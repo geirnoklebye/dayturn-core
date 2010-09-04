@@ -167,11 +167,6 @@ public:
 	}
 };
 
-// [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-08-25 (Catznip-2.1.2a) | Added: Catznip-2.1.2a
-// Defined in llviewermenu.cpp
-void handle_attachment_edit(const LLInventoryItem* pItem);
-// [/SL:KB]
-
 // +=================================================+
 // |        LLInvFVBridge                            |
 // +=================================================+
@@ -5364,9 +5359,7 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 // [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-08-25 (Catznip-2.1.2a) | Added: Catznip-2.1.2a
 	else if ("edit" == action)
 	{
-		const LLInventoryItem* pItem = gInventory.getItem(mUUID);
-		if (pItem)
-			handle_attachment_edit(pItem);
+		handle_attachment_edit(mUUID);
 	}
 // [/SL:KB]
 	{
