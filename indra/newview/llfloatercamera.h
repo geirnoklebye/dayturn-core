@@ -45,11 +45,17 @@ enum ECameraControlMode
 	CAMERA_CTRL_MODE_PRESETS
 };
 
-class LLFloaterCamera : public LLFloater
+class LLFloaterCamera
+	:	public LLFloater
 {
 	friend class LLFloaterReg;
 	
 public:
+	/* return instance if it exists - created by LLFloaterReg */
+	static LLFloaterCamera* findInstance();
+
+	/* update camera modes items selection and camera preset items selection according to the currently selected preset */
+	void updateItemsSelection();
 
 	/* whether in free camera mode */
 	static bool inFreeCameraMode();
@@ -86,9 +92,6 @@ private:
 	LLFloaterCamera(const LLSD& val);
 	~LLFloaterCamera() {};
 
-	/* return instance if it exists - created by LLFloaterReg */
-	static LLFloaterCamera* findInstance();
-
 	/*virtual*/ BOOL postBuild();
 
 	ECameraControlMode determineMode();
@@ -105,9 +108,6 @@ private:
 	/* updates the state (UI) according to the current mode */
 	void updateState();
 
-	/* update camera modes items selection and camera preset items selection according to the currently selected preset */
-	void updateItemsSelection();
-
 	void onClickBtn(ECameraControlMode mode);
 	void assignButton2Mode(ECameraControlMode mode, const std::string& button_name);
 	
@@ -121,6 +121,8 @@ private:
 	static bool sFreeCamera;
 	static bool sAppearanceEditing;
 	BOOL mClosed;
+
+	bool mUseFlatUI;
 	ECameraControlMode mPrevMode;
 	ECameraControlMode mCurrMode;
 	std::map<ECameraControlMode, LLButton*> mMode2Button;

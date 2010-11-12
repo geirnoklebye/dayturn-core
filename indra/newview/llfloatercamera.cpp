@@ -347,6 +347,7 @@ void LLFloaterCamera::onClose(bool app_quitting)
 LLFloaterCamera::LLFloaterCamera(const LLSD& val)
 :	LLFloater(val),
 	mClosed(FALSE),
+	mUseFlatUI(false),
 	mCurrMode(CAMERA_CTRL_MODE_PAN),
 	mPrevMode(CAMERA_CTRL_MODE_PAN)
 {
@@ -363,9 +364,16 @@ BOOL LLFloaterCamera::postBuild()
 	mZoom = findChild<LLPanelCameraZoom>(ZOOM);
 	mTrack = getChild<LLJoystickCameraTrack>(PAN);
 
-	assignButton2Mode(CAMERA_CTRL_MODE_MODES,			"avatarview_btn");
-	assignButton2Mode(CAMERA_CTRL_MODE_PAN,				"pan_btn");
-	assignButton2Mode(CAMERA_CTRL_MODE_PRESETS,		"presets_btn");
+	if (hasString("use_flat_ui"))
+	{
+		mUseFlatUI = true;
+	}
+	else
+	{
+		assignButton2Mode(CAMERA_CTRL_MODE_MODES,			"avatarview_btn");
+		assignButton2Mode(CAMERA_CTRL_MODE_PAN,				"pan_btn");
+		assignButton2Mode(CAMERA_CTRL_MODE_PRESETS,		"presets_btn");
+	}
 
 	update();
 
@@ -493,6 +501,11 @@ void LLFloaterCamera::assignButton2Mode(ECameraControlMode mode, const std::stri
 
 void LLFloaterCamera::updateState()
 {
+	if (mUseFlatUI)
+	{
+		return;
+	}
+
 	getChildView(ZOOM)->setVisible(CAMERA_CTRL_MODE_PAN == mCurrMode);
 	
 	bool show_presets = (CAMERA_CTRL_MODE_PRESETS == mCurrMode) || (CAMERA_CTRL_MODE_FREE_CAMERA == mCurrMode
@@ -534,26 +547,42 @@ void LLFloaterCamera::updateItemsSelection()
 	getChild<LLPanelCameraItem>("object_view")->setValue(argument);
 }
 
+/*static*/
 void LLFloaterCamera::onClickCameraItem(const LLSD& param)
 {
 	std::string name = param.asString();
 
-	if ("mouselook_view" == name)
+	LLFloaterCamera* camera_floater = LLFloaterCamera::findInstance();
+ 
+	if ("reset_view" == name)
+	{
+		gAgentCamera.switchCameraPreset(CAMERA_PRESET_REAR_VIEW);
+		gAgentCamera.changeCameraToDefault();
+		if (camera_floater)
+			camera_floater->switchMode(CAMERA_CTRL_MODE_PAN);
+	}
+	else if ("mouselook_view" == name)
 	{
 		gAgentCamera.changeCameraToMouselook();
 	}
-	else if ("object_view" == name)
+	else if ("object_view" == name && camera_floater)
 	{
+		if (camera_floater->mUseFlatUI)
+		{
+			camera_floater->mCurrMode == CAMERA_CTRL_MODE_FREE_CAMERA ? camera_floater->switchMode(CAMERA_CTRL_MODE_PAN) : camera_floater->switchMode(CAMERA_CTRL_MODE_FREE_CAMERA);
+		}
+		else
+		{
 		LLFloaterCamera* camera_floater = LLFloaterCamera::findInstance();
 		if (camera_floater)
-		camera_floater->switchMode(CAMERA_CTRL_MODE_FREE_CAMERA);
+			camera_floater->switchMode(CAMERA_CTRL_MODE_FREE_CAMERA);
+		}
 	}
 	else
 	{
 		switchToPreset(name);
 	}
 
-	LLFloaterCamera* camera_floater = LLFloaterCamera::findInstance();
 	if (camera_floater)
 	{
 		camera_floater->updateItemsSelection();
@@ -582,7 +611,11 @@ void LLFloaterCamera::switchToPreset(const std::string& name)
 
 void LLFloaterCamera::fromFreeToPresets()
 {
-	if (!sFreeCamera && mCurrMode == CAMERA_CTRL_MODE_FREE_CAMERA && mPrevMode == CAMERA_CTRL_MODE_PRESETS)
+	if(mUseFlatUI && !sFreeCamera && mCurrMode == CAMERA_CTRL_MODE_FREE_CAMERA && mPrevMode == CAMERA_CTRL_MODE_PAN)
+	{
+		switchMode(CAMERA_CTRL_MODE_PAN);
+	}
+	else if (!sFreeCamera && mCurrMode == CAMERA_CTRL_MODE_FREE_CAMERA && mPrevMode == CAMERA_CTRL_MODE_PRESETS)
 	{
 		switchMode(CAMERA_CTRL_MODE_PRESETS);
 	}
