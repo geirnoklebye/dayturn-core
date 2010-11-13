@@ -29,8 +29,7 @@
 #include "llappviewer.h"
 
 // Viewer includes
-#include "llversioninfo.h"
-#include "llversionviewer.h"
+#include "viewerinfo.h"
 #include "llfeaturemanager.h"
 #include "lluictrlfactory.h"
 #include "lltexteditor.h"
@@ -1019,8 +1018,7 @@ bool LLAppViewer::init()
 	gDebugInfo["GraphicsCard"] = LLFeatureManager::getInstance()->getGPUString();
 
 	// Save the current version to the prefs file
-	gSavedSettings.setString("LastRunVersion",
-							 LLVersionInfo::getChannelAndVersion());
+	gSavedSettings.setString("LastRunVersion", ViewerInfo::fullInfo());
 
 	gSimLastTime = gRenderStartTime.getElapsedTimeF32();
 	gSimFrames = (F32)gFrameCount;
@@ -2779,8 +2777,8 @@ void LLAppViewer::initUpdater()
 	// Get Channel
 	// Get Version
 	std::string url = gSavedSettings.getString("UpdaterServiceURL");
-	std::string channel = LLVersionInfo::getChannel();
-	std::string version = LLVersionInfo::getVersion();
+	std::string channel = ViewerInfo::viewerName(); // *TODO: ViewerInfo channel - Jacek
+	std::string version = ViewerInfo::versionNumber();
 	std::string protocol_version = gSavedSettings.getString("UpdaterServiceProtocolVersion");
 	std::string service_path = gSavedSettings.getString("UpdaterServicePath");
 	U32 check_period = gSavedSettings.getU32("UpdaterServiceCheckPeriod");
@@ -3003,11 +3001,11 @@ void LLAppViewer::writeSystemInfo()
 {
 	gDebugInfo["SLLog"] = LLError::logFileName();
 
-	gDebugInfo["ClientInfo"]["Name"] = LLVersionInfo::getChannel();
-	gDebugInfo["ClientInfo"]["MajorVersion"] = LLVersionInfo::getMajor();
-	gDebugInfo["ClientInfo"]["MinorVersion"] = LLVersionInfo::getMinor();
-	gDebugInfo["ClientInfo"]["PatchVersion"] = LLVersionInfo::getPatch();
-	gDebugInfo["ClientInfo"]["BuildVersion"] = LLVersionInfo::getBuild();
+	gDebugInfo["ClientInfo"]["Name"] = ViewerInfo::viewerName();
+	gDebugInfo["ClientInfo"]["MajorVersion"] = ViewerInfo::versionMajor();
+	gDebugInfo["ClientInfo"]["MinorVersion"] = ViewerInfo::versionMinor();
+	gDebugInfo["ClientInfo"]["PatchVersion"] = ViewerInfo::versionPatch();
+	gDebugInfo["ClientInfo"]["ExtraVersion"] = ViewerInfo::versionExtra();
 
 	gDebugInfo["CAFilename"] = gDirUtilp->getCAFile();
 
@@ -3050,7 +3048,7 @@ void LLAppViewer::writeSystemInfo()
 	
 	// Dump some debugging info
 	LL_INFOS("SystemInfo") << LLTrans::getString("APP_NAME")
-			<< " version " << LLVersionInfo::getShortVersion() << LL_ENDL;
+			<< " version " << ViewerInfo::versionNumber() << LL_ENDL;
 
 	// Dump the local time and time zone
 	time_t now;
@@ -3110,12 +3108,11 @@ void LLAppViewer::handleViewerCrash()
 	
 	//We already do this in writeSystemInfo(), but we do it again here to make /sure/ we have a version
 	//to check against no matter what
-	gDebugInfo["ClientInfo"]["Name"] = LLVersionInfo::getChannel();
-
-	gDebugInfo["ClientInfo"]["MajorVersion"] = LLVersionInfo::getMajor();
-	gDebugInfo["ClientInfo"]["MinorVersion"] = LLVersionInfo::getMinor();
-	gDebugInfo["ClientInfo"]["PatchVersion"] = LLVersionInfo::getPatch();
-	gDebugInfo["ClientInfo"]["BuildVersion"] = LLVersionInfo::getBuild();
+	gDebugInfo["ClientInfo"]["Name"] = ViewerInfo::viewerName();
+	gDebugInfo["ClientInfo"]["MajorVersion"] = ViewerInfo::versionMajor();
+	gDebugInfo["ClientInfo"]["MinorVersion"] = ViewerInfo::versionMinor();
+	gDebugInfo["ClientInfo"]["PatchVersion"] = ViewerInfo::versionPatch();
+	gDebugInfo["ClientInfo"]["ExtraVersion"] = ViewerInfo::versionExtra();
 
 	LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
 	if ( parcel && parcel->getMusicURL()[0])
@@ -4920,12 +4917,11 @@ void LLAppViewer::handleLoginComplete()
 	initMainloopTimeout("Mainloop Init");
 
 	// Store some data to DebugInfo in case of a freeze.
-	gDebugInfo["ClientInfo"]["Name"] = LLVersionInfo::getChannel();
-
-	gDebugInfo["ClientInfo"]["MajorVersion"] = LLVersionInfo::getMajor();
-	gDebugInfo["ClientInfo"]["MinorVersion"] = LLVersionInfo::getMinor();
-	gDebugInfo["ClientInfo"]["PatchVersion"] = LLVersionInfo::getPatch();
-	gDebugInfo["ClientInfo"]["BuildVersion"] = LLVersionInfo::getBuild();
+	gDebugInfo["ClientInfo"]["Name"] = ViewerInfo::viewerName();
+	gDebugInfo["ClientInfo"]["MajorVersion"] = ViewerInfo::versionMajor();
+	gDebugInfo["ClientInfo"]["MinorVersion"] = ViewerInfo::versionMinor();
+	gDebugInfo["ClientInfo"]["PatchVersion"] = ViewerInfo::versionPatch();
+	gDebugInfo["ClientInfo"]["ExtraVersion"] = ViewerInfo::versionExtra();
 
 	LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
 	if ( parcel && parcel->getMusicURL()[0])
@@ -5055,7 +5051,7 @@ void LLAppViewer::launchUpdater()
 	// *TODO change userserver to be grid on both viewer and sim, since
 	// userserver no longer exists.
 	query_map["userserver"] = LLGridManager::getInstance()->getGridLabel();
-	query_map["channel"] = LLVersionInfo::getChannel();
+	query_map["channel"] = ViewerInfo::viewerName(); // *TODO: ViewerInfo channel - Jacek
 	// *TODO constantize this guy
 	// *NOTE: This URL is also used in win_setup/lldownloader.cpp
 	LLURI update_url = LLURI::buildHTTP("secondlife.com", 80, "update.php", query_map);

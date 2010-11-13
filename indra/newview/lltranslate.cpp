@@ -33,7 +33,7 @@
 #include "llbufferstream.h"
 #include "lltrans.h"
 #include "llui.h"
-#include "llversioninfo.h"
+#include "viewerinfo.h"
 #include "llviewercontrol.h"
 
 #include "reader.h"
@@ -79,6 +79,7 @@ bool LLGoogleTranslationHandler::parseResponse(
 		return false;
 	}
 
+	std::string user_agent = ViewerInfo::fullInfo();
 	if (!root.isObject()) // empty response? should not happen
 	{
 		return false;

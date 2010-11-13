@@ -74,7 +74,7 @@
 #include "llsecondlifeurls.h"
 #include "llstring.h"
 #include "lluserrelations.h"
-#include "llversioninfo.h"
+#include "viewerinfo.h"
 #include "llviewercontrol.h"
 #include "llviewerhelp.h"
 #include "llvfs.h"
@@ -504,9 +504,9 @@ bool idle_startup()
 			if(!start_messaging_system(
 				   message_template_path,
 				   port,
-				   LLVersionInfo::getMajor(),
-				   LLVersionInfo::getMinor(),
-				   LLVersionInfo::getPatch(),
+				   ViewerInfo::versionMajor(),
+				   ViewerInfo::versionMinor(),
+				   ViewerInfo::versionPatch(),
 				   FALSE,
 				   std::string(),
 				   responder,
