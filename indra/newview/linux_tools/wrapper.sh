@@ -110,8 +110,15 @@ export SAVED_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 #    fi
 #fi
 
-export SL_ENV='LD_LIBRARY_PATH="`pwd`"/lib:"${LD_LIBRARY_PATH}"'
-export SL_CMD='$LL_WRAPPER bin/do-not-directly-run-secondlife-bin'
+BINARY_TYPE=$(expr match "$(file -b bin/do-not-directly-run-kokua-bin)" '\(.*executable\)')
+if [ "${BINARY_TYPE}" == "ELF 32-bit LSB executable" ]; then
+
+	export SL_ENV='LD_LIBRARY_PATH="`pwd`"/lib:"${LD_LIBRARY_PATH}"'
+else
+	export SL_ENV='LD_LIBRARY_PATH="`pwd`"/lib64:"`pwd`"/lib32:"${LD_LIBRARY_PATH}"'
+fi
+
+export SL_CMD='$LL_WRAPPER bin/do-not-directly-run-kokua-bin'
 export SL_OPT="`cat etc/gridargs.dat` $@"
 
 # Run the program
@@ -141,7 +148,7 @@ fi
 
 echo
 echo '*******************************************************'
-echo 'This is a BETA release of the Second Life linux client.'
+echo 'This is a ALPHA release of the Kokua Linux client.'
 echo 'Thank you for testing!'
 echo 'Please see README-linux.txt before reporting problems.'
 echo
