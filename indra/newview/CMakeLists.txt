@@ -1203,14 +1203,12 @@ if (DARWIN)
     secondlife.icns
     macview.r
     gpu_table.txt
-    Info-SecondLife.plist
-    SecondLife.nib/
+    packaging/mac/SecondLife.nib/
     # CMake doesn't seem to support Xcode language variants well just yet
-    English.lproj/InfoPlist.strings
-    English.lproj/language.txt
-    German.lproj/language.txt
-    Japanese.lproj/language.txt
-    Korean.lproj/language.txt
+    packaging/mac/English.lproj/language.txt
+    packaging/mac/German.lproj/language.txt
+    packaging/mac/Japanese.lproj/language.txt
+    packaging/mac/Korean.lproj/language.txt
     )
   set_source_files_properties(
     ${viewer_RESOURCE_FILES}
