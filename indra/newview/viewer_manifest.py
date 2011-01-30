@@ -451,6 +451,7 @@ class WindowsManifest(ViewerManifest):
 	self.path(src="licenses-win32.txt", dst="licenses.txt")
 	self.path("featuretable.txt")
 	self.path("featuretable_xp.txt")
+	self.path("VivoxAUP.txt")
     
         #self.enable_no_crt_manifest_check()
 
@@ -826,6 +827,7 @@ class DarwinManifest(ViewerManifest):
 
                 self.path("licenses-mac.txt", dst="licenses.txt")
                 self.path("featuretable_mac.txt")
+                self.path("VivoxAUP.txt")
 
                 self.path("viewer.icns")
 
@@ -980,6 +982,7 @@ class DarwinManifest(ViewerManifest):
                 home_path = os.environ['HOME']
                 keychain_pwd_path = os.path.join(build_secrets_checkout,'code-signing-osx','password.txt')
                 keychain_pwd = open(keychain_pwd_path).read().rstrip()
+                # os.path.join(dmg_template, "VivoxAUP.txt"): "Vivox (Voice Services) Usage Policy.txt",
 
                 self.run_command('security unlock-keychain -p "%s" "%s/Library/Keychains/viewer.keychain"' % ( keychain_pwd, home_path ) )
                 self.run_command('codesign --verbose --force --keychain "%(home_path)s/Library/Keychains/viewer.keychain" --sign %(identity)r %(bundle)r' % {
@@ -994,6 +997,7 @@ class LinuxManifest(ViewerManifest):
         super(LinuxManifest, self).construct()
         self.path("licenses-linux.txt","licenses.txt")
         self.path("res/kokua_icon.png", "kokua_icon.png")
+    	self.path("VivoxAUP.txt")
         if self.prefix("linux_tools", dst=""):
             self.path("client-readme.txt","README-linux.txt")
             self.path("client-readme-voice.txt","README-linux-voice.txt")
@@ -1067,6 +1071,7 @@ class Linux_i686Manifest(LinuxManifest):
         except:
             print "Skipping libllkdu.so - not found"
 
+            self.path("libopenjpeg.so.1.3.0", "libopenjpeg.so.1.3")
         try:
             self.path("../llcommon/libllcommon.so", "lib/libllcommon.so")
         except:
