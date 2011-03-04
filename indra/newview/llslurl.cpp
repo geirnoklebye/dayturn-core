@@ -34,15 +34,17 @@
 #include "llviewernetwork.h"
 #include "llfiltersd2xmlrpc.h"
 #include "curl/curl.h"
+const char* LLSLURL::HOP_SCHEME		 = "hop";
 const char* LLSLURL::SLURL_HTTP_SCHEME		 = "http";
 const char* LLSLURL::SLURL_HTTPS_SCHEME		 = "https";
 const char* LLSLURL::SLURL_SECONDLIFE_SCHEME	 = "secondlife";
-const char* LLSLURL::SLURL_X_GRID_LOCATION_INFO_SCHEME = "x-grid-location-info"; // <AW: opensim>
+const char* LLSLURL::SLURL_X_GRID_LOCATION_INFO_SCHEME = "x-grid-location-info";
 
 // For DnD - even though www.slurl.com redirects to slurl.com in a browser, you can copy and drag
 // text with www.slurl.com or a link explicitly pointing at www.slurl.com so testing for this
 // version is required also.
 
+const char* LLSLURL::SLURL_COM		 = "slurl.com";
 const char* LLSLURL::WWW_SLURL_COM	 = "www.slurl.com";
 const char* LLSLURL::MAPS_SECONDLIFE_COM = "maps.secondlife.com";
 
@@ -203,6 +205,7 @@ LLSLURL::LLSLURL(const std::string& slurl)
 		else if(   (slurl_uri.scheme() == LLSLURL::SLURL_HTTP_SCHEME)
 		 	|| (slurl_uri.scheme() == LLSLURL::SLURL_HTTPS_SCHEME)
 		 	|| (slurl_uri.scheme() == LLSLURL::SLURL_X_GRID_LOCATION_INFO_SCHEME)
+		 	|| (slurl_uri.scheme() == LLSLURL::HOP_SCHEME	)
 			)
 		{
 			// We're dealing with either a Standalone style slurl or slurl.com slurl
@@ -229,7 +232,7 @@ LLSLURL::LLSLURL(const std::string& slurl)
 				LL_DEBUGS("SLURL") << "slurl_uri.hostNameAndPort(): " 
 							<< slurl_uri.hostNameAndPort() << LL_ENDL;
 				LL_DEBUGS("SLURL") << "getGridByProbing(slurl_uri.hostNameAndPort(): "
-							<< probe_grid<< ")" <<LL_ENDL;
+							<< probe_grid<< LL_ENDL;
 				if ((slurl_uri.scheme() == LLSLURL::SLURL_HTTP_SCHEME ||
 					 slurl_uri.scheme() == LLSLURL::SLURL_HTTPS_SCHEME) &&
 					slurl_uri.hostNameAndPort() != probe_grid)
