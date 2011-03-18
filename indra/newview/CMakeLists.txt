@@ -1313,9 +1313,8 @@ if (WINDOWS)
         res/lltooltranslate.cur
         res/lltoolzoomin.cur
         res/lltoolzoomout.cur
-        res-sdl/ll_icon.BMP
-        res/ll_icon.BMP
-        res/ll_icon.ico
+        res/kokua_icon.BMP
+        res/kokua_icon.ico
         res/resource.h
         res/toolpickobject.cur
         res/toolpickobject2.cur
