@@ -232,7 +232,7 @@ LLSLURL::LLSLURL(const std::string& slurl)
 				LL_DEBUGS("SLURL") << "slurl_uri.hostNameAndPort(): " 
 							<< slurl_uri.hostNameAndPort() << LL_ENDL;
 				LL_DEBUGS("SLURL") << "getGridByProbing(slurl_uri.hostNameAndPort(): "
-							<< probe_grid<< LL_ENDL;
+							<< probe_grid<< ")" <<LL_ENDL;
 				if ((slurl_uri.scheme() == LLSLURL::SLURL_HTTP_SCHEME ||
 					 slurl_uri.scheme() == LLSLURL::SLURL_HTTPS_SCHEME) &&
 					slurl_uri.hostNameAndPort() != probe_grid)
@@ -269,10 +269,15 @@ LLSLURL::LLSLURL(const std::string& slurl)
 			}
 			else if (path_array[0].asString() == LLSLURL::SLURL_APP_PATH)
 			{
-				LL_DEBUGS("SLURL") << "its an app slurl"  << LL_ENDL;
+				LL_DEBUGS("SLURL") << "its an app hop or slurl"  << LL_ENDL;
 				mType = APP;
 				path_array.erase(0);
 				// leave app appended.
+			}
+			else if ( slurl_uri.scheme() == LLSLURL::HOP_SCHEME)
+			{
+				LL_DEBUGS("SLURL") << "its a location hop"  << LL_ENDL;
+				mType = LOCATION;
 			}
 			else
 			{
@@ -431,8 +436,11 @@ std::string LLSLURL::getSLURLString() const
 				S32 x = llround( (F32)mPosition[VX] );
 				S32 y = llround( (F32)mPosition[VY] );
 				S32 z = llround( (F32)mPosition[VZ] );	
-				return LLGridManager::getInstance()->getSLURLBase(mGrid) + 
-				LLURI::escape(mRegion) + llformat("/%d/%d/%d",x,y,z); 
+				std::string ret = LLGridManager::getInstance()->getSLURLBase(mGrid);
+				ret.append(LLURI::escape(mRegion)); 
+				ret.append(llformat("/%d/%d/%d",x,y,z));
+				LL_DEBUGS("SLURL") << "Location: " << ret << LL_ENDL;
+				return ret;
 			}
 
 		case APP:

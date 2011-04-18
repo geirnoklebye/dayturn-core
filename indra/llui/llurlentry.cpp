@@ -38,7 +38,7 @@
 #include "lluicolortable.h"
 #include "message.h"
 
-#define APP_HEADER_REGEX "((x-grid-location-info://[-\\w\\.]+/app)|((hop|secondlife):///app))"
+#define APP_HEADER_REGEX "(((hop|x-grid-location-info)://[-\\w\\.\\:\\@]+/app)|((hop|secondlife):///app))"
 
 // Utility functions
 std::string localize_slapp_label(const std::string& url, const std::string& full_name);
@@ -284,6 +284,7 @@ std::string LLUrlEntrySLURL::getLabel(const std::string &url, const LLUrlLabelCa
 	//   - http://slurl.com/secondlife/Place/X
 	//   - http://slurl.com/secondlife/Place
 	//
+
 	LLURI uri(url);
 	LLSD path_array = uri.pathArray();
 	S32 path_parts = path_array.size();
@@ -324,11 +325,17 @@ std::string LLUrlEntrySLURL::getLabel(const std::string &url, const LLUrlLabelCa
 std::string LLUrlEntrySLURL::getLocation(const std::string &url) const
 {
 	// return the part of the Url after slurl.com/secondlife/
-	const std::string search_string = "/secondlife";
+	std::string search_string = "/secondlife";
 	size_t pos = url.find(search_string);
 	if (pos == std::string::npos)
 	{
-		return "";
+		search_string = "/region";
+		pos = url.find(search_string);
+
+		if (pos == std::string::npos)
+		{
+				return std::string();
+		}
 	}
 
 	pos += search_string.size() + 1;
@@ -846,7 +853,7 @@ void LLUrlEntryParcel::processParcelInfo(const LLParcelData& parcel_data)
 //
 LLUrlEntryPlace::LLUrlEntryPlace()
 {
-	mPattern = boost::regex("((x-grid-location-info://[-\\w\\.]+/region/)|((hop|secondlife)://))\\S+/?(\\d+/\\d+/\\d+|\\d+/\\d+)/?",
+	mPattern = boost::regex("(((hop|x-grid-location-info)://[-\\w\\.\\:\\@]+/region/)|(secondlife://))\\S+/?(\\d+/\\d+/\\d+|\\d+/\\d+)/?",
 							boost::regex::perl|boost::regex::icase);
 	mMenuName = "menu_url_slurl.xml";
 	mTooltip = LLTrans::getString("TooltipSLURL");
