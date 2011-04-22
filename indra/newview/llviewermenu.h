@@ -93,6 +93,11 @@ void handle_object_touch();
 bool enable_object_open();
 void handle_object_open();
 
+//MK
+void handle_object_edit();
+void handle_object_delete();
+//mk
+
 // Buy either contents or object itself
 void handle_buy();
 void handle_take_copy();

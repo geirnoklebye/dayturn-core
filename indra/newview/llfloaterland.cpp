@@ -200,6 +200,13 @@ void LLFloaterLand::refreshAll()
 	LLFloaterLand* land_instance = LLFloaterReg::getTypedInstance<LLFloaterLand>("about_land");
 	if(land_instance)
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+		{
+			land_instance->closeFloater();
+			return;
+		}
+//mk
 		land_instance->refresh();
 	}
 }
@@ -899,6 +906,12 @@ void LLPanelLandGeneral::setGroup(const LLUUID& group_id)
 void LLPanelLandGeneral::onClickBuyLand(void* data)
 {
 	BOOL* for_group = (BOOL*)data;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	LLViewerParcelMgr::getInstance()->startBuyLand(*for_group);
 }
 

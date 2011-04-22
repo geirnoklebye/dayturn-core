@@ -76,6 +76,12 @@ public:
 
 	bool handle(const LLSD& params, const LLSD& query_map, LLMediaCtrl* web)
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			return true;
+		}
+//mk
 		if (params.size() < 1)
 		{
 			return false;
@@ -135,6 +141,13 @@ public:
 	void onObjectIconContextMenuItemClicked(const LLSD& userdata)
 	{
 		std::string level = userdata.asString();
+
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			return;
+		}
+//mk
 
 		if (level == "profile")
 		{
@@ -222,6 +235,12 @@ public:
 
 	void showInspector()
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			return;
+		}
+//mk
 		if (mAvatarID.isNull() && CHAT_SOURCE_SYSTEM != mSourceType) return;
 		
 		if (mSourceType == CHAT_SOURCE_OBJECT)

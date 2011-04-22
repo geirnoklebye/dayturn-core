@@ -52,6 +52,10 @@
 #include "llui.h"				// positionViewNearMouse()
 #include "lluictrl.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 class LLViewerObject;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -186,6 +190,13 @@ BOOL LLInspectObject::postBuild(void)
 //virtual
 void LLInspectObject::onOpen(const LLSD& data)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		closeFloater();		
+	}
+//mk
+
 	// Start animation
 	LLInspect::onOpen(data);
 

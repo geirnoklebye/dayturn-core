@@ -47,6 +47,11 @@
 #include "llvoiceclient.h"
 #include "llviewercontrol.h"	// for gSavedSettings
 
+//MK
+#include "llagent.h"
+#include "llsidetray.h"
+//mk
+
 static LLDefaultChildRegistry::Register<LLAvatarList> r("avatar_list");
 
 // Last interaction time update period.
@@ -507,6 +512,13 @@ void LLAvatarList::computeDifference(
 // Refresh shown time of our last interaction with all listed avatars.
 void LLAvatarList::updateLastInteractionTimes()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		LLSideTray::getInstance()->childSetVisible("recent_panel", false);
+		return;
+	}
+//mk
 	S32 now = (S32) LLDate::now().secondsSinceEpoch();
 	std::vector<LLPanel*> items;
 	getItems(items);

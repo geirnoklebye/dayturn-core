@@ -1056,6 +1056,20 @@ void LLFloaterPreference::refreshEnabledState()
 	// maybe some cards that use shaders, but don't support windlight
 	ctrl_wind_light->setEnabled(ctrl_shader_enable->getEnabled() && shaders);
 
+//MK
+	// If unable to change windlight or debug settings, make sure the Basic & Advanced
+	// Shaders checkboxes are ticked and disabled
+	if (gRRenabled && (gAgent.mRRInterface.mContainsSetenv || gAgent.mRRInterface.mContainsSetdebug))
+	{
+		gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
+		gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
+		ctrl_shader_enable->setValue(TRUE);
+		ctrl_wind_light->setValue(TRUE);
+		ctrl_shader_enable->setEnabled(FALSE);
+		ctrl_wind_light->setEnabled(FALSE);
+	}
+//mk
+
 	//Deferred/SSAO/Shadows
 	LLCheckBoxCtrl* ctrl_deferred = getChild<LLCheckBoxCtrl>("UseLightShaders");
 	if (LLFeatureManager::getInstance()->isFeatureAvailable("RenderUseFBO") &&
@@ -1392,6 +1406,12 @@ void LLFloaterPreference::setPersonalInfo(const std::string& visibility, bool im
 	getChildView("log_instant_messages")->setEnabled(TRUE);
 //	getChildView("log_chat")->setEnabled(TRUE);
 //	getChildView("busy_response")->setEnabled(TRUE);
+//MK
+	if (gRRenabled && gAgent.mRRInterface.containsWithoutException ("sendim"))
+	{
+		getChildView("busy_response")->setEnabled(false);
+	}
+//mk
 //	getChildView("log_instant_messages_timestamp")->setEnabled(TRUE);
 //	getChildView("log_chat_timestamp")->setEnabled(TRUE);
 	getChildView("log_chat_IM")->setEnabled(TRUE);

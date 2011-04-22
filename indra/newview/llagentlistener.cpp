@@ -40,6 +40,10 @@
 #include "llsdutil.h"
 #include "llsdutil_math.h"
 
+//MK
+#include "llvoavatarself.h"
+//mk
+
 LLAgentListener::LLAgentListener(LLAgent &agent)
   : LLEventAPI("LLAgent",
                "LLAgent listener to (e.g.) teleport, sit, stand, etc."),
@@ -98,6 +102,13 @@ void LLAgentListener::requestSit(LLSD const & event_data) const
 
 	if (object && object->getPCode() == LL_PCODE_VOLUME)
 	{
+//MK
+		if (gRRenabled && gAgentAvatarp && !gAgentAvatarp->mIsSitting)
+		{
+			// We are now standing, and we want to sit down => store our current location so that we can snap back here when we stand up, if under @standtp
+			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+		}
+//mk
 		gMessageSystem->newMessageFast(_PREHASH_AgentRequestSit);
 		gMessageSystem->nextBlockFast(_PREHASH_AgentData);
 		gMessageSystem->addUUIDFast(_PREHASH_AgentID, mAgent.getID());
@@ -112,7 +123,22 @@ void LLAgentListener::requestSit(LLSD const & event_data) const
 
 void LLAgentListener::requestStand(LLSD const & event_data) const
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit)
+	{
+		return;
+	}
+	gAgent.setFlying(FALSE);
+//mk
 	mAgent.setControlFlags(AGENT_CONTROL_STAND_UP);
+//MK
+	if (gAgent.mRRInterface.contains ("standtp"))
+	{
+		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
+		gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
+		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
+	}
+//mk
 }
 
 void LLAgentListener::resetAxes(const LLSD& event) const

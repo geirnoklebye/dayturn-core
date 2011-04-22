@@ -49,6 +49,9 @@
 #include "llvoavatarself.h"
 #include "llwearableitemslist.h"
 
+//MK
+#include "llagent.h"
+//mk
 static bool is_tab_header_clicked(LLAccordionCtrlTab* tab, S32 y);
 
 static const LLOutfitTabNameComparator OUTFIT_TAB_NAME_COMPARATOR;

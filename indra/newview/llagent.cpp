@@ -78,6 +78,10 @@
 #include "llworld.h"
 #include "llworldmap.h"
 
+//MK
+#include "llstartup.h"
+//mk
+
 using namespace LLVOAvatarDefines;
 
 extern LLMenuBarGL* gMenuBarView;
@@ -286,6 +290,12 @@ LLAgent::~LLAgent()
 //-----------------------------------------------------------------------------
 void LLAgent::onAppFocusGained()
 {
+//MK
+	if (gRRenabled)
+	{
+		return;
+	}
+//mk
 	if (CAMERA_MODE_MOUSELOOK == gAgentCamera.getCameraMode())
 	{
 		gAgentCamera.changeCameraToDefault();
@@ -476,6 +486,12 @@ void LLAgent::movePitch(F32 mag)
 // Does this parcel allow you to fly?
 BOOL LLAgent::canFly()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsFly)
+	{
+		return FALSE;
+	}
+//mk
 	if (isGodlike()) return TRUE;
 
 	LLViewerRegion* regionp = getRegion();
@@ -524,6 +540,12 @@ void LLAgent::setFlying(BOOL fly)
 
 	if (fly)
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsFly)
+		{
+			return;
+		}
+//mk
 		BOOL was_flying = getFlying();
 		if (!canFly() && !was_flying)
 		{
@@ -581,7 +603,22 @@ bool LLAgent::enableFlying()
 
 void LLAgent::standUp()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit)
+	{
+		return;
+	}
+	gAgent.setFlying(FALSE);
+//mk
 	setControlFlags(AGENT_CONTROL_STAND_UP);
+//MK
+	if (gAgent.mRRInterface.contains ("standtp"))
+	{
+		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
+		gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
+		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
+	}
+//mk
 }
 
 
@@ -597,8 +634,15 @@ void LLAgent::setRegion(LLViewerRegion *regionp)
 		// host_name = regionp->getHost().getHostName();
 
 		std::string ip = regionp->getHost().getString();
-		llinfos << "Moving agent into region: " << regionp->getName()
+//MK
+		if (!gRRenabled || !gAgent.mRRInterface.mContainsShowloc)
+		{
+//mk
+			llinfos << "Moving agent into region: " << regionp->getName()
 				<< " located at " << ip << llendl;
+//MK
+		}
+//mk
 		if (mRegionp)
 		{
 			// We've changed regions, we're now going to change our agent coordinate frame.
@@ -3340,6 +3384,17 @@ void LLAgent::teleportRequest(
 // Landmark ID = LLUUID::null means teleport home
 void LLAgent::teleportViaLandmark(const LLUUID& landmark_asset_id)
 {
+//MK
+	LLVOAvatar* avatar = gAgentAvatarp;
+	if (gRRenabled && (LLStartUp::getStartupState() != STATE_STARTED || gViewerWindow->getShowProgress() 
+					  || gAgent.mRRInterface.contains ("tplm") 
+					  || (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
+	{
+		return;
+	}
+	//// eliminate all restrictions issued from objects the avatar is not wearing
+	//gAgent.mRRInterface.garbageCollector ();
+//mk
 	LLViewerRegion *regionp = getRegion();
 	if(regionp && teleportCore())
 	{
@@ -3355,6 +3410,13 @@ void LLAgent::teleportViaLandmark(const LLUUID& landmark_asset_id)
 
 void LLAgent::teleportViaLure(const LLUUID& lure_id, BOOL godlike)
 {
+//MK
+	//// eliminate all restrictions issued from objects the avatar is not wearing
+	//if (gRRenabled)
+	//{
+	//	gAgent.mRRInterface.garbageCollector ();
+	//}
+//mk
 	LLViewerRegion* regionp = getRegion();
 	if(regionp && teleportCore())
 	{
@@ -3404,6 +3466,18 @@ void LLAgent::teleportCancel()
 
 void LLAgent::teleportViaLocation(const LLVector3d& pos_global)
 {
+//MK
+	LLVOAvatar* avatar = gAgentAvatarp;
+	if (gRRenabled && (LLStartUp::getStartupState() != STATE_STARTED || gViewerWindow->getShowProgress() 
+					  || gAgent.mRRInterface.contains ("tploc") 
+					  || gAgent.mRRInterface.contains ("sittp") 
+					  || (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
+	{
+		return;
+	}
+	//// eliminate all restrictions issued from objects the avatar is not wearing
+	//gAgent.mRRInterface.garbageCollector ();
+//mk
 	LLViewerRegion* regionp = getRegion();
 	U64 handle = to_region_handle(pos_global);
 	LLSimInfo* info = LLWorldMap::getInstance()->simInfoFromHandle(handle);
@@ -3446,6 +3520,23 @@ void LLAgent::teleportViaLocation(const LLVector3d& pos_global)
 // Teleport to global position, but keep facing in the same direction 
 void LLAgent::teleportViaLocationLookAt(const LLVector3d& pos_global)
 {
+//MK
+	if (gRRenabled)
+	{
+		// Do not perform these checks if we are automatically snapping back to the last standing location
+		if (!mRRInterface.mSnappingBackToLastStandingLocation)
+		{
+			// Can't double-click-TP if we can't sittp, unsit, tp to a location or when the controls are grabbed and something is locked
+			if (gAgent.mRRInterface.contains ("tploc") 
+				|| (gAgent.forwardGrabbed() && gAgent.mRRInterface.mContainsDetach)
+				|| gAgent.mRRInterface.contains ("sittp") 
+				|| (gAgent.mRRInterface.mContainsUnsit && gAgentAvatarp && gAgentAvatarp->mIsSitting))
+			{
+				return;
+			}
+		}
+	}
+//mk
 	mbTeleportKeepsLookAt = true;
 	gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);	// detach camera form avatar, so it keeps direction
 	U64 region_handle = to_region_handle(pos_global);
@@ -3634,7 +3725,16 @@ void LLAgent::sendAgentSetAppearance()
 	// NOTE -- when we start correcting all of the other Havok geometry 
 	// to compensate for the COLLISION_TOLERANCE ugliness we will have 
 	// to tweak this number again
-	const LLVector3 body_size = gAgentAvatarp->mBodySize;
+//MK
+////	const LLVector3 body_size = gAgentAvatarp->mBodySize;
+	LLVector3 body_size = gAgentAvatarp->mBodySize;
+	F32 x_offset = gSavedSettings.getF32("RestrainedLoveOffsetAvatarX");
+	F32 y_offset = gSavedSettings.getF32("RestrainedLoveOffsetAvatarY");
+	F32 z_offset = gSavedSettings.getF32("RestrainedLoveOffsetAvatarZ");
+	body_size.mV[VX] = body_size.mV[VX] + x_offset;
+	body_size.mV[VY] = body_size.mV[VY] + y_offset;
+	body_size.mV[VZ] = body_size.mV[VZ] + z_offset;
+//mk
 	msg->addVector3Fast(_PREHASH_Size, body_size);	
 
 	// To guard against out of order packets

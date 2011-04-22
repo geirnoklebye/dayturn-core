@@ -162,6 +162,13 @@ void LLTracker::render3D()
 		return;
 	}
 	
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		instance()->mTrackedLocationName = "";
+	}
+//mk
+
 	static LLUIColor map_track_color = LLUIColorTable::instance().getColor("MapTrackColor", LLColor4::white);
 	
 	// Arbitary location beacon
@@ -292,6 +299,13 @@ void LLTracker::trackAvatar( const LLUUID& avatar_id, const std::string& name )
 {
 	instance()->stopTrackingLandmark();
 	instance()->stopTrackingLocation();
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		instance()->stopTrackingAvatar(true);
+		return;
+	}
+//mk
 	
 	LLAvatarTracker::instance().track( avatar_id, name );
 	instance()->mTrackingStatus = TRACKING_AVATAR;
@@ -305,6 +319,13 @@ void LLTracker::trackLandmark( const LLUUID& asset_id, const LLUUID& item_id, co
 {
 	instance()->stopTrackingAvatar();
 	instance()->stopTrackingLocation();
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShowminimap || gAgent.mRRInterface.mContainsShowworldmap))
+	{
+		instance()->stopTrackingLandmark(true);
+		return;
+	}
+//mk
 	
  	instance()->mTrackedLandmarkAssetID = asset_id;
  	instance()->mTrackedLandmarkItemID = item_id;
@@ -321,6 +342,13 @@ void LLTracker::trackLocation(const LLVector3d& pos_global, const std::string& f
 {
 	instance()->stopTrackingAvatar();
 	instance()->stopTrackingLandmark();
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShowminimap || gAgent.mRRInterface.mContainsShowworldmap))
+	{
+		instance()->stopTrackingLocation(true);
+		return;
+	}
+//mk
 
 	instance()->mTrackedPositionGlobal = pos_global;
 	instance()->mTrackedLocationName = full_name;
@@ -648,6 +676,26 @@ void LLTracker::clearFocus()
 
 void LLTracker::drawMarker(const LLVector3d& pos_global, const LLColor4& color)
 {
+//MK
+	/*
+	bool must_stop_tracking = false;
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		stopTrackingAvatar(true);
+		must_stop_tracking = true;
+	}
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShowloc || gAgent.mRRInterface.mContainsShowworldmap))
+	{
+		stopTrackingLocation(true);
+		stopTrackingLandmark(true);
+		must_stop_tracking = true;
+	}
+	if (must_stop_tracking)
+	{
+		return;
+	}
+	*/
+//mk
 	// get position
 	LLVector3 pos_local = gAgent.getPosAgentFromGlobal(pos_global);
 

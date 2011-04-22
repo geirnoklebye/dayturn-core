@@ -534,6 +534,13 @@ void LLPipeline::allocateScreenBuffer(U32 resX, U32 resY)
 	
 	//never use more than 4 samples for render targets
 	U32 samples = llmin(gSavedSettings.getU32("RenderFSAASamples"), (U32) 4);
+//MK
+	// If RenderUseFBO is set, ignore RenderFSAASamples completely or the HUDs will disappear
+	if (gRRenabled && gSavedSettings.getBOOL("RenderUseFBO"))
+	{
+		samples = 0;
+	}
+//mk
 	U32 res_mod = gSavedSettings.getU32("RenderResolutionDivisor");
 
 	if (res_mod > 1 && res_mod < resX && res_mod < resY)
@@ -2325,7 +2332,10 @@ void LLPipeline::stateSort(LLDrawable* drawablep, LLCamera& camera)
 		return;
 	}
 	
-	if (LLSelectMgr::getInstance()->mHideSelectedObjects)
+	if (LLSelectMgr::getInstance()->mHideSelectedObjects
+//MK
+		&& (!gRRenabled || !gAgent.mRRInterface.mContainsEdit))
+//mk
 	{
 		if (drawablep->getVObj().notNull() &&
 			drawablep->getVObj()->isSelected())
@@ -3085,6 +3095,7 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 	LLGLEnable fog_enable(use_fog &&
 						  !gPipeline.canUseWindLightShadersOnObjects() ? GL_FOG : 0);
 	gSky.updateFog(camera.getFar());
+
 	if (!use_fog)
 	{
 		sUnderWaterRender = FALSE;

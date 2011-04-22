@@ -90,6 +90,20 @@ extern BOOL gAuditTexture;
 ////////////////////////////////////////////////////////////////////////////
 // Listeners
 
+//MK
+static bool handleRestrainedLoveDebugChanged(const LLSD& newvalue)
+{
+	RRInterface::sRestrainedLoveDebug = newvalue.asBoolean();
+	return true;
+}
+
+static bool handleRestrainedLoveOffsetAvatarChanged(const LLSD& newvalue)
+{
+	gAgent.sendAgentSetAppearance();
+	return true;
+}
+//mk
+
 static bool handleRenderAvatarMouselookChanged(const LLSD& newvalue)
 {
 	LLVOAvatar::sVisibleInFirstPerson = newvalue.asBoolean();
@@ -490,6 +504,9 @@ bool toggle_show_navigation_panel(const LLSD& newvalue)
 	bool value = newvalue.asBoolean();
 
 	LLNavigationBar::getInstance()->showNavigationPanel(value);
+//MK
+	if (!gRRenabled)
+//mk
 	gSavedSettings.setBOOL("ShowMiniLocationPanel", !value);
 
 	return true;
@@ -506,6 +523,9 @@ bool toggle_show_mini_location_panel(const LLSD& newvalue)
 	bool value = newvalue.asBoolean();
 
 	LLPanelTopInfoBar::getInstance()->setVisible(value);
+//MK
+	if (!gRRenabled)
+//mk
 	gSavedSettings.setBOOL("ShowNavbarNavigationPanel", !value);
 
 	return true;
@@ -534,6 +554,12 @@ void toggle_updater_service_active(LLControlVariable* control, const LLSD& new_v
 
 void settings_setup_listeners()
 {
+//MK
+	gSavedSettings.getControl("RestrainedLoveDebug")->getSignal()->connect(boost::bind(&handleRestrainedLoveDebugChanged, _2));
+	gSavedSettings.getControl("RestrainedLoveOffsetAvatarX")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+	gSavedSettings.getControl("RestrainedLoveOffsetAvatarY")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+	gSavedSettings.getControl("RestrainedLoveOffsetAvatarZ")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+//mk
 	gSavedSettings.getControl("FirstPersonAvatarVisible")->getSignal()->connect(boost::bind(&handleRenderAvatarMouselookChanged, _2));
 	gSavedSettings.getControl("RenderFarClip")->getSignal()->connect(boost::bind(&handleRenderFarClipChanged, _2));
 	gSavedSettings.getControl("RenderTerrainDetail")->getSignal()->connect(boost::bind(&handleTerrainDetailChanged, _2));

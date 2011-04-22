@@ -104,12 +104,17 @@ private:
 	 * Called when user checks/unchecks Show Coordinates menu item.
 	 */
 	void onNavBarShowParcelPropertiesCtrlChanged();
-
+//MK
+public:
+//mk
 	/**
 	 * Shorthand to call updateParcelInfoText() and updateParcelIcons().
 	 */
 	void update();
 
+//MK
+private:
+//mk
 	/**
 	 * Updates parcel info text (mParcelInfoText).
 	 */

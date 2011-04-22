@@ -250,6 +250,13 @@ LLInventoryPanel::~LLInventoryPanel()
 
 void LLInventoryPanel::draw()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
+	{
+//		LLFloaterInventory::hideAll(); // close all the secondary inventory floaters
+//		return;
+	}
+//mk
 	// Select the desired item (in case it wasn't loaded when the selection was requested)
 	mFolderRoot->updateSelection();
 	LLPanel::draw();

@@ -43,6 +43,10 @@
 #include "llwindow.h"
 #include "llsliderctrl.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 LLFloaterHardwareSettings::LLFloaterHardwareSettings(const LLSD& key)
 	: LLFloater(key),
 

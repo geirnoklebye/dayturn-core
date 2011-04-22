@@ -804,6 +804,13 @@ void LLPanelPeople::updateNearbyList()
 	if (!mNearbyList)
 		return;
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
+		return;
+	}
+//mk
 	std::vector<LLVector3d> positions;
 
 	LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
@@ -818,6 +825,13 @@ void LLPanelPeople::updateRecentList()
 	if (!mRecentList)
 		return;
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		LLSideTray::getInstance()->childSetVisible("recent_panel", false);
+		return;
+	}
+//mk
 	LLRecentPeople::instance().get(mRecentList->getIDs());
 	mRecentList->setDirty();
 }

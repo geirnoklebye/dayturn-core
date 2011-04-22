@@ -40,6 +40,10 @@
 #include "llviewerwindow.h"
 #include "llfloatertools.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 //
 // Member functions
 //
@@ -82,6 +86,12 @@ void LLToolFace::pickCallback(const LLPickInfo& pick_info)
 	LLViewerObject* hit_obj	= pick_info.getObject();
 	if (hit_obj)
 	{
+//MK
+		if (gRRenabled && !gAgent.mRRInterface.canTouch (hit_obj))
+		{
+			return;
+		}
+//mk
 		S32 hit_face = pick_info.mObjectFace;
 		
 		if (hit_obj->isAvatar())

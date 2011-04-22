@@ -366,6 +366,13 @@ void LLNavigationBar::fillSearchComboBox()
 
 void LLNavigationBar::draw()
 {
+//MK
+//	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+//	{
+//		toggle_show_navigation_panel(LLSD(false));
+//		gSavedSettings.setBOOL ("ShowNavbarNavigationPanel", FALSE);
+//	}
+//mk
 	if(mPurgeTPHistoryItems)
 	{
 		LLTeleportHistory::getInstance()->purgeItems();
@@ -547,6 +554,16 @@ void LLNavigationBar::onTeleportFailed()
 
 void LLNavigationBar::onTeleportFinished(const LLVector3d& global_agent_pos)
 {
+//MK
+	if (gRRenabled)
+	{
+		gAgent.mRRInterface.setParcelName (LLViewerParcelMgr::getInstance()->getAgentParcelName());
+		if (gAgent.mRRInterface.scriptsEnabled())
+		{
+			gAgent.mRRInterface.setScriptsEnabledOnce(TRUE); // we are in a script enabled area => retain this information for later
+		}
+	}
+//mk
 	if (!mSaveToLocationHistory)
 		return;
 	LLLocationHistory* lh = LLLocationHistory::getInstance();

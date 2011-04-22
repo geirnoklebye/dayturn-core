@@ -375,6 +375,14 @@ void LLNetMap::draw()
 					show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
 				}
 
+//MK
+				// Don't show as friend under @shownames, since it can give away an
+				// information about the avatars who are around
+				if (gRRenabled && gAgent.mRRInterface.mContainsShownames) 
+				{
+					show_as_friend = false;
+				}
+//mk
 				LLColor4 color = show_as_friend ? map_avatar_friend_color : map_avatar_color;
 				LLWorldMapView::drawAvatar(
 					pos_map.mV[VX], pos_map.mV[VY], 
@@ -645,6 +653,13 @@ BOOL LLNetMap::handleToolTip( S32 x, S32 y, MASK mask )
 	LLStringUtil::format_map_t args;
 	args["[REGION]"] = region_name;
 	std::string msg = mToolTipMsg;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+			args["[REGION]"] = "(Region hidden)\n";
+	}
+	else
+//mk
 	LLStringUtil::format(msg, args);
 	LLToolTipMgr::instance().show(LLToolTip::Params()
 		.message(msg)
@@ -669,6 +684,13 @@ BOOL LLNetMap::handleToolTipAgent(const LLUUID& avatar_id)
 	{
 		LLInspector::Params p;
 		p.fillFrom(LLUICtrlFactory::instance().getDefaultParams<LLInspector>());
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			p.message(gAgent.mRRInterface.getDummyName(av_name.getCompleteName()));
+		}
+		else
+//mk
 		p.message(av_name.getCompleteName());
 		p.image.name("Inspector_I");
 		p.click_callback(boost::bind(showAvatarInspector, avatar_id));

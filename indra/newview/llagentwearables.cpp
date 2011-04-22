@@ -724,6 +724,15 @@ LLWearable* LLAgentWearables::getWearable(const LLWearableType::EType type, U32 
 
 void LLAgentWearables::setWearable(const LLWearableType::EType type, U32 index, LLWearable *wearable)
 {
+//MK
+	if (gRRenabled)
+	{
+		if (!gAgent.mRRInterface.canWear (type))
+		{
+			return;
+		}
+	}
+//mk
 
 	LLWearable *old_wearable = getWearable(type,index);
 	if (!old_wearable)
@@ -732,7 +741,18 @@ void LLAgentWearables::setWearable(const LLWearableType::EType type, U32 index, 
 		return;
 	}
 	
-	wearableentry_map_t::iterator wearable_iter = mWearableDatas.find(type);
+//MK
+	if (gRRenabled)
+	{
+		if (!gAgent.mRRInterface.canUnwear(type))
+		{
+			// cannot remove this outfit, so cannot replace it either
+			return;
+		}
+	}
+//mk
+
+		wearableentry_map_t::iterator wearable_iter = mWearableDatas.find(type);
 	if (wearable_iter == mWearableDatas.end())
 	{
 		llwarns << "invalid type, type " << type << " index " << index << llendl; 
@@ -1278,6 +1298,15 @@ void LLAgentWearables::addWearableToAgentInventory(LLPointer<LLInventoryCallback
 
 void LLAgentWearables::removeWearable(const LLWearableType::EType type, bool do_remove_all, U32 index)
 {
+//MK
+	if (gRRenabled)
+	{
+		if (!gAgent.mRRInterface.canUnwear (type))
+		{
+			return;
+		}
+	}
+//mk
 	if (gAgent.isTeen() &&
 		(type == LLWearableType::WT_UNDERSHIRT || type == LLWearableType::WT_UNDERPANTS))
 	{
@@ -1400,7 +1429,40 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 		{
 			if (LLWearableType::getAssetType((LLWearableType::EType)type) == LLAssetType::AT_CLOTHING)
 			{
-				removeWearable((LLWearableType::EType)type, true, 0);
+//MK
+				// Actually we do not need to remove all clothes when updating the outfit, or else the avatar finds itself nude
+				// for a second, and the shoe base disappears as well. This can become very annoying after a while.
+				// The "wearables" array contains all the wearables (bodyparts included) that must be worn and no other.
+				// => Only remove clothes that we know have changed in the array of new wearables.
+
+				for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE; ++index)
+				{
+					bool remove_this = true;
+					// cur_wearable is the piece of clothing we are wearing on index "index" on the layer "type" (ex : WT_SHIRT, WT_PANTS...)
+					LLWearable* cur_wearable = getWearable ((LLWearableType::EType)type, index);
+
+					S32 count = wearables.count();
+					llassert(items.count() == count);
+					S32 i;
+					for (i = 0; i < count; i++)
+					{
+						// new_wearable represents each of the wearables we are supposed to update, every cur_wearable that is not
+						// part of the "wearables" array must be removed
+						LLWearable* new_wearable = wearables[i];
+						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
+						{
+							remove_this = false;
+							llinfos << "not removing old wearable " << cur_wearable->getName() << llendl;
+						}
+					}
+
+					if (remove_this)
+					{
+////					removeWearable((LLWearableType::EType)type, true, 0);
+						removeWearable((LLWearableType::EType)type, false, index);
+					}
+//mk
+				}
 			}
 		}
 	}
@@ -1422,17 +1484,44 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 			new_wearable->setName(new_item->getName());
 			new_wearable->setItemID(new_item->getUUID());
 
-			if (LLWearableType::getAssetType(type) == LLAssetType::AT_BODYPART)
+//MK
+			// We did not remove the items that are already worn in order to avoid unnecessary updates,
+			// hence we do not want to wear the new ones either or they will stack.
+			bool wear_this = true;
+
+			for (S32 type = 0; type < (S32)LLWearableType::WT_COUNT && wear_this; type++)
 			{
-				// exactly one wearable per body part
-				setWearable(type,0,new_wearable);
+				if (LLWearableType::getAssetType((LLWearableType::EType)type) == LLAssetType::AT_CLOTHING)
+				{
+					for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE && wear_this; ++index)
+					{
+						LLWearable* cur_wearable = getWearable ((LLWearableType::EType)type, index);
+						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
+						{
+							wear_this = false;
+							llinfos << "not wearing new wearable " << new_wearable->getName() << llendl;
+						}
+					}
+				}
 			}
-			else
+
+			if (wear_this)
 			{
-				pushWearable(type,new_wearable);
+//mk
+				if (LLWearableType::getAssetType(type) == LLAssetType::AT_BODYPART)
+				{
+					// exactly one wearable per body part
+					setWearable(type,0,new_wearable);
+				}
+				else
+				{
+					pushWearable(type,new_wearable);
+				}
+				wearableUpdated(new_wearable);
+				checkWearableAgainstInventory(new_wearable);
+//MK
 			}
-			wearableUpdated(new_wearable);
-			checkWearableAgainstInventory(new_wearable);
+//mk
 		}
 	}
 
@@ -1763,7 +1852,19 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 				else
 				{
 					// object currently worn, not requested.
-					objects_to_remove.push_back(objectp);
+//MK
+					// There are two ways to receive this list of objects :
+					// - from a burst of "attach this here" messages
+					// - from a change of outfit
+					// In the first case, the list is partial and we don't want to remove what we are going to wear
+					// In the second case, the list is complete and describes what we are going to wear
+					// => We need to use RRInterface::mUserUpdateAttachmentsUpdatesAll to determine what we want to do
+					// with objects that are not in the list
+					if (gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll)
+					{
+						objects_to_remove.push_back(objectp);
+					}
+//mk
 				}
 			}
 		}
@@ -1794,6 +1895,10 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 
 	// Add everything in items_to_add
 	userAttachMultipleAttachments(items_to_add);
+
+//MK
+	gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
+//mk
 }
 
 void LLAgentWearables::userRemoveMultipleAttachments(llvo_vec_t& objects_to_remove)
@@ -1813,6 +1918,12 @@ void LLAgentWearables::userRemoveMultipleAttachments(llvo_vec_t& objects_to_remo
 		 ++it)
 	{
 		LLViewerObject *objectp = *it;
+//MK
+		if (gRRenabled && !gAgent.mRRInterface.canDetach (objectp))
+		{
+			return;
+		}
+//mk
 		gMessageSystem->nextBlockFast(_PREHASH_ObjectData);
 		gMessageSystem->addU32Fast(_PREHASH_ObjectLocalID, objectp->getLocalID());
 	}

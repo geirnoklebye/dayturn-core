@@ -41,6 +41,10 @@
 
 #include <boost/signals2.hpp>
 
+ //MK
+ #include "RRInterface.h"
+ //mk
+
 extern const BOOL 	ANIMATE;
 extern const U8 	AGENT_STATE_TYPING;  // Typing indication
 extern const U8 	AGENT_STATE_EDITING; // Set when agent has objects selected
@@ -306,6 +310,11 @@ public:
 	// When the agent hasn't typed anything for this duration, it leaves the 
 	// typing state (for both chat and IM).
 	static const F32 TYPING_TIMEOUT_SECS;
+
+//MK
+ 	RRInterface		mRRInterface;
+//mk
+
 private:
 	LLFrameTimer	mTypingTimer;
 

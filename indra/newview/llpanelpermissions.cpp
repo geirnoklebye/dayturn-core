@@ -358,6 +358,12 @@ void LLPanelPermissions::refresh()
 			}
 		}
 	}
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		owner_name = gAgent.mRRInterface.getDummyName (owner_name);
+	}
+//mk
 	getChild<LLUICtrl>("Owner Name")->setValue(owner_name);
 	getChildView("Owner Name")->setEnabled(TRUE);
 

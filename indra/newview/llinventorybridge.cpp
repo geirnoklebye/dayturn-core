@@ -2499,10 +2499,11 @@ void LLFolderBridge::folderOptionsMenu()
 	LLIsType is_object( LLAssetType::AT_OBJECT );
 	LLIsType is_gesture( LLAssetType::AT_GESTURE );
 
-	if (mWearables ||
+//MK	
+	if (!gRRenabled && (mWearables ||
 		checkFolderForContentsOfType(model, is_wearable)  ||
 		checkFolderForContentsOfType(model, is_object) ||
-		checkFolderForContentsOfType(model, is_gesture) )
+		checkFolderForContentsOfType(model, is_gesture)) )
 	{
 		mItems.push_back(std::string("Folder Wearables Separator"));
 
@@ -2531,6 +2532,7 @@ void LLFolderBridge::folderOptionsMenu()
 		}
 		mItems.push_back(std::string("Outfit Separator"));
 	}
+//mk
 	LLMenuGL* menup = dynamic_cast<LLMenuGL*>(mMenu.get());
 	if (menup)
 	{
@@ -2567,6 +2569,17 @@ void LLFolderBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	if(!model) return;
 	const LLUUID trash_id = model->findCategoryUUIDForType(LLFolderType::FT_TRASH);
 	const LLUUID lost_and_found_id = model->findCategoryUUIDForType(LLFolderType::FT_LOST_AND_FOUND);
+
+//MK
+	// Not only this is needed for RestrainedLove, but this also fixes
+	// a regular viewer bug.
+	// We need to clear the context menu, or some menu items would not refresh
+	// when objects are locked/unlocked (RestrainedLove), or worn/unworn or
+	// attached/detached (regular viewers) and the context menu is pulled down
+	// in-between.
+	mItems.clear();
+	mDisabledItems.clear();
+//mk
 
 	if (lost_and_found_id == mUUID)
 	{
@@ -2661,6 +2674,28 @@ void LLFolderBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 			mWearables=TRUE;
 		}
 	}
+
+//MK
+		if (gRRenabled && mWearables)
+		{
+			mItems.push_back("Folder Wearables Separator");
+			mItems.push_back("Add To Outfit");
+			mItems.push_back("Replace Outfit");
+			mItems.push_back("Remove From Outfit");
+//			mItems.push_back("Take Off Items");
+			// Note : After some tests, it seems we can't rely on testing whether any item within this folder is locked, because 
+			// it may have not been fetched from the server yet, and appear empty to the viewer, hence making it think
+			// nothing is locked and return a false negative. Therefore we must condition the following menu items to
+			// whether something is locked or not.
+			if (gAgent.mRRInterface.mContainsDetach)
+			{
+				mDisabledItems.push_back("Add To Outfit");
+				mDisabledItems.push_back("Replace Outfit");
+				mDisabledItems.push_back("Remove From Outfit");
+//				mDisabledItems.push_back("Take Off Items");
+			}
+		}
+//mk
 
 	// Preemptively disable system folder removal if more than one item selected.
 	if ((flags & FIRST_SELECTED_ITEM) == 0)
@@ -2879,6 +2914,23 @@ void LLFolderBridge::createWearable(LLFolderBridge* bridge, LLWearableType::ETyp
 
 void LLFolderBridge::modifyOutfit(BOOL append)
 {
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.mContainsDetach && !append)
+		{
+			return;
+		}
+		if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
+		{
+			return;
+		}
+		if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
+		{
+			return;
+		}
+	}
+//mk
 	LLInventoryModel* model = getInventoryModel();
 	if(!model) return;
 	LLViewerInventoryCategory* cat = getCategory();
@@ -3303,6 +3355,12 @@ LLUIImagePtr LLTextureBridge::getIcon() const
 
 void LLTextureBridge::openItem()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains ("viewtexture"))
+	{
+		return;
+	}
+//mk
 	LLViewerInventoryItem* item = getItem();
 
 	if (item)
@@ -3809,6 +3867,12 @@ BOOL LLCallingCardBridge::dragOrDrop(MASK mask, BOOL drop,
 
 void LLNotecardBridge::openItem()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains ("viewnote"))
+	{
+		return;
+	}
+//mk
 	LLViewerInventoryItem* item = getItem();
 	if (item)
 	{
@@ -4103,12 +4167,48 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 {
 	if (isAddAction(action))
 	{
+//MK
+		bool replace = true;
+		if (gSavedSettings.controlExists("RestrainedLoveDoubleClickWear") && !gSavedSettings.getBOOL("RestrainedLoveDoubleClickWear"))
+		{
+			replace = false;
+		}
+//mk
 		LLUUID object_id = mUUID;
 		LLViewerInventoryItem* item;
 		item = (LLViewerInventoryItem*)gInventory.getItem(object_id);
 		if(item && gInventory.isObjectDescendentOf(object_id, gInventory.getRootFolderID()))
 		{
-			rez_attachment(item, NULL, true); // Replace if "Wear"ing.
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsDetach)
+			{
+				LLViewerJointAttachment* attachmentp = NULL;
+				// if it's a no-mod item, the containing folder has priority to decide where to wear it
+				if (!item->getPermissions().allowModifyBy(gAgent.getID()))
+				{
+					attachmentp = gAgent.mRRInterface.findAttachmentPointFromParentName (item);
+					if (attachmentp) rez_attachment(item, attachmentp, replace);
+					else
+					{
+						// but the name itself could also have the information => check
+						attachmentp = gAgent.mRRInterface.findAttachmentPointFromName (item->getName());
+						if (attachmentp) rez_attachment(item, attachmentp, replace);
+						else if (!gAgent.mRRInterface.mContainsDefaultwear && gSavedSettings.getBOOL("RestrainedLoveAllowWear")) rez_attachment(item, NULL, replace);
+					}
+				}
+				else
+				{
+					// this is a mod item, wear it according to its name
+					attachmentp = gAgent.mRRInterface.findAttachmentPointFromName (item->getName());
+					if (attachmentp) rez_attachment(item, attachmentp, replace);
+ 					else if (!gAgent.mRRInterface.mContainsDefaultwear && gSavedSettings.getBOOL("RestrainedLoveAllowWear")) rez_attachment(item, NULL, replace);
+
+				}
+			}
+			else
+////			rez_attachment(item, NULL, true); // Replace if "Wear"ing.
+			rez_attachment(item, NULL, replace);
+//mk
 		}
 		else if(item && item->isFinished())
 		{
@@ -4133,7 +4233,14 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 		LLInventoryItem* item = gInventory.getItem(mUUID);
 		if(item)
 		{
-			LLVOAvatarSelf::detachAttachmentIntoInventory(item->getLinkedUUID());
+//MK
+			if (!gRRenabled || gAgent.mRRInterface.canDetach (item, false))
+  			{
+//mk
+				LLVOAvatarSelf::detachAttachmentIntoInventory(item->getLinkedUUID());
+//MK
+			}
+//mk
 		}
 	}
 	else LLItemBridge::performAction(model, action);
@@ -4204,11 +4311,26 @@ void rez_attachment(LLViewerInventoryItem* item, LLViewerJointAttachment* attach
 	if (replace &&
 		(attachment && attachment->getNumObjects() > 0))
 	{
+//MK
+		if (!gRRenabled || (gAgent.mRRInterface.canAttach(item) && gAgent.mRRInterface.canDetach(attachment->getObject())))
+		{
+//mk
 		LLNotificationsUtil::add("ReplaceAttachment", LLSD(), payload, confirm_attachment_rez);
+//MK
+		}
+//mk
 	}
 	else
 	{
+//MK
+		if (!gRRenabled || gAgent.mRRInterface.canAttach(item))
+		{
+//mk
 		LLNotifications::instance().forceResponse(LLNotification::Params("ReplaceAttachment").payload(payload), 0/*YES*/);
+//MK
+		}
+//mk
+
 	}
 }
 
@@ -4297,11 +4419,26 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 			{
 				items.push_back(std::string("Wearable And Object Separator"));
 				items.push_back(std::string("Detach From Yourself"));
+ //MK
+ 				if (gRRenabled && !gAgent.mRRInterface.canDetach(gAgentAvatarp->getWornAttachment(mUUID), false))
+ 				{
+ 					disabled_items.push_back(std::string("Detach From Yourself"));
+ 				}
+ //mk
 			}
 			else if (!isItemInTrash() && !isLinkedObjectInTrash() && !isLinkedObjectMissing() && !isCOFFolder())
 			{
 				items.push_back(std::string("Wearable And Object Separator"));
 				items.push_back(std::string("Wearable And Object Wear"));
+ //MK
+ 				if (gRRenabled && gAgent.mRRInterface.mContainsDetach
+ 					&& (gAgent.mRRInterface.mContainsDefaultwear || !gSavedSettings.getBOOL("RestrainedLoveAllowWear"))
+ 					&& gAgent.mRRInterface.findAttachmentPointFromName (item->getName()) == NULL
+ 					&& gAgent.mRRInterface.findAttachmentPointFromParentName (item) == NULL)
+ 				{
+ 					disabled_items.push_back(std::string("Wearable And Object Wear"));
+ 				}
+ //mk
 				items.push_back(std::string("Wearable Add"));
 				items.push_back(std::string("Attach To"));
 				items.push_back(std::string("Attach To HUD"));
@@ -4397,6 +4534,12 @@ BOOL LLObjectBridge::renameItem(const std::string& new_name)
 
 void LLLSLTextBridge::openItem()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains ("viewscript"))
+	{
+		return;
+	}
+//mk
 	LLViewerInventoryItem* item = getItem();
 
 	if (item)
@@ -4424,6 +4567,16 @@ LLWearableBridge::LLWearableBridge(LLInventoryPanel* inventory,
 
 void remove_inventory_category_from_avatar( LLInventoryCategory* category )
 {
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.mContainsDetach || gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
+		{
+			return;
+		}
+	}
+//mk
+
 	if(!category) return;
 	lldebugs << "remove_inventory_category_from_avatar( " << category->getName()
 			 << " )" << llendl;
@@ -4514,7 +4667,14 @@ void remove_inventory_category_from_avatar_step2( BOOL proceed, LLUUID category_
 				LLViewerInventoryItem *obj_item = obj_item_array.get(i);
 				if (get_is_item_worn(obj_item->getUUID()))
 				{
-					LLVOAvatarSelf::detachAttachmentIntoInventory(obj_item->getLinkedUUID());
+//MK
+					if (!gRRenabled || gAgent.mRRInterface.canDetach (obj_item))
+  					{
+//mk
+						LLVOAvatarSelf::detachAttachmentIntoInventory(obj_item->getLinkedUUID());
+//MK
+					}
+//mk
 				}
 			}
 		}
@@ -4664,6 +4824,12 @@ void LLWearableBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 			{
 				case LLAssetType::AT_CLOTHING:
 					items.push_back(std::string("Take Off"));
+ //MK
+ 					if (gRRenabled && !gAgent.mRRInterface.canUnwear(item, false))
+ 					{
+ 						disabled_items.push_back(std::string("Take Off"));
+ 					}
+ //mk
 					// Fallthrough since clothing and bodypart share wear options
 				case LLAssetType::AT_BODYPART:
 					if (get_is_item_worn(item->getUUID()))
@@ -4911,11 +5077,51 @@ void LLWearableBridge::removeItemFromAvatar(LLViewerInventoryItem *item)
 {
 	if (item)
 	{
-		LLWearableList::instance().getAsset(item->getAssetUUID(),
-											item->getName(),
-											item->getType(),
-											LLWearableBridge::onRemoveFromAvatarArrived,
-											new OnRemoveStruct(item->getUUID()));
+//MK
+		if (gRRenabled)
+		{
+			if (item->isWearableType())
+			{
+				LLInventoryItem* wearable_item = item;
+				if (item->getIsLinkType()) wearable_item = (LLInventoryItem*)(item->getLinkedItem());
+				if (!gAgent.mRRInterface.canUnwear(wearable_item))
+				{
+					return;
+				}
+			}
+		}
+//mk
+//MK
+		// Find and remove this item from the COF.
+//		LLUUID item_id = item->getUUID();
+		const LLUUID &item_id = gInventory.getLinkedItemID(item->getUUID());
+/*
+		LLWearable* wearable = gAgentWearables.getWearableFromItemID(item_id);
+		if (wearable)
+		{
+			if( get_is_item_worn( item_id ) )
+			{
+				LLWearableType::EType type = wearable->getType();
+
+				if( !(type==LLWearableType::WT_SHAPE || type==LLWearableType::WT_SKIN || type==LLWearableType::WT_HAIR || type==LLWearableType::WT_EYES ) ) //&&
+					//!((!gAgent.isTeen()) && ( type==LLWearableType::WT_UNDERPANTS || type==LLWearableType::WT_UNDERSHIRT )) )
+				{
+					bool do_remove_all = false;
+					U32 index = gAgentWearables.getWearableIndex(wearable);
+					gAgentWearables.removeWearable( type, do_remove_all, index );
+				}
+			}
+		}
+*/
+		LLAppearanceMgr::instance().removeCOFItemLinks(item_id,true);
+		gInventory.notifyObservers();
+
+////		LLWearableList::instance().getAsset(item->getAssetUUID(),
+////											item->getName(),
+////											item->getType(),
+////											LLWearableBridge::onRemoveFromAvatarArrived,
+////											new OnRemoveStruct(item->getUUID()));
+//mk
 	}
 }
 

@@ -335,6 +335,11 @@ bool idle_startup()
 
 	//static bool stipend_since_login = false;
 
+//MK
+	gRRenabled = gSavedSettings.getBOOL("RestrainedLove");
+	RRInterface::sRRNoSetEnv = gSavedSettings.getBOOL("RestrainedLoveNoSetEnv");
+	RRInterface::sRestrainedLoveDebug = gSavedSettings.getBOOL("RestrainedLoveDebug");
+//mk
 	// HACK: These are things from the main loop that usually aren't done
 	// until initialization is complete, but need to be done here for things
 	// to work.
@@ -920,22 +925,37 @@ bool idle_startup()
 		// their last location, or some URL "-url //sim/x/y[/z]"
 		// All accounts have both a home and a last location, and we don't support
 		// more locations than that.  Choose the appropriate one.  JC
-		switch (LLStartUp::getStartSLURL().getType())
-		  {
-		  case LLSLURL::LOCATION:
-		    agent_location_id = START_LOCATION_ID_URL;
-		    location_which = START_LOCATION_ID_LAST;
-		    break;
-		  case LLSLURL::LAST_LOCATION:
-		    agent_location_id = START_LOCATION_ID_LAST;
-		    location_which = START_LOCATION_ID_LAST;
-		    break;
-		  default:
-		    agent_location_id = START_LOCATION_ID_HOME;
-		    location_which = START_LOCATION_ID_HOME;
-		    break;
-		  }
+//MK
+		if (!gRRenabled)
+		{
+//mk
+			switch (LLStartUp::getStartSLURL().getType())
+			{
+			  case LLSLURL::LOCATION:
+				agent_location_id = START_LOCATION_ID_URL;
+				location_which = START_LOCATION_ID_LAST;
+				break;
+			  case LLSLURL::LAST_LOCATION:
+				agent_location_id = START_LOCATION_ID_LAST;
+				location_which = START_LOCATION_ID_LAST;
+				break;
+			  default:
+				agent_location_id = START_LOCATION_ID_HOME;
+				location_which = START_LOCATION_ID_HOME;
+				break;
+			}
+//MK
+		}
+//mk
 
+//MK
+		if (gRRenabled)
+		{
+			gSavedSettings.setBOOL("LoginLastLocation", TRUE);
+			agent_location_id = START_LOCATION_ID_LAST;	// always last location (actually ignore list)
+			location_which = START_LOCATION_ID_LAST;
+		}
+//mk
 		gViewerWindow->getWindow()->setCursor(UI_CURSOR_WAIT);
 
 		init_start_screen(agent_location_id);
@@ -1969,7 +1989,12 @@ bool idle_startup()
 		show_debug_menus(); // Debug menu visiblity and First Use trigger
 		
 		// If we've got a startup URL, dispatch it
-		LLStartUp::dispatchURL();
+//MK
+		if (!gRRenabled)
+		{
+			LLStartUp::dispatchURL();
+		}
+//mk
 
 		// Retrieve information about the land data
 		// (just accessing this the first time will fetch it,

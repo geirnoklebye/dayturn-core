@@ -742,6 +742,14 @@ void LLPanelLogin::updateLocationCombo( bool force_visible )
 	if ( ! force_visible )
 		show_start = gSavedSettings.getBOOL("ShowStartLocation");
 	
+ //MK
+ 	if (gSavedSettings.getBOOL("RestrainedLove"))
+	{
+		combo->setCurrentByIndex( 0 );	
+ 		show_start = FALSE;
+	}
+ //mk
+ 
 	sInstance->getChildView("start_location_combo")->setVisible( show_start);
 	sInstance->getChildView("start_location_text")->setVisible( show_start);
 	

@@ -92,6 +92,11 @@ public:
 	BOOL isObjectAttached(const LLViewerObject *viewer_object) const;
 	const LLViewerObject *getAttachedObject(const LLUUID &object_id) const;
 	LLViewerObject *getAttachedObject(const LLUUID &object_id);
+//MK
+	LLViewerObject* getObject() const;
+	const LLUUID& getItemID() const;
+	BOOL isObjectAttached(LLViewerObject *viewer_object) const;
+//mk
 
 	// list of attachments for this joint
 	typedef std::vector<LLViewerObject *> attachedobjs_vec_t;

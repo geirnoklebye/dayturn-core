@@ -174,6 +174,18 @@ BOOL LLToolGrab::handleObjectHit(const LLPickInfo& info)
 {
 	mGrabPick = info;
 	LLViewerObject* objectp = mGrabPick.getObject();
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	{
+		// hide grab tool immediately
+		if (gGrabTransientTool)
+		{
+			gBasicToolset->selectTool( gGrabTransientTool );
+			gGrabTransientTool = NULL;
+		}
+		return TRUE;
+	}
+//mk
 
 	if (gDebugClicks)
 	{
@@ -309,6 +321,12 @@ void LLToolGrab::startSpin()
 	// Was saveSelectedObjectTransform()
 	LLViewerObject *root = (LLViewerObject *)objectp->getRoot();
 	mSpinRotation = root->getRotation();
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	{
+		return;
+	}
+//mk
 
 	LLMessageSystem *msg = gMessageSystem;
 	msg->newMessageFast(_PREHASH_ObjectSpinStart);
@@ -369,6 +387,24 @@ void LLToolGrab::startGrab()
 
 	// drag from center
 	LLVector3d grab_start_global = root->getPositionGlobal();
+
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	{
+		return;
+	}
+//	if (gRRenabled && gAgent.mRRInterface.mContainsFartouch
+//		&& !objectp->isHUDAttachment())
+//	{
+////		LLVector3 pos = objectp->getPositionRegion ();
+//		LLVector3 pos = mGrabPick.mIntersection;
+//		pos -= gAgent.getPositionAgent ();
+//		if (pos.magVec () >= 1.5)
+//		{
+//			return;
+//		}
+//	}
+//mk
 
 	// Where the grab starts, relative to the center of the root object of the set.
 	// JC - This code looks wonky, but I believe it does the right thing.
@@ -473,6 +509,13 @@ void LLToolGrab::handleHoverActive(S32 x, S32 y, MASK mask)
 		setMouseCapture(FALSE);
 		return;
 	}
+
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	{
+		return;
+	}
+//mk
 
 	//--------------------------------------------------
 	// Toggle spinning
@@ -1022,6 +1065,13 @@ void LLToolGrab::stopGrab()
 	{
 		return;
 	}
+
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	{
+		return;
+	}
+//mk
 
 	LLPickInfo pick = mGrabPick;
 

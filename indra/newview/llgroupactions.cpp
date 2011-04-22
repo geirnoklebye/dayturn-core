@@ -228,6 +228,12 @@ void LLGroupActions::leave(const LLUUID& group_id)
 // static
 void LLGroupActions::activate(const LLUUID& group_id)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains ("setgroup"))
+	{
+		return;
+	}
+//mk
 	LLMessageSystem* msg = gMessageSystem;
 	msg->newMessageFast(_PREHASH_ActivateGroup);
 	msg->nextBlockFast(_PREHASH_AgentData);

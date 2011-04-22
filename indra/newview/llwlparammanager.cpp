@@ -51,6 +51,10 @@
 
 #include "curl/curl.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 LLWLParamManager * LLWLParamManager::sInstance = NULL;
 static LLFastTimer::DeclareTimer FTM_UPDATE_WLPARAM("Update Windlight Params");
 
@@ -224,6 +228,12 @@ void LLWLParamManager::loadPreset(const std::string & name,bool propagate)
 		return;
 	}
 
+//MK
+	if (gRRenabled) 
+	{
+		gAgent.mRRInterface.setLastLoadedPreset (name);
+	}
+//mk
 	
 	if(propagate)
 	{

@@ -224,6 +224,12 @@ void LLPanelLandInfo::refresh()
 //static
 void LLPanelLandInfo::onClickClaim()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	LLViewerParcelMgr::getInstance()->startBuyLand();
 }
 
@@ -255,5 +261,11 @@ void LLPanelLandInfo::onClickAbout()
 		LLViewerParcelMgr::getInstance()->selectParcelInRectangle();
 	}
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	LLFloaterReg::showInstance("about_land");
 }

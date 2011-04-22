@@ -611,7 +611,10 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 
 		LLSpatialGroup::sNoDelete = TRUE;
 		LLPipeline::sUseOcclusion = 
-				(!gUseWireframe
+				((!gUseWireframe
+//MK
+				|| (gRRenabled && gAgent.mRRInterface.mContainsDetach))
+//mk
 				&& LLFeatureManager::getInstance()->isFeatureAvailable("UseOcclusion") 
 				&& gSavedSettings.getBOOL("UseOcclusion") 
 				&& gGLManager.mHasOcclusionQuery) ? 2 : 0;
@@ -779,7 +782,9 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			gSky.updateSky();
 		}
 
-		if(gUseWireframe)
+//MK
+		if(gUseWireframe && (!gRRenabled || !gAgent.mRRInterface.mContainsDetach))
+//mk
 		{
 			glClearColor(0.5f, 0.5f, 0.5f, 0.f);
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -938,7 +943,14 @@ void render_hud_attachments()
 	glh::matrix4f current_mod = glh_get_current_modelview();
 
 	// clamp target zoom level to reasonable values
-	gAgentCamera.mHUDTargetZoom = llclamp(gAgentCamera.mHUDTargetZoom, 0.1f, 1.f);
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mHasLockedHuds)
+	{
+		gAgentCamera.mHUDTargetZoom = llclamp(gAgentCamera.mHUDTargetZoom, 0.85f, 1.f);
+	}
+	else
+//mk
+		gAgentCamera.mHUDTargetZoom = llclamp(gAgentCamera.mHUDTargetZoom, 0.1f, 1.f);
 	// smoothly interpolate current zoom level
 	gAgentCamera.mHUDCurZoom = lerp(gAgentCamera.mHUDCurZoom, gAgentCamera.mHUDTargetZoom, LLCriticalDamp::getInterpolant(0.03f));
 

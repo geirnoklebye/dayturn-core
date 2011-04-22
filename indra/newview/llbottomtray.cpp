@@ -108,9 +108,19 @@ BOOL LLBottomtrayButton::handleMouseDown(S32 x, S32 y, MASK mask)
 	return LLButton::handleMouseDown(x, y, mask);
 }
 
+//MK
+#include "llagent.h"
+//mk
+
 static void update_build_button_enable_state()
 {
 	bool can_edit = LLToolMgr::getInstance()->canEdit();
+
+//MK
+	if (gAgent.mRRInterface.mContainsRez) {
+		can_edit = false;
+	}
+//mk
 
 	LLBottomTray::getInstance()->getChildView("build_btn")->setEnabled(can_edit);
 }

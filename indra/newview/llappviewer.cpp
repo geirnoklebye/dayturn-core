@@ -1083,6 +1083,10 @@ bool LLAppViewer::mainLoop()
 	LLViewerJoystick* joystick(LLViewerJoystick::getInstance());
 	joystick->setNeedsReset(true);
 
+//MK
+	int garbage_collector_cnt=-3000; // give the garbage collector a few minutes before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
+//mk
+
     LLEventPump& mainloop(LLEventPumps::instance().obtain("mainloop"));
     // As we do not (yet) send data on the mainloop LLEventPump that varies
     // with each frame, no need to instantiate a new LLSD event object each
@@ -1173,6 +1177,66 @@ bool LLAppViewer::mainLoop()
 					joystick->scanJoystick();
 					gKeyboard->scanKeyboard();
 				}
+
+//MK
+				// Do some RLV maintenance (garbage collector etc)
+				if (gRRenabled && LLStartUp::getStartupState() == STATE_STARTED
+					&& !gViewerWindow->getShowProgress())
+				{
+					// if RLV share inventory has not been fetched yet, fetch it now
+					gAgent.mRRInterface.fetchInventory ();
+					
+					// perform some maintenance only if no object is waiting to be reattached
+					if (gAgent.mRRInterface.mAssetsToReattach.empty())
+					{
+						// fire all the stored commands that we received while initializing
+						gAgent.mRRInterface.fireCommands ();
+						
+						// fire the garbage collector for orphaned restrictions
+						if (++garbage_collector_cnt >= 600) {
+							gAgent.mRRInterface.garbageCollector (FALSE);
+							garbage_collector_cnt = 0;
+						}
+						
+					}
+
+					// We must check whether there is an object waiting to be reattached after
+					// having been kicked off while locked.
+					if (!gAgent.mRRInterface.mAssetsToReattach.empty())
+					{
+						// Get the elapsed time since detached, and the delay before reattach.
+						U32 elapsed = (U32)gAgent.mRRInterface.mReattachTimer.getElapsedTimeF32();
+						U32 delay = gSavedSettings.getU32("RestrainedLoveReattachDelay");
+						// Timeout flag.
+						BOOL timeout = (gAgent.mRRInterface.mReattaching && elapsed > 4 * delay);
+						if (timeout)
+						{
+							// If we timed out, reset the timer and tell the interface...
+							gAgent.mRRInterface.mReattachTimer.reset();
+							gAgent.mRRInterface.mReattachTimeout = TRUE;
+							llwarns << "Timeout reattaching an asset, retrying." << llendl;
+						}
+						if (!gAgent.mRRInterface.mReattaching || timeout)
+						{
+							// We are not reattaching an object (or we timed out), so
+							// let's see if the delay before auto-reattach has elapsed.
+							if (elapsed >= delay)
+							{
+								// Let's reattach the object to its default attach point.
+								AssetAndTarget& at = gAgent.mRRInterface.mAssetsToReattach.front();
+								LLUUID tmp_uuid = at.uuid;
+								std::string tmp_attachpt = at.attachpt;
+								int tmp_attachpt_nb = 0;
+								LLViewerJointAttachment* attachpt = gAgent.mRRInterface.findAttachmentPointFromName(tmp_attachpt, true);
+								if (attachpt) tmp_attachpt_nb = gAgent.mRRInterface.findAttachmentPointNumber(attachpt);
+								llinfos << "Reattaching asset " << tmp_uuid << " to point " << tmp_attachpt_nb << llendl;
+								gAgent.mRRInterface.mReattaching = TRUE;
+								gAgent.mRRInterface.attachObjectByUUID (tmp_uuid, tmp_attachpt_nb);
+							}
+						}
+					}
+				}
+//mk
 
 				// Update state based on messages, user input, object idle.
 				{
@@ -2366,17 +2430,31 @@ bool LLAppViewer::initConfiguration()
     // injection and steal passwords. Phoenix. SL-55321
     if(clp.hasOption("url"))
     {
-		LLStartUp::setStartSLURL(LLSLURL(clp.getOption("url")[0]));
-		if(LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION) 
-		{  
-			LLGridManager::getInstance()->setGridChoice(LLStartUp::getStartSLURL().getGrid());
-			
-		}  
-    }
+//MK
+        if (!gSavedSettings.getBOOL("RestrainedLove"))
+        {
+//mk
+			LLStartUp::setStartSLURL(LLSLURL(clp.getOption("url")[0]));
+			if(LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION) 
+			{  
+				LLGridManager::getInstance()->setGridChoice(LLStartUp::getStartSLURL().getGrid());
+				
+			}  
+//MK
+		}
+//mk
+	}
     else if(clp.hasOption("slurl"))
     {
-		LLSLURL start_slurl(clp.getOption("slurl")[0]);
-		LLStartUp::setStartSLURL(start_slurl);
+//MK
+        if (!gSavedSettings.getBOOL("RestrainedLove"))
+        {
+//mk
+			LLSLURL start_slurl(clp.getOption("slurl")[0]);
+			LLStartUp::setStartSLURL(start_slurl);
+//MK
+		}
+//mk
     }
 
     const LLControlVariable* skinfolder = gSavedSettings.getControl("SkinCurrent");
@@ -3145,6 +3223,9 @@ void LLAppViewer::handleViewerCrash()
 
 bool LLAppViewer::anotherInstanceRunning()
 {
+//MK
+	return false;
+//mk
 	// We create a marker file when the program starts and remove the file when it finishes.
 	// If the file is currently locked, that means another process is already running.
 
@@ -4959,7 +5040,9 @@ void LLAppViewer::launchUpdater()
 	LLAppViewer::sUpdaterInfo = new LLAppViewer::LLUpdaterInfo() ;
 
 	// if a sim name was passed in via command line parameter (typically through a SLURL)
-	if ( LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION )
+//MK
+	if ( !gRRenabled && LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION )
+//mk
 	{
 		// record the location to start at next time
 		gSavedSettings.setString( "NextLoginLocation", LLStartUp::getStartSLURL().getSLURLString()); 

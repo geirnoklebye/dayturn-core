@@ -610,6 +610,13 @@ bool LLSelectMgr::linkObjects()
 
 bool LLSelectMgr::unlinkObjects()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit
+		&& gAgent.mRRInterface.isSittingOnAnySelectedObject())
+	{
+		return true;
+	}
+//mk
 	LLSelectMgr::getInstance()->sendDelink();
 	return true;
 }
@@ -624,6 +631,13 @@ bool LLSelectMgr::unlinkObjects()
 // reasonable expectation for the link to work, but it will fail.
 bool LLSelectMgr::enableLinkObjects()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit
+		&& gAgent.mRRInterface.isSittingOnAnySelectedObject())
+	{
+		return false;
+	}
+//mk
 	bool new_value = false;
 	// check if there are at least 2 objects selected, and that the
 	// user can modify at least one of the selected objects.
@@ -649,6 +663,13 @@ bool LLSelectMgr::enableLinkObjects()
 
 bool LLSelectMgr::enableUnlinkObjects()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit
+		&& gAgent.mRRInterface.isSittingOnAnySelectedObject())
+	{
+		return false;
+	}
+//mk
 	LLViewerObject* first_editable_object = LLSelectMgr::getInstance()->getSelection()->getFirstEditableObject();
 
 	bool new_value = LLSelectMgr::getInstance()->selectGetAllRootsValid() &&
@@ -2848,6 +2869,13 @@ void LLSelectMgr::selectDelete()
 		{
 			continue;
 		}
+		
+//MK
+		if (gRRenabled && obj->isSeat ()  && gAgent.mRRInterface.mContainsUnsit)
+		{
+			continue;
+		}
+//mk
 
 		deleteable_count++;
 

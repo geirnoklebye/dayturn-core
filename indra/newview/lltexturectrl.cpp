@@ -287,6 +287,13 @@ BOOL LLFloaterTexturePicker::handleDragAndDrop(
 		EAcceptance *accept,
 		std::string& tooltip_msg)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
+	{
+		*accept = ACCEPT_NO;
+		return TRUE; 
+	}
+//mk
 	BOOL handled = FALSE;
 
 	if (cargo_type == DAD_TEXTURE)

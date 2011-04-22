@@ -158,6 +158,17 @@ void	LLNearbyChat::addMessage(const LLChat& chat,bool archive,const LLSD &args)
 		tmp_chat.mTimeStr = appendTime();
 
 	bool use_plain_text_chat_history = gSavedSettings.getBOOL("PlainTextChatHistory");
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		use_plain_text_chat_history = true;
+	}
+
+	if (gRRenabled && chat.mText == "")
+	{
+		return;
+	}
+//mk
 	
 	if (!chat.mMuted)
 	{
@@ -203,6 +214,12 @@ void LLNearbyChat::onNearbySpeakers()
 {
 	LLSD param;
 	param["people_panel_tab_name"] = "nearby_panel";
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		if (!LLSideTray::getInstance()->childIsVisible("panel_people")) return;
+	}
+//mk
 	LLSideTray::getInstance()->showPanel("panel_people",param);
 }
 

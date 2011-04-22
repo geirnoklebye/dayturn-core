@@ -472,7 +472,12 @@ void* LLFloaterChat::createChatPanel(void* data)
 void LLFloaterChat::onClickToggleActiveSpeakers(void* userdata)
 {
 	LLFloaterChat* self = (LLFloaterChat*)userdata;
-
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		if (!self->childIsVisible("active_speakers_panel")) return;
+	}
+//mk
 	self->childSetVisible("active_speakers_panel", !self->childIsVisible("active_speakers_panel"));
 }
 

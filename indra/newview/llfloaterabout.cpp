@@ -215,6 +215,17 @@ LLSD LLFloaterAbout::getInfo()
 	info["BUILD_TIME"] = __TIME__;
 	info["CHANNEL"] = LLVersionInfo::getChannel();
 
+//MK
+	if (gRRenabled)
+	{
+		info["CHANNEL"] = gAgent.mRRInterface.getVersion2 ();
+	}
+	else
+	{
+	info["CHANNEL"] = LLVersionInfo::getChannel();
+	}
+//mk
+
 	info["VIEWER_RELEASE_NOTES_URL"] = get_viewer_release_notes_url();
 
 #if LL_MSVC
@@ -236,6 +247,15 @@ LLSD LLFloaterAbout::getInfo()
 		info["HOSTIP"] = gAgent.getRegion()->getHost().getString();
 		info["SERVER_VERSION"] = gLastVersionChannel;
 		info["SERVER_RELEASE_NOTES_URL"] = LLWeb::escapeURL(region->getCapability("ServerReleaseNotes"));
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+		{
+			info["POSITION"] = ll_sd_from_vector3d (LLVector3d::zero);
+			info["REGION"] = LLSD::String( "(Region hidden)");
+			info["HOSTNAME"] =  LLSD::String("(Server info hidden)");
+			info["HOSTIP"] = LLSD::String("IP address hidden");
+		}
+//mk
 	}
 
 	// CPU

@@ -1084,6 +1084,25 @@ void LLToolDragAndDrop::dropScript(LLViewerObject* hit_obj,
 	}
 	if (hit_obj && item)
 	{
+//MK
+		if (gRRenabled)
+		{
+			// can't edit objects that someone is sitting on,
+			// when prevented from sit-tping
+			if (gAgent.mRRInterface.contains ("sittp") || gAgent.mRRInterface.mContainsUnsit)
+			{
+				if (hit_obj->isSeat())
+				{
+					return;
+				}
+			}
+
+			if (!gAgent.mRRInterface.canDetach(hit_obj))
+			{
+				return;
+			}
+		}
+//mk
 		LLPointer<LLViewerInventoryItem> new_script = new LLViewerInventoryItem(item);
 		if (!item->getPermissions().allowCopyBy(gAgent.getID()))
 		{
@@ -1134,6 +1153,13 @@ void LLToolDragAndDrop::dropObject(LLViewerObject* raycast_target,
 		llwarns << "Couldn't find region to rez object" << llendl;
 		return;
 	}
+
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsRez)
+	{
+		return;
+	}
+//mk
 
 	//llinfos << "Rezzing object" << llendl;
 	make_ui_sound("UISndObjectRezIn");
@@ -1404,6 +1430,25 @@ EAcceptance LLToolDragAndDrop::willObjectAcceptInventory(LLViewerObject* obj, LL
 	BOOL volume = (LL_PCODE_VOLUME == obj->getPCode());
 	BOOL attached = obj->isAttachment();
 	BOOL unrestricted = ((perm.getMaskBase() & PERM_ITEM_UNRESTRICTED) == PERM_ITEM_UNRESTRICTED) ? TRUE : FALSE;
+//MK
+	if (gRRenabled)
+	{
+		// can't edit objects that someone is sitting on,
+		// when prevented from sit-tping
+		if (gAgent.mRRInterface.contains ("sittp") || gAgent.mRRInterface.mContainsUnsit)
+		{
+			if (obj->isSeat())
+			{
+				return ACCEPT_NO_LOCKED;
+			}
+		}
+
+		if (!gAgent.mRRInterface.canDetach(obj))
+		{
+			return ACCEPT_NO_LOCKED;
+		}
+	}
+//mk
 	if (attached && !unrestricted)
 	{
 		return ACCEPT_NO_LOCKED;
@@ -1598,6 +1643,12 @@ EAcceptance LLToolDragAndDrop::dad3dRezAttachmentFromInv(
 	LLViewerObject* obj, S32 face, MASK mask, BOOL drop)
 {
 	lldebugs << "LLToolDragAndDrop::dad3dRezAttachmentFromInv()" << llendl;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsDetach)
+	{
+		return ACCEPT_NO;
+	}
+//mk
 	// must be in the user's inventory
 	if (mSource != SOURCE_AGENT && mSource != SOURCE_LIBRARY)
 	{
@@ -1984,6 +2035,14 @@ EAcceptance LLToolDragAndDrop::dad3dWearCategory(
 	locateInventory(item, category);
 	if (!category) return ACCEPT_NO;
 
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsDetach
+		|| gAgent.mRRInterface.containsSubstr ("addoutfit")
+		|| gAgent.mRRInterface.containsSubstr ("remoutfit")))
+	{
+		return ACCEPT_NO;
+	}
+//mk
 	if (drop)
 	{
 		// TODO: investigate wearables may not be loaded at this point EXT-8231
@@ -2190,6 +2249,13 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventoryObject(
 	// item has to be in agent inventory.
 	if (mSource != SOURCE_AGENT) return ACCEPT_NO;
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		// to avoid having "so-and-so accepted/declined your inventory offer." messages
+		return ACCEPT_NO;
+	}
+//mk
 	// find the item now.
 	LLViewerInventoryItem* item;
 	LLViewerInventoryCategory* cat;
@@ -2225,6 +2291,13 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventory(
 	lldebugs << "LLToolDragAndDrop::dad3dGiveInventory()" << llendl;
 	// item has to be in agent inventory.
 	if (mSource != SOURCE_AGENT) return ACCEPT_NO;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		// to avoid having "so-and-so accepted/declined your inventory offer." messages
+		return ACCEPT_NO;
+	}
+//mk
 	LLViewerInventoryItem* item;
 	LLViewerInventoryCategory* cat;
 	locateInventory(item, cat);
@@ -2246,6 +2319,13 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventoryCategory(
 	LLViewerObject* obj, S32 face, MASK mask, BOOL drop)
 {
 	lldebugs << "LLToolDragAndDrop::dad3dGiveInventoryCategory()" << llendl;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		// to avoid having "so-and-so accepted/declined your inventory offer." messages
+		return ACCEPT_NO;
+	}
+//mk
 	if (drop && obj)
 	{
 		LLViewerInventoryItem* item;
@@ -2264,6 +2344,12 @@ EAcceptance LLToolDragAndDrop::dad3dRezFromObjectOnLand(
 	LLViewerObject* obj, S32 face, MASK mask, BOOL drop)
 {
 	lldebugs << "LLToolDragAndDrop::dad3dRezFromObjectOnLand()" << llendl;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsRez)
+	{
+		return ACCEPT_NO;
+	}
+//mk
 	LLViewerInventoryItem* item = NULL;
 	LLViewerInventoryCategory* cat = NULL;
 	locateInventory(item, cat);
@@ -2285,6 +2371,12 @@ EAcceptance LLToolDragAndDrop::dad3dRezFromObjectOnObject(
 	LLViewerObject* obj, S32 face, MASK mask, BOOL drop)
 {
 	lldebugs << "LLToolDragAndDrop::dad3dRezFromObjectOnObject()" << llendl;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsRez)
+	{
+		return ACCEPT_NO;
+	}
+//mk
 	LLViewerInventoryItem* item;
 	LLViewerInventoryCategory* cat;
 	locateInventory(item, cat);

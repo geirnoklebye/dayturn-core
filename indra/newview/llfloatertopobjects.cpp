@@ -180,6 +180,22 @@ void LLFloaterTopObjects::handleReply(LLMessageSystem *msg, void** data)
 		msg->getF32Fast(_PREHASH_ReportData, _PREHASH_Score, score, block);
 		msg->getStringFast(_PREHASH_ReportData, _PREHASH_TaskName, name_buf, block);
 		msg->getStringFast(_PREHASH_ReportData, _PREHASH_OwnerName, owner_buf, block);
+
+//MK
+		// This window can show the name of everyone in the sim by displaying their total script time
+		// => when the name of the object matches the name of its owner, censor it
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			if (name_buf == owner_buf)
+			{
+				name_buf = owner_buf = gAgent.mRRInterface.getDummyName (name_buf);
+			}
+			else
+			{
+				owner_buf = gAgent.mRRInterface.getDummyName (owner_buf);
+			}
+		}
+//mk
 		if(msg->has("DataExtended"))
 		{
 			have_extended_data = true;

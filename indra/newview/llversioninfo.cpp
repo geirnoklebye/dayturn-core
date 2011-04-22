@@ -100,8 +100,10 @@ namespace
 	/// Storage of the channel name the viewer is using.
 	//  The channel name is set by hardcoded constant, 
 	//  or by calling LLVersionInfo::resetChannel()
-	std::string sWorkingChannelName(LL_CHANNEL);
-
+//MK
+////	std::string sWorkingChannelName(LL_CHANNEL);
+	std::string sWorkingChannelName("Restrained Love Release");
+//mk
 	// Storage for the "version and channel" string.
 	// This will get reset too.
 	std::string sVersionChannel("");

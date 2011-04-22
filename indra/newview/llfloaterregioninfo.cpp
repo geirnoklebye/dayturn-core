@@ -400,6 +400,13 @@ LLPanelEstateCovenant* LLFloaterRegionInfo::getPanelCovenant()
 
 void LLFloaterRegionInfo::refreshFromRegion(LLViewerRegion* region)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		LLFloaterReg::hideInstance("region_info");
+		return;
+	}
+//mk
 	if (!region)
 	{
 		return; 

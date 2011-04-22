@@ -987,6 +987,12 @@ void LLSnapshotLivePreview::saveTexture()
 		LLVFile::writeFile(formatted->getData(), formatted->getDataSize(), gVFS, new_asset_id, LLAssetType::AT_TEXTURE);
 		std::string pos_string;
 		LLAgentUI::buildLocationString(pos_string, LLAgentUI::LOCATION_FORMAT_FULL);
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+		{
+			pos_string = "(Region hidden)";
+		}
+//mk
 		std::string who_took_it;
 		LLAgentUI::buildFullname(who_took_it);
 		LLAssetStorage::LLStoreAssetCallback callback = NULL;
@@ -1457,6 +1463,14 @@ void LLFloaterSnapshot::Impl::updateControls(LLFloaterSnapshot* floater)
 		previewp->setSnapshotFormat(shot_format);
 		previewp->setSnapshotBufferType(layer_type);
 	}
+
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mHasLockedHuds)
+	{
+		floater->childSetValue("hud_check", TRUE);
+		gSavedSettings.setBOOL( "RenderHUDInSnapshot", TRUE );
+	}
+//mk
 }
 
 // static
@@ -1641,6 +1655,12 @@ void LLFloaterSnapshot::Impl::onClickHUDCheck(LLUICtrl *ctrl, void* data)
 {
 	LLCheckBoxCtrl *check = (LLCheckBoxCtrl *)ctrl;
 	gSavedSettings.setBOOL( "RenderHUDInSnapshot", check->get() );
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mHasLockedHuds)
+	{
+		gSavedSettings.setBOOL( "RenderHUDInSnapshot", TRUE );
+	}
+//mk
 	
 	LLFloaterSnapshot *view = (LLFloaterSnapshot *)data;
 	if (view)
@@ -2157,6 +2177,13 @@ BOOL LLFloaterSnapshot::postBuild()
 
 	childSetCommitCallback("hud_check", Impl::onClickHUDCheck, this);
 	getChild<LLUICtrl>("hud_check")->setValue(gSavedSettings.getBOOL("RenderHUDInSnapshot"));
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mHasLockedHuds)
+	{
+		getChild<LLUICtrl>("hud_check")->setValue(TRUE);
+		gSavedSettings.setBOOL( "RenderHUDInSnapshot", TRUE );
+	}
+//mk
 
 	childSetCommitCallback("keep_open_check", Impl::onClickKeepOpenCheck, this);
 	getChild<LLUICtrl>("keep_open_check")->setValue(!gSavedSettings.getBOOL("CloseSnapshotOnKeep"));

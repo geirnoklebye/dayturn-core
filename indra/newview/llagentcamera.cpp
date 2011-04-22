@@ -2248,6 +2248,12 @@ void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToCustomizeAvatar()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit)
+	{
+		return;
+	}
+//mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
 	{
 		return;

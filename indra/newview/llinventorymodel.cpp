@@ -52,6 +52,10 @@
 #include "process.h"
 #endif
 
+//MK
+#include "llviewercontrol.h"
+//mk
+
 // Increment this if the inventory contents change in a non-backwards-compatible way.
 // For viewer 2, the addition of link items makes a pre-viewer-2 cache incorrect.
 const S32 LLInventoryModel::sCurrentInvCacheVersion = 2;
@@ -2331,6 +2335,21 @@ void LLInventoryModel::processUpdateInventoryFolder(LLMessageSystem* msg,
 		// make sure it's not a protected folder
 		tfolder->setPreferredType(LLFolderType::FT_NONE);
 		folders.push_back(tfolder);
+//MK
+		if (gRRenabled && gAgent.mRRInterface.getRlvShare() &&
+			!gSavedSettings.getBOOL("RestrainedLoveForbidGiveToRLV"))
+		{
+			std::string folder_name = tfolder->getName();
+			if(folder_name.find(RR_RLV_REDIR_FOLDER_PREFIX) == 0)
+			{
+				folder_name.erase(0, RR_HRLVS_LENGTH);
+				tfolder->rename(folder_name);
+				tfolder->setParent (gAgent.mRRInterface.getRlvShare()->getUUID());
+				tfolder->updateServer(FALSE);
+			}
+		}
+//mk
+		
 		// examine update for changes.
 		LLViewerInventoryCategory* folderp = gInventory.getCategory(tfolder->getUUID());
 		if(folderp)
@@ -2477,6 +2496,20 @@ void LLInventoryModel::processBulkUpdateInventory(LLMessageSystem* msg, void**)
 		//		<< llendl;
 		if(tfolder->getUUID().notNull())
 		{
+//MK
+			if (gRRenabled && gAgent.mRRInterface.getRlvShare() &&
+				!gSavedSettings.getBOOL("RestrainedLoveForbidGiveToRLV"))
+			{
+				std::string folder_name = tfolder->getName();
+				if(folder_name.find(RR_RLV_REDIR_FOLDER_PREFIX) == 0)
+				{
+					folder_name.erase(0, RR_HRLVS_LENGTH);
+					tfolder->rename(folder_name);
+					tfolder->setParent (gAgent.mRRInterface.getRlvShare()->getUUID());
+					tfolder->updateServer(FALSE);
+				}
+			}
+//mk
 			folders.push_back(tfolder);
 			LLViewerInventoryCategory* folderp = gInventory.getCategory(tfolder->getUUID());
 			if(folderp)

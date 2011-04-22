@@ -1326,6 +1326,13 @@ const LLVector3 LLVOAvatar::getRenderPosition() const
 	}
 	else
 	{
+//MK
+		// Fix for a crash when mDrawable is NULL (it happens)
+		if (mDrawable->getParent() == NULL)
+		{
+			return mDrawable->getPositionAgent();
+		}
+//mk
 		return getPosition() * mDrawable->getParent()->getRenderMatrix();
 	}
 }
@@ -2752,6 +2759,13 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 								 && gSavedSettings.getS32("AvatarNameTagMode") ));
 	}
 
+//MK
+	// hide the names above the heads
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		render_name = FALSE;
+	}
+//mk
 	if ( !render_name )
 	{
 		if (mNameText)
@@ -5674,7 +5688,7 @@ LLViewerJointAttachment* LLVOAvatar::getTargetAttachmentPoint(LLViewerObject* vi
 //-----------------------------------------------------------------------------
 // attachObject()
 //-----------------------------------------------------------------------------
-const LLViewerJointAttachment *LLVOAvatar::attachObject(LLViewerObject *viewer_object)
+const LLViewerJointAttachment *LLVOAvatar::attachObject(LLViewerObject* viewer_object)
 {
 	LLViewerJointAttachment* attachment = getTargetAttachmentPoint(viewer_object);
 
@@ -5796,12 +5810,31 @@ BOOL LLVOAvatar::detachObject(LLViewerObject *viewer_object)
 //-----------------------------------------------------------------------------
 void LLVOAvatar::sitDown(BOOL bSitting)
 {
+//MK
+	BOOL was_sitting = mIsSitting;
+//mk
 	mIsSitting = bSitting;
 	if (isSelf())
 	{
 		// Update Movement Controls according to own Sitting mode
 		LLFloaterMove::setSittingMode(bSitting);
 	}
+//MK
+	if (gRRenabled && isSelf())
+	{
+		// If we are being forced to stand up (prim derezzing or calling llUnsit() ), snap back to the previous
+		// standing location if under @standtp
+		if (was_sitting)
+		{
+			if (gAgent.mRRInterface.contains ("standtp"))
+			{
+				gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
+				gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
+				gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
+			}
+		}
+	}
+//mk
 }
 
 //-----------------------------------------------------------------------------
@@ -5809,6 +5842,13 @@ void LLVOAvatar::sitDown(BOOL bSitting)
 //-----------------------------------------------------------------------------
 void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 {
+//MK
+	if (gRRenabled && sit_object && isSelf())
+	{
+		gAgent.mRRInterface.setSitTargetId (sit_object->getID());
+	}
+//mk
+
 	if (isSelf())
 	{
 		// Might be first sit
@@ -5831,6 +5871,7 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 	{
 		return;
 	}
+
 	LLQuaternion inv_obj_rot = ~sit_object->getRenderRotation();
 	LLVector3 obj_pos = sit_object->getRenderPosition();
 
@@ -5866,6 +5907,12 @@ void LLVOAvatar::getOffObject()
 
 	if (sit_object) 
 	{
+//MK
+		if (gRRenabled && isSelf())
+		{
+			gAgent.mRRInterface.setSitTargetId (LLUUID::null);
+		}
+//mk
 		stopMotionFromSource(sit_object->getID());
 		LLFollowCamMgr::setCameraActive(sit_object->getID(), FALSE);
 

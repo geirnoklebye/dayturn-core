@@ -297,6 +297,15 @@ void LLOverlayBar::onClickMouselook(void*)
 //static
 void LLOverlayBar::onClickStandUp(void*)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit)
+	{
+		if (gAgent.getAvatarObject() &&	gAgent.getAvatarObject()->mIsSitting)
+		{
+			return;
+		}
+	}
+//mk
 	LLSelectMgr::getInstance()->deselectAllForStandingUp();
 	gAgent.setControlFlags(AGENT_CONTROL_STAND_UP);
 }

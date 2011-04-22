@@ -272,6 +272,16 @@ void LLStatusBar::refresh()
 		// set the tooltip to have the date
 		std::string dtStr = getString("timeTooltip");
 		LLStringUtil::format (dtStr, substitution);
+//MK
+		if (gRRenabled)
+		{
+			LLViewerRegion* region = gAgent.getRegion();
+			if (region)
+			{
+				dtStr = dtStr + " (" + region->getSimAccessString() + ")";
+			}
+		}
+//mk
 		mTextTime->setToolTip (dtStr);
 	}
 

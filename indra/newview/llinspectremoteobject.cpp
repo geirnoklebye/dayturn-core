@@ -36,6 +36,9 @@
 #include "lluictrl.h"
 #include "llurlaction.h"
 
+//MK
+#include "llagent.h"
+//mk
 //////////////////////////////////////////////////////////////////////////////
 // LLInspectRemoteObject
 //////////////////////////////////////////////////////////////////////////////
@@ -99,6 +102,13 @@ BOOL LLInspectRemoteObject::postBuild(void)
 /*virtual*/
 void LLInspectRemoteObject::onOpen(const LLSD& data)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		closeFloater();		
+	}
+//mk
+
 	// Start animation
 	LLInspect::onOpen(data);
 

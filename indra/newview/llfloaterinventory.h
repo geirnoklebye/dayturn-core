@@ -56,6 +56,10 @@ public:
 	// Final cleanup, destroy all open inventory views.
 	static void cleanup();
 
+//MK
+	static void hideAll();
+//mk
+
 	// Inherited functionality
 	/*virtual*/ void onOpen(const LLSD& key);
 

@@ -112,6 +112,22 @@ void change_item_parent(LLInventoryModel* model,
 {
 	if (item->getParentUUID() != new_parent_id)
 	{
+//MK
+		if (gRRenabled)
+		{
+			LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
+			LLInventoryCategory* cat_new_parent = gInventory.getCategory (new_parent_id);
+			if (gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
+			{
+				if (!gAgent.mRRInterface.canAttachCategory(cat_parent, false) || !gAgent.mRRInterface.canDetachCategory(cat_parent, false)
+				 || !gAgent.mRRInterface.canAttachCategory(cat_new_parent, false) || !gAgent.mRRInterface.canDetachCategory(cat_new_parent, false))
+				{
+					return;
+				}
+			}
+		}
+//mk
+
 		LLInventoryModel::update_list_t update;
 		LLInventoryModel::LLCategoryUpdate old_folder(item->getParentUUID(),-1);
 		update.push_back(old_folder);
@@ -136,6 +152,21 @@ void change_category_parent(LLInventoryModel* model,
 	{
 		return;
 	}
+
+//MK
+	if (gRRenabled)
+	{
+		LLInventoryCategory* cat_new_parent = gInventory.getCategory (new_parent_id);
+		if (gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
+		{
+			if (!gAgent.mRRInterface.canAttachCategory(cat, false) || !gAgent.mRRInterface.canDetachCategory(cat, false)
+			 || !gAgent.mRRInterface.canAttachCategory(cat_new_parent, false) || !gAgent.mRRInterface.canDetachCategory(cat_new_parent, false))
+			{
+				return;
+			}
+		}
+	}
+//mk
 
 	// Can't move a folder into a child of itself.
 	if (model->isObjectDescendentOf(new_parent_id, cat->getUUID()))
@@ -395,6 +426,19 @@ BOOL get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 	}
 
 	LLViewerInventoryCategory* cat = model->getCategory(id);
+
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.isUnderRlvShare(cat))
+		{
+			if (!gAgent.mRRInterface.canAttachCategory(cat, false) || !gAgent.mRRInterface.canDetachCategory(cat, false))
+			{
+				return FALSE;
+			}
+		}
+	}
+//mk
 
 	if (cat && !LLFolderType::lookupIsProtectedType(cat->getPreferredType()) &&
 		cat->getOwnerID() == gAgent.getID())
