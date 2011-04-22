@@ -40,6 +40,11 @@
 #include "llselectmgr.h"
 #include "llglheaders.h"
 
+#include "llviewercontrol.h"
+#include "llviewerwindow.h"
+#include "llavatarnamecache.h"
+#include "llrender.h"
+#include "llhudrender.h"
 
 #include "llxmltree.h"
 
@@ -495,9 +500,50 @@ void LLHUDEffectLookAt::render()
 {
 	if (sDebugLookAt && mSourceObject.notNull())
 	{
-		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+		static LLCachedControl<bool> hide_own(gSavedPerAccountSettings, "DebugLookAtHideOwn", false);
+		static LLCachedControl<bool> is_private(gSavedSettings, "PrivateLookAtTarget", false);
+		if ((hide_own || is_private) && ((LLVOAvatar*)(LLViewerObject*)mSourceObject)->isSelf())
+			return;
 
 		LLVector3 target = mTargetPos + ((LLVOAvatar*)(LLViewerObject*)mSourceObject)->mHeadp->getWorldPosition();
+		LLColor3 lookAtColor = (*mAttentions)[mTargetType].mColor;
+
+		static LLCachedControl<U32> show_names(gSavedSettings, "DebugLookAtShowNames");
+		if ((show_names > 0) && !gAgent.mRRInterface.mContainsShownames)
+		{
+			// render name for crosshair
+			const LLFontGL* fontp=LLFontGL::getFont(LLFontDescriptor("SansSerif","Small",LLFontGL::BOLD));
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			LLVector3 position=target+LLVector3(0.f,0.f,0.3f);
+
+			LLAvatarName nameBuffer;
+			LLAvatarNameCache::get(((LLVOAvatar*)(LLViewerObject*)mSourceObject)->getID(), &nameBuffer);
+			std::string name;
+			switch (show_names)
+			{
+				case 1: // Display Name (user.name)
+					name = nameBuffer.getCompleteName();
+					break;
+				case 2: // Display Name
+					name = nameBuffer.mDisplayName;
+					break;
+				case 3: // First Last
+					name = nameBuffer.getLegacyName();
+					break;
+				default: //user.name
+					name = nameBuffer.mUsername;
+					break;
+			}
+
+			gViewerWindow->setup3DRender();
+			hud_render_utf8text(name,position,*fontp,LLFontGL::NORMAL,LLFontGL::NO_SHADOW,-0.5*fontp->getWidthF32(name),3.0,lookAtColor,FALSE);
+
+			glPopMatrix();
+		}
+
+		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+
 		glMatrixMode(GL_MODELVIEW);
 		gGL.pushMatrix();
 		gGL.translatef(target.mV[VX], target.mV[VY], target.mV[VZ]);

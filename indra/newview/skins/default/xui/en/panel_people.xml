@@ -464,7 +464,20 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                  name="activate_btn"
                  tool_tip="Activate selected group"
                  width="31" />
-                 <icon
+              <text
+                 type="string"
+                 length="1"
+                 follows="bottom|right"
+                 height="25"
+                 layout="topleft"
+                 top="5" 
+              	 left_pad="5"
+                 name="groupcount"
+               	 width="209">
+                Group slots used: [COUNT] / [MAX]
+              </text>
+<!--
+              <icon
              	 follows="bottom|left|right"
              	 height="25"
              	 image_name="Toolbar_Right_Off"
@@ -473,6 +486,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
              	 name="dummy_icon"
              	 width="212"
              />
+-->
             </panel>
         </panel>
         <panel

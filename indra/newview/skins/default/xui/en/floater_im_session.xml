@@ -68,7 +68,58 @@
           image_overlay="TabIcon_Close_Off"
           width="25"
           name="slide_right_btn" />
-        <chat_history
+<!-- Shortcut buttons here -->
+      <button
+       follows="left|top"
+       height="20"
+       label="Profile"
+       name="view_profile_btn"
+       tool_tip = "View this person's profile"
+       top="0"
+       left_pad="2"
+       width="60" />
+<!--      <button
+       follows="left|top"
+       height="20"
+       label="Add Friend"
+       name="add_friend_btn"
+       tool_tip = "Add this person to your Friends List"
+       left_pad="2"
+       top="0"
+       width="60" />
+-->
+      <button
+       auto_resize="false"
+       follows="left|top"
+       height="20"
+       label="Teleport"
+       name="teleport_btn"
+       tool_tip = "Offer to teleport this person"
+       left_pad="2"
+       top="0"
+       width="60" />
+      <button
+        auto_resize="true"
+        follows="left|top"
+        height="20"
+        label="Share"
+        name="share_btn"
+        tool_tip = "Give inventory to this person"
+        left_pad="2"
+        top="0"
+        width="60" />
+      <button
+        auto_resize="true"
+        follows="left|top"
+        height="20"
+        label="Pay"
+        name="pay_btn"
+        tool_tip = "Give money to this person"
+        left_pad="2"
+        top="0"
+        width="60" />
+<!-- End shortcut buttons -->
+      <chat_history
 	 font="SansSerifSmall"
          follows="left|right|top|bottom"
          height="150"

@@ -47,6 +47,8 @@
 #include "llvoiceclient.h"
 #include "lltextbox.h"
 #include "lltrans.h"
+#include "llgroupactions.h"
+#include "llgrouplist.h"
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Class LLDropTarget
@@ -122,6 +124,7 @@ static LLDefaultChildRegistry::Register<LLDropTarget> r("drop_target");
 static LLRegisterPanelClassWrapper<LLPanelAvatarProfile> t_panel_profile("panel_profile");
 static LLRegisterPanelClassWrapper<LLPanelMyProfile> t_panel_my_profile("panel_my_profile");
 static LLRegisterPanelClassWrapper<LLPanelAvatarNotes> t_panel_notes("panel_notes");
+static LLRegisterPanelClassWrapper<LLPanelAvatarFirst> t_panel_profile_firstlife("panel_profile_firstlife");
 
 //-----------------------------------------------------------------------------
 // LLPanelAvatarNotes()
@@ -459,6 +462,12 @@ void LLPanelProfileTab::updateButtons()
 			       is_agent_mappable(getAvatarId()))
 		|| gAgent.isGodlike();
 	getChildView("show_on_map_btn")->setEnabled(enable_map_btn);
+	
+	bool enable_block_btn = LLAvatarActions::canBlock(getAvatarId()) && !LLAvatarActions::isBlocked(getAvatarId());
+	getChildView("block")->setVisible(enable_block_btn);
+	
+	bool enable_unblock_btn = LLAvatarActions::isBlocked(getAvatarId());
+	getChildView("unblock")->setVisible(enable_unblock_btn);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -482,9 +491,13 @@ BOOL LLPanelAvatarProfile::postBuild()
 	childSetCommitCallback("im",(boost::bind(&LLPanelAvatarProfile::onIMButtonClick,this)),NULL);
 	childSetCommitCallback("call",(boost::bind(&LLPanelAvatarProfile::onCallButtonClick,this)),NULL);
 	childSetCommitCallback("teleport",(boost::bind(&LLPanelAvatarProfile::onTeleportButtonClick,this)),NULL);
+	childSetCommitCallback("overflow_btn", boost::bind(&LLPanelAvatarProfile::onOverflowButtonClicked, this), NULL);
 	childSetCommitCallback("share",(boost::bind(&LLPanelAvatarProfile::onShareButtonClick,this)),NULL);
 	childSetCommitCallback("show_on_map_btn", (boost::bind(
 			&LLPanelAvatarProfile::onMapButtonClick, this)), NULL);
+	childSetCommitCallback("pay",(boost::bind(&LLPanelAvatarProfile::pay,this)),NULL);
+	childSetCommitCallback("block",(boost::bind(&LLPanelAvatarProfile::toggleBlock,this)),NULL);
+	childSetCommitCallback("unblock",(boost::bind(&LLPanelAvatarProfile::toggleBlock,this)),NULL);
 
 	LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
 	registrar.add("Profile.ShowOnMap",  boost::bind(&LLPanelAvatarProfile::onMapButtonClick, this));
@@ -504,6 +517,7 @@ BOOL LLPanelAvatarProfile::postBuild()
 
 	LLToggleableMenu* profile_menu = LLUICtrlFactory::getInstance()->createFromFile<LLToggleableMenu>("menu_profile_overflow.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
 	getChild<LLMenuButton>("overflow_btn")->setMenu(profile_menu, LLMenuButton::MP_TOP_RIGHT);
+	mProfileMenu = profile_menu;
 
 	LLVoiceClient::getInstance()->addObserver((LLVoiceClientStatusObserver*)this);
 
@@ -594,6 +608,12 @@ void LLPanelAvatarProfile::processProfileProperties(const LLAvatarData* avatar_d
 
 void LLPanelAvatarProfile::processGroupProperties(const LLAvatarGroups* avatar_groups)
 {
+	//KC: the group_list ctrl can handle all this for us on our own profile
+	if (getAvatarId() == gAgent.getID())
+		return;
+
+//	LLGroupList* group_list = getChild<LLGroupList>("group_list");
+
 	// *NOTE dzaporozhan
 	// Group properties may arrive in two callbacks, we need to save them across
 	// different calls. We can't do that in textbox as textbox may change the text.
@@ -646,8 +666,10 @@ static void got_full_name_callback( LLHandle<LLPanel> profile_panel_handle, cons
 
 	args["[NAME]"] = name;
 
-	std::string linden_name = profile_panel->getString("name_text_args", args);
-	profile_panel->getChild<LLUICtrl>("name_descr_text")->setValue(linden_name);
+//MK
+////	std::string linden_name = profile_panel->getString("name_text_args", args);
+////	profile_panel->getChild<LLUICtrl>("name_descr_text")->setValue(linden_name);
+//mk
 }
 
 void LLPanelAvatarProfile::onNameCache(const LLUUID& agent_id, const LLAvatarName& av_name)
@@ -655,8 +677,10 @@ void LLPanelAvatarProfile::onNameCache(const LLUUID& agent_id, const LLAvatarNam
 	LLStringUtil::format_map_t args;
 	args["[DISPLAY_NAME]"] = av_name.mDisplayName;
 
-	std::string display_name = getString("display_name_text_args", args);
-	getChild<LLUICtrl>("display_name_descr_text")->setValue(display_name);
+//MK
+////	std::string display_name = getString("display_name_text_args", args);
+////	getChild<LLUICtrl>("display_name_descr_text")->setValue(display_name);
+//mk
 }
 
 void LLPanelAvatarProfile::fillCommonData(const LLAvatarData* avatar_data)
@@ -740,6 +764,12 @@ void LLPanelAvatarProfile::share()
 void LLPanelAvatarProfile::toggleBlock()
 {
 	LLAvatarActions::toggleBlock(getAvatarId());
+	
+	bool enable_block_btn = LLAvatarActions::canBlock(getAvatarId()) && !LLAvatarActions::isBlocked(getAvatarId());
+	getChildView("block")->setVisible(enable_block_btn);
+	
+	bool enable_unblock_btn = LLAvatarActions::isBlocked(getAvatarId());
+	getChildView("unblock")->setVisible(enable_unblock_btn);
 }
 
 bool LLPanelAvatarProfile::enableShowOnMap()
@@ -811,6 +841,23 @@ void LLPanelAvatarProfile::onCallButtonClick()
 void LLPanelAvatarProfile::onShareButtonClick()
 {
 	//*TODO not implemented
+}
+
+void LLPanelAvatarProfile::onOverflowButtonClicked()
+{
+	if (!mProfileMenu->toggleVisibility())
+		return;
+
+	LLView* btn = getChild<LLView>("overflow_btn");
+
+	if (mProfileMenu->getButtonRect().isEmpty())
+	{
+		mProfileMenu->setButtonRect(btn);
+	}
+	mProfileMenu->updateParent(LLMenuGL::sMenuContainer);
+
+	LLRect rect = btn->getRect();
+	LLMenuGL::showPopup(this, mProfileMenu, rect.mRight, rect.mTop);
 }
 
 LLPanelAvatarProfile::~LLPanelAvatarProfile()
@@ -905,4 +952,103 @@ void LLPanelMyProfile::resetControls()
 void LLPanelMyProfile::onStatusMessageChanged()
 {
 	updateData();
+}
+
+
+//-----------------------------------------------------------------------------
+// LLPanelAvatarFirst()
+//-----------------------------------------------------------------------------
+LLPanelAvatarFirst::LLPanelAvatarFirst()
+: LLPanelProfileTab()
+{
+}
+
+void LLPanelAvatarFirst::updateData()
+{
+	if (getAvatarId().notNull())
+	{
+		LLAvatarPropertiesProcessor::getInstance()->
+			sendAvatarPropertiesRequest(getAvatarId());
+	}
+}
+
+BOOL LLPanelAvatarFirst::postBuild()
+{
+	resetControls();
+	resetData();
+
+	return TRUE;
+}
+
+void LLPanelAvatarFirst::onOpen(const LLSD& key)
+{
+	LLPanelProfileTab::onOpen(key);
+}
+
+void LLPanelAvatarFirst::processProperties(void* data, EAvatarProcessorType type)
+{
+	if(APT_PROPERTIES == type)
+	{
+		const LLAvatarData* avatar_data = static_cast<const LLAvatarData*>(data);
+		if(avatar_data && getAvatarId() == avatar_data->avatar_id)
+		{
+			getChild<LLUICtrl>("fl_description_edit")->setValue(avatar_data->fl_about_text);
+			getChild<LLUICtrl>("real_world_pic")->setValue(avatar_data->fl_image_id);
+			getChild<LLUICtrl>("homepage_edit")->setValue(avatar_data->profile_url);
+
+			LLAvatarPropertiesProcessor::getInstance()->removeObserver(getAvatarId(),this);
+		}
+	}
+}
+
+void LLPanelAvatarFirst::resetData()
+{
+	getChild<LLUICtrl>("real_world_pic")->setValue(LLUUID::null);
+	getChild<LLUICtrl>("fl_description_edit")->setValue(LLStringUtil::null);
+	getChild<LLUICtrl>("homepage_edit")->setValue(LLStringUtil::null);
+}
+
+void LLPanelAvatarFirst::resetControls()
+{
+}
+
+LLPanelAvatarFirst::~LLPanelAvatarFirst()
+{
+	if(getAvatarId().notNull())
+	{
+		LLAvatarTracker::instance().removeParticularFriendObserver(getAvatarId(), this);
+		//if(LLVoiceClient::instanceExists())
+		//{
+		//	LLVoiceClient::getInstance()->removeObserver((LLVoiceClientStatusObserver*)this);
+		//}
+	}
+// [SL:KB] - Patch : UI-ProfileGroupFloater 
+	if(LLVoiceClient::instanceExists())
+	{
+		LLVoiceClient::getInstance()->removeObserver((LLVoiceClientStatusObserver*)this);
+	}
+// [/SL:KB]
+}
+
+// virtual, called by LLAvatarTracker
+void LLPanelAvatarFirst::changed(U32 mask)
+{
+}
+
+// virtual
+void LLPanelAvatarFirst::onChange(EStatusType status, const std::string &channelURI, bool proximal)
+{
+}
+
+void LLPanelAvatarFirst::setAvatarId(const LLUUID& id)
+{
+	if(id.notNull())
+	{
+		if(getAvatarId().notNull())
+		{
+			LLAvatarTracker::instance().removeParticularFriendObserver(getAvatarId(), this);
+		}
+		LLPanelProfileTab::setAvatarId(id);
+		LLAvatarTracker::instance().addParticularFriendObserver(getAvatarId(), this);
+	}
 }

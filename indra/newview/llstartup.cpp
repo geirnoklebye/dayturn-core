@@ -3039,9 +3039,14 @@ bool process_login_success_response()
 		LLVector3 position = ll_vector3_from_sd(sd["position"]);
 		gAgent.setHomePosRegion(region_handle, position);
 	}
-
 	gAgent.mMOTD.assign(response["message"]);
 
+//MK
+	if (gRRenabled)
+	{
+		gAgent.mMOTD.assign("");
+	}
+//mk
 	// Options...
 	// Each 'option' is an array of submaps. 
 	// It appears that we only ever use the first element of the array.

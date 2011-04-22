@@ -530,9 +530,10 @@ void LLNearbyChatBar::onChatBoxKeystroke(LLLineEditor* caller, void* userdata)
 
 	S32 length = raw_text.length();
 
-	if( (length > 0) && (raw_text[0] != '/') )  // forward slash is used for escape (eg. emote) sequences
-	{
 //MK
+////	if( (length > 0) && (raw_text[0] != '/') )  // forward slash is used for escape (eg. emote) sequences
+	if( (length > 0) && (raw_text[0] != '/') && (raw_text[0] != ':') )  // forward slash and colon are used for escape (eg. emote) sequences
+	{
 		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
 //mk
 		gAgent.startTyping();
@@ -655,7 +656,6 @@ void LLNearbyChatBar::sendChat( EChatType type )
 			std::string utf8_revised_text;
 			if (0 == channel)
 			{
-				// discard returned "found" boolean
 //MK
 ////			// discard returned "found" boolean
 ////				LLGestureMgr::instance().triggerAndReviseString(utf8text, &utf8_revised_text);
@@ -929,20 +929,76 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 		return;
 	}
 	
+	std::string utf8text = utf8_out_text;
+
 	if (gRRenabled && channel == 0)
 	{
+//-TT Patch MU_OOC from Satomi Ahn
+//		if (gSavedSettings.getBOOL("AutoCloseOOC"))
+		{
+			// Try to find any unclosed OOC chat (i.e. an opening
+			// double parenthesis without a matching closing double
+			// parenthesis.
+			if (utf8text.find("(( ") != -1 && utf8text.find("))") == -1)
+			{
+				// add the missing closing double parenthesis.
+				utf8text += " ))";
+			}
+			else if (utf8text.find("((") != -1 && utf8text.find("))") == -1)
+			{
+				if (utf8text.at(utf8text.length() - 1) == ')')
+				{
+					// cosmetic: add a space first to avoid a closing triple parenthesis
+					utf8text += " ";
+				}
+				// add the missing closing double parenthesis.
+				utf8text += "))";
+			}
+			else if (utf8text.find("[[ ") != -1 && utf8text.find("]]") == -1)
+			{
+				// add the missing closing double parenthesis.
+				utf8text += " ]]";
+			}
+			else if (utf8text.find("[[") != -1 && utf8text.find("]]") == -1)
+			{
+				if (utf8text.at(utf8text.length() - 1) == ']')
+				{
+					// cosmetic: add a space first to avoid a closing triple parenthesis
+					utf8text += " ";
+				}
+				// add the missing closing double parenthesis.
+				utf8text += "]]";
+			}
+		}
+
+	// Convert MU*s style poses into IRC emotes here.
+//		if (gSavedSettings.getBOOL("AllowMUpose"))
+		{
+			if (utf8text.find(":") == 0 && utf8text.length() > 3)
+			{
+				if (utf8text.find(":'") == 0)
+				{
+					utf8text.replace(0, 1, "/me");
+				}
+				else if (isalpha(utf8text.at(1)))	// Do not prevent smileys and such.
+				{
+					utf8text.replace(0, 1, "/me ");
+				}
+			}
+		}
+//-TT Patch MU_OOC from Satomi Ahn
 		std::string restriction;
 
 		// We might want to redirect this chat or emote (and exit this function early on)
-		if (utf8_out_text.find ("/me ") == 0 // emote
-			|| utf8_out_text.find ("/me's") == 0) // emote
+		if (utf8text.find ("/me ") == 0 // emote
+			|| utf8text.find ("/me's") == 0) // emote
 		{
 			if (gAgent.mRRInterface.containsSubstr ("rediremote:"))
 			{
 				restriction = "rediremote:";
 			}
 		}
-		else if (utf8_out_text.find ("((") != 0 || utf8_out_text.find ("))") != utf8_out_text.length () - 2)
+		else if (utf8text.find ("((") != 0 || utf8text.find ("))") != utf8text.length () - 2)
 		{
 			if (gAgent.mRRInterface.containsSubstr ("redirchat:"))
 			{
@@ -973,7 +1029,7 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 							msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
 							msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 							msg->nextBlockFast(_PREHASH_ChatData);
-							msg->addStringFast(_PREHASH_Message, utf8_out_text);
+							msg->addStringFast(_PREHASH_Message, utf8text);
 							msg->addU8Fast(_PREHASH_Type, type);
 							msg->addS32("Channel", ch);
 
@@ -991,7 +1047,7 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 		}
 	}
 
-	std::string crunchedText = utf8_out_text;
+	std::string crunchedText = utf8text;
 	
 	// There is a redirection in order but this particular message is an emote or an OOC text, so we didn't
 	// redirect it. However it has not gone through crunchEmote yet, so we need to do this here to prevent

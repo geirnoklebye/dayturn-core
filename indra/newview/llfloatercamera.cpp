@@ -552,6 +552,10 @@ void LLFloaterCamera::updateItemsSelection()
 	LLSD argument;
 	argument["selected"] = preset == CAMERA_PRESET_REAR_VIEW;
 	getChild<LLPanelCameraItem>("rear_view")->setValue(argument);
+	argument["selected"] = preset == CAMERA_PRESET_TOPDOWN_VIEW;
+	getChild<LLPanelCameraItem>("top_view")->setValue(argument);
+	argument["selected"] = preset == CAMERA_PRESET_FPS_VIEW;
+	getChild<LLPanelCameraItem>("fps_view")->setValue(argument);
 	argument["selected"] = preset == CAMERA_PRESET_GROUP_VIEW;
 	getChild<LLPanelCameraItem>("group_view")->setValue(argument);
 	argument["selected"] = preset == CAMERA_PRESET_FRONT_VIEW;
@@ -601,6 +605,14 @@ void LLFloaterCamera::switchToPreset(const std::string& name)
 	else if ("group_view" == name)
 	{
 		gAgentCamera.switchCameraPreset(CAMERA_PRESET_GROUP_VIEW);
+	}
+	else if ("top_view" == name)
+	{
+		gAgentCamera.switchCameraPreset(CAMERA_PRESET_TOPDOWN_VIEW);
+	}
+	else if ("fps_view" == name)
+	{
+		gAgentCamera.switchCameraPreset(CAMERA_PRESET_FPS_VIEW);
 	}
 	else if ("front_view" == name)
 	{

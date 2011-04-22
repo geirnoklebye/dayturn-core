@@ -367,6 +367,37 @@ Disabled for now.
             </bottomtray_button>
         </layout_panel>
         <layout_panel
+         mouse_opaque="false"
+         auto_resize="false"
+         follows="left|right"
+         height="28"
+         layout="topleft"
+         min_height="28"
+         min_width="49"
+         name="inventory_panel"
+         user_resize="false"
+         width="80">
+            <button
+                 image_selected="PushButton_Selected_Press"
+                 image_pressed="PushButton_Press"
+		 image_pressed_selected="PushButton_Selected_Press"
+             follows="left|right"
+             height="23"
+             use_ellipses="true"
+             is_toggle="true"
+             label="Inventory"
+             layout="topleft"
+             left="0"
+             tool_tip="Shows/hides Inventory"
+             top="5"
+             name="inventory_btn"
+             width="80">
+                <button.init_callback
+                 function="Button.SetDockableFloaterToggle"
+                 parameter="inventory" />
+            </button>
+        </layout_panel>
+        <layout_panel
          follows="left|right"
          height="30"
          layout="topleft"

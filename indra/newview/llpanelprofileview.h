@@ -32,6 +32,7 @@
 #include "llavatarpropertiesprocessor.h"
 #include "llagent.h"
 #include "lltooldraganddrop.h"
+#include "llfloater.h"
 
 class LLAvatarName;
 class LLPanelProfile;
@@ -75,6 +76,7 @@ protected:
 
 	void onBackBtnClick();
 	void onCopyToClipboard();
+	void onCopyURI();
 	bool isGrantedToSeeOnlineStatus();
 
 	/**
@@ -103,6 +105,22 @@ private:
 
 	LLTextBox* mStatusText;
 	AvatarStatusObserver* mAvatarStatusObserver;
+};
+
+
+class LLFloaterProfileView : public LLFloater
+{
+public:
+	LLFloaterProfileView(const LLSD& seed) : LLFloater(seed) {}
+	~LLFloaterProfileView() {}
+	
+	void onOpen(const LLSD& key)
+	{
+		LLPanel* panel = findChild<LLPanel>("panel_profile_view");
+		if(panel)
+			panel->onOpen(key);
+	}
+
 };
 
 #endif //LL_LLPANELPROFILEVIEW_H

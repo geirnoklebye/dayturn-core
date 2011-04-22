@@ -33,6 +33,9 @@
 #include "llagent.h"
 #include "llappviewer.h"
 #include "llavatarnamecache.h"
+//MK
+#include "llavataractions.h"
+//mk
 #include "llbutton.h"
 #include "llbottomtray.h"
 #include "llchannelmanager.h"
@@ -206,6 +209,66 @@ void LLIMFloater::sendMsg()
 	if (mInputEditor)
 	{
 		LLWString text = mInputEditor->getConvertedText();
+
+		// Convert to UTF8 for transport
+		std::string utf8_text = wstring_to_utf8str(text);
+//-TT Patch MU_OOC from Satomi Ahn
+//		if (gSavedSettings.getBOOL("AutoCloseOOC"))
+		{
+			// Try to find any unclosed OOC chat (i.e. an opening
+			// double parenthesis without a matching closing double
+			// parenthesis.
+			if (utf8_text.find("(( ") != -1 && utf8_text.find("))") == -1)
+			{
+				// add the missing closing double parenthesis.
+				utf8_text += " ))";
+			}
+			else if (utf8_text.find("((") != -1 && utf8_text.find("))") == -1)
+			{
+				if (utf8_text.at(utf8_text.length() - 1) == ')')
+				{
+					// cosmetic: add a space first to avoid a closing triple parenthesis
+					utf8_text += " ";
+				}
+				// add the missing closing double parenthesis.
+				utf8_text += "))";
+			}
+			else if (utf8_text.find("[[ ") != -1 && utf8_text.find("]]") == -1)
+			{
+				// add the missing closing double parenthesis.
+				utf8_text += " ]]";
+			}
+			else if (utf8_text.find("[[") != -1 && utf8_text.find("]]") == -1)
+			{
+				if (utf8_text.at(utf8_text.length() - 1) == ']')
+				{
+					// cosmetic: add a space first to avoid a closing triple parenthesis
+					utf8_text += " ";
+				}
+					// add the missing closing double parenthesis.
+				utf8_text += "]]";
+			}
+		}
+		// Convert MU*s style poses into IRC emotes here.
+//		if (gSavedSettings.getBOOL("AllowMUpose"))
+		{
+			if (utf8_text.find(":") == 0 && utf8_text.length() > 3)
+			{
+				if (utf8_text.find(":'") == 0)
+				{
+					utf8_text.replace(0, 1, "/me");
+				}
+				else if (isalpha(utf8_text.at(1)))	// Do not prevent smileys and such.
+				{
+					utf8_text.replace(0, 1, "/me ");
+				}
+			}
+		}
+//-TT /Patch MU_OOC from Satomi Ahn
+
+		// Truncate for transport
+		text = utf8str_to_wstring(utf8str_truncate(utf8_text, MAX_MSG_BUF_SIZE - 1));
+
 //MK
 		if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim", mOtherParticipantUUID.asString())
 			|| gAgent.mRRInterface.contains ("sendimto:"+mOtherParticipantUUID.asString())))
@@ -263,6 +326,13 @@ BOOL LLIMFloater::postBuild()
 	mControlPanel->setSessionId(mSessionID);
 	mControlPanel->getParent()->setVisible(gSavedSettings.getBOOL("IMShowControlPanel"));
 
+//MK
+	childSetAction("view_profile_btn", boost::bind(&LLIMFloater::onViewProfileButtonClicked, this));
+	childSetAction("add_friend_btn", boost::bind(&LLIMFloater::onAddFriendButtonClicked, this));
+	childSetAction("share_btn", boost::bind(&LLIMFloater::onShareButtonClicked, this));
+	childSetAction("teleport_btn", boost::bind(&LLIMFloater::onTeleportButtonClicked, this));
+	childSetAction("pay_btn", boost::bind(&LLIMFloater::onPayButtonClicked, this));
+//mk
 	LLButton* slide_left = getChild<LLButton>("slide_left_btn");
 	slide_left->setVisible(mControlPanel->getParent()->getVisible());
 	slide_left->setClickedCallback(boost::bind(&LLIMFloater::onSlide, this));
@@ -329,6 +399,36 @@ BOOL LLIMFloater::postBuild()
 		return LLDockableFloater::postBuild();
 	}
 }
+
+//MK
+void LLIMFloater::onViewProfileButtonClicked()
+{
+	LLAvatarActions::showProfile(mOtherParticipantUUID);
+}
+
+void LLIMFloater::onAddFriendButtonClicked()
+{
+	//LLAvatarIconCtrl* avatar_icon = getChild<LLAvatarIconCtrl>("avatar_icon");
+	//std::string full_name = avatar_icon->getFullName();
+	//LLAvatarActions::requestFriendshipDialog(mOtherParticipantUUID, full_name);
+}
+
+void LLIMFloater::onShareButtonClicked()
+{
+	LLAvatarActions::share(mOtherParticipantUUID);
+}
+
+void LLIMFloater::onTeleportButtonClicked()
+{
+	LLAvatarActions::offerTeleport(mOtherParticipantUUID);
+}
+
+void LLIMFloater::onPayButtonClicked()
+{
+	LLAvatarActions::pay(mOtherParticipantUUID);
+}
+
+//mk
 
 void LLIMFloater::updateSessionName(const std::string& ui_title,
 									const std::string& ui_label)

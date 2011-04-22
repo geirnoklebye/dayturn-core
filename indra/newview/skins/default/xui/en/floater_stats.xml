@@ -686,6 +686,20 @@
 				 show_bar="false"
 				 show_mean="false" >
 			  </stat_bar>
+			   <stat_bar
+					 name="simsparemsec"
+					 label="Spare Time"
+					 stat="simsparemsec"
+					 unit_label="ms"
+					 precision="1"
+					 bar_min="0.f"
+					 bar_max="40.f" 
+					 tick_spacing="10.f"
+					 label_spacing="20.f" 
+					 show_per_sec="false"
+					 show_bar="false"
+					 show_mean="false" >
+			   </stat_bar>
 			</stat_view>
 		  </stat_view>
 		</container_view>

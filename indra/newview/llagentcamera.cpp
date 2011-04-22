@@ -73,7 +73,7 @@ const F32 AVATAR_ZOOM_MIN_X_FACTOR = 0.55f;
 const F32 AVATAR_ZOOM_MIN_Y_FACTOR = 0.7f;
 const F32 AVATAR_ZOOM_MIN_Z_FACTOR = 1.15f;
 
-const F32 MAX_CAMERA_DISTANCE_FROM_AGENT = 50.f;
+const F32 MAX_CAMERA_DISTANCE_FROM_AGENT = 512.f; // S21
 
 const F32 MAX_CAMERA_SMOOTH_DISTANCE = 50.0f;
 
@@ -205,10 +205,14 @@ void LLAgentCamera::init()
 	mCameraOffsetInitial[CAMERA_PRESET_REAR_VIEW] = gSavedSettings.getControl("CameraOffsetRearView");
 	mCameraOffsetInitial[CAMERA_PRESET_FRONT_VIEW] = gSavedSettings.getControl("CameraOffsetFrontView");
 	mCameraOffsetInitial[CAMERA_PRESET_GROUP_VIEW] = gSavedSettings.getControl("CameraOffsetGroupView");
+	mCameraOffsetInitial[CAMERA_PRESET_TOPDOWN_VIEW] = gSavedSettings.getControl("CameraOffsetTopView"); // KL S21.
+    mCameraOffsetInitial[CAMERA_PRESET_FPS_VIEW] = gSavedSettings.getControl("CameraOffsetFpsView"); // KL S21
 
 	mFocusOffsetInitial[CAMERA_PRESET_REAR_VIEW] = gSavedSettings.getControl("FocusOffsetRearView");
 	mFocusOffsetInitial[CAMERA_PRESET_FRONT_VIEW] = gSavedSettings.getControl("FocusOffsetFrontView");
 	mFocusOffsetInitial[CAMERA_PRESET_GROUP_VIEW] = gSavedSettings.getControl("FocusOffsetGroupView");
+	mFocusOffsetInitial[CAMERA_PRESET_TOPDOWN_VIEW] = gSavedSettings.getControl("FocusOffsetTopView"); // KL S21
+	mFocusOffsetInitial[CAMERA_PRESET_FPS_VIEW] = gSavedSettings.getControl("FocusOffsetFpsView"); // KL S21
 
 	mCameraCollidePlane.clearVec();
 	mCurrentCameraDistance = getCameraOffsetInitial().magVec() * gSavedSettings.getF32("CameraOffsetScale");

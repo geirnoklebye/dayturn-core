@@ -49,6 +49,7 @@
 #include "llbutton.h"
 #include "llinventoryobserver.h"
 #include "llinventorymodel.h"
+#include "llnotificationmanager.h"
 #include "llnotifications.h"
 #include "llnotificationsutil.h"
 #include "llresmgr.h"
@@ -511,11 +512,15 @@ void LLAvatarTracker::removeParticularFriendObserver(const LLUUID& buddy_id, LLF
 
     observer_map_t::iterator obs_it = mParticularFriendObserverMap.find(buddy_id);
     if(obs_it == mParticularFriendObserverMap.end())
+	{
         return;
+	}
 
     obs_it->second.erase(observer);
 
     // purge empty sets from the map
+	// AO: Remove below check as last resort to resolve a crash from dangling pointer.
+	// TODO: clean up all observers and don't leave dangling pointers here.
     if (obs_it->second.size() == 0)
     	mParticularFriendObserverMap.erase(obs_it);
 }
@@ -530,7 +535,50 @@ void LLAvatarTracker::notifyParticularFriendObservers(const LLUUID& buddy_id)
     observer_set_t& obs = obs_it->second;
     for (observer_set_t::iterator ob_it = obs.begin(); ob_it != obs.end(); ob_it++)
     {
+		if (*ob_it)
         (*ob_it)->changed(mModifyMask);
+		else
+			llwarns << "Invalid observer" << llendl;
+    }
+}
+
+
+void LLAvatarTracker::addFriendPermissionObserver(const LLUUID& buddy_id, LLFriendObserver* observer)
+{
+	if (buddy_id.notNull() && observer)
+	{
+		mFriendPermissionObserverMap[buddy_id].insert(observer);
+	}
+}
+
+void LLAvatarTracker::removeFriendPermissionObserver(const LLUUID& buddy_id, LLFriendObserver* observer)
+{
+	if (buddy_id.isNull() || !observer)
+		return;
+	
+    observer_map_t::iterator obs_it = mFriendPermissionObserverMap.find(buddy_id);
+    if(obs_it == mFriendPermissionObserverMap.end())
+        return;
+	
+    obs_it->second.erase(observer);
+	
+    // purge empty sets from the map
+    if (obs_it->second.size() == 0)
+    	mFriendPermissionObserverMap.erase(obs_it);
+}
+
+void LLAvatarTracker::notifyFriendPermissionObservers(const LLUUID& buddy_id)
+{
+    observer_map_t::iterator obs_it = mFriendPermissionObserverMap.find(buddy_id);
+    if(obs_it == mFriendPermissionObserverMap.end())
+	{
+		return;
+	}
+    // Notify observers interested in buddy_id.
+    observer_set_t& obs = obs_it->second;
+    for (observer_set_t::iterator ob_it = obs.begin(); ob_it != obs.end(); ob_it++)
+    {
+		(*ob_it)->changed(LLFriendObserver::PERMS);
     }
 }
 
@@ -653,6 +701,7 @@ void LLAvatarTracker::processChange(LLMessageSystem* msg)
 
 	addChangedMask(LLFriendObserver::POWERS, agent_id);
 	notifyObservers();
+	notifyFriendPermissionObservers(agent_related);
 }
 
 void LLAvatarTracker::processChangeUserRights(LLMessageSystem* msg, void**)
@@ -743,6 +792,16 @@ static void on_avatar_name_cache_notify(const LLUUID& agent_id,
 	LLUUID session_id = LLIMMgr::computeSessionID(IM_NOTHING_SPECIAL, agent_id);
 	std::string notify_msg = notification->getMessage();
 	LLIMModel::instance().proccessOnlineOfflineNotification(session_id, notify_msg);
+
+	// If desired, also send it to nearby chat, this allows friends'
+	// online/offline times to be referenced in chat & logged.
+	if (gSavedSettings.getBOOL("OnlineOfflinetoNearbyChat")) {
+		LLChat chat;
+		chat.mText = notify_msg;
+		chat.mSourceType = CHAT_SOURCE_SYSTEM;
+		args["type"] = LLNotificationsUI::NT_NEARBYCHAT;
+		LLNotificationsUI::LLNotificationManager::instance().onChat(chat, args);
+	}
 }
 
 void LLAvatarTracker::formFriendship(const LLUUID& id)

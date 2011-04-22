@@ -125,6 +125,14 @@ private:
 	/* virtual */ void onFocusLost();
 	/* virtual */ void onFocusReceived();
 
+//MK
+	void onViewProfileButtonClicked();
+	void onAddFriendButtonClicked();
+	void onShareButtonClicked();
+	void onTeleportButtonClicked();
+	void onPayButtonClicked();
+//mk
+
 	// Update the window title, input field help text, etc.
 	void updateSessionName(const std::string& ui_title, const std::string& ui_label);
 	

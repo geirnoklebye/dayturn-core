@@ -302,11 +302,46 @@ void LLAvatarActions::startConference(const uuid_vec_t& ids)
 
 static void on_avatar_name_show_profile(const LLUUID& agent_id, const LLAvatarName& av_name)
 {
-	llinfos << "opening web profile for " << av_name.mUsername << llendl;		
-	std::string url = getProfileURL(av_name.mUsername);
+	if ( (!gSavedSettings.getBOOL("ShowProfileFloaters")) || ((gAgent.getID() == agent_id)) )
+	{
+		LLSD params;
+		params["id"] = agent_id;
+		params["open_tab_name"] = "panel_profile";
 
-	// PROFILES: open in webkit window
-	LLWeb::loadWebURLInternal(url, "", agent_id.asString());
+		// PROFILES: open in webkit window
+		std::string full_name;
+		if (gCacheName->getFullName(agent_id,full_name))
+		{
+			std::string agent_name = LLCacheName::buildUsername(full_name);
+			llinfos << "opening web profile for " << agent_name << llendl;		
+			std::string url = getProfileURL(agent_name);
+			LLWeb::loadWebURLInternal(url);
+		}
+		else
+		{
+			llwarns << "no name info for agent id " << agent_id << llendl;
+		}
+#if 0
+		//Show own profile
+		if(gAgent.getID() == agent_id)
+		{
+			LLSideTray::getInstance()->showPanel("panel_me", params);
+		}
+		//Show other user profile
+		else
+		{
+			LLSideTray::getInstance()->showPanel("panel_profile_view", params);
+		}
+#endif
+	}
+	else
+	{
+		llinfos << "opening web profile for " << av_name.mUsername << llendl;		
+		std::string url = getProfileURL(av_name.mUsername);
+
+		// PROFILES: open in webkit window
+		LLWeb::loadWebURLInternal(url, "", agent_id.asString());
+	}
 }
 
 // static
