@@ -240,9 +240,9 @@
           <key>linux</key>
           <map>
             <key>md5sum</key>
-            <string>9c9b629b62bf874d550c430ad678dc04</string>
+            <string>a20e73f2e7d6a032ff25a5161b1b7394</string>
             <key>url</key>
-            <uri>https://s3.amazonaws.com/automated-builds-secondlife-com/hg/repo/brad_curl-autobuild/rev/216961/arch/Linux/installer/curl-7.21.1-linux-20101215.tar.bz2</uri>
+            <uri>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/curl-7.20.1-linux-20100527.tar.bz2</uri>
           </map>
           <key>linux64</key>
           <map>
@@ -366,23 +366,23 @@
           <key>darwin</key>
           <map>
             <key>md5sum</key>
-            <string>261bcd3387066cf0a1d46549400052b5</string>
+            <string>69011586de5725de08c10611b1a0289a</string>
             <key>url</key>
-            <uri>scp:install-packages.lindenlab.com:/local/www/install-packages/doc/fmod-3.75-darwin-20101007.tar.bz2</uri>
+            <uri>http://www.fmod.org/files/fmod3/fmodapi375mac.zip</uri>
           </map>
           <key>linux</key>
           <map>
             <key>md5sum</key>
-            <string>8490d97430c12c2e1ac19ff80a8d4db4</string>
+            <string>4fbd42fb8187c37ea454cc66186a1dfa</string>
             <key>url</key>
-            <uri>scp:install-packages.lindenlab.com:/local/www/install-packages/doc/fmod-3.75-linux-20101007.tar.bz2</uri>
+            <uri>http://www.fmod.org/files/fmod3/fmodapi375linux.tar.gz</uri>
           </map>
           <key>windows</key>
           <map>
             <key>md5sum</key>
-            <string>bab1babcb01ff9849b7f072d352e1ecd</string>
+            <string>4d28a685a92557c0dac06f9ab2567203</string>
             <key>url</key>
-            <uri>scp:install-packages.lindenlab.com:/local/www/install-packages/doc/fmod-3.75-windows-20101007.tar.bz2</uri>
+            <uri>http://www.fmod.org/files/fmod3/fmodapi375win.zip</uri>
           </map>
         </map>
       </map>
@@ -981,9 +981,9 @@ anguage Infrstructure (CLI) international standard</string>
           <key>darwin</key>
           <map>
             <key>md5sum</key>
-            <string>f07b063cdc207479b111576dc74127f0</string>
+            <string>66c46841825ab4969ec875b5c8f9b24c</string>
             <key>url</key>
-            <uri>http://viewer-source-downloads.s3.amazonaws.com/install_pkgs/llqtwebkit-darwin-qt4.7.1-20110322.tar.bz2</uri>
+            <uri>http://viewer-source-downloads.s3.amazonaws.com/install_pkgs/llqtwebkit-darwin-qt4.7.1-20101221.tar.bz2</uri>
           </map>
           <key>linux</key>
           <map>
@@ -995,9 +995,9 @@ anguage Infrstructure (CLI) international standard</string>
           <key>windows</key>
           <map>
             <key>md5sum</key>
-            <string>1e66b1ecab911a60ba50b59361ef62e1</string>
+            <string>b678c4d18ea8e4fab42b20f8d0b2629a</string>
             <key>url</key>
-            <uri>http://viewer-source-downloads.s3.amazonaws.com/install_pkgs/llqtwebkit-windows-qt4.7.1-20110317.tar.bz2</uri>
+            <uri>http://viewer-source-downloads.s3.amazonaws.com/install_pkgs/llqtwebkit-windows-qt4.7.1-20101221.tar.bz2</uri>
           </map>
         </map>
       </map>

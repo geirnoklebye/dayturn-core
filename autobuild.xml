@@ -426,9 +426,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d9a9a6ad86895353bcd63374a4c1a91d</string>
+              <string>b6ee837656ec341b70e69935ba67ca74</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-fmod-private/rev/221852/arch/CYGWIN/installer/fmod-3.75-windows-20110222.tar.bz2</string>
+              <string>file:///Jeux/fmodapi375win.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2286,7 +2286,7 @@
                   <string>-DUSE_PRECOMPILED_HEADERS=ON</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>
                   <string>-DUSE_KDU=FALSE</string>
-                  <string>-DFMOD=FALSE</string>
+                  <string>-DFMOD=TRUE</string>
                 </array>
               </map>
               <key>name</key>

@@ -64,3 +64,15 @@ glob:indra/newview/search_history.txt
 glob:indra/newview/filters.xml
 glob:indra/newview/avatar_icons_cache.txt
 glob:indra/newview/avatar_lad.log
+.hgtags.orig
+fmodapi375win.zip
+fmodapi375win/README.TXT
+fmodapi375win/api/delphi/fmod.pas
+fmodapi375win/api/delphi/fmod.dcu
+indra/newview/skins/default/xui/en/panel_bottomtray.xml.orig
+indra/cmake/FMOD.cmake__
+indra/newview/viewer_manifest.py__
+install.xml__
+scripts/install.py
+syntax: regexp
+fmodapi375win/*

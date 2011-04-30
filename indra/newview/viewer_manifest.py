@@ -1,31 +1,29 @@
-#!/usr/bin/env python
-"""\
-@file viewer_manifest.py
-@author Ryan Williams
-@brief Description of all installer viewer files, and methods for packaging
-       them into installers for all supported platforms.
-
-$LicenseInfo:firstyear=2006&license=viewerlgpl$
-Second Life Viewer Source Code
-Copyright (C) 2006-2011, Linden Research, Inc.
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation;
-version 2.1 of the License only.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
-$/LicenseInfo$
-"""
+#!/usr/bin/python
+# @file viewer_manifest.py
+# @author Ryan Williams
+# @brief Description of all installer viewer files, and methods for packaging
+#        them into installers for all supported platforms.
+#
+# $LicenseInfo:firstyear=2006&license=viewerlgpl$
+# Second Life Viewer Source Code
+# Copyright (C) 2010, Linden Research, Inc.
+# 
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation;
+# version 2.1 of the License only.
+# 
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# 
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+# 
+# Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
+# $/LicenseInfo$
 import sys
 import os.path
 import re
@@ -81,6 +79,7 @@ class ViewerManifest(LLManifest):
             # skins
             if self.prefix(src="skins"):
                     self.path("paths.xml")
+		    self.path("skins.xml")
                     # include the entire textures directory recursively
                     if self.prefix(src="*/textures"):
                             self.path("*/*.tga")
@@ -95,6 +94,18 @@ class ViewerManifest(LLManifest):
                             self.end_prefix("*/textures")
                     self.path("*/xui/*/*.xml")
                     self.path("*/xui/*/widgets/*.xml")
+		    self.path("*/themes/*/colors.xml")
+		    if self.prefix(src="*/themes/*/textures"):
+                            self.path("*/*.tga")
+                            self.path("*/*.j2c")
+                            self.path("*/*.jpg")
+                            self.path("*/*.png")
+                            self.path("*.tga")
+                            self.path("*.j2c")
+                            self.path("*.jpg")
+                            self.path("*.png")
+                            self.end_prefix("*/themes/*/textures")
+
                     self.path("*/*.xml")
 
                     # Local HTML files (e.g. loading screen)
@@ -221,36 +232,33 @@ class WindowsManifest(ViewerManifest):
         else:
             print "Doesn't exist:", src
         
-    ### DISABLED MANIFEST CHECKING for vs2010.  we may need to reenable this
-    # shortly.  If this hasn't been reenabled by the 2.9 viewer release then it
-    # should be deleted -brad
-    #def enable_crt_manifest_check(self):
-    #    if self.is_packaging_viewer():
-    #       WindowsManifest.copy_action = WindowsManifest.test_msvcrt_and_copy_action
+    def enable_crt_manifest_check(self):
+        if self.is_packaging_viewer():
+           WindowsManifest.copy_action = WindowsManifest.test_msvcrt_and_copy_action
 
-    #def enable_no_crt_manifest_check(self):
-    #    if self.is_packaging_viewer():
-    #        WindowsManifest.copy_action = WindowsManifest.test_for_no_msvcrt_manifest_and_copy_action
+    def enable_no_crt_manifest_check(self):
+        if self.is_packaging_viewer():
+            WindowsManifest.copy_action = WindowsManifest.test_for_no_msvcrt_manifest_and_copy_action
 
-    #def disable_manifest_check(self):
-    #    if self.is_packaging_viewer():
-    #        del WindowsManifest.copy_action
+    def disable_manifest_check(self):
+        if self.is_packaging_viewer():
+            del WindowsManifest.copy_action
 
     def construct(self):
         super(WindowsManifest, self).construct()
 
-        #self.enable_crt_manifest_check()
+        self.enable_crt_manifest_check()
 
         if self.is_packaging_viewer():
             # Find secondlife-bin.exe in the 'configuration' dir, then rename it to the result of final_exe.
-            self.path(src='%s/secondlife-bin.exe' % self.args['configuration'], dst=self.final_exe())
+            self.path(src='%s/firestorm-bin.exe' % self.args['configuration'], dst=self.final_exe())
 
         # Plugin host application
         self.path(os.path.join(os.pardir,
                                'llplugin', 'slplugin', self.args['configuration'], "slplugin.exe"),
                   "slplugin.exe")
         
-        #self.disable_manifest_check()
+        self.disable_manifest_check()
 
         self.path(src="../viewer_components/updater/scripts/windows/update_install.bat", dst="update_install.bat")
 
@@ -258,7 +266,13 @@ class WindowsManifest(ViewerManifest):
         if self.prefix(src=os.path.join(os.pardir, 'sharedlibs', self.args['configuration']),
                        dst=""):
 
-            #self.enable_crt_manifest_check()
+            self.enable_crt_manifest_check()
+
+            # Get kdu dll, continue if missing.
+            try:
+                self.path('llkdu.dll', dst='llkdu.dll')
+            except RuntimeError:
+                print "Skipping llkdu.dll"
 
             # Get llcommon and deps. If missing assume static linkage and continue.
             try:
@@ -270,11 +284,11 @@ class WindowsManifest(ViewerManifest):
                 print err.message
                 print "Skipping llcommon.dll (assuming llcommon was linked statically)"
 
-            #self.disable_manifest_check()
+            self.disable_manifest_check()
 
             # Get fmod dll, continue if missing
             try:
-                self.path("fmod.dll")
+                self.path("../../../../fmodapi375win/api/fmod.dll", "fmod.dll")
             except:
                 print "Skipping fmod.dll"
 
@@ -284,14 +298,19 @@ class WindowsManifest(ViewerManifest):
             else:
                 self.path("openjpeg.dll")
 
-            # These need to be installed as a SxS assembly, currently a 'private' assembly.
-            # See http://msdn.microsoft.com/en-us/library/ms235291(VS.80).aspx
-            if self.args['configuration'].lower() == 'debug':
-                 self.path("msvcr100d.dll")
-                 self.path("msvcp100d.dll")
-            else:
-                 self.path("msvcr100.dll")
-                 self.path("msvcp100.dll")
+            try:
+                # These need to be installed as a SxS assembly, currently a 'private' assembly.
+                # See http://msdn.microsoft.com/en-us/library/ms235291(VS.80).aspx
+                if self.args['configuration'].lower() == 'debug':
+                    self.path("msvcr80d.dll")
+                    self.path("msvcp80d.dll")
+                    self.path("Microsoft.VC80.DebugCRT.manifest")
+                else:
+                    self.path("msvcr80.dll")
+                    self.path("msvcp80.dll")
+                    self.path("Microsoft.VC80.CRT.manifest")
+            except RuntimeError:
+                print "WARNING: not copying VC runtimes to staging area, this will fail if you make an installer from this staging"
 
             # Vivox runtimes
             self.path("SLVoice.exe")
@@ -301,10 +320,6 @@ class WindowsManifest(ViewerManifest):
             self.path("zlib1.dll")
             self.path("vivoxplatform.dll")
             self.path("vivoxoal.dll")
-            
-            # Security
-            self.path("ssleay32.dll")
-            self.path("libeay32.dll")
 
             # For google-perftools tcmalloc allocator.
             try:
@@ -320,8 +335,12 @@ class WindowsManifest(ViewerManifest):
         self.path(src="licenses-win32.txt", dst="licenses.txt")
         self.path("featuretable.txt")
         self.path("featuretable_xp.txt")
+        self.path("VivoxAUP.txt")
 
-        #self.enable_no_crt_manifest_check()
+        # For use in crash reporting (generates minidumps)
+        self.path("dbghelp.dll")
+
+        self.enable_no_crt_manifest_check()
         
         # Media plugins - QuickTime
         if self.prefix(src='../media_plugins/quicktime/%s' % self.args['configuration'], dst="llplugin"):
@@ -334,13 +353,13 @@ class WindowsManifest(ViewerManifest):
             self.end_prefix()
 
         # winmm.dll shim
-        if self.prefix(src='../media_plugins/winmmshim/%s' % self.args['configuration'], dst=""):
+        if self.prefix(src='../media_plugins/winmmshim/%s' % self.args['configuration'], dst="llplugin"):
             self.path("winmm.dll")
             self.end_prefix()
 
 
         if self.args['configuration'].lower() == 'debug':
-            if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'debug'),
+            if self.prefix(src=os.path.join(os.pardir, os.pardir, 'libraries', 'i686-win32', 'lib', 'debug'),
                            dst="llplugin"):
                 self.path("libeay32.dll")
                 self.path("qtcored4.dll")
@@ -371,7 +390,7 @@ class WindowsManifest(ViewerManifest):
 
                 self.end_prefix()
         else:
-            if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'),
+            if self.prefix(src=os.path.join(os.pardir, os.pardir, 'libraries', 'i686-win32', 'lib', 'release'),
                            dst="llplugin"):
                 self.path("libeay32.dll")
                 self.path("qtcore4.dll")
@@ -402,7 +421,7 @@ class WindowsManifest(ViewerManifest):
 
                 self.end_prefix()
 
-        #self.disable_manifest_check()
+        self.disable_manifest_check()
 
         # pull in the crash logger and updater from other projects
         # tag:"crash-logger" here as a cue to the exporter
@@ -482,34 +501,34 @@ class WindowsManifest(ViewerManifest):
         if self.default_channel():
             if self.default_grid():
                 # release viewer
-                installer_file = "Second_Life_%(version_dashes)s_Setup.exe"
+                installer_file = "Phoenix_Firestorm_%(version_dashes)s_Setup.exe"
                 grid_vars_template = """
                 OutFile "%(installer_file)s"
                 !define INSTFLAGS "%(flags)s"
-                !define INSTNAME   "SecondLifeViewer2"
-                !define SHORTCUT   "Second Life Viewer 2"
+                !define INSTNAME   "Firestorm"
+                !define SHORTCUT   "Firestorm"
                 !define URLNAME   "secondlife"
-                Caption "Second Life ${VERSION}"
+                Caption "Firestorm ${VERSION}"
                 """
             else:
                 # beta grid viewer
-                installer_file = "Second_Life_%(version_dashes)s_(%(grid_caps)s)_Setup.exe"
+                installer_file = "Phoenix_Firestorm_%(version_dashes)s_(%(grid_caps)s)_Setup.exe"
                 grid_vars_template = """
                 OutFile "%(installer_file)s"
                 !define INSTFLAGS "%(flags)s"
-                !define INSTNAME   "SecondLife%(grid_caps)s"
-                !define SHORTCUT   "Second Life (%(grid_caps)s)"
+                !define INSTNAME   "Firestorm%(grid_caps)s"
+                !define SHORTCUT   "Firestorm (%(grid_caps)s)"
                 !define URLNAME   "secondlife%(grid)s"
                 !define UNINSTALL_SETTINGS 1
-                Caption "Second Life %(grid)s ${VERSION}"
+                Caption "Firestorm %(grid)s ${VERSION}"
                 """
         else:
             # some other channel on some grid
-            installer_file = "Second_Life_%(version_dashes)s_%(channel_oneword)s_Setup.exe"
+            installer_file = "Phoenix_%(channel_oneword)s_%(version_dashes)s_Setup.exe"
             grid_vars_template = """
             OutFile "%(installer_file)s"
             !define INSTFLAGS "%(flags)s"
-            !define INSTNAME   "SecondLife%(channel_oneword)s"
+            !define INSTNAME   "%(channel_oneword)s"
             !define SHORTCUT   "%(channel)s"
             !define URLNAME   "secondlife"
             !define UNINSTALL_SETTINGS 1
@@ -564,13 +583,13 @@ class DarwinManifest(ViewerManifest):
 
     def construct(self):
         # copy over the build result (this is a no-op if run within the xcode script)
-        self.path(self.args['configuration'] + "/Second Life.app", dst="")
+        self.path(self.args['configuration'] + "/Firestorm.app", dst="")
 
         if self.prefix(src="", dst="Contents"):  # everything goes in Contents
             self.path("Info-SecondLife.plist", dst="Info.plist")
 
             # copy additional libs in <bundle>/Contents/MacOS/
-            self.path("../packages/lib/release/libndofdev.dylib", dst="Resources/libndofdev.dylib")
+            self.path("../../libraries/universal-darwin/lib_release/libndofdev.dylib", dst="MacOS/libndofdev.dylib")
 
             self.path("../viewer_components/updater/scripts/darwin/update_install", "MacOS/update_install")
 
@@ -585,13 +604,14 @@ class DarwinManifest(ViewerManifest):
                 self.path("licenses-mac.txt", dst="licenses.txt")
                 self.path("featuretable_mac.txt")
                 self.path("SecondLife.nib")
+		self.path("VivoxAUP.txt")
 
                 # If we are not using the default channel, use the 'Firstlook
                 # icon' to show that it isn't a stable release.
                 if self.default_channel() and self.default_grid():
-                    self.path("secondlife.icns")
+                    self.path("phoenix_icon.icns")
                 else:
-                    self.path("secondlife_firstlook.icns", "secondlife.icns")
+                    self.path("phoenix_icon.icns", "phoenix_icon.icns") # Does nothing, but we could change it to use a beta icon later. - AO
                 self.path("SecondLife.nib")
                 
                 # Translations
@@ -612,38 +632,41 @@ class DarwinManifest(ViewerManifest):
                 self.path("uk.lproj")
                 self.path("zh-Hans.lproj")
 
-                libdir = "../packages/lib/release"
+                # SLVoice and vivox lols
+                self.path("vivox-runtime/universal-darwin/libsndfile.dylib", "libsndfile.dylib")
+                self.path("vivox-runtime/universal-darwin/libvivoxoal.dylib", "libvivoxoal.dylib")
+                self.path("vivox-runtime/universal-darwin/libortp.dylib", "libortp.dylib")
+                self.path("vivox-runtime/universal-darwin/libvivoxsdk.dylib", "libvivoxsdk.dylib")
+                self.path("vivox-runtime/universal-darwin/libvivoxplatform.dylib", "libvivoxplatform.dylib")
+                self.path("vivox-runtime/universal-darwin/SLVoice", "SLVoice")
+
+                libdir = "../../libraries/universal-darwin/lib_release"
                 dylibs = {}
 
-                # Need to get the llcommon dll from any of the build directories as well
-                lib = "llcommon"
-                libfile = "lib%s.dylib" % lib
-                try:
-                    self.path(self.find_existing_file(os.path.join(os.pardir,
-                                                                    lib,
-                                                                    self.args['configuration'],
-                                                                    libfile),
-                                                      os.path.join(libdir, libfile)),
-                                                      dst=libfile)
-                except RuntimeError:
-                    print "Skipping %s" % libfile
-                    dylibs[lib] = False
-                else:
-                    dylibs[lib] = True
+                # need to get the kdu dll from any of the build directories as well
+                for lib in "llkdu", "llcommon":
+                    libfile = "lib%s.dylib" % lib
+                    try:
+                        self.path(self.find_existing_file(os.path.join(os.pardir,
+                                                                       lib,
+                                                                       self.args['configuration'],
+                                                                       libfile),
+                                                          os.path.join(libdir, libfile)),
+                                  dst=libfile)
+                    except RuntimeError:
+                        print "Skipping %s" % libfile
+                        dylibs[lib] = False
+                    else:
+                        dylibs[lib] = True
 
                 if dylibs["llcommon"]:
-                    for libfile in ("libapr-1.0.dylib",
-                                    "libaprutil-1.0.dylib",
-                                    "libexpat.1.5.2.dylib",
+                    for libfile in ("libapr-1.0.3.7.dylib",
+                                    "libaprutil-1.0.3.8.dylib",
+                                    "libexpat.0.5.0.dylib",
                                     "libexception_handler.dylib",
                                     ):
                         self.path(os.path.join(libdir, libfile), libfile)
 
-                # SLVoice and vivox lols
-                for libfile in ('libsndfile.dylib', 'libvivoxoal.dylib', 'libortp.dylib', \
-                    'libvivoxsdk.dylib', 'libvivoxplatform.dylib', 'SLVoice') :
-                     self.path(os.path.join(libdir, libfile), libfile)
-                
                 try:
                     # FMOD for sound
                     self.path(self.args['configuration'] + "/libfmodwrapper.dylib", "libfmodwrapper.dylib")
@@ -663,9 +686,9 @@ class DarwinManifest(ViewerManifest):
                     mac_updater_res_path = self.dst_path_of("mac-updater.app/Contents/Resources")
                     slplugin_res_path = self.dst_path_of("SLPlugin.app/Contents/Resources")
                     for libfile in ("libllcommon.dylib",
-                                    "libapr-1.0.dylib",
-                                    "libaprutil-1.0.dylib",
-                                    "libexpat.1.5.2.dylib",
+                                    "libapr-1.0.3.7.dylib",
+                                    "libaprutil-1.0.3.8.dylib",
+                                    "libexpat.0.5.0.dylib",
                                     "libexception_handler.dylib",
                                     ):
                         target_lib = os.path.join('../../..', libfile)
@@ -686,7 +709,7 @@ class DarwinManifest(ViewerManifest):
                 if self.prefix(src="", dst="llplugin"):
                     self.path("../media_plugins/quicktime/" + self.args['configuration'] + "/media_plugin_quicktime.dylib", "media_plugin_quicktime.dylib")
                     self.path("../media_plugins/webkit/" + self.args['configuration'] + "/media_plugin_webkit.dylib", "media_plugin_webkit.dylib")
-                    self.path("../packages/lib/release/libllqtwebkit.dylib", "libllqtwebkit.dylib")
+                    self.path("../../libraries/universal-darwin/lib_release/libllqtwebkit.dylib", "libllqtwebkit.dylib")
 
                     self.end_prefix("llplugin")
 
@@ -704,7 +727,7 @@ class DarwinManifest(ViewerManifest):
         if ("package" in self.args['actions'] or 
             "unpacked" in self.args['actions']):
             self.run_command('strip -S %(viewer_binary)r' %
-                             { 'viewer_binary' : self.dst_path_of('Contents/MacOS/Second Life')})
+                             { 'viewer_binary' : self.dst_path_of('Contents/MacOS/Firestorm')})
 
     def copy_finish(self):
         # Force executable permissions to be set for scripts
@@ -713,24 +736,24 @@ class DarwinManifest(ViewerManifest):
             self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
 
     def package_finish(self):
-        channel_standin = 'Second Life Viewer 2'  # hah, our default channel is not usable on its own
+        channel_standin = 'Firestorm'  # hah, our default channel is not usable on its own
         if not self.default_channel():
             channel_standin = self.channel()
 
-        imagename="SecondLife_" + '_'.join(self.args['version'])
+        imagename="Phoenix_" + self.channel_oneword() + '_' + '_'.join(self.args['version'])
 
         # MBW -- If the mounted volume name changes, it breaks the .DS_Store's background image and icon positioning.
         #  If we really need differently named volumes, we'll need to create multiple DS_Store file images, or use some other trick.
 
-        volname="Second Life Installer"  # DO NOT CHANGE without understanding comment above
+        volname="Firestorm Installer"  # DO NOT CHANGE without understanding comment above
 
-        if self.default_channel():
-            if not self.default_grid():
-                # beta case
-                imagename = imagename + '_' + self.args['grid'].upper()
-        else:
-            # first look, etc
-            imagename = imagename + '_' + self.channel_oneword().upper()
+        #if self.default_channel():
+        #    if not self.default_grid():
+        #        # beta case
+        #        imagename = imagename + '_' + self.args['grid'].upper()
+        #else:
+        #    # first look, etc
+        #    imagename = imagename + '_' + self.channel_oneword().upper()
 
         sparsename = imagename + ".sparseimage"
         finalname = imagename + ".dmg"
@@ -755,7 +778,7 @@ class DarwinManifest(ViewerManifest):
             # Copy everything in to the mounted .dmg
 
             if self.default_channel() and not self.default_grid():
-                app_name = "Second Life " + self.args['grid']
+                app_name = "Firestorm " + self.args['grid']
             else:
                 app_name = channel_standin.strip()
 
@@ -777,6 +800,7 @@ class DarwinManifest(ViewerManifest):
             for s,d in {self.get_dst_prefix():app_name + ".app",
                         os.path.join(dmg_template, "_VolumeIcon.icns"): ".VolumeIcon.icns",
                         os.path.join(dmg_template, "background.jpg"): "background.jpg",
+			os.path.join(dmg_template, "VivoxAUP.txt"): "Vivox (Voice Services) Usage Policy.txt",
                         os.path.join(dmg_template, "_DS_Store"): ".DS_Store"}.items():
                 print "Copying to dmg", s, d
                 self.copy_action(self.src_path_of(s), os.path.join(volpath, d))
@@ -802,7 +826,7 @@ class DarwinManifest(ViewerManifest):
                 self.run_command('SetFile -a V %r' % pathname)
 
             # Create the alias file (which is a resource file) from the .r
-            self.run_command('Rez %r -o %r' %
+            self.run_command('rez %r -o %r' %
                              (self.src_path_of("installers/darwin/release-dmg/Applications-alias.r"),
                               os.path.join(volpath, "Applications")))
 
@@ -825,12 +849,13 @@ class LinuxManifest(ViewerManifest):
     def construct(self):
         super(LinuxManifest, self).construct()
         self.path("licenses-linux.txt","licenses.txt")
-        self.path("res/ll_icon.png","secondlife_icon.png")
+        self.path("VivoxAUP.txt")
+        self.path("res/firestorm_icon.png","secondlife_icon.png")
         if self.prefix("linux_tools", dst=""):
             self.path("client-readme.txt","README-linux.txt")
             self.path("client-readme-voice.txt","README-linux-voice.txt")
             self.path("client-readme-joystick.txt","README-linux-joystick.txt")
-            self.path("wrapper.sh","secondlife")
+            self.path("wrapper.sh","firestorm")
             self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
             self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
             self.path("refresh_desktop_app_entry.sh", "etc/refresh_desktop_app_entry.sh")
@@ -841,7 +866,7 @@ class LinuxManifest(ViewerManifest):
         # Create an appropriate gridargs.dat for this package, denoting required grid.
         self.put_in_file(self.flags_list(), 'etc/gridargs.dat')
 
-        self.path("secondlife-bin","bin/do-not-directly-run-secondlife-bin")
+        self.path("firestorm-bin","bin/do-not-directly-run-firestorm-bin")
         self.path("../linux_crash_logger/linux-crash-logger","bin/linux-crash-logger.bin")
         self.path("../linux_updater/linux-updater", "bin/linux-updater.bin")
         self.path("../llplugin/slplugin/SLPlugin", "bin/SLPlugin")
@@ -869,21 +894,19 @@ class LinuxManifest(ViewerManifest):
     def copy_finish(self):
         # Force executable permissions to be set for scripts
         # see CHOP-223 and http://mercurial.selenic.com/bts/issue1802
-        for script in 'secondlife', 'bin/update_install':
+        for script in 'firestorm', 'bin/update_install':
             self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
 
     def package_finish(self):
-        if 'installer_name' in self.args:
-            installer_name = self.args['installer_name']
-        else:
-            installer_name_components = ['SecondLife_', self.args.get('arch')]
-            installer_name_components.extend(self.args['version'])
-            installer_name = "_".join(installer_name_components)
-            if self.default_channel():
-                if not self.default_grid():
-                    installer_name += '_' + self.args['grid'].upper()
-            else:
-                installer_name += '_' + self.channel_oneword().upper()
+        # a standard map of strings for replacing in the templates
+        installer_name_components = ['Phoenix',self.channel_oneword(),self.args.get('arch'),'.'.join(self.args['version'])]
+        installer_name = "_".join(installer_name_components)
+        #if self.default_channel():
+        #    if not self.default_grid():
+        #        installer_name += '_' + self.args['grid'].upper()
+        #else:
+        #    installer_name += '_' + self.channel_oneword().upper()
+	print "installer name=%s" % installer_name
 
         if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
             print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
@@ -926,38 +949,41 @@ class Linux_i686Manifest(LinuxManifest):
     def construct(self):
         super(Linux_i686Manifest, self).construct()
 
-        if self.prefix("../packages/lib/release", dst="lib"):
-            self.path("libapr-1.so")
+        # install either the libllkdu we just built, or a prebuilt one, in
+        # decreasing order of preference.  for linux package, this goes to bin/
+        try:
+            self.path(self.find_existing_file('../llkdu/libllkdu.so',
+                '../../libraries/i686-linux/lib_release_client/libllkdu.so'),
+                  dst='bin/libllkdu.so')
+        except:
+            print "Skipping libllkdu.so - not found"
+
+        if self.prefix("../../libraries/i686-linux/lib_release_client", dst="lib"):
             self.path("libapr-1.so.0")
-            self.path("libapr-1.so.0.4.2")
-            self.path("libaprutil-1.so")
             self.path("libaprutil-1.so.0")
-            self.path("libaprutil-1.so.0.3.10")
-            self.path("libbreakpad_client.so.0.0.0")
-            self.path("libbreakpad_client.so.0")
-            self.path("libbreakpad_client.so")
-            self.path("libdb-5.1.so")
-            self.path("libdb-5.so")
-            self.path("libdb.so")
-            self.path("libcrypto.so.1.0.0")
-            self.path("libexpat.so.1.5.2")
-            self.path("libssl.so.1.0.0")
-            self.path("libuuid.so")
-            self.path("libuuid.so.16")
-            self.path("libuuid.so.16.0.22")
-            self.path("libSDL-1.2.so.0.11.3")
-            self.path("libdirectfb-1.4.so.5.0.4")
-            self.path("libfusion-1.4.so.5.0.4")
-            self.path("libdirect-1.4.so.5.0.4")
-            self.path("libopenjpeg.so.1.4.0")
-            self.path("libopenjpeg.so.1")
-            self.path("libopenjpeg.so")
+            self.path("libbreakpad_client.so.0.0.0", "libbreakpad_client.so.0")
+            self.path("libdb-4.2.so")
+            self.path("libcrypto.so.0.9.7")
+            self.path("libexpat.so.1")
+            self.path("libssl.so.0.9.7")
+            self.path("libuuid.so.1")
+            self.path("libSDL-1.2.so.0")
+            self.path("libELFIO.so")
+	    #self.path("libopenjpeg.so.1.4.0","libopenjpeg.so.1.4.0")
+            #self.path("libopenjpeg.so.1.4", "libopenjpeg.so.1.4")
+	    #self.path("libopenjpeg.so.1", "libopenjpeg.so.1")
+            self.path("libopenjpeg.so.1.3.0", "libopenjpeg.so.1.3")
             self.path("libalut.so")
             self.path("libopenal.so", "libopenal.so.1")
             self.path("libopenal.so", "libvivoxoal.so.1") # vivox's sdk expects this soname
-            self.path("libfontconfig.so.1.4.4")
             try:
-                    self.path("libfmod-3.75.so")
+                    self.path("libkdu.so")
+                    pass
+            except:
+                    print "Skipping libkdu.so - not found"
+                    pass
+            try:
+                    self.path("../../../fmodapi375linux/api/libfmod-3.75.so", "libfmod-3.75.so")
                     pass
             except:
                     print "Skipping libfmod-3.75.so - not found"
@@ -965,10 +991,10 @@ class Linux_i686Manifest(LinuxManifest):
             self.end_prefix("lib")
 
             # Vivox runtimes
-            if self.prefix(src="../packages/lib/release", dst="bin"):
+            if self.prefix(src="vivox-runtime/i686-linux", dst="bin"):
                     self.path("SLVoice")
                     self.end_prefix()
-            if self.prefix(src="../packages/lib/release", dst="lib"):
+            if self.prefix(src="vivox-runtime/i686-linux", dst="lib"):
                     self.path("libortp.so")
                     self.path("libsndfile.so.1")
                     #self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib

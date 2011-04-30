@@ -88,7 +88,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <integer>0.0</integer>
+      <real>0.0</real>
     </map>
     <key>RestrainedLoveOffsetAvatarY</key>
     <map>
@@ -99,7 +99,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <integer>0.0</integer>
+      <real>0.0</real>
     </map>
     <key>RestrainedLoveOffsetAvatarZ</key>
     <map>
@@ -110,7 +110,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <integer>0.0</integer>
+      <real>0.0</real>
     </map>
     <key>RestrainedLoveShowEllipsis</key>
     <map>
