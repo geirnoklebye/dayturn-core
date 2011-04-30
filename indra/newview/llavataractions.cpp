@@ -336,11 +336,7 @@ static void on_avatar_name_show_profile(const LLUUID& agent_id, const LLAvatarNa
 	}
 	else
 	{
-		llinfos << "opening web profile for " << av_name.mUsername << llendl;		
-		std::string url = getProfileURL(av_name.mUsername);
-
-		// PROFILES: open in webkit window
-		LLWeb::loadWebURLInternal(url, "", agent_id.asString());
+		LLFloaterReg::showInstance("floater_profile_view", LLSD().with("id", agent_id));
 	}
 }
 
