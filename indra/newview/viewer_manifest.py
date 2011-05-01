@@ -337,7 +337,7 @@ class WindowsManifest(ViewerManifest):
         if self.prefix(src=os.path.join(os.pardir, 'sharedlibs', self.args['configuration']),
                        dst=""):
 
-            #self.enable_crt_manifest_check()
+            # BEGIN SHARED LIBS DIRECTORY
             
             # Get llcommon and deps. If missing assume static linkage and continue.
             try:
@@ -385,22 +385,6 @@ class WindowsManifest(ViewerManifest):
             else:
                  self.path("msvcr100.dll")
                  self.path("msvcp100.dll")
-
-            # Vivox runtimes
-            try:
-                if self.prefix(src="../../newview/vivox-runtime/i686-win32", dst=""):
-                #    self.path("alut.dll")
-                    self.path("wrap_oal.dll")
-                    self.path("SLVoice.exe")
-                #    self.path("SLVoiceAgent.exe")
-                #    self.path("libeay32.dll")
-                #    self.path("srtp.dll")
-                #    self.path("ssleay32.dll")
-                #    self.path("tntk.dll")
-                    self.path("vivoxsdk.dll")
-                    self.path("ortp.dll")
-            except:
-                print "Skipping Vivox voice files (not found)"
                     
             self.path("vivoxoal.dll")
             
@@ -416,28 +400,56 @@ class WindowsManifest(ViewerManifest):
                     self.path('libtcmalloc_minimal.dll')
             except:
                 print "Skipping libtcmalloc_minimal.dll"
+                
+        #self.enable_no_crt_manifest_check()
 
+            # GStreamer libs
+            try:
+            except:
+                print "Skipping GStreamer libraries (not found)"
+
+                print "Skipping OpenAL audio libraries (not found)"                
+
+
+            # END SHARED LIBS DIRECTORY - entering indra/newview
             self.end_prefix()
 
-        #self.enable_no_crt_manifest_check()
-            # GStreamer plugins
+
+            self.path(src="licenses-win32.txt", dst="licenses.txt")
+            self.path("featuretable.txt")
+            self.path("featuretable_xp.txt")
+
+
+            # For use in crash reporting (generates minidumps) 
+            #self.path("dbghelp.dll")
+
+
+            # Vivox runtimes
+            try:
+                if self.prefix(src="../../newview/vivox-runtime/i686-win32", dst=""):
+                #    self.path("alut.dll")
+                    self.path("wrap_oal.dll")
+                    self.path("SLVoice.exe")
+                #    self.path("SLVoiceAgent.exe")
+                #    self.path("libeay32.dll")
+                #    self.path("srtp.dll")
+                #    self.path("ssleay32.dll")
+                #    self.path("tntk.dll")
+                    self.path("vivoxsdk.dll")
+                    self.path("ortp.dll")
+                    self.end_prefix()
+            except:
+                print "Skipping Vivox voice files (not found)"
+                
+
+            # GStreamer plugins directory
             try:
                 if self.prefix(src="../../newview/lib/gstreamer-plugins", dst=""):
                     self.path("*.dll", dst="lib/gstreamer-plugins/*.dll")
                     self.end_prefix()
             except:
                 print "Skipping GStreamer plugins (not found)"
-
-            # GStreamer libs
-            try:
-            except:
-                print "Skipping GStreamer libraries (not found)"
-            self.path(src="licenses-win32.txt", dst="licenses.txt")
-            self.path("featuretable.txt")
-            self.path("featuretable_xp.txt")
-
-            # For use in crash reporting (generates minidumps) 
-            #self.path("dbghelp.dll")
+                
 
         try:
         except:
