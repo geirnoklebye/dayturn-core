@@ -132,9 +132,10 @@ set(GRID agni CACHE STRING "Target Grid")
 
 set(VIEWER ON CACHE BOOL "Build Kokua viewer.")
 set(VIEWER_CHANNEL "Kokua Viewer" CACHE STRING "Viewer Channel Name")
-# set the default channel always to Kokua. Any other words set here will be included in the Windows installer.
-# For example, "KokuaExperimental" will create an installer string of Kokua_[VERSION]_Experimental_Setup.exe
-set(VIEWER_CHANNEL "Kokua" CACHE STRING "Viewer Channel Name")
+# Set the default channel always to "Kokua Release". Any other words set here will be included in the Windows installer.
+# For example, "Kokua Experimental" will create an installer string of Kokua_Experimental_[VERSION]_Setup.exe
+# and "Kokua Experimental [VERSION]: Installation Folder" -- MC
+set(VIEWER_CHANNEL "Kokua Release" CACHE STRING "Viewer Channel Name")
 set(VIEWER_LOGIN_CHANNEL ${VIEWER_CHANNEL} CACHE STRING "Fake login channel for A/B Testing")
 
 set(VERSION_BUILD "0" CACHE STRING "Revision number passed in from the outside")
