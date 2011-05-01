@@ -72,6 +72,10 @@
 #include "llpaneltopinfobar.h"
 #include "llupdaterservice.h"
 
+//MK
+#include "llstatusbar.h"
+//mk
+
 #ifdef TOGGLE_HACKED_GODLIKE_VIEWER
 BOOL 				gHackGodmode = FALSE;
 #endif
@@ -499,6 +503,14 @@ bool toggle_show_navigation_panel(const LLSD& newvalue)
 
 	LLNavigationBar::getInstance()->showNavigationPanel(value);
 //MK
+	if (gRRenabled && gStatusBar)
+	{
+		// if we show the navigation bar, we don't need the parcel info and sliders on the top status bar
+		// and vice-versa
+		gStatusBar->childSetVisible("parcel_info_panel", !value);
+		gStatusBar->childSetVisible("drawdistance", !value);
+		gStatusBar->childSetVisible("avatar_z_offset", !value);
+	}
 	if (!gRRenabled)
 //mk
 	gSavedSettings.setBOOL("ShowMiniLocationPanel", !value);
