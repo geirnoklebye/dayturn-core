@@ -1470,6 +1470,7 @@ std::string RRInterface::getOutfitLayerAsString (LLWearableType::EType layer)
 #if ALPHA_AND_TATTOO
 		case LLWearableType::WT_ALPHA: return WS_ALPHA;
 		case LLWearableType::WT_TATTOO: return WS_TATTOO;
+		case LLWearableType::WT_PHYSICS: return WS_PHYSICS;
 #endif
 		case LLWearableType::WT_EYES: return WS_EYES;
 		case LLWearableType::WT_HAIR: return WS_HAIR;
@@ -1493,6 +1494,7 @@ LLWearableType::EType RRInterface::getOutfitLayerAsType (std::string layer)
 #if ALPHA_AND_TATTOO
 	if (layer==WS_ALPHA) return LLWearableType::WT_ALPHA;
 	if (layer==WS_TATTOO) return LLWearableType::WT_TATTOO;
+	if (layer==WS_PHYSICS) return LLWearableType::WT_PHYSICS;
 #endif
 	if (layer==WS_EYES) return LLWearableType::WT_EYES;
 	if (layer==WS_HAIR) return LLWearableType::WT_HAIR;
@@ -1517,6 +1519,7 @@ std::string RRInterface::getOutfit (std::string layer)
 //	if (layer==WS_TATTOO) return (gAgent.getWearable (LLWearableType::WT_TATTOO, 0) != NULL? "1" : "0");
 	if (layer==WS_ALPHA) return (gAgentWearables.getWearable (LLWearableType::WT_ALPHA, 0) != NULL? "1" : "0");
 	if (layer==WS_TATTOO) return (gAgentWearables.getWearable (LLWearableType::WT_TATTOO, 0) != NULL? "1" : "0");
+	if (layer==WS_PHYSICS) return (gAgentWearables.getWearable (LLWearableType::WT_PHYSICS, 0) != NULL? "1" : "0");
 #endif
 	if (layer==WS_EYES) return (gAgentWearables.getWearable (LLWearableType::WT_EYES, 0) != NULL? "1" : "0");
 	if (layer==WS_HAIR) return (gAgentWearables.getWearable (LLWearableType::WT_HAIR, 0) != NULL? "1" : "0");
@@ -1526,7 +1529,7 @@ std::string RRInterface::getOutfit (std::string layer)
 			+getOutfit (WS_SOCKS)+getOutfit (WS_UNDERPANTS)+getOutfit (WS_UNDERSHIRT)
 			+getOutfit (WS_SKIN)+getOutfit (WS_EYES)+getOutfit (WS_HAIR)+getOutfit (WS_SHAPE)
 #if ALPHA_AND_TATTOO
-			+getOutfit (WS_ALPHA)+getOutfit (WS_TATTOO)
+			+getOutfit (WS_ALPHA)+getOutfit (WS_TATTOO)+getOutfit (WS_PHYSICS)
 #endif
 			;
 }

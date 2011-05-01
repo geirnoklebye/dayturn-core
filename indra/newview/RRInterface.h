@@ -26,9 +26,9 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2060001"
-#define RR_VERSION "2.06.00.01"
-#define RR_SLV_VERSION "2.6.6.15829"
+#define RR_VERSION_NUM "2060100"
+#define RR_VERSION "2.06.01.00"
+#define RR_SLV_VERSION "2.6.7.15937"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -57,6 +57,7 @@
 #if ALPHA_AND_TATTOO
 #define WS_ALPHA "alpha"
 #define WS_TATTOO "tattoo"
+#define WS_PHYSICS "physics"
 #endif
 
 //#include <set>
