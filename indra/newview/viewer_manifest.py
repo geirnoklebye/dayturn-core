@@ -387,12 +387,21 @@ class WindowsManifest(ViewerManifest):
                  self.path("msvcp100.dll")
 
             # Vivox runtimes
-            self.path("SLVoice.exe")
-            self.path("vivoxsdk.dll")
-            self.path("ortp.dll")
-            self.path("libsndfile-1.dll")
-            self.path("zlib1.dll")
-            self.path("vivoxplatform.dll")
+            try:
+                if self.prefix(src="../../newview/vivox-runtime/i686-win32", dst=""):
+                #    self.path("alut.dll")
+                    self.path("wrap_oal.dll")
+                    self.path("SLVoice.exe")
+                #    self.path("SLVoiceAgent.exe")
+                #    self.path("libeay32.dll")
+                #    self.path("srtp.dll")
+                #    self.path("ssleay32.dll")
+                #    self.path("tntk.dll")
+                    self.path("vivoxsdk.dll")
+                    self.path("ortp.dll")
+            except:
+                print "Skipping Vivox voice files (not found)"
+                    
             self.path("vivoxoal.dll")
             
             # Security
@@ -411,14 +420,18 @@ class WindowsManifest(ViewerManifest):
             self.end_prefix()
 
         #self.enable_no_crt_manifest_check()
-            # For sound
+            # GStreamer plugins
             try:
-                self.path("openal32.dll")
-                self.path("alut.dll")
-                self.end_prefix()
+                if self.prefix(src="../../newview/lib/gstreamer-plugins", dst=""):
+                    self.path("*.dll", dst="lib/gstreamer-plugins/*.dll")
+                    self.end_prefix()
             except:
-                print "Skipping OpenAL audio libraries (not found)"                
+                print "Skipping GStreamer plugins (not found)"
 
+            # GStreamer libs
+            try:
+            except:
+                print "Skipping GStreamer libraries (not found)"
             self.path(src="licenses-win32.txt", dst="licenses.txt")
             self.path("featuretable.txt")
             self.path("featuretable_xp.txt")
@@ -426,6 +439,9 @@ class WindowsManifest(ViewerManifest):
             # For use in crash reporting (generates minidumps) 
             #self.path("dbghelp.dll")
 
+        try:
+        except:
+            print "Skipping OpenAL audio libraries (not found)"
             # Media plugins - QuickTime
             if self.prefix(src='../media_plugins/quicktime/%s' % self.args['configuration'], dst="llplugin"):
                 self.path("media_plugin_quicktime.dll")
