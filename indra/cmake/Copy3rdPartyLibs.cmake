@@ -24,7 +24,7 @@ if(WINDOWS)
         vivoxplatform.dll
         vivoxsdk.dll
         ortp.dll
-        zlib1.dll
+        #zlib1.dll
         vivoxoal.dll
         )
 
