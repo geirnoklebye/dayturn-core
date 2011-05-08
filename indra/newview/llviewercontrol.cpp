@@ -505,7 +505,7 @@ bool toggle_show_navigation_panel(const LLSD& newvalue)
 //MK
 	if (gRRenabled && gStatusBar)
 	{
-		// if we show the navigation bar, we don't need the parcel info and sliders on the top status bar
+		// if we show the navigation bar or the mini location bar, we don't need the parcel info and sliders on the top status bar
 		// and vice-versa
 		gStatusBar->childSetVisible("parcel_info_panel", !value);
 		gStatusBar->childSetVisible("drawdistance", !value);
@@ -530,6 +530,14 @@ bool toggle_show_mini_location_panel(const LLSD& newvalue)
 
 	LLPanelTopInfoBar::getInstance()->setVisible(value);
 //MK
+	if (gRRenabled && gStatusBar)
+	{
+		// if we show the navigation bar or the mini location bar, we don't need the parcel info and sliders on the top status bar
+		// and vice-versa
+		gStatusBar->childSetVisible("parcel_info_panel", !value);
+		gStatusBar->childSetVisible("drawdistance", !value);
+		gStatusBar->childSetVisible("avatar_z_offset", !value);
+	}
 	if (!gRRenabled)
 //mk
 	gSavedSettings.setBOOL("ShowNavbarNavigationPanel", !value);
