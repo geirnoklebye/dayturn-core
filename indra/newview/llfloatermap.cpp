@@ -202,11 +202,11 @@ void LLFloaterMap::updateMinorDirections()
 void LLFloaterMap::draw()
 {
 //MK
-	//if (gRRenabled && (gAgent.mRRInterface.mContainsShowminimap || gAgent.mRRInterface.mContainsShowloc))
-	//{
-	//	closeFloater();
-	//	return;
-	//}
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowminimap)
+	{
+		closeFloater();
+		return;
+	}
 //mk
 	F32 rotation = 0;
 
