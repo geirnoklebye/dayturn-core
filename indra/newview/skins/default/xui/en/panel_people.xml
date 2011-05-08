@@ -158,7 +158,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                <commit_callback
                   function="People.addFriend" />
              </button>
-             <icon
+<!--             <icon
              follows="bottom|left|right"
              height="25"
              image_name="Toolbar_Right_Off"
@@ -167,6 +167,22 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
              name="dummy_icon"
              width="243"
              />
+-->
+             <slider
+          control_name="NearMeRange"
+          decimal_digits="0"
+          follows="bottom|left"
+          height="16"
+          increment="2"
+          initial_value="96"
+          label="Range(meters):"
+          label_width="105"
+          layout="topleft"
+          max_val="400"
+          min_val="32"
+          name="NearMeRange"
+          left_pad="10"
+          width="241" />
             </panel>
         </panel>
         <panel
