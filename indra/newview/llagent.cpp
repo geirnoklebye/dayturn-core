@@ -331,10 +331,18 @@ void LLAgent::moveAt(S32 direction, bool reset)
 
 	if (direction > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveForward) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_AT_POS | AGENT_CONTROL_FAST_AT);
 	}
 	else if (direction < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveBackward) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_AT_NEG | AGENT_CONTROL_FAST_AT);
 	}
 
@@ -359,10 +367,18 @@ void LLAgent::moveAtNudge(S32 direction)
 
 	if (direction > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveForward) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_NUDGE_AT_POS);
 	}
 	else if (direction < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveBackward) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_NUDGE_AT_NEG);
 	}
 
@@ -384,10 +400,18 @@ void LLAgent::moveLeft(S32 direction)
 
 	if (direction > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveStrafeRight) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_LEFT_POS | AGENT_CONTROL_FAST_LEFT);
 	}
 	else if (direction < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveStrafeLeft) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_LEFT_NEG | AGENT_CONTROL_FAST_LEFT);
 	}
 
@@ -409,10 +433,18 @@ void LLAgent::moveLeftNudge(S32 direction)
 
 	if (direction > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveStrafeRight) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_NUDGE_LEFT_POS);
 	}
 	else if (direction < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveStrafeLeft) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_NUDGE_LEFT_NEG);
 	}
 
@@ -434,10 +466,18 @@ void LLAgent::moveUp(S32 direction)
 
 	if (direction > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveUp) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_UP_POS | AGENT_CONTROL_FAST_UP);
 	}
 	else if (direction < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveDown) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_UP_NEG | AGENT_CONTROL_FAST_UP);
 	}
 
@@ -453,10 +493,18 @@ void LLAgent::moveYaw(F32 mag, bool reset_view)
 
 	if (mag > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnRight) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_YAW_POS);
 	}
 	else if (mag < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnLeft) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_YAW_NEG);
 	}
 
@@ -475,10 +523,18 @@ void LLAgent::movePitch(F32 mag)
 
 	if (mag > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnUp) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_PITCH_POS);
 	}
 	else if (mag < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnDown) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_PITCH_NEG);
 	}
 }

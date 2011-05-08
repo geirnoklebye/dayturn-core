@@ -324,6 +324,16 @@ void LLFloaterMove::setMovementMode(const EMovementMode mode)
 	case MM_RUN:
 		gAgent.setAlwaysRun();
 		gAgent.setRunning();
+//MK
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsRun || gAgent.mRRInterface.mContainsAlwaysRun) 
+			{
+				gAgent.clearRunning();
+				gAgent.clearAlwaysRun();
+			}
+		}
+//mk
 		break;
 	case MM_WALK:
 		gAgent.clearAlwaysRun();
@@ -337,6 +347,15 @@ void LLFloaterMove::setMovementMode(const EMovementMode mode)
 	gAgent.sendWalkRun(gAgent.getAlwaysRun());
 	
 	updateButtonsWithMovementMode(mode);
+//MK
+		if (gRRenabled && mode == MM_RUN)
+		{
+			if (gAgent.mRRInterface.mContainsRun || gAgent.mRRInterface.mContainsAlwaysRun) 
+			{
+				updateButtonsWithMovementMode(MM_WALK);
+			}
+		}
+//mk
 
 	bool bHideModeButtons = MM_FLY == mode
 		|| (isAgentAvatarValid() && gAgentAvatarp->isSitting());

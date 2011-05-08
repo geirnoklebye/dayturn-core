@@ -184,6 +184,18 @@ void refreshCachedVariable (std::string var)
 	else if (var == "showhovertextworld")	gAgent.mRRInterface.mContainsShowhovertextworld = contained;
 	else if (var == "defaultwear")			gAgent.mRRInterface.mContainsDefaultwear = contained;
 	else if (var == "permissive")			gAgent.mRRInterface.mContainsPermissive = contained;
+	else if (var == "temprun")					gAgent.mRRInterface.mContainsRun = contained;
+	else if (var == "alwaysrun")				gAgent.mRRInterface.mContainsAlwaysRun = contained;
+	//else if (var == "moveup")					gAgent.mRRInterface.mContainsMoveUp = contained;
+	//else if (var == "movedown")				gAgent.mRRInterface.mContainsMoveDown = contained;
+	//else if (var == "moveleft")			gAgent.mRRInterface.mContainsMoveStrafeLeft = contained;
+	//else if (var == "moveright")			gAgent.mRRInterface.mContainsMoveStrafeRight = contained;
+	//else if (var == "moveforward")				gAgent.mRRInterface.mContainsMoveForward = contained;
+	//else if (var == "movebackward")			gAgent.mRRInterface.mContainsMoveBackward = contained;
+	//else if (var == "moveturnup")				gAgent.mRRInterface.mContainsMoveTurnUp = contained;
+	//else if (var == "moveturndown")			gAgent.mRRInterface.mContainsMoveTurnDown = contained;
+	//else if (var == "moveturnleft")			gAgent.mRRInterface.mContainsMoveTurnLeft = contained;
+	//else if (var == "moveturnright")			gAgent.mRRInterface.mContainsMoveTurnRight = contained;
 
 	if (var == "showinv") {
 		if (gAgent.mRRInterface.mContainsShowinv) {
@@ -271,6 +283,24 @@ void refreshCachedVariable (std::string var)
 			else LLFloaterMove::setFlyingMode(TRUE);
 		}
 	}
+	else if (var == "temprun") {
+		if (gAgent.mRRInterface.mContainsRun) {
+			if (gAgent.getRunning()) {
+				if (gAgent.getAlwaysRun()) gAgent.clearAlwaysRun();
+				gAgent.clearRunning();
+				gAgent.sendWalkRun(gAgent.getRunning());
+			}
+		}
+	}
+	else if (var == "alwaysrun") {
+		if (gAgent.mRRInterface.mContainsAlwaysRun) {
+			if (gAgent.getAlwaysRun()) {
+				if (gAgent.getRunning()) gAgent.clearRunning();
+				gAgent.clearAlwaysRun();
+				gAgent.sendWalkRun(gAgent.getRunning());
+			}
+		}
+	}
 
 }
 
@@ -345,6 +375,37 @@ RRInterface::RRInterface():
 	, mSnappingBackToLastStandingLocation(FALSE)
 	, mUserUpdateAttachmentsUpdatesAll(FALSE)
 	, mScriptsEnabledOnce(FALSE)
+	, mHasLockedHuds(FALSE)
+	, mContainsDetach(FALSE)
+	, mContainsShowinv(FALSE)
+	, mContainsUnsit(FALSE)
+	, mContainsFartouch(FALSE)
+	, mContainsShowworldmap(FALSE)
+	, mContainsShowminimap(FALSE)
+	, mContainsShowloc(FALSE)
+	, mContainsShownames(FALSE)
+	, mContainsSetenv(FALSE)
+	, mContainsSetdebug(FALSE)
+	, mContainsFly(FALSE)
+	, mContainsEdit(FALSE)
+	, mContainsRez(FALSE)
+	, mContainsShowhovertextall(FALSE)
+	, mContainsShowhovertexthud(FALSE)
+	, mContainsShowhovertextworld(FALSE)
+	, mContainsDefaultwear(FALSE)
+	, mContainsPermissive(FALSE)
+	, mContainsRun(FALSE)
+	, mContainsAlwaysRun(FALSE)
+	//, mContainsMoveUp(FALSE)
+	//, mContainsMoveDown(FALSE)
+	//, mContainsMoveForward(FALSE)
+	//, mContainsMoveBackward(FALSE)
+	//, mContainsMoveTurnUp(FALSE)
+	//, mContainsMoveTurnDown(FALSE)
+	//, mContainsMoveTurnLeft(FALSE)
+	//, mContainsMoveTurnRight(FALSE)
+	//, mContainsMoveStrafeLeft(FALSE)
+	//, mContainsMoveStrafeRight(FALSE)
 {
 	mAllowedS32 = ",";
 
@@ -1195,6 +1256,17 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		if (!allowed_to_sittp) add (object_uuid, "sittp", "");
 		return res;
 	}
+	//else if (command=="offertp") { // force to offer a tp to someone (regardless of showloc restriction, but do not show a confirmation)
+	//	LLSD edit_args;
+	//	edit_args["REGION"] = gAgent.getRegion()->getName();
+
+	//	LLSD payload;
+	//	if (LLUUID::validate(option)) {
+	//		LLUUID uuid(option);
+	//		payload["ids"].append(uuid);
+
+	//	}
+	//}
 	else if (command=="attach" || command == "addoutfit") { // attach:cuffs=force
 		return forceAttach (option, FALSE, AttachHow_over_or_replace); // Will have to be changed back to AttachHow_replace eventually, but not before a clear and early communication
 	}

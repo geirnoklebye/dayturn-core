@@ -5589,6 +5589,12 @@ class LLWorldAlwaysRun : public view_listener_t
 	{
 		// as well as altering the default walk-vs-run state,
 		// we also change the *current* walk-vs-run state.
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsAlwaysRun)
+		{
+			gAgent.setAlwaysRun(); // we set it to TRUE here so that the following test sets it to FALSE
+		}
+//mk
 		if (gAgent.getAlwaysRun())
 		{
 			gAgent.clearAlwaysRun();

@@ -110,6 +110,9 @@ static void agent_handle_doubletap_run(EKeystate s, LLAgent::EDoubleTapRunMode m
 			// Same walk-key was pushed again quickly; this is a
 			// double-tap so engage temporary running.
 			gAgent.setRunning();
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsRun) gAgent.clearRunning();
+//mk
 			gAgent.sendWalkRun(gAgent.getRunning());
 		}
 

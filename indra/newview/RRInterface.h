@@ -26,9 +26,9 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2060100"
-#define RR_VERSION "2.06.01.00"
-#define RR_SLV_VERSION "2.6.7.15937"
+#define RR_VERSION_NUM "2070000"
+#define RR_VERSION "2.07.00.00"
+#define RR_SLV_VERSION "2.6.8.16112"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -253,6 +253,18 @@ public:
 	BOOL mContainsShowhovertextworld;
 	BOOL mContainsDefaultwear;
 	BOOL mContainsPermissive;
+	BOOL mContainsRun;
+	BOOL mContainsAlwaysRun;
+	//BOOL mContainsMoveUp;
+	//BOOL mContainsMoveDown;
+	//BOOL mContainsMoveForward;
+	//BOOL mContainsMoveBackward;
+	//BOOL mContainsMoveTurnUp;
+	//BOOL mContainsMoveTurnDown;
+	//BOOL mContainsMoveTurnLeft;
+	//BOOL mContainsMoveTurnRight;
+	//BOOL mContainsMoveStrafeLeft;
+	//BOOL mContainsMoveStrafeRight;
 
 	static BOOL sRRNoSetEnv;
 	static BOOL sRestrainedLoveDebug;
