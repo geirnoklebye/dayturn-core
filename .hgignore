@@ -74,5 +74,8 @@ indra/cmake/FMOD.cmake__
 indra/newview/viewer_manifest.py__
 install.xml__
 scripts/install.py
+autobuild.xml.orig
+install.xml.orig
+indra/newview/viewer_manifest.py.orig
 syntax: regexp
 fmodapi375win/*
