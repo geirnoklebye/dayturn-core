@@ -5500,7 +5500,15 @@ void LLWearableBridgeAction::wearOnAvatar()
 	LLViewerInventoryItem* item = getItem();
 	if(item)
 	{
-		LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, true);
+//MK
+////		LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, true);
+		bool replace = true;
+		if (gSavedSettings.controlExists("RestrainedLoveDoubleClickWear") && !gSavedSettings.getBOOL("RestrainedLoveDoubleClickWear"))
+		{
+			replace = false;
+		}
+		LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, replace);
+//mk
 	}
 }
 
