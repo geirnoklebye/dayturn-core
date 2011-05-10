@@ -747,6 +747,13 @@ void LLIMFloater::sessionInitReplyReceived(const LLUUID& im_session_id)
 		mSessionID = im_session_id;
 		setKey(im_session_id);
 		mControlPanel->setSessionId(im_session_id);
+//MK
+		// Disable "Teleport" button if friend is offline
+		if(LLAvatarActions::isFriend(mOtherParticipantUUID))
+		{
+			getChildView("teleport_btn")->setEnabled(LLAvatarTracker::instance().isBuddyOnline(mOtherParticipantUUID));
+		}
+//mk
 	}
 
 	// updating "Call" button from group control panel here to enable it without placing into draw() (EXT-4796)
