@@ -1668,6 +1668,7 @@
                   <string>-DWORD_SIZE:STRING=32</string>
                   <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
+                  <string>-DFMOD=TRUE</string>
                 </array>
                 <key>arguments</key>
                 <array>
