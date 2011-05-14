@@ -89,7 +89,7 @@ public:
 	S32 getSquareMetersLeft() const;
 
 	LLPanelNearByMedia* getNearbyMediaPanel() { return mPanelNearByMedia; }
-
+    BOOL getAudioStreamEnabled() const;
 private:
 	
 	void onClickBuyCurrency();
@@ -101,6 +101,7 @@ private:
 	void onClickStatistics();
 	void onClickScreen(S32 x, S32 y);
 
+	static void onClickStreamToggle(void* data);		// ## Zi: Media/Stream separation
 	static void onClickMediaToggle(void* data);
 	static void onClickBalance(void* data);
 
@@ -118,6 +119,7 @@ private:
 	LLIconCtrl	*mIconPresets;
 	LLButton	*mBtnVolume;
 	LLTextBox	*mBoxBalance;
+	LLButton	*mStreamToggle;		// ## Zi: Media/Stream separation
 	LLButton	*mMediaToggle;
 	LLButton	*mBandwidthButton;
 	LLView		*mScriptOut;
@@ -129,6 +131,7 @@ private:
 	S32				mHealth;
 	S32				mSquareMetersCredit;
 	S32				mSquareMetersCommitted;
+	BOOL			mAudioStreamEnabled;
 	LLFrameTimer*	mBalanceTimer;
 	LLFrameTimer*	mHealthTimer;
 	LLPanelPresetsPulldown* mPanelPresetsPulldown;

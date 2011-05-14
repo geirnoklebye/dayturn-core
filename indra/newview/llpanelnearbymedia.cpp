@@ -28,7 +28,7 @@
 
 #include "llpanelnearbymedia.h"
 
-#include "llaudioengine.h"
+// #include "llaudioengine.h"	// ## Zi: Media/Stream separation
 #include "llcheckboxctrl.h"
 #include "llcombobox.h"
 #include "llresizebar.h"
@@ -63,7 +63,7 @@
 extern LLControlGroup gSavedSettings;
 
 static const LLUUID PARCEL_MEDIA_LIST_ITEM_UUID = LLUUID("CAB5920F-E484-4233-8621-384CF373A321");
-static const LLUUID PARCEL_AUDIO_LIST_ITEM_UUID = LLUUID("DF4B020D-8A24-4B95-AB5D-CA970D694822");
+// static const LLUUID PARCEL_AUDIO_LIST_ITEM_UUID = LLUUID("DF4B020D-8A24-4B95-AB5D-CA970D694822");	// ## Zi: Media/Stream separation
 
 const F32 AUTO_CLOSE_FADE_TIME_START= 2.0f;
 const F32 AUTO_CLOSE_FADE_TIME_END = 3.0f;
@@ -78,15 +78,18 @@ LLPanelNearByMedia::LLPanelNearByMedia()
 	  mEnableAllCtrl(NULL),
 	  mAllMediaDisabled(false),
 	  mDebugInfoVisible(false),
-	  mParcelMediaItem(NULL),
-	  mParcelAudioItem(NULL)
+	  mParcelMediaItem(NULL)
+//	  mParcelAudioItem(NULL)	// ## Zi: Media/Stream separation
 {
 	mHoverTimer.stop();
 
+	/* ## Zi: Media/Stream separation
 	mParcelAudioAutoStart = gSavedSettings.getBOOL(LLViewerMedia::AUTO_PLAY_MEDIA_SETTING) &&
 							gSavedSettings.getBOOL("MediaTentativeAutoPlay");
 
 	gSavedSettings.getControl(LLViewerMedia::AUTO_PLAY_MEDIA_SETTING)->getSignal()->connect(boost::bind(&LLPanelNearByMedia::handleMediaAutoPlayChanged, this, _2));
+	## Zi: Media/Stream separation
+	*/
 
 	mCommitCallbackRegistrar.add("MediaListCtrl.EnableAll",		boost::bind(&LLPanelNearByMedia::onClickEnableAll, this));
 	mCommitCallbackRegistrar.add("MediaListCtrl.DisableAll",		boost::bind(&LLPanelNearByMedia::onClickDisableAll, this));
@@ -153,7 +156,7 @@ BOOL LLPanelNearByMedia::postBuild()
 	
 	mEmptyNameString = getString("empty_item_text");
 	mParcelMediaName = getString("parcel_media_name");
-	mParcelAudioName = getString("parcel_audio_name");
+//	mParcelAudioName = getString("parcel_audio_name");	// ## Zi: Media/Stream separation
 	mPlayingString = getString("playing_suffix");
 	
 	mMediaList->setDoubleClickCallback(onZoomMedia, this);
@@ -174,14 +177,15 @@ BOOL LLPanelNearByMedia::postBuild()
 	
 	return TRUE;
 }
-
+/* ## Zi: Media/Stream separation
 void LLPanelNearByMedia::handleMediaAutoPlayChanged(const LLSD& newvalue)
 {
 	// update mParcelAudioAutoStart if AUTO_PLAY_MEDIA_SETTING changes
 	mParcelAudioAutoStart = gSavedSettings.getBOOL(LLViewerMedia::AUTO_PLAY_MEDIA_SETTING) &&
 							gSavedSettings.getBOOL("MediaTentativeAutoPlay");
 }
-
+## Zi: Media/Stream separation
+*/
 /*virtual*/
 void LLPanelNearByMedia::onMouseEnter(S32 x, S32 y, MASK mask)
 {
@@ -273,10 +277,13 @@ BOOL LLPanelNearByMedia::handleHover(S32 x, S32 y, MASK mask)
 	return true;
 }
 
+/* 	## Zi: Media/Stream separation
 bool LLPanelNearByMedia::getParcelAudioAutoStart()
 {
 	return mParcelAudioAutoStart;
 }
+## Zi: Media/Stream separation
+*/
 
 LLScrollListItem* LLPanelNearByMedia::addListItem(const LLUUID &id)
 {
@@ -426,7 +433,7 @@ void LLPanelNearByMedia::updateListItem(LLScrollListItem* item,
 		// *HACK ALERT: force ordering of Media before Audio before the rest of the list
 		S32 new_visibility = 
 			item->getUUID() == PARCEL_MEDIA_LIST_ITEM_UUID ? 3
-			: item->getUUID() == PARCEL_AUDIO_LIST_ITEM_UUID ? 2
+//			: item->getUUID() == PARCEL_AUDIO_LIST_ITEM_UUID ? 2	// ## Zi: Media/Stream separation
 			: (has_media) ? 1 
 			: ((is_disabled) ? 0
 			: -1);
@@ -534,7 +541,7 @@ void LLPanelNearByMedia::refreshParcelItems()
 	// First add/remove the "fake" items Parcel Media and Parcel Audio.
 	// These items will have special UUIDs 
 	//    PARCEL_MEDIA_LIST_ITEM_UUID
-	//    PARCEL_AUDIO_LIST_ITEM_UUID
+	//    PARCEL_AUDIO_LIST_ITEM_UUID (removed: ## Zi: Media/Stream separation)
 	//
 	// Get the filter choice.
 	const LLSD &choice_llsd = mShowCtrl->getSelectedValue();
@@ -585,7 +592,7 @@ void LLPanelNearByMedia::refreshParcelItems()
 					   MEDIA_CLASS_ALL,
 					   "parcel media");
 	}
-	
+	/* 	## Zi: Media/Stream separation
 	// Next Parcel Audio: add or remove it as necessary (don't show if disabled in prefs)
 	if (should_include && LLViewerMedia::hasParcelAudio() && gSavedSettings.getBOOL("AudioStreamingMusic"))
 	{
@@ -603,7 +610,6 @@ void LLPanelNearByMedia::refreshParcelItems()
 			mMediaList->setNeedsSort(true);
 		}
 	}
-	
 	// ... then update it
 	if (NULL != mParcelAudioItem)
 	{
@@ -622,6 +628,7 @@ void LLPanelNearByMedia::refreshParcelItems()
 					   MEDIA_CLASS_ALL,
 					   "parcel audio");
 	}
+	## Zi: Media/Stream separation */
 }
 
 void LLPanelNearByMedia::refreshList()
@@ -642,7 +649,7 @@ void LLPanelNearByMedia::refreshList()
 
 		// Clear all items so the list gets regenerated.
 		mMediaList->deleteAllItems();
-		mParcelAudioItem = NULL;
+		// mParcelAudioItem = NULL;	// ## Zi: Media/Stream separation
 		mParcelMediaItem = NULL;
 		all_items_deleted = true;
 		
@@ -727,8 +734,8 @@ void LLPanelNearByMedia::refreshList()
 		LLScrollListItem* item = (*item_it);
 		LLUUID row_id = item->getUUID();
 		
-		if (row_id != PARCEL_MEDIA_LIST_ITEM_UUID &&
-			row_id != PARCEL_AUDIO_LIST_ITEM_UUID)
+		if (row_id != PARCEL_MEDIA_LIST_ITEM_UUID)
+			// &&			row_id != PARCEL_AUDIO_LIST_ITEM_UUID)	// ## Zi: Media/Stream separation
 		{
 			LLViewerMediaImpl* impl = LLViewerMedia::getMediaImplFromTextureID(row_id);
 			if(impl)
@@ -806,6 +813,7 @@ void LLPanelNearByMedia::onCheckItem(LLUICtrl* ctrl, const LLUUID &row_id)
 
 bool LLPanelNearByMedia::setDisabled(const LLUUID &row_id, bool disabled)
 {
+	/* ## Zi: Media/Stream separation
 	if (row_id == PARCEL_AUDIO_LIST_ITEM_UUID)
 	{
 		if (disabled)
@@ -818,7 +826,9 @@ bool LLPanelNearByMedia::setDisabled(const LLUUID &row_id, bool disabled)
 		}
 		return true;
 	}
-	else if (row_id == PARCEL_MEDIA_LIST_ITEM_UUID)
+	else
+	## Zi: Media/Stream separation */
+	if (row_id == PARCEL_MEDIA_LIST_ITEM_UUID)
 	{
 		if (disabled)
 		{
@@ -918,7 +928,8 @@ void LLPanelNearByMedia::onClickParcelAudioPause()
 	// 'true' means pause
 	gAudiop->pauseInternetStream(true);
 }
-
+## Zi: Media/Stream separation
+*/
 bool LLPanelNearByMedia::shouldShow(LLViewerMediaImpl* impl)
 {	
 	const LLSD &choice_llsd = mShowCtrl->getSelectedValue();
@@ -981,6 +992,7 @@ void LLPanelNearByMedia::updateControls()
 {
 	LLUUID selected_media_id = mMediaList->getValue().asUUID();
 	
+	/* ## Zi: Media/Stream separation
 	if (selected_media_id == PARCEL_AUDIO_LIST_ITEM_UUID)
 	{
 		if (!LLViewerMedia::hasParcelAudio() || !gSavedSettings.getBOOL("AudioStreamingMusic"))
@@ -996,7 +1008,9 @@ void LLPanelNearByMedia::updateControls()
 							  gSavedSettings.getF32("AudioLevelMusic") );
 		}
 	}
-	else if (selected_media_id == PARCEL_MEDIA_LIST_ITEM_UUID)
+	else
+	## Zi: Media/Stream separation */
+	if (selected_media_id == PARCEL_MEDIA_LIST_ITEM_UUID)
 	{
 		if (!LLViewerMedia::hasParcelMedia() || !gSavedSettings.getBOOL("AudioStreamingMedia"))
 		{
@@ -1112,8 +1126,11 @@ void LLPanelNearByMedia::onClickSelectedMediaPlay()
 	setDisabled(selected_media_id, false);
 	
 	// Special code to make play "unpause" if time-based and playing
+	/*
+	## Zi: Media/Stream separation
 	if (selected_media_id != PARCEL_AUDIO_LIST_ITEM_UUID)
 	{
+	*/
 		LLViewerMediaImpl *impl = (selected_media_id == PARCEL_MEDIA_LIST_ITEM_UUID) ?
 			((LLViewerMediaImpl*)LLViewerParcelMedia::getParcelMedia()) : LLViewerMedia::getMediaImplFromTextureID(selected_media_id);
 		if (NULL != impl)
@@ -1129,17 +1146,20 @@ void LLPanelNearByMedia::onClickSelectedMediaPlay()
 				LLViewerParcelMedia::play(LLViewerParcelMgr::getInstance()->getAgentParcel());
 			}
 		}
-	}	
+//	}	// ## Zi: Media/Stream separation
 }
 
 void LLPanelNearByMedia::onClickSelectedMediaPause()
 {
 	LLUUID selected_media_id = mMediaList->getValue().asUUID();
+	/* ## Zi: Media/Stream separation
 	if (selected_media_id == PARCEL_AUDIO_LIST_ITEM_UUID)
 	{
 		onClickParcelAudioPause();
 	}
-	else if (selected_media_id == PARCEL_MEDIA_LIST_ITEM_UUID) 
+	else
+	## Zi: Media/Stream separation */
+	if (selected_media_id == PARCEL_MEDIA_LIST_ITEM_UUID) 
 	{
 		onClickParcelMediaPause();
 	}
@@ -1155,11 +1175,14 @@ void LLPanelNearByMedia::onClickSelectedMediaPause()
 void LLPanelNearByMedia::onClickSelectedMediaMute()
 {
 	LLUUID selected_media_id = mMediaList->getValue().asUUID();
+	/* ## Zi: Media/Stream separation
 	if (selected_media_id == PARCEL_AUDIO_LIST_ITEM_UUID)
 	{
 		gSavedSettings.setBOOL("MuteMusic", mMuteBtn->getValue());
 	}
 	else {
+	## Zi: Media/Stream separation
+	*/
 		LLViewerMediaImpl* impl = (selected_media_id == PARCEL_MEDIA_LIST_ITEM_UUID) ?
 			((LLViewerMediaImpl*)LLViewerParcelMedia::getParcelMedia()) : LLViewerMedia::getMediaImplFromTextureID(selected_media_id);
 		if (NULL != impl)
@@ -1179,31 +1202,35 @@ void LLPanelNearByMedia::onClickSelectedMediaMute()
 				impl->setVolume(mVolumeSlider->getValueF32());
 			}
 		}
-	}
+//	}	// ## Zi: Media/Stream separation
 }
 
 void LLPanelNearByMedia::onCommitSelectedMediaVolume()
 {
 	LLUUID selected_media_id = mMediaList->getValue().asUUID();
+	/* ## Zi: Media/Stream separation
 	if (selected_media_id == PARCEL_AUDIO_LIST_ITEM_UUID)
 	{
 		F32 vol = mVolumeSlider->getValueF32();
 		gSavedSettings.setF32("AudioLevelMusic", vol);
 	}
 	else {
+	## Zi: Media/Stream separation
+	*/
 		LLViewerMediaImpl* impl = (selected_media_id == PARCEL_MEDIA_LIST_ITEM_UUID) ?
 			((LLViewerMediaImpl*)LLViewerParcelMedia::getParcelMedia()) : LLViewerMedia::getMediaImplFromTextureID(selected_media_id);
 		if (NULL != impl)
 		{
 			impl->setVolume(mVolumeSlider->getValueF32());
 		}
-	}
+	// }	// ## Zi: Media/Stream separation
 }
 
 void LLPanelNearByMedia::onClickSelectedMediaZoom()
 {
 	LLUUID selected_media_id = mMediaList->getValue().asUUID();
-	if (selected_media_id == PARCEL_AUDIO_LIST_ITEM_UUID || selected_media_id == PARCEL_MEDIA_LIST_ITEM_UUID)
+	if (	// selected_media_id == PARCEL_AUDIO_LIST_ITEM_UUID ||	// ## Zi: Media/Stream separation
+		selected_media_id == PARCEL_MEDIA_LIST_ITEM_UUID)
 		return;
 	LLViewerMediaFocus::getInstance()->focusZoomOnMedia(selected_media_id);
 }
