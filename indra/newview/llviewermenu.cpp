@@ -5147,6 +5147,35 @@ class LLToolsStopAllAnimations : public view_listener_t
 	}
 };
 
+class LLToolsRestartAllAnimations : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		S32 i;
+		for (i=0; i<gObjectList.getNumObjects(); ++i)
+		{
+			LLViewerObject* object = gObjectList.getObject(i);
+			if (object && object->isAvatar())
+			{
+				LLVOAvatar* avatarp = (LLVOAvatar*)object;
+				if (avatarp)
+				{
+					for ( LLVOAvatar::AnimIterator anim_it =
+							  avatarp->mPlayingAnimations.begin();
+						  anim_it != avatarp->mPlayingAnimations.end();
+						  anim_it++)
+					{
+						// restart this animation locally only, don't propagate to server
+						avatarp->stopMotion(anim_it->first, TRUE);
+						avatarp->startMotion(anim_it->first);
+					}
+				}
+			}
+		}
+		return true;
+	}
+};
+
 class LLToolsReleaseKeys : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -8578,6 +8607,7 @@ void initialize_menus()
 	commit.add("Tools.Link", boost::bind(&LLSelectMgr::linkObjects, LLSelectMgr::getInstance()));
 	commit.add("Tools.Unlink", boost::bind(&LLSelectMgr::unlinkObjects, LLSelectMgr::getInstance()));
 	view_listener_t::addMenu(new LLToolsStopAllAnimations(), "Tools.StopAllAnimations");
+	view_listener_t::addMenu(new LLToolsRestartAllAnimations(), "Tools.RestartAllAnimations");
 	view_listener_t::addMenu(new LLToolsReleaseKeys(), "Tools.ReleaseKeys");
 	view_listener_t::addMenu(new LLToolsEnableReleaseKeys(), "Tools.EnableReleaseKeys");	
 	commit.add("Tools.LookAtSelection", boost::bind(&handle_look_at_selection, _2));

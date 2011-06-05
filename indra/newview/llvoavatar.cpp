@@ -4624,8 +4624,11 @@ BOOL LLVOAvatar::isAnyAnimationSignaled(const LLUUID *anim_array, const S32 num_
 //-----------------------------------------------------------------------------
 void LLVOAvatar::resetAnimations()
 {
-	LLKeyframeMotion::flushKeyframeCache();
-	flushAllMotions();
+//MK
+////	LLKeyframeMotion::flushKeyframeCache();
+////	flushAllMotions();
+	mMotionController.updateMotions(true);
+//mk
 }
 
 // Override selectively based on avatar sex and whether we're using new
