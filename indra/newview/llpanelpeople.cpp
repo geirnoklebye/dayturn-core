@@ -939,7 +939,10 @@ void LLPanelPeople::updateNearbyList()
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 	{
-		LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
+		if (LLSideTray::getInstance()->childIsVisible("nearby_panel") == true)
+		{
+			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
+		}
 		return;
 	}
 //mk
@@ -965,7 +968,10 @@ void LLPanelPeople::updateRecentList()
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 	{
-		LLSideTray::getInstance()->childSetVisible("recent_panel", false);
+		if (LLSideTray::getInstance()->childIsVisible("nearby_panel") == true)
+		{
+			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
+		}
 		return;
 	}
 //mk
