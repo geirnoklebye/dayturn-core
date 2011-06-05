@@ -304,6 +304,7 @@ private:
 	BOOL mAllowCancelTp; // TRUE unless forced to TP with @tpto (=> receive TP order from server, act like it is a lure from a Linden => don't show the cancel button)
 	LLUUID mSitTargetId;
 	std::string mLastLoadedPreset; // contains the name of the latest loaded Windlight preset
+	int mLaunchTimestamp; // timestamp of the beginning of this session
 	
 };
 

@@ -406,6 +406,7 @@ RRInterface::RRInterface():
 	//, mContainsMoveTurnRight(FALSE)
 	//, mContainsMoveStrafeLeft(FALSE)
 	//, mContainsMoveStrafeRight(FALSE)
+	, mLaunchTimestamp(LLDate::now().secondsSinceEpoch())
 {
 	mAllowedS32 = ",";
 
@@ -2749,7 +2750,7 @@ std::string RRInterface::getDummyName (std::string name, EChatAudible audible /*
 {
 	int len = name.length();
 	if (len < 2) return ""; // just to avoid crashing in some cases
-	unsigned char hash = name.at(3) + len; // very lame hash function I know... but it should be linear enough (the old length method was way too gaussian with a peak at 11 to 16 characters)
+	unsigned char hash = name.at(3) + len + mLaunchTimestamp; // very lame hash function I know... but it should be linear enough (the old length method was way too gaussian with a peak at 11 to 16 characters)
 	unsigned char mod = hash % 28;
 	std::string res = "";
 	switch (mod) {
