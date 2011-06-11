@@ -117,10 +117,10 @@ void change_item_parent(LLInventoryModel* model,
 		{
 			LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
 			LLInventoryCategory* cat_new_parent = gInventory.getCategory (new_parent_id);
-			if (gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
+			// We can move this item if we are moving it from an unshared folder to another one, even if both folders are locked
+			if (gAgent.mRRInterface.isUnderRlvShare(cat_parent) || gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
 			{
-				if (!gAgent.mRRInterface.canAttachCategory(cat_parent, false) || !gAgent.mRRInterface.canDetachCategory(cat_parent, false)
-				 || !gAgent.mRRInterface.canAttachCategory(cat_new_parent, false) || !gAgent.mRRInterface.canDetachCategory(cat_new_parent, false))
+				if (gAgent.mRRInterface.isFolderLocked(cat_parent) || gAgent.mRRInterface.isFolderLocked(cat_new_parent))
 				{
 					return;
 				}
@@ -157,10 +157,10 @@ void change_category_parent(LLInventoryModel* model,
 	if (gRRenabled)
 	{
 		LLInventoryCategory* cat_new_parent = gInventory.getCategory (new_parent_id);
-		if (gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
+			// We can move this category if we are moving it from an unshared folder to another one, even if both folders are locked
+			if (gAgent.mRRInterface.isUnderRlvShare(cat) || gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
 		{
-			if (!gAgent.mRRInterface.canAttachCategory(cat, false) || !gAgent.mRRInterface.canDetachCategory(cat, false)
-			 || !gAgent.mRRInterface.canAttachCategory(cat_new_parent, false) || !gAgent.mRRInterface.canDetachCategory(cat_new_parent, false))
+			if (gAgent.mRRInterface.isFolderLocked(cat) || gAgent.mRRInterface.isFolderLocked(cat_new_parent))
 			{
 				return;
 			}
@@ -432,7 +432,7 @@ BOOL get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 	{
 		if (gAgent.mRRInterface.isUnderRlvShare(cat))
 		{
-			if (!gAgent.mRRInterface.canAttachCategory(cat, false) || !gAgent.mRRInterface.canDetachCategory(cat, false))
+			if (!gAgent.mRRInterface.isFolderLocked(cat))
 			{
 				return FALSE;
 			}

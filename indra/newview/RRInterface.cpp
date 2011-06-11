@@ -304,20 +304,6 @@ void refreshCachedVariable (std::string var)
 
 }
 
-std::string getFirstName (std::string fullName)
-{
-	int ind = fullName.find (" ");
-	if (ind != -1) return fullName.substr (0, ind);
-	else return fullName;
-}
-
-std::string getLastName (std::string fullName)
-{
-	int ind = fullName.find (" ");
-	if (ind != -1) return fullName.substr (ind+1);
-	else return fullName;
-}
-
 void updateAllHudTexts ()
 {
 	LLHUDText::TextObjectIterator text_it;
@@ -453,6 +439,20 @@ std::string RRInterface::getVersion2 ()
 //	return RR_VIEWER_NAME_NEW" viewer v"RR_VERSION" ("+LLViewerInfo::getVersion()+")";
 }
 
+std::string RRInterface::getFirstName (std::string fullName)
+{
+	int ind = fullName.find (" ");
+	if (ind != -1) return fullName.substr (0, ind);
+	else return fullName;
+}
+
+std::string RRInterface::getLastName (std::string fullName)
+{
+	int ind = fullName.find (" ");
+	if (ind != -1) return fullName.substr (ind+1);
+	else return fullName;
+}
+
 BOOL RRInterface::isAllowed (LLUUID object_uuid, std::string action, BOOL log_it)
 {
 	BOOL debug = sRestrainedLoveDebug && log_it;
@@ -550,6 +550,14 @@ BOOL RRInterface::containsWithoutException (std::string action, std::string exce
 	return FALSE;
 }
 
+bool RRInterface::isFolderLocked(LLInventoryCategory* cat)
+{
+	if (contains ("unsharedwear") && !isUnderRlvShare(cat)) return true;
+	if (isFolderLockedWithoutException(cat, "attach") != FolderLock_unlocked) return true;
+	if (isFolderLockedWithoutException(cat, "detach") != FolderLock_unlocked) return true;
+	return false;
+}
+
 FolderLock RRInterface::isFolderLockedWithoutException (LLInventoryCategory* cat, std::string attach_or_detach)
 {
 	if (cat == NULL) return FolderLock_unlocked;
@@ -578,7 +586,7 @@ FolderLock RRInterface::isFolderLockedWithoutException (LLInventoryCategory* cat
 		// param will always be equal to "n" in this case since we added it to command, but we don't care about this here
 		if (parseCommand (command+"=n", behav, option, param)) // detach=n, recvchat=n, recvim=n, unsit=n, recvim:<uuid>=add, clear=tplure:
 		{
-			// find whether this object has issued a "{attach/detach}[all]this" command on a folder that is either this one, or a parent
+			// find whether this object has issued a "{attach|detach}[all]this" command on a folder that is either this one, or a parent
 			this_object_locks = false;
 			if (behav == attach_or_detach+"this") {
 				if (getCategoryUnderRlvShare(option) == cat) {
@@ -600,32 +608,11 @@ FolderLock RRInterface::isFolderLockedWithoutException (LLInventoryCategory* cat
 				if (sRestrainedLoveDebug) {
 					llinfos << "this_lock=" << this_lock << llendl;
 				}
-				//for (unsigned int i = 0; i < commands_list.size(); ++i)
-				//{
-				//	this_command = commands_list[i];
-				//	// this_param will always be equal to "n" in this case since we added it to this_command, but we don't care about this here
-				//	if (parseCommand (this_command+"=n", this_behav, this_option, this_param)) // detach=n, recvchat=n, recvim=n, unsit=n, recvim:<uuid>=add, clear=tplure:
-				//	{
-				//		if (this_behav == attach_or_detach+"this_except") {
-				//			if (getCategoryUnderRlvShare(this_option) == cat) {
-				//				return FolderLock_locked_with_except;
-				//			}
-				//		}
-				//		else if (this_behav == attach_or_detach+"allthis_except") {
-				//			if (isUnderFolder(getCategoryUnderRlvShare(this_option), cat)) {
-				//				return FolderLock_locked_with_except;
-				//			}
-				//		}
-				//	}
-				//}
-				// Return locked since the folder is locked and we didn't find any exception
-				//return FolderLock_locked_without_except;
 			}
 		}
 	}
 
 	// Finally, return unlocked since we didn't find any lock on this folder
-//	return FolderLock_unlocked;
 	return current_lock;
 }
 

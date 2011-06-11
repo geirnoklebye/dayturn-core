@@ -3469,6 +3469,40 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	chatter = gObjectList.findObject(from_id);
 	if (chatter)
 	{
+//MK
+		// If this is an object but its name is equal to its owner's user name or diplay name
+		// and if the debug setting is set right, then show the chat like it were said by the owner
+		if (chat.mSourceType == CHAT_SOURCE_OBJECT)
+		{
+			if (!chatter->isAvatar())
+			{
+				if (chatter->isAttachment())
+				{
+					if (gSavedSettings.getBOOL("RestrainedLoveImitateAvatarSpeech"))
+					{
+						LLAvatarName av_name;
+						if (LLAvatarNameCache::get(owner_id, &av_name))
+						{
+							std::string owner_display_name = av_name.mDisplayName;
+							std::string owner_user_name = av_name.getLegacyName();
+							std::string owner_first_name = gAgent.mRRInterface.getFirstName(owner_user_name);
+							std::string owner_last_name = gAgent.mRRInterface.getLastName(owner_user_name);
+							if (from_name == owner_display_name
+								|| from_name == owner_user_name
+								|| from_name == owner_first_name
+								|| from_name == owner_last_name
+								)
+							{
+								chat.mFromID = owner_id;
+								chat.mSourceType = CHAT_SOURCE_AGENT;
+							}
+						}
+					}
+				}
+			}
+		}
+//mk
+
 		chat.mPosAgent = chatter->getPositionAgent();
 
 		// Make swirly things only for talking objects. (not script debug messages, though)

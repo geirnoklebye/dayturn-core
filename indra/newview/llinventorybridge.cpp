@@ -1571,6 +1571,29 @@ BOOL LLFolderBridge::isClipboardPasteable() const
 		}
 
 	}
+//MK
+	if (gRRenabled)
+	{
+		// Don't allow if either the destination folder or the source folder is locked
+		LLInventoryModel* model = getInventoryModel();
+		if (model)
+		{
+			LLDynamicArray<LLUUID> objects;
+			LLInventoryClipboard::instance().retrieve(objects);
+			LLViewerInventoryCategory *current_cat = getCategory();
+
+			for(S32 i = objects.count() - 1; i >= 0; --i)
+			{
+				const LLUUID &obj_id = objects.get(i);
+				if (gAgent.mRRInterface.isFolderLocked(current_cat)
+				|| gAgent.mRRInterface.isFolderLocked(gInventory.getCategory (model->getObject(obj_id)->getParentUUID())))
+				{
+					return FALSE;
+				}
+			}
+		}
+	}
+//mk
 	return TRUE;
 }
 
@@ -1623,6 +1646,29 @@ BOOL LLFolderBridge::isClipboardPasteableAsLink() const
 			}
 		}
 	}
+//MK
+	if (gRRenabled)
+	{
+		// Don't allow if either the destination folder or the source folder is locked
+		LLInventoryModel* model = getInventoryModel();
+		if (model)
+		{
+			LLDynamicArray<LLUUID> objects;
+			LLInventoryClipboard::instance().retrieve(objects);
+			LLViewerInventoryCategory *current_cat = getCategory();
+
+			for(S32 i = objects.count() - 1; i >= 0; --i)
+			{
+				const LLUUID &obj_id = objects.get(i);
+				if (gAgent.mRRInterface.isFolderLocked(current_cat)
+				|| gAgent.mRRInterface.isFolderLocked(gInventory.getCategory (model->getObject(obj_id)->getParentUUID())))
+				{
+					return FALSE;
+				}
+			}
+		}
+	}
+//mk
 	return TRUE;
 
 }
@@ -2394,7 +2440,7 @@ void LLFolderBridge::pasteFromClipboard()
 void LLFolderBridge::pasteLinkFromClipboard()
 {
 	LLInventoryModel* model = getInventoryModel();
-	if(model)
+	if(model && isClipboardPasteableAsLink())
 	{
 		const LLUUID &current_outfit_id = model->findCategoryUUIDForType(LLFolderType::FT_CURRENT_OUTFIT, false);
 		const BOOL move_is_into_current_outfit = (mUUID == current_outfit_id);

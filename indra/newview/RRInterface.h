@@ -26,8 +26,8 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2070002"
-#define RR_VERSION "2.07.00.02"
+#define RR_VERSION_NUM "2070100"
+#define RR_VERSION "2.07.01.00"
 #define RR_SLV_VERSION "2.6.9.16149"
 
 #define RR_PREFIX "@"
@@ -117,10 +117,13 @@ public:
 
 	std::string getVersion (); // returns "RestrainedLife Viewer blah blah"
 	std::string getVersion2 (); // returns "RestrainedLove Viewer blah blah"
+	std::string getFirstName (std::string fullName);
+	std::string getLastName (std::string fullName);
 	BOOL isAllowed (LLUUID object_uuid, std::string action, BOOL log_it = TRUE);
 	BOOL contains (std::string action); // return TRUE if the action is contained
 	BOOL containsSubstr (std::string action); // return TRUE if the action, or an action which name contains the specified name, is contained
 	BOOL containsWithoutException (std::string action, std::string except = ""); // return TRUE if the action or action+"_sec" is contained, and either there is no global exception, or there is no local exception in the case of action+"_sec"
+	bool isFolderLocked(LLInventoryCategory* cat); // return true if cat has a lock specified for it or one of its parents, or not shared and @unshared is active
 	FolderLock isFolderLockedWithoutException (LLInventoryCategory* cat, std::string attach_or_detach); // attach_or_detach must be equal to either "attach" or "detach"
 	FolderLock isFolderLockedWithoutExceptionAux (LLInventoryCategory* cat, std::string attach_or_detach, std::deque<std::string> list_of_restrictions); // auxiliary function to isFolderLockedWithoutException
 
