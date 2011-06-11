@@ -1749,6 +1749,18 @@ void LLViewerWindow::initWorldUI()
 		navbar->showFavoritesPanel(FALSE);
 	}
 
+//MK
+	if (gRRenabled && gStatusBar)
+	{
+		bool navbar_visible = gSavedSettings.getBOOL("ShowNavbarNavigationPanel");
+		// if we show the navigation bar or the mini location bar, we don't need the parcel info and sliders on the top status bar
+		// and vice-versa
+		gStatusBar->childSetVisible("parcel_info_panel", !navbar_visible);
+		gStatusBar->childSetVisible("drawdistance", !navbar_visible);
+		gStatusBar->childSetVisible("avatar_z_offset", !navbar_visible);
+	}
+//mk
+
 	// Top Info bar
 	LLPanel* topinfo_bar_container = getRootView()->getChild<LLPanel>("topinfo_bar_container");
 	LLPanelTopInfoBar* topinfo_bar = LLPanelTopInfoBar::getInstance();
