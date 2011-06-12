@@ -432,7 +432,7 @@ BOOL get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 	{
 		if (gAgent.mRRInterface.isUnderRlvShare(cat))
 		{
-			if (!gAgent.mRRInterface.isFolderLocked(cat))
+			if (gAgent.mRRInterface.isFolderLocked(cat))
 			{
 				return FALSE;
 			}
