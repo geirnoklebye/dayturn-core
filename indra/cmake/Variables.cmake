@@ -29,6 +29,7 @@ set(SERVER_PREFIX)
 set(VIEWER_PREFIX)
 set(INTEGRATION_TESTS_PREFIX)
 set(LL_TESTS ON CACHE BOOL "Build and run unit and integration tests (disable for build timing runs to reduce variation")
+set(INCREMENTAL_LINK OFF CACHE BOOL "Use incremental linking on win32 builds (enable for faster links on some machines)")
 
 if(LIBS_CLOSED_DIR)
   file(TO_CMAKE_PATH "${LIBS_CLOSED_DIR}" LIBS_CLOSED_DIR)
@@ -101,7 +102,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   # To support a different SDK update these Xcode settings:
   set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
   set(CMAKE_OSX_SYSROOT /Developer/SDKs/MacOSX10.5.sdk)
-  set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "4.2")
+  set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "4.0")
   set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT dwarf-with-dsym)
 
   # NOTE: To attempt an i386/PPC Universal build, add this on the configure line:
@@ -151,7 +152,7 @@ For more information, please see JIRA DEV-14943 - Cmake Linux cannot build both 
 endif (LINUX AND SERVER AND VIEWER)
 
 
-set(USE_PRECOMPILED_HEADERS OFF CACHE BOOL "Enable use of precompiled header directives where supported.")
+set(USE_PRECOMPILED_HEADERS ON CACHE BOOL "Enable use of precompiled header directives where supported.")
 
 source_group("CMake Rules" FILES CMakeLists.txt)
 

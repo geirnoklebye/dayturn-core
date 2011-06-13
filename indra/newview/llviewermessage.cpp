@@ -2779,6 +2779,9 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 		args["NAME"] = LLSLURL("agent", from_id, "completename").getSLURLString();;
 		LLSD payload;
 		payload["from_id"] = from_id;
+		// Passing the "SESSION_NAME" to use it for IM notification logging
+		// in LLTipHandler::processNotification(). See STORM-941.
+		payload["SESSION_NAME"] = name;
 		LLNotificationsUtil::add("InventoryAccepted", args, payload);
 		break;
 	}
@@ -3638,11 +3641,13 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		}
 		else
 		{
+			chat.mText = "";
 			switch(chat.mChatType)
 			{
 			case CHAT_TYPE_WHISPER:
 				verb = LLTrans::getString("whisper") + " ";
 				break;
+			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_OWNER:
 //MK
 			// This is the actual handling of the commands sent by owned objects.
@@ -3694,6 +3699,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 //mk
 			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_NORMAL:
+			case CHAT_TYPE_DIRECT:
 				verb = "";
 				break;
 			case CHAT_TYPE_SHOUT:
@@ -5864,6 +5870,11 @@ bool attempt_standard_notification(LLMessageSystem* msgsystem)
 	{
 		// notification was specified using the new mechanism, so we can just handle it here
 		std::string notificationID;
+		msgsystem->getStringFast(_PREHASH_AlertInfo, _PREHASH_Message, notificationID);
+		if (!LLNotifications::getInstance()->templateExists(notificationID))
+		{
+			return false;
+		}
 		std::string llsdRaw;
 		LLSD llsdBlock;
 		msgsystem->getStringFast(_PREHASH_AlertInfo, _PREHASH_Message, notificationID);

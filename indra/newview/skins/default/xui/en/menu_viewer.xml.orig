@@ -136,7 +136,13 @@
                  <menu_item_call.on_click
                   function="Tools.StopAllAnimations" />
             </menu_item_call>
-		</menu>
+            <menu_item_call
+             label="Restart All Animations"
+             name="Restart All Animations">
+              <menu_item_call.on_click
+               function="Tools.RestartAllAnimations" />
+            </menu_item_call>
+    </menu>
         <menu
          create_jump_keys="true"
          label="My Status"
@@ -1112,7 +1118,7 @@
        parameter="RestrainedLoveShowEllipsis" />
     </menu_item_check>
     <menu_item_check
-     label="Double-click to replace attachments"
+     label="Double-click to replace items"
      name="RestrainedLoveDoubleClickWear">
       <menu_item_check.on_check
        function="CheckControl"
@@ -2774,7 +2780,7 @@
           <menu_item_call
            label="Web Content Browser"
            name="Web Content Browser"
-           shortcut="control|alt|W">
+           shortcut="control|shift|Z">
             <menu_item_call.on_click
              function="Advanced.WebContentTest"
              parameter="http://google.com"/>

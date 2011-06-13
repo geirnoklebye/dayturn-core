@@ -46,6 +46,7 @@
 #include "llhints.h"
 #include "llimfloater.h" // for LLIMFloater
 #include "llnearbychatbar.h"
+#include "llnearbychatbarlistener.h"
 #include "llsidetray.h"
 #include "llspeakbutton.h"
 #include "llsplitbutton.h"
@@ -547,6 +548,8 @@ BOOL LLBottomTray::postBuild()
 	mNearbyChatBar = findChild<LLNearbyChatBar>("chat_bar");
 	LLHints::registerHintTarget("chat_bar", mNearbyChatBar->LLView::getHandle());
 
+	mListener.reset(new LLNearbyChatBarListener(*mNearbyChatBar));
+
 	mChatBarContainer = getChild<LLLayoutPanel>("chat_bar_layout_panel");
 	mNearbyCharResizeHandlePanel = getChild<LLPanel>("chat_bar_resize_handle_panel");
 
@@ -569,7 +572,7 @@ BOOL LLBottomTray::postBuild()
 	else
 	{
 		LLTransientFloaterMgr::getInstance()->addControlView(getChild<LLButton>("speak_btn"));
-		LLTransientFloaterMgr::getInstance()->addControlView(getChild<LLButton>("speak_flyout_btn"));
+		LLTransientFloaterMgr::getInstance()->addControlView(getChild<LLButton>("flyout_btn"));
 	}
 
 
@@ -1601,7 +1604,7 @@ void LLBottomTray::initResizeStateContainers()
 // because it resets chatbar's width according to resize logic.
 void LLBottomTray::initButtonsVisibility()
 {
-	setVisibleAndFitWidths(RS_BUTTON_SPEAK, gSavedSettings.getBOOL("EnableVoiceChat"));
+	setVisibleAndFitWidths(RS_BUTTON_SPEAK, gSavedSettings.getBOOL("EnableVoiceChat") || !mSpeakBtn );
 	setVisibleAndFitWidths(RS_BUTTON_GESTURES, gSavedSettings.getBOOL("ShowGestureButton"));
 	setVisibleAndFitWidths(RS_BUTTON_MOVEMENT, gSavedSettings.getBOOL("ShowMoveButton"));
 	setVisibleAndFitWidths(RS_BUTTON_CAMERA, gSavedSettings.getBOOL("ShowCameraButton"));
@@ -1615,7 +1618,12 @@ void LLBottomTray::initButtonsVisibility()
 
 void LLBottomTray::setButtonsControlsAndListeners()
 {
-	gSavedSettings.getControl("EnableVoiceChat")->getSignal()->connect(boost::bind(&LLBottomTray::toggleShowButton, RS_BUTTON_SPEAK, _2));
+	// always show the speak panel if using the basic skin
+	if (mSpeakBtn)
+	{
+		gSavedSettings.getControl("EnableVoiceChat")->getSignal()->connect(boost::bind(&LLBottomTray::toggleShowButton, RS_BUTTON_SPEAK, _2));
+	}	
+
 	gSavedSettings.getControl("ShowGestureButton")->getSignal()->connect(boost::bind(&LLBottomTray::toggleShowButton, RS_BUTTON_GESTURES, _2));
 	gSavedSettings.getControl("ShowMoveButton")->getSignal()->connect(boost::bind(&LLBottomTray::toggleShowButton, RS_BUTTON_MOVEMENT, _2));
 	gSavedSettings.getControl("ShowCameraButton")->getSignal()->connect(boost::bind(&LLBottomTray::toggleShowButton, RS_BUTTON_CAMERA, _2));
