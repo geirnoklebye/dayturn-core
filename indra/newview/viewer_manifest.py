@@ -311,11 +311,11 @@ class WindowsManifest(ViewerManifest):
                 # These need to be installed as a SxS assembly, currently a 'private' assembly.
                 # See http://msdn.microsoft.com/en-us/library/ms235291(VS.80).aspx
                 if self.args['configuration'].lower() == 'debug':
-                 self.path("msvcr100d.dll")
-                 self.path("msvcp100d.dll")
-            else:
-                 self.path("msvcr100.dll")
-                 self.path("msvcp100.dll")
+                    self.path("msvcr100d.dll")
+                    self.path("msvcp100d.dll")
+                else:
+                    self.path("msvcr100.dll")
+                    self.path("msvcp100.dll")
 
             # Vivox runtimes
             self.path("SLVoice.exe")
@@ -641,19 +641,19 @@ class DarwinManifest(ViewerManifest):
 
                 # Need to get the llcommon dll from any of the build directories as well
                 lib = "llcommon"
-                    libfile = "lib%s.dylib" % lib
-                    try:
-                        self.path(self.find_existing_file(os.path.join(os.pardir,
-                                                                       lib,
-                                                                       self.args['configuration'],
-                                                                       libfile),
-                                                          os.path.join(libdir, libfile)),
-                                  dst=libfile)
-                    except RuntimeError:
-                        print "Skipping %s" % libfile
-                        dylibs[lib] = False
-                    else:
-                        dylibs[lib] = True
+                libfile = "lib%s.dylib" % lib
+                try:
+                   self.path(self.find_existing_file(os.path.join(os.pardir,
+                                                   lib,
+                                                   self.args['configuration'],
+                                                   libfile),
+                                       os.path.join(libdir, libfile)),
+                  dst=libfile)
+                except RuntimeError:
+                   print "Skipping %s" % libfile
+                   dylibs[lib] = False
+                else:
+                   dylibs[lib] = True
 
                 if dylibs["llcommon"]:
                     for libfile in ("libapr-1.0.dylib",
@@ -694,7 +694,7 @@ class DarwinManifest(ViewerManifest):
                                     "libexpat.1.5.2.dylib",
                                     "libexception_handler.dylib",
                                     "libGLOD.dylib",
-				    "libcollada14dom.dylib"
+                                    "libcollada14dom.dylib"
                                     ):
                         target_lib = os.path.join('../../..', libfile)
                         self.run_command("ln -sf %(target)r %(link)r" % 
@@ -907,7 +907,7 @@ class LinuxManifest(ViewerManifest):
         else:
             installer_name_components = ['SecondLife_', self.args.get('arch')]
             installer_name_components.extend(self.args['version'])
-        installer_name = "_".join(installer_name_components)
+            installer_name = "_".join(installer_name_components)
             if self.default_channel():
                 if not self.default_grid():
                     installer_name += '_' + self.args['grid'].upper()
@@ -965,15 +965,15 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libbreakpad_client.so.0.0.0")
             self.path("libbreakpad_client.so.0")
             self.path("libbreakpad_client.so")
-	    self.path("libcollada14dom.so")
+            self.path("libcollada14dom.so")
             self.path("libdb-5.1.so")
             self.path("libdb-5.so")
             self.path("libdb.so")
             self.path("libcrypto.so.1.0.0")
             self.path("libexpat.so.1.5.2")
             self.path("libssl.so.1.0.0")
-	    self.path("libglod.so")
-	    self.path("libminizip.so")
+            self.path("libglod.so")
+            self.path("libminizip.so")
             self.path("libuuid.so")
             self.path("libuuid.so.16")
             self.path("libuuid.so.16.0.22")
