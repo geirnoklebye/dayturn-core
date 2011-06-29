@@ -692,7 +692,10 @@ void LLMultisampleBuffer::addColorAttachment(U32 color_fmt)
 		case GL_FRAMEBUFFER_COMPLETE:
 			break;
 		default:
-			llerrs << "WTF? " << std::hex << status << llendl;
+//MK
+			// Seems status can be different from GL_FRAMEBUFFER_COMPLETE (e.g. GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT), so don't crash when it is
+////			llerrs << "WTF? " << std::hex << status << llendl;
+//mk
 			break;
 		}
 
