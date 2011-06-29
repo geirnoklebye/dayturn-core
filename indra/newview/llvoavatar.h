@@ -880,6 +880,7 @@ private:
 	std::string  	mTitle;
 	bool	  		mNameAway;
 	bool	  		mNameBusy;
+	bool	  		mNameTyping;
 	bool	  		mNameMute;
 	bool      		mNameAppearance;
 	bool			mNameFriend;

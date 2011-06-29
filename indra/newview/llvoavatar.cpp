@@ -668,6 +668,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mTitle(),
 	mNameAway(false),
 	mNameBusy(false),
+	mNameTyping(false),
 	mNameMute(false),
 	mNameAppearance(false),
 	mNameFriend(false),
@@ -2914,6 +2915,9 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 
 	bool is_away = mSignaledAnimations.find(ANIM_AGENT_AWAY)  != mSignaledAnimations.end();
 	bool is_busy = mSignaledAnimations.find(ANIM_AGENT_BUSY) != mSignaledAnimations.end();
+//MK
+	bool is_typing = getTyping();
+//mk
 	bool is_appearance = mSignaledAnimations.find(ANIM_AGENT_CUSTOMIZE) != mSignaledAnimations.end();
 	bool is_muted;
 	if (isSelf())
@@ -2957,6 +2961,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		|| (title && mTitle != title->getString())
 		|| is_away != mNameAway 
 		|| is_busy != mNameBusy 
+		|| is_typing != mNameTyping 
 		|| is_muted != mNameMute
 				|| is_appearance != mNameAppearance 
 		|| is_friend != mNameFriend
@@ -2966,7 +2971,10 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 
 		clearNameTag();
 
-		if (is_away || is_muted || is_busy || is_appearance)
+//MK
+////		if (is_away || is_muted || is_busy || is_appearance)
+		if (is_away || is_muted || is_busy || is_appearance || is_typing)
+//mk
 				{
 			std::string line;
 					if (is_away)
@@ -2979,6 +2987,13 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				line += LLTrans::getString("AvatarBusy");
 				line += ", ";
 			}
+//MK
+					if (is_typing)
+					{
+				line += LLTrans::getString("AvatarTyping");
+				line += ", ";
+			}
+//mk
 			if (is_muted)
 						{
 				line += LLTrans::getString("AvatarMuted");
@@ -3048,6 +3063,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 
 				mNameAway = is_away;
 				mNameBusy = is_busy;
+				mNameTyping = is_typing;
 				mNameMute = is_muted;
 				mNameAppearance = is_appearance;
 		mNameFriend = is_friend;

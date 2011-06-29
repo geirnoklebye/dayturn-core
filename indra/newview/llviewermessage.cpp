@@ -3613,7 +3613,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			if (chatter && chatter->isAvatar())
 			{
 //MK
-		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
+//		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
 //mk
 				((LLVOAvatar*)chatter)->startTyping();
 			}

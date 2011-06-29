@@ -280,7 +280,10 @@ Please try logging in again in a minute.</string>
 	<!-- llvoavatar. Displayed in the avatar chat bubble -->
 	<string name="AvatarEditingAppearance">(Editing Appearance)</string>
 	<string name="AvatarAway">Away</string>
-	<string name="AvatarBusy">Busy</string>
+  <string name="AvatarBusy">Busy</string>
+//MK
+  <string name="AvatarTyping">Typing</string>
+//mk
 	<string name="AvatarMuted">Blocked</string>
 
 	<!-- animations -->
