@@ -1921,7 +1921,7 @@ void LLAgentWearables::userRemoveMultipleAttachments(llvo_vec_t& objects_to_remo
 //MK
 		if (gRRenabled && !gAgent.mRRInterface.canDetach (objectp))
 		{
-			return;
+			continue;
 		}
 //mk
 		gMessageSystem->nextBlockFast(_PREHASH_ObjectData);

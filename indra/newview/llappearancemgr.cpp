@@ -1879,10 +1879,10 @@ void LLAppearanceMgr::wearInventoryCategory(LLInventoryCategory* category, bool 
 //MK
 	if (gRRenabled)
 	{
-		if (gAgent.mRRInterface.mContainsDetach && !append)
-		{
-			return;
-		}
+		//if (gAgent.mRRInterface.mContainsDetach && !append)
+		//{
+		//	return;
+		//}
 		if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
 		{
 			return;
@@ -2000,10 +2000,10 @@ void LLAppearanceMgr::wearInventoryCategoryOnAvatar( LLInventoryCategory* catego
 //MK
 	if (gRRenabled)
 	{
-		if (gAgent.mRRInterface.mContainsDetach && !append)
-		{
-			return;
-		}
+		//if (gAgent.mRRInterface.mContainsDetach && !append)
+		//{
+		//	return;
+		//}
 		if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
 		{
 			return;
@@ -2039,7 +2039,7 @@ void LLAppearanceMgr::wearOutfitByName(const std::string& name)
 //MK
 	if (gRRenabled)
 	{
-		if (gAgent.mRRInterface.mContainsDetach || gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
+		if (gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
 		{
 			return;
 		}
