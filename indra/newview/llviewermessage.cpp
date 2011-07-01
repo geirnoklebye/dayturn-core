@@ -2443,13 +2443,13 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
 			{
 				// agent is forbidden to receive IMs and the sender is no exception
-				buffer = separator_string + saved + "*** IM blocked by your viewer";
+				buffer = separator_string + saved + "...";
 				
 				// tell the sender the avatar could not read them
 				std::string my_name;
 				LLAgentUI::buildFullname(my_name);
 				my_name = my_name+" using viewer "+gAgent.mRRInterface.getVersion ();
-				std::string response = "The Resident you messaged is prevented from reading your instant messages at the moment, please try again later.";
+				std::string response = RRInterface::sRecvimMessage;
 				pack_instant_message(
 					gMessageSystem,
 					gAgent.getID(),

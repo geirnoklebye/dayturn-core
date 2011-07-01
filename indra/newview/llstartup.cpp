@@ -339,6 +339,9 @@ bool idle_startup()
 	gRRenabled = gSavedSettings.getBOOL("RestrainedLove");
 	RRInterface::sRRNoSetEnv = gSavedSettings.getBOOL("RestrainedLoveNoSetEnv");
 	RRInterface::sRestrainedLoveDebug = gSavedSettings.getBOOL("RestrainedLoveDebug");
+	RRInterface::sCanOoc = gSavedSettings.getBOOL("RestrainedLoveCanOoc");
+	RRInterface::sRecvimMessage = gSavedSettings.getString("RestrainedLoveRecvimMessage");
+	RRInterface::sSendimMessage = gSavedSettings.getString("RestrainedLoveSendimMessage");
 //mk
 	// HACK: These are things from the main loop that usually aren't done
 	// until initialization is complete, but need to be done here for things

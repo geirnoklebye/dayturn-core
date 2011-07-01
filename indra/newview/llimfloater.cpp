@@ -274,7 +274,7 @@ void LLIMFloater::sendMsg()
 			|| gAgent.mRRInterface.contains ("sendimto:"+mOtherParticipantUUID.asString())))
 		{
 			// user is forbidden to send IMs and the receiver is no exception
-			text = utf8str_to_wstring("*** IM blocked by sender's viewer"); // signal both the sender and the receiver
+			text = utf8str_to_wstring(RRInterface::sSendimMessage); // signal both the sender and the receiver
 		}
 //mk
 		if(!text.empty())

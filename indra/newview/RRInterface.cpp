@@ -77,6 +77,10 @@
 BOOL gRRenabled = TRUE;
 BOOL RRInterface::sRRNoSetEnv = FALSE;
 BOOL RRInterface::sRestrainedLoveDebug = FALSE;
+BOOL RRInterface::sCanOoc = TRUE;
+std::string RRInterface::sRecvimMessage = "The Resident you messaged is prevented from reading your instant messages at the moment, please try again later.";
+std::string RRInterface::sSendimMessage = "...";
+
 
 #if !defined(max)
 #define max(a, b)	((a) > (b) ? (a) : (b))
@@ -827,6 +831,7 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 			llinfos << "  checking " << it->second << llendl;
 		}
 		if (it->first==object_uuid.asString() && (command=="" || it->second.find (command)!=-1)) {
+			notify (object_uuid, it->second, "=y");
 			if (sRestrainedLoveDebug) {
 				llinfos << it->second << " => removed. " << llendl;
 			}
@@ -1507,7 +1512,7 @@ std::string RRInterface::crunchEmote (std::string msg, unsigned int truncateTo) 
 			crunched = "...";
 		}
 	}
-	else if (msg.find ("((") != 0 || msg.find ("))") != msg.length () - 2) {
+	else if (msg.find ("((") != 0 || msg.find ("))") != msg.length () - 2 || !sCanOoc) {
 		// Only allow OOC chat, starting with "((" and ending with "))".
 		crunched = "...";
 	}
