@@ -598,10 +598,10 @@ void LLPipeline::allocateScreenBuffer(U32 resX, U32 resY)
 	U32 samples = llmin(gSavedSettings.getU32("RenderFSAASamples"), (U32) 4);
 //MK
 	// If RenderUseFBO is set, ignore RenderFSAASamples completely or the HUDs will disappear
-	//if (gRRenabled && gSavedSettings.getBOOL("RenderUseFBO"))
-	//{
-	//	samples = 0;
-	//}
+	if (gRRenabled && gSavedSettings.getBOOL("RenderUseFBO"))
+	{
+		samples = 0;
+	}
 //mk
 	U32 res_mod = gSavedSettings.getU32("RenderResolutionDivisor");
 
