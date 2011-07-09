@@ -37,6 +37,7 @@
 #include "lleconomy.h"
 #include "lleventtimer.h"
 #include "llfloaterreg.h"
+#include "llfolderview.h"
 #include "llfollowcamparams.h"
 #include "llinventorydefines.h"
 #include "lllslconstants.h"
@@ -87,6 +88,7 @@
 #include "lluri.h"
 #include "llviewergenericmessage.h"
 #include "llviewermenu.h"
+#include "llviewerinventory.h"
 #include "llviewerjoystick.h"
 #include "llviewerobjectlist.h"
 #include "llviewerparcelmgr.h"
@@ -96,7 +98,6 @@
 #include "llviewerwindow.h"
 #include "llvlmanager.h"
 #include "llvoavatarself.h"
-#include "llvotextbubble.h"
 #include "llworld.h"
 #include "pipeline.h"
 #include "llfloaterworldmap.h"
@@ -695,7 +696,7 @@ bool join_group_response(const LLSD& notification, const LLSD& response)
 	return false;
 }
 
-static void highlight_inventory_items_in_panel(const std::vector<LLUUID>& items, LLInventoryPanel *inventory_panel)
+static void highlight_inventory_objects_in_panel(const std::vector<LLUUID>& items, LLInventoryPanel *inventory_panel)
 {
 	if (NULL == inventory_panel) return;
 
@@ -709,7 +710,7 @@ static void highlight_inventory_items_in_panel(const std::vector<LLUUID>& items,
 			continue;
 		}
 
-		LLInventoryItem* item = gInventory.getItem(item_id);
+		LLInventoryObject* item = gInventory.getObject(item_id);
 		llassert(item);
 		if (!item) {
 			continue;
@@ -788,7 +789,6 @@ class LLViewerInventoryMoveFromWorldObserver : public LLInventoryAddItemByAssetO
 public:
 	LLViewerInventoryMoveFromWorldObserver()
 		: LLInventoryAddItemByAssetObserver()
-		, mActivePanel(NULL)
 	{
 
 	}
@@ -799,13 +799,16 @@ private:
 	/*virtual */void onAssetAdded(const LLUUID& asset_id)
 	{
 		// Store active Inventory panel.
-		mActivePanel = LLInventoryPanel::getActiveInventoryPanel();
+		if (LLInventoryPanel::getActiveInventoryPanel())
+		{
+			mActivePanel = LLInventoryPanel::getActiveInventoryPanel()->getHandle();
+		}
 
 		// Store selected items (without destination folder)
 		mSelectedItems.clear();
-		if (mActivePanel)
+		if (LLInventoryPanel::getActiveInventoryPanel())
 		{
-			mSelectedItems = mActivePanel->getRootFolder()->getSelectionList();
+			mSelectedItems = LLInventoryPanel::getActiveInventoryPanel()->getRootFolder()->getSelectionList();
 		}
 		mSelectedItems.erase(mMoveIntoFolderID);
 	}
@@ -816,12 +819,14 @@ private:
 	 */
 	void done()
 	{
+		LLInventoryPanel* active_panel = dynamic_cast<LLInventoryPanel*>(mActivePanel.get());
+
 		// if selection is not changed since watch started lets hightlight new items.
-		if (mActivePanel && !isSelectionChanged())
+		if (active_panel && !isSelectionChanged())
 		{
 			LL_DEBUGS("Inventory_Move") << "Selecting new items..." << LL_ENDL;
-			mActivePanel->clearSelection();
-			highlight_inventory_items_in_panel(mAddedItems, mActivePanel);
+			active_panel->clearSelection();
+			highlight_inventory_objects_in_panel(mAddedItems, active_panel);
 		}
 	}
 
@@ -829,16 +834,16 @@ private:
 	 * Returns true if selected inventory items were changed since moved inventory items were started to watch.
 	 */
 	bool isSelectionChanged()
-	{
-		const LLInventoryPanel * const current_active_panel = LLInventoryPanel::getActiveInventoryPanel();
+	{	
+		LLInventoryPanel* active_panel = dynamic_cast<LLInventoryPanel*>(mActivePanel.get());
 
-		if (NULL == mActivePanel || current_active_panel != mActivePanel)
+		if (NULL == active_panel)
 		{
 			return true;
 		}
 
 		// get selected items (without destination folder)
-		selected_items_t selected_items = mActivePanel->getRootFolder()->getSelectionList();
+		selected_items_t selected_items = active_panel->getRootFolder()->getSelectionList();
 		selected_items.erase(mMoveIntoFolderID);
 
 		// compare stored & current sets of selected items
@@ -852,7 +857,7 @@ private:
 		return different_items.size() > 0;
 	}
 
-	LLInventoryPanel *mActivePanel;
+	LLHandle<LLPanel> mActivePanel;
 	typedef std::set<LLUUID> selected_items_t;
 	selected_items_t mSelectedItems;
 
@@ -879,6 +884,75 @@ void set_dad_inventory_item(LLInventoryItem* inv_item, const LLUUID& into_folder
 
 	gInventoryMoveObserver->setMoveIntoFolderID(into_folder_uuid);
 	gInventoryMoveObserver->watchAsset(inv_item->getAssetUUID());
+}
+
+
+/**
+ * Class to observe moving of items and to select them in inventory.
+ *
+ * Used currently for dragging from inbox to regular inventory folders
+ */
+
+class LLViewerInventoryMoveObserver : public LLInventoryObserver
+{
+public:
+
+	LLViewerInventoryMoveObserver(const LLUUID& object_id)
+		: LLInventoryObserver()
+		, mObjectID(object_id)
+	{
+		if (LLInventoryPanel::getActiveInventoryPanel())
+		{
+			mActivePanel = LLInventoryPanel::getActiveInventoryPanel()->getHandle();
+		}
+	}
+
+	virtual ~LLViewerInventoryMoveObserver() {}
+	virtual void changed(U32 mask);
+	
+private:
+	LLUUID mObjectID;
+	LLHandle<LLPanel> mActivePanel;
+
+};
+
+void LLViewerInventoryMoveObserver::changed(U32 mask)
+{
+	LLInventoryPanel* active_panel = dynamic_cast<LLInventoryPanel*>(mActivePanel.get());
+
+	if (NULL == active_panel)
+	{
+		gInventory.removeObserver(this);
+		return;
+	}
+
+	if((mask & (LLInventoryObserver::STRUCTURE)) != 0)
+	{
+		const std::set<LLUUID>& changed_items = gInventory.getChangedIDs();
+
+		std::set<LLUUID>::const_iterator id_it = changed_items.begin();
+		std::set<LLUUID>::const_iterator id_end = changed_items.end();
+		for (;id_it != id_end; ++id_it)
+		{
+			if ((*id_it) == mObjectID)
+			{
+				active_panel->clearSelection();			
+				std::vector<LLUUID> items;
+				items.push_back(mObjectID);
+				highlight_inventory_objects_in_panel(items, active_panel);
+				active_panel->getRootFolder()->scrollToShowSelection();
+				
+				gInventory.removeObserver(this);
+				break;
+			}
+		}
+	}
+}
+
+void set_dad_inbox_object(const LLUUID& object_id)
+{
+	LLViewerInventoryMoveObserver* move_observer = new LLViewerInventoryMoveObserver(object_id);
+	gInventory.addObserver(move_observer);
 }
 
 //unlike the FetchObserver for AgentOffer, we only make one 
@@ -937,7 +1011,6 @@ protected:
 
 //one global instance to bind them
 LLOpenTaskOffer* gNewInventoryObserver=NULL;
-
 class LLNewInventoryHintObserver : public LLInventoryAddedObserver
 {
 protected:
@@ -946,6 +1019,8 @@ protected:
 		LLFirstUse::newInventory();
 	}
 };
+
+LLNewInventoryHintObserver* gNewInventoryHintObserver=NULL;
 
 void start_new_inventory_observer()
 {
@@ -963,7 +1038,12 @@ void start_new_inventory_observer()
 		gInventory.addObserver(gInventoryMoveObserver);
 	}
 
-	gInventory.addObserver(new LLNewInventoryHintObserver());
+	if (!gNewInventoryHintObserver)
+	{
+		// Observer is deleted by gInventory
+		gNewInventoryHintObserver = new LLNewInventoryHintObserver();
+		gInventory.addObserver(gNewInventoryHintObserver);
+	}
 }
 
 class LLDiscardAgentOffer : public LLInventoryFetchItemsObserver
@@ -1517,7 +1597,7 @@ bool LLOfferInfo::inventory_offer_callback(const LLSD& notification, const LLSD&
 			log_message = chatHistory_string + " " + LLTrans::getString("InvOfferGaveYou") + " " + mDesc + LLTrans::getString(".");
 			LLSD args;
 			args["MESSAGE"] = log_message;
-			LLNotificationsUtil::add("SystemMessage", args);
+			LLNotificationsUtil::add("SystemMessageTip", args);
 		}
 		break;
 
@@ -1699,7 +1779,7 @@ bool LLOfferInfo::inventory_task_offer_callback(const LLSD& notification, const 
 				log_message = chatHistory_string + " " + LLTrans::getString("InvOfferGaveYou") + " " + mDesc + LLTrans::getString(".");
 				LLSD args;
 				args["MESSAGE"] = log_message;
-				LLNotificationsUtil::add("SystemMessage", args);
+				LLNotificationsUtil::add("SystemMessageTip", args);
 			}
 			
 			// we will want to open this item when it comes back.
@@ -1763,7 +1843,7 @@ bool LLOfferInfo::inventory_task_offer_callback(const LLSD& notification, const 
 
 				LLSD args;
 				args["MESSAGE"] = log_message;
-				LLNotificationsUtil::add("SystemMessage", args);
+				LLNotificationsUtil::add("SystemMessageTip", args);
 			}
 			
 			if (busy &&	(!mFromGroup && !mFromObject))
@@ -4725,15 +4805,8 @@ void process_kill_object(LLMessageSystem *mesgsys, void **user_data)
 				// Display green bubble on kill
 				if ( gShowObjectUpdates )
 				{
-					LLViewerObject* newobject;
-					newobject = gObjectList.createObjectViewer(LL_PCODE_LEGACY_TEXT_BUBBLE, objectp->getRegion());
-
-					LLVOTextBubble* bubble = (LLVOTextBubble*) newobject;
-
-					bubble->mColor.setVec(0.f, 1.f, 0.f, 1.f);
-					bubble->setScale( 2.0f * bubble->getScale() );
-					bubble->setPositionGlobal(objectp->getPositionGlobal());
-					gPipeline.addObject(bubble);
+					LLColor4 color(0.f,1.f,0.f,1.f);
+					gPipeline.addDebugBlip(objectp->getPositionAgent(), color);
 				}
 
 				// Do the kill
@@ -4770,8 +4843,8 @@ void process_time_synch(LLMessageSystem *mesgsys, void **user_data)
 
 	LLWorld::getInstance()->setSpaceTimeUSec(space_time_usec);
 
-	//LL_DEBUGS("Messaging") << "time_synch() - " << sun_direction << ", " << sun_ang_velocity
-	//		 << ", " << phase << LL_ENDL;
+	LL_DEBUGS("Windlight Sync") << "time_synch() - " << sun_direction << ", " << sun_ang_velocity
+		<< ", " << phase << LL_ENDL;
 
 	gSky.setSunPhase(phase);
 	gSky.setSunTargetDirection(sun_direction, sun_ang_velocity);
@@ -4830,6 +4903,12 @@ void process_sound_trigger(LLMessageSystem *msg, void **)
 		return;
 	}
 		
+	// Don't play sounds from gestures if they are not enabled.
+	if (object_id == owner_id && !gSavedSettings.getBOOL("EnableGestureSounds"))
+	{
+		return;
+	}
+
 	gAudiop->triggerSound(sound_id, owner_id, gain, LLAudioEngine::AUDIO_TYPE_SFX, pos_global);
 }
 
@@ -6812,6 +6891,18 @@ void send_group_notice(const LLUUID& group_id,
 
 bool handle_lure_callback(const LLSD& notification, const LLSD& response)
 {
+	static const unsigned OFFER_RECIPIENT_LIMIT = 250;
+	if(notification["payload"]["ids"].size() > OFFER_RECIPIENT_LIMIT) 
+	{
+		// More than OFFER_RECIPIENT_LIMIT targets will overload the message
+		// producing an llerror.
+		LLSD args;
+		args["OFFERS"] = notification["payload"]["ids"].size();
+		args["LIMIT"] = static_cast<int>(OFFER_RECIPIENT_LIMIT);
+		LLNotificationsUtil::add("TooManyTeleportOffers", args);
+		return false;
+	}
+	
 	std::string text = response["message"].asString();
 	LLSLURL slurl;
 	LLAgentUI::buildSLURL(slurl);
@@ -7063,10 +7154,14 @@ void process_script_dialog(LLMessageSystem* msg, void**)
 	LLSD payload;
 
 	LLUUID object_id;
-    LLUUID owner_id;
-
 	msg->getUUID("Data", "ObjectID", object_id);
+
+//	For compability with OS grids first check for presence of extended packet before fetching data.
+    LLUUID owner_id;
+	if (gMessageSystem->getNumberOfBlocks("OwnerData") > 0)
+	{
     msg->getUUID("OwnerData", "OwnerID", owner_id);
+	}
 
 	if (LLMuteList::getInstance()->isMuted(object_id) || LLMuteList::getInstance()->isMuted(owner_id))
 	{

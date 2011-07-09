@@ -1762,10 +1762,10 @@ integer llGetParcelMaxPrims(vector pos, integer sim_wide)
 Returns the maximum number of prims allowed on the parcel at pos
 	</string>
 	<string name="LSLTipText_llGetParcelDetails" translate="false">
-list llGetParcelDetails(vector pos, list params)
-Returns the parcel details specified in params for the parcel at pos.
-Params is one or more of: PARCEL_DETAILS_NAME, _DESC, _OWNER, _GROUP, _AREA
-	</string>
+    list llGetParcelDetails(vector pos, list params)
+    Returns the parcel details specified in params for the parcel at pos.
+    Params is one or more of: PARCEL_DETAILS_NAME, _DESC, _OWNER, _GROUP, _AREA, _ID, _SEE_AVATARS
+  </string>
 	<string name="LSLTipText_llSetLinkPrimitiveParams" translate="false">
 llSetLinkPrimitiveParams(integer linknumber, list rules)
 Sets primitive parameters for linknumber based on rules
@@ -2024,6 +2024,8 @@ Returns a string with the requested data about the region
 	<string name="PlacesNoMatchingItems">Didn't find what you're looking for? Try [secondlife:///app/search/places/[SEARCH_TERM] Search].</string>
 	<string name="FavoritesNoMatchingItems">Drag a landmark here to add it to your favorites.</string>
 	<string name="InventoryNoTexture">You do not have a copy of this texture in your inventory</string>
+	<string name="InventoryInboxNoItems">Items purchased through the marketplace will be delivered here.</string>
+	<string name="InventoryOutboxNoItems">Drag items here in preparation for listing on your marketplace storefront.</string>
     <!-- use value="" because they have preceding spaces -->
 	<string name="no_transfer" value=" (no transfer)" />
 	<string name="no_modify"   value=" (no modify)" />
@@ -2103,6 +2105,8 @@ Returns a string with the requested data about the region
   <!-- are used for Friends and Friends/All folders in Inventory "Calling cards" folder. See EXT-694-->
 	<string name="InvFolder Friends">Friends</string>
 	<string name="InvFolder All">All</string>
+
+	<string name="no_attachments">No attachments worn</string>
 
 	<!-- inventory FVBridge -->
 	<!--  This is used in llpanelinventory.cpp when constructing a context menu for an item for Sale  -->
@@ -2251,6 +2255,9 @@ Returns a string with the requested data about the region
 	<string name="IMMainland">mainland</string>
 	<string name="IMTeen">teen</string>
 
+    <!-- floater about land -->
+    <string name="Anyone">anyone</string>
+
 	<!-- floater region info -->
 	<!-- The following will replace variable [ALL_ESTATES] in notifications EstateAllowed*, EstateBanned*, EstateManager* -->
 	<string name="RegionInfoError">error</string>
@@ -2352,6 +2359,10 @@ Returns a string with the requested data about the region
 	<!--Region Details-->
 	<string name="GroupOwned">Group Owned</string>
 	<string name="Public">Public</string>
+
+	<!-- Environment settings -->
+	<string name="LocalSettings">Local Settings</string>
+	<string name="RegionSettings">Region Settings</string>
 
 	<!-- panel classified -->
 	<string name="ClassifiedClicksTxt">Clicks: [TELEPORT] teleport, [MAP] map, [PROFILE] profile</string>
@@ -3134,6 +3145,7 @@ If you continue to receive this message, contact the [SUPPORT_SITE].
   <string name="LocationCtrlAdultIconTooltip">Adult Region</string>
   <string name="LocationCtrlModerateIconTooltip">Moderate Region</string>
   <string name="LocationCtrlGeneralIconTooltip">General Region</string>
+  <string name="LocationCtrlSeeAVsTooltip">Avatars visible and chat allowed outside of this parcel</string>
 
   <!-- Strings used by the (currently Linux) auto-updater app -->
 	<string name="UpdaterWindowTitle">

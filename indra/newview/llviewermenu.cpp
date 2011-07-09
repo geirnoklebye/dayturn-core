@@ -45,6 +45,7 @@
 #include "llcompilequeue.h"
 #include "llconsole.h"
 #include "lldebugview.h"
+#include "llenvmanager.h"
 #include "llfilepicker.h"
 #include "llfirstuse.h"
 #include "llfloaterbuy.h"
@@ -107,6 +108,7 @@
 #include "lltrans.h"
 #include "lleconomy.h"
 #include "lltoolgrab.h"
+#include "llwindow.h"
 #include "boost/unordered_map.hpp"
 
 using namespace LLVOAvatarDefines;
@@ -5168,6 +5170,7 @@ class LLToolsStopAllAnimations : public view_listener_t
 	}
 };
 
+//MK
 class LLToolsRestartAllAnimations : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -5196,6 +5199,7 @@ class LLToolsRestartAllAnimations : public view_listener_t
 		return true;
 	}
 };
+//mk
 
 class LLToolsReleaseKeys : public view_listener_t
 {
@@ -8257,70 +8261,38 @@ class LLWorldEnvSettings : public view_listener_t
 		}
 //mk
 		std::string tod = userdata.asString();
-		LLVector3 sun_direction;
 		
 		if (tod == "editor")
 		{
-			// if not there or is hidden, show it
 			LLFloaterReg::toggleInstance("env_settings");
 			return true;
 		}
 		
 		if (tod == "sunrise")
 		{
-			// set the value, turn off animation
-			LLWLParamManager::instance()->mAnimator.setDayTime(0.25);
-			LLWLParamManager::instance()->mAnimator.mIsRunning = false;
-			LLWLParamManager::instance()->mAnimator.mUseLindenTime = false;
-
-			// then call update once
-			LLWLParamManager::instance()->mAnimator.update(
-				LLWLParamManager::instance()->mCurParams);
+			LLEnvManagerNew::instance().setUseSkyPreset("Sunrise");
 		}
 		else if (tod == "noon")
 		{
-			// set the value, turn off animation
-			LLWLParamManager::instance()->mAnimator.setDayTime(0.567);
-			LLWLParamManager::instance()->mAnimator.mIsRunning = false;
-			LLWLParamManager::instance()->mAnimator.mUseLindenTime = false;
-
-			// then call update once
-			LLWLParamManager::instance()->mAnimator.update(
-				LLWLParamManager::instance()->mCurParams);
+			LLEnvManagerNew::instance().setUseSkyPreset("Midday");
 		}
 		else if (tod == "sunset")
 		{
-			// set the value, turn off animation
-			LLWLParamManager::instance()->mAnimator.setDayTime(0.75);
-			LLWLParamManager::instance()->mAnimator.mIsRunning = false;
-			LLWLParamManager::instance()->mAnimator.mUseLindenTime = false;
-
-			// then call update once
-			LLWLParamManager::instance()->mAnimator.update(
-				LLWLParamManager::instance()->mCurParams);
+			LLEnvManagerNew::instance().setUseSkyPreset("Sunset");
 		}
 		else if (tod == "midnight")
 		{
-			// set the value, turn off animation
-			LLWLParamManager::instance()->mAnimator.setDayTime(0.0);
-			LLWLParamManager::instance()->mAnimator.mIsRunning = false;
-			LLWLParamManager::instance()->mAnimator.mUseLindenTime = false;
-
-			// then call update once
-			LLWLParamManager::instance()->mAnimator.update(
-				LLWLParamManager::instance()->mCurParams);
+			LLEnvManagerNew::instance().setUseSkyPreset("Midnight");
 		}
 		else
 		{
-			LLWLParamManager::instance()->mAnimator.mIsRunning = true;
-			LLWLParamManager::instance()->mAnimator.mUseLindenTime = true;	
+			LLEnvManagerNew::instance().setUseDayCycle(LLEnvManagerNew::instance().getDayCycleName());
 		}
 		return true;
 	}
 };
 
-/// Water Menu callbacks
-class LLWorldWaterSettings : public view_listener_t
+class LLWorldEnvPreset : public view_listener_t
 {	
 	bool handleEvent(const LLSD& userdata)
 	{
@@ -8330,7 +8302,49 @@ class LLWorldWaterSettings : public view_listener_t
 			return true;
 		}
 //mk
-		LLFloaterReg::toggleInstance("env_water");
+		std::string item = userdata.asString();
+
+		if (item == "new_water")
+		{
+			LLFloaterReg::showInstance("env_edit_water", "new");
+		}
+		else if (item == "edit_water")
+		{
+			LLFloaterReg::showInstance("env_edit_water", "edit");
+		}
+		else if (item == "delete_water")
+		{
+			LLFloaterReg::showInstance("env_delete_preset", "water");
+		}
+		else if (item == "new_sky")
+		{
+			LLFloaterReg::showInstance("env_edit_sky", "new");
+		}
+		else if (item == "edit_sky")
+		{
+			LLFloaterReg::showInstance("env_edit_sky", "edit");
+		}
+		else if (item == "delete_sky")
+		{
+			LLFloaterReg::showInstance("env_delete_preset", "sky");
+		}
+		else if (item == "new_day_cycle")
+		{
+			LLFloaterReg::showInstance("env_edit_day_cycle", "new");
+		}
+		else if (item == "edit_day_cycle")
+		{
+			LLFloaterReg::showInstance("env_edit_day_cycle", "edit");
+		}
+		else if (item == "delete_day_cycle")
+		{
+			LLFloaterReg::showInstance("env_delete_preset", "day_cycle");
+		}
+		else
+		{
+			llwarns << "Unknown item selected" << llendl;
+		}
+
 		return true;
 	}
 };
@@ -8347,22 +8361,6 @@ class LLWorldPostProcess : public view_listener_t
 		}
 //mk
 		LLFloaterReg::showInstance("env_post_process");
-		return true;
-	}
-};
-
-/// Day Cycle callbacks
-class LLWorldDayCycle : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-//MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
-		{
-			return true;
-		}
-//mk
-		LLFloaterReg::showInstance("env_day_cycle");
 		return true;
 	}
 };
@@ -8607,7 +8605,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLWorldCheckAlwaysRun(), "World.CheckAlwaysRun");
 	
 	view_listener_t::addMenu(new LLWorldEnvSettings(), "World.EnvSettings");
-	view_listener_t::addMenu(new LLWorldWaterSettings(), "World.WaterSettings");
+	view_listener_t::addMenu(new LLWorldEnvPreset(), "World.EnvPreset");
 	view_listener_t::addMenu(new LLWorldPostProcess(), "World.PostProcess");
 	view_listener_t::addMenu(new LLWorldDayCycle(), "World.DayCycle");
 

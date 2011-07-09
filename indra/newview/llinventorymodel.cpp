@@ -636,10 +636,12 @@ U32 LLInventoryModel::updateItem(const LLViewerInventoryItem* item)
 	}
 
 	// We're hiding mesh types
+#if 0
 	if (item->getType() == LLAssetType::AT_MESH)
 	{
 		return mask;
 	}
+#endif
 
 	LLViewerInventoryItem* old_item = getItem(item->getUUID());
 	LLPointer<LLViewerInventoryItem> new_item;
@@ -2620,7 +2622,7 @@ void LLInventoryModel::processBulkUpdateInventory(LLMessageSystem* msg, void**)
 		LLInventoryState::sWearNewClothing = FALSE;
 	}
 
-	if (tid == LLInventoryState::sWearNewClothingTransactionID)
+	if (tid.notNull() && tid == LLInventoryState::sWearNewClothingTransactionID)
 	{
 		count = wearable_ids.size();
 		for (i = 0; i < count; ++i)

@@ -601,7 +601,7 @@ public:
 			
 			ypos += y_inc;
 
-			if (gSavedSettings.getBOOL("MeshEnabled"))
+			if (gMeshRepo.meshRezEnabled())
 			{
 				addText(xpos, ypos, llformat("%.3f MB Mesh Data Received", LLMeshRepository::sBytesReceived/(1024.f*1024.f)));
 				
@@ -1991,7 +1991,10 @@ void LLViewerWindow::shutdownViews()
 	
 	// destroy the nav bar, not currently part of gViewerWindow
 	// *TODO: Make LLNavigationBar part of gViewerWindow
+	if (LLNavigationBar::instanceExists())
+	{
 	delete LLNavigationBar::getInstance();
+	}
 
 	// destroy menus after instantiating navbar above, as it needs
 	// access to gMenuHolder
@@ -4553,6 +4556,14 @@ void LLViewerWindow::setup3DViewport(S32 x_offset, S32 y_offset)
 	gGLViewport[2] = mWorldViewRectRaw.getWidth();
 	gGLViewport[3] = mWorldViewRectRaw.getHeight();
 	glViewport(gGLViewport[0], gGLViewport[1], gGLViewport[2], gGLViewport[3]);
+}
+
+void LLViewerWindow::revealIntroPanel()
+{
+	if (mProgressView)
+	{
+		mProgressView->revealIntroPanel();
+	}
 }
 
 void LLViewerWindow::setShowProgress(const BOOL show)
