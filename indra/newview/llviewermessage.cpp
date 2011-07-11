@@ -3133,7 +3133,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 						SYSTEM_FROM,
 						response.c_str(),
 						IM_ONLINE,
-						IM_CONSOLE_AND_CHAT_HISTORY);
+						IM_BUSY_AUTO_RESPONSE);
 					gAgent.sendReliableMessage();
 					return;
 				}
