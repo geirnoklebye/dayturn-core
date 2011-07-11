@@ -338,17 +338,17 @@ static void on_avatar_name_show_profile(const LLUUID& agent_id, const LLAvatarNa
 	}
 	else
 	{
-//		LLFloaterReg::showInstance("floater_profile_view", LLSD().with("id", agent_id));
-		std::string username = av_name.mUsername;
-		if (username.empty())
-		{
-			username = LLCacheName::buildUsername(av_name.mDisplayName);
-		}
-		llinfos << "opening web profile for " << username << llendl;		
-		std::string url = getProfileURL(username);
-		const bool show_chrome = false;
-		static LLCachedControl<LLRect> profile_rect(gSavedSettings, "WebProfileRect");
-		LLFloaterWebContent::create(url, "", agent_id.asString(), show_chrome, profile_rect);
+		LLFloaterReg::showInstance("floater_profile_view", LLSD().with("id", agent_id));
+//		std::string username = av_name.mUsername;
+//		if (username.empty())
+//		{
+//			username = LLCacheName::buildUsername(av_name.mDisplayName);
+//		}
+//		llinfos << "opening web profile for " << username << llendl;		
+//		std::string url = getProfileURL(username);
+//		const bool show_chrome = false;
+//		static LLCachedControl<LLRect> profile_rect(gSavedSettings, "WebProfileRect");
+//		LLFloaterWebContent::create(url, "", agent_id.asString(), show_chrome, profile_rect);
 	}
 }
 

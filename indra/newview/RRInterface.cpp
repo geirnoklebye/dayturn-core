@@ -30,15 +30,15 @@
 #include "llbottomtray.h"
 #include "lldrawpoolalpha.h"
 #include "llfloaterchat.h"
-#include "llfloaterdaycycle.h"
-#include "llfloaterenvsettings.h"
+//#include "llfloaterenvsettings.h"
+#include "llfloatereditsky.h"
 #include "llfloaterinventory.h"
 #include "llfloatermap.h"
 #include "llfloaterpostprocess.h"
 #include "llfloaterreg.h"
 #include "llfloatersettingsdebug.h"
-#include "llfloaterwater.h"
-#include "llfloaterwindlight.h"
+//#include "llfloaterwater.h"
+//#include "llfloaterwindlight.h"
 #include "llfloaterworldmap.h"
 #include "llfocusmgr.h"
 #include "llgroupactions.h"
@@ -2818,13 +2818,13 @@ void updateAndSave (WLColorControl* color)
 	if (color->b > color->i) {
 		color->i = color->b;
 	}
-	color->update (LLWLParamManager::instance()->mCurParams);
+	color->update (LLWLParamManager::getInstance()->mCurParams);
 }
 
 void updateAndSave (WLFloatControl* floatControl)
 {
 	if (floatControl == NULL) return;
-	floatControl->update (LLWLParamManager::instance()->mCurParams);
+	floatControl->update (LLWLParamManager::getInstance()->mCurParams);
 }
 
 BOOL RRInterface::forceEnvironment (std::string command, std::string option)
@@ -2834,10 +2834,11 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 
 	int length = 7; // size of "setenv_"
 	command = command.substr (length);
-	LLWLParamManager* params = LLWLParamManager::instance();
+	LLWLParamManager* params = LLWLParamManager::getInstance();
 
 	params->mAnimator.mIsRunning = false;
-	params->mAnimator.mUseLindenTime = false;
+	//params->mAnimator.mUseLindenTime = false;
+	params->mAnimator.setTimeType(LLWLAnimator::TIME_CUSTOM);
 
 	if (command == "daytime") {
 		if (val > 1.0) val = 1.0;
@@ -2846,8 +2847,9 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 			params->mAnimator.update(params->mCurParams);
 		}
 		else {
-			LLWLParamManager::instance()->mAnimator.mIsRunning = true;
-			LLWLParamManager::instance()->mAnimator.mUseLindenTime = true;
+			LLWLParamManager::getInstance()->mAnimator.mIsRunning = true;
+			//LLWLParamManager::getInstance()->mAnimator.mUseLindenTime = true;
+			LLWLParamManager::getInstance()->mAnimator.setTimeType(LLWLAnimator::TIME_LINDEN);
 		}
 	}
 	else if (command == "bluehorizonr") {
@@ -3048,7 +3050,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 
 	// send the current parameters to shaders
-	LLWLParamManager::instance()->propagateParameters();
+	LLWLParamManager::getInstance()->propagateParameters();
 
 	return TRUE;
 }
@@ -3058,10 +3060,10 @@ std::string RRInterface::getEnvironment (std::string command)
 	F64 res = 0;
 	int length = 7; // size of "getenv_"
 	command = command.substr (length);
-	LLWLParamManager* params = LLWLParamManager::instance();
+	LLWLParamManager* params = LLWLParamManager::getInstance();
 
 	if (command == "daytime") {
-		if (params->mAnimator.mIsRunning && params->mAnimator.mUseLindenTime) res = -1;
+		if (params->mAnimator.mIsRunning && params->mAnimator.getTimeType() == LLWLAnimator::TIME_LINDEN) res = -1;
 		else res = params->mAnimator.getDayTime();
 	}
 

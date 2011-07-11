@@ -117,7 +117,7 @@
 	     width="30">
 		 <button.init_callback
                function="Button.SetFloaterToggle"
-               parameter="env_windlight" />
+               parameter="env_settings" />
 		 </button>
       <!-- end of Windlight Button -->
 	    <location_input

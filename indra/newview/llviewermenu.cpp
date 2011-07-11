@@ -8607,7 +8607,6 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLWorldEnvSettings(), "World.EnvSettings");
 	view_listener_t::addMenu(new LLWorldEnvPreset(), "World.EnvPreset");
 	view_listener_t::addMenu(new LLWorldPostProcess(), "World.PostProcess");
-	view_listener_t::addMenu(new LLWorldDayCycle(), "World.DayCycle");
 
 	view_listener_t::addMenu(new LLWorldToggleMovementControls(), "World.Toggle.MovementControls");
 	view_listener_t::addMenu(new LLWorldToggleCameraControls(), "World.Toggle.CameraControls");
