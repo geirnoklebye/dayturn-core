@@ -638,7 +638,10 @@ void LLAvatarList::updateLastInteractionTimes()
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 	{
-		LLSideTray::getInstance()->childSetVisible("recent_panel", false);
+		if (LLSideTray::getInstance()->childIsVisible("recent_panel") == true)
+		{
+			LLSideTray::getInstance()->childSetVisible("recent_panel", false);
+		}
 		return;
 	}
 //mk
