@@ -782,6 +782,15 @@ U32 LLAgentWearables::pushWearable(const LLWearableType::EType type, LLWearable 
 	}
 	if (type < LLWearableType::WT_COUNT || mWearableDatas[type].size() < MAX_CLOTHING_PER_TYPE)
 	{
+//MK
+		if (gRRenabled)
+		{
+			if (!gAgent.mRRInterface.canWear (type))
+			{
+				return MAX_CLOTHING_PER_TYPE;
+			}
+		}
+//mk
 		mWearableDatas[type].push_back(wearable);
 		wearableUpdated(wearable);
 		checkWearableAgainstInventory(wearable);

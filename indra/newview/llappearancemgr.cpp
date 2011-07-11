@@ -1007,7 +1007,14 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear, bool do_up
 				}
 //mk
 			}
-			addCOFItemLink(item_to_wear, do_update, cb);
+//MK
+			if (gRRenabled && gAgent.mRRInterface.canWear (item_to_wear->getWearableType()))
+			{
+//mk
+				addCOFItemLink(item_to_wear, do_update, cb);
+//MK
+			}
+//mk
 		} 
 		break;
 	case LLAssetType::AT_BODYPART:
@@ -1121,17 +1128,6 @@ void LLAppearanceMgr::addCategoryToCurrentOutfit(const LLUUID& cat_id)
 
 void LLAppearanceMgr::takeOffOutfit(const LLUUID& cat_id)
 {
-//MK
-/*
-	if (gRRenabled)
-	{
-		if (gAgent.mRRInterface.mContainsDetach || gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
-		{
-			return;
-		}
-	}
-*/
-//mk
 	LLInventoryModel::cat_array_t cats;
 	LLInventoryModel::item_array_t items;
 	LLFindWearablesEx collector(/*is_worn=*/ true, /*include_body_parts=*/ false);
@@ -1883,14 +1879,14 @@ void LLAppearanceMgr::wearInventoryCategory(LLInventoryCategory* category, bool 
 		//{
 		//	return;
 		//}
-		if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
-		{
-			return;
-		}
-		if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
-		{
-			return;
-		}
+		//if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
+		//{
+		//	return;
+		//}
+		//if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
+		//{
+		//	return;
+		//}
 		if (!gAgent.mRRInterface.canAttachCategory (category))
 		{
 			return;
@@ -2004,14 +2000,14 @@ void LLAppearanceMgr::wearInventoryCategoryOnAvatar( LLInventoryCategory* catego
 		//{
 		//	return;
 		//}
-		if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
-		{
-			return;
-		}
-		if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
-		{
-			return;
-		}
+		//if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
+		//{
+		//	return;
+		//}
+		//if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
+		//{
+		//	return;
+		//}
 		if (!gAgent.mRRInterface.canAttachCategory (category))
 		{
 			return;
@@ -2037,13 +2033,13 @@ void LLAppearanceMgr::wearOutfitByName(const std::string& name)
 	//inc_busy_count();
 
 //MK
-	if (gRRenabled)
-	{
-		if (gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
-		{
-			return;
-		}
-	}
+	//if (gRRenabled)
+	//{
+	//	if (gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
+	//	{
+	//		return;
+	//	}
+	//}
 //mk
 
 	LLInventoryModel::cat_array_t cat_array;
