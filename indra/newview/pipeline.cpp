@@ -2761,8 +2761,9 @@ void LLPipeline::stateSort(LLDrawable* drawablep, LLCamera& camera)
 		return;
 	}
 	
-	if (LLSelectMgr::getInstance()->mHideSelectedObjects)
 //MK
+////	if (LLSelectMgr::getInstance()->mHideSelectedObjects)
+	if (LLSelectMgr::getInstance()->mHideSelectedObjects
 		&& (!gRRenabled || !gAgent.mRRInterface.mContainsEdit))
 //mk
 	{
