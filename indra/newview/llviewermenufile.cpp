@@ -1052,6 +1052,10 @@ LLSD generate_new_resource_upload_capability_body(
 	return body;
 }
 
+//MK
+void temp_upload_done_callback(const LLUUID& uuid, void* user_data, S32 result, LLExtStat ext_status);
+//mk
+
 void upload_new_resource(
 	const LLTransactionID &tid,
 	LLAssetType::EType asset_type,
@@ -1081,7 +1085,9 @@ void upload_new_resource(
 			name,
 			display_name,
 			desc);
-	
+//MK	
+	BOOL temp_upload = FALSE;
+//mk
 	if( LLAssetType::AT_SOUND == asset_type )
 	{
 		LLViewerStats::getInstance()->incStat(LLViewerStats::ST_UPLOAD_SOUND_COUNT );
@@ -1090,6 +1096,14 @@ void upload_new_resource(
 	if( LLAssetType::AT_TEXTURE == asset_type )
 	{
 		LLViewerStats::getInstance()->incStat(LLViewerStats::ST_UPLOAD_TEXTURE_COUNT );
+//MK
+		temp_upload = gSavedSettings.getBOOL("TemporaryUpload");
+		if (temp_upload)
+		{
+			name = "[temp] " + name;
+		}
+		gSavedSettings.setBOOL("TemporaryUpload", FALSE);
+//mk
 	}
 	else
 	if( LLAssetType::AT_ANIMATION == asset_type)
@@ -1129,7 +1143,10 @@ void upload_new_resource(
 	std::string url = gAgent.getRegion()->getCapability(
 		"NewFileAgentInventory");
 
-	if ( !url.empty() )
+//MK
+////	if ( !url.empty() )
+	if (!url.empty() && !temp_upload)
+//mk
 	{
 		llinfos << "New Agent Inventory via capability" << llendl;
 
@@ -1154,24 +1171,31 @@ void upload_new_resource(
 	}
 	else
 	{
-		llinfos << "NewAgentInventory capability not found, new agent inventory via asset system." << llendl;
-		// check for adequate funds
-		// TODO: do this check on the sim
-		if (LLAssetType::AT_SOUND == asset_type ||
-			LLAssetType::AT_TEXTURE == asset_type ||
-			LLAssetType::AT_ANIMATION == asset_type)
+//MK
+		if (!temp_upload)
 		{
-			S32 balance = gStatusBar->getBalance();
-			if (balance < expected_upload_cost)
+//mk
+			llinfos << "NewAgentInventory capability not found, new agent inventory via asset system." << llendl;
+			// check for adequate funds
+			// TODO: do this check on the sim
+			if (LLAssetType::AT_SOUND == asset_type ||
+				LLAssetType::AT_TEXTURE == asset_type ||
+				LLAssetType::AT_ANIMATION == asset_type)
 			{
-				// insufficient funds, bail on this upload
-				LLStringUtil::format_map_t args;
-				args["NAME"] = name;
-				args["AMOUNT"] = llformat("%d", expected_upload_cost);
-				LLBuyCurrencyHTML::openCurrencyFloater( LLTrans::getString("UploadingCosts", args), expected_upload_cost );
-				return;
+				S32 balance = gStatusBar->getBalance();
+				if (balance < expected_upload_cost)
+				{
+					// insufficient funds, bail on this upload
+					LLStringUtil::format_map_t args;
+					args["NAME"] = name;
+					args["AMOUNT"] = llformat("%d", expected_upload_cost);
+					LLBuyCurrencyHTML::openCurrencyFloater( LLTrans::getString("UploadingCosts", args), expected_upload_cost );
+					return;
+				}
 			}
+//MK
 		}
+//mk
 
 		LLResourceData* data = new LLResourceData;
 		data->mAssetInfo.mTransactionID = tid;
@@ -1186,17 +1210,28 @@ void upload_new_resource(
 		data->mAssetInfo.setDescription(desc);
 		data->mPreferredLocation = destination_folder_type;
 
-		LLAssetStorage::LLStoreAssetCallback asset_callback = &upload_done_callback;
+//MK
+////		LLAssetStorage::LLStoreAssetCallback asset_callback = &upload_done_callback;
+		LLAssetStorage::LLStoreAssetCallback asset_callback = temp_upload ? &temp_upload_done_callback : &upload_done_callback;
+//mk
 		if (callback)
 		{
 			asset_callback = callback;
 		}
-		gAssetStorage->storeAssetData(
-			data->mAssetInfo.mTransactionID,
-			data->mAssetInfo.mType,
-			asset_callback,
-			(void*)data,
-			FALSE);
+//MK
+		////gAssetStorage->storeAssetData(
+		////	data->mAssetInfo.mTransactionID,
+		////	data->mAssetInfo.mType,
+		////	asset_callback,
+		////	(void*)data,
+		////	FALSE);
+		gAssetStorage->storeAssetData(data->mAssetInfo.mTransactionID, data->mAssetInfo.mType,
+										asset_callback,
+										(void*)data,
+										temp_upload,
+										TRUE,
+										temp_upload);
+//mk
 	}
 }
 
