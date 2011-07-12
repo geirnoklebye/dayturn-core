@@ -92,9 +92,10 @@ void LLPanelMarketplaceOutbox::onFocusReceived()
 		{
 			inv_panel->clearSelection();
 		}
-
-		LLInventoryPanel * inbox_panel = sidepanel_inventory->findChild<LLInventoryPanel>("inventory_inbox");
-
+//MK
+////		LLInventoryPanel * inbox_panel = sidepanel_inventory->findChild<LLInventoryPanel>("inventory_inbox");
+		LLInventoryPanel * inbox_panel = NULL;
+//mk
 		if (inbox_panel)
 		{
 			inbox_panel->clearSelection();

@@ -722,7 +722,10 @@ std::set<LLUUID> LLAvatarActions::getInventorySelectedUUIDs()
 	if (inventory_selected_uuids.empty())
 	{
 		LLSidepanelInventory * sidepanel_inventory = LLSideTray::getInstance()->getPanel<LLSidepanelInventory>("sidepanel_inventory");
-		LLInventoryPanel * inbox = sidepanel_inventory->findChild<LLInventoryPanel>("inventory_inbox");
+//MK
+////		LLInventoryPanel * inbox = sidepanel_inventory->findChild<LLInventoryPanel>("inventory_inbox");
+		LLInventoryPanel * inbox = NULL;
+//mk
 		if (inbox)
 		{
 			inventory_selected_uuids = inbox->getRootFolder()->getSelectionList();

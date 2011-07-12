@@ -579,8 +579,10 @@ void LLPanelMainInventory::onFocusReceived()
 {
 	LLSidepanelInventory * sidepanel_inventory = LLSideTray::getInstance()->getPanel<LLSidepanelInventory>("sidepanel_inventory");
 
-	LLInventoryPanel * inbox_panel = sidepanel_inventory->findChild<LLInventoryPanel>("inventory_inbox");
-
+//MK
+////	LLInventoryPanel * inbox_panel = sidepanel_inventory->findChild<LLInventoryPanel>("inventory_inbox");
+	LLInventoryPanel * inbox_panel = NULL;
+//mk
 	if (inbox_panel)
 	{
 		inbox_panel->clearSelection();

@@ -539,7 +539,10 @@ void LLSidepanelInventory::performActionOnSelection(const std::string &action)
 	LLFolderViewItem* current_item = panel_main_inventory->getActivePanel()->getRootFolder()->getCurSelectedItem();
 	if (!current_item)
 	{
-		LLInventoryPanel* inbox = findChild<LLInventoryPanel>("inventory_inbox");
+//MK
+////		LLInventoryPanel* inbox = findChild<LLInventoryPanel>("inventory_inbox");
+		LLInventoryPanel* inbox = NULL;
+//mk
 		if (inbox)
 		{
 			current_item = inbox->getRootFolder()->getCurSelectedItem();
@@ -696,8 +699,10 @@ bool LLSidepanelInventory::canShare()
 	LLPanelMainInventory* panel_main_inventory =
 		mInventoryPanel->findChild<LLPanelMainInventory>("panel_main_inventory");
 
-	LLInventoryPanel* inbox = findChild<LLInventoryPanel>("inventory_inbox");
-
+//MK
+////	LLInventoryPanel* inbox = findChild<LLInventoryPanel>("inventory_inbox");
+	LLInventoryPanel* inbox = NULL;
+//mk
 	// Avoid flicker in the Recent tab while inventory is being loaded.
 	if ( (!inbox || inbox->getRootFolder()->getSelectionList().empty())
 		&& (panel_main_inventory && !panel_main_inventory->getActivePanel()->getRootFolder()->hasVisibleChildren()) )
@@ -734,7 +739,10 @@ LLInventoryItem *LLSidepanelInventory::getSelectedItem()
 	LLFolderViewItem* current_item = panel_main_inventory->getActivePanel()->getRootFolder()->getCurSelectedItem();
 	if (!current_item)
 	{
-		LLInventoryPanel* inbox = findChild<LLInventoryPanel>("inventory_inbox");
+//MK
+////		LLInventoryPanel* inbox = findChild<LLInventoryPanel>("inventory_inbox");
+		LLInventoryPanel* inbox = NULL;
+//mk
 		if (inbox)
 		{
 			current_item = inbox->getRootFolder()->getCurSelectedItem();
@@ -758,7 +766,10 @@ U32 LLSidepanelInventory::getSelectedCount()
 	std::set<LLUUID> selection_list = panel_main_inventory->getActivePanel()->getRootFolder()->getSelectionList();
 	count += selection_list.size();
 
-	LLInventoryPanel* inbox = findChild<LLInventoryPanel>("inventory_inbox");
+//MK
+////	LLInventoryPanel* inbox = findChild<LLInventoryPanel>("inventory_inbox");
+	LLInventoryPanel* inbox = NULL;
+//mk
 	if (inbox)
 	{
 		selection_list = inbox->getRootFolder()->getSelectionList();
