@@ -236,10 +236,17 @@ BOOL LLImageJ2COJ::decodeImpl(LLImageJ2C &base, LLImageRaw &raw_image, F32 decod
 	// first_channel is what channel to start copying from
 	// dest is what channel to copy to.  first_channel comes from the
 	// argument, dest always starts writing at channel zero.
+//MK
+	if( channels > max_channel_count )
+		channels = max_channel_count;
+//mk
 	for (S32 comp = first_channel, dest=0; comp < first_channel + channels;
 		comp++, dest++)
 	{
-		if (image->comps[comp].data)
+//MK
+////		if (image->comps[comp].data)
+		if (image && comp < img_components && image->comps[comp].data)
+//mk
 		{
 			S32 offset = dest;
 			for (S32 y = (height - 1); y >= 0; y--)
