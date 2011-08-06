@@ -81,5 +81,6 @@ indra/newview/viewer_manifest.py.orig
 indra/newview/CMakeLists.txt.orig
 indra/newview/skins/default/xui/en/floater_snapshot.xml.orig
 build-vc100__/*
+build-vc100*
 syntax: regexp
 fmodapi375win/*
