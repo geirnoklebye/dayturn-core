@@ -304,52 +304,35 @@ void LLAvatarActions::startConference(const uuid_vec_t& ids)
 
 static void on_avatar_name_show_profile(const LLUUID& agent_id, const LLAvatarName& av_name)
 {
+	std::string username = av_name.mUsername;
+	if (username.empty())
+	{
+		username = LLCacheName::buildUsername(av_name.mDisplayName);
+	}
+
+//MK	
 	if ( (!gSavedSettings.getBOOL("ShowProfileFloaters")) || ((gAgent.getID() == agent_id)) )
 	{
-		LLSD params;
-		params["id"] = agent_id;
-		params["open_tab_name"] = "panel_profile";
-
+//mk
+		llinfos << "opening web profile for " << username << llendl;		
+		std::string url = getProfileURL(username);
+	
 		// PROFILES: open in webkit window
-		std::string full_name;
-		if (gCacheName->getFullName(agent_id,full_name))
-		{
-			std::string agent_name = LLCacheName::buildUsername(full_name);
-			llinfos << "opening web profile for " << agent_name << llendl;		
-			std::string url = getProfileURL(agent_name);
-			LLWeb::loadWebURLInternal(url);
-		}
-		else
-		{
-			llwarns << "no name info for agent id " << agent_id << llendl;
-		}
-#if 0
-		//Show own profile
-		if(gAgent.getID() == agent_id)
-		{
-			LLSideTray::getInstance()->showPanel("panel_me", params);
-		}
-		//Show other user profile
-		else
-		{
-			LLSideTray::getInstance()->showPanel("panel_profile_view", params);
-		}
-#endif
+		const bool show_chrome = false;
+		static LLCachedControl<LLRect> profile_rect(gSavedSettings, "WebProfileRect");
+		LLFloaterWebContent::create(LLFloaterWebContent::Params().
+								url(url).
+								id(agent_id.asString()).
+								show_chrome(show_chrome).
+								window_class("profile").
+								preferred_media_size(profile_rect));
+//MK
 	}
 	else
 	{
 		LLFloaterReg::showInstance("floater_profile_view", LLSD().with("id", agent_id));
-//		std::string username = av_name.mUsername;
-//		if (username.empty())
-//		{
-//			username = LLCacheName::buildUsername(av_name.mDisplayName);
-//		}
-//		llinfos << "opening web profile for " << username << llendl;		
-//		std::string url = getProfileURL(username);
-//		const bool show_chrome = false;
-//		static LLCachedControl<LLRect> profile_rect(gSavedSettings, "WebProfileRect");
-//		LLFloaterWebContent::create(url, "", agent_id.asString(), show_chrome, profile_rect);
 	}
+//mk
 }
 
 // static
@@ -364,7 +347,9 @@ void LLAvatarActions::showProfile(const LLUUID& id)
 //static 
 bool LLAvatarActions::profileVisible(const LLUUID& id)
 {
-	LLFloaterWebContent *browser = dynamic_cast<LLFloaterWebContent*> (LLFloaterReg::findInstance("web_content", id.asString()));
+	LLSD sd;
+	sd["id"] = id;
+	LLFloaterWebContent *browser = dynamic_cast<LLFloaterWebContent*> (LLFloaterReg::findInstance("profile", sd));
 	return browser && browser->isShown();
 }
 
@@ -372,7 +357,9 @@ bool LLAvatarActions::profileVisible(const LLUUID& id)
 //static 
 void LLAvatarActions::hideProfile(const LLUUID& id)
 {
-	LLFloaterWebContent *browser = dynamic_cast<LLFloaterWebContent*> (LLFloaterReg::findInstance("web_content", id.asString()));
+	LLSD sd;
+	sd["id"] = id;
+	LLFloaterWebContent *browser = dynamic_cast<LLFloaterWebContent*> (LLFloaterReg::findInstance("profile", sd));
 	if (browser)
 	{
 		browser->closeFloater();
@@ -481,7 +468,6 @@ void LLAvatarActions::share(const LLUUID& id)
 
 namespace action_give_inventory
 {
-	typedef std::set<LLUUID> uuid_set_t;
 
 	/**
 	 * Returns a pointer to 'Add More' inventory panel of Edit Outfit SP.

@@ -3746,6 +3746,8 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 	LLVertexBuffer::unbind();
 	LLGLState::checkStates();
 
+	if (!LLPipeline::sImpostorRender)
+	{
 	LLAppViewer::instance()->pingMainloopTimeout("Pipeline:RenderHighlights");
 
 	if (!sReflectionRender)
@@ -3793,6 +3795,7 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 			gGLModelView[i] = saved_modelview[i];
 			gGLProjection[i] = saved_projection[i];
 		}
+	}
 	}
 
 	LLVertexBuffer::unbind();
