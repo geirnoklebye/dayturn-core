@@ -3126,7 +3126,7 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 	
 	LLCDMeshData mesh;	
 
-#if 1
+#if 0
 	setMeshData(mesh, true);
 
 	LLCDResult ret = decomp->buildSingleHull() ;
