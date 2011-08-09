@@ -471,6 +471,12 @@ void LLEnvManagerNew::onTeleport()
 
 void LLEnvManagerNew::onRegionSettingsResponse(const LLSD& content)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		return;
+	}
+//mk
 	// If the message was valid, grab the UUID from it and save it for next outbound update message.
 	mLastReceivedID = content[0]["messageID"].asUUID();
 

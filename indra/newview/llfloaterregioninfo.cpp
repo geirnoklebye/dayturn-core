@@ -330,7 +330,7 @@ void LLFloaterRegionInfo::processRegionInfo(LLMessageSystem* msg)
 	// so our environment won't be updated.
 	// This is also the way to know about externally changed region environment.
 	LLEnvManagerNew::instance().requestRegionSettings();
-	
+
 	LLTabContainer* tab = floater->getChild<LLTabContainer>("region_panels");
 
 	LLViewerRegion* region = gAgent.getRegion();
@@ -2973,6 +2973,12 @@ void LLPanelEnvironmentInfo::onOpen(const LLSD& key)
 // virtual
 void LLPanelEnvironmentInfo::handleVisibilityChange(BOOL new_visibility)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		return;
+	}
+//mk
 	// If hiding (user switched to another tab or closed the floater),
 	// display user's preferred environment.
 	if (!new_visibility)
