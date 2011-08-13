@@ -3736,7 +3736,13 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				{
 					std::string command = mesg_str.substr(1, mesg_str.length());
 					LLStringUtil::toLower(command);
-					if (gAgent.mRRInterface.handleCommand (from_id, command))
+					LLUUID obj_id = from_id;
+					LLViewerObject* object = gObjectList.findObject(from_id);
+					if (object && object->getRootEdit())
+					{
+						obj_id = object->getRootEdit()->getID();
+					}
+					if (gAgent.mRRInterface.handleCommand (obj_id, command))
 					{
 						if (!gSavedSettings.getBOOL("RestrainedLoveDebug"))
 						{
