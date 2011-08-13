@@ -787,15 +787,18 @@ void LLNearbyChatBar::sendChatFromViewer(const LLWString &wtext, EChatType type,
 		if (type == CHAT_TYPE_WHISPER && gAgent.mRRInterface.contains ("chatwhisper"))
 		{
 			type = CHAT_TYPE_NORMAL;
+			animate = false;
 		}
 		if (type == CHAT_TYPE_SHOUT && gAgent.mRRInterface.contains ("chatshout"))
 		{
 			type = CHAT_TYPE_NORMAL;
+			animate = false;
 		}
 		if ((type == CHAT_TYPE_SHOUT || type == CHAT_TYPE_NORMAL)
 			&& gAgent.mRRInterface.contains ("chatnormal"))
 		{
 			type = CHAT_TYPE_WHISPER;
+			animate = false;
 		}
 		
 		if (gAgent.mRRInterface.containsSubstr ("redirchat:"))
