@@ -201,13 +201,6 @@ void LLFloaterLand::refreshAll()
 	LLFloaterLand* land_instance = LLFloaterReg::getTypedInstance<LLFloaterLand>("about_land");
 	if(land_instance)
 	{
-//MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
-		{
-			land_instance->closeFloater();
-			return;
-		}
-//mk
 		land_instance->refresh();
 	}
 }
@@ -216,6 +209,13 @@ void LLFloaterLand::onOpen(const LLSD& key)
 {
 	// moved from triggering show instance in llviwermenu.cpp
 	
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		closeFloater();
+		return;
+	}
+//mk
 	if (LLViewerParcelMgr::getInstance()->selectionEmpty())
 	{
 		LLViewerParcelMgr::getInstance()->selectParcelAt(gAgent.getPositionGlobal());
