@@ -1964,18 +1964,18 @@ std::string RRInterface::getWornItems (LLInventoryCategory* cat)
 		}
 	}
 
-	if (isNoMod) {
-		// the folder contains one no-mod object and is named from an attachment point
-		// => return a special character that will be handled by the calling method
-		if (nbWorn > 0) return "N";
-		else return "n";
-	}
-	else {
+	//if (isNoMod) {
+	//	// the folder contains one no-mod object and is named from an attachment point
+	//	// => return a special character that will be handled by the calling method
+	//	if (nbWorn > 0) return "N";
+	//	else return "n";
+	//}
+	//else {
 		if (isRoot || nbItems == 0) res = 0; // forcibly hide all items contained directly under #RLV
 		else if (nbWorn >= nbItems) res = 3;
 		else if (nbWorn > 0) res = 2;
 		else res = 1;
-	}
+	//}
 	std::stringstream str;
 	str << res;
 	str << subRes;
