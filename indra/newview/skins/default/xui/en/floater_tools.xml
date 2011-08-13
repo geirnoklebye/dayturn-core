@@ -54,6 +54,26 @@
      name="status_selectprimequiv">
         , [SEL_WEIGHT] prim equivs
     </floater.string>
+		<floater.string
+     name="grid_screen_text">
+        Screen
+    </floater.string>
+    <floater.string
+     name="grid_local_text">
+        Local
+    </floater.string>
+    <floater.string
+     name="grid_world_text">
+        World
+    </floater.string>
+    <floater.string
+     name="grid_reference_text">
+        Reference
+    </floater.string>
+    <floater.string
+     name="grid_attachment_text">
+        Attachment
+    </floater.string>
     <button
      follows="left|top"
      height="25"
@@ -248,11 +268,11 @@
      label="Edit linked"
      layout="topleft"
      name="checkbox edit linked parts"
-     top_pad="-18">
+     top_pad="-10">
 		  <check_box.commit_callback
 			function="BuildTool.selectComponent"/>
 	</check_box>
-
+<!-- MK: Removing those very dangerous buttons. Too easy to click on by mistake.
    <button
      follows="left|top"
      height="20"
@@ -276,7 +296,32 @@
 	  <button.commit_callback
 	     function="BuildTool.UnlinkObjects"/>
     </button>
-    <check_box
+-->
+<!-- MK: This combo box, on the other hand, is too useful to hide. -->
+    <combo_box
+     height="23"
+     layout="topleft"
+     follows="left|top"
+     name="combobox grid mode"
+     tool_tip="Choose the type of grid ruler for positioning the object"
+     top="108"
+		 left="143"
+     width="108">
+        <combo_box.item
+         label="World grid"
+         name="World"
+         value="World" />
+        <combo_box.item
+         label="Local grid"
+         name="Local"
+         value="Local" />
+        <combo_box.item
+         label="Reference grid"
+         name="Reference"
+         value="Reference" />
+		 <combo_box.commit_callback
+	     function="BuildTool.gridMode"/>
+    </combo_box>    <check_box
      control_name="ScaleUniform"
      height="19"
      label=""
@@ -730,7 +775,7 @@
 	  layout="topleft"
 	  left="10"
 	  name="selection_count"
-	  top_delta="0"
+	  top_delta="10"
 	  visible="false"
 	  width="280">
 	</text>
@@ -744,7 +789,7 @@
 	  layout="topleft"
 	  left="10"
 	  name="selection_weight"
-	  top_pad="0"
+	  top_pad="10"
 	  visible="false"
 	  width="280">
 	  Physics weight [PHYS_WEIGHT], Render Cost [DISP_WEIGHT].
@@ -782,7 +827,7 @@
     layout="topleft"
     left="6"
     name="cost_text_border"
-    top="135"
+    top="145"
     width="282"/>
     <tab_container
      follows="left|top"
@@ -794,7 +839,7 @@
      tab_min_width="40"
      tab_position="top"
      tab_height="25"
-     top="173"
+     top="183"
      width="295">
 	
 <panel
