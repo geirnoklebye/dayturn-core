@@ -572,6 +572,8 @@ void LLPanelMainInventory::updateItemcountText()
 	{
 		text = getString("ItemcountUnknown");
 	}
+	
+	// *TODO: Cache the LLUICtrl* for the ItemcountText control
 	getChild<LLUICtrl>("ItemcountText")->setValue(text);
 }
 
@@ -579,23 +581,7 @@ void LLPanelMainInventory::onFocusReceived()
 {
 	LLSidepanelInventory * sidepanel_inventory = LLSideTray::getInstance()->getPanel<LLSidepanelInventory>("sidepanel_inventory");
 
-//MK
-////	LLInventoryPanel * inbox_panel = sidepanel_inventory->findChild<LLInventoryPanel>("inventory_inbox");
-	LLInventoryPanel * inbox_panel = NULL;
-//mk
-	if (inbox_panel)
-	{
-		inbox_panel->clearSelection();
-	}
-
-	LLInventoryPanel * outbox_panel = sidepanel_inventory->findChild<LLInventoryPanel>("inventory_outbox");
-
-	if (outbox_panel)
-	{
-		outbox_panel->clearSelection();
-	}
-
-	sidepanel_inventory->updateVerbs();
+	sidepanel_inventory->clearSelections(false, true, true);
 }
 
 void LLPanelMainInventory::setFilterTextFromFilter() 

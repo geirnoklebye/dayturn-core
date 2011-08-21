@@ -166,7 +166,6 @@ private:
 	void			removeWearableFinal(const LLWearableType::EType type, bool do_remove_all /*= false*/, U32 index /*= 0*/);
 protected:
 	static bool		onRemoveWearableDialog(const LLSD& notification, const LLSD& response);
-	static void		userRemoveAllClothesStep2(BOOL proceed); // userdata is NULL
 	
 	//--------------------------------------------------------------------
 	// Server Communication
@@ -212,7 +211,6 @@ public:
 public:
 	static void		userRemoveWearable(const LLWearableType::EType &type, const U32 &index);
 	static void		userRemoveWearablesOfType(const LLWearableType::EType &type);
-	static void		userRemoveAllClothes();	
 	
 	typedef std::vector<LLViewerObject*> llvo_vec_t;
 
