@@ -3727,7 +3727,6 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			case CHAT_TYPE_WHISPER:
 				chat.mText = LLTrans::getString("whisper") + " ";
 				break;
-			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_OWNER:
 //MK
 			// This is the actual handling of the commands sent by owned objects.

@@ -83,5 +83,10 @@ indra/newview/CMakeLists.txt.orig
 indra/newview/skins/default/xui/en/floater_snapshot.xml.orig
 build-vc100__/*
 build-vc100*
+.project
+indra/.cproject
+indra/.settings/org.eclipse.cdt.core.prefs
+indra/.settings/org.eclipse.cdt.ui.prefs
+.cproject
 syntax: regexp
 fmodapi375win/*
