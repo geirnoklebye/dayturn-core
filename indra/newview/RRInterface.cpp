@@ -3673,9 +3673,23 @@ bool RRInterface::canDetach(LLViewerObject* attached_object, BOOL handle_nostrip
 {
 //	if (!scriptsEnabled() && !getScriptsEnabledOnce()) return false;
 	if (attached_object == NULL) return true;
-	if (attached_object->getRootEdit() == NULL) return true;
-	
-	if (!isAllowed (attached_object->getRootEdit()->getID(), "detach", FALSE)) return false;
+	LLViewerObject* root = attached_object->getRootEdit();
+	if (root == NULL) return true;
+
+	// Check all the current restrictions, if "detach" is issued from a child prim of the root prim of
+	// attached_object, then the whole object is undetachable
+	RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
+	while (it != mSpecialObjectBehaviours.end()) {
+		if (it->second == "detach") {
+			if (gObjectList.findObject(LLUUID(it->first)) == root) {
+				return false;
+			}
+		}
+		it++;
+	}
+
+//	if (!isAllowed (attached_object->getRootEdit()->getID(), "detach", FALSE)) return false;
+	if (!isAllowed (attached_object->getID(), "detach", FALSE)) return false;
 
 	LLInventoryItem* item = getItem (attached_object->getRootEdit()->getID());
 
