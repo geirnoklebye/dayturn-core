@@ -28,7 +28,7 @@
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
 #define RR_VERSION_NUM "2070303"
 #define RR_VERSION "2.07.03.03"
-#define RR_SLV_VERSION "3.0.2.20195"
+#define RR_SLV_VERSION "3.0.3.20205"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
