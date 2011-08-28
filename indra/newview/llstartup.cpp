@@ -686,10 +686,24 @@ bool idle_startup()
 			return FALSE;
 		}
 	}
-// </AW: opensim>
 
 	if (STATE_AUDIO_INIT == LLStartUp::getStartupState())
 	{
+
+		// parsing slurls depending on the grid obviously 
+		// only works after we have a grid list
+		// Anyway this belongs into the gridmanager as soon as 
+		// it is cleaner
+		if(!LLStartUp::sStartSLURLString.empty())
+		{
+			LLStartUp::setStartSLURL(LLStartUp::sStartSLURLString);
+		}
+// </AW: opensim>
+
+		//-------------------------------------------------
+		// Init audio, which may be needed for prefs dialog
+		// or audio cues in connection UI.
+		//-------------------------------------------------
 
 		if (FALSE == gSavedSettings.getBOOL("NoAudio"))
 		{
@@ -1095,7 +1109,9 @@ bool idle_startup()
 		// This call to LLLoginInstance::connect() starts the 
 		// authentication process.
 		login->connect(gUserCredential);
-
+// <AW: opensim>
+		LLGridManager::getInstance()->saveGridList();
+// </AW: opensim>
 		LLStartUp::setStartupState( STATE_LOGIN_CURL_UNSTUCK );
 		return FALSE;
 	}
@@ -1240,7 +1256,10 @@ bool idle_startup()
 				LLVoiceClient::getInstance()->userAuthorized(gUserCredential->userID(), gAgentID);
 				// create the default proximal channel
 				LLVoiceChannel::initClass();
-				LLGridManager::getInstance()->setFavorite(); 
+// <AW: opensim>
+				// Not used anymore
+				//LLGridManager::getInstance()->setFavorite();
+ // </AW: opensim>
 				LLStartUp::setStartupState( STATE_WORLD_INIT);
 			}
 			else
@@ -3441,7 +3460,7 @@ bool process_login_success_response()
 
 	// Request the map server url
 	// Non-agni grids have a different default location.
-	if (!LLGridManager::getInstance()->isInSLMain())
+	if (LLGridManager::getInstance()->isInSLBeta())
 	{
 		gSavedSettings.setString("MapServerURL", "http://test.map.secondlife.com.s3.amazonaws.com/");
 	}
