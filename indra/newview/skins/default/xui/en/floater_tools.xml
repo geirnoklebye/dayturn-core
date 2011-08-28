@@ -2,7 +2,7 @@
 <floater
  legacy_header_height="18"
  follows="left|top|right"
- height="580"
+ height="600"
  layout="topleft"
  bg_opaque_image="Window_NoTitle_Foreground"
  bg_alpha_image="Window_NoTitle_Background"
@@ -761,7 +761,7 @@
 	  layout="topleft"
 	  left="10"
 	  name="selection_empty"
-	  top_pad="0"
+	  top_pad="10"
 	  width="100">
 		Nothing selected.
 	</text>
