@@ -114,7 +114,9 @@
 #include "llviewershadermgr.h"
 #include "glod/glod.h"
 #include <boost/algorithm/string.hpp>
-
+// <AW: opensim-limits>
+#include "llworld.h"
+// </AW: opensim-limits>
 
 const S32 SLM_SUPPORTED_VERSION = 3;
 
@@ -3401,12 +3403,12 @@ void LLModelPreview::rebuildUploadData()
 		}
 	}
 
-	F32 max_import_scale = (DEFAULT_MAX_PRIM_SCALE-0.1f)/max_scale;
 
-	F32 max_axis = llmax(mPreviewScale.mV[0], mPreviewScale.mV[1]);
-	max_axis = llmax(max_axis, mPreviewScale.mV[2]);
-	max_axis *= 2.f;
-
+// <AW: opensim-limits>
+	//F32 max_import_scale = DEFAULT_MAX_PRIM_SCALE/max_scale;
+	F32 region_max_prim_scale = LLWorld::getInstance()->getRegionMaxPrimScale();
+	F32 max_import_scale = region_max_prim_scale/max_scale;
+// </AW: opensim-limits>
 	//clamp scale so that total imported model bounding box is smaller than 240m on a side
 	max_import_scale = llmin(max_import_scale, 240.f/max_axis);
 

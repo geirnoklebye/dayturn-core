@@ -287,6 +287,8 @@ LLPanelObject::LLPanelObject()
 	mSelectedType(MI_BOX),
 	mSculptTextureRevert(LLUUID::null),
 	mSculptTypeRevert(0)
+	mHasLightParam(FALSE),
+	mLimitsNeedUpdate(true)	// <AW: opensim-limits>
 {
 }
 
@@ -295,6 +297,33 @@ LLPanelObject::~LLPanelObject()
 {
 	// Children all cleaned up by default view destructor.
 }
+
+// <AW: opensim-limits>
+void LLPanelObject::updateLimits()
+{
+	mLimitsNeedUpdate = false;
+
+	mRegionMaxHeight = LLWorld::getInstance()->getRegionMaxHeight();
+	mCtrlPosZ->setMaxValue(mRegionMaxHeight);
+
+
+	mMinScale = LLWorld::getInstance()->getRegionMinPrimScale();
+	mMaxScale = LLWorld::getInstance()->getRegionMaxPrimScale();
+	mCtrlScaleX->setMinValue(mMinScale);
+	mCtrlScaleX->setMaxValue(mMaxScale);
+	mCtrlScaleY->setMinValue(mMinScale);
+	mCtrlScaleY->setMaxValue(mMaxScale);
+	mCtrlScaleZ->setMinValue(mMinScale);
+	mCtrlScaleZ->setMaxValue(mMaxScale);
+
+	mMaxHollowSize = LLWorld::getInstance()->getRegionMaxHollowSize();
+	mSpinHollow->setMaxValue(mMaxHollowSize);
+
+	mMinHoleSize = LLWorld::getInstance()->getRegionMinHoleSize();
+	mSpinScaleX->setMinValue(mMinHoleSize);
+	mSpinScaleY->setMinValue(mMinHoleSize);
+}
+// </AW: opensim-limits>
 
 void LLPanelObject::getState( )
 {
@@ -904,11 +933,14 @@ void LLPanelObject::getState( )
 	case MI_RING:
 		mSpinScaleX->set( scale_x );
 		mSpinScaleY->set( scale_y );
+		mSpinScaleX->setMinValue(mMinHoleSize);// <AW: opensim-limits>
 		calcp->setVar(LLCalc::X_HOLE, scale_x);
 		calcp->setVar(LLCalc::Y_HOLE, scale_y);
-		mSpinScaleX->setMinValue(OBJECT_MIN_HOLE_SIZE);
+//		mSpinScaleX->setMinValue(OBJECT_MIN_HOLE_SIZE);
+		mSpinScaleX->setMinValue(mMinHoleSize);// <AW: opensim-limits>
 		mSpinScaleX->setMaxValue(OBJECT_MAX_HOLE_SIZE_X);
-		mSpinScaleY->setMinValue(OBJECT_MIN_HOLE_SIZE);
+//		mSpinScaleY->setMinValue(OBJECT_MIN_HOLE_SIZE);
+		mSpinScaleY->setMinValue(mMinHoleSize);// <AW: opensim-limits>
 		mSpinScaleY->setMaxValue(OBJECT_MAX_HOLE_SIZE_Y);
 		break;
 	default:
@@ -944,7 +976,8 @@ void LLPanelObject::getState( )
 	else 
 	{
 		mSpinHollow->setMinValue(0.f);
-		mSpinHollow->setMaxValue(95.f);
+// 		mSpinHollow->setMaxValue(100.f);
+		mSpinHollow->setMaxValue(mMaxHollowSize);// <AW: opensim-limits>
 	}
 
 	// Update field enablement
@@ -1491,11 +1524,13 @@ void LLPanelObject::getVolumeParams(LLVolumeParams& volume_params)
 	{
 		scale_x = llclamp(
 			scale_x,
-			OBJECT_MIN_HOLE_SIZE,
+//			OBJECT_MIN_HOLE_SIZE,
+			mMinHoleSize,// <AW: opensim-limits>
 			OBJECT_MAX_HOLE_SIZE_X);
 		scale_y = llclamp(
 			scale_y,
-			OBJECT_MIN_HOLE_SIZE,
+// 			OBJECT_MIN_HOLE_SIZE,
+			mMinHoleSize,// <AW: opensim-limits>
 			OBJECT_MAX_HOLE_SIZE_Y);
 
 		// Limit radius offset, based on taper and hole size y.
@@ -1625,13 +1660,27 @@ void LLPanelObject::sendRotation(BOOL btn_down)
 	}
 }
 
+// <AW: opensim-limits>
+//	if(gAgent.getRegion()->getCapability("GetMesh").empty())
+//		return DEFAULT_MAX_PRIM_SCALE;
+//	return 64.f;
+	return LLWorld::getInstance()->getRegionMaxPrimScale();
+// </AW: opensim-limits>
 
 // BUG: Make work with multiple objects
 void LLPanelObject::sendScale(BOOL btn_down)
 {
 	if (mObject.isNull()) return;
 
-	LLVector3 newscale(mCtrlScaleX->get(), mCtrlScaleY->get(), mCtrlScaleZ->get());
+
+// <AW: opensim-limits>
+//	LLVector3 newscale(llclamp(mCtrlScaleX->get(), MIN_PRIM_SCALE, llpanelobject_max_prim_scale()),
+//					   llclamp(mCtrlScaleY->get(), MIN_PRIM_SCALE, llpanelobject_max_prim_scale()),
+//					   llclamp(mCtrlScaleZ->get(), MIN_PRIM_SCALE, llpanelobject_max_prim_scale()));
+	LLVector3 newscale(llclamp(mCtrlScaleX->get(), mMinScale, llpanelobject_max_prim_scale()),
+					   llclamp(mCtrlScaleY->get(), mMinScale, llpanelobject_max_prim_scale()),
+					   llclamp(mCtrlScaleZ->get(), mMinScale, llpanelobject_max_prim_scale()));
+// </AW: opensim-limits>
 
 	LLVector3 delta = newscale - mObject->getScale();
 	if (delta.magVec() >= 0.0005f)
@@ -1783,6 +1832,13 @@ void LLPanelObject::sendSculpt()
 
 void LLPanelObject::refresh()
 {
+// <AW: opensim-limits>
+	if(mLimitsNeedUpdate)
+	{
+		updateLimits();
+	}
+// </AW: opensim-limits>
+
 	getState();
 	if (mObject.notNull() && mObject->isDead())
 	{
@@ -2037,3 +2093,12 @@ void LLPanelObject::onCommitSculptType(LLUICtrl *ctrl, void* userdata)
 
 	self->sendSculpt();
 }
+
+// <AW: opensim-limits>
+//	mClipboardSize.mV[VX] = llclamp(mClipboardSize.mV[VX], MIN_PRIM_SCALE, llpanelobject_max_prim_scale());
+//	mClipboardSize.mV[VY] = llclamp(mClipboardSize.mV[VY], MIN_PRIM_SCALE, llpanelobject_max_prim_scale());
+//	mClipboardSize.mV[VZ] = llclamp(mClipboardSize.mV[VZ], MIN_PRIM_SCALE, llpanelobject_max_prim_scale());
+	mClipboardSize.mV[VX] = llclamp(mClipboardSize.mV[VX], mMinScale, llpanelobject_max_prim_scale());
+	mClipboardSize.mV[VY] = llclamp(mClipboardSize.mV[VY], mMinScale, llpanelobject_max_prim_scale());
+	mClipboardSize.mV[VZ] = llclamp(mClipboardSize.mV[VZ], mMinScale, llpanelobject_max_prim_scale());
+// </AW: opensim-limits>
