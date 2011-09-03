@@ -79,7 +79,7 @@ BOOL RRInterface::sRRNoSetEnv = FALSE;
 BOOL RRInterface::sRestrainedLoveDebug = FALSE;
 BOOL RRInterface::sCanOoc = TRUE;
 std::string RRInterface::sRecvimMessage = "The Resident you messaged is prevented from reading your instant messages at the moment, please try again later.";
-std::string RRInterface::sSendimMessage = "...";
+std::string RRInterface::sSendimMessage = "*** IM blocked by sender's viewer";
 
 
 #if !defined(max)
