@@ -176,7 +176,7 @@
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>...</string>
+      <string>*** IM blocked by sender's viewer</string>
     </map>
     <key>ShowProfileFloaters</key>
     <map>

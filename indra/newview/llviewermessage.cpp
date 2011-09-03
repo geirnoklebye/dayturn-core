@@ -1054,41 +1054,17 @@ public:
 		LLInventoryFetchItemsObserver(object_id),
 		mFolderID(folder_id),
 		mObjectID(object_id) {}
-	virtual ~LLDiscardAgentOffer() {}
+
 	virtual void done()
 	{
 		LL_DEBUGS("Messaging") << "LLDiscardAgentOffer::done()" << LL_ENDL;
-		const LLUUID trash_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_TRASH);
-		bool notify = false;
-		if(trash_id.notNull() && mObjectID.notNull())
-		{
-			LLInventoryModel::update_list_t update;
-			LLInventoryModel::LLCategoryUpdate old_folder(mFolderID, -1);
-			update.push_back(old_folder);
-			LLInventoryModel::LLCategoryUpdate new_folder(trash_id, 1);
-			update.push_back(new_folder);
-			gInventory.accountForUpdate(update);
-			gInventory.moveObject(mObjectID, trash_id);
-			LLInventoryObject* obj = gInventory.getObject(mObjectID);
-			if(obj)
-			{
-				// no need to restamp since this is already a freshly
-				// stamped item.
-				obj->updateParentOnServer(FALSE);
-				notify = true;
-			}
-		}
-		else
-		{
-			LL_WARNS("Messaging") << "DiscardAgentOffer unable to find: "
-					<< (trash_id.isNull() ? "trash " : "")
-					<< (mObjectID.isNull() ? "object" : "") << LL_ENDL;
-		}
+
+		// We're invoked from LLInventoryModel::notifyObservers().
+		// If we now try to remove the inventory item, it will cause a nested
+		// notifyObservers() call, which won't work.
+		// So defer moving the item to trash until viewer gets idle (in a moment).
+		LLAppViewer::instance()->addOnIdleCallback(boost::bind(&LLInventoryModel::removeItem, &gInventory, mObjectID));
 		gInventory.removeObserver(this);
-		if(notify)
-		{
-			gInventory.notifyObservers();
-		}
 		delete this;
 	}
 protected:
@@ -1527,7 +1503,7 @@ bool LLOfferInfo::inventory_offer_callback(const LLSD& notification, const LLSD&
 	// TODO: when task inventory offers can also be handled the new way, migrate the code that sets these strings here:
 	from_string = chatHistory_string = mFromName;
 	
-	bool busy=FALSE;
+	bool busy = gAgent.getBusy();
 	
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
@@ -1601,9 +1577,6 @@ bool LLOfferInfo::inventory_offer_callback(const LLSD& notification, const LLSD&
 		}
 		break;
 
-	case IOR_BUSY:
-		//Busy falls through to decline.  Says to make busy message.
-		busy=TRUE;
 	case IOR_MUTE:
 		// MUTE falls through to decline
 	case IOR_DECLINE:
@@ -1749,7 +1722,7 @@ bool LLOfferInfo::inventory_task_offer_callback(const LLSD& notification, const 
 		from_string = chatHistory_string = mFromName;
 	}
 	
-	bool busy=FALSE;
+	bool busy = gAgent.getBusy();
 
 //MK
 	// mDesc looks like '#RLV/~foldername' ( http://slurl.com/secondlife/Sim/X/Y/Z )
@@ -1816,9 +1789,6 @@ bool LLOfferInfo::inventory_task_offer_callback(const LLSD& notification, const 
 //mk
 			break;
 			
-		case IOR_BUSY:
-			//Busy falls through to decline.  Says to make busy message.
-			busy=TRUE;
 		case IOR_MUTE:
 			// MUTE falls through to decline
 		case IOR_DECLINE:
@@ -1894,20 +1864,6 @@ void LLOfferInfo::initRespondFunctionMap()
 
 void inventory_offer_handler(LLOfferInfo* info)
 {
-	//Until throttling is implmented, busy mode should reject inventory instead of silently
-	//accepting it.  SEE SL-39554
-//MK
-	// I don't agree with this at all. Inventory offers should NEVER be automatically declined, unless the source is muted
-	// (and even this is borderline). At the very worst the item should go to the trash, like it did in 1.x. I have personally
-	// lost countless valuable notecards from customers because of this decision, so I am commenting out this piece of
-	// code for the moment.
-////	if (gAgent.getBusy())
-////	{
-////		info->forceResponse(IOR_BUSY);
-////		return;
-////	}
-//mk
-	
 	//If muted, don't even go through the messaging stuff.  Just curtail the offer here.
 	if (LLMuteList::getInstance()->isMuted(info->mFromID, info->mFromName))
 	{
@@ -2847,6 +2803,12 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				// Same as closing window
 				info->forceResponse(IOR_DECLINE);
 			}
+			else if (is_busy && dialog != IM_TASK_INVENTORY_OFFERED) // busy mode must not affect interaction with objects (STORM-565)
+			{
+				// Until throttling is implemented, busy mode should reject inventory instead of silently
+				// accepting it.  SEE SL-39554
+				info->forceResponse(IOR_DECLINE);
+			}
 			else
 			{
 				inventory_offer_handler(info);
@@ -3622,7 +3584,6 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	if (is_audible)
 	{
 		BOOL visible_in_chat_bubble = FALSE;
-		std::string verb;
 
 		color.setVec(1.f,1.f,1.f,1.f);
 		msg->getStringFast(_PREHASH_ChatData, _PREHASH_Message, mesg);
@@ -3727,6 +3688,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			case CHAT_TYPE_WHISPER:
 				chat.mText = LLTrans::getString("whisper") + " ";
 				break;
+			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_OWNER:
 //MK
 			// This is the actual handling of the commands sent by owned objects.
@@ -3785,7 +3747,6 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_NORMAL:
 			case CHAT_TYPE_DIRECT:
-				verb = "";
 				break;
 			case CHAT_TYPE_SHOUT:
 				chat.mText = LLTrans::getString("shout") + " ";
@@ -3796,7 +3757,6 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				break;
 			default:
 				LL_WARNS("Messaging") << "Unknown type " << chat.mChatType << " in chat!" << LL_ENDL;
-				verb = "";
 				break;
 			}
 
@@ -7132,8 +7092,24 @@ bool callback_script_dialog(const LLSD& notification, const LLSD& response)
 		rtn_text = LLNotification::getSelectedOptionName(response);
 	}
 
-	// Didn't click "Ignore"
-	if (button_idx != -1)
+	// Button -2 = Mute
+	// Button -1 = Ignore - no processing needed for this button
+	// Buttons 0 and above = dialog choices
+
+	if (-2 == button_idx)
+	{
+		std::string object_name = notification["payload"]["object_name"].asString();
+		LLUUID object_id = notification["payload"]["object_id"].asUUID();
+		LLMute mute(object_id, object_name, LLMute::OBJECT);
+		if (LLMuteList::getInstance()->add(mute))
+		{
+			// This call opens the sidebar, displays the block list, and highlights the newly blocked
+			// object in the list so the user can see that their block click has taken effect.
+			LLPanelBlockedList::showPanelAndSelect(object_id);
+		}
+	}
+
+	if (0 <= button_idx)
 	{
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessage("ScriptDialogReply");
@@ -7176,12 +7152,12 @@ void process_script_dialog(LLMessageSystem* msg, void**)
 	std::string message; 
 	std::string first_name;
 	std::string last_name;
-	std::string title;
+	std::string object_name;
 
 	S32 chat_channel;
 	msg->getString("Data", "FirstName", first_name);
 	msg->getString("Data", "LastName", last_name);
-	msg->getString("Data", "ObjectName", title);
+	msg->getString("Data", "ObjectName", object_name);
 	msg->getString("Data", "Message", message);
 	msg->getS32("Data", "ChatChannel", chat_channel);
 
@@ -7192,6 +7168,7 @@ void process_script_dialog(LLMessageSystem* msg, void**)
 	payload["sender"] = msg->getSender().getIPandPort();
 	payload["object_id"] = object_id;
 	payload["chat_channel"] = chat_channel;
+	payload["object_name"] = object_name;
 
 	// build up custom form
 	S32 button_count = msg->getNumberOfBlocks("Buttons");
@@ -7239,7 +7216,7 @@ void process_script_dialog(LLMessageSystem* msg, void**)
 //mk
 
 	LLSD args;
-	args["TITLE"] = title;
+	args["TITLE"] = object_name;
 	args["MESSAGE"] = message;
 	LLNotificationPtr notification;
 	if (!first_name.empty())

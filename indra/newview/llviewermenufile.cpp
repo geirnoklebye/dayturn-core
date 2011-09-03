@@ -149,7 +149,7 @@ void LLFilePickerThread::run()
 //static
 void LLFilePickerThread::initClass()
 {
-	sMutex = new LLMutex(NULL);
+	sMutex = new LLMutex();
 }
 
 //static
@@ -815,8 +815,7 @@ LLUUID upload_new_resource(
 		uuid = tid.makeAssetID(gAgent.getSecureSessionID());
 		// copy this file into the vfs for upload
 		S32 file_size;
-		LLAPRFile infile ;
-		infile.open(filename, LL_APR_RB, NULL, &file_size);
+		LLAPRFile infile(filename, LL_APR_RB, &file_size);
 		if (infile.getFileHandle())
 		{
 			LLVFile file(gVFS, uuid, asset_type, LLVFile::WRITE);
@@ -1298,6 +1297,7 @@ void assign_defaults_and_show_upload_message(
 	LLUploadDialog::modalUploadDialog(upload_message);
 }
 
+//MK
 void temp_upload_done_callback(const LLUUID& uuid, void* user_data, S32 result, LLExtStat ext_status)
 {
 	LLResourceData* data = (LLResourceData*)user_data;
@@ -1335,6 +1335,7 @@ void temp_upload_done_callback(const LLUUID& uuid, void* user_data, S32 result, 
 	LLUploadDialog::modalUploadFinished();
 	delete data;
 }
+//mk
 
 void init_menu_file()
 {
