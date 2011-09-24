@@ -67,6 +67,7 @@
 #include "llviewerthrottle.h"
 #include "lluictrlfactory.h"
 
+//MK
 #include "llagentui.h"
 #include "llclipboard.h"
 #include "lllandmarkactions.h"
@@ -75,7 +76,7 @@
 #include "llsidetray.h"
 #include "llslurl.h"
 #include "llviewerinventory.h"
-
+//mk
 #include "lltoolmgr.h"
 #include "llfocusmgr.h"
 #include "llappviewer.h"
@@ -118,6 +119,7 @@ const S32 TEXT_HEIGHT = 18;
 
 static void onClickVolume(void*);
 
+//MK
 class LLStatusBar::LLParcelChangeObserver : public LLParcelObserver
 {
 public:
@@ -134,6 +136,7 @@ private:
 
 	LLStatusBar* mTopInfoBar;
 };
+//mk
 
 LLStatusBar::LLStatusBar(const LLRect& rect)
 :	LLPanel(),
@@ -155,8 +158,10 @@ LLStatusBar::LLStatusBar(const LLRect& rect)
 	mBalanceTimer = new LLFrameTimer();
 	mHealthTimer = new LLFrameTimer();
 
+//MK
 	LLUICtrl::CommitCallbackRegistry::currentRegistrar()
 			.add("TopInfoBar.Action", boost::bind(&LLStatusBar::onContextMenuItemClicked, this, _2));
+//mk
 
 	buildFromFile("panel_status_bar.xml");
 }
@@ -169,6 +174,7 @@ LLStatusBar::~LLStatusBar()
 	delete mHealthTimer;
 	mHealthTimer = NULL;
 
+//MK
 	if (mParcelChangedObserver)
 	{
 		LLViewerParcelMgr::getInstance()->removeObserver(mParcelChangedObserver);
@@ -189,6 +195,7 @@ LLStatusBar::~LLStatusBar()
 	{
 		mShowCoordsCtrlConnection.disconnect();
 	}
+//mk
 
 	// LLView destructor cleans up children
 }
@@ -201,8 +208,11 @@ LLStatusBar::~LLStatusBar()
 void LLStatusBar::draw()
 {
 	refresh();
+//MK
 	updateParcelInfoText();
 	updateHealth();
+//mk
+
 	LLPanel::draw();
 }
 
@@ -214,6 +224,8 @@ BOOL LLStatusBar::handleRightMouseDown(S32 x, S32 y, MASK mask)
 
 BOOL LLStatusBar::postBuild()
 {
+	LLControlVariablePtr mode_control = gSavedSettings.getControl("SessionSettingsFile");
+
 	gMenuBarView->setRightMouseDownCallback(boost::bind(&show_navbar_context_menu, _1, _2, _3));
 
 	mTextTime = getChild<LLTextBox>("TimeText" );
@@ -285,15 +297,14 @@ BOOL LLStatusBar::postBuild()
 
 	mScriptOut = getChildView("scriptout");
 
-	mInfoBtn = getChild<LLButton>("place_info_btn");
-	mInfoBtn->setClickedCallback(boost::bind(&LLStatusBar::onInfoButtonClicked, this));
+	LLUICtrl& mode_combo = getChildRef<LLUICtrl>("mode_combo");
+	mode_combo.setValue(gSavedSettings.getString("SessionSettingsFile"));
+	mode_combo.setCommitCallback(boost::bind(&LLStatusBar::onModeChange, this, getChild<LLUICtrl>("mode_combo")->getValue(), _2));
 
+//MK
 	mParcelInfoPanel = getChild<LLPanel>("parcel_info_panel");
 	mParcelInfoText = getChild<LLTextBox>("parcel_info_text");
 	mDamageText = getChild<LLTextBox>("damage_text");
-
-	//mPWLBtn = getChild<LLButton>("status_wl_btn");
-	//mPWLBtn->setClickedCallback(boost::bind(&LLStatusBar::onParcelWLClicked, this));
 
 	initParcelIcons();
 
@@ -316,8 +327,35 @@ BOOL LLStatusBar::postBuild()
 
 	mParcelMgrConnection = LLViewerParcelMgr::getInstance()->addAgentParcelChangedCallback(
 			boost::bind(&LLStatusBar::onAgentParcelChange, this));
+//mk
 
 	return TRUE;
+}
+
+void LLStatusBar::onModeChange(const LLSD& original_value, const LLSD& new_value)
+{
+	if (original_value.asString() != new_value.asString())
+	{
+		LLNotificationsUtil::add("ModeChange", LLSD(), LLSD(), boost::bind(&LLStatusBar::onModeChangeConfirm, this, original_value, new_value, _1, _2));
+	}
+}
+
+void LLStatusBar::onModeChangeConfirm(const LLSD& original_value, const LLSD& new_value, const LLSD& notification, const LLSD& response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	switch (option)
+	{
+	case 0:
+		gSavedSettings.getControl("SessionSettingsFile")->set(new_value);
+		LLAppViewer::instance()->requestQuit();
+		break;
+	case 1:
+		// revert to original value
+		getChild<LLUICtrl>("mode_combo")->setValue(original_value);
+		break;
+	default:
+		break;
+	}
 }
 
 // Per-frame updates of visibility
@@ -377,11 +415,13 @@ void LLStatusBar::refresh()
 	{
 		gMenuBarView->reshape(MENU_RIGHT, gMenuBarView->getRect().getHeight());
 	}
+//MK
 	// also update the parcel info panel pos -KC
 	if ((MENU_RIGHT + MENU_PARCEL_SPACING) != mParcelInfoPanel->getRect().mLeft)
 	{
 		updateParcelPanel();
 	}
+//mk
 
 	mSGBandwidth->setVisible(net_stats_visible);
 	mSGPacketLoss->setVisible(net_stats_visible);
@@ -656,7 +696,7 @@ public:
 // register with command dispatch system
 LLBalanceHandler gBalanceHandler;
 
-
+//MK
 void LLStatusBar::initParcelIcons()
 {
 	mParcelIcon[VOICE_ICON] = getChild<LLIconCtrl>("voice_icon");
@@ -962,3 +1002,4 @@ void LLStatusBar::setBackgroundColor( const LLColor4& color )
 	getChild<LLPanel>("balance_bg")->setBackgroundColor(color);
 	getChild<LLPanel>("time_and_media_bg")->setBackgroundColor(color);
 }
+//mk
