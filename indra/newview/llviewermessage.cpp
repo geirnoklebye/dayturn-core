@@ -3584,6 +3584,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	if (is_audible)
 	{
 		BOOL visible_in_chat_bubble = FALSE;
+		std::string verb;
 
 		color.setVec(1.f,1.f,1.f,1.f);
 		msg->getStringFast(_PREHASH_ChatData, _PREHASH_Message, mesg);
@@ -3744,7 +3745,6 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				break;
 			}
 //mk
-			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_NORMAL:
 			case CHAT_TYPE_DIRECT:
 				break;
@@ -7193,12 +7193,12 @@ void process_script_dialog(LLMessageSystem* msg, void**)
 				{
 					{
 						// hide every occurrence of the Parcel name if the location restriction is active
-						title = gAgent.mRRInterface.stringReplace (title, 
+						object_name = gAgent.mRRInterface.stringReplace (object_name, 
 								gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
 						message = gAgent.mRRInterface.stringReplace (message, 
 								gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
 						// hide every occurrence of the Region name if the location restriction is active
-						title = gAgent.mRRInterface.stringReplace (title, 
+						object_name = gAgent.mRRInterface.stringReplace (object_name, 
 								gAgent.getRegion()->getName(), "(Region hidden)");
 						if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
 					}
@@ -7206,7 +7206,7 @@ void process_script_dialog(LLMessageSystem* msg, void**)
 
 				if (gAgent.mRRInterface.mContainsShownames)
 				{
-					title = gAgent.mRRInterface.getCensoredMessage (title);
+					object_name = gAgent.mRRInterface.getCensoredMessage (object_name);
 					message = gAgent.mRRInterface.getCensoredMessage (message);
 					last_name = first_name+" "+last_name;
 					first_name = "";
