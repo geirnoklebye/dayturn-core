@@ -640,7 +640,7 @@ void LLViewerParcelMgr::renderCollisionSegments(U8* segments, BOOL use_pass, LLV
 	F32 pos_y = pos.mV[VY];
 
 	LLGLSUIDefault gls_ui;
-	LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
+	LLGLDepthTest gls_depth(GL_TRUE);
 	LLGLDisable cull(GL_CULL_FACE);
 	
 	if (mCollisionBanned == BA_BANNED)
