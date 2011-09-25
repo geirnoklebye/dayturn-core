@@ -610,13 +610,6 @@ bool LLSelectMgr::linkObjects()
 
 bool LLSelectMgr::unlinkObjects()
 {
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit
-		&& gAgent.mRRInterface.isSittingOnAnySelectedObject())
-	{
-		return true;
-	}
-//mk
 	LLSelectMgr::getInstance()->sendDelink();
 	return true;
 }
@@ -631,13 +624,6 @@ bool LLSelectMgr::unlinkObjects()
 // reasonable expectation for the link to work, but it will fail.
 bool LLSelectMgr::enableLinkObjects()
 {
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit
-		&& gAgent.mRRInterface.isSittingOnAnySelectedObject())
-	{
-		return false;
-	}
-//mk
 	bool new_value = false;
 	// check if there are at least 2 objects selected, and that the
 	// user can modify at least one of the selected objects.
@@ -663,13 +649,6 @@ bool LLSelectMgr::enableLinkObjects()
 
 bool LLSelectMgr::enableUnlinkObjects()
 {
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit
-		&& gAgent.mRRInterface.isSittingOnAnySelectedObject())
-	{
-		return false;
-	}
-//mk
 	LLViewerObject* first_editable_object = LLSelectMgr::getInstance()->getSelection()->getFirstEditableObject();
 
 	bool new_value = LLSelectMgr::getInstance()->selectGetAllRootsValid() &&
@@ -2972,13 +2951,6 @@ void LLSelectMgr::selectDelete()
 		{
 			continue;
 		}
-		
-//MK
-		if (gRRenabled && obj->isSeat ()  && gAgent.mRRInterface.mContainsUnsit)
-		{
-			continue;
-		}
-//mk
 
 		deleteable_count++;
 
@@ -5151,6 +5123,7 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
 
 	gGL.getTexUnit(0)->bind(mSilhouetteImagep);
 	LLGLSPipelineSelection gls_select;
+	gGL.setAlphaRejectSettings(LLRender::CF_GREATER, 0.f);
 	LLGLEnable blend(GL_BLEND);
 	LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
 
@@ -5277,6 +5250,7 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
 	}
 
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+	gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
 }
 
 void LLSelectMgr::generateSilhouette(LLSelectNode* nodep, const LLVector3& view_point)
@@ -6548,75 +6522,32 @@ U32 LLObjectSelection::getSelectedObjectTriangleCount()
 	return count;
 }
 
-S32 LLObjectSelection::getSelectedObjectRenderCost()
+/*S32 LLObjectSelection::getSelectedObjectRenderCost()
 {
        S32 cost = 0;
        LLVOVolume::texture_cost_t textures;
-       typedef std::set<LLUUID> uuid_list_t;
-       uuid_list_t computed_objects;
-
-	   typedef std::list<LLPointer<LLViewerObject> > child_list_t;
-	   typedef const child_list_t const_child_list_t;
-
-	   // add render cost of complete linksets first, to get accurate texture counts
        for (list_t::iterator iter = mList.begin(); iter != mList.end(); ++iter)
        {
                LLSelectNode* node = *iter;
-			   
                LLVOVolume* object = (LLVOVolume*)node->getObject();
 
-               if (object && object->isRootEdit())
+               if (object)
                {
-				   cost += object->getRenderCost(textures);
-				   computed_objects.insert(object->getID());
-
-				   const_child_list_t children = object->getChildren();
-				   for (const_child_list_t::const_iterator child_iter = children.begin();
-						 child_iter != children.end();
-						 ++child_iter)
-				   {
-					   LLViewerObject* child_obj = *child_iter;
-					   LLVOVolume *child = dynamic_cast<LLVOVolume*>( child_obj );
-					   if (child)
-					   {
-						   cost += child->getRenderCost(textures);
-						   computed_objects.insert(child->getID());
-					   }
-				   }
-
-				   for (LLVOVolume::texture_cost_t::iterator iter = textures.begin(); iter != textures.end(); ++iter)
-				   {
-					   // add the cost of each individual texture in the linkset
-					   cost += iter->second;
-				   }
-
-				   textures.clear();
+                       cost += object->getRenderCost(textures);
                }
+
+               for (LLVOVolume::texture_cost_t::iterator iter = textures.begin(); iter != textures.end(); ++iter)
+               {
+                       // add the cost of each individual texture in the linkset
+                       cost += iter->second;
+               }
+               textures.clear();
        }
-	
-	   // add any partial linkset objects, texture cost may be slightly misleading
-		for (list_t::iterator iter = mList.begin(); iter != mList.end(); ++iter)
-		{
-			LLSelectNode* node = *iter;
-			LLVOVolume* object = (LLVOVolume*)node->getObject();
 
-			if (object && computed_objects.find(object->getID()) == computed_objects.end()  )
-			{
-					cost += object->getRenderCost(textures);
-					computed_objects.insert(object->getID());
-			}
-
-			for (LLVOVolume::texture_cost_t::iterator iter = textures.begin(); iter != textures.end(); ++iter)
-			{
-				// add the cost of each individual texture in the linkset
-				cost += iter->second;
-			}
-
-			textures.clear();
-		}
 
        return cost;
-}
+}*/
+
 
 //-----------------------------------------------------------------------------
 // getTECount()

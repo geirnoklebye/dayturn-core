@@ -258,6 +258,7 @@ void LLDrawPoolAvatar::beginPostDeferredAlpha()
 	sSkipOpaque = TRUE;
 	sShaderLevel = mVertexShaderLevel;
 	sVertexProgram = &gDeferredAvatarAlphaProgram;
+
 	sRenderingSkinned = TRUE;
 
 	gPipeline.bindDeferredShader(*sVertexProgram);
@@ -360,7 +361,7 @@ void LLDrawPoolAvatar::beginShadowPass(S32 pass)
 		{
 			gAvatarMatrixParam = sVertexProgram->mUniform[LLViewerShaderMgr::AVATAR_MATRIX];
 		}
-		//gGL.setAlphaRejectSettings(LLRender::CF_GREATER_EQUAL, 0.2f);
+		gGL.setAlphaRejectSettings(LLRender::CF_GREATER_EQUAL, 0.2f);
 		
 		glColor4f(1,1,1,1);
 
@@ -589,22 +590,12 @@ void LLDrawPoolAvatar::beginImpostor()
 		LLVOAvatar::sNumVisibleAvatars = 0;
 	}
 
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gImpostorProgram.bind();
-		gImpostorProgram.setAlphaRange(0.01f, 1.f);
-	}
-
 	gPipeline.enableLightsFullbright(LLColor4(1,1,1,1));
 	sDiffuseChannel = 0;
 }
 
 void LLDrawPoolAvatar::endImpostor()
 {
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gImpostorProgram.unbind();
-	}
 	gPipeline.enableLightsDynamic();
 }
 
@@ -614,17 +605,16 @@ void LLDrawPoolAvatar::beginRigid()
 	{
 		if (LLPipeline::sUnderWaterRender)
 		{
-			sVertexProgram = &gObjectAlphaMaskNonIndexedWaterProgram;
+			sVertexProgram = &gObjectSimpleNonIndexedWaterProgram;
 		}
 		else
 		{
-			sVertexProgram = &gObjectAlphaMaskNonIndexedProgram;
+			sVertexProgram = &gObjectSimpleNonIndexedProgram;
 		}
 		
 		if (sVertexProgram != NULL)
 		{	//eyeballs render with the specular shader
 			sVertexProgram->bind();
-			sVertexProgram->setAlphaRange(0.2f, 1.f);
 		}
 	}
 	else
@@ -657,7 +647,6 @@ void LLDrawPoolAvatar::beginDeferredImpostor()
 	sDiffuseChannel = sVertexProgram->enableTexture(LLViewerShaderMgr::DIFFUSE_MAP);
 
 	sVertexProgram->bind();
-	sVertexProgram->setAlphaRange(0.01f, 1.f);
 }
 
 void LLDrawPoolAvatar::endDeferredImpostor()
@@ -703,11 +692,11 @@ void LLDrawPoolAvatar::beginSkinned()
 	{
 		if (LLPipeline::sUnderWaterRender)
 		{
-			sVertexProgram = &gObjectAlphaMaskNonIndexedWaterProgram;
+			sVertexProgram = &gObjectSimpleNonIndexedWaterProgram;
 		}
 		else
 		{
-			sVertexProgram = &gObjectAlphaMaskNonIndexedProgram;
+			sVertexProgram = &gObjectSimpleNonIndexedProgram;
 		}
 	}
 	
@@ -738,11 +727,6 @@ void LLDrawPoolAvatar::beginSkinned()
 			// TODO: find a better fallback method for software skinning.
 			sVertexProgram->bind();
 		}
-	}
-
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		sVertexProgram->setAlphaRange(0.2f, 1.f);
 	}
 }
 
@@ -1299,38 +1283,30 @@ void LLDrawPoolAvatar::updateRiggedFaceVertexBuffer(LLVOAvatar* avatar, LLFace* 
 		return;
 	}
 
-	LLPointer<LLVertexBuffer> buffer = face->getVertexBuffer();
-	LLDrawable* drawable = face->getDrawable();
+	LLVertexBuffer* buffer = face->getVertexBuffer();
 
 	U32 data_mask = face->getRiggedVertexBufferDataMask();
 	
-	if (buffer.isNull() || 
+	if (!buffer || 
 		buffer->getTypeMask() != data_mask ||
-		buffer->getRequestedVerts() != vol_face.mNumVertices ||
-		buffer->getRequestedIndices() != vol_face.mNumIndices ||
-		(drawable && drawable->isState(LLDrawable::REBUILD_ALL)))
+		buffer->getRequestedVerts() != vol_face.mNumVertices)
 	{
 		face->setGeomIndex(0);
 		face->setIndicesIndex(0);
-		
-		if (buffer.isNull() || buffer->getTypeMask() != data_mask)
-		{ //make a new buffer
-			if (sShaderLevel > 0)
-			{
-				buffer = new LLVertexBuffer(data_mask, GL_DYNAMIC_DRAW_ARB);
-			}
-			else
-			{
-				buffer = new LLVertexBuffer(data_mask, GL_STREAM_DRAW_ARB);
-			}
-			buffer->allocateBuffer(vol_face.mNumVertices, vol_face.mNumIndices, true);
+		face->setSize(vol_face.mNumVertices, vol_face.mNumIndices, true);
+
+
+		if (sShaderLevel > 0)
+		{
+			buffer = new LLVertexBuffer(data_mask, GL_DYNAMIC_DRAW_ARB);
 		}
 		else
-		{ //resize existing buffer
-			buffer->resizeBuffer(vol_face.mNumVertices, vol_face.mNumIndices);
+		{
+			buffer = new LLVertexBuffer(data_mask, GL_STREAM_DRAW_ARB);
 		}
 
-		face->setSize(vol_face.mNumVertices, vol_face.mNumIndices);
+		buffer->allocateBuffer(face->getGeomCount(), face->getIndicesCount(), true);
+
 		face->setVertexBuffer(buffer);
 
 		U16 offset = 0;
@@ -1431,11 +1407,6 @@ void LLDrawPoolAvatar::updateRiggedFaceVertexBuffer(LLVOAvatar* avatar, LLFace* 
 			}
 		}
 	}
-
-	if (drawable && (face->getTEOffset() == drawable->getNumFaces()-1))
-	{
-		drawable->clearState(LLDrawable::REBUILD_ALL);
-	}
 }
 
 void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
@@ -1466,7 +1437,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 		LLVolume* volume = vobj->getVolume();
 		S32 te = face->getTEOffset();
 
-		if (!volume || volume->getNumVolumeFaces() <= te || !volume->isMeshAssetLoaded())
+		if (!volume || volume->getNumVolumeFaces() <= te)
 		{
 			continue;
 		}
