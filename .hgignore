@@ -90,5 +90,6 @@ indra/.settings/org.eclipse.cdt.ui.prefs
 indra/newview/llviewermessage.cpp.rej
 indra/newview/res/ll_icon.ico__
 *.patch
+*.rej
 syntax: regexp
 fmodapi375win/*
