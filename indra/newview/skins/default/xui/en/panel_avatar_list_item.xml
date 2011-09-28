@@ -51,7 +51,7 @@
      layout="topleft"
      left="5"
      mouse_opaque="true"
-     top="0"
+     top="2"
      width="20" />
     <text
      follows="left|right"
@@ -60,8 +60,8 @@
      layout="topleft"
      left_pad="5"
      name="avatar_name"
-     top="5"
-     clip_partial="true"
+     parse_urls="false"
+     top="6"
      use_ellipses="true"
      value="(loading)"
      width="180" />
