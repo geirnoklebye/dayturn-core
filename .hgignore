@@ -33,6 +33,7 @@ indra/newview/character
 indra/newview/fmod.dll
 indra/newview/mozilla-theme
 indra/newview/mozilla-universal-darwin.tgz
+indra/newview/res/ll_icon.*
 indra/newview/res-sdl
 indra/newview/vivox-runtime
 indra/server-linux-*
@@ -87,9 +88,5 @@ indra/.cproject
 indra/.settings/org.eclipse.cdt.core.prefs
 indra/.settings/org.eclipse.cdt.ui.prefs
 .cproject
-indra/newview/llviewermessage.cpp.rej
-indra/newview/res/ll_icon.ico__
-*.patch
-*.rej
 syntax: regexp
 fmodapi375win/*
