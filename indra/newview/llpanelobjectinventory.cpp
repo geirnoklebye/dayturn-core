@@ -140,7 +140,8 @@ public:
 	virtual BOOL startDrag(EDragAndDropType* type, LLUUID* id) const;
 	virtual BOOL dragOrDrop(MASK mask, BOOL drop,
 							EDragAndDropType cargo_type,
-							void* cargo_data);
+							void* cargo_data,
+							std::string& tooltip_msg);
 };
 
 LLTaskInvFVBridge::LLTaskInvFVBridge(
@@ -605,7 +606,8 @@ BOOL LLTaskInvFVBridge::startDrag(EDragAndDropType* type, LLUUID* id) const
 
 BOOL LLTaskInvFVBridge::dragOrDrop(MASK mask, BOOL drop,
 								   EDragAndDropType cargo_type,
-								   void* cargo_data)
+								   void* cargo_data,
+								   std::string& tooltip_msg)
 {
 	//llinfos << "LLTaskInvFVBridge::dragOrDrop()" << llendl;
 	return FALSE;
@@ -735,7 +737,8 @@ public:
 	virtual BOOL startDrag(EDragAndDropType* type, LLUUID* id) const;
 	virtual BOOL dragOrDrop(MASK mask, BOOL drop,
 							EDragAndDropType cargo_type,
-							void* cargo_data);
+							void* cargo_data,
+							std::string& tooltip_msg);
 	virtual BOOL canOpenItem() const { return TRUE; }
 	virtual void openItem();
 };
@@ -829,7 +832,8 @@ BOOL LLTaskCategoryBridge::startDrag(EDragAndDropType* type, LLUUID* id) const
 
 BOOL LLTaskCategoryBridge::dragOrDrop(MASK mask, BOOL drop,
 									  EDragAndDropType cargo_type,
-									  void* cargo_data)
+									  void* cargo_data,
+									  std::string& tooltip_msg)
 {
 	//llinfos << "LLTaskCategoryBridge::dragOrDrop()" << llendl;
 	BOOL accept = FALSE;
