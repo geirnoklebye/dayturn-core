@@ -3364,15 +3364,13 @@ void render_hud_elements()
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	
 	gGL.color4f(1,1,1,1);
-	
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gUIProgram.bind();
-	}
-	LLGLDepthTest depth(GL_TRUE, GL_FALSE);
-
 	if (!LLPipeline::sReflectionRender && gPipeline.hasRenderDebugFeatureMask(LLPipeline::RENDER_DEBUG_FEATURE_UI))
 	{
+		if (LLGLSLShader::sNoFixedFunction)
+		{
+			gUIProgram.bind();
+		}
+
 		LLGLEnable multisample(gSavedSettings.getU32("RenderFSAASamples") > 0 ? GL_MULTISAMPLE_ARB : 0);
 		gViewerWindow->renderSelections(FALSE, FALSE, FALSE); // For HUD version in render_ui_3d()
 	
@@ -3386,6 +3384,10 @@ void render_hud_elements()
 	
 		// Render name tags.
 		LLHUDObject::renderAll();
+		if (LLGLSLShader::sNoFixedFunction)
+		{
+			gUIProgram.unbind();
+		}
 	}
 	else if (gForceRenderLandFence)
 	{
@@ -3395,11 +3397,6 @@ void render_hud_elements()
 	else if (gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_HUD))
 	{
 		LLHUDText::renderAllHUD();
-	}
-
-	if (LLGLSLShader::sNoFixedFunction)
-	{
-		gUIProgram.unbind();
 	}
 	gGL.flush();
 }
