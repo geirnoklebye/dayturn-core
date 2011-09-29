@@ -88,5 +88,7 @@ indra/.cproject
 indra/.settings/org.eclipse.cdt.core.prefs
 indra/.settings/org.eclipse.cdt.ui.prefs
 .cproject
+*.patch
+*.rej
 syntax: regexp
 fmodapi375win/*
