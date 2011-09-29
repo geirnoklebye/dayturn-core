@@ -206,40 +206,21 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 	
 	if (features->hasLighting)
 	{
+	
 		if (features->hasWaterFog)
 		{
 			if (features->disableTextureIndex)
 			{
-				if (features->hasAlphaMask)
+				if (!shader->attachObject("lighting/lightWaterNonIndexedF.glsl"))
 				{
-					if (!shader->attachObject("lighting/lightWaterAlphaMaskNonIndexedF.glsl"))
-					{
-						return FALSE;
-					}
-				}
-				else
-				{
-					if (!shader->attachObject("lighting/lightWaterNonIndexedF.glsl"))
-					{
-						return FALSE;
-					}
+					return FALSE;
 				}
 			}
 			else 
 			{
-				if (features->hasAlphaMask)
+				if (!shader->attachObject("lighting/lightWaterF.glsl"))
 				{
-					if (!shader->attachObject("lighting/lightWaterAlphaMaskF.glsl"))
-					{
-						return FALSE;
-					}
-				}
-				else
-				{
-					if (!shader->attachObject("lighting/lightWaterF.glsl"))
-					{
-						return FALSE;
-					}
+					return FALSE;
 				}
 				shader->mFeatures.mIndexedTextureChannels = gGLManager.mNumTextureImageUnits-1;
 			}
@@ -249,36 +230,16 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 		{
 			if (features->disableTextureIndex)
 			{
-				if (features->hasAlphaMask)
+				if (!shader->attachObject("lighting/lightNonIndexedF.glsl"))
 				{
-					if (!shader->attachObject("lighting/lightAlphaMaskNonIndexedF.glsl"))
-					{
-						return FALSE;
-					}
-				}
-				else
-				{
-					if (!shader->attachObject("lighting/lightNonIndexedF.glsl"))
-					{
-						return FALSE;
-					}
+					return FALSE;
 				}
 			}
 			else 
 			{
-				if (features->hasAlphaMask)
+				if (!shader->attachObject("lighting/lightF.glsl"))
 				{
-					if (!shader->attachObject("lighting/lightAlphaMaskF.glsl"))
-					{
-						return FALSE;
-					}
-				}
-				else
-				{
-					if (!shader->attachObject("lighting/lightF.glsl"))
-					{
-						return FALSE;
-					}
+					return FALSE;
 				}
 				shader->mFeatures.mIndexedTextureChannels = gGLManager.mNumTextureImageUnits-1;
 			}
@@ -311,28 +272,14 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 		{
 			if (features->disableTextureIndex)
 			{
-				if (features->hasAlphaMask)
-				{
-					if (!shader->attachObject("lighting/lightFullbrightWaterNonIndexedAlphaMaskF.glsl"))
-					{
-						return FALSE;
-					}
-				}
-				else if (!shader->attachObject("lighting/lightFullbrightWaterNonIndexedF.glsl"))
+				if (!shader->attachObject("lighting/lightFullbrightWaterNonIndexedF.glsl"))
 				{
 					return FALSE;
 				}
 			}
 			else 
 			{
-				if (features->hasAlphaMask)
-				{
-					if (!shader->attachObject("lighting/lightFullbrightWaterAlphaMaskF.glsl"))
-					{
-						return FALSE;
-					}
-				}
-				else if (!shader->attachObject("lighting/lightFullbrightWaterF.glsl"))
+				if (!shader->attachObject("lighting/lightFullbrightWaterF.glsl"))
 				{
 					return FALSE;
 				}
@@ -363,37 +310,16 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 		{
 			if (features->disableTextureIndex)
 			{
-
-				if (features->hasAlphaMask)
+				if (!shader->attachObject("lighting/lightFullbrightNonIndexedF.glsl"))
 				{
-					if (!shader->attachObject("lighting/lightFullbrightNonIndexedAlphaMaskF.glsl"))
-					{
-						return FALSE;
-					}
-				}
-				else
-				{
-					if (!shader->attachObject("lighting/lightFullbrightNonIndexedF.glsl"))
-					{
-						return FALSE;
-					}
+					return FALSE;
 				}
 			}
 			else 
 			{
-				if (features->hasAlphaMask)
+				if (!shader->attachObject("lighting/lightFullbrightF.glsl"))
 				{
-					if (!shader->attachObject("lighting/lightFullbrightAlphaMaskF.glsl"))
-					{
-						return FALSE;
-					}
-				}
-				else
-				{
-					if (!shader->attachObject("lighting/lightFullbrightF.glsl"))
-					{
-						return FALSE;
-					}
+					return FALSE;
 				}
 				shader->mFeatures.mIndexedTextureChannels = gGLManager.mNumTextureImageUnits-1;
 			}
@@ -480,7 +406,7 @@ void LLShaderMgr::dumpObjectLog(GLhandleARB ret, BOOL warns)
 			LL_DEBUGS("ShaderLoading") << log << LL_ENDL;
 		}
 	}
- }
+}
 
 GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shader_level, GLenum type, S32 texture_index_channels)
 {
