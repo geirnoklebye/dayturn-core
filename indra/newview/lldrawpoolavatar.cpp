@@ -592,8 +592,8 @@ void LLDrawPoolAvatar::beginImpostor()
 
 	if (LLGLSLShader::sNoFixedFunction)
 	{
-		gImpostorProgram.bind();
-		gImpostorProgram.setAlphaRange(0.01f, 1.f);
+//		gImpostorProgram.bind();
+//		gImpostorProgram.setAlphaRange(0.01f, 1.f);
 	}
 
 	gPipeline.enableLightsFullbright(LLColor4(1,1,1,1));
@@ -604,7 +604,7 @@ void LLDrawPoolAvatar::endImpostor()
 {
 	if (LLGLSLShader::sNoFixedFunction)
 	{
-		gImpostorProgram.unbind();
+//		gImpostorProgram.unbind();
 	}
 	gPipeline.enableLightsDynamic();
 }
@@ -657,7 +657,7 @@ void LLDrawPoolAvatar::beginDeferredImpostor()
 	sDiffuseChannel = sVertexProgram->enableTexture(LLViewerShaderMgr::DIFFUSE_MAP);
 
 	sVertexProgram->bind();
-	sVertexProgram->setAlphaRange(0.01f, 1.f);
+//	sVertexProgram->setAlphaRange(0.01f, 1.f);
 }
 
 void LLDrawPoolAvatar::endDeferredImpostor()
