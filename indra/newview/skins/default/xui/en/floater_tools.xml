@@ -775,7 +775,7 @@
 	  layout="topleft"
 	  left="10"
 	  name="selection_count"
-	  top_delta="10"
+	  top_delta="0"
 	  visible="false"
 	  width="280">
 	</text>
