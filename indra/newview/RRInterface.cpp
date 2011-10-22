@@ -556,6 +556,9 @@ BOOL RRInterface::containsWithoutException (std::string action, std::string exce
 
 bool RRInterface::isFolderLocked(LLInventoryCategory* cat)
 {
+	const LLFolderType::EType folder_type = cat->getPreferredType();
+	if (LLFolderType::lookupIsProtectedType(folder_type)) return false;
+
 	if (contains ("unsharedwear") && !isUnderRlvShare(cat)) return true;
 	if (isFolderLockedWithoutException(cat, "attach") != FolderLock_unlocked) return true;
 	if (isFolderLockedWithoutException(cat, "detach") != FolderLock_unlocked) return true;
@@ -2507,6 +2510,12 @@ BOOL RRInterface::forceAttach (std::string category, BOOL recursive, AttachHow h
 //						LLAppearanceMgr::instance().addCOFItemLink(item);
 						LLAppearanceMgr::instance().wearItemOnAvatar(item->getLinkedUUID(), true, replacing);
 					}
+					// this is a gesture
+					else if (item->getType() == LLAssetType::AT_GESTURE) {
+						if (!LLGestureMgr::instance().isGestureActive(item->getLinkedUUID())) {
+							LLGestureMgr::instance().activateGesture(item->getLinkedUUID());
+						}
+					}
 				}
 			}
 		}
@@ -2600,7 +2609,7 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive, BOOL 
 						llinfos << "trying to detach " << item->getName() << llendl;
 					}
 					
-					// attached object
+					// this is an attached object
 					if (item->getType() == LLAssetType::AT_OBJECT) {
 						// find the attachpoint from which to detach
 						for (LLVOAvatar::attachment_map_t::iterator iter = avatar->mAttachmentPoints.begin(); 
@@ -2616,11 +2625,17 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive, BOOL 
 						}
 						
 					}
-					// piece of clothing
+					// this is a piece of clothing
 					else if (item->getType() == LLAssetType::AT_CLOTHING) {
 //						const LLWearable* layer = gAgentWearables.getWearableFromItemID (item->getLinkedUUID());
 //						if (layer != NULL) gAgentWearables.removeWearable (layer->getType(), false, 0);
 						if (canDetach (item)) removeItemFromAvatar(item);		
+					}
+					// this is a gesture
+					else if (item->getType() == LLAssetType::AT_GESTURE) {
+						if (LLGestureMgr::instance().isGestureActive(item->getLinkedUUID())) {
+							LLGestureMgr::instance().deactivateGesture(item->getLinkedUUID());
+						}
 					}
 				}
 			}
