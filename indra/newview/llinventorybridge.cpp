@@ -5289,7 +5289,11 @@ void LLWearableBridge::wearOnAvatar()
 	LLViewerInventoryItem* item = getItem();
 	if(item)
 	{
-		LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, true);
+//MK
+		// Should use getLinkedUUID, or we are not being consistent with double click.
+////		LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, true);
+		LLAppearanceMgr::instance().wearItemOnAvatar(item->getLinkedUUID(), true, true);
+//mk
 	}
 }
 
