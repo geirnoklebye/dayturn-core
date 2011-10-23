@@ -103,7 +103,6 @@ set(viewer_SOURCE_FILES
     llavatarlist.cpp
     llavatarlistitem.cpp
     llavatarpropertiesprocessor.cpp
-    llbottomtray.cpp
     llbox.cpp
     llbreadcrumbview.cpp
     llbrowsernotification.cpp
@@ -119,6 +118,7 @@ set(viewer_SOURCE_FILES
     llchatitemscontainerctrl.cpp
     llchatmsgbox.cpp
     llchiclet.cpp
+    llchicletbar.cpp
     llclassifiedinfo.cpp
     llclassifiedstatsresponder.cpp
     llcofwearables.cpp
@@ -169,6 +169,7 @@ set(viewer_SOURCE_FILES
     llfloaterabout.cpp
     llfloateranimpreview.cpp
     llfloaterauction.cpp
+    llfloateravatar.cpp
     llfloateravatarpicker.cpp
     llfloateravatartextures.cpp
     llfloaterbeacons.cpp
@@ -183,6 +184,7 @@ set(viewer_SOURCE_FILES
     llfloatercamera.cpp
     llfloatercolorpicker.cpp
     llfloaterdeleteenvpreset.cpp
+    llfloaterdestinations.cpp
     llfloaterdisplayname.cpp
     llfloatereditdaycycle.cpp
     llfloatereditsky.cpp
@@ -230,7 +232,7 @@ set(viewer_SOURCE_FILES
     llfloatersearch.cpp
     llfloatersellland.cpp
     llfloatersettingsdebug.cpp
-    llfloatersidetraytab.cpp
+    llfloatersidepanelcontainer.cpp
     llfloatersnapshot.cpp
     llfloatersounddevices.cpp
     llfloatertelehub.cpp
@@ -239,6 +241,7 @@ set(viewer_SOURCE_FILES
     llfloatertools.cpp
     llfloatertopobjects.cpp
     llfloatertos.cpp
+    llfloatertoybox.cpp
     llfloateruipreview.cpp
     llfloaterurlentry.cpp
     llfloatervoiceeffect.cpp
@@ -442,13 +445,10 @@ set(viewer_SOURCE_FILES
     llsidepanelinventorysubpanel.cpp
     llsidepaneliteminfo.cpp
     llsidepaneltaskinfo.cpp
-    llsidetray.cpp
-    llsidetraylistener.cpp
     llsidetraypanelcontainer.cpp
     llsky.cpp
     llslurl.cpp
     llspatialpartition.cpp
-    llspeakbutton.cpp
     llspeakers.cpp
     llspeakingindicatormanager.cpp
     llsplitbutton.cpp
@@ -484,6 +484,7 @@ set(viewer_SOURCE_FILES
     lltoastpanel.cpp
     lltoastscripttextbox.cpp
     lltool.cpp
+    lltoolbarview.cpp
     lltoolbrush.cpp
     lltoolcomp.cpp
     lltooldraganddrop.cpp
@@ -604,6 +605,7 @@ set(viewer_SOURCE_FILES
     llweb.cpp
     llwebsharing.cpp
     llwind.cpp
+    llwindowlistener.cpp
     llwlanimator.cpp
     llwldaycycle.cpp
     llwlhandlers.cpp
@@ -669,7 +671,6 @@ set(viewer_HEADER_FILES
     llavatarlist.h
     llavatarlistitem.h
     llavatarpropertiesprocessor.h
-    llbottomtray.h
     llbox.h
     llbreadcrumbview.h
     llbuycurrencyhtml.h
@@ -685,6 +686,7 @@ set(viewer_HEADER_FILES
     llchatitemscontainerctrl.h
     llchatmsgbox.h
     llchiclet.h
+    llchicletbar.h
     llclassifiedinfo.h
     llclassifiedstatsresponder.h
     llcofwearables.h
@@ -735,6 +737,7 @@ set(viewer_HEADER_FILES
     llfloaterabout.h
     llfloateranimpreview.h
     llfloaterauction.h
+    llfloateravatar.h
     llfloateravatarpicker.h
     llfloateravatartextures.h
     llfloaterbeacons.h
@@ -749,6 +752,7 @@ set(viewer_HEADER_FILES
     llfloatercamera.h
     llfloatercolorpicker.h
     llfloaterdeleteenvpreset.h
+    llfloaterdestinations.h
     llfloaterdisplayname.h
     llfloatereditdaycycle.h
     llfloatereditsky.h
@@ -796,7 +800,7 @@ set(viewer_HEADER_FILES
     llfloatersearch.h
     llfloatersellland.h
     llfloatersettingsdebug.h
-    llfloatersidetraytab.h
+    llfloatersidepanelcontainer.h
     llfloatersnapshot.h
     llfloatersounddevices.h
     llfloatertelehub.h
@@ -805,6 +809,7 @@ set(viewer_HEADER_FILES
     llfloatertools.h
     llfloatertopobjects.h
     llfloatertos.h
+    llfloatertoybox.h
     llfloateruipreview.h
     llfloaterurlentry.h
     llfloatervoiceeffect.h
@@ -1003,13 +1008,10 @@ set(viewer_HEADER_FILES
     llsidepanelinventorysubpanel.h
     llsidepaneliteminfo.h
     llsidepaneltaskinfo.h
-    llsidetray.h
-    llsidetraylistener.h
     llsidetraypanelcontainer.h
     llsky.h
     llslurl.h
     llspatialpartition.h
-    llspeakbutton.h
     llspeakers.h
     llspeakingindicatormanager.h
     llsplitbutton.h
@@ -1046,6 +1048,7 @@ set(viewer_HEADER_FILES
     lltoastpanel.h
     lltoastscripttextbox.h
     lltool.h
+    lltoolbarview.h
     lltoolbrush.h
     lltoolcomp.h
     lltooldraganddrop.h
@@ -1164,6 +1167,7 @@ set(viewer_HEADER_FILES
     llweb.h
     llwebsharing.h
     llwind.h
+    llwindowlistener.h
     llwlanimator.h
     llwldaycycle.h
     llwlhandlers.h
@@ -1387,11 +1391,6 @@ endif (WINDOWS)
 set(viewer_XUI_FILES
     skins/default/colors.xml
     skins/default/textures/textures.xml
-    skins/minimal/colors.xml
-    skins/minimal/textures/textures.xml
-
-
-
     )
 file(GLOB DEFAULT_XUI_FILE_GLOB_LIST
      ${CMAKE_CURRENT_SOURCE_DIR}/skins/*/xui/en/*.xml)
@@ -1418,6 +1417,7 @@ list(APPEND viewer_SOURCE_FILES ${viewer_XUI_FILES})
 set(viewer_APPSETTINGS_FILES
     app_settings/anim.ini
     app_settings/cmd_line.xml
+    app_settings/commands.xml
     app_settings/grass.xml
     app_settings/high_graphics.xml
     app_settings/ignorable_dialogs.xml
@@ -1430,8 +1430,8 @@ set(viewer_APPSETTINGS_FILES
     app_settings/settings_crash_behavior.xml
     app_settings/settings_files.xml
     app_settings/settings_per_account.xml
-    app_settings/settings_minimal.xml
     app_settings/std_bump.ini
+    app_settings/toolbars.xml
     app_settings/trees.xml
     app_settings/ultra_graphics.xml
     app_settings/viewerart.xml

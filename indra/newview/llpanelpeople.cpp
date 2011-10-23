@@ -29,6 +29,7 @@
 // libs
 #include "llavatarname.h"
 #include "llfloaterreg.h"
+#include "llfloatersidepanelcontainer.h"
 #include "llmenubutton.h"
 #include "llmenugl.h"
 #include "llnotificationsutil.h"
@@ -56,7 +57,6 @@
 #include "llinventoryobserver.h"
 #include "llnetmap.h"
 #include "llpanelpeoplemenus.h"
-#include "llsidetray.h"
 #include "llsidetraypanelcontainer.h"
 #include "llrecentpeople.h"
 #include "llviewercontrol.h"		// for gSavedSettings
@@ -537,11 +537,11 @@ LLPanelPeople::~LLPanelPeople()
 		LLVoiceClient::getInstance()->removeObserver(this);
 	}
 
-	LLView::deleteViewByHandle(mGroupPlusMenuHandle);
-	LLView::deleteViewByHandle(mNearbyViewSortMenuHandle);
-	LLView::deleteViewByHandle(mFriendsViewSortMenuHandle);
-	LLView::deleteViewByHandle(mGroupsViewSortMenuHandle);
-	LLView::deleteViewByHandle(mRecentViewSortMenuHandle);
+	delete mGroupPlusMenuHandle.get();
+	delete mNearbyViewSortMenuHandle.get();
+	delete mFriendsViewSortMenuHandle.get();
+	delete mGroupsViewSortMenuHandle.get();
+	delete mRecentViewSortMenuHandle.get();
 
 }
 
@@ -1474,6 +1474,10 @@ void LLPanelPeople::onFriendsViewSortMenuItemClicked(const LLSD& userdata)
 		mAllFriendList->showPermissions(show_permissions);
 		mOnlineFriendList->showPermissions(show_permissions);
 	}
+	else if (chosen_item == "panel_block_list_sidetray")
+	{
+		LLFloaterSidePanelContainer::showPanel("people", "panel_block_list_sidetray", LLSD());
+	}
 }
 
 void LLPanelPeople::onGroupsViewSortMenuItemClicked(const LLSD& userdata)
@@ -1505,6 +1509,10 @@ void LLPanelPeople::onNearbyViewSortMenuItemClicked(const LLSD& userdata)
 	else if (chosen_item == "sort_distance")
 	{
 		setSortOrder(mNearbyList, E_SORT_BY_DISTANCE);
+	}
+	else if (chosen_item == "panel_block_list_sidetray")
+	{
+		LLFloaterSidePanelContainer::showPanel("people", "panel_block_list_sidetray", LLSD());
 	}
 }
 
@@ -1538,6 +1546,10 @@ void LLPanelPeople::onRecentViewSortMenuItemClicked(const LLSD& userdata)
 	else if (chosen_item == "view_icons")
 	{
 		mRecentList->toggleIcons();
+	}
+	else if (chosen_item == "panel_block_list_sidetray")
+	{
+		LLFloaterSidePanelContainer::showPanel("people", "panel_block_list_sidetray", LLSD());
 	}
 }
 
@@ -1630,7 +1642,7 @@ bool LLPanelPeople::notifyChildren(const LLSD& info)
 			container->onOpen(LLSD().with(LLSideTrayPanelContainer::PARAM_SUB_PANEL_NAME, getName()));
 		}
 		else
-			LLSideTray::getInstance()->collapseSideBar();
+			LLFloaterReg::hideInstance("people");
 
 		return true; // this notification is only supposed to be handled by task panels
 	}

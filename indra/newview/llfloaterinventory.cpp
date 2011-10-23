@@ -134,3 +134,12 @@ void LLFloaterInventory::onOpen(const LLSD& key)
 	}
 //mk
 }
+
+void LLFloaterInventory::onClose(bool app_quitting)
+{
+	LLFloater::onClose(app_quitting);
+	if (mKey.asInteger() > 1)
+	{
+		destroy();
+	}
+}

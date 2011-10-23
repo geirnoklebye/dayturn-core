@@ -2139,7 +2139,7 @@ LLFloaterSnapshot::LLFloaterSnapshot(const LLSD& key)
 // Destroys the object
 LLFloaterSnapshot::~LLFloaterSnapshot()
 {
-	LLView::deleteViewByHandle(impl.mPreviewHandle);
+	delete impl.mPreviewHandle.get();
 
 	//unfreeze everything else
 	gSavedSettings.setBOOL("FreezeTime", FALSE);
@@ -2253,7 +2253,7 @@ void LLFloaterSnapshot::draw()
 
 	LLFloater::draw();
 
-	if (previewp)
+	if (previewp && !isMinimized())
 	{		
 		if(previewp->getThumbnailImage())
 		{
