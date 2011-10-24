@@ -177,7 +177,7 @@ void LLNearbyChat::onNearbySpeakers()
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 	{
-		if (!LLSideTray::getInstance()->childIsVisible("panel_people")) return;
+//		if (!LLSideTray::getInstance()->childIsVisible("panel_people")) return;
 	}
 //mk
 	LLFloaterSidePanelContainer::showPanel("people", "panel_people", param);

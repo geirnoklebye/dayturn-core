@@ -49,7 +49,6 @@
 
 //MK
 #include "llagent.h"
-#include "llsidetray.h"
 //mk
 
 static LLDefaultChildRegistry::Register<LLAvatarList> r("avatar_list");
@@ -636,14 +635,14 @@ void LLAvatarList::computeDifference(
 void LLAvatarList::updateLastInteractionTimes()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
-	{
-		if (LLSideTray::getInstance()->childIsVisible("recent_panel") == true)
-		{
-			LLSideTray::getInstance()->childSetVisible("recent_panel", false);
-		}
-		return;
-	}
+//	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+//	{
+//		if (LLSideTray::getInstance()->childIsVisible("recent_panel") == true)
+//		{
+//			LLSideTray::getInstance()->childSetVisible("recent_panel", false);
+//		}
+//		return;
+//	}
 //mk
 	S32 now = (S32) LLDate::now().secondsSinceEpoch();
 	std::vector<LLPanel*> items;

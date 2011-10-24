@@ -73,7 +73,6 @@
 #include "lllandmarkactions.h"
 #include "lllocationinputctrl.h"
 #include "llparcel.h"
-#include "llsidetray.h"
 #include "llslurl.h"
 #include "llviewerinventory.h"
 //mk
@@ -299,7 +298,6 @@ BOOL LLStatusBar::postBuild()
 
 	LLUICtrl& mode_combo = getChildRef<LLUICtrl>("mode_combo");
 	mode_combo.setValue(gSavedSettings.getString("SessionSettingsFile"));
-	mode_combo.setCommitCallback(boost::bind(&LLStatusBar::onModeChange, this, getChild<LLUICtrl>("mode_combo")->getValue(), _2));
 
 //MK
 	mParcelInfoPanel = getChild<LLPanel>("parcel_info_panel");
@@ -941,12 +939,12 @@ void LLStatusBar::onContextMenuItemClicked(const LLSD::String& item)
 
 		if(landmark == NULL)
 		{
-			LLSideTray::getInstance()->showPanel("panel_places", LLSD().with("type", "create_landmark"));
+//			LLSideTray::getInstance()->showPanel("panel_places", LLSD().with("type", "create_landmark"));
 		}
 		else
 		{
-			LLSideTray::getInstance()->showPanel("panel_places",
-					LLSD().with("type", "landmark").with("id",landmark->getUUID()));
+//			LLSideTray::getInstance()->showPanel("panel_places",
+//					LLSD().with("type", "landmark").with("id",landmark->getUUID()));
 		}
 	}
 	else if (item == "copy")

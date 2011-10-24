@@ -27,7 +27,6 @@
 #include "llagentcamera.h"
 #include "llagentwearables.h"
 #include "llappearancemgr.h"
-#include "llbottomtray.h"
 #include "lldrawpoolalpha.h"
 #include "llfloaterchat.h"
 //#include "llfloaterenvsettings.h"
@@ -48,6 +47,7 @@
 #include "llnearbychat.h"
 #include "llnearbychatbar.h"
 #include "llnotifications.h"
+#include "llpanelmaininventory.h"
 #include "llpaneltopinfobar.h"
 #include "llselectmgr.h"
 #include "llstartup.h"
@@ -55,7 +55,6 @@
 #include "llvoavatarself.h"
 //#include "llinventoryview.h"
 #include "lloverlaybar.h"
-#include "llsidetray.h"
 #include "lltoolmgr.h"
 #include "lltracker.h"
 //#include "llurlsimstring.h"
@@ -203,13 +202,14 @@ void refreshCachedVariable (std::string var)
 
 	if (var == "showinv") {
 		if (gAgent.mRRInterface.mContainsShowinv) {
-			LLSideTray::getInstance()->childSetVisible("panel_main_inventory", false);
+//			LLSideTray::getInstance()->childSetVisible("panel_main_inventory", false);
+			LLPanelMainInventory::
 			LLFloaterInventory::hideAll(); // close all the secondary inventory floaters
-			LLBottomTray::getInstance()->childSetEnabled("inventory_btn", false);
+//			LLBottomTray::getInstance()->childSetEnabled("inventory_btn", false);
 		}
 		else {
-			LLSideTray::getInstance()->childSetVisible("panel_main_inventory", true);
-			LLBottomTray::getInstance()->childSetEnabled("inventory_btn", true);
+//			LLSideTray::getInstance()->childSetVisible("panel_main_inventory", true);
+//			LLBottomTray::getInstance()->childSetEnabled("inventory_btn", true);
 		}
 	}
 
@@ -217,62 +217,65 @@ void refreshCachedVariable (std::string var)
 		bool parcel_allows_build = LLToolMgr::getInstance()->canEdit();
 		if (parcel_allows_build) { // if we can't edit in this parcel, no need to refresh the button anyway
 			if (gAgent.mRRInterface.mContainsRez) {
-				LLBottomTray::getInstance()->childSetEnabled("build_btn", false);
+//				LLBottomTray::getInstance()->childSetEnabled("build_btn", false);
 			}
 			else {
-				LLBottomTray::getInstance()->childSetEnabled("build_btn", true);
+//				LLBottomTray::getInstance()->childSetEnabled("build_btn", true);
 			}
 		}
 	}
 
 	else if (var == "shownames") {
 		if (gAgent.mRRInterface.mContainsShownames) {
-			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
-			LLSideTray::getInstance()->childSetVisible("recent_panel", false);
+//			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
+//			LLSideTray::getInstance()->childSetVisible("recent_panel", false);
 		}
 		else {
-			LLSideTray::getInstance()->childSetVisible("nearby_panel", true);
-			LLSideTray::getInstance()->childSetVisible("recent_panel", true);
+//			LLSideTray::getInstance()->childSetVisible("nearby_panel", true);
+//			LLSideTray::getInstance()->childSetVisible("recent_panel", true);
 		}
 	}
 
 	else if (var == "showminimap") {
 		if (gAgent.mRRInterface.mContainsShowminimap) {
 			LLFloaterMap::getInstance()->setVisible (false);
-			LLBottomTray::getInstance()->childSetEnabled("mini_map_btn", false);
-			LLSideTray::getInstance()->childSetVisible("Net Map", false);
+//			LLBottomTray::getInstance()->childSetEnabled("mini_map_btn", false);
+//			LLSideTray::getInstance()->childSetVisible("Net Map", false);
 		}
 		else {
-			if (!gAgent.mRRInterface.mContainsShowloc) LLBottomTray::getInstance()->childSetEnabled("mini_map_btn", true);
-			LLSideTray::getInstance()->childSetVisible("Net Map", true);
+			if (!gAgent.mRRInterface.mContainsShowloc) {
+//				LLBottomTray::getInstance()->childSetEnabled("mini_map_btn", true);
+			}
+//			LLSideTray::getInstance()->childSetVisible("Net Map", true);
 		}
 	}
 
 	else if (var == "showworldmap") {
 		if (gAgent.mRRInterface.mContainsShowworldmap) {
 			LLFloaterWorldMap::getInstance()->setVisible (false);
-			LLBottomTray::getInstance()->childSetEnabled("world_map_btn", false);
+//			LLBottomTray::getInstance()->childSetEnabled("world_map_btn", false);
 		}
 		else {
-			if (!gAgent.mRRInterface.mContainsShowloc) LLBottomTray::getInstance()->childSetEnabled("world_map_btn", true);
+			if (!gAgent.mRRInterface.mContainsShowloc) {
+//				LLBottomTray::getInstance()->childSetEnabled("world_map_btn", true);
+			}
 		}
 	}
 
 	else if (var == "showloc") {
 		if (gAgent.mRRInterface.mContainsShowloc) {
 			toggle_show_mini_location_panel(LLSD(false));
-//			LLFloaterMap::getInstance()->setVisible (false);
 			LLFloaterWorldMap::getInstance()->setVisible (false);
-			LLSideTray::getInstance()->childSetVisible("panel_places", false);
+//			LLSideTray::getInstance()->childSetVisible("panel_places", false);
 			gSavedSettings.setBOOL ("ShowMiniLocationPanel", FALSE);
-			LLBottomTray::getInstance()->childSetEnabled("world_map_btn", false);
-//			LLBottomTray::getInstance()->childSetEnabled("mini_map_btn", false);
+//			LLBottomTray::getInstance()->childSetEnabled("world_map_btn", false);
 		}
 		else {
-			LLSideTray::getInstance()->childSetVisible("panel_places", true);
+//			LLSideTray::getInstance()->childSetVisible("panel_places", true);
 			LLPanelTopInfoBar::getInstance()->update();
-			if (!gAgent.mRRInterface.mContainsShowworldmap) LLBottomTray::getInstance()->childSetEnabled("world_map_btn", true);
-//			if (!gAgent.mRRInterface.mContainsShowminimap) LLBottomTray::getInstance()->childSetEnabled("mini_map_btn", true);
+			if (!gAgent.mRRInterface.mContainsShowworldmap) {
+//				LLBottomTray::getInstance()->childSetEnabled("world_map_btn", true);
+			}
 		}
 	}
 
@@ -344,7 +347,8 @@ void printOnChat (std::string message)
 {
 	LLChat chat(message);
 	chat.mSourceType = CHAT_SOURCE_SYSTEM;
-	LLNearbyChat* nearby_chat = LLFloaterReg::getTypedInstance<LLNearbyChat>("nearby_chat", LLSD());
+	LLFloater* chat_bar = LLFloaterReg::getInstance("chat_bar");
+	LLNearbyChat* nearby_chat = chat_bar->findChild<LLNearbyChat>("nearby_chat");
 	if(nearby_chat) {
 		nearby_chat->addMessage(chat);
 	}

@@ -166,48 +166,6 @@
          <combo_list
          mouse_wheel_opaque="true"/>
 	    </location_input>
-	   <!-- Avatar Z Offset widget here -->
-	   <slider bottom="-20"
-		control_name="RestrainedLoveOffsetAvatarZ"
-		decimal_digits="2"
-		enabled="true"
-		follows="right|top"
-		halign="left"   
-		height="23"
-		layout="topleft"
-		right="-300"
-		mouse_opaque="false"
-	      tool_tip="Altitude offset of your avatar to adjust your height"
-		name="avatar_z_offset"
-		top_delta="0"
-		width="180"
-		hidden="false"
-		increment="0.01"
-		initial_val="0.0"
-		max_val="0.5"
-		min_val="-0.5" />
-         <!-- end Avatar Z Offset widget -->
-	   <!-- Draw distance widget here -->
-	   <slider bottom="-20"
-		control_name="RenderFarClip"
-		decimal_digits="0"
-		enabled="true"
-		follows="right|top"
-		halign="left"   
-		height="23"
-		layout="topleft"
-		right="-210"
-		mouse_opaque="false"
-	      tool_tip="Maximum distance away from camera to be rezzed (meters)"
-		name="draw_distance"
-		top_delta="0"
-		width="80"
-		hidden="false"
-		increment="16"
-		initial_val="64"
-		max_val="512"
-		min_val="32" />
-         <!-- end Draw distance widget -->
 	</panel>
          </layout_panel>
          
