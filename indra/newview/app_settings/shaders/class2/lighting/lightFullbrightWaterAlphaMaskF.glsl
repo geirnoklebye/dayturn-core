@@ -1,9 +1,9 @@
 /** 
- * @file shadowV.glsl
+ * @file lightFullbrightWaterAlphaMaskF.glsl
  *
  * $LicenseInfo:firstyear=2011&license=viewerlgpl$
  * Second Life Viewer Source Code
- * Copyright (C) 2007, Linden Research, Inc.
+ * Copyright (C) 2011, Linden Research, Inc.
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,20 +22,26 @@
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
- 
 
+uniform float minimum_alpha;
+uniform float maximum_alpha;
 
-varying vec4 post_pos;
+vec4 diffuseLookup(vec2 texcoord);
 
-void main()
+vec3 fullbrightAtmosTransport(vec3 light);
+vec4 applyWaterFog(vec4 color);
+
+void fullbright_lighting_water()
 {
-	//transform vertex
-	vec4 pos = gl_ModelViewProjectionMatrix*gl_Vertex;
+	vec4 color = diffuseLookup(gl_TexCoord[0].xy) * gl_Color;
+
+	if (color.a < minimum_alpha || color.a > maximum_alpha)
+	{
+		discard;
+	}
+
+	color.rgb = fullbrightAtmosTransport(color.rgb);
 	
-	post_pos = pos;
-	
-	gl_Position = vec4(pos.x, pos.y, pos.w*0.5, pos.w);
-	
-	gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;
-	gl_FrontColor = gl_Color;
+	gl_FragColor = applyWaterFog(color);
 }
+
