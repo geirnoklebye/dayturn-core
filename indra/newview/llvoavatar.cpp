@@ -669,7 +669,6 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mTitle(),
 	mNameAway(false),
 	mNameBusy(false),
-	mNameTyping(false),
 	mNameMute(false),
 	mNameAppearance(false),
 	mNameFriend(false),
@@ -1124,20 +1123,14 @@ void LLVOAvatar::initClass()
 	// Process XML data
 
 	// avatar_skeleton.xml
-	if (sAvatarSkeletonInfo)
-	{ //this can happen if a login attempt failed
-		delete sAvatarSkeletonInfo;
-	}
+	llassert(!sAvatarSkeletonInfo);
 	sAvatarSkeletonInfo = new LLVOAvatarSkeletonInfo;
 	if (!sAvatarSkeletonInfo->parseXml(sSkeletonXMLTree.getRoot()))
 	{
 		llerrs << "Error parsing skeleton XML file: " << skeleton_path << llendl;
 	}
 	// parse avatar_lad.xml
-	if (sAvatarXmlInfo)
-	{ //this can happen if a login attempt failed
-		deleteAndClear(sAvatarXmlInfo);
-	}
+	llassert(!sAvatarXmlInfo);
 	sAvatarXmlInfo = new LLVOAvatarXmlInfo;
 	if (!sAvatarXmlInfo->parseXmlSkeletonNode(root))
 	{
@@ -1353,13 +1346,6 @@ const LLVector3 LLVOAvatar::getRenderPosition() const
 	}
 	else
 	{
-//MK
-		// Fix for a crash when mDrawable is NULL (it happens)
-		if (mDrawable->getParent() == NULL)
-		{
-			return mDrawable->getPositionAgent();
-		}
-//mk
 		return getPosition() * mDrawable->getParent()->getRenderMatrix();
 	}
 }
@@ -2811,10 +2797,7 @@ void LLVOAvatar::idleUpdateLoadingEffect()
 																 LLPartData::LL_PART_EMISSIVE_MASK | // LLPartData::LL_PART_FOLLOW_SRC_MASK |
 																 LLPartData::LL_PART_TARGET_POS_MASK );
 			
-			if (!isTooComplex()) // do not generate particles for overly-complex avatars
-			{
-				setParticleSource(particle_parameters, getID());
-			}
+			setParticleSource(particle_parameters, getID());
 		}
 	}
 }	
@@ -2907,13 +2890,6 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 								 && gSavedSettings.getS32("AvatarNameTagMode") ));
 	}
 
-//MK
-	// hide the names above the heads
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
-	{
-		render_name = FALSE;
-	}
-//mk
 	if ( !render_name )
 	{
 		if (mNameText)
@@ -3003,9 +2979,6 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 
 	bool is_away = mSignaledAnimations.find(ANIM_AGENT_AWAY)  != mSignaledAnimations.end();
 	bool is_busy = mSignaledAnimations.find(ANIM_AGENT_BUSY) != mSignaledAnimations.end();
-//MK
-	bool is_typing = getTyping();
-//mk
 	bool is_appearance = mSignaledAnimations.find(ANIM_AGENT_CUSTOMIZE) != mSignaledAnimations.end();
 	bool is_muted;
 	if (isSelf())
@@ -3049,7 +3022,6 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		|| (title && mTitle != title->getString())
 		|| is_away != mNameAway 
 		|| is_busy != mNameBusy 
-		|| is_typing != mNameTyping 
 		|| is_muted != mNameMute
 				|| is_appearance != mNameAppearance 
 		|| is_friend != mNameFriend
@@ -3059,10 +3031,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 
 		clearNameTag();
 
-//MK
-////		if (is_away || is_muted || is_busy || is_appearance)
-		if (is_away || is_muted || is_busy || is_appearance || is_typing)
-//mk
+		if (is_away || is_muted || is_busy || is_appearance)
 				{
 			std::string line;
 					if (is_away)
@@ -3075,13 +3044,6 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				line += LLTrans::getString("AvatarBusy");
 				line += ", ";
 			}
-//MK
-					if (is_typing)
-					{
-				line += LLTrans::getString("AvatarTyping");
-				line += ", ";
-			}
-//mk
 			if (is_muted)
 						{
 				line += LLTrans::getString("AvatarMuted");
@@ -3151,7 +3113,6 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 
 				mNameAway = is_away;
 				mNameBusy = is_busy;
-				mNameTyping = is_typing;
 				mNameMute = is_muted;
 				mNameAppearance = is_appearance;
 		mNameFriend = is_friend;
@@ -4868,11 +4829,8 @@ BOOL LLVOAvatar::isAnyAnimationSignaled(const LLUUID *anim_array, const S32 num_
 //-----------------------------------------------------------------------------
 void LLVOAvatar::resetAnimations()
 {
-//MK
-////	LLKeyframeMotion::flushKeyframeCache();
-////	flushAllMotions();
-	mMotionController.updateMotions(true);
-//mk
+	LLKeyframeMotion::flushKeyframeCache();
+	flushAllMotions();
 }
 
 // Override selectively based on avatar sex and whether we're using new
@@ -6000,7 +5958,7 @@ LLViewerJointAttachment* LLVOAvatar::getTargetAttachmentPoint(LLViewerObject* vi
 //-----------------------------------------------------------------------------
 // attachObject()
 //-----------------------------------------------------------------------------
-const LLViewerJointAttachment *LLVOAvatar::attachObject(LLViewerObject* viewer_object)
+const LLViewerJointAttachment *LLVOAvatar::attachObject(LLViewerObject *viewer_object)
 {
 	LLViewerJointAttachment* attachment = getTargetAttachmentPoint(viewer_object);
 
@@ -6185,31 +6143,12 @@ BOOL LLVOAvatar::detachObject(LLViewerObject *viewer_object)
 //-----------------------------------------------------------------------------
 void LLVOAvatar::sitDown(BOOL bSitting)
 {
-//MK
-	BOOL was_sitting = mIsSitting;
-//mk
 	mIsSitting = bSitting;
 	if (isSelf())
 	{
 		// Update Movement Controls according to own Sitting mode
 		LLFloaterMove::setSittingMode(bSitting);
 	}
-//MK
-	if (gRRenabled && isSelf())
-	{
-		// If we are being forced to stand up (prim derezzing or calling llUnsit() ), snap back to the previous
-		// standing location if under @standtp
-		if (was_sitting)
-		{
-			if (gAgent.mRRInterface.contains ("standtp"))
-			{
-				gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
-				gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
-				gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
-			}
-		}
-	}
-//mk
 }
 
 //-----------------------------------------------------------------------------
@@ -6217,13 +6156,6 @@ void LLVOAvatar::sitDown(BOOL bSitting)
 //-----------------------------------------------------------------------------
 void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 {
-//MK
-	if (gRRenabled && sit_object && isSelf())
-	{
-		gAgent.mRRInterface.setSitTargetId (sit_object->getID());
-	}
-//mk
-
 	if (isSelf())
 	{
 		// Might be first sit
@@ -6246,7 +6178,6 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 	{
 		return;
 	}
-
 	LLQuaternion inv_obj_rot = ~sit_object->getRenderRotation();
 	LLVector3 obj_pos = sit_object->getRenderPosition();
 
@@ -6282,12 +6213,6 @@ void LLVOAvatar::getOffObject()
 
 	if (sit_object) 
 	{
-//MK
-		if (gRRenabled && isSelf())
-		{
-			gAgent.mRRInterface.setSitTargetId (LLUUID::null);
-		}
-//mk
 		stopMotionFromSource(sit_object->getID());
 		LLFollowCamMgr::setCameraActive(sit_object->getID(), FALSE);
 
@@ -6452,11 +6377,6 @@ BOOL LLVOAvatar::getIsCloud()
 	{
 		return TRUE;
 	}
-
-	if (isTooComplex())
-	{
-		return TRUE;
-	}
 	return FALSE;
 }
 
@@ -6549,16 +6469,6 @@ BOOL LLVOAvatar::isFullyLoaded() const
 		return TRUE;
 	else
 		return mFullyLoaded;
-}
-
-bool LLVOAvatar::isTooComplex() const
-{
-	if (gSavedSettings.getS32("RenderAvatarComplexityLimit") > 0 && mVisualComplexity >= gSavedSettings.getS32("RenderAvatarComplexityLimit"))
-	{
-		return true;
-	}
-
-	return false;
 }
 
 
@@ -8394,7 +8304,7 @@ void LLVOAvatar::getImpostorValues(LLVector4a* extents, LLVector3& angle, F32& d
 
 void LLVOAvatar::idleUpdateRenderCost()
 {
-	static const U32 ARC_BODY_PART_COST = 200;
+	static const U32 ARC_BODY_PART_COST = 20;
 	static const U32 ARC_LIMIT = 2048;
 
 	static std::set<LLUUID> all_textures;
@@ -8405,7 +8315,7 @@ void LLVOAvatar::idleUpdateRenderCost()
 	}
 
 	U32 cost = 0;
-	LLVOVolume::texture_cost_t textures;
+	std::set<LLUUID> textures;
 
 	for (U8 baked_index = 0; baked_index < BAKED_NUM_INDICES; baked_index++)
 	{
@@ -8420,7 +8330,6 @@ void LLVOAvatar::idleUpdateRenderCost()
 		}
 	}
 
-
 	for (attachment_map_t::const_iterator iter = mAttachmentPoints.begin(); 
 		 iter != mAttachmentPoints.end();
 		 ++iter)
@@ -8433,7 +8342,6 @@ void LLVOAvatar::idleUpdateRenderCost()
 			const LLViewerObject* attached_object = (*attachment_iter);
 			if (attached_object && !attached_object->isHUDAttachment())
 			{
-				textures.clear();
 				const LLDrawable* drawable = attached_object->mDrawable;
 				if (drawable)
 				{
@@ -8441,25 +8349,6 @@ void LLVOAvatar::idleUpdateRenderCost()
 					if (volume)
 					{
 						cost += volume->getRenderCost(textures);
-
-						const_child_list_t children = volume->getChildren();
-						for (const_child_list_t::const_iterator child_iter = children.begin();
-							  child_iter != children.end();
-							  ++child_iter)
-						{
-							LLViewerObject* child_obj = *child_iter;
-							LLVOVolume *child = dynamic_cast<LLVOVolume*>( child_obj );
-							if (child)
-							{
-								cost += child->getRenderCost(textures);
-							}
-						}
-
-						for (LLVOVolume::texture_cost_t::iterator iter = textures.begin(); iter != textures.end(); ++iter)
-						{
-							// add the cost of each individual texture in the linkset
-							cost += iter->second;
-						}
 					}
 				}
 			}
@@ -8467,17 +8356,15 @@ void LLVOAvatar::idleUpdateRenderCost()
 
 	}
 
-
-
 	// Diagnostic output to identify all avatar-related textures.
 	// Does not affect rendering cost calculation.
 	// Could be wrapped in a debug option if output becomes problematic.
 	if (isSelf())
 	{
 		// print any attachment textures we didn't already know about.
-		for (LLVOVolume::texture_cost_t::iterator it = textures.begin(); it != textures.end(); ++it)
+		for (std::set<LLUUID>::iterator it = textures.begin(); it != textures.end(); ++it)
 		{
-			LLUUID image_id = it->first;
+			LLUUID image_id = *it;
 			if( image_id.isNull() || image_id == IMG_DEFAULT || image_id == IMG_DEFAULT_AVATAR)
 				continue;
 			if (all_textures.find(image_id) == all_textures.end())
@@ -8509,8 +8396,9 @@ void LLVOAvatar::idleUpdateRenderCost()
 		}
 	}
 
+	cost += textures.size() * LLVOVolume::ARC_TEXTURE_COST;
+
 	setDebugText(llformat("%d", cost));
-	mVisualComplexity = cost;
 	F32 green = 1.f-llclamp(((F32) cost-(F32)ARC_LIMIT)/(F32)ARC_LIMIT, 0.f, 1.f);
 	F32 red = llmin((F32) cost/(F32)ARC_LIMIT, 1.f);
 	mText->setColor(LLColor4(red,green,0,1));

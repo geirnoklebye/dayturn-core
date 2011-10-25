@@ -2140,7 +2140,8 @@ void LLGLNamePool::release(GLuint name)
 void LLGLNamePool::upkeepPools()
 {
 	LLMemType mt(LLMemType::MTYPE_UPKEEP_POOLS);
-	for (tracker_t::instance_iter iter = beginInstances(); iter != endInstances(); ++iter)
+	tracker_t::LLInstanceTrackerScopedGuard guard;
+	for (tracker_t::instance_iter iter = guard.beginInstances(); iter != guard.endInstances(); ++iter)
 	{
 		LLGLNamePool & pool = *iter;
 		pool.upkeep();
@@ -2150,7 +2151,8 @@ void LLGLNamePool::upkeepPools()
 //static
 void LLGLNamePool::cleanupPools()
 {
-	for (tracker_t::instance_iter iter = beginInstances(); iter != endInstances(); ++iter)
+	tracker_t::LLInstanceTrackerScopedGuard guard;
+	for (tracker_t::instance_iter iter = guard.beginInstances(); iter != guard.endInstances(); ++iter)
 	{
 		LLGLNamePool & pool = *iter;
 		pool.cleanup();
