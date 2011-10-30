@@ -92,3 +92,4 @@ indra/.settings/org.eclipse.cdt.ui.prefs
 *.rej
 syntax: regexp
 fmodapi375win/*
+glob:*.diff
