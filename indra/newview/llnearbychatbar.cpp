@@ -147,12 +147,11 @@ LLNearbyChatBar* LLNearbyChatBar::getInstance()
 
 void LLNearbyChatBar::showHistory()
 {
+	openFloater();
 	if (!getChildView("nearby_chat")->getVisible())
 	{
 		onToggleNearbyChatPanel();
 }
-
-	openFloater();
 }
 
 void LLNearbyChatBar::draw()
@@ -410,7 +409,10 @@ void LLNearbyChatBar::onToggleNearbyChatPanel()
 
 	if (nearby_chat->getVisible())
 	{
+		if (!isMinimized())
+		{
 		mExpandedHeight = getRect().getHeight();
+		}
 		setResizeLimits(getMinWidth(), COLLAPSED_HEIGHT);
 		nearby_chat->setVisible(FALSE);
 		reshape(getRect().getWidth(), COLLAPSED_HEIGHT);
@@ -424,6 +426,15 @@ void LLNearbyChatBar::onToggleNearbyChatPanel()
 		reshape(getRect().getWidth(), mExpandedHeight);
 		enableResizeCtrls(true);
 		storeRectControl();
+	}
+}
+
+void LLNearbyChatBar::setMinimized(BOOL b)
+{
+	if (b != LLFloater::isMinimized())
+	{
+		LLFloater::setMinimized(b);
+		getChildView("nearby_chat")->setVisible(!b);
 	}
 }
 
