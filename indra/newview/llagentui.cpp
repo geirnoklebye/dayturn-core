@@ -104,6 +104,7 @@ BOOL LLAgentUI::buildLocationString(std::string& str, ELocationFormat fmt,const 
 	{
 		parcel_name = "(Parcel hidden)";
 		region_name = "(Region hidden)";
+		pos_x = pos_y = pos_z = 9999;
 	}
 //mk
 	std::string sim_access_string = region->getSimAccessString();
