@@ -1910,10 +1910,6 @@
               <map>
                 <key>command</key>
                 <string>xcodebuild</string>
-                <key>filters</key>
-                <array>
-                  <string>setenv</string>
-                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration Debug</string>
@@ -1964,10 +1960,6 @@
               <map>
                 <key>command</key>
                 <string>xcodebuild</string>
-                <key>filters</key>
-                <array>
-                  <string>setenv</string>
-                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration RelWithDebInfo</string>
@@ -2020,10 +2012,6 @@
               <map>
                 <key>command</key>
                 <string>xcodebuild</string>
-                <key>filters</key>
-                <array>
-                  <string>setenv</string>
-                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration Release</string>
@@ -2456,14 +2444,19 @@
               </map>
               <key>configure</key>
               <map>
+                <key>arguments</key>
+                <array>
+                  <string>../indra</string>
+                </array>
                 <key>options</key>
                 <array>
-                  <string>-G</string>
-                  <string>"Visual Studio 10"</string>
-                  <string>-DUNATTENDED:BOOL=ON</string>
-                  <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DUSE_KDU=FALSE</string>
                   <string>-DFMOD=TRUE</string>
+                  <string>'-DROOT_PROJECT_NAME:STRING=Restrained Love Release'</string>
+                  <string>'-DVIEWER_CHANNEL:STRING=Restrained Love Release'</string>
+                  <string>'-DVIEWER_LOGIN_CHANNEL:STRING=Restrained Love Release'</string>
+                  <string>-DPACKAGE:BOOL=ON</string>
+                  <string>-DGCC_DISABLE_FATAL_WARNINGS:BOOL=ON</string>
+                  <string>-DLL_TESTS:BOOL=OFF</string>
                 </array>
               </map>
               <key>name</key>
