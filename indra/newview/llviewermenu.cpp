@@ -8353,6 +8353,10 @@ class LLWorldEnvSettings : public view_listener_t
 		{
 			LLEnvManagerNew::instance().setUseSkyPreset("Midnight");
 		}
+		else if (tod == "default")
+		{
+			LLEnvManagerNew::instance().useRegionSettings();
+		}
 		else
 		{
 			LLEnvManagerNew::instance().setUseDayCycle(LLEnvManagerNew::instance().getDayCycleName());
