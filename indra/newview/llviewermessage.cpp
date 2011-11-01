@@ -6875,13 +6875,23 @@ bool handle_lure_callback(const LLSD& notification, const LLSD& response)
 		msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 		msg->nextBlockFast(_PREHASH_Info);
 		msg->addU8Fast(_PREHASH_LureType, (U8)0); // sim will fill this in.
-//MK
-		if (gRRenabled && gAgent.mRRInterface.containsSubstr("sendim"))
+//LC
+		for(LLSD::array_const_iterator lc_it = notification["payload"]["ids"].beginArray();
+			lc_it != notification["payload"]["ids"].endArray();
+			++lc_it)
 		{
-			text = "(Hidden)";
+
+//MK
+			LLUUID lc_target_id = lc_it->asUUID();
+                        if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim") || gAgent.mRRInterface.containsSubstr ("sendimto:"+lc_target_id.asString())))
+			{
+				text = "(Hidden)";
+			}
 		}
-		msg->addStringFast(_PREHASH_Message, text);
+
+ 		msg->addStringFast(_PREHASH_Message, text);
 //mk
+//lc
 		for(LLSD::array_const_iterator it = notification["payload"]["ids"].beginArray();
 			it != notification["payload"]["ids"].endArray();
 			++it)
