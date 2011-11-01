@@ -939,9 +939,11 @@ void LLPanelPeople::updateNearbyList()
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 	{
-//		if (LLSideTray::getInstance()->childIsVisible("nearby_panel") == true)
+		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
+		if (nearby_tab && nearby_tab->getVisible())
 		{
-//			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
+//			nearby_tab->setVisible(FALSE);
+			nearby_tab->childSetVisible("avatar_list", FALSE);
 		}
 		return;
 	}
@@ -968,9 +970,11 @@ void LLPanelPeople::updateRecentList()
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 	{
-//		if (LLSideTray::getInstance()->childIsVisible("nearby_panel") == true)
+		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
+		if (nearby_tab && nearby_tab->getVisible())
 		{
-//			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
+//			nearby_tab->setVisible(FALSE);
+			nearby_tab->childSetVisible("avatar_list", FALSE);
 		}
 		return;
 	}

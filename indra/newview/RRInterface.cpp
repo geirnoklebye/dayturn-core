@@ -36,6 +36,7 @@
 #include "llfloaterpostprocess.h"
 #include "llfloaterreg.h"
 #include "llfloatersettingsdebug.h"
+#include "llfloatersidepanelcontainer.h"
 //#include "llfloaterwater.h"
 //#include "llfloaterwindlight.h"
 #include "llfloaterworldmap.h"
@@ -149,6 +150,22 @@ bool findMultiple (std::deque<std::string> list, std::string str)
 	return true;
 }
 
+void setVisibleAll(std::string floater_name, BOOL visible)
+{
+	// Use this to hide or show all floaters bearing this name
+	U32 count = 0;
+	LLFloaterReg::const_instance_list_t& inst_list = LLFloaterReg::getFloaterList(floater_name);
+	for (LLFloaterReg::const_instance_list_t::const_iterator iter = inst_list.begin(); iter != inst_list.end();)
+	{
+		LLFloater* iv = dynamic_cast<LLFloater*>(*iter++);
+		if (iv)
+		{
+			count++;
+			iv->setVisible(visible);
+		}
+	}
+}
+
 void refreshCachedVariable (std::string var)
 {
 	// Call this function when adding/removing a restriction only, i.e. in this file
@@ -203,11 +220,13 @@ void refreshCachedVariable (std::string var)
 	if (var == "showinv") {
 		if (gAgent.mRRInterface.mContainsShowinv) {
 //			LLSideTray::getInstance()->childSetVisible("panel_main_inventory", false);
-			LLPanelMainInventory::
-			LLFloaterInventory::hideAll(); // close all the secondary inventory floaters
+			LLFloaterReg::hideInstance("panel_main_inventory", LLSD());
+			setVisibleAll("inventory", FALSE);
+			//LLFloaterInventory::hideAll(); // close all the secondary inventory floaters
 //			LLBottomTray::getInstance()->childSetEnabled("inventory_btn", false);
 		}
 		else {
+//			setVisibleAll("inventory", TRUE);
 //			LLSideTray::getInstance()->childSetVisible("panel_main_inventory", true);
 //			LLBottomTray::getInstance()->childSetEnabled("inventory_btn", true);
 		}
@@ -229,22 +248,39 @@ void refreshCachedVariable (std::string var)
 		if (gAgent.mRRInterface.mContainsShownames) {
 //			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
 //			LLSideTray::getInstance()->childSetVisible("recent_panel", false);
+			LLPanel* panel = LLFloaterSidePanelContainer::getPanel("people", "panel_people");
+			if (panel) {
+				panel->childSetVisible("avatar_list", false);
+			}
 		}
 		else {
 //			LLSideTray::getInstance()->childSetVisible("nearby_panel", true);
 //			LLSideTray::getInstance()->childSetVisible("recent_panel", true);
+			LLPanel* panel = LLFloaterSidePanelContainer::getPanel("people", "panel_people");
+			if (panel) {
+				panel->childSetVisible("avatar_list", true);
+			}
 		}
 	}
 
 	else if (var == "showminimap") {
 		if (gAgent.mRRInterface.mContainsShowminimap) {
 			LLFloaterMap::getInstance()->setVisible (false);
+			LLPanel* panel = LLFloaterSidePanelContainer::getPanel("people", "panel_people");
+			if (panel) {
+				panel->childSetVisible("Net Map", false);
+			}
 //			LLBottomTray::getInstance()->childSetEnabled("mini_map_btn", false);
 //			LLSideTray::getInstance()->childSetVisible("Net Map", false);
+
 		}
 		else {
 			if (!gAgent.mRRInterface.mContainsShowloc) {
 //				LLBottomTray::getInstance()->childSetEnabled("mini_map_btn", true);
+			}
+			LLPanel* panel = LLFloaterSidePanelContainer::getPanel("people", "panel_people");
+			if (panel) {
+				panel->childSetVisible("Net Map", true);
 			}
 //			LLSideTray::getInstance()->childSetVisible("Net Map", true);
 		}
@@ -267,6 +303,7 @@ void refreshCachedVariable (std::string var)
 			toggle_show_mini_location_panel(LLSD(false));
 			LLFloaterWorldMap::getInstance()->setVisible (false);
 //			LLSideTray::getInstance()->childSetVisible("panel_places", false);
+			setVisibleAll("panel_places", FALSE);
 			gSavedSettings.setBOOL ("ShowMiniLocationPanel", FALSE);
 //			LLBottomTray::getInstance()->childSetEnabled("world_map_btn", false);
 		}
@@ -307,6 +344,16 @@ void refreshCachedVariable (std::string var)
 				gAgent.sendWalkRun(gAgent.getRunning());
 			}
 		}
+	}
+
+	if (gAgent.mRRInterface.contains("tplm")
+	|| gAgent.mRRInterface.contains("tploc")
+	|| gAgent.mRRInterface.contains("tplure"))
+	{
+		gAgent.mRRInterface.mContainsTp = TRUE;
+	}
+	else {
+		gAgent.mRRInterface.mContainsTp = FALSE;
 	}
 
 }
@@ -390,6 +437,7 @@ RRInterface::RRInterface():
 	, mContainsPermissive(FALSE)
 	, mContainsRun(FALSE)
 	, mContainsAlwaysRun(FALSE)
+	, mContainsTp(FALSE)
 	//, mContainsMoveUp(FALSE)
 	//, mContainsMoveDown(FALSE)
 	//, mContainsMoveForward(FALSE)
@@ -2886,10 +2934,16 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		updateAndSave (&(params->mBlueHorizon));
 	}
 	else if (command == "bluehorizoni") {
-		params->mBlueHorizon.r = val*2;
-		params->mBlueHorizon.g = val*2;
-		params->mBlueHorizon.b = val*2;
-		updateAndSave (&(params->mBlueHorizon));
+		F32 old_intensity = llmax(params->mBlueHorizon.r, params->mBlueHorizon.g, params->mBlueHorizon.b);
+		if (val == 0 || old_intensity == 0) {
+			params->mBlueHorizon.r = params->mBlueHorizon.g = params->mBlueHorizon.b = val * 2;
+		}
+		else {
+			params->mBlueHorizon.r *= val * 2 / old_intensity;
+			params->mBlueHorizon.g *= val * 2 / old_intensity;
+			params->mBlueHorizon.b *= val * 2 / old_intensity;
+		}
+		updateAndSave(&(params->mBlueHorizon));
 	}
 
 	else if (command == "bluedensityr") {
@@ -2905,10 +2959,16 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		updateAndSave (&(params->mBlueDensity));
 	}
 	else if (command == "bluedensityi") {
-		params->mBlueDensity.r = val*2;
-		params->mBlueDensity.g = val*2;
-		params->mBlueDensity.b = val*2;
-		updateAndSave (&(params->mBlueDensity));
+		F32 old_intensity = llmax(params->mBlueDensity.r, params->mBlueDensity.g, params->mBlueDensity.b);
+		if (val == 0 || old_intensity == 0) {
+			params->mBlueDensity.r = params->mBlueDensity.g = params->mBlueDensity.b = val * 2;
+		}
+		else {
+			params->mBlueDensity.r *= val * 2 / old_intensity;
+			params->mBlueDensity.g *= val * 2 / old_intensity;
+			params->mBlueDensity.b *= val * 2 / old_intensity;
+		}
+		updateAndSave(&(params->mBlueDensity));
 	}
 
 	else if (command == "hazehorizon") {
@@ -2956,10 +3016,16 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		updateAndSave (&(params->mSunlight));
 	}
 	else if (command == "sunmooncolori") {
-		params->mSunlight.r = val*3;
-		params->mSunlight.g = val*3;
-		params->mSunlight.b = val*3;
-		updateAndSave (&(params->mSunlight));
+		F32 old_intensity = llmax(params->mSunlight.r, params->mSunlight.g, params->mSunlight.b);
+		if (val == 0 || old_intensity == 0) {
+			params->mSunlight.r = params->mSunlight.g = params->mSunlight.b = val * 2;
+		}
+		else {
+			params->mSunlight.r *= val * 2 / old_intensity;
+			params->mSunlight.g *= val * 2 / old_intensity;
+			params->mSunlight.b *= val * 2 / old_intensity;
+		}
+		updateAndSave(&(params->mSunlight));
 	}
 
 	else if (command == "ambientr") {
@@ -2975,10 +3041,16 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		updateAndSave (&(params->mAmbient));
 	}
 	else if (command == "ambienti") {
-		params->mAmbient.r = val*3;
-		params->mAmbient.g = val*3;
-		params->mAmbient.b = val*3;
-		updateAndSave (&(params->mAmbient));
+		F32 old_intensity = llmax(params->mAmbient.r, params->mAmbient.g, params->mAmbient.b);
+		if (val == 0 || old_intensity == 0) {
+			params->mAmbient.r = params->mAmbient.g = params->mAmbient.b = val * 2;
+		}
+		else {
+			params->mAmbient.r *= val * 2 / old_intensity;
+			params->mAmbient.g *= val * 2 / old_intensity;
+			params->mAmbient.b *= val * 2 / old_intensity;
+		}
+		updateAndSave(&(params->mAmbient));
 	}
 	else if (command == "sunglowfocus") {
 		params->mGlow.b = -val*5;
@@ -3015,10 +3087,16 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		updateAndSave (&(params->mCloudColor));
 	}
 	else if (command == "cloudcolori") {
-		params->mCloudColor.r = val;
-		params->mCloudColor.g = val;
-		params->mCloudColor.b = val;
-		updateAndSave (&(params->mCloudColor));
+		F32 old_intensity = llmax(params->mCloudColor.r, params->mCloudColor.g, params->mCloudColor.b);
+		if (val == 0 || old_intensity == 0) {
+			params->mCloudColor.r = params->mCloudColor.g = params->mCloudColor.b = val * 2;
+		}
+		else {
+			params->mCloudColor.r *= val * 2 / old_intensity;
+			params->mCloudColor.g *= val * 2 / old_intensity;
+			params->mCloudColor.b *= val * 2 / old_intensity;
+		}
+		updateAndSave(&(params->mCloudColor));
 	}
 
 	else if (command == "cloudx") {

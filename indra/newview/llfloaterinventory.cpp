@@ -113,7 +113,7 @@ void LLFloaterInventory::hideAll()
 	LLFloaterReg::const_instance_list_t& inst_list = LLFloaterReg::getFloaterList("inventory");
 	for (LLFloaterReg::const_instance_list_t::const_iterator iter = inst_list.begin(); iter != inst_list.end();)
 	{
-		LLFloaterInventory* iv = dynamic_cast<LLFloaterInventory*>(*iter++);
+		LLFloater* iv = dynamic_cast<LLFloater*>(*iter++);
 		if (iv)
 		{
 			count++;

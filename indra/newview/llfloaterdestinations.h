@@ -38,6 +38,10 @@ private:
 	LLFloaterDestinations(const LLSD& key);
 	/*virtual*/	~LLFloaterDestinations();
 	/*virtual*/	BOOL postBuild();
+//MK
+	virtual void onOpen(const LLSD& key);
+	virtual void draw();
+//mk
 };
 
 #endif

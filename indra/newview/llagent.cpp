@@ -176,6 +176,15 @@ bool LLAgent::isActionAllowed(const LLSD& sdname)
 	if (param == "build")
 	{
 		retval = gAgent.canEditParcel();
+//MK
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsEdit || gAgent.mRRInterface.mContainsRez)
+			{
+				retval = false;
+			}
+		}
+//mk
 	}
 	else if (param == "speak")
 	{
@@ -190,6 +199,64 @@ bool LLAgent::isActionAllowed(const LLSD& sdname)
 			retval = false;
 		}
 	}
+//MK
+	else if (param == "inventory")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsShowinv)
+			{
+				retval = false;
+			}
+		}
+	}
+	else if (param == "map")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsShowworldmap
+			|| gAgent.mRRInterface.mContainsShowloc)
+			{
+				retval = false;
+			}
+		}
+	}
+	else if (param == "minimap")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsShowminimap)
+			{
+				retval = false;
+			}
+		}
+	}
+	else if (param == "aboutland")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsShowloc)
+			{
+				retval = false;
+			}
+		}
+	}
+	else if (param == "destinations")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsTp)
+			{
+				retval = false;
+			}
+		}
+	}
+//mk
 
 	return retval;
 }
