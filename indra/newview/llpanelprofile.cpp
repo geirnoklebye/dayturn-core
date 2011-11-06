@@ -288,6 +288,9 @@ void LLPanelProfile::reshape(S32 width, S32 height, BOOL called_from_parent)
 
 void LLPanelProfile::onOpen(const LLSD& key)
 {
+//MK
+	getTabContainer()[PANEL_PROFILE]->onOpen(getAvatarId());
+//mk
 	getTabContainer()[PANEL_PICKS]->onOpen(getAvatarId());
 
 	// support commands to open further pieces of UI
