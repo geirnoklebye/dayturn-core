@@ -294,6 +294,22 @@ void LLNearbyChatBar::onChatBoxFocusLost(LLFocusableElement* caller, void* userd
 {
 	// stop typing animation
 	gAgent.stopTyping();
+//MK
+	// If nearby chat bar is minimized but visible, hide it
+	if (gSavedSettings.getBOOL("CloseChatOnReturn"))
+	{
+		LLNearbyChatBar* cb = LLNearbyChatBar::getInstance();
+
+		if (cb)
+		{
+			LLView* nearby_chat = cb->getChildView("nearby_chat");
+			if (nearby_chat && !nearby_chat->getVisible())
+			{
+				cb->closeFloater(true); // set app_quitting to true to suppress the sound
+			}
+		}
+	}
+//mk
 }
 
 void LLNearbyChatBar::onChatBoxFocusReceived()

@@ -384,7 +384,7 @@ void LLNearbyChatScreenChannel::arrangeToasts()
 
 	S32 channel_bottom = channel_rect.mBottom;
 
-	S32		bottom = channel_bottom + 10;
+	S32		bottom = channel_bottom + 50;
 	S32		margin = gSavedSettings.getS32("ToastGap");
 
 	//sort active toasts
