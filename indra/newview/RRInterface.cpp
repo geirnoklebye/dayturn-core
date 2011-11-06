@@ -348,8 +348,9 @@ void refreshCachedVariable (std::string var)
 
 	if (gAgent.mRRInterface.contains("tplm")
 	|| gAgent.mRRInterface.contains("tploc")
-	|| gAgent.mRRInterface.contains("tplure"))
-	{
+	|| gAgent.mRRInterface.contains("tplure")
+	|| (gAgent.mRRInterface.mContainsUnsit && gAgentAvatarp->mIsSitting)
+	) {
 		gAgent.mRRInterface.mContainsTp = TRUE;
 	}
 	else {
