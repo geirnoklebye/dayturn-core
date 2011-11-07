@@ -119,7 +119,7 @@
             <menu_item_call
              label="Restart All Animations"
              name="Restart All Animations"
-             shortcut="control|A">
+             shortcut="control|alt|shift|A">
               <menu_item_call.on_click
                function="Tools.RestartAllAnimations" />
             </menu_item_call>
@@ -3377,8 +3377,7 @@
             </menu_item_call>
             <menu_item_call
              label="Debug Avatar Textures"
-             name="Debug Avatar Textures"
-             shortcut="control|alt|shift|A">
+             name="Debug Avatar Textures">
                 <menu_item_call.on_click
                  function="Advanced.DebugAvatarTextures" />
             </menu_item_call>
