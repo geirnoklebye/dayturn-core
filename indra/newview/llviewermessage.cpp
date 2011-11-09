@@ -3772,8 +3772,8 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 					}
 				}
 			}
+////			chat.mText = "";
 //mk
-			chat.mText = "";
 			chat.mText += verb;
 			chat.mText += mesg;
 		}
