@@ -831,6 +831,16 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				link_params.overwriteFrom(LLStyleMap::instance().lookupAgent(chat.mFromID));
 
 				// Add link to avatar's inspector and delimiter to message.
+//MK
+				// FIX : Don't add the name of the chatter in case of an emote
+				// because it is already there
+				// Don't add any delimiter after name in irc styled messages
+				if (irc_me || chat.mChatStyle == CHAT_STYLE_IRC)
+				{
+					mEditor->appendText("", false, link_params);
+				}
+				else
+//mk
 				mEditor->appendText(std::string(link_params.link_href) + delimiter, false, link_params);
 			}
 			else
