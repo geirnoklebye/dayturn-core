@@ -116,7 +116,7 @@ public:
 	void showStatusFlags(bool show);
 	void showAvatarAge(bool show);
 	void showPaymentStatus(bool show);
-	void updateFirstSeen();
+	void updateFirstSeen(int nb = 5);
 	void showUsername(bool show);
 	void setShowPermissions(bool show);
 	void showLastInteractionTime(bool show);

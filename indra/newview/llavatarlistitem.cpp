@@ -362,8 +362,8 @@ void LLAvatarListItem::showFirstSeen(bool show)
 
 void LLAvatarListItem::showPaymentStatus(bool show)
 {
-	mShowPaymentStatus=show;
-	updateAvatarProperties();
+	mPaymentStatus->setVisible(show);
+////	updateAvatarProperties();
 }
 
 void LLAvatarListItem::showStatusFlags(bool show)
@@ -371,13 +371,17 @@ void LLAvatarListItem::showStatusFlags(bool show)
 	mShowStatusFlags=show;
 }
 
-void LLAvatarListItem::updateFirstSeen()
+void LLAvatarListItem::updateFirstSeen(int nb /* = 5 */)
 {
 	S32 seentime = (S32)difftime(time(NULL), mFirstSeen);
 	S32 hours = (S32)(seentime / 3600);
 	S32 mins = (S32)((seentime - hours * 3600) / 60);
 	S32 secs = (S32)((seentime - hours * 3600 - mins * 60));
 	mFirstSeenDisplay->setValue(llformat("%d:%02d:%02d", hours, mins, secs));
+	showPaymentStatus(nb >= 5);
+	showAvatarAge(nb >= 4);
+	showFirstSeen(nb >= 3);
+	showRange(nb >= 2);
 	updateChildren();
 }
 

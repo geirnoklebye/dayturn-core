@@ -850,7 +850,15 @@ void LLPanelPeople::updateNearbyList()
 		if (lastRadarSweep.count(avId) > 0)
 		{
 			av->setFirstSeen(lastRadarSweep[avId].firstSeen);
-			av->updateFirstSeen();
+
+			// Hide some of the fields if the window is too small
+			int width = getRect().getWidth();
+			int nb = 5;
+			if (width < 330) nb = 4;
+			if (width < 280) nb = 3;
+			if (width < 230) nb = 2;
+			if (width < 160) nb = 1;
+			av->updateFirstSeen(nb);
 
 			if (gSavedSettings.getBOOL("RadarReportChatRange"))
 			{
