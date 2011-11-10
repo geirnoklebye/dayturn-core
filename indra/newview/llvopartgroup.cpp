@@ -325,17 +325,13 @@ void LLVOPartGroup::getGeometry(S32 idx,
 
 	LLVector3 normal = -LLViewerCamera::getInstance()->getXAxis();
 
-	//HACK -- the verticesp->mV[3] = 0.f here are to set the texture index to 0 (particles don't use texture batching, maybe they should)
-	// this works because there is actually a 4th float stored after the vertex position which is used as a texture index
-	// also, somebody please VECTORIZE THIS
-
-	verticesp->mV[3] = 0.f;
+	((LLVector4*)verticesp.get())->mV[3] = 0.f;
 	*verticesp++ = part_pos_agent + up - right;
-	verticesp->mV[3] = 0.f;
+	((LLVector4*)verticesp.get())->mV[3] = 0.f;
 	*verticesp++ = part_pos_agent - up - right;
-	verticesp->mV[3] = 0.f;
+	((LLVector4*)verticesp.get())->mV[3] = 0.f;
 	*verticesp++ = part_pos_agent + up + right;
-	verticesp->mV[3] = 0.f;
+	((LLVector4*)verticesp.get())->mV[3] = 0.f;
 	*verticesp++ = part_pos_agent - up + right;
 
 	*colorsp++ = part.mColor;
