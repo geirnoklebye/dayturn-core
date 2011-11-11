@@ -822,6 +822,16 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				link_params.is_link = true;
 				link_params.link_href = url;
 
+//MK
+				// FIX : Don't add the name of the chatter in case of an emote
+				// because it is already there
+				// Don't add any delimiter after name in irc styled messages
+				if (chat.mChatStyle == CHAT_STYLE_IRC)
+				{
+					mEditor->appendText("", false, link_params);
+				}
+				else
+//mk
 				mEditor->appendText(chat.mFromName + delimiter,
 									false, link_params);
 			}
@@ -835,7 +845,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				// FIX : Don't add the name of the chatter in case of an emote
 				// because it is already there
 				// Don't add any delimiter after name in irc styled messages
-				if (irc_me || chat.mChatStyle == CHAT_STYLE_IRC)
+				if (chat.mChatStyle == CHAT_STYLE_IRC)
 				{
 					mEditor->appendText("", false, link_params);
 				}
