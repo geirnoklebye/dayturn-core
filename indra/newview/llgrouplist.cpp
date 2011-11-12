@@ -63,7 +63,7 @@ public:
 	}
 };
 
-static const LLGroupComparator GROUP_COMPARATOR;
+static LLGroupComparator GROUP_COMPARATOR;
 
 
 LLGroupList::LLGroupList(const Params& p)
