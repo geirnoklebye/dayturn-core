@@ -299,19 +299,18 @@ void refreshCachedVariable (std::string var)
 	}
 
 	else if (var == "showloc") {
+		LLNavigationBar::getInstance()->refresh();
 		if (gAgent.mRRInterface.mContainsShowloc) {
-			toggle_show_mini_location_panel(LLSD(false));
+			if (LLPanelTopInfoBar::getInstance()->getVisible()) {
+				toggle_show_mini_location_panel(LLSD(false));
+			}
 			LLFloaterWorldMap::getInstance()->setVisible (false);
-//			LLSideTray::getInstance()->childSetVisible("panel_places", false);
 			setVisibleAll("panel_places", FALSE);
 			gSavedSettings.setBOOL ("ShowMiniLocationPanel", FALSE);
-//			LLBottomTray::getInstance()->childSetEnabled("world_map_btn", false);
 		}
 		else {
-//			LLSideTray::getInstance()->childSetVisible("panel_places", true);
 			LLPanelTopInfoBar::getInstance()->update();
 			if (!gAgent.mRRInterface.mContainsShowworldmap) {
-//				LLBottomTray::getInstance()->childSetEnabled("world_map_btn", true);
 			}
 		}
 	}

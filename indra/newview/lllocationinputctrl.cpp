@@ -565,8 +565,13 @@ void LLLocationInputCtrl::onFocusLost()
 
 void LLLocationInputCtrl::draw()
 {
-	static LLUICachedControl<bool> show_coords("NavBarShowCoordinates", false);
-	if(!hasFocus() && show_coords)
+//MK
+	// Update the location whether the coordinates are shown or not, because
+	// buildLocationString() is where the parcel, region and coords are hidden
+////	static LLUICachedControl<bool> show_coords("NavBarShowCoordinates", false);
+////	if(!hasFocus() && show_coords)
+	if(!hasFocus())
+//mk
 	{
 		refreshLocation();
 	}

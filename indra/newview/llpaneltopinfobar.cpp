@@ -277,7 +277,11 @@ void LLPanelTopInfoBar::updateParcelInfoText()
 	}
 //mk
 
-	if (show_coords)
+//MK
+	// Update the location whether the coordinates are shown or not, because
+	// buildLocationString() is where the parcel, region and coords are hidden
+////	if (show_coords)
+//mk
 	{
 		std::string new_text;
 
