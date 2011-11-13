@@ -579,7 +579,11 @@ void LLLocationInputCtrl::draw()
 	static LLUICachedControl<bool> show_icons("NavBarShowParcelProperties", false);
 	if (show_icons)
 	{
-		refreshHealth();
+//MK
+		// FIX : parcel properties should be refreshed at all times, not only health
+////		refreshHealth();
+		refresh();
+//mk
 	}
 	LLComboBox::draw();
 }
