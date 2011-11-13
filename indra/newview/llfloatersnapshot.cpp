@@ -2215,7 +2215,6 @@ BOOL LLFloaterSnapshot::postBuild()
 	}
 //mk
 
-	childSetCommitCallback("keep_open_check", Impl::onClickKeepOpenCheck, this);
 	getChild<LLUICtrl>("keep_open_check")->setValue(!gSavedSettings.getBOOL("CloseSnapshotOnKeep"));
 
 #if 0
