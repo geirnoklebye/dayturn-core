@@ -6352,10 +6352,12 @@ Grant this request?
 [NAME]&apos;s &apos;&lt;nolink&gt;[TITLE]&lt;/nolink&gt;&apos;
 [MESSAGE]
     <form name="form">
+<!--
       <button
        index="-2"
        name="MUTE_HARDCODED"
        text="Block"/>
+-->
       <button
        index="-1"
        name="Ignore"
