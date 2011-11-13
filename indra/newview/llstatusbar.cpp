@@ -70,6 +70,7 @@
 //MK
 #include "llagentui.h"
 #include "llclipboard.h"
+#include "llfloatersidepanelcontainer.h"
 #include "lllandmarkactions.h"
 #include "lllocationinputctrl.h"
 #include "llparcel.h"
@@ -303,6 +304,10 @@ BOOL LLStatusBar::postBuild()
 	mParcelInfoPanel = getChild<LLPanel>("parcel_info_panel");
 	mParcelInfoText = getChild<LLTextBox>("parcel_info_text");
 	mDamageText = getChild<LLTextBox>("damage_text");
+
+	mInfoBtn = getChild<LLButton>("place_info_btn");
+	mInfoBtn->setClickedCallback(boost::bind(&LLStatusBar::onInfoButtonClicked, this));
+	mInfoBtn->setToolTip(LLTrans::getString("LocationCtrlInfoBtnTooltip"));
 
 	initParcelIcons();
 
@@ -965,7 +970,14 @@ void LLStatusBar::onContextMenuItemClicked(const LLSD::String& item)
 void LLStatusBar::onInfoButtonClicked()
 {
 	//LLSideTray::getInstance()->showPanel("panel_places", LLSD().with("type", "agent"));
-	LLFloaterReg::showInstance("about_land");
+//MK
+////	LLFloaterReg::showInstance("about_land");
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+	LLFloaterSidePanelContainer::showPanel("places", LLSD().with("type", "agent"));
+//mk
 }
 
 void LLStatusBar::onParcelWLClicked()
