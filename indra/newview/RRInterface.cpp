@@ -958,16 +958,22 @@ std::deque<std::string> RRInterface::parse (std::string str, std::string sep)
 {
 	int ind;
 	int length = sep.length();
+	std::string token;
 	std::deque<std::string> res;
 	
 	do {
 		ind=str.find(sep);
 		if (ind!=-1) {
-			res.push_back (str.substr (0, ind));
+			token = str.substr (0, ind);
+			if (token != "") {
+				res.push_back (token);
+			}
 			str=str.substr (ind+length);
 		}
 		else {
-			res.push_back (str);
+			if (str != "") {
+				res.push_back (str);
+			}
 		}
 	} while (ind!=-1);
 	
