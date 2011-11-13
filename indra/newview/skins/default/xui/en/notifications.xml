@@ -6354,7 +6354,7 @@ Grant this request?
     <form name="form">
       <button
        index="-2"
-       name="Mute"
+       name="MUTE_HARDCODED"
        text="Block"/>
       <button
        index="-1"

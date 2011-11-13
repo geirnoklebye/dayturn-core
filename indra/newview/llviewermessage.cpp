@@ -6328,7 +6328,7 @@ bool script_question_cb(const LLSD& notification, const LLSD& response)
 		notify_cautioned_script_question(notification, response, orig, allowed);
 	}
 
-	if ( response["Mute"] ) // mute
+	if ( response["MUTE_HARDCODED"] ) // mute
 	{
 		LLMuteList::getInstance()->add(LLMute(item_id, notification["payload"]["object_name"].asString(), LLMute::OBJECT));
 
