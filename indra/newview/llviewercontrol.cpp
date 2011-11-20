@@ -561,15 +561,17 @@ bool toggle_show_navigation_panel(const LLSD& newvalue)
 
 	LLNavigationBar::getInstance()->setVisible(value);
 //MK
-	if (gRRenabled && gStatusBar)
+	if (gStatusBar)
 	{
 		// if we show the navigation bar or the mini location bar, we don't need the parcel info and sliders on the top status bar
 		// and vice-versa
-		gStatusBar->childSetVisible("parcel_info_panel", !value);
-		gStatusBar->childSetVisible("drawdistance", !value);
-		gStatusBar->childSetVisible("avatar_z_offset", !value);
+		BOOL minilocation_visible = gSavedSettings.getBOOL("ShowMiniLocationPanel");
+		gStatusBar->childSetVisible("parcel_info_panel", !value && !minilocation_visible);
+		gStatusBar->childSetVisible("drawdistance", !value && !minilocation_visible);
+		gStatusBar->childSetVisible("avatar_z_offset", !value && !minilocation_visible);
 	}
-	if (!gRRenabled)
+//	if (!gRRenabled)
+	else
 //mk
 	gSavedSettings.setBOOL("ShowMiniLocationPanel", !value);
 
@@ -582,15 +584,17 @@ bool toggle_show_mini_location_panel(const LLSD& newvalue)
 
 	LLPanelTopInfoBar::getInstance()->setVisible(value);
 //MK
-	if (gRRenabled && gStatusBar)
+	if (gStatusBar)
 	{
 		// if we show the navigation bar or the mini location bar, we don't need the parcel info and sliders on the top status bar
 		// and vice-versa
-		gStatusBar->childSetVisible("parcel_info_panel", !value);
-		gStatusBar->childSetVisible("drawdistance", !value);
-		gStatusBar->childSetVisible("avatar_z_offset", !value);
+		BOOL navbar_visible = gSavedSettings.getBOOL("ShowNavbarNavigationPanel");
+		gStatusBar->childSetVisible("parcel_info_panel", !value && !navbar_visible);
+		gStatusBar->childSetVisible("drawdistance", !value && !navbar_visible);
+		gStatusBar->childSetVisible("avatar_z_offset", !value && !navbar_visible);
 	}
-	if (!gRRenabled)
+//	if (!gRRenabled)
+	else
 //mk
 	gSavedSettings.setBOOL("ShowNavbarNavigationPanel", !value);
 
