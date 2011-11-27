@@ -855,6 +855,16 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 			}
 			else
 			{
+//MK
+				// FIX : Don't add the name of the chatter in case of an emote
+				// because it is already there
+				// Don't add any delimiter after name in irc styled messages
+				if (chat.mChatStyle == CHAT_STYLE_IRC)
+				{
+					mEditor->appendText("", false, style_params);
+				}
+				else
+//mk
 				mEditor->appendText("<nolink>" + chat.mFromName + "</nolink>" + delimiter, false, style_params);
 			}
 		}
