@@ -80,6 +80,7 @@ BOOL RRInterface::sRestrainedLoveDebug = FALSE;
 BOOL RRInterface::sCanOoc = TRUE;
 std::string RRInterface::sRecvimMessage = "The Resident you messaged is prevented from reading your instant messages at the moment, please try again later.";
 std::string RRInterface::sSendimMessage = "*** IM blocked by sender's viewer";
+std::string RRInterface::sBlacklist = "";
 
 
 #if !defined(max)
@@ -495,6 +496,15 @@ std::string RRInterface::getVersion2 ()
 //	return RR_VIEWER_NAME_NEW" viewer v"RR_VERSION" ("+LLViewerInfo::getVersion()+")";
 }
 
+std::string RRInterface::getVersionNum ()
+{
+	std::string res = RR_VERSION_NUM;
+	if (sBlacklist != "") {
+		res += ","+sBlacklist;
+	}
+	return res;
+}
+
 std::string RRInterface::getFirstName (std::string fullName)
 {
 	int ind = fullName.find (" ");
@@ -761,6 +771,11 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 	if (isAllowed (object_uuid, action)) {
 		// Notify if needed
 		notify (object_uuid, action, "=n");
+
+		// If this action is blacklisted, do nothing
+		if (canon_action != "notify" && isBlacklisted (canon_action, false)) {
+			return TRUE;
+		}
 		
 		// Actions to do BEFORE inserting the new behav
 		if (action=="fly") {
@@ -1074,6 +1089,8 @@ BOOL RRInterface::handleCommand (LLUUID uuid, std::string command)
 		if (behav=="version") return answerOnChat (param, getVersion ());
 		else if (behav=="versionnew") return answerOnChat (param, getVersion2 ());
 		else if (behav=="versionnum") return answerOnChat (param, RR_VERSION_NUM);
+		else if (behav=="versionnumbl") return answerOnChat (param, getVersionNum());
+		else if (behav=="getblacklist") return answerOnChat (param, dumpList2String (getBlacklist(option), ","));
 		else if (behav=="getoutfit") return answerOnChat (param, getOutfit (option));
 		else if (behav=="getattach") return answerOnChat (param, getAttachments (option));
 		else if (behav=="getstatus") return answerOnChat (param, getStatus (uuid, option));
@@ -1180,6 +1197,12 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 	if (sRestrainedLoveDebug) {
 		llinfos << command << "     " << option << llendl;
 	}
+
+	// If this action is blacklisted, do nothing
+	if (isBlacklisted (command, true)) {
+		return TRUE;
+	}
+		
 	if (command=="sit") { // sit:UUID
 		BOOL allowed_to_sittp=TRUE;
 		if (!isAllowed (object_uuid, "sittp")) {
@@ -1690,8 +1713,16 @@ std::string RRInterface::getAttachments (std::string attachpt)
 
 std::string RRInterface::getStatus (LLUUID object_uuid, std::string rule)
 {
-	std::string res="";
+	std::string res="/";
 	std::string name;
+	std::string separator = "/";
+	// If rule contains a specification of the separator, extract it
+	int ind = rule.find (";");
+	if (ind != -1) {
+		separator = rule.substr (ind+1);
+		rule = rule.substr (0, ind);
+	}
+
 	RRMAP::iterator it;
 	if (object_uuid.isNull()) {
 		it = mSpecialObjectBehaviours.begin();
@@ -1705,8 +1736,7 @@ std::string RRInterface::getStatus (LLUUID object_uuid, std::string rule)
 	)
 	{
 		if (rule=="" || it->second.find (rule)!=-1) {
-			//if (!is_first) 
-			res+="/";
+			if (!is_first) 	res+=separator;
 			res+=it->second;
 			is_first=false;
 		}
@@ -3978,4 +4008,32 @@ void RRInterface::listRlvRestrictions(std::string substr /*= ""*/)
 		it++;
 	}
 	printOnChat ("##########################################");
+}
+
+BOOL RRInterface::isBlacklisted (std::string action, bool force)
+{
+	std::string blacklist;
+	blacklist = ","+sBlacklist+",";
+	if (force) {
+		return (blacklist.find (","+action+"%f,") != -1);
+	}
+	else {
+		return (blacklist.find (","+action+",") != -1);
+	}
+}
+
+std::deque<std::string> RRInterface::getBlacklist (std::string filter /* = ""*/)
+{
+	std::deque<std::string> list, res;
+	list = parse (sBlacklist, ",");
+	res.clear();
+
+	unsigned int size = list.size();
+	for (unsigned int i = 0; i < size; i++) {
+		if (filter == "" || list[i].find (filter) != -1) {
+			res.push_back (list[i]);
+		}
+	}
+
+	return res;
 }

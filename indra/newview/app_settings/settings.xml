@@ -148,7 +148,7 @@
     <key>RestrainedLoveCanOoc</key>
     <map>
       <key>Comment</key>
-      <string>When TRUE, you can bypass chat restrictions by surrounding your chat with (( and )). ATTENTION : This means Out-Of-Character chat and cheating with it is despised by other players. Requires a restart of your viewer.</string>
+      <string>When TRUE, you can bypass chat restrictions by surrounding your chat with (( and )). ATTENTION : This means Out-Of-Character chat and cheating with it is despised by other players. Needs a restart of the viewer.</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -159,7 +159,7 @@
     <key>RestrainedLoveRecvimMessage</key>
     <map>
       <key>Comment</key>
-      <string>Message to show to people who try to IM you, when you're restricted from receiving IMs. Requires a restart of your viewer.</string>
+      <string>Message to show to people who try to IM you, when you're restricted from receiving IMs. Needs a restart of the viewer.</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -170,7 +170,7 @@
     <key>RestrainedLoveSendimMessage</key>
     <map>
       <key>Comment</key>
-      <string>Message to show to people when you try to IM them and you're restricted from sending IMs. Requires a restart of your viewer.</string>
+      <string>Message to show to people when you try to IM them and you're restricted from sending IMs. Needs a restart of the viewer.</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -178,7 +178,18 @@
       <key>Value</key>
       <string>*** IM blocked by sender's viewer</string>
     </map>
-    <key>ShowProfileFloaters</key>
+		<key>RestrainedLoveBlacklist</key>
+		<map>
+			<key>Comment</key>
+			<string>Comma-separated list of RLV commands that you want your viewer to ignore. Add a "%f" suffix after a command to indicate it is a "=force" command rather than a "=n" one. Needs a restart of the viewer.</string>
+			<key>Persist</key>
+			<integer>1</integer>
+			<key>Type</key>
+			<string>String</string>
+			<key>Value</key>
+			<string></string>
+		</map>
+		<key>ShowProfileFloaters</key>
     <map>
       <key>Comment</key>
       <string>Shows resident profiles in a floater rather than the side tray</string>

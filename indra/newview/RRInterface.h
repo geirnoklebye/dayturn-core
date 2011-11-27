@@ -26,8 +26,8 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2070402"
-#define RR_VERSION "2.07.04.02"
+#define RR_VERSION_NUM "2080000"
+#define RR_VERSION "2.08.00.00"
 #define RR_SLV_VERSION "3.2.3.21649"
 
 #define RR_PREFIX "@"
@@ -117,6 +117,7 @@ public:
 
 	std::string getVersion (); // returns "RestrainedLife Viewer blah blah"
 	std::string getVersion2 (); // returns "RestrainedLove Viewer blah blah"
+	std::string getVersionNum (); // returns "RR_VERSION_NUM[,blacklist]"
 	std::string getFirstName (std::string fullName);
 	std::string getLastName (std::string fullName);
 	BOOL isAllowed (LLUUID object_uuid, std::string action, BOOL log_it = TRUE);
@@ -126,6 +127,8 @@ public:
 	bool isFolderLocked(LLInventoryCategory* cat); // return true if cat has a lock specified for it or one of its parents, or not shared and @unshared is active
 	FolderLock isFolderLockedWithoutException (LLInventoryCategory* cat, std::string attach_or_detach); // attach_or_detach must be equal to either "attach" or "detach"
 	FolderLock isFolderLockedWithoutExceptionAux (LLInventoryCategory* cat, std::string attach_or_detach, std::deque<std::string> list_of_restrictions); // auxiliary function to isFolderLockedWithoutException
+	BOOL isBlacklisted (std::string action, bool force); // return TRUE if the command is blacklisted, with %f in the case of a "=force" command
+	std::deque<std::string> getBlacklist (std::string filter = ""); // return the list of blacklisted commands which contain the substring specified by filter
 
 	BOOL add (LLUUID object_uuid, std::string action, std::string option); // add a restriction
 	BOOL remove (LLUUID object_uuid, std::string action, std::string option); // remove a restriction
@@ -275,6 +278,7 @@ public:
 	static BOOL sCanOoc; // when TRUE, the user can bypass a sendchat restriction by surrounding with (( and ))
 	static std::string sRecvimMessage; // message to replace an incoming IM, when under recvim
 	static std::string sSendimMessage; // message to replace an outgoing IM, when under sendim
+	static std::string sBlacklist; // comma-separated list of RLV commands, add "%f" after a token to indicate it is the "=force" variant
 
 	// Allowed debug settings (initialized in the ctor)
 	std::string mAllowedU32;
