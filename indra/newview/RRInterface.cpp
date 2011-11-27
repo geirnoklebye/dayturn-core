@@ -1895,8 +1895,11 @@ std::string RRInterface::getInventoryList (std::string path, BOOL withWornInfo /
 			S32 count = cats->count();
 			bool found_one = false;
 			if (withWornInfo) {
-				res += "|" + getWornItems (root);
-				found_one = true;
+				std::string worn_items = getWornItems (root);
+				if (worn_items != "n" && worn_items != "N") {
+					res += "|" + worn_items;
+					found_one = true;
+				}
 			}
 			for(S32 i = 0; i < count; ++i) {
 				LLInventoryCategory* cat = cats->get(i);
@@ -1905,7 +1908,10 @@ std::string RRInterface::getInventoryList (std::string path, BOOL withWornInfo /
 					if (found_one) res += ",";
 					res += name.c_str();
 					if (withWornInfo) {
-						res += "|" + getWornItems (cat);
+						std::string worn_items = getWornItems (cat);
+						if (worn_items != "n" && worn_items != "N") {
+							res += "|" + worn_items;
+						}
 					}
 					found_one = true;
 				}
@@ -3784,7 +3790,8 @@ bool RRInterface::canDetach(LLViewerObject* attached_object, BOOL handle_nostrip
 	RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
 	while (it != mSpecialObjectBehaviours.end()) {
 		if (it->second == "detach") {
-			if (gObjectList.findObject(LLUUID(it->first)) == root) {
+			LLViewerObject* this_prim = gObjectList.findObject(LLUUID(it->first));
+			if (this_prim && (this_prim->getRootEdit() == root)) {
 				return false;
 			}
 		}
