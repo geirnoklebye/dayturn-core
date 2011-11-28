@@ -47,6 +47,7 @@ public:
 	bool hasGamma;
 	S32 mIndexedTextureChannels;
 	bool disableTextureIndex;
+	bool hasAlphaMask;
 
 	// char numLights;
 	
@@ -67,6 +68,8 @@ public:
 	LLGLSLShader();
 
 	static GLhandleARB sCurBoundShader;
+	static LLGLSLShader* sCurBoundShaderPtr;
+	static S32 sIndexedTextureChannels;
 	static bool sNoFixedFunction;
 
 	void unload();
@@ -105,10 +108,14 @@ public:
 	void uniformMatrix3fv(const std::string& uniform, U32 count, GLboolean transpose, const GLfloat *v);
 	void uniformMatrix4fv(const std::string& uniform, U32 count, GLboolean transpose, const GLfloat *v);
 
+	void setMinimumAlpha(F32 minimum);
+
 	void vertexAttrib4f(U32 index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 	void vertexAttrib4fv(U32 index, GLfloat* v);
 	
 	GLint getUniformLocation(const std::string& uniform);
+	GLint getUniformLocation(U32 index);
+
 	GLint getAttribLocation(U32 attrib);
 	GLint mapUniformTextureChannel(GLint location, GLenum type);
 	
@@ -126,6 +133,9 @@ public:
 
 	// Unbinds any previously bound shader by explicitly binding no shader.
 	static void bindNoShader(void);
+
+	U32 mMatHash[LLRender::NUM_MATRIX_MODES];
+	U32 mLightHash;
 
 	GLhandleARB mProgramObject;
 	std::vector<GLint> mAttribute; //lookup table of attribute enum to attribute channel

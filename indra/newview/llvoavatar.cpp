@@ -2125,8 +2125,8 @@ void LLVOAvatar::updateMeshData()
 			}
 			else
 			{
-				if (buff->getRequestedIndices() == num_indices &&
-					buff->getRequestedVerts() == num_vertices)
+				if (buff->getNumIndices() == num_indices &&
+					buff->getNumVerts() == num_vertices)
 				{
 					terse_update = true;
 				}
@@ -2146,11 +2146,19 @@ void LLVOAvatar::updateMeshData()
 
 			for(S32 k = j ; k < part_index ; k++)
 			{
-				mMeshLOD[k]->updateFaceData(facep, mAdjustedPixelArea, k == MESH_ID_HAIR, terse_update);
+				bool rigid = false;
+				if (k == MESH_ID_EYEBALL_LEFT ||
+					k == MESH_ID_EYEBALL_RIGHT)
+				{ //eyeballs can't have terse updates since they're never rendered with
+					//the hardware skinning shader
+					rigid = true;
+				}
+				
+				mMeshLOD[k]->updateFaceData(facep, mAdjustedPixelArea, k == MESH_ID_HAIR, terse_update && !rigid);
 			}
 
 			stop_glerror();
-			buff->setBuffer(0);
+			buff->flush();
 
 			if(!f_num)
 			{
@@ -4165,7 +4173,7 @@ U32 LLVOAvatar::renderSkinned(EAvatarRenderPass pass)
 			LLVertexBuffer* vb = mDrawable->getFace(0)->getVertexBuffer();
 			if (vb)
 			{
-				vb->setBuffer(0);
+				vb->flush();
 			}
 		}
 	}
@@ -8395,7 +8403,7 @@ void LLVOAvatar::getImpostorValues(LLVector4a* extents, LLVector3& angle, F32& d
 void LLVOAvatar::idleUpdateRenderCost()
 {
 	static const U32 ARC_BODY_PART_COST = 200;
-	static const U32 ARC_LIMIT = 2048;
+	static const U32 ARC_LIMIT = 20000;
 
 	static std::set<LLUUID> all_textures;
 
