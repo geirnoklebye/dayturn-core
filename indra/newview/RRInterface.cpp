@@ -1713,7 +1713,7 @@ std::string RRInterface::getAttachments (std::string attachpt)
 
 std::string RRInterface::getStatus (LLUUID object_uuid, std::string rule)
 {
-	std::string res="/";
+	std::string res="";
 	std::string name;
 	std::string separator = "/";
 	// If rule contains a specification of the separator, extract it
@@ -1722,7 +1722,10 @@ std::string RRInterface::getStatus (LLUUID object_uuid, std::string rule)
 		separator = rule.substr (ind+1);
 		rule = rule.substr (0, ind);
 	}
-
+	if (separator == "") {
+		separator = "/"; // Prevent a hack to force the avatar to say something
+	}
+	
 	RRMAP::iterator it;
 	if (object_uuid.isNull()) {
 		it = mSpecialObjectBehaviours.begin();
@@ -1736,7 +1739,8 @@ std::string RRInterface::getStatus (LLUUID object_uuid, std::string rule)
 	)
 	{
 		if (rule=="" || it->second.find (rule)!=-1) {
-			if (!is_first) 	res+=separator;
+			//if (!is_first) 
+			res+=separator;
 			res+=it->second;
 			is_first=false;
 		}
@@ -1926,9 +1930,16 @@ std::string RRInterface::getInventoryList (std::string path, BOOL withWornInfo /
 			bool found_one = false;
 			if (withWornInfo) {
 				std::string worn_items = getWornItems (root);
-				if (worn_items != "n" && worn_items != "N") {
-					res += "|" + worn_items;
-					found_one = true;
+				res += "|";
+				found_one = true;
+				if (worn_items == "n") {
+					res += "10";
+				}
+				else if (worn_items == "N") {
+					res += "30";
+				}
+				else {
+					res += worn_items;
 				}
 			}
 			for(S32 i = 0; i < count; ++i) {
@@ -1939,8 +1950,16 @@ std::string RRInterface::getInventoryList (std::string path, BOOL withWornInfo /
 					res += name.c_str();
 					if (withWornInfo) {
 						std::string worn_items = getWornItems (cat);
-						if (worn_items != "n" && worn_items != "N") {
-							res += "|" + worn_items;
+						res += "|";
+						found_one = true;
+						if (worn_items == "n") {
+							res += "10";
+						}
+						else if (worn_items == "N") {
+							res += "30";
+						}
+						else {
+							res += worn_items;
 						}
 					}
 					found_one = true;
