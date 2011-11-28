@@ -4,6 +4,7 @@
  follows="all"
  layout="topleft"
  name="nearby_chat"
+ border_visible="false"
  help_topic="nearby_chat"
  width="320">
   <!--
