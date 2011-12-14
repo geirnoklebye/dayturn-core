@@ -33,12 +33,18 @@
 #include "llcommandhandler.h"
 #include "llnotificationsutil.h"
 #include "llpanelpicks.h"
+//MK
+#include "llpanelavatar.h"
+//mk
 #include "lltabcontainer.h"
 #include "llviewercontrol.h"
 #include "llviewernetwork.h"
 
 static const std::string PANEL_PICKS = "panel_picks";
 static const std::string PANEL_PROFILE = "panel_profile";
+//MK
+static const std::string PANEL_NOTES = "panel_notes";
+//mk
 
 std::string getProfileURL(const std::string& agent_name)
 {
@@ -273,7 +279,9 @@ BOOL LLPanelProfile::postBuild()
 
 	getTabContainer()[PANEL_PICKS] = panel_picks;
 	getTabContainer()[PANEL_PROFILE] = findChild<LLPanelAvatarProfile>(PANEL_PROFILE);
-
+//MK
+	getTabContainer()[PANEL_NOTES] = findChild<LLPanelAvatarNotes>(PANEL_NOTES);
+//mk
 	return TRUE;
 }
 
@@ -292,6 +300,10 @@ void LLPanelProfile::onOpen(const LLSD& key)
 	if (NULL != getTabContainer()[PANEL_PROFILE])
 	{
 		getTabContainer()[PANEL_PROFILE]->onOpen(getAvatarId());
+	}
+	if (NULL != getTabContainer()[PANEL_NOTES])
+	{
+		getTabContainer()[PANEL_NOTES]->onOpen(getAvatarId());
 	}
 //mk
 	getTabContainer()[PANEL_PICKS]->onOpen(getAvatarId());
