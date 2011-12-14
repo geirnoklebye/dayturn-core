@@ -245,6 +245,7 @@ set(viewer_SOURCE_FILES
     llfloaterurlentry.cpp
     llfloatervoiceeffect.cpp
     llfloaterwebcontent.cpp
+    llfloaterwebprofile.cpp
     llfloaterwhitelistentry.cpp
     llfloaterwindowsize.cpp
     llfloaterworldmap.cpp
@@ -317,7 +318,6 @@ set(viewer_SOURCE_FILES
     llmediactrl.cpp
     llmediadataclient.cpp
     llmemoryview.cpp
-    llmenucommands.cpp
     llmeshrepository.cpp
     llmimetypes.cpp
     llmorphview.cpp
@@ -394,7 +394,6 @@ set(viewer_SOURCE_FILES
     llpanelplacestab.cpp
     llpanelprimmediacontrols.cpp
     llpanelprofile.cpp
-    llpanelprofileview.cpp
     llpanelsnapshot.cpp
     llpanelsnapshotinventory.cpp
     llpanelsnapshotlocal.cpp
@@ -802,6 +801,7 @@ set(viewer_HEADER_FILES
     llfloaterurlentry.h
     llfloatervoiceeffect.h
     llfloaterwebcontent.h
+    llfloaterwebprofile.h
     llfloaterwhitelistentry.h
     llfloaterwindowsize.h
     llfloaterworldmap.h
@@ -874,7 +874,6 @@ set(viewer_HEADER_FILES
     llmediactrl.h
     llmediadataclient.h
     llmemoryview.h
-    llmenucommands.h
     llmeshrepository.h
     llmimetypes.h
     llmorphview.h
@@ -945,7 +944,6 @@ set(viewer_HEADER_FILES
     llpanelplacestab.h
     llpanelprimmediacontrols.h
     llpanelprofile.h
-    llpanelprofileview.h
     llpanelsnapshot.h
     llpanelteleporthistory.h
     llpaneltiptoast.h

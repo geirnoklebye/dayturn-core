@@ -296,7 +296,9 @@ public:
 
 	static void		pressMicrophone(const LLSD& name);
 	static void		releaseMicrophone(const LLSD& name);
+	static void		toggleMicrophone(const LLSD& name);
 	static bool		isMicrophoneOn(const LLSD& sdname);
+	static bool		isActionAllowed(const LLSD& sdname);
 
 private:
 	bool			mVoiceConnected;
@@ -604,7 +606,6 @@ public:
 private:
 	bool			mCanEditParcel;
 
-	static bool isActionAllowed(const LLSD& sdname);
 	static void parcelChangedCallback();
 
 /********************************************************************************

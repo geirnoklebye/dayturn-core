@@ -276,6 +276,12 @@ void LLAgent::releaseMicrophone(const LLSD& name)
 }
 
 // static
+void LLAgent::toggleMicrophone(const LLSD& name)
+{
+	LLVoiceClient::getInstance()->toggleUserPTTState();
+}
+
+// static
 bool LLAgent::isMicrophoneOn(const LLSD& sdname)
 {
 	return LLVoiceClient::getInstance()->getUserPTTState();
@@ -402,12 +408,6 @@ void LLAgent::init()
 
 	LLViewerParcelMgr::getInstance()->addAgentParcelChangedCallback(boost::bind(&LLAgent::parcelChangedCallback));
 
-	LLUICtrl::EnableCallbackRegistry::currentRegistrar().add("Agent.IsActionAllowed", boost::bind(&LLAgent::isActionAllowed, _2));
-	LLUICtrl::CommitCallbackRegistry::currentRegistrar().add("Agent.PressMicrophone", boost::bind(&LLAgent::pressMicrophone, _2));
-	LLUICtrl::CommitCallbackRegistry::currentRegistrar().add("Agent.ReleaseMicrophone", boost::bind(&LLAgent::releaseMicrophone, _2));
-	LLUICtrl::EnableCallbackRegistry::currentRegistrar().add("Agent.IsMicrophoneOn", boost::bind(&LLAgent::isMicrophoneOn, _2));
-
-	
 	mInitialized = TRUE;
 }
 
