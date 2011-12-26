@@ -1709,7 +1709,7 @@ even though the user gets a free copy.
              layout="topleft"
              name="comboBaseType"
              top="6"
-             left="130"
+             left="125"
              width="150">
                 <combo_box.item
                  label="Box"
@@ -1788,7 +1788,7 @@ even though the user gets a free copy.
              follows="left|top"
              height="10"
              layout="topleft"
-             left="130"
+             left="125"
              name="text hollow"
              top_pad="6"
              width="68">
@@ -1812,7 +1812,7 @@ even though the user gets a free copy.
              increment="5"
              initial_value="0"
              layout="topleft"
-             left="130"
+             left="125"
              max_val="95"
              name="Scale 1"
              top_pad="4"
@@ -1836,7 +1836,7 @@ even though the user gets a free copy.
              follows="left|top"
              height="15"
              layout="topleft"
-             left="130"
+             left="125"
              name="Hollow Shape"
              top_pad="4"
              width="150">
@@ -1914,7 +1914,7 @@ even though the user gets a free copy.
              follows="left|top"
              height="10"
              layout="topleft"
-             left="130"
+             left="125"
              name="scale_taper"
              top_pad="3"
              width="150">
@@ -1967,7 +1967,7 @@ even though the user gets a free copy.
              follows="left|top"
              height="10"
              layout="topleft"
-             left="130"
+             left="125"
              name="text topshear"
              top_pad="3"
              width="141">
@@ -2010,7 +2010,7 @@ even though the user gets a free copy.
              follows="left|top"
              height="10"
              layout="topleft"
-             left="130"
+             left="125"
              name="advanced_cut"
              top_pad="3"
              width="150">
@@ -2074,7 +2074,7 @@ even though the user gets a free copy.
              follows="left|top"
              height="10"
              layout="topleft"
-             left="130"
+             left="125"
              name="text taper2"
              top_pad="3"
              width="150">
@@ -2117,7 +2117,7 @@ even though the user gets a free copy.
              follows="left|top"
              height="10"
              layout="topleft"
-             left="130"
+             left="125"
              name="text radius delta"
              top_pad="2"
              width="78">
@@ -2142,7 +2142,7 @@ even though the user gets a free copy.
              increment="0.05"
              initial_value="0"
              layout="topleft"
-             left="130"
+             left="125"
              min_val="-1"
              name="Radius Offset"
              top_pad="4"
@@ -2167,7 +2167,7 @@ even though the user gets a free copy.
              height="141"
              label="Sculpt Texture"
              layout="topleft"
-             left="130"
+             left="125"
              name="sculpt texture control"
              tool_tip="Click to choose a picture"
              top="70"
@@ -3031,6 +3031,16 @@ even though the user gets a free copy.
              min_val="-1"
              name="TexOffsetU"
              width="185" />
+			 <button
+             follows="top|right"
+             height="19"
+             label="Copy"
+             layout="topleft"
+             left_pad="10"
+             name="copytextures"
+             tool_tip="Copy Parameters to Clipboard"
+             width="68">
+            </button>
             <spinner
              follows="left|top"
              height="19"
@@ -3038,11 +3048,21 @@ even though the user gets a free copy.
              label="Vertical (V)"
              label_width="125"
              layout="topleft"
-             left_delta="0"
+             left="20"
              min_val="-1"
              name="TexOffsetV"
              top_pad="1"
              width="185" />
+			 <button
+             follows="top|right"
+             height="20"
+             label="Paste"
+             layout="topleft"
+             left_pad="10"
+             name="pastetextures"
+             tool_tip="Paste Parameters from Clipboard"
+             width="68">
+            </button>
         <panel
          border="false"
          follows="left|top"
