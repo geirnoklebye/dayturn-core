@@ -220,21 +220,40 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 	
 	if (features->hasLighting)
 	{
-	
 		if (features->hasWaterFog)
 		{
 			if (features->disableTextureIndex)
 			{
+				if (features->hasAlphaMask)
+				{
+					if (!shader->attachObject("lighting/lightWaterAlphaMaskNonIndexedF.glsl"))
+					{
+						return FALSE;
+					}
+				}
+				else
+				{
 				if (!shader->attachObject("lighting/lightWaterNonIndexedF.glsl"))
 				{
 					return FALSE;
 				}
 			}
+			}
+			else 
+			{
+				if (features->hasAlphaMask)
+				{
+					if (!shader->attachObject("lighting/lightWaterAlphaMaskF.glsl"))
+					{
+						return FALSE;
+					}
+				}
 			else 
 			{
 				if (!shader->attachObject("lighting/lightWaterF.glsl"))
 				{
 					return FALSE;
+				}
 				}
 				shader->mFeatures.mIndexedTextureChannels = llmax(LLGLSLShader::sIndexedTextureChannels-1, 1);
 			}
@@ -244,16 +263,36 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 		{
 			if (features->disableTextureIndex)
 			{
+				if (features->hasAlphaMask)
+				{
+					if (!shader->attachObject("lighting/lightAlphaMaskNonIndexedF.glsl"))
+					{
+						return FALSE;
+					}
+				}
+				else
+				{
 				if (!shader->attachObject("lighting/lightNonIndexedF.glsl"))
 				{
 					return FALSE;
 				}
 			}
+			}
+			else 
+			{
+				if (features->hasAlphaMask)
+				{
+					if (!shader->attachObject("lighting/lightAlphaMaskF.glsl"))
+					{
+						return FALSE;
+					}
+				}
 			else 
 			{
 				if (!shader->attachObject("lighting/lightF.glsl"))
 				{
 					return FALSE;
+				}
 				}
 				shader->mFeatures.mIndexedTextureChannels = llmax(LLGLSLShader::sIndexedTextureChannels-1, 1);
 			}
@@ -286,14 +325,28 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 		{
 			if (features->disableTextureIndex)
 			{
-				if (!shader->attachObject("lighting/lightFullbrightWaterNonIndexedF.glsl"))
+				if (features->hasAlphaMask)
+				{
+					if (!shader->attachObject("lighting/lightFullbrightWaterNonIndexedAlphaMaskF.glsl"))
+					{
+						return FALSE;
+					}
+				}
+				else if (!shader->attachObject("lighting/lightFullbrightWaterNonIndexedF.glsl"))
 				{
 					return FALSE;
 				}
 			}
 			else 
 			{
-				if (!shader->attachObject("lighting/lightFullbrightWaterF.glsl"))
+				if (features->hasAlphaMask)
+				{
+					if (!shader->attachObject("lighting/lightFullbrightWaterAlphaMaskF.glsl"))
+					{
+						return FALSE;
+					}
+				}
+				else if (!shader->attachObject("lighting/lightFullbrightWaterF.glsl"))
 				{
 					return FALSE;
 				}
@@ -324,16 +377,37 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 		{
 			if (features->disableTextureIndex)
 			{
+
+				if (features->hasAlphaMask)
+				{
+					if (!shader->attachObject("lighting/lightFullbrightNonIndexedAlphaMaskF.glsl"))
+					{
+						return FALSE;
+					}
+				}
+				else
+				{
 				if (!shader->attachObject("lighting/lightFullbrightNonIndexedF.glsl"))
 				{
 					return FALSE;
 				}
 			}
+			}
+			else 
+			{
+				if (features->hasAlphaMask)
+				{
+					if (!shader->attachObject("lighting/lightFullbrightAlphaMaskF.glsl"))
+					{
+						return FALSE;
+					}
+				}
 			else 
 			{
 				if (!shader->attachObject("lighting/lightFullbrightF.glsl"))
 				{
 					return FALSE;
+				}
 				}
 				shader->mFeatures.mIndexedTextureChannels = llmax(LLGLSLShader::sIndexedTextureChannels-1, 1);
 			}
@@ -771,33 +845,20 @@ BOOL LLShaderMgr::linkProgramObject(GLhandleARB obj, BOOL suppress_errors)
 		LL_WARNS("ShaderLoading") << "GLSL Linker Error:" << LL_ENDL;
 	}
 
-#if LL_DARWIN
-
-	// For some reason this absolutely kills the frame rate when VBO's are enabled
-	if (0)
-	{
+// NOTE: Removing LL_DARWIN block as it doesn't seem to actually give the correct answer, 
+// but want it for reference once I move it.
+#if 0
 		// Force an evaluation of the gl state so the driver can tell if the shader will run in hardware or software
 		// per Apple's suggestion
-		LLGLSLShader::sNoFixedFunction = false;
-		
-		glUseProgramObjectARB(obj);
-
-		gGL.begin(LLRender::TRIANGLES);
-		gGL.vertex3f(0.0f, 0.0f, 0.0f);
-		gGL.vertex3f(0.0f, 0.0f, 0.0f);
-		gGL.vertex3f(0.0f, 0.0f, 0.0f);
-		gGL.end();
-		gGL.flush();
-		
-		glUseProgramObjectARB(0);
-		
-		LLGLSLShader::sNoFixedFunction = true;
+	glBegin(gGL.mMode);
+	glEnd();
 
 		// Query whether the shader can or cannot run in hardware
 		// http://developer.apple.com/qa/qa2007/qa1502.html
-		GLint vertexGPUProcessing, fragmentGPUProcessing;
+	long vertexGPUProcessing;
 		CGLContextObj ctx = CGLGetCurrentContext();
 		CGLGetParameter(ctx, kCGLCPGPUVertexProcessing, &vertexGPUProcessing);	
+	long fragmentGPUProcessing;
 		CGLGetParameter(ctx, kCGLCPGPUFragmentProcessing, &fragmentGPUProcessing);
 		if (!fragmentGPUProcessing || !vertexGPUProcessing)
 		{
@@ -805,7 +866,6 @@ BOOL LLShaderMgr::linkProgramObject(GLhandleARB obj, BOOL suppress_errors)
 			success = GL_FALSE;
 			suppress_errors = FALSE;		
 		}
-	}
 
 #else
 	std::string log = get_object_log(obj);

@@ -1337,7 +1337,6 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 	if (success)
 	{
 		gDeferredShadowAlphaMaskProgram.mName = "Deferred Shadow Alpha Mask Shader";
-		gDeferredShadowAlphaMaskProgram.mFeatures.mIndexedTextureChannels = LLGLSLShader::sIndexedTextureChannels;
 		gDeferredShadowAlphaMaskProgram.mShaderFiles.clear();
 		gDeferredShadowAlphaMaskProgram.mShaderFiles.push_back(make_pair("deferred/shadowAlphaMaskV.glsl", GL_VERTEX_SHADER_ARB));
 		gDeferredShadowAlphaMaskProgram.mShaderFiles.push_back(make_pair("deferred/shadowAlphaMaskF.glsl", GL_FRAGMENT_SHADER_ARB));
@@ -1993,7 +1992,7 @@ BOOL LLViewerShaderMgr::loadShadersObject()
 		gObjectSimpleAlphaMaskProgram.mShaderLevel = mVertexShaderLevel[SHADER_OBJECT];
 		success = gObjectSimpleAlphaMaskProgram.createShader(NULL, NULL);
 	}
-	
+
 	if (success)
 	{
 		gObjectSimpleWaterAlphaMaskProgram.mName = "Simple Water Alpha Mask Shader";
