@@ -6,9 +6,9 @@
  can_minimize="true"
  can_close="true"
  can_resize="true"
- min_height="230"
+ min_height="300"
  min_width="450"
- height="230"
+ height="300"
  layout="topleft"
  name="Avatar"
  single_instance="true"
@@ -19,7 +19,7 @@
  width="700">
     <web_browser
       top="25"
-      height="200"
+      height="270"
       width="700"
       follows="all"
       name="avatar_picker_contents"

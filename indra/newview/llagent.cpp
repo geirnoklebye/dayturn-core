@@ -256,6 +256,17 @@ bool LLAgent::isActionAllowed(const LLSD& sdname)
 			}
 		}
 	}
+	else if (param == "avatar")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsDetach)
+			{
+				retval = false;
+			}
+		}
+	}
 //mk
 
 	return retval;
