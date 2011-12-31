@@ -130,8 +130,11 @@ BOOL LLToolGrab::handleMouseDown(S32 x, S32 y, MASK mask)
 
 	// call the base class to propogate info to sim
 	LLTool::handleMouseDown(x, y, mask);
-	
-	if (!gAgent.leftButtonGrabbed())
+
+//MK
+	// We need to be able to click on stuff, even when the controls are grabbed
+	////if (!gAgent.leftButtonGrabbed())
+//mk
 	{
 		// can grab transparent objects (how touch event propagates, scripters rely on this)
 		gViewerWindow->pickAsync(x, y, mask, pickCallback, TRUE);

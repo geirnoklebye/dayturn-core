@@ -699,7 +699,10 @@ BOOL LLToolCompGun::handleMouseDown(S32 x, S32 y, MASK mask)
 	if (gAgent.leftButtonGrabbed())
 	{
 		gAgent.setControlFlags(AGENT_CONTROL_ML_LBUTTON_DOWN);
-		return FALSE;
+//MK
+		// Don't prevent from clicking on stuff, though
+		////return FALSE;
+//mk
 	}
 
 	// On mousedown, start grabbing
