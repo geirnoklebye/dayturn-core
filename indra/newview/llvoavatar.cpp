@@ -6281,6 +6281,18 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 
 	stopMotion(ANIM_AGENT_BODY_NOISE);
 
+//MK
+	// Seems there is a bug when sitting while already in Mouselook mode, pitch axis is
+	// inverted. A solution to this is to switch to third person look, then immediately
+	// back to Mouselook to make the pitch axis right again. It is a ugly hack, but at 
+	// least it works.
+	if (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK)
+	{
+		gAgentCamera.changeCameraToThirdPerson(FALSE);
+		gAgentCamera.changeCameraToMouselook(FALSE);
+	}
+//mk
+
 }
 
 //-----------------------------------------------------------------------------

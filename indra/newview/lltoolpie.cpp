@@ -128,7 +128,7 @@ BOOL LLToolPie::handleRightMouseDown(S32 x, S32 y, MASK mask)
 	// HACK : if alt-right-clicking and not in mouselook, HUDs are passed through and we risk
 	// right-clicking in-world
 	// => sit on this object instead of selecting it (this may be convenient if the whole screen is obstructed by a HUD prim
-	if (gRRenabled && (mask & MASK_ALT) && gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+	if (gRRenabled && (mask & MASK_ALT)) // && gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
 	{
 		if (isAgentAvatarValid())
 		{

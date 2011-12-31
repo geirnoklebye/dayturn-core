@@ -605,8 +605,10 @@ BOOL LLPanelStandStopFlying::postBuild()
 //virtual
 void LLPanelStandStopFlying::setVisible(BOOL visible)
 {
-	//we dont need to show the panel if these buttons are not activated
-	if (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK) visible = false;
+//MK
+	//////we dont need to show the panel if these buttons are not activated
+	////if (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK) visible = false;
+//mk
 
 	if (visible)
 	{
