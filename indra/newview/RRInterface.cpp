@@ -2614,6 +2614,10 @@ BOOL RRInterface::forceAttach (std::string category, BOOL recursive, AttachHow h
 								rez_attachment (item, attachpt, false);
 							}
 						}
+						else {
+							// attachment point is not in the name => stack
+							rez_attachment (item, attachpt, false);
+						}
 					}
 					// this is a piece of clothing
 					else if (item->getType() == LLAssetType::AT_CLOTHING
@@ -2641,17 +2645,17 @@ BOOL RRInterface::forceAttach (std::string category, BOOL recursive, AttachHow h
 				LLViewerJointAttachment* attachpt = findAttachmentPointFromName (cat_child->getName());
 				
 				if (!isRoot) {
-					if (attachpt) {
-						// this subfolder is properly named => attach the first item it contains
-						LLInventoryModel::cat_array_t* cats_grandchildren; // won't be used here
-						LLInventoryModel::item_array_t* items_grandchildren; // actual no-mod item(s)
-						gInventory.getDirectDescendentsOf (cat_child->getUUID(), 
-															cats_grandchildren, items_grandchildren);
+					// this subfolder is properly named => attach the first item it contains
+					LLInventoryModel::cat_array_t* cats_grandchildren; // won't be used here
+					LLInventoryModel::item_array_t* items_grandchildren; // actual no-mod item(s)
+					gInventory.getDirectDescendentsOf (cat_child->getUUID(), 
+														cats_grandchildren, items_grandchildren);
 
-						if (items_grandchildren && items_grandchildren->count() == 1) {
-							LLViewerInventoryItem* item_grandchild = 
-									(LLViewerInventoryItem*)items_grandchildren->get(0);
+					if (items_grandchildren && items_grandchildren->count() == 1) {
+						LLViewerInventoryItem* item_grandchild = 
+								(LLViewerInventoryItem*)items_grandchildren->get(0);
 
+						if (attachpt) {
 							if (item_grandchild && item_grandchild->getType() == LLAssetType::AT_OBJECT
 								&& !item_grandchild->getPermissions().allowModifyBy(gAgent.getID())
 								&& findAttachmentPointFromParentName (item_grandchild) != NULL) { // it is no-mod and its parent is named correctly
@@ -2672,6 +2676,10 @@ BOOL RRInterface::forceAttach (std::string category, BOOL recursive, AttachHow h
 									rez_attachment (item_grandchild, attachpt, false);
 								}
 							}
+						}
+						else {
+							// attachment point is not in the name => stack
+							rez_attachment (item_grandchild, attachpt, false);
 						}
 					}
 				}
