@@ -112,6 +112,10 @@
 #include "llwindow.h"
 #include "boost/unordered_map.hpp"
 
+//MK
+#include "llimfloatercontainer.h"
+//mk
+
 using namespace LLVOAvatarDefines;
 
 typedef LLPointer<LLViewerObject> LLViewerObjectPtr;
@@ -5204,6 +5208,35 @@ class LLToolsRestartAllAnimations : public view_listener_t
 		return true;
 	}
 };
+
+
+class LLCommunicateCheckConversations : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		LLIMFloaterContainer* im_box = LLIMFloaterContainer::getInstance();
+		if (im_box)
+		{
+			return im_box->getVisible();
+		}
+		return false;
+	}
+};
+
+class LLCommunicateConversations : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		LLIMFloaterContainer* im_box = LLIMFloaterContainer::getInstance();
+		if (im_box)
+		{
+			BOOL visible = im_box->getVisible();
+			im_box->setVisible(!visible);
+			im_box->setFocus(!visible);
+		}
+		return true;
+	}
+};
 //mk
 
 class LLToolsReleaseKeys : public view_listener_t
@@ -8709,6 +8742,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLToolsStopAllAnimations(), "Tools.StopAllAnimations");
 //MK
 	view_listener_t::addMenu(new LLToolsRestartAllAnimations(), "Tools.RestartAllAnimations");
+
+	view_listener_t::addMenu(new LLCommunicateConversations(), "Communicate.Conversations");
+	view_listener_t::addMenu(new LLCommunicateCheckConversations(), "Communicate.CheckConversations");
 //mk
 	view_listener_t::addMenu(new LLToolsReleaseKeys(), "Tools.ReleaseKeys");
 	view_listener_t::addMenu(new LLToolsEnableReleaseKeys(), "Tools.EnableReleaseKeys");	
