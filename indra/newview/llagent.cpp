@@ -2151,11 +2151,18 @@ void LLAgent::endAnimationUpdateUI()
 		LLFloaterCamera::onAvatarEditingAppearance(false);
 	}
 
+//MK
 	//---------------------------------------------------------------------
 	// Set up UI for mode we're entering
 	//---------------------------------------------------------------------
 	if (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK)
 	{
+//MK
+		// Don't hide the UI while in Mouselook mode, we can do this through
+		// another command already (Ctrl+Alt+F1). Hiding the UI renders
+		// Mouselook pretty useless, if you ask me.
+/*
+//mk
 		// clean up UI
 		// first show anything hidden by UI toggle
 		gViewerWindow->setUIVisibility(TRUE);
@@ -2198,7 +2205,9 @@ void LLAgent::endAnimationUpdateUI()
 		skip_list.insert(LLFloaterReg::findInstance("mini_map"));
 		gFloaterView->pushVisibleAll(FALSE, skip_list);
 #endif
-
+//MK
+*/
+//mk
 		if( gMorphView )
 		{
 			gMorphView->setVisible(FALSE);
