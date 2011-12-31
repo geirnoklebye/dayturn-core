@@ -3016,13 +3016,13 @@ void LLFolderBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 			// it may have not been fetched from the server yet, and appear empty to the viewer, hence making it think
 			// nothing is locked and return a false negative. Therefore we must condition the following menu items to
 			// whether something is locked or not.
-			if (gAgent.mRRInterface.mContainsDetach)
-			{
-				mDisabledItems.push_back("Add To Outfit");
-				mDisabledItems.push_back("Replace Outfit");
-				mDisabledItems.push_back("Remove From Outfit");
-//				mDisabledItems.push_back("Take Off Items");
-			}
+//			if (gAgent.mRRInterface.mContainsDetach)
+//			{
+//				mDisabledItems.push_back("Add To Outfit");
+//				mDisabledItems.push_back("Replace Outfit");
+//				mDisabledItems.push_back("Remove From Outfit");
+////				mDisabledItems.push_back("Take Off Items");
+//			}
 		}
 //mk
 
@@ -4965,13 +4965,13 @@ LLWearableBridge::LLWearableBridge(LLInventoryPanel* inventory,
 void remove_inventory_category_from_avatar( LLInventoryCategory* category )
 {
 //MK
-	if (gRRenabled)
-	{
-		if (gAgent.mRRInterface.mContainsDetach || gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
-		{
-			return;
-		}
-	}
+	//if (gRRenabled)
+	//{
+	//	if (gAgent.mRRInterface.mContainsDetach || gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
+	//	{
+	//		return;
+	//	}
+	//}
 //mk
 
 	if(!category) return;
