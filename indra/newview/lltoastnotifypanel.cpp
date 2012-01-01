@@ -196,22 +196,8 @@ mCloseNotificationOnDestroy(true)
 			}
 		
 			// we need to keep min width and max height to make visible all buttons, because width of the toast can not be changed
-//MK
-			if (mIsScriptDialog && FALSE) // deactivate this part for now, investigate later how to move the text on the floater
-			{
-				// Add an arbitrary height to the script dialog
-				S32 bonus_height = 100;
-				LLRect rect = mTextBox->getRect();
-				rect.mBottom += bonus_height;
-				mTextBox->setRect(rect);
-			}
-			else
-			{
-//mk
-				adjustPanelForScriptNotice(button_panel_width, button_panel_height);
-//MK
-			}
-//mk
+			adjustPanelForScriptNotice(button_panel_width, button_panel_height);
+
 			updateButtonsLayout(buttons, h_pad);
 			// save buttons for later use in disableButtons()
 			mButtons.assign(buttons.begin(), buttons.end());
@@ -227,6 +213,8 @@ mCloseNotificationOnDestroy(true)
 //mk
 		snapToMessageHeight(mTextBox, MAX_LENGTH);
 //MK
+		// Add an arbitrary height to the notification
+		adjustPanelForScriptNotice(mControlPanel->getRect().getWidth(), mControlPanel->getRect().getHeight()+20);
 	}
 //mk
 
