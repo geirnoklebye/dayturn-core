@@ -2679,7 +2679,7 @@ BOOL RRInterface::forceAttach (std::string category, BOOL recursive, AttachHow h
 						}
 						else {
 							// attachment point is not in the name => stack
-							rez_attachment (item_grandchild, attachpt, false);
+//							rez_attachment (item_grandchild, attachpt, false);
 						}
 					}
 				}
