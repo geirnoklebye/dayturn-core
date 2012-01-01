@@ -107,6 +107,13 @@ static bool handleRestrainedLoveOffsetAvatarChanged(const LLSD& newvalue)
 	gAgent.sendAgentSetAppearance();
 	return true;
 }
+
+static bool handleRenderDeferredShowInvisiprimsChanged(const LLSD& newvalue)
+{
+	bool status = newvalue.asBoolean();
+	LLDrawPoolBump::sRenderDeferredShowInvisiprims = status;
+	return true;
+}
 //mk
 
 static bool handleRenderAvatarMouselookChanged(const LLSD& newvalue)
@@ -603,6 +610,7 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("RestrainedLoveOffsetAvatarX")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveOffsetAvatarY")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveOffsetAvatarZ")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+	gSavedSettings.getControl("RenderDeferredShowInvisiprims")->getSignal()->connect(boost::bind(&handleRenderDeferredShowInvisiprimsChanged, _2));
 //mk
 	gSavedSettings.getControl("FirstPersonAvatarVisible")->getSignal()->connect(boost::bind(&handleRenderAvatarMouselookChanged, _2));
 	gSavedSettings.getControl("RenderFarClip")->getSignal()->connect(boost::bind(&handleRenderFarClipChanged, _2));
