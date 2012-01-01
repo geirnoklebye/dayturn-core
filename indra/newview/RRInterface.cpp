@@ -2907,7 +2907,7 @@ std::string RRInterface::getDummyName (std::string name, EChatAudible audible /*
 		case 19:	res = "This soul";			break;
 		case 20:	res = "That soul";			break;
 		case 21:	res = "Somebody";			break;
-		case 22:	res = "Some people";		break;
+		case 22:	res = "Anonymous one";		break;
 		case 23:	res = "Someone";			break;
 		case 24:	res = "Mysterious one";		break;
 		case 25:	res = "An unknown being";	break;
