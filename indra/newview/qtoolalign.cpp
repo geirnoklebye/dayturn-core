@@ -244,7 +244,7 @@ void render_cone_bbox(LLBBox bbox)
 	setup_transforms_bbox(bbox);
 
 	gGL.flush();
-	gCone.render(0);
+	gCone.render();
 
 	gGL.popMatrix();
 }
