@@ -6291,7 +6291,7 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 	// inverted. A solution to this is to switch to third person look, then immediately
 	// back to Mouselook to make the pitch axis right again. It is a ugly hack, but at 
 	// least it works.
-	if (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK)
+	if ((gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK)&& isSelf())
 	{
 		gAgentCamera.changeCameraToThirdPerson(FALSE);
 		gAgentCamera.changeCameraToMouselook(FALSE);
