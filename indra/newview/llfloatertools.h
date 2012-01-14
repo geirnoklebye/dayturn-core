@@ -30,6 +30,9 @@
 #include "llfloater.h"
 #include "llcoord.h"
 #include "llparcelselection.h"
+//MK
+#include "llselectmgr.h"
+//mk
 
 class LLButton;
 class LLComboBox;
@@ -106,6 +109,10 @@ public:
 	void navigateToTitleMedia( const std::string url );
 	bool selectedMediaEditable();
 	void updateLandImpacts();
+
+//MK
+	void setGridMode(EGridMode mode);
+//mk
 
 private:
 	void refresh();

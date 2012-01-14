@@ -853,6 +853,12 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 	mPanelLandInfo->setVisible(land_visible);
 }
 
+//MK
+void LLFloaterTools::setGridMode(EGridMode mode)
+{
+	mComboGridMode->setCurrentByIndex((S32)mode);
+}
+//mk
 
 // virtual
 BOOL LLFloaterTools::canClose()

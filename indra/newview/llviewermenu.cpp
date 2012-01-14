@@ -7859,6 +7859,71 @@ void force_error_driver_crash(void *)
     LLAppViewer::instance()->forceErrorDriverCrash();
 }
 
+//MK
+class LLGridModeWorld : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		LLSelectMgr::getInstance()->setGridMode(GRID_MODE_WORLD);
+
+		LLFloaterBuildOptions* build_options_floater = LLFloaterReg::getTypedInstance<LLFloaterBuildOptions>("build_options");
+		if (build_options_floater && build_options_floater->getVisible())
+		{
+			build_options_floater->setGridMode(GRID_MODE_WORLD);
+		}
+
+		LLFloaterTools* tools_floater = LLFloaterReg::getTypedInstance<LLFloaterTools>("build");
+		if (tools_floater && tools_floater->getVisible())
+		{
+			tools_floater->setGridMode(GRID_MODE_WORLD);
+		}
+		return true;
+	}
+};
+
+class LLGridModeLocal : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		LLSelectMgr::getInstance()->setGridMode(GRID_MODE_LOCAL);
+
+		LLFloaterBuildOptions* build_options_floater = LLFloaterReg::getTypedInstance<LLFloaterBuildOptions>("build_options");
+		if (build_options_floater && build_options_floater->getVisible())
+		{
+			build_options_floater->setGridMode(GRID_MODE_LOCAL);
+		}
+
+		LLFloaterTools* tools_floater = LLFloaterReg::getTypedInstance<LLFloaterTools>("build");
+		if (tools_floater && tools_floater->getVisible())
+		{
+			tools_floater->setGridMode(GRID_MODE_LOCAL);
+		}
+		return true;
+	}
+};
+
+class LLGridModeReference : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		LLSelectMgr::getInstance()->setGridMode(GRID_MODE_REF_OBJECT);
+
+		LLFloaterBuildOptions* build_options_floater = LLFloaterReg::getTypedInstance<LLFloaterBuildOptions>("build_options");
+		if (build_options_floater && build_options_floater->getVisible())
+		{
+			build_options_floater->setGridMode(GRID_MODE_REF_OBJECT);
+		}
+
+		LLFloaterTools* tools_floater = LLFloaterReg::getTypedInstance<LLFloaterTools>("build");
+		if (tools_floater && tools_floater->getVisible())
+		{
+			tools_floater->setGridMode(GRID_MODE_REF_OBJECT);
+		}
+		return true;
+	}
+};
+//mk
+
 class LLToolsUseSelectionForGrid : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -7880,6 +7945,13 @@ class LLToolsUseSelectionForGrid : public view_listener_t
 		{
 			build_options_floater->setGridMode(GRID_MODE_REF_OBJECT);
 		}
+//MK
+		LLFloaterTools* tools_floater = LLFloaterReg::getTypedInstance<LLFloaterTools>("build");
+		if (tools_floater && tools_floater->getVisible())
+		{
+			tools_floater->setGridMode(GRID_MODE_REF_OBJECT);
+		}
+//mk
 		return true;
 	}
 };
@@ -8741,6 +8813,9 @@ void initialize_menus()
 	commit.add("Tools.Unlink", boost::bind(&LLSelectMgr::unlinkObjects, LLSelectMgr::getInstance()));
 	view_listener_t::addMenu(new LLToolsStopAllAnimations(), "Tools.StopAllAnimations");
 //MK
+	view_listener_t::addMenu(new LLGridModeWorld(), "Tools.GridModeWorld");
+	view_listener_t::addMenu(new LLGridModeLocal(), "Tools.GridModeLocal");
+	view_listener_t::addMenu(new LLGridModeReference(), "Tools.GridModeReference");
 	view_listener_t::addMenu(new LLToolsRestartAllAnimations(), "Tools.RestartAllAnimations");
 
 	view_listener_t::addMenu(new LLCommunicateConversations(), "Communicate.Conversations");

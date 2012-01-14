@@ -145,7 +145,6 @@
         <menu_item_call
          label="Request Admin Status"
          name="Request Admin Options"
-         shortcut="control|alt|G"
 		 visible="false">
             <menu_item_call.on_click
              function="Advanced.RequestAdminStatus" />
@@ -765,7 +764,8 @@
         </menu_item_call>
         <menu_item_check
              label="Edit Linked Parts"
-             name="Edit Linked Parts">
+             name="Edit Linked Parts"
+              shortcut="alt|W">
                 <menu_item_check.on_check
                  control="EditLinkedParts" />
                 <menu_item_check.on_click
@@ -1064,14 +1064,61 @@
                      function="Tools.EnableToolNotPie" />
                 </menu_item_call>
                 <menu_item_call
+                 label="Grid mode : World"
+                 name="GridModeWorld"
+                 shortcut="alt|R">
+                  <menu_item_call.on_click
+                   function="Tools.GridModeWorld" />
+                  <menu_item_call.on_enable
+                   function="SomethingSelected" />
+                </menu_item_call>
+                <menu_item_call
+                 label="Grid mode : Local"
+                 name="GridModeLocal"
+                 shortcut="alt|F">
+                  <menu_item_call.on_click
+                   function="Tools.GridModeLocal" />
+                  <menu_item_call.on_enable
+                   function="SomethingSelected" />
+                </menu_item_call>
+                <menu_item_call
+                 label="Grid mode : Reference"
+                 name="GridModeReference"
+                 shortcut="alt|V">
+                  <menu_item_call.on_click
+                   function="Tools.GridModeReference" />
+                  <menu_item_call.on_enable
+                   function="SomethingSelected" />
+                </menu_item_call>
+                <menu_item_call
                  label="Use Selection for Grid"
                  name="Use Selection for Grid"
-                 shortcut="shift|G">
+                 shortcut="alt|G">
                     <menu_item_call.on_click
                      function="Tools.UseSelectionForGrid" />
                     <menu_item_call.on_enable
                      function="SomethingSelected" />
                 </menu_item_call>
+                <menu_item_check
+                 label="Stretch Textures"
+                 name="StretchTextures"
+                 shortcut="alt|T">
+                  <menu_item_check.on_check
+                   control="ScaleStretchTextures" />
+                  <menu_item_check.on_click
+                   function="ToggleControl"
+                   parameter="ScaleStretchTextures" />
+                </menu_item_check>
+                <menu_item_check
+                 label="Stretch Both Sides"
+                 name="StretchBothSides"
+                 shortcut="alt|B">
+                  <menu_item_check.on_check
+                   control="ScaleUniform" />
+                  <menu_item_check.on_click
+                   function="ToggleControl"
+                   parameter="ScaleUniform" />
+                </menu_item_check>
                 <menu_item_call
                  label="Grid Options"
                  name="Grid Options"
@@ -1817,7 +1864,7 @@
          label="Shortcuts"
          name="Shortcuts"
          tear_off="true"
-         visible="false">
+         visible="true">
           <menu_item_call
              label="Image (L$[COST])..."
              name="Upload Image"
@@ -3458,7 +3505,6 @@
         <menu_item_call
          label="Request Admin Status"
          name="Request Admin Options"
-         shortcut="control|alt|G">
             <menu_item_call.on_click
              function="Advanced.RequestAdminStatus" />
         </menu_item_call>
