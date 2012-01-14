@@ -145,7 +145,6 @@
         <menu_item_call
          label="Request Admin Status"
          name="Request Admin Options"
-         shortcut="control|alt|G"
 		 visible="false">
             <menu_item_call.on_click
              function="Advanced.RequestAdminStatus" />
@@ -189,7 +188,7 @@
          <menu_item_call
          label="Toolbar buttons..."
          name="Toolbars"
-         shortcut="control|T">
+         shortcut="control|shift|T">
             <menu_item_call.on_click
              function="Floater.Toggle"
              parameter="toybox" />
@@ -230,6 +229,16 @@
              parameter="chat_bar" />
         </menu_item_check>
         <menu_item_check
+         label="Conversations..."
+         name="Conversations"
+         shortcut="control|T"
+         use_mac_ctrl="true">
+          <menu_item_check.on_check
+           function="Communicate.CheckConversations" />
+          <menu_item_check.on_click
+           function="Communicate.Conversations" />
+        </menu_item_check>
+      <menu_item_check
          label="Speak"
          name="Speak">
             <menu_item_check.on_check
@@ -755,7 +764,8 @@
         </menu_item_call>
         <menu_item_check
              label="Edit Linked Parts"
-             name="Edit Linked Parts">
+             name="Edit Linked Parts"
+              shortcut="alt|W">
                 <menu_item_check.on_check
                  control="EditLinkedParts" />
                 <menu_item_check.on_click
@@ -1054,14 +1064,61 @@
                      function="Tools.EnableToolNotPie" />
                 </menu_item_call>
                 <menu_item_call
+                 label="Grid mode : World"
+                 name="GridModeWorld"
+                 shortcut="alt|R">
+                  <menu_item_call.on_click
+                   function="Tools.GridModeWorld" />
+                  <menu_item_call.on_enable
+                   function="SomethingSelected" />
+                </menu_item_call>
+                <menu_item_call
+                 label="Grid mode : Local"
+                 name="GridModeLocal"
+                 shortcut="alt|F">
+                  <menu_item_call.on_click
+                   function="Tools.GridModeLocal" />
+                  <menu_item_call.on_enable
+                   function="SomethingSelected" />
+                </menu_item_call>
+                <menu_item_call
+                 label="Grid mode : Reference"
+                 name="GridModeReference"
+                 shortcut="alt|V">
+                  <menu_item_call.on_click
+                   function="Tools.GridModeReference" />
+                  <menu_item_call.on_enable
+                   function="SomethingSelected" />
+                </menu_item_call>
+                <menu_item_call
                  label="Use Selection for Grid"
                  name="Use Selection for Grid"
-                 shortcut="shift|G">
+                 shortcut="alt|G">
                     <menu_item_call.on_click
                      function="Tools.UseSelectionForGrid" />
                     <menu_item_call.on_enable
                      function="SomethingSelected" />
                 </menu_item_call>
+                <menu_item_check
+                 label="Stretch Textures"
+                 name="StretchTextures"
+                 shortcut="alt|T">
+                  <menu_item_check.on_check
+                   control="ScaleStretchTextures" />
+                  <menu_item_check.on_click
+                   function="ToggleControl"
+                   parameter="ScaleStretchTextures" />
+                </menu_item_check>
+                <menu_item_check
+                 label="Stretch Both Sides"
+                 name="StretchBothSides"
+                 shortcut="alt|B">
+                  <menu_item_check.on_check
+                   control="ScaleUniform" />
+                  <menu_item_check.on_click
+                   function="ToggleControl"
+                   parameter="ScaleUniform" />
+                </menu_item_check>
                 <menu_item_call
                  label="Grid Options"
                  name="Grid Options"
@@ -1789,7 +1846,17 @@
              function="ToggleControl"
              parameter="MouseSmooth" />
         </menu_item_check>
-
+            <menu_item_call
+             enabled="false"
+             label="Release Keys"
+             name="Release Keys">
+                <menu_item_call.on_click
+                 function="Tools.ReleaseKeys"
+                 parameter="" />
+                <menu_item_call.on_enable
+                 function="Tools.EnableReleaseKeys"
+                 parameter="" />
+            </menu_item_call>
         <menu_item_separator/>
 
         <menu
@@ -1797,7 +1864,7 @@
          label="Shortcuts"
          name="Shortcuts"
          tear_off="true"
-         visible="false">
+         visible="true">
           <menu_item_call
              label="Image (L$[COST])..."
              name="Upload Image"
@@ -1819,17 +1886,7 @@
              function="Floater.Toggle"
              parameter="search" />
             </menu_item_check>
-            <menu_item_call
-             enabled="false"
-             label="Release Keys"
-             name="Release Keys">
-                <menu_item_call.on_click
-                 function="Tools.ReleaseKeys"
-                 parameter="" />
-                <menu_item_call.on_enable
-                 function="Tools.EnableReleaseKeys"
-                 parameter="" />
-            </menu_item_call>
+
             <!-- This second, alternative shortcut for Show Advanced Menu is for backward compatibility.  The main shortcut has been changed so it's Linux-friendly, where the old shortcut is typically eaten by the window manager. -->
             <menu_item_check
                label="Show Advanced Menu - legacy shortcut"
@@ -3448,7 +3505,6 @@
         <menu_item_call
          label="Request Admin Status"
          name="Request Admin Options"
-         shortcut="control|alt|G">
             <menu_item_call.on_click
              function="Advanced.RequestAdminStatus" />
         </menu_item_call>
