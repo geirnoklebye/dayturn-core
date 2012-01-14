@@ -3084,7 +3084,13 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			{ 
 				return;
 			}
-			else if (is_busy) 
+//MK
+////			else if (is_busy) 
+			// Accept the TP if we are forced to accept TPs from this avatar or from everyone,
+			// even in busy mode
+			else if (is_busy && (!gRRenabled || (!gAgent.mRRInterface.contains ("accepttp:"+from_id.asString())
+									&& !gAgent.mRRInterface.contains ("accepttp")))) 
+//mk
 			{
 				busy_message(msg,from_id);
 			}
