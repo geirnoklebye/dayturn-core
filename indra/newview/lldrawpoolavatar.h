@@ -41,6 +41,10 @@ class LLVOVolume;
 class LLDrawPoolAvatar : public LLFacePool
 {
 public:
+//MK
+	static BOOL sRenderMeshDeformed;
+//mk
+
 	enum
 	{
 		SHADER_LEVEL_BUMP = 2,

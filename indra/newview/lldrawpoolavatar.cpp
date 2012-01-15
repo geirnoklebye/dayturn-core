@@ -60,6 +60,9 @@ BOOL	LLDrawPoolAvatar::sSkipOpaque = FALSE;
 BOOL	LLDrawPoolAvatar::sSkipTransparent = FALSE;
 S32 LLDrawPoolAvatar::sDiffuseChannel = 0;
 
+//MK
+BOOL LLDrawPoolAvatar::sRenderMeshDeformed = FALSE;
+//mk
 
 static bool is_deferred_render = false;
 
@@ -1335,7 +1338,14 @@ void LLDrawPoolAvatar::updateRiggedFaceVertexBuffer(LLVOAvatar* avatar, LLFace* 
 			face->setPoolType(LLDrawPool::POOL_AVATAR);
 		}
 
-		face->getGeometryVolume(*deformed_volume, face->getTEOffset(), mat_vert, mat_normal, offset, true);
+//MK
+		if (LLDrawPoolAvatar::sRenderMeshDeformed)
+//mk
+			face->getGeometryVolume(*deformed_volume, face->getTEOffset(), mat_vert, mat_normal, offset, true);
+//MK
+		else
+			face->getGeometryVolume(*volume, face->getTEOffset(), mat_vert, mat_normal, offset, true);
+//mk
 
 		buffer->flush();
 	}
