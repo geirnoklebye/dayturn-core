@@ -664,6 +664,7 @@ set(viewer_SOURCE_FILES
     qtoolalign.cpp
     pipeline.cpp
     viewerinfo.cpp
+    streamtitledisplay.cpp
     )
 
 set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
@@ -1239,6 +1240,7 @@ set(viewer_HEADER_FILES
     noise.h
     qtoolalign.h
     pipeline.h
+    streamtitledisplay.h
     VertexCache.h
     viewerinfo.h
     VorbisFramework.h
