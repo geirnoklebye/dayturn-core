@@ -87,6 +87,7 @@
 #include "llviewerwindow.h"
 #include "llvovolume.h"
 #include "lluictrlfactory.h"
+#include "qtoolalign.h"
 #include "llmeshrepository.h"
 
 // Globals
@@ -673,6 +674,10 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 	{
 		mCheckSelectIndividual->setVisible(edit_visible);
 		//mCheckSelectIndividual->set(gSavedSettings.getBOOL("EditLinkedParts"));
+	}
+	else if ( tool == QToolAlign::getInstance() )
+	{
+		mRadioGroupEdit->setValue("radio align");
 	}
 
 	if ( tool == LLToolCompTranslate::getInstance() )

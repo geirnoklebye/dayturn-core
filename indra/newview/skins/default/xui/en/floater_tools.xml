@@ -229,7 +229,7 @@
 	<radio_group
      follows="left|top"
 	 left="5"
-	 top="55"
+	 top="50"
 	 height="70"
      layout="topleft"
 	 name="edit_radio_group">

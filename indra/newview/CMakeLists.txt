@@ -632,6 +632,7 @@ set(viewer_SOURCE_FILES
     llxmlrpclistener.cpp
     llxmlrpctransaction.cpp
     noise.cpp
+    qtoolalign.cpp
     pipeline.cpp
     viewerinfo.cpp
     )
@@ -1191,6 +1192,7 @@ set(viewer_HEADER_FILES
     llxmlrpctransaction.h
     macmain.h
     noise.h
+    qtoolalign.h
     pipeline.h
     VertexCache.h
     viewerinfo.h
