@@ -54,11 +54,11 @@
     width="800"
     height="2"/>
 	 <layout_stack
-       use_border="true"
-       bevel_style="none"
        follows="all"
        height="34"
        layout="topleft"
+       border_size="0"
+       resize_bar_overlap="3"
        left="0"
        mouse_opaque="false"
        name="nvp_stack"
@@ -209,27 +209,16 @@
          mouse_wheel_opaque="true"/>
 	    </location_input>
 	</panel>
-         </layout_panel>
-         
-         <layout_panel
-           auto_resize="false"
-           layout="topleft"
-           max_width="5"
-           min_width="5"
-           name="nav_bar_resize_handle_panel"
-           user_resize="false"
-           width="5">
              <icon
                follows="top|right"
                height="25"
                image_name="ChatBarHandle"
                layout="topleft"
-               left="-6"
+             left="-3"
                name="resize_handle"
                top="4"
                width="5" />
          </layout_panel>
-      
          <layout_panel
            follows="top|left"
 	     layout="topleft"
@@ -238,12 +227,23 @@
            min_width="315"
            name="favorites_layout_panel"
            width="315">
+           <icon
+             follows="top|left"
+             height="25"
+             image_name="ChatBarHandle"
+             layout="topleft"
+             left="-318"
+             name="resize_handle"
+             top="4"
+             width="5" />
+
     <favorites_bar
      follows="left|right|top"
      font="SansSerifSmall"
                height="20"
      layout="topleft"
      left="0"
+             top="4"
      name="favorite"
      image_drag_indication="Accordion_ArrowOpened_Off"
      tool_tip="Drag Landmarks here for quick access to your favorite places in Second Life!"

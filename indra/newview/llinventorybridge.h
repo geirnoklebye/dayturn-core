@@ -69,9 +69,9 @@ public:
 									   U32 flags = 0x00);
 	virtual ~LLInvFVBridge() {}
 
-	BOOL canShare() const;
-	BOOL canListOnMarketplace() const;
-	BOOL canListOnMarketplaceNow() const;
+	bool canShare() const;
+	bool canListOnMarketplace() const;
+	bool canListOnMarketplaceNow() const;
 
 	//--------------------------------------------------------------------
 	// LLInvFVBridge functionality
@@ -131,6 +131,9 @@ protected:
 	virtual void addDeleteContextMenuOptions(menuentry_vec_t &items,
 											 menuentry_vec_t &disabled_items);
 	virtual void addOpenRightClickMenuOption(menuentry_vec_t &items);
+	virtual void addOutboxContextMenuOptions(U32 flags,
+											 menuentry_vec_t &items,
+											 menuentry_vec_t &disabled_items);
 //MK
 ////protected:
 public:
@@ -147,6 +150,7 @@ public:
 	BOOL isCOFFolder() const; // true if COF or descendent of
 	BOOL isInboxFolder() const; // true if COF or descendent of marketplace inbox
 	BOOL isOutboxFolder() const; // true if COF or descendent of marketplace outbox
+	BOOL isOutboxFolderDirectParent() const;
 	const LLUUID getOutboxFolder() const;
 
 	virtual BOOL isItemPermissive() const;
@@ -281,6 +285,9 @@ public:
 	LLHandle<LLFolderBridge> getHandle() { mHandle.bind(this); return mHandle; }
 
 protected:
+	void buildContextMenuBaseOptions(U32 flags);
+	void buildContextMenuFolderOptions(U32 flags);
+
 	//--------------------------------------------------------------------
 	// Menu callbacks
 	//--------------------------------------------------------------------
@@ -309,8 +316,6 @@ protected:
 
 	void dropToFavorites(LLInventoryItem* inv_item);
 	void dropToOutfit(LLInventoryItem* inv_item, BOOL move_is_into_current_outfit);
-	void dropToOutbox(LLInventoryItem* inv_item);
-	void dropFolderToOutbox(LLInventoryCategory* inv_cat);
 
 	//--------------------------------------------------------------------
 	// Messy hacks for handling folder options
@@ -318,12 +323,10 @@ protected:
 public:
 	static LLHandle<LLFolderBridge> sSelf;
 	static void staticFolderOptionsMenu();
-	void folderOptionsMenu();
 
 private:
 	BOOL				mCallingCards;
 	BOOL				mWearables;
-	LLHandle<LLView>	mMenu;
 	menuentry_vec_t		mItems;
 	menuentry_vec_t		mDisabledItems;
 	LLRootHandle<LLFolderBridge> mHandle;
@@ -653,7 +656,6 @@ BOOL move_inv_category_world_to_agent(const LLUUID& object_id,
 // are set as enabled.
 void hide_context_entries(LLMenuGL& menu, 
 						  const menuentry_vec_t &entries_to_show, 
-						  const menuentry_vec_t &disabled_entries,
-						  BOOL append = FALSE);
+						  const menuentry_vec_t &disabled_entries);
 
 #endif // LL_LLINVENTORYBRIDGE_H
