@@ -111,6 +111,7 @@ public:
 		Optional<std::string>	is_starting_function;
 		Optional<LLSD>			is_starting_parameters;
 
+		Optional<std::string>	checkbox_control;		// <FS:Zi> Add checkbox control toggle
 		Params();
 	};
 
@@ -161,6 +162,14 @@ private:
 
 	std::string mIsStartingFunction;
 	LLSD        mIsStartingParameters;
+// <FS;Zi> Add control_variable ald checkbox_control to commands in toolbar
+	std::string mControlVariable;
+	std::string mCheckboxControlVariable;
+
+public:
+	const std::string& controlVariableName() const { return mControlVariable; }
+	const std::string& checkboxControlVariableName() const { return mCheckboxControlVariable; }
+// </FS:Zi>
 };
 
 
