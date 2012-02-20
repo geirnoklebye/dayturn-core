@@ -144,6 +144,7 @@ LLToolBar::LLToolBar(const LLToolBar::Params& p)
 	mButtonEnterSignal(NULL),
 	mButtonLeaveSignal(NULL),
 	mButtonRemoveSignal(NULL),
+	// <FS:Zi> add layout style and alignment initialisation
 	mDragAndDropTarget(false),
 	// <FS:Zi> add layout style and alignment initialisation
 	//mCaretIcon(NULL)
