@@ -32,6 +32,7 @@
 #include "llresmgr.h" // for LLLocale
 #include "lltrans.h"
 #include "llviewercontrol.h"
+#include "llversioninfo.h" //needed for get channel
 #include "viewerinfo.h"
 
 #include "llcurrencyuimanager.h"

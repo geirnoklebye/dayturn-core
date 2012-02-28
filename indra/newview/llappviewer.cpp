@@ -29,6 +29,7 @@
 #include "llappviewer.h"
 
 // Viewer includes
+#include "llversioninfo.h" //needed for get channel and reset channel
 #include "viewerinfo.h"
 #include "llfeaturemanager.h"
 #include "lluictrlfactory.h"
