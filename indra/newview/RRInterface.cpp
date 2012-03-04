@@ -2366,10 +2366,10 @@ LLViewerJointAttachment* RRInterface::findAttachmentPointFromName (std::string o
 //				llinfos << "trying attachment " << attachName << llendl;
 //			}
 			if (exactName && objectName == attachName) return attachment;
-			else if (!exactName && (ind = objectName.rfind (attachName)) != -1)
+			else if (!exactName && (ind = objectName.rfind ("("+attachName+")")) != -1)
 			{
 				Candidate new_candidate;
-				new_candidate.index = ind;
+				new_candidate.index = ind+1;
 				new_candidate.length = attachName.length();
 				new_candidate.attachment = attachment;
 				candidates.push_back (new_candidate);
