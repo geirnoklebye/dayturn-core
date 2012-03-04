@@ -2046,6 +2046,12 @@ void LLViewerWindow::shutdownGL()
 	gSky.cleanup();
 	stop_glerror();
 
+	llinfos << "Cleaning up pipeline" << llendl;
+	gPipeline.cleanup();
+	stop_glerror();
+
+	//MUST clean up pipeline before cleaning up wearables
+	llinfos << "Cleaning up wearables" << llendl;
 	LLWearableList::instance().cleanup() ;
 
 	gTextureList.shutdown();
@@ -2055,10 +2061,6 @@ void LLViewerWindow::shutdownGL()
 	stop_glerror();
 
 	LLWorldMapView::cleanupTextures();
-
-	llinfos << "Cleaning up pipeline" << llendl;
-	gPipeline.cleanup();
-	stop_glerror();
 
 	LLViewerTextureManager::cleanup() ;
 	LLImageGL::cleanupClass() ;
