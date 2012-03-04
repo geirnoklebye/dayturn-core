@@ -4,13 +4,13 @@
 	<!-- Named Colors -->
 	<color
 	 name="EmphasisColor"
-	 value="0.38 0.694 0.573 1" />
+	 reference="Kokua" />
 	<color
 	 name="EmphasisColor_13"
-	 value="0.38 0.694 0.573 0.13" />
+	  reference="Kokua_11"/>
 	<color
 	 name="EmphasisColor_35"
-	 value="0.38 0.694 0.573 0.35" />
+	 reference="Kokua_42" />
 	<color
 	 name="White"
 	 value="1 1 1 1" />
@@ -41,6 +41,9 @@
 	<color
 	 name="DkGray"
 	 value="0.125 0.125 0.125 1" />
+        <color
+              name="DkGray_42"
+	 value="0.125 0.125 0.125 .42" />
 	<color
 	 name="DkGray_66"
 	 value="0.125 0.125 0.125 .66" />
@@ -124,6 +127,15 @@
      name="AlertCautionTextColor"
      reference="LtYellow" />
     <color
+     name="AgentLinkColor"
+     reference="EmphasisColor" />
+    <color
+     name="AlertTextColor"
+     value="0.58 0.66 0.84 1" />
+    <color
+     name="AudioStreamTitle"
+     reference="Kokua" />
+    <color
      name="AvatarListItemIconDefaultColor"
      reference="White" />
     <color
@@ -197,7 +209,7 @@
      reference="LtGray" />
     <color
      name="ChicletFlashColor"
-     value="0.114 0.65 0.1" />
+     reference="Kokua_11" />
     <color
      name="ColorDropShadow"
      reference="Black_50" />
@@ -206,7 +218,7 @@
      reference="Black" />
     <color
      name="ColorPaletteEntry02"
-     reference="Gray" />
+     value="0.5 0.5 0.5 1" />
     <color
      name="ColorPaletteEntry03"
      value="0.5 0 0 1" />
@@ -324,9 +336,12 @@
      <color
      name="FilterBackgroundColor"
      reference="Black" />
+<!--    <color
+     name="FilterTextColor"
+     value="0.38 0.69 0.57 1" />Kokua-->
     <color
      name="FilterTextColor"
-     value="0.38 0.69 0.57 1" />
+     reference="Kokua" />
      <color
      name="FloaterButtonImageColor"
      reference="LtGray" />
@@ -439,8 +454,21 @@
      name="InventorySearchStatusColor"
      reference="EmphasisColor" />
     <color
+     name="Kokua"
+     value="0.749019607843140033942575 0.4666666666666700047372274 0.8078431372548999789273694 1" />
+    <!--191 119 206-->
+    <color
+     name="Kokua_11"
+     value="0.749019607843140033942575 0.4666666666666700047372274 0.8078431372548999789273694 .11" />
+    <color
+     name="Kokua_23"
+     value="0.749019607843140033942575 0.4666666666666700047372274 0.8078431372548999789273694 .23" />
+    <color
+     name="Kokua_42"
+     value="0.749019607843140033942575 0.4666666666666700047372274 0.8078431372548999789273694 .42" />
+    <color
      name="LabelDisabledColor"
-     reference="White_25" />
+	 reference="White_25" />
     <color
      name="LabelSelectedColor"
      reference="White" />
@@ -520,9 +548,6 @@
      name="MenuPopupBgColor"
 	  reference="DkGray2" />
     <color
-     name="ModelUploaderLabels"
-     value="1 0.6 0 1" />	  
-    <color
      name="MultiSliderDisabledThumbColor"
      reference="Black" />
     <color
@@ -565,7 +590,7 @@
      reference="White" />
     <color
      name="NetMapBackgroundColor"
-     value="0 0 0 1" />
+     value="0 0 0 0" />
     <color
      name="NetMapGroupOwnAboveWater"
      reference="Purple" />
@@ -622,13 +647,16 @@
      reference="White" />
     <color
      name="PieMenuBgColor"
-     value="0.24 0.24 0.24 0.59" />
+     value="0 0 0 0.75" />
+     <color
+     name="PieMenuTextColor"
+     value="1 1 1 0.85" />
     <color
      name="PieMenuLineColor"
-     value="0 0 0 0.5" />
+     value="0.24 0.24 0.24 0.5" />
     <color
      name="PieMenuSelectedColor"
-     value="0.72 0.72 0.74 0.3" />
+     reference="EmphasisColor_35" />
     <color
      name="PropertyColorAuction"
      value="0.5 0 1 0.4" />
