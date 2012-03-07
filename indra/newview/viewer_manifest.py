@@ -444,8 +444,8 @@ class WindowsManifest(ViewerManifest):
             #self.enable_no_crt_manifest_check()                
 
             if self.args['configuration'].lower() == 'debug':
-                if self.prefix(src=os.path.join(os.pardir, os.pardir, 'libraries', 'i686-win32', 'lib', 'debug'),
-                               dst="llplugin"):
+                if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'),
+                           dst="llplugin"):
                     self.path("libeay32.dll")
                     self.path("qtcored4.dll")
                     self.path("qtguid4.dll")
@@ -476,38 +476,38 @@ class WindowsManifest(ViewerManifest):
                     self.end_prefix()
             
             else:
-                if self.prefix(src=os.path.join(os.pardir, os.pardir, 'libraries', 'i686-win32', 'lib', 'release'),
-                               dst="llplugin"):
-                    self.path("libeay32.dll")
-                    self.path("qtcore4.dll")
-                    self.path("qtgui4.dll")
-                    self.path("qtnetwork4.dll")
-                    self.path("qtopengl4.dll")
-                    self.path("qtwebkit4.dll")
-                    self.path("qtxmlpatterns4.dll")
-                    self.path("ssleay32.dll")
+					if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'),
+                           dst="llplugin"):
+						self.path("libeay32.dll")
+						self.path("qtcore4.dll")
+						self.path("qtgui4.dll")
+						self.path("qtnetwork4.dll")
+						self.path("qtopengl4.dll")
+						self.path("qtwebkit4.dll")
+						self.path("qtxmlpatterns4.dll")
+						self.path("ssleay32.dll")
 
-                    # For WebKit/Qt plugin runtimes (image format plugins)
-                    if self.prefix(src="imageformats", dst="imageformats"):
-                        self.path("qgif4.dll")
-                        self.path("qico4.dll")
-                        self.path("qjpeg4.dll")
-                        self.path("qmng4.dll")
-                        self.path("qsvg4.dll")
-                        self.path("qtiff4.dll")
-                        self.end_prefix()
+						# For WebKit/Qt plugin runtimes (image format plugins)
+						if self.prefix(src="imageformats", dst="imageformats"):
+							self.path("qgif4.dll")
+							self.path("qico4.dll")
+							self.path("qjpeg4.dll")
+							self.path("qmng4.dll")
+							self.path("qsvg4.dll")
+							self.path("qtiff4.dll")
+							self.end_prefix()
 
-                    # For WebKit/Qt plugin runtimes (codec/character encoding plugins)
-                    if self.prefix(src="codecs", dst="codecs"):
-                        self.path("qcncodecs4.dll")
-                        self.path("qjpcodecs4.dll")
-                        self.path("qkrcodecs4.dll")
-                        self.path("qtwcodecs4.dll")
-                        self.end_prefix()
+						# For WebKit/Qt plugin runtimes (codec/character encoding plugins)
+						if self.prefix(src="codecs", dst="codecs"):
+							self.path("qcncodecs4.dll")
+							self.path("qjpcodecs4.dll")
+							self.path("qkrcodecs4.dll")
+							self.path("qtwcodecs4.dll")
+							self.end_prefix()
+            self.end_prefix()
 
-                    self.end_prefix()
             
-            self.disable_manifest_check()
+#            self.disable_manifest_check()
 
             # pull in the crash logger and updater from other projects
             # tag:"crash-logger" here as a cue to the exporter

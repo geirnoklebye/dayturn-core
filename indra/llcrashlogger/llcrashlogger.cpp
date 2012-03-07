@@ -422,7 +422,6 @@ bool LLCrashLogger::init()
 	if( gDirUtilp )
 	{
 		std::string marker_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Kokua.exec_marker");
-																 "SecondLife.exec_marker");
 		LLAPRFile::remove( marker_file );
 	}
 	
