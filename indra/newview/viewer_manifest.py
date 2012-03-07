@@ -417,8 +417,8 @@ class WindowsManifest(ViewerManifest):
             self.path("featuretable.txt")
             self.path("featuretable_xp.txt")
 
-            # For use in crash reporting (generates minidumps)
-            self.path("dbghelp.dll")
+            # For use in crash reporting (generates minidumps) 
+            #self.path("dbghelp.dll")
 
             # Media plugins - QuickTime
             if self.prefix(src='../media_plugins/quicktime/%s' % self.args['configuration'], dst="llplugin"):
@@ -441,7 +441,7 @@ class WindowsManifest(ViewerManifest):
                 self.end_prefix()
 
             # We do this after plugins because they may not be statically linked to the CRT -- MC
-            self.enable_no_crt_manifest_check()                
+            #self.enable_no_crt_manifest_check()                
 
             if self.args['configuration'].lower() == 'debug':
                 if self.prefix(src=os.path.join(os.pardir, os.pardir, 'libraries', 'i686-win32', 'lib', 'debug'),
