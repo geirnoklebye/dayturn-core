@@ -3107,7 +3107,7 @@ void LLAppViewer::writeSystemInfo()
 
 	// The user is not logged on yet, but record the current grid choice login url
 	// which may have been the intended grid. This can b
-	gDebugInfo["GridName"] = LLGridManager::getInstance()->getGridLabel();
+	gDebugInfo["GridName"] = LLGridManager::getInstance()->getGridNick();
 
 	// *FIX:Mani - move this down in llappviewerwin32
 #ifdef LL_WINDOWS

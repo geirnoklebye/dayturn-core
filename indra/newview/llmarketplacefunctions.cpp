@@ -47,7 +47,7 @@ static std::string getMarketplaceDomain()
 	
 	if (!LLGridManager::getInstance()->isInSLMain())
 	{
-		const std::string& grid_label = LLGridManager::getInstance()->getGridLabel();
+		const std::string& grid_label = LLGridManager::getInstance()->getGridNick();
 		const std::string& grid_label_lower = utf8str_tolower(grid_label);
 		
 		if (grid_label_lower == "damballah")

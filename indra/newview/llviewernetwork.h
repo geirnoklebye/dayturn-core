@@ -141,9 +141,13 @@ public:
 	// grid, and the various URIs will be automatically generated.
 	void setGridChoice(const std::string& grid);
 	
-	
-	std::string getGridLabel() { return mGridList[mGrid][GRID_LABEL_VALUE]; } 	
+	//get the grid label e.g. "Second Life"
+	std::string getGridLabel() { return mGridList[mGrid][GRID_LABEL_VALUE]; }
+	//get the grid nick e.g. "agni"
+	std::string getGridNick() { return mGridList[mGrid][GRID_NICK_VALUE]; }
+	//get the grid e.g. "util.agni.lindenlab.com"
 	std::string getGrid() const { return mGrid; }
+
 	void getLoginURIs(std::vector<std::string>& uris);
 	std::string getHelperURI();
 	std::string getLoginPage();
