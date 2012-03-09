@@ -439,7 +439,8 @@ class WindowsManifest(ViewerManifest):
         if self.prefix(src='../media_plugins/gstreamer010/%s' % self.args['configuration'], dst="llplugin"):
                self.path("media_plugin_gstreamer010.dll")
                self.end_prefix()
-        if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release', 'gstreamer-plugins'),
+
+               if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release', 'gstreamer-plugins'),
                            dst="llplugin/gstreamer-plugins"):
                 try:
                    #self.path("*.dll") #why does this nothing?
