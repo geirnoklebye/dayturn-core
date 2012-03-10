@@ -344,77 +344,7 @@ class WindowsManifest(ViewerManifest):
             except:
                 print "Skipping zlib1.dll"
 
-            #OpenAL
-            try:
-                self.path("openal32.dll")
-                self.path("alut.dll")
-            except:
-                print "Skipping openal"
-            # Gstreamer libs
-            try:
-                self.path("avcodec-gpl-52.dll")
-                self.path("avdevice-gpl-52.dll")
-                self.path("avfilter-gpl-1.dll")
-                self.path("avformat-gpl-52.dll")
-                self.path("avutil-gpl-50.dll")
-                self.path("iconv.dll")
-                self.path("liba52-0.dll")
-                self.path("libbz2.dll")
-                self.path("libcelt-0.dll")
-                self.path("libdca-0.dll")
-                self.path("libexpat-1.dll")
-                self.path("libfaad-2.dll")
-                self.path("libFLAC-8.dll")
-                self.path("libgcrypt-11.dll")
-                self.path("libgio-2.0-0.dll")
-                self.path("libglib-2.0-0.dll")
-                self.path("libgmodule-2.0-0.dll")
-                self.path("libgnutls-26.dll")
-                self.path("libgobject-2.0-0.dll")
-                self.path("libgpg-error-0.dll")
-                self.path("libgstapp-0.10.dll")
-                self.path("libgstaudio-0.10.dll")
-                self.path("libgstbase-0.10.dll")
-                self.path("libgstcontroller-0.10.dll")
-                self.path("libgstdataprotocol-0.10.dll")
-                self.path("libgstfft-0.10.dll")
-                self.path("libgstinterfaces-0.10.dll")
-                self.path("libgstnet-0.10.dll")
-                self.path("libgstnetbuffer-0.10.dll")
-                self.path("libgstpbutils-0.10.dll")
-                self.path("libgstphotography-0.10.dll")
-                self.path("libgstreamer-0.10.dll")
-                self.path("libgstriff-0.10.dll")
-                self.path("libgstrtp-0.10.dll")
-                self.path("libgstrtsp-0.10.dll")
-                self.path("libgstsdp-0.10.dll")
-                self.path("libgstsignalprocessor-0.10.dll")
-                self.path("libgsttag-0.10.dll")
-                self.path("libgstvideo-0.10.dll")
-                self.path("libgthread-2.0-0.dll")
-                self.path("libmms-0.dll")
-                self.path("libmpeg2-0.dll")
-                self.path("libneon-27.dll")
-                self.path("libogg-0.dll")
-                self.path("liboil-0.3-0.dll")
-                self.path("libsoup-2.4-1.dll")
-                self.path("libtasn1-3.dll")
-                self.path("libtheora-0.dll")
-                self.path("libtheoradec-1.dll")
-                self.path("libvorbis-0.dll")
-                self.path("libvorbisenc-2.dll")
-                self.path("libvorbisfile-3.dll")
-                self.path("libwavpack-1.dll")
-                self.path("libx264-67.dll")
-                self.path("libxml2-2.dll")
-                self.path("libxml2.dll")
-                self.path("SDL.dll")
-                self.path("xvidcore.dll")
-                self.path("z.dll")
-            except:
-                print "Skipping gstreamer libraries"
-
-                # Security
+               # Security
             self.path("ssleay32.dll")
             self.path("libeay32.dll")
 
@@ -431,95 +361,173 @@ class WindowsManifest(ViewerManifest):
 
         self.path(src="licenses-win32.txt", dst="licenses.txt")
         self.path("featuretable.txt")
-        self.path("featuretable_xp.txt")
+        self.path("featuretable_xp.txt")        
+
+        #OpenAL
+        try:
+            self.path("openal32.dll")
+            self.path("alut.dll")
+        except:
+            print "Skipping openal"
+        # Gstreamer libs
+        try:
+            self.path("avcodec-gpl-52.dll")
+            self.path("avdevice-gpl-52.dll")
+            self.path("avfilter-gpl-1.dll")
+            self.path("avformat-gpl-52.dll")
+            self.path("avutil-gpl-50.dll")
+            self.path("iconv.dll")
+            self.path("liba52-0.dll")
+            self.path("libbz2.dll")
+            self.path("libcelt-0.dll")
+            self.path("libdca-0.dll")
+            self.path("libexpat-1.dll")
+            self.path("libfaad-2.dll")
+            self.path("libFLAC-8.dll")
+            self.path("libgcrypt-11.dll")
+            self.path("libgio-2.0-0.dll")
+            self.path("libglib-2.0-0.dll")
+            self.path("libgmodule-2.0-0.dll")
+            self.path("libgnutls-26.dll")
+            self.path("libgobject-2.0-0.dll")
+            self.path("libgpg-error-0.dll")
+            self.path("libgstapp-0.10.dll")
+            self.path("libgstaudio-0.10.dll")
+            self.path("libgstbase-0.10.dll")
+            self.path("libgstcontroller-0.10.dll")
+            self.path("libgstdataprotocol-0.10.dll")
+            self.path("libgstfft-0.10.dll")
+            self.path("libgstinterfaces-0.10.dll")
+            self.path("libgstnet-0.10.dll")
+            self.path("libgstnetbuffer-0.10.dll")
+            self.path("libgstpbutils-0.10.dll")
+            self.path("libgstphotography-0.10.dll")
+            self.path("libgstreamer-0.10.dll")
+            self.path("libgstriff-0.10.dll")
+            self.path("libgstrtp-0.10.dll")
+            self.path("libgstrtsp-0.10.dll")
+            self.path("libgstsdp-0.10.dll")
+            self.path("libgstsignalprocessor-0.10.dll")
+            self.path("libgsttag-0.10.dll")
+            self.path("libgstvideo-0.10.dll")
+            self.path("libgthread-2.0-0.dll")
+            self.path("libmms-0.dll")
+            self.path("libmpeg2-0.dll")
+            self.path("libneon-27.dll")
+            self.path("libogg-0.dll")
+            self.path("liboil-0.3-0.dll")
+            self.path("libsoup-2.4-1.dll")
+            self.path("libtasn1-3.dll")
+            self.path("libtheora-0.dll")
+            self.path("libtheoradec-1.dll")
+            self.path("libvorbis-0.dll")
+            self.path("libvorbisenc-2.dll")
+            self.path("libvorbisfile-3.dll")
+            self.path("libwavpack-1.dll")
+            self.path("libx264-67.dll")
+            self.path("libxml2-2.dll")
+            self.path("libxml2.dll")
+            self.path("SDL.dll")
+            self.path("xvidcore.dll")
+            self.path("z.dll")
+        except:
+            print "Skipping gstreamer libraries"
+ 
+
+
+
 
         #self.enable_no_crt_manifest_check()
 
-        # Gstreamer plugins
+        # On first build tries to copy before it is built.
         if self.prefix(src='../media_plugins/gstreamer010/%s' % self.args['configuration'], dst="llplugin"):
-               self.path("media_plugin_gstreamer010.dll")
-               self.end_prefix()
+            try:
+                self.path("media_plugin_gstreamer010.dll")
+            except:
+                print "Skipping media_plugin_gstreamer010.dll" 
+            self.end_prefix()
 
-               if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release', 'gstreamer-plugins'),
-                           dst="llplugin/gstreamer-plugins"):
-                try:
-                   #self.path("*.dll") #why does this nothing?
-                   self.path("libgsta52dec.dll")
-                   self.path("libgstadder.dll")
-                   self.path("libgstapetag.dll")
-                   self.path("libgstapp.dll")
-                   self.path("libgstasf.dll")
-                   self.path("libgstasfmux.dll")
-                   self.path("libgstaudioconvert.dll")
-                   self.path("libgstaudiofx.dll")
-                   self.path("libgstaudiorate.dll")
-                   self.path("libgstaudioresample.dll")
-                   self.path("libgstauparse.dll")
-                   self.path("libgstautoconvert.dll")
-                   self.path("libgstautodetect.dll")
-                   self.path("libgstbz2.dll")
-                   self.path("libgstcelt.dll")
-                   self.path("libgstcoreelements.dll")
-                   self.path("libgstdecodebin.dll")
-                   self.path("libgstdecodebin2.dll")
-                   self.path("libgstdirectsound.dll")
-                   self.path("libgstdirectsoundsrc.dll")
-                   self.path("libgstdtsdec.dll")
-                   self.path("libgstequalizer.dll")
-                   self.path("libgstfaad.dll")
-                   self.path("libgstffmpeg-gpl.dll")
-                   self.path("libgstflac.dll")
-                   self.path("libgstfreeze.dll")
-                   self.path("libgstgdp.dll")
-                   self.path("libgstgio.dll")
-                   self.path("libgsth264parse.dll")
-                   self.path("libgsticydemux.dll")
-                   self.path("libgstid3demux.dll")
-                   self.path("libgstinterleave.dll")
-                   self.path("libgstlegacyresample.dll")
-                   self.path("libgstlevel.dll")
-                   self.path("libgstliveadder.dll")
-                   self.path("libgstmms.dll")
-                   self.path("libgstmpeg2dec.dll")
-                   self.path("libgstmpegaudioparse.dll")
-                   self.path("libgstmpegdemux.dll")
-                   self.path("libgstmpegpsmux.dll")
-                   self.path("libgstmpegstream.dll")
-                   self.path("libgstmpegtsmux.dll")
-                   self.path("libgstneonhttpsrc.dll")
-                   self.path("libgstogg.dll")
-                   self.path("libgstplaybin.dll")
-                   self.path("libgstqtdemux.dll")
-                   self.path("libgstqtmux.dll")
-                   self.path("libgstrawparse.dll")
-                   self.path("libgstreal.dll")
-                   self.path("libgstrtp.dll")
-                   self.path("libgstrtpdemux.dll")
-                   self.path("libgstrtpjitterbuffer.dll")
-                   self.path("libgstrtpmanager.dll")
-                   self.path("libgstrtpmux.dll")
-                   self.path("libgstrtppayloads.dll")
-                   self.path("libgstrtsp.dll")
-                   self.path("libgstscaletempoplugin.dll")
-                   self.path("libgstsdl.dll")
-                   self.path("libgstsdpelem.dll")
-                   self.path("libgstsouphttpsrc.dll")
-                   self.path("libgststereo.dll")
-                   self.path("libgsttta.dll")
-                   self.path("libgsttypefindfunctions.dll")
-                   self.path("libgstudp.dll")
-                   self.path("libgstvalve.dll")
-                   self.path("libgstvolume.dll")
-                   self.path("libgstvorbis.dll")
-                   self.path("libgstwasapi.dll")
-                   self.path("libgstwaveformsink.dll")
-                   self.path("libgstwavpack.dll")
-                   self.path("libgstwavparse.dll")
-                   self.path("libgstwininet.dll")
-                   self.path("libgstx264.dll")
-                except:
-                    print "Skipping gstreamer-plugins"
-                self.end_prefix()
+        # Gstreamer plugins
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release', 'gstreamer-plugins'),
+            dst="llplugin/gstreamer-plugins"):
+            try:
+               #self.path("*.dll") #why does this nothing?
+               self.path("libgsta52dec.dll")
+               self.path("libgstadder.dll")
+               self.path("libgstapetag.dll")
+               self.path("libgstapp.dll")
+               self.path("libgstasf.dll")
+               self.path("libgstasfmux.dll")
+               self.path("libgstaudioconvert.dll")
+               self.path("libgstaudiofx.dll")
+               self.path("libgstaudiorate.dll")
+               self.path("libgstaudioresample.dll")
+               self.path("libgstauparse.dll")
+               self.path("libgstautoconvert.dll")
+               self.path("libgstautodetect.dll")
+               self.path("libgstbz2.dll")
+               self.path("libgstcelt.dll")
+               self.path("libgstcoreelements.dll")
+               self.path("libgstdecodebin.dll")
+               self.path("libgstdecodebin2.dll")
+               self.path("libgstdirectsound.dll")
+               self.path("libgstdirectsoundsrc.dll")
+               self.path("libgstdtsdec.dll")
+               self.path("libgstequalizer.dll")
+               self.path("libgstfaad.dll")
+               self.path("libgstffmpeg-gpl.dll")
+               self.path("libgstflac.dll")
+               self.path("libgstfreeze.dll")
+               self.path("libgstgdp.dll")
+               self.path("libgstgio.dll")
+               self.path("libgsth264parse.dll")
+               self.path("libgsticydemux.dll")
+               self.path("libgstid3demux.dll")
+               self.path("libgstinterleave.dll")
+               self.path("libgstlegacyresample.dll")
+               self.path("libgstlevel.dll")
+               self.path("libgstliveadder.dll")
+               self.path("libgstmms.dll")
+               self.path("libgstmpeg2dec.dll")
+               self.path("libgstmpegaudioparse.dll")
+               self.path("libgstmpegdemux.dll")
+               self.path("libgstmpegpsmux.dll")
+               self.path("libgstmpegstream.dll")
+               self.path("libgstmpegtsmux.dll")
+               self.path("libgstneonhttpsrc.dll")
+               self.path("libgstogg.dll")
+               self.path("libgstplaybin.dll")
+               self.path("libgstqtdemux.dll")
+               self.path("libgstqtmux.dll")
+               self.path("libgstrawparse.dll")
+               self.path("libgstreal.dll")
+               self.path("libgstrtp.dll")
+               self.path("libgstrtpdemux.dll")
+               self.path("libgstrtpjitterbuffer.dll")
+               self.path("libgstrtpmanager.dll")
+               self.path("libgstrtpmux.dll")
+               self.path("libgstrtppayloads.dll")
+               self.path("libgstrtsp.dll")
+               self.path("libgstscaletempoplugin.dll")
+               self.path("libgstsdl.dll")
+               self.path("libgstsdpelem.dll")
+               self.path("libgstsouphttpsrc.dll")
+               self.path("libgststereo.dll")
+               self.path("libgsttta.dll")
+               self.path("libgsttypefindfunctions.dll")
+               self.path("libgstudp.dll")
+               self.path("libgstvalve.dll")
+               self.path("libgstvolume.dll")
+               self.path("libgstvorbis.dll")
+               self.path("libgstwasapi.dll")
+               self.path("libgstwaveformsink.dll")
+               self.path("libgstwavpack.dll")
+               self.path("libgstwavparse.dll")
+               self.path("libgstwininet.dll")
+               self.path("libgstx264.dll")
+            except:
+                print "Skipping gstreamer-plugins"
+        self.end_prefix()
 
         # Media plugins - QuickTime
         if self.prefix(src='../media_plugins/quicktime/%s' % self.args['configuration'], dst="llplugin"):
@@ -531,12 +539,18 @@ class WindowsManifest(ViewerManifest):
 
         # Media plugins - WebKit/Qt
         if self.prefix(src='../media_plugins/webkit/%s' % self.args['configuration'], dst="llplugin"):
-            self.path("media_plugin_webkit.dll")
+            try:
+                self.path("media_plugin_webkit.dll")
+            except:
+                print "Skipping media_plugin_webkit.dll"
             self.end_prefix()
 
         # winmm.dll shim
         if self.prefix(src='../media_plugins/winmmshim/%s' % self.args['configuration'], dst=""):
-            self.path("winmm.dll")
+            try:
+                self.path("winmm.dll")
+            except:
+                print "Skipping winmm.dll"
             self.end_prefix()
 
 
@@ -683,7 +697,7 @@ class WindowsManifest(ViewerManifest):
         if self.default_channel():
             if self.default_grid():
                 # release viewer
-                installer_file = "Kokua_Mesh_Upload_Test%(version_dashes)s_Setup.exe"
+                installer_file = "Kokua_Experimental-%(version_dashes)s_Setup.exe"
                 grid_vars_template = """
                 OutFile "%(installer_file)s"
                 !define INSTFLAGS "%(flags)s"
@@ -694,7 +708,7 @@ class WindowsManifest(ViewerManifest):
                 """
             else:
                 # beta grid viewer
-                installer_file = "Kokua_Mesh_Upload_Test%(version_dashes)s_(%(grid_caps)s)_Setup.exe"
+                installer_file = "Kokua_Experimental-%(version_dashes)s_(%(grid_caps)s)_Setup.exe"
                 grid_vars_template = """
                 OutFile "%(installer_file)s"
                 !define INSTFLAGS "%(flags)s"
@@ -706,7 +720,7 @@ class WindowsManifest(ViewerManifest):
                 """
         else:
             # some other channel on some grid
-            installer_file = "Kokua_Mesh_Upload_Test%(version_dashes)s_%(channel_oneword)s_Setup.exe"
+            installer_file = "Kokua_Experimental-%(version_dashes)s_%(channel_oneword)s_Setup.exe"
             grid_vars_template = """
             OutFile "%(installer_file)s"
             !define INSTFLAGS "%(flags)s"
