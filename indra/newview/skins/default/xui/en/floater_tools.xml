@@ -383,6 +383,7 @@
      top_pad="0"
      name="checkbox snap to grid"
      width="134" />
+  <!-- MK: What's this doing here ?
     <combo_box
       height="20"
       layout="topleft"
@@ -408,7 +409,7 @@
       <combo_box.commit_callback
       function="BuildTool.gridMode"/>
     </combo_box>  
-  
+  -->
   <button
      left="259"
      label=""

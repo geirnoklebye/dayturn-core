@@ -328,7 +328,6 @@ void LLNetMap::draw()
 
 		gGL.popMatrix();
 
-
 		// Mouse pointer in local coordinates
 		S32 local_mouse_x;
 		S32 local_mouse_y;
@@ -353,19 +352,6 @@ void LLNetMap::draw()
 
 			bool show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
 
-			LLColor4 color = show_as_friend ? map_avatar_friend_color : map_avatar_color;
-
-			unknown_relative_z = positions[i].mdV[VZ] == COARSEUPDATE_MAX_Z &&
-					camera_position.mV[VZ] >= COARSEUPDATE_MAX_Z;
-
-				LLUUID uuid(NULL);
-				BOOL show_as_friend = FALSE;
-				if( i < regionp->mMapAvatarIDs.count())
-				{
-					uuid = regionp->mMapAvatarIDs.get(i);
-					show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
-				}
-
 //MK
 				// Don't show as friend under @shownames, since it can give away an
 				// information about the avatars who are around
@@ -374,52 +360,55 @@ void LLNetMap::draw()
 					show_as_friend = false;
 				}
 //mk
-				LLColor4 color = show_as_friend ? map_avatar_friend_color : map_avatar_color;
-				LLWorldMapView::drawAvatar(
-					pos_map.mV[VX], pos_map.mV[VY], 
-					color, 
+			LLColor4 color = show_as_friend ? map_avatar_friend_color : map_avatar_color;
+
+			unknown_relative_z = positions[i].mdV[VZ] == COARSEUPDATE_MAX_Z &&
+					camera_position.mV[VZ] >= COARSEUPDATE_MAX_Z;
+
+			LLWorldMapView::drawAvatar(
+				pos_map.mV[VX], pos_map.mV[VY], 
+				color, 
 				pos_map.mV[VZ], mDotRadius,
 				unknown_relative_z);
 
-				if(uuid.notNull())
+			if(uuid.notNull())
+			{
+				bool selected = false;
+				uuid_vec_t::iterator sel_iter = gmSelected.begin();
+				for (; sel_iter != gmSelected.end(); sel_iter++)
 				{
-					bool selected = false;
-					uuid_vec_t::iterator sel_iter = gmSelected.begin();
-					for (; sel_iter != gmSelected.end(); sel_iter++)
+					if(*sel_iter == uuid)
 					{
-						if(*sel_iter == uuid)
-						{
-							selected = true;
-							break;
-						}
-					}
-					if(selected)
-					{
-						if( (pos_map.mV[VX] < 0) ||
-							(pos_map.mV[VY] < 0) ||
-							(pos_map.mV[VX] >= getRect().getWidth()) ||
-							(pos_map.mV[VY] >= getRect().getHeight()) )
-						{
-							S32 x = llround( pos_map.mV[VX] );
-							S32 y = llround( pos_map.mV[VY] );
-							LLWorldMapView::drawTrackingCircle( getRect(), x, y, color, 1, 10);
-						} else
-						{
-							LLWorldMapView::drawTrackingDot(pos_map.mV[VX],pos_map.mV[VY],color,0.f);
-						}
+						selected = true;
+						break;
 					}
 				}
+				if(selected)
+				{
+					if( (pos_map.mV[VX] < 0) ||
+						(pos_map.mV[VY] < 0) ||
+						(pos_map.mV[VX] >= getRect().getWidth()) ||
+						(pos_map.mV[VY] >= getRect().getHeight()) )
+					{
+						S32 x = llround( pos_map.mV[VX] );
+						S32 y = llround( pos_map.mV[VY] );
+						LLWorldMapView::drawTrackingCircle( getRect(), x, y, color, 1, 10);
+					} else
+					{
+						LLWorldMapView::drawTrackingDot(pos_map.mV[VX],pos_map.mV[VY],color,0.f);
+					}
+				}
+			}
 
-				F32	dist_to_cursor_squared = dist_vec_squared(LLVector2(pos_map.mV[VX], pos_map.mV[VY]),
-											  LLVector2(local_mouse_x,local_mouse_y));
-				if(dist_to_cursor_squared < min_pick_dist_squared && dist_to_cursor_squared < closest_dist_squared)
-				{
-					closest_dist_squared = dist_to_cursor_squared;
-					mClosestAgentToCursor = uuid;
+			F32	dist_to_cursor_squared = dist_vec_squared(LLVector2(pos_map.mV[VX], pos_map.mV[VY]),
+										  LLVector2(local_mouse_x,local_mouse_y));
+			if(dist_to_cursor_squared < min_pick_dist_squared && dist_to_cursor_squared < closest_dist_squared)
+			{
+				closest_dist_squared = dist_to_cursor_squared;
+				mClosestAgentToCursor = uuid;
 //MK
-					mClosestAgentPosition = pos_global;
+					mClosestAgentPosition = LLVector3d (pos_map);
 //mk
-				}
 			}
 		}
 
@@ -517,7 +506,7 @@ void LLNetMap::reshape(S32 width, S32 height, BOOL called_from_parent)
 	createObjectImage();
 }
 
-LLVector3 LLNetMap::globalPosToView( const LLVector3d& global_pos )
+LLVector3 LLNetMap::globalPosToView(const LLVector3d& global_pos)
 {
 	LLVector3d camera_position = gAgentCamera.getCameraPositionGlobal();
 
@@ -546,7 +535,7 @@ LLVector3 LLNetMap::globalPosToView( const LLVector3d& global_pos )
 void LLNetMap::drawTracking(const LLVector3d& pos_global, const LLColor4& color, 
 							BOOL draw_arrow )
 {
-	LLVector3 pos_local = globalPosToView( pos_global );
+	LLVector3 pos_local = globalPosToView(pos_global);
 	if( (pos_local.mV[VX] < 0) ||
 		(pos_local.mV[VY] < 0) ||
 		(pos_local.mV[VX] >= getRect().getWidth()) ||
@@ -681,6 +670,7 @@ BOOL LLNetMap::handleToolTipAgent(const LLUUID& avatar_id)
 	{
 		LLInspector::Params p;
 		p.fillFrom(LLUICtrlFactory::instance().getDefaultParams<LLInspector>());
+		p.message(av_name.getCompleteName());
 //MK
 		std::string label = av_name.getCompleteName();
 		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)

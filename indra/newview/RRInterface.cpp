@@ -3039,15 +3039,11 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 
 	else if (command == "hazehorizon") {
-		params->mHazeHorizon.r = val*2;
-		params->mHazeHorizon.g = val*2;
-		params->mHazeHorizon.b = val*2;
+		params->mHazeHorizon.x = val*2;
 		updateAndSave (&(params->mHazeHorizon));
 	}
 	else if (command == "hazedensity") {
-		params->mHazeDensity.r = val*2;
-		params->mHazeDensity.g = val*2;
-		params->mHazeDensity.b = val*2;
+		params->mHazeDensity.x = val*2;
 		updateAndSave (&(params->mHazeDensity));
 	}
 
@@ -3243,8 +3239,8 @@ std::string RRInterface::getEnvironment (std::string command)
 	else if (command == "bluedensityb") res = params->mBlueDensity.b/2;
 	else if (command == "bluedensityi") res = max (max (params->mBlueDensity.r, params->mBlueDensity.g), params->mBlueDensity.b) / 2;
 
-	else if (command == "hazehorizon")  res = max (max (params->mHazeHorizon.r, params->mHazeHorizon.g), params->mHazeHorizon.b) / 2;
-	else if (command == "hazedensity")  res = max (max (params->mHazeDensity.r, params->mHazeDensity.g), params->mHazeDensity.b) / 2;
+	else if (command == "hazehorizon")  res = params->mHazeHorizon.x;
+	else if (command == "hazedensity")  res = params->mHazeDensity.x;
 
 	else if (command == "densitymultiplier")  res = params->mDensityMult.x*1000;
 	else if (command == "distancemultiplier") res = params->mDistanceMult.x;

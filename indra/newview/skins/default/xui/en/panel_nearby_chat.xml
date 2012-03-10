@@ -40,7 +40,7 @@
 -->
     <layout_panel
      auto_resize="true"
-     height="277"
+     height="300"
      left_delta="0"
      layout="topleft"
      name="chat_history_lp"
@@ -52,7 +52,7 @@
        layout="topleft"
        left="5"
        left_widget_pad="0"
-       height="272"
+       height="300"
        name="chat_history"
        parse_highlights="true"
        parse_urls="true"
