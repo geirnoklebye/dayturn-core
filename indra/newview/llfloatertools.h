@@ -37,6 +37,7 @@
 class LLButton;
 class LLComboBox;
 class LLCheckBoxCtrl;
+class LLComboBox;
 class LLPanelPermissions;
 class LLPanelObject;
 class LLPanelVolume;

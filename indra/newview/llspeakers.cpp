@@ -272,6 +272,7 @@ LLPointer<LLSpeaker> LLSpeakerMgr::setSpeaker(const LLUUID& id, const std::strin
 		speakerp->mStatus = status;
 		mSpeakers.insert(std::make_pair(speakerp->mID, speakerp));
 		mSpeakersSorted.push_back(speakerp);
+		LL_DEBUGS("Speakers") << "Added speaker " << id << llendl;
 		fireEvent(new LLSpeakerListChangeEvent(this, speakerp->mID), "add");
 	}
 	else
@@ -289,6 +290,10 @@ LLPointer<LLSpeaker> LLSpeakerMgr::setSpeaker(const LLUUID& id, const std::strin
 				speakerp->mType = LLSpeaker::SPEAKER_AGENT;
 				speakerp->lookupName();
 			}
+		}
+		else
+		{
+			LL_WARNS("Speakers") << "Speaker " << id << " not found" << llendl;
 		}
 	}
 
@@ -360,6 +365,7 @@ void LLSpeakerMgr::update(BOOL resort_ok)
 			if (moderator_muted_voice != speakerp->mModeratorMutedVoice)
 			{
 				speakerp->mModeratorMutedVoice = moderator_muted_voice;
+				LL_DEBUGS("Speakers") << (speakerp->mModeratorMutedVoice? "Muted" : "Umuted") << " speaker " << speaker_id<< llendl;
 				speakerp->fireEvent(new LLSpeakerVoiceModerationEvent(speakerp));
 			}
 
@@ -496,6 +502,7 @@ bool LLSpeakerMgr::removeSpeaker(const LLUUID& speaker_id)
 		}
 	}
 
+	LL_DEBUGS("Speakers") << "Removed speaker " << speaker_id << llendl;
 	fireEvent(new LLSpeakerListChangeEvent(this, speaker_id), "remove");
 
 	update(TRUE);
@@ -607,7 +614,10 @@ void LLIMSpeakerMgr::setSpeakers(const LLSD& speakers)
 					speaker_it->second["mutes"]["text"];
 				// Fire event only if moderator changed
 				if ( is_moderator != speakerp->mIsModerator )
+				{
+					LL_DEBUGS("Speakers") << "Speaker " << agent_id << (is_moderator ? "is now" : "no longer is") << " a moderator" << llendl;
 					fireEvent(new LLSpeakerUpdateModeratorEvent(speakerp), "update_moderator");
+				}
 			}
 		}
 	}
@@ -677,7 +687,10 @@ void LLIMSpeakerMgr::updateSpeakers(const LLSD& update)
 					speakerp->mIsModerator = agent_info["is_moderator"];
 					// Fire event only if moderator changed
 					if ( is_moderator != speakerp->mIsModerator )
+					{
+						LL_DEBUGS("Speakers") << "Speaker " << agent_id << (is_moderator ? "is now" : "no longer is") << " a moderator" << llendl;
 						fireEvent(new LLSpeakerUpdateModeratorEvent(speakerp), "update_moderator");
+					}
 				}
 
 				if (agent_info.has("mutes"))
@@ -869,6 +882,7 @@ void LLActiveSpeakerMgr::updateSpeakerList()
 	// always populate from active voice channel
 	if (LLVoiceChannel::getCurrentVoiceChannel() != mVoiceChannel) //MA: seems this is always false
 	{
+		LL_DEBUGS("Speakers") << "Removed all speakers" << llendl;
 		fireEvent(new LLSpeakerListChangeEvent(this, LLUUID::null), "clear");
 		mSpeakers.clear();
 		mSpeakersSorted.clear();

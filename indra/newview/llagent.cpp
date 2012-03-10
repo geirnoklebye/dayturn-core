@@ -2151,7 +2151,6 @@ void LLAgent::endAnimationUpdateUI()
 		LLFloaterCamera::onAvatarEditingAppearance(false);
 	}
 
-//MK
 	//---------------------------------------------------------------------
 	// Set up UI for mode we're entering
 	//---------------------------------------------------------------------

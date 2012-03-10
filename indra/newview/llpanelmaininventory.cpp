@@ -578,7 +578,7 @@ void LLPanelMainInventory::updateItemcountText()
 
 	std::string text = "";
 
-	if (LLInventoryModelBackgroundFetch::instance().backgroundFetchActive())
+	if (LLInventoryModelBackgroundFetch::instance().folderFetchActive())
 	{
 		text = getString("ItemcountFetching", string_args);
 	}

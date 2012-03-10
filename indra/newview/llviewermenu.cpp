@@ -3329,8 +3329,7 @@ void handle_avatar_eject(const LLSD& avatar_id)
 
 bool my_profile_visible()
 {
-	//LLFloater* floaterp = LLAvatarActions::getProfileFloater(gAgentID);
-	LLFloater* floaterp = LLFloaterReg::findInstance("profile", LLSD().with("id", gAgent.getID()));
+	LLFloater* floaterp = LLAvatarActions::getProfileFloater(gAgentID);
 	return floaterp && floaterp->isInVisibleChain();
 }
 
@@ -7991,12 +7990,12 @@ class LLToolsUseSelectionForGrid : public view_listener_t
 		LLSelectMgr::getInstance()->getSelection()->applyToRootObjects(&func);
 		LLSelectMgr::getInstance()->setGridMode(GRID_MODE_REF_OBJECT);
 
+//MK
 		LLFloaterBuildOptions* build_options_floater = LLFloaterReg::getTypedInstance<LLFloaterBuildOptions>("build_options");
 		if (build_options_floater && build_options_floater->getVisible())
 		{
 			build_options_floater->setGridMode(GRID_MODE_REF_OBJECT);
 		}
-//MK
 		LLFloaterTools* tools_floater = LLFloaterReg::getTypedInstance<LLFloaterTools>("build");
 		if (tools_floater && tools_floater->getVisible())
 		{

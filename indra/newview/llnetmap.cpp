@@ -78,6 +78,8 @@ const F32 DOT_SCALE = 0.75f;
 const F32 MIN_PICK_SCALE = 2.f;
 const S32 MOUSE_DRAG_SLOP = 2;		// How far the mouse needs to move before we think it's a drag
 
+const F64 COARSEUPDATE_MAX_Z = 1020.0f;
+
 LLNetMap::LLNetMap (const Params & p)
 :	LLUICtrl (p),
 	mBackgroundColor (p.bg_color()),
@@ -304,7 +306,8 @@ void LLNetMap::draw()
 		}
 
 		LLVector3 map_center_agent = gAgent.getPosAgentFromGlobal(mObjectImageCenterGlobal);
-		map_center_agent -= gAgentCamera.getCameraPositionAgent();
+		LLVector3 camera_position = gAgentCamera.getCameraPositionAgent();
+		map_center_agent -= camera_position;
 		map_center_agent.mV[VX] *= mScale/region_width;
 		map_center_agent.mV[VY] *= mScale/region_width;
 
@@ -325,8 +328,6 @@ void LLNetMap::draw()
 
 		gGL.popMatrix();
 
-		LLVector3d pos_global;
-		LLVector3 pos_map;
 
 		// Mouse pointer in local coordinates
 		S32 local_mouse_x;
@@ -337,39 +338,25 @@ void LLNetMap::draw()
 		F32 closest_dist_squared = F32_MAX; // value will be overridden in the loop
 		F32 min_pick_dist_squared = (mDotRadius * MIN_PICK_SCALE) * (mDotRadius * MIN_PICK_SCALE);
 
+		LLVector3 pos_map;
+		uuid_vec_t avatar_ids;
+		std::vector<LLVector3d> positions;
+		bool unknown_relative_z;
+
+		LLWorld::getInstance()->getAvatars(&avatar_ids, &positions, gAgentCamera.getCameraPositionGlobal());
+
 		// Draw avatars
-		for (LLWorld::region_list_t::const_iterator iter = LLWorld::getInstance()->getRegionList().begin();
-			 iter != LLWorld::getInstance()->getRegionList().end(); ++iter)
+		for (U32 i = 0; i < avatar_ids.size(); i++)
 		{
-			LLViewerRegion* regionp = *iter;
-			const LLVector3d& origin_global = regionp->getOriginGlobal();
+			pos_map = globalPosToView(positions[i]);
+			LLUUID uuid = avatar_ids[i];
 
-			S32 count = regionp->mMapAvatars.count();
-			S32 i;
-			LLVector3 pos_local;
-			U32 compact_local;
-			U8 bits;
-			// TODO: it'd be very cool to draw these in sorted order from lowest Z to highest.
-			// just be careful to sort the avatar IDs along with the positions. -MG
-			for (i = 0; i < count; i++)
-			{
-				compact_local = regionp->mMapAvatars.get(i);
+			bool show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
 
-				bits = compact_local & 0xFF;
-				pos_local.mV[VZ] = F32(bits) * 4.f;
-				compact_local >>= 8;
+			LLColor4 color = show_as_friend ? map_avatar_friend_color : map_avatar_color;
 
-				bits = compact_local & 0xFF;
-				pos_local.mV[VY] = (F32)bits;
-				compact_local >>= 8;
-
-				bits = compact_local & 0xFF;
-				pos_local.mV[VX] = (F32)bits;
-
-				pos_global.setVec( pos_local );
-				pos_global += origin_global;
-
-				pos_map = globalPosToView(pos_global);
+			unknown_relative_z = positions[i].mdV[VZ] == COARSEUPDATE_MAX_Z &&
+					camera_position.mV[VZ] >= COARSEUPDATE_MAX_Z;
 
 				LLUUID uuid(NULL);
 				BOOL show_as_friend = FALSE;
@@ -391,7 +378,8 @@ void LLNetMap::draw()
 				LLWorldMapView::drawAvatar(
 					pos_map.mV[VX], pos_map.mV[VY], 
 					color, 
-					pos_map.mV[VZ], mDotRadius);
+				pos_map.mV[VZ], mDotRadius,
+				unknown_relative_z);
 
 				if(uuid.notNull())
 				{
@@ -427,7 +415,7 @@ void LLNetMap::draw()
 				if(dist_to_cursor_squared < min_pick_dist_squared && dist_to_cursor_squared < closest_dist_squared)
 				{
 					closest_dist_squared = dist_to_cursor_squared;
-					mClosestAgentToCursor = regionp->mMapAvatarIDs.get(i);
+					mClosestAgentToCursor = uuid;
 //MK
 					mClosestAgentPosition = pos_global;
 //mk
@@ -455,7 +443,7 @@ void LLNetMap::draw()
 		}
 
 		// Draw dot for self avatar position
-		pos_global = gAgent.getPositionGlobal();
+		LLVector3d pos_global = gAgent.getPositionGlobal();
 		pos_map = globalPosToView(pos_global);
 		S32 dot_width = llround(mDotRadius * 2.f);
 		LLUIImagePtr you = LLWorldMapView::sAvatarYouLargeImage;
@@ -531,7 +519,9 @@ void LLNetMap::reshape(S32 width, S32 height, BOOL called_from_parent)
 
 LLVector3 LLNetMap::globalPosToView( const LLVector3d& global_pos )
 {
-	LLVector3d relative_pos_global = global_pos - gAgentCamera.getCameraPositionGlobal();
+	LLVector3d camera_position = gAgentCamera.getCameraPositionGlobal();
+
+	LLVector3d relative_pos_global = global_pos - camera_position;
 	LLVector3 pos_local;
 	pos_local.setVec(relative_pos_global);  // convert to floats from doubles
 
