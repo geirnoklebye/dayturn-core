@@ -288,6 +288,8 @@
         </map>
     <key>util.aditi.lindenlab.com</key>
         <map>
+        <key>LastModified</key>
+            <date>2012-03-11T13:37:23.42Z</date>
         <key>app_slurl_base</key>
             <string>secondlife:///app</string>
         <key>gridname</key>
@@ -301,7 +303,7 @@
                 <string>agent</string>
             </array>
         <key>loginpage</key>
-            <string>http://secondlife.com/app/login/</string>
+            <string>http://viewer-login.agni.lindenlab.com</string>
         <key>loginuri</key>
             <array>
                 <string>https://login.aditi.lindenlab.com/cgi-bin/login.cgi</string>
@@ -315,6 +317,8 @@
         </map>
     <key>util.agni.lindenlab.com</key>
         <map>
+        <key>LastModified</key>
+            <date>2012-03-11T13:37:23.42Z</date>
         <key>app_slurl_base</key>
             <string>secondlife:///app</string>
         <key>favorite</key>
@@ -330,7 +334,7 @@
                 <string>agent</string>
             </array>
         <key>loginpage</key>
-            <string>http://secondlife.com/app/login/</string>
+            <string>http://viewer-login.agni.lindenlab.com/</string>
         <key>loginuri</key>
             <array>
                 <string>https://login.agni.lindenlab.com/cgi-bin/login.cgi</string>

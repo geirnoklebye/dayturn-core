@@ -501,9 +501,6 @@ void LLGridManager::gridInfoResponderCB(GridEntry* grid_entry)
 	std::string slurl_base(llformat(DEFAULT_SLURL_BASE, grid.c_str()));
 	grid_entry->grid[GRID_SLURL_BASE]= slurl_base;
 
-	LLDate now = LLDate::now();
-	grid_entry->grid["LastModified"] = now;
-
 	addGrid(grid_entry, FINISH);
 }
 
@@ -679,6 +676,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 			llwarns << "Adding Legacy Economy at:" << grid_entry->grid[GRID_HELPER_URI_VALUE].asString() << llendl;
 			grid_entry->grid[GRID_HELPER_URI_VALUE] = std::string("https://") + grid + "/helpers/";
 		}
+
 	}
 
 	if(FAIL != state)
@@ -701,6 +699,11 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 		{
 			if (!mGridList.has(grid)) //new grid
 			{
+				if (!grid_entry->grid.has("LastModified"))
+				{
+					LLDate now = LLDate::now();
+					grid_entry->grid["LastModified"] = now;
+				}
 				//finally add the grid \o/
 				mGridList[grid] = grid_entry->grid;
 				++mGridEntries;
