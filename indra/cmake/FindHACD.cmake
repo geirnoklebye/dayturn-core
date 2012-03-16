@@ -1,6 +1,5 @@
 # -*- cmake -*-
 
-# - Find HUNSPELL
 # This module defines
 #  HACD_INCLUDE_DIR, where to find hacdHACD.h, etc.
 #  HACD_LIBRARY, the library needed to use HACD.
