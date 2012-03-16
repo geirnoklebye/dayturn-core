@@ -474,9 +474,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d9a9a6ad86895353bcd63374a4c1a91d</string>
+              <string>9cbd9ea1088cc115eb4aa6f5e8d95845</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-fmod-private/rev/221852/arch/CYGWIN/installer/fmod-3.75-windows-20110222.tar.bz2</string>
+              <string>file:///C:/Users/Bill/lindenhg/3p/3p-fmod-open-71/fmod-3.75-windows-20120210.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1095,6 +1095,53 @@
           </map>
         </map>
       </map>
+       <key>k_hacdConvexDecomposition</key>
+      <map>
+        <key>license</key>
+        <string>BSD</string>
+        <key>name</key>
+        <string>k_hacdConvexDecomposition</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>18f3e50246c13a20044dd7b19d53c412</string>
+              <key>url</key>
+              <string>http://phoenixviewer.com/app/packages/hacd_darwin_20111003.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>616f312493b30f8bd79ae461ce606693</string>
+              <key>url</key>
+              <string>http://bitbucket.org/NickyP/kokua-mesh-upload/downloads/hacd_k-0.178-linux-20120202.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>93db8df6e20b284ccde0f468a6056b8f</string>
+              <key>url</key>
+              <string>http://bitbucket.org/NickyP/kokua-mesh-upload/downloads/hacd_k-0.178-windows-20120213.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+      </map>
+     
       <key>llconvexdecomposition</key>
       <map>
         <key>license</key>
@@ -1137,6 +1184,52 @@
               <string>6ecf2f85f03c5ae87fe45769566a5660</string>
               <key>url</key>
               <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-llconvexdecomposition/rev/238959/arch/CYGWIN/installer/llconvexdecomposition-0.1-windows-20110819.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+      </map>
+      <key>k_hacdConvexDecomposition</key>
+      <map>
+        <key>license</key>
+        <string>BSD</string>
+        <key>name</key>
+        <string>k_hacdConvexDecomposition</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>18f3e50246c13a20044dd7b19d53c412</string>
+              <key>url</key>
+              <string>http://phoenixviewer.com/app/packages/hacd_darwin_20111003.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>e658a85c13e561336c469f290e11ffa3</string>
+              <key>url</key>
+              <string>http://bitbucket.org/NickyP/kokua-mesh-upload/downloads/hacd_k-0.162-linux-20111115.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>08371bd5bb7e4ba3740765883df43f4b</string>
+              <key>url</key>
+              <string>http://bitbucket.org/NickyP/kokua-mesh-upload/downloads/hacd_k-0.162-windows-20111114.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
