@@ -549,21 +549,22 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 			throw LLInvalidGridName(grid);
 			}
 
-			size_t find_last_slash = grid.find_last_of("/");
-			if ( (grid.length()-1) == find_last_slash )
+		// trim last slash
+		size_t pos = grid.find_last_of("/");
+		if ( (grid.length()-1) == pos )
 			{
-				grid.erase(find_last_slash);
+			grid.erase(pos);
 				grid_entry->grid[GRID_VALUE]  = grid;
 		}
 
-/*
-		size_t find_last_slash = grid.find_last_of("/");
-		if ( (grid.length()-1) == find_last_slash )
+ 		// trim region from hypergrid uris
+		std::string  grid_trimmed = trimHypergrid(grid);
+ 		if (grid_trimmed != grid)
 		{
-
-
-			grid.erase(find_last_slash);
+			grid = grid_trimmed;
 			grid_entry->grid[GRID_VALUE]  = grid;
+			grid_entry->grid["HG"] = "TRUE";
+		}
 
 		}
 */
@@ -606,8 +607,8 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 			grid_entry->grid[GRID_LOGIN_URI_VALUE] = LLSD::emptyArray();
 			grid_entry->grid[GRID_LOGIN_URI_VALUE].append(uri);
 
-			size_t find_last_slash = uri.find_last_of("/");
-			if ( (uri.length()-1) != find_last_slash )
+			size_t pos = uri.find_last_of("/");
+			if ( (uri.length()-1) != pos )
 			{
 				uri.append("/");
 			}
@@ -1073,6 +1074,25 @@ void LLGridManager::saveGridList()
 	llsd_xml.close();
 }
 
+std::string LLGridManager::trimHypergrid(const std::string& trim)
+{
+	std::size_t pos;
+	std::string grid = trim;
+
+	pos = grid.find_last_of(":");
+	if (pos != std::string::npos)
+	{
+		std::string  part = grid.substr(pos+1, grid.length()-1);
+		// in hope numbers only is a good guess for it's a port number
+		if (std::string::npos != part.find_first_not_of("1234567890"))
+		{
+			//and erase if not
+			grid.erase(pos,grid.length()-1);
+		}
+	}
+
+	return grid;
+}
 
 // <AW opensim>
 // build a slurl for the given region within the selected grid
@@ -1080,9 +1100,11 @@ std::string LLGridManager::getSLURLBase(const std::string& grid)
 {
 	std::string grid_base;
 	std::string ret;
-	if(mGridList.has(grid) && mGridList[grid].has(GRID_SLURL_BASE))
+	std::string grid_trimmed = trimHypergrid(grid);
+
+	if(mGridList.has(grid_trimmed) && mGridList[grid_trimmed].has(GRID_SLURL_BASE))
 	{
-		ret = mGridList[grid][GRID_SLURL_BASE].asString();
+		ret = mGridList[grid_trimmed][GRID_SLURL_BASE].asString();
 		LL_DEBUGS("GridManager") << "GRID_SLURL_BASE: " << ret << LL_ENDL;
 	}
 	else

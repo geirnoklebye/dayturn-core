@@ -44,9 +44,12 @@
 						<array>
 						<!-- sample entry for debugging specific items	
 						     <string>Avatar</string>
-						     <string>Voice</string>		
+						<string>OS_SETTINGS</string>
+						<string>UrlEntry</string>
+						<string>WebApi</string>
+							<!--<string>Voice</string>-->
 						-->
-						<string>SLURL</string>
+							<!--<string>InterfaceProtocolParser</string>-->
 						</array>
 				</map>
 			</array>
