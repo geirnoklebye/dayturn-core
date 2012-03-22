@@ -200,17 +200,6 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
-    <key>RenderMeshDeformed</key>
-    <map>
-      <key>Comment</key>
-      <string>Render rigged Mesh clothing either deformed according to the avatar shape by using Qarl's parametric deformer, or in their original shape.</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
     <key>ShowProfileFloaters</key>
     <map>
       <key>Comment</key>

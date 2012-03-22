@@ -75,7 +75,6 @@
 
 //MK
 #include "llstatusbar.h"
-#include "lldrawpoolavatar.h"
 //mk
 
 #ifdef TOGGLE_HACKED_GODLIKE_VIEWER
@@ -113,13 +112,6 @@ static bool handleRenderDeferredShowInvisiprimsChanged(const LLSD& newvalue)
 {
 	bool status = newvalue.asBoolean();
 	LLDrawPoolBump::sRenderDeferredShowInvisiprims = status;
-	return true;
-}
-
-static bool handleRenderMeshDeformedChanged(const LLSD& newvalue)
-{
-	bool status = newvalue.asBoolean();
-	LLDrawPoolAvatar::sRenderMeshDeformed = status;
 	return true;
 }
 //mk
@@ -619,7 +611,6 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("RestrainedLoveOffsetAvatarY")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveOffsetAvatarZ")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
 	gSavedSettings.getControl("RenderDeferredShowInvisiprims")->getSignal()->connect(boost::bind(&handleRenderDeferredShowInvisiprimsChanged, _2));
-	gSavedSettings.getControl("RenderMeshDeformed")->getSignal()->connect(boost::bind(&handleRenderMeshDeformedChanged, _2));
 //mk
 	gSavedSettings.getControl("FirstPersonAvatarVisible")->getSignal()->connect(boost::bind(&handleRenderAvatarMouselookChanged, _2));
 	gSavedSettings.getControl("RenderFarClip")->getSignal()->connect(boost::bind(&handleRenderFarClipChanged, _2));
