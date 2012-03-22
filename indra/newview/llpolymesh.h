@@ -234,12 +234,6 @@ public:
 		return mBinormals; 
 	}
 
-	// Get base mesh coords
-	const LLVector3 *getBaseCoords() const{
-		llassert(mSharedData);
-		return mSharedData->mBaseCoords;
-	}
-	
 	// Get base mesh normals
 	const LLVector3 *getBaseNormals() const{
 		llassert(mSharedData);

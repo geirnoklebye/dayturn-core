@@ -5242,10 +5242,6 @@ LLPolyMesh*	LLVOAvatar::getUpperBodyMesh()
 	return mMeshLOD[MESH_ID_UPPER_BODY]->mMeshParts[0]->getMesh();
 }
 
-LLPolyMesh* LLVOAvatar::getMesh(S32 which)
-{
-	return mMeshLOD[which]->mMeshParts[0]->getMesh();
-}
 
 //-----------------------------------------------------------------------------
 // LLVOAvatar::getPosGlobalFromAgent()
@@ -5762,10 +5758,9 @@ void LLVOAvatar::updateVisualParams()
 		mLastSkeletonSerialNum = mSkeletonSerialNum;
 		mRoot.updateWorldMatrixChildren();
 	}
-	
+
 	dirtyMesh();
 	updateHeadOffset();
-	rebuildRiggedAttachments();
 }
 
 //-----------------------------------------------------------------------------
