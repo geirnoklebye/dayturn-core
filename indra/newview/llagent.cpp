@@ -836,7 +836,9 @@ void LLAgent::standUp()
 	{
 		return;
 	}
-	gAgent.setFlying(FALSE);
+//LC - fix for issue #58
+//	gAgent.setFlying(FALSE);
+//lc
 //mk
 	setControlFlags(AGENT_CONTROL_STAND_UP);
 //MK
