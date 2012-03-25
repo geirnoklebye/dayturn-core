@@ -153,8 +153,8 @@ public:
 	std::string getAttachments (std::string attachpt);
 
 	std::string getStatus (LLUUID object_uuid, std::string rule); // if object_uuid is null, return all
-	BOOL forceDetach (std::string attachpt, BOOL handle_nostrip);
-	BOOL forceDetachByUuid (std::string object_uuid, BOOL handle_nostrip);
+	BOOL forceDetach (std::string attachpt);
+	BOOL forceDetachByUuid (std::string object_uuid);
 
 	BOOL hasLockedHuds ();
 	std::deque<LLInventoryItem*> getListOfLockedItems (LLInventoryCategory* root);
@@ -175,11 +175,11 @@ public:
 //	bool handle_detach_from_avatar(LLViewerJointAttachment* attachment);
 	void detachObject(LLViewerObject* object);
 	void detachAllObjectsFromAttachment(LLViewerJointAttachment* attachment);
-	bool canDetachAllObjectsFromAttachment(LLViewerJointAttachment* attachment, BOOL handle_nostrip = TRUE);
+	bool canDetachAllObjectsFromAttachment(LLViewerJointAttachment* attachment);
 	void fetchInventory (LLInventoryCategory* root = NULL);
 
 	BOOL forceAttach (std::string category, BOOL recursive, AttachHow how);
-	BOOL forceDetachByName (std::string category, BOOL recursive, BOOL handle_nostrip);
+	BOOL forceDetachByName (std::string category, BOOL recursive);
 
 	BOOL getAllowCancelTp() { return mAllowCancelTp; }
 	void setAllowCancelTp(BOOL newval) { mAllowCancelTp = newval; }
@@ -220,15 +220,15 @@ public:
 	
 	bool canAttachCategory(LLInventoryCategory* folder, bool with_exceptions = true);
 	bool canAttachCategoryAux(LLInventoryCategory* folder, bool in_parent, bool in_no_mod, bool with_exceptions = true);
-	bool canDetachCategory(LLInventoryCategory* folder, bool with_exceptions = true);
-	bool canDetachCategoryAux(LLInventoryCategory* folder, bool in_parent, bool in_no_mod, bool with_exceptions = true);
-	bool canUnwear(LLInventoryItem* item, BOOL handle_nostrip = TRUE);
-	bool canUnwear(LLWearableType::EType type, BOOL handle_nostrip = TRUE);
-	bool canWear(LLInventoryItem* item, BOOL handle_nostrip = TRUE);
+	bool canDetachCategory(LLInventoryCategory* folder, bool with_exceptions);
+	bool canDetachCategoryAux(LLInventoryCategory* folder, bool in_parent, bool in_no_mod, bool with_exceptions);
+	bool canUnwear(LLInventoryItem* item);
+	bool canUnwear(LLWearableType::EType type);
+	bool canWear(LLInventoryItem* item);
 	bool canWear(LLWearableType::EType type, bool from_server = false);
-	bool canDetach(LLInventoryItem* item, BOOL handle_nostrip = TRUE);
-	bool canDetach(LLViewerObject* attached_object, BOOL handle_nostrip = TRUE);
-	bool canDetach(std::string attachpt, BOOL handle_nostrip = TRUE);
+	bool canDetach(LLInventoryItem* item);
+	bool canDetach(LLViewerObject* attached_object);
+	bool canDetach(std::string attachpt);
 	bool canAttach(LLViewerObject* object_to_attach, std::string attachpt, bool from_server = false);
 	bool canAttach(LLInventoryItem* item, bool from_server = false);
 	bool canEdit(LLViewerObject* object);
@@ -262,6 +262,7 @@ public:
 	BOOL mContainsRun;
 	BOOL mContainsAlwaysRun;
 	BOOL mContainsTp;
+	BOOL mHandleNoStrip;
 	//BOOL mContainsMoveUp;
 	//BOOL mContainsMoveDown;
 	//BOOL mContainsMoveForward;

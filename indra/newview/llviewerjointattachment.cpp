@@ -327,6 +327,7 @@ void LLViewerJointAttachment::removeObject(LLViewerObject *object)
 		if (inv_item) inv_item_id = inv_item->getUUID();
 		std::string target_attachpt = "";
 		if (avatarp) target_attachpt = avatarp->getAttachedPointName(inv_item_id);
+		gAgent.mRRInterface.mHandleNoStrip = FALSE;
 		if (!gAgent.mRRInterface.canDetach(object)
 			&& gAgent.mRRInterface.mJustDetached.attachpt != target_attachpt	// we didn't just detach something from this attach pt automatically
 			&& gAgent.mRRInterface.mJustReattached.attachpt != target_attachpt)	// we didn't just reattach something to this attach pt automatically
@@ -363,6 +364,7 @@ void LLViewerJointAttachment::removeObject(LLViewerObject *object)
 				gAgent.mRRInterface.notify (LLUUID::null, "detached legally " + getName(), "");
 			}
 		}
+		gAgent.mRRInterface.mHandleNoStrip = TRUE;
 		gAgent.mRRInterface.mJustDetached.uuid.setNull();
 		gAgent.mRRInterface.mJustDetached.attachpt = "";
 		gAgent.mRRInterface.mJustReattached.uuid.setNull();

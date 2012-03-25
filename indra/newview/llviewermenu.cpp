@@ -6696,10 +6696,13 @@ class LLAttachmentDetachFromPoint : public view_listener_t
 		if (attachment->getNumObjects() > 0)
 		{
 //MK
-			if (gRRenabled && !gAgent.mRRInterface.canDetach(attachment->getName(), false))
+			gAgent.mRRInterface.mHandleNoStrip = FALSE;
+			if (gRRenabled && !gAgent.mRRInterface.canDetach(attachment->getName()))
 			{
+				gAgent.mRRInterface.mHandleNoStrip = TRUE;
 				return true;
 			}
+			gAgent.mRRInterface.mHandleNoStrip = TRUE;
 //mk
 			gMessageSystem->newMessage("ObjectDetach");
 			gMessageSystem->nextBlockFast(_PREHASH_AgentData);
@@ -6765,10 +6768,13 @@ class LLAttachmentDetach : public view_listener_t
 		}
 
 //MK
-		if (gRRenabled && !gAgent.mRRInterface.canDetach(object, false))
+		gAgent.mRRInterface.mHandleNoStrip = FALSE;
+		if (gRRenabled && !gAgent.mRRInterface.canDetach(object))
 		{
+			gAgent.mRRInterface.mHandleNoStrip = TRUE;
 			return true;
 		}
+		gAgent.mRRInterface.mHandleNoStrip = TRUE;
 //mk
 		LLViewerObject *parent = (LLViewerObject*)object->getParent();
 		while (parent)
@@ -6905,10 +6911,13 @@ BOOL enable_detach(const LLSD&)
 //MK
 	if (gRRenabled)
 	{
-		if (!gAgent.mRRInterface.canDetach(object, false))
+		gAgent.mRRInterface.mHandleNoStrip = FALSE;
+		if (!gAgent.mRRInterface.canDetach(object))
 		{
+			gAgent.mRRInterface.mHandleNoStrip = TRUE;
 			return FALSE;
 		}
+		gAgent.mRRInterface.mHandleNoStrip = TRUE;
 
 		// prevent a clever workaround that allowed to detach several objects at the same time by selecting them
 		if (gAgent.mRRInterface.mContainsDetach && LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() > 1)
@@ -8410,7 +8419,13 @@ class LLEditTakeOff : public view_listener_t
 				// MULTI-WEARABLES: assuming user wanted to remove top shirt.
 				U32 wearable_index = gAgentWearables.getWearableCount(type) - 1;
 				LLViewerInventoryItem *item = dynamic_cast<LLViewerInventoryItem*>(gAgentWearables.getWearableInventoryItem(type,wearable_index));
+//MK
+				gAgent.mRRInterface.mHandleNoStrip = FALSE;
+//mk
 				LLWearableBridge::removeItemFromAvatar(item);
+//MK
+				gAgent.mRRInterface.mHandleNoStrip = TRUE;
+//mk
 			}
 				
 		}

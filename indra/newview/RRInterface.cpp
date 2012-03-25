@@ -437,6 +437,7 @@ RRInterface::RRInterface():
 	, mContainsRun(FALSE)
 	, mContainsAlwaysRun(FALSE)
 	, mContainsTp(FALSE)
+	, mHandleNoStrip(TRUE)
 	//, mContainsMoveUp(FALSE)
 	//, mContainsMoveDown(FALSE)
 	//, mContainsMoveForward(FALSE)
@@ -1246,7 +1247,7 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 //			gAgentWearables.removeWearable (WT_UNDERPANTS, false, 0);
 //			gAgentWearables.removeWearable (WT_UNDERSHIRT, false, 0);
 
-			for (int i = 0; i < LLAgentWearables::MAX_CLOTHING_PER_TYPE; ++i) {
+			for (int i = LLAgentWearables::MAX_CLOTHING_PER_TYPE - 1; i >= 0; --i) {
 				removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (LLWearableType::WT_GLOVES, i)));
 				removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (LLWearableType::WT_JACKET, i)));
 				removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (LLWearableType::WT_PANTS, i)));
@@ -1262,6 +1263,7 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 //			gAgentWearables.removeWearable (WT_TATTOO, false, 0);
 				removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (LLWearableType::WT_ALPHA, i)));
 				removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (LLWearableType::WT_TATTOO, i)));
+				removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (LLWearableType::WT_PHYSICS, i)));
 #endif
 			}
 		}
@@ -1271,40 +1273,40 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 				 // clothes only, not skin, eyes, hair or shape
 				if (LLWearableType::getAssetType(type) == LLAssetType::AT_CLOTHING) {
 //					gAgentWearables.removeWearable (type, false, 0); // remove by layer
-					for (int i = 0; i < LLAgentWearables::MAX_CLOTHING_PER_TYPE; ++i) {
+					for (int i = LLAgentWearables::MAX_CLOTHING_PER_TYPE - 1; i >= 0; --i) {
 						removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (type, i)));
 					}
 				}
 			}
-			else forceDetachByName (option, FALSE, TRUE); // remove by category (in RLV share)
+			else forceDetachByName (option, FALSE); // remove by category (in RLV share)
 		}
 	}
 	else if (command=="detach" || command=="remattach") { // detach:chest=force OR detach:restraints/cuffs=force (@remattach is a synonym)
 		LLViewerJointAttachment* attachpt = findAttachmentPointFromName (option, TRUE); // exact name
-		if (attachpt != NULL || option == "") return forceDetach (option, TRUE); // remove by attach pt
-		else forceDetachByName (option, FALSE, TRUE);
+		if (attachpt != NULL || option == "") return forceDetach (option); // remove by attach pt
+		else forceDetachByName (option, FALSE);
 	}
 	else if (command=="detachme") { // detachme=force to detach this object specifically
-		return forceDetachByUuid (object_uuid.asString(), TRUE); // remove by uuid
+		return forceDetachByUuid (object_uuid.asString()); // remove by uuid
 	}
 	else if (command=="detachthis") { // detachthis=force to detach the folder containing this object
 		std::string pathes_str = getFullPath (getItem(object_uuid), option);
 		std::deque<std::string> pathes = parse (pathes_str, ",");
 		BOOL res = TRUE;
 		for (unsigned int i = 0; i < pathes.size(); ++i) {
-			res &= forceDetachByName (pathes.at(i), FALSE, TRUE);
+			res &= forceDetachByName (pathes.at(i), FALSE);
 		}
 		return res;
 	}
 	else if (command=="detachall") { // detachall:cuffs=force to detach a folder and its subfolders
-		return forceDetachByName (option, TRUE, TRUE);
+		return forceDetachByName (option, TRUE);
 	}
 	else if (command=="detachallthis") { // detachallthis=force to detach the folder containing this object and also its subfolders
 		std::string pathes_str = getFullPath (getItem(object_uuid), option);
 		std::deque<std::string> pathes = parse (pathes_str, ",");
 		BOOL res = TRUE;
 		for (unsigned int i = 0; i < pathes.size(); ++i) {
-			res &= forceDetachByName (pathes.at(i), TRUE, TRUE);
+			res &= forceDetachByName (pathes.at(i), TRUE);
 		}
 		return res;
 	}
@@ -1747,7 +1749,7 @@ std::string RRInterface::getStatus (LLUUID object_uuid, std::string rule)
 	return res;
 }
 
-BOOL RRInterface::forceDetach (std::string attachpt, BOOL handle_nostrip)
+BOOL RRInterface::forceDetach (std::string attachpt)
 {
 	std::string name;
 	BOOL res=FALSE;
@@ -1775,7 +1777,7 @@ BOOL RRInterface::forceDetach (std::string attachpt, BOOL handle_nostrip)
 }
 
 
-BOOL RRInterface::forceDetachByUuid (std::string object_uuid, BOOL handle_nostrip)
+BOOL RRInterface::forceDetachByUuid (std::string object_uuid)
 {
 	BOOL res=FALSE;
 	LLVOAvatar* avatar = gAgentAvatarp;
@@ -2507,14 +2509,14 @@ void RRInterface::detachAllObjectsFromAttachment(LLViewerJointAttachment* attach
 	}
 }
 
-bool RRInterface::canDetachAllObjectsFromAttachment(LLViewerJointAttachment* attachment, BOOL handle_nostrip /* = TRUE */)
+bool RRInterface::canDetachAllObjectsFromAttachment(LLViewerJointAttachment* attachment)
 {
 	if (!attachment) return false;
 	LLViewerObject* object;
 
 	for (unsigned int i = 0; i <  attachment ->mAttachedObjects.size(); ++i) {
 		object =  attachment ->mAttachedObjects.at(i);
-		if (!gAgent.mRRInterface.canDetach(object, handle_nostrip)) return false;
+		if (!gAgent.mRRInterface.canDetach(object)) return false;
 	}
 
 	return true;
@@ -2693,7 +2695,7 @@ BOOL RRInterface::forceAttach (std::string category, BOOL recursive, AttachHow h
 	return TRUE;
 }
 
-BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive, BOOL handle_nostrip)
+BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive)
 {
 //LLWearableBridge::removeItemFromAvatar(item);		
 	// find the category under RLV shared folder
@@ -2706,7 +2708,7 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive, BOOL 
 	// if exists, detach/unwear all the items inside it
 	if (cat) {
 	
-		if (handle_nostrip) {
+		if (mHandleNoStrip) {
 			std::string name = cat->getName();
 			LLStringUtil::toLower(name);
 			if (name.find ("nostrip") != -1) return false;
@@ -2766,7 +2768,7 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive, BOOL 
 			for(S32 i = 0; i < count; ++i) {
 				LLViewerInventoryCategory* cat_child = (LLViewerInventoryCategory*)cats->get(i);
 
-				if (handle_nostrip) {
+				if (mHandleNoStrip) {
 					std::string name = cat_child->getName();
 					LLStringUtil::toLower(name);
 					if (name.find ("nostrip") != -1) continue;
@@ -2801,7 +2803,7 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive, BOOL 
 				}
 
 				if (recursive && cat_child->getName().find (".") != 0) { // detachall and not invisible)
-					forceDetachByName (getFullPath (cat_child), recursive, handle_nostrip);
+					forceDetachByName (getFullPath (cat_child), recursive);
 				}
 			}
 		}
@@ -3208,7 +3210,8 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	// cloudscrollx 0-1, cloudscrolly 0-1, drawclassicclouds 0/1
 
 	else if (command == "preset") {
-		params->loadPreset (option);
+//		params->loadPreset (option);
+		LLEnvManagerNew::getInstance()->useSkyPreset(option);
 	}
 
 	// send the current parameters to shaders
@@ -3625,7 +3628,7 @@ bool RRInterface::canAttachCategoryAux(LLInventoryCategory* folder, bool in_pare
 	return true;
 }
 
-bool RRInterface::canDetachCategory(LLInventoryCategory* folder, bool with_exceptions /*= true*/)
+bool RRInterface::canDetachCategory(LLInventoryCategory* folder, bool with_exceptions)
 {
 	// return false if :
 	// - at least one object contained in this folder issued a @detachthis restriction
@@ -3644,12 +3647,17 @@ bool RRInterface::canDetachCategory(LLInventoryCategory* folder, bool with_excep
 	return canDetachCategoryAux(folder, false, false, with_exceptions);
 }
 
-bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_parent, bool in_no_mod, bool with_exceptions /*= true*/)
+bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_parent, bool in_no_mod, bool with_exceptions)
 {
 	LLVOAvatarSelf* avatar = gAgentAvatarp;
 	if (!avatar) return true;
 	FolderLock folder_lock = FolderLock_unlocked;
 	if (folder) {
+		if (mHandleNoStrip) {
+			std::string name = folder->getName();
+			LLStringUtil::toLower(name);
+			if (name.find ("nostrip") != -1) return false;
+		}
 		// check @detachthis:folder in all restrictions
 		RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
 		//LLInventoryCategory* restricted_cat;
@@ -3725,25 +3733,25 @@ bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_pare
 	return true;
 }
 
-bool RRInterface::canUnwear(LLInventoryItem* item, BOOL handle_nostrip /* = TRUE */)
+bool RRInterface::canUnwear(LLInventoryItem* item)
 {
 	if (item) {
 		LLInventoryCategory* parent = gInventory.getCategory (item->getParentUUID());
 		if (item->getType() ==  LLAssetType::AT_OBJECT) {
-			if (!canDetach (item, handle_nostrip)) return false;
+			if (!canDetach (item)) return false;
 		}
 		else if (item->getType() == LLAssetType::AT_CLOTHING || item->getType() == LLAssetType::AT_BODYPART) {
 			const LLViewerInventoryItem *vitem = dynamic_cast<const LLViewerInventoryItem*>(item);
 			if (vitem) {
 				if (!canUnwear (vitem->getWearableType())) return false;
 			}
-			if (!canDetachCategory (parent)) return false;
+			if (!canDetachCategory (parent, true)) return false;
 		}
 	}
 	return true;
 }
 
-bool RRInterface::canUnwear(LLWearableType::EType type, BOOL handle_nostrip /* = TRUE */)
+bool RRInterface::canUnwear(LLWearableType::EType type)
 {
 	if (contains ("remoutfit")) {
 		return false;
@@ -3754,7 +3762,7 @@ bool RRInterface::canUnwear(LLWearableType::EType type, BOOL handle_nostrip /* =
 	return true;
 }
 
-bool RRInterface::canWear(LLInventoryItem* item, BOOL handle_nostrip /* = TRUE */)
+bool RRInterface::canWear(LLInventoryItem* item)
 {
 	if (item) {
 		LLInventoryCategory* parent = gInventory.getCategory (item->getParentUUID());
@@ -3802,14 +3810,14 @@ bool RRInterface::canWear(LLWearableType::EType type, bool from_server /*= false
 	return true;
 }
 
-bool RRInterface::canDetach(LLInventoryItem* item, BOOL handle_nostrip /* = TRUE */)
+bool RRInterface::canDetach(LLInventoryItem* item)
 {
 //	if (!scriptsEnabled() && !getScriptsEnabledOnce()) return false;
 	if (item == NULL) return true;
 	LLVOAvatarSelf* avatarp = gAgentAvatarp;
 	if (!avatarp) return true;
 	
-	if (handle_nostrip) {
+	if (mHandleNoStrip) {
 		std::string name = item->getName();
 		LLStringUtil::toLower(name);
 		if (name.find ("nostrip") != -1) return false;
@@ -3817,11 +3825,11 @@ bool RRInterface::canDetach(LLInventoryItem* item, BOOL handle_nostrip /* = TRUE
 
 	if (item->getType() == LLAssetType::AT_OBJECT) {
 		// we'll check canDetachCategory() inside this function
-		return canDetach (avatarp->getWornAttachment(item->getLinkedUUID()), handle_nostrip);
+		return canDetach (avatarp->getWornAttachment(item->getLinkedUUID()));
 	}
 	else if (item->getType() == LLAssetType::AT_CLOTHING) {
 		LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
-		if (cat_parent && !canDetachCategory(cat_parent)) return false;
+		if (cat_parent && !canDetachCategory(cat_parent, true)) return false;
 		const LLWearable* wearable = gAgentWearables.getWearableFromItemID (item->getLinkedUUID());
 		if (wearable) return canUnwear (wearable->getType());
 		return true;
@@ -3829,7 +3837,7 @@ bool RRInterface::canDetach(LLInventoryItem* item, BOOL handle_nostrip /* = TRUE
 	return true;
 }
 
-bool RRInterface::canDetach(LLViewerObject* attached_object, BOOL handle_nostrip /* = TRUE */)
+bool RRInterface::canDetach(LLViewerObject* attached_object)
 {
 //	if (!scriptsEnabled() && !getScriptsEnabledOnce()) return false;
 	if (attached_object == NULL) return true;
@@ -3856,9 +3864,9 @@ bool RRInterface::canDetach(LLViewerObject* attached_object, BOOL handle_nostrip
 
 	if (item) {
 		LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
-		if (cat_parent && !canDetachCategory(cat_parent)) return false;
+		if (cat_parent && !canDetachCategory(cat_parent, true)) return false;
 
-		if (handle_nostrip) {
+		if (mHandleNoStrip) {
 			std::string name = item->getName();
 			LLStringUtil::toLower(name);
 			if (name.find ("nostrip") != -1) return false;
@@ -3876,7 +3884,7 @@ bool RRInterface::canDetach(LLViewerObject* attached_object, BOOL handle_nostrip
 	return true;
 }
 
-bool RRInterface::canDetach(std::string attachpt, BOOL handle_nostrip /* = TRUE */)
+bool RRInterface::canDetach(std::string attachpt)
 {
 //	if (!scriptsEnabled() && !getScriptsEnabledOnce()) return false;
 	LLStringUtil::toLower(attachpt);
@@ -3884,19 +3892,17 @@ bool RRInterface::canDetach(std::string attachpt, BOOL handle_nostrip /* = TRUE 
 	if (contains("remattach")) return false;
 	if (contains("remattach:"+attachpt)) return false;
 	LLViewerJointAttachment* attachment = findAttachmentPointFromName (attachpt, TRUE);
-	if (!canDetachAllObjectsFromAttachment (attachment, handle_nostrip)) return false;
+	if (!canDetachAllObjectsFromAttachment (attachment)) return false;
 	return true;
 }
 
 bool RRInterface::canAttach(LLViewerObject* object_to_attach, std::string attachpt, bool from_server /* = false */)
 {
-	// If from_server == true, the check is done while receiving an order from the server => ignore MultipleAttachments, do as if it were TRUE
+	// If from_server == true, the check is done while receiving an order from the server => always allow
+	if (from_server) return true;
+
 	// Attention : this function does not check if we are replacing and there is a locked object already present on the attachment point
 	LLStringUtil::toLower(attachpt);
-	// care about existing objects only if not allowing multiple attachments
-//	if (!gSavedSettings.getBOOL("MultipleAttachments")) {
-//		if (contains("detach:"+attachpt)) return false;
-//	}
 	if (contains("addattach")) return false;
 	if (contains("addattach:"+attachpt)) return false;
 	if (object_to_attach) {
@@ -3907,20 +3913,14 @@ bool RRInterface::canAttach(LLViewerObject* object_to_attach, std::string attach
 		}
 	}
 	
-	// care about existing objects only if not allowing multiple attachments
-//	if (!gSavedSettings.getBOOL("MultipleAttachments")) {
-//		if (!from_server) {
-//			LLViewerJointAttachment* attachment = findAttachmentPointFromName(attachpt, TRUE);
-//			if (attachment && object_to_attach != attachment->getObject()) {
-//				if (!canDetach(attachment->getObject())) return false;
-//			}
-//		}
-//	}
 	return true;
 }
 
 bool RRInterface::canAttach(LLInventoryItem* item, bool from_server /* = false */)
 {
+	// If from_server == true, the check is done while receiving an order from the server => always allow
+	if (from_server) return true;
+
 	if (contains("addattach")) return false;
 	if (!item) return true;
 	LLViewerJointAttachment* attachpt = findAttachmentPointFromName (item->getName());

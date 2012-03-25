@@ -1772,10 +1772,12 @@ BOOL LLToolPie::handleRightClickPick()
 				else if (mask & MASK_SHIFT)
 				{
 					// Detach object
+					gAgent.mRRInterface.mHandleNoStrip = FALSE;
 					if (gAgent.mRRInterface.canDetachAllSelectedObjects()) //canDetach (object, false))
 					{
 						LLSelectMgr::getInstance()->sendDetach();
 					}
+					gAgent.mRRInterface.mHandleNoStrip = TRUE;
 //					gAgent.mRRInterface.detachObject (object);
 					return TRUE;
 				}

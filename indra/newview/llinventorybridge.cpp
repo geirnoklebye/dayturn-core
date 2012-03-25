@@ -5110,12 +5110,14 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 		if(item)
 		{
 //MK
-			if (!gRRenabled || gAgent.mRRInterface.canDetach (item, false))
+			gAgent.mRRInterface.mHandleNoStrip = FALSE;
+			if (!gRRenabled || gAgent.mRRInterface.canDetach (item))
   			{
 //mk
 				LLVOAvatarSelf::detachAttachmentIntoInventory(item->getLinkedUUID());
 //MK
 			}
+			gAgent.mRRInterface.mHandleNoStrip = TRUE;
 //mk
 		}
 	}
@@ -5300,11 +5302,13 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 				items.push_back(std::string("Wearable And Object Separator"));
 				items.push_back(std::string("Detach From Yourself"));
  //MK
- 				if (gRRenabled && !gAgent.mRRInterface.canDetach(gAgentAvatarp->getWornAttachment(mUUID), false))
+				gAgent.mRRInterface.mHandleNoStrip = FALSE;
+ 				if (gRRenabled && !gAgent.mRRInterface.canDetach(gAgentAvatarp->getWornAttachment(mUUID)))
  				{
  					disabled_items.push_back(std::string("Detach From Yourself"));
  				}
- //mk
+	 			gAgent.mRRInterface.mHandleNoStrip = TRUE;
+//mk
 			}
 			else if (!isItemInTrash() && !isLinkedObjectInTrash() && !isLinkedObjectMissing() && !isCOFFolder())
 			{
@@ -5621,7 +5625,13 @@ void LLWearableBridge::performAction(LLInventoryModel* model, std::string action
 	}
 	else if (isRemoveAction(action))
 	{
+//MK
+		gAgent.mRRInterface.mHandleNoStrip = FALSE;
+//mk
 		removeFromAvatar();
+//MK
+		gAgent.mRRInterface.mHandleNoStrip = TRUE;
+//mk
 		return;
 	}
 	else LLItemBridge::performAction(model, action);
@@ -5709,11 +5719,13 @@ void LLWearableBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 				case LLAssetType::AT_CLOTHING:
 					items.push_back(std::string("Take Off"));
  //MK
- 					if (gRRenabled && !gAgent.mRRInterface.canUnwear(item, false))
+					gAgent.mRRInterface.mHandleNoStrip = FALSE;
+ 					if (gRRenabled && !gAgent.mRRInterface.canUnwear(item))
  					{
  						disabled_items.push_back(std::string("Take Off"));
  					}
- //mk
+		 			gAgent.mRRInterface.mHandleNoStrip = TRUE;
+//mk
 					// Fallthrough since clothing and bodypart share wear options
 				case LLAssetType::AT_BODYPART:
 					if (get_is_item_worn(item->getUUID()))
@@ -6449,7 +6461,9 @@ void LLWearableBridgeAction::wearOnAvatar()
 		{
 			replace = false;
 		}
+		gAgent.mRRInterface.mHandleNoStrip = FALSE;
 		LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, replace);
+		gAgent.mRRInterface.mHandleNoStrip = TRUE;
 //mk
 	}
 }
