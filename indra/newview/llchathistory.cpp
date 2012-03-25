@@ -957,7 +957,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 
 //MK
 			// Move the control panel down a bit
-			S32 bonus = 20;
+			S32 bonus = 15;
 			LLRect control_panel_rect = notify_box->getControlPanel()->getRect();
 			control_panel_rect.mBottom -= bonus;
 			notify_box->getControlPanel()->setRect(control_panel_rect);
