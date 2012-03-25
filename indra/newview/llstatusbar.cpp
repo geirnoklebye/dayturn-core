@@ -312,6 +312,9 @@ BOOL LLStatusBar::postBuild()
 	mInfoBtn->setClickedCallback(boost::bind(&LLStatusBar::onInfoButtonClicked, this));
 	mInfoBtn->setToolTip(LLTrans::getString("LocationCtrlInfoBtnTooltip"));
 
+	mAvatarHeightOffsetResetBtn = getChild<LLButton>("avatar_z_offset_reset_btn");
+	mAvatarHeightOffsetResetBtn->setClickedCallback(boost::bind(&LLStatusBar::onAvatarHeightOffsetResetButtonClicked, this));
+
 	initParcelIcons();
 
 	mParcelChangedObserver = new LLParcelChangeObserver(this);
@@ -994,5 +997,11 @@ void LLStatusBar::setBackgroundColor( const LLColor4& color )
 	LLPanel::setBackgroundColor(color);
 	getChild<LLPanel>("balance_bg")->setBackgroundColor(color);
 	getChild<LLPanel>("time_and_media_bg")->setBackgroundColor(color);
+}
+
+//MK
+void LLStatusBar::onAvatarHeightOffsetResetButtonClicked()
+{
+	gSavedSettings.setF32 ("RestrainedLoveOffsetAvatarZ", 0.0);
 }
 //mk

@@ -171,7 +171,19 @@
        initial_val="0.0"
        max_val="0.5"
        min_val="-0.5" />
-         <!-- end Avatar Z Offset widget -->
+     <button
+      follows="left|top"
+      height="16"
+      hover_glow_amount="0.15"
+      image_disabled="RadioButton_Disabled"
+      image_disabled_selected="RadioButton_On_Disabled"
+      image_selected="RadioButton_On"
+      image_unselected="RadioButton_Off"
+			left_pad="0"
+      name="avatar_z_offset_reset_btn"
+      top="2"
+      width="16"/>
+      <!-- end Avatar Z Offset widget -->
       <!-- Draw distance widget here -->
       <slider bottom="-20"
        control_name="RenderFarClip"
@@ -181,7 +193,7 @@
        halign="left"   
        height="23"
        layout="topleft"
-       left_pad="7"
+       left_pad="15"
        mouse_opaque="false"
          tool_tip="Maximum distance away from camera to be rezzed (meters)"
        name="draw_distance"

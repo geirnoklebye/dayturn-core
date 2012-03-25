@@ -288,6 +288,11 @@ BOOL LLNavigationBar::postBuild()
 	mBtnForward	= getChild<LLPullButton>("forward_btn");
 	mBtnHome	= getChild<LLButton>("home_btn");
 	
+//MK
+	mAvatarHeightOffsetResetBtn = getChild<LLButton>("avatar_z_offset_reset_btn");
+	mAvatarHeightOffsetResetBtn->setClickedCallback(boost::bind(&LLNavigationBar::onAvatarHeightOffsetResetButtonClicked, this));
+//mk
+
 	mCmbLocation= getChild<LLLocationInputCtrl>("location_combo");
 
 	mBtnBack->setEnabled(FALSE);
@@ -715,3 +720,10 @@ int LLNavigationBar::getDefFavBarHeight()
 {
 	return mDefaultFpRect.getHeight();
 }
+
+//MK
+void LLNavigationBar::onAvatarHeightOffsetResetButtonClicked()
+{
+	gSavedSettings.setF32 ("RestrainedLoveOffsetAvatarZ", 0.0);
+}
+//mk

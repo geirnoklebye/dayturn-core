@@ -192,6 +192,11 @@ private:
 	void onNavBarShowParcelPropertiesCtrlChanged();
 
 	/**
+	 * Handles clicks on the info buttons.
+	 */
+	void onAvatarHeightOffsetResetButtonClicked();
+
+	/**
 	 * Shorthand to call updateParcelInfoText() and updateParcelIcons().
 	 */
 	void update();
@@ -265,6 +270,7 @@ private:
 	LLPanelVolumePulldown* mPanelVolumePulldown;
 	LLPanelNearByMedia*	mPanelNearByMedia;
 	
+//MK
 	LLPanel* 				mParcelInfoPanel;
 	LLButton* 				mInfoBtn;
 	LLTextBox* 				mParcelInfoText;
@@ -272,6 +278,8 @@ private:
 	LLIconCtrl*				mParcelIcon[ICON_COUNT];
 	LLParcelChangeObserver*	mParcelChangedObserver;
 	LLButton* 				mPWLBtn;
+	LLButton* 				mAvatarHeightOffsetResetBtn;
+//mk
 
 	boost::signals2::connection	mParcelPropsCtrlConnection;
 	boost::signals2::connection	mShowCoordsCtrlConnection;

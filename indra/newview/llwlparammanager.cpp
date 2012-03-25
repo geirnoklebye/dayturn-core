@@ -539,13 +539,35 @@ BOOL LLWLParamManager::addParamSet(const LLWLParamKey& key, LLSD const & param)
 bool LLWLParamManager::getParamSet(const LLWLParamKey& key, LLWLParamSet& param)
 {
 	// find it and set it
-	std::map<LLWLParamKey, LLWLParamSet>::iterator mIt = mParamList.find(key);
+//MK
+	// The old way was case-sensitive, but the RLV delivers lowercase parameters
+	std::map<LLWLParamKey, LLWLParamSet>::iterator mIt = mParamList.begin();
+	std::string lower_name = key.name;
+	LLStringUtil::toLower(lower_name);
+	while (mIt != mParamList.end())
+	{
+		std::string lower_preset = mIt->first.name;
+		LLStringUtil::toLower(lower_preset);
+		if (lower_preset == lower_name)
+		{
+			break;
+		}
+		mIt++;
+	}
 	if(mIt != mParamList.end()) 
 	{
-		param = mParamList[key];
-		param.mName = key.name;
+		param = mParamList[mIt->first];
+		param.mName = mIt->first.name;
 		return true;
 	}
+////	std::map<LLWLParamKey, LLWLParamSet>::iterator mIt = mParamList.find(key);
+////	if(mIt != mParamList.end()) 
+////	{
+////		param = mParamList[key];
+////		param.mName = key.name;
+////		return true;
+////	}
+//mk
 
 	return false;
 }

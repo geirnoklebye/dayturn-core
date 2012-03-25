@@ -273,7 +273,7 @@
      top="5"
      label="Draw:"
      label_length="40"
-     left_delta="-510"
+     left_delta="-520"
      max_val="992"
      min_val="32"
      name="drawdistance" 
@@ -281,7 +281,19 @@
      width="130" />
 <!-- End Draw distance widget here -->
 <!-- Avatar Z Offset widget here -->
-			<slider bottom="-20"
+     <button
+      follows="right|top"
+      height="16"
+      hover_glow_amount="0.15"
+      image_disabled="RadioButton_Disabled"
+      image_disabled_selected="RadioButton_On_Disabled"
+      image_selected="RadioButton_On"
+      image_unselected="RadioButton_Off"
+			left_delta="-40"
+      name="avatar_z_offset_reset_btn"
+      top="2"
+      width="16"/>
+		<slider bottom="-20"
 			control_name="RestrainedLoveOffsetAvatarZ"
 			decimal_digits="2"
 			enabled="true"
@@ -294,7 +306,7 @@
 			layout="topleft"
 			left_delta="-300"
 			mouse_opaque="false"
-			tool_tip="Altitude offset of your avatar to adjust your height"
+			tool_tip="Altitude offset of your avatar to adjust your height. Click the button to reset."
 			name="avatar_z_offset"
 			top_delta="0"
 			width="300"
