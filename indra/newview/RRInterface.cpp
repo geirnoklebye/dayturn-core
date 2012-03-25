@@ -2351,6 +2351,8 @@ LLViewerJointAttachment* RRInterface::findAttachmentPointFromName (std::string o
 		return NULL;
 	}
 	LLStringUtil::toLower(objectName);
+	// HACK : we replace "(avatar center)" by "(root)", to make those two equivalent
+	objectName = stringReplace (objectName, "(avatar center)", "(root)");
 	std::string attachName;
 	int ind = -1;
 	bool found_one = false;
