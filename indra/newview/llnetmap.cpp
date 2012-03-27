@@ -407,7 +407,7 @@ void LLNetMap::draw()
 				closest_dist_squared = dist_to_cursor_squared;
 				mClosestAgentToCursor = uuid;
 //MK
-					mClosestAgentPosition = LLVector3d (pos_map);
+					mClosestAgentPosition = LLVector3d (positions[i]);
 //mk
 			}
 		}
