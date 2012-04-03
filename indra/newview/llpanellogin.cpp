@@ -214,6 +214,7 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	updateServerCombo();
 
 	childSetAction("connect_btn", onClickConnect, this);
+	childSetAction("add_grid_btn", onClickAddGrid, this);
 
 	getChild<LLPanel>("login")->setDefaultBtn("connect_btn");
 
@@ -510,6 +511,9 @@ void LLPanelLogin::setFields(LLPointer<LLCredential> credential,
 		llwarns << "Attempted fillFields with no login view shown" << llendl;
 		return;
 	}
+
+	LL_DEBUGS("PanelLogin") << " " << LL_ENDL;
+
 	LL_INFOS("Credentials") << "Setting login fields to " << *credential << LL_ENDL;
 
 	LLSD identifier = credential->getIdentifier();
@@ -568,7 +572,9 @@ void LLPanelLogin::getFields(LLPointer<LLCredential>& credential,
 		llwarns << "Attempted getFields with no login view shown" << llendl;
 		return;
 	}
-	
+
+	LL_DEBUGS("PanelLogin") << " " << LL_ENDL;
+
 	// load the credential so we can pass back the stored password or hash if the user did
 	// not modify the password field.
 	
@@ -670,6 +676,8 @@ BOOL LLPanelLogin::isGridComboDirty()
 // static
 BOOL LLPanelLogin::areCredentialFieldsDirty()
 {
+	LL_DEBUGS("PanelLogin") << " " << LL_ENDL;
+
 	if (!sInstance)
 	{
 		llwarns << "Attempted getServer with no login view shown" << llendl;
@@ -700,7 +708,9 @@ void LLPanelLogin::updateLocationCombo( bool force_visible )
 	if (!sInstance) 
 	{
 		return;
-	}	
+	}
+
+	LL_DEBUGS("PanelLogin") << " " << LL_ENDL;
 	
 	LLComboBox* combo = sInstance->getChild<LLComboBox>("start_location_combo");
 	
@@ -738,6 +748,7 @@ void LLPanelLogin::updateLocationCombo( bool force_visible )
 void LLPanelLogin::updateStartSLURL()
 {
 	if (!sInstance) return;
+	LL_DEBUGS("PanelLogin") << " " << LL_ENDL;
 
 
 	LLComboBox* combo = sInstance->getChild<LLComboBox>("start_location_combo");
@@ -773,6 +784,8 @@ void LLPanelLogin::updateStartSLURL()
 
 void LLPanelLogin::setLocation(const LLSLURL& slurl)
 {
+	LL_DEBUGS("PanelLogin") << " " << LL_ENDL;
+
 	LLStartUp::setStartSLURL(slurl);
 	updateServer();
 }
@@ -812,11 +825,18 @@ void LLPanelLogin::loadLoginPage()
 
 
 	std::string login_page = LLGridManager::getInstance()->getLoginPage();
+	std::string add_grid_item = LLTrans::getString("ServerComboAddGrid");
+	LL_DEBUGS("PanelLogin") << "login_page: " << login_page << LL_ENDL;
+
 
 	if (login_page.empty()) 
 	{
 		web_browser->navigateToLocalPage( "loading-error" , "index.html" );
 		return;
+	}
+	else if (login_page == add_grid_item)
+	{
+		web_browser->navigateToLocalPage( "loading", "waiting.html" );
 	}
 
 	std::ostringstream oStr;
@@ -981,6 +1001,15 @@ void LLPanelLogin::onClickConnect(void *)
 
 // static
 // <AW: opensim>
+void LLPanelLogin::onClickAddGrid(void *)
+{
+	if ( !sInstance ) return;
+
+	sInstance->updateServer();
+	sInstance->giveFocus();
+}
+
+// static
 void LLPanelLogin::onClickNewAccount(void*)
 {
 	if ( !sInstance ) return;
@@ -1043,6 +1072,7 @@ void LLPanelLogin::onPassKey(LLLineEditor* caller, void* user_data)
 // <AW: opensim>
 void LLPanelLogin::updateServer()
 {
+	LL_DEBUGS("PanelLogin") << " " << LL_ENDL;
 	try 
 	{
 
@@ -1075,9 +1105,14 @@ void LLPanelLogin::updateServerCombo()
 	{
 		return;	
 	}
+
+	LL_DEBUGS("PanelLogin") << " " << LL_ENDL;
+
 	// We add all of the possible values, sorted, and then add a bar and the current value at the top
 	LLComboBox* server_choice_combo = sInstance->getChild<LLComboBox>("server_combo");	
 	server_choice_combo->removeall();
+
+	std::string add_grid_item = LLTrans::getString("ServerComboAddGrid");
 
 	std::map<std::string, std::string> known_grids = LLGridManager::getInstance()->getKnownGrids(!gSavedSettings.getBOOL("ShowBetaGrids"));
 
@@ -1087,18 +1122,21 @@ void LLPanelLogin::updateServerCombo()
 	{
 		if (!grid_choice->first.empty())
 		{
-			server_choice_combo->add(grid_choice->second, grid_choice->first);
+			if(grid_choice->first != add_grid_item)
+			{
+				server_choice_combo->add(grid_choice->second, grid_choice->first);
+			}
 		}
 	}
 	server_choice_combo->sortByName();
 	
 	server_choice_combo->addSeparator(ADD_TOP);
-	
-	server_choice_combo->add(LLGridManager::getInstance()->getGridLabel(), 
-		LLGridManager::getInstance()->getGrid(), ADD_TOP);	
-	
-	server_choice_combo->selectFirstItem();
 
+	server_choice_combo->add(LLGridManager::getInstance()->getGridLabel(), LLGridManager::getInstance()->getGrid(), ADD_TOP);
+
+	server_choice_combo->add(add_grid_item, add_grid_item, ADD_BOTTOM);
+	server_choice_combo->selectFirstItem();
+ 
 	update_grid_help();
 }
 
@@ -1137,6 +1175,7 @@ void LLPanelLogin::onSelectServer(LLUICtrl*, void*)
 		return;
 	}
 
+
 	try
 	{
 		LLGridManager::getInstance()->setGridChoice(new_combo_value);
@@ -1146,12 +1185,14 @@ void LLPanelLogin::onSelectServer(LLUICtrl*, void*)
 		// do nothing
 	}
 // </AW: opensim>
-	//Clear the PW for security reasons, if the Grid changed manually.
-	sInstance->getChild<LLLineEditor>("password_edit")->clear();
+	std::string add_grid_item = LLTrans::getString("ServerComboAddGrid");
+	if(add_grid_item != new_combo_value)
+	{
+		LLStartUp::setStartSLURL(LLSLURL(gSavedSettings.getString("LoginLocation")));
+	}
+	
 	combo = sInstance->getChild<LLComboBox>("start_location_combo");	
-//	combo->setCurrentByIndex(1);  <- SA: Why???
-	LLStartUp::setStartSLURL(LLSLURL(gSavedSettings.getString("LoginLocation")));
-//NP	LLGridManager::getInstance()->setGridChoice(combo_val.asString());
+	combo->setCurrentByIndex(1);
 	// This new selection will override preset uris
 	// from the command line.
 	updateServer();
@@ -1160,6 +1201,8 @@ void LLPanelLogin::onSelectServer(LLUICtrl*, void*)
 
 void LLPanelLogin::onServerComboLostFocus(LLFocusableElement* fe)
 {
+	LL_DEBUGS("PanelLogin") << " " << LL_ENDL;
+
 	if (!sInstance)
 	{
 		return;

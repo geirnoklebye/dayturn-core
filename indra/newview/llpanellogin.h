@@ -90,6 +90,7 @@ private:
 	void addFavoritesToStartLocation();
 	void addUsersWithFavoritesToUsername();
 	static void onClickConnect(void*);
+	static void onClickAddGrid(void*);
 	static void onClickNewAccount(void*);
 	static void onClickVersion(void*);
 	static void onClickForgotPassword(void*);

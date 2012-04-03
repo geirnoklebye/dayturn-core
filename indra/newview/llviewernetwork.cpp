@@ -210,8 +210,9 @@ void LLGridManager::initGrids()
 
 void LLGridManager::initSystemGrids()
 {
+	std::string add_grid_item = LLTrans::getString("ServerComboAddGrid");
 
-	addSystemGrid(LLTrans::getString("loading..."), "", "", "", "", DEFAULT_LOGIN_PAGE);
+	addSystemGrid(add_grid_item, add_grid_item, add_grid_item, " ", " ", add_grid_item);
 // 	addSystemGrid("None", "", "", "", DEFAULT_LOGIN_PAGE);
 //we get this now from the grid list
 /*
@@ -277,7 +278,7 @@ void LLGridManager::initGridList(std::string grid_file, AddState state)
 					addGrid(grid_entry, state);
 					LL_DEBUGS("GridManager") << "Added grid: " << key_name << LL_ENDL;
 				}
-				catch (...)
+				catch (LLInvalidGridName ex)
 				{
 				}
 
@@ -369,7 +370,14 @@ void LLGridManager::initCmdLineGrids()
 
 		// add the grid with the additional values, or update the
 		// existing grid if it exists with the given values
-		addGrid(grid_entry, FETCH);
+		try
+		{
+			addGrid(grid_entry, FETCH);
+		}
+		catch(LLInvalidGridName ex)
+		{
+
+		}
 	}
 }
 // </AW opensim>
@@ -534,7 +542,9 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 		std::string grid = utf8str_tolower(grid_entry->grid[GRID_VALUE]);
 		// grid should be in the form of a dns address
 		// but also support localhost:9000 or localhost:9000/login
-		if ( !grid.empty() && grid.find_first_not_of("abcdefghijklmnopqrstuvwxyz1234567890-_.:/@% ") != std::string::npos)
+		bool is_special_entry = (grid.find("<") == 0 
+					&& grid.rfind(">") == grid.length() -1);
+		if ( !is_special_entry && !grid.empty() && grid.find_first_not_of("abcdefghijklmnopqrstuvwxyz1234567890-_.:/@% ") != std::string::npos)
 		{
 			printf("grid name: %s", grid.c_str());
 			if (grid_entry)
@@ -593,12 +603,18 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 		}
 		else
 		{
-			if ( std::string::npos == uri.find(".")
-				|| std::string::npos != uri.find("127.0.0.1")
+			char host_name[255];
+			host_name[254] ='\0';
+			gethostname(host_name, 254);
+			if (std::string::npos != uri.find(host_name)||
+				std::string::npos != uri.find("127.0.0.1")
 				|| std::string::npos != uri.find("localhost") )
 			{
+	
+				LL_DEBUGS("GridManager") << "state = LOCAL" << LL_ENDL;
 				state = LOCAL;
 			}
+
 			grid_entry->grid[GRID_LOGIN_URI_VALUE] = LLSD::emptyArray();
 			grid_entry->grid[GRID_LOGIN_URI_VALUE].append(uri);
 
@@ -817,7 +833,16 @@ void LLGridManager::addSystemGrid(const std::string& label,
 	{
 		grid_entry->grid[GRID_SLURL_BASE] = llformat(SYSTEM_GRID_SLURL_BASE, label.c_str());
 	}
-	addGrid(grid_entry, SYSTEM);
+	LL_DEBUGS("PanelLogin") << " " << grid_entry->grid[GRID_LOGIN_PAGE_VALUE]<< LL_ENDL;
+
+	try
+	{
+		addGrid(grid_entry, SYSTEM);
+	}
+	catch(LLInvalidGridName ex)
+	{
+
+	}
 }
 
 
@@ -891,9 +916,17 @@ void LLGridManager::setGridChoice(const std::string& grid)
 	{
 		LL_DEBUGS("GridManager")<< "setting grid choice: " << grid << LL_ENDL;
 		mGrid = grid;
-		gSavedSettings.setString("CurrentGrid", grid); 
 		updateIsInProductionGrid();
-		mReadyToLogin = true;
+		std::string add_grid_item = LLTrans::getString("ServerComboAddGrid");
+		if(grid == add_grid_item)
+		{
+			mReadyToLogin = false;
+		}
+		else
+		{
+			gSavedSettings.setString("CurrentGrid", grid); 
+			mReadyToLogin = true;
+		}
 	}
 }
 
