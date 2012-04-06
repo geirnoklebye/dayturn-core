@@ -181,8 +181,8 @@ class ViewerManifest(LLManifest):
         setting_flags = ''
         if not self.default_channel() or not self.default_grid():
             if self.default_grid():
-                setting_flags = '--settings settings_%s.xml'\
-                                % self.channel_lowerword()
+                setting_flags = '--settings settings_%s_%s.xml'\
+                                % (self.channel_lowerword(), 'kokua_experimental')
             else:
                 setting_flags = '--settings settings_%s_%s.xml'\
                                 % (self.grid(), self.channel_lowerword())
