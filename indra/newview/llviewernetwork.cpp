@@ -856,11 +856,13 @@ std::map<std::string, std::string> LLGridManager::getKnownGrids(bool favorite_on
 		grid_iter++) 
 	{
 		if(!favorite_only || grid_iter->second.has(GRID_IS_FAVORITE_VALUE))
+                   ||grid_iter->second.has("USER_DELETED")//use in user list only
+                   ||grid_iter->second.has("FLAG_TEMPORARY")))
 		{
 			result[grid_iter->first] = grid_iter->second[GRID_LABEL_VALUE].asString();
 		}
 	}
-
+	result[mGridList[mGrid]] =  mGridList[mGrid][GRID_LABEL_VALUE].asString();//awfixme
 	return result;
 }
 
@@ -910,7 +912,7 @@ void LLGridManager::setGridChoice(const std::string& grid)
 		grid_entry->grid = LLSD::emptyMap();
 		grid_entry->grid[GRID_VALUE] = grid;
 		grid_entry->set_current = true;
-		addGrid(grid_entry, FETCH);
+		addGrid(grid_entry, FETCHTEMP);
 	}
 	else
 	{
@@ -1138,6 +1140,11 @@ void LLGridManager::saveGridList()
 {
 	// filter out just those which are not hardcoded anyway
 	LLSD output_grid_list = LLSD::emptyMap();
+	if (mGridList[mGrid].has("FLAG_TEMPORARY"))
+	{
+		mGridList[mGrid].erase("FLAG_TEMPORARY");
+		llwarns << "HIPPOS! " << mGridList[mGrid] << llendl;
+	}
 	for(LLSD::map_iterator grid_iter = mGridList.beginMap();
 		grid_iter != mGridList.endMap();
 		grid_iter++)

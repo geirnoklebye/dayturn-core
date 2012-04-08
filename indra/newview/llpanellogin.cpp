@@ -63,7 +63,7 @@
 #include "llweb.h"
 #include "llmediactrl.h"
 #include "llrootview.h"
-
+#include "llfloaterwebcontent.h"
 #include "llfloatertos.h"
 #include "lltrans.h"
 #include "llglheaders.h"
@@ -212,6 +212,7 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	server_choice_combo->setCommitCallback(onSelectServer, NULL);
 	server_choice_combo->setFocusLostCallback(boost::bind(onServerComboLostFocus, _1));
 	updateServerCombo();
+	childSetAction("select_grids_btn", onClickSelectGrid, this);
 
 	childSetAction("connect_btn", onClickConnect, this);
 	childSetAction("add_grid_btn", onClickAddGrid, this);
@@ -968,6 +969,8 @@ void LLPanelLogin::onClickConnect(void *)
 			}
 			else
 			{
+			LLFloaterReg::hideInstance("select_grid");
+
 				LLPointer<LLCredential> cred;
 				BOOL remember;
 				getFields(cred, remember);
