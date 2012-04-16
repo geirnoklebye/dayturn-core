@@ -5,7 +5,7 @@
 @brief Description of all installer viewer files, and methods for packaging
        them into installers for all supported platforms.
 
-$LicenseInfo:firstyear=2006&license=viewerlgpl$
+$LicenseInfo: firstyear=2006&license=viewerlgpl$
 Second Life Viewer Source Code
 Copyright (C) 2006-2011, Linden Research, Inc.
 

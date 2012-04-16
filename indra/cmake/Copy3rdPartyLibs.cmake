@@ -1,6 +1,6 @@
 # -*- cmake -*-
 
-# The copy_win_libs folder contains file lists and a script used to
+#  The copy_win_libs folder contains file lists and a script used to
 # copy dlls, exes and such needed to run the SecondLife from within
 # VisualStudio.
 
