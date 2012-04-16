@@ -1797,7 +1797,6 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLLOGIN_LIBRARIES}
     ${LLCONVEXDECOMP_LIBRARY}
     ${TCMALLOC_LIBRARIES}
-    ${HACD_LIBRARY}
     )
 
 if (USE_KDU)

@@ -1236,6 +1236,52 @@
           </map>
         </map>
       </map>
+      <key>k_hacdConvexDecomposition</key>
+      <map>
+        <key>license</key>
+        <string>BSD</string>
+        <key>name</key>
+        <string>k_hacdConvexDecomposition</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>18f3e50246c13a20044dd7b19d53c412</string>
+              <key>url</key>
+              <string>http://phoenixviewer.com/app/packages/hacd_darwin_20111003.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>e658a85c13e561336c469f290e11ffa3</string>
+              <key>url</key>
+              <string>http://bitbucket.org/NickyP/kokua-mesh-upload/downloads/hacd_k-0.162-linux-20111115.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>08371bd5bb7e4ba3740765883df43f4b</string>
+              <key>url</key>
+              <string>http://bitbucket.org/NickyP/kokua-mesh-upload/downloads/hacd_k-0.162-windows-20111114.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+      </map>
       <key>llconvexdecompositionstub</key>
       <map>
         <key>license</key>
