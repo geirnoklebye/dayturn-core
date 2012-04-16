@@ -1267,22 +1267,30 @@ if (WINDOWS)
         set(ICON_PATH "development")
     elseif(channel_lower MATCHES "project")
         set(ICON_PATH "project")
+    elseif(channel_lower MATCHES "kokua")
+        set(ICON_PATH "kokua")        
     endif()
+
     message("Copying icons for ${ICON_PATH}")
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/secondlife.ico"
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.ico"
         "${CMAKE_CURRENT_SOURCE_DIR}/res/ll_icon.ico"
       )
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/secondlife_256.BMP"
-        "${CMAKE_CURRENT_SOURCE_DIR}/res/ll_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.png"
+        "${CMAKE_CURRENT_SOURCE_DIR}/res/kokua_icon.png"
+      )
+      
+    execute_process(
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.BMP"
       )
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/secondlife_256.BMP"
-        "${CMAKE_CURRENT_SOURCE_DIR}/res-sdl/ll_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/res-sdl/kokua_icon.BMP"
       )
 
     # Add resource files to the project.
@@ -1382,6 +1390,11 @@ endif (WINDOWS)
 set(viewer_XUI_FILES
     skins/default/colors.xml
     skins/default/textures/textures.xml
+    skins/minimal/colors.xml
+    skins/minimal/textures/textures.xml
+
+
+
     )
 file(GLOB DEFAULT_XUI_FILE_GLOB_LIST
      ${CMAKE_CURRENT_SOURCE_DIR}/skins/*/xui/en/*.xml)
@@ -1404,6 +1417,17 @@ set_source_files_properties(${viewer_XUI_FILES}
                             PROPERTIES HEADER_FILE_ONLY TRUE)
 
 list(APPEND viewer_SOURCE_FILES ${viewer_XUI_FILES})
+
+
+
+
+source_group("Library Install File" FILES ${viewer_LIBRARY_INSTALL_FILES})
+
+set_source_files_properties(${viewer_LIBRARY_INSTALL_FILES}
+                            PROPERTIES HEADER_FILE_ONLY TRUE)
+                            
+list(APPEND viewer_SOURCE_FILES ${viewer_LIBRARY_INSTALL_FILES})
+
 
 set(viewer_APPSETTINGS_FILES
     app_settings/anim.ini
