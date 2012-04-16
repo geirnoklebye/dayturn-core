@@ -6,9 +6,9 @@ add_subdirectory(webkit)
 
 add_subdirectory(gstreamer010)
 
-if (WINDOWS OR DARWIN)
+if (USE_QUICKTIME)
     add_subdirectory(quicktime)
-endif (WINDOWS OR DARWIN)
+endif (USE_QUICKTIME)
 
 if (WINDOWS)
     add_subdirectory(winmmshim)
