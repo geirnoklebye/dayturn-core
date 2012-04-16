@@ -344,25 +344,6 @@ class WindowsManifest(ViewerManifest):
             except:
                 print "Skipping zlib1.dll"
 
-               # Security
-            self.path("ssleay32.dll")
-            self.path("libeay32.dll")
-
-            # For google-perftools tcmalloc allocator.
-            try:
-                if self.args['configuration'].lower() == 'debug':
-                    self.path('libtcmalloc_minimal-debug.dll')
-                else:
-                    self.path('libtcmalloc_minimal.dll')
-            except:
-                print "Skipping libtcmalloc_minimal.dll"
-
-            self.end_prefix()
-
-        self.path(src="licenses-win32.txt", dst="licenses.txt")
-        self.path("featuretable.txt")
-        self.path("featuretable_xp.txt")        
-
         #OpenAL
         try:
             self.path("openal32.dll")
@@ -432,9 +413,25 @@ class WindowsManifest(ViewerManifest):
             self.path("z.dll")
         except:
             print "Skipping gstreamer libraries"
- 
 
+               # Security
+            self.path("ssleay32.dll")
+            self.path("libeay32.dll")
+			
+		# For google-perftools tcmalloc allocator.
+	try:
+		if self.args['configuration'].lower() == 'debug':
+			self.path('libtcmalloc_minimal-debug.dll')
+		else:
+			self.path('libtcmalloc_minimal.dll')
+	except:
+			print "Skipping libtcmalloc_minimal.dll"
+			
+			self.path(src="licenses-win32.txt", dst="licenses.txt")
+			self.path("featuretable.txt")
+			self.path("featuretable_xp.txt")
 
+        self.end_prefix()
 
 
         #self.enable_no_crt_manifest_check()
