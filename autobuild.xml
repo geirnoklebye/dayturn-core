@@ -1347,6 +1347,43 @@
           </map>
         </map>
       </map>
+      <key>gtk-atk-pango-glib</key>
+      <map>
+        <key>license</key>
+        <string>lgpl</string>
+        <key>license_file</key>
+        <string>LICENSES/gtk-atk-pango-glib.txt</string>
+        <key>name</key>
+        <string>gtk-atk-pango-glib</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>03694ade27f53199229c03cbbda89214</string>
+              <key>url</key>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/gtk-atk-pango-glib-linux-20101001.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>c257d718abdde8cfe8a0af26175161a7</string>
+              <key>url</key>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/gtk-atk-pango-glib-windows-20101001a.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+      </map>
+
       <key>jpeglib</key>
       <map>
         <key>license</key>
@@ -1751,9 +1788,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>18f3e50246c13a20044dd7b19d53c412</string>
+              <string>2701d4d88d7b42634387bb9e6db4b4d2</string>
               <key>url</key>
-              <string>http://phoenixviewer.com/app/packages/hacd_darwin_20111003.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/hacd_k-0.178-darwin-20120401.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -1894,11 +1931,28 @@
                 <key>libraries/x86_64-linux/lib_release_client</key>
                 <string>lib/release</string>
               </map>
+              <key>hash</key>
               <string>2d4aee5c3e83a238cdf4c995854299f8</string>
+              <key>url</key>
               <string>http://download.kokuaviewer.org/files/libs/llconvexdecompositionstub-0.3-Linux-Linux-x86_64-20110906.tar.bz2</string>
+            </map>
+            <key>name</key>
             <string>linux64</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
               <string>92f1dff3249024c1534b55343ed79ea3</string>
+              <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llconvexdecompositionstub/rev/227399/arch/CYGWIN/installer/llconvexdecompositionstub-0.3-windows-20110421.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+      </map>
       <key>llqtwebkit</key>
       <map>
         <key>license</key>
