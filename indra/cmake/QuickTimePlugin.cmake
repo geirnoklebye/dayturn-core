@@ -1,54 +1,53 @@
 # -*- cmake -*-
+if(INSTALL_PROPRIETARY OR QUICKTIME)
+  set(QUICKTIME ON CACHE BOOL "Build with Quicktime support")
+endif(INSTALL_PROPRIETARY OR QUICKTIME)
 
-if(INSTALL_PROPRIETARY)
+if(QUICKTIME)
   include(Prebuilt)
   use_prebuilt_binary(quicktime)
-endif(INSTALL_PROPRIETARY)
 
-if(USE_QUICKTIME)
-   include(Prebuilt)
-   use_prebuilt_binary(quicktime)
-endif(USE_QUICKTIME)
-if (DARWIN)
-  include(CMakeFindFrameworks)
-  find_library(QUICKTIME_LIBRARY QuickTime)
-elseif (WINDOWS)
-    if (USE_QUICKTIME_LOCAL_REPO)
-        set(QUICKTIME_SDK_DIR "$ENV(QUICKTIME_SDK_DIR)"
-        CACHE PATH "Location of the QuickTime SDK.")
-    else (APPLE LOCAL SDK)
-        set(QUICKTIME_SDK_DIR "$ENV{PROGRAMFILES}/QuickTime SDK"
-        CACHE PATH "Location of the QuickTime SDK.")
-    endif (USE_QUICKTIME_LOCAL_REPO)
-  find_library(DEBUG_QUICKTIME_LIBRARY qtmlclient.lib
-               PATHS
-               ${ARCH_PREBUILT_DIRS_DEBUG}
-               "${QUICKTIME_SDK_DIR}\\libraries"
-               )
+  if (DARWIN)
+    include(CMakeFindFrameworks)
+    find_library(QUICKTIME_LIBRARY QuickTime)
+  elseif (WINDOWS)
+    if ("$ENV(QUICKTIME_SDK_DIR")
+      set(QUICKTIME_SDK_DIR "$ENV(QUICKTIME_SDK_DIR)"
+           CACHE PATH "Location of the QuickTime SDK.")
+    else ()#APPLE LOCAL SDK
+      set(QUICKTIME_SDK_DIR "$ENV{PROGRAMFILES}/QuickTime SDK"
+      CACHE PATH "Location of the QuickTime SDK.")
+    endif ()
 
-  find_library(RELEASE_QUICKTIME_LIBRARY qtmlclient.lib
-               PATHS
-               ${ARCH_PREBUILT_DIRS_RELEASE}
-               "${QUICKTIME_SDK_DIR}\\libraries"
-               )
+    find_library(DEBUG_QUICKTIME_LIBRARY qtmlclient.lib
+           PATHS
+           ${ARCH_PREBUILT_DIRS_DEBUG}
+           "${QUICKTIME_SDK_DIR}\\libraries"
+           )
 
-  if (DEBUG_QUICKTIME_LIBRARY AND RELEASE_QUICKTIME_LIBRARY)
+    find_library(RELEASE_QUICKTIME_LIBRARY qtmlclient.lib
+           PATHS
+           ${ARCH_PREBUILT_DIRS_RELEASE}
+           "${QUICKTIME_SDK_DIR}\\libraries"
+           )
+
+    if (DEBUG_QUICKTIME_LIBRARY AND RELEASE_QUICKTIME_LIBRARY)
     set(QUICKTIME_LIBRARY 
-        optimized ${RELEASE_QUICKTIME_LIBRARY}
-        debug ${DEBUG_QUICKTIME_LIBRARY}
-        )
-        
-  endif (DEBUG_QUICKTIME_LIBRARY AND RELEASE_QUICKTIME_LIBRARY)
-  
-  include_directories(
+      optimized ${RELEASE_QUICKTIME_LIBRARY}
+      debug ${DEBUG_QUICKTIME_LIBRARY}
+      )
+      
+    endif (DEBUG_QUICKTIME_LIBRARY AND RELEASE_QUICKTIME_LIBRARY)
+    
+    include_directories(
     ${LIBS_PREBUILT_DIR}/include/quicktime
     "${QUICKTIME_SDK_DIR}\\CIncludes"
     )
-endif (DARWIN)
+  endif (DARWIN)
 
-mark_as_advanced(QUICKTIME_LIBRARY)
+  mark_as_advanced(QUICKTIME_LIBRARY)
 
-if (QUICKTIME_LIBRARY)
-  set(QUICKTIME ON CACHE BOOL "Build with QuickTime streaming media support.")
-endif (QUICKTIME_LIBRARY)
-
+  if (QUICKTIME_LIBRARY)
+    set(QUICKTIME ON CACHE BOOL "Build with QuickTime streaming media support.")
+  endif (QUICKTIME_LIBRARY)
+endif(QUICKTIME)
