@@ -5,13 +5,21 @@ if(INSTALL_PROPRIETARY)
   use_prebuilt_binary(quicktime)
 endif(INSTALL_PROPRIETARY)
 
+if(USE_QUICKTIME)
+   include(Prebuilt)
+   use_prebuilt_binary(quicktime)
+endif(USE_QUICKTIME)
 if (DARWIN)
   include(CMakeFindFrameworks)
   find_library(QUICKTIME_LIBRARY QuickTime)
 elseif (WINDOWS)
-  set(QUICKTIME_SDK_DIR "$ENV{PROGRAMFILES}/QuickTime SDK"
-      CACHE PATH "Location of the QuickTime SDK.")
-
+    if (USE_QUICKTIME_LOCAL_REPO)
+        set(QUICKTIME_SDK_DIR "$ENV(QUICKTIME_SDK_DIR)"
+        CACHE PATH "Location of the QuickTime SDK.")
+    else (APPLE LOCAL SDK)
+        set(QUICKTIME_SDK_DIR "$ENV{PROGRAMFILES}/QuickTime SDK"
+        CACHE PATH "Location of the QuickTime SDK.")
+    endif (USE_QUICKTIME_LOCAL_REPO)
   find_library(DEBUG_QUICKTIME_LIBRARY qtmlclient.lib
                PATHS
                ${ARCH_PREBUILT_DIRS_DEBUG}

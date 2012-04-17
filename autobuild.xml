@@ -1894,28 +1894,11 @@
                 <key>libraries/x86_64-linux/lib_release_client</key>
                 <string>lib/release</string>
               </map>
-              <key>hash</key>
               <string>2d4aee5c3e83a238cdf4c995854299f8</string>
-              <key>url</key>
               <string>http://download.kokuaviewer.org/files/libs/llconvexdecompositionstub-0.3-Linux-Linux-x86_64-20110906.tar.bz2</string>
-            </map>
-            <key>name</key>
             <string>linux64</string>
-          </map>
-          <key>windows</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
               <string>92f1dff3249024c1534b55343ed79ea3</string>
-              <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llconvexdecompositionstub/rev/227399/arch/CYGWIN/installer/llconvexdecompositionstub-0.3-windows-20110421.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>windows</string>
-          </map>
-        </map>
-      </map>
       <key>llqtwebkit</key>
       <map>
         <key>license</key>
