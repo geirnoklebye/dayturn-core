@@ -297,6 +297,7 @@ LLMemoryInfo gSysMemory;
 U64 gMemoryAllocated = 0; // updated in display_stats() in llviewerdisplay.cpp
 
 std::string gLastVersionChannel;
+std::string gSimulatorType;
 
 LLVector3			gWindVec(3.0, 3.0, 0.0);
 LLVector3			gRelativeWindVec(0.0, 0.0, 0.0);

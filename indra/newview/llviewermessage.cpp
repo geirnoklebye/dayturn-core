@@ -3756,7 +3756,17 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 	
 	std::string version_channel;
 	msg->getString("SimData", "ChannelVersion", version_channel);
-
+	const std::string delims (" ");
+	int begIdx, endIdx;
+	std::string simString =  version_channel;
+	begIdx = simString.find_first_not_of (delims);
+	endIdx = simString.find_first_of (delims, begIdx);
+	gSimulatorType = simString.substr (begIdx, endIdx - begIdx);
+	if (gSimulatorType == "Second")
+	{
+		gSimulatorType += "Life";
+	}
+	llinfos << "Simulator Type : " << gSimulatorType <<llendl;
 	if (!isAgentAvatarValid())
 	{
 		// Could happen if you were immediately god-teleported away on login,
