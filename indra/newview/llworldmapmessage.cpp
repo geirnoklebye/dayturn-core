@@ -26,6 +26,7 @@
 
 #include "llviewerprecompiledheaders.h"
 
+#include "llappviewer.h"
 #include "llworldmapmessage.h"
 #include "message.h"
 
@@ -188,8 +189,15 @@ void LLWorldMapMessage::processMapBlockReply(LLMessageSystem* msg, void**)
 		U32 y_world = (U32)(y_regions) * REGION_WIDTH_UNITS;
 
 		// name shouldn't be empty, see EXT-4568
-		//llassert(!name.empty()); FIXME kokua NP
-		llwarns << "Kokua Fixme for Opensim " <<  "World Map Name :" << (!name.empty()) << LL_ENDL;
+		if (gSimulatorType == "SecondLife")
+		{
+			llassert(!name.empty());
+		}
+		else
+		{
+			//leave commented out to reduce log spam
+			//llwarns << "Kokua Fixme for Opensim " <<  "World Map Name :" << (!name.empty()) << LL_ENDL;
+		}
 		// Insert that region in the world map, if failure, flag it as a "null_sim"
 		if (!(LLWorldMap::getInstance()->insertRegion(x_world, y_world, name, image_id, (U32)accesscode, region_flags)))
 		{
