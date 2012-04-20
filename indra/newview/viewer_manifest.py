@@ -344,6 +344,10 @@ class WindowsManifest(ViewerManifest):
             except:
                 print "Skipping zlib1.dll"
 
+				# Security
+            self.path("ssleay32.dll")
+            self.path("libeay32.dll")				
+
         #OpenAL
         try:
             self.path("openal32.dll")
@@ -414,9 +418,6 @@ class WindowsManifest(ViewerManifest):
         except:
             print "Skipping gstreamer libraries"
 
-               # Security
-            self.path("ssleay32.dll")
-            self.path("libeay32.dll")
 			
 		# For google-perftools tcmalloc allocator.
 	try:
