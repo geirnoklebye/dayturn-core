@@ -4,7 +4,7 @@ add_subdirectory(base)
 
 add_subdirectory(webkit)
 
-add_subdirectory(gstreamer010)
+#add_subdirectory(gstreamer010)
 
 if (QUICKTIME)
     add_subdirectory(quicktime)

@@ -41,6 +41,7 @@ include(UnixInstall)
 include(LLKDU)
 include(ViewerMiscLibs)
 include(LLLogin)
+# include(VisualLeakDetector)
 include(GLOD)
 include(CMakeCopyIfDifferent)
 
@@ -1229,6 +1230,17 @@ if (LINUX)
     set(viewer_LIBRARIES
         Xinerama
         )
+   # OpenMP is used with HACD. OpenMP is not available for VS2010 Express
+    # Edition. So, It is restricted to Linux 
+    # To do NP Move to windows and drawin. 
+    include_directories(${CMAKE_COMMON_INC})
+
+    include(FindOpenMP)
+    if(OPENMP_FOUND)
+ 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+ 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+ 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+    endif() 
 endif (LINUX)
 
 if (WINDOWS)
@@ -1418,17 +1430,6 @@ set_source_files_properties(${viewer_XUI_FILES}
                             PROPERTIES HEADER_FILE_ONLY TRUE)
 
 list(APPEND viewer_SOURCE_FILES ${viewer_XUI_FILES})
-
-
-
-
-source_group("Library Install File" FILES ${viewer_LIBRARY_INSTALL_FILES})
-
-set_source_files_properties(${viewer_LIBRARY_INSTALL_FILES}
-                            PROPERTIES HEADER_FILE_ONLY TRUE)
-                            
-list(APPEND viewer_SOURCE_FILES ${viewer_LIBRARY_INSTALL_FILES})
-
 
 set(viewer_APPSETTINGS_FILES
     app_settings/anim.ini
@@ -1828,7 +1829,7 @@ if (LINUX)
     linux-updater
     SLPlugin
     media_plugin_webkit
-    media_plugin_gstreamer010
+#    media_plugin_gstreamer010
     llcommon
     )
 

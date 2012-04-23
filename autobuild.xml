@@ -962,30 +962,7 @@
         <string>glib</string>
         <key>platforms</key>
         <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/i686-linux/include</key>
-                <string>include</string>
-                <key>libraries/i686-linux/lib_release_client</key>
-                <string>lib/release</string>
-                <key>libraries/include</key>
-                <string>include</string>
-              </map>
-              <key>hash</key>
-              <string>566cc47a572303bc4aef12ca02670902</string>
-              <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/glib-2.20.5-linux32-20100529.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
+           <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
@@ -1979,21 +1956,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/i686-linux/include</key>
-                <string>include</string>
-                <key>libraries/i686-linux/lib_release_client</key>
-                <string>lib/release</string>
-                <key>libraries/include</key>
-                <string>include</string>
-              </map>
               <key>hash</key>
-              <string>d2f69c0d72e28037f5377538d4ec8dfe</string>
+              <string>f50e5f0cc880c55b3f0f7e67dc8f7221</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/kokua-llqtwebkit-Linux-i686-20110620.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llqtwebkit/rev/250147/arch/Linux/installer/llqtwebkit-4.7.1-linux-20120228.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2561,17 +2527,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>indra/newview/vivox-runtime/i686-linux</key>
-                <string>lib/release/vivox-runtime</string>
-              </map>
               <key>hash</key>
-              <string>01573510dce7f380f44e561ef2f3dd9f</string>
+              <string>8a0bc982367d6fdc20a28b391cd40566</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/vivox-2.1.3010.6270-linux-20090309.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/231678/arch/Linux/installer/slvoice-3.2.0002.10426-linux-20110601.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>

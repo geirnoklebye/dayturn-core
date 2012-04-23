@@ -152,10 +152,12 @@ class ViewerManifest(LLManifest):
             icon_path += channel_type
         elif channel_type == 'betaviewer' :
             icon_path += 'beta'
+        elif channel_type == 'kokua' :
+            icon_path += 'kokua'
         elif re.match('project.*',channel_type) :
             icon_path += 'project'
         else :
-            icon_path += 'test'
+            icon_path += 'kokua'
         return icon_path
 
     def flags_list(self):
@@ -1075,7 +1077,7 @@ class LinuxManifest(ViewerManifest):
             self.path("wrapper.sh","kokua")
             self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
             self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
-            self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
+#            self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
             self.path("refresh_desktop_app_entry.sh", "etc/refresh_desktop_app_entry.sh")
             self.path("launch_url.sh","etc/launch_url.sh")
             self.path("install.sh")
@@ -1108,7 +1110,7 @@ class LinuxManifest(ViewerManifest):
         # plugins
         if self.prefix(src="", dst="bin/llplugin"):
             self.path("../media_plugins/webkit/libmedia_plugin_webkit.so", "libmedia_plugin_webkit.so")
-            self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
+            #self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
             self.end_prefix("bin/llplugin")
 
 
@@ -1119,11 +1121,13 @@ class LinuxManifest(ViewerManifest):
         # Force executable permissions to be set for scripts
         # see CHOP-223 and http://mercurial.selenic.com/bts/issue1802
 
+        for script in ('install.sh', 'kokua', 'bin/update_install'):
+            self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
         #yus, copy paste was faster :P
-        for script in ('install.sh', 'kokua', 'bin/update_install', 'etc/handle_secondlifeprotocol.sh',
-                       'etc/register_secondlifeprotocol.sh', 'etc/register_hopprotocol.sh',
-                       'etc/refresh_desktop_app_entry.sh', 'etc/launch_url.sh'):
-                           self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
+#        for script in ('install.sh', 'kokua', 'bin/update_install', 'etc/handle_secondlifeprotocol.sh',
+#                       'etc/register_secondlifeprotocol.sh', 'etc/register_hopprotocol.sh',
+#                       'etc/refresh_desktop_app_entry.sh', 'etc/launch_url.sh'):
+#                           self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
 
 class Linux_i686Manifest(LinuxManifest):
     def construct(self):
@@ -1202,10 +1206,10 @@ class Linux_i686Manifest(LinuxManifest):
             self.end_prefix("lib")
 
             # Vivox runtimes
-            if self.prefix(src="../packages/lib/release/vivox-runtime", dst="bin"):
+            if self.prefix(src="../packages/lib/release/", dst="bin"):
                     self.path("SLVoice")
                     self.end_prefix()
-            if self.prefix(src="../packages/lib/release/vivox-runtime", dst="lib"):
+            if self.prefix(src="../packages/lib/release/", dst="lib"):
                     self.path("libortp.so")
                     self.path("libvivoxsdk.so")
                     self.end_prefix("lib")

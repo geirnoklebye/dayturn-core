@@ -1,7 +1,7 @@
 # -*- cmake -*-
 
-#  The copy_win_libs folder contains file lists and a script used to
-# copy dlls, exes and such needed to run the SecondLife from within
+# The copy_win_libs folder contains file lists and a script used to
+# copy dlls, exes and such needed to run the Kokua.sln from within
 # VisualStudio.
 
 include(CMakeCopyIfDifferent)
@@ -17,7 +17,7 @@ if(WINDOWS)
 
     #*******************************
     # VIVOX - *NOTE: no debug version
-	set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
+    set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(vivox_files
         SLVoice.exe
 #        wrap_oal.dll not in archive
@@ -106,8 +106,9 @@ if(WINDOWS)
         ssleay32.dll
         libeay32.dll
         libcollada14dom22-d.dll
-        glod.dll    
+        glod.dll
         )
+
 
     set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(release_files
@@ -184,6 +185,8 @@ if(WINDOWS)
         libcollada14dom22.dll
         glod.dll
         )
+
+
 
     if(USE_GOOGLE_PERFTOOLS)
       set(debug_files ${debug_files} libtcmalloc_minimal-debug.dll)
@@ -335,20 +338,26 @@ elseif(DARWIN)
        )
     set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(release_files
-        libapr-1.0.dylib
+# kokuafixme
+# <<<<<<< HEAD
+        libalut.0.dylib
+        libapr-1.0.3.7.dylib
+# =======
+#         libapr-1.0.dylib
+# >>>>>>> viewer-dev/master
         libapr-1.dylib
         libaprutil-1.0.dylib
         libaprutil-1.dylib
         libexpat.1.5.2.dylib
         libexpat.dylib
         libGLOD.dylib
-    libllqtwebkit.dylib
-    libminizip.a
+        libllqtwebkit.dylib
+        libminizip.a
         libndofdev.dylib
         libopenal.1.dylib
         libopenjpeg.1.4.dylib
         libexception_handler.dylib
-    libcollada14dom.dylib
+        libcollada14dom.dylib
        )
 
     # fmod is statically linked on darwin
@@ -362,7 +371,7 @@ elseif(LINUX)
     set(SHARED_LIB_STAGING_DIR_RELEASE          "${SHARED_LIB_STAGING_DIR}")
 
 
-    set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}/vivox-runtime")
+    set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(vivox_files
         libsndfile.so.1
         libortp.so
@@ -373,13 +382,47 @@ elseif(LINUX)
        )
     # *TODO - update this to use LIBS_PREBUILT_DIR and LL_ARCH_DIR variables
     # or ARCH_PREBUILT_DIRS
+
     set(debug_src_dir "${ARCH_PREBUILT_DIRS_DEBUG}")
     set(debug_files
        )
     # *TODO - update this to use LIBS_PREBUILT_DIR and LL_ARCH_DIR variables
     # or ARCH_PREBUILT_DIRS
+
     set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
+
     # *FIX - figure out what to do with duplicate libalut.so here -brad
+
+    if(${ARCH} STREQUAL "x86_64")
+      set(release_files
+          libapr-1.so.0
+          libaprutil-1.so.0
+          libatk-1.0.so.0
+          libbreakpad_client.so.0
+          libcares.so.2
+          libcrypto.so
+          libcrypto.so.1.0.0
+          libcurl.so.4
+          libdb-5.1.so
+          libexpat.so
+          libexpat.so.1
+          libgmock_main.so
+          libgmock.so.0
+          libgmodule-2.0.so.0
+          libgobject-2.0.so
+          libgtest_main.so
+          libgtest.so.0
+          libopenal.so
+          libopenjpeg.so
+          libopenjpeg.so.1.4.0
+#           libstacktrace.so
+#           libtcmalloc.so
+          libssl.so
+          libssl.so.1.0.0
+          libgomp.so.1
+          libgomp.so.1.0.0
+         )
+    else(${ARCH} STREQUAL "x86_64")
     set(release_files
         libapr-1.so.0
         libaprutil-1.so.0
@@ -390,14 +433,14 @@ elseif(LINUX)
         libdb-5.1.so
         libexpat.so
         libexpat.so.1
-    libglod.so
+        libglod.so
         libgmock_main.so
         libgmock.so.0
         libgmodule-2.0.so
         libgobject-2.0.so
         libgtest_main.so
         libgtest.so.0
-    libminizip.so
+        libminizip.so
         libopenal.so
         libopenjpeg.so
         libssl.so
@@ -406,7 +449,10 @@ elseif(LINUX)
         libuuid.so.16.0.22
         libssl.so.1.0.0
         libfontconfig.so.1.4.4
+        libgomp.so.1
+        libgomp.so.1.0.0
        )
+    endif(${ARCH} STREQUAL "x86_64")
 
     if (FMOD)
       set(release_files ${release_files} "libfmod-3.75.so")
@@ -414,15 +460,15 @@ elseif(LINUX)
 
 else(WINDOWS)
     message(STATUS "WARNING: unrecognized platform for staging 3rd party libs, skipping...")
-    set(vivox_src_dir "${CMAKE_SOURCE_DIR}/newview/vivox-runtime/i686-linux")
+    set(vivox_src_dir "${CMAKE_SOURCE_DIR}/newview/vivox-runtime/i686-linux")#voice is always i686
     set(vivox_files "")
     # *TODO - update this to use LIBS_PREBUILT_DIR and LL_ARCH_DIR variables
     # or ARCH_PREBUILT_DIRS
-    set(debug_src_dir "${CMAKE_SOURCE_DIR}/../libraries/i686-linux/lib/debug")
+    set(debug_src_dir "${CMAKE_SOURCE_DIR}/../libraries/${ARCH}-linux/lib/debug")
     set(debug_files "")
     # *TODO - update this to use LIBS_PREBUILT_DIR and LL_ARCH_DIR variables
     # or ARCH_PREBUILT_DIRS
-    set(release_src_dir "${CMAKE_SOURCE_DIR}/../libraries/i686-linux/lib/release")
+    set(release_src_dir "${CMAKE_SOURCE_DIR}/../libraries/${ARCH}-linux/lib/release")
     set(release_files "")
 
     set(fmod_files "")
@@ -438,7 +484,6 @@ endif(WINDOWS)
 ################################################################
 # Done building the file lists, now set up the copy commands.
 ################################################################
-
 copy_if_different(
     ${vivox_src_dir}
     "${SHARED_LIB_STAGING_DIR_DEBUG}"
