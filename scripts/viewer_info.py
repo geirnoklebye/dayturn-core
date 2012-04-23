@@ -55,7 +55,7 @@ class ViewerInfo:
         self.minor = re.search('MINOR\s*=\s*(\d+)',     data).group(1)
         self.patch = re.search('PATCH\s*=\s*(\d+)',     data).group(1)
         self.extra = re.search('EXTRA\s*=\s*"([^"]*)"', data).group(1)
-        self.bundle_id = re.search('BUNDLE_ID\s*=\s*"([^"]*)"', data).group(1)
+#        self.bundle_id = re.search('BUNDLE_ID\s*=\s*"([^"]*)"', data).group(1)
 
         self.version = "%s.%s.%s"%(self.major, self.minor, self.patch)
         if len(self.extra) > 0:
