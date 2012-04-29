@@ -313,9 +313,9 @@
                 <string>lib/release</string>
               </map>
               <key>hash</key>
-              <string>3fb08fa18c3647db8077744e3d4cc1bf</string>
+              <string>ead9b63286672e9083bb30654e820052</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/boost-1.39.0-linux64-PIC-2010115.tar.bz2</string>
+              <string>http://download.kokuaviewer.org/files/libs/boost-1.45.0-Linux-x86_64-20111216.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1360,7 +1360,6 @@
           </map>
         </map>
       </map>
-
       <key>jpeglib</key>
       <map>
         <key>license</key>
@@ -1743,9 +1742,9 @@
                 <string>lib/release</string>
               </map>
               <key>hash</key>
-              <string>746e871fc32bbb10f0b524663182cb96</string>
+              <string>af3e301feb87b40617fd6599eaefb59c</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/libxml2-2.7.8-Linux-x86_64-20110405.tar.bz2</string>
+              <string>http://download.kokuaviewer.org/files/libs/libxml2-2.7.8-Linux-x86_64-20111209.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
