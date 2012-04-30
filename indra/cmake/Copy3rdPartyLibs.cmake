@@ -371,15 +371,6 @@ elseif(LINUX)
     set(SHARED_LIB_STAGING_DIR_RELEASE          "${SHARED_LIB_STAGING_DIR}")
 
 
-    set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
-    set(vivox_files
-        libsndfile.so.1
-        libortp.so
-        libvivoxoal.so.1
-        libvivoxplatform.so
-        libvivoxsdk.so
-        SLVoice
-       )
     # *TODO - update this to use LIBS_PREBUILT_DIR and LL_ARCH_DIR variables
     # or ARCH_PREBUILT_DIRS
 
@@ -394,6 +385,12 @@ elseif(LINUX)
     # *FIX - figure out what to do with duplicate libalut.so here -brad
 
     if(${ARCH} STREQUAL "x86_64")
+      set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}/vivox-runtime")
+      set(vivox_files
+          libortp.so
+          libvivoxsdk.so
+          SLVoice
+        )
       set(release_files
           libapr-1.so.0
           libaprutil-1.so.0
@@ -423,6 +420,15 @@ elseif(LINUX)
           libgomp.so.1.0.0
          )
     else(${ARCH} STREQUAL "x86_64")
+      set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
+      set(vivox_files
+          libsndfile.so.1
+          libortp.so
+          libvivoxoal.so.1
+          libvivoxplatform.so
+          libvivoxsdk.so
+          SLVoice
+          )
     set(release_files
         libapr-1.so.0
         libaprutil-1.so.0
