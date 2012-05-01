@@ -1826,7 +1826,7 @@ if (LINUX)
     linux-crash-logger
     linux-updater
     SLPlugin
-    media_plugin_webkit
+#    media_plugin_webkit
 #    media_plugin_gstreamer010
     llcommon
     )

@@ -12,13 +12,17 @@ else (STANDALONE)
     set(GOOGLE_PERFTOOLS_FOUND "YES")
   endif (WINDOWS)
   if (LINUX)
-    use_prebuilt_binary(tcmalloc)
-    set(TCMALLOC_LIBRARIES 
-    tcmalloc)
-    set(PROFILER_LIBRARIES profiler)
-    set(GOOGLE_PERFTOOLS_INCLUDE_DIR
-        ${LIBS_PREBUILT_DIR}/include)
-    set(GOOGLE_PERFTOOLS_FOUND "YES")
+    if(${ARCH} STREQUAL "x86_64")
+      set(USE_GOOGLE_PERFTOOLS OFF CACHE BOOL "Build without Google PerfTools support.")
+    else(${ARCH} STREQUAL "x86_64")
+      use_prebuilt_binary(tcmalloc)
+      set(TCMALLOC_LIBRARIES 
+	  tcmalloc)
+      set(PROFILER_LIBRARIES profiler)
+      set(GOOGLE_PERFTOOLS_INCLUDE_DIR
+          ${LIBS_PREBUILT_DIR}/include)
+      set(GOOGLE_PERFTOOLS_FOUND "YES")
+    endif(${ARCH} STREQUAL "x86_64")
   endif (LINUX)
 endif (STANDALONE)
 

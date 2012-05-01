@@ -1109,7 +1109,7 @@ class LinuxManifest(ViewerManifest):
 
         # plugins
         if self.prefix(src="", dst="bin/llplugin"):
-            self.path("../media_plugins/webkit/libmedia_plugin_webkit.so", "libmedia_plugin_webkit.so")
+            #self.path("../media_plugins/webkit/libmedia_plugin_webkit.so", "libmedia_plugin_webkit.so")
             #self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
             self.end_prefix("bin/llplugin")
 
@@ -1168,7 +1168,7 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libssl.so")
             self.path("libssl.so.1.0.0")
             self.path("libglod.so")
-            self.path("libminizip.so")
+#            self.path("libminizip.so")
 #kokuafixme            #self.path("libuuid.so")
             #self.path("libuuid.so.16")
             #self.path("libuuid.so.16.0.22")

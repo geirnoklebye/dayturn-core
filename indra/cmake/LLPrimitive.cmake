@@ -24,7 +24,7 @@ else (WINDOWS)
     set(LLPRIMITIVE_LIBRARIES 
         llprimitive
         collada14dom
-        minizip
+#        minizip
         xml2
         pcrecpp
         pcre

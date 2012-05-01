@@ -394,7 +394,7 @@ elseif(LINUX)
       set(release_files
           libapr-1.so.0
           libaprutil-1.so.0
-          libatk-1.0.so.0
+          libatk-1.0.so.0 
           libbreakpad_client.so.0
           libcares.so.2
           libcrypto.so
@@ -405,8 +405,8 @@ elseif(LINUX)
           libexpat.so.1
           libgmock_main.so
           libgmock.so.0
-          libgmodule-2.0.so.0
-          libgobject-2.0.so
+          libgmodule-2.0.so.0 
+          libgobject-2.0.so 
           libgtest_main.so
           libgtest.so.0
           libopenal.so
