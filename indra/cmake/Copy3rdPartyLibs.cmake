@@ -418,6 +418,8 @@ elseif(LINUX)
           libssl.so.1.0.0
           libgomp.so.1
           libgomp.so.1.0.0
+          libpcre.so
+          libpcre.so.3
          )
     else(${ARCH} STREQUAL "x86_64")
       set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
