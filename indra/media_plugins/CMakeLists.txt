@@ -6,7 +6,7 @@ add_subdirectory(webkit)
 if (WINDOWS)
     add_subdirectory(gstreamer010)
 endif (WINDOWS)
-#add_subdirectory(gstreamer010)
+add_subdirectory(gstreamer010)
 
 if (QUICKTIME)
     add_subdirectory(quicktime)
