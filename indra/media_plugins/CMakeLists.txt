@@ -3,9 +3,6 @@
 add_subdirectory(base)
 
 add_subdirectory(webkit)
-if (WINDOWS)
-    add_subdirectory(gstreamer010)
-endif (WINDOWS)
 add_subdirectory(gstreamer010)
 
 if (QUICKTIME)
