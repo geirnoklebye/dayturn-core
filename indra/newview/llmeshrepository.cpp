@@ -508,6 +508,7 @@ void LLMeshRepoThread::run()
 			
 			while (!mLODReqQ.empty() && count < MAX_MESH_REQUESTS_PER_SECOND && sActiveLODRequests < sMaxConcurrentRequests)
 			{
+				if (mMutex)
 				{
 					mMutex->lock();
 					LODRequest req = mLODReqQ.front();
@@ -525,6 +526,7 @@ void LLMeshRepoThread::run()
 
 			while (!mHeaderReqQ.empty() && count < MAX_MESH_REQUESTS_PER_SECOND && sActiveHeaderRequests < sMaxConcurrentRequests)
 			{
+				if (mMutex)
 				{
 					mMutex->lock();
 					HeaderRequest req = mHeaderReqQ.front();
@@ -671,6 +673,12 @@ std::string LLMeshRepoThread::constructUrl(LLUUID mesh_id)
 
 bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 { //protected by mMutex
+	
+	if (!mHeaderMutex)
+	{
+		return false;
+	}
+
 	mHeaderMutex->lock();
 
 	if (mMeshHeader.find(mesh_id) == mMeshHeader.end())
@@ -747,6 +755,11 @@ bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 
 bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id)
 { //protected by mMutex
+	if (!mHeaderMutex)
+	{
+		return false;
+	}
+
 	mHeaderMutex->lock();
 
 	if (mMeshHeader.find(mesh_id) == mMeshHeader.end())
@@ -824,6 +837,11 @@ bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id)
 
 bool LLMeshRepoThread::fetchMeshPhysicsShape(const LLUUID& mesh_id)
 { //protected by mMutex
+	if (!mHeaderMutex)
+	{
+		return false;
+	}
+
 	mHeaderMutex->lock();
 
 	if (mMeshHeader.find(mesh_id) == mMeshHeader.end())
@@ -950,6 +968,11 @@ bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params, U32& c
 //return false if failed to get mesh lod.
 bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod, U32& count)
 { //protected by mMutex
+	if (!mHeaderMutex)
+	{
+		return false;
+	}
+
 	mHeaderMutex->lock();
 
 	bool retval = true;
@@ -1068,10 +1091,11 @@ bool LLMeshRepoThread::headerReceived(const LLVolumeParams& mesh_params, U8* dat
 	{
 		LLUUID mesh_id = mesh_params.getSculptID();
 		
-		mHeaderMutex->lock();
+		{
+			LLMutexLock lock(mHeaderMutex);
 		mMeshHeaderSize[mesh_id] = header_size;
 		mMeshHeader[mesh_id] = header;
-		mHeaderMutex->unlock();
+			}
 
 		//check for pending requests
 		pending_lod_map::iterator iter = mPendingLOD.find(mesh_params);
@@ -1646,6 +1670,11 @@ void LLMeshUploadThread::requestWholeModelFee()
 
 void LLMeshRepoThread::notifyLoadedMeshes()
 {
+	if (!mMutex)
+	{
+		return;
+	}
+
 	while (!mLoadedQ.empty())
 	{
 		mMutex->lock();
@@ -2357,8 +2386,9 @@ void LLMeshRepository::notifyLoadedMeshes()
 		}
 	}
 
-	mMeshMutex->lock();	
-	mThread->mMutex->lock();
+	{
+		LLMutexLock lock1(mMeshMutex);
+		LLMutexLock lock2(mThread->mMutex);
 		
 	//popup queued error messages from background threads
 	while (!mUploadErrorQ.empty())
@@ -2441,9 +2471,7 @@ void LLMeshRepository::notifyLoadedMeshes()
 	}
 	
 	mThread->notifyLoadedMeshes();
-
-	mThread->mMutex->unlock();
-	mMeshMutex->unlock();
+	}
 
 	mThread->mSignal->signal();
 }
@@ -2968,41 +2996,8 @@ S32 LLPhysicsDecomp::llcdCallback(const char* status, S32 p1, S32 p2)
 	return 1;
 }
 
-bool hacdTriangles( LLConvexDecomposition *aDC )
-{
-	if( !aDC )
-		return false;
-
-	LLCDParam const  *pParams(0);
-	int nParams = aDC->getParameters( &pParams );
-
-	if( nParams <= 0 )
-		return false;
-
-	for( int i = 0; i < nParams; ++i )
-	{
-		if( pParams[i].mName && strcmp( "kAlwaysNeedTriangles", pParams[i].mName ) == 0 )
-		{
-			if( LLCDParam::LLCD_BOOLEAN == pParams[i].mType && pParams[i].mDefault.mBool )
-				return true;
-			else
-				return false;
-		}
-	}
-
-	return false;
-}
-
 void LLPhysicsDecomp::setMeshData(LLCDMeshData& mesh, bool vertex_based)
 {
-	LLConvexDecomposition *hDeComp = LLConvexDecomposition::getInstance();
-
-	if( !hDeComp )
-		return;
-
-	if( vertex_based )
-		vertex_based = !hacdTriangles( hDeComp );
-
 	mesh.mVertexBase = mCurRequest->mPositions[0].mV;
 	mesh.mVertexStrideBytes = 12;
 	mesh.mNumVertices = mCurRequest->mPositions.size();
@@ -3124,13 +3119,14 @@ void LLPhysicsDecomp::doDecomposition()
 			num_hulls = LLConvexDecomposition::getInstance()->getNumHullsFromStage(stage);
 		}
 		
-		mMutex->lock();
+		{
+			LLMutexLock lock(mMutex);
 		mCurRequest->mHull.clear();
 		mCurRequest->mHull.resize(num_hulls);
 
 		mCurRequest->mHullMesh.clear();
 		mCurRequest->mHullMesh.resize(num_hulls);
-		mMutex->unlock();
+		}
 
 		for (S32 i = 0; i < num_hulls; ++i)
 		{
@@ -3154,9 +3150,10 @@ void LLPhysicsDecomp::doDecomposition()
 
 			get_vertex_buffer_from_mesh(mesh, mCurRequest->mHullMesh[i]);
 			
-			mMutex->lock();
+			{
+				LLMutexLock lock(mMutex);
 			mCurRequest->mHull[i] = p;
-			mMutex->unlock();
+			}
 		}
 	
 		{
@@ -3229,7 +3226,6 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 	
 	LLCDMeshData mesh;	
 
-#if 0
 	setMeshData(mesh, true);
 
 	LLCDResult ret = decomp->buildSingleHull() ;
@@ -3240,11 +3236,12 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 	}
 	else
 	{
-		mMutex->lock();
+		{
+			LLMutexLock lock(mMutex);
 		mCurRequest->mHull.clear();
 		mCurRequest->mHull.resize(1);
 		mCurRequest->mHullMesh.clear();
-		mMutex->unlock();
+		}
 
 		std::vector<LLVector3> p;
 		LLCDHull hull;
@@ -3261,149 +3258,18 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 			v = (F32*) (((U8*) v) + hull.mVertexStrideBytes);
 		}
 						
-		mMutex->lock();
+		{
+			LLMutexLock lock(mMutex);
 		mCurRequest->mHull[0] = p;
-		mMutex->unlock();	
 	}		
-#else
-	setMeshData(mesh, false);
-
-	//set all parameters to default
-	std::map<std::string, const LLCDParam*> param_map;
-
-	static const LLCDParam* params = NULL;
-	static S32 param_count = 0;
-
-	if (!params)
-	{
-		param_count = decomp->getParameters(&params);
 	}
 	
-	for (S32 i = 0; i < param_count; ++i)
-	{
-		decomp->setParam(params[i].mName, params[i].mDefault.mIntOrEnumValue);
-	}
-
-	const S32 STAGE_DECOMPOSE = mStageID["Decompose"];	
-	const S32 STAGE_SIMPLIFY = mStageID["Simplify"];
-	const S32 DECOMP_PREVIEW = 0;
-	const S32 SIMPLIFY_RETAIN = 0;
-	
-	decomp->setParam("Decompose Quality", DECOMP_PREVIEW);
-	decomp->setParam("Simplify Method", SIMPLIFY_RETAIN);
-	decomp->setParam("Retain%", 0.f);
-
-	LLCDResult ret = LLCD_OK;
-	ret = decomp->executeStage(STAGE_DECOMPOSE);
-	
-	if (ret)
-	{
-		llwarns << "Could not execute decomposition stage when attempting to create single hull." << llendl;
-		make_box(mCurRequest);
-	}
-	else
-	{
-		ret = decomp->executeStage(STAGE_SIMPLIFY);
-
-		if (ret)
-		{
-			llwarns << "Could not execute simiplification stage when attempting to create single hull." << llendl;
-			make_box(mCurRequest);
-		}
-		else
-		{
-			S32 num_hulls =0;
-			if (LLConvexDecomposition::getInstance() != NULL)
-			{
-				num_hulls = LLConvexDecomposition::getInstance()->getNumHullsFromStage(STAGE_SIMPLIFY);
-			}
-			
-			mMutex->lock();
-			mCurRequest->mHull.clear();
-			mCurRequest->mHull.resize(num_hulls);
-			mCurRequest->mHullMesh.clear();
-			mMutex->unlock();
-
-			for (S32 i = 0; i < num_hulls; ++i)
-			{
-				std::vector<LLVector3> p;
-				LLCDHull hull;
-				// if LLConvexDecomposition is a stub, num_hulls should have been set to 0 above, and we should not reach this code
-				LLConvexDecomposition::getInstance()->getHullFromStage(STAGE_SIMPLIFY, i, &hull);
-
-				const F32* v = hull.mVertexBase;
-
-				for (S32 j = 0; j < hull.mNumVertices; ++j)
-				{
-					LLVector3 vert(v[0], v[1], v[2]); 
-					p.push_back(vert);
-					v = (F32*) (((U8*) v) + hull.mVertexStrideBytes);
-				}
-						
-				mMutex->lock();
-				mCurRequest->mHull[i] = p;
-				mMutex->unlock();
-			}
-		}
-	}
-#endif
-
 	{
 		completeCurrent();
 		
 	}
 }
 
-#ifdef K_HASCONVEXDECOMP_TRACER
-
-class kDecompTracer: public kConvexDecompositionTracer
-{
-	int mRefCount;
-
-public:
-	kDecompTracer()
-		: mRefCount(0)
-	{
-	}
-
-	virtual void trace( char const *a_strMsg )
-	{
-		llinfos << a_strMsg << llendl;
-	}
-
-	virtual void startTraceData( char const *a_strWhat)
-	{
-		llinfos << a_strWhat << llendl;
-	}
-
-	virtual void traceData( char const *a_strData )
-	{
-		llinfos << a_strData << llendl;
-	}
-
-	virtual void endTraceData()
-	{
-	}
-
-	virtual int getLevel()
-	{
-		return eTraceFunctions;// | eTraceData;
-	}
-
-	virtual void addref()
-	{
-		++mRefCount;
-	}
-
-	virtual void release()
-	{
-		--mRefCount;
-		if( mRefCount == 0 )
-			delete this;
-	}
-};
-
-#endif
 
 void LLPhysicsDecomp::run()
 {
@@ -3415,13 +3281,6 @@ void LLPhysicsDecomp::run()
 		mInited = true;
 		return;
 	}
-
-#ifdef K_HASCONVEXDECOMP_TRACER
-	kConvexDecompositionTracable *pTraceable = dynamic_cast< kConvexDecompositionTracable* >( decomp );
-
-	if( pTraceable )
-		pTraceable->setTracer( new kDecompTracer() );
-#endif
 
 	decomp->initThread();
 	mInited = true;

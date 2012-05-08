@@ -26,7 +26,9 @@
 #extension GL_ARB_texture_rectangle : enable
 
 #ifdef DEFINE_GL_FRAGCOLOR
-out vec4 gl_FragColor;
+out vec4 frag_color;
+#else
+#define frag_color gl_FragColor
 #endif
 
 //class 2, shadows, no SSAO
@@ -76,42 +78,42 @@ vec4 getPosition(vec2 pos_screen)
 	return pos;
 }
 
-float pcfShadow(sampler2DRectShadow shadowMap, vec4 stc, float scl)
+float pcfShadow(sampler2DRectShadow shadowMap, vec4 stc, float scl, vec2 pos_screen)
 {
 	stc.xyz /= stc.w;
 	stc.z += shadow_bias*scl;
-	
+
+	stc.x = floor(stc.x + fract(pos_screen.y*0.666666666)); // add some jitter to X sample pos according to Y to disguise the snapping going on here
+
 	float cs = shadow2DRect(shadowMap, stc.xyz).x;
 	float shadow = cs;
 
-	shadow += max(shadow2DRect(shadowMap, stc.xyz+vec3(1.5, 1.5, 0.0)).x, cs);
-	shadow += max(shadow2DRect(shadowMap, stc.xyz+vec3(1.5, -1.5, 0.0)).x, cs);
-	shadow += max(shadow2DRect(shadowMap, stc.xyz+vec3(-1.5, 1.5, 0.0)).x, cs);
-	shadow += max(shadow2DRect(shadowMap, stc.xyz+vec3(-1.5, -1.5, 0.0)).x, cs);
+	shadow += shadow2DRect(shadowMap, stc.xyz+vec3(2.0, 1.5, 0.0)).x;
+	shadow += shadow2DRect(shadowMap, stc.xyz+vec3(1.0, -1.5, 0.0)).x;
+	shadow += shadow2DRect(shadowMap, stc.xyz+vec3(-2.0, 1.5, 0.0)).x;
+	shadow += shadow2DRect(shadowMap, stc.xyz+vec3(-1.0, -1.5, 0.0)).x;
 			
-	return shadow/5.0;
-	
-	//return shadow;
+        return shadow*0.2;
 }
 
-float pcfShadow(sampler2DShadow shadowMap, vec4 stc, float scl)
+float pcfShadow(sampler2DShadow shadowMap, vec4 stc, float scl, vec2 pos_screen)
 {
 	stc.xyz /= stc.w;
 	stc.z += spot_shadow_bias*scl;
+	stc.x = floor(proj_shadow_res.x * stc.x + fract(pos_screen.y*0.666666666)) / proj_shadow_res.x; // snap
 	
 	float cs = shadow2D(shadowMap, stc.xyz).x;
 	float shadow = cs;
 
-	vec2 off = 1.5/proj_shadow_res;
+	vec2 off = 1.0/proj_shadow_res;
+	off.y *= 1.5;
 	
-	shadow += max(shadow2D(shadowMap, stc.xyz+vec3(off.x, off.y, 0.0)).x, cs);
-	shadow += max(shadow2D(shadowMap, stc.xyz+vec3(off.x, -off.y, 0.0)).x, cs);
-	shadow += max(shadow2D(shadowMap, stc.xyz+vec3(-off.x, off.y, 0.0)).x, cs);
-	shadow += max(shadow2D(shadowMap, stc.xyz+vec3(-off.x, -off.y, 0.0)).x, cs);
-				
-	return shadow/5.0;
-	
-	//return shadow;
+	shadow += shadow2D(shadowMap, stc.xyz+vec3(off.x*2.0, off.y, 0.0)).x;
+	shadow += shadow2D(shadowMap, stc.xyz+vec3(off.x, -off.y, 0.0)).x;
+	shadow += shadow2D(shadowMap, stc.xyz+vec3(-off.x, off.y, 0.0)).x;
+	shadow += shadow2D(shadowMap, stc.xyz+vec3(-off.x*2.0, -off.y, 0.0)).x;
+
+        return shadow*0.2;
 }
 
 void main() 
@@ -129,11 +131,11 @@ void main()
 	
 	/*if (pos.z == 0.0) // do nothing for sky *FIX: REMOVE THIS IF/WHEN THE POSITION MAP IS BEING USED AS A STENCIL
 	{
-		gl_FragColor = vec4(0.0); // doesn't matter
+		frag_color = vec4(0.0); // doesn't matter
 		return;
 	}*/
 	
-	float shadow = 1.0;
+	float shadow = 0.0;
 	float dp_directional_light = max(0.0, dot(norm, sun_dir.xyz));
 
 	vec3 shadow_pos = pos.xyz + displace*norm;
@@ -152,32 +154,62 @@ void main()
 		{
 			vec4 lpos;
 			
-			if (spos.z < -shadow_clip.z)
+			vec4 near_split = shadow_clip*-0.75;
+			vec4 far_split = shadow_clip*-1.25;
+			vec4 transition_domain = near_split-far_split;
+			float weight = 0.0;
+
+			if (spos.z < near_split.z)
 			{
 				lpos = shadow_matrix[3]*spos;
 				lpos.xy *= shadow_res;
-				shadow = pcfShadow(shadowMap3, lpos, 0.25);
+
+				float w = 1.0;
+				w -= max(spos.z-far_split.z, 0.0)/transition_domain.z;
+				shadow += pcfShadow(shadowMap3, lpos, 0.25, pos_screen)*w;
+				weight += w;
 				shadow += max((pos.z+shadow_clip.z)/(shadow_clip.z-shadow_clip.w)*2.0-1.0, 0.0);
 			}
-			else if (spos.z < -shadow_clip.y)
+
+			if (spos.z < near_split.y && spos.z > far_split.z)
 			{
 				lpos = shadow_matrix[2]*spos;
 				lpos.xy *= shadow_res;
-				shadow = pcfShadow(shadowMap2, lpos, 0.5);
+
+				float w = 1.0;
+				w -= max(spos.z-far_split.y, 0.0)/transition_domain.y;
+				w -= max(near_split.z-spos.z, 0.0)/transition_domain.z;
+				shadow += pcfShadow(shadowMap2, lpos, 0.5, pos_screen)*w;
+				weight += w;
 			}
-			else if (spos.z < -shadow_clip.x)
+
+			if (spos.z < near_split.x && spos.z > far_split.y)
 			{
 				lpos = shadow_matrix[1]*spos;
 				lpos.xy *= shadow_res;
-				shadow = pcfShadow(shadowMap1, lpos, 0.75);
+
+				float w = 1.0;
+				w -= max(spos.z-far_split.x, 0.0)/transition_domain.x;
+				w -= max(near_split.y-spos.z, 0.0)/transition_domain.y;
+				shadow += pcfShadow(shadowMap1, lpos, 0.75, pos_screen)*w;
+				weight += w;
 			}
-			else
+
+			if (spos.z > far_split.x)
 			{
 				lpos = shadow_matrix[0]*spos;
 				lpos.xy *= shadow_res;
-				shadow = pcfShadow(shadowMap0, lpos, 1.0);
+				
+				float w = 1.0;
+				w -= max(near_split.x-spos.z, 0.0)/transition_domain.x;
+				
+				shadow += pcfShadow(shadowMap0, lpos, 1.0, pos_screen)*w;
+				weight += w;
 			}
 		
+
+			shadow /= weight;
+
 			// take the most-shadowed value out of these two:
 			//  * the blurred sun shadow in the light (shadow) map
 			//  * an unblurred dot product between the sun and this norm
@@ -198,19 +230,19 @@ void main()
 		shadow = 1.0;
 	}
 	
-	gl_FragColor[0] = shadow;
-	gl_FragColor[1] = 1.0;
+	frag_color[0] = shadow;
+	frag_color[1] = 1.0;
 	
 	spos = vec4(shadow_pos+norm*spot_shadow_offset, 1.0);
 	
 	//spotlight shadow 1
 	vec4 lpos = shadow_matrix[4]*spos;
-	gl_FragColor[2] = pcfShadow(shadowMap4, lpos, 0.8); 
+	frag_color[2] = pcfShadow(shadowMap4, lpos, 0.8, pos_screen); 
 	
 	//spotlight shadow 2
 	lpos = shadow_matrix[5]*spos;
-	gl_FragColor[3] = pcfShadow(shadowMap5, lpos, 0.8); 
+	frag_color[3] = pcfShadow(shadowMap5, lpos, 0.8, pos_screen); 
 
-	//gl_FragColor.rgb = pos.xyz;
-	//gl_FragColor.b = shadow;
+	//frag_color.rgb = pos.xyz;
+	//frag_color.b = shadow;
 }
