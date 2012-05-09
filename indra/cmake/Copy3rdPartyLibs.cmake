@@ -32,11 +32,15 @@ if(WINDOWS)
 
     #*******************************
     # Misc shared libs 
-
+    if (OPENAL)
+        set(debug_src_dir "${ARCH_PREBUILT_DIRS_DEBUG}")
+        set(debug_files
+            alut.dll
+            openal32.dll
+        )
+    endif(OPENAL)
     set(debug_src_dir "${ARCH_PREBUILT_DIRS_DEBUG}")
     set(debug_files
-        alut.dll
-        openal32.dll
         openjpegd.dll
         libapr-1.dll
         libaprutil-1.dll
@@ -109,11 +113,16 @@ if(WINDOWS)
         glod.dll
         )
 
+    if (OPENAL)
+        set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
+        set(release_files
+            alut.dll
+            openal32.dll
+        )
+    endif(OPENAL)
 
     set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(release_files
-        alut.dll
-        openal32.dll
         openjpeg.dll
         libapr-1.dll
         libaprutil-1.dll
