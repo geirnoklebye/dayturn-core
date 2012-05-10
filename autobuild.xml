@@ -2490,9 +2490,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>670a3934bf961f5ec8755e904643c1ba</string>
+              <string>8ae9be58857262409adc5d4902751f36</string>
               <key>url</key>
-              <string>http://bitbucket.org/NickyP/3p-pcre/downloads/pcre-7.6-linux64-20120505.tar.bz2</string>
+              <string>https://bitbucket.org/NickyP/3p-pcre/downloads/pcre-7.6-linux64-20120509.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
