@@ -31,16 +31,12 @@ if (STANDALONE)
     add_definitions(${${pkg}_CFLAGS_OTHERS})
   endforeach(pkg)
 else (STANDALONE)
-if (NOT LINUX)
+if (WINDOWS)
   use_prebuilt_binary(gtk-atk-pango-glib)
-endif (NOT LINUX)
+endif (WINDOWS)
   if (LINUX)
-    if (${ARCH} STREQUAL "x86_64")
-        use_prebuilt_binary(glib)		# gtk-etc needs glib
-        use_prebuilt_binary(gtk-etc)
-    else (${ARCH} STREQUAL "x86_64")
-        use_prebuilt_binary(gtk-atk-pango-glib)
-    endif (${ARCH} STREQUAL "x86_64")
+    use_prebuilt_binary(glib)		# gtk-etc needs glib
+    use_prebuilt_binary(gtk-etc)
 
     set(UI_LIBRARIES
         atk-1.0
