@@ -1169,9 +1169,9 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libssl.so.1.0.0")
             self.path("libglod.so")
 #            self.path("libminizip.so")
-#kokuafixme            #self.path("libuuid.so")
-            #self.path("libuuid.so.16")
-            #self.path("libuuid.so.16.0.22")
+            self.path("libuuid.so")
+            self.path("libuuid.so.16")
+            self.path("libuuid.so.16.0.22")
 
             self.path("libSDL-1.2.so.0.11.3")
             self.path("libSDL-1.2.so.0")
