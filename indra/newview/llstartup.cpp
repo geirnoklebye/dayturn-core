@@ -961,6 +961,7 @@ bool idle_startup()
 		LLFile::mkdir(gDirUtilp->getLindenUserDir());
 
 		// Set PerAccountSettingsFile to the default value.
+		std::string per_account_settings_file = LLAppViewer::instance()->getSettingsFilename("Default", "PerAccount");
 		gSavedSettings.setString("PerAccountSettingsFile",
 			gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, 
 				LLAppViewer::instance()->getSettingsFilename("Default", "PerAccount")));
@@ -3440,7 +3441,7 @@ bool process_login_success_response()
 
 	// Request the map server url
 	// Non-agni grids have a different default location.
-	if (!LLGridManager::getInstance()->isInProductionGrid())
+	if (!LLGridManager::getInstance()->isInSLMain())
 	{
 		gSavedSettings.setString("MapServerURL", "http://test.map.secondlife.com.s3.amazonaws.com/");
 	}

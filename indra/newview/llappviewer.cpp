@@ -2491,8 +2491,8 @@ bool LLAppViewer::initConfiguration()
 	}
 
 //-TT Hacking to save the skin and theme for future use.
-	mCurrentSkin = gSavedSettings.getString("SkinCurrent");
-	mCurrentSkinTheme = gSavedSettings.getString("SkinCurrentTheme");
+//	mCurrentSkin = gSavedSettings.getString("SkinCurrent");
+//	mCurrentSkinTheme = gSavedSettings.getString("SkinCurrentTheme");
 //-TT
     const LLControlVariable* skinfolder = gSavedSettings.getControl("SkinCurrent");
     if(skinfolder && LLStringUtil::null != skinfolder->getValue().asString())

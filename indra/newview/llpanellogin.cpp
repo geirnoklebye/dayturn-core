@@ -104,6 +104,54 @@ public:
 LLLoginRefreshHandler gLoginRefreshHandler;
 
 
+/*
+// helper class that trys to download a URL from a web site and calls a method 
+// on parent class indicating if the web server is working or not
+class LLIamHereLogin : public LLHTTPClient::Responder
+{
+	private:
+		LLIamHereLogin( LLPanelLogin* parent ) :
+		   mParent( parent )
+		{}
+
+		LLPanelLogin* mParent;
+
+	public:
+		static boost::intrusive_ptr< LLIamHereLogin > build( LLPanelLogin* parent )
+		{
+			return boost::intrusive_ptr< LLIamHereLogin >( new LLIamHereLogin( parent ) );
+		};
+
+		virtual void  setParent( LLPanelLogin* parentIn )
+		{
+			mParent = parentIn;
+		};
+
+		// We don't actually expect LLSD back, so need to override completedRaw
+		virtual void completedRaw(U32 status, const std::string& reason,
+								  const LLChannelDescriptors& channels,
+								  const LLIOPipe::buffer_ptr_t& buffer)
+		{
+			completed(status, reason, LLSD()); // will call result() or error()
+		}
+	
+		virtual void result( const LLSD& content )
+		{
+			if ( mParent )
+				mParent->setSiteIsAlive( true );
+		};
+
+		virtual void error( U32 status, const std::string& reason )
+		{
+			if ( mParent )
+				mParent->setSiteIsAlive( false );
+		};
+};
+// this is global and not a class member to keep crud out of the header file
+namespace {
+	boost::intrusive_ptr< LLIamHereLogin > gResponsePtr = 0;
+};
+*/
 //---------------------------------------------------------------------------
 // Public methods
 //---------------------------------------------------------------------------
@@ -115,6 +163,7 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	mLogoImage(),
 	mCallback(callback),
 	mCallbackData(cb_data),
+//	mHtmlAvailable( TRUE ),
 	mGridEntries(0),
 	mListener(new LLPanelLoginListener(this))
 {
@@ -187,12 +236,24 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	LLMediaCtrl* web_browser = getChild<LLMediaCtrl>("login_html");
 	web_browser->addObserver(this);
 
+//	mLoginWidgets=getChild<LLView>("login_widgets");
+
+	// Clear the browser's cache to avoid any potential for the cache messing up the login screen.
+	// web_browser->clearCache(); // Kokua: we don't need to get rid of other viewers hijacking of the login page
 
 	reshapeBrowser();
 
 // <AW: opensim>
 	web_browser->setVisible(true);
 	web_browser->navigateToLocalPage( "loading", "loading.html" );
+
+//	updateSavedLoginsCombo();
+	updateLocationCombo(false);
+// 	LLHTTPClient::head( LLGridManager::getInstance()->getLoginPage(), gResponsePtr );
+	
+	reshapeBrowser();
+
+//	loadLoginPage();
 // </AW: opensim>
 
 	// Show last logged in user favorites in "Start at" combo.
@@ -876,10 +937,8 @@ void LLPanelLogin::onClickConnect(void *)
 		std::string username = sInstance->getChild<LLUICtrl>("username_combo")->getValue().asString();
 
 		
-		if(username.empty())
-		{
 			// user must type in something into the username field
-			LLNotificationsUtil::add("MustHaveAccountToLogIn");
+//NP			LLNotificationsUtil::add("MustHaveAccountToLogIn");
 			if(username.empty())
 			{
 				LLSD args;
@@ -919,7 +978,6 @@ void LLPanelLogin::onClickConnect(void *)
 			}
 		}
 	}
-}
 
 // static
 // <AW: opensim>
@@ -1051,6 +1109,7 @@ void LLPanelLogin::onSelectServer(LLUICtrl*, void*)
 	// LLPanelLogin::onServerComboLostFocus(LLFocusableElement* fe, void*)
 	// calls this method.
 	LL_INFOS("AppInit") << "onSelectServer" << LL_ENDL;
+//	LL_DEBUGS("AppInit") << "onSelectServer" << LL_ENDL;
 	// The user twiddled with the grid choice ui.
 	// apply the selection to the grid setting.
 	LLPointer<LLCredential> credential;
@@ -1087,15 +1146,15 @@ void LLPanelLogin::onSelectServer(LLUICtrl*, void*)
 		// do nothing
 	}
 // </AW: opensim>
-
+	//Clear the PW for security reasons, if the Grid changed manually.
+	sInstance->getChild<LLLineEditor>("password_edit")->clear();
 	combo = sInstance->getChild<LLComboBox>("start_location_combo");	
-	combo->setCurrentByIndex(1);
+//	combo->setCurrentByIndex(1);  <- SA: Why???
 	LLStartUp::setStartSLURL(LLSLURL(gSavedSettings.getString("LoginLocation")));
-	LLGridManager::getInstance()->setGridChoice(combo_val.asString());
+//NP	LLGridManager::getInstance()->setGridChoice(combo_val.asString());
 	// This new selection will override preset uris
 	// from the command line.
 	updateServer();
-	updateLocationCombo(false);
 	updateLoginPanelLinks();
 }
 
@@ -1112,7 +1171,6 @@ void LLPanelLogin::onServerComboLostFocus(LLFocusableElement* fe)
 		onSelectServer(combo, NULL);	
 	}
 }
-*/
 
 // <AW: opensim>
 void LLPanelLogin::updateLoginPanelLinks()
@@ -1134,6 +1192,7 @@ void LLPanelLogin::updateLoginPanelLinks()
 }
 // </AW: opensim>
 
+//		LLAppViewer::instance()->requestQuit();
 std::string canonicalize_username(const std::string& name)
 {
 	std::string cname = name;

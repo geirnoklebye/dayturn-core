@@ -57,12 +57,12 @@ const char* LLSLURL::SIM_LOCATION_LAST = "last";
 
 
 
-// resolve a simstring from a slurl
+//  resolve a simstring from a slurl
 LLSLURL::LLSLURL(const std::string& slurl)
 {
 	// by default we go to agni.
 	mType = INVALID;
-	LL_INFOS("AppInit") << "SLURL: " << slurl << LL_ENDL;
+//	LL_INFOS("AppInit") << "SLURL: " << slurl << LL_ENDL;
 	LL_DEBUGS("SLURL") << "SLURL: " << slurl << LL_ENDL;
 	if(slurl == SIM_LOCATION_HOME)
 	{
@@ -319,7 +319,6 @@ LLSLURL::LLSLURL(const std::string& slurl)
 			LL_DEBUGS("SLURL") << "mRegion: "  << mRegion << LL_ENDL;
 
 			path_array.erase(0);
-<<<<<<< local
 			
 			// parse the x, y, and optionally z
 			if(path_array.size() >= 2)

@@ -5755,6 +5755,8 @@ class LLToggleSpeak : public view_listener_t
 		return true;
 	}
 };
+//NP
+/*
 class LLShowSidetrayPanel : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -5774,6 +5776,7 @@ class LLShowSidetrayPanel : public view_listener_t
 			bool isMinimized = floater_tab->isMinimized();
 			floater_tab->setMinimized(!isMinimized);
 		}
+
 		else // Toggle docked sidetray
 		{
 			LLPanel* panel = LLSideTray::getInstance()->getPanel(panel_name);
@@ -5786,6 +5789,7 @@ class LLShowSidetrayPanel : public view_listener_t
 				LLFloaterReg::getInstance(floater_name)->openFloater();
 			}
 		}
+
 		return true;
 	}
 };
@@ -5807,7 +5811,7 @@ class LLSidetrayPanelVisible : public view_listener_t
 		
 	}
 };
-
+*/
 
 bool callback_show_url(const LLSD& notification, const LLSD& response)
 {
@@ -8430,8 +8434,8 @@ void initialize_menus()
 	enable.add("VisibleBuild", boost::bind(&enable_object_build));
 
 	view_listener_t::addMenu(new LLFloaterVisible(), "FloaterVisible");
-	view_listener_t::addMenu(new LLShowSidetrayPanel(), "ShowSidetrayPanel");
-	view_listener_t::addMenu(new LLSidetrayPanelVisible(), "SidetrayPanelVisible");
+//NP	view_listener_t::addMenu(new LLShowSidetrayPanel(), "ShowSidetrayPanel");
+//NP	view_listener_t::addMenu(new LLSidetrayPanelVisible(), "SidetrayPanelVisible");
 	view_listener_t::addMenu(new LLSomethingSelected(), "SomethingSelected");
 	view_listener_t::addMenu(new LLSomethingSelectedNoHUD(), "SomethingSelectedNoHUD");
 	view_listener_t::addMenu(new LLEditableSelected(), "EditableSelected");
