@@ -163,13 +163,16 @@ No tutorial is currently available.
      yestext="OK"/>
   </notification>
 
+  <!-- Kokua: [CURRENT_GRID] done -->
   <notification
    icon="alertmodal.tga"
    name="LoginFailedNoNetwork"
    type="alertmodal">
     <tag>fail</tag>
-    Could not connect to the [SECOND_LIFE_GRID].
-    &apos;[DIAGNOSTIC]&apos;
+Could not connect to [CURRENT_GRID].
+&apos;[DIAGNOSTIC]&apos;
+
+
 Make sure your Internet connection is working properly.
 	<usetemplate
      name="okbutton"
@@ -599,11 +602,12 @@ Your selling price will be L$[SALE_PRICE] and will be authorized for sale to [NA
      yestext="OK"/>
   </notification>
 
+  <!-- Kokua: [CURRENT_GRID] done -->
   <notification
    icon="alertmodal.tga"
    name="ConfirmLandSaleToAnyoneChange"
    type="alertmodal">
-ATTENTION: Clicking &apos;sell to anyone&apos; makes your land available to the entire [SECOND_LIFE] community, even those not in this region.
+ATTENTION: Clicking &apos;sell to anyone&apos; makes your land available to the entire [CURRENT_GRID] community, even those not in this region.
 
 The selected [LAND_SIZE] m² land is being set for sale.
 Your selling price will be L$[SALE_PRICE] and will be authorized for sale to [NAME].
@@ -825,12 +829,14 @@ There was a problem uploading a report screenshot due to the following reason: [
   <tag>fail</tag>
   </notification>
 
+  <!-- Kokua: [CURRENT_GRID] done -->
   <notification
    icon="alertmodal.tga"
    name="MustAgreeToLogIn"
    type="alertmodal">
    <tag>fail</tag>
-You must agree to the Terms of Service to continue logging into [SECOND_LIFE].
+
+You must agree to the Terms of Service to continue logging into [CURRENT_GRID].
   </notification>
 
   <notification
@@ -867,6 +873,7 @@ You can not wear that item because it has not yet loaded. Please try again in a 
   <tag>fail</tag>
   </notification>
 
+  <!-- Kokua: [CURRENT_GRID] done -->
   <notification
    icon="alertmodal.tga"
    name="MustHaveAccountToLogIn"
@@ -875,7 +882,8 @@ You can not wear that item because it has not yet loaded. Please try again in a 
 Oops! Something was left blank.
 You need to enter the Username name of your avatar.
 
-You need an account to enter [SECOND_LIFE]. Would you like to create one now?
+
+You need an account to enter [CURRENT_GRID]. Would you like to create one now?
     <tag>confirm</tag>
     <url
 	option="0"
@@ -975,11 +983,13 @@ Delete pick &lt;nolink&gt;[PICK]&lt;/nolink&gt;?
      yestext="OK"/>
   </notification>
 
+  <!-- Kokua: notification not used? -->
   <notification
    icon="alertmodal.tga"
    name="PromptGoToEventsPage"
    type="alertmodal">
-Go to the [SECOND_LIFE] events web page?
+
+Go to the [CURRENT_GRID] events web page?
     <tag>confirm</tag>
     <url option="0" name="url">
 
@@ -1067,11 +1077,13 @@ The new skin will appear after you restart [APP_NAME].
 Changing language will take effect after you restart [APP_NAME].
   </notification>
 
+  <!-- Kokua: [CURRENT_GRID] done -->
   <notification
    icon="alertmodal.tga"
    name="GoToAuctionPage"
    type="alertmodal">
-    Go to the [SECOND_LIFE] web page to see auction details or make a bid?
+
+Go to the [CURRENT_GRID] web page to see auction details or make a bid?
     <tag>confirm</tag>
     <url option="0" name="url">
 			http://secondlife.com/auctions/auction-detail.php?id=[AUCTION_ID]
@@ -1241,25 +1253,6 @@ Visit [_URL] for more information?
      notext="No"
      yestext="Yes"/>
   <tag>fail</tag>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="IntelOldDriver"
-   type="alertmodal">
-     There is likely a newer driver for your graphics chip.  Updating graphics drivers can substantially improve performance.
-
-    Visit [_URL] to check for driver updates?
-    <tag>confirm</tag>
-    <url option="0" name="url">
-      http://www.intel.com/p/en_US/support/detect/graphics
-    </url>
-    <usetemplate
-     ignoretext="My graphics driver is out of date"
-     name="okcancelignore"
-     notext="No"
-     yestext="Yes"/>
-    <tag>fail</tag>
   </notification>
 
   <notification
@@ -1686,7 +1679,7 @@ Unable to create output file: [FILE]
    icon="alertmodal.tga"
    name="DoNotSupportBulkAnimationUpload"
    type="alertmodal">
-[APP_NAME] does not currently support bulk upload of BVH format animation files.
+[APP_NAME] does not currently support bulk upload of animation files.
   <tag>fail</tag>
   </notification>
 
@@ -2310,11 +2303,12 @@ This is usually a temporary failure. Please customize and save the wearable agai
   <tag>fail</tag>
   </notification>
 
+  <!-- Kokua: [CURRENT_GRID] done -->
   <notification
    icon="alertmodal.tga"
    name="YouHaveBeenLoggedOut"
    type="alertmodal">
-Darn. You have been logged out of [SECOND_LIFE]
+You have been logged out of [CURRENT_GRID]
             [MESSAGE]
     <usetemplate
      name="okcancelbuttons"
@@ -2356,93 +2350,6 @@ Would you be my friend?
        name="Cancel"
        text="Cancel"/>
     </form>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   label="Add Auto-Replace List"
-   name="AddAutoReplaceList"
-   type="alertmodal">
-    <tag>addlist</tag>
-    Name for the new list:
-    <tag>confirm</tag>
-    <form name="form">
-      <input name="listname" type="text"/>
-      <button
-       default="true"
-       index="0"
-       name="SetName"
-       text="OK"/>
-    </form>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   label="Rename Auto-Replace List"
-   name="RenameAutoReplaceList"
-   type="alertmodal">
-    The name '[DUPNAME]' is in use
-    Enter a new unique name:
-    <tag>confirm</tag>
-    <form name="form">
-      <input name="listname" type="text"/>
-      <button
-       default="false"
-       index="0"
-       name="ReplaceList"
-       text="Replace Current List"/>
-      <button
-       default="true"
-       index="1"
-       name="SetName"
-       text="Use New Name"/>
-    </form>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="InvalidAutoReplaceEntry"
-   type="alertmodal">
-    The keyword must be a single word, and the replacement may not be empty.
-    <tag>fail</tag>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="InvalidAutoReplaceList"
-   type="alertmodal">
-    That replacement list is not valid.
-    <tag>fail</tag>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="SpellingDictImportRequired"
-   type="alertmodal">
-    You must specify a file, a name, and a language.
-    <tag>fail</tag>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="SpellingDictIsSecondary"
-   type="alertmodal">
-The dictionary [DIC_NAME] does not appear to have an "aff" file; this means that it is a "secondary" dictionary.
-It can be used as an additional dictionary, but not as your Main dictionary.
-
-See https://wiki.secondlife.com/wiki/Adding_Spelling_Dictionaries
-    <tag>confirm</tag>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="SpellingDictImportFailed"
-   type="alertmodal">
-    Unable to copy
-    [FROM_NAME]
-    to
-    [TO_NAME]
-    <tag>fail</tag>
   </notification>
 
   <notification
@@ -2870,13 +2777,14 @@ You have been moved into a nearby region.
 You may want to set a new home location.
   </notification>
 
+  <!-- Kokua: [CURRENT_GRID] done -->
   <notification
    icon="alertmodal.tga"
    name="ClothingLoading"
    type="alertmodal">
    <tag>fail</tag>
 Your clothing is still downloading.
-You can use [SECOND_LIFE] normally and other people will see you correctly.
+You can use [CURRENT_GRID] normally and other people will see you correctly.
     <form name="form">
       <ignore name="ignore"
        text="Clothing is taking a long time to download"/>
@@ -2890,7 +2798,7 @@ You can use [SECOND_LIFE] normally and other people will see you correctly.
 
 [APP_NAME] installation is complete.
 
-If this is your first time using [SECOND_LIFE], you will need to create an account before you can log in.
+If this is your first time using [APP_NAME], you will need to create an account before you can log in.
 Return to [http://join.secondlife.com secondlife.com] to create a new account?
     <tag>confirm</tag>
     <usetemplate
@@ -2899,12 +2807,15 @@ Return to [http://join.secondlife.com secondlife.com] to create a new account?
      yestext="New Account..."/>
   </notification>
 
+  <!-- Kokua: [CURRENT_GRID] done -->
   <notification
    icon="alertmodal.tga"
    name="LoginPacketNeverReceived"
    type="alertmodal">
+
+
    <tag>fail</tag>
-We&apos;re having trouble connecting. There may be a problem with your Internet connection or the [SECOND_LIFE_GRID].
+We&apos;re having trouble connecting. There may be a problem with your Internet connection or the [CURRENT_GRID].
 
 You can either check your Internet connection and try again in a few minutes, click Help to view the [SUPPORT_SITE], or click Teleport to attempt to teleport home.
     <url option="1" name="url">
@@ -2935,13 +2846,15 @@ You can either check your Internet connection and try again in a few minutes, cl
 Your character will appear in a moment.
 
 Use arrow keys to walk.
-Press the F1 key at any time for help or to learn more about [SECOND_LIFE].
+Press the F1 key at any time for help or to learn more about [APP_NAME].
 Please choose the male or female avatar. You can change your mind later.
     <usetemplate
      name="okcancelbuttons"
      notext="Female"
      yestext="Male"/>
   </notification>
+
+  <!-- Kokua: [CURRENT_GRID] done -->
   <notification icon="alertmodal.tga"
 		name="CantTeleportToGrid"
 		type="alertmodal">
@@ -3361,14 +3274,14 @@ http://secondlife.com/download.
    icon="alertmodal.tga"
    name="UpdaterServiceNotRunning"
    type="alertmodal">
-There is a required update for your Second Life Installation.
+There is a required update for your UKanDo Installation.
 
 You may download this update from http://www.secondlife.com/downloads
 or you can install it now.
     <tag>confirm</tag>
     <usetemplate
      name="okcancelbuttons"
-     notext="Quit Second Life"
+     notext="Quit UKanDo"
      yestext="Download and install now"/>
   </notification>
 
@@ -3464,11 +3377,13 @@ Go to your [http://secondlife.com/account/ Dashboard] to manage your account?
      yestext="OK"/>
   </notification>
 
+  <!-- Kokua: notification not used? -->
   <notification
    icon="alertmodal.tga"
    name="WebLaunchSecurityIssues"
    type="alertmodal">
-Visit the [SECOND_LIFE] Wiki for details of how to report a security issue.
+
+Visit the [CURRENT_GRID] Wiki for details of how to report a security issue.
     <tag>confirm</tag>
     <usetemplate
      ignoretext="Launch my browser to learn how to report a Security Issue"
@@ -3481,7 +3396,8 @@ Visit the [SECOND_LIFE] Wiki for details of how to report a security issue.
    icon="alertmodal.tga"
    name="WebLaunchQAWiki"
    type="alertmodal">
-Visit the [SECOND_LIFE] QA Wiki.
+
+Visit the [APP_NAME] QA Wiki.
     <tag>confirm</tag>
     <usetemplate
      ignoretext="Launch my browser to view the QA Wiki"
@@ -3494,7 +3410,8 @@ Visit the [SECOND_LIFE] QA Wiki.
    icon="alertmodal.tga"
    name="WebLaunchPublicIssue"
    type="alertmodal">
-Visit the [SECOND_LIFE] Public Issue Tracker, where you can report bugs and other issues.
+
+Visit the [APP_NAME] Public Issue Tracker, where you can report bugs and other issues.
     <tag>confirm</tag>
     <usetemplate
      ignoretext="Launch my browser to use the Public Issue Tracker"
@@ -4176,7 +4093,9 @@ Are you sure you want to change the Estate Covenant?
    name="RegionEntryAccessBlocked"
    type="alertmodal">
    <tag>fail</tag>
-    The region you're trying to visit contains content exceeding your current preferences.  You can change your preferences using Me &gt; Preferences &gt; General.
+You are not allowed in that Region due to your maturity Rating. This may be a result of a lack of information validating your age.
+
+Please verify you have the latest Viewer installed, and go to the Knowledge Base for details on accessing areas with this maturity rating.
     <usetemplate
      name="okbutton"
      yestext="OK"/>
@@ -4184,11 +4103,13 @@ Are you sure you want to change the Estate Covenant?
 
   <notification
    icon="alertmodal.tga"
-   name="RegionEntryAccessBlocked_AdultsOnlyContent"
+   name="RegionEntryAccessBlocked_KB"
    type="alertmodal">
    <tag>fail</tag>
     <tag>confirm</tag>
-    The region you're trying to visit contains [REGIONMATURITY] content, which is accessible to adults only.
+You are not allowed in that region due to your maturity Rating.
+
+Go to the Knowledge Base for more information about maturity Ratings?
     <url option="0" name="url">
 		http://wiki.secondlife.com/wiki/Linden_Lab_Official:Maturity_ratings:_an_overview
     </url>
@@ -4196,7 +4117,7 @@ Are you sure you want to change the Estate Covenant?
      name="okcancelignore"
      yestext="Go to Knowledge Base"
 	 notext="Close"
-	 ignoretext="Region crossing: The region you&apos;re trying to visit contains content which is accessible to adults only."/>
+	 ignoretext="I can&apos;t enter this Region, due to restrictions of the maturity Rating"/>
   </notification>
 
   <notification
@@ -4204,189 +4125,47 @@ Are you sure you want to change the Estate Covenant?
    name="RegionEntryAccessBlocked_Notify"
    type="notifytip">
    <tag>fail</tag>
-The region you're trying to visit contains [REGIONMATURITY] content, but your current preferences are set to exclude [REGIONMATURITY] content.
-  </notification>
-
-  <notification
-   icon="notifytip.tga"
-   name="RegionEntryAccessBlocked_NotifyAdultsOnly"
-   type="notifytip">
-    <tag>fail</tag>
-    The region you're trying to visit contains [REGIONMATURITY] content, which is accessible to adults only.
+You are not allowed in that region due to your maturity Rating.
   </notification>
 
   <notification
    icon="alertmodal.tga"
    name="RegionEntryAccessBlocked_Change"
    type="alertmodal">
-    <tag>fail</tag>
+   <tag>fail</tag>
     <tag>confirm</tag>
-The region you're trying to visit contains [REGIONMATURITY] content, but your current preferences are set to exclude [REGIONMATURITY] content. We can change your preferences, or you can cancel. After your preferences are changed, you may attempt to enter the region again.
-    <form name="form">
+You are not allowed in that Region due to your maturity Rating preference.
+
+To enter the desired region, please change your maturity Rating preference. This will allow you to search for and access [REGIONMATURITY] content. To undo any changes, go to Me &gt; Preferences &gt; General.
+	 <form name="form">
       <button
        index="0"
        name="OK"
-       text="Change preferences"/>
-      <button 
+       text="Change Preference"/>
+      <button
        default="true"
        index="1"
        name="Cancel"
-       text="Cancel"/>
-      <ignore name="ignore" text="Region crossing: The region you&apos;re trying to visit contains content excluded by your preferences."/>
+       text="Close"/>
+       <ignore name="ignore" text="My chosen Rating preference prevents me from entering a Region"/>
     </form>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="RegionEntryAccessBlocked_PreferencesOutOfSync"
-   type="alertmodal">
-    <tag>fail</tag>
-    We are having technical difficulties with your teleport because your preferences are out of sync with the server.
-    <usetemplate
-     name="okbutton"
-     yestext="OK"/>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="TeleportEntryAccessBlocked"
-   type="alertmodal">
-    <tag>fail</tag>
-    The region you're trying to visit contains content exceeding your current preferences.  You can change your preferences using Me &gt; Preferences &gt; General.
-    <usetemplate
-     name="okbutton"
-     yestext="OK"/>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="TeleportEntryAccessBlocked_AdultsOnlyContent"
-   type="alertmodal">
-    <unique>
-      <context>REGIONMATURITY</context>
-    </unique>
-    <tag>fail</tag>
-    <tag>confirm</tag>
-    The region you're trying to visit contains [REGIONMATURITY] content, which is accessible to adults only.
-    <url option="0" name="url">
-      http://wiki.secondlife.com/wiki/Linden_Lab_Official:Maturity_ratings:_an_overview
-    </url>
-    <usetemplate
-     name="okcancelignore"
-     yestext="Go to Knowledge Base"
-	 notext="Close"
-	 ignoretext="Teleport: The region you&apos;re trying to visit contains content which is accessible to adults only."/>
   </notification>
 
   <notification
    icon="notifytip.tga"
-   name="TeleportEntryAccessBlocked_Notify"
-   type="notifytip">
-    <unique>
-      <context>REGIONMATURITY</context>
-    </unique>
-    <tag>fail</tag>
-    The region you're trying to visit contains [REGIONMATURITY] content, but your current preferences are set to exclude [REGIONMATURITY] content.
-  </notification>
-
-  <notification
-   icon="notifytip.tga"
-   name="TeleportEntryAccessBlocked_NotifyAdultsOnly"
-   type="notifytip">
-    <unique>
-      <context>REGIONMATURITY</context>
-    </unique>
-    <tag>fail</tag>
-    The region you're trying to visit contains [REGIONMATURITY] content, which is accessible to adults only.
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="TeleportEntryAccessBlocked_ChangeAndReTeleport"
-   type="alertmodal">
-    <unique>
-      <context>REGIONMATURITY</context>
-    </unique>
-    <tag>fail</tag>
-    <tag>confirm</tag>
-    The region you're trying to visit contains [REGIONMATURITY] content, but your current preferences are set to exclude [REGIONMATURITY] content. We can change your preferences and continue with the teleport, or you can cancel this teleport.
-    <form name="form">
-      <button
-       index="0"
-       name="OK"
-       text="Change and continue"/>
-      <button
-       default="true"
-       index="1"
-       name="Cancel"
-       text="Cancel"/>
-      <ignore name="ignore" text="Teleport (restartable): The region you&apos;re trying to visit contains content excluded by your preferences."/>
-    </form>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="TeleportEntryAccessBlocked_Change"
-   type="alertmodal">
-    <unique>
-      <context>REGIONMATURITY</context>
-    </unique>
-    <tag>fail</tag>
-    <tag>confirm</tag>
-    The region you're trying to visit contains [REGIONMATURITY] content, but your current preferences are set to exclude [REGIONMATURITY] content. We can change your preferences, or you can cancel the teleport. After your preferences are changed, you will need to attempt the teleport again.
-    <form name="form">
-      <button
-       index="0"
-       name="OK"
-       text="Change preferences"/>
-      <button
-       default="true"
-       index="1"
-       name="Cancel"
-       text="Cancel"/>
-      <ignore name="ignore" text="Teleport (non-restartable): The region you&apos;re trying to visit contains content excluded by your preferences."/>
-    </form>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="TeleportEntryAccessBlocked_PreferencesOutOfSync"
-   type="alertmodal">
-    <tag>fail</tag>
-    We are having technical difficulties with your teleport because your preferences are out of sync with the server.
-    <usetemplate
-     name="okbutton"
-     yestext="OK"/>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
    name="PreferredMaturityChanged"
-   type="alertmodal">
-You won't receive any more notifications that you're about to visit a region with [RATING] content.  You may change your content preferences in the future by using Me &gt; Preferences &gt; General from the menu bar.
-  <tag>confirm</tag>
-    <usetemplate
-     name="okbutton"
-     yestext="OK"/>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="MaturityChangeError"
-   type="alertmodal">
-    We were unable to change your preferences to view [PREFERRED_MATURITY] content at this time.  Your preferences have been reset to view [ACTUAL_MATURITY] content.  You may attempt to change your preferences again by using Me &gt; Preferences &gt; General from the menu bar.
-    <tag>confirm</tag>
-    <usetemplate
-     name="okbutton"
-     yestext="OK"/>
+   type="notifytip">
+Your maturity Rating preference is now [RATING].
   </notification>
 
   <notification
    icon="alertmodal.tga"
    name="LandClaimAccessBlocked"
    type="alertmodal">
-    The land you're trying to claim has a maturity rating exceeding your current preferences.  You can change your preferences using Me &gt; Preferences &gt; General.
-    <tag>fail</tag>
+You cannot claim this land due to your maturity Rating. This may be a result of a lack of information validating your age.
+
+Please verify you have the latest Viewer installed, and go to the Knowledge Base for details on accessing areas with this maturity rating.
+  <tag>fail</tag>
     <usetemplate
      name="okbutton"
      yestext="OK"/>
@@ -4394,10 +4173,12 @@ You won't receive any more notifications that you're about to visit a region wit
 
   <notification
    icon="alertmodal.tga"
-   name="LandClaimAccessBlocked_AdultsOnlyContent"
+   name="LandClaimAccessBlocked_KB"
    type="alertmodal">
-    Only adults can claim this land.
-    <tag>fail</tag>
+You cannot claim this land due to your maturity Rating.
+
+Go to the Knowledge Base for more information about maturity Ratings?
+  <tag>fail</tag>
     <tag>confirm</tag>
     <url option="0" name="url">
 		http://wiki.secondlife.com/wiki/Linden_Lab_Official:Maturity_ratings:_an_overview
@@ -4406,52 +4187,41 @@ You won't receive any more notifications that you're about to visit a region wit
      name="okcancelignore"
      yestext="Go to Knowledge Base"
 	 notext="Close"
-	 ignoretext="Only adults can claim this land."/>
+	 ignoretext="I can&apos;t claim this Land, due to restrictions of the maturity Rating"/>
   </notification>
 
   <notification
    icon="notifytip.tga"
    name="LandClaimAccessBlocked_Notify"
    type="notifytip">
-    The land you're trying to claim contains [REGIONMATURITY] content, but your current preferences are set to exclude [REGIONMATURITY] content.
-    <tag>fail</tag>
-  </notification>
-
-  <notification
-   icon="notifytip.tga"
-   name="LandClaimAccessBlocked_NotifyAdultsOnly"
-   type="notifytip">
-    <tag>fail</tag>
-    The land you're trying to claim contains [REGIONMATURITY] content, which is accessible to adults only.
+You cannot claim this land due to your maturity Rating.
+  <tag>fail</tag>
   </notification>
 
   <notification
    icon="alertmodal.tga"
    name="LandClaimAccessBlocked_Change"
    type="alertmodal">
-    The land you're trying to claim contains [REGIONMATURITY] content, but your current preferences are set to exclude [REGIONMATURITY] content. We can change your preferences, then you can try claiming the land again.
+You cannot claim this land due to your maturity Rating preference.
+
+You can click &apos;Change Preference&apos; to raise your maturity Rating preference now and allow you to enter. You will be able to search and access [REGIONMATURITY] content from now on. If you later want to change this setting back, go to Me &gt; Preferences &gt; General.
     <tag>fail</tag>
     <tag>confirm</tag>
-    <form name="form">
-      <button
-       index="0"
-       name="OK"
-       text="Change preferences"/>
-      <button
-       default="true"
-       index="1"
-       name="Cancel"
-       text="Cancel"/>
-      <ignore name="ignore" text="The land you&apos;re trying to claim contains content excluded by your preferences."/>
-    </form>
+    <usetemplate
+     name="okcancelignore"
+     yestext="Change Preference"
+	 notext="Close"
+	 ignoretext="My chosen Rating preference prevents me from claiming Land"/>
   </notification>
 
   <notification
    icon="alertmodal.tga"
    name="LandBuyAccessBlocked"
    type="alertmodal">
-    The land you're trying to buy has a maturity rating exceeding your current preferences.  You can change your preferences using Me &gt; Preferences &gt; General.
-    <tag>fail</tag>
+You cannot buy this land due to your maturity Rating. This may be a result of a lack of information validating your age.
+
+Please verify you have the latest Viewer installed, and go to the Knowledge Base for details on accessing areas with this maturity rating.
+  <tag>fail</tag>
     <usetemplate
      name="okbutton"
      yestext="OK"/>
@@ -4459,9 +4229,11 @@ You won't receive any more notifications that you're about to visit a region wit
 
   <notification
    icon="alertmodal.tga"
-   name="LandBuyAccessBlocked_AdultsOnlyContent"
+   name="LandBuyAccessBlocked_KB"
    type="alertmodal">
-    Only adults can buy this land.
+You cannot buy this land due to your maturity Rating.
+
+Go to the Knowledge Base for more information about maturity Ratings?
     <tag>confirm</tag>
   <tag>fail</tag>
     <url option="0" name="url">
@@ -4471,44 +4243,31 @@ You won't receive any more notifications that you're about to visit a region wit
      name="okcancelignore"
      yestext="Go to Knowledge Base"
 	 notext="Close"
-	 ignoretext="Only adults can buy this land."/>
+	 ignoretext="I can&apos;t buy this Land, due to restrictions of the maturity Rating"/>
   </notification>
 
   <notification
    icon="notifytip.tga"
    name="LandBuyAccessBlocked_Notify"
    type="notifytip">
-    The land you're trying to buy contains [REGIONMATURITY] content, but your current preferences are set to exclude [REGIONMATURITY] content.
-    <tag>fail</tag>
-  </notification>
-
-  <notification
-   icon="notifytip.tga"
-   name="LandBuyAccessBlocked_NotifyAdultsOnly"
-   type="notifytip">
-    <tag>fail</tag>
-    The land you're trying to buy contains [REGIONMATURITY] content, which is accessible to adults only.
+You cannot buy this land due to your maturity Rating.
+  <tag>fail</tag>
   </notification>
 
   <notification
    icon="alertmodal.tga"
    name="LandBuyAccessBlocked_Change"
    type="alertmodal">
-    The land you're trying to buy contains [REGIONMATURITY] content, but your current preferences are set to exclude [REGIONMATURITY] content. We can change your preferences, then you can try buying the land again.
+You cannot buy this land due to your maturity Rating preference.
+
+You can click &apos;Change Preference&apos; to raise your maturity Rating preference now and allow you to enter. You will be able to search and access [REGIONMATURITY] content from now on. If you later want to change this setting back, go to Me &gt; Preferences &gt; General.
     <tag>confirm</tag>
     <tag>fail</tag>
-    <form name="form">
-      <button
-       index="0"
-       name="OK"
-       text="Change preferences"/>
-      <button
-       default="true"
-       index="1"
-       name="Cancel"
-       text="Cancel"/>
-      <ignore name="ignore" text="The land you&apos;re trying to buy contains content excluded by your preferences."/>
-    </form>
+    <usetemplate
+     name="okcancelignore"
+     yestext="Change Preference"
+	 notext="Close"
+	 ignoretext="My chosen Rating preference prevents me from buying Land"/>
   </notification>
 
 	<notification
@@ -4753,11 +4512,10 @@ Type a short announcement which will be sent to everyone in this region.
    label="Changed Region Maturity"
    name="RegionMaturityChange"
    type="alertmodal">
-The maturity rating for this region has been changed.
-It may take some time for this change to be reflected on the map.
-    <usetemplate
-     name="okbutton"
-     yestext="OK"/>
+The maturity rating for this region has been updated.
+It may take some time for the change to be reflected on the map.
+
+To enter Adult regions, Residents must be Account Verified, either by age-verification or payment-verification.
   </notification>
 
   <notification
@@ -5131,6 +4889,7 @@ Entering an accurate description helps us file and process abuse reports.
   <tag>fail</tag>
   </notification>
 
+  <!-- Kokua: [CURRENT_GRID] done -->
   <notification
    icon="alertmodal.tga"
    name="HelpReportAbuseContainsCopyright"
@@ -5139,9 +4898,9 @@ Dear Resident,
 
 You appear to be reporting intellectual property infringement. Please make sure you are reporting it correctly:
 
-(1) The Abuse Process. You may submit an abuse report if you believe a Resident is exploiting the [SECOND_LIFE] permissions system, for example, by using CopyBot or similar copying tools, to infringe intellectual property rights. The Abuse Team investigates and issues appropriate disciplinary action for behavior that violates the [SECOND_LIFE] [http://secondlife.com/corporate/tos.php Terms of Service] or [http://secondlife.com/corporate/cs.php Community Standards]. However, the Abuse Team does not handle and will not respond to requests to remove content from the [SECOND_LIFE] world.
+(1) The Abuse Process. You may submit an abuse report if you believe a Resident is exploiting the [CURRENT_GRID] permissions system, for example, by using CopyBot or similar copying tools, to infringe intellectual property rights. The Abuse Team investigates and issues appropriate disciplinary action for behavior that violates the [CURRENT_GRID] [http://secondlife.com/corporate/tos.php Terms of Service] or [http://secondlife.com/corporate/cs.php Community Standards]. However, the Abuse Team does not handle and will not respond to requests to remove content from the [CURRENT_GRID] world.
 
-(2) The DMCA or Content Removal Process. To request removal of content from [SECOND_LIFE], you MUST submit a valid notification of infringement as provided in our [http://secondlife.com/corporate/dmca.php DMCA Policy].
+(2) The DMCA or Content Removal Process. To request removal of content from [CURRENT_GRID], you MUST submit a valid notification of infringement as provided in our [http://secondlife.com/corporate/dmca.php DMCA Policy].
 
 If you still wish to continue with the abuse process, please close this window and finish submitting your report.  You may need to select the specific category &apos;CopyBot or Permissions Exploit&apos;.
 
@@ -5459,31 +5218,33 @@ Would you like to automatically wear the clothing you are about to create?
      yestext="Yes"/>
   </notification>
 
+  <!-- Kokua: notification not used? -->
   <notification
    icon="alertmodal.tga"
    name="NotAgeVerified"
    type="alertmodal">
-    The location you're trying to visit is restricted to residents age 18 and over.
-    <tag>fail</tag>
+   <tag>fail</tag>
+To access adult content and areas in [CURRENT_GRID] you must be at least 18 years old. Please visit our age verification page to confirm you are over 18. 
+Note this will launch your web browser.
+
+[_URL]
+    <tag>confirm</tag>
+    <url option="0" name="url">
+	    https://secondlife.com/my/account/verification.php
+    </url>
     <usetemplate
-     ignoretext="I am not old enough to visit age restricted areas."
-     name="okignore"
-     yestext="OK"/>
+     ignoretext="I have not verified my age"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="Go to Age Verification"/>
   </notification>
 
-  <notification
-   icon="notifytip.tga"
-   name="NotAgeVerified_Notify"
-   type="notifytip">
-    Location restricted to age 18 and over.
-    <tag>fail</tag>
-  </notification>
-
+ <!-- Kokua: not used ? -->
   <notification
    icon="alertmodal.tga"
    name="Cannot enter parcel: no payment info on file"
    type="alertmodal">
-You must have payment information on file to visit this area.  Do you want to go to the [SECOND_LIFE] website and set this up?
+You must have payment information on file to visit this area.  Do you want to go to the [CURRENT_GRID] website and set this up?
 
 [_URL]
     <tag>confirm</tag>
@@ -5623,7 +5384,7 @@ Terrain.raw downloaded
    icon="notifytip.tga"
    name="GestureMissing"
    type="notifytip">
-Gesture [NAME] is missing from the database.
+Hmm. Gesture [NAME] is missing from the database.
   <tag>fail</tag>
   </notification>
 
@@ -6009,39 +5770,7 @@ Please re-install the plugin or contact the vendor if you continue to experience
        text="A Media Plugin fails to run"/>
     </form>
   </notification>
- 
-<notification
- icon="alert.tga"
- name="MediaPluginFailedWebkit"
- type="alert">
-The following browser plugin has failed:
-     [PLUGIN]
-
-Make sure "Flash For Other Browsers" is installed.
-The latest version can be found at: 
-http://get.adobe.com/flashplayer/otherversions/
- <form name="form">
-  <ignore name="ignore"
-    text="When the browser plugin fails"/>
- </form>
-</notification>
-
-<notification
- icon="alert.tga"
- name="MediaPluginFailedQuickTime"
- type="alert">
-  The QuickTime Media Plugin has failed:
-  [PLUGIN]
-
-  If the error persists, reinstalling QuickTime might fix it.
-  <form name="form">
-    <ignore name="ignore"
-      text="When the QuickTime plugin fails"/>
-  </form>
-</notification>
-  
-
- <notification
+  <notification
    icon="notify.tga"
    name="OwnedObjectsReturned"
    persist="true"
@@ -6193,7 +5922,9 @@ You can only claim public land in the Region you&apos;re in.
    persist="true"
    type="notify">
    <tag>fail</tag>
-    The region you're trying to visit contains content exceeding your current preferences.  You can change your preferences using Me &gt; Preferences &gt; General.
+You aren&apos;t allowed in that Region due to your maturity Rating. You may need to validate your age and/or install the latest Viewer.
+
+Please go to the Knowledge Base for details on accessing areas with this maturity Rating.
   </notification>
 
   <notification
@@ -6225,11 +5956,11 @@ You do not have proper payment status to enter this region.
 
   <notification
 	icon="notify.tga"
-	name="MustGetAgeRegion"
+	name="MustGetAgeRgion"
    persist="true"
 	type="notify">
    <tag>fail</tag>
-You must be age 18 or over to enter this region.
+You must be age-verified to enter this region.
   </notification>
 
   <notification
@@ -6238,7 +5969,7 @@ You must be age 18 or over to enter this region.
    persist="true"
 	type="notify">
    <tag>fail</tag>
-    You must be age 18 or over to enter this parcel.
+You must be age-verified to enter this parcel.
   </notification>
 
   <notification
@@ -6513,8 +6244,7 @@ Your object named &lt;nolink&gt;[OBJECTFROMNAME]&lt;/nolink&gt; has given you th
    type="offer">
 [NAME_SLURL] has offered to teleport you to their location:
 
-“[MESSAGE]”
-&lt;icon&gt;[MATURITY_ICON]&lt;/icon&gt; - [MATURITY_STR]
+[MESSAGE] - [MATURITY_STR] &lt;icon&gt;[MATURITY_ICON]&lt;/icon&gt;
     <tag>confirm</tag>
     <form name="form">
       <button
@@ -6526,42 +6256,6 @@ Your object named &lt;nolink&gt;[OBJECTFROMNAME]&lt;/nolink&gt; has given you th
        name="Cancel"
        text="Cancel"/>
     </form>
-  </notification>
-
-  <notification
-   icon="notify.tga"
-   name="TeleportOffered_MaturityExceeded"
-   type="offer">
-[NAME_SLURL] has offered to teleport you to their location:
-
-“[MESSAGE]”
-&lt;icon&gt;[MATURITY_ICON]&lt;/icon&gt; - [MATURITY_STR]
-
-This region contains [REGION_CONTENT_MATURITY] content, but your current preferences are set to exclude [REGION_CONTENT_MATURITY] content.  We can change your preferences and continue with the teleport, or you can cancel this teleport.
-    <tag>confirm</tag>
-    <form name="form">
-      <button
-       index="0"
-       name="Teleport"
-       text="Change and Continue"/>
-      <button
-       index="1"
-       name="Cancel"
-       text="Cancel"/>
-    </form>
-  </notification>
-
-  <notification
-   icon="notify.tga"
-   name="TeleportOffered_MaturityBlocked"
-   type="notifytip">
-[NAME_SLURL] has offered to teleport you to their location:
-
-“[MESSAGE]”
-&lt;icon&gt;[MATURITY_ICON]&lt;/icon&gt; - [MATURITY_STR]
-
-However, this region contains content accessible to adults only.
-    <tag>fail</tag>
   </notification>
 
   <notification
@@ -6795,28 +6489,31 @@ Is this OK?
   <notification
    icon="notify.tga"
    name="ScriptQuestionCaution"
-   priority="critical"
+   priority="high"
    persist="true"
    type="notify">
-Warning: The object &apos;&lt;nolink&gt;[OBJECTNAME]&lt;/nolink&gt;&apos; wants total access to your Linden Dollars account. If you allow access, it can remove funds from your account at any time, or empty your account completely, on an ongoing basis with no additional warnings.
-  
-It is rare that such a request is legitimate. Do not allow access if you do not fully understand why it wants access to your account.
+An object named &apos;&lt;nolink&gt;[OBJECTNAME]&lt;/nolink&gt;&apos;, owned by &apos;[NAME]&apos; would like to:
 
+[QUESTIONS]
+If you do not trust this object and its creator, you should deny the request.
+
+Grant this request?
   <tag>confirm</tag>
     <form name="form">
       <button
        index="0"
        name="Grant"
-       text="Allow total access"/>
+       text="Grant"/>
       <button
        default="true"
        index="1"
        name="Deny"
        text="Deny"/>
+      <button
+       index="2"
+       name="Details"
+       text="Details..."/>
     </form>
-    <footer>
-[FOOTERTEXT]
-    </footer>
   </notification>
 
   <notification
@@ -6828,11 +6525,11 @@ It is rare that such a request is legitimate. Do not allow access if you do not 
     <form name="form">
       <button
        index="-2"
-       name="Client_Side_Mute"
+       name="Mute"
        text="Block"/>
       <button
        index="-1"
-       name="Client_Side_Ignore"
+       name="Ignore"
        text="Ignore"/>
     </form>
   </notification>
@@ -6847,11 +6544,11 @@ It is rare that such a request is legitimate. Do not allow access if you do not 
     <form name="form">
       <button
        index="-2"
-       name="Client_Side_Mute"
+       name="Mute"
        text="Block"/>
       <button
        index="-1"
-       name="Client_Side_Ignore"
+       name="Ignore"
        text="Ignore"/>
     </form>
   </notification>
@@ -7600,18 +7297,6 @@ You locally updated a [RESOLUTION] baked texture for '[BODYREGION]' after [TIME]
 
   <notification
    icon="alertmodal.tga"
-   name="LivePreviewUnavailable"
-   type="alert">
-   
-We cannot display a preview of this texture because it is no-copy and/or no-transfer.
-  <usetemplate
-    ignoretext="Warn me that Live Preview mode is not available for no-copy and/or no-transfer textures"
-    name="okignore"
-    yestext="OK"/>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
    name="ConfirmLeaveCall"
    type="alert">
 Are you sure you want to leave this call?
@@ -7907,9 +7592,7 @@ Click and drag anywhere on the world to rotate your view
    <usetemplate
      name="okbutton"
      yestext="OK"/>
-  </notification>
 
-  <notification
   name="AuthRequest"
   type="browser">
 The site at &apos;&lt;nolink&gt;[HOST_NAME]&lt;/nolink&gt;&apos; in realm &apos;[REALM]&apos; requires a user name and password.
@@ -8094,7 +7777,61 @@ The site at &apos;&lt;nolink&gt;[HOST_NAME]&lt;/nolink&gt;&apos; in realm &apos;
       notext="Cancel"
       ignoretext="Confirm before hiding UI"/>
   </notification>
-  
+
+<!-- [KITTY VIEWER] -->
+
+  <notification
+   icon="alertmodal.tga"
+   name="KittyInvalidWaterlightNotecard"
+   type="alert">
+[NAME] is not a valid water settings asset.
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="KittyInvalidWindlightNotecard"
+   type="alert">
+[NAME] is not a valid WindLight settings asset.
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="KittyWindlightLoadingFailed"
+   type="alert">
+The WindLight setting "[NAME]" could not be opened.
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="KittyWaterlightLoadingFailed"
+   type="alert">
+The water setting "[NAME]" could not be opened.
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="KittyWLSaveNotecardAlert"
+   type="alertmodal">
+Do you wish to overwrite the saved preset?
+    <usetemplate
+     name="okcancelbuttons"
+     notext="No"
+     yestext="Yes"/>
+  </notification>
+<!-- [/KITTY VIEWER] -->
+
+<!-- [Kokua] -->
+  <notification icon="alertmodal.tga"
+		name="CantAddGrid"
+		type="alertmodal">
+Could not add [GRID] to the grid list.
+[REASON] contact support of [GRID].
+    <usetemplate
+     name="okbutton"
+     yestext="OK"/>
+  </notification>
+<!-- [/Kokua] -->
+
   <global name="UnsupportedGLRequirements">
 You do not appear to have the proper hardware requirements for [APP_NAME]. [APP_NAME] requires an OpenGL graphics card that has multitexture support. If this is the case, you may want to make sure that you have the latest drivers for your graphics card, and service packs and patches for your operating system.
 
@@ -8127,31 +7864,4 @@ Otherwise, you can look at the Map and find places marked &quot;Infohub&quot;.
 You died and have been teleported to your home location.
   </global>
 
-<!-- AW: opensim -->
-  <notification icon="alertmodal.tga"
-		name="CantAddGrid"
-		type="alertmodal">
-Could not add [GRID] to the grid list.
-[REASON] contact support of [GRID].
-    <usetemplate
-     name="okbutton"
-     yestext="OK"/>
-  </notification>
-<!-- AW: opensim -->
-
-   persist="true"
-   type="notify">
-[FNAME] could not be opened or decoded for [NRETRIES] attempts, and is now considered broken.
-Disabling future updates for this file.
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="LocalBitmapsVerifyFail"
-   persist="true"
-   type="notify">
-Attempted to add an invalid or unreadable image file [FNAME] which could not be opened or decoded.
-Attempt cancelled.
-  </notification>
-  
 </notifications>

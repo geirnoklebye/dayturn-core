@@ -3072,7 +3072,7 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		mNameText->setVertAlignment(LLHUDNameTag::ALIGN_VERT_TOP);
 		mNameText->setVisibleOffScreen(TRUE);
 		mNameText->setMaxLines(11);
-		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
+					mNameText->setFadeDistance(LLWorld::getInstance()->getSayDistance(), 5.f);
 		sNumVisibleChatBubbles++;
 		new_name = TRUE;
 	}
@@ -3219,7 +3219,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		mNameBusy = is_busy;
 		mNameMute = is_muted;
 		mNameAppearance = is_appearance;
-		mNameFriend = is_friend;
+				mNameFriend = is_friend;
 		mNameCloud = is_cloud;
 		mTitle = title ? title->getString() : "";
 		LLStringFn::replace_ascii_controlchars(mTitle,LL_UNKNOWN_CHAR);
@@ -3229,8 +3229,8 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 	if (mVisibleChat)
 	{
 		mNameText->setFont(LLFontGL::getFontSansSerif());
-		mNameText->setTextAlignment(LLHUDNameTag::ALIGN_TEXT_LEFT);
-		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS * 2.f, 5.f);
+				mNameText->setTextAlignment(LLHUDNameTag::ALIGN_TEXT_LEFT);
+				mNameText->setFadeDistance(LLWorld::getInstance()->getSayDistance() * 2.f, 5.f);
 			
 		char line[MAX_STRING];		/* Flawfinder: ignore */
 		line[0] = '\0';
@@ -3301,7 +3301,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 	{
 		// ...not using chat bubbles, just names
 		mNameText->setTextAlignment(LLHUDNameTag::ALIGN_TEXT_CENTER);
-		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
+				mNameText->setFadeDistance(LLWorld::getInstance()->getSayDistance(), 5.f);
 		mNameText->setVisibleOffScreen(FALSE);
 	}
 }

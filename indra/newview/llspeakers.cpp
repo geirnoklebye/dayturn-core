@@ -920,7 +920,7 @@ void LLLocalSpeakerMgr::updateSpeakerList()
 	// pick up non-voice speakers in chat range
 	uuid_vec_t avatar_ids;
 	std::vector<LLVector3d> positions;
-	LLWorld::getInstance()->getAvatars(&avatar_ids, &positions, gAgent.getPositionGlobal(), CHAT_NORMAL_RADIUS);
+	LLWorld::getInstance()->getAvatars(&avatar_ids, &positions, gAgent.getPositionGlobal(), LLWorld::getInstance()->getSayDistance());
 	for(U32 i=0; i<avatar_ids.size(); i++)
 	{
 		setSpeaker(avatar_ids[i]);
@@ -934,7 +934,8 @@ void LLLocalSpeakerMgr::updateSpeakerList()
 		if (speakerp->mStatus == LLSpeaker::STATUS_TEXT_ONLY)
 		{
 			LLVOAvatar* avatarp = (LLVOAvatar*)gObjectList.findObject(speaker_id);
-			if (!avatarp || dist_vec_squared(avatarp->getPositionAgent(), gAgent.getPositionAgent()) > CHAT_NORMAL_RADIUS_SQUARED)
+			F32 say_distance_squared = (LLWorld::getInstance()->getSayDistance() * LLWorld::getInstance()->getSayDistance());
+			if (!avatarp || dist_vec_squared(avatarp->getPositionAgent(), gAgent.getPositionAgent()) > say_distance_squared)
 			{
 				setSpeakerNotInChannel(speakerp);
 			}

@@ -54,7 +54,8 @@ static const F32 REGION_WIDTH_METERS = 256.f;
 static const S32 REGION_WIDTH_UNITS = 256;
 static const U32 REGION_WIDTH_U32 = 256;
 
-const F32 REGION_HEIGHT_METERS = 4096.f;
+//Kokua:Removed. Use instead: LLWorld::getInstance()->getRegionMaxHeight()
+// const F32 REGION_HEIGHT_METERS = 4096.f;
 
 // Bits for simulator performance query flags
 enum LAND_STAT_FLAGS
@@ -146,6 +147,11 @@ const	char	LAND_LAYER_CODE					= 'L';
 const	char	WATER_LAYER_CODE				= 'W';
 const	char	WIND_LAYER_CODE					= '7';
 const	char	CLOUD_LAYER_CODE				= '8';
+// Extended land layer for Aurora Sim
+const	char	AURORA_LAND_LAYER_CODE			= 'M';
+const	char	AURORA_WATER_LAYER_CODE			= 'X';
+const	char	AURORA_WIND_LAYER_CODE			= '9';
+const	char	AURORA_CLOUD_LAYER_CODE			= ':';
 
 // keys
 // Bit masks for various keyboard modifier keys.

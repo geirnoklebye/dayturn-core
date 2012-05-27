@@ -97,7 +97,7 @@ void LLViewerChat::getChatColor(const LLChat& chat, LLColor4& r_color)
 		{
 			LLVector3 pos_agent = gAgent.getPositionAgent();
 			F32 distance_squared = dist_vec_squared(pos_agent, chat.mPosAgent);
-			F32 dist_near_chat = gAgent.getNearChatRadius();
+			F32 dist_near_chat = LLWorld::getInstance()->getSayDistance();
 			if (distance_squared > dist_near_chat * dist_near_chat)
 			{
 				// diminish far-off chat
@@ -167,7 +167,7 @@ void LLViewerChat::getChatColor(const LLChat& chat, std::string& r_color_name, F
 		{
 			LLVector3 pos_agent = gAgent.getPositionAgent();
 			F32 distance_squared = dist_vec_squared(pos_agent, chat.mPosAgent);
-			F32 dist_near_chat = gAgent.getNearChatRadius();
+			F32 dist_near_chat = LLWorld::getInstance()->getSayDistance();
 			if (distance_squared > dist_near_chat * dist_near_chat)
 			{
 				// diminish far-off chat

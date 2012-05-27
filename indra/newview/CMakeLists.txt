@@ -635,6 +635,7 @@ set(viewer_SOURCE_FILES
     qtoolalign.cpp
     pipeline.cpp
     viewerinfo.cpp
+    astraopenregionsettings.cpp
     )
 
 set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING

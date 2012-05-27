@@ -70,6 +70,7 @@
 #include "stringize.h"
 #include "llviewercontrol.h"
 #include "llsdserialize.h"
+#include "llviewerparcelmgr.h"
 
 #ifdef LL_WINDOWS
 	#pragma warning(disable:4355)
@@ -291,9 +292,9 @@ LLViewerRegion::LLViewerRegion(const U64 &handle,
 	mCacheLoaded(FALSE),
 	mCacheDirty(FALSE),
 	mReleaseNotesRequested(FALSE),
-	mCapabilitiesReceived(false)
+	mCapabilitiesReceived(false),
+	mWidth(region_width_meters)
 {
-	mWidth = region_width_meters;
 	mImpl->mOriginGlobal = from_region_handle(handle); 
 	updateRenderMatrix();
 
@@ -303,7 +304,7 @@ LLViewerRegion::LLViewerRegion(const U64 &handle,
 	mImpl->mCompositionp =
 		new LLVLComposition(mImpl->mLandp,
 							grids_per_region_edge,
-							region_width_meters / grids_per_region_edge);
+							mWidth / grids_per_region_edge);
 	mImpl->mCompositionp->setSurface(mImpl->mLandp);
 
 	// Create the surfaces
@@ -313,7 +314,8 @@ LLViewerRegion::LLViewerRegion(const U64 &handle,
 					mImpl->mOriginGlobal,
 					mWidth);
 
-	mParcelOverlay = new LLViewerParcelOverlay(this, region_width_meters);
+	mParcelOverlay = new LLViewerParcelOverlay(this, mWidth);
+	LLViewerParcelMgr::getInstance()->init(mWidth);
 
 	setOriginGlobal(from_region_handle(handle));
 	calculateCenterGlobal();
@@ -471,6 +473,10 @@ void LLViewerRegion::setWaterHeight(F32 water_level)
 	mImpl->mLandp->setWaterHeight(water_level);
 }
 
+void LLViewerRegion::rebuildWater()
+{
+	mImpl->mLandp->rebuildWater();
+}
 F32 LLViewerRegion::getWaterHeight() const
 {
 	return mImpl->mLandp->getWaterHeight();
@@ -1520,6 +1526,8 @@ void LLViewerRegionImpl::buildCapabilityNames(LLSD& capabilityNames)
 	capabilityNames.append("CopyInventoryFromNotecard");
 	capabilityNames.append("CreateInventoryCategory");
 	capabilityNames.append("DispatchRegionInfo");
+	capabilityNames.append("DispatchOpenRegionSettings");
+	//capabilityNames.append("DispatchWindLightSettings"); // now using EnvironmentSettings for windlight settings
 	capabilityNames.append("EstateChangeInfo");
 	capabilityNames.append("EventQueueGet");
 	capabilityNames.append("EnvironmentSettings");

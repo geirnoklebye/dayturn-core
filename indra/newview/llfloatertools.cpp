@@ -221,6 +221,10 @@ LLPCode toolData[]={
 	LL_PCODE_LEGACY_TREE,
 	LL_PCODE_LEGACY_GRASS};
 
+void LLFloaterTools::updateToolsSizeLimits()
+{
+	mPanelObject->updateLimits();
+}
 BOOL	LLFloaterTools::postBuild()
 {	
 	// Hide until tool selected

@@ -170,6 +170,7 @@ void LLSurface::create(const S32 grids_per_edge,
 	mNumberOfPatches = mPatchesPerEdge * mPatchesPerEdge;
 	mMetersPerGrid = width / ((F32)(mGridsPerEdge - 1));
 	mMetersPerEdge = mMetersPerGrid * (mGridsPerEdge - 1);
+	sTextureSize = width;
 
 	mOriginGlobal.setVec(origin_global);
 
@@ -288,13 +289,34 @@ void LLSurface::initTextures()
 	//
 	// Water texture
 	//
-	if (gSavedSettings.getBOOL("RenderWater") )
+	if (gSavedSettings.getBOOL("RenderWater") && LLWorld::getInstance()->getAllowRenderWater())
 	{
 		createWaterTexture();
 		mWaterObjp = (LLVOWater *)gObjectList.createObjectViewer(LLViewerObject::LL_VO_WATER, mRegionp);
 		gPipeline.createObject(mWaterObjp);
 		LLVector3d water_pos_global = from_region_handle(mRegionp->getHandle());
-		water_pos_global += LLVector3d(128.0, 128.0, DEFAULT_WATER_HEIGHT);
+		water_pos_global += LLVector3d(mRegionp->getWidth()/2, mRegionp->getWidth()/2, DEFAULT_WATER_HEIGHT);
+		mWaterObjp->setPositionGlobal(water_pos_global);
+	}
+}
+
+void LLSurface::rebuildWater()
+{
+	BOOL renderwater = gSavedSettings.getBOOL("RenderWater") && LLWorld::getInstance()->getAllowRenderWater();
+	BOOL prev_renderwater = !mWaterObjp.isNull();
+
+	if(prev_renderwater && !renderwater)
+	{
+		gObjectList.killObject(mWaterObjp);
+	}
+
+	if (!prev_renderwater && renderwater)
+	{
+		createWaterTexture();
+		mWaterObjp = (LLVOWater *)gObjectList.createObjectViewer(LLViewerObject::LL_VO_WATER, mRegionp);
+		gPipeline.createObject(mWaterObjp);
+		LLVector3d water_pos_global = from_region_handle(mRegionp->getHandle());
+		water_pos_global += LLVector3d(mRegionp->getWidth()/2, mRegionp->getWidth()/2, DEFAULT_WATER_HEIGHT);
 		mWaterObjp->setPositionGlobal(water_pos_global);
 	}
 }
@@ -324,8 +346,8 @@ void LLSurface::setOriginGlobal(const LLVector3d &origin_global)
 	// Hack!
 	if (mWaterObjp.notNull() && mWaterObjp->mDrawable.notNull())
 	{
-		const F64 x = origin_global.mdV[VX] + 128.0;
-		const F64 y = origin_global.mdV[VY] + 128.0;
+		const F64 x = origin_global.mdV[VX] + (F64)mRegionp->getWidth()/2;
+		const F64 y = origin_global.mdV[VY] + (F64)mRegionp->getWidth()/2;
 		const F64 z = mWaterObjp->getPositionGlobal().mdV[VZ];
 
 		LLVector3d water_origin_global(x, y, z);
@@ -682,14 +704,22 @@ void LLSurface::decompressDCTPatch(LLBitPack &bitpack, LLGroupHeader *gopp, BOOL
 
 	while (1)
 	{
-		decode_patch_header(bitpack, &ph);
+		decode_patch_header(bitpack, &ph, b_large_patch);
 		if (ph.quant_wbits == END_OF_PATCHES)
 		{
 			break;
 		}
 
-		i = ph.patchids >> 5;
-		j = ph.patchids & 0x1F;
+		if (b_large_patch)
+		{
+			i = ph.patchids >> 16; //x
+			j = ph.patchids & 0xFFFF; //y
+		}
+		else
+		{
+			i = ph.patchids >> 5; //x
+			j = ph.patchids & 0x1F; //y
+		}
 
 		if ((i >= mPatchesPerEdge) || (j >= mPatchesPerEdge))
 		{
@@ -1211,7 +1241,7 @@ BOOL LLSurface::generateWaterTexture(const F32 x, const F32 y,
 	LLPointer<LLImageRaw> raw = new LLImageRaw(tex_width, tex_height, tex_comps);
 	U8 *rawp = raw->getData();
 
-	F32 scale = 256.f * getMetersPerGrid() / (F32)tex_width;
+	F32 scale = LLWorld::getInstance()->getRegionWidthInMeters() * getMetersPerGrid() / (F32)tex_width;
 	F32 scale_inv = 1.f / scale;
 
 	S32 x_begin, y_begin, x_end, y_end;

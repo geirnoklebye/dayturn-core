@@ -75,12 +75,15 @@ const F32 MIN_PICK_SCALE = 2.f;
 const S32 MOUSE_DRAG_SLOP = 2;		// How far the mouse needs to move before we think it's a drag
 
 const F64 COARSEUPDATE_MAX_Z = 1020.0f;
+//static
+uuid_vec_t LLNetMap::sSelected;
 
 LLNetMap::LLNetMap (const Params & p)
 :	LLUICtrl (p),
 	mBackgroundColor (p.bg_color()),
 	mScale( MAP_SCALE_MID ),
-	mPixelsPerMeter( MAP_SCALE_MID / REGION_WIDTH_METERS ),
+	//mPixelsPerMeter( MAP_SCALE_MID / REGION_WIDTH_METERS ),
+	mPixelsPerMeter( MAP_SCALE_MID / LLWorld::getInstance()->getRegionWidthInMeters()),
 	mObjectMapTPM(0.f),
 	mObjectMapPixels(0.f),
 	mTargetPan(0.f, 0.f),
@@ -135,7 +138,7 @@ void LLNetMap::setScale( F32 scale )
 		mObjectMapPixels = diameter;
 	}
 
-	mPixelsPerMeter = mScale / REGION_WIDTH_METERS;
+	mPixelsPerMeter = mScale / LLWorld::getInstance()->getRegionWidthInMeters();
 	mDotRadius = llmax(DOT_SCALE * mPixelsPerMeter, MIN_DOT_RADIUS);
 
 	mUpdateNow = true;
@@ -499,6 +502,7 @@ LLVector3 LLNetMap::globalPosToView(const LLVector3d& global_pos)
 	LLVector3 pos_local;
 	pos_local.setVec(relative_pos_global);  // convert to floats from doubles
 
+	mPixelsPerMeter = mScale / LLWorld::getInstance()->getRegionWidthInMeters();
 	pos_local.mV[VX] *= mPixelsPerMeter;
 	pos_local.mV[VY] *= mPixelsPerMeter;
 	// leave Z component in meters
