@@ -58,6 +58,7 @@
 #include "llfloatertools.h"
 #include "llfloaterreg.h"
 
+
 #include <deque>
 #include <queue>
 #include <map>
@@ -81,7 +82,6 @@ U32 LLWorld::mWidth = 256;
 
 // meters/point, therefore mWidth * mScale = meters per edge
 const F32 LLWorld::mScale = 1.f;
-
 F32 LLWorld::mWidthInMeters = mWidth * mScale;
 
 //
@@ -137,9 +137,11 @@ void LLWorld::destroyClass()
 		mEdgeWaterObjects[i] = NULL;
 	}
 }
-// <opensim-limits>
+
+// <opensim-limits
 void LLWorld::refreshLimits()
 {
+
 	mLimitsNeedRefresh = false;
 
 	if(LLGridManager::getInstance()->isInOpenSim())
@@ -159,10 +161,10 @@ void LLWorld::refreshLimits()
 		mAllowMinimap = TRUE;
 		mAllowPhysicalPrims = TRUE;
 		mAllowRenderWater = TRUE;
+
 		mMaxPrimXPos = F32_MAX;
 		mMaxPrimYPos = F32_MAX;
 		mMaxPrimZPos = F32_MAX;
-
 		mMinPrimXPos = 0;
 		mMinPrimYPos = 0;
 		mMinPrimZPos = 0;
@@ -226,11 +228,6 @@ void LLWorld::refreshLimits()
 	LL_DEBUGS("OS_SETTINGS") << "RegionMinHoleSize  " << mRegionMinHoleSize << llendl;
 }
 // </AW: opensim-limits>
-
-
-
-
-
 void LLWorld::setRegionMaxHeight(F32 val)
 { 
 	if(val <= 0.0f)
@@ -416,14 +413,13 @@ void LLWorld::setEnableTeenMode(BOOL val)		{ mEnableTeenMode = val; }
 void LLWorld::setEnforceMaxBuild(BOOL val)		{ mEnforceMaxBuild = val; }
 void LLWorld::setLockedDrawDistance(BOOL val)	{ mLockedDrawDistance = val; }
 void LLWorld::setAllowRenderName(S32 val)		{ mAllowRenderName = val; }
-void LLWorld::updateLimits()
 
+void LLWorld::updateLimits()
 {
 	if(!LLGridManager::getInstance())
 	{
 		return;
 	}
-
 	/*
 	mRegionMaxHeight
 	getRegionMinPrimScale
@@ -439,11 +435,12 @@ void LLWorld::updateLimits()
 	getAllowPhysicalPrims
 	mRegionMaxPrimScaleNoMesh // not implemented
 	*/
-
 	gFloaterTools->updateToolsSizeLimits();
+
 	/*
 	mAllowMinimap
 	*/
+
 	if(mAllowMinimap && LLFloaterReg::instanceVisible("mini_map")) LLFloaterReg::showInstance("mini_map");
 	else LLFloaterReg::hideInstance("mini_map");
 
@@ -451,17 +448,14 @@ void LLWorld::updateLimits()
 	mMaxLinkedPrims;
 	mMaxPhysLinkedPrims; // not implemented
 	*/
-
 	//done in llselectmgr.cpp
 	/*
 	mMaxDragDistance;
 	*/
-
 	//done in llmaniptranslate.cpp
 	/*
 	mAllowRenderWater
 	*/
-
 	gAgent.getRegion()->rebuildWater();
 
 	/*
@@ -469,7 +463,6 @@ void LLWorld::updateLimits()
 	*/
 
 	//done in llgiveinventory.cpp
-
 	/*
 	drawdistance // set in kowopenregionssettings.cpp
 	mLockedDrawDistance
@@ -477,17 +470,14 @@ void LLWorld::updateLimits()
 	*/
 
 	//done in llviewerdisplay.cpp
-
 	/*
 	skyUseClassicClouds
 	*/
 
 	//can't implement, classic clouds are removed from v3 viewers
-
 	/*
 	mEnableTeenMode
 	*/
-
 	//this is enabletoggle, not set, done in llviewermenu.cpp
 
 	/*
@@ -495,23 +485,20 @@ void LLWorld::updateLimits()
 	*/
 
 	//todo
-
 	/*
 	mEnforceMaxBuild
 	*/
 
 	// not used as long as there is no gSavedSettings.getBOOL("DisableMaxBuildConstraints") to overwrite default settings
-
 	/*
 	mAllowParcelWindLight
 	*/
 
 	// not implemented setting
-
 	/*
+
 	//Update the floater if its around
 	LLPanelRegionOpenSettingsInfo* floater = LLFloaterRegionInfo::getPanelOpenSettings();
-
 	if (floater != NULL)
 	{
 		floater->refreshFromRegion(gAgent.getRegion());
@@ -521,7 +508,6 @@ void LLWorld::updateLimits()
 
 // </opensim-limits>
 LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host, const U32 &region_size_x, const U32 &region_size_y)
-
 {
 	// <AW: opensim-limits>
 	if(mLimitsNeedRefresh)
@@ -600,21 +586,43 @@ LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host,
 	F32 width = getRegionWidthInMeters();
 
 	LLViewerRegion *neighborp;
+	LLViewerRegion *last_neighborp;
 	from_region_handle(region_handle, &region_x, &region_y);
 
 	// Iterate through all directions, and connect neighbors if there.
 	S32 dir;
 	for (dir = 0; dir < 8; dir++)
 	{
+		last_neighborp = NULL;
 		adj_x = region_x + width * gDirAxes[dir][0];
 		adj_y = region_y + width * gDirAxes[dir][1];
-		to_region_handle(adj_x, adj_y, &adj_handle);
 
-		neighborp = getRegionFromHandle(adj_handle);
-		if (neighborp)
+		if(gDirAxes[dir][0] < 0) adj_x = region_x - WORLD_PATCH_SIZE;
+		if(gDirAxes[dir][1] < 0) adj_y = region_y - WORLD_PATCH_SIZE;
+
+
+		for(S32 offset = 0; offset < width; offset += WORLD_PATCH_SIZE)
 		{
-			//llinfos << "Connecting " << region_x << ":" << region_y << " -> " << adj_x << ":" << adj_y << llendl;
-			regionp->connectNeighbor(neighborp, dir);
+			to_region_handle(adj_x, adj_y, &adj_handle);
+			neighborp = getRegionFromHandle(adj_handle);
+
+			if (neighborp && last_neighborp != neighborp)
+			{
+				//llinfos << "Connecting " << region_x << ":" << region_y << " -> " << adj_x << ":" << adj_y << " dir:" << dir << llendl;
+				regionp->connectNeighbor(neighborp, dir);
+				last_neighborp = neighborp;
+			}
+
+			if(dir == NORTHEAST ||
+			   dir == NORTHWEST ||
+			   dir == SOUTHWEST ||
+			   dir == SOUTHEAST)
+			{
+				break;
+			}
+
+			if(dir == NORTH || dir == SOUTH) adj_x += WORLD_PATCH_SIZE;
+			if(dir == EAST || dir == WEST) adj_y += WORLD_PATCH_SIZE;
 		}
 	}
 
@@ -624,6 +632,7 @@ LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host,
 // </AW: opensim-limits>
 	return regionp;
 }
+
 
 void LLWorld::removeRegion(const LLHost &host)
 {
@@ -806,6 +815,7 @@ LLViewerRegion* LLWorld::getRegionFromHandle(const U64 &handle)
 	return NULL;
 }
 
+
 void LLWorld::updateAgentOffset(const LLVector3d &offset_global)
 {
 #if 0
@@ -817,6 +827,7 @@ void LLWorld::updateAgentOffset(const LLVector3d &offset_global)
 	}
 #endif
 }
+
 
 BOOL LLWorld::positionRegionValidGlobal(const LLVector3d &pos_global)
 {
@@ -831,6 +842,7 @@ BOOL LLWorld::positionRegionValidGlobal(const LLVector3d &pos_global)
 	}
 	return FALSE;
 }
+
 
 // Allow objects to go up to their radius underground.
 F32 LLWorld::getMinAllowedZ(LLViewerObject* object, const LLVector3d &global_pos)
@@ -1238,7 +1250,7 @@ void LLWorld::updateWaterObjects()
 
 	// Now, get a list of the holes
 	S32 x, y;
-		S32 step = 256;
+	S32 step = 256;
 	for (x = min_x; x <= max_x; x += step)
 	{
 		for (y = min_y; y <= max_y; y += step)
