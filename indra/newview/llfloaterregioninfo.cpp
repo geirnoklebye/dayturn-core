@@ -1221,7 +1221,7 @@ BOOL LLPanelRegionTerrainInfo::validateTextureSizes()
 			return FALSE;
 		}
 
-		if (width > 512 || height > 512)
+		if (width > 1024 || height > 1024)
 		{
 
 			LLSD args;

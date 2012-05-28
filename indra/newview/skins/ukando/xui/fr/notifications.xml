@@ -85,40 +85,6 @@ Veuillez vérifier votre connexion Internet.
 		Enregistrer les changements dans la partie du corps/les habits actuels ?
 		<usetemplate canceltext="Cancel" name="yesnocancelbuttons" notext="Ne pas enregistrer" yestext="Enregistrer"/>
 	</notification>
-	<notification name="ConfirmNoCopyToOutbox">
-		Vous n&apos;êtes pas autorisé à copier un ou plusieurs de ces articles dans la boîte d&apos;envoi vendeur. Vous pouvez les déplacer ou les laisser.
-		<usetemplate name="okcancelbuttons" notext="Ne pas déplacer les articles" yestext="Déplacer les articles"/>
-	</notification>
-	<notification name="OutboxFolderCreated">
-		Un nouveau dossier a été créé pour chaque article que vous avez transféré vers le niveau supérieur de votre boîte d&apos;envoi vendeur.
-		<usetemplate ignoretext="Un nouveau dossier a été créé dans la boîte d&apos;envoi vendeur." name="okignore" yestext="OK"/>
-	</notification>
-	<notification name="OutboxImportComplete">
-		Transfert réussi
-
-Tous les dossiers ont été envoyés vers la Place du marché.
-		<usetemplate ignoretext="Tous les dossiers envoyés vers la Place du marché" name="okignore" yestext="OK"/>
-	</notification>
-	<notification name="OutboxImportHadErrors">
-		Impossible de transférer certains dossiers
-
-Des erreurs se sont produites lors de l&apos;envoi de certains dossiers vers la Place du marché. Ces dossiers sont toujours disponibles dans votre boîte d&apos;envoi vendeur.
-
-Pour plus d&apos;informations, consultez le [[MARKETPLACE_IMPORTS_URL] journal des erreurs].
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="OutboxImportFailed">
-		Échec de transfert
-
-Aucun dossier n&apos;a été envoyé vers la Place du marché en raison d&apos;une erreur système ou réseau. Veuillez réessayer ultérieurement.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="OutboxInitFailed">
-		Échec d&apos;initialisation de la Place du marché
-
-L&apos;initialisation de la Place du marché a échoué en raison d&apos;une erreur système ou réseau. Veuillez réessayer ultérieurement.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
 	<notification name="CompileQueueSaveText">
 		Une erreur est survenue lors du chargement du texte pour un script, suite au problème suivant : [REASON]. Veuillez réessayer ultérieurement.
 	</notification>
@@ -148,7 +114,7 @@ Veuillez ne sélectionner qu&apos;un seul objet.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="GrantModifyRights">
-		Lorsque vous accordez des droits de modification à un autre résident, vous lui permettez de changer, supprimer ou prendre n&apos;importe lequel de vos objets dans Second Life. Réfléchissez bien avant d&apos;accorder ces droits.
+		Lorsque vous accordez des droits de modification à un autre résident, vous lui permettez de changer, supprimer ou prendre n&apos;importe lequel de vos objets. Réfléchissez bien avant d&apos;accorder ces droits.
 Voulez-vous vraiment accorder des droits de modification à [NAME] ?
 		<usetemplate name="okcancelbuttons" notext="Non" yestext="Oui"/>
 	</notification>
@@ -669,7 +635,7 @@ Assurez-vous que le fichier a l&apos;extension correcte.
 		Impossible de créer le fichier de sortie : [FILE]
 	</notification>
 	<notification name="DoNotSupportBulkAnimationUpload">
-		Actuellement, [APP_NAME] ne prend pas en charge le chargement par lot de fichiers d&apos;animation au format BVH.
+		Actuellement, [APP_NAME] ne prend pas en charge le chargement de lots de fichiers d&apos;animation.
 	</notification>
 	<notification name="CannotUploadReason">
 		Impossible de charger [FILE] suite au problème suivant : [REASON]
@@ -1001,7 +967,7 @@ Proposer à [NAME] de devenir votre ami(e) ?
 		</form>
 	</notification>
 	<notification name="RemoveFromFriends">
-		Voulez-vous supprimer &lt;nolink&gt;[NAME]&lt;/nolink&gt; de votre liste d&apos;amis ?
+		Voulez-vous supprimer [NAME] de votre liste d&apos;amis ?
 		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="OK"/>
 	</notification>
 	<notification name="RemoveMultipleFromFriends">
@@ -1126,13 +1092,8 @@ Céder ces [AREA] m² de terrain au groupe [GROUP_NAME] ?
 	<notification name="DisplaySetToSafe">
 		Les paramètres d&apos;affichage sont au niveau le plus sûr, comme vous l&apos;aviez indiqué.
 	</notification>
-	<notification name="DisplaySetToRecommendedGPUChange">
-		Les paramètres d&apos;affichage ont été modifiés selon les niveaux recommandés car votre carte graphique
-[LAST_GPU] a été remplacée
-par une carte [THIS_GPU].
-	</notification>
-	<notification name="DisplaySetToRecommendedFeatureChange">
-		Les paramètres d&apos;affichage ont été modifiés selon les niveaux recommandés en raison d&apos;un changement relatif au sous-système de rendu.
+	<notification name="DisplaySetToRecommended">
+		Vos paramètres d&apos;affichage ont été réglés avec une marge de sécurité en fonction de votre configuration système.
 	</notification>
 	<notification name="ErrorMessage">
 		[ERROR_MESSAGE]
@@ -1383,11 +1344,11 @@ http://secondlife.com/download.
 		<usetemplate name="okbutton" yestext="Quitter"/>
 	</notification>
 	<notification name="UpdaterServiceNotRunning">
-		Une mise à jour requise pour votre installation Second Life existe.
+		Une mise à jour requise pour votre installation de UKanDo existe.
 
 Pour la télécharger, accédez à http://www.secondlife.com/downloads.
 Vous pouvez également l&apos;installer dès maintenant.
-		<usetemplate name="okcancelbuttons" notext="Quitter Second Life" yestext="Télécharger et installer maintenant"/>
+		<usetemplate name="okcancelbuttons" notext="Quitter UKanDo" yestext="Télécharger et installer maintenant"/>
 	</notification>
 	<notification name="DownloadBackgroundTip">
 		Nous avons téléchargé une mise à jour de votre installation [APP_NAME].
@@ -1454,8 +1415,8 @@ Version [VERSION]
 		<usetemplate ignoretext="Confirmer avant de rendre les objets à leurs propriétaires" name="okcancelignore" notext="Annuler" yestext="OK"/>
 	</notification>
 	<notification name="GroupLeaveConfirmMember">
-		Vous êtes actuellement membre du groupe &lt;nolink&gt;[GROUP]&lt;/nolink&gt;.
-Quitter le groupe ?
+		Vous êtes actuellement membre du groupe [GROUP].
+Quitter le groupe ?
 		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="OK"/>
 	</notification>
 	<notification name="ConfirmKick">
@@ -1588,11 +1549,6 @@ Veuillez réessayer ultérieurement.
 			<button name="OK" text="OK"/>
 			<button name="Cancel" text="Annuler"/>
 		</form>
-	</notification>
-	<notification name="TooManyTeleportOffers">
-		Vous avez essayé d&apos;effectuer [OFFERS] offres de téléportation,
-or ce nombre dépasse la limite autorisée fixée à [LIMIT].
-		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="OfferTeleportFromGod">
 		Exiger du résident qu&apos;il vienne vous rejoindre ?
@@ -1935,18 +1891,6 @@ Déplacer les objets de l&apos;inventaire ?
 		Êtes-vous certain de vouloir quitter ?
 		<usetemplate ignoretext="Confirmer avant de quitter" name="okcancelignore" notext="Ne pas quitter" yestext="Quitter"/>
 	</notification>
-	<notification name="ConfirmRestoreToybox">
-		Cette action rétablira vos boutons et barres d&apos;outils par défaut.
-
-Vous ne pouvez pas l&apos;annuler.
-		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="OK"/>
-	</notification>
-	<notification name="ConfirmClearAllToybox">
-		Cette action replacera tous les boutons dans la boîte à outils de sorte que vos barres d&apos;outils seront vides.
-    
-Vous ne pouvez pas l&apos;annuler.
-		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="OK"/>
-	</notification>
 	<notification name="DeleteItems">
 		[QUESTION]
 		<usetemplate ignoretext="Confirmer avant de supprimer des articles" name="okcancelignore" notext="Annuler" yestext="OK"/>
@@ -2027,10 +1971,6 @@ Souhaitez-vous quitter le mode occupé avant de terminer cette transaction ?
 		Êtes-vous certain de vouloir supprimer l&apos;historique de vos visites et recherches ?
 		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="OK"/>
 	</notification>
-	<notification name="ConfirmClearCache">
-		Voulez-vous vraiment vider le cache de votre client ?
-		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="OK"/>
-	</notification>
 	<notification name="ConfirmClearCookies">
 		Êtes-vous certain de vouloir supprimer vos cookies ?
 		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="Oui"/>
@@ -2056,30 +1996,48 @@ Liez-la à partir d&apos;une page web pour permettre aux autres résidents d&apo
 		Voulez-vous écraser l&apos;option précédemment enregistrée ?
 		<usetemplate name="okcancelbuttons" notext="Non" yestext="Oui"/>
 	</notification>
+	<notification name="WLDeletePresetAlert">
+		Voulez-vous supprimer [SKY] ?
+		<usetemplate name="okcancelbuttons" notext="Non" yestext="Oui"/>
+	</notification>
 	<notification name="WLNoEditDefault">
 		Vous ne pouvez pas modifier ou supprimer un préréglage par défaut.
 	</notification>
 	<notification name="WLMissingSky">
 		Une dossier semble manquer au Cycle du jour : [SKY].
 	</notification>
-	<notification name="WLRegionApplyFail">
-		Impossible d&apos;appliquer les réglages à la région. Le problème est parfois résolu en quittant la région puis en y revenant. Motif fourni : [FAIL_REASON]
-	</notification>
-	<notification name="EnvCannotDeleteLastDayCycleKey">
-		Impossible de supprimer la dernière clé de ce cycle du jour car ce dernier ne peut pas être vide. Modifiez la dernière clé restante au lieu d&apos;essayer de la supprimer puis d&apos;en créer une nouvelle.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="DayCycleTooManyKeyframes">
-		Impossible d&apos;ajouter plus d&apos;images-clés à ce cycle du jour. Un maximum de [MAX] images-clés peut être associé aux cycles du jour de type [SCOPE].
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="EnvUpdateRate">
-		Vous ne pouvez mettre à jour les paramètres d&apos;environnement d&apos;une région que toutes les [WAIT] secondes. Veuillez patienter pendant au moins ce délai avant de réessayer.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
 	<notification name="PPSaveEffectAlert">
 		Certains effets post-traitement existent. Voulez-vous quand même écraser ce fichier ?
 		<usetemplate name="okcancelbuttons" notext="Non" yestext="Oui"/>
+	</notification>
+	<notification name="NewSkyPreset">
+		Nommez le nouveau ciel.
+		<form name="form">
+			<input name="message">
+				Nouveau préréglage
+			</input>
+			<button name="OK" text="OK"/>
+			<button name="Cancel" text="Annuler"/>
+		</form>
+	</notification>
+	<notification name="ExistsSkyPresetAlert">
+		Ce préréglage existe déjà !
+	</notification>
+	<notification name="NewWaterPreset">
+		Nommez ce nouveau préréglage d&apos;eau.
+		<form name="form">
+			<input name="message">
+				Nouveau préréglage
+			</input>
+			<button name="OK" text="OK"/>
+			<button name="Cancel" text="Annuler"/>
+		</form>
+	</notification>
+	<notification name="ExistsWaterPresetAlert">
+		Ce préréglage existe déjà !
+	</notification>
+	<notification name="WaterNoEditDefault">
+		Vous ne pouvez pas modifier ou supprimer un préréglage par défaut.
 	</notification>
 	<notification name="ChatterBoxSessionStartError">
 		Impossible de démarrer une nouvelle session de chat avec [RECIPIENT].
@@ -2108,14 +2066,13 @@ Liez-la à partir d&apos;une page web pour permettre aux autres résidents d&apo
 		<usetemplate ignoretext="Porter automatiquement tout en modifiant mon apparence" name="okcancelignore" notext="Non" yestext="Oui"/>
 	</notification>
 	<notification name="NotAgeVerified">
-		Vous devez avoir au moins 18 ans pour accéder au contenu et aux zones Adulte dans Second Life. Visitez la page de vérification de l&apos;âge afin de confirmer que vous avez plus de 18 ans. 
-Cette opération lancera votre navigateur Web.
+		Pour pouvoir pénétrer dans cette zone, vous devez avoir procédé à la vérification de votre âge.  Souhaitez-vous aller sur [SECOND_LIFE] et procéder à la vérification de votre âge ?
 
 [_URL]
 		<url name="url" option="0">
-			https://secondlife.com/my/account/verification.php
+			https://secondlife.com/account/verification.php?lang=fr
 		</url>
-		<usetemplate ignoretext="Je n&apos;ai pas procédé à la vérification de mon âge" name="okcancelignore" notext="Annuler" yestext="Accéder à la page de vérification de l&apos;âge"/>
+		<usetemplate ignoretext="Je n&apos;ai pas procédé à la vérification de mon âge" name="okcancelignore" notext="Non" yestext="Oui"/>
 	</notification>
 	<notification name="Cannot enter parcel: no payment info on file">
 		Pour pouvoir pénétrer dans cette zone, vous devez avoir enregistré vos informations de paiement.  Souhaitez-vous aller sur [SECOND_LIFE] et enregistrer vos informations de paiement ?
@@ -2151,10 +2108,10 @@ Cette opération lancera votre navigateur Web.
 		Sujet : [SUBJECT], Message : [MESSAGE]
 	</notification>
 	<notification name="FriendOnline">
-		&lt;nolink&gt;[NAME]&lt;/nolink&gt; est en ligne
+		[NAME] est en ligne
 	</notification>
 	<notification name="FriendOffline">
-		&lt;nolink&gt;[NAME]&lt;/nolink&gt; est hors ligne
+		[NAME] est hors ligne
 	</notification>
 	<notification name="AddSelfFriend">
 		Même si vous êtes extrêmement sympathique, vous ne pouvez pas devenir ami avec vous-même.
@@ -2268,16 +2225,14 @@ Veuillez sélectionner un seul objet.
 		Votre carte de visite a été refusée.
 	</notification>
 	<notification name="TeleportToLandmark">
-		Pour vous téléporter vers un lieu tel que [NAME], cliquez sur le bouton Endroits,
-    puis sélectionnez l&apos;onglet Repères dans la fenêtre qui s&apos;ouvre. Cliquez sur n&apos;importe quel
-    repère pour le sélectionner, puis sur Téléportation en bas de la fenêtre.
-    (Vous pouvez aussi double-cliquer sur le repère ou cliquer-droit dessus et
-    choisir Téléportation).
+		Vous pouvez vous téléporter vers des endroits comme [NAME] en ouvrant le panneau Lieux sur le côté droit de votre écran, puis en sélectionnant l&apos;onglet Repères.
+Cliquez sur le repère de votre choix pour le sélectionner, puis sur Téléporter en bas du panneau.
+(Vous pouvez aussi double-cliquer sur le repère ou cliquer dessus avec le bouton droit de la souris et sélectionner Téléporter.)
 	</notification>
 	<notification name="TeleportToPerson">
-		Pour contacter un résident tel que [NAME], cliquez sur le bouton Personnes, sélectionnez le résident dans la fenêtre qui s&apos;ouvre, puis cliquez sur IM en
-    bas de la fenêtre.
-    (Vous pouvez aussi double-cliquer sur le nom du résident dans la liste ou cliquer-droit dessus et choisir IM.)
+		Vous pouvez contacter des résidents comme [NAME] en ouvrant le panneau Résidents sur le côté droit de votre écran.
+Sélectionnez le résident de votre choix dans la liste, puis cliquez sur IM en bas du panneau.
+(Vous pouvez aussi double-cliquer sur le nom du résident dans la liste ou cliquer dessus avec le bouton droit de la souris et sélectionner IM.)
 	</notification>
 	<notification name="CantSelectLandFromMultipleRegions">
 		Vous ne pouvez pas sélectionner de terrain en dehors des limites du serveur.
@@ -2296,9 +2251,6 @@ Veuillez sélectionner un terrain plus petit.
 		[MESSAGE]
 	</notification>
 	<notification name="PaymentSent">
-		[MESSAGE]
-	</notification>
-	<notification name="PaymentFailure">
 		[MESSAGE]
 	</notification>
 	<notification name="EventNotification">
@@ -2376,9 +2328,6 @@ Vous ne pouvez pas voler ici.
 	</notification>
 	<notification name="NoBuild">
 		La construction est interdite dans cette zone. Vous ne pouvez pas construite ou rezzer d&apos;objets ici.
-	</notification>
-	<notification name="SeeAvatars">
-		Cette parcelle masque les avatars et le chat écrit des autres parcelles. Vous ne pouvez pas voir les résidents qui se trouvent en dehors, et ceux qui se trouvent en dehors ne peuvent pas vous voir. Le chat écrit habituel sur le canal 0 est également bloqué.
 	</notification>
 	<notification name="ScriptsStopped">
 		Un administrateur a temporairement stoppé les scripts dans cette région.
@@ -2474,19 +2423,11 @@ Veuillez réessayer dans quelques minutes.
 	</notification>
 	<notification name="ObjectGiveItem">
 		Un objet nommé &lt;nolink&gt;[OBJECTFROMNAME]&lt;/nolink&gt; appartenant à [NAME_SLURL] vous a donné un objet de type [OBJECTTYPE] :
-&lt;nolink&gt;[ITEM_SLURL]&lt;/nolink&gt;
+[ITEM_SLURL]
 		<form name="form">
 			<button name="Keep" text="Garder"/>
 			<button name="Discard" text="Jeter"/>
-			<button name="Mute" text="Ignorer le propriétaire"/>
-		</form>
-	</notification>
-	<notification name="OwnObjectGiveItem">
-		Votre objet nommé &lt;nolink&gt;[OBJECTFROMNAME]&lt;/nolink&gt; vous a donné un objet de type [OBJECTTYPE] :
-&lt;nolink&gt;[ITEM_SLURL]&lt;/nolink&gt;
-		<form name="form">
-			<button name="Keep" text="Garder"/>
-			<button name="Discard" text="Jeter"/>
+			<button name="Mute" text="Ignorer"/>
 		</form>
 	</notification>
 	<notification name="UserGiveItem">
@@ -2555,10 +2496,10 @@ Veuillez réessayer dans quelques minutes.
 		</form>
 	</notification>
 	<notification name="FriendshipAccepted">
-		&lt;nolink&gt;[NAME]&lt;/nolink&gt; a accepté votre amitié.
+		[NAME] a accepté votre amitié.
 	</notification>
 	<notification name="FriendshipDeclined">
-		&lt;nolink&gt;[NAME]&lt;/nolink&gt; a refusé votre amitié.
+		[NAME] a refusé votre amitié.
 	</notification>
 	<notification name="FriendshipAcceptedByMe">
 		Amitié acceptée.
@@ -2630,16 +2571,14 @@ Accepter cette requête ?
 		&lt;nolink&gt;[TITLE]&lt;/nolink&gt; de [NAME]
 [MESSAGE]
 		<form name="form">
-			<button name="Client_Side_Mute" text="Bloquer"/>
-			<button name="Client_Side_Ignore" text="Ignorer"/>
+			<button name="Ignore" text="Ignorer"/>
 		</form>
 	</notification>
 	<notification name="ScriptDialogGroup">
 		&lt;nolink&gt;[TITLE]&lt;/nolink&gt; de [GROUPNAME]
 [MESSAGE]
 		<form name="form">
-			<button name="Client_Side_Mute" text="Bloquer"/>
-			<button name="Client_Side_Ignore" text="Ignorer"/>
+			<button name="Ignore" text="Ignorer"/>
 		</form>
 	</notification>
 	<notification name="BuyLindenDollarSuccess">
@@ -2817,30 +2756,10 @@ Le bouton sera affiché quand il y aura suffisamment de place.
 		Sélectionnez les résidents avec lesquels partager l&apos;élément.
 	</notification>
 	<notification name="MeshUploadError">
-		Échec de chargement de [LABEL] : [MESSAGE] [IDENTIFIER] 
-
-Voir le fichier journal pour plus de détails.
-	</notification>
-	<notification name="MeshUploadPermError">
-		Erreur lors de la demande des autorisations de chargement de maillage.
-	</notification>
-	<notification name="RegionCapabilityRequestError">
-		Impossible d&apos;obtenir la capacité de région : [CAPABILITY].
+		Échec de chargement de [LABEL] : [MESSAGE] [IDENTIFIER] [INVALIDITY_IDENTIFIER]
 	</notification>
 	<notification name="ShareItemsConfirmation">
 		Voulez-vous vraiment partager les articles suivants :
-
-&lt;nolink&gt;[ITEMS]&lt;/nolink&gt;
-
-avec les résidents suivants :
-
-[RESIDENTS] ?
-		<usetemplate name="okcancelbuttons" notext="Annuler" yestext="OK"/>
-	</notification>
-	<notification name="ShareFolderConfirmation">
-		Vous ne pouvez partager qu&apos;un dossier à la fois.
-
-Voulez-vous vraiment partager les articles suivants :
 
 &lt;nolink&gt;[ITEMS]&lt;/nolink&gt;
 
@@ -2937,7 +2856,7 @@ Les résidents rejoignant l&apos;appel ultérieurement seront également
 ignorés, même si vous quittez l&apos;appel.
 
 Ignorer les autres ?
-		<usetemplate ignoretext="Confirmer avant d&apos;ignorer les autres lors d&apos;un appel de groupe" name="okcancelignore" notext="Annuler" yestext="OK"/>
+		<usetemplate ignoretext="Confirmer avant d&apos;ignorer les autres lors d&apos;un appel de groupe" name="okcancelignore" notext="Annuler" yestext="Ok"/>
 	</notification>
 	<notification label="Chat" name="HintChat">
 		Pour participer à la conversation, saisissez du texte dans le champ de chat situé en dessous.
@@ -2980,66 +2899,12 @@ Cliquez sur un point dans le monde et faites glisser votre souris pour faire tou
 	<notification label="Vous possédez des Linden dollars !" name="HintLindenDollar">
 		Votre solde actuel en L$ est celui-ci. Pour y ajouter d&apos;autres Linden dollars, cliquez sur Acheter L$.
 	</notification>
-	<notification name="LowMemory">
-		Pool de mémoire faible. Certaines fonctions de SL ont été désactivées afin d&apos;éviter un plantage. Veuillez fermer les autres applications. Si le problème persiste, redémarrez SL.
-	</notification>
-	<notification name="ForceQuitDueToLowMemory">
-		Mémoire insuffisante : fermeture de SL dans 30 secondes.
-	</notification>
 	<notification name="PopupAttempt">
 		Impossible d&apos;ouvrir une fenêtre popup.
 		<form name="form">
 			<ignore name="ignore" text="Activer toutes les fenêtres popup"/>
 			<button name="open" text="Ouvrir la fenêtre popup"/>
 		</form>
-	</notification>
-	<notification name="SOCKS_NOT_PERMITTED">
-		Le proxy SOCKS 5 &quot;[HOST]:[PORT]&quot; a refusé la connexion, non autorisée par le jeu de règles défini.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="SOCKS_CONNECT_ERROR">
-		Le proxy SOCKS 5 &quot;[HOST]:[PORT]&quot; a refusé la connexion. Impossible d&apos;ouvrir le canal TCP.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="SOCKS_NOT_ACCEPTABLE">
-		Le proxy SOCKS 5 &quot;[HOST]:[PORT]&quot; a refusé le système d&apos;authentification sélectionné.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="SOCKS_AUTH_FAIL">
-		Le proxy SOCKS 5 &quot;[HOST]:[PORT]&quot; indique que vos identifiants ne sont pas valides.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="SOCKS_UDP_FWD_NOT_GRANTED">
-		Le proxy SOCKS 5 &quot;[HOST]:[PORT]&quot; a refusé la demande d&apos;association UDP (UDP ASSOCIATE).
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="SOCKS_HOST_CONNECT_FAILED">
-		Connexion au serveur de proxy SOCKS 5 &quot;[HOST]:[PORT]&quot; impossible.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="SOCKS_UNKNOWN_STATUS">
-		Erreur de proxy inconnue avec le serveur &quot;[HOST]:[PORT]&quot;.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="SOCKS_INVALID_HOST">
-		Adresse ou port &quot;[HOST]:[PORT]&quot; de proxy SOCKS non valide.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="SOCKS_BAD_CREDS">
-		Nom d&apos;utilisateur ou mot de passe SOCKS 5 non valide.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="PROXY_INVALID_HTTP_HOST">
-		Adresse ou port &quot;[HOST]:[PORT]&quot; de proxy HTTP non valide.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="PROXY_INVALID_SOCKS_HOST">
-		Adresse ou port &quot;[HOST]:[PORT]&quot; de proxy SOCKS non valide.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="ChangeProxySettings">
-		Les paramètres de proxy seront appliqués au redémarrage de [APP_NAME].
-		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="AuthRequest">
 		Nom d&apos;utilisateur et mot de passe requis pour le site se trouvant à l&apos;emplacement suivant : &apos;&lt;nolink&gt;[HOST_NAME]&lt;/nolink&gt;&apos;, domaine &apos;[REALM]&apos;.
@@ -3049,6 +2914,10 @@ Cliquez sur un point dans le monde et faites glisser votre souris pour faire tou
 			<button name="ok" text="Soumettre"/>
 			<button name="cancel" text="Annuler"/>
 		</form>
+	</notification>
+	<notification label="" name="ModeChange">
+		Vous devez quitter et redémarrer l&apos;application afin de changer de mode.
+		<usetemplate name="okcancelbuttons" notext="Ne pas quitter" yestext="Quitter"/>
 	</notification>
 	<notification label="" name="NoClassifieds">
 		Pour créer et modifier des petites annonces, vous devez utiliser le mode Avancé. Voulez-vous quitter l&apos;application afin de changer de mode ? Le sélecteur de mode se trouve sur l&apos;écran de connexion.
@@ -3093,10 +2962,6 @@ Cliquez sur un point dans le monde et faites glisser votre souris pour faire tou
 	<notification label="" name="NoSearch">
 		La recherche est uniquement disponible en mode Avancé. Voulez-vous quitter l&apos;application afin de changer de mode ?
 		<usetemplate name="okcancelbuttons" notext="Ne pas quitter" yestext="Quitter"/>
-	</notification>
-	<notification label="" name="ConfirmHideUI">
-		Cette action masquera tous les boutons et articles de menu. Pour les récupérer, cliquez de nouveau sur [SHORTCUT].
-		<usetemplate ignoretext="Confirmer avant de masquer l&apos;interface" name="okcancelignore" notext="Annuler" yestext="OK"/>
 	</notification>
 	<global name="UnsupportedGLRequirements">
 		Vous semblez ne pas avoir le matériel requis pour utiliser [APP_NAME]. [APP_NAME] requiert une carte graphique OpenGL avec une prise en charge du multitexturing. Si vous avez une telle carte, assurez-vous que vous avez aussi les pilotes les plus récents pour la carte, ainsi que les service packs et les patchs pour votre système d&apos;exploitation.
