@@ -1344,8 +1344,7 @@ void LLBumpImageList::onSourceLoaded( BOOL success, LLViewerTexture *src_vi, LLI
 			// immediately assign bump to a global smart pointer in case some local smart pointer
 			// accidentally releases it.
 			LLPointer<LLViewerTexture> bump = LLViewerTextureManager::getLocalTexture( TRUE );
-			
-			
+
 			if (!LLPipeline::sRenderDeferred)
 			{
 				LLFastTimer t(FTM_BUMP_SOURCE_CREATE);
@@ -1354,6 +1353,10 @@ void LLBumpImageList::onSourceLoaded( BOOL success, LLViewerTexture *src_vi, LLI
 			}
 			else 
 			{ //convert to normal map
+				
+				//disable compression on normal maps to prevent errors below
+				bump->getGLTexture()->setAllowCompression(false);
+
 				{
 					LLFastTimer t(FTM_BUMP_SOURCE_CREATE);
 					bump->setExplicitFormat(GL_RGBA8, GL_ALPHA);

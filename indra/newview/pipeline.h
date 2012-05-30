@@ -466,6 +466,7 @@ public:
 		RENDER_DEBUG_LOD_INFO	        = 0x04000000,
 		RENDER_DEBUG_RENDER_COMPLEXITY  = 0x08000000,
 		RENDER_DEBUG_ATTACHMENT_BYTES	= 0x10000000,
+		RENDER_DEBUG_TEXEL_DENSITY		= 0x20000000
 	};
 
 public:
@@ -853,6 +854,7 @@ public:
 	static BOOL CameraOffset;
 	static F32 CameraMaxCoF;
 	static F32 CameraDoFResScale;
+	static F32 RenderAutoHideSurfaceAreaLimit;
 };
 
 void render_bbox(const LLVector3 &min, const LLVector3 &max);

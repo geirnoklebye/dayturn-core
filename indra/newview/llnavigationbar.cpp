@@ -267,7 +267,6 @@ LLNavigationBar::LLNavigationBar()
 	mBtnForward(NULL),
 	mBtnHome(NULL),
 	mCmbLocation(NULL),
-	mPurgeTPHistoryItems(false),
 	mSaveToLocationHistory(false)
 {
 	buildFromFile( "panel_navigation_bar.xml");
@@ -350,11 +349,6 @@ void LLNavigationBar::draw()
 //		gSavedSettings.setBOOL ("ShowNavbarNavigationPanel", FALSE);
 //	}
 //mk
-	if(mPurgeTPHistoryItems)
-	{
-		LLTeleportHistory::getInstance()->purgeItems();
-		mPurgeTPHistoryItems = false;
-	}
 
 	if (isBackgroundVisible())
 	{
@@ -709,7 +703,7 @@ void LLNavigationBar::clearHistoryCache()
 	LLLocationHistory* lh = LLLocationHistory::getInstance();
 	lh->removeItems();
 	lh->save();	
-	mPurgeTPHistoryItems= true;
+	LLTeleportHistory::getInstance()->purgeItems();
 }
 
 int LLNavigationBar::getDefNavBarHeight()
