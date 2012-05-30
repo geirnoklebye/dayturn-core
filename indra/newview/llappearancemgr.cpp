@@ -2083,7 +2083,7 @@ void LLAppearanceMgr::wearInventoryCategoryOnAvatar( LLInventoryCategory* catego
 
 void LLAppearanceMgr::wearOutfitByName(const std::string& name)
 {
-	llinfos << "Wearing category " << name << llendl;
+	LL_INFOS("Avatar") << self_av_string() << "Wearing category " << name << LL_ENDL;
 	//inc_busy_count();
 
 //MK
@@ -2470,7 +2470,7 @@ const std::string OTHER_GESTURES_FOLDER = "Other Gestures";
 
 void LLAppearanceMgr::copyLibraryGestures()
 {
-	llinfos << "Copying library gestures" << llendl;
+	LL_INFOS("Avatar") << self_av_string() << "Copying library gestures" << LL_ENDL;
 
 	// Copy gestures
 	LLUUID lib_gesture_cat_id =
@@ -2526,11 +2526,11 @@ void LLAppearanceMgr::copyLibraryGestures()
 		LLUUID cat_id = findDescendentCategoryIDByName(lib_gesture_cat_id,folder_name);
 		if (cat_id.isNull())
 		{
-			llwarns << "failed to find gesture folder for " << folder_name << llendl;
+			llwarns << self_av_string() << "failed to find gesture folder for " << folder_name << llendl;
 		}
 		else
 		{
-			llinfos << "initiating fetch and copy for " << folder_name << " cat_id " << cat_id << llendl;
+			LL_DEBUGS("Avatar") << self_av_string() << "initiating fetch and copy for " << folder_name << " cat_id " << cat_id << LL_ENDL;
 			callAfterCategoryFetch(cat_id,
 								   boost::bind(&LLAppearanceMgr::shallowCopyCategory,
 											   &LLAppearanceMgr::instance(),
@@ -2544,7 +2544,7 @@ void LLAppearanceMgr::autopopulateOutfits()
 	// If this is the very first time the user has logged into viewer2+ (from a legacy viewer, or new account)
 	// then auto-populate outfits from the library into the My Outfits folder.
 
-	llinfos << "avatar fully visible" << llendl;
+	LL_INFOS("Avatar") << self_av_string() << "avatar fully visible" << LL_ENDL;
 
 	static bool check_populate_my_outfits = true;
 	if (check_populate_my_outfits && 
@@ -2938,9 +2938,8 @@ void LLAppearanceMgr::dumpItemArray(const LLInventoryModel::item_array_t& items,
 		{
 			asset_id = linked_item->getAssetUUID();
 		}
-		llinfos << msg << " " << i <<" " << (item ? item->getName() : "(nullitem)") << " " << asset_id.asString() << llendl;
+		LL_DEBUGS("Avatar") << self_av_string() << msg << " " << i <<" " << (item ? item->getName() : "(nullitem)") << " " << asset_id.asString() << LL_ENDL;
 	}
-	llinfos << llendl;
 }
 
 LLAppearanceMgr::LLAppearanceMgr():
