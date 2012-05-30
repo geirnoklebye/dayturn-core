@@ -1907,7 +1907,7 @@ BOOL LLFolderBridge::isClipboardPasteable() const
 		if (model)
 		{
 			LLDynamicArray<LLUUID> objects;
-			LLInventoryClipboard::instance().retrieve(objects);
+			LLClipboard::instance().pasteFromClipboard(objects);
 			LLViewerInventoryCategory *current_cat = getCategory();
 
 			for(S32 i = objects.count() - 1; i >= 0; --i)
@@ -1982,7 +1982,7 @@ BOOL LLFolderBridge::isClipboardPasteableAsLink() const
 		if (model)
 		{
 			LLDynamicArray<LLUUID> objects;
-			LLInventoryClipboard::instance().retrieve(objects);
+			LLClipboard::instance().pasteFromClipboard(objects);
 			LLViewerInventoryCategory *current_cat = getCategory();
 
 			for(S32 i = objects.count() - 1; i >= 0; --i)

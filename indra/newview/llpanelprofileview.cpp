@@ -192,7 +192,7 @@ void LLPanelProfileView::onBackBtnClick()
 void LLPanelProfileView::onCopyToClipboard()
 {
 	std::string name = getChild<LLUICtrl>("display_name")->getValue().asString() + " (" + getChild<LLUICtrl>("user_slid")->getValue().asString() + ")";
-	gClipboard.copyFromString(utf8str_to_wstring(name));
+	LLClipboard::instance().copyToClipboard (utf8str_to_wstring(name), 0, name.size());
 }
 
 bool LLPanelProfileView::isGrantedToSeeOnlineStatus()
@@ -298,7 +298,7 @@ void LLPanelProfileView::onAvatarNameCache(const LLUUID& agent_id,
 void LLPanelProfileView::onCopyURI()
 {
     std::string name = "secondlife:///app/agent/"+getChild<LLUICtrl>("user_key")->getValue().asString()+"/about";
-    gClipboard.copyFromString(utf8str_to_wstring(name));
+	LLClipboard::instance().copyToClipboard (utf8str_to_wstring(name), 0, name.size());
 }
 
 // EOF

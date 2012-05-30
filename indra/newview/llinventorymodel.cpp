@@ -1036,6 +1036,21 @@ void LLInventoryModel::changeItemParent(LLViewerInventoryItem* item,
 	}
 	else
 	{
+//MK
+		if (gRRenabled)
+		{
+			LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
+			LLInventoryCategory* cat_new_parent = gInventory.getCategory (new_parent_id);
+			// We can move this item if we are moving it from an unshared folder to another one, even if both folders are locked
+			if (gAgent.mRRInterface.isUnderRlvShare(cat_parent) || gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
+			{
+				if (gAgent.mRRInterface.isFolderLocked(cat_parent) || gAgent.mRRInterface.isFolderLocked(cat_new_parent))
+				{
+					return;
+				}
+			}
+		}
+//mk
 		LL_INFOS("Inventory") << "Moving '" << item->getName() << "' (" << item->getUUID()
 							  << ") from " << item->getParentUUID() << " to folder "
 							  << new_parent_id << LL_ENDL;
@@ -1063,6 +1078,21 @@ void LLInventoryModel::changeCategoryParent(LLViewerInventoryCategory* cat,
 	{
 		return;
 	}
+
+//MK
+	if (gRRenabled)
+	{
+		LLInventoryCategory* cat_new_parent = gInventory.getCategory (new_parent_id);
+			// We can move this category if we are moving it from an unshared folder to another one, even if both folders are locked
+			if (gAgent.mRRInterface.isUnderRlvShare(cat) || gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
+		{
+			if (gAgent.mRRInterface.isFolderLocked(cat) || gAgent.mRRInterface.isFolderLocked(cat_new_parent))
+			{
+				return;
+			}
+		}
+	}
+//mk
 
 	// Can't move a folder into a child of itself.
 	if (isObjectDescendentOf(new_parent_id, cat->getUUID()))
