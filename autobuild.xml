@@ -2261,21 +2261,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>d02fd5e08e7300e418ac86f00a321b23</string>
+              <string>fb112c0ea9068c91d5ed43ae501b95f9</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/openSSL-1.0.0-Linux-x86_64-20110405.tar.bz2</string>
+              <string>http://download.kokuaviewer.org/files/libs/openSSL-1.0.0-Linux-x86_64-20111224.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3327,6 +3316,7 @@
                 <array>
                   <string>-G</string>
                   <string>'Unix Makefiles'</string>
+                  <string>-DWORD_SIZE:STRING=64</string>
                 </array>
               </map>
               <key>name</key>
@@ -3349,6 +3339,7 @@
                 <array>
                   <string>-G</string>
                   <string>'Unix Makefiles'</string>
+                  <string>-DWORD_SIZE:STRING=64</string>
                 </array>
               </map>
               <key>name</key>
@@ -3363,7 +3354,7 @@
                 <key>options</key>
                 <array>
                   <string>-j 12</string>
-                </array>
+                 </array>
               </map>
               <key>configure</key>
               <map>
@@ -3375,6 +3366,7 @@
                 <array>
                   <string>-G</string>
                   <string>'Unix Makefiles'</string>
+                  <string>-DWORD_SIZE:STRING=64</string>
                 </array>
               </map>
               <key>default</key>
@@ -3427,6 +3419,7 @@
                 <array>
                   <string>-G</string>
                   <string>'Unix Makefiles'</string>
+                  <string>-DWORD_SIZE:STRING=64</string>
                 </array>
               </map>
               <key>name</key>
@@ -3449,6 +3442,7 @@
                 <array>
                   <string>-G</string>
                   <string>'Unix Makefiles'</string>
+                  <string>-DWORD_SIZE:STRING=64</string>
                 </array>
               </map>
               <key>name</key>
