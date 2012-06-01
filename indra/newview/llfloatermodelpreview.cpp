@@ -3403,6 +3403,11 @@ void LLModelPreview::rebuildUploadData()
 		}
 	}
 
+//	F32 max_import_scale = (DEFAULT_MAX_PRIM_SCALE-0.1f)/max_scale;
+
+	F32 max_axis = llmax(mPreviewScale.mV[0], mPreviewScale.mV[1]);
+	max_axis = llmax(max_axis, mPreviewScale.mV[2]);
+	max_axis *= 2.f;
 
 // <AW: opensim-limits>
 	//F32 max_import_scale = DEFAULT_MAX_PRIM_SCALE/max_scale;

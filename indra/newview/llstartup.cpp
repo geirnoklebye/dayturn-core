@@ -638,11 +638,6 @@ bool idle_startup()
 
 		LL_INFOS("AppInit") << "Message System Initialized." << LL_ENDL;
 
-		//-------------------------------------------------
-		// Init audio, which may be needed for prefs dialog
-		// or audio cues in connection UI.
-		//-------------------------------------------------
-
 // <AW: opensim>
 		if(!gSavedSettings.getBOOL("GridListDownload"))
 		{
