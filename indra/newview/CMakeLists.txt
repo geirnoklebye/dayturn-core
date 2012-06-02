@@ -168,7 +168,7 @@ set(viewer_SOURCE_FILES
     llfirstuse.cpp
     llflexibleobject.cpp
     llfloaterabout.cpp
-    llfloateranimpreview.cpp
+    llfloaterbvhpreview.cpp
     llfloaterauction.cpp
     llfloateravatar.cpp
     llfloateravatarpicker.cpp
