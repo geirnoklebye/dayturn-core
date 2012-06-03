@@ -8733,7 +8733,7 @@ void LLPipeline::generateSunShadow(LLCamera& camera)
 					LLPipeline::RENDER_TYPE_PASS_ALPHA_MASK,
 					LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_ALPHA_MASK,
 //MK
-					LLPipeline::RENDER_TYPE_PASS_ALPHA_SHADOW,
+//					LLPipeline::RENDER_TYPE_PASS_ALPHA_SHADOW,
 //mk
 					LLPipeline::RENDER_TYPE_PASS_GRASS,
 					LLPipeline::RENDER_TYPE_PASS_SIMPLE,
