@@ -29,10 +29,13 @@
 
 const S32 LL_VERSION_MAJOR = 3;
 const S32 LL_VERSION_MINOR = 3;
-const S32 LL_VERSION_PATCH = 2;
+const S32 LL_VERSION_PATCH = 1;
 const S32 LL_VERSION_BUILD = 0;
 
-const char * const LL_CHANNEL = "Second Life Developer";
+const char * const LL_CHANNEL = "Kokua Experimental";
+// For example, "Kokua Experimental" will create an installer string of Kokua_Experimental_[VERSION]_Setup.exe
+// and "Kokua Experimental [VERSION]: Installation Folder" -- MC
+// const char * const LL_CHANNEL = "Kokua Release";
 
 #if LL_DARWIN
 const char * const LL_VERSION_BUNDLE_ID = "com.secondlife.indra.viewer";

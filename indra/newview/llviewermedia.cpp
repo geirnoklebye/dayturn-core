@@ -44,6 +44,7 @@
 #include "llmarketplacefunctions.h"
 #include "llmediaentry.h"
 #include "llmimetypes.h"
+#include "viewerinfo.h"
 #include "llmutelist.h"
 #include "llnotifications.h"
 #include "llnotificationsutil.h"
@@ -387,6 +388,7 @@ class LLViewerMediaMuteListObserver : public LLMuteListObserver
 
 static LLViewerMediaMuteListObserver sViewerMediaMuteListObserver;
 static bool sViewerMediaMuteListObserverInitialized = false;
+static bool sInWorldMediaDisabled = false;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -545,7 +547,7 @@ std::string LLViewerMedia::getCurrentUserAgent()
 
 	// Just in case we need to check browser differences in A/B test
 	// builds.
-	std::string channel = LLVersionInfo::getChannel();
+	// std::string channel = LLVersionInfo::getChannel();
 
 	// append our magic version number string to the browser user agent id
 	// See the HTTP 1.0 and 1.1 specifications for allowed formats:
@@ -554,9 +556,9 @@ std::string LLViewerMedia::getCurrentUserAgent()
 	// This was also helpful:
 	// http://www.mozilla.org/build/revised-user-agent-strings.html
 	std::ostringstream codec;
-	codec << "SecondLife/";
-	codec << LLVersionInfo::getVersion();
-	codec << " (" << channel << "; " << skin_name << " skin)";
+	codec << ViewerInfo::viewerName() << "/";
+	codec << ViewerInfo::versionFull();
+	codec << " (" << skin_name << " skin)";
 	llinfos << codec.str() << llendl;
 	
 	return codec.str();
@@ -649,6 +651,20 @@ void LLViewerMedia::muteListChanged()
 		LLViewerMediaImpl* pimpl = *iter;
 		pimpl->mNeedsMuteCheck = true;
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// static
+void LLViewerMedia::setInWorldMediaDisabled(bool disabled)
+{
+	sInWorldMediaDisabled = disabled;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// static
+bool LLViewerMedia::getInWorldMediaDisabled()
+{
+	return sInWorldMediaDisabled;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -1444,6 +1460,30 @@ void LLViewerMedia::setOpenIDCookie()
 		LLHTTPClient::get(profile_url,  
 			new LLViewerMediaWebProfileResponder(raw_profile_url.getAuthority()),
 			headers);
+//		std::string url = "https://marketplace.secondlife.com/";
+
+// 		if (LLGridManager::getInstance()->isInProductionGrid())
+//		if (LLGridManager::getInstance()->isInSLBeta())// <AW opensim>
+//		{
+//			std::string gridLabel = LLGridManager::getInstance()->getGridLabel();
+//			url = llformat("https://marketplace.%s.lindenlab.com/", utf8str_tolower(gridLabel).c_str());
+//		}
+
+		// <AW opensim> needs coordinating with opensim devs
+//		if (!LLGridManager::getInstance()->isInOpenSim())// <AW opensim>
+//		{
+//			url += "api/1/users/";
+//			url += gAgent.getID().getString();
+//			url += "/user_status";
+	
+//			headers = LLSD::emptyMap();
+//			headers["Accept"] = "*/*";
+//			headers["Cookie"] = sOpenIDCookie;
+//			headers["User-Agent"] = getCurrentUserAgent();
+//	
+//			LLHTTPClient::get(url, new LLInventoryUserStatusResponder(), headers);
+//		}
+		
 	}
 }
 

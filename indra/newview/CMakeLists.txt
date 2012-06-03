@@ -41,7 +41,7 @@ include(UnixInstall)
 include(LLKDU)
 include(ViewerMiscLibs)
 include(LLLogin)
-include(VisualLeakDetector)
+# include(VisualLeakDetector)
 include(GLOD)
 include(CMakeCopyIfDifferent)
 
@@ -74,6 +74,7 @@ include_directories(
     ${LIBS_PREBUILT_DIR}/include/collada
     ${OPENAL_LIB_INCLUDE_DIRS}
     ${LIBS_PREBUILT_DIR}/include/collada/1.4
+    ${HACD_INCLUDE_DIR} 
     )
 
 set(viewer_SOURCE_FILES
@@ -624,9 +625,10 @@ set(viewer_SOURCE_FILES
     llxmlrpctransaction.cpp
     noise.cpp
     pipeline.cpp
+    viewerinfo.cpp
     )
 
-set(VIEWER_BINARY_NAME "secondlife-bin" CACHE STRING
+set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
     "The name of the viewer executable to create.")
 
 set(viewer_HEADER_FILES
@@ -1174,6 +1176,7 @@ set(viewer_HEADER_FILES
     noise.h
     pipeline.h
     VertexCache.h
+    viewerinfo.h
     VorbisFramework.h
     )
 
@@ -1200,14 +1203,12 @@ if (DARWIN)
     secondlife.icns
     macview.r
     gpu_table.txt
-    Info-SecondLife.plist
-    SecondLife.nib/
+    packaging/mac/SecondLife.nib/
     # CMake doesn't seem to support Xcode language variants well just yet
-    English.lproj/InfoPlist.strings
-    English.lproj/language.txt
-    German.lproj/language.txt
-    Japanese.lproj/language.txt
-    Korean.lproj/language.txt
+    packaging/mac/English.lproj/language.txt
+    packaging/mac/German.lproj/language.txt
+    packaging/mac/Japanese.lproj/language.txt
+    packaging/mac/Korean.lproj/language.txt
     )
   set_source_files_properties(
     ${viewer_RESOURCE_FILES}
@@ -1227,6 +1228,17 @@ if (LINUX)
     set(viewer_LIBRARIES
         Xinerama
         )
+   # OpenMP is used with HACD. OpenMP is not available for VS2010 Express
+    # Edition. So, It is restricted to Linux 
+    # To do NP Move to windows and drawin. 
+    include_directories(${CMAKE_COMMON_INC})
+
+    include(FindOpenMP)
+    if(OPENMP_FOUND)
+ 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+ 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+ 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+    endif() 
 endif (LINUX)
 
 if (WINDOWS)
@@ -1265,22 +1277,31 @@ if (WINDOWS)
         set(ICON_PATH "development")
     elseif(channel_lower MATCHES "project")
         set(ICON_PATH "project")
+    elseif(channel_lower MATCHES "kokua")
+        set(ICON_PATH "kokua")        
     endif()
+
     message("Copying icons for ${ICON_PATH}")
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/secondlife.ico"
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.ico"
         "${CMAKE_CURRENT_SOURCE_DIR}/res/ll_icon.ico"
       )
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/secondlife_256.BMP"
-        "${CMAKE_CURRENT_SOURCE_DIR}/res/ll_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.png"
+        "${CMAKE_CURRENT_SOURCE_DIR}/res/kokua_icon.png"
       )
+      
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/secondlife_256.BMP"
-        "${CMAKE_CURRENT_SOURCE_DIR}/res-sdl/ll_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/res/kokua_icon.png"
+	  )
+    execute_process(
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/res-sdl/kokua_icon.BMP"
       )
 
     # Add resource files to the project.
@@ -1312,9 +1333,8 @@ if (WINDOWS)
         res/lltooltranslate.cur
         res/lltoolzoomin.cur
         res/lltoolzoomout.cur
-        res-sdl/ll_icon.BMP
-        res/ll_icon.BMP
-        res/ll_icon.ico
+        res/kokua_icon.BMP
+        res/kokua_icon.ico
         res/resource.h
         res/toolpickobject.cur
         res/toolpickobject2.cur
@@ -1381,6 +1401,11 @@ endif (WINDOWS)
 set(viewer_XUI_FILES
     skins/default/colors.xml
     skins/default/textures/textures.xml
+    skins/minimal/colors.xml
+    skins/minimal/textures/textures.xml
+
+
+
     )
 file(GLOB DEFAULT_XUI_FILE_GLOB_LIST
      ${CMAKE_CURRENT_SOURCE_DIR}/skins/*/xui/en/*.xml)
@@ -1416,6 +1441,7 @@ set(viewer_APPSETTINGS_FILES
     app_settings/logcontrol.xml
     app_settings/low_graphics.xml
     app_settings/mid_graphics.xml
+    app_settings/grids.fallback.xml
     app_settings/settings.xml
     app_settings/settings_crash_behavior.xml
     app_settings/settings_files.xml
@@ -1622,6 +1648,7 @@ if (WINDOWS)
       SLPlugin
       media_plugin_quicktime
       media_plugin_webkit
+      media_plugin_gstreamer010
       winmm_shim
       windows-crash-logger
       windows-updater
@@ -1771,6 +1798,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLLOGIN_LIBRARIES}
     ${LLCONVEXDECOMP_LIBRARY}
     ${TCMALLOC_LIBRARIES}
+    ${HACD_LIBRARY}
     )
 
 if (USE_KDU)
@@ -1791,7 +1819,7 @@ set(ARTWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH
 
 
 if (LINUX)
-  set(product SecondLife-${ARCH}-${viewer_VERSION})
+  set(product Kokua-${ARCH}-${viewer_VERSION})
 
   # These are the generated targets that are copied to package/
   set(COPY_INPUT_DEPENDENCIES
@@ -1799,8 +1827,8 @@ if (LINUX)
     linux-crash-logger
     linux-updater
     SLPlugin
-    media_plugin_webkit
-    media_plugin_gstreamer010
+#    media_plugin_webkit
+#    media_plugin_gstreamer010
     llcommon
     )
 
@@ -1939,7 +1967,7 @@ if (PACKAGE)
   if (LINUX)
     set(VIEWER_DIST_DIR "${CMAKE_CURRENT_BINARY_DIR}/packaged")
     set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-linux.tar.bz2")
-    set(VIEWER_EXE_GLOBS "do-not-directly-run-secondlife-bin SLPlugin")
+    set(VIEWER_EXE_GLOBS "do-not-directly-run-kokua-bin SLPlugin")
     set(VIEWER_LIB_GLOB "*${CMAKE_SHARED_MODULE_SUFFIX}*")
     set(VIEWER_COPY_MANIFEST copy_l_viewer_manifest)
   endif (LINUX)

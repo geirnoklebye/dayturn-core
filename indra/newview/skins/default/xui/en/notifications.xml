@@ -7696,18 +7696,18 @@ Otherwise, you can look at the Map and find places marked &quot;Infohub&quot;.
 You died and have been teleported to your home location.
   </global>
 
-  <notification
-   icon="alertmodal.tga"
-   name="LocalBitmapsUpdateFileNotFound"
-   persist="true"
-   type="notify">
-[FNAME] could not be updated because the file could no longer be found.
-Disabling future updates for this file.
+<!-- AW: opensim -->
+  <notification icon="alertmodal.tga"
+		name="CantAddGrid"
+		type="alertmodal">
+Could not add [GRID] to the grid list.
+[REASON] contact support of [GRID].
+    <usetemplate
+     name="okbutton"
+     yestext="OK"/>
   </notification>
+<!-- AW: opensim -->
 
-  <notification
-   icon="alertmodal.tga"
-   name="LocalBitmapsUpdateFailedFinal"
    persist="true"
    type="notify">
 [FNAME] could not be opened or decoded for [NRETRIES] attempts, and is now considered broken.
