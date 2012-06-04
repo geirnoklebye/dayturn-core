@@ -184,7 +184,7 @@ class ViewerManifest(LLManifest):
         if not self.default_channel() or not self.default_grid():
             if self.default_grid():
                 setting_flags = '--settings settings_%s_%s.xml'\
-                                % (self.channel_lowerword(), 'kokua_experimental')
+                                % (self.channel_lowerword(), 'kokua_beta')
             else:
                 setting_flags = '--settings settings_%s_%s.xml'\
                                 % (self.grid(), self.channel_lowerword())
@@ -700,7 +700,7 @@ class WindowsManifest(ViewerManifest):
         if self.default_channel():
             if self.default_grid():
                 # release viewer
-                installer_file = "Kokua_Experimental-%(version_dashes)s_Setup.exe"
+                installer_file = "Kokua_Beta-%(version_dashes)s_Setup.exe"
                 grid_vars_template = """
                 OutFile "%(installer_file)s"
                 !define INSTFLAGS "%(flags)s"
@@ -711,7 +711,7 @@ class WindowsManifest(ViewerManifest):
                 """
             else:
                 # beta grid viewer
-                installer_file = "Kokua_Experimental-%(version_dashes)s_(%(grid_caps)s)_Setup.exe"
+                installer_file = "Kokua_Beta-%(version_dashes)s_(%(grid_caps)s)_Setup.exe"
                 grid_vars_template = """
                 OutFile "%(installer_file)s"
                 !define INSTFLAGS "%(flags)s"
@@ -723,7 +723,7 @@ class WindowsManifest(ViewerManifest):
                 """
         else:
             # some other channel on some grid
-            installer_file = "Kokua_Experimental-%(version_dashes)s_%(channel_oneword)s_Setup.exe"
+            installer_file = "Kokua_-%(version_dashes)s_%(channel_oneword)s_Setup.exe"
             grid_vars_template = """
             OutFile "%(installer_file)s"
             !define INSTFLAGS "%(flags)s"

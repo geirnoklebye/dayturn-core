@@ -32,7 +32,7 @@ const S32 LL_VERSION_MINOR = 3;
 const S32 LL_VERSION_PATCH = 1;
 const S32 LL_VERSION_BUILD = 0;
 
-const char * const LL_CHANNEL = "Kokua Experimental";
+const char * const LL_CHANNEL = "Kokua Beta";
 // For example, "Kokua Experimental" will create an installer string of Kokua_Experimental_[VERSION]_Setup.exe
 // and "Kokua Experimental [VERSION]: Installation Folder" -- MC
 // const char * const LL_CHANNEL = "Kokua Release";
