@@ -40,6 +40,9 @@ namespace ViewerInfo
 	/// Returns the patch (third) version number.
   S32 versionPatch();
 
+	/// Returns the build (fourth) version number
+  S32 versionBuild();
+
 	/// Returns the extra version string (e.g. "beta 1", "RC1").
 	/// May be empty, if no extra string was set.
   const std::string& versionExtra();

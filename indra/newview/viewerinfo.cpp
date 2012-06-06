@@ -34,6 +34,7 @@ namespace ViewerInfo
 	const S32         MAJOR = 3;
 	const S32         MINOR = 3;
 	const S32         PATCH = 1;
+	const S32         BUILD = 22986;
 	const std::string EXTRA = "Beta_1";
 
 
@@ -64,7 +65,7 @@ namespace ViewerInfo
 
 	const std::string& versionNumber()
 	{
-		static std::string s = llformat("%d.%d.%d", MAJOR, MINOR, PATCH);
+		static std::string s = llformat("%d.%d.%d.%d", MAJOR, MINOR, PATCH, BUILD);
 		return s;
 	}
 
