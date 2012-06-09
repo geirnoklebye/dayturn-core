@@ -1262,6 +1262,7 @@ class Linux_x86_64Manifest(LinuxManifest):
             self.path("libopenjpeg.so")
             self.path("libgomp.so.1")
             self.path("libgomp.so.1.0.0")
+            self.path("libpcre.so")
             self.path("libpcre.so.3")
             self.path("libminizip.so")
             self.path("libminizip.so.1")
