@@ -1171,7 +1171,7 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libssl.so")
             self.path("libssl.so.1.0.0")
             self.path("libglod.so")
-#            self.path("libminizip.so")
+            self.path("libminizip.so")
             self.path("libuuid.so")
             self.path("libuuid.so.16")
             self.path("libuuid.so.16.0.22")
@@ -1195,6 +1195,7 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libopenal.so")
             self.path("libopenal.so.1")
             self.path("libopenal.so.1.13.0")
+            self.path("libopenal.so", "libvivoxoal.so.1") # vivox's sdk expects this soname
             self.path("libfontconfig.so.1.4.4")
             self.path("libtcmalloc.so", "libtcmalloc.so") #formerly called google perf tools
             self.path("libtcmalloc.so.0", "libtcmalloc.so.0") #formerly called google perf tools
@@ -1214,7 +1215,9 @@ class Linux_i686Manifest(LinuxManifest):
                     self.end_prefix()
             if self.prefix(src="../packages/lib/release/", dst="lib"):
                     self.path("libortp.so")
+                    self.path("libsndfile.so.1")
                     self.path("libvivoxsdk.so")
+                    self.path("libvivoxplatform.so")
                     self.end_prefix("lib")
 
         if self.args['buildtype'].lower() == 'release':
