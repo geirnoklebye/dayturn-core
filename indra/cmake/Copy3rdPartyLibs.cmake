@@ -352,7 +352,7 @@ elseif(DARWIN)
         libexpat.dylib
         libGLOD.dylib
         libllqtwebkit.dylib
-#        libminizip.a
+        libminizip.a
         libndofdev.dylib
         libopenal.1.dylib
         libopenjpeg.1.4.dylib
