@@ -28,6 +28,7 @@
 #include "llfolderviewitem.h"
 
 // viewer includes
+#include "aoengine.h"			// ## Zi: Animation Overrider
 #include "llfolderview.h"		// Items depend extensively on LLFolderViews
 #include "llfoldervieweventlistener.h"
 #include "llviewerfoldertype.h"
@@ -864,6 +865,7 @@ void LLFolderViewItem::draw()
 	static LLUIColor sLibraryColor = LLUIColorTable::instance().getColor("InventoryItemLibraryColor", DEFAULT_WHITE);
 	static LLUIColor sLinkColor = LLUIColorTable::instance().getColor("InventoryItemLinkColor", DEFAULT_WHITE);
 	static LLUIColor sSearchStatusColor = LLUIColorTable::instance().getColor("InventorySearchStatusColor", DEFAULT_WHITE);
+	static LLUIColor sProtectedColor = LLUIColorTable::instance().getColor("InventoryProtectedColor", DEFAULT_WHITE);		// ## Zi: Animation Overrider
 	static LLUIColor sMouseOverColor = LLUIColorTable::instance().getColor("InventoryMouseOverColor", DEFAULT_WHITE);
 
 	const Params& default_params = LLUICtrlFactory::getDefaultParams<LLFolderViewItem>();
@@ -1060,6 +1062,23 @@ void LLFolderViewItem::draw()
 						 LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW, 
 						 S32_MAX, S32_MAX, &right_x, FALSE);
 	}
+
+	// ## Zi: Animation Overrider
+	//--------------------------------------------------------------------------------//
+	// Draw "protected" indicator
+	//
+	if((mListener->getUUID()==AOEngine::instance().getAOFolder() && gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+// //-TT Client LSL Bridge
+// 		||(mListener->getUUID()==FSLSLBridge::instance().getBridgeFolder() && gSavedPerAccountSettings.getBOOL("ProtectBridgeFolder"))
+// //-TT
+		)
+	{
+		std::string locked_string = " (" + LLTrans::getString("ProtectedFolder") + ") ";
+		font->renderUTF8(locked_string, 0, right_x, y, sProtectedColor,
+						 LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW, 
+						 S32_MAX, S32_MAX, &right_x, FALSE);
+	}
+	// ## Zi: Animation Overrider
 
 	//--------------------------------------------------------------------------------//
 	// Draw label suffix

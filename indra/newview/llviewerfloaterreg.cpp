@@ -31,6 +31,7 @@
 
 #include "llviewerfloaterreg.h"
 #include "llfloaterautoreplacesettings.h"
+#include "ao.h"				// ## Zi: Animation Overrider
 #include "floaterhop.h"
 #include "fsfloaterprofile.h" // <FS:KC legacy profiles>
 #include "llcompilequeue.h"
@@ -172,6 +173,7 @@ void LLViewerFloaterReg::registerFloaters()
 {
 	// *NOTE: Please keep these alphabetized for easier merges
 
+	LLFloaterReg::add("animation_overrider", "floater_ao.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FloaterAO>);	// ## Zi: Animation Overrider
 	LLFloaterAboutUtil::registerFloater();
 	LLFloaterReg::add("fast_timers", "floater_fast_timers.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFastTimerView>);
 	LLFloaterReg::add("about_land", "floater_about_land.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterLand>);

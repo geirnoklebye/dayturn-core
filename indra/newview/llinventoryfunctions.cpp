@@ -84,6 +84,8 @@
 
 #include <boost/foreach.hpp>
 
+#include "aoengine.h"			// ## Zi: Animation Overrider
+
 BOOL LLInventoryState::sWearNewClothing = FALSE;
 LLUUID LLInventoryState::sWearNewClothingTransactionID;
 
@@ -334,6 +336,18 @@ BOOL get_is_item_removable(const LLInventoryModel* model, const LLUUID& id)
 		return FALSE;
 	}
 
+	// ## Zi: Animation Overrider
+	if((model->isObjectDescendentOf(id,AOEngine::instance().getAOFolder())
+		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+// //-TT Client LSL Bridge
+// 		|| (model->isObjectDescendentOf(id,FSLSLBridge::instance().getBridgeFolder())
+// 			&& gSavedPerAccountSettings.getBOOL("ProtectBridgeFolder"))
+// //-TT
+		)
+
+		return FALSE;
+	// ## Zi: Animation Overrider
+
 	// Disable delete from COF folder; have users explicitly choose "detach/take off",
 	// unless the item is not worn but in the COF (i.e. is bugged).
 	if (LLAppearanceMgr::instance().getIsProtectedCOFItem(id))
@@ -372,6 +386,18 @@ BOOL get_is_category_removable(const LLInventoryModel* model, const LLUUID& id)
 		return FALSE;
 	}
 
+	// ## Zi: Animation Overrider
+	if(((id==AOEngine::instance().getAOFolder() || model->isObjectDescendentOf(id,AOEngine::instance().getAOFolder()))
+		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+// //-TT Client LSL Bridge
+// 		|| (id==FSLSLBridge::instance().getBridgeFolder() || model->isObjectDescendentOf(id,FSLSLBridge::instance().getBridgeFolder())
+// 			&& gSavedPerAccountSettings.getBOOL("ProtectBridgeFolder"))
+// //-TT
+		)
+
+		return FALSE;
+	// ## Zi: Animation Overrider
+
 	if (!isAgentAvatarValid()) return FALSE;
 
 	const LLInventoryCategory* category = model->getCategory(id);
@@ -407,6 +433,18 @@ BOOL get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 		return FALSE;
 	}
 
+	// ## Zi: Animation Overrider
+	if(((id==AOEngine::instance().getAOFolder() || model->isObjectDescendentOf(id,AOEngine::instance().getAOFolder()))
+		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+// //-TT Client LSL Bridge
+// 		|| (id==FSLSLBridge::instance().getBridgeFolder() || model->isObjectDescendentOf(id,FSLSLBridge::instance().getBridgeFolder())
+// 			&& gSavedPerAccountSettings.getBOOL("ProtectBridgeFolder"))
+// //-TT
+		)
+
+		return FALSE;
+	// ## Zi: Animation Overrider
+
 	LLViewerInventoryCategory* cat = model->getCategory(id);
 
 	if (cat && !LLFolderType::lookupIsProtectedType(cat->getPreferredType()) &&
@@ -414,6 +452,7 @@ BOOL get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 	{
 		return TRUE;
 	}
+
 	return FALSE;
 }
 

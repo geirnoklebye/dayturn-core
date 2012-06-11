@@ -98,6 +98,9 @@ set(viewer_SOURCE_FILES
     fsfloaterprofile.cpp
     fspanelclassified.cpp
     fspanelprofile.cpp
+    ao.cpp
+    aoengine.cpp
+    aoset.cpp
     fspanelprofileclassifieds.cpp
     groupchatlistener.cpp
     llaccountingcostmanager.cpp
@@ -681,6 +684,9 @@ set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
 set(viewer_HEADER_FILES
     CMakeLists.txt
     ViewerInstall.cmake
+    ao.h
+    aoengine.h
+    aoset.h
 	floaterhop.h
     fsfloaterprofile.h
     fspanelclassified.h

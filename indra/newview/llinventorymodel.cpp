@@ -27,6 +27,7 @@
 #include "llviewerprecompiledheaders.h"
 #include "llinventorymodel.h"
 
+#include "aoengine.h"
 #include "llagent.h"
 #include "llagentwearables.h"
 #include "llappearancemgr.h"
@@ -1040,6 +1041,13 @@ void LLInventoryModel::changeItemParent(LLViewerInventoryItem* item,
 		LL_INFOS("Inventory") << "Moving '" << item->getName() << "' (" << item->getUUID()
 							  << ") from " << item->getParentUUID() << " to folder "
 							  << new_parent_id << LL_ENDL;
+
+		// ## Zi: Animation Overrider
+		if(isObjectDescendentOf(item->getUUID(),AOEngine::instance().getAOFolder())
+			&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+			return;
+		// ## Zi: Animation Overrider
+
 		LLInventoryModel::update_list_t update;
 		LLInventoryModel::LLCategoryUpdate old_folder(item->getParentUUID(),-1);
 		update.push_back(old_folder);
@@ -1070,6 +1078,17 @@ void LLInventoryModel::changeCategoryParent(LLViewerInventoryCategory* cat,
 	{
 		return;
 	}
+
+	// ## Zi: Animation Overrider
+	if((isObjectDescendentOf(cat->getUUID(),AOEngine::instance().getAOFolder())
+		&& gSavedPerAccountSettings.getBOOL("ProtectAOFolders"))
+// //-TT Client LSL Bridge
+// 		|| (isObjectDescendentOf(cat->getUUID(),FSLSLBridge::instance().getBridgeFolder())
+// 			&& gSavedPerAccountSettings.getBOOL("ProtectBridgeFolder"))
+// //-TT
+		)
+		return;
+	// ## Zi: Animation Overrider
 
 	LLInventoryModel::update_list_t update;
 	LLInventoryModel::LLCategoryUpdate old_folder(cat->getParentUUID(), -1);
