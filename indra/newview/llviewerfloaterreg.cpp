@@ -31,6 +31,8 @@
 
 #include "llviewerfloaterreg.h"
 #include "llfloaterautoreplacesettings.h"
+#include "floaterhop.h"
+#include "fsfloaterprofile.h" // <FS:KC legacy profiles>
 #include "llcompilequeue.h"
 #include "llcallfloater.h"
 #include "llfasttimerview.h"
@@ -201,7 +203,11 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("env_edit_day_cycle", "floater_edit_day_cycle.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterEditDayCycle>);
 
 	LLFloaterReg::add("event", "floater_event.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterEvent>);
-	
+
+//<FS:KC legacy profiles>
+	LLFloaterReg::add("floater_profile", "floater_profile_view.xml",&LLFloaterReg::build<FSFloaterProfile>);
+//</FS:KC legacy profiles>
+
 	LLFloaterReg::add("font_test", "floater_font_test.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterFontTest>);
 
 	LLFloaterReg::add("gestures", "floater_gesture.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterGesture>);

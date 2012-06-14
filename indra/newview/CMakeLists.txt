@@ -78,6 +78,10 @@ include_directories(
     )
 
 set(viewer_SOURCE_FILES
+    fsfloaterprofile.cpp
+    fspanelclassified.cpp
+    fspanelprofile.cpp
+    fspanelprofileclassifieds.cpp
     groupchatlistener.cpp
     llaccountingcostmanager.cpp
     llagent.cpp
@@ -638,6 +642,10 @@ set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
 set(viewer_HEADER_FILES
     CMakeLists.txt
     ViewerInstall.cmake
+    fsfloaterprofile.h
+    fspanelclassified.h
+    fspanelprofile.h
+    fspanelprofileclassifieds.h
     groupchatlistener.h
     llaccountingcostmanager.h
     llagent.h
