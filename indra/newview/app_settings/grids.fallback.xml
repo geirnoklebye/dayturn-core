@@ -160,10 +160,10 @@
         <key>slurl_base</key>
             <string>https://inworldz.com:8002/</string>
         </map>
-    <key>localhost:9000</key>
+    <key>127.0.0.1:9000</key>
         <map>
         <key>grid_login_id</key>
-            <string>localhost:9000</string>
+            <string>127.0.0.1:9000</string>
         <key>gridname</key>
             <string>localhost</string>
         <key>gridnick</key>
@@ -177,12 +177,12 @@
             <undef />
         <key>loginuri</key>
             <array>
-                <string>http://localhost:9000</string>
+                <string>http://127.0.0.1:9000</string>
             </array>
         <key>name</key>
-            <string>localhost:9000</string>
+            <string>127.0.0.1:9000</string>
         <key>slurl_base</key>
-            <string>https://localhost:9000/</string>
+            <string>https://127.0.0.1:9000/</string>
         </map>
     <key>login.danger.osgrid.org</key>
         <map>
