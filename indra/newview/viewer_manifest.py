@@ -1234,9 +1234,9 @@ class Linux_x86_64Manifest(LinuxManifest):
 
 #        if self.prefix("../../libraries/x86_64-linux/lib_release_client", dst="lib64"):
         if self.prefix("../packages/lib/release", dst="lib64"):
-            self.path("libapr-1.so.0")
-            self.path("libaprutil-1.so.0")
-            self.path("libbreakpad_client.so.0.0.0", "libbreakpad_client.so.0")
+            self.path("libapr-1.so*")
+            self.path("libaprutil-1.so*")
+            self.path("libbreakpad_client.so*")
             self.path("libdb-5.1.so")
             self.path("libdb-5.so")
             self.path("libdb.so")
