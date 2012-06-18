@@ -196,7 +196,11 @@ private:
         // extension) is also unique. This is likely, though not guaranteed:
         // files could be created in the same temp directory other than by
         // this class.
-        ll_apr_assert_status(apr_file_link(mPath.c_str(), path.c_str()));
+        //*HACK building with 2.6.32-5-amd64 x86_64 GNU/Linux
+        // g++ (Debian 4.4.5-8) 4.4.5
+        // Commented out because apr_file_link not declared in this scope and
+        // Cannot find anything by that name on this system
+        //ll_apr_assert_status(apr_file_link(mPath.c_str(), path.c_str()));
     }
 
     std::string mLink;
