@@ -74,7 +74,7 @@
 #include "llsecondlifeurls.h"
 #include "llstring.h"
 #include "lluserrelations.h"
-#include "llversioninfo.h"
+#include "viewerinfo.h"
 #include "llviewercontrol.h"
 #include "llviewerhelp.h"
 #include "llvfs.h"
@@ -225,6 +225,7 @@ static bool gUseCircuitCallbackCalled = false;
 
 EStartupState LLStartUp::gStartupState = STATE_FIRST;
 LLSLURL LLStartUp::sStartSLURL;
+std::string LLStartUp::sStartSLURLString;
 
 static LLPointer<LLCredential> gUserCredential;
 static std::string gDisplayName;
@@ -298,6 +299,38 @@ namespace
 		}
 	};
 }
+
+// <AW: opensim>
+static bool sGridListRequestReady = false;
+class GridListRequestResponder : public LLHTTPClient::Responder
+{
+public:
+	//If we get back a normal response, handle it here
+	virtual void result(const LLSD& content)
+	{
+		std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "grids.remote.xml");
+
+		llofstream out_file;
+		out_file.open(filename);
+		LLSDSerialize::toPrettyXML(content, out_file);
+		out_file.close();
+		llinfos << "GridListRequest: got new list." << llendl;
+		sGridListRequestReady = true;
+	}
+
+	//If we get back an error (not found, etc...), handle it here
+	virtual void error(U32 status, const std::string& reason)
+	{
+		sGridListRequestReady = true;
+		if (304 == status)
+		{
+			LL_DEBUGS("GridManager") << "<- no error :P ... GridListRequest: List not modified since last session" << LL_ENDL;
+		}
+		else
+			llwarns << "GridListRequest::error("<< status << ": " << reason << ")" << llendl;
+	}
+};
+// </AW: opensim>
 
 void update_texture_fetch()
 {
@@ -505,9 +538,9 @@ bool idle_startup()
 			if(!start_messaging_system(
 				   message_template_path,
 				   port,
-				   LLVersionInfo::getMajor(),
-				   LLVersionInfo::getMinor(),
-				   LLVersionInfo::getPatch(),
+				   ViewerInfo::versionMajor(),
+				   ViewerInfo::versionMinor(),
+				   ViewerInfo::versionPatch(),
 				   FALSE,
 				   std::string(),
 				   responder,
@@ -605,6 +638,63 @@ bool idle_startup()
 		}
 
 		LL_INFOS("AppInit") << "Message System Initialized." << LL_ENDL;
+
+// <AW: opensim>
+		if(!gSavedSettings.getBOOL("GridListDownload"))
+		{
+			sGridListRequestReady = true;
+		}
+		else
+		{
+			std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "grids.remote.xml");
+
+			llstat file_stat; //platform independent wrapper for stat
+			time_t last_modified = 0;
+
+			if(!LLFile::stat(filename, &file_stat))//exists
+			{
+				last_modified = file_stat.st_mtime;
+			}
+
+			std::string url = gSavedSettings.getString("GridListDownloadURL");
+			LLHTTPClient::getIfModified(url, new GridListRequestResponder(), last_modified );
+		}
+		// Fetch grid infos as needed
+		LLGridManager::getInstance()->initGrids();
+		LLStartUp::setStartupState( STATE_FETCH_GRID_INFO );
+	}
+
+	if (STATE_FETCH_GRID_INFO == LLStartUp::getStartupState())
+	{
+		static LLFrameTimer grid_timer;
+
+		const F32 grid_time = grid_timer.getElapsedTimeF32();
+		const F32 MAX_GRID_TIME = 15.f;//don't wait forever
+
+		if(grid_time>MAX_GRID_TIME ||
+			( sGridListRequestReady && LLGridManager::getInstance()->isReadyToLogin() ))
+		{
+			LLStartUp::setStartupState( STATE_AUDIO_INIT );
+		}
+		else
+		{
+			ms_sleep(1);
+			return FALSE;
+		}
+	}
+
+	if (STATE_AUDIO_INIT == LLStartUp::getStartupState())
+	{
+
+		// parsing slurls depending on the grid obviously 
+		// only works after we have a grid list
+		// Anyway this belongs into the gridmanager as soon as 
+		// it is cleaner
+		if(!LLStartUp::sStartSLURLString.empty())
+		{
+			LLStartUp::setStartSLURL(LLStartUp::sStartSLURLString);
+		}
+// </AW: opensim>
 
 		//-------------------------------------------------
 		// Init audio, which may be needed for prefs dialog
@@ -881,6 +971,7 @@ bool idle_startup()
 		LLFile::mkdir(gDirUtilp->getLindenUserDir());
 
 		// Set PerAccountSettingsFile to the default value.
+		std::string per_account_settings_file = LLAppViewer::instance()->getSettingsFilename("Default", "PerAccount");
 		gSavedSettings.setString("PerAccountSettingsFile",
 			gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, 
 				LLAppViewer::instance()->getSettingsFilename("Default", "PerAccount")));
@@ -1014,7 +1105,9 @@ bool idle_startup()
 		// This call to LLLoginInstance::connect() starts the 
 		// authentication process.
 		login->connect(gUserCredential);
-
+// <AW: opensim>
+		LLGridManager::getInstance()->saveGridList();
+// </AW: opensim>
 		LLStartUp::setStartupState( STATE_LOGIN_CURL_UNSTUCK );
 		return FALSE;
 	}
@@ -1159,7 +1252,10 @@ bool idle_startup()
 				LLVoiceClient::getInstance()->userAuthorized(gUserCredential->userID(), gAgentID);
 				// create the default proximal channel
 				LLVoiceChannel::initClass();
-				LLGridManager::getInstance()->setFavorite(); 
+// <AW: opensim>
+				// Not used anymore
+				//LLGridManager::getInstance()->setFavorite();
+ // </AW: opensim>
 				LLStartUp::setStartupState( STATE_WORLD_INIT);
 			}
 			else
@@ -2673,6 +2769,8 @@ std::string LLStartUp::startupStateToString(EStartupState state)
 #define RTNENUM(E) case E: return #E
 	switch(state){
 		RTNENUM( STATE_FIRST );
+		RTNENUM( STATE_FETCH_GRID_INFO);
+		RTNENUM( STATE_AUDIO_INIT);
 		RTNENUM( STATE_BROWSER_INIT );
 		RTNENUM( STATE_LOGIN_SHOW );
 		RTNENUM( STATE_LOGIN_WAIT );
@@ -3361,7 +3459,7 @@ bool process_login_success_response()
 
 	// Request the map server url
 	// Non-agni grids have a different default location.
-	if (!LLGridManager::getInstance()->isInProductionGrid())
+	if (LLGridManager::getInstance()->isInSLBeta())
 	{
 		gSavedSettings.setString("MapServerURL", "http://test.map.secondlife.com.s3.amazonaws.com/");
 	}

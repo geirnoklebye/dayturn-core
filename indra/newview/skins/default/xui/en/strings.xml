@@ -6,9 +6,9 @@
 <strings>
 
 	<!-- Default Args - these arguments will be replaced in all strings -->
-	<string name="SECOND_LIFE">Second Life</string>
-	<string name="APP_NAME">Second Life</string>
-	<string name="CAPITALIZED_APP_NAME">SECOND LIFE</string>
+	<string name="SECOND_LIFE">[CURRENT_GRID]</string>
+	<string name="APP_NAME">Kokua</string>
+	<string name="CAPITALIZED_APP_NAME">KOKUA</string>
 	<string name="SECOND_LIFE_GRID">Second Life Grid</string>
 	<string name="SUPPORT_SITE">Second Life Support Portal</string>
 
@@ -771,7 +771,7 @@ Returns the rotation velocity in radians per second
 	</string>
 	<string name="LSLTipText_llGetTimeOfDay" translate="false">
 float llGetTimeOfDay()
-Returns the time in seconds since [SECOND_LIFE] server midnight or since region up-time, whichever is smaller
+Returns the time in seconds since [CURRENT_GRID] server midnight or since region up-time, whichever is smaller
 	</string>
 	<string name="LSLTipText_llGetWallclock" translate="false">
 float llGetWallclock()
@@ -3508,7 +3508,7 @@ Abuse Report</string>
   <string name="server_is_down">
 	Despite our best efforts, something unexpected has gone wrong.
 
-	Please check status.secondlifegrid.net to see if there is a known problem with the service.
+	Please check the grid's status to see if there is a known problem with the service.  
         If you continue to experience problems, please check your network and firewall setup.
   </string>
 

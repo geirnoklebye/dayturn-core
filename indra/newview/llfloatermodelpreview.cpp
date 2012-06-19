@@ -114,7 +114,9 @@
 #include "llviewershadermgr.h"
 #include "glod/glod.h"
 #include <boost/algorithm/string.hpp>
-
+// <AW: opensim-limits>
+#include "llworld.h"
+// </AW: opensim-limits>
 
 const S32 SLM_SUPPORTED_VERSION = 3;
 
@@ -3356,9 +3358,8 @@ void LLModelPreview::rebuildUploadData()
 		F32 x_length = x_transformed.normalize();
 		F32 y_length = y_transformed.normalize();
 		F32 z_length = z_transformed.normalize();
-
 		max_scale = llmax(llmax(llmax(max_scale, x_length), y_length), z_length);
-
+		
 		mat *= scale_mat;
 
 		for (LLModelLoader::model_instance_list::iterator model_iter = iter->second.begin(); model_iter != iter->second.end(); ++model_iter)
@@ -3401,14 +3402,33 @@ void LLModelPreview::rebuildUploadData()
 		}
 	}
 
-	F32 max_import_scale = (DEFAULT_MAX_PRIM_SCALE-0.1f)/max_scale;
+//	F32 max_import_scale = (DEFAULT_MAX_PRIM_SCALE-0.1f)/max_scale;
 
 	F32 max_axis = llmax(mPreviewScale.mV[0], mPreviewScale.mV[1]);
 	max_axis = llmax(max_axis, mPreviewScale.mV[2]);
 	max_axis *= 2.f;
 
-	//clamp scale so that total imported model bounding box is smaller than 240m on a side
-	max_import_scale = llmin(max_import_scale, 240.f/max_axis);
+// <AW: opensim-limits>
+	//F32 max_import_scale = DEFAULT_MAX_PRIM_SCALE/max_scale;
+	F32 region_max_prim_scale = LLWorld::getInstance()->getRegionMaxPrimScale();
+	F32 max_import_scale = region_max_prim_scale/max_scale;
+// </AW: opensim-limits>
+
+	if (!(gSimulatorType == "SecondLife"))
+	// Some other simulator like OpenSim, Aurora or a self named version.
+    {
+    llinfos << "Type: Float , Region Max Prim: " << region_max_prim_scale << llendl;
+    llinfos << "Type: Float , Max Import Scale: " << max_import_scale << llendl;
+    llinfos << "Type: Float , Max Scale: " << max_scale << llendl;
+    //clamp scale so that total imported model bounding box is smaller than 256m on a side
+		max_import_scale = llmin(max_import_scale, 256.f/max_axis);
+   	}
+	else
+	// Seoondlife simulatot
+	{
+		//clamp scale so that total imported model bounding box is smaller than 240m on a side
+		max_import_scale = llmin(max_import_scale, 240.f/max_axis);
+	}
 
 	scale_spinner->setMaxValue(max_import_scale);
 

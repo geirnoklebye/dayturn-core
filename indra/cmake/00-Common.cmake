@@ -1,13 +1,16 @@
 # -*- cmake -*-
 #
-# Compilation options shared by all Second Life components.
+# Compilation options shared by all Kokua components.
 
 include(Variables)
 
 # Portable compilation flags.
 set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DLL_DEBUG=1")
 set(CMAKE_CXX_FLAGS_RELEASE
-    "-DLL_RELEASE=1 -DLL_RELEASE_FOR_DOWNLOAD=1 -DNDEBUG") 
+#   "-DLL_RELEASE=1 -DLL_RELEASE_FOR_DOWNLOAD=1 -D_SECURE_SCL=0 -DLL_SEND_CRASH_REPORTS=${release_crash_reports} -DNDEBUG") 
+#kokua no crash reports for now, please
+    "-DLL_RELEASE=1 -DLL_RELEASE_FOR_DOWNLOAD=1 -D_SECURE_SCL=0 -DLL_SEND_CRASH_REPORTS=0 -DNDEBUG") 
+
 
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 
     "-DLL_RELEASE=1 -DNDEBUG -DLL_RELEASE_WITH_DEBUG_INFO=1")
@@ -46,11 +49,16 @@ if (WINDOWS)
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od /Zi /MDd /MP -D_SCL_SECURE_NO_WARNINGS=1"
       CACHE STRING "C++ compiler debug options" FORCE)
   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 
-      "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Od /Zi /MD /MP /Ob0 -D_SECURE_STL=0"
+      "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Od /Zi /MD /MP /Ob2 -D_SECURE_STL=0"
       CACHE STRING "C++ compiler release-with-debug options" FORCE)
   set(CMAKE_CXX_FLAGS_RELEASE
       "${CMAKE_CXX_FLAGS_RELEASE} ${LL_CXX_FLAGS} /O2 /Zi /MD /MP /Ob2 -D_SECURE_STL=0 -D_HAS_ITERATOR_DEBUGGING=0"
       CACHE STRING "C++ compiler release options" FORCE)
+
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LARGEADDRESSAWARE"
+      CACHE STRING "Flags used by the linker during all builds" FORCE)
+
+
 
   set(CMAKE_CXX_STANDARD_LIBRARIES "")
   set(CMAKE_C_STANDARD_LIBRARIES "")
@@ -62,7 +70,7 @@ if (WINDOWS)
       /D_UNICODE 
       /GS
       /TP
-      /W3
+      /W2
       /c
       /Zc:forScope
       /nologo
@@ -143,6 +151,8 @@ if (LINUX)
       -fno-strict-aliasing
       -fsigned-char
       -g
+      -mmmx
+      -msse
       -msse2
       -mfpmath=sse
       -pthread
@@ -167,7 +177,7 @@ if (LINUX)
   endif (SERVER)
 
   if (VIEWER)
-    add_definitions(-DAPPID=secondlife)
+    add_definitions(-DAPPID=kokua)
     add_definitions(-fvisibility=hidden)
     # don't catch SIGCHLD in our base application class for the viewer - some of our 3rd party libs may need their *own* SIGCHLD handler to work.  Sigh!  The viewer doesn't need to catch SIGCHLD anyway.
     add_definitions(-DLL_IGNORE_SIGCHLD)
@@ -183,9 +193,15 @@ if (LINUX)
       set(CMAKE_CXX_LINK_FLAGS "-Wl,--no-keep-memory")
     endif (NOT STANDALONE)
   endif (VIEWER)
-
   set(CMAKE_CXX_FLAGS_DEBUG "-fno-inline ${CMAKE_CXX_FLAGS_DEBUG}")
-  set(CMAKE_CXX_FLAGS_RELEASE "-O2 ${CMAKE_CXX_FLAGS_RELEASE}")
+
+  if (${ARCH} STREQUAL "x86_64")
+     add_definitions(-DLINUX64=1 -pipe)
+     #linux64 atm crashes usin -O2
+#      set(CMAKE_CXX_FLAGS_RELEASE "-fomit-frame-pointer -mmmx -msse -mfpmath=sse msse2 -ffast-math - ftree-vectorize -fweb -fexpensive-optimizations -frename-registers ${CMAKE_CXX_FLAGS_RELEASE}")
+  else(${ARCH} STREQUAL "x86_64")
+      set(CMAKE_CXX_FLAGS_RELEASE "-O2 ${CMAKE_CXX_FLAGS_RELEASE}")
+  endif (${ARCH} STREQUAL "x86_64")
 endif (LINUX)
 
 
@@ -211,9 +227,9 @@ endif (DARWIN)
 if (LINUX OR DARWIN)
   set(GCC_WARNINGS "-Wall -Wno-sign-compare -Wno-trigraphs")
 
-  if (NOT GCC_DISABLE_FATAL_WARNINGS)
-    set(GCC_WARNINGS "${GCC_WARNINGS} -Werror")
-  endif (NOT GCC_DISABLE_FATAL_WARNINGS)
+   if (NOT GCC_DISABLE_FATAL_WARNINGS)
+     set(GCC_WARNINGS "${GCC_WARNINGS} -Werror")
+   endif (NOT GCC_DISABLE_FATAL_WARNINGS)
 
   set(GCC_CXX_WARNINGS "${GCC_WARNINGS} -Wno-reorder -Wno-non-virtual-dtor")
 
@@ -239,7 +255,6 @@ if (STANDALONE)
 
 else (STANDALONE)
   set(${ARCH}_linux_INCLUDES
-      ELFIO
       atk-1.0
       glib-2.0
       gstreamer-0.10

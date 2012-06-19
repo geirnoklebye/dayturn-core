@@ -1,11 +1,27 @@
 # -*- cmake -*-
 include(Prebuilt)
-
-if (NOT STANDALONE)
+if (STANDALONE)
+  set(STANDALONE OFF)
+  use_prebuilt_binary(slvoice)
+#kokuafixme
+#   if(LINUX AND ${ARCH} STREQUAL "x86_64")
+#     use_prebuilt_binary(32bitcompatibilitylibs)
+#   endif(LINUX AND ${ARCH} STREQUAL "x86_64")
+  set(STANDALONE ON)
+else (STANDALONE)
   use_prebuilt_binary(libuuid)
   use_prebuilt_binary(slvoice)
   use_prebuilt_binary(fontconfig)
-endif(NOT STANDALONE)
+  use_prebuilt_binary(k_hacdConvexDecomposition)
+  if(LINUX)
+     if (${ARCH} STREQUAL "x86_64")
+      use_prebuilt_binary(32bitcompatibilitylibs)
+      # for mesh, this is built with colladadom and
+      # KOKUAFIXME: should be packaged with colladadom the next time packaging it
+      use_prebuilt_binary(minizip)
+     endif (${ARCH} STREQUAL "x86_64")
+  endif(LINUX)
+endif(STANDALONE)
 
 if(VIEWER AND NOT STANDALONE)
   if(EXISTS ${CMAKE_SOURCE_DIR}/newview/res/have_artwork_bundle.marker)

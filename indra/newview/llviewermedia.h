@@ -112,6 +112,9 @@ public:
 	
 	static F32 getVolume();	
 	static void muteListChanged();
+	static void setInWorldMediaDisabled(bool disabled);
+	static bool getInWorldMediaDisabled();
+	
 	static bool isInterestingEnough(const LLVOVolume* object, const F64 &object_interest);
 	
 	// Returns the priority-sorted list of all media impls.
