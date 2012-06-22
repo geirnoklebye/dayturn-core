@@ -457,8 +457,9 @@ elseif(LINUX)
         libuuid.so.16.0.22
         libssl.so.1.0.0
         libfontconfig.so.1.4.4
-        libgomp.so.1
-        libgomp.so.1.0.0
+# Remove OPenMP from build of viewer causes conflict starting at Viewer-Beta 3.3.3
+#        libgomp.so.1
+#        libgomp.so.1.0.0
        )
     endif(${ARCH} STREQUAL "x86_64")
 

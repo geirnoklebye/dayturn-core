@@ -1777,9 +1777,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>616f312493b30f8bd79ae461ce606693</string>
+              <string>7f53fbf4de319f0d7768273c7df19e02</string>
               <key>url</key>
-              <string>http://bitbucket.org/NickyP/kokua-mesh-upload/downloads/hacd_k-0.178-linux-20120202.tar.bz2</string>
+              <string>file:///home/bill/hacd-k/hacd_k-0.178-linux-20120621.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
