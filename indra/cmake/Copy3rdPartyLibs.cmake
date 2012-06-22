@@ -417,8 +417,9 @@ elseif(LINUX)
 #           libtcmalloc.so
           libssl.so
           libssl.so.1.0.0
-          libgomp.so.1
-          libgomp.so.1.0.0
+# Remove OPenMP from build of viewer causes conflict starting at Viewer-Beta 3.3.3
+#          libgomp.so.1
+#          libgomp.so.1.0.0
           libpcre.so.3
          )
     else(${ARCH} STREQUAL "x86_64")

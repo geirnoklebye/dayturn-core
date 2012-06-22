@@ -53,9 +53,9 @@
                 <string>lib/release</string>
               </map>
               <key>hash</key>
-              <string>e4406c44327a0399f738affc863d6532</string>
+              <string>72fcdfa8b36de6c802c42068be983129</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/glod-1.0pre4-Linux-x86_64-20110414.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4-linux64-20120621.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1779,7 +1779,7 @@
               <key>hash</key>
               <string>7f53fbf4de319f0d7768273c7df19e02</string>
               <key>url</key>
-              <string>file:///home/bill/hacd-k/hacd_k-0.178-linux-20120621.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-hacd-k/downloads/hacd_k-0.178-linux-20120621.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1789,9 +1789,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>61b6dbf6a7d48094f9f4d90152634f92</string>
+              <string>d23a522dacf73711b78b9b22c0164b4e</string>
               <key>url</key>
-              <string>http://bitbucket.org/NickyP/kokua-mesh-upload/downloads/hacd_k-0.178-linux64-20120203.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-hacd-k/downloads/hacd_k-0.178-linux64-20120621.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
