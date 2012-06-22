@@ -1802,9 +1802,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>93db8df6e20b284ccde0f468a6056b8f</string>
+              <string>691884b758f1c3facdcf791835a57925</string>
               <key>url</key>
-              <string>http://bitbucket.org/NickyP/kokua-mesh-upload/downloads/hacd_k-0.178-windows-20120213.tar.bz2</string>
+              <string>file:///C:/Users/Bill/lindenhg/3p/hacd-k-wip/hacd_k-0.178-windows-20120621.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
