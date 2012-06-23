@@ -1860,7 +1860,12 @@ LLTextureFetch::LLTextureFetch(LLTextureCache* cache, LLImageDecodeThread* image
 	  mTotalHTTPRequests(0),
 	  mCurlGetRequest(NULL),
 	  mQAMode(qa_mode),
-	  mFetchDebugger(NULL)
+//MK
+	// https://jira.secondlife.com/browse/SH-3153
+////	  mFetchDebugger(NULL)
+	  mFetchDebugger(NULL),
+	  mFetcherLocked(FALSE)
+//mk
 {
 	mCurlPOSTRequestCount = 0;
 	mMaxBandwidth = gSavedSettings.getF32("ThrottleBandwidthKBPS");
