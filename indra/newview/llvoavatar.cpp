@@ -1433,7 +1433,11 @@ const LLVector3 LLVOAvatar::getRenderPosition() const
 	{
 		return getPositionAgent();
 	}
-	else if (isRoot())
+//MK
+	// Protect from a potential crash
+////	else if (isRoot())
+	else if (isRoot() || !(mDrawable->getParent()))
+//mk
 	{
 		if ( !mHasPelvisOffset )
 		{
