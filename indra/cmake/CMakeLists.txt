@@ -38,6 +38,7 @@ set(cmake_SOURCE_FILES
     GStreamer010Plugin.cmake
     GooglePerfTools.cmake
     HACD.cmake
+	Hunspell.cmake
     JPEG.cmake
     LLAddBuildTest.cmake
     LLAudio.cmake
