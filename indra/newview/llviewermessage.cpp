@@ -3265,35 +3265,36 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 					args["MESSAGE"] = message;
 					args["MATURITY_STR"] = region_access_str;
 					args["MATURITY_ICON"] = region_access_icn;
-				args["REGION_CONTENT_MATURITY"] = region_access_lc;
+					args["REGION_CONTENT_MATURITY"] = region_access_lc;
 					LLSD payload;
 					payload["from_id"] = from_id;
 					payload["lure_id"] = session_id;
 					payload["godlike"] = FALSE;
-				payload["region_maturity"] = region_access;
+					payload["region_maturity"] = region_access;
 
-				if (!canUserAccessDstRegion)
-				{
-					LLNotification::Params params("TeleportOffered_MaturityBlocked");
-					params.substitutions = args;
-					params.payload = payload;
-					LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
-					send_simple_im(from_id, LLTrans::getString("TeleportMaturityExceeded"), IM_NOTHING_SPECIAL, session_id);
-					send_simple_im(from_id, LLStringUtil::null, IM_LURE_DECLINED, session_id);
-				}
-				else if (doesUserRequireMaturityIncrease)
-				{
-					LLNotification::Params params("TeleportOffered_MaturityExceeded");
-					params.substitutions = args;
-					params.payload = payload;
-					LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
-				}
-				else
-				{
-					LLNotification::Params params("TeleportOffered");
-					params.substitutions = args;
-					params.payload = payload;
-					LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
+					if (!canUserAccessDstRegion)
+					{
+						LLNotification::Params params("TeleportOffered_MaturityBlocked");
+						params.substitutions = args;
+						params.payload = payload;
+						LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
+						send_simple_im(from_id, LLTrans::getString("TeleportMaturityExceeded"), IM_NOTHING_SPECIAL, session_id);
+						send_simple_im(from_id, LLStringUtil::null, IM_LURE_DECLINED, session_id);
+					}
+					else if (doesUserRequireMaturityIncrease)
+					{
+						LLNotification::Params params("TeleportOffered_MaturityExceeded");
+						params.substitutions = args;
+						params.payload = payload;
+						LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
+					}
+					else
+					{
+						LLNotification::Params params("TeleportOffered");
+						params.substitutions = args;
+						params.payload = payload;
+						LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
+					}
 //MK
 				}
 //mk

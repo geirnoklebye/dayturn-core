@@ -189,9 +189,7 @@
          <menu_item_call
          label="Toolbar buttons..."
          name="Toolbars"
-<!-- MK -->
          shortcut="control|shift|T">
-<!-- mk -->
             <menu_item_call.on_click
              function="Floater.Toggle"
              parameter="toybox" />
@@ -785,9 +783,7 @@
         <menu_item_check
              label="Edit Linked Parts"
              name="Edit Linked Parts"
-<!-- MK -->
               shortcut="alt|W">
-<!-- mk -->
                 <menu_item_check.on_check
                  control="EditLinkedParts" />
                 <menu_item_check.on_click
@@ -1117,9 +1113,7 @@
                 <menu_item_call
                  label="Use Selection for Grid"
                  name="Use Selection for Grid"
-<!-- MK -->
                  shortcut="alt|G">
-<!-- mk -->
                     <menu_item_call.on_click
                      function="Tools.UseSelectionForGrid" />
                     <menu_item_call.on_enable
@@ -1887,7 +1881,6 @@
          label="Shortcuts"
          name="Shortcuts"
          tear_off="true"
-<!-- MK -->
          visible="true">
           <menu_item_call
              label="Image (L$[COST])..."
@@ -1910,7 +1903,6 @@
              function="Floater.Toggle"
              parameter="search" />
             </menu_item_check>
-<!-- mk -->
 
             <!-- This second, alternative shortcut for Show Advanced Menu is for backward compatibility.  The main shortcut has been changed so it's Linux-friendly, where the old shortcut is typically eaten by the window manager. -->
             <menu_item_check
@@ -3485,9 +3477,6 @@
             <menu_item_call
              label="Debug Avatar Textures"
              name="Debug Avatar Textures"
-<!-- MK -->
-<!----				shortcut="control|alt|shift|A"> -->
-<!-- mk -->
                 <menu_item_call.on_click
                  function="Advanced.DebugAvatarTextures" />
             </menu_item_call>
@@ -3618,9 +3607,6 @@
         <menu_item_call
          label="Request Admin Status"
          name="Request Admin Options"
-<!-- MK -->
-<!----         shortcut="control|alt|G"> -->
-<!-- MK -->
             <menu_item_call.on_click
              function="Advanced.RequestAdminStatus" />
         </menu_item_call>
