@@ -3,6 +3,7 @@ include(Prebuilt)
 if (STANDALONE)
   set(STANDALONE OFF)
   use_prebuilt_binary(slvoice)
+  use_prebuilt_binary(libhunspell)
 #kokuafixme
 #   if(LINUX AND ${ARCH} STREQUAL "x86_64")
 #     use_prebuilt_binary(32bitcompatibilitylibs)
