@@ -3757,20 +3757,20 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 	msg->getVector3Fast(_PREHASH_Data, _PREHASH_LookAt, look_at);
 	U64 region_handle;
 	msg->getU64Fast(_PREHASH_Data, _PREHASH_RegionHandle, region_handle);
-	
 	std::string version_channel;
 	msg->getString("SimData", "ChannelVersion", version_channel);
-	const std::string delims (" ");
-	int begIdx, endIdx;
-	std::string simString =  version_channel;
-	begIdx = simString.find_first_not_of (delims);
-	endIdx = simString.find_first_of (delims, begIdx);
-	gSimulatorType = simString.substr (begIdx, endIdx - begIdx);
-	if (gSimulatorType == "Second")
+	//! gSimulatorType is set first in Grid Manager
+	//! if not a second life grid we extract first word of the Channel Version 
+	if (!(gSimulatorType == "SecondLife"))
 	{
-		gSimulatorType += "Life";
+		const std::string delims (" ");
+		int begIdx, endIdx;
+		std::string simString =  version_channel;
+		begIdx = simString.find_first_not_of (delims);
+		endIdx = simString.find_first_of (delims, begIdx);
+		gSimulatorType = simString.substr (begIdx, endIdx - begIdx);
 	}
-	llinfos << "Simulator Type : " << gSimulatorType <<llendl;
+		llinfos << "Simulator Type : " << gSimulatorType <<llendl;
 	if (!isAgentAvatarValid())
 	{
 		// Could happen if you were immediately god-teleported away on login,
