@@ -1599,6 +1599,53 @@
           </map>
         </map>
       </map>
+      <key>kokua-qt</key>
+      <map>
+        <key>license</key>
+        <string>lgpl</string>
+        <key>license_file</key>
+        <string>LICENSES/qt.txt</string>
+        <key>name</key>
+        <string>kokua-qt</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>15e99de5bf1ed04ec3d64f67198ff36e</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/kokua-qt4.7.4-autobuild-Linux-i686-20110628.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>4c6c0f607f7cc9ebaa5446fd9ca3371a</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/kokua-qt4.7.4-Linux-x86_64-20110620.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+      </map>
       <key>libhunspell</key>
       <map>
         <key>license</key>
