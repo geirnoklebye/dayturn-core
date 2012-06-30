@@ -51,7 +51,7 @@ void main()
 	gl_Position = vec4(pos.x, pos.y, pos.w*0.5, pos.w);
 	
 	passTextureIndex();
-	
+
 	vary_texcoord0 = (texture_matrix0 * vec4(texcoord0,0,1)).xy;
 	vertex_color = diffuse_color;
 }
