@@ -1899,6 +1899,7 @@ BOOL LLPanelLandOptions::postBuild()
 		mSnapshotCtrl->setCommitCallback( onCommitAny, this );
 		mSnapshotCtrl->setAllowNoTexture ( TRUE );
 		mSnapshotCtrl->setImmediateFilterPermMask(PERM_COPY | PERM_TRANSFER);
+		mSnapshotCtrl->setDnDFilterPermMask(PERM_COPY | PERM_TRANSFER);
 		mSnapshotCtrl->setNonImmediateFilterPermMask(PERM_COPY | PERM_TRANSFER);
 	}
 	else

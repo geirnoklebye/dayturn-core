@@ -262,7 +262,9 @@ void LLDrawPoolAvatar::beginPostDeferredAlpha()
 	sRenderingSkinned = TRUE;
 
 	gPipeline.bindDeferredShader(*sVertexProgram);
-	
+
+	sVertexProgram->setMinimumAlpha(0.2f);
+
 	sDiffuseChannel = sVertexProgram->enableTexture(LLViewerShaderMgr::DIFFUSE_MAP);
 }
 

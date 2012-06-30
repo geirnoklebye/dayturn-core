@@ -68,6 +68,16 @@ protected:
 	~LLDrawInfo();	
 	
 public:
+	void* operator new(size_t size)
+	{
+		return ll_aligned_malloc_16(size);
+	}
+
+	void operator delete(void* ptr)
+	{
+		ll_aligned_free_16(ptr);
+	}
+
 
 	LLDrawInfo(const LLDrawInfo& rhs)
 	{
@@ -106,7 +116,7 @@ public:
 	F32 mPartSize;
 	F32 mVSize;
 	LLSpatialGroup* mGroup;
-	LLFace* mFace; //associated face
+	LL_ALIGN_16(LLFace* mFace); //associated face
 	F32 mDistance;
 	U32 mDrawMode;
 
@@ -181,7 +191,7 @@ public:
 	};
 };
 
-LL_ALIGN_PREFIX(64)
+LL_ALIGN_PREFIX(16)
 class LLSpatialGroup : public LLOctreeListener<LLDrawable>
 {
 	friend class LLSpatialPartition;
@@ -191,6 +201,16 @@ public:
 	LLSpatialGroup(const LLSpatialGroup& rhs)
 	{
 		*this = rhs;
+	}
+
+	void* operator new(size_t size)
+	{
+		return ll_aligned_malloc_16(size);
+	}
+
+	void operator delete(void* ptr)
+	{
+		ll_aligned_free_16(ptr);
 	}
 
 	const LLSpatialGroup& operator=(const LLSpatialGroup& rhs)
@@ -263,11 +283,10 @@ public:
 		SKIP_FRUSTUM_CHECK		= 0x00000020,
 		IN_IMAGE_QUEUE			= 0x00000040,
 		IMAGE_DIRTY				= 0x00000080,
-		OCCLUSION_DIRTY			= 0x00000100,
-		MESH_DIRTY				= 0x00000200,
-		NEW_DRAWINFO			= 0x00000400,
-		IN_BUILD_Q1				= 0x00000800,
-		IN_BUILD_Q2				= 0x00001000,
+		MESH_DIRTY				= 0x00000100,
+		NEW_DRAWINFO			= 0x00000200,
+		IN_BUILD_Q1				= 0x00000400,
+		IN_BUILD_Q2				= 0x00000800,
 		STATE_MASK				= 0x0000FFFF,
 	} eSpatialState;
 
@@ -313,10 +332,9 @@ public:
 	BOOL boundObjects(BOOL empty, LLVector4a& newMin, LLVector4a& newMax);
 	void unbound();
 	BOOL rebound();
-	void buildOcclusion(); //rebuild mOcclusionVerts
 	void checkOcclusion(); //read back last occlusion query (if any)
 	void doOcclusion(LLCamera* camera); //issue occlusion query
-	void destroyGL();
+	void destroyGL(bool keep_occlusion = false);
 	
 	void updateDistance(LLCamera& camera);
 	BOOL needsUpdate();
@@ -372,12 +390,12 @@ public:
 		V4_COUNT = 10
 	} eV4Index;
 
-	LLVector4a mBounds[2]; // bounding box (center, size) of this node and all its children (tight fit to objects)
-	LLVector4a mExtents[2]; // extents (min, max) of this node and all its children
-	LLVector4a mObjectExtents[2]; // extents (min, max) of objects in this node
-	LLVector4a mObjectBounds[2]; // bounding box (center, size) of objects in this node
-	LLVector4a mViewAngle;
-	LLVector4a mLastUpdateViewAngle;
+	LL_ALIGN_16(LLVector4a mBounds[2]); // bounding box (center, size) of this node and all its children (tight fit to objects)
+	LL_ALIGN_16(LLVector4a mExtents[2]); // extents (min, max) of this node and all its children
+	LL_ALIGN_16(LLVector4a mObjectExtents[2]); // extents (min, max) of objects in this node
+	LL_ALIGN_16(LLVector4a mObjectBounds[2]); // bounding box (center, size) of objects in this node
+	LL_ALIGN_16(LLVector4a mViewAngle);
+	LL_ALIGN_16(LLVector4a mLastUpdateViewAngle);
 
 	F32 mObjectBoxSize; //cached mObjectBounds[1].getLength3()
 		
@@ -415,7 +433,6 @@ public:
 	LLSpatialPartition* mSpatialPartition;
 	
 	LLPointer<LLVertexBuffer> mVertexBuffer;
-	LLPointer<LLVertexBuffer> mOcclusionVerts;
 	GLuint					mOcclusionQuery[LLViewerCamera::NUM_CAMERAS];
 
 	U32 mBufferUsage;
@@ -657,6 +674,7 @@ class LLParticlePartition : public LLSpatialPartition
 {
 public:
 	LLParticlePartition();
+	virtual void rebuildGeom(LLSpatialGroup* group);
 	virtual void getGeometry(LLSpatialGroup* group);
 	virtual void addGeometryCount(LLSpatialGroup* group, U32 &vertex_count, U32& index_count);
 	virtual F32 calcPixelArea(LLSpatialGroup* group, LLCamera& camera);
@@ -671,10 +689,14 @@ public:
 };
 
 //spatial partition for grass (implemented in LLVOGrass.cpp)
-class LLGrassPartition : public LLParticlePartition
+class LLGrassPartition : public LLSpatialPartition
 {
 public:
 	LLGrassPartition();
+	virtual void getGeometry(LLSpatialGroup* group);
+	virtual void addGeometryCount(LLSpatialGroup* group, U32 &vertex_count, U32& index_count);
+protected:
+	U32 mRenderPass;
 };
 
 //class for wrangling geometry out of volumes (implemented in LLVOVolume.cpp)

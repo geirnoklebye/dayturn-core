@@ -59,6 +59,7 @@ class LLViewerTexture;
 const U32 SILHOUETTE_HIGHLIGHT = 0;
 
 // All data for new renderer goes into this class.
+LL_ALIGN_PREFIX(16)
 class LLDrawable : public LLRefCount
 {
 public:
@@ -74,6 +75,16 @@ public:
 	}
 
 	static void initClass();
+
+	void* operator new(size_t size)
+	{
+		return ll_aligned_malloc_16(size);
+	}
+
+	void operator delete(void* ptr)
+	{
+		ll_aligned_free_16(ptr);
+	}
 
 	LLDrawable()				{ init(); }
 	MEM_TYPE_NEW(LLMemType::MTYPE_DRAWABLE);
@@ -277,11 +288,12 @@ public:
 		HAS_ALPHA		= 0x04000000,
 		RIGGED			= 0x08000000,
 		PARTITION_MOVE	= 0x10000000,
+		ANIMATED_CHILD  = 0x20000000,
 	} EDrawableFlags;
 
 private: //aligned members
-	LLVector4a		mExtents[2];
-	LLVector4a		mPositionGroup;
+	LL_ALIGN_16(LLVector4a		mExtents[2]);
+	LL_ALIGN_16(LLVector4a		mPositionGroup);
 	
 public:
 	LLXformMatrix       mXform;
@@ -322,7 +334,7 @@ private:
 
 	static U32 sNumZombieDrawables;
 	static LLDynamicArrayPtr<LLPointer<LLDrawable> > sDeadList;
-};
+} LL_ALIGN_POSTFIX(16);
 
 
 inline LLFace* LLDrawable::getFace(const S32 i) const
@@ -333,12 +345,14 @@ inline LLFace* LLDrawable::getFace(const S32 i) const
 
 	if ((U32) i >= mFaces.size())
 	{
-		llerrs << "Invalid face index." << llendl;
+		llwarns << "Invalid face index." << llendl;
+		return NULL;
 	}
 
 	if (!mFaces[i])
 	{
-		llerrs << "Null face found." << llendl;
+		llwarns << "Null face found." << llendl;
+		return NULL;
 	}
 	
 	return mFaces[i];
