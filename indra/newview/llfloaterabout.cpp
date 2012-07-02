@@ -31,6 +31,8 @@
 
 #include "llfloaterabout.h"
 
+
+
 // Viewer includes
 #include "llagent.h"
 #include "llappviewer.h" 
@@ -142,7 +144,6 @@ BOOL LLFloaterAbout::postBuild()
 
 	getChild<LLUICtrl>("copy_btn")->setCommitCallback(
 		boost::bind(&LLFloaterAbout::onClickCopyToClipboard, this));
-/* FIXME NP opemsim floos of warnings.
 	if (gAgent.getRegion())
 	{
 		// start fetching server release notes URL
@@ -153,7 +154,7 @@ BOOL LLFloaterAbout::postBuild()
 	{
 		setSupportText(LLStringUtil::null);
 	}
-*/
+
 	setSupportText(LLStringUtil::null);
 
 	support_widget->blockUndo();
