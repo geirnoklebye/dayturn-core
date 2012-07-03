@@ -1269,6 +1269,9 @@ class Linux_x86_64Manifest(LinuxManifest):
             self.path("libopenjpeg.so.1.4.0")
             self.path("libopenjpeg.so.1")
             self.path("libopenjpeg.so")
+            self.path("libhunspell-1.3.so")
+            self.path("libhunspell-1.3.so.0")
+            self.path("libhunspell-1.3.so.0.0.0")
 #Removed libgomp openmp from the hacd library effect with viewer-Beta 3.3.3
 #            self.path("libgomp.so.1")
 #            self.path("libgomp.so.1.0.0")
