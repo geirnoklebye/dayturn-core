@@ -1400,6 +1400,16 @@
          function="Upload.CalculateCosts"
          parameter="Upload Image" />
       </menu_item_call>
+      <menu_item_check
+        label="Sound Explorer"
+        name="Sound Explorer">
+        <menu_item_check.on_check
+          function="Floater.Visible"
+          parameter="sound_explorer" />
+        <menu_item_check.on_click
+          function="Floater.Toggle"
+          parameter="sound_explorer" />
+      </menu_item_check>
       <menu_item_call
        label="Sound ([COST])..."
        layout="topleft"

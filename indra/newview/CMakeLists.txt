@@ -752,6 +752,7 @@ set(viewer_SOURCE_FILES
     utilitybar.cpp
     viewerinfo.cpp
     streamtitledisplay.cpp
+	NACLfloaterexploresounds.cpp
     )
 
 set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
@@ -1404,6 +1405,7 @@ set(viewer_HEADER_FILES
     VertexCache.h
     viewerinfo.h
     VorbisFramework.h
+	NACLfloaterexploresounds.h
     )
 
 source_group("CMake Rules" FILES ViewerInstall.cmake)
