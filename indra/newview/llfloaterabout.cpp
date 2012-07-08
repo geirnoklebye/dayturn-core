@@ -31,8 +31,6 @@
 
 #include "llfloaterabout.h"
 
-
-
 // Viewer includes
 #include "llagent.h"
 #include "llappviewer.h" 
