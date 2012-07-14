@@ -199,6 +199,7 @@ LLViewerObject::LLViewerObject(const LLUUID &id, const LLPCode pcode, LLViewerRe
 	mID(id),
 	mLocalID(0),
 	mTotalCRC(0),
+	mListIndex(-1),
 	mTEImages(NULL),
 	mGLName(0),
 	mbCanSelect(TRUE),
@@ -2177,8 +2178,8 @@ BOOL LLViewerObject::isActive() const
 
 BOOL LLViewerObject::idleUpdate(LLAgent &agent, LLWorld &world, const F64 &time)
 {
-	static LLFastTimer::DeclareTimer ftm("Viewer Object");
-	LLFastTimer t(ftm);
+	//static LLFastTimer::DeclareTimer ftm("Viewer Object");
+	//LLFastTimer t(ftm);
 
 	if (mDead)
 	{
@@ -2930,27 +2931,39 @@ void LLViewerObject::removeInventory(const LLUUID& item_id)
 	++mInventorySerialNum;
 }
 
+bool LLViewerObject::isTextureInInventory(LLViewerInventoryItem* item)
+{
+	bool result = false;
+
+	if (item && LLAssetType::AT_TEXTURE == item->getType())
+	{
+		std::list<LLUUID>::iterator begin = mPendingInventoryItemsIDs.begin();
+		std::list<LLUUID>::iterator end = mPendingInventoryItemsIDs.end();
+
+		bool is_fetching = std::find(begin, end, item->getAssetUUID()) != end;
+		bool is_fetched = getInventoryItemByAsset(item->getAssetUUID()) != NULL;
+
+		result = is_fetched || is_fetching;
+	}
+
+	return result;
+}
+
+void LLViewerObject::updateTextureInventory(LLViewerInventoryItem* item, U8 key, bool is_new)
+{
+	if (item && !isTextureInInventory(item))
+	{
+		mPendingInventoryItemsIDs.push_back(item->getAssetUUID());
+		updateInventory(item, key, is_new);
+	}
+}
+
 void LLViewerObject::updateInventory(
 	LLViewerInventoryItem* item,
 	U8 key,
 	bool is_new)
 {
 	LLMemType mt(LLMemType::MTYPE_OBJECT);
-
-	std::list<LLUUID>::iterator begin = mPendingInventoryItemsIDs.begin();
-	std::list<LLUUID>::iterator end = mPendingInventoryItemsIDs.end();
-
-	bool is_fetching = std::find(begin, end, item->getAssetUUID()) != end;
-	bool is_fetched = getInventoryItemByAsset(item->getAssetUUID()) != NULL;
-
-	if (is_fetched || is_fetching)
-	{
-		return;
-	}
-	else
-	{
-		mPendingInventoryItemsIDs.push_back(item->getAssetUUID());
-	}
 
 	// This slices the object into what we're concerned about on the
 	// viewer. The simulator will take the permissions and transfer
@@ -4818,9 +4831,11 @@ void LLViewerObject::deleteParticleSource()
 // virtual
 void LLViewerObject::updateDrawable(BOOL force_damped)
 {
-	if (mDrawable.notNull() && 
-		!mDrawable->isState(LLDrawable::ON_MOVE_LIST) &&
-		isChanged(MOVED))
+	if (!isChanged(MOVED))
+	{ //most common case, having an empty if case here makes for better branch prediction
+	}
+	else if (mDrawable.notNull() && 
+		!mDrawable->isState(LLDrawable::ON_MOVE_LIST))
 	{
 		BOOL damped_motion = 
 			!isChanged(SHIFTED) &&										// not shifted between regions this frame and...

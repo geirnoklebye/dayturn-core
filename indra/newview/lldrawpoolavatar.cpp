@@ -1038,9 +1038,13 @@ void LLDrawPoolAvatar::endDeferredSkinned()
 	gGL.getTexUnit(0)->activate();
 }
 
+static LLFastTimer::DeclareTimer FTM_RENDER_AVATARS("renderAvatars");
+
 
 void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 {
+	LLFastTimer t(FTM_RENDER_AVATARS);
+
 	if (pass == -1)
 	{
 		for (S32 i = 1; i < getNumPasses(); i++)
@@ -1197,15 +1201,6 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 
 	if (pass >= 7 && pass < 9)
 	{
-		LLGLEnable blend(GL_BLEND);
-
-		gGL.setColorMask(true, true);
-		gGL.blendFunc(LLRender::BF_SOURCE_ALPHA,
-					  LLRender::BF_ONE_MINUS_SOURCE_ALPHA,
-					  LLRender::BF_ZERO,
-					  LLRender::BF_ONE_MINUS_SOURCE_ALPHA);
-
-		
 		if (pass == 7)
 		{
 			renderRiggedAlpha(avatarp);
@@ -1221,20 +1216,8 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 
 	if (pass == 9)
 	{
-		LLGLEnable blend(GL_BLEND);
-		LLGLDisable test(GL_ALPHA_TEST);
-		gGL.flush();
-
-		LLGLEnable polyOffset(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(-1.0f, -1.0f);
-		gGL.setSceneBlendType(LLRender::BT_ADD);
-
-		LLGLDepthTest depth(GL_TRUE, GL_FALSE);
-		gGL.setColorMask(false, true);
-
 		renderRiggedGlow(avatarp);
-		gGL.setColorMask(true, false);
-		gGL.setSceneBlendType(LLRender::BT_ALPHA);
+		
 		return;
 	}
 	
@@ -1432,7 +1415,7 @@ void LLDrawPoolAvatar::updateRiggedFaceVertexBuffer(LLVOAvatar* avatar, LLFace* 
 
 void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 {
-	if (avatar->isSelf() && !gAgent.needsRenderAvatar() || !gMeshRepo.meshRezEnabled())
+	if (avatar->isSelf() && !gAgent.needsRenderAvatar())
 	{
 		return;
 	}
@@ -1561,8 +1544,12 @@ void LLDrawPoolAvatar::renderDeferredRiggedBump(LLVOAvatar* avatar)
 	renderRigged(avatar, RIGGED_DEFERRED_BUMP);
 }
 
+static LLFastTimer::DeclareTimer FTM_RIGGED_VBO("Rigged VBO");
+
 void LLDrawPoolAvatar::updateRiggedVertexBuffers(LLVOAvatar* avatar)
 {
+	LLFastTimer t(FTM_RIGGED_VBO);
+
 	//update rigged vertex buffers
 	for (U32 type = 0; type < NUM_RIGGED_PASSES; ++type)
 	{
@@ -1634,17 +1621,56 @@ void LLDrawPoolAvatar::renderRiggedFullbrightShiny(LLVOAvatar* avatar)
 
 void LLDrawPoolAvatar::renderRiggedAlpha(LLVOAvatar* avatar)
 {
-	renderRigged(avatar, RIGGED_ALPHA);
+	if (!mRiggedFace[RIGGED_ALPHA].empty())
+	{
+		LLGLEnable blend(GL_BLEND);
+
+		gGL.setColorMask(true, true);
+		gGL.blendFunc(LLRender::BF_SOURCE_ALPHA,
+						LLRender::BF_ONE_MINUS_SOURCE_ALPHA,
+						LLRender::BF_ZERO,
+						LLRender::BF_ONE_MINUS_SOURCE_ALPHA);
+
+		renderRigged(avatar, RIGGED_ALPHA);
+	}
 }
 
 void LLDrawPoolAvatar::renderRiggedFullbrightAlpha(LLVOAvatar* avatar)
 {
-	renderRigged(avatar, RIGGED_FULLBRIGHT_ALPHA);
+	if (!mRiggedFace[RIGGED_FULLBRIGHT_ALPHA].empty())
+	{
+		LLGLEnable blend(GL_BLEND);
+
+		gGL.setColorMask(true, true);
+		gGL.blendFunc(LLRender::BF_SOURCE_ALPHA,
+						LLRender::BF_ONE_MINUS_SOURCE_ALPHA,
+						LLRender::BF_ZERO,
+						LLRender::BF_ONE_MINUS_SOURCE_ALPHA);
+
+		renderRigged(avatar, RIGGED_FULLBRIGHT_ALPHA);
+	}
 }
 
 void LLDrawPoolAvatar::renderRiggedGlow(LLVOAvatar* avatar)
 {
-	renderRigged(avatar, RIGGED_GLOW, true);
+	if (!mRiggedFace[RIGGED_GLOW].empty())
+	{
+		LLGLEnable blend(GL_BLEND);
+		LLGLDisable test(GL_ALPHA_TEST);
+		gGL.flush();
+
+		LLGLEnable polyOffset(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(-1.0f, -1.0f);
+		gGL.setSceneBlendType(LLRender::BT_ADD);
+
+		LLGLDepthTest depth(GL_TRUE, GL_FALSE);
+		gGL.setColorMask(false, true);
+
+		renderRigged(avatar, RIGGED_GLOW, true);
+
+		gGL.setColorMask(true, false);
+		gGL.setSceneBlendType(LLRender::BT_ALPHA);
+	}
 }
 
 
