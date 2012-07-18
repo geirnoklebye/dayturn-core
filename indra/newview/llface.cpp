@@ -317,7 +317,20 @@ void LLFace::setTexture(LLViewerTexture* tex)
 
 void LLFace::dirtyTexture()
 {
-	gPipeline.markTextured(getDrawable());
+	LLDrawable* drawablep = getDrawable();
+
+	if (mVObjp.notNull() && mVObjp->getVolume() && 
+		mTexture.notNull() && mTexture->getComponents() == 4)
+	{ //dirty texture on an alpha object should be treated as an LoD update
+		LLVOVolume* vobj = drawablep->getVOVolume();
+		if (vobj)
+		{
+			vobj->mLODChanged = TRUE;
+		}
+		gPipeline.markRebuild(drawablep, LLDrawable::REBUILD_VOLUME, FALSE);
+	}		
+			
+	gPipeline.markTextured(drawablep);
 }
 
 void LLFace::switchTexture(LLViewerTexture* new_texture)
@@ -1943,15 +1956,12 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 			LLVector4a texIdx;
 
-			U8 index = mTextureIndex < 255 ? mTextureIndex : 0;
+			S32 index = mTextureIndex < 255 ? mTextureIndex : 0;
 
 			F32 val = 0.f;
-			U8* vp = (U8*) &val;
-			vp[0] = index;
-			vp[1] = 0;
-			vp[2] = 0;
-			vp[3] = 0;
-
+			S32* vp = (S32*) &val;
+			*vp = index;
+			
 			llassert(index <= LLGLSLShader::sIndexedTextureChannels-1);
 
 			LLVector4Logical mask;
