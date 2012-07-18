@@ -582,6 +582,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>92398d45c81bbac7009e6da423be5953</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-dictionaries/downloads/dictionaries-1-linux64-20120702.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1679,6 +1691,18 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>32491873ed138ef804b2c0d1526bad07</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-hunspell/downloads/libhunspell-1.3.2-linux64-20120702.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
