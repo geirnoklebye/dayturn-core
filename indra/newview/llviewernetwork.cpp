@@ -497,7 +497,7 @@ void LLGridManager::gridInfoResponderCB(GridEntry* grid_entry)
 	}
 
 	grid_entry->grid[GRID_SLURL_BASE] = grid_entry->grid[GRID_VALUE];
-
+    std::string grid = grid_entry->grid[GRID_VALUE].asString();
 	std::string slurl_base(llformat(DEFAULT_SLURL_BASE, grid.c_str()));
 	grid_entry->grid[GRID_SLURL_BASE]= slurl_base;
 
@@ -556,6 +556,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 				grid_entry->grid[GRID_VALUE]  = grid;
 		}
 
+/*
 		size_t find_last_slash = grid.find_last_of("/");
 		if ( (grid.length()-1) == find_last_slash )
 		{
@@ -565,7 +566,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 			grid_entry->grid[GRID_VALUE]  = grid;
 
 		}
-
+*/
 		if (FETCHTEMP == state)
 		{
 			grid_entry->grid["FLAG_TEMPORARY"] = "TRUE";

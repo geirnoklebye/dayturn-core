@@ -44,7 +44,7 @@ const char* LLSLURL::SLURL_X_GRID_LOCATION_INFO_SCHEME = "x-grid-location-info";
 // text with www.slurl.com or a link explicitly pointing at www.slurl.com so testing for this
 // version is required also.
 
-const char* LLSLURL::SLURL_COM		 = "slurl.com";
+//const char* LLSLURL::SLURL_COM		 = "slurl.com";
 const char* LLSLURL::WWW_SLURL_COM	 = "www.slurl.com";
 const char* LLSLURL::MAPS_SECONDLIFE_COM = "maps.secondlife.com";
 
