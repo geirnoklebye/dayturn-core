@@ -547,12 +547,12 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 				grid_entry = NULL;
 			}
 			throw LLInvalidGridName(grid);
-			}
+		}
 
 		// trim last slash
 		size_t pos = grid.find_last_of("/");
 		if ( (grid.length()-1) == pos )
-			{
+		{
 			grid.erase(pos);
 				grid_entry->grid[GRID_VALUE]  = grid;
 		}
@@ -566,8 +566,6 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 			grid_entry->grid["HG"] = "TRUE";
 		}
 
-		}
-*/
 		if (FETCHTEMP == state)
 		{
 			grid_entry->grid["FLAG_TEMPORARY"] = "TRUE";

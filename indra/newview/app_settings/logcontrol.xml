@@ -43,13 +43,13 @@
 					<key>tags</key>
 						<array>
 						<!-- sample entry for debugging specific items	
-						     <string>Avatar</string>
+						<string>Avatar</string>
 						<string>OS_SETTINGS</string>
 						<string>UrlEntry</string>
 						<string>WebApi</string>
-							<!--<string>Voice</string>-->
-						-->
-							<!--<string>InterfaceProtocolParser</string>-->
+						<string>Voice</string>
+						<string>InterfaceProtocolParser</string>
+                        -->
 						</array>
 				</map>
 			</array>
