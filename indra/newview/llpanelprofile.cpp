@@ -58,7 +58,6 @@ std::string getProfileURL(const std::string& agent_name)
 	}
 
 		//			* capability (better for decentaliced environment)
-	}
 
 	LLSD subs;
 	subs["AGENT_NAME"] = agent_name;
