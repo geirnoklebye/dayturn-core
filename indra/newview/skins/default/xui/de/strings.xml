@@ -4549,6 +4549,11 @@ Missbrauchsbericht
 	<string name="free">
 		kostenlos
 	</string>
+<!--  FS:AW opensim currency support -->
+	<string name="free">
+		 kostenlos
+	</string>
+<!--  /FS:AW opensim currency support -->
 	<string name="Membership">
 		Mitgliedschaft
 	</string>

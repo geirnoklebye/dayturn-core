@@ -94,6 +94,7 @@
 #include "llviewermenu.h"
 #include "llviewerinventory.h"
 #include "llviewerjoystick.h"
+#include "llviewernetwork.h" // <FS:AW opensim currency support>
 #include "llviewerobjectlist.h"
 #include "llviewerparcelmgr.h"
 #include "llviewerstats.h"
@@ -6893,14 +6894,27 @@ void process_economy_data(LLMessageSystem *msg, void** /*user_data*/)
 {
 	LLGlobalEconomy::processEconomyData(msg, LLGlobalEconomy::Singleton::getInstance());
 
-	S32 upload_cost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
+	S32 cost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
+	std::string upload_cost;
+#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
+	bool in_opensim = LLGridManager::getInstance()->isInOpenSim();
+	if(in_opensim)
+	{
+		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : LLTrans::getString("free");
+	}
+	else
+#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
+	{
+		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
+	}
 
 	LL_INFOS_ONCE("Messaging") << Tea::wrapCurrency("EconomyData message arrived; upload cost is L$") << upload_cost << LL_ENDL;
 
-	gMenuHolder->getChild<LLUICtrl>("Upload Image")->setLabelArg("[COST]", llformat("%d", upload_cost));
-	gMenuHolder->getChild<LLUICtrl>("Upload Sound")->setLabelArg("[COST]", llformat("%d", upload_cost));
-	gMenuHolder->getChild<LLUICtrl>("Upload Animation")->setLabelArg("[COST]", llformat("%d", upload_cost));
-	gMenuHolder->getChild<LLUICtrl>("Bulk Upload")->setLabelArg("[COST]", llformat("%d", upload_cost));
+	gMenuHolder->getChild<LLUICtrl>("Upload Image")->setLabelArg("[COST]",  upload_cost);
+	gMenuHolder->getChild<LLUICtrl>("Upload Sound")->setLabelArg("[COST]",  upload_cost);
+	gMenuHolder->getChild<LLUICtrl>("Upload Animation")->setLabelArg("[COST]", upload_cost);
+	gMenuHolder->getChild<LLUICtrl>("Bulk Upload")->setLabelArg("[COST]", upload_cost);
+ // <FS:AW opensim currency support>
 }
 
 void notify_cautioned_script_question(const LLSD& notification, const LLSD& response, S32 orig_questions, BOOL granted)

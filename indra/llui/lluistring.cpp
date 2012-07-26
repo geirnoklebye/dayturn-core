@@ -129,8 +129,8 @@ void LLUIString::updateResult() const
 		mWResult.clear();
 		return;
 	}
-	mResult = Tea::wrapCurrency(mOrig);
-	
+	mResult = mOrig;
+
 	// get the default args + local args
 	LLStringUtil::format_map_t combined_args = LLTrans::getDefaultArgs();
 	if (mArgs && !mArgs->empty())
@@ -138,6 +138,11 @@ void LLUIString::updateResult() const
 		combined_args.insert(mArgs->begin(), mArgs->end());
 	}
 	LLStringUtil::format(mResult, combined_args);
+	// <FS:AW opensim currency support>
+	// Impact on lag: at average frame time 15.9 ms
+	// FTM_UI_STRING 0.01ms both with/without wrapCurrency
+	Tea::wrapCurrency(mResult);
+	// </FS:AW opensim currency support>
 }
 
 void LLUIString::updateWResult() const

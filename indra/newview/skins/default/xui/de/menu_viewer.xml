@@ -153,11 +153,11 @@
 			<menu_item_call label="Rasteroptionen" name="Grid Options"/>
 		</menu>
 		<menu label="Hochladen" name="Upload">
-			<menu_item_call label="Bild ([COST] L$)..." name="Upload Image"/>
-			<menu_item_call label="Sound ([COST] L$)..." name="Upload Sound"/>
-			<menu_item_call label="Animation ([COST] L$)..." name="Upload Animation"/>
+			<menu_item_call label="Bild ([COST])..." name="Upload Image"/>
+			<menu_item_call label="Sound ([COST])..." name="Upload Sound"/>
+			<menu_item_call label="Animation ([COST])..." name="Upload Animation"/>
 			<menu_item_call label="Modell..." name="Upload Model"/>
-			<menu_item_call label="Mehrfach-Upload ([COST] L$ pro Datei)..." name="Bulk Upload"/>
+			<menu_item_call label="Mehrfach-Upload ([COST] pro Datei)..." name="Bulk Upload"/>
 			<menu_item_call label="Hochlade-Berechtigungen (Standard) festlegen" name="perm prefs"/>
 		</menu>
 		<menu_item_call label="Rückgängig" name="Undo"/>
@@ -226,6 +226,7 @@
 		<menu_item_check label="Weiche Mausbewegung" name="Mouse Smoothing"/>
 		<menu_item_call label="Tasten freigeben" name="Release Keys"/>
 		<menu label="Tastaturkürzel" name="Shortcuts">
++			<menu_item_call label="Bild hochladen ([COST])..." name="Upload Image"/>		
 			<menu_item_check label="Erweitert-Menü anzeigen - veraltetet" name="Show Advanced Menu - legacy shortcut"/>
 			<menu_item_call label="Fenster schließen" name="Close Window"/>
 			<menu_item_call label="Alle Fenster schließen" name="Close All Windows"/>

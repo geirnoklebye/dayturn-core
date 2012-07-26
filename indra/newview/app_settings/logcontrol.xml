@@ -46,6 +46,7 @@
 						     <string>Inventory</string>
 						     <string>SceneLoadTiming</string>
 						     <string>Avatar</string>
+						     <string>GridManager</string>							 
 						     <string>Voice</string>		
 						-->
 						</array>
