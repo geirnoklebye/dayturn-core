@@ -642,6 +642,7 @@ set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
 set(viewer_HEADER_FILES
     CMakeLists.txt
     ViewerInstall.cmake
+	floaterhop.h
     fsfloaterprofile.h
     fspanelclassified.h
     fspanelprofile.h

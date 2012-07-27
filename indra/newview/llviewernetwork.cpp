@@ -1151,3 +1151,25 @@ std::string LLGridManager::getAppSLURLBase(const std::string& grid)
 	LL_DEBUGS("GridManager") << "App slurl base: " << ret << LL_ENDL;
 	return ret;
 }
+/*
+// <FS:AW conditional opensim support>
+std::string LLGridManager::getGridNick()
+{
+	std:: string ret;
+	if ("Second Life" ==  getGridLabel())
+	{
+		ret = "Agni";
+	}
+	if ("Second Life Beta" ==  getGridLabel())
+	{
+		ret = "Agni";
+	}
+	else
+	{
+		ret = getGridLabel();
+	}
+
+	return  ret;
+}
+// </FS:AW conditional opensim support>
+*/
