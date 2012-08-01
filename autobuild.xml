@@ -766,21 +766,11 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
+
               <key>hash</key>
-              <string>13b551e5deafbaa6cfd105fa072bdfba</string>
+              <string>83d6e4a3be560192057f80772a0c9de5</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/fontconfig-2.7.3-linux64-20091230.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-fontconfig/downloads/fontconfig-2.8.0-linux64-20120731a.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -849,21 +839,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>1b4624ab06a7ba30e29d1994424db41e</string>
+              <string>f9e85717f4723a0b98444656013908fc</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/freetype-2.3.11-linux64-20091230.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.3.11-linux64-20120731.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1459,21 +1438,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>64e7fa98568ef52b3b9d4a18b3515090</string>
+              <string>1293364aa62a6b6377e838004554467c</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/jpeglib-7-linux64-20091230.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-jpeglib/downloads/jpeglib-8c-linux64-20120728.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2622,9 +2590,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>1feaa673c7508aae957fbf88f9d4e392</string>
+              <string>66c1e00918951757ee16e4c9f257ccb7</string>
               <key>url</key>
-              <string>http://bitbucket.org/NickyP/3p-pcre/downloads/pcre-7.6-linux64-20120609.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-pcre/downloads/pcre-7.6-linux64-20120731c.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
