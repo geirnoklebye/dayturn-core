@@ -150,7 +150,7 @@ bool LLURLDispatcherImpl::dispatchApp(const LLSLURL& slurl,
 									  LLMediaCtrl* web,
 									  bool trusted_browser)
 {
-	llinfos << "cmd: " << slurl.getAppCmd() << " path: " << slurl.getAppPath() << " query: " << slurl.getAppQuery() << llendl;
+	LL_DEBUGS("SLURL") <<"\nslurl: " << slurl.asString() << "\ncmd: " << slurl.getAppCmd() << "\npath: " << slurl.getAppPath() << "\nquery: " << slurl.getAppQuery() << llendl;
 	const LLSD& query_map = LLURI::queryMap(slurl.getAppQuery());
 	bool handled = LLCommandDispatcher::dispatch(
 			slurl.getAppCmd(), slurl.getAppPath(), query_map, web, nav_type, trusted_browser);
@@ -205,8 +205,11 @@ void LLURLDispatcherImpl::regionHandleCallback(U64 region_handle, const LLSLURL&
 {
 
   // we can't teleport cross grid at this point
-	if((!LLGridManager::getInstance()->isSystemGrid(slurl.getGrid()) || !LLGridManager::getInstance()->isSystemGrid()) &&
-	   (slurl.getGrid() != LLGridManager::getInstance()->getGrid()))
+	if( !slurl.getHypergrid()// yes we can!
+	    &&  (!LLGridManager::getInstance()->isSystemGrid(slurl.getGrid()) 
+			|| !LLGridManager::getInstance()->isSystemGrid()) 
+	    &&	(slurl.getGrid() != LLGridManager::getInstance()->getGrid())
+	  )
 	{
 		LLSD args;
 		args["SLURL"] = slurl.getLocationString();
@@ -228,7 +231,7 @@ void LLURLDispatcherImpl::regionHandleCallback(U64 region_handle, const LLSLURL&
 	
 	LLVector3d global_pos = from_region_handle(region_handle);
 	global_pos += LLVector3d(slurl.getPosition());
-	
+LL_DEBUGS("SLURL") << "global_pos " << 	global_pos << llendl;
 	if (teleport)
 	{	
 		gAgent.teleportViaLocation(global_pos);
@@ -264,25 +267,15 @@ public:
 	bool handle(const LLSD& tokens, const LLSD& query_map,
 				LLMediaCtrl* web)
 	{
+		LL_DEBUGS("SLURL") << tokens << LL_ENDL;
 		// construct a "normal" SLURL, resolve the region to
 		// a global position, and teleport to it
 		if (tokens.size() < 1) return false;
 
-		LLVector3 coords(128, 128, 0);
-		if (tokens.size() <= 4)
-		{
-			coords = LLVector3(tokens[1].asReal(), 
-							   tokens[2].asReal(), 
-							   tokens[3].asReal());
-		}
-		
-		// Region names may be %20 escaped.
-		
-		std::string region_name = LLURI::unescape(tokens[0]);
-
-		LLWorldMapMessage::getInstance()->sendNamedRegionRequest(region_name,
+		LLSLURL dest(tokens, true);
+		LLWorldMapMessage::getInstance()->sendNamedRegionRequest(dest.getRegion(),
 			LLURLDispatcherImpl::regionHandleCallback,
-			LLSLURL(region_name, coords).getSLURLString(),
+			LLSLURL(dest).getSLURLString(),
 			true);	// teleport
 		return true;
 	}

@@ -184,8 +184,12 @@ std::string LLWeb::expandURLSubstitutions(const std::string &url,
 	substitution["VERSION_MINOR"] = ViewerInfo::versionMinor();
 	substitution["VERSION_PATCH"] = ViewerInfo::versionPatch();
 	substitution["CHANNEL"] = ViewerInfo::viewerName();
-	substitution["GRID"] = LLGridManager::getInstance()->getGridLabel();
-	substitution["GRID_LOWERCASE"] = utf8str_tolower(LLGridManager::getInstance()->getGridLabel());
+	// substitution["GRID"] = LLGridManager::getInstance()->getGridLabel();
+	// substitution["GRID_LOWERCASE"] = utf8str_tolower(LLGridManager::getInstance()->getGridLabel());
+	//NOTE: getGridLabel() returns e.g. "Second Life"
+	//      getGridNick() returns e.g. "agni"
+	substitution["GRID"] = LLGridManager::getInstance()->getGridNick();
+	substitution["GRID_LOWERCASE"] = utf8str_tolower(LLGridManager::getInstance()->getGridNick());
 	substitution["OS"] = LLAppViewer::instance()->getOSInfo().getOSStringSimple();
 	substitution["SESSION_ID"] = gAgent.getSessionID();
 	substitution["FIRST_LOGIN"] = gAgent.isFirstLogin();

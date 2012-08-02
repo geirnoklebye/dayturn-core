@@ -496,13 +496,10 @@ void LLGridManager::gridInfoResponderCB(GridEntry* grid_entry)
 		}
 	}
 
-
-	std::string grid = grid_entry->grid[GRID_VALUE].asString();
+	grid_entry->grid[GRID_SLURL_BASE] = grid_entry->grid[GRID_VALUE];
+    std::string grid = grid_entry->grid[GRID_VALUE].asString();
 	std::string slurl_base(llformat(DEFAULT_SLURL_BASE, grid.c_str()));
 	grid_entry->grid[GRID_SLURL_BASE]= slurl_base;
-
-	LLDate now = LLDate::now();
-	grid_entry->grid["LastModified"] = now;
 
 	addGrid(grid_entry, FINISH);
 }
@@ -549,14 +546,21 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 			throw LLInvalidGridName(grid);
 		}
 
-		size_t find_last_slash = grid.find_last_of("/");
-		if ( (grid.length()-1) == find_last_slash )
+		// trim last slash
+		size_t pos = grid.find_last_of("/");
+		if ( (grid.length()-1) == pos )
 		{
+			grid.erase(pos);
+				grid_entry->grid[GRID_VALUE]  = grid;
+		}
 
-
-			grid.erase(find_last_slash);
+ 		// trim region from hypergrid uris
+		std::string  grid_trimmed = trimHypergrid(grid);
+ 		if (grid_trimmed != grid)
+		{
+			grid = grid_trimmed;
 			grid_entry->grid[GRID_VALUE]  = grid;
-
+			grid_entry->grid["HG"] = "TRUE";
 		}
 
 		if (FETCHTEMP == state)
@@ -598,8 +602,8 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 			grid_entry->grid[GRID_LOGIN_URI_VALUE] = LLSD::emptyArray();
 			grid_entry->grid[GRID_LOGIN_URI_VALUE].append(uri);
 
-			size_t find_last_slash = uri.find_last_of("/");
-			if ( (uri.length()-1) != find_last_slash )
+			size_t pos = uri.find_last_of("/");
+			if ( (uri.length()-1) != pos )
 			{
 				uri.append("/");
 			}
@@ -672,6 +676,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 			llwarns << "Adding Legacy Economy at:" << grid_entry->grid[GRID_HELPER_URI_VALUE].asString() << llendl;
 			grid_entry->grid[GRID_HELPER_URI_VALUE] = std::string("https://") + grid + "/helpers/";
 		}
+
 	}
 
 	if(FAIL != state)
@@ -694,6 +699,11 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 		{
 			if (!mGridList.has(grid)) //new grid
 			{
+				if (!grid_entry->grid.has("LastModified"))
+				{
+					LLDate now = LLDate::now();
+					grid_entry->grid["LastModified"] = now;
+				}
 				//finally add the grid \o/
 				mGridList[grid] = grid_entry->grid;
 				++mGridEntries;
@@ -1065,6 +1075,25 @@ void LLGridManager::saveGridList()
 	llsd_xml.close();
 }
 
+std::string LLGridManager::trimHypergrid(const std::string& trim)
+{
+	std::size_t pos;
+	std::string grid = trim;
+
+	pos = grid.find_last_of(":");
+	if (pos != std::string::npos)
+	{
+		std::string  part = grid.substr(pos+1, grid.length()-1);
+		// in hope numbers only is a good guess for it's a port number
+		if (std::string::npos != part.find_first_not_of("1234567890"))
+		{
+			//and erase if not
+			grid.erase(pos,grid.length()-1);
+		}
+	}
+
+	return grid;
+}
 
 // <AW opensim>
 // build a slurl for the given region within the selected grid
@@ -1072,9 +1101,11 @@ std::string LLGridManager::getSLURLBase(const std::string& grid)
 {
 	std::string grid_base;
 	std::string ret;
-	if(mGridList.has(grid) && mGridList[grid].has(GRID_SLURL_BASE))
+	std::string grid_trimmed = trimHypergrid(grid);
+
+	if(mGridList.has(grid_trimmed) && mGridList[grid_trimmed].has(GRID_SLURL_BASE))
 	{
-		ret = mGridList[grid][GRID_SLURL_BASE].asString();
+		ret = mGridList[grid_trimmed][GRID_SLURL_BASE].asString();
 		LL_DEBUGS("GridManager") << "GRID_SLURL_BASE: " << ret << LL_ENDL;
 	}
 	else
@@ -1107,6 +1138,11 @@ std::string LLGridManager::getAppSLURLBase(const std::string& grid)
 	{
 		ret = mGridList[grid][GRID_APP_SLURL_BASE].asString();
 	}
+	else if (mGridList.has(grid) && mGridList[grid].has(GRID_SLURL_BASE))
+	{
+		ret = mGridList[grid][GRID_SLURL_BASE].asString();
+	  	ret.append("app");
+	}
 	else
 	{
 		ret =  llformat(DEFAULT_APP_SLURL_BASE, grid.c_str());
@@ -1115,3 +1151,25 @@ std::string LLGridManager::getAppSLURLBase(const std::string& grid)
 	LL_DEBUGS("GridManager") << "App slurl base: " << ret << LL_ENDL;
 	return ret;
 }
+/*
+// <FS:AW conditional opensim support>
+std::string LLGridManager::getGridNick()
+{
+	std:: string ret;
+	if ("Second Life" ==  getGridLabel())
+	{
+		ret = "Agni";
+	}
+	if ("Second Life Beta" ==  getGridLabel())
+	{
+		ret = "Agni";
+	}
+	else
+	{
+		ret = getGridLabel();
+	}
+
+	return  ret;
+}
+// </FS:AW conditional opensim support>
+*/

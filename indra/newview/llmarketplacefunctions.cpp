@@ -47,7 +47,7 @@ static std::string getMarketplaceDomain()
 	
 	if (!LLGridManager::getInstance()->isInSLMain())
 	{
-		const std::string& grid_label = LLGridManager::getInstance()->getGridLabel();
+		const std::string& grid_label = LLGridManager::getInstance()->getGridNick();
 		const std::string& grid_label_lower = utf8str_tolower(grid_label);
 		
 		if (grid_label_lower == "damballah")
@@ -336,13 +336,19 @@ namespace LLMarketplaceImport
 // Interface class
 //
 
+static const F32 MARKET_IMPORTER_UPDATE_FREQUENCY = 1.0f;
 
 //static
 void LLMarketplaceInventoryImporter::update()
 {
 	if (instanceExists())
 	{
-		LLMarketplaceInventoryImporter::instance().updateImport();
+		static LLTimer update_timer;
+		if (update_timer.hasExpired())
+		{
+			LLMarketplaceInventoryImporter::instance().updateImport();
+			update_timer.setTimerExpirySec(MARKET_IMPORTER_UPDATE_FREQUENCY);
+		}
 	}
 }
 

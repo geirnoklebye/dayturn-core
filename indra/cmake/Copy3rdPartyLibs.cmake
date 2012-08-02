@@ -107,6 +107,7 @@ if(WINDOWS)
         libeay32.dll
         libcollada14dom22-d.dll
         glod.dll
+        libhunspell.dll
         )
 
 
@@ -184,6 +185,7 @@ if(WINDOWS)
         libeay32.dll
         libcollada14dom22.dll
         glod.dll
+        libhunspell.dll
         )
 
 
@@ -355,6 +357,7 @@ elseif(DARWIN)
         libminizip.a
         libndofdev.dylib
         libopenal.1.dylib
+        libhunspell-1.3.0.dylib
         libopenjpeg.1.4.dylib
         libexception_handler.dylib
         libcollada14dom.dylib
@@ -449,6 +452,7 @@ elseif(LINUX)
         libgobject-2.0.so
         libgtest_main.so
         libgtest.so.0
+        libhunspell-1.3.so.0.0.0
         libminizip.so
         libopenal.so
         libopenjpeg.so

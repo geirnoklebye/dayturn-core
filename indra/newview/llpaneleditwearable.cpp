@@ -574,6 +574,7 @@ static void init_texture_ctrl(LLPanelEditWearable* self, LLPanel* panel, const L
                 texture_ctrl->setAllowNoTexture(entry->mAllowNoTexture);
                 // Don't allow (no copy) or (notransfer) textures to be selected.
                 texture_ctrl->setImmediateFilterPermMask(PERM_NONE);
+                texture_ctrl->setDnDFilterPermMask(PERM_NONE);
                 texture_ctrl->setNonImmediateFilterPermMask(PERM_NONE);
         }
 }
@@ -661,7 +662,7 @@ void LLPanelEditWearable::updateMetricLayout(BOOL new_value)
         current_metric = new_value ? mMeters : mFeet;
         replacment_metric = new_value ? mFeet : mMeters;
         mHeigthValue.setArg( "[METRIC1]", current_metric.getString() );
-        mReplacementMetricUrl.setArg( "[URL_METRIC2]", std::string("[secondlife:///app/metricsystem ") + replacment_metric.getString() + std::string("]"));
+	mReplacementMetricUrl.setArg( "[URL_METRIC2]", std::string("[hop:///app/metricsystem ") + replacment_metric.getString() + std::string("]"));
 }
 
 void LLPanelEditWearable::updateAvatarHeightLabel()

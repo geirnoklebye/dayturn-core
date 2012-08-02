@@ -182,7 +182,7 @@ public:
 		}
 
 		// build a secondlife://{PLACE} SLurl from this SLapp
-		std::string url = "secondlife://";
+		std::string url = "hop://";
 		for (int i = 0; i < num_params; i++)
 		{
 			if (i > 0)
@@ -652,6 +652,31 @@ std::string LLViewerRegion::accessToShortString(U8 sim_access)
 	default:
 		return "U";
 	}
+}
+
+// static
+U8 LLViewerRegion::shortStringToAccess(const std::string &sim_access)
+{
+	U8 accessValue;
+
+	if (LLStringUtil::compareStrings(sim_access, "PG") == 0)
+	{
+		accessValue = SIM_ACCESS_PG;
+	}
+	else if (LLStringUtil::compareStrings(sim_access, "M") == 0)
+	{
+		accessValue = SIM_ACCESS_MATURE;
+	}
+	else if (LLStringUtil::compareStrings(sim_access, "A") == 0)
+	{
+		accessValue = SIM_ACCESS_ADULT;
+	}
+	else
+	{
+		accessValue = SIM_ACCESS_MIN;
+	}
+
+	return accessValue;
 }
 
 // static

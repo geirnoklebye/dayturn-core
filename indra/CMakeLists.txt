@@ -31,6 +31,12 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
       "Build type.  One of: Debug Release RelWithDebInfo" FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
+#<FS:AW optional opensim support>
+set(HAS_OPENSIM_SUPPORT ON)
+if (HAS_OPENSIM_SUPPORT)
+  add_definitions(-DHAS_OPENSIM_SUPPORT=1)
+  message("compiling with OpenSim support")
+endif (HAS_OPENSIM_SUPPORT)
 
 # For the library installation process;
 # see cmake/Prebuild.cmake for the counterpart code.

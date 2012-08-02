@@ -38,6 +38,7 @@
 #include "llagent.h"
 #include "llagentcamera.h"
 #include "llfloaterreg.h"
+#include "lllogininstance.h" // <FS:AW  opensim destinations and avatar picker>
 #include "llmeshrepository.h"
 #include "llpanellogin.h"
 #include "llviewerkeyboard.h"
@@ -121,6 +122,7 @@
 #include "llimageworker.h"
 #include "llkeyboard.h"
 #include "lllineeditor.h"
+#include "lllogininstance.h"
 #include "llmenugl.h"
 #include "llmodaldialog.h"
 #include "llmorphview.h"
@@ -175,6 +177,7 @@
 #include "llviewershadermgr.h"
 #include "llviewerstats.h"
 #include "llvoavatarself.h"
+#include "llvopartgroup.h"
 #include "llvovolume.h"
 #include "llworld.h"
 #include "llworldmapview.h"
@@ -613,7 +616,7 @@ public:
 				addText(xpos, ypos, llformat("%d/%d Mesh HTTP Requests/Retries", LLMeshRepository::sHTTPRequestCount,
 					LLMeshRepository::sHTTPRetryCount));
 				ypos += y_inc;
-
+				
 				addText(xpos, ypos, llformat("%d/%d Mesh LOD Pending/Processing", LLMeshRepository::sLODPending, LLMeshRepository::sLODProcessing));
 				ypos += y_inc;
 
@@ -1704,9 +1707,6 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	// Can't have spaces in settings.ini strings, so use underscores instead and convert them.
 	LLStringUtil::replaceChar(mOverlayTitle, '_', ' ');
 
-	// sync the keyboard's setting with the saved setting
-	gSavedSettings.getControl("NumpadControl")->firePropertyChanged();
-
 	mDebugText = new LLDebugText(this);
 
 	mWorldViewRectScaled = calcScaledRect(mWorldViewRectRaw, mDisplayScale);
@@ -1935,23 +1935,77 @@ void LLViewerWindow::initWorldUI()
 		gToolBarView->loadToolbars();
 		gToolBarView->setVisible(TRUE);
 	}
+// <FS:AW  opensim destinations and avatar picker>
+// 	LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
+// 	if (destinations)
+// 	{
+// 		destinations->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
+// 		std::string url = gSavedSettings.getString("DestinationGuideURL");
+// 		url = LLWeb::expandURLSubstitutions(url, LLSD());
+// 		destinations->navigateTo(url, "text/html");
+// 	}
+// 	LLMediaCtrl* avatar_picker = LLFloaterReg::getInstance("avatar")->findChild<LLMediaCtrl>("avatar_picker_contents");
+// 	if (avatar_picker)
+// 	{
+// 		avatar_picker->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
+// 		std::string url = gSavedSettings.getString("AvatarPickerURL");
+// 		url = LLWeb::expandURLSubstitutions(url, LLSD());
+// 		avatar_picker->navigateTo(url, "text/html");
+// 	}
+	std::string destination_guide_url;
+#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
+	if (LLGridManager::getInstance()->isInOpenSim())
+	{
+		if (LLLoginInstance::getInstance()->hasResponse("destination_guide_url"))
+		{
+			destination_guide_url = LLLoginInstance::getInstance()->getResponse("destination_guide_url").asString();
+		}
+	}
+	else
+#endif // HAS_OPENSIM_SUPPORT  // <FS:AW optional opensim support>
+	{
+		destination_guide_url = gSavedSettings.getString("DestinationGuideURL");
+	}
 
-	LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
-	if (destinations)
-	{
-		destinations->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-		std::string url = gSavedSettings.getString("DestinationGuideURL");
-		url = LLWeb::expandURLSubstitutions(url, LLSD());
-		destinations->navigateTo(url, "text/html");
+	if(!destination_guide_url.empty())
+	{	
+		LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
+		if (destinations)
+		{
+			destinations->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
+			destination_guide_url = LLWeb::expandURLSubstitutions(destination_guide_url, LLSD());
+			LL_DEBUGS("WebApi") << "3 DestinationGuideURL \"" << destination_guide_url << "\"" << LL_ENDL;
+			destinations->navigateTo(destination_guide_url, "text/html");
+		}
 	}
-	LLMediaCtrl* avatar_picker = LLFloaterReg::getInstance("avatar")->findChild<LLMediaCtrl>("avatar_picker_contents");
-	if (avatar_picker)
+
+	std::string avatar_picker_url;
+#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
+	if (LLGridManager::getInstance()->isInOpenSim())
 	{
-		avatar_picker->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-		std::string url = gSavedSettings.getString("AvatarPickerURL");
-		url = LLWeb::expandURLSubstitutions(url, LLSD());
-		avatar_picker->navigateTo(url, "text/html");
+		if (LLLoginInstance::getInstance()->hasResponse("avatar_picker_url"))
+		{
+			avatar_picker_url = LLLoginInstance::getInstance()->getResponse("avatar_picker_url").asString();
+		}
 	}
+	else
+#endif // HAS_OPENSIM_SUPPORT  // <FS:AW optional opensim support>
+	{
+		avatar_picker_url = gSavedSettings.getString("AvatarPickerURL");
+	}
+
+	if(!avatar_picker_url.empty())
+	{	
+		LLMediaCtrl* avatar_picker = LLFloaterReg::getInstance("avatar")->findChild<LLMediaCtrl>("avatar_picker_contents");
+		if (avatar_picker)
+		{
+			avatar_picker->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
+			avatar_picker_url = LLWeb::expandURLSubstitutions(avatar_picker_url, LLSD());
+			LL_DEBUGS("WebApi") << "AvatarPickerURL \"" << avatar_picker_url << "\"" << LL_ENDL;
+			avatar_picker->navigateTo(avatar_picker_url, "text/html");
+		}
+ 	}
+// </FS:AW  opensim destinations and avatar picker>
 }
 
 // Destroy the UI
@@ -1973,12 +2027,12 @@ void LLViewerWindow::shutdownViews()
 		gMorphView->setVisible(FALSE);
 	}
 	llinfos << "Global views cleaned." << llendl ;
-	
+
 	// DEV-40930: Clear sModalStack. Otherwise, any LLModalDialog left open
 	// will crump with LL_ERRS.
 	LLModalDialog::shutdownModals();
 	llinfos << "LLModalDialog shut down." << llendl; 
-
+	
 	// destroy the nav bar, not currently part of gViewerWindow
 	// *TODO: Make LLNavigationBar part of gViewerWindow
 	if (LLNavigationBar::instanceExists())
@@ -1986,17 +2040,17 @@ void LLViewerWindow::shutdownViews()
 		delete LLNavigationBar::getInstance();
 	}
 	llinfos << "LLNavigationBar destroyed." << llendl ;
-	
+
 	// destroy menus after instantiating navbar above, as it needs
 	// access to gMenuHolder
 	cleanup_menus();
 	llinfos << "menus destroyed." << llendl ;
-	
+
 	// Delete all child views.
 	delete mRootView;
 	mRootView = NULL;
 	llinfos << "RootView deleted." << llendl ;
-	
+
 	// Automatically deleted as children of mRootView.  Fix the globals.
 	gStatusBar = NULL;
 	gIMMgr = NULL;
@@ -4660,6 +4714,8 @@ void LLViewerWindow::stopGL(BOOL save_state)
 		LLVOAvatar::destroyGL();
 		stop_glerror();
 
+		LLVOPartGroup::destroyGL();
+
 		LLViewerDynamicTexture::destroyGL();
 		stop_glerror();
 
@@ -4713,7 +4769,8 @@ void LLViewerWindow::restoreGL(const std::string& progress_message)
 		gBumpImageList.restoreGL();
 		LLViewerDynamicTexture::restoreGL();
 		LLVOAvatar::restoreGL();
-		
+		LLVOPartGroup::restoreGL();
+
 		gResizeScreenTexture = TRUE;
 		gWindowResized = TRUE;
 
@@ -5196,8 +5253,10 @@ void LLPickInfo::getSurfaceInfo()
 			if (objectp->mDrawable.notNull() && mObjectFace > -1)
 			{
 				LLFace* facep = objectp->mDrawable->getFace(mObjectFace);
-
-				mUVCoords = facep->surfaceToTexture(mSTCoords, mIntersection, mNormal);
+				if (facep)
+				{
+					mUVCoords = facep->surfaceToTexture(mSTCoords, mIntersection, mNormal);
+				}
 			}
 
 			// and XY coords:

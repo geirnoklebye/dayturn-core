@@ -62,7 +62,7 @@
 	<string name="create_account_url">http://join.secondlife.com/</string>
 
 	<string name="LoginFailedViewerNotPermitted">
-The viewer you are using can no longer access Second Life. Please visit the following page to download a new viewer:
+The viewer you are using can no longer access [CURRENT_GRID]. Please visit the following page to download a new viewer:
 http://secondlife.com/download
 
 For more information, see our FAQ below:
@@ -84,13 +84,13 @@ We are very sorry for the inconvenience.</string>
 Please go to your account page at http://secondlife.com/password
 and answer the security question to reset your password.
 We are very sorry for the inconvenience.</string>
-	<string name="LoginFailedEmployeesOnly">Second Life is temporarily closed for maintenance.
+	<string name="LoginFailedEmployeesOnly">[CURRENT_GRID] is temporarily closed for maintenance.
 Logins are currently restricted to employees only.
 Check www.secondlife.com/status for updates.</string>
-	<string name="LoginFailedPremiumOnly">Second Life logins are temporarily restricted in order to make sure that those in-world have the best possible experience.
+	<string name="LoginFailedPremiumOnly">[CURRENT_GRID] logins are temporarily restricted in order to make sure that those in-world have the best possible experience.
 
-People with free accounts will not be able to access Second Life during this time, to make room for those who have paid for Second Life.</string>
-	<string name="LoginFailedComputerProhibited">Second Life cannot be accessed from this computer.
+People with free accounts will not be able to access [CURRENT_GRID] during this time, to make room for those who have paid for [CURRENT_GRID].</string>
+	<string name="LoginFailedComputerProhibited">[CURRENT_GRID] cannot be accessed from this computer.
 If you feel this is an error, please contact
 support@secondlife.com.</string>
 	<string name="LoginFailedAcountSuspended">Your account is not accessible until
@@ -110,7 +110,7 @@ Your Account will not be available until
 [TIME] Pacific Time.</string>
 	<string name="LoginFailedUnableToCreateSession">Unable to create valid session.</string>
 	<string name="LoginFailedUnableToConnectToSimulator">Unable to connect to a simulator.</string>
-	<string name="LoginFailedRestrictedHours">Your account can only access Second Life
+	<string name="LoginFailedRestrictedHours">Your account can only access [CURRENT_GRID]
 between [START] and [END] Pacific Time.
 Please come back during those hours.
 If you feel this is an error, please contact support@secondlife.com.</string>
@@ -136,7 +136,7 @@ Please try logging in again in a minute.</string>
 Please try logging in again in a minute.</string>
 	<string name="LoginFailedLoggingOutSession">The system has begun logging out your last session.
 Please try logging in again in a minute.</string>
-
+	<string name="ServerComboAddGrid">&lt;type or paste new login uri&gt;</string>
 
 	<!-- Disconnection -->
 	<string name="AgentLostConnection">This region may be experiencing trouble.  Please check your connection to the Internet.</string>
@@ -441,6 +441,7 @@ Please try logging in again in a minute.</string>
 	<string name="load_files">Load Files</string>
 	<string name="choose_the_directory">Choose Directory</string>
 	<string name="script_files">Scripts</string>
+	<string name="dictionary_files">Dictionaries</string>
 
   <!-- LSL Usage Hover Tips -->
   <!-- NOTE: For now these are set as translate="false", until DEV-40761 is implemented (to internationalize the rest of tooltips in the same window).
@@ -2044,7 +2045,7 @@ Returns a string with the requested data about the region
 	<string name="InventoryNoTexture">You do not have a copy of this texture in your inventory</string>
 	<string name="InventoryInboxNoItems">Your Marketplace purchases will appear here. You may then drag them into your inventory to use them.</string>
 	<string name="MarketplaceURL">https://marketplace.[MARKETPLACE_DOMAIN_NAME]/</string>
-	<string name="MarketplaceURL_CreateStore">http://community.secondlife.com/t5/English-Knowledge-Base/Selling-in-the-Marketplace/ta-p/700193#Section_.4</string>
+	<string name="MarketplaceURL_CreateStore">http://community.[MARKETPLACE_DOMAIN_NAME]/t5/English-Knowledge-Base/Selling-in-the-Marketplace/ta-p/700193#Section_.4</string>
 	<string name="MarketplaceURL_Dashboard">https://marketplace.[MARKETPLACE_DOMAIN_NAME]/merchants/store/dashboard</string>
 	<string name="MarketplaceURL_Imports">https://marketplace.[MARKETPLACE_DOMAIN_NAME]/merchants/store/imports</string>
 	<string name="MarketplaceURL_LearnMore">https://marketplace.[MARKETPLACE_DOMAIN_NAME]/learn_more</string>
@@ -2420,6 +2421,11 @@ Drag folders to this area and click "Send to Marketplace" to list them for sale 
   <string name="NoPicksClassifiedsText">You haven't created any Picks or Classifieds. Click the Plus button below to create a Pick or Classified.</string>
   <string name="NoAvatarPicksClassifiedsText">User has no picks or classifieds</string>
   <string name="PicksClassifiedsLoadingText">Loading...</string>
+  <!-- FS:KC legacy profiles -->
+  <string name="NoPicksText">You haven't created any Picks.</string>
+  <string name="NoAvatarPicksText">User has no picks</string>
+  <string name="NoClassifiedsText">You haven't created any Classifieds.</string>
+  <string name="NoAvatarClassifiedsText">User has no classifieds</string>
 
 	<!-- Multi Preview Floater -->
 	<string name="MultiPreviewTitle">Preview</string>
@@ -3758,4 +3764,9 @@ Try enclosing path to the editor with double quotes.
   <string name="snapshot_quality_high">High</string>
   <string name="snapshot_quality_very_high">Very High</string>
 
+  <string name="TeleportMaturityExceeded">The Resident cannot visit this region.</string>
+
+  <!-- Spell check settings floater -->
+  <string name="UserDictionary">[User]</string>
+  
   </strings>

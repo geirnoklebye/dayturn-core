@@ -64,6 +64,13 @@ class ViewerManifest(LLManifest):
                 self.path("shaders")
                 # ... and the entire windlight directory
                 self.path("windlight")
+
+                # ... and the included spell checking dictionaries
+                pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
+                if self.prefix(src=pkgdir,dst=""):
+                    self.path("dictionaries")
+                    self.end_prefix(pkgdir)
+
                 self.end_prefix("app_settings")
 
             if self.prefix(src="character"):
@@ -349,6 +356,9 @@ class WindowsManifest(ViewerManifest):
 				# Security
             self.path("ssleay32.dll")
             self.path("libeay32.dll")				
+
+            # Hunspell
+            self.path("libhunspell.dll")
 
         #OpenAL
         try:
@@ -796,6 +806,7 @@ class DarwinManifest(ViewerManifest):
                 self.end_prefix("MacOS")
 
             self.path("../packages/lib/release/libndofdev.dylib", dst="Resources/libndofdev.dylib")
+            self.path("../packages/lib/release/libhunspell-1.3.0.dylib", dst="Resources/libhunspell-1.3.0.dylib")
 
 	    self.path("../viewer_components/updater/scripts/darwin/update_install", "MacOS/update_install")
 
@@ -1080,7 +1091,7 @@ class LinuxManifest(ViewerManifest):
             self.path("wrapper.sh","kokua")
             self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
             self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
-#            self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
+            self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
             self.path("refresh_desktop_app_entry.sh", "etc/refresh_desktop_app_entry.sh")
             self.path("launch_url.sh","etc/launch_url.sh")
             self.path("install.sh")
@@ -1172,9 +1183,13 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libopenjpeg.so*")
             self.path("libdirectfb-1.4.so.5")
             self.path("libfusion-1.4.so.5")
+            self.path("libdirect-1.4.so.5.0.4")
             self.path("libdirect-1.4.so.5")
+            self.path("libhunspell-1.3.so")
+            self.path("libhunspell-1.3.so.0")
             #self.path("libgomp.so.1")
             #self.path("libgomp.so.1.0.0")
+            self.path("libhunspell-1.3.so.0.0.0")
             self.path("libalut.so")
             self.path("libalut.so.0")
             self.path("libalut.so.0.0.0")
@@ -1250,15 +1265,22 @@ class Linux_x86_64Manifest(LinuxManifest):
 #
             self.path("libexpat.so.1")
             self.path("libSDL-1.2.so.0.11.3","libSDL-1.2.so.0")
-            self.path("libjpeg.so.7")
+            self.path("libjpeg.so")
+            self.path("libjpeg.so.8")
+            self.path("libjpeg.so.8.3.0")
             self.path("libopenjpeg.so.1.4.0")
             self.path("libopenjpeg.so.1")
             self.path("libopenjpeg.so")
+            self.path("libhunspell-1.3.so")
+            self.path("libhunspell-1.3.so.0")
+            self.path("libhunspell-1.3.so.0.0.0")
 #Removed libgomp openmp from the hacd library effect with viewer-Beta 3.3.3
 #            self.path("libgomp.so.1")
 #            self.path("libgomp.so.1.0.0")
             self.path("libpcre.so")
             self.path("libpcre.so.3")
+            self.path("libpcrecpp.so")
+            self.path("libpcrecpp.so.0")
             self.path("libminizip.so")
             self.path("libminizip.so.1")
             self.path("libminizip.so.1.2.3")

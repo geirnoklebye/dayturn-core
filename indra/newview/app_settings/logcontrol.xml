@@ -43,9 +43,37 @@
 					<key>tags</key>
 						<array>
 						<!-- sample entry for debugging specific items	
-						     <string>Avatar</string>
-						     <string>Voice</string>		
-						-->
+						<string>Avatar</string>
+						<string>OS_SETTINGS</string>
+						<string>UrlEntry</string>
+						<string>WebApi</string>
+						<string>Voice</string>
+						<string>InterfaceProtocolParser</string>
+                        -->
+
+						<!-- <string>InventoryFetch</string> -->
+
+						<!-- Voice -->
+							<!-- <string>Voice</string> -->
+							<!-- <string>VivoxProtocolParser</string> -->
+
+						<!-- Wearable -->
+
+						<!--Shaders-->
+							<!--<string>Shaders</string>-->
+							<!--<string>WindLight</string>-->
+
+						<!-- see lltexturefetch -->
+							<!-- <string>HTTPGetResponder</string> -->
+							<!-- <string>TextureFetch</string> -->
+							<!-- <string>TextureFetchWorker</string> -->
+
+
+						<!-- Spammers -->
+							<!-- <string>ShaderLoading</string> -->
+							<!-- <string>View</string> -->
+							<!-- <string>FastTimer</string> -->
+
 						</array>
 				</map>
 			</array>
