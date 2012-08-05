@@ -60,6 +60,8 @@
 #include "llfloatergodtools.h"
 #include "llfloaterinventory.h"
 #include "llfloaterland.h"
+#include "llfloaterpathfindingcharacters.h"
+#include "llfloaterpathfindinglinksets.h"
 #include "llfloaterpay.h"
 #include "llfloaterreporter.h"
 #include "llfloatersearch.h"
@@ -117,6 +119,7 @@
 #include "lleconomy.h"
 #include "lltoolgrab.h"
 #include "llwindow.h"
+#include "llpathfindingmanager.h"
 #include "boost/unordered_map.hpp"
 
 //MK
@@ -208,7 +211,6 @@ void near_sit_object();
 BOOL is_selection_buy_not_take();
 S32 selection_price();
 BOOL enable_take();
-void handle_take();
 void handle_object_show_inspector();
 void handle_avatar_show_inspector();
 bool confirm_take(const LLSD& notification, const LLSD& response, LLObjectSelectionHandle selection_handle);
@@ -2900,6 +2902,16 @@ bool enable_object_build()
 	return !enable_object_edit();
 }
 
+bool enable_object_select_in_pathfinding_linksets()
+{
+	return LLPathfindingManager::getInstance()->isPathfindingEnabledForCurrentRegion() && LLSelectMgr::getInstance()->selectGetEditableLinksets();
+}
+
+bool enable_object_select_in_pathfinding_characters()
+{
+	return LLPathfindingManager::getInstance()->isPathfindingEnabledForCurrentRegion() &&  LLSelectMgr::getInstance()->selectGetViewableCharacters();
+}
+
 class LLSelfRemoveAllAttachments : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -3481,7 +3493,7 @@ void append_aggregate(std::string& string, const LLAggregatePermissions& ag_perm
 bool enable_buy_object()
 {
     // In order to buy, there must only be 1 purchaseable object in
-    // the selection manger.
+    // the selection manager.
 	if(LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() != 1) return false;
     LLViewerObject* obj = NULL;
     LLSelectNode* node = LLSelectMgr::getInstance()->getSelection()->getFirstRootNode();
@@ -4458,8 +4470,9 @@ static bool get_derezzable_objects(
 		{
 		case DRD_TAKE_INTO_AGENT_INVENTORY:
 		case DRD_TRASH:
-			if( (node->mPermissions->allowTransferTo(gAgent.getID()) && object->permModify())
-				|| (node->allowOperationOnNode(PERM_OWNER, GP_OBJECT_MANIPULATE)) )
+			if (!object->isPermanentEnforced() &&
+				((node->mPermissions->allowTransferTo(gAgent.getID()) && object->permModify())
+				|| (node->allowOperationOnNode(PERM_OWNER, GP_OBJECT_MANIPULATE))))
 			{
 				can_derez_current = TRUE;
 			}
@@ -4923,9 +4936,10 @@ BOOL enable_take()
 			return TRUE;
 		}
 # endif
-		if((node->mPermissions->allowTransferTo(gAgent.getID())
+		if(!object->isPermanentEnforced() &&
+			((node->mPermissions->allowTransferTo(gAgent.getID())
 			&& object->permModify())
-		   || (node->mPermissions->getOwner() == gAgent.getID()))
+			|| (node->mPermissions->getOwner() == gAgent.getID())))
 		{
 			return TRUE;
 		}
@@ -5174,6 +5188,22 @@ class LLToolsSaveToObjectInventory : public view_listener_t
 			derez_objects(DRD_SAVE_INTO_TASK_INVENTORY, node->mFromTaskID);
 		}
 		return true;
+	}
+};
+
+class LLToolsEnablePathfinding : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		return (LLPathfindingManager::getInstance() != NULL) && LLPathfindingManager::getInstance()->isPathfindingEnabledForCurrentRegion();
+	}
+};
+
+class LLToolsEnablePathfindingView : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		return (LLPathfindingManager::getInstance() != NULL) && LLPathfindingManager::getInstance()->isPathfindingEnabledForCurrentRegion() && LLPathfindingManager::getInstance()->isPathfindingViewEnabled();
 	}
 };
 
@@ -5527,6 +5557,12 @@ class LLEditDelete : public view_listener_t
 	}
 };
 
+bool enable_object_return()
+{
+	return (!LLSelectMgr::getInstance()->getSelection()->isEmpty() &&
+		(gAgent.isGodlike() || can_derez(DRD_RETURN_TO_OWNER)));
+}
+
 void handle_spellcheck_replace_with_suggestion(const LLUICtrl* ctrl, const LLSD& param)
 {
 	const LLContextMenu* menu = dynamic_cast<const LLContextMenu*>(ctrl->getParent());
@@ -5624,6 +5660,49 @@ bool enable_object_delete()
 	}
 //mk
 	return new_value;
+}
+
+class LLObjectsReturnPackage
+{
+public:
+	LLObjectsReturnPackage() : mObjectSelection(), mReturnableObjects(), mError(),	mFirstRegion(NULL) {};
+	~LLObjectsReturnPackage()
+	{
+		mObjectSelection.clear();
+		mReturnableObjects.clear();
+		mError.clear();
+		mFirstRegion = NULL;
+	};
+
+	LLObjectSelectionHandle mObjectSelection;
+	LLDynamicArray<LLViewerObjectPtr> mReturnableObjects;
+	std::string mError;
+	LLViewerRegion *mFirstRegion;
+};
+
+static void return_objects(LLObjectsReturnPackage *objectsReturnPackage, const LLSD& notification, const LLSD& response)
+{
+	if (LLNotificationsUtil::getSelectedOption(notification, response) == 0)
+	{
+		// Ignore category ID for this derez destination.
+		derez_objects(DRD_RETURN_TO_OWNER, LLUUID::null, objectsReturnPackage->mFirstRegion, objectsReturnPackage->mError, &objectsReturnPackage->mReturnableObjects);
+	}
+
+	delete objectsReturnPackage;
+}
+
+void handle_object_return()
+{
+	if (!LLSelectMgr::getInstance()->getSelection()->isEmpty())
+	{
+		LLObjectsReturnPackage *objectsReturnPackage = new LLObjectsReturnPackage();
+		objectsReturnPackage->mObjectSelection = LLSelectMgr::getInstance()->getEditSelection();
+
+		// Save selected objects, so that we still know what to return after the confirmation dialog resets selection.
+		get_derezzable_objects(DRD_RETURN_TO_OWNER, objectsReturnPackage->mError, objectsReturnPackage->mFirstRegion, &objectsReturnPackage->mReturnableObjects);
+
+		LLNotificationsUtil::add("ReturnToOwner", LLSD(), LLSD(), boost::bind(&return_objects, objectsReturnPackage, _1, _2));
+	}
 }
 
 void handle_object_delete()
@@ -7151,6 +7230,7 @@ BOOL object_selected_and_point_valid()
 		(selection->getFirstRootObject()->getPCode() == LL_PCODE_VOLUME) && 
 		selection->getFirstRootObject()->permYouOwner() &&
 		selection->getFirstRootObject()->flagObjectMove() &&
+		!selection->getFirstRootObject()->flagObjectPermanent() &&
 		!((LLViewerObject*)selection->getFirstRootObject()->getRoot())->isAvatar() && 
 		(selection->getFirstRootObject()->getNVPair("AssetContainer") == NULL);
 }
@@ -7700,8 +7780,8 @@ BOOL enable_save_into_inventory(void*)
 			return TRUE;
 		}
 	}
-#endif
 	return FALSE;
+#endif
 }
 
 class LLToolsEnableSaveToInventory : public view_listener_t
@@ -9095,6 +9175,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLToolsEnableSaveToInventory(), "Tools.EnableSaveToInventory");
 	view_listener_t::addMenu(new LLToolsEnableSaveToObjectInventory(), "Tools.EnableSaveToObjectInventory");
 
+	view_listener_t::addMenu(new LLToolsEnablePathfinding(), "Tools.EnablePathfinding");
+	view_listener_t::addMenu(new LLToolsEnablePathfindingView(), "Tools.EnablePathfindingView");
+
 	// Help menu
 	// most items use the ShowFloater method
 	view_listener_t::addMenu(new LLToggleHowTo(), "Help.ToggleHowTo");
@@ -9384,6 +9467,10 @@ void initialize_menus()
 	enable.add("EnablePayAvatar", boost::bind(&enable_pay_avatar));
 	enable.add("EnableEdit", boost::bind(&enable_object_edit));
 	enable.add("VisibleBuild", boost::bind(&enable_object_build));
+	commit.add("Pathfinding.Linksets.Select", boost::bind(&LLFloaterPathfindingLinksets::openLinksetsWithSelectedObjects));
+	enable.add("EnableSelectInPathfindingLinksets", boost::bind(&enable_object_select_in_pathfinding_linksets));
+	commit.add("Pathfinding.Characters.Select", boost::bind(&LLFloaterPathfindingCharacters::openCharactersWithSelectedObjects));
+	enable.add("EnableSelectInPathfindingCharacters", boost::bind(&enable_object_select_in_pathfinding_characters));
 
 	view_listener_t::addMenu(new LLFloaterVisible(), "FloaterVisible");
 	view_listener_t::addMenu(new LLShowSidetrayPanel(), "ShowSidetrayPanel");

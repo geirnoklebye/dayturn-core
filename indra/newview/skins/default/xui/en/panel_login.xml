@@ -147,7 +147,7 @@ label="&lt;Type region name&gt;"
 name="Typeregionname"   value="" />
 </combo_box>
 <combo_box
-allow_text_entry="true"
+          allow_text_entry="false"
 font="SansSerifSmall"
    follows="left|right|bottom"
    height="23"
@@ -155,7 +155,7 @@ font="SansSerifSmall"
 layout="topleft"
 top_pad="2"
 name="server_combo"
-width="135"
+          width="250"
   visible="false" />
 </layout_panel>
 <layout_panel
@@ -200,17 +200,6 @@ top_pad="2"
 right="-10"
     width="200">
        Need help logging in?   </text>
-<!--  <text
-    follows="right|bottom"
-    font="SansSerifSmall"
-    halign="right"
-    height="28"
-    top_pad="2"
-    name="channel_text"
-    width="180"
-    word_wrap="true">
-       [VERSION]
-   </text>-->
    </layout_panel>
 </layout_stack>
 </panel>
