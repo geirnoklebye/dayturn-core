@@ -617,8 +617,8 @@ BOOL RRInterface::containsWithoutException (std::string action, std::string exce
 
 bool RRInterface::isFolderLocked(LLInventoryCategory* cat)
 {
-	const LLFolderType::EType folder_type = cat->getPreferredType();
-	if (LLFolderType::lookupIsProtectedType(folder_type)) return false;
+//	const LLFolderType::EType folder_type = cat->getPreferredType();
+//	if (LLFolderType::lookupIsProtectedType(folder_type)) return false;
 
 	if (contains ("unsharedwear") && !isUnderRlvShare(cat)) return true;
 	if (isFolderLockedWithoutException(cat, "attach") != FolderLock_unlocked) return true;
@@ -3778,6 +3778,17 @@ bool RRInterface::canWear(LLInventoryItem* item)
 		else if (item->getType() == LLAssetType::AT_CLOTHING || item->getType() == LLAssetType::AT_BODYPART) {
 			const LLViewerInventoryItem *vitem = dynamic_cast<const LLViewerInventoryItem*>(item);
 			if (vitem) {
+				LLWearableType::EType type = vitem->getWearableType();
+				if (gAgentAvatarp && gAgentAvatarp->getIsCloud())
+				{
+					if (type == LLWearableType::WT_SHAPE
+						|| type == LLWearableType::WT_HAIR
+						|| type == LLWearableType::WT_EYES
+						|| type == LLWearableType::WT_SKIN
+					) {
+						return true;
+					}
+				}
 				if (!canWear (vitem->getWearableType())) return false;
 			}
 			if (!canAttachCategory (parent)) return false;
