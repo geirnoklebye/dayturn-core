@@ -622,9 +622,16 @@ void LLPanelLogin::updateLocationSelectorsVisibility()
 //MK
 		if (gSavedSettings.getBOOL("RestrainedLove"))
 		{
+			// Force to "My last location"
 			LLComboBox* combo = sInstance->getChild<LLComboBox>("start_location_combo");
-			combo->setCurrentByIndex( 0 );	
- 			show_start = FALSE;
+			combo->setCurrentByIndex( 0 );
+
+			// Simulate a callback on this combo to take the change into account
+			std::string location = combo->getValue().asString();
+			LLStartUp::setStartSLURL(location); // calls onUpdateStartSLURL, above 
+
+			// Hide the combo
+			show_start = FALSE;
 		}
 //mk
 	
