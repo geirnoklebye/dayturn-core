@@ -92,6 +92,8 @@ indra/.settings/org.eclipse.cdt.ui.prefs
 .cproject
 *.patch
 *.rej
+*.bz2
+*.zip
 syntax: regexp
 fmodapi375win/*
 glob:*.diff
