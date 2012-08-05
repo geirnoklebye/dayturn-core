@@ -619,23 +619,22 @@ void LLPanelLogin::updateLocationSelectorsVisibility()
 	if (sInstance) 
 	{
 		BOOL show_start = gSavedSettings.getBOOL("ShowStartLocation");
-	}
-
- //MK
- 	if (gSavedSettings.getBOOL("RestrainedLove"))
-	{
-		combo->setCurrentByIndex( 0 );	
- 		show_start = FALSE;
-	}
- //mk
- 
-	sInstance->getChildView("start_location_combo")->setVisible( show_start);
-	sInstance->getChildView("start_location_text")->setVisible( show_start);
+//MK
+		if (gSavedSettings.getBOOL("RestrainedLove"))
+		{
+			LLComboBox* combo = sInstance->getChild<LLComboBox>("start_location_combo");
+			combo->setCurrentByIndex( 0 );	
+ 			show_start = FALSE;
+		}
+//mk
 	
-	BOOL show_server = gSavedSettings.getBOOL("ForceShowGrid");
+		sInstance->getChildView("start_location_combo")->setVisible( show_start);
+		sInstance->getChildView("start_location_text")->setVisible( show_start);
+	
+		BOOL show_server = gSavedSettings.getBOOL("ForceShowGrid");
 		LLComboBox* server_choice_combo = sInstance->getChild<LLComboBox>("server_combo");
 		server_choice_combo->setVisible( show_server );
-}
+	}
 }
 
 // static - called from LLStartUp::setStartSLURL
