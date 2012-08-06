@@ -1214,7 +1214,7 @@ class Linux_i686Manifest(LinuxManifest):
             # particular wildcard specification gets us exactly what the
             # previous call did, without having to explicitly state the
             # version number.
-            self.path("libfontconfig.so.*.*")
+            self.path("libfontconfig.so*")
             self.path("libtcmalloc.so*") #formerly called google perf tools
             self.end_prefix("lib")
 
@@ -1303,7 +1303,7 @@ class Linux_x86_64Manifest(LinuxManifest):
             #use old package for now, with 1.13.0 objects render black
             self.path("libalut.so.0.1.0")
             self.path("libopenal.so.1.12.854")
-
+            self.path("libfontconfig.so*")
             self.end_prefix("lib64")
 
             # Vivox runtimes

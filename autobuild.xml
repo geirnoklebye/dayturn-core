@@ -755,9 +755,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d8b08b657247566bde5fd853c7622478</string>
+              <string>7d1b34f062795570b8f79c36c1aafdce</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/fontconfig-2.8.0-linux-20110311.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-fontconfig/downloads/fontconfig-2.8.0-linux-20120803.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -828,9 +828,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9f8a9dc39fd7c3da0fb3533782d1fddf</string>
+              <string>ac22a824d07b2c0926ebf19fd96257c1</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-freetype/rev/226814/arch/Linux/installer/freetype-2.3.9-linux-20110418.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.3.11-linux-20120803.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
