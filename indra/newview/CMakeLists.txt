@@ -46,7 +46,15 @@ include(VisualLeakDetector)
 include(GLOD)
 include(CMakeCopyIfDifferent)
 
-add_subdirectory(${LLPHYSICSEXTENSIONS_SRC_DIR} llphysicsextensions)
+# <FS:ND> if using ndPhysicsstub this variable will be unset, we don't need to build any stub code viewer side in that case
+if( LLPHYSICSEXTENSIONS_SRC_DIR )
+# </FS:ND>
+
+  add_subdirectory(${LLPHYSICSEXTENSIONS_SRC_DIR} llphysicsextensions)
+
+# <FS:ND>
+endif( LLPHYSICSEXTENSIONS_SRC_DIR )
+# </FS:ND>
 
 include_directories(
     ${DBUSGLIB_INCLUDE_DIRS}
