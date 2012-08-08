@@ -848,7 +848,6 @@ class DarwinManifest(ViewerManifest):
                     self.path("zh-Hans.lproj")
                     self.end_prefix("packaging/mac")
 
-#<<<<<<< HEAD
                 # SLVoice and vivox lols
 
                 self.path("vivox-runtime/universal-darwin/libalut.dylib", "libalut.dylib")
@@ -858,9 +857,7 @@ class DarwinManifest(ViewerManifest):
                 self.path("vivox-runtime/universal-darwin/SLVoice", "SLVoice")
 
                 libdir = "../../libraries/universal-darwin/lib_release"
-#=======
                 libdir = "../packages/lib/release"
-#>>>>>>> viewer-dev/master
                 dylibs = {}
 
                 # Need to get the llcommon dll from any of the build directories as well
@@ -918,7 +915,7 @@ class DarwinManifest(ViewerManifest):
                                     "libexpat.1.5.2.dylib",
                                     "libexception_handler.dylib",
                                     "libGLOD.dylib",
-				    "libcollada14dom.dylib"
+                                    "libcollada14dom.dylib"
                                     ):
                         target_lib = os.path.join('../../..', libfile)
                         self.run_command("ln -sf %(target)r %(link)r" % 
@@ -936,10 +933,8 @@ class DarwinManifest(ViewerManifest):
 
                 # plugins
                 if self.prefix(src="", dst="llplugin"):
-                    # self.path("../media_plugins/quicktime/" + self.args['configuration'] + "/media_plugin_quicktime.dylib", "media_plugin_quicktime.dylib")
                     self.path("../media_plugins/webkit/" + self.args['configuration'] + "/media_plugin_webkit.dylib", "media_plugin_webkit.dylib")
                     self.path("../packages/lib/release/libllqtwebkit.dylib", "libllqtwebkit.dylib")
-
                     self.end_prefix("llplugin")
 
                 # command line arguments for connecting to the proper grid
@@ -966,118 +961,6 @@ class DarwinManifest(ViewerManifest):
         for script in 'Contents/MacOS/update_install',:
             self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
 
-
-#<<<<<<< HEAD
-#=======
-    #def package_finish(self):
-        #channel_standin = 'Second Life Viewer 2'  # hah, our default channel is not usable on its own
-        #if not self.default_channel():
-            #channel_standin = self.channel()
-
-        #imagename="SecondLife_" + '_'.join(self.args['version'])
-
-        ## MBW -- If the mounted volume name changes, it breaks the .DS_Store's background image and icon positioning.
-        ##  If we really need differently named volumes, we'll need to create multiple DS_Store file images, or use some other trick.
-
-        #volname="Second Life Installer"  # DO NOT CHANGE without understanding comment above
-
-        #if self.default_channel():
-            #if not self.default_grid():
-                ## beta case
-                #imagename = imagename + '_' + self.args['grid'].upper()
-        #else:
-            ## first look, etc
-            #imagename = imagename + '_' + self.channel_oneword().upper()
-
-        #sparsename = imagename + ".sparseimage"
-        #finalname = imagename + ".dmg"
-        ## make sure we don't have stale files laying about
-        #self.remove(sparsename, finalname)
-
-        #self.run_command('hdiutil create %(sparse)r -volname %(vol)r -fs HFS+ -type SPARSE -megabytes 700 -layout SPUD' % {
-                #'sparse':sparsename,
-                #'vol':volname})
-
-        ## mount the image and get the name of the mount point and device node
-        #hdi_output = self.run_command('hdiutil attach -private %r' % sparsename)
-        #try:
-            #devfile = re.search("/dev/disk([0-9]+)[^s]", hdi_output).group(0).strip()
-            #volpath = re.search('HFS\s+(.+)', hdi_output).group(1).strip()
-
-            #if devfile != '/dev/disk1':
-                ## adding more debugging info based upon nat's hunches to the
-                ## logs to help track down 'SetFile -a V' failures -brad
-                #print "WARNING: 'SetFile -a V' command below is probably gonna fail"
-
-            ## Copy everything in to the mounted .dmg
-
-            #if self.default_channel() and not self.default_grid():
-                #app_name = "Second Life " + self.args['grid']
-            #else:
-                #app_name = channel_standin.strip()
-
-            ## Hack:
-            ## Because there is no easy way to coerce the Finder into positioning
-            ## the app bundle in the same place with different app names, we are
-            ## adding multiple .DS_Store files to svn. There is one for release,
-            ## one for release candidate and one for first look. Any other channels
-            ## will use the release .DS_Store, and will look broken.
-            ## - Ambroff 2008-08-20
-            #dmg_template = os.path.join(
-                #'installers', 
-                #'darwin',
-                #'%s-dmg' % "".join(self.channel_unique().split()).lower())
-
-            #if not os.path.exists (self.src_path_of(dmg_template)):
-                #dmg_template = os.path.join ('installers', 'darwin', 'release-dmg')
-
-            #for s,d in {self.get_dst_prefix():app_name + ".app",
-                        #os.path.join(dmg_template, "_VolumeIcon.icns"): ".VolumeIcon.icns",
-                        #os.path.join(dmg_template, "background.jpg"): "background.jpg",
-                        #os.path.join(dmg_template, "_DS_Store"): ".DS_Store"}.items():
-                #print "Copying to dmg", s, d
-                #self.copy_action(self.src_path_of(s), os.path.join(volpath, d))
-
-            ## Hide the background image, DS_Store file, and volume icon file (set their "visible" bit)
-            #for f in ".VolumeIcon.icns", "background.jpg", ".DS_Store":
-                #pathname = os.path.join(volpath, f)
-                ## We've observed mysterious "no such file" failures of the SetFile
-                ## command, especially on the first file listed above -- yet
-                ## subsequent inspection of the target directory confirms it's
-                ## there. Timing problem with copy command? Try to handle.
-                #for x in xrange(3):
-                    #if os.path.exists(pathname):
-                        #print "Confirmed existence: %r" % pathname
-                        #break
-                    #print "Waiting for %s copy command to complete (%s)..." % (f, x+1)
-                    #sys.stdout.flush()
-                    #time.sleep(1)
-                ## If we fall out of the loop above without a successful break, oh
-                ## well, possibly we've mistaken the nature of the problem. In any
-                ## case, don't hang up the whole build looping indefinitely, let
-                ## the original problem manifest by executing the desired command.
-                #self.run_command('SetFile -a V %r' % pathname)
-
-            ## Create the alias file (which is a resource file) from the .r
-            #self.run_command('Rez %r -o %r' %
-                             #(self.src_path_of("installers/darwin/release-dmg/Applications-alias.r"),
-                              #os.path.join(volpath, "Applications")))
-
-            ## Set the alias file's alias and custom icon bits
-            #self.run_command('SetFile -a AC %r' % os.path.join(volpath, "Applications"))
-
-            ## Set the disk image root's custom icon bit
-            #self.run_command('SetFile -a C %r' % volpath)
-        #finally:
-            ## Unmount the image even if exceptions from any of the above 
-            #self.run_command('hdiutil detach -force %r' % devfile)
-
-        #print "Converting temp disk image to final disk image"
-        #self.run_command('hdiutil convert %(sparse)r -format UDZO -imagekey zlib-level=9 -o %(final)r' % {'sparse':sparsename, 'final':finalname})
-        ## get rid of the temp file
-        #self.package_file = finalname
-        #self.remove(sparsename)
-#>>>>>>> viewer-dev/master
 
 class LinuxManifest(ViewerManifest):
     def construct(self):
@@ -1187,8 +1070,6 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libdirect-1.4.so.5")
             self.path("libhunspell-1.3.so")
             self.path("libhunspell-1.3.so.0")
-            #self.path("libgomp.so.1")
-            #self.path("libgomp.so.1.0.0")
             self.path("libhunspell-1.3.so.0.0.0")
             self.path("libalut.so")
             self.path("libalut.so.0")
@@ -1197,23 +1078,6 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libopenal.so.1")
             self.path("libopenal.so.1.13.0")
             self.path("libopenal.so", "libvivoxoal.so.1") # vivox's sdk expects this soname
-            # KLUDGE: As of 2012-04-11, the 'fontconfig' package installs
-            # libfontconfig.so.1.4.4, along with symlinks libfontconfig.so.1
-            # and libfontconfig.so. Before we added support for library-file
-            # wildcards, though, this self.path() call specifically named
-            # libfontconfig.so.1.4.4 WITHOUT also copying the symlinks. When I
-            # (nat) changed the call to self.path("libfontconfig.so.*"), we
-            # ended up with the libfontconfig.so.1 symlink in the target
-            # directory as well. But guess what! At least on Ubuntu 10.04,
-            # certain viewer fonts look terrible with libfontconfig.so.1
-            # present in the target directory. Removing that symlink suffices
-            # to improve them. I suspect that means we actually do better when
-            # the viewer fails to find our packaged libfontconfig.so*, falling
-            # back on the system one instead -- but diagnosing and fixing that
-            # is a bit out of scope for the present project. Meanwhile, this
-            # particular wildcard specification gets us exactly what the
-            # previous call did, without having to explicitly state the
-            # version number.
             self.path("libfontconfig.so*")
             self.path("libtcmalloc.so*") #formerly called google perf tools
             self.end_prefix("lib")
@@ -1247,7 +1111,6 @@ class Linux_x86_64Manifest(LinuxManifest):
         except:
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
-#        if self.prefix("../../libraries/x86_64-linux/lib_release_client", dst="lib64"):
         if self.prefix("../packages/lib/release", dst="lib64"):
             self.path("libapr-1.so*")
             self.path("libaprutil-1.so*")
@@ -1255,14 +1118,11 @@ class Linux_x86_64Manifest(LinuxManifest):
             self.path("libdb-5.1.so")
             self.path("libdb-5.so")
             self.path("libdb.so")
-#
             self.path("libcares.so.2.0.0", "libcares.so.2")
             self.path("libcurl.so.4.2.0", "libcurl.so.4")
             self.path("libcrypto.so.1.0.0")
             self.path("libssl.so")
             self.path("libssl.so.1.0.0")
-
-#
             self.path("libexpat.so.1")
             self.path("libSDL-1.2.so.0.11.3","libSDL-1.2.so.0")
             self.path("libjpeg.so")
@@ -1274,9 +1134,6 @@ class Linux_x86_64Manifest(LinuxManifest):
             self.path("libhunspell-1.3.so")
             self.path("libhunspell-1.3.so.0")
             self.path("libhunspell-1.3.so.0.0.0")
-#Removed libgomp openmp from the hacd library effect with viewer-Beta 3.3.3
-#            self.path("libgomp.so.1")
-#            self.path("libgomp.so.1.0.0")
             self.path("libpcre.so")
             self.path("libpcre.so.3")
             self.path("libpcrecpp.so")
@@ -1284,23 +1141,18 @@ class Linux_x86_64Manifest(LinuxManifest):
             self.path("libminizip.so")
             self.path("libminizip.so.1")
             self.path("libminizip.so.1.2.3")
-#
             self.path("libxml2.so.2.7.8")
             self.path("libz.so.1.2.5")
             self.path("libz.so.1")
             self.path("libz.so")
-#
             self.path("libcollada14dom.so.2.3.0","libcollada14dom.so.2")
             self.path("libglod.so")
 
             # OpenAL
             self.path("libalut.so")
             self.path("libalut.so.0")
-#            self.path("libalut.so.0.0.0")
             self.path("libopenal.so")
             self.path("libopenal.so.1")
-#            self.path("libopenal.so.1.13.0")
-            #use old package for now, with 1.13.0 objects render black
             self.path("libalut.so.0.1.0")
             self.path("libopenal.so.1.12.854")
             self.path("libfontconfig.so*")
@@ -1319,12 +1171,10 @@ class Linux_x86_64Manifest(LinuxManifest):
             if self.prefix("../packages/lib/release/32bit-compat", dst="lib32"):
                     self.path("libalut.so")
                     self.path("libalut.so.0")
-                     #self.path("libalut.so.0.0.0")
                     self.path("libidn.so")
                     self.path("libidn.so.11")
                     self.path("libopenal.so")
                     self.path("libopenal.so.1")
-                     #self.path("libopenal.so.1.13.0")
                     self.path("libuuid.so")
                     self.path("libuuid.so.1")
                     self.path("libalut.so.0.1.0")
