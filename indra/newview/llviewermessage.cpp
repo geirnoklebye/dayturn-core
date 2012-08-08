@@ -6887,13 +6887,26 @@ void process_script_question(LLMessageSystem *msg, void **user_data)
 					   					 LSCRIPTRunTimePermissionBits[3] |	//LSCRIPTRunTimePermissions::SCRIPT_PERMISSION_TRIGGER_ANIMATION]
 					   					 LSCRIPTRunTimePermissionBits[4]));	//LSCRIPTRunTimePermissions::SCRIPT_PERMISSION_ATTACH]
 	
-		// security check : if there is any other permission contained in this package, we can't automatically grant anything
 		if (auto_acceptable_permission)
 		{
+			// security check : if there is any other permission contained in this package, we can't automatically grant anything
 			unsigned int other_perms = questions & ~ (LSCRIPTRunTimePermissionBits[1] | LSCRIPTRunTimePermissionBits[3] | LSCRIPTRunTimePermissionBits[4]);
-			if (other_perms) auto_acceptable_permission = FALSE;
-			// can't accept animation permission if not sitting
-			if (gAgentAvatarp && !gAgentAvatarp->mIsSitting && (questions & LSCRIPTRunTimePermissionBits[3])) auto_acceptable_permission = FALSE;
+			if (other_perms)
+			{
+				auto_acceptable_permission = FALSE;
+			}
+
+			// can't auto-accept animation permission if not sitting
+			if (gAgentAvatarp && !gAgentAvatarp->mIsSitting && (questions & LSCRIPTRunTimePermissionBits[3]))
+			{
+				auto_acceptable_permission = FALSE;
+			}
+
+			// can't auto-accept attach request from a non-owned object
+			if (questions & LSCRIPTRunTimePermissionBits[4] && owner_name != self_name)
+			{
+				auto_acceptable_permission = FALSE;
+			}
 		}
 	}
 //mk
