@@ -18,6 +18,7 @@ include(JsonCpp)
 include(LLAudio)
 include(LLCharacter)
 include(LLCommon)
+include(LLConvexDecomposition)
 include(LLImage)
 include(LLImageJ2COJ)
 include(LLInventory)
@@ -54,6 +55,7 @@ include_directories(
     ${LLAUDIO_INCLUDE_DIRS}
     ${LLCHARACTER_INCLUDE_DIRS}
     ${LLCOMMON_INCLUDE_DIRS}
+    ${LLCONVEXDECOMP_INCLUDE_DIRS}
     ${LLPHYSICS_INCLUDE_DIRS}
     ${FMOD_INCLUDE_DIR}
     ${LLIMAGE_INCLUDE_DIRS}
@@ -1836,6 +1838,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${OPENSSL_LIBRARIES}
     ${CRYPTO_LIBRARIES}
     ${LLLOGIN_LIBRARIES}
+    ${LLCONVEXDECOMP_LIBRARY}
     ${LLPHYSICS_LIBRARIES}
     ${LLPHYSICSEXTENSIONS_LIBRARIES}
     ${TCMALLOC_LIBRARIES}

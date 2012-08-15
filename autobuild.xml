@@ -1285,6 +1285,54 @@
           </map>
         </map>
       </map>
+      <key>llconvexdecomposition</key>
+      <map>
+        <key>license</key>
+        <string>havok</string>
+        <key>license_file</key>
+        <string>on_file</string>
+        <key>name</key>
+        <string>llconvexdecomposition</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>362654a472ef7368d4c803ae3fb89d95</string>
+              <key>url</key>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-llconvexdecomposition/rev/238959/arch/Darwin/installer/llconvexdecomposition-0.1-darwin-20110819.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>c7801d899daec5338fbe95053255b7e7</string>
+              <key>url</key>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-llconvexdecomposition/rev/238959/arch/Linux/installer/llconvexdecomposition-0.1-linux-20110819.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>6ecf2f85f03c5ae87fe45769566a5660</string>
+              <key>url</key>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-llconvexdecomposition/rev/238959/arch/CYGWIN/installer/llconvexdecomposition-0.1-windows-20110819.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+      </map>
       <key>llphysicsextensions_source</key>
       <map>
         <key>license</key>
@@ -1388,6 +1436,54 @@
         </map>
         <key>version</key>
         <string>0.2</string>
+      </map>
+      <key>llconvexdecompositionstub</key>
+      <map>
+        <key>license</key>
+        <string>lgpl</string>
+        <key>license_file</key>
+        <string>LICENSES/LLConvexDecompositionStubLicense.txt</string>
+        <key>name</key>
+        <string>llconvexdecompositionstub</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>a5f53e09f67271fd50f1131ffdda9d27</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llconvexdecompositionstub/rev/238958/arch/Darwin/installer/llconvexdecompositionstub-0.3-darwin-20110819.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>0006a964f1497f55a5f181b7042d2d22</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llconvexdecompositionstub/rev/238958/arch/Linux/installer/llconvexdecompositionstub-0.3-linux-20110819.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>b859e7e3bb03ebb467f0309f46422995</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llconvexdecompositionstub/rev/238958/arch/CYGWIN/installer/llconvexdecompositionstub-0.3-windows-20110819.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
       </map>
       <key>llqtwebkit</key>
       <map>
