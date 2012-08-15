@@ -27,6 +27,7 @@
 #include "llviewerprecompiledheaders.h"
 
 #include "llpanellogin.h"
+#include "lllayoutstack.h"
 
 #include "indra_constants.h"		// for key and mask constants
 #include "llfloaterreg.h"
@@ -146,12 +147,6 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	// change z sort of clickable text to be behind buttons
 	sendChildToBack(getChildView("forgot_password_text"));
 
-	if(LLStartUp::getStartSLURL().getType() != LLSLURL::LOCATION)
-	{
-		LLSLURL slurl(gSavedSettings.getString("LoginLocation"));
-		LLStartUp::setStartSLURL(slurl);
-	}
-
 	LLComboBox* location_combo = getChild<LLComboBox>("start_location_combo");
 	updateLocationSelectorsVisibility(); // separate so that it can be called from preferences
 	location_combo->setFocusLostCallback(boost::bind(&LLPanelLogin::onLocationSLURL, this));
@@ -182,9 +177,32 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 							 ADD_TOP);	
 	server_choice_combo->selectFirstItem();		
 
+	LLSLURL start_slurl(LLStartUp::getStartSLURL());
+	if ( !start_slurl.isSpatial() ) // has a start been established by the command line or NextLoginLocation ? 
+	{
+		// no, so get the preference setting
+		std::string defaultStartLocation = gSavedSettings.getString("LoginLocation");
+		LL_INFOS("AppInit")<<"default LoginLocation '"<<defaultStartLocation<<"'"<<LL_ENDL;
+		LLSLURL defaultStart(defaultStartLocation);
+		if ( defaultStart.isSpatial() )
+		{
+			LLStartUp::setStartSLURL(defaultStart);
+		}
+		else
+		{
+			LL_INFOS("AppInit")<<"no valid LoginLocation, using home"<<LL_ENDL;
+			LLSLURL homeStart(LLSLURL::SIM_LOCATION_HOME);
+			LLStartUp::setStartSLURL(homeStart);
+		}
+	}
+	else
+	{
+		LLPanelLogin::onUpdateStartSLURL(start_slurl); // updates grid if needed
+	}
+	
 	childSetAction("connect_btn", onClickConnect, this);
 
-	getChild<LLPanel>("login")->setDefaultBtn("connect_btn");
+	getChild<LLPanel>("links_login_panel")->setDefaultBtn("connect_btn");
 
 	std::string channel = LLVersionInfo::getChannel();
 	std::string version = llformat("%s (%d)",
@@ -194,8 +212,7 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	LLTextBox* forgot_password_text = getChild<LLTextBox>("forgot_password_text");
 	forgot_password_text->setClickedCallback(onClickForgotPassword, NULL);
 
-	LLTextBox* create_new_account_text = getChild<LLTextBox>("create_new_account_text");
-	create_new_account_text->setClickedCallback(onClickNewAccount, NULL);
+	childSetAction("create_new_account_btn", onClickNewAccount, NULL);
 
 	LLTextBox* need_help_text = getChild<LLTextBox>("login_help");
 	need_help_text->setClickedCallback(onClickHelp, NULL);
@@ -622,6 +639,7 @@ void LLPanelLogin::updateLocationSelectorsVisibility()
 //MK
 		if (gSavedSettings.getBOOL("RestrainedLove"))
 		{
+			// sInstance->getChild<LLLayoutPanel>("start_location_panel")->setVisible(show_start);
 			// Force to "My last location"
 			LLComboBox* combo = sInstance->getChild<LLComboBox>("start_location_combo");
 			combo->setCurrentByIndex( 0 );
@@ -639,8 +657,7 @@ void LLPanelLogin::updateLocationSelectorsVisibility()
 		sInstance->getChildView("start_location_text")->setVisible( show_start);
 	
 		BOOL show_server = gSavedSettings.getBOOL("ForceShowGrid");
-		LLComboBox* server_choice_combo = sInstance->getChild<LLComboBox>("server_combo");
-		server_choice_combo->setVisible( show_server );
+		sInstance->getChild<LLLayoutPanel>("grid_panel")->setVisible(show_server);
 	}
 }
 
@@ -661,8 +678,11 @@ void LLPanelLogin::onUpdateStartSLURL(const LLSLURL& new_start_slurl)
 	 * specify a particular grid; in those cases we want to change the grid
 	 * and the grid selector to match the new value.
 	 */
-	if ( LLSLURL::LOCATION == new_start_slurl.getType() )
+	enum LLSLURL::SLURL_TYPE new_slurl_type = new_start_slurl.getType();
+	switch ( new_slurl_type )
 	{
+	case LLSLURL::LOCATION:
+	  {
 		std::string slurl_grid = LLGridManager::getInstance()->getGrid(new_start_slurl.getGrid());
 		if ( ! slurl_grid.empty() ) // is that a valid grid?
 	{
@@ -684,11 +704,26 @@ void LLPanelLogin::onUpdateStartSLURL(const LLSLURL& new_start_slurl)
 		{
 			// the grid specified by the slurl is not known
 			LLNotificationsUtil::add("InvalidLocationSLURL");
+			LL_WARNS("AppInit")<<"invalid LoginLocation:"<<new_start_slurl.asString()<<LL_ENDL;
 			location_combo->setTextEntry(LLStringUtil::null);
 		}			
 	}
-}
+ 	break;
 
+	case LLSLURL::HOME_LOCATION:
+		location_combo->setCurrentByIndex(1); // home location
+		break;
+		
+	case LLSLURL::LAST_LOCATION:
+		location_combo->setCurrentByIndex(0); // last location
+		break;
+
+	default:
+		LL_WARNS("AppInit")<<"invalid login slurl, using home"<<LL_ENDL;
+		location_combo->setCurrentByIndex(1); // home location
+		break;
+}
+}
 
 void LLPanelLogin::setLocation(const LLSLURL& slurl)
 {
@@ -867,8 +902,8 @@ void LLPanelLogin::onClickNewAccount(void*)
 {
 	if (sInstance)
 	{
-	LLWeb::loadURLExternal(sInstance->getString("create_account_url"));
-}
+		LLWeb::loadURLExternal(LLTrans::getString("create_account_url"));
+	}
 }
 
 
@@ -928,7 +963,9 @@ void LLPanelLogin::updateServer()
 			// update the login panel links 
 			bool system_grid = LLGridManager::getInstance()->isSystemGrid();
 	
-			sInstance->getChildView("create_new_account_text")->setVisible( system_grid);
+			// Want to vanish not only create_new_account_btn, but also the
+			// title text over it, so turn on/off the whole layout_panel element.
+			sInstance->getChild<LLLayoutPanel>("links")->setVisible(system_grid);
 			sInstance->getChildView("forgot_password_text")->setVisible( system_grid);
 		// grid changed so show new splash screen (possibly)
 		loadLoginPage();
