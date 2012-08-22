@@ -18,6 +18,7 @@ include(JsonCpp)
 include(LLAudio)
 include(LLCharacter)
 include(LLCommon)
+include(LLConvexDecomposition)
 include(LLImage)
 include(LLImageJ2COJ)
 include(LLInventory)
@@ -45,7 +46,15 @@ include(VisualLeakDetector)
 include(GLOD)
 include(CMakeCopyIfDifferent)
 
-add_subdirectory(${LLPHYSICSEXTENSIONS_SRC_DIR} llphysicsextensions)
+# <FS:ND> if using ndPhysicsstub this variable will be unset, we don't need to build any stub code viewer side in that case
+if( LLPHYSICSEXTENSIONS_SRC_DIR )
+# </FS:ND>
+
+  add_subdirectory(${LLPHYSICSEXTENSIONS_SRC_DIR} llphysicsextensions)
+
+# <FS:ND>
+endif( LLPHYSICSEXTENSIONS_SRC_DIR )
+# </FS:ND>
 
 include_directories(
     ${DBUSGLIB_INCLUDE_DIRS}
@@ -54,6 +63,7 @@ include_directories(
     ${LLAUDIO_INCLUDE_DIRS}
     ${LLCHARACTER_INCLUDE_DIRS}
     ${LLCOMMON_INCLUDE_DIRS}
+    ${LLCONVEXDECOMP_INCLUDE_DIRS}
     ${LLPHYSICS_INCLUDE_DIRS}
     ${FMOD_INCLUDE_DIR}
     ${LLIMAGE_INCLUDE_DIRS}
@@ -77,9 +87,11 @@ include_directories(
     ${LIBS_PREBUILD_DIR}/include/hunspell
     ${OPENAL_LIB_INCLUDE_DIRS}
     ${LIBS_PREBUILT_DIR}/include/collada/1.4
+    ${HACD_INCLUDE_DIR} 
     )
 
 set(viewer_SOURCE_FILES
+    RRInterface.cpp
     groupchatlistener.cpp
     llaccountingcostmanager.cpp
     llagent.cpp
@@ -407,6 +419,7 @@ set(viewer_SOURCE_FILES
     llpanelplacestab.cpp
     llpanelprimmediacontrols.cpp
     llpanelprofile.cpp
+	llpanelprofileview.cpp
     llpanelsnapshot.cpp
     llpanelsnapshotinventory.cpp
     llpanelsnapshotlocal.cpp
@@ -647,6 +660,7 @@ set(viewer_SOURCE_FILES
     llxmlrpctransaction.cpp
     noise.cpp
     pipeline.cpp
+	qtoolalign.cpp
     )
 
 set(VIEWER_BINARY_NAME "secondlife-bin" CACHE STRING
@@ -655,6 +669,7 @@ set(VIEWER_BINARY_NAME "secondlife-bin" CACHE STRING
 set(viewer_HEADER_FILES
     CMakeLists.txt
     ViewerInstall.cmake
+    RRInterface.h
     groupchatlistener.h
     llaccountingcostmanager.h
     llagent.h
@@ -977,6 +992,7 @@ set(viewer_HEADER_FILES
     llpanelplacestab.h
     llpanelprimmediacontrols.h
     llpanelprofile.h
+	llpanelprofileview.h
     llpanelsnapshot.h
     llpanelteleporthistory.h
     llpaneltiptoast.h
@@ -1216,6 +1232,7 @@ set(viewer_HEADER_FILES
     macmain.h
     noise.h
     pipeline.h
+    qtoolalign.h
     VertexCache.h
     VorbisFramework.h
     )
@@ -1829,9 +1846,11 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${OPENSSL_LIBRARIES}
     ${CRYPTO_LIBRARIES}
     ${LLLOGIN_LIBRARIES}
+    ${LLCONVEXDECOMP_LIBRARY}
     ${LLPHYSICS_LIBRARIES}
     ${LLPHYSICSEXTENSIONS_LIBRARIES}
     ${TCMALLOC_LIBRARIES}
+    ${HACD_LIBRARY}
     )
 
 if (USE_KDU)
@@ -1852,7 +1871,7 @@ set(ARTWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH
 
 
 if (LINUX)
-  set(product SecondLife-${ARCH}-${viewer_VERSION})
+  set(product RestrainedLove-${ARCH}-${viewer_VERSION})
 
   # These are the generated targets that are copied to package/
   set(COPY_INPUT_DEPENDENCIES
@@ -1920,16 +1939,16 @@ if (LINUX)
 endif (LINUX)
 
 if (DARWIN)
-  set(product "Second Life")
+  set(product "Restrained Love")
   set_target_properties(
     ${VIEWER_BINARY_NAME}
     PROPERTIES
     OUTPUT_NAME "${product}"
     MACOSX_BUNDLE_INFO_STRING "info string - localize me"
     MACOSX_BUNDLE_ICON_FILE "secondlife.icns"
-    MACOSX_BUNDLE_GUI_IDENTIFIER "Second Life"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "Restrained Love"
     MACOSX_BUNDLE_LONG_VERSION_STRING "ververver"
-    MACOSX_BUNDLE_BUNDLE_NAME "Second Life"
+    MACOSX_BUNDLE_BUNDLE_NAME "Restrained Love"
     MACOSX_BUNDLE_SHORT_VERSION_STRING "asdf"
     MACOSX_BUNDLE_BUNDLE_VERSION "asdf"
     MACOSX_BUNDLE_COPYRIGHT "copyright linden lab 2007 - localize me and run me through a legal wringer"
@@ -1994,7 +2013,7 @@ if (PACKAGE)
   if (DARWIN)
     set(VIEWER_DIST_DIR "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${product}.app")
     set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-darwin.tar.bz2")
-    set(VIEWER_EXE_GLOBS "'Second Life' SLPlugin")
+    set(VIEWER_EXE_GLOBS "'Restrained Love' SLPlugin")
     set(VIEWER_LIB_GLOB "*.dylib")
   endif (DARWIN)
   if (LINUX)
