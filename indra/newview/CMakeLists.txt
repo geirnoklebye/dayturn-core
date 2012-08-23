@@ -51,7 +51,6 @@ if( LLPHYSICSEXTENSIONS_SRC_DIR )
 # </FS:ND>
 
   add_subdirectory(${LLPHYSICSEXTENSIONS_SRC_DIR} llphysicsextensions)
-endif (NOT HAVOK_TPV)
 
 # <FS:ND>
 endif( LLPHYSICSEXTENSIONS_SRC_DIR )
