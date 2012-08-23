@@ -67,7 +67,6 @@ class MediaPluginGStreamer010 : public MediaPluginBase
 {
 public:
 	MediaPluginGStreamer010(LLPluginInstance::sendMessageFunction host_send_func, void *host_user_data);
-	~MediaPluginGStreamer010();
 
 	/* virtual */ void receiveMessage(const char *message_string);
 
@@ -83,6 +82,8 @@ public:
 	static bool writeToLog(const char* str, ...);
 
 private:
+	~MediaPluginGStreamer010();
+
 	std::string getVersion();
 	bool navigateTo( const std::string urlIn );
 	bool seek( double time_sec );
@@ -662,7 +663,7 @@ MediaPluginGStreamer010::setVolume( float volume )
 	mVolume = volume;
 	if (mDoneInit && mPlaybin)
 	{
-		writeToLog((char*)"playing media... volume=%f", volume);
+		writeToLog("MediaPluginGStreamer010::receiveMessage: set_volume: %f", volume);
 		g_object_set(mPlaybin, "volume", mVolume, NULL);
 		return true;
 	}
@@ -955,9 +956,14 @@ void MediaPluginGStreamer010::set_gst_plugin_path()
 	char* raw_dir;
 	raw_dir = _getcwd(NULL,0);
 	if( raw_dir != NULL )
-		{
+	{
 		imp_dir = std::string( raw_dir );
+		// add a trailing slash to the end if there isn't one
+		if (*(imp_dir.rbegin()) != '\\')
+		{
+			imp_dir += '\\';
 		}
+	}
 	
 
 #elif LL_DARWIN
@@ -1003,13 +1009,15 @@ void MediaPluginGStreamer010::set_gst_plugin_path()
 		old_plugin_path = separator + std::string( old_path );
 	}
 
-
 	// Search both Imprudence and Imprudence\lib\gstreamer-plugins.
 	// But we also want to search the path the user has set, if any.
 	std::string plugin_path =	
 		"GST_PLUGIN_PATH=" +
 #if LL_WINDOWS
-		imp_dir + "\\gstreamer-plugins" +
+		// The third path is so we can load the plugins when running in Visual Studio
+		imp_dir + "lib\\gstreamer-plugins" + G_SEARCHPATH_SEPARATOR_S +
+		imp_dir + "llplugin\\lib\\gstreamer-plugins" + G_SEARCHPATH_SEPARATOR_S +
+		imp_dir + "..\\..\\..\\..\\newview\\lib\\gstreamer-plugins" +
 #elif LL_DARWIN
 		imp_dir + separator +
 		imp_dir + "/../Resources/lib/gstreamer-plugins" +
@@ -1087,11 +1095,14 @@ MediaPluginGStreamer010::sizeChanged()
 bool
 MediaPluginGStreamer010::closedown()
 {
+
 	if (!mDoneInit)
 		return false; // error
 
 
 	mDoneInit = false;
+
+	writeToLog("GStreamer010 closed down");
 
 	return true;
 }
@@ -1102,7 +1113,7 @@ MediaPluginGStreamer010::~MediaPluginGStreamer010()
 
 	closedown();
 
-	writeToLog((char*)"GStreamer010 closing down");
+	writeToLog("GStreamer010 destructor");
 }
 
 
@@ -1169,6 +1180,16 @@ void MediaPluginGStreamer010::receiveMessage(const char *message_string)
 				writeToLog("MediaPluginGStreamer010::receiveMessage: cleanup");
 				unload();
 				closedown();
+
+				// Reply once we're done
+				LLPluginMessage message("base", "cleanup_reply");
+				sendMessage(message);
+
+				// Now suicide. Because It is the only honorable thing to do.
+				// JUST BE CAREFUL! 
+				// http://www.parashift.com/c++-faq-lite/delete-this.html	
+				delete this;
+				return;
 			}
 			else if(message_name == "shm_added")
 			{

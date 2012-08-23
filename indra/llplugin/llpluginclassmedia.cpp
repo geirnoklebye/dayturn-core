@@ -1383,6 +1383,12 @@ void LLPluginClassMedia::hangPlugin()
 	sendMessage(message);
 }
 
+void LLPluginClassMedia::forceCleanUpPlugin()
+{
+	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_BASE, "cleanup");
+
+	sendMessage(message);
+}
 
 ////////////////////////////////////////////////////////////
 // MARK: media_time class functions

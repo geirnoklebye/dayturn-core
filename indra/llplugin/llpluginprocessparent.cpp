@@ -160,6 +160,11 @@ void LLPluginProcessParent::errorState(void)
 	mBindRetryCount = 0;
 }
 
+void LLPluginProcessParent::cleanupState()
+{
+	setState(STATE_CLEANUP);
+}
+
 void LLPluginProcessParent::init(const std::string &launcher_filename, const std::string &plugin_dir, const std::string &plugin_filename, bool debug)
 {	
 	mProcessParams.executable = launcher_filename;
@@ -980,6 +985,11 @@ void LLPluginProcessParent::receiveMessage(const LLPluginMessage &message)
 				// and remove it from our map
 				mSharedMemoryRegions.erase(iter);
 			}
+		}
+		else if (message_name == "cleanup_reply")
+		{
+			LL_DEBUGS("PluginParent") << "cleanup_reply message received" << LL_ENDL;
+			cleanupState();
 		}
 		else
 		{

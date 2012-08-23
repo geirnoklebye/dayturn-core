@@ -214,6 +214,16 @@ void LLPluginProcessChild::idle(void)
 				}
 				setState(STATE_UNLOADED);
 			break;
+
+			// Special case for when the plugin knows it's cleaned up -- MC
+			case STATE_UNLOADING_CLEANED:
+				if (mInstance)
+				{
+					delete mInstance;
+					mInstance = NULL;
+				}
+				setState(STATE_UNLOADED);
+			break;
 			
 			case STATE_UNLOADED:
 				killSockets();
@@ -534,6 +544,17 @@ void LLPluginProcessChild::receivePluginMessage(const std::string &message)
 				{
 					LL_WARNS("Plugin") << "shm_remove_response for unknown memory segment!" << LL_ENDL;
 				}
+			}
+			else if (message_name == "cleanup_reply")
+			{
+				LL_DEBUGS("PluginChild") << "cleanup_reply message received" << LL_ENDL;
+				passMessage = false;
+
+				setState(STATE_UNLOADING_CLEANED);
+
+				// Clean up this and tell the parent
+				LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_INTERNAL, "cleanup_reply");
+				sendMessageToParent(message);
 			}
 		}
 	}
