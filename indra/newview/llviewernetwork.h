@@ -147,7 +147,12 @@ public:
 	std::string getGridNick() { return mGridList[mGrid][GRID_NICK_VALUE]; }
 	//get the grid e.g. "util.agni.lindenlab.com"
 	std::string getGrid() const { return mGrid; }
-
+	/// Return the name of a grid, given either its name or its id
+	std::string getGridsl( const std::string &grid );
+		/// Get the id (short form selector) for a given grid
+	std::string getGridId(const std::string& grid);
+		/// Get the id (short form selector) for the selected grid
+	std::string getGridId() { return getGridId(mGrid); }
 	void getLoginURIs(std::vector<std::string>& uris);
 	std::string getHelperURI();
 	std::string getLoginPage();

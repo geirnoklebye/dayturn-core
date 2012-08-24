@@ -897,6 +897,51 @@ void LLGridManager::setGridChoice(const std::string& grid)
 	}
 }
 
+std::string LLGridManager::getGridsl( const std::string &grid )
+{
+	std::string grid_name;
+
+	if (mGridList.has(grid))
+	{
+		// the grid was the long name, so we're good, return it
+		grid_name = grid;
+	}
+	else
+	{
+		// search the grid list for a grid with a matching id
+		for(LLSD::map_iterator grid_iter = mGridList.beginMap();
+			grid_name.empty() && grid_iter != mGridList.endMap();
+			grid_iter++)
+		{
+			if (grid_iter->second.has(GRID_ID_VALUE))
+			{
+				if (0 == (LLStringUtil::compareInsensitive(grid,
+														   grid_iter->second[GRID_ID_VALUE].asString())))
+				{
+					// found a matching label, return this name
+					grid_name = grid_iter->first;
+				}
+			}
+		}
+	}
+	return grid_name;
+}
+
+std::string LLGridManager::getGridId(const std::string& grid)
+{
+	std::string grid_id;
+	std::string grid_name = getGridsl(grid);
+	if (!grid.empty())
+	{
+		grid_id = mGridList[grid_name][GRID_ID_VALUE].asString();
+	}
+	else
+	{
+		LL_WARNS("GridManager")<<"invalid grid '"<<grid<<"'"<<LL_ENDL;
+	}
+	LL_DEBUGS("GridManager")<<"returning "<<grid_id<<LL_ENDL;
+	return grid_id;
+}
 
 std::string LLGridManager::getGridByProbing( const std::string &probe_for, bool case_sensitive)
 {
