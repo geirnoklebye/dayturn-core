@@ -29,6 +29,8 @@
 #ifndef LL_LLPLUGINPROCESSCHILD_H
 #define LL_LLPLUGINPROCESSCHILD_H
 
+#include <queue> //imprudence
+
 #include "llpluginmessage.h"
 #include "llpluginmessagepipe.h"
 #include "llplugininstance.h"
@@ -68,6 +70,10 @@ public:
 	// Inherited from LLPluginInstanceMessageListener
 	/* virtual */ void receivePluginMessage(const std::string &message);
 	
+#if LL_WINDOWS
+	void createConsole();
+#endif
+
 private:
 
 	enum EState

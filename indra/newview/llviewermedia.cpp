@@ -27,7 +27,7 @@
 #include "llviewerprecompiledheaders.h"
 
 #include "llviewermedia.h"
-
+#include "llpluginclassmedia.h"
 #include "llagent.h"
 #include "llagentcamera.h"
 #include "llappviewer.h"
@@ -76,6 +76,7 @@
 
 #include <boost/bind.hpp>	// for SkinFolder listener
 #include <boost/signals2.hpp>
+
 
 /*static*/ const char* LLViewerMedia::AUTO_PLAY_MEDIA_SETTING = "ParcelMediaAutoPlayEnable";
 /*static*/ const char* LLViewerMedia::SHOW_MEDIA_ON_OTHERS_SETTING = "MediaShowOnOthers";
@@ -1915,7 +1916,13 @@ LLPluginClassMedia* LLViewerMediaImpl::newSourceFromMediaType(std::string media_
 			const std::string plugin_dir = gDirUtilp->getLLPluginDir();
 			if (media_source->init(launcher_name, plugin_dir, plugin_name, gSavedSettings.getBOOL("PluginAttachDebuggerToPlugins")))
 			{
-				return media_source;
+				#if LL_WINDOWS
+				if (gSavedSettings.getBOOL("ShowConsoleWindow"))
+				{
+						media_source->showConsole();
+				}
+				#endif
+                return media_source;
 			}
 			else
 			{

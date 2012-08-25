@@ -36,6 +36,7 @@
 #include <queue>
 #include "v4color.h"
 
+
 class LLPluginClassMedia : public LLPluginProcessParentOwner
 {
 	LOG_CLASS(LLPluginClassMedia);
@@ -248,6 +249,11 @@ public:
 
 	// This is valid during MEDIA_EVENT_CLICK_LINK_HREF and MEDIA_EVENT_GEOMETRY_CHANGE
 	std::string getClickUUID() const { return mClickUUID; };
+
+    #if LL_WINDOWS
+	//Open a debug console for this plugin.
+	void showConsole();
+    #endif
 
 	// These are valid during MEDIA_EVENT_DEBUG_MESSAGE
 	std::string getDebugMessageText() const { return mDebugMessageText; };
