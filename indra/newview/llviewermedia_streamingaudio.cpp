@@ -140,13 +140,13 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 
 void LLStreamingAudio_MediaPlugins::stop()
 {
+
 	llinfos << "Stopping internet stream." << llendl;
 	if(mMediaPlugin)
 	{
 		mMediaPlugin->stop();
-
 		// MURDER DEATH KILL -- MC
-		mMediaPlugin->forceCleanUpPlugin();
+		//mMediaPlugin->forceCleanUpPlugin();
 	}
 
 	mURL.clear();

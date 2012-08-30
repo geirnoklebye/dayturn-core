@@ -958,11 +958,6 @@ void MediaPluginGStreamer010::set_gst_plugin_path()
 	if( raw_dir != NULL )
 	{
 		imp_dir = std::string( raw_dir );
-		// add a trailing slash to the end if there isn't one
-		if (*(imp_dir.rbegin()) != '\\')
-		{
-			imp_dir += '\\';
-		}
 	}
 	
 
@@ -1014,10 +1009,7 @@ void MediaPluginGStreamer010::set_gst_plugin_path()
 	std::string plugin_path =	
 		"GST_PLUGIN_PATH=" +
 #if LL_WINDOWS
-		// The third path is so we can load the plugins when running in Visual Studio
-		imp_dir + "lib\\gstreamer-plugins" + G_SEARCHPATH_SEPARATOR_S +
-		imp_dir + "llplugin\\lib\\gstreamer-plugins" + G_SEARCHPATH_SEPARATOR_S +
-		imp_dir + "..\\..\\..\\..\\newview\\lib\\gstreamer-plugins" +
+		imp_dir + "\\gstreamer-plugins" +
 #elif LL_DARWIN
 		imp_dir + separator +
 		imp_dir + "/../Resources/lib/gstreamer-plugins" +

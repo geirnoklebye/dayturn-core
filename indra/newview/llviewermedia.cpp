@@ -3224,7 +3224,7 @@ void LLViewerMediaImpl::handleMediaEvent(LLPluginClassMedia* plugin, LLPluginCla
 			LLStringUtil::toLower(plugin_name);
 			if (plugin_name.find("quicktime") != std::string::npos)
 			{
-				notification_name = "MediaPluginQuickTime";
+				notification_name = "MediaPluginFailedQuickTime";
 			}
 			else if (plugin_name.find("webkit") != std::string::npos)
 			{
