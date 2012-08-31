@@ -77,6 +77,10 @@
 #include "llvoavatar.h"
 #include "llvocache.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 const S32 MIN_QUIET_FRAMES_COALESCE = 30;
 const F32 FORCE_SIMPLE_RENDER_AREA = 512.f;
 const F32 FORCE_CULL_AREA = 8.f;
@@ -3951,7 +3955,11 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 	LLFastTimer t(FTM_REGISTER_FACE);
 	LLMemType mt(LLMemType::MTYPE_SPACE_PARTITION);
 
-	if (facep->getViewerObject()->isSelected() && LLSelectMgr::getInstance()->mHideSelectedObjects)
+	if (facep->getViewerObject()->isSelected() 
+//MK
+		&& (!gRRenabled || !gAgent.mRRInterface.mContainsEdit)
+//mk
+		&& LLSelectMgr::getInstance()->mHideSelectedObjects)
 	{
 		return;
 	}
