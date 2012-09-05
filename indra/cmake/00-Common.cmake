@@ -135,6 +135,14 @@ if (LINUX)
     set(CMAKE_CXX_FLAGS "-Wno-deprecated ${CMAKE_CXX_FLAGS}")
   endif (${CXX_VERSION_NUMBER} GREATER 429)
 
+  # I know, I know, I shouldn't be using an ugly hack like
+  # this, but at present, I have no choice in the matter.
+  # All things considered, it's one of the rare occasions I
+  # agree with Firestorm's assessment of fixing the issue. 
+  if(${CXX_VERSION_NUMBER} GREATER 460)
+     set(CMAKE_CXX_FLAGS "-Wno-unused-but-set-variable ${CMAKE_CXX_FLAGS}")
+  endif (${CXX_VERSION_NUMBER} GREATER 460)
+
   # End of hacks.
 
   add_definitions(
@@ -198,6 +206,7 @@ if (DARWIN)
   # ucontext_t struct when _XOPEN_SOURCE is not defined (rdar://problem/5578699 ).
   # As a workaround, define _XOPEN_SOURCE before including ucontext.h.
   add_definitions(-DLL_DARWIN=1 -D_XOPEN_SOURCE)
+  set(CMAKE_CXX_FLAGS "-Wno-deprecated ${CMAKE_CXX_FLAGS}")
   set(CMAKE_CXX_LINK_FLAGS "-Wl,-headerpad_max_install_names,-search_paths_first")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_CXX_LINK_FLAGS}")
   set(DARWIN_extra_cstar_flags "-mlong-branch")
