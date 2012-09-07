@@ -229,7 +229,7 @@
 	<radio_group
      follows="left|top"
 	 left="5"
-	 top="50"
+	 top="46"
 	 height="70"
      layout="topleft"
 	 name="edit_radio_group">
@@ -238,20 +238,25 @@
 		 layout="topleft"
 		 name="radio position" />
         <radio_item
-		 top_pad="6"
+		 top_pad="5"
          label="Rotate (Ctrl)"
          layout="topleft"
          name="radio rotate" />
         <radio_item
-		 top_pad="6"
+		 top_pad="5"
          label="Stretch (Ctrl+Shift)"
          layout="topleft"
          name="radio stretch" />
         <radio_item
-		 top_pad="6"
+		 top_pad="5"
          label="Select Face"
          layout="topleft"
          name="radio select face" />
+	     <radio_item
+		 top_pad="5"
+         label="Align"
+         layout="topleft"
+         name="radio align" />
 			<radio_group.commit_callback
 			function="BuildTool.commitRadioEdit"/>
     </radio_group>
@@ -263,7 +268,7 @@
      label="Edit linked"
      layout="topleft"
      name="checkbox edit linked parts"
-     top_pad="-18">
+     top_pad="-9">
 		  <check_box.commit_callback
 			function="BuildTool.selectComponent"/>
 	</check_box>
@@ -272,7 +277,7 @@
      follows="left|top"
      height="20"
      label="Link"
-     top="108"
+     top="114"
      layout="topleft"
      left="143"
      name="link_btn"
@@ -298,7 +303,7 @@
      layout="topleft"
      left="143"
      name="checkbox uniform"
-     top="48"
+     top="47"
      width="20" />
     <text
      height="19"
