@@ -6884,8 +6884,9 @@ void handle_test_female(void*)
 	//gGestureList.requestResetFromServer( FALSE );
 }
 
-	if(LLWorld::getInstance()->getEnableTeenMode()) {
+/*	if(LLWorld::getInstance()->getEnableTeenMode()) {
 	}
+*/
 void handle_dump_attachments(void*)
 {
 	if(!isAgentAvatarValid()) return;

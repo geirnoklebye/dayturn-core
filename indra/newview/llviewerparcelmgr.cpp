@@ -30,7 +30,6 @@
 
 // Library includes
 #include "llaudioengine.h"
-#include "kokuastreamingaudio.h"
 #include "indra_constants.h"
 #include "llcachename.h"
 #include "llgl.h"

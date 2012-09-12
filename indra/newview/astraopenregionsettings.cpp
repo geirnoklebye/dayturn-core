@@ -180,14 +180,14 @@ class OpenRegionInfoUpdate : public LLHTTPNode
 		{
 			regionlimits->setEnableTeenMode(body["ToggleTeenMode"].asInteger() == 1 ? TRUE : FALSE);
 		}
-		if ( body.has("SetTeenMode") )
+/*		if ( body.has("SetTeenMode") )
 		{
 			BOOL setteen = body["SetTeenMode"].asInteger() == 1 ? TRUE : FALSE;
 			gAgent.setTeen(setteen);
 			LLFloaterWorldMap::reloadIcons(NULL);
 			regionlimits->setEnableTeenMode(setteen);
 		}
-		if ( body.has("ShowTags") )
+*/		if ( body.has("ShowTags") )
 		{
 			regionlimits->setAllowRenderName(body["ShowTags"].asReal());
 		}

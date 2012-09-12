@@ -36,7 +36,6 @@
 
 #include <time.h>
 
-#include "kokuastreamingaudio.h"
 #include "llviewermedia_streamingaudio.h"
 #include "llaudioengine.h"
 

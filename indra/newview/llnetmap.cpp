@@ -365,8 +365,8 @@ void LLNetMap::draw()
 			if(uuid.notNull())
 			{
 				bool selected = false;
-				uuid_vec_t::iterator sel_iter = gmSelected.begin();
-				for (; sel_iter != gmSelected.end(); sel_iter++)
+				uuid_vec_t::iterator sel_iter = sSelected.begin();
+				for (; sel_iter != sSelected.end(); sel_iter++)
 				{
 					if(*sel_iter == uuid)
 					{
