@@ -88,11 +88,11 @@ void LLDrawPoolAlpha::endDeferredPass(S32 pass)
 
 void LLDrawPoolAlpha::renderDeferred(S32 pass)
 {
-	LLFastTimer t(FTM_RENDER_GRASS);
+		LLFastTimer t(FTM_RENDER_GRASS);
 	gDeferredDiffuseAlphaMaskProgram.bind();
 	gDeferredDiffuseAlphaMaskProgram.setMinimumAlpha(0.33f);
 
-	//render alpha masked objects
+		//render alpha masked objects
 	LLRenderPass::pushBatches(LLRenderPass::PASS_ALPHA_MASK, getVertexDataMask() | LLVertexBuffer::MAP_TEXTURE_INDEX, TRUE, TRUE);
 	gDeferredDiffuseAlphaMaskProgram.unbind();			
 }
@@ -272,15 +272,15 @@ void LLDrawPoolAlpha::render(S32 pass)
 
 		if (mVertexShaderLevel > 0)
 		{
-			if (LLPipeline::sImpostorRender)
-			{
+		if (LLPipeline::sImpostorRender)
+		{
 				fullbright_shader->bind();
 				fullbright_shader->setMinimumAlpha(0.5f);
 				simple_shader->bind();
 				simple_shader->setMinimumAlpha(0.5f);
-			}				
-			else
-			{
+		}
+		else
+		{
 				fullbright_shader->bind();
 				fullbright_shader->setMinimumAlpha(0.f);
 				simple_shader->bind();
@@ -521,7 +521,7 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask)
 					
 					// glow doesn't use vertex colors from the mesh data
 					params.mVertexBuffer->setBuffer((mask & ~LLVertexBuffer::MAP_COLOR) | LLVertexBuffer::MAP_EMISSIVE);
-					
+
 					// do the actual drawing, again
 					params.mVertexBuffer->drawRange(params.mDrawMode, params.mStart, params.mEnd, params.mCount, params.mOffset);
 					gPipeline.addTrianglesDrawn(params.mCount, params.mDrawMode);
