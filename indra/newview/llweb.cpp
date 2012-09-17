@@ -179,9 +179,7 @@ std::string LLWeb::escapeURL(const std::string& url)
 std::string LLWeb::expandURLSubstitutions(const std::string &url,
 										  const LLSD &default_subs)
 {
-	LLSD substitution = default_subs;
-	if (gSimulatorType != "SecondLife")
-	{
+        LLSD substitution = default_subs;
 		substitution["VERSION"] = ViewerInfo::versionFull();
 		substitution["VERSION_MAJOR"] = ViewerInfo::versionMajor();
 		substitution["VERSION_MINOR"] = ViewerInfo::versionMinor();
@@ -196,23 +194,6 @@ std::string LLWeb::expandURLSubstitutions(const std::string &url,
 		substitution["OS"] = LLAppViewer::instance()->getOSInfo().getOSStringSimple();
 		substitution["SESSION_ID"] = gAgent.getSessionID();
 		substitution["FIRST_LOGIN"] = gAgent.isFirstLogin();
-	}
-	else
-	{
-		substitution["VERSION"] = LLVersionInfo::getVersion();
-		substitution["VERSION_MAJOR"] = LLVersionInfo::getMajor();
-		substitution["VERSION_MINOR"] = LLVersionInfo::getMinor();
-		substitution["VERSION_PATCH"] = LLVersionInfo::getPatch();
-		substitution["VERSION_BUILD"] = LLVersionInfo::getBuild();
-		substitution["CHANNEL"] = LLVersionInfo::getChannel();
-		substitution["GRID"] = LLGridManager::getInstance()->getGridId();
-		substitution["GRID_LOWERCASE"] = utf8str_tolower(LLGridManager::getInstance()->getGridId());
-		substitution["OS"] = LLAppViewer::instance()->getOSInfo().getOSStringSimple();
-		substitution["SESSION_ID"] = gAgent.getSessionID();
-		substitution["FIRST_LOGIN"] = gAgent.isFirstLogin();
-	}
-
-	
 
 	// work out the current language
 	std::string lang = LLUI::getLanguage();
@@ -241,6 +222,8 @@ std::string LLWeb::expandURLSubstitutions(const std::string &url,
 		parcel_id = parcel->getLocalID();
 	}
 	substitution["PARCEL_ID"] = llformat("%d", parcel_id);
+
+	substitution["SLURL_TYPE"] = "hop";
 
 	// expand all of the substitution strings and escape the url
 	std::string expanded_url = url;

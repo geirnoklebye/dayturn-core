@@ -65,7 +65,6 @@ public:
 
 	static void getFields(LLPointer<LLCredential>& credential, BOOL& remember);
 
-// <AW: opensim>
 // 	static BOOL isGridComboDirty(); 
 	static BOOL areCredentialFieldsDirty();
 	static void setLocation(const LLSLURL& slurl);
@@ -73,7 +72,6 @@ public:
 	static void updateLocationCombo(bool force_visible);  // simply update the combo box
 	static void closePanel();
 
-// <AW: opensim>
 // 	void setSiteIsAlive( bool alive );
 
 	static void loadLoginPage();	
@@ -89,9 +87,9 @@ private:
 	void reshapeBrowser();
 	void addFavoritesToStartLocation();
 	void addUsersWithFavoritesToUsername();
-	static void onClickConnect(void*);
-	static void onClickSelectGrid(void*);
+    static void onClickConnect(void*);
 	static void onClickAddGrid(void*);
+	static void onClickSelectGrid(void*);
 	static void onClickNewAccount(void*);
 	static void onClickVersion(void*);
 	static void onClickForgotPassword(void*);
@@ -99,6 +97,7 @@ private:
 	static void onPassKey(LLLineEditor* caller, void* user_data);
 	static void onSelectServer(LLUICtrl*, void*);
 	static void onServerComboLostFocus(LLFocusableElement*);
+	static void gridListChanged(bool success);// <FS:AW  grid management>
 	static void updateServerCombo();
 	static void updateStartSLURL();
 	static void updateLoginPanelLinks();
@@ -114,8 +113,8 @@ private:
 
 	static LLPanelLogin* sInstance;
 	static BOOL		sCapslockDidNotification;
-	int mGridEntries; 	// <AW: opensim>
-	std::string mLoginPage; // <AW: opensim>
+	BOOL			mHtmlAvailable;
+	std::string mLoginPage;
 };
 
 #endif

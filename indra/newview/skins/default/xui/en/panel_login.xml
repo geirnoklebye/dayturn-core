@@ -54,7 +54,7 @@ follows="left|bottom"
 font="SansSerifSmall"
 height="16"
 name="username_text"
-top="20"
+top="10"
 left="20"
 width="150">
 Username:
@@ -81,7 +81,7 @@ font="SansSerifSmall"
 height="15"
 left_pad="-19"
 name="password_text"
-top="20"
+top="10"
     width="150">
        Password:
 </text>
@@ -113,7 +113,7 @@ label="Remember password"
   layout="topleft"
   left_pad="10"
   name="connect_btn"
-  top="35"
+  top="25"
   width="90" />
   <text
   follows="left|bottom"
@@ -121,7 +121,7 @@ label="Remember password"
   height="15"
   left_pad="8"
   name="start_location_text"
-  top="20"
+  top="10"
   width="130">
        Start at:
  </text>
@@ -156,7 +156,32 @@ layout="topleft"
 top_pad="2"
 name="server_combo"
 width="135"
-  visible="false" />
+  visible="true" >
+</combo_box>
+<button
+  follows="left|bottom"
+  height="19"
+  image_unselected="PushButton_Off"
+  image_selected="PushButton_On"
+  image_overlay="Refresh_Off"
+  label=" "
+  layout="topleft"
+  left_pad="1"
+  name="add_grid_btn"
+  top_delta="2"
+  width="20" />
+<button
+  follows="left|bottom"
+  height="23"
+  is_toggle="true"
+  image_unselected="PushButton_Off"
+  image_selected="PushButton_On_Selected"
+  label="New Grids"
+  layout="topleft"
+  left_pad="10"
+  name="select_grids_btn"
+  top_delta="-2"
+  width="70" />
 </layout_panel>
 <layout_panel
 tab_stop="false"

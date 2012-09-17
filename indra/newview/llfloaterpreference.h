@@ -232,6 +232,35 @@ protected:
 	
 };
 
+// <FS:AW  opensim preferences>
+class LLPanelPreferenceOpensim : public LLPanelPreference
+{
+public:
+	LLPanelPreferenceOpensim();
+// <FS:AW  grid management>
+	/*virtual*/ BOOL postBuild();
+	/*virtual*/ void apply();
+	/*virtual*/ void cancel();
+
+protected:
+
+	void onClickAddGrid();
+	void addedGrid(bool success);
+	void onClickClearGrid();
+	void onClickRefreshGrid();
+	void onClickRemoveGrid();
+	bool removeGridCB(const LLSD& notification, const LLSD& response);
+// </FS:AW  grid management>
+// <FS:AW  opensim search support>
+	void onClickClearDebugSearchURL();
+	void onClickPickDebugSearchURL();
+// </FS:AW  opensim search support>
+
+	void refreshGridList(bool success = true);
+	LLScrollListCtrl* mGridListControl;
+};
+// </FS:AW  opensim preferences>
+
 class LLFloaterPreferenceProxy : public LLFloater
 {
 public: 

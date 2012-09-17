@@ -338,7 +338,6 @@
     <key>GridListDownload</key>
     <map>
       <key>Comment</key>
-      <string>Enable texture auditting.</string>
       <string>Wether to fetch a grid list from the URL specified in GridListDownloadURL.</string>
       <key>Persist</key>
       <integer>1</integer>
@@ -1705,19 +1704,44 @@
       <key>Value</key>
       <string />
     </map>
-    <key>CmdLineLoginURI</key>
-    <map>
-      <key>Comment</key>
-      <string>Command line specified login server and CGI prefix to use.</string>
-      <key>Persist</key>
+  <key>CmdLineLoginURI</key>
+  <map>
+    <key>Comment</key>
+    <string>Command line specified login server and CGI prefix to use.</string>
+    <key>Persist</key>
+    <integer>0</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string />
+  </map>
+  <key>GridSelectorURI</key>
+  <map>
+    <key>Comment</key>
+    <string>URL that provides grid hop:// uris (adjust size: GridSelectorRect)</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string>http://ubuntuone.com/06v4P4LWWjFCA4XcyaguRj</string>
+  </map>
+  <key>GridSelectorRect</key>
+  <map>
+    <key>Comment</key>
+    <string>Rectangle for grid selector</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Rect</string>
+    <key>Value</key>
+    <array>
       <integer>0</integer>
-      <key>Type</key>
-      <string>LLSD</string>
-      <key>Value</key>
-      <array>
-        <string />
-      </array>
-    </map>
+      <integer>210</integer>
+      <integer>300</integer>
+      <integer>0</integer>
+    </array>
+  </map>  
     <key>ConnectAsGod</key>
     <map>
       <key>Comment</key>

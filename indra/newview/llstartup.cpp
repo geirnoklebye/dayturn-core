@@ -798,13 +798,13 @@ bool idle_startup()
 	
 	if (STATE_BROWSER_INIT == LLStartUp::getStartupState())
 	{
-		LL_DEBUGS("AppInit") << "STATE_BROWSER_INIT" << LL_ENDL;
-		std::string msg = LLTrans::getString("LoginInitializingBrowser");
-		set_startup_status(0.03f, msg.c_str(), gAgent.mMOTD.c_str());
-		display_startup();
-		// LLViewerMedia::initBrowser();
+//		LL_DEBUGS("AppInit") << "STATE_BROWSER_INIT" << LL_ENDL;
+//		std::string msg = LLTrans::getString("LoginInitializingBrowser");
+//		set_startup_status(0.03f, msg.c_str(), gAgent.mMOTD.c_str());
+//		display_startup();
+//		// LLViewerMedia::initBrowser();
 		LLStartUp::setStartupState( STATE_LOGIN_SHOW );
-		return FALSE;
+//		return FALSE;
 	}
 
 

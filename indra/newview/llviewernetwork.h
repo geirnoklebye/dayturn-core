@@ -6,6 +6,7 @@
  * $LicenseInfo:firstyear=2006&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
+ * With modifications Copyright (C) 2012, arminweatherwax@lavabit.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,6 +31,9 @@
 
 #include "llxmlnode.h"
                                                                                                        
+#include <boost/function.hpp>
+#include <boost/signals2.hpp>
+                                                                                                       
 extern const char* DEFAULT_LOGIN_PAGE;
 //Kokua: for llviewernetwork_test
 #define KNOWN_GRIDS_SIZE 3
@@ -37,20 +41,17 @@ extern const char* DEFAULT_LOGIN_PAGE;
 #define ADITI "Second Life Beta"
 
 #define GRID_VALUE "name"
-#define GRID_ID_VALUE "grid_login_id"
-// <AW opensim> 
 #define GRID_LABEL_VALUE "gridname"
 #define GRID_NICK_VALUE "gridnick"
+//#define GRID_ID_VALUE "grid_login_id"
 #define GRID_LOGIN_URI_VALUE "loginuri"
 #define GRID_HELPER_URI_VALUE "helperuri"
 #define GRID_LOGIN_PAGE_VALUE "loginpage"
+#define GRID_IS_SYSTEM_GRID_VALUE "system_grid"
 #define GRID_IS_FAVORITE_VALUE "favorite"
 #define GRID_REGISTER_NEW_ACCOUNT "register"
 #define GRID_FORGOT_PASSWORD "password"
-// </AW opensim>
-#define GRID_IS_SYSTEM_GRID_VALUE "system_grid"
-#define GRID_IS_FAVORITE_VALUE "favorite"
-#define MAINGRID "util.agni.lindenlab.com"
+#define MAINGRID "login.agni.lindenlab.com"
 #define GRID_LOGIN_IDENTIFIER_TYPES "login_identifier_types"
 // defines slurl formats associated with various grids.
 // we need to continue to support existing forms, as slurls
@@ -58,6 +59,7 @@ extern const char* DEFAULT_LOGIN_PAGE;
 // forms.
 #define GRID_SLURL_BASE "slurl_base"
 #define GRID_APP_SLURL_BASE "app_slurl_base"
+class GridInfoRequestResponder;
 
 // <AW opensim>
 struct GridEntry
@@ -101,7 +103,8 @@ public:
 		LOCAL,
 		FINISH,
 		TRYLEGACY,
-		FAIL
+		FAIL,
+		REMOVE
 	} AddState;
 public:
 	
@@ -115,19 +118,19 @@ public:
 	void initSystemGrids();
 	void initGridList(std::string grid_file, AddState state);
 	void initCmdLineGrids();
-
+	void resetGrids();
 	// grid list management
-	bool isReadyToLogin(){return mReadyToLogin;}
-	void incResponderCount(){++mResponderCount;}
-	void decResponderCount(){--mResponderCount;}
-	void gridInfoResponderCB(GridEntry* grid_data);
-	// add a grid to the list of grids
 
-	void addGrid(GridEntry* grid_info, AddState state);	
+	// add a grid to the list of grids
+	void addGrid(const std::string& loginuri);
+	bool isReadyToLogin(){return mReadyToLogin;}
+	void removeGrid(const std::string& grid);
+	void reFetchGrid() { reFetchGrid(mGrid, true); }
+	void reFetchGrid(const std::string& grid, bool set_current = false);
 
 	// retrieve a map of grid-name <-> label
 	// by default only return the user visible grids
-	std::map<std::string, std::string> getKnownGrids(bool favorites_only=FALSE);
+	std::map<std::string, std::string> getKnownGrids();
 	
 	// this was getGridInfo - renamed to avoid ambiguity with the OpenSim grid_info
 	void getGridData(const std::string& grid, LLSD &grid_info);
@@ -145,18 +148,19 @@ public:
 	std::string getGridLabel() { return mGridList[mGrid][GRID_LABEL_VALUE]; }
 	//get the grid nick e.g. "agni"
 	std::string getGridNick() { return mGridList[mGrid][GRID_NICK_VALUE]; }
-	//get the grid e.g. "util.agni.lindenlab.com"
+	//get the grid e.g. "login.agni.lindenlab.com"
 	std::string getGrid() const { return mGrid; }
-	/// Return the name of a grid, given either its name or its id
-	std::string getGridsl( const std::string &grid );
-		/// Get the id (short form selector) for a given grid
-	std::string getGridId(const std::string& grid);
-		/// Get the id (short form selector) for the selected grid
-	std::string getGridId() { return getGridId(mGrid); }
+// <FS:AW  grid management>
+	// get the first (and very probably only) login URI of a specified grid
+	std::string getLoginURI(const std::string& grid);
+// </FS:AW  grid management>
+	// get the Login URIs of the current grid
 	void getLoginURIs(std::vector<std::string>& uris);
 	std::string getHelperURI();
 	std::string getLoginPage();
-	std::string getGridLoginID() { return mGridList[mGrid][GRID_ID_VALUE]; }	
+	std::string getGridLoginID() { return mGridList[mGrid][GRID_VALUE]; }
+	// was ://	std::string getGridLoginID() { return mGridList[mGrid][GRID_ID_VALUE]; }
+	// however we already have that in GRID_VALUE
 	std::string getLoginPage(const std::string& grid) { return mGridList[grid][GRID_LOGIN_PAGE_VALUE]; }
 	void        getLoginIdentifierTypes(LLSD& idTypes) { idTypes = mGridList[mGrid][GRID_LOGIN_IDENTIFIER_TYPES]; }
 
@@ -168,9 +172,21 @@ public:
 	
 	std::string getAppSLURLBase(const std::string& grid);
 	std::string getAppSLURLBase() { return getAppSLURLBase(mGrid); }	
+
+	bool hasGrid(const std::string& grid){ return mGridList.has(grid); }
+	bool isTemporary(){ return mGridList[mGrid].has("FLAG_TEMPORARY"); }
+	bool isTemporary(const std::string& grid){ return mGridList[grid].has("FLAG_TEMPORARY"); }
+
+	// tell if we got this from a Hypergrid SLURL
 	bool isHyperGrid(const std::string& grid) { return mGridList[grid].has("HG"); }
 
-// <AW opensim>
+	// tell if we know how to acess this grid via Hypergrid
+	std::string getGatekeeper() { return getGatekeeper(mGrid); }
+	std::string getGatekeeper(const std::string& grid) { return mGridList[grid].has("gatekeeper") ? mGridList[grid]["gatekeeper"].asString() : std::string(); }
+
+
+
+
 	std::string getGridByProbing( const std::string &probe_for, bool case_sensitive = false);
 	std::string getGridByLabel( const std::string &grid_label, bool case_sensitive = false);
 	std::string getGridByGridNick( const std::string &grid_nick, bool case_sensitive = false);
@@ -186,20 +202,32 @@ public:
 	bool isSystemGrid() { return isSystemGrid(mGrid); }
 	// Mark this grid as a favorite that should be persisited on 'save'
 	// this is currently used to persist a grid after a successful login
-// <AW: opensim>
-	// Not used anymore, keeping commented as reminder for merge conflicts
-	//void setFavorite() { mGridList[mGrid][GRID_IS_FAVORITE_VALUE] = TRUE; }
-// </AW opensim>
+	void setFavorite() { mGridList[mGrid][GRID_IS_FAVORITE_VALUE] = TRUE; }
+
+// <FS:AW  grid management>
+	typedef boost::function<void(bool success)> grid_list_changed_callback_t;
+	typedef boost::signals2::signal<void(bool success)> grid_list_changed_signal_t;
+
+	boost::signals2::connection addGridListChangedCallback(grid_list_changed_callback_t cb);
+	grid_list_changed_signal_t	mGridListChangedSignal;
+// <FS:AW  grid management>
 	
 // <AW opensim>
 	bool isInSLMain();
 	bool isInSLBeta();
 	bool isInOpenSim();
 	void saveGridList();
-	int mGridEntries;
-// </AW opensim>
 	void clearFavorites();
 	
+private:
+	friend class GridInfoRequestResponder;
+	void addGrid(GridEntry* grid_info, AddState state);
+	void incResponderCount(){++mResponderCount;}
+	void decResponderCount(){--mResponderCount;}
+	void gridInfoResponderCB(GridEntry* grid_data);
+
+	void setGridData(const LLSD &grid_info) { mGridList[mGrid]=grid_info; }
+
 protected:
 
 	void updateIsInProductionGrid();
@@ -216,14 +244,13 @@ protected:
 	std::string mGrid;
 	std::string mGridFile;
 	LLSD mGridList;
-// <AW opensim>
+	LLSD mConnectedGrid;
 	bool mIsInSLMain;
 	bool mIsInSLBeta;
 	bool mIsInOpenSim;
 	int mResponderCount;
 	bool mReadyToLogin;
 	bool mCommandLineDone;
-// </AW opensim>
 };
 
 const S32 MAC_ADDRESS_BYTES = 6;
