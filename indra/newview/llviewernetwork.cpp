@@ -991,8 +991,6 @@ std::map<std::string, std::string> LLGridManager::getKnownGrids()
 		grid_iter++) 
 	{
 		if(!(grid_iter->second.has("DEPRECATED")//use in fallback list only
-                   ||grid_iter->second.has("USER_DELETED")//use in user list only
-                   ||grid_iter->second.has("FLAG_TEMPORARY")))
 		{
 			key = grid_iter->first;
 			value = grid_iter->second[GRID_LABEL_VALUE].asString();
@@ -1058,7 +1056,7 @@ void LLGridManager::setGridChoice(const std::string& grid)
 		grid_entry->grid = LLSD::emptyMap();
 		grid_entry->grid[GRID_VALUE] = grid;
 		grid_entry->set_current = true;
-		addGrid(grid_entry, FETCHTEMP);
+		addGrid(grid_entry, FETCH);
 	}
 	else
 	{
@@ -1265,10 +1263,6 @@ void LLGridManager::saveGridList()
 	LL_DEBUGS("GridManager") << __FUNCTION__ << LL_ENDL;
 
 	LLSD output_grid_list = LLSD::emptyMap();
-	if (mGridList[mGrid].has("FLAG_TEMPORARY"))
-	{
-		mGridList[mGrid].erase("FLAG_TEMPORARY");
-	}
 	for(LLSD::map_iterator grid_iter = mGridList.beginMap();
 		grid_iter != mGridList.endMap();
 		grid_iter++)

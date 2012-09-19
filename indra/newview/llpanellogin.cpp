@@ -63,7 +63,7 @@
 #include "llweb.h"
 #include "llmediactrl.h"
 #include "llrootview.h"
-#include "llfloaterwebcontent.h"
+
 #include "llfloatertos.h"
 #include "lltrans.h"
 #include "llglheaders.h"
@@ -969,8 +969,6 @@ void LLPanelLogin::onClickConnect(void *)
 			}
 			else
 			{
-			LLFloaterReg::hideInstance("select_grid");
-
 				LLPointer<LLCredential> cred;
 				BOOL remember;
 				getFields(cred, remember);
