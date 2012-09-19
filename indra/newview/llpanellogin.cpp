@@ -68,6 +68,7 @@
 #include "lltrans.h"
 #include "llglheaders.h"
 #include "llpanelloginlistener.h"
+#include "lltabcontainer.h"
 
 #if LL_WINDOWS
 #pragma warning(disable: 4355)      // 'this' used in initializer list
@@ -1017,12 +1018,27 @@ void LLPanelLogin::onClickAddGrid(void *)
 void LLPanelLogin::onClickSelectGrid(void *)
 {
 //	if ( !sInstance ) return;
+	// bring up the prefs floater
+	LLFloaterPreference* prefsfloater = dynamic_cast<LLFloaterPreference*>(LLFloaterReg::showInstance("preferences"));
+	if (prefsfloater)
+	{
+		// grab the 'grids' panel from the preferences floater and
+		// bring it the front!
+		LLTabContainer* tabcontainer = prefsfloater->getChild<LLTabContainer>("pref core");
+		LLPanel* gridspanel = prefsfloater->getChild<LLPanel>("grids");
+		if (tabcontainer && gridspanel)
+		{
+			tabcontainer->selectTabPanel(gridspanel);
+		}
+	}
+/* NP remove web grid selector
 	LLFloaterWebContent::Params p;
 	p.url = gSavedSettings.getString("GridSelectorURI");
 	p.show_chrome = false;
 	p.preferred_media_size = gSavedSettings.getRect("GridSelectorRect");
 
 	LLFloaterReg::toggleInstanceOrBringToFront("select_grid", p);
+*/
 }
 
 // static

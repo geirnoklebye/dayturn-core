@@ -767,7 +767,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 
 	if(FAIL != state)
 	{
-	llwarns << "GRID_VALUE:" << grid_entry->grid[GRID_VALUE] << llendl;
+	lldebugs << "GRID_VALUE:" << grid_entry->grid[GRID_VALUE] << llendl;
     std::string grid = utf8str_tolower(grid_entry->grid[GRID_VALUE]);
 		if(grid.empty())
  		{
@@ -990,7 +990,7 @@ std::map<std::string, std::string> LLGridManager::getKnownGrids()
 		grid_iter != mGridList.endMap();
 		grid_iter++) 
 	{
-		if(!(grid_iter->second.has("DEPRECATED")//use in fallback list only
+		if(!(grid_iter->second.has("DEPRECATED")))//use in fallback list only
 		{
 			key = grid_iter->first;
 			value = grid_iter->second[GRID_LABEL_VALUE].asString();

@@ -8049,11 +8049,15 @@ Could not add [GRID] to the grid list.
   </notification>
 <!-- AW: opensim -->
 
-   persist="true"
-   type="notify">
-[FNAME] could not be opened or decoded for [NRETRIES] attempts, and is now considered broken.
-Disabling future updates for this file.
+  <notification
+     icon="alertmodal.tga"
+     name="LocalBitmapsUpdateFailedFinal"
+     persist="true"
+     type="notify">
+    [FNAME] could not be opened or decoded for [NRETRIES] attempts, and is now considered broken.
+    Disabling future updates for this file.
   </notification>
+
 
   <notification
    icon="alertmodal.tga"
@@ -8063,5 +8067,54 @@ Disabling future updates for this file.
 Attempted to add an invalid or unreadable image file [FNAME] which could not be opened or decoded.
 Attempt cancelled.
   </notification>
+  <notification
+ icon="alertmodal.tga"
+ name="ConfirmClearDebugSearchURL"
+ type="alertmodal">
+    Are you sure you want to clear the debug search url?
+    <tag>confirm</tag>
+    <usetemplate
+     name="okcancelbuttons"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+  <notification
+   icon="alertmodal.tga"
+   name="ConfirmPickDebugSearchURL"
+   type="alertmodal">
+    Are you sure you want to pick the current search url as debug search url?
+    <tag>confirm</tag>
+    <usetemplate
+     ignoretext="Confirm picking debug search url"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+  <notification
+   icon="alertmodal.tga"
+   name="CanNotRemoveConnectedGrid"
+   type="alertmodal">
+    You can not remove [REMOVE_GRID] while being connected to it.
+    <tag>confirm</tag>
+    <usetemplate
+     ignoretext="Warn that the grid connected to can not be removed."
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+  <!-- <FS:AW  grid management-->
+  <notification
+    icon="alertmodal.tga"
+    name="ConfirmRemoveGrid"
+    type="alertmodal">
+    Are you sure you want to remove [REMOVE_GRID] from the grid list?
+    <tag>confirm</tag>
+    <usetemplate
+     ignoretext="Confirm removing grids"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+  <!-- </FS:AW  grid management-->
   
 </notifications>

@@ -176,12 +176,12 @@ width="135"
   is_toggle="true"
   image_unselected="PushButton_Off"
   image_selected="PushButton_On_Selected"
-  label="New Grids"
+  label="Grid Manager"
   layout="topleft"
   left_pad="10"
   name="select_grids_btn"
   top_delta="-2"
-  width="70" />
+  width="86" />
 </layout_panel>
 <layout_panel
 tab_stop="false"
