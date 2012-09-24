@@ -28,7 +28,7 @@
 
 #include "llviewerprecompiledheaders.h"
 
-//#include "llappviewer.h"
+#include "llappviewer.h"
 #include "llviewernetwork.h"
 #include "llviewercontrol.h"
 #include "llsdserialize.h"
@@ -1218,12 +1218,16 @@ void LLGridManager::updateIsInProductionGrid()
 	if( login_uri.authority().find("login.agni.lindenlab.com") ==  0 )
 	{
 		LL_DEBUGS("GridManager")<< "uri: "<<  login_uri.authority() << " set IsInSLMain" << LL_ENDL;
+		gSimulatorType = "SecondLife";
+		llinfos << "Simulator Type : " << gSimulatorType <<llendl;
 		mIsInSLMain = true;
 		return;
 	}
 	else if( login_uri.authority().find("lindenlab.com") !=  std::string::npos )//here is no real money
 	{
 		LL_DEBUGS("GridManager")<< "uri: "<< login_uri.authority() << " set IsInSLBeta" << LL_ENDL;
+		gSimulatorType = "SecondLife";
+		llinfos << "Simulator Type : " << gSimulatorType <<llendl;
 		mIsInSLBeta = true;
 		return;
 	}
@@ -1239,6 +1243,8 @@ void LLGridManager::updateIsInProductionGrid()
 	}
 
 	LL_DEBUGS("GridManager")<< "uri: "<< login_uri.authority() << " set IsInOpenSim" << LL_ENDL;
+	gSimulatorType = "OpenSim";
+	llinfos << "Simulator Type : " << gSimulatorType <<llendl;
 	mIsInOpenSim = true;
 }
 // </AW opensim>
