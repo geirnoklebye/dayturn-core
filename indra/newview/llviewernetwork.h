@@ -147,7 +147,7 @@ public:
 	//get the grid label e.g. "Second Life"
 	std::string getGridLabel() { return mGridList[mGrid][GRID_LABEL_VALUE]; }
 	//get the grid nick e.g. "agni"
-	std::string getGridNick() { return mGridList[mGrid][GRID_NICK_VALUE]; }
+	std::string getGridNick() { return mGridList[mGrid][GRID_NICK_VALUE].asString(); }
 	//get the grid e.g. "login.agni.lindenlab.com"
 	std::string getGrid() const { return mGrid; }
 // <FS:AW  grid management>
