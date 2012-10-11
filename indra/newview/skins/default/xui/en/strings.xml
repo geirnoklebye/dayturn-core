@@ -295,7 +295,10 @@ Please try logging in again in a minute.</string>
 	<!-- llvoavatar. Displayed in the avatar chat bubble -->
 	<string name="AvatarEditingAppearance">(Editing Appearance)</string>
 	<string name="AvatarAway">Away</string>
-	<string name="AvatarBusy">Busy</string>
+  <string name="AvatarBusy">Busy</string>
+//MK
+  <string name="AvatarTyping">Typing</string>
+//mk
 	<string name="AvatarMuted">Blocked</string>
 
 	<!-- animations -->
@@ -2340,7 +2343,8 @@ Drag folders to this area and click "Send to Marketplace" to list them for sale 
 	<string name="Right Pec">Right Pec</string>
     <string name="Neck">Neck</string>
     <string name="Avatar Center">Avatar Center</string>
-	<string name="Invalid Attachment">Invalid Attachment Point</string>
+  <string name="Root">Root</string>
+  <string name="Invalid Attachment">Invalid Attachment Point</string>
 
   <!-- Avatar age computation, see LLDateUtil::ageFromDate -->
   <string name="YearsMonthsOld">[AGEYEARS] [AGEMONTHS] old</string>
@@ -3828,6 +3832,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Build_Label">Build</string>
   <string name="Command_Chat_Label">Chat</string>
   <string name="Command_Compass_Label">Compass</string>
+  <string name="Command_Conversations_Label">Conversations</string>
   <string name="Command_Destinations_Label">Destinations</string>
   <string name="Command_Gestures_Label">Gestures</string>
   <string name="Command_HowTo_Label">How to</string>
@@ -3854,6 +3859,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Build_Tooltip">Building objects and reshaping terrain</string>
   <string name="Command_Chat_Tooltip">Chat with people nearby using text</string>
   <string name="Command_Compass_Tooltip">Compass</string>
+  <string name="Command_Conversations_Tooltip">Conversations</string>
   <string name="Command_Destinations_Tooltip">Destinations of interest</string>
   <string name="Command_Gestures_Tooltip">Gestures for your avatar</string>
   <string name="Command_HowTo_Tooltip">How to do common tasks</string>
