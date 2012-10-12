@@ -2666,6 +2666,14 @@ bool LLAppViewer::initConfiguration()
 		}
 	}
 
+	// If automatic login from command line with --login switch
+	// init StartSLURL location. In interactive login, LLPanelLogin
+	// will take care of it.
+	if ((clp.hasOption("login") || clp.hasOption("autologin")) && !clp.hasOption("url") && !clp.hasOption("slurl"))
+	{
+		LLStartUp::setStartSLURL(LLSLURL(gSavedSettings.getString("LoginLocation")));
+	}
+
 	if (!gSavedSettings.getBOOL("AllowMultipleViewers"))
 	{
 	    //
@@ -2713,27 +2721,12 @@ bool LLAppViewer::initConfiguration()
         }
 	}
 
-   	// NextLoginLocation is set from the command line option
+   	// need to do this here - need to have initialized global settings first
 	std::string nextLoginLocation = gSavedSettings.getString( "NextLoginLocation" );
 	if ( !nextLoginLocation.empty() )
 	{
-		LL_DEBUGS("AppInit")<<"set start from NextLoginLocation: "<<nextLoginLocation<<LL_ENDL;
 		LLStartUp::setStartSLURL(LLSLURL(nextLoginLocation));
-	}
-	else if (   (   clp.hasOption("login") || clp.hasOption("autologin"))
-			 && !clp.hasOption("url")
-			 && !clp.hasOption("slurl"))
-	{
-		// If automatic login from command line with --login switch
-		// init StartSLURL location.
-		std::string start_slurl_setting = gSavedSettings.getString("LoginLocation");
-		LL_DEBUGS("AppInit") << "start slurl setting '" << start_slurl_setting << "'" << LL_ENDL;
-		LLStartUp::setStartSLURL(LLSLURL(start_slurl_setting));
-	}
-	else
-	{
-		// the login location will be set by the login panel (see LLPanelLogin)
-	}
+	};
 
 	gLastRunVersion = gSavedSettings.getString("LastRunVersion");
 
@@ -3117,8 +3110,8 @@ void LLAppViewer::writeSystemInfo()
 	gDebugInfo["OSInfo"] = getOSInfo().getOSStringSimple();
 
 	// The user is not logged on yet, but record the current grid choice login url
-	// which may have been the intended grid. 
-	gDebugInfo["GridName"] = LLGridManager::getInstance()->getGridId();
+	// which may have been the intended grid. This can b
+	gDebugInfo["GridName"] = LLGridManager::getInstance()->getGridNick();
 
 	// *FIX:Mani - move this down in llappviewerwin32
 #ifdef LL_WINDOWS
@@ -5070,7 +5063,7 @@ void LLAppViewer::launchUpdater()
 #endif
 	// *TODO change userserver to be grid on both viewer and sim, since
 	// userserver no longer exists.
-	query_map["userserver"] = LLGridManager::getInstance()->getGridId();
+	query_map["userserver"] = LLGridManager::getInstance()->getGridLabel();
 	query_map["channel"] = ViewerInfo::viewerName(); // *TODO: ViewerInfo channel - Jacek
 	// *TODO constantize this guy
 	// *NOTE: This URL is also used in win_setup/lldownloader.cpp
