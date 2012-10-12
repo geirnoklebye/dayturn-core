@@ -18,7 +18,6 @@ include(JsonCpp)
 include(LLAudio)
 include(LLCharacter)
 include(LLCommon)
-include(LLConvexDecomposition)
 include(LLImage)
 include(LLImageJ2COJ)
 include(LLInventory)
@@ -74,7 +73,6 @@ include_directories(
     ${LIBS_PREBUILD_DIR}/include/hunspell
     ${OPENAL_LIB_INCLUDE_DIRS}
     ${LIBS_PREBUILT_DIR}/include/collada/1.4
-    ${HACD_INCLUDE_DIR} 
     )
 
 set(viewer_SOURCE_FILES
@@ -1820,8 +1818,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLLOGIN_LIBRARIES}
     ${LLCONVEXDECOMP_LIBRARY}
     ${TCMALLOC_LIBRARIES}
-    ${HACD_LIBRARY}
-    )
+     )
 
 if (USE_KDU)
     target_link_libraries(${VIEWER_BINARY_NAME}
