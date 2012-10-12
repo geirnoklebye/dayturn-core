@@ -45,18 +45,18 @@ static std::string getMarketplaceDomain()
 {
 	std::string domain = "secondlife.com";
 	
-	if (!LLGridManager::getInstance()->isInProductionGrid())
+	if (!LLGridManager::getInstance()->isInSLMain())
 	{
-		const std::string& grid_id = LLGridManager::getInstance()->getGridId();
-		const std::string& grid_id_lower = utf8str_tolower(grid_id);
+		const std::string& grid_label = LLGridManager::getInstance()->getGridNick();
+		const std::string& grid_label_lower = utf8str_tolower(grid_label);
 		
-		if (grid_id_lower == "damballah")
+		if (grid_label_lower == "damballah")
 		{
 			domain = "secondlife-staging.com";
 		}
 		else
 		{
-			domain = llformat("%s.lindenlab.com", grid_id_lower.c_str());
+			domain = llformat("%s.lindenlab.com", grid_label_lower.c_str());
 		}
 	}
 	

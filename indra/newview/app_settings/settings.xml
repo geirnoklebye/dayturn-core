@@ -335,6 +335,17 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <key>GridListDownload</key>
+    <map>
+      <key>Comment</key>
+      <string>Wether to fetch a grid list from the URL specified in GridListDownloadURL.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
     <key>AutoReplace</key>
     <map>
       <key>Comment</key>
@@ -346,6 +357,27 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+  <key>GridListDownloadURL</key>
+  <map>
+    <key>Comment</key>
+    <string>Fetch a grid list from this URL.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string>http://localhost/grids.xml</string>
+  </map>
+  <key>ShowMutedAvatarsAsCloud</key>
+  <map>
+    <key>Comment</key>
+    <string>If true, show muted avatars as clouds.</string>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
   <key>AutoAcceptNewInventory</key>
     <map>
       <key>Comment</key>
@@ -1672,19 +1704,44 @@
       <key>Value</key>
       <string />
     </map>
-    <key>CmdLineLoginURI</key>
-    <map>
-      <key>Comment</key>
-      <string>Command line specified login server and CGI prefix to use.</string>
-      <key>Persist</key>
+  <key>CmdLineLoginURI</key>
+  <map>
+    <key>Comment</key>
+    <string>Command line specified login server and CGI prefix to use.</string>
+    <key>Persist</key>
+    <integer>0</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string />
+  </map>
+  <key>GridSelectorURI</key>
+  <map>
+    <key>Comment</key>
+    <string>URL that provides grid hop:// uris (adjust size: GridSelectorRect)</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string>http://ubuntuone.com/06v4P4LWWjFCA4XcyaguRj</string>
+  </map>
+  <key>GridSelectorRect</key>
+  <map>
+    <key>Comment</key>
+    <string>Rectangle for grid selector</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Rect</string>
+    <key>Value</key>
+    <array>
       <integer>0</integer>
-      <key>Type</key>
-      <string>LLSD</string>
-      <key>Value</key>
-      <array>
-        <string />
-      </array>
-    </map>
+      <integer>210</integer>
+      <integer>300</integer>
+      <integer>0</integer>
+    </array>
+  </map>  
     <key>ConnectAsGod</key>
     <map>
       <key>Comment</key>
@@ -1958,7 +2015,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>1</integer>
+      <integer>0</integer>
     </map>
     <key>DebugInventoryFilters</key>
     <map>
@@ -3884,7 +3941,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>ForceMandatoryUpdate</key>
     <map>
@@ -4324,7 +4381,7 @@
 		<key>Type</key>
 		<string>Boolean</string>
 		<key>Value</key>
-		<integer>0</integer>
+		<integer>1</integer>
 	</map>
 	<key>InventoryOutboxLogging</key>
 	<map>
@@ -12129,7 +12186,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>UseDebugMenus</key>
     <map>
@@ -12140,7 +12197,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>UseDefaultColorPicker</key>
     <map>

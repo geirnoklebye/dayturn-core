@@ -37,6 +37,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>72fcdfa8b36de6c802c42068be983129</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4-linux64-20120621.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -73,6 +96,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>b0f92b832e4ae5aee351801d644629e7</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/SDL-1.2.14-Linux-x86_64-20110410.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
         </map>
       </map>
       <key>apr_suite</key>
@@ -108,6 +154,18 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>46cfc1e55d071deaf2e3406140ae9da1</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-apr/downloads/apr_suite-1.4.5-linux64-20120619.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -157,6 +215,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>301a1317c7d5bebbdc396e1a4874175b</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/ares-1.7.1-Linux-x86_64-20110405.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -204,6 +285,29 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>ead9b63286672e9083bb30654e820052</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/boost-1.45.0-Linux-x86_64-20111216.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -253,6 +357,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>ed57bb06511e87312d4c70ce43068d55</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/colladadom-2.3-Linux-x86_64-20110414.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -301,6 +428,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>7e698e37a1425d66f709163a36ce0b5a</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/curl-7.21.4-Linux-x86_64-20110405.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -337,6 +487,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>162692b84b6edd815ecd75fe7fe1870a</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/db-5.1.25-Linux-x86_64-20110807.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
         </map>
       </map>
       <key>dbusglib</key>
@@ -360,6 +522,29 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>09be41e3145e1a960e50f2f9ce0a5e7d</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/dbusglib-linux64-20101007.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
         </map>
       </map>
@@ -396,6 +581,18 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>92398d45c81bbac7009e6da423be5953</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-dictionaries/downloads/dictionaries-1-linux64-20120702.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -468,6 +665,18 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>5f6c43f46c0b23f8924e07f89def2fe9</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-expat/downloads/expat-2.0.1-linux64-20120616.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -546,12 +755,25 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d8b08b657247566bde5fd853c7622478</string>
+              <string>7d1b34f062795570b8f79c36c1aafdce</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/fontconfig-2.8.0-linux-20110311.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-fontconfig/downloads/fontconfig-2.8.0-linux-20120803.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+
+              <key>hash</key>
+              <string>83d6e4a3be560192057f80772a0c9de5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-fontconfig/downloads/fontconfig-2.8.0-linux64-20120731a.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
         </map>
       </map>
@@ -606,12 +828,24 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9f8a9dc39fd7c3da0fb3533782d1fddf</string>
+              <string>ac22a824d07b2c0926ebf19fd96257c1</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-freetype/rev/226814/arch/Linux/installer/freetype-2.3.9-linux-20110418.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.3.11-linux-20120803.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>f9e85717f4723a0b98444656013908fc</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.3.11-linux64-20120731.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -648,6 +882,18 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>5de58ca0fe19abf68b25956762ee0d29</string>
+              <key>url</key>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/glext-68-windows-20110406.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -697,6 +943,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>26f2df1f0b0fa01e94e0253e322f3583</string>
+              <key>url</key>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/glh_linear-linux-20101001.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -708,6 +966,64 @@
             </map>
             <key>name</key>
             <string>windows</string>
+          </map>
+        </map>
+      </map>
+      <key>glib</key>
+      <map>
+        <key>license</key>
+        <string>gpl</string>
+        <key>license-url</key>
+        <string>http://www.gnu.org/licenses/gpl.html</string>
+        <key>name</key>
+        <string>glib</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/i686-linux/include</key>
+                <string>include</string>
+                <key>libraries/i686-linux/lib_release_client</key>
+                <string>lib/release</string>
+                <key>libraries/include</key>
+                <string>include</string>
+              </map>
+              <key>hash</key>
+              <string>566cc47a572303bc4aef12ca02670902</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/glib-2.20.5-linux32-20100529.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>58c11add6b275c163950364df5b2964a</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/glib-2.20.5-linux64-20100515.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
         </map>
       </map>
@@ -781,6 +1097,31 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/bin</key>
+                <string>bin</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>0300272a1e6ecf64ccb02e94cf18e65b</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/google_breakpad-0.0.0-rev599-linux64-20101117.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -829,6 +1170,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>71316e5ce1ab4892c5fb369bbee02929</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/googlemock-1.5.0-linux64-20101115.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -857,13 +1221,146 @@
           <map>
             <key>archive</key>
             <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/i686-linux/include</key>
+                <string>include</string>
+                <key>libraries/i686-linux/lib_release_client</key>
+                <string>lib/release</string>
+                <key>libraries/include</key>
+                <string>include</string>
+              </map>
               <key>hash</key>
-              <string>ddbc0a64ad788107877fee777403592c</string>
+              <string>2cd3f6499f8444f1d119d097e4047252</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/gstreamer-linux-20101013.tar.bz2</string>
+              <string>http://imprudenceviewer.org/download/libs/gstreamer-0.10.24-linux-20091125.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>7e6fc4e185e8444a07b58ba7c0df255a</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/gstreamer-0.10.24-linux64-20091230.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>063358a877595303075ccca8c546266f</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/gstreamer-glib-iconv-libxml-plugins-autobuild-windows-20110816.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+      </map>
+<!--      <key>gst_plugins</key>
+      <map>
+        <key>license</key>
+        <string>gpl</string>
+        <key>license_file</key>
+        <string>LICENSES/gstreamer.txt</string>
+        <key>name</key>
+        <string>gst_plugins</string>
+        <key>platforms</key>
+        <map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>indra/newview/lib/gstreamer-plugins</key>
+                <string>lib/release/gstreamer-plugins</string>
+              </map>
+              <key>hash</key>
+              <string>76ad5a08f8f07f99c9e1545c2a0adc27</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/gstreamer-plugins-windows-0.10.32-20110503.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+      </map> -->
+      <key>gtk-etc</key>
+      <map>
+        <key>license</key>
+        <string>lgpl</string>
+        <key>license-file</key>
+        <string>LICENSES/gtk-etc.txt</string>
+        <key>name</key>
+        <string>gtk-etc</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/i686-linux/include</key>
+                <string>include</string>
+                <key>libraries/i686-linux/lib_release_client</key>
+                <string>lib/release</string>
+                <key>libraries/include</key>
+                <string>include</string>
+              </map>
+              <key>hash</key>
+              <string>349ee367e0ac1e878b24b66e449c6ff8</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/gtk-etc-linux-20101106.1.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>e8cb3f28379b7730004da44f04263936</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/gtk-etc-linux64-20091231.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
         </map>
       </map>
@@ -985,6 +1482,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>1293364aa62a6b6377e838004554467c</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-jpeglib/downloads/jpeglib-8c-linux64-20120728.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1032,6 +1541,29 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>a06ab38628ab7b53b8f3326cd942a6a8</string>
+              <key>url</key>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/jsoncpp-svn-r69-linux64-20090922.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -1095,6 +1627,53 @@
           </map>
         </map>
       </map>
+      <key>kokua-qt</key>
+      <map>
+        <key>license</key>
+        <string>lgpl</string>
+        <key>license_file</key>
+        <string>LICENSES/qt.txt</string>
+        <key>name</key>
+        <string>kokua-qt</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>15e99de5bf1ed04ec3d64f67198ff36e</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/kokua-qt4.7.4-autobuild-Linux-i686-20110628.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>4c6c0f607f7cc9ebaa5446fd9ca3371a</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/kokua-qt4.7.4-Linux-x86_64-20110620.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+      </map>
       <key>libhunspell</key>
       <map>
         <key>license</key>
@@ -1128,6 +1707,18 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>32491873ed138ef804b2c0d1526bad07</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-hunspell/downloads/libhunspell-1.3.2-linux64-20120702.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -1177,6 +1768,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>06bf5ce24accd2638eb751e84cb059a4</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/libpng-1.5.1-Linux-x86_64-20110822.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1213,6 +1816,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>3f2a0b553a2a72d3b9a39f528f057b18</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/libuuid-linux64-lenny-20091130.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
         </map>
       </map>
       <key>libxml</key>
@@ -1236,6 +1862,29 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>af3e301feb87b40617fd6599eaefb59c</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/libxml2-2.7.8-Linux-x86_64-20111209.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
         </map>
       </map>
@@ -1327,6 +1976,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>2d4aee5c3e83a238cdf4c995854299f8</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/llconvexdecompositionstub-0.3-Linux-Linux-x86_64-20110906.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1346,7 +2018,7 @@
       <key>llqtwebkit</key>
       <map>
         <key>license</key>
-        <string>lgpl</string>
+        <string>gpl</string>
         <key>license_file</key>
         <string>LICENSES/llqtwebkit.txt</string>
         <key>name</key>
@@ -1358,9 +2030,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4a98d727561cd1f4ac5ee02907411df1</string>
+              <string>82798d0da3ac3d97c91517a575d9ea1c</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llqtwebkit/rev/250147/arch/Darwin/installer/llqtwebkit-4.7.1-darwin-20120228.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llqtwebkit/rev/231093/arch/Darwin/installer/llqtwebkit-4.7.1-darwin-20110526.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -1369,22 +2041,56 @@
           <map>
             <key>archive</key>
             <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/i686-linux/include</key>
+                <string>include</string>
+                <key>libraries/i686-linux/lib_release_client</key>
+                <string>lib/release</string>
+                <key>libraries/include</key>
+                <string>include</string>
+              </map>
               <key>hash</key>
-              <string>f50e5f0cc880c55b3f0f7e67dc8f7221</string>
+              <string>d2f69c0d72e28037f5377538d4ec8dfe</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llqtwebkit/rev/250147/arch/Linux/installer/llqtwebkit-4.7.1-linux-20120228.tar.bz2</string>
+              <string>http://download.kokuaviewer.org/files/libs/kokua-llqtwebkit-Linux-i686-20110620.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>28fe808f318a2b66146e4bbcf1f96306</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/kokua-llqtwebkit-Linux-x86_64-20110620.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5e3cd6af397e853a963a6de40d440ff4</string>
+              <string>b9cc0333cc274c9cc40256ab7146b4fc</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llqtwebkit/rev/250147/arch/CYGWIN/installer/llqtwebkit-4.7.1-windows-20120228.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llqtwebkit/rev/232420/arch/CYGWIN/installer/llqtwebkit-4.7.1-windows-20110608.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1412,6 +2118,29 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>56630977f9261bd82039b0da08a0685c</string>
+              <key>url</key>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/mesa-6.2.1-linux64-20081016.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
         </map>
       </map>
@@ -1448,6 +2177,29 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>d1986d287655f159be50d661c125ba19</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/ndofdev-linux64-0.3.1-20100817.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -1497,6 +2249,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>dded849d4d46fb5d94f088c86407ec98</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/ogg-vorbis-linux64-1.2.2-1.3.2-20110514.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1545,6 +2320,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>fb112c0ea9068c91d5ed43ae501b95f9</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/openSSL-1.0.0-Linux-x86_64-20111224.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1573,15 +2360,53 @@
           <map>
             <key>archive</key>
             <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/i686-linux/include</key>
+                <string>include</string>
+                <key>libraries/i686-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
               <key>hash</key>
-              <string>fccdca18a950ac9363c6fb39118b80e1</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>cb1acfef8c0c44e86b539bae0e255a2e</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/openal-3ad86a1c-linux-20110114.tar.bz2</string>
+              <string>http://download.kokuaviewer.org/files/libs/openal-1.13-Linux-i686-20110708.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+<!--
+              <key>hash</key>
+              <string>7b1039886ab997d2926604540426961f</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/openal-1.13-Linux-x86_64-20110708.tar.bz2</string>
+-->
+              <key>hash</key>
+              <string>032848c2591a15e26c71998df3644cfc</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/openal-linux64-pulse0.9.21-20110304.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -1598,6 +2423,37 @@
         </map>
         <key>version</key>
         <string>3ad86a1c</string>
+      </map>
+      <key>32bitcompatibilitylibs</key>
+      <map>
+        <key>license</key>
+        <string>gpl</string>
+        <key>license_file</key>
+        <string>LICENSES/*.txt</string>
+        <key>name</key>
+        <string>32bitcompatibilitylibs</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>8f124facf11bc8e05da4ca3cea2ffbc1</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/32bit-compatibility-libs-Linux-x86_64-20110409.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
       </map>
       <key>openjpeg</key>
       <map>
@@ -1633,6 +2489,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>d7806f46c136793f5a8e784f24a4fb7a</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/openjpeg-1.4-Linux-x86_64-20110823.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1644,6 +2523,30 @@
             </map>
             <key>name</key>
             <string>windows</string>
+          </map>
+        </map>
+      </map>
+      <key>minizip</key>
+      <map>
+        <key>license</key>
+        <string>gpl</string>
+        <key>license_file</key>
+        <string>LICENSES/*.txt</string>
+        <key>name</key>
+        <string>minizip</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>89e178a6c1308d1e86cf5211e9434582</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/minizip-Linux-x86_64-20111209.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
         </map>
       </map>
@@ -1680,6 +2583,18 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>66c1e00918951757ee16e4c9f257ccb7</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-pcre/downloads/pcre-7.6-linux64-20120731c.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
         </map>
       </map>
@@ -1722,9 +2637,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>24e735ae005f3ce7a21a09cc02cece17</string>
+              <string>e19576af3c0affc71293d8f0bcce2606</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/231678/arch/Darwin/installer/slvoice-3.2.0002.10426-darwin-20110601.tar.bz2</string>
+              <string> http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/slvoice-3.2.0002.9361-darwin-20110120.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -1740,6 +2655,25 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>indra/newview/vivox-runtime/i686-linux</key>
+                <string>lib/release/vivox-runtime</string>
+              </map>
+              <key>hash</key>
+              <string>01573510dce7f380f44e561ef2f3dd9f</string>
+              <key>url</key>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/vivox-2.1.3010.6270-linux-20090309.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -1849,6 +2783,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>dc67b896c56116df8e18f2d1bbd07031</string>
+              <key>url</key>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/xmlrpc-epi-0.51-linux64-20080909.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1897,6 +2854,29 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>36716acbb29ed2adbc8d82d9ddbdec65</string>
+              <key>url</key>
+              <string>http://download.kokuaviewer.org/files/libs/z-lib-1.2.5-Linux-x86_64-20110405.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1939,7 +2919,7 @@
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=Debug</string>
                   <string>-DWORD_SIZE:STRING=32</string>
-                  <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
+                  <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>
                 </array>
               </map>
@@ -1960,7 +2940,7 @@
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=Debug</string>
                   <string>-DWORD_SIZE:STRING=32</string>
-                  <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
+                  <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
               </map>
@@ -1980,7 +2960,7 @@
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
                   <string>-DWORD_SIZE:STRING=32</string>
-                  <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
+                  <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>
                 </array>
               </map>
@@ -2001,7 +2981,7 @@
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
                   <string>-DWORD_SIZE:STRING=32</string>
-                  <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
+                  <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
               </map>
@@ -2021,7 +3001,7 @@
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=Release</string>
                   <string>-DWORD_SIZE:STRING=32</string>
-                  <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
+                  <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>
                 </array>
               </map>
@@ -2042,7 +3022,7 @@
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=Release</string>
                   <string>-DWORD_SIZE:STRING=32</string>
-                  <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
+                  <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
               </map>
@@ -2063,16 +3043,19 @@
             <map>
               <key>build</key>
               <map>
-                <key>command</key>
-                <string>xcodebuild</string>
-                <key>filters</key>
+                <key>arguments</key>
                 <array>
+                  <string>|</string>
+                  <string>grep</string>
+                  <string>-v</string>
                   <string>setenv</string>
                 </array>
+                <key>command</key>
+                <string>xcodebuild</string>
                 <key>options</key>
                 <array>
                   <string>-configuration Debug</string>
-                  <string>-project SecondLife.xcodeproj</string>
+                  <string>-project Kokua.xcodeproj</string>
                 </array>
               </map>
               <key>configure</key>
@@ -2099,7 +3082,7 @@
                 <key>options</key>
                 <array>
                   <string>-configuration Debug</string>
-                  <string>-project SecondLife.xcodeproj</string>
+                  <string>-project Kokua.xcodeproj</string>
                 </array>
               </map>
               <key>configure</key>
@@ -2117,16 +3100,19 @@
             <map>
               <key>build</key>
               <map>
-                <key>command</key>
-                <string>xcodebuild</string>
-                <key>filters</key>
+                <key>arguments</key>
                 <array>
+                  <string>|</string>
+                  <string>grep</string>
+                  <string>-v</string>
                   <string>setenv</string>
                 </array>
+                <key>command</key>
+                <string>xcodebuild</string>
                 <key>options</key>
                 <array>
                   <string>-configuration RelWithDebInfo</string>
-                  <string>-project SecondLife.xcodeproj</string>
+                  <string>-project Kokua.xcodeproj</string>
                 </array>
               </map>
               <key>configure</key>
@@ -2155,7 +3141,7 @@
                 <key>options</key>
                 <array>
                   <string>-configuration RelWithDebInfo</string>
-                  <string>-project SecondLife.xcodeproj</string>
+                  <string>-project Kokua.xcodeproj</string>
                 </array>
               </map>
               <key>configure</key>
@@ -2173,16 +3159,19 @@
             <map>
               <key>build</key>
               <map>
-                <key>command</key>
-                <string>xcodebuild</string>
-                <key>filters</key>
+                <key>arguments</key>
                 <array>
+                  <string>|</string>
+                  <string>grep</string>
+                  <string>-v</string>
                   <string>setenv</string>
                 </array>
+                <key>command</key>
+                <string>xcodebuild</string>
                 <key>options</key>
                 <array>
                   <string>-configuration Release</string>
-                  <string>-project SecondLife.xcodeproj</string>
+                  <string>-project Kokua.xcodeproj</string>
                 </array>
               </map>
               <key>configure</key>
@@ -2209,7 +3198,7 @@
                 <key>options</key>
                 <array>
                   <string>-configuration Release</string>
-                  <string>-project SecondLife.xcodeproj</string>
+                  <string>-project Kokua.xcodeproj</string>
                 </array>
               </map>
               <key>configure</key>
@@ -2391,6 +3380,177 @@
           <key>name</key>
           <string>linux</string>
         </map>
+        <key>linux64</key>
+        <map>
+          <key>build_directory</key>
+          <string>build-linux-x86_64</string>
+          <key>configurations</key>
+          <map>
+            <key>Debug</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>command</key>
+                <string>make</string>
+                <key>options</key>
+                <array>
+                  <string>-j 12</string>
+                </array>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>arguments</key>
+                <array>
+                  <string>../indra</string>
+                </array>
+                <key>options</key>
+                <array>
+                  <string>-G</string>
+                  <string>'Unix Makefiles'</string>
+                  <string>-DWORD_SIZE:STRING=64</string>
+                </array>
+              </map>
+              <key>name</key>
+              <string>Debug</string>
+            </map>
+            <key>DebugOS</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>command</key>
+                <string>make</string>
+                <key>options</key>
+                <array>
+                  <string>-j 2</string>
+                </array>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>options</key>
+                <array>
+                  <string>-G</string>
+                  <string>'Unix Makefiles'</string>
+                  <string>-DWORD_SIZE:STRING=64</string>
+                </array>
+              </map>
+              <key>name</key>
+              <string>DebugOS</string>
+            </map>
+            <key>RelWithDebInfo</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>command</key>
+                <string>make</string>
+                <key>options</key>
+                <array>
+                  <string>-j 12</string>
+                 </array>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>arguments</key>
+                <array>
+                  <string>../indra</string>
+                </array>
+                <key>options</key>
+                <array>
+                  <string>-G</string>
+                  <string>'Unix Makefiles'</string>
+                  <string>-DWORD_SIZE:STRING=64</string>
+                </array>
+              </map>
+              <key>default</key>
+              <string>True</string>
+              <key>name</key>
+              <string>RelWithDebInfo</string>
+            </map>
+            <key>RelWithDebInfoOS</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>command</key>
+                <string>make</string>
+                <key>options</key>
+                <array>
+                  <string>-j 2</string>
+                </array>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>options</key>
+                <array>
+                  <string>-G</string>
+                  <string>'Unix Makefiles'</string>
+                  <string>--</string>
+                  <string>-DWORD_SIZE:INTEGER=64</string>
+                </array>
+              </map>
+              <key>name</key>
+              <string>RelWithDebInfoOS</string>
+            </map>
+            <key>Release</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>command</key>
+                <string>make</string>
+                <key>options</key>
+                <array>
+                  <string>-j 12</string>
+                </array>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>arguments</key>
+                <array>
+                  <string>../indra</string>
+                </array>
+                <key>options</key>
+                <array>
+                  <string>-G</string>
+                  <string>'Unix Makefiles'</string>
+                  <string>-DWORD_SIZE:STRING=64</string>
+                </array>
+              </map>
+              <key>name</key>
+              <string>Release</string>
+            </map>
+            <key>ReleaseOS</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>command</key>
+                <string>make</string>
+                <key>options</key>
+                <array>
+                  <string>-j 2</string>
+                </array>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>options</key>
+                <array>
+                  <string>-G</string>
+                  <string>'Unix Makefiles'</string>
+                  <string>-DWORD_SIZE:STRING=64</string>
+                </array>
+              </map>
+              <key>name</key>
+              <string>ReleaseOS</string>
+            </map>
+            <key>default</key>
+            <map>
+              <key>build</key>
+              <map>
+              </map>
+              <key>name</key>
+              <string>default</string>
+            </map>
+          </map>
+          <key>name</key>
+          <string>linux64</string>
+        </map>
         <key>windows</key>
         <map>
           <key>build_directory</key>
@@ -2403,7 +3563,7 @@
               <map>
                 <key>arguments</key>
                 <array>
-                  <string>SecondLife.sln</string>
+                  <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
                 <string>BuildConsole</string>
@@ -2421,11 +3581,11 @@
                   <string>&amp;&amp;</string>
                   <string>..\indra\tools\vstool\VSTool.exe</string>
                   <string>--solution</string>
-                  <string>SecondLife.sln</string>
+                  <string>Kokua.sln</string>
                   <string>--config</string>
                   <string>Debug</string>
                   <string>--startup</string>
-                  <string>secondlife-bin</string>
+                  <string>kokua-bin</string>
                 </array>
                 <key>options</key>
                 <array>
@@ -2442,7 +3602,7 @@
               <map>
                 <key>arguments</key>
                 <array>
-                  <string>SecondLife.sln</string>
+                  <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
                 <string>msbuild.exe</string>
@@ -2477,7 +3637,7 @@
               <map>
                 <key>arguments</key>
                 <array>
-                  <string>SecondLife.sln</string>
+                  <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
                 <string>BuildConsole</string>
@@ -2495,11 +3655,11 @@
                   <string>&amp;&amp;</string>
                   <string>..\indra\tools\vstool\VSTool.exe</string>
                   <string>--solution</string>
-                  <string>SecondLife.sln</string>
+                  <string>Kokua.sln</string>
                   <string>--config</string>
                   <string>RelWithDebInfo</string>
                   <string>--startup</string>
-                  <string>secondlife-bin</string>
+                  <string>kokua-bin</string>
                 </array>
                 <key>options</key>
                 <array>
@@ -2518,7 +3678,7 @@
               <map>
                 <key>arguments</key>
                 <array>
-                  <string>SecondLife.sln</string>
+                  <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
                 <string>msbuild.exe</string>
@@ -2554,7 +3714,7 @@
               <map>
                 <key>arguments</key>
                 <array>
-                  <string>SecondLife.sln</string>
+                  <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
                 <string>BuildConsole</string>
@@ -2573,11 +3733,11 @@
                   <string>&amp;&amp;</string>
                   <string>..\indra\tools\vstool\VSTool.exe</string>
                   <string>--solution</string>
-                  <string>SecondLife.sln</string>
+                  <string>Kokua.sln</string>
                   <string>--config</string>
                   <string>Release</string>
                   <string>--startup</string>
-                  <string>secondlife-bin</string>
+                  <string>kokua-bin</string>
                 </array>
                 <key>options</key>
                 <array>
@@ -2594,7 +3754,7 @@
               <map>
                 <key>arguments</key>
                 <array>
-                  <string>SecondLife.sln</string>
+                  <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
                 <string>msbuild.exe</string>

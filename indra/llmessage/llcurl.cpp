@@ -286,6 +286,7 @@ void LLCurl::Easy::releaseEasyHandle(CURL* handle)
 
 LLCurl::Easy::Easy()
 	: mHeaders(NULL),
+	  mAliases(NULL),
 	  mCurlEasyHandle(NULL)
 {
 	mErrorBuffer[0] = 0;
@@ -318,6 +319,7 @@ LLCurl::Easy::~Easy()
 	releaseEasyHandle(mCurlEasyHandle);
 	--gCurlEasyCount;
 	curl_slist_free_all(mHeaders);
+	curl_slist_free_all(mAliases);
 	for_each(mStrings.begin(), mStrings.end(), DeletePointerArray());
 
 	if (mResponder && LLCurl::sNotQuitting) //aborted
@@ -337,6 +339,11 @@ void LLCurl::Easy::resetState()
 	{
 		curl_slist_free_all(mHeaders);
 		mHeaders = NULL;
+	}
+	if (mAliases)
+	{
+		curl_slist_free_all(mAliases);
+		mAliases = NULL;
 	}
 
 	mRequest.str("");
@@ -378,6 +385,7 @@ void LLCurl::Easy::setCA()
 void LLCurl::Easy::setHeaders()
 {
 	setopt(CURLOPT_HTTPHEADER, mHeaders);
+	setopt(CURLOPT_HTTP200ALIASES, mAliases); // Just in case -- MC
 }
 
 void LLCurl::Easy::getTransferInfo(LLCurl::TransferInfo* info)
@@ -524,6 +532,11 @@ void LLCurl::Easy::prepRequest(const std::string& url,
 	//don't verify host name so urls with scrubbed host names will work (improves DNS performance)
 	setopt(CURLOPT_SSL_VERIFYHOST, 0);
 	setopt(CURLOPT_TIMEOUT, llmax(time_out, CURL_REQUEST_TIMEOUT));
+
+	mAliases = curl_slist_append(mAliases, "ICY 200 OK");
+	mAliases = curl_slist_append(mAliases, "ICY 402 Service Unavailabe");
+	setopt(CURLOPT_HTTP200ALIASES, mAliases);
+	//setopt(CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0); // Possible streaming fix? -- MC
 
 	setoptString(CURLOPT_URL, url);
 

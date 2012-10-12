@@ -1796,6 +1796,11 @@ void LLMeshLODResponder::completedRaw(U32 status, const std::string& reason,
 							  const LLChannelDescriptors& channels,
 							  const LLIOPipe::buffer_ptr_t& buffer)
 {
+	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
+	if( !gMeshRepo.mThread )
+		return;
+	// </FS:ND>
+
 
 	S32 data_size = buffer->countAfter(channels.in(), NULL);
 
@@ -1851,6 +1856,11 @@ void LLMeshSkinInfoResponder::completedRaw(U32 status, const std::string& reason
 							  const LLChannelDescriptors& channels,
 							  const LLIOPipe::buffer_ptr_t& buffer)
 {
+	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
+	if( !gMeshRepo.mThread )
+		return;
+	// </FS:ND>
+
 	S32 data_size = buffer->countAfter(channels.in(), NULL);
 
 	if (status < 200 || status > 400)
@@ -1905,6 +1915,11 @@ void LLMeshDecompositionResponder::completedRaw(U32 status, const std::string& r
 							  const LLChannelDescriptors& channels,
 							  const LLIOPipe::buffer_ptr_t& buffer)
 {
+	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
+	if( !gMeshRepo.mThread )
+		return;
+	// </FS:ND>
+
 	S32 data_size = buffer->countAfter(channels.in(), NULL);
 
 	if (status < 200 || status > 400)
@@ -1959,6 +1974,11 @@ void LLMeshPhysicsShapeResponder::completedRaw(U32 status, const std::string& re
 							  const LLChannelDescriptors& channels,
 							  const LLIOPipe::buffer_ptr_t& buffer)
 {
+	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
+	if( !gMeshRepo.mThread )
+		return;
+	// </FS:ND>
+
 	S32 data_size = buffer->countAfter(channels.in(), NULL);
 
 	if (status < 200 || status > 400)
@@ -2013,6 +2033,11 @@ void LLMeshHeaderResponder::completedRaw(U32 status, const std::string& reason,
 							  const LLChannelDescriptors& channels,
 							  const LLIOPipe::buffer_ptr_t& buffer)
 {
+	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
+	if( !gMeshRepo.mThread )
+		return;
+	// </FS:ND>
+
 	if (status < 200 || status > 400)
 	{
 		//llwarns
@@ -2996,8 +3021,41 @@ S32 LLPhysicsDecomp::llcdCallback(const char* status, S32 p1, S32 p2)
 	return 1;
 }
 
+bool hacdTriangles( LLConvexDecomposition *aDC )
+{
+	if( !aDC )
+		return false;
+
+	LLCDParam const  *pParams(0);
+	int nParams = aDC->getParameters( &pParams );
+
+	if( nParams <= 0 )
+		return false;
+
+	for( int i = 0; i < nParams; ++i )
+	{
+		if( pParams[i].mName && strcmp( "kAlwaysNeedTriangles", pParams[i].mName ) == 0 )
+		{
+			if( LLCDParam::LLCD_BOOLEAN == pParams[i].mType && pParams[i].mDefault.mBool )
+				return true;
+			else
+				return false;
+		}
+	}
+
+	return false;
+}
+
 void LLPhysicsDecomp::setMeshData(LLCDMeshData& mesh, bool vertex_based)
 {
+	LLConvexDecomposition *hDeComp = LLConvexDecomposition::getInstance();
+
+	if( !hDeComp )
+		return;
+
+	if( vertex_based )
+		vertex_based = !hacdTriangles( hDeComp );
+
 	mesh.mVertexBase = mCurRequest->mPositions[0].mV;
 	mesh.mVertexStrideBytes = 12;
 	mesh.mNumVertices = mCurRequest->mPositions.size();
@@ -3269,6 +3327,56 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 	}
 }
 
+#ifdef K_HASCONVEXDECOMP_TRACER
+
+class kDecompTracer: public kConvexDecompositionTracer
+{
+	int mRefCount;
+
+public:
+	kDecompTracer()
+		: mRefCount(0)
+	{
+	}
+
+	virtual void trace( char const *a_strMsg )
+	{
+		llinfos << a_strMsg << llendl;
+	}
+
+	virtual void startTraceData( char const *a_strWhat)
+	{
+		llinfos << a_strWhat << llendl;
+	}
+
+	virtual void traceData( char const *a_strData )
+	{
+		llinfos << a_strData << llendl;
+	}
+
+	virtual void endTraceData()
+	{
+	}
+
+	virtual int getLevel()
+	{
+		return eTraceFunctions;// | eTraceData;
+	}
+
+	virtual void addref()
+	{
+		++mRefCount;
+	}
+
+	virtual void release()
+	{
+		--mRefCount;
+		if( mRefCount == 0 )
+			delete this;
+	}
+};
+
+#endif
 
 void LLPhysicsDecomp::run()
 {
@@ -3280,6 +3388,13 @@ void LLPhysicsDecomp::run()
 		mInited = true;
 		return;
 	}
+
+#ifdef K_HASCONVEXDECOMP_TRACER
+	kConvexDecompositionTracable *pTraceable = dynamic_cast< kConvexDecompositionTracable* >( decomp );
+
+	if( pTraceable )
+		pTraceable->setTracer( new kDecompTracer() );
+#endif
 
 	decomp->initThread();
 	mInited = true;

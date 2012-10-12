@@ -36,6 +36,7 @@
 #include "lltabcontainer.h"
 #include "llviewercontrol.h"
 #include "llviewernetwork.h"
+#include "lllogininstance.h"
 
 static const std::string PANEL_PICKS = "panel_picks";
 
@@ -43,14 +44,21 @@ std::string getProfileURL(const std::string& agent_name)
 {
 	std::string url;
 
-	if (LLGridManager::getInstance()->isInProductionGrid())
+	if (LLGridManager::getInstance()->isInSLMain())
 	{
 		url = gSavedSettings.getString("WebProfileURL");
 	}
-	else
+	else if (LLGridManager::getInstance()->isInSLBeta())
 	{
 		url = gSavedSettings.getString("WebProfileNonProductionURL");
 	}
+	else if (LLLoginInstance::getInstance()->hasResponse("profile-server-url"))
+	{
+		url = LLLoginInstance::getInstance()->getResponse("profile-server-url").asString();
+	}
+
+		//			* capability (better for decentaliced environment)
+
 	LLSD subs;
 	subs["AGENT_NAME"] = agent_name;
 	url = LLWeb::expandURLSubstitutions(url,subs);

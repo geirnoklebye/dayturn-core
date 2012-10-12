@@ -29,8 +29,8 @@
 #include "llappviewer.h"
 
 // Viewer includes
-#include "llversioninfo.h"
-#include "llversionviewer.h"
+#include "llversioninfo.h" //needed for get channel and reset channel
+#include "viewerinfo.h"
 #include "llfeaturemanager.h"
 #include "lluictrlfactory.h"
 #include "lltexteditor.h"
@@ -303,6 +303,7 @@ LLMemoryInfo gSysMemory;
 U64 gMemoryAllocated = 0; // updated in display_stats() in llviewerdisplay.cpp
 
 std::string gLastVersionChannel;
+std::string gSimulatorType;
 
 LLVector3			gWindVec(3.0, 3.0, 0.0);
 LLVector3			gRelativeWindVec(0.0, 0.0, 0.0);
@@ -322,15 +323,16 @@ BOOL gLogoutInProgress = FALSE;
 // Internal globals... that should be removed.
 static std::string gArgs;
 
-const std::string MARKER_FILE_NAME("SecondLife.exec_marker");
-const std::string ERROR_MARKER_FILE_NAME("SecondLife.error_marker");
-const std::string LLERROR_MARKER_FILE_NAME("SecondLife.llerror_marker");
-const std::string LOGOUT_MARKER_FILE_NAME("SecondLife.logout_marker");
+const std::string MARKER_FILE_NAME("Kokua.exec_marker");
+const std::string ERROR_MARKER_FILE_NAME("Kokua.error_marker");
+const std::string LLERROR_MARKER_FILE_NAME("Kokua.llerror_marker");
+const std::string LOGOUT_MARKER_FILE_NAME("Kokua.logout_marker");
 static BOOL gDoDisconnect = FALSE;
 static std::string gLaunchFileOnQuit;
 
 // Used on Win32 for other apps to identify our window (eg, win_setup)
-const char* const VIEWER_WINDOW_CLASSNAME = "Second Life";
+//Kokua: FIXME Rebranding
+const char* const VIEWER_WINDOW_CLASSNAME = "Kokua";
 
 //-- LLDeferredTaskList ------------------------------------------------------
 
@@ -681,7 +683,7 @@ bool LLAppViewer::init()
 
 	// Need to do this initialization before we do anything else, since anything
 	// that touches files should really go through the lldir API
-	gDirUtilp->initAppDirs("SecondLife");
+	gDirUtilp->initAppDirs("Kokua");// this is setting up $HOME/.kokua
 	// set skin search path to default, will be overridden later
 	// this allows simple skinned file lookups to work
 	gDirUtilp->setSkinFolder("default");
@@ -1035,8 +1037,7 @@ bool LLAppViewer::init()
 	gDebugInfo["GraphicsCard"] = LLFeatureManager::getInstance()->getGPUString();
 
 	// Save the current version to the prefs file
-	gSavedSettings.setString("LastRunVersion",
-							 LLVersionInfo::getChannelAndVersion());
+	gSavedSettings.setString("LastRunVersion", ViewerInfo::fullInfo());
 
 	gSimLastTime = gRenderStartTime.getElapsedTimeF32();
 	gSimFrames = (F32)gFrameCount;
@@ -2073,15 +2074,15 @@ bool LLAppViewer::initLogging()
 
 	// Remove the last ".old" log file.
 	std::string old_log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-							     "SecondLife.old");
+							     "Kokua.old");
 	LLFile::remove(old_log_file);
 
 	// Rename current log file to ".old"
 	std::string log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-							     "SecondLife.log");
+							     "Kokua.log");
 	LLFile::rename(log_file, old_log_file);
 
-	// Set the log file to SecondLife.log
+	// Set the log file to Kokua.log
 
 	LLError::logToFile(log_file);
 
@@ -2544,21 +2545,25 @@ bool LLAppViewer::initConfiguration()
     // What can happen is that someone can use IE (or potentially 
     // other browsers) and do the rough equivalent of command 
     // injection and steal passwords. Phoenix. SL-55321
-    if(clp.hasOption("url"))
-    {
-		LLStartUp::setStartSLURL(LLSLURL(clp.getOption("url")[0]));
-		if(LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION) 
-		{  
-			LLGridManager::getInstance()->setGridChoice(LLStartUp::getStartSLURL().getGrid());
-			
-		}  
-    }
-    else if(clp.hasOption("slurl"))
-    {
-		LLSLURL start_slurl(clp.getOption("slurl")[0]);
-		LLStartUp::setStartSLURL(start_slurl);
-    }
 
+
+	// The gridmanager doesn't know the grids yet, only prepare
+	// parsing the slurls, actually done when the grids are fetched 
+	// (currently at the top of startup STATE_AUDIO_INIT,
+	// but rather it belongs into the gridmanager)
+	if(clp.hasOption("url"))
+	{
+		LLStartUp::setStartSLURLString((clp.getOption("url")[0]));
+	}
+	else if(clp.hasOption("slurl"))
+	{
+		LLStartUp::setStartSLURLString(clp.getOption("slurl")[0]);
+	}
+
+//-TT Hacking to save the skin and theme for future use.
+//	mCurrentSkin = gSavedSettings.getString("SkinCurrent");
+//	mCurrentSkinTheme = gSavedSettings.getString("SkinCurrentTheme");
+//-TT
     const LLControlVariable* skinfolder = gSavedSettings.getControl("SkinCurrent");
     if(skinfolder && LLStringUtil::null != skinfolder->getValue().asString())
     {   
@@ -2869,8 +2874,8 @@ void LLAppViewer::initUpdater()
 	// Get Channel
 	// Get Version
 	std::string url = gSavedSettings.getString("UpdaterServiceURL");
-	std::string channel = LLVersionInfo::getChannel();
-	std::string version = LLVersionInfo::getVersion();
+	std::string channel = ViewerInfo::viewerName(); // *TODO: ViewerInfo channel - Jacek
+	std::string version = ViewerInfo::versionNumber();
 	std::string protocol_version = gSavedSettings.getString("UpdaterServiceProtocolVersion");
 	std::string service_path = gSavedSettings.getString("UpdaterServicePath");
 	U32 check_period = gSavedSettings.getU32("UpdaterServiceCheckPeriod");
@@ -3090,13 +3095,13 @@ void LLAppViewer::removeCacheFiles(const std::string& file_mask)
 
 void LLAppViewer::writeSystemInfo()
 {
-	gDebugInfo["SLLog"] = LLError::logFileName();
+	gDebugInfo["KLog"] = LLError::logFileName();
 
-	gDebugInfo["ClientInfo"]["Name"] = LLVersionInfo::getChannel();
-	gDebugInfo["ClientInfo"]["MajorVersion"] = LLVersionInfo::getMajor();
-	gDebugInfo["ClientInfo"]["MinorVersion"] = LLVersionInfo::getMinor();
-	gDebugInfo["ClientInfo"]["PatchVersion"] = LLVersionInfo::getPatch();
-	gDebugInfo["ClientInfo"]["BuildVersion"] = LLVersionInfo::getBuild();
+	gDebugInfo["ClientInfo"]["Name"] = ViewerInfo::viewerName();
+	gDebugInfo["ClientInfo"]["MajorVersion"] = ViewerInfo::versionMajor();
+	gDebugInfo["ClientInfo"]["MinorVersion"] = ViewerInfo::versionMinor();
+	gDebugInfo["ClientInfo"]["PatchVersion"] = ViewerInfo::versionPatch();
+	gDebugInfo["ClientInfo"]["ExtraVersion"] = ViewerInfo::versionExtra();
 
 	gDebugInfo["CAFilename"] = gDirUtilp->getCAFile();
 
@@ -3139,7 +3144,7 @@ void LLAppViewer::writeSystemInfo()
 	
 	// Dump some debugging info
 	LL_INFOS("SystemInfo") << LLTrans::getString("APP_NAME")
-			<< " version " << LLVersionInfo::getShortVersion() << LL_ENDL;
+			<< " version " << ViewerInfo::versionNumber() << LL_ENDL;
 
 	// Dump the local time and time zone
 	time_t now;
@@ -3199,12 +3204,11 @@ void LLAppViewer::handleViewerCrash()
 	
 	//We already do this in writeSystemInfo(), but we do it again here to make /sure/ we have a version
 	//to check against no matter what
-	gDebugInfo["ClientInfo"]["Name"] = LLVersionInfo::getChannel();
-
-	gDebugInfo["ClientInfo"]["MajorVersion"] = LLVersionInfo::getMajor();
-	gDebugInfo["ClientInfo"]["MinorVersion"] = LLVersionInfo::getMinor();
-	gDebugInfo["ClientInfo"]["PatchVersion"] = LLVersionInfo::getPatch();
-	gDebugInfo["ClientInfo"]["BuildVersion"] = LLVersionInfo::getBuild();
+	gDebugInfo["ClientInfo"]["Name"] = ViewerInfo::viewerName();
+	gDebugInfo["ClientInfo"]["MajorVersion"] = ViewerInfo::versionMajor();
+	gDebugInfo["ClientInfo"]["MinorVersion"] = ViewerInfo::versionMinor();
+	gDebugInfo["ClientInfo"]["PatchVersion"] = ViewerInfo::versionPatch();
+	gDebugInfo["ClientInfo"]["ExtraVersion"] = ViewerInfo::versionExtra();
 
 	LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
 	if ( parcel && parcel->getMusicURL()[0])
@@ -3369,10 +3373,10 @@ void LLAppViewer::initMarkerFile()
 	LL_DEBUGS("MarkerFile") << "Checking marker file for lock..." << LL_ENDL;
 
 	//We've got 4 things to test for here
-	// - Other Process Running (SecondLife.exec_marker present, locked)
-	// - Freeze (SecondLife.exec_marker present, not locked)
-	// - LLError Crash (SecondLife.llerror_marker present)
-	// - Other Crash (SecondLife.error_marker present)
+	// - Other Process Running (Kokua.exec_marker present, locked)
+	// - Freeze (Kokua.exec_marker present, not locked)
+	// - LLError Crash (Kokua.llerror_marker present)
+	// - Other Crash (Kokua.error_marker present)
 	// These checks should also remove these files for the last 2 cases if they currently exist
 
 	//LLError/Error checks. Only one of these should ever happen at a time.
@@ -3569,18 +3573,18 @@ void LLAppViewer::abortQuit()
 void LLAppViewer::migrateCacheDirectory()
 {
 #if LL_WINDOWS || LL_DARWIN
-	// NOTE: (Nyx) as of 1.21, cache for mac is moving to /library/caches/SecondLife from
-	// /library/application support/SecondLife/cache This should clear/delete the old dir.
+	// NOTE: (Nyx) as of 1.21, cache for mac is moving to /library/caches/Kokua from
+	// /library/application support/Kokua/cache This should clear/delete the old dir.
 
 	// As of 1.23 the Windows cache moved from
-	//   C:\Documents and Settings\James\Application Support\SecondLife\cache
+	//   C:\Documents and Settings\James\Application Support\Kokua\cache
 	// to
-	//   C:\Documents and Settings\James\Local Settings\Application Support\SecondLife
+	//   C:\Documents and Settings\James\Local Settings\Application Support\Kokua
 	//
 	// The Windows Vista equivalent is from
-	//   C:\Users\James\AppData\Roaming\SecondLife\cache
+	//   C:\Users\James\AppData\Roaming\Kokua\cache
 	// to
-	//   C:\Users\James\AppData\Local\SecondLife
+	//   C:\Users\James\AppData\Local\Kokua
 	//
 	// Note the absence of \cache on the second path.  James.
 
@@ -5010,12 +5014,11 @@ void LLAppViewer::handleLoginComplete()
 	initMainloopTimeout("Mainloop Init");
 
 	// Store some data to DebugInfo in case of a freeze.
-	gDebugInfo["ClientInfo"]["Name"] = LLVersionInfo::getChannel();
-
-	gDebugInfo["ClientInfo"]["MajorVersion"] = LLVersionInfo::getMajor();
-	gDebugInfo["ClientInfo"]["MinorVersion"] = LLVersionInfo::getMinor();
-	gDebugInfo["ClientInfo"]["PatchVersion"] = LLVersionInfo::getPatch();
-	gDebugInfo["ClientInfo"]["BuildVersion"] = LLVersionInfo::getBuild();
+	gDebugInfo["ClientInfo"]["Name"] = ViewerInfo::viewerName();
+	gDebugInfo["ClientInfo"]["MajorVersion"] = ViewerInfo::versionMajor();
+	gDebugInfo["ClientInfo"]["MinorVersion"] = ViewerInfo::versionMinor();
+	gDebugInfo["ClientInfo"]["PatchVersion"] = ViewerInfo::versionPatch();
+	gDebugInfo["ClientInfo"]["ExtraVersion"] = ViewerInfo::versionExtra();
 
 	LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
 	if ( parcel && parcel->getMusicURL()[0])
@@ -5068,7 +5071,7 @@ void LLAppViewer::launchUpdater()
 	// *TODO change userserver to be grid on both viewer and sim, since
 	// userserver no longer exists.
 	query_map["userserver"] = LLGridManager::getInstance()->getGridId();
-	query_map["channel"] = LLVersionInfo::getChannel();
+	query_map["channel"] = ViewerInfo::viewerName(); // *TODO: ViewerInfo channel - Jacek
 	// *TODO constantize this guy
 	// *NOTE: This URL is also used in win_setup/lldownloader.cpp
 	LLURI update_url = LLURI::buildHTTP("secondlife.com", 80, "update.php", query_map);

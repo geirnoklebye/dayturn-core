@@ -73,12 +73,12 @@ public:
 
 	static void closePanel();
 
-	void setSiteIsAlive( bool alive );
+// 	void setSiteIsAlive( bool alive );
 
 	static void loadLoginPage();	
 	static void giveFocus();
 	static void setAlwaysRefresh(bool refresh); 
-	
+
 	// inherited from LLViewerMediaObserver
 	/*virtual*/ void handleMediaEvent(LLPluginClassMedia* self, EMediaEvent event);
 	static void updateServer();  // update the combo box, change the login page to the new server, clear the combo
@@ -94,12 +94,15 @@ private:
 	void onSelectServer();
 	void onLocationSLURL();
 
-	static void onClickConnect(void*);
+    static void onClickConnect(void*);
+	static void onClickAddGrid(void*);
+	static void onClickSelectGrid(void*);
 	static void onClickNewAccount(void*);
 	static void onClickVersion(void*);
 	static void onClickForgotPassword(void*);
 	static void onClickHelp(void*);
 	static void onPassKey(LLLineEditor* caller, void* user_data);
+	static void gridListChanged(bool success);// <FS:AW  grid management>
 	static void updateServerCombo();
 
 private:
@@ -113,6 +116,8 @@ private:
 
 	static LLPanelLogin* sInstance;
 	static BOOL		sCapslockDidNotification;
+	BOOL			mHtmlAvailable;
+	std::string mLoginPage;
 };
 
 #endif
