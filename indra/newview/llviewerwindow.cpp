@@ -1964,7 +1964,7 @@ void LLViewerWindow::initWorldUI()
 	{
 		if (LLLoginInstance::getInstance()->hasResponse("destination_guide_url"))
 		{
-			destination_guide_url = LLLoginInstance::getInstance()->getResponse("destination_guide_url").asString();
+		destination_guide_url = LLLoginInstance::getInstance()->getResponse("destination_guide_url").asString();
 		}
 	}
 	else
@@ -1972,7 +1972,6 @@ void LLViewerWindow::initWorldUI()
 	{
 		destination_guide_url = gSavedSettings.getString("DestinationGuideURL");
 	}
-
 	if(!destination_guide_url.empty())
 	{	
 		LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
@@ -1980,7 +1979,7 @@ void LLViewerWindow::initWorldUI()
 		{
 			destinations->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
 			destination_guide_url = LLWeb::expandURLSubstitutions(destination_guide_url, LLSD());
-			LL_DEBUGS("WebApi") << "3 DestinationGuideURL \"" << destination_guide_url << "\"" << LL_ENDL;
+			LL_WARNS("WebApi") << "3 DestinationGuideURL \"" << destination_guide_url << "\"" << LL_ENDL;
 			destinations->navigateTo(destination_guide_url, "text/html");
 		}
 	}

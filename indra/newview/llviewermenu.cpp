@@ -5982,17 +5982,18 @@ bool update_grid_help()
 	if (LLGridManager::getInstance()->isInOpenSim())
 	{
 		if (!LLLoginInstance::getInstance()->hasResponse("destination_guide_url") 
-		||LLLoginInstance::getInstance()->getResponse("destination_guide_url").asString().empty()
-		)
+		||LLLoginInstance::getInstance()->getResponse("destination_guide_url").asString().empty())
 		{
-			gMenuHolder->childSetVisible("Avatar Picker", false);
+			llwarns << "Destinations Guide Off" << llendl;
+			gMenuHolder->childSetVisible("Destinations", false);
 		}
 	
 		if (!LLLoginInstance::getInstance()->hasResponse("avatar_picker_url") 
-		||LLLoginInstance::getInstance()->getResponse("avatar_picker_url").asString().empty()
-		)
+		||LLLoginInstance::getInstance()->getResponse("avatar_picker_url").asString().empty())
+			llwarns << "Avatar Picker Off" << llendl;
+			gMenuHolder->childSetVisible("Avatar Picker", false);
 		{
-			gMenuHolder->childSetVisible("Destinations", false);
+
 		}
 	}
 #endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
