@@ -3021,7 +3021,7 @@ S32 LLPhysicsDecomp::llcdCallback(const char* status, S32 p1, S32 p2)
 	return 1;
 }
 
-bool hacdTriangles( LLConvexDecomposition *aDC )
+bool needTriangles( LLConvexDecomposition *aDC )
 {
 	if( !aDC )
 		return false;
@@ -3034,7 +3034,7 @@ bool hacdTriangles( LLConvexDecomposition *aDC )
 
 	for( int i = 0; i < nParams; ++i )
 	{
-		if( pParams[i].mName && strcmp( "kAlwaysNeedTriangles", pParams[i].mName ) == 0 )
+		if( pParams[i].mName && strcmp( "nd_AlwaysNeedTriangles", pParams[i].mName ) == 0 )
 		{
 			if( LLCDParam::LLCD_BOOLEAN == pParams[i].mType && pParams[i].mDefault.mBool )
 				return true;
@@ -3048,13 +3048,13 @@ bool hacdTriangles( LLConvexDecomposition *aDC )
 
 void LLPhysicsDecomp::setMeshData(LLCDMeshData& mesh, bool vertex_based)
 {
-	LLConvexDecomposition *hDeComp = LLConvexDecomposition::getInstance();
+	LLConvexDecomposition *pDeComp = LLConvexDecomposition::getInstance();
 
-	if( !hDeComp )
+	if( !pDeComp )
 		return;
 
 	if( vertex_based )
-		vertex_based = !hacdTriangles( hDeComp );
+		vertex_based = !needTriangles( pDeComp );
 
 	mesh.mVertexBase = mCurRequest->mPositions[0].mV;
 	mesh.mVertexStrideBytes = 12;
@@ -3072,17 +3072,12 @@ void LLPhysicsDecomp::setMeshData(LLCDMeshData& mesh, bool vertex_based)
 	if ((vertex_based || mesh.mNumTriangles > 0) && mesh.mNumVertices > 2)
 	{
 		LLCDResult ret = LLCD_OK;
-		if (LLConvexDecomposition::getInstance() != NULL)
-		{
 			ret  = LLConvexDecomposition::getInstance()->setMeshData(&mesh, vertex_based);
-		}
 
 		if (ret)
-		{
 			llerrs << "Convex Decomposition thread valid but could not set mesh data" << llendl;
 		}
 	}
-}
 
 void LLPhysicsDecomp::doDecomposition()
 {
@@ -3327,14 +3322,14 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 	}
 }
 
-#ifdef K_HASCONVEXDECOMP_TRACER
+#ifdef ND_HASCONVEXDECOMP_TRACER
 
-class kDecompTracer: public kConvexDecompositionTracer
+class ndDecompTracer: public ndConvexDecompositionTracer
 {
 	int mRefCount;
 
 public:
-	kDecompTracer()
+	ndDecompTracer()
 		: mRefCount(0)
 	{
 	}
@@ -3389,11 +3384,11 @@ void LLPhysicsDecomp::run()
 		return;
 	}
 
-#ifdef K_HASCONVEXDECOMP_TRACER
-	kConvexDecompositionTracable *pTraceable = dynamic_cast< kConvexDecompositionTracable* >( decomp );
+#ifdef ND_HASCONVEXDECOMP_TRACER
+	ndConvexDecompositionTracable *pTraceable = dynamic_cast< ndConvexDecompositionTracable* >( decomp );
 
 	if( pTraceable )
-		pTraceable->setTracer( new kDecompTracer() );
+		pTraceable->setTracer( new ndDecompTracer() );
 #endif
 
 	decomp->initThread();

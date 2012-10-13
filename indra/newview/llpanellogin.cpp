@@ -693,6 +693,20 @@ BOOL LLPanelLogin::areCredentialFieldsDirty()
 	return false;	
 }
 
+// static
+void LLPanelLogin::updateLocationSelectorsVisibility()
+{
+	if (sInstance) 
+	{
+		BOOL show_start = gSavedSettings.getBOOL("ShowStartLocation");
+		sInstance->getChildView("start_location_combo")->setVisible(show_start);
+		sInstance->getChildView("start_location_text")->setVisible(show_start);
+
+		BOOL show_server = gSavedSettings.getBOOL("ForceShowGrid");
+		LLComboBox* server_choice_combo = sInstance->getChild<LLComboBox>("server_combo");
+		server_choice_combo->setVisible( show_server );
+	}	
+}
 
 // static
 void LLPanelLogin::updateLocationCombo( bool force_visible )

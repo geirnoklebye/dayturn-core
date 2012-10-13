@@ -1088,7 +1088,7 @@ bool idle_startup()
 
 	if(STATE_LOGIN_AUTH_INIT == LLStartUp::getStartupState())
 	{
-		gDebugInfo["GridName"] = LLGridManager::getInstance()->getGridId();
+		gDebugInfo["GridName"] = LLGridManager::getInstance()->getGridLabel();
 
 		// Update progress status and the display loop.
 		auth_desc = LLTrans::getString("LoginInProgress");
@@ -2020,7 +2020,6 @@ bool idle_startup()
 		{
 			llinfos << "gAgentStartLocation : " << gAgentStartLocation << llendl;
 			LLSLURL start_slurl = LLStartUp::getStartSLURL();
-			LL_DEBUGS("AppInit") << "start slurl "<<start_slurl.asString()<<LL_ENDL;
 
 			if (((start_slurl.getType() == LLSLURL::LOCATION) && (gAgentStartLocation == "url")) ||
 				((start_slurl.getType() == LLSLURL::LAST_LOCATION) && (gAgentStartLocation == "last")) ||
@@ -2283,13 +2282,21 @@ void login_show()
 {
 	LL_INFOS("AppInit") << "Initializing Login Screen" << LL_ENDL;
 
+#ifdef LL_RELEASE_FOR_DOWNLOAD
+	BOOL bUseDebugLogin = gSavedSettings.getBOOL("UseDebugLogin");
+#else
+	BOOL bUseDebugLogin = TRUE;
+#endif
 	// Hide the toolbars: may happen to come back here if login fails after login agent but before login in region
 	if (gToolBarView)
 	{
 		gToolBarView->setVisible(FALSE);
 	}
 	
-	LLPanelLogin::show(	gViewerWindow->getWindowRectScaled(), login_callback, NULL );
+	LLPanelLogin::show(	gViewerWindow->getWindowRectScaled(),
+						bUseDebugLogin || gSavedSettings.getBOOL("SecondLifeEnterprise"),
+						login_callback, NULL );
+
 }
 
 // Callback for when login screen is closed.  Option 0 = connect, option 1 = quit.
@@ -2922,25 +2929,23 @@ bool LLStartUp::dispatchURL()
 
 void LLStartUp::setStartSLURL(const LLSLURL& slurl) 
 {
-	LL_DEBUGS("AppInit")<<slurl.asString()<<LL_ENDL;
-
-	if ( slurl.isSpatial() )
+  sStartSLURL = slurl;
+  switch(slurl.getType())
+  {
+    case LLSLURL::HOME_LOCATION:
 	{
-		std::string new_start = slurl.getSLURLString();
-		LL_DEBUGS("AppInit")<<new_start<<LL_ENDL;
-		sStartSLURL = slurl;
-		LLPanelLogin::onUpdateStartSLURL(slurl); // updates grid if needed
-
-		// remember that this is where we wanted to log in...if the login fails,
-		// the next attempt will default to the same place.
-		gSavedSettings.setString("NextLoginLocation", new_start);
-		// following a successful login, this is cleared
-		// and the default reverts to LoginLocation
+		  gSavedSettings.setString("LoginLocation", LLSLURL::SIM_LOCATION_HOME);
+	break;
 	}
-	else
+    case LLSLURL::LAST_LOCATION:
 	{
-		LL_WARNS("AppInit")<<"Invalid start SLURL (ignored): "<<slurl.asString()<<LL_ENDL;
+	gSavedSettings.setString("LoginLocation", LLSLURL::SIM_LOCATION_LAST);
+	break;
 	}
+    default:
+			LLGridManager::getInstance()->setGridChoice(slurl.getGrid());
+			break;
+  }
 }
 
 // static
