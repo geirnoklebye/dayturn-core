@@ -139,13 +139,13 @@ public:
 	
 	/* ================================================================
 	 * @name Grid Identifiers 
-	std::map<std::string, std::string> getKnownGrids();
 	 * The id is a short form (typically one word) grid name,
 	 * It should be used in URL path elements or parameters
 	 *
 	 * Each grid also has a "label", intented to be a user friendly
 	 * descriptive form (it is used in the login panel grid menu, for example).
 	 */
+	std::map<std::string, std::string> getKnownGrids();
 	/// Return the name of a grid, given either its name or its id
 	std::string getGrid( const std::string &grid );
 

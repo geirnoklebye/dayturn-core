@@ -52,6 +52,7 @@ public:
 	static const char* SLURL_APP_PATH;
 	static const char* SLURL_REGION_PATH; 
  
+	enum SLURL_TYPE
 	// if you modify this enumeration, update typeName as well
 	{
 		INVALID,
