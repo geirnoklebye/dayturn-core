@@ -766,7 +766,6 @@
           <map>
             <key>archive</key>
             <map>
-
               <key>hash</key>
               <string>83d6e4a3be560192057f80772a0c9de5</string>
               <key>url</key>
@@ -2167,21 +2166,33 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a77a8daf932e6f32f1511f528762ae81</string>
+              <string>c2379a6115982cd4f1cf8e835eee57d9</string>
               <key>url</key>
-              <string>http://downloads.phoenixviewer.com/ndPhysicsStub-r65-linux32.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/ndphysicsstub/downloads/ndPhysicsStub-0.1.1-r167-Linux.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+            <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>536df6113e7ead1452de362f2b30282f</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/ndphysicsstub/downloads/ndPhysicsStub-0.1.1--r167-Linux64.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d8fdf76fbeda3bcd592759780fd3cbe1</string>
+              <string>2d033d5734ab96dae687736c0250678b</string>
               <key>url</key>
-              <string>http://downloads.phoenixviewer.com/ndPhysicsStub-r65-win32.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/ndphysicsstub/downloads/ndPhysicsStub-0.1.1-r167-win32.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
