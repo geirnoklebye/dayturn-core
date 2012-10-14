@@ -665,8 +665,9 @@ std::string LLSLURL::getTypeHumanReadable(SLURL_TYPE type)
 		case HOME_LOCATION:	ret = "HOME_LOCATION"; break;
 		case LAST_LOCATION:	ret = "LAST_LOCATION"; break;
 		case APP:		ret = "APP"; break;
-		case HELP:		ret = "HELP";
-	}
+		case HELP:		ret = "HELP";break;
+		case NUM_SLURL_TYPES: ret = "NUM_SLURL_TYPES";
+		}
 
 	return ret;
 }
