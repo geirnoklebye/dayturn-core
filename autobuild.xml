@@ -2173,7 +2173,7 @@
             <key>name</key>
             <string>linux</string>
           </map>
-            <key>linux64</key>
+          <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
