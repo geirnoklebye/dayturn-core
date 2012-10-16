@@ -334,12 +334,13 @@ class WindowsManifest(ViewerManifest):
         #self.disable_manifest_check()
 
         self.path(src="../viewer_components/updater/scripts/windows/update_install.bat", dst="update_install.bat")
+
         # Get shared libs from the shared libs staging directory
         if self.prefix(src=os.path.join(os.pardir, 'sharedlibs', self.args['configuration']),
                        dst=""):
 
             #self.enable_crt_manifest_check()
-            
+
             # Get llcommon and deps. If missing assume static linkage and continue.
             try:
                 self.path('llcommon.dll')
@@ -378,14 +379,14 @@ class WindowsManifest(ViewerManifest):
             else:
                 self.path("openjpeg.dll")
 
-            # These need to be installed as a SxS assembly, currently a 'private' assembly.
-            # See http://msdn.microsoft.com/en-us/library/ms235291(VS.80).aspx
-            if self.args['configuration'].lower() == 'debug':
-                 self.path("msvcr100d.dll")
-                 self.path("msvcp100d.dll")
-            else:
-                 self.path("msvcr100.dll")
-                 self.path("msvcp100.dll")
+                # These need to be installed as a SxS assembly, currently a 'private' assembly.
+                # See http://msdn.microsoft.com/en-us/library/ms235291(VS.80).aspx
+                if self.args['configuration'].lower() == 'debug':
+                    self.path("msvcr100d.dll")
+                    self.path("msvcp100d.dll")
+                else:
+                    self.path("msvcr100.dll")
+                    self.path("msvcp100.dll")
 
             # Vivox runtimes
             self.path("SLVoice.exe")
@@ -395,7 +396,7 @@ class WindowsManifest(ViewerManifest):
             self.path("zlib1.dll")
             self.path("vivoxplatform.dll")
             self.path("vivoxoal.dll")
-            
+
             # Security
             self.path("ssleay32.dll")
             self.path("libeay32.dll")
@@ -419,7 +420,7 @@ class WindowsManifest(ViewerManifest):
         self.path("featuretable_xp.txt")
 
         #self.enable_no_crt_manifest_check()
-
+        
         # Media plugins - QuickTime
         if self.prefix(src='../media_plugins/quicktime/%s' % self.args['configuration'], dst="llplugin"):
             self.path("media_plugin_quicktime.dll")
@@ -718,17 +719,17 @@ class DarwinManifest(ViewerManifest):
                 lib = "llcommon"
                 libfile = "lib%s.dylib" % lib
                 try:
-                    self.path(self.find_existing_file(os.path.join(os.pardir,
-                                                                    lib,
-                                                                    self.args['configuration'],
-                                                                    libfile),
-                                                      os.path.join(libdir, libfile)),
-                                                      dst=libfile)
+                   self.path(self.find_existing_file(os.path.join(os.pardir,
+                                                   lib,
+                                                   self.args['configuration'],
+                                                   libfile),
+                                       os.path.join(libdir, libfile)),
+                  dst=libfile)
                 except RuntimeError:
-                    print "Skipping %s" % libfile
-                    dylibs[lib] = False
+                   print "Skipping %s" % libfile
+                   dylibs[lib] = False
                 else:
-                    dylibs[lib] = True
+                   dylibs[lib] = True
 
                 if dylibs["llcommon"]:
                     for libfile in ("libapr-1.0.dylib",
