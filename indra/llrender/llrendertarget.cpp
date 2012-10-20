@@ -108,6 +108,7 @@ void LLRenderTarget::resize(U32 resx, U32 resy, U32 color_fmt)
 bool LLRenderTarget::allocate(U32 resx, U32 resy, U32 color_fmt, bool depth, bool stencil, LLTexUnit::eTextureType usage, bool use_fbo, S32 samples)
 {
 	stop_glerror();
+
 	release();
 	stop_glerror();
 
@@ -185,33 +186,32 @@ bool LLRenderTarget::addColorAttachment(U32 color_fmt)
 			return false;
 		}
 	}
-	
+
 	sBytesAllocated += mResX*mResY*4;
 
 	stop_glerror();
 
 	
 	if (offset == 0)
-	{ //use bilinear filtering on single texture render targets that aren't multisampled
+		{ //use bilinear filtering on single texture render targets that aren't multisampled
 		gGL.getTexUnit(0)->setTextureFilteringOption(LLTexUnit::TFO_BILINEAR);
-		stop_glerror();
+			stop_glerror();
 	}
 	else
 	{ //don't filter data attachments
 		gGL.getTexUnit(0)->setTextureFilteringOption(LLTexUnit::TFO_POINT);
-		stop_glerror();
+			stop_glerror();
 	}
-
 	if (mUsage != LLTexUnit::TT_RECT_TEXTURE)
 	{
 		gGL.getTexUnit(0)->setTextureAddressMode(LLTexUnit::TAM_MIRROR);
-		stop_glerror();
+			stop_glerror();
 	}
 	else
 	{
 		// ATI doesn't support mirrored repeat for rectangular textures.
 		gGL.getTexUnit(0)->setTextureAddressMode(LLTexUnit::TAM_CLAMP);
-		stop_glerror();
+			stop_glerror();
 	}
 		
 	if (mFBO)
@@ -257,8 +257,8 @@ bool LLRenderTarget::allocateDepth()
 		gGL.getTexUnit(0)->bindManual(mUsage, mDepth);
 		
 		U32 internal_type = LLTexUnit::getInternalType(mUsage);
-		stop_glerror();
-		clear_glerror();
+			stop_glerror();
+			clear_glerror();
 		LLImageGL::setManualImage(internal_type, 0, GL_DEPTH_COMPONENT24, mResX, mResY, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL, false);
 		gGL.getTexUnit(0)->setTextureFilteringOption(LLTexUnit::TFO_POINT);
 	}
@@ -366,7 +366,7 @@ void LLRenderTarget::release()
 		mTex.clear();
 		mInternalFormat.clear();
 	}
-	
+
 	mResX = mResY = 0;
 
 	sBoundTarget = NULL;
@@ -378,27 +378,27 @@ void LLRenderTarget::bindTarget()
 	{
 		stop_glerror();
 		
-		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
-		stop_glerror();
-		if (gGLManager.mHasDrawBuffers)
-		{ //setup multiple render targets
-			GLenum drawbuffers[] = {GL_COLOR_ATTACHMENT0,
-									GL_COLOR_ATTACHMENT1,
-									GL_COLOR_ATTACHMENT2,
-									GL_COLOR_ATTACHMENT3};
-			glDrawBuffersARB(mTex.size(), drawbuffers);
-		}
+			glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+			stop_glerror();
+			if (gGLManager.mHasDrawBuffers)
+			{ //setup multiple render targets
+				GLenum drawbuffers[] = {GL_COLOR_ATTACHMENT0,
+										GL_COLOR_ATTACHMENT1,
+										GL_COLOR_ATTACHMENT2,
+										GL_COLOR_ATTACHMENT3};
+				glDrawBuffersARB(mTex.size(), drawbuffers);
+			}
 			
-		if (mTex.empty())
-		{ //no color buffer to draw to
-			glDrawBuffer(GL_NONE);
-			glReadBuffer(GL_NONE);
+			if (mTex.empty())
+			{ //no color buffer to draw to
+				glDrawBuffer(GL_NONE);
+				glReadBuffer(GL_NONE);
+			}
+
+			check_framebuffer_status();
+
+			stop_glerror();
 		}
-
-		check_framebuffer_status();
-
-		stop_glerror();
-	}
 
 	glViewport(0, 0, mResX, mResY);
 	sBoundTarget = this;
@@ -441,7 +441,10 @@ U32 LLRenderTarget::getTexture(U32 attachment) const
 {
 	if (attachment > mTex.size()-1)
 	{
-		llerrs << "Invalid attachment index." << llendl;
+//MK
+		////llerrs << "Invalid attachment index." << llendl;
+		return 0;
+//mk
 	}
 	if (mTex.empty())
 	{
@@ -479,10 +482,11 @@ void LLRenderTarget::flush(bool fetch_depth)
 	else
 	{
 		stop_glerror();
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		stop_glerror();
-	}
-}
+					stop_glerror();
+				}
+			}
 
 void LLRenderTarget::copyContents(LLRenderTarget& source, S32 srcX0, S32 srcY0, S32 srcX1, S32 srcY1,
 						S32 dstX0, S32 dstY0, S32 dstX1, S32 dstY1, U32 mask, U32 filter)
@@ -499,37 +503,37 @@ void LLRenderTarget::copyContents(LLRenderTarget& source, S32 srcX0, S32 srcY0, 
 	}
 
 	
-	if (mask == GL_DEPTH_BUFFER_BIT && source.mStencil != mStencil)
-	{
-		stop_glerror();
+		if (mask == GL_DEPTH_BUFFER_BIT && source.mStencil != mStencil)
+		{
+			stop_glerror();
 		
-		glBindFramebuffer(GL_FRAMEBUFFER, source.mFBO);
+			glBindFramebuffer(GL_FRAMEBUFFER, source.mFBO);
 		check_framebuffer_status();
-		gGL.getTexUnit(0)->bind(this, true);
-		stop_glerror();
-		glCopyTexSubImage2D(LLTexUnit::getInternalType(mUsage), 0, srcX0, srcY0, dstX0, dstY0, dstX1, dstY1);
-		stop_glerror();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		stop_glerror();
-	}
-	else
-	{
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, source.mFBO);
-		stop_glerror();
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFBO);
-		stop_glerror();
-		check_framebuffer_status();
-		stop_glerror();
-		glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
-		stop_glerror();
+			gGL.getTexUnit(0)->bind(this, true);
+			stop_glerror();
+			glCopyTexSubImage2D(LLTexUnit::getInternalType(mUsage), 0, srcX0, srcY0, dstX0, dstY0, dstX1, dstY1);
+			stop_glerror();
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			stop_glerror();
+		}
+		else
+		{
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, source.mFBO);
+			stop_glerror();
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFBO);
+			stop_glerror();
+			check_framebuffer_status();
+			stop_glerror();
+			glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+			stop_glerror();
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 		stop_glerror();
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		stop_glerror();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		stop_glerror();
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			stop_glerror();
+		}
 	}
-}
 
 //static
 void LLRenderTarget::copyContentsToFramebuffer(LLRenderTarget& source, S32 srcX0, S32 srcY0, S32 srcX1, S32 srcY1,

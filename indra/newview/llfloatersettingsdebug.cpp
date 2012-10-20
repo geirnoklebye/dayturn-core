@@ -35,6 +35,9 @@
 #include "llviewercontrol.h"
 #include "lltexteditor.h"
 
+//MK
+#include "llagent.h"
+//mk
 
 LLFloaterSettingsDebug::LLFloaterSettingsDebug(const LLSD& key) 
 :	LLFloater(key)
@@ -120,33 +123,106 @@ void LLFloaterSettingsDebug::onCommitSettings()
 	switch(controlp->type())
 	{		
 	  case TYPE_U32:
+//MK
+		// If this debug setting can be changed through RLV and a setdebug restriction is active, ignore the change
+		if (gRRenabled && gAgent.mRRInterface.contains ("setdebug")
+			&& gAgent.mRRInterface.mAllowedU32.find (","+controlp->getName()+",") != -1)
+		{
+			return;
+		}
+//mk
 		controlp->set(getChild<LLUICtrl>("val_spinner_1")->getValue());
 		break;
 	  case TYPE_S32:
+//MK
+		// If this debug setting can be changed through RLV and a setdebug restriction is active, ignore the change
+		if (gRRenabled && gAgent.mRRInterface.contains ("setdebug")
+			&& gAgent.mRRInterface.mAllowedS32.find (","+controlp->getName()+",") != -1)
+		{
+			return;
+		}
+//mk
 		controlp->set(getChild<LLUICtrl>("val_spinner_1")->getValue());
 		break;
 	  case TYPE_F32:
+//MK
+		// If this debug setting can be changed through RLV and a setdebug restriction is active, ignore the change
+		if (gRRenabled && gAgent.mRRInterface.contains ("setdebug")
+			&& gAgent.mRRInterface.mAllowedF32.find (","+controlp->getName()+",") != -1)
+		{
+			return;
+		}
+//mk
 		controlp->set(LLSD(getChild<LLUICtrl>("val_spinner_1")->getValue().asReal()));
 		break;
 	  case TYPE_BOOLEAN:
+//MK
+		// If this debug setting can be changed through RLV and a setdebug restriction is active, ignore the change
+		if (gRRenabled && gAgent.mRRInterface.contains ("setdebug")
+			&& gAgent.mRRInterface.mAllowedBOOLEAN.find (","+controlp->getName()+",") != -1)
+		{
+			return;
+		}
+		// Special case : don't allow changing VertexShaderEnable nor WindLightUseAtmosShaders if setenv or setdebug is on
+		if (gRRenabled && (gAgent.mRRInterface.mContainsSetenv || gAgent.mRRInterface.mContainsSetdebug))
+		{
+			if (controlp->getName() == "VertexShaderEnable"
+			|| controlp->getName() == "WindLightUseAtmosShaders"
+			) {
+				return;
+			}
+		}
+//mk
 		controlp->set(getChild<LLUICtrl>("boolean_combo")->getValue());
 		break;
 	  case TYPE_STRING:
+//MK
+		// If this debug setting can be changed through RLV and a setdebug restriction is active, ignore the change
+		if (gRRenabled && gAgent.mRRInterface.contains ("setdebug")
+			&& gAgent.mRRInterface.mAllowedSTRING.find (","+controlp->getName()+",") != -1)
+		{
+			return;
+		}
+//mk
 		controlp->set(LLSD(getChild<LLUICtrl>("val_text")->getValue().asString()));
 		break;
 	  case TYPE_VEC3:
+//MK
+		// If this debug setting can be changed through RLV and a setdebug restriction is active, ignore the change
+		if (gRRenabled && gAgent.mRRInterface.contains ("setdebug")
+			&& gAgent.mRRInterface.mAllowedVEC3.find (","+controlp->getName()+",") != -1)
+		{
+			return;
+		}
+//mk
 		vector.mV[VX] = (F32)getChild<LLUICtrl>("val_spinner_1")->getValue().asReal();
 		vector.mV[VY] = (F32)getChild<LLUICtrl>("val_spinner_2")->getValue().asReal();
 		vector.mV[VZ] = (F32)getChild<LLUICtrl>("val_spinner_3")->getValue().asReal();
 		controlp->set(vector.getValue());
 		break;
 	  case TYPE_VEC3D:
+//MK
+		// If this debug setting can be changed through RLV and a setdebug restriction is active, ignore the change
+		if (gRRenabled && gAgent.mRRInterface.contains ("setdebug")
+			&& gAgent.mRRInterface.mAllowedVEC3D.find (","+controlp->getName()+",") != -1)
+		{
+			return;
+		}
+//mk
 		vectord.mdV[VX] = getChild<LLUICtrl>("val_spinner_1")->getValue().asReal();
 		vectord.mdV[VY] = getChild<LLUICtrl>("val_spinner_2")->getValue().asReal();
 		vectord.mdV[VZ] = getChild<LLUICtrl>("val_spinner_3")->getValue().asReal();
 		controlp->set(vectord.getValue());
 		break;
 	  case TYPE_RECT:
+//MK
+		// If this debug setting can be changed through RLV and a setdebug restriction is active, ignore the change
+		if (gRRenabled && gAgent.mRRInterface.contains ("setdebug")
+			&& gAgent.mRRInterface.mAllowedRECT.find (","+controlp->getName()+",") != -1)
+		{
+			return;
+		}
+//mk
 		rect.mLeft = getChild<LLUICtrl>("val_spinner_1")->getValue().asInteger();
 		rect.mRight = getChild<LLUICtrl>("val_spinner_2")->getValue().asInteger();
 		rect.mBottom = getChild<LLUICtrl>("val_spinner_3")->getValue().asInteger();
@@ -154,11 +230,27 @@ void LLFloaterSettingsDebug::onCommitSettings()
 		controlp->set(rect.getValue());
 		break;
 	  case TYPE_COL4:
+//MK
+		// If this debug setting can be changed through RLV and a setdebug restriction is active, ignore the change
+		if (gRRenabled && gAgent.mRRInterface.contains ("setdebug")
+			&& gAgent.mRRInterface.mAllowedCOL4.find (","+controlp->getName()+",") != -1)
+		{
+			return;
+		}
+//mk
 		col3.setValue(getChild<LLUICtrl>("val_color_swatch")->getValue());
 		col4 = LLColor4(col3, (F32)getChild<LLUICtrl>("val_spinner_4")->getValue().asReal());
 		controlp->set(col4.getValue());
 		break;
 	  case TYPE_COL3:
+//MK
+		// If this debug setting can be changed through RLV and a setdebug restriction is active, ignore the change
+		if (gRRenabled && gAgent.mRRInterface.contains ("setdebug")
+			&& gAgent.mRRInterface.mAllowedCOL3.find (","+controlp->getName()+",") != -1)
+		{
+			return;
+		}
+//mk
 		controlp->set(getChild<LLUICtrl>("val_color_swatch")->getValue());
 		//col3.mV[VRED] = (F32)floaterp->getChild<LLUICtrl>("val_spinner_1")->getValue().asC();
 		//col3.mV[VGREEN] = (F32)floaterp->getChild<LLUICtrl>("val_spinner_2")->getValue().asReal();
@@ -173,6 +265,13 @@ void LLFloaterSettingsDebug::onCommitSettings()
 // static
 void LLFloaterSettingsDebug::onClickDefault()
 {
+//MK
+	// Don't allow Reset To Default when under @setdebug (that could give funny results)
+	if (gRRenabled && gAgent.mRRInterface.contains ("setdebug"))
+	{
+		return;
+	}
+//mk
 	LLComboBox* settings_combo = getChild<LLComboBox>("settings_combo");
 	LLControlVariable* controlp = (LLControlVariable*)settings_combo->getCurrentUserdata();
 

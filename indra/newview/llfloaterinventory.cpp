@@ -37,6 +37,10 @@
 #include "llviewerfoldertype.h"
 #include "lltransientfloatermgr.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 ///----------------------------------------------------------------------------
 /// LLFloaterInventory
 ///----------------------------------------------------------------------------
@@ -68,6 +72,12 @@ LLInventoryPanel* LLFloaterInventory::getPanel()
 // static
 LLFloaterInventory* LLFloaterInventory::showAgentInventory()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
+	{
+		return NULL;
+	}
+//mk
 	// Hack to generate semi-unique key for each inventory floater.
 	static S32 instance_num = 0;
 	instance_num = (instance_num + 1) % S32_MAX;
@@ -94,9 +104,35 @@ void LLFloaterInventory::cleanup()
 	}
 }
 
+//MK
+// static
+void LLFloaterInventory::hideAll()
+{
+	// Use this when issuing a "showinv" restriction
+	U32 count = 0;
+	LLFloaterReg::const_instance_list_t& inst_list = LLFloaterReg::getFloaterList("inventory");
+	for (LLFloaterReg::const_instance_list_t::const_iterator iter = inst_list.begin(); iter != inst_list.end();)
+	{
+		LLFloater* iv = dynamic_cast<LLFloater*>(*iter++);
+		if (iv)
+		{
+			count++;
+//			iv->closeFloater();
+			iv->setVisible(FALSE);
+		}
+	}
+}
+//mk
+
 void LLFloaterInventory::onOpen(const LLSD& key)
 {
 	//LLFirstUse::useInventory();
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
+	{
+		closeFloater();
+	}
+//mk
 }
 
 void LLFloaterInventory::onClose(bool app_quitting)
