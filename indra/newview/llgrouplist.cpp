@@ -63,39 +63,58 @@ public:
 	}
 };
 
-static const LLGroupComparator GROUP_COMPARATOR;
+//static const LLGroupComparator GROUP_COMPARATOR;
+static LLGroupComparator GROUP_COMPARATOR; // <ND/> const makes GCC >= 4.6 very angry about not user defined default ctor.
 
+LLGroupList::Params::Params()
+: for_agent("for_agent", true)
+{
+}
 
 LLGroupList::LLGroupList(const Params& p)
-:	LLFlatListViewEx(p)
+:	LLFlatListViewEx(p),
+	mForAgent(p.for_agent)
 	, mDirty(true) // to force initial update
+    , mShowIcons(false)
+    , mShowNone(true)
 {
-	// Listen for agent group changes.
-	gAgent.addListener(this, "new group");
-
-	mShowIcons = gSavedSettings.getBOOL("GroupListShowIcons");
 	setCommitOnSelectionChange(true);
 
 	// Set default sort order.
 	setComparator(&GROUP_COMPARATOR);
-
-	// Set up context menu.
-	LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
-	LLUICtrl::EnableCallbackRegistry::ScopedRegistrar enable_registrar;
-
-	registrar.add("People.Groups.Action",			boost::bind(&LLGroupList::onContextMenuItemClick,	this, _2));
-	enable_registrar.add("People.Groups.Enable",	boost::bind(&LLGroupList::onContextMenuItemEnable,	this, _2));
-
-	LLMenuGL* context_menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_people_groups.xml",
-			gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
-	if(context_menu)
-		mContextMenuHandle = context_menu->getHandle();
+    
+    if (mForAgent)
+	{
+        enableForAgent(true);
+    }
 }
 
 LLGroupList::~LLGroupList()
 {
-	gAgent.removeListener(this);
+	if (mForAgent) gAgent.removeListener(this);
 	if (mContextMenuHandle.get()) mContextMenuHandle.get()->die();
+}
+
+void LLGroupList::enableForAgent(bool show_icons)
+{
+    mForAgent = true;
+
+	mShowIcons = mForAgent && gSavedSettings.getBOOL("GroupListShowIcons") && show_icons;
+
+	// Listen for agent group changes.
+	gAgent.addListener(this, "new group");
+
+    // Set up context menu.
+    LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
+    LLUICtrl::EnableCallbackRegistry::ScopedRegistrar enable_registrar;
+
+    registrar.add("People.Groups.Action",			boost::bind(&LLGroupList::onContextMenuItemClick,	this, _2));
+    enable_registrar.add("People.Groups.Enable",	boost::bind(&LLGroupList::onContextMenuItemEnable,	this, _2));
+
+    LLMenuGL* context_menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_people_groups.xml",
+            gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
+    if(context_menu)
+        mContextMenuHandle = context_menu->getHandle();
 }
 
 // virtual
@@ -112,12 +131,15 @@ BOOL LLGroupList::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
 	BOOL handled = LLUICtrl::handleRightMouseDown(x, y, mask);
 
+	if (mForAgent)
+	{
 	LLMenuGL* context_menu = (LLMenuGL*)mContextMenuHandle.get();
 	if (context_menu && size() > 0)
 	{
 		context_menu->buildDrawLabels();
 		context_menu->updateParent(LLMenuGL::sMenuContainer);
 		LLMenuGL::showPopup(this, context_menu, x, y);
+	}
 	}
 
 	return handled;
@@ -162,6 +184,8 @@ static bool findInsensitive(std::string haystack, const std::string& needle_uppe
 
 void LLGroupList::refresh()
 {
+	if (mForAgent)
+	{
 	const LLUUID& 		highlight_id	= gAgent.getGroupID();
 	S32					count			= gAgent.mGroups.count();
 	LLUUID				id;
@@ -175,7 +199,9 @@ void LLGroupList::refresh()
 		const LLGroupData& group_data = gAgent.mGroups.get(i);
 		if (have_filter && !findInsensitive(group_data.mName, mNameFilter))
 			continue;
-		addNewItem(id, group_data.mName, group_data.mInsigniaID, ADD_BOTTOM);
+		// <FS:Ansariel> Mark groups hidden in profile
+		//addNewItem(id, group_data.mName, group_data.mInsigniaID, ADD_BOTTOM);
+		addNewItem(id, group_data.mName, group_data.mInsigniaID, ADD_BOTTOM, !group_data.mListInProfile);
 	}
 
 	// Sort the list.
@@ -183,13 +209,26 @@ void LLGroupList::refresh()
 
 	// Add "none" to list at top if filter not set (what's the point of filtering "none"?).
 	// but only if some real groups exists. EXT-4838
-	if (!have_filter && count > 0)
+	if (!have_filter && count > 0 && mShowNone)
 	{
 		std::string loc_none = LLTrans::getString("GroupsNone");
 		addNewItem(LLUUID::null, loc_none, LLUUID::null, ADD_TOP);
 	}
 
 	selectItemByUUID(highlight_id);
+	}
+	else
+	{
+		clear();
+
+		for (group_map_t::iterator it = mGroups.begin(); it != mGroups.end(); ++it)
+		{
+			addNewItem(it->second, it->first, LLUUID::null, ADD_BOTTOM);
+		}
+
+		// Sort the list.
+		sort();
+	}
 
 	setDirty(false);
 	onCommit();
@@ -210,13 +249,21 @@ void LLGroupList::toggleIcons()
 	}
 }
 
+void LLGroupList::setGroups(const std::map< std::string,LLUUID> group_list)
+{
+	mGroups = group_list;
+	setDirty(true);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // PRIVATE Section
 //////////////////////////////////////////////////////////////////////////
 
-void LLGroupList::addNewItem(const LLUUID& id, const std::string& name, const LLUUID& icon_id, EAddPosition pos)
+// <FS:Ansariel> Mark groups hidden in profile
+//void LLGroupList::addNewItem(const LLUUID& id, const std::string& name, const LLUUID& icon_id, EAddPosition pos)
+void LLGroupList::addNewItem(const LLUUID& id, const std::string& name, const LLUUID& icon_id, EAddPosition pos, bool hiddenInProfile)
 {
-	LLGroupListItem* item = new LLGroupListItem();
+	LLGroupListItem* item = new LLGroupListItem(mForAgent && mShowIcons);
 
 	item->setGroupID(id);
 	item->setName(name, mNameFilter);
@@ -225,6 +272,13 @@ void LLGroupList::addNewItem(const LLUUID& id, const std::string& name, const LL
 	item->getChildView("info_btn")->setVisible( false);
 	item->getChildView("profile_btn")->setVisible( false);
 	item->setGroupIconVisible(mShowIcons);
+
+	// <FS:Ansariel> Mark groups hidden in profile
+	if (hiddenInProfile)
+	{
+		item->markHiddenInProfile();
+	}
+	// </FS:Ansariel> Mark groups hidden in profile
 
 	addItem(item, id, pos);
 
@@ -281,6 +335,8 @@ bool LLGroupList::onContextMenuItemEnable(const LLSD& userdata)
 	// each group including "none" can be activated
 	if (userdata.asString() == "activate")
 		return gAgent.getGroupID() != selected_group_id;
+	else if (userdata.asString() == "leave")
+		return ((real_group_selected) && (gAgent.getGroupID() != selected_group_id) );
 
 	if (userdata.asString() == "call")
 	  return real_group_selected && LLVoiceClient::getInstance()->voiceEnabled() && LLVoiceClient::getInstance()->isVoiceWorking();
@@ -292,14 +348,17 @@ bool LLGroupList::onContextMenuItemEnable(const LLSD& userdata)
 /*          LLGroupListItem implementation                              */
 /************************************************************************/
 
-LLGroupListItem::LLGroupListItem()
+LLGroupListItem::LLGroupListItem(bool for_agent)
 :	LLPanel(),
 mGroupIcon(NULL),
 mGroupNameBox(NULL),
 mInfoBtn(NULL),
 mGroupID(LLUUID::null)
 {
-	buildFromFile( "panel_group_list_item.xml");
+	if (for_agent)
+		buildFromFile( "panel_group_list_item.xml");
+	else
+		buildFromFile( "panel_group_list_item_short.xml");
 
 	// Remember group icon width including its padding from the name text box,
 	// so that we can hide and show the icon again later.
@@ -397,6 +456,13 @@ void LLGroupListItem::setGroupIconVisible(bool visible)
 	name_rect.mLeft += visible ? sIconWidth : -sIconWidth;
 	mGroupNameBox->setRect(name_rect);
 }
+
+// <FS:Ansariel> Mark groups hidden in profile
+void LLGroupListItem::markHiddenInProfile()
+{
+	mGroupNameBox->setColor(LLUIColorTable::instance().getColor("GroupHiddenInProfile", LLColor4::red).get());
+}
+// </FS:Ansariel> Mark groups hidden in profile
 
 //////////////////////////////////////////////////////////////////////////
 // Private Section

@@ -101,7 +101,7 @@
     <key>grid</key>
     <map>
       <key>desc</key>
-      <string>Specify the name of the grid to connect to.</string>
+      <string>Specify the name of the grid, local, or an IP address to connect to.</string>
       <key>count</key>
       <integer>1</integer>
       <key>map-to</key>

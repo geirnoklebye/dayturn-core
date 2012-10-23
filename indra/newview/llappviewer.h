@@ -350,6 +350,7 @@ extern LLMemoryInfo gSysMemory;
 extern U64 gMemoryAllocated;
 
 extern std::string gLastVersionChannel;
+extern std::string gSimulatorType; //Opensim or SecondLife
 
 extern LLVector3 gWindVec;
 extern LLVector3 gRelativeWindVec;

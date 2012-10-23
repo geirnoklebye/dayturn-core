@@ -170,7 +170,7 @@ BOOL	LLPanelObject::postBuild()
 	mLabelSkew = getChild<LLTextBox>("text skew");
 	mSpinHollow = getChild<LLSpinCtrl>("Scale 1");
 	childSetCommitCallback("Scale 1",onCommitParametric,this);
-	mSpinHollow->setValidateBeforeCommit( &precommitValidate );
+// 	mSpinHollow->setValidateBeforeCommit( &precommitValidate );
 	mSpinSkew = getChild<LLSpinCtrl>("Skew");
 	childSetCommitCallback("Skew",onCommitParametric,this);
 	mSpinSkew->setValidateBeforeCommit( &precommitValidate );
@@ -285,7 +285,8 @@ LLPanelObject::LLPanelObject()
 	mIsPhantom(FALSE),
 	mSelectedType(MI_BOX),
 	mSculptTextureRevert(LLUUID::null),
-	mSculptTypeRevert(0)
+	mSculptTypeRevert(0),
+	mLimitsNeedUpdate(true)
 {
 }
 
@@ -293,6 +294,31 @@ LLPanelObject::LLPanelObject()
 LLPanelObject::~LLPanelObject()
 {
 	// Children all cleaned up by default view destructor.
+}
+
+void LLPanelObject::updateLimits()
+{
+	mLimitsNeedUpdate = false;
+
+	mRegionMaxHeight = LLWorld::getInstance()->getRegionMaxHeight();
+	mCtrlPosZ->setMaxValue(mRegionMaxHeight);
+
+
+	mMinScale = LLWorld::getInstance()->getRegionMinPrimScale();
+	mMaxScale = LLWorld::getInstance()->getRegionMaxPrimScale();
+	mCtrlScaleX->setMinValue(mMinScale);
+	mCtrlScaleX->setMaxValue(mMaxScale);
+	mCtrlScaleY->setMinValue(mMinScale);
+	mCtrlScaleY->setMaxValue(mMaxScale);
+	mCtrlScaleZ->setMinValue(mMinScale);
+	mCtrlScaleZ->setMaxValue(mMaxScale);
+
+	mMaxHollowSize = LLWorld::getInstance()->getRegionMaxHollowSize();
+	mSpinHollow->setMaxValue(mMaxHollowSize);
+
+	mMinHoleSize = LLWorld::getInstance()->getRegionMinHoleSize();
+	mSpinScaleX->setMinValue(mMinHoleSize);
+	mSpinScaleY->setMinValue(mMinHoleSize);
 }
 
 void LLPanelObject::getState( )
@@ -907,11 +933,11 @@ void LLPanelObject::getState( )
 	case MI_RING:
 		mSpinScaleX->set( scale_x );
 		mSpinScaleY->set( scale_y );
+		mSpinScaleX->setMinValue(mMinHoleSize);
 		calcp->setVar(LLCalc::X_HOLE, scale_x);
 		calcp->setVar(LLCalc::Y_HOLE, scale_y);
-		mSpinScaleX->setMinValue(OBJECT_MIN_HOLE_SIZE);
 		mSpinScaleX->setMaxValue(OBJECT_MAX_HOLE_SIZE_X);
-		mSpinScaleY->setMinValue(OBJECT_MIN_HOLE_SIZE);
+		mSpinScaleY->setMinValue(mMinHoleSize);
 		mSpinScaleY->setMaxValue(OBJECT_MAX_HOLE_SIZE_Y);
 		break;
 	default:
@@ -947,7 +973,7 @@ void LLPanelObject::getState( )
 	else 
 	{
 		mSpinHollow->setMinValue(0.f);
-		mSpinHollow->setMaxValue(95.f);
+		mSpinHollow->setMaxValue(mMaxHollowSize);
 	}
 
 	// Update field enablement
@@ -1478,11 +1504,11 @@ void LLPanelObject::getVolumeParams(LLVolumeParams& volume_params)
 	{
 		scale_x = llclamp(
 			scale_x,
-			OBJECT_MIN_HOLE_SIZE,
+			mMinHoleSize,
 			OBJECT_MAX_HOLE_SIZE_X);
 		scale_y = llclamp(
 			scale_y,
-			OBJECT_MIN_HOLE_SIZE,
+			mMinHoleSize,
 			OBJECT_MAX_HOLE_SIZE_Y);
 
 		// Limit radius offset, based on taper and hole size y.
@@ -1619,6 +1645,15 @@ void LLPanelObject::sendScale(BOOL btn_down)
 	if (mObject.isNull()) return;
 
 	LLVector3 newscale(mCtrlScaleX->get(), mCtrlScaleY->get(), mCtrlScaleZ->get());
+
+// <AW: opensim-limits>
+//	LLVector3 newscale(llclamp(mCtrlScaleX->get(), MIN_PRIM_SCALE, llpanelobject_max_prim_scale()),
+//					   llclamp(mCtrlScaleY->get(), MIN_PRIM_SCALE, llpanelobject_max_prim_scale()),
+//					   llclamp(mCtrlScaleZ->get(), MIN_PRIM_SCALE, llpanelobject_max_prim_scale()));
+//	LLVector3 newscale(llclamp(mCtrlScaleX->get(), mMinScale, llpanelobject_max_prim_scale()),
+//					   llclamp(mCtrlScaleY->get(), mMinScale, llpanelobject_max_prim_scale()),
+//					   llclamp(mCtrlScaleZ->get(), mMinScale, llpanelobject_max_prim_scale()));
+// </AW: opensim-limits>
 
 	LLVector3 delta = newscale - mObject->getScale();
 	if (delta.magVec() >= 0.0005f)
@@ -1770,6 +1805,11 @@ void LLPanelObject::sendSculpt()
 
 void LLPanelObject::refresh()
 {
+	if(mLimitsNeedUpdate)
+	{
+		updateLimits();
+	}
+
 	getState();
 	if (mObject.notNull() && mObject->isDead())
 	{

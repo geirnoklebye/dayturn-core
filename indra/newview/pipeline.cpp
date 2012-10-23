@@ -6780,6 +6780,7 @@ void LLPipeline::doResetVertexBuffers()
 		llwarns << "VBO wipe failed -- " << LLVertexBuffer::sGLCount << " buffers remaining." << llendl;
 	}
 
+	//llassert(LLVertexBuffer::sGLCount == 0);
 	LLVertexBuffer::unbind();	
 	
 	sRenderBump = gSavedSettings.getBOOL("RenderObjectBump");

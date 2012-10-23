@@ -34,6 +34,7 @@
 #include "stringize.h"
 
 #include "llapr.h"
+#include "llrand.h"
 
 //virtual 
 LLPluginProcessParentOwner::~LLPluginProcessParentOwner()
@@ -156,6 +157,12 @@ void LLPluginProcessParent::errorState(void)
 		setState(STATE_LAUNCH_FAILURE);
 	else
 		setState(STATE_ERROR);
+	mBindRetryCount = 0;
+}
+
+void LLPluginProcessParent::cleanupState()
+{
+	setState(STATE_CLEANUP);
 }
 
 void LLPluginProcessParent::init(const std::string &launcher_filename, const std::string &plugin_dir, const std::string &plugin_filename, bool debug)
@@ -165,7 +172,9 @@ void LLPluginProcessParent::init(const std::string &launcher_filename, const std
 	mPluginFile = plugin_filename;
 	mPluginDir = plugin_dir;
 	mCPUUsage = 0.0f;
-	mDebug = debug;	
+	mDebug = debug;
+	mPortToBind = 0;
+	mBindRetryCount = 0;
 	setState(STATE_INITIALIZED);
 }
 
@@ -275,7 +284,6 @@ void LLPluginProcessParent::idle(void)
 
 			case STATE_INITIALIZED:
 			{
-	
 				apr_status_t status = APR_SUCCESS;
 				apr_sockaddr_t* addr = NULL;
 				mListenSocket = LLSocket::create(gAPRPoolp, LLSocket::STREAM_TCP);
@@ -287,14 +295,28 @@ void LLPluginProcessParent::idle(void)
 					&addr,
 					"127.0.0.1",
 					APR_INET,
-					0,	// port 0 = ephemeral ("find me a port")
+					mPortToBind,	// initially port 0 = ephemeral ("find me a port")
 					0,
 					gAPRPoolp);
 					
 				if(ll_apr_warn_status(status))
 				{
+					// A non-zero value for mPortToBind could get us here
 					killSockets();
-					errorState();
+					if (mBindRetryCount > 9) 
+					{
+						LL_WARNS("PluginParent") << "apr_sockaddr_info_get could not return successful, out of retries. Bailing out" << LL_ENDL;
+						errorState();
+					}
+					else
+					{
+						LL_WARNS("PluginParent") << "Port " << mPortToBind 
+							<< " is possibly in use, retrying with a different port. Retry count " << mBindRetryCount+1 << " of 10" << LL_ENDL;
+						++mBindRetryCount;
+						mPortToBind = ll_rand(16383) + 49152; // See comment on dynamic ports
+						setState(STATE_INITIALIZED); // Necessary?
+						idle_again = true;
+					}
 					break;
 				}
 
@@ -324,7 +346,7 @@ void LLPluginProcessParent::idle(void)
 					{
 						LL_WARNS("Plugin") << "Bound port number unknown, bailing out." << LL_ENDL;
 						
-						killSockets();
+						//killSockets();
 						errorState();
 						break;
 					}
@@ -963,6 +985,11 @@ void LLPluginProcessParent::receiveMessage(const LLPluginMessage &message)
 				// and remove it from our map
 				mSharedMemoryRegions.erase(iter);
 			}
+		}
+		else if (message_name == "cleanup_reply")
+		{
+			LL_DEBUGS("PluginParent") << "cleanup_reply message received" << LL_ENDL;
+			cleanupState();
 		}
 		else
 		{
