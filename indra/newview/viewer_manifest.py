@@ -1080,6 +1080,8 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libopenal.so.1.13.0")
             self.path("libopenal.so", "libvivoxoal.so.1") # vivox's sdk expects this soname
             self.path("libfontconfig.so*")
+            self.path("libpng15.so.15") 
+            self.path("libpng15.so.15.10.0")            
             try:
                 self.path("libtcmalloc.so*") #formerly called google perf tools
                 pass

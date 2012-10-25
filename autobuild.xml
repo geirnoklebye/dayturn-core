@@ -1760,9 +1760,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>0681ab7e1988dfdbdad7dd9edb7760ee</string>
+              <string>899aa2d5217172f8b61181451778b91d</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/libpng-1.5.1-linux-20110223.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libpng/downloads/libpng-1.5.10-linux-20121025.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2902,9 +2902,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7b4cf3aa2c04937d0a20761516587896</string>
+              <string>a5b61d9816a302371dbb70370c97f04a</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-zlib/rev/223739/arch/Linux/installer/zlib-1.2.5-linux-20110314.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-zlib/downloads/zlib-1.2.6-linux-20121025.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
