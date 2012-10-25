@@ -1772,9 +1772,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>06bf5ce24accd2638eb751e84cb059a4</string>
+              <string>833c0012de87001d2d6fbb44cb4e22fc</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/libpng-1.5.1-Linux-x86_64-20110822.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libpng/downloads/libpng-1.5.10-linux64-20121024.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2913,21 +2913,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>36716acbb29ed2adbc8d82d9ddbdec65</string>
+              <string>532ba2b7f9a31b93cd272ce834da3177</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/z-lib-1.2.5-Linux-x86_64-20110405.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-zlib/downloads/zlib-1.2.6-linux64-20121024.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>

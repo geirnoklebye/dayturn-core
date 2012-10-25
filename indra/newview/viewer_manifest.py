@@ -1163,6 +1163,8 @@ class Linux_x86_64Manifest(LinuxManifest):
             self.path("libalut.so.0.1.0")
             self.path("libopenal.so.1.12.854")
             self.path("libfontconfig.so*")
+            self.path("libpng15.so.15") 
+            self.path("libpng15.so.15.10.0")
             self.end_prefix("lib64")
 
             # Vivox runtimes

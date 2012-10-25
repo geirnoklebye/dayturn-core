@@ -460,6 +460,8 @@ elseif(LINUX)
         libuuid.so.16.0.22
         libssl.so.1.0.0
         libfontconfig.so.1.4.4
+        libpng15.so.15
+        libpng15.so.15.10.0
 # Remove OPenMP from build of viewer causes conflict starting at Viewer-Beta 3.3.3
 #        libgomp.so.1
 #        libgomp.so.1.0.0
