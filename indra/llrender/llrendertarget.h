@@ -57,11 +57,13 @@
 
 */
 
+class LLMultisampleBuffer;
+
 class LLRenderTarget
 {
 public:
 	//whether or not to use FBO implementation
-	static bool sUseFBO; 
+	static BOOL sUseFBO; 
 	static U32 sBytesAllocated;
 
 	LLRenderTarget();
@@ -149,9 +151,9 @@ protected:
 	std::vector<U32> mInternalFormat;
 	U32 mFBO;
 	U32 mDepth;
-	bool mStencil;
-	bool mUseDepth;
-	bool mRenderDepth;
+	BOOL mStencil;
+	BOOL mUseDepth;
+	BOOL mRenderDepth;
 	LLTexUnit::eTextureType mUsage;
 	
 	static LLRenderTarget* sBoundTarget;

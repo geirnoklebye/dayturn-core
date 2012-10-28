@@ -1106,7 +1106,7 @@
              height="20"
              follows="top|left"
              left_pad="10"
-             max_val="64.0"
+             max_val="256.0"
              min_val="0.01"
              name="import_scale"
              top_delta="-4"
