@@ -77,6 +77,10 @@
 // Third party library includes
 #include <boost/algorithm/string.hpp>
 
+//MK
+#include "llstatusbar.h"
+//mk
+
 #ifdef TOGGLE_HACKED_GODLIKE_VIEWER
 BOOL 				gHackGodmode = FALSE;
 #endif
@@ -93,6 +97,27 @@ extern BOOL gResizeScreenTexture;
 extern BOOL gDebugGL;
 ////////////////////////////////////////////////////////////////////////////
 // Listeners
+
+//MK
+static bool handleRestrainedLoveDebugChanged(const LLSD& newvalue)
+{
+	RRInterface::sRestrainedLoveDebug = newvalue.asBoolean();
+	return true;
+}
+
+static bool handleRestrainedLoveOffsetAvatarChanged(const LLSD& newvalue)
+{
+	gAgent.sendAgentSetAppearance();
+	return true;
+}
+
+static bool handleRenderDeferredShowInvisiprimsChanged(const LLSD& newvalue)
+{
+	bool status = newvalue.asBoolean();
+	LLDrawPoolBump::sRenderDeferredShowInvisiprims = status;
+	return true;
+}
+//mk
 
 static bool handleRenderAvatarMouselookChanged(const LLSD& newvalue)
 {
@@ -533,6 +558,20 @@ bool toggle_show_navigation_panel(const LLSD& newvalue)
 	bool value = newvalue.asBoolean();
 
 	LLNavigationBar::getInstance()->setVisible(value);
+//MK
+	if (gStatusBar)
+	{
+		// if we show the navigation bar or the mini location bar, we don't need the parcel info and sliders on the top status bar
+		// and vice-versa
+		BOOL minilocation_visible = gSavedSettings.getBOOL("ShowMiniLocationPanel");
+		gStatusBar->childSetVisible("parcel_info_panel", !value && !minilocation_visible);
+		gStatusBar->childSetVisible("drawdistance", !value && !minilocation_visible);
+		gStatusBar->childSetVisible("avatar_z_offset", !value && !minilocation_visible);
+		gStatusBar->childSetVisible("avatar_z_offset_reset_btn", !value && !minilocation_visible);
+	}
+//	if (!gRRenabled)
+	else
+//mk
 	gSavedSettings.setBOOL("ShowMiniLocationPanel", !value);
 
 	return true;
@@ -543,6 +582,20 @@ bool toggle_show_mini_location_panel(const LLSD& newvalue)
 	bool value = newvalue.asBoolean();
 
 	LLPanelTopInfoBar::getInstance()->setVisible(value);
+//MK
+	if (gStatusBar)
+	{
+		// if we show the navigation bar or the mini location bar, we don't need the parcel info and sliders on the top status bar
+		// and vice-versa
+		BOOL navbar_visible = gSavedSettings.getBOOL("ShowNavbarNavigationPanel");
+		gStatusBar->childSetVisible("parcel_info_panel", !value && !navbar_visible);
+		gStatusBar->childSetVisible("drawdistance", !value && !navbar_visible);
+		gStatusBar->childSetVisible("avatar_z_offset", !value && !navbar_visible);
+		gStatusBar->childSetVisible("avatar_z_offset_reset_btn", !value && !navbar_visible);
+	}
+//	if (!gRRenabled)
+	else
+//mk
 	gSavedSettings.setBOOL("ShowNavbarNavigationPanel", !value);
 
 	return true;
@@ -571,6 +624,13 @@ void toggle_updater_service_active(const LLSD& new_value)
 
 void settings_setup_listeners()
 {
+//MK
+	gSavedSettings.getControl("RestrainedLoveDebug")->getSignal()->connect(boost::bind(&handleRestrainedLoveDebugChanged, _2));
+	gSavedSettings.getControl("RestrainedLoveOffsetAvatarX")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+	gSavedSettings.getControl("RestrainedLoveOffsetAvatarY")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+	gSavedSettings.getControl("RestrainedLoveOffsetAvatarZ")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+	gSavedSettings.getControl("RenderDeferredShowInvisiprims")->getSignal()->connect(boost::bind(&handleRenderDeferredShowInvisiprimsChanged, _2));
+//mk
 	gSavedSettings.getControl("FirstPersonAvatarVisible")->getSignal()->connect(boost::bind(&handleRenderAvatarMouselookChanged, _2));
 	gSavedSettings.getControl("RenderFarClip")->getSignal()->connect(boost::bind(&handleRenderFarClipChanged, _2));
 	gSavedSettings.getControl("RenderTerrainDetail")->getSignal()->connect(boost::bind(&handleTerrainDetailChanged, _2));

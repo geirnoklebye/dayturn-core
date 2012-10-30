@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>Second Life</string>
+	<string>Restrained Love</string>
 	<key>CFBundleIconFile</key>
 	<string>secondlife.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Second Life</string>
+	<string>Restrained Love</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
@@ -32,7 +32,7 @@
 				<string>application/x-grid-location-info</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Secondlife SLURL</string>
+			<string>RestrainedLove SLURL</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>SLRL</string>
@@ -42,14 +42,14 @@
 			<key>LSTypeIsPackage</key>
 			<true/>
 			<key>NSDocumentClass</key>
-			<string>SecondLifeSLURL</string>
+			<string>RestrainedLoveSLURL</string>
 		</dict>
 	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>Second Life URL</string>
+			<string>Restrained Love URL</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>secondlife</string>
