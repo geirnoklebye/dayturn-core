@@ -36,6 +36,7 @@
 #include <queue>
 #include "v4color.h"
 
+
 class LLPluginClassMedia : public LLPluginProcessParentOwner
 {
 	LOG_CLASS(LLPluginClassMedia);
@@ -249,6 +250,11 @@ public:
 	// This is valid during MEDIA_EVENT_CLICK_LINK_HREF and MEDIA_EVENT_GEOMETRY_CHANGE
 	std::string getClickUUID() const { return mClickUUID; };
 
+    #if LL_WINDOWS
+	//Open a debug console for this plugin.
+	void showConsole();
+    #endif
+
 	// These are valid during MEDIA_EVENT_DEBUG_MESSAGE
 	std::string getDebugMessageText() const { return mDebugMessageText; };
 	std::string getDebugMessageLevel() const { return mDebugMessageLevel; };
@@ -278,6 +284,11 @@ public:
 	
 	// Hang the plugin.  If you use this outside of a testbed, you will be punished.
 	void		hangPlugin();
+
+	// This sends the message "base", "cleanup" to the plugin
+	// Don't call this unless you know what you're doing
+	// and you know this is exactly what you want to do
+	void		forceCleanUpPlugin();
 
 	///////////////////////////////////
 	// media time class functions

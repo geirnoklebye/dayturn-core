@@ -5957,7 +5957,39 @@ Please re-install the plugin or contact the vendor if you continue to experience
        text="A Media Plugin fails to run"/>
     </form>
   </notification>
-  <notification
+ 
+<notification
+ icon="alert.tga"
+ name="MediaPluginFailedWebkit"
+ type="alert">
+The following browser plugin has failed:
+     [PLUGIN]
+
+Make sure "Flash For Other Browsers" is installed.
+The latest version can be found at: 
+http://get.adobe.com/flashplayer/otherversions/
+ <form name="form">
+  <ignore name="ignore"
+    text="When the browser plugin fails"/>
+ </form>
+</notification>
+
+<notification
+ icon="alert.tga"
+ name="MediaPluginFailedQuickTime"
+ type="alert">
+  The QuickTime Media Plugin has failed:
+  [PLUGIN]
+
+  If the error persists, reinstalling QuickTime might fix it.
+  <form name="form">
+    <ignore name="ignore"
+      text="When the QuickTime plugin fails"/>
+  </form>
+</notification>
+  
+
+ <notification
    icon="notify.tga"
    name="OwnedObjectsReturned"
    persist="true"
@@ -8221,23 +8253,27 @@ Otherwise, you can look at the Map and find places marked &quot;Infohub&quot;.
 You died and have been teleported to your home location.
   </global>
 
-  <notification
-   icon="alertmodal.tga"
-   name="LocalBitmapsUpdateFileNotFound"
-   persist="true"
-   type="notify">
-[FNAME] could not be updated because the file could no longer be found.
-Disabling future updates for this file.
+<!-- AW: opensim -->
+  <notification icon="alertmodal.tga"
+		name="CantAddGrid"
+		type="alertmodal">
+Could not add [GRID] to the grid list.
+[REASON] contact support of [GRID].
+    <usetemplate
+     name="okbutton"
+     yestext="OK"/>
   </notification>
+<!-- AW: opensim -->
 
   <notification
-   icon="alertmodal.tga"
-   name="LocalBitmapsUpdateFailedFinal"
-   persist="true"
-   type="notify">
-[FNAME] could not be opened or decoded for [NRETRIES] attempts, and is now considered broken.
-Disabling future updates for this file.
+     icon="alertmodal.tga"
+     name="LocalBitmapsUpdateFailedFinal"
+     persist="true"
+     type="notify">
+    [FNAME] could not be opened or decoded for [NRETRIES] attempts, and is now considered broken.
+    Disabling future updates for this file.
   </notification>
+
 
   <notification
    icon="alertmodal.tga"
@@ -8247,6 +8283,55 @@ Disabling future updates for this file.
 Attempted to add an invalid or unreadable image file [FNAME] which could not be opened or decoded.
 Attempt cancelled.
   </notification>
+  <notification
+ icon="alertmodal.tga"
+ name="ConfirmClearDebugSearchURL"
+ type="alertmodal">
+    Are you sure you want to clear the debug search url?
+    <tag>confirm</tag>
+    <usetemplate
+     name="okcancelbuttons"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+  <notification
+   icon="alertmodal.tga"
+   name="ConfirmPickDebugSearchURL"
+   type="alertmodal">
+    Are you sure you want to pick the current search url as debug search url?
+    <tag>confirm</tag>
+    <usetemplate
+     ignoretext="Confirm picking debug search url"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+  <notification
+   icon="alertmodal.tga"
+   name="CanNotRemoveConnectedGrid"
+   type="alertmodal">
+    You can not remove [REMOVE_GRID] while being connected to it.
+    <tag>confirm</tag>
+    <usetemplate
+     ignoretext="Warn that the grid connected to can not be removed."
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+  <!-- <FS:AW  grid management-->
+  <notification
+    icon="alertmodal.tga"
+    name="ConfirmRemoveGrid"
+    type="alertmodal">
+    Are you sure you want to remove [REMOVE_GRID] from the grid list?
+    <tag>confirm</tag>
+    <usetemplate
+     ignoretext="Confirm removing grids"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+  <!-- </FS:AW  grid management-->
 
   <notification
    icon="alertmodal.tga"
