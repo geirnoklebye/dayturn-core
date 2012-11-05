@@ -29,9 +29,13 @@ if (STANDALONE)
     set(WEBKITLIBPLUGIN OFF CACHE BOOL
         "WEBKITLIBPLUGIN support for the llplugin/llmedia test apps.")
 else (STANDALONE)
-    use_prebuilt_binary(llqtwebkit)
-    set(WEBKITLIBPLUGIN ON CACHE BOOL
-        "WEBKITLIBPLUGIN support for the llplugin/llmedia test apps.")
+  if(LINUX)
+     use_prebuilt_binary(kokua-qt)
+  endif(LINUX)
+  use_prebuilt_binary(llqtwebkit)
+  set(WEBKITLIBPLUGIN ON CACHE BOOL
+      "WEBKITLIBPLUGIN support for the llplugin/llmedia test apps.")
+
 endif (STANDALONE)
 
 if (WINDOWS)
