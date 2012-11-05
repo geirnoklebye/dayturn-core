@@ -1154,7 +1154,10 @@ class Linux_x86_64Manifest(LinuxManifest):
             self.path("libz.so.1.2.5")
             self.path("libz.so.1")
             self.path("libz.so")
-            self.path("libcollada14dom.so.2.3.0","libcollada14dom.so.2")
+            # KOKUA Library self.path("libcollada14dom.so.2.3.0","libcollada14dom.so.2")
+			self.path("libcollada14dom.so.2.2")
+            self.path("libcollada14dom.so.2")
+            self.path("libcollada14dom.so")
             self.path("libglod.so")
 
             # OpenAL

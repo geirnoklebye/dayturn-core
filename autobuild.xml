@@ -361,21 +361,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>ed57bb06511e87312d4c70ce43068d55</string>
+              <string>6b215cd8bea41da3e965fecd888f85cb</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/colladadom-2.3-Linux-x86_64-20110414.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/colladadom/downloads/colladadom-2.2-linux-x86_64-20120719.tar.bz2.tar</string>
             </map>
             <key>name</key>
             <string>linux64</string>
