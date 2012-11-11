@@ -704,7 +704,7 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 	
 	std::string utf8text = utf8_out_text;
 
-	if (gRRenabled && channel == 0)
+	if (channel == 0)
 	{
 //-TT Patch MU_OOC from Satomi Ahn
 //		if (gSavedSettings.getBOOL("AutoCloseOOC"))
@@ -766,20 +766,20 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 		if (utf8text.find ("/me ") == 0 // emote
 			|| utf8text.find ("/me's") == 0) // emote
 		{
-			if (gAgent.mRRInterface.containsSubstr ("rediremote:"))
+			if (gRRenabled && gAgent.mRRInterface.containsSubstr ("rediremote:"))
 			{
 				restriction = "rediremote:";
 			}
 		}
 		else if (utf8text.find ("((") != 0 || utf8text.find ("))") != utf8text.length () - 2)
 		{
-			if (gAgent.mRRInterface.containsSubstr ("redirchat:"))
+			if (gRRenabled && gAgent.mRRInterface.containsSubstr ("redirchat:"))
 			{
 				restriction = "redirchat:";
 			}
 		}
 
-		if (!restriction.empty())
+		if (gRRenabled && !restriction.empty())
 		{
 			// Public chat or emote redirected => for each redirection, send the same message on the target channel
 			RRMAP::iterator it = gAgent.mRRInterface.mSpecialObjectBehaviours.begin ();
