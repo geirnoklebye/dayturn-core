@@ -1128,7 +1128,7 @@ void LLPanelLogin::updateServer()
 				bool remember = sInstance->getChild<LLUICtrl>("remember_check")->getValue();
 				sInstance->setFields(credential, remember);
 			}
-
+		loadLoginPage();
 		updateLocationCombo(LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION);
 
 		}
