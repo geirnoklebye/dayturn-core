@@ -4278,6 +4278,12 @@ void LLAgent::doTeleportViaLocation(const LLVector3d& pos_global)
 	//gAgent.mRRInterface.garbageCollector ();
 //mk
 	LLViewerRegion* regionp = getRegion();
+
+	if (!regionp)
+	{
+		return;
+	}
+
 	U64 handle = to_region_handle(pos_global);
 	LLSimInfo* info = LLWorldMap::getInstance()->simInfoFromHandle(handle);
 	if(regionp && info)
