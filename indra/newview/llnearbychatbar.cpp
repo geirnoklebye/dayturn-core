@@ -169,11 +169,10 @@ LLNearbyChatBar* LLNearbyChatBar::getInstance()
 void LLNearbyChatBar::showHistory()
 {
 	openFloater();
-
 	if (!getChildView("nearby_chat")->getVisible())
 	{
 		onToggleNearbyChatPanel();
-	}
+}
 }
 
 void LLNearbyChatBar::showTranslationCheckbox(BOOL show)
@@ -203,6 +202,14 @@ BOOL LLNearbyChatBar::handleKeyHere( KEY key, MASK mask )
 		sendChat(CHAT_TYPE_SHOUT);
 		handled = TRUE;
 	}
+//MK
+	else if (KEY_RETURN == key && mask == MASK_SHIFT)
+	{
+		// whisper
+		sendChat( CHAT_TYPE_WHISPER );
+		handled = TRUE;
+	}
+//mk
 
 	return handled;
 }
@@ -244,8 +251,12 @@ void LLNearbyChatBar::onChatBoxKeystroke(LLLineEditor* caller, void* userdata)
 
 	S32 length = raw_text.length();
 
-	if( (length > 0) && (raw_text[0] != '/') )  // forward slash is used for escape (eg. emote) sequences
+//MK
+////	if( (length > 0) && (raw_text[0] != '/') )  // forward slash is used for escape (eg. emote) sequences
+	if( (length > 0) && (raw_text[0] != '/') && (raw_text[0] != ':') )  // forward slash and colon are used for escape (eg. emote) sequences
 	{
+		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
+//mk
 		gAgent.startTyping();
 	}
 	else
@@ -309,6 +320,22 @@ void LLNearbyChatBar::onChatBoxFocusLost(LLFocusableElement* caller, void* userd
 {
 	// stop typing animation
 	gAgent.stopTyping();
+//MK
+	// If nearby chat bar is minimized but visible, hide it
+	if (gSavedSettings.getBOOL("CloseChatOnReturn"))
+	{
+		LLNearbyChatBar* cb = LLNearbyChatBar::getInstance();
+
+		if (cb)
+		{
+			LLView* nearby_chat = cb->getChildView("nearby_chat");
+			if (nearby_chat && !nearby_chat->getVisible())
+			{
+				cb->closeFloater(true); // set app_quitting to true to suppress the sound
+			}
+		}
+	}
+//mk
 }
 
 void LLNearbyChatBar::onChatBoxFocusReceived()
@@ -366,11 +393,30 @@ void LLNearbyChatBar::sendChat( EChatType type )
 			std::string utf8_revised_text;
 			if (0 == channel)
 			{
-				// discard returned "found" boolean
-				LLGestureMgr::instance().triggerAndReviseString(utf8text, &utf8_revised_text);
+//MK
+////			// discard returned "found" boolean
+////				LLGestureMgr::instance().triggerAndReviseString(utf8text, &utf8_revised_text);
+				BOOL found_gesture=LLGestureMgr::instance().triggerAndReviseString(utf8text, &utf8_revised_text);
+
+				if (gRRenabled && gAgent.mRRInterface.contains ("sendchat") && !gAgent.mRRInterface.containsSubstr ("redirchat:"))
+				{
+					// user is forbidden to send any chat message on channel 0 except emotes and OOC text
+					utf8_revised_text = gAgent.mRRInterface.crunchEmote (utf8_revised_text, 20);
+					if (found_gesture && utf8_revised_text=="...") utf8_revised_text="";
+				}
+//mk
 			}
 			else
 			{
+//MK
+				std::ostringstream stream;
+				stream << "" << channel;
+				if (gRRenabled && gAgent.mRRInterface.containsWithoutException ("sendchannel", stream.str()))
+				{
+					utf8_revised_text = "";
+				}
+				else
+//mk
 				utf8_revised_text = utf8text;
 			}
 
@@ -404,7 +450,7 @@ void LLNearbyChatBar::showNearbyChatPanel(bool show)
 	{
 		if (mNearbyChat->getVisible() && !isMinimized())
 		{
-			mExpandedHeight = getRect().getHeight();
+		mExpandedHeight = getRect().getHeight();
 		}
 		setResizeLimits(getMinWidth(), COLLAPSED_HEIGHT);
 		mNearbyChat->setVisible(FALSE);
@@ -486,7 +532,7 @@ void LLNearbyChatBar::sendChatFromViewer(const std::string &utf8text, EChatType 
 }
 
 void LLNearbyChatBar::sendChatFromViewer(const LLWString &wtext, EChatType type, BOOL animate)
-{
+{ 
 	// Look for "/20 foo" channel chats.
 	S32 channel = 0;
 	LLWString out_text = stripChannelNumber(wtext, &channel);
@@ -499,6 +545,33 @@ void LLNearbyChatBar::sendChatFromViewer(const LLWString &wtext, EChatType type,
 		utf8_text = utf8str_truncate(utf8_text, MAX_STRING - 1);
 	}
 
+//MK
+	if (gRRenabled && channel == 0)
+	{
+		// transform the type according to chatshout, chatnormal and chatwhisper restrictions
+		if (type == CHAT_TYPE_WHISPER && gAgent.mRRInterface.contains ("chatwhisper"))
+		{
+			type = CHAT_TYPE_NORMAL;
+			animate = false;
+		}
+		if (type == CHAT_TYPE_SHOUT && gAgent.mRRInterface.contains ("chatshout"))
+		{
+			type = CHAT_TYPE_NORMAL;
+			animate = false;
+		}
+		if ((type == CHAT_TYPE_SHOUT || type == CHAT_TYPE_NORMAL)
+			&& gAgent.mRRInterface.contains ("chatnormal"))
+		{
+			type = CHAT_TYPE_WHISPER;
+			animate = false;
+		}
+		
+		if (gAgent.mRRInterface.containsSubstr ("redirchat:"))
+		{
+			animate = false;
+		}
+	}
+//mk
 	// Don't animate for chats people can't hear (chat to scripts)
 	if (animate && (channel == 0))
 	{
@@ -622,13 +695,152 @@ LLWString LLNearbyChatBar::stripChannelNumber(const LLWString &mesg, S32* channe
 
 void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32 channel)
 {
+//MK
+	if (gRRenabled && channel >= 2147483647 && gAgent.mRRInterface.contains ("sendchat"))
+	{
+		// When prevented from talking, remove the ability to talk on the DEBUG_CHANNEL altogether, since it is a way of cheating
+		return;
+	}
+	
+	std::string utf8text = utf8_out_text;
+
+	if (gRRenabled && channel == 0)
+	{
+//-TT Patch MU_OOC from Satomi Ahn
+//		if (gSavedSettings.getBOOL("AutoCloseOOC"))
+		{
+			// Try to find any unclosed OOC chat (i.e. an opening
+			// double parenthesis without a matching closing double
+			// parenthesis.
+			if (utf8text.find("(( ") != -1 && utf8text.find("))") == -1)
+			{
+				// add the missing closing double parenthesis.
+				utf8text += " ))";
+			}
+			else if (utf8text.find("((") != -1 && utf8text.find("))") == -1)
+			{
+				if (utf8text.at(utf8text.length() - 1) == ')')
+				{
+					// cosmetic: add a space first to avoid a closing triple parenthesis
+					utf8text += " ";
+				}
+				// add the missing closing double parenthesis.
+				utf8text += "))";
+			}
+			else if (utf8text.find("[[ ") != -1 && utf8text.find("]]") == -1)
+			{
+				// add the missing closing double parenthesis.
+				utf8text += " ]]";
+			}
+			else if (utf8text.find("[[") != -1 && utf8text.find("]]") == -1)
+			{
+				if (utf8text.at(utf8text.length() - 1) == ']')
+				{
+					// cosmetic: add a space first to avoid a closing triple parenthesis
+					utf8text += " ";
+				}
+				// add the missing closing double parenthesis.
+				utf8text += "]]";
+			}
+		}
+
+	// Convert MU*s style poses into IRC emotes here.
+//		if (gSavedSettings.getBOOL("AllowMUpose"))
+		{
+			if (utf8text.find(":") == 0 && utf8text.length() > 3)
+			{
+				if (utf8text.find(":'") == 0)
+				{
+					utf8text.replace(0, 1, "/me");
+				}
+				else if (isalpha(utf8text.at(1)))	// Do not prevent smileys and such.
+				{
+					utf8text.replace(0, 1, "/me ");
+				}
+			}
+		}
+//-TT Patch MU_OOC from Satomi Ahn
+		std::string restriction;
+
+		// We might want to redirect this chat or emote (and exit this function early on)
+		if (utf8text.find ("/me ") == 0 // emote
+			|| utf8text.find ("/me's") == 0) // emote
+		{
+			if (gAgent.mRRInterface.containsSubstr ("rediremote:"))
+			{
+				restriction = "rediremote:";
+			}
+		}
+		else if (utf8text.find ("((") != 0 || utf8text.find ("))") != utf8text.length () - 2)
+		{
+			if (gAgent.mRRInterface.containsSubstr ("redirchat:"))
+			{
+				restriction = "redirchat:";
+			}
+		}
+
+		if (!restriction.empty())
+		{
+			// Public chat or emote redirected => for each redirection, send the same message on the target channel
+			RRMAP::iterator it = gAgent.mRRInterface.mSpecialObjectBehaviours.begin ();
+			std::string behav;
+			while (it != gAgent.mRRInterface.mSpecialObjectBehaviours.end())
+			{
+				behav = it->second;
+				if (behav.find (restriction) == 0)
+				{
+					S32 ch = atoi (behav.substr (restriction.length()).c_str());
+					std::ostringstream stream;
+					stream << "" << ch;
+					if (!gAgent.mRRInterface.containsWithoutException ("sendchannel", stream.str()))
+					{
+						if (ch > 0 && ch < 2147483647)
+						{
+							LLMessageSystem* msg = gMessageSystem;
+							msg->newMessageFast(_PREHASH_ChatFromViewer);
+							msg->nextBlockFast(_PREHASH_AgentData);
+							msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+							msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+							msg->nextBlockFast(_PREHASH_ChatData);
+							msg->addStringFast(_PREHASH_Message, utf8text);
+							msg->addU8Fast(_PREHASH_Type, type);
+							msg->addS32("Channel", ch);
+
+							gAgent.sendReliableMessage();
+						}
+					}
+				}
+				it++;
+			}
+
+			LLViewerStats::getInstance()->incStat(LLViewerStats::ST_CHAT_COUNT);
+
+			// We have redirected the chat message, don't send it on the original channel
+			return;
+		}
+	}
+
+	std::string crunchedText = utf8text;
+	
+	// There is a redirection in order but this particular message is an emote or an OOC text, so we didn't
+	// redirect it. However it has not gone through crunchEmote yet, so we need to do this here to prevent
+	// cheated, emote-like chat (true emotes must however go through untouched).
+	if (gRRenabled && channel == 0 && gAgent.mRRInterface.containsSubstr ("redirchat:"))
+	{
+		crunchedText = gAgent.mRRInterface.crunchEmote(crunchedText);
+	}
+//mk
+	
 	LLMessageSystem* msg = gMessageSystem;
 	msg->newMessageFast(_PREHASH_ChatFromViewer);
 	msg->nextBlockFast(_PREHASH_AgentData);
 	msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
 	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 	msg->nextBlockFast(_PREHASH_ChatData);
-	msg->addStringFast(_PREHASH_Message, utf8_out_text);
+//MK	
+////	msg->addStringFast(_PREHASH_Message, utf8_out_text);
+	msg->addStringFast(_PREHASH_Message, crunchedText);
+//mk
 	msg->addU8Fast(_PREHASH_Type, type);
 	msg->addS32("Channel", channel);
 
@@ -662,7 +874,14 @@ public:
 				retval = true;
 		// Send unescaped message, see EXT-6353.
 		std::string unescaped_mesg (LLURI::unescape(tokens[1].asString()));
-		send_chat_from_viewer(unescaped_mesg, CHAT_TYPE_NORMAL, channel);
+//MK
+				if (gRRenabled && channel == 0 && gAgent.mRRInterface.contains ("chatnormal"))
+				{
+					send_chat_from_viewer(unescaped_mesg, CHAT_TYPE_WHISPER, channel);
+				}
+				else
+//mk
+				send_chat_from_viewer(unescaped_mesg, CHAT_TYPE_NORMAL, channel);
 			}
 			else
 			{
