@@ -90,7 +90,6 @@ LLShaderFeatures::LLShaderFeatures()
 LLGLSLShader::LLGLSLShader()
 	: mProgramObject(0), mActiveTextureChannels(0), mShaderLevel(0), mShaderGroup(SG_DEFAULT), mUniformsDirty(FALSE)
 {
-
 }
 
 void LLGLSLShader::unload()
@@ -465,8 +464,8 @@ void LLGLSLShader::bindNoShader(void)
 	LLVertexBuffer::unbind();
 	if (gGLManager.mHasShaderObjects)
 	{
-		glUseProgramObjectARB(0);
-		sCurBoundShader = 0;
+	glUseProgramObjectARB(0);
+	sCurBoundShader = 0;
 		sCurBoundShaderPtr = NULL;
 	}
 }
@@ -818,13 +817,13 @@ GLint LLGLSLShader::getUniformLocation(const string& uniform)
 }
 
 GLint LLGLSLShader::getUniformLocation(U32 index)
-{
+	{
 	GLint ret = -1;
 	if (mProgramObject > 0)
-	{
+		{
 		llassert(index < mUniform.size());
 		return mUniform[index];
-	}
+		}
 
 	return ret;
 }
