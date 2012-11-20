@@ -1235,12 +1235,8 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 //MK
 					mText->mLastMessageText = temp_string;
 //mk
-					
-					if (mDrawable.notNull())
-					{
-						setChanged(MOVED | SILHOUETTE);
-						gPipeline.markMoved(mDrawable, FALSE); // undamped
-					}
+
+					setChanged(MOVED | SILHOUETTE);
 				}
 				else if (mText.notNull())
 				{
@@ -2052,12 +2048,12 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 		|| (new_angv != old_angv))
 	{
 		if (new_rot != mPreviousRotation)
-	{
+		{
 			resetRot();
 		}
 		else if (new_angv != old_angv)
 		{
-			if (flagUsePhysics() || new_angv.isExactlyZero())
+			if (flagUsePhysics())
 			{
 				resetRot();
 			}
@@ -2074,7 +2070,6 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 		setRotation(new_rot * mAngularVelocityRot);
 		setChanged(ROTATED | SILHOUETTE);
 	}
-
 
 	if ( gShowObjectUpdates )
 	{
