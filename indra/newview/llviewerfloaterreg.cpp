@@ -34,6 +34,8 @@
 #include "ao.h"				// ## Zi: Animation Overrider
 #include "floaterhop.h"
 #include "fsfloaterprofile.h" // <FS:KC legacy profiles>
+#include "fsfloatersearch.h"
+#include "fsfloatersearchlegacy.h"
 #include "llcompilequeue.h"
 #include "llfasttimerview.h"
 #include "llfloaterabout.h"
@@ -342,5 +344,7 @@ void LLViewerFloaterReg::registerFloaters()
 	// *NOTE: Please keep these alphabetized for easier merges
 	LLFloaterReg::add("animation_overrider", "floater_ao.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FloaterAO>);	// ## Zi: Animation Overrider	
 	LLFloaterReg::add("fs_import", "floater_fs_import.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterImport>);
+	// <FS:CR> FIRE-6310: Include Legacy Search
+	LLFloaterReg::add("search_legacy", "floater_fs_search_legacy.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterSearchLegacy>);
 	LLFloaterReg::registerControlVariables(); // Make sure visibility and rect controls get preserved when saving
 }

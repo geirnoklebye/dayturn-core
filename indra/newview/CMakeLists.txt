@@ -109,13 +109,15 @@ set(viewer_SOURCE_FILES
     fsexport.cpp
     fsfloaterimport.cpp
     fsfloaterprofile.cpp
+    fsfloatersearch.cpp
+    fsfloatersearchlegacy.cpp
     fspanelclassified.cpp
     fspanelprofile.cpp
     ao.cpp
     aoengine.cpp
     aoset.cpp
     fspanelprofileclassifieds.cpp
-	fslightshare.cpp
+    fslightshare.cpp
     groupchatlistener.cpp
     chatbar_as_cmdline.cpp	
     daeexport.cpp
@@ -710,17 +712,19 @@ set(viewer_HEADER_FILES
     ao.h
     aoengine.h
     aoset.h
-	floaterhop.h
-	fscommon.h
+    floaterhop.h
+    fscommon.h
     fsexport.h
     fsfloaterimport.h
     fsfloaterprofile.h
+    fsfloatersearch.h
+    fsfloatersearchlegacy.h
     fspanelclassified.h
     fspanelprofile.h
     fspanelprofileclassifieds.h
-	fslightshare.h
+    fslightshare.h
     groupchatlistener.h
-	chatbar_as_cmdline.h
+    chatbar_as_cmdline.h
     daeexport.h
     llaccountingcostmanager.h
     llagent.h
