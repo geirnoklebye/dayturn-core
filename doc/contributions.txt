@@ -186,6 +186,7 @@ ArminWeatherHax
 	STORM-1532
 Armin Weatherwax
 	VWR-8436
+	KOKUA-1152
 ArminasX Saiman
 Arya Braveheart
 Asaeda Meltingdots

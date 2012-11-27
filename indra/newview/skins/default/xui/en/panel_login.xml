@@ -63,7 +63,7 @@
           font="SansSerifSmall"
           height="16"
           name="username_text"
-          top="35"
+top="10"
           left="15"
           width="150">
         Username:
@@ -91,7 +91,7 @@
           font="SansSerifSmall"
           height="16"
           name="password_text"
-          top="35"
+top="10"
           left="175"
           width="150">
         Password:
@@ -165,7 +165,33 @@
           layout="topleft"
           top_pad="2"
           name="server_combo"
-          width="135" />
+          width="180"
+  visible="true" >
+</combo_box>
+<button
+  follows="left|bottom"
+  height="19"
+  image_unselected="PushButton_Off"
+  image_selected="PushButton_On"
+  image_overlay="Refresh_Off"
+  label=" "
+  layout="topleft"
+  left_pad="1"
+  name="add_grid_btn"
+  top_delta="1"
+  width="20" />
+<button
+  follows="left|bottom"
+  height="23"
+  is_toggle="true"
+  image_unselected="PushButton_Off"
+  image_selected="PushButton_On_Selected"
+  label="Grid Manager"
+  layout="topleft"
+  left_pad="1"
+  name="select_grids_btn"
+  top_delta="-1"
+  width="86" />
     </layout_panel>
     <layout_panel
         auto_resize="false"

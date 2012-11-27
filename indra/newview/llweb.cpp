@@ -42,6 +42,7 @@
 #include "lltoastalertpanel.h"
 #include "llui.h"
 #include "lluri.h"
+#include "viewerinfo.h"
 #include "llversioninfo.h"
 #include "llviewercontrol.h"
 #include "llviewernetwork.h"
@@ -178,18 +179,21 @@ std::string LLWeb::escapeURL(const std::string& url)
 std::string LLWeb::expandURLSubstitutions(const std::string &url,
 										  const LLSD &default_subs)
 {
-	LLSD substitution = default_subs;
-	substitution["VERSION"] = LLVersionInfo::getVersion();
-	substitution["VERSION_MAJOR"] = LLVersionInfo::getMajor();
-	substitution["VERSION_MINOR"] = LLVersionInfo::getMinor();
-	substitution["VERSION_PATCH"] = LLVersionInfo::getPatch();
-	substitution["VERSION_BUILD"] = LLVersionInfo::getBuild();
-	substitution["CHANNEL"] = LLVersionInfo::getChannel();
-	substitution["GRID"] = LLGridManager::getInstance()->getGridId();
-	substitution["GRID_LOWERCASE"] = utf8str_tolower(LLGridManager::getInstance()->getGridId());
-	substitution["OS"] = LLAppViewer::instance()->getOSInfo().getOSStringSimple();
-	substitution["SESSION_ID"] = gAgent.getSessionID();
-	substitution["FIRST_LOGIN"] = gAgent.isFirstLogin();
+        LLSD substitution = default_subs;
+		substitution["VERSION"] = ViewerInfo::versionFull();
+		substitution["VERSION_MAJOR"] = ViewerInfo::versionMajor();
+		substitution["VERSION_MINOR"] = ViewerInfo::versionMinor();
+		substitution["VERSION_PATCH"] = ViewerInfo::versionPatch();
+		substitution["CHANNEL"] = ViewerInfo::viewerName();
+		// substitution["GRID"] = LLGridManager::getInstance()->getGridLabel();
+		// substitution["GRID_LOWERCASE"] = utf8str_tolower(LLGridManager::getInstance()->getGridLabel());
+		//NOTE: getGridLabel() returns e.g. "Second Life"
+		//	  getGridNick() returns e.g. "agni"
+		substitution["GRID"] = LLGridManager::getInstance()->getGridNick();
+		substitution["GRID_LOWERCASE"] = utf8str_tolower(LLGridManager::getInstance()->getGridNick());
+		substitution["OS"] = LLAppViewer::instance()->getOSInfo().getOSStringSimple();
+		substitution["SESSION_ID"] = gAgent.getSessionID();
+		substitution["FIRST_LOGIN"] = gAgent.isFirstLogin();
 
 	// work out the current language
 	std::string lang = LLUI::getLanguage();
@@ -218,6 +222,8 @@ std::string LLWeb::expandURLSubstitutions(const std::string &url,
 		parcel_id = parcel->getLocalID();
 	}
 	substitution["PARCEL_ID"] = llformat("%d", parcel_id);
+
+	substitution["SLURL_TYPE"] = "hop";
 
 	// expand all of the substitution strings and escape the url
 	std::string expanded_url = url;

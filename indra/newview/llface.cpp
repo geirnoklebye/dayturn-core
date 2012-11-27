@@ -795,8 +795,8 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
 		min = face.mExtents[0];
 		max = face.mExtents[1];
 		
-		llassert(less_than_max_mag(min));
-		llassert(less_than_max_mag(max));
+		// llassert(less_than_max_mag(min));
+		// llassert(less_than_max_mag(max));
 
 		//min, max are in volume space, convert to drawable render space
 		LLVector4a center;
@@ -808,8 +808,8 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
 		size.setSub(max, min);
 		size.mul(0.5f);
 
-		llassert(less_than_max_mag(min));
-		llassert(less_than_max_mag(max));
+		// llassert(less_than_max_mag(min));
+		// llassert(less_than_max_mag(max));
 
 		if (!global_volume)
 		{
@@ -848,7 +848,7 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
 		
 		newMin = newMax = center;
 		
-		llassert(less_than_max_mag(center));
+		// llassert(less_than_max_mag(center));
 		
 		for (U32 i = 0; i < 4; i++)
 		{
@@ -862,8 +862,8 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
 			newMin.setMin(newMin,min);
 			newMax.setMax(newMax,max);
 
-			llassert(less_than_max_mag(newMin));
-			llassert(less_than_max_mag(newMax));
+			// llassert(less_than_max_mag(newMin));
+			// llassert(less_than_max_mag(newMax));
 		}
 
 		if (!mDrawablep->isActive())
@@ -873,20 +873,20 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
 			newMin.add(offset);
 			newMax.add(offset);
 			
-			llassert(less_than_max_mag(newMin));
-			llassert(less_than_max_mag(newMax));
+			// llassert(less_than_max_mag(newMin));
+			// llassert(less_than_max_mag(newMax));
 		}
 
 		t.setAdd(newMin, newMax);
 		t.mul(0.5f);
 
-		llassert(less_than_max_mag(t));
+		// llassert(less_than_max_mag(t));
 		
 		//VECTORIZE THIS
 		mCenterLocal.set(t.getF32ptr());
 		
-		llassert(less_than_max_mag(newMin));
-		llassert(less_than_max_mag(newMax));
+		// llassert(less_than_max_mag(newMin));
+		// llassert(less_than_max_mag(newMax));
 
 		t.setSub(newMax,newMin);
 		mBoundingSphereRadius = t.getLength3().getF32()*0.5f;
@@ -2067,7 +2067,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 			LLVector4a src;
 
 			U32 vec[4];
-			vec[0] = vec[1] = vec[2] = vec[3] = color.mAll;
+			vec[0] = vec[1] = vec[2] = vec[3] = color.asRGBA();
 		
 			src.loadua((F32*) vec);
 

@@ -26,6 +26,7 @@
 
 #include "llviewerprecompiledheaders.h"
 
+#include "llappviewer.h"
 #include "llworldmapmessage.h"
 #include "message.h"
 
@@ -188,8 +189,14 @@ void LLWorldMapMessage::processMapBlockReply(LLMessageSystem* msg, void**)
 		U32 y_world = (U32)(y_regions) * REGION_WIDTH_UNITS;
 
 		// name shouldn't be empty, see EXT-4568
-		llassert(!name.empty());
-
+// <AW: opensim>
+		// was: llassert(!name.empty())
+		// which made debug builds impossible to use on OpenSim
+		if(name.empty())
+		{
+			llwarns << "MapBlockReply returned empty region name, not inserting in  the world map" << llendl;
+		}
+// </AW: opensim>
 		// Insert that region in the world map, if failure, flag it as a "null_sim"
 		if (!(LLWorldMap::getInstance()->insertRegion(x_world, y_world, name, image_id, (U32)accesscode, region_flags)))
 		{
@@ -229,7 +236,6 @@ void LLWorldMapMessage::processMapBlockReply(LLMessageSystem* msg, void**)
 	// Tell the UI to update itself
 	gFloaterWorldMap->updateSims(found_null_sim);
 }
-
 // public static
 void LLWorldMapMessage::processMapItemReply(LLMessageSystem* msg, void**)
 {

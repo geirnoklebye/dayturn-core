@@ -314,6 +314,10 @@ public:
 	/*virtual*/ BOOL		canDeselect() const;
 	/*virtual*/ void		deselect();
 
+//<FS:KC - expose ParseHTML setting>
+	void        setParseHTML(bool parse_html) { mParseHTML = parse_html; }
+//</FS:KC - expose ParseHTML setting>
+
 	// LLSpellCheckMenuHandler overrides
 	/*virtual*/ bool		getSpellCheck() const;
 
