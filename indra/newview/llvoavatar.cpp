@@ -629,6 +629,7 @@ F32 LLVOAvatar::sLODFactor = 1.f;
 F32 LLVOAvatar::sPhysicsLODFactor = 1.f;
 BOOL LLVOAvatar::sUseImpostors = FALSE;
 BOOL LLVOAvatar::sJointDebug = FALSE;
+
 F32 LLVOAvatar::sUnbakedTime = 0.f;
 F32 LLVOAvatar::sUnbakedUpdateTime = 0.f;
 F32 LLVOAvatar::sGreyTime = 0.f;
@@ -668,6 +669,9 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mTitle(),
 	mNameAway(false),
 	mNameBusy(false),
+//MK
+	mNameTyping(false),
+//mk
 	mNameMute(false),
 	mNameAppearance(false),
 	mNameFriend(false),
@@ -805,14 +809,14 @@ void LLVOAvatar::debugAvatarRezTime(std::string notification_name, std::string c
 //------------------------------------------------------------------------
 LLVOAvatar::~LLVOAvatar()
 {
-	if (!mFullyLoaded)
-	{
+		if (!mFullyLoaded)
+		{
 		debugAvatarRezTime("AvatarRezLeftCloudNotification","left after ruth seconds as cloud");
-	}
-	else
-	{
+		}
+		else
+		{
 		debugAvatarRezTime("AvatarRezLeftNotification","left sometime after declouding");
-	}
+		}
 
 	lldebugs << "LLVOAvatar Destructor (0x" << this << ") id:" << mID << llendl;
 
@@ -1430,7 +1434,11 @@ const LLVector3 LLVOAvatar::getRenderPosition() const
 	{
 		return getPositionAgent();
 	}
-	else if (isRoot())
+//MK
+	// Protect from a potential crash
+////	else if (isRoot())
+	else if (isRoot() || !(mDrawable->getParent()))
+//mk
 	{
 		if ( !mHasPelvisOffset )
 		{
@@ -2353,12 +2361,11 @@ U32 LLVOAvatar::processUpdateMessage(LLMessageSystem *mesgsys,
 	U32 retval = LLViewerObject::processUpdateMessage(mesgsys, user_data, block_num, update_type, dp);
 
 	// Print out arrival information once we have name of avatar.
-	if (has_name && getNVPair("FirstName"))
-	{
-		mDebugExistenceTimer.reset();
+		if (has_name && getNVPair("FirstName"))
+		{
+			mDebugExistenceTimer.reset();
 		debugAvatarRezTime("AvatarRezArrivedNotification","avatar arrived");
 	}
-
 	if(retval & LLViewerObject::INVALID_UPDATE)
 	{
 		if (isSelf())
@@ -2866,8 +2873,8 @@ void LLVOAvatar::idleUpdateLoadingEffect()
 		{
 			LL_INFOS("Avatar") << avString() << "self isFullyLoaded, mFirstFullyVisible" << LL_ENDL;
 			mFirstFullyVisible = FALSE;
-			LLAppearanceMgr::instance().onFirstFullyVisible();
-		}
+				LLAppearanceMgr::instance().onFirstFullyVisible();
+			}
 		if (isFullyLoaded() && mFirstFullyVisible && !isSelf())
 		{
 			LL_INFOS("Avatar") << avString() << "other isFullyLoaded, mFirstFullyVisible" << LL_ENDL;
@@ -3003,6 +3010,13 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 								 && gSavedSettings.getS32("AvatarNameTagMode") ));
 	}
 
+//MK
+	// hide the names above the heads
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		render_name = FALSE;
+	}
+//mk
 	if ( !render_name )
 	{
 		if (mNameText)
@@ -3015,43 +3029,43 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		return;
 	}
 
-	BOOL new_name = FALSE;
-	if (visible_chat != mVisibleChat)
-	{
-		mVisibleChat = visible_chat;
-		new_name = TRUE;
-	}
+		BOOL new_name = FALSE;
+		if (visible_chat != mVisibleChat)
+		{
+			mVisibleChat = visible_chat;
+			new_name = TRUE;
+		}
 		
-	if (sRenderGroupTitles != mRenderGroupTitles)
-	{
-		mRenderGroupTitles = sRenderGroupTitles;
-		new_name = TRUE;
-	}
+		if (sRenderGroupTitles != mRenderGroupTitles)
+		{
+			mRenderGroupTitles = sRenderGroupTitles;
+			new_name = TRUE;
+		}
 
-	// First Calculate Alpha
-	// If alpha > 0, create mNameText if necessary, otherwise delete it
-	F32 alpha = 0.f;
-	if (mAppAngle > 5.f)
-	{
-		const F32 START_FADE_TIME = NAME_SHOW_TIME - FADE_DURATION;
-		if (!visible_chat && sRenderName == RENDER_NAME_FADE && time_visible > START_FADE_TIME)
-		{
-			alpha = 1.f - (time_visible - START_FADE_TIME) / FADE_DURATION;
-		}
-		else
-		{
-			// ...not fading, full alpha
-			alpha = 1.f;
-		}
-	}
-	else if (mAppAngle > 2.f)
-	{
-		// far away is faded out also
-		alpha = (mAppAngle-2.f)/3.f;
-	}
+		// First Calculate Alpha
+		// If alpha > 0, create mNameText if necessary, otherwise delete it
+			F32 alpha = 0.f;
+			if (mAppAngle > 5.f)
+			{
+				const F32 START_FADE_TIME = NAME_SHOW_TIME - FADE_DURATION;
+				if (!visible_chat && sRenderName == RENDER_NAME_FADE && time_visible > START_FADE_TIME)
+				{
+					alpha = 1.f - (time_visible - START_FADE_TIME) / FADE_DURATION;
+				}
+				else
+				{
+					// ...not fading, full alpha
+					alpha = 1.f;
+				}
+			}
+			else if (mAppAngle > 2.f)
+			{
+				// far away is faded out also
+				alpha = (mAppAngle-2.f)/3.f;
+			}
 
 	if (alpha <= 0.f)
-	{
+			{
 		if (mNameText)
 		{
 			mNameText->markDead();
@@ -3061,19 +3075,19 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		return;
 	}
 
-	if (!mNameText)
-	{
+				if (!mNameText)
+				{
 		mNameText = static_cast<LLHUDNameTag*>( LLHUDObject::addHUDObject(
-													LLHUDObject::LL_HUD_NAME_TAG) );
+			LLHUDObject::LL_HUD_NAME_TAG) );
 		//mNameText->setMass(10.f);
-		mNameText->setSourceObject(this);
+					mNameText->setSourceObject(this);
 		mNameText->setVertAlignment(LLHUDNameTag::ALIGN_VERT_TOP);
-		mNameText->setVisibleOffScreen(TRUE);
-		mNameText->setMaxLines(11);
-		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
-		sNumVisibleChatBubbles++;
-		new_name = TRUE;
-	}
+					mNameText->setVisibleOffScreen(TRUE);
+					mNameText->setMaxLines(11);
+					mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
+					sNumVisibleChatBubbles++;
+					new_name = TRUE;
+				}
 				
 	LLVector3 name_position = idleUpdateNameTagPosition(root_pos_last);
 	mNameText->setPositionAgent(name_position);				
@@ -3082,16 +3096,19 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 }
 
 void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
-{
-	LLNameValue *title = getNVPair("Title");
-	LLNameValue* firstname = getNVPair("FirstName");
-	LLNameValue* lastname = getNVPair("LastName");
+			{
+		LLNameValue *title = getNVPair("Title");
+		LLNameValue* firstname = getNVPair("FirstName");
+		LLNameValue* lastname = getNVPair("LastName");
 
 	// Avatars must have a first and last name
 	if (!firstname || !lastname) return;
 
 	bool is_away = mSignaledAnimations.find(ANIM_AGENT_AWAY)  != mSignaledAnimations.end();
 	bool is_busy = mSignaledAnimations.find(ANIM_AGENT_BUSY) != mSignaledAnimations.end();
+//MK
+	bool is_typing = getTyping();
+//mk
 	bool is_appearance = mSignaledAnimations.find(ANIM_AGENT_CUSTOMIZE) != mSignaledAnimations.end();
 	bool is_muted;
 	if (isSelf())
@@ -3099,23 +3116,23 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		is_muted = false;
 	}
 	else
-	{
+		{
 		is_muted = LLMuteList::getInstance()->isMuted(getID());
 	}
 	bool is_friend = LLAvatarTracker::instance().isBuddy(getID());
 	bool is_cloud = getIsCloud();
 
-	if (is_appearance != mNameAppearance)
-	{
-		if (is_appearance)
-		{
+				if (is_appearance != mNameAppearance)
+				{
+					if (is_appearance)
+					{
 			debugAvatarRezTime("AvatarRezEnteredAppearanceNotification","entered appearance mode");
-		}
-		else
-		{
+					}
+					else
+					{
 			debugAvatarRezTime("AvatarRezLeftAppearanceNotification","left appearance mode");
-		}
-	}
+				}
+			}
 
 	// Rebuild name tag if state change detected
 	if (mNameString.empty()
@@ -3124,57 +3141,70 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		|| (title && mTitle != title->getString())
 		|| is_away != mNameAway 
 		|| is_busy != mNameBusy 
+//MK
+		|| is_typing != mNameTyping 
+//mk
 		|| is_muted != mNameMute
-		|| is_appearance != mNameAppearance 
+				|| is_appearance != mNameAppearance 
 		|| is_friend != mNameFriend
 		|| is_cloud != mNameCloud)
-	{
+				{
 		LLColor4 name_tag_color = getNameTagColor(is_friend);
 
 		clearNameTag();
 
-		if (is_away || is_muted || is_busy || is_appearance)
-		{
+//MK
+////		if (is_away || is_muted || is_busy || is_appearance)
+		if (is_away || is_muted || is_busy || is_appearance || is_typing)
+//mk
+				{
 			std::string line;
-			if (is_away)
-			{
-				line += LLTrans::getString("AvatarAway");
+					if (is_away)
+					{
+						line += LLTrans::getString("AvatarAway");
 				line += ", ";
-			}
-			if (is_busy)
-			{
+					}
+					if (is_busy)
+					{
 				line += LLTrans::getString("AvatarBusy");
 				line += ", ";
 			}
-			if (is_muted)
-			{
-				line += LLTrans::getString("AvatarMuted");
+//MK
+					if (is_typing)
+					{
+				line += LLTrans::getString("AvatarTyping");
 				line += ", ";
 			}
+//mk
+			if (is_muted)
+						{
+				line += LLTrans::getString("AvatarMuted");
+							line += ", ";
+						}
 			if (is_appearance)
 			{
 				line += LLTrans::getString("AvatarEditingAppearance");
 				line += ", ";
-			}
+					}
 			if (is_cloud)
-			{
+					{
 				line += LLTrans::getString("LoadingData");
 				line += ", ";
 			}
 			// trim last ", "
 			line.resize( line.length() - 2 );
 			addNameTagLine(line, name_tag_color, LLFontGL::NORMAL,
-						   LLFontGL::getFontSansSerifSmall());
+				LLFontGL::getFontSansSerifSmall());
 		}
 
 		if (sRenderGroupTitles
 			&& title && title->getString() && title->getString()[0] != '\0')
-		{
+						{
 			std::string title_str = title->getString();
 			LLStringFn::replace_ascii_controlchars(title_str,LL_UNKNOWN_CHAR);
 			addNameTagLine(title_str, name_tag_color, LLFontGL::NORMAL,
-						   LLFontGL::getFontSansSerifSmall());
-		}
+				LLFontGL::getFontSansSerifSmall());
+						}
 
 		static LLUICachedControl<bool> show_display_names("NameTagShowDisplayNames");
 		static LLUICachedControl<bool> show_usernames("NameTagShowUsernames");
@@ -3187,120 +3217,123 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				// ...call this function back when the name arrives
 				// and force a rebuild
 				LLAvatarNameCache::get(getID(),
-									   boost::bind(&LLVOAvatar::clearNameTag, this));
-			}
+					boost::bind(&LLVOAvatar::clearNameTag, this));
+					}
 
 			// Might be blank if name not available yet, that's OK
 			if (show_display_names)
 			{
 				addNameTagLine(av_name.mDisplayName, name_tag_color, LLFontGL::NORMAL,
-							   LLFontGL::getFontSansSerif());
-			}
+					LLFontGL::getFontSansSerif());
+				}
 			// Suppress SLID display if display name matches exactly (ugh)
 			if (show_usernames && !av_name.mIsDisplayNameDefault)
-			{
+				{
 				// *HACK: Desaturate the color
 				LLColor4 username_color = name_tag_color * 0.83f;
 				addNameTagLine(av_name.mUsername, username_color, LLFontGL::NORMAL,
-							   LLFontGL::getFontSansSerifSmall());
+					LLFontGL::getFontSansSerifSmall());
 			}
-		}
+				}
 		else
-		{
+				{
 			const LLFontGL* font = LLFontGL::getFontSansSerif();
 			std::string full_name =
 				LLCacheName::buildFullName( firstname->getString(), lastname->getString() );
 			addNameTagLine(full_name, name_tag_color, LLFontGL::NORMAL, font);
-		}
+				}
 
-		mNameAway = is_away;
-		mNameBusy = is_busy;
-		mNameMute = is_muted;
-		mNameAppearance = is_appearance;
+				mNameAway = is_away;
+				mNameBusy = is_busy;
+//MK
+				mNameTyping = is_typing;
+//mk
+				mNameMute = is_muted;
+				mNameAppearance = is_appearance;
 		mNameFriend = is_friend;
-		mNameCloud = is_cloud;
-		mTitle = title ? title->getString() : "";
-		LLStringFn::replace_ascii_controlchars(mTitle,LL_UNKNOWN_CHAR);
-		new_name = TRUE;
-	}
+				mNameCloud = is_cloud;
+				mTitle = title ? title->getString() : "";
+				LLStringFn::replace_ascii_controlchars(mTitle,LL_UNKNOWN_CHAR);
+				new_name = TRUE;
+			}
 
 	if (mVisibleChat)
-	{
-		mNameText->setFont(LLFontGL::getFontSansSerif());
+			{
+				mNameText->setFont(LLFontGL::getFontSansSerif());
 		mNameText->setTextAlignment(LLHUDNameTag::ALIGN_TEXT_LEFT);
-		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS * 2.f, 5.f);
+				mNameText->setFadeDistance(CHAT_NORMAL_RADIUS * 2.f, 5.f);
 			
-		char line[MAX_STRING];		/* Flawfinder: ignore */
-		line[0] = '\0';
-		std::deque<LLChat>::iterator chat_iter = mChats.begin();
-		mNameText->clearString();
+				char line[MAX_STRING];		/* Flawfinder: ignore */
+				line[0] = '\0';
+				std::deque<LLChat>::iterator chat_iter = mChats.begin();
+				mNameText->clearString();
 
-		LLColor4 new_chat = LLUIColorTable::instance().getColor( isSelf() ? "UserChatColor" : "AgentChatColor" );
-		LLColor4 normal_chat = lerp(new_chat, LLColor4(0.8f, 0.8f, 0.8f, 1.f), 0.7f);
-		LLColor4 old_chat = lerp(normal_chat, LLColor4(0.6f, 0.6f, 0.6f, 1.f), 0.7f);
-		if (mTyping && mChats.size() >= MAX_BUBBLE_CHAT_UTTERANCES) 
-		{
-			++chat_iter;
-		}
+				LLColor4 new_chat = LLUIColorTable::instance().getColor( isSelf() ? "UserChatColor" : "AgentChatColor" );
+				LLColor4 normal_chat = lerp(new_chat, LLColor4(0.8f, 0.8f, 0.8f, 1.f), 0.7f);
+				LLColor4 old_chat = lerp(normal_chat, LLColor4(0.6f, 0.6f, 0.6f, 1.f), 0.7f);
+				if (mTyping && mChats.size() >= MAX_BUBBLE_CHAT_UTTERANCES) 
+				{
+					++chat_iter;
+				}
 
-		for(; chat_iter != mChats.end(); ++chat_iter)
-		{
-			F32 chat_fade_amt = llclamp((F32)((LLFrameTimer::getElapsedSeconds() - chat_iter->mTime) / CHAT_FADE_TIME), 0.f, 4.f);
-			LLFontGL::StyleFlags style;
-			switch(chat_iter->mChatType)
-			{
-				case CHAT_TYPE_WHISPER:
-				style = LLFontGL::ITALIC;
-				break;
-				case CHAT_TYPE_SHOUT:
-				style = LLFontGL::BOLD;
-				break;
-				default:
-				style = LLFontGL::NORMAL;
-				break;
-			}
-			if (chat_fade_amt < 1.f)
-			{
-				F32 u = clamp_rescale(chat_fade_amt, 0.9f, 1.f, 0.f, 1.f);
-				mNameText->addLine(chat_iter->mText, lerp(new_chat, normal_chat, u), style);
-			}
-			else if (chat_fade_amt < 2.f)
-			{
-				F32 u = clamp_rescale(chat_fade_amt, 1.9f, 2.f, 0.f, 1.f);
-				mNameText->addLine(chat_iter->mText, lerp(normal_chat, old_chat, u), style);
-			}
-			else if (chat_fade_amt < 3.f)
-			{
-				// *NOTE: only remove lines down to minimum number
-				mNameText->addLine(chat_iter->mText, old_chat, style);
-			}
-		}
-		mNameText->setVisibleOffScreen(TRUE);
+				for(; chat_iter != mChats.end(); ++chat_iter)
+				{
+					F32 chat_fade_amt = llclamp((F32)((LLFrameTimer::getElapsedSeconds() - chat_iter->mTime) / CHAT_FADE_TIME), 0.f, 4.f);
+					LLFontGL::StyleFlags style;
+					switch(chat_iter->mChatType)
+					{
+						case CHAT_TYPE_WHISPER:
+							style = LLFontGL::ITALIC;
+							break;
+						case CHAT_TYPE_SHOUT:
+							style = LLFontGL::BOLD;
+							break;
+						default:
+							style = LLFontGL::NORMAL;
+							break;
+					}
+					if (chat_fade_amt < 1.f)
+					{
+						F32 u = clamp_rescale(chat_fade_amt, 0.9f, 1.f, 0.f, 1.f);
+						mNameText->addLine(chat_iter->mText, lerp(new_chat, normal_chat, u), style);
+					}
+					else if (chat_fade_amt < 2.f)
+					{
+						F32 u = clamp_rescale(chat_fade_amt, 1.9f, 2.f, 0.f, 1.f);
+						mNameText->addLine(chat_iter->mText, lerp(normal_chat, old_chat, u), style);
+					}
+					else if (chat_fade_amt < 3.f)
+					{
+						// *NOTE: only remove lines down to minimum number
+						mNameText->addLine(chat_iter->mText, old_chat, style);
+					}
+				}
+				mNameText->setVisibleOffScreen(TRUE);
 
-		if (mTyping)
-		{
-			S32 dot_count = (llfloor(mTypingTimer.getElapsedTimeF32() * 3.f) + 2) % 3 + 1;
-			switch(dot_count)
-			{
-				case 1:
-				mNameText->addLine(".", new_chat);
-				break;
-				case 2:
-				mNameText->addLine("..", new_chat);
-				break;
-				case 3:
-				mNameText->addLine("...", new_chat);
-				break;
-			}
+				if (mTyping)
+				{
+					S32 dot_count = (llfloor(mTypingTimer.getElapsedTimeF32() * 3.f) + 2) % 3 + 1;
+					switch(dot_count)
+					{
+						case 1:
+							mNameText->addLine(".", new_chat);
+							break;
+						case 2:
+							mNameText->addLine("..", new_chat);
+							break;
+						case 3:
+							mNameText->addLine("...", new_chat);
+							break;
+					}
 
-		}
-	}
-	else
-	{
+				}
+			}
+			else
+			{
 		// ...not using chat bubbles, just names
 		mNameText->setTextAlignment(LLHUDNameTag::ALIGN_TEXT_CENTER);
-		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
-		mNameText->setVisibleOffScreen(FALSE);
+				mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
+				mNameText->setVisibleOffScreen(FALSE);
 	}
 }
 
@@ -3323,8 +3356,8 @@ void LLVOAvatar::clearNameTag()
 {
 	mNameString.clear();
 	if (mNameText)
-	{
-		mNameText->setLabel("");
+				{
+					mNameText->setLabel("");
 		mNameText->setString( "" );
 	}
 }
@@ -4216,11 +4249,11 @@ U32 LLVOAvatar::renderSkinned(EAvatarRenderPass pass)
 	{	//LOD changed or new mesh created, allocate new vertex buffer if needed
 		if (needs_rebuild || mDirtyMesh >= 2 || mVisibilityRank <= 4)
 		{
-			updateMeshData();
+		updateMeshData();
 			mDirtyMesh = 0;
-			mNeedsSkin = TRUE;
-			mDrawable->clearState(LLDrawable::REBUILD_GEOMETRY);
-		}
+		mNeedsSkin = TRUE;
+		mDrawable->clearState(LLDrawable::REBUILD_GEOMETRY);
+	}
 	}
 
 	if (LLViewerShaderMgr::instance()->getVertexShaderLevel(LLViewerShaderMgr::SHADER_AVATAR) <= 0)
@@ -4376,7 +4409,7 @@ U32 LLVOAvatar::renderSkinned(EAvatarRenderPass pass)
 
 		if (should_alpha_mask && !LLGLSLShader::sNoFixedFunction)
 		{
-			gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
+		gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
 		}
 
 		if (!LLDrawPoolAvatar::sSkipTransparent || LLPipeline::sImpostorRender)
@@ -4475,7 +4508,7 @@ U32 LLVOAvatar::renderRigid()
 
 	if (should_alpha_mask && !LLGLSLShader::sNoFixedFunction)
 	{
-		gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
+	gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
 	}
 	
 	return num_indices;
@@ -4976,8 +5009,11 @@ BOOL LLVOAvatar::isAnyAnimationSignaled(const LLUUID *anim_array, const S32 num_
 //-----------------------------------------------------------------------------
 void LLVOAvatar::resetAnimations()
 {
-	LLKeyframeMotion::flushKeyframeCache();
-	flushAllMotions();
+//MK
+////	LLKeyframeMotion::flushKeyframeCache();
+////	flushAllMotions();
+	mMotionController.updateMotions(true);
+//mk
 }
 
 // Override selectively based on avatar sex and whether we're using new
@@ -6106,7 +6142,7 @@ LLViewerJointAttachment* LLVOAvatar::getTargetAttachmentPoint(LLViewerObject* vi
 //-----------------------------------------------------------------------------
 // attachObject()
 //-----------------------------------------------------------------------------
-const LLViewerJointAttachment *LLVOAvatar::attachObject(LLViewerObject *viewer_object)
+const LLViewerJointAttachment *LLVOAvatar::attachObject(LLViewerObject* viewer_object)
 {
 	LLViewerJointAttachment* attachment = getTargetAttachmentPoint(viewer_object);
 
@@ -6291,12 +6327,31 @@ BOOL LLVOAvatar::detachObject(LLViewerObject *viewer_object)
 //-----------------------------------------------------------------------------
 void LLVOAvatar::sitDown(BOOL bSitting)
 {
+//MK
+	BOOL was_sitting = mIsSitting;
+//mk
 	mIsSitting = bSitting;
 	if (isSelf())
 	{
 		// Update Movement Controls according to own Sitting mode
 		LLFloaterMove::setSittingMode(bSitting);
 	}
+//MK
+	if (gRRenabled && isSelf())
+	{
+		// If we are being forced to stand up (prim derezzing or calling llUnsit() ), snap back to the previous
+		// standing location if under @standtp
+		if (was_sitting)
+		{
+			if (gAgent.mRRInterface.contains ("standtp"))
+			{
+				gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
+				gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
+				gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
+			}
+		}
+	}
+//mk
 }
 
 //-----------------------------------------------------------------------------
@@ -6304,6 +6359,13 @@ void LLVOAvatar::sitDown(BOOL bSitting)
 //-----------------------------------------------------------------------------
 void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 {
+//MK
+	if (gRRenabled && sit_object && isSelf())
+	{
+		gAgent.mRRInterface.setSitTargetId (sit_object->getID());
+	}
+//mk
+
 	if (isSelf())
 	{
 		// Might be first sit
@@ -6326,6 +6388,7 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 	{
 		return;
 	}
+
 	LLQuaternion inv_obj_rot = ~sit_object->getRenderRotation();
 	LLVector3 obj_pos = sit_object->getRenderPosition();
 
@@ -6345,6 +6408,18 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 
 	stopMotion(ANIM_AGENT_BODY_NOISE);
 
+//MK
+	// Seems there is a bug when sitting while already in Mouselook mode, pitch axis is
+	// inverted. A solution to this is to switch to third person look, then immediately
+	// back to Mouselook to make the pitch axis right again. It is a ugly hack, but at 
+	// least it works.
+	if ((gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK)&& isSelf())
+	{
+		gAgentCamera.changeCameraToThirdPerson(FALSE);
+		gAgentCamera.changeCameraToMouselook(FALSE);
+	}
+//mk
+
 }
 
 //-----------------------------------------------------------------------------
@@ -6361,6 +6436,12 @@ void LLVOAvatar::getOffObject()
 
 	if (sit_object) 
 	{
+//MK
+		if (gRRenabled && isSelf())
+		{
+			gAgent.mRRInterface.setSitTargetId (LLUUID::null);
+		}
+//mk
 		stopMotionFromSource(sit_object->getID());
 		LLFollowCamMgr::setCameraActive(sit_object->getID(), FALSE);
 
@@ -6623,8 +6704,8 @@ BOOL LLVOAvatar::processFullyLoadedChange(bool loading)
 	
 	mFullyLoaded = (mFullyLoadedTimer.getElapsedTimeF32() > PAUSE);
 
-	if (!mPreviousFullyLoaded && !loading && mFullyLoaded)
-	{
+		if (!mPreviousFullyLoaded && !loading && mFullyLoaded)
+		{
 		debugAvatarRezTime("AvatarRezNotification","fully loaded");
 	}
 
@@ -7605,7 +7686,7 @@ void LLVOAvatar::onInitialBakedTextureLoaded( BOOL success, LLViewerFetchedTextu
 	
 	LLUUID *avatar_idp = (LLUUID *)userdata;
 	LLVOAvatar *selfp = (LLVOAvatar *)gObjectList.findObject(*avatar_idp);
-	
+
 	if (selfp)
 	{
 		LL_DEBUGS("Avatar") << selfp->avString() << "discard_level " << discard_level << " success " << success << " final " << final << LL_ENDL;

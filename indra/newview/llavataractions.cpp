@@ -305,7 +305,10 @@ void LLAvatarActions::startConference(const uuid_vec_t& ids)
 static const char* get_profile_floater_name(const LLUUID& avatar_id)
 {
 	// Use different floater XML for our profile to be able to save its rect.
-	return avatar_id == gAgentID ? "my_profile" : "profile";
+//MK
+////	return avatar_id == gAgentID ? "my_profile" : "profile";
+	return "profile";
+//mk
 }
 
 static void on_avatar_name_show_profile(const LLUUID& agent_id, const LLAvatarName& av_name)
@@ -315,15 +318,26 @@ static void on_avatar_name_show_profile(const LLUUID& agent_id, const LLAvatarNa
 	{
 		username = LLCacheName::buildUsername(av_name.mDisplayName);
 	}
-	
-	llinfos << "opening web profile for " << username << llendl;		
-	std::string url = getProfileURL(username);
 
-	// PROFILES: open in webkit window
+//MK	
+	if ( (!gSavedSettings.getBOOL("ShowProfileFloaters")) || ((gAgent.getID() == agent_id)) )
+	{
+//mk
+		llinfos << "opening web profile for " << username << llendl;		
+		std::string url = getProfileURL(username);
+	
+		// PROFILES: open in webkit window
 	LLFloaterWebContent::Params p;
 	p.url(url).
 		id(agent_id.asString());
 	LLFloaterReg::showInstance(get_profile_floater_name(agent_id), p);
+//MK
+	}
+	else
+	{
+		LLFloaterReg::showInstance("floater_profile_view", LLSD().with("id", agent_id));
+	}
+//mk
 }
 
 // static
@@ -449,6 +463,7 @@ void LLAvatarActions::share(const LLUUID& id)
 	LLSD key;
 	LLFloaterSidePanelContainer::showPanel("inventory", key);
 
+
 	LLUUID session_id = gIMMgr->computeSessionID(IM_NOTHING_SPECIAL,id);
 
 	if (!gIMMgr->hasSession(session_id))
@@ -465,6 +480,7 @@ void LLAvatarActions::share(const LLUUID& id)
 
 namespace action_give_inventory
 {
+
 	/**
 	 * Returns a pointer to 'Add More' inventory panel of Edit Outfit SP.
 	 */
@@ -494,7 +510,6 @@ namespace action_give_inventory
 	/**
 	 * Checks My Inventory visibility.
 	 */
-
 	static bool is_give_inventory_acceptable()
 	{
 		// check selection in the panel

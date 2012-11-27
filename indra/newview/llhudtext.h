@@ -131,6 +131,12 @@ protected:
 	void renderText();
 	static void updateAll();
 	S32 getMaxLines();
+	
+//MK
+public:
+	// This variable is here to allow one to refresh a HUD text by calling setStringUTF8, it is set when an update message is received
+	std::string mLastMessageText;
+//mk
 
 private:
 	~LLHUDText();
@@ -162,6 +168,10 @@ private:
 	EVertAlignment	mVertAlignment;
 	BOOL			mHidden;
 
+//MK
+	// I am making these members public. I know, it's evil, but they are needed in RRInterface. None of them will be harmed, promised.
+public:
+//mk
 	static BOOL    sDisplayText ;
 	static std::set<LLPointer<LLHUDText> > sTextObjects;
 	static std::vector<LLPointer<LLHUDText> > sVisibleTextObjects;
