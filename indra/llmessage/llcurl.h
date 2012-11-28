@@ -460,7 +460,7 @@ private:
 			}
 			else
 			{
-				return (U32)lhs < (U32)rhs;
+				return (ptrdiff_t)lhs < (ptrdiff_t)rhs;
 			}
 		}
 	};
