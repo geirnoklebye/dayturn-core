@@ -218,7 +218,7 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	childSetAction("add_grid_btn", onClickAddGrid, this);
 	childSetAction("select_grids_btn", onClickSelectGrid, this);
 
-	getChild<LLPanel>("links_login_panel")->setDefaultBtn("connect_btn");
+	getChild<LLPanel>("login")->setDefaultBtn("connect_btn");
 
 	std::string version = ViewerInfo::versionNumber();
 	//LLTextBox* channel_text = getChild<LLTextBox>("channel_text");
@@ -229,7 +229,8 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	LLTextBox* forgot_password_text = getChild<LLTextBox>("forgot_password_text");
 	forgot_password_text->setClickedCallback(onClickForgotPassword, NULL);
 
-	childSetAction("create_new_account_btn", onClickNewAccount, NULL);
+	LLTextBox* create_new_account_text = getChild<LLTextBox>("create_new_account_text");
+	create_new_account_text->setClickedCallback(onClickNewAccount, NULL);
 
 	LLTextBox* need_help_text = getChild<LLTextBox>("login_help");
 	need_help_text->setClickedCallback(onClickHelp, NULL);
@@ -699,10 +700,12 @@ void LLPanelLogin::updateLocationSelectorsVisibility()
 	if (sInstance) 
 	{
 		BOOL show_start = gSavedSettings.getBOOL("ShowStartLocation");
-		sInstance->getChild<LLLayoutPanel>("start_location_panel")->setVisible(show_start);
+		sInstance->getChildView("start_location_combo")->setVisible(show_start);
+		sInstance->getChildView("start_location_text")->setVisible(show_start);
 
 		BOOL show_server = gSavedSettings.getBOOL("ForceShowGrid");
-		sInstance->getChild<LLLayoutPanel>("grid_panel")->setVisible(show_server);
+		LLComboBox* server_choice_combo = sInstance->getChild<LLComboBox>("server_combo");
+		server_choice_combo->setVisible( show_server );
 	}	
 }
 
@@ -1126,10 +1129,6 @@ void LLPanelLogin::updateServer()
 				bool remember = sInstance->getChild<LLUICtrl>("remember_check")->getValue();
 				sInstance->setFields(credential, remember);
 			}
-			// Want to vanish not only create_new_account_btn, but also the
-			// title text over it, so turn on/off the whole layout_panel element.
-			sInstance->getChild<LLLayoutPanel>("links")->setVisible(system_grid);
-			sInstance->getChildView("forgot_password_text")->setVisible(system_grid);
 		loadLoginPage();
 		updateLocationCombo(LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION);
 
