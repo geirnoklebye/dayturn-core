@@ -249,6 +249,7 @@ BOOL FSFloaterSearchLegacy::postBuild()
 	//childSetAction("parcel_profile_btn", boost::bind(&FSFloaterSearchLegacy::onBtnParcelProfile, this));
 	childSetAction("parcel_teleport_btn", boost::bind(&FSFloaterSearchLegacy::onBtnParcelTeleport, this));
 	childSetAction("parcel_map_btn", boost::bind(&FSFloaterSearchLegacy::onBtnParcelMap, this));
+	childSetAction("search_results_land", boost::bind(&FSFloaterSearchLegacy::onBtnFind, this));
 	getChildView("Next")->setEnabled(FALSE);
 	getChildView("Back")->setEnabled(FALSE);
 	
@@ -385,6 +386,7 @@ void FSFloaterSearchLegacy::refreshSearchJunk()
 	childSetVisible("edit_area", isLand());
 	childSetVisible("price_check", isLand());
 	childSetVisible("area_check", isLand());
+	childSetVisible("ascending_check", isLand());
 	getChildView("Edit")->setEnabled(!isLand());;
 	//Yipee!
 }
@@ -829,8 +831,18 @@ void FSFloaterSearchLegacy::find()
                 return;
 			}
 			
-			U32 category = findChild<LLComboBox>("land_category")->getSelectedValue().asInteger();
-
+			U32 category = ST_ALL;
+			const std::string& selection = findChild<LLComboBox>("land_category")->getSelectedValue().asString();
+			if (!selection.empty())
+			{
+				if (selection == "Auction")
+					category = ST_AUCTION;
+				else if (selection == "Mainland")
+					category = ST_MAINLAND;
+				else if (selection == "Estate")
+					category = ST_ESTATE;
+			}
+			
 			U32 scope = 0;
 			if (gAgent.wantsPGOnly())
 				scope |= DFQ_PG_SIMS_ONLY;
@@ -843,6 +855,24 @@ void FSFloaterSearchLegacy::find()
 				scope |= DFQ_INC_MATURE;
 			if (inc_adult && adult_enabled)
 				scope |= DFQ_INC_ADULT;
+			const std::string& sort = findChild<LLComboBox>("land_sort_combo")->getSelectedValue().asString();
+			if (!sort.empty())
+			{
+				if (sort == "Name")
+					scope |= DFQ_NAME_SORT;
+				else if (sort == "Price")
+					scope |= DFQ_PRICE_SORT;
+				else if (sort == "PPM")
+					scope |= DFQ_PER_METER_SORT;
+				else if (sort == "Area")
+					scope |= DFQ_AREA_SORT;
+			}
+			else
+			{
+				scope |= DFQ_PRICE_SORT;
+			}
+			if (childGetValue("ascending_check").asBoolean())
+				scope |= DFQ_SORT_ASC;
 			if (limit_price)
 				scope |= DFQ_LIMIT_BY_PRICE;
 			if (limit_area)
@@ -857,8 +887,9 @@ void FSFloaterSearchLegacy::find()
 								price,
 								area,
 								mStartSearch);
-			getChild<LLScrollListCtrl>("search_results_land")->deleteAllItems();
-			getChild<LLScrollListCtrl>("search_results_land")->setCommentText(getString("searching"));
+			LLScrollListCtrl* search_results = getChild<LLScrollListCtrl>("search_results_land");
+			search_results->deleteAllItems();
+			search_results->setCommentText(getString("searching"));
 			setLoadingProgress(true);
 			break;
 		}
@@ -960,7 +991,7 @@ void FSFloaterSearchLegacy::sendLandSearchQuery(LLMessageSystem* msg,
 	msg->addS32("QueryStart", query_start);
 	gAgent.sendReliableMessage();
 	
-	llinfos << "Firing off places search request: " << query_id << llendl;
+	llinfos << "Firing off places search request: " << query_id << category << llendl;
 }
 
 void FSFloaterSearchLegacy::sendClassifiedsSearchQuery(LLMessageSystem* msg,
@@ -1435,7 +1466,7 @@ void FSFloaterSearchLegacy::processSearchLandReply(LLMessageSystem* msg, void**)
 	
 	// Not for us
 	if (agent_id != gAgent.getID()) return;
-	lldebugs << "received directory request - QueryID: " << query_id << " AgentID: " << agent_id << llendl;
+	llinfos << "received directory request - QueryID: " << query_id << " AgentID: " << agent_id << llendl;
 	
 	FSFloaterSearchLegacy* self = LLFloaterReg::findTypedInstance<FSFloaterSearchLegacy>("search_legacy");
 	// floater is closed or these are not results from our last request
