@@ -617,6 +617,13 @@ bool LLSelectMgr::linkObjects()
 
 bool LLSelectMgr::unlinkObjects()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit
+		&& gAgent.mRRInterface.isSittingOnAnySelectedObject())
+	{
+		return true;
+	}
+//mk
 	LLSelectMgr::getInstance()->sendDelink();
 	return true;
 }
@@ -631,6 +638,13 @@ bool LLSelectMgr::unlinkObjects()
 // reasonable expectation for the link to work, but it will fail.
 bool LLSelectMgr::enableLinkObjects()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit
+		&& gAgent.mRRInterface.isSittingOnAnySelectedObject())
+	{
+		return false;
+	}
+//mk
 	bool new_value = false;
 	// check if there are at least 2 objects selected, and that the
 	// user can modify at least one of the selected objects.
@@ -658,6 +672,13 @@ bool LLSelectMgr::enableLinkObjects()
 
 bool LLSelectMgr::enableUnlinkObjects()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit
+		&& gAgent.mRRInterface.isSittingOnAnySelectedObject())
+	{
+		return false;
+	}
+//mk
 	LLViewerObject* first_editable_object = LLSelectMgr::getInstance()->getSelection()->getFirstEditableObject();
 	LLViewerObject *root_object = (first_editable_object == NULL) ? NULL : first_editable_object->getRootEdit();
 
@@ -3305,6 +3326,13 @@ void LLSelectMgr::selectDelete()
 		{
 			continue;
 		}
+		
+//MK
+		if (gRRenabled && obj->isSeat ()  && gAgent.mRRInterface.mContainsUnsit)
+		{
+			continue;
+		}
+//mk
 
 		deleteable_count++;
 
@@ -5473,6 +5501,7 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
 
 	gGL.getTexUnit(0)->bind(mSilhouetteImagep);
 	LLGLSPipelineSelection gls_select;
+	gGL.setAlphaRejectSettings(LLRender::CF_GREATER, 0.f);
 	LLGLEnable blend(GL_BLEND);
 	LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
 
@@ -5599,6 +5628,7 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
 	}
 
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+	gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
 }
 
 void LLSelectMgr::generateSilhouette(LLSelectNode* nodep, const LLVector3& view_point)
