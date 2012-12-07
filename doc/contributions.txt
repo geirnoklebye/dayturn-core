@@ -186,6 +186,7 @@ ArminWeatherHax
 	STORM-1532
 Armin Weatherwax
 	VWR-8436
+	KOKUA-1152
 ArminasX Saiman
 Arya Braveheart
 Asaeda Meltingdots
@@ -311,6 +312,7 @@ Cron Stardust
 	VWR-10579
 	VWR-25120
 	STORM-1075
+	STORM-1919
 Cypren Christenson
 	STORM-417
 Dante Tucker

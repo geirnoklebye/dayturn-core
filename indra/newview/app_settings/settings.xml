@@ -2,7 +2,207 @@
 <llsd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="llsd.xsd">
 <map>
-	<key>CrashHostUrl</key>
+  <key>ShowStreamMetadata</key>
+  <map>
+    <key>Comment</key>
+    <string>Shows stream metadata (artist, title) in local chat.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>1</integer>
+  </map>
+  <key>StreamMetadataAnnounceToChat</key>
+  <map>
+    <key>Comment</key>
+    <string>Announces stream metadata to a defined chat channel.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
+  <key>StreamMetadataAnnounceChannel</key>
+  <map>
+    <key>Comment</key>
+    <string>Chat channel where stream metadata is announced to.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>S32</string>
+    <key>Value</key>
+    <integer>362394</integer>
+  </map>
+    <key>SkinCurrentTheme</key>
+    <map>
+      <key>Comment</key>
+      <string>The selected theme for the current skin.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string>default</string>
+    </map>
+    <key>SkinCurrentTheme</key>
+    <map>
+      <key>Comment</key>
+      <string>The selected theme for the current skin.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string>default</string>
+    </map>
+    <!-- ## Zi: Pie menu -->
+    <key>OverridePieColors</key>
+    <map>
+            <key>Comment</key>
+            <string>Override the pie menu color defined by the currently selected skin</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>Boolean</string>
+            <key>Value</key>
+            <integer>0</integer>
+    </map>
+    <key>PieMenuOpacity</key>
+    <map>
+            <key>Comment</key>
+            <string>Opacity for the pie menu background</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>F32</string>
+            <key>Value</key>
+            <real>0.85</real>
+    </map>
+    <key>PieMenuFade</key>
+    <map>
+            <key>Comment</key>
+            <string>Fade out for the pie menu background towards the edges</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>F32</string>
+            <key>Value</key>
+            <real>0.3</real>
+    </map>
+    <key>UISndPieMenuAppear</key>
+    <map>
+            <key>Comment</key>
+            <string>Sound file for opening pie menu (uuid for sound asset)</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>String</string>
+            <key>Value</key>
+            <string>8eaed61f-92ff-6485-de83-4dcc938a478e</string>
+    </map>
+    <key>UISndPieMenuHide</key>
+    <map>
+            <key>Comment</key>
+            <string>Sound file for closing pie menu (uuid for sound asset)</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>String</string>
+            <key>Value</key>
+            <string>00000000-0000-0000-0000-000000000000</string>
+    </map>
+    <key>UISndPieMenuSliceHighlight0</key>
+    <map>
+            <key>Comment</key>
+            <string>Sound file for selecting pie menu item 0 (uuid for sound asset)</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>String</string>
+            <key>Value</key>
+            <string>d9f73cf8-17b4-6f7a-1565-7951226c305d</string>
+    </map>
+    <key>UISndPieMenuSliceHighlight1</key>
+    <map>
+            <key>Comment</key>
+            <string>Sound file for selecting pie menu item 1 (uuid for sound asset)</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>String</string>
+            <key>Value</key>
+            <string>f6ba9816-dcaf-f755-7b67-51b31b6233e5</string>
+    </map>
+    <key>UISndPieMenuSliceHighlight2</key>
+    <map>
+            <key>Comment</key>
+            <string>Sound file for selecting pie menu item 2 (uuid for sound asset)</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>String</string>
+            <key>Value</key>
+            <string>7aff2265-d05b-8b72-63c7-dbf96dc2f21f</string>
+    </map>
+    <key>UISndPieMenuSliceHighlight3</key>
+    <map>
+            <key>Comment</key>
+            <string>Sound file for selecting pie menu item 3 (uuid for sound asset)</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>String</string>
+            <key>Value</key>
+            <string>09b2184e-8601-44e2-afbb-ce37434b8ba1</string>
+    </map>
+    <key>UISndPieMenuSliceHighlight4</key>
+    <map>
+            <key>Comment</key>
+            <string>Sound file for selecting pie menu item 4 (uuid for sound asset)</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>String</string>
+            <key>Value</key>
+            <string>bbe4c7fc-7044-b05e-7b89-36924a67593c</string>
+    </map>
+    <key>UISndPieMenuSliceHighlight5</key>
+    <map>
+            <key>Comment</key>
+            <string>Sound file for selecting pie menu item 5 (uuid for sound asset)</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>String</string>
+            <key>Value</key>
+            <string>d166039b-b4f5-c2ec-4911-c85c727b016c</string>
+    </map>
+    <key>UISndPieMenuSliceHighlight6</key>
+    <map>
+            <key>Comment</key>
+            <string>Sound file for selecting pie menu item 6 (uuid for sound asset)</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>String</string>
+            <key>Value</key>
+            <string>242af82b-43c2-9a3b-e108-3b0c7e384981</string>
+    </map>
+    <key>UISndPieMenuSliceHighlight7</key>
+    <map>
+            <key>Comment</key>
+            <string>Sound file for selecting pie menu item 7 (uuid for sound asset)</string>
+            <key>Persist</key>
+            <integer>1</integer>
+            <key>Type</key>
+            <string>String</string>
+            <key>Value</key>
+            <string>c1f334fb-a5be-8fe7-22b3-29631c21cf0b</string>
+    </map>
+    <!-- ## Zi: Pie menu -->
+    <key>CrashHostUrl</key>
     <map>
       <key>Comment</key>
       <string>A URL pointing to a crash report handler; overrides cluster negotiation to locate crash handler.</string>
@@ -335,6 +535,17 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <key>GridListDownload</key>
+    <map>
+      <key>Comment</key>
+      <string>Wether to fetch a grid list from the URL specified in GridListDownloadURL.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
     <key>AutoReplace</key>
     <map>
       <key>Comment</key>
@@ -346,6 +557,27 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+  <key>GridListDownloadURL</key>
+  <map>
+    <key>Comment</key>
+    <string>Fetch a grid list from this URL.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string>http://localhost/grids.xml</string>
+  </map>
+  <key>ShowMutedAvatarsAsCloud</key>
+  <map>
+    <key>Comment</key>
+    <string>If true, show muted avatars as clouds.</string>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
   <key>AutoAcceptNewInventory</key>
     <map>
       <key>Comment</key>
@@ -1672,19 +1904,44 @@
       <key>Value</key>
       <string />
     </map>
-    <key>CmdLineLoginURI</key>
-    <map>
-      <key>Comment</key>
-      <string>Command line specified login server and CGI prefix to use.</string>
-      <key>Persist</key>
+  <key>CmdLineLoginURI</key>
+  <map>
+    <key>Comment</key>
+    <string>Command line specified login server and CGI prefix to use.</string>
+    <key>Persist</key>
+    <integer>0</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string />
+  </map>
+  <key>GridSelectorURI</key>
+  <map>
+    <key>Comment</key>
+    <string>URL that provides grid hop:// uris (adjust size: GridSelectorRect)</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string>http://ubuntuone.com/06v4P4LWWjFCA4XcyaguRj</string>
+  </map>
+  <key>GridSelectorRect</key>
+  <map>
+    <key>Comment</key>
+    <string>Rectangle for grid selector</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Rect</string>
+    <key>Value</key>
+    <array>
       <integer>0</integer>
-      <key>Type</key>
-      <string>LLSD</string>
-      <key>Value</key>
-      <array>
-        <string />
-      </array>
-    </map>
+      <integer>210</integer>
+      <integer>300</integer>
+      <integer>0</integer>
+    </array>
+  </map>  
     <key>ConnectAsGod</key>
     <map>
       <key>Comment</key>
@@ -1958,7 +2215,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>1</integer>
+      <integer>0</integer>
     </map>
     <key>DebugInventoryFilters</key>
     <map>
@@ -3895,7 +4152,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>ForceMandatoryUpdate</key>
     <map>
@@ -4324,7 +4581,7 @@
 		<key>Type</key>
 		<string>Boolean</string>
 		<key>Value</key>
-		<integer>0</integer>
+		<integer>1</integer>
 	</map>
 	<key>InventoryOutboxLogging</key>
 	<map>
@@ -12217,7 +12474,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>UseDebugMenus</key>
     <map>
@@ -12228,7 +12485,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>UseDefaultColorPicker</key>
     <map>
@@ -14070,6 +14327,18 @@
         <real>1.0</real>
       </array>
     </map>
+  <key>FSUseWebProfiles</key>
+  <map>
+    <key>Comment</key>
+    <string>Shows web profiles instead of the v1-style profile floater</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
+     <key>DebugSearch</key>
 
   <key>SimulateFBOFailure</key>
   <map>
@@ -14082,5 +14351,82 @@
     <key>Value</key>
     <integer>0</integer>
   </map>
+    <map>
+      <key>Comment</key>
+      <string>If TRUE use search url as given  in SearchURLDebug</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>SearchURLDebug</key>
+    <map>
+      <key>Comment</key>
+      <string>Debug URL for Search website. Overrides any other search URL if DebugSearch is   true. Displayed in the Find floater</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string/>
+    </map>
+    <key>SearchURLOpenSim</key>
+    <map>
+      <key>Comment</key>
+      <string>Fallback URL for Search website if the loginservice doesn't provide a search URL. Displayed in the Find floater</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string>http://search.metaverseink.com/opensim/results.jsp?query=[QUERY]&amp;submit=[CATEGORY]</string>
+    </map>
+    <key>OpensimPrefsAddGrid</key>
+    <map>
+      <key>Comment</key>
+      <string>Transient string for adding new grids in Preferences  Opensim</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string/>
+    </map>
+  <key>FSMaxMeshRequestsPerSecond</key>
+  <map>
+    <key>Comment</key>
+    <string>The maximum number of mesh requests per second.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>U32</string>
+    <key>Value</key>
+    <integer>100</integer>
+  </map>
+  <key>FSMeshRequestTimeout</key>
+  <map>
+    <key>Comment</key>
+    <string>The timeout in seconds for a mesh header or LOD data request after that the request will be sent again.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>F32</string>
+    <key>Value</key>
+    <integer>10.0</integer>
+  </map>
+  <key>FSMeshUploadPossible</key>
+  <map>
+    <key>Comment</key>
+    <string>If true, shows dummy (preview) avatars in radar.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>1</integer>
+  </map>
+  
 </map>
 </llsd>

@@ -293,7 +293,7 @@ std::string LLDir::buildSLOSCacheDir() const
 	}
 	else
 	{
-		res = add(getOSCacheDir(), "SecondLife");
+		res = getOSCacheDir() + mDirDelimiter + "kokua";
 	}
 	return res;
 }

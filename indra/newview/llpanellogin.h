@@ -44,7 +44,7 @@ class LLPanelLogin:
 {
 	LOG_CLASS(LLPanelLogin);
 public:
-	LLPanelLogin(const LLRect &rect,
+	LLPanelLogin(const LLRect &rect, BOOL show_server, 
 				void (*callback)(S32 option, void* user_data),
 				void *callback_data);
 	~LLPanelLogin();
@@ -57,7 +57,7 @@ public:
 	// hidden on startup for reg-in-client
 	static void showLoginWidgets();
 
-	static void show(const LLRect &rect,
+	static void show(const LLRect &rect, BOOL show_server, 
 		void (*callback)(S32 option, void* user_data), 
 		void* callback_data);
 
@@ -68,17 +68,18 @@ public:
 	static BOOL areCredentialFieldsDirty();
 	static void setLocation(const LLSLURL& slurl);
 	
+	static void updateLocationCombo(bool force_visible);  // simply update the combo box
 	/// Call when preferences that control visibility may have changed
 	static void updateLocationSelectorsVisibility();
 
 	static void closePanel();
 
-	void setSiteIsAlive( bool alive );
+// 	void setSiteIsAlive( bool alive );
 
 	static void loadLoginPage();	
 	static void giveFocus();
 	static void setAlwaysRefresh(bool refresh); 
-	
+
 	// inherited from LLViewerMediaObserver
 	/*virtual*/ void handleMediaEvent(LLPluginClassMedia* self, EMediaEvent event);
 	static void updateServer();  // update the combo box, change the login page to the new server, clear the combo
@@ -91,16 +92,23 @@ private:
 	void reshapeBrowser();
 	void addFavoritesToStartLocation();
 	void addUsersWithFavoritesToUsername();
-	void onSelectServer();
+//	void onSelectServer();
 	void onLocationSLURL();
 
-	static void onClickConnect(void*);
+    static void onClickConnect(void*);
+	static void onClickAddGrid(void*);
+	static void onClickSelectGrid(void*);
 	static void onClickNewAccount(void*);
 	static void onClickVersion(void*);
 	static void onClickForgotPassword(void*);
 	static void onClickHelp(void*);
 	static void onPassKey(LLLineEditor* caller, void* user_data);
+	static void onSelectServer(LLUICtrl*, void*);
+	static void onServerComboLostFocus(LLFocusableElement*);
+	static void gridListChanged(bool success);// <FS:AW  grid management>
 	static void updateServerCombo();
+	static void updateStartSLURL();
+	static void updateLoginPanelLinks();
 
 private:
 	LLPointer<LLUIImage> mLogoImage;
@@ -113,6 +121,8 @@ private:
 
 	static LLPanelLogin* sInstance;
 	static BOOL		sCapslockDidNotification;
+	BOOL			mHtmlAvailable;
+	std::string mLoginPage;
 };
 
 #endif

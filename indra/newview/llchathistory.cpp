@@ -63,7 +63,7 @@ static LLDefaultChildRegistry::Register<LLChatHistory> r("chat_history");
 
 const static std::string NEW_LINE(rawstr_to_utf8("\n"));
 
-const static std::string SLURL_APP_AGENT = "secondlife:///app/agent/";
+const static std::string SLURL_APP_AGENT = "hop:///app/agent/";
 const static std::string SLURL_ABOUT = "/about";
 
 // support for secondlife:///app/objectim/{UUID}/ SLapps
@@ -344,7 +344,7 @@ public:
 				icon->setValue(LLSD("OBJECT_Icon"));
 				break;
 			case CHAT_SOURCE_SYSTEM:
-				icon->setValue(LLSD("SL_Logo"));
+				icon->setValue(LLSD("Kokua_Logo"));
 				break;
 			case CHAT_SOURCE_UNKNOWN: 
 				icon->setValue(LLSD("Unknown_Icon"));

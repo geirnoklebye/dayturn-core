@@ -53,34 +53,100 @@ LLStreamingAudio_MediaPlugins::~LLStreamingAudio_MediaPlugins()
 
 void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 {
+	if (url.empty()) 
+	{
+		return;
+	}
+	
+	std::string test_url(url);
+	//llinfos << "Starting internet stream: " << test_url << llendl;
+	// note: it's okay if mURL is empty here
+	if (mURL != test_url)
+	{
+		// stop any previous stream that was playing
+		// this happens on parcel crossings, usually
+		stop();
+
+		if (mMediaPlugin)
+		{
+			mMediaPlugin->reset();
+			mMediaPlugin = initializeMedia("audio/mpeg");
+		}
+	}
+	mURL = test_url;
+
+#ifdef LL_DARWIN
+	// We need to change http:// streams to icy:// in order to use them with quicktime.
+	// This isn't a good place to put this, but none of this is good, so... -- MC
+	LLURI uri(test_url);
+	std::string scheme = uri.scheme();
+	if ((scheme.empty() || "http" == scheme || "https" == scheme) &&
+		((test_url.length() > 4) &&
+		 (test_url.substr(test_url.length()-4, 4) != ".pls") &&		// Shoutcast listen.pls playlists
+		 (test_url.substr(test_url.length()-4, 4) != ".m3u"))		// Icecast liten.m3u playlists
+		)
+	{
+		std::string temp_url = "icy:" + uri.opaque();
+		test_url = temp_url; 
+	}
+#endif //LL_DARWIN
+	
 	if (!mMediaPlugin) // lazy-init the underlying media plugin
 	{
 		mMediaPlugin = initializeMedia("audio/mpeg"); // assumes that whatever media implementation supports mp3 also supports vorbis.
 		llinfos << "streaming audio mMediaPlugin is now " << mMediaPlugin << llendl;
 	}
+	else if (mMediaPlugin->isPluginExited()) // If our reset didn't work right, try again
+	{
+		mMediaPlugin->reset();
+		mMediaPlugin = initializeMedia("audio/mpeg");
+	}
 
 	if(!mMediaPlugin)
 		return;
 
-	if (!url.empty()) {
-		llinfos << "Starting internet stream: " << url << llendl;
-		mURL = url;
-		mMediaPlugin->loadURI ( url );
+	if (!url.empty()) 
+	{
+		std::string test_url(url);
+		// We need to change http:// streams to icy:// in order to use them with quicktime.
+		// This isn't a good place to put this, but none of this is good, so... -- MC
+#ifdef LL_DARWIN
+		LLURI uri(test_url);
+		std::string scheme = uri.scheme();
+		if ((scheme.empty() || "http" == scheme || "https" == scheme) &&
+			((test_url.length() > 4) &&
+			 (test_url.substr(test_url.length()-4, 4) != ".pls") &&		// Shoutcast listen.pls playlists
+			 (test_url.substr(test_url.length()-4, 4) != ".m3u"))		// Icecast liten.m3u playlists
+			)
+		{
+			std::string temp_url = "icy:" + uri.opaque();
+			test_url = temp_url; 
+		}
+#endif //LL_DARWIN
+		//llinfos << "Starting internet stream: " << test_url << llendl;
+		mURL = test_url;
+		mMediaPlugin->loadURI ( test_url );
 		mMediaPlugin->start();
-		llinfos << "Playing stream..." << llendl;		
-	} else {
-		llinfos << "setting stream to NULL"<< llendl;
-		mURL.clear();
-		mMediaPlugin->stop();
+		llinfos << "Playing internet stream: " << mURL << llendl;		
+		mMediaPlugin->start();
+		llinfos << "Attempting to play internet stream: " << mURL << llendl;	
+	}
+	else
+	{
+		//llinfos << "setting stream to NULL"<< llendl;
+		stop();
 	}
 }
 
 void LLStreamingAudio_MediaPlugins::stop()
 {
+
 	llinfos << "Stopping internet stream." << llendl;
 	if(mMediaPlugin)
 	{
 		mMediaPlugin->stop();
+		// MURDER DEATH KILL -- MC
+		//mMediaPlugin->forceCleanUpPlugin();
 	}
 
 	mURL.clear();
@@ -164,3 +230,24 @@ LLPluginClassMedia* LLStreamingAudio_MediaPlugins::initializeMedia(const std::st
 	return media_source;
 }
 
+// <ND> stream metadata from plugin
+bool LLStreamingAudio_MediaPlugins::hasNewMetadata()
+{
+	if (!mMediaPlugin)
+		return false;
+
+	return mTitle != mMediaPlugin->getTitle() || mArtist != mMediaPlugin->getArtist();
+}
+
+std::string LLStreamingAudio_MediaPlugins::getCurrentArtist()
+{
+	mArtist = mMediaPlugin->getArtist();
+	return mArtist;
+}
+
+std::string LLStreamingAudio_MediaPlugins::getCurrentTitle()
+{
+	mTitle = mMediaPlugin->getTitle();
+	return mTitle;
+}
+// </ND>

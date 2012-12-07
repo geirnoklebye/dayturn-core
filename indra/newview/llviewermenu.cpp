@@ -81,8 +81,10 @@
 #include "llinventorybridge.h"
 #include "llinventorydefines.h"
 #include "llinventoryfunctions.h"
+#include "lllogininstance.h" // <FS:AW  opensim destinations and avatar picker>
 #include "llpanellogin.h"
 #include "llpanelblockedlist.h"
+#include "piemenu.h"		// ## Zi: Pie menu
 #include "llmoveview.h"
 #include "llparcel.h"
 #include "llrootview.h"
@@ -157,13 +159,20 @@ LLMenuGL		*gPopupMenuView = NULL;
 LLMenuGL		*gEditMenu = NULL;
 LLMenuBarGL		*gLoginMenuBarView = NULL;
 
-// Pie menus
+// Context menus
 LLContextMenu	*gMenuAvatarSelf	= NULL;
 LLContextMenu	*gMenuAvatarOther = NULL;
 LLContextMenu	*gMenuObject = NULL;
 LLContextMenu	*gMenuAttachmentSelf = NULL;
 LLContextMenu	*gMenuAttachmentOther = NULL;
 LLContextMenu	*gMenuLand	= NULL;
+// ## Zi: Pie menus
+PieMenu		*gPieMenuAvatarSelf	= NULL;
+PieMenu		*gPieMenuAvatarOther = NULL;
+PieMenu		*gPieMenuObject = NULL;
+PieMenu		*gPieMenuAttachmentSelf = NULL;
+PieMenu		*gPieMenuAttachmentOther = NULL;
+PieMenu		*gPieMenuLand	= NULL;
 
 const std::string SAVE_INTO_INVENTORY("Save Object Back to My Inventory");
 const std::string SAVE_INTO_TASK_INVENTORY("Save Object Back to Object Contents");
@@ -178,6 +187,12 @@ LLContextMenu* gDetachPieMenu = NULL;
 LLContextMenu* gDetachScreenPieMenu = NULL;
 LLContextMenu* gDetachBodyPartPieMenus[8];
 
+PieMenu* gPieAttachScreenMenu = NULL;
+PieMenu* gPieAttachMenu = NULL;
+PieMenu* gPieAttachBodyPartMenus[8];
+PieMenu* gPieDetachMenu = NULL;
+PieMenu* gPieDetachScreenMenu = NULL;
+PieMenu* gPieDetachBodyPartMenus[8];
 LLMenuItemCallGL* gAFKMenu = NULL;
 LLMenuItemCallGL* gBusyMenu = NULL;
 
@@ -423,6 +438,30 @@ void init_menus()
 	gMenuLand = LLUICtrlFactory::createFromFile<LLContextMenu>(
 		"menu_land.xml", gMenuHolder, registry);
 
+// ## Zi: Pie menu
+	gPieMenuAvatarSelf = LLUICtrlFactory::createFromFile<PieMenu>(
+		"menu_pie_avatar_self.xml", gMenuHolder, registry);
+	gPieMenuAvatarOther = LLUICtrlFactory::createFromFile<PieMenu>(
+		"menu_pie_avatar_other.xml", gMenuHolder, registry);
+
+	// added "Pie" to the control names to keep them unique
+	gPieDetachScreenMenu = gMenuHolder->getChild<PieMenu>("Pie Object Detach HUD", true);
+	gPieDetachMenu = gMenuHolder->getChild<PieMenu>("Pie Object Detach", true);
+
+	gPieMenuObject = LLUICtrlFactory::createFromFile<PieMenu>(
+		"menu_pie_object.xml", gMenuHolder, registry);
+
+	// added "Pie" to the control names to keep them unique
+	gPieAttachScreenMenu = gMenuHolder->getChild<PieMenu>("Pie Object Attach HUD");
+	gPieAttachMenu = gMenuHolder->getChild<PieMenu>("Pie Object Attach");
+
+	gPieMenuAttachmentSelf = LLUICtrlFactory::createFromFile<PieMenu>(
+		"menu_pie_attachment_self.xml", gMenuHolder, registry);
+	gPieMenuAttachmentOther = LLUICtrlFactory::createFromFile<PieMenu>(
+		"menu_pie_attachment_other.xml", gMenuHolder, registry);
+
+	gPieMenuLand = LLUICtrlFactory::createFromFile<PieMenu>(
+		"menu_pie_land.xml", gMenuHolder, registry);
 	///
 	/// set up the colors
 	///
@@ -442,7 +481,7 @@ void init_menus()
 	gPopupMenuView->setBackgroundColor( color );
 
 	// If we are not in production, use a different color to make it apparent.
-	if (LLGridManager::getInstance()->isInProductionGrid())
+	if (!LLGridManager::getInstance()->isInSLBeta())
 	{
 		color = LLUIColorTable::instance().getColor( "MenuBarBgColor" );
 	}
@@ -460,7 +499,7 @@ void init_menus()
 	menu_bar_holder->addChild(gMenuBarView);
   
     gViewerWindow->setMenuBackgroundColor(false, 
-        LLGridManager::getInstance()->isInProductionGrid());
+        !LLGridManager::getInstance()->isInSLBeta());
 
 	// Assume L$10 for now, the server will tell us the real cost at login
 	// *TODO:Also fix cost in llfolderview.cpp for Inventory menus
@@ -756,7 +795,7 @@ class LLAdvancedToggleRenderType : public view_listener_t
 		U32 render_type = render_type_from_string( userdata.asString() );
 		if ( render_type != 0 )
 		{
-			LLPipeline::toggleRenderTypeControl( (void*)render_type );
+			LLPipeline::toggleRenderTypeControl( (void*)(ptrdiff_t)render_type );
 		}
 		return true;
 	}
@@ -772,7 +811,7 @@ class LLAdvancedCheckRenderType : public view_listener_t
 
 		if ( render_type != 0 )
 		{
-			new_value = LLPipeline::hasRenderTypeControl( (void*)render_type );
+			new_value = LLPipeline::hasRenderTypeControl( (void*)(ptrdiff_t)render_type );
 		}
 
 		return new_value;
@@ -831,7 +870,7 @@ class LLAdvancedToggleFeature : public view_listener_t
 		U32 feature = feature_from_string( userdata.asString() );
 		if ( feature != 0 )
 		{
-			LLPipeline::toggleRenderDebugFeature( (void*)feature );
+			LLPipeline::toggleRenderDebugFeature( (void*)(ptrdiff_t)feature );
 		}
 		return true;
 	}
@@ -846,7 +885,7 @@ class LLAdvancedCheckFeature : public view_listener_t
 
 	if ( feature != 0 )
 	{
-		new_value = LLPipeline::toggleRenderDebugFeatureControl( (void*)feature );
+		new_value = LLPipeline::toggleRenderDebugFeatureControl( (void*)(ptrdiff_t)feature );
 	}
 
 	return new_value;
@@ -1054,7 +1093,7 @@ class LLAdvancedToggleInfoDisplay : public view_listener_t
 		
 		if ( info_display != 0 )
 		{
-			LLPipeline::toggleRenderDebug( (void*)info_display );
+			LLPipeline::toggleRenderDebug( (void*)(ptrdiff_t)info_display );
 		}
 
 		return true;
@@ -1073,7 +1112,7 @@ class LLAdvancedCheckInfoDisplay : public view_listener_t
 
 		if ( info_display != 0 )
 		{
-			new_value = LLPipeline::toggleRenderDebugControl( (void*)info_display );
+			new_value = LLPipeline::toggleRenderDebugControl( (void*)(ptrdiff_t)info_display );
 		}
 
 		return new_value;
@@ -3571,7 +3610,7 @@ void set_god_level(U8 god_level)
         if(gViewerWindow)
         {
             gViewerWindow->setMenuBackgroundColor(god_level > GOD_NOT,
-            LLGridManager::getInstance()->isInProductionGrid());
+            !LLGridManager::getInstance()->isInSLBeta());
         }
     
         LLSD args;
@@ -3611,7 +3650,7 @@ BOOL check_toggle_hacked_godmode(void*)
 
 bool enable_toggle_hacked_godmode(void*)
 {
-  return !LLGridManager::getInstance()->isInProductionGrid();
+  return LLGridManager::getInstance()->isInSLBeta();
 }
 #endif
 
@@ -4599,7 +4638,7 @@ BOOL enable_take()
 		return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (!LLGridManager::getInstance()->isInProductionGrid() 
+		if (LLGridManager::getInstance()->isInSLBeta() 
             && gAgent.isGodlike())
 		{
 			return TRUE;
@@ -5219,7 +5258,7 @@ bool enable_object_delete()
 	TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-	(!LLGridManager::getInstance()->isInProductionGrid()
+	(LLGridManager::getInstance()->isInSLBeta()
      && gAgent.isGodlike()) ||
 # endif
 	LLSelectMgr::getInstance()->canDoDelete();
@@ -5936,6 +5975,72 @@ class LLShowHelp : public view_listener_t
 	}
 };
 
+// <AW: OpenSim>
+bool update_grid_help()
+{
+	LLSD grid_info;
+	LLGridManager::getInstance()->getGridData(grid_info);
+	std::string grid_label = LLGridManager::getInstance()->getGridLabel();
+
+	bool needs_seperator = false;
+
+
+	if (LLGridManager::getInstance()->isInOpenSim() && grid_info.has("help"))
+	{
+		needs_seperator = true;
+		gMenuHolder->childSetVisible("current_grid_help",true);
+		gMenuHolder->childSetLabelArg("current_grid_help", "[CURRENT_GRID]", grid_label);
+		gMenuHolder->childSetVisible("current_grid_help_login",true);
+		gMenuHolder->childSetLabelArg("current_grid_help_login", "[CURRENT_GRID]", grid_label);
+	}
+	else
+	{
+		gMenuHolder->childSetVisible("current_grid_help",false);
+		gMenuHolder->childSetVisible("current_grid_help_login",false);
+	}
+	if (LLGridManager::getInstance()->isInOpenSim() && grid_info.has("about"))
+	{
+		needs_seperator = true;
+		gMenuHolder->childSetVisible("current_grid_about",true);
+		gMenuHolder->childSetLabelArg("current_grid_about", "[CURRENT_GRID]", grid_label);
+		gMenuHolder->childSetVisible("current_grid_about_login",true);
+		gMenuHolder->childSetLabelArg("current_grid_about_login", "[CURRENT_GRID]", grid_label);
+	}
+	else
+	{
+		gMenuHolder->childSetVisible("current_grid_about",false);
+		gMenuHolder->childSetVisible("current_grid_about_login",false);
+	}
+	//FIXME: this does nothing
+	gMenuHolder->childSetVisible("grid_help_seperator",needs_seperator);
+	gMenuHolder->childSetVisible("grid_help_seperator_login",needs_seperator);
+
+// <FS:AW  opensim destinations and avatar picker>
+#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
+	if (LLGridManager::getInstance()->isInOpenSim())
+	{
+		if (!LLLoginInstance::getInstance()->hasResponse("destination_guide_url") 
+		||LLLoginInstance::getInstance()->getResponse("destination_guide_url").asString().empty())
+		{
+			llwarns << "Destinations Guide Off" << llendl;
+			gMenuHolder->childSetVisible("Destinations", false);
+		}
+	
+		if (!LLLoginInstance::getInstance()->hasResponse("avatar_picker_url") 
+		||LLLoginInstance::getInstance()->getResponse("avatar_picker_url").asString().empty())
+			llwarns << "Avatar Picker Off" << llendl;
+			gMenuHolder->childSetVisible("Avatar Picker", false);
+		{
+
+		}
+	}
+#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
+// </FS:AW  opensim destinations and avatar picker>
+
+	return true;
+}
+// </AW: OpenSim>
+
 class LLToggleHelp : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -5963,16 +6068,32 @@ class LLToggleSpeak : public view_listener_t
 		return true;
 	}
 };
+//NP
+/*
 class LLShowSidetrayPanel : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
 		std::string floater_name = userdata.asString();
+		std::string panel_name = userdata.asString();
+		std::string udock_name = userdata.asString();
+		if (panel_name == "sidepanel_inventory")
+			udock_name = "sidebar_inventory";
 
-		LLPanel* panel = LLFloaterSidePanelContainer::getPanel(floater_name);
 		if (panel)
+		// AO: Proper behavior if tab is undocked
+		LLFloater* floater_tab = LLFloaterReg::getInstance("side_bar_tab",udock_name);
+		if (LLFloater::isShown(floater_tab) || LLFloater::isMinimized(floater_tab))
 		{
-			if (panel->isInVisibleChain())
+
+			bool isMinimized = floater_tab->isMinimized();
+			floater_tab->setMinimized(!isMinimized);
+		}
+
+		else // Toggle docked sidetray
+		{
+			LLPanel* panel = LLSideTray::getInstance()->getPanel(panel_name);
+			if (panel)
 			{
 				LLFloaterReg::getInstance(floater_name)->closeFloater();
 			}
@@ -5981,6 +6102,7 @@ class LLShowSidetrayPanel : public view_listener_t
 				LLFloaterReg::getInstance(floater_name)->openFloater();
 			}
 		}
+
 		return true;
 	}
 };
@@ -6002,7 +6124,7 @@ class LLSidetrayPanelVisible : public view_listener_t
 		
 	}
 };
-
+*/
 
 bool callback_show_url(const LLSD& notification, const LLSD& response)
 {
@@ -7060,7 +7182,7 @@ bool enable_object_take_copy()
 		all_valid = true;
 #ifndef HACKED_GODLIKE_VIEWER
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (LLGridManager::getInstance()->isInProductionGrid()
+		if (!LLGridManager::getInstance()->isInSLBeta()
             || !gAgent.isGodlike())
 # endif
 		{
@@ -7122,7 +7244,7 @@ BOOL enable_save_into_inventory(void*)
 	return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-	if (!LLGridManager::getInstance()->isInProductionGrid()
+	if (LLGridManager::getInstance()->isInSLBeta()
         && gAgent.isGodlike())
 	{
 		return TRUE;
@@ -7182,7 +7304,9 @@ class LLToggleHowTo : public view_listener_t
 	{
 		LLFloaterWebContent::Params p;
 		std::string url = gSavedSettings.getString("HowToHelpURL");
-		p.url = LLWeb::expandURLSubstitutions(url, LLSD());
+		std::string url_expanded = LLWeb::expandURLSubstitutions(url, LLSD());
+		LL_DEBUGS("WebApi") << "HowToHelpURL \"" << url_expanded << "\"" << LL_ENDL;
+		p.url = url_expanded;
 		p.show_chrome = false;
 		p.target = "__help_how_to";
 		p.show_page_title = false;
@@ -8655,8 +8779,8 @@ void initialize_menus()
 	enable.add("EnableSelectInPathfindingCharacters", boost::bind(&enable_object_select_in_pathfinding_characters));
 
 	view_listener_t::addMenu(new LLFloaterVisible(), "FloaterVisible");
-	view_listener_t::addMenu(new LLShowSidetrayPanel(), "ShowSidetrayPanel");
-	view_listener_t::addMenu(new LLSidetrayPanelVisible(), "SidetrayPanelVisible");
+//NP	view_listener_t::addMenu(new LLShowSidetrayPanel(), "ShowSidetrayPanel");
+//NP	view_listener_t::addMenu(new LLSidetrayPanelVisible(), "SidetrayPanelVisible");
 	view_listener_t::addMenu(new LLSomethingSelected(), "SomethingSelected");
 	view_listener_t::addMenu(new LLSomethingSelectedNoHUD(), "SomethingSelectedNoHUD");
 	view_listener_t::addMenu(new LLEditableSelected(), "EditableSelected");

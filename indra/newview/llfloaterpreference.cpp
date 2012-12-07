@@ -106,7 +106,7 @@
 #include "llpluginclassmedia.h"
 #include "llteleporthistorystorage.h"
 #include "llproxy.h"
-
+#include "llviewernetwork.h"
 #include "lllogininstance.h"        // to check if logged in yet
 #include "llsdserialize.h"
 
@@ -189,6 +189,8 @@ void handleNameTagOptionChanged(const LLSD& newvalue);
 void handleDisplayNamesOptionChanged(const LLSD& newvalue);	
 bool callback_clear_browser_cache(const LLSD& notification, const LLSD& response);
 bool callback_clear_cache(const LLSD& notification, const LLSD& response);
+bool callback_clear_debug_search(const LLSD& notification, const LLSD& response);
+bool callback_pick_debug_search(const LLSD& notification, const LLSD& response);
 
 //bool callback_skip_dialogs(const LLSD& notification, const LLSD& response, LLFloaterPreference* floater);
 //bool callback_reset_dialogs(const LLSD& notification, const LLSD& response, LLFloaterPreference* floater);
@@ -233,6 +235,41 @@ bool callback_clear_browser_cache(const LLSD& notification, const LLSD& response
 		LLTeleportHistoryStorage::getInstance()->save();
 	}
 	
+	return false;
+}
+
+bool callback_clear_debug_search(const LLSD& notification, const LLSD& response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	if ( option == 0 ) // YES
+	{
+	        gSavedSettings.setString("SearchURLDebug","");
+	}
+
+	return false;
+}
+
+bool callback_pick_debug_search(const LLSD& notification, const LLSD& response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	if ( option == 0 ) // YES
+	{
+		std::string url = gSavedSettings.getString("SearchURLOpenSim");
+
+		if(!LLGridManager::getInstance()->isInOpenSim())
+		{
+			//not in OpenSim means we are in SL or SL beta
+			url = gSavedSettings.getString("SearchURL");
+		}
+		else if (LLLoginInstance::getInstance()->hasResponse("search"))
+		{
+			url = LLLoginInstance::getInstance()->getResponse("search").asString();
+		}
+
+	        gSavedSettings.setString("SearchURLDebug", url);
+
+	}
+
 	return false;
 }
 
@@ -454,9 +491,25 @@ BOOL LLFloaterPreference::postBuild()
 	{
 		gSavedPerAccountSettings.setString("BusyModeResponse", LLTrans::getString("BusyModeResponseDefault"));
 	}
-
+// ## Zi: Pie menu
+	gSavedSettings.getControl("OverridePieColors")->getSignal()->connect(boost::bind(&LLFloaterPreference::onPieColorsOverrideChanged, this));
+	// make sure pie color controls are enabled or greyed out properly
+	onPieColorsOverrideChanged();
+// ## Zi: Pie menu
 	return TRUE;
 }
+
+// ## Zi: Pie menu
+void LLFloaterPreference::onPieColorsOverrideChanged()
+{
+	BOOL enable=gSavedSettings.getBOOL("OverridePieColors");
+
+	getChild<LLColorSwatchCtrl>("pie_bg_color_override")->setEnabled(enable);
+	getChild<LLColorSwatchCtrl>("pie_selected_color_override")->setEnabled(enable);
+	getChild<LLSliderCtrl>("pie_menu_opacity")->setEnabled(enable);
+	getChild<LLSliderCtrl>("pie_menu_fade_out")->setEnabled(enable);
+}
+// ## Zi: Pie menu
 
 void LLFloaterPreference::onBusyResponseChanged()
 {
@@ -1116,7 +1169,9 @@ void LLFloaterPreference::refreshEnabledState()
 	// now turn off any features that are unavailable
 	disableUnavailableSettings();
 
-	getChildView("block_list")->setEnabled(LLLoginInstance::getInstance()->authSuccess());
+	bool logged_in = LLLoginInstance::getInstance()->authSuccess();
+	getChildView("block_list")->setEnabled(logged_in);
+	getChildView("pick_current_search_url")->setEnabled(logged_in);
 }
 
 void LLFloaterPreference::disableUnavailableSettings()
@@ -1962,6 +2017,168 @@ void LLPanelPreferenceGraphics::setHardwareDefaults()
 	resetDirtyChilds();
 	LLPanelPreference::setHardwareDefaults();
 }
+
+//<FS:AW  opensim preferences>
+static LLRegisterPanelClassWrapper<LLPanelPreferenceOpensim> t_pref_opensim("panel_preference_opensim");
+
+LLPanelPreferenceOpensim::LLPanelPreferenceOpensim() : LLPanelPreference(),
+	mGridListControl(NULL)
+{
+// <FS:AW  opensim search support>
+	mCommitCallbackRegistrar.add("Pref.ClearDebugSearchURL", boost::bind(&LLPanelPreferenceOpensim::onClickClearDebugSearchURL, this));
+	mCommitCallbackRegistrar.add("Pref.PickDebugSearchURL", boost::bind(&LLPanelPreferenceOpensim::onClickPickDebugSearchURL, this));
+// </FS:AW  opensim search support>
+// <FS:AW  grid management>
+	mCommitCallbackRegistrar.add("Pref.AddGrid", boost::bind(&LLPanelPreferenceOpensim::onClickAddGrid, this));
+	mCommitCallbackRegistrar.add("Pref.ClearGrid", boost::bind(&LLPanelPreferenceOpensim::onClickClearGrid, this));
+	mCommitCallbackRegistrar.add("Pref.RefreshGrid", boost::bind( &LLPanelPreferenceOpensim::onClickRefreshGrid, this));
+	mCommitCallbackRegistrar.add("Pref.RemoveGrid", boost::bind( &LLPanelPreferenceOpensim::onClickRemoveGrid, this));
+// </FS:AW  grid management>
+}
+// <FS:AW  grid management>
+BOOL LLPanelPreferenceOpensim::postBuild()
+{
+	mGridListControl = getChild<LLScrollListCtrl>("grid_list");
+	refreshGridList();
+
+	return LLPanelPreference::postBuild();
+}
+
+void LLPanelPreferenceOpensim::apply()
+{
+	LLGridManager::getInstance()->saveGridList();
+}
+
+void LLPanelPreferenceOpensim::cancel()
+{
+	LLGridManager::getInstance()->resetGrids();
+	LLPanelLogin::updateLocationCombo(false);
+}
+
+void LLPanelPreferenceOpensim::onClickAddGrid()
+{
+
+	std::string new_grid = gSavedSettings.getString("OpensimPrefsAddGrid");
+
+	if (!new_grid.empty())
+	{
+		getChild<LLUICtrl>("grid_management_panel")->setEnabled(FALSE);
+		LLGridManager::getInstance()->addGridListChangedCallback(boost::bind(&LLPanelPreferenceOpensim::addedGrid, this, _1));
+		LLGridManager::getInstance()->addGrid(new_grid);
+	}
+}
+
+void LLPanelPreferenceOpensim::addedGrid(bool success)
+{
+	if (success)
+	{
+		onClickClearGrid();
+	}
+	refreshGridList(success);
+}
+
+void LLPanelPreferenceOpensim::onClickClearGrid()
+{
+	gSavedSettings.setString("OpensimPrefsAddGrid", std::string());
+}
+
+void LLPanelPreferenceOpensim::onClickRefreshGrid()
+{
+	std::string grid = mGridListControl->getSelectedValue();
+	getChild<LLUICtrl>("grid_management_panel")->setEnabled(FALSE);
+	LLGridManager::getInstance()->addGridListChangedCallback(boost::bind(&LLPanelPreferenceOpensim::refreshGridList, this, _1));
+	LLGridManager::getInstance()->reFetchGrid(grid);
+}
+
+void LLPanelPreferenceOpensim::onClickRemoveGrid()
+{
+	std::string grid = mGridListControl->getSelectedValue();
+	LLSD args;
+
+	if (grid != LLGridManager::getInstance()->getGrid())
+	{
+		args["REMOVE_GRID"] = grid;
+		LLSD payload = grid;
+		LLNotificationsUtil::add("ConfirmRemoveGrid", args, payload, boost::bind(&LLPanelPreferenceOpensim::removeGridCB, this,  _1, _2));
+	}
+	else
+	{
+		args["REMOVE_GRID"] = LLGridManager::getInstance()->getGridLabel();
+		LLNotificationsUtil::add("CanNotRemoveConnectedGrid", args);
+	}
+}
+
+bool LLPanelPreferenceOpensim::removeGridCB(const LLSD& notification, const LLSD& response)
+{
+	const S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	if (0 == option)
+	{
+		std::string grid = notification["payload"].asString();
+		getChild<LLUICtrl>("grid_management_panel")->setEnabled(FALSE);
+		/*mGridListChanged =*/ LLGridManager::getInstance()->addGridListChangedCallback(boost::bind(&LLPanelPreferenceOpensim::refreshGridList, this, _1));
+		LLGridManager::getInstance()->removeGrid(grid);
+	}
+	return false;
+}
+
+void LLPanelPreferenceOpensim::refreshGridList(bool success)
+{
+	getChild<LLUICtrl>("grid_management_panel")->setEnabled(TRUE);
+
+	if (!mGridListControl)
+	{
+		llwarns << "No GridListControl - bug or out of memory" << llendl;
+		return;
+	}
+
+	mGridListControl->operateOnAll(LLCtrlListInterface::OP_DELETE);
+	mGridListControl->sortByColumnIndex(0, TRUE);
+
+	std::map<std::string, std::string> known_grids = LLGridManager::getInstance()->getKnownGrids();
+        std::map<std::string, std::string>::iterator grid_iter = known_grids.begin();
+	for(; grid_iter != known_grids.end(); grid_iter++)
+	{
+		if (!grid_iter->first.empty() && !grid_iter->second.empty())
+		{
+			LLURI login_uri = LLURI(LLGridManager::getInstance()->getLoginURI(grid_iter->first));
+			LLSD element;
+			const std::string connected_grid = LLGridManager::getInstance()->getGrid();
+
+			std::string style = "NORMAL";
+			if (connected_grid == grid_iter->first)
+			{
+				style = "BOLD";
+			}
+
+			int col = 0;
+			element["id"] = grid_iter->first;
+			element["columns"][col]["column"] = "grid_label";
+			element["columns"][col]["value"] = grid_iter->second;
+			element["columns"][col]["font"]["name"] = "SANSSERIF";
+			element["columns"][col]["font"]["style"] = style;
+			col++;
+			element["columns"][col]["column"] = "login_uri";
+			element["columns"][col]["value"] = login_uri.authority();
+			element["columns"][col]["font"]["name"] = "SANSSERIF";
+			element["columns"][col]["font"]["style"] = style;
+	
+			mGridListControl->addElement(element);
+		}
+	}
+}
+// <FS:AW  grid management>
+// <FS:AW  opensim search support>
+void LLPanelPreferenceOpensim::onClickClearDebugSearchURL()
+{
+	LLNotificationsUtil::add("ConfirmClearDebugSearchURL", LLSD(), LLSD(), callback_clear_debug_search);
+}
+
+void LLPanelPreferenceOpensim::onClickPickDebugSearchURL()
+{
+	LLNotificationsUtil::add("ConfirmPickDebugSearchURL", LLSD(), LLSD(),callback_pick_debug_search );
+}
+// </FS:AW  opensim search support>
+// </FS:AW  opensim preferences>
 
 LLFloaterPreferenceProxy::LLFloaterPreferenceProxy(const LLSD& key)
 	: LLFloater(key),

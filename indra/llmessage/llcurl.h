@@ -251,7 +251,7 @@ private:
 
 	CURL*				mCurlEasyHandle;
 	struct curl_slist*	mHeaders;
-
+	struct curl_slist*	mAliases;
 	std::stringstream	mRequest;
 	LLChannelDescriptors mChannels;
 	LLIOPipe::buffer_ptr_t mOutput;
@@ -460,7 +460,7 @@ private:
 			}
 			else
 			{
-				return (U32)lhs < (U32)rhs;
+				return (ptrdiff_t)lhs < (ptrdiff_t)rhs;
 			}
 		}
 	};

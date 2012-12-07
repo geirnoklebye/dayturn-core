@@ -82,7 +82,8 @@ RUN_PATH=`dirname "${SCRIPTSRC}" || echo .`
 echo "Running from ${RUN_PATH}"
 cd "${RUN_PATH}"
 
-# Re-register the secondlife:// protocol handler every launch, for now.
+# Re-register  hop:// and secondlife:// protocol handler every launch, for now.
+./etc/register_hopprotocol.sh
 ./etc/register_secondlifeprotocol.sh
 
 # Re-register the application with the desktop system every launch, for now.
@@ -110,34 +111,29 @@ export SAVED_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 #    fi
 #fi
 
-export LD_LIBRARY_PATH="$PWD/lib:${LD_LIBRARY_PATH}"
+BINARY_TYPE=$(expr match "$(file -b bin/do-not-directly-run-kokua-bin)" '\(.*executable\)')
+if [ "${BINARY_TYPE}" == "ELF 32-bit LSB executable" ]; then
 
-# Have to deal specially with gridargs.dat; typical contents look like:
-# --channel "Second Life Developer"  --settings settings_developer.xml
-# Simply embedding $(<etc/gridargs.dat) into a command line treats each of
-# Second, Life and Developer as separate args -- no good. We need bash to
-# process quotes using eval.
-# First read it without scanning, then scan that string. Break quoted words
-# into a bash array. Note that if gridargs.dat is empty, or contains only
-# whitespace, the resulting gridargs array will be empty -- zero entries --
-# therefore "${gridargs[@]}" entirely vanishes from the command line below,
-# just as we want.
-eval gridargs=("$(<etc/gridargs.dat)")
+	export SL_ENV='LD_LIBRARY_PATH="`pwd`"/lib:"${LD_LIBRARY_PATH}"'
+else
+	export SL_ENV='LD_LIBRARY_PATH="`pwd`"/lib64:"`pwd`"/lib32:"${LD_LIBRARY_PATH}"'
+fi
 
-# Run the program.
-# Don't quote $LL_WRAPPER because, if empty, it should simply vanish from the
-# command line. But DO quote "$@": preserve separate args as individually
-# quoted. Similar remarks about the contents of gridargs.
-$LL_WRAPPER bin/do-not-directly-run-secondlife-bin "${gridargs[@]}" "$@"
-LL_RUN_ERR=$?
+export SL_CMD='$LL_WRAPPER bin/do-not-directly-run-kokua-bin'
+export SL_OPT="`cat etc/gridargs.dat` $@"
+
+# Run the program
+eval ${SL_ENV} ${SL_CMD} ${SL_OPT} || LL_RUN_ERR=runerr
 
 # Handle any resulting errors
-if [ $LL_RUN_ERR -ne 0 ]; then
-	# generic error running the binary
-	echo '*** Bad shutdown ($LL_RUN_ERR). ***'
-	if [ "$(uname -m)" = "x86_64" ]; then
-		echo
-		cat << EOFMARKER
+if [ -n "$LL_RUN_ERR" ]; then
+	LL_RUN_ERR_MSG=""
+	if [ "$LL_RUN_ERR" = "runerr" ]; then
+		# generic error running the binary
+		echo '*** Bad shutdown. ***'
+		if [ "`uname -m`" = "x86_64" ]; then
+			echo
+			cat << EOFMARKER
 You are running the Second Life Viewer on a x86_64 platform.  The
 most common problems when launching the Viewer (particularly
 'bin/do-not-directly-run-secondlife-bin: not found' and 'error while
@@ -146,12 +142,14 @@ distribution's 32-bit compatibility packages.
 For example, on Ubuntu and other Debian-based Linuxes you might run:
 $ sudo apt-get install ia32-libs ia32-libs-gtk ia32-libs-kde ia32-libs-sdl
 EOFMARKER
+		fi
 	fi
 fi
+	
 
 echo
 echo '*******************************************************'
-echo 'This is a BETA release of the Second Life linux client.'
+echo 'This is a ALPHA release of the Kokua Linux client.'
 echo 'Thank you for testing!'
 echo 'Please see README-linux.txt before reporting problems.'
 echo

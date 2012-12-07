@@ -142,7 +142,7 @@
 			audio
 		</widgettype>
 		<impl>
-			media_plugin_quicktime
+			media_plugin_gstreamer010
 		</impl>
 	</mimetype>
 	<mimetype name="video/*">
@@ -197,7 +197,7 @@
 			audio
 		</widgettype>
 		<impl>
-			media_plugin_quicktime
+      media_plugin_gstreamer010
 		</impl>
 	</mimetype>
 	<mimetype name="application/pdf">
@@ -274,7 +274,7 @@
 			audio
 		</widgettype>
 		<impl>
-			media_plugin_quicktime
+      media_plugin_gstreamer010
 		</impl>
 	</mimetype>
 	<mimetype name="audio/mpeg">
@@ -285,7 +285,7 @@
 			audio
 		</widgettype>
 		<impl>
-			media_plugin_quicktime
+      media_plugin_gstreamer010
 		</impl>
 	</mimetype>
 	<mimetype name="audio/x-aiff">
@@ -296,7 +296,7 @@
 			audio
 		</widgettype>
 		<impl>
-			media_plugin_quicktime
+      media_plugin_gstreamer010
 		</impl>
 	</mimetype>
 	<mimetype name="audio/x-wav">
@@ -307,7 +307,7 @@
 			audio
 		</widgettype>
 		<impl>
-			media_plugin_quicktime
+      media_plugin_gstreamer010
 		</impl>
 	</mimetype>
 	<mimetype menu="1" name="image/bmp">
@@ -430,6 +430,17 @@
 		<impl>
 			media_plugin_quicktime
 		</impl>
+	</mimetype>
+	<mimetype name="video/x-m4v">
+		<label name="video/m4v_label">
+			Movie (M4V)
+		</label>
+		<widgettype>
+			movie
+		</widgettype>
+		<impl>
+      media_plugin_quicktime
+    </impl>
 	</mimetype>
 	<mimetype menu="1" name="video/quicktime">
 		<label name="video/quicktime_label">
