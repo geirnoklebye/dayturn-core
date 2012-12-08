@@ -197,10 +197,7 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 
 	reshape(rect.getWidth(), rect.getHeight());
 
-	LLLineEditor* password_edit(getChild<LLLineEditor>("password_edit"));
-	password_edit->setKeystrokeCallback(onPassKey, this);
-	// STEAM-14: When user presses Enter with this field in focus, initiate login
-	password_edit->setCommitCallback(boost::bind(&LLPanelLogin::onClickConnect, this));
+	getChild<LLLineEditor>("password_edit")->setKeystrokeCallback(onPassKey, this);
 
 	// change z sort of clickable text to be behind buttons
 	sendChildToBack(getChildView("forgot_password_text"));
@@ -264,10 +261,10 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 
 	// Show last logged in user favorites in "Start at" combo.
 	addUsersWithFavoritesToUsername();
-	LLComboBox* username_combo(getChild<LLComboBox>("username_combo"));
-	username_combo->setTextChangedCallback(boost::bind(&LLPanelLogin::addFavoritesToStartLocation, this));
-	// STEAM-14: When user presses Enter with this field in focus, initiate login
-	username_combo->setCommitCallback(boost::bind(&LLPanelLogin::onClickConnect, this));
+	getChild<LLComboBox>("username_combo")->setTextChangedCallback(boost::bind(&LLPanelLogin::addFavoritesToStartLocation, this));
+
+	updateLocationCombo(false);
+
 }
 
 void LLPanelLogin::addUsersWithFavoritesToUsername()
@@ -838,6 +835,8 @@ void LLPanelLogin::loadLoginPage()
 	LLMediaCtrl* web_browser = sInstance->getChild<LLMediaCtrl>("login_html");
 	if (!web_browser) return;
 
+
+	std::string login_page = LLGridManager::getInstance()->getLoginPage();
 	std::string add_grid_item = LLTrans::getString("ServerComboAddGrid");
 	LL_DEBUGS("PanelLogin") << "login_page: " << login_page << LL_ENDL;
 
@@ -862,43 +861,52 @@ void LLPanelLogin::loadLoginPage()
 		return;
 	}
 	std::ostringstream oStr;
+	oStr << login_page;
 
+	// Use the right delimeter depending on how LLURI parses the URL
+	LLURI login_page_uri = LLURI(login_page);
 
-	LL_DEBUGS("AppInit") << "login_page: " << login_page << LL_ENDL;
+	std::string first_query_delimiter = "&";
+	if (login_page_uri.queryMap().size() == 0)
+	{
+		first_query_delimiter = "?";
+	}
 
 	// Language
-	params["lang"] = LLUI::getLanguage();
+	std::string language = LLUI::getLanguage();
+	oStr << first_query_delimiter<<"lang=" << language;
 
 	// First Login?
 	if (gSavedSettings.getBOOL("FirstLoginThisInstall"))
 	{
-		params["firstlogin"] = "TRUE"; // not bool: server expects string TRUE
+		oStr << "&firstlogin=TRUE";
 	}
 
 	// Channel and Version
 	char* curl_channel = curl_escape(ViewerInfo::viewerName().c_str(), 0);
 	char* curl_version = curl_escape(ViewerInfo::versionNumber().c_str(), 0);
 
+	oStr << "&channel=" << curl_channel;
+	oStr << "&version=" << curl_version;
+
+	curl_free(curl_channel);
+	curl_free(curl_version);
+
 	// Grid
 	char* curl_grid = curl_escape(LLGridManager::getInstance()->getGridNick().c_str(), 0);
+	oStr << "&grid=" << curl_grid;
+	curl_free(curl_grid);
 
 	// add OS info
-	params["os"] = LLAppViewer::instance()->getOSInfo().getOSStringSimple();
-
-	// sourceid
-	params["sourceid"] = gSavedSettings.getString("sourceid");
-
-	// Make an LLURI with this augmented info
-	LLURI login_uri(LLURI::buildHTTP(login_page.authority(),
-									 login_page.path(),
-									 params));
+	char * os_info = curl_escape(LLAppViewer::instance()->getOSInfo().getOSStringSimple().c_str(), 0);
+	oStr << "&os=" << os_info;
+	curl_free(os_info);
 
 	gViewerWindow->setMenuBackgroundColor(false, LLGridManager::getInstance()->isInSLBeta());
 
-	if (web_browser->getCurrentNavUrl() != login_uri.asString())
+	if (web_browser->getCurrentNavUrl() != oStr.str())
 	{
-		LL_DEBUGS("AppInit") << "loading:    " << login_uri << LL_ENDL;
-		web_browser->navigateTo( login_uri.asString(), "text/html" );
+		web_browser->navigateTo( oStr.str(), "text/html" );
 	}
 }
 

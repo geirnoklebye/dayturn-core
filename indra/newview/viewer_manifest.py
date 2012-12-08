@@ -63,12 +63,6 @@ class ViewerManifest(LLManifest):
 
                 # include the entire shaders directory recursively
                 self.path("shaders")
-                if not linden_names_path :
-                    print "No 'LINDEN_CREDITS' specified in environment, using built-in list"
-                else:
-                    except IOError:
-                        print "No Linden names found at '%s', using built-in list" % linden_names_path
-                    else:
                 # ... and the entire windlight directory
                 self.path("windlight")
 
@@ -94,6 +88,7 @@ class ViewerManifest(LLManifest):
 
             # skins
             if self.prefix(src="skins"):
+                    self.path("paths.xml")
                     # include the entire textures directory recursively
                     if self.prefix(src="*/textures"):
                             self.path("*/*.tga")
@@ -111,13 +106,7 @@ class ViewerManifest(LLManifest):
                     self.path("*/*.xml")
 
                     # Local HTML files (e.g. loading screen)
-                    # The claim is that we never use local html files any
-                    # longer. But rather than commenting out this block, let's
-                    # rename every html subdirectory as html.old. That way, if
-                    # we're wrong, a user actually does have the relevant
-                    # files; s/he just needs to rename every html.old
-                    # directory back to html to recover them.
-                    if self.prefix(src="*/html", dst="*/html.old"):
+                    if self.prefix(src="*/html"):
                             self.path("*.png")
                             self.path("*/*/*.html")
                             self.path("*/*/*.gif")
@@ -135,9 +124,14 @@ class ViewerManifest(LLManifest):
             self.path("gpu_table.txt")
 
             # The summary.json file gets left in the base checkout dir by
-            # build.sh. It's only created for a build.sh build.
-            if not self.path2basename(os.path.join(os.pardir, os.pardir), "summary.json"):
-                print "No summary.json file"
+            # build.sh. It's only created for a build.sh build, therefore we
+            # have to check whether it exists.  :-P
+            summary_json = "summary.json"
+            summary_json_path = os.path.join(os.pardir, os.pardir, summary_json)
+            if os.path.exists(os.path.join(self.get_src_prefix(), summary_json_path)):
+                self.path(summary_json_path, summary_json)
+            else:
+                print "No %s" % os.path.join(self.get_src_prefix(), summary_json_path)
 
     def login_channel(self):
         """Channel reported for login and upgrade purposes ONLY;
@@ -287,13 +281,13 @@ class WindowsManifest(ViewerManifest):
             self.path(src='%s/kokua-bin.exe' % self.args['configuration'], dst=self.final_exe())
 
         # Plugin host application
-        self.path2basename(os.path.join(os.pardir,
-                                        'llplugin', 'slplugin', self.args['configuration']),
+        self.path(os.path.join(os.pardir,
+                               'llplugin', 'slplugin', self.args['configuration'], "slplugin.exe"),
                            "slplugin.exe")
         
         #self.disable_manifest_check()
 
-        self.path2basename("../viewer_components/updater/scripts/windows", "update_install.bat")
+        self.path(src="../viewer_components/updater/scripts/windows/update_install.bat", dst="update_install.bat")
         # Get shared libs from the shared libs staging directory
         if self.prefix(src=os.path.join(os.pardir, 'sharedlibs', self.args['configuration']),
                        dst=""):
@@ -327,7 +321,9 @@ class WindowsManifest(ViewerManifest):
 
 
             # Get fmod dll, continue if missing
-            if not self.path("fmod.dll"):
+            try:
+                self.path("fmod.dll")
+            except:
                 print "Skipping fmod.dll"
 
             # For textures
@@ -863,82 +859,85 @@ class DarwinManifest(ViewerManifest):
                 self.path("vivox-runtime/universal-darwin/libvivoxsdk.dylib", "libvivoxsdk.dylib")
                 self.path("vivox-runtime/universal-darwin/SLVoice", "SLVoice")
 
-                def path_optional(src, dst):
-                    """
-                    For a number of our self.path() calls, not only do we want
-                    to deal with the absence of src, we also want to remember
-                    which were present. Return either an empty list (absent)
-                    or a list containing dst (present). Concatenate these
-                    return values to get a list of all libs that are present.
-                    """
-                    if self.path(src, dst):
-                        return [dst]
-                    print "Skipping %s" % dst
-                    return []
-
+                libdir = "../../libraries/universal-darwin/lib_release"
                 libdir = "../packages/lib/release"
-                # dylibs is a list of all the .dylib files we expect to need
-                # in our bundled sub-apps. For each of these we'll create a
-                # symlink from sub-app/Contents/Resources to the real .dylib.
-                # Need to get the llcommon dll from any of the build directories as well.
-                libfile = "libllcommon.dylib"
-                dylibs = path_optional(self.find_existing_file(os.path.join(os.pardir,
-                                                               "llcommon",
+                dylibs = {}
+
+                # Need to get the llcommon dll from any of the build directories as well
+                lib = "llcommon"
+                libfile = "lib%s.dylib" % lib
+                try:
+                    self.path(self.find_existing_file(os.path.join(os.pardir,
+                                                                    lib,
                                                                self.args['configuration'],
                                                                libfile),
                                                                os.path.join(libdir, libfile)),
                                        dst=libfile)
+                except RuntimeError:
+                    print "Skipping %s" % libfile
+                    dylibs[lib] = False
+                else:
+                    dylibs[lib] = True
 
-                for libfile in (
-                                "libapr-1.0.dylib",
+                if dylibs["llcommon"]:
+                    for libfile in ("libapr-1.0.dylib",
                                 "libaprutil-1.0.dylib",
                                 "libcollada14dom.dylib",
                                 "libexpat.1.5.2.dylib",
                                 "libexception_handler.dylib",
                                 "libGLOD.dylib",
                                 ):
-                    dylibs += path_optional(os.path.join(libdir, libfile), libfile)
+                        self.path(os.path.join(libdir, libfile), libfile)
 
-                # SLVoice and vivox lols, no symlinks needed
-                for libfile in (
-                                'libortp.dylib',
-                                'libsndfile.dylib',
-                                'libvivoxoal.dylib',
-                                'libvivoxsdk.dylib',
-                                'libvivoxplatform.dylib',
-                                'SLVoice',
-                                ):
-                     self.path2basename(libdir, libfile)
+                # SLVoice and vivox lols
+                for libfile in ('libsndfile.dylib', 'libvivoxoal.dylib', 'libortp.dylib', \
+                    'libvivoxsdk.dylib', 'libvivoxplatform.dylib', 'SLVoice') :
+                     self.path(os.path.join(libdir, libfile), libfile)
                 
+                try:
                 # FMOD for sound
-                libfile = "libfmodwrapper.dylib"
-                path_optional(os.path.join(self.args['configuration'], libfile), libfile)
+                    self.path(self.args['configuration'] + "/libfmodwrapper.dylib", "libfmodwrapper.dylib")
+                except:
+                    print "Skipping FMOD - not found"
                 
                 # our apps
-                for app_bld_dir, app in (("mac_crash_logger", "mac-crash-logger.app"),
-                                         ("mac_updater", "mac-updater.app"),
+                self.path("../mac_crash_logger/" + self.args['configuration'] + "/mac-crash-logger.app", "mac-crash-logger.app")
+                self.path("../mac_updater/" + self.args['configuration'] + "/mac-updater.app", "mac-updater.app")
+
                                          # plugin launcher
-                                         (os.path.join("llplugin", "slplugin"), "SLPlugin.app"),
-                                         ):
-                    self.path2basename(os.path.join(os.pardir,
-                                                    app_bld_dir, self.args['configuration']),
-                                       app)
+                self.path("../llplugin/slplugin/" + self.args['configuration'] + "/SLPlugin.app", "SLPlugin.app")
 
                     # our apps dependencies on shared libs
-                    # for each app, for each dylib we collected in dylibs,
-                    # create a symlink to the real copy of the dylib.
-                    resource_path = self.dst_path_of(os.path.join(app, "Contents", "Resources"))
-                    for libfile in dylibs:
-                        symlinkf(os.path.join(os.pardir, os.pardir, os.pardir, libfile),
-                                 os.path.join(resource_path, libfile))
+                if dylibs["llcommon"]:
+                    mac_crash_logger_res_path = self.dst_path_of("mac-crash-logger.app/Contents/Resources")
+                    mac_updater_res_path = self.dst_path_of("mac-updater.app/Contents/Resources")
+                    slplugin_res_path = self.dst_path_of("SLPlugin.app/Contents/Resources")
+                    for libfile in ("libllcommon.dylib",
+                                    "libapr-1.0.dylib",
+                                    "libaprutil-1.0.dylib",
+                                    "libexpat.1.5.2.dylib",
+                                    "libexception_handler.dylib",
+                                    "libGLOD.dylib",
+                                    "libcollada14dom.dylib"
+                                    ):
+                        target_lib = os.path.join('../../..', libfile)
+                        self.run_command("ln -sf %(target)r %(link)r" % 
+                                         {'target': target_lib,
+                                          'link' : os.path.join(mac_crash_logger_res_path, libfile)}
+                                         )
+                        self.run_command("ln -sf %(target)r %(link)r" % 
+                                         {'target': target_lib,
+                                          'link' : os.path.join(mac_updater_res_path, libfile)}
+                                         )
+                        self.run_command("ln -sf %(target)r %(link)r" % 
+                                         {'target': target_lib,
+                                          'link' : os.path.join(slplugin_res_path, libfile)}
+                                         )
 
                 # plugins
                 if self.prefix(src="", dst="llplugin"):
-                    self.path2basename("../media_plugins/quicktime/" + self.args['configuration'],
-                                       "media_plugin_quicktime.dylib")
-                    self.path2basename("../media_plugins/webkit/" + self.args['configuration'],
-                                       "media_plugin_webkit.dylib")
-                    self.path2basename("../packages/lib/release", "libllqtwebkit.dylib")
+                    self.path("../media_plugins/webkit/" + self.args['configuration'] + "/media_plugin_webkit.dylib", "media_plugin_webkit.dylib")
+                    self.path("../packages/lib/release/libllqtwebkit.dylib", "libllqtwebkit.dylib")
                     self.end_prefix("llplugin")
 
                 # command line arguments for connecting to the proper grid
@@ -1000,25 +999,21 @@ class LinuxManifest(ViewerManifest):
             self.path("client-readme-voice.txt","README-linux-voice.txt")
             self.path("client-readme-joystick.txt","README-linux-joystick.txt")
             self.path("wrapper.sh","kokua")
-            if self.prefix(src="", dst="etc"):
-                self.path("handle_secondlifeprotocol.sh")
-                self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
-                self.path("refresh_desktop_app_entry.sh")
-                self.path("launch_url.sh")
-                self.end_prefix("etc")
+            self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
+            self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
+            self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
+            self.path("refresh_desktop_app_entry.sh", "etc/refresh_desktop_app_entry.sh")
+            self.path("launch_url.sh","etc/launch_url.sh")
             self.path("install.sh")
             self.end_prefix("linux_tools")
 
         # Create an appropriate gridargs.dat for this package, denoting required grid.
         self.put_in_file(self.flags_list(), 'etc/gridargs.dat')
 
-        if self.prefix(src="", dst="bin"):
-            self.path("secondlife-bin","do-not-directly-run-secondlife-bin")
-            self.path("../linux_crash_logger/linux-crash-logger","linux-crash-logger.bin")
-            self.path("../linux_updater/linux-updater", "linux-updater.bin")
-            self.path2basename("../llplugin/slplugin", "SLPlugin")
-            self.path2basename("../viewer_components/updater/scripts/linux", "update_install")
-            self.end_prefix("bin")
+        self.path("kokua-bin","bin/do-not-directly-run-kokua-bin")
+        self.path("../linux_crash_logger/linux-crash-logger","bin/linux-crash-logger.bin")
+        self.path("../linux_updater/linux-updater", "bin/linux-updater.bin")
+        self.path("../llplugin/slplugin/SLPlugin", "bin/SLPlugin")
 
         if self.prefix("res-sdl"):
             self.path("*")
@@ -1034,9 +1029,11 @@ class LinuxManifest(ViewerManifest):
                 self.end_prefix("res-sdl")
             self.end_prefix(icon_path)
 
+        self.path("../viewer_components/updater/scripts/linux/update_install", "bin/update_install")
+
         # plugins
         if self.prefix(src="", dst="bin/llplugin"):
-            self.path2basename("../media_plugins/webkit", "libmedia_plugin_webkit.so")
+            self.path("../media_plugins/webkit/libmedia_plugin_webkit.so", "libmedia_plugin_webkit.so")
             self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
             self.end_prefix("bin/llplugin")
 
@@ -1108,8 +1105,11 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libopenjpeg.so*")
             self.path("libdirectfb-1.4.so.5")
             self.path("libfusion-1.4.so.5")
-            self.path("libdirect-1.4.so.5*")
-            self.path("libhunspell-1.3.so*")
+            self.path("libdirect-1.4.so.5.0.4")
+            self.path("libdirect-1.4.so.5")
+            self.path("libhunspell-1.3.so")
+            self.path("libhunspell-1.3.so.0")
+            self.path("libhunspell-1.3.so.0.0.0")
             self.path("libalut.so")
             self.path("libalut.so.0")
             self.path("libalut.so.0.0.0")
@@ -1238,26 +1238,6 @@ class Linux_x86_64Manifest(LinuxManifest):
                                  % {'d': self.get_dst_prefix()} )
 
 ################################################################
-
-def symlinkf(src, dst):
-    """
-    Like ln -sf, but uses os.symlink() instead of running ln.
-    """
-    try:
-        os.symlink(src, dst)
-    except OSError, err:
-        if err.errno != errno.EEXIST:
-            raise
-        # We could just blithely attempt to remove and recreate the target
-        # file, but that strategy doesn't work so well if we don't have
-        # permissions to remove it. Check to see if it's already the
-        # symlink we want, which is the usual reason for EEXIST.
-        if not (os.path.islink(dst) and os.readlink(dst) == src):
-            # Here either dst isn't a symlink or it's the wrong symlink.
-            # Remove and recreate. Caller will just have to deal with any
-            # exceptions at this stage.
-            os.remove(dst)
-            os.symlink(src, dst)
 
 if __name__ == "__main__":
     main()
