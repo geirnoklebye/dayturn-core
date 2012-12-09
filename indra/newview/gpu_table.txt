@@ -603,5 +603,4 @@ XGI										XGI.*									0	0	0	0
 VIA										VIA.*									0	0	0	0
 Apple Generic							Apple.*Generic.*						0	0	0	0
 Apple Software Renderer					Apple.*Software Renderer.*				0	0	0	0
-Humper									Humper.*								0	1	1	2.1
 PowerVR SGX545							.*PowerVR SGX.*							1	1	1	3
