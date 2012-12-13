@@ -1904,7 +1904,7 @@
       <key>Value</key>
       <string />
     </map>
-  <key>CmdLineLoginURI</key>
+  <key>CmdLineLoginURI1</key>
   <map>
     <key>Comment</key>
     <string>Command line specified login server and CGI prefix to use.</string>
