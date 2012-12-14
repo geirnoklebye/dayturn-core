@@ -265,6 +265,14 @@ set(llcommon_HEADER_FILES
     u64.h
     )
 
+# <FS:CR> Add OSSL constants for OpenSim builds
+if (HAS_OPENSIM_SUPPORT)
+    LIST(APPEND llcommon_HEADER_FILES
+    osslconstants.h
+    )
+endif (HAS_OPENSIM_SUPPORT)
+# </FS:CR>
+
 set_source_files_properties(${llcommon_HEADER_FILES}
                             PROPERTIES HEADER_FILE_ONLY TRUE)
 
