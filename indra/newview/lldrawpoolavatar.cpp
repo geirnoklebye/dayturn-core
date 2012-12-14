@@ -1632,6 +1632,7 @@ void LLDrawPoolAvatar::renderRiggedAlpha(LLVOAvatar* avatar)
 						LLRender::BF_ONE_MINUS_SOURCE_ALPHA);
 
 		renderRigged(avatar, RIGGED_ALPHA);
+		gGL.setColorMask(true, false);
 	}
 }
 
@@ -1648,6 +1649,7 @@ void LLDrawPoolAvatar::renderRiggedFullbrightAlpha(LLVOAvatar* avatar)
 						LLRender::BF_ONE_MINUS_SOURCE_ALPHA);
 
 		renderRigged(avatar, RIGGED_FULLBRIGHT_ALPHA);
+		gGL.setColorMask(true, false);
 	}
 }
 
