@@ -37,6 +37,10 @@
 #include "llwlparamset.h"
 #include "llwlparammanager.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 LLFloaterEnvironmentSettings::LLFloaterEnvironmentSettings(const LLSD &key)
 : 	 LLFloater(key)
 	,mRegionSettingsRadioGroup(NULL)
@@ -83,6 +87,13 @@ BOOL LLFloaterEnvironmentSettings::postBuild()
 // virtual
 void LLFloaterEnvironmentSettings::onOpen(const LLSD& key)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		closeFloater();
+		return;
+	}
+//mk
 	refresh();
 }
 

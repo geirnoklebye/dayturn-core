@@ -1000,6 +1000,15 @@ BOOL LLViewerWindow::handleRightMouseDown(LLWindow *window,  LLCoordGL pos, MASK
 	x = llround((F32)x / mDisplayScale.mV[VX]);
 	y = llround((F32)y / mDisplayScale.mV[VY]);
 
+//MK
+	// HACK : Since we can't get the right click context menu in mouselook, we have to
+	// use Alt to sit, and we must handle it here
+	if (CAMERA_MODE_MOUSELOOK == gAgentCamera.getCameraMode() && (mask & MASK_ALT))
+	{
+		LLToolPie::getInstance()->handleRightMouseDown(x, y, mask);
+		return true;
+	}
+//mk
 	BOOL down = TRUE;
 	BOOL handle = handleAnyMouseClick(window,pos,mask,LLMouseHandler::CLICK_RIGHT,down);
 	if (handle)
@@ -1007,7 +1016,11 @@ BOOL LLViewerWindow::handleRightMouseDown(LLWindow *window,  LLCoordGL pos, MASK
 
 	// *HACK: this should be rolled into the composite tool logic, not
 	// hardcoded at the top level.
-	if (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && LLToolMgr::getInstance()->getCurrentTool() != LLToolPie::getInstance())
+//MK
+////	if (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && LLToolMgr::getInstance()->getCurrentTool() != LLToolPie::getInstance())
+	// We need to handle right clicks even in mouselook
+	if (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && !(mask & MASK_SHIFT))
+//mk
 	{
 		// If the current tool didn't process the click, we should show
 		// the pie menu.  This can be done by passing the event to the pie
@@ -1901,6 +1914,19 @@ void LLViewerWindow::initWorldUI()
 	{
 		navbar->setVisible(FALSE);
 	}
+
+//MK
+	if (gRRenabled && gStatusBar)
+	{
+		bool navbar_visible = gSavedSettings.getBOOL("ShowNavbarNavigationPanel");
+		// if we show the navigation bar or the mini location bar, we don't need the parcel info and sliders on the top status bar
+		// and vice-versa
+		gStatusBar->childSetVisible("parcel_info_panel", !navbar_visible);
+		gStatusBar->childSetVisible("drawdistance", !navbar_visible);
+		gStatusBar->childSetVisible("avatar_z_offset", !navbar_visible);
+		gStatusBar->childSetVisible("avatar_z_offset_reset_btn", !navbar_visible);
+	}
+//mk
 
 	// Top Info bar
 	LLPanel* topinfo_bar_container = getRootView()->getChild<LLPanel>("topinfo_bar_container");
@@ -3541,6 +3567,20 @@ void LLViewerWindow::renderSelections( BOOL for_gl_pick, BOOL pick_parcel_walls,
 						{
 							moveable_object_selected = TRUE;
 							this_object_movable = TRUE;
+//MK
+							// can't edit objects that someone is sitting on,
+							// when prevented from sit-tping
+							LLVOAvatar* avatar = gAgentAvatarp;
+							if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")
+									|| (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
+							{
+								if (object->isSeat())
+								{
+									moveable_object_selected = FALSE;
+									this_object_movable = FALSE;
+								}
+							}
+//mk
 						}
 						all_selected_objects_move = all_selected_objects_move && this_object_movable;
 						all_selected_objects_modify = all_selected_objects_modify && object->permModify();
@@ -3812,7 +3852,17 @@ LLViewerObject* LLViewerWindow::cursorIntersect(S32 mouse_x, S32 mouse_y, F32 de
 	{
 		found = gPipeline.lineSegmentIntersectInHUD(mouse_hud_start, mouse_hud_end, pick_transparent,
 													face_hit, intersection, uv, normal, binormal);
-
+//MK
+		// HACK : don't allow focusing on HUDs unless we are in Mouselook mode
+		if (gRRenabled && gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+		{
+			MASK mask = gKeyboard->currentMask(TRUE);
+			if (mask & MASK_ALT)
+			{
+				found = NULL;
+			}
+		}
+//mk
 		if (!found) // if not found in HUD, look in world:
 		{
 			found = gPipeline.lineSegmentIntersectInWorld(mouse_world_start, mouse_world_end, pick_transparent,
@@ -4218,6 +4268,13 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 	// if not showing ui, use full window to render world view
 	updateWorldViewRect(!show_ui);
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mHasLockedHuds)
+	{
+		LLPipeline::sShowHUDAttachments = TRUE;
+	}
+//mk
+	
 	// Copy screen to a buffer
 	// crop sides or top and bottom, if taking a snapshot of different aspect ratio
 	// from window

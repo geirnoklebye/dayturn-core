@@ -242,11 +242,11 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 				}
 				else
 				{
-					if (!shader->attachObject("lighting/lightWaterNonIndexedF.glsl"))
-					{
-						return FALSE;
-					}
+				if (!shader->attachObject("lighting/lightWaterNonIndexedF.glsl"))
+				{
+					return FALSE;
 				}
+			}
 			}
 			else 
 			{
@@ -257,12 +257,12 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 						return FALSE;
 					}
 				}
-				else
+			else 
+			{
+				if (!shader->attachObject("lighting/lightWaterF.glsl"))
 				{
-					if (!shader->attachObject("lighting/lightWaterF.glsl"))
-					{
-						return FALSE;
-					}
+					return FALSE;
+				}
 				}
 				shader->mFeatures.mIndexedTextureChannels = llmax(LLGLSLShader::sIndexedTextureChannels-1, 1);
 			}
@@ -281,11 +281,11 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 				}
 				else
 				{
-					if (!shader->attachObject("lighting/lightNonIndexedF.glsl"))
-					{
-						return FALSE;
-					}
+				if (!shader->attachObject("lighting/lightNonIndexedF.glsl"))
+				{
+					return FALSE;
 				}
+			}
 			}
 			else 
 			{
@@ -296,12 +296,12 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 						return FALSE;
 					}
 				}
-				else
+			else 
+			{
+				if (!shader->attachObject("lighting/lightF.glsl"))
 				{
-					if (!shader->attachObject("lighting/lightF.glsl"))
-					{
-						return FALSE;
-					}
+					return FALSE;
+				}
 				}
 				shader->mFeatures.mIndexedTextureChannels = llmax(LLGLSLShader::sIndexedTextureChannels-1, 1);
 			}
@@ -396,11 +396,11 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 				}
 				else
 				{
-					if (!shader->attachObject("lighting/lightFullbrightNonIndexedF.glsl"))
-					{
-						return FALSE;
-					}
+				if (!shader->attachObject("lighting/lightFullbrightNonIndexedF.glsl"))
+				{
+					return FALSE;
 				}
+			}
 			}
 			else 
 			{
@@ -411,12 +411,12 @@ BOOL LLShaderMgr::attachShaderFeatures(LLGLSLShader * shader)
 						return FALSE;
 					}
 				}
-				else
+			else 
+			{
+				if (!shader->attachObject("lighting/lightFullbrightF.glsl"))
 				{
-					if (!shader->attachObject("lighting/lightFullbrightF.glsl"))
-					{
-						return FALSE;
-					}
+					return FALSE;
+				}
 				}
 				shader->mFeatures.mIndexedTextureChannels = llmax(LLGLSLShader::sIndexedTextureChannels-1, 1);
 			}
@@ -519,7 +519,7 @@ void LLShaderMgr::dumpObjectLog(GLhandleARB ret, BOOL warns)
 			LL_INFOS("ShaderLoading") << log << LL_ENDL;
 		}
 	}
- }
+}
 
 GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shader_level, GLenum type, S32 texture_index_channels)
 {
@@ -873,33 +873,20 @@ BOOL LLShaderMgr::linkProgramObject(GLhandleARB obj, BOOL suppress_errors)
 		LL_WARNS("ShaderLoading") << "GLSL Linker Error:" << LL_ENDL;
 	}
 
-#if LL_DARWIN
-
-	// For some reason this absolutely kills the frame rate when VBO's are enabled
-	if (0)
-	{
+// NOTE: Removing LL_DARWIN block as it doesn't seem to actually give the correct answer, 
+// but want it for reference once I move it.
+#if 0
 		// Force an evaluation of the gl state so the driver can tell if the shader will run in hardware or software
 		// per Apple's suggestion
-		LLGLSLShader::sNoFixedFunction = false;
-		
-		glUseProgramObjectARB(obj);
-
-		gGL.begin(LLRender::TRIANGLES);
-		gGL.vertex3f(0.0f, 0.0f, 0.0f);
-		gGL.vertex3f(0.0f, 0.0f, 0.0f);
-		gGL.vertex3f(0.0f, 0.0f, 0.0f);
-		gGL.end();
-		gGL.flush();
-		
-		glUseProgramObjectARB(0);
-		
-		LLGLSLShader::sNoFixedFunction = true;
+	glBegin(gGL.mMode);
+	glEnd();
 
 		// Query whether the shader can or cannot run in hardware
 		// http://developer.apple.com/qa/qa2007/qa1502.html
-		GLint vertexGPUProcessing, fragmentGPUProcessing;
+	long vertexGPUProcessing;
 		CGLContextObj ctx = CGLGetCurrentContext();
 		CGLGetParameter(ctx, kCGLCPGPUVertexProcessing, &vertexGPUProcessing);	
+	long fragmentGPUProcessing;
 		CGLGetParameter(ctx, kCGLCPGPUFragmentProcessing, &fragmentGPUProcessing);
 		if (!fragmentGPUProcessing || !vertexGPUProcessing)
 		{
@@ -907,7 +894,6 @@ BOOL LLShaderMgr::linkProgramObject(GLhandleARB obj, BOOL suppress_errors)
 			success = GL_FALSE;
 			suppress_errors = FALSE;		
 		}
-	}
 
 #else
 	std::string log = get_object_log(obj);

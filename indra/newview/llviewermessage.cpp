@@ -1055,7 +1055,6 @@ void start_new_inventory_observer()
 class LLDiscardAgentOffer : public LLInventoryFetchItemsObserver
 {
 	LOG_CLASS(LLDiscardAgentOffer);
-
 public:
 	LLDiscardAgentOffer(const LLUUID& folder_id, const LLUUID& object_id) :
 		LLInventoryFetchItemsObserver(object_id),
@@ -1076,7 +1075,6 @@ public:
 		gInventory.removeObserver(this);
 		delete this;
 	}
-
 protected:
 	LLUUID mFolderID;
 	LLUUID mObjectID;
@@ -1468,7 +1466,7 @@ bool LLOfferInfo::inventory_offer_callback(const LLSD& notification, const LLSD&
 	LLChat chat;
 	std::string log_message;
 	S32 button = LLNotificationsUtil::getSelectedOption(notification, response);
-
+	
 	LLInventoryObserver* opener = NULL;
 	LLViewerInventoryCategory* catp = NULL;
 	catp = (LLViewerInventoryCategory*)gInventory.getCategory(mObjectID);
@@ -1501,6 +1499,21 @@ bool LLOfferInfo::inventory_offer_callback(const LLSD& notification, const LLSD&
 	from_string = chatHistory_string = mFromName;
 	
 	bool busy = gAgent.getBusy();
+	
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		from_string = chatHistory_string = gAgent.mRRInterface.getDummyName(from_string);
+	}
+
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		// hide every occurrence of the Parcel name if the location restriction is active
+		mDesc = gAgent.mRRInterface.stringReplace (mDesc, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+		// hide every occurrence of the Region name if the location restriction is active
+		if (gAgent.getRegion()) mDesc = gAgent.mRRInterface.stringReplace (mDesc, gAgent.getRegion()->getName(), "(Region hidden)");
+	}
+//mk
 	
 	switch(button)
 	{
@@ -1705,6 +1718,14 @@ bool LLOfferInfo::inventory_task_offer_callback(const LLSD& notification, const 
 	}
 	
 	bool busy = gAgent.getBusy();
+
+//MK
+	// mDesc looks like '#RLV/~foldername' ( http://slurl.com/secondlife/Sim/X/Y/Z )
+	// => we need to parse in order to find the folder name
+	std::string folder_name = mDesc;
+	unsigned int ind = folder_name.rfind ("'");
+	if (ind != -1) folder_name = folder_name.substr (1, ind -1); // get rid of the first quote too
+//mk
 	
 	switch(button)
 	{
@@ -1748,6 +1769,19 @@ bool LLOfferInfo::inventory_task_offer_callback(const LLSD& notification, const 
 				LL_WARNS("Messaging") << "inventory_offer_callback: unknown offer type" << LL_ENDL;
 				break;
 		}	// end switch (mIM)
+//MK
+			if (gRRenabled)
+			{
+				if (gAgent.mRRInterface.getRlvShare() && mFolderID == gAgent.mRRInterface.getRlvShare()->getUUID())
+				{
+					gAgent.mRRInterface.notify (LLUUID::null, "accepted_in_rlv inv_offer " + folder_name, "");
+				}
+				else
+				{
+					gAgent.mRRInterface.notify (LLUUID::null, "accepted_in_inv inv_offer " + folder_name, "");
+				}
+			}
+//mk
 			break;
 			
 		case IOR_MUTE:
@@ -1781,7 +1815,13 @@ bool LLOfferInfo::inventory_task_offer_callback(const LLSD& notification, const 
 			{
 				busy_message(msg,mFromID);
 			}
-			break;
+//MK
+			if (gRRenabled)
+			{
+				gAgent.mRRInterface.notify (LLUUID::null, "declined inv_offer " + folder_name, "");
+			}
+//mk
+				break;
 	}
 	
 	if(opener)
@@ -2331,6 +2371,21 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 	switch(dialog)
 	{
 	case IM_CONSOLE_AND_CHAT_HISTORY:
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+		{
+			// hide every occurrence of the Parcel name if the location restriction is active
+			message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+			// hide every occurrence of the Region name if the location restriction is active
+			if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
+		}
+		
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			// censor object IMs but not avatar IMs
+			message = gAgent.mRRInterface.getCensoredMessage (message);
+		}
+//mk
 		args["MESSAGE"] = message;
 		payload["from_id"] = from_id;
 
@@ -2349,11 +2404,19 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			// do nothing -- don't distract newbies in
 			// Prelude with global IMs
 		}
-		else if (offline == IM_ONLINE && !is_linden && is_busy && name != SYSTEM_FROM)
+		else if (offline == IM_ONLINE && !is_linden && is_busy && name != SYSTEM_FROM
+//MK
+			 // agent is not forbidden to receive IMs or the sender is an exception => send Busy response
+			 && (!gRRenabled || (!gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString()) && !gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString()))
+			))
+//mk
 		{
 			// return a standard "busy" message, but only do it to online IM 
 			// (i.e. not other auto responses and not store-and-forward IM)
-			if (!gIMMgr->hasSession(session_id))
+			if (!gIMMgr->hasSession(session_id)
+//MK
+				|| gRRenabled)
+//mk
 			{
 				// if there is not a panel for this conversation (i.e. it is a new IM conversation
 				// initiated by the other party) then...
@@ -2393,9 +2456,72 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				position,
 				true);
 		}
+//MK
+		else if (gRRenabled && message == "@version")
+		{
+			// return the version message
+			std::string my_name;
+			LLAgentUI::buildFullname(my_name);
+			std::string response = gAgent.mRRInterface.getVersion ();
+			pack_instant_message(
+				gMessageSystem,
+				gAgent.getID(),
+				FALSE,
+				gAgent.getSessionID(),
+				from_id,
+				my_name.c_str(),
+				response.c_str(),
+				IM_ONLINE,
+				IM_BUSY_AUTO_RESPONSE,
+				session_id);
+			gAgent.sendReliableMessage();
+
+			// remove the "XXX is typing..." label from the IM window
+			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
+			gIMMgr->processIMTypingStop(im_info);
+		}
+		else if (gRRenabled && message == "@getblacklist")
+		{
+			// return the contents of  the blacklist, without a filter
+			std::string my_name;
+			LLAgentUI::buildFullname(my_name);
+			std::string response = gAgent.mRRInterface.sBlacklist;
+			pack_instant_message(
+				gMessageSystem,
+				gAgent.getID(),
+				FALSE,
+				gAgent.getSessionID(),
+				from_id,
+				my_name.c_str(),
+				response.c_str(),
+				IM_ONLINE,
+				IM_BUSY_AUTO_RESPONSE,
+				session_id);
+			gAgent.sendReliableMessage();
+
+			// remove the "XXX is typing..." label from the IM window
+			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
+			gIMMgr->processIMTypingStop(im_info);
+		}
+//mk
 		else if (from_id.isNull())
 		{
 			LLSD args;
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+			{
+				// hide every occurrence of the Parcel name if the location restriction is active
+				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+				// hide every occurrence of the Region name if the location restriction is active
+				if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
+			}
+			
+			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			{
+				// censor object IMs but not avatar IMs
+				message = gAgent.mRRInterface.getCensoredMessage (message);
+			}
+//mk
 			args["MESSAGE"] = message;
 			LLNotificationsUtil::add("SystemMessage", args);
 		}
@@ -2416,6 +2542,33 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				saved = LLTrans::getString("Saved_message", args);
 			}
 			buffer = saved + message;
+
+//MK
+			if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString())
+				|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
+			{
+				// agent is forbidden to receive IMs and the sender is no exception
+				buffer = separator_string + saved + "...";
+				
+				// tell the sender the avatar could not read them
+				std::string my_name;
+				LLAgentUI::buildFullname(my_name);
+				my_name = my_name+" using viewer "+gAgent.mRRInterface.getVersion ();
+				std::string response = RRInterface::sRecvimMessage;
+				pack_instant_message(
+					gMessageSystem,
+					gAgent.getID(),
+					FALSE,
+					gAgent.getSessionID(),
+					from_id,
+					my_name.c_str(),
+					response.c_str(),
+					IM_ONLINE,
+					IM_BUSY_AUTO_RESPONSE,
+					session_id);
+				gAgent.sendReliableMessage();
+			}
+//mk
 
 			LL_INFOS("Messaging") << "process_improved_im: session_id( " << session_id << " ), from_id( " << from_id << " )" << LL_ENDL;
 
@@ -2482,6 +2635,20 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 		{
 			// This is a block, modeless dialog.
 			//*TODO: Translate
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+			{
+				// hide every occurrence of the Parcel name if the location restriction is active
+				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+				// hide every occurrence of the Region name if the location restriction is active
+				if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
+			}
+			
+			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			{
+				message = gAgent.mRRInterface.getCensoredMessage(message);
+			}
+//mk
 			args["MESSAGE"] = message;
 			LLNotificationsUtil::add("SystemMessageTip", args);
 		}
@@ -2686,9 +2853,33 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			info->mFromID = from_id;
 			info->mFromGroup = from_group;
 			info->mTransactionID = session_id;
-			info->mFolderID = gInventory.findCategoryUUIDForType(LLFolderType::assetTypeToFolderType(info->mType));
+//MK
+			std::string folder_name(message);
+			if (gRRenabled && !gSavedSettings.getBOOL("RestrainedLoveForbidGiveToRLV") &&
+				info->mType == LLAssetType::AT_CATEGORY &&
+				gAgent.mRRInterface.getRlvShare() &&
+				(folder_name.find(RR_RLV_REDIR_FOLDER_PREFIX) == 0 || folder_name.find(RR_RLV_REDIR_FOLDER_PREFIX) == 1))
+			{
+				info->mFolderID = gAgent.mRRInterface.getRlvShare()->getUUID();
+			}
+			else
+			{
+//mk
+				info->mFolderID = gInventory.findCategoryUUIDForType(LLFolderType::assetTypeToFolderType(info->mType));
+//MK
+			}
+//mk
 
 			info->mFromName = name;
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+			{
+				// hide every occurrence of the Parcel name if the location restriction is active
+				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+				// hide every occurrence of the Region name if the location restriction is active
+				if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
+			}
+//mk
 			info->mDesc = message;
 			info->mHost = msg->getSender();
 			//if (((is_busy && !is_owned_by_me) || is_muted))
@@ -2753,7 +2944,14 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 		{
 			return;
 		}
-
+//MK
+		if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim")
+			|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
+		{
+			 // agent is forbidden to receive IMs
+			return;
+		}
+//mk
 		// Only show messages if we have a session open (which
 		// should happen after you get an "invitation"
 		if ( !gIMMgr->hasSession(session_id) )
@@ -2789,11 +2987,19 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 
 	case IM_FROM_TASK:
 		{
-			if (is_busy && !is_owned_by_me)
-			{
-				return;
-			}
-
+//MK
+			// There are cases when the user is Busy and still wants to receive IMs from tasks that do not belong to them.
+			// Busy mode should have only one purpose : to notify other users that you are unavailable by sending an
+			// automated message. That's why it doesn't make sense to cut task IMs, since by definition you can't IM a
+			// task back to notify it of your status. Hence the IM is lost, and neither the user nor the task knows it.
+			// Besides, even muted task IMs can still show in the history, there is no reason why IMs received when being
+			// in Busy mode shouldn't. Busy is not supposed to protect more than Mute.
+			// That's why I'm commenting this code out for now.
+////			if (is_busy && !is_owned_by_me)
+////			{
+////				return;
+////			}
+//mk
 			// Build a link to open the object IM info window.
 			std::string location = ll_safe_string((char*)binary_bucket, binary_bucket_size-1);
 
@@ -2837,6 +3043,22 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			}	
 
 			chat.mURL = LLSLURL("objectim", session_id, "").getSLURLString();
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+			{
+				// hide the url
+				chat.mURL = "";
+				// hide every occurrence of the Parcel name if the location restriction is active
+				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+				// hide every occurrence of the Region name if the location restriction is active
+				if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
+			}
+			
+			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			{
+				message = gAgent.mRRInterface.getCensoredMessage(message);
+			}
+//mk
 			chat.mText = message;
 
 			// Note: lie to Nearby Chat, pretending that this is NOT an IM, because
@@ -2893,6 +3115,21 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 		}
 		{
 			// Construct a viewer alert for this message.
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+			{
+				// hide every occurrence of the Parcel name if the location restriction is active
+				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+				// hide every occurrence of the Region name if the location restriction is active
+				if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
+			}
+			
+			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			{
+				// censor object IMs but not avatar IMs
+				message = gAgent.mRRInterface.getCensoredMessage (message);
+			}
+//mk
 			args["NAME"] = name;
 			args["MESSAGE"] = message;
 			LLNotificationsUtil::add("ObjectMessage", args);
@@ -2918,7 +3155,13 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			{ 
 				return;
 			}
-			else if (is_busy) 
+//MK
+////			else if (is_busy) 
+			// Accept the TP if we are forced to accept TPs from this avatar or from everyone,
+			// even in busy mode
+			else if (is_busy && (!gRRenabled || (!gAgent.mRRInterface.contains ("accepttp:"+from_id.asString())
+									&& !gAgent.mRRInterface.contains ("accepttp")))) 
+//mk
 			{
 				busy_message(msg,from_id);
 			}
@@ -2975,44 +3218,91 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 						}
 					}
 				}
-
-				LLSD args;
-				// *TODO: Translate -> [FIRST] [LAST] (maybe)
-				args["NAME_SLURL"] = LLSLURL("agent", from_id, "about").getSLURLString();
-				args["MESSAGE"] = message;
-				args["MATURITY_STR"] = region_access_str;
-				args["MATURITY_ICON"] = region_access_icn;
-				args["REGION_CONTENT_MATURITY"] = region_access_lc;
-				LLSD payload;
-				payload["from_id"] = from_id;
-				payload["lure_id"] = session_id;
-				payload["godlike"] = FALSE;
-				payload["region_maturity"] = region_access;
-
-				if (!canUserAccessDstRegion)
+//MK
+				if (gRRenabled 
+					&& (gAgent.mRRInterface.containsWithoutException ("tplure", from_id.asString())
+					|| (gAgent.mRRInterface.mContainsUnsit && gAgentAvatarp && gAgentAvatarp->mIsSitting)))
 				{
-					LLNotification::Params params("TeleportOffered_MaturityBlocked");
-					params.substitutions = args;
-					params.payload = payload;
-					LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
-					send_simple_im(from_id, LLTrans::getString("TeleportMaturityExceeded"), IM_NOTHING_SPECIAL, session_id);
-					send_simple_im(from_id, LLStringUtil::null, IM_LURE_DECLINED, session_id);
+					std::string response = "The Resident you invited is prevented from accepting teleport offers. Please try again later.";
+					pack_instant_message(
+						gMessageSystem,
+						gAgent.getID(),
+						FALSE,
+						gAgent.getSessionID(),
+						from_id,
+						SYSTEM_FROM,
+						response.c_str(),
+						IM_ONLINE,
+						IM_BUSY_AUTO_RESPONSE);
+					gAgent.sendReliableMessage();
+					return;
 				}
-				else if (doesUserRequireMaturityIncrease)
+				
+				if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString())
+					|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
 				{
-					LLNotification::Params params("TeleportOffered_MaturityExceeded");
-					params.substitutions = args;
-					params.payload = payload;
-					LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
+					message = "(Hidden)";
+				}
+				
+				if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+				{
+					message = "(Hidden)";
+				}
+
+				if (gRRenabled && (gAgent.mRRInterface.contains ("accepttp:"+from_id.asString())
+									|| gAgent.mRRInterface.contains ("accepttp")))
+				{
+					// accepttp => the viewer acts like it was teleported by a god
+					gAgent.mRRInterface.setAllowCancelTp (FALSE);
+					LLSD payload;
+					payload["from_id"] = from_id;
+					payload["lure_id"] = session_id;
+					payload["godlike"] = TRUE;
+					// do not show a message box, because you're about to be teleported.
+					LLNotifications::instance().forceResponse(LLNotification::Params("TeleportOffered").payload(payload), 0);
 				}
 				else
 				{
-					LLNotification::Params params("TeleportOffered");
-					params.substitutions = args;
-					params.payload = payload;
-					LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
-				}
+//mk
+					LLSD args;
+					// *TODO: Translate -> [FIRST] [LAST] (maybe)
+					args["NAME_SLURL"] = LLSLURL("agent", from_id, "about").getSLURLString();
+					args["MESSAGE"] = message;
+					args["MATURITY_STR"] = region_access_str;
+					args["MATURITY_ICON"] = region_access_icn;
+					args["REGION_CONTENT_MATURITY"] = region_access_lc;
+					LLSD payload;
+					payload["from_id"] = from_id;
+					payload["lure_id"] = session_id;
+					payload["godlike"] = FALSE;
+					payload["region_maturity"] = region_access;
 
+					if (!canUserAccessDstRegion)
+					{
+						LLNotification::Params params("TeleportOffered_MaturityBlocked");
+						params.substitutions = args;
+						params.payload = payload;
+						LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
+						send_simple_im(from_id, LLTrans::getString("TeleportMaturityExceeded"), IM_NOTHING_SPECIAL, session_id);
+						send_simple_im(from_id, LLStringUtil::null, IM_LURE_DECLINED, session_id);
+					}
+					else if (doesUserRequireMaturityIncrease)
+					{
+						LLNotification::Params params("TeleportOffered_MaturityExceeded");
+						params.substitutions = args;
+						params.payload = payload;
+						LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
+					}
+					else
+					{
+						LLNotification::Params params("TeleportOffered");
+						params.substitutions = args;
+						params.payload = payload;
+						LLPostponedNotification::add<LLPostponedOfferNotification>(	params, from_id, false);
+					}
+//MK
+				}
+//mk
 			}
 		}
 		break;
@@ -3102,10 +3392,10 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			}
 			else
 			{
-				// do not show a message box, because you're about to be
-				// teleported.
-				LLNotifications::instance().forceResponse(LLNotification::Params("TeleportOffered").payload(payload), 0);
-			}
+			// do not show a message box, because you're about to be
+			// teleported.
+			LLNotifications::instance().forceResponse(LLNotification::Params("TeleportOffered").payload(payload), 0);
+		}
 		}
 		break;
 
@@ -3153,6 +3443,13 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			else
 			{
 				args["NAME_SLURL"] = LLSLURL("agent", from_id, "about").getSLURLString();
+//MK
+				if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString())
+					|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
+				{
+					message = "(Hidden)";
+				}
+//mk
 				if(message.empty())
 				{
 					//support for frienship offers from clients before July 2008
@@ -3388,12 +3685,26 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	LLUUID		owner_id;
 	BOOL		is_owned_by_me = FALSE;
 	LLViewerObject*	chatter;
+//MK
+	BOOL twirly = FALSE;
+//mk
 
 	msg->getString("ChatData", "FromName", from_name);
 	
 	msg->getUUID("ChatData", "SourceID", from_id);
 	chat.mFromID = from_id;
-	
+
+//MK
+	// We need to suppress the slurl before adding it to the chat history, so we cannot retrive it with a right-click
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		if (from_id != gAgent.getID())
+		{
+			chat.mFromID = LLUUID::null;
+		}
+	}
+//mk
+
 	// Object owner for objects
 	msg->getUUID("ChatData", "OwnerID", owner_id);
 
@@ -3445,6 +3756,40 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	chatter = gObjectList.findObject(from_id);
 	if (chatter)
 	{
+//MK
+		// If this is an object but its name is equal to its owner's user name or diplay name
+		// and if the debug setting is set right, then show the chat like it were said by the owner
+		if (chat.mSourceType == CHAT_SOURCE_OBJECT)
+		{
+			if (!chatter->isAvatar())
+			{
+				if (chatter->isAttachment())
+				{
+					if (gSavedSettings.getBOOL("RestrainedLoveImitateAvatarSpeech"))
+					{
+						LLAvatarName av_name;
+						if (LLAvatarNameCache::get(owner_id, &av_name))
+						{
+							std::string owner_display_name = av_name.mDisplayName;
+							std::string owner_user_name = av_name.getLegacyName();
+							std::string owner_first_name = gAgent.mRRInterface.getFirstName(owner_user_name);
+							std::string owner_last_name = gAgent.mRRInterface.getLastName(owner_user_name);
+							if (from_name == owner_display_name
+								|| from_name == owner_user_name
+								|| from_name == owner_first_name
+								|| from_name == owner_last_name
+								)
+							{
+								chat.mFromID = owner_id;
+								chat.mSourceType = CHAT_SOURCE_AGENT;
+							}
+						}
+					}
+				}
+			}
+		}
+//mk
+
 		chat.mPosAgent = chatter->getPositionAgent();
 
 		// Make swirly things only for talking objects. (not script debug messages, though)
@@ -3452,13 +3797,16 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			&& chat.mChatType != CHAT_TYPE_DEBUG_MSG
 			&& gSavedSettings.getBOOL("EffectScriptChatParticles") )
 		{
-			LLPointer<LLViewerPartSourceChat> psc = new LLViewerPartSourceChat(chatter->getPositionAgent());
-			psc->setSourceObject(chatter);
-			psc->setColor(color);
-			//We set the particles to be owned by the object's owner, 
-			//just in case they should be muted by the mute list
-			psc->setOwnerUUID(owner_id);
-			LLViewerPartSim::getInstance()->addPartSource(psc);
+//MK
+////			LLPointer<LLViewerPartSourceChat> psc = new LLViewerPartSourceChat(chatter->getPositionAgent());
+////			psc->setSourceObject(chatter);
+////			psc->setColor(color);
+////			//We set the particles to be owned by the object's owner, 
+////			//just in case they should be muted by the mute list
+////			psc->setOwnerUUID(owner_id);
+////			LLViewerPartSim::getInstance()->addPartSource(psc);
+			twirly = TRUE;
+//mk
 		}
 
 		// record last audible utterance
@@ -3478,12 +3826,62 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	if (is_audible)
 	{
 		BOOL visible_in_chat_bubble = FALSE;
+//MK
+		std::string verb;
+//mk
 
 		color.setVec(1.f,1.f,1.f,1.f);
 		msg->getStringFast(_PREHASH_ChatData, _PREHASH_Message, mesg);
 
 		BOOL ircstyle = FALSE;
+//MK
+		if (gRRenabled && chat.mChatType != CHAT_TYPE_OWNER)
+		{
+			if ((chatter &&	(chatter->isAvatar () || !chatter->isAttachment () || !chatter->permYouOwner ()))  // avatar, object or attachment that doesn't belong to me
+				|| !chatter) // or this may be a HUD (visible only to the other party) or an unrezzed avatar or object
+			{
+				if (gAgent.mRRInterface.containsWithoutException ("recvchat", from_id.asString())
+					|| gAgent.mRRInterface.contains ("recvchatfrom:"+from_id.asString()))
+				{
+					chat.mFromName = from_name;				
+					chat.mText = gAgent.mRRInterface.crunchEmote (mesg, 20); // + '\0';
+					if (!gSavedSettings.getBOOL ("RestrainedLoveShowEllipsis") && chat.mText == "...") {
+						chat.mText = "";
+					}
+					mesg = chat.mText;
+				}
 
+				if (gAgent.mRRInterface.containsWithoutException ("recvemote", from_id.asString())
+					|| gAgent.mRRInterface.contains ("recvemotefrom:"+from_id.asString()))
+				{
+					std::string prefix = mesg.substr(0, 4);
+					if (prefix == "/me " || prefix == "/me'")
+					{
+						chat.mFromName = from_name;				
+						chat.mText = "/me ...";
+						if (!gSavedSettings.getBOOL ("RestrainedLoveShowEllipsis")) {
+							chat.mText = "";
+						}
+						mesg = chat.mText;
+					}
+				}
+				
+				if (from_id != gAgent.getID() && gAgent.mRRInterface.mContainsShownames)
+				{
+					// also scramble the name of the chatter (replace with a dummy name)
+					if (chatter && chatter->isAvatar ())
+					{
+						from_name = gAgent.mRRInterface.getDummyName (from_name, chat.mAudible);
+					}
+					else
+					{
+						from_name = gAgent.mRRInterface.getCensoredMessage (from_name);
+					}
+					chat.mFromName = from_name;				
+				}
+			}
+		}
+//mk
 		// Look for IRC-style emotes here so chatbubbles work
 		std::string prefix = mesg.substr(0, 4);
 		if (prefix == "/me " || prefix == "/me'")
@@ -3500,6 +3898,9 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			// Might not have the avatar constructed yet, eg on login.
 			if (chatter && chatter->isAvatar())
 			{
+//MK
+//		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
+//mk
 				((LLVOAvatar*)chatter)->startTyping();
 			}
 			return;
@@ -3534,6 +3935,60 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				break;
 			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_OWNER:
+//MK
+			// This is the actual handling of the commands sent by owned objects.
+			{
+				std::string mesg_str(mesg);
+				if (gRRenabled && mesg_str.substr (0, 1) == RR_PREFIX)
+				{
+					std::string command = mesg_str.substr(1, mesg_str.length());
+					LLStringUtil::toLower(command);
+					LLUUID obj_id = from_id;
+					//LLViewerObject* object = gObjectList.findObject(from_id);
+					//if (object && object->getRootEdit())
+					//{
+					//	obj_id = object->getRootEdit()->getID();
+					//}
+					if (gAgent.mRRInterface.handleCommand (obj_id, command))
+					{
+						if (!gSavedSettings.getBOOL("RestrainedLoveDebug"))
+						{
+							return;
+						}
+						verb = " executes command: ";
+					}
+					else
+					{
+						verb = " fails command: ";
+					}
+				}
+//				else if (gRRenabled && mesg_str.length() >= 2 && mesg_str.substr (0, 2) == "\t") // this is a remark, only visible to non-RLV users
+//				{
+//					return;
+//				}
+				else
+				{
+					if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+					{
+						// hide every occurrence of the Parcel name if the location restriction is active
+						mesg = gAgent.mRRInterface.stringReplace (mesg, 
+								gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+						// hide every occurrence of the Region name if the location restriction is active
+						if (gAgent.getRegion()) mesg = gAgent.mRRInterface.stringReplace (mesg, gAgent.getRegion()->getName(), "(Region hidden)");
+					}
+					
+					if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+					{
+						mesg = gAgent.mRRInterface.getCensoredMessage (mesg);
+						from_name = gAgent.mRRInterface.getCensoredMessage (from_name);
+						chat.mFromName = from_name;				
+					}
+
+					verb = ": ";
+				}
+				break;
+			}
+//mk
 			case CHAT_TYPE_NORMAL:
 			case CHAT_TYPE_DIRECT:
 				break;
@@ -3549,9 +4004,51 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				break;
 			}
 
+
+//MK
+			if (gRRenabled)
+			{
+				// censor object chat but not avatar chat
+				if (!chatter || (chatter && !chatter->isAvatar()))
+				{
+					if (gAgent.mRRInterface.mContainsShowloc)
+					{
+//						if (chat.mChatType == CHAT_TYPE_NORMAL || chat.mChatType == CHAT_TYPE_SHOUT
+//							|| chat.mChatType == CHAT_TYPE_WHISPER)
+						{
+							// hide every occurrence of the Parcel name if the location restriction is active
+							mesg = gAgent.mRRInterface.stringReplace (mesg, 
+									gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+							// hide every occurrence of the Region name if the location restriction is active
+							if (gAgent.getRegion()) mesg = gAgent.mRRInterface.stringReplace (mesg, gAgent.getRegion()->getName(), "(Region hidden)");
+						}
+					}
+
+					if (gAgent.mRRInterface.mContainsShownames)
+					{
+						mesg = gAgent.mRRInterface.getCensoredMessage (mesg);
+					}
+				}
+			}
+////			chat.mText = "";
+//mk
+			chat.mText += verb;
 			chat.mText += mesg;
 		}
 		
+//MK
+		if (twirly)
+		{
+			LLPointer<LLViewerPartSourceChat> psc = new LLViewerPartSourceChat(chatter->getPositionAgent());
+			psc->setSourceObject(chatter);
+			psc->setColor(color);
+			//We set the particles to be owned by the object's owner, 
+			//just in case they should be muted by the mute list
+			psc->setOwnerUUID(owner_id);
+			LLViewerPartSim::getInstance()->addPartSource(psc);
+		}
+//mk		
+
 		// We have a real utterance now, so can stop showing "..." and proceed.
 		if (chatter && chatter->isAvatar())
 		{
@@ -3641,6 +4138,13 @@ void process_teleport_start(LLMessageSystem *msg, void**)
 		gViewerWindow->setProgressCancelButtonVisible(TRUE, LLTrans::getString("Cancel"));
 	}
 
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.getAllowCancelTp())
+	{
+		gViewerWindow->setProgressCancelButtonVisible(FALSE, "");
+	}
+//mk
+
 	// Freeze the UI and show progress bar
 	// Note: could add data here to differentiate between normal teleport and death.
 
@@ -3651,7 +4155,6 @@ void process_teleport_start(LLMessageSystem *msg, void**)
 		make_ui_sound("UISndTeleportOut");
 		
 		LL_INFOS("Messaging") << "Teleport initiated by remote TeleportStart message with TeleportFlags: " <<  teleport_flags << LL_ENDL;
-
 		// Don't call LLFirstUse::useTeleport here because this could be
 		// due to being killed, which would send you home, not to a Telehub
 	}
@@ -3674,7 +4177,10 @@ void process_teleport_progress(LLMessageSystem* msg, void**)
 	}
 	U32 teleport_flags = 0x0;
 	msg->getU32("Info", "TeleportFlags", teleport_flags);
-	if (teleport_flags & TELEPORT_FLAGS_DISABLE_CANCEL)
+	if (teleport_flags & TELEPORT_FLAGS_DISABLE_CANCEL
+//MK
+		|| (gRRenabled && !gAgent.mRRInterface.getAllowCancelTp()))
+//mk
 	{
 		gViewerWindow->setProgressCancelButtonVisible(FALSE);
 	}
@@ -3809,6 +4315,14 @@ BOOL LLPostTeleportNotifiers::tick()
 // We're going to pretend to be a new agent
 void process_teleport_finish(LLMessageSystem* msg, void**)
 {
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.getAllowCancelTp())
+	{
+		// Cancel button was forcibly hidden by the RLV code ("@tpto") => allow it to show again
+		// for next time
+		gAgent.mRRInterface.setAllowCancelTp (TRUE);
+	}
+//mk
 	LL_DEBUGS("Messaging") << "Got teleport location message" << LL_ENDL;
 	LLUUID agent_id;
 	msg->getUUIDFast(_PREHASH_Info, _PREHASH_AgentID, agent_id);
@@ -4030,8 +4544,15 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 			LLStringUtil::format(completed_from, substitution);
 
 			LLSD args;
-			args["MESSAGE"] = completed_from;
-			LLNotificationsUtil::add("SystemMessageTip", args);
+ //MK
+ 			if (!gRRenabled || !gAgent.mRRInterface.mContainsShowloc)
+ 			{
+ //mk
+				args["MESSAGE"] = completed_from;
+				LLNotificationsUtil::add("SystemMessageTip", args);
+ //MK
+ 			}
+ //mk
 
 			// Set the new position
 			gAgentAvatarp->setPositionAgent(agent_pos);
@@ -5072,7 +5593,14 @@ void process_avatar_sit_response(LLMessageSystem *mesgsys, void **user_data)
 		gAgentCamera.setSitCamera(sitObjectID, camera_eye, camera_at);
 	}
 	
-	gAgentCamera.setForceMouselook(force_mouselook);
+//MK
+	if (gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+	{
+//mk
+		gAgentCamera.setForceMouselook(force_mouselook);
+//MK
+	}
+//mk
 	// Forcing turning off flying here to prevent flying after pressing "Stand"
 	// to stand up from an object. See EXT-1655.
 	gAgent.setFlying(FALSE);
@@ -5629,14 +6157,14 @@ static void process_money_balance_reply_extended(LLMessageSystem* msg)
 bool handle_prompt_for_maturity_level_change_callback(const LLSD& notification, const LLSD& response)
 {
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
-	
+
 	if (0 == option)
 	{
 		// set the preference to the maturity of the region we're calling
 		U8 preferredMaturity = static_cast<U8>(notification["payload"]["_region_access"].asInteger());
 		gSavedSettings.setU32("PreferredMaturity", static_cast<U32>(preferredMaturity));
 	}
-	
+
 	return false;
 }
 
@@ -5713,7 +6241,7 @@ bool handle_special_notification(std::string notificationID, LLSD& llsdBlock)
 			returnValue = true;
 		}
 	}
-
+	
 	if ((maturityLevelNotification == NULL) || maturityLevelNotification->isIgnored())
 	{
 		// Given a simple notification if no maturityLevelNotification is set or it is ignore
@@ -5782,7 +6310,7 @@ bool handle_teleport_access_blocked(LLSD& llsdBlock)
 			{
 				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_ChangeAndReTeleport", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_and_reteleport_callback);
 				returnValue = true;
-			}
+		}
 			else
 			{
 				gAgent.clearTeleportRequest();
@@ -5819,7 +6347,6 @@ bool attempt_standard_notification(LLMessageSystem* msgsystem)
 		{
 			return false;
 		}
-
 		std::string llsdRaw;
 		LLSD llsdBlock;
 		msgsystem->getStringFast(_PREHASH_AlertInfo, _PREHASH_Message, notificationID);
@@ -5962,8 +6489,8 @@ void process_alert_core(const std::string& message, BOOL modal)
 		std::string alert_name(message.substr(ALERT_PREFIX.length()));
 		if (!handle_special_alerts(alert_name))
 		{
-			LLNotificationsUtil::add(alert_name);
-		}
+		LLNotificationsUtil::add(alert_name);
+	}
 	}
 	else if (message.find(NOTIFY_PREFIX) == 0)
 	{
@@ -6158,6 +6685,14 @@ void notify_cautioned_script_question(const LLSD& notification, const LLSD& resp
 		notice.setArg("[OBJECTNAME]", notification["payload"]["object_name"].asString());
 		notice.setArg("[OWNERNAME]", notification["payload"]["owner_name"].asString());
 
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			notice.setArg("[OBJECTNAME]", gAgent.mRRInterface.getCensoredMessage (notification["payload"]["object_name"].asString()));
+			notice.setArg("[OWNERNAME]", gAgent.mRRInterface.getDummyName (notification["payload"]["owner_name"].asString()));
+		}
+//mk
+		
 		// try to lookup viewerobject that corresponds to the object that
 		// requested permissions (here, taskid->requesting object id)
 		BOOL foundpos = FALSE;
@@ -6172,7 +6707,14 @@ void notify_cautioned_script_question(const LLSD& notification, const LLSD& resp
 			if (viewregion)
 			{
 				// got the region, so include the region and 3d coordinates of the object
-				notice.setArg("[REGIONNAME]", viewregion->getName());				
+//MK
+				if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+				{
+					notice.setArg("[REGIONNAME]", "(Region hidden)");
+				}
+				else
+//mk
+					notice.setArg("[REGIONNAME]", viewregion->getName());				
 				std::string formatpos = llformat("%.1f, %.1f,%.1f", objpos[VX], objpos[VY], objpos[VZ]);
 				notice.setArg("[REGIONPOS]", formatpos);
 
@@ -6270,7 +6812,7 @@ bool script_question_cb(const LLSD& notification, const LLSD& response)
 		notify_cautioned_script_question(notification, response, orig, allowed);
 	}
 
-	if ( response["Mute"] ) // mute
+	if ( response["MUTE_HARDCODED"] ) // mute
 	{
 		LLMuteList::getInstance()->add(LLMute(item_id, notification["payload"]["object_name"].asString(), LLMute::OBJECT));
 
@@ -6336,26 +6878,67 @@ void process_script_question(LLMessageSystem *msg, void **user_data)
 	// don't display permission requests if this object is muted
 	if (LLMuteList::getInstance()->isMuted(taskid)) return;
 	
+//MK
+	BOOL auto_acceptable_permission = FALSE;
+	if (gRRenabled && gAgent.mRRInterface.contains ("acceptpermission"))
+	{
+		auto_acceptable_permission = (questions	&
+										(LSCRIPTRunTimePermissionBits[1] |	//LSCRIPTRunTimePermissions::SCRIPT_PERMISSION_TAKE_CONTROLS]
+					   					 LSCRIPTRunTimePermissionBits[3] |	//LSCRIPTRunTimePermissions::SCRIPT_PERMISSION_TRIGGER_ANIMATION]
+					   					 LSCRIPTRunTimePermissionBits[4]));	//LSCRIPTRunTimePermissions::SCRIPT_PERMISSION_ATTACH]
+	
+		if (auto_acceptable_permission)
+		{
+			// security check : if there is any other permission contained in this package, we can't automatically grant anything
+			unsigned int other_perms = questions & ~ (LSCRIPTRunTimePermissionBits[1] | LSCRIPTRunTimePermissionBits[3] | LSCRIPTRunTimePermissionBits[4]);
+			if (other_perms)
+			{
+				auto_acceptable_permission = FALSE;
+			}
+
+			// can't auto-accept animation permission if not sitting
+			if (gAgentAvatarp && !gAgentAvatarp->mIsSitting && (questions & LSCRIPTRunTimePermissionBits[3]))
+			{
+				auto_acceptable_permission = FALSE;
+			}
+
+			// can't auto-accept attach request from a non-owned object
+			if (questions & LSCRIPTRunTimePermissionBits[4] && owner_name != self_name)
+			{
+				auto_acceptable_permission = FALSE;
+			}
+		}
+	}
+//mk
+
 	// throttle excessive requests from any specific user's scripts
 	typedef LLKeyThrottle<std::string> LLStringThrottle;
 	static LLStringThrottle question_throttle( LLREQUEST_PERMISSION_THROTTLE_LIMIT, LLREQUEST_PERMISSION_THROTTLE_INTERVAL );
 
-	switch (question_throttle.noteAction(throttle_name))
+//MK
+	// do not throttle automatically accepted permissions
+	if (!auto_acceptable_permission)
 	{
-		case LLStringThrottle::THROTTLE_NEWLY_BLOCKED:
-			LL_INFOS("Messaging") << "process_script_question throttled"
-					<< " owner_name:" << owner_name
-					<< LL_ENDL;
-			// Fall through
+//mk
+		switch (question_throttle.noteAction(throttle_name))
+		{
+			case LLStringThrottle::THROTTLE_NEWLY_BLOCKED:
+				LL_INFOS("Messaging") << "process_script_question throttled"
+						<< " owner_name:" << owner_name
+						<< LL_ENDL;
+				// Fall through
 
-		case LLStringThrottle::THROTTLE_BLOCKED:
-			// Escape altogether until we recover
-			return;
+			case LLStringThrottle::THROTTLE_BLOCKED:
+				// Escape altogether until we recover
+				return;
 
-		case LLStringThrottle::THROTTLE_OK:
-			break;
+			case LLStringThrottle::THROTTLE_OK:
+				break;
+		}
+//MK
 	}
-
+//mk
+	
 	std::string script_question;
 	if (questions)
 	{
@@ -6391,7 +6974,14 @@ void process_script_question(LLMessageSystem *msg, void **user_data)
 		payload["questions"] = questions;
 		payload["object_name"] = object_name;
 		payload["owner_name"] = owner_name;
-
+//MK
+		if (auto_acceptable_permission && !(caution && gSavedSettings.getBOOL("PermissionsCautionEnabled")))
+		{
+			// reply with the permissions granted
+			LLNotifications::instance().forceResponse(LLNotification::Params("ScriptQuestion").payload(payload), 0/*YES*/);
+			return;
+		}
+//mk
 		// check whether cautions are even enabled or not
 		if (gSavedSettings.getBOOL("PermissionsCautionEnabled"))
 		{
@@ -6766,6 +7356,12 @@ bool handle_lure_callback(const LLSD& notification, const LLSD& response)
 	LLSLURL slurl;
 	LLAgentUI::buildSLURL(slurl);
 	text.append("\r\n").append(slurl.getSLURLString());
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return false;
+	}
+//mk
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
 
 	if(0 == option)
@@ -6777,13 +7373,28 @@ bool handle_lure_callback(const LLSD& notification, const LLSD& response)
 		msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 		msg->nextBlockFast(_PREHASH_Info);
 		msg->addU8Fast(_PREHASH_LureType, (U8)0); // sim will fill this in.
-		msg->addStringFast(_PREHASH_Message, text);
+//LC
+		for(LLSD::array_const_iterator lc_it = notification["payload"]["ids"].beginArray();
+			lc_it != notification["payload"]["ids"].endArray();
+			++lc_it)
+		{
+
+//MK
+			LLUUID lc_target_id = lc_it->asUUID();
+                        if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim") || gAgent.mRRInterface.containsSubstr ("sendimto:"+lc_target_id.asString())))
+			{
+				text = "(Hidden)";
+			}
+		}
+
+ 		msg->addStringFast(_PREHASH_Message, text);
+//mk
+//lc
 		for(LLSD::array_const_iterator it = notification["payload"]["ids"].beginArray();
 			it != notification["payload"]["ids"].endArray();
 			++it)
 		{
 			LLUUID target_id = it->asUUID();
-
 			msg->nextBlockFast(_PREHASH_TargetData);
 			msg->addUUIDFast(_PREHASH_TargetID, target_id);
 
@@ -6835,6 +7446,25 @@ void handle_lure(const uuid_vec_t& ids)
 	{
 		payload["ids"].append(*it);
 	}
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+		//edit_args["[REGION]"] = "(Hidden)";
+		
+//		// allow the tp offer if and only if the avatar is allowed to send tp offers to ALL
+//		// the avatars in the list
+//		for (LLDynamicArray<LLUUID>::iterator it = ids.begin();
+//			 it != ids.end(); ++it)
+//		{
+//			if (!gAgent.mRRInterface.contains ("tplure:"+it->asString()))
+//			{
+//				// someone in the list is not an exception to tplure => eject
+//				return;
+//			}
+//		}
+	}
+//mk
 	if (gAgent.isGodlike())
 	{
 		LLNotificationsUtil::add("OfferTeleportFromGod", edit_args, payload, handle_lure_callback);
@@ -7045,6 +7675,35 @@ void process_script_dialog(LLMessageSystem* msg, void**)
 		msg->getString("Buttons", "ButtonLabel", tdesc, i);
 		form.addElement("button", std::string(tdesc));
 	}
+
+//MK
+			if (gRRenabled)
+			{
+				if (gAgent.mRRInterface.mContainsShowloc)
+				{
+					{
+						// hide every occurrence of the Parcel name if the location restriction is active
+						object_name = gAgent.mRRInterface.stringReplace (object_name, 
+								gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+						message = gAgent.mRRInterface.stringReplace (message, 
+								gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+						// hide every occurrence of the Region name if the location restriction is active
+						object_name = gAgent.mRRInterface.stringReplace (object_name, 
+								gAgent.getRegion()->getName(), "(Region hidden)");
+						if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
+					}
+				}
+
+				if (gAgent.mRRInterface.mContainsShownames)
+				{
+					object_name = gAgent.mRRInterface.getCensoredMessage (object_name);
+					message = gAgent.mRRInterface.getCensoredMessage (message);
+					last_name = first_name+" "+last_name;
+					first_name = "";
+					last_name = gAgent.mRRInterface.getDummyName (last_name);
+				}
+			}
+//mk
 
 	LLSD args;
 	args["TITLE"] = object_name;
