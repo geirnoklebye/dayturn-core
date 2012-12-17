@@ -104,9 +104,10 @@ public:
 	U32				getWearableCount(const LLWearableType::EType type) const;
 	U32				getWearableCount(const U32 tex_index) const;
 
-	static const U32 MAX_CLOTHING_PER_TYPE = 5; 
-
-
+//MK
+////	static const U32 MAX_CLOTHING_PER_TYPE = 5; 
+	static const U32 MAX_CLOTHING_PER_TYPE = 10; 
+//mk
 	//--------------------------------------------------------------------
 	// Setters
 	//--------------------------------------------------------------------

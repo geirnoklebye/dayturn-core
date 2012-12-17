@@ -38,6 +38,9 @@ private:
 	LLFloaterAvatar(const LLSD& key);
 	/*virtual*/	~LLFloaterAvatar();
 	/*virtual*/	BOOL postBuild();
+//MK
+	/*virtual*/ void draw();
+//mk
 };
 
 #endif

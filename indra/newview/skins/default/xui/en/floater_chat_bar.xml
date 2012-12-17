@@ -8,6 +8,8 @@
  legacy_header_height="25"
  single_instance="true"
  title="NEARBY CHAT"
+ show_title="false"
+ border_visible="false"
  save_rect="true"
  save_visibility="true"
  can_close="true"
