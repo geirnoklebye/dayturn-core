@@ -189,6 +189,13 @@ ATI Radeon HD 4800						.*ATI.*Radeon HD *48..					3	1	1	4
 ATI ASUS EAH5400						.*ATI.*ASUS EAH54..						3	1	1	4.2
 ATI Radeon HD 5400						.*ATI.*Radeon HD *54..					3	1	1	4.2
 ATI Radeon HD 5500						.*ATI.*Radeon HD *55..					3	1	1	4.2
+ATI Radeon HD 7300				.*ATI.*Radeon HD *73..						3		1
+ATI Radeon HD 7400				.*ATI.*Radeon HD *74..						3		1
+ATI Radeon HD 7500				.*ATI.*Radeon HD *75..						3		1
+ATI Radeon HD 7600				.*ATI.*Radeon HD *76..						3		1
+ATI Radeon HD 7700				.*ATI.*Radeon HD *77..						3		1
+ATI Radeon HD 7800				.*ATI.*Radeon HD *78..						3		1
+ATI Radeon HD 7900				.*ATI.*Radeon HD *79..						3		1
 ATI ASUS EAH5500						.*ATI.*ASUS EAH55..						3	1	1	4.2
 ATI Radeon HD 5600						.*ATI.*Radeon HD *56..					3	1	1	4.2
 ATI Radeon HD 5700						.*ATI.*Radeon HD *57..					3	1	1	4.2
@@ -313,6 +320,8 @@ Intel HD3000							.*Intel.*HD3000.*						3	1	0	0
 Intel HD Graphics						.*Intel.*HD Graphics.*					2	1	1	4
 Intel Mobile 4 Series					.*Intel.*Mobile.* 4 Series.*			0	1	1	2.1
 Intel 4 Series Internal					.*Intel.* 4 Series Internal.*			1	1	1	2.1
+NVIDIA 605M						.*NVIDIA .*GeForce 605M.*					2		1
+NVIDIA 610M						.*NVIDIA .*GeForce 610M.*					2		1
 Intel Media Graphics HD					.*Intel.*Media Graphics HD.*			0	1	0	0
 Intel Montara							.*Intel.*Montara.*						0	0	1	1.3
 Intel Pineview							.*Intel.*Pineview.*						0	1	1	1.4
@@ -594,5 +603,4 @@ XGI										XGI.*									0	0	0	0
 VIA										VIA.*									0	0	0	0
 Apple Generic							Apple.*Generic.*						0	0	0	0
 Apple Software Renderer					Apple.*Software Renderer.*				0	0	0	0
-Humper									Humper.*								0	1	1	2.1
 PowerVR SGX545							.*PowerVR SGX.*							1	1	1	3

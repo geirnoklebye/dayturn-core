@@ -36,6 +36,7 @@
 #include <queue>
 #include "v4color.h"
 
+
 class LLPluginClassMedia : public LLPluginProcessParentOwner
 {
 	LOG_CLASS(LLPluginClassMedia);
@@ -249,6 +250,11 @@ public:
 	// This is valid during MEDIA_EVENT_CLICK_LINK_HREF and MEDIA_EVENT_GEOMETRY_CHANGE
 	std::string getClickUUID() const { return mClickUUID; };
 
+    #if LL_WINDOWS
+	//Open a debug console for this plugin.
+	void showConsole();
+    #endif
+
 	// These are valid during MEDIA_EVENT_DEBUG_MESSAGE
 	std::string getDebugMessageText() const { return mDebugMessageText; };
 	std::string getDebugMessageLevel() const { return mDebugMessageLevel; };
@@ -278,6 +284,11 @@ public:
 	
 	// Hang the plugin.  If you use this outside of a testbed, you will be punished.
 	void		hangPlugin();
+
+	// This sends the message "base", "cleanup" to the plugin
+	// Don't call this unless you know what you're doing
+	// and you know this is exactly what you want to do
+	void		forceCleanUpPlugin();
 
 	///////////////////////////////////
 	// media time class functions
@@ -422,7 +433,20 @@ protected:
 	F64				mDuration;
 	F64				mCurrentRate;
 	F64				mLoadedDuration;
-	
+
+public:
+	// <ND> Enable gstreamer plugin to report title/artist of current stream
+	std::string const& getArtist() const
+	{ return mArtist; }
+
+	std::string const& getTitle() const
+	{ return mTitle; }
+
+private:
+	std::string mArtist;
+	std::string mTitle;
+	// </ND>
+
 //--------------------------------------
 	//debug use only
 	//
