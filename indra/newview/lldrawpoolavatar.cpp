@@ -258,6 +258,7 @@ void LLDrawPoolAvatar::beginPostDeferredAlpha()
 	sSkipOpaque = TRUE;
 	sShaderLevel = mVertexShaderLevel;
 	sVertexProgram = &gDeferredAvatarAlphaProgram;
+
 	sRenderingSkinned = TRUE;
 
 	gPipeline.bindDeferredShader(*sVertexProgram);
@@ -313,7 +314,7 @@ void LLDrawPoolAvatar::endPostDeferredAlpha()
 	// if we're in software-blending, remember to set the fence _after_ we draw so we wait till this rendering is done
 	sRenderingSkinned = FALSE;
 	sSkipOpaque = FALSE;
-		
+	
 	gPipeline.unbindDeferredShader(*sVertexProgram);
 	sDiffuseChannel = 0;
 	sShaderLevel = mVertexShaderLevel;
@@ -1014,6 +1015,7 @@ void LLDrawPoolAvatar::beginDeferredSkinned()
 {
 	sShaderLevel = mVertexShaderLevel;
 	sVertexProgram = &gDeferredAvatarProgram;
+
 	sRenderingSkinned = TRUE;
 
 	sVertexProgram->bind();
