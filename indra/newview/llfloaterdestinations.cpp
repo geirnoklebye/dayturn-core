@@ -35,6 +35,9 @@
 #include "llfloaterdestinations.h"
 #include "lluictrlfactory.h"
 
+//MK
+#include "llagent.h"
+//mk
 
 LLFloaterDestinations::LLFloaterDestinations(const LLSD& key)
 	:	LLFloater(key)
@@ -51,4 +54,27 @@ BOOL LLFloaterDestinations::postBuild()
 	return TRUE;
 }
 
+//MK
+void LLFloaterDestinations::onOpen(const LLSD& key)
+{
+	if (gRRenabled && gAgent.mRRInterface.mContainsTp)
+	{
+		closeFloater();
+		return;
+	}
+
+	LLFloater::onOpen(key);
+}
+
+void LLFloaterDestinations::draw()
+{
+	if (gRRenabled && gAgent.mRRInterface.mContainsTp)
+	{
+		closeFloater();
+		return;
+	}
+
+	LLFloater::draw();
+}
+//mk
 
