@@ -2579,6 +2579,13 @@ LLUUID LLIMMgr::addSession(
 {
 	LLDynamicArray<LLUUID> ids;
 	ids.put(other_participant_id);
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.containsWithoutException("startim", other_participant_id.asString())
+		|| gAgent.mRRInterface.contains ("startimto:"+other_participant_id.asString())))
+	{
+		return LLUUID::null;
+	}
+//mk
 	return addSession(name, dialog, other_participant_id, ids, voice);
 }
 
@@ -3258,7 +3265,13 @@ public:
 			{
 				return;
 			}
-
+//MK            
+			if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString())
+				|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
+			{
+				return;
+			}
+//mk
 			// standard message, not from system
 			std::string saved;
 			if(offline == IM_OFFLINE)
