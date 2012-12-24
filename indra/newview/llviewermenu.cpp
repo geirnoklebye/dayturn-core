@@ -4172,12 +4172,6 @@ class LLViewToggleUI : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-//MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsRez)
-		{
-			return true;
-		}
-//mk		
 		LLNotification::Params params("ConfirmHideUI");
 		params.functor.function(boost::bind(&LLViewToggleUI::confirm, this, _1, _2));
 		LLSD substitutions;
@@ -6797,11 +6791,21 @@ private:
 //MK
 			if (gRRenabled)
 			{
+				// Can't "Wear" while something is locked, since it could kick a locked object off
 				if (index == 0 && gAgent.mRRInterface.mContainsDetach)
 				{
  					setObjectSelection (NULL);
 					return false; // something is locked and we're attempting a Wear in-world
 				}
+
+				// Can't attach to any point if "unsharedwear" is active, since the object would go into the "Objects" folder
+				if (gAgent.mRRInterface.contains ("unsharedwear"))
+				{
+					setObjectSelection (NULL);
+					return false;
+				}
+
+				// Can't attach to a locked attachment point
 				if (attachment_point
 					&& (!gAgent.mRRInterface.canDetach(attachment_point->getName()) || !gAgent.mRRInterface.canAttach(NULL, attachment_point->getName())))
 				{

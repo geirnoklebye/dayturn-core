@@ -1046,12 +1046,16 @@ void LLInventoryModel::changeItemParent(LLViewerInventoryItem* item,
 		{
 			LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
 			LLInventoryCategory* cat_new_parent = gInventory.getCategory (new_parent_id);
-			// We can move this item if we are moving it from an unshared folder to another one, even if both folders are locked
-//			if (gAgent.mRRInterface.isUnderRlvShare(cat_parent) || gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
+			const LLUUID cat_trash_uuid = gInventory.findCategoryUUIDForType(LLFolderType::FT_TRASH);
+			if (cat_parent->getUUID() != cat_trash_uuid && cat_new_parent->getUUID() != cat_trash_uuid)
 			{
-				if (gAgent.mRRInterface.isFolderLocked(cat_parent) || gAgent.mRRInterface.isFolderLocked(cat_new_parent))
+				// We can move this item only if both folders are locked or both folders are unlocked
+				//if (gAgent.mRRInterface.isUnderRlvShare(cat_parent) || gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
 				{
-					return;
+					if (gAgent.mRRInterface.isFolderLocked(cat_parent) != gAgent.mRRInterface.isFolderLocked(cat_new_parent))
+					{
+						return;
+					}
 				}
 			}
 		}
@@ -1088,12 +1092,16 @@ void LLInventoryModel::changeCategoryParent(LLViewerInventoryCategory* cat,
 	if (gRRenabled)
 	{
 		LLInventoryCategory* cat_new_parent = gInventory.getCategory (new_parent_id);
-			// We can move this category if we are moving it from an unshared folder to another one, even if both folders are locked
-//			if (gAgent.mRRInterface.isUnderRlvShare(cat) || gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
+		const LLUUID cat_trash_uuid = gInventory.findCategoryUUIDForType(LLFolderType::FT_TRASH);
+		if (cat->getUUID() != cat_trash_uuid && cat_new_parent->getUUID() != cat_trash_uuid)
 		{
-			if (gAgent.mRRInterface.isFolderLocked(cat) || gAgent.mRRInterface.isFolderLocked(cat_new_parent))
+			// We can move this item only if both folders are locked or both folders are unlocked
+			//if (gAgent.mRRInterface.isUnderRlvShare(cat) || gAgent.mRRInterface.isUnderRlvShare(cat_new_parent))
 			{
-				return;
+				if (gAgent.mRRInterface.isFolderLocked(cat) != gAgent.mRRInterface.isFolderLocked(cat_new_parent))
+				{
+					return;
+				}
 			}
 		}
 	}

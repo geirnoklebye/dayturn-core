@@ -2111,6 +2111,21 @@ void LLAgentWearables::createWearable(LLWearableType::EType type, bool wear, con
 {
 	if (type == LLWearableType::WT_INVALID || type == LLWearableType::WT_NONE) return;
 
+//MK
+	// We can't create a wearable under #RLV if at least one folder is locked
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.isUnderRlvShare(gInventory.getCategory(parent_id)))
+		{
+			if (gAgent.mRRInterface.containsSubstr("attachthis")
+			|| gAgent.mRRInterface.containsSubstr("attachallthis"))
+			{
+				return;
+			}
+		}
+	}
+//mk
+
 	LLWearable* wearable = LLWearableList::instance().createNewWearable(type);
 	LLAssetType::EType asset_type = wearable->getAssetType();
 	LLInventoryType::EType inv_type = LLInventoryType::IT_WEARABLE;

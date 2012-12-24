@@ -1931,7 +1931,7 @@ BOOL LLFolderBridge::isClipboardPasteable() const
 //MK
 	if (gRRenabled)
 	{
-		// Don't allow if either the destination folder or the source folder is locked
+		// Don't allow if the destination folder is unlocked and the source folder is locked
 		LLInventoryModel* model = getInventoryModel();
 		if (model)
 		{
@@ -1942,8 +1942,8 @@ BOOL LLFolderBridge::isClipboardPasteable() const
 			for(S32 i = objects.count() - 1; i >= 0; --i)
 			{
 				const LLUUID &obj_id = objects.get(i);
-				if (gAgent.mRRInterface.isFolderLocked(current_cat)
-				|| gAgent.mRRInterface.isFolderLocked(gInventory.getCategory (model->getObject(obj_id)->getParentUUID())))
+				if (!gAgent.mRRInterface.isFolderLocked(current_cat)
+				&& gAgent.mRRInterface.isFolderLocked(gInventory.getCategory (model->getObject(obj_id)->getParentUUID())))
 				{
 					return FALSE;
 				}
@@ -2006,7 +2006,7 @@ BOOL LLFolderBridge::isClipboardPasteableAsLink() const
 //MK
 	if (gRRenabled)
 	{
-		// Don't allow if either the destination folder or the source folder is locked
+		// Don't allow if the destination folder is unlocked and the source folder is locked
 		LLInventoryModel* model = getInventoryModel();
 		if (model)
 		{
@@ -2017,8 +2017,8 @@ BOOL LLFolderBridge::isClipboardPasteableAsLink() const
 			for(S32 i = objects.count() - 1; i >= 0; --i)
 			{
 				const LLUUID &obj_id = objects.get(i);
-				if (gAgent.mRRInterface.isFolderLocked(current_cat)
-				|| gAgent.mRRInterface.isFolderLocked(gInventory.getCategory (model->getObject(obj_id)->getParentUUID())))
+				if (!gAgent.mRRInterface.isFolderLocked(current_cat)
+				&& gAgent.mRRInterface.isFolderLocked(gInventory.getCategory (model->getObject(obj_id)->getParentUUID())))
 				{
 					return FALSE;
 				}
@@ -3909,6 +3909,27 @@ BOOL LLFolderBridge::dragItemIntoFolder(LLInventoryItem* inv_item,
 	LLToolDragAndDrop::ESource source = LLToolDragAndDrop::getInstance()->getSource();
 	BOOL accept = FALSE;
 	LLViewerObject* object = NULL;
+
+//MK
+	// We can't drag into #RLV if at least one folder is locked
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.isUnderRlvShare(getCategory()))
+		{
+			// check for every kind of source except Agent, since we already have rules about where an item or a folder
+			// can come from and where it can go, according to the current restrictions
+			if(LLToolDragAndDrop::SOURCE_AGENT != source)
+			{
+				if (gAgent.mRRInterface.containsSubstr("attachthis")
+				|| gAgent.mRRInterface.containsSubstr("attachallthis"))
+				{
+					return false;
+				}
+			}
+		}
+	}
+//mk
+
 	if(LLToolDragAndDrop::SOURCE_AGENT == source)
 	{
 		const LLUUID &trash_id = model->findCategoryUUIDForType(LLFolderType::FT_TRASH, false);
