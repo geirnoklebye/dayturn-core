@@ -339,9 +339,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>be7321370b69b6d66938b82a9230a067</string>
+              <string>74596e1ef0de2aa684239cd936aa0adc</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-colladadom/rev/233450/arch/Linux/installer/colladadom-2.2-linux-20110621.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/colladadom/downloads/colladadom-2.2-linux-20121229.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
