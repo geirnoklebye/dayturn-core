@@ -2573,6 +2573,17 @@
           <map>
             <key>archive</key>
             <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
               <key>hash</key>
               <string>89e178a6c1308d1e86cf5211e9434582</string>
               <key>url</key>
