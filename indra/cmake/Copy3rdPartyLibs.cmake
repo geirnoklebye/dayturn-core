@@ -397,11 +397,18 @@ elseif(LINUX)
           libapr-1.so.0
           libaprutil-1.so.0
           libatk-1.0.so.0 
+          libboost_program_options-mt.so.1.48.0
+          libboost_regex-mt.so.1.48.0
+          libboost_thread-mt.so.1.48.0
+          libboost_filesystem-mt.so.1.48.0
+          libboost_signals-mt.so.1.48.0
+          libboost_system-mt.so.1.48.0
           libbreakpad_client.so.0
           libcares.so.2
           libcrypto.so
           libcrypto.so.1.0.0
           libcurl.so.4
+          libcollada14dom.so
           libdb-5.1.so
           libexpat.so
           libexpat.so.1

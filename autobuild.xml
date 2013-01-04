@@ -290,21 +290,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>ead9b63286672e9083bb30654e820052</string>
+              <string>fb26c88983b6bf9b5042d00bfdd3ade4</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/boost-1.45.0-Linux-x86_64-20111216.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-boost/downloads/boost-1.48.0-linux64-20130103.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>

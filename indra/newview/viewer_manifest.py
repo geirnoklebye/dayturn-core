@@ -1166,6 +1166,12 @@ class Linux_x86_64Manifest(LinuxManifest):
         if self.prefix("../packages/lib/release", dst="lib64"):
             self.path("libapr-1.so*")
             self.path("libaprutil-1.so*")
+            self.path("libboost_program_options-mt.so.1.48.0")
+            self.path("libboost_regex-mt.so.1.48.0")
+            self.path("libboost_thread-mt.so.1.48.0")
+            self.path("libboost_filesystem-mt.so.1.48.0")
+            self.path("libboost_signals-mt.so.1.48.0")
+            self.path("libboost_system-mt.so.1.48.0")
             self.path("libbreakpad_client.so*")
             self.path("libdb-5.1.so")
             self.path("libdb-5.so")
