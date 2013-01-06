@@ -55,14 +55,18 @@ LLToolGun::LLToolGun( LLToolComposite* composite )
 void LLToolGun::handleSelect()
 {
 	gViewerWindow->hideCursor();
-	gViewerWindow->moveCursorToCenter();
+//MK
+////	gViewerWindow->moveCursorToCenter();
+//mk
 	gViewerWindow->getWindow()->setMouseClipping(TRUE);
 	mIsSelected = TRUE;
 }
 
 void LLToolGun::handleDeselect()
 {
-	gViewerWindow->moveCursorToCenter();
+//MK
+////	gViewerWindow->moveCursorToCenter();
+//mk
 	gViewerWindow->showCursor();
 	gViewerWindow->getWindow()->setMouseClipping(FALSE);
 	mIsSelected = FALSE;
