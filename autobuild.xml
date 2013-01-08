@@ -280,9 +280,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fb26c88983b6bf9b5042d00bfdd3ade4</string>
+              <string>b9dbe1ab34187a9a6f53fd89f88060d2</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-boost/downloads/boost-1.48.0-linux64-20130103.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-boost-64/downloads/boost-1.52.0-linux64-20130107.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
