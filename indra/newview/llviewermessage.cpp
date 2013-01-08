@@ -4797,7 +4797,7 @@ void send_agent_update(BOOL force_send, BOOL send_reliable)
 		msg_number += 1;
 		if (head_rot_chg < THRESHOLD_HEAD_ROT_QDOT)
 		{
-			//LL_INFOS("Messaging") << " head rot " << head_rotation << LL_ENDL;
+			//LL_INFOS("Messaging") << "head rot " << head_rotation << LL_ENDL;
 			LL_INFOS("Messaging") << "msg " << msg_number << ", frame " << LLFrameTimer::getFrameCount() << ", head_rot_chg " << head_rot_chg << LL_ENDL;
 		}
 		if (cam_rot_chg.magVec() > ROTATION_THRESHOLD) 
@@ -4816,7 +4816,7 @@ void send_agent_update(BOOL force_send, BOOL send_reliable)
 		{
 			LL_INFOS("Messaging") << "msg " << msg_number << ", frame " << LLFrameTimer::getFrameCount() << ", dcf = " << control_flag_change << LL_ENDL;
 		}
-		*/
+*/
 
 		duplicate_count = 0;
 	}
@@ -4941,7 +4941,6 @@ extern U32 gObjectBits;
 
 void process_object_update(LLMessageSystem *mesgsys, void **user_data)
 {	
-	LLMemType mt(LLMemType::MTYPE_OBJECT);
 	// Update the data counters
 	if (mesgsys->getReceiveCompressedSize())
 	{
@@ -4958,7 +4957,6 @@ void process_object_update(LLMessageSystem *mesgsys, void **user_data)
 
 void process_compressed_object_update(LLMessageSystem *mesgsys, void **user_data)
 {
-	LLMemType mt(LLMemType::MTYPE_OBJECT);
 	// Update the data counters
 	if (mesgsys->getReceiveCompressedSize())
 	{
@@ -4975,7 +4973,6 @@ void process_compressed_object_update(LLMessageSystem *mesgsys, void **user_data
 
 void process_cached_object_update(LLMessageSystem *mesgsys, void **user_data)
 {
-	LLMemType mt(LLMemType::MTYPE_OBJECT);
 	// Update the data counters
 	if (mesgsys->getReceiveCompressedSize())
 	{
@@ -4993,7 +4990,6 @@ void process_cached_object_update(LLMessageSystem *mesgsys, void **user_data)
 
 void process_terse_object_update_improved(LLMessageSystem *mesgsys, void **user_data)
 {
-	LLMemType mt(LLMemType::MTYPE_OBJECT);
 	if (mesgsys->getReceiveCompressedSize())
 	{
 		gObjectBits += mesgsys->getReceiveCompressedSize() * 8;
@@ -5006,7 +5002,7 @@ void process_terse_object_update_improved(LLMessageSystem *mesgsys, void **user_
 	gObjectList.processCompressedObjectUpdate(mesgsys, user_data, OUT_TERSE_IMPROVED);
 }
 
-static LLFastTimer::DeclareTimer FTM_PROCESS_OBJECTS("Process Objects");
+static LLFastTimer::DeclareTimer FTM_PROCESS_OBJECTS("Process Kill Objects");
 
 
 void process_kill_object(LLMessageSystem *mesgsys, void **user_data)
@@ -6227,7 +6223,7 @@ bool handle_special_notification(std::string notificationID, LLSD& llsdBlock)
 			gAgent.clearTeleportRequest();
 			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
 			returnValue = true;
-
+	
 			notifySuffix = "_NotifyAdultsOnly";
 		}
 		else if (gAgent.prefersPG() || gAgent.prefersMature())
@@ -6324,7 +6320,7 @@ bool handle_teleport_access_blocked(LLSD& llsdBlock)
 			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
 			returnValue = true;
 		}
-	}
+		}
 
 	if ((maturityLevelNotification == NULL) || maturityLevelNotification->isIgnored())
 	{

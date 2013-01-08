@@ -699,7 +699,6 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mLastRezzedStatus(-1)
 
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
 	//VTResume();  // VTune
 	
 	// mVoiceVisualizer is created by the hud effects manager and uses the HUD Effects pipeline
@@ -1747,8 +1746,6 @@ LLViewerObject* LLVOAvatar::lineSegmentIntersectRiggedAttachments(const LLVector
 //-----------------------------------------------------------------------------
 BOOL LLVOAvatar::parseSkeletonFile(const std::string& filename)
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-	
 	//-------------------------------------------------------------------------
 	// parse the file
 	//-------------------------------------------------------------------------
@@ -1790,8 +1787,6 @@ BOOL LLVOAvatar::parseSkeletonFile(const std::string& filename)
 //-----------------------------------------------------------------------------
 BOOL LLVOAvatar::setupBone(const LLVOAvatarBoneInfo* info, LLViewerJoint* parent, S32 &volume_num, S32 &joint_num)
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-	
 	LLViewerJoint* joint = NULL;
 
 	if (info->mIsJoint)
@@ -1857,8 +1852,6 @@ BOOL LLVOAvatar::setupBone(const LLVOAvatarBoneInfo* info, LLViewerJoint* parent
 //-----------------------------------------------------------------------------
 BOOL LLVOAvatar::buildSkeleton(const LLVOAvatarSkeletonInfo *info)
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-	
 	//-------------------------------------------------------------------------
 	// allocate joints
 	//-------------------------------------------------------------------------
@@ -1929,8 +1922,6 @@ void LLVOAvatar::startDefaultMotions()
 //-----------------------------------------------------------------------------
 void LLVOAvatar::buildCharacter()
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-	
 	//-------------------------------------------------------------------------
 	// remove all references to our existing skeleton
 	// so we can rebuild it
@@ -2080,8 +2071,6 @@ void LLVOAvatar::buildCharacter()
 //-----------------------------------------------------------------------------
 void LLVOAvatar::releaseMeshData()
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-	
 	if (sInstances.size() < AVATAR_RELEASE_THRESHOLD || mIsDummy)
 	{
 		return;
@@ -2136,7 +2125,6 @@ void LLVOAvatar::releaseMeshData()
 void LLVOAvatar::restoreMeshData()
 {
 	llassert(!isSelf());
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
 	
 	//llinfos << "Restoring" << llendl;
 	mMeshValid = TRUE;
@@ -2352,8 +2340,6 @@ U32 LLVOAvatar::processUpdateMessage(LLMessageSystem *mesgsys,
 									 U32 block_num, const EObjectUpdateType update_type,
 									 LLDataPacker *dp)
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-	
 	LLVector3 old_vel = getVelocity();
 	const BOOL has_name = !getNVPair("FirstName");
 
@@ -2432,7 +2418,6 @@ void LLVOAvatar::dumpAnimationState()
 //------------------------------------------------------------------------
 void LLVOAvatar::idleUpdate(LLAgent &agent, LLWorld &world, const F64 &time)
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
 	LLFastTimer t(FTM_AVATAR_UPDATE);
 
 	if (isDead())
@@ -3496,8 +3481,6 @@ bool LLVOAvatar::isVisuallyMuted() const
 //------------------------------------------------------------------------
 BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-
 	// clear debug text
 	mDebugText.clear();
 	if (LLVOAvatar::sShowAnimationDebug)
@@ -4841,8 +4824,6 @@ const LLUUID& LLVOAvatar::getStepSound() const
 //-----------------------------------------------------------------------------
 void LLVOAvatar::processAnimationStateChanges()
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-	
 	if ( isAnyAnimationSignaled(AGENT_WALK_ANIMS, NUM_AGENT_WALK_ANIMS) )
 	{
 		startMotion(ANIM_AGENT_WALK_ADJUST);
@@ -4933,8 +4914,6 @@ void LLVOAvatar::processAnimationStateChanges()
 //-----------------------------------------------------------------------------
 BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL start )
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-	
 	BOOL result = FALSE;
 
 	if ( start ) // start animation
@@ -5072,8 +5051,6 @@ LLUUID LLVOAvatar::remapMotionID(const LLUUID& id)
 //-----------------------------------------------------------------------------
 BOOL LLVOAvatar::startMotion(const LLUUID& id, F32 time_offset)
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-
 	lldebugs << "motion requested " << id.asString() << " " << gAnimLibrary.animationName(id) << llendl;
 
 	LLUUID remap_id = remapMotionID(id);
@@ -5902,8 +5879,6 @@ BOOL LLVOAvatar::isActive() const
 //-----------------------------------------------------------------------------
 void LLVOAvatar::setPixelAreaAndAngle(LLAgent &agent)
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-
 	if (mDrawable.isNull())
 	{
 		return;
@@ -7393,8 +7368,6 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 		return;
 	}
 	
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-
 	BOOL is_first_appearance_message = !mFirstAppearanceMessageReceived;
 	mFirstAppearanceMessageReceived = TRUE;
 
@@ -7595,7 +7568,6 @@ void LLVOAvatar::onBakedTextureMasksLoaded( BOOL success, LLViewerFetchedTexture
 	if (!userdata) return;
 
 	//llinfos << "onBakedTextureMasksLoaded: " << src_vi->getID() << llendl;
-	const LLMemType mt(LLMemType::MTYPE_AVATAR);
 	const LLUUID id = src_vi->getID();
  
 	LLTextureMaskData* maskData = (LLTextureMaskData*) userdata;
