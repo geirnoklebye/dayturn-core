@@ -82,14 +82,6 @@ LLFloaterMap::~LLFloaterMap()
 {
 }
 
-//MK
-//static
-LLFloaterMap* LLFloaterMap::getInstance()
-{
-	return LLFloaterReg::getTypedInstance<LLFloaterMap>("mini_map");
-}
-//mk
-
 BOOL LLFloaterMap::postBuild()
 {
 	mMap = getChild<LLNetMap>("Net Map");
@@ -134,16 +126,13 @@ BOOL LLFloaterMap::handleDoubleClick(S32 x, S32 y, MASK mask)
 
 	LLVector3d pos_global = mMap->viewPosToGlobal(x, y);
 	
-	// If we're not tracking a beacon already, double-click will set one 
-	if (!LLTracker::isTracking(NULL))
+	LLTracker::stopTracking(NULL);
+	LLFloaterWorldMap* world_map = LLFloaterWorldMap::getInstance();
+	if (world_map)
 	{
-		LLFloaterWorldMap* world_map = LLFloaterWorldMap::getInstance();
-		if (world_map)
-		{
-			world_map->trackLocation(pos_global);
-		}
+		world_map->trackLocation(pos_global);
 	}
-	
+
 	if (gSavedSettings.getBOOL("DoubleClickTeleport"))
 	{
 		// If DoubleClickTeleport is on, double clicking the minimap will teleport there
@@ -267,4 +256,9 @@ void LLFloaterMap::handleZoom(const LLSD& userdata)
 	{
 		mMap->setScale(scale);
 	}
+}
+
+LLFloaterMap* LLFloaterMap::getInstance()
+{
+	return LLFloaterReg::getTypedInstance<LLFloaterMap>("mini_map");
 }

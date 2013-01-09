@@ -142,9 +142,10 @@ BOOL LLToolPie::handleRightMouseDown(S32 x, S32 y, MASK mask)
 //mk
 
 	// claim not handled so UI focus stays same
-	
-	handleRightClickPick();
-	
+	if(gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+	{
+		handleRightClickPick();
+	}
 	return FALSE;
 }
 
