@@ -27,10 +27,6 @@
 #ifndef LL_LLFLOATERMAP_H
 #define LL_LLFLOATERMAP_H
 
-//MK
-//#pragma warning(default:4263)
-//mk
-
 #include "llfloater.h"
 
 class LLNetMap;
@@ -50,10 +46,7 @@ public:
 	/*virtual*/ BOOL	handleDoubleClick( S32 x, S32 y, MASK mask );
 	/*virtual*/ void	reshape(S32 width, S32 height, BOOL called_from_parent = TRUE);
 	/*virtual*/ void	draw();
-//MK
-	static LLFloaterMap* getInstance();
-//mk
-	
+
 private:
 	void handleZoom(const LLSD& userdata);
 	void setDirectionPos( LLTextBox* text_box, F32 rotation );

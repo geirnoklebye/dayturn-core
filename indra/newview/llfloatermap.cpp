@@ -82,14 +82,6 @@ LLFloaterMap::~LLFloaterMap()
 {
 }
 
-//MK
-//static
-LLFloaterMap* LLFloaterMap::getInstance()
-{
-	return LLFloaterReg::getTypedInstance<LLFloaterMap>("mini_map");
-}
-//mk
-
 BOOL LLFloaterMap::postBuild()
 {
 	mMap = getChild<LLNetMap>("Net Map");
