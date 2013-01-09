@@ -8,13 +8,15 @@
  width="320">
   <layout_stack
    follows="all"
-   height="295"
+   height="320"
    layout="topleft"
    left="0"
    name="stack"
    top="5"
    orientation="vertical"
    width="320">
+<!-- MK : remove translate checkbox panel -->
+<!--
     <layout_panel
      auto_resize="false"
      height="26"
@@ -35,9 +37,10 @@
        name="translate_chat_checkbox"
        width="300" />
     </layout_panel>
+-->
     <layout_panel
      auto_resize="true"
-     height="277"
+     height="320"
      left_delta="0"
      layout="topleft"
      name="chat_history_lp"
@@ -49,7 +52,7 @@
        layout="topleft"
        left="5"
        left_widget_pad="0"
-       height="272"
+       height="300"
        name="chat_history"
        parse_highlights="true"
        parse_urls="true"

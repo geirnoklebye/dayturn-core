@@ -75,6 +75,12 @@ public:
 
 	bool handle(const LLSD& params, const LLSD& query_map, LLMediaCtrl* web)
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			return true;
+		}
+//mk
 		if (params.size() < 1)
 		{
 			return false;
@@ -136,6 +142,13 @@ public:
 	void onObjectIconContextMenuItemClicked(const LLSD& userdata)
 	{
 		std::string level = userdata.asString();
+
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			return;
+		}
+//mk
 
 		if (level == "profile")
 		{
@@ -226,6 +239,12 @@ public:
 
 	void showInspector()
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			return;
+		}
+//mk
 		if (mAvatarID.isNull() && CHAT_SOURCE_SYSTEM != mSourceType) return;
 		
 		if (mSourceType == CHAT_SOURCE_OBJECT)
@@ -812,6 +831,16 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				link_params.is_link = true;
 				link_params.link_href = url;
 
+//MK
+				// FIX : Don't add the name of the chatter in case of an emote
+				// because it is already there
+				// Don't add any delimiter after name in irc styled messages
+				//if (chat.mChatStyle == CHAT_STYLE_IRC)
+				//{
+				//	mEditor->appendText("", false, link_params);
+				//}
+				//else
+//mk
 				mEditor->appendText(chat.mFromName + delimiter,
 									false, link_params);
 			}
@@ -821,10 +850,30 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				link_params.overwriteFrom(LLStyleMap::instance().lookupAgent(chat.mFromID));
 
 				// Add link to avatar's inspector and delimiter to message.
+//MK
+				// FIX : Don't add the name of the chatter in case of an emote
+				// because it is already there
+				// Don't add any delimiter after name in irc styled messages
+				//if (chat.mChatStyle == CHAT_STYLE_IRC)
+				//{
+				//	mEditor->appendText("", false, link_params);
+				//}
+				//else
+//mk
 				mEditor->appendText(std::string(link_params.link_href) + delimiter, false, link_params);
 			}
 			else
 			{
+//MK
+				// FIX : Don't add the name of the chatter in case of an emote
+				// because it is already there
+				// Don't add any delimiter after name in irc styled messages
+				//if (chat.mChatStyle == CHAT_STYLE_IRC)
+				//{
+				//	mEditor->appendText("", false, style_params);
+				//}
+				//else
+//mk
 				mEditor->appendText("<nolink>" + chat.mFromName + "</nolink>" + delimiter, false, style_params);
 			}
 		}
@@ -916,11 +965,19 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				}
 			}
 
+//MK
+			// Move the control panel down a bit
+			S32 bonus = 15;
+			LLRect control_panel_rect = notify_box->getControlPanel()->getRect();
+			control_panel_rect.mBottom -= bonus;
+			notify_box->getControlPanel()->setRect(control_panel_rect);
+//mk
 			//Prepare the rect for the view
 			LLRect target_rect = mEditor->getDocumentView()->getRect();
 			// squeeze down the widget by subtracting padding off left and right
 			target_rect.mLeft += mLeftWidgetPad + mEditor->getHPad();
 			target_rect.mRight -= mRightWidgetPad;
+
 			notify_box->reshape(target_rect.getWidth(),	notify_box->getRect().getHeight());
 			notify_box->setOrigin(target_rect.mLeft, notify_box->getRect().mBottom);
 
@@ -928,6 +985,9 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 			params.view = notify_box;
 			params.left_pad = mLeftWidgetPad;
 			params.right_pad = mRightWidgetPad;
+//MK
+			params.bottom_pad = bonus;
+//mk
 			mEditor->appendWidget(params, "\n", false);
 		}
 	}
