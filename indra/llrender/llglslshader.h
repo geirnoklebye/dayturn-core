@@ -123,6 +123,7 @@ public:
 	GLint getAttribLocation(U32 attrib);
 	GLint mapUniformTextureChannel(GLint location, GLenum type);
 	
+
 	//enable/disable texture channel for specified uniform
 	//if given texture uniform is active in the shader, 
 	//the corresponding channel will be active upon return
