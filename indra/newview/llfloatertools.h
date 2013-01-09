@@ -115,6 +115,8 @@ public:
 	void setGridMode(EGridMode mode);
 //mk
 
+	static void setGridMode(S32 mode);
+
 private:
 	void refresh();
 	void refreshMedia();

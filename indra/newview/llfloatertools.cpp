@@ -1082,6 +1082,17 @@ void LLFloaterTools::setObjectType( LLPCode pcode )
 	gFocusMgr.setMouseCapture(NULL);
 }
 
+// static
+void LLFloaterTools::setGridMode(S32 mode)
+{
+	LLFloaterTools* tools_floater = LLFloaterReg::getTypedInstance<LLFloaterTools>("build");
+	if (!tools_floater || !tools_floater->mComboGridMode)
+	{
+		return;
+	}
+
+	tools_floater->mComboGridMode->setCurrentByIndex(mode);
+}
 
 void LLFloaterTools::onClickGridOptions()
 {
