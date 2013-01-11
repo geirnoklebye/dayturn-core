@@ -573,7 +573,10 @@ void LLAgent::moveAt(S32 direction, bool reset)
 
 	if (reset)
 	{
-		gAgentCamera.resetView();
+// <FS:CR> FIRE-8798: Option to prevent camera reset on movement
+		//gAgentCamera.resetView();
+		gAgentCamera.resetView(TRUE, FALSE, TRUE);
+// </FS:CR>
 	}
 }
 
@@ -599,15 +602,7 @@ void LLAgent::moveAtNudge(S32 direction)
 		setControlFlags(AGENT_CONTROL_NUDGE_AT_NEG);
 	}
 
-//MK
-	// If we are sitting on something, don't reset the view when moving (we can press Escape for that)
-	if (!gAgentAvatarp->isSitting())
-	{
-//mk
-	gAgentCamera.resetView();
-//MK
-	}
-//mk
+	gAgentCamera.resetView(TRUE, FALSE, TRUE);
 }
 
 //-----------------------------------------------------------------------------
@@ -632,7 +627,10 @@ void LLAgent::moveLeft(S32 direction)
 		setControlFlags(AGENT_CONTROL_LEFT_NEG | AGENT_CONTROL_FAST_LEFT);
 	}
 
-	gAgentCamera.resetView();
+// <FS:CR> FIRE-8798: Option to prevent camera reset on movement
+	//gAgentCamera.resetView();
+	gAgentCamera.resetView(TRUE, FALSE, TRUE);
+// </FS:CR>
 }
 
 //-----------------------------------------------------------------------------
@@ -656,8 +654,10 @@ void LLAgent::moveLeftNudge(S32 direction)
 	{
 		setControlFlags(AGENT_CONTROL_NUDGE_LEFT_NEG);
 	}
-
-	gAgentCamera.resetView();
+// <FS:CR> FIRE-8798: Option to prevent camera reset on movement
+	//gAgentCamera.resetView();
+	gAgentCamera.resetView(TRUE, FALSE, TRUE);
+// </FS:CR>
 }
 
 //-----------------------------------------------------------------------------
@@ -682,15 +682,8 @@ void LLAgent::moveUp(S32 direction)
 		setControlFlags(AGENT_CONTROL_UP_NEG | AGENT_CONTROL_FAST_UP);
 	}
 
-//MK
-	// If we are sitting on something, don't reset the view when moving (we can press Escape for that)
-	if (!gAgentAvatarp->isSitting())
-	{
-//mk
-		gAgentCamera.resetView();
-//MK
-	}
-//mk
+    gAgentCamera.resetView(TRUE, FALSE, TRUE);
+
 }
 
 //-----------------------------------------------------------------------------
@@ -711,15 +704,7 @@ void LLAgent::moveYaw(F32 mag, bool reset_view)
 
     if (reset_view)
 	{
-//MK
-		// If we are sitting on something, don't reset the view when moving (we can press Escape for that)
-		if (!gAgentAvatarp->isSitting())
-		{
-//mk
-			gAgentCamera.resetView();
-//MK
-		}
-//mk
+    	gAgentCamera.resetView(TRUE, FALSE, TRUE);
 	}
 }
 
@@ -851,7 +836,7 @@ void LLAgent::toggleFlying()
 	{
 		gAgent.setFlying(fly);
 	}
-	gAgentCamera.resetView();
+	gAgentCamera.resetView(TRUE, FALSE, TRUE);
 }
 
 // static
