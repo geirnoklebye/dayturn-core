@@ -292,7 +292,10 @@ LLAgentCamera::~LLAgentCamera()
 //-----------------------------------------------------------------------------
 // resetView()
 //-----------------------------------------------------------------------------
-void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
+// <FS:CR> FIRE-8798: Option to prevent camera reset on movement
+//void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
+void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera, BOOL movement)
+// </FS:CR>
 {
 //MK
 	if (gRRenabled)
@@ -329,7 +332,7 @@ void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
 	
 	// <FS:CR> FIRE-8798: Option to prevent camera reset on movement
 	static LLCachedControl<bool> sResetCameraOnMovement(gSavedSettings, "ResetCameraOnMovement");
-	if (sResetCameraOnMovement)
+	if (sResetCameraOnMovement || movement == FALSE)
 	{
 	// </FS:CR>
 
