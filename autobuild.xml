@@ -2144,9 +2144,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c2379a6115982cd4f1cf8e835eee57d9</string>
+              <string>9dd3e8d6468f53ae902184fec21c9595</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/ndphysicsstub/downloads/ndPhysicsStub-0.1.1-r167-Linux.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/ndphysicsstub/downloads/ndPhysicsStub-0.1.1-r167-Linux-2013012.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
