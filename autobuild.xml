@@ -2168,9 +2168,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2d033d5734ab96dae687736c0250678b</string>
+              <string>a176c100a3556d0162e9892592d3739f</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/ndphysicsstub/downloads/ndPhysicsStub-0.1.1-r167-win32.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/ndphysicsstub/downloads/ndPhysicsStub-0.1.1-r167-win32-20130111.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
