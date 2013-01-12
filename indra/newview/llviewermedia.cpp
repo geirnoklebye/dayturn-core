@@ -27,7 +27,7 @@
 #include "llviewerprecompiledheaders.h"
 
 #include "llviewermedia.h"
-
+#include "llpluginclassmedia.h"
 #include "llagent.h"
 #include "llagentcamera.h"
 #include "llappviewer.h"
@@ -44,6 +44,7 @@
 #include "llmarketplacefunctions.h"
 #include "llmediaentry.h"
 #include "llmimetypes.h"
+#include "viewerinfo.h"
 #include "llmutelist.h"
 #include "llnotifications.h"
 #include "llnotificationsutil.h"
@@ -75,6 +76,7 @@
 
 #include <boost/bind.hpp>	// for SkinFolder listener
 #include <boost/signals2.hpp>
+
 
 /*static*/ const char* LLViewerMedia::AUTO_PLAY_MEDIA_SETTING = "ParcelMediaAutoPlayEnable";
 /*static*/ const char* LLViewerMedia::SHOW_MEDIA_ON_OTHERS_SETTING = "MediaShowOnOthers";
@@ -387,6 +389,7 @@ class LLViewerMediaMuteListObserver : public LLMuteListObserver
 
 static LLViewerMediaMuteListObserver sViewerMediaMuteListObserver;
 static bool sViewerMediaMuteListObserverInitialized = false;
+static bool sInWorldMediaDisabled = false;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -545,7 +548,7 @@ std::string LLViewerMedia::getCurrentUserAgent()
 
 	// Just in case we need to check browser differences in A/B test
 	// builds.
-	std::string channel = LLVersionInfo::getChannel();
+	// std::string channel = LLVersionInfo::getChannel();
 
 	// append our magic version number string to the browser user agent id
 	// See the HTTP 1.0 and 1.1 specifications for allowed formats:
@@ -554,9 +557,9 @@ std::string LLViewerMedia::getCurrentUserAgent()
 	// This was also helpful:
 	// http://www.mozilla.org/build/revised-user-agent-strings.html
 	std::ostringstream codec;
-	codec << "SecondLife/";
-	codec << LLVersionInfo::getVersion();
-	codec << " (" << channel << "; " << skin_name << " skin)";
+	codec << ViewerInfo::viewerName() << "/";
+	codec << ViewerInfo::versionNumber();
+	codec << " (" << skin_name << " skin)";
 	llinfos << codec.str() << llendl;
 	
 	return codec.str();
@@ -649,6 +652,20 @@ void LLViewerMedia::muteListChanged()
 		LLViewerMediaImpl* pimpl = *iter;
 		pimpl->mNeedsMuteCheck = true;
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// static
+void LLViewerMedia::setInWorldMediaDisabled(bool disabled)
+{
+	sInWorldMediaDisabled = disabled;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// static
+bool LLViewerMedia::getInWorldMediaDisabled()
+{
+	return sInWorldMediaDisabled;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -1439,6 +1456,30 @@ void LLViewerMedia::setOpenIDCookie()
 		LLHTTPClient::get(profile_url,  
 			new LLViewerMediaWebProfileResponder(raw_profile_url.getAuthority()),
 			headers);
+//		std::string url = "https://marketplace.secondlife.com/";
+
+// 		if (LLGridManager::getInstance()->isInProductionGrid())
+//		if (LLGridManager::getInstance()->isInSLBeta())// <AW opensim>
+//		{
+//			std::string gridLabel = LLGridManager::getInstance()->getGridLabel();
+//			url = llformat("https://marketplace.%s.lindenlab.com/", utf8str_tolower(gridLabel).c_str());
+//		}
+
+		// <AW opensim> needs coordinating with opensim devs
+//		if (!LLGridManager::getInstance()->isInOpenSim())// <AW opensim>
+//		{
+//			url += "api/1/users/";
+//			url += gAgent.getID().getString();
+//			url += "/user_status";
+	
+//			headers = LLSD::emptyMap();
+//			headers["Accept"] = "*/*";
+//			headers["Cookie"] = sOpenIDCookie;
+//			headers["User-Agent"] = getCurrentUserAgent();
+//	
+//			LLHTTPClient::get(url, new LLInventoryUserStatusResponder(), headers);
+//		}
+		
 	}
 }
 
@@ -1870,7 +1911,13 @@ LLPluginClassMedia* LLViewerMediaImpl::newSourceFromMediaType(std::string media_
 			const std::string plugin_dir = gDirUtilp->getLLPluginDir();
 			if (media_source->init(launcher_name, plugin_dir, plugin_name, gSavedSettings.getBOOL("PluginAttachDebuggerToPlugins")))
 			{
-				return media_source;
+				#if LL_WINDOWS
+				if (gSavedSettings.getBOOL("ShowConsoleWindow"))
+				{
+						media_source->showConsole();
+				}
+				#endif
+                return media_source;
 			}
 			else
 			{
@@ -3164,9 +3211,27 @@ void LLViewerMediaImpl::handleMediaEvent(LLPluginClassMedia* plugin, LLPluginCla
 			resetPreviousMediaState();
 
 			LLSD args;
-			args["PLUGIN"] = LLMIMETypes::implType(mCurrentMimeType);
-			// SJB: This is getting called every frame if the plugin fails to load, continuously respawining the alert!
-			//LLNotificationsUtil::add("MediaPluginFailed", args);
+			std::string plugin_name = LLMIMETypes::implType(mMimeType);
+			args["PLUGIN"] = plugin_name;
+
+			// These should really be hardcoded in LLMimeTypes, if anywhere -- MC
+			std::string notification_name;
+			LLStringUtil::toLower(plugin_name);
+			if (plugin_name.find("quicktime") != std::string::npos)
+			{
+				notification_name = "MediaPluginFailedQuickTime";
+			}
+			else if (plugin_name.find("webkit") != std::string::npos)
+			{
+				notification_name = "MediaPluginFailedWebkit";
+			}
+			else
+			{
+				notification_name = "MediaPluginFailed";
+			}
+
+			LLNotificationsUtil::add(notification_name, args);
+
 		}
 		break;
 		

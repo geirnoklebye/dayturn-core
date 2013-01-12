@@ -35,7 +35,7 @@
     </panel.string>
   <panel
     height="18"
-    left="-395"
+    left="-550"
     width="185"
     top="1"
     follows="right|top" 
@@ -130,4 +130,43 @@
      top="2"
      name="volume_btn"
      width="16" />
+     	<!-- Draw distance widget here -->
+   <panel
+    height="17"
+    width="128"
+    top="1"
+    left_pad="15"
+    follows="right|top"
+    name="drawdistance_panel"
+    background_opaque="true"
+    background_visible="true">
+    <icon
+     follows="right|top"
+     height="16"
+     image_name="Draw_Distance"
+     name="dd_icon"
+     tool_tip="Draw Distance"
+     top="0"
+     left="1"
+     visible="true"
+     width="16"
+     scale_image="false"/>
+     <slider
+     control_name="RenderFarClip"
+     decimal_digits="0"
+     text_color="EmphasisColor" 
+     follows="right|top"
+     height="16"
+     increment="8"
+     initial_value="160"
+     layout="topleft"
+     tool_tip="Maximum distance away from camera to be rezzed (meters)"
+     top="1"
+     left_pad="2"
+     max_val="1024"
+     min_val="3"
+     name="drawdistance" 
+     top_delta="0"
+     width="98" />
+  </panel> 
 </panel>

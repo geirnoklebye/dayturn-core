@@ -863,6 +863,14 @@ void LLPluginClassMedia::receivePluginMessage(const LLPluginMessage &message)
 	if(message_class == LLPLUGIN_MESSAGE_CLASS_MEDIA)
 	{
 		std::string message_name = message.getName();
+
+		// <ND> Enable gs	treamer plugin to report title/artist of current stream
+		if( message_name == "ndMediadata_change" )
+		{
+			mTitle = message.getValue( "title" );
+			mArtist = message.getValue( "artist" );
+		}
+		else // </ND>
 		if(message_name == "texture_params")
 		{
 			mRequestedTextureDepth = message.getValueS32("depth");
@@ -1230,6 +1238,15 @@ bool LLPluginClassMedia::pluginSupportsMediaBrowser(void)
 	return !version.empty();
 }
 
+#if LL_WINDOWS
+void LLPluginClassMedia::showConsole()
+{
+	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_INTERNAL, "show_console");
+
+	sendMessage(message);
+}
+#endif
+
 void LLPluginClassMedia::focus(bool focused)
 {
 	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER, "focus");
@@ -1374,6 +1391,12 @@ void LLPluginClassMedia::hangPlugin()
 	sendMessage(message);
 }
 
+void LLPluginClassMedia::forceCleanUpPlugin()
+{
+	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_BASE, "cleanup");
+
+	sendMessage(message);
+}
 
 ////////////////////////////////////////////////////////////
 // MARK: media_time class functions

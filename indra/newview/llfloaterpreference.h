@@ -93,6 +93,11 @@ protected:
 	void		onLanguageChange();
 	void		onNameTagOpacityChange(const LLSD& newvalue);
 
+	// ## Zi: Pie menu
+	// make sure controls get greyed out or enwbled when pie color override is toggled
+	void onPieColorsOverrideChanged();
+	// ## Zi: Pie menu
+
 	// set value of "BusyResponseChanged" in account settings depending on whether busy response
 	// string differs from default after user changes.
 	void onBusyResponseChanged();
@@ -231,6 +236,35 @@ protected:
 	void resetDirtyChilds();
 	
 };
+
+// <FS:AW  opensim preferences>
+class LLPanelPreferenceOpensim : public LLPanelPreference
+{
+public:
+	LLPanelPreferenceOpensim();
+// <FS:AW  grid management>
+	/*virtual*/ BOOL postBuild();
+	/*virtual*/ void apply();
+	/*virtual*/ void cancel();
+
+protected:
+
+	void onClickAddGrid();
+	void addedGrid(bool success);
+	void onClickClearGrid();
+	void onClickRefreshGrid();
+	void onClickRemoveGrid();
+	bool removeGridCB(const LLSD& notification, const LLSD& response);
+// </FS:AW  grid management>
+// <FS:AW  opensim search support>
+	void onClickClearDebugSearchURL();
+	void onClickPickDebugSearchURL();
+// </FS:AW  opensim search support>
+
+	void refreshGridList(bool success = true);
+	LLScrollListCtrl* mGridListControl;
+};
+// </FS:AW  opensim preferences>
 
 class LLFloaterPreferenceProxy : public LLFloater
 {

@@ -68,6 +68,7 @@
 		<radio_item label="Drehen (Strg)" name="radio rotate"/>
 		<radio_item label="Dehnen (Strg+Umschalt)" name="radio stretch"/>
 		<radio_item label="Fläche auswählen" name="radio select face"/>
+		<radio_item label="Ausrichten" name="radio align"/>
 	</radio_group>
 	<check_box label="Verknüpfte Teile bearbeiten" name="checkbox edit linked parts"/>
 	<button label="Link" name="link_btn" width="30"/>

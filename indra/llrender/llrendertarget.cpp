@@ -50,7 +50,7 @@ void check_framebuffer_status()
 	}
 }
 
-bool LLRenderTarget::sUseFBO = false;
+BOOL LLRenderTarget::sUseFBO = false;
 U32 LLRenderTarget::sCurFBO = 0;
 
 LLRenderTarget::LLRenderTarget() :

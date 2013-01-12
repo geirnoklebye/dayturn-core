@@ -65,6 +65,7 @@ LLDir_Mac::LLDir_Mac()
 	mDirDelimiter = "/";
 
     const std::string     secondLifeString = "SecondLife";
+	CFStringRef		secondLifeString = CFSTR("Kokua");
     
     std::string *executablepathstr = getSystemExecutableFolder();
 
@@ -134,7 +135,7 @@ LLDir_Mac::LLDir_Mac()
 		
 		{
             mOSCacheDir = *cachedir;
-            //SPATTERS TODO:  This changes from ~/Library/Cache/Secondlife to ~/Library/Cache/com.app.secondlife/Secondlife.  Last dir level could go away.
+			(void)CFCreateDirectory(&cacheDirRef, CFSTR("kokua"),NULL);
             CreateDirectory(mOSCacheDir, secondLifeString, NULL);
 		}
 		

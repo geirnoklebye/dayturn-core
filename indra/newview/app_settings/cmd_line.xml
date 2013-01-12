@@ -101,7 +101,7 @@
     <key>grid</key>
     <map>
       <key>desc</key>
-      <string>Specify the name of the grid to connect to.</string>
+      <string>Specify the name of the grid, local, or an IP address to connect to.</string>
       <key>count</key>
       <integer>1</integer>
       <key>map-to</key>
@@ -162,6 +162,28 @@
       <integer>3</integer>
       <key>map-to</key>
       <string>UserLoginInfo</string>
+    </map>
+
+    <key>loginpage</key>
+    <map>
+      <key>desc</key>
+      <string>Login authentication page to use.</string>
+      <key>count</key>
+      <integer>1</integer>
+      <key>map-to</key>
+      <string>LoginPage</string>
+    </map>
+    
+    <key>loginuri</key>
+    <map>
+      <key>desc</key>
+      <string>login server and CGI script to use</string>
+      <key>count</key>
+      <integer>1</integer>
+      <key>compose</key>
+      <boolean>true</boolean>
+      <key>map-to</key>
+      <string>CmdLineLoginURI1</string>
     </map>
 
     <key>logmetrics</key>

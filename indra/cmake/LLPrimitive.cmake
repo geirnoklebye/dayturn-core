@@ -24,10 +24,13 @@ else (WINDOWS)
     set(LLPRIMITIVE_LIBRARIES 
         llprimitive
         collada14dom
-        minizip
         xml2
         pcrecpp
         pcre
         )
+   if(LINUX)
+      list(APPEND LLPRIMITIVE_LIBRARIES minizip xml2 )
+    endif(LINUX)
 endif (WINDOWS)
+
 

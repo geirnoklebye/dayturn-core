@@ -37,6 +37,7 @@ class LLView;
 class LLParcelSelection;
 class LLObjectSelection;
 class LLSelectNode;
+class PieMenu;			// ## Zi: Pie menu
 
 void initialize_edit_menu();
 void initialize_spellcheck_menu();
@@ -135,6 +136,7 @@ void handle_give_money_dialog();
 bool enable_pay_object();
 bool enable_buy_object();
 bool handle_go_to();
+bool update_grid_help();
 
 // Export to XML or Collada
 void handle_export_selected( void * );
@@ -187,10 +189,30 @@ extern LLContextMenu* gDetachPieMenu;
 extern LLContextMenu* gAttachBodyPartPieMenus[8];
 extern LLContextMenu* gDetachBodyPartPieMenus[8];
 
+// ## Zi: Pie menus in 3D scene
+extern PieMenu			*gPieMenuAvatarSelf;
+extern PieMenu			*gPieMenuAvatarOther;
+extern PieMenu			*gPieMenuObject;
+extern PieMenu			*gPieMenuAttachmentSelf;
+extern PieMenu			*gPieMenuAttachmentOther;
+extern PieMenu			*gPieMenuLand;
+// Needed to build pie menus when attachment site list available
+extern PieMenu* gPieAttachScreenMenu;
+extern PieMenu* gPieDetachScreenMenu;
+extern PieMenu* gPieAttachMenu;
+extern PieMenu* gPieDetachMenu;
+extern PieMenu* gPieAttachBodyPartMenus[8];
+extern PieMenu* gPieDetachBodyPartMenus[8];
+
 extern LLMenuItemCallGL* gAFKMenu;
 extern LLMenuItemCallGL* gBusyMenu;
+
+/*
+// Dead code?
 extern LLMenuItemCallGL* gMutePieMenu;
 extern LLMenuItemCallGL* gMuteObjectPieMenu;
 extern LLMenuItemCallGL* gBuyPassPieMenu;
+// Dead code?
+*/
 
 #endif

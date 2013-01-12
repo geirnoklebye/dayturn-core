@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel
-bg_opaque_color="DkGray2"
+bg_opaque_color="DkGray_66"
        background_visible="true"
-       background_opaque="true"
+background_opaque="false"
  follows="all"
- height="571"
+ height="570"
  label="Picks"
  layout="topleft"
  left="8"
@@ -17,35 +17,23 @@ bg_opaque_color="DkGray2"
  <string
   name="no_classifieds"
   value="No Classifieds" />
- <text
-  type="string"
+
+<tab_container
   follows="all"
-  height="535"
-  layout="topleft"
-  left="6"
-  name="picks_panel_text"
-  wrap="true"
-  top="10"
-  width="313"/>
- <accordion
-  fit_parent="true" 
-  follows="all"
-  height="514"
+  height="505"
   layout="topleft"
   left="0"
   name="accordion"
-  top="0"
-  single_expansion="true"
+  top="4"
   width="313">
-    <accordion_tab
+    <panel
      layout="topleft"
-     height="235"
-     min_height="150"
      name="tab_picks"
      title="Picks"
-     visible="false">
+     follows="all"
+     visible="true">
  <flat_list_view
-         color="DkGray2"
+         color="SL-Background_66"
          follows="all"
          layout="topleft"
          left="0"
@@ -53,15 +41,15 @@ bg_opaque_color="DkGray2"
          opaque="true"
          top="0"
          width="313" />
-    </accordion_tab>
-    <accordion_tab
+    </panel>
+    <panel
      layout="topleft"
-     height="235"
      name="tab_classifieds"
      title="Classifieds"
-     visible="false">
+     follows="all"
+     visible="true">
             <flat_list_view
-             color="DkGray2"
+             color="SL-Background_66"
              follows="all"
              layout="topleft"
              left="0"
@@ -69,98 +57,84 @@ bg_opaque_color="DkGray2"
              opaque="true"
              top="0"
              width="313" />
-    </accordion_tab>
- </accordion>
+    </panel>
+ </tab_container>
+
    <panel
-       bg_opaque_color="DkGray2"
-       background_visible="true"
-       background_opaque="true"
+         bg_opaque_color="SL-Background_66"
        bevel_style="none"
        enabled="false"
        follows="bottom|left|right"
-       left="1"
-       height="27"
+         left="6"
+         top_pad="2"
+         height="25"
        label="bottom_panel"
-       layout="topleft"
+         layout="bottom"
        name="edit_panel"
-       top_pad="0"
-       width="312">
+         width="313">
          
-         <layout_stack
-		  follows="bottom|left|right"
-		  height="23"
-		  layout="bottomleft"
-		  name="edit_panel_ls"
-		  left="10"
-		  orientation="horizontal"
-		  top_pad="0"
-		  width="293">
+  <!-- Replaces LLs button panel as they had not put buttons in -->
 		  
-		  <layout_panel
-			  follows="bottom|left"
-			  height="18"
-			  layout="bottomleft"
-			  left="0"
-			  name="gear_menu_btn"
-		      auto_resize="true"
-			  width="51">
 				<button
 	             follows="bottom|left"
-	             height="18"
-	             image_disabled="AddItem_Disabled"
-	             image_selected="AddItem_Press"
-	             image_unselected="AddItem_Off"
+                   height="25"
+                   image_hover_unselected="Toolbar_Middle_Over"
+                   image_overlay="AddItem_Off"
+                   image_selected="Toolbar_Middle_Selected"
+                   image_unselected="Toolbar_Middle_Off"
 	             layout="topleft"
 	             left="0"
 	             name="new_btn"
 	             tool_tip="Create a new pick or classified at the current location"
 	             top="0"
-	             width="18" />
-		  </layout_panel>
+                   width="31" />
+
+
+                  <icon
+                   follows="bottom|left|right"
+                   height="25"
+                   image_name="Toolbar_Middle_Off"
+                   layout="topleft"
+                   left_pad="2"
+                   top="0"
+                   name="dummy_icon"
+                   width="237" />
 		  
-		  <layout_panel
+                  <dnd_button
 			  follows="bottom|right"
-			  height="18"
-			  layout="bottomleft"
-			  name="trash_btn_lp"
-		      auto_resize="true"
-			  width="18">
-				<button
-	             follows="bottom|right"
-	             height="18"
-	             image_disabled="TrashItem_Disabled"
-	             image_selected="TrashItem_Press"
-	             image_unselected="TrashItem_Off"
+                   height="25"
+                   image_hover_unselected="Toolbar_Right_Over"
+                   image_overlay="TrashItem_Off"
+                   image_selected="Toolbar_Right_Selected"
+                   image_unselected="Toolbar_Right_Off"
+                   right="-10"
 	             layout="topleft"
 	             name="trash_btn"
 	             top="0"
-	             width="18" />
-		  </layout_panel>
+                   width="31"/>
 		  
-	  </layout_stack>
 	  </panel>
 	  
 	  <panel
- bg_opaque_color="DkGray"
+         bg_opaque_color="SL-Background_66"
        background_visible="true"
-       background_opaque="true"
          follows="bottom|left|right"
          layout="topleft"
-         left="0"
+         left="6"
          height="30"
+         top_pad="2"
          name="buttons_cucks"
-         top_pad="0"
          width="313">
       
       <layout_stack
 		  follows="bottom|left|right"
 		  height="28"
 		  layout="topleft"
-		  left="2"
+          left="0"
 		  name="buttons_cucks_ls"
 		  orientation="horizontal"
 		  top="0"
-		  width="313">
+          width="309">
 		  	  
 		  <layout_panel
 			  follows="bottom|left|right"
@@ -168,6 +142,7 @@ bg_opaque_color="DkGray2"
 			  layout="topleft"
 			  left="0"
 			  name="info_btn_lp"
+              user_resize="false"
 		      auto_resize="true"
 			  top="0"
 			  width="95">
@@ -189,6 +164,7 @@ bg_opaque_color="DkGray2"
 			  layout="bottomleft" 
 			  left_pad="2"
 			  name="teleport_btn_lp"
+              user_resize="false"
 		      auto_resize="true"
 			  width="117">
 		        <button
@@ -208,6 +184,7 @@ bg_opaque_color="DkGray2"
 			  height="28"
 			  layout="bottomleft"
 			  name="show_on_map_btn_lp"
+              user_resize="false"
 		      auto_resize="true" 
 			  left_pad="2"
 			  width="90">
@@ -220,8 +197,21 @@ bg_opaque_color="DkGray2"
 		         name="show_on_map_btn"
 		         tab_stop="false"
 		         tool_tip="Show the corresponding area on the World Map"
-		         width="88" />
+                 width="90" />
 		  </layout_panel>
 	</layout_stack>
 	</panel>
+
+    <text
+	 type="string"
+     follows="all"
+     height="185"
+     layout="topleft"
+     left="10"
+     name="picks_panel_text"
+     wrap="true"
+     top="60"
+     mouse_opaque="false"
+     right="-16"/>
+
 </panel>

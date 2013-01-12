@@ -12,8 +12,8 @@ if (COMMAND cmake_policy)
   cmake_policy(SET CMP0003 OLD)
 endif (COMMAND cmake_policy)
 
-set(ROOT_PROJECT_NAME "SecondLife" CACHE STRING
-    "The root project/makefile/solution name. Defaults to SecondLife.")
+set(ROOT_PROJECT_NAME "Kokua" CACHE STRING
+    "The root project/makefile/solution name. Defaults to Kokua.")
 project(${ROOT_PROJECT_NAME})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -31,6 +31,12 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
       "Build type.  One of: Debug Release RelWithDebInfo" FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
+#<FS:AW optional opensim support>
+set(HAS_OPENSIM_SUPPORT ON)
+if (HAS_OPENSIM_SUPPORT)
+  add_definitions(-DHAS_OPENSIM_SUPPORT=1)
+  message("compiling with OpenSim support")
+endif (HAS_OPENSIM_SUPPORT)
 
 # For the library installation process;
 # see cmake/Prebuild.cmake for the counterpart code.
@@ -103,7 +109,7 @@ if (VIEWER)
   endif (LINUX)
 
   add_subdirectory(${VIEWER_PREFIX}newview)
-  add_dependencies(viewer secondlife-bin)
+  add_dependencies(viewer kokua-bin)
 endif (VIEWER)
 
 # Linux builds the viewer and server in 2 separate projects
