@@ -74,7 +74,7 @@ public:
 		SHADER_COUNT
 	};
 
-	typedef enum
+	typedef enum 
 	{
 		SHINY_ORIGIN = END_RESERVED_UNIFORMS
 	} eShinyUniforms;
@@ -233,7 +233,7 @@ extern LLGLSLShader			gAlphaMaskProgram;
 
 //output tex0[tc0] + tex1[tc1]
 extern LLGLSLShader			gTwoTextureAddProgram;
-						
+								
 extern LLGLSLShader			gOneTextureNoColorProgram;
 
 //object shaders
