@@ -8,21 +8,21 @@
      label="Me"
      name="Me"
      tear_off="true">
-      <menu_item_call
+        <menu_item_call
        label="Profile..."
-       name="Profile">
-        <menu_item_call.on_click
-         function="ShowAgentProfile"
-         parameter="agent" />
-      </menu_item_call>
-      <menu_item_call
+         name="Profile">
+            <menu_item_call.on_click
+             function="ShowAgentProfile"
+             parameter="agent" />
+        </menu_item_call>
+        <menu_item_call
        label="Appearance..."
-       name="ChangeOutfit">
-        <menu_item_call.on_click
-         function="CustomizeAvatar" />
-        <menu_item_call.on_enable
-         function="Edit.EnableCustomizeAvatar" />
-      </menu_item_call>
+         name="ChangeOutfit">
+            <menu_item_call.on_click
+             function="CustomizeAvatar" />
+            <menu_item_call.on_enable
+             function="Edit.EnableCustomizeAvatar" />
+        </menu_item_call>
       <menu_item_call
        label="Choose an avatar..."
        name="Avatar Picker">
@@ -31,18 +31,18 @@
          parameter="avatar" />
       </menu_item_call>
       <menu_item_separator/>
-      <menu_item_check
+        <menu_item_check
          label="Inventory..."
          name="Inventory"
          shortcut="control|I"
 		     visible="true">
-        <menu_item_check.on_check
-         function="Floater.Visible"
-         parameter="inventory" />
-        <menu_item_check.on_click
-         function="Floater.Toggle"
-         parameter="inventory" />
-      </menu_item_check>
+            <menu_item_check.on_check
+             function="Floater.Visible"
+             parameter="inventory" />
+            <menu_item_check.on_click
+             function="Floater.Toggle"
+             parameter="inventory" />
+        </menu_item_check>
       <menu_item_call
        label="New Inventory Window"
        name="NewInventoryWindow"
@@ -74,79 +74,87 @@
          function="Floater.ToggleOrBringToFront"
          parameter="camera" />
       </menu_item_call>
-      <menu
-       create_jump_keys="true"
-       label="Movement"
-       name="Movement"
-       tear_off="true">
-        <menu_item_call
-         label="Sit Down"
-         layout="topleft"
-         shortcut="alt|shift|S"
-         name="Sit Down Here">
-          <menu_item_call.on_click
-           function="Self.SitDown"
-           parameter="" />
-          <menu_item_call.on_enable
-           function="Self.EnableSitDown" />
-        </menu_item_call>
-        <menu_item_check
-         label="Fly"
-         name="Fly"
-         shortcut="Home">
-          <menu_item_check.on_check
-           function="Agent.getFlying" />
-          <menu_item_check.on_click
-           function="Agent.toggleFlying" />
-          <menu_item_check.on_enable
-           function="Agent.enableFlying" />
-        </menu_item_check>
-        <menu_item_check
-         label="Always Run"
-         name="Always Run"
-         shortcut="control|R">
-          <menu_item_check.on_check
-           function="World.CheckAlwaysRun" />
-          <menu_item_check.on_click
-           function="World.AlwaysRun" />
-        </menu_item_check>
-        <menu_item_call
-         label="Stop Animating Me"
-         name="Stop Animating My Avatar">
-          <menu_item_call.on_click
-           function="Tools.StopAllAnimations" />
-        </menu_item_call>
-        <menu_item_call
-         label="Walk / run / fly..."
-         name="Walk / run / fly">
-          <menu_item_call.on_click
-           function="Floater.ToggleOrBringToFront"
-           parameter="moveview" />
-        </menu_item_call>
-      </menu>
-
-      <menu
-       create_jump_keys="true"
+		<menu
+		 create_jump_keys="true"
+		 label="Movement"
+		 name="Movement"
+		 tear_off="true">
+            <menu_item_call
+             label="Sit Down"
+             layout="topleft"
+		     shortcut="alt|shift|S"
+             name="Sit Down Here">
+                <menu_item_call.on_click
+                 function="Self.SitDown"
+                 parameter="" />
+                <menu_item_call.on_enable
+                 function="Self.EnableSitDown" />
+            </menu_item_call>
+            <menu_item_check
+             label="Fly"
+             name="Fly"
+             shortcut="Home">
+                <menu_item_check.on_check
+                 function="Agent.getFlying" />
+                <menu_item_check.on_click
+                 function="Agent.toggleFlying" />
+                <menu_item_check.on_enable
+                 function="Agent.enableFlying" />
+            </menu_item_check>
+            <menu_item_check
+             label="Always Run"
+             name="Always Run"
+             shortcut="control|R">
+                <menu_item_check.on_check
+                 function="World.CheckAlwaysRun" />
+                <menu_item_check.on_click
+                 function="World.AlwaysRun" />
+            </menu_item_check>
+            <menu_item_call
+             label="Stop Animating Me"
+             name="Stop Animating My Avatar">
+                 <menu_item_call.on_click
+                  function="Tools.StopAllAnimations" />
+            </menu_item_call>
+	        <menu_item_call
+	         label="Walk / run / fly..."
+	         name="Walk / run / fly">
+	          <menu_item_call.on_click
+	           function="Floater.ToggleOrBringToFront"
+	           parameter="moveview" />
+	        </menu_item_call>
+<!-- MK -->
+            <menu_item_call
+             label="Restart All Animations"
+             name="Restart All Animations"
+             shortcut="control|alt|shift|A">
+              <menu_item_call.on_click
+               function="Tools.RestartAllAnimations" />
+            </menu_item_call>
+<!-- mk -->
+    </menu>
+        <menu
+         create_jump_keys="true"
        label="Status"
-       name="Status"
-       tear_off="true">
-        <menu_item_call
-         label="Away"
-         name="Set Away">
-          <menu_item_call.on_click
-           function="World.SetAway" />
-        </menu_item_call>
-        <menu_item_call
-         label="Busy"
-         name="Set Busy">
-          <menu_item_call.on_click
-           function="World.SetBusy"/>
-        </menu_item_call>
-      </menu>
+         name="Status"
+         tear_off="true">
+            <menu_item_call
+             label="Away"
+             name="Set Away">
+                <menu_item_call.on_click
+                 function="World.SetAway" />
+            </menu_item_call>
+            <menu_item_call
+             label="Busy"
+             name="Set Busy">
+                <menu_item_call.on_click
+                 function="World.SetBusy"/>
+            </menu_item_call>
+        </menu>
 
-      <menu_item_separator/>
+        <menu_item_separator/>
 
-      <menu_item_call
+        <menu_item_call
          label="Buy L$..."
          name="Buy and Sell L$">
         <menu_item_call.on_click
@@ -181,7 +189,7 @@
          <menu_item_call
          label="Toolbar buttons..."
          name="Toolbars"
-         shortcut="control|T">
+         shortcut="control|shift|T">
             <menu_item_call.on_click
              function="Floater.Toggle"
              parameter="toybox" />
@@ -230,7 +238,19 @@
              function="Floater.Toggle"
              parameter="chat_bar" />
         </menu_item_check>
+<!-- MK -->
         <menu_item_check
+         label="Conversations..."
+         name="Conversations"
+         shortcut="control|T"
+         use_mac_ctrl="true">
+          <menu_item_check.on_check
+           function="Communicate.CheckConversations" />
+          <menu_item_check.on_click
+           function="Communicate.Conversations" />
+        </menu_item_check>
+<!-- mk -->
+      <menu_item_check
          label="Speak"
          name="Speak">
             <menu_item_check.on_check
@@ -306,8 +326,8 @@
              function="SideTray.CheckPanelPeopleTab"
              parameter="nearby_panel" />
             <menu_item_check.on_click
-              function="SideTray.PanelPeopleTab"
-              parameter="nearby_panel" />
+             function="SideTray.PanelPeopleTab"
+             parameter="nearby_panel" />
         </menu_item_check>
         <menu_item_call
          label="Block List"
@@ -336,7 +356,7 @@
              function="Floater.ToggleOrBringToFront"
              parameter="destinations" />
         </menu_item_call>
-        <menu_item_check
+            <menu_item_check
          label="World map"
          name="World Map"
          shortcut="control|M"
@@ -348,7 +368,7 @@
              function="Floater.Toggle"
              parameter="world_map" />
         </menu_item_check>
-            <menu_item_check
+         <menu_item_check
          label="Mini-map"
          name="Mini-Map"
          shortcut="control|shift|M">
@@ -398,7 +418,7 @@
              parameter="snapshot" />
         </menu_item_call>
         <menu_item_separator/>
-        <menu_item_call
+      <menu_item_call
          label="Place profile"
          layout="topleft"
          name="Place Profile">
@@ -413,7 +433,7 @@
              parameter="about_land" />
         </menu_item_call>
         <menu_item_call
-         label="Region / Estate"
+         label="Region/Estate"
          name="Region/Estate">
             <menu_item_call.on_click
              function="Floater.Show"
@@ -428,11 +448,11 @@
         </menu_item_call>
         <menu_item_call
          label="Buy this land"
-         name="Buy Land">
-            <menu_item_call.on_click
-             function="Land.Buy" />
-            <menu_item_call.on_enable
-             function="World.EnableBuyLand" />
+             name="Buy Land">
+                <menu_item_call.on_click
+                 function="Land.Buy" />
+                <menu_item_call.on_enable
+                 function="World.EnableBuyLand" />
             </menu_item_call>
 
         <menu_item_separator/>
@@ -442,7 +462,7 @@
            label="Show"
            name="LandShow"
            tear_off="true">
-          <menu_item_check
+         <menu_item_check
              label="Ban Lines"
              name="Ban Lines">
             <menu_item_check.on_check
@@ -771,7 +791,8 @@
         </menu_item_call>
         <menu_item_check
              label="Edit Linked Parts"
-             name="Edit Linked Parts">
+             name="Edit Linked Parts"
+              shortcut="alt|W">
                 <menu_item_check.on_check
                  control="EditLinkedParts" />
                 <menu_item_check.on_click
@@ -1104,15 +1125,66 @@
                     <menu_item_call.on_enable
                      function="Tools.EnableToolNotPie" />
                 </menu_item_call>
+<!-- MK -->
+                <menu_item_call
+                 label="Grid mode : World"
+                 name="GridModeWorld"
+                 shortcut="alt|R">
+                  <menu_item_call.on_click
+                   function="Tools.GridModeWorld" />
+                  <menu_item_call.on_enable
+                   function="SomethingSelected" />
+                </menu_item_call>
+                <menu_item_call
+                 label="Grid mode : Local"
+                 name="GridModeLocal"
+                 shortcut="alt|F">
+                  <menu_item_call.on_click
+                   function="Tools.GridModeLocal" />
+                  <menu_item_call.on_enable
+                   function="SomethingSelected" />
+                </menu_item_call>
+                <menu_item_call
+                 label="Grid mode : Reference"
+                 name="GridModeReference"
+                 shortcut="alt|V">
+                  <menu_item_call.on_click
+                   function="Tools.GridModeReference" />
+                  <menu_item_call.on_enable
+                   function="SomethingSelected" />
+                </menu_item_call>
+<!-- mk -->
                 <menu_item_call
                  label="Use Selection for Grid"
                  name="Use Selection for Grid"
-                 shortcut="shift|G">
+                 shortcut="alt|G">
                     <menu_item_call.on_click
                      function="Tools.UseSelectionForGrid" />
                     <menu_item_call.on_enable
                      function="SomethingSelected" />
                 </menu_item_call>
+<!-- MK -->
+                <menu_item_check
+                 label="Stretch Textures"
+                 name="StretchTextures"
+                 shortcut="alt|T">
+                  <menu_item_check.on_check
+                   control="ScaleStretchTextures" />
+                  <menu_item_check.on_click
+                   function="ToggleControl"
+                   parameter="ScaleStretchTextures" />
+                </menu_item_check>
+                <menu_item_check
+                 label="Stretch Both Sides"
+                 name="StretchBothSides"
+                 shortcut="alt|B">
+                  <menu_item_check.on_check
+                   control="ScaleUniform" />
+                  <menu_item_check.on_click
+                   function="ToggleControl"
+                   parameter="ScaleUniform" />
+                </menu_item_check>
+<!-- mk -->
                 <menu_item_call
                  label="Grid Options"
                  name="Grid Options"
@@ -1278,7 +1350,87 @@
              parameter="sl_about" />
         </menu_item_call>
     </menu>
-    <menu
+<!-- MK -->
+  <!-- RLV menu here -->
+  <menu
+   create_jump_keys="true"
+   label="RLV"
+   name="RLV"
+   tear_off="true"
+   visible="true">
+    <menu_item_call
+     label="List restrictions"
+     name="List restrictions"
+     visible="true">
+      <menu_item_call.on_click
+       function="Rlv.ListRlvRestrictions" />
+    </menu_item_call>
+    <menu_item_separator/>
+    <menu_item_check
+     label="Show Debug Messages"
+     name="Show Debug Messages">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RestrainedLoveDebug" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RestrainedLoveDebug" />
+    </menu_item_check>
+    <menu_item_check
+     label="Forbid offers to #RLV"
+     name="Forbid offers to #RLV">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RestrainedLoveForbidGiveToRLV" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RestrainedLoveForbidGiveToRLV" />
+    </menu_item_check>
+    <menu_item_check
+     label="Show '...'"
+     name="ShowEllipsis">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RestrainedLoveShowEllipsis" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RestrainedLoveShowEllipsis" />
+    </menu_item_check>
+    <menu_item_check
+     label="Double-click to replace items"
+     name="RestrainedLoveDoubleClickWear">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RestrainedLoveDoubleClickWear" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RestrainedLoveDoubleClickWear" />
+    </menu_item_check>
+    <menu_item_separator/>
+    <menu_item_check
+     label="Report avatar entering chat range"
+     name="RadarReportChatRange">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RadarReportChatRange" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RadarReportChatRange" />
+    </menu_item_check>
+    <menu_item_check
+     label="Report avatar entering draw range"
+     name="RadarReportDrawRange">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RadarReportDrawRange" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RadarReportDrawRange" />
+    </menu_item_check>
+  </menu>
+  <!-- End RLV menu -->
+<!-- mk -->
+  <menu
      create_jump_keys="true"
      label="Advanced"
      name="Advanced"
@@ -1773,7 +1925,29 @@
          label="Shortcuts"
          name="Shortcuts"
          tear_off="true"
-         visible="false">
+         visible="true">
+          <menu_item_call
+             label="Image (L$[COST])..."
+             name="Upload Image"
+             shortcut="control|U">
+            <menu_item_call.on_click
+               function="File.UploadImage"
+               parameter="" />
+            <menu_item_call.on_enable
+               function="File.EnableUpload" />
+            </menu_item_call>
+            <menu_item_check
+               label="Search"
+               name="Search"
+               shortcut="control|F">
+            <menu_item_check.on_check
+             function="Floater.Visible"
+             parameter="search" />
+            <menu_item_check.on_click
+             function="Floater.Toggle"
+             parameter="search" />
+            </menu_item_check>
+
             <!-- This second, alternative shortcut for Show Advanced Menu is for backward compatibility.  The main shortcut has been changed so it's Linux-friendly, where the old shortcut is typically eaten by the window manager. -->
             <menu_item_check
                label="Show Advanced Menu - legacy shortcut"
@@ -1860,6 +2034,55 @@
 
             <menu_item_separator/>
 
+<!-- MK -->
+            <menu
+             create_jump_keys="true"
+             label="Select Build Tool"
+             name="Select Tool"
+             tear_off="true">
+                <menu_item_call
+                 label="Focus Tool"
+                 name="Focus"
+                 shortcut="control|1">
+                    <menu_item_call.on_click
+                     function="Tools.SelectTool"
+                     parameter="focus" />
+                </menu_item_call>
+                <menu_item_call
+                 label="Move Tool"
+                 name="Move"
+                 shortcut="control|2">
+                    <menu_item_call.on_click
+                     function="Tools.SelectTool"
+                     parameter="move" />
+                </menu_item_call>
+                <menu_item_call
+                 label="Edit Tool"
+                 name="Edit"
+                 shortcut="control|3">
+                    <menu_item_call.on_click
+                     function="Tools.SelectTool"
+                     parameter="edit" />
+                </menu_item_call>
+                <menu_item_call
+                 label="Create Tool"
+                 name="Create"
+                 shortcut="control|4">
+                    <menu_item_call.on_click
+                     function="Tools.SelectTool"
+                     parameter="create" />
+                </menu_item_call>
+                <menu_item_call
+                 label="Land Tool"
+                 name="Land"
+                 shortcut="control|5">
+                    <menu_item_call.on_click
+                     function="Tools.SelectTool"
+                     parameter="land" />
+                </menu_item_call>
+            </menu>
+            <menu_item_separator/>
+<!-- mk -->
             <menu_item_call
              label="Zoom In"
              name="Zoom In"
@@ -2460,7 +2683,7 @@
            function="Advanced.ToggleInfoDisplay"
            parameter="rendercomplexity" />
         </menu_item_check>
-        <menu_item_check
+		<menu_item_check
          label="Attachment Bytes"
          name="attachment bytes">
           <menu_item_check.on_check
@@ -3322,7 +3545,6 @@
             <menu_item_call
              label="Debug Avatar Textures"
              name="Debug Avatar Textures"
-             shortcut="control|alt|shift|A">
                 <menu_item_call.on_click
                  function="Advanced.DebugAvatarTextures" />
             </menu_item_call>
@@ -3453,7 +3675,6 @@
         <menu_item_call
          label="Request Admin Status"
          name="Request Admin Options"
-         shortcut="control|alt|G">
             <menu_item_call.on_click
              function="Advanced.RequestAdminStatus" />
         </menu_item_call>
