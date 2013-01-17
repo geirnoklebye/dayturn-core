@@ -61,6 +61,7 @@ extern "C" {
 #include "llmediaimplgstreamertriviallogging.h"
 
 #include "llmediaimplgstreamervidplug.h"
+#include "llmediaimplgstreamer_syms.h"
 // <ND> extract stream metadata so we can report back into the client what's playing
 struct ndStreamMetadata
 {
@@ -903,7 +904,7 @@ MediaPluginGStreamer010::startup()
 		// Because: Latest stable gstreamer at the time writing this: 0.10.31
 //		gst_segtrap_set_enabled(FALSE);// Since 0.10.10	, was released Sep 2006
 
-/*
+
 		// Get symbols!
 #if LL_DARWIN
 		if (! grab_gst_syms("libgstreamer-0.10.dylib",
@@ -919,24 +920,24 @@ MediaPluginGStreamer010::startup()
 			writeToLog((char*)"Couldn't find suitable GStreamer 0.10 support on this system - video playback disabled.");
 			return false;
 		}
-*/
-// 		if (gst_segtrap_set_enabled)
-// 		{
-			gst_segtrap_set_enabled(FALSE);
-// 		}
-// 		else
-// 		{
-// 			writeToLog((char*)"gst_segtrap_set_enabled() is not available; plugin crashes won't be caught.");
-// 		}
-/*
+
+ 		if (llgst_segtrap_set_enabled)
+ 		{
+			llgst_segtrap_set_enabled(FALSE);
+ 		}
+ 		else
+ 		{
+ 			writeToLog((char*)"gst_segtrap_set_enabled() is not available; plugin crashes won't be caught.");
+ 		}
+
 #if LL_LINUX
 		// Gstreamer tries a fork during init, waitpid-ing on it,
 		// which conflicts with any installed SIGCHLD handler...
 		struct sigaction tmpact, oldact;
-		if (gst_registry_fork_set_enabled) {
+		if (llgst_registry_fork_set_enabled) {
 		// if we can disable SIGCHLD-using forking behaviour,
 		// do it.
-			gst_registry_fork_set_enabled(false);
+			llgst_registry_fork_set_enabled(false);
 		}
 		else {
 			// else temporarily install default SIGCHLD handler
@@ -947,7 +948,7 @@ MediaPluginGStreamer010::startup()
 			sigaction(SIGCHLD, &tmpact, &oldact);
 		}
 #endif // LL_LINUX
-*/
+
 		// Protect against GStreamer resetting the locale, yuck.
 		static std::string saved_locale;
 		saved_locale = setlocale(LC_ALL, NULL);
@@ -958,6 +959,11 @@ MediaPluginGStreamer010::startup()
 
 		// restore old locale
 		setlocale(LC_ALL, saved_locale.c_str() );
+#if LL_LINUX
+		// restore old SIGCHLD handler
+		if (!llgst_registry_fork_set_enabled)
+			sigaction(SIGCHLD, &oldact, NULL);
+#endif // LL_LINUX
 
 
 
