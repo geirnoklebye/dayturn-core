@@ -906,7 +906,6 @@ MediaPluginGStreamer010::startup()
 		// Because: Latest stable gstreamer at the time writing this: 0.10.31
 //		gst_segtrap_set_enabled(FALSE);// Since 0.10.10	, was released Sep 2006
 #if LL_LINUX
-/*
 
 
 		// Get symbols!
@@ -933,7 +932,7 @@ MediaPluginGStreamer010::startup()
  		{
  			writeToLog((char*)"gst_segtrap_set_enabled() is not available; plugin crashes won't be caught.");
  		}
-*/
+
 #endif //LL_LINUX
 #if LL_WINDOWS
     gst_segtrap_set_enabled(FALSE);
