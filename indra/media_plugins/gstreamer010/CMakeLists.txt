@@ -40,16 +40,20 @@ endif(NOT WORD_SIZE EQUAL 32)
 
 set(media_plugin_gstreamer010_SOURCE_FILES
     media_plugin_gstreamer010.cpp
-    llmediaimplgstreamer_syms.cpp
     llmediaimplgstreamervidplug.cpp
     )
-
+if(LINUX)
+     LIST(APPEND media_plugin_gstreamer010_SOURCE_FILES llmediaimplgstreamer_syms.cpp)
+endif(LINUX)
+ 
 set(media_plugin_gstreamer010_HEADER_FILES
     llmediaimplgstreamer.h
     llmediaimplgstreamervidplug.h
-    llmediaimplgstreamer_syms.h
     llmediaimplgstreamertriviallogging.h
     )
+if(LINUX)
+     LIST(APPEND media_plugin_gstreamer010_ HEADER_FILES llmediaimplgstreamer_syms.h)
+endif(LINUX)
 	
 set_source_files_properties(${media_plugin_gstreamer010_HEADER_FILES}
 							PROPERTIES HEADER_FILE_ONLY TRUE)
