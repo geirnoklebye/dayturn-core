@@ -101,7 +101,7 @@ private:
 
 	LLStatGraph *mSGBandwidth;
 	LLStatGraph *mSGPacketLoss;
-
+	LLView		*mIconDD;
 	LLView		*mBtnStats;
 	LLButton	*mBtnVolume;
 	LLTextBox	*mBoxBalance;
