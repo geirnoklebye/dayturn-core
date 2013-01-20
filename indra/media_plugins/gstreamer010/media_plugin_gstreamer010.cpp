@@ -565,7 +565,7 @@ MediaPluginGStreamer010::update(int milliseconds)
 	        GST_OBJECT_LOCK(mVideoSink);
 		if (mVideoSink->retained_frame_ready)
 		{
-			writeToLog((char*)"NEW FRAME READY");
+			//writeToLog((char*)"NEW FRAME READY");
 
 			if (mVideoSink->retained_frame_width != mCurrentWidth ||
 			    mVideoSink->retained_frame_height != mCurrentHeight)
@@ -624,7 +624,7 @@ MediaPluginGStreamer010::update(int milliseconds)
 				}
 
 				GST_OBJECT_UNLOCK(mVideoSink);
-				writeToLog((char*)"NEW FRAME REALLY TRULY CONSUMED, TELLING HOST");
+				//writeToLog((char*)"NEW FRAME REALLY TRULY CONSUMED, TELLING HOST");
 
 				setDirty(0,0,mCurrentWidth,mCurrentHeight);
 			}
