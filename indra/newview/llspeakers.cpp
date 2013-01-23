@@ -330,6 +330,12 @@ void LLSpeakerMgr::initVoiceModerateMode()
 
 void LLSpeakerMgr::update(BOOL resort_ok)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		return;
+	}
+//mk
 	if (!LLVoiceClient::getInstance())
 	{
 		return;
@@ -448,6 +454,12 @@ void LLSpeakerMgr::update(BOOL resort_ok)
 
 void LLSpeakerMgr::updateSpeakerList()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		return;
+	}
+//mk
 	// are we bound to the currently active voice channel?
 	if ((!mVoiceChannel && LLVoiceClient::getInstance()->inProximalChannel()) || (mVoiceChannel && mVoiceChannel->isActive()))
 	{
