@@ -1882,7 +1882,6 @@ if (LINUX)
   set(COPY_INPUT_DEPENDENCIES
     ${VIEWER_BINARY_NAME}
     linux-crash-logger
-    linux-updater
     SLPlugin
     media_plugin_webkit
     media_plugin_gstreamer010
