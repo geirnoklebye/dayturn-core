@@ -105,7 +105,9 @@ void LLViewerStatsRecorder::initStatsRecorder(LLViewerRegion *regionp)
 				<< "UpdateFailures"
 				<< "\n";
 
-			fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile );
+			if( fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile ))
+			{
+			}
 		}
 	}
 }
@@ -241,7 +243,9 @@ void LLViewerStatsRecorder::endObjectUpdateEvents()
 			<< ", " << mObjectUpdateFailures
 			<< "\n";
 
-		fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile );
+			if (fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile ))
+	{
+	}
 	}
 
 	clearStats();
