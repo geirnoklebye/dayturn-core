@@ -37,6 +37,7 @@
 #include "llcallfloater.h"
 #include "llfasttimerview.h"
 #include "llfloaterabout.h"
+#include "llfloateradvancedbuildoptions.h"
 #include "llfloaterauction.h"
 #include "llfloateravatar.h"
 #include "llfloateravatarpicker.h"
@@ -189,6 +190,7 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("buy_object_contents", "floater_buy_contents.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterBuyContents>);
 	LLFloaterReg::add("build", "floater_tools.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterTools>);
 	LLFloaterReg::add("build_options", "floater_build_options.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterBuildOptions>);
+	LLFloaterReg::add("advancedbuild_options", "floater_advancedbuild_options.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAdvancedBuildOptions>);
 	LLFloaterReg::add("bumps", "floater_bumps.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterBump>);
 
 	LLFloaterReg::add("camera", "floater_camera.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterCamera>);

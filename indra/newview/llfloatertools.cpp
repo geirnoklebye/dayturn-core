@@ -61,6 +61,7 @@
 #include "llresmgr.h"
 #include "llselectmgr.h"
 #include "llslider.h"
+#include "llspinctrl.h"
 #include "llstatusbar.h"
 #include "lltabcontainer.h"
 #include "lltextbox.h"
@@ -218,6 +219,28 @@ LLPCode toolData[]={
 	LL_PCODE_LEGACY_TREE,
 	LL_PCODE_LEGACY_GRASS};
 
+void LLFloaterTools::toolsPrecision()
+{
+	U32 decimals = gSavedSettings.getU32("DecimalsForTools");
+	if (decimals != mPrecision)
+	{
+		if (decimals > 5)
+		{
+			decimals = 5;
+		}
+		getChild<LLSpinCtrl>("Pos X")->setPrecision(decimals);
+		getChild<LLSpinCtrl>("Pos Y")->setPrecision(decimals);
+		getChild<LLSpinCtrl>("Pos Z")->setPrecision(decimals);
+		getChild<LLSpinCtrl>("Scale X")->setPrecision(decimals);
+		getChild<LLSpinCtrl>("Scale Y")->setPrecision(decimals);
+		getChild<LLSpinCtrl>("Scale Z")->setPrecision(decimals);
+		getChild<LLSpinCtrl>("Rot X")->setPrecision(decimals);
+		getChild<LLSpinCtrl>("Rot Y")->setPrecision(decimals);
+		getChild<LLSpinCtrl>("Rot Z")->setPrecision(decimals);
+		mPrecision = decimals;
+	}
+}
+
 BOOL	LLFloaterTools::postBuild()
 {	
 	// Hide until tool selected
@@ -254,6 +277,8 @@ BOOL	LLFloaterTools::postBuild()
 	getChild<LLUICtrl>("checkbox stretch textures")->setValue((BOOL)gSavedSettings.getBOOL("ScaleStretchTextures"));
 	mComboGridMode			= getChild<LLComboBox>("combobox grid mode");
 	mCheckStretchUniformLabel = getChild<LLTextBox>("checkbox uniform label");
+
+	toolsPrecision();
 
 	//
 	// Create Buttons
@@ -370,6 +395,7 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 	mLandImpactsObserver(NULL),
 
 	mDirty(TRUE),
+	mPrecision(3),
 	mNeedMediaTitle(TRUE)
 {
 	gFloaterTools = this;
@@ -521,6 +547,8 @@ void LLFloaterTools::refresh()
 		childSetVisible("selection_empty", !have_selection);
 	}
 
+
+	toolsPrecision();
 
 	// Refresh child tabs
 	mPanelPermissions->refresh();
@@ -867,7 +895,7 @@ void LLFloaterTools::onClose(bool app_quitting)
 	if( mTitleMedia )
 		mTitleMedia->unloadMediaSource();
 
-    // Different from handle_reset_view in that it doesn't actually 
+	// Different from handle_reset_view in that it doesn't actually 
 	//   move the camera if EditCameraMovement is not set.
 	gAgentCamera.resetView(gSavedSettings.getBOOL("EditCameraMovement"));
 	

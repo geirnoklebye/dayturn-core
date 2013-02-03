@@ -347,11 +347,45 @@ LLVector3 LLManip::getSavedPivotPoint() const
 
 LLVector3 LLManip::getPivotPoint()
 {
-	if (mObjectSelection->getFirstObject() && mObjectSelection->getObjectCount() == 1 && mObjectSelection->getSelectType() != SELECT_TYPE_HUD)
+	LLVector3 pos;
+	LLVector3 scale;
+	LLQuaternion rot;
+	static LLCachedControl<bool> sActualRoot(gSavedSettings, "BuildPrefs_ActualRoot", false);
+	static LLCachedControl<bool> sPivotPerc(gSavedSettings, "BuildPrefs_PivotIsPercent", false);
+	static LLCachedControl<F32> sPivotX(gSavedSettings, "BuildPrefs_PivotX");
+	static LLCachedControl<F32> sPivotY(gSavedSettings, "BuildPrefs_PivotY");
+	static LLCachedControl<F32> sPivotZ(gSavedSettings, "BuildPrefs_PivotZ");
+	
+	const BOOL children_ok = TRUE;
+	if (mObjectSelection->getFirstRootObject(children_ok) && (mObjectSelection->getObjectCount() == 1 || sActualRoot) && mObjectSelection->getSelectType() != SELECT_TYPE_HUD)
 	{
-		return mObjectSelection->getFirstObject()->getPivotPositionAgent();
+		pos = mObjectSelection->getFirstRootObject(children_ok)->getPivotPositionAgent();
+		scale = mObjectSelection->getFirstRootObject(children_ok)->getScale();
+		rot = mObjectSelection->getFirstRootObject(children_ok)->getRotation();
 	}
-	return LLSelectMgr::getInstance()->getBBoxOfSelection().getCenterAgent();
+	else
+	{
+		pos = LLSelectMgr::getInstance()->getBBoxOfSelection().getCenterAgent();
+		scale = LLSelectMgr::getInstance()->getBBoxOfSelection().getExtentLocal();
+		rot = LLSelectMgr::getInstance()->getBBoxOfSelection().getRotation();
+	}
+	if(sPivotPerc)
+	{
+		
+		LLVector3 add(
+			(-scale[VX]*0.5) + (scale[VX]*(sPivotX*0.01)),
+			(-scale[VY]*0.5) + (scale[VY]*(sPivotY*0.01)),
+			(-scale[VZ]*0.5) + (scale[VZ]*(sPivotZ*0.01)));
+		add = add * rot;
+		pos = pos + add;
+	}
+	else
+	{
+		LLVector3 add(sPivotX, sPivotY, sPivotZ);
+		add = add * rot;
+		pos = pos + add;
+	}
+	return pos;
 }
 
 
@@ -382,6 +416,7 @@ void LLManip::renderGuidelines(BOOL draw_x, BOOL draw_y, BOOL draw_z)
 		gGL.rotatef(angle_radians * RAD_TO_DEG, x, y, z);
 
 		F32 region_size = LLWorld::getInstance()->getRegionWidthInMeters();
+		//F32 region_size = object->getRegion()->getWidth();
 
 		const F32 LINE_ALPHA = 0.33f;
 

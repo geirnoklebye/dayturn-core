@@ -1122,6 +1122,16 @@
                     <menu_item_call.on_enable
                      function="Tools.EnableToolNotPie" />
                 </menu_item_call>
+               <menu_item_call
+                 label="Advanced Build Options"
+                 name="Advanced Build Options"
+                 shortcut="control|alt|B">
+                    <menu_item_call.on_click
+                     function="Floater.Show"
+                     parameter="advancedbuild_options" />
+                    <menu_item_call.on_enable
+                     function="Tools.EnableToolNotPie" />
+                </menu_item_call>				
         </menu>
         <menu
          create_jump_keys="true"

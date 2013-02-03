@@ -190,6 +190,7 @@ set(viewer_SOURCE_FILES
     llfirstuse.cpp
     llflexibleobject.cpp
     llfloaterabout.cpp
+	llfloateradvancedbuildoptions.cpp
     llfloaterbvhpreview.cpp
     llfloaterauction.cpp
     llfloaterautoreplacesettings.cpp
@@ -778,6 +779,7 @@ set(viewer_HEADER_FILES
     llfirstuse.h
     llflexibleobject.h
     llfloaterabout.h
+	llfloateradvancedbuildoptions.h
     llfloaterbvhpreview.h
     llfloaterauction.h
     llfloaterautoreplacesettings.h

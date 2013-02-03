@@ -70,6 +70,7 @@
 #include "llfloatertools.h"
 #include "llfloaterworldmap.h"
 #include "llfloaterbuildoptions.h"
+#include "llfloateradvancedbuildoptions.h"
 #include "llavataractions.h"
 #include "lllandmarkactions.h"
 #include "llgroupmgr.h"
