@@ -371,7 +371,7 @@
      layout="topleft"
      follows="top|left"
      name="Options..."
-     tool_tip="See more grid options"
+     tool_tip="See advanced build options"
      top="83"
      width="25"
      height="20" >
