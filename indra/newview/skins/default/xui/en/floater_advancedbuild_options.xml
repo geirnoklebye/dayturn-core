@@ -397,8 +397,8 @@
      radio_style="false"
      tooltip="Rez objects on group land using the land"
     />
-  <!--   <spinner
-     control_name="DecimalsFortools"
+    <spinner
+     control_name="DecimalsForTools"
      name="spinner_decimal"
      label="Object edit decimal places:"
      tool_tip="Sets the default decimal precision for move, resize, and rotate"
@@ -415,7 +415,7 @@
      min_val="0"
      mouse_opaque="true"
     />
-
+  <!-- 
     <button
      name="btn_apply"
      label="Apply"
