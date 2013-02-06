@@ -274,6 +274,42 @@
         <key>slurl_base</key>
             <string>hop://login.francogrid.org/</string>
         </map>
+    <key>hypergrid.org:8002</key>
+        <map>
+        <key>LastModified</key>
+            <date>2013-02-05T22:25:10.58Z</date>
+        <key>about</key>
+            <string>http://www.hypergrid.org/metropolis/wiki</string>
+        <key>gatekeeper</key>
+            <string>hypergrid.org:8002</string>
+        <key>gridname</key>
+            <string>Metropolis Metaversum</string>
+        <key>gridnick</key>
+            <string>Metropolis</string>
+        <key>help</key>
+            <string>http://metropolis.hypergrid.org</string>
+        <key>helperuri</key>
+            <string>http://metropolis.hypergrid.org/currency/helper/</string>
+        <key>login_identifier_types</key>
+            <array>
+                <string>agent</string>
+                <string>account</string>
+            </array>
+        <key>loginpage</key>
+            <string>http://metropolis.hypergrid.org</string>
+        <key>loginuri</key>
+            <array>
+                <string>http://hypergrid.org:8002/</string>
+            </array>
+        <key>name</key>
+            <string>hypergrid.org:8002</string>
+        <key>password</key>
+            <string>http://metropolis.hypergrid.org/oswi.php</string>
+        <key>register</key>
+            <string>http://www.hypergrid.org/metropolis/metro_rg.php</string>
+        <key>slurl_base</key>
+            <string>hop://hypergrid.org:8002/</string>
+        </map>		
     <key>login.osgrid.org</key>
         <map>
         <key>LastModified</key>
