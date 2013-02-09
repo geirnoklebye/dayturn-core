@@ -23,12 +23,16 @@
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
+//#ifdef LL_LINUX
+//#pragma GCC diagnostic ignored "-Wunused-variable"
+//#endif
 
 #include "lldiriterator.h"
-
+#include <string.h>
 #include "fix_macros.h"
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
+
 
 namespace fs = boost::filesystem;
 
@@ -122,7 +126,11 @@ bool LLDirIterator::Impl::next(std::string &fname)
 	while (mIter != end_itr && !found)
 	{
 		boost::smatch match;
+#if (LL_LINUX) && defined(__amd64__)
+		std::string name = mIter->path().filename();
+#else 
 		std::string name = mIter->path().filename().string();
+#endif
 		if (found = boost::regex_match(name, match, mFilterExp))
 		{
 			fname = name;
