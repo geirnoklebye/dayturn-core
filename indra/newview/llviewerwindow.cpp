@@ -78,6 +78,7 @@
 #include "llmediaentry.h"
 #include "llurldispatcher.h"
 #include "raytrace.h"
+#include "llstat.h"
 
 // newview includes
 #include "llagent.h"
@@ -336,26 +337,23 @@ public:
 		
 		if (gSavedSettings.getBOOL("DebugShowTime"))
 		{
-			const U32 y_inc2 = 15;
-			for (std::map<S32,LLFrameTimer>::reverse_iterator iter = gDebugTimers.rbegin();
-				 iter != gDebugTimers.rend(); ++iter)
 			{
-				S32 idx = iter->first;
-				LLFrameTimer& timer = iter->second;
+			const U32 y_inc2 = 15;
+				LLFrameTimer& timer = gTextureTimer;
 				F32 time = timer.getElapsedTimeF32();
 				S32 hours = (S32)(time / (60*60));
 				S32 mins = (S32)((time - hours*(60*60)) / 60);
 				S32 secs = (S32)((time - hours*(60*60) - mins*60));
-				std::string label = gDebugTimerLabel[idx];
-				if (label.empty()) label = llformat("Debug: %d", idx);
-				addText(xpos, ypos, llformat(" %s: %d:%02d:%02d", label.c_str(), hours,mins,secs)); ypos += y_inc2;
+				addText(xpos, ypos, llformat("Texture: %d:%02d:%02d", hours,mins,secs)); ypos += y_inc2;
 			}
 			
+			{
 			F32 time = gFrameTimeSeconds;
 			S32 hours = (S32)(time / (60*60));
 			S32 mins = (S32)((time - hours*(60*60)) / 60);
 			S32 secs = (S32)((time - hours*(60*60) - mins*60));
 			addText(xpos, ypos, llformat("Time: %d:%02d:%02d", hours,mins,secs)); ypos += y_inc;
+		}
 		}
 		
 #if LL_WINDOWS
@@ -620,7 +618,7 @@ public:
 				addText(xpos, ypos, llformat("%d/%d Mesh HTTP Requests/Retries", LLMeshRepository::sHTTPRequestCount,
 					LLMeshRepository::sHTTPRetryCount));
 				ypos += y_inc;
-				
+
 				addText(xpos, ypos, llformat("%d/%d Mesh LOD Pending/Processing", LLMeshRepository::sLODPending, LLMeshRepository::sLODProcessing));
 				ypos += y_inc;
 
@@ -1547,7 +1545,8 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	mResDirty(false),
 	mStatesDirty(false),
 	mCurrResolutionIndex(0),
-	mProgressView(NULL)
+	mProgressView(NULL),
+	mMouseVelocityStat(new LLStat("Mouse Velocity"))
 {
 	// gKeyboard is still NULL, so it doesn't do LLWindowListener any good to
 	// pass its value right now. Instead, pass it a nullary function that
@@ -1936,7 +1935,7 @@ void LLViewerWindow::initWorldUI()
 	panel_ssf_container->addChild(panel_stand_stop_flying);
 
 	panel_ssf_container->setVisible(TRUE);
-	
+
 	LLMenuOptionPathfindingRebakeNavmesh::getInstance()->initialize();
 
 	// Load and make the toolbars visible
@@ -2037,12 +2036,12 @@ void LLViewerWindow::shutdownViews()
 		gMorphView->setVisible(FALSE);
 	}
 	llinfos << "Global views cleaned." << llendl ;
-
+	
 	// DEV-40930: Clear sModalStack. Otherwise, any LLModalDialog left open
 	// will crump with LL_ERRS.
 	LLModalDialog::shutdownModals();
 	llinfos << "LLModalDialog shut down." << llendl; 
-	
+
 	// destroy the nav bar, not currently part of gViewerWindow
 	// *TODO: Make LLNavigationBar part of gViewerWindow
 	if (LLNavigationBar::instanceExists())
@@ -2050,17 +2049,17 @@ void LLViewerWindow::shutdownViews()
 		delete LLNavigationBar::getInstance();
 	}
 	llinfos << "LLNavigationBar destroyed." << llendl ;
-
+	
 	// destroy menus after instantiating navbar above, as it needs
 	// access to gMenuHolder
 	cleanup_menus();
 	llinfos << "menus destroyed." << llendl ;
-
+	
 	// Delete all child views.
 	delete mRootView;
 	mRootView = NULL;
 	llinfos << "RootView deleted." << llendl ;
-
+	
 	LLMenuOptionPathfindingRebakeNavmesh::getInstance()->quit();
 
 	// Automatically deleted as children of mRootView.  Fix the globals.
@@ -2130,6 +2129,8 @@ LLViewerWindow::~LLViewerWindow()
 
 	delete mDebugText;
 	mDebugText = NULL;
+
+	delete mMouseVelocityStat;
 }
 
 
@@ -3303,7 +3304,7 @@ void LLViewerWindow::updateMouseDelta()
 		mouse_vel.setVec((F32) dx, (F32) dy);
 	}
     
-	mMouseVelocityStat.addValue(mouse_vel.magVec());
+	mMouseVelocityStat->addValue(mouse_vel.magVec());
 }
 
 void LLViewerWindow::updateKeyboardFocus()
@@ -4827,7 +4828,7 @@ void LLViewerWindow::restoreGL(const std::string& progress_message)
 		LLViewerDynamicTexture::restoreGL();
 		LLVOAvatar::restoreGL();
 		LLVOPartGroup::restoreGL();
-
+		
 		gResizeScreenTexture = TRUE;
 		gWindowResized = TRUE;
 
@@ -5054,7 +5055,7 @@ S32 LLViewerWindow::getChatConsoleBottomPad()
 	S32 offset = 0;
 
 	if(gToolBarView)
-		offset += gToolBarView->getChild<LLView>("bottom_toolbar_panel")->getRect().getHeight();
+		offset += gToolBarView->getBottomToolbar()->getRect().getHeight();
 
 	return offset;
 }
@@ -5314,8 +5315,8 @@ void LLPickInfo::getSurfaceInfo()
 				LLFace* facep = objectp->mDrawable->getFace(mObjectFace);
 				if (facep)
 				{
-					mUVCoords = facep->surfaceToTexture(mSTCoords, mIntersection, mNormal);
-				}
+				mUVCoords = facep->surfaceToTexture(mSTCoords, mIntersection, mNormal);
+			}
 			}
 
 			// and XY coords:

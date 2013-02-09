@@ -261,8 +261,6 @@ BOOL LLVOAvatarSelf::loadAvatarSelf()
 
 BOOL LLVOAvatarSelf::buildSkeletonSelf(const LLVOAvatarSkeletonInfo *info)
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-
 	// add special-purpose "screen" joint
 	mScreenp = new LLViewerJoint("mScreen", NULL);
 	// for now, put screen at origin, as it is only used during special
@@ -789,8 +787,6 @@ BOOL LLVOAvatarSelf::loadLayersets()
 // virtual
 BOOL LLVOAvatarSelf::updateCharacter(LLAgent &agent)
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-
 	// update screen joint size
 	if (mScreenp)
 	{
@@ -1145,8 +1141,6 @@ void LLVOAvatarSelf::idleUpdateTractorBeam()
 // virtual
 void LLVOAvatarSelf::restoreMeshData()
 {
-	LLMemType mt(LLMemType::MTYPE_AVATAR);
-	
 	//llinfos << "Restoring" << llendl;
 	mMeshValid = TRUE;
 	updateJointLODs();

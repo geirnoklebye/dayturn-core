@@ -109,6 +109,8 @@ public:
 	bool selectedMediaEditable();
 	void updateLandImpacts();
 
+	static void setGridMode(S32 mode);
+
 private:
 	void refresh();
 	void refreshMedia();

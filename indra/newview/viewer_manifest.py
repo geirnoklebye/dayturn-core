@@ -1061,6 +1061,7 @@ class Linux_i686Manifest(LinuxManifest):
     def construct(self):
         super(Linux_i686Manifest, self).construct()
 
+        self.strip_binaries()
 
         # install either the libllkdu we just built, or a prebuilt one, in
         # decreasing order of preference.  for linux package, this goes to bin/
@@ -1076,6 +1077,11 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("../llcommon/libllcommon.so", "lib/libllcommon.so")
         except:
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
+
+    def strip_binaries(self):
+        if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
+            print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
+            self.run_command(r"find %(d)r/bin %(d)r/lib -type f \! -name update_install | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
 
 
         if self.prefix("../packages/lib/release", dst="lib"):
@@ -1145,9 +1151,7 @@ class Linux_i686Manifest(LinuxManifest):
                     self.path("libvivoxplatform.so")
                     self.end_prefix("lib")
 
-        if self.args['buildtype'].lower() == 'release':
-                self.run_command('find %(d)r/bin %(d)r/lib  -type f \\'
-                                 '! -name update_install | xargs --no-run-if-empty strip -S'
+            self.strip_binaries()
                                  % {'d': self.get_dst_prefix()} )
 
 
