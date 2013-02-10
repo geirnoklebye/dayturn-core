@@ -66,8 +66,7 @@ LLViewerStatsRecorder::~LLViewerStatsRecorder()
 	}
 }
 
-			{
-			}
+
 void LLViewerStatsRecorder::clearStats()
 {
 	mObjectCacheHitCount = 0;

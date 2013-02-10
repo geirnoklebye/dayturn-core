@@ -1152,7 +1152,6 @@ class Linux_i686Manifest(LinuxManifest):
                     self.end_prefix("lib")
 
             self.strip_binaries()
-                                 % {'d': self.get_dst_prefix()} )
 
 
 class Linux_x86_64Manifest(LinuxManifest):
