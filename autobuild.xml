@@ -1079,23 +1079,11 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/bin</key>
-                <string>bin</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>0300272a1e6ecf64ccb02e94cf18e65b</string>
+              <string>33083600e7ab8b6c6ea4ff00a1650662</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/google_breakpad-0.0.0-rev599-linux64-20101117.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-google-breakpad/downloads/google_breakpad-0.0.0-rev599-linux64-20130210.tar.bz2
+</string>
             </map>
             <key>name</key>
             <string>linux64</string>
