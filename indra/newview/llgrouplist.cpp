@@ -63,7 +63,7 @@ public:
 	}
 };
 
-static const LLGroupComparator GROUP_COMPARATOR;
+static LLGroupComparator GROUP_COMPARATOR;
 
 
 LLGroupList::LLGroupList(const Params& p)
@@ -275,6 +275,12 @@ bool LLGroupList::onContextMenuItemClick(const LLSD& userdata)
 
 bool LLGroupList::onContextMenuItemEnable(const LLSD& userdata)
 {
+//MK
+	if (gRRenabled && userdata.asString() == "activate" && gAgent.mRRInterface.contains ("setgroup"))
+	{
+		return false;
+	}
+//mk
 	LLUUID selected_group_id = getSelectedUUID();
 	bool real_group_selected = selected_group_id.notNull(); // a "real" (not "none") group is selected
 

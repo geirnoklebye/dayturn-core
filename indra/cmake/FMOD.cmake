@@ -6,7 +6,7 @@
 # Open source devs should use the -DFMOD:BOOL=ON then if they want to build with FMOD, whether
 # they are using STANDALONE or not.
 if (INSTALL_PROPRIETARY)
-  set(FMOD ON CACHE BOOL "Use FMOD sound library.")
+set(FMOD ON CACHE BOOL "Use FMOD sound library.")
 endif (INSTALL_PROPRIETARY)
 
 if (FMOD)
@@ -23,15 +23,15 @@ if (FMOD)
       # If not, we're going to try to get the package listed in autobuild.xml
       # Note: if you're not using INSTALL_PROPRIETARY, the package URL should be local (file:/// URL) 
       # as accessing the private LL location will fail if you don't have the credential
-      include(Prebuilt)
-      use_prebuilt_binary(fmod)    
-      if (WINDOWS)
+    include(Prebuilt)
+    use_prebuilt_binary(fmod)
+    if (WINDOWS)
         set(FMOD_LIBRARY fmod)
-      elseif (DARWIN)
+    elseif (DARWIN)
         set(FMOD_LIBRARY fmod)
-      elseif (LINUX)
+    elseif (LINUX)
         set(FMOD_LIBRARY fmod-3.75)
-      endif (WINDOWS)
+    endif (WINDOWS)
       set(FMOD_LIBRARIES ${FMOD_LIBRARY})
       set(FMOD_INCLUDE_DIR ${LIBS_PREBUILT_DIR}/include)
     endif (FMOD_LIBRARY AND FMOD_INCLUDE_DIR)
