@@ -1045,6 +1045,7 @@ class LinuxManifest(ViewerManifest):
 
         self.path("featuretable_linux.txt")
         self.package_file = "foo"
+        self.strip_binaries()
     def copy_finish(self):
         # Force executable permissions to be set for scripts
         # see CHOP-223 and http://mercurial.selenic.com/bts/issue1802
@@ -1057,11 +1058,17 @@ class LinuxManifest(ViewerManifest):
 #                       'etc/refresh_desktop_app_entry.sh', 'etc/launch_url.sh'):
 #                           self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
 
+    def strip_binaries(self):
+        if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
+            print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
+            self.run_command(r"find %(d)r/bin %(d)r/lib -type f \! -name update_install | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
+
+
 class Linux_i686Manifest(LinuxManifest):
     def construct(self):
         super(Linux_i686Manifest, self).construct()
 
-        self.strip_binaries()
+
 
         # install either the libllkdu we just built, or a prebuilt one, in
         # decreasing order of preference.  for linux package, this goes to bin/
@@ -1078,10 +1085,6 @@ class Linux_i686Manifest(LinuxManifest):
         except:
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
-    def strip_binaries(self):
-        if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
-            print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
-            self.run_command(r"find %(d)r/bin %(d)r/lib -type f \! -name update_install | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
 
 
         if self.prefix("../packages/lib/release", dst="lib"):
@@ -1150,8 +1153,6 @@ class Linux_i686Manifest(LinuxManifest):
                     self.path("libvivoxsdk.so")
                     self.path("libvivoxplatform.so")
                     self.end_prefix("lib")
-
-            self.strip_binaries()
 
 
 class Linux_x86_64Manifest(LinuxManifest):
