@@ -217,9 +217,9 @@ void LLViewerStatsRecorder::writeToLog( F32 interval )
 				<< "Texture Fetch bps\t"
 				<< "\n";
 
-			fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile );
-	{
-	}
+			if(fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile ))
+			{
+			}
 		}
 		else
 		{
@@ -252,7 +252,9 @@ void LLViewerStatsRecorder::writeToLog( F32 interval )
 		<< "\t" << (mTextureFetchSize * 8 / delta_time)
 		<< "\n";
 
-	fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile );
+	if(fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile ))
+	{
+	}
 	clearStats();
 }
 
