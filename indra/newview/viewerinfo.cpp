@@ -33,8 +33,8 @@ namespace ViewerInfo
 	const std::string NAME  = "Kokua";
 	const S32         MAJOR = 3;
 	const S32         MINOR = 4;
-	const S32         PATCH = 5;
-	const S32         BUILD = 25945;
+	const S32         PATCH = 6;
+	const S32         BUILD = 25966;
 	const std::string EXTRA = "";
 
 
