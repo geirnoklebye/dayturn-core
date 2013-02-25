@@ -60,13 +60,14 @@ public:
 	typedef LLDefaultChildRegistry child_registry_t;
 	
 	// Xml structure of the toolbars.xml setting
-	// Those live in a toolbars.xml found in app_settings (for the default) and in
+	// Those live in a toolbars.xml found in the selected skin folder and in
 	// the user folder for the user specific (saved) settings
 	struct Toolbar : public LLInitParam::Block<Toolbar>
 	{
 		Mandatory<LLToolBarEnums::ButtonType>	button_display_mode;
 		Multiple<LLCommandId::Params>	commands;
 		Optional<LLToolBarEnums::Alignment>		button_alignment;		// <FS:Zi> Added alignment parameter
+		Optional<LLToolBarEnums::LayoutStyle>	button_layout_style;	// <FS:Zi> Added layout style parameter
 
 		Toolbar();
 	};

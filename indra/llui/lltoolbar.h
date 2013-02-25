@@ -346,6 +346,8 @@ private:
 
 	std::string						mButtonTooltipSuffix;
 
+	LLIconCtrl*						mCaretIcon; 
+	
 // <FS:Zi> Layout and alignment helper functions and member variables
 
 	// context menu callbacks
