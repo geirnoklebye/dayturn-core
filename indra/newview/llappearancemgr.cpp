@@ -1633,8 +1633,6 @@ void LLAppearanceMgr::updateAgentWearables(LLWearableHoldingPattern* holder, boo
 	{
 		gAgentWearables.setWearableOutfit(items, wearables, !append);
 	}
-
-//	dec_busy_count();
 }
 
 static void remove_non_link_items(LLInventoryModel::item_array_t &items)
@@ -2086,7 +2084,6 @@ void LLAppearanceMgr::wearInventoryCategoryOnAvatar( LLInventoryCategory* catego
 void LLAppearanceMgr::wearOutfitByName(const std::string& name)
 {
 	LL_INFOS("Avatar") << self_av_string() << "Wearing category " << name << LL_ENDL;
-	//inc_busy_count();
 
 //MK
 	//if (gRRenabled)
@@ -2136,8 +2133,6 @@ void LLAppearanceMgr::wearOutfitByName(const std::string& name)
 		llwarns << "Couldn't find outfit " <<name<< " in wearOutfitByName()"
 				<< llendl;
 	}
-
-	//dec_busy_count();
 }
 
 bool areMatchingWearables(const LLViewerInventoryItem *a, const LLViewerInventoryItem *b)
@@ -2476,7 +2471,7 @@ void LLAppearanceMgr::copyLibraryGestures()
 
 	// Copy gestures
 	LLUUID lib_gesture_cat_id =
-		gInventory.findCategoryUUIDForType(LLFolderType::FT_GESTURE,false,true);
+		gInventory.findLibraryCategoryUUIDForType(LLFolderType::FT_GESTURE,false);
 	if (lib_gesture_cat_id.isNull())
 	{
 		llwarns << "Unable to copy gestures, source category not found" << llendl;
@@ -3120,7 +3115,6 @@ public:
 		{
 			llwarns << "Nothing fetched in category " << mComplete.front()
 					<< llendl;
-			//dec_busy_count();
 			gInventory.removeObserver(this);
 
 			// lets notify observers that loading is finished.

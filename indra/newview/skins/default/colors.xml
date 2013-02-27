@@ -532,6 +532,9 @@
      name="MenuItemHighlightBgColor"
      reference="EmphasisColor_35" />
     <color
+     name="MenuItemFlashBgColor"
+     reference="BeaconColor" />
+    <color
      name="MenuItemHighlightFgColor"
      reference="White" />
     <color

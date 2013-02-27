@@ -59,6 +59,7 @@
 #include "llbuycurrencyhtml.h"
 #include "llfloatergodtools.h"
 #include "llfloaterinventory.h"
+#include "llfloaterimcontainer.h"
 #include "llfloaterland.h"
 #include "llfloaterpathfindingcharacters.h"
 #include "llfloaterpathfindinglinksets.h"
@@ -107,6 +108,7 @@
 #include "llviewerparcelmgr.h"
 #include "llviewerstats.h"
 #include "llvoavatarself.h"
+#include "llvoicevivox.h"
 #include "llworldmap.h"
 #include "pipeline.h"
 #include "llviewerjoystick.h"
@@ -122,10 +124,6 @@
 #include "llwindow.h"
 #include "llpathfindingmanager.h"
 #include "boost/unordered_map.hpp"
-
-//MK
-#include "llimfloatercontainer.h"
-//mk
 
 using namespace LLVOAvatarDefines;
 
@@ -181,9 +179,6 @@ LLContextMenu* gAttachBodyPartPieMenus[8];
 LLContextMenu* gDetachPieMenu = NULL;
 LLContextMenu* gDetachScreenPieMenu = NULL;
 LLContextMenu* gDetachBodyPartPieMenus[8];
-
-LLMenuItemCallGL* gAFKMenu = NULL;
-LLMenuItemCallGL* gBusyMenu = NULL;
 
 //
 // Local prototypes
@@ -473,8 +468,6 @@ void init_menus()
 	gMenuHolder->childSetLabelArg("Upload Animation", "[COST]", upload_cost);
 	gMenuHolder->childSetLabelArg("Bulk Upload", "[COST]", upload_cost);
 
-	gAFKMenu = gMenuBarView->getChild<LLMenuItemCallGL>("Set Away", TRUE);
-	gBusyMenu = gMenuBarView->getChild<LLMenuItemCallGL>("Set Busy", TRUE);
 	gAttachSubMenu = gMenuBarView->findChildMenuByName("Attach Object", TRUE);
 	gDetachSubMenu = gMenuBarView->findChildMenuByName("Detach Object", TRUE);
 
@@ -3473,15 +3466,6 @@ bool enable_freeze_eject(const LLSD& avatar_id)
 	return new_value;
 }
 
-
-void login_done(S32 which, void *user)
-{
-	llinfos << "Login done " << which << llendl;
-
-	LLPanelLogin::closePanel();
-}
-
-
 bool callback_leave_group(const LLSD& notification, const LLSD& response)
 {
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
@@ -3711,7 +3695,8 @@ class LLTogglePanelPeopleTab : public view_listener_t
 
 		if (   panel_name == "friends_panel"
 			|| panel_name == "groups_panel"
-			|| panel_name == "nearby_panel")
+			|| panel_name == "nearby_panel"
+			|| panel_name == "blocked_panel")
 		{
 			return togglePeoplePanel(panel_name, param);
 		}
@@ -5445,35 +5430,6 @@ class LLToolsRestartAllAnimations : public view_listener_t
 		return true;
 	}
 };
-
-
-class LLCommunicateCheckConversations : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		LLIMFloaterContainer* im_box = LLIMFloaterContainer::getInstance();
-		if (im_box)
-		{
-			return im_box->getVisible();
-		}
-		return false;
-	}
-};
-
-class LLCommunicateConversations : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		LLIMFloaterContainer* im_box = LLIMFloaterContainer::getInstance();
-		if (im_box)
-		{
-			BOOL visible = im_box->getVisible();
-			im_box->setVisible(!visible);
-			im_box->setFocus(!visible);
-		}
-		return true;
-	}
-};
 //mk
 
 class LLToolsReleaseKeys : public view_listener_t
@@ -6021,16 +5977,6 @@ void toggle_debug_menus(void*)
 // 	gExportDialog = LLUploadDialog::modalUploadDialog("Exporting selected objects...");
 // }
 //
-
-class LLCommunicateBlockList : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		LLFloaterSidePanelContainer::showPanel("people", "panel_block_list_sidetray", LLSD());
-		return true;
-	}
-};
-
 class LLWorldSetHomeLocation : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -6110,18 +6056,18 @@ class LLWorldSetAway : public view_listener_t
 	}
 };
 
-class LLWorldSetBusy : public view_listener_t
+class LLWorldSetDoNotDisturb : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		if (gAgent.getBusy())
+		if (gAgent.isDoNotDisturb())
 		{
-			gAgent.clearBusy();
+			gAgent.setDoNotDisturb(false);
 		}
 		else
 		{
-			gAgent.setBusy();
-			LLNotificationsUtil::add("BusyModeSet");
+			gAgent.setDoNotDisturb(true);
+			LLNotificationsUtil::add("DoNotDisturbModeSet");
 		}
 		return true;
 	}
@@ -6305,7 +6251,7 @@ bool complete_give_money(const LLSD& notification, const LLSD& response, LLObjec
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
 	if (option == 0)
 	{
-		gAgent.clearBusy();
+		gAgent.setDoNotDisturb(false);
 	}
 
 	LLViewerObject* objectp = selection->getPrimaryObject();
@@ -6344,12 +6290,12 @@ bool complete_give_money(const LLSD& notification, const LLSD& response, LLObjec
 
 void handle_give_money_dialog()
 {
-	LLNotification::Params params("BusyModePay");
+	LLNotification::Params params("DoNotDisturbModePay");
 	params.functor.function(boost::bind(complete_give_money, _1, _2, LLSelectMgr::getInstance()->getSelection()));
 
-	if (gAgent.getBusy())
+	if (gAgent.isDoNotDisturb())
 	{
-		// warn users of being in busy mode during a transaction
+		// warn users of being in do not disturb mode during a transaction
 		LLNotifications::instance().add(params);
 	}
 	else
@@ -8289,7 +8235,7 @@ class LLToolsUseSelectionForGrid : public view_listener_t
 		LLFloaterTools* tools_floater = LLFloaterReg::getTypedInstance<LLFloaterTools>("build");
 		if (tools_floater && tools_floater->getVisible())
 		{
-			tools_floater->setGridMode(GRID_MODE_REF_OBJECT);
+			LLFloaterTools::setGridMode((S32)GRID_MODE_REF_OBJECT);
 		}
 //mk
 		return true;
@@ -8366,6 +8312,20 @@ void handle_web_content_test(const LLSD& param)
 {
 	std::string url = param.asString();
 	LLWeb::loadURLInternal(url);
+}
+
+void handle_show_url(const LLSD& param)
+{
+	std::string url = param.asString();
+	if(gSavedSettings.getBOOL("UseExternalBrowser"))
+	{
+		LLWeb::loadURLExternal(url);
+	}
+	else
+	{
+		LLWeb::loadURLInternal(url);
+	}
+
 }
 
 void handle_buy_currency_test(void*)
@@ -8630,6 +8590,22 @@ class LLViewCheckRenderType : public view_listener_t
 			new_value = LLPipeline::toggleRenderTypeControlNegated((void *)LLPipeline::RENDER_TYPE_PARTICLES);
 		}
 		return new_value;
+	}
+};
+
+class LLViewStatusAway : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		return (gAgent.isInitialized() && gAgent.getAFK());
+	}
+};
+
+class LLViewStatusDoNotDisturb : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		return (gAgent.isInitialized() && gAgent.isDoNotDisturb());
 	}
 };
 
@@ -8914,11 +8890,7 @@ class LLWorldPostProcess : public view_listener_t
 
 void handle_flush_name_caches()
 {
-	// Toggle display names on and off to flush
-	bool use_display_names = LLAvatarNameCache::useDisplayNames();
-	LLAvatarNameCache::setUseDisplayNames(!use_display_names);
-	LLAvatarNameCache::setUseDisplayNames(use_display_names);
-
+	LLAvatarNameCache::cleanupClass();
 	if (gCacheName) gCacheName->clear();
 }
 
@@ -8942,6 +8914,11 @@ public:
 		calculateCost();
 	}
 };
+
+void handle_voice_morphing_subscribe()
+{
+	LLWeb::loadURLExternal(LLTrans::getString("voice_morphing_url"));
+}
 
 class LLToggleUIHints : public view_listener_t
 {
@@ -9087,6 +9064,7 @@ void initialize_menus()
 
 
 	commit.add("Inventory.NewWindow", boost::bind(&LLFloaterInventory::showAgentInventory));
+	enable.add("Conversation.IsConversationLoggingAllowed", boost::bind(&LLFloaterIMContainer::isConversationLoggingAllowed));
 
 	// Agent
 	commit.add("Agent.toggleFlying", boost::bind(&LLAgent::toggleFlying));
@@ -9132,13 +9110,20 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLViewCheckShowHoverTips(), "View.CheckShowHoverTips");
 	view_listener_t::addMenu(new LLViewCheckHighlightTransparent(), "View.CheckHighlightTransparent");
 	view_listener_t::addMenu(new LLViewCheckRenderType(), "View.CheckRenderType");
+	view_listener_t::addMenu(new LLViewStatusAway(), "View.Status.CheckAway");
+	view_listener_t::addMenu(new LLViewStatusDoNotDisturb(), "View.Status.CheckDoNotDisturb");
 	view_listener_t::addMenu(new LLViewCheckHUDAttachments(), "View.CheckHUDAttachments");
 
 	// Me > Movement
 	view_listener_t::addMenu(new LLAdvancedAgentFlyingInfo(), "Agent.getFlying");
 	
-	// Communicate
-	view_listener_t::addMenu(new LLCommunicateBlockList(), "Communicate.BlockList");
+	// Communicate > Voice morphing > Subscribe...
+	commit.add("Communicate.VoiceMorphing.Subscribe", boost::bind(&handle_voice_morphing_subscribe));
+	LLVivoxVoiceClient * voice_clientp = LLVivoxVoiceClient::getInstance();
+	enable.add("Communicate.VoiceMorphing.NoVoiceMorphing.Check"
+		, boost::bind(&LLVivoxVoiceClient::onCheckVoiceEffect, voice_clientp, "NoVoiceMorphing"));
+	commit.add("Communicate.VoiceMorphing.NoVoiceMorphing.Click"
+		, boost::bind(&LLVivoxVoiceClient::onClickVoiceEffect, voice_clientp, "NoVoiceMorphing"));
 	
 	// World menu
 	view_listener_t::addMenu(new LLWorldAlwaysRun(), "World.AlwaysRun");
@@ -9147,7 +9132,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLWorldSetHomeLocation(), "World.SetHomeLocation");
 	view_listener_t::addMenu(new LLWorldTeleportHome(), "World.TeleportHome");
 	view_listener_t::addMenu(new LLWorldSetAway(), "World.SetAway");
-	view_listener_t::addMenu(new LLWorldSetBusy(), "World.SetBusy");
+	view_listener_t::addMenu(new LLWorldSetDoNotDisturb(), "World.SetDoNotDisturb");
 
 	view_listener_t::addMenu(new LLWorldEnableCreateLandmark(), "World.EnableCreateLandmark");
 	view_listener_t::addMenu(new LLWorldEnableSetHomeLocation(), "World.EnableSetHomeLocation");
@@ -9180,9 +9165,6 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLGridModeLocal(), "Tools.GridModeLocal");
 	view_listener_t::addMenu(new LLGridModeReference(), "Tools.GridModeReference");
 	view_listener_t::addMenu(new LLToolsRestartAllAnimations(), "Tools.RestartAllAnimations");
-
-	view_listener_t::addMenu(new LLCommunicateConversations(), "Communicate.Conversations");
-	view_listener_t::addMenu(new LLCommunicateCheckConversations(), "Communicate.CheckConversations");
 //mk
 	view_listener_t::addMenu(new LLToolsReleaseKeys(), "Tools.ReleaseKeys");
 	view_listener_t::addMenu(new LLToolsEnableReleaseKeys(), "Tools.EnableReleaseKeys");	
@@ -9272,6 +9254,7 @@ void initialize_menus()
 	// Advanced > UI
 	commit.add("Advanced.WebBrowserTest", boost::bind(&handle_web_browser_test,	_2));	// sigh! this one opens the MEDIA browser
 	commit.add("Advanced.WebContentTest", boost::bind(&handle_web_content_test, _2));	// this one opens the Web Content floater
+	commit.add("Advanced.ShowURL", boost::bind(&handle_show_url, _2));
 	view_listener_t::addMenu(new LLAdvancedBuyCurrencyTest(), "Advanced.BuyCurrencyTest");
 	view_listener_t::addMenu(new LLAdvancedDumpSelectMgr(), "Advanced.DumpSelectMgr");
 	view_listener_t::addMenu(new LLAdvancedDumpInventory(), "Advanced.DumpInventory");
