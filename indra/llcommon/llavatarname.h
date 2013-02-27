@@ -1,4 +1,4 @@
-/** 
+/* 
  * @file llavatarname.h
  * @brief Represents name-related data for an avatar, such as the
  * username/SLID ("bobsmith123" or "james.linden") and the display
@@ -90,7 +90,7 @@ public:
 	// Unix time-from-epoch seconds
 	F64 mNextUpdate;
 	
-private:
+//private: //Kokua can't find when private 
 	// "bobsmith123" or "james.linden", US-ASCII only
 	std::string mUsername;
 

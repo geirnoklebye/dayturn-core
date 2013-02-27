@@ -24,7 +24,7 @@
 * $/LicenseInfo$
 */
 #include "../newview/llviewerprecompiledheaders.h"
-
+#include "../newview/aoengine.h" // ## Zi: Animation Overrider
 #include "llflashtimer.h"
 
 #include "linden_common.h"
@@ -848,7 +848,7 @@ void LLFolderViewItem::draw()
 		LLRect box_rect(left, top, right, bottom);
 		box_image->draw(box_rect, sFilterBGColor);
     }
-
+/*
 	// ## Zi: Animation Overrider
 	//--------------------------------------------------------------------------------//
 	// Draw "protected" indicator
@@ -865,7 +865,7 @@ void LLFolderViewItem::draw()
 						 S32_MAX, S32_MAX, &right_x, FALSE);
 	}
 	// ## Zi: Animation Overrider
-
+*/
     LLColor4 color = (mIsSelected && filled) ? mFontHighlightColor : mFontColor;
     drawLabel(font, text_left, y, color, right_x);
 

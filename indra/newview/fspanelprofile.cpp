@@ -314,7 +314,7 @@ void FSPanelProfile::onOpen(const LLSD& key)
         group_list->setShowNone(false);
         group_list->enableForAgent(false);
 
-        if (LLAvatarNameCache::useDisplayNames())
+        if (LLAvatarName::useDisplayNames())
         {
             getChild<LLUICtrl>("set_name")->setVisible( true );
             getChild<LLUICtrl>("set_name")->setEnabled( true );

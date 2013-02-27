@@ -41,6 +41,21 @@ class LLFloaterIMSession;
 
 namespace LLNotificationsUI
 {
+// ENotificationType enumerates all possible types of notifications that could be met
+// 
+typedef enum e_notification_type
+{
+	NT_NOTIFY, 
+	NT_NOTIFYTIP,
+	NT_GROUPNOTIFY,
+	NT_IMCHAT, 
+	NT_GROUPCHAT, 
+	NT_NEARBYCHAT, 
+	NT_ALERT,
+	NT_ALERTMODAL,
+	NT_OFFER
+} ENotificationType;
+
 
 /**
  * Handler of notification events.
