@@ -111,7 +111,7 @@ void LLGroupList::enableForAgent(bool show_icons)
     registrar.add("People.Groups.Action",			boost::bind(&LLGroupList::onContextMenuItemClick,	this, _2));
     enable_registrar.add("People.Groups.Enable",	boost::bind(&LLGroupList::onContextMenuItemEnable,	this, _2));
 
-    LLMenuGL* context_menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_people_groups.xml",
+	LLToggleableMenu* context_menu = LLUICtrlFactory::getInstance()->createFromFile<LLToggleableMenu>("menu_people_groups.xml",
             gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
     if(context_menu)
         mContextMenuHandle = context_menu->getHandle();
@@ -131,9 +131,8 @@ BOOL LLGroupList::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
 	BOOL handled = LLUICtrl::handleRightMouseDown(x, y, mask);
 
-	if (mForAgent)
+	LLToggleableMenu* context_menu = mContextMenuHandle.get();
 	{
-	LLMenuGL* context_menu = (LLMenuGL*)mContextMenuHandle.get();
 	if (context_menu && size() > 0)
 	{
 		context_menu->buildDrawLabels();
@@ -472,7 +471,7 @@ void LLGroupListItem::setActive(bool active)
 	// *BUG: setName() overrides the style params.
 
 	// Active group should be bold.
-	LLFontDescriptor new_desc(mGroupNameBox->getDefaultFont()->getFontDesc());
+	LLFontDescriptor new_desc(mGroupNameBox->getFont()->getFontDesc());
 
 	// *NOTE dzaporozhan
 	// On Windows LLFontGL::NORMAL will not remove LLFontGL::BOLD if font 

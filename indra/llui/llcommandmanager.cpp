@@ -64,6 +64,7 @@ LLCommand::Params::Params()
 	, is_starting_function("is_starting_function")
 	, is_starting_parameters("is_starting_parameters")
 	, checkbox_control("checkbox_control")		// <FS:Zi> Add checkbox control toggle
+	, is_flashing_allowed("is_flashing_allowed", false)
 {
 }
 
@@ -85,6 +86,7 @@ LLCommand::LLCommand(const LLCommand::Params& p)
 	, mIsStartingFunction(p.is_starting_function)
 	, mIsStartingParameters(p.is_starting_parameters)
 	, mCheckboxControlVariable(p.checkbox_control)	// <FS:Zi> Add checkbox control toggle
+	, mIsFlashingAllowed(p.is_flashing_allowed)
 {
 }
 
