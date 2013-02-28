@@ -32,9 +32,9 @@ namespace ViewerInfo
 	// because they should NOT be read directly. Use the functions.
 	const std::string NAME  = "Kokua";
 	const S32         MAJOR = 3;
-	const S32         MINOR = 4;
-	const S32         PATCH = 6;
-	const S32         BUILD = 25966;
+	const S32         MINOR = 5;
+	const S32         PATCH = 1;
+	const S32         BUILD = 27231;
 	const std::string EXTRA = "";
 
 
