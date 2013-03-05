@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <toolbars>
   <bottom_toolbar
-    button_display_mode="icons_with_text">
+    button_display_mode="icons_with_text"
+    button_alignment="left"
+    button_layout_style="fill">	
     <command name="chat"/>
-    <command name="speak"/>
-    <command name="destinations"/>
     <command name="people"/>
+    <command name="snapshot"/> 
+    <command name="search"/>	
+    <command name="build"/>
     <command name="profile"/>
+    <command name="preferences"/>
     <command name="move"/>
     <command name="view"/>
-    <command name="howto"/>
+    <command name="minimap"/>
+    <command name="map"/>
+    <command name="places"/>
+    <command name="appearance"/>   
+    <command name="inventory"/>
     <command name="animationoverride"/>
  
   </bottom_toolbar>
   <left_toolbar
     button_display_mode="icons_only">
     <command name="avatar"/>
-    <command name="appearance"/>
-    <command name="inventory"/>
-    <command name="search"/>
-    <command name="places"/>
-    <command name="voice"/>
-    <command name="minimap"/>
-    <command name="snapshot"/>
+    <command name="destinations"/>	
   </left_toolbar>
 </toolbars>
