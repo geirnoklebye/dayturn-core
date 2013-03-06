@@ -1208,7 +1208,7 @@ const LLViewerJointAttachment *LLVOAvatarSelf::attachObject(LLViewerObject *view
 		LLViewerInventoryItem* item = gInventory.getItem (id);
 		if (item && gAgent.mRRInterface.isUnderRlvShare (item))
 		{
-			if (gAgent.mRRInterface.findAttachmentPointFromName (item->getName()) == NULL)
+			if (gAgent.mRRInterface.findAttachmentPointFromName (item->getName()) == NULL && gSavedSettings.controlExists("RestrainedLoveAutomaticRenameItems") && gSavedSettings.controlExists("RestrainedLoveAutomaticRenameItems"))
 			{
 				if (item->isFinished())
 				{
