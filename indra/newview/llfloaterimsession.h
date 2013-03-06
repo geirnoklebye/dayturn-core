@@ -134,6 +134,9 @@ public:
 	static floater_showed_signal_t sIMFloaterShowedSignal;
 
 	bool needsTitleOverwrite() { return mSessionNameUpdatedForTyping && mOtherTyping; }
+
+	static bool LLFloaterIMSession::isChatMultiTab();
+
 private:
 
 	/*virtual*/ void refresh();

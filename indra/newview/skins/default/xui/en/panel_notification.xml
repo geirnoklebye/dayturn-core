@@ -33,7 +33,7 @@
     <text
       border_visible="false"
       follows="left|right|top|bottom"
-      font="SansSerif"
+      font="SansSerifSmall"
       height="85"
       layout="topleft"
       left="10"
@@ -65,7 +65,7 @@
       embedded_items="false"
       enabled="false"
       follows="left|right|top|bottom"
-      font="SansSerif"
+      font="SansSerifSmall"
       height="125" 
       layout="topleft"
       left="10"

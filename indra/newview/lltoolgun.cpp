@@ -96,10 +96,10 @@ BOOL LLToolGun::handleHover(S32 x, S32 y, MASK mask)
 			mouse_sensitivity *= 0.1f;
 		}
 		
-		if (mask & MASK_CONTROL)
-		{
-			mouse_sensitivity *= 0.25f;
-		}
+//		if (mask & MASK_CONTROL)
+//		{
+//			mouse_sensitivity *= 0.25f;
+//		}
 //mk
 		// ...move the view with the mouse
 

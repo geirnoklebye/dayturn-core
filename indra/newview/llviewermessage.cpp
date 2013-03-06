@@ -2502,7 +2502,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				my_name.c_str(),
 				response.c_str(),
 				IM_ONLINE,
-				IM_BUSY_AUTO_RESPONSE,
+				IM_DO_NOT_DISTURB_AUTO_RESPONSE,
 				session_id);
 			gAgent.sendReliableMessage();
 
@@ -2525,7 +2525,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				my_name.c_str(),
 				response.c_str(),
 				IM_ONLINE,
-				IM_BUSY_AUTO_RESPONSE,
+				IM_DO_NOT_DISTURB_AUTO_RESPONSE,
 				session_id);
 			gAgent.sendReliableMessage();
 
@@ -2594,7 +2594,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 					my_name.c_str(),
 					response.c_str(),
 					IM_ONLINE,
-					IM_BUSY_AUTO_RESPONSE,
+					IM_DO_NOT_DISTURB_AUTO_RESPONSE,
 					session_id);
 				gAgent.sendReliableMessage();
 			}
@@ -3191,7 +3191,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 ////			else if (is_do_not_disturb) 
 			// Accept the TP if we are forced to accept TPs from this avatar or from everyone,
 			// even in busy mode
-			else if (is_busy && (!gRRenabled || (!gAgent.mRRInterface.contains ("accepttp:"+from_id.asString())
+			else if (is_do_not_disturb && (!gRRenabled || (!gAgent.mRRInterface.contains ("accepttp:"+from_id.asString())
 									&& !gAgent.mRRInterface.contains ("accepttp")))) 
 //mk
 			{
@@ -3265,7 +3265,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 						SYSTEM_FROM,
 						response.c_str(),
 						IM_ONLINE,
-						IM_BUSY_AUTO_RESPONSE);
+						IM_DO_NOT_DISTURB_AUTO_RESPONSE);
 					gAgent.sendReliableMessage();
 					return;
 				}
@@ -3797,14 +3797,10 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 						LLAvatarName av_name;
 						if (LLAvatarNameCache::get(owner_id, &av_name))
 						{
-							std::string owner_display_name = av_name.mDisplayName;
-							std::string owner_user_name = av_name.getLegacyName();
-							std::string owner_first_name = gAgent.mRRInterface.getFirstName(owner_user_name);
-							std::string owner_last_name = gAgent.mRRInterface.getLastName(owner_user_name);
-							if (from_name == owner_display_name
-								|| from_name == owner_user_name
-								|| from_name == owner_first_name
-								|| from_name == owner_last_name
+							if (from_name == av_name.mDisplayName
+								|| from_name == av_name.mLegacyFirstName + " " + av_name.mLegacyLastName
+								|| from_name == av_name.mLegacyFirstName
+								|| from_name == av_name.mLegacyLastName
 								)
 							{
 								chat.mFromID = owner_id;
@@ -3895,6 +3891,25 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				
 				if (from_id != gAgent.getID() && gAgent.mRRInterface.mContainsShownames)
 				{
+					// Special case : if the object is an attachment and imitates the name of its owner, scramble its name as if it were an agent
+					if (!chatter->isAvatar())
+					{
+						if (chatter->isAttachment())
+						{
+							LLAvatarName av_name;
+							if (LLAvatarNameCache::get(owner_id, &av_name))
+							{
+							if (from_name == av_name.mDisplayName
+								|| from_name == av_name.mLegacyFirstName + " " + av_name.mLegacyLastName
+								|| from_name == av_name.mLegacyFirstName
+								|| from_name == av_name.mLegacyLastName
+								)
+								{
+									from_name = gAgent.mRRInterface.getDummyName (from_name, chat.mAudible);
+								}
+							}
+						}
+					}
 					// also scramble the name of the chatter (replace with a dummy name)
 					if (chatter && chatter->isAvatar ())
 					{

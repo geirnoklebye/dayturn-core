@@ -96,6 +96,7 @@ indra/.settings/org.eclipse.cdt.ui.prefs
 *.zip
 openjpeg.dll
 *.dll
+.metadata
 syntax: regexp
 fmodapi375win/*
 glob:*.diff

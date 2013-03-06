@@ -270,7 +270,7 @@ void LLPanelProfileView::onAvatarNameCache(const LLUUID& agent_id,
 	}
 #endif
 
-	if (LLAvatarNameCache::useDisplayNames())
+	if (LLAvatarName::useDisplayNames())
 	{
 		getChild<LLUICtrl>("user_label")->setVisible( true );
 		getChild<LLUICtrl>("user_name")->setVisible( true );

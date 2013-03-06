@@ -1011,6 +1011,18 @@ LLLocalSpeakerMgr::~LLLocalSpeakerMgr ()
 
 void LLLocalSpeakerMgr::updateSpeakerList()
 {
+//MK
+	// When @shownames is active, the list of nearby speakers must be emptied completely
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		for (speaker_map_t::iterator speaker_it = mSpeakers.begin(); speaker_it != mSpeakers.end(); ++speaker_it)
+		{
+			LLSpeaker* speakerp = speaker_it->second;
+			setSpeakerNotInChannel(speakerp);
+		}
+		return;
+	}
+//mk
 	// pull speakers from voice channel
 	LLSpeakerMgr::updateSpeakerList();
 

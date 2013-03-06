@@ -68,7 +68,7 @@
     <icon
      height="16"
      follows="right"
-     image_name="icon_event_adult.tga"
+     image_name="map_avatar_16.tga"
      layout="topleft"
      right="-154"
      name="payment_info"

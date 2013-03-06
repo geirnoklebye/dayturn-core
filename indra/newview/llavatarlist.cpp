@@ -106,7 +106,7 @@ void LLAvatarList::showPermissions(bool visible)
 	getItems(items);
 	for(std::vector<LLPanel*>::const_iterator it = items.begin(), end_it = items.end(); it != end_it; ++it)
 	{
-		static_cast<LLAvatarListItem*>(*it)->setShowPermissions(mShowPermissions);
+//		static_cast<LLAvatarListItem*>(*it)->setShowPermissions(mShowPermissions);
 	}
 }
 
@@ -556,7 +556,7 @@ void LLAvatarList::addNewItem(const LLUUID& id, const std::string& name, BOOL is
 	item->setShowInfoBtn(mShowInfoBtn);
 	item->setShowProfileBtn(mShowProfileBtn);
 	item->showSpeakingIndicator(mShowSpeakingIndicator);
-	item->setShowPermissions(mShowPermissions);
+//	item->setShowPermissions(mShowPermissions);
 	item->showUsername(mShowUsername);
 	item->showDisplayName(mShowDisplayName);
 	item->showRange(mShowRange);

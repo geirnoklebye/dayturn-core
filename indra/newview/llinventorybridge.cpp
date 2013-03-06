@@ -3417,8 +3417,8 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
 	// when objects are locked/unlocked (RestrainedLove), or worn/unworn or
 	// attached/detached (regular viewers) and the context menu is pulled down
 	// in-between.
-	mItems.clear();
-	mDisabledItems.clear();
+	items.clear();
+	disabled_items.clear();
 //mk
 
 	if (lost_and_found_id == mUUID)
@@ -3526,11 +3526,11 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
 //MK
 		if (gRRenabled && mWearables)
 		{
-			mItems.push_back("Folder Wearables Separator");
-			mItems.push_back("Add To Outfit");
-			mItems.push_back("Replace Outfit");
-			mItems.push_back("Remove From Outfit");
-//			mItems.push_back("Take Off Items");
+			items.push_back("Folder Wearables Separator");
+			items.push_back("Add To Outfit");
+			items.push_back("Replace Outfit");
+			items.push_back("Remove From Outfit");
+//			items.push_back("Take Off Items");
 			// Note : After some tests, it seems we can't rely on testing whether any item within this folder is locked, because 
 			// it may have not been fetched from the server yet, and appear empty to the viewer, hence making it think
 			// nothing is locked and return a false negative. Therefore we must condition the following menu items to
@@ -3672,7 +3672,7 @@ void LLFolderBridge::buildContextMenuFolderOptions(U32 flags,   menuentry_vec_t&
 		{
 			disabled_items.push_back(std::string("Replace Outfit"));
 		}
-		mItems.push_back(std::string("Outfit Separator"));
+		items.push_back(std::string("Outfit Separator"));
 	}
 }
 

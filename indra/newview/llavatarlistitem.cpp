@@ -194,6 +194,9 @@ void LLAvatarListItem::fetchAvatarName()
 			mAvatarNameCacheConnection.disconnect();
 		}
 		mAvatarNameCacheConnection = LLAvatarNameCache::get(getAvatarId(), boost::bind(&LLAvatarListItem::onAvatarNameCache, this, _2));
+//MK
+		showPermissions(mShowPermissions);
+//mk
 	}
 }
 
@@ -594,7 +597,7 @@ void LLAvatarListItem::processProperties(void* data, EAvatarProcessorType type)
 
 		if (mShowPaymentStatus)
 		{
-			mPaymentStatus->setVisible(avatar_data->flags & AVATAR_IDENTIFIED);
+			mPaymentStatus->setVisible(avatar_data->flags);
 		}
 		
 	}
@@ -818,6 +821,12 @@ void LLAvatarListItem::updateChildren()
 	name_view->setShape(name_view_rect);
 
 	LL_DEBUGS("AvatarItemReshape") << "name rect after: " << name_view_rect << LL_ENDL;
+}
+
+void LLAvatarListItem::setShowPermissions(bool show)
+{
+	mShowPermissions=show;
+	showPermissions(show);
 }
 
 bool LLAvatarListItem::showPermissions(bool visible)

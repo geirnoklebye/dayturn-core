@@ -30,6 +30,7 @@
 #include "lldrawpoolalpha.h"
 //#include "llfloaterenvsettings.h"
 #include "llfloatereditsky.h"
+#include "llfloaterimnearbychat.h"
 #include "llfloaterinventory.h"
 #include "llfloatermap.h"
 #include "llfloaterpostprocess.h"
@@ -44,12 +45,13 @@
 #include "llhudtext.h"
 #include "llmoveview.h"
 #include "llnavigationbar.h"
-#include "llnearbychat.h"
-#include "llnearbychatbar.h"
+//#include "llnearbychat.h"
+//#include "llnearbychatbar.h"
 #include "llnotifications.h"
 #include "llpanelmaininventory.h"
 #include "llpaneltopinfobar.h"
 #include "llselectmgr.h"
+#include "llspeakers.h"
 #include "llstartup.h"
 #include "llvoavatar.h"
 #include "llvoavatarself.h"
@@ -68,6 +70,8 @@
 #include "llviewermessage.h"
 #include "llviewerparcelmgr.h"
 #include "pipeline.h"
+
+#include <cstdlib>
 
 #include "RRInterface.h"
 
@@ -260,6 +264,7 @@ void refreshCachedVariable (std::string var)
 				panel->childSetVisible("avatar_list", true);
 			}
 		}
+		LLLocalSpeakerMgr::getInstance()->updateSpeakerList();
 	}
 
 	else if (var == "showminimap") {
@@ -393,9 +398,9 @@ void printOnChat (std::string message)
 {
 	LLChat chat(message);
 	chat.mSourceType = CHAT_SOURCE_SYSTEM;
-	LLFloater* chat_bar = LLFloaterReg::getInstance("chat_bar");
-	LLNearbyChat* nearby_chat = chat_bar->findChild<LLNearbyChat>("nearby_chat");
-	if(nearby_chat) {
+	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
+	if(nearby_chat)
+	{
 		nearby_chat->addMessage(chat);
 	}
 }
@@ -508,12 +513,16 @@ std::string RRInterface::getFirstName (std::string fullName)
 {
 	int ind = fullName.find (" ");
 	if (ind != -1) return fullName.substr (0, ind);
+	ind = fullName.find (".");
+	if (ind != -1) return fullName.substr (0, ind);
 	else return fullName;
 }
 
 std::string RRInterface::getLastName (std::string fullName)
 {
 	int ind = fullName.find (" ");
+	if (ind != -1) return fullName.substr (ind+1);
+	ind = fullName.find (".");
 	if (ind != -1) return fullName.substr (ind+1);
 	else return fullName;
 }
@@ -1541,7 +1550,7 @@ BOOL RRInterface::answerOnChat (std::string channel, std::string msg)
 	if (chan > 0) {
 		std::ostringstream temp;
 		temp << "/" << chan << " " << msg;
-		LLNearbyChatBar::sendChatFromViewer(temp.str(), CHAT_TYPE_SHOUT, FALSE);
+		LLFloaterIMNearbyChat::sendChatFromViewer(temp.str(), CHAT_TYPE_SHOUT, FALSE);
 	} else {
 		gMessageSystem->newMessage("ScriptDialogReply");
 		gMessageSystem->nextBlock("AgentData");

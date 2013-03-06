@@ -69,6 +69,7 @@
            is_running_function="Floater.IsOpen"
            is_running_parameters="compass"
            />
+  <!--
   <command name="conversations"
            available_in_toybox="true"
            icon="Command_Conversations_Icon"
@@ -79,6 +80,7 @@
            is_running_function="Communicate.CheckConversations"
            is_running_parameters="conversations"
            />
+-->
   <command name="destinations"
            available_in_toybox="true"
            icon="Command_Destinations_Icon"

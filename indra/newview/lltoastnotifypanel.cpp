@@ -286,7 +286,7 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
     // init font variables
     if (!sFont)
 {
-        sFont = LLFontGL::getFontSansSerif();
+        sFont = LLFontGL::getFontSansSerifSmall();
         sFontSmall = LLFontGL::getFontSansSerifSmall();
     }
     // initialize
@@ -401,7 +401,15 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
 	//.xml file intially makes info panel only follow left/right/top. This is so that when control buttons are added the info panel 
 	//can shift upward making room for the buttons inside mControlPanel. After the buttons are added, the info panel can then be set to follow 'all'.
 	mInfoPanel->setFollowsAll();
+//MK
+	// If we are a script dialog, don't allow changing the height of the toast
+	if (!mIsScriptDialog)
+	{
+//mk
     snapToMessageHeight(mTextBox, MAX_LENGTH);
+//MK
+	}
+//mk
 
 	// reshape the panel to its previous size
 	if (current_rect.notEmpty())

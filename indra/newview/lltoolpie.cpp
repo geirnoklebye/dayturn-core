@@ -1042,7 +1042,7 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 //MK
 			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 			{
-				final_name = gAgent.mRRInterface.getDummyName (full_name);
+				final_name = gAgent.mRRInterface.getDummyName (av_name.getUserName());
 			}
 //mk
 			// *HACK: We may select this object, so pretend it was clicked

@@ -656,7 +656,7 @@ static void got_full_name_callback( LLHandle<LLPanel> profile_panel_handle, cons
 	LLStringUtil::format_map_t args;
 
 	std::string name;
-	if (LLAvatarNameCache::useDisplayNames())
+	if (LLAvatarName::useDisplayNames())
 	{
 		name = LLCacheName::buildUsername(full_name);
 	}
