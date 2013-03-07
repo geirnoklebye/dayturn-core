@@ -332,10 +332,12 @@ public:
 	bool isTornOff() {return mTornOff;}
 	void setOpenPositioning(LLFloaterEnums::EOpenPositioning pos) {mPositioning = pos;}
 
+	// Return a closeable floater, if any, given the current focus.
+	static LLFloater* getClosableFloaterFromFocus(); 
 
-	// Close the floater returned by getFrontmostClosableFloater() and 
+	// Close the floater returned by getClosableFloaterFromFocus() and 
 	// handle refocusing.
-	static void		closeFrontmostFloater();
+	static void		closeFocusedFloater();
 
 //	LLNotification::Params contextualNotification(const std::string& name) 
 //	{ 
@@ -565,7 +567,6 @@ public:
 	S32 getZOrder(LLFloater* child);
 
 	void setFloaterSnapView(LLHandle<LLView> snap_view) {mSnapView = snap_view; }
-	LLFloater* getFrontmostClosableFloater(); 
 
 private:
 	void hiddenFloaterClosed(LLFloater* floater);

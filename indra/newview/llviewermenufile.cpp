@@ -476,8 +476,8 @@ class LLFileEnableCloseWindow : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = NULL != gFloaterView->getFrontmostClosableFloater();
-		return new_value;
+		bool new_value = NULL != LLFloater::getClosableFloaterFromFocus();
+		return new_value || LLFloaterMap::getInstance()->isInVisibleChain();
 	}
 };
 
@@ -485,7 +485,12 @@ class LLFileCloseWindow : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		LLFloater::closeFrontmostFloater();
+		bool new_value = (NULL == LLFloater::getClosableFloaterFromFocus());
+		if(new_value && LLFloaterMap::getInstance()->isInVisibleChain())
+		{
+			LLFloaterMap::getInstance()->closeFloater(false);
+		}
+		LLFloater::closeFocusedFloater();
 		return true;
 	}
 };
