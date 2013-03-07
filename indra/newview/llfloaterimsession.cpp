@@ -1339,15 +1339,6 @@ void LLFloaterIMSession::sRemoveTypingIndicator(const LLSD& data)
 }
 
 // static
-bool LLFloaterIMSession::isChatMultiTab()
-{
-	// Restart is required in order to change chat window type.
-	static bool is_single_window = gSavedSettings.getS32("ChatWindow") == 1;
-	return is_single_window;
-}
-
-
-// static
 void LLFloaterIMSession::onIMChicletCreated( const LLUUID& session_id )
 {
 	LLFloaterIMSession::addToHost(session_id);

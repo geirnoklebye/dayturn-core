@@ -134,7 +134,6 @@ public:
 	static floater_showed_signal_t sIMFloaterShowedSignal;
 
 	bool needsTitleOverwrite() { return mSessionNameUpdatedForTyping && mOtherTyping; }
-	static bool LLFloaterIMSession::isChatMultiTab();
 	S32 getLastChatMessageIndex() {return mLastMessageIndex;}
 
 private:
