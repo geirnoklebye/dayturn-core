@@ -8335,6 +8335,14 @@ You died and have been teleported to your home location.
   </global>
 
 <!-- AW: opensim -->
+  <notification
+   icon="alertmodal.tga"
+   name="LocalBitmapsUpdateFileNotFound"
+   persist="true"
+   type="notify">
+[FNAME] could not be updated because the file could no longer be found.
+Disabling future updates for this file.
+  </notification>
   <notification icon="alertmodal.tga"
 		name="CantAddGrid"
 		type="alertmodal">
