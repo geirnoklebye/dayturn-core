@@ -8335,6 +8335,14 @@ You died and have been teleported to your home location.
   </global>
 
 <!-- AW: opensim -->
+  <notification
+   icon="alertmodal.tga"
+   name="LocalBitmapsUpdateFileNotFound"
+   persist="true"
+   type="notify">
+[FNAME] could not be updated because the file could no longer be found.
+Disabling future updates for this file.
+  </notification>
   <notification icon="alertmodal.tga"
 		name="CantAddGrid"
 		type="alertmodal">
@@ -9793,14 +9801,6 @@ No room to sit here, try another spot.
 
   <notification
    icon="alertmodal.tga"
-   name="AutopilotCanceled"
-   type="notify">
-   <tag>fail</tag>
-Autopilot canceled
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
    name="ClaimObjectFailedNoPermission"
    type="notify">
    <tag>fail</tag>
@@ -10275,4 +10275,15 @@ Creating animation link for animation "[NAME]" failed!
      yestext="OK"/>
   </notification>
 
+  <notification
+   icon="alert.tga"
+   name="PreferenceChatPathChanged"
+   type="alert">
+   Unable to move files. Restored previous path.
+    <usetemplate
+     ignoretext="Unable to move files. Restored previous path."
+     name="okignore"
+     yestext="OK"/>
+  </notification>
+  
 </notifications>

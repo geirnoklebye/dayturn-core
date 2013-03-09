@@ -1,4 +1,3 @@
-
 /** 
  * @file llbutton.cpp
  * @brief LLButton base class
@@ -179,14 +178,31 @@ LLButton::LLButton(const LLButton::Params& p)
 	mUseDrawContextAlpha(p.use_draw_context_alpha),
 	mHandleRightMouse(p.handle_right_mouse),
 	mButtonFlashCount(p.button_flash_count),
-	mFlashingTimer(NULL),
 	// <FS:Zi> Add checkbox control toggle
 	// mButtonFlashRate(p.button_flash_rate)
 	mButtonFlashRate(p.button_flash_rate),
 	mCheckboxControl(p.checkbox_control),
-	mCheckboxControlPanel(NULL)
+	mCheckboxControlPanel(NULL),
 	// </FS:Zi>
+	mFlashingTimer(NULL)
+
 {
+	if (p.button_flash_enable)
+	{
+		// If optional parameter "p.button_flash_count" is not provided, LLFlashTimer will be
+		// used instead it a "default" value from gSavedSettings.getS32("FlashCount")).
+		// Likewise, missing "p.button_flash_rate" is replaced by gSavedSettings.getF32("FlashPeriod").
+		// Note: flashing should be allowed in settings.xml (boolean key "EnableButtonFlashing").
+		S32 flash_count = p.button_flash_count.isProvided()? p.button_flash_count : 0;
+		F32 flash_rate = p.button_flash_rate.isProvided()? p.button_flash_rate : 0.0;
+		mFlashingTimer = new LLFlashTimer ((LLFlashTimer::callback_t)NULL, flash_count, flash_rate);
+	}
+	else
+    {
+		mButtonFlashCount = p.button_flash_count;
+		mButtonFlashRate = p.button_flash_rate;
+	}
+
 	static LLUICachedControl<S32> llbutton_orig_h_pad ("UIButtonOrigHPad", 0);
 	static Params default_params(LLUICtrlFactory::getDefaultParams<LLButton>());
 
