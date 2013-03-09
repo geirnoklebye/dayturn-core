@@ -3606,7 +3606,7 @@
             </menu_item_call>
             <menu_item_call
              label="Debug Avatar Textures"
-             name="Debug Avatar Textures"
+	       name="Debug Avatar Textures" >
                 <menu_item_call.on_click
                  function="Advanced.DebugAvatarTextures" />
             </menu_item_call>
@@ -3736,7 +3736,7 @@
 
         <menu_item_call
          label="Request Admin Status"
-         name="Request Admin Options"
+	   name="Request Admin Options" >
             <menu_item_call.on_click
              function="Advanced.RequestAdminStatus" />
         </menu_item_call>
