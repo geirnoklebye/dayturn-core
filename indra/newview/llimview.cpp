@@ -158,7 +158,7 @@ static void on_avatar_name_cache_toast(const LLUUID& agent_id,
 }
 
 void on_new_message(const LLSD& msg)
-{
+	{
     std::string action;
     LLUUID participant_id = msg["from_id"].asUUID();
     LLUUID session_id = msg["session_id"].asUUID();
@@ -188,13 +188,13 @@ void on_new_message(const LLSD& msg)
     else if(session->isGroupSessionType())
     {
         action = gSavedSettings.getString("NotificationGroupChatOptions");
-    }
+	}
 
     // do not show notification which goes from agent
     if (gAgent.getID() == participant_id)
-    {
-        return;
-    }
+	{
+		return;
+	}
 
     // execution of the action
 
@@ -230,27 +230,27 @@ void on_new_message(const LLSD& msg)
     {
         //User is not focused on conversation containing the message
         if(session_floater_not_focused)
-        {
+	{
         	if(!LLMuteList::getInstance()->isMuted(participant_id))
         	{
         		im_box->flashConversationItemWidget(session_id, true);
-        	}
+	}
             //The conversation floater isn't focused/open
             if(conversation_floater_not_focused)
-            {
+	{
             	if(!LLMuteList::getInstance()->isMuted(participant_id) 
                     && !gAgent.isDoNotDisturb())
             	{
             		gToolBarView->flashCommand(LLCommandId("chat"), true);
-            	}
+	}
 
                 //Show IM toasts (upper right toasts)
                 // Skip toasting for system messages and for nearby chat
                 if(session_id.notNull() && participant_id.notNull())
-                {
+	{
                     LLAvatarNameCache::get(participant_id, boost::bind(&on_avatar_name_cache_toast, _1, _2, msg));
                 }
-            }
+	}
 		}
     }
 
@@ -271,13 +271,13 @@ void on_new_message(const LLSD& msg)
 			//useMostItrusiveIMNotification will be called to notify user a message exists
 			LLAvatarNameCache::get(participant_id, boost::bind(&on_avatar_name_cache_toast, _1, _2, msg));
 		}
-    }
+}
 
     else if("openconversations" == action)
-    {
+{
         //User is not focused on conversation containing the message
         if(session_floater_not_focused)
-        {
+	{
             //Flash line item
             im_box->flashConversationItemWidget(session_id, true);
 
@@ -290,7 +290,7 @@ void on_new_message(const LLSD& msg)
 				{
 					LLFloater::onClickMinimize(session_floater);
 				}
-			}
+	}
 
             //If in DND mode, allow notification to be stored so upon DND exit 
             //useMostItrusiveIMNotification will be called to notify user a message exists
@@ -749,9 +749,9 @@ void LLIMModel::LLIMSession::buildHistoryFileName()
 		if (LLAvatarNameCache::get(mOtherParticipantID, &av_name))
 		{
 			mHistoryFileName = LLCacheName::buildUsername(av_name.getUserName());
-		}
-		else
-		{
+			}
+			else
+			{
 			// Incoming P2P sessions include a name that we can use to build a history file name
 			mHistoryFileName = LLCacheName::buildUsername(mName);
 		}
@@ -787,6 +787,7 @@ void LLIMModel::processSessionInitializedReply(const LLUUID& old_session_id, con
 		{
 			mId2SessionMap.erase(old_session_id);
 			mId2SessionMap[new_session_id] = session;
+
 		}
 
 		LLFloaterIMSession* im_floater = LLFloaterIMSession::findInstance(old_session_id);
@@ -1042,7 +1043,7 @@ const std::string LLIMModel::getName(const LLUUID& session_id) const
 {
 	LLIMSession* session = findIMSession(session_id);
 
-	if (!session)
+	if (!session) 
 	{
 		llwarns << "session " << session_id << "does not exist " << llendl;
 		return LLTrans::getString("no_session_message");
@@ -1068,7 +1069,7 @@ const LLUUID& LLIMModel::getOtherParticipantID(const LLUUID& session_id) const
 	LLIMSession* session = findIMSession(session_id);
 	if (!session)
 	{
-		llwarns << "session " << session_id << " does not exist " << llendl;
+		llwarns << "session " << session_id << "does not exist " << llendl;
 		return LLUUID::null;
 	}
 
@@ -2250,6 +2251,7 @@ BOOL LLIncomingCallDialog::postBuild()
 	getChildView("Start IM")->setVisible( is_avatar && notify_box_type != "VoiceInviteAdHoc" && notify_box_type != "VoiceInviteGroup");
 
 	setCanDrag(FALSE);
+
 	return TRUE;
 }
 
@@ -2567,7 +2569,6 @@ void LLIMMgr::addMessage(
 	bool link_name) // If this is true, then we insert the name and link it to a profile
 {
 	LLUUID other_participant_id = target_id;
-
 	LLUUID new_session_id = session_id;
 	if (new_session_id.isNull())
 	{
@@ -2630,8 +2631,8 @@ void LLIMMgr::addMessage(
         //Play sound for new conversations
 		if (!gAgent.isDoNotDisturb() && (gSavedSettings.getBOOL("PlaySoundNewConversation") == TRUE))
         {
-            make_ui_sound("UISndNewIncomingIMSession");
-        }
+		make_ui_sound("UISndNewIncomingIMSession");
+	}
 	}
 
 	bool skip_message = false;
@@ -2670,9 +2671,10 @@ void LLIMMgr::addSystemMessage(const LLUUID& session_id, const std::string& mess
 
 		LLChat chat(message);
 		chat.mSourceType = CHAT_SOURCE_SYSTEM;
-
+		
 		LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
-		if (nearby_chat)
+
+		if(nearby_chat)
 		{
 			nearby_chat->addMessage(chat);
 		}
@@ -2686,7 +2688,6 @@ void LLIMMgr::addSystemMessage(const LLUUID& session_id, const std::string& mess
 			gIMMgr->addMessage(session_id, LLUUID::null, SYSTEM_FROM, message.getString());
 		}
 		// log message to file
-
 		else
 		{
 			std::string session_name;
@@ -2769,6 +2770,13 @@ LLUUID LLIMMgr::addSession(
 {
 	LLDynamicArray<LLUUID> ids;
 	ids.put(other_participant_id);
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.containsWithoutException("startim", other_participant_id.asString())
+		|| gAgent.mRRInterface.contains ("startimto:"+other_participant_id.asString())))
+	{
+		return LLUUID::null;
+	}
+//mk
 	LLUUID session_id = addSession(name, dialog, other_participant_id, ids, voice);
 	return session_id;
 }
@@ -3492,7 +3500,13 @@ public:
 			{
 				return;
 			}
-
+//MK            
+			if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString())
+				|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
+			{
+				return;
+			}
+//mk
 			// standard message, not from system
 			std::string saved;
 			if(offline == IM_OFFLINE)
