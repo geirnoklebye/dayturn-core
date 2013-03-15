@@ -183,10 +183,11 @@ if (LINUX)
     add_definitions(-fvisibility=hidden)
     # don't catch SIGCHLD in our base application class for the viewer - some of our 3rd party libs may need their *own* SIGCHLD handler to work.  Sigh!  The viewer doesn't need to catch SIGCHLD anyway.
     add_definitions(-DLL_IGNORE_SIGCHLD)
-    if (WORD_SIZE EQUAL 32)
-      add_definitions(-march=pentium4)
-    endif (WORD_SIZE EQUAL 32)
-    add_definitions(-mfpmath=sse)
+    IF(${ARCH} STREQUAL "x86_64")
+      add_definitions(-march=x86-64 -mfpmath=sse)
+    ELSE(${ARCH} STREQUAL "x86_64")
+       add_definitions(-mtune=pentium4 -mfpmath=sse)
+    ENDIF(${ARCH} STREQUAL "x86_64")
     #add_definitions(-ftree-vectorize) # THIS CRASHES GCC 3.1-3.2
     if (NOT STANDALONE)
       # this stops us requiring a really recent glibc at runtime
@@ -199,8 +200,10 @@ if (LINUX)
 
   if (${ARCH} STREQUAL "x86_64")
      add_definitions(-DLINUX64=1 -pipe)
-     #linux64 atm crashes usin -O2
-#      set(CMAKE_CXX_FLAGS_RELEASE "-fomit-frame-pointer -mmmx -msse -mfpmath=sse msse2 -ffast-math - ftree-vectorize -fweb -fexpensive-optimizations -frename-registers ${CMAKE_CXX_FLAGS_RELEASE}")
+     set(CMAKE_CXX_FLAGS_RELEASE "-O2 ${CMAKE_CXX_FLAGS_RELEASE}")
+     set(CMAKE_C_FLAGS_RELEASE "-O2 ${CMAKE_C_FLAGS_RELEASE}")
+     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+     set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 ${CMAKE_C_FLAGS_RELWITHDEBINFO}")  
   else(${ARCH} STREQUAL "x86_64")
       set(CMAKE_CXX_FLAGS_RELEASE "-O2 ${CMAKE_CXX_FLAGS_RELEASE}")
   endif (${ARCH} STREQUAL "x86_64")
