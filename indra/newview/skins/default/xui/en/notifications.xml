@@ -10614,5 +10614,21 @@ Creating animation link for animation "[NAME]" failed!
 ♫ Now Playing:
   [TITLE] ♫
     </notification>
-  
+    <notification
+        icon="notifytip.tga"
+        name="StreamMetadata"
+        type="notifytip">
+        <tag>StreamMetadata</tag>
+        ♫ Now Playing:
+        [TITLE]
+        [ARTIST]♫
+    </notification>
+    <notification
+        icon="notifytip.tga"
+        name="StreamMetadataNoArtist"
+        type="notifytip">
+        <tag>StreamMetadata</tag>
+        ♫ Now Playing:
+        [TITLE]♫
+    </notification>    
 </notifications>

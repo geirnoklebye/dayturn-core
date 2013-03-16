@@ -271,7 +271,7 @@
 				value="0"
 				width="70" />
             <radio_item
-				enabled="false"
+				enabled="true"
 				label="Toasts"
 				left_pad="1"
 				layout="topleft"
