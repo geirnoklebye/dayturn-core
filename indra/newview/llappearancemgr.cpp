@@ -233,10 +233,10 @@ LLUpdateAppearanceOnDestroy::~LLUpdateAppearanceOnDestroy()
 	if (!LLApp::isExiting())
 	{
 		// speculative fix for MAINT-1150
-		LL_INFOS("Avatar") << self_av_string() << "done update appearance on destroy" << LL_ENDL;
-
-		selfStopPhase("update_appearance_on_destroy");
-
+	LL_INFOS("Avatar") << self_av_string() << "done update appearance on destroy" << LL_ENDL;
+	
+	selfStopPhase("update_appearance_on_destroy");
+	
 		LLAppearanceMgr::instance().updateAppearanceFromCOF(mUpdateBaseOrder);
 	}
 }
@@ -415,7 +415,7 @@ void LLWearableHoldingPattern::checkMissingWearables()
 		// runway why don't we actually skip here?
 		llwarns << self_av_string() << "skipping because LLWearableHolding pattern is invalid (superceded by later outfit request)" << llendl;
 	}
-
+		
 	std::vector<S32> found_by_type(LLWearableType::WT_COUNT,0);
 	std::vector<S32> requested_by_type(LLWearableType::WT_COUNT,0);
 	for (found_list_t::iterator it = getFoundList().begin(); it != getFoundList().end(); ++it)
@@ -1041,12 +1041,30 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear, bool do_up
 			if ((replace && wearable_count != 0) ||
 				(wearable_count >= LLAgentWearables::MAX_CLOTHING_PER_TYPE) )
 			{
-				removeCOFItemLinks(gAgentWearables.getWearableItemID(item_to_wear->getWearableType(), wearable_count-1), false);
+//MK
+				if (gRRenabled && gAgent.mRRInterface.canUnwear (item_to_wear->getWearableType()))
+				{
+//mk
+					removeCOFItemLinks(gAgentWearables.getWearableItemID(item_to_wear->getWearableType(), wearable_count-1), false);
+//MK
+				}
+//mk
 			}
-			addCOFItemLink(item_to_wear, do_update, cb);
+//MK
+			if (gRRenabled && gAgent.mRRInterface.canWear (item_to_wear->getWearableType()))
+			{
+//mk
+				addCOFItemLink(item_to_wear, do_update, cb);
+//MK
+			}
+//mk
 		} 
 		break;
 	case LLAssetType::AT_BODYPART:
+//MK
+		if (gRRenabled && gAgent.mRRInterface.canUnwear (item_to_wear->getWearableType()))
+		{
+//mk
 		// TODO: investigate wearables may not be loaded at this point EXT-8231
 		
 		// Remove the existing wearables of the same type.
@@ -1054,8 +1072,20 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear, bool do_up
 		removeCOFLinksOfType(item_to_wear->getWearableType(), false);
 
 		addCOFItemLink(item_to_wear, do_update, cb);
+//MK
+		}
+//mk
 		break;
 	case LLAssetType::AT_OBJECT:
+//MK
+		if (gRRenabled && replace)
+		{
+			if (!gAgent.mRRInterface.canAttach(item_to_wear))
+			{
+				break;
+			}
+		}
+//mk
 		rez_attachment(item_to_wear, NULL, replace);
 		break;
 	default: return false;;
@@ -1427,8 +1457,8 @@ void LLAppearanceMgr::filterWearableItems(
 
 // Create links to all listed items.
 void LLAppearanceMgr::linkAll(const LLUUID& cat_uuid,
-							  LLInventoryModel::item_array_t& items,
-							  LLPointer<LLInventoryCallback> cb)
+								  LLInventoryModel::item_array_t& items,
+								  LLPointer<LLInventoryCallback> cb)
 {
 	for (S32 i=0; i<items.count(); i++)
 	{
@@ -1890,6 +1920,32 @@ void LLAppearanceMgr::wearInventoryCategory(LLInventoryCategory* category, bool 
 	selfClearPhases();
 	selfStartPhase("wear_inventory_category");
 
+//MK
+	if (gRRenabled)
+	{
+		//if (gAgent.mRRInterface.mContainsDetach && !append)
+		//{
+		//	return;
+		//}
+		//if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
+		//{
+		//	return;
+		//}
+		//if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
+		//{
+		//	return;
+		//}
+		if (!gAgent.mRRInterface.canAttachCategory (category))
+		{
+			return;
+		}
+
+		// Depending on the command (replace or add), we must retain what we chose in order to decide what to do with the list
+		// of wearables once LLAgentWearables::userUpdateAttachments() is called
+	}
+	gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = !append;
+//mk
+
 	gAgentWearables.notifyLoadingStarted();
 
 	LL_INFOS("Avatar") << self_av_string() << "wearInventoryCategory( " << category->getName()
@@ -1990,6 +2046,31 @@ void LLAppearanceMgr::wearInventoryCategoryOnAvatar( LLInventoryCategory* catego
 
 	LL_INFOS("Avatar") << self_av_string() << "wearInventoryCategoryOnAvatar '" << category->getName()
 			 << "'" << LL_ENDL;
+
+//MK
+	if (gRRenabled)
+	{
+		//if (gAgent.mRRInterface.mContainsDetach && !append)
+		//{
+		//	return;
+		//}
+		//if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
+		//{
+		//	return;
+		//}
+		//if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
+		//{
+		//	return;
+		//}
+		if (!gAgent.mRRInterface.canAttachCategory (category))
+		{
+			return;
+		}
+	}
+//mk
+
+	llinfos << "wearInventoryCategoryOnAvatar( " << category->getName()
+			 << " )" << llendl;
 			 	
 	if (gAgentCamera.cameraCustomizeAvatar())
 	{
@@ -2003,6 +2084,16 @@ void LLAppearanceMgr::wearInventoryCategoryOnAvatar( LLInventoryCategory* catego
 void LLAppearanceMgr::wearOutfitByName(const std::string& name)
 {
 	LL_INFOS("Avatar") << self_av_string() << "Wearing category " << name << LL_ENDL;
+
+//MK
+	//if (gRRenabled)
+	//{
+	//	if (gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
+	//	{
+	//		return;
+	//	}
+	//}
+//mk
 
 	LLInventoryModel::cat_array_t cat_array;
 	LLInventoryModel::item_array_t item_array;
@@ -2099,13 +2190,41 @@ void LLAppearanceMgr::addCOFItemLink(const LLUUID &item_id, bool do_update, LLPo
 }
 
 void LLAppearanceMgr::addCOFItemLink(const LLInventoryItem *item, bool do_update, LLPointer<LLInventoryCallback> cb)
-{		
+{
 	const LLViewerInventoryItem *vitem = dynamic_cast<const LLViewerInventoryItem*>(item);
+//MK
+	LLInventoryItem* item_non_const = const_cast<LLInventoryItem*>(item);;
+//mk
 	if (!vitem)
 	{
 		llwarns << "not an llviewerinventoryitem, failed" << llendl;
 		return;
 	}
+//MK
+	if (gRRenabled)
+	{
+		if (vitem->isWearableType())
+		{
+			if (!gAgent.mRRInterface.canWear(item_non_const))
+			{
+				return;
+			}
+
+			LLWearable *old_wearable = gAgentWearables.getWearable(vitem->getWearableType(),0);
+			if (old_wearable)
+			{
+				if (!gAgent.mRRInterface.canUnwear (item_non_const))
+				{
+					// cannot remove this outfit, so cannot replace it either
+					return;
+				}
+			}
+
+			// Notify that this layer has been worn
+			gAgent.mRRInterface.notify (LLUUID::null, "worn legally " + gAgent.mRRInterface.getOutfitLayerAsString(vitem->getWearableType()), "");
+		}
+	}
+//mk
 
 	gInventory.addChangedMask(LLInventoryObserver::LABEL, vitem->getLinkedUUID());
 
@@ -2193,6 +2312,16 @@ void LLAppearanceMgr::addEnsembleLink( LLInventoryCategory* cat, bool do_update 
 
 void LLAppearanceMgr::removeCOFItemLinks(const LLUUID& item_id, bool do_update)
 {
+//MK
+//	if (gRRenabled)
+//	{
+//		if (gAgent.mRRInterface.mContainsDetach || gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
+//		{
+//			return;
+//		}
+//	}
+//mk
+
 	gInventory.addChangedMask(LLInventoryObserver::LABEL, item_id);
 
 	LLInventoryModel::cat_array_t cat_array;
@@ -2207,6 +2336,22 @@ void LLAppearanceMgr::removeCOFItemLinks(const LLUUID& item_id, bool do_update)
 		if (item->getIsLinkType() && item->getLinkedUUID() == item_id)
 		{
 			gInventory.purgeObject(item->getUUID());
+//MK
+			if (gRRenabled)
+			{
+				// Notify that this layer has been unworn
+				const LLViewerInventoryItem* vitem = dynamic_cast<const LLViewerInventoryItem*>(item);
+				LLViewerInventoryItem* vitem_non_const = const_cast<LLViewerInventoryItem*>(vitem);
+				if (vitem_non_const)
+				{
+					std::string layer = gAgent.mRRInterface.getOutfitLayerAsString(vitem_non_const->getWearableType());
+					if (layer != "")
+					{
+						gAgent.mRRInterface.notify (LLUUID::null, "unworn legally " + layer, "");
+					}
+				}
+			}
+//mk
 		}
 	}
 	if (do_update)
@@ -2671,7 +2816,14 @@ void LLAppearanceMgr::removeItemFromAvatar(const LLUUID& id_to_remove)
 			}
 			break;
 		case LLAssetType::AT_OBJECT:
-			LLVOAvatarSelf::detachAttachmentIntoInventory(item_to_remove->getLinkedUUID());
+//MK
+			if (!gRRenabled || gAgent.mRRInterface.canDetach (item_to_remove))
+			{
+//mk
+				LLVOAvatarSelf::detachAttachmentIntoInventory(item_to_remove->getLinkedUUID());
+//MK
+			}
+//mk
 		default:
 			break;
 	}
@@ -2772,7 +2924,7 @@ void LLAppearanceMgr::dumpCat(const LLUUID& cat_id, const std::string& msg)
 }
 
 void LLAppearanceMgr::dumpItemArray(const LLInventoryModel::item_array_t& items,
-									const std::string& msg)
+										const std::string& msg)
 {
 	for (S32 i=0; i<items.count(); i++)
 	{
