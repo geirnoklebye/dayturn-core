@@ -29,17 +29,17 @@
 
 #include "lldeferredsounds.h"
 
-#include "llaudioengine.h"
+void ui_audio_callback(const LLUUID& uuid);
 
-void LLDeferredSounds::deferSound(SoundData& sound)
+void LLDeferredSounds::deferSound(LLUUID sound)
 {
-	soundVector.push_back(sound);
+	soundQueue.push(sound);
 }
 void LLDeferredSounds::playdeferredSounds()
 {
-	while(soundVector.size())
+	while(soundQueue.size())
 	{
-		gAudiop->triggerSound(soundVector.back());
-		soundVector.pop_back();
+		ui_audio_callback(soundQueue.front());
+		soundQueue.pop();
 	}
 }
