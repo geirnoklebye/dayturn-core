@@ -132,6 +132,7 @@ bool LLOfferHandler::processNotification(const LLNotificationPtr& notification)
 			if(channel)
 				channel->addToast(p);
 
+            bool playSound = !((notification->getName() == "UserGiveItem"
 		}
 
 		if (notification->canLogToIM())

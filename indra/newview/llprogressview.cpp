@@ -96,7 +96,7 @@ BOOL LLProgressView::postBuild()
 	getChild<LLTextBox>("message_text")->setClickedCallback(onClickMessage, this);
 
 	// hidden initially, until we need it
-	setVisible(FALSE);
+	LLPanel::setVisible(FALSE);
 
 	LLNotifications::instance().getChannel("AlertModal")->connectChanged(boost::bind(&LLProgressView::onAlertModal, this, _1));
 
@@ -265,7 +265,7 @@ void LLProgressView::draw()
 			gFocusMgr.releaseFocusIfNeeded( this );
 
 			// turn off panel that hosts intro so we see the world
-			setVisible(FALSE);
+			LLPanel::setVisible(FALSE);
 
 			// stop observing events since we no longer care
 			mMediaCtrl->remObserver( this );
