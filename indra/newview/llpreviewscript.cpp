@@ -87,6 +87,11 @@
 #include "llviewercontrol.h"
 #include "llappviewer.h"
 
+//MK
+#include "llvoavatar.h"
+//mk
+
+
 const std::string HELLO_LSL =
 	"default\n"
 	"{\n"
@@ -389,7 +394,6 @@ BOOL LLScriptEdCore::postBuild()
 	childSetAction("Edit_btn", boost::bind(&LLScriptEdCore::openInExternalEditor, this));
 
 	initMenu();
-
 
 	std::vector<std::string> funcs;
 	std::vector<std::string> tooltips;
@@ -1955,6 +1959,13 @@ void LLLiveLSLEditor::onRunningCheckboxClicked( LLUICtrl*, void* userdata )
 	LLCheckBoxCtrl* runningCheckbox = self->getChild<LLCheckBoxCtrl>("running");
 	BOOL running =  runningCheckbox->get();
 	//self->mRunningCheckbox->get();
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canDetach(object))
+	{
+		runningCheckbox->set(!running);
+		return;
+	}
+//mk
 	if( object )
 	{
 		LLMessageSystem* msg = gMessageSystem;
@@ -1982,6 +1993,12 @@ void LLLiveLSLEditor::onReset(void *userdata)
 	LLViewerObject* object = gObjectList.findObject( self->mObjectUUID );
 	if(object)
 	{
+//MK
+		if (gRRenabled && !gAgent.mRRInterface.canDetach(object))
+		{
+			return;
+		}
+//mk
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessageFast(_PREHASH_ScriptReset);
 		msg->nextBlockFast(_PREHASH_AgentData);
@@ -2372,7 +2389,17 @@ void LLLiveLSLEditor::onLoad(void* userdata)
 // static
 void LLLiveLSLEditor::onSave(void* userdata, BOOL close_after_save)
 {
-	LLLiveLSLEditor* self = (LLLiveLSLEditor*)userdata;
+	LLLiveLSLEditor* self = (LLLiveLSLEditor*) userdata;
+//MK
+	if (gRRenabled)
+	{
+		LLViewerObject* object = gObjectList.findObject(self->mObjectUUID);
+		if (!gAgent.mRRInterface.canDetach(object))
+		{
+			return;
+		}
+	}
+//mk
 	self->mCloseAfterSave = close_after_save;
 	self->saveIfNeeded();
 }

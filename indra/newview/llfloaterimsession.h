@@ -62,13 +62,12 @@ public:
 
 	void initIMSession(const LLUUID& session_id);
 	void initIMFloater();
-
+	
 	// LLView overrides
 	/*virtual*/ BOOL postBuild();
 	/*virtual*/ void setVisible(BOOL visible);
 	/*virtual*/ BOOL getVisible();
 	// Check typing timeout timer.
-
 	/*virtual*/ void draw();
 	/*virtual*/ BOOL handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 		EDragAndDropType cargo_type,
@@ -82,6 +81,7 @@ public:
 	// LLFloater overrides
 	/*virtual*/ void onClose(bool app_quitting);
 	/*virtual*/ void setDocked(bool docked, bool pop_on_undock = true);
+
 	// Make IM conversion visible and update the message history
 	static LLFloaterIMSession* show(const LLUUID& session_id);
 
@@ -94,7 +94,7 @@ public:
 	// get new messages from LLIMModel
 	/*virtual*/ void updateMessages();
 	void reloadMessages(bool clean_messages = false);
-	static void onSendMsg(LLUICtrl*, void*);
+	static void onSendMsg( LLUICtrl*, void*);
 	void sendMsgFromInputEditor();
 	void sendMsg(const std::string& msg);
 
@@ -126,6 +126,7 @@ public:
 
 	//used as a callback on receiving new IM message
 	static void sRemoveTypingIndicator(const LLSD& data);
+
 	static void onIMChicletCreated(const LLUUID& session_id);
     const LLUUID& getOtherParticipantUUID() {return mOtherParticipantUUID;}
 
@@ -134,6 +135,7 @@ public:
 
 	bool needsTitleOverwrite() { return mSessionNameUpdatedForTyping && mOtherTyping; }
 	S32 getLastChatMessageIndex() {return mLastMessageIndex;}
+
 private:
 
 	/*virtual*/ void refresh();
@@ -141,6 +143,13 @@ private:
     /*virtual*/ void onTearOffClicked();
 	/*virtual*/ void onClickCloseBtn();
 
+//MK
+	void onViewProfileButtonClicked();
+	void onAddFriendButtonClicked();
+	void onShareButtonClicked();
+	void onTeleportButtonClicked();
+	void onPayButtonClicked();
+//mk
 	// Update the window title and input field help text
 	/*virtual*/ void updateSessionName(const std::string& name);
 
@@ -148,10 +157,10 @@ private:
 
 	BOOL isInviteAllowed() const;
 	BOOL inviteToSession(const uuid_vec_t& agent_ids);
-	static void onInputEditorFocusReceived( LLFocusableElement* caller,void* userdata );
-	static void onInputEditorFocusLost(LLFocusableElement* caller, void* userdata);
+	static void		onInputEditorFocusReceived( LLFocusableElement* caller, void* userdata );
+	static void		onInputEditorFocusLost(LLFocusableElement* caller, void* userdata);
 	static void onInputEditorKeystroke(LLTextEditor* caller, void* userdata);
-	void setTyping(bool typing);
+	void			setTyping(bool typing);
 	void onAddButtonClicked();
 	void addSessionParticipants(const uuid_vec_t& uuids);
 	void addP2PSessionParticipants(const LLSD& notification, const LLSD& response, const uuid_vec_t& uuids);

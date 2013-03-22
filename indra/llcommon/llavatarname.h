@@ -89,8 +89,9 @@ public:
 	// when the next update is allowed
 	// Unix time-from-epoch seconds
 	F64 mNextUpdate;
-	
-private:
+//MK	
+////private:
+//mk
 	// "bobsmith123" or "james.linden", US-ASCII only
 	std::string mUsername;
 

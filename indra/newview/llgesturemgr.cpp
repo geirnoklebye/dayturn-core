@@ -998,8 +998,15 @@ void LLGestureMgr::runStep(LLMultiGesture* gesture, LLGestureStep* step)
 
 			const BOOL animate = FALSE;
 
-			(LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat"))->
-					sendChatFromViewer(chat_text, CHAT_TYPE_NORMAL, animate);
+//MK
+			if (gRRenabled && gAgent.mRRInterface.contains ("sendchat") 
+				&& chat_text.find ("/me ") != 0 && chat_text.find ("/me'") != 0)
+			{
+				chat_text = gAgent.mRRInterface.crunchEmote (chat_text, 20);
+			}
+//mk
+
+		(LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat"))->sendChatFromViewer(chat_text, CHAT_TYPE_NORMAL, animate);
 
 			gesture->mCurrentStep++;
 			break;
