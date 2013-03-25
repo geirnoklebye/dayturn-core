@@ -105,6 +105,8 @@ include_directories(SYSTEM
     )
 
 set(viewer_SOURCE_FILES
+    fsexport.cpp
+    fsfloaterimport.cpp
     fsfloaterprofile.cpp
     fspanelclassified.cpp
     fspanelprofile.cpp
@@ -703,6 +705,8 @@ set(viewer_HEADER_FILES
     aoengine.h
     aoset.h
 	floaterhop.h
+    fsexport.h
+    fsfloaterimport.h
     fsfloaterprofile.h
     fspanelclassified.h
     fspanelprofile.h

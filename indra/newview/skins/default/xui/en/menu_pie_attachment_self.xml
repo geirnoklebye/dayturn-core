@@ -41,6 +41,15 @@
             <pie_slice.on_click
                 function="Object.Derender" />
         </pie_slice>
+	<pie_slice
+         enabled="false"
+         label="Export"
+         name="Export">
+         <pie_slice.on_click
+            function="Object.Export" />
+         <pie_slice.on_enable
+            function="Object.EnableExport" />
+        </pie_slice>
         <pie_separator name="inspect_placeholder" />
 
     </pie_menu>

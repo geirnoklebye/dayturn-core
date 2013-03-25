@@ -129,6 +129,7 @@
 #include "llpathfindingmanager.h"
 #include "boost/unordered_map.hpp"
 
+#include "fsexport.h"
 using namespace LLAvatarAppearanceDefines;
 
 typedef LLPointer<LLViewerObject> LLViewerObjectPtr;
@@ -8412,6 +8413,22 @@ void show_topinfobar_context_menu(LLView* ctrl, S32 x, S32 y)
 	LLMenuGL::showPopup(ctrl, show_topbarinfo_context_menu, x, y);
 }
 
+// <FS:Techwolf Lupindo> export
+BOOL enable_export_object()
+{
+	return LLSelectMgr::getInstance()->selectGetAllValid();
+}
+
+class FSObjectExport : public view_listener_t
+{
+	bool handleEvent( const LLSD& userdata)
+	{
+		FSExport::getInstance()->exportSelection();
+		return true;
+	}
+};
+// </FS:Techwolf Lupindo>
+
 void initialize_edit_menu()
 {
 	view_listener_t::addMenu(new LLEditUndo(), "Edit.Undo");
@@ -8909,4 +8926,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLEditableSelected(), "EditableSelected");
 	view_listener_t::addMenu(new LLEditableSelectedMono(), "EditableSelectedMono");
 	view_listener_t::addMenu(new LLToggleUIHints(), "ToggleUIHints");
+
+	// <FS:Techwolf Lupindo> export
+	view_listener_t::addMenu(new FSObjectExport(), "Object.Export");
+	enable.add("Object.EnableExport", boost::bind(&enable_export_object));
+	// </FS:Techwolf Lupindo>
 }

@@ -490,67 +490,494 @@
           control_name="ChatFullWidth"
           label="Use full screen width for console"/>
         <text
-          name="requires_restart_label2"
-          follows="left|top"
-          layout="topleft"
-          top_delta="2"
-          left_delta="200"
-          height="18"
-          width="130"
-          text_color="White_25">
-          (requires restart)
+         top_pad="10"
+         type="string"
+         length="1"
+         follows="left|top"
+         height="15"
+         layout="topleft"
+         left="10"
+         name="could_texture_text"
+         width="220">
+           Cloud texture (restart recommended):
+        <combo_box
+         allow_text_entry="false"
+         left_pad="5"
+         follows="left|top"
+         height="20"
+         name="cloud_combo"
+         width="130"
+         control_name="FSCloudTexture"
+         tool_tip="Select the cloud texture you would like to use."/>
+     
+         top="5"
+         left="20"
+         Default Object Size
+        </text>
+        <text
+         top="5"
+         follows="left|top|right"
+         height="10"
+         left="180"
+         name="text_box_objprams2"
+         width="175">
+         Settings
+        </text>
+        <text
+         top="5"
+         follows="left|top|right"
+         height="10"
+         left="350"
+         name="text_box_objprams3"
+         width="175">
+         Texture
+        </text>
+         left="5"
+         height="90"
+         follows="top|left"
+         width="140"/>
+        <view_border
+         top_delta="0"
+         left_delta="140"
+         height="90"
+         follows="top|left"
+         bevel_style="none"
+         border_thickness="1"
+         name="SettingBorder"
+         width="120"/>
+        <view_border
+         top_delta="0"
+         left_delta="120"
+         height="90"
+         follows="top|left"
+         bevel_style="none"
+         border_thickness="1"
+         name="TextureBorder"
+         width="255"/>
+         
+         top_pad="-77"
+         left="15"
+
+        <check_box
+         top_delta="-50"
+         enabled="true"
+         font="SansSerifSmall"
+         height="16"
+         label="Phantom"
+         left="155"
+         mouse_opaque="true"
+         name="FSBuildPrefs_PhantomToggle"
+         radio_style="false"
+         width="100"
+         control_name="FSBuildPrefs_Phantom"/>
+        <check_box
+         top_delta="20"
+         enabled="true"
+         follows="left|top"
+         font="SansSerifSmall"
+         height="16"
+         label="Physical"
+         left_delta="0"
+         mouse_opaque="true"
+         name="FSBuildPrefs_PhysicalToggle"
+         radio_style="false"
+         width="100"
+         control_name="FSBuildPrefs_Physical"/>
+        <check_box
+         top_delta="20"
+         enabled="true"
+         follows="left|top"
+         font="SansSerifSmall"
+         height="16"
+         label="Temporary"
+         left_delta="0"
+         mouse_opaque="true"
+         name="FSBuildPrefs_TemporaryToggle"
+         radio_style="false"
+         width="100"
+         control_name="FSBuildPrefs_Temporary"/>
+         top_delta="20"
+         left_delta="1"
+         height="18"
+         left="10"
+         max_chars="20"
+         mouse_opaque="true"
+         width="87"
+
+        <texture_picker
+         allow_no_texture="false"
+         top_delta="-60"
+         can_apply_immediately="true"
+         default_image_name="Default"
+         follows="left|top"
+         height="80"
+         label="Texture"
+         left="275"
+         mouse_opaque="true"
+         name="texture control"
+         control_name="DefaultObjectTexture"
+         tool_tip="Click to choose a picture"
+         width="64"/>
+        <color_swatch
+         border_color="0.45098, 0.517647, 0.607843, 1"
+         top_delta="0"
+         can_apply_immediately="true"
+         color="1, 1, 1, 1"
+         follows="left|top"
+         height="80"
+         label="Color"
+         left_delta="75"
+         mouse_opaque="true"
+         name="colorswatch"
+         tool_tip="Click to open Color Picker"
+         width="64"
+         control_name="FSBuildPrefs_Color"/>
+        <spinner
+         top_delta="0"
+         decimal_digits="0"
+         follows="left|top"
+         height="16"
+         increment="1"
+         label="Alpha"
+         label_width="40"
+         left_delta="70"
+         max_val="100"
+         min_val="0"
+         mouse_opaque="true"
+         name="alpha"
+         width="90"
+         control_name="FSBuildPrefs_Alpha"/>
+        <spinner
+         top_delta="20"
+         enabled="true"
+         decimal_digits="2"
+         follows="left|top"
+         height="16"
+         increment="0.05"
+         label="Glow"
+         label_width="40"
+         left_delta="0"
+         max_val="1"
+         min_val="0"
+         mouse_opaque="true"
+         name="glow"
+         width="90"
+         control_name="FSBuildPrefs_Glow"/>
+        <check_box
+         top_delta="22"
+         enabled="true"
+         follows="left|top"
+         font="SansSerifSmall"
+         height="16"
+         label="Full Bright"
+         left_delta="0"
+         mouse_opaque="true"
+         name="EmFBToggle"
+         radio_style="false"
+         width="100"
+         control_name="FSBuildPrefs_FullBright"/>
+        <combo_box
+         allow_text_entry="false"
+         top_delta="18"
+         follows="left|top"
+         height="18"
+         left_delta="0"
+         max_chars="20"
+         mouse_opaque="true"
+         name="combobox shininess"
+         tool_tip="Set the amount of shine for the object"
+         width="90"
+         control_name="FSBuildPrefs_Shiny">
+          <combo_item name="None" value="None">None</combo_item>
+          <combo_item name="Low" value="Low">Low</combo_item>
+          <combo_item name="Medium" value="Medium">Medium</combo_item>
+          <combo_item name="High" value="High">High</combo_item>
+        </combo_box>
+<!--
+TODO: add the code to enable drag and drop support for items
+For now, just make the UI elements invisiable but still have the debug settings to play with.
+-->
+        <check_box
+	visible="false"
+         name="FSBuildPrefs_EmbedItem"
+         top="120"
+         enabled="false"
+         follows="left|top"
+         font="SansSerifSmall"
+         height="16"
+         initial_value="false"
+         label="Embed an item into new prims"
+         left="10"
+         mouse_opaque="true"
+         control_name="FSBuildPrefs_EmbedItem"
+         radio_style="false"
+         width="270"/>
+        <view_border
+	visible="false"
+	enabled="false"
+         bevel_style="in"
+         top_delta="20"
+         follows="left|top"
+         height="16"
+         left_delta="0"
+         mouse_opaque="false"
+         name="im_give_drop_target_rect"
+         width="220"/>
+        <text
+	visible="false"
+	enabled="false"
+         bg_visible="false"
+         border_drop_shadow_visible="false"
+         border_visible="false"
+         top_delta="0"
+         drop_shadow_visible="true"
+         follows="left|top"
+         font="SansSerifSmall"
+         h_pad="0"
+         halign="center"
+         height="16"
+         left_delta="0"
+         mouse_opaque="true"
+         name="Give inventory"
+         tool_tip="Drop an inventory item here."
+         v_pad="2"
+         width="220">
+         Drop an inventory item here.
+        </text>
+        <view_border
+	visible="false"
+	enabled="false"
+         bevel_style="in"
+         top_delta="18"
+         follows="left|top"
+         height="16"
+         left_delta="0"
+         mouse_opaque="false"
+         name="build_item_add_disp_rect"
+         width="220"/>
+        <text
+	visible="false"
+	enabled="false"
+         bg_visible="false"
+         border_drop_shadow_visible="false"
+         border_visible="false"
+         top_delta="0"
+         drop_shadow_visible="true"
+         follows="left|top"
+         font="SansSerifSmall"
+         h_pad="0"
+         halign="center"
+         height="16"
+         left_delta="0"
+         mouse_opaque="true"
+         name="build_item_add_disp_rect_txt"
+         tool_tip=""
+         v_pad="2"
+         width="220">
+         Currently set to: ITEM
+        </text>
+<!-- end drag and drop UI -->
+        <text
+         top_pad="-60"
+         left_pad="20"
+         follows="left|top"
+         height="10"
+         name="text_box_permissions"
+         width="135">
+          Permissions
+        </text>
+        <view_border
+         top_pad="4"
+         bevel_style="none"
+         border_thickness="1"
+         follows="top|left"
+         height="120"
+         name="PermissionsBorder"
+         width="135"/>
+        <text
+         top_pad="-110"
+         left_delta="10"
+         follows="left|top"
+         height="10"
+         name="text_box_permnextowner"
+         width="135">
+          Next Owner:
+        </text>
+        <check_box
+         top_pad="10"
+         enabled="true"
+         follows="left|top"
+         font="SansSerifSmall"
+         height="16"
+         initial_value="false"
+         label="Copy permission"
+         left_delta="-7"
+         mouse_opaque="true"
+         tool_tip="Copy permissions"
+         name="next_owner_copy"
+         control_name="NextOwnerCopy"
+         radio_style="false"
+         width="270"/>
+        <check_box
+         top_pad="0"
+         enabled="true"
+         follows="left|top"
+         font="SansSerifSmall"
+         height="16"
+         initial_value="false"
+         label="Modify permission"
+         left_delta="0"
+         mouse_opaque="true"
+         tool_tip="Modify permissions"
+         name="next_owner_modify"
+         control_name="NextOwnerModify"
+         radio_style="false"
+         width="270"/>
+        <check_box
+         top_pad="0"
+         enabled="true"
+         follows="left|top"
+         font="SansSerifSmall"
+         height="16"
+         initial_value="true"
+         label="Transfer permission"
+         left_delta="0"
+         mouse_opaque="true"
+         tool_tip="Transfer permissions"
+         name="next_owner_transfer"
+         control_name="NextOwnerTransfer"
+         radio_style="false"
+         width="270"/>
+        <text
+         top_pad="5"
+         left_delta="5"
+         follows="left|top"
+         height="10"
+         name="text_box_permnote1"
+         width="135">
+          This will also apply
+        </text>
+        <text
+         top_pad="5"
+         follows="left|top"
+         height="10"
+         name="text_box_permnote2"
+         width="135">
+          apply to new uploads.
         </text>
 
-		<spinner top_delta="25" control_name="NearbyToastLifeTime" decimal_digits="0"
-			enabled="true" follows="left|top" height="20" increment="1"
-			initial_val="10" label="Fade chat after" label_width="90" left="35"
-			max_val="60" min_val="2" mouse_opaque="true" name="fade_chat_time"
-			width="130" />
-		<text type="string" length="1" bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-			bottom_delta="0" drop_shadow_visible="true" enabled="true"
-			follows="left|top" font="SansSerifSmall" h_pad="0" halign="left"
-			height="20" left_delta="140" mouse_opaque="false" name="text_box4" v_pad="0"
-			width="80">
-			(seconds)
+         top_pad="-123"
+         left_pad="-5"
 		</text>
-		<spinner bottom_delta="0" decimal_digits="0" control_name="ConsoleMaxLines"
-			enabled="true" follows="left|top" height="20" increment="1"
-			initial_val="10" left="230" max_val="50" min_val="1" mouse_opaque="true"
-			name="max_chat_count" width="60" />
-		<text type="string" length="1" bg_visible="false" border_drop_shadow_visible="false" border_visible="false"
-			bottom_delta="0" drop_shadow_visible="true" enabled="true"
-			follows="left|top" font="SansSerifSmall" h_pad="0" halign="left"
-			height="20" left="295" mouse_opaque="false" name="text_box5" v_pad="0"
-			width="60">
-			(# lines)
-		</text>
+         width="135"/>
+         top_delta="13"
+         label="Axis on root prim"
+         name="FSBuildPrefsActualRoot_toggle"
+         name="FSPivotPercToggle"
+         top_pad="-30"
+		 left="3"
+         name="FSBuildPrefsRenderHighlight_toggle"
+
+         label="Use old &quot;Set Object For Sale&quot; behavior"
+         tool_tip="When checked, object for sale info is saved on change instead of requiring a confirm."
+         name="FSCommitForSaleOnChange_toggle"
+         control_name="FSCommitForSaleOnChange"/>
+        <check_box
+         follows="left|top"
+         height="16"
+         label="Save scripts edited from inventory as Mono"
+         tool_tip="When checked, editing a script directly from inventory and then saving it saves as Mono instead of LSL."
+         name="FSSaveInventoryScriptsAsMono_toggle"
+         control_name="FSSaveInventoryScriptsAsMono"/>
+        <check_box
+         follows="left|top"
+         height="16"
+        <check_box
+         follows="left|top"
+         height="16"
+         top="320"
+         label="Enable LSL preprocessor"
+         tool_tip="When checked, the LSL preprocessor is enabled."
+         name="preproc_checkbox"
+         control_name="_NACL_LSLPreprocessor" />
         <check_box
           layout="topleft"
-          follows="left|top"
-          top_delta="25"
-          left="20"
-          width="50"
-          height="20"
-          control_name="PhoenixBoldGroupMods"
-          label="Show group moderator messages in bold"/>
+         follows="left|top"
+         height="16"
+         left="20"
+         enabled_control="_NACL_LSLPreprocessor"
+         label="Script optimizer"
+         tool_tip="When checked, the LSL preprocessor will optimize space used by scripts at the cost of readability."
+         name="preprocoptimizer_checkbox"
+         control_name="_NACL_PreProcLSLOptimizer" />
+        <check_box
+         follows="left|top"
+         height="16"
+         top_delta="0"
+         left_delta="120"
+         enabled_control="_NACL_LSLPreprocessor"
+         label="switch() statement"
+         tool_tip="When checked, the LSL preprocessor will allow the use of the switch() statement for script flow control."
+         name="preprocswitch_checkbox"
+         control_name="_NACL_PreProcLSLSwitch" />
         <check_box
           layout="topleft"
-          follows="left|top"
-          top_delta="20"
-          left="20"
-          width="50"
-          height="20"
-          control_name="PhoenixMuteAllGroups"
-          label="Disable ALL group chats"/>
+         follows="left|top"
+         height="16"
+         top_delta="0"
+         left_delta="130"
+         enabled_control="_NACL_LSLPreprocessor"
+         label="Lazy lists"
+         tool_tip="When checked, the LSL preprocessor will allow the use of syntax extensions for list handling."
+         name="preproclazy_checkbox"
+         control_name="_NACL_PreProcLSLLazyLists" />
         <check_box
-          layout="topleft"
-          follows="left|top"
-          top_delta="20"
-          left="20"
-          width="50"
-          height="20"
-          control_name="PhoenixMuteGroupWhenNoticesDisabled"
-          label="When 'Receive group notices' is disabled, disable group chat as well"/>
+         follows="left|top"
+         top_delta="0"
+         left_delta="80"
+         height="16"
+         enabled_control="_NACL_LSLPreprocessor"
+         label="#includes from local disk"
+         tool_tip="When checked, the LSL preprocessor will allow #include statements to reference files on your local disk."
+         name="preprocinclude_checkbox"
+         control_name="_NACL_PreProcEnableHDDInclude" />
+        <text
+         follows="left|top"
+         height="16"
+         type="string"
+         length="1"
+         layout="topleft"
+         enabled_control="_NACL_PreProcEnableHDDInclude"
+         name="lslpreprocinclude_textbox"
+         left="10"
+         width="256">
+          Preprocessor include path:
+        </text>
+        <line_editor
+         control_name="_NACL_PreProcHDDIncludeLocation"
+         border_style="line"
+         border_thickness="1"
+         follows="left|top"
+         font="SansSerif"
+         height="23"
+         enabled_control="_NACL_PreProcEnableHDDInclude"
+         max_length_chars="4096"
+         name="preprocinclude_location"
+         width="310" />
+        <button
+         follows="left|top"
+         height="23"
+         enabled_control="_NACL_PreProcEnableHDDInclude"
+         label="Browse"
+         label_selected="Browse"
+         left_pad="5"
+         name="SetPreprocInclude"
+         top_delta="0"
+         width="100">
+         <button.commit_callback
+          function="NACL.SetPreprocInclude" />
+        </button>
+
 
 		</panel>
 

@@ -46,6 +46,8 @@
 						     <string>Avatar</string>
 						     <string>Voice</string>		
 						-->
+						     <string>import</string>
+						     <string>export</string>
 						</array>
 				</map>
       </array>

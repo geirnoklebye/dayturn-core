@@ -190,6 +190,13 @@
              function="Floater.Toggle"
              parameter="toybox" />
         </menu_item_call>
+            <menu_item_call
+             label="Import Linkset"
+             name="import linkset">
+                <menu_item_call.on_click
+                 function="Floater.Toggle"
+                 parameter="fs_import" />
+            </menu_item_call>
          <menu_item_call
          label="Hide all controls"
          name="Hide UI"
@@ -1255,6 +1262,13 @@
                 <menu_item_call.on_click
                  function="Floater.Toggle"
                  parameter="perm_prefs" />
+            </menu_item_call>
+	    <menu_item_call
+             label="Import Linkset"
+             name="import linkset">
+                <menu_item_call.on_click
+                 function="Floater.Toggle"
+                 parameter="fs_import" />
             </menu_item_call>
         </menu>
         <menu_item_separator/>
