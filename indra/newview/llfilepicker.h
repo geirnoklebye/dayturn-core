@@ -85,7 +85,10 @@ public:
 		FFLOAD_MODEL = 9,
 		FFLOAD_COLLADA = 10,
 		FFLOAD_SCRIPT = 11,
-		FFLOAD_DICTIONARY = 12
+		FFLOAD_DICTIONARY = 12,
+// <FS:CR> Export filter
+		FFLOAD_IMPORT = 13
+// </FS:CR>
 	};
 
 	enum ESaveFilter
@@ -106,6 +109,9 @@ public:
 		FFSAVE_PNG = 13,
 		FFSAVE_JPEG = 14,
 		FFSAVE_SCRIPT = 15,
+// <FS:CR> Export filter
+		FFSAVE_EXPORT = 17
+// </FS:CR>
 	};
 
 	// open the dialog. This is a modal operation
