@@ -462,6 +462,10 @@ void LLAvatarPropertiesProcessor::notifyObservers(const LLUUID& id,void* data, E
 		const LLUUID &agent_id = oi->first;
 		if (agent_id == id || agent_id.isNull())
 		{
+//MK
+			// We're getting crashes here...
+			if (oi->second)
+//mk
 			oi->second->processProperties(data,type);
 		}
 	}
