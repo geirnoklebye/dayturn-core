@@ -2418,27 +2418,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
-<!--
               <key>hash</key>
-              <string>7b1039886ab997d2926604540426961f</string>
+              <string>dd6fbac69e118b744f55a7bac0411f27</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/openal-1.13-Linux-x86_64-20110708.tar.bz2</string>
--->
-              <key>hash</key>
-              <string>032848c2591a15e26c71998df3644cfc</string>
-              <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/openal-linux64-pulse0.9.21-20110304.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0-linux64-20130329.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
