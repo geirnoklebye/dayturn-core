@@ -214,7 +214,7 @@ void LLDoNotDisturbNotificationStorage::loadNotifications()
 		LLFloaterReg::showInstance("conversation");
 	}
 
-    if(imToastExists || group_ad_hoc_toast_exists || offerExists)
+    if(imToastExists || group_ad_hoc_toast_exists)
     //writes out empty .xml file (since LLCommunicationChannel::mHistory is empty)
 	saveNotifications();
 

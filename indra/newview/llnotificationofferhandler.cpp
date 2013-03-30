@@ -131,8 +131,7 @@ bool LLOfferHandler::processNotification(const LLNotificationPtr& notification)
 			LLScreenChannel* channel = dynamic_cast<LLScreenChannel*>(mChannel.get());
 			if(channel)
 				channel->addToast(p);
-
-            bool playSound = !((notification->getName() == "UserGiveItem"
+				//bool playSound = !((notification->getName() == "UserGiveItem"));//unused variable error on linnux
 		}
 
 		if (notification->canLogToIM())
