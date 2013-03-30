@@ -1235,14 +1235,14 @@ class Linux_x86_64Manifest(LinuxManifest):
             if self.prefix("../packages/lib/release/32bit-compat", dst="lib32"):
                     self.path("libalut.so")
                     self.path("libalut.so.0")
-                    self.path("libidn.so")
-                    self.path("libidn.so.11")
+#                    self.path("libidn.so")
+#                    self.path("libidn.so.11")
                     self.path("libopenal.so")
                     self.path("libopenal.so.1")
-                    self.path("libuuid.so")
-                    self.path("libuuid.so.1")
-                    self.path("libalut.so.0.1.0")
-                    self.path("libopenal.so.1.12.854")
+#                    self.path("libuuid.so")
+#                    self.path("libuuid.so.1")
+                    self.path("libalut.so.0.0.0")
+                    self.path("libopenal.so.1.15.1")
                     self.end_prefix("lib32")
 
         if self.args['buildtype'].lower() == 'release':
