@@ -2459,9 +2459,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>04df406f3e5d04cf176660bdac66c3a1</string>
+              <string>94b92004d1bace49421717ddb8286133</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/openal-1.12.854-1.1.0-windows-20110301.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0-windows-20130328.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
