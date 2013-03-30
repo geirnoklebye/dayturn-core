@@ -2406,21 +2406,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/i686-linux/include</key>
-                <string>include</string>
-                <key>libraries/i686-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>cb1acfef8c0c44e86b539bae0e255a2e</string>
+              <string>4defb83829a72e0a435e50506032fb63</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/openal-1.13-Linux-i686-20110708.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0-linux-20130329.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
