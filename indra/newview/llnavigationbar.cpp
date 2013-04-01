@@ -287,6 +287,11 @@ BOOL LLNavigationBar::postBuild()
 	mBtnForward	= getChild<LLPullButton>("forward_btn");
 	mBtnHome	= getChild<LLButton>("home_btn");
 	
+//MK
+	mAvatarHeightOffsetResetBtn = getChild<LLButton>("avatar_z_offset_reset_btn");
+	mAvatarHeightOffsetResetBtn->setClickedCallback(boost::bind(&LLNavigationBar::onAvatarHeightOffsetResetButtonClicked, this));
+//mk
+
 	mCmbLocation= getChild<LLLocationInputCtrl>("location_combo");
 
 	mBtnBack->setEnabled(FALSE);
@@ -337,6 +342,14 @@ void LLNavigationBar::setVisible(BOOL visible)
 
 void LLNavigationBar::draw()
 {
+//MK
+//	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+//	{
+//		toggle_show_navigation_panel(LLSD(false));
+//		gSavedSettings.setBOOL ("ShowNavbarNavigationPanel", FALSE);
+//	}
+//mk
+
 	if (isBackgroundVisible())
 	{
 		static LLUICachedControl<S32> drop_shadow_floater ("DropShadowFloater", 0);
@@ -502,6 +515,16 @@ void LLNavigationBar::onTeleportFailed()
 
 void LLNavigationBar::onTeleportFinished(const LLVector3d& global_agent_pos)
 {
+//MK
+	if (gRRenabled)
+	{
+		gAgent.mRRInterface.setParcelName (LLViewerParcelMgr::getInstance()->getAgentParcelName());
+		if (gAgent.mRRInterface.scriptsEnabled())
+		{
+			gAgent.mRRInterface.setScriptsEnabledOnce(TRUE); // we are in a script enabled area => retain this information for later
+		}
+	}
+//mk
 	if (!mSaveToLocationHistory)
 		return;
 	LLLocationHistory* lh = LLLocationHistory::getInstance();
@@ -691,3 +714,10 @@ int LLNavigationBar::getDefFavBarHeight()
 {
 	return mDefaultFpRect.getHeight();
 }
+
+//MK
+void LLNavigationBar::onAvatarHeightOffsetResetButtonClicked()
+{
+	gSavedSettings.setF32 ("RestrainedLoveOffsetAvatarZ", 0.0);
+}
+//mk

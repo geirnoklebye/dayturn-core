@@ -1,69 +1,70 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <floater
- background_visible="true"
- default_tab_group="1"
- height="355"
- help_topic="floater_im_box"
- layout="topleft"
- name="panel_im"
- can_dock="false"
- can_minimize="true"
- can_close="true"
- save_rect="true"
- visible="false"
- width="394"
- can_resize="true"
- can_tear_off="false"
- min_height="190"
- positioning="relative">
-    <floater.string name="call_btn_start">Conv_toolbar_open_call</floater.string>
-    <floater.string name="call_btn_stop">Conv_toolbar_hang_up</floater.string>
-    <floater.string
+background_visible="true"
+default_tab_group="1"
+height="355"
+help_topic="floater_im_box"
+layout="topleft"
+name="panel_im"
+can_dock="false"
+can_minimize="true"
+can_close="true"
+save_rect="true"
+visible="false"
+width="394"
+can_resize="true"
+can_tear_off="false"
+min_width="340"
+min_height="130"
+positioning="relative">
+  <floater.string name="call_btn_start">Conv_toolbar_open_call</floater.string>
+  <floater.string name="call_btn_stop">Conv_toolbar_hang_up</floater.string>
+  <floater.string
      name="collapseline_icon"
      value="Conv_collapse_to_one_line"/>
     <floater.string
      name="expandline_icon"
      value="Conv_expand_one_line"/>
     <floater.string
-     name="collapse_icon"
-     value="Conv_toolbar_collapse"/>
+  name="collapse_icon"
+  value="Conv_toolbar_collapse"/>
+  <floater.string
+  name="expand_icon"
+  value="Conv_toolbar_expand"/>
+  <floater.string
+  name="tear_off_icon"
+  value="Conv_toolbar_arrow_ne"/>
+  <floater.string
+  name="return_icon"
+  value="Conv_toolbar_arrow_sw"/>
+  <floater.string
+  name="participant_added"
+  value="[NAME] was invited to the conversation."/>
+  <floater.string
+  name="multiple_participants_added"
+  value="[NAME] were invited to the conversation."/>
     <floater.string
-     name="expand_icon"
-     value="Conv_toolbar_expand"/>
+  name="tooltip_to_separate_window"
+  value="Move this conversation to a separate window"/>
     <floater.string
-     name="tear_off_icon"
-     value="Conv_toolbar_arrow_ne"/>
+  name="tooltip_to_main_window"
+  value="Move this conversation back to main window"/>
     <floater.string
-     name="return_icon"
-     value="Conv_toolbar_arrow_sw"/>
+  name="start_call_button_tooltip"
+  value="Open voice connection"/>
     <floater.string
-     name="participant_added"
-     value="[NAME] was invited to the conversation."/>
+  name="end_call_button_tooltip"
+  value="Close voice connection"/>
     <floater.string
-     name="multiple_participants_added"
-     value="[NAME] were invited to the conversation."/>
+  name="expcol_button_not_tearoff_tooltip"
+  value="Collapse this pane"/>
     <floater.string
-     name="tooltip_to_separate_window"
-     value="Move this conversation to a separate window"/>
+  name="expcol_button_tearoff_and_expanded_tooltip"
+  value="Collapse participant list"/>
     <floater.string
-     name="tooltip_to_main_window"
-     value="Move this conversation back to main window"/>
-    <floater.string
-     name="start_call_button_tooltip"
-     value="Open voice connection"/>
-    <floater.string
-     name="end_call_button_tooltip"
-     value="Close voice connection"/>
-    <floater.string
-     name="expcol_button_not_tearoff_tooltip"
-     value="Collapse this pane"/>
-    <floater.string
-     name="expcol_button_tearoff_and_expanded_tooltip"
-     value="Collapse participant list"/>
-    <floater.string
-     name="expcol_button_tearoff_and_collapsed_tooltip"
-     value="Expand participant list"/>
-    <view
+  name="expcol_button_tearoff_and_collapsed_tooltip"
+  value="Expand participant list"/>
+  <view
      follows="all"
      layout="topleft"
      name="contents_view"
@@ -88,19 +89,19 @@
              name="toolbar_panel"
              height="35">
                 <menu_button
-                 menu_filename="menu_im_session_showmodes.xml"
-                 follows="top|left"
-                 height="25"
-                 image_hover_unselected="Toolbar_Middle_Over"
-                 image_overlay="Conv_toolbar_sort"
-                 image_selected="Toolbar_Middle_Selected"
-                 image_unselected="Toolbar_Middle_Off"
-                 layout="topleft"
-                 left="5"
-                 name="view_options_btn"
-                 tool_tip="View/sort options"
-                 top="5"
-                 width="31" />
+      menu_filename="menu_im_session_showmodes.xml"
+      follows="top|left"
+      height="15"
+      image_hover_unselected="Toolbar_Middle_Over"
+      image_overlay="Conv_toolbar_sort"
+      image_selected="Toolbar_Middle_Selected"
+      image_unselected="Toolbar_Middle_Off"
+      layout="topleft"
+      left="5"
+      name="view_options_btn"
+      tool_tip="View/sort options"
+      top="5"
+      width="20" />
                 <menu_button
                  menu_filename="menu_im_conversation.xml"
                  follows="top|left"
@@ -117,32 +118,32 @@
                  tool_tip="Actions on selected person"
                  width="31"/>
                 <button
-                 enabled="false"
-                 follows="top|left"
-                 height="25"
-                 image_hover_unselected="Toolbar_Middle_Over"
-                 image_overlay="Conv_toolbar_add_person"
-                 image_selected="Toolbar_Middle_Selected"
-                 image_unselected="Toolbar_Middle_Off"
-                 layout="topleft"
-                 top="5"
+      enabled="false"
+      follows="top|left"
+      height="15"
+      image_hover_unselected="Toolbar_Middle_Over"
+      image_overlay="Conv_toolbar_add_person"
+      image_selected="Toolbar_Middle_Selected"
+      image_unselected="Toolbar_Middle_Off"
+      layout="topleft"
+      top="5"
                  left_pad="2"
-                 name="add_btn"
-                 tool_tip="Add someone to this conversation"
-                 width="31"/>
+      name="add_btn"
+      tool_tip="Add someone to this conversation"
+      width="20"/>
                 <button
-                 follows="top|left"
-                 height="25"
-                 image_hover_unselected="Toolbar_Middle_Over"
-                 image_overlay="Conv_toolbar_open_call"
-                 image_selected="Toolbar_Middle_Selected"
-                 image_unselected="Toolbar_Middle_Off"
-                 layout="topleft"
-                 top="5"
+      follows="top|left"
+      height="15"
+      image_hover_unselected="Toolbar_Middle_Over"
+      image_overlay="Conv_toolbar_open_call"
+      image_selected="Toolbar_Middle_Selected"
+      image_unselected="Toolbar_Middle_Off"
+      layout="topleft"
+      top="5"
                  left_pad="2"
-                 name="voice_call_btn"
-                 tool_tip="Open voice connection"
-                 width="31"/>
+      name="voice_call_btn"
+      tool_tip="Open voice connection"
+      width="20"/>
                 <output_monitor
                  auto_update="true"
                  follows="top|left"
@@ -156,43 +157,42 @@
                  visible="false"
                  width="20" />
                 <button
-                 follows="right|top"
-                 height="25"
-                 image_hover_unselected="Toolbar_Middle_Over"
-                 image_overlay="Conv_toolbar_close"
-                 image_selected="Toolbar_Middle_Selected"
-                 image_unselected="Toolbar_Middle_Off"
-                 layout="topleft"
-                 top="5"
+      follows="right|top"
+      height="15"
+      image_hover_unselected="Toolbar_Middle_Over"
+      image_overlay="Conv_toolbar_close"
+      image_selected="Toolbar_Middle_Selected"
+      image_unselected="Toolbar_Middle_Off"
+      layout="topleft"
+      top="5"
                  right="-70"
-                 name="close_btn"
-                 tool_tip="End this conversation"
-                 width="31" />
+      name="close_btn"
+      tool_tip="End this conversation"
+      width="20" />
                 <button
-                 follows="right|top"
-                 height="25"
-                 image_hover_unselected="Toolbar_Middle_Over"
-                 image_overlay="Conv_toolbar_collapse"
-                 image_selected="Toolbar_Middle_Selected"
+      follows="right|top"
+      height="15"
+      image_hover_unselected="Toolbar_Middle_Over"
+      image_overlay="Conv_toolbar_collapse"
+      image_selected="Toolbar_Middle_Selected"
                  image_unselected="Toolbar_Middle_Off"
-                 layout="topleft"
-                 top="5"
+      layout="topleft"
+      top="5"
                  left_pad="2"
-                 name="expand_collapse_btn"
-                 tool_tip="Collapse/Expand this pane"
-                 width="31" />
+      name="expand_collapse_btn"
+      tool_tip="Collapse/Expand this pane"
+      width="20" />
                 <button
-                 follows="right|top"
-                 height="25"
-                 image_hover_unselected="Toolbar_Middle_Over"
-                 image_overlay="Conv_toolbar_arrow_ne"
-                 image_selected="Toolbar_Middle_Selected"
+      follows="right|top"
+      height="15"
+      image_hover_unselected="Toolbar_Middle_Over"
+      image_overlay="Conv_toolbar_arrow_ne"
+      image_selected="Toolbar_Middle_Selected"
                  image_unselected="Toolbar_Middle_Off"
-                 layout="topleft"
+      layout="topleft"
                  left_pad="2"
-                 name="tear_off_btn"
+      name="tear_off_btn"
                  top="5"
-                 width="31" />
             </layout_panel>
             <layout_panel
              name="body_panel"
@@ -314,5 +314,5 @@
                 </layout_stack>
             </layout_panel>
         </layout_stack>
-    </view>
+  </view>
 </floater>
