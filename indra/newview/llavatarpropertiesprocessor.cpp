@@ -430,6 +430,14 @@ void LLAvatarPropertiesProcessor::processAvatarGroupsReply(LLMessageSystem* msg,
 	msg->getUUIDFast(_PREHASH_AgentData, _PREHASH_AvatarID, avatar_groups.avatar_id );
 
 	S32 group_count = msg->getNumberOfBlocksFast(_PREHASH_GroupData);
+//MK
+	// For some reason, sometimes we receive completely bogus group update messages, with a huge
+	// number of groups... and we crash.
+	if (group_count < 0 || group_count > gMaxAgentGroups)
+	{
+		group_count = 0;
+	}
+//mk
 	for(S32 i = 0; i < group_count; ++i)
 	{
 		LLAvatarGroups::LLGroupData group_data;
