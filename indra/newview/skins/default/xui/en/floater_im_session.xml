@@ -92,7 +92,7 @@ positioning="relative">
     top="0"
     left="0"
     height="20"
-         min_height="35"
+         min_height="20"
     width="394">
       <menu_button
       menu_filename="menu_im_session_showmodes.xml"
@@ -301,6 +301,7 @@ positioning="relative">
               font="SansSerifSmall"
               follows="all"
               visible="true"
+              height="242"
               name="chat_history"
               parse_highlights="true"
               parse_urls="true"

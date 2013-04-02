@@ -408,6 +408,7 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
 //mk
     snapToMessageHeight(mTextBox, MAX_LENGTH);
 //MK
+		adjustPanelForScriptNotice(mControlPanel->getRect().getWidth(), mControlPanel->getRect().getHeight()+20);
 	}
 //mk
 
