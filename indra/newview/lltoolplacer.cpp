@@ -65,6 +65,7 @@
 #include "llwindow.h"			// incBusyCount()
 #include "material_codes.h"
 
+#include "fscommon.h"
 const LLVector3 DEFAULT_OBJECT_SCALE(0.5f, 0.5f, 0.5f);
 
 //static 
@@ -452,6 +453,7 @@ BOOL LLToolPlacer::addObject( LLPCode pcode, S32 x, S32 y, U8 use_physics )
 	// Spawns a message, so must be after above send
 	if (create_selected)
 	{
+		FSCommon::sObjectAddMsg++;
 		LLSelectMgr::getInstance()->deselectAll();
 		gViewerWindow->getWindow()->incBusyCount();
 	}
