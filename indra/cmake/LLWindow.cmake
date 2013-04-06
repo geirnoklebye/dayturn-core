@@ -22,6 +22,7 @@ else (STANDALONE)
     if (NOT ${ARCH} STREQUAL "x86_64")
       list(APPEND SDL_LIBRARY directfb fusion direct)
     endif (NOT ${ARCH} STREQUAL "x86_64")
+  endif (LINUX)	
 endif (STANDALONE)
 
 if (SDL_FOUND)

@@ -184,17 +184,9 @@ void LLInventoryModelBackgroundFetch::backgroundFetchCB(void *)
 void LLInventoryModelBackgroundFetch::backgroundFetch()
 {
 	if (mBackgroundFetchActive && gAgent.getRegion() && gAgent.getRegion()->capabilitiesReceived())
-	if (!region || !region->capabilitiesReceived())
-	{
-		return;
-	}
-
-	if (mBackgroundFetchActive)
 	{
 		// If we'll be using the capability, we'll be sending batches and the background thing isn't as important.
-
-		std::string url = region->getCapability("FetchInventory2");
-		if (gSavedSettings.getBOOL("UseHTTPInventory") && !url.empty()) 
+		if (gSavedSettings.getBOOL("UseHTTPInventory")) 
 		{
 			bulkFetch();
 			return;
@@ -224,7 +216,7 @@ void LLInventoryModelBackgroundFetch::backgroundFetch()
 			// Double timeouts on failure.
 			mMinTimeBetweenFetches = llmin(mMinTimeBetweenFetches * 2.f, 10.f);
 			mMaxTimeBetweenFetches = llmin(mMaxTimeBetweenFetches * 2.f, 120.f);
-			LL_DEBUGS("InventoryFetch") << "Inventory fetch times grown to (" << mMinTimeBetweenFetches << ", " << mMaxTimeBetweenFetches << ")" << llendl;
+			lldebugs << "Inventory fetch times grown to (" << mMinTimeBetweenFetches << ", " << mMaxTimeBetweenFetches << ")" << llendl;
 			// fetch is no longer considered "timely" although we will wait for full time-out.
 			mTimelyFetchPending = FALSE;
 		}
@@ -297,7 +289,7 @@ void LLInventoryModelBackgroundFetch::backgroundFetch()
 						// Shrink timeouts based on success.
 						mMinTimeBetweenFetches = llmax(mMinTimeBetweenFetches * 0.8f, 0.3f);
 						mMaxTimeBetweenFetches = llmax(mMaxTimeBetweenFetches * 0.8f, 10.f);
-						LL_DEBUGS("InventoryFetch") << "Inventory fetch times shrunk to (" << mMinTimeBetweenFetches << ", " << mMaxTimeBetweenFetches << ")" << llendl;
+						lldebugs << "Inventory fetch times shrunk to (" << mMinTimeBetweenFetches << ", " << mMaxTimeBetweenFetches << ")" << llendl;
 					}
 
 					mTimelyFetchPending = FALSE;
@@ -520,7 +512,7 @@ void LLInventoryModelFetchDescendentsResponder::result(const LLSD& content)
 			LLSD folder_sd = *folder_it;
 			
 			// These folders failed on the dataserver.  We probably don't want to retry them.
-			LL_DEBUGS("InventoryFetch") << "Folder " << folder_sd["folder_id"].asString() 
+			llinfos << "Folder " << folder_sd["folder_id"].asString() 
 					<< "Error: " << folder_sd["error"].asString() << llendl;
 		}
 	}
@@ -576,14 +568,11 @@ BOOL LLInventoryModelFetchDescendentsResponder::getIsRecursive(const LLUUID& cat
 // static   
 void LLInventoryModelBackgroundFetch::bulkFetch()
 {
-	if (gDisconnected) return;
 	//Background fetch is called from gIdleCallbacks in a loop until background fetch is stopped.
 	//If there are items in mFetchQueue, we want to check the time since the last bulkFetch was 
 	//sent.  If it exceeds our retry time, go ahead and fire off another batch.  
 	LLViewerRegion* region = gAgent.getRegion();
 	if (!region) return;
-
-	if (!region->capabilitiesReceived()) return;
 
 	S16 max_concurrent_fetches=8;
 	F32 new_min_time = 0.5f;			//HACK!  Clean this up when old code goes away entirely.
@@ -592,7 +581,8 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 		mMinTimeBetweenFetches=new_min_time;  //HACK!  See above.
 	}
 	
-	if (	(mFetchCount > max_concurrent_fetches) ||
+	if (gDisconnected ||
+		(mFetchCount > max_concurrent_fetches) ||
 		(mFetchTimer.getElapsedTimeF32() < mMinTimeBetweenFetches))
 	{
 		return; // just bail if we are disconnected
@@ -696,7 +686,6 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 	{
 		if (folder_count)
 		{
-			mFetchCount++; //awfixme this looks wrong
 			std::string url = region->getCapability("FetchInventoryDescendents2");   			
 			if ( !url.empty() )
 			{
@@ -710,9 +699,6 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 				{
 					std::string url_lib = gAgent.getRegion()->getCapability("FetchLibDescendents2");
 
-			std::string url_lib = gAgent.getRegion()->getCapability("FetchLibDescendents2");
-			if (!url_lib.empty() && folder_request_body_lib["folders"].size())
-			{
 					LLInventoryModelFetchDescendentsResponder *fetcher = new LLInventoryModelFetchDescendentsResponder(folder_request_body_lib, recursive_cats);
 					LLHTTPClient::post(url_lib, folder_request_body_lib, fetcher, 300.0);
 				}
@@ -734,9 +720,8 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 
 					LLHTTPClient::post(url, body, new LLInventoryModelFetchItemResponder(body));
 				}
-				else
-				{
-					llwarns << "FIXME! no FetchInventory2 capability" << llendl;
+				//else
+				//{
 				//	LLMessageSystem* msg = gMessageSystem;
 				//	msg->newMessage("FetchInventory");
 				//	msg->nextBlock("AgentData");
@@ -746,7 +731,7 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 				//	msg->addUUID("OwnerID", mPermissions.getOwner());
 				//	msg->addUUID("ItemID", mUUID);
 				//	gAgent.sendReliableMessage();
-				}
+				//}
 			}
 
 			if (item_request_body_lib.size())
@@ -772,6 +757,7 @@ void LLInventoryModelBackgroundFetch::bulkFetch()
 		setAllFoldersFetched();
 	}
 }
+
 
 bool LLInventoryModelBackgroundFetch::fetchQueueContainsNoDescendentsOf(const LLUUID& cat_id) const
 {
