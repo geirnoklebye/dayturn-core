@@ -1,6 +1,7 @@
 # -*- cmake -*-
 
-include(OpenGL)
+include(Variables)
+include(GLEXT)
 include(Prebuilt)
 
 if (STANDALONE)
@@ -13,8 +14,7 @@ if (STANDALONE)
       SDL_LIBRARY
       )
 else (STANDALONE)
-  use_prebuilt_binary(mesa)
-  if (LINUX AND VIEWER)
+  if (LINUX)
     use_prebuilt_binary(SDL)#kokuafixme was:SDL-noartwork
     set (SDL_FOUND TRUE)
     set (SDL_INCLUDE_DIR ${LIBS_PREBUILT_DIR}/include)
@@ -22,11 +22,9 @@ else (STANDALONE)
     if (NOT ${ARCH} STREQUAL "x86_64")
       list(APPEND SDL_LIBRARY directfb fusion direct)
     endif (NOT ${ARCH} STREQUAL "x86_64")
-  endif (LINUX AND VIEWER)
 endif (STANDALONE)
 
 if (SDL_FOUND)
-  add_definitions(-DLL_SDL=1)
   include_directories(${SDL_INCLUDE_DIR})
 endif (SDL_FOUND)
 
@@ -35,12 +33,12 @@ set(LLWINDOW_INCLUDE_DIRS
     ${LIBS_OPEN_DIR}/llwindow
     )
 
-if (SERVER AND LINUX)
-  set(LLWINDOW_LIBRARIES
-      llwindowheadless
-      )
-else (SERVER AND LINUX)
-  set(LLWINDOW_LIBRARIES
-      llwindow
-      )
-endif (SERVER AND LINUX)
+if (BUILD_HEADLESS)
+  set(LLWINDOW_HEADLESS_LIBRARIES
+    llwindowheadless
+    )
+endif (BUILD_HEADLESS)
+
+set(LLWINDOW_LIBRARIES
+    llwindow
+    )

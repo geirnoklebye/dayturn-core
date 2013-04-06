@@ -12,7 +12,7 @@ include(DragDrop)
 include(EXPAT)
 include(FMOD)
 include(OPENAL)
-include(FindOpenGL)
+include(OpenGL)
 include(Hunspell)
 include(JsonCpp)
 include(LLAudio)
@@ -46,6 +46,7 @@ include(LLLogin)
 # include(VisualLeakDetector)
 include(GLOD)
 include(CMakeCopyIfDifferent)
+include(LLAppearance)
 
 # <FS:ND> if using ndPhysicsstub this variable will be unset, we don't need to build any stub code viewer side in that case
 if( LLPHYSICSEXTENSIONS_SRC_DIR )
@@ -76,7 +77,6 @@ include_directories(
     ${LLMATH_INCLUDE_DIRS}
     ${LLPHYSICSEXTENSIONS_INCLUDE_DIRS}
     ${LLMESSAGE_INCLUDE_DIRS}
-    ${LLPHYSICSEXTENSIONS_INCLUDE_DIRS}
     ${LLPLUGIN_INCLUDE_DIRS}
     ${LLPRIMITIVE_INCLUDE_DIRS}
     ${LLRENDER_INCLUDE_DIRS}
@@ -92,6 +92,13 @@ include_directories(
     ${LIBS_PREBUILD_DIR}/include/hunspell
     ${OPENAL_LIB_INCLUDE_DIRS}
     ${LIBS_PREBUILT_DIR}/include/collada/1.4
+    ${LLAPPEARANCE_INCLUDE_DIRS}
+    )
+
+include_directories(SYSTEM
+    ${LLCOMMON_SYSTEM_INCLUDE_DIRS}
+    ${LLXML_SYSTEM_INCLUDE_DIRS}
+    ${LLPHYSICSEXTENSIONS_INCLUDE_DIRS}
     )
 
 set(viewer_SOURCE_FILES
@@ -184,7 +191,6 @@ set(viewer_SOURCE_FILES
     lldrawpooltree.cpp
     lldrawpoolwater.cpp
     lldrawpoolwlsky.cpp
-    lldriverparam.cpp
     lldynamictexture.cpp
     llemote.cpp
     llenvmanager.cpp
@@ -350,7 +356,6 @@ set(viewer_SOURCE_FILES
     lllistcontextmenu.cpp
     lllistview.cpp
     lllocalbitmaps.cpp
-    lllocaltextureobject.cpp
     lllocationhistory.cpp
     lllocationinputctrl.cpp
     lllogchat.cpp
@@ -470,12 +475,11 @@ set(viewer_SOURCE_FILES
     llpersistentnotificationstorage.cpp
     llphysicsmotion.cpp
     llphysicsshapebuilderutil.cpp
+    llpipelinelistener.cpp
     llplacesinventorybridge.cpp
     llplacesinventorypanel.cpp
     llplacesfolderview.cpp
     llpopupview.cpp
-    llpolymesh.cpp
-    llpolymorph.cpp
     llpostcard.cpp
     llpreview.cpp
     llpreviewanim.cpp
@@ -526,9 +530,6 @@ set(viewer_SOURCE_FILES
     llsyswellwindow.cpp
     llteleporthistory.cpp
     llteleporthistorystorage.cpp
-    lltexglobalcolor.cpp
-    lltexlayer.cpp
-    lltexlayerparams.cpp
     lltextureatlas.cpp
     lltextureatlasmanager.cpp
     lltexturecache.cpp
@@ -626,18 +627,18 @@ set(viewer_SOURCE_FILES
     llviewershadermgr.cpp
     llviewerstats.cpp
     llviewerstatsrecorder.cpp
+    llviewertexlayer.cpp
     llviewertexteditor.cpp
     llviewertexture.cpp
     llviewertextureanim.cpp
     llviewertexturelist.cpp
     llviewerthrottle.cpp
-    llviewervisualparam.cpp
+    llviewerwearable.cpp
     llviewerwindow.cpp
     llviewerwindowlistener.cpp
     llvlcomposition.cpp
     llvlmanager.cpp
     llvoavatar.cpp
-    llvoavatardefines.cpp
     llvoavatarself.cpp
     llvocache.cpp
     llvograss.cpp
@@ -658,10 +659,8 @@ set(viewer_SOURCE_FILES
     llwatchdog.cpp
     llwaterparammanager.cpp
     llwaterparamset.cpp
-    llwearable.cpp
     llwearableitemslist.cpp
     llwearablelist.cpp
-    llwearabletype.cpp
     llweb.cpp
     llwebprofile.cpp
     llwebsharing.cpp
@@ -786,7 +785,6 @@ set(viewer_HEADER_FILES
     lldrawpooltree.h
     lldrawpoolwater.h
     lldrawpoolwlsky.h
-    lldriverparam.h
     lldynamictexture.h
     llemote.h
     llenvmanager.h
@@ -951,7 +949,6 @@ set(viewer_HEADER_FILES
     lllistcontextmenu.h
     lllistview.h
     lllocalbitmaps.h
-    lllocaltextureobject.h
     lllocationhistory.h
     lllocationinputctrl.h
     lllogchat.h
@@ -1060,11 +1057,10 @@ set(viewer_HEADER_FILES
     llpersistentnotificationstorage.h
     llphysicsmotion.h
     llphysicsshapebuilderutil.h
+    llpipelinelistener.h
     llplacesinventorybridge.h
     llplacesinventorypanel.h
     llplacesfolderview.h
-    llpolymesh.h
-    llpolymorph.h
     llpopupview.h
     llpostcard.h
     llpreview.h
@@ -1118,9 +1114,6 @@ set(viewer_HEADER_FILES
     lltable.h
     llteleporthistory.h
     llteleporthistorystorage.h
-    lltexglobalcolor.h
-    lltexlayer.h
-    lltexlayerparams.h
     lltextureatlas.h
     lltextureatlasmanager.h
     lltexturecache.h
@@ -1219,18 +1212,18 @@ set(viewer_HEADER_FILES
     llviewershadermgr.h
     llviewerstats.h
     llviewerstatsrecorder.h
+    llviewertexlayer.h
     llviewertexteditor.h
     llviewertexture.h
     llviewertextureanim.h
     llviewertexturelist.h
     llviewerthrottle.h
-    llviewervisualparam.h
+    llviewerwearable.h
     llviewerwindow.h
     llviewerwindowlistener.h
     llvlcomposition.h
     llvlmanager.h
     llvoavatar.h
-    llvoavatardefines.h
     llvoavatarself.h
     llvocache.h
     llvograss.h
@@ -1251,10 +1244,8 @@ set(viewer_HEADER_FILES
     llwatchdog.h
     llwaterparammanager.h
     llwaterparamset.h
-    llwearable.h
     llwearableitemslist.h
     llwearablelist.h
-    llwearabletype.h
     llweb.h
     llwebprofile.h
     llwebsharing.h
@@ -1638,6 +1629,12 @@ add_executable(${VIEWER_BINARY_NAME}
     ${viewer_SOURCE_FILES}
     )
 
+if (SDL_FOUND)
+  set_property(TARGET ${VIEWER_BINARY_NAME}
+    PROPERTY COMPILE_DEFINITIONS LL_SDL=1
+    )
+endif (SDL_FOUND)
+
 # add package files
 file(GLOB EVENT_HOST_SCRIPT_GLOB_LIST
      ${CMAKE_CURRENT_SOURCE_DIR}/../viewer_components/*.py)
@@ -1925,18 +1922,8 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLPHYSICS_LIBRARIES}
     ${LLPHYSICSEXTENSIONS_LIBRARIES}
     ${TCMALLOC_LIBRARIES}
+    ${LLAPPEARANCE_LIBRARIES}
      )
-
-if (USE_KDU)
-    target_link_libraries(${VIEWER_BINARY_NAME}
-        ${LLKDU_LIBRARIES}
-        ${KDU_LIBRARY}
-        )
-else (USE_KDU)
-    target_link_libraries(${VIEWER_BINARY_NAME}
-        ${LLIMAGEJ2COJ_LIBRARIES}
-        )
-endif (USE_KDU)
 
 build_version(viewer)
 
@@ -2154,6 +2141,15 @@ if (LL_TESTS)
     llversioninfo.cpp
     llworldmap.cpp
     llworldmipmap.cpp
+  )
+
+  set_source_files_properties(
+    llworldmap.cpp
+    llworldmipmap.cpp
+    PROPERTIES
+    LL_TEST_ADDITIONAL_SOURCE_FILES 
+    tests/llviewertexture_stub.cpp
+    #llviewertexturelist.cpp
   )
 
   set_source_files_properties(
