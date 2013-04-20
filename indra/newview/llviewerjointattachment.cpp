@@ -256,7 +256,7 @@ BOOL LLViewerJointAttachment::addObject(LLViewerObject* object)
 //					LLInventoryItem* inv_item = gAgent.mRRInterface.getItem (object->getID());
 					if (inv_item)
 					{
-						LLAppearanceMgr::instance().removeCOFItemLinks(inv_item->getUUID(), false);
+						LLAppearanceMgr::instance().removeCOFItemLinks(inv_item->getUUID());
  						object->setAttachmentItemID (LLUUID::null);
 						mAttachedObjects.pop_back ();
 						gInventory.notifyObservers();

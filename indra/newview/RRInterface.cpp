@@ -1533,7 +1533,8 @@ void RRInterface::removeItemFromAvatar (LLViewerInventoryItem* item)
 	std::string name = item->getName();
 	LLStringUtil::toLower(name);
 	if (name.find ("nostrip") != -1) return;
-	LLWearableBridge::removeItemFromAvatar (item);
+	LLAppearanceMgr::instance().removeItemFromAvatar(item->getUUID());
+	//LLWearableBridge::removeItemFromAvatar (item);
 }
 
 BOOL RRInterface::answerOnChat (std::string channel, std::string msg)

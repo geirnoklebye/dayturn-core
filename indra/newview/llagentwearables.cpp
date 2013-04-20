@@ -748,7 +748,7 @@ void LLAgentWearables::wearableUpdated(LLWearable *wearable, BOOL removed)
 		checkWearableAgainstInventory(viewer_wearable);
 	}
 }
-
+/*
 void LLAgentWearables::setWearable(const LLWearableType::EType type, U32 index, LLWearable *wearable)
 {
 //MK
@@ -938,7 +938,7 @@ U32 LLAgentWearables::getWearableCount(const U32 tex_index) const
 	const LLWearableType::EType wearable_type = LLVOAvatarDictionary::getTEWearableType((LLVOAvatarDefines::ETextureIndex)tex_index);
 	return getWearableCount(wearable_type);
 }
-
+*/
 
 BOOL LLAgentWearables::itemUpdatePending(const LLUUID& item_id) const
 {
@@ -1458,7 +1458,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 				{
 					bool remove_this = true;
 					// cur_wearable is the piece of clothing we are wearing on index "index" on the layer "type" (ex : WT_SHIRT, WT_PANTS...)
-					LLWearable* cur_wearable = getWearable ((LLWearableType::EType)type, index);
+					LLViewerWearable* cur_wearable = getViewerWearable ((LLWearableType::EType)type, index);
 
 					S32 count = wearables.count();
 					llassert(items.count() == count);
@@ -1467,7 +1467,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 					{
 						// new_wearable represents each of the wearables we are supposed to update, every cur_wearable that is not
 						// part of the "wearables" array must be removed
-						LLWearable* new_wearable = wearables[i];
+						LLViewerWearable* new_wearable = wearables[i];
 						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
 						{
 							remove_this = false;
@@ -1514,7 +1514,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 				{
 					for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE && wear_this; ++index)
 					{
-						LLWearable* cur_wearable = getWearable ((LLWearableType::EType)type, index);
+						LLViewerWearable* cur_wearable = getViewerWearable ((LLWearableType::EType)type, index);
 						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
 						{
 							wear_this = false;

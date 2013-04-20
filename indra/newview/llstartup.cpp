@@ -1015,7 +1015,6 @@ bool idle_startup()
 		{
 			gSavedSettings.setBOOL("LoginLastLocation", TRUE);
 			agent_location_id = START_LOCATION_ID_LAST;	// always last location (actually ignore list)
-			location_which = START_LOCATION_ID_LAST;
 		}
 //mk
 		gViewerWindow->getWindow()->setCursor(UI_CURSOR_WAIT);

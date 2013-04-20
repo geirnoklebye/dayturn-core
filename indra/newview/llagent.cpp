@@ -4604,7 +4604,7 @@ void LLAgent::sendAgentSetAppearance()
 
 	for(U8 baked_index = 0; baked_index < BAKED_NUM_INDICES; baked_index++ )
 	{
-		const ETextureIndex texture_index = LLVOAvatarDictionary::bakedToLocalTextureIndex((EBakedTextureIndex)baked_index);
+		const ETextureIndex texture_index = LLAvatarAppearanceDictionary::bakedToLocalTextureIndex((EBakedTextureIndex)baked_index);
 
 		// if we're not wearing a skirt, we don't need the texture to be baked
 		if (texture_index == TEX_SKIRT_BAKED && !gAgentAvatarp->isWearingWearableType(LLWearableType::WT_SKIRT))
@@ -4615,19 +4615,30 @@ void LLAgent::sendAgentSetAppearance()
 		// IMG_DEFAULT_AVATAR means not baked. 0 index should be ignored for baked textures
 		if (!gAgentAvatarp->isTextureDefined(texture_index, 0))
 		{
+			LL_DEBUGS("Avatar") << "texture not current for baked " << (S32)baked_index << " local " << (S32)texture_index << llendl;
 			textures_current = FALSE;
 			break;
 		}
 	}
 
 	// only update cache entries if we have all our baked textures
+
+	// FIXME DRANO need additional check for not in appearance editing
+	// mode, if still using local composites need to set using local
+	// composites to false, and update mesh textures.
 	if (textures_current)
 	{
-		LL_INFOS("Avatar") << gAgentAvatarp->avString() << "TAT: Sending cached texture data" << LL_ENDL;
+		bool enable_verbose_dumps = gSavedSettings.getBOOL("DebugAvatarAppearanceMessage");
+		std::string dump_prefix = gAgentAvatarp->getFullname() + "_sent_appearance";
+		if (enable_verbose_dumps)
+		{
+			dumpSentAppearance(dump_prefix);
+		}
+		LL_DEBUGS("Avatar") << gAgentAvatarp->avString() << "TAT: Sending cached texture data" << LL_ENDL;
 		for (U8 baked_index = 0; baked_index < BAKED_NUM_INDICES; baked_index++)
 		{
 			BOOL generate_valid_hash = TRUE;
-			if (isAgentAvatarValid() && !gAgentAvatarp->isBakedTextureFinal((LLVOAvatarDefines::EBakedTextureIndex)baked_index))
+			if (isAgentAvatarValid() && !gAgentAvatarp->isBakedTextureFinal((LLAvatarAppearanceDefines::EBakedTextureIndex)baked_index))
 			{
 				generate_valid_hash = FALSE;
 				LL_DEBUGS("Avatar") << gAgentAvatarp->avString() << "Not caching baked texture upload for " << (U32)baked_index << " due to being uploaded at low resolution." << LL_ENDL;
@@ -4636,7 +4647,7 @@ void LLAgent::sendAgentSetAppearance()
 			const LLUUID hash = gAgentWearables.computeBakedTextureHash((EBakedTextureIndex) baked_index, generate_valid_hash);
 			if (hash.notNull())
 			{
-				ETextureIndex texture_index = LLVOAvatarDictionary::bakedToLocalTextureIndex((EBakedTextureIndex) baked_index);
+				ETextureIndex texture_index = LLAvatarAppearanceDictionary::bakedToLocalTextureIndex((EBakedTextureIndex) baked_index);
 				msg->nextBlockFast(_PREHASH_WearableData);
 				msg->addUUIDFast(_PREHASH_CacheID, hash);
 				msg->addU8Fast(_PREHASH_TextureIndex, (U8)texture_index);
