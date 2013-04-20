@@ -100,3 +100,4 @@ openjpeg.dll
 syntax: regexp
 fmodapi375win/*
 glob:*.diff
+#*.rej

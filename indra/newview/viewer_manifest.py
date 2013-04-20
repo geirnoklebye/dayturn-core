@@ -368,10 +368,14 @@ class WindowsManifest(ViewerManifest):
                 print err.message
                 print "Skipping COLLADA and GLOD libraries (assumming linked statically)"
 
-
-            # Get fmod dll, continue if missing
-            if not self.path("fmod.dll"):
-                print "Skipping fmod.dll"
+            # Get fmodex dll, continue if missing
+            try:
+                if self.args['configuration'].lower() == 'debug':
+                    self.path("fmodexL.dll")
+                else:
+                    self.path("fmodex.dll")
+            except:
+                print "Skipping fmodex audio library(assuming other audio engine)"
 
             # For textures
             if self.args['configuration'].lower() == 'debug':
@@ -744,6 +748,7 @@ class DarwinManifest(ViewerManifest):
                                 "libcollada14dom.dylib",
                                 "libexpat.1.5.2.dylib",
                                 "libexception_handler.dylib",
+                                "libfmodex.dylib",
                                 "libGLOD.dylib",
                                 ):
                     dylibs += path_optional(os.path.join(libdir, libfile), libfile)
@@ -758,11 +763,7 @@ class DarwinManifest(ViewerManifest):
                                 'SLVoice',
                                 ):
                      self.path2basename(libdir, libfile)
-                
-                # FMOD for sound
-                libfile = "libfmodwrapper.dylib"
-                path_optional(os.path.join(self.args['configuration'], libfile), libfile)
-                
+
                 # our apps
                 for app_bld_dir, app in (("mac_crash_logger", "mac-crash-logger.app"),
                                          ("mac_updater", "mac-updater.app"),
@@ -1068,7 +1069,7 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libcrypto.so.*")
             self.path("libexpat.so.*")
             self.path("libssl.so.1.0.0")
-            self.path("libglod.so")
+            self.path("libGLOD.so")
             self.path("libminizip.so")
             self.path("libuuid.so*")
             self.path("libSDL-1.2.so.*")
@@ -1109,11 +1110,13 @@ class Linux_i686Manifest(LinuxManifest):
                 pass
 
             try:
-                    self.path("libfmod-3.75.so")
+                    self.path("libfmodex-*.so")
+                    self.path("libfmodex.so")
                     pass
             except:
-                    print "Skipping libfmod-3.75.so - not found"
+                    print "Skipping libfmodex.so - not found"
                     pass
+
             self.end_prefix("lib")
 
             # Vivox runtimes

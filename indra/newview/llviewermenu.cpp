@@ -125,7 +125,7 @@
 #include "llpathfindingmanager.h"
 #include "boost/unordered_map.hpp"
 
-using namespace LLVOAvatarDefines;
+using namespace LLAvatarAppearanceDefines;
 
 typedef LLPointer<LLViewerObject> LLViewerObjectPtr;
 
@@ -1576,11 +1576,26 @@ class LLAdvancedEnableGrabBakedTexture : public view_listener_t
 ///////////////////////
 
 
+class LLAdvancedEnableAppearanceToXML : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		return gSavedSettings.getBOOL("DebugAvatarAppearanceMessage");
+	}
+};
+
 class LLAdvancedAppearanceToXML : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		LLVOAvatar::dumpArchetypeXML(NULL);
+		std::string emptyname;
+		LLVOAvatar* avatar =
+			find_avatar_from_object( LLSelectMgr::getInstance()->getSelection()->getPrimaryObject() );
+		if (!avatar)
+		{
+			avatar = gAgentAvatarp;
+		}
+		avatar->dumpArchetypeXML(emptyname);
 		return true;
 	}
 };
@@ -2947,7 +2962,7 @@ class LLSelfRemoveAllAttachments : public view_listener_t
 			return false;
 		}
 //mk
-		LLAgentWearables::userRemoveAllAttachments();
+		LLAppearanceMgr::instance().removeAllAttachmentsFromAvatar();
 		return true;
 	}
 };
@@ -3236,8 +3251,9 @@ void handle_avatar_freeze(const LLSD& avatar_id)
 			LLSD payload;
 			payload["avatar_id"] = avatar->getID();
 
-			if (!fullname.empty()
 //MK
+////			if (!fullname.empty())
+			if (!fullname.empty()
 				&& !(gRRenabled && gAgent.mRRInterface.mContainsShownames))
 //mk
 			{
@@ -6964,6 +6980,7 @@ class LLAttachmentDetachFromPoint : public view_listener_t
 {
 	bool handleEvent(const LLSD& user_data)
 	{
+		uuid_vec_t ids_to_remove;
 		const LLViewerJointAttachment *attachment = get_if_there(gAgentAvatarp->mAttachmentPoints, user_data.asInteger(), (LLViewerJointAttachment*)NULL);
 		if (attachment->getNumObjects() > 0)
 		{
@@ -6976,20 +6993,18 @@ class LLAttachmentDetachFromPoint : public view_listener_t
 			}
 			gAgent.mRRInterface.mHandleNoStrip = TRUE;
 //mk
-			gMessageSystem->newMessage("ObjectDetach");
-			gMessageSystem->nextBlockFast(_PREHASH_AgentData);
-			gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID() );
-			gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-			
+
 			for (LLViewerJointAttachment::attachedobjs_vec_t::const_iterator iter = attachment->mAttachedObjects.begin();
 				 iter != attachment->mAttachedObjects.end();
 				 iter++)
 			{
 				LLViewerObject *attached_object = (*iter);
-				gMessageSystem->nextBlockFast(_PREHASH_ObjectData);
-				gMessageSystem->addU32Fast(_PREHASH_ObjectLocalID, attached_object->getLocalID());
+				ids_to_remove.push_back(attached_object->getAttachmentItemID());
 			}
-			gMessageSystem->sendReliable( gAgent.getRegionHost() );
+		}
+		if (!ids_to_remove.empty())
+		{
+			LLAppearanceMgr::instance().removeItemsFromAvatar(ids_to_remove);
 		}
 		return true;
 	}
@@ -7071,17 +7086,8 @@ class LLAttachmentDetach : public view_listener_t
 			return true;
 		}
 
-		// The sendDetach() method works on the list of selected
-		// objects.  Thus we need to clear the list, make sure it only
-		// contains the object the user clicked, send the message,
-		// then clear the list.
-		// We use deselectAll to update the simulator's notion of what's
-		// selected, and removeAll just to change things locally.
-		//RN: I thought it was more useful to detach everything that was selected
-		if (LLSelectMgr::getInstance()->getSelection()->isAttachment())
-		{
-			LLSelectMgr::getInstance()->sendDetach();
-		}
+		LLAppearanceMgr::instance().removeItemFromAvatar(object->getAttachmentItemID());
+
 		return true;
 	}
 };
@@ -8015,7 +8021,7 @@ void handle_grab_baked_texture(void* data)
 	if(folder_id.notNull())
 	{
 		std::string name;
-		name = "Baked " + LLVOAvatarDictionary::getInstance()->getBakedTexture(baked_tex_index)->mNameCapitalized + " Texture";
+		name = "Baked " + LLAvatarAppearanceDictionary::getInstance()->getBakedTexture(baked_tex_index)->mNameCapitalized + " Texture";
 
 		LLUUID item_id;
 		item_id.generate();
@@ -8351,6 +8357,10 @@ void handle_rebake_textures(void*)
 	// Slam pending upload count to "unstick" things
 	bool slam_for_debug = true;
 	gAgentAvatarp->forceBakeAllTextures(slam_for_debug);
+	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
+	{
+		LLAppearanceMgr::instance().requestServerAppearanceUpdate();
+	}
 }
 
 void toggle_visibility(void* user_data)
@@ -8665,7 +8675,7 @@ class LLEditTakeOff : public view_listener_t
 	{
 		std::string clothing = userdata.asString();
 		if (clothing == "all")
-			LLWearableBridge::removeAllClothesFromAvatar();
+			LLAppearanceMgr::instance().removeAllClothesFromAvatar();
 		else
 		{
 			LLWearableType::EType type = LLWearableType::typeNameToType(clothing);
@@ -8675,11 +8685,11 @@ class LLEditTakeOff : public view_listener_t
 			{
 				// MULTI-WEARABLES: assuming user wanted to remove top shirt.
 				U32 wearable_index = gAgentWearables.getWearableCount(type) - 1;
-				LLViewerInventoryItem *item = dynamic_cast<LLViewerInventoryItem*>(gAgentWearables.getWearableInventoryItem(type,wearable_index));
+				LLUUID item_id = gAgentWearables.getWearableItemID(type,wearable_index);
 //MK
 				gAgent.mRRInterface.mHandleNoStrip = FALSE;
 //mk
-				LLWearableBridge::removeItemFromAvatar(item);
+				LLAppearanceMgr::instance().removeItemFromAvatar(item_id);
 //MK
 				gAgent.mRRInterface.mHandleNoStrip = TRUE;
 //mk
@@ -9063,7 +9073,7 @@ void initialize_menus()
 	view_listener_t::addEnable(new LLUploadCostCalculator(), "Upload.CalculateCosts");
 
 
-	commit.add("Inventory.NewWindow", boost::bind(&LLFloaterInventory::showAgentInventory));
+//	commit.add("Inventory.NewWindow", boost::bind(&LLFloaterInventory::showAgentInventory));
 	enable.add("Conversation.IsConversationLoggingAllowed", boost::bind(&LLFloaterIMContainer::isConversationLoggingAllowed));
 
 	// Agent
@@ -9288,6 +9298,7 @@ void initialize_menus()
 
 	// Advanced > Character > Character Tests
 	view_listener_t::addMenu(new LLAdvancedAppearanceToXML(), "Advanced.AppearanceToXML");
+	view_listener_t::addMenu(new LLAdvancedEnableAppearanceToXML(), "Advanced.EnableAppearanceToXML");
 	view_listener_t::addMenu(new LLAdvancedToggleCharacterGeometry(), "Advanced.ToggleCharacterGeometry");
 
 	view_listener_t::addMenu(new LLAdvancedTestMale(), "Advanced.TestMale");

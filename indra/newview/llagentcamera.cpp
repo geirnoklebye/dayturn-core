@@ -50,7 +50,7 @@
 #include "llwindow.h"
 #include "llworld.h"
 
-using namespace LLVOAvatarDefines;
+using namespace LLAvatarAppearanceDefines;
 
 extern LLMenuBarGL* gMenuBarView;
 
@@ -74,7 +74,7 @@ const F32 AVATAR_ZOOM_MIN_X_FACTOR = 0.55f;
 const F32 AVATAR_ZOOM_MIN_Y_FACTOR = 0.7f;
 const F32 AVATAR_ZOOM_MIN_Z_FACTOR = 1.15f;
 
-const F32 MAX_CAMERA_DISTANCE_FROM_AGENT = 512.f; // S21
+const F32 MAX_CAMERA_DISTANCE_FROM_AGENT = 50.f;
 
 const F32 MAX_CAMERA_SMOOTH_DISTANCE = 50.0f;
 
@@ -206,14 +206,10 @@ void LLAgentCamera::init()
 	mCameraOffsetInitial[CAMERA_PRESET_REAR_VIEW] = gSavedSettings.getControl("CameraOffsetRearView");
 	mCameraOffsetInitial[CAMERA_PRESET_FRONT_VIEW] = gSavedSettings.getControl("CameraOffsetFrontView");
 	mCameraOffsetInitial[CAMERA_PRESET_GROUP_VIEW] = gSavedSettings.getControl("CameraOffsetGroupView");
-	mCameraOffsetInitial[CAMERA_PRESET_TOPDOWN_VIEW] = gSavedSettings.getControl("CameraOffsetTopView"); // KL S21.
-    mCameraOffsetInitial[CAMERA_PRESET_FPS_VIEW] = gSavedSettings.getControl("CameraOffsetFpsView"); // KL S21
 
 	mFocusOffsetInitial[CAMERA_PRESET_REAR_VIEW] = gSavedSettings.getControl("FocusOffsetRearView");
 	mFocusOffsetInitial[CAMERA_PRESET_FRONT_VIEW] = gSavedSettings.getControl("FocusOffsetFrontView");
 	mFocusOffsetInitial[CAMERA_PRESET_GROUP_VIEW] = gSavedSettings.getControl("FocusOffsetGroupView");
-	mFocusOffsetInitial[CAMERA_PRESET_TOPDOWN_VIEW] = gSavedSettings.getControl("FocusOffsetTopView"); // KL S21
-	mFocusOffsetInitial[CAMERA_PRESET_FPS_VIEW] = gSavedSettings.getControl("FocusOffsetFpsView"); // KL S21
 
 	mCameraCollidePlane.clearVec();
 	mCurrentCameraDistance = getCameraOffsetInitial().magVec() * gSavedSettings.getF32("CameraOffsetScale");
@@ -598,7 +594,6 @@ BOOL LLAgentCamera::calcCameraMinDistance(F32 &obj_min_distance)
 	abs_target_offset.abs();
 
 	LLVector3 target_offset_dir = target_offset_origin;
-	F32 object_radius = mFocusObject->getVObjRadius();
 
 	BOOL target_outside_object_extents = FALSE;
 
@@ -693,17 +688,6 @@ BOOL LLAgentCamera::calcCameraMinDistance(F32 &obj_min_distance)
 
 	LLVector3 camera_offset_object(getCameraPositionAgent() - mFocusObject->getPositionAgent());
 
-	// length projected orthogonal to target offset
-	F32 camera_offset_dist = (camera_offset_object - target_offset_dir * (camera_offset_object * target_offset_dir)).magVec();
-
-	// calculate whether the target point would be "visible" if it were outside the bounding box
-	// on the opposite of the splitting plane defined by object_split_axis;
-	BOOL exterior_target_visible = FALSE;
-	if (camera_offset_dist > object_radius)
-	{
-		// target is visible from camera, so turn off fov zoom
-		exterior_target_visible = TRUE;
-	}
 
 	F32 camera_offset_clip = camera_offset_object * object_split_axis;
 	F32 target_offset_clip = target_offset_dir * object_split_axis;
@@ -1083,8 +1067,8 @@ void LLAgentCamera::updateLookAt(const S32 mouse_x, const S32 mouse_y)
 
 	if (!isAgentAvatarValid()) return;
 
-	LLQuaternion av_inv_rot = ~gAgentAvatarp->mRoot.getWorldRotation();
-	LLVector3 root_at = LLVector3::x_axis * gAgentAvatarp->mRoot.getWorldRotation();
+	LLQuaternion av_inv_rot = ~gAgentAvatarp->mRoot->getWorldRotation();
+	LLVector3 root_at = LLVector3::x_axis * gAgentAvatarp->mRoot->getWorldRotation();
 
 	if 	((gViewerWindow->getMouseVelocityStat()->getCurrent() < 0.01f) &&
 		 (root_at * last_at_axis > 0.95f))
@@ -1437,7 +1421,7 @@ void LLAgentCamera::updateCamera()
 			LLVector3(0.08f, 0.f, 0.05f) * gAgentAvatarp->mHeadp->getWorldRotation() + 
 			LLVector3(0.1f, 0.f, 0.f) * gAgentAvatarp->mPelvisp->getWorldRotation();
 		LLVector3 diff = mCameraPositionAgent - head_pos;
-		diff = diff * ~gAgentAvatarp->mRoot.getWorldRotation();
+		diff = diff * ~gAgentAvatarp->mRoot->getWorldRotation();
 
 		LLJoint* torso_joint = gAgentAvatarp->mTorsop;
 		LLJoint* chest_joint = gAgentAvatarp->mChestp;
@@ -1461,7 +1445,7 @@ void LLAgentCamera::updateCamera()
 
 		gAgentAvatarp->mPelvisp->setPosition(gAgentAvatarp->mPelvisp->getPosition() + diff);
 
-		gAgentAvatarp->mRoot.updateWorldMatrixChildren();
+		gAgentAvatarp->mRoot->updateWorldMatrixChildren();
 
 		for (LLVOAvatar::attachment_map_t::iterator iter = gAgentAvatarp->mAttachmentPoints.begin(); 
 			 iter != gAgentAvatarp->mAttachmentPoints.end(); )
@@ -1662,7 +1646,6 @@ F32	LLAgentCamera::calcCameraFOVZoomFactor()
 	else if (mFocusObject.notNull() && !mFocusObject->isAvatar() && !mFocusOnAvatar)
 	{
 		// don't FOV zoom on mostly transparent objects
-		LLVector3 focus_offset = mFocusObjectOffset;
 		F32 obj_min_dist = 0.f;
 		calcCameraMinDistance(obj_min_dist);
 		F32 current_distance = llmax(0.001f, camera_offset_dir.magVec());
@@ -1689,7 +1672,7 @@ LLVector3d LLAgentCamera::calcCameraPositionTargetGlobal(BOOL *hit_limit)
 	F32			camera_land_height;
 	LLVector3d	frame_center_global = !isAgentAvatarValid() ? 
 		gAgent.getPositionGlobal() :
-		gAgent.getPosGlobalFromAgent(gAgentAvatarp->mRoot.getWorldPosition());
+		gAgent.getPosGlobalFromAgent(gAgentAvatarp->mRoot->getWorldPosition());
 	
 	BOOL		isConstrained = FALSE;
 	LLVector3d	head_offset;
@@ -1824,7 +1807,6 @@ LLVector3d LLAgentCamera::calcCameraPositionTargetGlobal(BOOL *hit_limit)
 			// set the global camera position
 			LLVector3d camera_offset;
 			
-			LLVector3 av_pos = !isAgentAvatarValid() ? LLVector3::zero : gAgentAvatarp->getRenderPosition();
 			camera_offset.setVec( local_camera_offset );
 			camera_position_global = frame_center_global + head_offset + camera_offset;
 
@@ -2267,7 +2249,7 @@ void LLAgentCamera::changeCameraToCustomizeAvatar()
 		return;
 	}
 //mk
-	if (LLViewerJoystick::getInstance()->getOverrideCamera())
+	if (LLViewerJoystick::getInstance()->getOverrideCamera() || !isAgentAvatarValid())
 	{
 		return;
 	}
@@ -2291,10 +2273,6 @@ void LLAgentCamera::changeCameraToCustomizeAvatar()
 		gFocusMgr.setKeyboardFocus( NULL );
 		gFocusMgr.setMouseCapture( NULL );
 
-		LLVOAvatarSelf::onCustomizeStart();
-
-		if (isAgentAvatarValid())
-		{
 			// Remove any pitch or rotation from the avatar
 			LLVector3 at = gAgent.getAtAxis();
 			at.mV[VZ] = 0.f;
@@ -2310,10 +2288,6 @@ void LLAgentCamera::changeCameraToCustomizeAvatar()
 			{
 				// delay camera animation long enough to play through turn animation
 				setAnimationDuration(turn_motion->getDuration() + CUSTOMIZE_AVATAR_CAMERA_ANIM_SLOP);
-			}
-
-			gAgentAvatarp->invalidateAll();
-			gAgentAvatarp->updateMeshTextures();
 		}
 	}
 

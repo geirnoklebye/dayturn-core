@@ -265,7 +265,7 @@ void LLFloaterIMNearbyChat::setVisibleAndFrontmost(BOOL take_focus, const LLSD& 
 
 	if(!isTornOff() && matchesKey(key))
 	{
-		LLFloaterIMContainer::getInstance()->selectConversationPair(mSessionID, true, false);
+		LLFloaterIMContainer::getInstance()->selectConversationPair(mSessionID, true, take_focus);
 	}
 }
 
@@ -329,7 +329,7 @@ void LLFloaterIMNearbyChat::onChatFontChange(LLFontGL* fontp)
 void LLFloaterIMNearbyChat::show()
 {
 		openFloater(getKey());
-	}
+}
 
 bool LLFloaterIMNearbyChat::isChatVisible() const
 {

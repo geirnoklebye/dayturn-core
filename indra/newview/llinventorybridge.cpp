@@ -51,6 +51,7 @@
 #include "llclipboard.h"
 #include "llinventorydefines.h"
 #include "llinventoryfunctions.h"
+#include "llinventoryicon.h"
 #include "llinventorymodel.h"
 #include "llinventorymodelbackgroundfetch.h"
 #include "llinventorypanel.h"
@@ -96,8 +97,6 @@ struct LLMoveInv
 using namespace LLOldEvents;
 
 // Function declarations
-void remove_inventory_category_from_avatar(LLInventoryCategory* category);
-void remove_inventory_category_from_avatar_step2( BOOL proceed, LLUUID category_id);
 bool move_task_inventory_callback(const LLSD& notification, const LLSD& response, LLMoveInv*);
 bool confirm_attachment_rez(const LLSD& notification, const LLSD& response);
 void teleport_via_landmark(const LLUUID& asset_id);
@@ -1542,7 +1541,7 @@ LLUIImagePtr LLItemBridge::getIcon() const
 										mIsLink);
 	}
 	
-	return LLInventoryIcon::getIcon(LLInventoryIcon::ICONNAME_OBJECT);
+	return LLInventoryIcon::getIcon(LLInventoryType::ICONNAME_OBJECT);
 }
 
 LLUIImagePtr LLItemBridge::getIconOverlay() const
@@ -2695,7 +2694,6 @@ BOOL move_inv_category_world_to_agent(const LLUUID& object_id,
 	if(drop && accept)
 	{
 		it = inventory_objects.begin();
-		LLInventoryObject::object_list_t::iterator first_it = inventory_objects.begin();
 		LLMoveInv* move_inv = new LLMoveInv;
 		move_inv->mObjectID = object_id;
 		move_inv->mCategoryID = category_id;
@@ -2972,7 +2970,7 @@ void LLFolderBridge::performAction(LLInventoryModel* model, std::string action)
 		LLViewerInventoryCategory* cat = getCategory();
 		if(!cat) return;
 
-		remove_inventory_category_from_avatar ( cat );
+		LLAppearanceMgr::instance().takeOffOutfit( cat->getLinkedUUID() );
 		return;
 	}
 	else if ("purge" == action)
@@ -5410,7 +5408,7 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 		else if(item && item->isFinished())
 		{
 			// must be in library. copy it to our inventory and put it on.
-			LLPointer<LLInventoryCallback> cb = new RezAttachmentCallback(0);
+			LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(rez_attachment_cb, _1, (LLViewerJointAttachment*)0));
 			copy_inventory_item(
 				gAgent.getID(),
 				item->getPermissions().getOwner(),
@@ -5435,7 +5433,7 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 			if (!gRRenabled || gAgent.mRRInterface.canDetach (item))
   			{
 //mk
-				LLVOAvatarSelf::detachAttachmentIntoInventory(item->getLinkedUUID());
+				LLAppearanceMgr::instance().removeItemFromAvatar(mUUID);
 //MK
 			}
 			gAgent.mRRInterface.mHandleNoStrip = TRUE;
@@ -5770,7 +5768,7 @@ LLWearableBridge::LLWearableBridge(LLInventoryPanel* inventory,
 {
 	mInvType = inv_type;
 }
-
+/*
 void remove_inventory_category_from_avatar( LLInventoryCategory* category )
 {
 //MK
@@ -5901,7 +5899,7 @@ void remove_inventory_category_from_avatar_step2( BOOL proceed, LLUUID category_
 		}
 	}
 }
-
+*/
 BOOL LLWearableBridge::renameItem(const std::string& new_name)
 {
 	if (get_is_item_worn(mUUID))
@@ -6130,7 +6128,7 @@ void LLWearableBridge::wearAddOnAvatar()
 }
 
 // static
-void LLWearableBridge::onWearOnAvatarArrived( LLWearable* wearable, void* userdata )
+void LLWearableBridge::onWearOnAvatarArrived( LLViewerWearable* wearable, void* userdata )
 {
 	LLUUID* item_id = (LLUUID*) userdata;
 	if(wearable)
@@ -6156,7 +6154,7 @@ void LLWearableBridge::onWearOnAvatarArrived( LLWearable* wearable, void* userda
 
 // static
 // BAP remove the "add" code path once everything is fully COF-ified.
-void LLWearableBridge::onWearAddOnAvatarArrived( LLWearable* wearable, void* userdata )
+void LLWearableBridge::onWearAddOnAvatarArrived( LLViewerWearable* wearable, void* userdata )
 {
 	LLUUID* item_id = (LLUUID*) userdata;
 	if(wearable)
@@ -6215,7 +6213,7 @@ BOOL LLWearableBridge::canRemoveFromAvatar(void* user_data)
 	}
 	return FALSE;
 }
-
+/*
 // static
 void LLWearableBridge::onRemoveFromAvatar(void* user_data)
 {
@@ -6309,24 +6307,6 @@ void LLWearableBridge::removeItemFromAvatar(LLViewerInventoryItem *item)
 		// Find and remove this item from the COF.
 //		LLUUID item_id = item->getUUID();
 		const LLUUID &item_id = gInventory.getLinkedItemID(item->getUUID());
-/*
-		LLWearable* wearable = gAgentWearables.getWearableFromItemID(item_id);
-		if (wearable)
-		{
-			if( get_is_item_worn( item_id ) )
-			{
-				LLWearableType::EType type = wearable->getType();
-
-				if( !(type==LLWearableType::WT_SHAPE || type==LLWearableType::WT_SKIN || type==LLWearableType::WT_HAIR || type==LLWearableType::WT_EYES ) ) //&&
-					//!((!gAgent.isTeen()) && ( type==LLWearableType::WT_UNDERPANTS || type==LLWearableType::WT_UNDERSHIRT )) )
-				{
-					bool do_remove_all = false;
-					U32 index = gAgentWearables.getWearableIndex(wearable);
-					gAgentWearables.removeWearable( type, do_remove_all, index );
-				}
-			}
-		}
-*/
 		LLAppearanceMgr::instance().removeCOFItemLinks(item_id,true);
 		gInventory.notifyObservers();
 
@@ -6338,13 +6318,13 @@ void LLWearableBridge::removeItemFromAvatar(LLViewerInventoryItem *item)
 //mk
 	}
 }
-
+*/
 void LLWearableBridge::removeFromAvatar()
 {
+	llwarns << "safe to remove?" << llendl;
 	if (get_is_item_worn(mUUID))
 	{
-		LLViewerInventoryItem* item = getItem();
-		removeItemFromAvatar(item);
+		LLAppearanceMgr::instance().removeItemFromAvatar(mUUID);
 	}
 }
 

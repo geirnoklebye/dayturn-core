@@ -1452,11 +1452,9 @@ S32 LLSDBinaryFormatter::format(const LLSD& data, std::ostream& ostr, U32 option
 
 	case LLSD::TypeUUID:
 	{
-		// ostr.write((const char*)(&(data.asUUID().mData)), UUID_BYTES);
-		// ND: replace above
 		ostr.put('u');
-		LLUUID oUUID = data.asUUID();
-		ostr.write((const char*)(&(oUUID.mData)), UUID_BYTES);
+		LLUUID temp = data.asUUID();
+		ostr.write((const char*)(&(temp.mData)), UUID_BYTES);
 		break;
 	}
 	case LLSD::TypeString:

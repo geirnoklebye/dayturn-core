@@ -462,7 +462,6 @@ void LLVertexBuffer::setupClientArrays(U32 data_mask)
 {
 	if (sLastMask != data_mask)
 	{
-		bool error = false;
 
 		if (gGLManager.mGLSLVersionMajor < 2 && gGLManager.mGLSLVersionMinor < 30)
 		{
@@ -529,7 +528,6 @@ void LLVertexBuffer::setupClientArrays(U32 data_mask)
 						{
 							if (gDebugSession)
 							{
-								error = true;
 								gFailLog << "Bad client state! " << array[i] << " disabled." << std::endl;
 							}
 							else
@@ -549,7 +547,6 @@ void LLVertexBuffer::setupClientArrays(U32 data_mask)
 					{ //needs to be disabled, make sure it was (DEBUG TEMPORARY)
 						if (gDebugSession)
 						{
-							error = true;
 							gFailLog << "Bad client state! " << array[i] << " enabled." << std::endl;
 						}
 						else
@@ -608,8 +605,10 @@ void LLVertexBuffer::setupClientArrays(U32 data_mask)
 }
 
 //static
+static LLFastTimer::DeclareTimer FTM_VB_DRAW_ARRAYS("drawArrays");
 void LLVertexBuffer::drawArrays(U32 mode, const std::vector<LLVector3>& pos, const std::vector<LLVector3>& norm)
 {
+	LLFastTimer t(FTM_VB_DRAW_ARRAYS);
 	llassert(!LLGLSLShader::sNoFixedFunction || LLGLSLShader::sCurBoundShaderPtr != NULL);
 	gGL.syncMatrices();
 
@@ -844,6 +843,7 @@ void LLVertexBuffer::draw(U32 mode, U32 count, U32 indices_offset) const
 	placeFence();
 }
 
+static LLFastTimer::DeclareTimer FTM_GL_DRAW_ARRAYS("GL draw arrays");
 void LLVertexBuffer::drawArrays(U32 mode, U32 first, U32 count) const
 {
 	llassert(!LLGLSLShader::sNoFixedFunction || LLGLSLShader::sCurBoundShaderPtr != NULL);
@@ -878,8 +878,11 @@ void LLVertexBuffer::drawArrays(U32 mode, U32 first, U32 count) const
 		return;
 	}
 
-	stop_glerror();
-	glDrawArrays(sGLMode[mode], first, count);
+	{
+		LLFastTimer t2(FTM_GL_DRAW_ARRAYS);
+		stop_glerror();
+		glDrawArrays(sGLMode[mode], first, count);
+	}
 	stop_glerror();
 	placeFence();
 }
@@ -1625,8 +1628,10 @@ volatile U8* LLVertexBuffer::mapVertexBuffer(S32 type, S32 index, S32 count, boo
 				{
 					if (map_range)
 					{
+#ifndef LL_MESA_HEADLESS
 						glBufferParameteriAPPLE(GL_ARRAY_BUFFER_ARB, GL_BUFFER_SERIALIZED_MODIFY_APPLE, GL_FALSE);
 						glBufferParameteriAPPLE(GL_ARRAY_BUFFER_ARB, GL_BUFFER_FLUSHING_UNMAP_APPLE, GL_FALSE);
+#endif
 						src = (U8*) glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 					}
 					else
@@ -1800,8 +1805,10 @@ volatile U8* LLVertexBuffer::mapIndexBuffer(S32 index, S32 count, bool map_range
 				{
 					if (map_range)
 					{
+#ifndef LL_MESA_HEADLESS
 						glBufferParameteriAPPLE(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_BUFFER_SERIALIZED_MODIFY_APPLE, GL_FALSE);
 						glBufferParameteriAPPLE(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_BUFFER_FLUSHING_UNMAP_APPLE, GL_FALSE);
+#endif
 						src = (U8*) glMapBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 					}
 					else
@@ -1928,7 +1935,9 @@ void LLVertexBuffer::unmapBuffer()
 						}
 						else if (gGLManager.mHasFlushBufferRange)
 						{
+#ifndef LL_MESA_HEADLESS
 							glFlushMappedBufferRangeAPPLE(GL_ARRAY_BUFFER_ARB, offset, length);
+#endif
 						}
 						stop_glerror();
 					}
@@ -1994,7 +2003,9 @@ void LLVertexBuffer::unmapBuffer()
 						else if (gGLManager.mHasFlushBufferRange)
 						{
 #ifdef GL_APPLE_flush_buffer_range
+#ifndef LL_MESA_HEADLESS
 							glFlushMappedBufferRangeAPPLE(GL_ELEMENT_ARRAY_BUFFER_ARB, offset, length);
+#endif
 #endif
 						}
 						stop_glerror();
@@ -2269,7 +2280,6 @@ void LLVertexBuffer::setBuffer(U32 data_mask)
 			setup = setup || bindBuffer || bindIndices;
 		}
 
-		bool error = false;
 		if (gDebugGL && !mGLArray)
 		{
 			GLint buff;
@@ -2278,7 +2288,6 @@ void LLVertexBuffer::setBuffer(U32 data_mask)
 			{
 				if (gDebugSession)
 				{
-					error = true;
 					gFailLog << "Invalid GL vertex buffer bound: " << buff << std::endl;
 				}
 				else
@@ -2294,7 +2303,6 @@ void LLVertexBuffer::setBuffer(U32 data_mask)
 				{
 					if (gDebugSession)
 					{
-						error = true;
 						gFailLog << "Invalid GL index buffer bound: " << buff <<  std::endl;
 					}
 					else

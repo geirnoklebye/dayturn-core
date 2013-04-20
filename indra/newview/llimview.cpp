@@ -175,6 +175,7 @@ void on_new_message(const LLSD& msg)
     enum {CLOSED, NOT_ON_TOP, ON_TOP, ON_TOP_AND_ITEM_IS_SELECTED} conversations_floater_status;
 
 
+
     LLFloaterIMContainer* im_box = LLFloaterReg::getTypedInstance<LLFloaterIMContainer>("im_container");
 	LLFloaterIMSessionTab* session_floater = LLFloaterIMSessionTab::getConversation(session_id);
 
@@ -182,18 +183,19 @@ void on_new_message(const LLSD& msg)
 	{
 		conversations_floater_status = CLOSED;
 	}
-	else if (!session_floater || !LLFloater::isVisible(session_floater)
-	            || session_floater->isMinimized() || !session_floater->hasFocus())
+	else if (!im_box->hasFocus() &&
+			    !(session_floater && LLFloater::isVisible(session_floater)
+	            && !session_floater->isMinimized() && session_floater->hasFocus()))
 	{
 		conversations_floater_status = NOT_ON_TOP;
 	}
-	else if ((session_floater->hasFocus()) && (im_box->getSelectedSession() == session_id))
+	else if (im_box->getSelectedSession() != session_id)
 	{
-		conversations_floater_status = ON_TOP_AND_ITEM_IS_SELECTED;
+		conversations_floater_status = ON_TOP;
     }
 	else
 	{
-		conversations_floater_status = ON_TOP;
+		conversations_floater_status = ON_TOP_AND_ITEM_IS_SELECTED;
 	}
 
     //  determine user prefs for this session
@@ -226,7 +228,7 @@ void on_new_message(const LLSD& msg)
     // 0. nothing - exit
     if (("none" == user_preferences ||
     		ON_TOP_AND_ITEM_IS_SELECTED == conversations_floater_status)
-    	&& session_floater->isMessagePaneExpanded())
+    	    && session_floater->isMessagePaneExpanded())
     {
     	return;
     }
@@ -1399,7 +1401,7 @@ public:
 		mAgents = agents_to_invite;
 	}
 
-	virtual void error(U32 statusNum, const std::string& reason)
+	virtual void errorWithContent(U32 statusNum, const std::string& reason, const LLSD& content)
 	{
 		//try an "old school" way.
 		if ( statusNum == 400 )
@@ -1410,6 +1412,9 @@ public:
 				mOtherParticipantID,
 				mAgents);
 		}
+
+		llwarns << "LLStartConferenceChatResponder error [status:"
+				<< statusNum << "]: " << content << llendl;
 
 		//else throw an error back to the client?
 		//in theory we should have just have these error strings
@@ -1556,8 +1561,10 @@ public:
 		}
 	}
 
-	void error(U32 statusNum, const std::string& reason)
-	{		
+	void errorWithContent(U32 statusNum, const std::string& reason, const LLSD& content)
+	{
+		llwarns << "LLViewerChatterBoxInvitationAcceptResponder error [status:"
+				<< statusNum << "]: " << content << llendl;
 		//throw something back to the viewer here?
 		if ( gIMMgr )
 		{
@@ -2852,6 +2859,8 @@ LLUUID LLIMMgr::addSession(
 	//we don't need to show notes about online/offline, mute/unmute users' statuses for existing sessions
 	if (!new_session) return session_id;
 	
+    llinfos << "LLIMMgr::addSession, new session added, name = " << name << ", session id = " << session_id << llendl;
+    
 	//Per Plan's suggestion commented "explicit offline status warning" out to make Dessie happier (see EXT-3609)
 	//*TODO After February 2010 remove this commented out line if no one will be missing that warning
 	//noteOfflineUsers(session_id, floater, ids);
@@ -2887,6 +2896,8 @@ void LLIMMgr::removeSession(const LLUUID& session_id)
 
 	LLIMModel::getInstance()->clearSession(session_id);
 
+    llinfos << "LLIMMgr::removeSession, session removed, session id = " << session_id << llendl;
+
 	notifyObserverSessionRemoved(session_id);
 }
 
@@ -2904,7 +2915,6 @@ void LLIMMgr::inviteToSession(
 	// voice invite question is different from default only for group call (EXT-7118)
 	std::string question_type = "VoiceInviteQuestionDefault";
 
-	BOOL ad_hoc_invite = FALSE;
 	BOOL voice_invite = FALSE;
 	bool is_linden = LLMuteList::getInstance()->isLinden(caller_name);
 
@@ -2927,13 +2937,11 @@ void LLIMMgr::inviteToSession(
 		//else it's an ad-hoc
 		//and a voice ad-hoc
 		notify_box_type = "VoiceInviteAdHoc";
-		ad_hoc_invite = TRUE;
 		voice_invite = TRUE;
 	}
 	else if ( inv_type == INVITATION_TYPE_IMMEDIATE )
 	{
 		notify_box_type = "InviteAdHoc";
-		ad_hoc_invite = TRUE;
 	}
 
 	LLSD payload;
@@ -3524,10 +3532,9 @@ public:
 			}
 			std::string buffer = saved + message;
 
-			BOOL is_this_agent = FALSE;
 			if(from_id == gAgentID)
 			{
-				is_this_agent = TRUE;
+				return;
 			}
 			gIMMgr->addMessage(
 				session_id,
