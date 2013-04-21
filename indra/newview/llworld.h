@@ -41,6 +41,7 @@
 #include "llviewerpartsim.h"
 #include "llviewertexture.h"
 #include "llvowater.h"
+#include "llfloateradvancedbuildoptions.h"
 
 class LLViewerRegion;
 class LLVector3d;
@@ -117,11 +118,20 @@ public:
 // <AW: opensim-limits>
 //	F32						getRegionMaxHeight() const		{ return MAX_OBJECT_Z; }
 	F32 getRegionMaxHeight() const		{ return mRegionMaxHeight; }
-	F32 getRegionMinPrimScale() const	{ return mRegionMinPrimScale; }
+	F32 getRegionMinPrimScale() const;
 	F32 getRegionMaxPrimScale() const	{ return mRegionMaxPrimScale; }
 	F32 getRegionMaxPrimScaleNoMesh() const	{ return mRegionMaxPrimScaleNoMesh; }
 	F32 getRegionMaxHollowSize() const	{ return mRegionMaxHollowSize; }
 	F32 getRegionMinHoleSize() const	{ return mRegionMinHoleSize; }
+// <NP: disable build constraints>
+	F32	getRegionMinPrimXPos() const;
+	F32	getRegionMinPrimYPos() const;
+	F32	getRegionMinPrimZPos() const;
+	F32	getRegionMaxPrimXPos() const;
+	F32	getRegionMaxPrimYPos() const;
+	F32	getRegionMaxPrimZPos() const;
+
+// </NP: disable build constraints>
 // </AW: opensim-limits>
 	void					updateRegions(F32 max_update_time);
 	void					updateVisibilities();
@@ -190,7 +200,14 @@ private:
 	F32 mRegionMaxPrimScaleNoMesh;
 	F32 mRegionMaxHollowSize;
 	F32 mRegionMinHoleSize;
+	F32	mRegionMaxPrimXPos;
+	F32	mRegionMaxPrimYPos;
+	F32	mRegionMaxPrimZPos;
+	F32	mRegionMinPrimXPos;
+	F32	mRegionMinPrimYPos;
+	F32	mRegionMinPrimZPos;
 	bool mLimitsNeedRefresh;
+	bool mEnforceMaxBuild;
 // </AW: opensim-limits>
 	F32 mLandFarClip;					// Far clip distance for land.
 	LLPatchVertexArray		mLandPatch;

@@ -366,6 +366,24 @@
      radio_style="false"
      tooltip=""
     />
+  <!--
+  Holding for future work cant get the listener function to run for here
+     <check_box
+     control_name="DisableMaxBuildConstraints" 
+     name="disable_max_build_constraints"
+     label="Disable Max Build Constraints"
+     enabled="true"
+     bottom_delta="22"
+     left_delta="0"
+     height="16"
+     width="270"
+     follows="left|bottom"
+     font="SansSerifSmall"
+     mouse_opaque="true"
+     radio_style="false"
+     tooltip=""
+    />
+  -->
     <check_box
      control_name="BuildPrefs_ActualRoot"
      name="BuildPrefsActualRoot_toggle"
@@ -415,6 +433,7 @@
      min_val="0"
      mouse_opaque="true"
     />
+
   <!-- 
     <button
      name="btn_apply"

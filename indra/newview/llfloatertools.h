@@ -76,8 +76,10 @@ public:
 	// call this once per frame to handle visibility, rect location,
 	// button highlights, etc.
 	void updatePopup(LLCoordGL center, MASK mask);
-
-	void toolsPrecision();
+// <NP: disable build constraints>
+	void updateToolsSizeLimits();
+	void updateToolsPrecision();
+// </NP: disable build constraints>
 
 	// When the floater is going away, reset any options that need to be 
 	// cleared.

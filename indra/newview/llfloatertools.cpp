@@ -90,6 +90,9 @@
 #include "lluictrlfactory.h"
 #include "qtoolalign.h"
 #include "llmeshrepository.h"
+// <NP: disable build constraints>extern  LLWorld* refreshLimits();
+#include "llworld.h"
+// </NP: disable build constraints>extern  LLWorld* refreshLimits();
 
 // Globals
 LLFloaterTools *gFloaterTools = NULL;
@@ -151,6 +154,7 @@ void*	LLFloaterTools::createPanelObject(void* data)
 {
 	LLFloaterTools* floater = (LLFloaterTools*)data;
 	floater->mPanelObject = new LLPanelObject();
+	LLWorld::getInstance()->refreshLimits();
 	return floater->mPanelObject;
 }
 
@@ -219,7 +223,43 @@ LLPCode toolData[]={
 	LL_PCODE_LEGACY_TREE,
 	LL_PCODE_LEGACY_GRASS};
 
-void LLFloaterTools::toolsPrecision()
+void LLFloaterTools::updateToolsSizeLimits()
+{
+	LLWorld::getInstance()->refreshLimits();
+	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
+	{
+		getChild<LLSpinCtrl>("Scale X")->setMaxValue(F32_MAX);
+		getChild<LLSpinCtrl>("Scale Y")->setMaxValue(F32_MAX);
+		getChild<LLSpinCtrl>("Scale Z")->setMaxValue(F32_MAX);
+		
+		getChild<LLSpinCtrl>("Scale X")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
+		getChild<LLSpinCtrl>("Scale Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
+		getChild<LLSpinCtrl>("Scale Z")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
+	}
+	else
+	{
+		getChild<LLSpinCtrl>("Scale X")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
+		getChild<LLSpinCtrl>("Scale Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
+		getChild<LLSpinCtrl>("Scale Z")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
+
+		getChild<LLSpinCtrl>("Scale X")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
+		getChild<LLSpinCtrl>("Scale Y")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
+		getChild<LLSpinCtrl>("Scale Z")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
+
+		getChild<LLSpinCtrl>("Pos X")->setMinValue(LLWorld::getInstance()->getRegionMinPrimXPos());
+		getChild<LLSpinCtrl>("Pos Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimYPos());
+		getChild<LLSpinCtrl>("Pos Z")->setMinValue(LLWorld::getInstance()->getRegionMinPrimZPos());
+
+		getChild<LLSpinCtrl>("Pos X")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimXPos());
+		getChild<LLSpinCtrl>("Pos Y")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimYPos());
+		getChild<LLSpinCtrl>("Pos Z")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimZPos());
+
+	//getChild<LLCheckBoxCtrl>("Physical Checkbox Ctrl")->setEnabled(LLWorld::getInstance()->mAllowPhysicalPrims);
+	}
+}
+
+void LLFloaterTools::updateToolsPrecision()
+
 {
 	U32 decimals = gSavedSettings.getU32("DecimalsForTools");
 	if (decimals != mPrecision)
@@ -278,7 +318,8 @@ BOOL	LLFloaterTools::postBuild()
 	mComboGridMode			= getChild<LLComboBox>("combobox grid mode");
 	mCheckStretchUniformLabel = getChild<LLTextBox>("checkbox uniform label");
 
-	toolsPrecision();
+	updateToolsSizeLimits();
+	updateToolsPrecision();
 
 	//
 	// Create Buttons
@@ -548,7 +589,7 @@ void LLFloaterTools::refresh()
 	}
 
 
-	toolsPrecision();
+	updateToolsPrecision();
 
 	// Refresh child tabs
 	mPanelPermissions->refresh();

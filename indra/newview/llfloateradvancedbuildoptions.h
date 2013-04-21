@@ -39,6 +39,10 @@
 class LLObjectSelection;
 
 typedef LLSafeHandle<LLObjectSelection> LLObjectSelectionHandle;
+// <NP: disable build constraints>
+extern  LLWorld* refreshLimits();
+// </NP: disable build constraints>
+
 
 class LLFloaterAdvancedBuildOptions
 	:	public LLFloater
@@ -51,7 +55,7 @@ public:
 
 private:
 	friend class LLFloaterReg;
-
+	friend class LLWorld;
 	LLFloaterAdvancedBuildOptions(const LLSD& key);
 	~LLFloaterAdvancedBuildOptions();
 

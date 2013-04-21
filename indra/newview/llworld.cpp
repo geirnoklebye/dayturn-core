@@ -55,7 +55,7 @@
 #include "message.h"
 #include "pipeline.h"
 #include "llappviewer.h"		// for do_disconnect()
-
+#include "llfloateradvancedbuildoptions.h"
 #include <deque>
 #include <queue>
 #include <map>
@@ -135,6 +135,93 @@ void LLWorld::destroyClass()
 		mEdgeWaterObjects[i] = NULL;
 	}
 }
+// <NP: disable build constraints>
+F32 LLWorld::getRegionMinPrimScale() const
+{
+	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
+	{
+		return 0;
+	}
+	else
+	{
+		return mRegionMinPrimScale;
+	}
+}
+
+F32 LLWorld::getRegionMaxPrimXPos() const
+{
+	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
+	{
+		return FLT_MAX;
+	}
+	else
+	{
+		return mRegionMaxPrimXPos;
+	}
+}
+
+F32 LLWorld::getRegionMaxPrimYPos() const
+{
+	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
+	{
+		return FLT_MAX;
+	}
+	else
+	{
+		return mRegionMaxPrimYPos;
+	}
+}
+
+F32 LLWorld::getRegionMaxPrimZPos() const
+{
+	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
+	{
+		return FLT_MAX;
+	}
+	else
+	{
+		return mRegionMaxPrimZPos;
+	}
+}
+
+F32 LLWorld::getRegionMinPrimXPos() const
+{
+	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
+	{
+		return FLT_MIN;
+	}
+	else
+	{
+		return mRegionMinPrimXPos;
+	}
+}
+
+F32 LLWorld::getRegionMinPrimYPos() const
+{
+	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
+	{
+		return FLT_MIN;
+	}
+	else
+	{
+		return mRegionMinPrimYPos;
+	}
+}
+
+F32 LLWorld::getRegionMinPrimZPos() const
+{
+	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
+	{
+		return FLT_MIN;
+	}
+	else
+	{
+		return mRegionMinPrimZPos;
+	}
+}
+
+// </NP: disable build constraints>
+
 // <AW: opensim-limits>
 void LLWorld::refreshLimits()
 {
@@ -150,7 +237,18 @@ void LLWorld::refreshLimits()
 		//llmath/xform.h
 		mRegionMaxHeight = OS_MAX_OBJECT_Z; //llmath/xform.h
 		mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
-		mRegionMaxPrimScale = OS_DEFAULT_MAX_PRIM_SCALE;
+		// <NP: disable build constraints>
+		if (gSavedSettings.getBOOL("DisableMaxBuildConstraints")) // adjusts max and min constrains
+		{
+				mRegionMaxPrimScale = F32_MAX;
+				mRegionMinPrimScale = 0.000001f;
+			}
+		else
+			{
+				mRegionMaxPrimScale = OS_DEFAULT_MAX_PRIM_SCALE;
+				mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
+		}
+		// </NP: disable build constraints>
 		mRegionMaxPrimScaleNoMesh = OS_DEFAULT_MAX_PRIM_SCALE;// no restrictions here
 		mRegionMaxHollowSize = OS_OBJECT_MAX_HOLLOW_SIZE;
 		mRegionMinHoleSize = OS_OBJECT_MIN_HOLE_SIZE;

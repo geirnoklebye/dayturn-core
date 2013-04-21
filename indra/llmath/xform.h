@@ -44,7 +44,7 @@ const F32 SL_MAX_PRIM_SCALE = 65536.f;	// something very high but not near FLT_M
 
 const F32 OS_MAX_OBJECT_Z 		= 10000.f;
 const F32 OS_MIN_OBJECT_Z 		= -256.f;
-const F32 OS_DEFAULT_MAX_PRIM_SCALE = 1024.f;
+const F32 OS_DEFAULT_MAX_PRIM_SCALE = 256.f;
 const F32 OS_MIN_PRIM_SCALE = 0.001f;
 const F32 OS_MAX_PRIM_SCALE = 65536.f;	// something very high but not near FLT_MAX
 // <AW: opensim-limits>
