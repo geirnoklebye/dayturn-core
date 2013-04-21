@@ -430,14 +430,6 @@ void LLAvatarPropertiesProcessor::processAvatarGroupsReply(LLMessageSystem* msg,
 	msg->getUUIDFast(_PREHASH_AgentData, _PREHASH_AvatarID, avatar_groups.avatar_id );
 
 	S32 group_count = msg->getNumberOfBlocksFast(_PREHASH_GroupData);
-//MK
-	// For some reason, sometimes we receive completely bogus group update messages, with a huge
-	// number of groups... and we crash.
-	if (group_count < 0 || group_count > gMaxAgentGroups)
-	{
-		group_count = 0;
-	}
-//mk
 	for(S32 i = 0; i < group_count; ++i)
 	{
 		LLAvatarGroups::LLGroupData group_data;
@@ -463,6 +455,10 @@ void LLAvatarPropertiesProcessor::notifyObservers(const LLUUID& id,void* data, E
 
 	observer_multimap_t::iterator oi = observers.begin();
 	observer_multimap_t::iterator end = observers.end();
+//MK
+	// debug code
+	int count = 0;
+//mk
 	for (; oi != end; ++oi)
 	{
 		// only notify observers for the same agent, or if the observer
@@ -472,10 +468,14 @@ void LLAvatarPropertiesProcessor::notifyObservers(const LLUUID& id,void* data, E
 		{
 //MK
 			// We're getting crashes here...
-			if (oi->second)
+			if (dynamic_cast<LLAvatarPropertiesObserver*> (oi->second) != NULL)
 //mk
 			oi->second->processProperties(data,type);
 		}
+//MK
+		// debug code
+		count++;
+//mk
 	}
 }
 
