@@ -444,7 +444,7 @@ void LLFloaterIMNearbyChat::onChatBoxKeystroke()
 
 	S32 length = raw_text.length();
 
-	if( (length > 0) && (raw_text[0] != '/') )  // forward slash is used for escape (eg. emote) sequences
+	if( (length > 0) && (raw_text[0] != '/')  && (raw_text[0] != ':') )  // forward slash is used for escape (eg. emote) sequences
 	{
 //MK
 		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
