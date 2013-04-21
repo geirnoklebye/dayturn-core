@@ -2064,7 +2064,36 @@ class LLAdvancedShowDebugSettings : public view_listener_t
 	}
 };
 
+///////////////////////////////////
+// DISABLE MAX BUILD CONSTRAINTS //
+///////////////////////////////////
 
+class LLAdvancedToggleMaxBuildConstraints : public view_listener_t
+{
+	bool handleEvent( const LLSD& userdata)
+	{
+		BOOL cur_val = gSavedSettings.getBOOL("DisableMaxBuildConstraints");
+		gSavedSettings.setBOOL("DisableMaxBuildConstraints", !cur_val );
+		gFloaterTools->updateToolsSizeLimits();
+		return true;
+	}
+};
+/*
+class LLAdvancedCheckMaxBuildConstraints : public view_listener_t
+{
+	bool handleEvent( const LLSD& userdata)
+	{
+		bool new_value = gSavedSettings.getBOOL("DisableMaxBuildConstraints");
+		std::string control_name = userdata["conrtol"].asString();
+//		gMenuHolder->findControl(control_name)->setValue(new_value);
+		LLControlVariable* control = gMenuHolder->findControl(control_name);
+		if (control)
+			control->set(LLSD(new_value));
+		return true;
+	}
+};
+*/
+ 
 
 ////////////////////////
 // VIEW ADMIN OPTIONS //
