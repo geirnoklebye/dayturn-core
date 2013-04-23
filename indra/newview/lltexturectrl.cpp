@@ -1007,6 +1007,9 @@ LLTextureCtrl::LLTextureCtrl(const LLTextureCtrl::Params& p)
 	mImageAssetID(p.image_id),
 	mDefaultImageAssetID(p.default_image_id),
 	mDefaultImageName(p.default_image_name),
+	// <FS:Ansariel> Mask texture if desired
+	mIsMasked(FALSE),
+	// </FS:Ansariel> Mask texture if desired   
 	mFallbackImage(p.fallback_image)
 {
 

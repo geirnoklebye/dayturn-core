@@ -60,8 +60,8 @@
 				<pie_slice label="Skripte starten" name="Object Set Scripts to Running"/>
 				<pie_slice label="Skripte stoppen" name="Object Set Scripts to Not Running"/>
 				<pie_slice label="Skripte löschen" name="Remove Scripts From Selection"/>
-				<pie_slice label="Skript-Info" name="ScriptInfo"/>
-			</pie_menu>
+<!--				<pie_slice label="Skript-Info" name="ScriptInfo"/>
+-->			</pie_menu>
 			<pie_slice label="Untersuchen" name="Object Inspect"/>
 		</pie_menu>
 		<pie_slice label="Kaufen..." name="Buy..."/>

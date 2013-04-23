@@ -46,8 +46,8 @@
 	</pie_menu>
 	<pie_slice label="Hinsetzen" name="Sit Down Here"/>
 	<pie_slice label="Aufstehen" name="Stand Up"/>
-	<pie_slice label="Skript-Info" name="ScriptInfo"/>
-	<pie_slice label="Gesten..." name="Gestures"/>
+<!--	<pie_slice label="Skript-Info" name="ScriptInfo"/>
+-->	<pie_slice label="Gesten..." name="Gestures"/>
 	<pie_menu label="Aussehen &gt;" name="Appearance &gt;">
 		<pie_slice label="Form bearb." name="Edit My Shape"/>
 		<pie_menu label="Zurücksetz. &gt;" name="ResetMenu">
