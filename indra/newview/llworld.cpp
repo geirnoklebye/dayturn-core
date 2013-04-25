@@ -242,11 +242,25 @@ void LLWorld::refreshLimits()
 		{
 				mRegionMaxPrimScale = F32_MAX;
 				mRegionMinPrimScale = 0.000001f;
+				mRegionMaxPrimXPos = F32_MAX;
+				mRegionMaxPrimYPos = F32_MAX;
+				mRegionMaxPrimZPos = F32_MAX;
+				mRegionMinPrimXPos = 0.000001f;
+				mRegionMinPrimYPos = 0.000001f;
+				mRegionMinPrimZPos = 0.000001f;
+
 			}
 		else
 			{
 				mRegionMaxPrimScale = OS_DEFAULT_MAX_PRIM_SCALE;
 				mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
+				//scale constants form xform.h should and be easier to modify if future need arrises
+				mRegionMaxPrimXPos = OS_DEFAULT_MAX_PRIM_SCALE;
+				mRegionMaxPrimYPos = OS_DEFAULT_MAX_PRIM_SCALE;
+				mRegionMaxPrimZPos = OS_DEFAULT_MAX_PRIM_SCALE;
+				mRegionMinPrimXPos = OS_MIN_PRIM_SCALE;
+				mRegionMinPrimYPos = OS_MIN_PRIM_SCALE;;
+				mRegionMinPrimZPos = OS_MIN_PRIM_SCALE;;
 		}
 		// </NP: disable build constraints>
 		mRegionMaxPrimScaleNoMesh = OS_DEFAULT_MAX_PRIM_SCALE;// no restrictions here

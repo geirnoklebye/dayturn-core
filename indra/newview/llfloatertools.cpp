@@ -232,19 +232,22 @@ void LLFloaterTools::updateToolsSizeLimits()
 		getChild<LLSpinCtrl>("Scale Y")->setMaxValue(F32_MAX);
 		getChild<LLSpinCtrl>("Scale Z")->setMaxValue(F32_MAX);
 		
-		getChild<LLSpinCtrl>("Scale X")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
-		getChild<LLSpinCtrl>("Scale Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
-		getChild<LLSpinCtrl>("Scale Z")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
+
 	}
 	else
 	{
 		getChild<LLSpinCtrl>("Scale X")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
 		getChild<LLSpinCtrl>("Scale Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
 		getChild<LLSpinCtrl>("Scale Z")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
-
+	}
+		//these switch between OS and SL in earch method
 		getChild<LLSpinCtrl>("Scale X")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
 		getChild<LLSpinCtrl>("Scale Y")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
 		getChild<LLSpinCtrl>("Scale Z")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
+		
+		getChild<LLSpinCtrl>("Scale X")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
+		getChild<LLSpinCtrl>("Scale Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
+		getChild<LLSpinCtrl>("Scale Z")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());		
 
 		getChild<LLSpinCtrl>("Pos X")->setMinValue(LLWorld::getInstance()->getRegionMinPrimXPos());
 		getChild<LLSpinCtrl>("Pos Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimYPos());
@@ -255,7 +258,7 @@ void LLFloaterTools::updateToolsSizeLimits()
 		getChild<LLSpinCtrl>("Pos Z")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimZPos());
 
 	//getChild<LLCheckBoxCtrl>("Physical Checkbox Ctrl")->setEnabled(LLWorld::getInstance()->mAllowPhysicalPrims);
-	}
+	
 }
 
 void LLFloaterTools::updateToolsPrecision()
