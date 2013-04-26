@@ -64,7 +64,11 @@ class LLWorld : public LLSingleton<LLWorld>
 {
 public:
 	LLWorld();
+	static	F32 mInferredServerScaleX;
+	static	F32 mInferredServerScaleY;
+	static 	F32 mInferredServerScaleZ;
 	void destroyClass();
+	friend class LLViewerObject;
 
 	void refreshLimits();// <AW: opensim-limits>
 	LLViewerRegion*	addRegion(const U64 &region_handle, const LLHost &host);
@@ -180,6 +184,10 @@ public:
 	// or if the circuit to this simulator had been lost.
 	bool isRegionListed(const LLViewerRegion* region) const;
 
+//	F32 mInferredServerScaleX;
+//	F32 mInferredServerScaleY;
+//	F32 mInferredServerScaleZ;
+
 private:
 	region_list_t	mActiveRegionList;
 	region_list_t	mRegionList;
@@ -193,6 +201,8 @@ private:
 	static const F32 mScale;
 
 	static const F32 mWidthInMeters;
+
+
 // <AW: opensim-limits>
 	F32 mRegionMaxHeight;
 	F32 mRegionMinPrimScale;
@@ -206,6 +216,7 @@ private:
 	F32	mRegionMinPrimXPos;
 	F32	mRegionMinPrimYPos;
 	F32	mRegionMinPrimZPos;
+
 	bool mLimitsNeedRefresh;
 	bool mEnforceMaxBuild;
 // </AW: opensim-limits>

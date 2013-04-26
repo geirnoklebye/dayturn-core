@@ -108,6 +108,7 @@ struct PotentialReturnableObject
 //============================================================================
 
 class LLViewerObject : public LLPrimitive, public LLRefCount, public LLGLUpdate
+
 {
 protected:
 	~LLViewerObject(); // use unref()
@@ -121,6 +122,7 @@ protected:
 	std::map<U16, ExtraParameter*> mExtraParameterList;
 
 public:
+friend class LLWorld;
 	typedef std::list<LLPointer<LLViewerObject> > child_list_t;
 	typedef std::list<LLPointer<LLViewerObject> > vobj_list_t;
 

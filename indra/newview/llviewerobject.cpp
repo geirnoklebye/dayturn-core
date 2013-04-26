@@ -102,7 +102,9 @@
 #include "llmediaentry.h"
 
 //#define DEBUG_UPDATE_TYPE
-
+extern LLWorld mInferredServerScaleX;
+extern LLWorld mInferredServerScaleY;
+extern LLWorld mInferredServerScaleZ;
 BOOL		LLViewerObject::sVelocityInterpolate = TRUE;
 BOOL		LLViewerObject::sPingInterpolate = TRUE; 
 
@@ -3223,6 +3225,13 @@ F32 LLViewerObject::getBinRadius()
 
 F32 LLViewerObject::getMaxScale() const
 {
+	// <NP:Opensim limits> Infer a Server clamp in LLWorld using these values
+	LLWorld* world = LLWorld::getInstance();
+		world->mInferredServerScaleX = getScale().mV[VX];
+		world->mInferredServerScaleY = getScale().mV[VY];
+		world->mInferredServerScaleZ = getScale().mV[VZ];
+	// </NP:Opensim limits>
+	
 	return llmax(getScale().mV[VX],getScale().mV[VY], getScale().mV[VZ]);
 }
 

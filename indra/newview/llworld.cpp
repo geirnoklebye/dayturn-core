@@ -56,6 +56,7 @@
 #include "pipeline.h"
 #include "llappviewer.h"		// for do_disconnect()
 #include "llfloateradvancedbuildoptions.h"
+#include "llviewerobject.h"
 #include <deque>
 #include <queue>
 #include <map>
@@ -110,6 +111,10 @@ LLWorld::LLWorld() :
 	mDefaultWaterTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), FALSE);
 	gGL.getTexUnit(0)->bind(mDefaultWaterTexturep);
 	mDefaultWaterTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
+	F32 mInferredServerScaleX = SL_DEFAULT_MAX_PRIM_SCALE;
+	F32 mInferredServerScaleY = SL_DEFAULT_MAX_PRIM_SCALE;
+	F32 mInferredServerScaleZ = SL_DEFAULT_MAX_PRIM_SCALE;
+
 
 }
 
@@ -135,12 +140,12 @@ void LLWorld::destroyClass()
 		mEdgeWaterObjects[i] = NULL;
 	}
 }
-// <NP: disable build constraints>
+// <NP: disable build constraints> //see /indra/llcommon/stdtypes.h for defined values F32_MIN = FLT_MIN = 0 NOT -INF
 F32 LLWorld::getRegionMinPrimScale() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return 0;
+		return F32_MIN; 
 	}
 	else
 	{
@@ -152,7 +157,8 @@ F32 LLWorld::getRegionMaxPrimXPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return FLT_MAX;
+		F32 max_scale = llmax(mInferredServerScaleX,mInferredServerScaleY,mInferredServerScaleZ); //value returned from server in a 3 element array
+		return (llmin(F32_MAX,max_scale));
 	}
 	else
 	{
@@ -164,7 +170,7 @@ F32 LLWorld::getRegionMaxPrimYPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return FLT_MAX;
+		return F32_MAX;
 	}
 	else
 	{
@@ -176,7 +182,7 @@ F32 LLWorld::getRegionMaxPrimZPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return FLT_MAX;
+		return F32_MAX;
 	}
 	else
 	{
@@ -188,7 +194,7 @@ F32 LLWorld::getRegionMinPrimXPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return FLT_MIN;
+		return F32_MIN;
 	}
 	else
 	{
@@ -259,9 +265,9 @@ void LLWorld::refreshLimits()
 				mRegionMaxPrimYPos = OS_DEFAULT_MAX_PRIM_SCALE;
 				mRegionMaxPrimZPos = OS_DEFAULT_MAX_PRIM_SCALE;
 				mRegionMinPrimXPos = OS_MIN_PRIM_SCALE;
-				mRegionMinPrimYPos = OS_MIN_PRIM_SCALE;;
-				mRegionMinPrimZPos = OS_MIN_PRIM_SCALE;;
-		}
+				mRegionMinPrimYPos = OS_MIN_PRIM_SCALE;
+				mRegionMinPrimZPos = OS_MIN_PRIM_SCALE;
+			}
 		// </NP: disable build constraints>
 		mRegionMaxPrimScaleNoMesh = OS_DEFAULT_MAX_PRIM_SCALE;// no restrictions here
 		mRegionMaxHollowSize = OS_OBJECT_MAX_HOLLOW_SIZE;
