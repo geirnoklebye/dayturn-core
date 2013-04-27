@@ -111,11 +111,6 @@ LLWorld::LLWorld() :
 	mDefaultWaterTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), FALSE);
 	gGL.getTexUnit(0)->bind(mDefaultWaterTexturep);
 	mDefaultWaterTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
-	F32 mInferredServerScaleX = SL_DEFAULT_MAX_PRIM_SCALE;
-	F32 mInferredServerScaleY = SL_DEFAULT_MAX_PRIM_SCALE;
-	F32 mInferredServerScaleZ = SL_DEFAULT_MAX_PRIM_SCALE;
-
-
 }
 
 
