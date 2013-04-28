@@ -2270,7 +2270,7 @@
                   <string>-DWORD_SIZE:STRING=32</string>
                   <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DFMOD=TRUE</string>
+                  <string>-DFMODEX=TRUE</string>
                 </array>
               </map>
               <key>name</key>
@@ -2696,7 +2696,7 @@
                   <string>"Visual Studio 10"</string>
                   <string>-DUNATTENDED:BOOL=ON</string>
                   <string>-DUSE_KDU=FALSE</string>
-                  <string>-DFMOD=FALSE</string>
+                  <string>-DFMODEX=FALSE</string>
                 </array>
               </map>
               <key>name</key>
@@ -2785,7 +2785,7 @@
                   <string>-DUNATTENDED:BOOL=ON</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                   <string>-DUSE_KDU=FALSE</string>
-                  <string>-DFMOD=FALSE</string>
+                  <string>-DFMODEX=FALSE</string>
                 </array>
               </map>
               <key>name</key>
@@ -2870,7 +2870,7 @@
                 <array>
                   <string>-G</string>
                   <string>"Visual Studio 10"</string>
-                  <string>-DFMOD=TRUE</string>
+                  <string>-DFMODEX=TRUE</string>
                   <string>'-DROOT_PROJECT_NAME:STRING=Restrained Love Release'</string>
                   <string>'-DVIEWER_CHANNEL:STRING=Restrained Love Release'</string>
                   <string>'-DVIEWER_LOGIN_CHANNEL:STRING=Restrained Love Release'</string>
