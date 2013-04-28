@@ -15164,7 +15164,7 @@
     <key>Type</key>
     <string>F32</string>
     <key>Value</key>
-    <integer>10.0</integer>
+    <real>35.0</real>
   </map>
   <key>FSMeshUploadPossible</key>
   <map>
