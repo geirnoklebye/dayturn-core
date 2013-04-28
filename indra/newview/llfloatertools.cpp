@@ -240,7 +240,7 @@ void LLFloaterTools::updateToolsSizeLimits()
 		getChild<LLSpinCtrl>("Scale Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
 		getChild<LLSpinCtrl>("Scale Z")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
 	}
-		//these switch between OS and SL in earch method
+		//these switch between OS and SL in each method
 		getChild<LLSpinCtrl>("Scale X")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
 		getChild<LLSpinCtrl>("Scale Y")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
 		getChild<LLSpinCtrl>("Scale Z")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
@@ -591,7 +591,7 @@ void LLFloaterTools::refresh()
 		childSetVisible("selection_empty", !have_selection);
 	}
 
-
+	updateToolsSizeLimits();
 	updateToolsPrecision();
 
 	// Refresh child tabs

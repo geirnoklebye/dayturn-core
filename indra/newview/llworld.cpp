@@ -96,6 +96,10 @@ LLWorld::LLWorld() :
 	mSpaceTimeUSec(0),
 	mLimitsNeedRefresh(true)// <AW: opensim-limits>
 {
+	mInferredServerScaleX = OS_DEFAULT_MAX_PRIM_SCALE;
+	mInferredServerScaleY = OS_DEFAULT_MAX_PRIM_SCALE;
+	mInferredServerScaleZ = OS_DEFAULT_MAX_PRIM_SCALE;
+
 	for (S32 i = 0; i < 8; i++)
 	{
 		mEdgeWaterObjects[i] = NULL;
@@ -152,7 +156,7 @@ F32 LLWorld::getRegionMaxPrimXPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		F32 max_scale = llmax(mInferredServerScaleX,mInferredServerScaleY,mInferredServerScaleZ); //value returned from server in a 3 element array
+		F32 max_scale = llmax(mInferredServerScaleX,mInferredServerScaleY,mInferredServerScaleZ); //values returned from server in a 3 element array see llviewerobject.cpp getMaxScale
 		return (llmin(F32_MAX,max_scale));
 	}
 	else
@@ -165,7 +169,8 @@ F32 LLWorld::getRegionMaxPrimYPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return F32_MAX;
+		F32 max_scale = llmax(mInferredServerScaleX,mInferredServerScaleY,mInferredServerScaleZ); //values returned from server in a 3 element array see llviewerobject.cpp getMaxScale
+		return (llmin(F32_MAX,max_scale));
 	}
 	else
 	{
@@ -177,7 +182,8 @@ F32 LLWorld::getRegionMaxPrimZPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return F32_MAX;
+		F32 max_scale = llmax(mInferredServerScaleX,mInferredServerScaleY,mInferredServerScaleZ); //values returned from server in a 3 element array see llviewerobject.cpp getMaxScale
+		return (llmin(F32_MAX,max_scale));
 	}
 	else
 	{

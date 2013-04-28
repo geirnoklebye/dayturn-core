@@ -42,6 +42,7 @@
 #include "llviewertexture.h"
 #include "llvowater.h"
 #include "llfloateradvancedbuildoptions.h"
+#include "llviewerobject.h"
 
 class LLViewerRegion;
 class LLVector3d;
@@ -55,6 +56,9 @@ class LLSurfacePatch;
 class LLCloudPuff;
 class LLCloudGroup;
 class LLVOAvatar;
+static	F32 mInferredServerScaleX;
+static	F32 mInferredServerScaleY;
+static 	F32 mInferredServerScaleZ;
 
 // LLWorld maintains a stack of unused viewer_regions and an array of pointers to viewer regions
 // as simulators are connected to, viewer_regions are popped off the stack and connected as required
@@ -64,11 +68,9 @@ class LLWorld : public LLSingleton<LLWorld>
 {
 public:
 	LLWorld();
-	static	F32 mInferredServerScaleX;
-	static	F32 mInferredServerScaleY;
-	static 	F32 mInferredServerScaleZ;
+
 	void destroyClass();
-	friend class LLViewerObject;
+
 
 	void refreshLimits();// <AW: opensim-limits>
 	LLViewerRegion*	addRegion(const U64 &region_handle, const LLHost &host);
