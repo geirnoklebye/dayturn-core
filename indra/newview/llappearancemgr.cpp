@@ -3575,6 +3575,11 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove)
 
 void LLAppearanceMgr::removeItemFromAvatar(const LLUUID& id_to_remove)
 {
+//MK
+	// The code below does not take attachments into account, so we need to specifically detach
+	// objects here. Then the pieces of clothing will follow.
+	LLVOAvatarSelf::detachAttachmentIntoInventory(gInventory.getLinkedItemID(id_to_remove));
+//mk
 	LLUUID linked_item_id = gInventory.getLinkedItemID(id_to_remove);
 	removeCOFItemLinks(linked_item_id);
 	updateAppearanceFromCOF();
