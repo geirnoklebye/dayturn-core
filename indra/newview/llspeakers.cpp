@@ -241,6 +241,10 @@ void LLSpeakersDelayActionsStorage::removeAllTimers()
 	for (; iter != mActionTimersMap.end(); ++iter)
 	{
 		delete iter->second;
+//MK
+		// Never forget to set a deleted pointer to NULL if its not a local one.
+		iter->second = NULL;
+//mk
 	}
 	mActionTimersMap.clear();
 }
@@ -321,6 +325,10 @@ LLSpeakerMgr::LLSpeakerMgr(LLVoiceChannel* channelp) :
 LLSpeakerMgr::~LLSpeakerMgr()
 {
 	delete mSpeakerDelayRemover;
+//MK
+	// Never forget to set a deleted pointer to NULL if its not a local one.
+	mSpeakerDelayRemover;
+//mk
 }
 
 LLPointer<LLSpeaker> LLSpeakerMgr::setSpeaker(const LLUUID& id, const std::string& name, LLSpeaker::ESpeakerStatus status, LLSpeaker::ESpeakerType type)
