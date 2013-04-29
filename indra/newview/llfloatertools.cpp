@@ -90,9 +90,8 @@
 #include "lluictrlfactory.h"
 #include "qtoolalign.h"
 #include "llmeshrepository.h"
-// <NP: disable build constraints>extern  LLWorld* refreshLimits();
 #include "llworld.h"
-// </NP: disable build constraints>extern  LLWorld* refreshLimits();
+
 
 // Globals
 LLFloaterTools *gFloaterTools = NULL;
@@ -256,13 +255,9 @@ void LLFloaterTools::updateToolsSizeLimits()
 		getChild<LLSpinCtrl>("Pos X")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimXPos());
 		getChild<LLSpinCtrl>("Pos Y")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimYPos());
 		getChild<LLSpinCtrl>("Pos Z")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimZPos());
-
-	//getChild<LLCheckBoxCtrl>("Physical Checkbox Ctrl")->setEnabled(LLWorld::getInstance()->mAllowPhysicalPrims);
-	
 }
 
 void LLFloaterTools::updateToolsPrecision()
-
 {
 	U32 decimals = gSavedSettings.getU32("DecimalsForTools");
 	if (decimals != mPrecision)

@@ -3223,14 +3223,9 @@ F32 LLViewerObject::getBinRadius()
 
 F32 LLViewerObject::getMaxScale() const
 {
-	// <NP:Opensim limits> Infer a Server clamp in LLWorld using these values
-	// removed from class and put at file scope in llworld.h
-		mInferredServerScaleX = getScale().mV[VX];
-		mInferredServerScaleY = getScale().mV[VY];
-		mInferredServerScaleZ = getScale().mV[VZ];
-		// </NP:Opensim limits>
-
-	
+	mInferredServerScaleX = getScale().mV[VX];
+	mInferredServerScaleY = getScale().mV[VY];
+	mInferredServerScaleZ = getScale().mV[VZ];
 	return llmax(getScale().mV[VX],getScale().mV[VY], getScale().mV[VZ]);
 }
 
