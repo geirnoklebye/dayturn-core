@@ -56,9 +56,18 @@ class LLSurfacePatch;
 class LLCloudPuff;
 class LLCloudGroup;
 class LLVOAvatar;
-static	F32 mInferredServerScaleX;
-static	F32 mInferredServerScaleY;
-static 	F32 mInferredServerScaleZ;
+//gcc warning treated as errors gives defined but not used warning
+//the following allows a complete build 
+#ifdef __GNUC__
+#define VARIABLE_IS_NOT_USED __attribute__ ((unused))
+#else
+#define VARIABLE_IS_NOT_USED
+#endif
+
+static F32 VARIABLE_IS_NOT_USED mInferredServerScaleX;
+static F32 VARIABLE_IS_NOT_USED mInferredServerScaleY;
+static F32 VARIABLE_IS_NOT_USED mInferredServerScaleZ;
+
 
 // LLWorld maintains a stack of unused viewer_regions and an array of pointers to viewer regions
 // as simulators are connected to, viewer_regions are popped off the stack and connected as required
