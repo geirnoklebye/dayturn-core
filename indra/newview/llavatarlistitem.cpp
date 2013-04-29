@@ -568,6 +568,11 @@ void LLAvatarListItem::updateAvatarName()
 
 void LLAvatarListItem::showAvatarAge(bool display)
 {
+//MK
+	// I need to deactivate this for now, because the observer for this datum tends to corrupt
+	// the list of observers in LLAvatarPropertiesProcessor, leading to a quick crash very often.
+	return;
+//mk
 	mAvatarAgeDisplay->setVisible(display);
 	updateAvatarProperties();
 }
