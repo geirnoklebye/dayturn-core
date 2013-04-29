@@ -87,7 +87,7 @@ positioning="relative">
      <layout_panel
              auto_resize="false"
     name="toolbar_panel"
-             height="35"
+             height="20"
              right="-1"
              left="1">
       <menu_button
