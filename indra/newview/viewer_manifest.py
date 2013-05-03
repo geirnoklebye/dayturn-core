@@ -133,14 +133,6 @@ class ViewerManifest(LLManifest):
             else:
                 print "No %s" % os.path.join(self.get_src_prefix(), summary_json_path)
 
-    def login_channel(self):
-        """Channel reported for login and upgrade purposes ONLY;
-        used for A/B testing"""
-        # NOTE: Do not return the normal channel if login_channel
-        # is not specified, as some code may branch depending on
-        # whether or not this is present
-        return self.args.get('login_channel')
-
     def grid(self):
         return self.args['grid']
     def channel(self):
@@ -152,18 +144,25 @@ class ViewerManifest(LLManifest):
     def channel_lowerword(self):
         return self.channel_oneword().lower()
 
+    def app_name(self):
+        app_suffix='Test'
+        channel_type=self.channel_lowerword()
+        if channel_type == 'release' :
+            app_suffix='Viewer'
+        elif re.match('^(beta|project).*',channel_type) :
+            app_suffix=self.channel_unique()
+        return "Second Life "+app_suffix
+        
     def icon_path(self):
         icon_path="icons/"
         channel_type=self.channel_lowerword()
-        if channel_type == 'release' \
-        or channel_type == 'development' \
-        :
+        print "Icon channel type '%s'" % channel_type
+        if channel_type == 'release' :
             icon_path += channel_type
-        elif channel_type == 'betaviewer' :
+        elif re.match('^beta.*',channel_type) :
             icon_path += 'beta'
         elif channel_type == 'kokua' :
             icon_path += 'kokua'
-        elif re.match('project.*',channel_type) :
             icon_path += 'project'
         else :
             icon_path += 'kokua'
@@ -180,14 +179,6 @@ class ViewerManifest(LLManifest):
                          "--helperuri http://preview-%(grid)s.secondlife.com/helpers/" %\
                            {'grid':self.grid()}
 
-        # set command line flags for channel
-        channel_flags = ''
-        if self.login_channel() and self.login_channel() != self.channel():
-            # Report a special channel during login, but use default
-            channel_flags = '--channel "%s"' % (self.login_channel())
-        elif not self.default_channel():
-            channel_flags = '--channel "%s"' % self.channel()
-
         # Deal with settings 
         setting_flags = ''
         if not self.default_channel() or not self.default_grid():
@@ -198,7 +189,7 @@ class ViewerManifest(LLManifest):
                 setting_flags = '--settings settings_%s_%s.xml'\
                                 % (self.grid(), self.channel_lowerword())
                                                 
-        return " ".join((channel_flags, grid_flags, setting_flags)).strip()
+        return " ".join((grid_flags, setting_flags)).strip()
 
 class WindowsManifest(ViewerManifest):
     def final_exe(self):
@@ -256,25 +247,8 @@ class WindowsManifest(ViewerManifest):
         else:
             print "Doesn't exist:", src
         
-    ### DISABLED MANIFEST CHECKING for vs2010.  we may need to reenable this
-    # shortly.  If this hasn't been reenabled by the 2.9 viewer release then it
-    # should be deleted -brad
-    #def enable_crt_manifest_check(self):
-    #    if self.is_packaging_viewer():
-    #       WindowsManifest.copy_action = WindowsManifest.test_msvcrt_and_copy_action
-
-    #def enable_no_crt_manifest_check(self):
-    #    if self.is_packaging_viewer():
-    #        WindowsManifest.copy_action = WindowsManifest.test_for_no_msvcrt_manifest_and_copy_action
-
-    #def disable_manifest_check(self):
-    #    if self.is_packaging_viewer():
-    #        del WindowsManifest.copy_action
-
     def construct(self):
         super(WindowsManifest, self).construct()
-
-        #self.enable_crt_manifest_check()
 
         if self.is_packaging_viewer():
             # Find kokua-bin.exe in the 'configuration' dir, then rename it to the result of final_exe.
@@ -285,15 +259,11 @@ class WindowsManifest(ViewerManifest):
                                'llplugin', 'slplugin', self.args['configuration'], "slplugin.exe"),
                            "slplugin.exe")
         
-        #self.disable_manifest_check()
-
         self.path(src="../viewer_components/updater/scripts/windows/update_install.bat", dst="update_install.bat")
         # Get shared libs from the shared libs staging directory
         if self.prefix(src=os.path.join(os.pardir, 'sharedlibs', self.args['configuration']),
                        dst=""):
 
-            #self.enable_crt_manifest_check()
-            
             # Get llcommon and deps. If missing assume static linkage and continue.
             try:
                 self.path('llcommon.dll')
@@ -304,8 +274,6 @@ class WindowsManifest(ViewerManifest):
             except RuntimeError, err:
                 print err.message
                 print "Skipping llcommon.dll (assuming llcommon was linked statically)"
-
-            #self.disable_manifest_check()
 
             # Mesh 3rd party libs needed for auto LOD and collada reading
             try:
@@ -319,12 +287,14 @@ class WindowsManifest(ViewerManifest):
                 print err.message
                 print "Skipping COLLADA and GLOD libraries (assumming linked statically)"
 
-
-            # Get fmod dll, continue if missing
+            # Get fmodex dll, continue if missing
             try:
-                self.path("fmod.dll")
+                if self.args['configuration'].lower() == 'debug':
+                    self.path("fmodexL.dll")
+                else:
+                    self.path("fmodex.dll")
             except:
-                print "Skipping fmod.dll"
+                print "Skipping fmodex audio library(assuming other audio engine)"
 
             # For textures
             if self.args['configuration'].lower() == 'debug':
@@ -453,8 +423,6 @@ class WindowsManifest(ViewerManifest):
 	self.path("featuretable_xp.txt")
 	self.path("VivoxAUP.txt")
     
-        #self.enable_no_crt_manifest_check()
-
         # On first build tries to copy before it is built.
         if self.prefix(src='../media_plugins/gstreamer010/%s' % self.args['configuration'], dst="llplugin"):
             try:
@@ -633,14 +601,10 @@ class WindowsManifest(ViewerManifest):
 
                 self.end_prefix()
 
-        #self.disable_manifest_check()
-
         # pull in the crash logger and updater from other projects
         # tag:"crash-logger" here as a cue to the exporter
         self.path(src='../win_crash_logger/%s/windows-crash-logger.exe' % self.args['configuration'],
                   dst="win_crash_logger.exe")
-        self.path(src='../win_updater/%s/windows-updater.exe' % self.args['configuration'],
-                  dst="updater.exe")
 
         if not self.is_packaging_viewer():
             self.package_file = "copied_deps"    
@@ -703,6 +667,7 @@ class WindowsManifest(ViewerManifest):
             'channel':self.channel(),
             'channel_oneword':self.channel_oneword(),
             'channel_unique':self.channel_unique(),
+            'subchannel_underscores':'_'.join(self.channel_unique().split())
             }
 
         version_vars = """
@@ -724,7 +689,7 @@ class WindowsManifest(ViewerManifest):
                 Caption "Kokua ${VERSION}"
                 """
             else:
-                # beta grid viewer
+                # alternate grid viewer
                 installer_file = "Kokua-%(version_dashes)s_(%(grid_caps)s)_Setup.exe"
                 grid_vars_template = """
                 OutFile "%(installer_file)s"
@@ -736,7 +701,7 @@ class WindowsManifest(ViewerManifest):
                 Caption "Kokua %(grid)s ${VERSION}"
                 """
         else:
-            # some other channel on some grid
+            # some other channel (grid name not used)
             installer_file = "Kokua_-%(version_dashes)s_%(channel_oneword)s_Setup.exe"
             grid_vars_template = """
             OutFile "%(installer_file)s"
@@ -799,6 +764,7 @@ class DarwinManifest(ViewerManifest):
         self.path(self.args['configuration'] + "/Kokua.app", dst="")
 
         if self.prefix(src="", dst="Contents"):  # everything goes in Contents
+            self.path("Info.plist", dst="Info.plist")
 
             # copy additional libs in <bundle>/Contents/MacOS/
 
@@ -812,7 +778,9 @@ class DarwinManifest(ViewerManifest):
             self.path("../packages/lib/release/libndofdev.dylib", dst="Resources/libndofdev.dylib")
             self.path("../packages/lib/release/libhunspell-1.3.0.dylib", dst="Resources/libhunspell-1.3.0.dylib")
 
-	    self.path("../viewer_components/updater/scripts/darwin/update_install", "MacOS/update_install")
+            if self.prefix(dst="MacOS"):
+                self.path2basename("../viewer_components/updater/scripts/darwin", "*.py")
+                self.end_prefix()
 
             # Info.plist goes directly in Contents
             self.path("packaging/mac/Info.plist", dst="Info.plist")
@@ -835,7 +803,11 @@ class DarwinManifest(ViewerManifest):
                     self.path("Kokua.nib")
 
                     # Translations
-                    self.path("English.lproj")
+                self.path("English.lproj/language.txt")
+                self.replace_in(src="English.lproj/InfoPlist.strings",
+                                dst="English.lproj/InfoPlist.strings",
+                                searchdict={'%%VERSION%%':'.'.join(self.args['version'])}
+                                )
                     self.path("German.lproj")
                     self.path("Japanese.lproj")
                     self.path("Korean.lproj")
@@ -887,6 +859,7 @@ class DarwinManifest(ViewerManifest):
                                 "libcollada14dom.dylib",
                                 "libexpat.1.5.2.dylib",
                                 "libexception_handler.dylib",
+                                "libfmodex.dylib",
                                 "libGLOD.dylib",
                                 ):
                         self.path(os.path.join(libdir, libfile), libfile)
@@ -895,17 +868,9 @@ class DarwinManifest(ViewerManifest):
                 for libfile in ('libsndfile.dylib', 'libvivoxoal.dylib', 'libortp.dylib', \
                     'libvivoxsdk.dylib', 'libvivoxplatform.dylib', 'SLVoice') :
                      self.path(os.path.join(libdir, libfile), libfile)
-                
-                try:
-                # FMOD for sound
-                    self.path(self.args['configuration'] + "/libfmodwrapper.dylib", "libfmodwrapper.dylib")
-                except:
-                    print "Skipping FMOD - not found"
-                
-                # our apps
-                self.path("../mac_crash_logger/" + self.args['configuration'] + "/mac-crash-logger.app", "mac-crash-logger.app")
-                self.path("../mac_updater/" + self.args['configuration'] + "/mac-updater.app", "mac-updater.app")
 
+                # our apps
+                for app_bld_dir, app in (("mac_crash_logger", "mac-crash-logger.app"),
                                          # plugin launcher
                 self.path("../llplugin/slplugin/" + self.args['configuration'] + "/SLPlugin.app", "SLPlugin.app")
 
@@ -963,7 +928,7 @@ class DarwinManifest(ViewerManifest):
     def copy_finish(self):
         # Force executable permissions to be set for scripts
         # see CHOP-223 and http://mercurial.selenic.com/bts/issue1802
-        for script in 'Contents/MacOS/update_install',:
+        for script in 'Contents/MacOS/update_install.py',:
             self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
 
         # Sign the app if requested.
@@ -991,6 +956,7 @@ class DarwinManifest(ViewerManifest):
                                  'bundle': self.get_dst_prefix()
                 })
 
+            app_name = self.app_name()
 
 class LinuxManifest(ViewerManifest):
     def construct(self):
@@ -1140,6 +1106,14 @@ class Linux_i686Manifest(LinuxManifest):
             except:
                 print "tcmalloc files not found, skipping"
                 pass
+
+            try:
+                    self.path("libfmodex-*.so")
+                    self.path("libfmodex.so")
+                    pass
+            except:
+                    print "Skipping libfmodex.so - not found"
+                    pass
 
             self.end_prefix("lib")
 

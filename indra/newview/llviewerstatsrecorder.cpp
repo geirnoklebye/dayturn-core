@@ -188,6 +188,7 @@ void LLViewerStatsRecorder::writeToLog( F32 interval )
 		<< mObjectUpdateFailures << " update failures"
 		<< llendl;
 
+	U32 data_size;
 	if (mObjectCacheFile == NULL)
 	{
 		mStartTime = LLTimer::getTotalSeconds();
@@ -217,8 +218,10 @@ void LLViewerStatsRecorder::writeToLog( F32 interval )
 				<< "Texture Fetch bps\t"
 				<< "\n";
 
-			if(fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile ))
+			data_size = data_msg.str().size();
+			if (fwrite(data_msg.str().c_str(), 1, data_size, mObjectCacheFile ) != data_size)
 			{
+				llwarns << "failed to write full headers to " << STATS_FILE_NAME << llendl;
 			}
 		}
 		else
@@ -252,9 +255,12 @@ void LLViewerStatsRecorder::writeToLog( F32 interval )
 		<< "\t" << (mTextureFetchSize * 8 / delta_time)
 		<< "\n";
 
-	if(fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile ))
+	data_size = data_msg.str().size();
+	if (fwrite(data_msg.str().c_str(), 1, data_size, mObjectCacheFile ) != data_size)
 	{
+		llwarns << "failed to write full stats to " << STATS_FILE_NAME << llendl;
 	}
+
 	clearStats();
 }
 

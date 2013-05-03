@@ -176,7 +176,6 @@ set(VIEWER_CHANNEL "Kokua Viewer" CACHE STRING "Viewer Channel Name")
 # For example, "Kokua Experimental" will create an installer string of Kokua_Experimental_[VERSION]_Setup.exe
 # and "Kokua Experimental [VERSION]: Installation Folder" -- MC
 set(VIEWER_CHANNEL "Kokua Release" CACHE STRING "Viewer Channel Name")
-set(VIEWER_LOGIN_CHANNEL ${VIEWER_CHANNEL} CACHE STRING "Fake login channel for A/B Testing")
 
 if (XCODE_VERSION GREATER 4.2)
   set(ENABLE_SIGNING OFF CACHE BOOL "Enable signing the viewer")
