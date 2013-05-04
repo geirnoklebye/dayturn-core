@@ -33,8 +33,7 @@
 #include "llbufferstream.h"
 #include "lltrans.h"
 #include "llui.h"
-#include "llversioninfo.h" //needed for get channel
-#include "viewerinfo.h"
+#include "llversioninfo.h"
 #include "llviewercontrol.h"
 
 #include "reader.h"
@@ -80,7 +79,6 @@ bool LLGoogleTranslationHandler::parseResponse(
 		return false;
 	}
 
-	std::string user_agent = ViewerInfo::fullInfo();
 	if (!root.isObject()) // empty response? should not happen
 	{
 		return false;
@@ -395,10 +393,10 @@ void LLTranslate::sendRequest(const std::string& url, LLHTTPClient::ResponderPtr
 	{
 	    std::string user_agent = llformat("%s %d.%d.%d (%d)",
 			LLVersionInfo::getChannel().c_str(),
-			ViewerInfo::versionMajor(),
-			ViewerInfo::versionMinor(),
-			ViewerInfo::versionPatch(),
-			LLVersionInfo::getBuild());//may need to be pulled into viewerinfo
+			LLVersionInfo::getMajor(),
+			LLVersionInfo::getMinor(),
+			LLVersionInfo::getPatch(),
+			LLVersionInfo::getBuild());
 
 		sHeader.insert("Accept", "text/plain");
 		sHeader.insert("User-Agent", user_agent);

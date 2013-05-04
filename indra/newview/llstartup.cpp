@@ -76,7 +76,7 @@
 #include "llsecondlifeurls.h"
 #include "llstring.h"
 #include "lluserrelations.h"
-#include "viewerinfo.h"
+#include "llversioninfo.h"
 #include "llviewercontrol.h"
 #include "llviewerhelp.h"
 #include "llvfs.h"
@@ -548,9 +548,9 @@ bool idle_startup()
 			if(!start_messaging_system(
 				   message_template_path,
 				   port,
-				   ViewerInfo::versionMajor(),
-				   ViewerInfo::versionMinor(),
-				   ViewerInfo::versionPatch(),
+				   LLVersionInfo::getMajor(),
+				   LLVersionInfo::getMinor(),
+				   LLVersionInfo::getPatch(),
 				   FALSE,
 				   std::string(),
 				   responder,
@@ -2048,6 +2048,7 @@ bool idle_startup()
 		{
 			llinfos << "gAgentStartLocation : " << gAgentStartLocation << llendl;
 			LLSLURL start_slurl = LLStartUp::getStartSLURL();
+			LL_DEBUGS("AppInit") << "start slurl "<<start_slurl.asString()<<LL_ENDL;
 			
 			if (((start_slurl.getType() == LLSLURL::LOCATION) && (gAgentStartLocation == "url")) ||
 				((start_slurl.getType() == LLSLURL::LAST_LOCATION) && (gAgentStartLocation == "last")) ||

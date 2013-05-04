@@ -151,7 +151,7 @@ class ViewerManifest(LLManifest):
             app_suffix='Viewer'
         elif re.match('^(beta|project).*',channel_type) :
             app_suffix=self.channel_unique()
-        return "Second Life "+app_suffix
+        return "Kokua "+app_suffix
         
     def icon_path(self):
         icon_path="icons/"
@@ -193,13 +193,21 @@ class ViewerManifest(LLManifest):
 
 class WindowsManifest(ViewerManifest):
     def final_exe(self):
-        if self.default_channel():
-            if self.default_grid():
-                return "Kokua.exe"
-            else:
-                return "Kokua.exe"
-        else:
-            return ''.join(self.channel().split()) + '.exe'
+        app_suffix="Test"
+        channel_type=self.channel_lowerword()
+        if channel_type == 'release' :
+            app_suffix=''
+        elif re.match('^(beta|project).*',channel_type) :
+            app_suffix=''.join(self.channel_unique().split())
+        return "Kokua"+app_suffix+".exe"
+#    def final_exe(self):
+#        if self.default_channel():
+#            if self.default_grid():
+#                return "Kokua.exe"
+#            else:
+#                return "Kokua.exe"
+#        else:
+#            return ''.join(self.channel().split()) + '.exe'
 
     def test_msvcrt_and_copy_action(self, src, dst):
         # This is used to test a dll manifest.
@@ -761,29 +769,18 @@ class DarwinManifest(ViewerManifest):
 
     def construct(self):
         # copy over the build result (this is a no-op if run within the xcode script)
-        self.path(self.args['configuration'] + "/Kokua.app", dst="")
+        self.path(self.args['configuration'] + "/Second Life.app", dst="")
 
         if self.prefix(src="", dst="Contents"):  # everything goes in Contents
             self.path("Info.plist", dst="Info.plist")
 
             # copy additional libs in <bundle>/Contents/MacOS/
-
-            if self.prefix(src="../../libraries/universal-darwin/lib_release/", dst="MacOS"):
-                self.path("libndofdev.dylib")
-                self.path("libalut.0.dylib")
-                self.path("libopenal.1.dylib")
-                self.path("libopenjpeg.1.4.dylib")
-                self.end_prefix("MacOS")
-
             self.path("../packages/lib/release/libndofdev.dylib", dst="Resources/libndofdev.dylib")
             self.path("../packages/lib/release/libhunspell-1.3.0.dylib", dst="Resources/libhunspell-1.3.0.dylib")
 
             if self.prefix(dst="MacOS"):
                 self.path2basename("../viewer_components/updater/scripts/darwin", "*.py")
                 self.end_prefix()
-
-            # Info.plist goes directly in Contents
-            self.path("packaging/mac/Info.plist", dst="Info.plist")
 
             # most everything goes in the Resources directory
             if self.prefix(src="", dst="Resources"):
@@ -795,66 +792,65 @@ class DarwinManifest(ViewerManifest):
 
                 self.path("licenses-mac.txt", dst="licenses.txt")
                 self.path("featuretable_mac.txt")
-                self.path("VivoxAUP.txt")
+                self.path("SecondLife.nib")
 
-                self.path("viewer.icns")
+                icon_path = self.icon_path()
+                if self.prefix(src=icon_path, dst="") :
+                    self.path("secondlife.icns")
+                    self.end_prefix(icon_path)
 
-                if self.prefix(src="packaging/mac", dst=""):
-                    self.path("Kokua.nib")
-
-                    # Translations
+                self.path("SecondLife.nib")
+                
+                # Translations
                 self.path("English.lproj/language.txt")
                 self.replace_in(src="English.lproj/InfoPlist.strings",
                                 dst="English.lproj/InfoPlist.strings",
                                 searchdict={'%%VERSION%%':'.'.join(self.args['version'])}
                                 )
-                    self.path("German.lproj")
-                    self.path("Japanese.lproj")
-                    self.path("Korean.lproj")
-                    self.path("da.lproj")
-                    self.path("es.lproj")
-                    self.path("fr.lproj")
-                    self.path("hu.lproj")
-                    self.path("it.lproj")
-                    self.path("nl.lproj")
-                    self.path("pl.lproj")
-                    self.path("pt.lproj")
-                    self.path("ru.lproj")
-                    self.path("tr.lproj")
-                    self.path("uk.lproj")
-                    self.path("zh-Hans.lproj")
-                    self.end_prefix("packaging/mac")
+                self.path("German.lproj")
+                self.path("Japanese.lproj")
+                self.path("Korean.lproj")
+                self.path("da.lproj")
+                self.path("es.lproj")
+                self.path("fr.lproj")
+                self.path("hu.lproj")
+                self.path("it.lproj")
+                self.path("nl.lproj")
+                self.path("pl.lproj")
+                self.path("pt.lproj")
+                self.path("ru.lproj")
+                self.path("tr.lproj")
+                self.path("uk.lproj")
+                self.path("zh-Hans.lproj")
 
-                # SLVoice and vivox lols
+                def path_optional(src, dst):
+                    """
+                    For a number of our self.path() calls, not only do we want
+                    to deal with the absence of src, we also want to remember
+                    which were present. Return either an empty list (absent)
+                    or a list containing dst (present). Concatenate these
+                    return values to get a list of all libs that are present.
+                    """
+                    if self.path(src, dst):
+                        return [dst]
+                    print "Skipping %s" % dst
+                    return []
 
-                self.path("vivox-runtime/universal-darwin/libalut.dylib", "libalut.dylib")
-                self.path("vivox-runtime/universal-darwin/libopenal.dylib", "libopenal.dylib")
-                self.path("vivox-runtime/universal-darwin/libortp.dylib", "libortp.dylib")
-                self.path("vivox-runtime/universal-darwin/libvivoxsdk.dylib", "libvivoxsdk.dylib")
-                self.path("vivox-runtime/universal-darwin/SLVoice", "SLVoice")
-
-                libdir = "../../libraries/universal-darwin/lib_release"
                 libdir = "../packages/lib/release"
-                dylibs = {}
-
-                # Need to get the llcommon dll from any of the build directories as well
-                lib = "llcommon"
-                libfile = "lib%s.dylib" % lib
-                try:
-                    self.path(self.find_existing_file(os.path.join(os.pardir,
-                                                                    lib,
+                # dylibs is a list of all the .dylib files we expect to need
+                # in our bundled sub-apps. For each of these we'll create a
+                # symlink from sub-app/Contents/Resources to the real .dylib.
+                # Need to get the llcommon dll from any of the build directories as well.
+                libfile = "libllcommon.dylib"
+                dylibs = path_optional(self.find_existing_file(os.path.join(os.pardir,
+                                                               "llcommon",
                                                                self.args['configuration'],
                                                                libfile),
                                                                os.path.join(libdir, libfile)),
                                        dst=libfile)
-                except RuntimeError:
-                    print "Skipping %s" % libfile
-                    dylibs[lib] = False
-                else:
-                    dylibs[lib] = True
 
-                if dylibs["llcommon"]:
-                    for libfile in ("libapr-1.0.dylib",
+                for libfile in (
+                                "libapr-1.0.dylib",
                                 "libaprutil-1.0.dylib",
                                 "libcollada14dom.dylib",
                                 "libexpat.1.5.2.dylib",
@@ -862,49 +858,44 @@ class DarwinManifest(ViewerManifest):
                                 "libfmodex.dylib",
                                 "libGLOD.dylib",
                                 ):
-                        self.path(os.path.join(libdir, libfile), libfile)
+                    dylibs += path_optional(os.path.join(libdir, libfile), libfile)
 
-                # SLVoice and vivox lols
-                for libfile in ('libsndfile.dylib', 'libvivoxoal.dylib', 'libortp.dylib', \
-                    'libvivoxsdk.dylib', 'libvivoxplatform.dylib', 'SLVoice') :
-                     self.path(os.path.join(libdir, libfile), libfile)
+                # SLVoice and vivox lols, no symlinks needed
+                for libfile in (
+                                'libortp.dylib',
+                                'libsndfile.dylib',
+                                'libvivoxoal.dylib',
+                                'libvivoxsdk.dylib',
+                                'libvivoxplatform.dylib',
+                                'SLVoice',
+                                ):
+                     self.path2basename(libdir, libfile)
 
                 # our apps
                 for app_bld_dir, app in (("mac_crash_logger", "mac-crash-logger.app"),
                                          # plugin launcher
-                self.path("../llplugin/slplugin/" + self.args['configuration'] + "/SLPlugin.app", "SLPlugin.app")
+                                         (os.path.join("llplugin", "slplugin"), "SLPlugin.app"),
+                                         ):
+                    self.path2basename(os.path.join(os.pardir,
+                                                    app_bld_dir, self.args['configuration']),
+                                       app)
 
                     # our apps dependencies on shared libs
-                if dylibs["llcommon"]:
-                    mac_crash_logger_res_path = self.dst_path_of("mac-crash-logger.app/Contents/Resources")
-                    mac_updater_res_path = self.dst_path_of("mac-updater.app/Contents/Resources")
-                    slplugin_res_path = self.dst_path_of("SLPlugin.app/Contents/Resources")
-                    for libfile in ("libllcommon.dylib",
-                                    "libapr-1.0.dylib",
-                                    "libaprutil-1.0.dylib",
-                                    "libexpat.1.5.2.dylib",
-                                    "libexception_handler.dylib",
-                                    "libGLOD.dylib",
-                                    "libcollada14dom.dylib"
-                                    ):
-                        target_lib = os.path.join('../../..', libfile)
-                        self.run_command("ln -sf %(target)r %(link)r" % 
-                                         {'target': target_lib,
-                                          'link' : os.path.join(mac_crash_logger_res_path, libfile)}
-                                         )
-                        self.run_command("ln -sf %(target)r %(link)r" % 
-                                         {'target': target_lib,
-                                          'link' : os.path.join(mac_updater_res_path, libfile)}
-                                         )
-                        self.run_command("ln -sf %(target)r %(link)r" % 
-                                         {'target': target_lib,
-                                          'link' : os.path.join(slplugin_res_path, libfile)}
-                                         )
+                    # for each app, for each dylib we collected in dylibs,
+                    # create a symlink to the real copy of the dylib.
+                    resource_path = self.dst_path_of(os.path.join(app, "Contents", "Resources"))
+                    for libfile in dylibs:
+                        symlinkf(os.path.join(os.pardir, os.pardir, os.pardir, libfile),
+                                 os.path.join(resource_path, libfile))
 
                 # plugins
                 if self.prefix(src="", dst="llplugin"):
-                    self.path("../media_plugins/webkit/" + self.args['configuration'] + "/media_plugin_webkit.dylib", "media_plugin_webkit.dylib")
-                    self.path("../packages/lib/release/libllqtwebkit.dylib", "libllqtwebkit.dylib")
+                    self.path2basename("../media_plugins/quicktime/" + self.args['configuration'],
+                                       "media_plugin_quicktime.dylib")
+                    self.path2basename("../media_plugins/webkit/" + self.args['configuration'],
+                                       "media_plugin_webkit.dylib")
+                    self.path2basename("../packages/lib/release", "libllqtwebkit.dylib")
+
                     self.end_prefix("llplugin")
 
                 # command line arguments for connecting to the proper grid
@@ -921,8 +912,7 @@ class DarwinManifest(ViewerManifest):
         if ("package" in self.args['actions'] or 
             "unpacked" in self.args['actions']):
             self.run_command('strip -S %(viewer_binary)r' %
-                             { 'viewer_binary' : self.dst_path_of('Contents/MacOS/Kokua')})
-
+                             { 'viewer_binary' : self.dst_path_of('Contents/MacOS/Second Life')})
 
 
     def copy_finish(self):
@@ -931,6 +921,7 @@ class DarwinManifest(ViewerManifest):
         for script in 'Contents/MacOS/update_install.py',:
             self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
 
+    def package_finish(self):
         # Sign the app if requested.
         if 'signature' in self.args:
             identity = self.args['signature']
@@ -947,7 +938,6 @@ class DarwinManifest(ViewerManifest):
                 home_path = os.environ['HOME']
                 keychain_pwd_path = os.path.join(build_secrets_checkout,'code-signing-osx','password.txt')
                 keychain_pwd = open(keychain_pwd_path).read().rstrip()
-                # os.path.join(dmg_template, "VivoxAUP.txt"): "Vivox (Voice Services) Usage Policy.txt",
 
                 self.run_command('security unlock-keychain -p "%s" "%s/Library/Keychains/viewer.keychain"' % ( keychain_pwd, home_path ) )
                 self.run_command('codesign --verbose --force --keychain "%(home_path)s/Library/Keychains/viewer.keychain" --sign %(identity)r %(bundle)r' % {
@@ -956,7 +946,108 @@ class DarwinManifest(ViewerManifest):
                                  'bundle': self.get_dst_prefix()
                 })
 
+        channel_standin = 'Second Life Viewer'  # hah, our default channel is not usable on its own
+        if not self.default_channel():
+            channel_standin = self.channel()
+
+        imagename="SecondLife_" + '_'.join(self.args['version'])
+
+        # MBW -- If the mounted volume name changes, it breaks the .DS_Store's background image and icon positioning.
+        #  If we really need differently named volumes, we'll need to create multiple DS_Store file images, or use some other trick.
+
+        volname="Second Life Installer"  # DO NOT CHANGE without understanding comment above
+
+        if self.default_channel():
+            if not self.default_grid():
+                # beta case
+                imagename = imagename + '_' + self.args['grid'].upper()
+        else:
+            # first look, etc
+            imagename = imagename + '_' + self.channel_oneword().upper()
+
+        sparsename = imagename + ".sparseimage"
+        finalname = imagename + ".dmg"
+        # make sure we don't have stale files laying about
+        self.remove(sparsename, finalname)
+
+        self.run_command('hdiutil create %(sparse)r -volname %(vol)r -fs HFS+ -type SPARSE -megabytes 700 -layout SPUD' % {
+                'sparse':sparsename,
+                'vol':volname})
+
+        # mount the image and get the name of the mount point and device node
+        hdi_output = self.run_command('hdiutil attach -private %r' % sparsename)
+        try:
+            devfile = re.search("/dev/disk([0-9]+)[^s]", hdi_output).group(0).strip()
+            volpath = re.search('HFS\s+(.+)', hdi_output).group(1).strip()
+
+            if devfile != '/dev/disk1':
+                # adding more debugging info based upon nat's hunches to the
+                # logs to help track down 'SetFile -a V' failures -brad
+                print "WARNING: 'SetFile -a V' command below is probably gonna fail"
+
+            # Copy everything in to the mounted .dmg
+
             app_name = self.app_name()
+
+            # Hack:
+            # Because there is no easy way to coerce the Finder into positioning
+            # the app bundle in the same place with different app names, we are
+            # adding multiple .DS_Store files to svn. There is one for release,
+            # one for release candidate and one for first look. Any other channels
+            # will use the release .DS_Store, and will look broken.
+            # - Ambroff 2008-08-20
+            dmg_template = os.path.join(
+                'installers', 'darwin', '%s-dmg' % self.channel_lowerword())
+
+            if not os.path.exists (self.src_path_of(dmg_template)):
+                dmg_template = os.path.join ('installers', 'darwin', 'release-dmg')
+
+            for s,d in {self.get_dst_prefix():app_name + ".app",
+                        os.path.join(dmg_template, "_VolumeIcon.icns"): ".VolumeIcon.icns",
+                        os.path.join(dmg_template, "background.jpg"): "background.jpg",
+                        os.path.join(dmg_template, "_DS_Store"): ".DS_Store"}.items():
+                print "Copying to dmg", s, d
+                self.copy_action(self.src_path_of(s), os.path.join(volpath, d))
+
+            # Hide the background image, DS_Store file, and volume icon file (set their "visible" bit)
+            for f in ".VolumeIcon.icns", "background.jpg", ".DS_Store":
+                pathname = os.path.join(volpath, f)
+                # We've observed mysterious "no such file" failures of the SetFile
+                # command, especially on the first file listed above -- yet
+                # subsequent inspection of the target directory confirms it's
+                # there. Timing problem with copy command? Try to handle.
+                for x in xrange(3):
+                    if os.path.exists(pathname):
+                        print "Confirmed existence: %r" % pathname
+                        break
+                    print "Waiting for %s copy command to complete (%s)..." % (f, x+1)
+                    sys.stdout.flush()
+                    time.sleep(1)
+                # If we fall out of the loop above without a successful break, oh
+                # well, possibly we've mistaken the nature of the problem. In any
+                # case, don't hang up the whole build looping indefinitely, let
+                # the original problem manifest by executing the desired command.
+                self.run_command('SetFile -a V %r' % pathname)
+
+            # Create the alias file (which is a resource file) from the .r
+            self.run_command('Rez %r -o %r' %
+                             (self.src_path_of("installers/darwin/release-dmg/Applications-alias.r"),
+                              os.path.join(volpath, "Applications")))
+
+            # Set the alias file's alias and custom icon bits
+            self.run_command('SetFile -a AC %r' % os.path.join(volpath, "Applications"))
+
+            # Set the disk image root's custom icon bit
+            self.run_command('SetFile -a C %r' % volpath)
+        finally:
+            # Unmount the image even if exceptions from any of the above 
+            self.run_command('hdiutil detach -force %r' % devfile)
+
+        print "Converting temp disk image to final disk image"
+        self.run_command('hdiutil convert %(sparse)r -format UDZO -imagekey zlib-level=9 -o %(final)r' % {'sparse':sparsename, 'final':finalname})
+        # get rid of the temp file
+        self.package_file = finalname
+        self.remove(sparsename)
 
 class LinuxManifest(ViewerManifest):
     def construct(self):

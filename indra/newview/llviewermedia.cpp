@@ -44,7 +44,6 @@
 #include "llmarketplacefunctions.h"
 #include "llmediaentry.h"
 #include "llmimetypes.h"
-#include "viewerinfo.h"
 #include "llmutelist.h"
 #include "llnotifications.h"
 #include "llnotificationsutil.h"
@@ -552,7 +551,7 @@ std::string LLViewerMedia::getCurrentUserAgent()
 
 	// Just in case we need to check browser differences in A/B test
 	// builds.
-	// std::string channel = LLVersionInfo::getChannel();
+	std::string channel = LLVersionInfo::getChannel();
 
 	// append our magic version number string to the browser user agent id
 	// See the HTTP 1.0 and 1.1 specifications for allowed formats:
@@ -561,9 +560,9 @@ std::string LLViewerMedia::getCurrentUserAgent()
 	// This was also helpful:
 	// http://www.mozilla.org/build/revised-user-agent-strings.html
 	std::ostringstream codec;
-	codec << ViewerInfo::viewerName() << "/";
-	codec << ViewerInfo::versionNumber();
-	codec << " (" << skin_name << " skin)";
+	codec << "SecondLife/";
+	codec << LLVersionInfo::getVersion();
+	codec << " (" << channel << "; " << skin_name << " skin)";
 	llinfos << codec.str() << llendl;
 	
 	return codec.str();

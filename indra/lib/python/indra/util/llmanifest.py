@@ -85,7 +85,7 @@ def get_default_platform(dummy):
             }[sys.platform]
 
 DEFAULT_SRCTREE = os.path.dirname(sys.argv[0])
-DEFAULT_CHANNEL = 'Kokua Release'
+RELEASE_CHANNEL = 'Kokua Release'
 
 ARGUMENTS=[
     dict(name='actions',

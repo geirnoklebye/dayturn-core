@@ -2312,14 +2312,15 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
 	// god more important than project, proj more important than grid
     if(god_mode && !LLGridManager::getInstance()->isInSLBeta())
     {
-		if ( LLGridManager::getInstance()->isInProductionGrid() )
-		{
-			new_bg_color = LLUIColorTable::instance().getColor( "MenuBarGodBgColor" );
-		}
-    else if(god_mode && LLGridManager::getInstance()->isInSLBeta())
-		{
+//		if ( LLGridManager::getInstance()->isInProductionGrid() )
+//		{
+//			new_bg_color = LLUIColorTable::instance().getColor( "MenuBarGodBgColor" );
+//		}
+	
+//    else if(god_mode && LLGridManager::getInstance()->isInSLBeta())
+//		{
 			new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionGodBgColor" );
-		}
+//		}
     }
 	else if (boost::regex_search(channel, is_beta_channel))
 	{
@@ -2333,14 +2334,15 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
 	{
 		new_bg_color = LLUIColorTable::instance().getColor( "MenuBarTestBgColor" );
 	}
-	else if(!LLGridManager::getInstance()->isInProductionGrid())
-	{
-		new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionBgColor" );
-	}
+//	else if(!LLGridManager::getInstance()->isInProductionGrid())
+//	{
+//		new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionBgColor" );
+//	}
 	else 
 	{
 		new_bg_color = LLUIColorTable::instance().getColor( "MenuBarBgColor" );
 	}
+
 
     if(gMenuBarView)
     {

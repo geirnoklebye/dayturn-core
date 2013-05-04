@@ -32,8 +32,7 @@
 #include "llresmgr.h" // for LLLocale
 #include "lltrans.h"
 #include "llviewercontrol.h"
-#include "llversioninfo.h" //needed for get channel
-#include "viewerinfo.h"
+#include "llversioninfo.h"
 
 #include "llcurrencyuimanager.h"
 
@@ -168,10 +167,10 @@ void LLCurrencyUIManager::Impl::updateCurrencyInfo()
 	keywordArgs.appendString("language", LLUI::getLanguage());
 	keywordArgs.appendInt("currencyBuy", mUserCurrencyBuy);
 	keywordArgs.appendString("viewerChannel", LLVersionInfo::getChannel());
-	keywordArgs.appendString("viewerChannel", ViewerInfo::viewerName());
-	keywordArgs.appendInt("viewerMajorVersion", ViewerInfo::versionMajor());
-	keywordArgs.appendInt("viewerMinorVersion", ViewerInfo::versionMinor());
-	keywordArgs.appendInt("viewerPatchVersion", ViewerInfo::versionPatch());
+	keywordArgs.appendInt("viewerMajorVersion", LLVersionInfo::getMajor());
+	keywordArgs.appendInt("viewerMinorVersion", LLVersionInfo::getMinor());
+	keywordArgs.appendInt("viewerPatchVersion", LLVersionInfo::getPatch());
+	keywordArgs.appendInt("viewerBuildVersion", LLVersionInfo::getBuild());
 	
 	LLXMLRPCValue params = LLXMLRPCValue::createArray();
 	params.append(keywordArgs);
@@ -242,10 +241,11 @@ void LLCurrencyUIManager::Impl::startCurrencyBuy(const std::string& password)
 	{
 		keywordArgs.appendString("password", password);
 	}
-	keywordArgs.appendString("viewerChannel", ViewerInfo::viewerName());
-	keywordArgs.appendInt("viewerMajorVersion", ViewerInfo::versionMajor());
-	keywordArgs.appendInt("viewerMinorVersion", ViewerInfo::versionMinor());
-	keywordArgs.appendInt("viewerPatchVersion", ViewerInfo::versionPatch());
+	keywordArgs.appendString("viewerChannel", LLVersionInfo::getChannel());
+	keywordArgs.appendInt("viewerMajorVersion", LLVersionInfo::getMajor());
+	keywordArgs.appendInt("viewerMinorVersion", LLVersionInfo::getMinor());
+	keywordArgs.appendInt("viewerPatchVersion", LLVersionInfo::getPatch());
+	keywordArgs.appendInt("viewerBuildVersion", LLVersionInfo::getBuild());
 
 	LLXMLRPCValue params = LLXMLRPCValue::createArray();
 	params.append(keywordArgs);
