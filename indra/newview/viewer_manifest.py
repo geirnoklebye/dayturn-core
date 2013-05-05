@@ -1071,10 +1071,12 @@ class LinuxManifest(ViewerManifest):
         # Create an appropriate gridargs.dat for this package, denoting required grid.
         self.put_in_file(self.flags_list(), 'etc/gridargs.dat')
 
-        self.path("kokua-bin","bin/do-not-directly-run-kokua-bin")
-        self.path("../linux_crash_logger/linux-crash-logger","bin/linux-crash-logger.bin")
-        self.path("../linux_updater/linux-updater", "bin/linux-updater.bin")
-        self.path("../llplugin/slplugin/SLPlugin", "bin/SLPlugin")
+        if self.prefix(src="", dst="bin"):
+            self.path("kokua-bin","do-not-directly-run-kokua-bin")
+            self.path("../linux_crash_logger/linux-crash-logger","linux-crash-logger.bin")
+            self.path2basename("../llplugin/slplugin", "SLPlugin")
+            self.path2basename("../viewer_components/updater/scripts/linux", "update_install")
+            self.end_prefix("bin")
 
         if self.prefix("res-sdl"):
             self.path("*")
@@ -1090,30 +1092,70 @@ class LinuxManifest(ViewerManifest):
                 self.end_prefix("res-sdl")
             self.end_prefix(icon_path)
 
-        self.path("../viewer_components/updater/scripts/linux/update_install", "bin/update_install")
-
         # plugins
         if self.prefix(src="", dst="bin/llplugin"):
-            self.path("../media_plugins/webkit/libmedia_plugin_webkit.so", "libmedia_plugin_webkit.so")
+            self.path2basename("../media_plugins/webkit", "libmedia_plugin_webkit.so")
             self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
             self.end_prefix("bin/llplugin")
 
-
+        if not self.path("../llcommon/libllcommon.so", "lib/libllcommon.so"):
+            print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
         self.path("featuretable_linux.txt")
-        self.package_file = "foo"
-        self.strip_binaries()
+
     def copy_finish(self):
         # Force executable permissions to be set for scripts
         # see CHOP-223 and http://mercurial.selenic.com/bts/issue1802
-
-        for script in ('install.sh', 'kokua', 'bin/update_install'):
+        for script in 'kokua', 'bin/update_install':
             self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
-        #yus, copy paste was faster :P
-#        for script in ('install.sh', 'kokua', 'bin/update_install', 'etc/handle_secondlifeprotocol.sh',
-#                       'etc/register_secondlifeprotocol.sh', 'etc/register_hopprotocol.sh',
-#                       'etc/refresh_desktop_app_entry.sh', 'etc/launch_url.sh'):
-#                           self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
+
+    def package_finish(self):
+        if 'installer_name' in self.args:
+            installer_name = self.args['installer_name']
+        else:
+            installer_name_components = ['Kokua_', self.args.get('arch')]
+            installer_name_components.extend(self.args['version'])
+            installer_name = "_".join(installer_name_components)
+            if self.default_channel():
+                if not self.default_grid():
+                    installer_name += '_' + self.args['grid'].upper()
+            else:
+                installer_name += '_' + self.channel_oneword().upper()
+
+        self.strip_binaries()
+
+        # Fix access permissions
+        self.run_command("""
+                find %(dst)s -type d | xargs --no-run-if-empty chmod 755;
+                find %(dst)s -type f -perm 0700 | xargs --no-run-if-empty chmod 0755;
+                find %(dst)s -type f -perm 0500 | xargs --no-run-if-empty chmod 0555;
+                find %(dst)s -type f -perm 0600 | xargs --no-run-if-empty chmod 0644;
+                find %(dst)s -type f -perm 0400 | xargs --no-run-if-empty chmod 0444;
+                true""" %  {'dst':self.get_dst_prefix() })
+        self.package_file = installer_name + '.tar.bz2'
+
+        # temporarily move directory tree so that it has the right
+        # name in the tarfile
+        self.run_command("mv %(dst)s %(inst)s" % {
+            'dst': self.get_dst_prefix(),
+            'inst': self.build_path_of(installer_name)})
+        try:
+            # only create tarball if it's a release build.
+            if self.args['buildtype'].lower() == 'release':
+                # --numeric-owner hides the username of the builder for
+                # security etc.
+                self.run_command('tar -C %(dir)s --numeric-owner -cjf '
+                                 '%(inst_path)s.tar.bz2 %(inst_name)s' % {
+                        'dir': self.get_build_prefix(),
+                        'inst_name': installer_name,
+                        'inst_path':self.build_path_of(installer_name)})
+            else:
+                print "Skipping %s.tar.bz2 for non-Release build (%s)" % \
+                      (installer_name, self.args['buildtype'])
+        finally:
+            self.run_command("mv %(inst)s %(dst)s" % {
+                'dst': self.get_dst_prefix(),
+                'inst': self.build_path_of(installer_name)})
 
     def strip_binaries(self):
         if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
