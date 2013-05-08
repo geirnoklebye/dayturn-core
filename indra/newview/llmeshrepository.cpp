@@ -784,25 +784,21 @@ void LLMeshRepoThread::run()
 		if (! mHttpRequestSet.empty())
 		{
 			mHttpRequest->update(0L);
-			ms_sleep(100);
 		}
-		else
-		{
-			mWaiting = true;
-			mSignal->wait();
-			mWaiting = false;
-		}
+
+		mWaiting = true;
+		mSignal->wait();
+		mWaiting = false;
 		
 		if (! LLApp::isQuitting())
 		{
 			static U32 count = 0;
-
 			static F32 last_hundred = gFrameTimeSeconds;
 
 			if (gFrameTimeSeconds - last_hundred > 1.f)
 			{ //a second has gone by, clear count
 				last_hundred = gFrameTimeSeconds;
-				count = 0;	
+				count = 0;
 
 				// <FS:Ansariel> Mesh header/LOD retry functionality
 				F32 curl_timeout = llmax((F32)fsMeshRequestTimeout, 30.f) + 2.f; // 30 secs minimum timeout as defined in LLCurl.cpp
@@ -1102,12 +1098,8 @@ bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 			std::string http_url = constructUrl(mesh_id);
 			if (!http_url.empty())
 			{
-#if 0
 				//ret = mCurlRequest->getByteRange(http_url, headers, offset, size,
 				//								 new LLMeshSkinInfoResponder(mesh_id, offset, size));
-				ret = mCurlRequest->getByteRange(http_url, headers, offset, size,
-												 new LLMeshSkinInfoResponder(mesh_id, offset, size), gSavedSettings.getS32("FSMeshRequestTimeout"));
-#else
 				LLMeshSkinInfoHandler * handler = new LLMeshSkinInfoHandler(mesh_id, offset, size);
 				// LL_WARNS("Mesh") << "MESH:  Issuing Skin Info Request" << LL_ENDL;
 				LLCore::HttpHandle handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
@@ -1129,10 +1121,6 @@ bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 				{
 					handler->mHttpHandle = handle;
 					mHttpRequestSet.insert(handler);
-				}
-#endif
-				if (ret)
-				{
 					LLMeshRepository::sHTTPRequestCount++;
 				}
 			}
@@ -1211,12 +1199,8 @@ bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id)
 			std::string http_url = constructUrl(mesh_id);
 			if (!http_url.empty())
 			{
-#if 0
 				//ret = mCurlRequest->getByteRange(http_url, headers, offset, size,
 				//								 new LLMeshDecompositionResponder(mesh_id, offset, size));
-				ret = mCurlRequest->getByteRange(http_url, headers, offset, size,
-												 new LLMeshDecompositionResponder(mesh_id, offset, size), gSavedSettings.getS32("FSMeshRequestTimeout"));
-#else
 				LLMeshDecompositionHandler * handler = new LLMeshDecompositionHandler(mesh_id, offset, size);
 				// LL_WARNS("Mesh") << "MESH:  Issuing Decomp Request" << LL_ENDL;
 				LLCore::HttpHandle handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
@@ -1238,10 +1222,6 @@ bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id)
 				{
 					handler->mHttpHandle = handle;
 					mHttpRequestSet.insert(handler);
-				}
-#endif
-				if (ret)
-				{
 					LLMeshRepository::sHTTPRequestCount++;
 				}
 			}
@@ -1319,12 +1299,8 @@ bool LLMeshRepoThread::fetchMeshPhysicsShape(const LLUUID& mesh_id)
 			std::string http_url = constructUrl(mesh_id);
 			if (!http_url.empty())
 			{
-#if 0
 				//ret = mCurlRequest->getByteRange(http_url, headers, offset, size,
 				//								 new LLMeshPhysicsShapeResponder(mesh_id, offset, size));
-				ret = mCurlRequest->getByteRange(http_url, headers, offset, size,
-												 new LLMeshPhysicsShapeResponder(mesh_id, offset, size), gSavedSettings.getS32("FSMeshRequestTimeout"));
-#else
 				LLMeshPhysicsShapeHandler * handler = new LLMeshPhysicsShapeHandler(mesh_id, offset, size);
 				// LL_WARNS("Mesh") << "MESH:  Issuing Physics Shape Request" << LL_ENDL;
 				LLCore::HttpHandle handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
@@ -1346,10 +1322,6 @@ bool LLMeshRepoThread::fetchMeshPhysicsShape(const LLUUID& mesh_id)
 				{
 					handler->mHttpHandle = handle;
 					mHttpRequestSet.insert(handler);
-				}
-#endif
-				if (ret)
-				{
 					LLMeshRepository::sHTTPRequestCount++;
 				}
 			}
@@ -1431,9 +1403,7 @@ bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params, U32& c
 		//grab first 4KB if we're going to bother with a fetch.  Cache will prevent future fetches if a full mesh fits
 		//within the first 4KB
 		//NOTE -- this will break of headers ever exceed 4KB		
-#if 0
-		retval = mCurlRequest->getByteRange(http_url, headers, 0, MESH_HEADER_SIZE, new LLMeshHeaderResponder(mesh_params));
-#else
+
 		LLMeshHeaderHandler * handler = new LLMeshHeaderHandler(mesh_params);
 		// LL_WARNS("Mesh") << "MESH:  Issuing Request" << LL_ENDL;
 		LLCore::HttpHandle handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
@@ -1455,10 +1425,6 @@ bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params, U32& c
 		{
 			handler->mHttpHandle = handle;
 			mHttpRequestSet.insert(handler);
-		}
-#endif		
-		if(retval)
-		{
 			LLMeshRepository::sHTTPRequestCount++;
 
 			// <FS:Ansariel> Mesh header/LOD retry functionality
@@ -1540,12 +1506,8 @@ bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod, 
 			std::string http_url = constructUrl(mesh_id);
 			if (!http_url.empty())
 			{
-#if 0
 				//retval = mCurlRequest->getByteRange(constructUrl(mesh_id), headers, offset, size,
 				//						   new LLMeshLODResponder(mesh_params, lod, offset, size));
-				retval = mCurlRequest->getByteRange(constructUrl(mesh_id), headers, offset, size,
-										   new LLMeshLODResponder(mesh_params, lod, offset, size), gSavedSettings.getS32("FSMeshRequestTimeout"));
-#else
 				LLMeshLODHandler * handler = new LLMeshLODHandler(mesh_params, lod, offset, size);
 				// LL_WARNS("Mesh") << "MESH:  Issuing LOD Request" << LL_ENDL;
 				LLCore::HttpHandle handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
@@ -1567,10 +1529,6 @@ bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod, 
 				{
 					handler->mHttpHandle = handle;
 					mHttpRequestSet.insert(handler);
-				}
-#endif
-				if(retval)
-				{
 					LLMeshRepository::sHTTPRequestCount++;
 
 					// <FS:Ansariel> Mesh header/LOD retry functionality
