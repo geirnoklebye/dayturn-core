@@ -1160,7 +1160,7 @@ class LinuxManifest(ViewerManifest):
     def strip_binaries(self):
         if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
             print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
-            self.run_command(r"find %(d)r/bin %(d)r/lib -type f \! -name update_install | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
+            self.run_command(r"find %(d)r/bin %(d)r/lib %(d)r/lib32 %(d)r/lib64 -type f \! -name update_install | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
 
 
 class Linux_i686Manifest(LinuxManifest):
@@ -1352,10 +1352,6 @@ class Linux_x86_64Manifest(LinuxManifest):
                     self.path("libopenal.so.1.15.1")
                     self.end_prefix("lib32")
 
-        if self.args['buildtype'].lower() == 'release':
-                self.run_command('find %(d)r/bin %(d)r/lib32 %(d)r/lib64  -type f \\'
-                                 '! -name update_install | xargs --no-run-if-empty strip -S'
-                                 % {'d': self.get_dst_prefix()} )
 
 ################################################################
 
