@@ -2601,8 +2601,15 @@ BOOL LLViewerWindow::handleKey(KEY key, MASK mask)
 	// If "Pressing letter keys starts local chat" option is selected, we are not in mouselook, 
 	// no view has keyboard focus, this is a printable character key (and no modifier key is 
 	// pressed except shift), then give focus to nearby chat (STORM-560)
-	if ( gSavedSettings.getS32("LetterKeysFocusChatBar") && !gAgentCamera.cameraMouselook() && 
+//MK
+	// Actually do not check we are in Mouselook, it confuses the user when they have to press Enter first
+	// only when being in Mouselook, while not having to do it in 3rd-person view. I don't see a reason why
+	// the two camera modes should be treated any differently.
+////	if ( gSavedSettings.getS32("LetterKeysFocusChatBar") && !gAgentCamera.cameraMouselook() && 
+////		!keyboard_focus && key < 0x80 && (mask == MASK_NONE || mask == MASK_SHIFT) )
+	if ( gSavedSettings.getS32("LetterKeysFocusChatBar") &&  
 		!keyboard_focus && key < 0x80 && (mask == MASK_NONE || mask == MASK_SHIFT) )
+//mk
 	{
 		// Initialize nearby chat if it's missing
 		LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
