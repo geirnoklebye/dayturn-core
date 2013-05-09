@@ -546,6 +546,13 @@ S32 LLAvatarList::notifyParent(const LLSD& info)
 
 void LLAvatarList::addNewItem(const LLUUID& id, const std::string& name, BOOL is_online, EAddPosition pos)
 {
+//MK
+	// Do not add ourselves to the list
+	if (id == gAgent.getID())
+	{
+		return;
+	}
+//mk
 	LLAvatarListItem* item = new LLAvatarListItem();
 	// This sets the name as a side effect
 	item->setAvatarId(id, mSessionID, mIgnoreOnlineStatus);
