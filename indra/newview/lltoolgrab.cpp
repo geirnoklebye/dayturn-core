@@ -302,7 +302,10 @@ BOOL LLToolGrab::handleObjectHit(const LLPickInfo& info)
 		local_edit_point -= edit_object->getPositionAgent();
 		local_edit_point = local_edit_point * ~edit_object->getRenderRotation();
 		gAgentCamera.setPointAt(POINTAT_TARGET_GRAB, edit_object, local_edit_point );
-		gAgentCamera.setLookAt(LOOKAT_TARGET_SELECT, edit_object, local_edit_point );
+//MK
+		// Do not lose focus when clicking on something
+////		gAgentCamera.setLookAt(LOOKAT_TARGET_SELECT, edit_object, local_edit_point );
+//mk
 	}
 
 	// on transient grabs (clicks on world objects), kill the grab immediately
@@ -905,7 +908,10 @@ void LLToolGrab::handleHoverNonPhysical(S32 x, S32 y, MASK mask)
 		local_edit_point -= objectp->getPositionAgent();
 		local_edit_point = local_edit_point * ~objectp->getRenderRotation();
 		gAgentCamera.setPointAt(POINTAT_TARGET_GRAB, objectp, local_edit_point );
-		gAgentCamera.setLookAt(LOOKAT_TARGET_SELECT, objectp, local_edit_point );
+//MK
+		// Do not lose focus when clicking on something
+////		gAgentCamera.setLookAt(LOOKAT_TARGET_SELECT, objectp, local_edit_point );
+//mk
 	}
 	
 	
@@ -1046,7 +1052,10 @@ void LLToolGrab::onMouseCaptureLost()
 
 	LLSelectMgr::getInstance()->updateSelectionCenter();
 	gAgentCamera.setPointAt(POINTAT_TARGET_CLEAR);
-	gAgentCamera.setLookAt(LOOKAT_TARGET_CLEAR);
+//MK
+	// Do not lose focus when clicking on something
+////	gAgentCamera.setLookAt(LOOKAT_TARGET_CLEAR);
+//mk
 
 	dialog_refresh_all();
 }
