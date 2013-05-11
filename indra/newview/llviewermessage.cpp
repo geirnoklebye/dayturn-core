@@ -121,6 +121,8 @@
 #pragma warning (disable:4702)
 #endif
 
+#include "fslightshare.h" // <FS:CR> FIRE-5118 - Lightshare support
+
 extern void on_new_message(const LLSD& msg);
 
 //
@@ -3969,6 +3971,14 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 
 	effectp->setColor(LLColor4U(gAgent.getEffectColor()));
 	LLHUDManager::getInstance()->sendEffects();
+
+	// <FS:CR> FIRE-5118 - Lightshare support
+	if(gSimulatorType != "SecondLife")
+	{
+		FSLightshare::getInstance()->processLightshareRefresh();
+	}
+	// </FS:CR>
+
 
 //	gTeleportDisplay = TRUE;
 //	gTeleportDisplayTimer.reset();
