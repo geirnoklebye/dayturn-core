@@ -1076,6 +1076,7 @@ void LLPanelRegionDebugInfo::onClickCancelRestart(void* data)
 
 BOOL LLPanelRegionTerrainInfo::validateTextureSizes()
 {
+	int maxSize = 1024;
 	for(S32 i = 0; i < TERRAIN_TEXTURE_COUNT; ++i)
 	{
 		std::string buffer;
@@ -1101,9 +1102,13 @@ BOOL LLPanelRegionTerrainInfo::validateTextureSizes()
 			return FALSE;
 		}
 
-		if (width > 512 || height > 512)
+		if(gSimulatorType == "SecondLife")
 		{
+			maxSize = 512;
+		}
 
+		if (width > maxSize || height > maxSize)
+		{
 			LLSD args;
 			args["TEXTURE_NUM"] = i+1;
 			args["TEXTURE_SIZE_X"] = width;
