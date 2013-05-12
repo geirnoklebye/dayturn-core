@@ -4,6 +4,7 @@ project(viewer)
 
 include(00-Common)
 include(Boost)
+include(BuildVersion)
 include(DBusGlib)
 include(DirectX)
 include(OpenSSL)
@@ -111,6 +112,7 @@ set(viewer_SOURCE_FILES
     aoengine.cpp
     aoset.cpp
     fspanelprofileclassifieds.cpp
+	fslightshare.cpp
     groupchatlistener.cpp
     llaccountingcostmanager.cpp
     llagent.cpp
@@ -705,6 +707,7 @@ set(viewer_HEADER_FILES
     fspanelclassified.h
     fspanelprofile.h
     fspanelprofileclassifieds.h
+	fslightshare.h
     groupchatlistener.h
     llaccountingcostmanager.h
     llagent.h

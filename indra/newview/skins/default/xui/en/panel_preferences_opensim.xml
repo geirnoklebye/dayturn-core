@@ -197,4 +197,38 @@
         function="Pref.PickDebugSearchURL" />
     </button>
   </panel>
+  <panel
+  border="false"
+  follows="all"
+  height="58"
+  layout="topleft"
+  left="0"
+  top_pad="15"
+  width="540"
+  label=""
+  name="enable_lightshare_panel">
+    <text
+    type="string"
+    length="1"
+    follows="left|top"
+    height="12"
+    layout="topleft"
+    left="50"
+    name="lightshare_for_opensim"
+    top_pad="5"
+    width="400">
+      LightShare for OpenSim:
+    </text>
+    <check_box
+      control_name="EnableLightShare"
+      height="16"
+      initial_value="false"
+      label="Enable LightShare"
+      layout="topleft"
+      left="30"
+      name="EnableLightShare"
+      top_pad="1"
+      width="256" />
+  </panel>
+
 </panel>
