@@ -126,11 +126,7 @@ bool LLDirIterator::Impl::next(std::string &fname)
 	while (mIter != end_itr && !found)
 	{
 		boost::smatch match;
-#if (LL_LINUX) && defined(__amd64__)
-		std::string name = mIter->path().filename();
-#else 
 		std::string name = mIter->path().filename().string();
-#endif
 		if (found = boost::regex_match(name, match, mFilterExp))
 		{
 			fname = name;

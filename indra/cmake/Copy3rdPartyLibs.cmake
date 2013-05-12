@@ -398,6 +398,7 @@ elseif(LINUX)
           libapr-1.so.0
           libaprutil-1.so.0
           libatk-1.0.so.0 
+          libboost_context-mt.so.${BOOST_VERSION}.0
           libboost_program_options-mt.so.${BOOST_VERSION}.0
           libboost_regex-mt.so.${BOOST_VERSION}.0
           libboost_thread-mt.so.${BOOST_VERSION}.0

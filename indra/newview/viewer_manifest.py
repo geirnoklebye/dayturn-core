@@ -1278,6 +1278,7 @@ class Linux_x86_64Manifest(LinuxManifest):
         if self.prefix("../packages/lib/release", dst="lib64"):
             self.path("libapr-1.so*")
             self.path("libaprutil-1.so*")
+            self.path("libboost_context-mt.so.*")
             self.path("libboost_program_options-mt.so.*")
             self.path("libboost_regex-mt.so.*")
             self.path("libboost_thread-mt.so.*")
@@ -1315,7 +1316,7 @@ class Linux_x86_64Manifest(LinuxManifest):
             self.path("libz.so.1.2.5")
             self.path("libz.so.1")
             self.path("libz.so")
-            self.path("libcollada14dom.so*")
+            self.path("libcollada14dom.so.2.3.0","libcollada14dom.so.2")
             self.path("libGLOD.so")
 
             # OpenAL

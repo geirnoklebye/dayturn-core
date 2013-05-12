@@ -280,9 +280,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fb26c88983b6bf9b5042d00bfdd3ade4</string>
+              <string>ab1f67acff9a1364ed70141011c1e5f4</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-boost/downloads/boost-1.48.0-linux64-20130103.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-boost-64/downloads/boost-1.52.0-linux64-20130508.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -339,7 +339,7 @@
           <map>
             <key>archive</key>
             <map>
-<!-->              <key>dir_structure</key>
+             <key>dir_structure</key>
               <map>
                 <key>LICENSES</key>
                 <string>LICENSES</string>
@@ -350,11 +350,10 @@
                 <key>libraries/x86_64-linux/lib_release_client</key>
                 <string>lib/release</string>
               </map>
--->
               <key>hash</key>
-              <string>6b215cd8bea41da3e965fecd888f85cb</string>
+              <string>ed57bb06511e87312d4c70ce43068d55</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/colladadom/downloads/colladadom-2.2-linux-x86_64-20120719.tar.bz2.tar</string>
+              <string>http://download.kokuaviewer.org/files/libs/colladadom-2.3-Linux-x86_64-20110414.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2613,7 +2612,7 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
+<!--              <key>dir_structure</key>
               <map>
                 <key>LICENSES</key>
                 <string>LICENSES</string>
@@ -2624,6 +2623,7 @@
                 <key>libraries/x86_64-linux/lib_release_client</key>
                 <string>lib/release</string>
               </map>
+-->
               <key>hash</key>
               <string>89e178a6c1308d1e86cf5211e9434582</string>
               <key>url</key>
