@@ -643,7 +643,11 @@ void FloaterAO::onClickNext()
 void FloaterAO::onClickMore()
 {
 	LLRect fullSize=gSavedPerAccountSettings.getRect("floater_rect_animation_overrider_full");
+/*
+//ao.cpp:646:9: error: variable ‘smallSize’ set but not used [-Werror=unused-
+//but-set-variable] cc1plus: all warnings being treated as errors
 	LLRect smallSize=getRect();
+*/
 
 	if(fullSize.getHeight()<getMinHeight())
 		fullSize.setOriginAndSize(fullSize.mLeft,fullSize.mBottom,fullSize.getWidth(),getRect().getHeight());
