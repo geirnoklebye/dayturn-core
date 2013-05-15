@@ -283,6 +283,11 @@ LLOSInfo::LLOSInfo() :
 					else
 						mOSStringSimple = "Windows Server 2012 ";
 				}
+				else if(osvi.dwMinorVersion == 3)
+				{
+					if(osvi.wProductType == VER_NT_WORKSTATION)
+						mOSStringSimple = "Microsoft Windows 8.1 ";
+				}
 
 				///get native system info if available..
 				typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO); ///function pointer for loading GetNativeSystemInfo
