@@ -426,7 +426,12 @@ BOOL LLScriptEdCore::postBuild()
 	
 	LLColor3 color(0.5f, 0.0f, 0.15f);
 	mEditor->loadKeywords(gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS,"keywords.ini"), funcs, tooltips, color);
-
+// <FS:CR> OSSL Keywords
+#ifdef OPENSIM
+	mEditor->loadKeywords(gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, "keywords_ossl.ini"), funcs, tooltips, color);
+#endif // OPENSIM
+// </FS:CR>
+	
 	std::vector<std::string> primary_keywords;
 	std::vector<std::string> secondary_keywords;
 	LLKeywordToken *token;
@@ -443,6 +448,27 @@ BOOL LLScriptEdCore::postBuild()
 			secondary_keywords.push_back( wstring_to_utf8str(token->getToken()) );
 		}
 	}
+
+		// <FS:CR> OSSL Keywords
+#ifdef OPENSIM
+		mEditor->loadKeywords(gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, "keywords_ossl.ini"), funcs, tooltips, color);
+#endif // OPENSIM
+		// </FS:CR>
+		mPostEditor->loadKeywords(gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, "keywords_preproc.ini"), funcs, tooltips, color);
+		
+		if(gSavedSettings.getBOOL("_NACL_PreProcLSLSwitch"))
+		{
+			mEditor->addToken(LLKeywordToken::WORD,"switch",LLColor3(0.0f,0.0f,0.8f),
+				std::string("Switch statement. See Advanced menu of the script editor."));
+			mEditor->addToken(LLKeywordToken::WORD,"case",LLColor3(0.0f,0.0f,0.8f),
+				std::string("Switch case. See Advanced menu of the script editor."));
+			mEditor->addToken(LLKeywordToken::WORD,"break",LLColor3(0.0f,0.0f,0.8f),
+				std::string("Switch break. See Advanced menu of the script editor."));
+		}
+
+		//couldn'tr define in file because # represented a comment
+	}
+	// NaCl End
 
 	// Case-insensitive dictionary sort for primary keywords. We don't sort the secondary
 	// keywords. They're intelligently grouped in keywords.ini.
