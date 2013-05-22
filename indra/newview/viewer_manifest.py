@@ -122,16 +122,9 @@ class ViewerManifest(LLManifest):
 
             # Files in the newview/ directory
             self.path("gpu_table.txt")
-
-            # The summary.json file gets left in the base checkout dir by
-            # build.sh. It's only created for a build.sh build, therefore we
-            # have to check whether it exists.  :-P
-            summary_json = "summary.json"
-            summary_json_path = os.path.join(os.pardir, os.pardir, summary_json)
-            if os.path.exists(os.path.join(self.get_src_prefix(), summary_json_path)):
-                self.path(summary_json_path, summary_json)
-            else:
-                print "No %s" % os.path.join(self.get_src_prefix(), summary_json_path)
+            # The summary.json file gets left in the build directory by newview/CMakeLists.txt.
+            if not self.path2basename(os.pardir, "summary.json"):
+                print "No summary.json file"
 
     def grid(self):
         return self.args['grid']
