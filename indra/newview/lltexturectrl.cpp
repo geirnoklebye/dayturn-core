@@ -145,6 +145,7 @@ public:
 		   void		onBtnPipette( );
 	//static void		onBtnRevert( void* userdata );
 	static void		onBtnWhite( void* userdata );
+	static void		onBtnTrans( void* userdata );
 	static void		onBtnNone( void* userdata );
 	static void		onBtnClear( void* userdata );
 		   void		onSelectionChange(const std::deque<LLFolderViewItem*> &items, BOOL user_action);
@@ -166,6 +167,7 @@ protected:
 	LLUIImagePtr		mFallbackImage; // What to show if currently selected texture is null.
 
 	LLUUID				mWhiteImageAssetID;
+	LLUUID				mTransImageAssetID;
 	LLUUID				mSpecialCurrentImageAssetID;  // Used when the asset id has no corresponding texture in the user's inventory.
 	LLUUID				mOriginalImageAssetID;
 
@@ -210,6 +212,7 @@ LLFloaterTexturePicker::LLFloaterTexturePicker(
 	mImageAssetID( owner->getImageAssetID() ),
 	mFallbackImage( fallback_image ),
 	mWhiteImageAssetID( gSavedSettings.getString( "UIImgWhiteUUID" ) ),
+	mTransImageAssetID( gSavedSettings.getString( "UIImgTransUUID" ) ),
 	mOriginalImageAssetID(owner->getImageAssetID()),
 	mLabel(label),
 	mTentativeLabel(NULL),
@@ -427,6 +430,7 @@ BOOL LLFloaterTexturePicker::postBuild()
 	childSetAction("Default",LLFloaterTexturePicker::onBtnSetToDefault,this);
 	childSetAction("None", LLFloaterTexturePicker::onBtnNone,this);
 	childSetAction("Blank", LLFloaterTexturePicker::onBtnWhite,this);
+	childSetAction("Trans", LLFloaterTexturePicker::onBtnTrans,this);
 
 
 	childSetCommitCallback("show_folders_check", onShowFolders, this);
@@ -582,6 +586,7 @@ void LLFloaterTexturePicker::draw()
 
 		getChildView("Default")->setEnabled(mImageAssetID != mOwner->getDefaultImageAssetID());
 		getChildView("Blank")->setEnabled(mImageAssetID != mWhiteImageAssetID );
+		getChildView("Trans")->setEnabled(mImageAssetID != mTransImageAssetID );
 		getChildView("None")->setEnabled(mOwner->getAllowNoTexture() && !mImageAssetID.isNull() );
 
 		LLFloater::draw();
@@ -729,6 +734,13 @@ void LLFloaterTexturePicker::onBtnWhite(void* userdata)
 	self->commitIfImmediateSet();
 }
 
+// static
+void LLFloaterTexturePicker::onBtnTrans(void* userdata)
+{
+	LLFloaterTexturePicker* self = (LLFloaterTexturePicker*) userdata;
+	self->setImageID( self->mTransImageAssetID );
+	self->commitIfImmediateSet();
+}
 
 // static
 void LLFloaterTexturePicker::onBtnNone(void* userdata)
