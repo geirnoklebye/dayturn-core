@@ -2556,6 +2556,35 @@ void cleanup_menus()
 // Object pie menu
 //-----------------------------------------------------------------------------
 
+// Andromeda Rage:  Derender functionality, inspired by Phoenix
+class LLObjectDerender : public view_listener_t
+{
+    bool handleEvent(const LLSD& userdata)
+    {
+        LLViewerObject* slct = LLSelectMgr::getInstance()->getSelection()->getFirstObject();
+        if(!slct)return true;
+        LLUUID id = slct->getID();
+        LLObjectSelectionHandle selection = LLSelectMgr::getInstance()->getSelection();
+        LLUUID root_key;
+        LLSelectNode* node = selection->getFirstRootNode();
+        if(node)root_key = node->getObject()->getID();
+        if(root_key.notNull())
+        {
+            id = root_key;
+        }
+        LLSelectMgr::getInstance()->removeObjectFromSelections(id);
+
+        if (!(id == gAgentID))
+        {
+            LLViewerObject *objectp = gObjectList.findObject(id);
+            {
+                gObjectList.killObject(objectp);
+            }
+        }
+        return true;
+    }
+};
+
 class LLObjectReportAbuse : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -8771,6 +8800,7 @@ void initialize_menus()
 
 	 // Avatar pie menu
 	view_listener_t::addMenu(new LLObjectMute(), "Avatar.Mute");
+	view_listener_t::addMenu(new LLObjectDerender(), "Object.Derender");
 	view_listener_t::addMenu(new LLAvatarAddFriend(), "Avatar.AddFriend");
 	view_listener_t::addMenu(new LLAvatarAddContact(), "Avatar.AddContact");
 	commit.add("Avatar.Freeze", boost::bind(&handle_avatar_freeze, LLSD()));
