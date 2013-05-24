@@ -1954,8 +1954,12 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, LLWorld &world, const F64 &time)
 		return;
 	}	
 
+	// <FS:CR> Use LLCachedControl
+	LLCachedControl<bool>disable_all_render_types(gSavedSettings, "DisableAllRenderTypes");
 	if (!(gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_AVATAR))
-		&& !(gSavedSettings.getBOOL("DisableAllRenderTypes")))
+		//&& !(gSavedSettings.getBOOL("DisableAllRenderTypes")))
+		&& !(disable_all_render_types))
+	// </FS:CR>
 	{
 		return;
 	}
@@ -2627,6 +2631,8 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 	}
 	bool is_friend = LLAvatarTracker::instance().isBuddy(getID());
 	bool is_cloud = getIsCloud();
+	static LLUICachedControl<U32> color_client_tags("FSColorClienttags");
+	if(mClientTagData.has("color") && !(show_friends && (is_friend || LGGContactSets::getInstance()->hasFriendColorThatShouldShow(getID(), LGG_CS_TAG))) && color_client_tags > 0 && !this->isSelf())
 
 	if (is_appearance != mNameAppearance)
 	{
@@ -3000,7 +3006,11 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 	// clear debug text
 	mDebugText.clear();
 
-	if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+	// <FS:CR> Use LLCachedControl
+	//if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+	static LLCachedControl<bool> debug_avatar_appearance_message(gSavedSettings, "DebugAvatarAppearanceMessage");
+	if (debug_avatar_appearance_message)
+	// </FS:CR>
 	{
 		S32 central_bake_version = -1;
 		if (getRegion())
@@ -3023,7 +3033,11 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		{
 			debug_line += llformat(" - cof: %d req: %d rcv:%d",
 								   curr_cof_version, last_request_cof_version, last_received_cof_version);
-			if (gSavedSettings.getBOOL("DebugForceAppearanceRequestFailure"))
+			// <FS:CR> Use LLCachedControl
+			//if (gSavedSettings.getBOOL("DebugForceAppearanceRequestFailure"))
+			static LLCachedControl<bool> debug_force_appearance_request_failure(gSavedSettings, "DebugForceAppearanceRequestFailure");
+			if (debug_force_appearance_request_failure)
+			// </FS:CR>
 			{
 				debug_line += " FORCING ERRS";
 			}
@@ -3034,7 +3048,11 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		}
 		addDebugText(debug_line);
 	}
-	if (gSavedSettings.getBOOL("DebugAvatarCompositeBaked"))
+	// <FS:CR> Use LLCachedControl
+	static LLCachedControl<bool> debug_avatar_composite_baked(gSavedSettings, "DebugAvatarCompositeBaked");
+	if (debug_avatar_composite_baked)
+	//if (gSavedSettings.getBOOL("DebugAvatarCompositeBaked"))
+	// </FS:CR>
 	{
 		if (!mBakedTextureDebugText.empty())
 			addDebugText(mBakedTextureDebugText);
@@ -3265,7 +3283,11 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 			}
 			LLVector3 velDir = getVelocity();
 			velDir.normalize();
-			if ( mSignaledAnimations.find(ANIM_AGENT_WALK) != mSignaledAnimations.end())
+			// <FS:CR> Use Cached Control
+			//if (!gSavedSettings.getBOOL("TurnAroundWhenWalkingBackwards") && (mSignaledAnimations.find(ANIM_AGENT_WALK) != mSignaledAnimations.end()))
+			static LLCachedControl<bool> walk_backwards(gSavedSettings, "TurnAroundWhenWalkingBackwards");
+			if (!walk_backwards && mSignaledAnimations.find(ANIM_AGENT_WALK) != mSignaledAnimations.end())
+			// </FS:CR>
 			{
 				F32 vpD = velDir * primDir;
 				if (vpD < -0.5f)
@@ -6964,7 +6986,10 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 {
 	LL_DEBUGS("Avatar") << "starts" << llendl;
 	
-	bool enable_verbose_dumps = gSavedSettings.getBOOL("DebugAvatarAppearanceMessage");
+	// <FS:CR> Use LLCachedControl
+	//bool enable_verbose_dumps = gSavedSettings.getBOOL("DebugAvatarAppearanceMessage");
+	static LLCachedControl<bool> enable_verbose_dumps(gSavedSettings, "DebugAvatarAppearanceMessage");
+	// </FS:CR>
 	std::string dump_prefix = getFullname() + "_" + (isSelf()?"s":"o") + "_";
 	if (gSavedSettings.getBOOL("BlockAvatarAppearanceMessages"))
 	{
