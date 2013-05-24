@@ -3373,6 +3373,35 @@
                  function="Advanced.ToggleShowPointAt" />
             </menu_item_check>
             <menu_item_check
+	     label="Private Look At"
+	     name="Private Look At">
+                <menu_item_check.on_check
+                 function="CheckControl"
+                 parameter="PrivateLookAtTarget" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="PrivateLookAtTarget" />
+            </menu_item_check>
+            <menu_item_check
+	     label="Private Point At"
+	     name="Private Point At">
+                <menu_item_check.on_check
+                 function="CheckControl"
+                 parameter="PrivatePointAtTarget" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="PrivatePointAtTarget" />
+            </menu_item_check>
+	    <menu_item_check name="Cat Mode"
+		label="Cat Mode (head follows mouse)">
+		<menu_item_check.on_check
+		function="CheckControl"
+		parameter="CatMode" />
+		<menu_item_check.on_click
+		function="ToggleControl"
+		parameter="CatMode" />
+	    </menu_item_check>
+            <menu_item_check
              label="Debug Joint Updates"
              name="Debug Joint Updates">
                 <menu_item_check.on_check

@@ -38,6 +38,11 @@
 #include "llvoavatar.h"
 #include "message.h"
 
+#include "llhudrender.h"
+#include "llresmgr.h"
+#include "llviewerwindow.h"
+#include "llavatarnamecache.h"
+
 // packet layout
 const S32 SOURCE_AVATAR = 0;
 const S32 TARGET_OBJECT = 16;
@@ -72,7 +77,7 @@ const S32 POINTAT_PRIORITIES[POINTAT_NUM_TARGETS] =
 
 // statics
 
-BOOL LLHUDEffectPointAt::sDebugPointAt;
+BOOL LLHUDEffectPointAt::sDebugPointAt = TRUE;
 
 
 //-----------------------------------------------------------------------------
@@ -319,12 +324,39 @@ void LLHUDEffectPointAt::setSourceObject(LLViewerObject* objectp)
 //-----------------------------------------------------------------------------
 void LLHUDEffectPointAt::render()
 {
-	update();
-	if (sDebugPointAt && mTargetType != POINTAT_TARGET_NONE)
-	{
-		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+	BOOL sDebugPointAtNames = 1;	// make this a proper config setting
+	BOOL sDebugLimitedPointAt = 1;	// make this a proper config setting
 
+	update();
+
+	if (sDebugPointAt && mTargetType != POINTAT_TARGET_NONE && (
+		!sDebugLimitedPointAt || !((LLVOAvatar*)(LLViewerObject*)mSourceObject)->isSelf()
+	)) {
 		LLVector3 target = mTargetPos + mSourceObject->getRenderPosition();
+
+		if (sDebugPointAtNames) {
+			//
+			//	render name above crosshairs
+			//
+			const LLFontGL *fontp = LLFontGL::getFont(LLFontDescriptor("SansSerif", "Small", LLFontGL::BOLD));
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			LLVector3 position = target + LLVector3(0.0f, 0.0f, 0.3f);
+
+			LLAvatarName nameBuffer;
+			LLAvatarNameCache::get(((LLVOAvatar*)(LLViewerObject*)mSourceObject)->getID(), &nameBuffer);
+			std::string name = nameBuffer.mDisplayName;
+
+			gViewerWindow->setup3DRender();
+			hud_render_utf8text(name, position, *fontp, LLFontGL::NORMAL, LLFontGL::NO_SHADOW, -0.5*fontp->getWidthF32(name), 3.0, LLColor3(1.f, 0.f, 0.f), FALSE);
+
+			glPopMatrix();
+		}
+
+		//
+		//	render crosshairs
+		//
+		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 		gGL.pushMatrix();
 		gGL.translatef(target.mV[VX], target.mV[VY], target.mV[VZ]);
 		gGL.scalef(0.3f, 0.3f, 0.3f);

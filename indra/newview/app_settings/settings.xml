@@ -2001,7 +2001,17 @@
     <key>Value</key>
     <real>1.5</real>
   </map>
-
+  <key>CatMode</key>
+  <map>
+    <key>Comment</key>
+    <string>IF your avatars head follows your mouse movements THEN the extend is defined in YawFromMousePosition  and PitchFromMousePosition</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
   <key>CertStore</key>
     <map>
       <key>Comment</key>
@@ -7900,6 +7910,28 @@
       <string>U32</string>
       <key>Value</key>
       <integer>100000</integer>
+    </map>
+    <key>PrivateLookAtTarget</key>
+    <map>
+	<key>Comment</key>
+	<string>If true, viewer shows simulated look-at behavior to others.</string>
+	<key>Persist</key>
+	<integer>1</integer>
+	<key>Type</key>
+	<string>Boolean</string>
+	<key>Value</key>
+	<integer>1</integer>
+    </map>
+    <key>PrivatePointAtTarget</key>
+    <map>
+	<key>Comment</key>
+	<string>If true, viewer won't show the editing arm motion.</string>
+	<key>Persist</key>
+	<integer>1</integer>
+	<key>Type</key>
+	<string>Boolean</string>
+	<key>Value</key>
+	<integer>1</integer>
     </map>
     <key>ProbeHardwareOnStartup</key>
     <map>
