@@ -735,19 +735,46 @@ namespace action_give_inventory
 // static
 void LLAvatarActions::buildResidentsString(std::vector<LLAvatarName> avatar_names, std::string& residents_string)
 {
-	llassert(avatar_names.size() > 0);
+	int clip_names = 3;		// TODO: make this a debug setting
+	int len = avatar_names.size();
+	llassert(s > 0);
 	
-	std::sort(avatar_names.begin(), avatar_names.end());
+	if (len != 1) {
+	    std::sort(avatar_names.begin(), avatar_names.end());
+	}
+
+	std::string trailer = "";
+
+	//
+	//	if there are (clip_names+1) or more names in the list then
+	//	show the first (clip_names) and follow with
+	//	"and [NUMBER] more"
+	//
+	//	otherwise if there are between 1 and clip_names entries in
+	//	the list then just show them all without a trailer
+	//
+	//	done like this because if it's "and 1 more" then we should
+	//	just show the last name instead of the trailer message
+	//
+	if (clip_names && len > clip_names + 1) {
+		LLStringUtil::format_map_t args;
+		args["[NUMBER]"] = llformat("%d", len - clip_names);
+
+		trailer = " " + LLTrans::getString("IM_and_more_names", args);
+		len = clip_names;
+	}
+
 	const std::string& separator = LLTrans::getString("words_separator");
 	for (std::vector<LLAvatarName>::const_iterator it = avatar_names.begin(); ; )
 	{
 		residents_string.append((*it).getDisplayName());
-		if	(++it == avatar_names.end())
+		if (!(--len) || ++it == avatar_names.end())
 		{
 			break;
 		}
 		residents_string.append(separator);
 	}
+	residents_string.append(trailer);
 }
 
 // static
