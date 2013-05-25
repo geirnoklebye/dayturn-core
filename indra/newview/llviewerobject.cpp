@@ -3224,10 +3224,9 @@ F32 LLViewerObject::getBinRadius()
 
 F32 LLViewerObject::getMaxScale() const
 {
-	mInferredServerScaleX = getScale().mV[VX];
-	mInferredServerScaleY = getScale().mV[VY];
-	mInferredServerScaleZ = getScale().mV[VZ];
-	return llmax(getScale().mV[VX],getScale().mV[VY], getScale().mV[VZ]);
+	F32 max_xy = llmax(getScale().mV[VX], getScale().mV[VY]);
+	LLWorld::getInstance()->setInferredServerScale(max_xy, getScale().mV[VZ]);
+	return llmax(max_xy, getScale().mV[VZ]);
 }
 
 F32 LLViewerObject::getMinScale() const

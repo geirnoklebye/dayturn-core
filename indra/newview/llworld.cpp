@@ -94,11 +94,10 @@ LLWorld::LLWorld() :
 	mLastPacketsOut(0),
 	mLastPacketsLost(0),
 	mSpaceTimeUSec(0),
+	mInferredServerScaleXY(OS_DEFAULT_MAX_PRIM_SCALE),
+	mInferredServerScaleZ(OS_DEFAULT_MAX_PRIM_SCALE),
 	mLimitsNeedRefresh(true)// <AW: opensim-limits>
 {
-	mInferredServerScaleX = OS_DEFAULT_MAX_PRIM_SCALE;
-	mInferredServerScaleY = OS_DEFAULT_MAX_PRIM_SCALE;
-	mInferredServerScaleZ = OS_DEFAULT_MAX_PRIM_SCALE;
 
 	for (S32 i = 0; i < 8; i++)
 	{
@@ -156,8 +155,7 @@ F32 LLWorld::getRegionMaxPrimXPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		F32 max_scale = llmax(mInferredServerScaleX,mInferredServerScaleY,mInferredServerScaleZ); //values returned from server in a 3 element array see llviewerobject.cpp getMaxScale
-		return (llmin(F32_MAX,max_scale));
+		return (llmin(F32_MAX, mInferredServerScaleXY));
 	}
 	else
 	{
@@ -169,8 +167,7 @@ F32 LLWorld::getRegionMaxPrimYPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		F32 max_scale = llmax(mInferredServerScaleX,mInferredServerScaleY,mInferredServerScaleZ); //values returned from server in a 3 element array see llviewerobject.cpp getMaxScale
-		return (llmin(F32_MAX,max_scale));
+		return (llmin(F32_MAX, mInferredServerScaleXY));
 	}
 	else
 	{
@@ -182,8 +179,7 @@ F32 LLWorld::getRegionMaxPrimZPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		F32 max_scale = llmax(mInferredServerScaleX,mInferredServerScaleY,mInferredServerScaleZ); //values returned from server in a 3 element array see llviewerobject.cpp getMaxScale
-		return (llmin(F32_MAX,max_scale));
+		return (llmin(F32_MAX, mInferredServerScaleZ));
 	}
 	else
 	{
@@ -244,6 +240,11 @@ void LLWorld::refreshLimits()
 		//llmath/xform.h
 		mRegionMaxHeight = OS_MAX_OBJECT_Z; //llmath/xform.h
 		mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
+
+		mRegionMinPrimXPos = 0.0f;
+		mRegionMinPrimYPos = 0.0f;
+		mRegionMinPrimZPos = 0.0f;
+
 		// <NP: disable build constraints>
 		if (gSavedSettings.getBOOL("DisableMaxBuildConstraints")) // adjusts max and min constrains
 		{
@@ -252,9 +253,6 @@ void LLWorld::refreshLimits()
 				mRegionMaxPrimXPos = F32_MAX;
 				mRegionMaxPrimYPos = F32_MAX;
 				mRegionMaxPrimZPos = F32_MAX;
-				mRegionMinPrimXPos = 0.000001f;
-				mRegionMinPrimYPos = 0.000001f;
-				mRegionMinPrimZPos = 0.000001f;
 
 			}
 		else
@@ -265,9 +263,6 @@ void LLWorld::refreshLimits()
 				mRegionMaxPrimXPos = OS_DEFAULT_MAX_PRIM_SCALE;
 				mRegionMaxPrimYPos = OS_DEFAULT_MAX_PRIM_SCALE;
 				mRegionMaxPrimZPos = OS_DEFAULT_MAX_PRIM_SCALE;
-				mRegionMinPrimXPos = OS_MIN_PRIM_SCALE;
-				mRegionMinPrimYPos = OS_MIN_PRIM_SCALE;
-				mRegionMinPrimZPos = OS_MIN_PRIM_SCALE;
 			}
 		// </NP: disable build constraints>
 		mRegionMaxPrimScaleNoMesh = OS_DEFAULT_MAX_PRIM_SCALE;// no restrictions here
@@ -284,6 +279,9 @@ void LLWorld::refreshLimits()
 		//llprimitive/llprimitive.*
 		mRegionMaxHollowSize = SL_OBJECT_MAX_HOLLOW_SIZE;
 		mRegionMinHoleSize = SL_OBJECT_MIN_HOLE_SIZE;
+		mRegionMaxPrimXPos = SL_MAX_OBJECT_XY;
+		mRegionMaxPrimYPos = SL_MAX_OBJECT_XY;
+		mRegionMaxPrimZPos = SL_MAX_OBJECT_Z;
 	}
 	LL_DEBUGS("OS_SETTINGS") << "RegionMaxHeight    " << mRegionMaxHeight << llendl;
 	LL_DEBUGS("OS_SETTINGS") << "RegionMinPrimScale " << mRegionMinPrimScale << llendl;
