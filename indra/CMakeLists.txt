@@ -22,6 +22,9 @@ endif (NOT CMAKE_BUILD_TYPE)
 #<FS:AW optional opensim support>
 set(HAS_OPENSIM_SUPPORT ON)
 if (HAS_OPENSIM_SUPPORT)
+#hack for firestorm renaming HAS_OPENSIM_SUPPORT to OPENSIM
+  option(OPENSIM "OpenSim support" ON)
+  add_definitions(-DOPENSIM=1)
   add_definitions(-DHAS_OPENSIM_SUPPORT=1)
   message("compiling with OpenSim support")
 endif (HAS_OPENSIM_SUPPORT)
