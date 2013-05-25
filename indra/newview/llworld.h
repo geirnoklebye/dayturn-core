@@ -136,6 +136,7 @@ public:
 	F32	getRegionMaxPrimYPos() const;
 	F32	getRegionMaxPrimZPos() const;
 
+
 	void setInferredServerScale(F32 xy, F32 z) { mInferredServerScaleXY = xy; mInferredServerScaleZ = z; }
 
 // </NP: disable build constraints>
