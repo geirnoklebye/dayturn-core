@@ -56,17 +56,6 @@ class LLSurfacePatch;
 class LLCloudPuff;
 class LLCloudGroup;
 class LLVOAvatar;
-//gcc warning treated as errors gives defined but not used warning
-//the following allows a complete build 
-#ifdef __GNUC__
-#define VARIABLE_IS_NOT_USED __attribute__ ((unused))
-#else
-#define VARIABLE_IS_NOT_USED
-#endif
-
-static F32 VARIABLE_IS_NOT_USED mInferredServerScaleX;
-static F32 VARIABLE_IS_NOT_USED mInferredServerScaleY;
-static F32 VARIABLE_IS_NOT_USED mInferredServerScaleZ;
 
 
 // LLWorld maintains a stack of unused viewer_regions and an array of pointers to viewer regions
@@ -146,6 +135,8 @@ public:
 	F32	getRegionMaxPrimYPos() const;
 	F32	getRegionMaxPrimZPos() const;
 
+	void setInferredServerScale(F32 xy, F32 z) { mInferredServerScaleXY = xy; mInferredServerScaleZ = z; }
+
 // </NP: disable build constraints>
 // </AW: opensim-limits>
 	void					updateRegions(F32 max_update_time);
@@ -195,15 +186,15 @@ public:
 	// or if the circuit to this simulator had been lost.
 	bool isRegionListed(const LLViewerRegion* region) const;
 
-//	F32 mInferredServerScaleX;
-//	F32 mInferredServerScaleY;
-//	F32 mInferredServerScaleZ;
-
 private:
 	region_list_t	mActiveRegionList;
 	region_list_t	mRegionList;
 	region_list_t	mVisibleRegionList;
 	region_list_t	mCulledRegionList;
+
+	// maximum prim position inferred from server behaviour
+	F32 mInferredServerScaleXY;
+	F32 mInferredServerScaleZ;
 
 	// Number of points on edge
 	static const U32 mWidth;

@@ -210,6 +210,7 @@ void LLDoNotDisturbNotificationStorage::loadNotifications()
         LLFloaterReg::showInstance("im_container");
     }
 
+	if (group_ad_hoc_toast_exists)
 	{
 		LLFloaterReg::showInstance("conversation");
 	}

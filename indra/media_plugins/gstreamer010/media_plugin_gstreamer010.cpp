@@ -256,11 +256,11 @@ bool MediaPluginGStreamer010::writeToLog(const char* str, ...)
 	va_list arglist;
     va_start(arglist, str);
 	vsprintf(strmsg, str, arglist);
-	strcat(strbuf, strmsg);
+	strncat(strbuf, strmsg, 1024 - strlen(strbuf));
 
 	// write to log file
-	fprintf(fp, strbuf);
-	fprintf(fp, "\n");
+	fputs(strbuf, fp);
+	fputc('\n', fp);
 	fclose(fp);
 
 	// mirror in console window if we have one

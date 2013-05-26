@@ -4,7 +4,7 @@
  can_minimize="true" 
  can_resize="true"
  chrome="true"
- height="200"
+ height="256"
  layout="topleft"
  min_height="128"
  min_width="128"
@@ -13,7 +13,7 @@
  help_topic="map"
  save_rect="true"
  save_visibility="true"
- width="200">
+ width="256">
     <floater.string
      name="ToolTipMsg">
         [REGION](Double-click to open Map, shift-drag to pan)
@@ -31,8 +31,8 @@
      left="0"
      mouse_opaque="false"
      name="Net Map"
-     width="200"
-     height="200"
+     width="256"
+     height="256"
      top="0"/>
     <text
      type="string"

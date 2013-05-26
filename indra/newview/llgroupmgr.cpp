@@ -840,22 +840,22 @@ LLGroupMgrGroupData* LLGroupMgr::getGroupData(const LLUUID& id)
 }
 
 // Helper function for LLGroupMgr::processGroupMembersReply
-// This reformats date strings from MM/DD/YYYY to YYYY/MM/DD ( e.g. 1/27/2008 -> 2008/1/27 )
+// This reformats date strings from MM/DD/YYYY to YYYY-MM-DD ( e.g. 1/27/2008 -> 2008-01-27 )
 // so that the sorter can sort by year before month before day.
 static void formatDateString(std::string &date_string)
 {
 	using namespace boost;
 	cmatch result;
-	const regex expression("([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})");
+	const regex expression("([0-9]{1,2})/([0-9]{1,2})/([0-9]{4}).*");
 	if (regex_match(date_string.c_str(), result, expression))
 	{
-		// convert matches to integers so that we can pad them with zeroes on Linux
+		// convert matches to integers so that we can pad them with zeros
 		S32 year	= boost::lexical_cast<S32>(result[3]);
 		S32 month	= boost::lexical_cast<S32>(result[1]);
 		S32 day		= boost::lexical_cast<S32>(result[2]);
 
 		// ISO 8601 date format
-		date_string = llformat("%04d/%02d/%02d", year, month, day);
+		date_string = llformat("%04d-%02d-%02d", year, month, day);
 	}
 }
 
@@ -915,7 +915,7 @@ void LLGroupMgr::processGroupMembersReply(LLMessageSystem* msg, void** data)
 				}
 				else
 				{
-					formatDateString(online_status); // reformat for sorting, e.g. 12/25/2008 -> 2008/12/25
+					formatDateString(online_status); // reformat for sorting, e.g. 12/25/2008 -> 2008-12-25
 				}
 				
 				//llinfos << "Member " << member_id << " has powers " << std::hex << agent_powers << std::dec << llendl;

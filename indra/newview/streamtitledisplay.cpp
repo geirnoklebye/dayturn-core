@@ -49,7 +49,7 @@ BOOL StreamTitleDisplay::tick()
 
 void StreamTitleDisplay::checkMetadata()
 {
-	static LLCachedControl<U32> ShowStreamMetadata(gSavedSettings, "ShowStreamMetadata");
+	static LLCachedControl<bool> ShowStreamMetadata(gSavedSettings, "ShowStreamMetadata");
 	static LLCachedControl<bool> StreamMetadataAnnounceToChat(gSavedSettings, "StreamMetadataAnnounceToChat");
 
 
