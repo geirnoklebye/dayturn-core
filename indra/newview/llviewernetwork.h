@@ -233,6 +233,7 @@ public:
 	bool isInSLMain();
 	bool isInSLBeta();
 	bool isInOpenSim();
+	bool isInSecondLife() { return (isInSLMain() || isInSLBeta()); }	// <FS:CR>
 	void saveGridList();
 	void clearFavorites();
 	

@@ -44,11 +44,17 @@ class LLScrollListCtrl;
 class LLViewerObject;
 struct 	LLEntryAndEdCore;
 class LLMenuBarGL;
-class LLFloaterScriptSearch;
+//class LLFloaterScriptSearch;
 class LLKeywordToken;
 class LLVFS;
 class LLViewerInventoryItem;
 class LLScriptEdContainer;
+// [SL:KB] - Patch: Build-ScriptRecover | Checked: 2011-11-23 (Catznip-3.2.0)
+class LLEventTimer;
+// [/SL:KB]
+// NaCl - LSL Preprocessor
+class FSLSLPreprocessor;
+// NaCl End
 
 // Inner, implementation class.  LLPreviewScript and LLLiveLSLEditor each own one of these.
 class LLScriptEdCore : public LLPanel
@@ -56,8 +62,11 @@ class LLScriptEdCore : public LLPanel
 	friend class LLPreviewScript;
 	friend class LLPreviewLSL;
 	friend class LLLiveLSLEditor;
-	friend class LLFloaterScriptSearch;
+//	friend class LLFloaterScriptSearch;
 	friend class LLScriptEdContainer;
+	// NaCl - LSL Preprocessor
+	friend class FSLSLPreprocessor;
+	// NaCl End
 
 protected:
 	// Supposed to be invoked only by the container.
@@ -82,8 +91,12 @@ public:
 	bool			canLoadOrSaveToFile( void* userdata );
 
 	void            setScriptText(const std::string& text, BOOL is_valid);
+	// NaCL - LSL Preprocessor
+	std::string		getScriptText();
+	void			doSaveComplete(void* userdata, BOOL close_after_save );
+	// NaCl End
 	bool			loadScriptText(const std::string& filename);
-	bool			writeToFile(const std::string& filename);
+	bool			writeToFile(const std::string& filename, bool unprocessed);
 	void			sync();
 	
 	void			doSave( BOOL close_after_save );
@@ -101,6 +114,7 @@ public:
 	static void		onBtnInsertFunction(LLUICtrl*, void*);
 	static void		onBtnLoadFromFile(void*);
 	static void		onBtnSaveToFile(void*);
+	static void		onBtnPrefs(void*);	// <FS:CR> Advanced Script Editor
 
 	static bool		enableSaveToFileMenu(void* userdata);
 	static bool		enableLoadFromFileMenu(void* userdata);
@@ -108,6 +122,9 @@ public:
 	virtual bool	hasAccelerators() const { return true; }
 
 private:
+	// NaCl - LSL Preprocessor
+	static void		onToggleProc(void* userdata);
+	// NaCl End
 	void		onBtnHelp();
 	void		onBtnDynamicHelp();
 	void		onBtnUndoChanges();
@@ -119,6 +136,11 @@ private:
 	virtual BOOL handleKeyHere(KEY key, MASK mask);
 	
 	void enableSave(BOOL b) {mEnableSave = b;}
+	
+// <FS:CR> Advanced Script Editor
+	void	initButtonBar();
+	void	updateButtonBar();
+// </FS:CR>
 
 protected:
 	void deleteBridges();
@@ -146,6 +168,24 @@ private:
 	BOOL			mEnableSave;
 	BOOL			mHasScriptData;
 	LLLiveLSLFile*	mLiveFile;
+	LLTextBox*		mLineCol;
+// <FS:CR> Advanced Script Editor
+	//LLView*			mSaveBtn;
+	LLButton*		mSaveBtn;
+	LLButton*		mCutBtn;
+	LLButton*		mCopyBtn;
+	LLButton*		mPasteBtn;
+	LLButton*		mUndoBtn;
+	LLButton*		mRedoBtn;
+	LLButton*		mSaveToDiskBtn;
+	LLButton*		mLoadFromDiskBtn;
+	LLButton*		mSearchBtn;
+// </FS:CR>
+	// NaCl - LSL Preprocessor
+	FSLSLPreprocessor* mLSLProc;
+	LLTextEditor*	mPostEditor;
+	std::string		mPostScript;
+	// NaCl End
 
 	LLScriptEdContainer* mContainer; // parent view
 };
@@ -156,13 +196,27 @@ class LLScriptEdContainer : public LLPreview
 
 public:
 	LLScriptEdContainer(const LLSD& key);
+// [SL:KB] - Patch: Build-ScriptRecover | Checked: 2011-11-23 (Catznip-3.2.0) | Added: Catznip-3.2.0
+	/*virtual*/ ~LLScriptEdContainer();
+
+	/*virtual*/ void refreshFromItem();
+// [/SL:KB]
 
 protected:
 	std::string		getTmpFileName();
+// [SL:KB] - Patch: Build-ScriptRecover | Checked: 2011-11-23 (Catznip-3.2.0) | Added: Catznip-3.2.0
+	virtual std::string getBackupFileName() const;
+	bool			onBackupTimer();
+// [/SL:KB]
+
 	bool			onExternalChange(const std::string& filename);
 	virtual void	saveIfNeeded(bool sync = true) = 0;
 
 	LLScriptEdCore*		mScriptEd;
+// [SL:KB] - Patch: Build-ScriptRecover | Checked: 2011-11-23 (Catznip-3.2.0) | Added: Catznip-3.2.0
+	std::string			mBackupFilename;
+	LLEventTimer*		mBackupTimer;
+// [/SL:KB]
 };
 
 // Used to view and edit a LSL from your inventory.
@@ -175,15 +229,22 @@ public:
 
 	/*virtual*/ BOOL postBuild();
 
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+	LLTextEditor* getEditor() { return (mScriptEd) ? mScriptEd->mEditor : NULL; }
+// [/SL:KB]
+
 protected:
 	virtual BOOL canClose();
 	void closeIfNeeded();
 
 	virtual void loadAsset();
 	/*virtual*/ void saveIfNeeded(bool sync = true);
+	// NaCl - LSL Preprocessor
 	void uploadAssetViaCaps(const std::string& url,
 							const std::string& filename, 
-							const LLUUID& item_id);
+							const LLUUID& item_id,
+							bool mono);
+	// NaCl End
 	void uploadAssetLegacy(const std::string& filename,
 							const LLUUID& item_id,
 							const LLTransactionID& tid);
@@ -228,7 +289,19 @@ public:
 	/*virtual*/ BOOL postBuild();
 	
 	void setIsNew() { mIsNew = TRUE; }
-	
+//-TT Client LSL Bridge
+	static void uploadAssetViaCapsStatic(const std::string& url,
+							const std::string& filename, 
+							const LLUUID& task_id,
+							const LLUUID& item_id,
+							const std::string& is_mono,
+							BOOL is_running);
+//-TT
+
+// [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
+	LLTextEditor* getEditor() { return (mScriptEd) ? mScriptEd->mEditor : NULL; }
+// [/SL:KB]
+
 private:
 	virtual BOOL canClose();
 	void closeIfNeeded();

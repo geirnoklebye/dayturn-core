@@ -42,6 +42,7 @@
 #include "llworldmapmessage.h"
 #include "llurldispatcherlistener.h"
 #include "llviewernetwork.h"
+#include "llviewercontrol.h"
 
 // library includes
 #include "llnotificationsutil.h"
@@ -157,7 +158,7 @@ bool LLURLDispatcherImpl::dispatchApp(const LLSLURL& slurl,
 // 	bool handled = LLCommandDispatcher::dispatch(
 // 			slurl.getAppCmd(), slurl.getAppPath(), query_map, web, nav_type, trusted_browser);
 	LLSD path;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
+#ifdef OPENSIM // <FS:AW optional opensim support>
 	if ("teleport" == slurl.getAppCmd())
 	{
 		path = LLSD::emptyArray();
@@ -168,7 +169,7 @@ bool LLURLDispatcherImpl::dispatchApp(const LLSLURL& slurl,
 		}
 	}
 	else
-#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
+#endif // OPENSIM // <FS:AW optional opensim support>
 	{
 		path = slurl.getAppPath();
 	}
@@ -213,14 +214,10 @@ bool LLURLDispatcherImpl::dispatchRegion(const LLSLURL& slurl, const std::string
 	std::string grid = slurl.getGrid();
 	std::string current_grid = LLGridManager::getInstance()->getGrid();
 
-//	std::string gatekeeper = LLGridManager::getInstance()->getGatekeeper(grid) && gatekeeper.empty();
+	std::string gatekeeper = LLGridManager::getInstance()->getGatekeeper(grid);
 
 	std::string current = LLGridManager::getInstance()->getGrid();
-	if((grid != current ) 
-		&& (!LLGridManager::getInstance()->isInOpenSim()
-			|| (!slurl.getHypergrid() )
-		   )
-	  )
+	if((grid != current ) && (!LLGridManager::getInstance()->isInOpenSim() || (!slurl.getHypergrid() && gatekeeper.empty())))
 	{
  		std::string dest = hyper.getSLURLString();
 		if (!dest.empty())
@@ -265,10 +262,9 @@ void LLURLDispatcherImpl::regionNameCallback(U64 region_handle, const LLSLURL& s
 void LLURLDispatcherImpl::regionHandleCallback(U64 region_handle, const LLSLURL& slurl, const LLUUID& snapshot_id, bool teleport)
 {
  // <FS:AW optional opensim support>
-#ifndef HAS_OPENSIM_SUPPORT
+#ifndef OPENSIM
   // we can't teleport cross grid at this point
-	if(   LLGridManager::getInstance()->getGrid(slurl.getGrid())
-	   != LLGridManager::getInstance()->getGrid())
+	if (LLGridManager::getInstance()->getGrid(slurl.getGrid()) != LLGridManager::getInstance()->getGrid())
 	{
 		LLSD args;
 		args["SLURL"] = slurl.getLocationString();
@@ -277,8 +273,8 @@ void LLURLDispatcherImpl::regionHandleCallback(U64 region_handle, const LLSLURL&
 		LLNotificationsUtil::add("CantTeleportToGrid", args);
 		return;
 	}
-	
-#endif // HAS_OPENSIM_SUPPORT
+
+#endif // OPENSIM
 // </FS:AW optional opensim support>
 
 	LLVector3d global_pos = from_region_handle(region_handle);
@@ -301,7 +297,17 @@ void LLURLDispatcherImpl::regionHandleCallback(U64 region_handle, const LLSLURL&
 		key["y"] = global_pos.mdV[VY];
 		key["z"] = global_pos.mdV[VZ];
 
-		LLFloaterSidePanelContainer::showPanel("places", key);
+		// <FS:Ansariel> FIRE-817: Separate place details floater
+		//LLFloaterSidePanelContainer::showPanel("places", key);
+		if (gSavedSettings.getBOOL("FSUseStandalonePlaceDetailsFloater"))
+		{
+			LLFloaterReg::showInstance("fs_placedetails", key);
+		}
+		else
+		{
+			LLFloaterSidePanelContainer::showPanel("places", key);
+		}
+		// </FS:Ansariel>
 	}
 }
 
@@ -323,19 +329,15 @@ public:
 		// a global position, and teleport to it
 		if (tokens.size() < 1) return false;
  // <FS:AW optional opensim support>
-#ifdef HAS_OPENSIM_SUPPORT
+#ifdef OPENSIM
 		LLSLURL slurl(tokens, true);
 
 		std::string grid = slurl.getGrid();
-//		std::string gatekeeper = LLGridManager::getInstance()->getGatekeeper(grid); && gatekeeper.empty()
+		std::string gatekeeper = LLGridManager::getInstance()->getGatekeeper(grid);
 		std::string region_name = slurl.getRegion();
 		std::string dest;
 		std::string current = LLGridManager::getInstance()->getGrid();
-		if((grid != current ) 
-			&& (!LLGridManager::getInstance()->isInOpenSim()
-				|| (!slurl.getHypergrid() )
-			)
-		)
+		if((grid != current) && (!LLGridManager::getInstance()->isInOpenSim() || (!slurl.getHypergrid() && gatekeeper.empty())))
 		{
 			dest = slurl.getSLURLString();
 			if (!dest.empty())
@@ -348,12 +350,10 @@ public:
 				return true;
 			}
 		}
-		/*
 		else if(!gatekeeper.empty() && gatekeeper != LLGridManager::getInstance()->getGatekeeper())
 		{
 			region_name = gatekeeper + ":" + region_name;
 		}
-		*/
 
 		dest = "hop://" + current + "/" + region_name;
 
@@ -366,7 +366,7 @@ public:
 			LLURLDispatcherImpl::regionHandleCallback,
 			LLSLURL(dest).getSLURLString(),
 			true);	// teleport
-#else // HAS_OPENSIM_SUPPORT
+#else // OPENSIM
 		LLVector3 coords(128, 128, 0);
 		if (tokens.size() <= 4)
 		{
@@ -379,11 +379,8 @@ public:
 		
 		std::string region_name = LLURI::unescape(tokens[0]);
 
-		LLWorldMapMessage::getInstance()->sendNamedRegionRequest(region_name,
- 			LLURLDispatcherImpl::regionHandleCallback,
-			LLSLURL(region_name, coords).getSLURLString(),
- 			true);	// teleport
-#endif // HAS_OPENSIM_SUPPORT
+		LLWorldMapMessage::getInstance()->sendNamedRegionRequest(region_name, LLURLDispatcherImpl::regionHandleCallback, LLSLURL(region_name, coords).getSLURLString(), true);// teleport
+#endif // OPENSIM
 // </FS:AW optional opensim support>
 
 		return true;

@@ -105,11 +105,13 @@ include_directories(SYSTEM
     )
 
 set(viewer_SOURCE_FILES
+    fscommon.cpp
     fsexport.cpp
     fsfloaterimport.cpp
     fsfloaterprofile.cpp
     fspanelclassified.cpp
     fspanelprofile.cpp
+	fslslpreproc.cpp
     ao.cpp
     aoengine.cpp
     aoset.cpp
@@ -705,6 +707,7 @@ set(viewer_HEADER_FILES
     aoengine.h
     aoset.h
 	floaterhop.h
+	fscommon.h
     fsexport.h
     fsfloaterimport.h
     fsfloaterprofile.h
@@ -712,6 +715,7 @@ set(viewer_HEADER_FILES
     fspanelprofile.h
     fspanelprofileclassifieds.h
 	fslightshare.h
+	fslslpreproc.h
     groupchatlistener.h
     llaccountingcostmanager.h
     llagent.h

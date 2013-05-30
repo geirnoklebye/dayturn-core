@@ -28,7 +28,7 @@
 #define LL_LLPANELPEOPLE_H
 
 #include <llpanel.h>
-
+#include <llfloater.h>
 #include "llcallingcard.h" // for avatar tracker
 #include "llvoiceclient.h"
 
@@ -38,6 +38,10 @@ class LLFilterEditor;
 class LLGroupList;
 class LLMenuButton;
 class LLTabContainer;
+
+// Firestorm declarations
+class LLMenuGL;
+class FSRadarListCtrl;
 
 class LLPanelPeople 
 	: public LLPanel
@@ -54,6 +58,14 @@ public:
 	// Implements LLVoiceClientStatusObserver::onChange() to enable call buttons
 	// when voice is available
 	/*virtual*/ void onChange(EStatusType status, const std::string &channelURI, bool proximal);
+
+// [RLVa:KB] - Checked: 2010-04-05 (RLVa-1.2.0d) | Added: RLVa-1.2.0d
+	// Externalized to FSRadar
+	//LLAvatarList* getNearbyList() { return mNearbyList; }
+// [/RLVa:KB]
+
+	// <FS:Ansariel> Firestorm radar
+	void updateNearby(const std::vector<LLSD>& entries, const LLSD& stats);
 
 	// internals
 	class Updater;
@@ -106,6 +118,8 @@ private:
 	void					onGroupsViewSortMenuItemClicked(const LLSD& userdata);
 	void					onRecentViewSortMenuItemClicked(const LLSD& userdata);
 
+	//returns false only if group is "none"
+	bool					isRealGroup();
 	bool					onFriendsViewSortMenuItemCheck(const LLSD& userdata);
 	bool					onRecentViewSortMenuItemCheck(const LLSD& userdata);
 	bool					onNearbyViewSortMenuItemCheck(const LLSD& userdata);
@@ -126,6 +140,12 @@ private:
 	bool					isAccordionCollapsedByUser(LLUICtrl* acc_tab);
 	bool					isAccordionCollapsedByUser(const std::string& name);
 
+	// <FS:Ansariel> Firestorm callback handler
+//	void					onRadarListDoubleClicked();
+//	void					onGlobalVisToggleButtonClicked();
+	// </FS:Ansariel> Firestorm callback handler
+
+	LLFilterEditor*			mFilterEditor;
 	LLTabContainer*			mTabContainer;
 	LLAvatarList*			mOnlineFriendList;
 	LLAvatarList*			mAllFriendList;

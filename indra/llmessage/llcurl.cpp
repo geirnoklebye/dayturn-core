@@ -222,10 +222,21 @@ CURL* LLCurl::Easy::allocEasyHandle()
 	if (sFreeHandles.empty())
 	{
 		ret = LLCurl::newEasyHandle();
+
+		// Ansariel: Added some debug code
+		if (!ret)
+			llwarns << "curl_easy_init() failed!" << llendl;
 	}
 	else
 	{
 		ret = *(sFreeHandles.begin());
+
+		// Ansariel: Added some debug code
+		if (!ret)
+		{
+			llwarns << "allocEasyHandle() error: sFreeHandles empty" << llendl;
+		}
+
 		sFreeHandles.erase(ret);
 		curl_easy_reset(ret);
 	}
@@ -300,6 +311,15 @@ LLCurl::Easy* LLCurl::Easy::getEasy()
 	result = curl_easy_setopt(easy->mCurlEasyHandle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 	check_curl_code(result);
 	
+	// <FS:ND> Disable SSL/TLS session caching. Some servers refuse to talk to us when session ids are enabled.
+	// id.secondlife.com is such a server, when greeted with a SSL HELLO and a session id, it immediatly returns a RST packet and closes
+	// the connections.
+	// Fixes: FIRE-5368, FIRE-5756, VWR-28039, VWR-28629
+	result = curl_easy_setopt(easy->mCurlEasyHandle, CURLOPT_SSL_SESSIONID_CACHE, 0);
+	check_curl_code(result);
+	// </FS:ND>
+
+
 	++gCurlEasyCount;
 	return easy;
 }
@@ -1123,7 +1143,11 @@ void LLCurlRequest::get(const std::string& url, LLCurl::ResponderPtr responder)
 bool LLCurlRequest::getByteRange(const std::string& url,
 								 const headers_t& headers,
 								 S32 offset, S32 length,
-								 LLCurl::ResponderPtr responder)
+								 // <FS:Ansariel> Expose time out param
+								 //LLCurl::ResponderPtr responder)
+								 LLCurl::ResponderPtr responder,
+								 S32 time_out)
+								 // </FS:Ansariel>
 {
 	llassert(LLCurl::sNotQuitting);
 	LLCurl::Easy* easy = allocEasy();
@@ -1131,7 +1155,10 @@ bool LLCurlRequest::getByteRange(const std::string& url,
 	{
 		return false;
 	}
-	easy->prepRequest(url, headers, responder);
+	// <FS:Ansariel> Expose time out param
+	//easy->prepRequest(url, headers, responder);
+	easy->prepRequest(url, headers, responder, time_out);
+	// </FS:Ansariel>
 	easy->setopt(CURLOPT_HTTPGET, 1);
 	if (length > 0)
 	{

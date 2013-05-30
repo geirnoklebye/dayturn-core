@@ -51,6 +51,8 @@
 #include "llversioninfo.h"
 #include "llvfile.h"
 #include "llviewerinventory.h"
+#include "llviewerobject.h"
+#include "llviewerobjectlist.h"
 #include "llviewernetwork.h"
 #include "llviewerregion.h"
 #include "llviewertexturelist.h"
@@ -59,6 +61,7 @@
 #include "llworld.h"
 #include "fscommon.h"
 #include <boost/algorithm/string_regex.hpp>
+#include "material_codes.h"
 
 const F32 MAX_TEXTURE_WAIT_TIME = 30.0f;
 const F32 MAX_INVENTORY_WAIT_TIME = 30.0f;
@@ -268,7 +271,7 @@ void FSExport::addPrim(LLViewerObject* object, bool root)
 	LLSelectNode* node = LLSelectMgr::getInstance()->getSelection()->getFirstNode(&func);
 	if (node)
 	{
-		if ((LLGridManager::getInstance()->isInSLMain() || LLGridManager::getInstance()->isInSLBeta())
+		if ((LLGridManager::getInstance()->isInSecondLife())
 			&& object->permYouOwner()
 			&& (gAgentID == node->mPermissions->getCreator() || megaPrimCheck(node->mPermissions->getCreator(), object)))
 		{
@@ -513,7 +516,7 @@ bool FSExport::exportTexture(const LLUUID& texture_id)
 	std::string name;
 	std::string description;
 	
-	if (LLGridManager::getInstance()->isInSLMain() || LLGridManager::getInstance()->isInSLBeta())
+	if (LLGridManager::getInstance()->isInSecondLife())
 	{
 		if (imagep->mComment.find("a") != imagep->mComment.end())
 		{
@@ -685,7 +688,7 @@ bool FSExport::assetCheck(LLUUID asset_id, std::string& name, std::string& descr
 					exportable = true;
 				}
 #endif
-				if ((LLGridManager::getInstance()->isInSLMain() || LLGridManager::getInstance()->isInSLBeta()) && (perms.getCreator() == gAgentID))
+				if (LLGridManager::getInstance()->isInSecondLife() && (perms.getCreator() == gAgentID))
 				{
 					exportable = true;
 				}
@@ -722,7 +725,7 @@ void FSExport::inventoryChanged(LLViewerObject* object, LLInventoryObject::objec
 			exportable = true;
 		}
 #endif
-		if ((LLGridManager::getInstance()->isInSLMain() || LLGridManager::getInstance()->isInSLBeta()) && (perms.getCreator() == gAgentID))
+		if (LLGridManager::getInstance()->isInSecondLife() && (perms.getCreator() == gAgentID))
 		{
 			exportable = true;
 		}

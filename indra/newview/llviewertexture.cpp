@@ -913,7 +913,12 @@ LLViewerFetchedTexture::LLViewerFetchedTexture(const LLUUID& id, FTType f_type, 
 	mFTType = f_type;
 	if (mFTType == FTT_HOST_BAKE)
 	{
-		mCanUseHTTP = false;
+		// <FS:Ansariel> According to Monty Linden in BUG-871, baked textures can be fetched via HTTP, too!
+		//               According to Cinder it works also on OpenSim.
+		//mCanUseHTTP = false;
+		static LLCachedControl<bool> useHttpBakedTextureFetch(gSavedSettings, "UseHTTPBakedTextureFetch");
+		mCanUseHTTP = useHttpBakedTextureFetch;
+		// </FS:Ansariel>
 	}
 	generateGLTexture() ;
 }
@@ -1169,10 +1174,22 @@ void LLViewerFetchedTexture::dump()
 // ONLY called from LLViewerFetchedTextureList
 void LLViewerFetchedTexture::destroyTexture() 
 {
+	// <FS:Ansariel> This was commented out as part of MAINT-775 and is a REALLY bad idea!
+	//               It will dump textures off memory once you turn away and you
+	//               will end up with gray textures that need to be fetched again.
+	//               Let's do this smarter and drop textures off memory soon before
+	//               we reach the desired max texture memory!
 	//if(LLImageGL::sGlobalTextureMemoryInBytes < sMaxDesiredTextureMemInBytes)//not ready to release unused memory.
 	//{
 	//	return ;
 	//}
+	static LLCachedControl<bool> fsDestroyGLTexturesImmediately(gSavedSettings, "FSDestroyGLTexturesImmediately");
+	static LLCachedControl<F32> fsDestroyGLTexturesThreshold(gSavedSettings, "FSDestroyGLTexturesThreshold");
+	if (!fsDestroyGLTexturesImmediately && LLImageGL::sGlobalTextureMemoryInBytes < sMaxDesiredTextureMemInBytes * fsDestroyGLTexturesThreshold)//not ready to release unused memory.
+	{
+		return ;
+	}
+	// </FS:Ansariel>
 	if (mNeedsCreateTexture)//return if in the process of generating a new texture.
 	{
 		return ;
@@ -1278,12 +1295,47 @@ BOOL LLViewerFetchedTexture::createTexture(S32 usename/*= 0*/)
 	mNeedsCreateTexture	= FALSE;
 	if (mRawImage.isNull())
 	{
-		llerrs << "LLViewerTexture trying to create texture with no Raw Image" << llendl;
+		llwarns << "LLViewerTexture trying to create texture with no Raw Image" << llendl;
+		setIsMissingAsset();
+		return FALSE;
 	}
 // 	llinfos << llformat("IMAGE Creating (%d) [%d x %d] Bytes: %d ",
 // 						mRawDiscardLevel, 
 // 						mRawImage->getWidth(), mRawImage->getHeight(),mRawImage->getDataSize())
 // 			<< mID.getString() << llendl;
+
+	// <FS:Techwolf Lupindo> texture comment metadata reader
+	if (!mRawImage->mComment.empty())
+	{
+		std::string comment = mRawImage->mComment;
+		mComment["comment"] = comment;
+		std::size_t position = 0;
+		std::size_t length = comment.length();
+		while (position < length)
+		{
+			std::size_t equals_position = comment.find("=", position);
+			if (equals_position != std::string::npos)
+			{
+				std::string type = comment.substr(position, equals_position - position);
+				position = comment.find("&", position);
+				if (position != std::string::npos)
+				{
+					mComment[type] = comment.substr(equals_position + 1, position - (equals_position + 1));
+					position++;
+				}
+				else
+				{
+					mComment[type] = comment.substr(equals_position + 1, length - (equals_position + 1));
+				}
+			}
+			else
+			{
+				position = equals_position;
+			}
+		}
+	}
+	// </FS:Techwolf Lupindo>
+
 	BOOL res = TRUE;
 
 	// store original size only for locally-sourced images
@@ -1452,6 +1504,14 @@ F32 LLViewerFetchedTexture::calcDecodePriority()
 	
 	if (mNeedsCreateTexture)
 	{
+		// <FS:ND> NaN has some very special comparison characterisctics. Those would make comparing by decode-prio wrong and destroy strict weak ordering of stl containers.
+		if( llisnan(mDecodePriority ) )
+		{
+			llwarns << "Detected NaN for decode priority" << llendl;
+			mDecodePriority = 0; // What to put here? Something low? high? zero?
+		}
+		// </FS:NS>
+
 		return mDecodePriority; // no change while waiting to create
 	}
 	if(mFullyLoaded && !mForceToSaveRawImage)//already loaded for static texture
@@ -1590,6 +1650,15 @@ F32 LLViewerFetchedTexture::calcDecodePriority()
 			priority += additional;
 		}
 	}
+
+	// <FS:ND> NaN has some very special comparison characterisctics. Those would make comparing by decode-prio wrong and destroy strict weak ordering of stl containers.
+	if( llisnan(priority) )
+	{
+		llwarns << "Detected NaN for decode priority" << llendl;
+		priority = 0; // What to put here? Something low? high? zero?
+	}
+	// </FS:ND>
+
 	return priority;
 }
 
@@ -1609,6 +1678,14 @@ F32 LLViewerFetchedTexture::maxDecodePriority()
 
 void LLViewerFetchedTexture::setDecodePriority(F32 priority)
 {
+	// <FS:ND> NaN has some very special comparison characterisctics. Those would make comparing by decode-prio wrong and destroy strict weak ordering of stl containers.
+	if( llisnan(priority) )
+	{
+		llwarns << "Detected NaN for decode priority" << llendl;
+		priority = 0; // What to put here? Something low? high? zero?
+	}
+	// </FS:ND>
+    
 	mDecodePriority = priority;
 
 	if(mDecodePriority < F_ALMOST_ZERO)
@@ -1792,6 +1869,9 @@ bool LLViewerFetchedTexture::updateFetch()
 				if(mFullWidth > MAX_IMAGE_SIZE || mFullHeight > MAX_IMAGE_SIZE)
 				{ 
 					//discard all oversized textures.
+					llinfos << "Discarding oversized texture, width= "
+						<< mFullWidth << ", height= "
+						<< mFullHeight << llendl;
 					destroyRawImage();
 					llwarns << "oversize, setting as missing" << llendl;
 					setIsMissingAsset();
@@ -1978,10 +2058,10 @@ bool LLViewerFetchedTexture::updateFetch()
 
 void LLViewerFetchedTexture::clearFetchedResults()
 {
-	if(mNeedsCreateTexture || mIsFetching)
-	{
-		return ;
-	}
+	// <FS:Ansariel> For texture refresh
+	//llassert_always(!mNeedsCreateTexture && !mIsFetching);
+	mIsMissingAsset = FALSE;
+	// </FS:Ansariel>
 	
 	cleanup();
 	destroyGLTexture();
