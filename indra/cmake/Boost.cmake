@@ -14,6 +14,7 @@ if (STANDALONE)
   set(BOOST_SIGNALS_LIBRARY boost_signals-mt)
   set(BOOST_SYSTEM_LIBRARY boost_system-mt)
   set(BOOST_THREAD_LIBRARY boost_thread-mt)
+  set(BOOST_WAVE_LIBRARY boost_wave-mt)
 else (STANDALONE)
   use_prebuilt_binary(boost)
   set(Boost_INCLUDE_DIRS ${LIBS_PREBUILT_DIR}/include)
@@ -46,6 +47,9 @@ else (STANDALONE)
       set(BOOST_THREAD_LIBRARY 
           optimized libboost_thread-vc80-mt-${BOOST_VERSION}
           debug libboost_thread-vc80-mt-gd-${BOOST_VERSION})
+	  set(BOOST_WAVE_LIBRARY 
+          optimized libboost_wave-vc80-mt-${BOOST_VERSION}
+          debug libboost_wave-vc80-mt-gd-${BOOST_VERSION})	  
     else(MSVC80)
       # MSVC 10.0 config
       set(BOOST_CONTEXT_LIBRARY 
@@ -69,6 +73,9 @@ else (STANDALONE)
       set(BOOST_THREAD_LIBRARY 
           optimized libboost_thread-mt
           debug libboost_thread-mt-gd)
+	  set(BOOST_WAVE_LIBRARY 
+          optimized libboost_wave-mt
+          debug libboost_wave-mt-gd)  
     endif (MSVC80)
   elseif (LINUX)
     set(BOOST_CONTEXT_LIBRARY
