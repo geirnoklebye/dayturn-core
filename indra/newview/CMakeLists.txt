@@ -111,7 +111,6 @@ set(viewer_SOURCE_FILES
     fsfloaterprofile.cpp
     fspanelclassified.cpp
     fspanelprofile.cpp
-	fslslpreproc.cpp
     ao.cpp
     aoengine.cpp
     aoset.cpp
@@ -715,7 +714,6 @@ set(viewer_HEADER_FILES
     fspanelprofile.h
     fspanelprofileclassifieds.h
 	fslightshare.h
-	fslslpreproc.h
     groupchatlistener.h
     llaccountingcostmanager.h
     llagent.h
