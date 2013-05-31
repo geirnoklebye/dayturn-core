@@ -1325,7 +1325,7 @@ static std::string add_export_filter_to_gtkchooser(GtkWindow *picker)
 	return filtername;
 }
 // </FS:CR>
-								
+BOOL LLFilePicker::getSaveFile( ESaveFilter filter, const std::string& filename)
 {
 	BOOL rtn = FALSE;
 
