@@ -99,6 +99,9 @@ else (STANDALONE)
     set(BOOST_THREAD_LIBRARY
         optimized boost_thread-mt
         debug boost_thread-mt-d)
+    set(BOOST_WAVE_LIBRARY 
+          optimized libboost_wave-mt
+          debug libboost_wave-mt-gd)  
   elseif (DARWIN)
     set(BOOST_CONTEXT_LIBRARY
         optimized boost_context-mt
