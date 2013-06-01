@@ -231,12 +231,10 @@ bool LLURLDispatcherImpl::dispatchRegion(const LLSLURL& slurl, const std::string
 			return true;
 		}
 	}
-	/*
 	else if(!gatekeeper.empty())
 	{
 		hyper = LLSLURL(gatekeeper + ":" + slurl.getRegion(), slurl.getPosition(), true);
 	}
-	*/
 	
 	// Trim the grid uri if we're talking a local region here. <FS:CR>
 	if (grid == current)
@@ -255,12 +253,10 @@ bool LLURLDispatcherImpl::dispatchRegion(const LLSLURL& slurl, const std::string
 		}
 	}
 
+#endif //OPENSIM
 	// Request a region handle by name
 	LLWorldMapMessage::getInstance()->sendNamedRegionRequest(region, LLURLDispatcherImpl::regionNameCallback, dest, LLUI::sSettingGroups["config"]->getBOOL("SLURLTeleportDirectly"));	// don't teleport
 // </FS:AW optional opensim support>
-									  hyper.getSLURLString(),
-// </FS:AW hypergrid support >
-									  LLUI::sSettingGroups["config"]->getBOOL("SLURLTeleportDirectly"));	// don't teleport
 	return true;
 }
 

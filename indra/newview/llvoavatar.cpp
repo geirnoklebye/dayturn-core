@@ -2631,8 +2631,6 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 	}
 	bool is_friend = LLAvatarTracker::instance().isBuddy(getID());
 	bool is_cloud = getIsCloud();
-	static LLUICachedControl<U32> color_client_tags("FSColorClienttags");
-	if(mClientTagData.has("color") && !(show_friends && (is_friend || LGGContactSets::getInstance()->hasFriendColorThatShouldShow(getID(), LGG_CS_TAG))) && color_client_tags > 0 && !this->isSelf())
 
 	if (is_appearance != mNameAppearance)
 	{
