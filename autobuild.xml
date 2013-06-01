@@ -268,9 +268,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>50c8b50b7cced52cc5656fb44e9b12cf</string>
+              <string>02355042f5263a2e27883b8f3d6063be</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/270698/arch/Linux/installer/boost-1.52.0-linux-20130222.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-boost-64/downloads/boost-1.52.0-linux-20130531.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>

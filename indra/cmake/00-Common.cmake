@@ -170,7 +170,7 @@ if (LINUX)
     IF(${ARCH} STREQUAL "x86_64")
       add_definitions(-march=x86-64 -mfpmath=sse)
     ELSE(${ARCH} STREQUAL "x86_64")
-       add_definitions(-mtune=pentium4 -mfpmath=sse)
+       add_definitions(-march=pentium4 -mfpmath=sse)
     ENDIF(${ARCH} STREQUAL "x86_64")
   #add_definitions(-ftree-vectorize) # THIS CRASHES GCC 3.1-3.2
   if (NOT STANDALONE)
