@@ -125,7 +125,7 @@
    layout="topleft"
    left="33"
    name="UI Size:"
-   top_pad="20"
+   top_pad="15"
    width="100">
     UI size:
   </text>
@@ -143,6 +143,44 @@
    name="ui_scale_slider"
    top_pad="-14"
    width="250" />
+   <text
+   type="string"
+   length="1"
+   follows="left|top"
+   height="12"
+   layout="topleft"
+   left="33"
+   name="Font Size:"
+   top_pad="10"
+   width="100">
+    Font size(dpi) :
+  </text>
+   <slider
+   control_name="FontScreenDPI"
+   decimal_digits="0"
+   follows="left|top"
+   height="17"
+   increment="1.0"
+   initial_value="100"
+   layout="topleft"
+   left_pad="0"
+   max_val="120"
+   min_val="75"
+   name="font_screen_slider"
+   top_pad="-14"
+   width="250" />
+   <text
+  type="string"
+   length="1"
+   follows="left|top"
+   height="12"
+   layout="topleft"
+   left="33"
+   name="Font Restart:"
+   top_pad="3"
+   width="400">
+    Font size change is active after a  viewer restart
+  </text>
     <check_box
      control_name="ShowScriptErrors"
      follows="left|top"
@@ -150,7 +188,7 @@
      label="Show script errors in:"
      layout="topleft"
      left="30"
-     top_pad="10" 
+     top_pad="15" 
      name="show_script_errors"
      width="256" />
     <radio_group
