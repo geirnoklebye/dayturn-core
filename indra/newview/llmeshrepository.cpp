@@ -220,7 +220,8 @@ public:
 	LLMeshHandlerBase()
 		: LLCore::HttpHandler(),
 		  mMeshParams(),
-		  mProcessed(false)
+		  mProcessed(false),
+		  mHttpHandle(LLCORE_HTTP_HANDLE_INVALID)
 	{}
 	virtual ~LLMeshHandlerBase();
 
@@ -367,95 +368,6 @@ public:
 	U32			mOffset;
 };
 
-	
-class LLMeshHeaderResponder : public LLCurl::Responder
-{
-public:
-	LLVolumeParams mMeshParams;
-	bool mProcessed;
-
-	LLMeshHeaderResponder(const LLVolumeParams& mesh_params)
-		: mMeshParams(mesh_params)
-	{
-		LLMeshRepoThread::incActiveHeaderRequests();
-		mProcessed = false;
-	}
-
-	~LLMeshHeaderResponder()
-	{
-		if (!LLApp::isQuitting())
-		{
-			if (!mProcessed)
-			{ //something went wrong, retry
-				llwarns << "Timeout or service unavailable, retrying." << llendl;
-				LLMeshRepository::sHTTPRetryCount++;
-				LLMeshRepoThread::HeaderRequest req(mMeshParams);
-				LLMutexLock lock(gMeshRepo.mThread->mMutex);
-				gMeshRepo.mThread->mHeaderReqQ.push(req);
-			}
-
-			LLMeshRepoThread::decActiveHeaderRequests();
-		}
-	}
-
-	virtual void completedRaw(U32 status, const std::string& reason,
-							  const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer);
-
-};
-
-class LLMeshLODResponder : public LLCurl::Responder
-{
-public:
-	LLVolumeParams mMeshParams;
-	S32 mLOD;
-	U32 mRequestedBytes;
-	U32 mOffset;
-	bool mProcessed;
-
-	LLMeshLODResponder(const LLVolumeParams& mesh_params, S32 lod, U32 offset, U32 requested_bytes)
-		: mMeshParams(mesh_params), mLOD(lod), mOffset(offset), mRequestedBytes(requested_bytes)
-	{
-		LLMeshRepoThread::incActiveLODRequests();
-		mProcessed = false;
-	}
-
-	~LLMeshLODResponder()
-	{
-		if (!LLApp::isQuitting())
-		{
-			if (!mProcessed)
-			{
-				llwarns << "Killed without being processed, retrying." << llendl;
-				LLMeshRepository::sHTTPRetryCount++;
-				gMeshRepo.mThread->lockAndLoadMeshLOD(mMeshParams, mLOD);
-			}
-			LLMeshRepoThread::decActiveLODRequests();
-		}
-	}
-
-	virtual void completedRaw(U32 status, const std::string& reason,
-							  const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer);
-
-};
-
-class LLMeshSkinInfoResponder : public LLCurl::Responder
-{
-public:
-	LLUUID mMeshID;
-	U32 mRequestedBytes;
-	U32 mOffset;
-	bool mProcessed;
-
-	LLMeshSkinInfoResponder(const LLUUID& id, U32 offset, U32 size)
-		: mMeshID(id), mRequestedBytes(size), mOffset(offset)
-	{
-		mProcessed = false;
-	}
-
-	~LLMeshSkinInfoResponder()
-	{
 		if (!LLApp::isQuitting() &&
 			!mProcessed &&
 			mMeshID.notNull())
@@ -464,30 +376,6 @@ public:
 			LLMeshRepository::sHTTPRetryCount++;
 			gMeshRepo.mThread->loadMeshSkinInfo(mMeshID);
 		}
-	}
-
-	virtual void completedRaw(U32 status, const std::string& reason,
-							  const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer);
-
-};
-
-class LLMeshDecompositionResponder : public LLCurl::Responder
-{
-public:
-	LLUUID mMeshID;
-	U32 mRequestedBytes;
-	U32 mOffset;
-	bool mProcessed;
-
-	LLMeshDecompositionResponder(const LLUUID& id, U32 offset, U32 size)
-		: mMeshID(id), mRequestedBytes(size), mOffset(offset)
-	{
-		mProcessed = false;
-	}
-
-	~LLMeshDecompositionResponder()
-	{
 		if (!LLApp::isQuitting() &&
 			!mProcessed &&
 			mMeshID.notNull())
@@ -496,30 +384,6 @@ public:
 			LLMeshRepository::sHTTPRetryCount++;
 			gMeshRepo.mThread->loadMeshDecomposition(mMeshID);
 		}
-	}
-
-	virtual void completedRaw(U32 status, const std::string& reason,
-							  const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer);
-
-};
-
-class LLMeshPhysicsShapeResponder : public LLCurl::Responder
-{
-public:
-	LLUUID mMeshID;
-	U32 mRequestedBytes;
-	U32 mOffset;
-	bool mProcessed;
-
-	LLMeshPhysicsShapeResponder(const LLUUID& id, U32 offset, U32 size)
-		: mMeshID(id), mRequestedBytes(size), mOffset(offset)
-	{
-		mProcessed = false;
-	}
-
-	~LLMeshPhysicsShapeResponder()
-	{
 		if (!LLApp::isQuitting() &&
 			!mProcessed &&
 			mMeshID.notNull())
@@ -528,14 +392,6 @@ public:
 			LLMeshRepository::sHTTPRetryCount++;
 			gMeshRepo.mThread->loadMeshPhysicsShape(mMeshID);
 		}
-	}
-
-	virtual void completedRaw(U32 status, const std::string& reason,
-							  const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer);
-
-};
-
 void log_upload_error(S32 status, const LLSD& content, std::string stage, std::string model_name)
 {
 	// Add notification popup.
@@ -1092,9 +948,6 @@ bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 			}
 
 			//reading from VFS failed for whatever reason, fetch from sim
-			std::vector<std::string> headers;
-			headers.push_back("Accept: application/octet-stream");
-
 			std::string http_url = constructUrl(mesh_id);
 			if (!http_url.empty())
 			{
@@ -1193,9 +1046,6 @@ bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id)
 			}
 
 			//reading from VFS failed for whatever reason, fetch from sim
-			std::vector<std::string> headers;
-			headers.push_back("Accept: application/octet-stream");
-
 			std::string http_url = constructUrl(mesh_id);
 			if (!http_url.empty())
 			{
@@ -1293,9 +1143,6 @@ bool LLMeshRepoThread::fetchMeshPhysicsShape(const LLUUID& mesh_id)
 			}
 
 			//reading from VFS failed for whatever reason, fetch from sim
-			std::vector<std::string> headers;
-			headers.push_back("Accept: application/octet-stream");
-
 			std::string http_url = constructUrl(mesh_id);
 			if (!http_url.empty())
 			{
@@ -1394,9 +1241,6 @@ bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params, U32& c
 
 	//either cache entry doesn't exist or is corrupt, request header from simulator	
 	bool retval = true ;
-	std::vector<std::string> headers;
-	headers.push_back("Accept: application/octet-stream");
-
 	std::string http_url = constructUrl(mesh_params.getSculptID());
 	if (!http_url.empty())
 	{
@@ -1500,9 +1344,6 @@ bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod, 
 			}
 
 			//reading from VFS failed for whatever reason, fetch from sim
-			std::vector<std::string> headers;
-			headers.push_back("Accept: application/octet-stream");
-
 			std::string http_url = constructUrl(mesh_id);
 			if (!http_url.empty())
 			{
@@ -2305,15 +2146,7 @@ void LLMeshRepository::cacheOutgoingMesh(LLMeshUploadData& data, LLSD& header)
 
 }
 
-void LLMeshLODResponder::completedRaw(U32 status, const std::string& reason,
-							  const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer)
-{
 	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
-	mProcessed = true;
-	
-	if( !gMeshRepo.mThread )
-		return;
 	// </FS:ND>
 
 	// <FS:Ansariel> Mesh header/LOD retry functionality
@@ -2322,265 +2155,36 @@ void LLMeshLODResponder::completedRaw(U32 status, const std::string& reason,
 		LLMeshRepoThread::ActiveLODRequest Req(mMeshParams, mLOD);
 		gMeshRepo.mThread->mActiveLODRequests.erase(Req);
 		LL_DEBUGS("MeshRequestTimeout") << "Cleared active mesh LOD request: SculptID=" << mMeshParams.getSculptID() << ", LOD=" << mLOD << LL_ENDL;
-	}
 	// </FS:Ansariel> Mesh header/LOD retry functionality
-	
-	S32 data_size = buffer->countAfter(channels.in(), NULL);
-
-	if (status < 200 || status > 400)
-	{
-		llwarns << status << ": " << reason << llendl;
-	}
-
-	if (data_size < mRequestedBytes)
-	{
 		if (status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE)
-		{ //timeout or service unavailable, try again
-			llwarns << "Timeout or service unavailable, retrying." << llendl;
-			LLMeshRepository::sHTTPRetryCount++;
-			gMeshRepo.mThread->loadMeshLOD(mMeshParams, mLOD);
-		}
-		else
-		{
 			llassert(status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE); //intentionally trigger a breakpoint
-			llwarns << "Unhandled status " << status << llendl;
-		}
-		return;
-	}
-
-	LLMeshRepository::sBytesReceived += mRequestedBytes;
-
-	U8* data = NULL;
-
-	if (data_size > 0)
-	{
-		data = new U8[data_size];
-		buffer->readAfter(channels.in(), NULL, data, data_size);
-	}
-
-	if (gMeshRepo.mThread->lodReceived(mMeshParams, mLOD, data, data_size))
-	{
-		//good fetch from sim, write to VFS for caching
-		LLVFile file(gVFS, mMeshParams.getSculptID(), LLAssetType::AT_MESH, LLVFile::WRITE);
-
-		S32 offset = mOffset;
-		S32 size = mRequestedBytes;
-
-		if (file.getSize() >= offset+size)
-		{
-			file.seek(offset);
-			file.write(data, size);
-			LLMeshRepository::sCacheBytesWritten += size;
-		}
-	}
-
-	delete [] data;
-}
-
-void LLMeshSkinInfoResponder::completedRaw(U32 status, const std::string& reason,
-							  const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer)
-{
 	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
-	mProcessed = true;
-
-	if( !gMeshRepo.mThread )
-		return;
 	// </FS:ND>
 
-
-	S32 data_size = buffer->countAfter(channels.in(), NULL);
-
-	if (status < 200 || status > 400)
-	{
-		llwarns << status << ": " << reason << llendl;
-	}
-
-	if (data_size < mRequestedBytes)
-	{
 		if (status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE)
-		{ //timeout or service unavailable, try again
 			llwarns << "Timeout or service unavailable, retrying loadMeshSkinInfo() for " << mMeshID << llendl;
-			LLMeshRepository::sHTTPRetryCount++;
-			gMeshRepo.mThread->loadMeshSkinInfo(mMeshID);
-		}
-		else
-		{
 			llassert(status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE); //intentionally trigger a breakpoint
-			llwarns << "Unhandled status " << status << llendl;
-		}
-		return;
-	}
-
-	LLMeshRepository::sBytesReceived += mRequestedBytes;
-
-	U8* data = NULL;
-
-	if (data_size > 0)
-	{
-		data = new U8[data_size];
-		buffer->readAfter(channels.in(), NULL, data, data_size);
-	}
-
-	if (gMeshRepo.mThread->skinInfoReceived(mMeshID, data, data_size))
-	{
-		//good fetch from sim, write to VFS for caching
-		LLVFile file(gVFS, mMeshID, LLAssetType::AT_MESH, LLVFile::WRITE);
-
-		S32 offset = mOffset;
-		S32 size = mRequestedBytes;
-
-		if (file.getSize() >= offset+size)
-		{
-			LLMeshRepository::sCacheBytesWritten += size;
-			file.seek(offset);
-			file.write(data, size);
-		}
-	}
-
-	delete [] data;
-}
-
-void LLMeshDecompositionResponder::completedRaw(U32 status, const std::string& reason,
-							  const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer)
-{
 	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
-	mProcessed = true;
-	
-	if( !gMeshRepo.mThread )
-		return;
 	// </FS:ND>
-
-	S32 data_size = buffer->countAfter(channels.in(), NULL);
-
-	if (status < 200 || status > 400)
-	{
-		llwarns << status << ": " << reason << llendl;
-	}
-
-	if (data_size < mRequestedBytes)
-	{
 		if (status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE)
 		//               not produce a request within the time that the server
 		//               was prepared to wait.)
 		//if (status == 499 || status == 503)
 		if (status == 408 || status == 499 || status == 503)
-		{ //timeout or service unavailable, try again
 			llwarns << "Timeout or service unavailable, retrying loadMeshDecomposition() for " << mMeshID << llendl;
-			LLMeshRepository::sHTTPRetryCount++;
-			gMeshRepo.mThread->loadMeshDecomposition(mMeshID);
-		}
-		else
-		{
 			llassert(status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE); //intentionally trigger a breakpoint
-			llwarns << "Unhandled status " << status << llendl;
-		}
-		return;
-	}
-
-	LLMeshRepository::sBytesReceived += mRequestedBytes;
-
-	U8* data = NULL;
-
-	if (data_size > 0)
-	{
-		data = new U8[data_size];
-		buffer->readAfter(channels.in(), NULL, data, data_size);
-	}
-
-	if (gMeshRepo.mThread->decompositionReceived(mMeshID, data, data_size))
-	{
-		//good fetch from sim, write to VFS for caching
-		LLVFile file(gVFS, mMeshID, LLAssetType::AT_MESH, LLVFile::WRITE);
-
-		S32 offset = mOffset;
-		S32 size = mRequestedBytes;
-
-		if (file.getSize() >= offset+size)
-		{
-			LLMeshRepository::sCacheBytesWritten += size;
-			file.seek(offset);
-			file.write(data, size);
-		}
-	}
-
-	delete [] data;
-}
-
-void LLMeshPhysicsShapeResponder::completedRaw(U32 status, const std::string& reason,
-							  const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer)
-{
 	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
-	mProcessed = true;
-
-	if( !gMeshRepo.mThread )
-		return;
 	// </FS:ND>
 
-
-	S32 data_size = buffer->countAfter(channels.in(), NULL);
-
-	if (status < 200 || status > 400)
-	{
-		llwarns << status << ": " << reason << llendl;
-	}
-
-	if (data_size < mRequestedBytes)
-	{
 		if (status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE)
-		{ //timeout or service unavailable, try again
 			llwarns << "Timeout or service unavailable, retrying loadMeshPhysicsShape() for " << mMeshID << llendl;
-			LLMeshRepository::sHTTPRetryCount++;
-			gMeshRepo.mThread->loadMeshPhysicsShape(mMeshID);
-		}
-		else
-		{
 			llassert(status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE); //intentionally trigger a breakpoint
-			llwarns << "Unhandled status " << status << llendl;
-		}
-		return;
-	}
-
-	LLMeshRepository::sBytesReceived += mRequestedBytes;
-
-	U8* data = NULL;
-
-	if (data_size > 0)
-	{
-		data = new U8[data_size];
-		buffer->readAfter(channels.in(), NULL, data, data_size);
-	}
-
-	if (gMeshRepo.mThread->physicsShapeReceived(mMeshID, data, data_size))
-	{
-		//good fetch from sim, write to VFS for caching
-		LLVFile file(gVFS, mMeshID, LLAssetType::AT_MESH, LLVFile::WRITE);
-
-		S32 offset = mOffset;
-		S32 size = mRequestedBytes;
-
-		if (file.getSize() >= offset+size)
-		{
-			LLMeshRepository::sCacheBytesWritten += size;
-			file.seek(offset);
-			file.write(data, size);
-		}
-	}
-
-	delete [] data;
-}
-
-	
 LLMeshHandlerBase::~LLMeshHandlerBase()
 {}
-
 
 void LLMeshHandlerBase::onCompleted(LLCore::HttpHandle handle, LLCore::HttpResponse * response)
 {
 	mProcessed = true;
-
 	LLCore::HttpStatus status(response->getStatus());
 	if (! status)
 	{
@@ -2639,7 +2243,6 @@ LLMeshHeaderHandler::~LLMeshHeaderHandler()
 	}
 }
 
-
 void LLMeshHeaderHandler::processFailure(LLCore::HttpStatus status)
 {
 	LL_WARNS("Mesh") << "MESH:  Processing Failure" << LL_ENDL;
@@ -2657,7 +2260,6 @@ void LLMeshHeaderHandler::processFailure(LLCore::HttpStatus status)
 		llwarns << "Unhandled status." << llendl;
 	}
 }
-
 
 void LLMeshHeaderHandler::processData(LLCore::BufferArray * body, U8 * data, S32 data_size)
 {
@@ -2729,7 +2331,6 @@ void LLMeshHeaderHandler::processData(LLCore::BufferArray * body, U8 * data, S32
 	}
 }
 
-
 LLMeshLODHandler::~LLMeshLODHandler()
 {
 	if (! LLApp::isQuitting())
@@ -2779,7 +2380,6 @@ void LLMeshLODHandler::processData(LLCore::BufferArray * body, U8 * data, S32 da
 	}
 }
 
-
 LLMeshSkinInfoHandler::~LLMeshSkinInfoHandler()
 {
 		llassert(mProcessed);
@@ -2819,7 +2419,6 @@ void LLMeshSkinInfoHandler::processData(LLCore::BufferArray * body, U8 * data, S
 		}
 	}
 }
-
 
 LLMeshDecompositionHandler::~LLMeshDecompositionHandler()
 {
@@ -2861,7 +2460,6 @@ void LLMeshDecompositionHandler::processData(LLCore::BufferArray * body, U8 * da
 	}
 }
 
-
 LLMeshPhysicsShapeHandler::~LLMeshPhysicsShapeHandler()
 {
 		llassert(mProcessed);
@@ -2883,7 +2481,6 @@ void LLMeshPhysicsShapeHandler::processFailure(LLCore::HttpStatus status)
 	}
 }
 
-	
 void LLMeshPhysicsShapeHandler::processData(LLCore::BufferArray * body, U8 * data, S32 data_size)
 {
 	if (gMeshRepo.mThread->physicsShapeReceived(mMeshID, data, data_size))
@@ -2903,16 +2500,7 @@ void LLMeshPhysicsShapeHandler::processData(LLCore::BufferArray * body, U8 * dat
 	}
 }
 
-
-void LLMeshHeaderResponder::completedRaw(U32 status, const std::string& reason,
-							  const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer)
-{
 	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
-	mProcessed = true;
-
-	if( !gMeshRepo.mThread )
-		return;
 	// </FS:ND>
 
 	// <FS:Ansariel> Mesh header/LOD retry functionality
@@ -2921,124 +2509,8 @@ void LLMeshHeaderResponder::completedRaw(U32 status, const std::string& reason,
 		LLMeshRepoThread::ActiveHeaderRequest Req(mMeshParams);
 		gMeshRepo.mThread->mActiveHeaderRequests.erase(Req);
 		LL_DEBUGS("MeshRequestTimeout") << "Cleared active mesh header request: " << mMeshParams.getSculptID() << LL_ENDL;
-	}
 	// </FS:Ansariel> Mesh header/LOD retry functionality
-
-	if (status < 200 || status > 400)
-	{
-		//llwarns
-		//	<< "Header responder failed with status: "
-		//	<< status << ": " << reason << llendl;
-
 		// 503 (service unavailable) or 499 (internal Linden-generated error)
-		// can be due to server load and can be retried
-
-		// TODO*: Add maximum retry logic, exponential backoff
-		// and (somewhat more optional than the others) retries
-		// again after some set period of time
-
-		llassert(status == HTTP_NOT_FOUND || status == HTTP_SERVICE_UNAVAILABLE || status == HTTP_REQUEST_TIME_OUT || status == HTTP_INTERNAL_ERROR);
-
-		if (status == HTTP_SERVICE_UNAVAILABLE || status == HTTP_REQUEST_TIME_OUT || status == HTTP_INTERNAL_ERROR)
-		{ //retry
-			llwarns << "Timeout or service unavailable, retrying." << llendl;
-			LLMeshRepository::sHTTPRetryCount++;
-			LLMeshRepoThread::HeaderRequest req(mMeshParams);
-			LLMutexLock lock(gMeshRepo.mThread->mMutex);
-			gMeshRepo.mThread->mHeaderReqQ.push(req);
-
-			return;
-		}
-		else
-		{
-			llwarns << "Unhandled status: " << status << llendl;
-		}
-	}
-
-	S32 data_size = buffer->countAfter(channels.in(), NULL);
-
-	U8* data = NULL;
-
-	if (data_size > 0)
-	{
-		data = new U8[data_size];
-		buffer->readAfter(channels.in(), NULL, data, data_size);
-	}
-
-	LLMeshRepository::sBytesReceived += llmin(data_size, MESH_HEADER_SIZE);
-
-	bool success = gMeshRepo.mThread->headerReceived(mMeshParams, data, data_size);
-	
-	llassert(success);
-
-	if (!success)
-	{
-		llwarns
-			<< "Unable to parse mesh header: "
-			<< status << ": " << reason << llendl;
-	}
-	else if (data && data_size > 0)
-	{
-		//header was successfully retrieved from sim, cache in vfs
-		LLUUID mesh_id = mMeshParams.getSculptID();
-		LLSD header = gMeshRepo.mThread->mMeshHeader[mesh_id];
-
-		S32 version = header["version"].asInteger();
-
-		if (version <= MAX_MESH_VERSION)
-		{
-			std::stringstream str;
-
-			S32 lod_bytes = 0;
-
-			for (U32 i = 0; i < LLModel::LOD_PHYSICS; ++i)
-			{ //figure out how many bytes we'll need to reserve in the file
-				std::string lod_name = header_lod[i];
-				lod_bytes = llmax(lod_bytes, header[lod_name]["offset"].asInteger()+header[lod_name]["size"].asInteger());
-			}
-		
-			//just in case skin info or decomposition is at the end of the file (which it shouldn't be)
-			lod_bytes = llmax(lod_bytes, header["skin"]["offset"].asInteger() + header["skin"]["size"].asInteger());
-			lod_bytes = llmax(lod_bytes, header["physics_convex"]["offset"].asInteger() + header["physics_convex"]["size"].asInteger());
-
-			S32 header_bytes = (S32) gMeshRepo.mThread->mMeshHeaderSize[mesh_id];
-			S32 bytes = lod_bytes + header_bytes; 
-
-		
-			//it's possible for the remote asset to have more data than is needed for the local cache
-			//only allocate as much space in the VFS as is needed for the local cache
-			data_size = llmin(data_size, bytes);
-
-			LLVFile file(gVFS, mesh_id, LLAssetType::AT_MESH, LLVFile::WRITE);
-			if (file.getMaxSize() >= bytes || file.setMaxSize(bytes))
-			{
-				LLMeshRepository::sCacheBytesWritten += data_size;
-
-				file.write((const U8*) data, data_size);
-			
-				//zero out the rest of the file 
-				U8 block[MESH_HEADER_SIZE];
-				memset(block, 0, MESH_HEADER_SIZE);
-
-				while (bytes-file.tell() > MESH_HEADER_SIZE)
-				{
-					file.write(block, MESH_HEADER_SIZE);
-				}
-
-				S32 remaining = bytes-file.tell();
-
-				if (remaining > 0)
-				{
-					file.write(block, remaining);
-				}
-			}
-		}
-	}
-
-	delete [] data;
-}
-
-
 LLMeshRepository::LLMeshRepository()
 : mMeshMutex(NULL),
   mMeshThreadCount(0),
