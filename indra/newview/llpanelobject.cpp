@@ -320,7 +320,7 @@ LLPanelObject::LLPanelObject()
 	mSelectedType(MI_BOX),
 	mSculptTextureRevert(LLUUID::null),
 	mSculptTypeRevert(0),
-	mLimitsNeedUpdate(true)
+	mLimitsNeedUpdate(true),
 	mHasPosClipboard(FALSE),
 	mHasSizeClipboard(FALSE),
 	mHasRotClipboard(FALSE),
