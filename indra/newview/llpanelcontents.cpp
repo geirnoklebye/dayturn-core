@@ -82,7 +82,7 @@ BOOL LLPanelContents::postBuild()
 
 	childSetAction("button new script",&LLPanelContents::onClickNewScript, this);
 	childSetAction("button permissions",&LLPanelContents::onClickPermissions, this);
-
+	childSetAction("button refresh",&LLPanelContents::onClickRefresh, this);
 	mPanelInventoryObject = getChild<LLPanelObjectInventory>("contents_inventory");
 
 	return TRUE;
@@ -106,6 +106,7 @@ void LLPanelContents::getState(LLViewerObject *objectp )
 	if( !objectp )
 	{
 		getChildView("button new script")->setEnabled(FALSE);
+		getChildView("button reset scripts")->setEnabled(FALSE);
 		return;
 	}
 
@@ -118,12 +119,23 @@ void LLPanelContents::getState(LLViewerObject *objectp )
 					       && ( objectp->permYouOwner() || ( !group_id.isNull() && gAgent.isInGroup(group_id) )));  // solves SL-23488
 	BOOL all_volume = LLSelectMgr::getInstance()->selectionAllPCode( LL_PCODE_VOLUME );
 
-	// Edit script button - ok if object is editable and there's an unambiguous destination for the object.
-	getChildView("button new script")->setEnabled(
-		editable &&
-		all_volume &&
-		((LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() == 1)
-			|| (LLSelectMgr::getInstance()->getSelection()->getObjectCount() == 1)));
+
+	// Edit/reset script buttons - ok if object is editable and there's an unambiguous destination for the object.
+	// <FS:PP> FIRE-3219: Reset Scripts button in Build floater
+	//	getChildView("button new script")->setEnabled(
+	//		editable &&
+	//		all_volume &&
+	//		((LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() == 1)
+	//			|| (LLSelectMgr::getInstance()->getSelection()->getObjectCount() == 1)));
+	bool objectIsOK = FALSE;
+	if( editable && all_volume && ( (LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() == 1) || (LLSelectMgr::getInstance()->getSelection()->getObjectCount() == 1) ) )
+	{
+		objectIsOK = TRUE;
+	}
+
+	getChildView("button new script")->setEnabled(objectIsOK);
+	getChildView("button reset scripts")->setEnabled(objectIsOK);
+	// </FS:PP>
 
 	getChildView("button permissions")->setEnabled(!objectp->isPermanentEnforced());
 	mPanelInventoryObject->setEnabled(!objectp->isPermanentEnforced());
@@ -197,4 +209,11 @@ void LLPanelContents::onClickPermissions(void *userdata)
 {
 	LLPanelContents* self = (LLPanelContents*)userdata;
 	gFloaterView->getParentFloater(self)->addDependentFloater(LLFloaterReg::showInstance("bulk_perms"));
+}
+
+// static
+void LLPanelContents::onClickRefresh(void *userdata)
+{
+	LLPanelContents* self = (LLPanelContents*)userdata;
+	self->refresh();
 }
