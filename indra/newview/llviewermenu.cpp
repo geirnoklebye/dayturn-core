@@ -4060,6 +4060,15 @@ class LLViewDefaultUISize : public view_listener_t
 	}
 };
 
+class LLToolsEnableCommandlineChat : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		BOOL cur_val = gSavedSettings.getBOOL("FSCmdLine");
+		gSavedSettings.setBOOL("FSCmdLine", ! cur_val );
+		return true;
+	}
+};
 class LLViewToggleUI : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -8617,7 +8626,8 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLToolsEnablePathfindingView(), "Tools.EnablePathfindingView");
 	view_listener_t::addMenu(new LLToolsDoPathfindingRebakeRegion(), "Tools.DoPathfindingRebakeRegion");
 	view_listener_t::addMenu(new LLToolsEnablePathfindingRebakeRegion(), "Tools.EnablePathfindingRebakeRegion");
-
+	// Commands menu
+	view_listener_t::addMenu(new LLToolsEnableCommandlineChat(), "Commands.EnableCommandlineChat");	
 	// Help menu
 	// most items use the ShowFloater method
 	view_listener_t::addMenu(new LLToggleHowTo(), "Help.ToggleHowTo");

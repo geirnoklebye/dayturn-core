@@ -1692,9 +1692,117 @@
             <menu_item_call.on_visible
             function="File.VisibleUploadModel"/>
         </menu_item_call>
-		
-		<menu_item_separator/>
+		<menu_item_separator/>		
+		<menu_item_call
+          	   label="Chat Entered Commands"
+               name="Chat Entered Commands">
+            <menu_item_call.on_click
+             function="Commands.EnableCommandlineChat" />
+            <menu_item_call.on_enable
+             function="" />			   
+        </menu_item_call>
+		<menu_item_call
+          	   label="Teleport Home tph"
+               name="Teleport Home"
+	           enabled="true"
+			   visibility_control="FSCmdLine">
+		   <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />			   
+        </menu_item_call>
+		<menu_item_call
+      		   label="Teleport Altitude gth x"
+               name="Teleport Altitude"
+			   enabled="true"
+			   visibility_control="FSCmdLine">
+            <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />				   
+        </menu_item_call>
+		<menu_item_call
+      		   label="Teleport Ground flr"
+               name="Teleport Ground"
+			   enabled="true"
+			   visibility_control="FSCmdLine">
+            <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />				   
+        </menu_item_call>
+		<menu_item_call
+      		   label="Teleport In Sim gtp x y z"
+               name="Teleport In Sim"
+			   enabled="true"
+			   visibility_control="FSCmdLine">
+            <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />				   
+        </menu_item_call>
+		<menu_item_call
+      		   label="Teleport To Sim mapto name"
+               name="Teleport To Sim"
+			   enabled="true"
+			   visibility_control="FSCmdLine">
+            <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />				   
+        </menu_item_call>
+		<menu_item_call
+      		   label="Rez A Platform rezplat 0-30"
+               name="Rez A Platform"
+			   enabled="true"
+			   visibility_control="FSCmdLine">
+            <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />				   
+        </menu_item_call>		 		
+		<menu_item_call
+      		   label="Draw Distance dd meters"
+               name="Draw Distance"
+			   enabled="true"
+			   visibility_control="FSCmdLine">
+            <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />				   
+        </menu_item_call>
+		<menu_item_call
+      		   label="Maximum Bandwidth bw kpbs "
+               name="Maximum Bandwidth"
+			   enabled="true"
+			   visibility_control="FSCmdLine">
+            <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />				   
+        </menu_item_call>
+		<menu_item_call
+      		   label="AO on/off cao on/off"
+               name="AO on/off"
+			   enabled="true"
+			   visibility_control="FSCmdLine">
+            <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />
+        </menu_item_call>			 
+		<menu_item_call
+      		   label="Calculate Expressions calc SIN(2+2)"
+               name="Calculate Expressions"
+			   enabled="true"
+			   visibility_control="FSCmdLine">
+            <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />				 
+        </menu_item_call>
 
+		<menu_item_separator/>		
             <menu_item_check
                label="Search"
                name="Search"
