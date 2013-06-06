@@ -1702,6 +1702,16 @@
              function="" />			   
         </menu_item_call>
 		<menu_item_call
+          	   label="Teleport to Camera tp2cam"
+               name="Teleport to Camera"
+	           enabled="true"
+			   visibility_control="FSCmdLine">
+		   <menu_item_call.on_click
+             function="" />
+            <menu_item_call.on_enable
+             function="" />			   
+        </menu_item_call>		
+		<menu_item_call
           	   label="Teleport Home tph"
                name="Teleport Home"
 	           enabled="true"
