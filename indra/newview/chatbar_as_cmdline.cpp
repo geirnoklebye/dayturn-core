@@ -541,7 +541,7 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
 					return false;
 				}
 			}
-*/
+
 			//<FS:HG> FIRE-6340, FIRE-6567 - Setting Bandwidth issues
 			else if (command == std::string(sFSCmdLineBandwidth))
 			{
@@ -559,6 +559,7 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                 }
 			}
 			//</FS:HG> FIRE-6340, FIRE-6567 - Setting Bandwidth issues
+*/
 			else if (command == std::string(sFSCmdLineAO))
             {
 				std::string status;

@@ -1771,6 +1771,7 @@
             <menu_item_call.on_enable
              function="" />				   
         </menu_item_call>
+<!-- will not implement at this time firestorm implementation touches a lot of the viewer.
 		<menu_item_call
       		   label="Maximum Bandwidth bw kpbs "
                name="Maximum Bandwidth"
@@ -1781,6 +1782,7 @@
             <menu_item_call.on_enable
              function="" />				   
         </menu_item_call>
+-->
 		<menu_item_call
       		   label="AO on/off cao on/off"
                name="AO on/off"

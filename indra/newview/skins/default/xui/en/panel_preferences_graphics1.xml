@@ -419,7 +419,7 @@
 		 layout="topleft"
 		 left="200"
 		 max_val="1024"
-		 min_val="3"
+		 min_val="0"
 		 name="DrawDistance"
 		 top="3"
 		 width="296" />

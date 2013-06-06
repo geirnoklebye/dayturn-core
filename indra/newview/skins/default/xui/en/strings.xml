@@ -417,6 +417,12 @@ Please try logging in again in a minute.</string>
 	<string name="OverrideYourAnimations">Replace your default animations</string>
 	<string name="ScriptReturnObjects">Return objects on your behalf</string>
 	<string name="UnknownScriptPermission">(unknown)!</string>
+
+  <!-- CmdLine Response Strings-->
+  <!--<FS:HG> FIRE-6340, FIRE-6567 - Setting Bandwidth issues-->
+  <string name="FSCmdLineRSP">Maximum bandwidth set to [VALUE] KBPS.</string>
+  <!--</FS:HG> FIRE-6340, FIRE-6567 - Setting Bandwidth issues-->
+
 	
 	<!-- Sim Access labels -->
 	<string name="SIM_ACCESS_PG">General</string>
@@ -4761,7 +4767,8 @@ Try enclosing path to the editor with double quotes.
 
   <!-- Spell check settings floater -->
   <string name="UserDictionary">[User]</string>
-  
+  <!--Draw distance set from command line dd x response chat-->
+  <string name="FSCmdLineDrawDistanceSet">Draw Distance set to [DISTANCE]m.</string>  
   <!-- Conversation log messages -->
   <string name="logging_calls_disabled_log_empty">
     Conversations are not being logged. To begin keeping a log, choose "Save: Log only" or "Save: Log and transcripts" under Preferences > Chat.
