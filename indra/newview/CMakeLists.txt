@@ -117,6 +117,7 @@ set(viewer_SOURCE_FILES
     fspanelprofileclassifieds.cpp
 	fslightshare.cpp
     groupchatlistener.cpp
+    chatbar_as_cmdline.cpp	
     llaccountingcostmanager.cpp
     llagent.cpp
     llagentaccess.cpp
@@ -715,6 +716,7 @@ set(viewer_HEADER_FILES
     fspanelprofileclassifieds.h
 	fslightshare.h
     groupchatlistener.h
+	chatbar_as_cmdline.h
     llaccountingcostmanager.h
     llagent.h
     llagentaccess.h

@@ -27,7 +27,6 @@
 #include "llviewerprecompiledheaders.h"
 
 #include "message.h"
-
 #include "lliconctrl.h"
 #include "llappviewer.h"
 #include "llchatentry.h"
@@ -67,7 +66,7 @@
 #include "llviewerchat.h"
 #include "lltranslate.h"
 #include "llautoreplace.h"
-
+#include "chatbar_as_cmdline.h"
 S32 LLFloaterIMNearbyChat::sLastSpecialChatChannel = 0;
 
 const S32 EXPANDED_HEIGHT = 266;
@@ -579,7 +578,7 @@ void LLFloaterIMNearbyChat::sendChat( EChatType type )
 
 			type = processChatTypeTriggers(type, utf8_revised_text);
 
-			if (!utf8_revised_text.empty())
+				if (!utf8_revised_text.empty() && cmd_line_chat(utf8_revised_text, type))
 			{
 				// Chat with animation
 				sendChatFromViewer(utf8_revised_text, type, TRUE);
