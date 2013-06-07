@@ -110,6 +110,7 @@ public:
 	void navigateToTitleMedia( const std::string url );
 	bool selectedMediaEditable();
 	void updateLandImpacts();
+	void onClickBtnCopyKeys();
 
 	static void setGridMode(S32 mode);
 
