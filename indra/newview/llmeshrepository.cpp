@@ -82,6 +82,10 @@ LLMeshRepository gMeshRepo;
 // <FS:Ansariel> Configurable request throttle
 const S32 MESH_HEADER_SIZE = 4096;
 //const U32 MAX_MESH_REQUESTS_PER_SECOND = 100;
+const S32 REQUEST_HIGH_WATER_MIN = 32;
+const S32 REQUEST_LOW_WATER_MIN = 16;
+const U32 LARGE_MESH_FETCH_THRESHOLD = 1U << 21;		// Size at which requests goes to narrow/slow queue
+const long LARGE_MESH_XFER_TIMEOUT = 240L;				// Seconds to complete xfer
 
 // Maximum mesh version to support.  Three least significant digits are reserved for the minor version, 
 // with major version changes indicating a format change that is not backwards compatible and should not
@@ -212,6 +216,8 @@ void get_vertex_buffer_from_mesh(LLCDMeshData& mesh, LLModel::PhysicsMesh& res, 
 S32 LLMeshRepoThread::sActiveHeaderRequests = 0;
 S32 LLMeshRepoThread::sActiveLODRequests = 0;
 U32	LLMeshRepoThread::sMaxConcurrentRequests = 1;
+S32 LLMeshRepoThread::sRequestLowWater = REQUEST_LOW_WATER_MIN;
+S32 LLMeshRepoThread::sRequestHighWater = REQUEST_HIGH_WATER_MIN;
 
 class LLMeshHandlerBase : public LLCore::HttpHandler
 {
@@ -574,25 +580,37 @@ public:
 
 LLMeshRepoThread::LLMeshRepoThread()
 : LLThread("mesh repo"),
-  mCurlRequest(NULL),
   mWaiting(false),
   mHttpRequest(NULL),
   mHttpOptions(NULL),
+  mHttpLargeOptions(NULL),
   mHttpHeaders(NULL),
-  mHttpPolicyClass(LLCore::HttpRequest::DEFAULT_POLICY_ID)
+  mHttpPolicyClass(LLCore::HttpRequest::DEFAULT_POLICY_ID),
+  mHttpLargePolicyClass(LLCore::HttpRequest::DEFAULT_POLICY_ID),
+  mHttpPriority(0),
+  mHttpGetCount(0U),
+  mHttpLargeGetCount(0U)
 { 
 	mMutex = new LLMutex(NULL);
 	mHeaderMutex = new LLMutex(NULL);
 	mSignal = new LLCondition(NULL);
 	mHttpRequest = new LLCore::HttpRequest;
 	mHttpOptions = new LLCore::HttpOptions;
+	mHttpLargeOptions = new LLCore::HttpOptions;
+	mHttpLargeOptions->setTransferTimeout(LARGE_MESH_XFER_TIMEOUT);
 	mHttpHeaders = new LLCore::HttpHeaders;
 	mHttpHeaders->mHeaders.push_back("Accept: application/vnd.ll.mesh");
-	mHttpPolicyClass = LLAppViewer::instance()->getAppCoreHttp().getPolicyMesh();
+	mHttpPolicyClass = LLAppViewer::instance()->getAppCoreHttp().getPolicy(LLAppCoreHttp::AP_MESH);
+	mHttpPolicyClass = LLAppViewer::instance()->getAppCoreHttp().getPolicy(LLAppCoreHttp::AP_LARGE_MESH);
 }
+
 
 LLMeshRepoThread::~LLMeshRepoThread()
 {
+	LL_INFOS("Mesh") << "Small GETs issued:  "
+					 << mHttpGetCount << ", Large GETs issued:  "
+					 << mHttpLargeGetCount << LL_ENDL;
+
 	for (http_request_set::iterator iter(mHttpRequestSet.begin());
 		 iter != mHttpRequestSet.end();
 		 ++iter)
@@ -610,6 +628,11 @@ LLMeshRepoThread::~LLMeshRepoThread()
 		mHttpOptions->release();
 		mHttpOptions = NULL;
 	}
+	if (mHttpLargeOptions)
+	{
+		mHttpLargeOptions->release();
+		mHttpLargeOptions = NULL;
+	}
 	delete mHttpRequest;
 	mHttpRequest = NULL;
 	delete mMutex;
@@ -622,7 +645,6 @@ LLMeshRepoThread::~LLMeshRepoThread()
 
 void LLMeshRepoThread::run()
 {
-	mCurlRequest = new LLCurlRequest();
 	LLCDResult res = LLConvexDecomposition::initThread();
 	if (res != LLCD_OK)
 	{
@@ -791,8 +813,6 @@ void LLMeshRepoThread::run()
 				}
 				mPhysicsShapeRequests = incomplete;
 			}
-
-			mCurlRequest->process();
 		}
 	}
 	
@@ -806,9 +826,6 @@ void LLMeshRepoThread::run()
 	{
 		llwarns << "convex decomposition unable to be quit" << llendl;
 	}
-
-	delete mCurlRequest;
-	mCurlRequest = NULL;
 }
 
 void LLMeshRepoThread::loadMeshSkinInfo(const LLUUID& mesh_id)
@@ -890,6 +907,42 @@ std::string LLMeshRepoThread::constructUrl(LLUUID mesh_id)
 	return http_url;
 }
 
+// May only be called by repo thread
+LLCore::HttpHandle LLMeshRepoThread::getByteRange(const std::string & url,
+												  size_t offset,
+												  size_t len,
+												  LLCore::HttpHandler * handler)
+{
+	LLCore::HttpHandle handle(LLCORE_HTTP_HANDLE_INVALID);
+	
+	if (len < LARGE_MESH_FETCH_THRESHOLD)
+	{
+		handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
+												   mHttpPriority,
+												   url,
+												   offset,
+												   len,
+												   mHttpOptions,
+												   mHttpHeaders,
+												   handler);
+		++mHttpGetCount;
+	}
+	else
+	{
+		handle = mHttpRequest->requestGetByteRange(mHttpLargePolicyClass,
+												   mHttpPriority,
+												   url,
+												   offset,
+												   len,
+												   mHttpLargeOptions,
+												   mHttpHeaders,
+												   handler);
+		++mHttpLargeGetCount;
+	}
+	return handle;
+}
+
+
 bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 { //protected by mMutex
 	
@@ -955,14 +1008,7 @@ bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 				//								 new LLMeshSkinInfoResponder(mesh_id, offset, size));
 				LLMeshSkinInfoHandler * handler = new LLMeshSkinInfoHandler(mesh_id, offset, size);
 				// LL_WARNS("Mesh") << "MESH:  Issuing Skin Info Request" << LL_ENDL;
-				LLCore::HttpHandle handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
-																			  0,				// *TODO:  Get better priority value
-																			  http_url,
-																			  offset,
-																			  size,
-																			  mHttpOptions,
-																			  mHttpHeaders,
-																			  handler);
+				LLCore::HttpHandle handle = getByteRange(http_url, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
 				{
 					// *TODO:  Better error message
@@ -1053,14 +1099,7 @@ bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id)
 				//								 new LLMeshDecompositionResponder(mesh_id, offset, size));
 				LLMeshDecompositionHandler * handler = new LLMeshDecompositionHandler(mesh_id, offset, size);
 				// LL_WARNS("Mesh") << "MESH:  Issuing Decomp Request" << LL_ENDL;
-				LLCore::HttpHandle handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
-																			  0,	// *TODO:  Get better priority value
-																			  http_url,
-																			  offset,
-																			  size,
-																			  mHttpOptions,
-																			  mHttpHeaders,
-																			  handler);
+				LLCore::HttpHandle handle = getByteRange(http_url, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
 				{
 					// *TODO:  Better error message
@@ -1150,14 +1189,7 @@ bool LLMeshRepoThread::fetchMeshPhysicsShape(const LLUUID& mesh_id)
 				//								 new LLMeshPhysicsShapeResponder(mesh_id, offset, size));
 				LLMeshPhysicsShapeHandler * handler = new LLMeshPhysicsShapeHandler(mesh_id, offset, size);
 				// LL_WARNS("Mesh") << "MESH:  Issuing Physics Shape Request" << LL_ENDL;
-				LLCore::HttpHandle handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
-																			  0,		// *TODO:  Get better priority value
-																			  http_url,
-																			  offset,
-																			  size,
-																			  mHttpOptions,
-																			  mHttpHeaders,
-																			  handler);
+				LLCore::HttpHandle handle = getByteRange(http_url, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
 				{
 					// *TODO:  Better error message
@@ -1250,14 +1282,7 @@ bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params, U32& c
 
 		LLMeshHeaderHandler * handler = new LLMeshHeaderHandler(mesh_params);
 		// LL_WARNS("Mesh") << "MESH:  Issuing Request" << LL_ENDL;
-		LLCore::HttpHandle handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
-																	  0,				// *TODO:  Get better priority value
-																	  http_url,
-																	  0,
-																	  MESH_HEADER_SIZE,
-																	  mHttpOptions,
-																	  mHttpHeaders,
-																	  handler);
+		LLCore::HttpHandle handle = getByteRange(http_url, 0, MESH_HEADER_SIZE, handler);
 		if (LLCORE_HTTP_HANDLE_INVALID == handle)
 		{
 			// *TODO:  Better error message
@@ -1351,14 +1376,7 @@ bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod, 
 				//						   new LLMeshLODResponder(mesh_params, lod, offset, size));
 				LLMeshLODHandler * handler = new LLMeshLODHandler(mesh_params, lod, offset, size);
 				// LL_WARNS("Mesh") << "MESH:  Issuing LOD Request" << LL_ENDL;
-				LLCore::HttpHandle handle = mHttpRequest->requestGetByteRange(mHttpPolicyClass,
-																			  0,		// *TODO:  Get better priority value
-																			  http_url,
-																			  offset,
-																			  size,
-																			  mHttpOptions,
-																			  mHttpHeaders,
-																			  handler);
+				LLCore::HttpHandle handle = getByteRange(http_url, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
 				{
 					// *TODO:  Better error message
@@ -2705,13 +2723,14 @@ S32 LLMeshRepository::loadMesh(LLVOVolume* vobj, const LLVolumeParams& mesh_para
 
 void LLMeshRepository::notifyLoadedMeshes()
 { //called from main thread
-
-	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
-	//LLMeshRepoThread::sMaxConcurrentRequests = gSavedSettings.getU32("MeshMaxConcurrentRequests");
-	static LLCachedControl<U32> meshMaxConcurrentRequests(gSavedSettings, "MeshMaxConcurrentRequests",32);
-	LLMeshRepoThread::sMaxConcurrentRequests = (U32)meshMaxConcurrentRequests;
-	// </FS:Ansariel>
-
+	// *FIXME:  Scaling down the setting by a factor of 4 for now to reflect
+	// target goal.  May want to rename the setting before release.
+	LLMeshRepoThread::sMaxConcurrentRequests = gSavedSettings.getU32("MeshMaxConcurrentRequests") / 4;
+	LLMeshRepoThread::sRequestHighWater = llmax(50 * S32(LLMeshRepoThread::sMaxConcurrentRequests),
+												REQUEST_HIGH_WATER_MIN);
+	LLMeshRepoThread::sRequestLowWater = llmax(LLMeshRepoThread::sRequestLowWater / 2,
+											   REQUEST_LOW_WATER_MIN);
+	
 	//clean up completed upload threads
 	for (std::vector<LLMeshUploadThread*>::iterator iter = mUploads.begin(); iter != mUploads.end(); )
 	{
@@ -2789,7 +2808,7 @@ void LLMeshRepository::notifyLoadedMeshes()
 	//call completed callbacks on finished decompositions
 	mDecompThread->notifyCompleted();
 	
-	if (!mThread->mWaiting)
+	if (!mThread->mWaiting && mPendingRequests.empty())
 	{ //curl thread is churning, wait for it to go idle
 		return;
 	}
@@ -2816,47 +2835,55 @@ void LLMeshRepository::notifyLoadedMeshes()
 			mUploadErrorQ.pop();
 		}
 
-		S32 push_count = LLMeshRepoThread::sMaxConcurrentRequests-(LLMeshRepoThread::sActiveHeaderRequests+LLMeshRepoThread::sActiveLODRequests);
-
-		if (push_count > 0)
+		S32 active_count = LLMeshRepoThread::sActiveHeaderRequests + LLMeshRepoThread::sActiveLODRequests;
+		if (active_count < LLMeshRepoThread::sRequestLowWater)
 		{
-			//calculate "score" for pending requests
+			S32 push_count = LLMeshRepoThread::sRequestHighWater - active_count;
 
-			//create score map
-			std::map<LLUUID, F32> score_map;
-
-			for (U32 i = 0; i < 4; ++i)
+			if (mPendingRequests.size() > push_count)
 			{
-				for (mesh_load_map::iterator iter = mLoadingMeshes[i].begin();  iter != mLoadingMeshes[i].end(); ++iter)
-				{
-					F32 max_score = 0.f;
-					for (std::set<LLUUID>::iterator obj_iter = iter->second.begin(); obj_iter != iter->second.end(); ++obj_iter)
-					{
-						LLViewerObject* object = gObjectList.findObject(*obj_iter);
+				// More requests than the high-water limit allows so
+				// sort and forward the most important.
 
-						if (object)
+				//calculate "score" for pending requests
+
+				//create score map
+				std::map<LLUUID, F32> score_map;
+
+				for (U32 i = 0; i < 4; ++i)
+				{
+					for (mesh_load_map::iterator iter = mLoadingMeshes[i].begin();  iter != mLoadingMeshes[i].end(); ++iter)
+					{
+						F32 max_score = 0.f;
+						for (std::set<LLUUID>::iterator obj_iter = iter->second.begin(); obj_iter != iter->second.end(); ++obj_iter)
 						{
-							LLDrawable* drawable = object->mDrawable;
-							if (drawable)
+							LLViewerObject* object = gObjectList.findObject(*obj_iter);
+
+							if (object)
 							{
-								F32 cur_score = drawable->getRadius()/llmax(drawable->mDistanceWRTCamera, 1.f);
-								max_score = llmax(max_score, cur_score);
+								LLDrawable* drawable = object->mDrawable;
+								if (drawable)
+								{
+									F32 cur_score = drawable->getRadius()/llmax(drawable->mDistanceWRTCamera, 1.f);
+									max_score = llmax(max_score, cur_score);
+								}
 							}
 						}
-					}
 				
-					score_map[iter->first.getSculptID()] = max_score;
+						score_map[iter->first.getSculptID()] = max_score;
+					}
 				}
-			}
 
-			//set "score" for pending requests
-			for (std::vector<LLMeshRepoThread::LODRequest>::iterator iter = mPendingRequests.begin(); iter != mPendingRequests.end(); ++iter)
-			{
-				iter->mScore = score_map[iter->mMeshParams.getSculptID()];
-			}
+				//set "score" for pending requests
+				for (std::vector<LLMeshRepoThread::LODRequest>::iterator iter = mPendingRequests.begin(); iter != mPendingRequests.end(); ++iter)
+				{
+					iter->mScore = score_map[iter->mMeshParams.getSculptID()];
+				}
 
-			//sort by "score"
-			std::sort(mPendingRequests.begin(), mPendingRequests.end(), LLMeshRepoThread::CompareScoreGreater());
+				//sort by "score"
+				std::partial_sort(mPendingRequests.begin(), mPendingRequests.begin() + push_count,
+								  mPendingRequests.end(), LLMeshRepoThread::CompareScoreGreater());
+			}
 
 			while (!mPendingRequests.empty() && push_count > 0)
 			{
