@@ -327,7 +327,7 @@ void LLFloaterIMNearbyChat::onChatFontChange(LLFontGL* fontp)
 void LLFloaterIMNearbyChat::show()
 {
 		openFloater(getKey());
-}
+	}
 
 bool LLFloaterIMNearbyChat::isChatVisible() const
 {

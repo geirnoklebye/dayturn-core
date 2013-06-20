@@ -144,7 +144,7 @@ public:
 	static void		onBtnCancel( void* userdata );
 		   void		onBtnPipette( );
 	//static void		onBtnRevert( void* userdata );
-	static void		onBtnWhite( void* userdata );
+	static void		onBtnBlank( void* userdata );
 	static void		onBtnTrans( void* userdata );
 	static void		onBtnNone( void* userdata );
 	static void		onBtnClear( void* userdata );
@@ -166,7 +166,6 @@ protected:
 	LLUUID				mImageAssetID; // Currently selected texture
 	LLUIImagePtr		mFallbackImage; // What to show if currently selected texture is null.
 
-	LLUUID				mWhiteImageAssetID;
 	LLUUID				mTransImageAssetID;
 	LLUUID				mSpecialCurrentImageAssetID;  // Used when the asset id has no corresponding texture in the user's inventory.
 	LLUUID				mOriginalImageAssetID;
@@ -210,8 +209,7 @@ LLFloaterTexturePicker::LLFloaterTexturePicker(
 :	LLFloater(LLSD()),
 	mOwner( owner ),
 	mImageAssetID( owner->getImageAssetID() ),
-	mFallbackImage( fallback_image ),
-	mWhiteImageAssetID( gSavedSettings.getString( "UIImgWhiteUUID" ) ),
+	mFallbackImage( fallback_image ),	
 	mTransImageAssetID( gSavedSettings.getString( "UIImgTransUUID" ) ),
 	mOriginalImageAssetID(owner->getImageAssetID()),
 	mLabel(label),
@@ -429,7 +427,7 @@ BOOL LLFloaterTexturePicker::postBuild()
 
 	childSetAction("Default",LLFloaterTexturePicker::onBtnSetToDefault,this);
 	childSetAction("None", LLFloaterTexturePicker::onBtnNone,this);
-	childSetAction("Blank", LLFloaterTexturePicker::onBtnWhite,this);
+	childSetAction("Blank", LLFloaterTexturePicker::onBtnBlank,this);
 	childSetAction("Trans", LLFloaterTexturePicker::onBtnTrans,this);
 
 
@@ -585,7 +583,7 @@ void LLFloaterTexturePicker::draw()
 		}
 
 		getChildView("Default")->setEnabled(mImageAssetID != mOwner->getDefaultImageAssetID());
-		getChildView("Blank")->setEnabled(mImageAssetID != mWhiteImageAssetID );
+		getChildView("Blank")->setEnabled(mImageAssetID != mOwner->getBlankImageAssetID());
 		getChildView("Trans")->setEnabled(mImageAssetID != mTransImageAssetID );
 		getChildView("None")->setEnabled(mOwner->getAllowNoTexture() && !mImageAssetID.isNull() );
 
@@ -726,11 +724,11 @@ void LLFloaterTexturePicker::onBtnSetToDefault(void* userdata)
 }
 
 // static
-void LLFloaterTexturePicker::onBtnWhite(void* userdata)
+void LLFloaterTexturePicker::onBtnBlank(void* userdata)
 {
 	LLFloaterTexturePicker* self = (LLFloaterTexturePicker*) userdata;
 	self->setCanApply(true, true);
-	self->setImageID( self->mWhiteImageAssetID );
+	self->setImageID( self->mOwner->getBlankImageAssetID() );
 	self->commitIfImmediateSet();
 }
 
@@ -1054,6 +1052,7 @@ LLTextureCtrl::LLTextureCtrl(const LLTextureCtrl::Params& p)
 	mDragCallback(NULL),
 	mDropCallback(NULL),
 	mOnCancelCallback(NULL),
+	mOnCloseCallback(NULL),
 	mOnSelectCallback(NULL),
 	mBorderColor( p.border_color() ),
 	mAllowNoTexture( FALSE ),
@@ -1068,6 +1067,12 @@ LLTextureCtrl::LLTextureCtrl(const LLTextureCtrl::Params& p)
 	mDefaultImageName(p.default_image_name),
 	mFallbackImage(p.fallback_image)
 {
+
+	// Default of defaults is white image for diff tex
+	//
+	LLUUID whiteImage( gSavedSettings.getString( "UIImgWhiteUUID" ) );
+	setBlankImageAssetID( whiteImage );
+
 	setAllowNoTexture(p.allow_no_texture);
 	setCanApplyImmediately(p.can_apply_immediately);
 	mCommitOnSelection = !p.no_commit_on_selection;
@@ -1304,6 +1309,10 @@ void LLTextureCtrl::onFloaterClose()
 
 	if (floaterp)
 	{
+		if (mOnCloseCallback)
+		{
+			mOnCloseCallback(this,LLSD());
+		}
 		floaterp->setOwner(NULL);
 	}
 
