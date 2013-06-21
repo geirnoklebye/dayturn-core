@@ -2631,7 +2631,7 @@ even though the user gets a free copy.
          help_topic="toolbox_texture_tab"
          name="Texture"
          filename="panel_tools_texture.xml">
-			 <button
+<!--			 <button
              follows="top|right"
              height="19"
              label="Copy"
@@ -2664,6 +2664,7 @@ even though the user gets a free copy.
              tool_tip="Paste Parameters from Clipboard"
              width="68">
             </button>
+-->
 	   </panel>
        <panel
          border="false"
