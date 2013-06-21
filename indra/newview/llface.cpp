@@ -2100,9 +2100,6 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 			LLVector4a src;
 
-		
-			LLColor4U glow4u = LLColor4U(0,0,0,glow);
-
 			U32 glow32 = glow |
 						 (glow << 8) |
 						 (glow << 16) |
