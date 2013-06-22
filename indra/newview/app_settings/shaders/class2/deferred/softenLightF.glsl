@@ -370,7 +370,7 @@ void main()
 			//
 			vec3 refnormpersp = normalize(reflect(pos.xyz, norm.xyz));
 			float sa = dot(refnormpersp, sun_dir.xyz);
-			float magic = 1.0; // TODO: work out what shadow val is being pre-div'd by
+			float magic = 1.0/2.6; // TODO: work out what shadow val is being pre-div'd by
 			vec3 dumbshiny = (vary_SunlitColor)*(scol * magic)*(6.0 * texture2D(lightFunc, vec2(sa, spec.a)).r);
 			dumbshiny = min(dumbshiny, vec3(1));
 
