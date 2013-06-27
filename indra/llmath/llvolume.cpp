@@ -7217,7 +7217,7 @@ BOOL LLVolumeFace::createSide(LLVolume* volume, BOOL partial_build)
 	return TRUE;
 }
 
-//adapted from Lengyel, Eric. “Computing Tangent Space Basis Vectors for an Arbitrary Mesh”. Terathon Software 3D Graphics Library, 2001. http://www.terathon.com/code/tangent.html
+//adapted from Lengyel, Eric. ï¿½Computing Tangent Space Basis Vectors for an Arbitrary Meshï¿½. Terathon Software 3D Graphics Library, 2001. http://www.terathon.com/code/tangent.html
 void CalculateTangentArray(U32 vertexCount, const LLVector4a *vertex, const LLVector4a *normal,
         const LLVector2 *texcoord, U32 triangleCount, const U16* index_array, LLVector4a *tangent)
 {
@@ -7285,9 +7285,6 @@ void CalculateTangentArray(U32 vertexCount, const LLVector4a *vertex, const LLVe
 
 		const LLVector4a& t = tan1[a];
 
-		llassert(tan1[a].getLength3().getF32() >= 0.f);
-		llassert(tan2[a].getLength3().getF32() >= 0.f);
-
 		LLVector4a ncrosst;
 		ncrosst.setCross3(n,t);
 
@@ -7307,16 +7304,6 @@ void CalculateTangentArray(U32 vertexCount, const LLVector4a *vertex, const LLVe
 			tsubn.getF32ptr()[3] = handedness;
 
 			tangent[a] = tsubn;
-
-			/*
-			These are going off on invalid input and hindering other debugging.
-			llassert(llfinite(tangent[a].getF32ptr()[0]));
-			llassert(llfinite(tangent[a].getF32ptr()[1]));
-			llassert(llfinite(tangent[a].getF32ptr()[2]));
-
-			llassert(!llisnan(tangent[a].getF32ptr()[0]));
-			llassert(!llisnan(tangent[a].getF32ptr()[1]));
-			llassert(!llisnan(tangent[a].getF32ptr()[2]));*/
 		}
 		else
 		{ //degenerate, make up a value
