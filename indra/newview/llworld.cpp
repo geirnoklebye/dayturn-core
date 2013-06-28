@@ -155,7 +155,7 @@ F32 LLWorld::getRegionMaxPrimXPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return (llmin(F32_MAX, mInferredServerScaleXY));
+		return F32_MAX;
 	}
 	else
 	{
@@ -167,7 +167,7 @@ F32 LLWorld::getRegionMaxPrimYPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return (llmin(F32_MAX, mInferredServerScaleXY));
+		return F32_MAX;
 	}
 	else
 	{
@@ -179,7 +179,7 @@ F32 LLWorld::getRegionMaxPrimZPos() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return (llmin(F32_MAX, mInferredServerScaleZ));
+		return F32_MAX;
 	}
 	else
 	{
@@ -260,9 +260,9 @@ void LLWorld::refreshLimits()
 				mRegionMaxPrimScale = OS_DEFAULT_MAX_PRIM_SCALE;
 				mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
 				//scale constants form xform.h should and be easier to modify if future need arrises
-				mRegionMaxPrimXPos = OS_DEFAULT_MAX_PRIM_SCALE;
+				mRegionMaxPrimXPos = OS_DEFAULT_MAX_PRIM_SCALE; //256
 				mRegionMaxPrimYPos = OS_DEFAULT_MAX_PRIM_SCALE;
-				mRegionMaxPrimZPos = OS_DEFAULT_MAX_PRIM_SCALE;
+				mRegionMaxPrimZPos = OS_MAX_PRIM_SCALE; //65536
 			}
 		// </NP: disable build constraints>
 		mRegionMaxPrimScaleNoMesh = OS_DEFAULT_MAX_PRIM_SCALE;// no restrictions here
