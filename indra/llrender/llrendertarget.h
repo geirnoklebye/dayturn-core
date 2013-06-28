@@ -56,13 +56,12 @@
 
 */
 
-class LLMultisampleBuffer;
 
 class LLRenderTarget
 {
 public:
 	//whether or not to use FBO implementation
-	static BOOL sUseFBO; 
+	static bool sUseFBO; 
 	static U32 sBytesAllocated;
 	static U32 sCurFBO;
 	static U32 sCurResX;
