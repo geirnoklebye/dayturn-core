@@ -349,8 +349,6 @@ void main()
 
 	vec4 diffuse = texture2DRect(diffuseRect, tc);
 
-	//convert to gamma space
-	diffuse.rgb = pow(diffuse.rgb, vec3(1.0/2.2));
 	vec3 col = diffuse.rgb;
 
 	float bloom = 0.0;
@@ -358,6 +356,9 @@ void main()
 
 	if (fullbrightification < 1.0)
 	{
+		//convert to gamma space
+		diffuse.rgb = pow(diffuse.rgb, vec3(1.0/2.2));
+
 		vec4 spec = texture2DRect(specularRect, vary_fragcoord.xy);
 		
 		vec2 scol_ambocc = texture2DRect(lightMap, vary_fragcoord.xy).rg;
@@ -463,12 +464,16 @@ void main()
 			  float refdepth = texture2DRect(depthMap, ref2d).r;
 			  //if (refdepth == 1.0) continue; // don't sample the sky
 			  vec3 refcol = texture2DRect(diffuseRect, ref2d).rgb;
+			  //convert to gamma space
+			  //refcol.rgb = pow(refcol.rgb, vec3(1.0/2.2));
 			  vec3 refpos = getPosition_d(ref2d, refdepth).xyz;
 			  // figure out how appropriate our guess actually was, directionwise
 			  //float refapprop=1;
 			  //float refapprop = max(0.0, dot(refnorm, normalize(refpos - pos)));
 			  float refapprop = 1.0 - rdpow2;
 			  if (refdepth < 1.0) { // non-sky
+			    refcol.rgb = pow(refcol.rgb, vec3(1.0/2.2));
+
 			    //refapprop *= step(0.0, dot(refnorm, (refpos - pos)));
 			    refapprop *= max(0.0, dot(refnorm, normalize(refpos - pos)));
 			    //refapprop *= (1.0 - sqrt(rdpow2));
