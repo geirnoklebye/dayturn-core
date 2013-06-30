@@ -361,12 +361,12 @@ void LLInventoryPanel::setFilterSubString(const std::string& string)
 // ## Zi: Extended Inventory Search
 void LLInventoryPanel::setFilterSubStringTarget(const std::string& target)
 {
-	getFilter()->setFilterSubStringTarget(target);
+	getFilter().setFilterSubStringTarget(target);
 }
 
 LLInventoryFilter::EFilterSubstringTarget LLInventoryPanel::getFilterSubStringTarget() const
 {
-	return getFilter()->getFilterSubStringTarget();
+	return getFilter().getFilterSubStringTarget();
 }
 // ## Zi: Extended Inventory Search
 
@@ -411,7 +411,7 @@ void LLInventoryPanel::setFilterLinks(U64 filter_links)
 // ## Zi: Filter Links Menu
 U64 LLInventoryPanel::getFilterLinks()
 {
-	return getFilter()->getFilterLinks();
+	return getFilter().getFilterLinks();
 }
 // ## Zi: Filter Links Menu
 
@@ -1097,7 +1097,8 @@ bool LLInventoryPanel::beginIMSession()
 						id = item_array.get(i)->getCreatorUUID();
 						if(at.isBuddyOnline(id))
 						{
-							members.put(id);
+							//members.put(id);
+							members.push_back(id);
 						}
 					}
 				}
@@ -1117,7 +1118,8 @@ bool LLInventoryPanel::beginIMSession()
 
 						if(at.isBuddyOnline(id))
 						{
-							members.put(id);
+							//members.put(id);
+							members.push_back(id);
 						}
 					}
 				} //if IT_CALLINGCARD
