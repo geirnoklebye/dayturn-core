@@ -56,8 +56,8 @@
              parameter="MiniMapAutoCenter" />
     </menu_item_check>
     <menu_item_check
-       label="Show chat range"
-       name="Show chat range">
+       label="Show Chat Range"
+       name="Show Chat Range">
           <menu_item_check.on_check
              control="MiniMapChatRing" />
           <menu_item_check.on_click
