@@ -91,6 +91,7 @@ private:
 	LLVector3		globalPosToView(const LLVector3d& global_pos);
 	LLVector3d		viewPosToGlobal(S32 x,S32 y);
 
+	void			drawRing(const F32 radius, LLVector3 pos_map, const LLUIColor& colour);
 	void			drawTracking( const LLVector3d& pos_global, 
 								  const LLColor4& color,
 								  BOOL draw_arrow = TRUE);

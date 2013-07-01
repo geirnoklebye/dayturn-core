@@ -73,6 +73,8 @@ const F32 MIN_DOT_RADIUS = 3.5f;
 const F32 DOT_SCALE = 0.75f;
 const F32 MIN_PICK_SCALE = 2.f;
 const S32 MOUSE_DRAG_SLOP = 2;		// How far the mouse needs to move before we think it's a drag
+const F32 WIDTH_PIXELS = 2.f;
+const S32 CIRCLE_STEPS = 100;
 
 const F64 COARSEUPDATE_MAX_Z = 1020.0f;
 
@@ -153,6 +155,9 @@ void LLNetMap::draw()
 	//static LLUIColor map_track_disabled_color = LLUIColorTable::instance().getColor("MapTrackDisabledColor", LLColor4::white);
 	static LLUIColor map_frustum_color = LLUIColorTable::instance().getColor("MapFrustumColor", LLColor4::white);
 	static LLUIColor map_frustum_rotating_color = LLUIColorTable::instance().getColor("MapFrustumRotatingColor", LLColor4::white);
+	static LLUIColor map_chat_ring_colour = LLUIColorTable::instance().getColor("MapChatRingColor", LLColor4::yellow);
+        static LLUIColor map_shout_ring_colour = LLUIColorTable::instance().getColor("MapShoutRingColor", LLColor4::red);
+
 	
 	if (mObjectImagep.isNull())
 	{
@@ -434,6 +439,15 @@ void LLNetMap::draw()
 			{
 				mClosestAgentToCursor = gAgent.getID();
 			}
+
+			//
+			//	Draw chat range rings if enabled
+			//
+                        static LLUICachedControl<bool> chat_ring("MiniMapChatRing", true);
+                        if (chat_ring) {
+                                drawRing(CHAT_NORMAL_RADIUS, pos_map, map_chat_ring_colour);
+                                drawRing(CHAT_SHOUT_RADIUS, pos_map, map_shout_ring_colour);
+                        }
 		}
 
 		// Draw frustum
@@ -515,6 +529,18 @@ LLVector3 LLNetMap::globalPosToView(const LLVector3d& global_pos)
 	pos_local.mV[VY] += getRect().getHeight() / 2 + mCurPan.mV[VY];
 
 	return pos_local;
+}
+
+void LLNetMap::drawRing(const F32 radius, const LLVector3 pos_map, const LLUIColor& colour)
+{
+	F32 meters_to_pixels = mScale / REGION_WIDTH_METERS;
+	F32 radius_pixels = radius * meters_to_pixels;
+
+	glMatrixMode(GL_MODELVIEW);
+	gGL.pushMatrix();
+	gGL.translatef((F32)pos_map.mV[VX], (F32)pos_map.mV[VY], 0.f);
+	gl_ring(radius_pixels, WIDTH_PIXELS, colour, colour, CIRCLE_STEPS, FALSE);
+	gGL.popMatrix();
 }
 
 void LLNetMap::drawTracking(const LLVector3d& pos_global, const LLColor4& color, 
