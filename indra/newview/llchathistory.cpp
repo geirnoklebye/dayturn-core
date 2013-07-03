@@ -189,9 +189,17 @@ public:
 		{
 			LLAvatarActions::requestFriendshipDialog(getAvatarId(), mFrom);
 		}
-		else if (level == "remove")
+		else if (level == "invitetogroup")
 		{
-			LLAvatarActions::removeFriendDialog(getAvatarId());
+			LLAvatarActions::inviteToGroup(getAvatarId());
+		}
+		else if (level == "share")
+		{
+			LLAvatarActions::share(getAvatarId());
+		}
+		else if (level == "pay")
+		{
+			LLAvatarActions::pay(getAvatarId());
 		}
 		else if (level == "toggleblock")
 		{
@@ -484,23 +492,27 @@ protected:
 			if (gAgentID == mAvatarID) {
 				menu->setItemEnabled("Send IM", false);
 				menu->setItemEnabled("Offer Teleport", false);
-				menu->setItemEnabled("Block", false);
 				menu->setItemEnabled("Add Friend", false);
-				menu->setItemVisible("Unblock", false);
+				menu->setItemEnabled("Invite To Group", false);
+				menu->setItemEnabled("Share", false);
+				menu->setItemEnabled("Pay", false);
+				menu->setItemEnabled("Block", false);
+
 				menu->setItemVisible("Remove Friend", false);
+				menu->setItemVisible("Unblock", false);
 			}
 			else {
 				menu->setItemVisible("Send IM", mSessionID != LLIMMgr::computeSessionID(IM_NOTHING_SPECIAL, mAvatarID));
 				menu->setItemEnabled("Offer Teleport", LLAvatarActions::canOfferTeleport(mAvatarID));
 
+				bool is_friend = (LLAvatarTracker::instance().getBuddyInfo(mAvatarID) != NULL);
+				menu->setItemVisible("Add Friend", !is_friend);
+				menu->setItemVisible("Remove Friend", is_friend);
+
 				bool is_blocked = LLAvatarActions::isBlocked(mAvatarID);
 				menu->setItemEnabled("Block", !is_blocked && LLAvatarActions::canBlock(mAvatarID));
 				menu->setItemVisible("Block", !is_blocked);
 				menu->setItemVisible("Unblock", is_blocked);
-
-				bool is_friend = (LLAvatarTracker::instance().getBuddyInfo(mAvatarID) != NULL);
-				menu->setItemVisible("Add Friend", !is_friend);
-				menu->setItemVisible("Remove Friend", is_friend);
 			}
 
 			menu->buildDrawLabels();
