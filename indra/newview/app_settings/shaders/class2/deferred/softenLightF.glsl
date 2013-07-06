@@ -514,9 +514,9 @@ void main()
 			    best_refn += refn.xyz * refapprop;
 			    best_refshad += refshad * refapprop;
 
-			    float sunc = dot(reflight, refn);
+			    float sunc = max(0.0, dot(reflight, refn));
 			    sunc = pow(sunc, light_gamma);
-			    best_refcol += ((vary_AmblitColor + vary_SunlitColor * min(max(0.0, sunc), refshad)) * refcol.rgb + vary_AdditiveColor) * refapprop;
+			    best_refcol += ((vary_AmblitColor + vary_SunlitColor * min(sunc, refshad)) * refcol.rgb + vary_AdditiveColor) * refapprop;
 
 			    //if (refapprop > best_refapprop) {
 			    //best_refapprop = refapprop;
