@@ -484,7 +484,7 @@ void main()
 			    //refapprop *= (1.0 - sqrt(rdpow2));
 			    float refshad = texture2DRect(lightMap, ref2d).r;
 			    refshad = pow(refshad, light_gamma);
-			    vec3 refn = normalize(texture2DRect(normalMap, ref2d).rgb * 2.0 - 1.0);
+			    vec3 refn = decode_normal(texture2DRect(normalMap, ref2d).xy);
 			    // darken reflections from points which face away from the reflected ray - our guess was a back-face
 			    //refapprop *= step(dot(refnorm, refn), 0.0);
 			    refapprop = max(min(refapprop, -dot(refnorm, refn)), 0.0);
