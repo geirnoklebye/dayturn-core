@@ -346,7 +346,7 @@ void main()
 		
 	float da = max(dot(norm.xyz, sun_dir.xyz), 0.0);
 
-	float light_gamma = 1.0/1.3;
+	float light_gamma = 1;//1.0/1.3;
 	da = pow(da, light_gamma);
 
 
@@ -390,6 +390,8 @@ void main()
 			//
 			vec3 refnormpersp = normalize(reflect(pos.xyz, norm.xyz));
 			float sa = dot(refnormpersp, sun_dir.xyz);
+			sa = pow(sa, light_gamma);
+
 			float magic = 1.0/2.6; // TODO: work out what shadow val is being pre-div'd by
 			vec3 dumbshiny = (vary_SunlitColor)*(scol * magic)*(6.0 * texture2D(lightFunc, vec2(sa, spec.a)).r);
 			dumbshiny = min(dumbshiny, vec3(1));
@@ -469,6 +471,7 @@ void main()
 			  vec3 refcol = texture2DRect(diffuseRect, ref2d).rgb;
 			  //convert to gamma space
 				refcol.rgb = linear_to_srgb(refcol.rgb);
+
 			  //refcol.rgb = pow(refcol.rgb, vec3(1.0/2.2));
 			  vec3 refpos = getPosition_d(ref2d, refdepth).xyz;
 			  // figure out how appropriate our guess actually was, directionwise
@@ -476,11 +479,11 @@ void main()
 			  //float refapprop = max(0.0, dot(refnorm, normalize(refpos - pos)));
 			  float refapprop = 1.0 - rdpow2;
 			  if (refdepth < 1.0) { // non-sky
-
 			    //refapprop *= step(0.0, dot(refnorm, (refpos - pos)));
 			    refapprop *= max(0.0, dot(refnorm, normalize(refpos - pos)));
 			    //refapprop *= (1.0 - sqrt(rdpow2));
 			    float refshad = texture2DRect(lightMap, ref2d).r;
+			    refshad = pow(refshad, light_gamma);
 			    vec3 refn = normalize(texture2DRect(normalMap, ref2d).rgb * 2.0 - 1.0);
 			    // darken reflections from points which face away from the reflected ray - our guess was a back-face
 			    //refapprop *= step(dot(refnorm, refn), 0.0);
@@ -510,7 +513,11 @@ void main()
 			    total_refapprop += refapprop;
 			    best_refn += refn.xyz * refapprop;
 			    best_refshad += refshad * refapprop;
-			    best_refcol += ( (vary_AmblitColor + vary_SunlitColor * min(max(0.0, dot(reflight, refn)), refshad)) * refcol.rgb + vary_AdditiveColor) * refapprop;
+
+			    float sunc = dot(reflight, refn);
+			    sunc = pow(sunc, light_gamma);
+			    best_refcol += ((vary_AmblitColor + vary_SunlitColor * min(max(0.0, sunc), refshad)) * refcol.rgb + vary_AdditiveColor) * refapprop;
+
 			    //if (refapprop > best_refapprop) {
 			    //best_refapprop = refapprop;
 			    ////best_refn = refn.xyz;
