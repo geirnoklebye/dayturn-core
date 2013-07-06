@@ -68,22 +68,6 @@ uniform vec2 screen_res;
 
 uniform mat4 inv_proj;
 
-#ifdef SINGLE_FP_ONLY
-vec2 encode_normal(vec3 n)
-{
-	vec2 sn;
-	sn.xy = (n.xy * vec2(0.5f,0.5f)) + vec2(0.5f,0.5f);
-	return sn;
-}
-
-vec3 decode_normal (vec2 enc)
-{
-	vec3 n;
-	n.xy = (enc.xy * vec2(2.0f,2.0f)) - vec2(1.0f,1.0f);
-	n.z = sqrt(1.0f - dot(n.xy,n.xy));
-	return n;
-}
-#else
 vec2 encode_normal(vec3 n)
 {
 	float f = sqrt(8 * n.z + 8);
@@ -100,11 +84,20 @@ vec3 decode_normal (vec2 enc)
     n.z = 1-f/2;
     return n;
 }
-#endif
+
+vec3 srgb_to_linear(vec3 cs)
+{
+	
+/*        {  cs / 12.92,                 cs <= 0.04045
+    cl = {
+        {  ((cs + 0.055)/1.055)^2.4,   cs >  0.04045*/
+
+	return pow((cs+vec3(0.055))/vec3(1.055), vec3(2.4));
+}
 
 vec4 correctWithGamma(vec4 col)
 {
-	return vec4(pow(col.rgb, vec3(2.2)), col.a);
+	return vec4(srgb_to_linear(col.rgb), col.a);
 }
 
 
@@ -335,6 +328,10 @@ void main()
 		}
 	}
 	
+
+	//not sure why, but this line prevents MATBUG-194
+	col = max(col, vec3(0.0));
+
 	frag_color.rgb = col;	
 	frag_color.a = 0.0;
 }
