@@ -30,6 +30,7 @@
 
 #include "llgl.h"
 #include "llrender.h"
+#include "llui.h"
 
 #include "llagent.h"
 #include "llagentcamera.h"
@@ -74,11 +75,6 @@ const S32 POINTAT_PRIORITIES[POINTAT_NUM_TARGETS] =
 	2, //POINTAT_TARGET_GRAB
 	3, //POINTAT_TARGET_CLEAR
 };
-
-// statics
-
-BOOL LLHUDEffectPointAt::sDebugPointAt = TRUE;
-
 
 //-----------------------------------------------------------------------------
 // LLHUDEffectPointAt()
@@ -324,17 +320,18 @@ void LLHUDEffectPointAt::setSourceObject(LLViewerObject* objectp)
 //-----------------------------------------------------------------------------
 void LLHUDEffectPointAt::render()
 {
-	BOOL sDebugPointAtNames = 1;	// make this a proper config setting
-	BOOL sDebugLimitedPointAt = 1;	// make this a proper config setting
+	static LLUICachedControl<bool> show_pointat("ShowPointAt", false);
+	static LLUICachedControl<bool> pointat_names("ShowPointAtNames", false);
+	static LLUICachedControl<bool> pointat_limited("ShowPointAtLimited", false);
 
 	update();
 
-	if (sDebugPointAt && mTargetType != POINTAT_TARGET_NONE && (
-		!sDebugLimitedPointAt || !((LLVOAvatar*)(LLViewerObject*)mSourceObject)->isSelf()
+	if (show_pointat && mTargetType != POINTAT_TARGET_NONE && (
+		!pointat_limited || !((LLVOAvatar*)(LLViewerObject*)mSourceObject)->isSelf()
 	)) {
 		LLVector3 target = mTargetPos + mSourceObject->getRenderPosition();
 
-		if (sDebugPointAtNames) {
+		if (pointat_names) {
 			//
 			//	render name above crosshairs
 			//

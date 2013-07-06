@@ -29,6 +29,7 @@
 #include "llhudeffectlookat.h"
 
 #include "llrender.h"
+#include "llui.h"
 
 #include "message.h"
 #include "llagent.h"
@@ -47,8 +48,6 @@
 
 #include "llxmltree.h"
 #include "llviewercontrol.h"
-
-BOOL LLHUDEffectLookAt::sDebugLookAt = TRUE;
 
 // packet layout
 const S32 SOURCE_AVATAR = 0;
@@ -293,16 +292,16 @@ void LLHUDEffectLookAt::packData(LLMessageSystem *mesgsys)
 		return;
 	}
 
-
 	bool is_self = source_avatar->isSelf();
-	bool is_private = gSavedSettings.getBOOL("PrivateLookAtTarget");
+	static LLUICachedControl<bool> private_lookat("PrivateLookAtTarget", true);
+
 	if (!is_self) //kokua TODO: find out why this happens at all and fix there
 	{
 		LL_DEBUGS("HUDEffect")<< "Non-self Avatar HUDEffectLookAt message for ID: " << source_avatar->getID().asString() << LL_ENDL;
 		markDead();
 		return;
 	}
-	else if (is_private && target_type != LOOKAT_TARGET_AUTO_LISTEN)
+	else if (private_lookat && target_type != LOOKAT_TARGET_AUTO_LISTEN)
 	{
 		//this mimicks "do nothing"
 		target_type = LOOKAT_TARGET_AUTO_LISTEN;
@@ -541,11 +540,12 @@ void LLHUDEffectLookAt::setSourceObject(LLViewerObject* objectp)
 //-----------------------------------------------------------------------------
 void LLHUDEffectLookAt::render()
 {
-	BOOL sDebugLookAtNames = 1;	// make this a proper config setting
-	BOOL sDebugLimitedLookAt = 1;	// make this a proper config setting
+	static LLUICachedControl<bool> show_lookat("ShowLookAt", false);
+	static LLUICachedControl<bool> lookat_names("ShowLookAtNames", false);
+	static LLUICachedControl<bool> lookat_limited("ShowLookAtLimited", false);
 
-	if (sDebugLookAt && mSourceObject.notNull() && (
-		!sDebugLimitedLookAt || (
+	if (show_lookat && mSourceObject.notNull() && (
+		!lookat_limited || (
 			!((LLVOAvatar*)(LLViewerObject*)mSourceObject)->isSelf() && (
 				mTargetType == LOOKAT_TARGET_RESPOND ||
 				mTargetType == LOOKAT_TARGET_HOVER ||
@@ -559,7 +559,7 @@ void LLHUDEffectLookAt::render()
 		LLVector3 target = mTargetPos + ((LLVOAvatar*)(LLViewerObject*)mSourceObject)->mHeadp->getWorldPosition();
 		LLColor3 color = (*mAttentions)[mTargetType].mColor;
 
-		if (sDebugLookAtNames) {
+		if (lookat_names) {
 			//
 			//	render name above crosshairs
 			//
@@ -652,7 +652,8 @@ void LLHUDEffectLookAt::update()
 		}
 	}
 
-	if (sDebugLookAt)
+	static LLUICachedControl<bool> show_lookat("ShowLookAt", false);
+	if (show_lookat)
 	{
 		((LLVOAvatar*)(LLViewerObject*)mSourceObject)->addDebugText((*mAttentions)[mTargetType].mName);
 	}

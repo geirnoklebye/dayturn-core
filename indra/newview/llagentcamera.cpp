@@ -1102,6 +1102,7 @@ void LLAgentCamera::updateLookAt(const S32 mouse_x, const S32 mouse_y)
 		ELookAtType lookAtType = LOOKAT_TARGET_NONE;
 		LLVector3 headLookAxis;
 		LLCoordFrame frameCamera = *((LLCoordFrame*)LLViewerCamera::getInstance());
+		static LLUICachedControl<bool> cat_mode("CatMode", false);
 
 		if (cameraMouselook())
 		{
@@ -1109,7 +1110,7 @@ void LLAgentCamera::updateLookAt(const S32 mouse_x, const S32 mouse_y)
 		}
 		else if (cameraThirdPerson())
 		{
-			if (gSavedSettings.getBOOL("CatMode"))
+			if (cat_mode)
 			{
 				// range from -.5 to .5
 				F32 x_from_center = 
@@ -2732,8 +2733,8 @@ void LLAgentCamera::lookAtLastChat()
 
 BOOL LLAgentCamera::setPointAt(EPointAtType target_type, LLViewerObject *object, LLVector3 position)
 {
-	// disallow pointing at attachments and avatars
-	bool private_pointat = gSavedSettings.getBOOL("PrivatePointAtTarget");//this is the editing arm motion
+	static LLUICachedControl<bool> private_pointat("PrivatePointAtTarget", true);
+
 	if (object && (object->isAttachment() || object->isAvatar()) || private_pointat)
 	{
 		return FALSE;
