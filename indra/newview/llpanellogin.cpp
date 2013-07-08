@@ -158,7 +158,6 @@ namespace {
 // Public methods
 //---------------------------------------------------------------------------
 LLPanelLogin::LLPanelLogin(const LLRect &rect,
-						 BOOL show_server,
 						 void (*callback)(S32 option, void* user_data),
 						 void *cb_data)
 :	LLPanel(),
@@ -187,6 +186,7 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	LLView* login_holder = gViewerWindow->getLoginPanelHolder();
 	if (login_holder)
 	{
+		LL_WARNS ("AppInit") << "Adding child login_holder" << LL_ENDL;
 		login_holder->addChild(this);
 	}
 
@@ -479,11 +479,10 @@ void LLPanelLogin::showLoginWidgets()
 
 // static
 void LLPanelLogin::show(const LLRect &rect,
-						BOOL show_server,
 						void (*callback)(S32 option, void* user_data),
 						void* callback_data)
 {
-	new LLPanelLogin(rect, show_server, callback, callback_data);
+	new LLPanelLogin(rect, callback, callback_data);
 
 	if( !gFocusMgr.getKeyboardFocus() )
 	{
