@@ -737,7 +737,7 @@ void LLAvatarActions::buildResidentsString(std::vector<LLAvatarName> avatar_name
 {
 	int clip_names = 3;		// TODO: make this a debug setting
 	int len = avatar_names.size();
-	llassert(s > 0);
+//	llassert(s > 0);
 	
 	if (len != 1) {
 	    std::sort(avatar_names.begin(), avatar_names.end());
