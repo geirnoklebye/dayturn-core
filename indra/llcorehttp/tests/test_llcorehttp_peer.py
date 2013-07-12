@@ -52,16 +52,16 @@ class TestHTTPRequestHandler(BaseHTTPRequestHandler):
     """This subclass of BaseHTTPRequestHandler is to receive and echo
     LLSD-flavored messages sent by the C++ LLHTTPClient.
 
-    Target URLs are fairly free-form and are assembled by 
-    concatinating fragments.  Currently defined fragments
-    are:
-    - '/reflect/'       Request headers are bounced back to caller
-                        after prefixing with 'X-Reflect-'
-    - '/fail/'          Body of request can contain LLSD with 
-                        'reason' string and 'status' integer
-                        which will become response header.
-    - '/bug2295/'       206 response, no data in body:
-    -- '/bug2295/0/'       "Content-Range: bytes 0-75/2983"
+    [Merge with viewer-cat later]
+    - '/503/'           Generate 503 responses with various kinds
+                        of 'retry-after' headers
+    -- '/503/0/'            "Retry-After: 2"   
+    -- '/503/1/'            "Retry-After: Thu, 31 Dec 2043 23:59:59 GMT"
+    -- '/503/2/'            "Retry-After: Fri, 31 Dec 1999 23:59:59 GMT"
+    -- '/503/3/'            "Retry-After: "
+    -- '/503/4/'            "Retry-After: (*#*(@*(@(")"
+    -- '/503/5/'            "Retry-After: aklsjflajfaklsfaklfasfklasdfklasdgahsdhgasdiogaioshdgo"
+    -- '/503/6/'            "Retry-After: 1 2 3 4 5 6 7 8 9 10"
     -- '/bug2295/1/'       "Content-Range: bytes 0-75/*"
     -- '/bug2295/2/'       "Content-Range: bytes 0-75/2983",
                            "Content-Length: 0"
@@ -143,7 +143,41 @@ class TestHTTPRequestHandler(BaseHTTPRequestHandler):
         if "/sleep/" in self.path:
             time.sleep(30)
 
-        if "fail" in self.path:
+        if "/503/" in self.path:
+            # Tests for various kinds of 'Retry-After' header parsing
+            body = None
+            if "/503/0/" in self.path:
+                self.send_response(503)
+                self.send_header("retry-after", "2")
+            elif "/503/1/" in self.path:
+                self.send_response(503)
+                self.send_header("retry-after", "Thu, 31 Dec 2043 23:59:59 GMT")
+            elif "/503/2/" in self.path:
+                self.send_response(503)
+                self.send_header("retry-after", "Fri, 31 Dec 1999 23:59:59 GMT")
+            elif "/503/3/" in self.path:
+                self.send_response(503)
+                self.send_header("retry-after", "")
+            elif "/503/4/" in self.path:
+                self.send_response(503)
+                self.send_header("retry-after", "(*#*(@*(@(")
+            elif "/503/5/" in self.path:
+                self.send_response(503)
+                self.send_header("retry-after", "aklsjflajfaklsfaklfasfklasdfklasdgahsdhgasdiogaioshdgo")
+            elif "/503/6/" in self.path:
+                self.send_response(503)
+                self.send_header("retry-after", "1 2 3 4 5 6 7 8 9 10")
+            else:
+                # Unknown request
+                self.send_response(400)
+                body = "Unknown /503/ path in server"
+            if "/reflect/" in self.path:
+                self.reflect_headers()
+            self.send_header("Content-type", "text/plain")
+            self.end_headers()
+            if body:
+                self.wfile.write(body)
+        elif "fail" not in self.path:
             status = data.get("status", 500)
             # self.responses maps an int status to a (short, long) pair of
             # strings. We want the longer string. That's why we pass a string
