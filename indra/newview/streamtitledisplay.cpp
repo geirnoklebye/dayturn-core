@@ -1,4 +1,5 @@
 /* Copyright (c) 2010 Katharine Berry All rights reserved.
+ * Copyright (c) 2013 Cinder Roxley <cinder.roxley@phoenixviewer.com>
  *
  * Redistribution and use in source and binary forms, with or
  * without modification, are permitted provided that the following
@@ -28,85 +29,76 @@
  */
 
 #include "llviewerprecompiledheaders.h"
-#include "message.h"
+
+#include "streamtitledisplay.h"
 #include "llagent.h"
-#include "llchat.h"
-//#include "llfloaterchat.h"
-#include "llnotificationmanager.h"
 #include "llaudioengine.h"
+#include "llnotificationsutil.h"
 #include "llstreamingaudio.h"
 #include "llviewercontrol.h"
 #include "lltrans.h"
-#include "streamtitledisplay.h"
+#include "fscommon.h"
+#include "message.h"
 
-StreamTitleDisplay::StreamTitleDisplay() : LLEventTimer(2) { };
+StreamTitleDisplay::StreamTitleDisplay() : LLEventTimer(2.f) { }
 
 BOOL StreamTitleDisplay::tick()
 {
 	checkMetadata();
-	return false;
+	return FALSE;
 }
 
 void StreamTitleDisplay::checkMetadata()
 {
-	static LLCachedControl<bool> ShowStreamMetadata(gSavedSettings, "ShowStreamMetadata", true);
-	static LLCachedControl<bool> ShowStreamName(gSavedSettings, "ShowStreamName", true);
+	static LLCachedControl<U32> ShowStreamMetadata(gSavedSettings, "ShowStreamMetadata", 1);
 	static LLCachedControl<bool> StreamMetadataAnnounceToChat(gSavedSettings, "StreamMetadataAnnounceToChat", false);
 
-
-	if(!gAudiop)
+	if (!gAudiop)
 		return;
-	if(gAudiop->getStreamingAudioImpl()->hasNewMetadata() && (ShowStreamMetadata || StreamMetadataAnnounceToChat))
+	if ((ShowStreamMetadata > 0 || StreamMetadataAnnounceToChat)
+	    && gAudiop->getStreamingAudioImpl()->getNewMetadata(mMetadata))
 	{
-		LLStreamingAudioInterface *stream = gAudiop->getStreamingAudioImpl();
-
-		if (!stream) {
-			return;
+		std::string chat = "";
+		
+		if (mMetadata.has("ARTIST"))
+		{
+			chat = mMetadata["ARTIST"].asString();
 		}
-
-		LLChat chat;
-		std::string title = stream->getCurrentTitle();
-		std::string artist = stream->getCurrentArtist();
-		chat.mText = artist;
-
-		if (!title.empty()) {
-			if (!chat.mText.empty()) {
-				chat.mText += " - ";
+		if (mMetadata.has("TITLE"))
+		{
+			if (chat.length() > 0)
+			{
+				chat.append(" - ");
 			}
-			chat.mText += title;
+			chat.append(mMetadata["TITLE"].asString());
 		}
-
-		if (!chat.mText.empty()) {
-			if (StreamMetadataAnnounceToChat) {
-				sendStreamTitleToChat(chat.mText);
+		if (chat.length() > 0)
+		{
+			if (StreamMetadataAnnounceToChat)
+			{
+				sendStreamTitleToChat(chat);
 			}
 
-			if (ShowStreamMetadata) {
-				chat.mSourceType = CHAT_SOURCE_AUDIO_STREAM;
-				chat.mFromID = AUDIO_STREAM_FROM;
-				chat.mFromName = LLTrans::getString("Audio Stream");
-				chat.mText = "<nolink>" + chat.mText + "</nolink>";
-
-				if (ShowStreamName) {
-					std::string stream_name = stream->getCurrentStreamName();
-
-					if (!stream_name.empty()) {
-						chat.mFromName += " - " + stream_name;
-					}
-				}
-
-				LLSD args;
-				args["type"] = LLNotificationsUI::NT_NEARBYCHAT;
-				LLNotificationsUI::LLNotificationManager::instance().onChat(chat, args);
+			if (ShowStreamMetadata > 1)
+			{
+				chat = LLTrans::getString("StreamtitleNowPlaying") + " " + chat;
+				reportToNearbyChat(chat);
+			}
+			else if (ShowStreamMetadata == 1
+					 && (mMetadata.has("TITLE") || mMetadata.has("ARTIST")))
+			{
+				if (!mMetadata.has("TITLE"))
+					mMetadata["TITLE"] = "";
+				LLNotificationsUtil::add((mMetadata.has("ARTIST") ? "StreamMetadata" : "StreamMetadataNoArtist"), mMetadata);
 			}
 		}
 	}
 }
 
-void StreamTitleDisplay::sendStreamTitleToChat(const std::string& Title)
+void StreamTitleDisplay::sendStreamTitleToChat(const std::string& title)
 {
-	static LLCachedControl<S32> StreamMetadataAnnounceChannel(gSavedSettings, "StreamMetadataAnnounceChannel", 362394);
-	if (StreamMetadataAnnounceChannel != 0)
+	static LLCachedControl<S32> streamMetadataAnnounceChannel(gSavedSettings, "StreamMetadataAnnounceChannel");
+	if (streamMetadataAnnounceChannel != 0)
 	{
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessageFast(_PREHASH_ChatFromViewer);
@@ -114,9 +106,9 @@ void StreamTitleDisplay::sendStreamTitleToChat(const std::string& Title)
 		msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
 		msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 		msg->nextBlockFast(_PREHASH_ChatData);
-		msg->addStringFast(_PREHASH_Message, Title);
+		msg->addStringFast(_PREHASH_Message, title);
 		msg->addU8Fast(_PREHASH_Type, CHAT_TYPE_WHISPER);
-		msg->addS32("Channel", StreamMetadataAnnounceChannel);
+		msg->addS32("Channel", streamMetadataAnnounceChannel);
 
 		gAgent.sendReliableMessage();
 	}
