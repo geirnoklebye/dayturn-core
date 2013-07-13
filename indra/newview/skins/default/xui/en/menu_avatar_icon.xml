@@ -88,4 +88,23 @@
          function="AvatarIcon.Action"
          parameter="toggleblock" />
     </menu_item_call>
+    <menu_item_separator
+     layout="topleft"
+     name="freeze_eject_sep" />
+    <menu_item_call
+     label="Freeze / Unfreeze"
+     layout="topleft"
+     name="ToggleFreeze">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="togglefreeze" />
+    </menu_item_call>
+    <menu_item_call
+     label="Eject / Ban"
+     layout="topleft"
+     name="Eject">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="eject" />
+    </menu_item_call>
 </menu>

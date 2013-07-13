@@ -55,6 +55,7 @@
 #include "lltooltip.h"
 #include "llviewerregion.h"
 #include "llviewertexteditor.h"
+#include "llviewermenu.h"
 #include "llworld.h"
 #include "lluiconstants.h"
 #include "llstring.h"
@@ -189,6 +190,10 @@ public:
 		{
 			LLAvatarActions::requestFriendshipDialog(getAvatarId(), mFrom);
 		}
+		else if (level == "remove")
+		{
+			LLAvatarActions::removeFriendDialog(getAvatarId());
+		}
 		else if (level == "invitetogroup")
 		{
 			LLAvatarActions::inviteToGroup(getAvatarId());
@@ -218,6 +223,14 @@ public:
 					)
 				);
 			}
+		}
+		else if (level == "togglefreeze")
+		{
+			handle_avatar_freeze(getAvatarId());
+		}
+		else if (level == "eject")
+		{
+			handle_avatar_eject(getAvatarId());
 		}
 	}
 
@@ -500,6 +513,10 @@ protected:
 
 				menu->setItemVisible("Remove Friend", false);
 				menu->setItemVisible("Unblock", false);
+
+				menu->setItemVisible("freeze_eject_sep", false);
+				menu->setItemVisible("ToggleFreeze", false);
+				menu->setItemVisible("Eject", false);
 			}
 			else {
 				menu->setItemVisible("Send IM", mSessionID != LLIMMgr::computeSessionID(IM_NOTHING_SPECIAL, mAvatarID));
@@ -513,6 +530,11 @@ protected:
 				menu->setItemEnabled("Block", !is_blocked && LLAvatarActions::canBlock(mAvatarID));
 				menu->setItemVisible("Block", !is_blocked);
 				menu->setItemVisible("Unblock", is_blocked);
+
+				bool can_freeze_eject = enable_freeze_eject(mAvatarID);
+				menu->setItemVisible("freeze_eject_sep", can_freeze_eject);
+				menu->setItemVisible("ToggleFreeze", can_freeze_eject);
+				menu->setItemVisible("Eject", can_freeze_eject);
 			}
 
 			menu->buildDrawLabels();
