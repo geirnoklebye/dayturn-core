@@ -501,10 +501,12 @@ BOOL LLFloaterPreference::postBuild()
 	onPieColorsOverrideChanged();
 // ## Zi: Pie menu
 
+	gSavedSettings.getControl("StreamMetadataAnnounceToChat")->getSignal()->connect(boost::bind(&LLFloaterPreference::onStreamMetadataAnnounceChanged, this));
 	gSavedSettings.getControl("MiniMapChatRing")->getSignal()->connect(boost::bind(&LLFloaterPreference::onMiniMapChatRingChanged, this));
 	gSavedSettings.getControl("ShowLookAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowLookAtChanged, this));
 	gSavedSettings.getControl("ShowPointAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowPointAtChanged, this));
 
+	onStreamMetadataAnnounceChanged();
 	onMiniMapChatRingChanged();
 	onShowLookAtChanged();
 	onShowPointAtChanged();
@@ -528,6 +530,13 @@ void LLFloaterPreference::onPieColorsOverrideChanged()
 	getChild<LLSliderCtrl>("pie_menu_fade_out")->setEnabled(enable);
 }
 // ## Zi: Pie menu
+
+void LLFloaterPreference::onStreamMetadataAnnounceChanged()
+{
+	BOOL enable = gSavedSettings.getBOOL("StreamMetadataAnnounceToChat");
+
+	getChild<LLSpinCtrl>("StreamMetadataAnnounceChannel")->setEnabled(enable);
+}
 
 void LLFloaterPreference::onMiniMapChatRingChanged()
 {

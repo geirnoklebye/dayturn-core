@@ -108,6 +108,7 @@ protected:
 	void onPieColorsOverrideChanged();
 	// ## Zi: Pie menu
 
+	void onStreamMetadataAnnounceChanged();
 	void onMiniMapChatRingChanged();
 	void onShowLookAtChanged();
 	void onShowPointAtChanged();
