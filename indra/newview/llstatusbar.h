@@ -91,6 +91,7 @@ private:
 
 	void onMouseEnterVolume();
 	void onMouseEnterNearbyMedia();
+	void onClickBandwidthGraph();
 	void onClickScreen(S32 x, S32 y);
 
 	static void onClickMediaToggle(void* data);
@@ -106,6 +107,7 @@ private:
 	LLButton	*mBtnVolume;
 	LLTextBox	*mBoxBalance;
 	LLButton	*mMediaToggle;
+	LLButton	*mBandwidthButton;
 	LLView		*mScriptOut;
 	LLFrameTimer	mClockUpdateTimer;
 

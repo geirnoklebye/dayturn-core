@@ -194,6 +194,20 @@ BOOL LLStatusBar::postBuild()
 	S32 x = getRect().getWidth() - 2;
 	S32 y = 0;
 	LLRect r;
+
+	r.set( x-((SIM_STAT_WIDTH*2)+2), y+MENU_BAR_HEIGHT-1, x, y+1);
+	LLButton::Params BandwidthButton;
+	BandwidthButton.name(std::string("BandwidthGraphButton"));
+	BandwidthButton.label("");
+	BandwidthButton.rect(r);
+	BandwidthButton.follows.flags(FOLLOWS_BOTTOM | FOLLOWS_RIGHT);
+	BandwidthButton.click_callback.function(boost::bind(&LLStatusBar::onClickBandwidthGraph, this));
+	mBandwidthButton = LLUICtrlFactory::create<LLButton>(BandwidthButton);
+	addChild(mBandwidthButton);
+	LLColor4 BandwidthButtonOpacity;
+	BandwidthButtonOpacity.setAlpha(0);
+	mBandwidthButton->setColor(BandwidthButtonOpacity);
+
 	r.set( x-SIM_STAT_WIDTH, y+MENU_BAR_HEIGHT-1, x, y+1);
 	LLStatGraph::Params sgp;
 	sgp.name("BandwidthGraph");
@@ -541,6 +555,11 @@ BOOL can_afford_transaction(S32 cost)
 void LLStatusBar::onVolumeChanged(const LLSD& newvalue)
 {
 	refresh();
+}
+
+void LLStatusBar::onClickBandwidthGraph()
+{
+	LLFloaterReg::toggleInstance("stats");
 }
 
 // Implements secondlife:///app/balance/request to request a L$ balance
