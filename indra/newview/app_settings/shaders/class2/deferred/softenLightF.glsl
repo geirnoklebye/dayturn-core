@@ -443,11 +443,12 @@ void main()
 			  //float rdpow2 = (guessnumfp)/(26.0);
 			  float rd = guessnumfp / itsf;
 			  float rdpow2 = rd * rd;
-			  float refdist = 0.5*(screen_res.y * (rd));// / (-depth) ;
+			  float refdist = (-1.0/pos.z)*(1.0-abs(norm.z))*0.5*(screen_res.y * (rd));// / (-depth) ;
 			  //float refdist = 0.25*(screen_res.y * (rdpow2)) ;
 			  //float refdist = (0.13* (screen_res.y) * ((1-abs(norm.z)) + ((1-depth)))) * (1.0*(guessnum+1)/161.0);
 			  //vec2 ref2d = mix(orig_ref2d, orig_ref2dpersp, 0*fract(orig_ref2d.y*12345.678)) * refdist;
-			  vec2 ref2d = (orig_ref2d + (1.0 - min(length(spec.rgb), 1.0))*0.13*vec2(rnd*2.0-1.0)) * refdist;
+			  //vec2 ref2d = (orig_ref2d + (1.0 - min(length(spec.rgb), 1.0))*90.913*vec2(rnd*2.0-1.0)) * refdist;
+			  vec2 ref2d = (orig_ref2d + refdist * (1.0 - spec.a)*0.0005*vec2(rnd*2.0-1.0)) * refdist;
 			
 			  //ref2d.x += checkerboard;
 
