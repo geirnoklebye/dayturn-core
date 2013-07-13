@@ -434,6 +434,7 @@ void main()
 			const float itsf = 26.0;
 			for (int guessnum = 1; guessnum <= its; ++guessnum)
 			{
+			float rnd2 = rand(vec2(guessnum+rnd, tc.x));
 			  //float rdpow2 = float(guessnum)/(26.0);
 			  float guessnumfp = float(guessnum);
 			  //guessnumfp -= rnd;
@@ -448,7 +449,7 @@ void main()
 			  //float refdist = (0.13* (screen_res.y) * ((1-abs(norm.z)) + ((1-depth)))) * (1.0*(guessnum+1)/161.0);
 			  //vec2 ref2d = mix(orig_ref2d, orig_ref2dpersp, 0*fract(orig_ref2d.y*12345.678)) * refdist;
 			  //vec2 ref2d = (orig_ref2d + (1.0 - min(length(spec.rgb), 1.0))*90.913*vec2(rnd*2.0-1.0)) * refdist;
-			  vec2 ref2d = (orig_ref2d + refdist * (1.0 - spec.a)*0.0005*vec2(rnd*2.0-1.0)) * refdist;
+			  vec2 ref2d = (orig_ref2d + (1.0 - spec.a)*0.25*vec2(rnd2*2.0-1.0)) * refdist;
 			
 			  //ref2d.x += checkerboard;
 
@@ -464,7 +465,7 @@ void main()
 			  ref2d += tc.xy; // use as offset from destination
 
 			  if (ref2d.y < 0.0 || ref2d.y > screen_res.y ||
-			      ref2d.x < 0.0 || ref2d.x > screen_res.x) break;
+			      ref2d.x < 0.0 || ref2d.x > screen_res.x) continue;
 
 			  // Get attributes from the 2D guess point.
 			  float refdepth = texture2DRect(depthMap, ref2d).r;
