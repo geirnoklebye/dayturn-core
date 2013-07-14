@@ -444,7 +444,7 @@ void main()
 			  //float rdpow2 = (guessnumfp)/(26.0);
 			  float rd = guessnumfp / itsf;
 			  float rdpow2 = rd * rd;
-			  float refdist = (-2.5/(-1.0+pos.z))*(1.0-(norm.z*norm.z))*(screen_res.y * (rd));// / (-depth) ;
+			  float refdist = (-2.5/(-1.0+pos.z))*(1.0-(norm.z*norm.z))*(screen_res.y * (rdpow2));// / (-depth) ;
 			  //float refdist = 0.25*(screen_res.y * (rdpow2)) ;
 			  //float refdist = (0.13* (screen_res.y) * ((1-abs(norm.z)) + ((1-depth)))) * (1.0*(guessnum+1)/161.0);
 			  //vec2 ref2d = mix(orig_ref2d, orig_ref2dpersp, 0*fract(orig_ref2d.y*12345.678)) * refdist;
