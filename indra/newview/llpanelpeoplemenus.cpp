@@ -75,6 +75,8 @@ LLContextMenu* PeopleContextMenu::createMenu()
 		registrar.add("Avatar.BlockUnblock",	boost::bind(&LLAvatarActions::toggleBlock,				id));
 		registrar.add("Avatar.InviteToGroup",	boost::bind(&LLAvatarActions::inviteToGroup,			id));
 		registrar.add("Avatar.Calllog",			boost::bind(&LLAvatarActions::viewChatHistory,			id));
+		registrar.add("Avatar.Freeze",			boost::bind(&handle_avatar_freeze,						id));
+		registrar.add("Avatar.Eject",			boost::bind(&handle_avatar_eject,						id));
 
 		enable_registrar.add("Avatar.EnableItem", boost::bind(&PeopleContextMenu::enableContextMenuItem, this, _2));
 		enable_registrar.add("Avatar.CheckItem",  boost::bind(&PeopleContextMenu::checkContextMenuItem,	this, _2));
@@ -234,6 +236,10 @@ bool PeopleContextMenu::enableContextMenuItem(const LLSD& userdata)
 	{
 		return LLLogChat::isTranscriptExist(mUUIDs.front());
 	}
+	else if (item == std::string("can_freeze_eject"))
+	{
+		return enable_freeze_eject(mUUIDs.front());
+	}
 	else if (item == std::string("can_im") || item == std::string("can_invite") ||
 	         item == std::string("can_share") || item == std::string("can_pay"))
 	{
@@ -286,7 +292,6 @@ void NearbyPeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 		items.push_back(std::string("offer_teleport"));
 		items.push_back(std::string("voice_call"));
 		items.push_back(std::string("chat_history"));
-		items.push_back(std::string("separator_chat_history"));
 		items.push_back(std::string("add_friend"));
 		items.push_back(std::string("remove_friend"));
 		items.push_back(std::string("invite_to_group"));
@@ -296,6 +301,9 @@ void NearbyPeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 		items.push_back(std::string("share"));
 		items.push_back(std::string("pay"));
 		items.push_back(std::string("block_unblock"));
+		items.push_back(std::string("separator_freeze_eject"));
+		items.push_back(std::string("freeze"));
+		items.push_back(std::string("eject"));
 	}
 
     hide_context_entries(menu, items, disabled_items);

@@ -61,6 +61,7 @@
 #include "llstring.h"
 #include "llurlaction.h"
 #include "llviewercontrol.h"
+#include "llviewerobjectlist.h"
 
 static LLDefaultChildRegistry::Register<LLChatHistory> r("chat_history");
 
@@ -193,6 +194,10 @@ public:
 		else if (level == "remove")
 		{
 			LLAvatarActions::removeFriendDialog(getAvatarId());
+		}
+		else if (level == "zoom")
+		{
+			handle_zoom_to_object(getAvatarId());
 		}
 		else if (level == "invitetogroup")
 		{
@@ -506,6 +511,7 @@ protected:
 				menu->setItemEnabled("Send IM", false);
 				menu->setItemEnabled("Offer Teleport", false);
 				menu->setItemEnabled("Add Friend", false);
+				menu->setItemEnabled("Zoom In", false);
 				menu->setItemEnabled("Invite To Group", false);
 				menu->setItemEnabled("Share", false);
 				menu->setItemEnabled("Pay", false);
@@ -513,7 +519,6 @@ protected:
 
 				menu->setItemVisible("Remove Friend", false);
 				menu->setItemVisible("Unblock", false);
-
 				menu->setItemVisible("freeze_eject_sep", false);
 				menu->setItemVisible("ToggleFreeze", false);
 				menu->setItemVisible("Eject", false);
@@ -525,6 +530,8 @@ protected:
 				bool is_friend = (LLAvatarTracker::instance().getBuddyInfo(mAvatarID) != NULL);
 				menu->setItemVisible("Add Friend", !is_friend);
 				menu->setItemVisible("Remove Friend", is_friend);
+
+				menu->setItemEnabled("Zoom In", gObjectList.findObject(mAvatarID) != NULL);
 
 				bool is_blocked = LLAvatarActions::isBlocked(mAvatarID);
 				menu->setItemEnabled("Block", !is_blocked && LLAvatarActions::canBlock(mAvatarID));

@@ -3320,7 +3320,7 @@ bool enable_freeze_eject(const LLSD& avatar_id)
 		avatar = find_avatar_from_object(
 			LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
 	}
-	if (!avatar) return false;
+	if (!avatar || avatar->isSelf()) return false;
 
 	// Gods can always freeze
 	if (gAgent.isGodlike()) return true;
