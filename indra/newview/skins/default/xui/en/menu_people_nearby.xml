@@ -80,7 +80,7 @@
          parameter="can_invite"/>
     </menu_item_call>
     <menu_item_separator name="separator_invite_to_group"/>
-    <menu_item_check
+    <menu_item_call
      label="Block / Unblock"
      layout="topleft"
      name="block_unblock">
@@ -92,7 +92,7 @@
         <menu_item_call.on_enable
          function="Avatar.EnableItem"
          parameter="can_block" />
-    </menu_item_check>
+    </menu_item_call>
     <menu_item_call
      label="Zoom In"
      layout="topleft"

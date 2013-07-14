@@ -179,6 +179,37 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
            right="-1"
            top_pad="0">
            <layout_panel
+             layout="topleft"
+             width="313">
+             <slider
+               control_name="NearMeRange"
+               decimal_digits="0"
+               follows="left|top"
+               height="17"
+               increment="1.0"
+               initial_value="130"
+               layout="topleft"
+               left_pad="-240"
+               max_val="1024"
+               min_val="75"
+               name="near_me_range"
+               tool_tip="Select the range (in meters) of the people to show in the avatar name list, below"
+               top_pad="5"
+               width="182" />
+            <text
+               type="string"
+               length="3"
+               follows="left|top"
+               height="12"
+               layout="topleft"
+               left="10"
+               name="Range:"
+               top_pad="-15"
+               width="80">
+                 Reach Out
+             </text>
+           </layout_panel>
+           <layout_panel
              height="142"
              layout="topleft"
              min_dim="120"
@@ -196,35 +227,6 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                name="Net Map"
                right="-1"
                top="4" />
-           </layout_panel>
-		   <layout_panel>
-		     user_resize="true">
-			<slider
-			   control_name="NearMeRange"
-			   decimal_digits="0"
-			   follows="left|top"
-			   height="17"
-			   increment="1.0"
-			   initial_value="130"
-			   layout="topleft"
-			   left_pad="-240"
-			   max_val="1024"
-			   min_val="75"
-			   name="near_me_range"
-			   top_pad="3"
-			   width="182" />
-			 <text
-			   type="string"
-			   length="3"
-			   follows="left|top"
-			   height="12"
-			   layout="topleft"
-			   left="10"
-			   name="Range:"
-			   top_pad="-15"
-			   width="80">
-				Reach Out
-		     </text>
            </layout_panel>
            <layout_panel
              height="213"
