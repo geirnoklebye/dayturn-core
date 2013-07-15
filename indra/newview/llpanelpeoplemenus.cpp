@@ -236,10 +236,6 @@ bool PeopleContextMenu::enableContextMenuItem(const LLSD& userdata)
 	{
 		return LLLogChat::isTranscriptExist(mUUIDs.front());
 	}
-	else if (item == std::string("can_freeze_eject"))
-	{
-		return enable_freeze_eject(mUUIDs.front());
-	}
 	else if (item == std::string("can_im") || item == std::string("can_invite") ||
 	         item == std::string("can_share") || item == std::string("can_pay"))
 	{
@@ -301,9 +297,12 @@ void NearbyPeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 		items.push_back(std::string("share"));
 		items.push_back(std::string("pay"));
 		items.push_back(std::string("block_unblock"));
-		items.push_back(std::string("separator_freeze_eject"));
-		items.push_back(std::string("freeze"));
-		items.push_back(std::string("eject"));
+
+		if (enable_freeze_eject(mUUIDs.front())) {
+			items.push_back(std::string("separator_freeze_eject"));
+			items.push_back(std::string("freeze"));
+			items.push_back(std::string("eject"));
+		}
 	}
 
     hide_context_entries(menu, items, disabled_items);
