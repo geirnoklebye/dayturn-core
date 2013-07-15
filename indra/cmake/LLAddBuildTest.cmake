@@ -1,6 +1,10 @@
 # -*- cmake -*-
 include(LLTestCommand)
-include(GoogleMock)
+
+# <FS:ND> Google Mock/Test is not used
+#include(GoogleMock)
+# </FS:ND>
+
 include(Tut)
 
 MACRO(LL_ADD_PROJECT_UNIT_TESTS project sources)
