@@ -348,11 +348,18 @@ void LLNetMap::draw()
 		// Draw avatars
 		for (U32 i = 0; i < avatar_ids.size(); i++)
 		{
-			pos_map = globalPosToView(positions[i]);
 			LLUUID uuid = avatar_ids[i];
 
-			bool show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
+			if (uuid == gAgent.getID()) {
+				//
+				//	no need to plot our own position here
+				//	as that will be taken care of later
+				//
+				continue;
+			}
 
+			pos_map = globalPosToView(positions[i]);
+			bool show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
 			LLColor4 color = show_as_friend ? map_avatar_friend_color : map_avatar_color;
 
 			unknown_relative_z = positions[i].mdV[VZ] == COARSEUPDATE_MAX_Z &&
