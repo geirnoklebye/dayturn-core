@@ -230,7 +230,7 @@ void VolumeCatcherImpl::init()
 			if (proplist)
 			{
 				llpa_proplist_sets(proplist, PA_PROP_APPLICATION_ICON_NAME, "multimedia-player");
-				llpa_proplist_sets(proplist, PA_PROP_APPLICATION_ID, "com.secondlife.viewer.mediaplugvoladjust");
+				llpa_proplist_sets(proplist, PA_PROP_APPLICATION_ID, "com.kokuaviewer.viewer.mediaplugvoladjust");
 				llpa_proplist_sets(proplist, PA_PROP_APPLICATION_NAME, "SL Plugin Volume Adjuster");
 				llpa_proplist_sets(proplist, PA_PROP_APPLICATION_VERSION, "1");
 

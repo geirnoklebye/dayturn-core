@@ -81,9 +81,9 @@ extern "C" {
 	gboolean viewer_app_api_GoSLURL(ViewerAppAPI *obj, gchar *slurl, gboolean **success_rtn, GError **error);
 }
 
-#define VIEWERAPI_SERVICE "com.secondlife.ViewerAppAPIService"
-#define VIEWERAPI_PATH "/com/secondlife/ViewerAppAPI"
-#define VIEWERAPI_INTERFACE "com.secondlife.ViewerAppAPI"
+#define VIEWERAPI_SERVICE "com.kokuaviewer.ViewerAppAPIService"
+#define VIEWERAPI_PATH "/com/kokuaviewer/ViewerAppAPI"
+#define VIEWERAPI_INTERFACE "com.kokuaviewer.ViewerAppAPI"
 
 #endif // LL_DBUS_ENABLED
 

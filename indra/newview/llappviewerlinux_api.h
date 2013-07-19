@@ -136,7 +136,7 @@ const DBusGObjectInfo dbus_glib_viewerapp_object_info = {
   0,
   dbus_glib_viewerapp_methods,
   1,
-"com.secondlife.ViewerAppAPI\0GoSLURL\0S\0slurl\0I\0s\0success_ret\0O\0F\0N\0b\0\0\0",
+"com.kokuaviewer.ViewerAppAPI\0GoSLURL\0S\0slurl\0I\0s\0success_ret\0O\0F\0N\0b\0\0\0",
 "\0",
 "\0"
 };
