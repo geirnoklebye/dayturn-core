@@ -151,13 +151,21 @@ void LLFloaterIMSessionTab::setFocus(BOOL focus)
 {
 	LLTransientDockableFloater::setFocus(focus);
 
-    //Redirect focus to input editor
     if (focus)
 	{
     	updateMessages();
 
         if (mInputEditor)
         {
+    	    //
+    	    //	clear the new message waiting indicator in the IM container
+    	    //	for this conversation
+    	    //
+    	    LLFloaterIMContainer::getInstance()->flashConversationItemWidget(mSessionID, false);
+
+    	    //
+    	    //	redirect focus to input editor
+    	    //
     	    mInputEditor->setFocus(TRUE);
         }
 	}
