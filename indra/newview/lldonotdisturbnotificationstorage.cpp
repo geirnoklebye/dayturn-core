@@ -231,7 +231,7 @@ void LLDoNotDisturbNotificationStorage::updateNotifications()
 
     LLNotifications& instance = LLNotifications::instance();
     bool imToastExists = false;
-#if (LL_LINUX && GCC_VERSION >= 40700)
+#if (LL_LINUX && GCC_VERSION >= 40600)
 //Work around gcc-4.7 set but unused warning
 	if (imToastExists){};
 #endif
