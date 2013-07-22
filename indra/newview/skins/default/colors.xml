@@ -629,22 +629,43 @@
      value="0 0 0 1" />
     <color
      name="NetMapGroupOwnAboveWater"
-     reference="Purple" />
+     value="1 0 1 0.9" />
     <color
      name="NetMapGroupOwnBelowWater"
-     value="0.78 0 0.78 1" />
+     value="0.78 0 0.78 0.8" />
+    <color
+     name="NetMapGroupPhysical"
+     value="0 0.78 0 1" />
     <color
      name="NetMapOtherOwnAboveWater"
-     value="0.24 0.24 0.24 1" />
+     value="0.24 0.24 0.24 0.9" />
     <color
      name="NetMapOtherOwnBelowWater"
-     value="0.12 0.12 0.12 1" />
+     value="0.12 0.12 0.12 0.8" />
+    <color
+     name="NetMapOtherPhysical"
+     value="0 0.78 0 1" />
+    <color
+     name="NetMapPropertyLineColor"
+     value="1 1 1 1" />
+    <color
+     name="NetMapPropertyForSaleColor"
+     value="1 0.5 0 0.4" />
+    <color
+     name="NetMapScripted"
+     value="1 0.5 0 1" />
+    <color
+     name="NetMapTempOnRez"
+     value="1 0.5 0 1" />
     <color
      name="NetMapYouOwnAboveWater"
-     value="0 1 1 1" />
+     value="0 1 1 0.9" />
     <color
      name="NetMapYouOwnBelowWater"
-     value="0 0.78 0.78 1" />
+     value="0 0.78 0.78 0.8" />
+    <color
+     name="NetMapOtherPhysical"
+     value="0.78 0 0 1" />
     <color
      name="NotifyBoxColor"
      value="LtGray" />

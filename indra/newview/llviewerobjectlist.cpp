@@ -1657,6 +1657,19 @@ void LLViewerObjectList::renderObjectsForMap(LLNetMap &netmap)
 	LLColor4 group_own_below_water_color = 
 						LLUIColorTable::instance().getColor( "NetMapGroupOwnBelowWater" );
 
+        LLColor4 you_own_physical_color = LLUIColorTable::instance().getColor("NetMapYouPhysical", LLColor4::red);
+        LLColor4 group_own_physical_color = LLUIColorTable::instance().getColor("NetMapGroupPhysical", LLColor4::green);
+        LLColor4 other_own_physical_color = LLUIColorTable::instance().getColor("NetMapOtherPhysical", LLColor4::green);
+        LLColor4 scripted_object_color = LLUIColorTable::instance().getColor("NetMapScripted", LLColor4::orange);
+        LLColor4 temp_on_rez_object_color = LLUIColorTable::instance().getColor("NetMapTempOnRez", LLColor4::orange);
+
+        static LLCachedControl<bool> netmap_physical(gSavedSettings, "MiniMapPhysical", false);
+        static LLCachedControl<bool> netmap_scripted(gSavedSettings, "MiniMapScripted", false);
+        static LLCachedControl<bool> netmap_temp_on_rez(gSavedSettings, "MiniMapTempOnRez", false);
+        static LLCachedControl<U32> netmap_phantom_opacity(gSavedSettings, "MiniMapPhantomOpacity", 80);
+
+        const F32 MIN_RADIUS_FOR_ACCENTED_OBJECTS = 2.f;
+
 	F32 max_radius = gSavedSettings.getF32("MiniMapPrimMaxRadius");
 
 	for (vobj_list_t::iterator iter = mMapObjects.begin(); iter != mMapObjects.end(); ++iter)
@@ -1720,6 +1733,42 @@ void LLViewerObjectList::renderObjectsForMap(LLNetMap &netmap)
 		if( pos.mdV[VZ] < water_height )
 		{
 			color = below_water_color;
+		}
+
+		if (netmap_scripted && objectp->flagScripted()) {
+			color = scripted_object_color;
+
+			if (approx_radius < MIN_RADIUS_FOR_ACCENTED_OBJECTS) {
+				approx_radius = MIN_RADIUS_FOR_ACCENTED_OBJECTS;
+			}
+		}
+		
+		if (netmap_physical && objectp->flagUsePhysics()) {
+			if (objectp->permYouOwner()) {
+				color = you_own_physical_color;
+			}
+			else if (objectp->permGroupOwner()) {
+				color = group_own_physical_color;
+			}
+			else {
+				color = other_own_physical_color;
+			}
+			if (approx_radius < MIN_RADIUS_FOR_ACCENTED_OBJECTS) {
+				approx_radius = MIN_RADIUS_FOR_ACCENTED_OBJECTS;
+			}
+		}
+		
+		if (netmap_temp_on_rez && objectp->flagTemporaryOnRez()) {
+			color = temp_on_rez_object_color;
+
+			if( approx_radius < MIN_RADIUS_FOR_ACCENTED_OBJECTS ) {
+				approx_radius = MIN_RADIUS_FOR_ACCENTED_OBJECTS;
+			}
+		}
+		
+		if (objectp->flagPhantom()) {
+			color.setAlpha(llclampb((U32)netmap_phantom_opacity));
+			
 		}
 
 		netmap.renderScaledPointGlobal( 
