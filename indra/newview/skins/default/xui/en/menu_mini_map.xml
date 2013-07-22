@@ -8,35 +8,24 @@
  top="724"
  visible="false"
  width="128">
-	<menu_item_call
-     label="Zoom Close"
-     name="Zoom Close">
-        <menu_item_call.on_click
-         function="Minimap.Zoom"
-         parameter="close" />
-    </menu_item_call>
-    <menu_item_call
-     label="Zoom Medium"
-     name="Zoom Medium">
-        <menu_item_call.on_click
-         function="Minimap.Zoom"
-         parameter="medium" />
-    </menu_item_call>
-    <menu_item_call
-     label="Zoom Far"
-     name="Zoom Far">
-        <menu_item_call.on_click
-         function="Minimap.Zoom"
-         parameter="far" />
-    </menu_item_call>
-	<menu_item_call
-     label="Zoom Default"
-     name="Zoom Default">
-		<menu_item_call.on_click
-         function="Minimap.Zoom"
-         parameter="default" />
-	</menu_item_call>
-	<menu_item_separator />
+    <menu_item_check
+       label="Chat Range Rings"
+       name="Show Chat Range">
+          <menu_item_check.on_check
+             control="MiniMapChatRing" />
+          <menu_item_check.on_click
+             function="ToggleControl"
+             parameter="MiniMapChatRing" />
+    </menu_item_check>
+    <menu_item_check
+      label="World Map Textures"
+      name="World Map Textures">
+        <menu_item_check.on_click
+          function="Minimap.ToggleOverlay"
+          parameter="MiniMapWorldMapTextures" />
+        <menu_item_check.on_check
+          control="MiniMapWorldMapTextures" />
+    </menu_item_check>
     <menu_item_check
        label="Rotate Map"
        name="Rotate Map">
@@ -55,29 +44,118 @@
              function="ToggleControl"
              parameter="MiniMapAutoCenter" />
     </menu_item_check>
+    <menu_item_separator />
     <menu_item_check
-       label="Show Chat Range"
-       name="Show Chat Range">
-          <menu_item_check.on_check
-             control="MiniMapChatRing" />
-          <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="MiniMapChatRing" />
+      label="Show Objects"
+      name="Show Objects">
+        <menu_item_check.on_click
+          function="ToggleControl"
+          parameter="MiniMapObjects" />
+        <menu_item_check.on_check
+          control="MiniMapObjects" />
+    </menu_item_check>
+    <menu_item_check
+      label="Physical Objects"
+      name="Physical Objects">
+        <menu_item_check.on_click
+          function="ToggleControl"
+          parameter="MiniMapPhysical" />
+        <menu_item_check.on_check
+          function="CheckControl"
+          parameter="MiniMapPhysical" />
+        <menu_item_check.on_enable
+          control="MiniMapObjects" />
+    </menu_item_check>
+    <menu_item_check
+      label="Scripted Objects"
+      name="Scripted Objects">
+        <menu_item_check.on_click
+          function="ToggleControl"
+          parameter="MiniMapScripted" />
+        <menu_item_check.on_check
+          function="CheckControl"
+          parameter="MiniMapScripted" />
+        <menu_item_check.on_enable
+          control="MiniMapObjects" />
+    </menu_item_check>
+    <menu_item_check
+      label="Temporary Objects"
+      name="Temporary Objects">
+        <menu_item_check.on_click
+          function="ToggleControl"
+          parameter="MiniMapTempOnRez" />
+        <menu_item_check.on_check
+          function="CheckControl"
+          parameter="MiniMapTempOnRez" />
+        <menu_item_check.on_enable
+          control="MiniMapObjects" />
     </menu_item_check>
     <menu_item_separator />
-    <menu_item_call
-     label="Stop Tracking"
-     name="Stop Tracking">
-        <menu_item_call.on_click
-         function="Minimap.Tracker"
-         parameter="task_properties" />
-    </menu_item_call>
+    <menu_item_check
+      label="Show Parcel Borders"
+      name="Show Parcel Borders">
+        <menu_item_check.on_click
+          function="Minimap.ToggleOverlay"
+          parameter="MiniMapPropertyLines" />
+        <menu_item_check.on_check
+          control="MiniMapPropertyLines" />
+    </menu_item_check>
+    <menu_item_check
+      label="Parcels For Sale"
+      name="Parcels For Sale">
+        <menu_item_check.on_click
+          function="Minimap.ToggleOverlay"
+          parameter="MiniMapForSaleParcels" />
+        <menu_item_check.on_check
+          control="MiniMapForSaleParcels" />
+        <menu_item_check.on_enable
+          control="MiniMapPropertyLines" />
+    </menu_item_check>
     <menu_item_separator />
+    <menu
+       label="Zoom"
+       name="Zoom">
+       <menu_item_call
+         label="Zoom Close"
+         name="Zoom Close">
+           <menu_item_call.on_click
+             function="Minimap.Zoom"
+             parameter="close" />
+       </menu_item_call>
+       <menu_item_call
+         label="Zoom Medium"
+         name="Zoom Medium">
+           <menu_item_call.on_click
+             function="Minimap.Zoom"
+             parameter="medium" />
+       </menu_item_call>
+       <menu_item_call
+         label="Zoom Far"
+         name="Zoom Far">
+             <menu_item_call.on_click
+               function="Minimap.Zoom"
+               parameter="far" />
+       </menu_item_call>
+       <menu_item_call
+         label="Zoom Default"
+         name="Zoom Default">
+           <menu_item_call.on_click
+             function="Minimap.Zoom"
+             parameter="default" />
+       </menu_item_call>
+    </menu>
     <menu_item_call
-     label="World Map"
-     name="World Map">
+      label="Stop Tracking"
+      name="Stop Tracking">
         <menu_item_call.on_click
-         function="Floater.Show"
-         parameter="world_map" />
+          function="Minimap.Tracker"
+          parameter="task_properties" />
     </menu_item_call>
+    <menu_item_call
+      label="Open World Map"
+      name="Open World Map">
+        <menu_item_call.on_click
+          function="Floater.Show"
+          parameter="world_map" />
+     </menu_item_call>
 </menu>

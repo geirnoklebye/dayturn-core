@@ -122,6 +122,8 @@ LLViewerParcelMgr::LLViewerParcelMgr()
 	mRenderSelection(TRUE),
 	mCollisionBanned(0),
 	mCollisionTimer(),
+	mCollisionRegionHandle(0),
+	mCollisionUpdateSignal(NULL),
 	mMediaParcelId(0),
 	mMediaRegionId(0)
 {
@@ -136,6 +138,11 @@ LLViewerParcelMgr::LLViewerParcelMgr()
 	mParcelsPerEdge = S32(	REGION_WIDTH_METERS / PARCEL_GRID_STEP_METERS );
 	mHighlightSegments = new U8[(mParcelsPerEdge+1)*(mParcelsPerEdge+1)];
 	resetSegments(mHighlightSegments);
+
+	mCollisionBitmap = new U8[getCollisionBitmapSize()];
+	if (mCollisionBitmap) {
+		memset(mCollisionBitmap, 0, getCollisionBitmapSize());
+	}
 
 	mCollisionSegments = new U8[(mParcelsPerEdge+1)*(mParcelsPerEdge+1)];
 	resetSegments(mCollisionSegments);
@@ -182,6 +189,9 @@ LLViewerParcelMgr::~LLViewerParcelMgr()
 
 	delete[] mHighlightSegments;
 	mHighlightSegments = NULL;
+
+	delete[] mCollisionBitmap;
+	mCollisionBitmap = NULL;
 
 	delete[] mCollisionSegments;
 	mCollisionSegments = NULL;
@@ -1694,17 +1704,17 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 
 		}
 
-		S32 bitmap_size =	parcel_mgr.mParcelsPerEdge
-							* parcel_mgr.mParcelsPerEdge
-							/ 8;
-		U8* bitmap = new U8[ bitmap_size ];
-		msg->getBinaryDataFast(_PREHASH_ParcelData, _PREHASH_Bitmap, bitmap, bitmap_size);
+		msg->getBinaryDataFast(_PREHASH_ParcelData, _PREHASH_Bitmap, parcel_mgr.mCollisionBitmap, parcel_mgr.getCollisionBitmapSize());
 
 		parcel_mgr.resetSegments(parcel_mgr.mCollisionSegments);
-		parcel_mgr.writeSegmentsFromBitmap( bitmap, parcel_mgr.mCollisionSegments );
+		parcel_mgr.writeSegmentsFromBitmap(parcel_mgr.mCollisionBitmap, parcel_mgr.mCollisionSegments);
 
-		delete[] bitmap;
-		bitmap = NULL;
+		LLViewerRegion *region = LLWorld::getInstance()->getRegion(msg->getSender());
+		parcel_mgr.mCollisionRegionHandle = (region) ? region->getHandle() : 0;
+
+		if (parcel_mgr.mCollisionUpdateSignal) {
+			(*parcel_mgr.mCollisionUpdateSignal)(region);
+		}
 
 	}
 	else if (sequence_id == HOVERED_PARCEL_SEQ_ID)
@@ -2507,4 +2517,12 @@ void LLViewerParcelMgr::onTeleportFinished(bool local, const LLVector3d& new_pos
 void LLViewerParcelMgr::onTeleportFailed()
 {
 	mTeleportFailedSignal();
+}
+
+boost::signals2::connection LLViewerParcelMgr::setCollisionUpdateCallback(const collision_update_signal_t::slot_type & cb)
+{
+	if (!mCollisionUpdateSignal) {
+		mCollisionUpdateSignal = new collision_update_signal_t();
+	}
+	return mCollisionUpdateSignal->connect(cb);
 }
