@@ -185,17 +185,17 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                control_name="NearMeRange"
                decimal_digits="0"
                follows="left|top"
-               height="17"
+               height="12"
                increment="1.0"
                initial_value="130"
                layout="topleft"
-               left_pad="-240"
+               left_pad="-230"
                max_val="1024"
                min_val="75"
                name="near_me_range"
-               tool_tip="Select the range (in meters) of the people to show in the avatar name list, below"
-               top_pad="5"
-               width="182" />
+               tool_tip="Select the distance from you (in meters) of the people who will show in the list, below"
+               top_pad="9"
+               width="180" />
             <text
                type="string"
                length="3"
@@ -204,9 +204,9 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                layout="topleft"
                left="10"
                name="Range:"
-               top_pad="-15"
+               top_pad="-12"
                width="80">
-                 Reach Out
+                 Radar Range
              </text>
            </layout_panel>
            <layout_panel
