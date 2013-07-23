@@ -272,6 +272,43 @@ BOOL LLMediaCtrl::handleMouseDown( S32 x, S32 y, MASK mask )
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+BOOL LLMediaCtrl::handleMiddleMouseUp( S32 x, S32 y, MASK mask )
+{
+	if (LLPanel::handleMiddleMouseUp(x, y, mask)) return TRUE;
+	convertInputCoords(x, y);
+
+	if (mMediaSource)
+	{
+		mMediaSource->mouseUp(x, y, mask, 2);
+	}
+	
+	gFocusMgr.setMouseCapture( NULL );
+
+	return TRUE;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+BOOL LLMediaCtrl::handleMiddleMouseDown( S32 x, S32 y, MASK mask )
+{
+	if (LLPanel::handleMiddleMouseDown(x, y, mask)) return TRUE;
+	convertInputCoords(x, y);
+
+	if (mMediaSource)
+		mMediaSource->mouseDown(x, y, mask, 2);
+	
+	gFocusMgr.setMouseCapture( this );
+
+	if (mTakeFocusOnClick)
+	{
+		setFocus( TRUE );
+	}
+
+	return TRUE;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 BOOL LLMediaCtrl::handleRightMouseUp( S32 x, S32 y, MASK mask )
 {
 	if (LLPanel::handleRightMouseUp(x, y, mask)) return TRUE;

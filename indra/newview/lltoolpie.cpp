@@ -117,6 +117,18 @@ BOOL LLToolPie::handleMouseDown(S32 x, S32 y, MASK mask)
 	return TRUE;
 }
 
+BOOL LLToolPie::handleMiddleMouseDown(S32 x, S32 y, MASK mask)
+{
+	LLPickInfo pick = gViewerWindow->pickImmediate(x, y, TRUE);
+
+	return handleMediaClick(pick, 2);
+}
+
+BOOL LLToolPie::handleMiddleMouseUp(S32 x, S32 y, MASK mask)
+{
+	return LLViewerMediaFocus::getInstance()->handleMiddleMouse(x, y, mask, false);
+}
+
 // Spawn context menus on right mouse down so you can drag over and select
 // an item.
 BOOL LLToolPie::handleRightMouseDown(S32 x, S32 y, MASK mask)
@@ -1391,7 +1403,7 @@ static void handle_click_action_play()
 	}
 }
 
-bool LLToolPie::handleMediaClick(const LLPickInfo& pick)
+bool LLToolPie::handleMediaClick(const LLPickInfo& pick, int button)
 {
 	//FIXME: how do we handle object in different parcel than us?
 	LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
@@ -1432,7 +1444,7 @@ bool LLToolPie::handleMediaClick(const LLPickInfo& pick)
 			gFocusMgr.setKeyboardFocus(LLViewerMediaFocus::getInstance());
 			LLEditMenuHandler::gEditMenuHandler = LLViewerMediaFocus::instance().getFocusedMediaImpl();
 			
-			media_impl->mouseDown(pick.mUVCoords, gKeyboard->currentMask(TRUE));
+			media_impl->mouseDown(pick.mUVCoords, gKeyboard->currentMask(TRUE), button);
 			mMediaMouseCaptureID = mep->getMediaID();
 			setMouseCapture(TRUE);  // This object will send a mouse-up to the media when it loses capture.
 		}

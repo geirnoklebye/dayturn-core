@@ -44,6 +44,8 @@ public:
 	// Virtual functions inherited from LLMouseHandler
 	virtual BOOL		handleAnyMouseClick(S32 x, S32 y, MASK mask, EClickType clicktype, BOOL down);
 	virtual BOOL		handleMouseDown(S32 x, S32 y, MASK mask);
+	virtual BOOL		handleMiddleMouseDown(S32 x, S32 y, MASK mask);
+	virtual BOOL		handleMiddleMouseUp(S32 x, S32 y, MASK mask);
 	virtual BOOL		handleRightMouseDown(S32 x, S32 y, MASK mask);
 	virtual BOOL		handleMouseUp(S32 x, S32 y, MASK mask);
 	virtual BOOL		handleRightMouseUp(S32 x, S32 y, MASK mask);
@@ -87,7 +89,7 @@ private:
 	void showVisualContextMenuEffect();
 	ECursorType cursorFromObject(LLViewerObject* object);
 
-	bool handleMediaClick(const LLPickInfo& info);
+	bool handleMediaClick(const LLPickInfo& info, int button = 0);
 	bool handleMediaHover(const LLPickInfo& info);
 	bool handleMediaMouseUp(); 
 	BOOL handleTooltipLand(std::string line, std::string tooltip_msg);
