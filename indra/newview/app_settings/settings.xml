@@ -10250,13 +10250,13 @@
   <key>RenderUseStreamVBO</key>
   <map>
     <key>Comment</key>
-    <string>Use VBO's for stream buffers</string>
+    <string>Use VBOs for stream buffers</string>
     <key>Persist</key>
     <integer>1</integer>
     <key>Type</key>
     <string>Boolean</string>
     <key>Value</key>
-    <integer>1</integer>
+    <integer>0</integer>
   </map>
 	<key>RenderPreferStreamDraw</key>
 	<map>

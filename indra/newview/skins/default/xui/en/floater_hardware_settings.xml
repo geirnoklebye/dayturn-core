@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <floater
  legacy_header_height="18"
- height="224"
+ height="232"
  layout="topleft"
  name="Hardware Settings Floater"
  help_topic="hardware_settings_floater"
@@ -15,7 +15,7 @@
      layout="topleft"
      left="10"
      name="Filtering:"
-     top="20"
+     top="30"
      width="188">
         Filtering:
     </text>
@@ -36,7 +36,7 @@
      layout="topleft"
      left="10"
      name="antialiasing label"
-     top_pad="7"
+     top_pad="5"
      width="188">
         Antialiasing:
     </text>
@@ -96,7 +96,7 @@
      left="10"
      max_val="2"
      name="gamma"
-     top_pad="11"
+     top_pad="15"
      width="262" />
     <text
      type="string"
@@ -118,7 +118,7 @@
      layout="topleft"
      left="10"
      name="Enable VBO:"
-     top_pad="10"
+     top_pad="15"
      width="188">
         Enable VBO:
     </text>
@@ -139,8 +139,30 @@
     height="16"
     layout="topleft"
     left="10"
+    name="streamed vbo label"
+    top_pad="5"
+    width="188">
+    Use VBOs For Stream Buffers:
+  </text>
+    <check_box
+     control_name="RenderUseStreamVBO"
+     height="16"
+     initial_value="true"
+     label="Use Vertex Buffer Objects For Stream Buffers"
+     layout="topleft"
+     left_pad="10"
+     name="streamed vbos"
+     tool_tip="Disabling this may improve performance when VBOs are enabled."
+     width="315" />
+  <text
+    type="string"
+    length="1"
+    follows="left|top"
+    height="16"
+    layout="topleft"
+    left="10"
     name="tc label"
-    top_pad="10"
+    top_pad="5"
     width="188">
     Enable S3TC:
   </text>
@@ -168,7 +190,7 @@
      max_val="4096"
      name="GraphicsCardTextureMemory"
      tool_tip="Amount of memory to allocate for textures. Defaults to video card memory. Reducing this may improve performance but may also make textures blurry."
-     top_pad="10"
+     top_pad="5"
      width="360" />
     <spinner
      control_name="RenderFogRatio"
@@ -183,7 +205,7 @@
      max_val="10"
      min_val="0.5"
      name="fog"
-     top_pad="7"
+     top_pad="5"
      width="262" />
     <button
      follows="right|bottom"
@@ -193,6 +215,6 @@
      layout="topleft"
      left="-102"
      name="OK"
-     top="192"
+     top="200"
      width="90" />
 </floater>
