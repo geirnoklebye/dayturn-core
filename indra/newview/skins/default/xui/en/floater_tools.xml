@@ -2706,7 +2706,7 @@ even though the user gets a free copy.
              width="90" />
             <button
              follows="left|top"
-             height="16"
+             height="20"
              label="Reset Scripts"
              layout="topleft"
              top_pad="1"
@@ -2725,7 +2725,7 @@ even though the user gets a free copy.
              layout="topleft"
              left="10"
              name="contents_inventory"
-             top="50"
+             top="55"
              width="275" />
 		</panel>
         </tab_container>
