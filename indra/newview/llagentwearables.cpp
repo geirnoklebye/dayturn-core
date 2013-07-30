@@ -2075,8 +2075,8 @@ void LLAgentWearables::createWearable(LLWearableType::EType type, bool wear, con
 	{
 		if (gAgent.mRRInterface.isUnderRlvShare(gInventory.getCategory(parent_id)))
 		{
-			if (gAgent.mRRInterface.containsSubstr("attachthis")
-			|| gAgent.mRRInterface.containsSubstr("attachallthis"))
+			if (gAgent.mRRInterface.containsSubstr("attachthis:")
+			|| gAgent.mRRInterface.containsSubstr("attachallthis:"))
 			{
 				return;
 			}

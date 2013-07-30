@@ -4073,8 +4073,8 @@ BOOL LLFolderBridge::dragItemIntoFolder(LLInventoryItem* inv_item,
 			// can come from and where it can go, according to the current restrictions
 			if(LLToolDragAndDrop::SOURCE_AGENT != source)
 			{
-				if (gAgent.mRRInterface.containsSubstr("attachthis")
-				|| gAgent.mRRInterface.containsSubstr("attachallthis"))
+				if (gAgent.mRRInterface.containsSubstr("attachthis:")
+				|| gAgent.mRRInterface.containsSubstr("attachallthis:"))
 				{
 					return false;
 				}
