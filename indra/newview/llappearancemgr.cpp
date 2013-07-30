@@ -2516,16 +2516,6 @@ void LLAppearanceMgr::addCOFItemLink(const LLInventoryItem *item, bool do_update
 				return;
 			}
 
-			LLWearable *old_wearable = gAgentWearables.getWearable(vitem->getWearableType(),0);
-			if (old_wearable)
-			{
-				if (!gAgent.mRRInterface.canUnwear (item_non_const))
-				{
-					// cannot remove this outfit, so cannot replace it either
-					return;
-				}
-			}
-
 			// Notify that this layer has been worn
 			gAgent.mRRInterface.notify (LLUUID::null, "worn legally " + gAgent.mRRInterface.getOutfitLayerAsString(vitem->getWearableType()), "");
 		}
@@ -3561,6 +3551,7 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove)
 		const LLUUID& id_to_remove = *it;
 		const LLUUID& linked_item_id = gInventory.getLinkedItemID(id_to_remove);
 //MK
+		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = TRUE;
 		LLViewerInventoryItem* item_to_remove = gInventory.getItem(id_to_remove);
 		if (!gRRenabled || gAgent.mRRInterface.canDetach (item_to_remove))
 		{
@@ -3571,6 +3562,7 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove)
 		removeCOFItemLinks(linked_item_id);
 //MK
 		}
+		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
 //mk
 	}
 	updateAppearanceFromCOF();
