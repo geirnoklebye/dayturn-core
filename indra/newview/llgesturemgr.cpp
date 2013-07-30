@@ -999,8 +999,10 @@ void LLGestureMgr::runStep(LLMultiGesture* gesture, LLGestureStep* step)
 			const BOOL animate = FALSE;
 
 //MK
+			// Don't allow to play this chat gesture if we can't send chat
+			// and this is a public chat message
 			if (gRRenabled && gAgent.mRRInterface.contains ("sendchat") 
-				&& chat_text.find ("/me ") != 0 && chat_text.find ("/me'") != 0)
+				&& (chat_text.length() < 1 || !isdigit (chat_text[1])))
 			{
 				chat_text = gAgent.mRRInterface.crunchEmote (chat_text, 20);
 			}
