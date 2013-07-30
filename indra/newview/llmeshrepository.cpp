@@ -635,7 +635,6 @@ public:
 LLMeshRepoThread::LLMeshRepoThread()
 : LLThread("mesh repo"),
   mWaiting(false),
-  mHttpRetries(0U),
   mHttpRequest(NULL),
   mHttpOptions(NULL),
   mHttpLargeOptions(NULL),
@@ -728,13 +727,7 @@ void LLMeshRepoThread::run()
 		
 		if (! LLApp::isQuitting())
 		{
-			static U32 count = 0;
-			static F32 last_hundred = gFrameTimeSeconds;
-
-			if (gFrameTimeSeconds - last_hundred > 1.f)
-			{ //a second has gone by, clear count
-				last_hundred = gFrameTimeSeconds;
-				count = 0;
+			// NOTE: order of queue processing intentionally favors LOD requests over header requests
 
 				// <FS:Ansariel> Mesh header/LOD retry functionality
 				F32 curl_timeout = llmax((F32)fsMeshRequestTimeout, 30.f) + 2.f; // 30 secs minimum timeout as defined in LLCurl.cpp
@@ -788,14 +781,6 @@ void LLMeshRepoThread::run()
 					mMutex->unlock();
 				}
 				// </FS:Ansariel> Mesh header/LOD retry functionality
-			}
-			else
-			{
-				count += mHttpRetries;
-			}
-			mHttpRetries = 0U;
-			
-			// NOTE: throttling intentionally favors LOD requests over header requests
 			
 			// <FS:Ansariel> Configurable request throttle
 			//while (!mLODReqQ.empty() && count < MAX_MESH_REQUESTS_PER_SECOND && sActiveLODRequests < sMaxConcurrentRequests)
@@ -811,7 +796,7 @@ void LLMeshRepoThread::run()
 				mLODReqQ.pop();
 				LLMeshRepository::sLODProcessing--;
 				mMutex->unlock();
-				if (!fetchMeshLOD(req.mMeshParams, req.mLOD, count))//failed, resubmit
+				if (!fetchMeshLOD(req.mMeshParams, req.mLOD))//failed, resubmit
 				{
 					mMutex->lock();
 						mLODReqQ.push(req); 
@@ -833,7 +818,7 @@ void LLMeshRepoThread::run()
 				HeaderRequest req = mHeaderReqQ.front();
 				mHeaderReqQ.pop();
 				mMutex->unlock();
-				if (!fetchMeshHeader(req.mMeshParams, count))//failed, resubmit
+				if (!fetchMeshHeader(req.mMeshParams))//failed, resubmit
 				{
 					mMutex->lock();
 					mHeaderReqQ.push(req) ;
@@ -848,14 +833,14 @@ void LLMeshRepoThread::run()
 			// order will lose.  Keep to the throttle enforcement and pay
 			// attention to the highwater level (enforced in each fetchXXX()
 			// method).
-			if (! mSkinRequests.empty() && count < MAX_MESH_REQUESTS_PER_SECOND && mHttpRequestSet.size() < sRequestHighWater)
+			if (! mSkinRequests.empty() && mHttpRequestSet.size() < sRequestHighWater)
 			{
 				// *FIXME:  this really does need a lock as do the following ones
 				std::set<LLUUID> incomplete;
 				for (std::set<LLUUID>::iterator iter = mSkinRequests.begin(); iter != mSkinRequests.end(); ++iter)
 				{
 					LLUUID mesh_id = *iter;
-					if (!fetchMeshSkinInfo(mesh_id, count))
+					if (!fetchMeshSkinInfo(mesh_id))
 					{
 						incomplete.insert(mesh_id);
 					}
@@ -863,13 +848,13 @@ void LLMeshRepoThread::run()
 				mSkinRequests.swap(incomplete);
 			}
 
-			if (! mDecompositionRequests.empty() && count < MAX_MESH_REQUESTS_PER_SECOND && mHttpRequestSet.size() < sRequestHighWater)
+			if (! mDecompositionRequests.empty() && mHttpRequestSet.size() < sRequestHighWater)
 			{
 				std::set<LLUUID> incomplete;
 				for (std::set<LLUUID>::iterator iter = mDecompositionRequests.begin(); iter != mDecompositionRequests.end(); ++iter)
 				{
 					LLUUID mesh_id = *iter;
-					if (!fetchMeshDecomposition(mesh_id, count))
+					if (!fetchMeshDecomposition(mesh_id))
 					{
 						incomplete.insert(mesh_id);
 					}
@@ -877,13 +862,13 @@ void LLMeshRepoThread::run()
 				mDecompositionRequests.swap(incomplete);
 			}
 
-			if (! mPhysicsShapeRequests.empty() && count < MAX_MESH_REQUESTS_PER_SECOND && mHttpRequestSet.size() < sRequestHighWater)
+			if (! mPhysicsShapeRequests.empty() && mHttpRequestSet.size() < sRequestHighWater)
 			{
 				std::set<LLUUID> incomplete;
 				for (std::set<LLUUID>::iterator iter = mPhysicsShapeRequests.begin(); iter != mPhysicsShapeRequests.end(); ++iter)
 				{
 					LLUUID mesh_id = *iter;
-					if (!fetchMeshPhysicsShape(mesh_id, count))
+					if (!fetchMeshPhysicsShape(mesh_id))
 					{
 						incomplete.insert(mesh_id);
 					}
@@ -1051,7 +1036,7 @@ LLCore::HttpHandle LLMeshRepoThread::getByteRange(const std::string & url, int c
 }
 
 
-bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id, U32& count)
+bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 {
 	
 	if (!mHeaderMutex)
@@ -1109,7 +1094,7 @@ bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id, U32& count)
 			}
 
 			//reading from VFS failed for whatever reason, fetch from sim
-			if (count >= MAX_MESH_REQUESTS_PER_SECOND || mHttpRequestSet.size() >= sRequestHighWater)
+			if (mHttpRequestSet.size() >= sRequestHighWater)
 			{
 				return false;
 			}
@@ -1148,7 +1133,7 @@ bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id, U32& count)
 	return ret;
 }
 
-bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id, U32& count)
+bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id)
 {
 	if (!mHeaderMutex)
 	{
@@ -1206,7 +1191,7 @@ bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id, U32& count)
 			}
 
 			//reading from VFS failed for whatever reason, fetch from sim
-			if (count >= MAX_MESH_REQUESTS_PER_SECOND || mHttpRequestSet.size() >= sRequestHighWater)
+			if (mHttpRequestSet.size() >= sRequestHighWater)
 			{
 				return false;
 			}
@@ -1245,7 +1230,7 @@ bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id, U32& count)
 	return ret;
 }
 
-bool LLMeshRepoThread::fetchMeshPhysicsShape(const LLUUID& mesh_id, U32& count)
+bool LLMeshRepoThread::fetchMeshPhysicsShape(const LLUUID& mesh_id)
 {
 	if (!mHeaderMutex)
 	{
@@ -1302,7 +1287,7 @@ bool LLMeshRepoThread::fetchMeshPhysicsShape(const LLUUID& mesh_id, U32& count)
 			}
 
 			//reading from VFS failed for whatever reason, fetch from sim
-			if (count >= MAX_MESH_REQUESTS_PER_SECOND || mHttpRequestSet.size() >= sRequestHighWater)
+			if (mHttpRequestSet.size() >= sRequestHighWater)
 			{
 				return false;
 			}
@@ -1374,7 +1359,7 @@ void LLMeshRepoThread::decActiveHeaderRequests()
 }
 
 //return false if failed to get header
-bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params, U32& count)
+bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params)
 {
 	{
 		//look for mesh in asset in vfs
@@ -1423,7 +1408,6 @@ bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params, U32& c
 			handler->mHttpHandle = handle;
 			mHttpRequestSet.insert(handler);
 			++LLMeshRepository::sHTTPRequestCount;
-			++count;
 			// <FS:Ansariel> Mesh header/LOD retry functionality
 			S32 frameTime = gFrameTimeSeconds;
 			LL_DEBUGS("MeshRequestTimeout") << "Mesh header request: SculptID=" << mesh_params.getSculptID() << ", gFrameTimeSeconds=" << frameTime << LL_ENDL;
@@ -1442,7 +1426,7 @@ bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params, U32& c
 }
 
 //return false if failed to get mesh lod.
-bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod, U32& count)
+bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod)
 {
 	if (!mHeaderMutex)
 	{
@@ -1518,7 +1502,6 @@ bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod, 
 					handler->mHttpHandle = handle;
 					mHttpRequestSet.insert(handler);
 					++LLMeshRepository::sHTTPRequestCount;
-					++count;
 					// <FS:Ansariel> Mesh header/LOD retry functionality
 					S32 frameTime = gFrameTimeSeconds;
 					LL_DEBUGS("MeshRequestTimeout") << "Mesh LOD request: SculptID=" << mesh_params.getSculptID() << ", LOD=" << lod << ", gFrameTimeSeconds=" << frameTime << LL_ENDL;
@@ -2525,11 +2508,8 @@ void LLMeshHandlerBase::onCompleted(LLCore::HttpHandle handle, LLCore::HttpRespo
 {
 	mProcessed = true;
 
-	// Accumulate retries, we'll use these to offset the HTTP
-	// count and maybe hold to a throttle better.
 	unsigned int retries(0U);
 	response->getRetries(NULL, &retries);
-	gMeshRepo.mThread->mHttpRetries += retries;
 	LLMeshRepository::sHTTPRetryCount += retries;
 
 	LLCore::HttpStatus status(response->getStatus());
