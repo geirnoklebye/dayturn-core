@@ -3668,7 +3668,7 @@ bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_pare
 		if (mHandleNoStrip) {
 			std::string name = folder->getName();
 			LLStringUtil::toLower(name);
-			if (name.find ("nostrip") != -1) return false;
+			if (name.find ("nostrip") != -1 && !mUserUpdateAttachmentsUpdatesAll) return false;
 		}
 		// check @detachthis:folder in all restrictions
 		RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
