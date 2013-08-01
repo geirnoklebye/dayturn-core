@@ -182,6 +182,14 @@ public:
 	void        getLoginIdentifierTypes(LLSD& idTypes) { idTypes = mGridList[mGrid][GRID_LOGIN_IDENTIFIER_TYPES]; }
 
 	std::string trimHypergrid(const std::string& trim);
+	/* ================================================================
+	 * @name Update Related Properties
+	 * @{
+	 */
+	/// Get the update service URL base (host and path) for the selected grid
+	std::string getUpdateServiceURL();
+	
+	//@}
 
 	// build a slurl for the given region within the selected grid
 	std::string getSLURLBase(const std::string& grid);
@@ -257,6 +265,7 @@ protected:
 					   const std::string& login, 
 					   const std::string& helper,
 					   const std::string& login_page);
+					   const std::string& update_url_base,
 	
 	
 	std::string mGrid;

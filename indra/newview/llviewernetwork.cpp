@@ -61,6 +61,8 @@ public:
 	{
 		llwarns << "goodbye " << this << llendl;
 	}
+/// url base for update queries
+const std::string  GRID_UPDATE_SERVICE_URL = "update_query_url_base";
 
 	// the grid info is no LLSD *sigh* ... override the default LLSD parsing behaviour 
 	virtual  void completedRaw(U32 status, const std::string& reason,
@@ -112,8 +114,8 @@ public:
 		}
 	}
 
-	virtual void result(const LLSD& content)
-	{
+const std::string SL_UPDATE_QUERY_URL = "https://update.secondlife.com/update";
+
 
 	}
 
@@ -237,13 +239,13 @@ void LLGridManager::initSystemGrids()
 			"https://login.agni.lindenlab.com/cgi-bin/login.cgi",
 			"https://secondlife.com/helpers/",
 			 DEFAULT_LOGIN_PAGE);
-	addSystemGrid(	ADITI,
+				  SL_UPDATE_QUERY_URL,
 			"util.aditi.lindenlab.com",
 			"aditi",
 			"https://login.aditi.lindenlab.com/cgi-bin/login.cgi",
 			"http://aditi-secondlife.webdev.lindenlab.com/helpers/",
 			DEFAULT_LOGIN_PAGE);
-// LLGridManager::addSystemGrid - helper for adding a system grid.
+				  SL_UPDATE_QUERY_URL,
 void LLGridManager::addSystemGrid(const std::string& label,
 					  const std::string& name,
 					  const std::string& nick,
@@ -920,6 +922,7 @@ void LLGridManager::addSystemGrid(const std::string& label,
 					  const std::string& login,
 					  const std::string& helper,
 					  const std::string& login_page )
+								  const std::string& update_url_base,
 {
 	GridEntry* grid_entry = new GridEntry;
 	grid_entry->set_current = false;
@@ -929,6 +932,7 @@ void LLGridManager::addSystemGrid(const std::string& label,
 	grid_entry->grid[GRID_NICK_VALUE] = nick;
 	grid_entry->grid[GRID_HELPER_URI_VALUE] = helper;
 	grid_entry->grid[GRID_LOGIN_URI_VALUE] = LLSD::emptyArray();
+	grid[GRID_UPDATE_SERVICE_URL] = update_url_base;
 	grid_entry->grid[GRID_LOGIN_URI_VALUE].append(login);
 	grid_entry->grid[GRID_LOGIN_PAGE_VALUE] = login_page;
 	grid_entry->grid[GRID_IS_SYSTEM_GRID_VALUE] = TRUE;
@@ -1196,6 +1200,30 @@ std::string LLGridManager::getLoginPage()
 }
 
 	return mGridList[mGrid][GRID_LOGIN_PAGE_VALUE];
+}
+
+std::string LLGridManager::getUpdateServiceURL()
+{
+	std::string update_url_base = gSavedSettings.getString("CmdLineUpdateService");;
+	if ( !update_url_base.empty() )
+	{
+		LL_INFOS2("UpdaterService","GridManager")
+			<< "Update URL base overridden from command line: " << update_url_base
+			<< LL_ENDL;
+	}
+	else if ( mGridList[mGrid].has(GRID_UPDATE_SERVICE_URL) )
+	{
+		update_url_base = mGridList[mGrid][GRID_UPDATE_SERVICE_URL].asString();
+	}
+	else
+	{
+		LL_WARNS2("UpdaterService","GridManager")
+			<< "The grid property '" << GRID_UPDATE_SERVICE_URL
+			<< "' is not defined for the grid '" << mGrid << "'"
+			<< LL_ENDL;
+	}
+			
+	return update_url_base;
 }
 
 // <AW opensim>
