@@ -502,6 +502,8 @@
             <string>login.aditi.lindenlab.com</string>
         <key>slurl_base</key>
             <string>secondlife://login.aditi.lindenlab.com/secondlife/</string>
+        <key>update_query_url_base</key>
+            <string>https://update.secondlife.com/update</string>
         <key>system_grid</key>
             <integer>1</integer>
         </map>
@@ -533,6 +535,8 @@
             <string>login.agni.lindenlab.com</string>
         <key>slurl_base</key>
             <string>http://maps.secondlife.com/secondlife/</string>
+        <key>update_query_url_base</key>
+          <string>https://update.secondlife.com/update</string>          
         <key>system_grid</key>
             <integer>1</integer>
         </map>

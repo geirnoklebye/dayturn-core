@@ -29,7 +29,7 @@
 #ifndef LL_LLVIEWERNETWORK_H
 #define LL_LLVIEWERNETWORK_H
 
-#include "llxmlnode.h"
+#include "../llxml/llxmlnode.h"
                                                                                                        
 #include <boost/function.hpp>
 #include <boost/signals2.hpp>
@@ -43,7 +43,7 @@ extern const char* DEFAULT_LOGIN_PAGE;
 #define GRID_VALUE "name"
 #define GRID_LABEL_VALUE "gridname"
 #define GRID_NICK_VALUE "gridnick"
-//#define GRID_ID_VALUE "grid_login_id"
+#define GRID_ID_VALUE "grid_login_id"
 #define GRID_LOGIN_URI_VALUE "loginuri"
 #define GRID_HELPER_URI_VALUE "helperuri"
 #define GRID_LOGIN_PAGE_VALUE "loginpage"
@@ -258,16 +258,15 @@ protected:
 
 	void updateIsInProductionGrid();
 
-	// helper function for adding the predefined grids
+
 	void addSystemGrid(const std::string& label, 
-					   const std::string& name,
-					   const std::string& nick,
+					   const std::string& name, 
 					   const std::string& login, 
 					   const std::string& helper,
-					   const std::string& login_page);
+					   const std::string& login_page,
 					   const std::string& update_url_base,
-	
-	
+					   const std::string& login_id = "");   
+
 	std::string mGrid;
 	std::string mGridFile;
 	LLSD mGridList;

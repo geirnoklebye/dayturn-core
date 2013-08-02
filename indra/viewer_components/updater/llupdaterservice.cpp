@@ -573,7 +573,7 @@ bool LLUpdaterServiceImpl::onMainLoop(LLSD const & event)
 			else
 			{
 				LL_WARNS("UpdaterService")
-					<< "No updater service defined for grid '" << LLGridManager::getInstance()->getGrid()
+					<< "No updater service defined for grid '" << LLGridManager::getInstance()->getGridNick()
 					<< "' will check again in " << mCheckPeriod << " seconds"
 					<< LL_ENDL;
 				// Because the grid can be changed after the viewer is started (when the first check takes place)
