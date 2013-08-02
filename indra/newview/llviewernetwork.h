@@ -61,7 +61,7 @@ extern const char* DEFAULT_LOGIN_PAGE;
 #define GRID_APP_SLURL_BASE "app_slurl_base"
 class GridInfoRequestResponder;
 
-// <AW opensim>
+
 struct GridEntry
 {
 	LLSD grid;
@@ -81,7 +81,6 @@ protected:
 	std::string mGrid;
 };
 
-// </AW opensim>
 
 
 /**
@@ -122,8 +121,7 @@ public:
 	LLGridManager();
 	~LLGridManager();
 	
-// <AW opensim>
-	void initGrids();
+    void initGrids();
 	void initSystemGrids();
 	void initGridList(std::string grid_file, AddState state);
 	void initCmdLineGrids();
@@ -152,10 +150,6 @@ public:
 	// this was getGridInfo - renamed to avoid ambiguity with the OpenSim grid_info
 	void getGridData(const std::string& grid, LLSD &grid_info);
 	void getGridData(LLSD &grid_info) { getGridData(mGrid, grid_info); }
-// </AW opensim>	
-
-	// current grid management
-
 	// select a given grid as the current grid.  If the grid
 	// is not a known grid, then it's assumed to be a dns name for the
 	// grid, and the various URIs will be automatically generated.
@@ -167,10 +161,8 @@ public:
 	std::string getGridNick() { return mGridList[mGrid][GRID_NICK_VALUE].asString(); }
 	//get the grid e.g. "login.agni.lindenlab.com"
 	std::string getGrid() const { return mGrid; }
-// <FS:AW  grid management>
 	// get the first (and very probably only) login URI of a specified grid
 	std::string getLoginURI(const std::string& grid);
-// </FS:AW  grid management>
 	// get the Login URIs of the current grid
 	void getLoginURIs(std::vector<std::string>& uris);
 	std::string getHelperURI();
@@ -208,16 +200,11 @@ public:
 	// tell if we know how to acess this grid via Hypergrid
 	std::string getGatekeeper() { return getGatekeeper(mGrid); }
 	std::string getGatekeeper(const std::string& grid) { return mGridList[grid].has("gatekeeper") ? mGridList[grid]["gatekeeper"].asString() : std::string(); }
-
-
-
-
 	std::string getGridByProbing( const std::string &probe_for, bool case_sensitive = false);
 	std::string getGridByLabel( const std::string &grid_label, bool case_sensitive = false);
 	std::string getGridByGridNick( const std::string &grid_nick, bool case_sensitive = false);
 	std::string getGridByHostName( const std::string &host_name, bool case_sensitive = false);
 	std::string getGridByAttribute(const std::string &attribute, const std::string &attribute_value, bool case_sensitive );
-// </AW opensim>
 	bool isSystemGrid(const std::string& grid) 
 	{ 
 		return mGridList.has(grid) &&
@@ -229,15 +216,12 @@ public:
 	// this is currently used to persist a grid after a successful login
 	void setFavorite() { mGridList[mGrid][GRID_IS_FAVORITE_VALUE] = TRUE; }
 
-// <FS:AW  grid management>
 	typedef boost::function<void(bool success)> grid_list_changed_callback_t;
 	typedef boost::signals2::signal<void(bool success)> grid_list_changed_signal_t;
 
 	boost::signals2::connection addGridListChangedCallback(grid_list_changed_callback_t cb);
 	grid_list_changed_signal_t	mGridListChangedSignal;
-// <FS:AW  grid management>
-	
-// <AW opensim>
+
 	bool isInSLMain();
 	bool isInSLBeta();
 	bool isInOpenSim();

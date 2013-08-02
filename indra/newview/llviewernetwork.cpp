@@ -107,7 +107,7 @@ public:
 		else if (LLGridManager::LOCAL == mState) //always add localhost, no matter
 		{
 			mOwner->addGrid(mData,	LLGridManager::FINISH);
-			//since we know now that its not up we cold also start it
+			//since we know now that its not up we could also start it
 		}
 		else
 		{
@@ -158,7 +158,6 @@ private:
 	GridEntry* mData;
 	LLGridManager::AddState mState;
 };
-// </AW opensim>
 
 
 const std::string  GRID_UPDATE_SERVICE_URL = "update_query_url_base";
@@ -173,7 +172,7 @@ const char* SYSTEM_GRID_APP_SLURL_BASE = "secondlife:///app";
 const char* DEFAULT_HOP_BASE = "hop://%s/";
 const char* DEFAULT_APP_SLURL_BASE = "x-grid-location-info://%s/app";
 
-// <AW opensim>
+
 LLGridManager::LLGridManager()
 :	mIsInSLMain(false),
 	mIsInSLBeta(false),
@@ -183,9 +182,7 @@ LLGridManager::LLGridManager()
 	mResponderCount(0)
 {
 	mGrid.clear() ;
-// <FS:AW  grid management>
 	mGridList = LLSD();
-// <FS:AW  grid management>
 }
 
 void LLGridManager::resetGrids()
@@ -199,9 +196,8 @@ void LLGridManager::resetGrids()
 
 void LLGridManager::initGrids()
 {
-// <FS:AW  grid management>
+
 	mGridList = LLSD();
-// <FS:AW  grid management>
 
 	std::string grid_fallback_file  = gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS,  "grids.fallback.xml");
 
@@ -228,9 +224,7 @@ void LLGridManager::initSystemGrids()
 {
 	std::string add_grid_item = LLTrans::getString("ServerComboAddGrid");
 
-	//addSystemGrid(add_grid_item, add_grid_item, add_grid_item, " ", " ", add_grid_item);
-// 	addSystemGrid("None", "", "", "", DEFAULT_LOGIN_PAGE);
-//we get this now from the grid list
+/// we get this now from the grid list
 
         addSystemGrid("Second Life Main Grid (Agni)",
                                   MAINGRID,
@@ -246,7 +240,6 @@ void LLGridManager::initSystemGrids()
                                   DEFAULT_LOGIN_PAGE,
                                   SL_UPDATE_QUERY_URL,
                                   "Aditi");
-LL_WARNS2("InitSystemGrids","GridManager") << "reading: " <<  SL_UPDATE_QUERY_URL << LL_ENDL;
 }
 
 
@@ -306,16 +299,11 @@ void LLGridManager::initCmdLineGrids()
 	// load a grid from the command line.
 	// if the actual grid name is specified from the command line,
 	// set it as the 'selected' grid.
-// <FS:AW fix commandline loginuri (partial fix of FIRE-3448)>
 	std::string cmd_line_login_uri = gSavedSettings.getString("CmdLineLoginURI1");
-//	LLSD cmd_line_login_uri = gSavedSettings.getLLSD("CmdLineLoginURI");
 	if ((!cmd_line_login_uri.empty()))
 	{	
 		mGrid = cmd_line_login_uri;
 		gSavedSettings.setString("CmdLineLoginURI1",std::string());	//in case setGridChoice tries to addGrid 
-	//and  addGrid recurses here.
-	// NOTE: This isn't fixed in llviewernetwork because it seems upstream 
-	// is going to remove the commandline loginuri soon anyway.
 	}
 	std::string grid;
 
@@ -328,7 +316,6 @@ void LLGridManager::initCmdLineGrids()
 		// however this only happens refetching all grid infos.
 		gSavedSettings.setString("CmdLineLoginURI1",std::string());
 		LL_DEBUGS("GridManager") << "Setting grid from --loginuri " << grid << LL_ENDL;
-//</FS:AW fix commandline loginuri (partial fix of FIRE-3448)-->
 		setGridChoice(grid);
 		return;
 	}
@@ -389,7 +376,6 @@ void LLGridManager::initCmdLineGrids()
 	else
 	{
 		LL_DEBUGS2("initCmdLineGrids","GridManager") << "Trying to fetch commandline grid " << grid << LL_ENDL;
-//		GridEntry* grid_entry = new GridEntry;
 		grid_entry->set_current = true;
 		grid_entry->grid = LLSD::emptyMap();	
 		grid_entry->grid[GRID_VALUE] = grid;
@@ -404,9 +390,9 @@ void LLGridManager::initCmdLineGrids()
 		{
 
 		}
+    }
 }
-}
-// </AW opensim>
+
 
 
 LLGridManager::~LLGridManager()
@@ -414,7 +400,6 @@ LLGridManager::~LLGridManager()
 
 }
 
-// <AW opensim>
 void LLGridManager::getGridData(const std::string &grid, LLSD& grid_info)
 {
 
@@ -422,36 +407,7 @@ void LLGridManager::getGridData(const std::string &grid, LLSD& grid_info)
 
 	
 
-	// override any grid data with the command line info.
-
-	// Kokua: rather not. Overriding means what you get is different from what you see
-	// - the actual loginuri is foo.com  but the combo shows bar.org -
-	// that is at least annoying and a security risk.
-	/*	
-	LLSD cmd_line_login_uri = gSavedSettings.getLLSD("CmdLineLoginURI");
-	if (cmd_line_login_uri.isString())
-	{
-		grid_info[GRID_LOGIN_URI_VALUE] = LLSD::emptyArray();
-		grid_info[GRID_LOGIN_URI_VALUE].append(cmd_line_login_uri);
-	}
-	
-	// override the helper uri if it was passed in
-	std::string cmd_line_helper_uri = gSavedSettings.getString("CmdLineHelperURI");
-	if(!cmd_line_helper_uri.empty())
-	{
-		grid_info[GRID_HELPER_URI_VALUE] = cmd_line_helper_uri;	
-	}
-	
-	// override the login page if it was passed in
-	std::string cmd_line_login_page = gSavedSettings.getString("LoginPage");
-	if(!cmd_line_login_page.empty())
-	{
-		grid_info[GRID_LOGIN_PAGE_VALUE] = cmd_line_login_page;
-	}
-	*/	
 }
-// <AW opensim>
-// <AW opensim>
 void LLGridManager::gridInfoResponderCB(GridEntry* grid_entry)
 {
 	for (LLXMLNode* node = grid_entry->info_root->getFirstChild(); node != NULL; node = node->getNextSibling())
@@ -555,7 +511,6 @@ void LLGridManager::gridInfoResponderCB(GridEntry* grid_entry)
 	addGrid(grid_entry, FINISH);
 }
 
-// <FS:AW  grid management>
 void LLGridManager::addGrid(const std::string& loginuri)
 {
 	GridEntry* grid_entry = new GridEntry;
@@ -564,11 +519,7 @@ void LLGridManager::addGrid(const std::string& loginuri)
 	grid_entry->grid[GRID_VALUE] = loginuri;
 	addGrid(grid_entry, FETCH);
 }
-// </FS:AW  grid management>
-//
-// LLGridManager::addGrid - add a grid to the grid list, populating the needed values
-// if they're not populated yet.
-//
+
 void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 {
 	if(!grid_entry)
@@ -606,7 +557,8 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 			state = FINISH;
 		}
 		else if (!grid.empty() && grid.find_first_not_of("abcdefghijklmnopqrstuvwxyz1234567890-_.:/@% ") != std::string::npos)
-		{// grid should be in the form of a dns address
+		{
+		 // grid should be in the form of a dns address
 		 // but also support localhost:9000 or localhost:9000/login
 			printf("grid name: %s", grid.c_str());
 			if (grid_entry)
@@ -725,7 +677,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 	{
 		std::string grid = utf8str_tolower(grid_entry->grid[GRID_VALUE]);
 
-				// populate the other values if they don't exist
+		// populate the other values if they don't exist
 		if (!grid_entry->grid.has(GRID_LABEL_VALUE)) 
 				{
 			grid_entry->grid[GRID_LABEL_VALUE] = grid;
@@ -744,7 +696,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 	{
 		std::string grid = utf8str_tolower(grid_entry->grid[GRID_VALUE]);
 
-				// if the grid data doesn't include any of the URIs, then
+		// if the grid data doesn't include any of the URIs, then
 		// generate them from the grid
 
 		if (!grid_entry->grid.has(GRID_LOGIN_URI_VALUE))
@@ -754,7 +706,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 			llwarns << "Adding Legacy Login Service at:" << grid_entry->grid[GRID_LOGIN_URI_VALUE].asString() << llendl;
 				}
 
-				// Populate to the default values
+		// Populate to the default values
 		if (!grid_entry->grid.has(GRID_LOGIN_PAGE_VALUE)) 
 				{
 			grid_entry->grid[GRID_LOGIN_PAGE_VALUE] = std::string("http://") + grid + "/app/login/";
@@ -778,7 +730,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 		}
 		else
 		{
-			bool list_changed = false;// <FS:AW  grid management>
+			bool list_changed = false;
 
 			LLURI login_uri(grid_entry->grid[GRID_LOGIN_URI_VALUE].get(0).asString());
 
@@ -792,9 +744,9 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 				{
 					// non system grids and grids that haven't already been configured with values
 					// get both types of credentials.
-			grid_entry->grid[GRID_LOGIN_IDENTIFIER_TYPES] = LLSD::emptyArray();
-			grid_entry->grid[GRID_LOGIN_IDENTIFIER_TYPES].append(CRED_IDENTIFIER_TYPE_AGENT);
-			grid_entry->grid[GRID_LOGIN_IDENTIFIER_TYPES].append(CRED_IDENTIFIER_TYPE_ACCOUNT);
+					grid_entry->grid[GRID_LOGIN_IDENTIFIER_TYPES] = LLSD::emptyArray();
+					grid_entry->grid[GRID_LOGIN_IDENTIFIER_TYPES].append(CRED_IDENTIFIER_TYPE_AGENT);
+					grid_entry->grid[GRID_LOGIN_IDENTIFIER_TYPES].append(CRED_IDENTIFIER_TYPE_ACCOUNT);
 				}
 	
 		bool is_current = grid_entry->set_current;
@@ -809,7 +761,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 				{
 				//finally add the grid \o/
 				mGridList[grid] = grid_entry->grid;
-					list_changed = true;// <FS:AW  grid management>
+					list_changed = true;
 				LL_DEBUGS("GridManager") << "Adding new entry: " << grid << LL_ENDL;
 			}
 			else
@@ -829,7 +781,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 					// entries from the fallback list can't be deleted
 					// hide them instead
 					mGridList[grid] = grid_entry->grid;
-					list_changed = true;// <FS:AW  grid management>
+					list_changed = true;
 					LL_DEBUGS("GridManager") << "Entry marked for deletion: " << grid << LL_ENDL;
 				}
 				else if (!existing_grid.has("LastModified"))
@@ -854,7 +806,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 						//existing_grid is older, override.
 	
 						mGridList[grid] = grid_entry->grid;
-						list_changed = true;// <FS:AW  grid management>
+						list_changed = true;
 						LL_DEBUGS("GridManager") << "Updating entry: " << grid << LL_ENDL;
 					}
 				}
@@ -870,13 +822,12 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 				LL_DEBUGS("GridManager") << "Selected grid is " << grid << LL_ENDL;		
 				setGridChoice(grid);
 			}
-// <FS:AW  grid management>
+
 			if(list_changed)
 			{
 				mGridListChangedSignal(true);
 				mGridListChangedSignal.disconnect_all_slots();
 			}
-// </FS:AW  grid management>
 		}
 	}
 
@@ -894,13 +845,13 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 		}
 	}
 */
-// <FS:AW  grid management>
+
 	if (FAIL == state)
 	{
 		mGridListChangedSignal(false);
 		mGridListChangedSignal.disconnect_all_slots();
 	}
-// </FS:AW  grid management>
+
 
 	if (grid_entry)
 	{
@@ -951,60 +902,6 @@ void LLGridManager::addSystemGrid(const std::string& label,
         addGrid(grid);
 }
 		
-/*
-//
-// LLGridManager::addSystemGrid - helper for adding a system grid.
-void LLGridManager::addSystemGrid(const std::string& label,
-					  const std::string& name,
-					  const std::string& nick,
-					  const std::string& login,
-					  const std::string& helper,
-					  const std::string& login_page )
-						
-{
-	GridEntry* grid_entry = new GridEntry;
-	grid_entry->set_current = false;
-	grid_entry->grid = LLSD::emptyMap();
-	grid_entry->grid[GRID_VALUE] = name;
-	grid_entry->grid[GRID_LABEL_VALUE] = label;
-	grid_entry->grid[GRID_NICK_VALUE] = nick;
-	grid_entry->grid[GRID_HELPER_URI_VALUE] = helper;
-	grid_entry->grid[GRID_LOGIN_URI_VALUE] = LLSD::emptyArray();
-	grid[GRID_UPDATE_SERVICE_URL] = update_url_base;
-	grid_entry->grid[GRID_LOGIN_URI_VALUE].append(login);
-	grid_entry->grid[GRID_LOGIN_PAGE_VALUE] = login_page;
-	grid_entry->grid[GRID_IS_SYSTEM_GRID_VALUE] = TRUE;
-	grid_entry->grid[GRID_LOGIN_IDENTIFIER_TYPES] = LLSD::emptyArray();
-	grid_entry->grid[GRID_LOGIN_IDENTIFIER_TYPES].append(CRED_IDENTIFIER_TYPE_AGENT);
-
-	grid_entry->grid[GRID_APP_SLURL_BASE] = SYSTEM_GRID_APP_SLURL_BASE;
-
-	
-	// only add the system grids beyond agni to the visible list
-	// if we're building a debug version.
-	if (name == std::string(MAINGRID))
-	{
-		grid_entry->grid[GRID_SLURL_BASE] = MAIN_GRID_SLURL_BASE;
-		grid_entry->grid[GRID_IS_FAVORITE_VALUE] = TRUE;
-	}
-	else
-	{
-		grid_entry->grid[GRID_SLURL_BASE] = llformat(SYSTEM_GRID_SLURL_BASE, label.c_str());
-	}
-	LL_DEBUGS("PanelLogin") << " " << grid_entry->grid[GRID_LOGIN_PAGE_VALUE]<< LL_ENDL;
-
-	try
-	{
-		addGrid(grid_entry, SYSTEM);
-	}
-	catch(LLInvalidGridName ex)
-	{
-
-	}
-
-}
-*/
-// <FS:AW  grid management>
 void LLGridManager::reFetchGrid(const std::string& grid, bool set_current)
 {
 	GridEntry* grid_entry = new GridEntry;
@@ -1027,7 +924,6 @@ boost::signals2::connection LLGridManager::addGridListChangedCallback(grid_list_
 {
 	return mGridListChangedSignal.connect(cb);
 }
-// <FS:AW  grid management>
 
 // return a list of grid name -> grid label mappings for UI purposes
 std::map<std::string, std::string> LLGridManager::getKnownGrids()
@@ -1175,9 +1071,6 @@ std::string LLGridManager::getGridByAttribute( const std::string &attribute, con
 		}
 	return std::string();
 }
-// </AW opensim>
-
-// <FS:AW  grid management>
 // this assumes that there is anyway only one uri saved
 std::string LLGridManager::getLoginURI(const std::string& grid)
 {
@@ -1193,9 +1086,7 @@ std::string LLGridManager::getLoginURI(const std::string& grid)
 
 	return ret;
 }
-// </FS:AW  grid management>
 
-// <AW opensim>
 void LLGridManager::getLoginURIs(std::vector<std::string>& uris)
 {
 	uris.clear();
@@ -1273,7 +1164,6 @@ std::string LLGridManager::getUpdateServiceURL()
 	return update_url_base;
 }
 
-// <AW opensim>
 void LLGridManager::updateIsInProductionGrid()
 {
 	mIsInSLMain = false;
@@ -1387,7 +1277,6 @@ std::string LLGridManager::trimHypergrid(const std::string& trim)
 	return grid;
 }
 
-// <AW opensim>
 // build a slurl for the given region within the selected grid
 std::string LLGridManager::getSLURLBase(const std::string& grid)
 {
