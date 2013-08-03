@@ -35,7 +35,7 @@
 #include <boost/signals2.hpp>
                                                                                                        
 extern const char* DEFAULT_LOGIN_PAGE;
-//Kokua: for llviewernetwork_test
+
 #define KNOWN_GRIDS_SIZE 3
 #define AGNI "Second Life"
 #define ADITI "Second Life Beta"
@@ -53,10 +53,12 @@ extern const char* DEFAULT_LOGIN_PAGE;
 #define GRID_FORGOT_PASSWORD "password"
 #define MAINGRID "login.agni.lindenlab.com"
 #define GRID_LOGIN_IDENTIFIER_TYPES "login_identifier_types"
-// defines slurl formats associated with various grids.
-// we need to continue to support existing forms, as slurls
-// are shared between viewers that may not understand newer
-// forms.
+/**
+* defines slurl formats associated with various grids.
+* we need to continue to support existing forms, as slurls
+* are shared between viewers that may not understand newer
+* forms.
+*/
 #define GRID_SLURL_BASE "slurl_base"
 #define GRID_APP_SLURL_BASE "app_slurl_base"
 class GridInfoRequestResponder;
@@ -101,7 +103,6 @@ protected:
 class LLGridManager : public LLSingleton<LLGridManager>
 {
   public:
-	// <AW opensim>
 	typedef enum 
 	{
 		FETCH,
@@ -116,8 +117,8 @@ class LLGridManager : public LLSingleton<LLGridManager>
 	} AddState;
 public:
 	
-	// when the grid manager is instantiated, the default grids are automatically
-	// loaded, and the grids favorites list is loaded from the xml file.
+	/// when the grid manager is instantiated, the default grids are automatically
+	/// loaded, and the grids favorites list is loaded from the xml file.
 	LLGridManager();
 	~LLGridManager();
 	
@@ -126,16 +127,15 @@ public:
 	void initGridList(std::string grid_file, AddState state);
 	void initCmdLineGrids();
 	void resetGrids();
-	// grid list management
-
-	// add a grid to the list of grids
+	/// grid list management
+	/// add a grid to the list of grids
 	void addGrid(const std::string& loginuri);
 	bool isReadyToLogin(){return mReadyToLogin;}
 	void removeGrid(const std::string& grid);
 	void reFetchGrid() { reFetchGrid(mGrid, true); }
 	void reFetchGrid(const std::string& grid, bool set_current = false);
 	
-	/* ================================================================
+	/** ================================================================
 	 * @name Grid Identifiers 
 	 * The id is a short form (typically one word) grid name,
 	 * It should be used in URL path elements or parameters
@@ -147,57 +147,50 @@ public:
 	/// Return the name of a grid, given either its name or its id
 	std::string getGrid( const std::string &grid );
 
-	// this was getGridInfo - renamed to avoid ambiguity with the OpenSim grid_info
+	/// this was getGridInfo - renamed to avoid ambiguity with the OpenSim grid_info
 	void getGridData(const std::string& grid, LLSD &grid_info);
 	void getGridData(LLSD &grid_info) { getGridData(mGrid, grid_info); }
-	// select a given grid as the current grid.  If the grid
-	// is not a known grid, then it's assumed to be a dns name for the
-	// grid, and the various URIs will be automatically generated.
+	/// select a given grid as the current grid.  If the grid
+	/// is not a known grid, then it's assumed to be a dns name for the
+	/// grid, and the various URIs will be automatically generated.
 	void setGridChoice(const std::string& grid);
 
-	//get the grid label e.g. "Second Life"
+	///get the grid label e.g. "Second Life"
 	std::string getGridLabel() { return mGridList[mGrid][GRID_LABEL_VALUE]; }
-	//get the grid nick e.g. "agni"
+	///get the grid nick e.g. "agni"
 	std::string getGridNick() { return mGridList[mGrid][GRID_NICK_VALUE].asString(); }
-	//get the grid e.g. "login.agni.lindenlab.com"
+	///get the grid e.g. "login.agni.lindenlab.com"
 	std::string getGrid() const { return mGrid; }
-	// get the first (and very probably only) login URI of a specified grid
+	/// get the first (and very probably only) login URI of a specified grid
 	std::string getLoginURI(const std::string& grid);
-	// get the Login URIs of the current grid
+	/// get the Login URIs of the current grid
 	void getLoginURIs(std::vector<std::string>& uris);
 	std::string getHelperURI();
 	std::string getLoginPage();
 	std::string getGridLoginID() { return mGridList[mGrid][GRID_VALUE]; }
-	// was ://	std::string getGridLoginID() { return mGridList[mGrid][GRID_ID_VALUE]; }
-	// however we already have that in GRID_VALUE
+	/// was ://	std::string getGridLoginID() { return mGridList[mGrid][GRID_ID_VALUE]; }
+	/// however we already have that in GRID_VALUE
 	std::string getLoginPage(const std::string& grid) { return mGridList[grid][GRID_LOGIN_PAGE_VALUE]; }
 	void        getLoginIdentifierTypes(LLSD& idTypes) { idTypes = mGridList[mGrid][GRID_LOGIN_IDENTIFIER_TYPES]; }
 
 	std::string trimHypergrid(const std::string& trim);
-	/* ================================================================
+	/** ================================================================
 	 * @name Update Related Properties
 	 * @{
 	 */
 	/// Get the update service URL base (host and path) for the selected grid
 	std::string getUpdateServiceURL();
-	
-	//@}
-
-	// build a slurl for the given region within the selected grid
+	/// build a slurl for the given region within the selected grid
 	std::string getSLURLBase(const std::string& grid);
 	std::string getSLURLBase() { return getSLURLBase(mGrid); }
-	
 	std::string getAppSLURLBase(const std::string& grid);
 	std::string getAppSLURLBase() { return getAppSLURLBase(mGrid); }	
-
 	bool hasGrid(const std::string& grid){ return mGridList.has(grid); }
 	bool isTemporary(){ return mGridList[mGrid].has("FLAG_TEMPORARY"); }
 	bool isTemporary(const std::string& grid){ return mGridList[grid].has("FLAG_TEMPORARY"); }
-
-	// tell if we got this from a Hypergrid SLURL
+	/// tell if we got this from a Hypergrid SLURL
 	bool isHyperGrid(const std::string& grid) { return mGridList[grid].has("HG"); }
-
-	// tell if we know how to acess this grid via Hypergrid
+	/// tell if we know how to acess this grid via Hypergrid
 	std::string getGatekeeper() { return getGatekeeper(mGrid); }
 	std::string getGatekeeper(const std::string& grid) { return mGridList[grid].has("gatekeeper") ? mGridList[grid]["gatekeeper"].asString() : std::string(); }
 	std::string getGridByProbing( const std::string &probe_for, bool case_sensitive = false);
@@ -212,8 +205,8 @@ public:
 	           mGridList[grid][GRID_IS_SYSTEM_GRID_VALUE].asBoolean(); 
 	}
 	bool isSystemGrid() { return isSystemGrid(mGrid); }
-	// Mark this grid as a favorite that should be persisited on 'save'
-	// this is currently used to persist a grid after a successful login
+	/// Mark this grid as a favorite that should be persisited on 'save'
+	/// this is currently used to persist a grid after a successful login
 	void setFavorite() { mGridList[mGrid][GRID_IS_FAVORITE_VALUE] = TRUE; }
 
 	typedef boost::function<void(bool success)> grid_list_changed_callback_t;
