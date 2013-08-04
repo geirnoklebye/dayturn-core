@@ -563,6 +563,14 @@ bool LLUpdaterServiceImpl::onMainLoop(LLSD const & event)
 		else
 		{
 			std::string query_url = LLGridManager::getInstance()->getUpdateServiceURL();
+			std::string grid_nickname = LLGridManager::getInstance()->getGridNick();
+			if ( ( !grid_nickname.empty() ) && ( mCheckPeriod < 3600 ) )
+			{
+				mCheckPeriod = 3600;//set back to default
+			}
+			LL_DEBUGS2("UpdaterService","onMainlood")
+				<< "The grid nick: " << grid_nickname
+				<< LL_ENDL;
 			if ( !query_url.empty() )
 			{
 				mUpdateChecker.checkVersion(query_url, mChannel, mVersion,
@@ -571,7 +579,11 @@ bool LLUpdaterServiceImpl::onMainLoop(LLSD const & event)
 				setState(LLUpdaterService::CHECKING_FOR_UPDATE);
 			}
 			else
-			{
+			{	
+				if ( grid_nickname.empty() )
+				{
+					mCheckPeriod = 120; //give the viewer time to get grid data
+				}
 				LL_WARNS("UpdaterService")
 					<< "No updater service defined for grid '" << LLGridManager::getInstance()->getGridNick()
 					<< "' will check again in " << mCheckPeriod << " seconds"
@@ -580,6 +592,9 @@ bool LLUpdaterServiceImpl::onMainLoop(LLSD const & event)
 				// but before the user logs in, the next check may be on a different grid, so set the retry timer
 				// even though this check did not happen.  The default time is once an hour, and if we're not
 				// doing the check anyway the performance impact is completely insignificant.
+				// At first check when more then SL grids are in play the grid nickname is unknown and empty.
+				// check for the URL again in 2 minutes to determine the grid. Once known set the restart timer
+				// back to 60 minutes which is done above. This will catch more users that may need to update.
 				restartTimer(mCheckPeriod);
 			}
 		}

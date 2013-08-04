@@ -223,7 +223,7 @@ void LLGridManager::initSystemGrids()
 	std::string add_grid_item = LLTrans::getString("ServerComboAddGrid");
 
 /// we get this now from the grid list
-
+/**
 	addSystemGrid("Second Life Main Grid (Agni)",
 							  MAINGRID,
 							  MAIN_GRID_LOGIN_URI,
@@ -238,6 +238,7 @@ void LLGridManager::initSystemGrids()
 							  DEFAULT_LOGIN_PAGE,
 							  SL_UPDATE_QUERY_URL,
 							  "Aditi");
+*/
 }
 
 
@@ -1017,7 +1018,8 @@ void LLGridManager::setGridChoice(const std::string& grid)
 		{
 			getGridData(mConnectedGrid);
 			gSavedSettings.setString("CurrentGrid", grid); 
-			LLTrans::setDefaultArg("CURRENT_GRID", getGridLabel()); ///<FS:AW make CURRENT_GRID a default substitution>
+			LLTrans::setDefaultArg("CURRENT_GRID", getGridLabel());///<FS:AW make CURRENT_GRID a default substitution>
+			std::string aboutthisgrid = getGridLabel();
 			mReadyToLogin = true;
 		}
 	}
@@ -1128,7 +1130,11 @@ std::string LLGridManager::getLoginPage()
 std::string LLGridManager::getUpdateServiceURL()
 {
  	std::string update_url_base = gSavedSettings.getString("CmdLineUpdateService");
-	if (  update_url_base.empty() ) /// Kokua starts with Secondlife (agni) as the default grid so use its updater url
+	std::string grid_nick = getGridNick();
+		LL_INFOS2("UpdaterService","GridManager")
+			<< "The grid nick: " << grid_nick
+			<< LL_ENDL;
+	if (  update_url_base.empty() && (grid_nick == "agni" || grid_nick == "aditi")) 
 	{
 		update_url_base = "https://update.secondlife.com/update";
 				LL_INFOS2("UpdaterService","GridManager")
