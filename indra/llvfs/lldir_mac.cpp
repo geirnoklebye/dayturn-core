@@ -135,6 +135,7 @@ LLDir_Mac::LLDir_Mac()
 		
 		{
             mOSCacheDir = *cachedir;
+            //Aura TODO:  This changes from ~/Library/Cache/Secondlife to ~/Library/Cache/com.app.secondlife/Secondlife.  Last dir level could go away.
 			(void)CFCreateDirectory(&cacheDirRef, CFSTR("kokua"),NULL);
             CreateDirectory(mOSCacheDir, secondLifeString, NULL);
 		}

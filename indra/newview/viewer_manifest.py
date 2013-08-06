@@ -320,6 +320,7 @@ class WindowsManifest(ViewerManifest):
 #           added from archive
             self.path("libsndfile-1.dll")
             self.path("vivoxoal.dll")
+            self.path("ca-bundle.crt")
             self.path("vivoxplatform.dll")
             try:
                 self.path("zlib1.dll")
@@ -860,6 +861,7 @@ class DarwinManifest(ViewerManifest):
                                 'libvivoxoal.dylib',
                                 'libvivoxsdk.dylib',
                                 'libvivoxplatform.dylib',
+                                'ca-bundle.crt',
                                 'SLVoice',
                                 ):
                      self.path2basename(libdir, libfile)
