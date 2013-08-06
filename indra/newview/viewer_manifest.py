@@ -1326,10 +1326,10 @@ class Linux_x86_64Manifest(LinuxManifest):
             self.end_prefix("lib64")
 
             # Vivox runtimes
-            if self.prefix(src="../packages/lib/release/vivox-runtime", dst="bin"):
+            if self.prefix(src="../packages/lib/release", dst="bin"):
                     self.path("SLVoice")
                     self.end_prefix()
-            if self.prefix(src="../packages/lib/release/vivox-runtime", dst="lib32"):
+            if self.prefix(src="../packages/lib/release", dst="lib32"):
                     self.path("libortp.so")
                     self.path("libvivoxsdk.so")
                     self.end_prefix("lib32")

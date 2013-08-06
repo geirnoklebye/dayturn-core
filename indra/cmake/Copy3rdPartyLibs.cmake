@@ -390,7 +390,7 @@ elseif(LINUX)
     # *FIX - figure out what to do with duplicate libalut.so here -brad
 
     if(${ARCH} STREQUAL "x86_64")
-      set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}/vivox-runtime")
+      set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
       set(vivox_files
           libortp.so
           libvivoxsdk.so
