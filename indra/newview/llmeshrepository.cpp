@@ -237,9 +237,13 @@ LLMeshRepository gMeshRepo;
 const S32 MESH_HEADER_SIZE = 4096;                      // Important:  assumption is that headers fit in this space
 //const U32 MAX_MESH_REQUESTS_PER_SECOND = 100;
 const S32 REQUEST_HIGH_WATER_MIN = 32;
-const S32 REQUEST_HIGH_WATER_MAX = 80;
+const S32 REQUEST_HIGH_WATER_MAX = 200;
 const S32 REQUEST_LOW_WATER_MIN = 16;
-const S32 REQUEST_LOW_WATER_MAX = 40;
+const S32 REQUEST_LOW_WATER_MAX = 100;
+const S32 REQUEST2_HIGH_WATER_MIN = 32;
+const S32 REQUEST2_HIGH_WATER_MAX = 80;
+const S32 REQUEST2_LOW_WATER_MIN = 16;
+const S32 REQUEST2_LOW_WATER_MAX = 40;
 const U32 LARGE_MESH_FETCH_THRESHOLD = 1U << 21;		// Size at which requests goes to narrow/slow queue
 const long SMALL_MESH_XFER_TIMEOUT = 60L;				// Seconds to complete xfer, small mesh downloads
 const long LARGE_MESH_XFER_TIMEOUT = 600L;				// Seconds to complete xfer, large downloads
@@ -378,8 +382,8 @@ void get_vertex_buffer_from_mesh(LLCDMeshData& mesh, LLModel::PhysicsMesh& res, 
 volatile S32 LLMeshRepoThread::sActiveHeaderRequests = 0;
 volatile S32 LLMeshRepoThread::sActiveLODRequests = 0;
 U32	LLMeshRepoThread::sMaxConcurrentRequests = 1;
-S32 LLMeshRepoThread::sRequestLowWater = REQUEST_LOW_WATER_MIN;
-S32 LLMeshRepoThread::sRequestHighWater = REQUEST_HIGH_WATER_MIN;
+S32 LLMeshRepoThread::sRequestLowWater = REQUEST2_LOW_WATER_MIN;
+S32 LLMeshRepoThread::sRequestHighWater = REQUEST2_HIGH_WATER_MIN;
 S32 LLMeshRepoThread::sRequestWaterLevel = 0;
 
 // Base handler class for all mesh users of llcorehttp.
@@ -3148,18 +3152,21 @@ void LLMeshRepository::notifyLoadedMeshes()
 		LLMeshRepoThread::sRequestHighWater = llclamp(2 * S32(LLMeshRepoThread::sMaxConcurrentRequests),
 													  REQUEST_HIGH_WATER_MIN,
 													  REQUEST_HIGH_WATER_MAX);
+		LLMeshRepoThread::sRequestLowWater = llclamp(LLMeshRepoThread::sRequestHighWater / 2,
+													 REQUEST_LOW_WATER_MIN,
+													 REQUEST_LOW_WATER_MAX);
 	}
 	else
 	{
 		// GetMesh2 operation with keepalives, etc.
 		LLMeshRepoThread::sMaxConcurrentRequests = gSavedSettings.getU32("Mesh2MaxConcurrentRequests");
 		LLMeshRepoThread::sRequestHighWater = llclamp(5 * S32(LLMeshRepoThread::sMaxConcurrentRequests),
-													  REQUEST_HIGH_WATER_MIN,
-													  REQUEST_HIGH_WATER_MAX);
+													  REQUEST2_HIGH_WATER_MIN,
+													  REQUEST2_HIGH_WATER_MAX);
+		LLMeshRepoThread::sRequestLowWater = llclamp(LLMeshRepoThread::sRequestHighWater / 2,
+													 REQUEST2_LOW_WATER_MIN,
+													 REQUEST2_LOW_WATER_MAX);
 	}
-	LLMeshRepoThread::sRequestLowWater = llclamp(LLMeshRepoThread::sRequestHighWater / 2,
-												 REQUEST_LOW_WATER_MIN,
-												 REQUEST_LOW_WATER_MAX);
 	
 	//clean up completed upload threads
 	for (std::vector<LLMeshUploadThread*>::iterator iter = mUploads.begin(); iter != mUploads.end(); )
