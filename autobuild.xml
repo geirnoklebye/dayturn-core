@@ -2456,9 +2456,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4defb83829a72e0a435e50506032fb63</string>
+              <string>fccdca18a950ac9363c6fb39118b80e1</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0-linux-20130329.tar.bz2</string>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/openal-3ad86a1c-linux-20110114.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
