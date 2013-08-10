@@ -2508,9 +2508,9 @@
             <key>archive</key>
             <map>
                <key>hash</key>
-              <string>8601e8dae837ed94d6ba1f5f4286d50c</string>
+              <string>83aeef2ca7481f2a34302d9680a2c14a</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-32bitcompatibilitylibs/downloads/32bit_compatibility_libs-0.0.2-linux64-20130330.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-32bitcompatibilitylibs/downloads/32bit_compatibility_libs-0.0.3-linux64-20130809.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>

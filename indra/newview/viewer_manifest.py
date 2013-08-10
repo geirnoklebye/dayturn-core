@@ -1342,15 +1342,11 @@ class Linux_x86_64Manifest(LinuxManifest):
             if self.prefix("../packages/lib/release/32bit-compat", dst="lib32"):
                     self.path("libalut.so")
                     self.path("libalut.so.0")
-#                    self.path("libidn.so")
-#                    self.path("libidn.so.11")
                     self.path("libopenal.so")
                     self.path("libopenal.so.1")
-#                    self.path("libuuid.so")
-#                    self.path("libuuid.so.1")
                     self.path("libalut.so.0.0.0")
                     self.path("libopenal.so.1.15.1")
-                    self.path("libopenal.so.1.15.1", "libvivoxoal.so.1") # vivox's sdk expects this soname
+                    self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
                     self.end_prefix("lib32")
 
 
