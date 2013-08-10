@@ -3413,7 +3413,7 @@ Download to your Applications folder?
    type="alertmodal">
 An error occurred installing the viewer update.
 Please download and install the latest viewer from
-http://secondlife.com/download.
+https://bitbucket.org/kokua/downloads/downloads.
     <usetemplate
      name="okbutton"
      yestext="OK"/>
@@ -3427,7 +3427,7 @@ We were unable to install a required update.
 You will be unable to log in until [APP_NAME] has been updated.
 
 Please download and install the latest viewer from
-http://secondlife.com/download.
+https://bitbucket.org/kokua/downloads/downloads.
   <tag>fail</tag>
     <usetemplate
      name="okbutton"
@@ -3438,14 +3438,14 @@ http://secondlife.com/download.
    icon="alertmodal.tga"
    name="UpdaterServiceNotRunning"
    type="alertmodal">
-There is a required update for your Second Life Installation.
+There is a required update for your Kokua Installation.
 
-You may download this update from http://www.secondlife.com/downloads
+You may download this update from https://bitbucket.org/kokua/downloads/downloads .
 or you can install it now.
     <tag>confirm</tag>
     <usetemplate
      name="okcancelbuttons"
-     notext="Quit Second Life"
+     notext="Quit Kokua"
      yestext="Download and install now"/>
   </notification>
 
