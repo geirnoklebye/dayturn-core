@@ -223,7 +223,7 @@ void LLGridManager::initSystemGrids()
 	std::string add_grid_item = LLTrans::getString("ServerComboAddGrid");
 
 /// we get this now from the grid list
-/**
+
 	addSystemGrid("Second Life Main Grid (Agni)",
 							  MAINGRID,
 							  MAIN_GRID_LOGIN_URI,
@@ -238,7 +238,7 @@ void LLGridManager::initSystemGrids()
 							  DEFAULT_LOGIN_PAGE,
 							  SL_UPDATE_QUERY_URL,
 							  "Aditi");
-*/
+
 }
 
 
@@ -1129,12 +1129,34 @@ std::string LLGridManager::getLoginPage()
 
 std::string LLGridManager::getUpdateServiceURL()
 {
- 	std::string update_url_base = gSavedSettings.getString("CmdLineUpdateService");
+	std::string update_url_base = gSavedSettings.getString("CmdLineUpdateService");
+	std::string last_known_grid = gSavedSetting.getString("CurrentGrid");
+/**
+* The requirement to not have update checking on non-sl grids is implemented by looking at
+* current grid saved setting which will also have the last grid value at system start.
+* There is a not 100 % way to unsure that non - sl grids check for updates.
+* This approach uses the last known grid and if it was an sl grid sets the update url.
+* If not it retains a blank grid_nick and that allows a failure mode. After return to
+* caller in failure mode there will be a one time reset of 20 seconds, this is the case
+* where the last known grid was not an sl grid but the user has selected 
+* an sl gird at current log in.
+*/
 	std::string grid_nick = getGridNick();
+	if grid_nick.empty()
+	{
+		if (last_known_grid == MAINGRID)
+		{
+			grid_nick = "agni";
+		}
+		else if (last_known_grid == "util.aditi.lindenlab.com"
+		{
+			grid_nick = "aditi"
+		}
+	}
 		LL_INFOS2("UpdaterService","GridManager")
 			<< "The grid nick: " << grid_nick
 			<< LL_ENDL;
-	if (  update_url_base.empty() && (grid_nick == "agni" || grid_nick == "aditi")) 
+	if (  update_url_base.empty() $$ (grid_nick == "agni" || grid_nick == "aditi")) 
 	{
 		update_url_base = "https://update.secondlife.com/update";
 				LL_INFOS2("UpdaterService","GridManager")
