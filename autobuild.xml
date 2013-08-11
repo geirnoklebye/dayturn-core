@@ -186,9 +186,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ac37d0038c91b0672fa31a02731f0eac</string>
+              <string>06dd7af75e1eb179aed54fd58d8688af</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/268347/arch/Darwin/installer/boost-1.52.0-darwin-20121218.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/270698/arch/Darwin/installer/boost-1.52.0-darwin-20130221.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -198,9 +198,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>146ed8a8c2ef8ab3f0a6c4f214fc5c22</string>
+              <string>50c8b50b7cced52cc5656fb44e9b12cf</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/268347/arch/Linux/installer/boost-1.52.0-linux-20121218.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/270698/arch/Linux/installer/boost-1.52.0-linux-20130222.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -210,9 +210,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3ea60f17d986b7e8a3351298734bdca4</string>
+              <string>742fc9675b033df7f9c6f215ff250f6c</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/268347/arch/CYGWIN/installer/boost-1.52.0-windows-20121218.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/270698/arch/CYGWIN/installer/boost-1.52.0-windows-20130221.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -834,9 +834,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>98994d5b0b4b3d43be22aa6a5c36e6fa</string>
+              <string>d2542614df9dd99cbb5ff67e76d4a6c1</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-mock-graham/rev/272961/arch/CYGWIN/installer/gmock-1.6.0-windows-20130327.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-mock/rev/274899/arch/CYGWIN/installer/gmock-1.6.0-windows-20130426.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1948,9 +1948,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>24e735ae005f3ce7a21a09cc02cece17</string>
+              <string>2994f1e028fb200c454c12b5f7ca9108</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/231678/arch/Darwin/installer/slvoice-3.2.0002.10426-darwin-20110601.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/270464/arch/Darwin/installer/slvoice-4.5.0009.17865-darwin-20130215.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2008,9 +2008,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f62841804acb91e1309603a84f3f0ce8</string>
+              <string>24710eda136bfd42d6333e5609c2c74f</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-perftools/rev/262672/arch/CYGWIN/installer/gperftools-2.0-windows-20120727.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/270464/arch/CYGWIN/installer/slvoice-4.5.0009.17865-windows-20130214.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2292,6 +2292,10 @@
               <map>
                 <key>command</key>
                 <string>xcodebuild</string>
+                <key>filters</key>
+                <array>
+                  <string>setenv</string>
+                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration Debug</string>
@@ -2342,6 +2346,10 @@
               <map>
                 <key>command</key>
                 <string>xcodebuild</string>
+                <key>filters</key>
+                <array>
+                  <string>setenv</string>
+                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration RelWithDebInfo</string>
@@ -2394,6 +2402,10 @@
               <map>
                 <key>command</key>
                 <string>xcodebuild</string>
+                <key>filters</key>
+                <array>
+                  <string>setenv</string>
+                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration Release</string>

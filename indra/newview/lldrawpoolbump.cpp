@@ -156,7 +156,7 @@ void LLStandardBumpmap::addstandard()
 		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mLabel = label;
 		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mImage = 
 			LLViewerTextureManager::getFetchedTexture(LLUUID(bump_image_id));	
-		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mImage->setBoostLevel(LLGLTexture::BOOST_BUMP) ;
+		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mImage->setBoostLevel(LLGLTexture::LOCAL) ;
 		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mImage->setLoadedCallback(LLBumpImageList::onSourceStandardLoaded, 0, TRUE, FALSE, NULL, NULL );
 		gStandardBumpmapList[LLStandardBumpmap::sStandardBumpmapCount].mImage->forceToSaveRawImage(0) ;
 		LLStandardBumpmap::sStandardBumpmapCount++;
@@ -452,9 +452,6 @@ void LLDrawPoolBump::unbindCubeMap(LLGLSLShader* shader, S32 shader_level, S32& 
 	LLCubeMap* cube_map = gSky.mVOSkyp ? gSky.mVOSkyp->getCubeMap() : NULL;
 	if( cube_map )
 	{
-		cube_map->disable();
-		cube_map->restoreMatrix();
-
 		if (!invisible && shader_level > 1)
 		{
 			shader->disableTexture(LLViewerShaderMgr::ENVIRONMENT_MAP, LLTexUnit::TT_CUBE_MAP);
@@ -467,6 +464,8 @@ void LLDrawPoolBump::unbindCubeMap(LLGLSLShader* shader, S32 shader_level, S32& 
 				}
 			}
 		}
+		cube_map->disable();
+		cube_map->restoreMatrix();
 	}
 
 	if (!LLGLSLShader::sNoFixedFunction)
@@ -517,7 +516,14 @@ void LLDrawPoolBump::beginFullbrightShiny()
 	}
 	else
 	{
-		shader = &gObjectFullbrightShinyProgram;
+		if (LLPipeline::sRenderDeferred)
+		{
+			shader = &gDeferredFullbrightShinyProgram;
+		}
+		else
+		{
+			shader = &gObjectFullbrightShinyProgram;
+		}
 	}
 
 	LLCubeMap* cube_map = gSky.mVOSkyp ? gSky.mVOSkyp->getCubeMap() : NULL;
@@ -853,7 +859,7 @@ void LLDrawPoolBump::renderDeferred(S32 pass)
 	LLCullResult::drawinfo_iterator begin = gPipeline.beginRenderMap(type);
 	LLCullResult::drawinfo_iterator end = gPipeline.endRenderMap(type);
 
-	U32 mask = LLVertexBuffer::MAP_VERTEX | LLVertexBuffer::MAP_TEXCOORD0 | LLVertexBuffer::MAP_BINORMAL | LLVertexBuffer::MAP_NORMAL | LLVertexBuffer::MAP_COLOR;
+	U32 mask = LLVertexBuffer::MAP_VERTEX | LLVertexBuffer::MAP_TEXCOORD0 | LLVertexBuffer::MAP_TANGENT | LLVertexBuffer::MAP_NORMAL | LLVertexBuffer::MAP_COLOR;
 	
 	for (LLCullResult::drawinfo_iterator i = begin; i != end; ++i)	
 	{
@@ -918,6 +924,8 @@ void LLBumpImageList::init()
 	llassert( mDarknessEntries.size() == 0 );
 
 	LLStandardBumpmap::init();
+
+	LLStandardBumpmap::restoreGL();
 }
 
 void LLBumpImageList::clear()

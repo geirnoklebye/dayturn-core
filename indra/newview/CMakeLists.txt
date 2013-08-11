@@ -99,6 +99,7 @@ include_directories(
     ${LIBS_PREBUILT_DIR}/include/collada/1.4
     ${LLAPPEARANCE_INCLUDE_DIRS}
     ${HACD_INCLUDE_DIR} 
+    ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
 include_directories(SYSTEM
@@ -186,6 +187,7 @@ set(viewer_SOURCE_FILES
     lldrawpoolavatar.cpp
     lldrawpoolbump.cpp
     lldrawpoolground.cpp
+    lldrawpoolmaterials.cpp
     lldrawpoolsimple.cpp
     lldrawpoolsky.cpp
     lldrawpoolterrain.cpp
@@ -313,6 +315,7 @@ set(viewer_SOURCE_FILES
     llgroupiconctrl.cpp
     llgrouplist.cpp
     llgroupmgr.cpp
+    llhasheduniqueid.cpp
     llhints.cpp
     llhomelocationresponder.cpp
     llhudeffect.cpp
@@ -369,6 +372,7 @@ set(viewer_SOURCE_FILES
     llmaniptranslate.cpp
     llmarketplacefunctions.cpp
     llmarketplacenotifications.cpp
+    llmaterialmgr.cpp
     llmediactrl.cpp
     llmediadataclient.cpp
     llmenuoptionpathfindingrebakenavmesh.cpp
@@ -768,6 +772,7 @@ set(viewer_HEADER_FILES
     lldrawpoolalpha.h
     lldrawpoolavatar.h
     lldrawpoolbump.h
+    lldrawpoolmaterials.h
     lldrawpoolground.h
     lldrawpoolsimple.h
     lldrawpoolsky.h
@@ -895,6 +900,7 @@ set(viewer_HEADER_FILES
     llgroupiconctrl.h
     llgrouplist.h
     llgroupmgr.h
+    llhasheduniqueid.h
     llhints.h
     llhomelocationresponder.h
     llhudeffect.h
@@ -951,6 +957,7 @@ set(viewer_HEADER_FILES
     llmaniptranslate.h
     llmarketplacefunctions.h
     llmarketplacenotifications.h
+    llmaterialmgr.h
     llmediactrl.h
     llmediadataclient.h
     llmenuoptionpathfindingrebakenavmesh.h
@@ -1263,6 +1270,22 @@ set(viewer_HEADER_FILES
 
 source_group("CMake Rules" FILES ViewerInstall.cmake)
 
+# the viewer_version.txt file created here is for passing to viewer_manifest
+# the summary.json file is created for the benefit of the TeamCity builds, where
+#   it is used to provide descriptive information to the build results page
+add_custom_target(generate_viewer_version ALL
+                  COMMAND printf '${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}' > ${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
+                  COMMAND printf '{"Type":"viewer","Version":"${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}"}' > ${CMAKE_BINARY_DIR}/summary.json
+                  COMMENT Generating viewer_version.txt for manifest processing
+                  )
+
+set_source_files_properties(
+   llversioninfo.cpp tests/llversioninfo_test.cpp 
+   PROPERTIES
+   DEPENDS generate_viewer_version  # dummy dependency to force recompile every time
+   COMPILE_DEFINITIONS "${VIEWER_CHANNEL_VERSION_DEFINES}" # see BuildVersion.cmake
+   )
+
 if (DARWIN)
   LIST(APPEND viewer_SOURCE_FILES llappviewermacosx.cpp)
 
@@ -1340,15 +1363,17 @@ if (WINDOWS)
     # Replace the icons with the appropriate ones for the channel
     # ('test' is the default)
     set(ICON_PATH "test")
+    set(VIEWER_MACOSX_PHASE "d")
     string(TOLOWER ${VIEWER_CHANNEL} channel_lower)
     if(channel_lower MATCHES "^second life release")
         set(ICON_PATH "release")
-    elseif(channel_lower MATCHES "^second life beta viewer")
+        set(VIEWER_MACOSX_PHASE "f")
+    elseif(channel_lower MATCHES "^second life beta")
         set(ICON_PATH "beta")
-    elseif(channel_lower MATCHES "^second life development")
-        set(ICON_PATH "development")
-    elseif(channel_lower MATCHES "project")
+        set(VIEWER_MACOSX_PHASE "b")
+    elseif(channel_lower MATCHES "^second life project")
         set(ICON_PATH "project")
+        set(VIEWER_MACOSX_PHASE "a")
     endif()
     message("Copying icons for ${ICON_PATH}")
     execute_process(
@@ -1417,10 +1442,17 @@ if (WINDOWS)
     set_source_files_properties(${viewer_RESOURCE_FILES}
                                 PROPERTIES HEADER_FILE_ONLY TRUE)
 
+    configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/res/viewerRes.rc
+                    ${CMAKE_CURRENT_BINARY_DIR}/viewerRes.rc
+                    )
     set(viewer_RESOURCE_FILES
-        res/viewerRes.rc
+        ${CMAKE_CURRENT_BINARY_DIR}/viewerRes.rc
         ${viewer_RESOURCE_FILES}
         )
+
+    set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/viewerRes.rc
+      PROPERTIES COMPILE_FLAGS "-I${CMAKE_CURRENT_SOURCE_DIR}/res"
+      )
 
     SOURCE_GROUP("Resource Files" FILES ${viewer_RESOURCE_FILES})
 
@@ -1656,6 +1688,7 @@ if (WINDOWS)
       ${SHARED_LIB_STAGING_DIR}/${CMAKE_CFG_INTDIR}/zlib1.dll
       ${SHARED_LIB_STAGING_DIR}/${CMAKE_CFG_INTDIR}/vivoxplatform.dll
       ${SHARED_LIB_STAGING_DIR}/${CMAKE_CFG_INTDIR}/vivoxoal.dll
+      ${SHARED_LIB_STAGING_DIR}/${CMAKE_CFG_INTDIR}/ca-bundle.crt
       ${GOOGLE_PERF_TOOLS_SOURCE}
       ${CMAKE_CURRENT_SOURCE_DIR}/licenses-win32.txt
       ${CMAKE_CURRENT_SOURCE_DIR}/featuretable.txt
@@ -1724,10 +1757,13 @@ if (WINDOWS)
         --configuration=${CMAKE_CFG_INTDIR}
         --dest=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}
         --grid=${GRID}
+        --channel=${VIEWER_CHANNEL}
+        --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
         --source=${CMAKE_CURRENT_SOURCE_DIR}
         --touch=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/copy_touched.bat
       DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
+        generate_viewer_version
         stage_third_party_libs
         ${COPY_INPUT_DEPENDENCIES}
       COMMENT "Performing viewer_manifest copy"
@@ -1786,6 +1822,7 @@ if (WINDOWS)
           --build=${CMAKE_CURRENT_BINARY_DIR}
           --buildtype=${CMAKE_BUILD_TYPE}
           --channel=${VIEWER_CHANNEL}
+          --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
           --configuration=${CMAKE_CFG_INTDIR}
           --dest=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}
           --grid=${GRID}
@@ -1795,12 +1832,14 @@ if (WINDOWS)
         DEPENDS
             ${VIEWER_BINARY_NAME}
             ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
+            ${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
             ${COPY_INPUT_DEPENDENCIES}
         )
 
       add_custom_target(package ALL DEPENDS
         ${CMAKE_CFG_INTDIR}/touched.bat
         windows-setup-build-all
+        generate_viewer_version
         )
         # temporarily disable packaging of event_host until hg subrepos get
         # sorted out on the parabuild cluster...
@@ -1852,6 +1891,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${viewer_LIBRARIES}
     ${BOOST_PROGRAM_OPTIONS_LIBRARY}
     ${BOOST_REGEX_LIBRARY}
+    ${BOOST_CONTEXT_LIBRARY}
     ${DBUSGLIB_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${FMODWRAPPER_LIBRARY} # must come after LLAudio
@@ -1905,15 +1945,16 @@ if (LINUX)
         --build=${CMAKE_CURRENT_BINARY_DIR}
         --buildtype=${CMAKE_BUILD_TYPE}
         --channel=${VIEWER_CHANNEL}
+        --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
         --configuration=${CMAKE_CFG_INTDIR}
         --dest=${CMAKE_CURRENT_BINARY_DIR}/packaged
         --grid=${GRID}
         --installer_name=${product}
-        --login_channel=${VIEWER_LOGIN_CHANNEL}
         --source=${CMAKE_CURRENT_SOURCE_DIR}
         --touch=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.touched
       DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
+        generate_viewer_version
         ${COPY_INPUT_DEPENDENCIES}
       )
 
@@ -1932,9 +1973,12 @@ if (LINUX)
       --configuration=${CMAKE_CFG_INTDIR}
       --dest=${CMAKE_CURRENT_BINARY_DIR}/packaged
       --grid=${GRID}
+      --channel=${VIEWER_CHANNEL}
+      --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
       --source=${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDS
       ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
+      generate_viewer_version
       ${COPY_INPUT_DEPENDENCIES}
     COMMENT "Performing viewer_manifest copy"
     )
@@ -1955,14 +1999,19 @@ if (DARWIN)
     ${VIEWER_BINARY_NAME}
     PROPERTIES
     OUTPUT_NAME "${product}"
-    MACOSX_BUNDLE_INFO_STRING "info string - localize me"
+    MACOSX_BUNDLE_INFO_STRING "Second Life Viewer"
     MACOSX_BUNDLE_ICON_FILE "secondlife.icns"
     MACOSX_BUNDLE_GUI_IDENTIFIER "Restrained Love"
-    MACOSX_BUNDLE_LONG_VERSION_STRING "ververver"
+    MACOSX_BUNDLE_LONG_VERSION_STRING "${VIEWER_CHANNEL} ${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}"
     MACOSX_BUNDLE_BUNDLE_NAME "Restrained Love"
-    MACOSX_BUNDLE_SHORT_VERSION_STRING "asdf"
-    MACOSX_BUNDLE_BUNDLE_VERSION "asdf"
-    MACOSX_BUNDLE_COPYRIGHT "copyright linden lab 2007 - localize me and run me through a legal wringer"
+    MACOSX_BUNDLE_SHORT_VERSION_STRING "${VIEWER_SHORT_VERSION}"
+    MACOSX_BUNDLE_BUNDLE_VERSION "${VIEWER_SHORT_VERSION}${VIEWER_MACOSX_PHASE}${VIEWER_REVISION}"
+    MACOSX_BUNDLE_COPYRIGHT "Copyright © Linden Research, Inc. 2007"
+    )
+
+  configure_file(
+     "${CMAKE_CURRENT_SOURCE_DIR}/Info-SecondLife.plist"
+     "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${product}.app/Contents/Info.plist"
     )
 
   add_custom_command(
@@ -1977,11 +2026,16 @@ if (DARWIN)
       --configuration=${CMAKE_CFG_INTDIR}
       --dest=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${product}.app
       --grid=${GRID}
+      --channel=${VIEWER_CHANNEL}
+      --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
       --source=${CMAKE_CURRENT_SOURCE_DIR}
-    DEPENDS ${VIEWER_BINARY_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
+    DEPENDS
+      ${VIEWER_BINARY_NAME}
+      ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
+      generate_viewer_version
     )
 
-  add_dependencies(${VIEWER_BINARY_NAME} SLPlugin media_plugin_quicktime media_plugin_webkit mac-updater mac-crash-logger)
+  add_dependencies(${VIEWER_BINARY_NAME} SLPlugin media_plugin_quicktime media_plugin_webkit mac-crash-logger)
   
   if (ENABLE_SIGNING)
       set(SIGNING_SETTING "--signature=${SIGNING_IDENTITY}")
@@ -1991,6 +2045,7 @@ if (DARWIN)
 
   if (PACKAGE)
       add_custom_target(package ALL DEPENDS ${VIEWER_BINARY_NAME})
+      add_dependencies(package generate_viewer_version)
 
       add_custom_command(
         TARGET package POST_BUILD
@@ -2004,12 +2059,14 @@ if (DARWIN)
           --configuration=${CMAKE_CFG_INTDIR}
           --dest=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${product}.app
           --grid=${GRID}
-          --login_channel=${VIEWER_LOGIN_CHANNEL}
+          --channel=${VIEWER_CHANNEL}
+          --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
           --source=${CMAKE_CURRENT_SOURCE_DIR}
           --touch=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.touched
           ${SIGNING_SETTING}
         DEPENDS
           ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
+          generate_viewer_version
       )
   endif (PACKAGE)
 endif (DARWIN)
@@ -2106,6 +2163,40 @@ if (LL_TESTS)
     lltranslate.cpp
     PROPERTIES
     LL_TEST_ADDITIONAL_LIBRARIES "${JSONCPP_LIBRARIES}"
+  )
+
+  set_source_files_properties(
+    llviewerhelputil.cpp
+    PROPERTIES
+    LL_TEST_ADDITIONAL_LIBRARIES "${BOOST_SYSTEM_LIBRARY}"
+  )
+
+  set_source_files_properties(
+    llremoteparcelrequest.cpp
+    PROPERTIES
+    LL_TEST_ADDITIONAL_LIBRARIES "${BOOST_SYSTEM_LIBRARY}"
+  )
+
+  set_source_files_properties(
+    llworldmap.cpp
+    llworldmipmap.cpp
+    PROPERTIES
+    LL_TEST_ADDITIONAL_SOURCE_FILES 
+    tests/llviewertexture_stub.cpp
+    #llviewertexturelist.cpp
+    LL_TEST_ADDITIONAL_LIBRARIES "${BOOST_SYSTEM_LIBRARY}"
+  )
+
+  set_source_files_properties(
+    llmediadataclient.cpp
+    PROPERTIES
+    LL_TEST_ADDITIONAL_LIBRARIES "${LLPRIMITIVE_LIBRARIES}"
+  )
+
+  set_source_files_properties(
+    llagentaccess.cpp
+    PROPERTIES
+    LL_TEST_ADDITIONAL_LIBRARIES "${BOOST_SYSTEM_LIBRARY}"
   )
 
   set_source_files_properties(

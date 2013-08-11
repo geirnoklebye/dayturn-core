@@ -247,7 +247,6 @@ set(llcommon_HEADER_FILES
     lluuid.h
     lluuidhashmap.h
     llversionserver.h
-    llversionviewer.h
     llworkerthread.h
     ll_template_cast.h
     metaclass.h
@@ -338,6 +337,7 @@ if (LL_TESTS)
   LL_ADD_INTEGRATION_TEST(reflection "" "${test_libs}")
   LL_ADD_INTEGRATION_TEST(stringize "" "${test_libs}")
   LL_ADD_INTEGRATION_TEST(lleventdispatcher "" "${test_libs}")
+  LL_ADD_INTEGRATION_TEST(lleventcoro "" "${test_libs};${BOOST_CONTEXT_LIBRARY}")
   LL_ADD_INTEGRATION_TEST(llprocess "" "${test_libs}")
   LL_ADD_INTEGRATION_TEST(llleap "" "${test_libs}")
   LL_ADD_INTEGRATION_TEST(llstreamqueue "" "${test_libs}")

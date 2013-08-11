@@ -20,6 +20,7 @@ if(WINDOWS)
     set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(vivox_files
         SLVoice.exe
+        ca-bundle.crt
         libsndfile-1.dll
         vivoxplatform.dll
         vivoxsdk.dll
@@ -195,6 +196,7 @@ elseif(DARWIN)
     set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(vivox_files
         SLVoice
+        ca-bundle.crt
         libsndfile.dylib
         libvivoxoal.dylib
         libortp.dylib
@@ -241,6 +243,7 @@ elseif(LINUX)
         libvivoxplatform.so
         libvivoxsdk.so
         SLVoice
+        # ca-bundle.crt   #No cert for linux.  It is actually still 3.2SDK.
        )
     # *TODO - update this to use LIBS_PREBUILT_DIR and LL_ARCH_DIR variables
     # or ARCH_PREBUILT_DIRS
@@ -255,12 +258,13 @@ elseif(LINUX)
         libapr-1.so.0
         libaprutil-1.so.0
         libatk-1.0.so
+        libboost_context-mt.so.${BOOST_VERSION}.0
+        libboost_filesystem-mt.so.${BOOST_VERSION}.0
         libboost_program_options-mt.so.${BOOST_VERSION}.0
         libboost_regex-mt.so.${BOOST_VERSION}.0
-        libboost_thread-mt.so.${BOOST_VERSION}.0
-        libboost_filesystem-mt.so.${BOOST_VERSION}.0
         libboost_signals-mt.so.${BOOST_VERSION}.0
         libboost_system-mt.so.${BOOST_VERSION}.0
+        libboost_thread-mt.so.${BOOST_VERSION}.0
         libcollada14dom.so
         libcrypto.so.1.0.0
         libdb-5.1.so

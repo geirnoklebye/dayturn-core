@@ -1394,19 +1394,20 @@ void LLVOAvatar::renderCollisionVolumes()
 
 	if (mNameText.notNull())
 	{
-		LLVector3 unused;
-		mNameText->lineSegmentIntersect(LLVector3(0,0,0), LLVector3(0,0,1), unused, TRUE);
+		LLVector4a unused;
+	
+		mNameText->lineSegmentIntersect(unused, unused, unused, TRUE);
 	}
 }
 
-BOOL LLVOAvatar::lineSegmentIntersect(const LLVector3& start, const LLVector3& end,
+BOOL LLVOAvatar::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
 									  S32 face,
 									  BOOL pick_transparent,
 									  S32* face_hit,
-									  LLVector3* intersection,
+									  LLVector4a* intersection,
 									  LLVector2* tex_coord,
-									  LLVector3* normal,
-									  LLVector3* bi_normal)
+									  LLVector4a* normal,
+									  LLVector4a* tangent)
 {
 	if ((isSelf() && !gAgent.needsRenderAvatar()) || !LLPipeline::sPickAvatar)
 	{
@@ -1423,8 +1424,8 @@ BOOL LLVOAvatar::lineSegmentIntersect(const LLVector3& start, const LLVector3& e
 			glh::matrix4f inverse = mat.inverse();
 			glh::matrix4f norm_mat = inverse.transpose();
 
-			glh::vec3f p1(start.mV);
-			glh::vec3f p2(end.mV);
+			glh::vec3f p1(start.getF32ptr());
+			glh::vec3f p2(end.getF32ptr());
 
 			inverse.mult_matrix_vec(p1);
 			inverse.mult_matrix_vec(p2);
@@ -1443,12 +1444,12 @@ BOOL LLVOAvatar::lineSegmentIntersect(const LLVector3& start, const LLVector3& e
 
 				if (intersection)
 				{
-					*intersection = LLVector3(res_pos.v);
+					intersection->load3(res_pos.v);
 				}
 
 				if (normal)
 				{
-					*normal = LLVector3(res_norm.v);
+					normal->load3(res_norm.v);
 				}
 
 				return TRUE;
@@ -1484,7 +1485,7 @@ BOOL LLVOAvatar::lineSegmentIntersect(const LLVector3& start, const LLVector3& e
 
 	
 	
-	LLVector3 position;
+	LLVector4a position;
 	if (mNameText.notNull() && mNameText->lineSegmentIntersect(start, end, position))
 	{
 		if (intersection)
@@ -1498,14 +1499,14 @@ BOOL LLVOAvatar::lineSegmentIntersect(const LLVector3& start, const LLVector3& e
 	return FALSE;
 }
 
-LLViewerObject* LLVOAvatar::lineSegmentIntersectRiggedAttachments(const LLVector3& start, const LLVector3& end,
+LLViewerObject* LLVOAvatar::lineSegmentIntersectRiggedAttachments(const LLVector4a& start, const LLVector4a& end,
 									  S32 face,
 									  BOOL pick_transparent,
 									  S32* face_hit,
-									  LLVector3* intersection,
+									  LLVector4a* intersection,
 									  LLVector2* tex_coord,
-									  LLVector3* normal,
-									  LLVector3* bi_normal)
+									  LLVector4a* normal,
+									  LLVector4a* tangent)
 {
 	if (isSelf() && !gAgent.needsRenderAvatar())
 	{
@@ -1516,8 +1517,8 @@ LLViewerObject* LLVOAvatar::lineSegmentIntersectRiggedAttachments(const LLVector
 
 	if (lineSegmentBoundingBox(start, end))
 	{
-		LLVector3 local_end = end;
-		LLVector3 local_intersection;
+		LLVector4a local_end = end;
+		LLVector4a local_intersection;
 
 		for (attachment_map_t::iterator iter = mAttachmentPoints.begin(); 
 			iter != mAttachmentPoints.end();
@@ -1531,7 +1532,7 @@ LLViewerObject* LLVOAvatar::lineSegmentIntersectRiggedAttachments(const LLVector
 			{
 				LLViewerObject* attached_object = (*attachment_iter);
 					
-				if (attached_object->lineSegmentIntersect(start, local_end, face, pick_transparent, face_hit, &local_intersection, tex_coord, normal, bi_normal))
+				if (attached_object->lineSegmentIntersect(start, local_end, face, pick_transparent, face_hit, &local_intersection, tex_coord, normal, tangent))
 				{
 					local_end = local_intersection;
 					if (intersection)
@@ -7464,6 +7465,10 @@ void LLVOAvatar::dumpArchetypeXML(const std::string& prefix, bool group_by_weara
 	}
 	if (outprefix.empty())
 	{
+		outprefix = getFullname() + (isSelf()?"_s":"_o");
+	}
+	if (outprefix.empty())
+	{
 		outprefix = std::string("new_archetype");
 	}
 	std::string outfilename = get_sequential_numbered_file_name(outprefix,".xml");
@@ -7529,7 +7534,6 @@ void LLVOAvatar::dumpArchetypeXML(const std::string& prefix, bool group_by_weara
 
 		for (U8 te = 0; te < TEX_NUM_INDICES; te++)
 		{
-			{
 				// MULTIPLE_WEARABLES: extend to multiple wearables?
 				LLViewerTexture* te_image = getImage((ETextureIndex)te, 0);
 				if( te_image )
@@ -7541,7 +7545,6 @@ void LLVOAvatar::dumpArchetypeXML(const std::string& prefix, bool group_by_weara
 			}
 		}
 
-	}
 	apr_file_printf( file, "\t</archetype>\n" );
 	apr_file_printf( file, "\n</linden_genepool>\n" );
 
