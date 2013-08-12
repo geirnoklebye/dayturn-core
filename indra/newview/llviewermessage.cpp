@@ -3880,8 +3880,8 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 
 	if (is_audible)
 	{
-		BOOL visible_in_chat_bubble = FALSE;
 //MK
+////		BOOL visible_in_chat_bubble = FALSE;
 		std::string verb;
 //mk
 

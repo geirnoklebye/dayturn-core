@@ -572,9 +572,9 @@ void LLAvatarListItem::showAvatarAge(bool display)
 	// I need to deactivate this for now, because the observer for this datum tends to corrupt
 	// the list of observers in LLAvatarPropertiesProcessor, leading to a quick crash very often.
 	return;
+////	mAvatarAgeDisplay->setVisible(display);
+////	updateAvatarProperties();
 //mk
-	mAvatarAgeDisplay->setVisible(display);
-	updateAvatarProperties();
 }
 
 void LLAvatarListItem::updateAvatarProperties()
