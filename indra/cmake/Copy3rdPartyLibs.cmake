@@ -20,7 +20,7 @@ if(WINDOWS)
     set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(vivox_files
         SLVoice.exe
-#        wrap_oal.dll not in archive
+        ca-bundle.crt
 #       added from archive
         vivoxsdk.dll
         ortp.dll
@@ -327,6 +327,7 @@ elseif(DARWIN)
     set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(vivox_files
         SLVoice
+        ca-bundle.crt
         libsndfile.dylib
         libvivoxoal.dylib
         libortp.dylib
@@ -374,6 +375,7 @@ elseif(LINUX)
     set(SHARED_LIB_STAGING_DIR_RELEASE          "${SHARED_LIB_STAGING_DIR}")
 
 
+        # ca-bundle.crt   #No cert for linux.  It is actually still 3.2SDK.
     # *TODO - update this to use LIBS_PREBUILT_DIR and LL_ARCH_DIR variables
     # or ARCH_PREBUILT_DIRS
 
@@ -388,7 +390,7 @@ elseif(LINUX)
     # *FIX - figure out what to do with duplicate libalut.so here -brad
 
     if(${ARCH} STREQUAL "x86_64")
-      set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}/vivox-runtime")
+      set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
       set(vivox_files
           libortp.so
           libvivoxsdk.so

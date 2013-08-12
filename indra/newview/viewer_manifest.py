@@ -32,6 +32,7 @@ import errno
 import re
 import tarfile
 import time
+import random
 viewer_dir = os.path.dirname(__file__)
 # add llmanifest library to our path so we don't have to muck with PYTHONPATH
 sys.path.append(os.path.join(viewer_dir, '../lib/python/indra/util'))
@@ -320,6 +321,7 @@ class WindowsManifest(ViewerManifest):
 #           added from archive
             self.path("libsndfile-1.dll")
             self.path("vivoxoal.dll")
+            self.path("ca-bundle.crt")
             self.path("vivoxplatform.dll")
             try:
                 self.path("zlib1.dll")
@@ -860,6 +862,7 @@ class DarwinManifest(ViewerManifest):
                                 'libvivoxoal.dylib',
                                 'libvivoxsdk.dylib',
                                 'libvivoxplatform.dylib',
+                                'ca-bundle.crt',
                                 'SLVoice',
                                 ):
                      self.path2basename(libdir, libfile)
@@ -1220,7 +1223,8 @@ class Linux_i686Manifest(LinuxManifest):
             self.path("libalut.so.0.0.0")
             self.path("libopenal.so")
             self.path("libopenal.so.1")
-            self.path("libopenal.so.1.13.0")
+            self.path("libopenal.so.1.15.1")
+            self.path("libopenal.so", "libopenal.so.1")
             self.path("libopenal.so", "libvivoxoal.so.1") # vivox's sdk expects this soname
             self.path("libfontconfig.so*")
             self.path("libpng15.so.15") 
@@ -1243,10 +1247,10 @@ class Linux_i686Manifest(LinuxManifest):
             self.end_prefix("lib")
 
             # Vivox runtimes
-            if self.prefix(src="../packages/lib/release/", dst="bin"):
+            if self.prefix(src="../packages/lib/release", dst="bin"):
                     self.path("SLVoice")
                     self.end_prefix()
-            if self.prefix(src="../packages/lib/release/", dst="lib"):
+            if self.prefix(src="../packages/lib/release", dst="lib"):
                     self.path("libortp.so")
                     self.path("libsndfile.so.1")
                     self.path("libvivoxsdk.so")
@@ -1324,26 +1328,25 @@ class Linux_x86_64Manifest(LinuxManifest):
             self.end_prefix("lib64")
 
             # Vivox runtimes
-            if self.prefix(src="../packages/lib/release/vivox-runtime", dst="bin"):
+            if self.prefix(src="../packages/lib/release", dst="bin"):
                     self.path("SLVoice")
                     self.end_prefix()
-            if self.prefix(src="../packages/lib/release/vivox-runtime", dst="lib32"):
+            if self.prefix(src="../packages/lib/release", dst="lib32"):
                     self.path("libortp.so")
+                    self.path("libsndfile.so.1")
                     self.path("libvivoxsdk.so")
+                    self.path("libvivoxplatform.so")
                     self.end_prefix("lib32")
 
             # 32bit libs needed for voice
             if self.prefix("../packages/lib/release/32bit-compat", dst="lib32"):
                     self.path("libalut.so")
                     self.path("libalut.so.0")
-#                    self.path("libidn.so")
-#                    self.path("libidn.so.11")
                     self.path("libopenal.so")
                     self.path("libopenal.so.1")
-#                    self.path("libuuid.so")
-#                    self.path("libuuid.so.1")
                     self.path("libalut.so.0.0.0")
                     self.path("libopenal.so.1.15.1")
+                    self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
                     self.end_prefix("lib32")
 
 
