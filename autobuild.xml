@@ -2885,7 +2885,6 @@
                   <string>-DFMODEX=TRUE</string>
                   <string>'-DROOT_PROJECT_NAME:STRING=Restrained Love Release'</string>
                   <string>'-DVIEWER_CHANNEL:STRING=Restrained Love Release'</string>
-                  <string>'-DVIEWER_LOGIN_CHANNEL:STRING=Restrained Love Release'</string>
                   <string>-DPACKAGE:BOOL=ON</string>
                   <string>-DGCC_DISABLE_FATAL_WARNINGS:BOOL=ON</string>
                   <string>-DLL_TESTS:BOOL=OFF</string>
