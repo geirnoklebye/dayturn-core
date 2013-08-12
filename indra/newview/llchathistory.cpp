@@ -181,13 +181,43 @@ public:
 		{
 			LLAvatarActions::startIM(getAvatarId());
 		}
+		else if (level == "teleport")
+		{
+			LLAvatarActions::offerTeleport(getAvatarId());
+		}
 		else if (level == "add")
 		{
 			LLAvatarActions::requestFriendshipDialog(getAvatarId(), mFrom);
 		}
-		else if (level == "remove")
+		else if (level == "invitetogroup")
 		{
-			LLAvatarActions::removeFriendDialog(getAvatarId());
+			LLAvatarActions::inviteToGroup(getAvatarId());
+		}
+		else if (level == "share")
+		{
+			LLAvatarActions::share(getAvatarId());
+		}
+		else if (level == "pay")
+		{
+			LLAvatarActions::pay(getAvatarId());
+		}
+		else if (level == "toggleblock")
+		{
+			bool was_blocked = LLAvatarActions::isBlocked(getAvatarId());
+
+			LLAvatarActions::toggleBlock(getAvatarId());
+
+			if (!was_blocked) {
+				LLFloaterSidePanelContainer::showPanel(
+					"people",
+					"panel_people",
+					LLSD().with(
+						"people_panel_tab_name",
+						"blocked_panel").with("blocked_to_select",
+						getAvatarId()
+					)
+				);
+			}
 		}
 	}
 
@@ -458,23 +488,31 @@ protected:
 	{
 		LLMenuGL* menu = (LLMenuGL*)mPopupMenuHandleAvatar.get();
 
-		if(menu)
-		{
-			bool is_friend = LLAvatarTracker::instance().getBuddyInfo(mAvatarID) != NULL;
-			
-			menu->setItemEnabled("Add Friend", !is_friend);
-			menu->setItemEnabled("Remove Friend", is_friend);
-
-			if(gAgentID == mAvatarID)
-			{
-				menu->setItemEnabled("Add Friend", false);
+		if (menu) {
+			if (gAgentID == mAvatarID) {
 				menu->setItemEnabled("Send IM", false);
-				menu->setItemEnabled("Remove Friend", false);
-			}
+				menu->setItemEnabled("Offer Teleport", false);
+				menu->setItemEnabled("Add Friend", false);
+				menu->setItemEnabled("Invite To Group", false);
+				menu->setItemEnabled("Share", false);
+				menu->setItemEnabled("Pay", false);
+				menu->setItemEnabled("Block", false);
 
-			if (mSessionID == LLIMMgr::computeSessionID(IM_NOTHING_SPECIAL, mAvatarID))
-			{
-				menu->setItemVisible("Send IM", false);
+				menu->setItemVisible("Remove Friend", false);
+				menu->setItemVisible("Unblock", false);
+			}
+			else {
+				menu->setItemVisible("Send IM", mSessionID != LLIMMgr::computeSessionID(IM_NOTHING_SPECIAL, mAvatarID));
+				menu->setItemEnabled("Offer Teleport", LLAvatarActions::canOfferTeleport(mAvatarID));
+
+				bool is_friend = (LLAvatarTracker::instance().getBuddyInfo(mAvatarID) != NULL);
+				menu->setItemVisible("Add Friend", !is_friend);
+				menu->setItemVisible("Remove Friend", is_friend);
+
+				bool is_blocked = LLAvatarActions::isBlocked(mAvatarID);
+				menu->setItemEnabled("Block", !is_blocked && LLAvatarActions::canBlock(mAvatarID));
+				menu->setItemVisible("Block", !is_blocked);
+				menu->setItemVisible("Unblock", is_blocked);
 			}
 
 			menu->buildDrawLabels();

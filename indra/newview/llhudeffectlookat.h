@@ -78,9 +78,6 @@ protected:
 	void setTargetObjectAndOffset(LLViewerObject *objp, LLVector3d offset);
 	void setTargetPosGlobal(const LLVector3d &target_pos_global);
 
-public:
-	static BOOL sDebugLookAt;
-
 private:
 	ELookAtType					mTargetType;
 	LLVector3d					mTargetOffsetGlobal;

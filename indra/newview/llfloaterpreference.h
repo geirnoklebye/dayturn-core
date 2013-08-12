@@ -108,6 +108,10 @@ protected:
 	void onPieColorsOverrideChanged();
 	// ## Zi: Pie menu
 
+	void onMiniMapChatRingChanged();
+	void onShowLookAtChanged();
+	void onShowPointAtChanged();
+
 	// string differs from default after user changes.
 	void onDoNotDisturbResponseChanged();
 	// if the custom settings box is clicked

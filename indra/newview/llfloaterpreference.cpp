@@ -500,6 +500,15 @@ BOOL LLFloaterPreference::postBuild()
 	// make sure pie color controls are enabled or greyed out properly
 	onPieColorsOverrideChanged();
 // ## Zi: Pie menu
+
+	gSavedSettings.getControl("MiniMapChatRing")->getSignal()->connect(boost::bind(&LLFloaterPreference::onMiniMapChatRingChanged, this));
+	gSavedSettings.getControl("ShowLookAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowLookAtChanged, this));
+	gSavedSettings.getControl("ShowPointAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowPointAtChanged, this));
+
+	onMiniMapChatRingChanged();
+	onShowLookAtChanged();
+	onShowPointAtChanged();
+
 	// set 'enable' property for 'Clear log...' button
 	changed();
 
@@ -519,6 +528,32 @@ void LLFloaterPreference::onPieColorsOverrideChanged()
 	getChild<LLSliderCtrl>("pie_menu_fade_out")->setEnabled(enable);
 }
 // ## Zi: Pie menu
+
+void LLFloaterPreference::onMiniMapChatRingChanged()
+{
+	BOOL enable = gSavedSettings.getBOOL("MiniMapChatRing");
+
+	getChild<LLColorSwatchCtrl>("netmap_chatring_color_swatch")->setEnabled(enable);
+	getChild<LLColorSwatchCtrl>("netmap_shoutring_color_swatch")->setEnabled(enable);
+	getChild<LLTextBox>("netmap_chatring_color_label")->setEnabled(enable);
+	getChild<LLTextBox>("netmap_shoutring_color_label")->setEnabled(enable);
+}
+
+void LLFloaterPreference::onShowLookAtChanged()
+{
+	BOOL enable = gSavedSettings.getBOOL("ShowLookAt");
+
+	getChild<LLCheckBoxCtrl>("ShowLookAtNames")->setEnabled(enable);
+	getChild<LLCheckBoxCtrl>("ShowLookAtLimited")->setEnabled(enable);
+}
+
+void LLFloaterPreference::onShowPointAtChanged()
+{
+	BOOL enable = gSavedSettings.getBOOL("ShowPointAt");
+
+	getChild<LLCheckBoxCtrl>("ShowPointAtNames")->setEnabled(enable);
+	getChild<LLCheckBoxCtrl>("ShowPointAtLimited")->setEnabled(enable);
+}
 
 void LLFloaterPreference::updateDeleteTranscriptsButton()
 {

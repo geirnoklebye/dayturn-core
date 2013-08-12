@@ -44,7 +44,7 @@ class LLPanelLogin:
 {
 	LOG_CLASS(LLPanelLogin);
 public:
-	LLPanelLogin(const LLRect &rect, BOOL show_server, 
+	LLPanelLogin(const LLRect &rect, 
 				void (*callback)(S32 option, void* user_data),
 				void *callback_data);
 	~LLPanelLogin();
@@ -57,7 +57,7 @@ public:
 	// hidden on startup for reg-in-client
 	static void showLoginWidgets();
 
-	static void show(const LLRect &rect, BOOL show_server, 
+	static void show(const LLRect &rect, 
 		void (*callback)(S32 option, void* user_data), 
 		void* callback_data);
 

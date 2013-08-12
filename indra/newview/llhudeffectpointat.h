@@ -69,8 +69,7 @@ protected:
 	void setTargetPosGlobal(const LLVector3d &target_pos_global);
 	bool calcTargetPosition();
 	void update();
-public:
-	static BOOL sDebugPointAt;
+
 private:
 	EPointAtType				mTargetType;
 	LLVector3d					mTargetOffsetGlobal;

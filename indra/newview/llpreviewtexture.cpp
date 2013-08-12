@@ -35,7 +35,7 @@
 #include "llcombobox.h"
 #include "llfilepicker.h"
 #include "llfloaterreg.h"
-#include "llimagetga.h"
+#include "llimagepng.h"
 #include "llinventory.h"
 #include "llnotificationsutil.h"
 #include "llresmgr.h"
@@ -261,7 +261,7 @@ void LLPreviewTexture::saveAs()
 
 	LLFilePicker& file_picker = LLFilePicker::instance();
 	const LLInventoryItem* item = getItem() ;
-	if( !file_picker.getSaveFile( LLFilePicker::FFSAVE_TGA, item ? LLDir::getScrubbedFileName(item->getName()) : LLStringUtil::null) )
+	if( !file_picker.getSaveFile( LLFilePicker::FFSAVE_PNG, item ? LLDir::getScrubbedFileName(item->getName()) + ".png" : LLStringUtil::null) )
 	{
 		// User canceled or we failed to acquire save file.
 		return;
@@ -358,14 +358,14 @@ void LLPreviewTexture::onFileLoadedForSave(BOOL success,
 
 	if( self && final && success )
 	{
-		LLPointer<LLImageTGA> image_tga = new LLImageTGA;
-		if( !image_tga->encode( src ) )
+		LLPointer<LLImagePNG> image_png = new LLImagePNG;
+		if( !image_png->encode( src, 0.0 ) )
 		{
 			LLSD args;
 			args["FILE"] = self->mSaveFileName;
 			LLNotificationsUtil::add("CannotEncodeFile", args);
 		}
-		else if( !image_tga->save( self->mSaveFileName ) )
+		else if( !image_png->save( self->mSaveFileName ) )
 		{
 			LLSD args;
 			args["FILE"] = self->mSaveFileName;

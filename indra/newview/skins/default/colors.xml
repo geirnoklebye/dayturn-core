@@ -542,6 +542,12 @@
      name="MapTrackDisabledColor"
      value="0.5 0 0 1" />
     <color
+     name="MapChatRingColor"
+     value="1 1 0 0.3" />
+    <color
+     name="MapShoutRingColor"
+     value="1 0 0 0.3" />
+    <color
      name="MenuBarBgColor"
      reference="DkGray" />
     <color

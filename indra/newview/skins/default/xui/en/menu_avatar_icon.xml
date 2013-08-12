@@ -17,7 +17,7 @@
          parameter="profile" />
     </menu_item_call>
     <menu_item_call
-     label="Send IM..."
+     label="Send IM"
      layout="topleft"
      name="Send IM">
         <menu_item_call.on_click
@@ -25,7 +25,15 @@
          parameter="im" />
     </menu_item_call>
     <menu_item_call
-     label="Add Friend..."
+     label="Offer Teleport"
+     layout="topleft"
+     name="Offer Teleport">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="teleport" />
+    </menu_item_call>
+    <menu_item_call
+     label="Add Friend"
      layout="topleft"
      name="Add Friend">
         <menu_item_call.on_click
@@ -33,11 +41,51 @@
          parameter="add" />
     </menu_item_call>
     <menu_item_call
-     label="Remove Friend..."
+     label="Remove Friend"
      layout="topleft"
      name="Remove Friend">
         <menu_item_call.on_click
          function="AvatarIcon.Action"
          parameter="remove" />
+    </menu_item_call>
+    <menu_item_call
+     label="Invite To Group"
+     layout="topleft"
+     name="Invite To Group">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="invitetogroup" />
+    </menu_item_call>
+    <menu_item_call
+     label="Share"
+     layout="topleft"
+     name="Share">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="share" />
+    </menu_item_call>
+    <menu_item_call
+     label="Pay"
+     layout="topleft"
+     name="Pay">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="pay" />
+    </menu_item_call>
+    <menu_item_call
+     label="Block"
+     layout="topleft"
+     name="Block">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="toggleblock" />
+    </menu_item_call>
+    <menu_item_call
+     label="Unblock"
+     layout="topleft"
+     name="Unblock">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="toggleblock" />
     </menu_item_call>
 </menu>

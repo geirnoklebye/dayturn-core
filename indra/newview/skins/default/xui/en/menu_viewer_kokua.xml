@@ -4029,25 +4029,27 @@
                  parameter="SlowMotionAnimation" />
             </menu_item_check>
             <menu_item_check
-             label="Show Look At"
-             name="Show Look At">
-                <menu_item_check.on_check
-                 function="Advanced.CheckShowLookAt"
-                 parameter="ShowLookAt" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleShowLookAt" />
+		label="Show Look-At">
+		name="Show Look-At"
+		<menu_item_check.on_check
+		    function="CheckControl"
+		    parameter="ShowLookAt" />
+		<menu_item_check.on_click
+		    function="ToggleControl"
+		    parameter="ShowLookAt" />
+            </menu_item_check>
+	    <menu_item_check
+		label="Show Point-At">
+		name="Show Point-At"
+		<menu_item_check.on_check
+		    function="CheckControl"
+		    parameter="ShowPointAt" />
+		<menu_item_check.on_click
+		    function="ToggleControl"
+		    parameter="ShowPointAt" />
             </menu_item_check>
             <menu_item_check
-             label="Show Point At"
-             name="Show Point At">
-                <menu_item_check.on_check
-                 function="Advanced.CheckShowPointAt"
-                 parameter="ShowPointAt" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleShowPointAt" />
-            </menu_item_check>
-            <menu_item_check
-				     label="Private Look At"
+	     label="Private Look At"
 	     name="Private Look At">
                 <menu_item_check.on_check
                  function="CheckControl"
@@ -4056,16 +4058,16 @@
                  function="ToggleControl"
                  parameter="PrivateLookAtTarget" />
             </menu_item_check>
-			<menu_item_check
-			 label="Private Point At"
-			 name="Private Point At">
-					<menu_item_check.on_check
-					 function="CheckControl"
-					 parameter="PrivatePointAtTarget" />
-					<menu_item_check.on_click
-					 function="ToggleControl"
-					 parameter="PrivatePointAtTarget" />
-				</menu_item_check>
+            <menu_item_check
+	     label="Private Point At"
+	     name="Private Point At">
+                <menu_item_check.on_check
+                 function="CheckControl"
+                 parameter="PrivatePointAtTarget" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="PrivatePointAtTarget" />
+            </menu_item_check>
 			<menu_item_check name="Cat Mode"
 			label="Cat Mode (head follows mouse)">
 			<menu_item_check.on_check

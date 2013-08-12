@@ -735,26 +735,29 @@ namespace action_give_inventory
 // static
 void LLAvatarActions::buildResidentsString(std::vector<LLAvatarName> avatar_names, std::string& residents_string)
 {
-	int clip_names = 3;		// TODO: make this a debug setting
 	int len = avatar_names.size();
-	llassert(s > 0);
+//	llassert(s > 0);
 	
 	if (len != 1) {
 	    std::sort(avatar_names.begin(), avatar_names.end());
 	}
 
 	std::string trailer = "";
+	static LLUICachedControl<U32> clip_names("ConferenceClipNames", 3);
 
 	//
-	//	if there are (clip_names+1) or more names in the list then
-	//	show the first (clip_names) and follow with
+	//	if there are more than (clip_names+1) names in the list then
+	//	show the first (clip_names) names and follow with
 	//	"and [NUMBER] more"
 	//
-	//	otherwise if there are between 1 and clip_names entries in
+	//	otherwise if there are between 1 and (clip_names+1) entries in
 	//	the list then just show them all without a trailer
 	//
 	//	done like this because if it's "and 1 more" then we should
 	//	just show the last name instead of the trailer message
+	//
+	//	if clip_names == 0 then don't clip the name list, thereby
+	//	disabling this feature
 	//
 	if (clip_names && len > clip_names + 1) {
 		LLStringUtil::format_map_t args;
