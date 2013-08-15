@@ -842,6 +842,7 @@ void LLFloaterTexturePicker::onModeSelect(LLUICtrl* ctrl, void *userdata)
 
 	self->getChild<LLButton>("Default")->setVisible(mode);
 	self->getChild<LLButton>("Blank")->setVisible(mode);
+	self->getChild<LLButton>("Trans")->setVisible(mode);
 	self->getChild<LLButton>("None")->setVisible(mode);
 	self->getChild<LLButton>("Pipette")->setVisible(mode);
 	self->getChild<LLFilterEditor>("inventory search editor")->setVisible(mode);
