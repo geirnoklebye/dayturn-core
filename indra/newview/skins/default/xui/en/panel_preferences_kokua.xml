@@ -3,15 +3,15 @@
     border="true"
     follows="all"
     height="408"
-    label="Kokua"
+    label="Wabbit"
     layout="topleft"
     left="102"
-    name="kokua_viewer"
+    name="wabbit_viewer"
     top="1"
     width="517">
 
     <tab_container
-	label="Kokua Prefs"
+	label="Wabbit Prefs"
 	top="-6" 
 	height="408"
 	left="0"
@@ -31,7 +31,7 @@
 	    label="General"
 	    left="1"
 	    mouse_opaque="true"
-	    name="kokua_general"
+	    name="wabbit_general"
 	    width="517">
 	    <check_box
 		top_pad="15"
@@ -49,30 +49,17 @@
 		width="270"
 		control_name="RezUnderLandGroup"
 		tool_tip="Attempts to rez objects under the land group, if you're in the land group, regardless of which group tag you're currently wearing." />
-	</panel>
-
-	<!--View-->
-	<panel
-	    border="true"
-	    follows="all"
-	    height="408"
-	    label="View"
-	    left="1"
-	    mouse_opaque="true"
-	    name="kokua_view"
-	    width="517">
 	    <check_box
-		top_pad="15"
 		font="SansSerifSmall"
 		height="20"
 		initial_value="false"
-		label="Enable minimap rotation"
+		label="Save scripts in inventory as Mono instead of LSL2"
 		layout="topleft"
 		left="15"
-		name="minimaprotate"
+		name="SaveInventoryScriptsAsMono"
 		width="350"
-		control_name="MiniMapRotate"
-		tool_tip="Rotate miniature world map to avatar direction." />
+		control_name="SaveInventoryScriptsAsMono"
+		tool_tip="If true then scripts saved in inventory will be saved as Mono.  Otherwise they will be saved as LSL2.  This applies when compiling scripts and not when simply copying them." />
 	    <check_box
 		control_name="MiniMapChatRing"
 		name="MiniMapChatRing"
@@ -151,21 +138,120 @@
 		width="95">
 		Shout range
 	    </text>
-	    <text
-		top_pad="25"
+	</panel>
+
+	<!--Chat-->
+	<panel
+	    border="true"
+	    follows="all"
+	    layout="topleft"
+	    height="408"
+	    label="Chat"
+	    left="1"
+	    mouse_opaque="true"
+	    name="wabbit_chat"
+	    width="517">
+	    <check_box
+		top_pad="15"
+		control_name="FSCmdLine"
+		name="FSCmdLine"
+		label="Enable chatbar commands (tph and tp2cam etc.)"
+		layout="topleft"
 		left="15"
+		height="20"
+		width="400"
+		tool_tip="Commands typed into the chatbar will be acted upon."/>
+	    <check_box
+		control_name="ShowStreamMetadata"
+		name="ShowStreamMetadata"
+		label="Show stream title in nearby chat"
+		layout="topleft"
+		left="15"
+		height="20"
+		width="400"
+		tool_tip="Send the title of each track played on the stream to your nearby chat window."/>
+	    <check_box
+		control_name="StreamMetadataAnnounceToChat"
+		name="StreamMetadataAnnounceToChat"
+		label="Announce stream title to chat channel:"
+		layout="topleft"
+		left="15"
+		height="20"
+		width="400"
+		tool_tip="Send the title of each track played on the stream to the specified chat channel.  This data could be used by an inworld object."/>
+	    <spinner
+		control_name="StreamMetadataAnnounceChannel"
+		decimal_digits="0"
+		enabled="true"
+		layout="topleft"
+		follows="left|top"
+		height="20"
+		left="60"
+		increment="1" 
+		initial_val="362394" 
+		max_val="2147483647"
+		min_val="1"
+		mouse_opaque="true"
+		name="StreamMetadataAnnounceChannel"
+		width="90"
+		tool_tip="The channel number to use for stream title announcements"/>
+	    <text
+		left="15"
+		type="string"
+		length="1"
+		follows="left|top"
+		top_pad="15"
+		height="10"
+		layout="topleft"
+		mouse_opaque="false"
+		name="clip_names_label"
+		width="500">
+		Number of names to list in the ad-hoc conference text input area:
+	    </text>
+	    <spinner
+		control_name="ConferenceClipNames"
+		decimal_digits="0"
+		enabled="true"
+		layout="topleft"
+		follows="left|top"
+		top_pad="10"
+		height="20"
+		left="60"
+		increment="1" 
+		initial_val="3" 
+		max_val="9999"
+		min_val="0"
+		mouse_opaque="true"
+		name="ConferenceClipNames"
+		width="90"
+		tool_tip="Number of names to list in the ad-hoc conference text input area (0 = Show all names)."/>
+	    <text
 		type="string"
 		length="1"
 		follows="left|top"
 		height="10"
 		layout="topleft"
+		left_pad="10"
 		mouse_opaque="false"
-		name="privacy_spy_heading"
-		width="500">
-		Privacy/Spy Settings:
+		name="clip_names_note"
+		top_delta="5"
+		width="200">
+		(0 = Show all names)
 	    </text>
+	</panel>
+
+	<!--Privacy-->
+	<panel
+	    border="true"
+	    follows="all"
+	    height="408"
+	    label="Privacy"
+	    left="1"
+	    mouse_opaque="true"
+	    name="wabbit_view"
+	    width="517">
 	    <check_box
-		top_pad="10"
+		top_pad="15"
 		font="SansSerifSmall"
 		height="20"
 		initial_value="false"
@@ -175,7 +261,7 @@
 		name="CatMode"
 		width="350"
 		control_name="CatMode"
-		tool_tip="Makes your head always look in the direction your mouse pointer when not idle." />
+		tool_tip="Makes your head always look in the direction your mouse pointer when not idle.  Best left disabled." />
 	    <check_box
 		font="SansSerifSmall"
 		height="20"
@@ -266,116 +352,6 @@
 		width="350"
 		control_name="ShowPointAtLimited"
 		tool_tip="Don't show my own point-at crosshair to myself (reduces screen clutter)." />
-	</panel>
-
-	<!--Chat-->
-	<panel
-	    border="true"
-	    follows="all"
-	    layout="topleft"
-	    height="408"
-	    label="Chat"
-	    left="1"
-	    mouse_opaque="true"
-	    name="kokua_chat"
-	    width="517">
-	    <text
-		left="15"
-		type="string"
-		length="1"
-		follows="left|top"
-		top_pad="15"
-		height="10"
-		layout="topleft"
-		mouse_opaque="false"
-		name="clip_names_label"
-		width="500">
-		Number of names to list in the ad-hoc conference text input area:
-	    </text>
-	    <spinner
-		control_name="ConferenceClipNames"
-		decimal_digits="0"
-		enabled="true"
-		layout="topleft"
-		follows="left|top"
-		top_pad="10"
-		height="20"
-		left="60"
-		increment="1" 
-		initial_val="3" 
-		max_val="9999"
-		min_val="0"
-		mouse_opaque="true"
-		name="ConferenceClipNames"
-		width="90"
-		tool_tip="Number of names to list in the ad-hoc conference text input area (0 = Show all names)."/>
-	    <text
-		type="string"
-		length="1"
-		follows="left|top"
-		height="10"
-		layout="topleft"
-		left_pad="10"
-		mouse_opaque="false"
-		name="clip_names_note"
-		top_delta="5"
-		width="200">
-		(0 = Show all names)
-	    </text>
-	    <check_box
-		top_pad="15"
-		control_name="FSCmdLine"
-		name="FSCmdLine"
-		label="Enable chatbar commands (tph and tp2cam etc.)"
-		layout="topleft"
-		left="15"
-		height="20"
-		width="400"
-		tool_tip="Commands typed into the chatbar will be acted upon."/>
-	    <check_box
-		control_name="ShowStreamMetadata"
-		name="ShowStreamMetadata"
-		label="Show stream title in nearby chat"
-		layout="topleft"
-		left="15"
-		height="20"
-		width="400"
-		tool_tip="Send the title of each track played on the stream to your nearby chat window."/>
-	    <check_box
-		control_name="StreamMetadataAnnounceToChat"
-		name="StreamMetadataAnnounceToChat"
-		label="Announce stream title to chat channel:"
-		layout="topleft"
-		left="15"
-		height="20"
-		width="400"
-		tool_tip="Send the title of each track played on the stream to the specified chat channel.  This data could be used by an inworld object."/>
-	    <spinner
-		control_name="StreamMetadataAnnounceChannel"
-		decimal_digits="0"
-		enabled="true"
-		layout="topleft"
-		follows="left|top"
-		height="20"
-		left="60"
-		increment="1" 
-		initial_val="362394" 
-		max_val="2147483647"
-		min_val="1"
-		mouse_opaque="true"
-		name="StreamMetadataAnnounceChannel"
-		width="90"
-		tool_tip="The channel number to use for stream title announcements"/>
-	    <!--
-	    <check_box
-		layout="topleft"
-		follows="left|top"
-		left="20"
-		width="50"
-		height="20"
-		control_name="PhoenixMuteGroupWhenNoticesDisabled"
-		label="When &quot;Receive group notices&quot; is disabled, disable group chat as well" />
-	    -->
 	</panel>
     </tab_container>
 </panel>
