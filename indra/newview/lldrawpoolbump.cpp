@@ -1611,16 +1611,34 @@ void LLDrawPoolInvisible::renderDeferred( S32 pass )
 	}
 //mk
 	LLFastTimer t(FTM_RENDER_INVISIBLE);
+
+//MK with thanks to Henri Beauchamp
+	if (gPipeline.canUseVertexShaders())
+	{
+		gOcclusionProgram.bind();
+	}
+//mk
   
 	U32 invisi_mask = LLVertexBuffer::MAP_VERTEX;
 	glStencilMask(0);
-	glStencilOp(GL_ZERO, GL_KEEP, GL_REPLACE);
+//MK with thanks to Henri Beauchamp
+////	glStencilOp(GL_ZERO, GL_KEEP, GL_REPLACE);
+//mk
 	gGL.setColorMask(false, false);
 	pushBatches(LLRenderPass::PASS_INVISIBLE, invisi_mask, FALSE);
 	gGL.setColorMask(true, true);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+//MK with thanks to Henri Beauchamp
+////	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+//mk
 	glStencilMask(0xFFFFFFFF);
-	
+
+//MK with thanks to Henri Beauchamp
+	if (gPipeline.canUseVertexShaders())
+	{
+		gOcclusionProgram.unbind();
+	}
+//mk
+
 	if (gPipeline.hasRenderBatches(LLRenderPass::PASS_INVISI_SHINY))
 	{
 		beginShiny(true);
