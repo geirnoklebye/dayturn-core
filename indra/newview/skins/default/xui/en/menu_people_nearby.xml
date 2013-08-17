@@ -68,7 +68,41 @@
       	 function="Avatar.EnableItem"
          parameter="can_callog"/>
     </menu_item_call>
-    <menu_item_separator name="separator_chat_history"/>
+    <context_menu
+        label="Permissions"
+        name="permissions">
+        <menu_item_check
+            label="See when I am online"
+            name="permission_online_status">
+            <menu_item_check.on_click
+                function="Avatar.GrantOnlineStatus" />
+            <menu_item_check.on_check
+                function="Avatar.CheckItem"
+                parameter="online_status" />
+        </menu_item_check>
+        <menu_item_check
+            label="Find me on the world map"
+            name="permission_map_location">
+            <menu_item_check.on_click
+                function="Avatar.GrantMapLocation" />
+            <menu_item_check.on_enable
+                function="Avatar.CheckItem"
+                parameter="online_status" />
+            <menu_item_check.on_check
+                function="Avatar.CheckItem"
+                parameter="map_location" />
+        </menu_item_check>
+        <menu_item_check
+            label="Edit, delete or take my objects"
+            name="permission_modify_objects">
+            <menu_item_check.on_click
+                function="Avatar.GrantModifyObjects" />
+            <menu_item_check.on_check
+                function="Avatar.CheckItem"
+                parameter="modify_objects" />
+        </menu_item_check>
+    </context_menu>
+    <menu_item_separator name="separator_permissions"/>
     <menu_item_call
      label="Invite to group..."
      layout="topleft"
@@ -80,19 +114,19 @@
          parameter="can_invite"/>
     </menu_item_call>
     <menu_item_separator name="separator_invite_to_group"/>
-    <menu_item_call
-     label="Block / Unblock"
+    <menu_item_check
+     label="Block"
      layout="topleft"
      name="block_unblock">
-        <menu_item_call.on_click
+        <menu_item_check.on_click
          function="Avatar.BlockUnblock" />
-        <menu_item_call.on_check
+        <menu_item_check.on_check
          function="Avatar.CheckItem"
          parameter="is_blocked" />
-        <menu_item_call.on_enable
+        <menu_item_check.on_enable
          function="Avatar.EnableItem"
          parameter="can_block" />
-    </menu_item_call>
+    </menu_item_check>
     <menu_item_call
      label="Zoom In"
      layout="topleft"

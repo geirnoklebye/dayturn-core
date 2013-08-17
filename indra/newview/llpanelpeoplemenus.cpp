@@ -41,6 +41,10 @@
 #include "llviewermenu.h"			// for gMenuHolder
 #include "llconversationmodel.h"
 #include "llviewerobjectlist.h"
+#include "llviewernetwork.h"
+#include "llnotificationsutil.h"
+#include "llslurl.h"
+#include "llavatarpropertiesprocessor.h"
 
 namespace LLPanelPeopleMenus
 {
@@ -77,6 +81,9 @@ LLContextMenu* PeopleContextMenu::createMenu()
 		registrar.add("Avatar.Calllog",			boost::bind(&LLAvatarActions::viewChatHistory,			id));
 		registrar.add("Avatar.Freeze",			boost::bind(&handle_avatar_freeze,						id));
 		registrar.add("Avatar.Eject",			boost::bind(&handle_avatar_eject,						id));
+		registrar.add("Avatar.GrantOnlineStatus",	boost::bind(&PeopleContextMenu::handle_avatar_grant_online_status,	this, id));
+		registrar.add("Avatar.GrantMapLocation",	boost::bind(&PeopleContextMenu::handle_avatar_grant_map_location,	this, id));
+		registrar.add("Avatar.GrantModifyObjects",	boost::bind(&PeopleContextMenu::handle_avatar_grant_modify_objects,	this, id));
 
 		enable_registrar.add("Avatar.EnableItem", boost::bind(&PeopleContextMenu::enableContextMenuItem, this, _2));
 		enable_registrar.add("Avatar.CheckItem",  boost::bind(&PeopleContextMenu::checkContextMenuItem,	this, _2));
@@ -129,7 +136,7 @@ void PeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 		items.push_back(std::string("offer_teleport"));
 		items.push_back(std::string("voice_call"));
 		items.push_back(std::string("chat_history"));
-		items.push_back(std::string("separator_chat_history"));
+		items.push_back(std::string("separator_permissions"));
 		items.push_back(std::string("add_friend"));
 		items.push_back(std::string("remove_friend"));
 		items.push_back(std::string("invite_to_group"));
@@ -138,6 +145,16 @@ void PeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 		items.push_back(std::string("share"));
 		items.push_back(std::string("pay"));
 		items.push_back(std::string("block_unblock"));
+
+		//
+		//	enable the following if the selected avatar is a friend
+		//
+		if (LLAvatarActions::isFriend(mUUIDs.front())) {
+			items.push_back(std::string("permissions"));
+			items.push_back(std::string("permission_online_status"));
+			items.push_back(std::string("permission_map_location"));
+			items.push_back(std::string("permission_modify_objects"));
+		}
 	}
 
     hide_context_entries(menu, items, disabled_items);
@@ -254,6 +271,30 @@ bool PeopleContextMenu::checkContextMenuItem(const LLSD& userdata)
 		return LLAvatarActions::isBlocked(id);
 	}
 
+	const LLRelationship *relationship = LLAvatarTracker::instance().getBuddyInfo(id);
+
+	if (relationship) {
+		S32 rights = relationship->getRightsGrantedTo();
+
+		if (item == std::string("online_status") &&
+		   (rights & LLRelationship::GRANT_ONLINE_STATUS)
+		) {
+			return true;
+		}
+
+		if (item == std::string("map_location") &&
+		   (rights & LLRelationship::GRANT_MAP_LOCATION)
+		) {
+			return true;
+		}
+
+		if (item == std::string("modify_objects") &&
+		   (rights & LLRelationship::GRANT_MODIFY_OBJECTS)
+		) {
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -262,6 +303,87 @@ void PeopleContextMenu::offerTeleport()
 	// boost::bind cannot recognize overloaded method LLAvatarActions::offerTeleport(),
 	// so we have to use a wrapper.
 	LLAvatarActions::offerTeleport(mUUIDs);
+}
+
+void PeopleContextMenu::handle_avatar_grant_online_status(const LLUUID& avatar_id)
+{
+	toggle_rights(avatar_id, LLRelationship::GRANT_ONLINE_STATUS);
+}
+
+void PeopleContextMenu::handle_avatar_grant_map_location(const LLUUID& avatar_id)
+{
+	toggle_rights(avatar_id, LLRelationship::GRANT_MAP_LOCATION);
+}
+
+void PeopleContextMenu::handle_avatar_grant_modify_objects(const LLUUID& avatar_id)
+{
+	toggle_rights(avatar_id, LLRelationship::GRANT_MODIFY_OBJECTS);
+}
+
+void PeopleContextMenu::toggle_rights(const LLUUID& avatar_id, S32 rights)
+{
+	const LLRelationship *relationship = LLAvatarTracker::instance().getBuddyInfo(avatar_id);
+
+	if (relationship) {
+		S32 current_rights = relationship->getRightsGrantedTo();
+
+		if (rights & LLRelationship::GRANT_MODIFY_OBJECTS) {
+			//
+			//	modify objects permission is being changed so
+			//	request confirmation
+			//
+			confirm_modify_rights(avatar_id, !(current_rights & LLRelationship::GRANT_MODIFY_OBJECTS), current_rights | rights);
+			return;
+		}
+
+		rights = current_rights ^ rights;
+		LLAvatarPropertiesProcessor::getInstance()->sendFriendRights(avatar_id, rights);
+
+		LLSD args;
+		args["NAME"] = LLSLURL("agent", avatar_id, "displayname").getSLURLString();
+		args["GRID_NAME"] = LLGridManager::getInstance()->getGridLabel();
+		LLNotificationsUtil::add("NewPermissionsPending", args);
+	}
+}
+
+void PeopleContextMenu::confirm_modify_rights(const LLUUID &avatar_id, const bool grant, const S32 rights)
+{
+	LLSD args;
+	args["NAME"] = LLSLURL("agent", avatar_id, "displayname").getSLURLString();
+
+	if (grant) {
+		LLNotificationsUtil::add(
+			"GrantModifyRights",
+			args,
+			LLSD(),
+			boost::bind(&PeopleContextMenu::rights_confirmation_callback, this, _1, _2, avatar_id, rights)
+		);
+	}
+	else {
+		LLNotificationsUtil::add(
+			"RevokeModifyRights",
+			args,
+			LLSD(),
+			boost::bind(&PeopleContextMenu::rights_confirmation_callback, this, _1, _2, avatar_id, rights & ~LLRelationship::GRANT_MODIFY_OBJECTS)
+		);
+	}
+}
+
+void PeopleContextMenu::rights_confirmation_callback(const LLSD& notification, const LLSD& response, const LLUUID &avatar_id, const S32 rights)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+
+	if (option == 0) {
+		LLAvatarPropertiesProcessor::getInstance()->sendFriendRights(
+			avatar_id,
+			rights
+		);
+
+		LLSD args;
+		args["NAME"] = LLSLURL("agent", avatar_id, "displayname").getSLURLString();
+		args["GRID_NAME"] = LLGridManager::getInstance()->getGridLabel();
+		LLNotificationsUtil::add("NewPermissionsPending", args);
+	}
 }
 
 //== NearbyPeopleContextMenu ===============================================================
@@ -291,13 +413,27 @@ void NearbyPeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 		items.push_back(std::string("add_friend"));
 		items.push_back(std::string("remove_friend"));
 		items.push_back(std::string("invite_to_group"));
-		items.push_back(std::string("separator_invite_to_group"));
+		items.push_back(std::string("separator_permissions"));
 		items.push_back(std::string("zoom_in"));
 		items.push_back(std::string("map"));
 		items.push_back(std::string("share"));
 		items.push_back(std::string("pay"));
 		items.push_back(std::string("block_unblock"));
 
+		//
+		//	enable the following if the selected avatar is a friend
+		//
+		if (LLAvatarActions::isFriend(mUUIDs.front())) {
+			items.push_back(std::string("permissions"));
+			items.push_back(std::string("permission_online_status"));
+			items.push_back(std::string("permission_map_location"));
+			items.push_back(std::string("permission_modify_objects"));
+		}
+
+		//
+		//	enable the following if we can freeze/eject the
+		//	selected avatar
+		//
 		if (enable_freeze_eject(mUUIDs.front())) {
 			items.push_back(std::string("separator_freeze_eject"));
 			items.push_back(std::string("freeze"));

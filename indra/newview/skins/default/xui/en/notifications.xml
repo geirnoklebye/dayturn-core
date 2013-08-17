@@ -10386,5 +10386,12 @@ Creating animation link for animation "[NAME]" failed!
     type="notify">
 	Collada DAE export failed.  No exportable objects selected.
   </notification>
+
+  <notification
+    icon="notify.tga"
+    name="NewPermissionsPending"
+    type="notify">
+	Your permission change request for [NAME] has been sent to [GRID_NAME] for processing.  This may take a few seconds to complete.
+  </notification>
   
 </notifications>

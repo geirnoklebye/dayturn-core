@@ -47,6 +47,14 @@ private:
 	bool enableContextMenuItem(const LLSD& userdata);
 	bool checkContextMenuItem(const LLSD& userdata);
 	void offerTeleport();
+
+	void handle_avatar_grant_online_status(const LLUUID& avatar_id);
+	void handle_avatar_grant_map_location(const LLUUID& avatar_id);
+	void handle_avatar_grant_modify_objects(const LLUUID& avatar_id);
+
+	void toggle_rights(const LLUUID& avatar_id, S32 rights);
+	void confirm_modify_rights(const LLUUID& avatar_id, const bool grant, const S32 rights);
+	void rights_confirmation_callback(const LLSD& notification, const LLSD& response, const LLUUID& avatar_id, const S32 rights);
 };
 
 /**

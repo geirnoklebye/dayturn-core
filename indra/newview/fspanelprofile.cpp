@@ -57,7 +57,6 @@
 #include "llfloaterreg.h"
 #include "llfirstuse.h"
 #include "llnotificationsutil.h"
-#include "llnotificationsutil.h"
 #include "lltrans.h"
 #include "llvoiceclient.h"
 #include "llgroupactions.h"
