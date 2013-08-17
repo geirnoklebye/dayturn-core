@@ -525,7 +525,6 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename)
 		mOFN.lpstrDefExt = L"txt";
 		mOFN.lpstrFilter = L"LSL Files (*.lsl)\0*.lsl\0" L"\0";
 		break;
-// <FS:CR> Export filter
 	case FFSAVE_EXPORT:
 		if (filename.empty())
 		{
@@ -534,11 +533,17 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename)
 		mOFN.lpstrDefExt = L"oxp";
 		mOFN.lpstrFilter = L"OXP Backup Files (*.oxp)\0*.oxp\0" L"\0";
 		break;
-// </FS:CR>
+	case FFSAVE_DAE:
+		if (filename.empty())
+		{
+			wcsncpy(mFilesW, L"untitled.dae", FILENAME_BUFFER_SIZE);
+		}
+		mOFN.lpstrDefExt = L"dae";
+		mOFN.lpstrFilter = L"Collada DAE Files (*.dae)\0*.dae\0" L"\0";
+		break;
 	default:
 		return FALSE;
 	}
-
  
 	mOFN.nMaxFile = SINGLE_FILENAME_BUFFER_SIZE;
 	mOFN.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST;

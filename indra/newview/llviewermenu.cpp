@@ -130,6 +130,8 @@
 #include "boost/unordered_map.hpp"
 
 #include "fsexport.h"
+#include "daeexport.h"
+
 using namespace LLAvatarAppearanceDefines;
 
 typedef LLPointer<LLViewerObject> LLViewerObjectPtr;
@@ -8444,16 +8446,6 @@ void show_topinfobar_context_menu(LLView* ctrl, S32 x, S32 y)
 	LLMenuGL::showPopup(ctrl, show_topbarinfo_context_menu, x, y);
 }
 
-// <FS:Techwolf Lupindo> export
-BOOL enable_export_object()
-{
-    // <FS:CR> FIRE-9682 - Temporarily disable export by setting (default off)
-	//return LLSelectMgr::getInstance()->selectGetAllValid();
-    bool allow_export = (LLSelectMgr::getInstance()->selectGetAllValid() && gSavedSettings.getBOOL("FSEnableObjectExports"));
-    return allow_export;
-    // </FS:CR>
-}
-
 class FSObjectExport : public view_listener_t
 {
 	bool handleEvent( const LLSD& userdata)
@@ -8462,7 +8454,15 @@ class FSObjectExport : public view_listener_t
 		return true;
 	}
 };
-// </FS:Techwolf Lupindo>
+
+class DAEExport : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		DAEExportUtil::export_selection();
+		return true;
+	}
+};
 
 void initialize_edit_menu()
 {
@@ -8962,8 +8962,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLEditableSelectedMono(), "EditableSelectedMono");
 	view_listener_t::addMenu(new LLToggleUIHints(), "ToggleUIHints");
 
-	// <FS:Techwolf Lupindo> export
 	view_listener_t::addMenu(new FSObjectExport(), "Object.Export");
-	enable.add("Object.EnableExport", boost::bind(&enable_export_object));
-	// </FS:Techwolf Lupindo>
+	view_listener_t::addMenu(new DAEExport(), "Object.ExportDAE");
+	enable.add("Object.EnableExport", boost::bind(&DAEExportUtil::enable_export_object));
 }

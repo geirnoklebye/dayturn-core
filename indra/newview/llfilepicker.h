@@ -109,9 +109,8 @@ public:
 		FFSAVE_PNG = 13,
 		FFSAVE_JPEG = 14,
 		FFSAVE_SCRIPT = 15,
-// <FS:CR> Export filter
-		FFSAVE_EXPORT = 17
-// </FS:CR>
+		FFSAVE_EXPORT = 17,
+		FFSAVE_DAE = 18
 	};
 
 	// open the dialog. This is a modal operation

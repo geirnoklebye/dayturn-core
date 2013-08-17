@@ -118,6 +118,7 @@ set(viewer_SOURCE_FILES
 	fslightshare.cpp
     groupchatlistener.cpp
     chatbar_as_cmdline.cpp	
+    daeexport.cpp
     llaccountingcostmanager.cpp
     llagent.cpp
     llagentaccess.cpp
@@ -719,6 +720,7 @@ set(viewer_HEADER_FILES
 	fslightshare.h
     groupchatlistener.h
 	chatbar_as_cmdline.h
+    daeexport.h
     llaccountingcostmanager.h
     llagent.h
     llagentaccess.h

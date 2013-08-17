@@ -195,14 +195,6 @@
         function="Object.EnableBuy" />
   </menu_item_call>
   <menu_item_call
-      label="Export"
-      name="Export">
-    <menu_item_call.on_click
-        function="Object.Export" />
-    <menu_item_call.on_enable
-        function="Object.EnableExport" />
-  </menu_item_call>
-  <menu_item_call
       enabled="false"
       label="Delete"
       name="Delete">
@@ -211,6 +203,26 @@
     <menu_item_call.on_enable
         function="Object.EnableDelete" />
   </menu_item_call>
+  <menu_item_separator />
+  <context_menu
+      label="Export"
+      name="Export">
+      <menu_item_call
+          label="OXP Format Backup"
+          name="OXP Format Backup">
+          <menu_item_call.on_click
+              function="Object.Export" />
+          <menu_item_call.on_enable
+              function="Object.EnableExport" />
+      </menu_item_call>
+      <menu_item_call
+          label="Collada DAE"
+          name="Collada DAE">
+          <menu_item_call.on_click
+              function="Object.ExportDAE" />
+          <menu_item_call.on_enable
+              function="Object.EnableExport" />
+      </menu_item_call>
   <menu_item_separator
        layout="topleft" />
   <menu_item_call
