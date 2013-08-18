@@ -661,9 +661,9 @@ void settings_setup_listeners()
 {
 //MK
 	gSavedSettings.getControl("RestrainedLoveDebug")->getSignal()->connect(boost::bind(&handleRestrainedLoveDebugChanged, _2));
-	gSavedSettings.getControl("RestrainedLoveOffsetAvatarX")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
-	gSavedSettings.getControl("RestrainedLoveOffsetAvatarY")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
-	gSavedSettings.getControl("RestrainedLoveOffsetAvatarZ")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarX")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarY")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarZ")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
 	gSavedSettings.getControl("RenderDeferredShowInvisiprims")->getSignal()->connect(boost::bind(&handleRenderDeferredShowInvisiprimsChanged, _2));
 //mk
 	gSavedSettings.getControl("FirstPersonAvatarVisible")->getSignal()->connect(boost::bind(&handleRenderAvatarMouselookChanged, _2));
