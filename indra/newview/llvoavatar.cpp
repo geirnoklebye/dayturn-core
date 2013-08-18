@@ -788,8 +788,9 @@ void LLVOAvatar::debugAvatarRezTime(std::string notification_name, std::string c
 					   << " : " << comment
 					   << llendl;
 
-	if (gSavedSettings.getBOOL("DebugAvatarRezTime"))
-	{
+	static LLCachedControl<bool> avatar_rez_time(gSavedSettings, "DebugAvatarRezTime");
+
+	if (avatar_rez_time) {
 		LLSD args;
 		args["EXISTENCE"] = llformat("%d",(U32)mDebugExistenceTimer.getElapsedTimeF32());
 		args["TIME"] = llformat("%d",(U32)mRuthDebugTimer.getElapsedTimeF32());
@@ -1955,12 +1956,9 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, LLWorld &world, const F64 &time)
 		return;
 	}	
 
-	// <FS:CR> Use LLCachedControl
 	LLCachedControl<bool>disable_all_render_types(gSavedSettings, "DisableAllRenderTypes");
 	if (!(gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_AVATAR))
-		//&& !(gSavedSettings.getBOOL("DisableAllRenderTypes")))
 		&& !(disable_all_render_types))
-	// </FS:CR>
 	{
 		return;
 	}
@@ -2054,8 +2052,9 @@ void LLVOAvatar::idleUpdateVoiceVisualizer(bool voice_enabled)
 	// Don't render the user's own voice visualizer when in mouselook, or when opening the mic is disabled.
 	if(isSelf())
 	{
-		if(gAgentCamera.cameraMouselook() || gSavedSettings.getBOOL("VoiceDisableMic"))
-		{
+		static LLCachedControl<bool> voice_disable_mic(gSavedSettings, "VoiceDisableMic");
+
+		if(gAgentCamera.cameraMouselook() || voice_disable_mic) {
 			render_visualizer = false;
 		}
 	}
@@ -2514,10 +2513,15 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	}
 	
 	const F32 time_visible = mTimeVisible.getElapsedTimeF32();
-	const F32 NAME_SHOW_TIME = gSavedSettings.getF32("RenderNameShowTime");	// seconds
-	const F32 FADE_DURATION = gSavedSettings.getF32("RenderNameFadeDuration"); // seconds
+
+	static LLCachedControl<F32> NAME_SHOW_TIME(gSavedSettings, "RenderNameShowTime");
+	static LLCachedControl<F32> FADE_DURATION(gSavedSettings, "RenderNameFadeDuration");
+	static LLCachedControl<bool> USE_CHAT_BUBBLES(gSavedSettings, "UseChatBubbles");
+	static LLCachedControl<bool> NAME_SHOW_SELF(gSavedSettings, "RenderNameShowSelf");
+	static LLCachedControl<S32> AVATAR_NAME_TAG_MODE(gSavedSettings, "AvatarNameTagMode");
+
 	BOOL visible_avatar = isVisible() || mNeedsAnimUpdate;
-	BOOL visible_chat = gSavedSettings.getBOOL("UseChatBubbles") && (mChats.size() || mTyping);
+	BOOL visible_chat = USE_CHAT_BUBBLES && (mChats.size() || mTyping);
 	BOOL render_name =	visible_chat ||
 		(visible_avatar &&
 		 ((sRenderName == RENDER_NAME_ALWAYS) ||
@@ -2528,8 +2532,7 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	{
 		render_name = render_name
 			&& !gAgentCamera.cameraMouselook()
-			&& (visible_chat || (gSavedSettings.getBOOL("RenderNameShowSelf") 
-								 && gSavedSettings.getS32("AvatarNameTagMode") ));
+			&& (visible_chat || (NAME_SHOW_SELF && AVATAR_NAME_TAG_MODE));
 	}
 
 	if ( !render_name )
@@ -3005,12 +3008,8 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 	// clear debug text
 	mDebugText.clear();
 
-	// <FS:CR> Use LLCachedControl
-	//if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
 	static LLCachedControl<bool> debug_avatar_appearance_message(gSavedSettings, "DebugAvatarAppearanceMessage");
-	if (debug_avatar_appearance_message)
-	// </FS:CR>
-	{
+	if (debug_avatar_appearance_message) {
 		S32 central_bake_version = -1;
 		if (getRegion())
 		{
@@ -3032,12 +3031,9 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		{
 			debug_line += llformat(" - cof: %d req: %d rcv:%d",
 								   curr_cof_version, last_request_cof_version, last_received_cof_version);
-			// <FS:CR> Use LLCachedControl
-			//if (gSavedSettings.getBOOL("DebugForceAppearanceRequestFailure"))
 			static LLCachedControl<bool> debug_force_appearance_request_failure(gSavedSettings, "DebugForceAppearanceRequestFailure");
-			if (debug_force_appearance_request_failure)
-			// </FS:CR>
-			{
+
+			if (debug_force_appearance_request_failure) {
 				debug_line += " FORCING ERRS";
 			}
 		}
@@ -3047,12 +3043,8 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		}
 		addDebugText(debug_line);
 	}
-	// <FS:CR> Use LLCachedControl
 	static LLCachedControl<bool> debug_avatar_composite_baked(gSavedSettings, "DebugAvatarCompositeBaked");
-	if (debug_avatar_composite_baked)
-	//if (gSavedSettings.getBOOL("DebugAvatarCompositeBaked"))
-	// </FS:CR>
-	{
+	if (debug_avatar_composite_baked) {
 		if (!mBakedTextureDebugText.empty())
 			addDebugText(mBakedTextureDebugText);
 	}
@@ -3282,12 +3274,9 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 			}
 			LLVector3 velDir = getVelocity();
 			velDir.normalize();
-			// <FS:CR> Use Cached Control
-			//if (!gSavedSettings.getBOOL("TurnAroundWhenWalkingBackwards") && (mSignaledAnimations.find(ANIM_AGENT_WALK) != mSignaledAnimations.end()))
+
 			static LLCachedControl<bool> walk_backwards(gSavedSettings, "TurnAroundWhenWalkingBackwards");
-			if (!walk_backwards && mSignaledAnimations.find(ANIM_AGENT_WALK) != mSignaledAnimations.end())
-			// </FS:CR>
-			{
+			if (!walk_backwards && mSignaledAnimations.find(ANIM_AGENT_WALK) != mSignaledAnimations.end()) {
 				F32 vpD = velDir * primDir;
 				if (vpD < -0.5f)
 				{
@@ -4750,8 +4739,9 @@ BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL 
 					//}
 					//else
 					{
-						LLUUID sound_id = LLUUID(gSavedSettings.getString("UISndTyping"));
-						gAudiop->triggerSound(sound_id, getID(), 1.0f, LLAudioEngine::AUDIO_TYPE_SFX, char_pos_global);
+						static LLCachedControl<std::string> sound_id(gSavedSettings, "UISndTyping");
+
+						gAudiop->triggerSound(LLUUID(sound_id), getID(), 1.0f, LLAudioEngine::AUDIO_TYPE_SFX, char_pos_global);
 					}
 				}
 			}
@@ -4812,7 +4802,7 @@ void LLVOAvatar::resetAnimations()
 // animations.
 LLUUID LLVOAvatar::remapMotionID(const LLUUID& id)
 {
-	BOOL use_new_walk_run = gSavedSettings.getBOOL("UseNewWalkRun");
+	static LLCachedControl<BOOL> use_new_walk_run(gSavedSettings, "UseNewWalkRun");
 	LLUUID result = id;
 
 	// start special case female walk for female avatars
@@ -6224,8 +6214,9 @@ BOOL LLVOAvatar::isFullyLoaded() const
 
 bool LLVOAvatar::isTooComplex() const
 {
-	if (gSavedSettings.getS32("RenderAvatarComplexityLimit") > 0 && mVisualComplexity >= gSavedSettings.getS32("RenderAvatarComplexityLimit"))
-	{
+	static LLCachedControl<S32> complexity_limit(gSavedSettings, "RenderAvatarComplexityLimit");
+
+	if (complexity_limit > 0 && mVisualComplexity >= complexity_limit) {
 		return true;
 	}
 
@@ -6245,8 +6236,8 @@ LLMotion* LLVOAvatar::findMotion(const LLUUID& id) const
 // colorized if using deferred rendering.
 void LLVOAvatar::debugColorizeSubMeshes(U32 i, const LLColor4& color)
 {
-	if (gSavedSettings.getBOOL("DebugAvatarCompositeBaked"))
-	{
+	static LLCachedControl<bool> composite_baked(gSavedSettings, "DebugAvatarCompositeBaked");
+	if (composite_baked) {
 		avatar_joint_mesh_list_t::iterator iter = mBakedTextureDatas[i].mJointMeshes.begin();
 		avatar_joint_mesh_list_t::iterator end  = mBakedTextureDatas[i].mJointMeshes.end();
 		for (; iter != end; ++iter)
@@ -6884,7 +6875,9 @@ void LLVOAvatar::parseAppearanceMessage(LLMessageSystem* mesgsys, LLAppearanceMe
 	
 	// Parse visual params, if any.
 	S32 num_blocks = mesgsys->getNumberOfBlocksFast(_PREHASH_VisualParam);
-	bool drop_visual_params_debug = gSavedSettings.getBOOL("BlockSomeAvatarAppearanceVisualParams") && (ll_rand(2) == 0); // pretend that ~12% of AvatarAppearance messages arrived without a VisualParam block, for testing
+	static LLCachedControl<bool> block_some_avatar_appearance_visual_params(gSavedSettings, "BlockSomeAvatarAppearanceVisualParams");
+
+	bool drop_visual_params_debug = block_some_avatar_appearance_visual_params && (ll_rand(2) == 0); // pretend that ~12% of AvatarAppearance messages arrived without a VisualParam block, for testing
 	if( num_blocks > 1 && !drop_visual_params_debug)
 	{
 		LL_DEBUGS("Avatar") << avString() << " handle visual params, num_blocks " << num_blocks << LL_ENDL;
@@ -6988,13 +6981,9 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 {
 	LL_DEBUGS("Avatar") << "starts" << llendl;
 	
-	// <FS:CR> Use LLCachedControl
-	//bool enable_verbose_dumps = gSavedSettings.getBOOL("DebugAvatarAppearanceMessage");
-	static LLCachedControl<bool> enable_verbose_dumps(gSavedSettings, "DebugAvatarAppearanceMessage");
-	// </FS:CR>
+	static LLCachedControl<bool> block_verbose_dumps(gSavedSettings, "BlockAvatarAppearanceMessages");
 	std::string dump_prefix = getFullname() + "_" + (isSelf()?"s":"o") + "_";
-	if (gSavedSettings.getBOOL("BlockAvatarAppearanceMessages"))
-	{
+	if (block_verbose_dumps) {
 		llwarns << "Blocking AvatarAppearance message" << llendl;
 		return;
 	}
@@ -7003,8 +6992,9 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 
 	LLAppearanceMessageContents contents;
 	parseAppearanceMessage(mesgsys, contents);
-	if (enable_verbose_dumps)
-	{
+
+	static LLCachedControl<bool> enable_verbose_dumps(gSavedSettings, "DebugAvatarAppearanceMessage");
+	if (enable_verbose_dumps) {
 		dumpAppearanceMsgParams(dump_prefix + "appearance_msg", contents);
 	}
 
