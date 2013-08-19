@@ -1204,15 +1204,11 @@ void LLViewerFetchedTexture::dump()
 // ONLY called from LLViewerFetchedTextureList
 void LLViewerFetchedTexture::destroyTexture() 
 {
-	// <FS:Ansariel> This was commented out as part of MAINT-775 and is a REALLY bad idea!
-	//               It will dump textures off memory once you turn away and you
-	//               will end up with gray textures that need to be fetched again.
-	//               Let's do this smarter and drop textures off memory soon before
+	if(LLImageGL::sGlobalTextureMemoryInBytes < sMaxDesiredTextureMemInBytes * 0.95f)//not ready to release unused memory.
+	{
+		return ;
+	}
 	//               we reach the desired max texture memory!
-	//if(LLImageGL::sGlobalTextureMemoryInBytes < sMaxDesiredTextureMemInBytes)//not ready to release unused memory.
-	//{
-	//	return ;
-	//}
 	static LLCachedControl<bool> fsDestroyGLTexturesImmediately(gSavedSettings, "FSDestroyGLTexturesImmediately");
 	static LLCachedControl<F32> fsDestroyGLTexturesThreshold(gSavedSettings, "FSDestroyGLTexturesThreshold");
 	if (!fsDestroyGLTexturesImmediately && LLImageGL::sGlobalTextureMemoryInBytes < sMaxDesiredTextureMemInBytes * fsDestroyGLTexturesThreshold)//not ready to release unused memory.
@@ -1307,7 +1303,12 @@ void LLViewerFetchedTexture::addToCreateTexture()
 							destroyRawImage();
 							return ;
 						}
-						mRawImage->scale(w >> i, h >> i) ;					
+
+						{
+							//make a duplicate in case somebody else is using this raw image
+							mRawImage = mRawImage->duplicate(); 
+							mRawImage->scale(w >> i, h >> i) ;					
+						}
 					}
 				}
 			}
@@ -1581,7 +1582,7 @@ F32 LLViewerFetchedTexture::calcDecodePriority()
 	else if (pixel_priority < 0.001f && !have_all_data)
 	{
 		// Not on screen but we might want some data
-		if (mBoostLevel > BOOST_HIGH)
+		if (mBoostLevel > BOOST_SELECTED)
 		{
 			// Always want high boosted images
 			priority = 1.f;
@@ -2749,7 +2750,11 @@ void LLViewerFetchedTexture::setCachedRawImage()
 				--i ;
 			}
 			
-			mRawImage->scale(w >> i, h >> i) ;
+			{
+				//make a duplicate in case somebody else is using this raw image
+				mRawImage = mRawImage->duplicate(); 
+				mRawImage->scale(w >> i, h >> i) ;
+			}
 		}
 		mCachedRawImage = mRawImage ;
 		mRawDiscardLevel += i ;

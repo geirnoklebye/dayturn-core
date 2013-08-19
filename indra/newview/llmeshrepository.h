@@ -485,7 +485,7 @@ public:
 
 	void startRequest() { ++mPendingUploads; }
 	void stopRequest() { --mPendingUploads; }
-		
+
 	bool finished() { return mFinished; }
 	virtual void run();
 	void preStart();

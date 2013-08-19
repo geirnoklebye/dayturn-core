@@ -109,7 +109,6 @@ LLViewerObjectList::LLViewerObjectList()
 	mNumNewObjects = 0;
 	mWasPaused = FALSE;
 	mNumDeadObjectUpdates = 0;
-	mNumUnknownKills = 0;
 	mNumUnknownUpdates = 0;
 }
 
