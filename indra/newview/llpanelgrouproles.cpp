@@ -832,6 +832,7 @@ void LLPanelGroupRolesSubTab::setGroupID(const LLUUID& id)
 	if(mRoleName) mRoleName->clear();
 	if(mRoleDescription) mRoleDescription->clear();
 	if(mRoleTitle) mRoleTitle->clear();
+	if(mRoleUUID) mRoleUUID->clear();
 
 	mHasRoleChange = FALSE;
 
@@ -1728,6 +1729,7 @@ LLPanelGroupRolesSubTab::LLPanelGroupRolesSubTab()
 	mRoleName(NULL),
 	mRoleTitle(NULL),
 	mRoleDescription(NULL),
+	mRoleUUID(NULL),
 	mMemberVisibleCheck(NULL),
 	mDeleteRoleButton(NULL),
 	mCreateRoleButton(NULL),
@@ -1760,11 +1762,12 @@ BOOL LLPanelGroupRolesSubTab::postBuildSubTab(LLView* root)
 	mRoleName = parent->getChild<LLLineEditor>("role_name", recurse);
 	mRoleTitle = parent->getChild<LLLineEditor>("role_title", recurse);
 	mRoleDescription = parent->getChild<LLTextEditor>("role_description", recurse);
+	mRoleUUID = parent->getChild<LLLineEditor>("role_uuid", recurse);
 
 	mMemberVisibleCheck = parent->getChild<LLCheckBoxCtrl>("role_visible_in_list", recurse);
 
 	if (!mRolesList || !mAssignedMembersList || !mAllowedActionsList
-		|| !mRoleName || !mRoleTitle || !mRoleDescription || !mMemberVisibleCheck)
+		|| !mRoleName || !mRoleTitle || !mRoleDescription || !mRoleUUID || !mMemberVisibleCheck)
 	{
 		llwarns << "ARG! element not found." << llendl;
 		return FALSE;
@@ -1821,6 +1824,7 @@ void LLPanelGroupRolesSubTab::activate()
 	mRoleName->clear();
 	mRoleDescription->clear();
 	mRoleTitle->clear();
+	mRoleUUID->clear();
 
 	setFooterEnabled(FALSE);
 
@@ -1982,6 +1986,7 @@ void LLPanelGroupRolesSubTab::update(LLGroupChange gc)
 			mRoleName->clear();
 			mRoleDescription->clear();
 			mRoleTitle->clear();
+			mRoleUUID->clear();
 			setFooterEnabled(FALSE);
 			mDeleteRoleButton->setEnabled(FALSE);
 		}
@@ -2048,6 +2053,7 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 		mRoleName->setText(rd.mRoleName);
 		mRoleTitle->setText(rd.mRoleTitle);
 		mRoleDescription->setText(rd.mRoleDescription);
+		mRoleUUID->setText(item->getUUID().asString());
 
 		mAllowedActionsList->setEnabled(gAgent.hasPowerInGroup(mGroupID,
 									   GP_ROLE_CHANGE_ACTIONS));
@@ -2065,6 +2071,7 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 				gAgent.hasPowerInGroup(mGroupID, GP_ROLE_PROPERTIES));
 		mRoleTitle->setEnabled(gAgent.hasPowerInGroup(mGroupID, GP_ROLE_PROPERTIES));
 		mRoleDescription->setEnabled(gAgent.hasPowerInGroup(mGroupID, GP_ROLE_PROPERTIES));
+		mRoleUUID->setEnabled(FALSE);
 		
 		if ( is_owner_role ) 
 			{
@@ -2094,6 +2101,7 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 		mRoleName->clear();
 		mRoleDescription->clear();
 		mRoleTitle->clear();
+		mRoleUUID->clear();
 		setFooterEnabled(FALSE);
 
 		can_delete = FALSE;
@@ -2344,6 +2352,10 @@ void LLPanelGroupRolesSubTab::handleCreateRole()
 	row["columns"][0]["value"] = rd.mRoleName;
 	mRolesList->addElement(row, ADD_BOTTOM, this);
 	mRolesList->selectByID(new_role_id);
+
+	if (mRoleUUID) {
+		mRoleUUID->setText(new_role_id.asString());
+	}
 
 	// put focus on name field and select its contents
 	if(mRoleName)

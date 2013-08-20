@@ -96,6 +96,7 @@ private:
 	LLTextBox			*mFounderName;
 	LLTextureCtrl		*mInsignia;
 	LLTextEditor		*mEditCharter;
+	LLLineEditor		*mGroupUUIDText;
 
 	LLNameListCtrl	*mListVisibleMembers;
 

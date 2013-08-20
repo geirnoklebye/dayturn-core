@@ -268,6 +268,7 @@ protected:
 
 	LLLineEditor* mRoleName;
 	LLLineEditor* mRoleTitle;
+	LLLineEditor* mRoleUUID;
 	LLTextEditor* mRoleDescription;
 
 	LLCheckBoxCtrl* mMemberVisibleCheck;

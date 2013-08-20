@@ -80,6 +80,7 @@ LLPanelGroupGeneral::LLPanelGroupGeneral()
 	mCtrlListGroup(NULL),
 	mActiveTitleLabel(NULL),
 	mComboActiveTitle(NULL),
+	mGroupUUIDText(NULL),
 	mAvatarNameCacheConnection()
 {
 
@@ -188,6 +189,11 @@ BOOL LLPanelGroupGeneral::postBuild()
 		mComboActiveTitle->setCommitCallback(onCommitAny, this);
 	}
 
+	mGroupUUIDText = getChild<LLLineEditor>("group_uuid_text", recurse);
+	if (mGroupUUIDText) {
+		mGroupUUIDText->setEnabled(FALSE);
+	}
+
 	mIncompleteMemberDataStr = getString("incomplete_member_data_str");
 
 	// If the group_id is null, then we are creating a new group
@@ -200,7 +206,7 @@ BOOL LLPanelGroupGeneral::postBuild()
 		mCtrlOpenEnrollment->setEnabled(TRUE);
 		mCtrlEnrollmentFee->setEnabled(TRUE);
 		mSpinEnrollmentFee->setEnabled(TRUE);
-
+		mGroupUUIDText->clear();
 	}
 
 	return LLPanelGroupTab::postBuild();
@@ -214,7 +220,6 @@ void LLPanelGroupGeneral::setupCtrls(LLPanel* panel_group)
 		mInsignia->setCommitCallback(onCommitAny, this);
 	}
 	mFounderName = getChild<LLTextBox>("founder_name");
-
 
 	mGroupNameEditor = panel_group->getChild<LLLineEditor>("group_name_editor");
 	mGroupNameEditor->setPrevalidate( LLTextValidate::validateASCII );
@@ -694,6 +699,11 @@ void LLPanelGroupGeneral::update(LLGroupChange gc)
 		}
 	}
 
+	if (mGroupUUIDText) {
+		mGroupUUIDText->setText(mGroupID.asString());
+		mGroupUUIDText->setEnabled(FALSE);
+	}
+
 	resetDirty();
 }
 
@@ -827,10 +837,8 @@ void LLPanelGroupGeneral::updateChanged()
 void LLPanelGroupGeneral::reset()
 {
 	mFounderName->setVisible(false);
-
 	
 	mCtrlReceiveNotices->set(false);
-	
 	
 	mCtrlListGroup->set(true);
 	
@@ -878,13 +886,14 @@ void LLPanelGroupGeneral::reset()
 		mListVisibleMembers->addElement(row);
 	}
 
-
 	{
 		mComboMature->setEnabled(true);
 		mComboMature->setVisible( !gAgent.isTeen() );
 		mComboMature->selectFirstItem();
 	}
 
+	mGroupUUIDText->clear();
+	mGroupUUIDText->setEnabled(FALSE);
 
 	resetDirty();
 }

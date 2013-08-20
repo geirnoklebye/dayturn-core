@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel
  label="General"
- height="604"
+ height="640"
  width="304"
  class="panel_group_general"
  name="general_tab">
@@ -264,6 +264,26 @@ Hover your mouse over the options for more help.
          tool_tip="Let people see this group in search results"
          top_pad="4"
          width="300" />
-
     </panel>
+    <text
+     type="string"
+     height="16"
+     layout="topleft"
+     follows="left|top"
+     left="10"
+     name="group_uuid_label"
+     width="300">
+       Group UUID:
+    </text>
+    <line_editor
+        type="string"
+        layout="topleft"
+        follows="left|top|right"
+        height="20"
+        top_pad="0"
+        left="10"
+        right="-10"
+        name="group_uuid_text"
+        width="300">
+    </line_editor>
 </panel>

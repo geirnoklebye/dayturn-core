@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel
- height="680"
+ height="730"
  label="Members &amp; Roles"
  layout="topleft"
  left="0"
@@ -34,7 +34,7 @@
         <panel
          border="false"
          follows="all"
-         height="303"
+         height="350"
          label="MEMBERS"
          layout="topleft"
          left="0"
@@ -117,7 +117,7 @@ clicking on their names.
         </panel>
         <panel
          border="false"
-         height="303"
+         height="350"
          label="ROLES"
          layout="topleft"
          left="0"
@@ -199,7 +199,7 @@ including the Everyone and Owner Roles.
              height="23"
              label="New Role"
              layout="topleft"
-             left="0"
+             left="5"
              name="role_create"
              width="120" />
             <button
@@ -213,7 +213,7 @@ including the Everyone and Owner Roles.
         </panel>
         <panel
          border="false"
-         height="303"
+         height="350"
          label="ABILITIES"
          layout="topleft"
          left="0"
@@ -253,7 +253,7 @@ things in this group. There&apos;s a broad variety of Abilities.
         <scroll_list
          column_padding="0"
          draw_stripes="true"
-         height="200"
+         height="280"
          follows="left|top|right"
          layout="topleft"
          left="0"
@@ -510,6 +510,28 @@ things in this group. There&apos;s a broad variety of Abilities.
              name="action"
              width="270" />
         </scroll_list>
+        <text
+         type="string"
+         height="16"
+         layout="topleft"
+         follows="left|top"
+         left="5"
+         name="role_uuid_label"
+         top_pad="10"
+         width="300">
+           Role UUID:
+        </text>
+        <line_editor
+         type="string"
+         layout="topleft"
+         follows="left|top|right"
+         height="20"
+         top_pad="0"
+         left="5"
+         right="-5"
+	 name="role_uuid"
+         width="300">
+        </line_editor>
     </panel>
    <panel
      height="424"
