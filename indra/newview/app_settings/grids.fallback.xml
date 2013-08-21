@@ -1,5 +1,37 @@
 <llsd>
     <map>
+	    <key>cc.opensimulator.org:8002</key>
+        <map>
+        <key>LastModified</key>
+            <date>2013-08-20T22:22:13.28Z</date>
+        <key>gatekeeper</key>
+            <string>cc.opensimulator.org:8002</string>
+        <key>gridname</key>
+            <string>2013 OpenSim Community Conference</string>
+        <key>gridnick</key>
+            <string>opensimcc</string>
+        <key>helperuri</key>
+            <string>http://cc.opensimulator.org/helper/</string>
+        <key>login_identifier_types</key>
+            <array>
+                <string>agent</string>
+                <string>account</string>
+            </array>
+        <key>loginpage</key>
+            <string>http://cc.opensimulator.org:8005/wifi/welcome.html</string>
+        <key>loginuri</key>
+            <array>
+                <string>http://cc.opensimulator.org:8002/</string>
+            </array>
+        <key>name</key>
+            <string>cc.opensimulator.org:8002</string>
+        <key>password</key>
+            <string>http://cc.opensimulator.org:8005/wifi/forgotpassword</string>
+        <key>register</key>
+            <string>http://cc.opensimulator.org:8005/wifi/user/account</string>
+        <key>slurl_base</key>
+            <string>hop://cc.opensimulator.org:8002/</string>
+        </map>
     <key>craft-world.org:8002</key>
         <map>
         <key>LastModified</key>
