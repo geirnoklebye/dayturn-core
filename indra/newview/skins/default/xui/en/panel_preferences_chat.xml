@@ -28,14 +28,23 @@
         name="play_typing_animation"
         width="330">
     </check_box>
-
+    <check_box
+        control_name="PlainTextChatHistory"
+        height="16"
+        initial_value="false"
+        label="Display plain text chat"
+        layout="topleft"
+        top_pad="2"
+        name="plain_test_chat_history"
+        width="330">
+    </check_box>
     <check_box
         enabled="false"
         height="16"
         label="Email me IMs when I'm offline"
         layout="topleft"
         name="send_im_to_email"
-        top_pad="6"
+        top_pad="2"
         width="330">
     </check_box>
 
@@ -45,7 +54,7 @@
         label="Only friends and groups can call or IM me"
         layout="topleft"
         name="voice_call_friends_only_check"
-        top_pad="6"
+        top_pad="2"
         width="350">     
     </check_box>
 
@@ -105,7 +114,8 @@
         height="12"
         name="notifications"
         left="0"
-        width="120">
+        width="120"
+        top_pad="13">
       Notifications
     </text>
     <text
