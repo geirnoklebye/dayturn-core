@@ -108,50 +108,55 @@ std::string LLDateUtil::ageFromDate(const LLDate& born_date, const LLDate& now)
 	// Try for age in round number of years
 	LLStringUtil::format_map_t args;
 
-	if (age_months > 0 || age_years > 0)
-	{
-		args["[AGEYEARS]"] =
-			LLTrans::getCountString(lang, "AgeYears", age_years);
-		args["[AGEMONTHS]"] =
-			LLTrans::getCountString(lang, "AgeMonths", age_months);
+	//
+	//	We want to display ages like the following:
+	//
+	//		2 years 2 months
+	//		2 years (implicitly 0 months)
+	//		11 months 2 weeks
+	//		11 months (implicitly 0 weeks)
+	//		1 week 3 days
+	//		1 week (implicitly 0 days)
+	//		5 days
+	//		joined today
+	//
+	if (age_years > 0) {
+		args["[AGEYEARS]"] = LLTrans::getCountString(lang, "AgeYears", age_years);
 
-		// We want to display times like:
-		// 2 year 2 months
-		// 2 years (implicitly 0 months)
-		// 11 months
-		if (age_years > 0)
-		{
-			if (age_months > 0)
-			{
-				return LLTrans::getString("YearsMonthsOld", args);
-			}
-			else
-			{
-				return LLTrans::getString("YearsOld", args);
-			}
+		if (age_months > 0) {
+			args["[AGEMONTHS]"] = LLTrans::getCountString(lang, "AgeMonths", age_months);
+			return LLTrans::getString("YearsMonthsOld", args);
 		}
-		else // age_years == 0
-		{
-			return LLTrans::getString("MonthsOld", args);
-		}
+		return LLTrans::getString("YearsOld", args);
 	}
-	// you're 0 months old, display in weeks or days
 
-	// Now for age in weeks
 	S32 age_weeks = age_days / 7;
+
+	if (age_months > 0) {
+		args["[AGEMONTHS]"] = LLTrans::getCountString(lang, "AgeMonths", age_months);
+
+		if (age_weeks > 0) {
+			args["[AGEWEEKS]"] = LLTrans::getCountString(lang, "AgeWeeks", age_weeks);
+			return LLTrans::getString("MonthsWeeksOld", args);
+		}
+		return LLTrans::getString("MonthsOld", args);
+	}
+
 	age_days = age_days % 7;
-	if (age_weeks > 0)
-	{
-		args["[AGEWEEKS]"] = 
-			LLTrans::getCountString(lang, "AgeWeeks", age_weeks);
+
+	if (age_weeks > 0) {
+		args["[AGEWEEKS]"] = LLTrans::getCountString(lang, "AgeWeeks", age_weeks);
+
+		if (age_days > 0) {
+			args["[AGEDAYS]"] = LLTrans::getCountString(lang, "AgeDays", age_days);
+			return LLTrans::getString("WeeksDaysOld", args);
+		}
 		return LLTrans::getString("WeeksOld", args);
 	}
 
-	// Down to days now
 	if (age_days > 0)
 	{
-		args["[AGEDAYS]"] =
-			LLTrans::getCountString(lang, "AgeDays", age_days);
+		args["[AGEDAYS]"] = LLTrans::getCountString(lang, "AgeDays", age_days);
 		return LLTrans::getString("DaysOld", args);
 	}
 

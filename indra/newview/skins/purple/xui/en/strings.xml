@@ -2209,6 +2209,8 @@ Drag folders to this area and click "Send to Marketplace" to list them for sale 
 
   <!-- Avatar age computation, see LLDateUtil::ageFromDate -->
   <string name="YearsMonthsOld">[AGEYEARS] [AGEMONTHS] old</string>
+  <string name="MonthsWeeksOld">[AGEMONTHS] [AGEWEEKS] old</string>
+  <string name="WeeksDaysOld">[AGEWEEKS] [AGEDAYS] old</string>
   <string name="YearsOld">[AGEYEARS] old</string>
   <string name="MonthsOld">[AGEMONTHS] old</string>
   <string name="WeeksOld">[AGEWEEKS] old</string>
