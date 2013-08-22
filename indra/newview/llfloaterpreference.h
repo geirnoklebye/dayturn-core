@@ -112,6 +112,8 @@ protected:
 	void onMiniMapChatRingChanged();
 	void onShowLookAtChanged();
 	void onShowPointAtChanged();
+	void onNameTagShowAgeChanged();
+	void onNameTagShowAgeLimitChanged();
 
 	// string differs from default after user changes.
 	void onDoNotDisturbResponseChanged();

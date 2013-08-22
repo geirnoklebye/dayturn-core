@@ -9793,6 +9793,28 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+    <key>NameTagShowAge</key>
+    <map>
+      <key>Comment</key>
+      <string>Show each avatar's age in their name tag</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>NameTagShowAgeLimit</key>
+    <map>
+      <key>Comment</key>
+      <string>Don't show the avatar's age in their name tag if they are older than this many days.  (0 = Always show each avatar's age when enabled)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>U32</string>
+      <key>Value</key>
+      <integer>28</integer>
+    </map>
     <key>NameTagShowGroupTitles</key>
     <map>
       <key>Comment</key>

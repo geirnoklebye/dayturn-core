@@ -505,11 +505,15 @@ BOOL LLFloaterPreference::postBuild()
 	gSavedSettings.getControl("MiniMapChatRing")->getSignal()->connect(boost::bind(&LLFloaterPreference::onMiniMapChatRingChanged, this));
 	gSavedSettings.getControl("ShowLookAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowLookAtChanged, this));
 	gSavedSettings.getControl("ShowPointAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowPointAtChanged, this));
+	gSavedSettings.getControl("NameTagShowAge")->getSignal()->connect(boost::bind(&LLFloaterPreference::onNameTagShowAgeChanged, this));
+	gSavedSettings.getControl("NameTagShowAgeLimit")->getSignal()->connect(boost::bind(&LLFloaterPreference::onNameTagShowAgeLimitChanged, this));
 
 	onStreamMetadataAnnounceChanged();
 	onMiniMapChatRingChanged();
 	onShowLookAtChanged();
 	onShowPointAtChanged();
+	onNameTagShowAgeChanged();
+	onNameTagShowAgeLimitChanged();
 
 	// set 'enable' property for 'Clear log...' button
 	changed();
@@ -562,6 +566,22 @@ void LLFloaterPreference::onShowPointAtChanged()
 
 	getChild<LLCheckBoxCtrl>("ShowPointAtNames")->setEnabled(enable);
 	getChild<LLCheckBoxCtrl>("ShowPointAtLimited")->setEnabled(enable);
+}
+
+void LLFloaterPreference::onNameTagShowAgeChanged()
+{
+	BOOL enable = gSavedSettings.getBOOL("NameTagShowAge");
+
+	getChild<LLSpinCtrl>("NameTagShowAgeLimit")->setEnabled(enable);
+	getChild<LLTextBox>("nametag_show_age_limit_label")->setEnabled(enable);
+	getChild<LLTextBox>("nametag_show_age_limit_note")->setEnabled(enable);
+
+	handleNameTagOptionChanged(LLSD());
+}
+
+void LLFloaterPreference::onNameTagShowAgeLimitChanged()
+{
+	handleNameTagOptionChanged(LLSD());
 }
 
 void LLFloaterPreference::updateDeleteTranscriptsButton()

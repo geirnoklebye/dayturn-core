@@ -44,6 +44,7 @@
 #include "llanimationstates.h"
 #include "llavatarnamecache.h"
 #include "llavatarpropertiesprocessor.h"
+#include "lldateutil.h"
 #include "llphysicsmotion.h"
 #include "llviewercontrol.h"
 #include "llcallingcard.h"		// IDEVO for LLAvatarTracker
@@ -607,6 +608,57 @@ private:
 	LLCharacter*		mCharacter;
 };
 
+//
+//	class FetchAvatarBirthdate
+//	--------------------------
+//	Pending request for avatar birthdate
+//
+class FetchAvatarBirthdate : public LLAvatarPropertiesObserver
+{
+public:
+	FetchAvatarBirthdate(const LLUUID &avatar_id, LLVOAvatar *requester) :
+		mAvatarID(avatar_id),
+		mRequester(requester)
+	{
+		LLAvatarPropertiesProcessor *proc = LLAvatarPropertiesProcessor::getInstance();
+
+		if (proc) {
+			//
+			//	request avatar data from the server and
+			//	register as an observer for the data
+			//
+			//	this will result in a call to the
+			//	processProperties() method
+			//
+			proc->addObserver(mAvatarID, this);
+			proc->sendAvatarPropertiesRequest(mAvatarID);
+		}
+	}
+
+	~FetchAvatarBirthdate()
+	{
+		//
+		//	remove our observer status
+		//
+		LLAvatarPropertiesProcessor::getInstance()->removeObserver(mAvatarID, this);
+	}
+
+	void processProperties(void *data, EAvatarProcessorType type)
+	{
+		if (type == APT_PROPERTIES) {
+			//
+			//	send the birthdate to the object that
+			//	requested it
+			//
+			mRequester->process_avatar_birthdate(((LLAvatarData *)data)->born_on);
+		}
+	}
+
+private:
+	LLUUID mAvatarID;
+	LLVOAvatar *mRequester;
+};
+
 /**
  **
  ** End LLVOAvatar Support classes
@@ -690,6 +742,8 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mNameFriend(false),
 	mNameAlpha(0.f),
 	mRenderGroupTitles(sRenderGroupTitles),
+	mAvatarBirthdateRequest(NULL),
+	mAvatarBirthdate(0.0f),
 	mNameCloud(false),
 	mFirstTEMessageReceived( FALSE ),
 	mFirstAppearanceMessageReceived( FALSE ),
@@ -816,6 +870,15 @@ LLVOAvatar::~LLVOAvatar()
 	logPendingPhases();
 
 	lldebugs << "LLVOAvatar Destructor (0x" << this << ") id:" << mID << llendl;
+
+	//
+	//	if we have a pending avatar properties request
+	//	then clear it down
+	//
+	if (mAvatarBirthdateRequest) {
+		delete mAvatarBirthdateRequest;
+		mAvatarBirthdateRequest = NULL;
+	}
 
 	std::for_each(mAttachmentPoints.begin(), mAttachmentPoints.end(), DeletePairedPointer());
 	mAttachmentPoints.clear();
@@ -2740,6 +2803,49 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			const LLFontGL* font = LLFontGL::getFontSansSerif();
 			std::string full_name = LLCacheName::buildFullName( firstname->getString(), lastname->getString() );
 			addNameTagLine(full_name, name_tag_color, LLFontGL::NORMAL, font);
+		}
+
+		//
+		//	show the avatar's age in the name tag (or not)
+		//
+		static LLUICachedControl<bool> show_age("NameTagShowAge");
+
+		if (show_age) {
+			//
+			//	check whether the birthday is available or if
+			//	it needs to be requested from the server
+			//
+			if (mAvatarBirthdate != 0.0f) {
+				//
+				//	check if the avatar's age is young
+				//	enough to be shown.  A zero age limit
+				//	means always show the age
+				//
+				static LLUICachedControl<U32> show_age_limit("NameTagShowAgeLimit");
+				LLDate date_now = LLDate::now();
+
+				if (!show_age_limit || date_now.secondsSinceEpoch() - ((show_age_limit + 1) * 86400) <= mAvatarBirthdate.secondsSinceEpoch()) {
+					addNameTagLine(
+						"(" + LLDateUtil::ageFromDate(mAvatarBirthdate, date_now) + ")",
+						name_tag_color * 0.75f,
+						LLFontGL::NORMAL,
+						LLFontGL::getFontSansSerifSmall()
+					);
+				}
+			}
+			else if (!mAvatarBirthdateRequest) {
+				//
+				//	we don't have the avatar's age and no
+				//	request is pending so send a request
+				//	to the server
+				//
+				//	when data is returned from the server
+				//	the process_avatar_birthdate() method
+				//	will be invoked to set mAvatarBirthdate
+				//	and force the name tag to be rebuilt
+				//
+				mAvatarBirthdateRequest = new FetchAvatarBirthdate(getID(), this);
+			}
 		}
 
 		mNameAway = is_away;
@@ -8054,5 +8160,19 @@ BOOL LLVOAvatar::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type,
 	return FALSE;
 }
 
+//
+//	process_avatar_birthdate()
+//	--------------------------
+//	callback method called by the FetchAvatarBirthdate class
+//
+//	sets the avatar's birthdate in response to our request and clears the
+//	name tag to force a rebuild
+//
+void LLVOAvatar::process_avatar_birthdate(const LLDate birthdate)
+{
+	mAvatarBirthdate = birthdate;
+	clearNameTag();
 
-
+	delete mAvatarBirthdateRequest;
+	mAvatarBirthdateRequest = NULL;
+}

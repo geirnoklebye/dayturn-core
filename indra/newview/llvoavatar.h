@@ -69,6 +69,8 @@ class LLVoiceVisualizer;
 class LLHUDNameTag;
 class LLHUDEffectSpiral;
 class LLTexGlobalColor;
+class FetchAvatarBirthdate;
+
 struct LLVOAvatarBoneInfo;
 struct LLVOAvatarChildJoint;
 //class LLViewerJoint;
@@ -851,6 +853,8 @@ private:
 public:
 	std::string		getFullname() const; // Returns "FirstName LastName"
 	std::string		avString() const; // Frequently used string in log messages "Avatar '<full name'"
+	void			process_avatar_birthdate(const LLDate birthdate);
+
 protected:
 	static void		getAnimLabels(LLDynamicArray<std::string>* labels);
 	static void		getAnimNames(LLDynamicArray<std::string>* names);	
@@ -865,6 +869,9 @@ private:
 	bool			mNameCloud;
 	F32				mNameAlpha;
 	BOOL      		mRenderGroupTitles;
+
+	FetchAvatarBirthdate	*mAvatarBirthdateRequest;
+	LLDate			mAvatarBirthdate;
 
 	//--------------------------------------------------------------------
 	// Display the name (then optionally fade it out)
