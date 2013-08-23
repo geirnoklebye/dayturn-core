@@ -8431,6 +8431,9 @@ void handle_rebake_textures(void*)
 	gAgentAvatarp->forceBakeAllTextures(slam_for_debug);
 	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
 	{
+//MK from HB
+		gAgentWearables.checkModifiableShape();
+//mk from HB
 		LLAppearanceMgr::instance().requestServerAppearanceUpdate();
 	}
 }

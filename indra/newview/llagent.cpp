@@ -989,6 +989,13 @@ void LLAgent::handleServerBakeRegionTransition(const LLUUID& region_id)
 {
 	llinfos << "called" << llendl;
 
+//MK from HB
+	// Make sure to use the proper method to account for the Z-Offset: as the
+	// value for the Hover shape visual parameter in SSB sims, or as a simple
+	// offset added to the size sent by sendAgentSetAppearance() in non-SSB
+	// sims (with the shape Hover reset to zero in that latter case).
+	gAgentWearables.setShapeAvatarOffset();
+//mk from HB
 
 	// Old-style appearance entering a server-bake region.
 	if (isAgentAvatarValid() &&

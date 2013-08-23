@@ -80,6 +80,7 @@
 #include <boost/algorithm/string.hpp>
 
 //MK
+#include "llagentwearables.h"
 #include "llstatusbar.h"
 //mk
 
@@ -109,7 +110,11 @@ static bool handleRestrainedLoveDebugChanged(const LLSD& newvalue)
 
 static bool handleRestrainedLoveOffsetAvatarChanged(const LLSD& newvalue)
 {
-	gAgent.sendAgentSetAppearance();
+	if (isAgentAvatarValid())
+	{
+		gAgentWearables.setShapeAvatarOffset();
+	}
+	//gAgent.sendAgentSetAppearance();
 	return true;
 }
 

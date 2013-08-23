@@ -3158,6 +3158,9 @@ public:
 	// Successful completion.
 	/* virtual */ void result(const LLSD& content)
 	{
+//MK from HB
+		gAgentWearables.checkModifiableShape();
+//mk from HB
 		LL_DEBUGS("Avatar") << "content: " << ll_pretty_print_sd(content) << LL_ENDL;
 		if (content["success"].asBoolean())
 		{

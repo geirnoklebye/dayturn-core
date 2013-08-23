@@ -159,6 +159,10 @@ LLAgentWearables::LLAgentWearables() :
 	LLWearableData(),
 	mWearablesLoaded(FALSE)
 ,	mCOFChangeInProgress(false)
+//MK from HB
+,	mHasModifiableShape(false)
+,	mLastWornShape(NULL)
+//mk from HB
 {
 }
 
@@ -2154,9 +2158,76 @@ void LLAgentWearables::editWearableIfRequested(const LLUUID& item_id)
 
 void LLAgentWearables::updateServer()
 {
+//MK from HB
+	LLViewerWearable* shape = getViewerWearable(LLWearableType::WT_SHAPE, 0);
+	if (shape && shape != mLastWornShape)
+	{
+		// If we just changed the shape, set its Hover parameter to match
+		// our current avatar Z offset setting (in SSB regions) or reset
+		// it (in non-SSB regions).
+		setShapeAvatarOffset(false);
+	}
+	else
+	{
+		checkModifiableShape();
+	}
+//mk from HB
 	sendAgentWearablesUpdate();
 	gAgent.sendAgentSetAppearance();
 }
+
+//MK from HB
+void LLAgentWearables::checkModifiableShape()
+{
+	mLastWornShape = getViewerWearable(LLWearableType::WT_SHAPE, 0);
+
+	LLViewerInventoryItem* item;
+	item = (LLViewerInventoryItem*)getWearableInventoryItem(LLWearableType::WT_SHAPE, 0);
+	if (item)
+	{
+		const LLPermissions& perm = item->getPermissions();
+		mHasModifiableShape = perm.allowModifyBy(gAgentID,
+												 gAgent.getGroupID());
+	}
+	else
+	{
+		mHasModifiableShape = false;
+	}
+}
+
+void LLAgentWearables::setShapeAvatarOffset(bool send_update)
+{
+	checkModifiableShape();
+
+	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
+	{
+		if (mHasModifiableShape && mLastWornShape)
+		{
+			F32 offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
+			if (mLastWornShape->getVisualParamWeight(AVATAR_HOVER) != offset)
+			{
+				mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset,
+													 FALSE);
+				saveWearable(LLWearableType::WT_SHAPE, 0);
+				//LLAppearanceMgr::instance().incrementCofVersionLegacy();
+			}
+		}
+	}
+	else
+	{
+		if (mHasModifiableShape && mLastWornShape &&
+			mLastWornShape->getVisualParamWeight(AVATAR_HOVER) != 0.f)
+		{
+			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, 0.f, FALSE);
+			saveWearable(LLWearableType::WT_SHAPE, 0);
+		}
+		if (send_update)
+		{
+			gAgent.sendAgentSetAppearance();
+		}
+	}
+}
+//mk from HB
 
 void LLAgentWearables::populateMyOutfitsFolder(void)
 {	
