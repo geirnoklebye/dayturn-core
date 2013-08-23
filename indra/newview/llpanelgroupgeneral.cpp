@@ -52,6 +52,7 @@
 #include "lltexturectrl.h"
 #include "lltrans.h"
 #include "llviewerwindow.h"
+#include "llwindow.h" 
 
 static LLRegisterPanelClassWrapper<LLPanelGroupGeneral> t_panel_group_general("panel_group_general");
 
@@ -81,6 +82,7 @@ LLPanelGroupGeneral::LLPanelGroupGeneral()
 	mActiveTitleLabel(NULL),
 	mComboActiveTitle(NULL),
 	mGroupUUIDText(NULL),
+	mBtnGroupUUIDCopy(NULL),
 	mAvatarNameCacheConnection()
 {
 
@@ -190,8 +192,10 @@ BOOL LLPanelGroupGeneral::postBuild()
 	}
 
 	mGroupUUIDText = getChild<LLLineEditor>("group_uuid_text", recurse);
-	if (mGroupUUIDText) {
-		mGroupUUIDText->setEnabled(FALSE);
+	mBtnGroupUUIDCopy = getChild<LLButton>("group_uuid_copy", recurse);
+	if (mBtnGroupUUIDCopy) {
+		mBtnGroupUUIDCopy->setEnabled(FALSE);
+		mBtnGroupUUIDCopy->setClickedCallback(onCopyGroupUUID, this);
 	}
 
 	mIncompleteMemberDataStr = getString("incomplete_member_data_str");
@@ -280,6 +284,14 @@ void LLPanelGroupGeneral::onCommitEnrollment(LLUICtrl* ctrl, void* data)
 		self->mSpinEnrollmentFee->setEnabled(FALSE);
 		self->mSpinEnrollmentFee->set(0);
 	}
+}
+
+// static
+void LLPanelGroupGeneral::onCopyGroupUUID(void *data)
+{
+	LLPanelGroupGeneral *self = static_cast<LLPanelGroupGeneral *>(data);
+
+	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(self->mGroupUUIDText->getText()));
 }
 
 // static
@@ -701,7 +713,7 @@ void LLPanelGroupGeneral::update(LLGroupChange gc)
 
 	if (mGroupUUIDText) {
 		mGroupUUIDText->setText(mGroupID.asString());
-		mGroupUUIDText->setEnabled(FALSE);
+		mBtnGroupUUIDCopy->setEnabled(TRUE);
 	}
 
 	resetDirty();
@@ -893,7 +905,7 @@ void LLPanelGroupGeneral::reset()
 	}
 
 	mGroupUUIDText->clear();
-	mGroupUUIDText->setEnabled(FALSE);
+	mBtnGroupUUIDCopy->setEnabled(FALSE);
 
 	resetDirty();
 }

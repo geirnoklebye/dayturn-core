@@ -38,6 +38,7 @@ class LLPanelGroupActionsSubTab;
 class LLScrollListCtrl;
 class LLScrollListItem;
 class LLTextEditor;
+class LLButton;
 
 // Forward declare for friend usage.
 //virtual BOOL LLPanelGroupSubTab::postBuildSubTab(LLView*);
@@ -255,6 +256,8 @@ public:
 	static void onDeleteRole(void*);
 	void handleDeleteRole();
 
+	static void onCopyRoleUUID(void *data);
+
 	void saveRoleChanges(bool select_saved_role);
 
 	virtual void setGroupID(const LLUUID& id);
@@ -269,6 +272,7 @@ protected:
 	LLLineEditor* mRoleName;
 	LLLineEditor* mRoleTitle;
 	LLLineEditor* mRoleUUID;
+	LLButton *mBtnRoleUUIDCopy;
 	LLTextEditor* mRoleDescription;
 
 	LLCheckBoxCtrl* mMemberVisibleCheck;

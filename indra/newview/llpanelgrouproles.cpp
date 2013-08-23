@@ -50,6 +50,7 @@
 #include "lltrans.h"
 #include "llviewertexturelist.h"
 #include "llviewerwindow.h"
+#include "llwindow.h" 
 #include "llfocusmgr.h"
 #include "llviewercontrol.h"
 
@@ -833,6 +834,7 @@ void LLPanelGroupRolesSubTab::setGroupID(const LLUUID& id)
 	if(mRoleDescription) mRoleDescription->clear();
 	if(mRoleTitle) mRoleTitle->clear();
 	if(mRoleUUID) mRoleUUID->clear();
+	if(mBtnRoleUUIDCopy) mBtnRoleUUIDCopy->setEnabled(FALSE);
 
 	mHasRoleChange = FALSE;
 
@@ -1730,6 +1732,7 @@ LLPanelGroupRolesSubTab::LLPanelGroupRolesSubTab()
 	mRoleTitle(NULL),
 	mRoleDescription(NULL),
 	mRoleUUID(NULL),
+	mBtnRoleUUIDCopy(NULL),
 	mMemberVisibleCheck(NULL),
 	mDeleteRoleButton(NULL),
 	mCreateRoleButton(NULL),
@@ -1763,11 +1766,16 @@ BOOL LLPanelGroupRolesSubTab::postBuildSubTab(LLView* root)
 	mRoleTitle = parent->getChild<LLLineEditor>("role_title", recurse);
 	mRoleDescription = parent->getChild<LLTextEditor>("role_description", recurse);
 	mRoleUUID = parent->getChild<LLLineEditor>("role_uuid", recurse);
+	mBtnRoleUUIDCopy = parent->getChild<LLButton>("role_uuid_copy", recurse);
+	if (mBtnRoleUUIDCopy) {
+		mBtnRoleUUIDCopy->setEnabled(FALSE);
+		mBtnRoleUUIDCopy->setClickedCallback(onCopyRoleUUID, this);
+	}
 
 	mMemberVisibleCheck = parent->getChild<LLCheckBoxCtrl>("role_visible_in_list", recurse);
 
 	if (!mRolesList || !mAssignedMembersList || !mAllowedActionsList
-		|| !mRoleName || !mRoleTitle || !mRoleDescription || !mRoleUUID || !mMemberVisibleCheck)
+		|| !mRoleName || !mRoleTitle || !mRoleDescription || !mRoleUUID || !mBtnRoleUUIDCopy || !mMemberVisibleCheck)
 	{
 		llwarns << "ARG! element not found." << llendl;
 		return FALSE;
@@ -1825,6 +1833,7 @@ void LLPanelGroupRolesSubTab::activate()
 	mRoleDescription->clear();
 	mRoleTitle->clear();
 	mRoleUUID->clear();
+	mBtnRoleUUIDCopy->setEnabled(FALSE);
 
 	setFooterEnabled(FALSE);
 
@@ -1988,6 +1997,7 @@ void LLPanelGroupRolesSubTab::update(LLGroupChange gc)
 			mRoleTitle->clear();
 			mRoleUUID->clear();
 			setFooterEnabled(FALSE);
+			mBtnRoleUUIDCopy->setEnabled(FALSE);
 			mDeleteRoleButton->setEnabled(FALSE);
 		}
 	}
@@ -2054,6 +2064,8 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 		mRoleTitle->setText(rd.mRoleTitle);
 		mRoleDescription->setText(rd.mRoleDescription);
 		mRoleUUID->setText(item->getUUID().asString());
+		mRoleUUID->setEnabled(FALSE);
+		mBtnRoleUUIDCopy->setEnabled(TRUE);
 
 		mAllowedActionsList->setEnabled(gAgent.hasPowerInGroup(mGroupID,
 									   GP_ROLE_CHANGE_ACTIONS));
@@ -2071,7 +2083,6 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 				gAgent.hasPowerInGroup(mGroupID, GP_ROLE_PROPERTIES));
 		mRoleTitle->setEnabled(gAgent.hasPowerInGroup(mGroupID, GP_ROLE_PROPERTIES));
 		mRoleDescription->setEnabled(gAgent.hasPowerInGroup(mGroupID, GP_ROLE_PROPERTIES));
-		mRoleUUID->setEnabled(FALSE);
 		
 		if ( is_owner_role ) 
 			{
@@ -2102,6 +2113,7 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 		mRoleDescription->clear();
 		mRoleTitle->clear();
 		mRoleUUID->clear();
+		mBtnRoleUUIDCopy->setEnabled(FALSE);
 		setFooterEnabled(FALSE);
 
 		can_delete = FALSE;
@@ -2355,6 +2367,8 @@ void LLPanelGroupRolesSubTab::handleCreateRole()
 
 	if (mRoleUUID) {
 		mRoleUUID->setText(new_role_id.asString());
+		mRoleUUID->setEnabled(FALSE);
+		mBtnRoleUUIDCopy->setEnabled(TRUE);
 	}
 
 	// put focus on name field and select its contents
@@ -2402,6 +2416,14 @@ void LLPanelGroupRolesSubTab::handleDeleteRole()
 	mRolesList->selectFirstItem();
 
 	notifyObservers();
+}
+
+// static
+void LLPanelGroupRolesSubTab::onCopyRoleUUID(void *data)
+{
+	LLPanelGroupRolesSubTab *self = static_cast<LLPanelGroupRolesSubTab *>(data);
+
+	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(self->mRoleUUID->getText()));
 }
 
 void LLPanelGroupRolesSubTab::saveRoleChanges(bool select_saved_role)

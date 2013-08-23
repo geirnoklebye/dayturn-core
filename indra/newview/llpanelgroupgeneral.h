@@ -76,6 +76,7 @@ private:
 	static void onClickInfo(void* userdata);
 	static void onReceiveNotices(LLUICtrl* ctrl, void* data);
 	static void openProfile(void* data);
+	static void onCopyGroupUUID(void *data);
 
 	S32	 sortMembersList(S32,const LLScrollListItem*,const LLScrollListItem*);
 	void addMember(LLGroupMemberData* member);
@@ -97,6 +98,7 @@ private:
 	LLTextureCtrl		*mInsignia;
 	LLTextEditor		*mEditCharter;
 	LLLineEditor		*mGroupUUIDText;
+	LLButton		*mBtnGroupUUIDCopy;
 
 	LLNameListCtrl	*mListVisibleMembers;
 

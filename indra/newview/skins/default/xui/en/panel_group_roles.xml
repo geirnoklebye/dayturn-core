@@ -511,28 +511,40 @@ things in this group. There&apos;s a broad variety of Abilities.
              width="270" />
         </scroll_list>
         <text
-         type="string"
-         height="16"
-         layout="topleft"
-         follows="left|top"
-         left="5"
-         name="role_uuid_label"
-         top_pad="10"
-         width="300">
-           Role UUID:
+           type="string"
+           name="role_uuid_label"
+           height="16"
+           layout="topleft"
+           follows="left|top"
+           left="5"
+           top_pad="10"
+           width="300">
+               Role UUID:
         </text>
         <line_editor
-         type="string"
-         layout="topleft"
-         follows="left|top|right"
-         height="20"
-         top_pad="0"
-         left="5"
-         right="-5"
-	 name="role_uuid"
-         width="300">
+            type="string"
+            name="role_uuid"
+            layout="topleft"
+            follows="left|top|right"
+            height="20"
+            top_pad="0"
+            left="5"
+            width="180"
+            enabled="false">
         </line_editor>
-    </panel>
+        <button
+            name="role_uuid_copy"
+            layout="topleft"
+            follows="right|top"
+            label="Copy Role UUID"
+            height="20"
+            width="110"
+            top_delta="0"
+            right="-4"
+            mouse_opaque="true"
+            enabled="false"
+            tool_tip="Copy role UUID to the clipboard" />
+        </panel>
    <panel
      height="424"
      background_visible="false"
