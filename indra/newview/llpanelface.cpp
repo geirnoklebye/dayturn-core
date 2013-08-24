@@ -146,6 +146,10 @@ BOOL	LLPanelFace::postBuild()
 	childSetAction("copytextures",&LLPanelFace::onClickCopy,this);
 	childSetAction("pastetextures",&LLPanelFace::onClickPaste,this);
 
+	childSetAction("TexDuplicate", &LLPanelFace::onClickDuplicateDiffuse, this);
+	childSetAction("bumpyDuplicate", &LLPanelFace::onClickDuplicateNormal, this);
+	childSetAction("shinyDuplicate", &LLPanelFace::onClickDuplicateSpecular, this);
+
 	LLTextureCtrl*	mTextureCtrl;
 	LLTextureCtrl*	mShinyTextureCtrl;
 	LLTextureCtrl*	mBumpyTextureCtrl;
@@ -1082,6 +1086,10 @@ void LLPanelFace::updateUI()
 			getChildView("TexOffsetU")->setEnabled(editable);
 			getChildView("shinyOffsetU")->setEnabled(editable && specmap_id.notNull());
 			getChildView("bumpyOffsetU")->setEnabled(editable && normmap_id.notNull());
+
+			getChildView("TexDuplicate")->setEnabled(editable);
+			getChildView("shinyDuplicate")->setEnabled(editable && specmap_id.notNull());
+			getChildView("bumpyDuplicate")->setEnabled(editable && normmap_id.notNull());
 		}
 
 		{
@@ -1112,6 +1120,9 @@ void LLPanelFace::updateUI()
 			getChildView("TexOffsetV")->setEnabled(editable);
 			getChildView("shinyOffsetV")->setEnabled(editable && specmap_id.notNull());
 			getChildView("bumpyOffsetV")->setEnabled(editable && normmap_id.notNull());
+			getChildView("duplicate_diffuse")->setEnabled(editable);
+			getChildView("duplicate_specular")->setEnabled(editable && specmap_id.notNull());
+			getChildView("duplicate_normal")->setEnabled(editable && normmap_id.notNull());
 		}
 
 		// Texture rotation
@@ -1526,6 +1537,7 @@ void LLPanelFace::updateVisibility()
 	getChildView("TexRot")->setVisible(show_texture);
 	getChildView("TexOffsetU")->setVisible(show_texture);
 	getChildView("TexOffsetV")->setVisible(show_texture);
+	getChildView("TexDuplicate")->setVisible(show_texture);
 
 	// Specular map controls
 	getChildView("shinytexture control")->setVisible(show_shininess);
@@ -1546,6 +1558,7 @@ void LLPanelFace::updateVisibility()
 	getChildView("shinyRot")->setVisible(show_shininess);
 	getChildView("shinyOffsetU")->setVisible(show_shininess);
 	getChildView("shinyOffsetV")->setVisible(show_shininess);
+	getChildView("shinyDuplicate")->setVisible(show_shininess);
 
 	// Normal map controls
 	if (show_bumpiness)
@@ -1560,8 +1573,7 @@ void LLPanelFace::updateVisibility()
 	getChildView("bumpyRot")->setVisible(show_bumpiness);
 	getChildView("bumpyOffsetU")->setVisible(show_bumpiness);
 	getChildView("bumpyOffsetV")->setVisible(show_bumpiness);
-
-
+	getChildView("bumpyDuplicate")->setVisible(show_bumpiness);
 }
 
 // static
@@ -2269,6 +2281,224 @@ void LLPanelFace::onTextureSelectionChanged(LLInventoryItem* itemp)
 			LLNotificationsUtil::add("LivePreviewUnavailable");
 		}
 	}
+}
+
+// static
+void LLPanelFace::onClickDuplicateDiffuse(void *data)
+{
+	LLPanelFace *self = (LLPanelFace *)data;
+	llassert_always(self);
+
+	const BOOL have_normal_map = !self->getCurrentNormalMap().isNull();
+	const BOOL have_specular_map = !self->getCurrentSpecularMap().isNull();
+
+	//
+	//	duplicate diffuse map scale (U)
+	//
+	F32 value = self->getChild<LLSpinCtrl>("TexScaleU")->getValue().asReal();
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyScaleU", value);
+		LLSelectedTEMaterial::setNormalRepeatX(self, value);
+	}
+	if (have_specular_map) {
+		self->childSetValue("shinyScaleU", value);
+		LLSelectedTEMaterial::setSpecularRepeatX(self, value);
+	}
+
+	//
+	//	duplicate diffuse map scale (V)
+	//
+	value = self->getChild<LLSpinCtrl>("TexScaleV")->getValue().asReal();
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyScaleV", value);
+		LLSelectedTEMaterial::setNormalRepeatY(self, value);
+	}
+	if (have_specular_map) {
+		self->childSetValue("shinyScaleV", value);
+		LLSelectedTEMaterial::setSpecularRepeatY(self, value);
+	}
+
+	//
+	//	duplicate diffuse map rotation
+	//
+	value = self->getChild<LLSpinCtrl>("TexRot")->getValue().asReal();
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyRot", value);
+		LLSelectedTEMaterial::setNormalRotation(self, value * DEG_TO_RAD);
+	}
+	if (have_specular_map) {
+		self->childSetValue("shinyRot", value);
+		LLSelectedTEMaterial::setSpecularRotation(self, value * DEG_TO_RAD);
+	}
+
+	//
+	//	duplicate diffuse map offset (U)
+	//
+	value = self->getChild<LLSpinCtrl>("TexOffsetU")->getValue().asReal();
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyOffsetU", value);
+		LLSelectedTEMaterial::setNormalOffsetX(self, value);
+	}
+	if (have_specular_map) {
+		self->childSetValue("shinyOffsetU", value);
+		LLSelectedTEMaterial::setSpecularOffsetX(self, value);
+	}
+
+	//
+	//	duplicate diffuse map offset (V)
+	//
+	value = self->getChild<LLSpinCtrl>("TexOffsetV")->getValue().asReal();
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyOffsetV", value);
+		LLSelectedTEMaterial::setNormalOffsetY(self, value);
+	}
+	if (have_specular_map) {
+		self->childSetValue("shinyOffsetV", value);
+		LLSelectedTEMaterial::setSpecularOffsetY(self, value);
+	}
+}
+
+// static
+void LLPanelFace::onClickDuplicateNormal(void *data)
+{
+	LLPanelFace *self = (LLPanelFace *)data;
+	llassert_always(self);
+
+	const BOOL have_specular_map = !self->getCurrentSpecularMap().isNull();
+
+	//
+	//	duplicate normal map scale (U)
+	//
+	F32 value = self->getChild<LLSpinCtrl>("bumpyScaleU")->getValue().asReal();
+	self->childSetValue("TexScaleU", value);
+
+	if (have_specular_map) {
+		self->childSetValue("shinyScaleU", value);
+		LLSelectedTEMaterial::setSpecularRepeatX(self, value);
+	}
+
+	//
+	//	duplicate normal map scale (V)
+	//
+	value = self->getChild<LLSpinCtrl>("bumpyScaleV")->getValue().asReal();
+	self->childSetValue("TexScaleV", value);
+
+	if (have_specular_map) {
+		self->childSetValue("shinyScaleV", value);
+		LLSelectedTEMaterial::setSpecularRepeatY(self, value);
+	}
+
+	//
+	//	duplicate normal map rotation
+	//
+	value = self->getChild<LLSpinCtrl>("bumpyRot")->getValue().asReal();
+	self->childSetValue("TexRot", value);
+
+	if (have_specular_map) {
+		self->childSetValue("shinyRot", value);
+		LLSelectedTEMaterial::setSpecularRotation(self, value * DEG_TO_RAD);
+	}
+
+	//
+	//	duplicate normal map offset (U)
+	//
+	value = self->getChild<LLSpinCtrl>("bumpyOffsetU")->getValue().asReal();
+	self->childSetValue("TexOffsetU", value);
+
+	if (have_specular_map) {
+		self->childSetValue("shinyOffsetU", value);
+		LLSelectedTEMaterial::setSpecularOffsetX(self, value);
+	}
+
+	//
+	//	duplicate normal map offset (V)
+	//
+	value = self->getChild<LLSpinCtrl>("bumpyOffsetV")->getValue().asReal();
+	self->childSetValue("TexOffsetV", value);
+
+	if (have_specular_map) {
+		self->childSetValue("shinyOffsetV", value);
+		LLSelectedTEMaterial::setSpecularOffsetY(self, value);
+	}
+
+	//
+	//	send diffuse map info
+	//
+	self->sendTextureInfo();
+}
+
+// static
+void LLPanelFace::onClickDuplicateSpecular(void *data)
+{
+	LLPanelFace *self = (LLPanelFace *)data;
+	llassert_always(self);
+
+	const BOOL have_normal_map = !self->getCurrentNormalMap().isNull();
+
+	//
+	//	duplicate specular map scale (U)
+	//
+	F32 value = self->getChild<LLSpinCtrl>("shinyScaleU")->getValue().asReal();
+	self->childSetValue("TexScaleU", value);
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyScaleU", value);
+		LLSelectedTEMaterial::setNormalRepeatX(self, value);
+	}
+
+	//
+	//	duplicate specular map scale (V)
+	//
+	value = self->getChild<LLSpinCtrl>("shinyScaleV")->getValue().asReal();
+	self->childSetValue("TexScaleV", value);
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyScaleV", value);
+		LLSelectedTEMaterial::setNormalRepeatY(self, value);
+	}
+
+	//
+	//	duplicate specular map rotation
+	//
+	value = self->getChild<LLSpinCtrl>("shinyRot")->getValue().asReal();
+	self->childSetValue("TexRot", value);
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyRot", value);
+		LLSelectedTEMaterial::setNormalRotation(self, value * DEG_TO_RAD);
+	}
+
+	//
+	//	duplicate specular map offset (U)
+	//
+	value = self->getChild<LLSpinCtrl>("shinyOffsetU")->getValue().asReal();
+	self->childSetValue("TexOffsetU", value);
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyOffsetU", value);
+		LLSelectedTEMaterial::setNormalOffsetX(self, value);
+	}
+
+	//
+	//	duplicate specular map offset (V)
+	//
+	value = self->getChild<LLSpinCtrl>("shinyOffsetV")->getValue().asReal();
+	self->childSetValue("TexOffsetV", value);
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyOffsetV", value);
+		LLSelectedTEMaterial::setNormalOffsetY(self, value);
+	}
+
+	//
+	//	send diffuse map info
+	//
+	self->sendTextureInfo();
 }
 
 bool LLPanelFace::isIdenticalPlanarTexgen()

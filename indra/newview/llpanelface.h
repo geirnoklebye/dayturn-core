@@ -181,6 +181,10 @@ protected:
 	static void		onClickCopy(void*);
 	static void		onClickPaste(void*);
 
+	static void 		onClickDuplicateDiffuse(void *data);
+	static void 		onClickDuplicateNormal(void *data);
+	static void 		onClickDuplicateSpecular(void *data);
+
 private:
 
 	bool		isAlpha() { return mIsAlpha; }

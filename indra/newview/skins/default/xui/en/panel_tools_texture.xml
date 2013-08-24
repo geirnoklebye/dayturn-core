@@ -519,14 +519,14 @@
              left="10"
              name="tex gen"
              text_readonly_color="LabelDisabledColor"
-             top_pad="60"
+             top_pad="48"
              width="140">
                 Mapping
             </text>
             <combo_box
              height="23"
              layout="topleft"
-             left_pad="0"
+             left_pad="3"
              name="combobox texgen"
              top_pad="-13"
              width="125">
@@ -550,7 +550,7 @@
              min_val="-100"
              max_val="100"
              name="TexScaleU"
-             top_pad="5"
+             top_pad="4"
              width="265" />
             <spinner
              follows="left|top"
@@ -614,6 +614,16 @@
              min_val="-1"
              name="TexOffsetV"
              width="265" />
+            <button
+             layout="topleft"
+             follows="top|left|right"
+             label="Duplicate Values"
+             name="TexDuplicate"
+             tool_tip="Copy these diffuse map scale, rotation and offset values to the normal and specular maps"
+             height="20"
+             right="-17"
+             top_pad="7"
+             width="110" />
             <spinner
              follows="left|top"
              height="19"
@@ -625,7 +635,7 @@
              min_val="-100"
              max_val="100"
              name="bumpyScaleU"
-             top_delta="-115"
+             top_delta="-141"
              width="265" />
             <spinner
              follows="left|top"
@@ -677,6 +687,16 @@
              min_val="-1"
              name="bumpyOffsetV"
              width="265" />
+            <button
+             layout="topleft"
+             follows="top|left|right"
+             label="Duplicate Values"
+             name="bumpyDuplicate"
+             tool_tip="Copy these normal map scale, rotation and offset values to the diffuse and specular maps"
+             height="20"
+             right="-17"
+             top_pad="7"
+             width="110" />
             <spinner
              follows="left|top"
              height="19"
@@ -688,7 +708,7 @@
              min_val="-100"
              max_val="100"
              name="shinyScaleU"
-             top_delta="-115"
+             top_delta="-141"
              width="265" />
             <spinner
              follows="left|top"
@@ -740,6 +760,16 @@
              min_val="-1"
              name="shinyOffsetV"
              width="265" />
+            <button
+             layout="topleft"
+             follows="top|left|right"
+             label="Duplicate Values"
+             name="shinyDuplicate"
+             tool_tip="Copy these specular map scale, rotation and offset values to the diffuse and normal maps"
+             height="20"
+             right="-17"
+             top_pad="7"
+             width="110" />
             <check_box
              follows="top|left"
              height="16"
@@ -749,7 +779,7 @@
              left="7"
              name="checkbox planar align"
              tool_tip="Align textures on all selected faces with the last selected face. Requires Planar texture mapping."
-             top_delta="16"
+             top_delta="5"
              width="260" />
             <web_browser
              visible="false"
