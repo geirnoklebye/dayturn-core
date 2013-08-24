@@ -195,7 +195,7 @@ static std::string getStringAfterToken(const std::string str, const std::string 
 //
 LLUrlEntryHTTP::LLUrlEntryHTTP()
 {
-	mPattern = boost::regex("https?://([-\\w\\.]+)+(:\\d+)?(:\\w+)?(@\\d+)?(@\\w+)?/?\\S*",
+	mPattern = boost::regex("https?://([\\w.-]+)+(:\\d+)?(:\\w+)?(@\\d+)?(@\\w+)?(/[^\\s?]*(\\?[^\\s?]+)?)?",
 							boost::regex::perl|boost::regex::icase);
 	mMenuName = "menu_url_http.xml";
 	mTooltip = LLTrans::getString("TooltipHttpUrl");
