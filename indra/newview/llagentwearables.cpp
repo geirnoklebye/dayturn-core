@@ -2206,10 +2206,12 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 			F32 offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
 			if (mLastWornShape->getVisualParamWeight(AVATAR_HOVER) != offset)
 			{
-				mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset,
-													 FALSE);
-				saveWearable(LLWearableType::WT_SHAPE, 0);
-				//LLAppearanceMgr::instance().incrementCofVersionLegacy();
+				mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset, FALSE);
+
+				// We've updated the Hover value locally, now we must update the server
+				// But we don't want to hammer the sim with requests, so we're just going to
+				// wait for some time after the last change before triggering the update.
+				RRInterface::sLastAvatarZOffsetCommit = gFrameTimeSeconds;
 			}
 		}
 	}
@@ -2228,6 +2230,40 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 	}
 }
 //mk from HB
+
+//MK
+void LLAgentWearables::forceUpdateShape (void)
+{
+	saveWearable(LLWearableType::WT_SHAPE, 0, FALSE);
+
+	// HACK : Force an update server-side by removing the link to the shape, then adding a new one
+	LLViewerWearable* shape = getViewerWearable(LLWearableType::WT_SHAPE, 0);
+
+	LLUUID uuid = shape->getItemID();
+	LLViewerInventoryItem* item = gInventory.getItem (uuid);
+
+	LLInventoryModel::cat_array_t cat_array;
+	LLInventoryModel::item_array_t item_array;
+	gInventory.collectDescendents(LLAppearanceMgr::instance().getCOF(),
+									cat_array,
+									item_array,
+									LLInventoryModel::EXCLUDE_TRASH);
+	for (S32 i=0; i<item_array.count(); i++)
+	{
+		const LLInventoryItem* item = item_array.get(i).get();
+		if (item->getIsLinkType() && item->getLinkedUUID() == uuid)
+		{
+			gInventory.purgeObject(item->getUUID());
+			break;
+		}
+	}
+
+	// Now create a new link to the shape
+	LLAppearanceMgr::instance().addCOFItemLink (item);
+
+	//LLAppearanceMgr::instance().incrementCofVersion();
+}
+//mk
 
 void LLAgentWearables::populateMyOutfitsFolder(void)
 {	

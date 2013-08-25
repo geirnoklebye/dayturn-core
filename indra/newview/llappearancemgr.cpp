@@ -3452,7 +3452,10 @@ void LLAppearanceMgr::incrementCofVersion(LLHTTPClient::ResponderPtr responder_p
 		return;
 	}
 
-	std::string url = gAgent.getRegion()->getCapability("IncrementCofVersion");
+//MK
+////	std::string url = gAgent.getRegion()->getCapability("IncrementCofVersion");
+	std::string url = gAgent.getRegion()->getCapability("IncrementCOFVersion");
+//mk
 	if (url.empty())
 	{
 		llwarns << "No cap for IncrementCofVersion." << llendl;

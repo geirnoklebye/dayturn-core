@@ -26,8 +26,8 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2080503"
-#define RR_VERSION "2.08.05.03"
+#define RR_VERSION_NUM "2080504"
+#define RR_VERSION "2.08.05.04"
 #define RR_SLV_VERSION "3.6.3.28997"
 
 #define RR_PREFIX "@"
@@ -280,6 +280,7 @@ public:
 	static std::string sRecvimMessage; // message to replace an incoming IM, when under recvim
 	static std::string sSendimMessage; // message to replace an outgoing IM, when under sendim
 	static std::string sBlacklist; // comma-separated list of RLV commands, add "%f" after a token to indicate it is the "=force" variant
+	static F32 sLastAvatarZOffsetCommit; // timestamp of the last change of RestrainedLoveOffsetAvatarZ
 
 	// Allowed debug settings (initialized in the ctor)
 	std::string mAllowedU32;

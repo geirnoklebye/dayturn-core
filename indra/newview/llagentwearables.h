@@ -220,6 +220,10 @@ public:
 	void		setShapeAvatarOffset(bool send_update = true);
 //mk from HB
 
+//MK
+	void		forceUpdateShape (void);
+//mk
+
 	BOOL			itemUpdatePending(const LLUUID& item_id) const;
 	U32				itemUpdatePendingCount() const;
 

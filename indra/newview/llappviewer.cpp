@@ -356,6 +356,10 @@ static std::string gLaunchFileOnQuit;
 // Used on Win32 for other apps to identify our window (eg, win_setup)
 const char* const VIEWER_WINDOW_CLASSNAME = "Second Life";
 
+//MK
+const F32 Z_OFFSET_THROTTLE_DELAY = 1.f;	// in seconds
+//mk
+
 //-- LLDeferredTaskList ------------------------------------------------------
 
 /**
@@ -1417,6 +1421,17 @@ bool LLAppViewer::mainLoop()
 								gAgent.mRRInterface.mReattaching = TRUE;
 								gAgent.mRRInterface.attachObjectByUUID (tmp_uuid, tmp_attachpt_nb);
 							}
+						}
+					}
+
+					// Let's look at how much time has passed since the last chage to the avatar Z offset
+					// and trigger an update to the shape if enough time has passed
+					if (RRInterface::sLastAvatarZOffsetCommit > 0.f)
+					{
+						if (gFrameTimeSeconds - RRInterface::sLastAvatarZOffsetCommit > Z_OFFSET_THROTTLE_DELAY)
+						{
+							RRInterface::sLastAvatarZOffsetCommit = 0.f;
+							gAgentWearables.forceUpdateShape ();
 						}
 					}
 				}

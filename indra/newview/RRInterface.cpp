@@ -83,6 +83,7 @@ BOOL RRInterface::sCanOoc = TRUE;
 std::string RRInterface::sRecvimMessage = "The Resident you messaged is prevented from reading your instant messages at the moment, please try again later.";
 std::string RRInterface::sSendimMessage = "*** IM blocked by sender's viewer";
 std::string RRInterface::sBlacklist = "";
+F32 RRInterface::sLastAvatarZOffsetCommit = 0.f;
 
 
 #if !defined(max)
@@ -478,6 +479,8 @@ RRInterface::RRInterface():
 	mJustDetached.attachpt = "";
 	mJustReattached.uuid.setNull();
 	mJustReattached.attachpt = "";
+
+	sLastAvatarZOffsetCommit = 0.f;
 
 	// Calling gSavedSettings here crashes the viewer when compiled with VS2005.
 	// OK under Linux. Moved this initialization to llstartup.cpp as a consequence.
