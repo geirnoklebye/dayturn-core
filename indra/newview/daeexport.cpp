@@ -90,25 +90,11 @@ namespace DAEExportUtil
 	bool can_export_node(LLSelectNode *node)
 	{
 		LLViewerObject *object = node->getObject();
-		bool exportable = false;
 
-		if ((LLGridManager::getInstance()->isInSecondLife())
-			&& object->permYouOwner()
-			&& gAgentID == node->mPermissions->getCreator()
-		) {
-			exportable = true;
+		if (object->permYouOwner() && node->mPermissions->getCreator() == gAgentID) {
+			return true;
 		}
-#if OPENSIM
-		if (LLGridManager::getInstance()->isInOpenSim()
-			&& object->permYouOwner()
-			&& object->permModify()
-			&& object->permCopy()
-			&& object->permTransfer()
-		) {
-			exportable = true;
-		}
-#endif
-		return exportable;
+		return false;
 	}
 
 	//
