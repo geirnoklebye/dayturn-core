@@ -1087,7 +1087,7 @@ void LLPanelFace::updateUI()
 			getChildView("shinyOffsetU")->setEnabled(editable && specmap_id.notNull());
 			getChildView("bumpyOffsetU")->setEnabled(editable && normmap_id.notNull());
 
-			getChildView("TexDuplicate")->setEnabled(editable);
+			getChildView("TexDuplicate")->setEnabled(editable && (normmap_id.notNull() || specmap_id.notNull()));
 			getChildView("shinyDuplicate")->setEnabled(editable && specmap_id.notNull());
 			getChildView("bumpyDuplicate")->setEnabled(editable && normmap_id.notNull());
 		}
@@ -2289,8 +2289,8 @@ void LLPanelFace::onClickDuplicateDiffuse(void *data)
 	LLPanelFace *self = (LLPanelFace *)data;
 	llassert_always(self);
 
-	const BOOL have_normal_map = !self->getCurrentNormalMap().isNull();
-	const BOOL have_specular_map = !self->getCurrentSpecularMap().isNull();
+	const BOOL have_normal_map = self->getCurrentNormalMap().notNull();
+	const BOOL have_specular_map = self->getCurrentSpecularMap().notNull();
 
 	//
 	//	duplicate diffuse map scale (U)
@@ -2369,7 +2369,7 @@ void LLPanelFace::onClickDuplicateNormal(void *data)
 	LLPanelFace *self = (LLPanelFace *)data;
 	llassert_always(self);
 
-	const BOOL have_specular_map = !self->getCurrentSpecularMap().isNull();
+	const BOOL have_specular_map = self->getCurrentSpecularMap().notNull();
 
 	//
 	//	duplicate normal map scale (U)
@@ -2438,7 +2438,7 @@ void LLPanelFace::onClickDuplicateSpecular(void *data)
 	LLPanelFace *self = (LLPanelFace *)data;
 	llassert_always(self);
 
-	const BOOL have_normal_map = !self->getCurrentNormalMap().isNull();
+	const BOOL have_normal_map = self->getCurrentNormalMap().notNull();
 
 	//
 	//	duplicate specular map scale (U)
