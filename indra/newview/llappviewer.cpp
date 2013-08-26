@@ -1430,7 +1430,7 @@ bool LLAppViewer::mainLoop()
 					{
 						if (gFrameTimeSeconds - RRInterface::sLastAvatarZOffsetCommit > Z_OFFSET_THROTTLE_DELAY)
 						{
-							RRInterface::sLastAvatarZOffsetCommit = 0.f;
+							RRInterface::sLastAvatarZOffsetCommit = -1000.f;
 							gAgentWearables.forceUpdateShape ();
 						}
 					}

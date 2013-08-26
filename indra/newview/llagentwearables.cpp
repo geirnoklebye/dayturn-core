@@ -58,6 +58,10 @@ BOOL LLAgentWearables::mInitialWearablesUpdateReceived = FALSE;
 
 using namespace LLAvatarAppearanceDefines;
 
+//MK
+const F32 OFFSET_FACTOR = 0.66f; // This factor is arbitrary and is supposed to align the baked avatar Hover setting with the offset we wanted to apply in the first place.
+//mk
+
 ///////////////////////////////////////////////////////////////////////////////
 
 // Callback to wear and start editing an item that has just been created.
@@ -162,6 +166,7 @@ LLAgentWearables::LLAgentWearables() :
 //MK from HB
 ,	mHasModifiableShape(false)
 ,	mLastWornShape(NULL)
+,	mSavedOffset(0.0f)
 //mk from HB
 {
 }
@@ -2159,18 +2164,18 @@ void LLAgentWearables::editWearableIfRequested(const LLUUID& item_id)
 void LLAgentWearables::updateServer()
 {
 //MK from HB
-	LLViewerWearable* shape = getViewerWearable(LLWearableType::WT_SHAPE, 0);
-	if (shape && shape != mLastWornShape)
-	{
-		// If we just changed the shape, set its Hover parameter to match
-		// our current avatar Z offset setting (in SSB regions) or reset
-		// it (in non-SSB regions).
-		setShapeAvatarOffset(false);
-	}
-	else
-	{
-		checkModifiableShape();
-	}
+	//LLViewerWearable* shape = getViewerWearable(LLWearableType::WT_SHAPE, 0);
+	//if (shape && shape != mLastWornShape)
+	//{
+	//	// If we just changed the shape, set its Hover parameter to match
+	//	// our current avatar Z offset setting (in SSB regions) or reset
+	//	// it (in non-SSB regions).
+	//	setShapeAvatarOffset(false);
+	//}
+	//else
+	//{
+	//	checkModifiableShape();
+	//}
 //mk from HB
 	sendAgentWearablesUpdate();
 	gAgent.sendAgentSetAppearance();
@@ -2197,6 +2202,26 @@ void LLAgentWearables::checkModifiableShape()
 
 void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 {
+	// MK : I took most of the code from Henri Beauchamp's viewer (thanks Henri), but I tweaked it rather deeply.
+	// In this viewer, I want the user to be able to modify their Z offset live, and then have it applied to the
+	// shape after a second or so, so it propagates and other users see it too. But it is very important that the
+	// user can move the Z offset slider manually and see the change in real time before deciding on an offset.
+
+	// Problem is, the offset we see in local and the offset applied to the shape are different ! When the user leaves
+	// the slider alone for a second, the offset could be sent as is to the server, but if we do that the offset will
+	// look off. After a few hours of trial and error, it seems the offset returns as 1.5 times the offset we have sent it.
+
+	// Worse, once we use the slider again, the offset suddenly "jumps" and even moving the slider will look off. For example,
+	// setting the offset to 0.5 and waiting will make the avatar float above the ground. Then setting it straight back to 0.0
+	// should put it straight back to the ground, except it doesn't. It just moves the avatar down half way and stops there.
+	// Then after a second, the offset is back to a correct value of 0.0 and the avatar is back to the ground. But it doesn't
+	// help setting the offset in local and just confuses the user.
+
+	// Once again after some trial and error, it seems that substracting half of the apparent offset does the trick, that's why
+	// you'll see "mSavedOffset * 0.5" later in the code.
+
+	// This is all very hacky and not at all the way I like to code, but this makes the thing work and that's all that matters.
+
 	checkModifiableShape();
 
 	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
@@ -2204,13 +2229,16 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 		if (mHasModifiableShape && mLastWornShape)
 		{
 			F32 offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
-			if (mLastWornShape->getVisualParamWeight(AVATAR_HOVER) != offset)
-			{
-				mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset, FALSE);
+			F32 old_offset = mLastWornShape->getVisualParamWeight(AVATAR_HOVER);
+//			llinfos << "old_offset = " << old_offset << " new offset = " << offset << " saved offset = " << mSavedOffset << llendl;
 
-				// We've updated the Hover value locally, now we must update the server
+			if (old_offset != offset)
+			{
+				mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset - mSavedOffset * 0.5, FALSE);
+
+				// We've updated the Hover value locally, now we must update the server.
 				// But we don't want to hammer the sim with requests, so we're just going to
-				// wait for some time after the last change before triggering the update.
+				// wait for a little while after the last change before triggering the update.
 				RRInterface::sLastAvatarZOffsetCommit = gFrameTimeSeconds;
 			}
 		}
@@ -2234,7 +2262,35 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 //MK
 void LLAgentWearables::forceUpdateShape (void)
 {
+	// To force the update of the shape, we need to remove the link to it from the COF
+	// and then immediately add a new link to it.
+
+	checkModifiableShape();
+
+	F32 offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
+
+	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
+	{
+		if (mHasModifiableShape && mLastWornShape)
+		{
+			// For some reason, setting X to RestrainedLoveOffsetAvatarZ will set the Hover to X * 1.5, but only
+			// after the bake. DON'T ASK ME WHY !
+			mSavedOffset = offset * OFFSET_FACTOR;
+			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, mSavedOffset, FALSE);
+		}
+	}
+
 	saveWearable(LLWearableType::WT_SHAPE, 0, FALSE);
+
+	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
+	{
+		if (mHasModifiableShape && mLastWornShape)
+		{
+			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset, FALSE);
+		}
+	}
+
+	//LLAppearanceMgr::instance().setOutfitDirty( true );		
 
 	// HACK : Force an update server-side by removing the link to the shape, then adding a new one
 	LLViewerWearable* shape = getViewerWearable(LLWearableType::WT_SHAPE, 0);

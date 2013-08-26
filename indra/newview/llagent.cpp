@@ -4588,15 +4588,15 @@ void LLAgent::sendAgentSetAppearance()
 	// to compensate for the COLLISION_TOLERANCE ugliness we will have 
 	// to tweak this number again
 //MK
-////	const LLVector3 body_size = gAgentAvatarp->mBodySize;
-////	const LLVector3 body_size = gAgentAvatarp->mBodySize + gAgentAvatarp->mAvatarOffset;
-	LLVector3 body_size = gAgentAvatarp->mBodySize + gAgentAvatarp->mAvatarOffset;
-	F32 x_offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarX");
-	F32 y_offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarY");
-	F32 z_offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
-	body_size.mV[VX] = body_size.mV[VX] + x_offset;
-	body_size.mV[VY] = body_size.mV[VY] + y_offset;
-	body_size.mV[VZ] = body_size.mV[VZ] + z_offset;
+	const LLVector3 body_size = gAgentAvatarp->mBodySize;
+	////const LLVector3 body_size = gAgentAvatarp->mBodySize + gAgentAvatarp->mAvatarOffset;
+	//LLVector3 body_size = gAgentAvatarp->mBodySize + gAgentAvatarp->mAvatarOffset;
+	//F32 x_offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarX");
+	//F32 y_offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarY");
+	//F32 z_offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
+	//body_size.mV[VX] = body_size.mV[VX] + x_offset;
+	//body_size.mV[VY] = body_size.mV[VY] + y_offset;
+	//body_size.mV[VZ] = body_size.mV[VZ] + z_offset;
 //mk
 	msg->addVector3Fast(_PREHASH_Size, body_size);	
 

@@ -257,6 +257,7 @@ private:
 //MK from HB
 	bool				mHasModifiableShape;
 	LLViewerWearable*	mLastWornShape;
+	F32					mSavedOffset;
 //mk from HB
 
 	/**
