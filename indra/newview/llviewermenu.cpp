@@ -3893,6 +3893,22 @@ void handle_object_sit_or_stand()
 	}
 }
 
+void handle_object_teleport()
+{
+	LLPickInfo pick = LLToolPie::getInstance()->getPick();
+	LLVector3d pos = pick.mPosGlobal;
+	LLViewerObject *objp = pick.getObject();
+
+	if (!pos.isExactlyZero()
+		&& objp->getRootEdit()
+		&& pick.mObjectID.notNull()
+		&& !objp->isHUDAttachment()
+	) {
+		pos.mdV[VZ] += gAgentAvatarp->getPelvisToFoot();
+		gAgent.teleportViaLocationLookAt(pos);
+	}
+}
+
 void near_sit_down_point(BOOL success, void *)
 {
 	if (success)
@@ -3924,6 +3940,22 @@ class LLLandSit : public view_listener_t
 			target_rot = gAgent.getFrameAgent().getQuaternion();
 		}
 		gAgent.startAutoPilotGlobal(posGlobal, "Sit", &target_rot, near_sit_down_point, NULL, 0.7f);
+		return true;
+	}
+};
+
+class LLLandTeleport : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		LLPickInfo pick = LLToolPie::getInstance()->getPick();
+		LLVector3d pos = pick.mPosGlobal;
+
+		if (!pos.isExactlyZero() && pick.mPickType == LLPickInfo::PICK_LAND) {
+			pos.mdV[VZ] += gAgentAvatarp->getPelvisToFoot();
+			gAgent.teleportViaLocationLookAt(pos);
+		}
+
 		return true;
 	}
 };
@@ -8873,6 +8905,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLObjectBuild(), "Object.Build");
 	commit.add("Object.Touch", boost::bind(&handle_object_touch));
 	commit.add("Object.SitOrStand", boost::bind(&handle_object_sit_or_stand));
+	commit.add("Object.Teleport", boost::bind(&handle_object_teleport));
 	commit.add("Object.Delete", boost::bind(&handle_object_delete));
 	view_listener_t::addMenu(new LLObjectAttachToAvatar(true), "Object.AttachToAvatar");
 	view_listener_t::addMenu(new LLObjectAttachToAvatar(false), "Object.AttachAddToAvatar");
@@ -8918,6 +8951,7 @@ void initialize_menus()
 	// Land pie menu
 	view_listener_t::addMenu(new LLLandBuild(), "Land.Build");
 	view_listener_t::addMenu(new LLLandSit(), "Land.Sit");
+	view_listener_t::addMenu(new LLLandTeleport(), "Land.Teleport");
 	view_listener_t::addMenu(new LLLandBuyPass(), "Land.BuyPass");
 	view_listener_t::addMenu(new LLLandEdit(), "Land.Edit");
 

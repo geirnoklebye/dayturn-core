@@ -131,6 +131,7 @@ void handle_save_snapshot(void *);
 void handle_toggle_flycam();
 
 void handle_object_sit_or_stand();
+void handle_object_teleport();
 void handle_give_money_dialog();
 bool enable_pay_object();
 bool enable_buy_object();

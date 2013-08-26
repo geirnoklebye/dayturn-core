@@ -51,6 +51,12 @@
             function="Object.EnableStandUp" />
     </pie_slice>
     <pie_slice
+        label="Teleport Here"
+        name="Object Teleport Here">
+        <pie_slice.on_click
+            function="Object.Teleport" />
+    </pie_slice>
+    <pie_slice
         start_autohide="true"
         enabled="false"
         label="Buy"
