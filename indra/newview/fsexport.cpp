@@ -187,8 +187,19 @@ void FSExport::onIdle()
 void FSExport::exportSelection()
 {
 	LLObjectSelectionHandle selection = LLSelectMgr::instance().getSelection();
+	if (!selection) {
+		LL_WARNS("export") << "No objects selected." << LL_ENDL;
+		return;
+	}
+
 	LLObjectSelection::valid_root_iterator iter = selection->valid_root_begin();
 	LLSelectNode* node = *iter;
+	LLViewerObject *root = selection->getFirstRootObject();
+
+	if (!root || !node) {
+		LL_WARNS("export") << "No root object in the selection.  Aborting backup." << LL_ENDL;
+		return;
+	}
 
 	LLFilePicker& file_picker = LLFilePicker::instance();
 	if(!file_picker.getSaveFile(LLFilePicker::FFSAVE_EXPORT, LLDir::getScrubbedFileName(node->mName + ".oxp")))

@@ -139,6 +139,7 @@ namespace DAEExportUtil
 	{
 		LLObjectSelectionHandle selection = LLSelectMgr::instance().getSelection();
 		if (!selection) {
+			LL_WARNS("daeexport") << "No objects selected." << LL_ENDL;
 			return;
 		}
 
@@ -152,7 +153,7 @@ namespace DAEExportUtil
 			node = *iter;
 
 			if (!root || !node) {
-				llwarns << "No objects selected for export" << llendl;
+				LL_WARNS("daeexport") << "No objects selected for export." << LL_ENDL;
 				return;
 			}
 		}
@@ -185,7 +186,7 @@ namespace DAEExportUtil
 		LLFilePicker &file_picker = LLFilePicker::instance();
 
 		if (!file_picker.getSaveFile(LLFilePicker::FFSAVE_DAE, LLDir::getScrubbedFileName(filename + ".dae"))) {
-			llwarns << "No file selected" << llendl;
+			LL_WARNS("daeexport") << "No file selected." << LL_ENDL;
 			return;
 		}
 
