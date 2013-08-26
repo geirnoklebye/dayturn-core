@@ -70,7 +70,7 @@ BOOL LLDoNotDisturbNotificationStorageTimer::tick()
 
 LLDoNotDisturbNotificationStorage::LLDoNotDisturbNotificationStorage()
 	: LLSingleton<LLDoNotDisturbNotificationStorage>()
-	, LLNotificationStorage(gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, "dnd_notifications.xml"))
+	, LLNotificationStorage("")
     , mDirty(false)
 {
     nameToPayloadParameterMap[toastName] = "SESSION_ID";
@@ -83,6 +83,7 @@ LLDoNotDisturbNotificationStorage::~LLDoNotDisturbNotificationStorage()
 
 void LLDoNotDisturbNotificationStorage::initialize()
 {
+	setFileName(gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, "dnd_notifications.xml"));
 	getCommunicationChannel()->connectFailedFilter(boost::bind(&LLDoNotDisturbNotificationStorage::onChannelChanged, this, _1));
 }
 
@@ -115,7 +116,8 @@ void LLDoNotDisturbNotificationStorage::saveNotifications()
 	{
 		LLNotificationPtr notificationPtr = historyIter->second;
 
-		if (!notificationPtr->isRespondedTo() && !notificationPtr->isCancelled() && !notificationPtr->isExpired())
+		if (!notificationPtr->isRespondedTo() && !notificationPtr->isCancelled() &&
+			!notificationPtr->isExpired() && !notificationPtr->isPersistent())
 		{
 			data.append(notificationPtr->asLLSD(true));
 		}
@@ -205,12 +207,8 @@ void LLDoNotDisturbNotificationStorage::loadNotifications()
 
 	}
 
-    if(imToastExists)
-    {
-        LLFloaterReg::showInstance("im_container");
-    }
-
-	if (group_ad_hoc_toast_exists)
+    bool isConversationLoggingAllowed = gSavedPerAccountSettings.getS32("KeepConversationLogTranscripts") > 0;
+	if(group_ad_hoc_toast_exists && isConversationLoggingAllowed)
 	{
 		LLFloaterReg::showInstance("conversation");
 	}
@@ -256,9 +254,6 @@ void LLDoNotDisturbNotificationStorage::updateNotifications()
         }
     }
 
-    if(imToastExists)
-    {   
-        LLFloaterReg::showInstance("im_container");
     }
 
     //When exit DND mode, write empty notifications file

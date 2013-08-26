@@ -381,7 +381,7 @@ void LLChatBar::sendChat( EChatType type )
 
 				if (!utf8_revised_text.empty() && cmd_line_chat(utf8_revised_text, type))
 			{
-				sendChatFromViewer(utf8_revised_text, type, TRUE);
+				sendChatFromViewer(utf8_revised_text, type, gSavedSettings.getBOOL("PlayChatAnim"));
 			}
 		}
 	}

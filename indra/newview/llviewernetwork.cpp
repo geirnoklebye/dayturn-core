@@ -58,6 +58,8 @@ public:
 		llwarns << "hello " << this << llendl;
 		mOwner->incResponderCount();
 	}
+/// url base for update queries
+const std::string  GRID_UPDATE_SERVICE_URL = "update_query_url_base";
 
 	~GridInfoRequestResponder()
 	{
@@ -81,8 +83,8 @@ public:
 			LL_DEBUGS("GridManager") << "Parsing gridinfo xml file from "
 				<< mData->grid[GRID_VALUE] << LL_ENDL;
 
-			LLBufferStream istr(channels, buffer.get());
-			if(LLXMLNode::parseStream( istr, mData->info_root, NULL))
+const std::string SL_UPDATE_QUERY_URL = "https://update.secondlife.com/update";
+
 			{
 				mOwner->gridInfoResponderCB(mData);
 			}
@@ -1183,6 +1185,19 @@ std::string LLGridManager::getUpdateServiceURL()
 		
 	}
 
+	return update_url_base;
+	else if ( mGridList[mGrid].has(GRID_UPDATE_SERVICE_URL) )
+	{
+		update_url_base = mGridList[mGrid][GRID_UPDATE_SERVICE_URL].asString();
+	}
+	else
+	{
+		LL_WARNS2("UpdaterService","GridManager")
+			<< "The grid property '" << GRID_UPDATE_SERVICE_URL
+			<< "' is not defined for the grid '" << mGrid << "'"
+			<< LL_ENDL;
+	}
+			
 	return update_url_base;
 }
 

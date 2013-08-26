@@ -123,32 +123,21 @@ export SAVED_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 BINARY_TYPE=$(expr match "$(file -b bin/do-not-directly-run-kokua-bin)" '\(.*executable\)')
 if [ "${BINARY_TYPE}" == "ELF 32-bit LSB executable" ]; then
 
-	export SL_ENV='LD_LIBRARY_PATH="`pwd`"/lib:"${LD_LIBRARY_PATH}"'
-else
-	export SL_ENV='LD_LIBRARY_PATH="`pwd`"/lib64:"`pwd`"/lib32:"${LD_LIBRARY_PATH}"'
-fi
-# First, check if we have been instructed to skip reading in gridargs.dat:
-skip_gridargs=false
-argnum=0
+# Copy "$@" to ARGS array specifically to delete the --skip-gridargs switch.
+# The gridargs.dat file is no more, but we still want to avoid breaking
+# scripts that invoke this one with --skip-gridargs.
+ARGS=()
 for ARG in "$@"; do
-    if [ "--skip-gridargs" == "$ARG" ]; then
-        skip_gridargs=true
-    else
-        ARGS[$argnum]="$ARG"
-        argnum=$(($argnum+1))
+    if [ "--skip-gridargs" != "$ARG" ]; then
+        ARGS[${#ARGS[*]}]="$ARG"
     fi
 done
 
-# Second, read it without scanning, then scan that string. Break quoted words
-if ! $skip_gridargs ; then
-    eval gridargs=("$(<etc/gridargs.dat)")
-fi
-
 export SL_CMD='$LL_WRAPPER bin/do-not-directly-run-kokua-bin'
 export SL_OPT="`cat etc/gridargs.dat` $@"
-
-# Run the program
-eval ${SL_ENV} ${SL_CMD} ${SL_OPT} || LL_RUN_ERR=runerr
+# command line. But DO quote "${ARGS[@]}": preserve separate args as
+# individually quoted.
+$LL_WRAPPER bin/do-not-directly-run-secondlife-bin "${ARGS[@]}"
 
 # Handle any resulting errors
 if [ -n "$LL_RUN_ERR" ]; then
