@@ -142,11 +142,24 @@ namespace DAEExportUtil
 			return;
 		}
 
-		DAESaver *daesaver = new DAESaver;
-		daesaver->mOffset = -selection->getFirstRootObject()->getRenderPosition();
-
+		LLViewerObject *root = selection->getFirstRootObject();
 		LLObjectSelection::valid_root_iterator root_it = selection->valid_root_begin();
 		LLSelectNode *node = *root_it;
+
+		if (!root || !node) {
+			root = selection->getFirstObject();
+			LLObjectSelection::iterator iter = selection->begin();
+			node = *iter;
+
+			if (!root || !node) {
+				llwarns << "No objects selected for export" << llendl;
+				return;
+			}
+		}
+
+		DAESaver *daesaver = new DAESaver;
+		daesaver->mOffset = -(root->getRenderPosition());
+
 		std::string filename = node->mName;
 
 		S32 total = 0;
