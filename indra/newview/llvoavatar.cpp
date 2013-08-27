@@ -2773,6 +2773,8 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		static LLUICachedControl<bool> show_display_names("NameTagShowDisplayNames");
 		static LLUICachedControl<bool> show_usernames("NameTagShowUsernames");
 
+		bool have_name = FALSE;
+
 		if (LLAvatarName::useDisplayNames())
 		{
 			LLAvatarName av_name;
@@ -2782,6 +2784,8 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				// Note: do not connect a callback on idle().
 				clearNameTag();
 			}
+
+			have_name = !av_name.getDisplayName().empty();
 
 			// Might be blank if name not available yet, that's OK
 			if (show_display_names)
@@ -2802,6 +2806,8 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		{
 			const LLFontGL* font = LLFontGL::getFontSansSerif();
 			std::string full_name = LLCacheName::buildFullName( firstname->getString(), lastname->getString() );
+			have_name = !full_name.empty();
+
 			addNameTagLine(full_name, name_tag_color, LLFontGL::NORMAL, font);
 		}
 
@@ -2833,11 +2839,14 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 					);
 				}
 			}
-			else if (!mAvatarBirthdateRequest) {
+			else if (have_name && !mAvatarBirthdateRequest) {
 				//
 				//	we don't have the avatar's age and no
 				//	request is pending so send a request
 				//	to the server
+				//
+				//	defer the request until after we have
+				//	the avatar's name to avoid a collision
 				//
 				//	when data is returned from the server
 				//	the process_avatar_birthdate() method
