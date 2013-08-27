@@ -176,9 +176,7 @@ public:
 	std::string trimHypergrid(const std::string& trim);
 	/** ================================================================
 	 * @name Update Related Properties
-	/* ================================================================
-	 * @name Update Related Properties
-	 * @{
+	 * ================================================================
 	 */
 	/// Get the update service URL base (host and path) for the selected grid
 	std::string getUpdateServiceURL();
