@@ -231,20 +231,35 @@ class ViewerManifest(LLManifest):
         # specific) user_settings/settings_something.xml file. It has become
         # clear that saving user settings in a channel-specific file causes
         # more problems (confusion) than it solves, so we've discontinued that.
-                setting_flags = '--settings settings_%s_%s.xml'\
-                                % (self.channel_lowerword(), 'kokua')
-
         # In fact we now avoid forcing viewer command-line switches at all,
         # instead introducing a settings_install.xml file. Command-line
         # switches don't aggregate well; for instance the generated --channel
         # switch actually prevented the user specifying --channel on the
         # command line. Settings files have well-defined override semantics.
         return None
-            else:
-                setting_flags = '--settings settings_%s_%s.xml'\
-                                % (self.grid(), self.channel_lowerword())
-                                                
-        return " ".join((grid_flags, setting_flags)).strip()
+
+    def extract_names(self,src):
+        try:
+            contrib_file = open(src,'r')
+        except IOError:
+            print "Failed to open '%s'" % src
+            raise
+        lines = contrib_file.readlines()
+        contrib_file.close()
+
+        # All lines up to and including the first blank line are the file header; skip them
+        lines.reverse() # so that pop will pull from first to last line
+        while not re.match("\s*$", lines.pop()) :
+            pass # do nothing
+
+        # A line that starts with a non-whitespace character is a name; all others describe contributions, so collect the names
+        names = []
+        for line in lines :
+            if re.match("\S", line) :
+                names.append(line.rstrip())
+        # It's not fair to always put the same people at the head of the list
+        random.shuffle(names)
+        return ', '.join(names)
 
 class WindowsManifest(ViewerManifest):
     def final_exe(self):

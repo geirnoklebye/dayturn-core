@@ -253,7 +253,9 @@ void LLDoNotDisturbNotificationStorage::updateNotifications()
             instance.update(notification);
         }
     }
-
+    if(imToastExists)
+    {   
+        LLFloaterReg::showInstance("im_container");
     }
 
     //When exit DND mode, write empty notifications file

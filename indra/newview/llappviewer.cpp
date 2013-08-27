@@ -2619,7 +2619,6 @@ bool LLAppViewer::initConfiguration()
 		LLStartUp::setStartSLURL(start_slurl);
 		if(start_slurl.getType() == LLSLURL::LOCATION) 
 			LLGridManager::getInstance()->setGridChoice(start_slurl.getGrid());
-		}
 	}
 
 //-TT Hacking to save the skin and theme for future use.

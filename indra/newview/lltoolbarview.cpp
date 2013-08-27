@@ -741,7 +741,19 @@ bool LLToolBarView::isModified() const
 	return modified;
 }
 
+//
+// HACK to bring up destinations guide at startup
+//
 
+void handleLoginToolbarSetup()
+{
+	// Open the destinations guide by default on first login, per Rhett
+	if (gSavedPerAccountSettings.getBOOL("DisplayDestinationsOnInitialRun") || gAgent.isFirstLogin())
+	{
 		if (gSimulatorType == "SecondLife")
 		{
+			LLFloaterReg::showInstance("destinations");
+			gSavedPerAccountSettings.setBOOL("DisplayDestinationsOnInitialRun", FALSE);
 		}
+	}
+}

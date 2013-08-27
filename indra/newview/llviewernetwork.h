@@ -182,12 +182,6 @@ public:
 	 */
 	/// Get the update service URL base (host and path) for the selected grid
 	std::string getUpdateServiceURL();
-	
-	//@}
-	 * @{
-	 */
-	/// Get the update service URL base (host and path) for the selected grid
-	std::string getUpdateServiceURL();
 	/// build a slurl for the given region within the selected grid
 	std::string getSLURLBase(const std::string& grid);
 	std::string getSLURLBase() { return getSLURLBase(mGrid); }
