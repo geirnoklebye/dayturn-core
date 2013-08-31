@@ -122,7 +122,8 @@ void LLPreviewNotecard::setEnabled( BOOL enabled )
 void LLPreviewNotecard::draw()
 {
 	LLViewerTextEditor* editor = getChild<LLViewerTextEditor>("Notecard Editor");
-	BOOL changed = !editor->isPristine();
+	LLLineEditor *desc = getChild<LLLineEditor>("desc");
+	BOOL changed = !editor->isPristine() || desc->isDirty();
 
 	getChildView("Save")->setEnabled(changed && getEnabled());
 	
