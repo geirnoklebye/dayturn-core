@@ -160,7 +160,10 @@ public:
 			mAvatarsPositions[*id_it] = *pos_it;
 		}
 	};
-
+//MK
+	// Used for Range Display, originally from KB/Catznip
+	const id_to_pos_map_t& getAvatarsPositions() { return mAvatarsPositions; }
+//mk
 protected:
 	virtual bool doCompare(const LLAvatarListItem* item1, const LLAvatarListItem* item2) const
 	{
