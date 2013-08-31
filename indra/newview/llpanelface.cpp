@@ -101,13 +101,13 @@ U8			LLPanelFace::getCurrentAlphaMaskCutoff()	{ return (U8)getChild<LLUICtrl>("m
 U8			LLPanelFace::getCurrentEnvIntensity()		{ return (U8)getChild<LLUICtrl>("environment")->getValue().asInteger();			}
 U8			LLPanelFace::getCurrentGlossiness()			{ return (U8)getChild<LLUICtrl>("glossiness")->getValue().asInteger();			}
 F32		LLPanelFace::getCurrentBumpyRot()			{ return getChild<LLUICtrl>("bumpyRot")->getValue().asReal();						}
-F32		LLPanelFace::getCurrentBumpyScaleU()		{ return getChild<LLUICtrl>("bumpyScaleU")->getValue().asReal();					}
-F32		LLPanelFace::getCurrentBumpyScaleV()		{ return getChild<LLUICtrl>("bumpyScaleV")->getValue().asReal();					}
+F32		LLPanelFace::getCurrentBumpyScaleU()		{ F32 value = getChild<LLUICtrl>("bumpyScaleU")->getValue().asReal(); return getChild<LLCheckBoxCtrl>("bumpyScaleFlipU")->getValue().asBoolean() ? -value : value; }
+F32		LLPanelFace::getCurrentBumpyScaleV()		{ F32 value = getChild<LLUICtrl>("bumpyScaleV")->getValue().asReal(); return getChild<LLCheckBoxCtrl>("bumpyScaleFlipV")->getValue().asBoolean() ? -value : value; }
 F32		LLPanelFace::getCurrentBumpyOffsetU()		{ return getChild<LLUICtrl>("bumpyOffsetU")->getValue().asReal();					}
 F32		LLPanelFace::getCurrentBumpyOffsetV()		{ return getChild<LLUICtrl>("bumpyOffsetV")->getValue().asReal();					}
 F32		LLPanelFace::getCurrentShinyRot()			{ return getChild<LLUICtrl>("shinyRot")->getValue().asReal();						}
-F32		LLPanelFace::getCurrentShinyScaleU()		{ return getChild<LLUICtrl>("shinyScaleU")->getValue().asReal();					}
-F32		LLPanelFace::getCurrentShinyScaleV()		{ return getChild<LLUICtrl>("shinyScaleV")->getValue().asReal();					}
+F32		LLPanelFace::getCurrentShinyScaleU()		{ F32 value = getChild<LLUICtrl>("shinyScaleU")->getValue().asReal(); return getChild<LLCheckBoxCtrl>("shinyScaleFlipU")->getValue().asBoolean() ? -value : value; }
+F32		LLPanelFace::getCurrentShinyScaleV()		{ F32 value = getChild<LLUICtrl>("shinyScaleV")->getValue().asReal(); return getChild<LLCheckBoxCtrl>("shinyScaleFlipV")->getValue().asBoolean() ? -value : value; }
 F32		LLPanelFace::getCurrentShinyOffsetU()		{ return getChild<LLUICtrl>("shinyOffsetU")->getValue().asReal();					}
 F32		LLPanelFace::getCurrentShinyOffsetV()		{ return getChild<LLUICtrl>("shinyOffsetV")->getValue().asReal();					}
 
@@ -122,6 +122,8 @@ BOOL	LLPanelFace::postBuild()
 	childSetCommitCallback("combobox alphamode",&LLPanelFace::onCommitAlphaMode,this);
 	childSetCommitCallback("TexScaleU",&LLPanelFace::onCommitTextureInfo, this);
 	childSetCommitCallback("TexScaleV",&LLPanelFace::onCommitTextureInfo, this);
+	childSetCommitCallback("TexScaleFlipU",&LLPanelFace::onCommitTextureInfo, this);
+	childSetCommitCallback("TexScaleFlipV",&LLPanelFace::onCommitTextureInfo, this);
 	childSetCommitCallback("TexRot",&LLPanelFace::onCommitTextureInfo, this);
 	childSetCommitCallback("rptctrl",&LLPanelFace::onCommitRepeatsPerMeter, this);
 	childSetCommitCallback("checkbox planar align",&LLPanelFace::onCommitPlanarAlign, this);
@@ -130,11 +132,15 @@ BOOL	LLPanelFace::postBuild()
 
 	childSetCommitCallback("bumpyScaleU",&LLPanelFace::onCommitMaterialBumpyScaleX, this);
 	childSetCommitCallback("bumpyScaleV",&LLPanelFace::onCommitMaterialBumpyScaleY, this);
+	childSetCommitCallback("bumpyScaleFlipU",&LLPanelFace::onCommitMaterialBumpyScaleX, this);
+	childSetCommitCallback("bumpyScaleFlipV",&LLPanelFace::onCommitMaterialBumpyScaleY, this);
 	childSetCommitCallback("bumpyRot",&LLPanelFace::onCommitMaterialBumpyRot, this);
 	childSetCommitCallback("bumpyOffsetU",&LLPanelFace::onCommitMaterialBumpyOffsetX, this);
 	childSetCommitCallback("bumpyOffsetV",&LLPanelFace::onCommitMaterialBumpyOffsetY, this);
 	childSetCommitCallback("shinyScaleU",&LLPanelFace::onCommitMaterialShinyScaleX, this);
 	childSetCommitCallback("shinyScaleV",&LLPanelFace::onCommitMaterialShinyScaleY, this);
+	childSetCommitCallback("shinyScaleFlipU",&LLPanelFace::onCommitMaterialShinyScaleX, this);
+	childSetCommitCallback("shinyScaleFlipV",&LLPanelFace::onCommitMaterialShinyScaleY, this);
 	childSetCommitCallback("shinyRot",&LLPanelFace::onCommitMaterialShinyRot, this);
 	childSetCommitCallback("shinyOffsetU",&LLPanelFace::onCommitMaterialShinyOffsetX, this);
 	childSetCommitCallback("shinyOffsetV",&LLPanelFace::onCommitMaterialShinyOffsetY, this);
@@ -435,6 +441,8 @@ struct LLPanelFaceSetTEFunctor : public LLSelectedTEFunctor
 		F32 value;
 		LLSpinCtrl*	ctrlTexScaleS = mPanel->getChild<LLSpinCtrl>("TexScaleU");
 		LLSpinCtrl*	ctrlTexScaleT = mPanel->getChild<LLSpinCtrl>("TexScaleV");
+		LLCheckBoxCtrl*	ctrlTexScaleFlipS = mPanel->getChild<LLCheckBoxCtrl>("TexScaleFlipU");
+		LLCheckBoxCtrl*	ctrlTexScaleFlipT = mPanel->getChild<LLCheckBoxCtrl>("TexScaleFlipV");
 		LLSpinCtrl*	ctrlTexOffsetS = mPanel->getChild<LLSpinCtrl>("TexOffsetU");
 		LLSpinCtrl*	ctrlTexOffsetT = mPanel->getChild<LLSpinCtrl>("TexOffsetV");
 		LLSpinCtrl*	ctrlTexRotation = mPanel->getChild<LLSpinCtrl>("TexRot");
@@ -452,6 +460,9 @@ struct LLPanelFaceSetTEFunctor : public LLSelectedTEFunctor
 				    comboTexGen->getCurrentIndex() == 1)
 				{
 					value *= 0.5f;
+				}
+				if (ctrlTexScaleFlipS && ctrlTexScaleFlipS->get()) {
+					value = -value;
 				}
 				object->setTEScaleS( te, value );
 			}
@@ -471,6 +482,9 @@ struct LLPanelFaceSetTEFunctor : public LLSelectedTEFunctor
 				    comboTexGen->getCurrentIndex() == 1)
 				{
 					value *= 0.5f;
+				}
+				if (ctrlTexScaleFlipT && ctrlTexScaleFlipT->get()) {
+					value = -value;
 				}
 				object->setTEScaleT( te, value );
 			}
@@ -988,6 +1002,10 @@ void LLPanelFace::updateUI()
 			F32 spec_scale_s = 1.f;
 			F32 norm_scale_s = 1.f;
 
+			BOOL diff_scale_flip_s = FALSE;
+			BOOL spec_scale_flip_s = FALSE;
+			BOOL norm_scale_flip_s = FALSE;
+
 			LLSelectedTE::getScaleS(						diff_scale_s, identical_diff_scale_s);			
 			LLSelectedTEMaterial::getSpecularRepeatX( spec_scale_s, identical_spec_scale_s);
 			LLSelectedTEMaterial::getNormalRepeatX(	norm_scale_s, identical_norm_scale_s);
@@ -1001,13 +1019,34 @@ void LLPanelFace::updateUI()
 			spec_scale_s = editable ? spec_scale_s : 1.0f;
 			spec_scale_s *= identical_planar_texgen ? 2.0f : 1.0f;
 
+			if (diff_scale_s < 0) {
+				diff_scale_s = -diff_scale_s;
+				diff_scale_flip_s = TRUE;
+			}
+			if (norm_scale_s < 0) {
+				norm_scale_s = -norm_scale_s;
+				norm_scale_flip_s = TRUE;
+			}
+			if (spec_scale_s < 0) {
+				spec_scale_s = -spec_scale_s;
+				spec_scale_flip_s = TRUE;
+			}
+
 			getChild<LLUICtrl>("TexScaleU")->setValue(diff_scale_s);
 			getChild<LLUICtrl>("shinyScaleU")->setValue(spec_scale_s);
 			getChild<LLUICtrl>("bumpyScaleU")->setValue(norm_scale_s);
 
+			getChild<LLUICtrl>("TexScaleFlipU")->setValue(diff_scale_flip_s);
+			getChild<LLUICtrl>("shinyScaleFlipU")->setValue(norm_scale_flip_s);
+			getChild<LLUICtrl>("bumpyScaleFlipU")->setValue(spec_scale_flip_s);
+
 			getChildView("TexScaleU")->setEnabled(editable);
 			getChildView("shinyScaleU")->setEnabled(editable && specmap_id.notNull());
 			getChildView("bumpyScaleU")->setEnabled(editable && normmap_id.notNull());
+
+			getChildView("TexScaleFlipU")->setEnabled(editable);
+			getChildView("shinyScaleFlipU")->setEnabled(editable && specmap_id.notNull());
+			getChildView("bumpyScaleFlipU")->setEnabled(editable && normmap_id.notNull());
 
 			BOOL diff_scale_tentative = !(identical && identical_diff_scale_s);
 			BOOL norm_scale_tentative = !(identical && identical_norm_scale_s);
@@ -1016,6 +1055,10 @@ void LLPanelFace::updateUI()
 			getChild<LLUICtrl>("TexScaleU")->setTentative(  LLSD(diff_scale_tentative));			
 			getChild<LLUICtrl>("shinyScaleU")->setTentative(LLSD(spec_scale_tentative));			
 			getChild<LLUICtrl>("bumpyScaleU")->setTentative(LLSD(norm_scale_tentative));
+
+			getChild<LLUICtrl>("TexScaleFlipU")->setTentative(LLSD(diff_scale_tentative));			
+			getChild<LLUICtrl>("shinyScaleFlipU")->setTentative(LLSD(spec_scale_tentative));			
+			getChild<LLUICtrl>("bumpyScaleFlipU")->setTentative(LLSD(norm_scale_tentative));
 		}
 
 		{
@@ -1026,6 +1069,10 @@ void LLPanelFace::updateUI()
 			F32 diff_scale_t = 1.f;			
 			F32 spec_scale_t = 1.f;
 			F32 norm_scale_t = 1.f;
+
+			BOOL diff_scale_flip_t = FALSE;
+			BOOL spec_scale_flip_t = FALSE;
+			BOOL norm_scale_flip_t = FALSE;
 
 			LLSelectedTE::getScaleT(diff_scale_t, identical_diff_scale_t);
 			LLSelectedTEMaterial::getSpecularRepeatY(spec_scale_t, identical_spec_scale_t);
@@ -1040,6 +1087,19 @@ void LLPanelFace::updateUI()
 			spec_scale_t = editable ? spec_scale_t : 1.0f;
 			spec_scale_t *= identical_planar_texgen ? 2.0f : 1.0f;
 
+			if (diff_scale_t < 0) {
+				diff_scale_t = -diff_scale_t;
+				diff_scale_flip_t = TRUE;
+			}
+			if (norm_scale_t < 0) {
+				norm_scale_t = -norm_scale_t;
+				norm_scale_flip_t = TRUE;
+			}
+			if (spec_scale_t < 0) {
+				spec_scale_t = -spec_scale_t;
+				spec_scale_flip_t = TRUE;
+			}
+
 			BOOL diff_scale_tentative = !identical_diff_scale_t;
 			BOOL norm_scale_tentative = !identical_norm_scale_t;
 			BOOL spec_scale_tentative = !identical_spec_scale_t;
@@ -1048,13 +1108,25 @@ void LLPanelFace::updateUI()
 			getChildView("shinyScaleV")->setEnabled(editable && specmap_id.notNull());
 			getChildView("bumpyScaleV")->setEnabled(editable && normmap_id.notNull());
 
+			getChildView("TexScaleFlipV")->setEnabled(editable);
+			getChildView("shinyScaleFlipV")->setEnabled(editable && specmap_id.notNull());
+			getChildView("bumpyScaleFlipV")->setEnabled(editable && normmap_id.notNull());
+
 			getChild<LLUICtrl>("TexScaleV")->setValue(diff_scale_t);
 			getChild<LLUICtrl>("shinyScaleV")->setValue(norm_scale_t);
 			getChild<LLUICtrl>("bumpyScaleV")->setValue(spec_scale_t);
 
+			getChild<LLUICtrl>("TexScaleFlipV")->setValue(diff_scale_flip_t);
+			getChild<LLUICtrl>("shinyScaleFlipV")->setValue(norm_scale_flip_t);
+			getChild<LLUICtrl>("bumpyScaleFlipV")->setValue(spec_scale_flip_t);
+
 			getChild<LLUICtrl>("TexScaleV")->setTentative(LLSD(diff_scale_tentative));
 			getChild<LLUICtrl>("shinyScaleV")->setTentative(LLSD(norm_scale_tentative));
 			getChild<LLUICtrl>("bumpyScaleV")->setTentative(LLSD(spec_scale_tentative));
+
+			getChild<LLUICtrl>("TexScaleFlipV")->setTentative(LLSD(diff_scale_tentative));			
+			getChild<LLUICtrl>("shinyScaleFlipV")->setTentative(LLSD(spec_scale_tentative));			
+			getChild<LLUICtrl>("bumpyScaleFlipV")->setTentative(LLSD(norm_scale_tentative));
 		}
 
 		// Texture offset
@@ -1321,9 +1393,23 @@ void LLPanelFace::updateUI()
 						repeat_y *= 2.0f;
 					}
 
+					BOOL flip_x = FALSE;
+					BOOL flip_y = FALSE;
+
+					if (repeat_x < 0) {
+						repeat_x = -repeat_x;
+						flip_x = TRUE;
+					}
+					if (repeat_y < 0) {
+						repeat_y = -repeat_y;
+						flip_y = TRUE;
+					}
+
 					rot = material->getSpecularRotation();
 					getChild<LLUICtrl>("shinyScaleU")->setValue(repeat_x);
 					getChild<LLUICtrl>("shinyScaleV")->setValue(repeat_y);
+					getChild<LLUICtrl>("shinyScaleFlipU")->setValue(flip_x);
+					getChild<LLUICtrl>("shinyScaleFlipV")->setValue(flip_y);
 					getChild<LLUICtrl>("shinyRot")->setValue(rot*RAD_TO_DEG);
 					getChild<LLUICtrl>("shinyOffsetU")->setValue(offset_x);
 					getChild<LLUICtrl>("shinyOffsetV")->setValue(offset_y);
@@ -1369,9 +1455,23 @@ void LLPanelFace::updateUI()
 						repeat_y *= 2.0f;
 					}
 
+					BOOL flip_x = FALSE;
+					BOOL flip_y = FALSE;
+
+					if (repeat_x < 0) {
+						repeat_x = -repeat_x;
+						flip_x = TRUE;
+					}
+					if (repeat_y < 0) {
+						repeat_y = -repeat_y;
+						flip_y = TRUE;
+					}
+
 					rot = material->getNormalRotation();
 					getChild<LLUICtrl>("bumpyScaleU")->setValue(repeat_x);
 					getChild<LLUICtrl>("bumpyScaleV")->setValue(repeat_y);
+					getChild<LLUICtrl>("bumpyScaleFlipU")->setValue(flip_x);
+					getChild<LLUICtrl>("bumpyScaleFlipV")->setValue(flip_y);
 					getChild<LLUICtrl>("bumpyRot")->setValue(rot*RAD_TO_DEG);
 					getChild<LLUICtrl>("bumpyOffsetU")->setValue(offset_x);
 					getChild<LLUICtrl>("bumpyOffsetV")->setValue(offset_y);
@@ -1534,6 +1634,8 @@ void LLPanelFace::updateVisibility()
 	}
 	getChildView("TexScaleU")->setVisible(show_texture);
 	getChildView("TexScaleV")->setVisible(show_texture);
+	getChildView("TexScaleFlipU")->setVisible(show_texture);
+	getChildView("TexScaleFlipV")->setVisible(show_texture);
 	getChildView("TexRot")->setVisible(show_texture);
 	getChildView("TexOffsetU")->setVisible(show_texture);
 	getChildView("TexOffsetV")->setVisible(show_texture);
@@ -1555,6 +1657,8 @@ void LLPanelFace::updateVisibility()
 	}
 	getChildView("shinyScaleU")->setVisible(show_shininess);
 	getChildView("shinyScaleV")->setVisible(show_shininess);
+	getChildView("shinyScaleFlipU")->setVisible(show_shininess);
+	getChildView("shinyScaleFlipV")->setVisible(show_shininess);
 	getChildView("shinyRot")->setVisible(show_shininess);
 	getChildView("shinyOffsetU")->setVisible(show_shininess);
 	getChildView("shinyOffsetV")->setVisible(show_shininess);
@@ -1570,6 +1674,8 @@ void LLPanelFace::updateVisibility()
 	getChildView("label bumpiness")->setVisible(show_bumpiness);
 	getChildView("bumpyScaleU")->setVisible(show_bumpiness);
 	getChildView("bumpyScaleV")->setVisible(show_bumpiness);
+	getChildView("bumpyScaleFlipU")->setVisible(show_bumpiness);
+	getChildView("bumpyScaleFlipV")->setVisible(show_bumpiness);
 	getChildView("bumpyRot")->setVisible(show_bumpiness);
 	getChildView("bumpyOffsetU")->setVisible(show_bumpiness);
 	getChildView("bumpyOffsetV")->setVisible(show_bumpiness);
@@ -2296,28 +2402,34 @@ void LLPanelFace::onClickDuplicateDiffuse(void *data)
 	//	duplicate diffuse map scale (U)
 	//
 	F32 value = self->getChild<LLSpinCtrl>("TexScaleU")->getValue().asReal();
+	BOOL flip = self->getChild<LLCheckBoxCtrl>("TexScaleFlipU")->getValue().asBoolean();
 
 	if (have_normal_map) {
 		self->childSetValue("bumpyScaleU", value);
-		LLSelectedTEMaterial::setNormalRepeatX(self, value);
+		self->childSetValue("bumpyScaleFlipU", flip);
+		LLSelectedTEMaterial::setNormalRepeatX(self, flip ? -value : value);
 	}
 	if (have_specular_map) {
 		self->childSetValue("shinyScaleU", value);
-		LLSelectedTEMaterial::setSpecularRepeatX(self, value);
+		self->childSetValue("shinyScaleFlipU", flip);
+		LLSelectedTEMaterial::setSpecularRepeatX(self, flip ? -value : value);
 	}
 
 	//
 	//	duplicate diffuse map scale (V)
 	//
 	value = self->getChild<LLSpinCtrl>("TexScaleV")->getValue().asReal();
+	flip = self->getChild<LLCheckBoxCtrl>("TexScaleFlipV")->getValue().asBoolean();
 
 	if (have_normal_map) {
 		self->childSetValue("bumpyScaleV", value);
-		LLSelectedTEMaterial::setNormalRepeatY(self, value);
+		self->childSetValue("bumpyScaleFlipV", flip);
+		LLSelectedTEMaterial::setNormalRepeatY(self, flip ? -value : value);
 	}
 	if (have_specular_map) {
 		self->childSetValue("shinyScaleV", value);
-		LLSelectedTEMaterial::setSpecularRepeatY(self, value);
+		self->childSetValue("shinyScaleFlipV", flip);
+		LLSelectedTEMaterial::setSpecularRepeatY(self, flip ? -value : value);
 	}
 
 	//
@@ -2375,22 +2487,30 @@ void LLPanelFace::onClickDuplicateNormal(void *data)
 	//	duplicate normal map scale (U)
 	//
 	F32 value = self->getChild<LLSpinCtrl>("bumpyScaleU")->getValue().asReal();
+	BOOL flip = self->getChild<LLCheckBoxCtrl>("bumpyScaleFlipU")->getValue().asBoolean();
+
 	self->childSetValue("TexScaleU", value);
+	self->childSetValue("TexScaleFlipU", flip);
 
 	if (have_specular_map) {
 		self->childSetValue("shinyScaleU", value);
-		LLSelectedTEMaterial::setSpecularRepeatX(self, value);
+		self->childSetValue("shinyScaleFlipU", flip);
+		LLSelectedTEMaterial::setSpecularRepeatX(self, flip ? -value : value);
 	}
 
 	//
 	//	duplicate normal map scale (V)
 	//
 	value = self->getChild<LLSpinCtrl>("bumpyScaleV")->getValue().asReal();
+	flip = self->getChild<LLCheckBoxCtrl>("bumpyScaleFlipV")->getValue().asBoolean();
+
 	self->childSetValue("TexScaleV", value);
+	self->childSetValue("TexScaleFlipV", flip);
 
 	if (have_specular_map) {
 		self->childSetValue("shinyScaleV", value);
-		LLSelectedTEMaterial::setSpecularRepeatY(self, value);
+		self->childSetValue("shinyScaleFlipV", flip);
+		LLSelectedTEMaterial::setSpecularRepeatY(self, flip ? -value : value);
 	}
 
 	//
@@ -2444,22 +2564,30 @@ void LLPanelFace::onClickDuplicateSpecular(void *data)
 	//	duplicate specular map scale (U)
 	//
 	F32 value = self->getChild<LLSpinCtrl>("shinyScaleU")->getValue().asReal();
+	F32 flip = self->getChild<LLCheckBoxCtrl>("shinyScaleFlipU")->getValue().asBoolean();
+
 	self->childSetValue("TexScaleU", value);
+	self->childSetValue("TexScaleFlipU", flip);
 
 	if (have_normal_map) {
 		self->childSetValue("bumpyScaleU", value);
-		LLSelectedTEMaterial::setNormalRepeatX(self, value);
+		self->childSetValue("bumpyScaleFlipU", flip);
+		LLSelectedTEMaterial::setNormalRepeatX(self, flip ? -value : value);
 	}
 
 	//
 	//	duplicate specular map scale (V)
 	//
 	value = self->getChild<LLSpinCtrl>("shinyScaleV")->getValue().asReal();
+	flip = self->getChild<LLCheckBoxCtrl>("shinyScaleFlipV")->getValue().asBoolean();
+
 	self->childSetValue("TexScaleV", value);
+	self->childSetValue("TexScaleFlipV", flip);
 
 	if (have_normal_map) {
 		self->childSetValue("bumpyScaleV", value);
-		LLSelectedTEMaterial::setNormalRepeatY(self, value);
+		self->childSetValue("bumpyScaleFlipV", flip);
+		LLSelectedTEMaterial::setNormalRepeatY(self, flip ? -value : value);
 	}
 
 	//

@@ -122,7 +122,7 @@
              left_pad="10"
              name="combobox mattype"
              top_delta="0"
-             width="155">
+             width="168">
                 <combo_box.item
                  label="Texture (diffuse)"
                  name="Texture (diffuse)"
@@ -350,7 +350,7 @@
              left_pad="10"
              text_readonly_color="LabelDisabledColor"
              top_delta="6"
-             width="90">
+             width="104">
                 Shininess
             </text>
             <combo_box
@@ -390,11 +390,11 @@
              follows="left|top"
              height="10"
              layout="topleft"
-             left_delta="-100"
+             left_delta="-114"
              name="label glossiness"
              text_readonly_color="LabelDisabledColor"
              top_pad="8"
-             width="116">
+             width="126">
                 Glossiness
             </text>
             <spinner
@@ -416,11 +416,11 @@
              follows="left|top"
              height="10"
              layout="topleft"
-             left_delta="-126"
+             left_delta="-136"
              name="label environment"
              text_readonly_color="LabelDisabledColor"
              top_pad="8"
-             width="116">
+             width="126">
                 Environment
             </text>
             <spinner
@@ -442,11 +442,11 @@
              follows="left|top"
              height="10"
              layout="topleft"
-             left_delta="-126"
+             left_delta="-136"
              name="label shinycolor"
              text_readonly_color="LabelDisabledColor"
              top_pad="8"
-             width="116">
+             width="126">
                 Color
             </text>
             <!-- label is blank because control places it below the box -->
@@ -520,7 +520,7 @@
              name="tex gen"
              text_readonly_color="LabelDisabledColor"
              top_pad="48"
-             width="140">
+             width="150">
                 Mapping
             </text>
             <combo_box
@@ -543,27 +543,43 @@
              follows="left|top"
              height="19"
              initial_value="0"
-             label="Horizontal scale"
-             label_width="205"
+             label="Horizontal scale (tick box to flip)"
+             label_width="195"
              layout="topleft"
              left="10"
-             min_val="-100"
+             min_val="0"
              max_val="100"
              name="TexScaleU"
              top_pad="4"
-             width="265" />
+             width="255" />
+            <check_box
+             height="19"
+             tool_tip="Flip Diffuse Map Horizontally"
+             layout="topleft"
+             left_pad="4"
+             name="TexScaleFlipU"
+             top_delta="0"
+             width="20" />
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
-             label="Vertical scale"
-             label_width="205"
+             label="Vertical scale (tick box to flip)"
+             label_width="195"
              layout="topleft"
              left="10"
-             min_val="-100"
+             min_val="0"
              max_val="100"
              name="TexScaleV"
-             width="265" />
+             width="255" />
+            <check_box
+             height="19"
+             tool_tip="Flip Diffuse Map Vertically"
+             layout="topleft"
+             left_pad="4"
+             name="TexScaleFlipV"
+             top_delta="0"
+             width="20" />
             <spinner
              decimal_digits="1"
              follows="left|top"
@@ -571,12 +587,12 @@
              initial_value=""
 			 label="Repeats per meter"
              layout="topleft"
-			 label_width="205"
+			 label_width="195"
              left="10"
              max_val="100"
              min_val="0.1"
              name="rptctrl"
-             width="265" />
+             width="255" />
            <spinner
              decimal_digits="2"
              follows="left|top"
@@ -585,35 +601,35 @@
              initial_value="0"
 			 label="Rotation degrees"
              layout="topleft"
-			 label_width="205"
+			 label_width="195"
              left="10"
              max_val="9999"
              min_val="-9999"
              name="TexRot"
-             width="265" />
+             width="255" />
 
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
              label="Horizontal offset"
-             label_width="205"
+             label_width="195"
              layout="topleft"
              left="10"
              min_val="-1"
              name="TexOffsetU"
-             width="265" />
+             width="255" />
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
              label="Vertical offset"
-             label_width="205"
+             label_width="195"
              layout="topleft"
              left="10"
              min_val="-1"
              name="TexOffsetV"
-             width="265" />
+             width="255" />
             <button
              layout="topleft"
              follows="top|left|right"
@@ -621,34 +637,50 @@
              name="TexDuplicate"
              tool_tip="Copy these diffuse map scale, rotation and offset values to the normal and specular maps"
              height="20"
-             right="-17"
+             right="-7"
              top_pad="7"
              width="110" />
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
-             label="Horizontal scale"
-             label_width="205"
+             label="Horizontal scale (tick box to flip)"
+             label_width="195"
              layout="topleft"
              left="10"
-             min_val="-100"
+             min_val="0"
              max_val="100"
              name="bumpyScaleU"
              top_delta="-141"
-             width="265" />
+             width="255" />
+            <check_box
+             height="19"
+             tool_tip="Flip Normal Map Horizontally"
+             layout="topleft"
+             left_pad="4"
+             name="bumpyScaleFlipU"
+             top_delta="0"
+             width="20" />
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
-             label="Vertical scale"
-             label_width="205"
+             label="Vertical scale (tick box to flip)"
+             label_width="195"
              layout="topleft"
              left="10"
-             min_val="-100"
+             min_val="0"
              max_val="100"
              name="bumpyScaleV"
-             width="265" />
+             width="255" />
+            <check_box
+             height="19"
+             tool_tip="Flip Normal Map Vertically"
+             layout="topleft"
+             left_pad="4"
+             name="bumpyScaleFlipV"
+             top_delta="0"
+             width="20" />
            <spinner
              decimal_digits="2"
              follows="left|top"
@@ -658,35 +690,35 @@
              initial_value="0"
 			 label="Rotation degrees"
              layout="topleft"
-			 label_width="205"
+			 label_width="195"
              left="10"
              max_val="360"
              min_val="0"
              name="bumpyRot"
-             width="265" />
+             width="255" />
 
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
              label="Horizontal offset"
-             label_width="205"
+             label_width="195"
              layout="topleft"
              left="10"
              min_val="-1"
              name="bumpyOffsetU"
-             width="265" />
+             width="255" />
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
              label="Vertical offset"
-             label_width="205"
+             label_width="195"
              layout="topleft"
              left="10"
              min_val="-1"
              name="bumpyOffsetV"
-             width="265" />
+             width="255" />
             <button
              layout="topleft"
              follows="top|left|right"
@@ -694,34 +726,50 @@
              name="bumpyDuplicate"
              tool_tip="Copy these normal map scale, rotation and offset values to the diffuse and specular maps"
              height="20"
-             right="-17"
+             right="-7"
              top_pad="7"
              width="110" />
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
-             label="Horizontal scale"
-             label_width="205"
+             label="Horizontal scale (tick box to flip)"
+             label_width="195"
              layout="topleft"
              left="10"
-             min_val="-100"
+             min_val="0"
              max_val="100"
              name="shinyScaleU"
              top_delta="-141"
-             width="265" />
+             width="255" />
+            <check_box
+             height="19"
+             tool_tip="Flip Specular Map Horizontally"
+             layout="topleft"
+             left_pad="4"
+             name="shinyScaleFlipU"
+             top_delta="0"
+             width="20" />
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
-             label="Vertical scale"
-             label_width="205"
+             label="Vertical scale (tick box to flip)"
+             label_width="195"
              layout="topleft"
              left="10"
-             min_val="-100"
+             min_val="0"
              max_val="100"
              name="shinyScaleV"
-             width="265" />
+             width="255" />
+            <check_box
+             height="19"
+             tool_tip="Flip Specular Map Vertically"
+             layout="topleft"
+             left_pad="4"
+             name="shinyScaleFlipV"
+             top_delta="0"
+             width="20" />
            <spinner
              decimal_digits="2"
              follows="left|top"
@@ -731,35 +779,35 @@
              initial_value="0"
 			 label="Rotation degrees"
              layout="topleft"
-			 label_width="205"
+			 label_width="195"
              left="10"
              max_val="360"
              min_val="0"
              name="shinyRot"
-             width="265" />
+             width="255" />
 
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
              label="Horizontal offset"
-             label_width="205"
+             label_width="195"
              layout="topleft"
              left="10"
              min_val="-1"
              name="shinyOffsetU"
-             width="265" />
+             width="255" />
             <spinner
              follows="left|top"
              height="19"
              initial_value="0"
              label="Vertical offset"
-             label_width="205"
+             label_width="195"
              layout="topleft"
              left="10"
              min_val="-1"
              name="shinyOffsetV"
-             width="265" />
+             width="255" />
             <button
              layout="topleft"
              follows="top|left|right"
@@ -767,7 +815,7 @@
              name="shinyDuplicate"
              tool_tip="Copy these specular map scale, rotation and offset values to the diffuse and normal maps"
              height="20"
-             right="-17"
+             right="-7"
              top_pad="7"
              width="110" />
             <check_box
