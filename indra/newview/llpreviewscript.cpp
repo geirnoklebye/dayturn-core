@@ -1437,6 +1437,8 @@ void LLPreviewLSL::onLoad(void* userdata)
 void LLPreviewLSL::onSave(void* userdata, BOOL close_after_save)
 {
 	LLPreviewLSL* self = (LLPreviewLSL*)userdata;
+
+	self->mScriptEd->mErrorList->setCommentText("");
 	self->mCloseAfterSave = close_after_save;
 	self->saveIfNeeded();
 }
