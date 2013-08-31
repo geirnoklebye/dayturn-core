@@ -126,7 +126,7 @@ BOOL LLFloaterIMNearbyChat::postBuild()
 	setTitle(LLTrans::getString("NearbyChatTitle"));
 
 	// obsolete, but may be needed for backward compatibility?
-	gSavedSettings.declareS32("nearbychat_showicons_and_names", 2, "NearByChat header settings", true);
+	gSavedSettings.declareS32("nearbychat_showicons_and_names", 2, "NearByChat header settings", LLControlVariable::PERSIST_NONDFT);
 
 	if (gSavedPerAccountSettings.getBOOL("LogShowHistory"))
 	{
@@ -139,19 +139,28 @@ BOOL LLFloaterIMNearbyChat::postBuild()
 // virtual
 void LLFloaterIMNearbyChat::closeHostedFloater()
 {
-	// Should check how many conversations are ongoing. Close all if 1 only (the Nearby Chat), select next one otherwise
+	// If detached from conversations window close anyway
+	if (!getHost())
+	{
+		setVisible(FALSE);
+	}
+
+	// Should check how many conversations are ongoing. Select next to "Nearby Chat" in case there are some other besides.
+	// Close conversations window in case "Nearby Chat" is attached and the only conversation
 	LLFloaterIMContainer* floater_container = LLFloaterIMContainer::getInstance();
 	if (floater_container->getConversationListItemSize() == 1)
 	{
+		if (getHost())
+		{
 		floater_container->closeFloater();
+	}
 	}
 	else
 	{
 		if (!getHost())
 		{
-			setVisible(FALSE);
+			floater_container->selectNextConversationByID(LLUUID());
 		}
-		floater_container->selectNextConversationByID(LLUUID());
 	}
 }
 
@@ -263,7 +272,7 @@ void LLFloaterIMNearbyChat::setVisibleAndFrontmost(BOOL take_focus, const LLSD& 
 {
 	LLFloaterIMSessionTab::setVisibleAndFrontmost(take_focus, key);
 
-	if(!isTornOff() && matchesKey(key))
+	if(matchesKey(key))
 	{
 		LLFloaterIMContainer::getInstance()->selectConversationPair(mSessionID, true, take_focus);
 	}
@@ -297,7 +306,6 @@ void LLFloaterIMNearbyChat::onClose(bool app_quitting)
 {
 	// Override LLFloaterIMSessionTab::onClose() so that Nearby Chat is not removed from the conversation floater
 	LLFloaterIMSessionTab::restoreFloater();
-	onClickCloseBtn();
 }
 
 // virtual
@@ -307,13 +315,7 @@ void LLFloaterIMNearbyChat::onClickCloseBtn()
 	{
 		return;
 	}
-	LLFloaterIMSessionTab::onTearOffClicked();
-	
-	LLFloaterIMContainer *im_box = LLFloaterIMContainer::findInstance();
-	if (im_box)
-	{
-		im_box->onNearbyChatClosed();
-	}
+	closeHostedFloater();
 }
 
 void LLFloaterIMNearbyChat::onChatFontChange(LLFontGL* fontp)
@@ -351,10 +353,16 @@ bool LLFloaterIMNearbyChat::isChatVisible() const
 void LLFloaterIMNearbyChat::showHistory()
 {
 	openFloater();
+	LLFloaterIMContainer::getInstance()->selectConversation(LLUUID(NULL));
+
 	if(!isMessagePaneExpanded())
 	{
 		restoreFloater();
 		setFocus(true);
+	}
+	else
+	{
+		LLFloaterIMContainer::getInstance()->setFocus(TRUE);
 	}
 	setResizeLimits(getMinWidth(), EXPANDED_MIN_HEIGHT);
 }
@@ -443,8 +451,10 @@ void LLFloaterIMNearbyChat::onChatBoxKeystroke()
 	LLWStringUtil::trimHead(raw_text);
 
 	S32 length = raw_text.length();
-
+//MK
+////	if( (length > 0) && (raw_text[0] != '/') )  // forward slash is used for escape (eg. emote) sequences
 	if( (length > 0) && (raw_text[0] != '/')  && (raw_text[0] != ':') )  // forward slash is used for escape (eg. emote) sequences
+//mk
 	{
 //MK
 		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
@@ -659,7 +669,7 @@ void LLFloaterIMNearbyChat::sendChat( EChatType type )
 			if (!utf8_revised_text.empty())
 			{
 				// Chat with animation
-				sendChatFromViewer(utf8_revised_text, type, TRUE);
+				sendChatFromViewer(utf8_revised_text, type, gSavedSettings.getBOOL("PlayChatAnim"));
 			}
 		}
 
@@ -713,10 +723,7 @@ void LLFloaterIMNearbyChat::addMessage(const LLChat& chat,bool archive,const LLS
 
 void LLFloaterIMNearbyChat::onChatBoxCommit()
 {
-	if (mInputEditor->getText().length() > 0)
-	{
 		sendChat(CHAT_TYPE_NORMAL);
-	}
 
 	gAgent.stopTyping();
 }

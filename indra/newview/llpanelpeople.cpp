@@ -161,9 +161,6 @@ public:
 		}
 	};
 
-	// Used for Range Display, originally from KB/Catznip
-	const id_to_pos_map_t& getAvatarsPositions() { return mAvatarsPositions; }
-
 protected:
 	virtual bool doCompare(const LLAvatarListItem* item1, const LLAvatarListItem* item2) const
 	{
@@ -611,6 +608,7 @@ BOOL LLPanelPeople::postBuild()
 	mMiniMap = (LLNetMap*)getChildView("Net Map",true);
 	mMiniMap->setToolTipMsg(gSavedSettings.getBOOL("DoubleClickTeleport") ? 
 		getString("AltMiniMapToolTipMsg") :	getString("MiniMapToolTipMsg"));
+//MK
 	mNearbyList->showRange(true); 
 	mNearbyList->showFirstSeen(true);
 	mNearbyList->showAvatarAge(true);
@@ -623,7 +621,7 @@ BOOL LLPanelPeople::postBuild()
 	// [/Ansariel: Colorful radar]
 	//nearby_tab->setVisibleCallback(boost::bind(&Updater::setActive, mNearbyListUpdater, _2));
 	mNearbyListUpdater->setActive(true); // AO: always keep radar active, for chat and channel integration
-
+//mk
 	mRecentList = getChild<LLPanel>(RECENT_TAB_NAME)->getChild<LLAvatarList>("avatar_list");
 	mRecentList->setNoItemsCommentText(getString("no_recent_people"));
 	mRecentList->setNoItemsMsg(getString("no_recent_people"));
@@ -789,16 +787,16 @@ void LLPanelPeople::updateFriendList()
 void LLPanelPeople::updateNearbyList()
 {
 	if (!mNearbyList)
-	{
 		return;
-	}
-
+//MK
 	std::vector<LLPanel*> items;
 	F32 drawRadius = gSavedSettings.getF32("RenderFarClip");
 	mNearbyList->getItems(items);	
 
 	// Fetch new list of surrounding Avs
+//mk
 	std::vector<LLVector3d> positions;
+//MK
 	LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
 	mNearbyList->setDirty(true,true); // AO: These optional arguements force updating even when we're not a visible window.
 	DISTANCE_COMPARATOR.updateAvatarsPositions(positions, mNearbyList->getIDs());
@@ -918,7 +916,6 @@ void LLPanelPeople::updateNearbyList()
 		lastRadarSweep[av->getAvatarId()] = rf;
 	}
 
-//MK
 	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 	{
 		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
@@ -929,12 +926,11 @@ void LLPanelPeople::updateNearbyList()
 		}
 		return;
 	}
-//mk
 
 	// Update various display fields
 	updateNearbyRange();
 	LLActiveSpeakerMgr::instance().update(TRUE);
-
+//mk
 	LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
 	mNearbyList->setDirty();
 
@@ -963,6 +959,7 @@ void LLPanelPeople::updateRecentList()
 //mk
 }
 
+//MK
 void LLPanelPeople::updateNearbyRange()
 // Iterates through nearbyList elements, updating the range field.
 // Thanks to Kitty Barnett for this logic.
@@ -997,7 +994,7 @@ void LLPanelPeople::reportToNearbyChat(std::string message)
 //	args["type"] = LLNotificationsUi::NT_NEARBYCHAT;
 //	LLNotificationsUi::LLNotificationManager::instance().onChat(chat, args);
 }
-
+//mk
 
 void LLPanelPeople::updateButtons()
 {
@@ -1023,6 +1020,7 @@ void LLPanelPeople::updateButtons()
 		groups_panel->getChildView("minus_btn")->setEnabled(item_selected && selected_id.notNull()); // a real group selected
 //MK
 		groups_panel->getChild<LLUICtrl>("groupcount")->setTextArg("[COUNT]", llformat("%d",gAgent.mGroups.count()));
+		groups_panel->getChild<LLUICtrl>("groupcount")->setTextArg("[REMAINING]", llformat("%d",(gMaxAgentGroups-gAgent.mGroups.count())));
 		groups_panel->getChild<LLUICtrl>("groupcount")->setTextArg("[MAX]", llformat("%d",gMaxAgentGroups));
 //mk
 	}
