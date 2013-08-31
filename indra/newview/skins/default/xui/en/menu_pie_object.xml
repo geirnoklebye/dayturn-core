@@ -12,10 +12,10 @@
          function="Object.EnableOpen" />
    </pie_slice>
      <pie_slice
-        label="Edit"
-        name="Edit...">
+        label="Create"
+        name="Build">
         <pie_slice.on_click
-            function="Object.Edit" />
+            function="Object.Build" />
         <pie_slice.on_enable
             function="EnableEdit"/>
     </pie_slice>
@@ -51,12 +51,6 @@
             function="Object.EnableStandUp" />
     </pie_slice>
     <pie_slice
-        label="Teleport Here"
-        name="Object Teleport Here">
-        <pie_slice.on_click
-            function="Object.Teleport" />
-    </pie_slice>
-    <pie_slice
         start_autohide="true"
         enabled="false"
         label="Buy"
@@ -77,12 +71,12 @@
     </pie_slice>
      <pie_slice
         enabled="false"
-        label="Buy"
-        name="Buy...">
+        label="Pay"
+        name="Pay...">
         <pie_slice.on_click
-            function="Object.Buy" />
+            function="PayObject" />
         <pie_slice.on_enable
-            function="Object.EnableBuy" />
+            function="EnablePayObject" />
         </pie_slice>
 
     <pie_menu
@@ -220,5 +214,26 @@
         </pie_slice>
 
     </pie_menu>
+
+    <pie_slice
+        enabled="false"
+        label="Buy"
+        name="Buy...">
+        <pie_slice.on_click
+            function="Object.Buy" />
+        <pie_slice.on_enable
+            function="Object.EnableBuy" />
+        </pie_slice>
+
+    </pie_menu>
+
+    <pie_slice
+        label="Edit"
+        name="Edit...">
+        <pie_slice.on_click
+            function="Object.Edit" />
+        <pie_slice.on_enable
+            function="EnableEdit"/>
+    </pie_slice>
 
 </pie_menu>
