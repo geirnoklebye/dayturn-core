@@ -2930,14 +2930,19 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				// Same as closing window
 				info->forceResponse(IOR_DECLINE);
 			}
-			// old logic: busy mode must not affect interaction with objects (STORM-565)
-			// new logic: inventory offers from in-world objects should be auto-declined (CHUI-519)
-			else if (is_do_not_disturb && dialog == IM_TASK_INVENTORY_OFFERED)
-			{
-				// Until throttling is implemented, do not disturb mode should reject inventory instead of silently
-				// accepting it.  SEE SL-39554
-				info->forceResponse(IOR_DECLINE);
-			}
+//MK
+			// MK : Comment this piece of code below, because auto-declining inventory offers from objects while in Busy mode
+			// confuses the user, thinking the object does not work. It certainly confuses me every time !
+
+			////// old logic: busy mode must not affect interaction with objects (STORM-565)
+			////// new logic: inventory offers from in-world objects should be auto-declined (CHUI-519)
+			////else if (is_do_not_disturb && dialog == IM_TASK_INVENTORY_OFFERED)
+			////{
+			////	// Until throttling is implemented, do not disturb mode should reject inventory instead of silently
+			////	// accepting it.  SEE SL-39554
+			////	info->forceResponse(IOR_DECLINE);
+			////}
+//mk
 			else
 			{
 				inventory_offer_handler(info);
