@@ -1670,51 +1670,6 @@ even though the user gets a free copy.
              enabled="true"
              tool_tip="Paste Rotation from Clipboard"
              width="30" />
- <!--           <text
-             type="string"
-             length="1"
-             follows="left|top"
-             height="10"
-             layout="topleft"
-             left="140"
-             name="label basetype"
-             top="5"
-             width="150">
-                Prim Type
-            </text>-->
-			<text
-			 type="string"
-			 length="1"
-			 follows="left|top"
-			 height="10"
-			 bottom="-15"
-			 layout="topleft"
-			 left="10"
-			 name="edit_object"
-			 top_pad="8"
-			 width="121">
-			  Object Parameters:
-			</text>
-			<button
-			 follows="top|right"
-			 height="16"
-			 label="Copy"
-			 layout="topleft"
-			 left="5"
-			 name="copyparams"
-			 tool_tip="Copy Parameters to Clipboard"
-			 width="52">
-			</button>
-			<button
-			 follows="top|right"
-			 height="16"
-			 label="Paste"
-			 layout="topleft"
-			 left_pad="10"
-			 name="pasteparams"
-			 tool_tip="Paste Parameters from Clipboard"
-			 width="52">
-			</button>
             <combo_box
              height="19"
              layout="topleft"
@@ -1763,7 +1718,7 @@ even though the user gets a free copy.
              layout="topleft"
              left_delta="0"
              name="text cut"
-             top_pad="5"
+             top_pad="2"
              width="150">
                 Path Cut (begin/end)
             </text>
@@ -1849,7 +1804,7 @@ even though the user gets a free copy.
              layout="topleft"
              left="140"
              name="Hollow Shape"
-             top_pad="4"
+             top_pad="5"
              width="150">
                 Hollow Shape
             </text>
@@ -1885,7 +1840,7 @@ even though the user gets a free copy.
              layout="topleft"
              left_delta="0"
              name="text twist"
-             top_pad="5"
+             top_pad="1"
              width="150">
                 Twist (begin/end)
             </text>
@@ -2171,6 +2126,38 @@ even though the user gets a free copy.
              name="Revolutions"
              top_delta="0"
              width="68" />
+            <text
+             type="string"
+             length="1"
+             follows="left|top"
+             height="10"
+             layout="topleft"
+             left="140"
+             name="edit_object"
+             top_pad="5"
+             width="150">
+                    Copy/Paste Prim Shape
+            </text>
+            <button
+             follows="left|top"
+             height="18"
+             label="Copy"
+             layout="topleft"
+             left="140"
+             name="copyparams"
+             tool_tip="Copy prim shape parameters to the clipboard"
+             width="70">
+            </button>
+            <button
+             follows="top|right"
+             height="18"
+             label="Paste"
+             layout="topleft"
+             left_pad="10"
+             name="pasteparams"
+             tool_tip="Paste prim shape parameters from the clipboard"
+             width="70">
+            </button>
             <texture_picker
              can_apply_immediately="true"
              default_image_name="Default"
