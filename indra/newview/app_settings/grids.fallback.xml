@@ -1,6 +1,6 @@
 <llsd>
     <map>
-	    <key>cc.opensimulator.org:8002</key>
+    <key>cc.opensimulator.org:8002</key>
         <map>
         <key>LastModified</key>
             <date>2013-08-20T22:22:13.28Z</date>
@@ -32,6 +32,112 @@
         <key>slurl_base</key>
             <string>hop://cc.opensimulator.org:8002/</string>
         </map>
+    <key>grid.jopensim.com:8002</key>
+        <map>
+        <key>LastModified</key>
+            <date>2013-07-02T22:36:08.06Z</date>
+        <key>about</key>
+            <string>http://www.jopensim.com</string>
+        <key>gridname</key>
+            <string>jOpenSimWorld</string>
+        <key>gridnick</key>
+            <string>jOpenSimWorld</string>
+        <key>help</key>
+            <string>http://grid.jopensim.com:9000/</string>
+        <key>helperuri</key>
+            <string>http://www.jopensim.com/components/com_opensim/</string>
+        <key>login_identifier_types</key>
+            <array>
+                <string>agent</string>
+                <string>account</string>
+            </array>
+        <key>loginpage</key>
+            <string>http://www.jopensim.com/index.php?option=com_opensim</string>
+        <key>loginuri</key>
+            <array>
+                <string>http://grid.jopensim.com:8002/</string>
+            </array>
+        <key>name</key>
+            <string>grid.jopensim.com:8002</string>
+        <key>password</key>
+            <string>http://www.jopensim.com</string>
+        <key>register</key>
+            <string>http://www.jopensim.com</string>
+        <key>slurl_base</key>
+            <string>hop://grid.jopensim.com:8002/</string>
+        </map>
+    <key>fleepgrid.com:8002</key>
+        <map>
+        <key>LastModified</key>
+            <date>2013-07-03T16:54:45.44Z</date>
+        <key>about</key>
+            <string>http://fleepgrid.com</string>
+        <key>gatekeeper</key>
+            <string>fleepgrid.com:8002</string>
+        <key>gridname</key>
+            <string>FleepGrid</string>
+        <key>gridnick</key>
+            <string>FleepGrid</string>
+        <key>help</key>
+            <string>http://fleepgrid.com</string>
+        <key>helperuri</key>
+            <string>http://fleepgrid.com/helper2/</string>
+        <key>login_identifier_types</key>
+            <array>
+                <string>agent</string>
+                <string>account</string>
+            </array>
+        <key>loginpage</key>
+            <string>http://fleepgrid.com/grid/modules/xoopensim/helper/loginpage.php</string>
+        <key>loginuri</key>
+            <array>
+                <string>http://fleepgrid.com:8002/</string>
+            </array>
+        <key>name</key>
+            <string>fleepgrid.com:8002</string>
+        <key>password</key>
+            <string>http://fleepgrid.com:8002/wifi</string>
+        <key>register</key>
+            <string>http://fleepgrid.com:8002/wifi</string>
+        <key>slurl_base</key>
+            <string>hop://fleepgrid.com:8002/</string>
+        </map>
+    <key>ucsim.uc.edu:8002</key>
+        <map>
+        <key>LastModified</key>
+            <date>2013-06-27T17:41:20.26Z</date>
+        <key>about</key>
+            <string>http://ucsim.uc.edu/blog/opensim/</string>
+        <key>gatekeeper</key>
+            <string>ucsim.uc.edu:8002</string>
+        <key>gridname</key>
+            <string>University of Cincinnati</string>
+        <key>gridnick</key>
+            <string>University of Cincinnati</string>
+        <key>help</key>
+            <string>http://ucsim.uc.edu/blog/opensim/</string>
+        <key>helperuri</key>
+            <string>http://ucsim.uc.edu/helper/</string>
+        <key>login_identifier_types</key>
+            <array>
+                <string>agent</string>
+                <string>account</string>
+            </array>
+        <key>loginpage</key>
+            <string>http://ucsim.uc.edu:8002/wifi/welcome.html</string>
+        <key>loginuri</key>
+            <array>
+                <string>http://ucsim.uc.edu:8002/</string>
+            </array>
+        <key>name</key>
+            <string>ucsim.uc.edu:8002</string>
+        <key>password</key>
+            <string>http://ucsim.uc.edu:8002/wifi</string>
+        <key>register</key>
+            <string>http://ucsim.uc.edu:8002/wifi</string>
+        <key>slurl_base</key>
+            <string>hop://ucsim.uc.edu:8002/</string>
+        </map>	
     <key>craft-world.org:8002</key>
         <map>
         <key>LastModified</key>
