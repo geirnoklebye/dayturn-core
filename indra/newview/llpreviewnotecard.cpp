@@ -402,14 +402,15 @@ struct LLSaveNotecardInfo
 bool LLPreviewNotecard::saveIfNeeded(LLInventoryItem* copyitem)
 {
 	LLViewerTextEditor* editor = getChild<LLViewerTextEditor>("Notecard Editor");
+	LLLineEditor *desc = getChild<LLLineEditor>("desc");
 
-	if(!editor)
+	if (!editor || !desc)
 	{
 		llwarns << "Cannot get handle to the notecard editor." << llendl;
 		return false;
 	}
 
-	if(!editor->isPristine())
+	if(!editor->isPristine() || desc->isDirty())
 	{
 		// We need to update the asset information
 		LLTransactionID tid;
@@ -426,6 +427,7 @@ bool LLPreviewNotecard::saveIfNeeded(LLInventoryItem* copyitem)
 		}
 
 		editor->makePristine();
+		desc->resetDirty();
 
 		S32 size = buffer.length() + 1;
 		file.setMaxSize(size);
