@@ -634,9 +634,11 @@ void LLScriptEdCore::sync()
 
 bool LLScriptEdCore::hasChanged()
 {
-	if (!mEditor) return false;
+	LLLineEditor *desc = mContainer->getChild<LLLineEditor>("desc");
 
-	return ((!mEditor->isPristine() || mEnableSave) && mHasScriptData);
+	if (!mEditor || !desc) return false;
+
+	return ((!mEditor->isPristine() || desc->isDirty() || mEnableSave) && mHasScriptData);
 }
 
 void LLScriptEdCore::draw()
@@ -1438,7 +1440,6 @@ void LLPreviewLSL::onSave(void* userdata, BOOL close_after_save)
 {
 	LLPreviewLSL* self = (LLPreviewLSL*)userdata;
 
-	self->mScriptEd->mErrorList->setCommentText("");
 	self->mCloseAfterSave = close_after_save;
 	self->saveIfNeeded();
 }
@@ -1454,7 +1455,13 @@ void LLPreviewLSL::saveIfNeeded(bool sync /*= true*/)
 		return;
 	}
 
+	LLLineEditor *desc = mScriptEd->mContainer->getChild<LLLineEditor>("desc");
+	if (desc) {
+		desc->resetDirty();
+	}
+
 	mPendingUploads = 0;
+	mScriptEd->mErrorList->setCommentText("");
 	mScriptEd->mErrorList->deleteAllItems();
 	mScriptEd->mEditor->makePristine();
 
