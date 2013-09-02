@@ -83,8 +83,9 @@ void StreamTitleDisplay::checkMetadata()
 
 			if (ShowStreamMetadata)
 			{
-				chat.mText = LLTrans::getString("StreamtitleNowPlaying") + " " + chat.mText;
-				chat.mSourceType = CHAT_SOURCE_SYSTEM;
+				chat.mSourceType = CHAT_SOURCE_AUDIO_STREAM;
+				chat.mFromID = AUDIO_STREAM_FROM;
+				chat.mFromName = LLTrans::getString("Audio Stream");
 				LLSD args;
 				args["type"] = LLNotificationsUI::NT_NEARBYCHAT;
 				LLNotificationsUI::LLNotificationManager::instance().onChat(chat, args);

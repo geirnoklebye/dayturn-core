@@ -826,6 +826,11 @@ void LLIMModel::LLIMSession::buildHistoryFileName()
 	}
 	else if (isP2P()) // look up username to use as the log name
 	{
+		if (mOtherParticipantID == AUDIO_STREAM_FROM) {
+			mHistoryFileName =  LLTrans::getString("Audio Stream");
+			return;
+		}
+
 		LLAvatarName av_name;
 		// For outgoing sessions we already have a cached name
 		// so no need for a callback in LLAvatarNameCache::get()
@@ -1030,9 +1035,12 @@ bool LLIMModel::logToFile(const std::string& file_name, const std::string& from,
 	if (gSavedPerAccountSettings.getS32("KeepConversationLogTranscripts") > 1)
 	{	
 		std::string from_name = from;
-
 		LLAvatarName av_name;
-		if (!from_id.isNull() && 
+
+		if (from_id == AUDIO_STREAM_FROM) {
+			from_name = LLTrans::getString("Audio Stream");
+		}
+		else if (!from_id.isNull() && 
 			LLAvatarNameCache::get(from_id, &av_name) &&
 			!av_name.isDisplayNameDefault())
 		{	
@@ -1065,7 +1073,7 @@ bool LLIMModel::addMessage(const LLUUID& session_id, const std::string& from, co
 
 	//good place to add some1 to recent list
 	//other places may be called from message history.
-	if( !from_id.isNull() &&
+	if (!(from_id.isNull() || from_id == AUDIO_STREAM_FROM) &&
 		( session->isP2PSessionType() || session->isAdHocSessionType() ) )
 		LLRecentPeople::instance().add(from_id);
 
@@ -1101,6 +1109,9 @@ LLIMModel::LLIMSession* LLIMModel::addMessageSilently(const LLUUID& session_id, 
 	{
 		from_name = SYSTEM_FROM;
 	}
+	else if (AUDIO_STREAM_FROM == from_id) {
+		from_name = LLTrans::getString("Audio Stream");
+	}
 
 	addToHistory(session_id, from_name, from_id, utf8_text);
 	if (log2file)
@@ -1111,7 +1122,7 @@ LLIMModel::LLIMSession* LLIMModel::addMessageSilently(const LLUUID& session_id, 
 	session->mNumUnread++;
 
 	//update count of unread messages from real participant
-	if (!(from_id.isNull() || from_id == gAgentID || SYSTEM_FROM == from)
+	if (!(from_id.isNull() || from_id == gAgentID || SYSTEM_FROM == from || AUDIO_STREAM_FROM == from_id)
 			// we should increment counter for interactive system messages()
 			|| INTERACTIVE_SYSTEM_FROM == from)
 	{

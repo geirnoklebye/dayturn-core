@@ -44,6 +44,7 @@
 
 // library includes
 #include "llavatarnamecache.h"
+#include "lltrans.h"
 
 #define MENU_ITEM_VIEW_PROFILE 0
 #define MENU_ITEM_SEND_IM 1
@@ -258,6 +259,12 @@ void LLAvatarIconCtrl::setValue(const LLSD& value)
 		LLIconCtrl::setValue(value);
 	}
 
+	if (mAvatarId == AUDIO_STREAM_FROM) {
+		mFullName = LLTrans::getString("Audio Stream");
+		setToolTip(std::string());
+		return;
+	}
+
 	fetchAvatarName();
 }
 
@@ -316,20 +323,23 @@ void LLAvatarIconCtrl::processProperties(void* data, EAvatarProcessorType type)
 void LLAvatarIconCtrl::onAvatarNameCache(const LLUUID& agent_id, const LLAvatarName& av_name)
 {
 	mAvatarNameCacheConnection.disconnect();
+	bool set_tool_tip = FALSE;
 
-	if (agent_id == mAvatarId)
-	{
+	if (agent_id == AUDIO_STREAM_FROM) {
+		mFullName = LLTrans::getString("Audio Stream");
+		set_tool_tip = TRUE;
+	}
+	else if (agent_id == mAvatarId) {
 		// Most avatar icon controls are next to a UI element that shows
 		// a display name, so only show username.
 		mFullName = av_name.getUserName();
+		set_tool_tip = TRUE;
+	}
 
-		if (mDrawTooltip)
-		{
-			setToolTip(mFullName);
-		}
-		else
-		{
-			setToolTip(std::string());
-		}
+	if (set_tool_tip && mDrawTooltip) {
+		setToolTip(mFullName);
+	}
+	else {
+		setToolTip(std::string());
 	}
 }

@@ -50,6 +50,8 @@
 
 class LLFetchAvatarData;
 
+extern const LLUUID AUDIO_STREAM_FROM;
+
 
 //////////////////////////////////////////////////////////////////////////////
 // LLInspectAvatar
@@ -261,6 +263,17 @@ void LLInspectAvatar::requestUpdate()
 	LLAvatarIconIDCache::getInstance()->remove(mAvatarID);
 
 	getChild<LLUICtrl>("avatar_icon")->setValue(LLSD(mAvatarID) );
+
+	if (mAvatarID == AUDIO_STREAM_FROM) {
+		std::string from_name = LLTrans::getString("Audio Stream");
+		LLSD sd;
+		sd["username"] = from_name;
+		sd["display_name"] = from_name;
+		LLAvatarName avatar_name;
+		avatar_name.fromLLSD(sd);
+		onAvatarNameCache(mAvatarID, avatar_name);
+		return;
+	}
 
 	if (mAvatarNameCacheConnection.connected())
 	{

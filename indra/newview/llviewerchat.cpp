@@ -54,6 +54,9 @@ void LLViewerChat::getChatColor(const LLChat& chat, LLColor4& r_color)
 			case CHAT_SOURCE_SYSTEM:
 				r_color = LLUIColorTable::instance().getColor("SystemChatColor"); 
 				break;
+			case CHAT_SOURCE_AUDIO_STREAM:
+				r_color = LLUIColorTable::instance().getColor("AudioStreamColour");
+				break;
 			case CHAT_SOURCE_AGENT:
 				if (chat.mFromID.isNull() || SYSTEM_FROM == chat.mFromName)
 				{
@@ -122,7 +125,11 @@ void LLViewerChat::getChatColor(const LLChat& chat, std::string& r_color_name, F
 			case CHAT_SOURCE_SYSTEM:
 				r_color_name = "SystemChatColor";
 				break;
-				
+
+			case CHAT_SOURCE_AUDIO_STREAM:
+				r_color_name = "AudioStreamColour";
+				break;
+
 			case CHAT_SOURCE_AGENT:
 				if (chat.mFromID.isNull())
 				{
@@ -239,6 +246,9 @@ std::string LLViewerChat::getSenderSLURL(const LLChat& chat, const LLSD& args)
 
 	case CHAT_SOURCE_OBJECT:
 		return getObjectImSLURL(chat, args);
+
+	case CHAT_SOURCE_AUDIO_STREAM:
+		return LLStringUtil::null;
 
 	default:
 		llwarns << "Getting SLURL for an unsupported sender type: " << chat.mSourceType << llendl;

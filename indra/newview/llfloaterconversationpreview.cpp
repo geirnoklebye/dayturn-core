@@ -189,7 +189,18 @@ void LLFloaterConversationPreview::showHistory()
 		}
 		else if (from_id.isNull())
 		{
-			chat.mSourceType = LLFloaterIMNearbyChat::isWordsName(from) ? CHAT_SOURCE_UNKNOWN : CHAT_SOURCE_OBJECT;
+			if (from == LLTrans::getString("Audio Stream")) {
+				chat.mSourceType = CHAT_SOURCE_AUDIO_STREAM;
+			}
+			else if (from == LLTrans::getString("SECOND_LIFE")) {
+				chat.mSourceType = CHAT_SOURCE_SYSTEM;
+			}
+			else if (!LLFloaterIMNearbyChat::isWordsName(from)) {
+				chat.mSourceType = CHAT_SOURCE_OBJECT;
+			}
+			else {
+				chat.mSourceType = CHAT_SOURCE_UNKNOWN;
+			}
 		}
 
 		LLSD chat_args;

@@ -331,6 +331,9 @@ public:
 		{
 			mSourceType = CHAT_SOURCE_SYSTEM;
 		}  
+		else if (chat.mFromID == AUDIO_STREAM_FROM) {
+			mSourceType = CHAT_SOURCE_AUDIO_STREAM;
+		}
 
 		mUserNameFont = style_params.font();
 		LLTextBox* user_name = getChild<LLTextBox>("user_name");
@@ -344,6 +347,11 @@ public:
 			user_name->setValue(mFrom);
 			updateMinUserNameWidth();
 		}
+		else if (mSourceType == CHAT_SOURCE_AUDIO_STREAM) {
+			mFrom = LLTrans::getString("Audio Stream");
+			user_name->setValue(mFrom);
+			updateMinUserNameWidth();
+	    	}
 		else if (mSourceType == CHAT_SOURCE_AGENT
 				 && !mAvatarID.isNull()
 				 && chat.mChatStyle != CHAT_STYLE_HISTORY)
@@ -418,8 +426,12 @@ public:
 			case CHAT_SOURCE_SYSTEM:
 				icon->setValue(LLSD("Kokua_Logo"));
 				break;
+			case CHAT_SOURCE_AUDIO_STREAM:
+				icon->setValue(LLSD("Sound_Icon"));
+				break;
 			case CHAT_SOURCE_UNKNOWN: 
 				icon->setValue(LLSD("Unknown_Icon"));
+				break;
 		}
 
 		// In case the message came from an object, save the object info
@@ -552,7 +564,7 @@ protected:
 
 	void showInfoCtrl()
 	{
-		if (mAvatarID.isNull() || mFrom.empty() || CHAT_SOURCE_SYSTEM == mSourceType) return;
+		if (mAvatarID.isNull() || mFrom.empty() || CHAT_SOURCE_SYSTEM == mSourceType || CHAT_SOURCE_AUDIO_STREAM == mSourceType) return;
 				
 		if (!sInfoCtrl)
 		{

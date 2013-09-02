@@ -373,6 +373,8 @@ void LLFloaterIMNearbyChatToastPanel::draw()
 				icon->setValue(LLSD("OBJECT_Icon"));
 			else if(mSourceType == CHAT_SOURCE_SYSTEM)
 				icon->setValue(LLSD("Kokua_Logo"));
+			else if(mSourceType == CHAT_SOURCE_AUDIO_STREAM)
+				icon->setValue(LLSD("Sound_Icon"));
 			else if(mSourceType == CHAT_SOURCE_AGENT)
 				icon->setValue(mFromID);
 			else if(!mFromID.isNull())
