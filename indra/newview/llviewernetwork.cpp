@@ -1129,6 +1129,9 @@ std::string LLGridManager::getLoginPage()
 std::string LLGridManager::getUpdateServiceURL()
 {
 	std::string update_url_base = gSavedSettings.getString("CmdLineUpdateService");
+		LL_INFOS2("UpdaterService","GridManager")
+			<< "Update URL base overridden from command line: " << update_url_base
+			<< LL_ENDL;
 	std::string last_known_grid = gSavedSettings.getString("CurrentGrid");
 /**
 * The requirement to not have update checking on non-sl grids is implemented by looking at
