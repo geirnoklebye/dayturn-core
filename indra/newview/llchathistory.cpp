@@ -972,7 +972,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				mEditor->appendText(chat.mFromName + delimiter, prependNewLineState, link_params);
 				prependNewLineState = false;
 			}
-			else if ( chat.mFromName != SYSTEM_FROM && chat.mFromID.notNull() && !message_from_log)
+			else if (chat.mFromName != SYSTEM_FROM && chat.mFromID.notNull() && chat.mFromID != AUDIO_STREAM_FROM && !message_from_log)
 			{
 				LLStyle::Params link_params(body_message_params);
 				link_params.overwriteFrom(LLStyleMap::instance().lookupAgent(chat.mFromID));
