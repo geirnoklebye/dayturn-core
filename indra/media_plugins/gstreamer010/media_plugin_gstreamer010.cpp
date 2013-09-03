@@ -73,15 +73,23 @@ struct ndStreamMetadata
 	std::string mStreamName;
 };
 
-static std::string unencode_metadata(std::string str)
+//
+//	decode some of the more common entity tokens found in stream metadata
+//
+//	Note: Convert this to use boost::regex if the list needs to be
+//	expanded in the future.  It's not used a lot so it doesn't matter
+//	for now
+//
+static std::string decode_entities(std::string str)
 {
-	LLStringUtil::replaceString(str, "&lt;", "<");
-	LLStringUtil::replaceString(str, "&gt;",">");
-	LLStringUtil::replaceString(str, "&quot;","\"");
-	LLStringUtil::replaceString(str, "&#39;","'");
-	LLStringUtil::replaceString(str, "&amp;","&");
-	LLStringUtil::replaceString(str, "&apos;","'");
-
+	if (str.find('&') != std::string::npos) {
+		LLStringUtil::replaceString(str, "&lt;", "<");
+		LLStringUtil::replaceString(str, "&gt;", ">");
+		LLStringUtil::replaceString(str, "&quot;", "\"");
+		LLStringUtil::replaceString(str, "&amp;", "&");
+		LLStringUtil::replaceString(str, "&apos;", "'");
+		LLStringUtil::replaceString(str, "&#39;", "'");
+	}
 	return str;
 }
 
@@ -115,7 +123,7 @@ static void extractMetadata (const GstTagList * list, const gchar * tag, gpointe
 		const GValue *val( gst_tag_list_get_value_index (list, tag, i) );
 
 		if (G_VALUE_HOLDS_STRING (val)) {
-			pStrOut->assign(unencode_metadata(g_value_get_string(val)));
+			pStrOut->assign(decode_entities(g_value_get_string(val)));
 		}
 	}
 }
