@@ -348,7 +348,7 @@ public:
 			updateMinUserNameWidth();
 		}
 		else if (mSourceType == CHAT_SOURCE_AUDIO_STREAM) {
-			mFrom = LLTrans::getString("Audio Stream");
+			mFrom = chat.mFromName;
 			user_name->setValue(mFrom);
 			updateMinUserNameWidth();
 	    	}

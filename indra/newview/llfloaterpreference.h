@@ -114,6 +114,7 @@ protected:
 	void onShowPointAtChanged();
 	void onNameTagShowAgeChanged();
 	void onNameTagShowAgeLimitChanged();
+	void onShowStreamMetadataChanged();
 
 	// string differs from default after user changes.
 	void onDoNotDisturbResponseChanged();

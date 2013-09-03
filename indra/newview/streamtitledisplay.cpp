@@ -50,6 +50,7 @@ BOOL StreamTitleDisplay::tick()
 void StreamTitleDisplay::checkMetadata()
 {
 	static LLCachedControl<bool> ShowStreamMetadata(gSavedSettings, "ShowStreamMetadata");
+	static LLCachedControl<bool> ShowStreamName(gSavedSettings, "ShowStreamName");
 	static LLCachedControl<bool> StreamMetadataAnnounceToChat(gSavedSettings, "StreamMetadataAnnounceToChat");
 
 
@@ -86,6 +87,15 @@ void StreamTitleDisplay::checkMetadata()
 				chat.mSourceType = CHAT_SOURCE_AUDIO_STREAM;
 				chat.mFromID = AUDIO_STREAM_FROM;
 				chat.mFromName = LLTrans::getString("Audio Stream");
+
+				if (ShowStreamName) {
+					std::string stream_name = gAudiop->getStreamingAudioImpl()->getCurrentStreamName();
+
+					if (!stream_name.empty()) {
+						chat.mFromName += " - " + stream_name;
+					}
+				}
+
 				LLSD args;
 				args["type"] = LLNotificationsUI::NT_NEARBYCHAT;
 				LLNotificationsUI::LLNotificationManager::instance().onChat(chat, args);

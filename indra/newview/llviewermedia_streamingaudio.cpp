@@ -250,4 +250,8 @@ std::string LLStreamingAudio_MediaPlugins::getCurrentTitle()
 	mTitle = mMediaPlugin->getTitle();
 	return mTitle;
 }
-// </ND>
+
+std::string LLStreamingAudio_MediaPlugins::getCurrentStreamName()
+{
+	return mMediaPlugin->getStreamName();
+}

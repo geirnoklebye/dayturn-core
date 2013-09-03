@@ -442,10 +442,13 @@ public:
 	std::string const& getTitle() const
 	{ return mTitle; }
 
+	std::string const &getStreamName() const
+	{ return mStreamName; }
+
 private:
 	std::string mArtist;
 	std::string mTitle;
-	// </ND>
+	std::string mStreamName;
 
 //--------------------------------------
 	//debug use only

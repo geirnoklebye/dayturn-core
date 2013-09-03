@@ -236,7 +236,9 @@ void LLFloaterIMNearbyChat::loadHistory()
 		}
 		else if (from_id.isNull())
 		{
-			if (from == LLTrans::getString("Audio Stream")) {
+			std::string audio_stream = LLTrans::getString("Audio Stream");
+
+			if (from.compare(0, audio_stream.length(), audio_stream) == 0) {
 				chat.mSourceType = CHAT_SOURCE_AUDIO_STREAM;
 			}
 			else if (from == LLTrans::getString("SECOND_LIFE")) {

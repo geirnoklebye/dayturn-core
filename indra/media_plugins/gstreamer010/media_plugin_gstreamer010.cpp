@@ -48,6 +48,7 @@
 #include "llplugininstance.h"
 #include "llpluginmessage.h"
 #include "llpluginmessageclasses.h"
+#include "llstring.h"
 #include "media_plugin_base.h"
 
 //#if LL_GSTREAMER010_ENABLED
@@ -64,13 +65,30 @@ extern "C" {
 #ifdef LL_LINUX
 #include "llmediaimplgstreamer_syms.h"
 #endif
-// <ND> extract stream metadata so we can report back into the client what's playing
+
 struct ndStreamMetadata
 {
 	std::string mArtist;
 	std::string mTitle;
+	std::string mStreamName;
 };
 
+static std::string unencode_metadata(std::string str)
+{
+	LLStringUtil::replaceString(str, "&lt;", "<");
+	LLStringUtil::replaceString(str, "&gt;",">");
+	LLStringUtil::replaceString(str, "&quot;","\"");
+	LLStringUtil::replaceString(str, "&#39;","'");
+	LLStringUtil::replaceString(str, "&amp;","&");
+	LLStringUtil::replaceString(str, "&apos;","'");
+
+	return str;
+}
+
+//
+//	extract stream metadata so we can report back into the
+//	client what's playing
+//
 static void extractMetadata (const GstTagList * list, const gchar * tag, gpointer user_data)
 {
 	int i, num;
@@ -85,6 +103,8 @@ static void extractMetadata (const GstTagList * list, const gchar * tag, gpointe
 		pStrOut = &pOut->mTitle;
 	else if( strcmp( tag, "artist" ) == 0 )
 		pStrOut = &pOut->mArtist;
+	else if (strcmp(tag, "organization") == 0)
+		pStrOut = &pOut->mStreamName;
 
 	if( !pStrOut )
 		return;
@@ -94,11 +114,11 @@ static void extractMetadata (const GstTagList * list, const gchar * tag, gpointe
 	{
 		const GValue *val( gst_tag_list_get_value_index (list, tag, i) );
 
-		if (G_VALUE_HOLDS_STRING (val))
-			pStrOut->assign( g_value_get_string(val) );
-  }
+		if (G_VALUE_HOLDS_STRING (val)) {
+			pStrOut->assign(unencode_metadata(g_value_get_string(val)));
+		}
+	}
 }
-// </ND>
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -192,6 +212,7 @@ private:
 	double mSeekDestination;
 
 	std::string mLastTitle;
+	std::string mStreamName;
 	
 	// Very GStreamer-specific
 	GMainLoop *mPump; // event pump for this media
@@ -291,7 +312,7 @@ MediaPluginGStreamer010::processGSTEvents(GstBus     *bus,
 			// NEEDS GST 0.10.11+ and America discovered by C.Columbus
 			gint percent = 0;
 			gst_message_parse_buffering(message, &percent);
-			writeToLog((char*)"GST buffering: %d%%", percent);
+			// writeToLog((char*)"GST buffering: %d%%", percent);
 
 			break;
 		}
@@ -339,18 +360,20 @@ MediaPluginGStreamer010::processGSTEvents(GstBus     *bus,
 		gst_tag_list_free (tags);
 		
 		LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA, "ndMediadata_change");
+		if (!oMData.mStreamName.empty()) {
+			mStreamName = oMData.mStreamName;
+		}
+
 		if (!oMData.mTitle.empty() || !oMData.mArtist.empty()) //dont send empty data
 		{
 			writeToLog((char*)"Title: %s", oMData.mTitle.c_str());
 			message.setValue("title", oMData.mTitle );
 			message.setValue("artist", oMData.mArtist );
+			message.setValue("streamname", mStreamName);
 			sendMessage(message);
 		}
-
-
-
-		
-	} // </ND>
+		break;
+	}
 	case GST_MESSAGE_ERROR: {
 
 			GError *err = NULL;
@@ -394,33 +417,6 @@ MediaPluginGStreamer010::processGSTEvents(GstBus     *bus,
 	
 			break;
 		}
-/*		case GST_MESSAGE_TAG: 
-		{
-			GstTagList *new_tags;
-
-			gst_message_parse_tag( message, &new_tags );
-
-			gchar *title = NULL;
-
-			if ( gst_tag_list_get_string(new_tags, GST_TAG_TITLE, &title) )
-			{
-				//writeToLog((char*)"Title: %s", title);
-				std::string newtitle(title);
-				gst_tag_list_free(new_tags);
-
-				if ( newtitle != mLastTitle && !newtitle.empty() )
-				{
-					LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA, "name_text");
-					message.setValue("name", newtitle );
-					sendMessage( message );
-					mLastTitle = newtitle;
-				}
-				g_free(title);
-			}
-
-			break;
-		}
-*/
 		case GST_MESSAGE_EOS:
 		{
 			/* end-of-stream */
@@ -703,6 +699,9 @@ MediaPluginGStreamer010::play(double rate)
 	// NOTE: we don't actually support non-natural rate.
 	writeToLog((char*)"playing media... rate=%f", rate);
 	// todo: error-check this?
+
+	mStreamName = "";
+
 	if (mDoneInit && mPlaybin)
 	{
 		gst_element_set_state(mPlaybin, GST_STATE_PLAYING);
@@ -725,7 +724,7 @@ MediaPluginGStreamer010::setVolume( float volume )
 	mVolume = volume;
 	if (mDoneInit && mPlaybin)
 	{
-		writeToLog("MediaPluginGStreamer010::receiveMessage: set_volume: %f", volume);
+		// writeToLog("MediaPluginGStreamer010::receiveMessage: set_volume: %f", volume);
 		g_object_set(mPlaybin, "volume", mVolume, NULL);
 		return true;
 	}
