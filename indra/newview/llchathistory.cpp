@@ -51,6 +51,7 @@
 #include "lllayoutstack.h"
 #include "llagent.h"
 #include "llnotificationsutil.h"
+#include "lltabcontainer.h"
 #include "lltoastnotifypanel.h"
 #include "lltooltip.h"
 #include "llviewerregion.h"
@@ -62,6 +63,12 @@
 #include "llurlaction.h"
 #include "llviewercontrol.h"
 #include "llviewerobjectlist.h"
+#include "llwindow.h"
+
+#include "llaudioengine.h"
+#include "llvieweraudio.h"
+#include "llviewermedia.h"
+#include "llviewermedia_streamingaudio.h"
 
 static LLDefaultChildRegistry::Register<LLChatHistory> r("chat_history");
 
@@ -239,18 +246,148 @@ public:
 		}
 	}
 
+	void onAudioStreamIconContextMenuItemClipboard(const LLSD& userdata)
+	{
+		std::string action = userdata.asString();
+		std::string clipboard;
+		LLStreamingAudioInterface *stream;
+		bool have_stream = false;
+		
+		//
+		//	check if music is playing first
+		//
+		if (gAudiop && 
+			LLViewerMedia::hasParcelAudio() &&
+			LLViewerMedia::isParcelAudioPlaying()
+		) {
+			stream = gAudiop->getStreamingAudioImpl();
+
+			if (stream) {
+				have_stream = true;
+			}
+		}
+
+		if (have_stream) {
+			if (action == "copy_track_name") {
+				//
+				//	prepend the artist to the track name
+				//	if artist info is available
+				//
+				clipboard = stream->getCurrentArtist();
+
+				if (!clipboard.empty()) {
+					clipboard += " - ";
+				}
+
+				clipboard += stream->getCurrentTitle();
+			}
+			else if (action == "copy_stream_name") {
+				clipboard = stream->getCurrentStreamName();
+			}
+			else if (action == "copy_stream_address") {
+				clipboard = stream->getURL();
+			}
+		}
+
+		LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(clipboard));
+	}
+
+	void onAudioStreamIconContextMenuItemStopStream(const LLSD& userdata)
+	{
+		LLViewerAudio *audio = LLViewerAudio::getInstance();
+			
+		if (audio) {
+			//
+			//	stop the stream
+			//
+			audio->stopInternetStreamWithAutoFade();
+		}
+	}
+
+	void onAudioStreamIconContextMenuItemStartStream(const LLSD& userdata)
+	{
+		if (gAudiop && LLViewerMedia::hasParcelAudio()) {
+			if (gAudiop->isInternetStreamPlaying() == LLAudioEngine::AUDIO_PAUSED) {
+				//
+				//	unpause the stream
+				//
+				gAudiop->pauseInternetStream(false);
+			}
+			else {
+				LLViewerAudio *audio = LLViewerAudio::getInstance();
+
+				if (audio) {
+					//
+					//	start the stream
+					//
+					audio->startInternetStreamWithAutoFade(LLViewerMedia::getParcelAudioURL());
+				}
+			}
+		}
+	}
+
+	void onAudioStreamIconContextMenuItemViewerSound(const LLSD& userdata)
+	{
+		open_floater_at_tab("preferences", "audio");
+	}
+
+	void onAudioStreamIconContextMenuItemParcelSound(const LLSD& userdata)
+	{
+		open_floater_at_tab("about_land", "land_audio_panel");
+	}
+
+	void open_floater_at_tab(const std::string floater_name, const std::string tab_name)
+	{
+		//
+		//	open the named floater
+		//
+		LLFloater *floater = LLFloaterReg::getTypedInstance<LLFloater>(floater_name);
+
+		if (!floater) {
+			return;
+		}
+
+		floater->openFloater();
+
+		//
+		//	switch to the named tab in the floater
+		//
+		LLPanel *tab = floater->getChild<LLPanel>(tab_name);
+
+		if (tab) {
+			LLTabContainer *container = dynamic_cast<LLTabContainer*>(tab->getParent());
+
+			if (container) {
+				container->selectTabPanel(tab);
+		    	}
+		}
+
+		//
+		//	focus the floater
+		//
+		floater->setFocus(TRUE);
+	}
+
 	BOOL postBuild()
 	{
 		LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
 
 		registrar.add("AvatarIcon.Action", boost::bind(&LLChatHistoryHeader::onAvatarIconContextMenuItemClicked, this, _2));
 		registrar.add("ObjectIcon.Action", boost::bind(&LLChatHistoryHeader::onObjectIconContextMenuItemClicked, this, _2));
+		registrar.add("AudioStreamIcon.Clipboard", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemClipboard, this, _2));
+		registrar.add("AudioStreamIcon.StopStream", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemStopStream, this, _2));
+		registrar.add("AudioStreamIcon.StartStream", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemStartStream, this, _2));
+		registrar.add("AudioStreamIcon.ViewerSound", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemViewerSound, this, _2));
+		registrar.add("AudioStreamIcon.ParcelSound", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemParcelSound, this, _2));
 
 		LLMenuGL* menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_avatar_icon.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
 		mPopupMenuHandleAvatar = menu->getHandle();
 
 		menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_object_icon.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
 		mPopupMenuHandleObject = menu->getHandle();
+
+		menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_audio_stream_icon.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
+		mPopupMenuHandleAudioStream = menu->getHandle();
 
 		setDoubleClickCallback(boost::bind(&LLChatHistoryHeader::showInspector, this));
 
@@ -497,10 +634,12 @@ protected:
 	{
 		if(mSourceType == CHAT_SOURCE_SYSTEM)
 			showSystemContextMenu(x,y);
-		if(mAvatarID.notNull() && mSourceType == CHAT_SOURCE_AGENT)
+		else if (mAvatarID.notNull() && mSourceType == CHAT_SOURCE_AGENT)
 			showAvatarContextMenu(x,y);
-		if(mAvatarID.notNull() && mSourceType == CHAT_SOURCE_OBJECT && SYSTEM_FROM != mFrom)
+		else if (mAvatarID.notNull() && mSourceType == CHAT_SOURCE_OBJECT && SYSTEM_FROM != mFrom)
 			showObjectContextMenu(x,y);
+		else if (mSourceType == CHAT_SOURCE_AUDIO_STREAM)
+			showAudioStreamContextMenu(x,y);
 	}
 
 	void showSystemContextMenu(S32 x,S32 y)
@@ -555,6 +694,40 @@ protected:
 				menu->setItemVisible("ToggleFreeze", can_freeze_eject);
 				menu->setItemVisible("Eject", can_freeze_eject);
 			}
+
+			menu->buildDrawLabels();
+			menu->updateParent(LLMenuGL::sMenuContainer);
+			LLMenuGL::showPopup(this, menu, x, y);
+		}
+	}
+
+	void showAudioStreamContextMenu(S32 x,S32 y)
+	{
+		LLMenuGL *menu = (LLMenuGL*)mPopupMenuHandleAudioStream.get();
+
+		if (menu) {
+			bool playing = false;
+
+			static LLCachedControl<bool> audio_streaming_music(gSavedSettings, "AudioStreamingMusic");
+
+			if (gAudiop && audio_streaming_music && LLViewerMedia::hasParcelAudio()) {
+				if (LLViewerMedia::isParcelAudioPlaying()) {
+					playing = true;
+				}
+
+				menu->setItemVisible("start_stream", !playing);
+				menu->setItemEnabled("start_stream", !playing);
+			}
+			else {
+				menu->setItemVisible("start_stream", true);
+				menu->setItemEnabled("start_stream", false);
+			}
+
+			menu->setItemVisible("stop_stream", playing);
+			menu->setItemEnabled("stop_stream", playing);
+			menu->setItemEnabled("copy_track_name", playing);
+			menu->setItemEnabled("copy_stream_name", playing);
+			menu->setItemEnabled("copy_stream_address", playing);
 
 			menu->buildDrawLabels();
 			menu->updateParent(LLMenuGL::sMenuContainer);
@@ -666,6 +839,7 @@ private:
 protected:
 	LLHandle<LLView>	mPopupMenuHandleAvatar;
 	LLHandle<LLView>	mPopupMenuHandleObject;
+	LLHandle<LLView>	mPopupMenuHandleAudioStream;
 
 	static LLUICtrl*	sInfoCtrl;
 

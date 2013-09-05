@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<menu
+    name="Audio Stream Icon Menu"
+    layout="topleft"
+    left="100"
+    top="724"
+    height="101"
+    width="128"
+    mouse_opaque="false"
+    visible="false">
+    <menu_item_call
+        name="stop_stream"
+        label="Stop Streaming Audio"
+        layout="topleft">
+        <menu_item_call.on_click
+            function="AudioStreamIcon.StopStream" />
+    </menu_item_call>
+    <menu_item_call
+        name="start_stream"
+        label="Start Streaming Audio"
+        layout="topleft">
+        <menu_item_call.on_click
+            function="AudioStreamIcon.StartStream" />
+    </menu_item_call>
+    <menu_item_separator />
+    <menu_item_call
+        name="copy_track_name"
+        label="Copy Current Track Name"
+        layout="topleft">
+        <menu_item_call.on_click
+            function="AudioStreamIcon.Clipboard"
+            parameter="copy_track_name" />
+    </menu_item_call>
+    <menu_item_call
+        name="copy_stream_name"
+        label="Copy Current Stream Name"
+        layout="topleft">
+        <menu_item_call.on_click
+            function="AudioStreamIcon.Clipboard"
+            parameter="copy_stream_name" />
+    </menu_item_call>
+    <menu_item_call
+        name="copy_stream_address"
+        label="Copy Current Stream Address"
+        layout="topleft">
+        <menu_item_call.on_click
+            function="AudioStreamIcon.Clipboard"
+            parameter="copy_stream_address" />
+    </menu_item_call>
+    <menu_item_separator />
+    <menu_item_call
+        name="viewer_sound"
+        label="Sound &amp; Media Preferences"
+        layout="topleft">
+        <menu_item_call.on_click
+            function="AudioStreamIcon.ViewerSound" />
+    </menu_item_call>
+    <menu_item_call
+        name="parcel_sound"
+        label="Parcel Sound Settings"
+        layout="topleft">
+        <menu_item_call.on_click
+            function="AudioStreamIcon.ParcelSound" />
+    </menu_item_call>
+</menu>
