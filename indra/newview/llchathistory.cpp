@@ -250,8 +250,7 @@ public:
 	{
 		std::string action = userdata.asString();
 		std::string clipboard;
-		LLStreamingAudioInterface *stream;
-		bool have_stream = false;
+		LLStreamingAudioInterface *stream = NULL;
 		
 		//
 		//	check if music is playing first
@@ -261,13 +260,9 @@ public:
 			LLViewerMedia::isParcelAudioPlaying()
 		) {
 			stream = gAudiop->getStreamingAudioImpl();
-
-			if (stream) {
-				have_stream = true;
-			}
 		}
 
-		if (have_stream) {
+		if (stream) {
 			if (action == "copy_track_name") {
 				//
 				//	prepend the artist to the track name
