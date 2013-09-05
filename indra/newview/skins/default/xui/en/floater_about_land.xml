@@ -1786,8 +1786,19 @@ Only large parcels can be listed in search.
              max_length_bytes="255"
              name="music_url"
              top_delta="0"
-             right="-15"
+             right="-65"
              select_on_focus="true" />
+            <button
+             name="music_url_copy"
+             layout="topleft"
+             follows="right|top"
+             label="Copy"
+             height="23"
+             width="50"
+             top_delta="0"
+             right="-10"
+             mouse_opaque="true"
+             tool_tip="Copy music URL to the clipboard" />
             <text
              type="string"
              length="1"

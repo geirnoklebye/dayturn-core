@@ -44,6 +44,7 @@ public:
 
 private:
 	static void onCommitAny(LLUICtrl* ctrl, void *userdata);
+	static void onCopyMusicURL(void *userdata);
 
 private:
 	LLCheckBoxCtrl* mCheckSoundLocal;
@@ -51,6 +52,7 @@ private:
 	LLCheckBoxCtrl* mCheckEstateDisabledVoice;
 	LLCheckBoxCtrl* mCheckParcelVoiceLocal;	
 	LLLineEditor*	mMusicURLEdit;
+	LLButton*	mMusicURLCopy;
 	LLCheckBoxCtrl* mMusicUrlCheck;
 	LLCheckBoxCtrl* mCheckAVSoundAny;
 	LLCheckBoxCtrl* mCheckAVSoundGroup;

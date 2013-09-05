@@ -49,6 +49,7 @@
 #include "lltexturectrl.h"
 #include "roles_constants.h"
 #include "llscrolllistctrl.h"
+#include "llwindow.h"
 
 // Values for the parcel voice settings radio group
 enum
@@ -90,6 +91,9 @@ BOOL LLPanelLandAudio::postBuild()
 
 	mMusicURLEdit = getChild<LLLineEditor>("music_url");
 	childSetCommitCallback("music_url", onCommitAny, this);
+
+	mMusicURLCopy = getChild<LLButton>("music_url_copy");
+	mMusicURLCopy->setClickedCallback(onCopyMusicURL, this);
 
 	mCheckAVSoundAny = getChild<LLCheckBoxCtrl>("all av sound check");
 	childSetCommitCallback("all av sound check", onCommitAny, this);
@@ -148,8 +152,12 @@ void LLPanelLandAudio::refresh()
 		mCheckParcelEnableVoice->set(allow_voice);
 		mCheckParcelVoiceLocal->set(!parcel->getParcelFlagUseEstateVoiceChannel());
 
-		mMusicURLEdit->setText(parcel->getMusicURL());
+		std::string music_url = parcel->getMusicURL();
+
+		mMusicURLEdit->setText(music_url);
 		mMusicURLEdit->setEnabled( can_change_media );
+
+		mMusicURLCopy->setEnabled(!music_url.empty());
 
 		BOOL can_change_av_sounds = LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_OPTIONS) && parcel->getHaveNewParcelLimitData();
 		mCheckAVSoundAny->set(parcel->getAllowAnyAVSounds());
@@ -173,6 +181,8 @@ void LLPanelLandAudio::onCommitAny(LLUICtrl*, void *userdata)
 	// Extract data from UI
 	BOOL sound_local		= self->mCheckSoundLocal->get();
 	std::string music_url	= self->mMusicURLEdit->getText();
+
+	self->mMusicURLCopy->setEnabled(!music_url.empty());
 
 	BOOL voice_enabled = self->mCheckParcelEnableVoice->get();
 	BOOL voice_estate_chan = !self->mCheckParcelVoiceLocal->get();
@@ -200,4 +210,12 @@ void LLPanelLandAudio::onCommitAny(LLUICtrl*, void *userdata)
 
 	// Might have changed properties, so let's redraw!
 	self->refresh();
+}
+
+// static
+void LLPanelLandAudio::onCopyMusicURL(void *userdata)
+{
+	LLPanelLandAudio *self = (LLPanelLandAudio *)userdata;
+
+	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(self->mMusicURLEdit->getText()));
 }
