@@ -73,6 +73,14 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 			mMediaPlugin = initializeMedia("audio/mpeg");
 		}
 	}
+	else if (isPlaying() == 1) {
+		//
+		//	we are already playing the requested stream
+		//	(nothing further to do here)
+		//
+		llinfos << "Already playing requested stream: " << test_url << llendl;
+		return;
+	}
 	mURL = test_url;
 
 #ifdef LL_DARWIN
@@ -123,13 +131,10 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 			test_url = temp_url; 
 		}
 #endif //LL_DARWIN
-		//llinfos << "Starting internet stream: " << test_url << llendl;
 		mURL = test_url;
 		mMediaPlugin->loadURI ( test_url );
-		mMediaPlugin->start();
-		llinfos << "Playing internet stream: " << mURL << llendl;		
-		mMediaPlugin->start();
 		llinfos << "Attempting to play internet stream: " << mURL << llendl;	
+		mMediaPlugin->start();
 	}
 	else
 	{
