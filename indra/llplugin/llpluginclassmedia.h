@@ -445,10 +445,14 @@ public:
 	std::string const &getStreamName() const
 	{ return mStreamName; }
 
+	std::string const &getStreamLocation() const
+	{ return mStreamLocation; }
+
 private:
 	std::string mArtist;
 	std::string mTitle;
 	std::string mStreamName;
+	std::string mStreamLocation;
 
 //--------------------------------------
 	//debug use only

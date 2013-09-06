@@ -260,3 +260,8 @@ std::string LLStreamingAudio_MediaPlugins::getCurrentStreamName()
 {
 	return mMediaPlugin->getStreamName();
 }
+
+std::string LLStreamingAudio_MediaPlugins::getCurrentStreamLocation()
+{
+	return mMediaPlugin->getStreamLocation();
+}

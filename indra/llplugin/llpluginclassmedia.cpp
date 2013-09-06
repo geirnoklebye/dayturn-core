@@ -864,15 +864,35 @@ void LLPluginClassMedia::receivePluginMessage(const LLPluginMessage &message)
 	{
 		std::string message_name = message.getName();
 
-		// <ND> Enable gs	treamer plugin to report title/artist of current stream
-		if( message_name == "ndMediadata_change" )
-		{
-			mTitle = message.getValue( "title" );
-			mArtist = message.getValue( "artist" );
+		//
+		//	enable gstreamer plugin to report metadata relating
+		//	to the current stream
+		//
+		if (message_name == "ndMediadata_change") {
+			//
+			//	always overwrite the artist and title
+			//	(even if blank)
+			//
+			mTitle = message.getValue("title");
+			mArtist = message.getValue("artist");
 
-			std::string stream_name = message.getValue("streamname");
-			if (!stream_name.empty()) {
-				mStreamName = stream_name;
+			//
+			//	only overwrite the stream name if a new value
+			//	is provided
+			//
+			std::string val = message.getValue("streamname");
+			if (!val.empty()) {
+				mStreamName = val;
+			}
+
+			//
+			//	only overwrite the stream location (URI) if a
+			//	new value is provided and that value starts
+			//	with "http"
+			//
+			val = message.getValue("streamlocation");
+			if (val.substr(0, 4) == "http") {
+				mStreamLocation = val;
 			}
 		}
 		else if (message_name == "texture_params")

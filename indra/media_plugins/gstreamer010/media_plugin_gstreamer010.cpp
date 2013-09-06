@@ -51,8 +51,6 @@
 #include "llstring.h"
 #include "media_plugin_base.h"
 
-//#if LL_GSTREAMER010_ENABLED
-
 extern "C" {
 #include <gst/gst.h>
 #include <gst/gstelement.h>
@@ -71,6 +69,7 @@ struct ndStreamMetadata
 	std::string mArtist;
 	std::string mTitle;
 	std::string mStreamName;
+	std::string mStreamLocation;
 };
 
 //
@@ -113,6 +112,8 @@ static void extractMetadata (const GstTagList * list, const gchar * tag, gpointe
 		pStrOut = &pOut->mArtist;
 	else if (strcmp(tag, "organization") == 0)
 		pStrOut = &pOut->mStreamName;
+	else if (strcmp(tag, "location") == 0)
+		pStrOut = &pOut->mStreamLocation;
 
 	if( !pStrOut )
 		return;
@@ -124,6 +125,7 @@ static void extractMetadata (const GstTagList * list, const gchar * tag, gpointe
 
 		if (G_VALUE_HOLDS_STRING (val)) {
 			pStrOut->assign(decode_entities(g_value_get_string(val)));
+			break;
 		}
 	}
 }
@@ -221,6 +223,7 @@ private:
 
 	std::string mLastTitle;
 	std::string mStreamName;
+	std::string mStreamLocation;
 	
 	// Very GStreamer-specific
 	GMainLoop *mPump; // event pump for this media
@@ -281,9 +284,9 @@ bool MediaPluginGStreamer010::writeToLog(const char* str, ...)
 	struct tm* ltime = localtime(&timeptr);
 	char strbuf[1024];
 	char strmsg[1024];
-	sprintf(strbuf, "[%d:%d:%d] ", ltime->tm_hour, ltime->tm_min, ltime->tm_sec);
+	sprintf(strbuf, "[%02d:%02d:%02d] ", ltime->tm_hour, ltime->tm_min, ltime->tm_sec);
 	va_list arglist;
-    va_start(arglist, str);
+	va_start(arglist, str);
 	vsprintf(strmsg, str, arglist);
 	strncat(strbuf, strmsg, 1024 - strlen(strbuf));
 
@@ -371,6 +374,9 @@ MediaPluginGStreamer010::processGSTEvents(GstBus     *bus,
 		if (!oMData.mStreamName.empty()) {
 			mStreamName = oMData.mStreamName;
 		}
+		if (!oMData.mStreamLocation.empty()) {
+			mStreamLocation = oMData.mStreamLocation;
+		}
 
 		if (!oMData.mTitle.empty() || !oMData.mArtist.empty()) //dont send empty data
 		{
@@ -378,6 +384,7 @@ MediaPluginGStreamer010::processGSTEvents(GstBus     *bus,
 			message.setValue("title", oMData.mTitle );
 			message.setValue("artist", oMData.mArtist );
 			message.setValue("streamname", mStreamName);
+			message.setValue("streamlocation", mStreamLocation);
 			sendMessage(message);
 		}
 		break;
@@ -709,6 +716,7 @@ MediaPluginGStreamer010::play(double rate)
 	// todo: error-check this?
 
 	mStreamName = "";
+	mStreamLocation = "";
 
 	if (mDoneInit && mPlaybin)
 	{
@@ -1489,41 +1497,3 @@ int init_media_plugin(LLPluginInstance::sendMessageFunction host_send_func, void
 		return -1; // failed to init
 	}
 }
-
-//#else // LL_GSTREAMER010_ENABLED
-//
-//// Stubbed-out class with constructor/destructor (necessary or windows linker
-//// will just think its dead code and optimize it all out)
-//class MediaPluginGStreamer010 : public MediaPluginBase
-//{
-//public:
-//	MediaPluginGStreamer010(LLPluginInstance::sendMessageFunction host_send_func, void *host_user_data);
-//	~MediaPluginGStreamer010();
-//	/* virtual */ void receiveMessage(const char *message_string);
-//};
-//
-//MediaPluginGStreamer010::MediaPluginGStreamer010(
-//	LLPluginInstance::sendMessageFunction host_send_func,
-//	void *host_user_data ) :
-//	MediaPluginBase(host_send_func, host_user_data)
-//{
-//    // no-op
-//}
-//
-//MediaPluginGStreamer010::~MediaPluginGStreamer010()
-//{
-//    // no-op
-//}
-//
-//void MediaPluginGStreamer010::receiveMessage(const char *message_string)
-//{
-//    // no-op 
-//}
-//
-//// We're building without GStreamer enabled.  Just refuse to initialize.
-//int init_media_plugin(LLPluginInstance::sendMessageFunction host_send_func, void *host_user_data, LLPluginInstance::sendMessageFunction *plugin_send_func, void **plugin_user_data)
-//{
-//    return -1;
-//}
-
-//#endif // LL_GSTREAMER010_ENABLED

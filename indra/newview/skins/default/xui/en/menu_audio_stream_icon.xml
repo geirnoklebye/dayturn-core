@@ -62,4 +62,12 @@
         <menu_item_call.on_click
             function="AudioStreamIcon.ParcelSound" />
     </menu_item_call>
+    <menu_item_separator />
+    <menu_item_call
+        name="visit_stream_website"
+        label="Visit This Stream's Website"
+        layout="topleft">
+        <menu_item_call.on_click
+            function="AudioStreamIcon.VisitWebsite" />
+    </menu_item_call>
 </menu>

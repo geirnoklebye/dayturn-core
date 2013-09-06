@@ -51,6 +51,7 @@ class LLStreamingAudioInterface
 	virtual std::string getCurrentArtist() { return ""; }
 	virtual std::string getCurrentTitle() { return ""; }
 	virtual std::string getCurrentStreamName() { return ""; }
+	virtual std::string getCurrentStreamLocation() { return ""; }
 };
 
 #endif // LL_STREAMINGAUDIO_H

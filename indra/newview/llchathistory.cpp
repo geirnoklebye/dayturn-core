@@ -249,8 +249,7 @@ public:
 	void onAudioStreamIconContextMenuItemClipboard(const LLSD& userdata)
 	{
 		std::string action = userdata.asString();
-		std::string clipboard;
-		LLStreamingAudioInterface *stream = NULL;
+		std::string clipboard = "";
 		
 		//
 		//	check if music is playing first
@@ -259,32 +258,53 @@ public:
 			LLViewerMedia::hasParcelAudio() &&
 			LLViewerMedia::isParcelAudioPlaying()
 		) {
-			stream = gAudiop->getStreamingAudioImpl();
-		}
+			LLStreamingAudioInterface *stream = gAudiop->getStreamingAudioImpl();
 
-		if (stream) {
-			if (action == "copy_track_name") {
-				//
-				//	prepend the artist to the track name
-				//	if artist info is available
-				//
-				clipboard = stream->getCurrentArtist();
+			if (stream) {
+				if (action == "copy_track_name") {
+					//
+					//	prepend the artist to the track
+					//	name if artist info is available
+					//
+					clipboard = stream->getCurrentArtist();
 
-				if (!clipboard.empty()) {
-					clipboard += " - ";
+					if (!stream->getCurrentTitle().empty()) {
+						if (!clipboard.empty()) {
+							clipboard += " - ";
+						}
+						clipboard += stream->getCurrentTitle();
+					}
 				}
-
-				clipboard += stream->getCurrentTitle();
-			}
-			else if (action == "copy_stream_name") {
-				clipboard = stream->getCurrentStreamName();
-			}
-			else if (action == "copy_stream_address") {
-				clipboard = stream->getURL();
+				else if (action == "copy_stream_name") {
+					clipboard = stream->getCurrentStreamName();
+				}
+				else if (action == "copy_stream_address") {
+					clipboard = stream->getURL();
+				}
 			}
 		}
 
 		LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(clipboard));
+	}
+
+	void onAudioStreamIconContextMenuItemVisitWebsite(const LLSD& userdata)
+	{
+		std::string action = userdata.asString();
+		
+		//
+		//	check if music is playing first
+		//
+		if (gAudiop && 
+			LLViewerMedia::hasParcelAudio() &&
+			LLViewerMedia::isParcelAudioPlaying()
+		) {
+			LLStreamingAudioInterface *stream = gAudiop->getStreamingAudioImpl();
+
+			if (stream) {
+				LLWeb::loadURL(stream->getCurrentStreamLocation());
+			}
+		}
+
 	}
 
 	void onAudioStreamIconContextMenuItemStopStream(const LLSD& userdata)
@@ -370,6 +390,7 @@ public:
 		registrar.add("AvatarIcon.Action", boost::bind(&LLChatHistoryHeader::onAvatarIconContextMenuItemClicked, this, _2));
 		registrar.add("ObjectIcon.Action", boost::bind(&LLChatHistoryHeader::onObjectIconContextMenuItemClicked, this, _2));
 		registrar.add("AudioStreamIcon.Clipboard", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemClipboard, this, _2));
+		registrar.add("AudioStreamIcon.VisitWebsite", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemVisitWebsite, this, _2));
 		registrar.add("AudioStreamIcon.StopStream", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemStopStream, this, _2));
 		registrar.add("AudioStreamIcon.StartStream", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemStartStream, this, _2));
 		registrar.add("AudioStreamIcon.ViewerSound", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemViewerSound, this, _2));
@@ -701,28 +722,29 @@ protected:
 		LLMenuGL *menu = (LLMenuGL*)mPopupMenuHandleAudioStream.get();
 
 		if (menu) {
-			bool playing = false;
+			LLStreamingAudioInterface *stream = NULL;
 
 			static LLCachedControl<bool> audio_streaming_music(gSavedSettings, "AudioStreamingMusic");
 
 			if (gAudiop && audio_streaming_music && LLViewerMedia::hasParcelAudio()) {
 				if (LLViewerMedia::isParcelAudioPlaying()) {
-					playing = true;
+					stream = gAudiop->getStreamingAudioImpl();
 				}
 
-				menu->setItemVisible("start_stream", !playing);
-				menu->setItemEnabled("start_stream", !playing);
+				menu->setItemVisible("start_stream", stream == NULL);
+				menu->setItemEnabled("start_stream", stream == NULL);
 			}
 			else {
 				menu->setItemVisible("start_stream", true);
 				menu->setItemEnabled("start_stream", false);
 			}
 
-			menu->setItemVisible("stop_stream", playing);
-			menu->setItemEnabled("stop_stream", playing);
-			menu->setItemEnabled("copy_track_name", playing);
-			menu->setItemEnabled("copy_stream_name", playing);
-			menu->setItemEnabled("copy_stream_address", playing);
+			menu->setItemVisible("stop_stream", stream != NULL);
+			menu->setItemEnabled("stop_stream", stream != NULL);
+			menu->setItemEnabled("copy_track_name", stream && (!stream->getCurrentArtist().empty() || !stream->getCurrentTitle().empty()));
+			menu->setItemEnabled("copy_stream_name", stream && !stream->getCurrentStreamName().empty());
+			menu->setItemEnabled("copy_stream_address", stream != NULL);
+			menu->setItemEnabled("visit_stream_website", stream && !stream->getCurrentStreamLocation().empty());
 
 			menu->buildDrawLabels();
 			menu->updateParent(LLMenuGL::sMenuContainer);
@@ -1071,7 +1093,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 		body_message_params.font.style = "ITALIC";
 	}
 
-	if(chat.mChatType == CHAT_TYPE_WHISPER)
+	if (chat.mChatType == CHAT_TYPE_WHISPER)
 	{
 		body_message_params.font.style = "ITALIC";
 	}

@@ -58,38 +58,37 @@ void StreamTitleDisplay::checkMetadata()
 		return;
 	if(gAudiop->getStreamingAudioImpl()->hasNewMetadata() && (ShowStreamMetadata || StreamMetadataAnnounceToChat))
 	{
-		LLChat chat;
-		std::string title = gAudiop->getStreamingAudioImpl()->getCurrentTitle();
-		std::string artist = gAudiop->getStreamingAudioImpl()->getCurrentArtist();
-		// Sometimes we get blanks...
-		chat.mText = "";
-		if(artist.length() > 0)
-		{
-			chat.mText = artist;
+		LLStreamingAudioInterface *stream = gAudiop->getStreamingAudioImpl();
+
+		if (!stream) {
+			return;
 		}
-		if(title.length() > 0)
-		{
-			if (chat.mText.length() > 0)
-			{
+
+		LLChat chat;
+		std::string title = stream->getCurrentTitle();
+		std::string artist = stream->getCurrentArtist();
+		chat.mText = artist;
+
+		if (!title.empty()) {
+			if (!chat.mText.empty()) {
 				chat.mText += " - ";
 			}
 			chat.mText += title;
 		}
-		if (chat.mText.length() > 0)
-		{
-			if (StreamMetadataAnnounceToChat)
-			{
+
+		if (!chat.mText.empty()) {
+			if (StreamMetadataAnnounceToChat) {
 				sendStreamTitleToChat(chat.mText);
 			}
 
-			if (ShowStreamMetadata)
-			{
+			if (ShowStreamMetadata) {
 				chat.mSourceType = CHAT_SOURCE_AUDIO_STREAM;
 				chat.mFromID = AUDIO_STREAM_FROM;
 				chat.mFromName = LLTrans::getString("Audio Stream");
+				chat.mText = "<nolink>" + chat.mText + "</nolink>";
 
 				if (ShowStreamName) {
-					std::string stream_name = gAudiop->getStreamingAudioImpl()->getCurrentStreamName();
+					std::string stream_name = stream->getCurrentStreamName();
 
 					if (!stream_name.empty()) {
 						chat.mFromName += " - " + stream_name;
