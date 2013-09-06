@@ -4908,7 +4908,7 @@ void LLVOAvatar::resetAnimations()
 // animations.
 LLUUID LLVOAvatar::remapMotionID(const LLUUID& id)
 {
-	static LLCachedControl<BOOL> use_new_walk_run(gSavedSettings, "UseNewWalkRun");
+	BOOL use_new_walk_run = gSavedSettings.getBOOL("UseNewWalkRun");
 	LLUUID result = id;
 
 	// start special case female walk for female avatars
