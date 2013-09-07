@@ -356,8 +356,6 @@ void LLNetMap::draw()
 		static LLCachedControl<bool> show_objects(gSavedSettings, "MiniMapObjects", true);
 		if (show_objects && (mUpdateObjectImage || map_timer.getElapsedTimeF32() > 0.5f)) {
 			mUpdateObjectImage = false;
-
-			mUpdateObjectImage = false;
 			mObjectImageCenterGlobal = posCenterGlobal;
 
 			// create the base texture
@@ -372,18 +370,18 @@ void LLNetMap::draw()
 			map_timer.reset();
 		}
 
-		LLVector3 map_center_agent = gAgent.getPosAgentFromGlobal(mObjectImageCenterGlobal);
 		LLVector3 camera_position = gAgentCamera.getCameraPositionAgent();
-		map_center_agent -= camera_position;
-		map_center_agent.mV[VX] *= mScale/region_width;
-		map_center_agent.mV[VY] *= mScale/region_width;
+		LLVector3 map_center_agent;
 
 		F32 image_half_width = 0.5f*mObjectMapPixels;
 		F32 image_half_height = 0.5f*mObjectMapPixels;
 
 		if (show_objects) {
-			gGL.getTexUnit(0)->bind(mObjectImagep);
+			map_center_agent = gAgent.getPosAgentFromGlobal(mParcelImageCenterGlobal) - camera_position;
+			map_center_agent.mV[VX] *= mScale / region_width;
+			map_center_agent.mV[VY] *= mScale / region_width;
 
+			gGL.getTexUnit(0)->bind(mObjectImagep);
 			gGL.begin(LLRender::QUADS);
 				gGL.texCoord2f(0.f, 1.f);
 				gGL.vertex2f(map_center_agent.mV[VX] - image_half_width, image_half_height + map_center_agent.mV[VY]);
@@ -630,6 +628,7 @@ void LLNetMap::reshape(S32 width, S32 height, BOOL called_from_parent)
 {
 	LLUICtrl::reshape(width, height, called_from_parent);
 	createObjectImage();
+	createParcelImage();
 }
 
 LLVector3 LLNetMap::globalPosToView(const LLVector3d& global_pos)
