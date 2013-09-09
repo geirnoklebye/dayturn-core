@@ -165,6 +165,34 @@ public:
 			LLFloaterSidePanelContainer::showPanel("people", "panel_people",
 				LLSD().with("people_panel_tab_name", "blocked_panel").with("blocked_to_select", getAvatarId()));
 		}
+		else if (level == "zoom") {
+			LLUUID object_id = mObjectData["object_id"];
+			LLViewerObject *object = gObjectList.findObject(object_id);
+
+			if (object) {
+				if (object->isHUDAttachment() && object->flagObjectYouOwner()) {
+					//
+					//	can't zoom in on your own HUD
+					//
+					object = NULL;
+				}
+			}
+			else {
+				//
+				//	can't find the object nearby, but if
+				//	the owner is nearby then the object
+				//	is most likely worn as a HUD
+				//	(either that or they only just deleted
+				//	the object)
+				//
+				object_id = mObjectData["owner_id"];
+				object = gObjectList.findObject(object_id);
+			}
+
+			if (object) {
+				handle_zoom_to_object(object_id);
+			}
+		}
 		else if (level == "map")
 		{
 			std::string url = "secondlife://" + mObjectData["slurl"].asString();
@@ -665,8 +693,33 @@ protected:
 	void showObjectContextMenu(S32 x,S32 y)
 	{
 		LLMenuGL* menu = (LLMenuGL*)mPopupMenuHandleObject.get();
-		if(menu)
+
+		if(menu) {
+			LLViewerObject *object = gObjectList.findObject(mObjectData["object_id"]);
+
+			if (object) {
+				if (object->isHUDAttachment() && object->flagObjectYouOwner()) {
+					//
+					//	can't zoom in on your own HUD
+					//
+					object = NULL;
+				}
+			}
+			else {
+				//
+				//	can't find the object nearby, but if
+				//	the owner is nearby then the object
+				//	is most likely worn as a HUD
+				//	(either that or they only just deleted
+				//	the object)
+				//
+				object = gObjectList.findObject(mObjectData["owner_id"]);
+			}
+
+			menu->setItemEnabled("zoom_in", object != NULL);
+
 			LLMenuGL::showPopup(this, menu, x, y);
+		}
 	}
 	
 	void showAvatarContextMenu(S32 x,S32 y)
