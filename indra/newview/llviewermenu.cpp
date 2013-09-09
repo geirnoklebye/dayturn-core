@@ -2865,6 +2865,20 @@ bool enable_object_edit()
 	return enable;
 }
 
+bool enable_particle_owner_profile()
+{
+	const LLPickInfo &pick = LLToolPie::getInstance()->getPick();
+
+	return pick.mParticleOwnerID.notNull();
+}
+
+bool enable_zoomowner_particle()
+{
+	const LLPickInfo &pick = LLToolPie::getInstance()->getPick();
+
+	return pick.mParticleOwnerID.notNull() && gObjectList.findObject(pick.mParticleOwnerID);
+}
+
 bool enable_mute_particle()
 {
 	const LLPickInfo& pick = LLToolPie::getInstance()->getPick();
@@ -6440,6 +6454,31 @@ class LLMuteParticle : public view_listener_t
 	}
 };
 
+class LLOwnerProfileParticle : public view_listener_t
+{
+	bool handleEvent(const LLSD &userdata)
+	{
+		LLUUID id = LLToolPie::getInstance()->getPick().mParticleOwnerID;
+		if (id.notNull()) {
+			LLAvatarActions::showProfile(id);
+		}
+		return true;
+	}
+};
+
+class LLZoomOwnerParticle : public view_listener_t
+{
+	bool handleEvent(const LLSD &userdata)
+	{
+		LLUUID id = LLToolPie::getInstance()->getPick().mParticleOwnerID;
+
+		if (id.notNull()) {
+			handle_zoom_to_object(id);
+		}
+		return true;
+	}
+};
+
 class LLWorldEnableBuyLand : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -8957,6 +8996,8 @@ void initialize_menus()
 
 	// Particle muting
 	view_listener_t::addMenu(new LLMuteParticle(), "Particle.Mute");
+	view_listener_t::addMenu(new LLOwnerProfileParticle(), "Particle.OwnerProfile");
+	view_listener_t::addMenu(new LLZoomOwnerParticle(), "Particle.ZoomOwner");
 
 	view_listener_t::addMenu(new LLLandEnableBuyPass(), "Land.EnableBuyPass");
 	commit.add("Land.Buy", boost::bind(&handle_buy_land));
@@ -8980,6 +9021,8 @@ void initialize_menus()
 	enable.add("EnablePayObject", boost::bind(&enable_pay_object));
 	enable.add("EnablePayAvatar", boost::bind(&enable_pay_avatar));
 	enable.add("EnableEdit", boost::bind(&enable_object_edit));
+	enable.add("EnableParticleOwnerProfile", boost::bind(&enable_particle_owner_profile));
+	enable.add("EnableZoomOwnerParticle", boost::bind(&enable_zoomowner_particle));
 	enable.add("EnableMuteParticle", boost::bind(&enable_mute_particle));
 	enable.add("VisibleBuild", boost::bind(&enable_object_build));
 	commit.add("Pathfinding.Linksets.Select", boost::bind(&LLFloaterPathfindingLinksets::openLinksetsWithSelectedObjects));
