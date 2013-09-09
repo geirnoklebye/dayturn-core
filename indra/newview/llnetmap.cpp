@@ -377,7 +377,7 @@ void LLNetMap::draw()
 		F32 image_half_height = 0.5f*mObjectMapPixels;
 
 		if (show_objects) {
-			map_center_agent = gAgent.getPosAgentFromGlobal(mParcelImageCenterGlobal) - camera_position;
+			map_center_agent = gAgent.getPosAgentFromGlobal(mObjectImageCenterGlobal) - camera_position;
 			map_center_agent.mV[VX] *= mScale / region_width;
 			map_center_agent.mV[VY] *= mScale / region_width;
 
