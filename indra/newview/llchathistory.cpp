@@ -117,6 +117,7 @@ public:
 		mPopupMenuHandleAvatar(),
 		mPopupMenuHandleObject(),
 		mAvatarID(),
+		mZoomIntoID(),
 		mSourceType(CHAT_SOURCE_UNKNOWN),
 		mFrom(),
 		mSessionID(),
@@ -165,33 +166,8 @@ public:
 			LLFloaterSidePanelContainer::showPanel("people", "panel_people",
 				LLSD().with("people_panel_tab_name", "blocked_panel").with("blocked_to_select", getAvatarId()));
 		}
-		else if (level == "zoom") {
-			LLUUID object_id = mObjectData["object_id"];
-			LLViewerObject *object = gObjectList.findObject(object_id);
-
-			if (object) {
-				if (object->isHUDAttachment() && object->flagObjectYouOwner()) {
-					//
-					//	can't zoom in on your own HUD
-					//
-					object = NULL;
-				}
-			}
-			else {
-				//
-				//	can't find the object nearby, but if
-				//	the owner is nearby then the object
-				//	is most likely worn as a HUD
-				//	(either that or they only just deleted
-				//	the object)
-				//
-				object_id = mObjectData["owner_id"];
-				object = gObjectList.findObject(object_id);
-			}
-
-			if (object) {
-				handle_zoom_to_object(object_id);
-			}
+		else if (level == "zoom" && mZoomIntoID.notNull()) {
+			handle_zoom_to_object(mZoomIntoID);
 		}
 		else if (level == "map")
 		{
@@ -692,17 +668,19 @@ protected:
 	
 	void showObjectContextMenu(S32 x,S32 y)
 	{
-		LLMenuGL* menu = (LLMenuGL*)mPopupMenuHandleObject.get();
+		LLMenuGL *menu = (LLMenuGL *)mPopupMenuHandleObject.get();
 
-		if(menu) {
+		if (menu) {
 			LLViewerObject *object = gObjectList.findObject(mObjectData["object_id"]);
 
+			mZoomIntoID.setNull();
+
 			if (object) {
-				if (object->isHUDAttachment() && object->flagObjectYouOwner()) {
-					//
-					//	can't zoom in on your own HUD
-					//
-					object = NULL;
+				//
+				//	can't zoom in on your own HUD
+				//
+				if (!(object->isHUDAttachment() && object->flagObjectYouOwner())) {
+					mZoomIntoID = mObjectData["object_id"];
 				}
 			}
 			else {
@@ -713,10 +691,12 @@ protected:
 				//	(either that or they only just deleted
 				//	the object)
 				//
-				object = gObjectList.findObject(mObjectData["owner_id"]);
+				if (gObjectList.findObject(mObjectData["owner_id"])) {
+					mZoomIntoID = mObjectData["owner_id"];
+				}
 			}
 
-			menu->setItemEnabled("zoom_in", object != NULL);
+			menu->setItemEnabled("zoom_in", mZoomIntoID.notNull());
 
 			LLMenuGL::showPopup(this, menu, x, y);
 		}
@@ -843,6 +823,8 @@ protected:
 	}
 
 private:
+	LLUUID mZoomIntoID;
+
 	void setTimeField(const LLChat& chat)
 	{
 		LLTextBox* time_box = getChild<LLTextBox>("time_box");

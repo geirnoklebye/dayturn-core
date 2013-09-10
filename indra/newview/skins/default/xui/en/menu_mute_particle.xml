@@ -5,6 +5,24 @@
  name="Mute Particle Pie">
   <menu_item_call
      enabled="false"
+     label="Particle Owner's Profile"
+     name="Particle Owner Profile">
+    <menu_item_call.on_click
+     function="Particle.OwnerProfile" />
+    <menu_item_call.on_enable
+     function="EnableParticleOwnerProfile" />
+  </menu_item_call>
+  <menu_item_call
+     enabled="false"
+     label="Zoom In On Particle Owner"
+     name="Zoom Particle Owner">
+    <menu_item_call.on_click
+     function="Particle.ZoomOwner" />
+    <menu_item_call.on_enable
+     function="EnableZoomOwnerParticle" />
+  </menu_item_call>
+  <menu_item_call
+     enabled="false"
      label="Block Particle Owner"
      name="Mute Particle">
     <menu_item_call.on_click
