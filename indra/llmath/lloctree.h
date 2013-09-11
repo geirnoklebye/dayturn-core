@@ -735,7 +735,8 @@ public:
 		}
 		
 		LLVector4a MAX_MAG;
-		MAX_MAG.splat(32767.f*256.f); // was MAX_MAG.splat(1024.f*1024.f); opensim 4096 bug
+		MAX_MAG.splat(1024.f*1024.f);
+
 		const LLVector4a& v = data->getPositionGroup();
 
 		LLVector4a val;
