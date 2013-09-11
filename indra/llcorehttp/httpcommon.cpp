@@ -177,34 +177,43 @@ std::string HttpStatus::toString() const
 }
 
 
-// Pass true on statuses that might actually be cleared by a
-// retry.  Library failures, calling problems, etc. aren't
-// going to be fixed by squirting bits all over the Net.
-bool HttpStatus::isRetryable() const
+std::string HttpStatus::toTerseString() const
 {
-	static const HttpStatus cant_connect(HttpStatus::EXT_CURL_EASY, CURLE_COULDNT_CONNECT);
-	static const HttpStatus cant_res_proxy(HttpStatus::EXT_CURL_EASY, CURLE_COULDNT_RESOLVE_PROXY);
-	static const HttpStatus cant_res_host(HttpStatus::EXT_CURL_EASY, CURLE_COULDNT_RESOLVE_HOST);
-	static const HttpStatus send_error(HttpStatus::EXT_CURL_EASY, CURLE_SEND_ERROR);
-	static const HttpStatus recv_error(HttpStatus::EXT_CURL_EASY, CURLE_RECV_ERROR);
-	static const HttpStatus upload_failed(HttpStatus::EXT_CURL_EASY, CURLE_UPLOAD_FAILED);
-	static const HttpStatus op_timedout(HttpStatus::EXT_CURL_EASY, CURLE_OPERATION_TIMEDOUT);
-	static const HttpStatus post_error(HttpStatus::EXT_CURL_EASY, CURLE_HTTP_POST_ERROR);
-	static const HttpStatus partial_file(HttpStatus::EXT_CURL_EASY, CURLE_PARTIAL_FILE);
-	static const HttpStatus inv_cont_range(HttpStatus::LLCORE, HE_INV_CONTENT_RANGE_HDR);
+	std::ostringstream result;
 
-	return ((isHttpStatus() && mType >= 499 && mType <= 599) ||	// Include special 499 in retryables
-			*this == cant_connect ||	// Connection reset/endpoint problems
-			*this == cant_res_proxy ||	// DNS problems
-			*this == cant_res_host ||	// DNS problems
-			*this == send_error ||		// General socket problems 
-			*this == recv_error ||		// General socket problems 
-			*this == upload_failed ||	// Transport problem
-			*this == op_timedout ||		// Timer expired
-			*this == post_error ||		// Transport problem
-			*this == partial_file ||	// Data inconsistency in response
-			*this == inv_cont_range);	// Short data read disagrees with content-range
+	unsigned int error_value((unsigned short) mStatus);
+	
+	switch (mType)
+	{
+	case EXT_CURL_EASY:
+		result << "Easy_";
+		break;
+		
+	case EXT_CURL_MULTI:
+		result << "Multi_";
+		break;
+		
+	case LLCORE:
+		result << "Core_";
+		break;
+
+	default:
+		if (isHttpStatus())
+		{
+			result << "Http_";
+			error_value = mType;
+		}
+		else
+		{
+			result << "Unknown_";
+		}
+		break;
+	}
+	
+	result << error_value;
+	return result.str();
 }
+
 
 		
 } // end namespace LLCore
