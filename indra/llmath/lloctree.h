@@ -35,6 +35,7 @@
 #define OCT_ERRS LL_WARNS("OctreeErrors")
 
 
+extern std::string gSimulatorType; //Opensim or SecondLife
 extern U32 gOctreeMaxCapacity;
 /*#define LL_OCTREE_PARANOIA_CHECK 0
 #if LL_DARWIN
@@ -396,21 +397,24 @@ public:
 				child->insert(data);
 			}
 		}
-		else 
-		{
-			//it's not in here, give it to the root
-			OCT_ERRS << "Octree insertion failed, starting over from root!" << llendl;
-
-			oct_node* node = this;
-
-			while (parent)
+			else
+			if (gSimulatorType == "SecondLife")
 			{
-				node = parent;
-				parent = node->getOctParent();
-			}
+				{
+					//it's not in here, give it to the root
+					OCT_ERRS << "Octree insertion failed, starting over from root!" << llendl;
 
-			node->insert(data);
-		}
+					oct_node* node = this;
+
+					while (parent)
+					{
+						node = parent;
+						parent = node->getOctParent();
+					}
+
+					node->insert(data);
+				}
+			}
 
 		return false;
 	}
@@ -735,8 +739,14 @@ public:
 		}
 		
 		LLVector4a MAX_MAG;
-		MAX_MAG.splat(1024.f*1024.f);
-
+		if (gSimulatorType == "SecondLife")
+		{
+			MAX_MAG.splat(1024.f*1024.f);
+		}
+		else
+		{
+			MAX_MAG.splat(4096.f*4096.f);
+		}
 		const LLVector4a& v = data->getPositionGroup();
 
 		LLVector4a val;
