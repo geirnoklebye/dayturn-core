@@ -741,11 +741,11 @@ public:
 		LLVector4a MAX_MAG;
 		if (gSimulatorType == "SecondLife")
 		{
-			MAX_MAG.splat(1024.f*1024.f);
+			MAX_MAG.splat(1024.f * 1024.f);
 		}
 		else
 		{
-			MAX_MAG.splat(4096.f*4096.f);
+			MAX_MAG.splat(1024.f * 1024.f); //setting same leaving simulator selection structure in place
 		}
 		const LLVector4a& v = data->getPositionGroup();
 
