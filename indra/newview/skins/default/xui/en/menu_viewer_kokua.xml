@@ -222,25 +222,13 @@
          label="My Inventory"
          name="Inventory"
          shortcut="control|I"
-		 visible="false">
+         visible="false">
             <menu_item_check.on_check
              function="Floater.Visible"
              parameter="inventory" />
             <menu_item_check.on_click
              function="Floater.Toggle"
              parameter="inventory" />
-        </menu_item_check>
-        <menu_item_check
-         label="My Inventory"
-         name="ShowSidetrayInventory"
-         shortcut="control|shift|I"
-		 visible="true">
-            <menu_item_check.on_check
-             function="SidetrayPanelVisible"
-             parameter="sidepanel_inventory" />
-            <menu_item_check.on_click
-             function="ShowSidetrayPanel"
-             parameter="sidepanel_inventory" />
         </menu_item_check>
         <menu_item_check
          label="My Gestures"
