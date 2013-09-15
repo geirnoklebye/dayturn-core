@@ -3101,17 +3101,8 @@ void LLViewerObject::setScale(const LLVector3 &scale, BOOL damped)
 
 	if( (LL_PCODE_VOLUME == getPCode()) && !isDead() )
 	{
-		static LLCachedControl<bool> minimap_physical(gSavedSettings, "MiniMapPhysical", false);
-		static LLCachedControl<bool> minimap_scripted(gSavedSettings, "MiniMapScripted", false);
-		static LLCachedControl<bool> minimap_temp_on_rez(gSavedSettings, "MiniMapTempOnRez", false);
-
-		if (
-			permYouOwner() ||
-			scale.magVecSquared() > (7.5f * 7.5f) ||
-			(minimap_physical && flagUsePhysics()) ||
-			(minimap_scripted && flagScripted()) ||
-			(minimap_temp_on_rez && flagTemporaryOnRez())
-		) {
+		if (permYouOwner() || (scale.magVecSquared() > (7.5f * 7.5f)) )
+		{
 			if (!mOnMap)
 			{
 				llassert_always(LLWorld::getInstance()->getRegionFromHandle(getRegion()->getHandle()));

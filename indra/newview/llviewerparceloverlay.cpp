@@ -52,8 +52,6 @@
 
 const U8  OVERLAY_IMG_COMPONENTS = 4;
 
-LLViewerParcelOverlay::update_signal_t* LLViewerParcelOverlay::sUpdateSignal = NULL;
-
 LLViewerParcelOverlay::LLViewerParcelOverlay(LLViewerRegion* region, F32 region_width_meters)
 :	mRegion( region ),
 	mParcelGridsPerEdge( S32( region_width_meters / PARCEL_GRID_STEP_METERS ) ),
@@ -63,6 +61,7 @@ LLViewerParcelOverlay::LLViewerParcelOverlay(LLViewerRegion* region, F32 region_
 	mVertexCount(0),
 	mVertexArray(NULL),
 	mColorArray(NULL)
+//	mTexCoordArray(NULL),
 {
 	// Create a texture to hold color information.
 	// 4 components
@@ -850,9 +849,6 @@ void LLViewerParcelOverlay::idleUpdate(bool force_update)
 		{
 			updateOverlayTexture();
 			updatePropertyLines();
-			if (sUpdateSignal) {
-				(*sUpdateSignal)(mRegion);
-			}
 			mTimeSinceLastUpdate.reset();
 		}
 	}
@@ -1004,12 +1000,4 @@ S32 LLViewerParcelOverlay::renderPropertyLines	()
 	gGL.popMatrix();
 
 	return drawn;
-}
-
-boost::signals2::connection LLViewerParcelOverlay::setUpdateCallback(const update_signal_t::slot_type & cb)
-{
-	if (!sUpdateSignal) {
-		sUpdateSignal = new update_signal_t();
-	}
-	return sUpdateSignal->connect(cb);
 }

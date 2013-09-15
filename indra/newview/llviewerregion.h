@@ -68,7 +68,6 @@ class LLDataPacker;
 class LLDataPackerBinaryBuffer;
 class LLHost;
 class LLBBox;
-class LLViewerTexture;
 
 class LLViewerRegionImpl;
 
@@ -133,9 +132,7 @@ public:
 	inline BOOL getRestrictPushObject()		const;
 	inline BOOL getReleaseNotesRequested()		const;
 
-	bool isAlive() const; // can become false if circuit disconnects
-
-	LLViewerTexture* getWorldMapTile() const;
+	bool isAlive(); // can become false if circuit disconnects
 
 	void setWaterHeight(F32 water_level);
 	F32 getWaterHeight() const;
@@ -433,8 +430,6 @@ private:
 
 	LLDynamicArray<U32>						mCacheMissFull;
 	LLDynamicArray<U32>						mCacheMissCRC;
-
-	mutable LLPointer<LLViewerTexture>		mWorldMapTile;
 
 	bool	mAlive;					// can become false if circuit disconnects
 	bool	mCapabilitiesReceived;

@@ -40,7 +40,6 @@ class LLImageRaw;
 class LLViewerTexture;
 class LLFloaterMap;
 class LLMenuGL;
-class LLViewerRegion;
 
 class LLNetMap : public LLUICtrl
 {
@@ -75,15 +74,10 @@ public:
 	/*virtual*/ BOOL	handleToolTip( S32 x, S32 y, MASK mask);
 	/*virtual*/ void	reshape(S32 width, S32 height, BOOL called_from_parent = TRUE);
 
-	/*virtual*/ BOOL	handleMiddleMouseDown(S32 x, S32 y, MASK mask) { return handleMouseDown(x, y, mask | MASK_SHIFT); }
-	/*virtual*/ BOOL	handleMiddleMouseUp(S32 x, S32 y, MASK mask) { return handleMouseUp(x, y, mask); }
-
 	/*virtual*/ BOOL 	postBuild();
 	/*virtual*/ BOOL	handleRightMouseDown( S32 x, S32 y, MASK mask );
 	/*virtual*/ BOOL	handleClick(S32 x, S32 y, MASK mask);
 	/*virtual*/ BOOL	handleDoubleClick( S32 x, S32 y, MASK mask );
-
-	void			refreshParcelOverlay() { mUpdateParcelImage = true; }
 
 	void			setScale( F32 scale );
 	void			setToolTipMsg(const std::string& msg) { mToolTipMsg = msg; }
@@ -103,15 +97,13 @@ private:
 								  BOOL draw_arrow = TRUE);
 	BOOL			handleToolTipAgent(const LLUUID& avatar_id);
 	static void		showAvatarInspector(const LLUUID& avatar_id);
-	bool			createImage(LLPointer<LLImageRaw>& rawimagep) const;
+
 	void			createObjectImage();
-	void			createParcelImage();
-	void			renderPropertyLinesForRegion(const LLViewerRegion* region);
 
 	static bool		outsideSlop(S32 x, S32 y, S32 start_x, S32 start_y, S32 slop);
 
-	bool			mUpdateObjectImage;
-	bool			mUpdateParcelImage;
+private:
+	bool			mUpdateNow;
 
 	LLUIColor		mBackgroundColor;
 
@@ -130,14 +122,11 @@ private:
 	LLVector3d		mObjectImageCenterGlobal;
 	LLPointer<LLImageRaw> mObjectRawImagep;
 	LLPointer<LLViewerTexture>	mObjectImagep;
-	LLVector3d			mParcelImageCenterGlobal;
-	LLPointer<LLImageRaw>		mParcelRawImagep;
-	LLPointer<LLViewerTexture>	mParcelImagep;
 
-	LLUUID				mClosestAgentToCursor;
-	LLVector3d			mClosestAgentPosition;
+	LLUUID			mClosestAgentToCursor;
+	LLUUID			mClosestAgentAtLastRightClick;
 
-	std::string	mToolTipMsg;
+	std::string		mToolTipMsg;
 
 public:
 	void			setSelected(uuid_vec_t uuids) { gmSelected=uuids; };
@@ -145,7 +134,6 @@ public:
 private:
 	void handleZoom(const LLSD& userdata);
 	void handleStopTracking (const LLSD& userdata);
-	void handleOverlayToggle(const LLSD& sdParam);
 
 	LLMenuGL*		mPopupMenu;
 	uuid_vec_t		gmSelected;
