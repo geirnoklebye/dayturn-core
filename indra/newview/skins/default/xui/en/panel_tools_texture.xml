@@ -706,7 +706,7 @@
              label_width="195"
              layout="topleft"
              left="10"
-             min_val="-1"
+             min_val="0"
              name="bumpyOffsetU"
              width="255" />
             <spinner
@@ -717,7 +717,7 @@
              label_width="195"
              layout="topleft"
              left="10"
-             min_val="-1"
+             min_val="0"
              name="bumpyOffsetV"
              width="255" />
             <button
@@ -795,7 +795,7 @@
              label_width="195"
              layout="topleft"
              left="10"
-             min_val="-1"
+             min_val="0"
              name="shinyOffsetU"
              width="255" />
             <spinner
@@ -806,7 +806,7 @@
              label_width="195"
              layout="topleft"
              left="10"
-             min_val="-1"
+             min_val="0"
              name="shinyOffsetV"
              width="255" />
             <button
