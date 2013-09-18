@@ -120,7 +120,6 @@ Second Life is brought to you by the Lindens:
       <text_editor
        enabled="false" 
        follows="top|left"
-Thanks to Latif Khalifa for Collada DAE exports.
        height="98"
        bg_readonly_color="Transparent"
        left="5"
