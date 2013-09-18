@@ -1341,6 +1341,14 @@
         <menu_item_call.on_enable
            function="EditableSelected" />
       </menu_item_call>
+      <menu_item_call
+        label="Scripting LSL wiki"
+        name="scripting_wiki">
+           <menu_item_call.on_click
+            function="PromptShowURL"
+            name="wiki_lslscripting_url"
+            parameter="WebLaunchExternalTarget,http://wiki.secondlife.com/wiki/LSL_Portal" />
+      </menu_item_call>
     </menu>
 
     <menu
@@ -2039,6 +2047,14 @@
              function="ShowHelp"
              parameter="f1_help" />
         </menu_item_call>
+        <menu_item_call
+          label="Scripting LSL wiki"
+          name="scripting_wiki">
+           <menu_item_call.on_click
+            function="PromptShowURL"
+            name="wiki_lslscripting_url"
+            parameter="WebLaunchExternalTarget,http://wiki.secondlife.com/wiki/LSL_Portal" />
+        </menu_item_call>
 <!--        <menu_item_call
          label="Tutorial"
          name="Tutorial">
@@ -2061,7 +2077,7 @@
                 <menu_item_call.on_click
                  function="ShowHelp"
                  parameter="report_bug" />
-            </menu_item_call>
+        </menu_item_call>
 
         <menu_item_separator/>
 
