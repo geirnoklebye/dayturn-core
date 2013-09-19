@@ -356,8 +356,6 @@ void LLNetMap::draw()
 		static LLCachedControl<bool> show_objects(gSavedSettings, "MiniMapObjects", true);
 		if (show_objects && (mUpdateObjectImage || map_timer.getElapsedTimeF32() > 0.5f)) {
 			mUpdateObjectImage = false;
-
-			mUpdateObjectImage = false;
 			mObjectImageCenterGlobal = posCenterGlobal;
 
 			// create the base texture
@@ -379,6 +377,9 @@ void LLNetMap::draw()
 		F32 image_half_height = 0.5f*mObjectMapPixels;
 
 		if (show_objects) {
+			LLVector3 map_center_agent = gAgent.getPosAgentFromGlobal(mObjectImageCenterGlobal) - camera_position;
+			map_center_agent.mV[VX] *= mScale / region_width;
+			map_center_agent.mV[VY] *= mScale / region_width;
 			gGL.getTexUnit(0)->bind(mObjectImagep);
 
 			gGL.begin(LLRender::QUADS);
@@ -394,7 +395,7 @@ void LLNetMap::draw()
 		}
 
 		if (show_property_lines) {
-			map_center_agent = gAgent.getPosAgentFromGlobal(mParcelImageCenterGlobal) - camera_position;
+			LLVector3 map_center_agent = gAgent.getPosAgentFromGlobal(mParcelImageCenterGlobal) - camera_position;
 			map_center_agent.mV[VX] *= mScale / region_width;
 			map_center_agent.mV[VY] *= mScale / region_width;
 
