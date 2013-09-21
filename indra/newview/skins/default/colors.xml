@@ -826,6 +826,12 @@
      name="SpeakingColor"
      reference="FrogGreen" />
     <color
+     name="StatusUserOffline"
+     reference="Red" />
+    <color
+     name="StatusUserOnline"
+     reference="LtGreen" />
+    <color
      name="SystemChatColor"
      reference="LtGray" />
     <color
