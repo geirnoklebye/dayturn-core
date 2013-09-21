@@ -243,6 +243,12 @@ BOOL FSPanelProfile::postBuild()
     mStatusText = getChild<LLTextBox>("status");
     mStatusText->setVisible(false);
 
+    LLButton *copy_button = getChild<LLButton>("avatar_key_copy");
+    
+    if (copy_button) {
+        copy_button->setClickedCallback(boost::bind(&FSPanelProfile::onCopyKey, this));
+    }
+
     LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
     registrar.add("Profile.Call",                   boost::bind(&FSPanelProfile::onCallButtonClick, this));
     registrar.add("Profile.Share",                  boost::bind(&FSPanelProfile::share, this));

@@ -77,6 +77,15 @@ KC: Use view_border's around text_editor's due to text render issues with border
          visible="false" />
 
         <text
+         top="9"
+         right="-41"
+         width="41"
+         layout="topleft"
+         follows="top|left"
+         name="status"
+         value="" />
+
+        <text
          top="8"
          left="6"
          height="16"
@@ -160,15 +169,15 @@ KC: Use view_border's around text_editor's due to text render issues with border
          max_length="254"
          value="(loading...)" />
 
-        <text
-         left_pad="2"
-         right="-6"
-         height="16"
+        <button
+         left_pad="3"
+         height="19"
+         width="50"
          layout="topleft"
-         follows="left|top|right"
-         name="status"
-         halign="center"
-         value="" />
+         follows="top|left"
+         name="avatar_key_copy"
+         label="Copy"
+         tool_tip="Copy avatar key to the clipboard" />
 
         <texture_picker
          top_pad="3"
