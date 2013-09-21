@@ -1290,6 +1290,11 @@ set_source_files_properties(
 
 if (DARWIN)
   LIST(APPEND viewer_SOURCE_FILES llappviewermacosx.cpp)
+  LIST(APPEND viewer_SOURCE_FILES llfilepicker_mac.mm)
+  LIST(APPEND viewer_HEADER_FILES llfilepicker_mac.h)
+
+  # This should be compiled with the viewer.
+  LIST(APPEND viewer_SOURCE_FILES llappdelegate-objc.mm)
 
   find_library(AGL_LIBRARY AGL)
   find_library(APPKIT_LIBRARY AppKit)
@@ -1310,7 +1315,7 @@ if (DARWIN)
     macview.r
     gpu_table.txt
     Info-SecondLife.plist
-    SecondLife.nib/
+    SecondLife.xib/
     # CMake doesn't seem to support Xcode language variants well just yet
     English.lproj/InfoPlist.strings
     English.lproj/language.txt
@@ -1916,9 +1921,6 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLAPPEARANCE_LIBRARIES}
     )
 
-
-# build_version(viewer)
-
 set(ARTWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH
     "Path to artwork files.")
 
@@ -1995,19 +1997,25 @@ if (LINUX)
 endif (LINUX)
 
 if (DARWIN)
+  # These all get set with PROPERTIES
   set(product "Restrained Love")
+  set(MACOSX_BUNDLE_INFO_STRING "Second Life Viewer")
+  set(MACOSX_BUNDLE_ICON_FILE "secondlife.icns")
+  set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.secondlife.indra.viewer")
+  set(MACOSX_BUNDLE_LONG_VERSION_STRING "${VIEWER_CHANNEL} ${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}")
+  set(MACOSX_BUNDLE_BUNDLE_NAME "SecondLife")
+  set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${VIEWER_SHORT_VERSION}")
+  set(MACOSX_BUNDLE_BUNDLE_VERSION "${VIEWER_SHORT_VERSION}${VIEWER_MACOSX_PHASE}${VIEWER_REVISION}")
+  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © Linden Research, Inc. 2007")
+  set(MACOSX_BUNDLE_NSMAIN_NIB_FILE "SecondLife.nib")
+  set(MACOSX_BUNDLE_NSPRINCIPAL_CLASS "NSApplication")
+  
   set_target_properties(
     ${VIEWER_BINARY_NAME}
     PROPERTIES
     OUTPUT_NAME "${product}"
-    MACOSX_BUNDLE_INFO_STRING "Second Life Viewer"
-    MACOSX_BUNDLE_ICON_FILE "secondlife.icns"
-    MACOSX_BUNDLE_GUI_IDENTIFIER "Restrained Love"
-    MACOSX_BUNDLE_LONG_VERSION_STRING "${VIEWER_CHANNEL} ${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}"
-    MACOSX_BUNDLE_BUNDLE_NAME "Restrained Love"
-    MACOSX_BUNDLE_SHORT_VERSION_STRING "${VIEWER_SHORT_VERSION}"
-    MACOSX_BUNDLE_BUNDLE_VERSION "${VIEWER_SHORT_VERSION}${VIEWER_MACOSX_PHASE}${VIEWER_REVISION}"
-    MACOSX_BUNDLE_COPYRIGHT "Copyright © Linden Research, Inc. 2007"
+    MACOSX_BUNDLE_INFO_PLIST
+    "${CMAKE_CURRENT_SOURCE_DIR}/Info-SecondLife.plist"
     )
 
   configure_file(
@@ -2092,12 +2100,11 @@ if (PACKAGE)
     # *TODO: Generate these search dirs in the cmake files related to each binary.
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/llplugin/slplugin/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/mac_crash_logger/${CMAKE_CFG_INTDIR}")
-    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/mac_updater/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/webkit/${CMAKE_CFG_INTDIR}")
     set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-darwin.tar.bz2")
-    set(VIEWER_EXE_GLOBS "'Restrained Love' SLPlugin mac-updater mac-crash-logger")
+    set(VIEWER_EXE_GLOBS "'Restrained Love' SLPlugin mac-crash-logger")
     set(VIEWER_LIB_GLOB "*.dylib")
   endif (DARWIN)
   if (LINUX)

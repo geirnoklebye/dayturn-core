@@ -728,6 +728,11 @@ bool LLAppViewer::init()
 	//
 	LLFastTimer::reset();
 
+	
+#ifdef LL_DARWIN
+	mMainLoopInitialized = false;
+#endif
+
 	// initialize LLWearableType translation bridge.
 	// Memory will be cleaned up in ::cleanupClass()
 	LLWearableType::initClass(new LLUITranslationBridge());
@@ -1257,6 +1262,10 @@ LLFastTimer::DeclareTimer FTM_FRAME("Frame", true);
 
 bool LLAppViewer::mainLoop()
 {
+#ifdef LL_DARWIN
+	if (!mMainLoopInitialized)
+#endif
+	{
 	mMainloopTimeout = new LLWatchdogTimeout();
 	
 	//-------------------------------------------
@@ -1273,28 +1282,40 @@ bool LLAppViewer::mainLoop()
 	LLVoiceChannel::initClass();
 	LLVoiceClient::getInstance()->init(gServicePump);
 	LLVoiceChannel::setCurrentVoiceChannelChangedCallback(boost::bind(&LLFloaterIMContainer::onCurrentChannelChanged, _1), true);
-	LLTimer frameTimer,idleTimer;
-	LLTimer debugTime;
-	LLViewerJoystick* joystick(LLViewerJoystick::getInstance());
+
+		joystick = LLViewerJoystick::getInstance();
 	joystick->setNeedsReset(true);
 
+#ifdef LL_DARWIN
+		// Ensure that this section of code never gets called again on OS X.
+		mMainLoopInitialized = true;
+#endif
+	}
 //MK
 	int garbage_collector_cnt=-3000; // give the garbage collector a few minutes before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
 //mk
-
-    LLEventPump& mainloop(LLEventPumps::instance().obtain("mainloop"));
     // As we do not (yet) send data on the mainloop LLEventPump that varies
     // with each frame, no need to instantiate a new LLSD event object each
     // time. Obviously, if that changes, just instantiate the LLSD at the
     // point of posting.
+	
+	LLEventPump& mainloop(LLEventPumps::instance().obtain("mainloop"));
+	
     LLSD newFrame;
 
+	LLTimer frameTimer,idleTimer;
+	LLTimer debugTime;
+	
 	//LLPrivateMemoryPoolTester::getInstance()->run(false) ;
 	//LLPrivateMemoryPoolTester::getInstance()->run(true) ;
 	//LLPrivateMemoryPoolTester::destroy() ;
 
 	// Handle messages
+#ifdef LL_DARWIN
+	if (!LLApp::isExiting())
+#else
 	while (!LLApp::isExiting())
+#endif
 	{
 		LLFastTimer _(FTM_FRAME);
 		LLFastTimer::nextFrame(); 
@@ -1641,6 +1662,8 @@ bool LLAppViewer::mainLoop()
 		}
 	}
 
+	if (LLApp::isExiting())
+	{
 	// Save snapshot for next time, if we made it through initialization
 	if (STATE_STARTED == LLStartUp::getStartupState())
 	{
@@ -1667,8 +1690,9 @@ bool LLAppViewer::mainLoop()
 	destroyMainloopTimeout();
 
 	llinfos << "Exiting main_loop" << llendflush;
+	}
 
-	return true;
+	return LLApp::isExiting();
 }
 
 void LLAppViewer::flushVFSIO()
@@ -2766,8 +2790,6 @@ bool LLAppViewer::initConfiguration()
 	//}
 
 #if LL_DARWIN
-	// Initialize apple menubar and various callbacks
-	init_apple_menu(LLTrans::getString("APP_NAME").c_str());
 
 #if __ppc__
 	// If the CPU doesn't have Altivec (i.e. it's not at least a G4), don't go any further.

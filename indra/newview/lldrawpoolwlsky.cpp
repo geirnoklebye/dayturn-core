@@ -421,3 +421,4 @@ void LLDrawPoolWLSky::restoreGL()
 		sCloudNoiseTexture = LLViewerTextureManager::getLocalTexture(sCloudNoiseRawImage.get(), TRUE);
 	}
 }
+
