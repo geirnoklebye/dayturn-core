@@ -47,7 +47,7 @@
   <check_box
       height="16"
       enabled="false"
-      label="Show me in Search results"
+      label="Show me in search results"
       layout="topleft"
       left="30"
       name="online_searchresults"
@@ -61,7 +61,7 @@
       layout="topleft"
       left="30"
       name="online_visibility"
-      top_pad="30"
+      top_pad="10"
       width="350" />
     
     <check_box

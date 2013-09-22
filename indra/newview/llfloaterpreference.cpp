@@ -824,20 +824,24 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 				maturity_list->deleteItems(LLSD(SIM_ACCESS_ADULT));
 			}
 		}
-		getChildView("maturity_desired_combobox")->setVisible( true);
-		getChildView("maturity_desired_textbox")->setVisible( false);
+		maturity_combo->setEnabled(true);
+
+		//
+		//	display selected maturity icons
+		//
+		onChangeMaturity();
 	}
 	else
 	{
-		getChild<LLUICtrl>("maturity_desired_textbox")->setValue(maturity_combo->getSelectedItemLabel());
-		getChildView("maturity_desired_combobox")->setVisible( false);
+		maturity_combo->setEnabled(false);
+
+		getChildView("rating_icon_general")->setVisible(false);
+		getChildView("rating_icon_moderate")->setVisible(false);
+		getChildView("rating_icon_adult")->setVisible(false);
 	}
 
 	// Forget previous language changes.
 	mLanguageChanged = false;
-
-	// Display selected maturity icons.
-	onChangeMaturity();
 	
 	// Load (double-)click to walk/teleport settings.
 	updateClickActionControls();

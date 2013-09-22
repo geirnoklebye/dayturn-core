@@ -121,16 +121,6 @@
      width="200">
         I want to access content rated:
     </text>
-	<text
-     type="string"
-     length="1"
-     follows="left|top"
-     height="15"
-     layout="topleft"
-     left_pad="5"
-     name="maturity_desired_textbox"
-     width="200">
-    </text>
     <combo_box
      control_name="PreferredMaturity"
      follows="left|top"
