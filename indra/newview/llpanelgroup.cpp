@@ -333,9 +333,14 @@ void LLPanelGroup::update(LLGroupChange gc)
 		childSetToolTip("group_name",group_name);
 		
 		LLGroupData agent_gdatap;
+		LLUICtrl *count_textbox = getChild<LLUICtrl>("group_member_count");
 		bool is_member = gAgent.getGroupData(mID,agent_gdatap) || gAgent.isGodlike();
 		bool join_btn_visible = !is_member && gdatap->mOpenEnrollment;
-		
+
+		if (count_textbox) {
+			count_textbox->setVisible(is_member && !gdatap->mMembers.empty());
+		}
+
 		mButtonJoin->setVisible(join_btn_visible);
 		mJoinText->setVisible(join_btn_visible);
 
@@ -354,6 +359,9 @@ void LLPanelGroup::update(LLGroupChange gc)
 				fee_buff = getString("group_join_free", string_args);
 			}
 			mJoinText->setValue(fee_buff);
+		}
+		else if (is_member && !gdatap->mMembers.empty() && count_textbox) {
+			count_textbox->setTextArg("[COUNT]", llformat("%d", gdatap->mMembers.size()));
 		}
 	}
 }

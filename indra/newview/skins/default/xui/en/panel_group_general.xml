@@ -77,6 +77,17 @@ Hover your mouse over the options for more help.
      width="190">
       Free
     </text>
+    <text
+     type="string"
+     layout="topleft"
+     follows="left|top"
+     top_delta="0"
+     height="14"
+     width="190"
+     visible="false"
+     name="group_member_count">
+      This group has [COUNT] members
+    </text>
     <button
      follows="left|top"
      left_delta="0"
