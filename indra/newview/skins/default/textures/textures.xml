@@ -345,6 +345,8 @@ with the same filename but different name
   <texture name="Mouselook_View_On" file_name="bottomtray/Mouselook_View_On.png" preload="false" />
   <texture name="ModelImport_Status_Error" file_name="red_x.png" preload="false"/>
   
+  <texture name="Mouselook_View_Off" file_name="bottomtray/Mouselook_View_Off.png" preload="false" />
+  <texture name="Mouselook_View_On" file_name="bottomtray/Mouselook_View_On.png" preload="false" />
 
   <texture name="Move_Fly_Off" file_name="bottomtray/Move_Fly_Off.png" preload="false" />
   <texture name="Move_Run_Off" file_name="bottomtray/Move_Run_Off.png" preload="false" />
@@ -497,6 +499,9 @@ with the same filename but different name
   <texture name="Refresh_Off" file_name="icons/Refresh_Off.png" preload="true" />
 
   <texture name="Resize_Corner" file_name="windows/Resize_Corner.png" preload="true" />
+
+  <texture name="Reset_View_Off" file_name="bottomtray/Reset_View_Off.png" preload="false" />
+  <texture name="Reset_View_Over" file_name="bottomtray/Reset_View_Over.png" preload="false" />
 
   <texture name="Rounded_Rect"	file_name="Rounded_Rect.png" preload="true" scale.left="6" scale.top="26" scale.right="58" scale.bottom="6" />
   <texture name="Rounded_Rect_Top"	file_name="Rounded_Rect.png" preload="true" scale.left="6" scale.top="8" scale.right="58" scale.bottom="0" clip.left="0" clip.right="64" clip.bottom="16" clip.top="32" />
