@@ -51,6 +51,7 @@ public:
 	
 	void onSearchEdit(const std::string& string);
 	void onSave();
+	void onSaveAs();
 	
 	bool onSaveCommit(const LLSD& notification, const LLSD& response);
 
@@ -64,7 +65,6 @@ protected:
 private:
 	LLTabContainer*			mAppearanceTabs;
 	std::string 			mFilterSubString;
-	std::auto_ptr<LLSaveOutfitComboBtn> mSaveComboBtn;
 
 	//////////////////////////////////////////////////////////////////////////////////
 	// tab panels                                                                   //
