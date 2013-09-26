@@ -337,7 +337,7 @@ with the same filename but different name
   <texture name="MinusItem_Off" file_name="icons/MinusItem_Off.png" preload="false" />
   <texture name="MinusItem_Press" file_name="icons/MinusItem_Press.png" preload="false" />
 
-  <texture name="menu_separator" file_name="navbar/FileMenu_Divider.png" scale.left="4" scale.top="166" scale.right="0" scale.bottom="0" />
+  <texture name="menu_separator" file_name="navbar/FileMenu_Divider.png" preload="true" scale.left="4" scale.top="166" scale.right="0" scale.bottom="0" />
 
   <texture name="ModelImport_Status_Good" file_name="green_checkmark.png" preload="false"/>
   <texture name="ModelImport_Status_Warning" file_name="lag_status_warning.tga" preload="false"/>
@@ -560,11 +560,11 @@ with the same filename but different name
   <texture name="SkipBackward_Off" file_name="icons/SkipBackward_Off.png" preload="false" />
   <texture name="SkipForward_Off" file_name="icons/SkipForward_Off.png" preload="false" />
 
-  <texture name="SliderTrack_Horiz" file_name="widgets/SliderTrack_Horiz.png" scale.left="4" scale.top="4" scale.right="100" scale.bottom="2" />
-  <texture name="SliderTrack_Vert" file_name="widgets/SliderTrack_Vert.png" scale.left="2" scale.top="100" scale.right="4" scale.bottom="4" />
-  <texture name="SliderThumb_Off" file_name="widgets/SliderThumb_Off.png" />
-  <texture name="SliderThumb_Disabled" file_name="widgets/SliderThumb_Disabled.png" />
-  <texture name="SliderThumb_Press" file_name="widgets/SliderThumb_Press.png" />
+  <texture name="SliderTrack_Horiz" file_name="widgets/SliderTrack_Horiz.png" preload="true" scale.left="4" scale.top="4" scale.right="100" scale.bottom="2" />
+  <texture name="SliderTrack_Vert" file_name="widgets/SliderTrack_Vert.png" preload="true" scale.left="2" scale.top="100" scale.right="4" scale.bottom="4" />
+  <texture name="SliderThumb_Off" file_name="widgets/SliderThumb_Off.png" preload="true" />
+  <texture name="SliderThumb_Disabled" file_name="widgets/SliderThumb_Disabled.png" preload="true" />
+  <texture name="SliderThumb_Press" file_name="widgets/SliderThumb_Press.png" preload="true" />
 
   <texture name="Kokua_Logo" file_name="icons/Kokua_Logo.png" preload="true" />
   <texture name="OBJECT_Icon" file_name="icons/object_icon.png" preload="true" />
@@ -579,10 +579,10 @@ with the same filename but different name
 
   <texture name="startup_logo"  file_name="windows/startup_logo.png" preload="true" />
 
-  <texture name="Stepper_Down_Off" file_name="widgets/Stepper_Down_Off.png" preload="false" />
-  <texture name="Stepper_Down_Press" file_name="widgets/Stepper_Down_Press.png" preload="false" />
-  <texture name="Stepper_Up_Off" file_name="widgets/Stepper_Up_Off.png" preload="false" />
-  <texture name="Stepper_Up_Press" file_name="widgets/Stepper_Up_Press.png" preload="false" />
+  <texture name="Stepper_Down_Off" file_name="widgets/Stepper_Down_Off.png" preload="true" />
+  <texture name="Stepper_Down_Press" file_name="widgets/Stepper_Down_Press.png" preload="true" />
+  <texture name="Stepper_Up_Off" file_name="widgets/Stepper_Up_Off.png" preload="true" />
+  <texture name="Stepper_Up_Press" file_name="widgets/Stepper_Up_Press.png" preload="true" />
 
   <texture name="Stop_Off" file_name="icons/Stop_Off.png" preload="true" />
   <texture name="StopReload_Off" file_name="icons/StopReload_Off.png" preload="false" />
@@ -605,15 +605,15 @@ with the same filename but different name
   <texture name="TabIcon_Places_Off" file_name="taskpanel/TabIcon_Places_Off.png" preload="false" />
   <texture name="TabIcon_Things_Off" file_name="taskpanel/TabIcon_Things_Off.png" preload="false" />
 
-  <texture name="TabTop_Right_Off" file_name="containers/TabTop_Right_Off.png" preload="false"  scale.left="8" scale.top="8" scale.right="62" scale.bottom="9" />
-  <texture name="TabTop_Right_Selected" file_name="containers/TabTop_Right_Selected.png" preload="false"  scale.left="8" scale.top="8" scale.right="62" scale.bottom="9" />
-  <texture name="TabTop_Middle_Off" file_name="containers/TabTop_Middle_Off.png" preload="false" scale.left="8" scale.top="8" scale.right="120" scale.bottom="9" />
-  <texture name="TabTop_Middle_Selected" file_name="containers/TabTop_Middle_Selected.png" preload="false" scale.left="8" scale.top="8" scale.right="96" scale.bottom="9" />
-  <texture name="TabTop_Left_Off" file_name="containers/TabTop_Left_Off.png" preload="false" scale.left="8" scale.top="8" scale.right="120" scale.bottom="9" />
-  <texture name="TabTop_Left_Selected" file_name="containers/TabTop_Left_Selected.png" preload="false" scale.left="8" scale.top="8" scale.right="96" scale.bottom="9" />
+  <texture name="TabTop_Right_Off" file_name="containers/TabTop_Right_Off.png" preload="true"  scale.left="8" scale.top="8" scale.right="62" scale.bottom="9" />
+  <texture name="TabTop_Right_Selected" file_name="containers/TabTop_Right_Selected.png" preload="true"  scale.left="8" scale.top="8" scale.right="62" scale.bottom="9" />
+  <texture name="TabTop_Middle_Off" file_name="containers/TabTop_Middle_Off.png" preload="true" scale.left="8" scale.top="8" scale.right="120" scale.bottom="9" />
+  <texture name="TabTop_Middle_Selected" file_name="containers/TabTop_Middle_Selected.png" preload="true" scale.left="8" scale.top="8" scale.right="96" scale.bottom="9" />
+  <texture name="TabTop_Left_Off" file_name="containers/TabTop_Left_Off.png" preload="true" scale.left="8" scale.top="8" scale.right="120" scale.bottom="9" />
+  <texture name="TabTop_Left_Selected" file_name="containers/TabTop_Left_Selected.png" preload="true" scale.left="8" scale.top="8" scale.right="96" scale.bottom="9" />
 
-  <texture name="TaskPanel_Tab_Off" file_name="taskpanel/TaskPanel_Tab_Off.png" preload="false" scale.left="4" scale.top="29" scale.right="36" scale.bottom="4" />
-  <texture name="TaskPanel_Tab_Selected" file_name="taskpanel/TaskPanel_Tab_Selected.png" preload="false" scale.left="5" scale.top="30" scale.right="36" scale.bottom="5" />
+  <texture name="TaskPanel_Tab_Off" file_name="taskpanel/TaskPanel_Tab_Off.png" preload="true" scale.left="4" scale.top="29" scale.right="36" scale.bottom="4" />
+  <texture name="TaskPanel_Tab_Selected" file_name="taskpanel/TaskPanel_Tab_Selected.png" preload="true" scale.left="5" scale.top="30" scale.right="36" scale.bottom="5" />
 
   <texture name="TextField_Search_Disabled" file_name="widgets/TextField_Search_Disabled.png" preload="true" scale.left="9" scale.top="12" scale.right="248" scale.bottom="12" />
   <texture name="TextField_Off" file_name="widgets/TextField_Off.png" preload="true" scale.left="9" scale.top="12" scale.right="248" scale.bottom="12" />
