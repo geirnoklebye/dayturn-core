@@ -306,20 +306,20 @@ bool DAESaver::save_collada_dae(std::string filename)
 	//
 	//	get ISO format time
 	//
-	std::string date = boost::posix_time::to_iso_extended_string(boost::posix_time::second_clock::local_time());
-
-	daeElement *created = asset->add("created");
+	// Get ISO format time
+	time_t rawtime;
+	time(&rawtime);
+	struct tm* utc_time = gmtime(&rawtime);
+	std::string date = llformat("%04d-%02d-%02dT%02d:%02d:%02d", utc_time->tm_year + 1900, utc_time->tm_mon + 1, utc_time->tm_mday, utc_time->tm_hour, utc_time->tm_min, utc_time->tm_sec);
+	daeElement* created = asset->add("created");
 	created->setCharData(date);
-	daeElement *modified = asset->add("modified");
+	daeElement* modified = asset->add("modified");
 	modified->setCharData(date);
-
-	daeElement *unit = asset->add("unit");
+	daeElement* unit = asset->add("unit");
 	unit->setAttribute("name", "meter");
 	unit->setAttribute("value", "1");
-
-	daeElement *up_axis = asset->add("up_axis");
+	daeElement* up_axis = asset->add("up_axis");
 	up_axis->setCharData("Z_UP");
-
 	//
 	//	file creator
 	//
