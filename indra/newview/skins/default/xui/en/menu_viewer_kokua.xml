@@ -750,17 +750,28 @@
        function="Floater.Toggle"
        parameter="mini_map" />
     </menu_item_check>
-    <menu_item_check
-    label="Search"
-    name="Search"
-    shortcut="control|F">
-      <menu_item_check.on_check
-       function="Floater.Visible"
-       parameter="search" />
-      <menu_item_check.on_click
-       function="Floater.Toggle"
-       parameter="search" />
-    </menu_item_check>
+        <menu_item_check
+        label="Search"
+        name="Search"
+        shortcut="control|F">
+            <menu_item_check.on_check
+             function="Floater.Visible"
+             parameter="search" />
+            <menu_item_check.on_click
+             function="Floater.Toggle"
+             parameter="search" />
+            </menu_item_check>
+        <menu_item_check
+			label="Legacy Search"
+			name="Legacy Search"
+      shortcut="control|alt|F">
+            <menu_item_check.on_check
+			function="Floater.Visible"
+			parameter="search_legacy" />
+            <menu_item_check.on_click
+			function="Floater.Toggle"
+			parameter="search_legacy" />
+		</menu_item_check>
     <menu_item_separator/>
     <menu_item_call
      label="Teleport home"
@@ -1656,11 +1667,22 @@
         <menu_item_call
          label="Stop Animating Me"
          name="Stop Animating My Avatar"
-		 shortcut="shift|S">
+		     shortcut="shift|S">
           <menu_item_call.on_click
            function="Tools.StopAllAnimations" />
         </menu_item_call>
-		   <menu_item_check
+        <menu_item_check
+         label="Legacy Search"
+         name="Legacy Search"
+         shortcut="control|alt|F">
+          <menu_item_check.on_check
+            function="Floater.Visible"
+            parameter="search_legacy" />
+          <menu_item_check.on_click
+            function="Floater.Toggle"
+            parameter="search_legacy" />
+       </menu_item_check>
+    <menu_item_check
            label="Highlight Transparent"
            name="Highlight Transparent"
            shortcut="control|alt|T">
