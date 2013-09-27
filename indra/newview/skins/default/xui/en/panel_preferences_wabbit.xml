@@ -193,6 +193,33 @@
 		width="300">
 		(0 = Always show each avatar's age when enabled)
 	    </text>
+	    <text
+		name="web_browser_home_page_label"
+		type="string"
+		length="1"
+		follows="left|top"
+		top_pad="20"
+		left="17"
+		height="10"
+		layout="topleft"
+		mouse_opaque="false"
+		width="140">
+		    Web browser home page:
+	    </text>
+	    <line_editor
+		control_name="WebBrowserHomePage"
+		border_style="line"
+		border_thickness="1"
+		font="SansSerif"
+		height="23"
+		layout="topleft"
+		follows="top|left|right"
+		top_delta="-5"
+		right="-10"
+		max_length="4096"
+		name="web_browser_home_page"
+		width="345">
+	    </line_editor>
 	</panel>
 
 	<!--Chat-->

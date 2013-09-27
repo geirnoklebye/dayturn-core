@@ -4711,6 +4711,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Speak_Label">Speak</string>
   <string name="Command_View_Label">Camera controls</string>
   <string name="Command_Voice_Label">Voice settings</string>
+  <string name="Command_Web_Browser_Label">Web Browser</string>
 
   <string name="Command_AboutLand_Tooltip">Information about the land you're visiting</string>
   <string name="Command_Appearance_Tooltip">Change your avatar</string>
@@ -4738,6 +4739,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Speak_Tooltip">Speak with people nearby using your microphone</string>
   <string name="Command_View_Tooltip">Changing camera angle</string>
   <string name="Command_Voice_Tooltip">Volume controls for calls and people near you in world</string>
+  <string name="Command_Web_Browser_Tooltip">Open an in-viewer web browser</string>
 <!-- Firestorm commands -->
   <string name="Command_AO_Label">Animation overrider</string>
   <string name="Command_AO_Tooltip">Animation overrider</string>

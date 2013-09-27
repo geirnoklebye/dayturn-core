@@ -70,6 +70,24 @@
           function="WebContent.Forward" />
       </button>
       <button
+        image_overlay="Home_Off"
+		    image_disabled="PushButton_Disabled"
+		    image_disabled_selected="PushButton_Disabled"
+		    image_selected="PushButton_Selected"
+		    image_unselected="PushButton_Off"
+        chrome="true"
+        tool_tip="Navigate home"
+        follows="left|top"
+        height="22"
+        layout="topleft"
+        left="51"
+        name="reload"
+        top_delta="0"
+        width="22">
+        <button.commit_callback
+          function="WebContent.Home" />
+      </button>
+      <button
         image_overlay="Stop_Off"
 		    image_disabled="PushButton_Disabled"
 		    image_disabled_selected="PushButton_Disabled"
@@ -81,7 +99,7 @@
         follows="left|top"
         height="22"
         layout="topleft"
-        left="51"
+        left="75"
         name="stop"
         top_delta="0"
         width="22">
@@ -99,7 +117,7 @@
         follows="left|top"
         height="22"
         layout="topleft"
-        left="51"
+        left="75"
         name="reload"
         top_delta="0"
         width="22">

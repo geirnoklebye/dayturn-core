@@ -85,6 +85,7 @@ protected:
 
 	void onClickBack();
 	void onClickForward();
+	void onClickHome();
 	void onClickReload();
 	void onClickStop();
 	void onEnterAddress();

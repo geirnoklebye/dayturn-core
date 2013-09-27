@@ -69,6 +69,7 @@ LLFloaterWebContent::LLFloaterWebContent( const Params& params )
 {
 	mCommitCallbackRegistrar.add( "WebContent.Back", boost::bind( &LLFloaterWebContent::onClickBack, this ));
 	mCommitCallbackRegistrar.add( "WebContent.Forward", boost::bind( &LLFloaterWebContent::onClickForward, this ));
+	mCommitCallbackRegistrar.add( "WebContent.Home", boost::bind( &LLFloaterWebContent::onClickHome, this ));
 	mCommitCallbackRegistrar.add( "WebContent.Reload", boost::bind( &LLFloaterWebContent::onClickReload, this ));
 	mCommitCallbackRegistrar.add( "WebContent.Stop", boost::bind( &LLFloaterWebContent::onClickStop, this ));
 	mCommitCallbackRegistrar.add( "WebContent.EnterAddress", boost::bind( &LLFloaterWebContent::onEnterAddress, this ));
@@ -278,6 +279,10 @@ void LLFloaterWebContent::onOpen(const LLSD& key)
 		return;
 	}
 
+	if (params.url().empty()) {
+		params.url = gSavedSettings.getString("WebBrowserHomePage");
+	}
+
 	mWebBrowser->setTrustedContent(params.trusted_content);
 
 	// tell the browser instance to load the specified URL
@@ -416,6 +421,11 @@ void LLFloaterWebContent::onClickForward()
 void LLFloaterWebContent::onClickBack()
 {
 	mWebBrowser->navigateBack();
+}
+
+void LLFloaterWebContent::onClickHome()
+{
+	mWebBrowser->navigateTo(gSavedSettings.getString("WebBrowserHomePage"));
 }
 
 void LLFloaterWebContent::onClickReload()

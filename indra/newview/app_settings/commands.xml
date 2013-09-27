@@ -241,6 +241,16 @@
            is_running_function="Floater.IsOpen"
            is_running_parameters="camera"
            />
+  <command name="web_browser"
+           available_in_toybox="true"
+           icon="Command_Web_Browser_Icon"
+           label_ref="Command_Web_Browser_Label"
+           tooltip_ref="Command_Web_Browser_Tooltip"
+           execute_function="Floater.ToggleOrBringToFront"
+           execute_parameters="web_content"
+           is_running_function="Floater.IsOpen"
+           is_running_parameters="web_content"
+           />
   <command name="animationoverride"
            available_in_toybox="true"
            icon="ao_toggle_18"
