@@ -25,5 +25,6 @@
     button_display_mode="icons_only">
     <command name="avatar"/>
     <command name="destinations"/>	
+    <command name="web_browser"/>	
   </left_toolbar>
 </toolbars>
