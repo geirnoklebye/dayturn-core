@@ -34,6 +34,7 @@
 #include "ao.h"				// ## Zi: Animation Overrider
 #include "floaterhop.h"
 #include "fsareasearch.h"
+#include "fsfloaterexport.h"
 #include "fsfloaterprofile.h" // <FS:KC legacy profiles>
 #include "fsfloatersearch.h"
 #include "fsfloatersearchlegacy.h"

@@ -235,6 +235,13 @@ boost::signals2::connection LLViewerObjectList::setNewObjectCallback(new_object_
 }
 // </FS:CR>
 
+// <FS:CR> Object Import
+boost::signals2::connection LLViewerObjectList::setNewObjectCallback(new_object_callback_t cb)
+{
+	return mNewObjectSignal.connect(cb);
+}
+// </FS:CR>
+
 void LLViewerObjectList::processUpdateCore(LLViewerObject* objectp, 
 										   void** user_data, 
 										   U32 i, 
