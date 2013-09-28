@@ -207,8 +207,8 @@
              visibility_control="FSEnableObjectExports"
              name="import linkset">
                 <menu_item_call.on_click
-                 function="Floater.Toggle"
-                 parameter="fs_import" />
+                 function="File.ImportLinkset"
+                 parameter="" />
             </menu_item_call>
          <menu_item_call
          label="Hide All Controls"

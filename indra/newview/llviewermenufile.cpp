@@ -464,6 +464,17 @@ class LLFileUploadBulk : public view_listener_t
 	}
 };
 
+// <FS:CR> Import Linkset
+class FSFileImportLinkset : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		(new LLGenericLoadFilePicker(LLFilePicker::FFLOAD_IMPORT, boost::bind(&show_floater_callback, "fs_import", _1, LLFilePicker::FFLOAD_IMPORT)))->getFile();
+		return TRUE;
+	}
+};
+// </FS:CR>
+
 void upload_error(const std::string& error_message, const std::string& label, const std::string& filename, const LLSD& args) 
 {
 	LL_WARNS() << error_message << LL_ENDL;
@@ -873,6 +884,7 @@ void init_menu_file()
 	view_listener_t::addEnable(new LLFileEnableUploadModel(), "File.EnableUploadModel");
 	view_listener_t::addMenu(new LLMeshEnabled(), "File.MeshEnabled");
 	view_listener_t::addMenu(new LLMeshUploadVisible(), "File.VisibleUploadModel");
+	view_listener_t::addCommit(new FSFileImportLinkset(), "File.ImportLinkset");	// <FS:CR> Import linkset item
 	
 	// "File.SaveTexture" moved to llpanelmaininventory so that it can be properly handled.
 }

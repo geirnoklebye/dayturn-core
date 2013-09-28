@@ -27,9 +27,9 @@
 
 #include "llviewerprecompiledheaders.h"
 #include "fsfloaterimport.h"
+
 #include "fscommon.h"
 #include "llagent.h"
-#include "llagentcamera.h"
 #include "llappviewer.h"
 #include "llbuycurrencyhtml.h"
 #include "llcallbacklist.h"
@@ -37,12 +37,9 @@
 #include "lldatapacker.h"
 #include "lldir.h"
 #include "lleconomy.h"
-#include "llfilepicker.h"
 #include "llfloaterperms.h"
-#include "llfloaterreg.h"
 #include "llinventorydefines.h"
 #include "llinventoryfunctions.h"
-#include "lllineeditor.h"
 #include "llmultigesture.h"
 #include "llnotificationsutil.h"
 #include "llparcel.h"
@@ -64,13 +61,12 @@
 #include "llvfs.h"
 #include "llvolumemessage.h"
 #include "lltrace.h"
-//#include "fsexportperms.h"
+#include "fsexportperms.h"
 #include <boost/algorithm/string_regex.hpp>
 #include <boost/lexical_cast.hpp>
 #include "llcoros.h"
 #include "llcoproceduremanager.h"
 #include "llsdutil.h"
-#include "material_codes.h"
 
 struct FSResourceData
 {
@@ -93,20 +89,21 @@ void resourceDeleter( LLResourceData *aData )
 
 void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter, std::string aURL,  LLSD aBody, LLAssetID aAssetId, LLAssetType::EType aAssetType, boost::shared_ptr< LLResourceData > aResourceData );
 
-FSFloaterImport::FSFloaterImport(const LLSD& key) :
-	LLFloater(key),
+FSFloaterImport::FSFloaterImport(const LLSD& filename) :
+	LLFloater(filename),
 	mCreatingActive(false),
 	mLinkset(0),
 	mObject(0),
 	mPrim(0),
 	mImportState(IDLE),
-	mFileReady(false)
+	mFileFullName(filename),
+	mObjectCreatedCallback(),
+	m_AssetsUploading( 0 )
 {
 	mInstance = this;
-	mCommitCallbackRegistrar.add("Import.PickFile", boost::bind(&FSFloaterImport::onClickBtnPickFile, this));
-	mCommitCallbackRegistrar.add("Import.ImportLinkset", boost::bind(&FSFloaterImport::onClickBtnImport, this));
-//	mCommitCallbackRegistrar.add("Import.UploadAsset",boost::bind(&FSFloaterImport::onClickCheckBoxUploadAsset,this));
-//	mCommitCallbackRegistrar.add("Import.TempAsset",boost::bind(&FSFloaterImport::onClickCheckBoxTempAsset,this));
+
+	mCommitCallbackRegistrar.add("Import.UploadAsset",boost::bind(&FSFloaterImport::onClickCheckBoxUploadAsset,this));
+	mCommitCallbackRegistrar.add("Import.TempAsset",boost::bind(&FSFloaterImport::onClickCheckBoxTempAsset,this));
 
 	gIdleCallbacks.addFunction(onIdle, this);
 
@@ -225,8 +222,8 @@ void FSFloaterImport::onIdle()
 
 void FSFloaterImport::loadFile()
 {
-	mFilePath = gDirUtilp->getDirName(mFileName);
-	mFileName = gDirUtilp->getBaseFileName(mFileFullName);
+	mFilePath = gDirUtilp->getDirName(mFilename);
+	mFilename = gDirUtilp->getBaseFileName(mFileFullName);
 
 	mManifest.clear();
 	mTextureQueue.clear();
@@ -318,7 +315,7 @@ void FSFloaterImport::loadFile()
 
 void FSFloaterImport::populateBackupInfo()
 {
-	childSetTextArg("filename_text", "[FILENAME]", mFileName);
+	childSetTextArg("filename_text", "[FILENAME]", mFilename);
 	childSetTextArg("client_text", "[VERSION]", mManifest["format_version"].asString());
 	childSetTextArg("client_text", "[CLIENT]", (mManifest.has("client") ? mManifest["client"].asString() : LLTrans::getString("Unknown")));
 	childSetTextArg("author_text", "[AUTHOR]", (mManifest.has("author") ? mManifest["author"].asString() : LLTrans::getString("Unknown")));
@@ -326,7 +323,7 @@ void FSFloaterImport::populateBackupInfo()
 	childSetTextArg("creation_date_text", "[DATE_STRING]", (mManifest.has("creation_date") ? mManifest["creation_date"].asString(): LLTrans::getString("Unknown")));
 	
 	LLUIString title = getString("floater_title");
-	title.setArg("[FILENAME]", mFileName);
+	title.setArg("[FILENAME]", mFilename);
 	setTitle(title);
 }
 
@@ -587,110 +584,6 @@ void FSFloaterImport::onClickBtnImport()
 	}
 }
 
-void FSFloaterImport::onClickBtnPickFile()
-{
-	// pick a file
-	LLFilePicker& file_picker = LLFilePicker::instance();
-	if (!file_picker.getOpenFile(LLFilePicker::FFLOAD_IMPORT))
-	{
-		// User canceled or we failed to acquire file.
-		return;
-	}
-	mFileFullName = file_picker.getFirstFile();
-	mFilePath = gDirUtilp->getDirName(mFileName);
-	mFileName = gDirUtilp->getBaseFileName(mFileFullName);
-	getChild<LLLineEditor>("filename")->setValue(LLSD(mFileName));
-
-	mFile.clear();
-	mTextureQueue.clear();
-	mAnimQueue.clear();
-	mSoundQueue.clear();
-	mFileReady = false;
-	mLinksetSize = 0;
-	mTexturesTotal = 0;
-	mAnimsTotal = 0;
-	mSoundsTotal = 0;
-
-
-	llifstream filestream(mFileFullName.c_str(), std::ios_base::in | std::ios_base::binary);
-	if (filestream.is_open())
-	{
-		filestream.seekg(0, std::ios::end);
-		S32 file_size = (S32)filestream.tellg();
-		filestream.seekg(0, std::ios::beg);
-		if (unzip_llsd(mFile, filestream, file_size))
-		{
-
-			mFileReady = true;
-		}
-		else
-		{
-			LL_WARNS("import") << "Failed to deserialize " << mFileFullName << LL_ENDL;
-		}
-	}
-	else
-	{
-		LL_WARNS("import") << "Unable to open file: " << mFileFullName << LL_ENDL;
-	}
-	filestream.close();
-
-
-	if (mFileReady)
-	{
-		if (mFile.has("format_version") && mFile["format_version"].asInteger() == 1)
-		{
-			LLSD& linksetsd = mFile["linkset"];
-			U32 prims = 0;
-			for (LLSD::array_iterator linkset_iter = linksetsd.beginArray();
-				linkset_iter != linksetsd.endArray();
-				++linkset_iter)
-			{
-				LLSD& objectsd = mFile["linkset"][mLinksetSize];
-				for (LLSD::array_iterator prim_iter = objectsd.beginArray();
-					prim_iter != objectsd.endArray();
-					++prim_iter)
-				{
-					processPrim(mFile["prim"][(*prim_iter).asString()]);
-					prims++;
-				}
-				mLinksetSize++;
-			}
-
-			LLUIString stats = getString("file_status");
-			stats.setArg("[LINKSETS]", llformat("%u", mLinksetSize));
-			stats.setArg("[PRIMS]", llformat("%u", prims));
-			stats.setArg("[TEXTURES]", llformat("%u", mTexturesTotal));
-			stats.setArg("[SOUNDS]", llformat("%u", mSoundsTotal));
-			stats.setArg("[ANIMATIONS]", llformat("%u", mAnimsTotal));
-			stats.setArg("[ASSETS]", llformat("%u", mAssetsTotal));
-			getChild<LLTextBox>("file_status_text")->setText(stats.getString());
-		}
-		else
-		{
-			getChild<LLTextBox>("file_status_text")->setText(getString("file_version_error"));
-		}
-	}
-	else
-	{
-		getChild<LLTextBox>("file_status_text")->setText(getString("file_status_error"));
-	}
-
-	LL_DEBUGS("import") << "Linkset size is " << mLinksetSize << LL_ENDL;
-	if (mLinksetSize != 0)
-	{
-		getChild<LLButton>("import_file")->setEnabled(TRUE);
-		getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(TRUE);
-		getChild<LLCheckBoxCtrl>("region_position")->setEnabled(TRUE);
-		getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(TRUE);
-	}
-	else
-	{
-		getChild<LLButton>("import_file")->setEnabled(FALSE);
-		getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(FALSE);
-		getChild<LLCheckBoxCtrl>("region_position")->setEnabled(FALSE);
-		getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(FALSE);
-	}
-}
 void FSFloaterImport::onClickCheckBoxUploadAsset()
 {
 	if (getChild<LLCheckBoxCtrl>("upload_asset")->get())
@@ -757,30 +650,16 @@ void FSFloaterImport::createPrim()
 	status.setArg("[PRIM]", llformat("%u", mObject + 1));
 	status.setArg("[PRIMS]", llformat("%u", mObjectSize));
 	getChild<LLTextBox>("file_status_text")->setText(status.getString());
-
-	LLUUID prim_uuid = mFile["linkset"][mLinkset][mObject].asUUID();
+  
+	LLUUID prim_uuid = mManifest["linkset"][mLinkset][mObject].asUUID();
 	LL_DEBUGS("import") << "Creating prim from " << prim_uuid.asString() << LL_ENDL;
-	LLSD& prim = mFile["prim"][prim_uuid.asString()];
+	LLSD& prim = mManifest["prim"][prim_uuid.asString()];
 
 	gMessageSystem->newMessageFast(_PREHASH_ObjectAdd);
 	gMessageSystem->nextBlockFast(_PREHASH_AgentData);
-	gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
-	gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-
-	LLUUID group_id = gAgent.getGroupID();
-	LLParcel *parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
-	if (gSavedSettings.getBOOL("RezUnderLandGroup"))
-	{
-		if (gAgent.isInGroup(parcel->getGroupID()))
-		{
-			group_id = parcel->getGroupID();
-		}
-		else if (gAgent.isInGroup(parcel->getOwnerID()))
-		{
-			group_id = parcel->getOwnerID();
-		}
-	}
-	gMessageSystem->addUUIDFast(_PREHASH_GroupID, group_id);
+	gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgentID);
+	gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgentSessionID);
+	gMessageSystem->addUUIDFast(_PREHASH_GroupID, gAgent.getGroupID());
 
 	gMessageSystem->nextBlockFast(_PREHASH_ObjectData);
 	gMessageSystem->addU8Fast(_PREHASH_Material, (U8)prim["material"].asInteger());
@@ -799,7 +678,7 @@ void FSFloaterImport::createPrim()
 	LLVector3 scale;
 	scale.setValue(prim["scale"]);
 	LL_DEBUGS("import") << "Creating prim scale of " << scale << LL_ENDL;
-	gMessageSystem->addVector3Fast(_PREHASH_Scale, scale);
+	gMessageSystem->addVector3Fast(_PREHASH_Scale, scale );
 
 	LLQuaternion rotation = ll_quaternion_from_sd(prim["rotation"]);
 	if (mObject != 0)
@@ -823,7 +702,13 @@ void FSFloaterImport::createPrim()
 	{
 		position = mRootPosition;
 	}
-
+	
+	if (mObjectCreatedCallback.connected())
+	{
+		mObjectCreatedCallback.disconnect();
+	}
+	mObjectCreatedCallback = gObjectList.setNewObjectCallback(boost::bind(&FSFloaterImport::processPrimCreated, this, _1));
+	
 	LL_DEBUGS("import") << "Creating prim at position " << position << LL_ENDL;
 	gMessageSystem->addVector3Fast(_PREHASH_RayStart, position);
 	gMessageSystem->addVector3Fast(_PREHASH_RayEnd, position);
@@ -833,8 +718,9 @@ void FSFloaterImport::createPrim()
 	gMessageSystem->addU8Fast(_PREHASH_State, (U8)0);
 	gMessageSystem->addUUIDFast(_PREHASH_RayTargetID, LLUUID::null);
 	gMessageSystem->sendReliable(gAgent.getRegion()->getHost());
-
+	LLTrace::add(LLStatViewer::OBJECT_CREATE,1);
 }
+
 bool FSFloaterImport::processPrimCreated(LLViewerObject* object)
 {
 	if (!(mInstance && mCreatingActive))
@@ -2038,9 +1924,6 @@ void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter
 	LLUUID new_id = postContentResult[ "new_asset" ];
 
 	LL_DEBUGS( "import" ) << "result: " << responseResult << " new_id: " << new_id << LL_ENDL;
-
-	// rename the file in the VFS to the actual asset id
-	gVFS->renameFile(aAssetId, aAssetType, new_id, aAssetType);
 
 	// rename the file in the VFS to the actual asset id
 	gVFS->renameFile(aAssetId, aAssetType, new_id, aAssetType);

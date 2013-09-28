@@ -150,7 +150,7 @@
 #include "boost/unordered_map.hpp"
 #include "llvowlsky.h"
 #include "llcleanup.h"
-#include "fsexport.h"
+#include "fsfloaterexport.h"
 #include "daeexport.h"
 
 using namespace LLAvatarAppearanceDefines;
@@ -10168,23 +10168,49 @@ void toggleWebBrowser(const LLSD& sdParam)
 }
 // </FS:Ansariel> For web browser toolbar button
 
+// <FS:Techwolf Lupindo> export
+BOOL enable_export_object()
+{
+    // <FS:CR>
+	for (LLObjectSelection::root_iterator iter = LLSelectMgr::getInstance()->getSelection()->root_begin();
+		 iter != LLSelectMgr::getInstance()->getSelection()->root_end(); iter++)
+	{
+		LLSelectNode* node = *iter;
+		LLViewerObject* obj = node->getObject();
+		if (obj || node)
+			return gSavedSettings.getBOOL("FSEnableObjectExports");
+	}
+    return false;
+    // </FS:CR>
+}
+
 class FSObjectExport : public view_listener_t
 {
 	bool handleEvent( const LLSD& userdata)
 	{
-//		FSExport::exportSelection();
+		LLViewerObject* objectp = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
+		if (objectp)
+		{
+			LLFloaterReg::showInstance("fs_export");
+		}
 		return true;
 	}
 };
-
-class DAEExport : public view_listener_t
+// </FS:Techwolf Lupindo>
+// <FS:CR>
+class FSObjectExportCollada : public view_listener_t
 {
-	bool handleEvent(const LLSD& userdata)
+	bool handleEvent( const LLSD& userdata)
 	{
-		DAEExportUtil::export_selection();
+		LLViewerObject* objectp = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
+		if (objectp)
+		{
+			LLFloaterReg::showInstance("export_collada");
+		}
 		return true;
 	}
 };
+// </FS:CR>
 
 void initialize_edit_menu()
 {
@@ -10752,7 +10778,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLRlvListRlvRestrictions(), "Rlv.ListRlvRestrictions");
 //mk
 
-	view_listener_t::addMenu(new FSObjectExport(), "Object.Export");
-	view_listener_t::addMenu(new DAEExport(), "Object.ExportDAE");
-	enable.add("Object.EnableExport", boost::bind(&DAEExportUtil::enable_export_object));
+    // <FS:Techwolf Lupindo> export
+    view_listener_t::addMenu(new FSObjectExport(), "Object.Export");
+    view_listener_t::addMenu(new FSObjectExportCollada(), "Object.ExportCollada");
+    enable.add("Object.EnableExport", boost::bind(&enable_export_object));
+    // </FS:Techwolf Lupindo>;
 }

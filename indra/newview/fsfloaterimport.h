@@ -35,7 +35,6 @@
 #include "llselectmgr.h"
 #include "llviewerinventory.h"
 #include "llviewerobject.h"
-const S32 OXP_FORMAT_VERSION = 2;
 
 struct FSResourceData;
 
@@ -43,14 +42,13 @@ class FSFloaterImport : public LLFloater
 {
 	LOG_CLASS(FSFloaterImport);
 public:
-    FSFloaterImport(const LLSD &filename);
+	FSFloaterImport(const LLSD &filename);
 	virtual ~FSFloaterImport();
 	virtual BOOL postBuild();
 	
 	static void onIdle(void *user_data);
 	
-	void onClickBtnPickFile();
-	void onClickBtnImport();
+	
 	void onClickCheckBoxUploadAsset();
 	void onClickCheckBoxTempAsset();
 	bool processPrimCreated(LLViewerObject* object);
@@ -91,6 +89,7 @@ private:
 
 	void loadFile();
 	void populateBackupInfo();
+	void onClickBtnImport();
 	void createPrim();
 	void postLink();
 	void onIdle();
@@ -101,9 +100,8 @@ private:
 	void processPrim(LLSD& prim);
 
 	LLSD mManifest;
-	LLSD mFile;
 	std::string mFileFullName;
-	std::string mFileName;
+	std::string mFilename;
 	std::string mFilePath;
 	bool mCreatingActive;
 	FSFloaterImport* mInstance;
@@ -118,7 +116,6 @@ private:
 	S32 mLinksetSize;
 	S32 mObjectSize;
 	LLObjectSelectionHandle	mObjectSelection;
-	bool mFileReady;
 	uuid_vec_t mTextureQueue;
 	U32 mTexturesTotal;
 	uuid_vec_t mSoundQueue;

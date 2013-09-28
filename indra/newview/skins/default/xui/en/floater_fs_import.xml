@@ -153,21 +153,19 @@
       follows="top|left"
       height="16"
       layout="topleft"
-      left="5"
       enabled="false"
       name="region_position"
       label="Restore Region Position"
-      top_pad="5"/>
+      top_pad="1"/>
     <check_box
       follows="top|left"
       height="16"
       layout="topleft"
-      left="5"
       width="90"
       enabled="false"
       name="upload_asset"
       label="Upload"
-      top_pad="5" >
+      top_pad="1" >
 	<check_box.commit_callback
 	    function="Import.UploadAsset" />
     </check_box>
