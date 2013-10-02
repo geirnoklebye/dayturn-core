@@ -84,6 +84,7 @@
 #include "llviewerjoystick.h"
 #include "llviewerregion.h"
 #include "llviewermenu.h"
+#include "llviewernetwork.h"
 #include "llviewerparcelmgr.h"
 #include "llviewerwindow.h"
 #include "llvovolume.h"
@@ -546,11 +547,7 @@ void LLFloaterTools::refresh()
 #endif
 	{
 		F32 link_cost  = LLSelectMgr::getInstance()->getSelection()->getSelectedLinksetCost();
-// <FS:CR> FIRE-9287 - LI/Prim count not reflected on OpenSim
-#ifdef OPENSIM
 		S32 prim_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
-#endif // OPENSIM
-// </FS:CR>
 		S32 link_count = LLSelectMgr::getInstance()->getSelection()->getRootObjectCount();
 
 		LLCrossParcelFunctor func;
@@ -574,18 +571,16 @@ void LLFloaterTools::refresh()
 				llwarns << "Failed to get selected object" << llendl;
 			}
 		}
-
 		LLStringUtil::format_map_t selection_args;
 		selection_args["OBJ_COUNT"] = llformat("%.1d", link_count);
-// <FS:CR> FIRE-9287 - LI/Prim count not reflected on OpenSim
-#ifdef OPENSIM
-		if (LLGridManager::getInstance()->isInOpenSim())
+		if (((S32)link_cost) == 0)
+		{
 			selection_args["LAND_IMPACT"] = llformat("%.1d", (S32)prim_count);
+		}
 		else
-#endif // OPENSIM
-// </FS:CR>
-		selection_args["LAND_IMPACT"] = llformat("%.1d", (S32)link_cost);
-
+		{
+			selection_args["LAND_IMPACT"] = llformat("%.1d", (S32)link_cost);
+		}
 		std::ostringstream selection_info;
 
 		selection_info << getString("status_selectcount", selection_args);
@@ -596,6 +591,7 @@ void LLFloaterTools::refresh()
 		childSetVisible("selection_count",  have_selection);
 		childSetVisible("remaining_capacity", have_selection);
 		childSetVisible("selection_empty", !have_selection);
+
 	}
 
 	updateToolsSizeLimits();
