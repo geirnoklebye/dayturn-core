@@ -341,7 +341,7 @@ public:
 	LLViewerTexture		*getTENormalMap(const U8 te) const;
 	LLViewerTexture		*getTESpecularMap(const U8 te) const;
 	
-	bool						isImageAlphaBlended(const U8 te) const;
+	bool 						isImageAlphaBlended(const U8 te) const;
 
 	void fitFaceTexture(const U8 face);
 	void sendTEUpdate() const;			// Sends packed representation of all texture entry information
@@ -608,6 +608,7 @@ public:
 	} EPhysicsShapeType;
 
 	LLUUID			mID;
+	LLUUID			mOwnerID; //null if unknown
 
 	// unique within region, not unique across regions
 	// Local ID = 0 is not used
@@ -688,7 +689,7 @@ protected:
 	BOOL isOnMap();
 
 	void unpackParticleSource(const S32 block_num, const LLUUID& owner_id);
-	void unpackParticleSource(LLDataPacker &dp, const LLUUID& owner_id);
+	void unpackParticleSource(LLDataPacker &dp, const LLUUID& owner_id, bool legacy);
 	void deleteParticleSource();
 	void setParticleSource(const LLPartSysData& particle_parameters, const LLUUID& owner_id);
 	
@@ -856,7 +857,10 @@ public:
 								LLStrider<LLVector3>& normalsp, 
 								LLStrider<LLVector2>& texcoordsp,
 								LLStrider<LLColor4U>& colorsp, 
+								LLStrider<LLColor4U>& emissivep,
 								LLStrider<U16>& indicesp) = 0;
+
+	virtual void getBlendFunc(S32 face, U32& src, U32& dst);
 
 	F32 mDepth;
 };

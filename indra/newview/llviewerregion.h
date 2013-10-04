@@ -348,7 +348,7 @@ public:
 	void getNeighboringRegionsStatus( std::vector<S32>& regions );
 	const LLViewerRegionImpl * getRegionImpl() const { return mImpl; }
 	LLViewerRegionImpl * getRegionImplNC() { return mImpl; }
-
+	
 	// implements the materials capability throttle
 	bool materialsCapThrottled() const { return !mMaterialsCapThrottleTimer.hasExpired(); }
 	void resetMaterialsCapThrottle();
@@ -388,6 +388,8 @@ public:
 	// we stop supporting the old CoarseLocationUpdate message.
 	LLDynamicArray<U32> mMapAvatars;
 	LLDynamicArray<LLUUID> mMapAvatarIDs;
+
+	LLFrameTimer &	getRenderInfoRequestTimer()			{ return mRenderInfoRequestTimer;		};
 
 private:
 	LLViewerRegionImpl * mImpl;
@@ -452,6 +454,7 @@ private:
 
 	// the materials capability throttle
 	LLFrameTimer mMaterialsCapThrottleTimer;
+LLFrameTimer	mRenderInfoRequestTimer;
 };
 
 inline BOOL LLViewerRegion::getRegionProtocol(U64 protocol) const
