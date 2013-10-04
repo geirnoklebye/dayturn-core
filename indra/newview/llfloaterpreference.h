@@ -166,7 +166,7 @@ public:
 	// if the quality radio buttons are changed
 	void onChangeQuality(const LLSD& data);
 	
-	void updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_box, F32 levels);
+	void updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_box);
 	void refreshUI();
 
 	void onCommitParcelMediaAutoPlayEnable();

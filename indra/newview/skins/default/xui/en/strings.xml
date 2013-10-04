@@ -3016,7 +3016,6 @@ Where tag = tag string to match.  Removes bot's matching the tag.
 	<string name="GraphicsQualityLow">Low</string>
 	<string name="GraphicsQualityMid">Mid</string>
 	<string name="GraphicsQualityHigh">High</string>
-	<string name="GraphicsQualityUltra">Ultra</string>
 
 	<!-- mouselook -->
 	<string name="LeaveMouselook">Press ESC to return to World View</string>
