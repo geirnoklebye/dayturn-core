@@ -494,6 +494,7 @@ void LLFloaterWorldMap::draw()
 	getChildView("Teleport")->setEnabled((BOOL)tracking_status);
 	//	getChildView("Clear")->setEnabled((BOOL)tracking_status);
 	getChildView("Show Destination")->setEnabled((BOOL)tracking_status || LLWorldMap::getInstance()->isTracking());
+	getChildView("Clear Destination")->setEnabled((BOOL)tracking_status || LLWorldMap::getInstance()->isTracking());
 	getChildView("copy_slurl")->setEnabled((mSLURL.isValid()) );
 	
 	setMouseOpaque(TRUE);

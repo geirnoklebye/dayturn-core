@@ -371,7 +371,7 @@
   <panel
    follows="right|top"
   height="22"
-  top_pad="0"
+  top_pad="5"
   width="238"
   background_visible="true"
   bg_alpha_color="DkGray2"
@@ -499,19 +499,6 @@
 		<button.commit_callback
 		function="WMap.Location" />
     </button>
-   <button
-     image_overlay="Refresh_Off"
-     follows="top|right"
-     height="23"
-     layout="topleft"
-     left="0"
-     name="Clear"
-     tool_tip="Clear tracking lines and reset map"
-     top_pad="5"
-     width="23">
-		<button.commit_callback
-		function="WMap.Clear" />
-    </button>
     <scroll_list
      draw_stripes="false"
      bg_writeable_color="MouseGray"
@@ -520,7 +507,7 @@
      layout="topleft"
      left="28"
      name="search_results"
-     top_pad="-23"
+     top_pad="6"
      width="209"
      sort_column="1">
         <scroll_list.columns
@@ -631,15 +618,28 @@
      top_pad="5"
      name="Show Destination"
      tool_tip="Center map on selected location"
-     width="213">
+     width="104">
 		<button.commit_callback
 		function="WMap.ShowTarget" />
+    </button>
+    <button
+     follows="right|bottom"
+     height="23"
+     label="Clear Selection"
+     layout="topleft"
+     left_pad="5"
+     name="Clear Destination"
+     tool_tip="Removes the selected destination marker"
+     top_delta="0"
+     width="104">
+		<button.commit_callback
+		function="WMap.Clear" />
     </button>
     </panel>
       <panel
     follows="right|bottom"
   height="22"
-  top_pad="0"
+  top_pad="5"
   width="238"
   background_visible="true"
   bg_alpha_color="DkGray2"
