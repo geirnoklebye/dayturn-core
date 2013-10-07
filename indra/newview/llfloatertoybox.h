@@ -52,6 +52,7 @@ public:
 protected:
 	void onBtnClearAll();
 	void onBtnRestoreDefaults();
+	void onBtnClose();
 
 	void onToolBarButtonEnter(LLView* button);
 

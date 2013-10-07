@@ -43,6 +43,7 @@ LLFloaterToybox::LLFloaterToybox(const LLSD& key)
 {
 	mCommitCallbackRegistrar.add("Toybox.RestoreDefaults", boost::bind(&LLFloaterToybox::onBtnRestoreDefaults, this));
 	mCommitCallbackRegistrar.add("Toybox.ClearAll", boost::bind(&LLFloaterToybox::onBtnClearAll, this));
+	mCommitCallbackRegistrar.add("Toybox.Close", boost::bind(&LLFloaterToybox::onBtnClose, this));
 }
 
 LLFloaterToybox::~LLFloaterToybox()
@@ -149,6 +150,11 @@ void LLFloaterToybox::onBtnRestoreDefaults()
 void LLFloaterToybox::onBtnClearAll()
 {
 	LLNotificationsUtil::add("ConfirmClearAllToybox");
+}
+
+void LLFloaterToybox::onBtnClose()
+{
+	closeFloater();
 }
 
 BOOL LLFloaterToybox::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
