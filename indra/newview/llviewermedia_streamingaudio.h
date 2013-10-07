@@ -50,9 +50,7 @@ class LLStreamingAudio_MediaPlugins : public LLStreamingAudioInterface
 	/*virtual*/ F32 getGain();
 	/*virtual*/ std::string getURL();
 
-	virtual bool hasNewMetadata();
-	virtual std::string getCurrentArtist();
-	virtual std::string getCurrentTitle();
+	virtual bool getNewMetadata(LLSD& metadata);
 	virtual std::string getCurrentStreamName();
 	virtual std::string getCurrentStreamLocation();
 
