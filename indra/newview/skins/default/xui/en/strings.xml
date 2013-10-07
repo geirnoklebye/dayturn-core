@@ -4708,12 +4708,12 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Places_Label">Places</string>
   <string name="Command_Preferences_Label">Preferences</string>
   <string name="Command_Profile_Label">Profile</string>
-  <string name="Command_Search_Label">Search</string>
+  <string name="Command_Search_Label">LLv3 web search</string>
   <string name="Command_Snapshot_Label">Snapshot</string>
   <string name="Command_Speak_Label">Speak</string>
   <string name="Command_View_Label">Camera controls</string>
   <string name="Command_Voice_Label">Voice settings</string>
-  <string name="Command_Web_Browser_Label">Web Browser</string>
+  <string name="Command_Web_Browser_Label">Web browser</string>
 
   <string name="Command_AboutLand_Tooltip">Information about the land you're visiting</string>
   <string name="Command_Appearance_Tooltip">Change your avatar</string>
@@ -4736,7 +4736,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Places_Tooltip">Places you've saved</string>
   <string name="Command_Preferences_Tooltip">Preferences</string>
   <string name="Command_Profile_Tooltip">Edit or view your profile</string>
-  <string name="Command_Search_Tooltip">Find places, events, people</string>
+  <string name="Command_Search_Tooltip">Find places, events and people using the LLv3-style web search</string>
   <string name="Command_Snapshot_Tooltip">Take a picture</string>
   <string name="Command_Speak_Tooltip">Speak with people nearby using your microphone</string>
   <string name="Command_View_Tooltip">Changing camera angle</string>
@@ -4745,8 +4745,8 @@ Try enclosing path to the editor with double quotes.
 <!-- Firestorm commands -->
   <string name="Command_AO_Label">Animation overrider</string>
   <string name="Command_AO_Tooltip">Animation overrider</string>
-  <string name="Command_Legacy_Search_Label">Legacy Search</string>
-  <string name="Command_Legacy_Search_Tooltip">Find places, groups, people using legacy searching</string>
+  <string name="Command_Legacy_Search_Label">Search</string>
+  <string name="Command_Legacy_Search_Tooltip">Find places, groups and people</string>
 <!-- /Firestorm commands -->
 
   <string name="Toolbar_Bottom_Tooltip">currently in your bottom toolbar</string>
