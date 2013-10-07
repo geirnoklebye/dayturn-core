@@ -347,17 +347,6 @@
 		font="SansSerifSmall"
 		height="20"
 		initial_value="false"
-		label="Cat mode (head follows mouse)"
-		layout="topleft"
-		left="15"
-		name="CatMode"
-		width="350"
-		control_name="CatMode"
-		tool_tip="Makes your head always look in the direction your mouse pointer when not idle.  Best left disabled." />
-	    <check_box
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
 		label="Do not reveal to others where I am looking"
 		layout="topleft"
 		left="15"
