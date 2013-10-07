@@ -125,6 +125,7 @@ static void extractMetadata (const GstTagList * list, const gchar * tag, gpointe
 
 		if (G_VALUE_HOLDS_STRING (val)) {
 			pStrOut->assign(decode_entities(g_value_get_string(val)));
+			LLStringUtil::trim(*pStrOut);
 			break;
 		}
 	}
