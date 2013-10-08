@@ -33,16 +33,38 @@
         <menu_item_call.on_enable
          function="Avatar.EnableCall" />
     </menu_item_call>
-      <menu_item_call
-         label="Invite to Group"
-         name="Invite...">
+    <menu_item_call
+      label="Invite to Group"
+      name="Invite...">
       <menu_item_call.on_click
-         function="Avatar.InviteToGroup" />
+        function="Avatar.InviteToGroup" />
+    </menu_item_call>
+    <context_menu
+      label="Copy To Clipboard"
+      name="copy_to_clipboard">
+      <menu_item_call
+        label="Copy Avatar Name"
+        name="Copy Avatar Name">
+        <menu_item_call.on_click
+          function="Avatar.CopyName" />
       </menu_item_call>
+      <menu_item_call
+        label="Copy Avatar UUID"
+        name="Copy Avatar UUID">
+        <menu_item_call.on_click
+          function="Avatar.CopyUUID" />
+      </menu_item_call>
+      <menu_item_call
+        label="Copy Avatar Profile Link"
+        name="Copy Avatar Profile Link">
+        <menu_item_call.on_click
+          function="Avatar.CopyProfileURI" />
+      </menu_item_call>
+    </context_menu>
     
    <menu_item_separator />
    
-     <menu_item_call
+    <menu_item_call
      enabled="false"
      label="Block"
      name="Avatar Mute">

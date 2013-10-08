@@ -81,6 +81,9 @@ LLContextMenu* PeopleContextMenu::createMenu()
 		registrar.add("Avatar.Calllog",			boost::bind(&LLAvatarActions::viewChatHistory,			id));
 		registrar.add("Avatar.Freeze",			boost::bind(&handle_avatar_freeze,						id));
 		registrar.add("Avatar.Eject",			boost::bind(&handle_avatar_eject,						id));
+		registrar.add("Avatar.CopyName",		boost::bind(&LLAvatarActions::copyName,					id));
+		registrar.add("Avatar.CopyUUID",		boost::bind(&LLAvatarActions::copyUUID,					id));
+		registrar.add("Avatar.CopyProfileURI",	boost::bind(&LLAvatarActions::copyProfileURI,			id));
 		registrar.add("Avatar.GrantOnlineStatus",	boost::bind(&PeopleContextMenu::handle_avatar_grant_online_status,	this, id));
 		registrar.add("Avatar.GrantMapLocation",	boost::bind(&PeopleContextMenu::handle_avatar_grant_map_location,	this, id));
 		registrar.add("Avatar.GrantModifyObjects",	boost::bind(&PeopleContextMenu::handle_avatar_grant_modify_objects,	this, id));
@@ -136,14 +139,17 @@ void PeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 		items.push_back(std::string("offer_teleport"));
 		items.push_back(std::string("voice_call"));
 		items.push_back(std::string("chat_history"));
-		items.push_back(std::string("separator_permissions"));
+		items.push_back(std::string("copy_to_clipboard"));
+		items.push_back(std::string("copy_name"));
+		items.push_back(std::string("copy_uuid"));
+		items.push_back(std::string("copy_profile_uri"));
 		items.push_back(std::string("add_friend"));
 		items.push_back(std::string("remove_friend"));
 		items.push_back(std::string("invite_to_group"));
-		items.push_back(std::string("separator_invite_to_group"));
 		items.push_back(std::string("map"));
 		items.push_back(std::string("share"));
 		items.push_back(std::string("pay"));
+		items.push_back(std::string("separator_blockunblock"));
 		items.push_back(std::string("block_unblock"));
 
 		//
@@ -412,12 +418,16 @@ void NearbyPeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 		items.push_back(std::string("chat_history"));
 		items.push_back(std::string("add_friend"));
 		items.push_back(std::string("remove_friend"));
+		items.push_back(std::string("copy_to_clipboard"));
+		items.push_back(std::string("copy_name"));
+		items.push_back(std::string("copy_uuid"));
+		items.push_back(std::string("copy_profile_uri"));
 		items.push_back(std::string("invite_to_group"));
-		items.push_back(std::string("separator_permissions"));
 		items.push_back(std::string("zoom_in"));
 		items.push_back(std::string("map"));
 		items.push_back(std::string("share"));
 		items.push_back(std::string("pay"));
+		items.push_back(std::string("separator_blockunblock"));
 		items.push_back(std::string("block_unblock"));
 
 		//

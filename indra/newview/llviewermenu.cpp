@@ -110,6 +110,7 @@
 #include "llviewerobjectlist.h"
 #include "llviewerparcelmgr.h"
 #include "llviewerstats.h"
+#include "llviewerwindow.h"
 #include "llvoavatarself.h"
 #include "llvoicevivox.h"
 #include "llworldmap.h"
@@ -5923,6 +5924,45 @@ class LLAvatarInviteToGroup : public view_listener_t
 	}
 };
 
+class LLAvatarCopyName : public view_listener_t
+{
+	bool handleEvent(const LLSD &userdata)
+	{
+		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+
+		if (avatar) {
+			LLAvatarActions::copyName(avatar->getID());
+		}
+		return true;
+	}
+};
+
+class LLAvatarCopyUUID : public view_listener_t
+{
+	bool handleEvent(const LLSD &userdata)
+	{
+		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+
+		if (avatar) {
+			LLAvatarActions::copyUUID(avatar->getID());
+		}
+		return true;
+	}
+};
+
+class LLAvatarCopyProfileURI : public view_listener_t
+{
+	bool handleEvent(const LLSD &userdata)
+	{
+		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+
+		if (avatar) {
+			LLAvatarActions::copyProfileURI(avatar->getID());
+		}
+		return true;
+	}
+};
+
 class LLAvatarAddFriend : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -8987,6 +9027,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAvatarDebug(), "Avatar.Debug");
 	view_listener_t::addMenu(new LLAvatarVisibleDebug(), "Avatar.VisibleDebug");
 	view_listener_t::addMenu(new LLAvatarInviteToGroup(), "Avatar.InviteToGroup");
+	view_listener_t::addMenu(new LLAvatarCopyName(), "Avatar.CopyName");
+	view_listener_t::addMenu(new LLAvatarCopyUUID(), "Avatar.CopyUUID");
+	view_listener_t::addMenu(new LLAvatarCopyProfileURI(), "Avatar.CopyProfileURI");
 	commit.add("Avatar.Eject", boost::bind(&handle_avatar_eject, LLSD()));
 	commit.add("Avatar.ShowInspector", boost::bind(&handle_avatar_show_inspector));
 	view_listener_t::addMenu(new LLAvatarSendIM(), "Avatar.SendIM");

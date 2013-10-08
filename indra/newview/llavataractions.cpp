@@ -500,6 +500,28 @@ void LLAvatarActions::share(const LLUUID& id)
 	}
 }
 
+//static 
+void LLAvatarActions::copyName(const LLUUID &id)
+{
+	LLAvatarName av_name;
+
+	if (LLAvatarNameCache::get(id, &av_name)) {
+		LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(av_name.getCompleteName()));
+	}
+};
+
+//static 
+void LLAvatarActions::copyUUID(const LLUUID &id)
+{
+	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(id.asString()));
+}
+
+//static 
+void LLAvatarActions::copyProfileURI(const LLUUID &id)
+{
+	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring("secondlife:///app/agent/" + id.asString() + "/about"));
+}
+
 namespace action_give_inventory
 {
 	/**

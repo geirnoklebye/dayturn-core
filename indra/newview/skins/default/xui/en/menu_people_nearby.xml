@@ -68,6 +68,38 @@
       	 function="Avatar.EnableItem"
          parameter="can_callog"/>
     </menu_item_call>
+    <menu_item_call
+     label="Invite to group..."
+     layout="topleft"
+     name="invite_to_group">
+        <menu_item_call.on_click
+         function="Avatar.InviteToGroup" />
+        <menu_item_call.on_enable
+      	 function="Avatar.EnableItem"
+         parameter="can_invite"/>
+    </menu_item_call>
+    <context_menu
+        label="Copy To Clipboard"
+        name="copy_to_clipboard">
+        <menu_item_call
+            label="Copy Avatar Name"
+            name="copy_name">
+            <menu_item_call.on_click
+                function="Avatar.CopyName" />
+        </menu_item_call>
+        <menu_item_call
+            label="Copy Avatar UUID"
+            name="copy_uuid">
+            <menu_item_call.on_click
+                function="Avatar.CopyUUID" />
+        </menu_item_call>
+        <menu_item_call
+            label="Copy Avatar Profile Link"
+            name="copy_profile_uri">
+            <menu_item_call.on_click
+                function="Avatar.CopyProfileLink" />
+        </menu_item_call>
+    </context_menu>
     <context_menu
         label="Permissions"
         name="permissions">
@@ -102,18 +134,7 @@
                 parameter="modify_objects" />
         </menu_item_check>
     </context_menu>
-    <menu_item_separator name="separator_permissions"/>
-    <menu_item_call
-     label="Invite to group..."
-     layout="topleft"
-     name="invite_to_group">
-        <menu_item_call.on_click
-         function="Avatar.InviteToGroup" />
-        <menu_item_call.on_enable
-      	 function="Avatar.EnableItem"
-         parameter="can_invite"/>
-    </menu_item_call>
-    <menu_item_separator name="separator_invite_to_group"/>
+    <menu_item_separator name="separator_blockunblock"/>
     <menu_item_check
      label="Block"
      layout="topleft"
@@ -167,9 +188,7 @@
       	 function="Avatar.EnableItem"
          parameter="can_pay"/> 
     </menu_item_call>
-    <menu_item_separator
-     layout="topleft"
-     name="separator_freeze_eject" />
+    <menu_item_separator name="separator_freeze_eject" />
     <menu_item_call
      label="Freeze / Unfreeze"
      layout="topleft"

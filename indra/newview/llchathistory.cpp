@@ -214,6 +214,18 @@ public:
 		{
 			LLAvatarActions::inviteToGroup(getAvatarId());
 		}
+		else if (level == "copyname")
+		{
+			LLAvatarActions::copyName(getAvatarId());
+		}
+		else if (level == "copyuuid")
+		{
+			LLAvatarActions::copyUUID(getAvatarId());
+		}
+		else if (level == "copyprofileuri")
+		{
+			LLAvatarActions::copyProfileURI(getAvatarId());
+		}
 		else if (level == "share")
 		{
 			LLAvatarActions::share(getAvatarId());

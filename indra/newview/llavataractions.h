@@ -120,6 +120,21 @@ public:
 	static void share(const LLUUID& id);
 
 	/**
+	 * Copy complete avatar name to the clipboard.
+	 */
+	static void copyName(const LLUUID &id);
+
+	/**
+	 * Copy avatar UUID to the clipboard.
+	 */
+	static void copyUUID(const LLUUID &id);
+
+	/**
+	 * Copy avatar profile URI to the clipboard.
+	 */
+	static void copyProfileURI(const LLUUID &id);
+
+	/**
 	 * Share items with the picked avatars.
 	 */
 	static void shareWithAvatars(LLView * panel);

@@ -56,6 +56,31 @@
          function="AvatarIcon.Action"
          parameter="invitetogroup" />
     </menu_item_call>
+    <menu
+      label="Copy To Clipboard"
+      name="copy_to_clipboard">
+      <menu_item_call
+        label="Copy Avatar Name"
+        name="Copy Avatar Name">
+        <menu_item_call.on_click
+          function="AvatarIcon.Action"
+	  parameter="copyname" />
+      </menu_item_call>
+      <menu_item_call
+        label="Copy Avatar UUID"
+        name="Copy Avatar UUID">
+        <menu_item_call.on_click
+          function="AvatarIcon.Action"
+	  parameter="copyuuid" />
+      </menu_item_call>
+      <menu_item_call
+        label="Copy Avatar Profile Link"
+        name="Copy Avatar Profile Link">
+        <menu_item_call.on_click
+          function="AvatarIcon.Action"
+	  parameter="copyprofileuri" />
+      </menu_item_call>
+    </menu>
     <menu_item_separator />
     <menu_item_call
      label="Block"
