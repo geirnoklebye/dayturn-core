@@ -624,10 +624,7 @@ with the same filename but different name
   <texture name="TextField_Active" file_name="widgets/TextField_Active.png" preload="true" scale.left="9" scale.top="12" scale.right="248" scale.bottom="12" />
   <!-- Firestorm -->
   <texture name="ao_toggle_18" file_name="toolbar_icons/animation_override.png" preload="true" />
-  <texture name="Icon_Place" file_name="icon_place.tga" preload="false" />
-  <texture name="Icon_Auction" file_name="icon_auction.tga" preload="false" />
-  <texture name="Icon_Group" file_name="icon_group.png" preload="false" />  
-  <!-- /Firestorm -->
+  <texture name="Icon_Auction" file_name="icons/icon_auction.png" preload="false" />
 
   <texture name="Toast_CloseBtn" file_name="windows/Toast_CloseBtn.png" preload="true" />
   <texture name="Toast_Background" file_name="windows/Toast_Background.png" preload="true"

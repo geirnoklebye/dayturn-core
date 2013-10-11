@@ -31,6 +31,7 @@
 #include "llfloater.h"
 #include "lltexteditor.h"
 #include "lltexturectrl.h"
+#include "llradiogroup.h"
 #include "llavatarpropertiesprocessor.h"
 #include "llgroupmgr.h"
 #include "llavatarnamecache.h"
@@ -68,12 +69,14 @@ public:
 	LLUUID& getSelectedID() { return mSelectedID; }
 protected:
 	S32 showNextButton(S32);
+	void showResultsCount();
+
 	void setAvatarID(const LLUUID& id);
-	void setLoadingProgress(bool started);
+	void setLoadingProgress(const BOOL started);
 	void setSelectionDetails(const std::string& title, const std::string& desc, const LLUUID& id);
 private:
-	static void	onModeSelect(LLUICtrl* ctrl, void *userdata);
-	void refreshSearchJunk();
+	static void onModeSelect(LLUICtrl* ctrl, void *userdata);
+	void refreshSearchVerbs();
 	void refreshActionButtons();
 	void onSelectItem();
 	
@@ -81,7 +84,6 @@ private:
 	void setupSearch();
 	void resetSearch();
 	
-	void onBtnFind();
 	void onBtnNext();
 	void onBtnBack();
 	void onBtnPeopleProfile();
@@ -93,33 +95,37 @@ private:
 	void onBtnParcelProfile();
 	void onBtnParcelTeleport();
 	void onBtnParcelMap();
+
+	void onSearchTextEntry();
+	void onSearchFocusChanged(LLFocusableElement *focus);
+	void updateSearchEnabled();
 	
-	BOOL isPeople();
-	BOOL isGroups();
-	BOOL isPlaces();
-	BOOL isLand();
-	BOOL isEvents();
-	BOOL isClassifieds();
+	inline bool isPeople() const { return ESearchMode == SM_PEOPLE; };
+	inline bool isGroups() const { return ESearchMode == SM_GROUPS; };
+	inline bool isPlaces() const { return ESearchMode == SM_PLACES; };
+	inline bool isLand() const { return ESearchMode == SM_LAND; };
+	inline bool isEvents() const { return ESearchMode == SM_EVENTS; };
+	inline bool isClassifieds() const { return ESearchMode == SM_CLASSIFIEDS; };
 	
-	LLUUID		mQueryID;
-	int			mNumResultsReturned;
+	LLUUID			mQueryID;
+	S32			mNumResultsReturned;
 	S32			mStartSearch;
 	S32			mResultsPerPage;
 	S32			mResultsReceived;
-	LLSD		mResultsContent;
-	LLUUID		mSelectedID;
-	LLVector3d	mParcelGlobal;
+	LLSD			mResultsContent;
+	LLUUID			mSelectedID;
+	LLVector3d		mParcelGlobal;
 	std::set<LLUUID>	mParcelIDs;
 	
 	LLRemoteParcelInfoObserver* mRemoteParcelObserver;
 	LLGroupMgrObserver* mGroupPropertiesRequest;
 	
-	LLTextEditor*	mDetailTitle;
-	LLTextEditor*	mDetailDesc;
-	LLTextureCtrl* mSnapshotCtrl;
+	LLTextEditor		*mDetailTitle;
+	LLTextEditor		*mDetailDesc;
+	LLTextureCtrl		*mSnapshotCtrl;
+	LLRadioGroup		*mSearchRadio;
 	
-	enum e_search_mode
-	{
+	enum e_search_mode {
 		SM_PEOPLE,
 		SM_GROUPS,
 		SM_PLACES,

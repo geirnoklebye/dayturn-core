@@ -2,17 +2,6 @@
 <llsd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="llsd.xsd">
 <map>
-	<key>SearchCategory</key>
-	<map>
-	  <key>Comment</key>
-	  <string>Category selection for legacy search: 0 = People, 1 = Groups, 2 = Places, 3 = Land, 4 = Events, 5 = Classifieds</string>
-	  <key>Persist</key>
-	  <integer>0</integer>
-	  <key>Type</key>
-	  <string>U32</string>
-	  <key>Value</key>
-	  <string>0</string>
-    </map>
 	<key>UIImgInvisibleUUID</key>
 	<map>
 	  <key>Comment</key>
@@ -11540,8 +11529,6 @@
       <string>Display results of search All that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11553,8 +11540,6 @@
       <string>Display results of search All that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11566,8 +11551,6 @@
       <string>Display results of search All that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11579,8 +11562,6 @@
       <string>Display results of find groups that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11592,8 +11573,6 @@
       <string>Display results of find groups that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11605,8 +11584,6 @@
       <string>Display results of find groups that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11618,8 +11595,6 @@
       <string>Display results of find classifieds that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11631,8 +11606,6 @@
       <string>Display results of find classifieds that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11644,8 +11617,6 @@
       <string>Display results of find classifieds that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11657,8 +11628,6 @@
       <string>Display results of find events that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11670,8 +11639,6 @@
       <string>Display results of find events that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11683,8 +11650,6 @@
       <string>Display results of find events that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11696,8 +11661,6 @@
       <string>Display results of find land sales that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11709,8 +11672,6 @@
       <string>Display results of find land sales that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11722,8 +11683,6 @@
       <string>Display results of find land sales that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11735,8 +11694,6 @@
       <string>Display results of find places or find popular that are in general sims</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11748,8 +11705,6 @@
       <string>Display results of find places or find popular that are in moderate sims</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11761,8 +11716,6 @@
       <string>Display results of find places or find popular that are in adult sims</string>
       <key>Persist</key>
       <integer>1</integer>
-	  <key>HideFromEditor</key>
-	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
