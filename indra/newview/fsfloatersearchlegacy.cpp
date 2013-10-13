@@ -328,7 +328,8 @@ BOOL FSFloaterSearchLegacy::postBuild()
 	mDetailDesc =	getChild<LLTextEditor>("detail_desc");
 	mSnapshotCtrl = getChild<LLTextureCtrl>("snapshot");
 
-	setSelectionDetails(LLTrans::getString("NothingSelected"), LLStringUtil::null, LLUUID::null);
+	setSelectionDetails(LLStringUtil::null, LLStringUtil::null, LLUUID::null);
+	mParcelID.setNull();
 	mParcelGlobal.setZero();
 	refreshSearchVerbs();
 	
@@ -483,7 +484,8 @@ void FSFloaterSearchLegacy::onBtnGroupJoin()
 void FSFloaterSearchLegacy::onBtnParcelProfile()
 {
 	LLSD params;
-	params["id"] = getSelectedID();
+
+	params["id"] = mParcelID;
 	params["type"] = "remote_place";
 
 	LLFloaterSidePanelContainer::showPanel("places", params);
@@ -586,12 +588,15 @@ void FSFloaterSearchLegacy::onSelectItem()
 	{
 		return;
 	}
+
 	mSelectedID = list->getSelectedValue();
 	if (mSelectedID.isNull()) {
 		return;
 	}
 
 	refreshActionButtons();
+	mSnapshotCtrl->setVisible(TRUE);
+	mParcelID.setNull();
 
 	LLAvatarPropertiesProcessor* mAvatarPropertiesProcessor = LLAvatarPropertiesProcessor::getInstance();
 	switch(ESearchMode)
@@ -607,6 +612,7 @@ void FSFloaterSearchLegacy::onSelectItem()
 			break;
 		case SM_PLACES:
 		case SM_LAND:
+			mParcelID = getSelectedID();
 			mRemoteParcelObserver->setParcelID(getSelectedID());
 			setLoadingProgress(TRUE);
 			break;
@@ -674,6 +680,7 @@ void FSFloaterSearchLegacy::processProperties(void* data, EAvatarProcessorType t
 		if(c_info && getSelectedID() == c_info->classified_id)
 		{
 			setSelectionDetails(c_info->name, c_info->description, c_info->snapshot_id);
+			mParcelID = c_info->parcel_id;
 			mParcelGlobal = c_info->pos_global;
 			setLoadingProgress(FALSE);
 			LLAvatarPropertiesProcessor::getInstance()->removeObserver(c_info->classified_id, this);
@@ -1311,9 +1318,6 @@ void FSFloaterSearchLegacy::processSearchGroupsReply(LLMessageSystem* msg, void*
 			
 			element["columns"][2]["column"]	= "members";
 			element["columns"][2]["value"]	= members;
-			
-			element["columns"][3]["column"]	= "score";
-			element["columns"][3]["value"]	= search_order;
 			
 			content["group_name"] = group_name;
 			

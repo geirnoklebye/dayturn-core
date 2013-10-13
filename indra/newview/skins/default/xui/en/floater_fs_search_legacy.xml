@@ -396,7 +396,7 @@
 		follows="left|top|right"
 		top="30"
 		left="10"
-		height="22"
+		height="23"
 		width="575"
 		text_readonly_color="DkGray"
 		select_on_focus="false"
@@ -561,14 +561,10 @@
 		<columns
 			label="Group Name"
 			name="group_name"
-			width="285" />
+			width="345" />
 		<columns
 			label="Members"
 			name="members"
-			width="60" />
-		<columns
-			label="Score"
-			name="score"
 			width="60" />
 	</scroll_list>
 	<scroll_list
@@ -746,7 +742,8 @@ Showing search results [FIRST]-[LAST]
 			name="snapshot"
 			top_pad="5"
 			width="324"
-			enabled="false" />
+			enabled="false"
+			visible="false" />
 		<text_editor
 			name="detail_desc"
 			left="10"
@@ -790,7 +787,7 @@ Showing search results [FIRST]-[LAST]
 		<button
 			follows="left|bottom"
 			height="23"
-			label="View Profile"
+			label="Group Profile"
 			name="group_profile_btn"
 			top="658"
 			left="10"
@@ -812,7 +809,7 @@ Showing search results [FIRST]-[LAST]
 		<button
 			follows="left|bottom"
 			height="23"
-			label="View Profile"
+			label="Place Profile"
 			name="parcel_profile_btn"
 			top="658"
 			left="10"

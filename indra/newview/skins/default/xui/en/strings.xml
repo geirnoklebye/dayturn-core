@@ -236,9 +236,6 @@ Please try logging in again in a minute.</string>
 	<!-- Indicates something is being loaded. Maybe should be merged with RetrievingData -->
 	<string name="LoadingData">Loading...</string>
 
-	<!-- Indicates that no row(s) were selected from a list -->
-	<string name="NothingSelected">Nothing Selected</string>
-
 	<!-- Indicates a protected Inventory folder. ## Zi: Animation Overrider -->
 	<string name="ProtectedFolder">protected</string>
 	<!-- namecache -->

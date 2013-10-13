@@ -115,6 +115,7 @@ private:
 	LLSD			mResultsContent;
 	LLUUID			mSelectedID;
 	LLVector3d		mParcelGlobal;
+	LLUUID			mParcelID;
 	std::set<LLUUID>	mParcelIDs;
 	
 	LLRemoteParcelInfoObserver* mRemoteParcelObserver;
