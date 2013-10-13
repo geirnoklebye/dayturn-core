@@ -224,7 +224,7 @@ public:
 		}
 		else if (level == "copyprofileuri")
 		{
-			LLAvatarActions::copyProfileURI(getAvatarId());
+			LLAvatarActions::copyProfileSLURL(getAvatarId());
 		}
 		else if (level == "share")
 		{

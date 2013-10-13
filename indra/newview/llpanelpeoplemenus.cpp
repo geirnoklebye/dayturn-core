@@ -85,7 +85,7 @@ LLContextMenu* PeopleContextMenu::createMenu()
 		registrar.add("Avatar.EstateBan",		boost::bind(&LLAvatarActions::estateBan,				id));
 		registrar.add("Avatar.CopyName",		boost::bind(&LLAvatarActions::copyName,					id));
 		registrar.add("Avatar.CopyUUID",		boost::bind(&LLAvatarActions::copyUUID,					id));
-		registrar.add("Avatar.CopyProfileURI",	boost::bind(&LLAvatarActions::copyProfileURI,			id));
+		registrar.add("Avatar.CopyProfileSLURL",	boost::bind(&LLAvatarActions::copyProfileSLURL,		id));
 		registrar.add("Avatar.GrantOnlineStatus",	boost::bind(&PeopleContextMenu::handle_avatar_grant_online_status,	this, id));
 		registrar.add("Avatar.GrantMapLocation",	boost::bind(&PeopleContextMenu::handle_avatar_grant_map_location,	this, id));
 		registrar.add("Avatar.GrantModifyObjects",	boost::bind(&PeopleContextMenu::handle_avatar_grant_modify_objects,	this, id));

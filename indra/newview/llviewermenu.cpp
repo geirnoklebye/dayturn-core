@@ -5950,14 +5950,14 @@ class LLAvatarCopyUUID : public view_listener_t
 	}
 };
 
-class LLAvatarCopyProfileURI : public view_listener_t
+class LLAvatarCopyProfileSLURL : public view_listener_t
 {
 	bool handleEvent(const LLSD &userdata)
 	{
 		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
 
 		if (avatar) {
-			LLAvatarActions::copyProfileURI(avatar->getID());
+			LLAvatarActions::copyProfileSLURL(avatar->getID());
 		}
 		return true;
 	}
@@ -9054,7 +9054,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAvatarInviteToGroup(), "Avatar.InviteToGroup");
 	view_listener_t::addMenu(new LLAvatarCopyName(), "Avatar.CopyName");
 	view_listener_t::addMenu(new LLAvatarCopyUUID(), "Avatar.CopyUUID");
-	view_listener_t::addMenu(new LLAvatarCopyProfileURI(), "Avatar.CopyProfileURI");
+	view_listener_t::addMenu(new LLAvatarCopyProfileSLURL(), "Avatar.CopyProfileSLURL");
 	enable.add("Avatar.EnableFreezeEject", boost::bind(&enable_freeze_eject, _2));
 	commit.add("Avatar.Freeze", boost::bind(&handle_avatar_freeze, LLSD()));
 	commit.add("Avatar.Eject", boost::bind(&handle_avatar_eject, LLSD()));

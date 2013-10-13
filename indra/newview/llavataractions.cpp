@@ -523,9 +523,9 @@ void LLAvatarActions::copyUUID(const LLUUID &id)
 }
 
 //static 
-void LLAvatarActions::copyProfileURI(const LLUUID &id)
+void LLAvatarActions::copyProfileSLURL(const LLUUID &id)
 {
-	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring("secondlife:///app/agent/" + id.asString() + "/about"));
+	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(LLSLURL("agent", id, "about").getSLURLString()));
 }
 
 namespace action_give_inventory

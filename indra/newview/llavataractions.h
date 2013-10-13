@@ -133,7 +133,7 @@ public:
 	/**
 	 * Copy avatar profile URI to the clipboard.
 	 */
-	static void copyProfileURI(const LLUUID &id);
+	static void copyProfileSLURL(const LLUUID &id);
 
 	/**
 	 * Share items with the picked avatars.
