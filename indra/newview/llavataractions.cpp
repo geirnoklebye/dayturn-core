@@ -48,6 +48,7 @@
 #include "llfloatergroupinvite.h"
 #include "llfloatergroups.h"
 #include "llfloaterreg.h"
+#include "llfloaterregioninfo.h"
 #include "llfloaterpay.h"
 #include "llfloatersidepanelcontainer.h"
 #include "llfloaterwebcontent.h"
@@ -69,12 +70,17 @@
 #include "llviewerobjectlist.h"
 #include "llviewermessage.h"	// for handle_lure
 #include "llviewerregion.h"
+#include "llvoavatar.h"
+#include "llselectmgr.h"
 #include "lltrans.h"
 #include "llcallingcard.h"
 #include "llslurl.h"			// IDEVO
 #include "llsidepanelinventory.h"
 //<FS:KC legacy profiles>
 #include "fsfloaterprofile.h"
+
+extern LLVOAvatar *find_avatar_from_object(LLViewerObject *object);
+extern LLVOAvatar *find_avatar_from_object(const LLUUID &object_id);
 
 // static
 void LLAvatarActions::requestFriendshipDialog(const LLUUID& id, const std::string& name)
@@ -1216,4 +1222,284 @@ bool LLAvatarActions::canBlock(const LLUUID& id)
 	bool is_linden = (full_name.find("Linden") != std::string::npos);
 	bool is_self = id == gAgentID;
 	return !is_self && !is_linden;
+}
+
+// static
+bool LLAvatarActions::isOnYourLand(const LLUUID &id)
+{
+	//
+	//	gods can do as they please
+	//
+	if (gAgent.isGodlike()) {
+		return true;
+	}
+
+	//
+	//	find the avatar
+	//
+	LLVOAvatar *avatar = NULL;
+
+	if (id.notNull()) {
+		avatar = find_avatar_from_object(id);
+	}
+	else {
+		avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+	}
+
+	if (!avatar) {
+		return false;
+	}
+
+	//
+	//	check if the target avatar is on land you own or manage
+	//
+	const LLViewerRegion *region = avatar->getRegion();
+
+	if (region && (
+		region->getOwner() == gAgent.getID() ||
+		region->isEstateManager()
+	)) {
+		return true;
+	}
+
+	return false;
+}
+
+// static
+void LLAvatarActions::teleportHome(const LLUUID &id)
+{
+	//
+	//	check whether we are allowed to teleport the user home
+	//	before we go any further
+	//
+	if (!isOnYourLand(id)) {
+		llwarns << "Can't teleport avatars home from land we don't own or manage" << llendl;
+		return;
+	}
+
+	//
+	//	set up the teleport home confirmaton request
+	//	(will return the response to the teleportHomeCommit() method)
+	//
+	LLSD args;
+	args["USERNAME"] = LLSLURL("agent", id, "about").getSLURLString();
+
+	LLSD payload;
+	payload["id"] = id;
+
+	LLNotificationsUtil::add("TeleportAvatarHome", args, payload, &teleportHomeCommit);
+}
+
+// static
+void LLAvatarActions::teleportHomeCommit(const LLSD &notification, const LLSD &response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+
+	//
+	//	option 0 is OK
+	//	option 1 is Cancel
+	//
+	if (option != 0) {
+		return;
+	}
+
+	//
+	//	find the avatar
+	//
+	const LLUUID id = notification["payload"]["id"];
+	LLVOAvatar *avatar = NULL;
+
+	if (id.notNull()) {
+		avatar = find_avatar_from_object(id);
+	}
+	else {
+		avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+	}
+
+	if (!avatar) {
+		llwarns << "Can't find the avatar" << llendl;
+		return;
+	}
+
+	//
+	//	find the region the avatar is in
+	//
+	const LLViewerRegion *region = avatar->getRegion();
+	if (!region) {
+		llwarns << "Can't find the region the avatar is in" << llendl;
+		return;
+	}
+
+	//
+	//	double-check that the avatar is still on land we control
+	//
+	//	the avatar may have moved in the time it took us to respond
+	//	to the confirmation.  if we are not godlike, the owner or
+	//	a manager then we have no power over the avatar's new location
+	//
+	if (!(
+		gAgent.isGodlike() ||
+		region->getOwner() == gAgent.getID() ||
+		region->isEstateManager()
+	)) {
+		llwarns << "Can't teleport avatars home from land we don't own or manage" << llendl;
+		return;
+	}
+
+	//
+	//	teleport the avatar home
+	//
+	gMessageSystem->newMessage("EstateOwnerMessage");
+	gMessageSystem->nextBlockFast(_PREHASH_AgentData);
+	gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+	gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+	gMessageSystem->addUUIDFast(_PREHASH_TransactionID, LLUUID::null); //not used
+	gMessageSystem->nextBlock("MethodData");
+	gMessageSystem->addString("Method", "teleporthomeuser");
+	gMessageSystem->addUUID("Invoice", LLUUID::generateNewID());
+	gMessageSystem->nextBlock("ParamList");
+	gMessageSystem->addString("Parameter", gAgent.getID().asString());
+	gMessageSystem->nextBlock("ParamList");
+	gMessageSystem->addString("Parameter", avatar->getID().asString());
+	gMessageSystem->sendReliable(region->getHost());
+}
+
+// static
+void LLAvatarActions::estateBan(const LLUUID &id)
+{
+	//
+	//	find the avatar
+	//
+	LLVOAvatar *avatar = NULL;
+
+	if (id.notNull()) {
+		avatar = find_avatar_from_object(id);
+	}
+	else {
+		avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+	}
+
+	if (!avatar) {
+		llwarns << "Can't find the avatar" << llendl;
+		return;
+	}
+
+	//
+	//	find the region the avatar is in
+	//
+	const LLViewerRegion *region = avatar->getRegion();
+	if (!region) {
+		llwarns << "Can't find the region the avatar is in" << llendl;
+		return;
+	}
+
+	//
+	//	set up the notification message and, as a side effect,
+	//	this also double-checks that the avatar is still on land
+	//	we control
+	//
+	LLSD args;
+
+	if (gAgent.isGodlike()) {
+		LLSD tokens;
+
+		tokens["[OWNER]"] = LLSLURL("agent", region->getOwner(), "about").getSLURLString().c_str();
+		args["ALL_ESTATES"] = LLTrans::getString("RegionInfoAllEstatesOwnedBy", tokens);
+	}
+	else if (region->getOwner() == gAgent.getID()) {
+		args["ALL_ESTATES"] = LLTrans::getString("RegionInfoAllEstatesYouOwn");
+	}
+	else if (region->isEstateManager()) {
+		LLSD tokens;
+
+		tokens["[OWNER]"] = LLSLURL("agent", region->getOwner(), "about").getSLURLString().c_str();
+		args["ALL_ESTATES"] = LLTrans::getString("RegionInfoAllEstatesYouManage", tokens);
+	}
+	else {
+		llwarns << "Can't estate ban avatars from land we don't own or manage" << llendl;
+		return;
+	}
+
+	//
+	//	set up the esate ban confirmaton request
+	//	(will return the response to the estateBanCommit() method)
+	//
+	LLSD payload;
+	payload["id"] = avatar->getID();
+
+	LLNotificationsUtil::add("EstateBannedAgentAdd", args, payload, &estateBanCommit);
+}
+
+// static
+void LLAvatarActions::estateBanCommit(const LLSD &notification, const LLSD &response)
+{
+	const S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+
+	//
+	//	option 0 is This Estate
+	//	option 1 is All Estates
+	//	option 2 is Cancel
+	//
+	if (option != 0 && option != 1) {
+		return;
+	}
+
+	//
+	//	find the avatar
+	//
+	const LLUUID id = notification["payload"]["id"];
+	LLVOAvatar *avatar = NULL;
+
+	if (id.notNull()) {
+		avatar = find_avatar_from_object(id);
+	}
+	else {
+		avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+	}
+
+	if (!avatar) {
+		llwarns << "Can't find the avatar" << llendl;
+		return;
+	}
+
+	//
+	//	find the region the avatar is in
+	//
+	const LLViewerRegion *region = avatar->getRegion();
+	if (!region) {
+		llwarns << "Can't find the region the avatar is in" << llendl;
+		return;
+	}
+
+	//
+	//	you don't have the kung-fu to estate ban the region's owner
+	//
+	if (region->getOwner() == avatar->getID()) {
+		LLNotificationsUtil::add("OwnerCanNotBeDenied");
+		return;
+	}
+
+	//
+	//	apply the estate ban to this estate
+	//
+	U32 flags = (
+		ESTATE_ACCESS_ALLOWED_AGENT_REMOVE |
+		ESTATE_ACCESS_BANNED_AGENT_ADD
+	);
+
+	if (option == 1) {
+		//
+		//	extend the estate ban to all estates that I own or
+		//	manage
+		//
+		if (region->getOwner() == gAgent.getID() || gAgent.isGodlike()) {
+			flags |= ESTATE_ACCESS_APPLY_TO_ALL_ESTATES;
+		}
+		else if (region->isEstateManager()) {
+			flags |= ESTATE_ACCESS_APPLY_TO_MANAGED_ESTATES;
+		}
+	}
+
+	LLFloaterRegionInfo::nextInvoice();
+	LLPanelEstateInfo::sendEstateAccessDelta(flags, avatar->getID());
 }

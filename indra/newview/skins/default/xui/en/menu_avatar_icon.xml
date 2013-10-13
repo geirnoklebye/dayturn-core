@@ -141,4 +141,20 @@
          function="AvatarIcon.Action"
          parameter="eject" />
     </menu_item_call>
+    <menu_item_call
+     label="Teleport Home"
+     layout="topleft"
+     name="Teleport Home">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="teleporthome" />
+    </menu_item_call>
+    <menu_item_call
+     label="Estate Ban"
+     layout="topleft"
+     name="Estate Ban">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="estateban" />
+    </menu_item_call>
 </menu>

@@ -5963,6 +5963,32 @@ class LLAvatarCopyProfileURI : public view_listener_t
 	}
 };
 
+class LLAvatarTeleportHome : public view_listener_t
+{
+	bool handleEvent(const LLSD &userdata)
+	{
+		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+
+		if (avatar) {
+			LLAvatarActions::teleportHome(avatar->getID());
+		}
+		return true;
+	}
+};
+
+class LLAvatarEstateBan : public view_listener_t
+{
+	bool handleEvent(const LLSD &userdata)
+	{
+		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+
+		if (avatar) {
+			LLAvatarActions::estateBan(avatar->getID());
+		}
+		return true;
+	}
+};
+
 class LLAvatarAddFriend : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -9023,14 +9049,18 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLObjectDerender(), "Object.Derender");
 	view_listener_t::addMenu(new LLAvatarAddFriend(), "Avatar.AddFriend");
 	view_listener_t::addMenu(new LLAvatarAddContact(), "Avatar.AddContact");
-	commit.add("Avatar.Freeze", boost::bind(&handle_avatar_freeze, LLSD()));
 	view_listener_t::addMenu(new LLAvatarDebug(), "Avatar.Debug");
 	view_listener_t::addMenu(new LLAvatarVisibleDebug(), "Avatar.VisibleDebug");
 	view_listener_t::addMenu(new LLAvatarInviteToGroup(), "Avatar.InviteToGroup");
 	view_listener_t::addMenu(new LLAvatarCopyName(), "Avatar.CopyName");
 	view_listener_t::addMenu(new LLAvatarCopyUUID(), "Avatar.CopyUUID");
 	view_listener_t::addMenu(new LLAvatarCopyProfileURI(), "Avatar.CopyProfileURI");
+	enable.add("Avatar.EnableFreezeEject", boost::bind(&enable_freeze_eject, _2));
+	commit.add("Avatar.Freeze", boost::bind(&handle_avatar_freeze, LLSD()));
 	commit.add("Avatar.Eject", boost::bind(&handle_avatar_eject, LLSD()));
+	enable.add("Avatar.IsOnYourLand", boost::bind(&LLAvatarActions::isOnYourLand, _2));
+	view_listener_t::addMenu(new LLAvatarTeleportHome(), "Avatar.TeleportHome");
+	view_listener_t::addMenu(new LLAvatarEstateBan(), "Avatar.EstateBan");
 	commit.add("Avatar.ShowInspector", boost::bind(&handle_avatar_show_inspector));
 	view_listener_t::addMenu(new LLAvatarSendIM(), "Avatar.SendIM");
 	view_listener_t::addMenu(new LLAvatarCall(), "Avatar.Call");
@@ -9042,7 +9072,6 @@ void initialize_menus()
 	commit.add("Avatar.OpenMarketplace", boost::bind(&LLWeb::loadURLExternal, gSavedSettings.getString("MarketplaceURL")));
 	
 	view_listener_t::addMenu(new LLAvatarEnableAddFriend(), "Avatar.EnableAddFriend");
-	enable.add("Avatar.EnableFreezeEject", boost::bind(&enable_freeze_eject, _2));
 
 	// Object pie menu
 	view_listener_t::addMenu(new LLObjectBuild(), "Object.Build");

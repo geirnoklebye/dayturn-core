@@ -4211,6 +4211,18 @@ It will change thousands of regions and make the spaceserver hiccup.
   </notification>
 
   <notification
+    icon="alert.tga"
+    label="Confirm Teleport Home"
+    name="TeleportAvatarHome"
+    type="alert">
+Teleport [USERNAME] home?
+    <usetemplate
+      name="okcancelbuttons"
+      yestext="OK"
+      notext="Cancel" />
+  </notification>
+
+  <notification
    icon="alert.tga"
    label="Select estate"
    name="EstateAllowedAgentAdd"

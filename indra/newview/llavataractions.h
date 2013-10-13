@@ -38,6 +38,7 @@ class LLAvatarName;
 class LLInventoryPanel;
 class LLFloater;
 class LLView;
+class LLViewerRegion;
 
 /**
  * Friend-related actions (add, remove, offer teleport, etc)
@@ -148,6 +149,23 @@ public:
 	 * Block/unblock the avatar voice.
 	 */
 	static void toggleMuteVoice(const LLUUID& id);
+
+	/**
+	 * Teleport the avatar home.
+	 */
+	static void teleportHome(const LLUUID &id);
+	static void teleportHomeCommit(const LLSD &notification, const LLSD &response);
+
+	/**
+	 * Estate ban the avatar.
+	 */
+	static void estateBan(const LLUUID &id);
+	static void estateBanCommit(const LLSD &notification, const LLSD &response);
+
+	/**
+	 * @return true if the avatar is on land you own or manage
+	 */
+	static bool isOnYourLand(const LLUUID &id);
 
 	/**
 	 * Return true if avatar with "id" is a friend

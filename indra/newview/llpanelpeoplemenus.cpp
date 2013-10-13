@@ -81,6 +81,8 @@ LLContextMenu* PeopleContextMenu::createMenu()
 		registrar.add("Avatar.Calllog",			boost::bind(&LLAvatarActions::viewChatHistory,			id));
 		registrar.add("Avatar.Freeze",			boost::bind(&handle_avatar_freeze,						id));
 		registrar.add("Avatar.Eject",			boost::bind(&handle_avatar_eject,						id));
+		registrar.add("Avatar.TeleportHome",	boost::bind(&LLAvatarActions::teleportHome,				id));
+		registrar.add("Avatar.EstateBan",		boost::bind(&LLAvatarActions::estateBan,				id));
 		registrar.add("Avatar.CopyName",		boost::bind(&LLAvatarActions::copyName,					id));
 		registrar.add("Avatar.CopyUUID",		boost::bind(&LLAvatarActions::copyUUID,					id));
 		registrar.add("Avatar.CopyProfileURI",	boost::bind(&LLAvatarActions::copyProfileURI,			id));
@@ -448,6 +450,15 @@ void NearbyPeopleContextMenu::buildContextMenu(class LLMenuGL& menu, U32 flags)
 			items.push_back(std::string("separator_freeze_eject"));
 			items.push_back(std::string("freeze"));
 			items.push_back(std::string("eject"));
+		}
+
+		//
+		//	enable the following if we are an estate owner
+		//	or manager
+		//
+		if (LLAvatarActions::isOnYourLand(mUUIDs.front())) {
+			items.push_back(std::string("teleport_home"));
+			items.push_back(std::string("estate_ban"));
 		}
 	}
 

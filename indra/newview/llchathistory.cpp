@@ -260,6 +260,14 @@ public:
 		{
 			handle_avatar_eject(getAvatarId());
 		}
+		else if (level == "teleporthome")
+		{
+			LLAvatarActions::teleportHome(getAvatarId());
+		}
+		else if (level == "estateban")
+		{
+			LLAvatarActions::estateBan(getAvatarId());
+		}
 	}
 
 	void onAudioStreamIconContextMenuItemClipboard(const LLSD& userdata)
@@ -734,26 +742,32 @@ protected:
 				menu->setItemVisible("freeze_eject_sep", false);
 				menu->setItemVisible("ToggleFreeze", false);
 				menu->setItemVisible("Eject", false);
+				menu->setItemVisible("Teleport Home", false);
+				menu->setItemVisible("Estate Ban", false);
 			}
 			else {
 				menu->setItemVisible("Send IM", mSessionID != LLIMMgr::computeSessionID(IM_NOTHING_SPECIAL, mAvatarID));
 				menu->setItemEnabled("Offer Teleport", LLAvatarActions::canOfferTeleport(mAvatarID));
 
-				bool is_friend = (LLAvatarTracker::instance().getBuddyInfo(mAvatarID) != NULL);
+				const bool is_friend = (LLAvatarTracker::instance().getBuddyInfo(mAvatarID) != NULL);
 				menu->setItemVisible("Add Friend", !is_friend);
 				menu->setItemVisible("Remove Friend", is_friend);
 
 				menu->setItemEnabled("Zoom In", gObjectList.findObject(mAvatarID) != NULL);
 
-				bool is_blocked = LLAvatarActions::isBlocked(mAvatarID);
+				const bool is_blocked = LLAvatarActions::isBlocked(mAvatarID);
 				menu->setItemEnabled("Block", !is_blocked && LLAvatarActions::canBlock(mAvatarID));
 				menu->setItemVisible("Block", !is_blocked);
 				menu->setItemVisible("Unblock", is_blocked);
 
-				bool can_freeze_eject = enable_freeze_eject(mAvatarID);
+				const bool can_freeze_eject = enable_freeze_eject(mAvatarID);
 				menu->setItemVisible("freeze_eject_sep", can_freeze_eject);
 				menu->setItemVisible("ToggleFreeze", can_freeze_eject);
 				menu->setItemVisible("Eject", can_freeze_eject);
+
+				const bool is_on_your_land = LLAvatarActions::isOnYourLand(mAvatarID);
+				menu->setItemVisible("Teleport Home", is_on_your_land);
+				menu->setItemVisible("Estate Ban", is_on_your_land);
 			}
 
 			menu->buildDrawLabels();
