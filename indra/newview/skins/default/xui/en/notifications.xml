@@ -6737,12 +6737,12 @@ However, this region contains content accessible to adults only.
   </notification>
 
   <notification
-   icon="notify.tga"
+   icon="notifytip.tga"
    name="TeleportOfferSent"
    log_to_im="true"
    log_to_chat="false"
    show_toast="false"
-   type="notify">
+   type="notifytip">
 	Teleport offer sent to [TO_NAME]
   </notification>
 
