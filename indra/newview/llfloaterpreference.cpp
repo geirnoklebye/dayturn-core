@@ -1462,14 +1462,14 @@ void LLFloaterPreference::refresh()
 	// sliders and their text boxes
 	//	mPostProcess = gSavedSettings.getS32("RenderGlowResolutionPow");
 	// slider text boxes
-	updateSliderText(getChild<LLSliderCtrl>("ObjectMeshDetail",		true), getChild<LLTextBox>("ObjectMeshDetailText",		true));
-	updateSliderText(getChild<LLSliderCtrl>("FlexibleMeshDetail",	true), getChild<LLTextBox>("FlexibleMeshDetailText",	true));
-	updateSliderText(getChild<LLSliderCtrl>("TreeMeshDetail",		true), getChild<LLTextBox>("TreeMeshDetailText",		true));
-	updateSliderText(getChild<LLSliderCtrl>("AvatarMeshDetail",		true), getChild<LLTextBox>("AvatarMeshDetailText",		true));
-	updateSliderText(getChild<LLSliderCtrl>("AvatarPhysicsDetail",	true), getChild<LLTextBox>("AvatarPhysicsDetailText",		true));
-	updateSliderText(getChild<LLSliderCtrl>("TerrainMeshDetail",	true), getChild<LLTextBox>("TerrainMeshDetailText",		true));
-	updateSliderText(getChild<LLSliderCtrl>("RenderPostProcess",	true), getChild<LLTextBox>("PostProcessText",			true));
-	updateSliderText(getChild<LLSliderCtrl>("SkyMeshDetail",		true), getChild<LLTextBox>("SkyMeshDetailText",			true));
+	updateSliderText(getChild<LLSliderCtrl>("ObjectMeshDetail",		true), getChild<LLTextBox>("ObjectMeshDetailText",		true), 4.0f);
+	updateSliderText(getChild<LLSliderCtrl>("FlexibleMeshDetail",	true), getChild<LLTextBox>("FlexibleMeshDetailText",	true), 3.0f);
+	updateSliderText(getChild<LLSliderCtrl>("TreeMeshDetail",		true), getChild<LLTextBox>("TreeMeshDetailText",		true), 3.0f);
+	updateSliderText(getChild<LLSliderCtrl>("AvatarMeshDetail",		true), getChild<LLTextBox>("AvatarMeshDetailText",		true), 3.0f);
+	updateSliderText(getChild<LLSliderCtrl>("AvatarPhysicsDetail",	true), getChild<LLTextBox>("AvatarPhysicsDetailText",	true), 3.0f);
+	updateSliderText(getChild<LLSliderCtrl>("TerrainMeshDetail",	true), getChild<LLTextBox>("TerrainMeshDetailText",		true), 3.0f);
+	updateSliderText(getChild<LLSliderCtrl>("RenderPostProcess",	true), getChild<LLTextBox>("PostProcessText",			true), 3.0f);
+	updateSliderText(getChild<LLSliderCtrl>("SkyMeshDetail",		true), getChild<LLTextBox>("SkyMeshDetailText",			true), 3.0f);
 	
 	refreshEnabledState();
 }
@@ -1724,12 +1724,13 @@ void LLFloaterPreference::onUpdateSliderText(LLUICtrl* ctrl, const LLSD& name)
 	if ((ctrl_name =="" )|| !hasChild(ctrl_name, TRUE))
 		return;
 	
-	LLTextBox* text_box = getChild<LLTextBox>(name.asString());
-	LLSliderCtrl* slider = dynamic_cast<LLSliderCtrl*>(ctrl);
-	updateSliderText(slider, text_box);
+	LLTextBox *text_box = getChild<LLTextBox>(ctrl_name);
+	LLSliderCtrl *slider = dynamic_cast<LLSliderCtrl*>(ctrl);
+
+	updateSliderText(slider, text_box, ctrl_name == "ObjectMeshDetailText" ? 4.0f : 3.0f);
 }
 
-void LLFloaterPreference::updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_box)
+void LLFloaterPreference::updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_box, F32 levels)
 {
 	if (text_box == NULL || ctrl== NULL)
 		return;
@@ -1740,9 +1741,10 @@ void LLFloaterPreference::updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_b
 	F32 max = ctrl->getMaxValue();
 	F32 range = max - min;
 	llassert(range > 0);
-	F32 midPoint = min + range / 3.0f;
-	F32 highPoint = min + (2.0f * range / 3.0f);
-	
+	F32 midPoint = min + range / levels;
+	F32 highPoint = min + (2.0f * range / levels);
+	F32 ultraPoint = min + (3.0f * range / levels);
+
 	// choose the right text
 	if (value < midPoint)
 	{
@@ -1752,9 +1754,13 @@ void LLFloaterPreference::updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_b
 	{
 		text_box->setText(LLTrans::getString("GraphicsQualityMid"));
 	}
-	else
+	else if (levels < 4.0f || value < ultraPoint)
 	{
 		text_box->setText(LLTrans::getString("GraphicsQualityHigh"));
+	}
+	else
+	{
+		text_box->setText(LLTrans::getString("GraphicsQualityUltra"));
 	}
 }
 

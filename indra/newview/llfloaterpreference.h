@@ -166,7 +166,7 @@ public:
 	// if the quality radio buttons are changed
 	void onChangeQuality(const LLSD& data);
 	
-	void updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_box);
+	void updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_box, F32 levels);
 	void onUpdateSliderText(LLUICtrl* ctrl, const LLSD& name);
 //	void fractionFromDecimal(F32 decimal_val, S32& numerator, S32& denominator);
 
