@@ -138,8 +138,7 @@
     left_pad="15"
     follows="right|top"
     name="drawdistance_panel"
-    background_opaque="true"
-    background_visible="true">
+    background_visible="false">
     <icon
      follows="right|top"
      height="16"
