@@ -122,6 +122,7 @@
 #endif
 
 #include "fslightshare.h" // <FS:CR> FIRE-5118 - Lightshare support
+#include "fsareasearch.h"
 
 extern void on_new_message(const LLSD& msg);
 
@@ -191,6 +192,7 @@ const BOOL SCRIPT_QUESTION_IS_CAUTION[SCRIPT_PERMISSION_EOF] =
 	FALSE,	// OverrideYourAnimations
 	FALSE,	// ScriptReturnObjects
 };
+
 
 bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
 {
@@ -4644,6 +4646,16 @@ void process_kill_object(LLMessageSystem *mesgsys, void **user_data)
 		LLSelectMgr::getInstance()->removeObjectFromSelections(id);
 	}
 }
+//ObjectPropertiesFamily  -KC
+void process_object_properties_family(LLMessageSystem *msg, void**user_data)
+{
+	// Send the result to the corresponding requesters.
+	LLSelectMgr::processObjectPropertiesFamily(msg, user_data);
+	
+	FSAreaSearch* area_search_floater = dynamic_cast<FSAreaSearch*>(LLFloaterReg::getInstance("area_search"));
+	area_search_floater->processObjectPropertiesFamily(msg);
+}
+
 
 void process_time_synch(LLMessageSystem *mesgsys, void **user_data)
 {

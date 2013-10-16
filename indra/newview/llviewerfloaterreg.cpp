@@ -33,6 +33,7 @@
 #include "llfloaterautoreplacesettings.h"
 #include "ao.h"				// ## Zi: Animation Overrider
 #include "floaterhop.h"
+#include "fsareasearch.h"
 #include "fsfloaterprofile.h" // <FS:KC legacy profiles>
 #include "fsfloatersearch.h"
 #include "fsfloatersearchlegacy.h"
@@ -182,6 +183,7 @@ void LLViewerFloaterReg::registerFloaters()
 
 	LLFloaterReg::add("fast_timers", "floater_fast_timers.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFastTimerView>);
 	LLFloaterReg::add("about_land", "floater_about_land.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterLand>);
+	LLFloaterReg::add("area_search", "floater_fs_area_search.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSAreaSearch>);
 	LLFloaterReg::add("appearance", "floater_my_appearance.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterSidePanelContainer>);
 	LLFloaterReg::add("auction", "floater_auction.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAuction>);
 	LLFloaterReg::add("avatar", "floater_avatar.xml",  (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAvatar>);

@@ -105,6 +105,7 @@ include_directories(SYSTEM
     )
 
 set(viewer_SOURCE_FILES
+    fsareasearch.cpp
     fscommon.cpp
     fsexport.cpp
     fsfloaterimport.cpp
@@ -714,6 +715,7 @@ set(viewer_HEADER_FILES
     aoengine.h
     aoset.h
     floaterhop.h
+	fsareasearch.h
     fscommon.h
     fsexport.h
     fsfloaterimport.h
