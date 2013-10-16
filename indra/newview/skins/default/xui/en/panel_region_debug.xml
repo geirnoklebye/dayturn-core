@@ -161,6 +161,53 @@
      name="return_btn"
      top="263"
      width="80" />
+    <text
+     name="region_restart_delay_label"
+     type="string"
+     layout="topleft"
+     follows="left|top"
+     top_pad="30"
+     left="10"
+     height="10"
+     width="110"
+     length="1"
+     mouse_opaque="false"
+     text_readonly_color="LabelDisabledColor"
+     enabled="false">
+         Region restart delay:
+    </text>
+    <spinner
+     name="region_restart_delay"
+     control_name="RestartDelaySeconds"
+     tool_tip="Allow users this many seconds to exit the region before it restarts"
+     layout="topleft"
+     follows="left|top"
+     top_delta="-5"
+     left_pad="10"
+     width="50"
+     height="20"
+     decimal_digits="0"
+     increment="1" 
+     initial_val="300" 
+     min_val="15"
+     max_val="3600"
+     mouse_opaque="true"
+     enabled="false" />
+    <text
+     name="region_restart_delay_note"
+     type="string"
+     layout="topleft"
+     follows="left|top"
+     top_delta="5"
+     left_pad="5"
+     height="10"
+     width="300"
+     length="1"
+     mouse_opaque="false"
+     text_readonly_color="LabelDisabledColor"
+     enabled="false">
+         (seconds)
+    </text>
     <button
      follows="left|top"
      height="20"
@@ -169,7 +216,7 @@
      left="10"
      name="top_colliders_btn"
      tool_tip="List of objects experiencing the most potential collisions"
-     top="313"
+     top_pad="30"
      width="150" />
     <button
      follows="left|top"
@@ -178,7 +225,7 @@
      layout="topleft"
      left_pad="155"
      name="restart_btn"
-     tool_tip="Give 2 minute countdown and restart region"
+     tool_tip="Give a countdown and then restart the region"
      top_delta="0"
      width="150" />
     <button

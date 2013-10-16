@@ -8575,6 +8575,17 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <key>RestartDelaySeconds</key>
+    <map>
+      <key>Comment</key>
+      <string>Allow users this many seconds to exit the region before it restarts</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>S32</string>
+      <key>Value</key>
+      <integer>300</integer>
+    </map>
     <key>RectangleSelectInclusive</key>
     <map>
       <key>Comment</key>

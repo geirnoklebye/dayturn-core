@@ -3206,6 +3206,10 @@ Drag folders to this area and click "Send to Marketplace" to list them for sale 
   <string name="DaysOld">[AGEDAYS] old</string>
   <string name="TodayOld">Joined today</string>
 
+  <string name="TimeMinutes">[MINUTES]</string>
+  <string name="TimeMinutesSeconds">[MINUTES] and [SECONDS]</string>
+  <string name="TimeSeconds">[SECONDS]</string>
+
   <!-- AgeYearsA = singular,
        AgeYearsB = plural,
        AgeYearsC = plural for non-English languages like Russian
@@ -3223,6 +3227,14 @@ Drag folders to this area and click "Send to Marketplace" to list them for sale 
   <string name="AgeDaysA">[COUNT] day</string>
   <string name="AgeDaysB">[COUNT] days</string>
   <string name="AgeDaysC">[COUNT] days</string>
+
+  <string name="TimeMinutesA">[COUNT] minute</string>
+  <string name="TimeMinutesB">[COUNT] minutes</string>
+  <string name="TimeMinutesC">[COUNT] minutes</string>
+  <string name="TimeSecondsA">[COUNT] second</string>
+  <string name="TimeSecondsB">[COUNT] seconds</string>
+  <string name="TimeSecondsC">[COUNT] seconds</string>
+
   <!-- Group member counts -->
   <string name="GroupMembersA">[COUNT] member</string>
   <string name="GroupMembersB">[COUNT] members</string>
