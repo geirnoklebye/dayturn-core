@@ -7118,6 +7118,19 @@ class LLAvatarCall : public view_listener_t
 	}
 };
 
+class LLAvatarShare : public view_listener_t
+{
+	bool handleEvent(const LLSD &userdata)
+	{
+		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+
+		if(avatar) {
+			LLAvatarActions::share(avatar->getID());
+		}
+		return true;
+	}
+};
+
 namespace
 {
 	struct QueueObjects : public LLSelectedObjectFunctor
@@ -9064,6 +9077,7 @@ void initialize_menus()
 	commit.add("Avatar.ShowInspector", boost::bind(&handle_avatar_show_inspector));
 	view_listener_t::addMenu(new LLAvatarSendIM(), "Avatar.SendIM");
 	view_listener_t::addMenu(new LLAvatarCall(), "Avatar.Call");
+	view_listener_t::addMenu(new LLAvatarShare(), "Avatar.Share");
 	enable.add("Avatar.EnableCall", boost::bind(&LLAvatarActions::canCall));
 	view_listener_t::addMenu(new LLAvatarReportAbuse(), "Avatar.ReportAbuse");
 	view_listener_t::addMenu(new LLAvatarToggleMyProfile(), "Avatar.ToggleMyProfile");

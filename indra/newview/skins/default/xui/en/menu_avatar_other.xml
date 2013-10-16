@@ -140,7 +140,13 @@
            function="Tools.LookAtSelection"
            parameter="zoom" />
     </menu_item_call>
-   <menu_item_call
+    <menu_item_call
+     label="Share"
+     name="Share">
+        <menu_item_call.on_click
+         function="Avatar.Share" />
+    </menu_item_call>
+    <menu_item_call
      enabled="false"
      label="Pay"
      name="Pay...">
