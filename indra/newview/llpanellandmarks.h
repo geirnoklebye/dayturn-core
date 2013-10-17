@@ -38,6 +38,7 @@
 #include "llremoteparcelrequest.h"
 
 class LLAccordionCtrlTab;
+class LLAvatarName;
 class LLFolderViewItem;
 class LLMenuButton;
 class LLMenuGL;
@@ -57,6 +58,7 @@ public:
 	/*virtual*/ void onShowOnMap();
 	/*virtual*/ void onShowProfile();
 	/*virtual*/ void onTeleport();
+	/*virtual*/ void onShare();
 	/*virtual*/ void updateVerbs();
 	/*virtual*/ bool isSingleItemSelected();
 
@@ -162,6 +164,10 @@ private:
 							 LLInventoryItem* inv_item,
 							 const LLParcelData& parcel_data);
 	void doCreatePick(LLLandmark* landmark);
+
+	static void buildLandmarksString(const uuid_vec_t &landmark_uuids, std::string &items_string);
+	static void shareLandmarks(LLLandmarksPanel *panel, const uuid_vec_t &avatar_uuids, const std::vector<LLAvatarName> &avatar_names);
+	static void shareLandmarksCommit(const LLSD &notification, const LLSD &response, uuid_vec_t &avatar_uuids, const uuid_vec_t &landmark_uuids);
 
 private:
 	LLPlacesInventoryPanel*		mFavoritesInventoryPanel;

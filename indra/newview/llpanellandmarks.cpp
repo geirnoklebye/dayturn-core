@@ -40,12 +40,17 @@
 #include "llagent.h"
 #include "llagentpicksinfo.h"
 #include "llagentui.h"
+#include "llavataractions.h"
+#include "llavatarnamecache.h"
+#include "llfloateravatarpicker.h"
 #include "llcallbacklist.h"
 #include "lldndbutton.h"
 #include "llfloatersidepanelcontainer.h"
 #include "llfloaterworldmap.h"
 #include "llfolderviewitem.h"
+#include "llgiveinventory.h"
 #include "llinventorymodelbackgroundfetch.h"
+#include "llimview.h"				// for gIMMgr
 #include "llinventorypanel.h"
 #include "llinventoryfunctions.h"
 #include "lllandmarkactions.h"
@@ -54,6 +59,7 @@
 #include "llplacesinventorypanel.h"
 #include "llplacesfolderview.h"
 #include "lltoggleablemenu.h"
+#include "lltrans.h"
 #include "llviewermenu.h"
 #include "llviewerregion.h"
 
@@ -295,6 +301,34 @@ void LLLandmarksPanel::onTeleport()
 	{
 		view_model_item->openItem();
 	}
+}
+
+// virtual
+void LLLandmarksPanel::onShare()
+{
+	LLFloater *floater = gFloaterView->getParentFloater(this);
+
+	if (!floater) {
+		llwarns << "Can't find our floater" << llendl;
+		return;
+	}
+
+	LLFloaterAvatarPicker *picker = LLFloaterAvatarPicker::show(
+		boost::bind(LLLandmarksPanel::shareLandmarks, this, _1, _2),
+		TRUE,
+		FALSE,
+		FALSE,
+		floater->getName()
+	);
+
+	if (!picker) {
+		llwarns << "Can't open the avatar picker" << llendl;
+		return;
+	}
+
+	picker->openFriendsTab();
+	floater->addDependentFloater(picker);
+	LLNotificationsUtil::add("ShareNotification");
 }
 
 // virtual
@@ -961,6 +995,7 @@ bool LLLandmarksPanel::isActionEnabled(const LLSD& userdata) const
 			|| "delete"		== command_name
 			|| "collapse"	== command_name
 			|| "expand"		== command_name
+			|| "share"		== command_name
 			)
 	{
 		if (!root_folder_view) return false;
@@ -1058,6 +1093,10 @@ void LLLandmarksPanel::onCustomAction(const LLSD& userdata)
 	else if ("teleport" == command_name)
 	{
 		onTeleport();
+	}
+	else if ("share" == command_name)
+	{
+		onShare();
 	}
 	else if ("show_on_map" == command_name)
 	{
@@ -1481,4 +1520,228 @@ void toggle_restore_menu(LLMenuGL *menu, BOOL visible, BOOL enabled)
 		}
 	}
 }
-// EOF
+
+// static
+void LLLandmarksPanel::buildLandmarksString(const uuid_vec_t &landmark_uuids, std::string &items_string)
+{
+	llassert(landmark_uuids.size() > 0);
+
+	const std::string separator = LLTrans::getString("words_separator");
+	const uuid_vec_t::const_iterator iter_end = landmark_uuids.end();
+	uuid_vec_t::const_iterator iter = landmark_uuids.begin();
+
+	//
+	//	make a list of landmark names with a separator between each one
+	//
+	while (true) {
+		LLViewerInventoryCategory *category = gInventory.getCategory(*iter);
+
+		if (category) {
+			//
+			//	if the selected item is a folder then
+			//	we are only going to be sharing this
+			//	and nothing else
+			//
+			items_string = category->getName();
+			break;
+		}
+
+		//
+		//	find the landmark UUID in inventory and use the
+		//	name specified there
+		//
+		LLViewerInventoryItem *inv_item = gInventory.getItem(*iter);
+
+		if (inv_item) {
+			items_string.append(inv_item->getName());
+		}
+
+		if (++iter == iter_end) {
+			break;
+		}
+
+		items_string.append(separator);
+	}
+}
+
+// static
+void LLLandmarksPanel::shareLandmarks(LLLandmarksPanel *self, const uuid_vec_t &avatar_uuids, const std::vector<LLAvatarName> &avatar_names)
+{
+	llassert(self && self->mCurrentSelectedList && avatar_names.size() == avatar_uuids.size());
+
+	LLFolderView *folder = self->mCurrentSelectedList->getRootFolder();
+
+	if (!folder) {
+		llwarns << "Can't open the root folder" << llendl;
+		return;
+	}
+
+	std::set<LLFolderViewItem*> landmarks_selected = folder->getSelectionList();
+
+	if (landmarks_selected.empty()) {
+		llwarns << "No landmarks selected" << llendl;
+		return;
+	}
+
+	//
+	//	build up a list of landmark UUIDs and names from the
+	//	selected items
+	//
+	uuid_vec_t landmark_uuids;
+	S32 folder_count = 0;
+
+	const std::set<LLFolderViewItem*>::const_iterator iter_end = landmarks_selected.end();
+
+	for (std::set<LLFolderViewItem*>::const_iterator iter = landmarks_selected.begin();
+		iter != iter_end;
+		iter++
+	) {
+		LLFolderViewModelItemInventory *item = static_cast<LLFolderViewModelItemInventory*>((*iter)->getViewModelItem());
+
+		if (!item) {
+			llwarns << "Failed to get a folder view for a landmark" << llendl;
+			continue;
+		}
+
+		LLViewerInventoryCategory *category = gInventory.getCategory(item->getUUID());
+
+		if (category) {
+			if (!folder_count++) {
+				//
+				//	if there is a folder in the selected
+				//	list then that's all we want
+				//
+				//	we can share one or more landmarks
+				//	or exactly one folder
+				//
+				//	we still continue on and count the
+				//	number of folders selected, rather
+				//	than break, so that a warning can be
+				//	given to the user in the confirmation
+				//	dialog
+				//
+				landmark_uuids.clear();
+				landmark_uuids.push_back(item->getUUID());
+			}
+		}
+		else if (!folder_count) {
+			if (item->getInventoryType() == LLInventoryType::IT_LANDMARK) {
+				//
+				//	the item is a landmark and we don't
+				//	have a folder in the list so add this
+				//	item
+				//
+				landmark_uuids.push_back(item->getUUID());
+			}
+			else {
+				llwarns << "Found a non-landmark item in the selection (type=" << item->getInventoryType() << ")" << llendl;
+			}
+		}
+	}
+
+	if (landmark_uuids.empty()) {
+		llwarns << "No landmark UUIDs found" << llendl;
+		return;
+	}
+
+	//
+	//	build up a list of avatar names and inventory item names
+	//	for use on the confirmation dialog
+	//
+	std::string residents_str;
+	std::string landmarks_str;
+
+	LLAvatarActions::buildResidentsString(avatar_names, residents_str);
+	buildLandmarksString(landmark_uuids, landmarks_str);
+
+	//
+	//	launch the share confirmation dialog
+	//	(will call back to the shareLandmarksCommit() method)
+	//
+	LLSD args;
+	args["RESIDENTS"] = residents_str;
+	args["ITEMS"] = landmarks_str;
+
+	LLNotificationsUtil::add(
+		folder_count > 1 ? "ShareFolderConfirmation" : "ShareItemsConfirmation",
+		args,
+		LLSD(),
+		boost::bind(shareLandmarksCommit, _1, _2, avatar_uuids, landmark_uuids)
+	);
+}
+
+// static
+void LLLandmarksPanel::shareLandmarksCommit(const LLSD &notification, const LLSD &response, uuid_vec_t &avatar_uuids, const uuid_vec_t &landmark_uuids)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+
+	if (option == 1) {
+		//
+		//	cancel button pressed so don't go any further
+		//
+		return;
+	}
+
+	if (avatar_uuids.empty() || landmark_uuids.empty()) {
+		llwarns << "No avatars or no landmarks selected" << llendl;
+		return;
+	}
+
+	bool success = false;
+
+	//
+	//	iterate through avatar list
+	//
+	const uuid_vec_t::const_iterator iter_av_end = avatar_uuids.end();
+
+	for (uuid_vec_t::const_iterator iter_av = avatar_uuids.begin();
+		iter_av != iter_av_end;
+		iter_av++
+	) {
+		const LLUUID session_id = gIMMgr->computeSessionID(IM_NOTHING_SPECIAL, *iter_av);
+
+		//
+		//	iterate through selected landmarks
+		//
+		const uuid_vec_t::const_iterator iter_lm_end = landmark_uuids.end();
+
+		for (uuid_vec_t::const_iterator iter_lm = landmark_uuids.begin();
+			iter_lm != iter_lm_end;
+			iter_lm++
+		) {
+			//
+			//	check if the UUID is a folder
+			//
+			LLViewerInventoryCategory *category = gInventory.getCategory(*iter_lm);
+
+			if (category && LLGiveInventory::doGiveInventoryCategory(*iter_av, category, session_id)) {
+				//
+				//	if a category was in the original list
+				//	then that's all that will be here (no
+				//	more categories or items) so we may we
+				//	well break the loop at this point
+				//
+				success = true;
+				break;
+			}
+
+			//
+			//	get the landmark to share
+			//
+			LLViewerInventoryItem *landmark = gInventory.getItem(*iter_lm);
+
+			if (landmark && LLGiveInventory::doGiveInventoryItem(*iter_av, landmark, session_id)) {
+				success = true;
+			}
+		}
+	}
+
+	//
+	//	if we shared at least one item then get rid of
+	//	the avatar picker and send a notification tip
+	//
+	if (success) {
+		LLFloaterReg::hideInstance("avatar_picker");
+		LLNotificationsUtil::add("ItemsShared");
+	}
+}
