@@ -696,6 +696,21 @@ void FSFloaterSearchLegacy::processProperties(void* data, EAvatarProcessorType t
 	}
 }
 
+void FSFloaterSearchLegacy::onOpen(const LLSD &params)
+{
+	const std::string category = params["category"].asString();
+
+	if (category.empty()) {
+		return;
+	}
+
+	else if (category == "groups") {
+		mSearchRadio->setValue(1);
+	}
+
+	onModeSelect(mSearchRadio, this);
+}
+
 void FSFloaterSearchLegacy::groupNameUpdatedCallback(const LLUUID& id, const std::string& name, bool is_group)
 {
 	if (id == getSelectedID())

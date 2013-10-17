@@ -48,6 +48,8 @@ public:
 	FSFloaterSearchLegacy(const LLSD& key);
 	virtual ~FSFloaterSearchLegacy();
 	virtual void processProperties(void* data, EAvatarProcessorType type);
+
+	/* virtual */ void onOpen(const LLSD &params);
 	
 	BOOL postBuild();
 	
