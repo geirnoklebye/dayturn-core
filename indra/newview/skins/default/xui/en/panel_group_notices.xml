@@ -339,6 +339,7 @@ Maximum 200 per group daily
          spellcheck="true"
          top_delta="-40"
          width="313"
+         parse_urls="true"
          word_wrap="true" />
         <line_editor
          enabled="false"

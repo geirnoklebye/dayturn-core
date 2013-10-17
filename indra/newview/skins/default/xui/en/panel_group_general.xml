@@ -110,6 +110,7 @@ Hover your mouse over the options for more help.
      right="-4"
     bg_readonly_color="DkGray2"
     text_readonly_color="White"
+     parse_urls="true"
      word_wrap="true">
      Group Charter
     </text_editor>
