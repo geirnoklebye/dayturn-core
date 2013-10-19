@@ -10,7 +10,6 @@
            is_running_function="Floater.IsOpen"
            is_running_parameters="about_land"
            />
-
   <command name="appearance"  
            available_in_toybox="true"
            icon="Command_Appearance_Icon"
@@ -20,6 +19,16 @@
            execute_parameters="appearance"
            is_running_function="Floater.IsOpen"
            is_running_parameters="appearance"
+           />
+  <command name="area_search"  
+           available_in_toybox="true"
+           icon="Command_Area_Search_Icon"
+           label_ref="Command_Area_Search_Label"
+           tooltip_ref="Command_Area_Search_Tooltip"
+           execute_function="Floater.ToggleOrBringToFront"
+           execute_parameters="area_search"
+           is_running_function="Floater.IsOpen"
+           is_running_parameters="area_search"
            />
   <command name="avatar"
            available_in_toybox="true"
