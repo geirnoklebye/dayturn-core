@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <floater
  name="area_search"
- title="Area Search for objects"
+ title="AREA SEARCH FOR OBJECTS"
  min_width="425"
  min_height="250"
  width="600"
