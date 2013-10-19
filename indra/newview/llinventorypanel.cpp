@@ -56,7 +56,7 @@ static LLDefaultChildRegistry::Register<LLInventoryPanel> r("inventory_panel");
 const std::string LLInventoryPanel::DEFAULT_SORT_ORDER = std::string("InventorySortOrder");
 const std::string LLInventoryPanel::RECENTITEMS_SORT_ORDER = std::string("RecentItemsSortOrder");
 const std::string LLInventoryPanel::INHERIT_SORT_ORDER = std::string("");
-static const LLInventoryFolderViewModelBuilder INVENTORY_BRIDGE_BUILDER;
+static LLInventoryFolderViewModelBuilder INVENTORY_BRIDGE_BUILDER;
 
 // statics 
 bool LLInventoryPanel::sColorSetInitialized = false;
@@ -1412,7 +1412,7 @@ bool LLInventoryPanel::isSelectionRemovable()
 class LLInventoryRecentItemsPanel;
 static LLDefaultChildRegistry::Register<LLInventoryRecentItemsPanel> t_recent_inventory_panel("recent_inventory_panel");
 
-static const LLRecentInventoryBridgeBuilder RECENT_ITEMS_BUILDER;
+static LLRecentInventoryBridgeBuilder RECENT_ITEMS_BUILDER;
 class LLInventoryRecentItemsPanel : public LLInventoryPanel
 {
 public:

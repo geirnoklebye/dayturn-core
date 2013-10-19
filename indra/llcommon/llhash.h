@@ -33,7 +33,9 @@
 #include <hash_map>
 #include <algorithm>
 #elif LL_DARWIN || LL_LINUX
-#  if GCC_VERSION >= 40300 // gcc 4.3 and up
+#  if LL_CLANG
+#    include <hashtable.h>
+#  elif GCC_VERSION >= 40300 // gcc 4.3 and up
 #    include <backward/hashtable.h>
 #  elif GCC_VERSION >= 30400 // gcc 3.4 and up
 #    include <ext/hashtable.h>

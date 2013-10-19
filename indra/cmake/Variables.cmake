@@ -134,6 +134,9 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     OUTPUT_VARIABLE XCODE_VERSION )
 
   # To support a different SDK update these Xcode settings:
+  if (XCODE_VERSION GREATER 4.9)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
+  else (XCODE_VERSION GREATER 4.9)
   if (XCODE_VERSION GREATER 4.5)
     set(CMAKE_OSX_DEPLOYMENT_TARGET 10.8)
     set(CMAKE_OSX_SYSROOT macosx10.8)
@@ -146,8 +149,14 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(CMAKE_OSX_SYSROOT macosx10.7)
   endif (XCODE_VERSION GREATER 4.2)
   endif (XCODE_VERSION GREATER 4.5)
+  endif (XCODE_VERSION GREATER 4.9)
 
-  set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
+  if (XCODE_VERSION GREATER 4.9)
+    set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
+  else (XCODE_VERSION GREATER 4.9)
+    set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
+  endif (XCODE_VERSION GREATER 4.9)
+
   set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT dwarf-with-dsym)
 
   # NOTE: To attempt an i386/PPC Universal build, add this on the configure line:

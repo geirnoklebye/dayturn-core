@@ -242,6 +242,9 @@ LLSD LLFloaterAbout::getInfo()
 #if LL_MSVC
 	info["COMPILER"] = "MSVC";
 	info["COMPILER_VERSION"] = _MSC_VER;
+#elif LL_CLANG
+	info["COMPILER"] = "Clang";
+	info["COMPILER_VERSION"] = CLANG_VERSION_STRING;
 #elif LL_GNUC
 	info["COMPILER"] = "GCC";
 	info["COMPILER_VERSION"] = GCC_VERSION;

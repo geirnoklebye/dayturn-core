@@ -3,7 +3,10 @@
 add_subdirectory(base)
 
 add_subdirectory(webkit)
-add_subdirectory(gstreamer010)
+# *FIXME: Gstreamer darwin package
+if (NOT DARWIN)
+    add_subdirectory(gstreamer010)
+endif (NOT DARWIN)
 
 if (QUICKTIME)
     add_subdirectory(quicktime)

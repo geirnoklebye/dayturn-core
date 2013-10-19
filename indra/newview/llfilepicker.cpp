@@ -582,6 +582,7 @@ std::vector<std::string>* LLFilePicker::navOpenFilterProc(ELoadFilter filter) //
             allowedv->push_back("lsl");
             allowedv->push_back("dic");
             allowedv->push_back("xcu");
+            allowedv->push_back("oxp");
         case FFLOAD_IMAGE:
             allowedv->push_back("jpg");
             allowedv->push_back("jpeg");
@@ -618,21 +619,13 @@ std::vector<std::string>* LLFilePicker::navOpenFilterProc(ELoadFilter filter) //
             break;
         case FFLOAD_DIRECTORY:
             break;
+case FFLOAD_IMPORT:
+            allowedv->push_back("oxp");
+	    break;
         default:
             llwarns << "Unsupported format." << llendl;
     }
-// <FS:CR> Import filter
-						else if (filter == FFLOAD_IMPORT)
-						{
-							if (fileInfo.filetype != 'OXP ' &&
-								//fileInfo.filetype != 'HPA ' &&
-								(fileInfo.extension && (CFStringCompare(fileInfo.extension, CFSTR("oxp"), kCFCompareCaseInsensitive) != kCFCompareEqualTo) )) //&&
-								 //fileInfo.extension && (CFStringCompare(fileInfo.extension, CFSTR("hpa"), kCFCompareCaseInsensitive) != kCFCompareEqualTo)))
-							{
-								result = false;
-							}
-						}
-// </FS:CR>
+	return allowedv;
 }
 
 bool	LLFilePicker::doNavChooseDialog(ELoadFilter filter)
@@ -733,13 +726,16 @@ bool	LLFilePicker::doNavSaveDialog(ESaveFilter filter, const std::string& filena
 			creator = "\?\?\?\?";
 			extension = "lsl";
 			break;
-// <FS:CR> Export filter
 		case FFSAVE_EXPORT:
-			type = 'OXP ';
-			creator = '\?\?\?\?';
-			extension = CFSTR(".oxp");
+			type = "OXP ";
+			creator = "\?\?\?\?";
+			extension = "oxp";
 			break;
-// </FS:CR>
+		case FFSAVE_COLLADA:
+			type = "DAE ";
+			creator = "\?\?\?\?";
+			extension = "dae";
+			break;
 		case FFSAVE_ALL:
 		default:
 			type = "\?\?\?\?";

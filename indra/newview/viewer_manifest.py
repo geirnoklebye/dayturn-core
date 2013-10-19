@@ -925,13 +925,14 @@ class DarwinManifest(ViewerManifest):
                                 "libcollada14dom.dylib",
                                 "libexpat.1.5.2.dylib",
                                 "libexception_handler.dylib",
-                                "libfmodex.dylib",
                                 "libGLOD.dylib",
                                 ):
                     dylibs += path_optional(os.path.join(libdir, libfile), libfile)
 
                 # SLVoice and vivox lols, no symlinks needed
                 for libfile in (
+                                'libalut.dylib',
+                                'libopenal.1.dylib',
                                 'libortp.dylib',
                                 'libsndfile.dylib',
                                 'libvivoxoal.dylib',
@@ -1014,7 +1015,7 @@ class DarwinManifest(ViewerManifest):
                                  'bundle': self.get_dst_prefix()
                 })
 
-        imagename="SecondLife_" + '_'.join(self.args['version'])
+        imagename="Kokua_" + '_'.join(self.args['version'])
 
         # MBW -- If the mounted volume name changes, it breaks the .DS_Store's background image and icon positioning.
         #  If we really need differently named volumes, we'll need to create multiple DS_Store file images, or use some other trick.
@@ -1416,6 +1417,26 @@ class Linux_x86_64Manifest(LinuxManifest):
 
 
 ################################################################
+
+def symlinkf(src, dst):
+    """
+    Like ln -sf, but uses os.symlink() instead of running ln.
+    """
+    try:
+        os.symlink(src, dst)
+    except OSError, err:
+        if err.errno != errno.EEXIST:
+            raise
+        # We could just blithely attempt to remove and recreate the target
+        # file, but that strategy doesn't work so well if we don't have
+        # permissions to remove it. Check to see if it's already the
+        # symlink we want, which is the usual reason for EEXIST.
+        if not (os.path.islink(dst) and os.readlink(dst) == src):
+            # Here either dst isn't a symlink or it's the wrong symlink.
+            # Remove and recreate. Caller will just have to deal with any
+            # exceptions at this stage.
+            os.remove(dst)
+            os.symlink(src, dst)
 
 if __name__ == "__main__":
     main()

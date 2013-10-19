@@ -339,13 +339,8 @@ elseif(DARWIN)
        )
     set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(release_files
-# kokuafixme
-# <<<<<<< HEAD
         libalut.0.dylib
-        libapr-1.0.3.7.dylib
-# =======
-#         libapr-1.0.dylib
-# >>>>>>> viewer-dev/master
+        libapr-1.0.dylib
         libapr-1.dylib
         libaprutil-1.0.dylib
         libaprutil-1.dylib
@@ -357,7 +352,6 @@ elseif(DARWIN)
         libndofdev.dylib
         libopenal.1.dylib
         libhunspell-1.3.0.dylib
-        libopenjpeg.1.4.dylib
         libexception_handler.dylib
         libcollada14dom.dylib
        )
