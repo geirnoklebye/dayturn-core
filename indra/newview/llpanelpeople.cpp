@@ -536,6 +536,9 @@ LLPanelPeople::LLPanelPeople()
 	mEnableCallbackRegistrar.add("People.Recent.ViewSort.CheckItem",	boost::bind(&LLPanelPeople::onRecentViewSortMenuItemCheck,	this, _2));
 	mEnableCallbackRegistrar.add("People.Nearby.ViewSort.CheckItem",	boost::bind(&LLPanelPeople::onNearbyViewSortMenuItemCheck,	this, _2));
 
+	mCommitCallbackRegistrar.add("People.All.ViewSort.ToggleLoginNames",	boost::bind(&LLPanelPeople::onViewLoginNamesMenuItemToggle, this));
+	mEnableCallbackRegistrar.add("People.All.ViewSort.CheckLoginNames",	boost::bind(&LLPanelPeople::onViewLoginNamesMenuItemCheck, this));
+
 	mEnableCallbackRegistrar.add("People.Group.Plus.Validate",	boost::bind(&LLPanelPeople::onGroupPlusButtonValidate,	this));
 }
 
@@ -1323,15 +1326,6 @@ void LLPanelPeople::onFriendsViewSortMenuItemClicked(const LLSD& userdata)
 		mAllFriendList->showPermissions(show_permissions);
 		mOnlineFriendList->showPermissions(show_permissions);
 	}
-	else if (chosen_item == "view_login_names") {
-		gSavedSettings.setBOOL(
-			"UseCompleteNameInLists",
-			!gSavedSettings.getBOOL("UseCompleteNameInLists")
-		);
-
-		mAllFriendList->handleDisplayNamesOptionChanged();
-		mOnlineFriendList->handleDisplayNamesOptionChanged();
-	}
 	}
 
 void LLPanelPeople::onGroupsViewSortMenuItemClicked(const LLSD& userdata)
@@ -1364,21 +1358,12 @@ void LLPanelPeople::onNearbyViewSortMenuItemClicked(const LLSD& userdata)
 	{
 		setSortOrder(mNearbyList, E_SORT_BY_DISTANCE);
 	}
-	else if (chosen_item == "view_login_names") {
-		gSavedSettings.setBOOL(
-			"UseCompleteNameInLists",
-			!gSavedSettings.getBOOL("UseCompleteNameInLists")
-		);
-
-		mNearbyList->handleDisplayNamesOptionChanged();
-	}
 }
 
 bool LLPanelPeople::onNearbyViewSortMenuItemCheck(const LLSD& userdata)
 {
 	std::string item = userdata.asString();
 	static LLCachedControl<U32> sort_order(gSavedSettings, "NearbyPeopleSortOrder", E_SORT_BY_RECENT_SPEAKERS);
-	static LLCachedControl<bool> use_complete_name(gSavedSettings, "UseCompleteNameInLists", true);
 
 	if (item == "sort_by_recent_speakers")
 		return sort_order == E_SORT_BY_RECENT_SPEAKERS;
@@ -1386,8 +1371,6 @@ bool LLPanelPeople::onNearbyViewSortMenuItemCheck(const LLSD& userdata)
 		return sort_order == E_SORT_BY_NAME;
 	if (item == "sort_distance")
 		return sort_order == E_SORT_BY_DISTANCE;
-	if (item == "view_login_names")
-		return use_complete_name;
 
 	return false;
 }
@@ -1408,15 +1391,6 @@ void LLPanelPeople::onRecentViewSortMenuItemClicked(const LLSD& userdata)
 	{
 		mRecentList->toggleIcons();
 	}
-	else if (chosen_item == "view_login_names")
-	{
-		gSavedSettings.setBOOL(
-			"UseCompleteNameInLists",
-			!gSavedSettings.getBOOL("UseCompleteNameInLists")
-		);
-
-		mRecentList->handleDisplayNamesOptionChanged();
-	}
 }
 
 bool LLPanelPeople::onFriendsViewSortMenuItemCheck(const LLSD& userdata) 
@@ -1424,14 +1398,11 @@ bool LLPanelPeople::onFriendsViewSortMenuItemCheck(const LLSD& userdata)
 	std::string item = userdata.asString();
 
 	static LLCachedControl<U32> sort_order(gSavedSettings, "FriendsSortOrder", E_SORT_BY_NAME);
-	static LLCachedControl<bool> use_complete_name(gSavedSettings, "UseCompleteNameInLists", true);
 
 	if (item == "sort_name") 
 		return sort_order == E_SORT_BY_NAME;
 	if (item == "sort_status")
 		return sort_order == E_SORT_BY_STATUS;
-	if (item == "view_login_names")
-		return use_complete_name;
 
 	return false;
 }
@@ -1440,16 +1411,33 @@ bool LLPanelPeople::onRecentViewSortMenuItemCheck(const LLSD& userdata)
 {
 	std::string item = userdata.asString();
 	static LLCachedControl<U32> sort_order(gSavedSettings, "RecentPeopleSortOrder", E_SORT_BY_MOST_RECENT);
-	static LLCachedControl<bool> use_complete_name(gSavedSettings, "UseCompleteNameInLists", true);
 
 	if (item == "sort_recent")
 		return sort_order == E_SORT_BY_MOST_RECENT;
 	if (item == "sort_name") 
 		return sort_order == E_SORT_BY_NAME;
-	if (item == "view_login_names")
-		return use_complete_name;
 
 	return false;
+}
+
+void LLPanelPeople::onViewLoginNamesMenuItemToggle()
+{
+	gSavedSettings.setBOOL(
+		"UseCompleteNameInLists",
+		!gSavedSettings.getBOOL("UseCompleteNameInLists")
+	);
+
+	mNearbyList->handleDisplayNamesOptionChanged();
+	mAllFriendList->handleDisplayNamesOptionChanged();
+	mOnlineFriendList->handleDisplayNamesOptionChanged();
+	mRecentList->handleDisplayNamesOptionChanged();
+}
+
+bool LLPanelPeople::onViewLoginNamesMenuItemCheck()
+{
+	static LLCachedControl<bool> use_complete_name(gSavedSettings, "UseCompleteNameInLists", false);
+
+	return use_complete_name;
 }
 
 void LLPanelPeople::onMoreButtonClicked()

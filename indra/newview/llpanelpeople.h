@@ -129,6 +129,9 @@ private:
 	bool					onRecentViewSortMenuItemCheck(const LLSD& userdata);
 	bool					onNearbyViewSortMenuItemCheck(const LLSD& userdata);
 
+	void					onViewLoginNamesMenuItemToggle();
+	bool					onViewLoginNamesMenuItemCheck();
+
 	// misc callbacks
 	static void				onAvatarPicked(const uuid_vec_t& ids, const std::vector<LLAvatarName> names);
 

@@ -583,7 +583,7 @@ void LLAvatarList::onItemDoubleClicked(LLUICtrl* ctrl, S32 x, S32 y, MASK mask)
 std::string LLAvatarList::getNameToDisplay(const LLAvatarName &av_name)
 {
 	static LLCachedControl<bool> use_display_name(gSavedSettings, "UseDisplayNames", true);
-	static LLCachedControl<bool> use_complete_name(gSavedSettings, "UseCompleteNameInLists", true);
+	static LLCachedControl<bool> use_complete_name(gSavedSettings, "UseCompleteNameInLists", false);
 
 	std::string display_name;
 
