@@ -34,6 +34,17 @@
          parameter="sort_distance"/>
     </menu_item_check>
     <menu_item_separator layout="topleft" />
+    <menu_item_check label="View Login Names" name="view_login_names">
+      <menu_item_check.on_click
+         function="People.Nearby.ViewSort.Action"
+         parameter="view_login_names" />
+      <menu_item_check.on_check
+         function="People.Nearby.ViewSort.CheckItem"
+         parameter="view_login_names" />
+      <menu_item_check.on_enable
+         function="CheckControl"
+         parameter="UseDisplayNames" />
+    </menu_item_check>
     <menu_item_check name="view_icons" label="View People Icons">
         <menu_item_check.on_click
          function="People.Nearby.ViewSort.Action"

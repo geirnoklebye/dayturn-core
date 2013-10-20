@@ -30,6 +30,7 @@
 #include <boost/signals2.hpp>
 
 #include "llavataractions.h"
+#include "llavatarlist.h"
 #include "llavatarlistitem.h"
 
 #include "llbutton.h"
@@ -406,7 +407,7 @@ void LLAvatarListItem::onAvatarNameCache(const LLAvatarName& av_name)
 {
 	mAvatarNameCacheConnection.disconnect();
 
-	setAvatarName(av_name.getDisplayName());
+	setAvatarName(LLAvatarList::getNameToDisplay(av_name));
 	setAvatarToolTip(av_name.getUserName());
 
 	//requesting the list to resort
