@@ -47,7 +47,7 @@ private:
 	bool enableContextMenuItem(const LLSD& userdata);
 	bool checkContextMenuItem(const LLSD& userdata);
 	void offerTeleport();
-
+	void requestTeleport();
 	void handle_avatar_grant_online_status(const LLUUID& avatar_id);
 	void handle_avatar_grant_map_location(const LLUUID& avatar_id);
 	void handle_avatar_grant_modify_objects(const LLUUID& avatar_id);
@@ -66,8 +66,21 @@ protected:
 	/*virtual*/ void buildContextMenu(class LLMenuGL& menu, U32 flags);
 };
 
+/**
+ * Menu used in the suggested friends list.
+ */
+class SuggestedFriendsContextMenu : public PeopleContextMenu
+{
+public:
+	/*virtual*/ LLContextMenu * createMenu();
+
+protected:
+	/*virtual*/ void buildContextMenu(class LLMenuGL& menu, U32 flags);
+};
+
 extern PeopleContextMenu gPeopleContextMenu;
 extern NearbyPeopleContextMenu gNearbyPeopleContextMenu;
+extern SuggestedFriendsContextMenu gSuggestedFriendsContextMenu;
 
 } // namespace LLPanelPeopleMenus
 

@@ -116,6 +116,12 @@ public:
 	static void pay(const LLUUID& id);
 
 	/**
+	 * Request teleport from other avatar
+	 */
+	static void teleportRequest(const LLUUID& id);
+	static void teleport_request_callback(const LLSD& notification, const LLSD& response);
+
+	/**
 	 * Share items with the avatar.
 	 */
 	static void share(const LLUUID& id);

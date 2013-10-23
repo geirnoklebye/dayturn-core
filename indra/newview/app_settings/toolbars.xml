@@ -5,7 +5,10 @@
     button_alignment="left"
     button_layout_style="fill">	
     <command name="chat"/>
+    <command name="speak"/>
+    <command name="destinations"/>
     <command name="people"/>
+    <command name="social"/>
     <command name="snapshot"/> 
     <command name="search"/>	
     <command name="build"/>

@@ -752,6 +752,9 @@ void LLFloaterPreference::cancel()
 	// hide spellchecker settings folder
 	LLFloaterReg::hideInstance("prefs_spellchecker");
 	
+	// hide spellchecker settings folder
+	LLFloaterReg::hideInstance("prefs_spellchecker");
+	
 	// cancel hardware menu
 	LLFloaterHardwareSettings* hardware_settings = LLFloaterReg::getTypedInstance<LLFloaterHardwareSettings>("prefs_hardware_settings");
 	if (hardware_settings)

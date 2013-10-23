@@ -148,6 +148,14 @@ Please try logging in again in a minute.</string>
 	<string name="SentToInvalidRegion">You were sent to an invalid region.</string>
 	<string name="TestingDisconnect">Testing viewer disconnect</string>
 
+	<!-- Facebook Connect and, eventually, other Social Network -->
+	<string name="SocialFacebookConnecting">Connecting to Facebook...</string>
+	<string name="SocialFacebookPosting">Posting...</string>
+	<string name="SocialFacebookDisconnecting">Disconnecting from Facebook...</string>
+	<string name="SocialFacebookErrorConnecting">Problem connecting to Facebook</string>
+	<string name="SocialFacebookErrorPosting">Problem posting to Facebook</string>
+	<string name="SocialFacebookErrorDisconnecting">Problem disconnecting from Facebook</string>
+    
 	<!-- Tooltip -->
 	<string name="TooltipPerson">Person</string><!-- Object under mouse pointer is an avatar -->
 	<string name="TooltipNoName">(no name)</string> <!-- No name on an object -->
@@ -380,7 +388,7 @@ Please try logging in again in a minute.</string>
 	<!-- world map -->
 	<string name="texture_loading">Loading...</string>
 	<string name="worldmap_offline">Offline</string>
-	<string name="worldmap_item_tooltip_format">[AREA] m² L$[PRICE]</string>
+	<string name="worldmap_item_tooltip_format">[AREA] m² L$[PRICE] ([SQMPRICE] L$/m²)</string>
 	<string name="worldmap_results_none_found">None found.</string>
 
 	<!-- animations uploading status codes -->
@@ -3321,7 +3329,11 @@ Drag folders to this area and click "Send to Marketplace" to list them for sale 
 		all estates that you manage for [OWNER]
 	</string>
 	<string name="RegionInfoAllowedResidents">Allowed Residents: ([ALLOWEDAGENTS], max [MAXACCESS])</string>
-	<string name="RegionInfoAllowedGroups">Allowed groups: ([ALLOWEDGROUPS], max [MAXACCESS])</string>
+	<string name="RegionInfoAllowedGroups">Allowed Groups: ([ALLOWEDGROUPS], max [MAXACCESS])</string>
+	<string name="RegionInfoEstateManagers">Estate Managers: ([ESTATEMANAGERS], max [MAXMANAGERS])</string>
+	<string name="RegionInfoBannedResidents">Banned Residents: ([BANNEDAGENTS], max [MAXBANNED])</string>
+	<string name="RegionInfoListTypeAllowedAgents">Allowed Residents</string>
+	<string name="RegionInfoListTypeBannedAgents">Banned Residents</string>
 
 	<!-- script limits floater -->
 	<string name="ScriptLimitsParcelScriptMemory">Parcel Script Memory</string>
@@ -4291,6 +4303,9 @@ If you continue to receive this message, contact the [SUPPORT_SITE].
     Drag items from inventory here
   </string>
 
+  <string name="facebook_post_success">
+    You posted to Facebook.
+  </string>
 
   <string name="no_session_message">
     (IM Session Doesn't Exist)
@@ -4723,6 +4738,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Profile_Label">Profile</string>
   <string name="Command_Search_Label">LLv3 web search</string>
   <string name="Command_Snapshot_Label">Snapshot</string>
+  <string name="Command_Social_Label">Facebook</string>
   <string name="Command_Speak_Label">Speak</string>
   <string name="Command_View_Label">Camera controls</string>
   <string name="Command_Voice_Label">Voice settings</string>
@@ -4751,6 +4767,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Profile_Tooltip">Edit or view your profile</string>
   <string name="Command_Search_Tooltip">Find places, events and people using the LLv3-style web search</string>
   <string name="Command_Snapshot_Tooltip">Take a picture</string>
+  <string name="Command_Social_Tooltip">Post to Facebook</string>
   <string name="Command_Speak_Tooltip">Speak with people nearby using your microphone</string>
   <string name="Command_View_Tooltip">Changing camera angle</string>
   <string name="Command_Voice_Tooltip">Volume controls for calls and people near you in world</string>
