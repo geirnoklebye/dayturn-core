@@ -119,23 +119,19 @@
 		<column
 		 name="Name"
 		 label="Name"
-		 dynamicwidth="true"
-		 tool_tip="Double click on any entry to get a position beacon"/>
+		 dynamicwidth="true" />
     	<column
 		 name="Description"
 		 label="Description"
-		 dynamicwidth="true"
-		 tool_tip="Double click on any entry to get a position beacon"/>
+		 dynamicwidth="true" />
     	<column
 		 name="Owner"
 		 label="Owner"
-		 dynamicwidth="true"
-		 tool_tip="Double click on any entry to get a position beacon"/>
+		 dynamicwidth="true" />
 		<column
 		 name="Group"
 		 label="Group"
-		 dynamicwidth="true"
-		 tool_tip="Double click on any entry to get a position beacon"/>
+		 dynamicwidth="true" />
 	</scroll_list>
 	<button
 	 name="Refresh"

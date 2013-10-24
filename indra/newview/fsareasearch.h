@@ -31,18 +31,21 @@
  * Modified, debugged, optimized and improved by Henri Beauchamp Feb 2010.
  * Refactored for Viewer2 by Kadah Coba, April 2011
  */
+#include "llsingleton.h"
 
 #include "llfloater.h"
 #include "llsingleton.h"
 #include "lluuid.h"
+#include "llselectmgr.h"
 #include "llstring.h"
 #include "llframetimer.h"
+#include "lllistcontextmenu.h"
 
 class LLTextBox;
 class LLScrollListCtrl;
 class LLViewerRegion;
 
-struct AObjectDetails
+struct ObjectDetails
 {
 	LLUUID id;
 	std::string name;
@@ -62,6 +65,23 @@ public:
 	void callbackLoadOwnerName(const LLUUID& id, const std::string& full_name);
 	void processObjectPropertiesFamily(LLMessageSystem* msg);
 
+	std::string getObjectName(const LLUUID &id) { return mObjectDetails[id].name; }
+
+	static bool enableSelection(LLScrollListCtrl *ctrl, const LLSD &userdata);
+	static bool handleSelection(LLScrollListCtrl *ctrl, const LLSD &userdata);
+
+	class ContextMenu : public LLListContextMenu, public LLSingleton<ContextMenu>
+	{
+	public:
+		ContextMenu();
+		/*virtual*/ void show(LLView *view, const uuid_vec_t &uuids, S32 x, S32 y);
+		/*virtual*/ LLContextMenu *createMenu();
+
+	protected:
+		FSAreaSearch *mFloater;
+		LLScrollListCtrl *mParent;
+	};
+
 private:
 	void results();
 	void checkRegion();
@@ -69,7 +89,9 @@ private:
 	void search();
 	void onCommitLine(class LLLineEditor* line, void* user_data);
 	void requestIfNeeded(class LLViewerObject *objectp);
+
 	void onDoubleClick();
+	void onRightClick(S32 x, S32 y);
 
 	enum OBJECT_COLUMN_ORDER
 	{
@@ -84,8 +106,9 @@ private:
 	LLTextBox* mCounterText;
 	LLScrollListCtrl* mResultList;
 	LLFrameTimer mLastUpdateTimer;
+	LLObjectSelectionHandle mSelectionHandle;
 
-	std::map<LLUUID, AObjectDetails> mObjectDetails;
+	std::map<LLUUID, ObjectDetails> mObjectDetails;
 
 	std::string mSearchedName;
 	std::string mSearchedDesc;

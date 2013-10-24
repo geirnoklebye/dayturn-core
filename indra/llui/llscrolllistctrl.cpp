@@ -1793,6 +1793,15 @@ BOOL LLScrollListCtrl::handleMouseUp(S32 x, S32 y, MASK mask)
 // virtual
 BOOL LLScrollListCtrl::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
+	if (mRightMouseDownSignal) {
+		//
+		//	a right mouse button handler is defined
+		//	so just call it and return
+		//
+		(*mRightMouseDownSignal)(this, x, y, mask);
+		return TRUE;
+	}
+
 	LLScrollListItem *item = hitItem(x, y);
 	if (item)
 	{

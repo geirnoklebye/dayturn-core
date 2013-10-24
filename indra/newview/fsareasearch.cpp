@@ -36,15 +36,22 @@
 
 #include "fsareasearch.h"
 
-#include "llscrolllistctrl.h"
-#include "lllineeditor.h"
-#include "lltextbox.h"
-#include "llfloaterreg.h"
 #include "llagent.h"
+#include "llblocklist.h"
+#include "llfloaterreg.h"
+#include "llfloaterreporter.h"
+#include "lllineeditor.h"
+#include "llmutelist.h"
+#include "llpanelblockedlist.h"
+#include "llscrolllistctrl.h"
+#include "lltextbox.h"
+#include "lltoolgrab.h"
 #include "lltracker.h"
-#include "llviewerobjectlist.h"
 #include "llviewercontrol.h"
+#include "llviewermenu.h"
+#include "llviewerobjectlist.h"
 #include "llviewerparcelmgr.h"
+#include "llviewerwindow.h"
 
 #include <boost/algorithm/string/find.hpp> //for boost::ifind_first
 
@@ -89,8 +96,12 @@ FSAreaSearch::~FSAreaSearch()
 BOOL FSAreaSearch::postBuild()
 {
 	mResultList = getChild<LLScrollListCtrl>("result_list");
-	mResultList->setDoubleClickCallback( boost::bind(&FSAreaSearch::onDoubleClick, this));
-	mResultList->sortByColumn("Name", TRUE);
+
+	if (mResultList) {
+		mResultList->setDoubleClickCallback(boost::bind(&FSAreaSearch::onDoubleClick, this));
+		mResultList->setRightMouseDownCallback(boost::bind(&FSAreaSearch::onRightClick, this, _2, _3));
+		mResultList->sortByColumn("Name", TRUE);
+	}
 
 	mCounterText = getChild<LLTextBox>("counter");
 
@@ -126,12 +137,43 @@ void FSAreaSearch::checkRegion()
 void FSAreaSearch::onDoubleClick()
 {
  	LLScrollListItem *item = mResultList->getFirstSelected();
-	if (!item) return;
-	LLUUID object_id = item->getUUID();
-	LLViewerObject* objectp = gObjectList.findObject(object_id);
-	if (objectp)
-	{
-		LLTracker::trackLocation(objectp->getPositionGlobal(), mObjectDetails[object_id].name, "", LLTracker::LOCATION_ITEM);
+	if (!item) {
+		return;
+	}
+
+	LLUUID id = item->getUUID();
+
+	LLViewerObject *object = gObjectList.findObject(id);
+
+	if (object) {
+		LLTracker::trackLocation(object->getPositionGlobal(), mObjectDetails[id].name, "", LLTracker::LOCATION_ITEM);
+	}
+}
+
+void FSAreaSearch::onRightClick(S32 x, S32 y)
+{
+	LLScrollListItem *item = mResultList->hitItem(x, y);
+
+	if (!item) {
+		return;
+	}
+
+	LLUUID id = item->getUUID();
+
+	if (id.notNull()) {
+		uuid_vec_t uuids;
+		uuids.push_back(id);
+
+		mResultList->selectByID(id);
+
+		LLViewerObject *object = gObjectList.findObject(id);
+
+		if (object) {
+			LLSelectMgr::getInstance()->deselectAll();
+			mSelectionHandle = LLSelectMgr::getInstance()->selectObjectAndFamily(object);
+		}
+
+		ContextMenu::instance().show(mResultList, uuids, x, y);
 	}
 }
 
@@ -174,7 +216,7 @@ void FSAreaSearch::requestIfNeeded(LLViewerObject *objectp)
 	LLUUID object_id = objectp->getID();
 	if (mObjectDetails.count(object_id) == 0)
 	{
-		AObjectDetails* details = &mObjectDetails[object_id];
+		ObjectDetails *details = &mObjectDetails[object_id];
 		details->name = request_string;
 		details->desc = request_string;
 		details->owner_id = LLUUID::null;
@@ -220,7 +262,7 @@ void FSAreaSearch::results()
 				}
 				else
 				{
-					AObjectDetails* details = &mObjectDetails[object_id];
+					ObjectDetails *details = &mObjectDetails[object_id];
 					std::string object_name = details->name;
 					std::string object_desc = details->desc;
 					std::string object_owner;
@@ -281,7 +323,7 @@ void FSAreaSearch::processObjectPropertiesFamily(LLMessageSystem* msg)
 	msg->getUUIDFast(_PREHASH_ObjectData, _PREHASH_ObjectID, object_id);
 
 	bool exists = (mObjectDetails.count(object_id) != 0);
-	AObjectDetails* details = &mObjectDetails[object_id];
+	ObjectDetails *details = &mObjectDetails[object_id];
 	if (!exists || details->name == request_string)
 	{
 		// We cache unknown objects (to avoid having to request them later)
@@ -296,4 +338,165 @@ void FSAreaSearch::processObjectPropertiesFamily(LLMessageSystem* msg)
 		gCacheName->get(details->group_id, true, boost::bind(
 							&FSAreaSearch::callbackLoadOwnerName, this, _1, _2));
 	}
+}
+
+// static
+bool FSAreaSearch::enableSelection(LLScrollListCtrl *ctrl, const LLSD &userdata)
+{
+	//
+	//	WABBIT TODO: change the menu item's label to match the
+	//	             object's touch name when one is defined
+	//
+ 	LLScrollListItem *item = ctrl->getFirstSelected();
+	if (!item) {
+		return FALSE;
+	}
+
+	LLViewerObject *object = gObjectList.findObject(item->getUUID());
+	if (!object) {
+		return false;
+	}
+
+	std::string parameter = userdata.asString();
+
+	if (parameter == "touch") {
+		return object->flagHandleTouch();
+	}
+	else if (parameter == "return") {
+		return enable_object_return();
+	}
+	else if (parameter == "take") {
+		//
+		//	WABBIT TODO: this doesn't work
+		//
+		return visible_take_object();
+	}
+	else if (parameter == "takecopy") {
+		return enable_object_take_copy();
+	}
+	else if (parameter == "buy") {
+		//
+		//	WABBIT TODO: this doesn't work
+		//
+		return enable_buy_object();
+	}
+	else if (parameter == "pay") {
+		return enable_pay_object();
+	}
+	else if (parameter == "delete") {
+		return enable_object_delete();
+	}
+
+	return true;
+}
+
+// static
+bool FSAreaSearch::handleSelection(LLScrollListCtrl *ctrl, const LLSD &userdata)
+{
+ 	LLScrollListItem *item = ctrl->getFirstSelected();
+	if (!item) {
+		return false;
+	}
+
+	LLViewerObject *object = gObjectList.findObject(item->getValue().asUUID());
+	if (!object) {
+		return false;
+	}
+
+	std::string parameter = userdata.asString();
+
+	if (parameter == "touch") {
+		handle_object_touch();
+	}
+	else if (parameter == "teleport") {
+		gAgent.teleportViaLocation(object->getPositionGlobal());
+	}
+	else if (parameter == "zoomin") {
+		handle_zoom_to_object(item->getUUID());
+	}
+	else if (parameter == "track") {
+		FSAreaSearch *floater = dynamic_cast<FSAreaSearch*>(gFloaterView->getParentFloater(ctrl));
+
+		if (floater) {
+			LLTracker::trackLocation(
+				object->getPositionGlobal(),
+				floater->getObjectName(item->getUUID()),
+				"",
+				LLTracker::LOCATION_ITEM
+			);
+		}
+	}
+	else if (parameter == "inspect") {
+		handle_object_inspect();
+	}
+	else if (parameter == "report") {
+		LLFloaterReporter::showFromObject(item->getValue().asUUID());
+	}
+	else if (parameter == "block") {
+		FSAreaSearch *floater = dynamic_cast<FSAreaSearch*>(gFloaterView->getParentFloater(ctrl));
+		LLMute mute(item->getValue().asUUID(), floater->getObjectName(item->getValue().asUUID()), LLMute::OBJECT);
+
+		if (LLMuteList::getInstance()->isMuted(mute.mID)) {
+			LLMuteList::getInstance()->remove(mute);
+		}
+		else {
+			LLMuteList::getInstance()->add(mute);
+			LLPanelBlockedList::showPanelAndSelect(mute.mID);
+		}
+	}
+	else if (parameter == "return") {
+		handle_object_return();
+	}
+	else if (parameter == "take") {
+		handle_take();
+	}
+	else if (parameter == "takecopy") {
+		handle_take_copy();
+	}
+	else if (parameter == "buy") {
+		handle_buy();
+	}
+	else if (parameter == "pay") {
+		handle_give_money_dialog();
+	}
+	else if (parameter == "delete") {
+		handle_object_delete();
+	}
+	else {
+		llwarns << "Unrecognised parameter (" << parameter << ")" << llendl;
+		return false;
+	}
+
+	return true;
+}
+
+FSAreaSearch::ContextMenu::ContextMenu() :
+	mParent(NULL)
+{
+}
+
+void FSAreaSearch::ContextMenu::show(LLView *view, const uuid_vec_t &uuids, S32 x, S32 y)
+{
+	mParent = dynamic_cast<LLScrollListCtrl*>(view);
+	LLListContextMenu::show(view, uuids, x, y);
+	mParent = NULL;
+}
+
+LLContextMenu *FSAreaSearch::ContextMenu::createMenu()
+{
+	LLUICtrl::CommitCallbackRegistry::ScopedRegistrar commit_registrar;
+
+	commit_registrar.add(
+		"AreaSearch.Action",
+		boost::bind(&FSAreaSearch::handleSelection, mParent, _2)
+	);
+
+	LLUICtrl::EnableCallbackRegistry::ScopedRegistrar enable_registrar;
+
+	enable_registrar.add(
+		"AreaSearch.Enable",
+		boost::bind(&FSAreaSearch::enableSelection, mParent, _2)
+	);
+
+	return createFromFile("menu_area_search.xml");
 }

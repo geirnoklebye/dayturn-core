@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<context_menu
+    layout="topleft"
+    name="area_search_context_menu">
+    <menu_item_call
+        name="touch"
+        label="Touch"
+        enabled="false">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="touch" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="touch" />
+    </menu_item_call>
+    <menu_item_call
+        name="teleport"
+        label="Teleport To Object">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="teleport" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="teleport" />
+    </menu_item_call>
+    <menu_item_call
+        name="inspect"
+        label="Object Inspector">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="inspect" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="inspect" />
+    </menu_item_call>
+    <menu_item_call
+        name="zoomin"
+        label="Zoom In"
+        enabled="false">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="zoomin" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="zoomin" />
+    </menu_item_call>
+    <menu_item_call
+        name="track"
+        label="Show Tracking Beacon">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="track" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="track" />
+    </menu_item_call>
+    <menu_item_separator />
+    <menu_item_call
+        name="report"
+        label="Report Abuse"
+        enabled="false">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="report" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="report" />
+    </menu_item_call>
+    <menu_item_call
+        name="block"
+        label="Block / Unblock"
+        enabled="false">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="block" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="block" />
+    </menu_item_call>
+    <menu_item_call
+        name="return"
+        label="Return"
+        enabled="false">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="return" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="return" />
+    </menu_item_call>
+<!--
+    <menu_item_call
+        name="take"
+        label="Take (BROKEN ENABLER)"
+        enabled="false">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="take" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="take" />
+    </menu_item_call>
+-->
+    <menu_item_call
+        name="takecopy"
+        label="Take Copy"
+        enabled="false">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="takecopy" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="takecopy" />
+    </menu_item_call>
+    <menu_item_call
+        name="pay"
+        label="Pay (UNTESTED)"
+        enabled="false">
+        <menu_item_call.on_click
+            function="PayObject" />
+        <menu_item_call.on_enable
+            function="EnablePayObject" />
+    </menu_item_call>
+<!--
+    <menu_item_call
+        name="buy"
+        label="Buy (BROKEN ENABLER)"
+        enabled="false">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="buy" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="buy" />
+    </menu_item_call>
+-->
+    <menu_item_separator />
+    <menu_item_call
+        name="Delete"
+        label="Delete"
+        enabled="false">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="delete" />
+        <menu_item_call.on_enable
+            function="AreaSearch.Enable"
+            parameter="delete" />
+    </menu_item_call>
+</context_menu>
