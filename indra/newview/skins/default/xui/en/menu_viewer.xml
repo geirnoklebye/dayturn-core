@@ -453,6 +453,17 @@
              function="Floater.Toggle"
              parameter="search" />
         </menu_item_check>
+        <menu_item_check
+        label="Area Search"
+        name="area_search"
+        shortcut="alt|A">
+            <menu_item_check.on_check
+             function="Floater.Visible"
+             parameter="area_search" />
+            <menu_item_check.on_click
+             function="Floater.Toggle"
+             parameter="area_search" />
+        </menu_item_check>
         <menu_item_separator/>
         <menu_item_call
          label="Teleport home"
