@@ -218,8 +218,9 @@ static void request(
 	LLCurl::ResponderPtr responder,
 	const F32 timeout = HTTP_REQUEST_EXPIRY_SECS,
 	const LLSD& headers = LLSD(),
-	bool follow_redirects = true
-    )
+	bool follow_redirects = true,
+	const time_t &if_modified_since = 0
+	)
 {
 	if (!LLHTTPClient::hasPump())
 	{
@@ -369,16 +370,15 @@ void LLHTTPClient::get(const std::string& url, ResponderPtr responder, const LLS
 }
 void LLHTTPClient::getHeaderOnly(const std::string& url, ResponderPtr responder, const LLSD& headers,
 								 const F32 timeout, bool follow_redirects /* = true */)
+{
+	request(url, LLURLRequest::HTTP_HEAD, NULL, responder, timeout, headers, follow_redirects);
+}
 // <AW: opensim>
 void LLHTTPClient::getIfModified(const std::string& url, ResponderPtr responder, const time_t &if_modified_since, const LLSD& headers, const F32 timeout)
 {
 	request(url, LLURLRequest::HTTP_GET, NULL, responder, timeout, headers,  if_modified_since);
 }
 // </AW: opensim>
-
-{
-	request(url, LLURLRequest::HTTP_HEAD, NULL, responder, timeout, headers, follow_redirects);
-}
 void LLHTTPClient::getHeaderOnly(const std::string& url, ResponderPtr responder, const F32 timeout,
 								 bool follow_redirects /* = true */)
 {

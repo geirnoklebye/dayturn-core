@@ -2655,6 +2655,7 @@ bool LLAppViewer::initConfiguration()
 		if(start_slurl.getType() == LLSLURL::LOCATION) 
 		{  
 			LLGridManager::getInstance()->setGridChoice(start_slurl.getGrid());
+		}
     }
 
 	//RN: if we received a URL, hand it off to the existing instance.

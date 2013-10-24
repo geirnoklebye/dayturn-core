@@ -72,6 +72,8 @@ public:
 					const F32 timeout=HTTP_REQUEST_EXPIRY_SECS, bool follow_redirects = true);
 	static void get(const std::string& url, const LLSD& query, ResponderPtr, const LLSD& headers = LLSD(),
 					const F32 timeout=HTTP_REQUEST_EXPIRY_SECS, bool follow_redirects = true);
+	static void getIfModified(const std::string& url, ResponderPtr, const time_t &if_modified_since,
+					const LLSD& headers = LLSD(), const F32 timeout=HTTP_REQUEST_EXPIRY_SECS);
 
 	static void put(
 		const std::string& url,
