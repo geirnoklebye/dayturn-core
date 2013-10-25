@@ -331,14 +331,14 @@ void callMouseExit()
 
 void callWindowFocus()
 {
-   if ( gWindowImplementation && gWindowImplementation->getCallbacks() )
-	{
-		gWindowImplementation->getCallbacks()->handleFocus (gWindowImplementation);
-	}
-	else
-	{
-		LL_WARNS("COCOA") << "Window Implementation or callbacks not yet initialized." << LL_ENDL;
-	}
+    if ( gWindowImplementation && gWindowImplementation->getCallbacks() )
+    {
+        gWindowImplementation->getCallbacks()->handleFocus (gWindowImplementation);
+    }
+    else
+    {
+        LL_WARNS("COCOA") << "Window Implementation or callbacks not yet initialized." << LL_ENDL;
+    }
 
 
 }
