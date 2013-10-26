@@ -7775,6 +7775,18 @@ class LLToolsSelectOnlyMovableObjects : public view_listener_t
 	}
 };
 
+class LLToolsSelectOnlyCopyableObjects : public view_listener_t
+{
+	bool handleEvent(const LLSD &userdata)
+	{
+		BOOL cur_val = gSavedSettings.getBOOL("SelectCopyableOnly");
+
+		gSavedSettings.setBOOL("SelectCopyableOnly", !cur_val);
+
+		return true;
+	}
+};
+
 class LLToolsSelectBySurrounding : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -8867,6 +8879,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLToolsSelectTool(), "Tools.SelectTool");
 	view_listener_t::addMenu(new LLToolsSelectOnlyMyObjects(), "Tools.SelectOnlyMyObjects");
 	view_listener_t::addMenu(new LLToolsSelectOnlyMovableObjects(), "Tools.SelectOnlyMovableObjects");
+	view_listener_t::addMenu(new LLToolsSelectOnlyCopyableObjects(), "Tools.SelectOnlyCopyableObjects");
 	view_listener_t::addMenu(new LLToolsSelectBySurrounding(), "Tools.SelectBySurrounding");
 	view_listener_t::addMenu(new LLToolsShowHiddenSelection(), "Tools.ShowHiddenSelection");
 	view_listener_t::addMenu(new LLToolsShowSelectionLightRadius(), "Tools.ShowSelectionLightRadius");
