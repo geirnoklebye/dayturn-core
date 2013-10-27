@@ -102,6 +102,7 @@ LLToolBar::Params::Params()
 	side("side", SIDE_TOP),
 	button_icon("button_icon"),
 	button_icon_and_text("button_icon_and_text"),
+	button_text_only("button_text_only"),
 	read_only("read_only", false),
 	wrap("wrap", true),
 	pad_left("pad_left"),
@@ -110,13 +111,9 @@ LLToolBar::Params::Params()
 	pad_bottom("pad_bottom"),
 	pad_between("pad_between"),
 	min_girth("min_girth"),
-	// <FS:Zi> Add our button (text-only) and layout style parameters, as well as alignment settings
-	// button_panel("button_panel")
 	button_panel("button_panel"),
-	button("button"),
 	layout_style("layout_style",LLToolBarEnums::LAYOUT_STYLE_NONE),
 	alignment("alignment",LLToolBarEnums::ALIGN_CENTER)
-	// </FS:Zi>
 {}
 
 LLToolBar::LLToolBar(const LLToolBar::Params& p)
@@ -154,7 +151,7 @@ LLToolBar::LLToolBar(const LLToolBar::Params& p)
 {
 	mButtonParams[LLToolBarEnums::BTNTYPE_ICONS_WITH_TEXT] = p.button_icon_and_text;
 	mButtonParams[LLToolBarEnums::BTNTYPE_ICONS_ONLY] = p.button_icon;
-	mButtonParams[LLToolBarEnums::BTNTYPE_TEXT_ONLY] = p.button;		// <FS:Zi> Add text only button
+	mButtonParams[LLToolBarEnums::BTNTYPE_TEXT_ONLY] = p.button_text_only;
 }
 
 LLToolBar::~LLToolBar()
