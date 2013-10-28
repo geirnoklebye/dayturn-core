@@ -61,8 +61,7 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 	std::string test_url(url);
 	//llinfos << "Starting internet stream: " << test_url << llendl;
 	// note: it's okay if mURL is empty here
-	if (mURL != test_url)
-	{
+	if (mURL != test_url || isPlaying() == 1) {
 		// stop any previous stream that was playing
 		// this happens on parcel crossings, usually
 		stop();
@@ -72,14 +71,6 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 			mMediaPlugin->reset();
 			mMediaPlugin = initializeMedia("audio/mpeg");
 		}
-	}
-	else if (isPlaying() == 1) {
-		//
-		//	we are already playing the requested stream
-		//	(nothing further to do here)
-		//
-		llinfos << "Already playing requested stream: " << test_url << llendl;
-		return;
 	}
 	mURL = test_url;
 
