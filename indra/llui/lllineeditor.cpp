@@ -2032,8 +2032,7 @@ void LLLineEditor::draw()
 		//draw label if no text is provided
 		//but we should draw it in a different color
 		//to give indication that it is not text you typed in
-		if (0 == mText.length() && mReadOnly)
-		{
+		if (0 == mText.length()) {
 			mGLFont->render(mLabel.getWString(), 0,
 							mTextLeftEdge, (F32)text_bottom,
 							label_color,
