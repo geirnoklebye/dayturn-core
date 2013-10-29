@@ -15,6 +15,11 @@
 [[VIEWER_RELEASE_NOTES_URL] [ReleaseNotes]]
 
 </floater.string>
+  <floater.string name="SupportGroup">
+[APP_NAME] support group on [GRID_NAME]: [SUPPORT_GROUP_SLURL]
+
+</floater.string>
+
   <floater.string
      name="AboutCompiler">
 Built with [COMPILER] version [COMPILER_VERSION]

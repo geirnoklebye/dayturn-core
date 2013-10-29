@@ -41,6 +41,7 @@
 #include "lluictrlfactory.h"
 #include "llviewertexteditor.h"
 #include "llviewercontrol.h"
+#include "llviewernetwork.h"
 #include "llviewerstats.h"
 #include "llviewerregion.h"
 #include "llversioninfo.h"
@@ -426,8 +427,19 @@ void LLFloaterAbout::setSupportText(const std::string& server_release_notes_url)
 
 	// Now build the various pieces
 	support << getString("AboutHeader", args);
-	if (info.has("REGION"))
-	{
+
+	if (info.has("REGION")) {
+		std::string grid = LLGridManager::getInstance()->getGridLabel();
+		LLStringUtil::replaceChar(grid, ' ', '_');
+
+		std::string group = gSavedSettings.getString("SupportGroupSLURL_" + grid);
+
+		if (!group.empty()) {
+			args["SUPPORT_GROUP_SLURL"] = group;
+			args["GRID_NAME"] = LLGridManager::getInstance()->getGridLabel();
+			support << "\n\n" << getString("SupportGroup", args);
+		}
+
 		support << "\n\n" << getString("AboutPosition", args);
 	}
 	support << "\n\n" << getString("AboutSystem", args);
