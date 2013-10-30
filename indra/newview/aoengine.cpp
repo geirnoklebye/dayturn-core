@@ -797,8 +797,8 @@ void AOEngine::purgeFolder(const LLUUID& uuid) const
 	// purge it
 
 /** Kokua SSA Merge */
-//	gInventory.purgeObject(uuid);
-//	gInventory.notifyObservers();
+	gInventory.onDescendentsPurgedFromServer(uuid);
+	gInventory.notifyObservers();
 
 	// protect it
 	gSavedPerAccountSettings.setBOOL("ProtectAOFolders",wasProtected);
