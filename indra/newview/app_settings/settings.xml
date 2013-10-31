@@ -9847,6 +9847,17 @@
       <key>Value</key>
       <real>1.0</real>
     </map>
+    <key>RenderGeometryOverloadProtection</key>
+    <map>
+      <key>Comment</key>
+      <string>Brings RenderAutoHideSurfaceAreaLimit and RenderAutoMuteSurfaceAreaLimit into force, protecting against overloads due to excessive proximal geometry</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
   <key>RenderDeferredDisplayGamma</key>
   <map>
     <key>Comment</key>
@@ -10509,13 +10520,13 @@
   <key>RenderAutoMuteSurfaceAreaLimit</key>
   <map>
     <key>Comment</key>
-    <string>Maximum surface area of attachments before an avatar is rendered as a simple impostor (0 to not use this limit).</string>
+    <string>(If RenderGeometryOverloadProtection is true) Maximum surface area of attachments before an avatar is rendered as a simple impostor (0 to not use this limit).</string>
     <key>Persist</key>
     <integer>1</integer>
     <key>Type</key>
     <string>F32</string>
     <key>Value</key>
-    <integer>0</integer>
+    <integer>2500</integer>
   </map>
   <key>RenderAutoMuteFunctions</key>
   <map>
@@ -10542,13 +10553,13 @@
   <key>RenderAutoHideSurfaceAreaLimit</key>
   <map>
     <key>Comment</key>
-    <string>Maximum surface area of a set of proximal objects inworld before automatically hiding geometry to prevent system overload.</string>
+    <string>(If RenderGeometryOverloadProtection is true) Maximum surface area of a set of proximal objects inworld before automatically hiding geometry to prevent system overload.</string>
     <key>Persist</key>
     <integer>1</integer>
     <key>Type</key>
     <string>F32</string>
     <key>Value</key>
-    <integer>120</integer>
+    <integer>130</integer>
   </map>
 
     <key>RenderVBOEnable</key>

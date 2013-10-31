@@ -204,6 +204,7 @@ BOOL LLPipeline::CameraOffset;
 F32 LLPipeline::CameraMaxCoF;
 F32 LLPipeline::CameraDoFResScale;
 F32 LLPipeline::RenderAutoHideSurfaceAreaLimit;
+BOOL LLPipeline::RenderGeometryOverloadProtection;
 
 const F32 BACKLIGHT_DAY_MAGNITUDE_AVATAR = 0.2f;
 const F32 BACKLIGHT_NIGHT_MAGNITUDE_AVATAR = 0.1f;
@@ -670,6 +671,9 @@ void LLPipeline::init()
 	connectRefreshCachedSettingsSafe("CameraDoFResScale");
 	connectRefreshCachedSettingsSafe("RenderAutoHideSurfaceAreaLimit");
 	gSavedSettings.getControl("RenderAutoHideSurfaceAreaLimit")->getCommitSignal()->connect(boost::bind(&LLPipeline::refreshCachedSettings));
+
+	connectRefreshCachedSettingsSafe("RenderGeometryOverloadProtection");
+	gSavedSettings.getControl("RenderGeometryOverloadProtection")->getCommitSignal()->connect(boost::bind(&LLPipeline::refreshCachedSettings));
 }
 
 LLPipeline::~LLPipeline()
@@ -1188,6 +1192,7 @@ void LLPipeline::refreshCachedSettings()
 	CameraMaxCoF = gSavedSettings.getF32("CameraMaxCoF");
 	CameraDoFResScale = gSavedSettings.getF32("CameraDoFResScale");
 	RenderAutoHideSurfaceAreaLimit = gSavedSettings.getF32("RenderAutoHideSurfaceAreaLimit");
+	RenderGeometryOverloadProtection = gSavedSettings.getBOOL("RenderGeometryOverloadProtection");
 	
 	updateRenderDeferred();
 }
@@ -3843,7 +3848,8 @@ void LLPipeline::postSort(LLCamera& camera)
 		LLSpatialGroup* group = *i;
 		if ((sUseOcclusion && 
 			group->isOcclusionState(LLSpatialGroup::OCCLUDED)) ||
-			(RenderAutoHideSurfaceAreaLimit > 0.f && 
+			(RenderGeometryOverloadProtection &&
+			RenderAutoHideSurfaceAreaLimit > 0.f && 
 			group->mSurfaceArea > RenderAutoHideSurfaceAreaLimit*llmax(group->mObjectBoxSize, 10.f)))
 		{
 			continue;
