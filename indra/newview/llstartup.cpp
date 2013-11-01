@@ -2138,7 +2138,7 @@ bool idle_startup()
 	{
 		display_startup();
 		F32 timeout_frac = timeout.getElapsedTimeF32()/PRECACHING_DELAY;
-		
+
 		// We now have an inventory skeleton, so if this is a user's first
 		// login, we can start setting up their clothing and avatar 
 		// appearance.  This helps to avoid the generic "Ruth" avatar in
@@ -2200,11 +2200,11 @@ bool idle_startup()
 		const F32 wearables_time = wearables_timer.getElapsedTimeF32();
 		static LLCachedControl<F32> max_wearables_time(gSavedSettings, "ClothingLoadingDelay");
 
-		if (!gAgent.isOutfitChosen() && isAgentAvatarValid())
+		if (!gAgent.isGenderChosen() && isAgentAvatarValid())
 		{
-			// No point in waiting for clothing, we don't even know
-			// what outfit we want.  Pop up a gender chooser dialog to
-			// ask and proceed to draw the world. JC
+			// No point in waiting for clothing, we don't even
+			// know what gender we are.  Pop a dialog to ask and
+			// proceed to draw the world. JC
 			//
 			// *NOTE: We might hit this case even if we have an
 			// initial outfit, but if the load hasn't started
@@ -2494,6 +2494,8 @@ void register_viewer_callbacks(LLMessageSystem* msg)
 	msg->setHandlerFuncFast(_PREHASH_RemoveNameValuePair,	process_remove_name_value);
 	msg->setHandlerFuncFast(_PREHASH_AvatarAnimation,		process_avatar_animation);
 	msg->setHandlerFuncFast(_PREHASH_AvatarAppearance,		process_avatar_appearance);
+	msg->setHandlerFunc("AgentCachedTextureResponse",	LLAgent::processAgentCachedTextureResponse);
+	msg->setHandlerFunc("RebakeAvatarTextures", LLVOAvatarSelf::processRebakeAvatarTextures);
 	msg->setHandlerFuncFast(_PREHASH_CameraConstraint,		process_camera_constraint);
 	msg->setHandlerFuncFast(_PREHASH_AvatarSitResponse,		process_avatar_sit_response);
 	msg->setHandlerFunc("SetFollowCamProperties",			process_set_follow_cam_properties);
@@ -2566,6 +2568,9 @@ void register_viewer_callbacks(LLMessageSystem* msg)
 	// ratings deprecated
 	// msg->setHandlerFuncFast(_PREHASH_ReputationIndividualReply,
 	//					LLFloaterRate::processReputationIndividualReply);
+
+	msg->setHandlerFuncFast(_PREHASH_AgentWearablesUpdate,
+						LLAgentWearables::processAgentInitialWearablesUpdate );
 
 	msg->setHandlerFunc("ScriptControlChange",
 						LLAgent::processScriptControlChange );
@@ -3509,11 +3514,7 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 		flag = login_flags["gendered"].asString();
 		if(flag == "Y")
 		{
-			// We don't care about this flag anymore; now base whether
-			// outfit is chosen on COF contents, initial outfit
-			// requested and available, etc.
-
-			//gAgent.setGenderChosen(TRUE);
+			gAgent.setGenderChosen(TRUE);
 		}
 		
 		bool pacific_daylight_time = false;
