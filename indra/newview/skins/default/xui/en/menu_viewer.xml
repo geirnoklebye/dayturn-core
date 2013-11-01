@@ -1396,6 +1396,13 @@
           function="Floater.Toggle"
           parameter="sound_explorer" />
       </menu_item_check>
+       <menu_item_call
+        label="Animation Explorer"
+        name="Animation Explorer">
+        <menu_item_call.on_click
+          function="Floater.Toggle"
+          parameter="animation_explorer" />
+      </menu_item_call>	  
       <menu_item_call
        label="Sound ([COST])..."
        layout="topleft"
