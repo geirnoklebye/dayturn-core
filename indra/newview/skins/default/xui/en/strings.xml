@@ -4341,6 +4341,13 @@ Previous simulator: [OLDVERSION]</string>
 [AGENT] ms Agent
 [IMAGES] ms Images
 [SCRIPT] ms Script
-[SPARE] ms Spare</string>
+[SPARE] ms Spare
+
+<!-- Animation Explorer -->
+  <string name="animation_explorer_seconds_ago">[SECONDS] seconds ago</string>
+  <string name="animation_explorer_still_playing">Still playing</string>
+
+</string>
+
 
 </strings>

@@ -111,6 +111,7 @@ include_directories(SYSTEM
 
 set(viewer_SOURCE_FILES
     RRInterface.cpp
+    animationexplorer.cpp
     ao.cpp
     aoengine.cpp
     aoset.cpp
@@ -763,6 +764,7 @@ set(viewer_HEADER_FILES
     ViewerInstall.cmake
     RRInterface.h
     RRInterfaceHelper.h
+    animationexplorer.h	
     ao.h
     aoengine.h
     aoset.h

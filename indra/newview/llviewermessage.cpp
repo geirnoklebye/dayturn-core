@@ -136,6 +136,8 @@
 
 #include "fsareasearch.h"
 
+#include "animationexplorer.h"		// <FS:Zi> Animation Explorer
+
 extern void on_new_message(const LLSD& msg);
 
 //
@@ -4749,6 +4751,12 @@ void process_avatar_animation(LLMessageSystem *mesgsys, void **user_data)
 					if (!anim_found)
 					{
 						avatarp->mAnimationSources.insert(LLVOAvatar::AnimationSourceMap::value_type(object_id, animation_id));
+						// <FS:Zi> Animation Explorer
+						if(avatarp==gAgentAvatarp)
+						{
+							RecentAnimationList::instance().addAnimation(animation_id,object_id);
+						}
+						// </FS:Zi>
 					}
 				}
 			}
@@ -5806,6 +5814,12 @@ static void process_special_alert_messages(const std::string & message)
 		snap_filename += gDirUtilp->getDirDelimiter();
 		snap_filename += SCREEN_HOME_FILENAME;
 		gViewerWindow->saveSnapshot(snap_filename, gViewerWindow->getWindowWidthRaw(), gViewerWindow->getWindowHeightRaw(), FALSE, FALSE);
+	}
+
+	AnimationExplorer* explorer=LLFloaterReg::findTypedInstance<AnimationExplorer>("animation_explorer");
+	if(explorer)
+	{
+		explorer->requestNameCallback(msg);
 	}
 }
 

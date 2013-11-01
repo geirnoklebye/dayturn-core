@@ -31,6 +31,7 @@
 #include "llviewerfloaterreg.h"
 
 #include "llcommandhandler.h"
+#include "animationexplorer.h"
 #include "ao.h"				// ## Zi: Animation Overrider
 #include "daeexport.h"
 #include "floaterhop.h"
@@ -402,6 +403,7 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("world_map", "floater_world_map.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterWorldMap>);	
 
 	// *NOTE: Please keep these alphabetized for easier merges
+	LLFloaterReg::add("animation_explorer", "floater_animation_explorer.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<AnimationExplorer>);	
 	LLFloaterReg::add("animation_overrider", "floater_ao.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FloaterAO>);	// ## Zi: Animation Overrider	
     LLFloaterReg::add("fs_export", "floater_fs_export.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterObjectExport>);
 	LLFloaterReg::add("fs_import", "floater_fs_import.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterImport>);
