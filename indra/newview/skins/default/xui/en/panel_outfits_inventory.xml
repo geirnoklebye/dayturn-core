@@ -82,7 +82,7 @@
                        follows="bottom|left|right"
                        layout="bottomleft"
                        height="23"
-                       width="99"
+                       width="80"
                        left="0"			
                        mouse_opaque="false"
                        name="wear_btn_lp"
@@ -93,7 +93,7 @@
                                top="0"
                                left="1"
                                height="23"
-                               width="98"
+                               width="78"
                                name="wear_btn"
                                label="Wear" />
                    </layout_panel>
@@ -101,8 +101,8 @@
                        follows="bottom|left|right"
                        layout="bottomleft"
                        height="23"
-                       width="99"
-                       left_pad="3"			
+                       width="80"
+                       left_pad="-1"
                        mouse_opaque="false"
                        name="save_btn_lp"
                        auto_resize="true">
@@ -110,9 +110,9 @@
                                follows="bottom|left|right"
                                layout="topleft"
                                top="0"
-                               left="1"
+                               left="0"
                                height="23"
-                               width="98"
+                               width="78"
                                name="save_btn"
                                label="Save" />
                    </layout_panel>
@@ -120,8 +120,8 @@
                        follows="bottom|left|right"
                        layout="bottomleft"
                        height="23"
-                       width="99"
-                       left_pad="3"			
+                       width="93"
+                       left_pad="-1"			
                        mouse_opaque="false"
                        name="save_as_btn_lp"
                        auto_resize="true">
@@ -129,11 +129,11 @@
                                follows="bottom|left|right"
                                layout="topleft"
                                top="0"
-                               left="1"
+                               left="0"
                                height="23"
-                               width="98"
+                               width="91"
                                name="save_as_btn"
-                               label="Save As New Outfit" />
+                               label="SaveAs New Outfit" />
                    </layout_panel>
            </layout_stack>
    </panel>
