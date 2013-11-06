@@ -279,6 +279,7 @@ bool callback_pick_debug_search(const LLSD& notification, const LLSD& response)
 
 void handleNameTagOptionChanged(const LLSD& newvalue)
 {
+	LLAvatarNameCache::setUseUsernames(gSavedSettings.getBOOL("NameTagShowUsernames"));
 	LLVOAvatar::invalidateNameTags();
 }
 
