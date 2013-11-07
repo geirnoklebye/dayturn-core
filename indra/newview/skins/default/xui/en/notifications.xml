@@ -6889,10 +6889,10 @@ Offer a teleport?
   </notification>
   
     <notification
-   icon="notify.tga"
+   icon="notifytip.tga"
    name="FriendshipAcceptedByMe"
    log_to_im="true"   
-   type="notify">
+   type="notifytip">
     <tag>friendship</tag>
 Friendship offer accepted.
   </notification>
@@ -8869,11 +8869,11 @@ Not enough script resources available to attach object!
   </notification>
 
   <notification
-   icon="alertmodal.tga"
+   icon="notifytip.tga"
    name="YouDiedAndGotTPHome"
-   type="notify">
+   type="notifytip">
    <tag>fail</tag>
-You died and have been teleported to your home location
+You died and have been teleported to your home location.
   </notification>
 
   <notification
@@ -9959,19 +9959,19 @@ Your pass to this land is about to expire.
   </notification>
 
   <notification
-   icon="alertmodal.tga"
+   icon="notifytip.tga"
    name="CantSitNoSuitableSurface"
-   type="notify">
+   type="notifytip">
    <tag>fail</tag>
-There is no suitable surface to sit on, try another spot.
+There is no suitable surface to sit on.  Try another spot.
   </notification>
 
   <notification
-   icon="alertmodal.tga"
+   icon="notifytip.tga"
    name="CantSitNoRoom"
-   type="notify">
+   type="notifytip">
    <tag>fail</tag>
-No room to sit here, try another spot.
+No room to sit here.  Try another spot.
   </notification>
 
   <notification
@@ -10483,9 +10483,9 @@ Creating animation link for animation "[NAME]" failed!
   </notification>
 
   <notification
-    icon="notify.tga"
+    icon="notifytip.tga"
     name="NewPermissionsPending"
-    type="notify">
+    type="notifytip">
 	Your permission change request for [NAME] has been sent to [GRID_NAME] for processing.  This may take a few seconds to complete.
   </notification>
   
