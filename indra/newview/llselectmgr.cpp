@@ -96,6 +96,8 @@
 #include "llpanelface.h"
 #include "llglheaders.h"
 
+#include "fsareasearch.h"
+
 LLViewerObject* getSelectedParentObject(LLViewerObject *object) ;
 //
 // Consts
@@ -5143,7 +5145,11 @@ void LLSelectMgr::processObjectProperties(LLMessageSystem* msg, void** user_data
 
 		if (!node)
 		{
-			llwarns << "Couldn't find object " << id << " selected." << llendl;
+			FSAreaSearch *area_search_floater = LLFloaterReg::getTypedInstance<FSAreaSearch>("area_search");
+
+			if (!area_search_floater || !area_search_floater->isSearchActive()) {
+				llwarns << "Couldn't find object " << id << " selected." << llendl;
+			}
 		}
 		else
 		{

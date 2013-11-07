@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<toggleable_menu
+    name="area_search_options_menu"
+    layout="topleft"
+    visible="false">
+    <menu_item_check
+        name="todo"
+        label="Auto-Track Selections">
+        <on_click
+            function="AreaSearchOptions.Action"
+            parameter="track" />
+        <on_check
+            function="AreaSearchOptions.Check"
+            parameter="track" />
+    </menu_item_check>
+    <menu_item_separator />
+    <menu_item_call
+        name="stop_tracking"
+        label="Stop Tracking">
+        <on_click
+            function="AreaSearchOptions.Action"
+            parameter="stop_tracking" />
+        <on_enable
+            function="AreaSearchOptions.Enable"
+            parameter="stop_tracking" />
+    </menu_item_call>
+</toggleable_menu>
