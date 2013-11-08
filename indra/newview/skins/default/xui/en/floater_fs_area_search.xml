@@ -221,7 +221,6 @@
 
     <progress_bar
         name="status_progress"
-        tool_tip="Re-request details of all of the listed objects from the simulator"
         layout="topleft"
         follows="bottom|right"
         bottom="-8"
