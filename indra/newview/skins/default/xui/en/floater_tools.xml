@@ -366,8 +366,7 @@
   <button
      left="259"
      label=""
-     image_selected="ForwardArrow_Press"
-     image_unselected="ForwardArrow_Off"
+     image_overlay="ForwardArrow_Off"
      layout="topleft"
      follows="top|left"
      name="Options..."

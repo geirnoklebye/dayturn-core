@@ -13,7 +13,7 @@
  min_width="543"
  mouse_opaque="true"
  rect_control="FloaterAdvancedBuildOptionsRect"
- title="Advanced Build Options"
+ title="ADVANCED BUILD OPTIONS"
 >
      <text
      name="text_box7"
