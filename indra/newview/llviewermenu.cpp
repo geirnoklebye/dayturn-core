@@ -8248,18 +8248,20 @@ void handle_show_url(const LLSD& param)
 
 }
 
-void handle_show_group()
+void handle_report_bug(const LLSD& param)
 {
-	std::string grid = LLGridManager::getInstance()->getGridLabel();
-	LLStringUtil::replaceChar(grid, ' ', '_');
+	LLUIString url(param.asString());
+	
+	LLStringUtil::format_map_t replace;
+	replace["[ENVIRONMENT]"] = LLURI::escape(LLAppViewer::instance()->getViewerInfoString());
+	LLSLURL location_url;
+	LLAgentUI::buildSLURL(location_url);
+	replace["[LOCATION]"] = location_url.getSLURLString();
 
-	const std::string group = gSavedSettings.getString("SupportGroupSLURL_" + grid);
+	LLUIString file_bug_url = gSavedSettings.getString("ReportBugURL");
+	file_bug_url.setArgs(replace);
 
-	if (!group.empty()) {
-		LLUrlEntryGroup ueg;
-
-		LLGroupActions::show(LLUUID(ueg.getID(group).asString().c_str()));
-	}
+	LLWeb::loadURLExternal(file_bug_url.getString());
 }
 
 void handle_buy_currency_test(void*)
@@ -9140,6 +9142,7 @@ void initialize_menus()
 	commit.add("Advanced.WebContentTest", boost::bind(&handle_web_content_test, _2));	// this one opens the Web Content floater
 	commit.add("Advanced.ShowGroup", boost::bind(&handle_show_group));
 	commit.add("Advanced.ShowURL", boost::bind(&handle_show_url, _2));
+	commit.add("Advanced.ReportBug", boost::bind(&handle_report_bug, _2));
 	view_listener_t::addMenu(new LLAdvancedBuyCurrencyTest(), "Advanced.BuyCurrencyTest");
 	view_listener_t::addMenu(new LLAdvancedDumpSelectMgr(), "Advanced.DumpSelectMgr");
 	view_listener_t::addMenu(new LLAdvancedDumpInventory(), "Advanced.DumpInventory");
