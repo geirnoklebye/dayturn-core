@@ -692,7 +692,9 @@ void LLFloaterIMSessionTab::hideOrShowTitle()
 
 void LLFloaterIMSessionTab::updateSessionName(const std::string& name)
 {
-	mInputEditor->setLabel(LLTrans::getString("IM_to_label") + " " + name);
+	const bool is_group = (mSession && mSession->isGroupSessionType());
+
+	mInputEditor->setLabel(LLTrans::getString(is_group ? "IM_group_label" : "IM_to_label") + " " + name);
 }
 
 void LLFloaterIMSessionTab::hideAllStandardButtons()
