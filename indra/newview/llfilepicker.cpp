@@ -432,6 +432,19 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename)
 			L"PNG Images (*.png)\0*.png\0" \
 			L"\0";
 		break;
+	case FFSAVE_TGAPNG:
+		if (filename.empty())
+		{
+			wcsncpy( mFilesW,L"untitled.png", FILENAME_BUFFER_SIZE);	/*Flawfinder: ignore*/
+			//PNG by default
+		}
+		mOFN.lpstrDefExt = L"png";
+		mOFN.lpstrFilter =
+			L"PNG Images (*.png)\0*.png\0" \
+			L"Targa Images (*.tga)\0*.tga\0" \
+			L"\0";
+		break;
+		
 	case FFSAVE_JPEG:
 		if (filename.empty())
 		{
@@ -668,13 +681,16 @@ bool	LLFilePicker::doNavSaveDialog(ESaveFilter filter, const std::string& filena
 			creator = "TVOD";
 			extension = "wav";
 			break;
-		
 		case FFSAVE_TGA:
 			type = "TPIC";
 			creator = "prvw";
 			extension = "tga";
 			break;
-		
+		case FFSAVE_TGAPNG:
+			type = "PNG";
+			creator = "prvw";
+			extension = "png";
+			break;
 		case FFSAVE_BMP:
 			type = "BMPf";
 			creator = "prvw";
@@ -962,6 +978,18 @@ void LLFilePicker::chooser_responder(GtkWidget *widget, gint response, gpointer 
 	// FIRE-3827; Only do this if the user accepted the dialog with ok.
 	// FIRE-3851, FIRE-3671, CTS-627; gtk_file_chooser_get_current_folder can return 0
 	if( GTK_RESPONSE_ACCEPT == response )
+		std::string filter = gtk_file_filter_get_name(gfilter);
+
+		if(filter == LLTrans::getString("png_image_files"))
+		{
+			picker->mCurrentExtension = ".png";
+		}
+		else if(filter == LLTrans::getString("targa_image_files"))
+		{
+			picker->mCurrentExtension = ".tga";
+		}
+	}
+
 	{
 		// set the default path for this usage context.
 		//		picker->mContextToPathMap[picker->mCurContextName] =
@@ -1194,6 +1222,15 @@ BOOL LLFilePicker::getSaveFile( ESaveFilter filter, const std::string& filename)
 				(picker, "image/bmp", LLTrans::getString("bitmap_image_files") + " (*.bmp)");
 			suggest_ext = ".bmp";
 			break;
+		case FFSAVE_PNG:
+			caption += add_simple_mime_filter_to_gtkchooser
+				(picker, "image/png", LLTrans::getString("png_image_files") + " (*.png)");
+			suggest_ext = ".png";
+			break;
+		case FFSAVE_TGAPNG:
+			caption += add_save_texture_filter_to_gtkchooser(picker);
+			suggest_ext = ".png";
+			break;
 		case FFSAVE_AVI:
 			caption += add_simple_mime_filter_to_gtkchooser
 				(picker, "video/x-msvideo",
@@ -1252,9 +1289,17 @@ BOOL LLFilePicker::getSaveFile( ESaveFilter filter, const std::string& filename)
 		}
 
 		gtk_widget_show_all(GTK_WIDGET(picker));
+
 		gtk_main();
 
 		rtn = (getFileCount() == 1);
+
+		if(rtn && filter == FFSAVE_TGAPNG)
+		{
+			std::string selected_file = mFiles.back();
+			mFiles.pop_back();
+			mFiles.push_back(selected_file + mCurrentExtension);
+		}
 	}
 
 	gViewerWindow->getWindow()->afterDialog();

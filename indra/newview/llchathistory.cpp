@@ -64,6 +64,7 @@
 #include "llviewercontrol.h"
 #include "llviewerobjectlist.h"
 #include "llwindow.h"
+#include "llmutelist.h"
 
 #include "llaudioengine.h"
 #include "llvieweraudio.h"
@@ -197,6 +198,14 @@ public:
 		else if (level == "teleport")
 		{
 			LLAvatarActions::offerTeleport(getAvatarId());
+		}
+		else if (level == "voice_call")
+		{
+			LLAvatarActions::startCall(getAvatarId());
+		}
+		else if (level == "chat_history")
+		{
+			LLAvatarActions::viewChatHistory(getAvatarId());
 		}
 		else if (level == "add")
 		{
@@ -410,8 +419,10 @@ public:
 	BOOL postBuild()
 	{
 		LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
+		LLUICtrl::EnableCallbackRegistry::ScopedRegistrar registrar_enable;
 
 		registrar.add("AvatarIcon.Action", boost::bind(&LLChatHistoryHeader::onAvatarIconContextMenuItemClicked, this, _2));
+		registrar_enable.add("AvatarIcon.Check", boost::bind(&LLChatHistoryHeader::onAvatarIconContextMenuItemChecked, this, _2));
 		registrar.add("ObjectIcon.Action", boost::bind(&LLChatHistoryHeader::onObjectIconContextMenuItemClicked, this, _2));
 		registrar.add("AudioStreamIcon.Clipboard", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemClipboard, this, _2));
 		registrar.add("AudioStreamIcon.VisitWebsite", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemVisitWebsite, this, _2));
@@ -796,7 +807,9 @@ protected:
 			else {
 				menu->setItemVisible("start_stream", true);
 				menu->setItemEnabled("start_stream", false);
-			}
+				}
+				menu->setItemEnabled("Offer Teleport", LLAvatarActions::canOfferTeleport(mAvatarID));
+				menu->setItemEnabled("Voice Call", LLAvatarActions::canCall());
 
 			menu->setItemVisible("stop_stream", stream != NULL);
 			menu->setItemEnabled("stop_stream", stream != NULL);
@@ -805,6 +818,8 @@ protected:
 			menu->setItemEnabled("copy_stream_address", stream != NULL);
 			menu->setItemEnabled("visit_stream_website", stream && !stream->getCurrentStreamLocation().empty());
 
+			menu->setItemEnabled("Chat History", LLLogChat::isTranscriptExist(mAvatarID));
+			menu->setItemEnabled("Map", (LLAvatarTracker::instance().isBuddyOnline(mAvatarID) && is_agent_mappable(mAvatarID)) || gAgent.isGodlike() );
 			menu->buildDrawLabels();
 			menu->updateParent(LLMenuGL::sMenuContainer);
 			LLMenuGL::showPopup(this, menu, x, y);
@@ -1299,25 +1314,42 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 	// notify processing
 	if (chat.mNotifId.notNull())
 	{
-		LLNotificationPtr notification = LLNotificationsUtil::find(chat.mNotifId);
-		if (notification != NULL)
+		bool create_toast = true;
+		for (LLToastNotifyPanel::instance_iter ti(LLToastNotifyPanel::beginInstances())
+			, tend(LLToastNotifyPanel::endInstances()); ti != tend; ++ti)
 		{
-			LLIMToastNotifyPanel* notify_box = new LLIMToastNotifyPanel(
+			LLToastNotifyPanel& panel = *ti;
+			LLIMToastNotifyPanel * imtoastp = dynamic_cast<LLIMToastNotifyPanel *>(&panel);
+			const std::string& notification_name = panel.getNotificationName();
+			if (notification_name == "OfferFriendship" && panel.isControlPanelEnabled() && imtoastp)
+			{
+				create_toast = false;
+				break;
+			}
+		}
+
+		if (create_toast)
+		{
+			LLNotificationPtr notification = LLNotificationsUtil::find(chat.mNotifId);
+			if (notification != NULL)
+			{
+				LLIMToastNotifyPanel* notify_box = new LLIMToastNotifyPanel(
 					notification, chat.mSessionID, LLRect::null, !use_plain_text_chat_history, mEditor);
 
-			//Prepare the rect for the view
-			LLRect target_rect = mEditor->getDocumentView()->getRect();
-			// squeeze down the widget by subtracting padding off left and right
-			target_rect.mLeft += mLeftWidgetPad + mEditor->getHPad();
-			target_rect.mRight -= mRightWidgetPad;
-			notify_box->reshape(target_rect.getWidth(),	notify_box->getRect().getHeight());
-			notify_box->setOrigin(target_rect.mLeft, notify_box->getRect().mBottom);
+				//Prepare the rect for the view
+				LLRect target_rect = mEditor->getDocumentView()->getRect();
+				// squeeze down the widget by subtracting padding off left and right
+				target_rect.mLeft += mLeftWidgetPad + mEditor->getHPad();
+				target_rect.mRight -= mRightWidgetPad;
+				notify_box->reshape(target_rect.getWidth(),	notify_box->getRect().getHeight());
+				notify_box->setOrigin(target_rect.mLeft, notify_box->getRect().mBottom);
 
-			LLInlineViewSegment::Params params;
-			params.view = notify_box;
-			params.left_pad = mLeftWidgetPad;
-			params.right_pad = mRightWidgetPad;
-			mEditor->appendWidget(params, "\n", false);
+				LLInlineViewSegment::Params params;
+				params.view = notify_box;
+				params.left_pad = mLeftWidgetPad;
+				params.right_pad = mRightWidgetPad;
+				mEditor->appendWidget(params, "\n", false);
+			}
 		}
 	}
 
@@ -1347,7 +1379,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 		if (square_brackets)
 		{
 			message += "]";
-	}
+		}
 
 		mEditor->appendText(message, prependNewLineState, body_message_params);
 		prependNewLineState = false;
