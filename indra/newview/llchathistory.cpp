@@ -450,6 +450,38 @@ public:
 
 		return LLPanel::postBuild();
 	}
+	bool onAvatarIconContextMenuItemChecked(const LLSD& userdata)
+	{
+		std::string level = userdata.asString();
+
+		if (level == "is_blocked")
+		{
+			return LLMuteList::getInstance()->isMuted(getAvatarId(), LLMute::flagVoiceChat);
+		}
+		if (level == "is_muted")
+		{
+			return LLMuteList::getInstance()->isMuted(getAvatarId(), LLMute::flagTextChat);
+		}
+		return false;
+	}
+
+	void mute(const LLUUID& participant_id, U32 flags)
+	{
+		BOOL is_muted = LLMuteList::getInstance()->isMuted(participant_id, flags);
+		std::string name;
+		gCacheName->getFullName(participant_id, name);
+		LLMute mute(participant_id, name, LLMute::AGENT);
+
+		if (!is_muted)
+		{
+			LLMuteList::getInstance()->add(mute, flags);
+		}
+		else
+		{
+			LLMuteList::getInstance()->remove(mute, flags);
+		}
+	}
+
 
 	bool pointInChild(const std::string& name,S32 x,S32 y)
 	{
@@ -794,7 +826,7 @@ protected:
 		if (menu) {
 			LLStreamingAudioInterface *stream = NULL;
 
-			static LLCachedControl<bool> audio_streaming_music(gSavedSettings, "AudioStreamingMusic");
+			static LLCachedControl<bool> audio_streaming_music(gSavedSettings, "AudioStreamingMusic", true);
 
 			if (gAudiop && audio_streaming_music && LLViewerMedia::hasParcelAudio()) {
 				if (LLViewerMedia::isParcelAudioPlaying()) {

@@ -201,7 +201,7 @@ S32 LLDrawPoolBump::numBumpPasses()
 {
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//if (gSavedSettings.getBOOL("RenderObjectBump"))
-	static LLCachedControl<bool> renderObjectBump(gSavedSettings, "RenderObjectBump");
+	static LLCachedControl<bool> renderObjectBump(gSavedSettings, "RenderObjectBump",true);
 	if (renderObjectBump)
 	// </FS:Ansariel>
 	{

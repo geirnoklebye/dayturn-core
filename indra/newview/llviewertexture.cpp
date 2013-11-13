@@ -946,7 +946,7 @@ LLViewerFetchedTexture::LLViewerFetchedTexture(const LLUUID& id, FTType f_type, 
 		// <FS:Ansariel> According to Monty Linden in BUG-871, baked textures can be fetched via HTTP, too!
 		//               According to Cinder it works also on OpenSim.
 		//mCanUseHTTP = false;
-		static LLCachedControl<bool> useHttpBakedTextureFetch(gSavedSettings, "UseHTTPBakedTextureFetch");
+		static LLCachedControl<bool> useHttpBakedTextureFetch(gSavedSettings, "UseHTTPBakedTextureFetch", true);
 		mCanUseHTTP = useHttpBakedTextureFetch;
 		// </FS:Ansariel>
 	}
@@ -1209,8 +1209,8 @@ void LLViewerFetchedTexture::destroyTexture()
 		return ;
 	}
 	//               we reach the desired max texture memory!
-	static LLCachedControl<bool> fsDestroyGLTexturesImmediately(gSavedSettings, "FSDestroyGLTexturesImmediately");
-	static LLCachedControl<F32> fsDestroyGLTexturesThreshold(gSavedSettings, "FSDestroyGLTexturesThreshold");
+	static LLCachedControl<bool> fsDestroyGLTexturesImmediately(gSavedSettings, "FSDestroyGLTexturesImmediately", false);
+	static LLCachedControl<F32> fsDestroyGLTexturesThreshold(gSavedSettings, "FSDestroyGLTexturesThreshold", 0.9f);
 	if (!fsDestroyGLTexturesImmediately && LLImageGL::sGlobalTextureMemoryInBytes < sMaxDesiredTextureMemInBytes * fsDestroyGLTexturesThreshold)//not ready to release unused memory.
 	{
 		return ;

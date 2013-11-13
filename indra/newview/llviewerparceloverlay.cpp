@@ -423,7 +423,7 @@ void LLViewerParcelOverlay::updatePropertyLines()
 {
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//if (!gSavedSettings.getBOOL("ShowPropertyLines"))
-	static LLCachedControl<bool> showPropertyLines(gSavedSettings, "ShowPropertyLines");
+	static LLCachedControl<bool> showPropertyLines(gSavedSettings, "ShowPropertyLines", 0);
 	if (!showPropertyLines)
 	// </FS:Ansariel>
 		return;
@@ -862,7 +862,7 @@ S32 LLViewerParcelOverlay::renderPropertyLines	()
 {
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//if (!gSavedSettings.getBOOL("ShowPropertyLines"))
-	static LLCachedControl<bool> showPropertyLines(gSavedSettings, "ShowPropertyLines");
+	static LLCachedControl<bool> showPropertyLines(gSavedSettings, "ShowPropertyLines", 0);
 	if (!showPropertyLines)
 	// </FS:Ansariel>
 	{

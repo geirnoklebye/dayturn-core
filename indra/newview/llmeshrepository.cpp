@@ -580,9 +580,9 @@ void LLMeshRepoThread::run()
 	}
 
 	// <FS:Ansariel> Configurable request throttle
-	static LLCachedControl<U32> fsMaxMeshRequestsPerSecond(gSavedSettings, "FSMaxMeshRequestsPerSecond");
+	static LLCachedControl<U32> fsMaxMeshRequestsPerSecond(gSavedSettings, "FSMaxMeshRequestsPerSecond", 100);
 	// <FS:Ansariel> Mesh header/LOD retry functionality
-	static LLCachedControl<S32> fsMeshRequestTimeout(gSavedSettings, "FSMeshRequestTimeout");
+	static LLCachedControl<S32> fsMeshRequestTimeout(gSavedSettings, "FSMeshRequestTimeout", 60);
 
 	while (!LLApp::isQuitting())
 	{
@@ -2606,7 +2606,7 @@ void LLMeshRepository::notifyLoadedMeshes()
 
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//LLMeshRepoThread::sMaxConcurrentRequests = gSavedSettings.getU32("MeshMaxConcurrentRequests");
-	static LLCachedControl<U32> meshMaxConcurrentRequests(gSavedSettings, "MeshMaxConcurrentRequests");
+	static LLCachedControl<U32> meshMaxConcurrentRequests(gSavedSettings, "MeshMaxConcurrentRequests",32);
 	LLMeshRepoThread::sMaxConcurrentRequests = (U32)meshMaxConcurrentRequests;
 	// </FS:Ansariel>
 
@@ -3919,7 +3919,7 @@ bool LLMeshRepository::meshUploadEnabled()
 	LLViewerRegion *region = gAgent.getRegion();
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//if(gSavedSettings.getBOOL("MeshEnabled") &&
-	static LLCachedControl<bool> meshEnabled(gSavedSettings, "MeshEnabled");
+	static LLCachedControl<bool> meshEnabled(gSavedSettings, "MeshEnabled", 1);
 	if(meshEnabled &&
 	// </FS:Ansariel>
 	   region)
@@ -3934,7 +3934,7 @@ bool LLMeshRepository::meshRezEnabled()
 	LLViewerRegion *region = gAgent.getRegion();
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//if(gSavedSettings.getBOOL("MeshEnabled") && 
-	static LLCachedControl<bool> meshEnabled(gSavedSettings, "MeshEnabled");
+	static LLCachedControl<bool> meshEnabled(gSavedSettings, "MeshEnabled", 1);
 	if(meshEnabled &&
 	// </FS:Ansariel>
 	   region)

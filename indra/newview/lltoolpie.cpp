@@ -1325,7 +1325,7 @@ LLTool* LLToolPie::getOverrideTool(MASK mask)
 {
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//if (gSavedSettings.getBOOL("EnableGrab"))
-	static LLCachedControl<bool> enableGrab(gSavedSettings, "EnableGrab");
+	static LLCachedControl<bool> enableGrab(gSavedSettings, "EnableGrab", true);
 	if (enableGrab)
 	// </FS:Ansariel>
 	{

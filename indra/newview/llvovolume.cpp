@@ -3498,23 +3498,23 @@ F32 LLVOVolume::getBinRadius()
 	F32 radius;
 	
 	F32 scale = 1.f;
-
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//S32 size_factor = llmax(gSavedSettings.getS32("OctreeStaticObjectSizeFactor"), 1);
 	//S32 attachment_size_factor = llmax(gSavedSettings.getS32("OctreeAttachmentSizeFactor"), 1);
 	//LLVector3 distance_factor = gSavedSettings.getVector3("OctreeDistanceFactor");
 	//LLVector3 alpha_distance_factor = gSavedSettings.getVector3("OctreeAlphaDistanceFactor");
 
-	static LLCachedControl<S32> octreeStaticObjectSizeFactor(gSavedSettings, "OctreeStaticObjectSizeFactor");
-	static LLCachedControl<S32> octreeAttachmentSizeFactor(gSavedSettings, "OctreeAttachmentSizeFactor");
-	static LLCachedControl<LLVector3> octreeDistanceFactor(gSavedSettings, "OctreeDistanceFactor");
-	static LLCachedControl<LLVector3> octreeAlphaDistanceFactor(gSavedSettings, "OctreeAlphaDistanceFactor");
+	static LLCachedControl<S32> octreeStaticObjectSizeFactor(gSavedSettings, "OctreeStaticObjectSizeFactor", 3);
+	static LLCachedControl<S32> octreeAttachmentSizeFactor(gSavedSettings, "OctreeAttachmentSizeFactor", 4);
+	static LLCachedControl<LLVector3> octreeDistanceFactor(gSavedSettings, "OctreeDistanceFactor",LLVector3(0.01f, 0.0f, 0.0f));
+	static LLCachedControl<LLVector3> octreeAlphaDistanceFactor(gSavedSettings, "OctreeAlphaDistanceFactor",LLVector3(0.1f, 0.0f, 0.0f));
 
 	S32 size_factor = (S32)octreeStaticObjectSizeFactor;
 	S32 attachment_size_factor = (S32)octreeAttachmentSizeFactor;
 	LLVector3 distance_factor = (LLVector3)octreeDistanceFactor;
 	LLVector3 alpha_distance_factor = (LLVector3)octreeAlphaDistanceFactor;
 	// </FS:Ansariel>
+
 	const LLVector4a* ext = mDrawable->getSpatialExtents();
 	
 	BOOL shrink_wrap = mDrawable->isAnimating();

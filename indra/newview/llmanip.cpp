@@ -359,9 +359,9 @@ LLVector3 LLManip::getPivotPoint()
 	LLQuaternion rot;
 	static LLCachedControl<bool> sActualRoot(gSavedSettings, "BuildPrefs_ActualRoot", false);
 	static LLCachedControl<bool> sPivotPerc(gSavedSettings, "BuildPrefs_PivotIsPercent", false);
-	static LLCachedControl<F32> sPivotX(gSavedSettings, "BuildPrefs_PivotX");
-	static LLCachedControl<F32> sPivotY(gSavedSettings, "BuildPrefs_PivotY");
-	static LLCachedControl<F32> sPivotZ(gSavedSettings, "BuildPrefs_PivotZ");
+	static LLCachedControl<F32> sPivotX(gSavedSettings, "BuildPrefs_PivotX", 50.0f);
+	static LLCachedControl<F32> sPivotY(gSavedSettings, "BuildPrefs_PivotY", 50.0f);
+	static LLCachedControl<F32> sPivotZ(gSavedSettings, "BuildPrefs_PivotZ", 50.0f);
 	
 	const BOOL children_ok = TRUE;
 	if (mObjectSelection->getFirstRootObject(children_ok) && (mObjectSelection->getObjectCount() == 1 || sActualRoot) && mObjectSelection->getSelectType() != SELECT_TYPE_HUD)

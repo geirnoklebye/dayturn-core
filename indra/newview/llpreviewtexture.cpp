@@ -36,7 +36,7 @@
 #include "llfilepicker.h"
 #include "llfloaterreg.h"
 #include "llimagepng.h"
-#include "llimagepng.h"
+#include "llimagetga.h"
 #include "llinventory.h"
 #include "llnotificationsutil.h"
 #include "llresmgr.h"
@@ -360,8 +360,9 @@ void LLPreviewTexture::onFileLoadedForSave(BOOL success,
 	if( self && final && success )
 	{
 		LLPointer<LLImagePNG> image_png = new LLImagePNG;
-		if( !image_png->encode( src, 0.0 ) )
-
+//		if( !image_png->encode( src, 0.0 ) )
+		const U32 ext_length = 3;
+		std::string extension = self->mSaveFileName.substr( self->mSaveFileName.length() - ext_length);
 		// We only support saving in PNG or TGA format
 		LLPointer<LLImageFormatted> image;
 		if(extension == "png")

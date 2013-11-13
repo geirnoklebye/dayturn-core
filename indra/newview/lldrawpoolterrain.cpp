@@ -126,7 +126,7 @@ void LLDrawPoolTerrain::prerender()
 	mVertexShaderLevel = LLViewerShaderMgr::instance()->getVertexShaderLevel(LLViewerShaderMgr::SHADER_ENVIRONMENT);
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//sDetailMode = gSavedSettings.getS32("RenderTerrainDetail");
-	static LLCachedControl<S32> renderTerrainDetail(gSavedSettings, "RenderTerrainDetail");
+	static LLCachedControl<S32> renderTerrainDetail(gSavedSettings, "RenderTerrainDetail",2);
 	sDetailMode = (S32)renderTerrainDetail;
 	// </FS:Ansariel>
 }
@@ -224,7 +224,7 @@ void LLDrawPoolTerrain::render(S32 pass)
 	// Special-case for land ownership feedback
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//if (gSavedSettings.getBOOL("ShowParcelOwners"))
-	static LLCachedControl<bool> showParcelOwners(gSavedSettings, "ShowParcelOwners");
+	static LLCachedControl<bool> showParcelOwners(gSavedSettings, "ShowParcelOwners",false);
 	if (showParcelOwners)
 	// </FS:Ansariel>
 	{

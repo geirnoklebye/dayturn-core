@@ -853,7 +853,7 @@ void LLVOAvatar::debugAvatarRezTime(std::string notification_name, std::string c
 					   << " : " << comment
 					   << llendl;
 
-	static LLCachedControl<bool> avatar_rez_time(gSavedSettings, "DebugAvatarRezTime");
+	static LLCachedControl<bool> avatar_rez_time(gSavedSettings, "DebugAvatarRezTime", false);
 
 	if (avatar_rez_time) {
 		LLSD args;
@@ -2030,7 +2030,7 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, LLWorld &world, const F64 &time)
 		return;
 	}	
 
-	LLCachedControl<bool>disable_all_render_types(gSavedSettings, "DisableAllRenderTypes");
+	LLCachedControl<bool>disable_all_render_types(gSavedSettings, "DisableAllRenderTypes", false);
 	if (!(gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_AVATAR))
 		&& !(disable_all_render_types))
 	{
@@ -2126,7 +2126,7 @@ void LLVOAvatar::idleUpdateVoiceVisualizer(bool voice_enabled)
 	// Don't render the user's own voice visualizer when in mouselook, or when opening the mic is disabled.
 	if(isSelf())
 	{
-		static LLCachedControl<bool> voice_disable_mic(gSavedSettings, "VoiceDisableMic");
+		static LLCachedControl<bool> voice_disable_mic(gSavedSettings, "VoiceDisableMic", false);
 
 		if(gAgentCamera.cameraMouselook() || voice_disable_mic) {
 			render_visualizer = false;
@@ -2588,11 +2588,11 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	
 	const F32 time_visible = mTimeVisible.getElapsedTimeF32();
 
-	static LLCachedControl<F32> NAME_SHOW_TIME(gSavedSettings, "RenderNameShowTime");
-	static LLCachedControl<F32> FADE_DURATION(gSavedSettings, "RenderNameFadeDuration");
-	static LLCachedControl<bool> USE_CHAT_BUBBLES(gSavedSettings, "UseChatBubbles");
-	static LLCachedControl<bool> NAME_SHOW_SELF(gSavedSettings, "RenderNameShowSelf");
-	static LLCachedControl<S32> AVATAR_NAME_TAG_MODE(gSavedSettings, "AvatarNameTagMode");
+	static LLCachedControl<F32> NAME_SHOW_TIME(gSavedSettings, "RenderNameShowTime", 10.0f);
+	static LLCachedControl<F32> FADE_DURATION(gSavedSettings, "RenderNameFadeDuration", 1.0f);
+	static LLCachedControl<bool> USE_CHAT_BUBBLES(gSavedSettings, "UseChatBubbles", false);
+	static LLCachedControl<bool> NAME_SHOW_SELF(gSavedSettings, "RenderNameShowSelf", true);
+	static LLCachedControl<S32> AVATAR_NAME_TAG_MODE(gSavedSettings, "AvatarNameTagMode", 1);
 
 	BOOL visible_avatar = isVisible() || mNeedsAnimUpdate;
 	BOOL visible_chat = USE_CHAT_BUBBLES && (mChats.size() || mTyping);
@@ -2825,7 +2825,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		//
 		//	show the avatar's age in the name tag (or not)
 		//
-		static LLUICachedControl<bool> show_age("NameTagShowAge");
+		static LLUICachedControl<bool> show_age("NameTagShowAge", false);
 
 		if (show_age) {
 			//
@@ -2838,7 +2838,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				//	enough to be shown.  A zero age limit
 				//	means always show the age
 				//
-				static LLUICachedControl<U32> show_age_limit("NameTagShowAgeLimit");
+				static LLUICachedControl<U32> show_age_limit("NameTagShowAgeLimit", 28);
 				LLDate date_now = LLDate::now();
 
 				if (!show_age_limit || date_now.secondsSinceEpoch() - ((show_age_limit + 1) * 86400) <= mAvatarBirthdate.secondsSinceEpoch()) {
@@ -3213,7 +3213,7 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 	// clear debug text
 	mDebugText.clear();
 
-	static LLCachedControl<bool> debug_avatar_appearance_message(gSavedSettings, "DebugAvatarAppearanceMessage");
+	static LLCachedControl<bool> debug_avatar_appearance_message(gSavedSettings, "DebugAvatarAppearanceMessage", false);
 	if (debug_avatar_appearance_message) {
 		S32 central_bake_version = -1;
 		if (getRegion())
@@ -3236,7 +3236,7 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		{
 			debug_line += llformat(" - cof: %d req: %d rcv:%d",
 								   curr_cof_version, last_request_cof_version, last_received_cof_version);
-			static LLCachedControl<bool> debug_force_appearance_request_failure(gSavedSettings, "DebugForceAppearanceRequestFailure");
+			static LLCachedControl<bool> debug_force_appearance_request_failure(gSavedSettings, "DebugForceAppearanceRequestFailure", false);
 
 			if (debug_force_appearance_request_failure) {
 				debug_line += " FORCING ERRS";
@@ -3248,7 +3248,7 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		}
 		addDebugText(debug_line);
 	}
-	static LLCachedControl<bool> debug_avatar_composite_baked(gSavedSettings, "DebugAvatarCompositeBaked");
+	static LLCachedControl<bool> debug_avatar_composite_baked(gSavedSettings, "DebugAvatarCompositeBaked", false);
 	if (debug_avatar_composite_baked) {
 		if (!mBakedTextureDebugText.empty())
 			addDebugText(mBakedTextureDebugText);
@@ -3481,7 +3481,7 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 			LLVector3 velDir = getVelocity();
 			velDir.normalize();
 
-			static LLCachedControl<bool> walk_backwards(gSavedSettings, "TurnAroundWhenWalkingBackwards");
+			static LLCachedControl<bool> walk_backwards(gSavedSettings, "TurnAroundWhenWalkingBackwards", true);
 			if (!walk_backwards && mSignaledAnimations.find(ANIM_AGENT_WALK) != mSignaledAnimations.end()) {
 				F32 vpD = velDir * primDir;
 				if (vpD < -0.5f)
@@ -4947,7 +4947,7 @@ BOOL LLVOAvatar::processSingleAnimationStateChange( const LLUUID& anim_id, BOOL 
 					//}
 					//else
 					{
-						static LLCachedControl<std::string> sound_id(gSavedSettings, "UISndTyping");
+						static LLCachedControl<std::string> sound_id(gSavedSettings, "UISndTyping", "5e191c7b-8996-9ced-a177-b2ac32bfea06");
 
 						gAudiop->triggerSound(LLUUID(sound_id), getID(), 1.0f, LLAudioEngine::AUDIO_TYPE_SFX, char_pos_global);
 					}
@@ -6483,7 +6483,7 @@ BOOL LLVOAvatar::isFullyLoaded() const
 
 bool LLVOAvatar::isTooComplex() const
 {
-	static LLCachedControl<S32> complexity_limit(gSavedSettings, "RenderAvatarComplexityLimit");
+	static LLCachedControl<S32> complexity_limit(gSavedSettings, "RenderAvatarComplexityLimit", -1);
 
 	if (complexity_limit > 0 && mVisualComplexity >= complexity_limit) {
 		return true;
@@ -6505,7 +6505,7 @@ LLMotion* LLVOAvatar::findMotion(const LLUUID& id) const
 // colorized if using deferred rendering.
 void LLVOAvatar::debugColorizeSubMeshes(U32 i, const LLColor4& color)
 {
-	static LLCachedControl<bool> composite_baked(gSavedSettings, "DebugAvatarCompositeBaked");
+	static LLCachedControl<bool> composite_baked(gSavedSettings, "DebugAvatarCompositeBaked", false);
 	if (composite_baked) {
 		avatar_joint_mesh_list_t::iterator iter = mBakedTextureDatas[i].mJointMeshes.begin();
 		avatar_joint_mesh_list_t::iterator end  = mBakedTextureDatas[i].mJointMeshes.end();
@@ -7144,7 +7144,7 @@ void LLVOAvatar::parseAppearanceMessage(LLMessageSystem* mesgsys, LLAppearanceMe
 	
 	// Parse visual params, if any.
 	S32 num_blocks = mesgsys->getNumberOfBlocksFast(_PREHASH_VisualParam);
-	static LLCachedControl<bool> block_some_avatar_appearance_visual_params(gSavedSettings, "BlockSomeAvatarAppearanceVisualParams");
+	static LLCachedControl<bool> block_some_avatar_appearance_visual_params(gSavedSettings, "BlockSomeAvatarAppearanceVisualParams", false);
 
 	bool drop_visual_params_debug = block_some_avatar_appearance_visual_params && (ll_rand(2) == 0); // pretend that ~12% of AvatarAppearance messages arrived without a VisualParam block, for testing
 	if( num_blocks > 1 && !drop_visual_params_debug)
@@ -7250,7 +7250,7 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 {
 	LL_DEBUGS("Avatar") << "starts" << llendl;
 	
-	static LLCachedControl<bool> block_verbose_dumps(gSavedSettings, "BlockAvatarAppearanceMessages");
+	static LLCachedControl<bool> block_verbose_dumps(gSavedSettings, "BlockAvatarAppearanceMessages", false);
 	std::string dump_prefix = getFullname() + "_" + (isSelf()?"s":"o") + "_";
 	if (block_verbose_dumps) {
 		llwarns << "Blocking AvatarAppearance message" << llendl;
@@ -7262,7 +7262,7 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 	LLAppearanceMessageContents contents;
 	parseAppearanceMessage(mesgsys, contents);
 
-	static LLCachedControl<bool> enable_verbose_dumps(gSavedSettings, "DebugAvatarAppearanceMessage");
+	static LLCachedControl<bool> enable_verbose_dumps(gSavedSettings, "DebugAvatarAppearanceMessage", false);
 	if (enable_verbose_dumps) {
 		dumpAppearanceMsgParams(dump_prefix + "appearance_msg", contents);
 	}
