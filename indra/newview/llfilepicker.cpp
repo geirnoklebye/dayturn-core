@@ -978,18 +978,6 @@ void LLFilePicker::chooser_responder(GtkWidget *widget, gint response, gpointer 
 	// FIRE-3827; Only do this if the user accepted the dialog with ok.
 	// FIRE-3851, FIRE-3671, CTS-627; gtk_file_chooser_get_current_folder can return 0
 	if( GTK_RESPONSE_ACCEPT == response )
-		std::string filter = gtk_file_filter_get_name(gfilter);
-
-		if(filter == LLTrans::getString("png_image_files"))
-		{
-			picker->mCurrentExtension = ".png";
-		}
-		else if(filter == LLTrans::getString("targa_image_files"))
-		{
-			picker->mCurrentExtension = ".tga";
-		}
-	}
-
 	{
 		// set the default path for this usage context.
 		//		picker->mContextToPathMap[picker->mCurContextName] =
@@ -1228,7 +1216,8 @@ BOOL LLFilePicker::getSaveFile( ESaveFilter filter, const std::string& filename)
 			suggest_ext = ".png";
 			break;
 		case FFSAVE_TGAPNG:
-			caption += add_save_texture_filter_to_gtkchooser(picker);
+			caption += add_simple_mime_filter_to_gtkchooser
+				(picker, "image/png", LLTrans::getString("png_image_files") + " (*.png)");
 			suggest_ext = ".png";
 			break;
 		case FFSAVE_AVI:
