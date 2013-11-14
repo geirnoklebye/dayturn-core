@@ -1314,7 +1314,7 @@ void FSAreaSearch::OptionsMenu::handleSelection(LLSD::String parameter)
 			//	auto-track is now switched off so stop
 			//	tracking the current object
 			//
-			LLTracker::stopTracking((void *)LLTracker::isTracking(NULL));
+			LLTracker::stopTracking((void *)(ptrdiff_t)LLTracker::isTracking(NULL));
 		}
 	}
 	else if (parameter == "stop_tracking") {
@@ -1322,7 +1322,7 @@ void FSAreaSearch::OptionsMenu::handleSelection(LLSD::String parameter)
 		//	if we are asked to stop tracking then switch
 		//	off auto-tracking mode as well
 		//
-		LLTracker::stopTracking((void *)LLTracker::isTracking(NULL));
+		LLTracker::stopTracking((void *)(ptrdiff_t)LLTracker::isTracking(NULL));
 
 		mFloater->setAutoTrackStatus(false);
 	}
