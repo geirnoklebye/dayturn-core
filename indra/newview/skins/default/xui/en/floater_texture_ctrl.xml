@@ -9,7 +9,7 @@
  min_width="410"
  name="texture picker"
  help_topic="texture_picker"
- title="PICK: TEXTURE"
+ title="TEXTURE PICKER"
  width="410">
  
 <!--  top static -->
@@ -81,13 +81,14 @@
      type="string"
      length="1"
      follows="left|top"
-     height="14"
+     height="28"
      layout="topleft"
      left_delta="-12"
      name="unknown"
      top_pad="4"
      width="">
-        Size: [DIMENSIONS]
+Size: [DIMENSIONS]
+([ALPHA])
     </text>
     
 <!--  middle: inventory mode -->

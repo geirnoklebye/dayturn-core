@@ -297,10 +297,12 @@ void LLFloaterTexturePicker::updateImageStats()
 		{
 			std::string formatted_dims = llformat("%d x %d", mTexturep->getFullWidth(),mTexturep->getFullHeight());
 			mResolutionLabel->setTextArg("[DIMENSIONS]", formatted_dims);
+			mResolutionLabel->setTextArg("[ALPHA]", LLTrans::getString(mTexturep->getIsAlphaMask() ? "Alpha" : "Opaque"));
 		}
 		else
 		{
 			mResolutionLabel->setTextArg("[DIMENSIONS]", std::string("[? x ?]"));
+			mResolutionLabel->setTextArg("[ALPHA]", std::string("?"));
 		}
 	}
 	else
