@@ -48,11 +48,11 @@
      follows="right|bottom"
      height="16"
      layout="topleft"
-     left="110"
+     right="-22"
      name="dimensions"
      top="255"
      width="200">
-        [WIDTH]px x [HEIGHT]px
+        [WIDTH]px x [HEIGHT]px ([ALPHA])
     </text>
     <text
      type="string"
@@ -61,22 +61,23 @@
      follows="right|bottom"
      height="16"
      layout="topleft"
-     left_delta="-110"
+     right="-135"
      name="aspect_ratio"
-     top_pad="5"
+     top_pad="8"
      width="200">
-        Preview aspect ratio
+        Preview aspect ratio:
     </text>
     <combo_box
      allow_text_entry="true" 
      top_delta="-3" 
      follows="right|bottom" 
      height="23"
-     left_pad="10"
+     right="-17"
+     bottom_delta="2"
      max_chars="20"
      mouse_opaque="true"
      enabled="true"
-     width="108"
+     width="110"
      name="combo_aspect_ratio"
      tool_tip="Preview at a fixed aspect ratio">
     	<combo_item name="Unconstrained" value="Unconstrained">
@@ -109,7 +110,7 @@
      height="22"
      label="OK"
      layout="topleft"
-     left="6"
+     left="13"
      name="Keep"
      top_pad="5"
      width="110" />
@@ -118,7 +119,7 @@
      height="22"
      label="Discard"
      layout="topleft"
-     left_pad="5"
+     left_pad="3"
      name="Discard"
      top_delta="0"
      width="110" />
@@ -127,7 +128,7 @@
      height="22"
      label="Save As"
      layout="topleft"
-     left_pad="5"
+     left_pad="3"
      name="save_tex_btn"
      top_delta="0"
      width="110" />

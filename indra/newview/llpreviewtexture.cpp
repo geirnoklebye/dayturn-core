@@ -419,6 +419,7 @@ void LLPreviewTexture::updateDimensions()
 	// Update the width/height display every time
 	getChild<LLUICtrl>("dimensions")->setTextArg("[WIDTH]",  llformat("%d", mImage->getFullWidth()));
 	getChild<LLUICtrl>("dimensions")->setTextArg("[HEIGHT]", llformat("%d", mImage->getFullHeight()));
+	getChild<LLUICtrl>("dimensions")->setTextArg("[ALPHA]", LLTrans::getString(mImage->getIsAlphaMask() ? "Alpha" : "Opaque"));
 
 	// Reshape the floater only when required
 	if (mUpdateDimensions)
@@ -429,10 +430,6 @@ void LLPreviewTexture::updateDimensions()
 		reshape(getRect().getWidth(), getRect().getHeight());
 
 		gFloaterView->adjustToFitScreen(this, FALSE);
-
-		LLRect dim_rect(getChildView("dimensions")->getRect());
-		LLRect aspect_label_rect(getChildView("aspect_ratio")->getRect());
-		getChildView("aspect_ratio")->setVisible( dim_rect.mRight < aspect_label_rect.mLeft);
 	}
 }
 
