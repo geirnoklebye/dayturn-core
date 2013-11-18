@@ -52,7 +52,7 @@
      name="dimensions"
      top="255"
      width="200">
-        [WIDTH]px x [HEIGHT]px ([ALPHA])
+        [WIDTH]x[HEIGHT]  ([ALPHA])
     </text>
     <text
      type="string"
