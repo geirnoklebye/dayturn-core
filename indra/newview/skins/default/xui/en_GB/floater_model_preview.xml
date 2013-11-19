@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater name="Model Preview">
+    <string name="decomposing">Analysing...</string>
+    <panel name="left_panel">
+        <tab_container name="import_tab">
+            <panel name="physics_panel">
+                <panel name="physics analysis">
+                    <text name="method_label">
+                        Step 2: Analyse
+                    </text>
+                    <button name="Decompose"
+                        label="Analyse" />
+                </panel>
+            </panel>
+        </tab_container>
+    </panel>
+</floater>

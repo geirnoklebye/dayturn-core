@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="Preferences">
+    <tab_container name="pref core">
+        <panel name="colors"
+            label="Colours" />
+    </tab_container>
+</floater>

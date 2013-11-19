@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="Snapshot">
+    <panel_container name="panel_container">
+        <panel name="advanced_options_panel">
+            <combo_box name="layer_types">
+                <combo_box.item name="Colors"
+                    label="Colors" />
+            </combo_box>
+        </panel>
+    </panel_container>
+</floater>

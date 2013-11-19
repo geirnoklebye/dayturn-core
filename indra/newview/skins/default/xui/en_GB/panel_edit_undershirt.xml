@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<panel name="edit_undershirt_panel">
+    <panel name="avatar_undershirt_color_panel">
+        <color_swatch name="Color/Tint"
+            label="Colour/Tint"
+            tool_tip="Click to open colour picker" />
+    </panel>
+</panel>

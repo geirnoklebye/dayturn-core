@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<mimetypes name="default">
+    <mimetype name="application/smil">
+        <label name="application/smil_label">
+            Synchronised Multimedia Integration Language (SMIL)
+        </label>
+    </mimetype>
+</mimetypes>

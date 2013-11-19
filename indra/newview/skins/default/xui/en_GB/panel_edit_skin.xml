@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<panel name="edit_skin_panel">
+    <panel name="accordion_panel">
+        <accordion name="wearable_accordion">
+            <accordion_tab name="skin_color_tab"
+                title="Skin Colour" />
+        </accordion>
+    </panel>
+</panel>

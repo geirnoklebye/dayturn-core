@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<panel name="colors_panel" label="Colours">
+    <color_swatch name="effect_color_swatch"
+        tool_tip="Click to open colour picker" />
+    <text name="font_colors">
+        Chat font colours:
+    </text>
+    <text name="bubble_chat">
+        Name tag background colour (also affects Bubble Chat):
+    </text>
+    <color_swatch name="background"
+        tool_tip="Choose name tag colour" />
+    <check_box name="override_pie_color_checkbox"
+        label="Override pie menu background colour and opacity:" />
+    <color_swatch name="pie_bg_color_override"
+        tool_tip="Choose pie menu background colour" />
+    <color_swatch name="pie_selected_color_override"
+        tool_tip="Choose pie menu selection colour" />
+</panel>

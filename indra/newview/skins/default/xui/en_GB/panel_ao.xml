@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panel name="animation_overrider_outer_panel">
+    <panel name="animation_overrider_panel">
+        <check_box name="ao_randomize"
+            label="Randomise order"
+            tool_tip="Randomise order of animations in cycle mode." />
+    </panel>
+</panel>

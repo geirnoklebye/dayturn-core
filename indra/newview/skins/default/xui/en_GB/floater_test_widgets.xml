@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="floater_test_widgets">
+    <tab_container name="group_tab_container">
+        <panel name="panel2" label="Tab 1 - Colour">
+            <color_swatch name="swatch1"
+                label="Colour Swatch 1"
+                tool_tip="Colour Swatch: Click to open Colour Picker" />
+            <color_swatch name="swatch2"
+                label="Colour Swatch 2"
+                tool_tip="Colour Swatch: Click to open Colour Picker" />
+        </panel>
+    </tab_container>
+</floater>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+    <string name="LSLTipText_llSetColor">
+llSetColor(vector colour, integer face)
+Sets the colour on face of the prim
+    </string>
+    <string name="LSLTipText_llGetColor">
+vector llGetColor(integer face)
+Returns the colour on face
+    </string>
+    <string name="LSLTipText_llSetLinkColor">
+llSetLinkColor(integer linknumber, vector colour, integer face)
+Sets face to colour if a task exists in the link chain at linknumber
+    </string>
+    <string name="LSLTipText_llSetText">
+llSetText(string text, vector colour, float alpha)
+Displays text that hovers over the prim with specific colour and translucency specified with alpha
+    </string>
+    <string name="LSLTipText_llVecNorm">
+vector llVecNorm(vector v)
+Returns the v normalised
+    </string>
+    <string name="LSLTipText_llGetSunDirection">
+vector llGetSunDirection()
+Returns a normalised vector of the direction of the sun in the region
+    </string>
+    <string name="LSLTipText_llListRandomize">
+list llListRandomize(list src, integer stride)
+Returns a randomised list of blocks of size stride
+    </string>
+
+    <string name="LSLTipText_osDrawFilledRectangle">
+osDrawFilledRectangle(string drawList, integer width, integer height)
+Draws a rectangle on a dynamic texture, and fills it with the current pen colour.
+    </string>
+    <string name="LSLTipText_osDrawFilledPolygon">
+osDrawFilledPolygon (string drawList, list x, list y)
+Draws a polygon on a dynamic texture, and fills it with the current pen colour.
+    </string>
+    <string name="LSLTipText_osParseJSONNew">
+osParseJSONNew(string JSON)
+Returns osd deserialised JSON to object.
+    </string>
+    <string name="LSLTipText_osSetPenColor">
+osSetPenColor(string drawList, string colour)
+Sets the pen colour that is to be used when drawing dynamic textures.
+    </string>
+    <string name="LSLTipText_osShutDown">
+osShutDown()
+Shut down current Simulator.
+Authorised Admin Only by config.
+    </string>
+
+    <string name="LSLTipText_aaGetTextColor">
+aaGetTextColor()
+Returns the hovertext colour in rotation.
+    </string>
+    <string name="LSLTipText_aaUpdateDatabase">
+aaUpdateDatabase(Key, xmlDataToPutIntoTheDatabase, Token)
+Where Key = database field name, xmlDataToPutIntoTheDatabase = serialised XML data,  Token = data-password
+    </string>
+
+    <string name="LoginQuicktimeNotFound">QuickTime not found.  Unable to initialise.</string>
+    <string name="LoginQuicktimeOK">QuickTime initialised successfully.</string>
+    <string name="BUTTON_MINIMIZE">Minimise</string>
+
+    <string name="Marketplace Error Folder Depth">Error: This item contains too many levels of nested folders.  Reorganise it to a maximum of 3 levels of nested folders.</string>
+    <string name="MBAlreadyRunning">
+[APP_NAME] is already running.
+Check your task bar for a minimised copy of the program.
+If this message persists then restart your computer.
+    </string>
+    <string name="MBAlpha">
+[APP_NAME] is unable to run because it can't get an 8 bit alpha channel.  Usually this is due to video card driver issues.
+Please make sure you have the latest video card drivers installed.
+Also be sure your monitor is set to True Colour (32-bit) in Control Panels &gt; Display &gt; Settings.
+    </string>
+    <string name="MBTrueColorWindow">
+[APP_NAME] requires True Colour (32-bit) to run.
+Please go to your computer's display settings and set the colour mode to 32-bit.
+    </string>
+
+    <string name="Blush Color">Blush Colour</string>
+    <string name="Eye Color">Eye Colour</string>
+    <string name="Eyeliner Color">Eyeliner Colour</string>
+    <string name="In Shdw Color">Inner Shadow Colour</string>
+    <string name="Lipstick Color">Lipstick Colour</string>
+    <string name="Nail Polish Color">Nail Polish Colour</string>
+    <string name="Out Shdw Color">Outer Shadow Colour</string>
+    <string name="Rainbow Color">Rainbow Colour</string>
+</strings>

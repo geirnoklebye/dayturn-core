@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<menu_bar name="Main Menu">
+    <menu name="Develop">
+        <menu name="Display Info">
+            <menu_item_call name="Show Color Under Cursor"
+                label="Show Colour Under Cursor" />
+        </menu>
+        <menu name="Render Tests">
+            <menu_item_call name="Randomize Framerate"
+                label="Randomise Framerate" />
+        </menu>
+        <menu name="XUI">
+            <menu_item_call name="Reload Color Settings"
+                label="Reload Colour Settings" />
+        </menu>
+    </menu>
+</menu_bar>

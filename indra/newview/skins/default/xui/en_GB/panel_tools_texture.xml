@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<panel name="Texture">
+    <text name="color label">
+        Colour
+    </text>
+    <color_swatch name="colorswatch"
+        tool_tip="Click to open colour picker" />
+    <text name="label shinycolor">
+        Colour
+    </text>
+    <color_swatch name="shinycolorswatch"
+        tool_tip="Click to open colour picker" />
+</panel>

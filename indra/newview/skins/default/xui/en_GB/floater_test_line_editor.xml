@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="floater_test_line_editor">
+    <line_editor name="enabled_colored_line_editor"
+        tool_tip="enabled coloured line editor" />
+    <line_editor name="disabled_colored_line_editor"
+        tool_tip="disabled coloured line editor" />
+</floater>

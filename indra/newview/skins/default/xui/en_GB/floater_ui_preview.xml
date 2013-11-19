@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="gui_preview_tool">
+    <panel name="main_panel">
+        <button name="edit_floater"
+            tool_tip="Edit the XUI floater defined by the selected XML file (opens external editor).  Opens en version if no localised version exists." />
+    </panel>
+</floater>

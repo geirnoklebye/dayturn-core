@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel name="Preference Media panel">
+    <text name="mute_chb_label">
+        Mute when minimised
+    </text>
+</panel>

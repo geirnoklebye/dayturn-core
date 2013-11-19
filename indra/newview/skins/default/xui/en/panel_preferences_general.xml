@@ -37,9 +37,14 @@
          value="default" />
         <combo_box.item
          enabled="true"
-         label="English"
-         name="English"
+         label="English (USA)"
+         name="English_USA"
          value="en" />
+        <combo_box.item
+         enabled="true"
+         label="English (British)"
+         name="English_British"
+         value="en_GB" />
         <combo_box.item
          enabled="true"
          label="Dansk (Danish) - Beta"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<floater name="floater_test_checkbox">
+    <check_box name="text_enabled_color_checkbox"
+        label="Text Enabled Colour" />
+    <check_box name="text_disabled_color_checkbox"
+        label="Text Disabled Colour" />
+</floater>
