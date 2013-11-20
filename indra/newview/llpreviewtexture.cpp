@@ -417,9 +417,14 @@ void LLPreviewTexture::updateDimensions()
 	}
 	
 	// Update the width/height display every time
-	getChild<LLUICtrl>("dimensions")->setTextArg("[WIDTH]",  llformat("%d", mImage->getFullWidth()));
-	getChild<LLUICtrl>("dimensions")->setTextArg("[HEIGHT]", llformat("%d", mImage->getFullHeight()));
-	getChild<LLUICtrl>("dimensions")->setTextArg("[ALPHA]", LLTrans::getString(mImage->getIsAlphaMask() ? "Alpha" : "Opaque"));
+	LLUICtrl *dimensions = getChild<LLUICtrl>("dimensions");
+
+	if (dimensions) {
+		dimensions->setTextArg("[WIDTH]",  llformat("%d", mImage->getFullWidth()));
+		dimensions->setTextArg("[HEIGHT]", llformat("%d", mImage->getFullHeight()));
+		dimensions->setTextArg("[ALPHA]", LLTrans::getString(mImage->getComponents() == 4 ? "Alpha" : "Opaque"));
+		dimensions->setVisible(TRUE);
+	}
 
 	// Reshape the floater only when required
 	if (mUpdateDimensions)
