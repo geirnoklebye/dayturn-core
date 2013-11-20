@@ -90,6 +90,7 @@ void exchange_callingcard(const LLUUID& dest_id);
 void handle_gestures(void*);
 void handle_sit_down(void*);
 void handle_object_build(void*);
+void handle_object_edit();
 void handle_object_touch();
 bool enable_object_open();
 void handle_object_open();

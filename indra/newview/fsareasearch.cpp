@@ -1222,6 +1222,9 @@ void FSAreaSearch::ContextMenu::handleSelection(LLScrollListCtrl *ctrl, const LL
 	else if (parameter == "pay") {
 		handle_give_money_dialog();
 	}
+	if (parameter == "edit") {
+		handle_object_edit();
+	}
 	else if (parameter == "delete") {
 		handle_object_delete();
 	}

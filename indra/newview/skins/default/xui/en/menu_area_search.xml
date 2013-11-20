@@ -136,6 +136,13 @@
 -->
     <menu_item_separator />
     <menu_item_call
+        name="edit"
+        label="Edit">
+        <menu_item_call.on_click
+            function="AreaSearch.Action"
+            parameter="edit" />
+    </menu_item_call>
+    <menu_item_call
         name="Delete"
         label="Delete"
         enabled="false">
