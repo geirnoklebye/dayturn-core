@@ -34,7 +34,7 @@
 		     name="ItemcountText"
 		     font="SansSerifMedium"
 		     text_color="EmphasisColor"
-		     top_pad="0"
+		     top="5"
 		     width="300">
     Items:
   </text>
@@ -47,20 +47,20 @@
    left="10"
    max_length_chars="300"
    name="inventory search editor"
-   top="18"
-   width="303" />
+   top_pad="5"
+   width="310" />
   <tab_container
      follows="all"
      halign="center"
-     height="339"
+     height="338"
      layout="topleft"
-     left="7"
+     left="8"
      name="inventory filter tabs"
      tab_height="30"
      tab_group="1"
      tab_position="top"
      tab_min_width="100"
-     top_pad="10"
+     top_pad="7"
      width="312">
     <inventory_panel
      bg_opaque_color="DkGray2"
@@ -78,7 +78,7 @@
      sort_order_setting="InventorySortOrder"
      show_item_link_overlays="true"
      top="16"
-     width="288" />
+     width="312" />
     <recent_inventory_panel
      bg_opaque_color="DkGray2"
      bg_alpha_color="DkGray2"
@@ -93,7 +93,7 @@
      left_delta="0"
      name="Recent Items"
      show_item_link_overlays="true"
-     width="290" />
+     width="312" />
   </tab_container>
   <layout_stack
    animate="false"
@@ -105,7 +105,7 @@
    top_pad="0"
    left="10"
    name="bottom_panel"
-   width="307">
+   width="310">
       <layout_panel
        auto_resize="false"
        height="25"
@@ -151,7 +151,7 @@
        height="25"
        layout="topleft"
        name="dummy_panel"
-       width="212">
+       width="214">
           <icon
            follows="bottom|left|right"
            height="25"
@@ -160,14 +160,14 @@
            left="0"
            top="0"
            name="dummy_icon"
-           width="211" />
+           width="213" />
       </layout_panel>
       <layout_panel
        auto_resize="false"
        height="25"
        layout="topleft"
        name="trash_btn_panel"
-       width="31">
+       width="32">
           <dnd_button
            follows="bottom|left"
            height="25"
