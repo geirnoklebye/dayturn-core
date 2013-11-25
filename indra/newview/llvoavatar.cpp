@@ -689,8 +689,6 @@ const LLUUID LLVOAvatar::sStepSounds[LL_MCODE_END] =
 	SND_RUBBER_RUBBER
 };
 
-S32 LLVOAvatar::sRenderName = RENDER_NAME_ALWAYS;
-BOOL LLVOAvatar::sRenderGroupTitles = TRUE;
 S32 LLVOAvatar::sNumVisibleChatBubbles = 0;
 BOOL LLVOAvatar::sDebugInvisible = FALSE;
 BOOL LLVOAvatar::sShowAttachmentPoints = FALSE;
@@ -743,7 +741,6 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mNameAppearance(false),
 	mNameFriend(false),
 	mNameAlpha(0.f),
-	mRenderGroupTitles(sRenderGroupTitles),
 	mAvatarBirthdateRequest(NULL),
 	mAvatarBirthdate(0.0f),
 	mNameCloud(false),
@@ -784,6 +781,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mMeshTexturesDirty = FALSE;
 	mHeadp = NULL;
 
+	mRenderGroupTitles = (gSavedSettings.getS32("AvatarNameTagMode") && gSavedSettings.getBOOL("NameTagShowGroupTitles"));
 
 	// set up animation variables
 	mSpeed = 0.f;
@@ -2593,13 +2591,16 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	static LLCachedControl<bool> USE_CHAT_BUBBLES(gSavedSettings, "UseChatBubbles", false);
 	static LLCachedControl<bool> NAME_SHOW_SELF(gSavedSettings, "RenderNameShowSelf", true);
 	static LLCachedControl<S32> AVATAR_NAME_TAG_MODE(gSavedSettings, "AvatarNameTagMode", 1);
+	static LLCachedControl<bool> NAME_TAG_SHOW_GROUP_TITLES(gSavedSettings, "NameTagShowGroupTitles", true);
+
+	const bool render_group_titles = (NAME_TAG_SHOW_GROUP_TITLES && AVATAR_NAME_TAG_MODE);
 
 	BOOL visible_avatar = isVisible() || mNeedsAnimUpdate;
 	BOOL visible_chat = USE_CHAT_BUBBLES && (mChats.size() || mTyping);
 	BOOL render_name =	visible_chat ||
 		(visible_avatar &&
-		 ((sRenderName == RENDER_NAME_ALWAYS) ||
-		  (sRenderName == RENDER_NAME_FADE && time_visible < NAME_SHOW_TIME)));
+		 ((AVATAR_NAME_TAG_MODE == RENDER_NAME_ALWAYS) ||
+		  (AVATAR_NAME_TAG_MODE == RENDER_NAME_FADE && time_visible < NAME_SHOW_TIME)));
 	// If it's your own avatar, don't draw in mouselook, and don't
 	// draw if we're specifically hiding our own name.
 	if (isSelf())
@@ -2628,9 +2629,9 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		new_name = TRUE;
 	}
 
-	if (sRenderGroupTitles != mRenderGroupTitles)
+	if (render_group_titles != mRenderGroupTitles)
 	{
-		mRenderGroupTitles = sRenderGroupTitles;
+		mRenderGroupTitles = render_group_titles;
 		new_name = TRUE;
 	}
 
@@ -2640,7 +2641,7 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	if (mAppAngle > 5.f)
 	{
 		const F32 START_FADE_TIME = NAME_SHOW_TIME - FADE_DURATION;
-		if (!visible_chat && sRenderName == RENDER_NAME_FADE && time_visible > START_FADE_TIME)
+		if (!visible_chat && AVATAR_NAME_TAG_MODE == RENDER_NAME_FADE && time_visible > START_FADE_TIME)
 		{
 			alpha = 1.f - (time_visible - START_FADE_TIME) / FADE_DURATION;
 		}
@@ -2772,7 +2773,10 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				LLFontGL::getFontSansSerifSmall());
 		}
 
-		if (sRenderGroupTitles
+		static LLCachedControl<S32> avatar_name_tag_mode(gSavedSettings, "AvatarNameTagMode", 1);
+		static LLCachedControl<bool> name_tag_show_group_titles(gSavedSettings, "NameTagShowGroupTitles", true);
+
+		if (name_tag_show_group_titles && avatar_name_tag_mode
 			&& title && title->getString() && title->getString()[0] != '\0')
 		{
 			std::string title_str = title->getString();

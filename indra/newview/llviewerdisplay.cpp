@@ -373,12 +373,6 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 
 	LLImageGL::updateStats(gFrameTimeSeconds);
 
-	static LLCachedControl<S32> avatar_name_tag_mode(gSavedSettings, "AvatarNameTagMode", 1);
-	static LLCachedControl<bool> name_tag_show_group_titles(gSavedSettings, "NameTagShowGroupTitles", true);
-	
-	LLVOAvatar::sRenderName = avatar_name_tag_mode;
-	LLVOAvatar::sRenderGroupTitles = (name_tag_show_group_titles && avatar_name_tag_mode);
-	
 	gPipeline.mBackfaceCull = TRUE;
 	gFrameCount++;
 	gRecentFrameCount++;
