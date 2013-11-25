@@ -1041,8 +1041,8 @@ bool LLPipeline::allocateScreenBuffer(U32 resX, U32 resY, U32 samples)
 		}
 
 		//HACK make screenbuffer allocations start failing after 30 seconds
-		if (gSavedSettings.getBOOL("SimulateFBOFailure"))
-		{
+		static LLCachedControl<bool> simulate_fbo_failure(gSavedSettings, "SimulateFBOFailure", false);
+		if (simulate_fbo_failure) {
 			return false;
 		}
 	}
@@ -1268,12 +1268,14 @@ void LLPipeline::createGLBuffers()
 	bool materials_in_water = false;
 
 #if MATERIALS_IN_REFLECTIONS
-	materials_in_water = gSavedSettings.getS32("RenderWaterMaterials");
+	static LLCachedControl<S32> render_water_materials(gSavedSettings, "RenderWaterMaterials", 0);
+	materials_in_water = (bool)render_water_materials;
 #endif
 
 	if (LLPipeline::sWaterReflections)
 	{ //water reflection texture
-		U32 res = (U32) llmax(gSavedSettings.getS32("RenderWaterRefResolution"), 512);
+		static LLCachedControl<S32> render_water_ref_resolution(gSavedSettings, "RenderWaterRefResolution", 512);
+		U32 res = llmax((S32)render_water_ref_resolution, 512);
 			
 		// Set up SRGB targets if we're doing deferred-path reflection rendering
 		//
@@ -1300,8 +1302,8 @@ void LLPipeline::createGLBuffers()
 	
 	if (LLPipeline::sRenderGlow)
 	{ //screen space glow buffers
-		const U32 glow_res = llmax(1, 
-			llmin(512, 1 << gSavedSettings.getS32("RenderGlowResolutionPow")));
+		static LLCachedControl<S32> render_glow_resolution_pow(gSavedSettings, "RenderGlowResolutionPow", 9);
+		const U32 glow_res = llmax(1, llmin(512, 1 << render_glow_resolution_pow));
 
 		for (U32 i = 0; i < 3; i++)
 		{
@@ -1320,7 +1322,9 @@ void LLPipeline::createGLBuffers()
 			const U32 noiseRes = 128;
 			LLVector3 noise[noiseRes*noiseRes];
 
-			F32 scaler = gSavedSettings.getF32("RenderDeferredNoise")/100.f;
+			static LLCachedControl<F32> render_deferred_noise(gSavedSettings, "RenderDeferredNoise", 4.f);
+			F32 scaler = render_deferred_noise / 100.f;
+
 			for (U32 i = 0; i < noiseRes*noiseRes; ++i)
 			{
 				noise[i] = LLVector3(ll_frand()-0.5f, ll_frand()-0.5f, 0.f);
@@ -1406,8 +1410,12 @@ void LLPipeline::createLUTBuffers()
 			}*/
 		
 
-			U32 lightResX = gSavedSettings.getU32("RenderSpecularResX");
-			U32 lightResY = gSavedSettings.getU32("RenderSpecularResY");
+			static LLCachedControl<U32> render_specular_res_x(gSavedSettings, "RenderSpecularResX", 1024);
+			static LLCachedControl<U32> render_specular_res_y(gSavedSettings, "RenderSpecularResY", 256);
+
+			const U32 lightResX = render_specular_res_x;
+			const U32 lightResY = render_specular_res_y;
+
 			F32* ls = new F32[lightResX*lightResY];
 			//F32 specExp = gSavedSettings.getF32("RenderSpecularExponent"); // Note: only use this when creating new specular lighting functions.
             // Calculate the (normalized) blinn-phong specular lookup texture. (with a few tweaks)
@@ -8924,7 +8932,7 @@ void LLPipeline::renderDeferredLighting()
 		
 		gDeferredPostGammaCorrectProgram.uniform2f(LLShaderMgr::DEFERRED_SCREEN_RES, mScreen.getWidth(), mScreen.getHeight());
 		
-		F32 gamma = gSavedSettings.getF32("RenderDeferredDisplayGamma");
+		static LLCachedControl<F32> gamma(gSavedSettings, "RenderDeferredDisplayGamma", 2.2f);
 
 		gDeferredPostGammaCorrectProgram.uniform1f(LLShaderMgr::DISPLAY_GAMMA, (gamma > 0.1f) ? 1.0f / gamma : (1.0f/2.2f));
 		
@@ -9473,7 +9481,7 @@ void LLPipeline::renderDeferredLightingToRT(LLRenderTarget* target)
 		
 		gDeferredPostGammaCorrectProgram.uniform2f(LLShaderMgr::DEFERRED_SCREEN_RES, target->getWidth(), target->getHeight());
 		
-		F32 gamma = gSavedSettings.getF32("RenderDeferredDisplayGamma");
+		static LLCachedControl<F32> gamma(gSavedSettings, "RenderDeferredDisplayGamma", 2.2f);
 
 		gDeferredPostGammaCorrectProgram.uniform1f(LLShaderMgr::DISPLAY_GAMMA, (gamma > 0.1f) ? 1.0f / gamma : (1.0f/2.2f));
 		
@@ -9785,7 +9793,8 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 		bool materials_in_water = false;
 
 #if MATERIALS_IN_REFLECTIONS
-		materials_in_water = gSavedSettings.getS32("RenderWaterMaterials");
+		static LLCachedControl<S32> render_water_materials(gSavedSettings, "RenderWaterMaterials", 0);
+		materials_in_water = (bool)render_water_materials;
 #endif
 
 		if (!LLViewerCamera::getInstance()->cameraUnderWater())

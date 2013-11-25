@@ -205,7 +205,9 @@ void display_update_camera()
 // Write some stats to llinfos
 void display_stats()
 {
-	F32 fps_log_freq = gSavedSettings.getF32("FPSLogFrequency");
+	static LLCachedControl<F32> fps_log_freq(gSavedSettings, "FPSLogFrequency", 10.f);
+	static LLCachedControl<F32> mem_log_freq(gSavedSettings, "MemoryLogFrequency", 600.f);
+
 	if (fps_log_freq > 0.f && gRecentFPSTime.getElapsedTimeF32() >= fps_log_freq)
 	{
 		F32 fps = gRecentFrameCount / fps_log_freq;
@@ -213,7 +215,7 @@ void display_stats()
 		gRecentFrameCount = 0;
 		gRecentFPSTime.reset();
 	}
-	F32 mem_log_freq = gSavedSettings.getF32("MemoryLogFrequency");
+
 	if (mem_log_freq > 0.f && gRecentMemoryTime.getElapsedTimeF32() >= mem_log_freq)
 	{
 		gMemoryAllocated = LLMemory::getCurrentRSS();
@@ -370,9 +372,12 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 	stop_glerror();
 
 	LLImageGL::updateStats(gFrameTimeSeconds);
+
+	static LLCachedControl<S32> avatar_name_tag_mode(gSavedSettings, "AvatarNameTagMode", 1);
+	static LLCachedControl<bool> name_tag_show_group_titles(gSavedSettings, "NameTagShowGroupTitles", true);
 	
-	LLVOAvatar::sRenderName = gSavedSettings.getS32("AvatarNameTagMode");
-	LLVOAvatar::sRenderGroupTitles = (gSavedSettings.getBOOL("NameTagShowGroupTitles") && gSavedSettings.getS32("AvatarNameTagMode"));
+	LLVOAvatar::sRenderName = avatar_name_tag_mode;
+	LLVOAvatar::sRenderGroupTitles = (name_tag_show_group_titles && avatar_name_tag_mode);
 	
 	gPipeline.mBackfaceCull = TRUE;
 	gFrameCount++;
@@ -917,7 +922,8 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 		{
 			LLViewerCamera::sCurCameraID = LLViewerCamera::CAMERA_WORLD;
 
-			if (gSavedSettings.getBOOL("RenderDepthPrePass") && LLGLSLShader::sNoFixedFunction)
+			static LLCachedControl<bool> render_depth_pre_pass(gSavedSettings, "RenderDepthPrePass", false);
+			if (render_depth_pre_pass && LLGLSLShader::sNoFixedFunction)
 			{
 				gGL.setColorMask(false, false);
 				
@@ -1069,7 +1075,9 @@ void render_hud_attachments()
 		hud_cam.setAxes(LLVector3(1,0,0), LLVector3(0,1,0), LLVector3(0,0,1));
 		LLViewerCamera::updateFrustumPlanes(hud_cam, TRUE);
 
-		bool render_particles = gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_PARTICLES) && gSavedSettings.getBOOL("RenderHUDParticles");
+		static LLCachedControl<bool> render_hud_particles(gSavedSettings, "RenderHUDParticles", false);
+
+		bool render_particles = gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_PARTICLES) && render_hud_particles;
 		
 		//only render hud objects
 		gPipeline.pushRenderTypeMask();
@@ -1410,8 +1418,9 @@ void render_ui_3d()
 	}
 
 	// Coordinate axes
-	if (gSavedSettings.getBOOL("ShowAxes"))
-	{
+	static LLCachedControl<bool> show_axes(gSavedSettings, "ShowAxes", false);
+
+	if (show_axes) {
 		draw_axes();
 	}
 
@@ -1466,7 +1475,9 @@ void render_ui_2d()
 	}
 	
 
-	if (gSavedSettings.getBOOL("RenderUIBuffer"))
+	static LLCachedControl<bool> render_ui_buffer(gSavedSettings, "RenderUIBuffer", false);
+
+	if (render_ui_buffer)
 	{
 		if (LLUI::sDirty)
 		{

@@ -3133,7 +3133,7 @@ bool LLVOAvatar::isVisuallyMuted()
 			//       - AND aren't over the thresholds
 			// * otherwise visually mute all other avatars
 
-			static LLCachedControl<BOOL> geometry_overload_protection(gSavedSettings, "RenderGeometryOverloadProtection", TRUE);
+			static LLCachedControl<bool> geometry_overload_protection(gSavedSettings, "RenderGeometryOverloadProtection", true);
 			static LLCachedControl<U32> max_attachment_bytes(gSavedSettings, "RenderAutoMuteByteLimit", 0);
 			static LLCachedControl<F32> max_attachment_area(gSavedSettings, "RenderAutoMuteSurfaceAreaLimit", 0.0);
 			static LLCachedControl<U32> max_render_cost(gSavedSettings, "RenderAutoMuteRenderWeightLimit", 0);
