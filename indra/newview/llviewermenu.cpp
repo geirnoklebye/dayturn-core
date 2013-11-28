@@ -110,6 +110,7 @@
 #include "llviewermenufile.h"	// init_menu_file()
 #include "llviewermessage.h"
 #include "llviewernetwork.h"
+#include "llworld.h"
 #include "llviewerobjectlist.h"
 #include "llviewerparcelmgr.h"
 #include "llviewerstats.h"
@@ -7391,6 +7392,9 @@ void handle_test_female(void*)
 	//gGestureList.requestResetFromServer( FALSE );
 }
 
+/*	if(LLWorld::getInstance()->getEnableTeenMode()) {
+	}
+*/
 void handle_dump_attachments(void*)
 {
 	if(!isAgentAvatarValid()) return;

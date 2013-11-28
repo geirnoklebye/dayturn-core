@@ -35,6 +35,8 @@
 #	include <sys/stat.h>		// mkdir()
 #endif
 
+#include <time.h>
+
 #include "llviewermedia_streamingaudio.h"
 #include "llaudioengine.h"
 
@@ -273,7 +275,7 @@ LLSD transform_cert_args(LLPointer<LLCertificate> cert);
 void general_cert_done(const LLSD& notification, const LLSD& response);
 void trust_cert_done(const LLSD& notification, const LLSD& response);
 void apply_udp_blacklist(const std::string& csv);
-bool process_login_success_response();
+bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y);
 void transition_back_to_login_panel(const std::string& emsg);
 
 void callback_cache_name(const LLUUID& id, const std::string& full_name, bool is_group)
@@ -364,6 +366,8 @@ bool idle_startup()
 	static std::string auth_desc;
 	static std::string auth_message;
 
+	static U32 first_sim_size_x = 256;
+	static U32 first_sim_size_y = 256;
 	static LLVector3 initial_sun_direction(1.f, 0.f, 0.f);
 	static LLVector3 agent_start_position_region(10.f, 10.f, 10.f);		// default for when no space server
 
@@ -1279,7 +1283,7 @@ bool idle_startup()
 		}
 		else if(LLLoginInstance::getInstance()->authSuccess())
 		{
-			if(process_login_success_response())
+			if(process_login_success_response(first_sim_size_x,first_sim_size_y))
 			{
 				// Pass the user information to the voice chat server interface.
 				LLVoiceClient::getInstance()->userAuthorized(gUserCredential->userID(), gAgentID);
@@ -1380,7 +1384,7 @@ bool idle_startup()
 		gAgent.initOriginGlobal(from_region_handle(gFirstSimHandle));
 		display_startup();
 
-		LLWorld::getInstance()->addRegion(gFirstSimHandle, gFirstSim);
+		LLWorld::getInstance()->addRegion(gFirstSimHandle, gFirstSim, first_sim_size_x, first_sim_size_y);
 		display_startup();
 
 		LLViewerRegion *regionp = LLWorld::getInstance()->getRegionFromHandle(gFirstSimHandle);
@@ -3281,7 +3285,7 @@ void apply_udp_blacklist(const std::string& csv)
 	
 }
 
-bool process_login_success_response()
+bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y)
 {
 	LLSD response = LLLoginInstance::getInstance()->getResponse();
 
@@ -3386,7 +3390,9 @@ bool process_login_success_response()
 	if(!sim_ip_str.empty() && !sim_port_str.empty())
 	{
 		U32 sim_port = strtoul(sim_port_str.c_str(), NULL, 10);
-		gFirstSim.set(sim_ip_str, sim_port);
+		//gFirstSim.set(sim_ip_str, sim_port);
+		gFirstSim.setHostByName(sim_ip_str);
+		gFirstSim.setPort(sim_port);
 		if (gFirstSim.isOk())
 		{
 			gMessageSystem->enableCircuit(gFirstSim, TRUE);
@@ -3401,6 +3407,15 @@ bool process_login_success_response()
 		gFirstSimHandle = to_region_handle(region_x, region_y);
 	}
 	
+	text = response["region_size_x"].asString();
+	if(!text.empty()) {
+		first_sim_size_x = strtoul(text.c_str(), NULL, 10);
+		LLViewerParcelMgr::getInstance()->init(first_sim_size_x);
+	}
+
+	//region Y size is currently unused, major refactoring required. - Patrick Sapinski (2/10/2011)
+	text = response["region_size_y"].asString();
+	if(!text.empty()) first_sim_size_y = strtoul(text.c_str(), NULL, 10);
 	const std::string look_at_str = response["look_at"];
 	if (!look_at_str.empty())
 	{
@@ -3520,6 +3535,21 @@ bool process_login_success_response()
 		LL_INFOS("LLStartup") << "map-server-url : no map-server-url answer, we use the default setting for the map : " << map_server_url << LL_ENDL;
 	}
 	
+	std::string web_profile_url = response["web_profile_url"];
+	if(!web_profile_url.empty())
+	{
+		// We got an answer from the grid -> use that for map for the current session
+		gSavedSettings.setString("WebProfileURL", web_profile_url); 
+		LL_INFOS("LLStartup") << "map-server-url : we got an answer from the grid : " << web_profile_url << LL_ENDL;
+	}
+	else
+	{
+		// No answer from the grid -> use the default setting for current session 
+		web_profile_url = "https://my.secondlife.com/[AGENT_NAME]";
+		gSavedSettings.setString("WebProfileURL", web_profile_url); 
+		LL_INFOS("LLStartup") << "web_profile_url : no web_profile_url answer, we use the default setting for the web : " << web_profile_url << LL_ENDL;
+	}
+
 	// Default male and female avatars allowing the user to choose their avatar on first login.
 	// These may be passed up by SLE to allow choice of enterprise avatars instead of the standard
 	// "new ruth."  Not to be confused with 'initial-outfit' below 

@@ -36,6 +36,7 @@
 #include "llfiltersd2xmlrpc.h"
 #include "curl/curl.h"
 #include <boost/algorithm/string.hpp>
+#include "llworld.h"
 const char* LLSLURL::HOP_SCHEME		 = "hop";
 const char* LLSLURL::SLURL_HTTP_SCHEME		 = "http";
 const char* LLSLURL::SLURL_HTTPS_SCHEME		 = "https";
@@ -395,21 +396,23 @@ LLSLURL::LLSLURL(const std::string& slurl)
 
 			LL_DEBUGS("SLURL") << "mRegion: "  << mRegion << LL_ENDL;
 
-			// parse the x, y, z
-			if(path_array.size() >= 3)
+
+			
+			// parse the x, y, and optionally z
+			if(path_array.size() >= 2)
 			{	
-				mPosition = LLVector3(path_array);
-// AW: the simulator should care of this
-// 				if((F32(mPosition[VX]) < 0.f) || 
-// 				(mPosition[VX] > REGION_WIDTH_METERS) ||
-// 				(F32(mPosition[VY]) < 0.f) || 
-// 				(mPosition[VY] > REGION_WIDTH_METERS) ||
-// 				(F32(mPosition[VZ]) < 0.f) || 
-// 				(mPosition[VZ] > LLWorld::getInstance()->getRegionMaxHeight()))
-// 				{
-// 					mType = INVALID;
-// 					return;
-// 				}
+			  
+			  mPosition = LLVector3(path_array); // this construction handles LLSD without all components (values default to 0.f)
+			  if((F32(mPosition[VX]) < 0.f) || 
+                             (mPosition[VX] > REGION_WIDTH_METERS) ||
+			     (F32(mPosition[VY]) < 0.f) || 
+                             (mPosition[VY] > REGION_WIDTH_METERS) ||
+			     (F32(mPosition[VZ]) < 0.f) || 
+                             (mPosition[VZ] > LLWorld::getInstance()->getRegionMaxHeight()))
+			    {
+			      mType = INVALID;
+			      return;
+			    }
  
 			}
 			else

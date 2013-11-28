@@ -64,6 +64,7 @@ public:
 	static	void*	createPanelContents(void*	vdata);
 	static	void*	createPanelLandInfo(void*	vdata);
 
+	void updateToolsSizeLimits();
 	LLFloaterTools(const LLSD& key);
 	virtual ~LLFloaterTools();
 

@@ -4113,6 +4113,7 @@ void LLAgent::doTeleportViaLocation(const LLVector3d& pos_global)
 			(F32)(pos_global.mdV[VY] - region_origin.mdV[VY]),
 			(F32)(pos_global.mdV[VZ]));
 		teleportRequest(handle, pos_local);
+		//teleportRequest(info->getHandle(), pos_local);
 	}
 	else if(regionp && 
 		teleportCore(regionp->getHandle() == to_region_handle_global((F32)pos_global.mdV[VX], (F32)pos_global.mdV[VY])))
@@ -4154,6 +4155,9 @@ void LLAgent::doTeleportViaLocationLookAt(const LLVector3d& pos_global)
 	gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);	// detach camera form avatar, so it keeps direction
 	standUp();
 	U64 region_handle = to_region_handle(pos_global);
+	//LLSimInfo* simInfo = LLWorldMap::instance().simInfoFromHandle(region_handle);
+	//if(simInfo)
+	//	region_handle = simInfo->getHandle();
 	LLVector3 pos_local = (LLVector3)(pos_global - from_region_handle(region_handle));
 	teleportRequest(region_handle, pos_local, getTeleportKeepsLookAt());
 }

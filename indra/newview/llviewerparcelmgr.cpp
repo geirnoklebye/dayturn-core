@@ -135,17 +135,10 @@ LLViewerParcelMgr::LLViewerParcelMgr()
 	mHoverParcel = new LLParcel();
 	mCollisionParcel = new LLParcel();
 
-	mParcelsPerEdge = S32(	REGION_WIDTH_METERS / PARCEL_GRID_STEP_METERS );
-	mHighlightSegments = new U8[(mParcelsPerEdge+1)*(mParcelsPerEdge+1)];
-	resetSegments(mHighlightSegments);
-
 	mCollisionBitmap = new U8[getCollisionBitmapSize()];
 	if (mCollisionBitmap) {
 		memset(mCollisionBitmap, 0, getCollisionBitmapSize());
 	}
-
-	mCollisionSegments = new U8[(mParcelsPerEdge+1)*(mParcelsPerEdge+1)];
-	resetSegments(mCollisionSegments);
 
 	// JC: Resolved a merge conflict here, eliminated
 	// mBlockedImage->setAddressMode(LLTexUnit::TAM_WRAP);
@@ -153,6 +146,13 @@ LLViewerParcelMgr::LLViewerParcelMgr()
 	mBlockedImage = LLViewerTextureManager::getFetchedTextureFromFile("world/NoEntryLines.png");
 	mPassImage = LLViewerTextureManager::getFetchedTextureFromFile("world/NoEntryPassLines.png");
 
+	F32 region_size = 8192.f; //aurora max region size, 8192
+	mParcelsPerEdge = S32(	region_size / PARCEL_GRID_STEP_METERS );
+	mHighlightSegments = new U8[(mParcelsPerEdge+1)*(mParcelsPerEdge+1)];
+	resetSegments(mHighlightSegments);
+
+	mCollisionSegments = new U8[(mParcelsPerEdge+1)*(mParcelsPerEdge+1)];
+	resetSegments(mCollisionSegments);
 	S32 overlay_size = mParcelsPerEdge * mParcelsPerEdge / PARCEL_OVERLAY_CHUNKS;
 	sPackedOverlay = new U8[overlay_size];
 
@@ -163,9 +163,15 @@ LLViewerParcelMgr::LLViewerParcelMgr()
 		mAgentParcelOverlay[i] = 0;
 	}
 
+	mParcelsPerEdge = S32(	REGION_WIDTH_METERS / PARCEL_GRID_STEP_METERS );
+
 	mTeleportInProgress = TRUE; // the initial parcel update is treated like teleport
 }
 
+void LLViewerParcelMgr::init(F32 region_size)
+{
+	mParcelsPerEdge = S32(	region_size / PARCEL_GRID_STEP_METERS );
+}
 
 LLViewerParcelMgr::~LLViewerParcelMgr()
 {
@@ -1403,8 +1409,9 @@ void LLViewerParcelMgr::processParcelOverlay(LLMessageSystem *msg, void **user)
 		return;
 	}
 
-	S32 parcels_per_edge = LLViewerParcelMgr::getInstance()->mParcelsPerEdge;
-	S32 expected_size = parcels_per_edge * parcels_per_edge / PARCEL_OVERLAY_CHUNKS;
+	//S32 parcels_per_edge = LLViewerParcelMgr::getInstance()->mParcelsPerEdge;
+	//S32 expected_size = parcels_per_edge * parcels_per_edge / PARCEL_OVERLAY_CHUNKS;
+	S32 expected_size = 1024;
 	if (packed_overlay_size != expected_size)
 	{
 		llwarns << "Got parcel overlay size " << packed_overlay_size
