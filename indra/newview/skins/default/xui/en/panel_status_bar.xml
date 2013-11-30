@@ -35,7 +35,7 @@
     </panel.string>
   <panel
     height="18"
-    left="-550"
+    left="-575"
     width="185"
     top="1"
     follows="right|top" 
@@ -133,9 +133,9 @@
      	<!-- Draw distance widget here -->
    <panel
     height="17"
-    width="128"
+    width="143"
     top="1"
-    left_pad="15"
+    left_pad="20"
     follows="right|top"
     name="drawdistance_panel"
     background_visible="false">
@@ -168,4 +168,18 @@
      top_delta="0"
      width="98" />
   </panel> 
+  <text
+     name="FPSText"
+     tool_tip="Frames Per Second"
+     type="string"
+     follows="right|top"
+     layout="topleft"
+     top="4"
+     right="-10"
+     height="16"
+     width="30"
+     halign="right"
+     mouse_opaque="false">
+         0.0
+     </text>
 </panel>

@@ -190,12 +190,16 @@ BOOL LLStatusBar::postBuild()
 
 	gSavedSettings.getControl("MuteAudio")->getSignal()->connect(boost::bind(&LLStatusBar::onVolumeChanged, this, _2));
 
-	// Adding Net Stat Graph
-	S32 x = getRect().getWidth() - 2;
+	mFPSText = getChild<LLTextBox>("FPSText");
+
+	//
+	//	adding net stat graph and button
+	//
+	S32 x = getRect().getWidth() - 40;
 	S32 y = 0;
 	LLRect r;
 
-	r.set( x-((SIM_STAT_WIDTH*2)+2), y+MENU_BAR_HEIGHT-1, x, y+1);
+	r.set(x - ((SIM_STAT_WIDTH * 2)) - 5, y + MENU_BAR_HEIGHT - 1, x + 40, y + 1);
 	LLButton::Params BandwidthButton;
 	BandwidthButton.name(std::string("BandwidthGraphButton"));
 	BandwidthButton.label("");
@@ -259,20 +263,35 @@ BOOL LLStatusBar::postBuild()
 // Per-frame updates of visibility
 void LLStatusBar::refresh()
 {
-	static LLCachedControl<bool> show_net_stats(gSavedSettings, "ShowNetStats", false);
-	bool net_stats_visible = show_net_stats;
+	static LLCachedControl<bool> net_stats_visible(gSavedSettings, "ShowNetStats", true);
+	static LLCachedControl<bool> fps_stats_visible(gSavedSettings, "ShowFPSStats", true);
 
-	if (net_stats_visible)
-	{
-		// Adding Net Stat Meter back in
-		F32 bwtotal = gViewerThrottle.getMaxBandwidth() / 1000.f;
-		mSGBandwidth->setMin(0.f);
-		mSGBandwidth->setMax(bwtotal*1.25f);
-		mSGBandwidth->setThreshold(0, bwtotal*0.75f);
-		mSGBandwidth->setThreshold(1, bwtotal);
-		mSGBandwidth->setThreshold(2, bwtotal);
+	//
+	//	update the netstat graph and FPS counter text
+	//	four times per second
+	//
+	if (mFPSUpdateTimer.getElapsedTimeF32() > 0.25f) {
+		mFPSUpdateTimer.reset();
+
+		if (net_stats_visible) {
+			F32 bwtotal = gViewerThrottle.getMaxBandwidth() / 1000.f;
+			mSGBandwidth->setMin(0.f);
+			mSGBandwidth->setMax(bwtotal * 1.25f);
+			mSGBandwidth->setThreshold(0, bwtotal * 0.75f);
+			mSGBandwidth->setThreshold(1, bwtotal);
+			mSGBandwidth->setThreshold(2, bwtotal);
+		}
+		
+		if (fps_stats_visible) {
+			mFPSText->setValue(llformat("%.1f", LLViewerStats::getInstance()->mFPSStat.getMeanPerSec()));
+		}
+
+		mSGBandwidth->setVisible(net_stats_visible);
+		mSGPacketLoss->setVisible(net_stats_visible);
+		mFPSText->setEnabled(fps_stats_visible);
+		mBtnStats->setEnabled(net_stats_visible || fps_stats_visible);
 	}
-	
+
 	// update clock every 10 seconds
 	if(mClockUpdateTimer.getElapsedTimeF32() > 10.f)
 	{
@@ -303,10 +322,6 @@ void LLStatusBar::refresh()
 	{
 		gMenuBarView->reshape(MENU_RIGHT, gMenuBarView->getRect().getHeight());
 	}
-
-	mSGBandwidth->setVisible(net_stats_visible);
-	mSGPacketLoss->setVisible(net_stats_visible);
-	mBtnStats->setEnabled(net_stats_visible);
 
 	// update the master volume button state
 	bool mute_audio = LLAppViewer::instance()->getMasterSystemAudioMute();
