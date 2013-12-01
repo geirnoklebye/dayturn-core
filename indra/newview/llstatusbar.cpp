@@ -46,6 +46,7 @@
 #include "llhudicon.h"
 #include "llnavigationbar.h"
 #include "llkeyboard.h"
+#include "lllayoutstack.h"
 #include "lllineeditor.h"
 #include "llmenugl.h"
 #include "llrootview.h"
@@ -114,8 +115,10 @@ LLStatusBar::LLStatusBar(const LLRect& rect)
 	mTextTime(NULL),
 	mSGBandwidth(NULL),
 	mSGPacketLoss(NULL),
-	mBtnStats(NULL),
-	mIconDD(NULL),
+	mFPSText(NULL),
+	mDrawDistancePanel(NULL),
+	mStatisticsPanel(NULL),
+	mFPSPanel(NULL),
 	mBtnVolume(NULL),
 	mBoxBalance(NULL),
 	mBalance(0),
@@ -175,8 +178,6 @@ BOOL LLStatusBar::postBuild()
 
 	mBoxBalance = getChild<LLTextBox>("balance");
 	mBoxBalance->setClickedCallback( &LLStatusBar::onClickBalance, this );
-	mIconDD = getChildView("dd_icon");
-	mBtnStats = getChildView("stat_btn");
 
 	mBtnVolume = getChild<LLButton>( "volume_btn" );
 	mBtnVolume->setClickedCallback( onClickVolume, this );
@@ -210,6 +211,10 @@ BOOL LLStatusBar::postBuild()
 		mFPSText->setClickedCallback(boost::bind(&LLStatusBar::onClickStatistics, this));
 	}
 
+	mDrawDistancePanel = getChild<LLLayoutPanel>("draw_distance_panel");
+	mStatisticsPanel = getChild<LLLayoutPanel>("statistics_panel");
+	mFPSPanel = getChild<LLLayoutPanel>("fps_panel");
+
 	mPanelVolumePulldown = new LLPanelVolumePulldown();
 	addChild(mPanelVolumePulldown);
 	mPanelVolumePulldown->setFollows(FOLLOWS_TOP|FOLLOWS_RIGHT);
@@ -230,6 +235,7 @@ void LLStatusBar::refresh()
 {
 	static LLCachedControl<bool> net_stats_visible(gSavedSettings, "ShowNetStats", true);
 	static LLCachedControl<bool> fps_stats_visible(gSavedSettings, "ShowFPSStats", true);
+	static LLCachedControl<bool> show_draw_distance(gSavedSettings, "ShowDDSlider", true);
 
 	//
 	//	update the netstat graph and FPS counter text
@@ -251,10 +257,9 @@ void LLStatusBar::refresh()
 			mFPSText->setValue(llformat("%.1f", LLViewerStats::getInstance()->mFPSStat.getMeanPerSec()));
 		}
 
-		mSGBandwidth->setVisible(net_stats_visible);
-		mSGPacketLoss->setVisible(net_stats_visible);
-		mFPSText->setEnabled(fps_stats_visible);
-		mBtnStats->setEnabled(net_stats_visible || fps_stats_visible);
+		mDrawDistancePanel->setVisible(show_draw_distance);
+		mStatisticsPanel->setVisible(net_stats_visible);
+		mFPSPanel->setVisible(fps_stats_visible);
 	}
 
 	// update clock every 10 seconds
@@ -306,13 +311,18 @@ void LLStatusBar::refresh()
 
 void LLStatusBar::setVisibleForMouselook(bool visible)
 {
+	static LLCachedControl<bool> net_stats_visible(gSavedSettings, "ShowNetStats", true);
+	static LLCachedControl<bool> fps_stats_visible(gSavedSettings, "ShowFPSStats", true);
+	static LLCachedControl<bool> show_draw_distance(gSavedSettings, "ShowDDSlider", true);
+
 	mTextTime->setVisible(visible);
 	getChild<LLUICtrl>("balance_bg")->setVisible(visible);
 	mBoxBalance->setVisible(visible);
 	mBtnVolume->setVisible(visible);
 	mMediaToggle->setVisible(visible);
-	mSGBandwidth->setVisible(visible);
-	mSGPacketLoss->setVisible(visible);
+	mDrawDistancePanel->setVisible(show_draw_distance);
+	mStatisticsPanel->setVisible(net_stats_visible);
+	mFPSPanel->setVisible(fps_stats_visible);
 	setBackgroundVisible(visible);
 }
 
@@ -461,8 +471,11 @@ void LLStatusBar::onClickBuyCurrency()
 void LLStatusBar::onMouseEnterVolume()
 {
 	LLButton* volbtn =  getChild<LLButton>( "volume_btn" );
-	LLRect vol_btn_rect = volbtn->getRect();
 	LLRect volume_pulldown_rect = mPanelVolumePulldown->getRect();
+	LLRect vol_btn_rect;
+
+	volbtn->localRectToOtherView(volbtn->getLocalRect(), &vol_btn_rect, this);
+
 	volume_pulldown_rect.setLeftTopAndSize(vol_btn_rect.mLeft -
 	     (volume_pulldown_rect.getWidth() - vol_btn_rect.getWidth()),
 			       vol_btn_rect.mBottom,
@@ -484,9 +497,12 @@ void LLStatusBar::onMouseEnterNearbyMedia()
 	LLView* popup_holder = gViewerWindow->getRootView()->getChildView("popup_holder");
 	LLRect nearby_media_rect = mPanelNearByMedia->getRect();
 	LLButton* nearby_media_btn =  getChild<LLButton>( "media_toggle_btn" );
-	LLRect nearby_media_btn_rect = nearby_media_btn->getRect();
+	LLRect nearby_media_btn_rect;
+
+	nearby_media_btn->localRectToOtherView(nearby_media_btn->getLocalRect(), &nearby_media_btn_rect, this);
+
 	nearby_media_rect.setLeftTopAndSize(nearby_media_btn_rect.mLeft - 
-										(nearby_media_rect.getWidth() - nearby_media_btn_rect.getWidth())/2,
+										(nearby_media_rect.getWidth() - nearby_media_btn_rect.getWidth()/2),
 										nearby_media_btn_rect.mBottom,
 										nearby_media_rect.getWidth(),
 										nearby_media_rect.getHeight());

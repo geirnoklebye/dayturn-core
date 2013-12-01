@@ -30,4 +30,40 @@
              function="CheckControl"
              parameter="ShowMiniLocationPanel" />
     </menu_item_check>
+
+    <menu_item_separator />
+
+    <menu_item_check
+         label="Show Draw Distance Slider"
+         layout="topleft"
+         name="ShowDDSlider">
+           <on_click
+             function="ToggleControl"
+             parameter="ShowDDSlider" />
+             <on_check
+             function="CheckControl"
+             parameter="ShowDDSlider" />
+    </menu_item_check>
+    <menu_item_check
+         label="Show Network Graphs"
+         layout="topleft"
+         name="ShowNetStats">
+           <on_click
+             function="ToggleControl"
+             parameter="ShowNetStats" />
+             <on_check
+             function="CheckControl"
+             parameter="ShowNetStats" />
+    </menu_item_check>
+    <menu_item_check
+         label="Show FPS Meter"
+         layout="topleft"
+         name="ShowFPSStats">
+           <on_click
+             function="ToggleControl"
+             parameter="ShowFPSStats" />
+             <on_check
+             function="CheckControl"
+             parameter="ShowFPSStats" />
+    </menu_item_check>
 </menu>

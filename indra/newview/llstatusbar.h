@@ -40,6 +40,7 @@ class LLTextEditor;
 class LLUICtrl;
 class LLUUID;
 class LLFrameTimer;
+class LLLayoutPanel;
 class LLStatGraph;
 class LLPanelVolumePulldown;
 class LLPanelNearByMedia;
@@ -101,10 +102,12 @@ private:
 	LLTextBox	*mTextTime;
 	LLTextBox	*mFPSText;
 
-	LLStatGraph *mSGBandwidth;
-	LLStatGraph *mSGPacketLoss;
-	LLView		*mIconDD;
-	LLView		*mBtnStats;
+	LLLayoutPanel	*mDrawDistancePanel;
+	LLLayoutPanel	*mStatisticsPanel;
+	LLLayoutPanel	*mFPSPanel;
+
+	LLStatGraph	*mSGBandwidth;
+	LLStatGraph	*mSGPacketLoss;
 	LLButton	*mBtnVolume;
 	LLTextBox	*mBoxBalance;
 	LLButton	*mMediaToggle;

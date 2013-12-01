@@ -1,216 +1,265 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel
- background_opaque="true"
- background_visible="true"
- bg_opaque_color="DkGray"
- chrome="true"
- follows="top|right"
- height="19"
- layout="topleft"
- left="0"
- mouse_opaque="false"
- name="status"
- top="19"
- tab_stop="false"
- width="1000">
-    <panel.string
-     name="packet_loss_tooltip">
+    name="status"
+    follows="top|right"
+    layout="topleft"
+    top="19"
+    left="0"
+    height="19"
+    width="1000"
+    background_opaque="true"
+    background_visible="true"
+    bg_opaque_color="DkGray"
+    chrome="true"
+    mouse_opaque="false"
+    tab_stop="false">
+    <panel.string name="packet_loss_tooltip">
         Packet Loss
     </panel.string>
-    <panel.string
-     name="bandwidth_tooltip">
+    <panel.string name="bandwidth_tooltip">
         Bandwidth
     </panel.string>
-    <panel.string
-     name="time">
+    <panel.string name="time">
         [hour12, datetime, slt]:[min, datetime, slt] [ampm, datetime, slt] [timezone,datetime, slt]
     </panel.string>
-    <panel.string
-     name="timeTooltip">
+    <panel.string name="timeTooltip">
         [weekday, datetime, slt], [day, datetime, slt] [month, datetime, slt] [year, datetime, slt]
     </panel.string>
-	<panel.string
-     name="buycurrencylabel">
+    <panel.string name="buycurrencylabel">
         L$ [AMT]
     </panel.string>
-  <panel
-    height="18"
-    left="-575"
-    width="185"
-    top="1"
-    follows="right|top" 
-    name="balance_bg">
-    <text
-     halign="center"
-     font="SansSerifSmall"
-     follows="all"
-     height="18"
-     left="0" 
-     name="balance"
-     tool_tip="Click to refresh your L$ balance"
-     v_pad="3"
-     top="0"
-     wrap="false" 
-     value="L$20" 
-     width="40" />
-    <button
-     halign="center"
-     font="SansSerifSmall"
-     follows="right|top|bottom"
-     image_hover_unselected="PushButton_Over"
-     image_unselected="PushButton_Off"
-     image_pressed="PushButton_Press"
-     height="18"
-     label="Buy L$"
-     label_color="White"
-     left_pad="0"
-     label_shadow="true"
-     name="buyL"
-     pad_right="0"
-     tool_tip="Click to buy more L$"
-     top="0"
-     width="80" />
-    <button
-     halign="left"
-     font="SansSerifSmall"
-     follows="right|top|bottom"
-     imgoverlay_label_space="7"
-     image_overlay="Command_MiniCart_Icon"
-     image_overlay_alignment="left"
-     image_hover_unselected="PushButton_Over"
-     image_unselected="PushButton_Off"
-     image_pressed="PushButton_Press"
-     height="18"
-     label="Shop"
-     label_color="White"
-     left_pad="0"
-     label_shadow="true"
-     name="goShop"
-     tool_tip="Open Second Life Marketplace"
-     top="0"
-     width="65" />
-  </panel>
-    <text
-     type="string"
-     font="SansSerifSmall"
-     text_readonly_color="TimeTextColor"
-     follows="right|top"
-     halign="right"
-     height="16"
-     top="4"
-     layout="topleft"
-     left_pad="0"
-     name="TimeText"
-     tool_tip="Current time (Pacific)"
-     width="145">
-        00:00 AM PST
-    </text>
-    <button
-     follows="right|top"
-     height="16"
-     image_selected="Play_Off"
-     image_unselected="Pause_Off"
-     image_pressed="Pause_Press"
-     image_pressed_selected="Play_Press"
-     is_toggle="true"
-     left_pad="5"
-     top="2"
-     name="media_toggle_btn"
-     tool_tip="Start/Stop All Media (Music, Video, Web pages)"
-     width="16" >
-    </button>
-    <button
-     follows="right|top"
-     height="16"
-     image_selected="AudioMute_Off"
-     image_pressed="Audio_Press"
-     image_unselected="Audio_Off"
-     is_toggle="true"
-     left_pad="5"
-     top="2"
-     name="volume_btn"
-     width="16" />
-     	<!-- Draw distance widget here -->
-   <panel
-    height="17"
-    width="150"
-    top="1"
-    left_pad="20"
-    follows="right|top"
-    name="drawdistance_panel"
-    background_visible="false">
-    <icon
-     follows="right|top"
-     height="16"
-     image_name="Draw_Distance"
-     name="dd_icon"
-     tool_tip="Draw Distance"
-     top="1"
-     left="1"
-     visible="true"
-     width="16"
-     scale_image="false"/>
-     <slider
-     control_name="RenderFarClip"
-     decimal_digits="0"
-     text_color="EmphasisColor" 
-     follows="right|top"
-     height="16"
-     increment="8"
-     initial_value="160"
-     layout="topleft"
-     tool_tip="Maximum distance away from camera to be rezzed (meters)"
-     top="1"
-     left_pad="2"
-     max_val="1024"
-     min_val="0"
-     name="drawdistance" 
-     top_delta="0"
-     width="105" />
-  </panel> 
 
-  <panel
-      name="statistics_panel"
-      follows="top|right"
-      top="1"
-      right="-5"
-      height="17"
-      width="45"
-      background_visible="false">
-      <statistics_graph
-          name="bandwidth_graph"
-          follows="top|left"
-          top="1"
-          left="0"
-          width="8"
-          height="17"
-          units=" Kbps"
-	  mouse_opaque="true" />
-      <statistics_graph
-          name="packet_loss_graph"
-          follows="top|left"
-          top="1"
-          left_pad="0"
-          width="8"
-          height="17"
-	  units="%"
-          value_min="0"
-          value_max="5"
-          precision="1"
-	  mouse_opaque="true" />
-      <text
-          name="fps_text"
-          tool_tip="Frames Per Second"
-          type="string"
-          follows="top|left"
-          top="0"
-          v_pad="3"
-          left_pad="5"
-          height="16"
-          width="24"
-          halign="right"
-	  mouse_opaque="true" />
-              0.0
-      </text>
-    </panel>
+    <layout_stack
+        name="status_panel"
+        follows="top|right"
+        layout="topleft"
+        top="0"
+        left="-633"
+        width="623"
+        height="19"
+        orientation="horizontal">
+        <layout_panel
+            name="balance_panel"
+            follows="top|left"
+            layout="topleft"
+            height="19"
+            width="60"
+            auto_resize="true"
+            user_resize="false"
+            visible="true">
+            <text
+                name="balance"
+                tool_tip="Click to refresh your L$ balance"
+                follows="all"
+                height="18"
+                width="60"
+                top="0"
+                left="0"
+                v_pad="4"
+                halign="right"
+                wrap="false"
+                value="L$ --" />
+        </layout_panel>
+
+        <layout_panel
+            name="purchase_panel"
+            follows="top|left"
+            layout="topleft"
+            height="19"
+            width="155"
+            auto_resize="false"
+            user_resize="false"
+            visible="true">
+            <button
+                name="buyL"
+                label="Buy L$"
+                tool_tip="Click to buy more L$"
+                follows="top|bottom|left"
+                top="1"
+                left="10"
+                pad_right="0"
+                height="18"
+                width="70"
+                halign="center"
+                image_hover_unselected="PushButton_Over"
+                image_unselected="PushButton_Off"
+                image_pressed="PushButton_Press"
+                label_color="White"
+                label_shadow="true" />
+            <button
+                name="goShop"
+                label="Shop"
+                tool_tip="Open Second Life Marketplace"
+                follows="top|bottom|left"
+                top="1"
+                left_pad="0"
+                width="70"
+                height="18"
+                halign="left"
+                imgoverlay_label_space="10"
+                image_overlay="Command_MiniCart_Icon"
+                image_overlay_alignment="left"
+                image_hover_unselected="PushButton_Over"
+                image_unselected="PushButton_Off"
+                image_pressed="PushButton_Press"
+                label_color="White"
+                label_shadow="true" />
+        </layout_panel>
+
+        <layout_panel
+            name="time_panel"
+            follows="top|left"
+            layout="topleft"
+            height="19"
+            width="155"
+            auto_resize="false"
+            user_resize="false"
+            visible="true">
+            <text
+                name="TimeText"
+                type="string"
+                tool_tip="Current time (Pacific)"
+                follows="top|left"
+                layout="topleft"
+                top="0"
+                left="10"
+                width="145"
+                height="16"
+                v_pad="4"
+                halign="right"
+                text_readonly_color="TimeTextColor">
+                --:--
+            </text>
+        </layout_panel>
+
+        <layout_panel
+            name="media_panel"
+            follows="top|left"
+            layout="topleft"
+            height="19"
+            width="47"
+            auto_resize="false"
+            user_resize="false"
+            visible="true">
+            <button
+                name="media_toggle_btn"
+                tool_tip="Start/Stop All Media (Music, Video, Web pages)"
+                follows="top|left"
+                width="16"
+                height="16"
+                top="2"
+                left="10"
+                image_selected="Play_Off"
+                image_unselected="Pause_Off"
+                image_pressed="Pause_Press"
+                image_pressed_selected="Play_Press"
+                is_toggle="true" />
+            <button
+                name="volume_btn"
+                follows="top|left"
+                height="16"
+                width="16"
+                top="2"
+                left_pad="5"
+                image_selected="AudioMute_Off"
+                image_pressed="Audio_Press"
+                image_unselected="Audio_Off"
+                is_toggle="true" />
+        </layout_panel>
+
+        <layout_panel
+            name="draw_distance_panel"
+            follows="top|left"
+            layout="topleft"
+            height="19"
+            width="133"
+            auto_resize="false"
+            user_resize="false"
+            visible="true">
+            <icon
+                name="dd_icon"
+                tool_tip="Draw Distance"
+                image_name="Draw_Distance"
+                follows="top|left"
+                height="16"
+                width="16"
+                top="1"
+                left="15"
+                visible="true"
+                scale_image="false" />
+            <slider
+                name="drawdistance"
+                control_name="RenderFarClip"
+                tool_tip="Maximum distance away from camera to be rezzed (meters)"
+                follows="top|left"
+                layout="topleft"
+                top="2"
+                left_pad="2"
+                height="16"
+                width="105"
+                decimal_digits="0"
+                increment="8"
+                initial_value="160"
+                max_val="1024"
+                min_val="0" />
+        </layout_panel>
+
+        <layout_panel
+            name="statistics_panel"
+            follows="top|left"
+            layout="topleft"
+            height="19"
+            width="26"
+            auto_resize="false"
+            user_resize="false"
+            visible="true">
+            <statistics_graph
+                name="bandwidth_graph"
+                follows="top|left"
+                top="1"
+                left="10"
+                width="8"
+                height="17"
+                units=" Kbps"
+                mouse_opaque="true" />
+            <statistics_graph
+                name="packet_loss_graph"
+                follows="top|left"
+                top="1"
+                left_pad="0"
+                width="8"
+                height="17"
+                units="%"
+                value_min="0"
+                value_max="5"
+                precision="1"
+                mouse_opaque="true" />
+        </layout_panel>
+
+        <layout_panel
+            name="fps_panel"
+            follows="top|left"
+            layout="topleft"
+            height="19"
+            width="29"
+            auto_resize="false"
+            user_resize="false"
+            visible="true">
+            <text
+                name="fps_text"
+                tool_tip="Frames Per Second"
+                type="string"
+                follows="top|left"
+                top="0"
+                left="5"
+                height="16"
+                width="24"
+                v_pad="4"
+                halign="center"
+                wrap="false"
+                mouse_opaque="true">
+                    0.0
+            </text>
+        </layout_panel>
+    </layout_stack>
 </panel>
