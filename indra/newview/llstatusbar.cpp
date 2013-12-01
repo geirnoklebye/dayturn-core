@@ -115,7 +115,7 @@ LLStatusBar::LLStatusBar(const LLRect& rect)
 	mSGBandwidth(NULL),
 	mSGPacketLoss(NULL),
 	mBtnStats(NULL),
-    mIconDD(NULL),
+	mIconDD(NULL),
 	mBtnVolume(NULL),
 	mBoxBalance(NULL),
 	mBalance(0),
@@ -190,60 +190,25 @@ BOOL LLStatusBar::postBuild()
 
 	gSavedSettings.getControl("MuteAudio")->getSignal()->connect(boost::bind(&LLStatusBar::onVolumeChanged, this, _2));
 
-	mFPSText = getChild<LLTextBox>("FPSText");
+	mSGBandwidth = getChild<LLStatGraph>("bandwidth_graph");
+	if (mSGBandwidth) {
+		mSGBandwidth->setClickedCallback(boost::bind(&LLStatusBar::onClickStatistics, this));
+		mSGBandwidth->setStat(&LLViewerStats::getInstance()->mKBitStat);
+	}
 
-	//
-	//	adding net stat graph and button
-	//
-	S32 x = getRect().getWidth() - 40;
-	S32 y = 0;
-	LLRect r;
+	mSGPacketLoss = getChild<LLStatGraph>("packet_loss_graph");
+	if (mSGPacketLoss) {
+		mSGPacketLoss->setClickedCallback(boost::bind(&LLStatusBar::onClickStatistics, this));
+		mSGPacketLoss->setStat(&LLViewerStats::getInstance()->mPacketsLostPercentStat);
+		mSGPacketLoss->setThreshold(0, 0.5f);
+		mSGPacketLoss->setThreshold(1, 1.f);
+		mSGPacketLoss->setThreshold(2, 3.f);
+	}
 
-	r.set(x - ((SIM_STAT_WIDTH * 2)) - 5, y + MENU_BAR_HEIGHT - 1, x + 40, y + 1);
-	LLButton::Params BandwidthButton;
-	BandwidthButton.name(std::string("BandwidthGraphButton"));
-	BandwidthButton.label("");
-	BandwidthButton.rect(r);
-	BandwidthButton.follows.flags(FOLLOWS_BOTTOM | FOLLOWS_RIGHT);
-	BandwidthButton.click_callback.function(boost::bind(&LLStatusBar::onClickBandwidthGraph, this));
-	mBandwidthButton = LLUICtrlFactory::create<LLButton>(BandwidthButton);
-	addChild(mBandwidthButton);
-	LLColor4 BandwidthButtonOpacity;
-	BandwidthButtonOpacity.setAlpha(0);
-	mBandwidthButton->setColor(BandwidthButtonOpacity);
-
-	r.set( x-SIM_STAT_WIDTH, y+MENU_BAR_HEIGHT-1, x, y+1);
-	LLStatGraph::Params sgp;
-	sgp.name("BandwidthGraph");
-	sgp.rect(r);
-	sgp.follows.flags(FOLLOWS_BOTTOM | FOLLOWS_RIGHT);
-	sgp.mouse_opaque(false);
-	mSGBandwidth = LLUICtrlFactory::create<LLStatGraph>(sgp);
-	mSGBandwidth->setStat(&LLViewerStats::getInstance()->mKBitStat);
-	mSGBandwidth->setUnits("Kbps");
-	mSGBandwidth->setPrecision(0);
-	addChild(mSGBandwidth);
-	x -= SIM_STAT_WIDTH + 2;
-
-	r.set( x-SIM_STAT_WIDTH, y+MENU_BAR_HEIGHT-1, x, y+1);
-	//these don't seem to like being reused
-	LLStatGraph::Params pgp;
-	pgp.name("PacketLossPercent");
-	pgp.rect(r);
-	pgp.follows.flags(FOLLOWS_BOTTOM | FOLLOWS_RIGHT);
-	pgp.mouse_opaque(false);
-
-	mSGPacketLoss = LLUICtrlFactory::create<LLStatGraph>(pgp);
-	mSGPacketLoss->setStat(&LLViewerStats::getInstance()->mPacketsLostPercentStat);
-	mSGPacketLoss->setUnits("%");
-	mSGPacketLoss->setMin(0.f);
-	mSGPacketLoss->setMax(5.f);
-	mSGPacketLoss->setThreshold(0, 0.5f);
-	mSGPacketLoss->setThreshold(1, 1.f);
-	mSGPacketLoss->setThreshold(2, 3.f);
-	mSGPacketLoss->setPrecision(1);
-	mSGPacketLoss->mPerSec = FALSE;
-	addChild(mSGPacketLoss);
+	mFPSText = getChild<LLTextBox>("fps_text");
+	if (mFPSText) {
+		mFPSText->setClickedCallback(boost::bind(&LLStatusBar::onClickStatistics, this));
+	}
 
 	mPanelVolumePulldown = new LLPanelVolumePulldown();
 	addChild(mPanelVolumePulldown);
@@ -572,7 +537,7 @@ void LLStatusBar::onVolumeChanged(const LLSD& newvalue)
 	refresh();
 }
 
-void LLStatusBar::onClickBandwidthGraph()
+void LLStatusBar::onClickStatistics()
 {
 	LLFloaterReg::toggleInstance("stats");
 }

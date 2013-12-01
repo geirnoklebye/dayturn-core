@@ -91,7 +91,7 @@ private:
 
 	void onMouseEnterVolume();
 	void onMouseEnterNearbyMedia();
-	void onClickBandwidthGraph();
+	void onClickStatistics();
 	void onClickScreen(S32 x, S32 y);
 
 	static void onClickMediaToggle(void* data);

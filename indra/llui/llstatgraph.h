@@ -27,16 +27,33 @@
 #ifndef LL_LLSTATGRAPH_H
 #define LL_LLSTATGRAPH_H
 
-#include "llview.h"
 #include "llframetimer.h"
+#include "lluictrl.h"
 #include "v4color.h"
+
+#include <boost/signals2.hpp>
 
 class LLStat;
 
-class LLStatGraph : public LLView
+class LLStatGraph : public LLUICtrl
 {
 public:
-	LLStatGraph(const LLView::Params&);
+	typedef boost::function<void (void)> callback_t;
+
+	struct Params
+	:	public LLInitParam::Block<Params, LLUICtrl::Params>
+	{
+		Optional<F32>		value;
+		Optional<F32>		value_min;
+		Optional<F32>		value_max;
+		Optional<S32>		precision;
+		Optional<std::string>	units;
+		Optional<bool>		per_sec;
+
+		Params();
+	};
+
+	LLStatGraph(const Params&);
 
 	virtual void draw();
 
@@ -52,6 +69,9 @@ public:
 	
 	LLStat *mStatp;
 	BOOL mPerSec;
+
+	void setClickedCallback(boost::function<void (void*)> cb, void *userdata = NULL);
+
 private:
 	F32 mValue;
 
@@ -65,6 +85,12 @@ private:
 	S32 mNumThresholds;
 	F32 mThresholds[4];
 	LLColor4 mThresholdColors[4];
+
+	callback_t mClickedCallback;
+
+	BOOL handleMouseDown(S32 x, S32 y, MASK mask);
+	BOOL handleMouseUp(S32 x, S32 y, MASK mask);
+	BOOL handleHover(S32 x, S32 y, MASK mask);
 };
 
 #endif  // LL_LLSTATGRAPH_H

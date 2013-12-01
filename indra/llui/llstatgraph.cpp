@@ -35,28 +35,45 @@
 #include "llstat.h"
 #include "llgl.h"
 #include "llglheaders.h"
-//#include "llviewercontrol.h"
+#include "llwindow.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-LLStatGraph::LLStatGraph(const LLView::Params& p)
-:	LLView(p)
+static LLDefaultChildRegistry::Register<LLStatGraph> r("statistics_graph");
+
+LLStatGraph::Params::Params()
+:
+	value("value"),
+	value_min("value_min"),
+	value_max("value_max"),
+	precision("precision"),
+	units("units"),
+	per_sec("per_sec")
 {
-	mStatp = NULL;
+}
+
+LLStatGraph::LLStatGraph(const LLStatGraph::Params &p)
+:	LLUICtrl(p),
+	mStatp(NULL),
+	mMin(p.value_min),
+	mMax(p.value_max),
+	mPerSec(p.per_sec),
+	mValue(p.value),
+	mUnits(p.units),
+	mPrecision(p.precision),
+	mClickedCallback(NULL)
+{
 	setToolTip(p.name());
+
 	mNumThresholds = 3;
 	mThresholdColors[0] = LLColor4(0.f, 1.f, 0.f, 1.f);
 	mThresholdColors[1] = LLColor4(1.f, 1.f, 0.f, 1.f);
 	mThresholdColors[2] = LLColor4(1.f, 0.f, 0.f, 1.f);
 	mThresholdColors[3] = LLColor4(1.f, 0.f, 0.f, 1.f);
+
 	mThresholds[0] = 50.f;
 	mThresholds[1] = 75.f;
 	mThresholds[2] = 100.f;
-	mMin = 0.f;
-	mMax = 125.f;
-	mPerSec = TRUE;
-	mValue = 0.f;
-	mPrecision = 0;
 }
 
 void LLStatGraph::draw()
@@ -154,4 +171,78 @@ void LLStatGraph::setPrecision(const S32 precision)
 void LLStatGraph::setThreshold(const S32 i, F32 value)
 {
 	mThresholds[i] = value;
+}
+
+void LLStatGraph::setClickedCallback(boost::function<void (void*)> cb, void *userdata /* = NULL */)
+{
+	mClickedCallback = boost::bind(cb, userdata);
+}
+
+BOOL LLStatGraph::handleMouseDown(S32 x, S32 y, MASK mask)
+{
+	BOOL handled = LLUICtrl::handleMouseDown(x, y, mask);
+
+	if (getSoundFlags() & MOUSE_DOWN) {
+		make_ui_sound("UISndClick");
+	}
+
+	if (!handled && mClickedCallback) {
+		handled = TRUE;
+	}
+
+	if (handled) {
+		//
+		//	route future Mouse messages here preemptively
+		//	(release on mouse up)
+		//
+		gFocusMgr.setMouseCapture( this );
+	}
+
+	return handled;
+}
+
+BOOL LLStatGraph::handleMouseUp(S32 x, S32 y, MASK mask)
+{
+	BOOL handled = LLUICtrl::handleMouseUp(x, y, mask);
+
+	if (getSoundFlags() & MOUSE_UP) {
+		make_ui_sound("UISndClickRelease");
+	}
+
+	//
+	//	we only handle the click if the click both started
+	//	and ended within us
+	//
+	if (hasMouseCapture()) {
+		//
+		//	release the mouse
+		//
+		gFocusMgr.setMouseCapture( NULL );
+
+		//
+		//	DO THIS AT THE VERY END to allow the button
+		//	to be destroyed as a result of being clicked
+		//
+		if (mClickedCallback && !handled) {
+			mClickedCallback();
+			handled = TRUE;
+		}
+	}
+
+	return handled;
+}
+
+BOOL LLStatGraph::handleHover(S32 x, S32 y, MASK mask)
+{
+	BOOL handled = LLUICtrl::handleHover(x, y, mask);
+
+	if (!handled && mClickedCallback) {
+		//
+		//	clickable statistics graphs change the cursor to a hand
+		//
+		LLUI::getWindow()->setCursor(UI_CURSOR_HAND);
+		handled = TRUE;
+	}
+
+	return handled;
 }
