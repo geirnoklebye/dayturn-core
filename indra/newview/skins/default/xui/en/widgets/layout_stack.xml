@@ -2,5 +2,5 @@
 <!-- Global settings for all widgets ("UI Controls") -->
 <!-- The params in this file aren't currently getting loaded in OSX -->
 <layout_stack name="stack"
-    open_time_constant="0.05"
-    close_time_constant="0.05" /> 
+    open_time_constant="0.08"
+    close_time_constant="0.08" /> 
