@@ -221,6 +221,7 @@
                 width="8"
                 height="17"
                 units=" Kbps"
+                per_sec="true"
                 mouse_opaque="true" />
             <statistics_graph
                 name="packet_loss_graph"

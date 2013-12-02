@@ -252,7 +252,7 @@ void LLStatusBar::refresh()
 		mFPSUpdateTimer.reset();
 
 		if (net_stats_visible) {
-			F32 bwtotal = gViewerThrottle.getMaxBandwidth() / 1000.f;
+			F32 bwtotal = gViewerThrottle.getMaxBandwidth() / 1024.f;
 			mSGBandwidth->setMin(0.f);
 			mSGBandwidth->setMax(bwtotal * 1.25f);
 			mSGBandwidth->setThreshold(0, bwtotal * 0.75f);
