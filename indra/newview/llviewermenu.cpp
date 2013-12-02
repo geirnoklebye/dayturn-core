@@ -75,6 +75,7 @@
 #include "llfloaterworldmap.h"
 #include "llfloaterbuildoptions.h"
 #include "llfloateradvancedbuildoptions.h"
+#include "llgroupactions.h"
 #include "llavataractions.h"
 #include "lllandmarkactions.h"
 #include "llgroupmgr.h"
@@ -104,6 +105,7 @@
 #include "lltoolpie.h"
 #include "lltoolselectland.h"
 #include "lltrans.h"
+#include "llurlentry.h"
 #include "llviewerdisplay.h" //for gWindowResized
 #include "llviewergenericmessage.h"
 #include "llviewerhelp.h"
@@ -1395,6 +1397,16 @@ class LLAdvancedCheckDebugViews : public view_listener_t
 	}
 };
 
+class LLAdvancedViewerSupportGroupExists : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		std::string grid = LLGridManager::getInstance()->getGridLabel();
+		LLStringUtil::replaceChar(grid, ' ', '_');
+
+		return !gSavedSettings.getString("SupportGroupSLURL_" + grid).empty();
+	}
+};
 
 
 ///////////////////////
@@ -8113,6 +8125,20 @@ void handle_show_url(const LLSD& param)
 
 }
 
+void handle_show_group()
+{
+	std::string grid = LLGridManager::getInstance()->getGridLabel();
+	LLStringUtil::replaceChar(grid, ' ', '_');
+
+	const std::string group = gSavedSettings.getString("SupportGroupSLURL_" + grid);
+
+	if (!group.empty()) {
+		LLUrlEntryGroup ueg;
+
+		LLGroupActions::show(LLUUID(ueg.getID(group).asString().c_str()));
+	}
+}
+
 void handle_buy_currency_test(void*)
 {
 	std::string url =
@@ -8980,6 +9006,7 @@ void initialize_menus()
 	// Advanced > UI
 	commit.add("Advanced.WebBrowserTest", boost::bind(&handle_web_browser_test,	_2));	// sigh! this one opens the MEDIA browser
 	commit.add("Advanced.WebContentTest", boost::bind(&handle_web_content_test, _2));	// this one opens the Web Content floater
+	commit.add("Advanced.ShowGroup", boost::bind(&handle_show_group));
 	commit.add("Advanced.ShowURL", boost::bind(&handle_show_url, _2));
 	view_listener_t::addMenu(new LLAdvancedBuyCurrencyTest(), "Advanced.BuyCurrencyTest");
 	view_listener_t::addMenu(new LLAdvancedDumpSelectMgr(), "Advanced.DumpSelectMgr");
@@ -8991,6 +9018,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedToggleDebugClicks(), "Advanced.ToggleDebugClicks");
 	view_listener_t::addMenu(new LLAdvancedCheckDebugClicks(), "Advanced.CheckDebugClicks");
 	view_listener_t::addMenu(new LLAdvancedCheckDebugViews(), "Advanced.CheckDebugViews");
+	view_listener_t::addMenu(new LLAdvancedViewerSupportGroupExists(), "Advanced.ViewerSupportGroupExists");
 	view_listener_t::addMenu(new LLAdvancedToggleDebugViews(), "Advanced.ToggleDebugViews");
 	view_listener_t::addMenu(new LLAdvancedToggleXUINameTooltips(), "Advanced.ToggleXUINameTooltips");
 	view_listener_t::addMenu(new LLAdvancedCheckXUINameTooltips(), "Advanced.CheckXUINameTooltips");

@@ -2101,6 +2101,15 @@
              function="Floater.Show"
              parameter="hud" />
         </menu_item_call>-->
+        <menu_item_call
+             label="[APP_NAME] Support Group"
+             name="Viewer Support Group"
+             visible="false">
+             <menu_item_call.on_click
+                 function="Advanced.ShowGroup" />
+             <menu_item_call.on_visible
+                 function="Advanced.ViewerSupportGroupExists" />
+        </menu_item_call>
 
         <menu_item_separator/>
 
