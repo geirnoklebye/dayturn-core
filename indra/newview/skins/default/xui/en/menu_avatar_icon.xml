@@ -41,10 +41,16 @@
          parameter="im" />
     </menu_item_call>
     <menu_item_call
-     label="Offer teleport"
+     label="Offer Teleport"
      layout="topleft"
      name="Offer Teleport">
-        <on_click function="AvatarIcon.Action" parameter="teleport"/>
+        <on_click function="AvatarIcon.Action" parameter="offer_teleport"/>
+    </menu_item_call>
+    <menu_item_call
+     label="Request Teleport"
+     layout="topleft"
+     name="Request Teleport">
+        <on_click function="AvatarIcon.Action" parameter="request_teleport"/>
     </menu_item_call>
     <menu_item_call
      label="Voice call"
@@ -60,21 +66,27 @@
     </menu_item_call>
     <menu_item_separator layout="topleft" name="separator_chat_history"/>
     <menu_item_call
-     label="Add friend"
-     layout="topleft"
-     name="Offer Teleport">
-        <menu_item_call.on_click
-         function="AvatarIcon.Action"
-         parameter="teleport" />
-    </menu_item_call>
-    <menu_item_call
      label="Invite To Group"
      layout="topleft"
      name="Invite To Group">
         <menu_item_call.on_click
          function="AvatarIcon.Action"
-         parameter="invitetogroup" />
+         parameter="invite_to_group" />
     </menu_item_call>
+    <menu_item_call
+     label="Block Voice"
+     layout="topleft"
+     name="Block Unblock">
+       <on_click function="AvatarIcon.Action" parameter="block_unblock" />
+       <on_check function="AvatarIcon.Check" parameter="is_blocked" />
+    </menu_item_call>
+    <menu_item_check
+     label="Block Text"
+     layout="topleft"
+     name="Mute Text">
+       <on_click function="AvatarIcon.Action" parameter="mute_unmute" />
+       <on_check function="AvatarIcon.Check" parameter="is_muted" />
+    </menu_item_check>
     <menu
       label="Copy To Clipboard"
       name="copy_to_clipboard">
@@ -102,28 +114,16 @@
     </menu>
     <menu_item_separator />
     <menu_item_call
-     label="Block"
-     layout="topleft"
-     name="Block">
-        <menu_item_call.on_click
-         function="AvatarIcon.Action"
-         parameter="toggleblock" />
-    </menu_item_call>
-    <menu_item_call
-     label="Unblock"
-     layout="topleft"
-     name="Unblock">
-        <menu_item_call.on_click
-         function="AvatarIcon.Action"
-         parameter="toggleblock" />
-    </menu_item_call>
-    <menu_item_call
      label="Zoom In"
      layout="topleft"
      name="Zoom In">
-        <menu_item_call.on_click
-         function="AvatarIcon.Action"
-         parameter="zoom" />
+       <on_click function="AvatarIcon.Action" parameter="zoom_in" />
+    </menu_item_call>
+    <menu_item_call
+     label="Show On Map"
+     layout="topleft"
+     name="Show On Map">
+       <on_click function="AvatarIcon.Action" parameter="map" />
     </menu_item_call>
     <menu_item_call
      label="Share"
@@ -176,49 +176,4 @@
          function="AvatarIcon.Action"
          parameter="estateban" />
     </menu_item_call>
-    <menu_item_call
-     label="Invite to group..."
-     layout="topleft"
-     name="Invite Group">
-      <on_click function="AvatarIcon.Action" parameter="invite_to_group" />   
-    </menu_item_call>
-    <menu_item_separator layout="topleft" name="separator_invite_to_group"/>
-    <menu_item_call
-     label="Zoom In"
-     layout="topleft"
-     name="Zoom In">
-      <on_click function="AvatarIcon.Action" parameter="zoom_in" />
-    </menu_item_call>
-    <menu_item_call
-     label="Map"
-     layout="topleft"
-     name="Map">
-       <on_click function="AvatarIcon.Action" parameter="map" />
-    </menu_item_call>
-    <menu_item_call
-     label="Share"
-     layout="topleft"
-     name="Share">
-       <on_click function="AvatarIcon.Action" parameter="share" />
-    </menu_item_call>
-    <menu_item_call
-     label="Pay"
-     layout="topleft"
-     name="Pay">
-       <on_click function="AvatarIcon.Action" parameter="pay" />
-    </menu_item_call>
-    <menu_item_check
-     label="Block Voice"
-     layout="topleft"
-     name="Block Unblock">
-       <on_click function="AvatarIcon.Action" parameter="block_unblock" />
-       <on_check function="AvatarIcon.Check" parameter="is_blocked" />
-    </menu_item_check>
-    <menu_item_check
-     label="Block Text"
-     layout="topleft"
-     name="Mute Text">
-       <on_click function="AvatarIcon.Action" parameter="mute_unmute" />
-       <on_check function="AvatarIcon.Check" parameter="is_muted" />   
-  </menu_item_check>
 </menu>

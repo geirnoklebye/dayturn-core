@@ -195,9 +195,13 @@ public:
 		{
 			LLAvatarActions::startIM(getAvatarId());
 		}
-		else if (level == "teleport")
+		else if (level == "offer_teleport")
 		{
 			LLAvatarActions::offerTeleport(getAvatarId());
+		}
+		else if (level == "request_teleport")
+		{
+			LLAvatarActions::teleportRequest(getAvatarId());
 		}
 		else if (level == "voice_call")
 		{
@@ -215,11 +219,11 @@ public:
 		{
 			LLAvatarActions::removeFriendDialog(getAvatarId());
 		}
-		else if (level == "zoom")
+		else if (level == "zoom_in")
 		{
 			handle_zoom_to_object(getAvatarId());
 		}
-		else if (level == "invitetogroup")
+		else if (level == "invite_to_group")
 		{
 			LLAvatarActions::inviteToGroup(getAvatarId());
 		}
@@ -235,6 +239,10 @@ public:
 		{
 			LLAvatarActions::copyProfileSLURL(getAvatarId());
 		}
+		else if (level == "map")
+		{
+			LLAvatarActions::showOnMap(getAvatarId());
+		}
 		else if (level == "share")
 		{
 			LLAvatarActions::share(getAvatarId());
@@ -243,23 +251,13 @@ public:
 		{
 			LLAvatarActions::pay(getAvatarId());
 		}
-		else if (level == "toggleblock")
+		else if (level == "block_unblock")
 		{
-			bool was_blocked = LLAvatarActions::isBlocked(getAvatarId());
-
-			LLAvatarActions::toggleBlock(getAvatarId());
-
-			if (!was_blocked) {
-				LLFloaterSidePanelContainer::showPanel(
-					"people",
-					"panel_people",
-					LLSD().with(
-						"people_panel_tab_name",
-						"blocked_panel").with("blocked_to_select",
-						getAvatarId()
-					)
-				);
-			}
+			mute(getAvatarId(), LLMute::flagVoiceChat);
+		}
+		else if (level == "mute_unmute")
+		{
+			mute(getAvatarId(), LLMute::flagTextChat);
 		}
 		else if (level == "togglefreeze")
 		{
@@ -773,6 +771,9 @@ protected:
 			if (gAgentID == mAvatarID) {
 				menu->setItemEnabled("Send IM", false);
 				menu->setItemEnabled("Offer Teleport", false);
+				menu->setItemEnabled("Request Teleport", false);
+				menu->setItemEnabled("Voice Call", false);
+				menu->setItemEnabled("Chat History", false);
 				menu->setItemEnabled("Add Friend", false);
 				menu->setItemEnabled("Zoom In", false);
 				menu->setItemEnabled("Invite To Group", false);
@@ -781,7 +782,8 @@ protected:
 				menu->setItemEnabled("Block", false);
 
 				menu->setItemVisible("Remove Friend", false);
-				menu->setItemVisible("Unblock", false);
+				menu->setItemVisible("Block Unblock", false);
+				menu->setItemVisible("Mute Text", false);
 				menu->setItemVisible("freeze_eject_sep", false);
 				menu->setItemVisible("ToggleFreeze", false);
 				menu->setItemVisible("Eject", false);
@@ -797,11 +799,9 @@ protected:
 				menu->setItemVisible("Remove Friend", is_friend);
 
 				menu->setItemEnabled("Zoom In", gObjectList.findObject(mAvatarID) != NULL);
-
-				const bool is_blocked = LLAvatarActions::isBlocked(mAvatarID);
-				menu->setItemEnabled("Block", !is_blocked && LLAvatarActions::canBlock(mAvatarID));
-				menu->setItemVisible("Block", !is_blocked);
-				menu->setItemVisible("Unblock", is_blocked);
+				menu->setItemEnabled("Block Unblock", LLAvatarActions::canBlock(mAvatarID));
+				menu->setItemEnabled("Mute Text", LLAvatarActions::canBlock(mAvatarID));
+				menu->setItemVisible("Show On Map", (is_friend && LLAvatarTracker::instance().isBuddyOnline(mAvatarID) && is_agent_mappable(mAvatarID)) || gAgent.isGodlike());
 
 				const bool can_freeze_eject = enable_freeze_eject(mAvatarID);
 				menu->setItemVisible("freeze_eject_sep", can_freeze_eject);
