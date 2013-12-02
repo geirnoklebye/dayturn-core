@@ -53,6 +53,7 @@
 #include "llsd.h"
 #include "lltextbox.h"
 #include "llui.h"
+#include "llviewernetwork.h"	// for LLGridManager
 #include "llviewerparceloverlay.h"
 #include "llviewerregion.h"
 #include "llviewerstats.h"
@@ -171,10 +172,16 @@ BOOL LLStatusBar::postBuild()
 
 	mTextTime = getChild<LLTextBox>("TimeText" );
 	
-	getChild<LLUICtrl>("buyL")->setCommitCallback(
-		boost::bind(&LLStatusBar::onClickBuyCurrency, this));
-
-	getChild<LLUICtrl>("goShop")->setCommitCallback(boost::bind(&LLWeb::loadURLExternal, gSavedSettings.getString("MarketplaceURL")));
+	//
+	//	only show the Buy and Shop buttons in Second Life
+	//
+	if (LLGridManager::getInstance()->isInSecondLife()) {
+		getChild<LLUICtrl>("buyL")->setCommitCallback(boost::bind(&LLStatusBar::onClickBuyCurrency, this));
+		getChild<LLUICtrl>("goShop")->setCommitCallback(boost::bind(&LLWeb::loadURLExternal, gSavedSettings.getString("MarketplaceURL")));
+	}
+	else {
+		getChild<LLUICtrl>("purchase_panel")->setVisible(FALSE);
+	}
 
 	mBoxBalance = getChild<LLTextBox>("balance");
 	mBoxBalance->setClickedCallback( &LLStatusBar::onClickBalance, this );
