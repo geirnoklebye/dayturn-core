@@ -18463,7 +18463,7 @@
       <key>Value</key>
       <string>http://search.metaverseink.com/opensim/results.jsp?query=[QUERY]&amp;submit=[CATEGORY]</string>
     </map>
-    <key>SupportGroupSLURL_Second_Life</key>
+    <key>SupportGroupSLURL_Second_Life_Main_Grid_(Agni)</key>
     <map>
       <key>Comment</key>
       <string>SLURL for the viewer support and announcement group in the Second Life grid</string>

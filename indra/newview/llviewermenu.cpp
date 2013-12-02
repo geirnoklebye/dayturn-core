@@ -1407,7 +1407,6 @@ class LLAdvancedDumpInventory : public view_listener_t
 };
 
 
-
 ////////////////////////////////
 // PRINT SELECTED OBJECT INFO //
 ////////////////////////////////
@@ -4106,7 +4105,6 @@ bool enable_sitstand_self()
 {
     return isAgentAvatarValid() && !gAgent.getFlying();
 }
-
 
 
 bool show_sitdown_self()
@@ -8912,7 +8910,9 @@ class LLToggleHowTo : public view_listener_t
 	{
 		LLFloaterWebContent::Params p;
 		std::string url = gSavedSettings.getString("HowToHelpURL");
-		p.url = LLWeb::expandURLSubstitutions(url, LLSD());
+		std::string url_expanded = LLWeb::expandURLSubstitutions(url, LLSD());
+		LL_DEBUGS("WebApi") << "HowToHelpURL \"" << url_expanded << "\"" << LL_ENDL;
+		p.url = url_expanded;
 		p.show_chrome = false;
 		p.target = "__help_how_to";
 		p.show_page_title = false;
@@ -9454,6 +9454,20 @@ void handle_report_bug(const LLSD& param)
 	file_bug_url.setArgs(replace);
 
 	LLWeb::loadURLExternal(file_bug_url.getString());
+}
+
+void handle_show_group()
+{
+	std::string grid = LLGridManager::getInstance()->getGridLabel();
+	LLStringUtil::replaceChar(grid, ' ', '_');
+
+	const std::string group = gSavedSettings.getString("SupportGroupSLURL_Second_Life_Main_Grid_(Agni)");
+
+	if (!group.empty()) {
+		LLUrlEntryGroup ueg;
+
+		LLGroupActions::show(LLUUID(ueg.getID(group).asString().c_str()));
+	}
 }
 
 void handle_buy_currency_test(void*)
@@ -10554,6 +10568,7 @@ void initialize_menus()
 	// Advanced > UI
 	commit.add("Advanced.WebBrowserTest", boost::bind(&handle_web_browser_test,	_2));	// sigh! this one opens the MEDIA browser
 	commit.add("Advanced.WebContentTest", boost::bind(&handle_web_content_test, _2));	// this one opens the Web Content floater
+	commit.add("Advanced.ShowGroup", boost::bind(&handle_show_group));
 	commit.add("Advanced.ShowURL", boost::bind(&handle_show_url, _2));
 	commit.add("Advanced.ReportBug", boost::bind(&handle_report_bug, _2));
 	view_listener_t::addMenu(new LLAdvancedBuyCurrencyTest(), "Advanced.BuyCurrencyTest");
@@ -10566,6 +10581,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedToggleDebugClicks(), "Advanced.ToggleDebugClicks");
 	view_listener_t::addMenu(new LLAdvancedCheckDebugClicks(), "Advanced.CheckDebugClicks");
 	view_listener_t::addMenu(new LLAdvancedCheckDebugViews(), "Advanced.CheckDebugViews");
+	view_listener_t::addMenu(new LLAdvancedViewerSupportGroupExists(), "Advanced.ViewerSupportGroupExists");
 	view_listener_t::addMenu(new LLAdvancedToggleDebugViews(), "Advanced.ToggleDebugViews");
 	view_listener_t::addMenu(new LLAdvancedToggleXUINameTooltips(), "Advanced.ToggleXUINameTooltips");
 	view_listener_t::addMenu(new LLAdvancedCheckXUINameTooltips(), "Advanced.CheckXUINameTooltips");
