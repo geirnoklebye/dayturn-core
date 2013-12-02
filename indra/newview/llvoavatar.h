@@ -905,7 +905,7 @@ private:
 	bool			mNameFriend;
 	bool			mNameCloud;
 	F32				mNameAlpha;
-	BOOL      		mRenderGroupTitles;
+	bool      		mRenderGroupTitles;
 
 	FetchAvatarBirthdate	*mAvatarBirthdateRequest;
 	LLDate			mAvatarBirthdate;
