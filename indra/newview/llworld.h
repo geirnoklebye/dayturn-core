@@ -309,7 +309,6 @@ private:
 	F32		mMaxPhysPrimScale;
 	BOOL    mAllowParcelWindLight;
 	BOOL    mEnableTeenMode;
-	BOOL    mEnforceMaxBuild;
 	BOOL	mLockedDrawDistance;
 	F32 mWhisperDistance;
 	F32 mSayDistance;

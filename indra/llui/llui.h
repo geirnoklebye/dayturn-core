@@ -278,6 +278,7 @@ public:
 	//
 	static settings_map_t sSettingGroups;
 	static LLUIAudioCallback sAudioCallback;
+	static LLVector2		sGLScaleFactor;
 	static LLWindow*		sWindow;
 	static LLView*			sRootView;
 	static LLHelp*			sHelpImpl;
