@@ -799,7 +799,7 @@ void LLMenuItemCallGL::onCommit( void )
 
 void LLMenuItemCallGL::updateEnabled( void )
 {
-	if (mEnableSignal.num_slots() > 0)
+	if (isAvailableOnThisGrid() && mEnableSignal.num_slots() > 0)
 	{
 		bool enabled = mEnableSignal(this, LLSD());
 		if (mEnabledControlVariable)
@@ -819,7 +819,7 @@ void LLMenuItemCallGL::updateEnabled( void )
 
 void LLMenuItemCallGL::updateVisible( void )
 {
-	if (mVisibleSignal.num_slots() > 0)
+	if (isAvailableOnThisGrid() && mVisibleSignal.num_slots() > 0)
 	{
 		bool visible = mVisibleSignal(this, LLSD());
 		setVisible(visible);
@@ -2573,6 +2573,7 @@ BOOL LLMenuGL::appendMenu( LLMenuGL* menu )
 	p.label = menu->getLabel();
 	p.branch = menu;
 	p.jump_key = menu->getJumpKey();
+	p.only_in_sl = menu->getOnlyInSL();
 	p.enabled_color=LLUIColorTable::instance().getColor("MenuItemEnabledColor");
 	p.disabled_color=LLUIColorTable::instance().getColor("MenuItemDisabledColor");
 	p.highlight_bg_color=LLUIColorTable::instance().getColor("MenuItemHighlightBgColor");
@@ -3879,7 +3880,7 @@ void LLContextMenuBranch::buildDrawLabel( void )
 			}
 		}
 		setDrawTextDisabled(!any_enabled);
-		setEnabled(TRUE);
+		setEnabled(any_enabled);
 	}
 
 	mDrawAccelLabel.clear();

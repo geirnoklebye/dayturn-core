@@ -57,6 +57,8 @@
 #include "lltexteditor.h"
 #include "lltextbox.h"
 
+#include "../newview/llviewernetwork.h"
+
 static const S32 LINE_HEIGHT = 15;
 
 S32		LLView::sDepth = 0;
@@ -96,6 +98,7 @@ LLView::Params::Params()
 :	name("name", std::string("unnamed")),
 	enabled("enabled", true),
 	visible("visible", true),
+	only_in_sl("only_in_sl", false),
 	mouse_opaque("mouse_opaque", true),
 	follows("follows"),
 	hover_cursor("hover_cursor", "UI_CURSOR_ARROW"),
@@ -125,6 +128,7 @@ LLView::Params::Params()
 
 LLView::LLView(const LLView::Params& p)
 :	mVisible(p.visible),
+	mOnlyInSL(p.only_in_sl),
 	mInDraw(false),
 	mName(p.name),
 	mParentView(NULL),
@@ -459,6 +463,18 @@ std::string LLView::getPathname() const
 	std::ostringstream out;
 	buildPathname(out, this);
 	return out.str();
+}
+
+const bool LLView::isAvailableOnThisGrid() const
+{
+	//
+	//	only show SL-specific items when in SL
+	//
+	if (mOnlyInSL && !LLGridManager::getInstance()->isInSecondLife()) {
+		return false;
+	}
+
+	return true;
 }
 
 //static
@@ -2180,9 +2196,8 @@ void LLView::initFromParams(const LLView::Params& params)
 	reshape(width, height);
 
 	// call virtual methods with most recent data
-	// use getters because these values might not come through parameter block
-	setEnabled(getEnabled());
-	setVisible(getVisible());
+	setEnabled(mEnabled);
+	setVisible(mVisible);
 
 	if (!params.name().empty())
 	{

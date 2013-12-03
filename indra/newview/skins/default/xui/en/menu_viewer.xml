@@ -170,27 +170,30 @@
 
       <menu_item_call
          label="Buy L$..."
-         name="Buy and Sell L$">
+         name="Buy and Sell L$"
+         only_in_sl="true">
         <menu_item_call.on_click
          function="BuyCurrency" />
       </menu_item_call>
       <menu_item_call
          label="Merchant Outbox..."
-         name="MerchantOutbox">
+         name="MerchantOutbox"
+         only_in_sl="true">
         <menu_item_call.on_click
          function="Floater.ToggleOrBringToFront"
          parameter="outbox" />
       </menu_item_call>
       <menu_item_call
            label="Account dashboard..."
-           name="Manage My Account">
+           name="Manage My Account"
+           only_in_sl="true">
         <menu_item_call.on_click
          function="PromptShowURL"
          name="ManageMyAccount_url"
          parameter="WebLaunchJoinNow,http://secondlife.com/account/" />
       </menu_item_call>
 
-      <menu_item_separator/>
+      <menu_item_separator only_in_sl="true" />
 
       <menu_item_call
          label="Preferences..."
@@ -922,7 +925,8 @@
         </menu>
         <menu_item_call
             label="Linksets..."
-            name="pathfinding_linkset_menu_item">
+            name="pathfinding_linkset_menu_item"
+            only_in_sl="true">
           <menu_item_call.on_click
               function="Floater.ToggleOrBringToFront"
               parameter="pathfinding_linksets" />
@@ -1060,6 +1064,7 @@
          create_jump_keys="true"
          label="Pathfinding"
          name="Pathfinding"
+         only_in_sl="true"
          tear_off="true">
         <menu_item_call
             label="Linksets..."
@@ -1371,12 +1376,12 @@
         </menu_item_call>
 <!--       <menu_item_call
            label="Quickstart"
-           name="Quickstart">
+           name="Quickstart"
+           only_in_sl="true">
             <menu_item_call.on_click
             function="Advanced.ShowURL"
             parameter="http://community.secondlife.com/t5/English-Knowledge-Base/Second-Life-Quickstart/ta-p/1087919"/>
         </menu_item_call>-->
-        <menu_item_separator name="grid_help_seperator"/>
         <menu_item_call
          label="[CURRENT_GRID] Help"
          name="current_grid_help">
@@ -1393,36 +1398,43 @@
         </menu_item_call>
 <!--        <menu_item_call
          label="Tutorial"
-         name="Tutorial">
+         name="Tutorial"
+         only_in_sl="true">
             <menu_item_call.on_click
              function="Floater.Show"
              parameter="hud" />
         </menu_item_call>-->
-		<menu_item_separator/>
+
+      <menu_item_separator only_in_sl="true" />
+
         <menu_item_call
              label="Knowledge Base"
-             name="Knowledge Base">
+             name="Knowledge Base"
+             only_in_sl="true">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
             parameter="http://community.secondlife.com/t5/English-Knowledge-Base/Second-Life-User-s-Guide/ta-p/1244857"/>
         </menu_item_call>
         <menu_item_call
              label="Wiki"
-             name="Wiki">
+             name="Wiki"
+             only_in_sl="true">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
                  parameter="http://wiki.secondlife.com"/>
         </menu_item_call>
         <menu_item_call
              label="Community Forums"
-             name="Community Forums">
+             name="Community Forums"
+             only_in_sl="true">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
                  parameter="http://community.secondlife.com/t5/Forums/ct-p/Forums"/>
         </menu_item_call>         
         <menu_item_call
              label="Support Portal"
-             name="Support portal">
+             name="Support portal"
+             only_in_sl="true">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
                  parameter="https://support.secondlife.com/"/>         
@@ -1973,21 +1985,6 @@
          name="Shortcuts"
          tear_off="true"
          visible="false">
-            <!-- This second, alternative shortcut for Show Advanced Menu is for backward compatibility.  The main shortcut has been changed so it's Linux-friendly, where the old shortcut is typically eaten by the window manager. -->
-            <menu_item_check
-               label="Show Advanced Menu - legacy shortcut"
-               name="Show Advanced Menu - legacy shortcut"
-               shortcut="control|alt|D">
-              <on_check
-                 function="CheckControl"
-                 parameter="UseDebugMenus" />
-              <on_click
-                 function="ToggleControl"
-                 parameter="UseDebugMenus" />
-            </menu_item_check>
-
-            <menu_item_separator/>
-
             <menu_item_call
              label="Close Window"
              name="Close Window"

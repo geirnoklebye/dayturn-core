@@ -203,6 +203,7 @@
                      auto_resize="true"
                      width="100">
                     <button
+                         only_in_sl="true"
                          enabled="true"
                          follows="bottom|left|right"
                          height="23"
