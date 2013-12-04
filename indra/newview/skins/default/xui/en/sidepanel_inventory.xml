@@ -49,6 +49,7 @@
                       width="330" />
              </layout_panel>
 			    <layout_panel
+                 only_in_sl="true"
                  width="330"
                  layout="topleft"
                  auto_resize="false"
