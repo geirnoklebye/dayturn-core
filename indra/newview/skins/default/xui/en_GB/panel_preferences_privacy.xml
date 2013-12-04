@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<panel name="im">
+    <check_box name="ShowFavoritesOnLogin"
+        label="Show my Favourite Landmarks at Login (via &apos;Start At&apos; drop-down menu)" />
+</panel>

@@ -3116,9 +3116,13 @@ Drag folders to this area and click "Send to Marketplace" to list them for sale 
 	<string name="InvFolder Sounds">Sounds</string>
 	<string name="InvFolder Calling Cards">Calling Cards</string>
 	<string name="InvFolder Landmarks">Landmarks</string>
+	<string name="InvFolder OpenSim Library">OpenSim Library</string>
+	<string name="InvFolder OpenSim Specific Scripts">OpenSim-Specific Scripts</string>
 	<string name="InvFolder Scripts">Scripts</string>
+	<string name="InvFolder Texture Library">Texture Library</string>
 	<string name="InvFolder Clothing">Clothing</string>
 	<string name="InvFolder Objects">Objects</string>
+	<string name="InvFolder Objects Library">Objects Library</string>
 	<string name="InvFolder Notecards">Notecards</string>
 	<string name="InvFolder New Folder">New Folder</string>
 	<string name="InvFolder Inventory">Inventory</string>

@@ -80,6 +80,14 @@ Also be sure your monitor is set to True Colour (32-bit) in Control Panels &gt; 
 Please go to your computer's display settings and set the colour mode to 32-bit.
     </string>
 
+    <string name="favorite">favourite</string>
+    <string name="FavoritesNoMatchingItems">Drag a landmark here to add it to your favourites.</string>
+    <string name="InvFolder favorite">My Favourites</string>
+    <string name="InvFolder Favorites">My Favourites</string>
+    <string name="InvFolder favorites">My Favourites</string>
+
+    <string name="Command_Picks_Tooltip">Places to show as favourites in your profile</string>
+
     <string name="Blush Color">Blush Colour</string>
     <string name="Eye Color">Eye Colour</string>
     <string name="Eyeliner Color">Eyeliner Colour</string>

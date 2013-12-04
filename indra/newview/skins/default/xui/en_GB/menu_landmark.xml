@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toggleable_menu name="landmark_overflow_menu">
+    <menu_item_call name="add_to_favbar"
+        label="Add to Favourites Bar" />
+</toggleable_menu>

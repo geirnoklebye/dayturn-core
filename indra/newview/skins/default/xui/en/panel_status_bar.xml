@@ -89,7 +89,7 @@
             <button
                 name="goShop"
                 label="Shop"
-                tool_tip="Open Second Life Marketplace"
+                tool_tip="Open [SECOND_LIFE] Marketplace"
                 follows="top|bottom|left"
                 top="1"
                 left_pad="0"

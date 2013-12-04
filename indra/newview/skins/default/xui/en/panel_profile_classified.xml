@@ -28,7 +28,7 @@
      layout="topleft"
      follows="left|top"
      name="Place an ad in Second Life&apos;s classified listings.">
-        Place an ad in Second Life&apos;s classified listings.
+        Place an ad in [SECOND_LIFE]&apos;s classified listings.
     </text>
 
     <button

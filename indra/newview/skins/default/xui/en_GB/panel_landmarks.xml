@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panel name="Landmarks">
+    <accordion name="landmarks_accordion">
+        <accordion_tab name="tab_favorites"
+            title="Favorites bar" />
+    </accordion>
+</panel>

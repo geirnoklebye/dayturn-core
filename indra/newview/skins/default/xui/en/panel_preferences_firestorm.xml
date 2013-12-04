@@ -216,7 +216,7 @@
       radio_style="false"
       width="270"
       control_name="FSDontSendAvPhysicsParms"
-      tool_tip="Disables sending your avatar physics information to the Second Life server, for compatibility with version 1 viewers"/>
+      tool_tip="Disables sending your avatar physics information to the [SECOND_LIFE] server, for compatibility with version 1 viewers"/>
 
         <check_box bottom_delta="-20"
       follows="left|top"

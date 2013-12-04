@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panel name="navigation_bar">
+    <layout_stack name="nvp_stack">
+        <layout_panel name="favorites_layout_panel">
+            <favorites_bar name="favorite"
+                tool_tip="Drag Landmarks here for quick access to your favourite places in [SECOND_LIFE]" />
+            <label name="favorites_bar_label"
+                tool_tip="Drag Landmarks here for quick access to your favourite places in [SECOND_LIFE]">
+                Favourites Bar
+            </label>
+        </layout_panel>
+    </layout_stack>
+</panel>

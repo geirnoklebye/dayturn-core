@@ -1,28 +1,31 @@
 <?xml version="1.0" ?>
 <notifications>
-    <notification name="ConfirmLandSaleChange"
+    <notification name="ConfirmLandSaleChange">
 The selected [LAND_SIZE] m² land is being set for sale.
 Your selling price will be L$[SALE_PRICE] and will be authorised for sale to [NAME].
     </notification>
-    <notification name="ConfirmLandSaleToAnyoneChange"
+    <notification name="ConfirmLandSaleToAnyoneChange">
 ATTENTION: Clicking &apos;sell to anyone&apos; makes your land available to the entire [SECOND_LIFE] community, even those not in this region.
 
 The selected [LAND_SIZE] m² land is being set for sale.
 Your selling price will be L$[SALE_PRICE] and will be authorised for sale to [NAME].
     </notification>
-    <notification name="UnknownGPU"
+    <notification name="FavoritesOnLogin">
+Note: When you turn on this option, anyone who uses this computer can see your list of favourite locations.
+    </notification>
+    <notification name="UnknownGPU">
 Your system contains a graphics card that [APP_NAME] doesn't recognise.
 This is often the case with new hardware that hasn&apos;t been tested yet with [APP_NAME].  It will probably be ok, but you may need to adjust your graphics settings.
 (Me &gt; Preferences &gt; Graphics).
     </notification>
-    <notification name="CannotSaveToAssetStore"
+    <notification name="CannotSaveToAssetStore">
 Unable to save [NAME] to central asset store.
 This is usually a temporary failure.  Please customise and save the wearable again in a few minutes.
     </notification>
-    <notification name="UnknownScriptQuestion"
+    <notification name="UnknownScriptQuestion">
 The runtime script permission requested by &apos;&lt;nolink&gt;[OBJECTNAME]&lt;/nolink&gt;&apos;, an object owned by &apos;[NAME]&apos;, isn&apos;t recognised by the viewer and can&apos;t be granted.
     </notification>
-    <notification name="CantBuyParcelNotAuthorized"
+    <notification name="CantBuyParcelNotAuthorized">
 You are not the authorised buyer for this parcel.
     </notification>
 </notifications>
