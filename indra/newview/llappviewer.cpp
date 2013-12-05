@@ -3587,7 +3587,7 @@ void LLAppViewer::writeSystemInfo()
 //also didn't see fit to provide a simple query request across the pipe to get this name either.
 //Since we are putting our output in a runtime generated directory and we know the header data in
 //the dump format, we can however use the following hack to identify our file. 
-//SPATTERS TODO make this a member function.
+// TODO make this a member function.
 void getFileList()
 {
 	std::stringstream filenames;
@@ -3624,8 +3624,6 @@ void LLAppViewer::handleViewerCrash()
 	llinfos << "Handle viewer crash entry." << llendl;
 
 	llinfos << "Last render pool type: " << LLPipeline::sCurRenderPoolType << llendl ;
-
-	std::cout << "SPATTERS I am here." << std::endl;
 
 	LLMemory::logMemoryInfo(true) ;
 
@@ -3731,7 +3729,6 @@ void LLAppViewer::handleViewerCrash()
 
 	char *minidump_file = pApp->getMiniDumpFilename();
 
-	std::cout << "SPATTERS minidump name is " << minidump_file << std::endl;
 	if(minidump_file && minidump_file[0] != 0)
 	{
 		gDebugInfo["Dynamic"]["MinidumpPath"] = minidump_file;
@@ -3739,7 +3736,6 @@ void LLAppViewer::handleViewerCrash()
 #ifdef LL_WINDOWS
 	getFileList();
 #endif
-	gDebugInfo["Dynamic"]["SPATTERS1"] = "Where my output?"; 
     gDebugInfo["Dynamic"]["CrashType"]="crash";
 	
 	if (gMessageSystem && gDirUtilp)
