@@ -519,7 +519,7 @@ public:
 	bool			mUploadTextures;
 	bool			mUploadSkin;
 	bool			mUploadJoints;
-	BOOL            mDiscarded;
+	volatile bool	mDiscarded;
 
 	LLHost			mHost;
 	std::string		mWholeModelFeeCapability;
@@ -535,7 +535,7 @@ public:
 	virtual void run();
 	void preStart();
 	void discard() ;
-	BOOL isDiscarded() const;
+	bool isDiscarded() const;
 
 	void generateHulls();
 
