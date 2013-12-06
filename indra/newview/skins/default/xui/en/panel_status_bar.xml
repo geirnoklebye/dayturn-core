@@ -13,12 +13,6 @@
     chrome="true"
     mouse_opaque="false"
     tab_stop="false">
-    <panel.string name="packet_loss_tooltip">
-        Packet Loss
-    </panel.string>
-    <panel.string name="bandwidth_tooltip">
-        Bandwidth
-    </panel.string>
     <panel.string name="time">
         [hour12, datetime, slt]:[min, datetime, slt] [ampm, datetime, slt] [timezone,datetime, slt]
     </panel.string>
@@ -143,7 +137,7 @@
             visible="true">
             <button
                 name="media_toggle_btn"
-                tool_tip="Start/Stop All Media (Music, Video, Web pages)"
+                tool_tip="Start/stop all media\n(Music, video, web pages)"
                 follows="top|left"
                 width="16"
                 height="16"
@@ -156,6 +150,7 @@
                 is_toggle="true" />
             <button
                 name="volume_btn"
+                tool_tip="Audio volume levels\n(Click to mute/unmute)"
                 follows="top|left"
                 height="16"
                 width="16"
@@ -178,7 +173,7 @@
             visible="true">
             <icon
                 name="dd_icon"
-                tool_tip="Draw Distance"
+                tool_tip="Draw distance"
                 image_name="Draw_Distance"
                 follows="top|left"
                 height="16"
@@ -220,7 +215,7 @@
                 left="10"
                 width="8"
                 height="17"
-                units=" Kbps"
+                units=" Kbps bandwidth in use\n(Click for details)"
                 per_sec="true"
                 mouse_opaque="true" />
             <statistics_graph
@@ -230,7 +225,7 @@
                 left_pad="0"
                 width="8"
                 height="17"
-                units="%"
+                units="% packet loss\n(Click for details)"
                 value_min="0"
                 value_max="5"
                 precision="1"
@@ -248,7 +243,7 @@
             visible="true">
             <text
                 name="fps_text"
-                tool_tip="Frames Per Second"
+                tool_tip="Frames per second\n(Click for details)"
                 type="string"
                 follows="top|left"
                 top="0"

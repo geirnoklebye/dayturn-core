@@ -36,6 +36,7 @@
 #include "llmenugl.h"       // hideMenus()
 #include "llui.h"			// positionViewNearMouse()
 #include "llwindow.h"
+#include "llstring.h"
 #include "lltrans.h"
 //
 // Constants
@@ -285,7 +286,10 @@ void LLToolTip::initFromParams(const LLToolTip::Params& p)
 	}
 	else
 	{
-		mTextBox->setText(p.message());
+		std::string message = p.message;
+
+		LLStringUtil::replaceString(message, "\\n", "\n");
+		mTextBox->setText(message);
 	}
 
 	S32 text_width = llmin(p.max_width(), mTextBox->getTextPixelWidth() + 1);
