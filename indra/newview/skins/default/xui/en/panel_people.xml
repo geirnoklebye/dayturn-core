@@ -169,47 +169,45 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                      function="People.DelFriend" />
                  </dnd_button>
             </panel>
+
+            <text
+               name="Range:"
+               type="string"
+               follows="top|left"
+               layout="topleft"
+               height="16"
+               width="70"
+               top_pad="8"
+               left="7"
+               length="3">
+                 Radar Range
+             </text>
+             <slider
+               name="near_me_range"
+               control_name="NearMeRange"
+               tool_tip="Select the distance from you (in meters) of the people who will show in the list, below"
+               follows="top|left|right"
+               layout="topleft"
+	       top_delta="-2"
+               left_pad="10"
+	       width="245"
+               height="16"
+               decimal_digits="0"
+               increment="1.0"
+               initial_value="130"
+               max_val="1024"
+               min_val="75" />
+
          <layout_stack
            clip="false"
            follows="all"
-           height="410"
+           height="386"
            layout="topleft"
            left="0"
            mouse_opaque="false"
            orientation="vertical"
            right="-1"
-           top_pad="0">
-           <layout_panel
-             layout="topleft"
-             width="313">
-             <slider
-               control_name="NearMeRange"
-               decimal_digits="0"
-               follows="left|top"
-               height="12"
-               increment="10.0"
-               initial_value="130"
-               layout="topleft"
-               left_pad="-230"
-               max_val="4096"
-               min_val="75"
-               name="near_me_range"
-               tool_tip="Select the distance from you (in meters) of the people who will show in the list, below"
-               top_pad="9"
-               width="180" />
-            <text
-               type="string"
-               length="3"
-               follows="left|top"
-               height="12"
-               layout="topleft"
-               left="10"
-               name="Range:"
-               top_pad="-12"
-               width="80">
-                 Radar Range
-             </text>
-           </layout_panel>
+           top_pad="2">
            <layout_panel
              height="142"
              layout="topleft"
@@ -533,10 +531,10 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                 type="string"
                 length="1"
                 follows="left|top|right"
-                height="14"
+                height="16"
                 layout="topleft"
                 right="-10"
-                top_pad="4"
+                top_pad="8"
                 left="7"
                 name="groupcount">
               You are a member of [COUNT] groups and can join [REMAINING] more
@@ -544,7 +542,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
             <group_list
              allow_select="true" 
              follows="all"
-             height="388"
+             height="382"
              layout="topleft"
              left="3"
              name="group_list"
