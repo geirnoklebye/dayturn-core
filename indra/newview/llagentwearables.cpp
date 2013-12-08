@@ -1547,7 +1547,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 				}
 				const BOOL removed = FALSE;
 				wearableUpdated(new_wearable, removed);
-				checkWearableAgainstInventory(new_wearable);
+//				checkWearableAgainstInventory(new_wearable);
 //MK
 			}
 //mk
@@ -1808,7 +1808,11 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 	std::set<LLUUID> requested_item_ids;
 	std::set<LLUUID> current_item_ids;
 	for (S32 i=0; i<obj_item_array.count(); i++)
-		requested_item_ids.insert(obj_item_array[i].get()->getLinkedUUID());
+	{
+		const LLUUID & requested_id = obj_item_array[i].get()->getLinkedUUID();
+		//llinfos << "Requested attachment id " << requested_id << llendl;
+		requested_item_ids.insert(requested_id);
+	}
 
 	// Build up list of objects to be removed and items currently attached.
 	llvo_vec_t objects_to_remove;
@@ -1825,15 +1829,21 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 			if (objectp)
 			{
 				LLUUID object_item_id = objectp->getAttachmentItemID();
+
+				bool remove_attachment = true;
 				if (requested_item_ids.find(object_item_id) != requested_item_ids.end())
-				{
-					// Object currently worn, was requested.
+				{	// Object currently worn, was requested to keep it
 					// Flag as currently worn so we won't have to add it again.
-					current_item_ids.insert(object_item_id);
+					remove_attachment = false;
 				}
-				else
+				else if (objectp->isTempAttachment())
+				{	// Check if we should keep this temp attachment
+					remove_attachment = LLAppearanceMgr::instance().shouldRemoveTempAttachment(objectp->getID());
+				}
+
+				if (remove_attachment)
 				{
-					// object currently worn, not requested.
+					// llinfos << "found object to remove, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << llendl;
 //MK
 					// There are two ways to receive this list of objects :
 					// - from a burst of "attach this here" messages
@@ -1848,6 +1858,11 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 					}
 //mk
 				}
+				else
+				{
+					// llinfos << "found object to keep, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << llendl;
+					current_item_ids.insert(object_item_id);
+					}
 			}
 		}
 	}

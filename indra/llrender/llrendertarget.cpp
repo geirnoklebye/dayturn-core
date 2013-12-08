@@ -364,9 +364,12 @@ void LLRenderTarget::release()
 
 		sBytesAllocated -= mResX*mResY*4;
 	}
-	else if (mUseDepth && mFBO)
-	{ //detach shared depth buffer
+	else if (mFBO)
+	{
 		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+
+		if (mUseDepth)
+	{ //detach shared depth buffer
 		if (mStencil)
 		{ //attached as a renderbuffer
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0);
@@ -379,20 +382,37 @@ void LLRenderTarget::release()
 		}
 		mUseDepth = false;
 	}
+	}
+
+	// Detach any extra color buffers (e.g. SRGB spec buffers)
+	//
+	if (mFBO && (mTex.size() > 1))
+	{		
+		S32 z;
+		for (z = mTex.size() - 1; z >= 1; z--)
+		{
+			sBytesAllocated -= mResX*mResY*4;
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0+z, LLTexUnit::getInternalType(mUsage), 0, 0);
+			stop_glerror();
+			LLImageGL::deleteTextures(1, &mTex[z]);
+		}
+	}
 
 	if (mFBO)
 	{
 		glDeleteFramebuffers(1, (GLuint *) &mFBO);
+		stop_glerror();
 		mFBO = 0;
 	}
 
 	if (mTex.size() > 0)
 	{
-		sBytesAllocated -= mResX*mResY*4*mTex.size();
-		LLImageGL::deleteTextures(mTex.size(), &mTex[0]);
+		sBytesAllocated -= mResX*mResY*4;
+		LLImageGL::deleteTextures(1, &mTex[0]);
+	}
+
 		mTex.clear();
 		mInternalFormat.clear();
-	}
 
 	mResX = mResY = 0;
 
