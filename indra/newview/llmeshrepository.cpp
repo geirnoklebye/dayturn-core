@@ -3181,45 +3181,8 @@ S32 LLPhysicsDecomp::llcdCallback(const char* status, S32 p1, S32 p2)
 	return 1;
 }
 
-//MK
-bool hacdTriangles( LLConvexDecomposition *aDC )
-{
-	if( !aDC )
-		return false;
-
-	LLCDParam const  *pParams(0);
-	int nParams = aDC->getParameters( &pParams );
-
-	if( nParams <= 0 )
-		return false;
-
-	for( int i = 0; i < nParams; ++i )
-	{
-		if( pParams[i].mName && strcmp( "kAlwaysNeedTriangles", pParams[i].mName ) == 0 )
-		{
-			if( LLCDParam::LLCD_BOOLEAN == pParams[i].mType && pParams[i].mDefault.mBool )
-				return true;
-			else
-				return false;
-		}
-	}
-
-	return false;
-}
-//mk
-
 void LLPhysicsDecomp::setMeshData(LLCDMeshData& mesh, bool vertex_based)
 {
-//MK
-	LLConvexDecomposition *hDeComp = LLConvexDecomposition::getInstance();
-
-	if( !hDeComp )
-		return;
-
-	if( vertex_based )
-		vertex_based = !hacdTriangles( hDeComp );
-//mk
-
 	mesh.mVertexBase = mCurRequest->mPositions[0].mV;
 	mesh.mVertexStrideBytes = 12;
 	mesh.mNumVertices = mCurRequest->mPositions.size();
@@ -3445,9 +3408,7 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 	}
 	
 	LLCDMeshData mesh;	
-//MK
-#if 0
-//mk
+
 	setMeshData(mesh, true);
 
 	LLCDResult ret = decomp->buildSingleHull() ;
@@ -3481,153 +3442,17 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 		}
 						
 		{
-		LLMutexLock lock(mMutex);
+			LLMutexLock lock(mMutex);
 		mCurRequest->mHull[0] = p;
 		}
-//MK
-#else
-	setMeshData(mesh, false);
-
-	//set all parameters to default
-	std::map<std::string, const LLCDParam*> param_map;
-
-	static const LLCDParam* params = NULL;
-	static S32 param_count = 0;
-
-	if (!params)
-	{
-		param_count = decomp->getParameters(&params);
-	}
-	
-	for (S32 i = 0; i < param_count; ++i)
-	{
-		decomp->setParam(params[i].mName, params[i].mDefault.mIntOrEnumValue);
 	}
 
-	const S32 STAGE_DECOMPOSE = mStageID["Decompose"];	
-	const S32 STAGE_SIMPLIFY = mStageID["Simplify"];
-	const S32 DECOMP_PREVIEW = 0;
-	const S32 SIMPLIFY_RETAIN = 0;
-	
-	decomp->setParam("Decompose Quality", DECOMP_PREVIEW);
-	decomp->setParam("Simplify Method", SIMPLIFY_RETAIN);
-	decomp->setParam("Retain%", 0.f);
-
-	LLCDResult ret = LLCD_OK;
-	ret = decomp->executeStage(STAGE_DECOMPOSE);
-	
-	if (ret)
-	{
-		llwarns << "Could not execute decomposition stage when attempting to create single hull." << llendl;
-		make_box(mCurRequest);
-	}
-	else
-	{
-		ret = decomp->executeStage(STAGE_SIMPLIFY);
-
-		if (ret)
-		{
-			llwarns << "Could not execute simiplification stage when attempting to create single hull." << llendl;
-			make_box(mCurRequest);
-		}
-		else
-		{
-			S32 num_hulls =0;
-			if (LLConvexDecomposition::getInstance() != NULL)
-			{
-				num_hulls = LLConvexDecomposition::getInstance()->getNumHullsFromStage(STAGE_SIMPLIFY);
-			}
-
-			{
-			LLMutexLock lock(mMutex);
-			mCurRequest->mHull.clear();
-			mCurRequest->mHull.resize(num_hulls);
-			mCurRequest->mHullMesh.clear();
-			}
-
-			for (S32 i = 0; i < num_hulls; ++i)
-			{
-				std::vector<LLVector3> p;
-				LLCDHull hull;
-				// if LLConvexDecomposition is a stub, num_hulls should have been set to 0 above, and we should not reach this code
-				LLConvexDecomposition::getInstance()->getHullFromStage(STAGE_SIMPLIFY, i, &hull);
-
-				const F32* v = hull.mVertexBase;
-
-				for (S32 j = 0; j < hull.mNumVertices; ++j)
-				{
-					LLVector3 vert(v[0], v[1], v[2]); 
-					p.push_back(vert);
-					v = (F32*) (((U8*) v) + hull.mVertexStrideBytes);
-				}
-						
-				{
-				LLMutexLock lock(mMutex);
-				mCurRequest->mHull[i] = p;
-				}
-			}
-		}
-	}
-#endif
-//mk
 	{
 		completeCurrent();
 		
 	}
 }
 
-//MK
-#ifdef K_HASCONVEXDECOMP_TRACER
-
-class kDecompTracer: public kConvexDecompositionTracer
-{
-	int mRefCount;
-
-public:
-	kDecompTracer()
-		: mRefCount(0)
-	{
-	}
-
-	virtual void trace( char const *a_strMsg )
-	{
-		llinfos << a_strMsg << llendl;
-	}
-
-	virtual void startTraceData( char const *a_strWhat)
-	{
-		llinfos << a_strWhat << llendl;
-	}
-
-	virtual void traceData( char const *a_strData )
-	{
-		llinfos << a_strData << llendl;
-	}
-
-	virtual void endTraceData()
-	{
-	}
-
-	virtual int getLevel()
-	{
-		return eTraceFunctions;// | eTraceData;
-	}
-
-	virtual void addref()
-	{
-		++mRefCount;
-	}
-
-	virtual void release()
-	{
-		--mRefCount;
-		if( mRefCount == 0 )
-			delete this;
-	}
-};
-
-#endif
-//mk
 
 void LLPhysicsDecomp::run()
 {
@@ -3639,15 +3464,6 @@ void LLPhysicsDecomp::run()
 		mInited = true;
 		return;
 	}
-
-//MK
-#ifdef K_HASCONVEXDECOMP_TRACER
-	kConvexDecompositionTracable *pTraceable = dynamic_cast< kConvexDecompositionTracable* >( decomp );
-
-	if( pTraceable )
-		pTraceable->setTracer( new kDecompTracer() );
-#endif
-//mk
 
 	decomp->initThread();
 	mInited = true;
