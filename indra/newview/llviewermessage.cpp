@@ -3549,6 +3549,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				}
 				args["NAME_SLURL"] = LLSLURL("agent", from_id, "about").getSLURLString();
 				if (add_notification)
+				{
 //MK
 					if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString())
 						|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
@@ -7525,7 +7526,7 @@ void send_lures(const LLSD& notification, const LLSD& response)
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 	{
-		return false;
+		return;
 	}
 //mk
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);

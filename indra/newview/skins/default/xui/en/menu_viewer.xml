@@ -844,10 +844,8 @@
         </menu_item_call>
         <menu_item_check
              label="Edit Linked Parts"
-<!-- MK -->
              name="Edit Linked Parts"
               shortcut="alt|W">
-<!-- MK -->
                 <menu_item_check.on_check
                  control="EditLinkedParts" />
                 <menu_item_check.on_click
@@ -1221,9 +1219,7 @@
                 <menu_item_call
                  label="Use Selection for Grid"
                  name="Use Selection for Grid"
-<!-- MK -->
                  shortcut="alt|G">
-<!-- mk -->
                     <menu_item_call.on_click
                      function="Tools.UseSelectionForGrid" />
                     <menu_item_call.on_enable
@@ -3673,9 +3669,7 @@
             </menu_item_call>
             <menu_item_call
              label="Debug Avatar Textures"
-<!-- MK -->
 	       name="Debug Avatar Textures" >
-<!-- MK -->
                 <menu_item_call.on_click
                  function="Advanced.DebugAvatarTextures" />
             </menu_item_call>
