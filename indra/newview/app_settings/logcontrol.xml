@@ -20,7 +20,7 @@
 					<key>tags</key>
 						<array>
 							<string>AppInit</string>
-							<string>Capabilities</string>
+                                                        <string>Capabilities</string>
 							<string>SystemInfo</string>
 							<string>TextureCache</string>
 							<string>AppCache</string>
@@ -42,14 +42,62 @@
 						</array>
 					<key>tags</key>
 						<array>
-						<!-- sample entry for debugging specific items	
-						     <string>Avatar</string>
-						     <string>Voice</string>		
-						-->
-						     <string>import</string>
-						     <string>export</string>
+						<string>OctreeErrors</string>
+						
+					<!-- Chat -->
+						<!-- <string>NearbyChat</string> -->
+						
+					<!-- Clicks -->
+						<string>DoubleClicks</string>
+						<string>MiddleMouse</string>
+
+					<!-- OpenSim related-->
+						<string>OS_SETTINGS</string>
+						<string>GridManager</string>
+						<string>SLURL</string>
+						<string>UrlEntry</string>
+						<string>WebApi</string>
+
+					<!-- Inventory -->
+						<!-- <string>InventoryFetch</string> -->
+
+					<!-- Login -->
+						<!-- <string>PanelLogin</string>-->
+					<!-- Media Plugins -->
+						<!--<string>Plugin</string>-->
+						<!--<string>PluginRect</string>--> <!--Spammer-->
+						<!--<string>PLUGIN_WEBKIT</string>-->
+						<!--<string>PLUGIN_VOLUME</string>-->
+					<!-- Voice -->
+						<!--<string>Voice</string>-->
+						<!--<string>VivoxProtocolParser</string>-->
+						<!--<string>InterfaceProtocolParser</string>-->
+						<!-- Wearable -->
+
+					<!--Shaders-->
+						<!--<string>Shaders</string>-->
+						<!--<string>WindLight</string>-->
+
+					<!-- see lltexturefetch -->
+						<!-- <string>HTTPGetResponder</string> -->
+						<!-- <string>TextureFetch</string> -->
+						<!-- <string>TextureFetchWorker</string> -->
+						 <!--<string>LocalTextures</string>--> 
+						<!-- <string>ViewerImages</string> -->
+						<string>Texture</string> 
+						 <string>IM</string> 
+					<!-- Spammers -->
+						<!--Meminfo-->
+						<!-- <string>FrameWatcher</string> -->
+						<!-- <string>FastTimer</string> -->
+						<!--shader-->
+						<!-- <string>ShaderLoading</string> -->
+						<!--LLUI-->
+						<!-- <string>View</string> -->
+
+
 						</array>
 				</map>
-      </array>
+			</array>
 	</map>
 </llsd>
