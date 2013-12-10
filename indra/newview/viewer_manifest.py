@@ -218,13 +218,13 @@ class ViewerManifest(LLManifest):
         global CHANNEL_VENDOR_BASE
         channel_qualifier=self.channel().replace(CHANNEL_VENDOR_BASE, "").lower().strip()
         if channel_qualifier.startswith('release'):
-        elif channel_type == 'kokua' :
-            icon_path += 'kokua'
+            channel_type='release'
+        elif channel_qualifier.startswith('beta'):
             channel_type='beta'
         elif channel_qualifier.startswith('project'):
             channel_type='project'
         else:
-            icon_path += 'kokua'
+            channel_type='test'
         return channel_type
 
     def channel_variant_app_suffix(self):

@@ -85,7 +85,7 @@ def get_default_platform(dummy):
             }[sys.platform]
 
 DEFAULT_SRCTREE = os.path.dirname(sys.argv[0])
-RELEASE_CHANNEL = 'Kokua Release'
+CHANNEL_VENDOR_BASE = 'Kokua'
 RELEASE_CHANNEL = CHANNEL_VENDOR_BASE + ' Release'
 
 ARGUMENTS=[
