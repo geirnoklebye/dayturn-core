@@ -42,6 +42,7 @@
 #include "llavatariconctrl.h"
 #include "lloutputmonitorctrl.h"
 #include "lltooldraganddrop.h"
+#include "llworld.h"
 
 bool LLAvatarListItem::sStaticInitialized = false;
 S32 LLAvatarListItem::sLeftPadding = 0;

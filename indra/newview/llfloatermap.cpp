@@ -43,6 +43,7 @@
 #include "lldraghandle.h"
 #include "lltextbox.h"
 #include "llfloaterworldmap.h"
+#include "llworld.h"
 #include "llagent.h"
 
 //
@@ -211,7 +212,9 @@ void LLFloaterMap::draw()
 		getDragHandle()->setMouseOpaque(TRUE);
 	}
 	
+	if(LLWorld::getInstance()->getAllowMinimap()) {
 	LLFloater::draw();
+	}
 }
 
 void LLFloaterMap::reshape(S32 width, S32 height, BOOL called_from_parent)

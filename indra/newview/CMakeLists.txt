@@ -706,6 +706,7 @@ set(viewer_SOURCE_FILES
     pipeline.cpp
     viewerinfo.cpp
     streamtitledisplay.cpp
+    astraopenregionsettings.cpp
     )
 
 set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING

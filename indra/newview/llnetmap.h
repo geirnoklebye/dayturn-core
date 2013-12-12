@@ -140,15 +140,14 @@ private:
 	std::string	mToolTipMsg;
 
 public:
-	void			setSelected(uuid_vec_t uuids) { gmSelected=uuids; };
-
+	void			setSelected(uuid_vec_t uuids) { sSelected=uuids; };
 private:
 	void handleZoom(const LLSD& userdata);
 	void handleStopTracking (const LLSD& userdata);
 	void handleOverlayToggle(const LLSD& sdParam);
 
 	LLMenuGL*		mPopupMenu;
-	uuid_vec_t		gmSelected;
+	static uuid_vec_t	sSelected;
 };
 
 

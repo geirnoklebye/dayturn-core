@@ -191,6 +191,11 @@ void display_update_camera()
 	{
 		final_far *= 0.5f;
 	}
+	if(LLWorld::getInstance()->getLockedDrawDistance())
+	{
+		//Reset the draw distance and do not update with the new val
+		final_far = LLViewerCamera::getInstance()->getFar();
+	}
 	LLViewerCamera::getInstance()->setFar(final_far);
 	gViewerWindow->setup3DRender();
 	
@@ -373,6 +378,11 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 
 	LLImageGL::updateStats(gFrameTimeSeconds);
 
+		S32 RenderName = gSavedSettings.getS32("AvatarNameTagMode");
+
+	if(RenderName > LLWorld::getInstance()->getAllowRenderName())//The most restricted gets set here
+		RenderName = LLWorld::getInstance()->getAllowRenderName();
+	LLVOAvatar::sRenderName = RenderName;
 	gPipeline.mBackfaceCull = TRUE;
 	gFrameCount++;
 	gRecentFrameCount++;
@@ -880,6 +890,9 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 
 		LLPipeline::sUnderWaterRender = LLViewerCamera::getInstance()->cameraUnderWater() ? TRUE : FALSE;
 
+		//Check for RenderWater
+		if (!gSavedSettings.getBOOL("RenderWater") || !LLWorld::getInstance()->getAllowRenderWater())
+			LLPipeline::sUnderWaterRender = FALSE;
 		LLGLState::checkStates();
 		LLGLState::checkClientArrays();
 

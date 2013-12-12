@@ -80,12 +80,15 @@ const F32 WIDTH_PIXELS = 2.f;
 const S32 CIRCLE_STEPS = 100;
 
 const F64 COARSEUPDATE_MAX_Z = 1020.0f;
+//static
+uuid_vec_t LLNetMap::sSelected;
 
 LLNetMap::LLNetMap (const Params & p)
 :	LLUICtrl (p),
 	mBackgroundColor (p.bg_color()),
 	mScale( MAP_SCALE_MID ),
-	mPixelsPerMeter( MAP_SCALE_MID / REGION_WIDTH_METERS ),
+	//mPixelsPerMeter( MAP_SCALE_MID / REGION_WIDTH_METERS ),
+	mPixelsPerMeter( MAP_SCALE_MID / LLWorld::getInstance()->getRegionWidthInMeters()),
 	mObjectMapTPM(0.f),
 	mObjectMapPixels(0.f),
 	mTargetPan(0.f, 0.f),
@@ -148,7 +151,7 @@ void LLNetMap::setScale( F32 scale )
 		mObjectMapPixels = diameter;
 	}
 
-	mPixelsPerMeter = mScale / REGION_WIDTH_METERS;
+	mPixelsPerMeter = mScale / LLWorld::getInstance()->getRegionWidthInMeters();
 	mDotRadius = llmax(DOT_SCALE * mPixelsPerMeter, MIN_DOT_RADIUS);
 
 	mUpdateObjectImage = true;
@@ -484,8 +487,8 @@ void LLNetMap::draw()
 			if(uuid.notNull())
 			{
 				bool selected = false;
-				uuid_vec_t::iterator sel_iter = gmSelected.begin();
-				for (; sel_iter != gmSelected.end(); sel_iter++)
+				uuid_vec_t::iterator sel_iter = sSelected.begin();
+				for (; sel_iter != sSelected.end(); sel_iter++)
 				{
 					if(*sel_iter == uuid)
 					{
@@ -642,6 +645,7 @@ LLVector3 LLNetMap::globalPosToView(const LLVector3d& global_pos)
 	LLVector3 pos_local;
 	pos_local.setVec(relative_pos_global);  // convert to floats from doubles
 
+	mPixelsPerMeter = mScale / LLWorld::getInstance()->getRegionWidthInMeters();
 	pos_local.mV[VX] *= mPixelsPerMeter;
 	pos_local.mV[VY] *= mPixelsPerMeter;
 	// leave Z component in meters

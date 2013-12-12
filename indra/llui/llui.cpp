@@ -76,6 +76,7 @@ std::map<std::string, std::string> gTranslation;
 std::list<std::string> gUntranslated;
 /*static*/ LLUI::settings_map_t LLUI::sSettingGroups;
 /*static*/ LLUIAudioCallback LLUI::sAudioCallback = NULL;
+/*static*/ LLVector2		LLUI::sGLScaleFactor(1.f, 1.f);
 /*static*/ LLWindow*		LLUI::sWindow = NULL;
 /*static*/ LLView*			LLUI::sRootView = NULL;
 /*static*/ BOOL                         LLUI::sDirty = FALSE;

@@ -2271,7 +2271,7 @@ void LLViewerWindow::reshape(S32 width, S32 height)
 
 		calcDisplayScale();
 	
-		BOOL display_scale_changed = mDisplayScale != LLUI::getScaleFactor();
+		BOOL display_scale_changed = mDisplayScale != LLUI::sGLScaleFactor;
 		LLUI::setScaleFactor(mDisplayScale);
 
 		// update our window rectangle
