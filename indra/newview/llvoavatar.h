@@ -272,6 +272,7 @@ public:
 	// Static preferences (controlled by user settings/menus)
 	//--------------------------------------------------------------------
 public:
+	static S32		sRenderName;
 	static U32		sMaxVisible; //(affected by control "RenderAvatarMaxVisible")
 	static F32		sRenderDistance; //distance at which avatars will render.
 	static BOOL		sShowAnimationDebug; // show animation debug info

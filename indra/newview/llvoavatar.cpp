@@ -689,6 +689,7 @@ const LLUUID LLVOAvatar::sStepSounds[LL_MCODE_END] =
 	SND_RUBBER_RUBBER
 };
 
+S32 LLVOAvatar::sRenderName = RENDER_NAME_ALWAYS;
 S32 LLVOAvatar::sNumVisibleChatBubbles = 0;
 BOOL LLVOAvatar::sDebugInvisible = FALSE;
 BOOL LLVOAvatar::sShowAttachmentPoints = FALSE;
