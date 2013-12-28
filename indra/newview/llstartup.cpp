@@ -2147,12 +2147,12 @@ bool idle_startup()
 			&& !sInitialOutfit.empty()    // registration set up an outfit
 			&& !sInitialOutfitGender.empty() // and a gender
 			&& isAgentAvatarValid()	  // can't wear clothes without object
-			&& !gAgent.isOutfitChosen()) // nothing already loading
+			&& !gAgent.isGenderChosen()) // nothing already loading
 		{
 			// Start loading the wearables, textures, gestures
 			LLStartUp::loadInitialOutfit( sInitialOutfit, sInitialOutfitGender );
 		}
-		// If not first login, we need to fetch COF contents and
+/*		// If not first login, we need to fetch COF contents and
 		// compute appearance from that.
 		if (isAgentAvatarValid() && !gAgent.isFirstLogin() && !gAgent.isOutfitChosen())
 		{
@@ -2161,6 +2161,7 @@ bool idle_startup()
 			gAgentWearables.sendDummyAgentWearablesUpdate();
 			callAfterCategoryFetch(LLAppearanceMgr::instance().getCOF(), set_flags_and_update_appearance);
 		}
+*/
 
 		display_startup();
 
@@ -2217,7 +2218,7 @@ bool idle_startup()
 		
 		display_startup();
 
-		if (gAgent.isOutfitChosen() && (wearables_time > max_wearables_time))
+		if (gAgent.isGenderChosen() && (wearables_time > max_wearables_time))
 		{
 			LLNotificationsUtil::add("ClothingLoading");
 			record(LLStatViewer::LOADING_WEARABLES_LONG_DELAY, wearables_time);
@@ -2736,7 +2737,7 @@ void LLStartUp::loadInitialOutfit( const std::string& outfit_folder_name,
 		LL_DEBUGS() << "initial outfit category id: " << cat_id << LL_ENDL;
 	}
 
-	gAgent.setOutfitChosen(TRUE);
+//	gAgent.setOutfitChosen(TRUE);
 	gAgentWearables.sendDummyAgentWearablesUpdate();
 }
 
