@@ -51,23 +51,31 @@
 #include "lllayoutstack.h"
 #include "llagent.h"
 #include "llnotificationsutil.h"
+#include "lltabcontainer.h"
 #include "lltoastnotifypanel.h"
 #include "lltooltip.h"
 #include "llviewerregion.h"
 #include "llviewertexteditor.h"
+#include "llviewermenu.h"
 #include "llworld.h"
 #include "lluiconstants.h"
 #include "llstring.h"
 #include "llurlaction.h"
 #include "llviewercontrol.h"
 #include "llviewerobjectlist.h"
+#include "llwindow.h"
 #include "llmutelist.h"
+
+#include "llaudioengine.h"
+#include "llvieweraudio.h"
+#include "llviewermedia.h"
+#include "llviewermedia_streamingaudio.h"
 
 static LLDefaultChildRegistry::Register<LLChatHistory> r("chat_history");
 
 const static std::string NEW_LINE(rawstr_to_utf8("\n"));
 
-const static std::string SLURL_APP_AGENT = "secondlife:///app/agent/";
+const static std::string SLURL_APP_AGENT = "hop:///app/agent/";
 const static std::string SLURL_ABOUT = "/about";
 
 // support for secondlife:///app/objectim/{UUID}/ SLapps
@@ -110,6 +118,7 @@ public:
 		mPopupMenuHandleAvatar(),
 		mPopupMenuHandleObject(),
 		mAvatarID(),
+		mZoomIntoID(),
 		mSourceType(CHAT_SOURCE_UNKNOWN),
 		mFrom(),
 		mSessionID(),
@@ -158,6 +167,9 @@ public:
 			LLFloaterSidePanelContainer::showPanel("people", "panel_people",
 				LLSD().with("people_panel_tab_name", "blocked_panel").with("blocked_to_select", getAvatarId()));
 		}
+		else if (level == "zoom" && mZoomIntoID.notNull()) {
+			handle_zoom_to_object(mZoomIntoID);
+		}
 		else if (level == "map")
 		{
 			std::string url = "secondlife://" + mObjectData["slurl"].asString();
@@ -183,9 +195,13 @@ public:
 		{
 			LLAvatarActions::startIM(getAvatarId());
 		}
-		else if (level == "teleport")
+		else if (level == "offer_teleport")
 		{
 			LLAvatarActions::offerTeleport(getAvatarId());
+		}
+		else if (level == "request_teleport")
+		{
+			LLAvatarActions::teleportRequest(getAvatarId());
 		}
 		else if (level == "voice_call")
 		{
@@ -203,13 +219,25 @@ public:
 		{
 			LLAvatarActions::removeFriendDialog(getAvatarId());
 		}
+		else if (level == "zoom_in")
+		{
+			handle_zoom_to_object(getAvatarId());
+		}
 		else if (level == "invite_to_group")
 		{
 			LLAvatarActions::inviteToGroup(getAvatarId());
 		}
-		else if (level == "zoom_in")
+		else if (level == "copyname")
 		{
-			handle_zoom_to_object(getAvatarId());
+			LLAvatarActions::copyName(getAvatarId());
+		}
+		else if (level == "copyuuid")
+		{
+			LLAvatarActions::copyUUID(getAvatarId());
+		}
+		else if (level == "copyprofileuri")
+		{
+			LLAvatarActions::copyProfileSLURL(getAvatarId());
 		}
 		else if (level == "map")
 		{
@@ -223,16 +251,203 @@ public:
 		{
 			LLAvatarActions::pay(getAvatarId());
 		}
-		else if(level == "block_unblock")
+		else if (level == "block_unblock")
 		{
 			mute(getAvatarId(), LLMute::flagVoiceChat);
 		}
-		else if(level == "mute_unmute")
+		else if (level == "mute_unmute")
 		{
 			mute(getAvatarId(), LLMute::flagTextChat);
 		}
+		else if (level == "togglefreeze")
+		{
+			handle_avatar_freeze(getAvatarId());
+		}
+		else if (level == "eject")
+		{
+			handle_avatar_eject(getAvatarId());
+		}
+		else if (level == "teleporthome")
+		{
+			LLAvatarActions::teleportHome(getAvatarId());
+		}
+		else if (level == "estateban")
+		{
+			LLAvatarActions::estateBan(getAvatarId());
+		}
 	}
 
+	void onAudioStreamIconContextMenuItemClipboard(const LLSD& userdata)
+	{
+		std::string action = userdata.asString();
+		std::string clipboard = "";
+		
+		//
+		//	check if music is playing first
+		//
+		if (gAudiop && 
+			LLViewerMedia::hasParcelAudio() &&
+			LLViewerMedia::isParcelAudioPlaying()
+		) {
+			LLStreamingAudioInterface *stream = gAudiop->getStreamingAudioImpl();
+
+			if (stream) {
+				if (action == "copy_track_name") {
+					//
+					//	prepend the artist to the track
+					//	name if artist info is available
+					//
+					clipboard = stream->getCurrentArtist();
+
+					if (!stream->getCurrentTitle().empty()) {
+						if (!clipboard.empty()) {
+							clipboard += " - ";
+						}
+						clipboard += stream->getCurrentTitle();
+					}
+				}
+				else if (action == "copy_stream_name") {
+					clipboard = stream->getCurrentStreamName();
+				}
+				else if (action == "copy_stream_address") {
+					clipboard = stream->getURL();
+				}
+			}
+		}
+
+		LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(clipboard));
+	}
+
+	void onAudioStreamIconContextMenuItemVisitWebsite(const LLSD& userdata)
+	{
+		std::string action = userdata.asString();
+		
+		//
+		//	check if music is playing first
+		//
+		if (gAudiop && 
+			LLViewerMedia::hasParcelAudio() &&
+			LLViewerMedia::isParcelAudioPlaying()
+		) {
+			LLStreamingAudioInterface *stream = gAudiop->getStreamingAudioImpl();
+
+			if (stream) {
+				LLWeb::loadURL(stream->getCurrentStreamLocation());
+			}
+		}
+
+	}
+
+	void onAudioStreamIconContextMenuItemStopStream(const LLSD& userdata)
+	{
+		LLViewerAudio *audio = LLViewerAudio::getInstance();
+			
+		if (audio) {
+			//
+			//	stop the stream
+			//
+			audio->stopInternetStreamWithAutoFade();
+		}
+	}
+
+	void onAudioStreamIconContextMenuItemStartStream(const LLSD& userdata)
+	{
+		if (gAudiop && LLViewerMedia::hasParcelAudio()) {
+			if (gAudiop->isInternetStreamPlaying() == LLAudioEngine::AUDIO_PAUSED) {
+				//
+				//	unpause the stream
+				//
+				gAudiop->pauseInternetStream(false);
+			}
+			else {
+				LLViewerAudio *audio = LLViewerAudio::getInstance();
+
+				if (audio) {
+					//
+					//	start the stream
+					//
+					audio->startInternetStreamWithAutoFade(LLViewerMedia::getParcelAudioURL());
+				}
+			}
+		}
+	}
+
+	void onAudioStreamIconContextMenuItemViewerSound(const LLSD& userdata)
+	{
+		open_floater_at_tab("preferences", "audio");
+	}
+
+	void onAudioStreamIconContextMenuItemParcelSound(const LLSD& userdata)
+	{
+		open_floater_at_tab("about_land", "land_audio_panel");
+	}
+
+	void open_floater_at_tab(const std::string floater_name, const std::string tab_name)
+	{
+		//
+		//	open the named floater
+		//
+		LLFloater *floater = LLFloaterReg::getTypedInstance<LLFloater>(floater_name);
+
+		if (!floater) {
+			return;
+		}
+
+		floater->openFloater();
+
+		//
+		//	switch to the named tab in the floater
+		//
+		LLPanel *tab = floater->getChild<LLPanel>(tab_name);
+
+		if (tab) {
+			LLTabContainer *container = dynamic_cast<LLTabContainer*>(tab->getParent());
+
+			if (container) {
+				container->selectTabPanel(tab);
+		    	}
+		}
+
+		//
+		//	focus the floater
+		//
+		floater->setFocus(TRUE);
+	}
+
+	BOOL postBuild()
+	{
+		LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
+		LLUICtrl::EnableCallbackRegistry::ScopedRegistrar registrar_enable;
+
+		registrar.add("AvatarIcon.Action", boost::bind(&LLChatHistoryHeader::onAvatarIconContextMenuItemClicked, this, _2));
+		registrar_enable.add("AvatarIcon.Check", boost::bind(&LLChatHistoryHeader::onAvatarIconContextMenuItemChecked, this, _2));
+		registrar.add("ObjectIcon.Action", boost::bind(&LLChatHistoryHeader::onObjectIconContextMenuItemClicked, this, _2));
+		registrar.add("AudioStreamIcon.Clipboard", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemClipboard, this, _2));
+		registrar.add("AudioStreamIcon.VisitWebsite", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemVisitWebsite, this, _2));
+		registrar.add("AudioStreamIcon.StopStream", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemStopStream, this, _2));
+		registrar.add("AudioStreamIcon.StartStream", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemStartStream, this, _2));
+		registrar.add("AudioStreamIcon.ViewerSound", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemViewerSound, this, _2));
+		registrar.add("AudioStreamIcon.ParcelSound", boost::bind(&LLChatHistoryHeader::onAudioStreamIconContextMenuItemParcelSound, this, _2));
+
+		LLMenuGL* menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_avatar_icon.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
+		mPopupMenuHandleAvatar = menu->getHandle();
+
+		menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_object_icon.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
+		mPopupMenuHandleObject = menu->getHandle();
+
+		menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_audio_stream_icon.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
+		mPopupMenuHandleAudioStream = menu->getHandle();
+
+		setDoubleClickCallback(boost::bind(&LLChatHistoryHeader::showInspector, this));
+
+		setMouseEnterCallback(boost::bind(&LLChatHistoryHeader::showInfoCtrl, this));
+		setMouseLeaveCallback(boost::bind(&LLChatHistoryHeader::hideInfoCtrl, this));
+
+		mUserNameTextBox = getChild<LLTextBox>("user_name");
+		mTimeBoxTextBox = getChild<LLTextBox>("time_box");
+
+		return LLPanel::postBuild();
+	}
 	bool onAvatarIconContextMenuItemChecked(const LLSD& userdata)
 	{
 		std::string level = userdata.asString();
@@ -265,31 +480,6 @@ public:
 		}
 	}
 
-	BOOL postBuild()
-	{
-		LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
-		LLUICtrl::EnableCallbackRegistry::ScopedRegistrar registrar_enable;
-
-		registrar.add("AvatarIcon.Action", boost::bind(&LLChatHistoryHeader::onAvatarIconContextMenuItemClicked, this, _2));
-		registrar_enable.add("AvatarIcon.Check", boost::bind(&LLChatHistoryHeader::onAvatarIconContextMenuItemChecked, this, _2));
-		registrar.add("ObjectIcon.Action", boost::bind(&LLChatHistoryHeader::onObjectIconContextMenuItemClicked, this, _2));
-
-		LLMenuGL* menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_avatar_icon.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
-		mPopupMenuHandleAvatar = menu->getHandle();
-
-		menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_object_icon.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
-		mPopupMenuHandleObject = menu->getHandle();
-
-		setDoubleClickCallback(boost::bind(&LLChatHistoryHeader::showInspector, this));
-
-		setMouseEnterCallback(boost::bind(&LLChatHistoryHeader::showInfoCtrl, this));
-		setMouseLeaveCallback(boost::bind(&LLChatHistoryHeader::hideInfoCtrl, this));
-
-		mUserNameTextBox = getChild<LLTextBox>("user_name");
-		mTimeBoxTextBox = getChild<LLTextBox>("time_box");
-
-		return LLPanel::postBuild();
-	}
 
 	bool pointInChild(const std::string& name,S32 x,S32 y)
 	{
@@ -359,6 +549,9 @@ public:
 		{
 			mSourceType = CHAT_SOURCE_SYSTEM;
 		}  
+		else if (chat.mFromID == AUDIO_STREAM_FROM) {
+			mSourceType = CHAT_SOURCE_AUDIO_STREAM;
+		}
 
 		mUserNameFont = style_params.font();
 		LLTextBox* user_name = getChild<LLTextBox>("user_name");
@@ -372,6 +565,11 @@ public:
 			user_name->setValue(mFrom);
 			updateMinUserNameWidth();
 		}
+		else if (mSourceType == CHAT_SOURCE_AUDIO_STREAM) {
+			mFrom = chat.mFromName;
+			user_name->setValue(mFrom);
+			updateMinUserNameWidth();
+	    	}
 		else if (mSourceType == CHAT_SOURCE_AGENT
 				 && !mAvatarID.isNull()
 				 && chat.mChatStyle != CHAT_STYLE_HISTORY)
@@ -444,10 +642,14 @@ public:
 				icon->setValue(LLSD("OBJECT_Icon"));
 				break;
 			case CHAT_SOURCE_SYSTEM:
-				icon->setValue(LLSD("SL_Logo"));
+				icon->setValue(LLSD("Kokua_Logo"));
+				break;
+			case CHAT_SOURCE_AUDIO_STREAM:
+				icon->setValue(LLSD("Sound_Icon"));
 				break;
 			case CHAT_SOURCE_UNKNOWN: 
 				icon->setValue(LLSD("Unknown_Icon"));
+				break;
 		}
 
 		// In case the message came from an object, save the object info
@@ -513,10 +715,12 @@ protected:
 	{
 		if(mSourceType == CHAT_SOURCE_SYSTEM)
 			showSystemContextMenu(x,y);
-		if(mAvatarID.notNull() && mSourceType == CHAT_SOURCE_AGENT)
+		else if (mAvatarID.notNull() && mSourceType == CHAT_SOURCE_AGENT)
 			showAvatarContextMenu(x,y);
-		if(mAvatarID.notNull() && mSourceType == CHAT_SOURCE_OBJECT && SYSTEM_FROM != mFrom)
+		else if (mAvatarID.notNull() && mSourceType == CHAT_SOURCE_OBJECT && SYSTEM_FROM != mFrom)
 			showObjectContextMenu(x,y);
+		else if (mSourceType == CHAT_SOURCE_AUDIO_STREAM)
+			showAudioStreamContextMenu(x,y);
 	}
 
 	void showSystemContextMenu(S32 x,S32 y)
@@ -525,52 +729,126 @@ protected:
 	
 	void showObjectContextMenu(S32 x,S32 y)
 	{
-		LLMenuGL* menu = (LLMenuGL*)mPopupMenuHandleObject.get();
-		if(menu)
+		LLMenuGL *menu = (LLMenuGL *)mPopupMenuHandleObject.get();
+
+		if (menu) {
+			LLViewerObject *object = gObjectList.findObject(mObjectData["object_id"]);
+
+			mZoomIntoID.setNull();
+
+			if (object) {
+				//
+				//	can't zoom in on your own HUD
+				//
+				if (!(object->isHUDAttachment() && object->flagObjectYouOwner())) {
+					mZoomIntoID = mObjectData["object_id"];
+				}
+			}
+			else {
+				//
+				//	can't find the object nearby, but if
+				//	the owner is nearby then the object
+				//	is most likely worn as a HUD
+				//	(either that or they only just deleted
+				//	the object)
+				//
+				if (gObjectList.findObject(mObjectData["owner_id"])) {
+					mZoomIntoID = mObjectData["owner_id"];
+				}
+			}
+
+			menu->setItemEnabled("zoom_in", mZoomIntoID.notNull());
+
 			LLMenuGL::showPopup(this, menu, x, y);
+		}
 	}
 	
 	void showAvatarContextMenu(S32 x,S32 y)
 	{
 		LLMenuGL* menu = (LLMenuGL*)mPopupMenuHandleAvatar.get();
 
-		if(menu)
-		{
-			bool is_friend = LLAvatarActions::isFriend(mAvatarID);
-			
-			menu->setItemEnabled("Add Friend", !is_friend);
-			menu->setItemEnabled("Remove Friend", is_friend);
-
-			if(gAgentID == mAvatarID)
-			{
-				menu->setItemEnabled("Add Friend", false);
+		if (menu) {
+			if (gAgentID == mAvatarID) {
 				menu->setItemEnabled("Send IM", false);
-				menu->setItemEnabled("Remove Friend", false);
-				menu->setItemEnabled("Offer Teleport",false);
+				menu->setItemEnabled("Offer Teleport", false);
+				menu->setItemEnabled("Request Teleport", false);
 				menu->setItemEnabled("Voice Call", false);
-				menu->setItemEnabled("Invite Group", false);
+				menu->setItemEnabled("Chat History", false);
+				menu->setItemEnabled("Add Friend", false);
 				menu->setItemEnabled("Zoom In", false);
+				menu->setItemEnabled("Invite To Group", false);
 				menu->setItemEnabled("Share", false);
 				menu->setItemEnabled("Pay", false);
-				menu->setItemEnabled("Block Unblock", false);
-				menu->setItemEnabled("Mute Text", false);
+				menu->setItemEnabled("Block", false);
+
+				menu->setItemVisible("Remove Friend", false);
+				menu->setItemVisible("Block Unblock", false);
+				menu->setItemVisible("Mute Text", false);
+				menu->setItemVisible("freeze_eject_sep", false);
+				menu->setItemVisible("ToggleFreeze", false);
+				menu->setItemVisible("Eject", false);
+				menu->setItemVisible("Teleport Home", false);
+				menu->setItemVisible("Estate Ban", false);
 			}
-			else
-			{
-				LLUUID currentSessionID = LLIMMgr::computeSessionID(IM_NOTHING_SPECIAL, mAvatarID);
-				if (mSessionID == currentSessionID)
-			{
-				menu->setItemVisible("Send IM", false);
+			else {
+				menu->setItemVisible("Send IM", mSessionID != LLIMMgr::computeSessionID(IM_NOTHING_SPECIAL, mAvatarID));
+				menu->setItemEnabled("Offer Teleport", LLAvatarActions::canOfferTeleport(mAvatarID));
+
+				const bool is_friend = (LLAvatarTracker::instance().getBuddyInfo(mAvatarID) != NULL);
+				menu->setItemVisible("Add Friend", !is_friend);
+				menu->setItemVisible("Remove Friend", is_friend);
+
+				menu->setItemEnabled("Zoom In", gObjectList.findObject(mAvatarID) != NULL);
+				menu->setItemEnabled("Block Unblock", LLAvatarActions::canBlock(mAvatarID));
+				menu->setItemEnabled("Mute Text", LLAvatarActions::canBlock(mAvatarID));
+				menu->setItemVisible("Show On Map", (is_friend && LLAvatarTracker::instance().isBuddyOnline(mAvatarID) && is_agent_mappable(mAvatarID)) || gAgent.isGodlike());
+
+				const bool can_freeze_eject = enable_freeze_eject(mAvatarID);
+				menu->setItemVisible("freeze_eject_sep", can_freeze_eject);
+				menu->setItemVisible("ToggleFreeze", can_freeze_eject);
+				menu->setItemVisible("Eject", can_freeze_eject);
+
+				const bool is_on_your_land = LLAvatarActions::isOnYourLand(mAvatarID);
+				menu->setItemVisible("Teleport Home", is_on_your_land);
+				menu->setItemVisible("Estate Ban", is_on_your_land);
+			}
+
+			menu->buildDrawLabels();
+			menu->updateParent(LLMenuGL::sMenuContainer);
+			LLMenuGL::showPopup(this, menu, x, y);
+		}
+	}
+
+	void showAudioStreamContextMenu(S32 x,S32 y)
+	{
+		LLMenuGL *menu = (LLMenuGL*)mPopupMenuHandleAudioStream.get();
+
+		if (menu) {
+			LLStreamingAudioInterface *stream = NULL;
+
+			static LLCachedControl<bool> audio_streaming_music(gSavedSettings, "AudioStreamingMusic", true);
+
+			if (gAudiop && audio_streaming_music && LLViewerMedia::hasParcelAudio()) {
+				if (LLViewerMedia::isParcelAudioPlaying()) {
+					stream = gAudiop->getStreamingAudioImpl();
+				}
+
+				menu->setItemVisible("start_stream", stream == NULL);
+				menu->setItemEnabled("start_stream", stream == NULL);
+			}
+			else {
+				menu->setItemVisible("start_stream", true);
+				menu->setItemEnabled("start_stream", false);
 			}
 				menu->setItemEnabled("Offer Teleport", LLAvatarActions::canOfferTeleport(mAvatarID));
 				menu->setItemEnabled("Voice Call", LLAvatarActions::canCall());
 
-				// We should only show 'Zoom in' item in a nearby chat
-				bool should_show_zoom = !LLIMModel::getInstance()->findIMSession(currentSessionID);
-				menu->setItemVisible("Zoom In", should_show_zoom && gObjectList.findObject(mAvatarID));	
-				menu->setItemEnabled("Block Unblock", LLAvatarActions::canBlock(mAvatarID));
-				menu->setItemEnabled("Mute Text", LLAvatarActions::canBlock(mAvatarID));
-			}
+			menu->setItemVisible("stop_stream", stream != NULL);
+			menu->setItemEnabled("stop_stream", stream != NULL);
+			menu->setItemEnabled("copy_track_name", stream && (!stream->getCurrentArtist().empty() || !stream->getCurrentTitle().empty()));
+			menu->setItemEnabled("copy_stream_name", stream && !stream->getCurrentStreamName().empty());
+			menu->setItemEnabled("copy_stream_address", stream != NULL);
+			menu->setItemEnabled("visit_stream_website", stream && !stream->getCurrentStreamLocation().empty());
 
 			menu->setItemEnabled("Chat History", LLLogChat::isTranscriptExist(mAvatarID));
 			menu->setItemEnabled("Map", (LLAvatarTracker::instance().isBuddyOnline(mAvatarID) && is_agent_mappable(mAvatarID)) || gAgent.isGodlike() );
@@ -582,7 +860,7 @@ protected:
 
 	void showInfoCtrl()
 	{
-		if (mAvatarID.isNull() || mFrom.empty() || CHAT_SOURCE_SYSTEM == mSourceType) return;
+		if (mAvatarID.isNull() || mFrom.empty() || CHAT_SOURCE_SYSTEM == mSourceType || CHAT_SOURCE_AUDIO_STREAM == mSourceType) return;
 				
 		if (!sInfoCtrl)
 		{
@@ -618,6 +896,8 @@ protected:
 	}
 
 private:
+	LLUUID mZoomIntoID;
+
 	void setTimeField(const LLChat& chat)
 	{
 		LLTextBox* time_box = getChild<LLTextBox>("time_box");
@@ -684,6 +964,7 @@ private:
 protected:
 	LLHandle<LLView>	mPopupMenuHandleAvatar;
 	LLHandle<LLView>	mPopupMenuHandleObject;
+	LLHandle<LLView>	mPopupMenuHandleAudioStream;
 
 	static LLUICtrl*	sInfoCtrl;
 
@@ -920,7 +1201,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 		body_message_params.font.style = "ITALIC";
 	}
 
-	if(chat.mChatType == CHAT_TYPE_WHISPER)
+	if (chat.mChatType == CHAT_TYPE_WHISPER)
 	{
 		body_message_params.font.style = "ITALIC";
 	}
@@ -990,7 +1271,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				mEditor->appendText(chat.mFromName + delimiter, prependNewLineState, link_params);
 				prependNewLineState = false;
 			}
-			else if ( chat.mFromName != SYSTEM_FROM && chat.mFromID.notNull() && !message_from_log)
+			else if (chat.mFromName != SYSTEM_FROM && chat.mFromID.notNull() && chat.mFromID != AUDIO_STREAM_FROM && !message_from_log)
 			{
 				LLStyle::Params link_params(body_message_params);
 				link_params.overwriteFrom(LLStyleMap::instance().lookupAgent(chat.mFromID));
