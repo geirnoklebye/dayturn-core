@@ -838,6 +838,11 @@ class Darwin_i386_Manifest(ViewerManifest):
             self.path("Info.plist", dst="Info.plist")
 
             # copy additional libs in <bundle>/Contents/MacOS/
+            if self.prefix(src="../packages/lib/release", dst="MacOS"):
+                self.path("libalut.0.dylib")
+                self.path("libopenal.1.dylib")
+                self.end_prefix("MacOS")
+            
             self.path("../packages/lib/release/libndofdev.dylib", dst="Resources/libndofdev.dylib")
             self.path("../packages/lib/release/libhunspell-1.3.0.dylib", dst="Resources/libhunspell-1.3.0.dylib")
 
