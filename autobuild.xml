@@ -447,9 +447,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fea96aa2a7d513397317194f3d6c979b</string>
+              <string>afcad0bb9d65d7e1efe13f5be2dfcbb9</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/curl-7.21.1-windows-20110211.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.24.0-windows-20140108.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
