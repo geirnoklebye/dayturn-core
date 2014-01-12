@@ -307,6 +307,23 @@ Function CheckNetworkConnection
     Return
 FunctionEnd
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Function CheckOldExeName
+; Viewer versions < 3.6.12 used the name 'SecondLife.exe'
+; If that name is found in the install folder, delete it to invalidate any
+; old shortcuts to it that may be in non-standard locations, so that the user
+; does not end up running the old version (potentially getting caught in an 
+; infinite update loop). See MAINT-3575
+; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Function CheckOldExeName
+  IfFileExists "$INSTDIR\SecondLife.exe" CHECKOLDEXE_FOUND CHECKOLDEXE_DONE
+
+CHECKOLDEXE_FOUND:
+  Delete "$INSTDIR\SecondLife.exe"
+CHECKOLDEXE_DONE:
+FunctionEnd
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Delete files in Documents and Settings\<user>\Kokua\cache
@@ -529,6 +546,9 @@ Delete "$INSTDIR\*.glsl"
 Delete "$INSTDIR\motions\*.lla"
 Delete "$INSTDIR\trial\*.html"
 Delete "$INSTDIR\newview.exe"
+Delete "$INSTDIR\SecondLife.exe"
+;; MAINT-3099 workaround - prevent these log files, if present, from causing a user alert
+Delete "$INSTDIR\VivoxVoiceService-*.log"
 ;; Remove entire help directory
 Delete "$INSTDIR\help\Advanced\*"
 RMDir  "$INSTDIR\help\Advanced"
@@ -775,6 +795,7 @@ Call CheckIfAdministrator		; Make sure the user can install/uninstall
 Call CheckIfAlreadyCurrent		; Make sure that we haven't already installed this version
 Call CloseSecondLife			; Make sure we're not running
 Call CheckNetworkConnection		; ping secondlife.com
+Call CheckOldExeName                    ; Clean up a previous version of the exe
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Don't remove cache files during a regular install, removing the inventory cache on upgrades results in lots of damage to the servers.
