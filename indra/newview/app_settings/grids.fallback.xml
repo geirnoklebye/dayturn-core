@@ -640,7 +640,41 @@
         <key>slurl_base</key>
             <string>hop://reactiongrid.com:8008/</string>
         </map>
-    <key>login.aditi.lindenlab.com</key>
+    <key>grid.spellscape.co.uk</key>
+        <map>
+        <key>LastModified</key>
+            <date>2014-01-10T14:37:17.45Z</date>
+        <key>about</key>
+            <string>http://www.spellscape.co.uk/</string>
+        <key>gridname</key>
+            <string>Spellscape</string>
+        <key>gridnick</key>
+            <string>Spellscape</string>
+        <key>help</key>
+            <string>http://www.spellscape.co.uk/</string>
+        <key>helperuri</key>
+            <string>http://www.spellscape.co.uk/viewer/</string>
+        <key>login_identifier_types</key>
+            <array>
+                <string>agent</string>
+                <string>account</string>
+            </array>
+        <key>loginpage</key>
+            <string>http://www.spellscape.co.uk/viewer/splash/</string>
+        <key>loginuri</key>
+            <array>
+                <string>http://grid.spellscape.co.uk/</string>
+            </array>
+        <key>name</key>
+            <string>grid.spellscape.co.uk</string>
+        <key>password</key>
+            <string>http://www.spellscape.co.uk/component/user/reset</string>
+        <key>register</key>
+            <string>http://www.spellscape.co.uk/component/user/register</string>
+        <key>slurl_base</key>
+            <string>hop://grid.spellscape.co.uk/</string>
+        </map>
+        <key>login.aditi.lindenlab.com</key>
         <map>
         <key>LastModified</key>
             <date>2012-03-11T13:37:13.37Z</date>
