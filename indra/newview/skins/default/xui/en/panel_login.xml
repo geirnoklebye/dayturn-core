@@ -182,7 +182,6 @@ top="10"
 <button
   follows="left|bottom"
   height="23"
-  is_toggle="true"
   image_unselected="PushButton_Off"
   image_selected="PushButton_On_Selected"
   label="Grid Manager"
