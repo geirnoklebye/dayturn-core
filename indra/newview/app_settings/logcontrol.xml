@@ -20,7 +20,7 @@
 					<key>tags</key>
 						<array>
 							<string>AppInit</string>
-                                                        <string>Capabilities</string>
+							<string>Capabilities</string>
 							<string>SystemInfo</string>
 							<string>TextureCache</string>
 							<string>AppCache</string>
@@ -42,21 +42,21 @@
 						</array>
 					<key>tags</key>
 						<array>
-						<string>OctreeErrors</string>
+						<!-- <string>OctreeErrors</string> -->
 						
 					<!-- Chat -->
 						<!-- <string>NearbyChat</string> -->
 						
-					<!-- Clicks -->
+					<!-- Clicks
 						<string>DoubleClicks</string>
-						<string>MiddleMouse</string>
+						<string>MiddleMouse</string> -->
 
-					<!-- OpenSim related-->
+					<!-- OpenSim related
 						<string>OS_SETTINGS</string>
 						<string>GridManager</string>
 						<string>SLURL</string>
 						<string>UrlEntry</string>
-						<string>WebApi</string>
+						<string>WebApi</string> -->
 
 					<!-- Inventory -->
 						<!-- <string>InventoryFetch</string> -->
@@ -79,13 +79,13 @@
 						<!--<string>WindLight</string>-->
 
 					<!-- see lltexturefetch -->
-						<!-- <string>HTTPGetResponder</string> -->
-						<!-- <string>TextureFetch</string> -->
-						<!-- <string>TextureFetchWorker</string> -->
+						<!-- <string>HTTPGetResponder</string>-->
+						<!-- <string>TextureFetch</string>-->
+						<!-- <string>TextureFetchWorker</string>-->
 						 <!--<string>LocalTextures</string>--> 
-						<!-- <string>ViewerImages</string> -->
-						<string>Texture</string> 
-						 <string>IM</string> 
+						<!-- <string>ViewerImages</string>-->
+						<!-- <string>Texture</string>--> 
+						<!-- <string>IM</string>--> 
 					<!-- Spammers -->
 						<!--Meminfo-->
 						<!-- <string>FrameWatcher</string> -->
