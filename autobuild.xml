@@ -412,9 +412,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2bc0a98c25f29ca0c2ff0695427f9ad3</string>
+              <string>2d9377951d99a1aa4735cea8d4b5aa71</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.24.0-linux-20140110.tar.bz2</string>
+              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/curl-7.21.1-linux-20110316.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
