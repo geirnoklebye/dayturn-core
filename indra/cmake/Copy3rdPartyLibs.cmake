@@ -407,7 +407,7 @@ elseif(LINUX)
           libcares.so.2
           libcrypto.so
           libcrypto.so.1.0.0
-#          libcurl.so.4
+          libcurl.so.4
           libcollada14dom.so
           libdb-5.1.so
           libexpat.so

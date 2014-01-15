@@ -423,10 +423,21 @@
           <map>
             <key>archive</key>
             <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
               <key>hash</key>
-              <string>3bbdfa98f03f4a3780564376e87cb7e5</string>
+              <string>7e698e37a1425d66f709163a36ce0b5a</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.24.0-linux64-20140109.tar.bz2</string>
+              <string>http://download.kokuaviewer.org/files/libs/curl-7.21.4-Linux-x86_64-20110405.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
