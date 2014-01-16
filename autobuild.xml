@@ -2493,9 +2493,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>dd680d91b0d4a14d9b50b80f7fd4e760</string>
-              <key>url</key>
-              <string>https://bitbucket.org/cinderblocks/3p-openal/downloads/openal-1.12.854-1.1.0-darwin-20131018.tar.bz2</string>
+                <string>7b28b9e82315043f9e1bad6a839a841c</string>
+                <key>url</key>
+                <string>http://inworldz.com/imprudence/libs/openal_soft-darwin-20130207.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
