@@ -412,9 +412,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2d9377951d99a1aa4735cea8d4b5aa71</string>
+              <string>2bc0a98c25f29ca0c2ff0695427f9ad3</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/curl-7.21.1-linux-20110316.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.24.0-linux-20140110.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -423,21 +423,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>7e698e37a1425d66f709163a36ce0b5a</string>
+              <string>941fb7f3cf20663d345479d7f1e0c866</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/curl-7.21.4-Linux-x86_64-20110405.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.24.0-linux64-20140109.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -447,9 +436,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fea96aa2a7d513397317194f3d6c979b</string>
+              <string>afcad0bb9d65d7e1efe13f5be2dfcbb9</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/curl-7.21.1-windows-20110211.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.24.0-windows-20140108.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2504,9 +2493,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-                <string>7b28b9e82315043f9e1bad6a839a841c</string>
-                <key>url</key>
-                <string>http://inworldz.com/imprudence/libs/openal_soft-darwin-20130207.tar.bz2</string>
+              <string>dd680d91b0d4a14d9b50b80f7fd4e760</string>
+              <key>url</key>
+              <string>https://bitbucket.org/cinderblocks/3p-openal/downloads/openal-1.12.854-1.1.0-darwin-20131018.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
