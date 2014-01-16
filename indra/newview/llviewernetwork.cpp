@@ -563,14 +563,10 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 		{
 		 /// grid should be in the form of a dns address
 		 /// but also support localhost:9000 or localhost:9000/login
-			printf("grid name: %s", grid.c_str());
-			if (grid_entry)
-			{
-				state = FAIL;
-				delete grid_entry;
-				grid_entry = NULL;
-			}
-			throw LLInvalidGridName(grid);
+			LLSD args;
+			args["GRID"] = grid;
+			LLNotificationsUtil::add("InvalidGrid", args);
+			state = FAIL;
 		}
 
 		/// trim last slash
