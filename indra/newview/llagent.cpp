@@ -95,6 +95,10 @@
 #include "stringize.h"
 #include "boost/foreach.hpp"
 
+//MK
+#include "llstartup.h"
+//mk
+
 using namespace LLAvatarAppearanceDefines;
 
 extern LLMenuBarGL* gMenuBarView;
@@ -274,7 +278,20 @@ bool LLAgent::isActionAllowed(const LLSD& sdname)
 
 	const std::string& param = sdname.asString();
 
-	if (param == "speak")
+	if (param == "build")
+	{
+		retval = gAgent.canEditParcel();
+//MK
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsEdit || gAgent.mRRInterface.mContainsRez)
+			{
+				retval = false;
+			}
+		}
+//mk
+	}
+	else if (param == "speak")
 	{
 		if ( gAgent.isVoiceConnected() && 
 			LLViewerParcelMgr::getInstance()->allowAgentVoice() &&
@@ -287,6 +304,75 @@ bool LLAgent::isActionAllowed(const LLSD& sdname)
 			retval = false;
 		}
 	}
+//MK
+	else if (param == "inventory")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsShowinv)
+			{
+				retval = false;
+			}
+		}
+	}
+	else if (param == "map")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsShowworldmap
+			|| gAgent.mRRInterface.mContainsShowloc)
+			{
+				retval = false;
+			}
+		}
+	}
+	else if (param == "minimap")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsShowminimap)
+			{
+				retval = false;
+			}
+		}
+	}
+	else if (param == "aboutland")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsShowloc)
+			{
+				retval = false;
+			}
+		}
+	}
+	else if (param == "destinations")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsTp)
+			{
+				retval = false;
+			}
+		}
+	}
+	else if (param == "avatar")
+	{
+		retval = true;
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsDetach)
+			{
+				retval = false;
+			}
+		}
+	}
+//mk
 
 	return retval;
 }
@@ -508,6 +594,12 @@ LLAgent::~LLAgent()
 //-----------------------------------------------------------------------------
 void LLAgent::onAppFocusGained()
 {
+//MK
+	if (gRRenabled)
+	{
+		return;
+	}
+//mk
 	if (CAMERA_MODE_MOUSELOOK == gAgentCamera.getCameraMode())
 	{
 		gAgentCamera.changeCameraToDefault();
@@ -542,10 +634,18 @@ void LLAgent::moveAt(S32 direction, bool reset)
 
 	if (direction > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveForward) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_AT_POS | AGENT_CONTROL_FAST_AT);
 	}
 	else if (direction < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveBackward) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_AT_NEG | AGENT_CONTROL_FAST_AT);
 	}
 
@@ -570,10 +670,18 @@ void LLAgent::moveAtNudge(S32 direction)
 
 	if (direction > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveForward) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_NUDGE_AT_POS);
 	}
 	else if (direction < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveBackward) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_NUDGE_AT_NEG);
 	}
 
@@ -595,10 +703,18 @@ void LLAgent::moveLeft(S32 direction)
 
 	if (direction > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveStrafeRight) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_LEFT_POS | AGENT_CONTROL_FAST_LEFT);
 	}
 	else if (direction < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveStrafeLeft) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_LEFT_NEG | AGENT_CONTROL_FAST_LEFT);
 	}
 
@@ -620,10 +736,18 @@ void LLAgent::moveLeftNudge(S32 direction)
 
 	if (direction > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveStrafeRight) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_NUDGE_LEFT_POS);
 	}
 	else if (direction < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveStrafeLeft) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_NUDGE_LEFT_NEG);
 	}
 
@@ -645,10 +769,18 @@ void LLAgent::moveUp(S32 direction)
 
 	if (direction > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveUp) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_UP_POS | AGENT_CONTROL_FAST_UP);
 	}
 	else if (direction < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveDown) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_UP_NEG | AGENT_CONTROL_FAST_UP);
 	}
 
@@ -664,10 +796,18 @@ void LLAgent::moveYaw(F32 mag, bool reset_view)
 
 	if (mag > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnRight) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_YAW_POS);
 	}
 	else if (mag < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnLeft) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_YAW_NEG);
 	}
 
@@ -686,10 +826,18 @@ void LLAgent::movePitch(F32 mag)
 
 	if (mag > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnUp) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_PITCH_POS);
 	}
 	else if (mag < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnDown) {}
+		//else
+//mk
 		setControlFlags(AGENT_CONTROL_PITCH_NEG);
 	}
 }
@@ -698,6 +846,12 @@ void LLAgent::movePitch(F32 mag)
 // Does this parcel allow you to fly?
 BOOL LLAgent::canFly()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsFly)
+	{
+		return FALSE;
+	}
+//mk
 	if (isGodlike()) return TRUE;
 
 	LLViewerRegion* regionp = getRegion();
@@ -746,6 +900,12 @@ void LLAgent::setFlying(BOOL fly)
 
 	if (fly)
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsFly)
+		{
+			return;
+		}
+//mk
 		BOOL was_flying = getFlying();
 		if (!canFly() && !was_flying)
 		{
@@ -808,14 +968,37 @@ bool LLAgent::enableFlying()
 
 void LLAgent::standUp()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit)
+	{
+		return;
+	}
+//LC - fix for issue #58
+//	gAgent.setFlying(FALSE);
+//lc
+//mk
 	setControlFlags(AGENT_CONTROL_STAND_UP);
+//MK
+	if (gAgent.mRRInterface.contains ("standtp"))
+	{
+		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
+		gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
+		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
+	}
+//mk
 }
-
 
 void LLAgent::handleServerBakeRegionTransition(const LLUUID& region_id)
 {
 	llinfos << "called" << llendl;
 
+//MK from HB
+	// Make sure to use the proper method to account for the Z-Offset: as the
+	// value for the Hover shape visual parameter in SSB sims, or as a simple
+	// offset added to the size sent by sendAgentSetAppearance() in non-SSB
+	// sims (with the shape Hover reset to zero in that latter case).
+	gAgentWearables.setShapeAvatarOffset();
+//mk from HB
 
 	// Old-style appearance entering a server-bake region.
 	if (isAgentAvatarValid() &&
@@ -834,7 +1017,6 @@ void LLAgent::handleServerBakeRegionTransition(const LLUUID& region_id)
 		gAgentAvatarp->checkForUnsupportedServerBakeAppearance();
 	}
 }
-
 //-----------------------------------------------------------------------------
 // setRegion()
 //-----------------------------------------------------------------------------
@@ -849,8 +1031,15 @@ void LLAgent::setRegion(LLViewerRegion *regionp)
 		// host_name = regionp->getHost().getHostName();
 
 		std::string ip = regionp->getHost().getString();
-		llinfos << "Moving agent into region: " << regionp->getName()
+//MK
+		if (!gRRenabled || !gAgent.mRRInterface.mContainsShowloc)
+		{
+//mk
+			llinfos << "Moving agent into region: " << regionp->getName()
 				<< " located at " << ip << llendl;
+//MK
+		}
+//mk
 		if (mRegionp)
 		{
 			// We've changed regions, we're now going to change our agent coordinate frame.
@@ -1148,6 +1337,17 @@ LLVector3d LLAgent::getPosGlobalFromAgent(const LLVector3 &pos_agent) const
 
 void LLAgent::sitDown()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains ("sit"))
+	{
+		return;
+	}
+	if (gRRenabled && gAgentAvatarp && !gAgentAvatarp->mIsSitting)
+	{
+		// We are now standing, and we want to sit down => store our current location so that we can snap back here when we stand up, if under @standtp
+		gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+	}
+//mk
 	setControlFlags(AGENT_CONTROL_SIT_ON_GROUND);
 }
 
@@ -2130,6 +2330,12 @@ void LLAgent::endAnimationUpdateUI()
 	//---------------------------------------------------------------------
 	if (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK)
 	{
+//MK
+		// Don't hide the UI while in Mouselook mode, we can do this through
+		// another command already (Ctrl+Alt+F1). Hiding the UI renders
+		// Mouselook pretty useless, if you ask me.
+/*
+//mk
 		// clean up UI
 		// first show anything hidden by UI toggle
 		gViewerWindow->setUIVisibility(TRUE);
@@ -2172,7 +2378,9 @@ void LLAgent::endAnimationUpdateUI()
 		skip_list.insert(LLFloaterReg::findInstance("mini_map"));
 		gFloaterView->pushVisibleAll(FALSE, skip_list);
 #endif
-
+//MK
+*/
+//mk
 		if( gMorphView )
 		{
 			gMorphView->setVisible(FALSE);
@@ -2637,7 +2845,7 @@ void LLAgent::handlePreferredMaturityResult(U8 pServerMaturity)
 			mMaturityPreferenceNumRetries = 0;
 			reportPreferredMaturitySuccess();
 			llassert(static_cast<U8>(gSavedSettings.getU32("PreferredMaturity")) == mLastKnownResponseMaturity);
-		}
+}
 		// Else, the viewer is out of sync with the server, so let's try to re-sync with the
 		// server by re-sending our last known request.  Cap the re-tries at 3 just to be safe.
 		else if (++mMaturityPreferenceNumRetries <= 3)
@@ -2690,7 +2898,7 @@ void LLAgent::reportPreferredMaturitySuccess()
 	if (hasPendingTeleportRequest())
 	{
 		startTeleportRequest();
-	}
+}
 }
 
 void LLAgent::reportPreferredMaturityError()
@@ -2707,7 +2915,7 @@ void LLAgent::reportPreferredMaturityError()
 	// Get the last known maturity request from the user activity
 	std::string preferredMaturity = LLViewerRegion::accessToString(mLastKnownRequestMaturity);
 	LLStringUtil::toLower(preferredMaturity);
-
+	
 	// Get the last known maturity response from the server
 	std::string actualMaturity = LLViewerRegion::accessToString(mLastKnownResponseMaturity);
 	LLStringUtil::toLower(actualMaturity);
@@ -2732,15 +2940,15 @@ void LLAgent::reportPreferredMaturityError()
 }
 
 bool LLAgent::isMaturityPreferenceSyncedWithServer() const
-{
+		{
 	return (mMaturityPreferenceRequestId == mMaturityPreferenceResponseId);
-}
+		}
 
 void LLAgent::sendMaturityPreferenceToServer(U8 pPreferredMaturity)
 {
 	// Only send maturity preference to the server if enabled
 	if (mIsDoSendMaturityPreferenceToServer)
-	{
+		{
 		// Increment the number of requests.  The handlers manage a separate count of responses.
 		++mMaturityPreferenceRequestId;
 
@@ -2765,15 +2973,15 @@ void LLAgent::sendMaturityPreferenceToServer(U8 pPreferredMaturity)
 			{
 				responderPtr->errorWithContent(0U, 
 							"capability 'UpdateAgentInformation' is not defined for region", LLSD());
-			}
+		}
 			else
 			{
 				// Set new access preference
 				LLSD access_prefs = LLSD::emptyMap();
 				access_prefs["max"] = LLViewerRegion::accessToShortString(pPreferredMaturity);
-
-				LLSD body = LLSD::emptyMap();
-				body["access_prefs"] = access_prefs;
+		
+		LLSD body = LLSD::emptyMap();
+		body["access_prefs"] = access_prefs;
 				llinfos << "Sending viewer preferred maturity to '" << LLViewerRegion::accessToString(pPreferredMaturity)
 					<< "' via capability to: " << url << llendl;
 				LLSD headers;
@@ -4017,6 +4225,17 @@ void LLAgent::teleportViaLandmark(const LLUUID& landmark_asset_id)
 
 void LLAgent::doTeleportViaLandmark(const LLUUID& landmark_asset_id)
 {
+//MK
+	LLVOAvatar* avatar = gAgentAvatarp;
+	if (gRRenabled && (LLStartUp::getStartupState() != STATE_STARTED || gViewerWindow->getShowProgress() 
+					  || gAgent.mRRInterface.contains ("tplm") 
+					  || (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
+	{
+		return;
+	}
+	//// eliminate all restrictions issued from objects the avatar is not wearing
+	//gAgent.mRRInterface.garbageCollector ();
+//mk
 	LLViewerRegion *regionp = getRegion();
 	if(regionp && teleportCore())
 	{
@@ -4038,6 +4257,13 @@ void LLAgent::teleportViaLure(const LLUUID& lure_id, BOOL godlike)
 
 void LLAgent::doTeleportViaLure(const LLUUID& lure_id, BOOL godlike)
 {
+//MK
+	//// eliminate all restrictions issued from objects the avatar is not wearing
+	//if (gRRenabled)
+	//{
+	//	gAgent.mRRInterface.garbageCollector ();
+	//}
+//mk
 	LLViewerRegion* regionp = getRegion();
 	if(regionp && teleportCore())
 	{
@@ -4071,17 +4297,17 @@ void LLAgent::teleportCancel()
 {
 	if (!hasPendingTeleportRequest())
 	{
-		LLViewerRegion* regionp = getRegion();
-		if(regionp)
-		{
-			// send the message
-			LLMessageSystem* msg = gMessageSystem;
-			msg->newMessage("TeleportCancel");
-			msg->nextBlockFast(_PREHASH_Info);
-			msg->addUUIDFast(_PREHASH_AgentID, getID());
-			msg->addUUIDFast(_PREHASH_SessionID, getSessionID());
-			sendReliableMessage();
-		}	
+	LLViewerRegion* regionp = getRegion();
+	if(regionp)
+	{
+		// send the message
+		LLMessageSystem* msg = gMessageSystem;
+		msg->newMessage("TeleportCancel");
+		msg->nextBlockFast(_PREHASH_Info);
+		msg->addUUIDFast(_PREHASH_AgentID, getID());
+		msg->addUUIDFast(_PREHASH_SessionID, getSessionID());
+		sendReliableMessage();
+	}	
 	}
 	clearTeleportRequest();
 	gAgent.setTeleportState( LLAgent::TELEPORT_NONE );
@@ -4095,7 +4321,19 @@ void LLAgent::teleportViaLocation(const LLVector3d& pos_global)
 }
 
 void LLAgent::doTeleportViaLocation(const LLVector3d& pos_global)
-{
+{	
+//MK
+	LLVOAvatar* avatar = gAgentAvatarp;
+	if (gRRenabled && (LLStartUp::getStartupState() != STATE_STARTED || gViewerWindow->getShowProgress() 
+					  || gAgent.mRRInterface.contains ("tploc") 
+					  //|| gAgent.mRRInterface.contains ("sittp") 
+					  || (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
+	{
+		return;
+	}
+	//// eliminate all restrictions issued from objects the avatar is not wearing
+	//gAgent.mRRInterface.garbageCollector ();
+//mk
 	LLViewerRegion* regionp = getRegion();
 
 	if (!regionp)
@@ -4150,6 +4388,23 @@ void LLAgent::teleportViaLocationLookAt(const LLVector3d& pos_global)
 
 void LLAgent::doTeleportViaLocationLookAt(const LLVector3d& pos_global)
 {
+//MK
+	if (gRRenabled)
+	{
+		// Do not perform these checks if we are automatically snapping back to the last standing location
+		if (!mRRInterface.mSnappingBackToLastStandingLocation)
+		{
+			// Can't double-click-TP if we can't sittp, unsit, tp to a location or when the controls are grabbed and something is locked
+			if (gAgent.mRRInterface.contains ("tploc") 
+				|| (gAgent.forwardGrabbed() && gAgent.mRRInterface.mContainsDetach)
+				|| gAgent.mRRInterface.contains ("sittp") 
+				|| (gAgent.mRRInterface.mContainsUnsit && gAgentAvatarp && gAgentAvatarp->mIsSitting))
+			{
+				return;
+			}
+		}
+	}
+//mk
 	mbTeleportKeepsLookAt = true;
 	gAgentCamera.setFocusOnAvatar(FALSE, ANIMATE);	// detach camera form avatar, so it keeps direction
 	U64 region_handle = to_region_handle(pos_global);
@@ -4420,7 +4675,17 @@ void LLAgent::sendAgentSetAppearance()
 	// NOTE -- when we start correcting all of the other Havok geometry 
 	// to compensate for the COLLISION_TOLERANCE ugliness we will have 
 	// to tweak this number again
-	const LLVector3 body_size = gAgentAvatarp->mBodySize + gAgentAvatarp->mAvatarOffset;
+//MK
+	const LLVector3 body_size = gAgentAvatarp->mBodySize;
+	////const LLVector3 body_size = gAgentAvatarp->mBodySize + gAgentAvatarp->mAvatarOffset;
+	//LLVector3 body_size = gAgentAvatarp->mBodySize + gAgentAvatarp->mAvatarOffset;
+	//F32 x_offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarX");
+	//F32 y_offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarY");
+	//F32 z_offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
+	//body_size.mV[VX] = body_size.mV[VX] + x_offset;
+	//body_size.mV[VY] = body_size.mV[VY] + y_offset;
+	//body_size.mV[VZ] = body_size.mV[VZ] + z_offset;
+//mk
 	msg->addVector3Fast(_PREHASH_Size, body_size);	
 
 	// To guard against out of order packets
@@ -4822,3 +5087,4 @@ void LLTeleportRequestViaLocationLookAt::restartTeleport()
 }
 
 // EOF
+

@@ -72,6 +72,7 @@ S32 LLVersionInfo::getBuild()
 const std::string &LLVersionInfo::getVersion()
 {
 	static std::string version("");
+
 	if (version.empty())
 	{
 		std::ostringstream stream;
@@ -79,6 +80,7 @@ const std::string &LLVersionInfo::getVersion()
 		// cache the version string
 		version = stream.str();
 	}
+
 	return version;
 }
 
@@ -103,8 +105,10 @@ namespace
 	/// Storage of the channel name the viewer is using.
 	//  The channel name is set by hardcoded constant, 
 	//  or by calling LLVersionInfo::resetChannel()
-	std::string sWorkingChannelName(LL_VIEWER_CHANNEL);
-
+//MK
+////	std::string sWorkingChannelName(LL_CHANNEL);
+	std::string sWorkingChannelName("Restrained Love Release");
+//mk
 	// Storage for the "version and channel" string.
 	// This will get reset too.
 	std::string sVersionChannel("");

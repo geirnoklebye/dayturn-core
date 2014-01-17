@@ -48,10 +48,18 @@ include(GLOD)
 include(CMakeCopyIfDifferent)
 include(LLAppearance)
 
+# <FS:ND> if using ndPhysicsstub this variable will be unset, we don't need to build any stub code viewer side in that case
+if( LLPHYSICSEXTENSIONS_SRC_DIR )
+# </FS:ND>
+
 if (NOT HAVOK_TPV)
    # When using HAVOK_TPV, the library is precompiled, so no need for this
-   add_subdirectory(${LLPHYSICSEXTENSIONS_SRC_DIR} llphysicsextensions)
+#  add_subdirectory(${LLPHYSICSEXTENSIONS_SRC_DIR} llphysicsextensions)
 endif (NOT HAVOK_TPV)
+
+# <FS:ND>
+endif( LLPHYSICSEXTENSIONS_SRC_DIR )
+# </FS:ND>
 
 if(FMODEX)
   include_directories(${FMODEX_INCLUDE_DIR})
@@ -65,12 +73,15 @@ include_directories(
     ${LLCHARACTER_INCLUDE_DIRS}
     ${LLCOMMON_INCLUDE_DIRS}
     ${LLCOREHTTP_INCLUDE_DIRS}
+    ${LLCONVEXDECOMP_INCLUDE_DIRS}
     ${LLPHYSICS_INCLUDE_DIRS}
+    ${FMOD_INCLUDE_DIR}
     ${LLIMAGE_INCLUDE_DIRS}
     ${LLKDU_INCLUDE_DIRS}
     ${LLINVENTORY_INCLUDE_DIRS}
     ${LLMATH_INCLUDE_DIRS}
     ${LLMESSAGE_INCLUDE_DIRS}
+    ${LLPHYSICSEXTENSIONS_INCLUDE_DIRS}
     ${LLPLUGIN_INCLUDE_DIRS}
     ${LLPRIMITIVE_INCLUDE_DIRS}
     ${LLRENDER_INCLUDE_DIRS}
@@ -87,6 +98,7 @@ include_directories(
     ${OPENAL_LIB_INCLUDE_DIRS}
     ${LIBS_PREBUILT_DIR}/include/collada/1.4
     ${LLAPPEARANCE_INCLUDE_DIRS}
+    ${HACD_INCLUDE_DIR} 
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
@@ -97,6 +109,7 @@ include_directories(SYSTEM
     )
 
 set(viewer_SOURCE_FILES
+    RRInterface.cpp
     groupchatlistener.cpp
     llaccountingcostmanager.cpp
     llagent.cpp
@@ -439,6 +452,7 @@ set(viewer_SOURCE_FILES
     llpanelplacestab.cpp
     llpanelprimmediacontrols.cpp
     llpanelprofile.cpp
+	llpanelprofileview.cpp
     llpanelsnapshot.cpp
     llpanelsnapshotinventory.cpp
     llpanelsnapshotlocal.cpp
@@ -676,6 +690,7 @@ set(viewer_SOURCE_FILES
     llxmlrpctransaction.cpp
     noise.cpp
     pipeline.cpp
+	qtoolalign.cpp
     )
 
 set(VIEWER_BINARY_NAME "secondlife-bin" CACHE STRING
@@ -684,6 +699,7 @@ set(VIEWER_BINARY_NAME "secondlife-bin" CACHE STRING
 set(viewer_HEADER_FILES
     CMakeLists.txt
     ViewerInstall.cmake
+    RRInterface.h
     groupchatlistener.h
     llaccountingcostmanager.h
     llagent.h
@@ -1020,6 +1036,7 @@ set(viewer_HEADER_FILES
     llpanelplacestab.h
     llpanelprimmediacontrols.h
     llpanelprofile.h
+	llpanelprofileview.h
     llpanelsnapshot.h
     llpanelteleporthistory.h
     llpaneltiptoast.h
@@ -1256,6 +1273,7 @@ set(viewer_HEADER_FILES
     macmain.h
     noise.h
     pipeline.h
+    qtoolalign.h
     VertexCache.h
     VorbisFramework.h
     )
@@ -1905,17 +1923,20 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${OPENSSL_LIBRARIES}
     ${CRYPTO_LIBRARIES}
     ${LLLOGIN_LIBRARIES}
+    ${LLCONVEXDECOMP_LIBRARY}
     ${LLPHYSICS_LIBRARIES}
     ${LLPHYSICSEXTENSIONS_LIBRARIES}
     ${TCMALLOC_LIBRARIES}
+    ${HACD_LIBRARY}
     ${LLAPPEARANCE_LIBRARIES}
     )
 
 set(ARTWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH
     "Path to artwork files.")
 
+
 if (LINUX)
-  set(product SecondLife-${ARCH}-${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION})
+  set(product RestrainedLove-${ARCH}-${viewer_VERSION})
 
   # These are the generated targets that are copied to package/
   set(COPY_INPUT_DEPENDENCIES
@@ -1951,7 +1972,6 @@ if (LINUX)
 
   if (PACKAGE)
   endif (PACKAGE)
-
   add_custom_command(
     OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.copy_touched
     COMMAND ${PYTHON_EXECUTABLE}
@@ -1987,7 +2007,7 @@ endif (LINUX)
 
 if (DARWIN)
   # These all get set with PROPERTIES
-  set(product "Second Life")
+  set(product "Restrained Love")
   set(MACOSX_BUNDLE_INFO_STRING "Second Life Viewer")
   set(MACOSX_BUNDLE_ICON_FILE "secondlife.icns")
   set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.secondlife.indra.viewer")
@@ -2095,7 +2115,7 @@ if (PACKAGE)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/webkit/${CMAKE_CFG_INTDIR}")
     set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-darwin.tar.bz2")
-    set(VIEWER_EXE_GLOBS "'Second Life' SLPlugin mac-crash-logger")
+    set(VIEWER_EXE_GLOBS "'Restrained Love' SLPlugin mac-crash-logger")
     set(VIEWER_LIB_GLOB "*.dylib")
   endif (DARWIN)
   if (LINUX)
@@ -2149,7 +2169,6 @@ if (LL_TESTS)
     llworldmap.cpp
     llworldmipmap.cpp
   )
-
   set_source_files_properties(
     llworldmap.cpp
     llworldmipmap.cpp

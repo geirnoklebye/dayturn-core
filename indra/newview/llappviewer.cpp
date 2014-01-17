@@ -361,6 +361,10 @@ static std::string gLaunchFileOnQuit;
 // Used on Win32 for other apps to identify our window (eg, win_setup)
 const char* const VIEWER_WINDOW_CLASSNAME = "Second Life";
 
+//MK
+const F32 Z_OFFSET_THROTTLE_DELAY = 1.f;	// in seconds
+//mk
+
 //-- LLDeferredTaskList ------------------------------------------------------
 
 /**
@@ -729,7 +733,7 @@ bool LLAppViewer::init()
 	// we run the "program crashed last time" error handler below.
 	//
 	LLFastTimer::reset();
-	
+
 	
 #ifdef LL_DARWIN
 	mMainLoopInitialized = false;
@@ -755,7 +759,7 @@ bool LLAppViewer::init()
 	initLoggingAndGetLastDuration();
 	
 	processMarkerFiles();
-
+	
 	//
 	// OK to write stuff to logs now, we've now crash reported if necessary
 	//
@@ -1268,40 +1272,43 @@ bool LLAppViewer::mainLoop()
 	if (!mMainLoopInitialized)
 #endif
 	{
-		mMainloopTimeout = new LLWatchdogTimeout();
-		
-		//-------------------------------------------
-		// Run main loop until time to quit
-		//-------------------------------------------
-		
-		// Create IO Pump to use for HTTP Requests.
-		gServicePump = new LLPumpIO(gAPRPoolp);
-		LLHTTPClient::setPump(*gServicePump);
-		LLCurl::setCAFile(gDirUtilp->getCAFile());
-		
-		// Note: this is where gLocalSpeakerMgr and gActiveSpeakerMgr used to be instantiated.
-		
-		LLVoiceChannel::initClass();
-		LLVoiceClient::getInstance()->init(gServicePump);
-		LLVoiceChannel::setCurrentVoiceChannelChangedCallback(boost::bind(&LLFloaterIMContainer::onCurrentChannelChanged, _1), true);
-		
+	mMainloopTimeout = new LLWatchdogTimeout();
+	
+	//-------------------------------------------
+	// Run main loop until time to quit
+	//-------------------------------------------
+
+	// Create IO Pump to use for HTTP Requests.
+	gServicePump = new LLPumpIO(gAPRPoolp);
+	LLHTTPClient::setPump(*gServicePump);
+	LLCurl::setCAFile(gDirUtilp->getCAFile());
+
+	// Note: this is where gLocalSpeakerMgr and gActiveSpeakerMgr used to be instantiated.
+
+	LLVoiceChannel::initClass();
+	LLVoiceClient::getInstance()->init(gServicePump);
+	LLVoiceChannel::setCurrentVoiceChannelChangedCallback(boost::bind(&LLFloaterIMContainer::onCurrentChannelChanged, _1), true);
+
 		joystick = LLViewerJoystick::getInstance();
-		joystick->setNeedsReset(true);
-		
+	joystick->setNeedsReset(true);
+
 #ifdef LL_DARWIN
 		// Ensure that this section of code never gets called again on OS X.
 		mMainLoopInitialized = true;
 #endif
 	}
-	// As we do not (yet) send data on the mainloop LLEventPump that varies
-	// with each frame, no need to instantiate a new LLSD event object each
-	// time. Obviously, if that changes, just instantiate the LLSD at the
-	// point of posting.
+//MK
+	int garbage_collector_cnt=-3000; // give the garbage collector a few minutes before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
+//mk
+    // As we do not (yet) send data on the mainloop LLEventPump that varies
+    // with each frame, no need to instantiate a new LLSD event object each
+    // time. Obviously, if that changes, just instantiate the LLSD at the
+    // point of posting.
 	
 	LLEventPump& mainloop(LLEventPumps::instance().obtain("mainloop"));
 	
     LLSD newFrame;
-	
+
 	LLTimer frameTimer,idleTimer;
 	LLTimer debugTime;
 	
@@ -1384,6 +1391,77 @@ bool LLAppViewer::mainLoop()
 					joystick->scanJoystick();
 					gKeyboard->scanKeyboard();
 				}
+
+//MK
+				// Do some RLV maintenance (garbage collector etc)
+				if (gRRenabled && LLStartUp::getStartupState() == STATE_STARTED
+					&& !gViewerWindow->getShowProgress())
+				{
+					// if RLV share inventory has not been fetched yet, fetch it now
+					gAgent.mRRInterface.fetchInventory ();
+					
+					// perform some maintenance only if no object is waiting to be reattached
+					if (gAgent.mRRInterface.mAssetsToReattach.empty())
+					{
+						// fire all the stored commands that we received while initializing
+						gAgent.mRRInterface.fireCommands ();
+						
+						// fire the garbage collector for orphaned restrictions
+						if (++garbage_collector_cnt >= 600) {
+							gAgent.mRRInterface.garbageCollector (FALSE);
+							garbage_collector_cnt = 0;
+						}
+						
+					}
+
+					// We must check whether there is an object waiting to be reattached after
+					// having been kicked off while locked.
+					if (!gAgent.mRRInterface.mAssetsToReattach.empty())
+					{
+						// Get the elapsed time since detached, and the delay before reattach.
+						U32 elapsed = (U32)gAgent.mRRInterface.mReattachTimer.getElapsedTimeF32();
+						U32 delay = gSavedSettings.getU32("RestrainedLoveReattachDelay");
+						// Timeout flag.
+						BOOL timeout = (gAgent.mRRInterface.mReattaching && elapsed > 4 * delay);
+						if (timeout)
+						{
+							// If we timed out, reset the timer and tell the interface...
+							gAgent.mRRInterface.mReattachTimer.reset();
+							gAgent.mRRInterface.mReattachTimeout = TRUE;
+							llwarns << "Timeout reattaching an asset, retrying." << llendl;
+						}
+						if (!gAgent.mRRInterface.mReattaching || timeout)
+						{
+							// We are not reattaching an object (or we timed out), so
+							// let's see if the delay before auto-reattach has elapsed.
+							if (elapsed >= delay)
+							{
+								// Let's reattach the object to its default attach point.
+								AssetAndTarget& at = gAgent.mRRInterface.mAssetsToReattach.front();
+								LLUUID tmp_uuid = at.uuid;
+								std::string tmp_attachpt = at.attachpt;
+								int tmp_attachpt_nb = 0;
+								LLViewerJointAttachment* attachpt = gAgent.mRRInterface.findAttachmentPointFromName(tmp_attachpt, true);
+								if (attachpt) tmp_attachpt_nb = gAgent.mRRInterface.findAttachmentPointNumber(attachpt);
+								llinfos << "Reattaching asset " << tmp_uuid << " to point " << tmp_attachpt_nb << llendl;
+								gAgent.mRRInterface.mReattaching = TRUE;
+								gAgent.mRRInterface.attachObjectByUUID (tmp_uuid, tmp_attachpt_nb);
+							}
+						}
+					}
+
+					// Let's look at how much time has passed since the last chage to the avatar Z offset
+					// and trigger an update to the shape if enough time has passed
+					if (RRInterface::sLastAvatarZOffsetCommit > 0.f)
+					{
+						if (gFrameTimeSeconds - RRInterface::sLastAvatarZOffsetCommit > Z_OFFSET_THROTTLE_DELAY)
+						{
+							RRInterface::sLastAvatarZOffsetCommit = -1000.f;
+							gAgentWearables.forceUpdateShape ();
+						}
+					}
+				}
+//mk
 
 				// Update state based on messages, user input, object idle.
 				{
@@ -1592,32 +1670,32 @@ bool LLAppViewer::mainLoop()
 
 	if (LLApp::isExiting())
 	{
-		// Save snapshot for next time, if we made it through initialization
-		if (STATE_STARTED == LLStartUp::getStartupState())
+	// Save snapshot for next time, if we made it through initialization
+	if (STATE_STARTED == LLStartUp::getStartupState())
+	{
+		try
 		{
-			try
-			{
-				saveFinalSnapshot();
-			}
-			catch(std::bad_alloc)
-			{
-				llwarns << "Bad memory allocation when saveFinalSnapshot() is called!" << llendl ;
-				
-				//stop memory leaking simulation
-				LLFloaterMemLeak* mem_leak_instance =
-				LLFloaterReg::findTypedInstance<LLFloaterMemLeak>("mem_leaking");
-				if(mem_leak_instance)
-				{
-					mem_leak_instance->stop() ;
-				}
-			}
+			saveFinalSnapshot();
 		}
-		
-		delete gServicePump;
-		
-		destroyMainloopTimeout();
-		
-		llinfos << "Exiting main_loop" << llendflush;
+		catch(std::bad_alloc)
+		{
+			llwarns << "Bad memory allocation when saveFinalSnapshot() is called!" << llendl ;
+
+			//stop memory leaking simulation
+			LLFloaterMemLeak* mem_leak_instance =
+				LLFloaterReg::findTypedInstance<LLFloaterMemLeak>("mem_leaking");
+			if(mem_leak_instance)
+			{
+				mem_leak_instance->stop() ;				
+			}	
+		}
+	}
+	
+	delete gServicePump;
+
+	destroyMainloopTimeout();
+
+	llinfos << "Exiting main_loop" << llendflush;
 	}
 
 	return LLApp::isExiting();
@@ -1761,7 +1839,7 @@ bool LLAppViewer::cleanup()
 		gAudiop->setStreamingAudioImpl(NULL);
 
 		// shut down the audio subsystem
-			gAudiop->shutdown();
+        gAudiop->shutdown();
 
 		delete gAudiop;
 		gAudiop = NULL;
@@ -2226,6 +2304,7 @@ void LLAppViewer::initLoggingAndGetLastDuration()
 	LLFile::rename(log_file, old_log_file);
 
 	// Set the log file to SecondLife.log
+
 	LLError::logToFile(log_file);
 	if (!duration_log_msg.empty())
 	{
@@ -2656,14 +2735,20 @@ bool LLAppViewer::initConfiguration()
 	std::string CmdLineLoginLocation(gSavedSettings.getString("CmdLineLoginLocation"));
 	if(! CmdLineLoginLocation.empty())
     {
-		start_slurl = CmdLineLoginLocation;
-		LLStartUp::setStartSLURL(start_slurl);
-		if(start_slurl.getType() == LLSLURL::LOCATION) 
-		{  
-			LLGridManager::getInstance()->setGridChoice(start_slurl.getGrid());
-    }
-    }
-
+//MK
+        if (!gSavedSettings.getBOOL("RestrainedLove"))
+        {
+//mk
+			start_slurl = CmdLineLoginLocation;
+			LLStartUp::setStartSLURL(start_slurl);
+			if(start_slurl.getType() == LLSLURL::LOCATION) 
+			{  
+				LLGridManager::getInstance()->setGridChoice(start_slurl.getGrid());
+			}
+//MK
+		}
+//mk
+	}
 	//RN: if we received a URL, hand it off to the existing instance.
 	// don't call anotherInstanceRunning() when doing URL handoff, as
 	// it relies on checking a marker file which will not work when running
@@ -2671,12 +2756,19 @@ bool LLAppViewer::initConfiguration()
 
 	if (start_slurl.isValid() &&
 		(gSavedSettings.getBOOL("SLURLPassToOtherInstance")))
-	{
+    {
+//MK
+        if (!gSavedSettings.getBOOL("RestrainedLove"))
+        {
+//mk
 		if (sendURLToOtherInstance(start_slurl.getSLURLString()))
 		{
 			// successfully handed off URL to existing instance, exit
 			return false;
 		}
+//MK
+		}
+//mk
     }
 
 	const LLControlVariable* skinfolder = gSavedSettings.getControl("SkinCurrent");
@@ -2781,35 +2873,35 @@ bool LLAppViewer::initConfiguration()
 		}
 	}
 
-	//
-	// Check for another instance of the app running
-	//
+	    //
+	    // Check for another instance of the app running
+	    //
 	if (mSecondInstance && !gSavedSettings.getBOOL("AllowMultipleViewers"))
-	{
-		std::ostringstream msg;
-		msg << LLTrans::getString("MBAlreadyRunning");
-		OSMessageBox(
-			msg.str(),
-			LLStringUtil::null,
-			OSMB_OK);
-		return false;
-	}
-
-	if (mSecondInstance)
-	{
-		// This is the second instance of SL. Turn off voice support,
-		// but make sure the setting is *not* persisted.
-		LLControlVariable* disable_voice = gSavedSettings.getControl("CmdLineDisableVoice");
-		if(disable_voice)
 		{
-			const BOOL DO_NOT_PERSIST = FALSE;
-			disable_voice->setValue(LLSD(TRUE), DO_NOT_PERSIST);
+			std::ostringstream msg;
+			msg << LLTrans::getString("MBAlreadyRunning");
+			OSMessageBox(
+				msg.str(),
+				LLStringUtil::null,
+				OSMB_OK);
+			return false;
 		}
-	}
+
+		if (mSecondInstance)
+		{
+			// This is the second instance of SL. Turn off voice support,
+			// but make sure the setting is *not* persisted.
+			LLControlVariable* disable_voice = gSavedSettings.getControl("CmdLineDisableVoice");
+			if(disable_voice)
+			{
+				const BOOL DO_NOT_PERSIST = FALSE;
+				disable_voice->setValue(LLSD(TRUE), DO_NOT_PERSIST);
+			}
+		}
 	else
-	{
-		checkForCrash();
-	}
+        {
+            checkForCrash();
+        }
 
    	// NextLoginLocation is set from the command line option
 	std::string nextLoginLocation = gSavedSettings.getString( "NextLoginLocation" );
@@ -3498,7 +3590,7 @@ void LLAppViewer::handleViewerCrash()
 		else
 		{
 			LL_WARNS("MarkerFile") << "Cannot create error marker file " << crash_marker_file_name << LL_ENDL;
-		}
+		}		
 	}
 	else
 	{
@@ -3551,7 +3643,7 @@ void LLAppViewer::handleViewerCrash()
 
 // static
 void LLAppViewer::recordMarkerVersion(LLAPRFile& marker_file) 
-{		
+{
 	std::string marker_version(LLVersionInfo::getChannelAndVersion());
 	if ( marker_version.length() > MAX_MARKER_LENGTH )
 	{
@@ -3566,7 +3658,7 @@ void LLAppViewer::recordMarkerVersion(LLAPRFile& marker_file)
 }
 
 bool LLAppViewer::markerIsSameVersion(const std::string& marker_name) const
-{
+	{
 	bool sameVersion = false;
 
 	std::string my_version(LLVersionInfo::getChannelAndVersion());
@@ -3637,20 +3729,20 @@ void LLAppViewer::processMarkerFiles()
 		}
 
 		if (mSecondInstance)
-		{
+	{
 			LL_INFOS("MarkerFile") << "Exec marker '"<< mMarkerFileName << "' owned by another instance" << LL_ENDL;
 		}
 		else if (marker_is_same_version)
 		{
 			// the file existed, is ours, and matched our version, so we can report on what it says
 			LL_INFOS("MarkerFile") << "Exec marker '"<< mMarkerFileName << "' found; last exec FROZE" << LL_ENDL;
-			gLastExecEvent = LAST_EXEC_FROZE;
+		gLastExecEvent = LAST_EXEC_FROZE;
 				
 		}
 		else
 		{
 			LL_INFOS("MarkerFile") << "Exec marker '"<< mMarkerFileName << "' found, but versions did not match" << LL_ENDL;
-		}
+	}    
 	}
 	else // marker did not exist... last exec (if any) did not freeze
 	{
@@ -3686,7 +3778,7 @@ void LLAppViewer::processMarkerFiles()
 	{
 		if (markerIsSameVersion(logout_marker_file))
 		{
-			gLastExecEvent = LAST_EXEC_LOGOUT_FROZE;
+		gLastExecEvent = LAST_EXEC_LOGOUT_FROZE;
 			LL_INFOS("MarkerFile") << "Logout crash marker '"<< logout_marker_file << "', changing LastExecEvent to LOGOUT_FROZE" << LL_ENDL;
 		}
 		else
@@ -3728,17 +3820,17 @@ void LLAppViewer::processMarkerFiles()
 			{
 				gLastExecEvent = LAST_EXEC_LOGOUT_CRASH;
 				LL_INFOS("MarkerFile") << "Error marker '"<< error_marker_file << "' crashed, setting LastExecEvent to LOGOUT_CRASH" << LL_ENDL;
-			}
+	}
 			else
-			{
+	{
 				gLastExecEvent = LAST_EXEC_OTHER_CRASH;
 				LL_INFOS("MarkerFile") << "Error marker '"<< error_marker_file << "' crashed, setting LastExecEvent to " << gLastExecEvent << LL_ENDL;
-			}
-		}
-		else
-		{
+	}
+	}
+	else
+	{
 			LL_INFOS("MarkerFile") << "Error marker '"<< error_marker_file << "' marker found, but versions did not match" << LL_ENDL;
-		}
+	}
 		LLAPRFile::remove(error_marker_file);
 	}
 }
@@ -3748,14 +3840,14 @@ void LLAppViewer::removeMarkerFile(bool leave_logout_marker)
 	if (!mSecondInstance)
 	{		
 		LL_DEBUGS("MarkerFile") << (leave_logout_marker?"leave":"remove") <<" logout" << LL_ENDL;
-		if (mMarkerFile.getFileHandle())
-		{
+	if (mMarkerFile.getFileHandle())
+	{
 			LL_DEBUGS("MarkerFile") << "removing exec marker '"<<mMarkerFileName<<"'"<< LL_ENDL;
-			mMarkerFile.close() ;
-			LLAPRFile::remove( mMarkerFileName );
-		}
+		mMarkerFile.close() ;
+		LLAPRFile::remove( mMarkerFileName );
+	}
 		else
-		{
+	{
 			LL_WARNS("MarkerFile") << "marker '"<<mMarkerFileName<<"' not open"<< LL_ENDL;
 		}
 		if (!leave_logout_marker)
@@ -3769,7 +3861,7 @@ void LLAppViewer::removeMarkerFile(bool leave_logout_marker)
 			{
 				LL_WARNS("MarkerFile") << "logout marker '"<<mLogoutMarkerFileName<<"' not open"<< LL_ENDL;
 			}
-			LLAPRFile::remove( mLogoutMarkerFileName );
+		LLAPRFile::remove( mLogoutMarkerFileName );
 		}
 	}
 	else
@@ -5420,7 +5512,9 @@ void LLAppViewer::launchUpdater()
 	LLAppViewer::sUpdaterInfo = new LLAppViewer::LLUpdaterInfo() ;
 
 	// if a sim name was passed in via command line parameter (typically through a SLURL)
-	if ( LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION )
+//MK
+	if ( !gRRenabled && LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION )
+//mk
 	{
 		// record the location to start at next time
 		gSavedSettings.setString( "NextLoginLocation", LLStartUp::getStartSLURL().getSLURLString()); 

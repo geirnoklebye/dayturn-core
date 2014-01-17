@@ -61,6 +61,10 @@
 #include "llworld.h"
 #include "llworldmapview.h"		// shared draw code
 
+//MK
+#include <strstream>
+//mk
+
 static LLDefaultChildRegistry::Register<LLNetMap> r1("net_map");
 
 const F32 LLNetMap::MAP_SCALE_MIN = 32;
@@ -351,6 +355,14 @@ void LLNetMap::draw()
 
 			bool show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
 
+//MK
+				// Don't show as friend under @shownames, since it can give away an
+				// information about the avatars who are around
+				if (gRRenabled && gAgent.mRRInterface.mContainsShownames) 
+				{
+					show_as_friend = false;
+				}
+//mk
 			LLColor4 color = show_as_friend ? map_avatar_friend_color : map_avatar_color;
 
 			unknown_relative_z = positions[i].mdV[VZ] == COARSEUPDATE_MAX_Z &&
@@ -397,6 +409,9 @@ void LLNetMap::draw()
 			{
 				closest_dist_squared = dist_to_cursor_squared;
 				mClosestAgentToCursor = uuid;
+//MK
+					mClosestAgentPosition = LLVector3d (positions[i]);
+//mk
 			}
 		}
 
@@ -627,6 +642,13 @@ BOOL LLNetMap::handleToolTip( S32 x, S32 y, MASK mask )
 	LLStringUtil::format_map_t args;
 	args["[REGION]"] = region_name;
 	std::string msg = mToolTipMsg;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+			args["[REGION]"] = "(Region hidden)\n";
+	}
+	else
+//mk
 	LLStringUtil::format(msg, args);
 	LLToolTipMgr::instance().show(LLToolTip::Params()
 		.message(msg)
@@ -652,6 +674,26 @@ BOOL LLNetMap::handleToolTipAgent(const LLUUID& avatar_id)
 		LLInspector::Params p;
 		p.fillFrom(LLUICtrlFactory::instance().getDefaultParams<LLInspector>());
 		p.message(av_name.getCompleteName());
+//MK
+		std::string label = av_name.getCompleteName();
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			label = gAgent.mRRInterface.getDummyName(av_name.mUsername);
+		}
+
+		if (avatar_id != gAgent.getID())
+		{
+			LLVector3d myPosition = gAgent.getPositionGlobal();
+			LLVector3d otherPosition = mClosestAgentPosition;
+			LLVector3d delta = otherPosition - myPosition;
+			F32 distance = (F32)delta.magVec();
+			std::stringstream stream;
+			stream << "\n" << distance << " m";
+			label += stream.str();
+		}
+////		p.message(av_name.getCompleteName());
+		p.message(label);
+//mk
 		p.image.name("Inspector_I");
 		p.click_callback(boost::bind(showAvatarInspector, avatar_id));
 		p.visible_time_near(6.f);

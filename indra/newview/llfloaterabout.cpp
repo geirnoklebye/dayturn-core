@@ -146,13 +146,13 @@ BOOL LLFloaterAbout::postBuild()
 		boost::bind(&LLFloaterAbout::onClickCopyToClipboard, this));
 
 	if (gAgent.getRegion())
-	{
+		{
 		// start fetching server release notes URL
 		setSupportText(LLTrans::getString("RetrievingData"));
 		LLServerReleaseNotesURLFetcher::startFetch();
-	}
+			}
 	else // not logged in
-	{
+			{
 		setSupportText(LLStringUtil::null);
 	}
 
@@ -238,6 +238,17 @@ LLSD LLFloaterAbout::getInfo()
 	info["BUILD_TIME"] = __TIME__;
 	info["CHANNEL"] = LLVersionInfo::getChannel();
 
+//MK
+	if (gRRenabled)
+	{
+		info["CHANNEL"] = gAgent.mRRInterface.getVersion2 ();
+	}
+	else
+	{
+	info["CHANNEL"] = LLVersionInfo::getChannel();
+	}
+//mk
+
 	info["VIEWER_RELEASE_NOTES_URL"] = get_viewer_release_notes_url();
 
 #if LL_MSVC
@@ -262,6 +273,16 @@ LLSD LLFloaterAbout::getInfo()
 		LLSLURL slurl;
 		LLAgentUI::buildSLURL(slurl);
 		info["SLURL"] = slurl.getSLURLString();
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+		{
+			info["POSITION"] = ll_sd_from_vector3d (LLVector3d::zero);
+			info["REGION"] = LLSD::String( "(Region hidden)");
+			info["HOSTNAME"] =  LLSD::String("(Server info hidden)");
+			info["HOSTIP"] = LLSD::String("IP address hidden");
+			info["SLURL"] = LLSD::String("SLURL hidden");
+		}
+//mk
 	}
 
 	// CPU
