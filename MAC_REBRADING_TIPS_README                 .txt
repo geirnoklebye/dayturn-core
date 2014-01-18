@@ -1,0 +1,25 @@
+Macintosh viewer re-branding tips:
+
+To convert ico file to icns go to http://iconverticons.com/online/
+I had to be on a mac to convert from a windows ico to a icns Mac icon set file.
+
+Thanks to David Rowe for the link.
+
+The Brand.icns has to be copied in all the indra/newview/icon/ directories and into newview directory.
+It needs to be copied to every location where secondlife.icns resides.
+
+To get a re-branded nib file:
+
+Copy Secondlife.xib to xxxx.xib.
+Text edit the file changing Second Life to your xxxx brand.
+
+http://www.speirs.org/blog/2007/12/5/what-are-xib-files.html
+
+This link has instructions for a command line way to make (compile) a new re-branded nib from tiy just edited xxxx.xib file. 
+
+This part from the blog is in error.
+ibtool --errors --warnings --notices --output-format human-readable-text --compile your.xib output.nib 
+
+It should be:
+ibtool --errors --warnings --notices --output-format human-readable-text --compile output.nib your.xib 
+
