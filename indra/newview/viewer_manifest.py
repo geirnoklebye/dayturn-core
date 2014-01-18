@@ -830,7 +830,7 @@ class Darwin_i386_Manifest(ViewerManifest):
 
     def construct(self):
         # copy over the build result (this is a no-op if run within the xcode script)
-        self.path(self.args['configuration'] + "/Second Life.app", dst="")
+        self.path(self.args['configuration'] + "/Kokua.app", dst="")
 
         if self.prefix(src="", dst="Contents"):  # everything goes in Contents
             self.path("Info.plist", dst="Info.plist")
@@ -858,14 +858,14 @@ class Darwin_i386_Manifest(ViewerManifest):
 
                 self.path("licenses-mac.txt", dst="licenses.txt")
                 self.path("featuretable_mac.txt")
-                self.path("SecondLife.nib")
+                self.path("Kokua.nib")
 
                 icon_path = self.icon_path()
                 if self.prefix(src=icon_path, dst="") :
-                    self.path("secondlife.icns")
+                    self.path("kokua_icon.icns")
                     self.end_prefix(icon_path)
 
-                self.path("SecondLife.nib")
+                self.path("Kokua.nib")
                 
                 # Translations
                 self.path("English.lproj/language.txt")
@@ -977,7 +977,7 @@ class Darwin_i386_Manifest(ViewerManifest):
         if ("package" in self.args['actions'] or 
             "unpacked" in self.args['actions']):
             self.run_command('strip -S %(viewer_binary)r' %
-                             { 'viewer_binary' : self.dst_path_of('Contents/MacOS/Second Life')})
+                             { 'viewer_binary' : self.dst_path_of('Contents/MacOS/Kokua')})
 
 
     def copy_finish(self):

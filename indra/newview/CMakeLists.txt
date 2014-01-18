@@ -1355,11 +1355,11 @@ if (DARWIN)
 
   # Add resource files to the project.
   set(viewer_RESOURCE_FILES
-    secondlife.icns
+    kokua_icon.icns
     macview.r
     gpu_table.txt
     Info-SecondLife.plist
-    SecondLife.xib/
+    Kokua.xib/
     # CMake doesn't seem to support Xcode language variants well just yet
     English.lproj/InfoPlist.strings
     English.lproj/language.txt
@@ -1424,7 +1424,7 @@ if (WINDOWS)
 
     # Replace the icons with the appropriate ones for the channel
     # ('test' is the default)
-    set(ICON_PATH "test")
+    set(ICON_PATH "kokua")
     set(VIEWER_MACOSX_PHASE "d")
     string(TOLOWER ${VIEWER_CHANNEL} channel_lower)
     if(channel_lower MATCHES "^second life release")
@@ -2068,16 +2068,16 @@ endif (LINUX)
 
 if (DARWIN)
   # These all get set with PROPERTIES
-  set(product "Second Life")
-  set(MACOSX_BUNDLE_INFO_STRING "Second Life Viewer")
-  set(MACOSX_BUNDLE_ICON_FILE "secondlife.icns")
+  set(product "Kokua")
+  set(MACOSX_BUNDLE_INFO_STRING "Kokua Viewer")
+  set(MACOSX_BUNDLE_ICON_FILE "kokua_icon.icns")
   set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.secondlife.indra.viewer")
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "${VIEWER_CHANNEL} ${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}")
-  set(MACOSX_BUNDLE_BUNDLE_NAME "SecondLife")
+  set(MACOSX_BUNDLE_BUNDLE_NAME "Kokua")
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${VIEWER_SHORT_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${VIEWER_SHORT_VERSION}${VIEWER_MACOSX_PHASE}${VIEWER_REVISION}")
   set(MACOSX_BUNDLE_COPYRIGHT "Copyright © Linden Research, Inc. 2007")
-  set(MACOSX_BUNDLE_NSMAIN_NIB_FILE "SecondLife.nib")
+  set(MACOSX_BUNDLE_NSMAIN_NIB_FILE "Kokua.nib")
   set(MACOSX_BUNDLE_NSPRINCIPAL_CLASS "NSApplication")
   
   set_target_properties(
@@ -2175,8 +2175,8 @@ if (PACKAGE)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/webkit/${CMAKE_CFG_INTDIR}")
-    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-darwin.tar.bz2")
-    set(VIEWER_EXE_GLOBS "'Second Life' SLPlugin mac-crash-logger")
+    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-darwin.tar.bz2")
+    set(VIEWER_EXE_GLOBS "'Kokua' SLPlugin mac-crash-logger")
     set(VIEWER_LIB_GLOB "*.dylib")
   endif (DARWIN)
   if (LINUX)
