@@ -359,9 +359,8 @@ const std::string LOGOUT_MARKER_FILE_NAME("Kokua.logout_marker");
 static BOOL gDoDisconnect = FALSE;
 static std::string gLaunchFileOnQuit;
 
-// Used on Win32 for other apps to identify our window (eg, win_setup)
-//Kokua: FIXME Rebranding
-const char* const VIEWER_WINDOW_CLASSNAME = "Kokua";
+// Used on Win32 for other apps to identify our window (eg, win_setup and SLURL handling)
+const char* const VIEWER_WINDOW_CLASSNAME = "Second Life";
 
 //-- LLDeferredTaskList ------------------------------------------------------
 
