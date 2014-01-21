@@ -53,7 +53,7 @@ LLStreamingAudio_MediaPlugins::~LLStreamingAudio_MediaPlugins()
 
 void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 {
-	if (url.empty()) 
+	/*if (url.empty()) 
 	{
 		return;
 	}
@@ -61,7 +61,8 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 	std::string test_url(url);
 	//llinfos << "Starting internet stream: " << test_url << llendl;
 	// note: it's okay if mURL is empty here
-	if (mURL != test_url || isPlaying() == 1) {
+	if (mURL != test_url)
+	{
 		// stop any previous stream that was playing
 		// this happens on parcel crossings, usually
 		stop();
@@ -104,6 +105,8 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 	if(!mMediaPlugin)
 		return;
 
+	llinfos << "mccabe version: " << mMediaPlugin->getPluginVersion() << llendl;
+
 	if (!url.empty()) 
 	{
 		std::string test_url(url);
@@ -122,15 +125,39 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 			test_url = temp_url; 
 		}
 #endif //LL_DARWIN
+		llinfos << "Starting internet stream: " << test_url << llendl; // comment out MC
 		mURL = test_url;
 		mMediaPlugin->loadURI ( test_url );
-		llinfos << "Attempting to play internet stream: " << mURL << llendl;	
+ 		mMediaPlugin->start();
+		llinfos << "Playing internet stream: " << mURL << llendl;		
 		mMediaPlugin->start();
+		llinfos << "Attempting to play internet stream: " << mURL << llendl;	
 	}
 	else
 	{
-		//llinfos << "setting stream to NULL"<< llendl;
+		llinfos << "setting stream to NULL"<< llendl; // comment out MC
 		stop();
+	}*/
+
+	if (!mMediaPlugin) // lazy-init the underlying media plugin
+	{
+		mMediaPlugin = initializeMedia("audio/mpeg"); // assumes that whatever media implementation supports mp3 also supports vorbis.
+		llinfos << "streaming audio mMediaPlugin is now " << mMediaPlugin << llendl;
+	}
+
+	if(!mMediaPlugin)
+		return;
+
+	if (!url.empty()) {
+		llinfos << "Starting internet stream: " << url << llendl;
+		mURL = url;
+		mMediaPlugin->loadURI ( url );
+		mMediaPlugin->start();
+		llinfos << "Playing stream..." << llendl;		
+	} else {
+		llinfos << "setting stream to NULL"<< llendl;
+		mURL.clear();
+		mMediaPlugin->stop();
 	}
 }
 
@@ -141,8 +168,6 @@ void LLStreamingAudio_MediaPlugins::stop()
 	if(mMediaPlugin)
 	{
 		mMediaPlugin->stop();
-		// MURDER DEATH KILL -- MC
-		//mMediaPlugin->forceCleanUpPlugin();
 	}
 
 	mURL.clear();
@@ -226,7 +251,7 @@ LLPluginClassMedia* LLStreamingAudio_MediaPlugins::initializeMedia(const std::st
 	return media_source;
 }
 
-// <ND> stream metadata from plugin
+// <FS:ND> stream metadata from plugin
 bool LLStreamingAudio_MediaPlugins::hasNewMetadata()
 {
 	if (!mMediaPlugin)
@@ -246,6 +271,7 @@ std::string LLStreamingAudio_MediaPlugins::getCurrentTitle()
 	mTitle = mMediaPlugin->getTitle();
 	return mTitle;
 }
+// </FS:ND>
 
 std::string LLStreamingAudio_MediaPlugins::getCurrentStreamName()
 {
