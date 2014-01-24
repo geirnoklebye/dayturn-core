@@ -197,7 +197,7 @@
 			audio
 		</widgettype>
 		<impl>
-      			media_plugin_gstreamer010
+      media_plugin_gstreamer010
 		</impl>
 	</mimetype>
 	<mimetype name="application/pdf">

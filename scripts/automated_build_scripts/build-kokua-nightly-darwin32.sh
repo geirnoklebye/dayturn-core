@@ -1,6 +1,6 @@
 #!/bin/bash
 #export AUTOBUILD_PLATFORM_OVERRIDE='linux64'
-TOP="/Users/nickyperian"
+TOP="/Users/nicky"
 ## Following adapted from onefang Rejected's Imprudence build sctipts
 # Try to figure out which SDK is the earliest this version of Xcode
 # supports.  This might be fragile, only tested it with Xcode 3.2.6,
