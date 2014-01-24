@@ -35,8 +35,8 @@
 #include "llcombobox.h"
 #include "llfilepicker.h"
 #include "llfloaterreg.h"
-#include "llimagepng.h"
 #include "llimagetga.h"
+#include "llimagepng.h"
 #include "llinventory.h"
 #include "llnotificationsutil.h"
 #include "llresmgr.h"
@@ -262,7 +262,7 @@ void LLPreviewTexture::saveAs()
 
 	LLFilePicker& file_picker = LLFilePicker::instance();
 	const LLInventoryItem* item = getItem() ;
-	if( !file_picker.getSaveFile( LLFilePicker::FFSAVE_PNG, item ? LLDir::getScrubbedFileName(item->getName()) + ".png" : LLStringUtil::null) )
+	if( !file_picker.getSaveFile( LLFilePicker::FFSAVE_TGAPNG, item ? LLDir::getScrubbedFileName(item->getName()) : LLStringUtil::null) )
 	{
 		// User canceled or we failed to acquire save file.
 		return;
@@ -359,8 +359,6 @@ void LLPreviewTexture::onFileLoadedForSave(BOOL success,
 
 	if( self && final && success )
 	{
-		LLPointer<LLImagePNG> image_png = new LLImagePNG;
-//		if( !image_png->encode( src, 0.0 ) )
 		const U32 ext_length = 3;
 		std::string extension = self->mSaveFileName.substr( self->mSaveFileName.length() - ext_length);
 		// We only support saving in PNG or TGA format
@@ -380,7 +378,7 @@ void LLPreviewTexture::onFileLoadedForSave(BOOL success,
 			args["FILE"] = self->mSaveFileName;
 			LLNotificationsUtil::add("CannotEncodeFile", args);
 		}
-		else if( !image_png->save( self->mSaveFileName ) )
+		else if( image && !image->save( self->mSaveFileName ) )
 		{
 			LLSD args;
 			args["FILE"] = self->mSaveFileName;
@@ -435,6 +433,10 @@ void LLPreviewTexture::updateDimensions()
 		reshape(getRect().getWidth(), getRect().getHeight());
 
 		gFloaterView->adjustToFitScreen(this, FALSE);
+
+		LLRect dim_rect(getChildView("dimensions")->getRect());
+		LLRect aspect_label_rect(getChildView("aspect_ratio")->getRect());
+		getChildView("aspect_ratio")->setVisible( dim_rect.mRight < aspect_label_rect.mLeft);
 	}
 }
 
