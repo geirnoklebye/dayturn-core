@@ -411,7 +411,7 @@
       <check_box
 		 control_name="RenderDepthOfField"
 		 height="16"
-		 initial_value="true"
+		 initial_value="false"
 		 label="Depth of Field"
 		 layout="topleft"
 		 left_delta="0"
