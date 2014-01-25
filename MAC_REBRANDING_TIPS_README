@@ -15,7 +15,7 @@ Text edit the file changing Second Life to your xxxx brand.
 
 http://www.speirs.org/blog/2007/12/5/what-are-xib-files.html
 
-This link has instructions for a command line way to make (compile) a new re-branded nib from tiy just edited xxxx.xib file. 
+This link has instructions for a command line way to make (compile) a new re-branded nib from the just edited xxxx.xib file. 
 
 This part from the blog is in error.
 ibtool --errors --warnings --notices --output-format human-readable-text --compile your.xib output.nib 
