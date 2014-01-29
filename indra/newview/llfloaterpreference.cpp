@@ -109,6 +109,10 @@
 #include "llviewernetwork.h"
 #include "lllogininstance.h"        // to check if logged in yet
 #include "llsdserialize.h"
+#include "llaudioengine.h"
+#include "llvieweraudio.h"
+#include "llviewermedia.h"
+#include "llviewermedia_streamingaudio.h"
 
 const F32 MAX_USER_FAR_CLIP = 512.f;
 const F32 MIN_USER_FAR_CLIP = 64.f;
@@ -2160,6 +2164,20 @@ void LLPanelPreference::updateMediaAutoPlayCheckbox(LLUICtrl* ctrl)
 
 		getChild<LLCheckBoxCtrl>("media_auto_play_btn")->setEnabled(music_enabled || media_enabled);
 	}
+	//enable_music is confusing it is any click of the enable check mark
+	if (name == "enable_music" && LLViewerMedia::isParcelAudioPlaying())
+	{
+		LLViewerAudio::getInstance()->stopInternetStreamWithAutoFade();
+	}
+	else if (name == "enable_music" && (!LLViewerMedia::isParcelAudioPlaying()))
+	{
+		if (gSavedSettings.getBOOL("ParcelMediaAutoPlayEnable"))
+		{
+			LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getParcelAudioURL());
+		}
+	}
+
+
 }
 
 class LLPanelPreferencePrivacy : public LLPanelPreference
