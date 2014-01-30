@@ -44,10 +44,12 @@ class LLPanelVolumePulldown : public LLPanel
 	/*virtual*/ void onTopLost();
 	/*virtual*/ void handleVisibilityChange ( BOOL new_visibility );
 	/*virtual*/ BOOL postBuild();
+
 	
  private:
 	void setControlFalse(const LLSD& user_data);
 	void onAdvancedButtonClick(const LLSD& user_data);
+	void onMusicButtonClick(const LLSD& user_data);	
 
 	LLFrameTimer mHoverTimer;
 	static const F32 sAutoCloseFadeStartTimeSec;
