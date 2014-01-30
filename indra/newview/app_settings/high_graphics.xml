@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings version = "101">
 	<!--NO SHADERS-->
-	<RenderAvatarCloth value="FALSE"/>
+	<RenderAvatarCloth value="TRUE"/>
 	<!--Default for now-->
 	<RenderAvatarLODFactor value="1.0"/>
 	<!--Default for now-->
@@ -29,7 +29,7 @@
 	<!--Try Impostors-->
 	<RenderUseImpostors value="TRUE"/>
 	<!--Default for now-->
-	<RenderVolumeLODFactor value="1.125"/>
+	<RenderVolumeLODFactor value="3.125"/>
 	<!--NO SHADERS-->
 	<VertexShaderEnable value="TRUE"/>
 	<!--NO SHADERS-->
