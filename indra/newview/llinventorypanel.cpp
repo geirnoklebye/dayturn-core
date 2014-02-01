@@ -223,7 +223,7 @@ void LLInventoryPanel::initFromParams(const LLInventoryPanel::Params& params)
 	
 	// Scroller
 		LLRect scroller_view_rect = getRect();
-		scroller_view_rect.set(2, scroller_view_rect.mTop - scroller_view_rect.mBottom, scroller_view_rect.mRight - 1, 0);
+		scroller_view_rect.translate(-scroller_view_rect.mLeft, -scroller_view_rect.mBottom);
 	LLScrollContainer::Params scroller_params(mParams.scroll());
 		scroller_params.rect(scroller_view_rect);
 		mScroller = LLUICtrlFactory::create<LLFolderViewScrollContainer>(scroller_params);
