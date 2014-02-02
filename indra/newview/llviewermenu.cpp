@@ -254,6 +254,7 @@ void near_sit_down_point(BOOL success, void *);
 void velocity_interpolate( void* );
 void handle_visual_leak_detector_toggle(void*);
 void handle_rebake_textures(void*);
+void handle_rebake_scene(void*);
 BOOL check_admin_override(void*);
 void handle_admin_override_toggle(void*);
 #ifdef TOGGLE_HACKED_GODLIKE_VIEWER
@@ -1890,8 +1891,21 @@ class LLAdvancedRebakeTextures : public view_listener_t
 		return true;
 	}
 };
+
+/////////////////////
+// REBAKE SCENE TEXTURES //
+/////////////////////
 	
 	
+class LLAdvancedRebakeScene : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		handle_rebake_scene(NULL);
+		return true;
+	}
+};
+		
 #if 1 //ndef LL_RELEASE_FOR_DOWNLOAD
 ///////////////////////////
 // DEBUG AVATAR TEXTURES //
@@ -8171,6 +8185,13 @@ void handle_rebake_textures(void*)
 		LLAppearanceMgr::instance().requestServerAppearanceUpdate();
 	}
 }
+void handle_rebake_scene(void*)
+{
+	LL_WARNS("PlaceHolder") << "Unload and reload to shaders goes here" << LL_ENDL;
+	if (!isAgentAvatarValid()) return;
+//Holder for unlpad and load for shaders
+
+}
 
 void toggle_visibility(void* user_data)
 {
@@ -9070,6 +9091,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedCheckDebugCharacterVis(), "Advanced.CheckDebugCharacterVis");
 	view_listener_t::addMenu(new LLAdvancedDumpAttachments(), "Advanced.DumpAttachments");
 	view_listener_t::addMenu(new LLAdvancedRebakeTextures(), "Advanced.RebakeTextures");
+	view_listener_t::addMenu(new LLAdvancedRebakeScene(), "Advanced.RebakeScene");
 	view_listener_t::addMenu(new LLAdvancedDebugAvatarTextures(), "Advanced.DebugAvatarTextures");
 	view_listener_t::addMenu(new LLAdvancedDumpAvatarLocalTextures(), "Advanced.DumpAvatarLocalTextures");
 	// Advanced > Network
