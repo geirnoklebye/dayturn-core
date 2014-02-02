@@ -135,7 +135,7 @@
 #include "llwindow.h"
 #include "llpathfindingmanager.h"
 #include "boost/unordered_map.hpp"
-
+#include "llvowlsky.h"
 #include "fsexport.h"
 #include "daeexport.h"
 
@@ -254,7 +254,7 @@ void near_sit_down_point(BOOL success, void *);
 void velocity_interpolate( void* );
 void handle_visual_leak_detector_toggle(void*);
 void handle_rebake_textures(void*);
-void handle_rebake_scene(void*);
+void handle_refresh_scene(void*);
 BOOL check_admin_override(void*);
 void handle_admin_override_toggle(void*);
 #ifdef TOGGLE_HACKED_GODLIKE_VIEWER
@@ -1892,16 +1892,16 @@ class LLAdvancedRebakeTextures : public view_listener_t
 	}
 };
 
-/////////////////////
-// REBAKE SCENE TEXTURES //
-/////////////////////
+///////////////////////////
+// REFRESH SCENE SHADERS //
+///////////////////////////
 	
 	
-class LLAdvancedRebakeScene : public view_listener_t
+class LLAdvancedRefreshScene : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		handle_rebake_scene(NULL);
+		handle_refresh_scene(NULL);
 		return true;
 	}
 };
@@ -8185,12 +8185,13 @@ void handle_rebake_textures(void*)
 		LLAppearanceMgr::instance().requestServerAppearanceUpdate();
 	}
 }
-void handle_rebake_scene(void*)
+void handle_refresh_scene(void*)
 {
-	LL_WARNS("PlaceHolder") << "Unload and reload to shaders goes here" << LL_ENDL;
 	if (!isAgentAvatarValid()) return;
-//Holder for unlpad and load for shaders
-
+ 	gSavedSettings.setBOOL("VertexShaderEnable",false);
+	LL_WARNS("Rendering") << "Vertex shaders unloaded" << LL_ENDL; //Purpose is to also kill a little time without sleeping.
+	//need an event here looking at llvowlsky
+	gSavedSettings.setBOOL("VertexShaderEnable",true);
 }
 
 void toggle_visibility(void* user_data)
@@ -9091,7 +9092,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedCheckDebugCharacterVis(), "Advanced.CheckDebugCharacterVis");
 	view_listener_t::addMenu(new LLAdvancedDumpAttachments(), "Advanced.DumpAttachments");
 	view_listener_t::addMenu(new LLAdvancedRebakeTextures(), "Advanced.RebakeTextures");
-	view_listener_t::addMenu(new LLAdvancedRebakeScene(), "Advanced.RebakeScene");
+	view_listener_t::addMenu(new LLAdvancedRefreshScene(), "Advanced.RefreshScene");
 	view_listener_t::addMenu(new LLAdvancedDebugAvatarTextures(), "Advanced.DebugAvatarTextures");
 	view_listener_t::addMenu(new LLAdvancedDumpAvatarLocalTextures(), "Advanced.DumpAvatarLocalTextures");
 	// Advanced > Network
