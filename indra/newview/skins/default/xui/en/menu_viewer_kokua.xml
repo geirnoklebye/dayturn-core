@@ -55,7 +55,7 @@
                  parameter="Upload Animation" />
             </menu_item_call>
                       <menu_item_call
-           label="Model..."
+           label="Mesh Model..."
            layout="topleft"
            name="Upload Model"
            shortcut="control|alt|U">
@@ -1599,7 +1599,7 @@
          parameter="Upload Animation" />
       </menu_item_call>
       <menu_item_call
-     label="Model..."
+     label="Mesh Model..."
      layout="topleft"
      name="Upload Model"
      shortcut="control|alt|U">
@@ -1730,7 +1730,7 @@
                  parameter="Upload Image" />
         </menu_item_call>
         <menu_item_call
-           label="Upload Model..."
+           label="Upload Mesh Model..."
            layout="topleft"
            name="Upload Model"
            shortcut="control|alt|U">
