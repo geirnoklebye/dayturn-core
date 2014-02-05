@@ -56,7 +56,7 @@
 
 #include "roles_constants.h"
 
-static LLRegisterPanelClassWrapper<LLPanelGroupRoles> t_panel_group_roles("panel_group_roles");
+static LLPanelInjector<LLPanelGroupRoles> t_panel_group_roles("panel_group_roles");
 
 bool agentCanRemoveFromRole(const LLUUID& group_id,
 							const LLUUID& role_id)
@@ -734,7 +734,7 @@ void LLPanelGroupSubTab::setFooterEnabled(BOOL enable)
 ////////////////////////////
 
 
-static LLRegisterPanelClassWrapper<LLPanelGroupMembersSubTab> t_panel_group_members_subtab("panel_group_members_subtab");
+static LLPanelInjector<LLPanelGroupMembersSubTab> t_panel_group_members_subtab("panel_group_members_subtab");
 
 LLPanelGroupMembersSubTab::LLPanelGroupMembersSubTab()
 : 	LLPanelGroupSubTab(),
@@ -1758,7 +1758,7 @@ void LLPanelGroupMembersSubTab::updateMembers()
 // LLPanelGroupRolesSubTab
 ////////////////////////////
 
-static LLRegisterPanelClassWrapper<LLPanelGroupRolesSubTab> t_panel_group_roles_subtab("panel_group_roles_subtab");
+static LLPanelInjector<LLPanelGroupRolesSubTab> t_panel_group_roles_subtab("panel_group_roles_subtab");
 
 LLPanelGroupRolesSubTab::LLPanelGroupRolesSubTab()
   : LLPanelGroupSubTab(),
@@ -2503,7 +2503,7 @@ void LLPanelGroupRolesSubTab::saveRoleChanges(bool select_saved_role)
 // LLPanelGroupActionsSubTab
 ////////////////////////////
 
-static LLRegisterPanelClassWrapper<LLPanelGroupActionsSubTab> t_panel_group_actions_subtab("panel_group_actions_subtab");
+static LLPanelInjector<LLPanelGroupActionsSubTab> t_panel_group_actions_subtab("panel_group_actions_subtab");
 
 
 LLPanelGroupActionsSubTab::LLPanelGroupActionsSubTab()
