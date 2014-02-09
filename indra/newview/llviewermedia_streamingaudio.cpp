@@ -72,7 +72,6 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 			mMediaPlugin = initializeMedia("audio/mpeg");
 		}
 	}
-	mURL = test_url;
 
 #ifdef LL_DARWIN
 	// We need to change http:// streams to icy:// in order to use them with quicktime.
@@ -89,6 +88,7 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 		test_url = temp_url; 
 	}
 #endif //LL_DARWIN
+	mURL = test_url;
 	
 	if (!mMediaPlugin) // lazy-init the underlying media plugin
 	{
@@ -155,12 +155,12 @@ void LLStreamingAudio_MediaPlugins::pause(int pause)
 	
 	if(pause)
 	{
-		llinfos << "Pausing internet stream." << llendl;
+		llinfos << "Pausing internet stream: " << mURL << llendl;
 		mMediaPlugin->pause();
 	} 
 	else 
 	{
-		llinfos << "Unpausing internet stream." << llendl;
+		llinfos << "Unpausing internet stream: " << mURL << llendl;
 		mMediaPlugin->start();
 	}
 }
