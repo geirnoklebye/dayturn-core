@@ -58,10 +58,10 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 		return;
 	}
 	
-	std::string test_url(url);
 	//llinfos << "Starting internet stream: " << test_url << llendl;
 	// note: it's okay if mURL is empty here
-	if (mURL != test_url || isPlaying() == 1) {
+	if (mURL != url))
+	{
 		// stop any previous stream that was playing
 		// this happens on parcel crossings, usually
 		stop();
@@ -73,22 +73,7 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 		}
 	}
 
-#ifdef LL_DARWIN
-	// We need to change http:// streams to icy:// in order to use them with quicktime.
-	// This isn't a good place to put this, but none of this is good, so... -- MC
-	LLURI uri(test_url);
-	std::string scheme = uri.scheme();
-	if ((scheme.empty() || "http" == scheme || "https" == scheme) &&
-		((test_url.length() > 4) &&
-		 (test_url.substr(test_url.length()-4, 4) != ".pls") &&		// Shoutcast listen.pls playlists
-		 (test_url.substr(test_url.length()-4, 4) != ".m3u"))		// Icecast liten.m3u playlists
-		)
-	{
-		std::string temp_url = "icy:" + uri.opaque();
-		test_url = temp_url; 
-	}
-#endif //LL_DARWIN
-	mURL = test_url;
+	mURL = url;
 	
 	if (!mMediaPlugin) // lazy-init the underlying media plugin
 	{

@@ -89,6 +89,27 @@ void LLViewerAudio::startInternetStreamWithAutoFade(std::string streamURI)
 
 	// Record the URI we are going to be switching to	
 	mNextStreamURI = streamURI;
+	
+#ifdef LL_DARWIN
+	if (!mNextStreamURI.empty())
+	{
+		std::string test_url(mNextStreamURI);
+		// We need to change http:// streams to icy:// in order to use them with quicktime.
+		// This isn't a good place to put this, but none of this is good, so... -- MC
+		LLURI uri(test_url);
+		std::string scheme = uri.scheme();
+		if ((scheme.empty() || "http" == scheme || "https" == scheme) &&
+			((test_url.length() > 4) &&
+			 (test_url.substr(test_url.length()-4, 4) != ".pls") &&		// Shoutcast listen.pls playlists
+			 (test_url.substr(test_url.length()-4, 4) != ".m3u"))		// Icecast liten.m3u playlists
+			)
+		{
+			std::string temp_url = "icy:" + uri.opaque();
+			test_url = temp_url; 
+		}
+		mNextStreamURI = test_url;
+	}
+#endif
 
 	switch (mFadeState)
 	{
