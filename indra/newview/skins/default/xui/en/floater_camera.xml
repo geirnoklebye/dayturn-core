@@ -174,14 +174,14 @@ free_mode_title
          top="3" />
       <button
          follows="top|left"
-         height="12"
+         height="18"
          image_disabled="AddItem_Disabled"
          image_selected="AddItem_Press"
          image_unselected="AddItem_Off"
          layout="topleft"
          left_pad="2" 
          name="zoom_plus_btn"
-         width="16"
+         width="18"
          top="0">
         <commit_callback
            function="Zoom.plus" />
@@ -189,27 +189,27 @@ free_mode_title
            function="Zoom.plus" />
       </button>
       <slider_bar
-         height="42"
+         height="36"
          layout="topleft"
          name="zoom_slider"
          orientation="vertical"
          tool_tip="Zoom camera toward focus"
-         top="10"
+         top="16"
          min_val="0"
          max_val="1" 
-         width="16">
+         width="18">
         <commit_callback function="Slider.value_changed"/>
       </slider_bar>
       <button
          follows="top|left"
-         height="16"
+         height="18"
          image_disabled="MinusItem_Disabled"
          image_selected="MinusItem_Press"
          image_unselected="MinusItem_Off"
          layout="topleft"
          name="zoom_minus_btn"
-         top="50"
-         width="16">
+         top="46"
+         width="18">
         <commit_callback
            function="Zoom.minus" />
         <mouse_held_callback
