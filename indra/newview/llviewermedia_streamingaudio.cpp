@@ -60,7 +60,7 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 	
 	//llinfos << "Starting internet stream: " << test_url << llendl;
 	// note: it's okay if mURL is empty here
-	if (mURL != url))
+	if (mURL != url)
 	{
 		// stop any previous stream that was playing
 		// this happens on parcel crossings, usually
