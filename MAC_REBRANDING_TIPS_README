@@ -23,3 +23,6 @@ ibtool --errors --warnings --notices --output-format human-readable-text --compi
 It should be:
 ibtool --errors --warnings --notices --output-format human-readable-text --compile output.nib your.xib 
 
+With "human-readable-txt" the nob file is not a bnary file but, seems to work correctly in the viewer.
+
+The title bar is branded by editing indra/newview/English.lproj/InfoPlist.strings 
