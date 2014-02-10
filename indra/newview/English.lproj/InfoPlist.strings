@@ -1,7 +1,7 @@
 /* Localized versions of Info.plist keys */
 
-CFBundleName = "Second Life";
+CFBundleName = "Kokua";
 
-CFBundleShortVersionString = "Second Life version %%VERSION%%";
-CFBundleGetInfoString = "Second Life version %%VERSION%%, Copyright 2004 Linden Research, Inc.";
+CFBundleShortVersionString = "Kokua version %%VERSION%%";
+CFBundleGetInfoString = "Kokua version %%VERSION%%, Copyright 2004 Linden Research, Inc.";
 
