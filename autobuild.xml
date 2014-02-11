@@ -711,9 +711,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>91752db72202807cffb33c1ec3fd90fc</string>
+              <string>7b0c06f4e619623382183ceef3653967</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-fmodex-private/rev/276321/arch/CYGWIN/installer/fmodex-4.44-windows-20130521.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.12-windows-20140210.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
