@@ -289,6 +289,7 @@ public:
 			LLViewerMedia::hasParcelAudio() &&
 			LLViewerMedia::isParcelAudioPlaying()
 		) {
+#ifndef LL_WINDOWS
 			LLStreamingAudioInterface *stream = gAudiop->getStreamingAudioImpl();
 
 			if (stream) {
@@ -313,6 +314,7 @@ public:
 					clipboard = stream->getURL();
 				}
 			}
+#endif //LL_WINDOWS
 		}
 
 		LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(clipboard));
@@ -842,14 +844,14 @@ protected:
 			}
 				menu->setItemEnabled("Offer Teleport", LLAvatarActions::canOfferTeleport(mAvatarID));
 				menu->setItemEnabled("Voice Call", LLAvatarActions::canCall());
-
+#ifndef LL_WINDOWS
 			menu->setItemVisible("stop_stream", stream != NULL);
 			menu->setItemEnabled("stop_stream", stream != NULL);
 			menu->setItemEnabled("copy_track_name", stream && (!stream->getCurrentArtist().empty() || !stream->getCurrentTitle().empty()));
 			menu->setItemEnabled("copy_stream_name", stream && !stream->getCurrentStreamName().empty());
 			menu->setItemEnabled("copy_stream_address", stream != NULL);
 			menu->setItemEnabled("visit_stream_website", stream && !stream->getCurrentStreamLocation().empty());
-
+#endif //LL_WINDOWS
 			menu->setItemEnabled("Chat History", LLLogChat::isTranscriptExist(mAvatarID));
 			menu->setItemEnabled("Map", (LLAvatarTracker::instance().isBuddyOnline(mAvatarID) && is_agent_mappable(mAvatarID)) || gAgent.isGodlike() );
 			menu->buildDrawLabels();
