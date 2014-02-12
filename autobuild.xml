@@ -399,10 +399,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>hash</key>
-              <string>757a879c72d813e30559cd2c3a6ce86c</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.24.0-darwin-20140110.tar.bz2</string>
+                <key>hash</key>
+                <string>f7d9b6a9c624364389b71209881f39de</string>
+                <key>url</key>
+                <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-curl/rev/280289/arch/Darwin/installer/curl-7.24.0-darwin-20130826.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
