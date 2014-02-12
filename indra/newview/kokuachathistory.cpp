@@ -289,7 +289,7 @@ public:
 			LLViewerMedia::hasParcelAudio() &&
 			LLViewerMedia::isParcelAudioPlaying()
 		) {
-#ifndef LL_WINDOWS
+#if 0 //TODO: make this code work again //#ifndef LL_WINDOWS
 			LLStreamingAudioInterface *stream = gAudiop->getStreamingAudioImpl();
 
 			if (stream) {
@@ -844,7 +844,7 @@ protected:
 			}
 				menu->setItemEnabled("Offer Teleport", LLAvatarActions::canOfferTeleport(mAvatarID));
 				menu->setItemEnabled("Voice Call", LLAvatarActions::canCall());
-#ifndef LL_WINDOWS
+#if 0 //TODO: make this code work again //#ifndef LL_WINDOWS
 			menu->setItemVisible("stop_stream", stream != NULL);
 			menu->setItemEnabled("stop_stream", stream != NULL);
 			menu->setItemEnabled("copy_track_name", stream && (!stream->getCurrentArtist().empty() || !stream->getCurrentTitle().empty()));
