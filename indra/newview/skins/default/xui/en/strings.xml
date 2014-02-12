@@ -4379,6 +4379,7 @@ Expected .wav, .tga, .bmp, .jpg, .jpeg, or .bvh
 	<string name="Multiple Media">Multiple Media</string>
 	<string name="Play Media">Play/Pause Media</string>
 	<string name="Audio Stream">Audio Stream</string>
+	<string name="StreamtitleNowPlaying">Now playing:</string>
 
 	<!-- OSMessageBox messages -->
 	<string name="MBCmdLineError">

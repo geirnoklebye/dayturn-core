@@ -50,11 +50,12 @@ BOOL StreamTitleDisplay::tick()
 
 void StreamTitleDisplay::checkMetadata()
 {
-	static LLCachedControl<U32> ShowStreamMetadata(gSavedSettings, "ShowStreamMetadata", 1);
+	static LLCachedControl<U32> ShowStreamMetadata(gSavedSettings, "ShowStreamMetadata", 2);
 	static LLCachedControl<bool> StreamMetadataAnnounceToChat(gSavedSettings, "StreamMetadataAnnounceToChat", false);
 
 	if (!gAudiop)
 		return;
+		LL_DEBUGS("StreamTitles") << "Stream Meta data " << ShowStreamMetadata << LL_ENDL;
 	if ((ShowStreamMetadata > 0 || StreamMetadataAnnounceToChat)
 	    && gAudiop->getStreamingAudioImpl()->getNewMetadata(mMetadata))
 	{
@@ -97,7 +98,7 @@ void StreamTitleDisplay::checkMetadata()
 
 void StreamTitleDisplay::sendStreamTitleToChat(const std::string& title)
 {
-	static LLCachedControl<S32> streamMetadataAnnounceChannel(gSavedSettings, "StreamMetadataAnnounceChannel");
+	static LLCachedControl<S32> streamMetadataAnnounceChannel(gSavedSettings, "StreamMetadataAnnounceChannel", 1);
 	if (streamMetadataAnnounceChannel != 0)
 	{
 		LLMessageSystem* msg = gMessageSystem;
