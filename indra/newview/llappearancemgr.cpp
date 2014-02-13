@@ -3186,6 +3186,15 @@ public:
 			debugCOF(content);
 		
 		}
+//MK
+		// In case of a COF version mismatch, let's not try to guess. Assume the version expected by the server and retry with that new version.
+		if (content["error"].asString().find ("Cof Version Mismatch") != -1)
+		//if (status == 400 && reason == "Bad Request" && content["code"].asInteger() == 1 && content["error"].asString().find ("Cof Version Mismatch") != -1)
+		{
+			llwarns << "Setting COF version to " << content["expected"].asInteger() - 1 << "\"" << llendl;
+			gAgentAvatarp->mLastUpdateRequestCOFVersion = content["expected"].asInteger() - 1;
+		}
+//mk
 		onFailure(status);
 	}	
 
