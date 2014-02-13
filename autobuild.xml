@@ -711,9 +711,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7b0c06f4e619623382183ceef3653967</string>
+              <string>29a214e84c40ae226740844aa8fedf6d</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.12-windows-20140210.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.31-windows-20140213.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
