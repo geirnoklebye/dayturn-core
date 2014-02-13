@@ -196,6 +196,8 @@ private:
 	LLFrameTimer mTypingTimer;
 	LLFrameTimer mTypingTimeoutTimer;
 	bool mSessionNameUpdatedForTyping;
+	LLFrameTimer mMeTypingTimer;
+	LLFrameTimer mOtherTypingTimer;
 
 	bool mSessionInitialized;
 	LLSD mQueuedMsgsForInit;
@@ -205,6 +207,8 @@ private:
 
 	// connection to voice channel state change signal
 	boost::signals2::connection mVoiceChannelStateChangeConnection;
+
+	const LLIMInfo* mImInfo;
 };
 
 #endif  // LL_FLOATERIMSESSION_H
