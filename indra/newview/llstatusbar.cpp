@@ -242,7 +242,7 @@ void LLStatusBar::refresh()
 {
 	static LLCachedControl<bool> net_stats_visible(gSavedSettings, "ShowNetStats", true);
 	static LLCachedControl<bool> fps_stats_visible(gSavedSettings, "ShowFPSStats", true);
-	static LLCachedControl<bool> show_draw_distance(gSavedSettings, "ShowDDSlider", true);
+	static LLCachedControl<bool> show_draw_distance(gSavedSettings, "ShowDDSlider", false);
 
 	//
 	//	update the netstat graph and FPS counter text
