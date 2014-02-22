@@ -1535,7 +1535,7 @@ void RRInterface::removeItemFromAvatar (LLViewerInventoryItem* item)
 	if (!item) return;
 	std::string name = item->getName();
 	LLStringUtil::toLower(name);
-	if (name.find ("nostrip") != -1) return;
+	if (!canUnwear (item)) return;
 	LLAppearanceMgr::instance().removeItemFromAvatar(item->getUUID());
 	//LLWearableBridge::removeItemFromAvatar (item);
 }
