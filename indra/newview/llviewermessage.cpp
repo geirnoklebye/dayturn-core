@@ -3933,7 +3933,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 
 		BOOL ircstyle = FALSE;
 //MK
-		if (gRRenabled && chat.mChatType != CHAT_TYPE_OWNER)
+		if (gRRenabled && chat.mChatType != CHAT_TYPE_OWNER && chat.mChatType != CHAT_TYPE_DIRECT) // don't crunch llRegionSayTo messages either
 		{
 			if ((chatter &&	(chatter->isAvatar () || !chatter->isAttachment () || !chatter->permYouOwner ()))  // avatar, object or attachment that doesn't belong to me
 				|| !chatter) // or this may be a HUD (visible only to the other party) or an unrezzed avatar or object
