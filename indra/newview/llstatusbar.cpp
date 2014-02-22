@@ -334,7 +334,7 @@ BOOL LLStatusBar::postBuild()
 		mShowCoordsCtrlConnection = ctrl->getSignal()->connect(boost::bind(&LLStatusBar::onNavBarShowParcelPropertiesCtrlChanged, this));
 	}
 
-	mParcelMgrConnection = LLViewerParcelMgr::getInstance()->addAgentParcelChangedCallback(
+	mParcelMgrConnection = gAgent.addParcelChangedCallback(
 			boost::bind(&LLStatusBar::onAgentParcelChange, this));
 //mk
 
