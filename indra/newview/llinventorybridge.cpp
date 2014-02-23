@@ -5018,6 +5018,12 @@ void LLGestureBridge::performAction(LLInventoryModel* model, std::string action)
 		gInventory.updateItem(item);
 		gInventory.notifyObservers();
 	}
+// [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-08-25 (Catznip-2.2.0a) | Added: Catznip-2.1.2a
+	else if ("edit" == action)
+	{
+		handle_attachment_edit(mUUID);
+	}
+// [/SL:KB]
 	else if (isRemoveAction(action))
 	{
 		LLGestureMgr::instance().deactivateGesture(mUUID);
@@ -5534,7 +5540,10 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 					items.push_back(std::string("Touch Attachment"));
 				}
 				// </FS:Ansariel>
-
+// [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-08-25 (Catznip-2.2.0a) | Added: Catznip-2.1.2a
+				// TOOD-Catznip: should really be "Wearable And Object Edit" if we ever plan on pushing this upstream
+				items.push_back(std::string("Wearable Edit"));
+// [/SL:KB]
 				items.push_back(std::string("Detach From Yourself"));
 			}
 			else if (!isItemInTrash() && !isLinkedObjectInTrash() && !isLinkedObjectMissing() && !isCOFFolder())
