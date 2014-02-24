@@ -195,7 +195,8 @@ protected:
 		// Enable/disable some menu items depending on the selection.
 // [SL:KB] - Patch: Inventory-AttachmentActions - Checked: 2012-05-05 (Catznip-3.3)
 		bool show_touch = !bp_selected && !clothes_selected && attachments_selected;
-
+		bool show_edit = bp_selected || clothes_selected || attachments_selected;
+		bool show_detach = !clothes_selected && attachments_selected;
 		bool show_take_off = clothes_selected && !attachments_selected;
 		bool show_take_off_or_detach = clothes_selected && attachments_selected;
 
@@ -204,16 +205,19 @@ protected:
 		menu->setItemVisible("edit_item",          show_edit);
 		menu->setItemEnabled("edit_item",          1 == mUUIDs.size() && enable_item_edit(mUUIDs.front()));
 		menu->setItemVisible("detach",             show_detach);
-		menu->setItemEnabled("detach",             !bp_selected);
+//		menu->setItemEnabled("detach",             !bp_selected);
 		menu->setItemVisible("take_off",           show_take_off);
-		menu->setItemEnabled("take_off",           !bp_selected);
+//		menu->setItemEnabled("take_off",           !bp_selected);
 		menu->setItemVisible("take_off_or_detach", show_take_off_or_detach);
-		menu->setItemEnabled("take_off_or_detach", !bp_selected);
+//		menu->setItemEnabled("take_off_or_detach", !bp_selected);
 
-		menu->setItemVisible("edit_outfit_separator", show_edit || show_detach || show_take_off || show_take_off_or_detach);
+
 // [/SL:KB]
 
 
+		menu->setItemEnabled("take_off_or_detach", !bp_selected && !rlv_blocked);
+
+		menu->setItemVisible("edit_outfit_separator", show_edit || show_detach || show_take_off || show_take_off_or_detach);
 //		bool allow_detach = !bp_selected && !clothes_selected && attachments_selected;
 //		bool allow_take_off = !bp_selected && clothes_selected && !attachments_selected;
 //
