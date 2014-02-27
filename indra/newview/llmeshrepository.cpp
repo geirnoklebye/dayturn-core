@@ -378,6 +378,11 @@ const long UPLOAD_RETRY_LIMIT = 0L;
 // See wiki at https://wiki.secondlife.com/wiki/Mesh/Mesh_Asset_Format
 const S32 MAX_MESH_VERSION = 999;
 
+//<FS:TS> FIRE-11451: Cap concurrent mesh requests at a sane value 
+const U32 MESH_CONCURRENT_REQUEST_LIMIT = 64;  // upper limit 
+const U32 MESH2_CONCURRENT_REQUEST_LIMIT = 32;  // upper limit 
+//</FS:TS> FIRE-11451 
+
 U32 LLMeshRepository::sBytesReceived = 0;
 U32 LLMeshRepository::sMeshRequestCount = 0;
 U32 LLMeshRepository::sHTTPRequestCount = 0;
@@ -848,11 +853,6 @@ void LLMeshRepoThread::run()
 		LL_WARNS(LOG_MESH) << "Convex decomposition unable to be loaded.  Expect severe problems." << LL_ENDL;
 	}
 
-	// <FS:Ansariel> Configurable request throttle
-	static LLCachedControl<U32> fsMaxMeshRequestsPerSecond(gSavedSettings, "FSMaxMeshRequestsPerSecond", 100);
-	// <FS:Ansariel> Mesh header/LOD retry functionality
-	static LLCachedControl<S32> fsMeshRequestTimeout(gSavedSettings, "FSMeshRequestTimeout", 60);
-
 	while (!LLApp::isQuitting())
 	{
 		// *TODO:  Revise sleep/wake strategy and try to move away
@@ -883,64 +883,8 @@ void LLMeshRepoThread::run()
 		sRequestWaterLevel = mHttpRequestSet.size();			// Stats data update
 			
 		// NOTE: order of queue processing intentionally favors LOD requests over header requests
-
-				// <FS:Ansariel> Mesh header/LOD retry functionality
-				F32 curl_timeout = llmax((F32)fsMeshRequestTimeout, 30.f) + 2.f; // 30 secs minimum timeout as defined in LLCurl.cpp
-
-				if (mMutex)
-				{
-					mMutex->lock();
-					// Handle header requests
-					std::set<ActiveHeaderRequest>::iterator header_it = mActiveHeaderRequests.begin();
-					std::list<ActiveHeaderRequest> active_header_clear_list;
-
-					for ( ; header_it != mActiveHeaderRequests.end(); header_it++)
-					{
-						ActiveHeaderRequest active_req = *header_it;
-						if (gFrameTimeSeconds - active_req.mFrameTimeStart > curl_timeout)
-						{
-							LL_WARNS("MeshRequestTimeout") << "Mesh header request timed out for SculptID=" << active_req.mMeshParams.getSculptID() << LL_ENDL;
-							HeaderRequest req(active_req.mMeshParams);
-							mHeaderReqQ.push(req);
-							active_header_clear_list.push_back(active_req);
-						}
-					}
-
-					for (std::list<ActiveHeaderRequest>::iterator it = active_header_clear_list.begin(); it != active_header_clear_list.end(); it++)
-					{
-						mActiveHeaderRequests.erase(*it);
-					}
-
-					// Handle LOD requests
-					std::set<ActiveLODRequest>::iterator lod_it = mActiveLODRequests.begin();
-					std::list<ActiveLODRequest> active_lod_clear_list;
-
-					for ( ; lod_it != mActiveLODRequests.end(); lod_it++)
-					{
-						ActiveLODRequest active_req = *lod_it;
-						if (gFrameTimeSeconds - active_req.mFrameTimeStart > curl_timeout)
-						{
-							LL_WARNS("MeshRequestTimeout") << "Mesh LOD request timed out for SculptID=" << active_req.mMeshParams.getSculptID() << " and LOD=" << active_req.mLOD << LL_ENDL;
-							LODRequest req(active_req.mMeshParams, active_req.mLOD);
-							LLMeshRepository::sLODProcessing++;
-							mLODReqQ.push(req);
-							active_lod_clear_list.push_back(active_req);
-						}
-					}
-
-					for (std::list<ActiveLODRequest>::iterator it = active_lod_clear_list.begin(); it != active_lod_clear_list.end(); it++)
-					{
-						mActiveLODRequests.erase(*it);
-					}
-
-					mMutex->unlock();
-				}
-				// </FS:Ansariel> Mesh header/LOD retry functionality
 			
 			// <FS:Ansariel> Configurable request throttle
-			//while (!mLODReqQ.empty() && count < MAX_MESH_REQUESTS_PER_SECOND && sActiveLODRequests < sMaxConcurrentRequests)
-			while (!mLODReqQ.empty() && count < (U32)fsMaxMeshRequestsPerSecond && sActiveLODRequests < sMaxConcurrentRequests)
-			// </FS:Ansariel> Configurable request throttle
 		{
 			if (! mMutex)
 			{
@@ -961,9 +905,6 @@ void LLMeshRepoThread::run()
 		}
 
 			// <FS:Ansariel> Configurable request throttle
-			//while (!mHeaderReqQ.empty() && count < MAX_MESH_REQUESTS_PER_SECOND && sActiveHeaderRequests < sMaxConcurrentRequests)
-			while (!mHeaderReqQ.empty() && count < (U32)fsMaxMeshRequestsPerSecond && sActiveHeaderRequests < sMaxConcurrentRequests)
-			// </FS:Ansariel> Configurable request throttle
 		{
 			if (! mMutex)
 			{
@@ -1649,8 +1590,6 @@ bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params)
 				mActiveHeaderRequests.insert(ActiveHeaderRequest(mesh_params, frameTime));
 				LL_DEBUGS("MeshRequestTimeout") << "Active mesh header requests: " << mActiveHeaderRequests.size() << LL_ENDL;
 				mMutex->unlock();
-			}
-			// </FS:Ansariel> Mesh header/LOD retry functionality
 		}
 	}
 
@@ -1748,7 +1687,6 @@ bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod)
 						LL_DEBUGS("MeshRequestTimeout") << "Active mesh LOD requests: " << mActiveLODRequests.size() << LL_ENDL;
 						mMutex->unlock();
 					}
-					// </FS:Ansariel> Mesh header/LOD retry functionality
 				}
 			}
 			else
@@ -1815,21 +1753,19 @@ bool LLMeshRepoThread::headerReceived(const LLVolumeParams& mesh_params, U8* dat
 		}
 
 		LLMutexLock lock(mMutex); // <FS:ND/> FIRE-7182, make sure only one thread access mPendingLOD at the same time.
+		LLMutexLock lock(mMutex); // make sure only one thread access mPendingLOD at the same time.
 
 		//check for pending requests
 		pending_lod_map::iterator iter = mPendingLOD.find(mesh_params);
 		if (iter != mPendingLOD.end())
 		{
-			//			LLMutexLock lock(mMutex); <FS:ND/> FIRE-7182, lock was moved up, before calling mPendingLOD.find
 			for (U32 i = 0; i < iter->second.size(); ++i)
 			{
 				LODRequest req(mesh_params, iter->second[i]);
 				mLODReqQ.push(req);
 				LLMeshRepository::sLODProcessing++;
 			}
-
-			mPendingLOD.erase(iter); // <FS:ND/> FIRE-7182, only call erase if iter is really valid.
-		//		mPendingLOD.erase(iter); // <FS:ND/> avoid crash by moving erase up.
+			mPendingLOD.erase(iter);
 		}
 	}
 
@@ -2772,16 +2708,6 @@ void LLMeshRepository::cacheOutgoingMesh(LLMeshUploadData& data, LLSD& header)
 
 }
 
-	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
-	// </FS:ND>
-
-	// <FS:Ansariel> Mesh header/LOD retry functionality
-	{
-		LLMutexLock lock(gMeshRepo.mThread->mMutex);
-		LLMeshRepoThread::ActiveLODRequest Req(mMeshParams, mLOD);
-		gMeshRepo.mThread->mActiveLODRequests.erase(Req);
-		LL_DEBUGS("MeshRequestTimeout") << "Cleared active mesh LOD request: SculptID=" << mMeshParams.getSculptID() << ", LOD=" << mLOD << LL_ENDL;
-	// </FS:Ansariel> Mesh header/LOD retry functionality
 		if (status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE)
 			llassert(status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE); //intentionally trigger a breakpoint
 	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
@@ -3355,7 +3281,24 @@ void LLMeshRepository::notifyLoadedMeshes()
 	if (1 == mGetMeshVersion)
 	{
 		// Legacy GetMesh operation with high connection concurrency
-		LLMeshRepoThread::sMaxConcurrentRequests = gSavedSettings.getU32("MeshMaxConcurrentRequests");
+		// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
+		//LLMeshRepoThread::sMaxConcurrentRequests = gSavedSettings.getU32("MeshMaxConcurrentRequests");
+		static LLCachedControl<U32> meshMaxConcurrentRequests(gSavedSettings, "MeshMaxConcurrentRequests",32);
+		//<FS:TS> FIRE-11451: Cap concurrent requests at a sane value
+		if (meshMaxConcurrentRequests() > MESH_CONCURRENT_REQUEST_LIMIT) 
+		{
+			U32 mesh_max_concurrent_requests_default = gSavedSettings.getControl("MeshMaxConcurrentRequests")->getDefault().asInteger();
+			LLSD args; 
+			args["VALUE"] = llformat("%d", meshMaxConcurrentRequests()); 
+			args["MAX"] = llformat("%d", MESH_CONCURRENT_REQUEST_LIMIT); 
+			args["DEFAULT"] = llformat("%d", mesh_max_concurrent_requests_default);
+			args["DEBUGNAME"] = "MeshMaxConccurrentRequests";
+			LLNotificationsUtil::add("MeshMaxConcurrentReqTooHigh", args); 
+			gSavedSettings.setU32("MeshMaxConcurrentRequests", mesh_max_concurrent_requests_default);
+		}
+		//</FS:TS> FIRE-11451 
+		LLMeshRepoThread::sMaxConcurrentRequests = meshMaxConcurrentRequests();
+		// </FS:Ansariel>
 		LLMeshRepoThread::sRequestHighWater = llclamp(2 * S32(LLMeshRepoThread::sMaxConcurrentRequests),
 													  REQUEST_HIGH_WATER_MIN,
 													  REQUEST_HIGH_WATER_MAX);
@@ -3367,7 +3310,24 @@ void LLMeshRepository::notifyLoadedMeshes()
 	{
 		// GetMesh2 operation with keepalives, etc.  With pipelining,
 		// we'll increase this.
-		LLMeshRepoThread::sMaxConcurrentRequests = gSavedSettings.getU32("Mesh2MaxConcurrentRequests");
+		// <FS:TM> Use faster LLCachedControls for frequently visited locations
+		//LLMeshRepoThread::sMaxConcurrentRequests = gSavedSettings.getU32("Mesh2MaxConcurrentRequests");
+		static LLCachedControl<U32> mesh2MaxConcurrentRequests(gSavedSettings, "Mesh2MaxConcurrentRequests",32);
+		//<FS:TS> FIRE-11451: Cap concurrent requests at a sane value
+		if (mesh2MaxConcurrentRequests() > MESH2_CONCURRENT_REQUEST_LIMIT) 
+		{ 
+			U32 mesh2_max_concurrent_requests_default = gSavedSettings.getControl("Mesh2MaxConcurrentRequests")->getDefault().asInteger();
+			LLSD args; 
+			args["VALUE"] = llformat("%d", mesh2MaxConcurrentRequests()); 
+			args["MAX"] = llformat("%d", MESH2_CONCURRENT_REQUEST_LIMIT); 
+			args["DEFAULT"] = llformat("%d", mesh2_max_concurrent_requests_default);
+			args["DEBUGNAME"] = "Mesh2MaxConccurrentRequests";
+			LLNotificationsUtil::add("MeshMaxConcurrentReqTooHigh", args); 
+			gSavedSettings.setU32("Mesh2MaxConcurrentRequests", mesh2_max_concurrent_requests_default);
+		}
+		//</FS:TS> FIRE-11451 
+		LLMeshRepoThread::sMaxConcurrentRequests = mesh2MaxConcurrentRequests();
+		// </FS:TM>
 		LLMeshRepoThread::sRequestHighWater = llclamp(5 * S32(LLMeshRepoThread::sMaxConcurrentRequests),
 													  REQUEST2_HIGH_WATER_MIN,
 													  REQUEST2_HIGH_WATER_MAX);
@@ -3973,10 +3933,17 @@ F32 LLMeshRepository::getStreamingCost(LLSD& header, F32 radius, S32* bytes, S32
 	F32 dlow = llmin(radius/0.06f, max_distance);
 	F32 dmid = llmin(radius/0.24f, max_distance);
 	
-	F32 METADATA_DISCOUNT = (F32) gSavedSettings.getU32("MeshMetaDataDiscount");  //discount 128 bytes to cover the cost of LLSD tags and compression domain overhead
-	F32 MINIMUM_SIZE = (F32) gSavedSettings.getU32("MeshMinimumByteSize"); //make sure nothing is "free"
+	// <FS:ND> replace often called setting with LLCachedControl
+	// F32 METADATA_DISCOUNT = (F32) gSavedSettings.getU32("MeshMetaDataDiscount");  //discount 128 bytes to cover the cost of LLSD tags and compression domain overhead
+	// F32 MINIMUM_SIZE = (F32) gSavedSettings.getU32("MeshMinimumByteSize"); //make sure nothing is "free"
 
-	F32 bytes_per_triangle = (F32) gSavedSettings.getU32("MeshBytesPerTriangle");
+	// F32 bytes_per_triangle = (F32) gSavedSettings.getU32("MeshBytesPerTriangle");
+
+	static LLCachedControl< U32 > METADATA_DISCOUNT( gSavedSettings, "MeshMetaDataDiscount", 384); 
+	static LLCachedControl< U32 > MINIMUM_SIZE( gSavedSettings, "MeshMinimumByteSize",16);
+	static LLCachedControl< U32 > bytes_per_triangle( gSavedSettings ,"MeshBytesPerTriangle",15);
+
+	// </FS:ND>
 
 	S32 bytes_lowest = header["lowest_lod"]["size"].asInteger();
 	S32 bytes_low = header["low_lod"]["size"].asInteger();
@@ -4003,10 +3970,18 @@ F32 LLMeshRepository::getStreamingCost(LLSD& header, F32 radius, S32* bytes, S32
 		bytes_lowest = bytes_low;
 	}
 
-	F32 triangles_lowest = llmax((F32) bytes_lowest-METADATA_DISCOUNT, MINIMUM_SIZE)/bytes_per_triangle;
-	F32 triangles_low = llmax((F32) bytes_low-METADATA_DISCOUNT, MINIMUM_SIZE)/bytes_per_triangle;
-	F32 triangles_mid = llmax((F32) bytes_mid-METADATA_DISCOUNT, MINIMUM_SIZE)/bytes_per_triangle;
-	F32 triangles_high = llmax((F32) bytes_high-METADATA_DISCOUNT, MINIMUM_SIZE)/bytes_per_triangle;
+	// <FS:ND> replace often called setting with LLCachedControl
+	// F32 triangles_lowest = llmax((F32) bytes_lowest-METADATA_DISCOUNT, MINIMUM_SIZE)/bytes_per_triangle;
+	// F32 triangles_low = llmax((F32) bytes_low-METADATA_DISCOUNT, MINIMUM_SIZE)/bytes_per_triangle;
+	// F32 triangles_mid = llmax((F32) bytes_mid-METADATA_DISCOUNT, MINIMUM_SIZE)/bytes_per_triangle;
+	// F32 triangles_high = llmax((F32) bytes_high-METADATA_DISCOUNT, MINIMUM_SIZE)/bytes_per_triangle;
+
+	F32 triangles_lowest = llmax((F32) bytes_lowest-(F32)METADATA_DISCOUNT, (F32)MINIMUM_SIZE)/(F32)bytes_per_triangle;
+	F32 triangles_low = llmax((F32) bytes_low-(F32)METADATA_DISCOUNT, (F32)MINIMUM_SIZE)/(F32)bytes_per_triangle;
+	F32 triangles_mid = llmax((F32) bytes_mid-(F32)METADATA_DISCOUNT, (F32)MINIMUM_SIZE)/(F32)bytes_per_triangle;
+	F32 triangles_high = llmax((F32) bytes_high-(F32)METADATA_DISCOUNT, (F32)MINIMUM_SIZE)/(F32)bytes_per_triangle;
+
+	// </FS:ND>
 
 	if (bytes)
 	{
@@ -4059,7 +4034,12 @@ F32 LLMeshRepository::getStreamingCost(LLSD& header, F32 radius, S32* bytes, S32
 		*unscaled_value = weighted_avg;
 	}
 
-	return weighted_avg/gSavedSettings.getU32("MeshTriangleBudget")*15000.f;
+	// <FS:ND> replace often called setting with LLCachedControl
+	//	return weighted_avg/gSavedSettings.getU32("MeshTriangleBudget")*15000.f;
+
+	static LLCachedControl< U32 > MeshTriangleBudget( gSavedSettings, "MeshTriangleBudget",250000);
+	return weighted_avg/MeshTriangleBudget*15000.f;
+	// </FS:ND>
 }
 
 
@@ -4416,56 +4396,6 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 	}
 }
 
-#ifdef ND_HASCONVEXDECOMP_TRACER
-
-class ndDecompTracer: public ndConvexDecompositionTracer
-{
-	int mRefCount;
-
-public:
-	ndDecompTracer()
-		: mRefCount(0)
-	{
-	}
-
-	virtual void trace( char const *a_strMsg )
-	{
-		llinfos << a_strMsg << llendl;
-	}
-
-	virtual void startTraceData( char const *a_strWhat)
-	{
-		llinfos << a_strWhat << llendl;
-	}
-
-	virtual void traceData( char const *a_strData )
-	{
-		llinfos << a_strData << llendl;
-	}
-
-	virtual void endTraceData()
-	{
-	}
-
-	virtual int getLevel()
-	{
-		return eTraceFunctions;// | eTraceData;
-	}
-
-	virtual void addref()
-	{
-		++mRefCount;
-	}
-
-	virtual void release()
-	{
-		--mRefCount;
-		if( mRefCount == 0 )
-			delete this;
-	}
-};
-
-#endif
 
 void LLPhysicsDecomp::run()
 {
@@ -4477,13 +4407,6 @@ void LLPhysicsDecomp::run()
 		mInited = true;
 		return;
 	}
-
-#ifdef ND_HASCONVEXDECOMP_TRACER
-	ndConvexDecompositionTracable *pTraceable = dynamic_cast< ndConvexDecompositionTracable* >( decomp );
-
-	if( pTraceable )
-		pTraceable->setTracer( new ndDecompTracer() );
-#endif
 
 	decomp->initThread();
 	mInited = true;
@@ -4723,7 +4646,7 @@ bool LLMeshRepository::meshUploadEnabled()
 	LLViewerRegion *region = gAgent.getRegion();
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//if(gSavedSettings.getBOOL("MeshEnabled") &&
-	static LLCachedControl<bool> meshEnabled(gSavedSettings, "MeshEnabled", 1);
+	static LLCachedControl<bool> meshEnabled(gSavedSettings, "MeshEnabled",true);
 	if(meshEnabled &&
 	// </FS:Ansariel>
 	   region)
@@ -4738,7 +4661,7 @@ bool LLMeshRepository::meshRezEnabled()
 	LLViewerRegion *region = gAgent.getRegion();
 	// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 	//if(gSavedSettings.getBOOL("MeshEnabled") && 
-	static LLCachedControl<bool> meshEnabled(gSavedSettings, "MeshEnabled", 1);
+	static LLCachedControl<bool> meshEnabled(gSavedSettings, "MeshEnabled",true);
 	if(meshEnabled &&
 	// </FS:Ansariel>
 	   region)
