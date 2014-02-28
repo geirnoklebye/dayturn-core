@@ -775,9 +775,14 @@ protected:
 public:
 	BOOL 			isAnyAnimationSignaled(const LLUUID *anim_array, const S32 num_anims) const;
 	void 			processAnimationStateChanges();
+//MK
+	void 			resetAnimations();
+//mk
 protected:
 	BOOL 			processSingleAnimationStateChange(const LLUUID &anim_id, BOOL start);
-	void 			resetAnimations();
+//MK
+////	void 			resetAnimations();
+//mk
 private:
 	LLTimer			mAnimTimer;
 	F32				mTimeLast;	
@@ -802,6 +807,9 @@ public:
 	void	   		clearChat();
 	void	   		startTyping() { mTyping = TRUE; mTypingTimer.reset(); }
 	void			stopTyping() { mTyping = FALSE; }
+//MK
+	BOOL			getTyping() { return mTyping; }
+//mk
 private:
 	BOOL			mVisibleChat;
 
@@ -875,7 +883,9 @@ public:
 	BOOL			isSitting(){return mIsSitting;}
 	void 			sitOnObject(LLViewerObject *sit_object);
 	void 			getOffObject();
-private:
+//MK
+////private:
+//mk
 	// set this property only with LLVOAvatar::sitDown method
 	BOOL 			mIsSitting;
 
@@ -899,6 +909,9 @@ private:
 	std::string  	mTitle;
 	bool	  		mNameAway;
 	bool	  		mNameDoNotDisturb;
+//MK
+	bool	  		mNameTyping;
+//mk
 	bool	  		mNameMute;
 	bool      		mNameAppearance;
 	bool			mNameFriend;

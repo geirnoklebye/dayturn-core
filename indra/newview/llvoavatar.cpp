@@ -266,7 +266,7 @@ struct LLVOAvatarChildJoint : public LLInitParam::ChoiceBlock<LLVOAvatarChildJoi
 	
 
 struct LLVOAvatarBoneInfo : public LLInitParam::Block<LLVOAvatarBoneInfo, LLVOAvatarCollisionVolumeInfo>
-{
+	{
 	LLVOAvatarBoneInfo() 
 	:	pivot("pivot")
 	{}
@@ -293,8 +293,6 @@ struct LLVOAvatarSkeletonInfo : public LLInitParam::Block<LLVOAvatarSkeletonInfo
 									num_collision_volumes;
 	Mandatory<LLVOAvatarChildJoint>	skeleton_root;
 };
-
-
 
 //-----------------------------------------------------------------------------
 // class LLBodyNoiseMotion
@@ -648,6 +646,7 @@ F32 LLVOAvatar::sLODFactor = 1.f;
 F32 LLVOAvatar::sPhysicsLODFactor = 1.f;
 BOOL LLVOAvatar::sUseImpostors = FALSE;
 BOOL LLVOAvatar::sJointDebug = FALSE;
+
 F32 LLVOAvatar::sUnbakedTime = 0.f;
 F32 LLVOAvatar::sUnbakedUpdateTime = 0.f;
 F32 LLVOAvatar::sGreyTime = 0.f;
@@ -686,6 +685,9 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mTitle(),
 	mNameAway(false),
 	mNameDoNotDisturb(false),
+//MK
+	mNameTyping(false),
+//mk
 	mNameMute(false),
 	mNameAppearance(false),
 	mNameFriend(false),
@@ -823,7 +825,7 @@ LLVOAvatar::~LLVOAvatar()
 		}
 
 	logPendingPhases();
-
+	
 	lldebugs << "LLVOAvatar Destructor (0x" << this << ") id:" << mID << llendl;
 
 	std::for_each(mAttachmentPoints.begin(), mAttachmentPoints.end(), DeletePairedPointer());
@@ -1249,7 +1251,11 @@ const LLVector3 LLVOAvatar::getRenderPosition() const
 	{
 		return getPositionAgent();
 	}
-	else if (isRoot())
+//MK
+	// Fix for a strange crash here
+////	else if (isRoot())
+	else if (isRoot() || !mDrawable->getParent())
+//mk
 	{
 		if ( !mHasPelvisOffset )
 		{
@@ -1752,15 +1758,15 @@ void LLVOAvatar::releaseMeshData()
 		LLFace* facep = mDrawable->getFace(0);
 		if (facep)
 		{
-		facep->setSize(0, 0);
-		for(S32 i = mNumInitFaces ; i < mDrawable->getNumFaces(); i++)
-		{
-			facep = mDrawable->getFace(i);
+			facep->setSize(0, 0);
+			for(S32 i = mNumInitFaces ; i < mDrawable->getNumFaces(); i++)
+			{
+				facep = mDrawable->getFace(i);
 				if (facep)
 				{
-			facep->setSize(0, 0);
-		}
-	}
+					facep->setSize(0, 0);
+				}
+			}
 		}
 	}
 	
@@ -1835,7 +1841,7 @@ void LLVOAvatar::updateMeshData()
 				if (part_mesh)
 				{
 					part_mesh->updateFaceSizes(num_vertices, num_indices, mAdjustedPixelArea);
-				}
+			}
 			}
 			if(num_vertices < 1)//skip empty meshes
 			{
@@ -1913,7 +1919,7 @@ void LLVOAvatar::updateMeshData()
 				if (mesh)
 				{
 					mesh->updateFaceData(facep, mAdjustedPixelArea, k == MESH_ID_HAIR, terse_update && !rigid);
-				}
+			}
 			}
 
 			stop_glerror();
@@ -1951,8 +1957,7 @@ U32 LLVOAvatar::processUpdateMessage(LLMessageSystem *mesgsys,
 		{
 			mDebugExistenceTimer.reset();
 		debugAvatarRezTime("AvatarRezArrivedNotification","avatar arrived");
-		}
-
+	}
 	if(retval & LLViewerObject::INVALID_UPDATE)
 	{
 		if (isSelf())
@@ -1981,10 +1986,10 @@ LLViewerFetchedTexture *LLVOAvatar::getBakedTextureImage(const U8 te, const LLUU
 	}
 
 	if (!result)
-{
+	{
 		const std::string url = getImageURL(te,uuid);
 		if (!url.empty())
-	{
+		{
 			LL_DEBUGS("Avatar") << avString() << "from URL " << url << llendl;
 			result = LLViewerTextureManager::getFetchedTextureFromUrl(
 				url, FTT_SERVER_BAKE, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE, 0, 0, uuid);
@@ -1995,10 +2000,10 @@ LLViewerFetchedTexture *LLVOAvatar::getBakedTextureImage(const U8 te, const LLUU
 			LLHost host = getObjectHost();
 			result = LLViewerTextureManager::getFetchedTexture(
 				uuid, FTT_HOST_BAKE, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE, 0, 0, host);
+		}
 	}
-}
 	return result;
-}
+	}
 
 // virtual
 S32 LLVOAvatar::setTETexture(const U8 te, const LLUUID& uuid)
@@ -2627,6 +2632,13 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 								 && gSavedSettings.getS32("AvatarNameTagMode") ));
 	}
 
+//MK
+	// hide the names above the heads
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		render_name = FALSE;
+	}
+//mk
 	if ( !render_name )
 	{
 		if (mNameText)
@@ -2705,16 +2717,19 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 }
 
 void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
-{
-	LLNameValue *title = getNVPair("Title");
-	LLNameValue* firstname = getNVPair("FirstName");
-	LLNameValue* lastname = getNVPair("LastName");
+			{
+		LLNameValue *title = getNVPair("Title");
+		LLNameValue* firstname = getNVPair("FirstName");
+		LLNameValue* lastname = getNVPair("LastName");
 
 	// Avatars must have a first and last name
 	if (!firstname || !lastname) return;
 
 	bool is_away = mSignaledAnimations.find(ANIM_AGENT_AWAY)  != mSignaledAnimations.end();
 	bool is_do_not_disturb = mSignaledAnimations.find(ANIM_AGENT_DO_NOT_DISTURB) != mSignaledAnimations.end();
+//MK
+	bool is_typing = getTyping();
+//mk
 	bool is_appearance = mSignaledAnimations.find(ANIM_AGENT_CUSTOMIZE) != mSignaledAnimations.end();
 	bool is_muted;
 	if (isSelf())
@@ -2722,23 +2737,23 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		is_muted = false;
 	}
 	else
-	{
+		{
 		is_muted = LLMuteList::getInstance()->isMuted(getID());
 	}
 	bool is_friend = LLAvatarTracker::instance().isBuddy(getID());
 	bool is_cloud = getIsCloud();
 
-	if (is_appearance != mNameAppearance)
-	{
-		if (is_appearance)
-		{
+				if (is_appearance != mNameAppearance)
+				{
+					if (is_appearance)
+					{
 			debugAvatarRezTime("AvatarRezEnteredAppearanceNotification","entered appearance mode");
-		}
-		else
-		{
+					}
+					else
+					{
 			debugAvatarRezTime("AvatarRezLeftAppearanceNotification","left appearance mode");
-		}
-	}
+				}
+			}
 
 	// Rebuild name tag if state change detected
 	if (!mNameIsSet
@@ -2747,40 +2762,53 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		|| (title && mTitle != title->getString())
 		|| is_away != mNameAway 
 		|| is_do_not_disturb != mNameDoNotDisturb 
+//MK
+		|| is_typing != mNameTyping 
+//mk
 		|| is_muted != mNameMute
-		|| is_appearance != mNameAppearance 
+				|| is_appearance != mNameAppearance 
 		|| is_friend != mNameFriend
 		|| is_cloud != mNameCloud)
-	{
+				{
 		LLColor4 name_tag_color = getNameTagColor(is_friend);
 
 		clearNameTag();
 
-		if (is_away || is_muted || is_do_not_disturb || is_appearance)
-		{
+//MK
+////		if (is_away || is_muted || is_do_not_disturb || is_appearance)
+		if (is_away || is_muted || is_do_not_disturb || is_appearance || is_typing)
+//mk
+				{
 			std::string line;
-			if (is_away)
-			{
-				line += LLTrans::getString("AvatarAway");
+					if (is_away)
+					{
+						line += LLTrans::getString("AvatarAway");
 				line += ", ";
-			}
+					}
 			if (is_do_not_disturb)
-			{
+					{
 				line += LLTrans::getString("AvatarDoNotDisturb");
 				line += ", ";
 			}
-			if (is_muted)
-			{
-				line += LLTrans::getString("AvatarMuted");
+//MK
+					if (is_typing)
+					{
+				line += LLTrans::getString("AvatarTyping");
 				line += ", ";
 			}
+//mk
+			if (is_muted)
+						{
+				line += LLTrans::getString("AvatarMuted");
+							line += ", ";
+						}
 			if (is_appearance)
 			{
 				line += LLTrans::getString("AvatarEditingAppearance");
 				line += ", ";
-			}
+					}
 			if (is_cloud)
-			{
+					{
 				line += LLTrans::getString("LoadingData");
 				line += ", ";
 			}
@@ -2792,12 +2820,12 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 
 		if (sRenderGroupTitles
 			&& title && title->getString() && title->getString()[0] != '\0')
-		{
+						{
 			std::string title_str = title->getString();
 			LLStringFn::replace_ascii_controlchars(title_str,LL_UNKNOWN_CHAR);
 			addNameTagLine(title_str, name_tag_color, LLFontGL::NORMAL,
 				LLFontGL::getFontSansSerifSmall());
-		}
+						}
 
 		static LLUICachedControl<bool> show_display_names("NameTagShowDisplayNames", true);
 		static LLUICachedControl<bool> show_usernames("NameTagShowUsernames", true);
@@ -2810,116 +2838,119 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				// Force a rebuild at next idle
 				// Note: do not connect a callback on idle().
 				clearNameTag();
-			}
+					}
 
 			// Might be blank if name not available yet, that's OK
 			if (show_display_names)
 			{
 				addNameTagLine(av_name.getDisplayName(), name_tag_color, LLFontGL::NORMAL,
 					LLFontGL::getFontSansSerif());
-			}
+				}
 			// Suppress SLID display if display name matches exactly (ugh)
 			if (show_usernames && !av_name.isDisplayNameDefault())
-			{
+				{
 				// *HACK: Desaturate the color
 				LLColor4 username_color = name_tag_color * 0.83f;
 				addNameTagLine(av_name.getUserName(), username_color, LLFontGL::NORMAL,
 					LLFontGL::getFontSansSerifSmall());
 			}
-		}
+				}
 		else
-		{
+				{
 			const LLFontGL* font = LLFontGL::getFontSansSerif();
 			std::string full_name = LLCacheName::buildFullName( firstname->getString(), lastname->getString() );
 			addNameTagLine(full_name, name_tag_color, LLFontGL::NORMAL, font);
-		}
+				}
 
-		mNameAway = is_away;
-		mNameDoNotDisturb = is_do_not_disturb;
-		mNameMute = is_muted;
-		mNameAppearance = is_appearance;
+				mNameAway = is_away;
+				mNameDoNotDisturb = is_do_not_disturb;
+//MK
+				mNameTyping = is_typing;
+//mk
+				mNameMute = is_muted;
+				mNameAppearance = is_appearance;
 		mNameFriend = is_friend;
-		mNameCloud = is_cloud;
-		mTitle = title ? title->getString() : "";
-		LLStringFn::replace_ascii_controlchars(mTitle,LL_UNKNOWN_CHAR);
-		new_name = TRUE;
-	}
+				mNameCloud = is_cloud;
+				mTitle = title ? title->getString() : "";
+				LLStringFn::replace_ascii_controlchars(mTitle,LL_UNKNOWN_CHAR);
+				new_name = TRUE;
+			}
 
 	if (mVisibleChat)
-	{
-		mNameText->setFont(LLFontGL::getFontSansSerif());
+			{
+				mNameText->setFont(LLFontGL::getFontSansSerif());
 		mNameText->setTextAlignment(LLHUDNameTag::ALIGN_TEXT_LEFT);
-		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS * 2.f, 5.f);
+				mNameText->setFadeDistance(CHAT_NORMAL_RADIUS * 2.f, 5.f);
+			
+				std::deque<LLChat>::iterator chat_iter = mChats.begin();
+				mNameText->clearString();
 
-		std::deque<LLChat>::iterator chat_iter = mChats.begin();
-		mNameText->clearString();
+				LLColor4 new_chat = LLUIColorTable::instance().getColor( isSelf() ? "UserChatColor" : "AgentChatColor" );
+				LLColor4 normal_chat = lerp(new_chat, LLColor4(0.8f, 0.8f, 0.8f, 1.f), 0.7f);
+				LLColor4 old_chat = lerp(normal_chat, LLColor4(0.6f, 0.6f, 0.6f, 1.f), 0.7f);
+				if (mTyping && mChats.size() >= MAX_BUBBLE_CHAT_UTTERANCES) 
+				{
+					++chat_iter;
+				}
 
-		LLColor4 new_chat = LLUIColorTable::instance().getColor( isSelf() ? "UserChatColor" : "AgentChatColor" );
-		LLColor4 normal_chat = lerp(new_chat, LLColor4(0.8f, 0.8f, 0.8f, 1.f), 0.7f);
-		LLColor4 old_chat = lerp(normal_chat, LLColor4(0.6f, 0.6f, 0.6f, 1.f), 0.7f);
-		if (mTyping && mChats.size() >= MAX_BUBBLE_CHAT_UTTERANCES) 
-		{
-			++chat_iter;
-		}
+				for(; chat_iter != mChats.end(); ++chat_iter)
+				{
+					F32 chat_fade_amt = llclamp((F32)((LLFrameTimer::getElapsedSeconds() - chat_iter->mTime) / CHAT_FADE_TIME), 0.f, 4.f);
+					LLFontGL::StyleFlags style;
+					switch(chat_iter->mChatType)
+					{
+						case CHAT_TYPE_WHISPER:
+							style = LLFontGL::ITALIC;
+							break;
+						case CHAT_TYPE_SHOUT:
+							style = LLFontGL::BOLD;
+							break;
+						default:
+							style = LLFontGL::NORMAL;
+							break;
+					}
+					if (chat_fade_amt < 1.f)
+					{
+						F32 u = clamp_rescale(chat_fade_amt, 0.9f, 1.f, 0.f, 1.f);
+						mNameText->addLine(chat_iter->mText, lerp(new_chat, normal_chat, u), style);
+					}
+					else if (chat_fade_amt < 2.f)
+					{
+						F32 u = clamp_rescale(chat_fade_amt, 1.9f, 2.f, 0.f, 1.f);
+						mNameText->addLine(chat_iter->mText, lerp(normal_chat, old_chat, u), style);
+					}
+					else if (chat_fade_amt < 3.f)
+					{
+						// *NOTE: only remove lines down to minimum number
+						mNameText->addLine(chat_iter->mText, old_chat, style);
+					}
+				}
+				mNameText->setVisibleOffScreen(TRUE);
 
-		for(; chat_iter != mChats.end(); ++chat_iter)
-		{
-			F32 chat_fade_amt = llclamp((F32)((LLFrameTimer::getElapsedSeconds() - chat_iter->mTime) / CHAT_FADE_TIME), 0.f, 4.f);
-			LLFontGL::StyleFlags style;
-			switch(chat_iter->mChatType)
-			{
-			case CHAT_TYPE_WHISPER:
-				style = LLFontGL::ITALIC;
-				break;
-			case CHAT_TYPE_SHOUT:
-				style = LLFontGL::BOLD;
-				break;
-			default:
-				style = LLFontGL::NORMAL;
-				break;
-			}
-			if (chat_fade_amt < 1.f)
-			{
-				F32 u = clamp_rescale(chat_fade_amt, 0.9f, 1.f, 0.f, 1.f);
-				mNameText->addLine(chat_iter->mText, lerp(new_chat, normal_chat, u), style);
-			}
-			else if (chat_fade_amt < 2.f)
-			{
-				F32 u = clamp_rescale(chat_fade_amt, 1.9f, 2.f, 0.f, 1.f);
-				mNameText->addLine(chat_iter->mText, lerp(normal_chat, old_chat, u), style);
-			}
-			else if (chat_fade_amt < 3.f)
-			{
-				// *NOTE: only remove lines down to minimum number
-				mNameText->addLine(chat_iter->mText, old_chat, style);
-			}
-		}
-		mNameText->setVisibleOffScreen(TRUE);
+				if (mTyping)
+				{
+					S32 dot_count = (llfloor(mTypingTimer.getElapsedTimeF32() * 3.f) + 2) % 3 + 1;
+					switch(dot_count)
+					{
+						case 1:
+							mNameText->addLine(".", new_chat);
+							break;
+						case 2:
+							mNameText->addLine("..", new_chat);
+							break;
+						case 3:
+							mNameText->addLine("...", new_chat);
+							break;
+					}
 
-		if (mTyping)
-		{
-			S32 dot_count = (llfloor(mTypingTimer.getElapsedTimeF32() * 3.f) + 2) % 3 + 1;
-			switch(dot_count)
-			{
-			case 1:
-				mNameText->addLine(".", new_chat);
-				break;
-			case 2:
-				mNameText->addLine("..", new_chat);
-				break;
-			case 3:
-				mNameText->addLine("...", new_chat);
-				break;
+				}
 			}
-
-		}
-	}
-	else
-	{
+			else
+			{
 		// ...not using chat bubbles, just names
 		mNameText->setTextAlignment(LLHUDNameTag::ALIGN_TEXT_CENTER);
-		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
-		mNameText->setVisibleOffScreen(FALSE);
+				mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
+				mNameText->setVisibleOffScreen(FALSE);
 	}
 }
 
@@ -2941,8 +2972,8 @@ void LLVOAvatar::clearNameTag()
 {
     mNameIsSet = false;
 	if (mNameText)
-	{
-		mNameText->setLabel("");
+				{
+					mNameText->setLabel("");
 		mNameText->setString("");
 	}
 	mTimeVisible.reset();
@@ -2971,6 +3002,7 @@ void LLVOAvatar::invalidateNameTags()
 		if (avatar->isDead()) continue;
 
 		avatar->clearNameTag();
+
 	}
 }
 
@@ -3043,7 +3075,7 @@ LLColor4 LLVOAvatar::getNameTagColor(bool is_friend)
 		else
 		{
 			color_name = "NameTagMismatch";
-		}
+	}
 	}
 	else
 	{
@@ -3938,7 +3970,7 @@ U32 LLVOAvatar::renderSkinned(EAvatarRenderPass pass)
 				if(skirt_mesh)
 				{
 					skirt_mesh->updateJointGeometry();
-				}
+			}
 			}
 
 			if (!isSelf() || gAgent.needsRenderHead() || LLPipeline::sShadowRender)
@@ -3950,7 +3982,7 @@ U32 LLVOAvatar::renderSkinned(EAvatarRenderPass pass)
 				if(head_mesh)
 				{
 					head_mesh->updateJointGeometry();
-				}
+			}
 				if(hair_mesh)
 				{
 					hair_mesh->updateJointGeometry();
@@ -3963,12 +3995,12 @@ U32 LLVOAvatar::renderSkinned(EAvatarRenderPass pass)
 			if (face)
 			{
 				LLVertexBuffer* vb = face->getVertexBuffer();
-			if (vb)
-			{
-				vb->flush();
+				if (vb)
+				{
+					vb->flush();
+				}
 			}
 		}
-	}
 	}
 	else
 	{
@@ -4104,7 +4136,7 @@ U32 LLVOAvatar::renderSkinned(EAvatarRenderPass pass)
 
 		if (should_alpha_mask && !LLGLSLShader::sNoFixedFunction)
 		{
-			gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
+		gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
 		}
 
 		if (!LLDrawPoolAvatar::sSkipTransparent || LLPipeline::sImpostorRender)
@@ -4162,7 +4194,7 @@ U32 LLVOAvatar::renderTransparent(BOOL first_pass)
 		{
 			LLViewerJoint* hair_mesh = getViewerJoint(MESH_ID_HAIR);
 			if (hair_mesh)
-		{
+			{
 				num_indices += hair_mesh->render(mAdjustedPixelArea, first_pass, mIsDummy);
 			}
 			first_pass = FALSE;
@@ -4172,7 +4204,7 @@ U32 LLVOAvatar::renderTransparent(BOOL first_pass)
 			gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
 		}
 	}
-	
+
 	return num_indices;
 }
 
@@ -4217,12 +4249,12 @@ U32 LLVOAvatar::renderRigid()
 		if(eyeball_right)
 		{
 			num_indices += eyeball_right->render(mAdjustedPixelArea, TRUE, mIsDummy);
-		}
+	}
 	}
 
 	if (should_alpha_mask && !LLGLSLShader::sNoFixedFunction)
 	{
-		gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
+	gGL.setAlphaRejectSettings(LLRender::CF_DEFAULT);
 	}
 	
 	return num_indices;
@@ -4956,8 +4988,11 @@ BOOL LLVOAvatar::isAnyAnimationSignaled(const LLUUID *anim_array, const S32 num_
 //-----------------------------------------------------------------------------
 void LLVOAvatar::resetAnimations()
 {
-	LLKeyframeMotion::flushKeyframeCache();
-	flushAllMotions();
+//MK
+////	LLKeyframeMotion::flushKeyframeCache();
+////	flushAllMotions();
+	mMotionController.updateMotions(true);
+//mk
 }
 
 // Override selectively based on avatar sex and whether we're using new
@@ -5145,6 +5180,7 @@ void LLVOAvatar::resetSpecificJointPosition( const std::string& name )
 //-----------------------------------------------------------------------------
 void LLVOAvatar::resetJointPositionsToDefault( void )
 {
+
 	//Subsequent joints are relative to pelvis
 	avatar_joint_list_t::iterator iter = mSkeleton.begin();
 	avatar_joint_list_t::iterator end  = mSkeleton.end();
@@ -5153,6 +5189,7 @@ void LLVOAvatar::resetJointPositionsToDefault( void )
 		LLJoint* pJoint = (*iter);
 		if ( pJoint->doesJointNeedToBeReset() )
 		{
+
 			pJoint->setId( LLUUID::null );
 			//restore joints to default positions, however skip over the pelvis
 			// *TODO: How does this pointer check skip over pelvis?
@@ -5288,7 +5325,7 @@ void LLVOAvatar::requestStopMotion( LLMotion* motion )
 BOOL LLVOAvatar::loadSkeletonNode ()
 {
 	if (!LLAvatarAppearance::loadSkeletonNode())
-	{
+			{
 				return FALSE;
 			}
 	
@@ -5681,7 +5718,7 @@ LLViewerJointAttachment* LLVOAvatar::getTargetAttachmentPoint(LLViewerObject* vi
 //-----------------------------------------------------------------------------
 // attachObject()
 //-----------------------------------------------------------------------------
-const LLViewerJointAttachment *LLVOAvatar::attachObject(LLViewerObject *viewer_object)
+const LLViewerJointAttachment *LLVOAvatar::attachObject(LLViewerObject* viewer_object)
 {
 	LLViewerJointAttachment* attachment = getTargetAttachmentPoint(viewer_object);
 
@@ -5871,12 +5908,31 @@ BOOL LLVOAvatar::detachObject(LLViewerObject *viewer_object)
 //-----------------------------------------------------------------------------
 void LLVOAvatar::sitDown(BOOL bSitting)
 {
+//MK
+	BOOL was_sitting = mIsSitting;
+//mk
 	mIsSitting = bSitting;
 	if (isSelf())
 	{
 		// Update Movement Controls according to own Sitting mode
 		LLFloaterMove::setSittingMode(bSitting);
 	}
+//MK
+	if (gRRenabled && isSelf())
+	{
+		// If we are being forced to stand up (prim derezzing or calling llUnsit() ), snap back to the previous
+		// standing location if under @standtp
+		if (was_sitting)
+		{
+			if (gAgent.mRRInterface.contains ("standtp"))
+			{
+				gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
+				gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
+				gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
+			}
+		}
+	}
+//mk
 }
 
 //-----------------------------------------------------------------------------
@@ -5884,6 +5940,13 @@ void LLVOAvatar::sitDown(BOOL bSitting)
 //-----------------------------------------------------------------------------
 void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 {
+//MK
+	if (gRRenabled && sit_object && isSelf())
+	{
+		gAgent.mRRInterface.setSitTargetId (sit_object->getID());
+	}
+//mk
+
 	if (isSelf())
 	{
 		// Might be first sit
@@ -5906,6 +5969,7 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 	{
 		return;
 	}
+
 	LLQuaternion inv_obj_rot = ~sit_object->getRenderRotation();
 	LLVector3 obj_pos = sit_object->getRenderPosition();
 
@@ -5925,6 +5989,18 @@ void LLVOAvatar::sitOnObject(LLViewerObject *sit_object)
 
 	stopMotion(ANIM_AGENT_BODY_NOISE);
 
+//MK
+	// Seems there is a bug when sitting while already in Mouselook mode, pitch axis is
+	// inverted. A solution to this is to switch to third person look, then immediately
+	// back to Mouselook to make the pitch axis right again. It is a ugly hack, but at 
+	// least it works.
+	if ((gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK)&& isSelf())
+	{
+		gAgentCamera.changeCameraToThirdPerson(FALSE);
+		gAgentCamera.changeCameraToMouselook(FALSE);
+	}
+//mk
+
 }
 
 //-----------------------------------------------------------------------------
@@ -5941,6 +6017,12 @@ void LLVOAvatar::getOffObject()
 
 	if (sit_object) 
 	{
+//MK
+		if (gRRenabled && isSelf())
+		{
+			gAgent.mRRInterface.setSitTargetId (LLUUID::null);
+		}
+//mk
 		stopMotionFromSource(sit_object->getID());
 		LLFollowCamMgr::setCameraActive(sit_object->getID(), FALSE);
 
@@ -5985,6 +6067,7 @@ void LLVOAvatar::getOffObject()
 		at_axis.normalize();
 		gAgent.resetAxes(at_axis);
 		gAgentCamera.setThirdPersonHeadOffset(LLVector3(0.f, 0.f, 1.f));
+
 		gAgentCamera.setSitCamera(LLUUID::null);
 	}
 }
@@ -6047,7 +6130,7 @@ BOOL LLVOAvatar::isWearingWearableType(LLWearableType::EType type) const
 	{
 		const LLAvatarAppearanceDictionary::TextureEntry *texture_dict = tex_iter->second;
 		if (texture_dict->mWearableType == type)
-	{
+		{
 			// Thus, you must check to see if the corresponding baked texture is defined.
 			// NOTE: this is a poor substitute if you actually want to know about individual pieces of clothing
 			// this works for detecting a skirt (most important), but is ineffective at any piece of clothing that
@@ -6056,7 +6139,7 @@ BOOL LLVOAvatar::isWearingWearableType(LLWearableType::EType type) const
 	{
 				const EBakedTextureIndex baked_index = texture_dict->mBakedTextureIndex;
 				return isTextureDefined(LLAvatarAppearanceDictionary::getInstance()->getBakedTexture(baked_index)->mTextureIndex);
-	}
+			}
 			return FALSE;
 	}
 	}
@@ -6123,11 +6206,11 @@ void LLVOAvatar::onGlobalColorChanged(const LLTexGlobalColor* global_color, BOOL
 			{
 				LLAvatarJointMesh* mesh = (*iter);
 				if (mesh)
-			{
+				{
 					mesh->setColor( color );
 				}
 			}
-		}
+		} 
 	} 
 	else if (global_color == mTexEyeColor)
 	{
@@ -6191,7 +6274,7 @@ void LLVOAvatar::updateRezzedStatusTimers()
 		{
 			// load level has decreased. start phase timers for higher load levels.
 			for (S32 i = rez_status+1; i <= mLastRezzedStatus; i++)
-		{
+			{
 				startPhase("load_" + LLVOAvatar::rezStatusToString(i));
 		}
 		}
@@ -6202,16 +6285,16 @@ void LLVOAvatar::updateRezzedStatusTimers()
 			{
 				stopPhase("load_" + LLVOAvatar::rezStatusToString(i));
 				stopPhase("first_load_" + LLVOAvatar::rezStatusToString(i), false);
-		}
+			}
 			if (rez_status == 3)
-		{
+			{
 				// "fully loaded", mark any pending appearance change complete.
 				selfStopPhase("update_appearance_from_cof");
 				selfStopPhase("wear_inventory_category", false);
 				selfStopPhase("process_initial_wearables_update", false);
 			}
 		}
-		
+
 		mLastRezzedStatus = rez_status;
 	}
 }
@@ -6238,7 +6321,7 @@ void LLVOAvatar::startPhase(const std::string& phase_name)
 }
 
 void LLVOAvatar::stopPhase(const std::string& phase_name, bool err_check)
-		{
+{
 	F32 elapsed;
 	bool completed;
 	if (getPhases().getPhaseValues(phase_name, elapsed, completed))
@@ -6272,8 +6355,8 @@ void LLVOAvatar::logPendingPhases()
 	if (!isAgentAvatarValid())
 		{
 		return;
-	}
-	
+		}
+
 	for (LLViewerStats::phase_map_t::iterator it = getPhases().begin();
 		 it != getPhases().end();
 		 ++it)
@@ -6286,14 +6369,14 @@ void LLVOAvatar::logPendingPhases()
 			if (!completed)
 			{
 				logMetricsTimerRecord(phase_name, elapsed, completed);
-		}
+			}
 		}
 	}
-		}
+}
 
 //static
 void LLVOAvatar::logPendingPhasesAllAvatars()
-		{
+{
 	for (std::vector<LLCharacter*>::iterator iter = LLCharacter::sInstances.begin();
 		 iter != LLCharacter::sInstances.end(); ++iter)
 	{
@@ -6304,12 +6387,12 @@ void LLVOAvatar::logPendingPhasesAllAvatars()
 		}
 		inst->logPendingPhases();
 	}
-		}
+}
 
 void LLVOAvatar::logMetricsTimerRecord(const std::string& phase_name, F32 elapsed, bool completed)
 		{
 	if (!isAgentAvatarValid())
-		{
+	{
 		return;
 		}
 	
@@ -6546,9 +6629,9 @@ void LLVOAvatar::updateMeshTextures()
 	{
 			LLViewerFetchedTexture* baked_img = LLViewerTextureManager::getFetchedTexture(mBakedTextureDatas[i].mLastTextureID);
 			mBakedTextureDatas[i].mIsUsed = TRUE;
-
-			debugColorizeSubMeshes(i,LLColor4::red);
 	
+			debugColorizeSubMeshes(i,LLColor4::red);
+
 			avatar_joint_mesh_list_t::iterator iter = mBakedTextureDatas[i].mJointMeshes.begin();
 			avatar_joint_mesh_list_t::iterator end  = mBakedTextureDatas[i].mJointMeshes.end();
 			for (; iter != end; ++iter)
@@ -6558,7 +6641,7 @@ void LLVOAvatar::updateMeshTextures()
 		{
 					mesh->setTexture( baked_img );
 			}
-			}
+		}
 		}
 		else if (!isUsingLocalAppearance() && is_layer_baked[i])
 		{
@@ -6602,8 +6685,8 @@ void LLVOAvatar::updateMeshTextures()
 				{
 					mesh->setLayerSet( layerset );
 			}
-			}
 		}
+	}
 		else
 		{
 			debugColorizeSubMeshes(i,LLColor4::blue);
@@ -6623,11 +6706,11 @@ void LLVOAvatar::updateMeshTextures()
 		{
 			LLAvatarJointMesh* mesh = (*iter);
 			if (mesh)
-		{
+			{
 				mesh->setColor( color );
 				mesh->setTexture( hair_img );
-			}
 		}
+	} 
 	} 
 	
 	
@@ -6711,16 +6794,15 @@ void LLVOAvatar::applyMorphMask(U8* tex_data, S32 width, S32 height, S32 num_com
 
 	for (morph_list_t::const_iterator iter = mBakedTextureDatas[index].mMaskedMorphs.begin();
 		 iter != mBakedTextureDatas[index].mMaskedMorphs.end(); ++iter)
-{
+	{
 		const LLMaskedMorph* maskedMorph = (*iter);
 		LLPolyMorphTarget* morph_target = dynamic_cast<LLPolyMorphTarget*>(maskedMorph->mMorphTarget);
 		if (morph_target)
 	{
 			morph_target->applyMask(tex_data, width, height, num_components, maskedMorph->mInvert);
-}
 	}
 }
-
+}
 
 
 // returns TRUE if morph masks are present and not valid for a given baked texture, FALSE otherwise
@@ -6976,7 +7058,7 @@ bool LLVOAvatar::visualParamWeightsAreDefault()
 }
 
 void dump_visual_param(apr_file_t* file, LLVisualParam* viewer_param, F32 value)
-{
+	{
 	std::string type_string = "unknown";
 	if (dynamic_cast<LLTexLayerParamAlpha*>(viewer_param))
 		type_string = "param_alpha";
@@ -7005,7 +7087,7 @@ void dump_visual_param(apr_file_t* file, LLVisualParam* viewer_param, F32 value)
 
 void LLVOAvatar::dumpAppearanceMsgParams( const std::string& dump_prefix,
 	const LLAppearanceMessageContents& contents)
-	{
+{
 	std::string outfilename = get_sequential_numbered_file_name(dump_prefix,".xml");
 	const std::vector<F32>& params_for_dump = contents.mParamWeights;
 	const LLTEContents& tec = contents.mTEContents;
@@ -7015,7 +7097,7 @@ void LLVOAvatar::dumpAppearanceMsgParams( const std::string& dump_prefix,
 	outfile.open(fullpath, LL_APR_WB );
 	apr_file_t* file = outfile.getFileHandle();
 	if (!file)
-		{
+	{
 			return;
 		}
 	else
@@ -7309,7 +7391,7 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 						param->setAnimationTarget(newWeight, FALSE);
 					}
 				}
-		}
+			}
 		const S32 expected_tweakable_count = getVisualParamCountInGroup(VISUAL_PARAM_GROUP_TWEAKABLE); // don't worry about VISUAL_PARAM_GROUP_TWEAKABLE_NO_TRANSMIT
 		if (num_params != expected_tweakable_count)
 		{
@@ -7362,7 +7444,7 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 	if (isSelf())
 	{
 		mUseLocalAppearance = false;
-	}
+}
 
 	updateMeshTextures();
 
@@ -7564,7 +7646,7 @@ void LLVOAvatar::useBakedTexture( const LLUUID& id )
 				avatar_joint_mesh_list_t::iterator iter = mBakedTextureDatas[i].mJointMeshes.begin();
 				avatar_joint_mesh_list_t::iterator end  = mBakedTextureDatas[i].mJointMeshes.end();
 				for (; iter != end; ++iter)
-			{
+				{
 					LLAvatarJointMesh* mesh = (*iter);
 					if (mesh)
 			{
@@ -7593,12 +7675,12 @@ void LLVOAvatar::useBakedTexture( const LLUUID& id )
 				{
 					LLAvatarJointMesh* mesh = (*iter);
 					if (mesh)
-				{
+					{
 						mesh->setColor( LLColor4::white );
-					}
 				}
 			}
 		}
+	}
 	}
 
 	dirtyMesh();
@@ -7612,7 +7694,7 @@ std::string get_sequential_numbered_file_name(const std::string& prefix,
 	file_num_type::iterator it = file_nums.find(prefix);
 	S32 num = 0;
 	if (it != file_nums.end())
-{
+	{
 		num = it->second;
 	}
 	file_nums[prefix] = num+1;
@@ -7629,7 +7711,7 @@ void LLVOAvatar::dumpArchetypeXML(const std::string& prefix, bool group_by_weara
 		outprefix = getFullname() + (isSelf()?"_s":"_o");
 	}
 	if (outprefix.empty())
-{
+	{
 		outprefix = getFullname() + (isSelf()?"_s":"_o");
 	}
 	if (outprefix.empty())
@@ -7687,7 +7769,7 @@ void LLVOAvatar::dumpArchetypeXML(const std::string& prefix, bool group_by_weara
 			}
 		}
 	}
-		}
+	}
 	else 
 	{
 		// Just dump all params sequentially.
@@ -7850,7 +7932,7 @@ BOOL LLVOAvatar::isUsingServerBakes() const
 	F32 wt = appearance_version_param->getWeight();
 	F32 expect_wt = mUseServerBakes ? 1.0 : 0.0;
 	if (!is_approx_equal(wt,expect_wt))
-{
+	{
 		llwarns << "wt " << wt << " differs from expected " << expect_wt << llendl;
 	}
 #endif
@@ -7868,7 +7950,7 @@ void LLVOAvatar::setIsUsingServerBakes(BOOL newval)
 
 // virtual
 void LLVOAvatar::removeMissingBakedTextures()
-			{
+				{
 }
 
 //virtual
@@ -8293,6 +8375,4 @@ BOOL LLVOAvatar::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type,
 	// non-self avatars don't have wearables
 	return FALSE;
 }
-
-
 
