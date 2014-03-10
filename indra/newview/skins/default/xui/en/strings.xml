@@ -342,6 +342,9 @@ Please try logging in again in a minute.</string>
 	<string name="AvatarEditingAppearance">(Editing Appearance)</string>
 	<string name="AvatarAway">Away</string>
 	<string name="AvatarDoNotDisturb">Do Not Disturb</string>
+//MK
+  <string name="AvatarTyping">Typing</string>
+//mk
 	<string name="AvatarMuted">Blocked</string>
 
 	<!-- animations -->
@@ -2396,7 +2399,10 @@ Drag folders to this area and click "Send to Marketplace" to list them for sale 
 	<string name="Right Pec">Right Pec</string>
     <string name="Neck">Neck</string>
     <string name="Avatar Center">Avatar Center</string>
-	<string name="Invalid Attachment">Invalid Attachment Point</string>
+//MK
+  <string name="Root">Root</string>
+//mk
+  <string name="Invalid Attachment">Invalid Attachment Point</string>
 
   <!-- Avatar age computation, see LLDateUtil::ageFromDate -->
   <string name="YearsMonthsOld">[AGEYEARS] [AGEMONTHS] old</string>
@@ -2644,6 +2650,7 @@ Drag folders to this area and click "Send to Marketplace" to list them for sale 
 	<string name="GroupMoneyCredits">Credits</string>
 	<string name="GroupMoneyDebits">Debits</string>
 	<string name="GroupMoneyDate">[weekday,datetime,utc] [mth,datetime,utc] [day,datetime,utc], [year,datetime,utc]</string>
+
 
 	<!-- Viewer menu -->
 	<string name="AcquiredItems">Acquired Items</string>
@@ -3449,7 +3456,7 @@ If you continue to receive this message, contact the [SUPPORT_SITE].
 	<string name="you_started_call">You started a voice call</string>
 	<string name="you_joined_call">You joined the voice call</string>
   <string name="you_auto_rejected_call-im">You automatically rejected the voice call while &apos;Do Not Disturb&apos; was on.</string>
-  <string name="name_started_call">[NAME] started a voice call</string>
+	<string name="name_started_call">[NAME] started a voice call</string>
 
   <string name="ringing-im">
     Joining voice call...

@@ -79,6 +79,10 @@
 #include "llvocache.h"
 #include "llmaterialmgr.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 const S32 MIN_QUIET_FRAMES_COALESCE = 30;
 const F32 FORCE_SIMPLE_RENDER_AREA = 512.f;
 const F32 FORCE_CULL_AREA = 8.f;
@@ -563,9 +567,9 @@ void LLVOVolume::animateTextures()
 				tex_mat.setIdentity();
 				LLVector3 trans ;
 
-				trans.set(LLVector3(off_s+0.5f, off_t+0.5f, 0.f));			
-				tex_mat.translate(LLVector3(-0.5f, -0.5f, 0.f));
-				
+					trans.set(LLVector3(off_s+0.5f, off_t+0.5f, 0.f));			
+					tex_mat.translate(LLVector3(-0.5f, -0.5f, 0.f));
+
 				LLVector3 scale(scale_s, scale_t, 1.f);			
 				LLQuaternion quat;
 				quat.setQuat(rot, 0, 0, -1.f);
@@ -1126,7 +1130,7 @@ void LLVOVolume::sculpt()
 		S32 max_discard = mSculptTexture->getMaxDiscardLevel();
 		if (discard_level > max_discard)
 		{
-			discard_level = max_discard;    // clamp to the best we can do			
+			discard_level = max_discard;    // clamp to the best we can do
 		}
 		if(discard_level > MAX_DISCARD_LEVEL)
 		{
@@ -3684,7 +3688,7 @@ BOOL LLVOVolume::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 	{	
 		LLVector4a local_start = start;
 		LLVector4a local_end = end;
-		
+	
 		if (transform)
 		{
 			LLVector3 v_start(start.getF32ptr());
@@ -3696,7 +3700,7 @@ BOOL LLVOVolume::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 			local_start.load3(v_start.mV);
 			local_end.load3(v_end.mV);
 		}
-				
+		
 		LLVector4a p;
 		LLVector4a n;
 		LLVector2 tc;
@@ -4006,6 +4010,7 @@ void LLRiggedVolume::update(const LLMeshSkinInfo* skin, LLVOAvatar* avatar, cons
 						llassert(idx[k] < kMaxJoints);
 						// clamp k to kMaxJoints to avoid reading garbage off stack in release
 						src.setMul(mp[idx[(k < kMaxJoints) ? k : 0]], w);
+
 						final_mat.add(src);
 					}
 
@@ -4119,8 +4124,12 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 	{
 		LL_WARNS("RenderMaterials") << "Oh no! No binormals for this alpha blended face!" << LL_ENDL;
 	}
-	
-	if (facep->getViewerObject()->isSelected() && LLSelectMgr::getInstance()->mHideSelectedObjects)
+
+	if (facep->getViewerObject()->isSelected() 
+//MK
+		&& (!gRRenabled || !gAgent.mRRInterface.mContainsEdit)
+//mk
+		&& LLSelectMgr::getInstance()->mHideSelectedObjects)
 	{
 		return;
 	}
@@ -4169,11 +4178,11 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 
 	U8 bump = (type == LLRenderPass::PASS_BUMP || type == LLRenderPass::PASS_POST_BUMP) ? facep->getTextureEntry()->getBumpmap() : 0;
 	U8 shiny = facep->getTextureEntry()->getShiny();
-
+	
 	LLViewerTexture* tex = facep->getTexture();
 
 	U8 index = facep->getTextureIndex();
-	
+
 	LLMaterial* mat = facep->getTextureEntry()->getMaterialParams().get(); 
 	LLMaterialID mat_id = facep->getTextureEntry()->getMaterialID();
 
@@ -4229,7 +4238,7 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 		draw_vec[idx]->mMaterial == mat &&
 		draw_vec[idx]->mMaterialID == mat_id &&
 		draw_vec[idx]->mFullbright == fullbright &&
-		draw_vec[idx]->mBump  == bump  &&
+		draw_vec[idx]->mBump == bump &&
 		(!mat || (draw_vec[idx]->mShiny == shiny)) && // need to break batches when a material is shared, but legacy settings are different
 		draw_vec[idx]->mTextureMatrix == tex_mat &&
 		draw_vec[idx]->mModelMatrix == model_mat &&
@@ -4255,7 +4264,7 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 		U32 offset = facep->getIndicesStart();
 		U32 count = facep->getIndicesCount();
 		LLPointer<LLDrawInfo> draw_info = new LLDrawInfo(start,end,count,offset, tex, 
-			facep->getVertexBuffer(), fullbright, bump);
+			facep->getVertexBuffer(), fullbright, bump); 
 		draw_info->mGroup = group;
 		draw_info->mVSize = facep->getVirtualSize();
 		draw_vec.push_back(draw_info);
@@ -4675,66 +4684,66 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 						}
 						else
 						{
-							if (type == LLDrawPool::POOL_ALPHA)
-							{
-								if (te->getColor().mV[3] > 0.f)
-								{
-									if (te->getFullbright())
-									{
-										pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_FULLBRIGHT_ALPHA);
-									}
-									else
-									{
-										pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_ALPHA);
-									}
-								}
-							}
-							else if (te->getShiny())
+						if (type == LLDrawPool::POOL_ALPHA)
+						{
+							if (te->getColor().mV[3] > 0.f)
 							{
 								if (te->getFullbright())
 								{
-									pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_FULLBRIGHT_SHINY);
+									pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_FULLBRIGHT_ALPHA);
 								}
 								else
 								{
-									if (LLPipeline::sRenderDeferred)
-									{
-										pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_SIMPLE);
-									}
-									else
-									{
-										pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_SHINY);
-									}
-								}
-							}
-							else
-							{
-								if (te->getFullbright())
-								{
-									pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_FULLBRIGHT);
-								}
-								else
-								{
-									pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_SIMPLE);
-								}
-							}
-
-						
-							if (LLPipeline::sRenderDeferred)
-							{
-								if (type != LLDrawPool::POOL_ALPHA && !te->getFullbright())
-								{
-									if (te->getBumpmap())
-									{
-										pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_DEFERRED_BUMP);
-									}
-									else
-									{
-										pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_DEFERRED_SIMPLE);
-									}
+									pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_ALPHA);
 								}
 							}
 						}
+						else if (te->getShiny())
+						{
+							if (te->getFullbright())
+							{
+								pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_FULLBRIGHT_SHINY);
+							}
+							else
+							{
+								if (LLPipeline::sRenderDeferred)
+								{
+									pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_SIMPLE);
+								}
+								else
+								{
+									pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_SHINY);
+								}
+							}
+						}
+						else
+						{
+							if (te->getFullbright())
+							{
+								pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_FULLBRIGHT);
+							}
+							else
+							{
+								pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_SIMPLE);
+							}
+						}
+
+
+						if (LLPipeline::sRenderDeferred)
+						{
+							if (type != LLDrawPool::POOL_ALPHA && !te->getFullbright())
+							{
+								if (te->getBumpmap())
+								{
+									pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_DEFERRED_BUMP);
+								}
+								else
+								{
+									pool->addRiggedFace(facep, LLDrawPoolAvatar::RIGGED_DEFERRED_SIMPLE);
+								}
+							}
+						}
+					}
 					}
 
 					continue;
@@ -4823,7 +4832,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							if (simple_count < MAX_FACE_COUNT)
 							{
 								simple_faces[simple_count++] = facep;
-							}
+						}
 						}
 						else
 						{
@@ -4834,8 +4843,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							if (alpha_count < MAX_FACE_COUNT)
 							{
 								alpha_faces[alpha_count++] = facep;
-							}
 						}
+					}
 					}
 					else
 					{
@@ -4857,44 +4866,44 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 										if (normspec_count < MAX_FACE_COUNT)
 										{
 											normspec_faces[normspec_count++] = facep;
-										}
+									}
 									}
 									else
 									{ //has normal map (needs texcoord1 and tangent)
 										if (norm_count < MAX_FACE_COUNT)
 										{
 											norm_faces[norm_count++] = facep;
-										}
 									}
+								}
 								}
 								else if (mat->getSpecularID().notNull())
 								{ //has specular map but no normal map, needs texcoord2
 									if (spec_count < MAX_FACE_COUNT)
 									{
 										spec_faces[spec_count++] = facep;
-									}
+								}
 								}
 								else
 								{ //has neither specular map nor normal map, only needs texcoord0
 									if (simple_count < MAX_FACE_COUNT)
 									{
 										simple_faces[simple_count++] = facep;
-									}
 								}									
+							}
 							}
 							else if (te->getBumpmap())
 							{ //needs normal + tangent
 								if (bump_count < MAX_FACE_COUNT)
 								{
 									bump_faces[bump_count++] = facep;
-								}
+							}
 							}
 							else if (te->getShiny() || !te->getFullbright())
 							{ //needs normal
 								if (simple_count < MAX_FACE_COUNT)
 								{
 									simple_faces[simple_count++] = facep;
-								}
+							}
 							}
 							else 
 							{ //doesn't need normal
@@ -4902,8 +4911,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (fullbright_count < MAX_FACE_COUNT)
 								{
 									fullbright_faces[fullbright_count++] = facep;
-								}
 							}
+						}
 						}
 						else
 						{
@@ -4912,7 +4921,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (bump_count < MAX_FACE_COUNT)
 								{
 									bump_faces[bump_count++] = facep;
-								}
+							}
 							}
 							else if ((te->getShiny() && LLPipeline::sRenderBump) ||
 								!(te->getFullbright() || bake_sunlight))
@@ -4920,7 +4929,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (simple_count < MAX_FACE_COUNT)
 								{
 									simple_faces[simple_count++] = facep;
-								}
+							}
 							}
 							else 
 							{ //doesn't need normal
@@ -4928,10 +4937,10 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (fullbright_count < MAX_FACE_COUNT)
 								{
 									fullbright_faces[fullbright_count++] = facep;
-								}
 							}
 						}
 					}
+				}
 				}
 				else
 				{	//face has no renderable geometry
@@ -4943,7 +4952,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 			{
 				if (!drawablep->isState(LLDrawable::RIGGED))
 				{
-					drawablep->setState(LLDrawable::RIGGED);
+				drawablep->setState(LLDrawable::RIGGED);
 
 					//first time this is drawable is being marked as rigged,
 					// do another LoD update to use avatar bounding box
@@ -4989,7 +4998,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 		alpha_mask = alpha_mask | LLVertexBuffer::MAP_TEXTURE_INDEX | LLVertexBuffer::MAP_TANGENT | LLVertexBuffer::MAP_TEXCOORD1 | LLVertexBuffer::MAP_TEXCOORD2;
 		fullbright_mask = fullbright_mask | LLVertexBuffer::MAP_TEXTURE_INDEX;
 	}
-
+	
 	genDrawInfo(group, simple_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, simple_faces, simple_count, FALSE, batch_textures, FALSE);
 	genDrawInfo(group, fullbright_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, fullbright_faces, fullbright_count, FALSE, batch_textures);
 	genDrawInfo(group, alpha_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, alpha_faces, alpha_count, TRUE, batch_textures);
@@ -5370,7 +5379,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 							if (texture_count < MAX_TEXTURE_COUNT)
 							{
 								texture_list[texture_count++] = tex;
-							}
+						}
 						}
 
 						if (geom_count + facep->getGeomCount() > max_vertices)
@@ -5495,7 +5504,8 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 
 			index_offset += facep->getGeomCount();
 			indices_index += facep->getIndicesCount();
-			
+
+
 			//append face to appropriate render batch
 
 			BOOL force_simple = facep->getPixelArea() < FORCE_SIMPLE_RENDER_AREA;
@@ -5719,7 +5729,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 					}
 					else
 					{
-						registerFace(group, facep, LLRenderPass::PASS_FULLBRIGHT);
+					registerFace(group, facep, LLRenderPass::PASS_FULLBRIGHT);
 					}
 					if (LLPipeline::sRenderDeferred && !hud_group && LLPipeline::sRenderBump && use_legacy_bump)
 					{ //if this is the deferred render and a bump map is present, register in post deferred bump
@@ -5741,9 +5751,9 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						}
 						else
 						{
-							registerFace(group, facep, LLRenderPass::PASS_SIMPLE);
-						}
+						registerFace(group, facep, LLRenderPass::PASS_SIMPLE);
 					}
+				}
 				}
 				
 				
@@ -5850,4 +5860,5 @@ void LLHUDPartition::shift(const LLVector4a &offset)
 {
 	//HUD objects don't shift with region crossing.  That would be silly.
 }
+
 
