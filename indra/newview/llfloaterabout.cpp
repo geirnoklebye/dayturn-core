@@ -218,27 +218,6 @@ BOOL LLFloaterAbout::postBuild()
 LLSD LLFloaterAbout::getInfo()
 {
 	return LLAppViewer::instance()->getViewerInfo();
-//MK
-	if (gRRenabled)
-	{
-		info["CHANNEL"] = gAgent.mRRInterface.getVersion2 ();
-	}
-	else
-	{
-	info["CHANNEL"] = LLVersionInfo::getChannel();
-	}
-//mk
-
-//MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
-		{
-			info["POSITION"] = ll_sd_from_vector3d (LLVector3d::zero);
-			info["REGION"] = LLSD::String( "(Region hidden)");
-			info["HOSTNAME"] =  LLSD::String("(Server info hidden)");
-			info["HOSTIP"] = LLSD::String("IP address hidden");
-			info["SLURL"] = LLSD::String("SLURL hidden");
-		}
-//mk
 }
 
 class LLFloaterAboutListener: public LLEventAPI

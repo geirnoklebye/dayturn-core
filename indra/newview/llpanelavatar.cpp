@@ -122,10 +122,12 @@ BOOL LLDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 
 static LLDefaultChildRegistry::Register<LLDropTarget> r("drop_target");
 
-static LLRegisterPanelClassWrapper<LLPanelAvatarProfile> t_panel_profile("panel_profile");
-static LLRegisterPanelClassWrapper<LLPanelMyProfile> t_panel_my_profile("panel_my_profile");
-static LLRegisterPanelClassWrapper<LLPanelAvatarNotes> t_panel_notes("panel_notes");
-static LLRegisterPanelClassWrapper<LLPanelAvatarFirst> t_panel_profile_firstlife("panel_profile_firstlife");
+//MK
+static LLPanelInjector<LLPanelAvatarProfile> t_panel_profile("panel_profile");
+static LLPanelInjector<LLPanelMyProfile> t_panel_my_profile("panel_my_profile");
+static LLPanelInjector<LLPanelAvatarNotes> t_panel_notes("panel_notes");
+static LLPanelInjector<LLPanelAvatarFirst> t_panel_profile_firstlife("panel_profile_firstlife");
+//mk
 
 //-----------------------------------------------------------------------------
 // LLPanelAvatarNotes()

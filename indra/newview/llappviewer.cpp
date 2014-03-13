@@ -3466,6 +3466,21 @@ LLSD LLAppViewer::getViewerInfo() const
 		info["SERVER_RELEASE_NOTES_URL"] = mServerReleaseNotesURL;
 	}
 
+//MK
+	if (gRRenabled)
+	{
+		info["CHANNEL"] = gAgent.mRRInterface.getVersion2 ();
+	}
+
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		info["POSITION"] = ll_sd_from_vector3d (LLVector3d::zero);
+		info["REGION"] = LLSD::String( "(Region hidden)");
+		info["HOSTNAME"] =  LLSD::String("(Server info hidden)");
+		info["HOSTIP"] = LLSD::String("IP address hidden");
+		info["SLURL"] = LLSD::String("SLURL hidden");
+	}
+//mk
 	return info;
 }
 
