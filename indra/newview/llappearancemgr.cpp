@@ -3586,12 +3586,32 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove)
 
 void LLAppearanceMgr::removeItemFromAvatar(const LLUUID& id_to_remove)
 {
-//MK
-	// The code below does not take attachments into account, so we need to specifically detach
-	// objects here. Then the pieces of clothing will follow.
-	LLVOAvatarSelf::detachAttachmentIntoInventory(gInventory.getLinkedItemID(id_to_remove));
-//mk
 	LLUUID linked_item_id = gInventory.getLinkedItemID(id_to_remove);
+//MK
+	LLViewerObject * attachmentp = gAgentAvatarp->findAttachmentByID(id_to_remove);
+	if (attachmentp &&
+		attachmentp->isTempAttachment())
+	{
+		// Special case : if the object is a temporary object, it does not have a counterpart in
+		// the inventory => detach immediately
+		if (gMessageSystem)
+		{
+			gMessageSystem->newMessage("ObjectDetach");
+			gMessageSystem->nextBlockFast(_PREHASH_AgentData);
+			gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID() );
+			gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());	
+			gMessageSystem->nextBlockFast(_PREHASH_ObjectData);
+			gMessageSystem->addU32Fast(_PREHASH_ObjectLocalID, attachmentp->getLocalID());
+			gMessageSystem->sendReliable( gAgent.getRegionHost() );
+		}
+	}
+	else
+	{
+		// Otherwise, since the code below does not take attachments into account, we need to specifically detach
+		// objects here. Then the pieces of clothing will follow.
+		LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
+	}
+//mk
 	removeCOFItemLinks(linked_item_id);
 	addDoomedTempAttachment(linked_item_id);
 	updateAppearanceFromCOF();
