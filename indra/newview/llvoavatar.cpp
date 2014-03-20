@@ -2903,7 +2903,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				// Note: do not connect a callback on idle().
 				clearNameTag();
 			}
-
+		have_name = !av_name.getDisplayName().empty();
 			have_name = !av_name.getDisplayName().empty();
 
 			// Might be blank if name not available yet, that's OK
@@ -2933,6 +2933,8 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		//
 		//	show the avatar's age in the name tag (or not)
 		//
+
+
 		static LLUICachedControl<bool> show_age("NameTagShowAge", false);
 		if (show_age) {
 			//
