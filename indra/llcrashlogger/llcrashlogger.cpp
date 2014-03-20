@@ -477,12 +477,6 @@ bool LLCrashLogger::sendCrashLogs()
                         else
                         {
                             //mCrashInfo["DebugLog"].erase("MinidumpPath");
-                            //To preserve logfile on clean shutdown move to regular log dir.
-                            std::string curr_log = (*lock)["dumpdir"].asString() + "SecondLife.log";
-                            std::string last_log = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"SecondLife.log");
-
-                            LLFile::remove(last_log);
-                            LLFile::rename(curr_log, last_log); //Before we blow away the directory, perserve log of previous run.
 
                             mKeyMaster.cleanupProcess((*lock)["dumpdir"].asString());
                         }
