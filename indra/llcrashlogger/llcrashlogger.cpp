@@ -218,7 +218,7 @@ void LLCrashLogger::gatherFiles()
 	{
 		// Figure out the filename of the second life log
 		LLCurl::setCAFile(gDirUtilp->getCAFile());
-		mFileMap["KokuaLog"] = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Kokua.log");
+		mFileMap["SecondLifeLog"] = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"SecondLife.log");
 		mFileMap["SettingsXml"] = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS,"settings.xml");
 	}
 
