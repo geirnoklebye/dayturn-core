@@ -115,7 +115,6 @@ void LLDrawPoolAlpha::beginPostDeferredPass(S32 pass)
 		fullbright_shader->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 2.2f); 
 		fullbright_shader->uniform1f(LLShaderMgr::DISPLAY_GAMMA, (gamma > 0.1f) ? 1.0f / gamma : (1.0f/2.2f));
 		fullbright_shader->unbind();
-
 		//prime simple shader (loads shadow relevant uniforms)
 		gPipeline.bindDeferredShader(*simple_shader);
 
@@ -234,7 +233,7 @@ void LLDrawPoolAlpha::render(S32 pass)
 	{
 		gGL.setColorMask(true, true);
 	}
-	
+
 	bool write_depth = LLDrawPoolWater::sSkipScreenCopy
 						 || (deferred_render && pass == 1)
 						 // we want depth written so that rendered alpha will
@@ -257,15 +256,15 @@ void LLDrawPoolAlpha::render(S32 pass)
 
 		if (mVertexShaderLevel > 0)
 		{
-			if (LLPipeline::sImpostorRender)
-			{
+		if (LLPipeline::sImpostorRender)
+		{
 				fullbright_shader->bind();
 				fullbright_shader->setMinimumAlpha(0.5f);
 				simple_shader->bind();
 				simple_shader->setMinimumAlpha(0.5f);
-			}				
-			else
-			{
+		}
+		else
+		{
 				fullbright_shader->bind();
 				fullbright_shader->setMinimumAlpha(0.f);
 				simple_shader->bind();
@@ -420,14 +419,14 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 				}
 
 				LLRenderPass::applyModelMatrix(params);
-				
+
 				LLMaterial* mat = NULL;
 
 				if (deferred_render)
 				{
 					mat = params.mMaterial;
 				}
-
+				
 				if (params.mFullbright)
 				{
 					// Turn off lighting if it hasn't already been so.
@@ -497,7 +496,7 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 					LLGLSLShader::bindNoShader();
 					current_shader = NULL;
 				}
-				
+
 				if (use_shaders && mat)
 				{
 					// We have a material.  Supply the appropriate data here.
@@ -547,7 +546,7 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 						}
 					}
 				}
-				else  
+				else
 				{ //not batching textures or batch has only 1 texture -- might need a texture matrix
 					if (params.mTexture.notNull())
 					{
@@ -558,7 +557,7 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 						}
 						else
 						{
-							gGL.getTexUnit(0)->bind(params.mTexture, TRUE);
+						gGL.getTexUnit(0)->bind(params.mTexture, TRUE) ;
 						}
 						
 						if (params.mTextureMatrix)
@@ -598,7 +597,7 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 					emissive_shader->bind();
 					
 					params.mVertexBuffer->setBuffer((mask & ~LLVertexBuffer::MAP_COLOR) | LLVertexBuffer::MAP_EMISSIVE);
-					
+
 					// do the actual drawing, again
 					params.mVertexBuffer->drawRange(params.mDrawMode, params.mStart, params.mEnd, params.mCount, params.mOffset);
 					gPipeline.addTrianglesDrawn(params.mCount, params.mDrawMode);

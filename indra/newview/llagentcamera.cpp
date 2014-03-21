@@ -2243,6 +2243,12 @@ void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToCustomizeAvatar()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit)
+	{
+		return;
+	}
+//mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera() || !isAgentAvatarValid())
 	{
 		return;
@@ -2282,7 +2288,7 @@ void LLAgentCamera::changeCameraToCustomizeAvatar()
 			{
 				// delay camera animation long enough to play through turn animation
 				setAnimationDuration(turn_motion->getDuration() + CUSTOMIZE_AVATAR_CAMERA_ANIM_SLOP);
-			}
+		}
 	}
 
 	LLVector3 agent_at = gAgent.getAtAxis();
