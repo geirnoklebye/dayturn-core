@@ -2924,6 +2924,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			std::string full_name = LLCacheName::buildFullName( firstname->getString(), lastname->getString() );
 			have_name = !full_name.empty();
 
+			have_name = !full_name.empty();
 			addNameTagLine(full_name, name_tag_color, LLFontGL::NORMAL, font);
 		}
 
