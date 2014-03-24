@@ -498,9 +498,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>862b9244ed8a27bec16b62883fe3580a</string>
+              <string>aa919c35f891dc03fe1325bb47b0d572</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-fmodex-private/rev/288122/arch/Darwin/installer/fmodex-4.44.31-darwin-20140314.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-darwin-20140324.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -510,9 +510,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>180f4d703deec104469e6a9044243110</string>
+              <string>43e9b7478b9fa331b975b02aa1d1a014</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-fmodex-private/rev/288122/arch/Linux/installer/fmodex-4.44.31-linux-20140315.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-linux-20140324.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -522,9 +522,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6c859cd17fb8c9cdd96b188c2a2c2838</string>
+              <string>077556208e2280b00c42f0f703805521</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-fmodex-private/rev/288122/arch/CYGWIN/installer/fmodex-4.44.31-windows-20140314.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-windows-20140324.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2292,10 +2292,6 @@
               <map>
                 <key>command</key>
                 <string>xcodebuild</string>
-                <key>filters</key>
-                <array>
-                  <string>setenv</string>
-                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration Debug</string>
@@ -2346,10 +2342,6 @@
               <map>
                 <key>command</key>
                 <string>xcodebuild</string>
-                <key>filters</key>
-                <array>
-                  <string>setenv</string>
-                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration RelWithDebInfo</string>
@@ -2402,10 +2394,6 @@
               <map>
                 <key>command</key>
                 <string>xcodebuild</string>
-                <key>filters</key>
-                <array>
-                  <string>setenv</string>
-                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration Release</string>
