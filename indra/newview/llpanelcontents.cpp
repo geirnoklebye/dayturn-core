@@ -60,6 +60,10 @@
 #include "llviewerwindow.h"
 #include "llworld.h"
 
+//MK
+#include "llvoavatar.h"
+//mk
+
 //
 // Imported globals
 //
@@ -154,6 +158,25 @@ void LLPanelContents::onClickNewScript(void *userdata)
 	LLViewerObject* object = LLSelectMgr::getInstance()->getSelection()->getFirstRootObject(children_ok);
 	if(object)
 	{
+//MK
+		if (gRRenabled)
+		{
+			// can't edit objects that someone is sitting on,
+			// when prevented from sit-tping
+			if (gAgent.mRRInterface.contains ("sittp") || gAgent.mRRInterface.mContainsUnsit)
+			{
+				if (object->isSeat())
+				{
+					return;
+				}
+			}
+
+			if (!gAgent.mRRInterface.canDetach(object))
+			{
+				return;
+			}
+		}
+//mk
 		LLPermissions perm;
 		perm.init(gAgent.getID(), gAgent.getID(), LLUUID::null, LLUUID::null);
 		perm.initMasks(

@@ -187,7 +187,7 @@ extern LLGLSLShader			gBenchmarkProgram;
 
 //output tex0[tc0] + tex1[tc1]
 extern LLGLSLShader			gTwoTextureAddProgram;
-						
+								
 extern LLGLSLShader			gOneTextureNoColorProgram;
 
 //object shaders
@@ -336,3 +336,4 @@ extern LLGLSLShader			gNormalMapGenProgram;
 extern LLGLSLShader			gDeferredMaterialProgram[LLMaterial::SHADER_COUNT*2];
 extern LLGLSLShader			gDeferredMaterialWaterProgram[LLMaterial::SHADER_COUNT*2];
 #endif
+
