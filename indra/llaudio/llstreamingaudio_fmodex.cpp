@@ -28,8 +28,8 @@
 
 #include "llmath.h"
 
-#include "fmod.hpp"
-#include "fmod_errors.h"
+#include "fmodex/fmod.hpp"
+#include "fmodex/fmod_errors.h"
 
 #include "llstreamingaudio_fmodex.h"
 

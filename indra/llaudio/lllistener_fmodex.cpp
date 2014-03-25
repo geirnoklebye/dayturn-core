@@ -28,7 +28,7 @@
 #include "linden_common.h"
 #include "llaudioengine.h"
 #include "lllistener_fmodex.h"
-#include "fmod.hpp"
+#include "fmodex/fmod.hpp"
 
 //-----------------------------------------------------------------------
 // constructor
