@@ -498,9 +498,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>aa919c35f891dc03fe1325bb47b0d572</string>
+              <string>b89e100838eb6746ee9106e837254333</string>
               <key>url</key>
-              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-darwin-20140324.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-darwin-20140326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -510,9 +510,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>43e9b7478b9fa331b975b02aa1d1a014</string>
+              <string>cab5c55347a2c331586cc00a20c6df80</string>
               <key>url</key>
-              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-linux-20140324.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-linux-20140326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -522,9 +522,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>077556208e2280b00c42f0f703805521</string>
+              <string>a378b6cb7a3bc79a2989109b3d2ff70c</string>
               <key>url</key>
-              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-windows-20140324.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-windows-20140326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
