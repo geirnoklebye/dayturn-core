@@ -639,6 +639,15 @@ static void edit_item(const LLUUID& idItem)
 }
 // [/SL:KB]
 
+static void touch_item(const LLUUID &id)
+{
+	const LLViewerInventoryItem *item = gInventory.getItem(id);
+
+	if (item && item->getType() == LLAssetType::AT_OBJECT) {
+		handle_attachment_touch(id);
+	}
+}
+
 static LLWearableItemTypeNameComparator WEARABLE_TYPE_NAME_COMPARATOR;
 static const LLWearableItemTypeNameComparator WEARABLE_TYPE_LAYER_COMPARATOR;
 static const LLWearableItemNameComparator WEARABLE_NAME_COMPARATOR;
@@ -819,7 +828,6 @@ LLContextMenu* LLWearableItemsList::ContextMenu::createMenu()
 	// Register handlers common for all wearable types.
 	registrar.add("Wearable.Wear", boost::bind(wear_multiple, ids, true));
 	registrar.add("Wearable.Add", boost::bind(wear_multiple, ids, false));
-//	registrar.add("Wearable.Edit", boost::bind(handleMultiple, LLAgentWearables::editWearable, ids));
 // [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-09-04 (Catznip-2.2.0a) | Added: Catznip-2.1.2a
 	registrar.add("Wearable.Edit", boost::bind(handleMultiple, edit_item, ids));
 // [/SL:KB]
@@ -835,6 +843,7 @@ LLContextMenu* LLWearableItemsList::ContextMenu::createMenu()
 	// Register handlers for body parts.
 
 	// Register handlers for attachments.
+	registrar.add("Attachment.Touch", boost::bind(handleMultiple, touch_item, ids));
 	registrar.add("Attachment.Detach", 
 				  boost::bind(&LLAppearanceMgr::removeItemsFromAvatar, LLAppearanceMgr::getInstance(), ids));
 	registrar.add("Attachment.Profile", boost::bind(show_item_profile, selected_id));
@@ -925,11 +934,12 @@ void LLWearableItemsList::ContextMenu::updateItemsVisibility(LLContextMenu* menu
 	setMenuItemEnabled(menu, "wear_add",			canAddWearables(ids));
 	setMenuItemVisible(menu, "wear_replace",		n_worn == 0 && n_already_worn != 0 && can_be_worn);
 	//visible only when one item selected and this item is worn
-//	setMenuItemVisible(menu, "edit",				!standalone && mask & (MASK_CLOTHING|MASK_BODYPART) && n_worn == n_items && n_worn == 1);
 // [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-09-04 (Catznip-2.2.0a) | Added: Catznip-2.1.2a
 	setMenuItemVisible(menu, "edit",				!standalone && mask & (MASK_CLOTHING|MASK_BODYPART|MASK_ATTACHMENT) && n_worn == n_items && n_worn == 1);
 // [/SL:KB]
 	setMenuItemEnabled(menu, "edit",				n_editable == 1 && n_worn == 1 && n_items == 1);
+	setMenuItemVisible(menu, "touch",				mask == MASK_ATTACHMENT);
+	setMenuItemEnabled(menu, "touch",				n_items == 1 && n_worn == 1 && enable_attachment_touch(ids.front()));
 	setMenuItemVisible(menu, "create_new",			mask & (MASK_CLOTHING|MASK_BODYPART) && n_items == 1);
 	setMenuItemEnabled(menu, "create_new",			canAddWearables(ids));
 	setMenuItemVisible(menu, "show_original",		!standalone);
