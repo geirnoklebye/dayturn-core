@@ -58,7 +58,7 @@ extern LLMenuBarGL* gMenuBarView;
 // Mousewheel camera zoom
 const F32 MIN_ZOOM_FRACTION = 0.25f;
 const F32 INITIAL_ZOOM_FRACTION = 1.f;
-const F32 MAX_ZOOM_FRACTION = 8.f;
+const F32 MAX_ZOOM_FRACTION = 40.f;
 
 const F32 CAMERA_ZOOM_HALF_LIFE = 0.07f;	// seconds
 const F32 FOV_ZOOM_HALF_LIFE = 0.07f;	// seconds
@@ -553,10 +553,12 @@ BOOL LLAgentCamera::calcCameraMinDistance(F32 &obj_min_distance)
 {
 	BOOL soft_limit = FALSE; // is the bounding box to be treated literally (volumes) or as an approximation (avatars)
 
+	static LLCachedControl<bool> disable_camera_constraints(gSavedSettings, "DisableCameraConstraints", true);
+
 	if (!mFocusObject || mFocusObject->isDead() || 
 		mFocusObject->isMesh() ||
-		gSavedSettings.getBOOL("DisableCameraConstraints"))
-	{
+		disable_camera_constraints
+	) {
 		obj_min_distance = 0.f;
 		return TRUE;
 	}
@@ -925,6 +927,7 @@ void LLAgentCamera::cameraZoomIn(const F32 fraction)
 			return;
 		}
 		*/
+
 	}
 
 	if(cameraCustomizeAvatar())
@@ -984,9 +987,10 @@ void LLAgentCamera::cameraOrbitIn(const F32 meters)
 
 		if (new_distance > max_distance)
 		{
+			static LLCachedControl<bool> disable_camera_constraints(gSavedSettings, "DisableCameraConstraints", true);
+
 			// Unless camera is unlocked
-			if (!gSavedSettings.getBOOL("DisableCameraConstraints"))
-			{
+			if (!disable_camera_constraints) {
 				return;
 			}
 		}
@@ -1883,7 +1887,9 @@ LLVector3d LLAgentCamera::calcCameraPositionTargetGlobal(BOOL *hit_limit)
 		camera_position_global = focusPosGlobal + mCameraFocusOffset;
 	}
 
-	if (!gSavedSettings.getBOOL("DisableCameraConstraints") && !gAgent.isGodlike())
+	static LLCachedControl<bool> disable_camera_constraints(gSavedSettings, "DisableCameraConstraints", true);
+
+	if (!disable_camera_constraints && !gAgent.isGodlike())
 	{
 		LLViewerRegion* regionp = LLWorld::getInstance()->getRegionFromPosGlobal(camera_position_global);
 		bool constrain = true;
@@ -2004,7 +2010,9 @@ F32 LLAgentCamera::getCameraMinOffGround()
 	}
 	else
 	{
-		if (gSavedSettings.getBOOL("DisableCameraConstraints"))
+		static LLCachedControl<bool> disable_camera_constraints(gSavedSettings, "DisableCameraConstraints", true);
+
+		if (disable_camera_constraints)
 		{
 			return -1000.f;
 		}
