@@ -2719,17 +2719,18 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		}
 		return;
 	}
-
 	BOOL new_name = FALSE;
 	if (visible_chat != mVisibleChat)
 	{
 		mVisibleChat = visible_chat;
 		new_name = TRUE;
 	}
-
-	if (render_group_titles != mRenderGroupTitles)
-
-	else if ((BOOL)render_group_titles != mRenderGroupTitles)
+	if (mRenderGroupTitles)
+	{
+		mRenderGroupTitles = FALSE;
+		new_name = TRUE;
+	}
+	if ((BOOL)render_group_titles != mRenderGroupTitles)
 	{
 		mRenderGroupTitles = (BOOL)render_group_titles;
 		new_name = TRUE;
@@ -2873,11 +2874,6 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				LLFontGL::getFontSansSerifSmall());
 		}
 
-		static LLCachedControl<S32> avatar_name_tag_mode(gSavedSettings, "AvatarNameTagMode", 1);
-		static LLCachedControl<bool> name_tag_show_group_titles(gSavedSettings, "NameTagShowGroupTitles", true);
-
-		if (name_tag_show_group_titles && avatar_name_tag_mode
-//		static LLCachedControl<S32> avatar_name_tag_mode(gSavedSettings, "AvatarNameTagMode", 1);
 		static LLCachedControl<bool> name_tag_show_group_titles(gSavedSettings, "NameTagShowGroupTitles", true);
 
 		if (name_tag_show_group_titles 
@@ -2893,6 +2889,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		static LLUICachedControl<bool> show_usernames("NameTagShowUsernames", true);
 
 		bool have_name = FALSE;
+
 
 		if (LLAvatarName::useDisplayNames())
 		{
