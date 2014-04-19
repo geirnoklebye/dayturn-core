@@ -215,7 +215,7 @@ protected:
 // [/SL:KB]
 
 
-		menu->setItemEnabled("take_off_or_detach", !bp_selected && !rlv_blocked);
+		menu->setItemEnabled("take_off_or_detach", !bp_selected );
 
 		menu->setItemVisible("edit_outfit_separator", show_edit || show_detach || show_take_off || show_take_off_or_detach);
 //		bool allow_detach = !bp_selected && !clothes_selected && attachments_selected;
