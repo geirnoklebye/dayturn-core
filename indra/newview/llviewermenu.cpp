@@ -8247,6 +8247,19 @@ void handle_show_url(const LLSD& param)
 	}
 
 }
+void handle_show_group()
+{
+	std::string grid = LLGridManager::getInstance()->getGridLabel();
+	LLStringUtil::replaceChar(grid, ' ', '_');
+
+	const std::string group = gSavedSettings.getString("SupportGroupSLURL_" + grid);
+
+	if (!group.empty()) {
+		LLUrlEntryGroup ueg;
+
+		LLGroupActions::show(LLUUID(ueg.getID(group).asString().c_str()));
+	}
+}
 
 void handle_report_bug(const LLSD& param)
 {

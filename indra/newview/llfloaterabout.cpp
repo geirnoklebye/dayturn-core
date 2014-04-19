@@ -46,9 +46,7 @@
 #include "llviewerregion.h"
 #include "llversioninfo.h"
 #include "llweb.h"
-// [RLVa:KB] - Checked: 2010-04-18 (RLVa-1.4.0a)
-#include "rlvhandler.h"
-// [/RLVa:KB]
+
 
 // Linden library includes
 #include "llaudioengine.h"
@@ -290,9 +288,7 @@ LLSD LLFloaterAbout::getInfo()
     }
 #endif
 
-// [RLVa:KB] - Checked: 2010-04-18 (RLVa-1.4.0a) | Added: RLVa-1.2.0e
-	info["RLV_VERSION"] = (rlv_handler_t::isEnabled()) ? RlvStrings::getVersionAbout() : "(disabled)";
-// [/RLVa:KB]
+
 	info["OPENGL_VERSION"] = (const char*)(glGetString(GL_VERSION));
 	info["LIBCURL_VERSION"] = LLCurl::getVersionString();
 	info["J2C_VERSION"] = LLImageJ2C::getEngineInfo();
