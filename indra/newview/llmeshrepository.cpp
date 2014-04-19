@@ -69,8 +69,8 @@
 #include "llviewerparcelmgr.h"
 #include "lluploadfloaterobservers.h"
 #include "bufferarray.h"
-#include "llfasttimer.h"
 #include "bufferstream.h"
+#include "llfasttimer.h"
 
 #include "boost/lexical_cast.hpp"
 
@@ -346,9 +346,8 @@ static LLFastTimer::DeclareTimer FTM_MESH_FETCH("Mesh Fetch");
 
 LLMeshRepository gMeshRepo;
 
-// <FS:Ansariel> Configurable request throttle
 const S32 MESH_HEADER_SIZE = 4096;                      // Important:  assumption is that headers fit in this space
-//const U32 MAX_MESH_REQUESTS_PER_SECOND = 100;
+const S32 REQUEST_HIGH_WATER_MIN = 32;					// Limits for GetMesh regions
 const S32 REQUEST_HIGH_WATER_MAX = 150;					// Should remain under 2X throttle
 const S32 REQUEST_LOW_WATER_MIN = 16;
 const S32 REQUEST_LOW_WATER_MAX = 75;
@@ -423,7 +422,6 @@ const char * const LOG_MESH = "Mesh";
 static unsigned int metrics_teleport_start_count = 0;
 boost::signals2::connection metrics_teleport_started_signal;
 static void teleport_started();
-
 
 //get the number of bytes resident in memory for given volume
 U32 get_volume_memory_size(const LLVolume* volume)
@@ -701,30 +699,9 @@ public:
 	U32			mOffset;
 };
 
-		if (!LLApp::isQuitting() &&
-			!mProcessed &&
-			mMeshID.notNull())
-		{	// Something went wrong, retry
-			llwarns << "Timeout or service unavailable, retrying loadMeshSkinInfo() for " << mMeshID << llendl;
-			LLMeshRepository::sHTTPRetryCount++;
-			gMeshRepo.mThread->loadMeshSkinInfo(mMeshID);
-		}
-		if (!LLApp::isQuitting() &&
-			!mProcessed &&
-			mMeshID.notNull())
-		{	// Something went wrong, retry
-			llwarns << "Timeout or service unavailable, retrying loadMeshDecomposition() for " << mMeshID << llendl;
-			LLMeshRepository::sHTTPRetryCount++;
-			gMeshRepo.mThread->loadMeshDecomposition(mMeshID);
-		}
-		if (!LLApp::isQuitting() &&
-			!mProcessed &&
-			mMeshID.notNull())
-		{	// Something went wrong, retry
-			llwarns << "Timeout or service unavailable, retrying loadMeshPhysicsShape() for " << mMeshID << llendl;
-			LLMeshRepository::sHTTPRetryCount++;
-			gMeshRepo.mThread->loadMeshPhysicsShape(mMeshID);
-		}
+
+void log_upload_error(LLCore::HttpStatus status, const LLSD& content,
+					  const char * const stage, const std::string & model_name)
 {
 	// Add notification popup.
 	LLSD args;
@@ -883,8 +860,8 @@ void LLMeshRepoThread::run()
 		sRequestWaterLevel = mHttpRequestSet.size();			// Stats data update
 			
 		// NOTE: order of queue processing intentionally favors LOD requests over header requests
-			
-			// <FS:Ansariel> Configurable request throttle
+
+		while (!mLODReqQ.empty() && mHttpRequestSet.size() < sRequestHighWater)
 		{
 			if (! mMutex)
 			{
@@ -898,13 +875,13 @@ void LLMeshRepoThread::run()
 			if (!fetchMeshLOD(req.mMeshParams, req.mLOD))		// failed, resubmit
 			{
 				mMutex->lock();
-						mLODReqQ.push(req); 
+				mLODReqQ.push(req) ; 
 				++LLMeshRepository::sLODProcessing;
 				mMutex->unlock();
 			}
 		}
 
-			// <FS:Ansariel> Configurable request throttle
+		while (!mHeaderReqQ.empty() && mHttpRequestSet.size() < sRequestHighWater)
 		{
 			if (! mMutex)
 			{
@@ -1273,8 +1250,6 @@ bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 
 			if (!http_url.empty())
 			{
-				//ret = mCurlRequest->getByteRange(http_url, headers, offset, size,
-				//								 new LLMeshSkinInfoResponder(mesh_id, offset, size));
 				LLMeshSkinInfoHandler * handler = new LLMeshSkinInfoHandler(mesh_id, offset, size);
 				LLCore::HttpHandle handle = getByteRange(http_url, cap_version, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
@@ -1370,8 +1345,6 @@ bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id)
 			
 			if (!http_url.empty())
 			{
-				//ret = mCurlRequest->getByteRange(http_url, headers, offset, size,
-				//								 new LLMeshDecompositionResponder(mesh_id, offset, size));
 				LLMeshDecompositionHandler * handler = new LLMeshDecompositionHandler(mesh_id, offset, size);
 				LLCore::HttpHandle handle = getByteRange(http_url, cap_version, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
@@ -1465,8 +1438,6 @@ bool LLMeshRepoThread::fetchMeshPhysicsShape(const LLUUID& mesh_id)
 			
 			if (!http_url.empty())
 			{
-				//ret = mCurlRequest->getByteRange(http_url, headers, offset, size,
-				//								 new LLMeshPhysicsShapeResponder(mesh_id, offset, size));
 				LLMeshPhysicsShapeHandler * handler = new LLMeshPhysicsShapeHandler(mesh_id, offset, size);
 				LLCore::HttpHandle handle = getByteRange(http_url, cap_version, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
@@ -1581,15 +1552,6 @@ bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params)
 		{
 			handler->mHttpHandle = handle;
 			mHttpRequestSet.insert(handler);
-			// <FS:Ansariel> Mesh header/LOD retry functionality
-			S32 frameTime = gFrameTimeSeconds;
-			LL_DEBUGS("MeshRequestTimeout") << "Mesh header request: SculptID=" << mesh_params.getSculptID() << ", gFrameTimeSeconds=" << frameTime << LL_ENDL;
-			if (mMutex)
-			{
-				mMutex->lock();
-				mActiveHeaderRequests.insert(ActiveHeaderRequest(mesh_params, frameTime));
-				LL_DEBUGS("MeshRequestTimeout") << "Active mesh header requests: " << mActiveHeaderRequests.size() << LL_ENDL;
-				mMutex->unlock();
 		}
 	}
 
@@ -1659,8 +1621,6 @@ bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod)
 			
 			if (!http_url.empty())
 			{
-				//retval = mCurlRequest->getByteRange(constructUrl(mesh_id), headers, offset, size,
-				//						   new LLMeshLODResponder(mesh_params, lod, offset, size));
 				LLMeshLODHandler * handler = new LLMeshLODHandler(mesh_params, lod, offset, size);
 				LLCore::HttpHandle handle = getByteRange(http_url, cap_version, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
@@ -1677,16 +1637,6 @@ bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod)
 					handler->mHttpHandle = handle;
 					mHttpRequestSet.insert(handler);
 					// *NOTE:  Allowing a re-request, not marking as unavailable.  Is that correct?
-					// <FS:Ansariel> Mesh header/LOD retry functionality
-					S32 frameTime = gFrameTimeSeconds;
-					LL_DEBUGS("MeshRequestTimeout") << "Mesh LOD request: SculptID=" << mesh_params.getSculptID() << ", LOD=" << lod << ", gFrameTimeSeconds=" << frameTime << LL_ENDL;
-					if (mMutex)
-					{
-						mMutex->lock();
-						mActiveLODRequests.insert(ActiveLODRequest(mesh_params, lod, frameTime));
-						LL_DEBUGS("MeshRequestTimeout") << "Active mesh LOD requests: " << mActiveLODRequests.size() << LL_ENDL;
-						mMutex->unlock();
-					}
 				}
 			}
 			else
@@ -1752,7 +1702,7 @@ bool LLMeshRepoThread::headerReceived(const LLVolumeParams& mesh_params, U8* dat
 			mMeshHeader[mesh_id] = header;
 		}
 
-		LLMutexLock lock(mMutex); // <FS:ND/> FIRE-7182, make sure only one thread access mPendingLOD at the same time.
+		
 		LLMutexLock lock(mMutex); // make sure only one thread access mPendingLOD at the same time.
 
 		//check for pending requests
@@ -2708,29 +2658,6 @@ void LLMeshRepository::cacheOutgoingMesh(LLMeshUploadData& data, LLSD& header)
 
 }
 
-		if (status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE)
-			llassert(status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE); //intentionally trigger a breakpoint
-	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
-	// </FS:ND>
-
-		if (status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE)
-			llwarns << "Timeout or service unavailable, retrying loadMeshSkinInfo() for " << mMeshID << llendl;
-			llassert(status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE); //intentionally trigger a breakpoint
-	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
-	// </FS:ND>
-		if (status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE)
-		//               not produce a request within the time that the server
-		//               was prepared to wait.)
-		//if (status == 499 || status == 503)
-		if (status == 408 || status == 499 || status == 503)
-			llwarns << "Timeout or service unavailable, retrying loadMeshDecomposition() for " << mMeshID << llendl;
-			llassert(status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE); //intentionally trigger a breakpoint
-	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
-	// </FS:ND>
-
-		if (status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE)
-			llwarns << "Timeout or service unavailable, retrying loadMeshPhysicsShape() for " << mMeshID << llendl;
-			llassert(status == HTTP_INTERNAL_ERROR || status == HTTP_SERVICE_UNAVAILABLE); //intentionally trigger a breakpoint
 void LLMeshHandlerBase::onCompleted(LLCore::HttpHandle handle, LLCore::HttpResponse * response)
 {
 	mProcessed = true;
@@ -3080,17 +3007,6 @@ void LLMeshPhysicsShapeHandler::processData(LLCore::BufferArray * body, U8 * dat
 	}
 }
 
-	// <FS:ND> FIRE-6485; thread could have already be destroyed during logout
-	// </FS:ND>
-
-	// <FS:Ansariel> Mesh header/LOD retry functionality
-	{
-		LLMutexLock lock(gMeshRepo.mThread->mMutex);
-		LLMeshRepoThread::ActiveHeaderRequest Req(mMeshParams);
-		gMeshRepo.mThread->mActiveHeaderRequests.erase(Req);
-		LL_DEBUGS("MeshRequestTimeout") << "Cleared active mesh header request: " << mMeshParams.getSculptID() << LL_ENDL;
-	// </FS:Ansariel> Mesh header/LOD retry functionality
-		// 503 (service unavailable) or 499 (internal Linden-generated error)
 LLMeshRepository::LLMeshRepository()
 : mMeshMutex(NULL),
   mMeshThreadCount(0),
@@ -3118,7 +3034,6 @@ void LLMeshRepository::init()
 	
 	mThread = new LLMeshRepoThread();
 	mThread->start();
-
 }
 
 void LLMeshRepository::shutdown()
@@ -3278,6 +3193,7 @@ S32 LLMeshRepository::loadMesh(LLVOVolume* vobj, const LLVolumeParams& mesh_para
 void LLMeshRepository::notifyLoadedMeshes()
 { //called from main thread
 	MESH_FASTTIMER_DEFBLOCK;
+
 	if (1 == mGetMeshVersion)
 	{
 		// Legacy GetMesh operation with high connection concurrency

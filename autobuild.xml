@@ -436,9 +436,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>afcad0bb9d65d7e1efe13f5be2dfcbb9</string>
+              <string>8d9ccb0277a26bfe3f346c3c49ce4b58</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.24.0-windows-20140108.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-curl/rev/280289/arch/CYGWIN/installer/curl-7.24.0-windows-20130826.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -699,9 +699,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>79e45527aa9fb90b813599dff5ce01a7</string>
+              <string>180f4d703deec104469e6a9044243110</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-fmodex-private/rev/274378/arch/Linux/installer/fmodex-4.44-linux-20130419.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/3p-fmodex-private/rev/288122/arch/Linux/installer/fmodex-4.44.31-linux-20140315.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1093,9 +1093,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d812a6dfcabe6528198a3191068dac09</string>
+              <string>a1e519d08c507c12f9d412b2ae8328c8</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-breakpad/rev/273073/arch/CYGWIN/installer/google_breakpad-0.0.0-rev1099-windows-20130329.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-breakpad/rev/279804/arch/CYGWIN/installer/google_breakpad-0.0.0-rev1099-windows-20130813.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1265,6 +1265,11 @@
             <key>name</key>
             <string>linux64</string>
           </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
               <string>063358a877595303075ccca8c546266f</string>
               <key>url</key>
               <string>http://download.kokuaviewer.org/files/libs/gstreamer-glib-iconv-libxml-plugins-autobuild-windows-20110816.tar.bz2</string>
@@ -1782,9 +1787,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f194ba857ca8dd86483a3ef24535d0db</string>
+              <string>73a1892bcbaaecdf369a7884efb46049</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-libpng/rev/226532/arch/CYGWIN/installer/libpng-1.5.1-windows-20110413.tar.bz2</string>
+              <string>http://viewer.catznip.com/downloads/packages/libpng-1.5.1-windows-20110619.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2599,9 +2604,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ca5765af55f798724d601720afdf6953</string>
+              <string>2fbd3c2523c45923245b55551fae5e53</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/openjpeg-1.4-windows-20110302.tar.bz2</string>
+              <string>http://viewer.catznip.com/downloads/packages/openjpeg-1.4-windows-20110622.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2695,9 +2700,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2994f1e028fb200c454c12b5f7ca9108</string>
+              <string>88181b9f66b7db650e0d571bbb632bdc</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/270464/arch/Darwin/installer/slvoice-4.5.0009.17865-darwin-20130215.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/287264/arch/Darwin/installer/slvoice-4.6.0009.20030-darwin-20140226.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2731,9 +2736,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>24710eda136bfd42d6333e5609c2c74f</string>
+              <string>ce89b881ee24977641d1ecbf8aff6dc7</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/270464/arch/CYGWIN/installer/slvoice-4.5.0009.17865-windows-20130214.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/287264/arch/CYGWIN/installer/slvoice-4.6.0009.20030-windows-20140227.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -3643,7 +3648,7 @@
                 <array>
                   <string>-G</string>
                   <string>"Visual Studio 10"</string>
-                  <string>-DUNATTENDED:BOOL=ON</string>
+                  <string>-DUNATTENDED:BOOL=OFF</string>
                   <string>-DUSE_KDU=FALSE</string>
                 </array>
               </map>
@@ -3730,7 +3735,7 @@
                 <array>
                   <string>-G</string>
                   <string>"Visual Studio 10"</string>
-                  <string>-DUNATTENDED:BOOL=ON</string>
+                  <string>-DUNATTENDED:BOOL=OFF</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                   <string>-DUSE_KDU=FALSE</string>
                 </array>
@@ -3816,7 +3821,7 @@
                 <array>
                   <string>-G</string>
                   <string>"Visual Studio 10"</string>
-                  <string>-DUNATTENDED:BOOL=ON</string>
+                  <string>-DUNATTENDED:BOOL=OFF</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                   <string>-DUSE_KDU=FALSE</string>
                 </array>
