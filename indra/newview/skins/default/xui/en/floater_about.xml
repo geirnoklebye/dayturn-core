@@ -13,19 +13,6 @@
      name="AboutHeader">
 [APP_NAME] [VIEWER_VERSION_STR] ([BUILD_DATE] [BUILD_TIME])([CHANNEL])
 [[VIEWER_RELEASE_NOTES_URL] [ReleaseNotes]]
-</floater.string>
-  <floater.string
-     name="AboutCompiler">
-Built with [COMPILER] version [COMPILER_VERSION]
-
-</floater.string>
-  <floater.string
-     name="AboutPosition">
-You are at [POSITION_LOCAL_0,number,1], [POSITION_LOCAL_1,number,1], [POSITION_LOCAL_2,number,1] in [REGION] located at &lt;nolink&gt;[HOSTNAME]&lt;/nolink&gt; ([HOSTIP])
-SLURL: &lt;nolink&gt;[SLURL]&lt;/nolink&gt;
-(global coordinates [POSITION_0,number,1], [POSITION_1,number,1], [POSITION_2,number,1])
-[SERVER_VERSION]
-[SERVER_RELEASE_NOTES_URL]
 
 </floater.string>
   <floater.string name="SupportGroup">
@@ -393,7 +380,7 @@ Additional code contributed to Kokua by:
        top_pad="10"
        width="435"
        word_wrap="true">
-Cinder Roxley, David Rowe, Jessica Wabbit,  Kadah Coba, Kitty Barnett, Latif Khalifa, Liny Odell, Llirusaito, Nicky Dasmijn, Tankmaster Finesmith, tx Oh, and others.
+Cinder Roxley, David Rowe, Jessica Wabbit,  Kadah Coba, Kitty Barnett, Latif Khalifa, Liny Odell, Llirusaito, Marine Kelley, Nicky Dasmijn, Tankmaster Finesmith, Trinity Dejavu, tx Oh, and others.
       </text_editor>
     </panel>
     <panel
