@@ -133,7 +133,6 @@ bool LLOfferHandler::processNotification(const LLNotificationPtr& notification)
 			LLHandlerUtil::addNotifPanelToIM(notification);
 
 		}
-		}
 
 		if (notification->canLogToIM())
 		{
