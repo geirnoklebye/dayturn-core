@@ -106,7 +106,6 @@ void LLPanelContents::getState(LLViewerObject *objectp )
 	if( !objectp )
 	{
 		getChildView("button new script")->setEnabled(FALSE);
-		getChildView("button reset scripts")->setEnabled(FALSE);
 		return;
 	}
 
@@ -119,33 +118,12 @@ void LLPanelContents::getState(LLViewerObject *objectp )
 					       && ( objectp->permYouOwner() || ( !group_id.isNull() && gAgent.isInGroup(group_id) )));  // solves SL-23488
 	BOOL all_volume = LLSelectMgr::getInstance()->selectionAllPCode( LL_PCODE_VOLUME );
 
-
-	// Edit/reset script buttons - ok if object is editable and there's an unambiguous destination for the object.
-	// <FS:PP> FIRE-3219: Reset Scripts button in Build floater
-	//	getChildView("button new script")->setEnabled(
-	//		editable &&
-	//		all_volume &&
-	//		((LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() == 1)
-	//			|| (LLSelectMgr::getInstance()->getSelection()->getObjectCount() == 1)));
-	bool objectIsOK = FALSE;
-	if( editable && all_volume && ( (LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() == 1) || (LLSelectMgr::getInstance()->getSelection()->getObjectCount() == 1) ) )
-	{
-		objectIsOK = TRUE;
-	}
-
-	getChildView("button new script")->setEnabled(objectIsOK);
-	getChildView("button reset scripts")->setEnabled(objectIsOK);
-	// </FS:PP>
-		all_volume && (
-			LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() == 1 ||
-			LLSelectMgr::getInstance()->getSelection()->getObjectCount() == 1
-		)
-	) {
-		enable_script_buttons = true;
-	}
-
-	getChildView("button new script")->setEnabled(enable_script_buttons);
-	getChildView("button reset scripts")->setEnabled(enable_script_buttons);
+	// Edit script button - ok if object is editable and there's an unambiguous destination for the object.
+	getChildView("button new script")->setEnabled(
+		editable &&
+		all_volume &&
+		((LLSelectMgr::getInstance()->getSelection()->getRootObjectCount() == 1)
+			|| (LLSelectMgr::getInstance()->getSelection()->getObjectCount() == 1)));
 
 	getChildView("button permissions")->setEnabled(!objectp->isPermanentEnforced());
 	mPanelInventoryObject->setEnabled(!objectp->isPermanentEnforced());

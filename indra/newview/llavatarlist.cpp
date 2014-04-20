@@ -578,7 +578,6 @@ void LLAvatarList::onItemDoubleClicked(LLUICtrl* ctrl, S32 x, S32 y, MASK mask)
 {
 	mItemDoubleClickSignal(ctrl, x, y, mask);
 }
-}
 
 // static
 std::string LLAvatarList::getNameToDisplay(const LLAvatarName &av_name)
