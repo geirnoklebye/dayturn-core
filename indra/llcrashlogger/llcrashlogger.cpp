@@ -46,6 +46,7 @@
 #include "llsdserialize.h"
 #include "llproxy.h"
  
+LLPumpIO* gServicePump = NULL;
 BOOL gBreak = false;
 BOOL gSent = false;
 
@@ -79,8 +80,7 @@ LLCrashLogger::LLCrashLogger() :
 
 LLCrashLogger::~LLCrashLogger()
 {
-	delete gServicePump;
-	gServicePump = NULL;
+
 }
 
 // TRIM_SIZE must remain larger than LINE_SEARCH_SIZE.
@@ -219,13 +219,13 @@ void LLCrashLogger::gatherFiles()
 		// Figure out the filename of the second life log
 		LLCurl::setCAFile(gDirUtilp->getCAFile());
         
-		mFileMap["SecondLifeLog"] = gDirUtilp->getExpandedFilename(LL_PATH_DUMP,"Kokua.log");
+		mFileMap["KokuaLog"] = gDirUtilp->getExpandedFilename(LL_PATH_DUMP,"Kokua.log");
         mFileMap["SettingsXml"] = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS,"settings.xml");
 	}
 
-    if (!gDirUtilp->fileExists(mFileMap["SecondLifeLog"]) ) //We would prefer to get this from the per-run but here's our fallback.
+    if (!gDirUtilp->fileExists(mFileMap["KokuaLog"]) ) //We would prefer to get this from the per-run but here's our fallback.
     {
-        mFileMap["SecondLifeLog"] = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Kokua.old");
+        mFileMap["KokuaLog"] = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Kokua.old");
     }
 
 	gatherPlatformSpecificFiles();
