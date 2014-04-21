@@ -2881,10 +2881,6 @@ bool LLAppViewer::initConfiguration()
 				disable_voice->setValue(LLSD(TRUE), DO_NOT_PERSIST);
 			}
 		}
-	else
-        {
-            checkForCrash();
-        }
 
    	// NextLoginLocation is set from the command line option
 	std::string nextLoginLocation = gSavedSettings.getString( "NextLoginLocation" );
