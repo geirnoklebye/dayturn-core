@@ -1595,7 +1595,7 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 			parcel_mgr.writeAgentParcelFromBitmap(bitmap);
 			delete[] bitmap;
 
-			// Let interesting parties know about agent parcel change.
+			// Let interested parties know about agent parcel change.
 			LLViewerParcelMgr* instance = LLViewerParcelMgr::getInstance();
 
 			// Notify anything that wants to know when the agent changes parcels
