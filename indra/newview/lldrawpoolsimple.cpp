@@ -122,7 +122,7 @@ void LLDrawPoolGlow::render(S32 pass)
 	LLGLDepthTest depth(GL_TRUE, GL_FALSE);
 	gGL.setColorMask(false, true);
 
-	pushBatches(LLRenderPass::PASS_GLOW, getVertexDataMask() | LLVertexBuffer::MAP_TEXTURE_INDEX, TRUE, TRUE);
+		pushBatches(LLRenderPass::PASS_GLOW, getVertexDataMask() | LLVertexBuffer::MAP_TEXTURE_INDEX, TRUE, TRUE);
 	
 	gGL.setColorMask(true, false);
 	gGL.setSceneBlendType(LLRender::BT_ALPHA);
@@ -501,14 +501,14 @@ void LLDrawPoolGrass::endRenderPass(S32 pass)
 void LLDrawPoolGrass::render(S32 pass)
 {
 	LLGLDisable blend(GL_BLEND);
-	
+
 	{
 		LL_RECORD_BLOCK_TIME(FTM_RENDER_GRASS);
 		LLGLEnable test(GL_ALPHA_TEST);
 		gGL.setSceneBlendType(LLRender::BT_ALPHA);
 		//render grass
 		LLRenderPass::renderTexture(LLRenderPass::PASS_GRASS, getVertexDataMask());
-	}
+	}			
 }
 
 void LLDrawPoolGrass::beginDeferredPass(S32 pass)

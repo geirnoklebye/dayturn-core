@@ -100,9 +100,14 @@ public:
 	LLInventoryItem*	getWearableInventoryItem(LLWearableType::EType type, U32 index /*= 0*/);
 	static BOOL			selfHasWearable(LLWearableType::EType type);
 
+//MK
+////	static const U32 MAX_CLOTHING_PER_TYPE = 5; 
+	static const U32 MAX_CLOTHING_PER_TYPE = 10; 
+//mk
 	//--------------------------------------------------------------------
 	// Setters
 	//--------------------------------------------------------------------
+
 private:
 	/*virtual*/void	wearableUpdated(LLWearable *wearable, BOOL removed);
 public:
@@ -202,6 +207,23 @@ public:
 	static void		userRemoveMultipleAttachments(llvo_vec_t& llvo_array);
 	static void		userAttachMultipleAttachments(LLInventoryModel::item_array_t& obj_item_array);
 
+//MK from HB
+	// These functions are for overriding the old initial wearables update
+	// message logic in SL, for when that message will stop being sent...
+	// They are only used by the LLAppearanceMgr::checkOutfit() function.
+	bool		initialWearablesUpdateReceived()	{ return mInitialWearablesUpdateReceived; }
+	void		setInitialWearablesUpdateReceived()	{ mInitialWearablesUpdateReceived = true; }
+	void		setWearablesLoaded()				{ mWearablesLoaded = true; }
+
+	void		checkModifiableShape();
+	bool		hasModifiableShape()				{ return mHasModifiableShape; }
+	void		setShapeAvatarOffset(bool send_update = true);
+//mk from HB
+
+//MK
+	void		forceUpdateShape (void);
+//mk
+
 	BOOL			itemUpdatePending(const LLUUID& item_id) const;
 	U32				itemUpdatePendingCount() const;
 
@@ -232,6 +254,11 @@ private:
 	static BOOL		mInitialWearablesUpdateReceived;
 	BOOL			mWearablesLoaded;
 	std::set<LLUUID>	mItemsAwaitingWearableUpdate;
+//MK from HB
+	bool				mHasModifiableShape;
+	LLViewerWearable*	mLastWornShape;
+	F32					mSavedOffset;
+//mk from HB
 
 	/**
 	 * True if agent's outfit is being changed now.

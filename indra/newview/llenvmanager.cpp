@@ -512,6 +512,12 @@ void LLEnvManagerNew::initSingleton()
 
 void LLEnvManagerNew::updateSkyFromPrefs()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		return;
+	}
+//mk
 	bool success = true;
 
 	// Sync sky with user prefs.
@@ -541,6 +547,12 @@ void LLEnvManagerNew::updateSkyFromPrefs()
 
 void LLEnvManagerNew::updateWaterFromPrefs(bool interpolate)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		return;
+	}
+//mk
 	LLWaterParamManager& water_mgr = LLWaterParamManager::instance();
 	LLSD target_water_params;
 
@@ -588,7 +600,12 @@ void LLEnvManagerNew::updateWaterFromPrefs(bool interpolate)
 
 void LLEnvManagerNew::updateManagersFromPrefs(bool interpolate)
 {
-	LL_DEBUGS("Windlight")<<LL_ENDL;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		return;
+	}
+//mk
 	// Apply water settings.
 	updateWaterFromPrefs(interpolate);
 
@@ -598,6 +615,12 @@ void LLEnvManagerNew::updateManagersFromPrefs(bool interpolate)
 
 bool LLEnvManagerNew::useRegionSky()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		return true;
+	}
+//mk
 	const LLEnvironmentSettings& region_settings = getRegionSettings();
 
 	// If region is set to defaults,
@@ -620,6 +643,12 @@ bool LLEnvManagerNew::useRegionSky()
 
 bool LLEnvManagerNew::useRegionWater()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		return true;
+	}
+//mk
 	const LLEnvironmentSettings& region_settings = getRegionSettings();
 	const LLSD& region_water = region_settings.getWaterParams();
 
@@ -637,11 +666,23 @@ bool LLEnvManagerNew::useRegionWater()
 
 bool LLEnvManagerNew::useDefaultSky()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		return true;
+	}
+//mk
 	return useDayCycle("Default", LLEnvKey::SCOPE_LOCAL);
 }
 
 bool LLEnvManagerNew::useDefaultWater()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		return true;
+	}
+//mk
 	return useWaterPreset("Default");
 }
 

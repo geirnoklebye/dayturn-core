@@ -191,7 +191,7 @@ extern LLGLSLShader			gTwoTextureAddProgram;
 extern LLGLSLShader			gTwoTextureCompareProgram;
 //discard some fragments based on user-set color tolerance
 extern LLGLSLShader			gOneTextureFilterProgram;
-						
+								
 extern LLGLSLShader			gOneTextureNoColorProgram;
 
 //object shaders
@@ -340,3 +340,4 @@ extern LLGLSLShader			gNormalMapGenProgram;
 extern LLGLSLShader			gDeferredMaterialProgram[LLMaterial::SHADER_COUNT*2];
 extern LLGLSLShader			gDeferredMaterialWaterProgram[LLMaterial::SHADER_COUNT*2];
 #endif
+

@@ -488,6 +488,12 @@ BOOL LLPanelPickEdit::isDirty() const
 
 void LLPanelPickEdit::sendUpdate()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	LLPickData pick_data;
 
 	// If we don't have a pick id yet, we'll need to generate one,
@@ -546,6 +552,13 @@ void LLPanelPickEdit::enableSaveButton(bool enable)
 
 void LLPanelPickEdit::onClickSetLocation()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		// don't allow to set the location while under @showloc, or it appears on the window
+		return;
+	}
+//mk
 	// Save location for later use.
 	setPosGlobal(gAgent.getPositionGlobal());
 

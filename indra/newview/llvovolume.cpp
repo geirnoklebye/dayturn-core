@@ -78,6 +78,10 @@
 #include "llvocache.h"
 #include "llmaterialmgr.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 const S32 MIN_QUIET_FRAMES_COALESCE = 30;
 const F32 FORCE_SIMPLE_RENDER_AREA = 512.f;
 const F32 FORCE_CULL_AREA = 8.f;
@@ -1125,7 +1129,7 @@ void LLVOVolume::sculpt()
 		S32 max_discard = mSculptTexture->getMaxDiscardLevel();
 		if (discard_level > max_discard)
 		{
-			discard_level = max_discard;    // clamp to the best we can do			
+			discard_level = max_discard;    // clamp to the best we can do
 		}
 		if(discard_level > MAX_DISCARD_LEVEL)
 		{
@@ -4003,6 +4007,7 @@ void LLRiggedVolume::update(const LLMeshSkinInfo* skin, LLVOAvatar* avatar, cons
 						llassert(idx[k] < kMaxJoints);
 						// clamp k to kMaxJoints to avoid reading garbage off stack in release
 						src.setMul(mp[idx[(k < kMaxJoints) ? k : 0]], w);
+
 						final_mat.add(src);
 					}
 
@@ -4117,7 +4122,11 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 		LL_WARNS("RenderMaterials") << "Oh no! No binormals for this alpha blended face!" << LL_ENDL;
 	}
 
-	if (facep->getViewerObject()->isSelected() && LLSelectMgr::getInstance()->mHideSelectedObjects)
+	if (facep->getViewerObject()->isSelected() 
+//MK
+		&& (!gRRenabled || !gAgent.mRRInterface.mContainsEdit)
+//mk
+		&& LLSelectMgr::getInstance()->mHideSelectedObjects)
 	{
 		return;
 	}
@@ -4821,7 +4830,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							if (simple_count < MAX_FACE_COUNT)
 							{
 								simple_faces[simple_count++] = facep;
-							}
+						}
 						}
 						else
 						{
@@ -4832,8 +4841,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							if (alpha_count < MAX_FACE_COUNT)
 							{
 								alpha_faces[alpha_count++] = facep;
-							}
 						}
+					}
 					}
 					else
 					{
@@ -4855,44 +4864,44 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 										if (normspec_count < MAX_FACE_COUNT)
 										{
 											normspec_faces[normspec_count++] = facep;
-										}
+									}
 									}
 									else
 									{ //has normal map (needs texcoord1 and tangent)
 										if (norm_count < MAX_FACE_COUNT)
 										{
 											norm_faces[norm_count++] = facep;
-										}
 									}
+								}
 								}
 								else if (mat->getSpecularID().notNull())
 								{ //has specular map but no normal map, needs texcoord2
 									if (spec_count < MAX_FACE_COUNT)
 									{
 										spec_faces[spec_count++] = facep;
-									}
+								}
 								}
 								else
 								{ //has neither specular map nor normal map, only needs texcoord0
 									if (simple_count < MAX_FACE_COUNT)
 									{
 										simple_faces[simple_count++] = facep;
-									}
 								}									
+							}
 							}
 							else if (te->getBumpmap())
 							{ //needs normal + tangent
 								if (bump_count < MAX_FACE_COUNT)
 								{
 									bump_faces[bump_count++] = facep;
-								}
+							}
 							}
 							else if (te->getShiny() || !te->getFullbright())
 							{ //needs normal
 								if (simple_count < MAX_FACE_COUNT)
 								{
 									simple_faces[simple_count++] = facep;
-								}
+							}
 							}
 							else 
 							{ //doesn't need normal
@@ -4900,8 +4909,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (fullbright_count < MAX_FACE_COUNT)
 								{
 									fullbright_faces[fullbright_count++] = facep;
-								}
 							}
+						}
 						}
 						else
 						{
@@ -4910,7 +4919,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (bump_count < MAX_FACE_COUNT)
 								{
 									bump_faces[bump_count++] = facep;
-								}
+							}
 							}
 							else if ((te->getShiny() && LLPipeline::sRenderBump) ||
 								!(te->getFullbright() || bake_sunlight))
@@ -4918,7 +4927,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (simple_count < MAX_FACE_COUNT)
 								{
 									simple_faces[simple_count++] = facep;
-								}
+							}
 							}
 							else 
 							{ //doesn't need normal
@@ -4926,10 +4935,10 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (fullbright_count < MAX_FACE_COUNT)
 								{
 									fullbright_faces[fullbright_count++] = facep;
-								}
 							}
 						}
 					}
+				}
 				}
 				else
 				{	//face has no renderable geometry
@@ -4941,7 +4950,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 			{
 				if (!drawablep->isState(LLDrawable::RIGGED))
 				{
-					drawablep->setState(LLDrawable::RIGGED);
+				drawablep->setState(LLDrawable::RIGGED);
 
 					//first time this is drawable is being marked as rigged,
 					// do another LoD update to use avatar bounding box
@@ -4987,7 +4996,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 		alpha_mask = alpha_mask | LLVertexBuffer::MAP_TEXTURE_INDEX | LLVertexBuffer::MAP_TANGENT | LLVertexBuffer::MAP_TEXCOORD1 | LLVertexBuffer::MAP_TEXCOORD2;
 		fullbright_mask = fullbright_mask | LLVertexBuffer::MAP_TEXTURE_INDEX;
 	}
-
+	
 	genDrawInfo(group, simple_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, simple_faces, simple_count, FALSE, batch_textures, FALSE);
 	genDrawInfo(group, fullbright_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, fullbright_faces, fullbright_count, FALSE, batch_textures);
 	genDrawInfo(group, alpha_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, alpha_faces, alpha_count, TRUE, batch_textures);
@@ -5375,7 +5384,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 							if (texture_count < MAX_TEXTURE_COUNT)
 							{
 								texture_list[texture_count++] = tex;
-							}
+						}
 						}
 
 						if (geom_count + facep->getGeomCount() > max_vertices)
@@ -5500,6 +5509,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 
 			index_offset += facep->getGeomCount();
 			indices_index += facep->getIndicesCount();
+
 
 			//append face to appropriate render batch
 
@@ -5855,4 +5865,5 @@ void LLHUDPartition::shift(const LLVector4a &offset)
 {
 	//HUD objects don't shift with region crossing.  That would be silly.
 }
+
 

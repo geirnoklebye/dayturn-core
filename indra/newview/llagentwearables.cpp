@@ -59,6 +59,10 @@ BOOL LLAgentWearables::mInitialWearablesUpdateReceived = FALSE;
 
 using namespace LLAvatarAppearanceDefines;
 
+//MK
+const F32 OFFSET_FACTOR = 0.66f; // This factor is arbitrary and is supposed to align the baked avatar Hover setting with the offset we wanted to apply in the first place.
+//mk
+
 ///////////////////////////////////////////////////////////////////////////////
 
 // Callback to wear and start editing an item that has just been created.
@@ -160,6 +164,11 @@ LLAgentWearables::LLAgentWearables() :
 	LLWearableData(),
 	mWearablesLoaded(FALSE)
 ,	mCOFChangeInProgress(false)
+//MK from HB
+,	mHasModifiableShape(false)
+,	mLastWornShape(NULL)
+,	mSavedOffset(0.0f)
+//mk from HB
 {
 }
 
@@ -742,13 +751,204 @@ void LLAgentWearables::wearableUpdated(LLWearable *wearable, BOOL removed)
 		{
 			wearable->setDefinitionVersion(22);
 			U32 index = getWearableIndex(wearable);
-			LL_INFOS() << "forcing wearable type " << wearable->getType() << " to version 22 from 24" << LL_ENDL;
+				llinfos << "forcing wearable type " << wearable->getType() << " to version 22 from 24" << llendl;
 			saveWearable(wearable->getType(),index,TRUE);
 		}
 
 		checkWearableAgainstInventory(viewer_wearable);
 	}
 }
+/*
+void LLAgentWearables::setWearable(const LLWearableType::EType type, U32 index, LLWearable *wearable)
+{
+//MK
+	if (gRRenabled)
+	{
+		if (!gAgent.mRRInterface.canWear (type))
+		{
+			return;
+		}
+	}
+//mk
+
+	LLWearable *old_wearable = getWearable(type,index);
+	if (!old_wearable)
+	{
+		pushWearable(type,wearable);
+		return;
+	}
+	
+//MK
+	if (gRRenabled)
+	{
+		if (!gAgent.mRRInterface.canUnwear(type))
+		{
+			// cannot remove this outfit, so cannot replace it either
+			return;
+		}
+	}
+//mk
+
+		wearableentry_map_t::iterator wearable_iter = mWearableDatas.find(type);
+	if (wearable_iter == mWearableDatas.end())
+	{
+		llwarns << "invalid type, type " << type << " index " << index << llendl; 
+		return;
+	}
+	wearableentry_vec_t& wearable_vec = wearable_iter->second;
+	if (index>=wearable_vec.size())
+	{
+		llwarns << "invalid index, type " << type << " index " << index << llendl; 
+	}
+	else
+	{
+		wearable_vec[index] = wearable;
+		old_wearable->setLabelUpdated();
+		wearableUpdated(wearable);
+		checkWearableAgainstInventory(wearable);
+	}
+}
+
+U32 LLAgentWearables::pushWearable(const LLWearableType::EType type, LLWearable *wearable)
+{
+	if (wearable == NULL)
+	{
+		// no null wearables please!
+		llwarns << "Null wearable sent for type " << type << llendl;
+		return MAX_CLOTHING_PER_TYPE;
+	}
+	if (type < LLWearableType::WT_COUNT || mWearableDatas[type].size() < MAX_CLOTHING_PER_TYPE)
+	{
+//MK
+		if (gRRenabled)
+		{
+			if (!gAgent.mRRInterface.canWear (type))
+			{
+				return MAX_CLOTHING_PER_TYPE;
+			}
+		}
+//mk
+		mWearableDatas[type].push_back(wearable);
+		wearableUpdated(wearable);
+		checkWearableAgainstInventory(wearable);
+		return mWearableDatas[type].size()-1;
+	}
+	return MAX_CLOTHING_PER_TYPE;
+}
+
+void LLAgentWearables::popWearable(LLWearable *wearable)
+{
+	if (wearable == NULL)
+	{
+		// nothing to do here. move along.
+		return;
+	}
+
+	U32 index = getWearableIndex(wearable);
+	LLWearableType::EType type = wearable->getType();
+
+	if (index < MAX_CLOTHING_PER_TYPE && index < getWearableCount(type))
+	{
+		popWearable(type, index);
+	}
+}
+
+void LLAgentWearables::popWearable(const LLWearableType::EType type, U32 index)
+{
+	LLWearable *wearable = getWearable(type, index);
+	if (wearable)
+	{
+		mWearableDatas[type].erase(mWearableDatas[type].begin() + index);
+		if (isAgentAvatarValid())
+		{
+		gAgentAvatarp->wearableUpdated(wearable->getType(), TRUE);
+		}
+		wearable->setLabelUpdated();
+	}
+}
+
+U32	LLAgentWearables::getWearableIndex(const LLWearable *wearable) const
+{
+	if (wearable == NULL)
+	{
+		return MAX_CLOTHING_PER_TYPE;
+	}
+
+	const LLWearableType::EType type = wearable->getType();
+	wearableentry_map_t::const_iterator wearable_iter = mWearableDatas.find(type);
+	if (wearable_iter == mWearableDatas.end())
+	{
+		llwarns << "tried to get wearable index with an invalid type!" << llendl;
+		return MAX_CLOTHING_PER_TYPE;
+	}
+	const wearableentry_vec_t& wearable_vec = wearable_iter->second;
+	for(U32 index = 0; index < wearable_vec.size(); index++)
+	{
+		if (wearable_vec[index] == wearable)
+		{
+			return index;
+		}
+	}
+
+	return MAX_CLOTHING_PER_TYPE;
+}
+
+const LLWearable* LLAgentWearables::getWearable(const LLWearableType::EType type, U32 index) const
+{
+	wearableentry_map_t::const_iterator wearable_iter = mWearableDatas.find(type);
+	if (wearable_iter == mWearableDatas.end())
+	{
+		return NULL;
+	}
+	const wearableentry_vec_t& wearable_vec = wearable_iter->second;
+	if (index>=wearable_vec.size())
+	{
+		return NULL;
+	}
+	else
+	{
+		return wearable_vec[index];
+	}
+}
+
+LLWearable* LLAgentWearables::getTopWearable(const LLWearableType::EType type)
+{
+	U32 count = getWearableCount(type);
+	if ( count == 0)
+	{
+		return NULL;
+	}
+
+	return getWearable(type, count-1);
+}
+
+LLWearable* LLAgentWearables::getBottomWearable(const LLWearableType::EType type)
+{
+	if (getWearableCount(type) == 0)
+	{
+		return NULL;
+	}
+
+	return getWearable(type, 0);
+}
+
+U32 LLAgentWearables::getWearableCount(const LLWearableType::EType type) const
+{
+	wearableentry_map_t::const_iterator wearable_iter = mWearableDatas.find(type);
+	if (wearable_iter == mWearableDatas.end())
+	{
+		return 0;
+	}
+	const wearableentry_vec_t& wearable_vec = wearable_iter->second;
+	return wearable_vec.size();
+}
+
+U32 LLAgentWearables::getWearableCount(const U32 tex_index) const
+{
+	const LLWearableType::EType wearable_type = LLVOAvatarDictionary::getTEWearableType((LLVOAvatarDefines::ETextureIndex)tex_index);
+	return getWearableCount(wearable_type);
+}
+*/
 
 BOOL LLAgentWearables::itemUpdatePending(const LLUUID& item_id) const
 {
@@ -1127,6 +1327,15 @@ void LLAgentWearables::addWearableToAgentInventory(LLPointer<LLInventoryCallback
 
 void LLAgentWearables::removeWearable(const LLWearableType::EType type, bool do_remove_all, U32 index)
 {
+//MK
+	if (gRRenabled)
+	{
+		if (!gAgent.mRRInterface.canUnwear (type))
+		{
+			return;
+		}
+	}
+//mk
 	if (gAgent.isTeen() &&
 		(type == LLWearableType::WT_UNDERSHIRT || type == LLWearableType::WT_UNDERPANTS))
 	{
@@ -1249,7 +1458,40 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 		{
 			if (LLWearableType::getAssetType((LLWearableType::EType)type) == LLAssetType::AT_CLOTHING)
 			{
-				removeWearable((LLWearableType::EType)type, true, 0);
+//MK
+				// Actually we do not need to remove all clothes when updating the outfit, or else the avatar finds itself nude
+				// for a second, and the shoe base disappears as well. This can become very annoying after a while.
+				// The "wearables" array contains all the wearables (bodyparts included) that must be worn and no other.
+				// => Only remove clothes that we know have changed in the array of new wearables.
+
+				for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE; ++index)
+				{
+					bool remove_this = true;
+					// cur_wearable is the piece of clothing we are wearing on index "index" on the layer "type" (ex : WT_SHIRT, WT_PANTS...)
+					LLViewerWearable* cur_wearable = getViewerWearable ((LLWearableType::EType)type, index);
+
+					S32 count = wearables.count();
+					llassert(items.count() == count);
+					S32 i;
+					for (i = 0; i < count; i++)
+					{
+						// new_wearable represents each of the wearables we are supposed to update, every cur_wearable that is not
+						// part of the "wearables" array must be removed
+						LLViewerWearable* new_wearable = wearables[i];
+						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
+						{
+							remove_this = false;
+							llinfos << "not removing old wearable " << cur_wearable->getName() << llendl;
+						}
+					}
+
+					if (remove_this)
+					{
+////					removeWearable((LLWearableType::EType)type, true, 0);
+						removeWearable((LLWearableType::EType)type, false, index);
+					}
+//mk
+				}
 			}
 		}
 	}
@@ -1271,17 +1513,45 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 			new_wearable->setName(new_item->getName());
 			new_wearable->setItemID(new_item->getUUID());
 
-			if (LLWearableType::getAssetType(type) == LLAssetType::AT_BODYPART)
+//MK
+			// We did not remove the items that are already worn in order to avoid unnecessary updates,
+			// hence we do not want to wear the new ones either or they will stack.
+			bool wear_this = true;
+
+			for (S32 type = 0; type < (S32)LLWearableType::WT_COUNT && wear_this; type++)
 			{
-				// exactly one wearable per body part
-				setWearable(type,0,new_wearable);
+				if (LLWearableType::getAssetType((LLWearableType::EType)type) == LLAssetType::AT_CLOTHING)
+				{
+					for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE && wear_this; ++index)
+					{
+						LLViewerWearable* cur_wearable = getViewerWearable ((LLWearableType::EType)type, index);
+						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
+						{
+							wear_this = false;
+							llinfos << "not wearing new wearable " << new_wearable->getName() << llendl;
+						}
+					}
+				}
 			}
-			else
+
+			if (wear_this)
 			{
-				pushWearable(type,new_wearable);
+//mk
+				if (LLWearableType::getAssetType(type) == LLAssetType::AT_BODYPART)
+				{
+					// exactly one wearable per body part
+					setWearable(type,0,new_wearable);
+				}
+				else
+				{
+					pushWearable(type,new_wearable);
+				}
+				const BOOL removed = FALSE;
+				wearableUpdated(new_wearable, removed);
+//				checkWearableAgainstInventory(new_wearable);
+//MK
 			}
-			const BOOL removed = FALSE;
-			wearableUpdated(new_wearable, removed);
+//mk
 		}
 	}
 
@@ -1575,13 +1845,25 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 				if (remove_attachment)
 				{
 					// LL_INFOS() << "found object to remove, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << LL_ENDL;
-					objects_to_remove.push_back(objectp);
+//MK
+					// There are two ways to receive this list of objects :
+					// - from a burst of "attach this here" messages
+					// - from a change of outfit
+					// In the first case, the list is partial and we don't want to remove what we are going to wear
+					// In the second case, the list is complete and describes what we are going to wear
+					// => We need to use RRInterface::mUserUpdateAttachmentsUpdatesAll to determine what we want to do
+					// with objects that are not in the list
+					if (gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll)
+					{
+						objects_to_remove.push_back(objectp);
+					}
+//mk
 				}
 				else
 				{
 					// LL_INFOS() << "found object to keep, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << LL_ENDL;
 					current_item_ids.insert(object_item_id);
-				}
+					}
 			}
 		}
 	}
@@ -1611,6 +1893,10 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 
 	// Add everything in items_to_add
 	userAttachMultipleAttachments(items_to_add);
+
+//MK
+	gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
+//mk
 }
 
 void LLAgentWearables::userRemoveMultipleAttachments(llvo_vec_t& objects_to_remove)
@@ -1630,6 +1916,12 @@ void LLAgentWearables::userRemoveMultipleAttachments(llvo_vec_t& objects_to_remo
 		 ++it)
 	{
 		LLViewerObject *objectp = *it;
+//MK
+		if (gRRenabled && !gAgent.mRRInterface.canDetach (objectp))
+		{
+			continue;
+		}
+//mk
 		gMessageSystem->nextBlockFast(_PREHASH_ObjectData);
 		gMessageSystem->addU32Fast(_PREHASH_ObjectLocalID, objectp->getLocalID());
 	}
@@ -1802,6 +2094,21 @@ void LLAgentWearables::createWearable(LLWearableType::EType type, bool wear, con
 {
 	if (type == LLWearableType::WT_INVALID || type == LLWearableType::WT_NONE) return;
 
+//MK
+	// We can't create a wearable under #RLV if at least one folder is locked
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.isUnderRlvShare(gInventory.getCategory(parent_id)))
+		{
+			if (gAgent.mRRInterface.containsSubstr("attachthis:")
+			|| gAgent.mRRInterface.containsSubstr("attachallthis:"))
+			{
+				return;
+			}
+		}
+	}
+//mk
+
 	LLViewerWearable* wearable = LLWearableList::instance().createNewWearable(type, gAgentAvatarp);
 	LLAssetType::EType asset_type = wearable->getAssetType();
 	LLInventoryType::EType inv_type = LLInventoryType::IT_WEARABLE;
@@ -1872,9 +2179,163 @@ void LLAgentWearables::editWearableIfRequested(const LLUUID& item_id)
 
 void LLAgentWearables::updateServer()
 {
+//MK from HB
+	//LLViewerWearable* shape = getViewerWearable(LLWearableType::WT_SHAPE, 0);
+	//if (shape && shape != mLastWornShape)
+	//{
+	//	// If we just changed the shape, set its Hover parameter to match
+	//	// our current avatar Z offset setting (in SSB regions) or reset
+	//	// it (in non-SSB regions).
+	//	setShapeAvatarOffset(false);
+	//}
+	//else
+	//{
+	//	checkModifiableShape();
+	//}
+//mk from HB
 	sendAgentWearablesUpdate();
 	gAgent.sendAgentSetAppearance();
 }
+
+//MK from HB
+void LLAgentWearables::checkModifiableShape()
+{
+	mLastWornShape = getViewerWearable(LLWearableType::WT_SHAPE, 0);
+
+	LLViewerInventoryItem* item;
+	item = (LLViewerInventoryItem*)getWearableInventoryItem(LLWearableType::WT_SHAPE, 0);
+	if (item)
+	{
+		const LLPermissions& perm = item->getPermissions();
+		mHasModifiableShape = perm.allowModifyBy(gAgentID,
+												 gAgent.getGroupID());
+	}
+	else
+	{
+		mHasModifiableShape = false;
+	}
+}
+
+void LLAgentWearables::setShapeAvatarOffset(bool send_update)
+{
+	// MK : I took most of the code from Henri Beauchamp's viewer (thanks Henri), but I tweaked it rather deeply.
+	// In this viewer, I want the user to be able to modify their Z offset live, and then have it applied to the
+	// shape after a second or so, so it propagates and other users see it too. But it is very important that the
+	// user can move the Z offset slider manually and see the change in real time before deciding on an offset.
+
+	// Problem is, the offset we see in local and the offset applied to the shape are different ! When the user leaves
+	// the slider alone for a second, the offset could be sent as is to the server, but if we do that the offset will
+	// look off. After a few hours of trial and error, it seems the offset returns as 1.5 times the offset we have sent it.
+
+	// Worse, once we use the slider again, the offset suddenly "jumps" and even moving the slider will look off. For example,
+	// setting the offset to 0.5 and waiting will make the avatar float above the ground. Then setting it straight back to 0.0
+	// should put it straight back to the ground, except it doesn't. It just moves the avatar down half way and stops there.
+	// Then after a second, the offset is back to a correct value of 0.0 and the avatar is back to the ground. But it doesn't
+	// help setting the offset in local and just confuses the user.
+
+	// Once again after some trial and error, it seems that substracting half of the apparent offset does the trick, that's why
+	// you'll see "mSavedOffset * 0.5" later in the code.
+
+	// This is all very hacky and not at all the way I like to code, but this makes the thing work and that's all that matters.
+
+	checkModifiableShape();
+
+	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
+	{
+		if (mHasModifiableShape && mLastWornShape)
+		{
+			F32 offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
+			F32 old_offset = mLastWornShape->getVisualParamWeight(AVATAR_HOVER);
+//			llinfos << "old_offset = " << old_offset << " new offset = " << offset << " saved offset = " << mSavedOffset << llendl;
+
+			if (old_offset != offset)
+			{
+				mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset - mSavedOffset * 0.5, FALSE);
+
+				// We've updated the Hover value locally, now we must update the server.
+				// But we don't want to hammer the sim with requests, so we're just going to
+				// wait for a little while after the last change before triggering the update.
+				RRInterface::sLastAvatarZOffsetCommit = gFrameTimeSeconds;
+			}
+		}
+	}
+	else
+	{
+		if (mHasModifiableShape && mLastWornShape &&
+			mLastWornShape->getVisualParamWeight(AVATAR_HOVER) != 0.f)
+		{
+			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, 0.f, FALSE);
+			saveWearable(LLWearableType::WT_SHAPE, 0);
+		}
+		if (send_update)
+		{
+			gAgent.sendAgentSetAppearance();
+		}
+	}
+}
+//mk from HB
+
+//MK
+void LLAgentWearables::forceUpdateShape (void)
+{
+	// To force the update of the shape, we need to remove the link to it from the COF
+	// and then immediately add a new link to it.
+
+	checkModifiableShape();
+
+	F32 offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
+
+	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
+	{
+		if (mHasModifiableShape && mLastWornShape)
+		{
+			// For some reason, setting X to RestrainedLoveOffsetAvatarZ will set the Hover to X * 1.5, but only
+			// after the bake. DON'T ASK ME WHY !
+			mSavedOffset = offset * OFFSET_FACTOR;
+			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, mSavedOffset, FALSE);
+		}
+	}
+
+	saveWearable(LLWearableType::WT_SHAPE, 0, FALSE);
+
+	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
+	{
+		if (mHasModifiableShape && mLastWornShape)
+		{
+			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset, FALSE);
+		}
+	}
+
+	//LLAppearanceMgr::instance().setOutfitDirty( true );		
+
+	// HACK : Force an update server-side by removing the link to the shape, then adding a new one
+	LLViewerWearable* shape = getViewerWearable(LLWearableType::WT_SHAPE, 0);
+
+	LLUUID uuid = shape->getItemID();
+	LLViewerInventoryItem* item = gInventory.getItem (uuid);
+
+	LLInventoryModel::cat_array_t cat_array;
+	LLInventoryModel::item_array_t item_array;
+	gInventory.collectDescendents(LLAppearanceMgr::instance().getCOF(),
+									cat_array,
+									item_array,
+									LLInventoryModel::EXCLUDE_TRASH);
+	for (S32 i=0; i<item_array.count(); i++)
+	{
+		const LLInventoryItem* item = item_array.get(i).get();
+		if (item->getIsLinkType() && item->getLinkedUUID() == uuid)
+		{
+			gInventory.purgeObject(item->getUUID());
+			break;
+		}
+	}
+
+	// Now create a new link to the shape
+	LLAppearanceMgr::instance().addCOFItemLink (item);
+
+	//LLAppearanceMgr::instance().incrementCofVersion();
+}
+//mk
 
 void LLAgentWearables::populateMyOutfitsFolder(void)
 {	
