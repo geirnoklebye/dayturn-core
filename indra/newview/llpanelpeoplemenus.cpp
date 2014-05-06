@@ -41,7 +41,6 @@
 #include "llviewermenu.h"			// for gMenuHolder
 #include "llconversationmodel.h"
 #include "llviewerobjectlist.h"
-#include "llviewernetwork.h"
 #include "llnotificationsutil.h"
 #include "llslurl.h"
 #include "llavatarpropertiesprocessor.h"
@@ -87,10 +86,8 @@ LLContextMenu* PeopleContextMenu::createMenu()
 		registrar.add("Avatar.EstateBan",		boost::bind(&LLAvatarActions::estateBan,				id));
 		registrar.add("Avatar.CopyName",		boost::bind(&LLAvatarActions::copyName,					id));
 		registrar.add("Avatar.CopyUUID",		boost::bind(&LLAvatarActions::copyUUID,					id));
-		registrar.add("Avatar.CopyProfileSLURL",	boost::bind(&LLAvatarActions::copyProfileSLURL,		id));
-		registrar.add("Avatar.GrantOnlineStatus",	boost::bind(&PeopleContextMenu::handle_avatar_grant_online_status,	this, id));
-		registrar.add("Avatar.GrantMapLocation",	boost::bind(&PeopleContextMenu::handle_avatar_grant_map_location,	this, id));
-		registrar.add("Avatar.GrantModifyObjects",	boost::bind(&PeopleContextMenu::handle_avatar_grant_modify_objects,	this, id));
+		registrar.add("Avatar.CopyProfileSLURL",boost::bind(&LLAvatarActions::copyProfileSLURL,			id));
+		registrar.add("Avatar.ToggleRights",	boost::bind(&PeopleContextMenu::toggleRights,			this, _2));
 
 		enable_registrar.add("Avatar.EnableItem", boost::bind(&PeopleContextMenu::enableContextMenuItem, this, _2));
 		enable_registrar.add("Avatar.CheckItem",  boost::bind(&PeopleContextMenu::checkContextMenuItem,	this, _2));
@@ -316,92 +313,26 @@ void PeopleContextMenu::requestTeleport()
 	LLAvatarActions::teleportRequest(mUUIDs.front());
 }
 
+void PeopleContextMenu::toggleRights(const LLSD &userdata)
+{
+	const std::string item = userdata.asString();
+
+	if (item == "online_status") {
+		LLAvatarActions::toggleAvatarRights(mUUIDs.front(), LLRelationship::GRANT_ONLINE_STATUS);
+	}
+	else if (item == "map_location") {
+		LLAvatarActions::toggleAvatarRights(mUUIDs.front(), LLRelationship::GRANT_MAP_LOCATION);
+	}
+	else if (item == "modify_objects") {
+		LLAvatarActions::toggleAvatarRights(mUUIDs.front(), LLRelationship::GRANT_MODIFY_OBJECTS);
+	}
+}
+
 void PeopleContextMenu::offerTeleport()
 {
 	// boost::bind cannot recognize overloaded method LLAvatarActions::offerTeleport(),
 	// so we have to use a wrapper.
 	LLAvatarActions::offerTeleport(mUUIDs);
-}
-
-void PeopleContextMenu::handle_avatar_grant_online_status(const LLUUID& avatar_id)
-{
-	toggle_rights(avatar_id, LLRelationship::GRANT_ONLINE_STATUS);
-}
-
-void PeopleContextMenu::handle_avatar_grant_map_location(const LLUUID& avatar_id)
-{
-	toggle_rights(avatar_id, LLRelationship::GRANT_MAP_LOCATION);
-}
-
-void PeopleContextMenu::handle_avatar_grant_modify_objects(const LLUUID& avatar_id)
-{
-	toggle_rights(avatar_id, LLRelationship::GRANT_MODIFY_OBJECTS);
-}
-
-void PeopleContextMenu::toggle_rights(const LLUUID& avatar_id, S32 rights)
-{
-	const LLRelationship *relationship = LLAvatarTracker::instance().getBuddyInfo(avatar_id);
-
-	if (relationship) {
-		S32 current_rights = relationship->getRightsGrantedTo();
-
-		if (rights & LLRelationship::GRANT_MODIFY_OBJECTS) {
-			//
-			//	modify objects permission is being changed so
-			//	request confirmation
-			//
-			confirm_modify_rights(avatar_id, !(current_rights & LLRelationship::GRANT_MODIFY_OBJECTS), current_rights | rights);
-			return;
-		}
-
-		rights = current_rights ^ rights;
-		LLAvatarPropertiesProcessor::getInstance()->sendFriendRights(avatar_id, rights);
-
-		LLSD args;
-		args["NAME"] = LLSLURL("agent", avatar_id, "displayname").getSLURLString();
-		args["GRID_NAME"] = LLGridManager::getInstance()->getGridLabel();
-		LLNotificationsUtil::add("NewPermissionsPending", args);
-	}
-}
-
-void PeopleContextMenu::confirm_modify_rights(const LLUUID &avatar_id, const bool grant, const S32 rights)
-{
-	LLSD args;
-	args["NAME"] = LLSLURL("agent", avatar_id, "displayname").getSLURLString();
-
-	if (grant) {
-		LLNotificationsUtil::add(
-			"GrantModifyRights",
-			args,
-			LLSD(),
-			boost::bind(&PeopleContextMenu::rights_confirmation_callback, this, _1, _2, avatar_id, rights)
-		);
-	}
-	else {
-		LLNotificationsUtil::add(
-			"RevokeModifyRights",
-			args,
-			LLSD(),
-			boost::bind(&PeopleContextMenu::rights_confirmation_callback, this, _1, _2, avatar_id, rights & ~LLRelationship::GRANT_MODIFY_OBJECTS)
-		);
-	}
-}
-
-void PeopleContextMenu::rights_confirmation_callback(const LLSD& notification, const LLSD& response, const LLUUID &avatar_id, const S32 rights)
-{
-	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
-
-	if (option == 0) {
-		LLAvatarPropertiesProcessor::getInstance()->sendFriendRights(
-			avatar_id,
-			rights
-		);
-
-		LLSD args;
-		args["NAME"] = LLSLURL("agent", avatar_id, "displayname").getSLURLString();
-		args["GRID_NAME"] = LLGridManager::getInstance()->getGridLabel();
-		LLNotificationsUtil::add("NewPermissionsPending", args);
-	}
 }
 
 //== NearbyPeopleContextMenu ===============================================================
