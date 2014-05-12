@@ -40,12 +40,10 @@
 #include "lluictrlfactory.h"
 #include "llviewertexteditor.h"
 #include "llviewercontrol.h"
-#include "llviewernetwork.h"
 #include "llviewerstats.h"
 #include "llviewerregion.h"
 #include "llversioninfo.h"
 #include "llweb.h"
-
 
 // Linden library includes
 #include "llaudioengine.h"
@@ -219,15 +217,6 @@ BOOL LLFloaterAbout::postBuild()
 LLSD LLFloaterAbout::getInfo()
 {
 	return LLAppViewer::instance()->getViewerInfo();
-#elif LL_CLANG
-	info["COMPILER"] = "Clang";
-	info["COMPILER_VERSION"] = CLANG_VERSION_STRING;
-		const LLVector3d& coords(region->getOriginGlobal());
-		std::string region_text = llformat("In region %s at (%.0f, %.0f) ", region->getName().c_str(), coords.mdV[VX]/REGION_WIDTH_METERS, coords.mdV[VY]/REGION_WIDTH_METERS);		
-		info["POSITION_DECIMAL"] = region_text;
-
-/*	if (gPacketsIn > 0)
-*/
 }
 
 class LLFloaterAboutListener: public LLEventAPI
@@ -277,17 +266,6 @@ void LLFloaterAbout::setSupportText(const std::string& server_release_notes_url)
 
 	LLViewerTextEditor *support_widget =
 		getChild<LLViewerTextEditor>("support_editor", true);
-
-		std::string grid = LLGridManager::getInstance()->getGridLabel();
-		LLStringUtil::replaceChar(grid, ' ', '_');
-
-		std::string group = gSavedSettings.getString("SupportGroupSLURL_" + grid);
-
-		if (!group.empty()) {
-			args["SUPPORT_GROUP_SLURL"] = group;
-			args["GRID_NAME"] = LLGridManager::getInstance()->getGridLabel();
-			support << "\n\n" << getString("SupportGroup", args);
-		}
 
 	support_widget->clear();
 	support_widget->appendText(LLAppViewer::instance()->getViewerInfoString(),
