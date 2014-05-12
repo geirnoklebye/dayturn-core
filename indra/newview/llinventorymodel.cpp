@@ -516,12 +516,12 @@ LLUUID LLInventoryModel::findCategoryByName(std::string name)
 		cats = get_ptr_in_map(mParentChildCategoryTree, root_id);
 		if(cats)
 		{
-			S32 count = cats->count();
+			S32 count = cats->size();
 			for(S32 i = 0; i < count; ++i)
 			{
-				if(cats->get(i)->getName() == name)
+				if(cats->operator[](i)->getName() == name)
 				{
-					return cats->get(i)->getUUID();
+					return cats->operator[](i)->getUUID();
 				}
 			}
 		}
@@ -727,6 +727,8 @@ void LLInventoryModel::collectDescendentsIf(const LLUUID& id,
 	LLViewerInventoryItem* item = NULL;
 	item_array_t* item_array = get_ptr_in_map(mParentChildItemTree, id);
 
+		S32 count = item_array->size();
+			item = item_array->operator[](i);
 	// Follow folder links recursively.  Currently never goes more
 	// than one level deep (for current outfit support)
 	// Note: if making it fully recursive, need more checking against infinite loops.
@@ -996,7 +998,7 @@ U32 LLInventoryModel::updateItem(const LLViewerInventoryItem* item)
 			else
 			{
 				// Fetch the current name
-				gCacheName->get(id, FALSE,
+				gCacheName->operator[](id, FALSE,
 					boost::bind(&LLViewerInventoryItem::onCallingCardNameLookup, new_item.get(),
 					_1, _2, _3));
 			}

@@ -160,7 +160,7 @@ void LLImageBase::sanityCheck()
 		)
 	{
 		LL_ERRS() << "Failed LLImageBase::sanityCheck "
-		llwarns << "Failed LLImageBase::sanityCheck "
+		       << "Failed LLImageBase::sanityCheck "
 			   << "width " << mWidth
 			   << "height " << mHeight
 			   << "datasize " << mDataSize
@@ -295,7 +295,6 @@ S32 LLImageRaw::sGlobalRawMemory = 0;
 S32 LLImageRaw::sRawImageCount = 0;
 
 LLImageRaw::LLImageRaw()
-	: LLImageBase()
 {
 	++sRawImageCount;
 }
@@ -1501,7 +1500,7 @@ void LLImageFormatted::sanityCheck()
 	if (mCodec >= IMG_CODEC_EOF)
 	{
 		LL_ERRS() << "Failed LLImageFormatted::sanityCheck "
-		llwarns << "Failed LLImageFormatted::sanityCheck "
+		      << "Failed LLImageFormatted::sanityCheck "
 			   << "decoding " << S32(mDecoding)
 			   << "decoded " << S32(mDecoded)
 			   << "codec " << S32(mCodec)
