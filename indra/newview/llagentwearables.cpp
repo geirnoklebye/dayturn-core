@@ -1322,7 +1322,7 @@ void LLAgentWearables::setWearableItem(LLInventoryItem* new_item, LLViewerWearab
 	//LLAgentDumper dumper("setWearableItem");
 	if (isWearingItem(new_item->getUUID()))
 	{
-		LL_WARNS() << "wearable " << new_item->getUUID() << " is already worn" << LL_ENDL;
+//		LL_WARNS() << "wearable " << new_item->getUUID() << " is already worn" << LL_ENDL;
 		return;
 	}
 	
@@ -1339,7 +1339,7 @@ void LLAgentWearables::setWearableItem(LLInventoryItem* new_item, LLViewerWearab
 			if ((old_wearable->getAssetID() == new_wearable->getAssetID()) &&
 				(old_item_id == new_item->getUUID()))
 			{
-				LL_DEBUGS() << "No change to wearable asset and item: " << LLWearableType::getTypeName(type) << LL_ENDL;
+//				LL_DEBUGS() << "No change to wearable asset and item: " << LLWearableType::getTypeName(type) << LL_ENDL;
 				return;
 			}
 			

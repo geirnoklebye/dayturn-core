@@ -199,13 +199,15 @@ BOOL LLStatusBar::postBuild()
 	gSavedSettings.getControl("MuteAudio")->getSignal()->connect(boost::bind(&LLStatusBar::onVolumeChanged, this, _2));
 
 	mSGBandwidth = getChild<LLStatGraph>("bandwidth_graph");
-	if (mSGBandwidth) {
+/*
+if (mSGBandwidth) {
 		mSGBandwidth->setClickedCallback(boost::bind(&LLStatusBar::onClickStatistics, this));
 	sgp.stat.count_stat_float(&LLStatViewer::ACTIVE_MESSAGE_DATA_RECEIVED);
 	sgp.units("Kbps");
 	sgp.precision(0);
 		mSGBandwidth->setStat(&LLViewerStats::getInstance()->mKBitStat);
 	}
+
 	pgp.stat.sample_stat_float(&LLStatViewer::PACKETS_LOST_PERCENT);
 	pgp.units("%");
 	pgp.min(0.f);
@@ -227,7 +229,7 @@ BOOL LLStatusBar::postBuild()
 		mSGPacketLoss->setThreshold(1, 1.f);
 		mSGPacketLoss->setThreshold(2, 3.f);
 	}
-
+*/
 	mFPSText = getChild<LLTextBox>("fps_text");
 	if (mFPSText) {
 		mFPSText->setClickedCallback(boost::bind(&LLStatusBar::onClickStatistics, this));

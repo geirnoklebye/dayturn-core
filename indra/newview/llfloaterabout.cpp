@@ -226,6 +226,8 @@ LLSD LLFloaterAbout::getInfo()
 		std::string region_text = llformat("In region %s at (%.0f, %.0f) ", region->getName().c_str(), coords.mdV[VX]/REGION_WIDTH_METERS, coords.mdV[VY]/REGION_WIDTH_METERS);		
 		info["POSITION_DECIMAL"] = region_text;
 
+/*	if (gPacketsIn > 0)
+*/
 }
 
 class LLFloaterAboutListener: public LLEventAPI

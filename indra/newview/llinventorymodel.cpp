@@ -998,7 +998,7 @@ U32 LLInventoryModel::updateItem(const LLViewerInventoryItem* item)
 			else
 			{
 				// Fetch the current name
-				gCacheName->operator[](id, FALSE,
+				gCacheName->get(id, FALSE,
 					boost::bind(&LLViewerInventoryItem::onCallingCardNameLookup, new_item.get(),
 					_1, _2, _3));
 			}
