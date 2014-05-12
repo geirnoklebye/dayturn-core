@@ -27,14 +27,12 @@
 #ifndef LL_LLSTATGRAPH_H
 #define LL_LLSTATGRAPH_H
 
+#include "llview.h"
 #include "llframetimer.h"
-#include "lluictrl.h"
 #include "v4color.h"
 #include "lltrace.h"
-#include <boost/signals2.hpp>
 
-
-class LLStatGraph : public LLUICtrl
+class LLStatGraph : public LLView
 {
 public:
 	struct ThresholdParams : public LLInitParam::Block<ThresholdParams>
@@ -105,9 +103,6 @@ public:
 
 	/*virtual*/ void setValue(const LLSD& value);
 	
-
-	void setClickedCallback(boost::function<void (void*)> cb, void *userdata = NULL);
-
 private:
 	LLTrace::StatType<LLTrace::CountAccumulator>*	mNewStatFloatp;
 
