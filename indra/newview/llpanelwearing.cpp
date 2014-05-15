@@ -179,7 +179,7 @@ protected:
 
 			if (!item)
 			{
-				LL_WARNS("PanelWearing") << "Invalid item" << LL_ENDL;
+				LL_WARNS() << "Invalid item" << LL_ENDL;
 				continue;
 			}
 

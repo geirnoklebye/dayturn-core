@@ -91,7 +91,6 @@ private:
 	LLTextEditor		*mEditCharter;
 	LLLineEditor		*mGroupUUIDText;
 	LLButton		*mBtnGroupUUIDCopy;
-
 	// Options (include any updates in updateChanged)
 	LLCheckBoxCtrl	*mCtrlShowInGroupList;
 	LLCheckBoxCtrl	*mCtrlOpenEnrollment;

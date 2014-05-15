@@ -967,6 +967,20 @@ class Darwin_i386_Manifest(ViewerManifest):
                                 ):
                         dylibs += path_optional(os.path.join("../packages/lib/release",
                                                              libfile), libfile)
+
+                # dylibs that vary based on configuration
+                if self.args['configuration'].lower() == 'debug':
+                    for libfile in (
+                                "libfmodexL.dylib",
+                                ):
+                        dylibs += path_optional(os.path.join("../packages/lib/debug",
+                                                             libfile), libfile)
+                else:
+                    for libfile in (
+                                "libfmodex.dylib",
+                                ):
+                        dylibs += path_optional(os.path.join("../packages/lib/release",
+                                                             libfile), libfile)
                 
                 # our apps
                 for app_bld_dir, app in (("mac_crash_logger", "mac-crash-logger.app"),

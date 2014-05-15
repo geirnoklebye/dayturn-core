@@ -433,10 +433,14 @@ HttpStatus HttpOpRequest::prepareRequest(HttpService * service)
 	code = curl_easy_setopt(mCurlHandle, CURLOPT_ENCODING, "");
 	check_curl_easy_code(code, CURLOPT_ENCODING);
 
-		code = curl_easy_setopt(mCurlHandle, CURLOPT_DNS_CACHE_TIMEOUT, 15);
-		check_curl_easy_code(code, CURLOPT_DNS_CACHE_TIMEOUT);
-		code = curl_easy_setopt(mCurlHandle, CURLOPT_DNS_CACHE_TIMEOUT, 0);
-		check_curl_easy_code(code, CURLOPT_DNS_CACHE_TIMEOUT);
+	// The Linksys WRT54G V5 router has an issue with frequent
+	// DNS lookups from LAN machines.  If they happen too often,
+	// like for every HTTP request, the router gets annoyed after
+	// about 700 or so requests and starts issuing TCP RSTs to
+	// new connections.  Reuse the DNS lookups for even a few
+	// seconds and no RSTs.
+	code = curl_easy_setopt(mCurlHandle, CURLOPT_DNS_CACHE_TIMEOUT, 15);
+	check_curl_easy_code(code, CURLOPT_DNS_CACHE_TIMEOUT);
 	code = curl_easy_setopt(mCurlHandle, CURLOPT_AUTOREFERER, 1);
 	check_curl_easy_code(code, CURLOPT_AUTOREFERER);
 	code = curl_easy_setopt(mCurlHandle, CURLOPT_FOLLOWLOCATION, 1);
@@ -1078,6 +1082,38 @@ char * os_strltrim(char * lstr)
 		++lstr;
 	}
 	return lstr;
+}
+
+
+void check_curl_easy_code(CURLcode code, int curl_setopt_option)
+{
+	if (CURLE_OK != code)
+	{
+		// Comment from old llcurl code which may no longer apply:
+		//
+		// linux appears to throw a curl error once per session for a bad initialization
+		// at a pretty random time (when enabling cookies).
+		LL_WARNS("CoreHttp") << "libcurl error detected:  " << curl_easy_strerror(code)
+							 << ", curl_easy_setopt option:  " << curl_setopt_option
+							 << LL_ENDL;
+	}
+}
+
+
+void check_curl_easy_code(CURLcode code)
+{
+	if (CURLE_OK != code)
+	{
+		// Comment from old llcurl code which may no longer apply:
+		//
+		// linux appears to throw a curl error once per session for a bad initialization
+		// at a pretty random time (when enabling cookies).
+		LL_WARNS("CoreHttp") << "libcurl error detected:  " << curl_easy_strerror(code)
+							 << LL_ENDL;
+	}
+}
+
+}  // end anonymous namespace
 }
 
 

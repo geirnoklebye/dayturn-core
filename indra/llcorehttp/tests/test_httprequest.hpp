@@ -3176,7 +3176,7 @@ void HttpRequestTestObjectType::test<22>()
 }
 
 template <> template <>
-void HttpRequestTestObjectType::test<22>()
+void HttpRequestTestObjectType::test<23>()
 {
 	ScopedCurlInit ready;
 

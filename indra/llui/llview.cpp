@@ -30,7 +30,6 @@
 #define LLVIEW_CPP
 #include "llview.h"
 
-#include <cassert>
 #include <sstream>
 #include <boost/tokenizer.hpp>
 #include <boost/foreach.hpp>
@@ -89,6 +88,16 @@ template class LLView* LLView::getChild<class LLView>(
 
 static LLDefaultChildRegistry::Register<LLView> r("view");
 
+namespace LLInitParam
+{
+	void TypeValues<LLView::EOrientation>::declareValues()
+	{
+		declare("horizontal", LLView::HORIZONTAL);
+		declare("vertical", LLView::VERTICAL);	
+	}
+}
+
+
 LLView::Follows::Follows()
 :   string(""),
 	flags("flags", FOLLOWS_LEFT | FOLLOWS_TOP)
@@ -127,7 +136,7 @@ LLView::Params::Params()
 }
 
 LLView::LLView(const LLView::Params& p)
-:	mVisible(p.visible),
+:	LLTrace::MemTrackable<LLView>("LLView"),
 	mOnlyInSL(p.only_in_sl),
 	mInDraw(false),
 	mName(p.name),
@@ -136,7 +145,6 @@ LLView::LLView(const LLView::Params& p)
 	mFromXUI(p.from_xui),
 	mIsFocusRoot(p.focus_root),
 	mLastVisible(FALSE),
-	mNextInsertionOrdinal(0),
 	mHoverCursor(getCursorFromString(p.hover_cursor)),
 	mEnabled(p.enabled),
 	mMouseOpaque(p.mouse_opaque),
@@ -155,10 +163,10 @@ LLView::LLView(const LLView::Params& p)
 LLView::~LLView()
 {
 	dirtyRect();
-	//llinfos << "Deleting view " << mName << ":" << (void*) this << llendl;
+	//LL_INFOS() << "Deleting view " << mName << ":" << (void*) this << LL_ENDL;
 	if (LLView::sIsDrawing)
 	{
-		lldebugs << "Deleting view " << mName << " during UI draw() phase" << llendl;
+		LL_DEBUGS() << "Deleting view " << mName << " during UI draw() phase" << LL_ENDL;
 	}
 // 	llassert(LLView::sIsDrawing == FALSE);
 	
@@ -166,7 +174,7 @@ LLView::~LLView()
 	
 	if( hasMouseCapture() )
 	{
-		//llwarns << "View holding mouse capture deleted: " << getName() << ".  Mouse capture removed." << llendl;
+		//LL_WARNS() << "View holding mouse capture deleted: " << getName() << ".  Mouse capture removed." << LL_ENDL;
 		gFocusMgr.removeMouseCaptureWithoutCallback( this );
 	}
 
@@ -271,22 +279,6 @@ void LLView::sendChildToBack(LLView* child)
 	}
 }
 
-void LLView::moveChildToFrontOfTabGroup(LLUICtrl* child)
-{
-	if(mCtrlOrder.find(child) != mCtrlOrder.end())
-	{
-		mCtrlOrder[child].second = -1 * mNextInsertionOrdinal++;
-	}
-}
-
-void LLView::moveChildToBackOfTabGroup(LLUICtrl* child)
-{
-	if(mCtrlOrder.find(child) != mCtrlOrder.end())
-	{
-		mCtrlOrder[child].second = mNextInsertionOrdinal++;
-	}
-}
-
 // virtual
 bool LLView::addChild(LLView* child, S32 tab_group)
 {
@@ -294,9 +286,10 @@ bool LLView::addChild(LLView* child, S32 tab_group)
 	{
 		return false;
 	}
-	if (mParentView == child) 
+
+	if (this == child) 
 	{
-		llerrs << "Adding view " << child->getName() << " as child of itself" << llendl;
+		LL_ERRS() << "Adding view " << child->getName() << " as child of itself" << LL_ENDL;
 	}
 
 	// remove from current parent
@@ -308,14 +301,10 @@ bool LLView::addChild(LLView* child, S32 tab_group)
 	// add to front of child list, as normal
 	mChildList.push_front(child);
 
-	// add to ctrl list if is LLUICtrl
-	if (child->isCtrl())
+	// add to tab order list
+	if (tab_group != 0)
 	{
-		LLUICtrl* ctrl = static_cast<LLUICtrl*>(child);
-		mCtrlOrder.insert(tab_order_pair_t(ctrl,
-							tab_order_t(tab_group, mNextInsertionOrdinal)));
-
-		mNextInsertionOrdinal++;
+		mTabOrder.insert(tab_order_pair_t(child, tab_group));
 	}
 
 	child->mParentView = this;
@@ -346,67 +335,17 @@ void LLView::removeChild(LLView* child)
 		llassert(child->mInDraw == false);
 		mChildList.remove( child );
 		child->mParentView = NULL;
-		if (child->isCtrl())
+		child_tab_order_t::iterator found = mTabOrder.find(child);
+		if(found != mTabOrder.end())
 		{
-			child_tab_order_t::iterator found = mCtrlOrder.find(static_cast<LLUICtrl*>(child));
-			if(found != mCtrlOrder.end())
-			{
-				mCtrlOrder.erase(found);
-			}
+			mTabOrder.erase(found);
 		}
 	}
 	else
 	{
-		llwarns << "\"" << child->getName() << "\" is not a child of " << getName() << llendl;
+		LL_WARNS() << "\"" << child->getName() << "\" is not a child of " << getName() << LL_ENDL;
 	}
 	updateBoundingRect();
-}
-
-LLView::ctrl_list_t LLView::getCtrlList() const
-{
-	ctrl_list_t controls;
-	BOOST_FOREACH(LLView* viewp, mChildList)
-	{
-		if(viewp->isCtrl())
-		{
-			controls.push_back(static_cast<LLUICtrl*>(viewp));
-		}
-	}
-	return controls;
-}
-
-LLView::ctrl_list_t LLView::getCtrlListSorted() const
-{
-	ctrl_list_t controls = getCtrlList();
-	std::sort(controls.begin(), controls.end(), LLCompareByTabOrder(mCtrlOrder));
-	return controls;
-}
-
-
-// This method compares two LLViews by the tab order specified in the comparator object.  The
-// code for this is a little convoluted because each argument can have four states:
-// 1) not a control, 2) a control but not in the tab order, 3) a control in the tab order, 4) null
-bool LLCompareByTabOrder::operator() (const LLView* const a, const LLView* const b) const
-{
-	S32 a_score = 0, b_score = 0;
-	if(a) a_score--;
-	if(b) b_score--;
-	if(a && a->isCtrl()) a_score--;
-	if(b && b->isCtrl()) b_score--;
-	if(a_score == -2 && b_score == -2)
-	{
-		const LLUICtrl * const a_ctrl = static_cast<const LLUICtrl*>(a);
-		const LLUICtrl * const b_ctrl = static_cast<const LLUICtrl*>(b);
-		LLView::child_tab_order_const_iter_t a_found = mTabOrder.find(a_ctrl), b_found = mTabOrder.find(b_ctrl);
-		if(a_found != mTabOrder.end()) a_score--;
-		if(b_found != mTabOrder.end()) b_score--;
-		if(a_score == -3 && b_score == -3)
-		{
-			// whew!  Once we're in here, they're both in the tab order, and we can compare based on that
-			return compareTabOrders(a_found->second, b_found->second);
-		}
-	}
-	return (a_score == b_score) ? a < b : a_score < b_score;
 }
 
 BOOL LLView::isInVisibleChain() const
@@ -544,42 +483,6 @@ BOOL LLView::focusPrevRoot()
 // static
 BOOL LLView::focusNext(LLView::child_list_t & result)
 {
-	LLView::child_list_iter_t focused = result.end();
-	for(LLView::child_list_iter_t iter = result.begin();
-		iter != result.end();
-		++iter)
-	{
-		if(gFocusMgr.childHasKeyboardFocus(*iter))
-		{
-			focused = iter;
-			break;
-		}
-	}
-	LLView::child_list_iter_t next = focused;
-	next = (next == result.end()) ? result.begin() : ++next;
-	while(next != focused)
-	{
-		// wrap around to beginning if necessary
-		if(next == result.end())
-		{
-			next = result.begin();
-		}
-		if((*next)->isCtrl())
-		{
-			LLUICtrl * ctrl = static_cast<LLUICtrl*>(*next);
-			ctrl->setFocus(TRUE);
-			ctrl->onTabInto();  
-			gFocusMgr.triggerFocusFlash();
-			return TRUE;
-		}
-		++next;
-	}
-	return FALSE;
-}
-
-// static
-BOOL LLView::focusPrev(LLView::child_list_t & result)
-{
 	LLView::child_list_reverse_iter_t focused = result.rend();
 	for(LLView::child_list_reverse_iter_t iter = result.rbegin();
 		iter != result.rend();
@@ -603,6 +506,42 @@ BOOL LLView::focusPrev(LLView::child_list_t & result)
 		if((*next)->isCtrl())
 		{
 			LLUICtrl * ctrl = static_cast<LLUICtrl*>(*next);
+			ctrl->setFocus(TRUE);
+			ctrl->onTabInto();  
+			gFocusMgr.triggerFocusFlash();
+			return TRUE;
+		}
+		++next;
+	}
+	return FALSE;
+}
+
+// static
+BOOL LLView::focusPrev(LLView::child_list_t & result)
+{
+	LLView::child_list_iter_t focused = result.end();
+	for(LLView::child_list_iter_t iter = result.begin();
+		iter != result.end();
+		++iter)
+	{
+		if(gFocusMgr.childHasKeyboardFocus(*iter))
+		{
+			focused = iter;
+			break;
+		}
+	}
+	LLView::child_list_iter_t next = focused;
+	next = (next == result.end()) ? result.begin() : ++next;
+	while(next != focused)
+	{
+		// wrap around to beginning if necessary
+		if(next == result.end())
+		{
+			next = result.begin();
+		}
+		if((*next)->isCtrl())
+		{
+			LLUICtrl * ctrl = static_cast<LLUICtrl*>(*next);
 			if (!ctrl->hasFocus())
 			{
 				ctrl->setFocus(TRUE);
@@ -622,7 +561,7 @@ BOOL LLView::focusPrev(LLView::child_list_t & result)
 void LLView::deleteAllChildren()
 {
 	// clear out the control ordering
-	mCtrlOrder.clear();
+	mTabOrder.clear();
 
 	while (!mChildList.empty())
 	{
@@ -651,14 +590,14 @@ void LLView::setVisible(BOOL visible)
 		{
 			// tell all children of this view that the visibility may have changed
 			dirtyRect();
-			handleVisibilityChange( visible );
+			onVisibilityChange( visible );
 		}
 		updateBoundingRect();
 	}
 }
 
 // virtual
-void LLView::handleVisibilityChange ( BOOL new_visibility )
+void LLView::onVisibilityChange ( BOOL new_visibility )
 {
 	BOOL old_visibility;
 	BOOL log_visibility_change = LLViewerEventRecorder::instance().getLoggingStatus();
@@ -677,15 +616,16 @@ void LLView::handleVisibilityChange ( BOOL new_visibility )
 
 		if (old_visibility)
 		{
-			viewp->handleVisibilityChange ( new_visibility );
+			viewp->onVisibilityChange ( new_visibility );
 		}
 
 		if(log_visibility_change)
 		{
 			// Consider changing returns to confirm success and know which widget grabbed it
-			// For now assume success and log at highest xui possible
+			// For now assume success and log at highest xui possible 
 			// NOTE we log actual state - which may differ if it somehow failed to set visibility
-			lldebugs << "LLView::handleVisibilityChange	 - now: " << getVisible()  << " xui: " << viewp->getPathname() << " name: " << viewp->getName() << llendl;
+			LL_DEBUGS() << "LLView::handleVisibilityChange	 - now: " << getVisible()  << " xui: " << viewp->getPathname() << " name: " << viewp->getName() << LL_ENDL;
+		}
 		}
 	}
 }
@@ -715,12 +655,12 @@ BOOL LLView::handleHover(S32 x, S32 y, MASK mask)
 
 void LLView::onMouseEnter(S32 x, S32 y, MASK mask)
 {
-	//llinfos << "Mouse entered " << getName() << llendl;
+	//LL_INFOS() << "Mouse entered " << getName() << LL_ENDL;
 }
 
 void LLView::onMouseLeave(S32 x, S32 y, MASK mask)
 {
-	//llinfos << "Mouse left " << getName() << llendl;
+	//LL_INFOS() << "Mouse left " << getName() << LL_ENDL;
 }
 
 bool LLView::visibleAndContains(S32 local_x, S32 local_y)
@@ -756,7 +696,7 @@ LLView* LLView::childrenHandleCharEvent(const std::string& desc, const METHOD& m
 			{
 				if (LLView::sDebugKeys)
 				{
-					llinfos << desc << " handled by " << viewp->getName() << llendl;
+					LL_INFOS() << desc << " handled by " << viewp->getName() << LL_ENDL;
 				}
 				return viewp;
 			}
@@ -782,8 +722,8 @@ LLView* LLView::childrenHandleMouseEvent(const METHOD& method, S32 x, S32 y, XDA
 		if ((viewp->*method)( local_x, local_y, extra )
 			|| (allow_mouse_block && viewp->blockMouseEvent( local_x, local_y )))
 		{
-			lldebugs << "LLView::childrenHandleMouseEvent calling updatemouseeventinfo - local_x|global x  "<< local_x << " " << x	<< "local/global y " << local_y << " " << y << llendl;
-			lldebugs << "LLView::childrenHandleMouseEvent  getPathname for viewp result: " << viewp->getPathname() << "for this view: " << getPathname() << llendl;
+			LL_DEBUGS() << "LLView::childrenHandleMouseEvent calling updatemouseeventinfo - local_x|global x  "<< local_x << " " << x	<< "local/global y " << local_y << " " << y << LL_ENDL;
+			LL_DEBUGS() << "LLView::childrenHandleMouseEvent  getPathname for viewp result: " << viewp->getPathname() << "for this view: " << getPathname() << LL_ENDL;
 
 			LLViewerEventRecorder::instance().updateMouseEventInfo(x,y,-55,-55,getPathname()); 
 
@@ -960,7 +900,7 @@ BOOL LLView::handleKey(KEY key, MASK mask, BOOL called_from_parent)
 			handled = handleKeyHere( key, mask );
 			if (handled)
 			{
-				llwarns << "Key handled by " << getName() << llendl;
+				LL_WARNS() << "Key handled by " << getName() << LL_ENDL;
 			}
 		}
 	}
@@ -997,7 +937,7 @@ BOOL LLView::handleUnicodeChar(llwchar uni_char, BOOL called_from_parent)
 			handled = handleUnicodeCharHere(uni_char);
 			if (handled && LLView::sDebugKeys)
 			{
-				llinfos << "Unicode key handled by " << getName() << llendl;
+				LL_INFOS() << "Unicode key handled by " << getName() << LL_ENDL;
 			}
 		}
 	}
@@ -1179,7 +1119,7 @@ void LLView::drawChildren()
 							// Check for bogus rectangle
 							if (!getRect().isValid())
 							{
-								llwarns << "Bogus rectangle for " << getName() << " with " << mRect << llendl;
+								LL_WARNS() << "Bogus rectangle for " << getName() << " with " << mRect << LL_ENDL;
 							}
 						}
 					}
@@ -1556,11 +1496,11 @@ LLView* LLView::getChildView(const std::string& name, BOOL recurse) const
 	return getChild<LLView>(name, recurse);
 }
 
-static LLFastTimer::DeclareTimer FTM_FIND_VIEWS("Find Widgets");
+static LLTrace::BlockTimerStatHandle FTM_FIND_VIEWS("Find Widgets");
 
 LLView* LLView::findChildView(const std::string& name, BOOL recurse) const
 {
-	LLFastTimer ft(FTM_FIND_VIEWS);
+	LL_RECORD_BLOCK_TIME(FTM_FIND_VIEWS);
 	//richard: should we allow empty names?
 	//if(name.empty())
 	//	return NULL;
@@ -1875,15 +1815,63 @@ BOOL LLView::localRectToOtherView( const LLRect& local, LLRect* other, const LLV
 	return FALSE;
 }
 
-// static
-const LLCtrlQuery & LLView::getTabOrderQuery()
+
+class CompareByTabOrder
 {
-	static LLCtrlQuery query;
+public:
+	CompareByTabOrder(const LLView::child_tab_order_t& order, S32 default_tab_group = 0) 
+		:	mTabOrder(order),
+		mDefaultTabGroup(default_tab_group)
+	{}
+	virtual ~CompareByTabOrder() {}
+
+	// This method compares two LLViews by the tab order specified in the comparator object.  The
+	// code for this is a little convoluted because each argument can have four states:
+	// 1) not a control, 2) a control but not in the tab order, 3) a control in the tab order, 4) null
+	bool operator() (const LLView* const a, const LLView* const b) const
+	{
+		S32 a_group = 0, b_group = 0;
+		if(!a) return false;
+		if(!b) return true;
+
+		LLView::child_tab_order_const_iter_t a_found = mTabOrder.find(a), b_found = mTabOrder.find(b);
+		if(a_found != mTabOrder.end())
+		{
+			a_group = a_found->second;
+		}
+		if(b_found != mTabOrder.end())
+		{
+			b_group = b_found->second;
+		}
+
+		if(a_group < mDefaultTabGroup && b_group >= mDefaultTabGroup) return true;
+		if(b_group < mDefaultTabGroup && a_group >= mDefaultTabGroup) return false;
+		return a_group > b_group;  // sort correctly if they're both on the same side of the default tab groupreturn a > b; 
+	}
+private:
+	// ok to store a reference, as this should only be allocated on stack during view query operations
+	const LLView::child_tab_order_t& mTabOrder;
+	const S32 mDefaultTabGroup;
+};
+
+class SortByTabOrder : public LLQuerySorter, public LLSingleton<SortByTabOrder>
+{
+	/*virtual*/ void sort(LLView * parent, LLView::child_list_t &children) const 
+	{
+		children.sort(CompareByTabOrder(parent->getTabOrder(), parent->getDefaultTabGroup()));
+	}
+};
+
+// static
+const LLViewQuery & LLView::getTabOrderQuery()
+{
+	static LLViewQuery query;
 	if(query.getPreFilters().size() == 0) {
 		query.addPreFilter(LLVisibleFilter::getInstance());
 		query.addPreFilter(LLEnabledFilter::getInstance());
 		query.addPreFilter(LLTabStopFilter::getInstance());
 		query.addPostFilter(LLLeavesFilter::getInstance());
+		query.setSorter(SortByTabOrder::getInstance());
 	}
 	return query;
 }
@@ -1898,9 +1886,9 @@ class LLFocusRootsFilter : public LLQueryFilter, public LLSingleton<LLFocusRoots
 };
 
 // static
-const LLCtrlQuery & LLView::getFocusRootsQuery()
+const LLViewQuery & LLView::getFocusRootsQuery()
 {
-	static LLCtrlQuery query;
+	static LLViewQuery query;
 	if(query.getPreFilters().size() == 0) {
 		query.addPreFilter(LLVisibleFilter::getInstance());
 		query.addPreFilter(LLEnabledFilter::getInstance());
@@ -2052,7 +2040,7 @@ LLView*	LLView::findSnapEdge(S32& new_edge_val, const LLCoordGL& mouse_dir, ESna
 			}
 			break;
 		default:
-			llerrs << "Invalid snap edge" << llendl;
+			LL_ERRS() << "Invalid snap edge" << LL_ENDL;
 		}
 	}
 
@@ -2154,7 +2142,7 @@ LLView*	LLView::findSnapEdge(S32& new_edge_val, const LLCoordGL& mouse_dir, ESna
 				}
 				break;
 			default:
-				llerrs << "Invalid snap edge" << llendl;
+				LL_ERRS() << "Invalid snap edge" << LL_ENDL;
 			}
 		}
 	}
@@ -2480,7 +2468,7 @@ static S32 invert_vertical(S32 y, LLView* parent)
 	}
 	else
 	{
-		llwarns << "Attempting to convert layout to top-left with no parent" << llendl;
+		LL_WARNS() << "Attempting to convert layout to top-left with no parent" << LL_ENDL;
 		return y;
 	}
 }

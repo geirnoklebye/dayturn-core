@@ -214,6 +214,8 @@ std::string HttpStatus::toTerseString() const
 	result << error_value;
 	return result.str();
 }
+
+
 // Pass true on statuses that might actually be cleared by a
 // retry.  Library failures, calling problems, etc. aren't
 // going to be fixed by squirting bits all over the Net.
@@ -244,6 +246,5 @@ bool HttpStatus::isRetryable() const
 }
 
 
-		
 } // end namespace LLCore
 

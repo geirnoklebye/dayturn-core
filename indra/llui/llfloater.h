@@ -308,7 +308,7 @@ public:
 	virtual BOOL	canClose() { return TRUE; }
 
 	/*virtual*/ void setVisible(BOOL visible); // do not override
-	/*virtual*/ void handleVisibilityChange ( BOOL new_visibility ); // do not override
+	/*virtual*/ void onVisibilityChange ( BOOL new_visibility ); // do not override
 	
 	void			setFrontmost(BOOL take_focus = TRUE);
     virtual void	setVisibleAndFrontmost(BOOL take_focus=TRUE, const LLSD& key = LLSD());    
@@ -581,7 +581,9 @@ private:
 	void hiddenFloaterClosed(LLFloater* floater);
 
 	LLRect				mLastSnapRect;
-	LLRect				mToolbarRects[LLToolBarEnums::TOOLBAR_COUNT];
+	LLRect				mToolbarLeftRect;
+	LLRect				mToolbarBottomRect;
+	LLRect				mToolbarRightRect;
 	LLHandle<LLView>	mSnapView;
 	BOOL			mFocusCycleMode;
 	S32				mSnapOffsetBottom;

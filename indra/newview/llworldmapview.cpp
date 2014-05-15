@@ -302,8 +302,8 @@ void LLWorldMapView::draw()
 	mVisibleRegions.clear();
 
 	// animate pan if necessary
-	sPanX = lerp(sPanX, sTargetPanX, LLCriticalDamp::getInterpolant(0.1f));
-	sPanY = lerp(sPanY, sTargetPanY, LLCriticalDamp::getInterpolant(0.1f));
+	sPanX = lerp(sPanX, sTargetPanX, LLSmoothInterpolation::getInterpolant(0.1f));
+	sPanY = lerp(sPanY, sTargetPanY, LLSmoothInterpolation::getInterpolant(0.1f));
 
 	const S32 width = getRect().getWidth();
 	const S32 height = getRect().getHeight();
@@ -1599,14 +1599,6 @@ void LLWorldMapView::handleClick(S32 x, S32 y, MASK mask,
 }
 
 
-BOOL outside_slop(S32 x, S32 y, S32 start_x, S32 start_y)
-{
-	S32 dx = x - start_x;
-	S32 dy = y - start_y;
-
-	return (dx <= -2 || 2 <= dx || dy <= -2 || 2 <= dy);
-}
-
 BOOL LLWorldMapView::handleMouseDown( S32 x, S32 y, MASK mask )
 {
 	gFocusMgr.setMouseCapture( this );
@@ -1689,7 +1681,7 @@ BOOL LLWorldMapView::handleHover( S32 x, S32 y, MASK mask )
 {
 	if (hasMouseCapture())
 	{
-		if (mPanning || outside_slop(x, y, mMouseDownX, mMouseDownY))
+		if (mPanning || llabs(x - mMouseDownX) > 1 || llabs(y - mMouseDownY) > 1)
 		{
 			// just started panning, so hide cursor
 			if (!mPanning)
@@ -1706,8 +1698,6 @@ BOOL LLWorldMapView::handleHover( S32 x, S32 y, MASK mask )
 			sPanY += delta_y;
 			sTargetPanX = sPanX;
 			sTargetPanY = sPanY;
-
-			gViewerWindow->moveCursorToCenter();
 		}
 
 		// doesn't matter, cursor should be hidden
@@ -1727,7 +1717,7 @@ BOOL LLWorldMapView::handleHover( S32 x, S32 y, MASK mask )
 		{
 			gViewerWindow->setCursor( UI_CURSOR_CROSS );
 		}
-		lldebugst(LLERR_USER_INPUT) << "hover handled by LLWorldMapView" << llendl;		
+		LL_DEBUGS("UserInput") << "hover handled by LLWorldMapView" << LL_ENDL;		
 		return TRUE;
 	}
 }
