@@ -60,11 +60,6 @@ enum ETerrainBrushType
 	E_LANDBRUSH_REVERT 	= 5,
 	E_LANDBRUSH_INVALID = 6
 };
-// Extended land layer for Aurora Sim
-const	char	AURORA_LAND_LAYER_CODE			= 'M';
-const	char	AURORA_WATER_LAYER_CODE			= 'X';
-const	char	AURORA_WIND_LAYER_CODE			= '9';
-const	char	AURORA_CLOUD_LAYER_CODE			= ':';
 
 
 // keys
@@ -227,11 +222,7 @@ const F32 CHAT_MAX_RADIUS = CHAT_SHOUT_RADIUS;
 const F32 CHAT_MAX_RADIUS_BY_TWO = CHAT_MAX_RADIUS / 2.f;
 
 // squared editions of the above for distance checks
-// Extended land layer for Aurora Sim
-const	char	AURORA_LAND_LAYER_CODE			= 'M';
-const	char	AURORA_WATER_LAYER_CODE			= 'X';
-const	char	AURORA_WIND_LAYER_CODE			= '9';
-const	char	AURORA_CLOUD_LAYER_CODE			= ':';
+
 const F32 CHAT_WHISPER_RADIUS_SQUARED = CHAT_WHISPER_RADIUS * CHAT_WHISPER_RADIUS;
 const F32 CHAT_NORMAL_RADIUS_SQUARED = CHAT_NORMAL_RADIUS * CHAT_NORMAL_RADIUS;
 const F32 CHAT_SHOUT_RADIUS_SQUARED = CHAT_SHOUT_RADIUS * CHAT_SHOUT_RADIUS;

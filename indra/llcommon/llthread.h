@@ -141,48 +141,6 @@ protected:
 	// mDataLock->unlock();
 };
 
-	void unlock();		// undefined behavior when called on mutex not being held
-//============================================================================
-
-//============================================================================
-
-
-// Scoped locking class similar in function to LLMutexLock but uses
-// the trylock() method to conditionally acquire lock without
-// blocking.  Caller resolves the resulting condition by calling
-// the isLocked() method and either punts or continues as indicated.
-//
-// Mostly of interest to callers needing to avoid stalls who can
-// guarantee another attempt at a later time.
-
-class LLMutexTrylock
-{
-public:
-	LLMutexTrylock(LLMutex* mutex)
-		: mMutex(mutex),
-		  mLocked(false)
-	{
-		if (mMutex)
-			mLocked = mMutex->trylock();
-	}
-
-	~LLMutexTrylock()
-	{
-		if (mMutex && mLocked)
-			mMutex->unlock();
-	}
-
-	bool isLocked() const
-	{
-		return mLocked;
-	}
-	
-private:
-	LLMutex*	mMutex;
-	bool		mLocked;
-};
-
-//============================================================================
 
 void LLThread::lockData()
 {

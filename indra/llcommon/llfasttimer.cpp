@@ -107,7 +107,6 @@ block_timer_tree_bf_iterator_t begin_block_timer_tree_bf(BlockTimerStatHandle& i
 block_timer_tree_bf_iterator_t end_block_timer_tree_bf()
 	{
 	return block_timer_tree_bf_iterator_t(); 
-		mTimers.clear();
 	}
 
 block_timer_tree_df_iterator_t begin_timer_tree(BlockTimerStatHandle& id) 
