@@ -86,7 +86,6 @@
 // system includes
 #include <iomanip>
 
-
 //
 // Globals
 //
@@ -205,6 +204,7 @@ if (mSGBandwidth) {
 	sgp.stat.count_stat_float(&LLStatViewer::ACTIVE_MESSAGE_DATA_RECEIVED);
 	sgp.units("Kbps");
 	sgp.precision(0);
+	mSGBandwidth = LLUICtrlFactory::create<LLStatGraph>(sgp);
 		mSGBandwidth->setStat(&LLViewerStats::getInstance()->mKBitStat);
 	}
 
@@ -280,11 +280,20 @@ void LLStatusBar::refresh()
 			F32 bwtotal = gViewerThrottle.getMaxBandwidth() / 1024.f;
 			mSGBandwidth->setMin(0.f);
 			mSGBandwidth->setMax(bwtotal * 1.25f);
-		//mSGBandwidth->setThreshold(0, bwtotal*0.75f);
-		//mSGBandwidth->setThreshold(1, bwtotal);
-		//mSGBandwidth->setThreshold(2, bwtotal);
+			mSGBandwidth->setThreshold(0, bwtotal * 0.75f);
+			mSGBandwidth->setThreshold(1, bwtotal);
+			mSGBandwidth->setThreshold(2, bwtotal);
 		}
 		
+		if (fps_stats_visible) {
+			mFPSText->setValue(llformat("%.1f", LLViewerStats::getInstance()->mFPSStat.getMeanPerSec()));
+		}
+
+		mDrawDistancePanel->setVisible(show_draw_distance);
+		mStatisticsPanel->setVisible(net_stats_visible);
+		mFPSPanel->setVisible(fps_stats_visible);
+		}
+
 		if (fps_stats_visible) {
 			mFPSText->setValue(llformat("%.1f", LLViewerStats::getInstance()->mFPSStat.getMeanPerSec()));
 		}
