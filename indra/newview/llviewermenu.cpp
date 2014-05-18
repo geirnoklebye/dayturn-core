@@ -6393,7 +6393,8 @@ bool update_grid_help()
 	bool needs_seperator = false;
 
 
-	if (LLGridManager::getInstance()->isInOpenSim() && grid_info.has("help"))
+	if (LLGridManager::getInstance()->isInSecondLife() ||
+		(LLGridManager::getInstance()->isInOpenSim() && grid_info.has("help")))
 	{
 		needs_seperator = true;
 		gMenuHolder->childSetVisible("current_grid_help",true);
@@ -6406,7 +6407,8 @@ bool update_grid_help()
 		gMenuHolder->childSetVisible("current_grid_help",false);
 		gMenuHolder->childSetVisible("current_grid_help_login",false);
 	}
-	if (LLGridManager::getInstance()->isInOpenSim() && grid_info.has("about"))
+	if (LLGridManager::getInstance()->isInSecondLife() ||
+		(LLGridManager::getInstance()->isInOpenSim() && grid_info.has("about")))
 	{
 		needs_seperator = true;
 		gMenuHolder->childSetVisible("current_grid_about",true);
