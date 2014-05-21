@@ -301,6 +301,12 @@ void LLFloaterProperties::refreshFromItem(LLInventoryItem* item)
 		else
 		{
 			gCacheName->getFullName(perm.getOwner(), name);
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			{
+				name = gAgent.mRRInterface.getDummyName (name);
+			}
+//mk
 		}
 		getChildView("BtnOwner")->setEnabled(TRUE);
 		getChildView("LabelOwnerTitle")->setEnabled(TRUE);
@@ -546,6 +552,12 @@ void LLFloaterProperties::onClickCreator()
 // static
 void LLFloaterProperties::onClickOwner()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		return;
+	}
+//mk
 	LLInventoryItem* item = findItem();
 	if(!item) return;
 	if(item->getPermissions().isGroupOwned())

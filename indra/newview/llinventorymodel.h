@@ -385,7 +385,10 @@ public:
 							 const std::string& name,
 							 void (*callback)(const LLSD&, void*) = NULL,
 							 void* user_data = NULL );
-protected:
+//MK
+////protected:
+public:
+//mk
 	// Internal methods that add inventory and make sure that all of
 	// the internal data structures are consistent. These methods
 	// should be passed pointers of newly created objects, and the
@@ -465,7 +468,10 @@ public:
 protected:
 	// Updates all linked items pointing to this id.
 	void addChangedMaskForLinks(const LLUUID& object_id, U32 mask);
-private:
+//MK
+////private:
+public:
+//mk
 	// Flag set when notifyObservers is being called, to look for bugs
 	// where it's called recursively.
 	BOOL mIsNotifyObservers;

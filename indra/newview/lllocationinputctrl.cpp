@@ -593,8 +593,13 @@ void LLLocationInputCtrl::onFocusLost()
 
 void LLLocationInputCtrl::draw()
 {
-	static LLUICachedControl<bool> show_coords("NavBarShowCoordinates", false);
-	if(!hasFocus() && show_coords)
+//MK
+	// Update the location whether the coordinates are shown or not, because
+	// buildLocationString() is where the parcel, region and coords are hidden
+////	static LLUICachedControl<bool> show_coords("NavBarShowCoordinates", false);
+////	if(!hasFocus() && show_coords)
+	if(!hasFocus())
+//mk
 	{
 		refreshLocation();
 	}
@@ -602,7 +607,11 @@ void LLLocationInputCtrl::draw()
 	static LLUICachedControl<bool> show_icons("NavBarShowParcelProperties", false);
 	if (show_icons)
 	{
-		refreshHealth();
+//MK
+		// FIX : parcel properties should be refreshed at all times, not only health
+////		refreshHealth();
+		refresh();
+//mk
 	}
 	LLComboBox::draw();
 }
@@ -628,11 +637,23 @@ void LLLocationInputCtrl::reshape(S32 width, S32 height, BOOL called_from_parent
 
 void LLLocationInputCtrl::onInfoButtonClicked()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	LLFloaterSidePanelContainer::showPanel("places", LLSD().with("type", "agent"));
 }
 
 void LLLocationInputCtrl::onForSaleButtonClicked()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	handle_buy_land();
 }
 
@@ -640,6 +661,12 @@ void LLLocationInputCtrl::onAddLandmarkButtonClicked()
 {
 	LLViewerInventoryItem* landmark = LLLandmarkActions::findLandmarkForAgentPos();
 	// Landmark exists, open it for preview and edit
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	if(landmark && landmark->getUUID().notNull())
 	{
 		LLSD key;
@@ -792,6 +819,13 @@ void LLLocationInputCtrl::refreshLocation()
 	{
 		location_name = "???";
 	}
+//MK
+//	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+//	{
+//		location_name = gAgent.mRRInterface.stringReplace (location_name, gAgent.mRRInterface.getParcelName(), "(Hidden)");
+//		if (gAgent.getRegion()) location_name = gAgent.mRRInterface.stringReplace (location_name, gAgent.getRegion()->getName(), "(Hidden)");
+//	}
+//mk
 	// store human-readable location to compare it in changeLocationPresentation()
 	mHumanReadableLocation = location_name;
 	setText(location_name);
@@ -1034,6 +1068,13 @@ void LLLocationInputCtrl::enableAddLandmarkButton(bool val)
 	LLUIImage* img = val ? mLandmarkImageOn : mLandmarkImageOff;
 	if(img)
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+		{
+			// Pretend we are not on a known landmark
+			img = mLandmarkImageOff;
+		}
+//mk
 		mAddLandmarkBtn->setImageUnselected(img);
 	}
 }
@@ -1055,6 +1096,13 @@ void LLLocationInputCtrl::updateAddLandmarkTooltip()
 	{
 		tooltip = mAddLandmarkTooltip;
 	}
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		// pretend we are not on a known landmark
+		tooltip = mAddLandmarkTooltip;
+	}
+//mk
 	mAddLandmarkBtn->setToolTip(tooltip);
 }
 
@@ -1071,6 +1119,15 @@ void LLLocationInputCtrl::updateContextMenu(){
 		{
 			landmarkItem->setLabel(LLTrans::getString("EditLandmarkNavBarMenu"));
 		}
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+		{
+			// Pretend we are not on a known landmark
+			landmarkItem->setLabel(LLTrans::getString("AddLandmarkNavBarMenu"));
+//			std::string nothing = "-";
+//			landmarkItem->setLabel(nothing);
+		}
+//mk
 	}
 }
 void LLLocationInputCtrl::updateWidgetlayout()
@@ -1090,6 +1147,12 @@ void LLLocationInputCtrl::updateWidgetlayout()
 
 void LLLocationInputCtrl::changeLocationPresentation()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	if (!mTextEntry)
 		return;
 
@@ -1126,6 +1189,12 @@ void LLLocationInputCtrl::onLocationContextMenuItemClicked(const LLSD& userdata)
 	}
 	else if (item == "landmark")
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+		{
+			return;
+		}
+//mk
 		LLViewerInventoryItem* landmark = LLLandmarkActions::findLandmarkForAgentPos();
 		
 		if(!landmark)
@@ -1135,7 +1204,6 @@ void LLLocationInputCtrl::onLocationContextMenuItemClicked(const LLSD& userdata)
 		else
 		{
 			LLFloaterSidePanelContainer::showPanel("places", LLSD().with("type", "landmark").with("id",landmark->getUUID()));
-
 		}
 	}
 	else if (item == "cut")

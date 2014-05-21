@@ -343,6 +343,14 @@ void LLFloaterWorldMap::onClose(bool app_quitting)
 // virtual
 void LLFloaterWorldMap::onOpen(const LLSD& key)
 {
+//MK
+	if (gRRenabled && (
+		gAgent.mRRInterface.mContainsShowworldmap
+		|| gAgent.mRRInterface.mContainsShowloc))
+	{
+//		return;
+	}
+//mk
 	bool center_on_target = (key.asString() == "center");
 	
 	mIsClosing = FALSE;
@@ -430,6 +438,14 @@ void LLFloaterWorldMap::reshape( S32 width, S32 height, BOOL called_from_parent 
 // virtual
 void LLFloaterWorldMap::draw()
 {
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShowworldmap || gAgent.mRRInterface.mContainsShowloc))
+	{
+		closeFloater();
+//		LLTracker::stopTracking(NULL);
+		return;
+	}
+//mk
 	static LLUIColor map_track_color = LLUIColorTable::instance().getColor("MapTrackColor", LLColor4::white);
 	static LLUIColor map_track_disabled_color = LLUIColorTable::instance().getColor("MapTrackDisabledColor", LLColor4::white);
 	
@@ -1634,3 +1650,16 @@ void LLFloaterWorldMap::onChangeMaturity()
 		gSavedSettings.setBOOL("ShowAdultEvents", FALSE);
 	}
 }
+
+//MK
+void LLFloaterWorldMap::open()
+{
+	if (gRRenabled && (
+		gAgent.mRRInterface.mContainsShowworldmap
+		|| gAgent.mRRInterface.mContainsShowloc))
+	{
+		return;
+	}
+	LLFloater::openFloater();
+}
+//mk

@@ -941,7 +941,13 @@ BOOL LLImageGL::preAddToAtlas(S32 discard_level, const LLImageRaw* raw_image)
 			mFormatType = GL_UNSIGNED_BYTE;
 			break;
 			default:
-			LL_ERRS() << "Bad number of components for texture: " << (U32)getComponents() << LL_ENDL;
+//MK
+			mFormatInternal = GL_RGBA8;
+			mFormatPrimary = GL_RGBA;
+			mFormatType = GL_UNSIGNED_BYTE;
+			break;
+////			llerrs << "Bad number of components for texture: " << (U32)getComponents() << llendl;
+//mk
 		}
 	}
 
@@ -1305,7 +1311,13 @@ BOOL LLImageGL::createGLTexture(S32 discard_level, const LLImageRaw* imageraw, S
 			mFormatType = GL_UNSIGNED_BYTE;
 			break;
 			default:
-			LL_ERRS() << "Bad number of components for texture: " << (U32)getComponents() << LL_ENDL;
+//MK
+			mFormatInternal = GL_RGBA8;
+			mFormatPrimary = GL_RGBA;
+			mFormatType = GL_UNSIGNED_BYTE;
+			break;
+////			llerrs << "Bad number of components for texture: " << (U32)getComponents() << llendl;
+//mk
 		}
 
 		calcAlphaChannelOffsetAndStride() ;

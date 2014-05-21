@@ -141,13 +141,13 @@ BOOL LLFloaterAbout::postBuild()
 		boost::bind(&LLFloaterAbout::onClickCopyToClipboard, this));
 
 	if (gAgent.getRegion())
-	{
+		{
 		// start fetching server release notes URL
 		setSupportText(LLTrans::getString("RetrievingData"));
 		LLServerReleaseNotesURLFetcher::startFetch();
-	}
+			}
 	else // not logged in
-	{
+			{
 		setSupportText(LLStringUtil::null);
 	}
 
