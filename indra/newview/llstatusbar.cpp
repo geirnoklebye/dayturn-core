@@ -279,15 +279,6 @@ void LLStatusBar::refresh()
 	mStatisticsPanel->setVisible(net_stats_visible);
 	mFPSPanel->setVisible(fps_stats_visible);
 
-		if (fps_stats_visible) {
-			mFPSText->setValue(llformat("%.1f", LLViewerStats::getInstance()->mFPSStat.getMeanPerSec()));
-		}
-
-		mDrawDistancePanel->setVisible(show_draw_distance);
-		mStatisticsPanel->setVisible(net_stats_visible);
-		mFPSPanel->setVisible(fps_stats_visible);
-	}
-
 	// update clock every 10 seconds
 	if(mClockUpdateTimer.getElapsedTimeF32() > 10.f)
 	{
