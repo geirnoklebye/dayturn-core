@@ -92,16 +92,6 @@ bool LLAvatarName::useUsernames()
 	return sUseUsernames;
 }
 
-void LLAvatarName::setUseUsernames(bool use)
-{
-	sUseUsernames = use;
-}
-
-bool LLAvatarName::useUsernames()
-{
-	return sUseUsernames;
-}
-
 LLSD LLAvatarName::asLLSD() const
 {
 	LLSD sd;

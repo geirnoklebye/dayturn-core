@@ -139,11 +139,7 @@ bool LLDirIterator::Impl::next(std::string &fname)
 			++mIter;
 		}
 	}
-	catch (const fs::filesystem_error& e)
-	{
-		llwarns << e.what() << llendl;
-		}
-	}
+
 	catch (const fs::filesystem_error& e)
 	{
 		LL_WARNS() << e.what() << LL_ENDL;

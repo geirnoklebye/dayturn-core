@@ -274,7 +274,4 @@ S32 LLPidLock::getPID()
     return (S32)getpid();
 }
 
-S32 LLPidLock::getPID()
-{
-    return (S32)getpid();
-}
+

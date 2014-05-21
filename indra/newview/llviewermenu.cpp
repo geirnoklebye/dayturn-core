@@ -8280,22 +8280,6 @@ void handle_report_bug(const LLSD& param)
 	LLWeb::loadURLExternal(file_bug_url.getString());
 }
 
-void handle_report_bug(const LLSD& param)
-{
-	LLUIString url(param.asString());
-	
-	LLStringUtil::format_map_t replace;
-	replace["[ENVIRONMENT]"] = LLURI::escape(LLAppViewer::instance()->getViewerInfoString());
-	LLSLURL location_url;
-	LLAgentUI::buildSLURL(location_url);
-	replace["[LOCATION]"] = location_url.getSLURLString();
-
-	LLUIString file_bug_url = gSavedSettings.getString("ReportBugURL");
-	file_bug_url.setArgs(replace);
-
-	LLWeb::loadURLExternal(file_bug_url.getString());
-}
-
 void handle_buy_currency_test(void*)
 {
 	std::string url =

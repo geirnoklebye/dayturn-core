@@ -102,8 +102,6 @@ void LLTemplateMessageReader::getData(const char *blockname, const char *varname
 
 	LLMsgVarData& vardata = msg_block_data->mMemberVarData[vnamep];
 
-	LLMsgVarData& vardata = msg_block_data->mMemberVarData[vnamep];
-
 	if (size && size != vardata.getSize())
 	{
 		LL_ERRS() << "Msg " << mCurrentRMessageData->mName 

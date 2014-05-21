@@ -727,8 +727,6 @@ void LLInventoryModel::collectDescendentsIf(const LLUUID& id,
 	LLViewerInventoryItem* item = NULL;
 	item_array_t* item_array = get_ptr_in_map(mParentChildItemTree, id);
 
-		S32 count = item_array->size();
-			item = item_array->operator[](i);
 	// Follow folder links recursively.  Currently never goes more
 	// than one level deep (for current outfit support)
 	// Note: if making it fully recursive, need more checking against infinite loops.

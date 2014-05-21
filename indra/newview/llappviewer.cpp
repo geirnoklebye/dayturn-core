@@ -3382,9 +3382,6 @@ LLSD LLAppViewer::getViewerInfo() const
 		info["GRAPHICS_DRIVER_VERSION"] = driver_info["DriverVersion"];
 	}
 #endif
-// [RLVa:KB] - Checked: 2010-04-18 (RLVa-1.4.0a) | Added: RLVa-1.2.0e
-	info["RLV_VERSION"] = (rlv_handler_t::isEnabled()) ? RlvStrings::getVersionAbout() : "(disabled)";
-// [/RLVa:KB]
 	info["OPENGL_VERSION"] = (const char*)(glGetString(GL_VERSION));
 	info["LIBCURL_VERSION"] = LLCurl::getVersionString();
 	info["J2C_VERSION"] = LLImageJ2C::getEngineInfo();

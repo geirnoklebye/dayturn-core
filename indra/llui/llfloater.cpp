@@ -2821,15 +2821,15 @@ void LLFloaterView::adjustToFitScreen(LLFloater* floater, BOOL allow_partial_out
 	{
 		floater->clearSnapTarget();
 	}
-	else if (delta_left > 0 && floater_rect.mTop < mToolbarLeftRect.mTop && floater_rect.mBottom > mToolbarLeftRect.mBottom)
+	else if (delta_left > 0 && floater_rect.mTop < left_toolbar_rect.mTop && floater_rect.mBottom > left_toolbar_rect.mBottom)
 	{
 		floater->translate(delta_left, 0);
 	}
-	else if (delta_bottom > 0 && floater_rect.mLeft > mToolbarBottomRect.mLeft && floater_rect.mRight < mToolbarBottomRect.mRight)
+	else if (delta_bottom > 0 && floater_rect.mLeft > bottom_toolbar_rect.mLeft && floater_rect.mRight < bottom_toolbar_rect.mRight)
 	{
 		floater->translate(0, delta_bottom);
 	}
-	else if (delta_right < 0 && floater_rect.mTop < mToolbarRightRect.mTop	&& floater_rect.mBottom > mToolbarRightRect.mBottom)
+	else if (delta_right < 0 && floater_rect.mTop < right_toolbar_rect.mTop	&& floater_rect.mBottom > right_toolbar_rect.mBottom)
 	{
 		floater->translate(delta_right, 0);
 	}
@@ -3033,25 +3033,7 @@ void LLFloaterView::setToolbarRect(LLToolBarEnums::EToolBarLocation tb, const LL
 	if (tb < LLToolBarEnums::TOOLBAR_COUNT)
 	{
 		mToolbarRects[tb] = toolbar_rect;
-	}
-}
-
-void LLFloaterView::setToolbarRect(LLToolBarEnums::EToolBarLocation tb, const LLRect& toolbar_rect)
-{
-	switch (tb)
-	{
-	case LLToolBarEnums::TOOLBAR_LEFT:
-		mToolbarLeftRect = toolbar_rect;
-		break;
-	case LLToolBarEnums::TOOLBAR_BOTTOM:
-		mToolbarBottomRect = toolbar_rect;
-		break;
-	case LLToolBarEnums::TOOLBAR_RIGHT:
-		mToolbarRightRect = toolbar_rect;
-		break;
-	default:
 		LL_WARNS() << "setToolbarRect() passed odd toolbar number " << (S32) tb << LL_ENDL;
-		break;
 	}
 }
 

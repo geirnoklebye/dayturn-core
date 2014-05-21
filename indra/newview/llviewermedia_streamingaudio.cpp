@@ -112,8 +112,8 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 		mMediaPlugin->loadURI ( test_url );
 		llinfos << "Attempting to play internet stream: " << mURL << llendl;	
 		mMediaPlugin->start();
+		LL_INFOS() << "Playing stream..." << LL_ENDL;
 	}
-		LL_INFOS() << "Playing stream..." << LL_ENDL;		
 	else
 	{
 		LL_INFOS() << "setting stream to NULL"<< LL_ENDL;

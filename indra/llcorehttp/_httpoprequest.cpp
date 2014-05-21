@@ -1114,7 +1114,7 @@ void check_curl_easy_code(CURLcode code)
 }
 
 }  // end anonymous namespace
-}
+
 
 
 void check_curl_easy_code(CURLcode code, int curl_setopt_option)
@@ -1145,4 +1145,4 @@ void check_curl_easy_code(CURLcode code)
 	}
 }
 
-}  // end anonymous namespace
+  // end anonymous namespace

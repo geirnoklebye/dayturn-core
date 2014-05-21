@@ -316,10 +316,12 @@ template<typename T>
 
 // local static instance for registering a particular panel class
 template<typename T>
+class LLRegisterPanelClassWrapper
+:	public LLRegisterPanelClass
 {
 public:
-	// register with either the provided builder, or the generic templated builder
-	LLPanelInjector(const std::string& tag);
+	// reigister with either the provided builder, or the generic templated builder
+	LLRegisterPanelClassWrapper(const std::string& tag);
 // [SL:KB] - Patch: UI-Base | Checked: 2010-12-01 (Catznip-3.0.0a) | Added: Catznip-2.4.0g
 	LLRegisterPanelClassWrapper(const std::string& tag, LLPanelClassCreatorFunc func);
 // [/SL:KB]
@@ -327,7 +329,7 @@ public:
 
 
 template<typename T>
-	LLPanelInjector<T>::LLPanelInjector(const std::string& tag) 
+LLRegisterPanelClassWrapper<T>::LLRegisterPanelClassWrapper(const std::string& tag) 
 {
 	LLRegisterPanelClass::instance().addPanelClass(tag,&LLRegisterPanelClass::defaultPanelClassBuilder<T>);
 }
