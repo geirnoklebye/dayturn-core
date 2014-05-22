@@ -2124,7 +2124,7 @@ bool LLViewerFetchedTexture::updateFetch()
 
 void LLViewerFetchedTexture::clearFetchedResults()
 {
-	if(LLImageGL::sGlobalTextureMemory < sMaxDesiredTextureMem * 0.95f)//not ready to release unused memory.
+	if(mNeedsCreateTexture || mIsFetching)
 	{
 		return ;
 	}
