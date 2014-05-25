@@ -137,6 +137,7 @@ LLView::Params::Params()
 
 LLView::LLView(const LLView::Params& p)
 :	LLTrace::MemTrackable<LLView>("LLView"),
+	mVisible(p.visible),
 	mOnlyInSL(p.only_in_sl),
 	mInDraw(false),
 	mName(p.name),

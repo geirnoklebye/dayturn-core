@@ -2155,9 +2155,7 @@ bool LLAppViewer::cleanup()
 
     removeDumpDir();
 
-    removeDumpDir();
-
-	// return 0;
+ 	// return 0;
 	return true;
 }
 

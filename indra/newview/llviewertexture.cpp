@@ -2124,18 +2124,18 @@ bool LLViewerFetchedTexture::updateFetch()
 
 void LLViewerFetchedTexture::clearFetchedResults()
 {
-	// <FS:Ansariel> For texture refresh
-	//llassert_always(!mNeedsCreateTexture && !mIsFetching);
-		return;
-	// </FS:Ansariel>
-	
-	cleanup();
-	destroyGLTexture();
-
-	if(getDiscardLevel() >= 0) //sculpty texture, force to invalidate
+	if(LLImageGL::sGlobalTextureMemory < sMaxDesiredTextureMem * 0.95f)//not ready to release unused memory.
 	{
-		mGLTexturep->forceToInvalidateGLTexture();
+		return ;
 	}
+	if (mNeedsCreateTexture)//return if in the process of generating a new texture.
+	{
+		return;
+	}
+
+	//LL_DEBUGS("Avatar") << mID << LL_ENDL;
+	destroyGLTexture();
+	mFullyLoaded = FALSE;
 }
 
 void LLViewerFetchedTexture::forceToDeleteRequest()
