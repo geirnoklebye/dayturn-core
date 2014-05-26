@@ -466,7 +466,7 @@ void LLAvatarPropertiesProcessor::notifyObservers(const LLUUID& id,void* data, E
 		if (agent_id == id || agent_id.isNull())
 		{
 //MK
-			//llinfos << count << llendl;
+			//LL_INFOS() << count << LL_ENDL;
 			// We're getting crashes here...
 			LLAvatarPropertiesObserver* tmp = dynamic_cast<LLAvatarPropertiesObserver*> (oi->second);
 			if (tmp != NULL)

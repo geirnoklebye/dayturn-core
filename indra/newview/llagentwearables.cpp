@@ -751,7 +751,7 @@ void LLAgentWearables::wearableUpdated(LLWearable *wearable, BOOL removed)
 		{
 			wearable->setDefinitionVersion(22);
 			U32 index = getWearableIndex(wearable);
-				llinfos << "forcing wearable type " << wearable->getType() << " to version 22 from 24" << llendl;
+				LL_INFOS() << "forcing wearable type " << wearable->getType() << " to version 22 from 24" << LL_ENDL;
 			saveWearable(wearable->getType(),index,TRUE);
 		}
 
@@ -792,13 +792,13 @@ void LLAgentWearables::setWearable(const LLWearableType::EType type, U32 index, 
 		wearableentry_map_t::iterator wearable_iter = mWearableDatas.find(type);
 	if (wearable_iter == mWearableDatas.end())
 	{
-		llwarns << "invalid type, type " << type << " index " << index << llendl; 
+		LL_WARNS() << "invalid type, type " << type << " index " << index << LL_ENDL; 
 		return;
 	}
 	wearableentry_vec_t& wearable_vec = wearable_iter->second;
 	if (index>=wearable_vec.size())
 	{
-		llwarns << "invalid index, type " << type << " index " << index << llendl; 
+		LL_WARNS() << "invalid index, type " << type << " index " << index << LL_ENDL; 
 	}
 	else
 	{
@@ -814,7 +814,7 @@ U32 LLAgentWearables::pushWearable(const LLWearableType::EType type, LLWearable 
 	if (wearable == NULL)
 	{
 		// no null wearables please!
-		llwarns << "Null wearable sent for type " << type << llendl;
+		LL_WARNS() << "Null wearable sent for type " << type << LL_ENDL;
 		return MAX_CLOTHING_PER_TYPE;
 	}
 	if (type < LLWearableType::WT_COUNT || mWearableDatas[type].size() < MAX_CLOTHING_PER_TYPE)
@@ -878,7 +878,7 @@ U32	LLAgentWearables::getWearableIndex(const LLWearable *wearable) const
 	wearableentry_map_t::const_iterator wearable_iter = mWearableDatas.find(type);
 	if (wearable_iter == mWearableDatas.end())
 	{
-		llwarns << "tried to get wearable index with an invalid type!" << llendl;
+		LL_WARNS() << "tried to get wearable index with an invalid type!" << LL_ENDL;
 		return MAX_CLOTHING_PER_TYPE;
 	}
 	const wearableentry_vec_t& wearable_vec = wearable_iter->second;
@@ -1470,8 +1470,8 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 					// cur_wearable is the piece of clothing we are wearing on index "index" on the layer "type" (ex : WT_SHIRT, WT_PANTS...)
 					LLViewerWearable* cur_wearable = getViewerWearable ((LLWearableType::EType)type, index);
 
-					S32 count = wearables.count();
-					llassert(items.count() == count);
+					S32 count = wearables.size();
+					llassert(items.size() == count);
 					S32 i;
 					for (i = 0; i < count; i++)
 					{
@@ -1481,7 +1481,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
 						{
 							remove_this = false;
-							llinfos << "not removing old wearable " << cur_wearable->getName() << llendl;
+							LL_INFOS() << "not removing old wearable " << cur_wearable->getName() << LL_ENDL;
 						}
 					}
 
@@ -1528,7 +1528,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
 						{
 							wear_this = false;
-							llinfos << "not wearing new wearable " << new_wearable->getName() << llendl;
+							LL_INFOS() << "not wearing new wearable " << new_wearable->getName() << LL_ENDL;
 						}
 					}
 				}
@@ -2246,7 +2246,7 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 		{
 			F32 offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
 			F32 old_offset = mLastWornShape->getVisualParamWeight(AVATAR_HOVER);
-//			llinfos << "old_offset = " << old_offset << " new offset = " << offset << " saved offset = " << mSavedOffset << llendl;
+//			LL_INFOS() << "old_offset = " << old_offset << " new offset = " << offset << " saved offset = " << mSavedOffset << LL_ENDL;
 
 			if (old_offset != offset)
 			{
@@ -2320,9 +2320,9 @@ void LLAgentWearables::forceUpdateShape (void)
 									cat_array,
 									item_array,
 									LLInventoryModel::EXCLUDE_TRASH);
-	for (S32 i=0; i<item_array.count(); i++)
+	for (S32 i=0; i<item_array.size(); i++)
 	{
-		const LLInventoryItem* item = item_array.get(i).get();
+		const LLInventoryItem* item = item_array.at(i).get();
 		if (item->getIsLinkType() && item->getLinkedUUID() == uuid)
 		{
 			gInventory.purgeObject(item->getUUID());

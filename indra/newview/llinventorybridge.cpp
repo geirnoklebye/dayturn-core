@@ -2102,13 +2102,13 @@ BOOL LLFolderBridge::isClipboardPasteable() const
 		LLInventoryModel* model = getInventoryModel();
 		if (model)
 		{
-			LLDynamicArray<LLUUID> objects;
+			std::vector<LLUUID> objects;
 			LLClipboard::instance().pasteFromClipboard(objects);
 			LLViewerInventoryCategory *current_cat = getCategory();
 
-			for(S32 i = objects.count() - 1; i >= 0; --i)
+			for(S32 i = objects.size() - 1; i >= 0; --i)
 			{
-				const LLUUID &obj_id = objects.get(i);
+				const LLUUID &obj_id = objects.at(i);
 				if (!gAgent.mRRInterface.isFolderLocked(current_cat)
 				&& gAgent.mRRInterface.isFolderLocked(gInventory.getCategory (model->getObject(obj_id)->getParentUUID())))
 				{
@@ -2177,13 +2177,13 @@ BOOL LLFolderBridge::isClipboardPasteableAsLink() const
 		LLInventoryModel* model = getInventoryModel();
 		if (model)
 		{
-			LLDynamicArray<LLUUID> objects;
+			std::vector<LLUUID> objects;
 			LLClipboard::instance().pasteFromClipboard(objects);
 			LLViewerInventoryCategory *current_cat = getCategory();
 
-			for(S32 i = objects.count() - 1; i >= 0; --i)
+			for(S32 i = objects.size() - 1; i >= 0; --i)
 			{
-				const LLUUID &obj_id = objects.get(i);
+				const LLUUID &obj_id = objects.at(i);
 				if (!gAgent.mRRInterface.isFolderLocked(current_cat)
 				&& gAgent.mRRInterface.isFolderLocked(gInventory.getCategory (model->getObject(obj_id)->getParentUUID())))
 				{
@@ -5829,8 +5829,8 @@ void remove_inventory_category_from_avatar( LLInventoryCategory* category )
 //mk
 
 	if(!category) return;
-	lldebugs << "remove_inventory_category_from_avatar( " << category->getName()
-			 << " )" << llendl;
+	LL_DEBUGS() << "remove_inventory_category_from_avatar( " << category->getName()
+			 << " )" << LL_ENDL;
 
 
 	if (gAgentCamera.cameraCustomizeAvatar())
@@ -5855,7 +5855,7 @@ void remove_inventory_category_from_avatar_step2( BOOL proceed, LLUUID category_
 {
 
 	// Find all the wearables that are in the category's subtree.
-	lldebugs << "remove_inventory_category_from_avatar_step2()" << llendl;
+	LL_DEBUGS() << "remove_inventory_category_from_avatar_step2()" << LL_ENDL;
 	if(proceed)
 	{
 		LLInventoryModel::cat_array_t cat_array;

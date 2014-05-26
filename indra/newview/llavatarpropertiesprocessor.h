@@ -188,7 +188,7 @@ public:
 	// Let's make this method non-pure virtual so we get rid of that crash once and for all, even if this
 	// is not the best nor the most elegant solution.
 ////	virtual void processProperties(void* data, EAvatarProcessorType type) = 0;
-	virtual void processProperties(void* data, EAvatarProcessorType type) { llwarns << "Defensive code against the Pure Virtual Function Call error in LLAvatarPropertiesProcessor" << llendl; }
+	virtual void processProperties(void* data, EAvatarProcessorType type) { LL_WARNS() << "Defensive code against the Pure Virtual Function Call error in LLAvatarPropertiesProcessor" << LL_ENDL; }
 //mk
 };
 

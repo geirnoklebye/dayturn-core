@@ -4280,7 +4280,7 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 	
 	if (ret)
 	{
-		llwarns << "Could not execute decomposition stage when attempting to create single hull." << llendl;
+		LL_WARNS() << "Could not execute decomposition stage when attempting to create single hull." << LL_ENDL;
 		make_box(mCurRequest);
 	}
 	else
@@ -4289,7 +4289,7 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 
 		if (ret)
 		{
-			llwarns << "Could not execute simiplification stage when attempting to create single hull." << llendl;
+			LL_WARNS() << "Could not execute simiplification stage when attempting to create single hull." << LL_ENDL;
 			make_box(mCurRequest);
 		}
 		else
@@ -4353,17 +4353,17 @@ public:
 
 	virtual void trace( char const *a_strMsg )
 	{
-		llinfos << a_strMsg << llendl;
+		LL_INFOS() << a_strMsg << LL_ENDL;
 	}
 
 	virtual void startTraceData( char const *a_strWhat)
 	{
-		llinfos << a_strWhat << llendl;
+		LL_INFOS() << a_strWhat << LL_ENDL;
 	}
 
 	virtual void traceData( char const *a_strData )
 	{
-		llinfos << a_strData << llendl;
+		LL_INFOS() << a_strData << LL_ENDL;
 	}
 
 	virtual void endTraceData()

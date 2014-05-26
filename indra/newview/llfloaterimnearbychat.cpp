@@ -1000,7 +1000,7 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 				it++;
 			}
 
-			LLViewerStats::getInstance()->incStat(LLViewerStats::ST_CHAT_COUNT);
+			//LLViewerStats::getInstance()->incStat(LLViewerStats::ST_CHAT_COUNT);
 
 			// We have redirected the chat message, don't send it on the original channel
 			return;
