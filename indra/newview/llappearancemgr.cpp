@@ -3192,7 +3192,7 @@ public:
 		if (content["error"].asString().find ("Cof Version Mismatch") != -1)
 		//if (status == 400 && reason == "Bad Request" && content["code"].asInteger() == 1 && content["error"].asString().find ("Cof Version Mismatch") != -1)
 		{
-			llwarns << "Setting COF version to " << content["expected"].asInteger() - 1 << "\"" << llendl;
+			LL_WARNS() << "Setting COF version to " << content["expected"].asInteger() - 1 << "\"" << LL_ENDL;
 			gAgentAvatarp->mLastUpdateRequestCOFVersion = content["expected"].asInteger() - 1;
 		}
 //mk

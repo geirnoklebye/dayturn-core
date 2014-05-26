@@ -105,7 +105,7 @@ void QToolAlign::handleSelect()
 {
 	// no parts, please
 
-	llwarns << "in select" << llendl;
+	LL_WARNS() << "in select" << LL_ENDL;
 	LLSelectMgr::getInstance()->promoteSelectionToRoot();
 }
 
@@ -509,7 +509,7 @@ void QToolAlign::align()
 			// check to see if it overlaps the previously placed objects
 			BOOL overlap = FALSE;
 
-			llwarns << "i=" << i << " j=" << j << llendl;
+			LL_WARNS() << "i=" << i << " j=" << j << LL_ENDL;
 			
 			if (!mForce) // well, don't check if in force mode
 			{
@@ -523,8 +523,8 @@ void QToolAlign::align()
 
 					if (overlaps_this)
 					{
-						llwarns << "overlap" << new_bbox.getCenterAgent() << other_bbox.getCenterAgent() << llendl;
-						llwarns << "extent" << new_bbox.getExtentLocal() << other_bbox.getExtentLocal() << llendl;
+						LL_WARNS() << "overlap" << new_bbox.getCenterAgent() << other_bbox.getCenterAgent() << LL_ENDL;
+						LL_WARNS() << "extent" << new_bbox.getExtentLocal() << other_bbox.getExtentLocal() << LL_ENDL;
 					}
 
 					overlap = (overlap || overlaps_this);

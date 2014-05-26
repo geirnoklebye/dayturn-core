@@ -406,6 +406,10 @@ void LLAvatarListItem::updateFirstSeen(int nb /* = 5 */)
 	updateChildren();
 }
 
+#define CHAT_WHISPER_RADIUS 10.0
+#define CHAT_NORMAL_RADIUS 20.0
+#define CHAT_SHOUT_RADIUS 100.0
+
 void LLAvatarListItem::setRange(F32 distance)
 {
 	mDistance = distance;

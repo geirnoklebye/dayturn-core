@@ -39,6 +39,10 @@
 #include "llavatarappearancedefines.h"
 #include "llwearabledata.h"
 
+//MK
+#include "llappviewer.h" // for gFrameTimeSeconds
+//mk
+
 class LLInventoryItem;
 class LLVOAvatarSelf;
 class LLViewerWearable;

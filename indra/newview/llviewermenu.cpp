@@ -9017,7 +9017,7 @@ class LLWorldEnableEnvSettings : public view_listener_t
 			}
 			else
 			{
-				llwarns << "Unknown item" << llendl;
+				LL_WARNS() << "Unknown item" << LL_ENDL;
 			}
 		}
 		return result;

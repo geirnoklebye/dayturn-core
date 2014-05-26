@@ -832,8 +832,8 @@ S32 LLCurl::Multi::process()
 				response = 499;
 				//*TODO: change to LL_WARNS()
 //MK
-////				llerrs << "cleaned up curl request completed!" << llendl;
-				llwarns << "cleaned up curl request completed!" << llendl;
+////				LL_ERRS() << "cleaned up curl request completed!" << LL_ENDL;
+				LL_WARNS() << "cleaned up curl request completed!" << LL_ENDL;
 //mk
 			}
 			if (response >= 400)
@@ -1104,8 +1104,8 @@ bool LLCurlRequest::addEasy(LLCurl::Easy* easy)
 	if (mProcessing)
 	{
 //MK
-		////llerrs << "Posting to a LLCurlRequest instance from within a responder is not allowed (causes DNS timeouts)." << llendl;
-		llwarns << "Posting to a LLCurlRequest instance from within a responder is not allowed (causes DNS timeouts)." << llendl;
+		////LL_ERRS() << "Posting to a LLCurlRequest instance from within a responder is not allowed (causes DNS timeouts)." << LL_ENDL;
+		LL_WARNS() << "Posting to a LLCurlRequest instance from within a responder is not allowed (causes DNS timeouts)." << LL_ENDL;
 //mk
 	}
 	bool res = mActiveMulti->addEasy(easy);

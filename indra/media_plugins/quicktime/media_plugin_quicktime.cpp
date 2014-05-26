@@ -32,12 +32,12 @@
 	#include <QuickTime/QuickTime.h>
 #elif defined(LL_WINDOWS)
 	#include "llwin32headers.h"
-	#include "MacTypes.h"
-	#include "QTML.h"
-	#include "Movies.h"
-	#include "QDoffscreen.h"
-	#include "FixMath.h"
-	#include "QTLoadLibraryUtils.h"
+//	#include "MacTypes.h"
+	//#include "QTML.h"
+	//#include "Movies.h"
+	//#include "QDoffscreen.h"
+	//#include "FixMath.h"
+	//#include "QTLoadLibraryUtils.h"
 #endif
 
 #include "llgl.h"

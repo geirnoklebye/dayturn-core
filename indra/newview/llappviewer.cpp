@@ -1450,7 +1450,7 @@ bool LLAppViewer::mainLoop()
 							// If we timed out, reset the timer and tell the interface...
 							gAgent.mRRInterface.mReattachTimer.reset();
 							gAgent.mRRInterface.mReattachTimeout = TRUE;
-							llwarns << "Timeout reattaching an asset, retrying." << llendl;
+							LL_WARNS() << "Timeout reattaching an asset, retrying." << LL_ENDL;
 						}
 						if (!gAgent.mRRInterface.mReattaching || timeout)
 						{
@@ -1465,7 +1465,7 @@ bool LLAppViewer::mainLoop()
 								int tmp_attachpt_nb = 0;
 								LLViewerJointAttachment* attachpt = gAgent.mRRInterface.findAttachmentPointFromName(tmp_attachpt, true);
 								if (attachpt) tmp_attachpt_nb = gAgent.mRRInterface.findAttachmentPointNumber(attachpt);
-								llinfos << "Reattaching asset " << tmp_uuid << " to point " << tmp_attachpt_nb << llendl;
+								LL_INFOS() << "Reattaching asset " << tmp_uuid << " to point " << tmp_attachpt_nb << LL_ENDL;
 								gAgent.mRRInterface.mReattaching = TRUE;
 								gAgent.mRRInterface.attachObjectByUUID (tmp_uuid, tmp_attachpt_nb);
 							}
@@ -2783,7 +2783,7 @@ bool LLAppViewer::initConfiguration()
         if (!gSavedSettings.getBOOL("RestrainedLove"))
         {
 //mk
-			start_slurl = CmdLineLoginLocation;
+			start_slurl = cmd_line_login_location;
 			LLStartUp::setStartSLURL(start_slurl);
 			if(start_slurl.getType() == LLSLURL::LOCATION) 
 		{  

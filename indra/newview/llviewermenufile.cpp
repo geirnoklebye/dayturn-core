@@ -1187,7 +1187,7 @@ void upload_new_resource(
 		if (!temp_upload)
 		{
 //mk
-			llinfos << "NewAgentInventory capability not found, new agent inventory via asset system." << llendl;
+			LL_INFOS() << "NewAgentInventory capability not found, new agent inventory via asset system." << LL_ENDL;
 			// check for adequate funds
 			// TODO: do this check on the sim
 			if (LLAssetType::AT_SOUND == asset_type ||

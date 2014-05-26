@@ -28,7 +28,9 @@
 
 #include "llpanelprofileview.h"
 
-#include "llavatarconstants.h"
+//MK
+////#include "llavatarconstants.h"
+//mk
 #include "llavatarnamecache.h"	// IDEVO
 #include "llclipboard.h"
 #include "lluserrelations.h"

@@ -537,7 +537,7 @@ void LLAvatarTracker::notifyParticularFriendObservers(const LLUUID& buddy_id)
 		if (*ob_it)
         (*ob_it)->changed(mModifyMask);
 		else
-			llwarns << "Invalid observer" << llendl;
+			LL_WARNS() << "Invalid observer" << LL_ENDL;
     }
 }
 
