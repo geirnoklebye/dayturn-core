@@ -1611,9 +1611,6 @@ void LLFolderView::update()
 	LLFolderViewFilter& filter_object = getFolderViewModel()->getFilter();
 
 	if (filter_object.isModified() && filter_object.isNotDefault())
-        return;
-    }
-
 	{
 		mNeedsAutoSelect = TRUE;
 	}
