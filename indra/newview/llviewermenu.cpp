@@ -4021,7 +4021,7 @@ class LLAvatarEnableRemoveFriend : public view_listener_t
 	{
 		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
 
-		return avatar && LLAvatarActions::isFriend(avatar->getID()) && !gRlvHandler.hasBehaviour(RLV_BHVR_SHOWNAMES);
+		return avatar && LLAvatarActions::isFriend(avatar->getID());
 	}
 };
 
@@ -6233,7 +6233,8 @@ class LLAvatarRemoveFriend : public view_listener_t
 	{
 		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
 
-		if (avatar && LLAvatarActions::isFriend(avatar->getID()) && !gRlvHandler.hasBehaviour(RLV_BHVR_SHOWNAMES)) {
+		if (avatar && LLAvatarActions::isFriend(avatar->getID()))
+		{
 			request_friendship_removal(avatar->getID());
 		}
 
