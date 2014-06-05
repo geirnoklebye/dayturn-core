@@ -43,6 +43,7 @@
 					<key>tags</key>
 						<array>
 						<!-- <string>OctreeErrors</string> -->
+						     <string>Inventory</string>
 						<!-- <string>SceneLoadTiming</string> -->
 					<!-- Chat -->
 						<!-- <string>NearbyChat</string> -->
