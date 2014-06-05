@@ -374,6 +374,17 @@ public:
 	/// removeItem() or removeCategory(), whichever is appropriate
 	void removeObject(const LLUUID& object_id);
 
+	// Delete a particular inventory object by ID, and delete it from
+	// the server. Also updates linked items.
+//	void purgeObject(const LLUUID& id);
+
+	// Collects and purges the descendants of the id
+	// provided. If the category is not found, no action is
+	// taken. This method goes through the long winded process of
+	// removing server representation of folders and items while doing
+	// cache accounting in a fairly efficient manner. This method does
+	// not notify observers (though maybe it should...)
+	void purgeDescendentsOf(const LLUUID& id);
 protected:
 	void updateLinkedObjectsFromPurge(const LLUUID& baseobj_id);
 	
