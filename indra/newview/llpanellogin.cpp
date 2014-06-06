@@ -899,7 +899,7 @@ void LLPanelLogin::loadLoginPage()
 
 	if (web_browser->getCurrentNavUrl() != oStr.str())
 	{
-		web_browser->navigateTo( login_uri.asString(), HTTP_CONTENT_TEXT_HTML );
+		web_browser->navigateTo( oStr.str(), "text/html" );
 	}
 }
 

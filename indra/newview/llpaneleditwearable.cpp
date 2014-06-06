@@ -1700,7 +1700,7 @@ void LLPanelEditWearable::onClickedImportBtn()
 			{
 				LLVisualParam* visual_param = getWearable()->getVisualParam(id);
 				if (visual_param)
-					visual_param->setWeight(value, FALSE);
+					visual_param->setWeight(value);
 			}
 			else
 			{
