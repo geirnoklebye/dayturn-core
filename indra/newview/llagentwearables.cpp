@@ -183,9 +183,22 @@ void LLAgentWearables::initClass()
 void LLAgentWearables::setAvatarObject(LLVOAvatarSelf *avatar)
 {
 	llassert(avatar);
+	avatar->outputRezTiming("Sending wearables request");
+	sendAgentWearablesRequest();
 	setAvatarAppearance(avatar);
 }
+// wearables
+LLAgentWearables::createStandardWearablesAllDoneCallback::~createStandardWearablesAllDoneCallback()
+{
+	llinfos << "destructor - all done?" << llendl;
+	gAgentWearables.createStandardWearablesAllDone();
+}
 
+LLAgentWearables::sendAgentWearablesUpdateCallback::~sendAgentWearablesUpdateCallback()
+{
+	gAgentWearables.sendAgentWearablesUpdate();
+}
+ 
 /**
  * @brief Construct a callback for dealing with the wearables.
  *
@@ -725,11 +738,20 @@ void LLAgentWearables::wearableUpdated(LLWearable *wearable, BOOL removed)
 			wearable->setDefinitionVersion(22);
 			U32 index = getWearableIndex(wearable);
 			LL_INFOS() << "forcing wearable type " << wearable->getType() << " to version 22 from 24" << LL_ENDL;
-			saveWearable(wearable->getType(),index);
+			saveWearable(wearable->getType(),index,TRUE);
 		}
 
 		checkWearableAgainstInventory(viewer_wearable);
 	}
+}
+BOOL LLAgentWearables::itemUpdatePending(const LLUUID& item_id) const
+{
+	return mItemsAwaitingWearableUpdate.find(item_id) != mItemsAwaitingWearableUpdate.end();
+}
+
+U32 LLAgentWearables::itemUpdatePendingCount() const
+{
+	return mItemsAwaitingWearableUpdate.size();
 }
 
 const LLUUID LLAgentWearables::getWearableItemID(LLWearableType::EType type, U32 index) const

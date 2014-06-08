@@ -7437,20 +7437,15 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 	applyParsedTEMessage(contents.mTEContents);
 
 	// prevent the overwriting of valid baked textures with invalid baked textures
+	// prevent the overwriting of valid baked textures with invalid baked textures
 	for (U8 baked_index = 0; baked_index < mBakedTextureDatas.size(); baked_index++)
 	{
 		if (!isTextureDefined(mBakedTextureDatas[baked_index].mTextureIndex) 
 			&& mBakedTextureDatas[baked_index].mLastTextureID != IMG_DEFAULT
 			&& baked_index != BAKED_SKIRT)
 		{
-			LL_DEBUGS("Avatar") << avString() << "sb " << (S32) isUsingServerBakes() << " baked_index " << (S32) baked_index << " using texture id ");
 			setTEImage(mBakedTextureDatas[baked_index].mTextureIndex, 
 				LLViewerTextureManager::getFetchedTexture(mBakedTextureDatas[baked_index].mLastTextureID, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE));
-		}
-		else
-		{
-			LL_DEBUGS("Avatar") << avString() << " baked_index " << (S32) baked_index << " using texture id "
-								<< getTE(mBakedTextureDatas[baked_index].mTextureIndex)->getID() << LL_ENDL;
 		}
 	}
 
