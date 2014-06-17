@@ -802,7 +802,7 @@ void LLPipeline::resizeScreenTexture()
 		GLuint resY = gViewerWindow->getWorldViewHeightRaw();
 //MK
 		// No need to check the current resolution against the new one, this method is called only
-		// when a setting change. Checking the values breaks RenderResolutionDivisor since the actual
+		// when a setting changes. Checking the values breaks RenderResolutionDivisor since the actual
 		// resolution wouldn't change when that debug setting is modified.
 ////		if ((resX != mScreen.getWidth()) || (resY != mScreen.getHeight()))
 //mk
@@ -4455,7 +4455,6 @@ void LLPipeline::renderGeom(LLCamera& camera, BOOL forceVBOUpdate)
 
 	gGL.getTexUnit(0)->bind(LLViewerFetchedTexture::sDefaultImagep);
 	LLViewerFetchedTexture::sDefaultImagep->setAddressMode(LLTexUnit::TAM_WRAP);
-	
 
 	//////////////////////////////////////////////
 	//
@@ -11552,12 +11551,15 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	}
 	
 	F32 old_alpha = LLDrawPoolAvatar::sMinimumAlpha;
-
-	if (visually_muted)
-	{ //disable alpha masking for muted avatars (get whole skin silhouette)
-		LLDrawPoolAvatar::sMinimumAlpha = 0.f;
-	}
-
+//MK
+	// We shouldn't disable alpha masking because :
+	// - alpha layers are usually worn to hide parts of the body under rigged mesh attachments
+	// - rigged mesh attachments are rendered as part of the avatar
+	////if (visually_muted)
+	////{ //disable alpha masking for muted avatars (get whole skin silhouette)
+	////	LLDrawPoolAvatar::sMinimumAlpha = 0.f;
+	////}
+//mk
 	if (LLPipeline::sRenderDeferred)
 	{
 		avatar->mImpostor.clear();
@@ -11650,6 +11652,13 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		}
 		else
 		{	// Visually muted avatar
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mShowavsDistMax < EXTREMUM)
+			{
+				gGL.diffuseColor4ub (32, 32, 32, 255); // pitch black
+			}
+			else
+//mk
 			gGL.diffuseColor4fv( avatar->getMutedAVColor().mV );
 		}
 

@@ -128,7 +128,7 @@ BOOL LLFloaterReporter::postBuild()
 	{
 		childSetVisible("abuse_location_edit", false);
 	}
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		childSetVisible("owner_name", false);
 		childSetVisible("abuser_name_edit", false);

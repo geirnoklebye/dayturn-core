@@ -2776,7 +2776,7 @@ void handle_object_edit()
 void handle_object_inspect()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		return;
 	}
@@ -3042,7 +3042,7 @@ BOOL enable_has_attachments(void*)
 bool enable_object_mute()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		return false;
 	}
@@ -3157,7 +3157,7 @@ class LLObjectMute : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			return false;
 		}
@@ -3171,12 +3171,6 @@ class LLObjectMute : public view_listener_t
 		LLVOAvatar* avatar = find_avatar_from_object(object); 
 		if (avatar)
 		{
-//MK
-			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
-			{
-				return false;
-			}
-//mk
 			id = avatar->getID();
 
 			LLNameValue *firstname = avatar->getNVPair("FirstName");
@@ -3339,7 +3333,7 @@ void handle_avatar_freeze(const LLSD& avatar_id)
 //MK
 ////			if (!fullname.empty())
 			if (!fullname.empty()
-				&& !(gRRenabled && gAgent.mRRInterface.mContainsShownames))
+				&& !(gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags)))
 //mk
 			{
 				LLSD args;
@@ -3364,7 +3358,7 @@ class LLAvatarVisibleDebug : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			return false;
 		}
@@ -3378,7 +3372,7 @@ class LLAvatarDebug : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			return false;
 		}
@@ -3475,7 +3469,7 @@ void handle_avatar_eject(const LLSD& avatar_id)
 			payload["avatar_id"] = avatar->getID();
 			std::string fullname = avatar->getFullname();
 //MK
-			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 			{
 				fullname = gAgent.mRRInterface.getDummyName (fullname);
 			}
@@ -4011,7 +4005,7 @@ class LLAvatarEnableAddFriend : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			return false;
 		}
@@ -4236,7 +4230,14 @@ void handle_reset_view()
 		// switching to outfit selector should automagically save any currently edited wearable
 		LLFloaterSidePanelContainer::showPanel("appearance", LLSD().with("type", "my_outfits"));
 	}
-
+//MK
+	// We shouldn't have to do this here, but when we hit the Esc key, we need to prevent exiting mouselook
+	// if the max cam distance is zero and we need to keep 
+	else if (gRRenabled && gAgentCamera.cameraMouselook() && gAgent.mRRInterface.mCamDistMax <= 0.f)
+	{
+		return;
+	}
+//mk
 	gAgentCamera.switchCameraPreset(CAMERA_PRESET_REAR_VIEW);
 	reset_view_final( TRUE );
 	LLFloaterCamera::resetCameraMode();
@@ -6271,7 +6272,7 @@ class LLAvatarInviteToGroup : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			return false;
 		}
@@ -6290,7 +6291,7 @@ class LLAvatarAddFriend : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			return false;
 		}
@@ -6311,7 +6312,7 @@ class LLAvatarToggleMyProfile : public view_listener_t
 	{
 		LLFloater* instance = LLAvatarActions::getProfileFloater(gAgent.getID());
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			return false;
 		}
@@ -6373,7 +6374,7 @@ bool complete_give_money(const LLSD& notification, const LLSD& response, LLObjec
 		if (objectp->isAvatar())
 		{
 //MK
-			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 			{
 				return false;
 			}
@@ -6410,7 +6411,7 @@ void handle_give_money_dialog()
 bool enable_pay_avatar()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		return false;
 	}
@@ -6715,7 +6716,7 @@ class LLShowAgentProfile : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			return false;
 		}
@@ -7418,7 +7419,7 @@ class LLAvatarSendIM : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			return false;
 		}
@@ -7437,7 +7438,7 @@ class LLAvatarCall : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 //MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			return false;
 		}

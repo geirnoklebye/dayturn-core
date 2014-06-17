@@ -2446,7 +2446,7 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventoryObject(
 	if (mSource != SOURCE_AGENT) return ACCEPT_NO;
 
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		// to avoid having "so-and-so accepted/declined your inventory offer." messages
 		return ACCEPT_NO;
@@ -2489,7 +2489,7 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventory(
 	// item has to be in agent inventory.
 	if (mSource != SOURCE_AGENT) return ACCEPT_NO;
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		// to avoid having "so-and-so accepted/declined your inventory offer." messages
 		return ACCEPT_NO;
@@ -2517,7 +2517,7 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventoryCategory(
 {
 	LL_DEBUGS() << "LLToolDragAndDrop::dad3dGiveInventoryCategory()" << LL_ENDL;
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		// to avoid having "so-and-so accepted/declined your inventory offer." messages
 		return ACCEPT_NO;

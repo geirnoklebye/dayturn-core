@@ -516,9 +516,10 @@ void LLNavigationBar::onTeleportFailed()
 void LLNavigationBar::onTeleportFinished(const LLVector3d& global_agent_pos)
 {
 //MK
-	if (gRRenabled)
+	if (gRRenabled && LLViewerParcelMgr::getInstance())
 	{
-		gAgent.mRRInterface.setParcelName (LLViewerParcelMgr::getInstance()->getAgentParcelName());
+		std::string parcel_name = LLViewerParcelMgr::getInstance()->getAgentParcelName();
+		gAgent.mRRInterface.mParcelName = parcel_name;
 		if (gAgent.mRRInterface.scriptsEnabled())
 		{
 			gAgent.mRRInterface.setScriptsEnabledOnce(TRUE); // we are in a script enabled area => retain this information for later

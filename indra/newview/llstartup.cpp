@@ -345,6 +345,11 @@ bool idle_startup()
 	RRInterface::sRecvimMessage = gSavedSettings.getString("RestrainedLoveRecvimMessage");
 	RRInterface::sSendimMessage = gSavedSettings.getString("RestrainedLoveSendimMessage");
 	RRInterface::sBlacklist = gSavedSettings.getString("RestrainedLoveBlacklist");
+	RRInterface::mCamDistNbGradients = gSavedSettings.getU32("RestrainedLoveCamDistNbGradients");
+	if (RRInterface::mCamDistNbGradients == 0)
+	{
+		RRInterface::mCamDistNbGradients = 1;
+	}
 //mk
 	// HACK: These are things from the main loop that usually aren't done
 	// until initialization is complete, but need to be done here for things

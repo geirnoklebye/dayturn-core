@@ -871,7 +871,7 @@ void LLPanelPeople::updateNearbyList()
 			if (width < 160) nb = 1;
 			av->updateFirstSeen(nb);
 
-			if (!gRRenabled || !gAgent.mRRInterface.mContainsShownames)
+			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 			{
 				if (gSavedSettings.getBOOL("RadarReportChatRange"))
 				{
@@ -903,7 +903,7 @@ void LLPanelPeople::updateNearbyList()
 		{
 			av->setFirstSeen(time(NULL));
 			
-			if (!gRRenabled || !gAgent.mRRInterface.mContainsShownames)
+			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 			{
 				if (gSavedSettings.getBOOL("RadarReportChatRange") && (r <= CHAT_NORMAL_RADIUS))
 				{			
@@ -923,7 +923,7 @@ void LLPanelPeople::updateNearbyList()
 	{
 		radarFields rf = i->second;
 		
-		if (!gRRenabled || !gAgent.mRRInterface.mContainsShownames)
+		if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			if (gSavedSettings.getBOOL("RadarReportChatRange") && (rf.lastDistance <= CHAT_NORMAL_RADIUS))
 			{
@@ -964,7 +964,7 @@ void LLPanelPeople::updateNearbyList()
 		lastRadarSweep[av->getAvatarId()] = rf;
 	}
 
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
 		if (nearby_tab && nearby_tab->getVisible())
@@ -994,7 +994,7 @@ void LLPanelPeople::updateRecentList()
 	mRecentList->setDirty();
 
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
 		if (nearby_tab && nearby_tab->getVisible())

@@ -2640,10 +2640,26 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	}
 
 //MK
-	// hide the names above the heads
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	// hide the names above the heads if we are under @shownames, or if we are under @camdistdrawmin
+	// and the other avatar is farther than the specified distance
+	if (gRRenabled)
 	{
-		render_name = FALSE;
+		if (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags)
+		{
+			render_name = FALSE;
+		}
+		else if (gAgent.mRRInterface.mCamDistDrawMin && gAgentAvatarp && gAgentAvatarp != this)
+		{
+			LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
+
+			LLVector3 camera_offset = mHeadp->getWorldPosition() - head_pos;
+			F32 camera_distance = (F32)camera_offset.magVec();
+
+			if(camera_distance > gAgent.mRRInterface.mCamDistMax)
+			{
+				render_name = FALSE;
+			}
+		}
 	}
 //mk
 	if ( !render_name )
@@ -3120,6 +3136,24 @@ bool LLVOAvatar::isVisuallyMuted()
 
 	if (!isSelf())
 	{
+//MK
+		if (gRRenabled && gAgentAvatarp)
+		{
+			LLVector3d my_head_pos (gAgent.getPosGlobalFromAgent(gAgentAvatarp->mHeadp->getWorldPosition()));
+			LLVector3d their_head_pos (gAgent.getPosGlobalFromAgent(mHeadp->getWorldPosition()));
+			LLVector3d offset (their_head_pos - my_head_pos);
+			F32 distance = (F32)offset.magVec();
+
+			if (distance > gAgent.mRRInterface.mShowavsDistMax)
+			{
+				// Note that mCachedVisualMute is set to false, we will use that
+				// later to distinguish between really muted avatars and those muted
+				// because of an RLV restriction.
+				mCachedVisualMute = false;
+				return true;
+			}
+		}
+//mk
 		static LLCachedControl<U32> render_auto_mute_functions(gSavedSettings, "RenderAutoMuteFunctions", 0);
 		if (render_auto_mute_functions)		// Hacky debug switch for developing feature
 		{
@@ -3306,6 +3340,15 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		F32 impostor_area = 256.f*512.f*(8.125f - LLVOAvatar::sLODFactor*8.f);
 		if (visually_muted)
 		{ // visually muted avatars update at 16 hz
+//MK
+			// If the cached value is not set, that means this avatar is muted for RLV reasons
+			// => update every frame
+			if (gRRenabled && !mCachedVisualMute)
+			{
+				mUpdatePeriod = 1;
+			}
+			else
+//mk
 			mUpdatePeriod = 16;
 		}
 		else if (mVisibilityRank <= LLVOAvatar::sMaxVisible ||

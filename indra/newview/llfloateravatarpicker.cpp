@@ -289,7 +289,7 @@ void LLFloaterAvatarPicker::populateNearMe()
 	near_me_scroller->deleteAllItems();
 
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		return;
 	}
