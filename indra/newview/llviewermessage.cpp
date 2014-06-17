@@ -7455,7 +7455,11 @@ void send_lures(const LLSD& notification, const LLSD& response)
 		return;
 	}
 //mk
-	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+
+//MK
+	// Get rid of a C4189 warning (unreferenced local variable)
+////	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+//mk
 
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessageFast(_PREHASH_StartLure);
