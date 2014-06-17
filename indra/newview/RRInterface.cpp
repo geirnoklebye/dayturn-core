@@ -50,6 +50,7 @@
 #include "llnotifications.h"
 #include "llpanelmaininventory.h"
 #include "llpaneltopinfobar.h"
+#include "llrendersphere.h"
 #include "llselectmgr.h"
 #include "llspeakers.h"
 #include "llstartup.h"
@@ -84,6 +85,7 @@ std::string RRInterface::sRecvimMessage = "The Resident you messaged is prevente
 std::string RRInterface::sSendimMessage = "*** IM blocked by sender's viewer";
 std::string RRInterface::sBlacklist = "";
 F32 RRInterface::sLastAvatarZOffsetCommit = 0.f;
+U32 RRInterface::mCamDistNbGradients = 10;
 
 
 #if !defined(max)
@@ -198,6 +200,7 @@ void refreshCachedVariable (std::string var)
 	else if (var == "showminimap")			gAgent.mRRInterface.mContainsShowminimap = contained;
 	else if (var == "showloc")				gAgent.mRRInterface.mContainsShowloc = contained;
 	else if (var == "shownames")			gAgent.mRRInterface.mContainsShownames = contained;
+	else if (var == "shownametags")			gAgent.mRRInterface.mContainsShownametags = contained;
 	else if (var == "setenv")				gAgent.mRRInterface.mContainsSetenv = contained;
 	else if (var == "setdebug")				gAgent.mRRInterface.mContainsSetdebug = contained;
 	else if (var == "fly")					gAgent.mRRInterface.mContainsFly = contained;
@@ -210,6 +213,7 @@ void refreshCachedVariable (std::string var)
 	else if (var == "permissive")			gAgent.mRRInterface.mContainsPermissive = contained;
 	else if (var == "temprun")					gAgent.mRRInterface.mContainsRun = contained;
 	else if (var == "alwaysrun")				gAgent.mRRInterface.mContainsAlwaysRun = contained;
+	else if (var == "camtextures")				gAgent.mRRInterface.mContainsCamTextures = contained;
 	//else if (var == "moveup")					gAgent.mRRInterface.mContainsMoveUp = contained;
 	//else if (var == "movedown")				gAgent.mRRInterface.mContainsMoveDown = contained;
 	//else if (var == "moveleft")			gAgent.mRRInterface.mContainsMoveStrafeLeft = contained;
@@ -248,8 +252,8 @@ void refreshCachedVariable (std::string var)
 		}
 	}
 
-	else if (var == "shownames") {
-		if (gAgent.mRRInterface.mContainsShownames) {
+	else if (var == "shownames" || var == "shownametags") {
+		if (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags) {
 //			LLSideTray::getInstance()->childSetVisible("nearby_panel", false);
 //			LLSideTray::getInstance()->childSetVisible("recent_panel", false);
 			LLPanel* panel = LLFloaterSidePanelContainer::getPanel("people", "panel_people");
@@ -349,6 +353,22 @@ void refreshCachedVariable (std::string var)
 			}
 		}
 	}
+	else if (var == "camtextures") {
+		// silly hack, but we need to force all textures in world to be updated
+		S32 i;
+		for (i=0; i<gObjectList.getNumObjects(); ++i) {
+			LLViewerObject* object = gObjectList.getObject(i);
+			if (object) {
+				object->setSelected(FALSE);
+			}
+		}
+	}
+	else if (var == "camunlock") {
+		gAgentCamera.resetView(TRUE, TRUE);
+	}
+	else if (var == "camzoommax" || var == "camzoommin") {
+		LLViewerCamera::getInstance()->setDefaultFOV(gSavedSettings.getF32("CameraAngle"));
+	}
 
 	if (gAgent.mRRInterface.contains("tplm")
 	|| gAgent.mRRInterface.contains("tploc")
@@ -420,6 +440,7 @@ RRInterface::RRInterface():
 	, mReattachTimeout(FALSE)
 	, mSnappingBackToLastStandingLocation(FALSE)
 	, mUserUpdateAttachmentsUpdatesAll(FALSE)
+	, mUserUpdateAttachmentsCalledFromScript(FALSE)
 	, mScriptsEnabledOnce(FALSE)
 	, mHasLockedHuds(FALSE)
 	, mContainsDetach(FALSE)
@@ -430,6 +451,7 @@ RRInterface::RRInterface():
 	, mContainsShowminimap(FALSE)
 	, mContainsShowloc(FALSE)
 	, mContainsShownames(FALSE)
+	, mContainsShownametags(FALSE)
 	, mContainsSetenv(FALSE)
 	, mContainsSetdebug(FALSE)
 	, mContainsFly(FALSE)
@@ -444,6 +466,7 @@ RRInterface::RRInterface():
 	, mContainsAlwaysRun(FALSE)
 	, mContainsTp(FALSE)
 	, mHandleNoStrip(TRUE)
+	, mContainsCamTextures(FALSE)
 	//, mContainsMoveUp(FALSE)
 	//, mContainsMoveDown(FALSE)
 	//, mContainsMoveForward(FALSE)
@@ -473,6 +496,8 @@ RRInterface::RRInterface():
 	mAllowedCOL3 = ",";
 	mAllowedCOL4U = ",";
 
+	mParcelName = "";
+
 	mAssetsToReattach.clear();
 
 	mJustDetached.uuid.setNull();
@@ -481,6 +506,8 @@ RRInterface::RRInterface():
 	mJustReattached.attachpt = "";
 
 	sLastAvatarZOffsetCommit = 0.f;
+
+	updateCameraLimits();
 
 	// Calling gSavedSettings here crashes the viewer when compiled with VS2005.
 	// OK under Linux. Moved this initialization to llstartup.cpp as a consequence.
@@ -585,6 +612,98 @@ BOOL RRInterface::containsSubstr (std::string action)
 		it++;
 	}
 	return FALSE;
+}
+
+F32 RRInterface::getMax (std::string action, F32 dflt /*= EXTREMUM*/)
+{
+	LLStringUtil::toLower(action);
+	F32 res = -EXTREMUM;
+	F32 tmp;
+	std::string command;
+	std::string behav;
+	std::string option;
+	std::string param;
+	BOOL found_one = FALSE;
+	for (RRMAP::iterator it = mSpecialObjectBehaviours.begin (); it != mSpecialObjectBehaviours.end(); ++it) {
+		command = it->second;
+		LLStringUtil::toLower(command);
+		if (parseCommand (command+"=n", behav, option, param)) {
+			if (behav == action) {
+				tmp = atof (option.c_str());
+				if (tmp > res) {
+					res = tmp;
+					found_one = TRUE;
+				}
+			}
+		}
+	}
+	if (!found_one) {
+		return dflt;
+	}
+	return res;
+}
+
+F32 RRInterface::getMin (std::string action, F32 dflt /*= -EXTREMUM*/)
+{
+	LLStringUtil::toLower(action);
+	F32 res = EXTREMUM;
+	F32 tmp;
+	std::string command;
+	std::string behav;
+	std::string option;
+	std::string param;
+	BOOL found_one = FALSE;
+	for (RRMAP::iterator it = mSpecialObjectBehaviours.begin (); it != mSpecialObjectBehaviours.end(); ++it) {
+		command = it->second;
+		LLStringUtil::toLower(command);
+		if (parseCommand (command+"=n", behav, option, param)) {
+			if (behav == action) {
+				tmp = atof (option.c_str());
+				if (tmp < res) {
+					res = tmp;
+					found_one = TRUE;
+				}
+			}
+		}
+	}
+	if (!found_one) {
+		return dflt;
+	}
+	return res;
+}
+
+LLColor3 RRInterface::getMixedColors (std::string action, LLColor3 dflt /*= LLColor3::black*/)
+{
+	LLStringUtil::toLower(action);
+	LLColor3 res = dflt;
+	LLColor3 tmp;
+	std::string command;
+	std::string behav;
+	std::string option;
+	std::string param;
+	BOOL found_one = FALSE;
+	std::deque<std::string> tokens;
+	for (RRMAP::iterator it = mSpecialObjectBehaviours.begin (); it != mSpecialObjectBehaviours.end(); ++it) {
+		command = it->second;
+		LLStringUtil::toLower(command);
+		if (parseCommand (command+"=n", behav, option, param)) {
+			if (behav == action) {
+				tokens = parse (option, ";");
+				tmp.mV[0] = atof (tokens[0].c_str());
+				tmp.mV[1] = atof (tokens[1].c_str());
+				tmp.mV[2] = atof (tokens[2].c_str());
+				if (!found_one) {
+					res.set (tmp);
+				}
+				else {
+					res += tmp;
+				}
+				found_one = TRUE;
+			}
+		}
+	}
+	res.normalize();
+	return res;
 }
 
 BOOL RRInterface::containsWithoutException (std::string action, std::string except /* = "" */)
@@ -825,7 +944,7 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 				gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
 			}
 		}
-		
+
 		// Insert the new behav
 		mSpecialObjectBehaviours.insert(std::pair<std::string, std::string>(object_uuid.asString(), action));
 		refreshCachedVariable(action);
@@ -835,9 +954,13 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 			|| action=="showhovertexthud" || action=="showhovertextworld" ) {
 			updateAllHudTexts();
 		}
-		if (canon_action == "showhovertext") {
+		else if (canon_action == "showhovertext") {
 			updateOneHudText(LLUUID(option));
 		}
+		else if (canon_action.find ("cam") == 0) {
+			updateCameraLimits ();
+		}
+		
 		// Update the stored last standing location, to allow grabbers to transport a victim inside a cage while sitting, and restrict them
 		// before standing up. If we didn't do this, the avatar would snap back to a safe location when being unsitted by the grabber,
 		// which would be rather silly.
@@ -887,6 +1010,9 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 			if (canon_action == "showhovertext") {
 				updateOneHudText(LLUUID(option));
 			}
+			else if (canon_action.find ("cam") == 0) {
+				updateCameraLimits ();
+			}
 
 			return TRUE;
 		}
@@ -926,6 +1052,7 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 		}
 	}
 	updateAllHudTexts();
+	updateCameraLimits();
 	return TRUE;
 }
 
@@ -1311,7 +1438,13 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		return res;
 	}
 	else if (command=="detachall") { // detachall:cuffs=force to detach a folder and its subfolders
-		return forceDetachByName (option, TRUE);
+		BOOL res = FALSE;
+		// We're now doing the same thing as "Remove From Current Outfit" in the inventory, except that we need to check for "nostrip"
+		// during this action, hence the need for mUserUpdateAttachmentsCalledFromScript
+		mUserUpdateAttachmentsCalledFromScript = TRUE;
+		res = forceDetachByName (option, TRUE);
+		mUserUpdateAttachmentsCalledFromScript = FALSE;
+		return res;
 	}
 	else if (command=="detachallthis") { // detachallthis=force to detach the folder containing this object and also its subfolders
 		std::string pathes_str = getFullPath (getItem(object_uuid), option);
@@ -2729,96 +2862,102 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive)
 			if (name.find ("nostrip") != -1) return false;
 		}
 
-		LLInventoryModel::cat_array_t* cats;
-		LLInventoryModel::item_array_t* items;
+		if (recursive) {
+			LLAppearanceMgr::instance().takeOffOutfit( cat->getLinkedUUID() );
+		}
+		else {
+
+			LLInventoryModel::cat_array_t* cats;
+			LLInventoryModel::item_array_t* items;
 		
-		// retrieve all the objects contained in this folder
-		gInventory.getDirectDescendentsOf (cat->getUUID(), cats, items);
-		if (items) {
+			// retrieve all the objects contained in this folder
+			gInventory.getDirectDescendentsOf (cat->getUUID(), cats, items);
+			if (items) {
 		
-			// unwear them one by one
-			S32 count = items->size();
-			for(S32 i = 0; i < count; ++i) {
-				if (!isRoot) {
-					LLViewerInventoryItem* item = (LLViewerInventoryItem*)items->at(i);
-					if (sRestrainedLoveDebug) {
-						LL_INFOS() << "trying to detach " << item->getName() << LL_ENDL;
-					}
-					
-					// this is an attached object
-					if (item->getType() == LLAssetType::AT_OBJECT) {
-						// find the attachpoint from which to detach
-						for (LLVOAvatar::attachment_map_t::iterator iter = avatar->mAttachmentPoints.begin(); 
-							 iter != avatar->mAttachmentPoints.end(); )
-						{
-							LLVOAvatar::attachment_map_t::iterator curiter = iter++;
-							LLViewerJointAttachment* attachment = curiter->second;
-							LLViewerObject* object = avatar->getWornAttachment(item->getLinkedUUID());
-							if (attachment->isObjectAttached(object)) {
-								detachObject (object);
-								break;
-							}
+				// unwear them one by one
+				S32 count = items->size();
+				for(S32 i = 0; i < count; ++i) {
+					if (!isRoot) {
+						LLViewerInventoryItem* item = (LLViewerInventoryItem*)items->at(i);
+						if (sRestrainedLoveDebug) {
+							LL_INFOS() << "trying to detach " << item->getName() << LL_ENDL;
 						}
+					
+						// this is an attached object
+						if (item->getType() == LLAssetType::AT_OBJECT) {
+							// find the attachpoint from which to detach
+							for (LLVOAvatar::attachment_map_t::iterator iter = avatar->mAttachmentPoints.begin(); 
+								 iter != avatar->mAttachmentPoints.end(); )
+							{
+								LLVOAvatar::attachment_map_t::iterator curiter = iter++;
+								LLViewerJointAttachment* attachment = curiter->second;
+								LLViewerObject* object = avatar->getWornAttachment(item->getLinkedUUID());
+								if (attachment->isObjectAttached(object)) {
+									detachObject (object);
+									break;
+								}
+							}
 						
-					}
-					// this is a piece of clothing
-					else if (item->getType() == LLAssetType::AT_CLOTHING) {
-//						const LLWearable* layer = gAgentWearables.getWearableFromItemID (item->getLinkedUUID());
-//						if (layer != NULL) gAgentWearables.removeWearable (layer->getType(), false, 0);
-						if (canDetach (item)) removeItemFromAvatar(item);		
-					}
-					// this is a gesture
-					else if (item->getType() == LLAssetType::AT_GESTURE) {
-						if (LLGestureMgr::instance().isGestureActive(item->getLinkedUUID())) {
-							LLGestureMgr::instance().deactivateGesture(item->getLinkedUUID());
+						}
+						// this is a piece of clothing
+						else if (item->getType() == LLAssetType::AT_CLOTHING) {
+	//						const LLWearable* layer = gAgentWearables.getWearableFromItemID (item->getLinkedUUID());
+	//						if (layer != NULL) gAgentWearables.removeWearable (layer->getType(), false, 0);
+							if (canDetach (item)) removeItemFromAvatar(item);		
+						}
+						// this is a gesture
+						else if (item->getType() == LLAssetType::AT_GESTURE) {
+							if (LLGestureMgr::instance().isGestureActive(item->getLinkedUUID())) {
+								LLGestureMgr::instance().deactivateGesture(item->getLinkedUUID());
+							}
 						}
 					}
 				}
 			}
-		}
 
-		if (cats) {
-			// for each subfolder, detach the first item it contains (only for single no-mod items contained in appropriately named folders)
-			S32 count = cats->size();
-			for(S32 i = 0; i < count; ++i) {
-				LLViewerInventoryCategory* cat_child = (LLViewerInventoryCategory*)cats->at(i);
+			if (cats) {
+				// for each subfolder, detach the first item it contains (only for single no-mod items contained in appropriately named folders)
+				S32 count = cats->size();
+				for(S32 i = 0; i < count; ++i) {
+					LLViewerInventoryCategory* cat_child = (LLViewerInventoryCategory*)cats->at(i);
 
-				if (mHandleNoStrip) {
-					std::string name = cat_child->getName();
-					LLStringUtil::toLower(name);
-					if (name.find ("nostrip") != -1) continue;
-				}
+					if (mHandleNoStrip) {
+						std::string name = cat_child->getName();
+						LLStringUtil::toLower(name);
+						if (name.find ("nostrip") != -1) continue;
+					}
 
-				LLInventoryModel::cat_array_t* cats_grandchildren; // won't be used here
-				LLInventoryModel::item_array_t* items_grandchildren; // actual no-mod item(s)
-				gInventory.getDirectDescendentsOf (cat_child->getUUID(), 
-													cats_grandchildren, items_grandchildren);
+					LLInventoryModel::cat_array_t* cats_grandchildren; // won't be used here
+					LLInventoryModel::item_array_t* items_grandchildren; // actual no-mod item(s)
+					gInventory.getDirectDescendentsOf (cat_child->getUUID(), 
+														cats_grandchildren, items_grandchildren);
 
-				if (!isRoot && items_grandchildren && items_grandchildren->size() == 1) { // only one item
-					LLViewerInventoryItem* item_grandchild = 
-							(LLViewerInventoryItem*)items_grandchildren->at(0);
+					if (!isRoot && items_grandchildren && items_grandchildren->size() == 1) { // only one item
+						LLViewerInventoryItem* item_grandchild = 
+								(LLViewerInventoryItem*)items_grandchildren->at(0);
 
-					if (item_grandchild && item_grandchild->getType() == LLAssetType::AT_OBJECT
-						&& !item_grandchild->getPermissions().allowModifyBy(gAgent.getID())
-						&& findAttachmentPointFromParentName (item_grandchild) != NULL) { // and it is no-mod and its parent is named correctly
-						// detach this object
-						// find the attachpoint from which to detach
-						for (LLVOAvatar::attachment_map_t::iterator iter = avatar->mAttachmentPoints.begin(); 
-							 iter != avatar->mAttachmentPoints.end(); )
-						{
-							LLVOAvatar::attachment_map_t::iterator curiter = iter++;
-							LLViewerJointAttachment* attachment = curiter->second;
-							LLViewerObject* object = avatar->getWornAttachment(item_grandchild->getUUID());
-							if (attachment->isObjectAttached(object)) {
-								detachObject (object);
-								break;
+						if (item_grandchild && item_grandchild->getType() == LLAssetType::AT_OBJECT
+							&& !item_grandchild->getPermissions().allowModifyBy(gAgent.getID())
+							&& findAttachmentPointFromParentName (item_grandchild) != NULL) { // and it is no-mod and its parent is named correctly
+							// detach this object
+							// find the attachpoint from which to detach
+							for (LLVOAvatar::attachment_map_t::iterator iter = avatar->mAttachmentPoints.begin(); 
+								 iter != avatar->mAttachmentPoints.end(); )
+							{
+								LLVOAvatar::attachment_map_t::iterator curiter = iter++;
+								LLViewerJointAttachment* attachment = curiter->second;
+								LLViewerObject* object = avatar->getWornAttachment(item_grandchild->getUUID());
+								if (attachment->isObjectAttached(object)) {
+									detachObject (object);
+									break;
+								}
 							}
 						}
 					}
-				}
 
-				if (recursive && cat_child->getName().find (".") != 0) { // detachall and not invisible)
-					forceDetachByName (getFullPath (cat_child), recursive);
+					if (recursive && cat_child->getName().find (".") != 0) { // detachall and not invisible)
+						forceDetachByName (getFullPath (cat_child), recursive);
+					}
 				}
 			}
 		}
@@ -3671,7 +3810,7 @@ bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_pare
 		if (mHandleNoStrip) {
 			std::string name = folder->getName();
 			LLStringUtil::toLower(name);
-			if (name.find ("nostrip") != -1 && !mUserUpdateAttachmentsUpdatesAll) return false;
+			if (name.find ("nostrip") != -1 && (!mUserUpdateAttachmentsUpdatesAll || mUserUpdateAttachmentsCalledFromScript)) return false;
 		}
 		// check @detachthis:folder in all restrictions
 		RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
@@ -4056,6 +4195,169 @@ void RRInterface::listRlvRestrictions(std::string substr /*= ""*/)
 	}
 	printOnChat ("##########################################");
 }
+
+BOOL RRInterface::checkCameraLimits (BOOL and_correct /* = FALSE*/)
+{
+	// Check that we are within the imposed limits
+	// Force the camera back into the limits when not
+	// Return TRUE when the camera is ok
+	if (!gAgentCamera.isInitialized()) {
+		return TRUE;
+	}
+
+	if (mCamDistMax <= 0.f && !gAgentCamera.cameraMouselook())
+	{
+		if (and_correct) {
+			gAgentCamera.changeCameraToMouselook ();
+		}
+		return FALSE;
+	}
+	else if (mCamDistMin > 0.f && gAgentCamera.cameraMouselook())
+	{
+		if (and_correct) {
+			gAgentCamera.changeCameraToDefault ();
+		}
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL RRInterface::updateCameraLimits ()
+{
+	// Update the min and max 
+	mShowavsDistMax = getMin ("camavdist", EXTREMUM);
+
+	mCamZoomMax = getMin ("camzoommax", EXTREMUM);
+	mCamZoomMin = getMax ("camzoommin", -EXTREMUM);
+	mCamDistMax = getMin ("camdistmax", EXTREMUM);
+	mCamDistMin = getMax ("camdistmin", -EXTREMUM);
+
+	mCamDistDrawMax = getMin ("camdrawmax", EXTREMUM);
+	mCamDistDrawMin = getMin ("camdrawmin", EXTREMUM);
+
+	mCamDistDrawAlphaMin = getMax ("camdrawalphamin", 0.f);
+	mCamDistDrawAlphaMax = getMax ("camdrawalphamax", 1.f);
+
+	mCamDistDrawColor = getMixedColors ("camdrawcolor", LLColor3::black);
+
+	if (mCamDistDrawMin <= 0.4f) { // So we're sure to render the spheres even when restricted to mouselook
+		mCamDistDrawMin = 0.4f;
+	}
+
+	if (mCamDistDrawMax < mCamDistDrawMin && mCamDistDrawMin < EXTREMUM) { // sort the two limits in order
+		mCamDistDrawMax = mCamDistDrawMin;
+	}
+
+	if (mCamDistMax >= mCamDistDrawMin) { // make sure we can't move the camera outside the minimum render limit
+		mCamDistMax = mCamDistDrawMin * 0.75f;
+	}
+	else if (mCamDistMax >= mCamDistDrawMax) { // make sure we can't move the camera outside the maximum render limit
+		mCamDistMax = mCamDistDrawMax * 0.75f;
+	}
+
+	if (mCamDistDrawAlphaMax < mCamDistDrawAlphaMin) { // make sure the "fog" goes in the right direction
+		mCamDistDrawAlphaMax = mCamDistDrawAlphaMin;
+	}
+
+	if (mCamZoomMin > mCamZoomMax) {
+		mCamZoomMin = mCamZoomMax;
+	}
+
+	if (mCamDistMin > mCamDistMax) {
+		mCamDistMin = mCamDistMax;
+	}
+
+	// And check the camera is still within the limits
+	return checkCameraLimits (TRUE);
+}
+
+// This function returns the effective alpha to set to each step when going from
+// 0.0 to "desired_alpha", so that everything seen through the last layer will
+// be obscured as if it were behind only one layer of alpha "desired_alpha", 
+// notwithstanding the number of layers "nb_layers"
+// If we have N layers of transparency T (T = 1-A), we want to find X so that
+// X**N = T, in other words, X = T**(1/N)
+F32 calculateDesiredAlphaPerStep (F32 desired_alpha, int nb_layers)
+{
+	if (desired_alpha > 0.99f) desired_alpha = 0.99f; // limit to 0.99 or it will return 1
+	return 1.f - pow (1.f - desired_alpha, 1.f/(F32)nb_layers);
+}
+
+// This method draws several big black spheres around the avatar, with various alphas
+// Alpha goes from mCamDistDrawAlphaMin to mCamDistDrawAlphaMax
+// Things to remember :
+// - There are two render limits in RLV : min and max (min is a sphere with a variable alpha
+//   and max is an opaque sphere).
+// - Render limit min <= render limit max.
+// - If a render limit is <= 1.0, make it 1.0 because we'll be forced into mouselook anyway,
+//   so it would be better to render the sphere
+// - If a render limit is unspecified (i.e. equal to EXTREMUM), don't render it.
+// - If both render limits are specified and different, render both and several in-between at 
+//   regular intervals, with a linear interpolation for alpha between mCamDistDrawAlphaMin and
+//   mCamDistDrawAlphaMax for each sphere.
+// - There are not too many spheres to render, because stacking alphas make the video card
+//   complain.
+void RRInterface::drawRenderLimit ()
+{
+	if (LLGLSLShader::sNoFixedFunction) {
+		gUIProgram.bind();
+	}
+
+	LLVector3 center = isAgentAvatarValid() 
+		? gAgentAvatarp->mHeadp->getWorldPosition()
+		: gAgent.getPositionAgent();
+
+	// Render the inner sphere first
+	if (mCamDistDrawMin < mCamDistDrawMax) {
+		drawSphere (center, mCamDistDrawMin, mCamDistDrawColor, mCamDistDrawAlphaMin);
+	}
+
+	// If the inner sphere is opaque, no need to go any further
+	if (mCamDistDrawAlphaMin >= 1.f) {
+		return;
+	}
+
+	// Now render every sphere from the inner one (excluded) to the outer one (included) with
+	// an alpha that depends on the number of spheres, so that the apparent alpha of all the
+	// combined spheres is equal to mCamDistDrawAlphaMax
+	F32 alpha_step = calculateDesiredAlphaPerStep (mCamDistDrawAlphaMax, mCamDistNbGradients);
+	for (int i = 1; i <= mCamDistNbGradients; i++) {
+		drawSphere (center
+			, lerp (mCamDistDrawMin, mCamDistDrawMax, (F32)i / (F32)mCamDistNbGradients)
+			, mCamDistDrawColor
+			, alpha_step
+		);
+	}
+}
+
+void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha)
+{
+	gGL.pushMatrix();
+	{
+		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+		LLGLEnable gls_blend(GL_BLEND);
+		LLGLEnable gls_cull(GL_CULL_FACE);
+		LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
+		gGL.matrixMode(LLRender::MM_MODELVIEW);
+
+		gGL.pushMatrix();
+		{
+			gGL.translatef(center[0], center[1], center[2]);
+			gGL.scalef(scale, scale, scale);
+
+			LLColor4 color_alpha(color, alpha);
+			gGL.color4fv(color_alpha.mV);
+				
+			// Render inside only (the camera is not supposed to go outside anyway
+			glCullFace(GL_FRONT);
+			gSphere.render();
+			glCullFace(GL_BACK);
+		}
+		gGL.popMatrix();
+	}
+	gGL.popMatrix();
+}
+
 
 BOOL RRInterface::isBlacklisted (std::string action, bool force)
 {

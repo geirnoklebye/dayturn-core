@@ -1550,7 +1550,7 @@ bool LLOfferInfo::inventory_offer_callback(const LLSD& notification, const LLSD&
 	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 	{
 		// hide every occurrence of the Parcel name if the location restriction is active
-		mDesc = gAgent.mRRInterface.stringReplace (mDesc, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+		mDesc = gAgent.mRRInterface.stringReplace (mDesc, gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 		// hide every occurrence of the Region name if the location restriction is active
 		if (gAgent.getRegion()) mDesc = gAgent.mRRInterface.stringReplace (mDesc, gAgent.getRegion()->getName(), "(Region hidden)");
 	}
@@ -2435,7 +2435,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 		{
 			// hide every occurrence of the Parcel name if the location restriction is active
-			message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+			message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 			// hide every occurrence of the Region name if the location restriction is active
 			if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
 		}
@@ -2561,7 +2561,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 			{
 				// hide every occurrence of the Parcel name if the location restriction is active
-				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 				// hide every occurrence of the Region name if the location restriction is active
 				if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
 			}
@@ -2690,7 +2690,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 			{
 				// hide every occurrence of the Parcel name if the location restriction is active
-				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 				// hide every occurrence of the Region name if the location restriction is active
 				if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
 			}
@@ -2928,7 +2928,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 			{
 				// hide every occurrence of the Parcel name if the location restriction is active
-				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 				// hide every occurrence of the Region name if the location restriction is active
 				if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
 			}
@@ -3070,7 +3070,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				// hide the url
 				chat.mURL = "";
 				// hide every occurrence of the Parcel name if the location restriction is active
-				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 				// hide every occurrence of the Region name if the location restriction is active
 				if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
 			}
@@ -3209,7 +3209,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 			{
 				// hide every occurrence of the Parcel name if the location restriction is active
-				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+				message = gAgent.mRRInterface.stringReplace (message, gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 				// hide every occurrence of the Region name if the location restriction is active
 				if (gAgent.getRegion()) message = gAgent.mRRInterface.stringReplace (message, gAgent.getRegion()->getName(), "(Region hidden)");
 			}
@@ -3980,7 +3980,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				if (from_id != gAgent.getID() && gAgent.mRRInterface.mContainsShownames)
 				{
 					// Special case : if the object is an attachment and imitates the name of its owner, scramble its name as if it were an agent
-					if (!chatter->isAvatar())
+					if (chatter && !chatter->isAvatar())
 					{
 						if (chatter->isAttachment())
 						{
@@ -4102,7 +4102,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 					{
 						// hide every occurrence of the Parcel name if the location restriction is active
 						mesg = gAgent.mRRInterface.stringReplace (mesg, 
-								gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+								gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 						// hide every occurrence of the Region name if the location restriction is active
 						if (gAgent.getRegion()) mesg = gAgent.mRRInterface.stringReplace (mesg, gAgent.getRegion()->getName(), "(Region hidden)");
 					}
@@ -4148,7 +4148,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 						{
 							// hide every occurrence of the Parcel name if the location restriction is active
 							mesg = gAgent.mRRInterface.stringReplace (mesg, 
-									gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+									gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 							// hide every occurrence of the Region name if the location restriction is active
 							if (gAgent.getRegion()) mesg = gAgent.mRRInterface.stringReplace (mesg, gAgent.getRegion()->getName(), "(Region hidden)");
 						}
@@ -7853,9 +7853,9 @@ void process_script_dialog(LLMessageSystem* msg, void**)
 					{
 						// hide every occurrence of the Parcel name if the location restriction is active
 						object_name = gAgent.mRRInterface.stringReplace (object_name, 
-								gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+								gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 						message = gAgent.mRRInterface.stringReplace (message, 
-								gAgent.mRRInterface.getParcelName(), "(Parcel hidden)");
+								gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 						// hide every occurrence of the Region name if the location restriction is active
 						object_name = gAgent.mRRInterface.stringReplace (object_name, 
 								gAgent.getRegion()->getName(), "(Region hidden)");

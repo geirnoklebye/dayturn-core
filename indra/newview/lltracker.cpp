@@ -304,7 +304,7 @@ void LLTracker::trackAvatar( const LLUUID& avatar_id, const std::string& name )
 	instance()->stopTrackingLandmark();
 	instance()->stopTrackingLocation();
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		instance()->stopTrackingAvatar(true);
 		return;

@@ -63,6 +63,14 @@ enum ECameraPreset
 
 	/** "Front, FPS view" S21*/
 	CAMERA_PRESET_FPS_VIEW
+
+//MK
+	// More camera presets, and add the number at the end
+	, CAMERA_PRESET_RIGHT_VIEW
+	, CAMERA_PRESET_LEFT_VIEW
+
+	, CAMERA_PRESET_NB
+//mk
 };
 
 //------------------------------------------------------------------------

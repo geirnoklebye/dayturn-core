@@ -194,6 +194,15 @@ void display_update_camera()
 	{
 		final_far *= 0.5f;
 	}
+//MK
+	//if (gRRenabled)
+	//{
+	//	if (gAgent.mRRInterface.mCamDistDrawMin < final_far)
+	//	{
+	//		final_far = gAgent.mRRInterface.mCamDistDrawMin;
+	//	}
+	//}
+//mk
 	LLViewerCamera::getInstance()->setFar(final_far);
 	gViewerWindow->setup3DRender();
 	
@@ -586,6 +595,10 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 	//
 
 	// do render-to-texture stuff here
+//MK
+	//if (gRRenabled && gAgent.mRRInterface.mContainsCamFocus)
+	//{
+//mk
 	if (gPipeline.hasRenderDebugFeatureMask(LLPipeline::RENDER_DEBUG_FEATURE_DYNAMIC_TEXTURES))
 	{
 		LLAppViewer::instance()->pingMainloopTimeout("Display:DynamicTextures");
@@ -596,6 +609,9 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			glClear(GL_DEPTH_BUFFER_BIT);
 		}
 	}
+//MK
+	//}
+//mk
 
 	gViewerWindow->setup3DViewport();
 
@@ -984,6 +1000,14 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			}
 		}
 
+////MK
+//		// Draw a big black sphere around our avatar if the camera render is limited by RLV
+//		if (gRRenabled)
+//		{
+//			gAgent.mRRInterface.drawRenderLimit();
+//		}
+////mk
+//
 		LLAppViewer::instance()->pingMainloopTimeout("Display:RenderFlush");		
 		
 		if (to_texture)
@@ -1034,7 +1058,6 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			swap();
 		}
 
-		
 		LLSpatialGroup::sNoDelete = FALSE;
 		gPipeline.clearReferences();
 
@@ -1293,6 +1316,14 @@ void render_ui(F32 zoom_factor, int subfield)
 			gPipeline.renderBloom(gSnapshot, zoom_factor, subfield);
 		}
 		
+//MK
+		// Draw a big black sphere around our avatar if the camera render is limited by RLV
+		if (gRRenabled)
+		{
+			gAgent.mRRInterface.drawRenderLimit();
+		}
+//mk
+
 		render_hud_elements();
 		render_hud_attachments();
 	}
@@ -1454,6 +1485,7 @@ void render_ui_3d()
 	}
 
 	gViewerWindow->renderSelections(FALSE, FALSE, TRUE); // Non HUD call in render_hud_elements
+
 	stop_glerror();
 }
 

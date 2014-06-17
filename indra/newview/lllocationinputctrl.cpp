@@ -822,7 +822,7 @@ void LLLocationInputCtrl::refreshLocation()
 //MK
 //	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 //	{
-//		location_name = gAgent.mRRInterface.stringReplace (location_name, gAgent.mRRInterface.getParcelName(), "(Hidden)");
+//		location_name = gAgent.mRRInterface.stringReplace (location_name, gAgent.mRRInterface.mParcelName, "(Hidden)");
 //		if (gAgent.getRegion()) location_name = gAgent.mRRInterface.stringReplace (location_name, gAgent.getRegion()->getName(), "(Hidden)");
 //	}
 //mk

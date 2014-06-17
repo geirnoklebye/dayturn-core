@@ -866,7 +866,7 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 			if (gCacheName->getGroupName(owner, name))
 			{
 //MK
-				if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+				if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 				{
 					name = gAgent.mRRInterface.getDummyName (name);
 				}
@@ -882,7 +882,7 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 		else if(gCacheName->getFullName(owner, name))
 		{
 //MK
-			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 			{
 				name = gAgent.mRRInterface.getDummyName (name);
 			}
@@ -1037,7 +1037,7 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 			}
 
 //MK
-			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 			{
 				final_name = gAgent.mRRInterface.getDummyName (av_name.getUserName());
 			}
@@ -1209,7 +1209,7 @@ BOOL LLToolPie::handleToolTip(S32 local_x, S32 local_y, MASK mask)
 static void show_inspector(const char* inspector, const char* param, const LLUUID& source_id)
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		return;
 	}

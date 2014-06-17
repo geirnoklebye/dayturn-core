@@ -4176,7 +4176,29 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 	U8 bump = (type == LLRenderPass::PASS_BUMP || type == LLRenderPass::PASS_POST_BUMP) ? facep->getTextureEntry()->getBumpmap() : 0;
 	U8 shiny = facep->getTextureEntry()->getShiny();
 	
-	LLViewerTexture* tex = facep->getTexture();
+//MK
+////	LLViewerTexture* tex = facep->getTexture();
+	LLViewerTexture* tex;
+
+	// If @camtexture is set, don't show any texture in world (but show attachments normally)
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		if (!facep->getViewerObject()->isAttachment())
+		{
+			tex = LLViewerFetchedTexture::sDefaultImagep;
+			facep->setFaceColor (LLColor4::white);
+		}
+		else
+		{
+			tex = facep->getTexture();
+		}
+	}
+	else
+	{
+		tex = facep->getTexture();
+	}
+//mk
+
 
 	U8 index = facep->getTextureIndex();
 
