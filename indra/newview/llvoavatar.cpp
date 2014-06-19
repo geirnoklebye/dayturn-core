@@ -4862,7 +4862,10 @@ const std::string LLVOAvatar::getImageURL(const U8 te, const LLUUID &uuid)
 		if (appearance_service_url.empty())
 		{
 			// Probably a server-side issue if we get here:
-			llwarns << "AgentAppearanceServiceURL not set - Baked texture requests will fail" << llendl;
+     		if (gSimulatorType == "SecondLife") //OpemSim does not have Server Side Baking
+	    	{
+	    		LL_WARNS() << "AgentAppearanceServiceURL not set - Baked texture requests will fail" << LL_ENDL;
+		    }
 			return url;
 		}
 	
