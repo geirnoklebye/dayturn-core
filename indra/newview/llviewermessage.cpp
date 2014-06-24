@@ -1570,6 +1570,21 @@ bool LLOfferInfo::inventory_offer_callback(const LLSD& notification, const LLSD&
 		// we will want to open this item when it comes back.
 		LL_DEBUGS("Messaging") << "Initializing an opener for tid: " << mTransactionID
 				 << LL_ENDL;
+//MK
+		{
+			// mDesc looks like '#RLV/~foldername' ( http://slurl.com/secondlife/Sim/X/Y/Z )
+			// => we need to parse in order to find the folder name
+			std::string folder_name = mDesc;
+			unsigned int ind = folder_name.rfind ("'");
+			if (ind != -1) folder_name = folder_name.substr (1, ind -1); // get rid of the first quote too
+
+			// We need to store the name of that folder, but without the #RLV/ part if any
+			std::string retain_folder_name = folder_name;
+			unsigned int ind_rlv = folder_name.rfind ("#RLV/");
+			if (ind != -1) folder_name = folder_name.substr (5);
+			gAgent.mRRInterface.mReceivedInventoryObjects.push_back (folder_name);
+		}
+//mk
 		switch (mIM)
 		{
 		case IM_INVENTORY_OFFERED:
@@ -1838,6 +1853,12 @@ bool LLOfferInfo::inventory_task_offer_callback(const LLSD& notification, const 
 				{
 					gAgent.mRRInterface.notify (LLUUID::null, "accepted_in_inv inv_offer " + folder_name, "");
 				}
+
+				// We need to store the name of that folder, but without the #RLV/ part if any
+				std::string retain_folder_name = folder_name;
+				unsigned int ind_rlv = folder_name.rfind ("#RLV/");
+				if (ind != -1) folder_name = folder_name.substr (5);
+				gAgent.mRRInterface.mReceivedInventoryObjects.push_back (folder_name);
 			}
 //mk
 			break;
@@ -7366,12 +7387,13 @@ void process_teleport_local(LLMessageSystem *msg,void**)
 
 	gAgent.setPositionAgent(pos);
 	gAgentCamera.slamLookAt(look_at);
-
-	if ( !(gAgent.getTeleportKeepsLookAt() && LLViewerJoystick::getInstance()->getOverrideCamera()) )
-	{
-		gAgentCamera.resetView(TRUE, TRUE);
-	}
-
+//MK
+	// This piece of code breaks @camdistmax when set to 0, I haven't found out why yet
+	////if ( !(gAgent.getTeleportKeepsLookAt() && LLViewerJoystick::getInstance()->getOverrideCamera()) )
+	////{
+	////	gAgentCamera.resetView(TRUE, TRUE);
+	////}
+//mk
 	// send camera update to new region
 	gAgentCamera.updateCamera();
 
