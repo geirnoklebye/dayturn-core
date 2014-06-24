@@ -126,9 +126,7 @@ public:
 	virtual UUID	asUUID() const				{ return LLUUID(); }
 	virtual Date	asDate() const				{ return LLDate(); }
 	virtual URI		asURI() const				{ return LLURI(); }
-	virtual const Binary&	asBinary() const	{ static const std::vector<U8> empty; return empty; }
-
-	virtual const String& asStringRef() const { static const std::string empty; return empty; } 
+	virtual Binary	asBinary() const			{ return std::vector<U8>(); }
 	
 	virtual bool has(const String&) const		{ return false; }
 	virtual LLSD get(const String&) const		{ return LLSD(); }
@@ -272,7 +270,6 @@ namespace
 		virtual LLSD::Date		asDate() const	{ return LLDate(mValue); }
 		virtual LLSD::URI		asURI() const	{ return LLURI(mValue); }
 		virtual int				size() const	{ return mValue.size(); }
-		virtual const LLSD::String&	asStringRef() const { return mValue; }
 	};
 	
 	LLSD::Integer	ImplString::asInteger() const
@@ -351,7 +348,7 @@ namespace
 	public:
 		ImplBinary(const LLSD::Binary& v) : Base(v) { }
 				
-		virtual const LLSD::Binary&	asBinary() const{ return mValue; }
+		virtual LLSD::Binary	asBinary() const{ return mValue; }
 	};
 
 
@@ -843,9 +840,7 @@ LLSD::String	LLSD::asString() const	{ return safe(impl).asString(); }
 LLSD::UUID		LLSD::asUUID() const	{ return safe(impl).asUUID(); }
 LLSD::Date		LLSD::asDate() const	{ return safe(impl).asDate(); }
 LLSD::URI		LLSD::asURI() const		{ return safe(impl).asURI(); }
-const LLSD::Binary&	LLSD::asBinary() const	{ return safe(impl).asBinary(); }
-
-const LLSD::String& LLSD::asStringRef() const { return safe(impl).asStringRef(); }
+LLSD::Binary	LLSD::asBinary() const	{ return safe(impl).asBinary(); }
 
 // const char * helpers
 LLSD::LLSD(const char* v) : impl(0)		{ ALLOC_LLSD_OBJECT;	assign(v); }

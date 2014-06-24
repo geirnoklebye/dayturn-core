@@ -107,8 +107,8 @@ public:
 private:
 	/*virtual*/ void done()
 	{
-		const uuid_set_t& added = gInventory.getAddedIDs();
-		for (uuid_set_t::const_iterator it = added.begin(); it != added.end(); ++it)
+		uuid_vec_t::const_iterator it = mAdded.begin(), end = mAdded.end();
+		for(; it != end; ++it)
 		{
 			LLInventoryItem* item = gInventory.getItem(*it);
 			if (!item || item->getType() != LLAssetType::AT_LANDMARK)
@@ -124,6 +124,8 @@ private:
 				mInput->onLandmarkLoaded(lm);
 			}
 		}
+
+		mAdded.clear();
 	}
 
 	LLLocationInputCtrl* mInput;
@@ -140,11 +142,7 @@ public:
 private:
 	/*virtual*/ void changed(U32 mask)
 	{
-		if (mask & (~(LLInventoryObserver::LABEL|
-					  LLInventoryObserver::INTERNAL|
-					  LLInventoryObserver::ADD|
-					  LLInventoryObserver::CREATE|
-					  LLInventoryObserver::UPDATE_CREATE)))
+		if (mask & (~(LLInventoryObserver::LABEL|LLInventoryObserver::INTERNAL|LLInventoryObserver::ADD)))
 		{
 			mInput->updateAddLandmarkButton();
 		}

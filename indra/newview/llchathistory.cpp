@@ -113,7 +113,6 @@ class LLChatHistoryHeader: public LLPanel
 public:
 	LLChatHistoryHeader()
 	:	LLPanel(),
-		mInfoCtrl(NULL),
 		mPopupMenuHandleAvatar(),
 		mPopupMenuHandleObject(),
 		mAvatarID(),
@@ -136,6 +135,9 @@ public:
 
 	~LLChatHistoryHeader()
 	{
+		// Detach the info button so that it doesn't get destroyed (EXT-8463).
+		hideInfoCtrl();
+
 		if (mAvatarNameCacheConnection.connected())
 		{
 			mAvatarNameCacheConnection.disconnect();
@@ -302,11 +304,6 @@ public:
 
 		mUserNameTextBox = getChild<LLTextBox>("user_name");
 		mTimeBoxTextBox = getChild<LLTextBox>("time_box");
-
-		mInfoCtrl = LLUICtrlFactory::getInstance()->createFromFile<LLUICtrl>("inspector_info_ctrl.xml", this, LLPanel::child_registry_t::instance());
-		llassert(mInfoCtrl != NULL);
-		mInfoCtrl->setCommitCallback(boost::bind(&LLChatHistoryHeader::onClickInfoCtrl, mInfoCtrl));
-		mInfoCtrl->setVisible(FALSE);
 
 		return LLPanel::postBuild();
 	}
@@ -611,19 +608,39 @@ protected:
 
 	void showInfoCtrl()
 	{
-		const bool isVisible = !mAvatarID.isNull() && !mFrom.empty() && CHAT_SOURCE_SYSTEM != mSourceType;
-		if (isVisible)
+		if (mAvatarID.isNull() || mFrom.empty() || CHAT_SOURCE_SYSTEM == mSourceType) return;
+				
+		if (!sInfoCtrl)
 		{
-			const LLRect sticky_rect = mUserNameTextBox->getRect();
-			S32 icon_x = llmin(sticky_rect.mLeft + mUserNameTextBox->getTextBoundingRect().getWidth() + 7, sticky_rect.mRight - 3);
-			mInfoCtrl->setOrigin(icon_x, sticky_rect.getCenterY() - mInfoCtrl->getRect().getHeight() / 2 ) ;
+			// *TODO: Delete the button at exit.
+			sInfoCtrl = LLUICtrlFactory::createFromFile<LLUICtrl>("inspector_info_ctrl.xml", NULL, LLPanel::child_registry_t::instance());
+			if (sInfoCtrl)
+			{
+				sInfoCtrl->setCommitCallback(boost::bind(&LLChatHistoryHeader::onClickInfoCtrl, sInfoCtrl));
+			}
 		}
-		mInfoCtrl->setVisible(isVisible);
+
+		if (!sInfoCtrl)
+		{
+			llassert(sInfoCtrl != NULL);
+			return;
+		}
+
+		LLTextBox* name = getChild<LLTextBox>("user_name");
+		LLRect sticky_rect = name->getRect();
+		S32 icon_x = llmin(sticky_rect.mLeft + name->getTextBoundingRect().getWidth() + 7, sticky_rect.mRight - 3);
+		sInfoCtrl->setOrigin(icon_x, sticky_rect.getCenterY() - sInfoCtrl->getRect().getHeight() / 2 ) ;
+		addChild(sInfoCtrl);
 	}
 
 	void hideInfoCtrl()
 	{
-		mInfoCtrl->setVisible(FALSE);
+		if (!sInfoCtrl) return;
+
+		if (sInfoCtrl->getParent() == this)
+		{
+			removeChild(sInfoCtrl);
+		}
 	}
 
 private:
@@ -694,7 +711,7 @@ protected:
 	LLHandle<LLView>	mPopupMenuHandleAvatar;
 	LLHandle<LLView>	mPopupMenuHandleObject;
 
-	LLUICtrl*			mInfoCtrl;
+	static LLUICtrl*	sInfoCtrl;
 
 	LLUUID			    mAvatarID;
 	LLSD				mObjectData;
@@ -710,6 +727,8 @@ protected:
 private:
 	boost::signals2::connection mAvatarNameCacheConnection;
 };
+
+LLUICtrl* LLChatHistoryHeader::sInfoCtrl = NULL;
 
 LLChatHistory::LLChatHistory(const LLChatHistory::Params& p)
 :	LLUICtrl(p),

@@ -40,6 +40,8 @@
 #include "llproxy.h"
 #include "llpumpio.h"
 
+#include "llsdhttpserver.h"
+#include "lliohttpserver.h"
 #include "lliosocket.h"
 #include "stringize.h"
 
@@ -99,7 +101,7 @@ namespace tut
 			if (mSawError)
 			{
 				std::string msg =
-					llformat("httpFailure() called when not expected, status %d",
+					llformat("error() called when not expected, status %d",
 						mStatus);
 				fail(msg);
 			}
@@ -109,7 +111,7 @@ namespace tut
 		{
 			if (!mSawError)
 			{
-				fail("httpFailure() wasn't called");
+				fail("error() wasn't called");
 			}
 		}
 
@@ -151,26 +153,33 @@ namespace tut
 				mClient.mResultDeleted = true;
 			}
 
-		protected:
-			virtual void httpFailure()
+			virtual void error(U32 status, const std::string& reason)
 			{
 				mClient.mSawError = true;
-				mClient.mStatus = getStatus();
-				mClient.mReason = getReason();
+				mClient.mStatus = status;
+				mClient.mReason = reason;
 			}
 
-			virtual void httpSuccess()
+			virtual void result(const LLSD& content)
 			{
-				mClient.mResult = getContent();
+				mClient.mResult = content;
 			}
 
-			virtual void httpCompleted()
+			virtual void completed(
+							U32 status, const std::string& reason,
+							const LLSD& content)
 			{
-				LLHTTPClient::Responder::httpCompleted();
-				
+				LLHTTPClient::Responder::completed(status, reason, content);
+
 				mClient.mSawCompleted = true;
+			}
+
+			virtual void completedHeader(
+				U32 status, const std::string& reason,
+				const LLSD& content)
+			{
+				mClient.mHeader = content;
 				mClient.mSawCompletedHeader = true;
-				mClient.mHeader = getResponseHeaders();
 			}
 
 		private:

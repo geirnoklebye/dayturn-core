@@ -95,6 +95,9 @@ public:
 	virtual bool isConfigured() const = 0;
 
 	virtual ~LLTranslationAPIHandler() {}
+
+protected:
+	static const int STATUS_OK = 200;
 };
 
 /// Google Translate v2 API handler.
@@ -198,6 +201,8 @@ public :
 		 * @see mHandler
 		 */
 		/*virtual*/ void completedRaw(
+			U32 http_status,
+			const std::string& reason,
 			const LLChannelDescriptors& channels,
 			const LLIOPipe::buffer_ptr_t& buffer);
 
@@ -245,6 +250,8 @@ public :
 		 * @see setVerificationStatus()
 		 */
 		/*virtual*/ void completedRaw(
+			U32 http_status,
+			const std::string& reason,
 			const LLChannelDescriptors& channels,
 			const LLIOPipe::buffer_ptr_t& buffer);
 

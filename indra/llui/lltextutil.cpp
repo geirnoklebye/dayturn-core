@@ -72,7 +72,7 @@ const std::string& LLTextUtil::formatPhoneNumber(const std::string& phone_str)
 	return formatted_phone_str;
 }
 
-bool LLTextUtil::processUrlMatch(LLUrlMatch* match,LLTextBase* text_base, bool is_content_trusted)
+bool LLTextUtil::processUrlMatch(LLUrlMatch* match,LLTextBase* text_base)
 {
 	if (match == 0 || text_base == 0)
 		return false;
@@ -85,7 +85,7 @@ bool LLTextUtil::processUrlMatch(LLUrlMatch* match,LLTextBase* text_base, bool i
 	}
 
 	// output an optional icon before the Url
-	if (is_content_trusted && !match->getIcon().empty() )
+	if (!match->getIcon().empty() )
 	{
 		LLUIImagePtr image = LLUI::getUIImage(match->getIcon());
 		if (image)

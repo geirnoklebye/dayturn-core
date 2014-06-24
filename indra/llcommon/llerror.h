@@ -261,9 +261,6 @@ namespace LLError
    private:
        static char**  sBuffer ;
 	   static S32     sIndex ;
-
-	   static void allocateStackBuffer();
-	   static void freeStackBuffer();
           
    public:   
 	   static void push(const char* function, const int line) ;
@@ -271,7 +268,6 @@ namespace LLError
        static void print() ;
        static void clear() ;
 	   static void end(std::ostringstream* _out) ;
-	   static void cleanup();
    }; 
 }
 

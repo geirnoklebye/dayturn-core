@@ -274,23 +274,21 @@ bool LLSpeakersDelayActionsStorage::isTimerStarted(const LLUUID& speaker_id)
 
 class ModerationResponder : public LLHTTPClient::Responder
 {
-	LOG_CLASS(ModerationResponder);
 public:
 	ModerationResponder(const LLUUID& session_id)
 	{
 		mSessionID = session_id;
 	}
 	
-protected:
-	virtual void httpFailure()
+	virtual void error(U32 status, const std::string& reason)
 	{
-		LL_WARNS() << dumpResponse() << LL_ENDL;
+		LL_WARNS() << status << ": " << reason << LL_ENDL;
 		
 		if ( gIMMgr )
 		{
 			//403 == you're not a mod
 			//should be disabled if you're not a moderator
-			if ( HTTP_FORBIDDEN == getStatus() )
+			if ( 403 == status )
 			{
 				gIMMgr->showSessionEventError(
 											  "mute",
@@ -878,7 +876,10 @@ void LLIMSpeakerMgr::updateSpeakers(const LLSD& update)
 		}
 	}
 }
-
+/*prep#
+	virtual void errorWithContent(U32 status, const std::string& reason, const LLSD& content)
+		LL_WARNS() << "ModerationResponder error [status:" << status << "]: " << content << LL_ENDL;
+		*/
 void LLIMSpeakerMgr::toggleAllowTextChat(const LLUUID& speaker_id)
 {
 	LLPointer<LLSpeaker> speakerp = findSpeaker(speaker_id);

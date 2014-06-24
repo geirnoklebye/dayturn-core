@@ -131,8 +131,6 @@ LLPluginProcessParent::~LLPluginProcessParent()
 	{
 		// destroy the shared memory region
 		iter->second->destroy();
-		delete iter->second;
-		iter->second = NULL;
 		
 		// and remove it from our map
 		mSharedMemoryRegions.erase(iter);
@@ -962,8 +960,6 @@ void LLPluginProcessParent::receiveMessage(const LLPluginMessage &message)
 			{
 				// destroy the shared memory region
 				iter->second->destroy();
-				delete iter->second;
-				iter->second = NULL;
 				
 				// and remove it from our map
 				mSharedMemoryRegions.erase(iter);

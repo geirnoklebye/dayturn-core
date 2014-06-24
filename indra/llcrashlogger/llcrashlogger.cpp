@@ -52,20 +52,17 @@ BOOL gSent = false;
 
 class LLCrashLoggerResponder : public LLHTTPClient::Responder
 {
-	LOG_CLASS(LLCrashLoggerResponder);
 public:
 	LLCrashLoggerResponder() 
 	{
 	}
 
-protected:
-	virtual void httpFailure()
+	virtual void error(U32 status, const std::string& reason)
 	{
-		LL_WARNS() << dumpResponse() << LL_ENDL;
 		gBreak = true;
 	}
 
-	virtual void httpSuccess()
+	virtual void result(const LLSD& content)
 	{
 		gBreak = true;
 		gSent = true;

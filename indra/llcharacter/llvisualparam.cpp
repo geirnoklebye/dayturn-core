@@ -159,32 +159,17 @@ void LLVisualParamInfo::toStream(std::ostream &out)
 //-----------------------------------------------------------------------------
 // LLVisualParam()
 //-----------------------------------------------------------------------------
-LLVisualParam::LLVisualParam()
-	: mCurWeight( 0.f ),
+LLVisualParam::LLVisualParam()	
+	:
+	mCurWeight( 0.f ),
 	mLastWeight( 0.f ),
 	mNext( NULL ),
 	mTargetWeight( 0.f ),
 	mIsAnimating( FALSE ),
-	mIsDummy(FALSE),
 	mID( -1 ),
 	mInfo( 0 ),
+	mIsDummy(FALSE),
 	mParamLocation(LOC_UNKNOWN)
-{
-}
-
-//-----------------------------------------------------------------------------
-// LLVisualParam()
-//-----------------------------------------------------------------------------
-LLVisualParam::LLVisualParam(const LLVisualParam& pOther)
-	: mCurWeight(pOther.mCurWeight),
-	mLastWeight(pOther.mLastWeight),
-	mNext(pOther.mNext),
-	mTargetWeight(pOther.mTargetWeight),
-	mIsAnimating(pOther.mIsAnimating),
-	mIsDummy(pOther.mIsDummy),
-	mID(pOther.mID),
-	mInfo(pOther.mInfo),
-	mParamLocation(pOther.mParamLocation)
 {
 }
 
@@ -194,7 +179,6 @@ LLVisualParam::LLVisualParam(const LLVisualParam& pOther)
 LLVisualParam::~LLVisualParam()
 {
 	delete mNext;
-	mNext = NULL;
 }
 
 /*
@@ -236,7 +220,7 @@ BOOL LLVisualParam::parseData(LLXmlTreeNode *node)
 //-----------------------------------------------------------------------------
 // setWeight()
 //-----------------------------------------------------------------------------
-void LLVisualParam::setWeight(F32 weight)
+void LLVisualParam::setWeight(F32 weight, BOOL upload_bake)
 {
 	if (mIsAnimating)
 	{
@@ -254,19 +238,19 @@ void LLVisualParam::setWeight(F32 weight)
 	
 	if (mNext)
 	{
-		mNext->setWeight(weight);
+		mNext->setWeight(weight, upload_bake);
 	}
 }
 
 //-----------------------------------------------------------------------------
 // setAnimationTarget()
 //-----------------------------------------------------------------------------
-void LLVisualParam::setAnimationTarget(F32 target_value)
+void LLVisualParam::setAnimationTarget(F32 target_value, BOOL upload_bake)
 {
 	// don't animate dummy parameters
 	if (mIsDummy)
 	{
-		setWeight(target_value);
+		setWeight(target_value, upload_bake);
 		mTargetWeight = mCurWeight;
 		return;
 	}
@@ -286,7 +270,7 @@ void LLVisualParam::setAnimationTarget(F32 target_value)
 
 	if (mNext)
 	{
-		mNext->setAnimationTarget(target_value);
+		mNext->setAnimationTarget(target_value, upload_bake);
 	}
 }
 
@@ -301,34 +285,26 @@ void LLVisualParam::setNextParam( LLVisualParam *next )
 }
 
 //-----------------------------------------------------------------------------
-// clearNextParam()
-//-----------------------------------------------------------------------------
-void LLVisualParam::clearNextParam()
-{
-	mNext = NULL;
-}
-
-//-----------------------------------------------------------------------------
 // animate()
 //-----------------------------------------------------------------------------
-void LLVisualParam::animate( F32 delta)
+void LLVisualParam::animate( F32 delta, BOOL upload_bake )
 {
 	if (mIsAnimating)
 	{
 		F32 new_weight = ((mTargetWeight - mCurWeight) * delta) + mCurWeight;
-		setWeight(new_weight);
+		setWeight(new_weight, upload_bake);
 	}
 }
 
 //-----------------------------------------------------------------------------
 // stopAnimating()
 //-----------------------------------------------------------------------------
-void LLVisualParam::stopAnimating()
+void LLVisualParam::stopAnimating(BOOL upload_bake)
 { 
 	if (mIsAnimating && isTweakable())
 	{
 		mIsAnimating = FALSE; 
-		setWeight(mTargetWeight);
+		setWeight(mTargetWeight, upload_bake);
 	}
 }
 

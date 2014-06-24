@@ -895,8 +895,7 @@ class view_listener_t : public boost::signals2::trackable
 {
 public:
 	virtual bool handleEvent(const LLSD& userdata) = 0;
-	view_listener_t() { sListeners.insert(this); }
-	virtual ~view_listener_t() { sListeners.erase(this); }
+	virtual ~view_listener_t() {}
 	
 	static void addEnable(view_listener_t* listener, const std::string& name)
 	{
@@ -914,20 +913,6 @@ public:
 		addEnable(listener, name);
 		addCommit(listener, name);
 	}
-
-	static void cleanup()
-	{
-		listener_vector_t listeners(sListeners.begin(), sListeners.end());
-		sListeners.clear();
-
-		std::for_each(listeners.begin(), listeners.end(), DeletePointer());
-		listeners.clear();
-	}
-
-private:
-	typedef std::set<view_listener_t*> listener_map_t;
-	typedef std::vector<view_listener_t*> listener_vector_t;
-	static listener_map_t sListeners;
 };
 
 #endif // LL_LLMENUGL_H

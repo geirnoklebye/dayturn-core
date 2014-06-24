@@ -412,19 +412,18 @@ void update_statistics()
 
 class ViewerStatsResponder : public LLHTTPClient::Responder
 {
-	LOG_CLASS(ViewerStatsResponder);
 public:
-	ViewerStatsResponder() { }
+    ViewerStatsResponder() { }
 
-private:
-	/* virtual */ void httpFailure()
-	{
-		LL_WARNS() << dumpResponse() << LL_ENDL;
-	}
+    void error(U32 statusNum, const std::string& reason)
+    {
+		LL_INFOS() << "ViewerStatsResponder::error " << statusNum << " "
+				<< reason << LL_ENDL;
+    }
 
-	/* virtual */ void httpSuccess()
-	{
-		LL_INFOS() << "OK" << LL_ENDL;
+    void result(const LLSD& content)
+    {
+		LL_INFOS() << "ViewerStatsResponder::result" << LL_ENDL;
 	}
 };
 
@@ -623,28 +622,44 @@ void send_stats()
 	LLViewerStats::instance().getRecording().resume();
 }
 
-LLTimer& LLViewerStats::PhaseMap::getPhaseTimer(const std::string& phase_name)
+LLFrameTimer& LLViewerStats::PhaseMap::getPhaseTimer(const std::string& phase_name)
 {
 	phase_map_t::iterator iter = mPhaseMap.find(phase_name);
 	if (iter == mPhaseMap.end())
 	{
-		LLTimer timer;
+		LLFrameTimer timer;
 		mPhaseMap[phase_name] = timer;
 	}
-	LLTimer& timer = mPhaseMap[phase_name];
+	LLFrameTimer& timer = mPhaseMap[phase_name];
 	return timer;
 }
 
 void LLViewerStats::PhaseMap::startPhase(const std::string& phase_name)
 {
-	LLTimer& timer = getPhaseTimer(phase_name);
-	timer.start();
-	//LL_DEBUGS("Avatar") << "startPhase " << phase_name << LL_ENDL;
+	LLFrameTimer& timer = getPhaseTimer(phase_name);
+	LL_DEBUGS() << "startPhase " << phase_name << LL_ENDL;
+	timer.unpause();
+}
+
+void LLViewerStats::PhaseMap::stopAllPhases()
+{
+	for (phase_map_t::iterator iter = mPhaseMap.begin();
+		 iter != mPhaseMap.end(); ++iter)
+	{
+		const std::string& phase_name = iter->first;
+		if (iter->second.getStarted())
+		{
+			// Going from started to paused state - record stats.
+			recordPhaseStat(phase_name,iter->second.getElapsedTimeF32());
+		}
+		LL_DEBUGS() << "stopPhase (all) " << phase_name << LL_ENDL;
+		iter->second.pause();
+	}
 }
 
 void LLViewerStats::PhaseMap::clearPhases()
 {
-	//LL_DEBUGS("Avatar") << "clearPhases" << LL_ENDL;
+	LL_DEBUGS() << "clearPhases" << LL_ENDL;
 
 	mPhaseMap.clear();
 }
@@ -669,6 +684,7 @@ LLViewerStats::PhaseMap::PhaseMap()
 {
 }
 
+
 void LLViewerStats::PhaseMap::stopPhase(const std::string& phase_name)
 {
 	phase_map_t::iterator iter = mPhaseMap.find(phase_name);
@@ -681,7 +697,6 @@ void LLViewerStats::PhaseMap::stopPhase(const std::string& phase_name)
 		}
 	}
 }
-
 // static
 LLViewerStats::StatsAccumulator& LLViewerStats::PhaseMap::getPhaseStats(const std::string& phase_name)
 {
@@ -705,18 +720,14 @@ void LLViewerStats::PhaseMap::recordPhaseStat(const std::string& phase_name, F32
 bool LLViewerStats::PhaseMap::getPhaseValues(const std::string& phase_name, F32& elapsed, bool& completed)
 {
 	phase_map_t::iterator iter = mPhaseMap.find(phase_name);
-	bool found = false;
 	if (iter != mPhaseMap.end())
 	{
-		found = true;
 		elapsed =  iter->second.getElapsedTimeF32();
 		completed = !iter->second.getStarted();
-		//LL_DEBUGS("Avatar") << " phase_name " << phase_name << " elapsed " << elapsed << " completed " << completed << " timer addr " << (S32)(&iter->second) << LL_ENDL;
+		return true;
 	}
 	else
 	{
-		//LL_DEBUGS("Avatar") << " phase_name " << phase_name << " NOT FOUND"  << LL_ENDL;
+		return false;
 	}
-
-	return found;
 }

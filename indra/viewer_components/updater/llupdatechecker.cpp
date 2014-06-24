@@ -130,13 +130,12 @@ void LLUpdateChecker::Implementation::checkVersion(std::string const & urlBase,
 	}
 }
 
-void LLUpdateChecker::Implementation::httpCompleted()
+void LLUpdateChecker::Implementation::completed(U32 status,
+												const std::string & reason,
+												const LLSD & content)
 {
 	mInProgress = false;	
-
-	S32 status = getStatus();
-	const LLSD& content = getContent();
-	const std::string& reason = getReason();
+	
 	if(status != 200)
 	{
 		std::string server_error;
@@ -163,9 +162,8 @@ void LLUpdateChecker::Implementation::httpCompleted()
 }
 
 
-void LLUpdateChecker::Implementation::httpFailure()
+void LLUpdateChecker::Implementation::error(U32 status, const std::string & reason)
 {
-	const std::string& reason = getReason();
 	mInProgress = false;
 	LL_WARNS("UpdaterService") << "update check failed; " << reason << LL_ENDL;
 	mClient.error(reason);

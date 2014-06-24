@@ -52,10 +52,11 @@ public:
 						  bool                willing_to_test
 						  );
 	
-    protected:
 		// Responder:
-		virtual void httpCompleted();
-		virtual void httpFailure();
+		virtual void completed(U32 status,
+							   const std::string & reason,
+							   const LLSD& content);
+		virtual void error(U32 status, const std::string & reason);
 	
 	private:	
 		static const char * sLegacyProtocolVersion;

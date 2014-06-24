@@ -132,14 +132,10 @@ public:
 };
 
 typedef std::vector<LLUUID> uuid_vec_t;
-typedef std::set<LLUUID> uuid_set_t;
 
-// Helper structure for ordering lluuids in stl containers.  eg:
-// std::map<LLUUID, LLWidget*, lluuid_less> widget_map;
-//
-// (isn't this the default behavior anyway? I think we could
-// everywhere replace these with uuid_set_t, but someone should
-// verify.)
+
+// Helper structure for ordering lluuids in stl containers.
+// eg: 	std::map<LLUUID, LLWidget*, lluuid_less> widget_map;
 struct lluuid_less
 {
 	bool operator()(const LLUUID& lhs, const LLUUID& rhs) const
@@ -149,6 +145,7 @@ struct lluuid_less
 };
 
 typedef std::set<LLUUID, lluuid_less> uuid_list_t;
+
 /*
  * Sub-classes for keeping transaction IDs and asset IDs
  * straight.

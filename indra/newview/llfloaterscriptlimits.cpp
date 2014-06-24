@@ -183,14 +183,8 @@ void LLPanelScriptLimitsInfo::updateChild(LLUICtrl* child_ctr)
 // Responders
 ///----------------------------------------------------------------------------
 
-void fetchScriptLimitsRegionInfoResponder::httpSuccess()
+void fetchScriptLimitsRegionInfoResponder::result(const LLSD& content)
 {
-	const LLSD& content = getContent();
-	if (!content.isMap())
-	{
-		failureResult(HTTP_INTERNAL_ERROR, "Malformed response contents", content);
-		return;
-	}
 	//we don't need to test with a fake respose here (shouldn't anyway)
 
 #ifdef DUMP_REPLIES_TO_LLINFOS
@@ -227,14 +221,13 @@ void fetchScriptLimitsRegionInfoResponder::httpSuccess()
 	}
 }
 
-void fetchScriptLimitsRegionInfoResponder::httpFailure()
+void fetchScriptLimitsRegionInfoResponder::errorWithContent(U32 status, const std::string& reason, const LLSD& content)
 {
-	LL_WARNS() << dumpResponse() << LL_ENDL;
+	LL_WARNS() << "fetchScriptLimitsRegionInfoResponder error [status:" << status << "]: " << content << LL_ENDL;
 }
 
-void fetchScriptLimitsRegionSummaryResponder::httpSuccess()
+void fetchScriptLimitsRegionSummaryResponder::result(const LLSD& content_ref)
 {
-	const LLSD& content_ref = getContent();
 #ifdef USE_FAKE_RESPONSES
 
 	LLSD fake_content;
@@ -275,12 +268,6 @@ void fetchScriptLimitsRegionSummaryResponder::httpSuccess()
 
 #endif
 
-	if (!content.isMap())
-	{
-		failureResult(HTTP_INTERNAL_ERROR, "Malformed response contents", content);
-		return;
-	}
-
 
 #ifdef DUMP_REPLIES_TO_LLINFOS
 
@@ -304,7 +291,7 @@ void fetchScriptLimitsRegionSummaryResponder::httpSuccess()
 		LLTabContainer* tab = instance->getChild<LLTabContainer>("scriptlimits_panels");
 		if(tab)
 		{
-			LLPanelScriptLimitsRegionMemory* panel_memory = (LLPanelScriptLimitsRegionMemory*)tab->getChild<LLPanel>("script_limits_region_memory_panel");
+		LLPanelScriptLimitsRegionMemory* panel_memory = (LLPanelScriptLimitsRegionMemory*)tab->getChild<LLPanel>("script_limits_region_memory_panel");
 			if(panel_memory)
 			{
 				panel_memory->getChild<LLUICtrl>("loading_text")->setValue(LLSD(std::string("")));
@@ -314,21 +301,20 @@ void fetchScriptLimitsRegionSummaryResponder::httpSuccess()
 				{
 					btn->setEnabled(true);
 				}
-
-				panel_memory->setRegionSummary(content);
-			}
-		}
+				
+		panel_memory->setRegionSummary(content);
+	}
+}
 	}
 }
 
-void fetchScriptLimitsRegionSummaryResponder::httpFailure()
+void fetchScriptLimitsRegionSummaryResponder::errorWithContent(U32 status, const std::string& reason, const LLSD& content)
 {
-	LL_WARNS() << dumpResponse() << LL_ENDL;
+	LL_WARNS() << "fetchScriptLimitsRegionSummaryResponder error [status:" << status << "]: " << content << LL_ENDL;
 }
 
-void fetchScriptLimitsRegionDetailsResponder::httpSuccess()
+void fetchScriptLimitsRegionDetailsResponder::result(const LLSD& content_ref)
 {
-	const LLSD& content_ref = getContent();
 #ifdef USE_FAKE_RESPONSES
 /*
 Updated detail service, ** denotes field added:
@@ -391,12 +377,6 @@ result (map)
 
 #endif
 
-	if (!content.isMap())
-	{
-		failureResult(HTTP_INTERNAL_ERROR, "Malformed response contents", content);
-		return;
-	}
-
 #ifdef DUMP_REPLIES_TO_LLINFOS
 
 	LLSDNotationStreamer notation_streamer(content);
@@ -437,14 +417,13 @@ result (map)
 	}
 }
 
-void fetchScriptLimitsRegionDetailsResponder::httpFailure()
+void fetchScriptLimitsRegionDetailsResponder::errorWithContent(U32 status, const std::string& reason, const LLSD& content)
 {
-	LL_WARNS() << dumpResponse() << LL_ENDL;
+	LL_WARNS() << "fetchScriptLimitsRegionDetailsResponder error [status:" << status << "]: " << content << LL_ENDL;
 }
 
-void fetchScriptLimitsAttachmentInfoResponder::httpSuccess()
+void fetchScriptLimitsAttachmentInfoResponder::result(const LLSD& content_ref)
 {
-	const LLSD& content_ref = getContent();
 
 #ifdef USE_FAKE_RESPONSES
 
@@ -485,12 +464,6 @@ void fetchScriptLimitsAttachmentInfoResponder::httpSuccess()
 	const LLSD& content = content_ref;
 
 #endif
-
-	if (!content.isMap())
-	{
-		failureResult(HTTP_INTERNAL_ERROR, "Malformed response contents", content);
-		return;
-	}
 
 #ifdef DUMP_REPLIES_TO_LLINFOS
 
@@ -540,9 +513,9 @@ void fetchScriptLimitsAttachmentInfoResponder::httpSuccess()
 	}
 }
 
-void fetchScriptLimitsAttachmentInfoResponder::httpFailure()
+void fetchScriptLimitsAttachmentInfoResponder::errorWithContent(U32 status, const std::string& reason, const LLSD& content)
 {
-	LL_WARNS() << dumpResponse() << LL_ENDL;
+	LL_WARNS() << "fetchScriptLimitsAttachmentInfoResponder error [status:" << status << "]: " << content << LL_ENDL;
 }
 
 ///----------------------------------------------------------------------------
@@ -613,7 +586,7 @@ void LLPanelScriptLimitsRegionMemory::setParcelID(const LLUUID& parcel_id)
 }
 
 // virtual
-void LLPanelScriptLimitsRegionMemory::setErrorStatus(S32 status, const std::string& reason)
+void LLPanelScriptLimitsRegionMemory::setErrorStatus(U32 status, const std::string& reason)
 {
 	LL_WARNS() << "Can't handle remote parcel request."<< " Http Status: "<< status << ". Reason : "<< reason<<LL_ENDL;
 }

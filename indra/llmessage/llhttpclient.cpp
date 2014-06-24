@@ -54,7 +54,7 @@ namespace
 	{
 	public:
 		LLHTTPClientURLAdaptor(LLCurl::ResponderPtr responder)
-			: LLURLRequestComplete(), mResponder(responder), mStatus(HTTP_INTERNAL_ERROR),
+			: LLURLRequestComplete(), mResponder(responder), mStatus(499),
 			  mReason("LLURLRequest complete w/no status")
 		{
 		}
@@ -63,7 +63,7 @@ namespace
 		{
 		}
 
-		virtual void httpStatus(S32 status, const std::string& reason)
+		virtual void httpStatus(U32 status, const std::string& reason)
 		{
 			LLURLRequestComplete::httpStatus(status,reason);
 
@@ -74,33 +74,30 @@ namespace
 		virtual void complete(const LLChannelDescriptors& channels,
 							  const buffer_ptr_t& buffer)
 		{
-			// *TODO: Re-interpret mRequestStatus codes?
-			//        Would like to detect curl errors, such as
-			//        connection errors, write erros, etc.
 			if (mResponder.get())
 			{
-				mResponder->setResult(mStatus, mReason);
-				mResponder->completedRaw(channels, buffer);
+				// Allow clients to parse headers before we attempt to parse
+				// the body and provide completed/result/error calls.
+				mResponder->completedHeader(mStatus, mReason, mHeaderOutput);
+				mResponder->completedRaw(mStatus, mReason, channels, buffer);
 			}
 		}
 		virtual void header(const std::string& header, const std::string& value)
 		{
-			if (mResponder.get())
-			{
-				mResponder->setResponseHeader(header, value);
-			}
+			mHeaderOutput[header] = value;
 		}
 
 	private:
 		LLCurl::ResponderPtr mResponder;
-		S32 mStatus;
+		U32 mStatus;
 		std::string mReason;
+		LLSD mHeaderOutput;
 	};
 	
 	class Injector : public LLIOPipe
 	{
 	public:
-		virtual const std::string& contentType() = 0;
+		virtual const char* contentType() = 0;
 	};
 
 	class LLSDInjector : public Injector
@@ -109,7 +106,7 @@ namespace
 		LLSDInjector(const LLSD& sd) : mSD(sd) {}
 		virtual ~LLSDInjector() {}
 
-		const std::string& contentType() { return HTTP_CONTENT_LLSD_XML; }
+		const char* contentType() { return "application/llsd+xml"; }
 
 		virtual EStatus process_impl(const LLChannelDescriptors& channels,
 			buffer_ptr_t& buffer, bool& eos, LLSD& context, LLPumpIO* pump)
@@ -127,9 +124,9 @@ namespace
 	{
 	public:
 		RawInjector(const U8* data, S32 size) : mData(data), mSize(size) {}
-		virtual ~RawInjector() {delete [] mData;}
+		virtual ~RawInjector() {delete mData;}
 
-		const std::string& contentType() { return HTTP_CONTENT_OCTET_STREAM; }
+		const char* contentType() { return "application/octet-stream"; }
 
 		virtual EStatus process_impl(const LLChannelDescriptors& channels,
 			buffer_ptr_t& buffer, bool& eos, LLSD& context, LLPumpIO* pump)
@@ -150,7 +147,7 @@ namespace
 		FileInjector(const std::string& filename) : mFilename(filename) {}
 		virtual ~FileInjector() {}
 
-		const std::string& contentType() { return HTTP_CONTENT_OCTET_STREAM; }
+		const char* contentType() { return "application/octet-stream"; }
 
 		virtual EStatus process_impl(const LLChannelDescriptors& channels,
 			buffer_ptr_t& buffer, bool& eos, LLSD& context, LLPumpIO* pump)
@@ -183,7 +180,7 @@ namespace
 		VFileInjector(const LLUUID& uuid, LLAssetType::EType asset_type) : mUUID(uuid), mAssetType(asset_type) {}
 		virtual ~VFileInjector() {}
 
-		const std::string& contentType() { return HTTP_CONTENT_OCTET_STREAM; }
+		const char* contentType() { return "application/octet-stream"; }
 
 		virtual EStatus process_impl(const LLChannelDescriptors& channels,
 			buffer_ptr_t& buffer, bool& eos, LLSD& context, LLPumpIO* pump)
@@ -216,7 +213,7 @@ void LLHTTPClient::setCertVerifyCallback(LLURLRequest::SSLCertVerifyCallback cal
 
 static void request(
 	const std::string& url,
-	EHTTPMethod method,
+	LLURLRequest::ERequestAction method,
 	Injector* body_injector,
 	LLCurl::ResponderPtr responder,
 	const F32 timeout = HTTP_REQUEST_EXPIRY_SECS,
@@ -228,7 +225,7 @@ static void request(
 	{
 		if (responder)
 		{
-			responder->completeResult(HTTP_INTERNAL_ERROR, "No pump");
+		responder->completed(U32_MAX, "No pump", LLSD());
 		}
 		delete body_injector;
 		return;
@@ -240,82 +237,90 @@ static void request(
 	{
 		if (responder)
 		{
-			responder->completeResult(HTTP_INTERNAL_CURL_ERROR, "Internal Error - curl failure");
+			responder->completed(498, "Internal Error - curl failure", LLSD());
 		}
-		delete req;
+		delete req ;
 		delete body_injector;
-		return;
+		return ;
 	}
 
 	req->setSSLVerifyCallback(LLHTTPClient::getCertVerifyCallback(), (void *)req);
 
-	LL_DEBUGS("LLHTTPClient") << httpMethodAsVerb(method) << " " << url << " " << headers << LL_ENDL;
+	
+	LL_DEBUGS() << LLURLRequest::actionAsVerb(method) << " " << url << " "
+		<< headers << LL_ENDL;
 
 	// Insert custom headers if the caller sent any
 	if (headers.isMap())
 	{
-		if (headers.has(HTTP_OUT_HEADER_COOKIE))
+		if (headers.has("Cookie"))
 		{
 			req->allowCookies();
 		}
 
-		LLSD::map_const_iterator iter = headers.beginMap();
-		LLSD::map_const_iterator end  = headers.endMap();
+        LLSD::map_const_iterator iter = headers.beginMap();
+        LLSD::map_const_iterator end  = headers.endMap();
 
-		for (; iter != end; ++iter)
-		{
-			//if the header is "Pragma" with no value
-			//the caller intends to force libcurl to drop
-			//the Pragma header it so gratuitously inserts
-			//Before inserting the header, force libcurl
-			//to not use the proxy (read: llurlrequest.cpp)
-			if ((iter->first == HTTP_OUT_HEADER_PRAGMA) && (iter->second.asString().empty()))
-			{
-				req->useProxy(false);
-			}
-			LL_DEBUGS("LLHTTPClient") << "header = " << iter->first 
-				<< ": " << iter->second.asString() << LL_ENDL;
-			req->addHeader(iter->first, iter->second.asString());
-		}
-	}
+        for (; iter != end; ++iter)
+        {
+            std::ostringstream header;
+            //if the header is "Pragma" with no value
+            //the caller intends to force libcurl to drop
+            //the Pragma header it so gratuitously inserts
+            //Before inserting the header, force libcurl
+            //to not use the proxy (read: llurlrequest.cpp)
+			static const std::string PRAGMA("Pragma");
+			if ((iter->first == PRAGMA) && (iter->second.asString().empty()))
+            {
+                req->useProxy(false);
+            }
+            header << iter->first << ": " << iter->second.asString() ;
+            LL_DEBUGS() << "header = " << header.str() << LL_ENDL;
+            req->addHeader(header.str().c_str());
+        }
+    }
 
 	// Check to see if we have already set Accept or not. If no one
 	// set it, set it to application/llsd+xml since that's what we
 	// almost always want.
-	if( method != HTTP_PUT && method != HTTP_POST )
+	if( method != LLURLRequest::HTTP_PUT && method != LLURLRequest::HTTP_POST )
 	{
-		if(!headers.has(HTTP_OUT_HEADER_ACCEPT))
+		static const std::string ACCEPT("Accept");
+		if(!headers.has(ACCEPT))
 		{
-			req->addHeader(HTTP_OUT_HEADER_ACCEPT, HTTP_CONTENT_LLSD_XML);
+			req->addHeader("Accept: application/llsd+xml");
 		}
 	}
 
 	if (responder)
 	{
 		responder->setURL(url);
-		responder->setHTTPMethod(method);
 	}
 
 	req->setCallback(new LLHTTPClientURLAdaptor(responder));
 
-	if (method == HTTP_POST  &&  gMessageSystem)
+	if (method == LLURLRequest::HTTP_POST  &&  gMessageSystem)
 	{
-		req->addHeader("X-SecondLife-UDP-Listen-Port", llformat("%d",
-					gMessageSystem->mPort));
-	}
+		req->addHeader(llformat("X-SecondLife-UDP-Listen-Port: %d",
+								gMessageSystem->mPort).c_str());
+   	}
 
-	if (method == HTTP_PUT || method == HTTP_POST || method == HTTP_PATCH)
+	if (method == LLURLRequest::HTTP_PUT || method == LLURLRequest::HTTP_POST)
 	{
-		if(!headers.has(HTTP_OUT_HEADER_CONTENT_TYPE))
+		static const std::string CONTENT_TYPE("Content-Type");
+		if(!headers.has(CONTENT_TYPE))
 		{
 			// If the Content-Type header was passed in, it has
 			// already been added as a header through req->addHeader
 			// in the loop above. We defer to the caller's wisdom, but
 			// if they did not specify a Content-Type, then ask the
 			// injector.
-			req->addHeader(HTTP_OUT_HEADER_CONTENT_TYPE, body_injector->contentType());
+			req->addHeader(
+				llformat(
+					"Content-Type: %s",
+					body_injector->contentType()).c_str());
 		}
-		chain.push_back(LLIOPipe::ptr_t(body_injector));
+   		chain.push_back(LLIOPipe::ptr_t(body_injector));
 	}
 
 	chain.push_back(LLIOPipe::ptr_t(req));
@@ -337,9 +342,9 @@ void LLHTTPClient::getByteRange(
 	if(offset > 0 || bytes > 0)
 	{
 		std::string range = llformat("bytes=%d-%d", offset, offset+bytes-1);
-		headers[HTTP_OUT_HEADER_RANGE] = range;
+		headers["Range"] = range;
 	}
-    request(url,HTTP_GET, NULL, responder, timeout, headers, follow_redirects);
+    request(url,LLURLRequest::HTTP_GET, NULL, responder, timeout, headers, follow_redirects);
 }
 
 void LLHTTPClient::head(
@@ -349,18 +354,18 @@ void LLHTTPClient::head(
 	const F32 timeout,
 	bool follow_redirects /* = true */)
 {
-	request(url, HTTP_HEAD, NULL, responder, timeout, headers, follow_redirects);
+	request(url, LLURLRequest::HTTP_HEAD, NULL, responder, timeout, headers, follow_redirects);
 }
 
 void LLHTTPClient::get(const std::string& url, ResponderPtr responder, const LLSD& headers, const F32 timeout,
 					   bool follow_redirects /* = true */)
 {
-	request(url, HTTP_GET, NULL, responder, timeout, headers, follow_redirects);
+	request(url, LLURLRequest::HTTP_GET, NULL, responder, timeout, headers, follow_redirects);
 }
 void LLHTTPClient::getHeaderOnly(const std::string& url, ResponderPtr responder, const LLSD& headers,
 								 const F32 timeout, bool follow_redirects /* = true */)
 {
-	request(url, HTTP_HEAD, NULL, responder, timeout, headers, follow_redirects);
+	request(url, LLURLRequest::HTTP_HEAD, NULL, responder, timeout, headers, follow_redirects);
 }
 void LLHTTPClient::getHeaderOnly(const std::string& url, ResponderPtr responder, const F32 timeout,
 								 bool follow_redirects /* = true */)
@@ -403,7 +408,7 @@ public:
 		return content;
 	}
 
-	const std::string& asString()
+	std::string asString()
 	{
 		return mBuffer;
 	}
@@ -432,7 +437,7 @@ private:
   */
 static LLSD blocking_request(
 	const std::string& url,
-	EHTTPMethod method,
+	LLURLRequest::ERequestAction method,
 	const LLSD& body,
 	const LLSD& headers = LLSD(),
 	const F32 timeout = 5
@@ -475,11 +480,11 @@ static LLSD blocking_request(
 	}
 	
 	// * Setup specific method / "verb" for the URI (currently only GET and POST supported + poppy)
-	if (method == HTTP_GET)
+	if (method == LLURLRequest::HTTP_GET)
 	{
 		curl_easy_setopt(curlp, CURLOPT_HTTPGET, 1);
 	}
-	else if (method == HTTP_POST)
+	else if (method == LLURLRequest::HTTP_POST)
 	{
 		curl_easy_setopt(curlp, CURLOPT_POST, 1);
 		//serialize to ostr then copy to str - need to because ostr ptr is unstable :(
@@ -488,20 +493,18 @@ static LLSD blocking_request(
 		body_str = ostr.str();
 		curl_easy_setopt(curlp, CURLOPT_POSTFIELDS, body_str.c_str());
 		//copied from PHP libs, correct?
-		headers_list = curl_slist_append(headers_list, 
-				llformat("%s: %s", HTTP_OUT_HEADER_CONTENT_TYPE.c_str(), HTTP_CONTENT_LLSD_XML.c_str()).c_str());
+		headers_list = curl_slist_append(headers_list, "Content-Type: application/llsd+xml");
 
 		// copied from llurlrequest.cpp
 		// it appears that apache2.2.3 or django in etch is busted. If
 		// we do not clear the expect header, we get a 500. May be
 		// limited to django/mod_wsgi.
-		headers_list = curl_slist_append(headers_list, llformat("%s:", HTTP_OUT_HEADER_EXPECT.c_str()).c_str());
+		headers_list = curl_slist_append(headers_list, "Expect:");
 	}
 	
 	// * Do the action using curl, handle results
 	LL_DEBUGS() << "HTTP body: " << body_str << LL_ENDL;
-	headers_list = curl_slist_append(headers_list,
-				llformat("%s: %s", HTTP_OUT_HEADER_ACCEPT.c_str(), HTTP_CONTENT_LLSD_XML.c_str()).c_str());
+	headers_list = curl_slist_append(headers_list, "Accept: application/llsd+xml");
 	CURLcode curl_result = curl_easy_setopt(curlp, CURLOPT_HTTPHEADER, headers_list);
 	if ( curl_result != CURLE_OK )
 	{
@@ -510,11 +513,11 @@ static LLSD blocking_request(
 
 	LLSD response = LLSD::emptyMap();
 	S32 curl_success = curl_easy_perform(curlp);
-	S32 http_status = HTTP_INTERNAL_ERROR;
+	S32 http_status = 499;
 	curl_easy_getinfo(curlp, CURLINFO_RESPONSE_CODE, &http_status);
 	response["status"] = http_status;
 	// if we get a non-404 and it's not a 200 OR maybe it is but you have error bits,
-	if ( http_status != HTTP_NOT_FOUND && (http_status != HTTP_OK || curl_success != 0) )
+	if ( http_status != 404 && (http_status != 200 || curl_success != 0) )
 	{
 		// We expect 404s, don't spam for them.
 		LL_WARNS() << "CURL REQ URL: " << url << LL_ENDL;
@@ -544,12 +547,12 @@ static LLSD blocking_request(
 
 LLSD LLHTTPClient::blockingGet(const std::string& url)
 {
-	return blocking_request(url, HTTP_GET, LLSD());
+	return blocking_request(url, LLURLRequest::HTTP_GET, LLSD());
 }
 
 LLSD LLHTTPClient::blockingPost(const std::string& url, const LLSD& body)
 {
-	return blocking_request(url, HTTP_POST, body);
+	return blocking_request(url, LLURLRequest::HTTP_POST, body);
 }
 
 void LLHTTPClient::put(
@@ -559,17 +562,7 @@ void LLHTTPClient::put(
 	const LLSD& headers,
 	const F32 timeout)
 {
-	request(url, HTTP_PUT, new LLSDInjector(body), responder, timeout, headers);
-}
-
-void LLHTTPClient::patch(
-	const std::string& url,
-	const LLSD& body,
-	ResponderPtr responder,
-	const LLSD& headers,
-	const F32 timeout)
-{
-	request(url, HTTP_PATCH, new LLSDInjector(body), responder, timeout, headers);
+	request(url, LLURLRequest::HTTP_PUT, new LLSDInjector(body), responder, timeout, headers);
 }
 
 void LLHTTPClient::post(
@@ -579,7 +572,7 @@ void LLHTTPClient::post(
 	const LLSD& headers,
 	const F32 timeout)
 {
-	request(url, HTTP_POST, new LLSDInjector(body), responder, timeout, headers);
+	request(url, LLURLRequest::HTTP_POST, new LLSDInjector(body), responder, timeout, headers);
 }
 
 void LLHTTPClient::postRaw(
@@ -590,7 +583,7 @@ void LLHTTPClient::postRaw(
 	const LLSD& headers,
 	const F32 timeout)
 {
-	request(url, HTTP_POST, new RawInjector(data, size), responder, timeout, headers);
+	request(url, LLURLRequest::HTTP_POST, new RawInjector(data, size), responder, timeout, headers);
 }
 
 void LLHTTPClient::postFile(
@@ -600,7 +593,7 @@ void LLHTTPClient::postFile(
 	const LLSD& headers,
 	const F32 timeout)
 {
-	request(url, HTTP_POST, new FileInjector(filename), responder, timeout, headers);
+	request(url, LLURLRequest::HTTP_POST, new FileInjector(filename), responder, timeout, headers);
 }
 
 void LLHTTPClient::postFile(
@@ -611,7 +604,7 @@ void LLHTTPClient::postFile(
 	const LLSD& headers,
 	const F32 timeout)
 {
-	request(url, HTTP_POST, new VFileInjector(uuid, asset_type), responder, timeout, headers);
+	request(url, LLURLRequest::HTTP_POST, new VFileInjector(uuid, asset_type), responder, timeout, headers);
 }
 
 // static
@@ -621,7 +614,7 @@ void LLHTTPClient::del(
 	const LLSD& headers,
 	const F32 timeout)
 {
-	request(url, HTTP_DELETE, NULL, responder, timeout, headers);
+	request(url, LLURLRequest::HTTP_DELETE, NULL, responder, timeout, headers);
 }
 
 // static
@@ -633,21 +626,8 @@ void LLHTTPClient::move(
 	const F32 timeout)
 {
 	LLSD headers = hdrs;
-	headers[HTTP_OUT_HEADER_DESTINATION] = destination;
-	request(url, HTTP_MOVE, NULL, responder, timeout, headers);
-}
-
-// static
-void LLHTTPClient::copy(
-	const std::string& url,
-	const std::string& destination,
-	ResponderPtr responder,
-	const LLSD& hdrs,
-	const F32 timeout)
-{
-	LLSD headers = hdrs;
-	headers[HTTP_OUT_HEADER_DESTINATION] = destination;
-	request(url, HTTP_COPY, NULL, responder, timeout, headers);
+	headers["Destination"] = destination;
+	request(url, LLURLRequest::HTTP_MOVE, NULL, responder, timeout, headers);
 }
 
 

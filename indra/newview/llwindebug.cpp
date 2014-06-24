@@ -45,7 +45,7 @@ public:
 	~LLMemoryReserve();
 	void reserve();
 	void release();
-private:
+protected:
 	unsigned char *mReserve;
 	static const size_t MEMORY_RESERVATION_SIZE;
 };
@@ -53,7 +53,7 @@ private:
 LLMemoryReserve::LLMemoryReserve() :
 	mReserve(NULL)
 {
-}
+};
 
 LLMemoryReserve::~LLMemoryReserve()
 {
@@ -66,19 +66,14 @@ const size_t LLMemoryReserve::MEMORY_RESERVATION_SIZE = 5 * 1024 * 1024;
 void LLMemoryReserve::reserve()
 {
 	if(NULL == mReserve)
-	{
 		mReserve = new unsigned char[MEMORY_RESERVATION_SIZE];
-	}
-}
+};
 
 void LLMemoryReserve::release()
 {
-	if (NULL != mReserve)
-	{
-		delete [] mReserve;
-	}
+	delete [] mReserve;
 	mReserve = NULL;
-}
+};
 
 static LLMemoryReserve gEmergencyMemoryReserve;
 
@@ -133,11 +128,6 @@ void  LLWinDebug::init()
 		// Add this exeption hanlder to save windows style minidump.
 		AddVectoredExceptionHandler(0, &vectoredHandler);
 	}
-}
-
-void LLWinDebug::cleanup ()
-{
-	gEmergencyMemoryReserve.release();
 }
 
 void LLWinDebug::writeDumpToFile(MINIDUMP_TYPE type, MINIDUMP_EXCEPTION_INFORMATION *ExInfop, const std::string& filename)

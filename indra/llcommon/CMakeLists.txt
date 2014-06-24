@@ -158,6 +158,7 @@ set(llcommon_HEADER_FILES
     llhandle.h
     llhash.h
     llheartbeat.h
+    llhttpstatuscodes.h
     llindexedvector.h
     llinitparam.h
     llinstancetracker.h

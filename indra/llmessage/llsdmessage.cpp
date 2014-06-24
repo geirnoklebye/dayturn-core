@@ -92,14 +92,14 @@ bool LLSDMessage::httpListener(const LLSD& request)
     return false;
 }
 
-void LLSDMessage::EventResponder::httpSuccess()
+void LLSDMessage::EventResponder::result(const LLSD& data)
 {
     // If our caller passed an empty replyPump name, they're not
     // listening: this is a fire-and-forget message. Don't bother posting
     // to the pump whose name is "".
     if (! mReplyPump.empty())
     {
-        LLSD response(getContent());
+        LLSD response(data);
         mReqID.stamp(response);
         mPumps.obtain(mReplyPump).post(response);
     }
@@ -111,7 +111,7 @@ void LLSDMessage::EventResponder::httpSuccess()
     }
 }
 
-void LLSDMessage::EventResponder::httpFailure()
+void LLSDMessage::EventResponder::errorWithContent(U32 status, const std::string& reason, const LLSD& content)
 {
     // If our caller passed an empty errorPump name, they're not
     // listening: "default error handling is acceptable." Only post to an
@@ -121,9 +121,9 @@ void LLSDMessage::EventResponder::httpFailure()
         LLSD info(mReqID.makeResponse());
         info["target"]  = mTarget;
         info["message"] = mMessage;
-        info["status"]  = getStatus();
-        info["reason"]  = getReason();
-        info["content"] = getContent();
+        info["status"]  = LLSD::Integer(status);
+        info["reason"]  = reason;
+        info["content"] = content;
         mPumps.obtain(mErrorPump).post(info);
     }
     else                        // default error handling
@@ -131,7 +131,9 @@ void LLSDMessage::EventResponder::httpFailure()
         // convention seems to be to use LL_INFOS(), but that seems a bit casual?
         LL_WARNS("LLSDMessage::EventResponder")
             << "'" << mMessage << "' to '" << mTarget
-            << "' failed " << dumpResponse() << LL_ENDL;
+            << "' failed with code " << status << ": " << reason << '\n'
+            << ll_pretty_print_sd(content)
+            << LL_ENDL;
     }
 }
 
@@ -149,11 +151,11 @@ bool LLSDMessage::ResponderAdapter::listener(const LLSD& payload, bool success)
 {
     if (success)
     {
-        mResponder->successResult(payload);
+        mResponder->result(payload);
     }
     else
     {
-        mResponder->failureResult(payload["status"].asInteger(), payload["reason"], payload["content"]);
+        mResponder->errorWithContent(payload["status"].asInteger(), payload["reason"], payload["content"]);
     }
 
     /*---------------- MUST BE LAST STATEMENT BEFORE RETURN ----------------*/

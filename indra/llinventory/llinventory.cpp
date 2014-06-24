@@ -51,7 +51,6 @@ static const std::string INV_DESC_LABEL("desc");
 static const std::string INV_PERMISSIONS_LABEL("permissions");
 static const std::string INV_SHADOW_ID_LABEL("shadow_id");
 static const std::string INV_ASSET_ID_LABEL("asset_id");
-static const std::string INV_LINKED_ID_LABEL("linked_id");
 static const std::string INV_SALE_INFO_LABEL("sale_info");
 static const std::string INV_FLAGS_LABEL("flags");
 static const std::string INV_CREATION_DATE_LABEL("created_at");
@@ -258,6 +257,13 @@ BOOL LLInventoryObject::exportLegacyStream(std::ostream& output_stream, BOOL) co
 	return TRUE;
 }
 
+
+void LLInventoryObject::removeFromServer()
+{
+	// don't do nothin'
+	LL_WARNS() << "LLInventoryObject::removeFromServer() called.  Doesn't do anything." << LL_ENDL;
+}
+
 void LLInventoryObject::updateParentOnServer(BOOL) const
 {
 	// don't do nothin'
@@ -270,7 +276,7 @@ void LLInventoryObject::updateServer(BOOL) const
 	LL_WARNS() << "LLInventoryObject::updateServer() called.  Doesn't do anything." << LL_ENDL;
 }
 
-// static
+inline
 void LLInventoryObject::correctInventoryName(std::string& name)
 {
 	LLStringUtil::replaceNonstandardASCII(name, ' ');
@@ -429,17 +435,12 @@ U32 LLInventoryItem::getCRC32() const
 	return crc;
 }
 
-// static
-void LLInventoryItem::correctInventoryDescription(std::string& desc)
-{
-	LLStringUtil::replaceNonstandardASCII(desc, ' ');
-	LLStringUtil::replaceChar(desc, '|', ' ');
-}
 
 void LLInventoryItem::setDescription(const std::string& d)
 {
 	std::string new_desc(d);
-	LLInventoryItem::correctInventoryDescription(new_desc);
+	LLStringUtil::replaceNonstandardASCII(new_desc, ' ');
+	LLStringUtil::replaceChar(new_desc, '|', ' ');
 	if( new_desc != mDescription )
 	{
 		disclaimMem(mDescription);
@@ -1067,16 +1068,11 @@ void LLInventoryItem::asLLSD( LLSD& sd ) const
 
 LLTrace::BlockTimerStatHandle FTM_INVENTORY_SD_DESERIALIZE("Inventory SD Deserialize");
 
-bool LLInventoryItem::fromLLSD(const LLSD& sd, bool is_new)
+bool LLInventoryItem::fromLLSD(const LLSD& sd)
 {
 	LL_RECORD_BLOCK_TIME(FTM_INVENTORY_SD_DESERIALIZE);
-	if (is_new)
-	{
-		// If we're adding LLSD to an existing object, need avoid
-		// clobbering these fields.
-		mInventoryType = LLInventoryType::IT_NONE;
-		mAssetUUID.setNull();
-	}
+	mInventoryType = LLInventoryType::IT_NONE;
+	mAssetUUID.setNull();
 	std::string w;
 
 	w = INV_ITEM_ID_LABEL;
@@ -1129,11 +1125,6 @@ bool LLInventoryItem::fromLLSD(const LLSD& sd, bool is_new)
 		cipher.decrypt(mAssetUUID.mData, UUID_BYTES);
 	}
 	w = INV_ASSET_ID_LABEL;
-	if (sd.has(w))
-	{
-		mAssetUUID = sd[w];
-	}
-	w = INV_LINKED_ID_LABEL;
 	if (sd.has(w))
 	{
 		mAssetUUID = sd[w];

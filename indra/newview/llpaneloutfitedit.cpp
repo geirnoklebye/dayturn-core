@@ -159,7 +159,6 @@ public:
 
 		registrar.add("Wearable.Create", boost::bind(onCreate, _2));
 
-		llassert(LLMenuGL::sMenuContainer != NULL);
 		LLToggleableMenu* menu = LLUICtrlFactory::getInstance()->createFromFile<LLToggleableMenu>(
 			"menu_cof_gear.xml", LLMenuGL::sMenuContainer, LLViewerMenuHolderGL::child_registry_t::instance());
 		llassert(menu);
@@ -229,7 +228,6 @@ public:
 		enable_registrar.add("AddWearable.Gear.Check", boost::bind(onCheck, flat_list_handle, inventory_panel_handle, _2));
 		enable_registrar.add("AddWearable.Gear.Visible", boost::bind(onVisible, inventory_panel_handle, _2));
 
-		llassert(LLMenuGL::sMenuContainer != NULL);
 		LLToggleableMenu* menu = LLUICtrlFactory::getInstance()->createFromFile<LLToggleableMenu>(
 			"menu_add_wearable_gear.xml",
 			LLMenuGL::sMenuContainer, LLViewerMenuHolderGL::child_registry_t::instance());
@@ -1186,12 +1184,12 @@ BOOL LLPanelOutfitEdit::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 			 * second argument is used to delay the appearance update until all dragged items
 			 * are added to optimize user experience.
 			 */
-			LLAppearanceMgr::instance().addCOFItemLink(item->getLinkedUUID());
+			LLAppearanceMgr::instance().addCOFItemLink(item->getLinkedUUID(), false);
 		}
 		else
 		{
 			// if asset id is not available for the item we must wear it immediately (attachments only)
-			LLAppearanceMgr::instance().addCOFItemLink(item->getLinkedUUID(), new LLUpdateAppearanceAndEditWearableOnDestroy(item->getUUID()));
+			LLAppearanceMgr::instance().addCOFItemLink(item->getLinkedUUID(), true);
 		}
 	}
 

@@ -95,9 +95,8 @@ LLEnvironmentRequestResponder::LLEnvironmentRequestResponder()
 {
 	mID = ++sCount;
 }
-/*virtual*/ void LLEnvironmentRequestResponder::httpSuccess()
+/*virtual*/ void LLEnvironmentRequestResponder::result(const LLSD& unvalidated_content)
 {
-	const LLSD& unvalidated_content = getContent();
 	LL_INFOS("WindlightCaps") << "Received region windlight settings" << LL_ENDL;
 
 	if (mID != sCount)
@@ -123,10 +122,10 @@ LLEnvironmentRequestResponder::LLEnvironmentRequestResponder()
 	LLEnvManagerNew::getInstance()->onRegionSettingsResponse(unvalidated_content);
 }
 /*virtual*/
-void LLEnvironmentRequestResponder::httpFailure()
+void LLEnvironmentRequestResponder::errorWithContent(U32 status, const std::string& reason, const LLSD& content)
 {
-	LL_WARNS("WindlightCaps") << "Got an error, not using region windlight... "
-			<< dumpResponse() << LL_ENDL;
+	LL_INFOS("WindlightCaps") << "Got an error, not using region windlight... [status:" 
+		<< status << "]: " << content << LL_ENDL;
 	LLEnvManagerNew::getInstance()->onRegionSettingsResponse(LLSD());
 }
 
@@ -170,14 +169,8 @@ bool LLEnvironmentApply::initiateRequest(const LLSD& content)
 /****
  * LLEnvironmentApplyResponder
  ****/
-/*virtual*/ void LLEnvironmentApplyResponder::httpSuccess()
+/*virtual*/ void LLEnvironmentApplyResponder::result(const LLSD& content)
 {
-	const LLSD& content = getContent();
-	if (!content.isMap() || !content.has("regionID"))
-	{
-		failureResult(HTTP_INTERNAL_ERROR, "Malformed response contents", content);
-		return;
-	}
 	if (content["regionID"].asUUID() != gAgent.getRegion()->getRegionID())
 	{
 		LL_WARNS("WindlightCaps") << "No longer in the region where data was sent (currently "
@@ -192,7 +185,7 @@ bool LLEnvironmentApply::initiateRequest(const LLSD& content)
 	}
 	else
 	{
-		LL_WARNS("WindlightCaps") << "Region couldn't apply windlight settings!  " << dumpResponse() << LL_ENDL;
+		LL_WARNS("WindlightCaps") << "Region couldn't apply windlight settings!  Reason from sim: " << content["fail_reason"].asString() << LL_ENDL;
 		LLSD args(LLSD::emptyMap());
 		args["FAIL_REASON"] = content["fail_reason"].asString();
 		LLNotificationsUtil::add("WLRegionApplyFail", args);
@@ -200,14 +193,14 @@ bool LLEnvironmentApply::initiateRequest(const LLSD& content)
 	}
 }
 /*virtual*/
-void LLEnvironmentApplyResponder::httpFailure()
+void LLEnvironmentApplyResponder::errorWithContent(U32 status, const std::string& reason, const LLSD& content)
 {
-	LL_WARNS("WindlightCaps") << "Couldn't apply windlight settings to region! "
-		<< dumpResponse() << LL_ENDL;
+	LL_WARNS("WindlightCaps") << "Couldn't apply windlight settings to region!  [status:"
+		<< status << "]: " << content << LL_ENDL;
 
 	LLSD args(LLSD::emptyMap());
 	std::stringstream msg;
-	msg << getReason() << " (Code " << getStatus() << ")";
+	msg << reason << " (Code " << status << ")";
 	args["FAIL_REASON"] = msg.str();
 	LLNotificationsUtil::add("WLRegionApplyFail", args);
 }

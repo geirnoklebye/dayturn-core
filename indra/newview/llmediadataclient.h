@@ -74,9 +74,8 @@ public:
 // Abstracts the Cap URL, the request, and the responder
 class LLMediaDataClient : public LLRefCount
 {
-protected:
-    LOG_CLASS(LLMediaDataClient);
 public:
+    LOG_CLASS(LLMediaDataClient);
     
     const static F32 QUEUE_TIMER_DELAY;// = 1.0; // seconds(s)
 	const static F32 UNAVAILABLE_RETRY_TIMER_DELAY;// = 5.0; // secs
@@ -193,16 +192,14 @@ protected:
 	// Responder
 	class Responder : public LLHTTPClient::Responder
 	{
-		LOG_CLASS(Responder);
 	public:
 		Responder(const request_ptr_t &request);
-		request_ptr_t &getRequest() { return mRequest; }
-
-	protected:
 		//If we get back an error (not found, etc...), handle it here
-		virtual void httpFailure();
+		virtual void errorWithContent(U32 status, const std::string& reason, const LLSD& content);
 		//If we get back a normal response, handle it here.	 Default just logs it.
-		virtual void httpSuccess();
+		virtual void result(const LLSD& content);
+
+		request_ptr_t &getRequest() { return mRequest; }
 
 	private:
 		request_ptr_t mRequest;
@@ -290,9 +287,8 @@ private:
 // MediaDataClient specific for the ObjectMedia cap
 class LLObjectMediaDataClient : public LLMediaDataClient
 {
-protected:
-    LOG_CLASS(LLObjectMediaDataClient);
 public:
+    LOG_CLASS(LLObjectMediaDataClient);
     LLObjectMediaDataClient(F32 queue_timer_delay = QUEUE_TIMER_DELAY,
 							F32 retry_timer_delay = UNAVAILABLE_RETRY_TIMER_DELAY,
 							U32 max_retries = MAX_RETRIES,
@@ -345,12 +341,10 @@ protected:
 		    
     class Responder : public LLMediaDataClient::Responder
     {
-        LOG_CLASS(Responder);
     public:
         Responder(const request_ptr_t &request)
             : LLMediaDataClient::Responder(request) {}
-    protected:
-        virtual void httpSuccess();
+        virtual void result(const LLSD &content);
     };
 private:
 	// The Get/Update data client needs a second queue to avoid object updates starving load-ins.
@@ -368,9 +362,8 @@ private:
 // MediaDataClient specific for the ObjectMediaNavigate cap
 class LLObjectMediaNavigateClient : public LLMediaDataClient
 {
-protected:
-    LOG_CLASS(LLObjectMediaNavigateClient);
 public:
+    LOG_CLASS(LLObjectMediaNavigateClient);
 	// NOTE: from llmediaservice.h
 	static const int ERROR_PERMISSION_DENIED_CODE = 8002;
 	
@@ -404,13 +397,11 @@ protected:
 
     class Responder : public LLMediaDataClient::Responder
     {
-        LOG_CLASS(Responder);
     public:
         Responder(const request_ptr_t &request)
             : LLMediaDataClient::Responder(request) {}
-    protected:
-        virtual void httpFailure();
-        virtual void httpSuccess();
+		virtual void errorWithContent(U32 status, const std::string& reason, const LLSD& content);
+        virtual void result(const LLSD &content);
     private:
         void mediaNavigateBounceBack();
     };

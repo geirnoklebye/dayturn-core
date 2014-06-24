@@ -36,7 +36,6 @@ LLAccountingCostManager::LLAccountingCostManager()
 //===============================================================================
 class LLAccountingCostResponder : public LLCurl::Responder
 {
-	LOG_CLASS(LLAccountingCostResponder);
 public:
 	LLAccountingCostResponder( const LLSD& objectIDs, const LLHandle<LLAccountingCostObserver>& observer_handle )
 	: mObjectIDs( objectIDs ),
@@ -57,27 +56,24 @@ public:
 		}
 	}
 	
-protected:
-	void httpFailure()
+	void errorWithContent( U32 statusNum, const std::string& reason, const LLSD& content )
 	{
-		LL_WARNS() << dumpResponse() << LL_ENDL;
+		LL_WARNS() << "Transport error [status:" << statusNum << "]: " << content <<LL_ENDL;
 		clearPendingRequests();
 
 		LLAccountingCostObserver* observer = mObserverHandle.get();
 		if (observer && observer->getTransactionID() == mTransactionID)
 		{
-			observer->setErrorStatus(getStatus(), getReason());
+			observer->setErrorStatus(statusNum, reason);
 		}
 	}
 	
-	void httpSuccess()
+	void result( const LLSD& content )
 	{
-		const LLSD& content = getContent();
 		//Check for error
 		if ( !content.isMap() || content.has("error") )
 		{
-			failureResult(HTTP_INTERNAL_ERROR, "Error on fetched data", content);
-			return;
+			LL_WARNS()	<< "Error on fetched data"<< LL_ENDL;
 		}
 		else if (content.has("selected"))
 		{

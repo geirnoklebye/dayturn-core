@@ -36,7 +36,7 @@
 #include "llbutton.h"
 #include "llevents.h"
 #include "llhttpclient.h"
-#include "llhttpconstants.h"
+#include "llhttpstatuscodes.h"	// for HTTP_FOUND
 #include "llnotificationsutil.h"
 #include "llradiogroup.h"
 #include "lltextbox.h"
@@ -62,46 +62,42 @@ LLFloaterTOS::LLFloaterTOS(const LLSD& data)
 // on parent class indicating if the web server is working or not
 class LLIamHere : public LLHTTPClient::Responder
 {
-	LOG_CLASS(LLIamHere);
-private:
-	LLIamHere( LLFloaterTOS* parent ) :
-	   mParent( parent )
-	{}
+	private:
+		LLIamHere( LLFloaterTOS* parent ) :
+		   mParent( parent )
+		{}
 
-	LLFloaterTOS* mParent;
+		LLFloaterTOS* mParent;
 
-public:
-	static LLIamHere* build( LLFloaterTOS* parent )
-	{
-		return new LLIamHere( parent );
-	}
-	
-	virtual void  setParent( LLFloaterTOS* parentIn )
-	{
-		mParent = parentIn;
-	}
-	
-protected:
-	virtual void httpSuccess()
-	{
-		if ( mParent )
+	public:
+
+		static LLIamHere* build( LLFloaterTOS* parent )
 		{
-			mParent->setSiteIsAlive( true );
-		}
-	}
-
-	virtual void httpFailure()
-	{
-		LL_DEBUGS("LLIamHere") << dumpResponse() << LL_ENDL;
-		if ( mParent )
+			return new LLIamHere( parent );
+		};
+		
+		virtual void  setParent( LLFloaterTOS* parentIn )
 		{
-			// *HACK: For purposes of this alive check, 302 Found
-			// (aka Moved Temporarily) is considered alive.  The web site
-			// redirects this link to a "cache busting" temporary URL. JC
-			bool alive = (getStatus() == HTTP_FOUND);
-			mParent->setSiteIsAlive( alive );
-		}
-	}
+			mParent = parentIn;
+		};
+		
+		virtual void result( const LLSD& content )
+		{
+			if ( mParent )
+				mParent->setSiteIsAlive( true );
+		};
+
+		virtual void error( U32 status, const std::string& reason )
+		{
+			if ( mParent )
+			{
+				// *HACK: For purposes of this alive check, 302 Found
+				// (aka Moved Temporarily) is considered alive.  The web site
+				// redirects this link to a "cache busting" temporary URL. JC
+				bool alive = (status == HTTP_FOUND);
+				mParent->setSiteIsAlive( alive );
+			}
+		};
 };
 
 // this is global and not a class member to keep crud out of the header file

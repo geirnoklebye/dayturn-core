@@ -73,29 +73,24 @@ namespace
 	// called if this request times out.
 	class AsyncConsoleResponder : public LLHTTPClient::Responder
 	{
-		LOG_CLASS(AsyncConsoleResponder);
-	protected:
+	public:
 		/* virtual */
-		void httpFailure()
+		void errorWithContent(U32 status, const std::string& reason, const LLSD& content)
 		{
-			LL_WARNS("Console") << dumpResponse() << LL_ENDL;
 			sConsoleReplySignal(UNABLE_TO_SEND_COMMAND);
 		}
 	};
 
 	class ConsoleResponder : public LLHTTPClient::Responder
 	{
-		LOG_CLASS(ConsoleResponder);
 	public:
 		ConsoleResponder(LLTextEditor *output) : mOutput(output)
 		{
 		}
 
-	protected:
 		/*virtual*/
-		void httpFailure()
+		void error(U32 status, const std::string& reason)
 		{
-			LL_WARNS("Console") << dumpResponse() << LL_ENDL;
 			if (mOutput)
 			{
 				mOutput->appendText(
@@ -105,10 +100,8 @@ namespace
 		}
 
 		/*virtual*/
-		void httpSuccess()
+		void result(const LLSD& content)
 		{
-			const LLSD& content = getContent();
-			LL_DEBUGS("Console") << content << LL_ENDL;
 			if (mOutput)
 			{
 				mOutput->appendText(
@@ -116,7 +109,6 @@ namespace
 			}
 		}
 
-	public:
 		LLTextEditor * mOutput;
 	};
 

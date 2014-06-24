@@ -29,6 +29,7 @@
 #include "llchatitemscontainerctrl.h"
 #include "lltextbox.h"
 
+#include "llchatmsgbox.h"
 #include "llavatariconctrl.h"
 #include "llcommandhandler.h"
 #include "llfloaterreg.h"
@@ -133,6 +134,7 @@ void LLFloaterIMNearbyChatToastPanel::addMessage(LLSD& notification)
 {
 	std::string		messageText = notification["message"].asString();		// UTF-8 line of text
 
+	LLChatMsgBox* msg_text = getChild<LLChatMsgBox>("msg_text", false);
 
 	std::string color_name = notification["text_color"].asString();
 	
@@ -173,7 +175,7 @@ void LLFloaterIMNearbyChatToastPanel::addMessage(LLSD& notification)
 		{
 			style_params.font.style = "ITALIC";
 		}
-		mMsgText->appendText(messageText, TRUE, style_params);
+		msg_text->appendText(messageText, TRUE, style_params);
 	}
 
 	snapToMessageHeight();
@@ -206,10 +208,9 @@ void LLFloaterIMNearbyChatToastPanel::init(LLSD& notification)
 		case 2:	messageFont = LLFontGL::getFontSansSerifBig();	break;
 	}
 	
-	mMsgText = getChild<LLChatMsgBox>("msg_text", false);
-	mMsgText->setContentTrusted(false);
+	LLChatMsgBox* msg_text = getChild<LLChatMsgBox>("msg_text", false);
 
-	mMsgText->setText(std::string(""));
+	msg_text->setText(std::string(""));
 
 	if ( notification["chat_style"].asInteger() != CHAT_STYLE_IRC )
 	{
@@ -235,12 +236,12 @@ void LLFloaterIMNearbyChatToastPanel::init(LLSD& notification)
 			style_params_name.link_href = notification["sender_slurl"].asString();
 			style_params_name.is_link = true;
 
-			mMsgText->appendText(str_sender, FALSE, style_params_name);
+			msg_text->appendText(str_sender, FALSE, style_params_name);
 
 		}
 		else
 		{
-			mMsgText->appendText(str_sender, false);
+			msg_text->appendText(str_sender, false);
 		}
 	}
 
@@ -267,7 +268,7 @@ void LLFloaterIMNearbyChatToastPanel::init(LLSD& notification)
 		{
 			style_params.font.style = "ITALIC";
 		}
-		mMsgText->appendText(messageText, FALSE, style_params);
+		msg_text->appendText(messageText, FALSE, style_params);
 	}
 
 
@@ -278,7 +279,8 @@ void LLFloaterIMNearbyChatToastPanel::init(LLSD& notification)
 
 void	LLFloaterIMNearbyChatToastPanel::snapToMessageHeight	()
 {
-	S32 new_height = llmax (mMsgText->getTextPixelHeight() + 2*mMsgText->getVPad() + 2*msg_height_pad, 25);
+	LLChatMsgBox* text_box = getChild<LLChatMsgBox>("msg_text", false);
+	S32 new_height = llmax (text_box->getTextPixelHeight() + 2*text_box->getVPad() + 2*msg_height_pad, 25);
 	
 	LLRect panel_rect = getRect();
 
@@ -314,13 +316,14 @@ BOOL	LLFloaterIMNearbyChatToastPanel::handleMouseUp	(S32 x, S32 y, MASK mask)
 		return LLPanel::handleMouseUp(x,y,mask);
     */
 
-	S32 local_x = x - mMsgText->getRect().mLeft;
-	S32 local_y = y - mMsgText->getRect().mBottom;
+	LLChatMsgBox* text_box = getChild<LLChatMsgBox>("msg_text", false);
+	S32 local_x = x - text_box->getRect().mLeft;
+	S32 local_y = y - text_box->getRect().mBottom;
 	
 	//if text_box process mouse up (ussually this is click on url) - we didn't show nearby_chat.
-	if (mMsgText->pointInView(local_x, local_y) )
+	if (text_box->pointInView(local_x, local_y) )
 	{
-		if (mMsgText->handleMouseUp(local_x,local_y,mask) == TRUE)
+		if (text_box->handleMouseUp(local_x,local_y,mask) == TRUE)
 			return TRUE;
 		else
 		{

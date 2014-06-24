@@ -123,7 +123,6 @@ private:
     /// LLCapabilityListener. Others should use higher-level APIs.
     class EventResponder: public LLHTTPClient::Responder
     {
-        LOG_CLASS(EventResponder);
     public:
         /**
          * LLHTTPClient::Responder that dispatches via named LLEventPump instances.
@@ -150,9 +149,8 @@ private:
             mErrorPump(errorPump)
         {}
     
-    protected:
-        virtual void httpSuccess();
-        virtual void httpFailure();
+        virtual void result(const LLSD& data);
+        virtual void errorWithContent(U32 status, const std::string& reason, const LLSD& content);
     
     private:
         LLEventPumps& mPumps;

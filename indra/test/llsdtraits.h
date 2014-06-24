@@ -93,7 +93,7 @@ LLSDTraits<LLSD::URI>::LLSDTraits()
 { }
 
 template<> inline
-LLSDTraits<const LLSD::Binary&>::LLSDTraits()
+LLSDTraits<LLSD::Binary>::LLSDTraits()
 	: type(LLSD::TypeBinary), getter(&LLSD::asBinary)
 { }
 

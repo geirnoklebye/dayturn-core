@@ -45,11 +45,11 @@ LLAssetUploadResponder::~LLAssetUploadResponder()
 {
 }
 
-void LLAssetUploadResponder::httpFailure()
+void LLAssetUploadResponder::error(U32 statusNum, const std::string& reason)
 {
 }
 
-void LLAssetUploadResponder::httpSuccess()
+void LLAssetUploadResponder::result(const LLSD& content)
 {
 }
 

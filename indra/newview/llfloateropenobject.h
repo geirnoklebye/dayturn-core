@@ -45,6 +45,15 @@ public:
 	
 	void dirty();
 	
+	class LLCategoryCreate
+	{
+		public:
+			LLCategoryCreate(LLUUID object_id, bool wear) : mObjectID(object_id), mWear(wear) {}
+		public:
+			LLUUID mObjectID;
+			bool mWear;
+	};
+	
 	struct LLCatAndWear
 	{
 		LLUUID mCatID;
@@ -63,7 +72,7 @@ protected:
 
 	void onClickMoveToInventory();
 	void onClickMoveAndWear();
-	static void callbackCreateInventoryCategory(const LLUUID& category_id, LLUUID object_id, bool wear);
+	static void callbackCreateInventoryCategory(const LLSD& result, void* data);
 	static void callbackMoveInventory(S32 result, void* data);
 
 private:

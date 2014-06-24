@@ -76,9 +76,14 @@ class LLServerReleaseNotesURLFetcher : public LLHTTPClient::Responder
 {
 	LOG_CLASS(LLServerReleaseNotesURLFetcher);
 public:
+
 	static void startFetch();
-private:
-	/* virtual */ void httpCompleted();
+	/*virtual*/ void completedHeader(U32 status, const std::string& reason, const LLSD& content);
+	/*virtual*/ void completedRaw(
+		U32 status,
+		const std::string& reason,
+		const LLChannelDescriptors& channels,
+		const LLIOPipe::buffer_ptr_t& buffer);
 };
 
 ///----------------------------------------------------------------------------
@@ -298,15 +303,16 @@ void LLServerReleaseNotesURLFetcher::startFetch()
 }
 
 // virtual
-void LLServerReleaseNotesURLFetcher::httpCompleted()
+void LLServerReleaseNotesURLFetcher::completedHeader(U32 status, const std::string& reason, const LLSD& content)
 {
-	LL_DEBUGS("ServerReleaseNotes") << dumpResponse() 
-									<< " [headers:" << getResponseHeaders() << "]" << LL_ENDL;
+	LL_DEBUGS() << "Status: " << status << LL_ENDL;
+	LL_DEBUGS() << "Reason: " << reason << LL_ENDL;
+	LL_DEBUGS() << "Headers: " << content << LL_ENDL;
 
 	LLFloaterAbout* floater_about = LLFloaterReg::getTypedInstance<LLFloaterAbout>("sl_about");
 	if (floater_about)
 	{
-		std::string location = getResponseHeader(HTTP_IN_HEADER_LOCATION);
+		std::string location = content["location"].asString();
 		if (location.empty())
 		{
 			location = LLTrans::getString("ErrorFetchingServerReleaseNotesURL");
@@ -315,3 +321,14 @@ void LLServerReleaseNotesURLFetcher::httpCompleted()
 	}
 }
 
+// virtual
+void LLServerReleaseNotesURLFetcher::completedRaw(
+	U32 status,
+	const std::string& reason,
+	const LLChannelDescriptors& channels,
+	const LLIOPipe::buffer_ptr_t& buffer)
+{
+	// Do nothing.
+	// We're overriding just because the base implementation tries to
+	// deserialize LLSD which triggers warnings.
+}

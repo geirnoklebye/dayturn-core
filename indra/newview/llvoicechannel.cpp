@@ -55,27 +55,26 @@ const U32 DEFAULT_RETRIES_COUNT = 3;
 
 class LLVoiceCallCapResponder : public LLHTTPClient::Responder
 {
-	LOG_CLASS(LLVoiceCallCapResponder);
 public:
 	LLVoiceCallCapResponder(const LLUUID& session_id) : mSessionID(session_id) {};
 
-protected:
 	// called with bad status codes
-	virtual void httpFailure();
-	virtual void httpSuccess();
+	virtual void errorWithContent(U32 status, const std::string& reason, const LLSD& content);
+	virtual void result(const LLSD& content);
 
 private:
 	LLUUID mSessionID;
 };
 
 
-void LLVoiceCallCapResponder::httpFailure()
+void LLVoiceCallCapResponder::errorWithContent(U32 status, const std::string& reason, const LLSD& content)
 {
-	LL_WARNS("Voice") << dumpResponse() << LL_ENDL;
+	LL_WARNS("Voice") << "LLVoiceCallCapResponder error [status:"
+		<< status << "]: " << content << LL_ENDL;
 	LLVoiceChannel* channelp = LLVoiceChannel::getChannelByID(mSessionID);
 	if ( channelp )
 	{
-		if ( HTTP_FORBIDDEN == getStatus() )
+		if ( 403 == status )
 		{
 			//403 == no ability
 			LLNotificationsUtil::add(
@@ -92,18 +91,12 @@ void LLVoiceCallCapResponder::httpFailure()
 	}
 }
 
-void LLVoiceCallCapResponder::httpSuccess()
+void LLVoiceCallCapResponder::result(const LLSD& content)
 {
 	LLVoiceChannel* channelp = LLVoiceChannel::getChannelByID(mSessionID);
 	if (channelp)
 	{
 		//*TODO: DEBUG SPAM
-		const LLSD& content = getContent();
-		if (!content.isMap())
-		{
-			failureResult(HTTP_INTERNAL_ERROR, "Malformed response contents", content);
-			return;
-		}
 		LLSD::map_const_iterator iter;
 		for(iter = content.beginMap(); iter != content.endMap(); ++iter)
 		{

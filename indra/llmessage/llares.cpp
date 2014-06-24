@@ -610,15 +610,6 @@ LLAres *ll_init_ares()
 	return gAres;
 }
 
-void ll_cleanup_ares()
-{
-	if (gAres != NULL)
-	{
-		delete gAres;
-		gAres = NULL;
-	}
-}
-
 LLDnsRecord::LLDnsRecord(LLResType type, const std::string &name,
 						 unsigned ttl)
 	: LLRefCount(),

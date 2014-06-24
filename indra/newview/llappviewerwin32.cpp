@@ -438,7 +438,7 @@ void LLAppViewerWin32::disableWinErrorReporting()
 
 const S32 MAX_CONSOLE_LINES = 500;
 
-static bool create_console()
+void create_console()
 {
 	int h_con_handle;
 	long l_std_handle;
@@ -447,7 +447,7 @@ static bool create_console()
 	FILE *fp;
 
 	// allocate a console for this app
-	const bool isConsoleAllocated = AllocConsole();
+	AllocConsole();
 
 	// set the screen buffer to be big enough to let us scroll text
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &coninfo);
@@ -495,13 +495,10 @@ static bool create_console()
 		*stderr = *fp;
 		setvbuf( stderr, NULL, _IONBF, 0 );
 	}
-
-    return isConsoleAllocated;
 }
 
 LLAppViewerWin32::LLAppViewerWin32(const char* cmd_line) :
-	mCmdLine(cmd_line),
-	mIsConsoleAllocated(false)
+    mCmdLine(cmd_line)
 {
 }
 
@@ -545,16 +542,6 @@ bool LLAppViewerWin32::cleanup()
 
 	gDXHardware.cleanup();
 
-#ifndef LL_RELEASE_FOR_DOWNLOAD
-	LLWinDebug::instance().cleanup();
-#endif
-
-	if (mIsConsoleAllocated)
-	{
-		FreeConsole();
-		mIsConsoleAllocated = false;
-	}
-
 	return result;
 }
 
@@ -566,7 +553,7 @@ void LLAppViewerWin32::initLoggingAndGetLastDuration()
 void LLAppViewerWin32::initConsole()
 {
 	// pop up debug console
-	mIsConsoleAllocated = create_console();
+	create_console();
 	return LLAppViewer::initConsole();
 }
 

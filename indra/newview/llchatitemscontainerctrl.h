@@ -28,7 +28,6 @@
 #define LL_LLCHATITEMSCONTAINERCTRL_H_
 
 #include "llchat.h"
-#include "llchatmsgbox.h"
 #include "llpanel.h"
 #include "llscrollbar.h"
 #include "llviewerchat.h"
@@ -86,7 +85,6 @@ private:
 	LLUUID			mFromID;	// agent id or object id
 	std::string		mFromName;
 	EChatSourceType	mSourceType;
-	LLChatMsgBox* 	mMsgText;
 	
 
 

@@ -169,15 +169,15 @@ void LLPanelPlaceInfo::displayParcelInfo(const LLUUID& region_id,
 }
 
 // virtual
-void LLPanelPlaceInfo::setErrorStatus(S32 status, const std::string& reason)
+void LLPanelPlaceInfo::setErrorStatus(U32 status, const std::string& reason)
 {
 	// We only really handle 404 and 499 errors
 	std::string error_text;
-	if(status == HTTP_NOT_FOUND)
+	if(status == 404)
 	{
 		error_text = getString("server_error_text");
 	}
-	else if(status == HTTP_INTERNAL_ERROR)
+	else if(status == 499)
 	{
 		error_text = getString("server_forbidden_text");
 	}

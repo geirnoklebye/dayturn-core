@@ -31,7 +31,7 @@
 #include "_httpoprequest.h"
 #include "_httppolicy.h"
 
-#include "llhttpconstants.h"
+#include "llhttpstatuscodes.h"
 
 
 namespace LLCore

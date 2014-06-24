@@ -95,8 +95,7 @@ public:
 
 	// Threads:  T*
 	bool getRequestFinished(const LLUUID& id, S32& discard_level,
-							LLPointer<LLImageRaw>& raw, LLPointer<LLImageRaw>& aux,
-							LLCore::HttpStatus& last_http_get_status);
+							LLPointer<LLImageRaw>& raw, LLPointer<LLImageRaw>& aux);
 
 	// Threads:  T*
 	bool updateRequestPriority(const LLUUID& id, F32 priority);
@@ -397,9 +396,6 @@ private:
 	e_tex_source mFetchSource;
 	e_tex_source mOriginFetchSource;
 
-	// Retry logic
-	//LLAdaptiveRetryPolicy mFetchRetryPolicy;
-	
 public:
 	//debug use
 	LLTextureFetchDebugger* getFetchDebugger() { return mFetchDebugger;}
@@ -479,9 +475,8 @@ private:
 
 	typedef std::map<LLCore::HttpHandle, S32> handle_fetch_map_t;
 	handle_fetch_map_t mHandleToFetchIndex;
-
-	void setDebuggerState(e_debug_state new_state) { mDebuggerState = new_state; }
-	e_debug_state mDebuggerState;
+	
+	e_debug_state mState;
 	
 	F32 mCacheReadTime;
 	F32 mCacheWriteTime;
@@ -554,7 +549,7 @@ public:
 	void callbackDecoded(S32 id, bool success, LLImageRaw* raw, LLImageRaw* aux);
 	void callbackHTTP(FetchEntry & fetch, LLCore::HttpResponse * response);
 
-	e_debug_state getState()             {return mDebuggerState;}
+	e_debug_state getState()             {return mState;}
 	S32  getNumFetchedTextures()         {return mNumFetchedTextures;}
 	S32  getNumFetchingRequests()        {return mFetchingHistory.size();}
 	S32  getNumCacheHits()               {return mNumCacheHits;}

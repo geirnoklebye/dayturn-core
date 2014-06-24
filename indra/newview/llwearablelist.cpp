@@ -81,7 +81,6 @@ void LLWearableList::getAsset(const LLAssetID& assetID, const std::string& weara
 	LLViewerWearable* instance = get_if_there(mList, assetID, (LLViewerWearable*)NULL );
 	if( instance )
 	{
-		LL_DEBUGS("Avatar") << "wearable " << assetID << " found in LLWearableList" << LL_ENDL;
 		asset_arrived_callback( instance, userdata );
 	}
 	else

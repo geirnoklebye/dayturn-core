@@ -41,9 +41,11 @@ public:
 	LLBadgeOwner(LLHandle< LLView > viewHandle);
 
 	void initBadgeParams(const LLBadge::Params& p);
-	void addBadgeToParentHolder();
+	bool addBadgeToParentPanel();
 	
-	bool hasBadgeHolderParent() const { return mHasBadgeHolderParent; };
+	bool badgeHasParent() const { return (mBadge && mBadge->getParent()); }
+
+	void setBadgeLabel(const LLStringExplicit& label);
 	void setBadgeVisibility(bool visible);
 
 private:
@@ -51,7 +53,7 @@ private:
 	LLBadge* createBadge(const LLBadge::Params& p);
 
 private:
-	bool				mHasBadgeHolderParent;
+
 	LLBadge*			mBadge;
 	LLHandle< LLView >	mBadgeOwnerView;
 };

@@ -42,14 +42,8 @@ LLClassifiedStatsResponder::LLClassifiedStatsResponder(LLUUID classified_id)
 {}
 
 /*virtual*/
-void LLClassifiedStatsResponder::httpSuccess()
+void LLClassifiedStatsResponder::result(const LLSD& content)
 {
-	const LLSD& content = getContent();
-	if (!content.isMap())
-	{
-		failureResult(HTTP_INTERNAL_ERROR, "Malformed response contents", content);
-		return;
-	}
 	S32 teleport = content["teleport_clicks"].asInteger();
 	S32 map = content["map_clicks"].asInteger();
 	S32 profile = content["profile_clicks"].asInteger();
@@ -65,8 +59,7 @@ void LLClassifiedStatsResponder::httpSuccess()
 }
 
 /*virtual*/
-void LLClassifiedStatsResponder::httpFailure()
+void LLClassifiedStatsResponder::errorWithContent(U32 status, const std::string& reason, const LLSD& content)
 {
-	LL_WARNS() << dumpResponse() << LL_ENDL;
+	LL_INFOS() << "LLClassifiedStatsResponder::error [status:" << status << "]: " << content << LL_ENDL;
 }
-

@@ -110,20 +110,20 @@ namespace
 		{
 		}
 
-	protected:
-		virtual void httpFailure()
+		virtual void error(U32 status, const std::string& reason)
 		{
 			// don't spam when agent communication disconnected already
-			if (HTTP_GONE != getStatus())
+			if (status != 410)
 			{
-				LL_WARNS("Messaging") << "error for message " << mMessageName
-									  << " " << dumpResponse() << LL_ENDL;
+				LL_WARNS("Messaging") << "error status " << status
+						<< " for message " << mMessageName
+						<< " reason " << reason << LL_ENDL;
 			}
 			// TODO: Map status in to useful error code.
 			if(NULL != mCallback) mCallback(mCallbackData, LL_ERR_TCP_TIMEOUT);
 		}
 		
-		virtual void httpSuccess()
+		virtual void result(const LLSD& content)
 		{
 			if(NULL != mCallback) mCallback(mCallbackData, LL_ERR_NOERR);
 		}
@@ -149,7 +149,7 @@ class LLMessageHandlerBridge : public LLHTTPNode
 void LLMessageHandlerBridge::post(LLHTTPNode::ResponsePtr response, 
 							const LLSD& context, const LLSD& input) const
 {
-	std::string name = context[CONTEXT_REQUEST][CONTEXT_WILDCARD]["message-name"];
+	std::string name = context["request"]["wildcard"]["message-name"];
 	char* namePtr = LLMessageStringTable::getInstance()->getString(name.c_str());
 	
 	LL_DEBUGS() << "Setting mLastSender " << input["sender"].asString() << LL_ENDL;

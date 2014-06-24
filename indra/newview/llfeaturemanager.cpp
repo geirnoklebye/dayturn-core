@@ -39,7 +39,6 @@
 #include "llgl.h"
 
 #include "llappviewer.h"
-#include "llbufferstream.h"
 #include "llhttpclient.h"
 #include "llnotificationsutil.h"
 #include "llviewercontrol.h"
@@ -610,7 +609,6 @@ bool LLFeatureManager::parseGPUTable(std::string filename)
 // responder saves table into file
 class LLHTTPFeatureTableResponder : public LLHTTPClient::Responder
 {
-	LOG_CLASS(LLHTTPFeatureTableResponder);
 public:
 
 	LLHTTPFeatureTableResponder(std::string filename) :
@@ -619,10 +617,11 @@ public:
 	}
 
 	
-	virtual void completedRaw(const LLChannelDescriptors& channels,
+	virtual void completedRaw(U32 status, const std::string& reason,
+							  const LLChannelDescriptors& channels,
 							  const LLIOPipe::buffer_ptr_t& buffer)
 	{
-		if (isGoodStatus())
+		if (isGoodStatus(status))
 		{
 			// write to file
 
@@ -641,18 +640,7 @@ public:
 				out.close();
 			}
 		}
-		else
-		{
-			char body[1025]; 
-			body[1024] = '\0';
-			LLBufferStream istr(channels, buffer.get());
-			istr.get(body,1024);
-			if (strlen(body) > 0)
-			{
-				mContent["body"] = body;
-			}
-			LL_WARNS() << dumpResponse() << LL_ENDL;
-		}
+		
 	}
 	
 private:

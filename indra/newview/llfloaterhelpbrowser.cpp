@@ -29,7 +29,6 @@
 #include "llfloaterhelpbrowser.h"
 
 #include "llfloaterreg.h"
-#include "llhttpconstants.h"
 #include "llpluginclassmedia.h"
 #include "llmediactrl.h"
 #include "llviewerwindow.h"
@@ -38,6 +37,7 @@
 #include "llui.h"
 
 #include "llurlhistory.h"
+#include "llmediactrl.h"
 #include "llviewermedia.h"
 #include "llviewerhelp.h"
 
@@ -148,7 +148,7 @@ void LLFloaterHelpBrowser::openMedia(const std::string& media_url)
 {
 	// explicitly make the media mime type for this floater since it will
 	// only ever display one type of content (Web).
-	mBrowser->setHomePageUrl(media_url, HTTP_CONTENT_TEXT_HTML);
-	mBrowser->navigateTo(media_url, HTTP_CONTENT_TEXT_HTML);
+	mBrowser->setHomePageUrl(media_url, "text/html");
+	mBrowser->navigateTo(media_url, "text/html");
 	setCurrentURL(media_url);
 }

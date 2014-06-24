@@ -38,7 +38,6 @@
 #include "llcallingcard.h" // for LLAvatarTracker
 #include "llviewerinventory.h"
 #include "llinventorymodel.h"
-#include "llcallbacklist.h"
 
 // Constants;
 
@@ -87,7 +86,7 @@ const LLUUID& get_folder_uuid(const LLUUID& parentFolderUUID, LLInventoryCollect
 
 	if (cats_count > 1)
 	{
-		LL_WARNS_ONCE("LLFriendCardsManager")
+		LL_WARNS("LLFriendCardsManager")
 			<< "There is more than one Friend card folder."
 			<< "The first folder will be used."
 			<< LL_ENDL;
@@ -155,7 +154,7 @@ void LLInitialFriendCardsFetch::done()
 	// This observer is no longer needed.
 	gInventory.removeObserver(this);
 
-	doOnIdleOneTime(mCheckFolderCallback);
+	mCheckFolderCallback();
 
 	delete this;
 }

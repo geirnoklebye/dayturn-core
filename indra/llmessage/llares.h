@@ -578,6 +578,5 @@ extern LLAres *gAres;
  * thread safe.
  */
 extern LLAres *ll_init_ares();
-extern void ll_cleanup_ares();
 
 #endif // LL_LLARES_H
