@@ -987,36 +987,6 @@ void LLAgent::standUp()
 //mk
 }
 
-void LLAgent::handleServerBakeRegionTransition(const LLUUID& region_id)
-{
-	LL_INFOS() << "called" << LL_ENDL;
-
-//MK from HB
-	// Make sure to use the proper method to account for the Z-Offset: as the
-	// value for the Hover shape visual parameter in SSB sims, or as a simple
-	// offset added to the size sent by sendAgentSetAppearance() in non-SSB
-	// sims (with the shape Hover reset to zero in that latter case).
-	gAgentWearables.setShapeAvatarOffset();
-//mk from HB
-
-	// Old-style appearance entering a server-bake region.
-	if (isAgentAvatarValid() &&
-		!gAgentAvatarp->isUsingServerBakes() &&
-		(mRegionp->getCentralBakeVersion()>0))
-	{
-		LL_INFOS() << "update requested due to region transition" << LL_ENDL;
-		LLAppearanceMgr::instance().requestServerAppearanceUpdate();
-	}
-	// new-style appearance entering a non-bake region,
-	// need to check for existence of the baking service.
-	else if (isAgentAvatarValid() &&
-			 gAgentAvatarp->isUsingServerBakes() &&
-			 mRegionp->getCentralBakeVersion()==0)
-	{
-		gAgentAvatarp->checkForUnsupportedServerBakeAppearance();
-	}
-}
-
 void LLAgent::changeParcels()
 {
 	LL_DEBUGS("AgentLocation") << "Calling ParcelChanged callbacks" << LL_ENDL;
@@ -1124,6 +1094,14 @@ void LLAgent::setRegion(LLViewerRegion *regionp)
 	LLSelectMgr::getInstance()->updateSelectionCenter();
 
 	LLFloaterMove::sUpdateFlyingStatus();
+
+//MK from HB
+	// Make sure to use the proper method to account for the Z-Offset: as the
+	// value for the Hover shape visual parameter in SSB sims, or as a simple
+	// offset added to the size sent by sendAgentSetAppearance() in non-SSB
+	// sims (with the shape Hover reset to zero in that latter case).
+	gAgentWearables.setShapeAvatarOffset();
+//mk from HB
 
 	if (notifyRegionChange)
 	{

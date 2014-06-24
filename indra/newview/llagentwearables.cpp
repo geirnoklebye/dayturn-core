@@ -58,10 +58,6 @@ BOOL LLAgentWearables::mInitialWearablesUpdateReceived = FALSE;
 
 using namespace LLAvatarAppearanceDefines;
 
-//MK
-const F32 OFFSET_FACTOR = 0.66f; // This factor is arbitrary and is supposed to align the baked avatar Hover setting with the offset we wanted to apply in the first place.
-//mk
-
 ///////////////////////////////////////////////////////////////////////////////
 
 // Callback to wear and start editing an item that has just been created.
@@ -1569,26 +1565,6 @@ void LLAgentWearables::editWearableIfRequested(const LLUUID& item_id)
 	}
 }
 
-void LLAgentWearables::updateServer()
-{
-//MK from HB
-	//LLViewerWearable* shape = getViewerWearable(LLWearableType::WT_SHAPE, 0);
-	//if (shape && shape != mLastWornShape)
-	//{
-	//	// If we just changed the shape, set its Hover parameter to match
-	//	// our current avatar Z offset setting (in SSB regions) or reset
-	//	// it (in non-SSB regions).
-	//	setShapeAvatarOffset(false);
-	//}
-	//else
-	//{
-	//	checkModifiableShape();
-	//}
-//mk from HB
-	sendAgentWearablesUpdate();
-	gAgent.sendAgentSetAppearance();
-}
-
 //MK from HB
 void LLAgentWearables::checkModifiableShape()
 {
@@ -1642,7 +1618,7 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 
 			if (old_offset != offset)
 			{
-				mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset - mSavedOffset * 0.5, FALSE);
+				mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset - mSavedOffset * 0.5);
 
 				// We've updated the Hover value locally, now we must update the server.
 				// But we don't want to hammer the sim with requests, so we're just going to
@@ -1656,12 +1632,8 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 		if (mHasModifiableShape && mLastWornShape &&
 			mLastWornShape->getVisualParamWeight(AVATAR_HOVER) != 0.f)
 		{
-			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, 0.f, FALSE);
+			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, 0.f);
 			saveWearable(LLWearableType::WT_SHAPE, 0);
-		}
-		if (send_update)
-		{
-			gAgent.sendAgentSetAppearance();
 		}
 	}
 }
@@ -1683,23 +1655,61 @@ void LLAgentWearables::forceUpdateShape (void)
 		{
 			// For some reason, setting X to RestrainedLoveOffsetAvatarZ will set the Hover to X * 1.5, but only
 			// after the bake. DON'T ASK ME WHY !
-			mSavedOffset = offset * OFFSET_FACTOR;
-			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, mSavedOffset, FALSE);
+			mSavedOffset = offset * 0.66f;
+			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, mSavedOffset);
 		}
 	}
 
-	saveWearable(LLWearableType::WT_SHAPE, 0, FALSE);
+	//saveWearable(LLWearableType::WT_SHAPE, 0);
 
-	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
+	//if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
+	//{
+	//	if (mHasModifiableShape && mLastWornShape)
+	//	{
+	//		mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset);
+	//	}
+	//}
+
+    U32 index = 0;
+
+	// Find an existing link to this wearable's inventory item, if any, and its description field.
+	LLInventoryItem *link_item = NULL;
+	std::string description;
+	LLInventoryModel::item_array_t links =
+		LLAppearanceMgr::instance().findCOFItemLinks(mLastWornShape->getItemID());
+	if (links.size()>0)
 	{
-		if (mHasModifiableShape && mLastWornShape)
+		link_item = links.at(0).get();
+		if (link_item && link_item->getIsLinkType())
 		{
-			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset, FALSE);
+			description = link_item->getActualDescription();
 		}
 	}
+
+	// Make another copy of this link, with the same
+	// description.  This is needed to bump the COF
+	// version so texture baking service knows appearance has changed.
+	if (link_item)
+	{
+		// Create new link
+		LL_DEBUGS("Avatar") << "link refresh, creating new link to " << link_item->getLinkedUUID()
+							<< " removing old link at " << link_item->getUUID()
+							<< " wearable item id " << mLastWornShape->getItemID() << LL_ENDL;
+
+		LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
+
+		LLInventoryObject::const_object_list_t obj_array;
+		obj_array.push_back(LLConstPointer<LLInventoryObject>(link_item));
+		link_inventory_array(LLAppearanceMgr::instance().getCOF(),
+								obj_array, 
+								cb);
+		// Remove old link
+		remove_inventory_item(link_item->getUUID(), cb);
+	}
+	saveWearable(mLastWornShape->getType(), index);
 
 	//LLAppearanceMgr::instance().setOutfitDirty( true );		
-
+/*
 	// HACK : Force an update server-side by removing the link to the shape, then adding a new one
 	LLViewerWearable* shape = getViewerWearable(LLWearableType::WT_SHAPE, 0);
 
@@ -1717,7 +1727,7 @@ void LLAgentWearables::forceUpdateShape (void)
 		const LLInventoryItem* item = item_array.at(i).get();
 		if (item->getIsLinkType() && item->getLinkedUUID() == uuid)
 		{
-			gInventory.purgeObject(item->getUUID());
+			gInventory.deleteObject(item->getUUID(), false, false);
 			break;
 		}
 	}
@@ -1726,6 +1736,7 @@ void LLAgentWearables::forceUpdateShape (void)
 	LLAppearanceMgr::instance().addCOFItemLink (item);
 
 	//LLAppearanceMgr::instance().incrementCofVersion();
+*/
 }
 //mk
 

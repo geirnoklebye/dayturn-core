@@ -1393,7 +1393,7 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear,
 		if (!cb && do_update)
 		{
 			cb = new LLUpdateAppearanceAndEditWearableOnDestroy(item_id_to_wear);
-		}		addCOFItemLink(item_to_wear, do_update, cb);
+		}		addCOFItemLink(item_to_wear, cb);
 //MK
 		}
 //mk
@@ -3416,6 +3416,17 @@ void RequestAgentUpdateAppearanceResponder::onSuccess()
 		dump_sequential_xml(gAgentAvatarp->getFullname() + "_appearance_request_error", content);
 		debugCOF(content);
 	}
+//MK
+	// In case of a COF version mismatch, let's not try to guess. Assume the version expected by the server and retry with that new version.
+	const LLSD& content = getContent();
+	LL_WARNS() << dumpResponse() << LL_ENDL;
+	if (content["error"].asString().find ("Cof Version Mismatch") != -1)
+	//if (status == 400 && reason == "Bad Request" && content["code"].asInteger() == 1 && content["error"].asString().find ("Cof Version Mismatch") != -1)
+	{
+		LL_WARNS() << "Setting COF version to " << content["expected"].asInteger() - 1 << "\"" << LL_ENDL;
+		gAgentAvatarp->mLastUpdateRequestCOFVersion = content["expected"].asInteger() - 1;
+	}
+//mk
 	onFailure();
 }
 
