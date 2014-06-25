@@ -1573,7 +1573,7 @@ bool LLOfferInfo::inventory_offer_callback(const LLSD& notification, const LLSD&
 			// We need to store the name of that folder, but without the #RLV/ part if any
 			std::string retain_folder_name = folder_name;
 			unsigned int ind_rlv = folder_name.rfind ("#RLV/");
-			if (ind != -1) folder_name = folder_name.substr (5);
+			if (ind_rlv != -1) folder_name = folder_name.substr (5);
 			gAgent.mRRInterface.mReceivedInventoryObjects.push_back (folder_name);
 		}
 //mk
