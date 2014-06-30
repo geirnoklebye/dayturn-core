@@ -1294,24 +1294,6 @@ void LLAgentCamera::updateCamera()
 		}
 	}
 
-//MK
-	else // not in CAMERA_MODE_FOLLOW
-	{
-		if (gRRenabled)
-		{
-			BOOL isfirstPerson = mCameraMode == CAMERA_MODE_MOUSELOOK;
-
-			if (isfirstPerson && gAgent.mRRInterface.mCamDistMin > 0.f)
-			{
-				changeCameraToDefault();
-			}
-			else if (!isfirstPerson && gAgent.mRRInterface.mCamDistMax <= 0.f)
-			{
-				changeCameraToMouselook();
-			}
-		}
-	}
-//mk
 	BOOL hit_limit;
 	LLVector3d camera_pos_global;
 	LLVector3d camera_target_global = calcCameraPositionTargetGlobal(&hit_limit);
@@ -1519,6 +1501,24 @@ void LLAgentCamera::updateCamera()
 		torso_joint->setScale(torso_scale);
 		chest_joint->setScale(chest_scale);
 	}
+//MK
+	if (mCameraMode != CAMERA_MODE_FOLLOW)
+	{
+		if (gRRenabled)
+		{
+			BOOL isfirstPerson = mCameraMode == CAMERA_MODE_MOUSELOOK;
+
+			if (isfirstPerson && gAgent.mRRInterface.mCamDistMin > 0.f)
+			{
+				changeCameraToDefault();
+			}
+			else if (!isfirstPerson && gAgent.mRRInterface.mCamDistMax <= 0.f)
+			{
+				changeCameraToMouselook();
+			}
+		}
+	}
+//mk
 }
 
 void LLAgentCamera::updateLastCamera()
@@ -2105,11 +2105,18 @@ void LLAgentCamera::resetCamera()
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToMouselook(BOOL animate)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	{
+//mk
 	if (!gSavedSettings.getBOOL("EnableMouselook") 
 		|| LLViewerJoystick::getInstance()->getOverrideCamera())
 	{
 		return;
 	}
+//MK
+	}
+//mk
 	
 	// visibility changes at end of animation
 	gViewerWindow->getWindow()->resetBusyCount();
@@ -2134,7 +2141,9 @@ void LLAgentCamera::changeCameraToMouselook(BOOL animate)
 	gViewerWindow->hideCursor();
 	gViewerWindow->moveCursorToCenter();
 
-	if (mCameraMode != CAMERA_MODE_MOUSELOOK)
+//MK
+////	if (mCameraMode != CAMERA_MODE_MOUSELOOK)
+//mk
 	{
 		gFocusMgr.setKeyboardFocus(NULL);
 		
@@ -2165,10 +2174,17 @@ void LLAgentCamera::changeCameraToMouselook(BOOL animate)
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToDefault()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	{
+//mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
 	{
 		return;
 	}
+//MK
+	}
+//mk
 
 	if (LLFollowCamMgr::getActiveFollowCamParams())
 	{
@@ -2191,11 +2207,17 @@ void LLAgentCamera::changeCameraToDefault()
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToFollow(BOOL animate)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	{
+//mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
 	{
 		return;
 	}
-
+//MK
+	}
+//mk
 	if(mCameraMode != CAMERA_MODE_FOLLOW)
 	{
 		if (mCameraMode == CAMERA_MODE_MOUSELOOK)
@@ -2244,10 +2266,17 @@ void LLAgentCamera::changeCameraToFollow(BOOL animate)
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	{
+//mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
 	{
 		return;
 	}
+//MK
+	}
+//mk
 
 	gViewerWindow->getWindow()->resetBusyCount();
 
@@ -2267,19 +2296,10 @@ void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 
 	// unpause avatar animation
 	gAgent.unpauseAnimation();
-
-	if (mCameraMode != CAMERA_MODE_THIRD_PERSON)
-	{
 //MK
-		if (gRRenabled)
-		{
-			if (gAgent.mRRInterface.mCamDistMax <= 0.f)
-			{
-				changeCameraToMouselook(); // make sure we stay in mouselook
-				return;
-			}
-		}
+////	if (mCameraMode != CAMERA_MODE_THIRD_PERSON)
 //mk
+	{
 		if (gBasicToolset)
 		{
 			LLToolMgr::getInstance()->setCurrentToolset(gBasicToolset);
@@ -2324,6 +2344,17 @@ void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 		mCameraAnimating = FALSE;
 		gAgent.endAnimationUpdateUI();
 	}
+
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.mCamDistMax <= 0.f)
+		{
+			changeCameraToMouselook(false); // make sure we stay in mouselook
+			return;
+		}
+	}
+//mk
 }
 
 //-----------------------------------------------------------------------------
@@ -2337,10 +2368,18 @@ void LLAgentCamera::changeCameraToCustomizeAvatar()
 		return;
 	}
 //mk
+
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	{
+//mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera() || !isAgentAvatarValid())
 	{
 		return;
 	}
+//MK
+	}
+//mk
 
 	gAgent.standUp(); // force stand up
 	gViewerWindow->getWindow()->resetBusyCount();

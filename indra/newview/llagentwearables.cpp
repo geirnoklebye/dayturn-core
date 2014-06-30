@@ -2267,10 +2267,6 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, 0.f, FALSE);
 			saveWearable(LLWearableType::WT_SHAPE, 0);
 		}
-		if (send_update)
-		{
-			gAgent.sendAgentSetAppearance();
-		}
 	}
 }
 //mk from HB

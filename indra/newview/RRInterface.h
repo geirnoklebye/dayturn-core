@@ -26,9 +26,9 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2090000"
-#define RR_VERSION "2.09.00.0"
-#define RR_SLV_VERSION "3.7.8.31723"
+#define RR_VERSION_NUM "2090100"
+#define RR_VERSION "2.09.01.0"
+#define RR_SLV_VERSION "3.7.9.32089"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -321,7 +321,8 @@ public:
 
 	// These should be private but we may want to browse them from the outside world, so let's keep them public
 	RRMAP mSpecialObjectBehaviours;
-	std::deque<Command> mRetainedCommands;
+	std::deque<Command> mRetainedCommands; // list of commands to execute later
+	std::deque<std::string> mReceivedInventoryObjects; // list of inventory objects (items or folders) received during this session
 
 	// When a locked attachment is kicked off by another one with llAttachToAvatar() in a script, retain its UUID here, to reattach it later 
 	std::deque<AssetAndTarget> mAssetsToReattach;

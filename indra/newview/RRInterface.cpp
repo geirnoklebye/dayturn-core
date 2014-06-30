@@ -425,6 +425,44 @@ void printOnChat (std::string message)
 		nearby_chat->addMessage(chat);
 	}
 }
+
+bool is_inventory_item_new (LLInventoryItem* item)
+{
+	// Return true if the item or its parent category has been received during this session
+	if (!item) return false; // just in case
+	std::string name = item->getName();
+	std::string parent_name = "";
+	LLUUID parent_uuid = item->getParentUUID();
+	LLInventoryCategory* parent = gInventory.getCategory (parent_uuid);
+	if (parent) {
+		parent_name = parent->getName();
+	}
+	size_t size = gAgent.mRRInterface.mReceivedInventoryObjects.size();
+	for (size_t i = 0; i < size; i++) {
+		if (gAgent.mRRInterface.mReceivedInventoryObjects[i] == name
+		|| gAgent.mRRInterface.mReceivedInventoryObjects[i] == parent_name) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+bool is_inventory_folder_new (LLInventoryCategory* folder)
+{
+	// Return true if the folder has been received during this session
+	if (!folder) return false; // just in case
+	std::string name = folder->getName();
+	size_t size = gAgent.mRRInterface.mReceivedInventoryObjects.size();
+	for (size_t i = 0; i < size; i++) {
+		if (gAgent.mRRInterface.mReceivedInventoryObjects[i] == name) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 // --
 
 
@@ -681,7 +719,9 @@ LLColor3 RRInterface::getMixedColors (std::string action, LLColor3 dflt /*= LLCo
 	std::string behav;
 	std::string option;
 	std::string param;
-	BOOL found_one = FALSE;
+	int nb_found = 0;
+	F32 h, s, l;
+	F32 total_h = 0.f, total_s = 0.f, total_l = 0.f;
 	std::deque<std::string> tokens;
 	for (RRMAP::iterator it = mSpecialObjectBehaviours.begin (); it != mSpecialObjectBehaviours.end(); ++it) {
 		command = it->second;
@@ -692,17 +732,20 @@ LLColor3 RRInterface::getMixedColors (std::string action, LLColor3 dflt /*= LLCo
 				tmp.mV[0] = atof (tokens[0].c_str());
 				tmp.mV[1] = atof (tokens[1].c_str());
 				tmp.mV[2] = atof (tokens[2].c_str());
-				if (!found_one) {
-					res.set (tmp);
-				}
-				else {
-					res += tmp;
-				}
-				found_one = TRUE;
+				tmp.calcHSL (&h, &s, &l);
+				total_h += h;
+				total_s += s;
+				total_l += l;
+				nb_found++;
 			}
 		}
 	}
-	res.normalize();
+	if (nb_found > 0) {
+		total_h /= (F32)nb_found;
+		total_s /= (F32)nb_found;
+		total_l /= (F32)nb_found;
+		res.setHSL (total_h, total_s, total_l);
+	}
 	return res;
 }
 
@@ -3689,6 +3732,7 @@ bool RRInterface::canAttachCategory(LLInventoryCategory* folder, bool with_excep
 	// - at least one piece of clothing in this folder is to be worn on a @attachthis:layer restriction
 	// - any parent folder returns false with @attachallthis
 	if (!folder) return true;
+	if (is_inventory_folder_new (folder)) return true;
 	LLVOAvatarSelf* avatar = gAgentAvatarp;
 	if (!avatar) return true;
 	LLInventoryCategory* rlvShare = getRlvShare();
@@ -3791,6 +3835,7 @@ bool RRInterface::canDetachCategory(LLInventoryCategory* folder, bool with_excep
 	// - at least one worn piece of clothing in this folder is worn on a @detachthis:layer restriction
 	// - any parent folder returns false with @detachallthis
 	if (!folder) return true;
+	if (is_inventory_folder_new (folder)) return true;
 	LLVOAvatarSelf* avatar = gAgentAvatarp;
 	if (!avatar) return true;
 	LLInventoryCategory* rlvShare = getRlvShare();
@@ -3890,6 +3935,9 @@ bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_pare
 bool RRInterface::canUnwear(LLInventoryItem* item)
 {
 	if (item) {
+		// If the item has just been received, let the user unwear it
+		if (is_inventory_item_new (item)) return true;
+
 		LLInventoryCategory* parent = gInventory.getCategory (item->getParentUUID());
 		if (item->getType() ==  LLAssetType::AT_OBJECT) {
 			if (!canDetach (item)) return false;
@@ -3919,6 +3967,10 @@ bool RRInterface::canUnwear(LLWearableType::EType type)
 bool RRInterface::canWear(LLInventoryItem* item)
 {
 	if (item) {
+		// If the item was just received, let the user wear it
+		if (is_inventory_item_new (item)) {
+			return true;
+		}
 		LLInventoryCategory* parent = gInventory.getCategory (item->getParentUUID());
 		if (item->getType() ==  LLAssetType::AT_OBJECT) {
 			LLViewerJointAttachment* attachpt = findAttachmentPointFromName(item->getName());
@@ -3982,6 +4034,9 @@ bool RRInterface::canDetach(LLInventoryItem* item)
 	LLVOAvatarSelf* avatarp = gAgentAvatarp;
 	if (!avatarp) return true;
 	
+	// If the item has just been received, let the user detach it
+	if (is_inventory_item_new (item)) return true;
+
 	if (mHandleNoStrip) {
 		std::string name = item->getName();
 		LLStringUtil::toLower(name);
@@ -4085,6 +4140,9 @@ bool RRInterface::canAttach(LLInventoryItem* item, bool from_server /* = false *
 {
 	// If from_server == true, the check is done while receiving an order from the server => always allow
 	if (from_server) return true;
+
+	// If the item has just been received, let the user attach it
+	if (is_inventory_item_new (item)) return true;
 
 	if (contains("addattach")) return false;
 	if (!item) return true;
@@ -4227,6 +4285,16 @@ BOOL RRInterface::updateCameraLimits ()
 	// Update the min and max 
 	mShowavsDistMax = getMin ("camavdist", EXTREMUM);
 
+	if (mShowavsDistMax < EXTREMUM) {
+		LLVOAvatar::sUseImpostors = TRUE;
+	}
+	else {
+		if (LLStartUp::getStartupState() >= STATE_STARTED) {
+			LLVOAvatar::sUseImpostors = gSavedSettings.getBOOL ("RenderUseImpostors");
+		}
+
+	}
+
 	mCamZoomMax = getMin ("camzoommax", EXTREMUM);
 	mCamZoomMin = getMax ("camzoommin", -EXTREMUM);
 	mCamDistMax = getMin ("camdistmax", EXTREMUM);
@@ -4271,16 +4339,25 @@ BOOL RRInterface::updateCameraLimits ()
 	return checkCameraLimits (TRUE);
 }
 
+#define UPPER_ALPHA_LIMIT 0.999999f
 // This function returns the effective alpha to set to each step when going from
 // 0.0 to "desired_alpha", so that everything seen through the last layer will
 // be obscured as if it were behind only one layer of alpha "desired_alpha", 
-// notwithstanding the number of layers "nb_layers"
-// If we have N layers of transparency T (T = 1-A), we want to find X so that
-// X**N = T, in other words, X = T**(1/N)
+// regardless of the number of layers "nb_layers"
+// If we have N layers and want a transparency T (T = 1-A), we want to find X so that
+// X**N = T (because combined transparencies multiply), in other words, X = T**(1/N)
+// The problem with this formula is that with a target transparency of 0 (alpha = 1), we would
+// not get any gradient at all so we need to limit the alpha to a maximum that is lower than 1.
 F32 calculateDesiredAlphaPerStep (F32 desired_alpha, int nb_layers)
 {
-	if (desired_alpha > 0.99f) desired_alpha = 0.99f; // limit to 0.99 or it will return 1
-	return 1.f - pow (1.f - desired_alpha, 1.f/(F32)nb_layers);
+	double trans_at_this_step;
+	if (desired_alpha > UPPER_ALPHA_LIMIT) {
+		desired_alpha = UPPER_ALPHA_LIMIT;
+	}
+	double desired_trans = (double)(1.f - desired_alpha);
+	trans_at_this_step = pow (desired_trans, 1.0/(double)nb_layers);
+
+	return (F32)(1.0 - trans_at_this_step);
 }
 
 // This method draws several big black spheres around the avatar, with various alphas
@@ -4295,13 +4372,23 @@ F32 calculateDesiredAlphaPerStep (F32 desired_alpha, int nb_layers)
 // - If both render limits are specified and different, render both and several in-between at 
 //   regular intervals, with a linear interpolation for alpha between mCamDistDrawAlphaMin and
 //   mCamDistDrawAlphaMax for each sphere.
-// - There are not too many spheres to render, because stacking alphas make the video card
+// - There are not too many spheres to render, because stacking alphas makes the video card
 //   complain.
 void RRInterface::drawRenderLimit ()
 {
+	if (mCamDistDrawMin >= EXTREMUM && mCamDistDrawMax >= EXTREMUM) {
+		return;
+	}
+
 	if (LLGLSLShader::sNoFixedFunction) {
 		gUIProgram.bind();
 	}
+
+	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+	LLGLEnable gls_blend(GL_BLEND);
+	LLGLEnable gls_cull(GL_CULL_FACE);
+	LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
+	gGL.matrixMode(LLRender::MM_MODELVIEW);
 
 	LLVector3 center = isAgentAvatarValid() 
 		? gAgentAvatarp->mHeadp->getWorldPosition()
@@ -4312,34 +4399,39 @@ void RRInterface::drawRenderLimit ()
 		drawSphere (center, mCamDistDrawMin, mCamDistDrawColor, mCamDistDrawAlphaMin);
 	}
 
-	// If the inner sphere is opaque, no need to go any further
-	if (mCamDistDrawAlphaMin >= 1.f) {
-		return;
-	}
+	do { // do this block only once, using break statements like glorified GOTOs
+		// If the inner sphere is opaque, no need to go any further
+		if (mCamDistDrawAlphaMin >= 1.f) {
+			break;
+		}
 
-	// Now render every sphere from the inner one (excluded) to the outer one (included) with
-	// an alpha that depends on the number of spheres, so that the apparent alpha of all the
-	// combined spheres is equal to mCamDistDrawAlphaMax
-	F32 alpha_step = calculateDesiredAlphaPerStep (mCamDistDrawAlphaMax, mCamDistNbGradients);
-	for (int i = 1; i <= mCamDistNbGradients; i++) {
-		drawSphere (center
-			, lerp (mCamDistDrawMin, mCamDistDrawMax, (F32)i / (F32)mCamDistNbGradients)
-			, mCamDistDrawColor
-			, alpha_step
-		);
-	}
+		// Now render every sphere from the inner one (excluded) to the outer one (included) with
+		// an alpha that depends on the number of spheres, so that the apparent alpha of all the
+		// combined spheres is equal to mCamDistDrawAlphaMax
+		F32 alpha_step = calculateDesiredAlphaPerStep (mCamDistDrawAlphaMax, mCamDistNbGradients);
+		for (int i = 1; i <= mCamDistNbGradients; i++) {
+			if (mCamDistDrawAlphaMax > UPPER_ALPHA_LIMIT && i == mCamDistNbGradients) {
+				// Outer sphere and we aim an alpha of 1 => make it opaque
+				alpha_step = 1.f;
+			}
+			// If this is the outer sphere and the desired alpha is 1, make sure to draw it opaque
+			// (because of rounding errors and of the upper limit in calculateDesiredAlphaPerStep(), 
+			// drawing white or grey spheres would not give a complete opacity otherwise).
+			drawSphere (center
+				, lerp (mCamDistDrawMin, mCamDistDrawMax, (F32)i / (F32)mCamDistNbGradients)
+				, mCamDistDrawColor
+				, alpha_step
+			);
+		}
+
+	} while (false);
+
 }
 
 void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha)
 {
-	gGL.pushMatrix();
+//	gGL.pushMatrix();
 	{
-		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
-		LLGLEnable gls_blend(GL_BLEND);
-		LLGLEnable gls_cull(GL_CULL_FACE);
-		LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
-		gGL.matrixMode(LLRender::MM_MODELVIEW);
-
 		gGL.pushMatrix();
 		{
 			gGL.translatef(center[0], center[1], center[2]);
@@ -4348,14 +4440,14 @@ void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 a
 			LLColor4 color_alpha(color, alpha);
 			gGL.color4fv(color_alpha.mV);
 				
-			// Render inside only (the camera is not supposed to go outside anyway
+			// Render inside only (the camera is not supposed to go outside anyway)
 			glCullFace(GL_FRONT);
 			gSphere.render();
 			glCullFace(GL_BACK);
 		}
 		gGL.popMatrix();
 	}
-	gGL.popMatrix();
+//	gGL.popMatrix();
 }
 
 
