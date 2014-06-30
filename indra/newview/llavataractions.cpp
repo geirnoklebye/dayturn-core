@@ -448,6 +448,15 @@ void LLAvatarActions::teleport_request_callback(const LLSD& notification, const 
 		LLAgentUI::buildFullname(name);
 
 		msg->addStringFast(_PREHASH_FromAgentName, name);
+//MK
+		LLUUID target_id = notification["substitutions"]["uuid"].asUUID();
+        if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim") || gAgent.mRRInterface.containsSubstr ("sendimto:"+target_id.asString())))
+		{
+	 		msg->addStringFast(_PREHASH_Message, "(Hidden)");
+		}
+
+		else
+//mk
 		msg->addStringFast(_PREHASH_Message, response["message"]);
 		msg->addU32Fast(_PREHASH_ParentEstateID, 0);
 		msg->addUUIDFast(_PREHASH_RegionID, LLUUID::null);
