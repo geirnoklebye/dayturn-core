@@ -3330,7 +3330,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 					}
 				}
 //MK
-				if (gRRenabled 
+				if (gRRenabled && dialog == IM_LURE_USER
 					&& (gAgent.mRRInterface.containsWithoutException ("tplure", from_id.asString())
 					|| (gAgent.mRRInterface.mContainsUnsit && gAgentAvatarp && gAgentAvatarp->mIsSitting)))
 				{
