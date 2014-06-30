@@ -719,7 +719,9 @@ LLColor3 RRInterface::getMixedColors (std::string action, LLColor3 dflt /*= LLCo
 	std::string behav;
 	std::string option;
 	std::string param;
-	BOOL found_one = FALSE;
+	int nb_found = 0;
+	F32 h, s, l;
+	F32 total_h = 0.f, total_s = 0.f, total_l = 0.f;
 	std::deque<std::string> tokens;
 	for (RRMAP::iterator it = mSpecialObjectBehaviours.begin (); it != mSpecialObjectBehaviours.end(); ++it) {
 		command = it->second;
@@ -730,17 +732,20 @@ LLColor3 RRInterface::getMixedColors (std::string action, LLColor3 dflt /*= LLCo
 				tmp.mV[0] = atof (tokens[0].c_str());
 				tmp.mV[1] = atof (tokens[1].c_str());
 				tmp.mV[2] = atof (tokens[2].c_str());
-				if (!found_one) {
-					res.set (tmp);
-				}
-				else {
-					res += tmp;
-				}
-				found_one = TRUE;
+				tmp.calcHSL (&h, &s, &l);
+				total_h += h;
+				total_s += s;
+				total_l += l;
+				nb_found++;
 			}
 		}
 	}
-	res.normalize();
+	if (nb_found > 0) {
+		total_h /= (F32)nb_found;
+		total_s /= (F32)nb_found;
+		total_l /= (F32)nb_found;
+		res.setHSL (total_h, total_s, total_l);
+	}
 	return res;
 }
 
@@ -4280,6 +4285,16 @@ BOOL RRInterface::updateCameraLimits ()
 	// Update the min and max 
 	mShowavsDistMax = getMin ("camavdist", EXTREMUM);
 
+	if (mShowavsDistMax < EXTREMUM) {
+		LLVOAvatar::sUseImpostors = TRUE;
+	}
+	else {
+		if (LLStartUp::getStartupState() >= STATE_STARTED) {
+			LLVOAvatar::sUseImpostors = gSavedSettings.getBOOL ("RenderUseImpostors");
+		}
+
+	}
+
 	mCamZoomMax = getMin ("camzoommax", EXTREMUM);
 	mCamZoomMin = getMax ("camzoommin", -EXTREMUM);
 	mCamDistMax = getMin ("camdistmax", EXTREMUM);
@@ -4361,9 +4376,19 @@ F32 calculateDesiredAlphaPerStep (F32 desired_alpha, int nb_layers)
 //   complain.
 void RRInterface::drawRenderLimit ()
 {
+	if (mCamDistDrawMin >= EXTREMUM && mCamDistDrawMax >= EXTREMUM) {
+		return;
+	}
+
 	if (LLGLSLShader::sNoFixedFunction) {
 		gUIProgram.bind();
 	}
+
+	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+	LLGLEnable gls_blend(GL_BLEND);
+	LLGLEnable gls_cull(GL_CULL_FACE);
+	LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
+	gGL.matrixMode(LLRender::MM_MODELVIEW);
 
 	LLVector3 center = isAgentAvatarValid() 
 		? gAgentAvatarp->mHeadp->getWorldPosition()
@@ -4374,41 +4399,39 @@ void RRInterface::drawRenderLimit ()
 		drawSphere (center, mCamDistDrawMin, mCamDistDrawColor, mCamDistDrawAlphaMin);
 	}
 
-	// If the inner sphere is opaque, no need to go any further
-	if (mCamDistDrawAlphaMin >= 1.f) {
-		return;
-	}
-
-	// Now render every sphere from the inner one (excluded) to the outer one (included) with
-	// an alpha that depends on the number of spheres, so that the apparent alpha of all the
-	// combined spheres is equal to mCamDistDrawAlphaMax
-	F32 alpha_step = calculateDesiredAlphaPerStep (mCamDistDrawAlphaMax, mCamDistNbGradients);
-	for (int i = 1; i <= mCamDistNbGradients; i++) {
-		if (mCamDistDrawAlphaMax > UPPER_ALPHA_LIMIT && i == mCamDistNbGradients) {
-			// Outer sphere and we aim an alpha of 1 => make it opaque
-			alpha_step = 1.f;
+	do { // do this block only once, using break statements like glorified GOTOs
+		// If the inner sphere is opaque, no need to go any further
+		if (mCamDistDrawAlphaMin >= 1.f) {
+			break;
 		}
-		// If this is the outer sphere and the desired alpha is 1, make sure to draw it opaque
-		// (because of rounding errors and of the upper limit in calculateDesiredAlphaPerStep(), 
-		// drawing white or grey spheres would not give a complete opacity otherwise).
-		drawSphere (center
-			, lerp (mCamDistDrawMin, mCamDistDrawMax, (F32)i / (F32)mCamDistNbGradients)
-			, mCamDistDrawColor
-			, alpha_step
-		);
-	}
+
+		// Now render every sphere from the inner one (excluded) to the outer one (included) with
+		// an alpha that depends on the number of spheres, so that the apparent alpha of all the
+		// combined spheres is equal to mCamDistDrawAlphaMax
+		F32 alpha_step = calculateDesiredAlphaPerStep (mCamDistDrawAlphaMax, mCamDistNbGradients);
+		for (int i = 1; i <= mCamDistNbGradients; i++) {
+			if (mCamDistDrawAlphaMax > UPPER_ALPHA_LIMIT && i == mCamDistNbGradients) {
+				// Outer sphere and we aim an alpha of 1 => make it opaque
+				alpha_step = 1.f;
+			}
+			// If this is the outer sphere and the desired alpha is 1, make sure to draw it opaque
+			// (because of rounding errors and of the upper limit in calculateDesiredAlphaPerStep(), 
+			// drawing white or grey spheres would not give a complete opacity otherwise).
+			drawSphere (center
+				, lerp (mCamDistDrawMin, mCamDistDrawMax, (F32)i / (F32)mCamDistNbGradients)
+				, mCamDistDrawColor
+				, alpha_step
+			);
+		}
+
+	} while (false);
+
 }
 
 void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha)
 {
-	gGL.pushMatrix();
+//	gGL.pushMatrix();
 	{
-		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
-		LLGLEnable gls_blend(GL_BLEND);
-		LLGLEnable gls_cull(GL_CULL_FACE);
-		LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
-		gGL.matrixMode(LLRender::MM_MODELVIEW);
-
 		gGL.pushMatrix();
 		{
 			gGL.translatef(center[0], center[1], center[2]);
@@ -4417,14 +4440,14 @@ void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 a
 			LLColor4 color_alpha(color, alpha);
 			gGL.color4fv(color_alpha.mV);
 				
-			// Render inside only (the camera is not supposed to go outside anyway
+			// Render inside only (the camera is not supposed to go outside anyway)
 			glCullFace(GL_FRONT);
 			gSphere.render();
 			glCullFace(GL_BACK);
 		}
 		gGL.popMatrix();
 	}
-	gGL.popMatrix();
+//	gGL.popMatrix();
 }
 
 
