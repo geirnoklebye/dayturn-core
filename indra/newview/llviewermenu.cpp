@@ -3267,6 +3267,12 @@ class LLAvatarReportAbuse : public view_listener_t
 		LLVOAvatar* avatar = find_avatar_from_object( LLSelectMgr::getInstance()->getSelection()->getPrimaryObject() );
 		if(avatar)
 		{
+//MK
+			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+			{
+				return true;
+			}
+//mk
 			LLFloaterReporter::showFromObject(avatar->getID());
 		}
 		return true;
