@@ -1,15 +1,9 @@
 # -*- cmake -*-
 include(Prebuilt)
-if (STANDALONE)
-  set(STANDALONE OFF)
+
+if (NOT USESYSTEMLIBS)
   use_prebuilt_binary(slvoice)
   use_prebuilt_binary(libhunspell)
-#kokuafixme
-#   if(LINUX AND ${ARCH} STREQUAL "x86_64")
-#     use_prebuilt_binary(32bitcompatibilitylibs)
-#   endif(LINUX AND ${ARCH} STREQUAL "x86_64")
-  set(STANDALONE ON)
-else (STANDALONE)
   use_prebuilt_binary(libuuid)
   use_prebuilt_binary(slvoice)
   use_prebuilt_binary(fontconfig)
@@ -21,5 +15,5 @@ else (STANDALONE)
       use_prebuilt_binary(minizip)
      endif (${ARCH} STREQUAL "x86_64")
   endif(LINUX)
-endif(STANDALONE)
+endif(NOT USESYSTEMLIBS)
 
