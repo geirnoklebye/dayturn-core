@@ -2249,6 +2249,7 @@ bool idle_startup()
 			}
 		}
 		//fall through this frame to STATE_CLEANUP
+		return TRUE; //do like fall throughs just adding another cycle seems safer
 	}
 
 	if (STATE_CLEANUP == LLStartUp::getStartupState())
