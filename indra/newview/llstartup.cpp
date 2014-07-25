@@ -2147,17 +2147,17 @@ bool idle_startup()
 			&& !sInitialOutfit.empty()    // registration set up an outfit
 			&& !sInitialOutfitGender.empty() // and a gender
 			&& isAgentAvatarValid()	  // can't wear clothes without object
-			&& !gAgent.isGenderChosen()) // nothing already loading
+			&& !gAgent.isOutfitChosen()) // nothing already loading
 		{
 			// Start loading the wearables, textures, gestures
 			LLStartUp::loadInitialOutfit( sInitialOutfit, sInitialOutfitGender );
 		}
 		// If not first login, we need to fetch COF contents and
 		// compute appearance from that.
-		if (isAgentAvatarValid() && !gAgent.isFirstLogin() && !gAgent.isGenderChosen())
+		if (isAgentAvatarValid() && !gAgent.isFirstLogin() && !gAgent.isOutfitChosen())
 		{
 			gAgentWearables.notifyLoadingStarted();
-			gAgent.setGenderChosen(TRUE);
+			gAgent.setOutfitChosen(TRUE);
 			gAgentWearables.sendDummyAgentWearablesUpdate();
 			callAfterCategoryFetch(LLAppearanceMgr::instance().getCOF(), set_flags_and_update_appearance);
 		}
@@ -2201,7 +2201,7 @@ bool idle_startup()
 		const F32 wearables_time = wearables_timer.getElapsedTimeF32();
 		static LLCachedControl<F32> max_wearables_time(gSavedSettings, "ClothingLoadingDelay");
 
-		if (!gAgent.isGenderChosen() && isAgentAvatarValid())
+		if (!gAgent.isOutfitChosen() && isAgentAvatarValid())
 		{
 			// No point in waiting for clothing, we don't even
 			// know what gender we are.  Pop a dialog to ask and
@@ -2218,7 +2218,7 @@ bool idle_startup()
 		
 		display_startup();
 
-		if (gAgent.isGenderChosen() && (wearables_time > max_wearables_time))
+		if (gAgent.isOutfitChosen() && (wearables_time > max_wearables_time))
 		{
 			LLNotificationsUtil::add("ClothingLoading");
 			record(LLStatViewer::LOADING_WEARABLES_LONG_DELAY, wearables_time);
@@ -3516,7 +3516,7 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 		flag = login_flags["gendered"].asString();
 		if(flag == "Y")
 		{
-			gAgent.setGenderChosen(TRUE);
+			gAgent.setOutfitChosen(TRUE);
 		}
 		
 		bool pacific_daylight_time = false;
