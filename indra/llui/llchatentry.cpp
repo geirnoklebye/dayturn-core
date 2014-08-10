@@ -51,6 +51,7 @@ LLChatEntry::LLChatEntry(const Params& p)
 	mCurrentHistoryLine = mLineHistory.begin();
 
 	mAutoIndent = false;
+	keepSelectionOnReturn(true);
 }
 
 LLChatEntry::~LLChatEntry()
@@ -178,17 +179,6 @@ void LLChatEntry::onFocusLost()
 BOOL LLChatEntry::handleSpecialKey(const KEY key, const MASK mask)
 {
 	BOOL handled = FALSE;
-
-//MK
-	// In the case of a chat entry, pressing RETURN when something is selected
-	// should NOT erase the selection (unlike a notecard, for example)
-	if (key == KEY_RETURN)
-	{
-		endOfDoc();
-		startSelection();
-		endSelection();
-	}
-//mk
 
 	LLTextEditor::handleSpecialKey(key, mask);
 

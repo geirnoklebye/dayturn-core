@@ -52,6 +52,8 @@
 #include "llwearablelist.h"
 #include "llsdutil.h"
 #include "llsdserialize.h"
+#include "llhttpretrypolicy.h"
+#include "llaisapi.h"
 
 #if LL_MSVC
 // disable boost::lexical_cast warning
@@ -217,7 +219,6 @@ public:
 	void addItem(const LLUUID& item_id)
 	{
 		LL_DEBUGS("Avatar") << "item_id " << item_id << LL_ENDL;
-		
 		if (!requestOperation(item_id))
 		{
 			LL_DEBUGS("Avatar") << "item_id " << item_id << " requestOperation false, skipping" << LL_ENDL;
@@ -396,6 +397,12 @@ public:
 		LLCallAfterInventoryBatchMgr(dst_cat_id, phase_name, on_completion_func, on_failure_func, retry_after, max_retries)
 	{
 		addItems(src_items);
+		sInstanceCount++;
+	}
+
+	~LLCallAfterInventoryCopyMgr()
+	{
+		sInstanceCount--;
 	}
 
 	virtual bool requestOperation(const LLUUID& item_id)
@@ -418,94 +425,84 @@ public:
 			);
 		return true;
 	}
+
+	static S32 getInstanceCount() { return sInstanceCount; }
+	
+private:
+	static S32 sInstanceCount;
 };
 
-class LLCallAfterInventoryLinkMgr: public LLCallAfterInventoryBatchMgr
+S32 LLCallAfterInventoryCopyMgr::sInstanceCount = 0;
+
+class LLWearCategoryAfterCopy: public LLInventoryCallback
 {
 public:
-	LLCallAfterInventoryLinkMgr(LLInventoryModel::item_array_t& src_items,
-								const LLUUID& dst_cat_id,
-								const std::string& phase_name,
-								nullary_func_t on_completion_func,
-								nullary_func_t on_failure_func = no_op,
-								 F32 retry_after = DEFAULT_RETRY_AFTER_INTERVAL,
-								 S32 max_retries = DEFAULT_MAX_RETRIES
-		):
-		LLCallAfterInventoryBatchMgr(dst_cat_id, phase_name, on_completion_func, on_failure_func, retry_after, max_retries)
+	LLWearCategoryAfterCopy(bool append):
+		mAppend(append)
+	{}
+
+	// virtual
+	void fire(const LLUUID& id)
 	{
-		addItems(src_items);
+		// Wear the inventory category.
+		LLInventoryCategory* cat = gInventory.getCategory(id);
+		LLAppearanceMgr::instance().wearInventoryCategoryOnAvatar(cat, mAppend);
 	}
 
-	virtual bool requestOperation(const LLUUID& item_id)
-	{
-		bool request_sent = false;
-		LLViewerInventoryItem *item = gInventory.getItem(item_id);
-		if (item)
-		{
-			if (item->getParentUUID() == mDstCatID)
-			{
-				LL_DEBUGS("Avatar") << "item " << item_id << " name " << item->getName() << " is already a child of " << mDstCatID << LL_ENDL;
-				return false;
-			}
-			LL_DEBUGS("Avatar") << "linking item " << item_id << " name " << item->getName() << " to " << mDstCatID << LL_ENDL;
-			// create an inventory item link.
-			if (ll_frand() < gSavedSettings.getF32("InventoryDebugSimulateOpFailureRate"))
-			{
-				LL_DEBUGS("Avatar") << "simulating failure by not sending request for item " << item_id << LL_ENDL;
-				return true;
-			}
-			link_inventory_item(gAgent.getID(),
-								item->getLinkedUUID(),
-								mDstCatID,
-								item->getName(),
-								item->getActualDescription(),
-								LLAssetType::AT_LINK,
-								new LLBoostFuncInventoryCallback(
-									boost::bind(&LLCallAfterInventoryBatchMgr::onOp,this,item_id,_1,LLTimer())));
-			return true;
-		}
-		else
-{
-			// create a base outfit link if appropriate.
-			LLViewerInventoryCategory *catp = gInventory.getCategory(item_id);
-			if (!catp)
-	{
-				LL_WARNS() << "link request failed, id not found as inventory item or category " << item_id << LL_ENDL;
-				return false;
-			}
-			const LLUUID cof = LLAppearanceMgr::instance().getCOF();
-			std::string new_outfit_name = "";
-
-			LLAppearanceMgr::instance().purgeBaseOutfitLink(cof);
-
-			if (catp && catp->getPreferredType() == LLFolderType::FT_OUTFIT)
-			{
-				if (ll_frand() < gSavedSettings.getF32("InventoryDebugSimulateOpFailureRate"))
-		{
-					LL_DEBUGS("Avatar") << "simulating failure by not sending request for item " << item_id << LL_ENDL;
-					return true;
-		}
-				LL_DEBUGS("Avatar") << "linking folder " << item_id << " name " << catp->getName() << " to cof " << cof << LL_ENDL;
-				link_inventory_item(gAgent.getID(), item_id, cof, catp->getName(), "",
-									LLAssetType::AT_LINK_FOLDER, 
-									new LLBoostFuncInventoryCallback(
-										boost::bind(&LLCallAfterInventoryBatchMgr::onOp,this,item_id,_1,LLTimer())));
-				new_outfit_name = catp->getName();
-				request_sent = true;
-			}
-	
-			LLAppearanceMgr::instance().updatePanelOutfitName(new_outfit_name);
-		}
-		return request_sent;
-	}
+private:
+	bool mAppend;
 };
 
+class LLTrackPhaseWrapper : public LLInventoryCallback
+	{
+public:
+	LLTrackPhaseWrapper(const std::string& phase_name, LLPointer<LLInventoryCallback> cb = NULL):
+		mTrackingPhase(phase_name),
+		mCB(cb)
+		{
+		selfStartPhase(mTrackingPhase);
+	}
 
-LLUpdateAppearanceOnDestroy::LLUpdateAppearanceOnDestroy(bool update_base_outfit_ordering):
+	// virtual
+	void fire(const LLUUID& id)
+			{
+		if (mCB)
+			{
+			mCB->fire(id);
+		}
+			}
+
+	// virtual
+	~LLTrackPhaseWrapper()
+			{
+		selfStopPhase(mTrackingPhase);
+			}
+	
+protected:
+	std::string mTrackingPhase;
+	LLPointer<LLInventoryCallback> mCB;
+};
+
+LLUpdateAppearanceOnDestroy::LLUpdateAppearanceOnDestroy(bool enforce_item_restrictions,
+														 bool enforce_ordering,
+														 nullary_func_t post_update_func 
+	):
 	mFireCount(0),
-	mUpdateBaseOrder(update_base_outfit_ordering)
+	mEnforceItemRestrictions(enforce_item_restrictions),
+	mEnforceOrdering(enforce_ordering),
+	mPostUpdateFunc(post_update_func)
 {
 	selfStartPhase("update_appearance_on_destroy");
+}
+
+void LLUpdateAppearanceOnDestroy::fire(const LLUUID& inv_item)
+{
+	LLViewerInventoryItem* item = (LLViewerInventoryItem*)gInventory.getItem(inv_item);
+	const std::string item_name = item ? item->getName() : "ITEM NOT FOUND";
+#ifndef LL_RELEASE_FOR_DOWNLOAD
+	LL_DEBUGS("Avatar") << self_av_string() << "callback fired [ name:" << item_name << " UUID:" << inv_item << " count:" << mFireCount << " ] " << LL_ENDL;
+#endif
+	mFireCount++;
 }
 
 LLUpdateAppearanceOnDestroy::~LLUpdateAppearanceOnDestroy()
@@ -517,18 +514,43 @@ LLUpdateAppearanceOnDestroy::~LLUpdateAppearanceOnDestroy()
 	
 	selfStopPhase("update_appearance_on_destroy");
 	
-		LLAppearanceMgr::instance().updateAppearanceFromCOF(mUpdateBaseOrder);
+		LLAppearanceMgr::instance().updateAppearanceFromCOF(mEnforceItemRestrictions,
+															mEnforceOrdering,
+															mPostUpdateFunc);
 	}
 }
 
-void LLUpdateAppearanceOnDestroy::fire(const LLUUID& inv_item)
+LLUpdateAppearanceAndEditWearableOnDestroy::LLUpdateAppearanceAndEditWearableOnDestroy(const LLUUID& item_id):
+	mItemID(item_id)
 {
-	LLViewerInventoryItem* item = (LLViewerInventoryItem*)gInventory.getItem(inv_item);
-	const std::string item_name = item ? item->getName() : "ITEM NOT FOUND";
-#ifndef LL_RELEASE_FOR_DOWNLOAD
-	LL_DEBUGS("Avatar") << self_av_string() << "callback fired [ name:" << item_name << " UUID:" << inv_item << " count:" << mFireCount << " ] " << LL_ENDL;
-#endif
-	mFireCount++;
+}
+
+void edit_wearable_and_customize_avatar(LLUUID item_id)
+{
+	// Start editing the item if previously requested.
+	gAgentWearables.editWearableIfRequested(item_id);
+	
+	// TODO: camera mode may not be changed if a debug setting is tweaked
+	if( gAgentCamera.cameraCustomizeAvatar() )
+	{
+		// If we're in appearance editing mode, the current tab may need to be refreshed
+		LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(
+			LLFloaterSidePanelContainer::getPanel("appearance"));
+		if (panel)
+		{
+			panel->showDefaultSubpart();
+		}
+	}
+}
+
+LLUpdateAppearanceAndEditWearableOnDestroy::~LLUpdateAppearanceAndEditWearableOnDestroy()
+{
+	if (!LLApp::isExiting())
+	{
+		LLAppearanceMgr::instance().updateAppearanceFromCOF(
+			true,true,
+			boost::bind(edit_wearable_and_customize_avatar, mItemID));
+	}
 }
 
 struct LLFoundData
@@ -594,6 +616,8 @@ public:
 	bool isMostRecent();
 	void handleLateArrivals();
 	void resetTime(F32 timeout);
+	static S32 countActive() { return sActiveHoldingPatterns.size(); }
+	S32 index() { return mIndex; }
 	
 private:
 	found_list_t mFoundList;
@@ -607,12 +631,15 @@ private:
 	bool mFired;
 	typedef std::set<LLWearableHoldingPattern*> type_set_hp;
 	static type_set_hp sActiveHoldingPatterns;
+	static S32 sNextIndex;
+	S32 mIndex;
 	bool mIsMostRecent;
 	std::set<LLViewerWearable*> mLateArrivals;
 	bool mIsAllComplete;
 };
 
 LLWearableHoldingPattern::type_set_hp LLWearableHoldingPattern::sActiveHoldingPatterns;
+S32 LLWearableHoldingPattern::sNextIndex = 0;
 
 LLWearableHoldingPattern::LLWearableHoldingPattern():
 	mResolved(0),
@@ -620,10 +647,10 @@ LLWearableHoldingPattern::LLWearableHoldingPattern():
 	mIsMostRecent(true),
 	mIsAllComplete(false)
 {
-	if (sActiveHoldingPatterns.size()>0)
+	if (countActive()>0)
 	{
 		LL_INFOS() << "Creating LLWearableHoldingPattern when "
-				<< sActiveHoldingPatterns.size()
+				   << countActive()
 				<< " other attempts are active."
 				<< " Flagging others as invalid."
 				<< LL_ENDL;
@@ -635,7 +662,9 @@ LLWearableHoldingPattern::LLWearableHoldingPattern():
 		}
 			 
 	}
+	mIndex = sNextIndex++;
 	sActiveHoldingPatterns.insert(this);
+	LL_DEBUGS("Avatar") << "HP " << index() << " created" << LL_ENDL;
 	selfStartPhase("holding_pattern");
 }
 
@@ -646,6 +675,7 @@ LLWearableHoldingPattern::~LLWearableHoldingPattern()
 	{
 		selfStopPhase("holding_pattern");
 	}
+	LL_DEBUGS("Avatar") << "HP " << index() << " deleted" << LL_ENDL;
 }
 
 bool LLWearableHoldingPattern::isMostRecent()
@@ -734,7 +764,10 @@ void LLWearableHoldingPattern::checkMissingWearables()
 
 	resetTime(60.0F);
 
-	selfStartPhase("get_missing_wearables");
+	if (isMostRecent())
+	{
+		selfStartPhase("get_missing_wearables_2");
+	}
 	if (!pollMissingWearables())
 	{
 		doOnIdleRepeating(boost::bind(&LLWearableHoldingPattern::pollMissingWearables,this));
@@ -774,8 +807,8 @@ void LLWearableHoldingPattern::onAllComplete()
 	}
 
 	// Update wearables.
-	LL_INFOS("Avatar") << self_av_string() << "Updating agent wearables with " << mResolved << " wearable items " << LL_ENDL;
-	LLAppearanceMgr::instance().updateAgentWearables(this, false);
+	LL_INFOS("Avatar") << self_av_string() << "HP " << index() << " updating agent wearables with " << mResolved << " wearable items " << LL_ENDL;
+	LLAppearanceMgr::instance().updateAgentWearables(this);
 	
 	// Update attachments to match those requested.
 	if (isAgentAvatarValid())
@@ -798,7 +831,10 @@ void LLWearableHoldingPattern::onAllComplete()
 
 void LLWearableHoldingPattern::onFetchCompletion()
 {
-	selfStopPhase("get_wearables");
+	if (isMostRecent())
+	{
+		selfStopPhase("get_wearables_2");
+	}
 		
 	if (!isMostRecent())
 	{
@@ -824,7 +860,7 @@ bool LLWearableHoldingPattern::pollFetchCompletion()
 
 	if (done)
 	{
-		LL_INFOS("Avatar") << self_av_string() << "polling, done status: " << completed << " timed out " << timed_out
+		LL_INFOS("Avatar") << self_av_string() << "HP " << index() << " polling, done status: " << completed << " timed out " << timed_out
 				<< " elapsed " << mWaitTime.getElapsedTimeF32() << LL_ENDL;
 
 		mFired = true;
@@ -843,11 +879,11 @@ void recovered_item_link_cb(const LLUUID& item_id, LLWearableType::EType type, L
 	{
 	if (!holder->isMostRecent())
 		{
-			LL_WARNS() << "skipping because LLWearableHolding pattern is invalid (superceded by later outfit request)" << LL_ENDL;
+		LL_WARNS() << "HP " << holder->index() << " skipping because LLWearableHolding pattern is invalid (superceded by later outfit request)" << LL_ENDL;
 			// runway skip here?
 		}
 
-	LL_INFOS() << "Recovered item link for type " << type << LL_ENDL;
+	LL_INFOS() << "HP " << holder->index() << " recovered item link for type " << type << LL_ENDL;
 	holder->eraseTypeToLink(type);
 		// Add wearable to FoundData for actual wearing
 		LLViewerInventoryItem *item = gInventory.getItem(item_id);
@@ -871,12 +907,12 @@ void recovered_item_link_cb(const LLUUID& item_id, LLWearableType::EType type, L
 			}
 			else
 			{
-				LL_WARNS() << self_av_string() << "inventory item not found for recovered wearable" << LL_ENDL;
+			LL_WARNS() << self_av_string() << "inventory link not found for recovered wearable" << LL_ENDL;
 			}
 		}
 		else
 		{
-			LL_WARNS() << self_av_string() << "inventory link not found for recovered wearable" << LL_ENDL;
+		LL_WARNS() << self_av_string() << "HP " << holder->index() << " inventory link not found for recovered wearable" << LL_ENDL;
 		}
 	}
 
@@ -889,20 +925,15 @@ void recovered_item_cb(const LLUUID& item_id, LLWearableType::EType type, LLView
 		}
 
 	LL_DEBUGS("Avatar") << self_av_string() << "Recovered item for type " << type << LL_ENDL;
-		LLViewerInventoryItem *itemp = gInventory.getItem(item_id);
+	LLConstPointer<LLInventoryObject> itemp = gInventory.getItem(item_id);
 	wearable->setItemID(item_id);
-	LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(recovered_item_link_cb,_1,type,wearable,holder));
 	holder->eraseTypeToRecover(type);
 		llassert(itemp);
 		if (itemp)
 		{
-			link_inventory_item( gAgent.getID(),
-					     item_id,
-					     LLAppearanceMgr::instance().getCOF(),
-					     itemp->getName(),
-						 itemp->getDescription(),
-					     LLAssetType::AT_LINK,
-					     cb);
+		LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(recovered_item_link_cb,_1,type,wearable,holder));
+
+		link_inventory_object(LLAppearanceMgr::instance().getCOF(), itemp, cb);
 		}
 	}
 
@@ -950,7 +981,7 @@ void LLWearableHoldingPattern::clearCOFLinksForMissingWearables()
 		if ((data.mWearableType < LLWearableType::WT_COUNT) && (!data.mWearable))
 		{
 			// Wearable link that was never resolved; remove links to it from COF
-			LL_INFOS("Avatar") << self_av_string() << "removing link for unresolved item " << data.mItemID.asString() << LL_ENDL;
+			LL_INFOS("Avatar") << self_av_string() << "HP " << index() << " removing link for unresolved item " << data.mItemID.asString() << LL_ENDL;
 			LLAppearanceMgr::instance().removeCOFItemLinks(data.mItemID);
 		}
 	}
@@ -970,7 +1001,7 @@ bool LLWearableHoldingPattern::pollMissingWearables()
 
 	if (!done)
 	{
-		LL_INFOS("Avatar") << self_av_string() << "polling missing wearables, waiting for items " << mTypesToRecover.size()
+		LL_INFOS("Avatar") << self_av_string() << "HP " << index() << " polling missing wearables, waiting for items " << mTypesToRecover.size()
 				<< " links " << mTypesToLink.size()
 				<< " wearables, timed out " << timed_out
 				<< " elapsed " << mWaitTime.getElapsedTimeF32()
@@ -979,7 +1010,10 @@ bool LLWearableHoldingPattern::pollMissingWearables()
 
 	if (done)
 	{
-		selfStopPhase("get_missing_wearables");
+		if (isMostRecent())
+		{
+			selfStopPhase("get_missing_wearables_2");
+		}
 
 		gAgentAvatarp->debugWearablesLoaded();
 
@@ -1017,7 +1051,7 @@ void LLWearableHoldingPattern::handleLateArrivals()
 		LL_WARNS() << self_av_string() << "Late arrivals not handled - in middle of missing wearables processing" << LL_ENDL;
 	}
 
-	LL_INFOS("Avatar") << self_av_string() << "Need to handle " << mLateArrivals.size() << " late arriving wearables" << LL_ENDL;
+	LL_INFOS("Avatar") << self_av_string() << "HP " << index() << " need to handle " << mLateArrivals.size() << " late arriving wearables" << LL_ENDL;
 
 	// Update mFoundList using late-arriving wearables.
 	std::set<LLWearableType::EType> replaced_types;
@@ -1080,7 +1114,7 @@ void LLWearableHoldingPattern::handleLateArrivals()
 	mLateArrivals.clear();
 
 	// Update appearance based on mFoundList
-	LLAppearanceMgr::instance().updateAgentWearables(this, false);
+	LLAppearanceMgr::instance().updateAgentWearables(this);
 }
 
 void LLWearableHoldingPattern::resetTime(F32 timeout)
@@ -1097,7 +1131,7 @@ void LLWearableHoldingPattern::onWearableAssetFetch(LLViewerWearable *wearable)
 	}
 	
 	mResolved += 1;  // just counting callbacks, not successes.
-	LL_DEBUGS("Avatar") << self_av_string() << "resolved " << mResolved << "/" << getFoundList().size() << LL_ENDL;
+	LL_DEBUGS("Avatar") << self_av_string() << "HP " << index() << " resolved " << mResolved << "/" << getFoundList().size() << LL_ENDL;
 	if (!wearable)
 	{
 		LL_WARNS() << self_av_string() << "no wearable found" << LL_ENDL;
@@ -1204,8 +1238,7 @@ const LLViewerInventoryItem* LLAppearanceMgr::getBaseOutfitLink()
 									cat_array,
 									item_array,
 									false,
-									is_category,
-									false);
+									is_category);
 	for (LLInventoryModel::item_array_t::const_iterator iter = item_array.begin();
 		 iter != item_array.end();
 		 iter++)
@@ -1271,7 +1304,10 @@ void wear_on_avatar_cb(const LLUUID& inv_item, bool do_replace = false)
 	}
 }
 
-bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear, bool do_update, bool replace, LLPointer<LLInventoryCallback> cb)
+bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear,
+									   bool do_update,
+									   bool replace,
+									   LLPointer<LLInventoryCallback> cb)
 {
 	if (item_id_to_wear.isNull()) return false;
 
@@ -1303,7 +1339,7 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear, bool do_up
 		LLNotificationsUtil::add("CannotWearTrash");
 		return false;
 	}
-	else if (gInventory.isObjectDescendentOf(item_to_wear->getUUID(), LLAppearanceMgr::instance().getCOF())) // EXT-84911
+	else if (isLinkedInCOF(item_to_wear->getUUID())) // EXT-84911
 	{
 		return false;
 	}
@@ -1313,6 +1349,10 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear, bool do_up
 	case LLAssetType::AT_CLOTHING:
 		if (gAgentWearables.areWearablesLoaded())
 		{
+			if (!cb && do_update)
+			{
+				cb = new LLUpdateAppearanceAndEditWearableOnDestroy(item_id_to_wear);
+			}
 			S32 wearable_count = gAgentWearables.getWearableCount(item_to_wear->getWearableType());
 			if ((replace && wearable_count != 0) ||
 				(wearable_count >= LLAgentWearables::MAX_CLOTHING_PER_TYPE) )
@@ -1321,7 +1361,9 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear, bool do_up
 				if (gRRenabled && gAgent.mRRInterface.canUnwear (item_to_wear->getWearableType()))
 				{
 //mk
-				removeCOFItemLinks(gAgentWearables.getWearableItemID(item_to_wear->getWearableType(), wearable_count-1));
+				LLUUID item_id = gAgentWearables.getWearableItemID(item_to_wear->getWearableType(),
+																   wearable_count-1);
+				removeCOFItemLinks(item_id, cb);
 //MK
 				}
 //mk
@@ -1330,7 +1372,7 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear, bool do_up
 			if (gRRenabled && gAgent.mRRInterface.canWear (item_to_wear->getWearableType()))
 			{
 //mk
-				addCOFItemLink(item_to_wear, do_update, cb);
+			addCOFItemLink(item_to_wear, cb);
 //MK
 			}
 //mk
@@ -1347,7 +1389,11 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear, bool do_up
 		// Remove existing body parts anyway because we must not be able to wear e.g. two skins.
 		removeCOFLinksOfType(item_to_wear->getWearableType());
 
-		addCOFItemLink(item_to_wear, do_update, cb);
+		if (!cb && do_update)
+		{
+			cb = new LLUpdateAppearanceAndEditWearableOnDestroy(item_id_to_wear);
+		}
+		addCOFItemLink(item_to_wear, cb);
 //MK
 		}
 //mk
@@ -1462,6 +1508,18 @@ void LLAppearanceMgr::takeOffOutfit(const LLUUID& cat_id)
 		uuids_to_remove.push_back(item->getUUID());
 	}
 	removeItemsFromAvatar(uuids_to_remove);
+
+	// deactivate all gestures in the outfit folder
+	LLInventoryModel::item_array_t gest_items;
+	getDescendentsOfAssetType(cat_id, gest_items, LLAssetType::AT_GESTURE);
+	for(S32 i = 0; i  < gest_items.size(); ++i)
+	{
+		LLViewerInventoryItem *gest_item = gest_items[i];
+		if ( LLGestureMgr::instance().isGestureActive( gest_item->getLinkedUUID()) )
+		{
+			LLGestureMgr::instance().deactivateGesture( gest_item->getLinkedUUID() );
+		}
+	}
 }
 
 // Create a copy of src_id + contents as a subfolder of dst_id.
@@ -1488,12 +1546,12 @@ void LLAppearanceMgr::shallowCopyCategory(const LLUUID& src_id, const LLUUID& ds
 	gInventory.notifyObservers();
 }
 
-// Copy contents of src_id to dst_id.
-void LLAppearanceMgr::shallowCopyCategoryContents(const LLUUID& src_id, const LLUUID& dst_id,
-													  LLPointer<LLInventoryCallback> cb)
+void LLAppearanceMgr::slamCategoryLinks(const LLUUID& src_id, const LLUUID& dst_id,
+										bool include_folder_links, LLPointer<LLInventoryCallback> cb)
 {
 	LLInventoryModel::cat_array_t* cats;
 	LLInventoryModel::item_array_t* items;
+	LLSD contents = LLSD::emptyArray();
 	gInventory.getDirectDescendentsOf(src_id, cats, items);
 	LL_INFOS() << "copying " << items->size() << " items" << LL_ENDL;
 	for (LLInventoryModel::item_array_t::const_iterator iter = items->begin();
@@ -1505,14 +1563,61 @@ void LLAppearanceMgr::shallowCopyCategoryContents(const LLUUID& src_id, const LL
 		{
 			case LLAssetType::AT_LINK:
 			{
+				LL_DEBUGS("Avatar") << "linking inventory item " << item->getName() << LL_ENDL;
 				//getActualDescription() is used for a new description 
 				//to propagate ordering information saved in descriptions of links
-				link_inventory_item(gAgent.getID(),
-									item->getLinkedUUID(),
-									dst_id,
-									item->getName(),
-									item->getActualDescription(),
-									LLAssetType::AT_LINK, cb);
+				LLSD item_contents;
+				item_contents["name"] = item->getName();
+				item_contents["desc"] = item->getActualDescription();
+				item_contents["linked_id"] = item->getLinkedUUID();
+				item_contents["type"] = LLAssetType::AT_LINK; 
+				contents.append(item_contents);
+				break;
+			}
+			case LLAssetType::AT_LINK_FOLDER:
+			{
+				LLViewerInventoryCategory *catp = item->getLinkedCategory();
+				if (catp && include_folder_links)
+				{
+					LL_DEBUGS("Avatar") << "linking inventory folder " << item->getName() << LL_ENDL;
+					LLSD base_contents;
+					base_contents["name"] = catp->getName();
+					base_contents["desc"] = ""; // categories don't have descriptions.
+					base_contents["linked_id"] = catp->getLinkedUUID();
+					base_contents["type"] = LLAssetType::AT_LINK_FOLDER; 
+					contents.append(base_contents);
+				}
+				break;
+			}
+			default:
+			{
+				// Linux refuses to compile unless all possible enums are handled. Really, Linux?
+				break;
+			}
+		}
+	}
+	slam_inventory_folder(dst_id, contents, cb);
+}
+// Copy contents of src_id to dst_id.
+void LLAppearanceMgr::shallowCopyCategoryContents(const LLUUID& src_id, const LLUUID& dst_id,
+													  LLPointer<LLInventoryCallback> cb)
+{
+	LLInventoryModel::cat_array_t* cats;
+	LLInventoryModel::item_array_t* items;
+	gInventory.getDirectDescendentsOf(src_id, cats, items);
+	LL_INFOS() << "copying " << items->size() << " items" << LL_ENDL;
+	LLInventoryObject::const_object_list_t link_array;
+	for (LLInventoryModel::item_array_t::const_iterator iter = items->begin();
+		 iter != items->end();
+		 ++iter)
+	{
+		const LLViewerInventoryItem* item = (*iter);
+		switch (item->getActualType())
+		{
+			case LLAssetType::AT_LINK:
+			{
+				LL_DEBUGS("Avatar") << "linking inventory item " << item->getName() << LL_ENDL;
+				link_array.push_back(LLConstPointer<LLInventoryObject>(item));
 				break;
 			}
 			case LLAssetType::AT_LINK_FOLDER:
@@ -1521,12 +1626,8 @@ void LLAppearanceMgr::shallowCopyCategoryContents(const LLUUID& src_id, const LL
 				// Skip copying outfit links.
 				if (catp && catp->getPreferredType() != LLFolderType::FT_OUTFIT)
 				{
-					link_inventory_item(gAgent.getID(),
-										item->getLinkedUUID(),
-										dst_id,
-										item->getName(),
-										item->getDescription(),
-										LLAssetType::AT_LINK_FOLDER, cb);
+					LL_DEBUGS("Avatar") << "linking inventory folder " << item->getName() << LL_ENDL;
+					link_array.push_back(LLConstPointer<LLInventoryObject>(item));
 				}
 				break;
 			}
@@ -1535,7 +1636,7 @@ void LLAppearanceMgr::shallowCopyCategoryContents(const LLUUID& src_id, const LL
 			case LLAssetType::AT_BODYPART:
 			case LLAssetType::AT_GESTURE:
 			{
-				LL_INFOS() << "copying inventory item " << item->getName() << LL_ENDL;
+				LL_DEBUGS("Avatar") << "copying inventory item " << item->getName() << LL_ENDL;
 				copy_inventory_item(gAgent.getID(),
 									item->getPermissions().getOwner(),
 									item->getUUID(),
@@ -1548,6 +1649,10 @@ void LLAppearanceMgr::shallowCopyCategoryContents(const LLUUID& src_id, const LL
 				// Ignore non-outfit asset types
 				break;
 		}
+	}
+	if (!link_array.empty())
+	{
+		link_inventory_array(dst_id, link_array, cb);
 	}
 }
 
@@ -1613,15 +1718,13 @@ bool LLAppearanceMgr::getCanRemoveOutfit(const LLUUID& outfit_cat_id)
 // static
 bool LLAppearanceMgr::getCanRemoveFromCOF(const LLUUID& outfit_cat_id)
 {
-	LLInventoryModel::cat_array_t cats;
-	LLInventoryModel::item_array_t items;
+	if (gAgentWearables.isCOFChangeInProgress())
+	{
+		return false;
+	}
+
 	LLFindWearablesEx is_worn(/*is_worn=*/ true, /*include_body_parts=*/ false);
-	gInventory.collectDescendentsIf(outfit_cat_id,
-		cats,
-		items,
-		LLInventoryModel::EXCLUDE_TRASH,
-		is_worn);
-	return items.size() > 0;
+	return gInventory.hasMatchingDirectDescendent(outfit_cat_id, is_worn);
 }
 
 // static
@@ -1632,15 +1735,8 @@ bool LLAppearanceMgr::getCanAddToCOF(const LLUUID& outfit_cat_id)
 		return false;
 	}
 
-	LLInventoryModel::cat_array_t cats;
-	LLInventoryModel::item_array_t items;
 	LLFindWearablesEx not_worn(/*is_worn=*/ false, /*include_body_parts=*/ false);
-	gInventory.collectDescendentsIf(outfit_cat_id,
-		cats,
-		items,
-		LLInventoryModel::EXCLUDE_TRASH,
-		not_worn);
-	return items.size() > 0;
+	return gInventory.hasMatchingDirectDescendent(outfit_cat_id, not_worn);
 }
 
 bool LLAppearanceMgr::getCanReplaceCOF(const LLUUID& outfit_cat_id)
@@ -1658,18 +1754,11 @@ bool LLAppearanceMgr::getCanReplaceCOF(const LLUUID& outfit_cat_id)
 	}
 
 	// Check whether the outfit contains any wearables we aren't wearing already (STORM-702).
-	LLInventoryModel::cat_array_t cats;
-	LLInventoryModel::item_array_t items;
-	LLFindWearablesEx is_worn(/*is_worn=*/ false, /*include_body_parts=*/ true);
-	gInventory.collectDescendentsIf(outfit_cat_id,
-		cats,
-		items,
-		LLInventoryModel::EXCLUDE_TRASH,
-		is_worn);
-	return items.size() > 0;
+	LLFindWearablesEx not_worn(/*is_worn=*/ false, /*include_body_parts=*/ true);
+	return gInventory.hasMatchingDirectDescendent(outfit_cat_id, not_worn);
 }
 
-void LLAppearanceMgr::purgeBaseOutfitLink(const LLUUID& category)
+void LLAppearanceMgr::purgeBaseOutfitLink(const LLUUID& category, LLPointer<LLInventoryCallback> cb)
 {
 	LLInventoryModel::cat_array_t cats;
 	LLInventoryModel::item_array_t items;
@@ -1680,43 +1769,11 @@ void LLAppearanceMgr::purgeBaseOutfitLink(const LLUUID& category)
 		LLViewerInventoryItem *item = items.at(i);
 		if (item->getActualType() != LLAssetType::AT_LINK_FOLDER)
 			continue;
-		if (item->getIsLinkType())
-		{
 			LLViewerInventoryCategory* catp = item->getLinkedCategory();
 			if(catp && catp->getPreferredType() == LLFolderType::FT_OUTFIT)
 			{
-				gInventory.purgeObject(item->getUUID());
-			}
+			remove_inventory_item(item->getUUID(), cb);
 		}
-	}
-}
-
-void LLAppearanceMgr::purgeCategory(const LLUUID& category, bool keep_outfit_links, LLInventoryModel::item_array_t* keep_items)
-{
-	LLInventoryModel::cat_array_t cats;
-	LLInventoryModel::item_array_t items;
-	gInventory.collectDescendents(category, cats, items,
-								  LLInventoryModel::EXCLUDE_TRASH);
-	for (S32 i = 0; i < items.size(); ++i)
-	{
-		LLViewerInventoryItem *item = items.at(i);
-		if (keep_outfit_links && (item->getActualType() == LLAssetType::AT_LINK_FOLDER))
-			continue;
-		if (item->getIsLinkType())
-		{
-#if 0
-			if (keep_items && keep_items->find(item) != LLInventoryModel::item_array_t::FAIL)
-			{
-				LL_INFOS() << "preserved item" << LL_ENDL;
-			}
-			else
-			{
-				gInventory.purgeObject(item->getUUID());
-			}
-#else
-			gInventory.purgeObject(item->getUUID());
-		}
-#endif
 	}
 }
 
@@ -1744,33 +1801,14 @@ void LLAppearanceMgr::filterWearableItems(
 	}
 }
 
-// Create links to all listed items.
-void LLAppearanceMgr::linkAll(const LLUUID& cat_uuid,
-								  LLInventoryModel::item_array_t& items,
-								  LLPointer<LLInventoryCallback> cb)
-{
-	for (S32 i=0; i<items.size(); i++)
-	{
-		const LLInventoryItem* item = items.at(i).get();
-		link_inventory_item(gAgent.getID(),
-							item->getLinkedUUID(),
-							cat_uuid,
-							item->getName(),
-							item->getActualDescription(),
-							LLAssetType::AT_LINK,
-							cb);
-
-		const LLViewerInventoryCategory *cat = gInventory.getCategory(cat_uuid);
-		const std::string cat_name = cat ? cat->getName() : "CAT NOT FOUND";
-#ifndef LL_RELEASE_FOR_DOWNLOAD
-		LL_DEBUGS("Avatar") << self_av_string() << "Linking Item [ name:" << item->getName() << " UUID:" << item->getUUID() << " ] to Category [ name:" << cat_name << " UUID:" << cat_uuid << " ] " << LL_ENDL;
-#endif
-	}
-}
-
 void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 {
 	LLViewerInventoryCategory *pcat = gInventory.getCategory(category);
+	if (!pcat)
+	{
+		LL_WARNS() << "no category found for id " << category << LL_ENDL;
+		return;
+	}
 	LL_INFOS("Avatar") << self_av_string() << "starting, cat '" << (pcat ? pcat->getName() : "[UNKNOWN]") << "'" << LL_ENDL;
 
 	const LLUUID cof = getCOF();
@@ -1779,7 +1817,7 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 	if (!append)
 	{
 		LLInventoryModel::item_array_t gest_items;
-		getDescendentsOfAssetType(cof, gest_items, LLAssetType::AT_GESTURE, false);
+		getDescendentsOfAssetType(cof, gest_items, LLAssetType::AT_GESTURE);
 		for(S32 i = 0; i  < gest_items.size(); ++i)
 		{
 			LLViewerInventoryItem *gest_item = gest_items.at(i);
@@ -1796,8 +1834,8 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 	// required parts are missing.
 	// Preserve body parts from COF if appending.
 	LLInventoryModel::item_array_t body_items;
-	getDescendentsOfAssetType(cof, body_items, LLAssetType::AT_BODYPART, false);
-	getDescendentsOfAssetType(category, body_items, LLAssetType::AT_BODYPART, false);
+	getDescendentsOfAssetType(cof, body_items, LLAssetType::AT_BODYPART);
+	getDescendentsOfAssetType(category, body_items, LLAssetType::AT_BODYPART);
 	if (append)
 		reverse(body_items.begin(), body_items.end());
 	// Reduce body items to max of one per type.
@@ -1807,8 +1845,8 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 	// - Wearables: include COF contents only if appending.
 	LLInventoryModel::item_array_t wear_items;
 	if (append)
-		getDescendentsOfAssetType(cof, wear_items, LLAssetType::AT_CLOTHING, false);
-	getDescendentsOfAssetType(category, wear_items, LLAssetType::AT_CLOTHING, false);
+		getDescendentsOfAssetType(cof, wear_items, LLAssetType::AT_CLOTHING);
+	getDescendentsOfAssetType(category, wear_items, LLAssetType::AT_CLOTHING);
 	// Reduce wearables to max of one per type.
 	removeDuplicateItems(wear_items);
 	filterWearableItems(wear_items, LLAgentWearables::MAX_CLOTHING_PER_TYPE);
@@ -1816,15 +1854,15 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 	// - Attachments: include COF contents only if appending.
 	LLInventoryModel::item_array_t obj_items;
 	if (append)
-		getDescendentsOfAssetType(cof, obj_items, LLAssetType::AT_OBJECT, false);
-	getDescendentsOfAssetType(category, obj_items, LLAssetType::AT_OBJECT, false);
+		getDescendentsOfAssetType(cof, obj_items, LLAssetType::AT_OBJECT);
+	getDescendentsOfAssetType(category, obj_items, LLAssetType::AT_OBJECT);
 	removeDuplicateItems(obj_items);
 
 	// - Gestures: include COF contents only if appending.
 	LLInventoryModel::item_array_t gest_items;
 	if (append)
-		getDescendentsOfAssetType(cof, gest_items, LLAssetType::AT_GESTURE, false);
-	getDescendentsOfAssetType(category, gest_items, LLAssetType::AT_GESTURE, false);
+		getDescendentsOfAssetType(cof, gest_items, LLAssetType::AT_GESTURE);
+	getDescendentsOfAssetType(category, gest_items, LLAssetType::AT_GESTURE);
 	removeDuplicateItems(gest_items);
 	
 	// Create links to new COF contents.
@@ -1834,23 +1872,56 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 	std::copy(obj_items.begin(), obj_items.end(), std::back_inserter(all_items));
 	std::copy(gest_items.begin(), gest_items.end(), std::back_inserter(all_items));
 
-	// Will link all the above items.
-	LLPointer<LLInventoryCallback> link_waiter = new LLUpdateAppearanceOnDestroy;
-	linkAll(cof,all_items,link_waiter);
+	// Find any wearables that need description set to enforce ordering.
+	desc_map_t desc_map;
+	getWearableOrderingDescUpdates(wear_items, desc_map);
 
-	// Add link to outfit if category is an outfit. 
-	if (!append)
+	// Will link all the above items.
+	// link_waiter enforce flags are false because we've already fixed everything up in updateCOF().
+	LLPointer<LLInventoryCallback> link_waiter = new LLUpdateAppearanceOnDestroy(false,false);
+	LLSD contents = LLSD::emptyArray();
+
+	for (LLInventoryModel::item_array_t::const_iterator it = all_items.begin();
+		 it != all_items.end(); ++it)
 	{
-		createBaseOutfitLink(category, link_waiter);
+		LLSD item_contents;
+		LLInventoryItem *item = *it;
+
+		std::string desc;
+		desc_map_t::const_iterator desc_iter = desc_map.find(item->getUUID());
+		if (desc_iter != desc_map.end())
+		{
+			desc = desc_iter->second;
+			LL_DEBUGS("Avatar") << item->getName() << " overriding desc to: " << desc
+								<< " (was: " << item->getActualDescription() << ")" << LL_ENDL;
+		}
+		else
+	{
+			desc = item->getActualDescription();
 	}
 
-	// Remove current COF contents.  Have to do this after creating
-	// the link_waiter so links can be followed for any items that get
-	// carried over (e.g. keeping old shape if the new outfit does not
-	// contain one)
-	bool keep_outfit_links = append;
-	purgeCategory(cof, keep_outfit_links, &all_items);
-	gInventory.notifyObservers();
+		item_contents["name"] = item->getName();
+		item_contents["desc"] = desc;
+		item_contents["linked_id"] = item->getLinkedUUID();
+		item_contents["type"] = LLAssetType::AT_LINK; 
+		contents.append(item_contents);
+	}
+	const LLUUID& base_id = append ? getBaseOutfitUUID() : category;
+	LLViewerInventoryCategory *base_cat = gInventory.getCategory(base_id);
+	if (base_cat)
+	{
+		LLSD base_contents;
+		base_contents["name"] = base_cat->getName();
+		base_contents["desc"] = "";
+		base_contents["linked_id"] = base_cat->getLinkedUUID();
+		base_contents["type"] = LLAssetType::AT_LINK_FOLDER; 
+		contents.append(base_contents);
+	}
+	if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+	{
+		dump_sequential_xml(gAgentAvatarp->getFullname() + "_slam_request", contents);
+	}
+	slam_inventory_folder(getCOF(), contents, link_waiter);
 
 	LL_DEBUGS("Avatar") << self_av_string() << "waiting for LLUpdateAppearanceOnDestroy" << LL_ENDL;
 }
@@ -1871,21 +1942,20 @@ void LLAppearanceMgr::createBaseOutfitLink(const LLUUID& category, LLPointer<LLI
 	LLViewerInventoryCategory* catp = gInventory.getCategory(category);
 	std::string new_outfit_name = "";
 
-	purgeBaseOutfitLink(cof);
+	purgeBaseOutfitLink(cof, link_waiter);
 
 	if (catp && catp->getPreferredType() == LLFolderType::FT_OUTFIT)
 	{
-		link_inventory_item(gAgent.getID(), category, cof, catp->getName(), "",
-							LLAssetType::AT_LINK_FOLDER, link_waiter);
+		link_inventory_object(cof, catp, link_waiter);
 		new_outfit_name = catp->getName();
 	}
 	
 	updatePanelOutfitName(new_outfit_name);
 }
 
-void LLAppearanceMgr::updateAgentWearables(LLWearableHoldingPattern* holder, bool append)
+void LLAppearanceMgr::updateAgentWearables(LLWearableHoldingPattern* holder)
 {
-	LL_DEBUGS() << "updateAgentWearables()" << LL_ENDL;
+	LL_DEBUGS("Avatar") << "updateAgentWearables()" << LL_ENDL;
 	LLInventoryItem::item_array_t items;
 	std::vector< LLViewerWearable* > wearables;
 	wearables.reserve(32);
@@ -1912,8 +1982,13 @@ void LLAppearanceMgr::updateAgentWearables(LLWearableHoldingPattern* holder, boo
 
 	if(wearables.size() > 0)
 	{
-		gAgentWearables.setWearableOutfit(items, wearables, !append);
+		gAgentWearables.setWearableOutfit(items, wearables);
 	}
+}
+
+S32 LLAppearanceMgr::countActiveHoldingPatterns()
+{
+	return LLWearableHoldingPattern::countActive();
 }
 
 static void remove_non_link_items(LLInventoryModel::item_array_t &items)
@@ -1964,12 +2039,12 @@ void item_array_diff(LLInventoryModel::item_array_t& full_list,
 S32 LLAppearanceMgr::findExcessOrDuplicateItems(const LLUUID& cat_id,
 												 LLAssetType::EType type,
 												 S32 max_items,
-												 LLInventoryModel::item_array_t& items_to_kill)
+												 LLInventoryObject::object_list_t& items_to_kill)
 {
 	S32 to_kill_count = 0;
 
 	LLInventoryModel::item_array_t items;
-	getDescendentsOfAssetType(cat_id, items, type, false);
+	getDescendentsOfAssetType(cat_id, items, type);
 	LLInventoryModel::item_array_t curr_items = items;
 	removeDuplicateItems(items);
 	if (max_items > 0)
@@ -1982,40 +2057,39 @@ S32 LLAppearanceMgr::findExcessOrDuplicateItems(const LLUUID& cat_id,
 		 it != kill_items.end();
 		 ++it)
 	{
-		items_to_kill.push_back(*it);
+		items_to_kill.push_back(LLPointer<LLInventoryObject>(*it));
 		to_kill_count++;
 	}
 	return to_kill_count;
 }
 	
 												 
-void LLAppearanceMgr::enforceItemRestrictions()
+void LLAppearanceMgr::findAllExcessOrDuplicateItems(const LLUUID& cat_id,
+													LLInventoryObject::object_list_t& items_to_kill)
 {
-	S32 purge_count = 0;
-	LLInventoryModel::item_array_t items_to_kill;
-
-	purge_count += findExcessOrDuplicateItems(getCOF(),LLAssetType::AT_BODYPART,
+	findExcessOrDuplicateItems(cat_id,LLAssetType::AT_BODYPART,
 											  1, items_to_kill);
-	purge_count += findExcessOrDuplicateItems(getCOF(),LLAssetType::AT_CLOTHING,
+	findExcessOrDuplicateItems(cat_id,LLAssetType::AT_CLOTHING,
 											  LLAgentWearables::MAX_CLOTHING_PER_TYPE, items_to_kill);
-	purge_count += findExcessOrDuplicateItems(getCOF(),LLAssetType::AT_OBJECT,
+	findExcessOrDuplicateItems(cat_id,LLAssetType::AT_OBJECT,
 											  -1, items_to_kill);
+}
 
+void LLAppearanceMgr::enforceCOFItemRestrictions(LLPointer<LLInventoryCallback> cb)
+{
+	LLInventoryObject::object_list_t items_to_kill;
+	findAllExcessOrDuplicateItems(getCOF(), items_to_kill);
 	if (items_to_kill.size()>0)
 	{
-		for (LLInventoryModel::item_array_t::iterator it = items_to_kill.begin();
-			 it != items_to_kill.end();
-			 ++it)
-		{
-			LLViewerInventoryItem *item = *it;
-			LL_DEBUGS("Avatar") << self_av_string() << "purging duplicate or excess item " << item->getName() << LL_ENDL;
-			gInventory.purgeObject(item->getUUID());
-		}
-		gInventory.notifyObservers();
+		// Remove duplicate or excess wearables. Should normally be enforced at the UI level, but
+		// this should catch anything that gets through.
+		remove_inventory_items(items_to_kill, cb);
 	}
 }
 
-void LLAppearanceMgr::updateAppearanceFromCOF(bool update_base_outfit_ordering)
+void LLAppearanceMgr::updateAppearanceFromCOF(bool enforce_item_restrictions,
+											  bool enforce_ordering,
+											  nullary_func_t post_update_func)
 {
 	if (mIsInUpdateAppearanceFromCOF)
 	{
@@ -2023,18 +2097,42 @@ void LLAppearanceMgr::updateAppearanceFromCOF(bool update_base_outfit_ordering)
 		return;
 	}
 
-	BoolSetter setIsInUpdateAppearanceFromCOF(mIsInUpdateAppearanceFromCOF);
-	selfStartPhase("update_appearance_from_cof");
-
 	LL_DEBUGS("Avatar") << self_av_string() << "starting" << LL_ENDL;
 
+	if (enforce_item_restrictions)
+	{
+		// The point here is just to call
+		// updateAppearanceFromCOF() again after excess items
+		// have been removed. That time we will set
+		// enforce_item_restrictions to false so we don't get
+		// caught in a perpetual loop.
+		LLPointer<LLInventoryCallback> cb(
+			new LLUpdateAppearanceOnDestroy(false, enforce_ordering, post_update_func));
+		enforceCOFItemRestrictions(cb);
+		return;
+	}
+
+	if (enforce_ordering)
+	{
 	//checking integrity of the COF in terms of ordering of wearables, 
 	//checking and updating links' descriptions of wearables in the COF (before analyzed for "dirty" state)
-	updateClothingOrderingInfo(LLUUID::null, update_base_outfit_ordering);
 
-	// Remove duplicate or excess wearables. Should normally be enforced at the UI level, but
-	// this should catch anything that gets through.
-	enforceItemRestrictions();
+		// As with enforce_item_restrictions handling above, we want
+		// to wait for the update callbacks, then (finally!) call
+		// updateAppearanceFromCOF() with no additional COF munging needed.
+		LLPointer<LLInventoryCallback> cb(
+			new LLUpdateAppearanceOnDestroy(false, false, post_update_func));
+		updateClothingOrderingInfo(LLUUID::null, cb);
+		return;
+	}
+
+	if (!validateClothingOrderingInfo())
+	{
+		LL_WARNS() << "Clothing ordering error" << LL_ENDL;
+	}
+
+	BoolSetter setIsInUpdateAppearanceFromCOF(mIsInUpdateAppearanceFromCOF);
+	selfStartPhase("update_appearance_from_cof");
 	
 	// update dirty flag to see if the state of the COF matches
 	// the saved outfit stored as a folder link
@@ -2045,13 +2143,7 @@ void LLAppearanceMgr::updateAppearanceFromCOF(bool update_base_outfit_ordering)
 	{
 		requestServerAppearanceUpdate();
 	}
-	// DRANO really should wait for the appearance message to set this.
-	// verify that deleting this line doesn't break anything.
-	//gAgentAvatarp->setIsUsingServerBakes(gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion());
 	
-	//dumpCat(getCOF(),"COF, start");
-
-	bool follow_folder_links = false;
 	LLUUID current_outfit_id = getCOF();
 
 	// Find all the wearables that are in the COF's subtree.
@@ -2059,7 +2151,7 @@ void LLAppearanceMgr::updateAppearanceFromCOF(bool update_base_outfit_ordering)
 	LLInventoryModel::item_array_t wear_items;
 	LLInventoryModel::item_array_t obj_items;
 	LLInventoryModel::item_array_t gest_items;
-	getUserDescendents(current_outfit_id, wear_items, obj_items, gest_items, follow_folder_links);
+	getUserDescendents(current_outfit_id, wear_items, obj_items, gest_items);
 	// Get rid of non-links in case somehow the COF was corrupted.
 	remove_non_link_items(wear_items);
 	remove_non_link_items(obj_items);
@@ -2068,6 +2160,13 @@ void LLAppearanceMgr::updateAppearanceFromCOF(bool update_base_outfit_ordering)
 	dumpItemArray(wear_items,"asset_dump: wear_item");
 	dumpItemArray(obj_items,"asset_dump: obj_item");
 
+	LLViewerInventoryCategory *cof = gInventory.getCategory(current_outfit_id);
+	if (!gInventory.isCategoryComplete(current_outfit_id))
+	{
+		LL_WARNS() << "COF info is not complete. Version " << cof->getVersion()
+				<< " descendent_count " << cof->getDescendentCount()
+				<< " viewer desc count " << cof->getViewerDescendentCount() << LL_ENDL;
+	}
 	if(!wear_items.size())
 	{
 		LLNotificationsUtil::add("CouldNotPutOnOutfit");
@@ -2078,6 +2177,8 @@ void LLAppearanceMgr::updateAppearanceFromCOF(bool update_base_outfit_ordering)
 	sortItemsByActualDescription(wear_items);
 
 
+	LL_DEBUGS("Avatar") << "HP block starts" << LL_ENDL;
+	LLTimer hp_block_timer;
 	LLWearableHoldingPattern* holder = new LLWearableHoldingPattern;
 
 	holder->setObjItems(obj_items);
@@ -2127,7 +2228,7 @@ void LLAppearanceMgr::updateAppearanceFromCOF(bool update_base_outfit_ordering)
 		}
 	}
 
-	selfStartPhase("get_wearables");
+	selfStartPhase("get_wearables_2");
 
 	for (LLWearableHoldingPattern::found_list_t::iterator it = holder->getFoundList().begin();
 		 it != holder->getFoundList().end(); ++it)
@@ -2151,12 +2252,14 @@ void LLAppearanceMgr::updateAppearanceFromCOF(bool update_base_outfit_ordering)
 	{
 		doOnIdleRepeating(boost::bind(&LLWearableHoldingPattern::pollFetchCompletion,holder));
 	}
+	post_update_func();
+
+	LL_DEBUGS("Avatar") << "HP block ends, elapsed " << hp_block_timer.getElapsedTimeF32() << LL_ENDL;
 }
 
 void LLAppearanceMgr::getDescendentsOfAssetType(const LLUUID& category,
 													LLInventoryModel::item_array_t& items,
-													LLAssetType::EType type,
-													bool follow_folder_links)
+													LLAssetType::EType type)
 {
 	LLInventoryModel::cat_array_t cats;
 	LLIsType is_of_type(type);
@@ -2164,15 +2267,13 @@ void LLAppearanceMgr::getDescendentsOfAssetType(const LLUUID& category,
 									cats,
 									items,
 									LLInventoryModel::EXCLUDE_TRASH,
-									is_of_type,
-									follow_folder_links);
+									is_of_type);
 }
 
 void LLAppearanceMgr::getUserDescendents(const LLUUID& category, 
 											 LLInventoryModel::item_array_t& wear_items,
 											 LLInventoryModel::item_array_t& obj_items,
-											 LLInventoryModel::item_array_t& gest_items,
-											 bool follow_folder_links)
+											 LLInventoryModel::item_array_t& gest_items)
 {
 	LLInventoryModel::cat_array_t wear_cats;
 	LLFindWearables is_wearable;
@@ -2180,8 +2281,7 @@ void LLAppearanceMgr::getUserDescendents(const LLUUID& category,
 									wear_cats,
 									wear_items,
 									LLInventoryModel::EXCLUDE_TRASH,
-									is_wearable,
-									follow_folder_links);
+									is_wearable);
 
 	LLInventoryModel::cat_array_t obj_cats;
 	LLIsType is_object( LLAssetType::AT_OBJECT );
@@ -2189,8 +2289,7 @@ void LLAppearanceMgr::getUserDescendents(const LLUUID& category,
 									obj_cats,
 									obj_items,
 									LLInventoryModel::EXCLUDE_TRASH,
-									is_object,
-									follow_folder_links);
+									is_object);
 
 	// Find all gestures in this folder
 	LLInventoryModel::cat_array_t gest_cats;
@@ -2199,32 +2298,16 @@ void LLAppearanceMgr::getUserDescendents(const LLUUID& category,
 									gest_cats,
 									gest_items,
 									LLInventoryModel::EXCLUDE_TRASH,
-									is_gesture,
-									follow_folder_links);
+									is_gesture);
 }
 
 void LLAppearanceMgr::wearInventoryCategory(LLInventoryCategory* category, bool copy, bool append)
 {
 	if(!category) return;
 
-	selfClearPhases();
-	selfStartPhase("wear_inventory_category");
-
 //MK
 	if (gRRenabled)
 	{
-		//if (gAgent.mRRInterface.mContainsDetach && !append)
-		//{
-		//	return;
-		//}
-		//if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
-		//{
-		//	return;
-		//}
-		//if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
-		//{
-		//	return;
-		//}
 		if (!gAgent.mRRInterface.canAttachCategory (category))
 		{
 			return;
@@ -2232,19 +2315,49 @@ void LLAppearanceMgr::wearInventoryCategory(LLInventoryCategory* category, bool 
 
 		// Depending on the command (replace or add), we must retain what we chose in order to decide what to do with the list
 		// of wearables once LLAgentWearables::userUpdateAttachments() is called
+		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = !append;
 	}
-	gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = !append;
 //mk
+
+	selfClearPhases();
+	selfStartPhase("wear_inventory_category");
 
 	gAgentWearables.notifyLoadingStarted();
 
 	LL_INFOS("Avatar") << self_av_string() << "wearInventoryCategory( " << category->getName()
 			 << " )" << LL_ENDL;
 
+
+	// If we are copying from library, attempt to use AIS to copy the category.
+	bool ais_ran=false;
+	if (copy && AISCommand::isAPIAvailable())
+	{
+		LLUUID parent_id;
+		parent_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_CLOTHING);
+		if (parent_id.isNull())
+		{
+			parent_id = gInventory.getRootFolderID();
+		}
+
+		LLPointer<LLInventoryCallback> copy_cb = new LLWearCategoryAfterCopy(append);
+		LLPointer<LLInventoryCallback> track_cb = new LLTrackPhaseWrapper(
+													std::string("wear_inventory_category_callback"), copy_cb);
+		LLPointer<AISCommand> cmd_ptr = new CopyLibraryCategoryCommand(category->getUUID(), parent_id, track_cb);
+		ais_ran=cmd_ptr->run_command();
+	}
+
+	if (!ais_ran)
+	{
 	selfStartPhase("wear_inventory_category_fetch");
 	callAfterCategoryFetch(category->getUUID(),boost::bind(&LLAppearanceMgr::wearCategoryFinal,
 														   &LLAppearanceMgr::instance(),
 														   category->getUUID(), copy, append));
+}
+}
+
+S32 LLAppearanceMgr::getActiveCopyOperations() const
+{
+	return LLCallAfterInventoryCopyMgr::getInstanceCount(); 
 }
 
 void LLAppearanceMgr::wearCategoryFinal(LLUUID& cat_id, bool copy_items, bool append)
@@ -2335,18 +2448,6 @@ void LLAppearanceMgr::wearInventoryCategoryOnAvatar( LLInventoryCategory* catego
 //MK
 	if (gRRenabled)
 	{
-		//if (gAgent.mRRInterface.mContainsDetach && !append)
-		//{
-		//	return;
-		//}
-		//if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
-		//{
-		//	return;
-		//}
-		//if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
-		//{
-		//	return;
-		//}
 		if (!gAgent.mRRInterface.canAttachCategory (category))
 		{
 			return;
@@ -2366,19 +2467,10 @@ void LLAppearanceMgr::wearInventoryCategoryOnAvatar( LLInventoryCategory* catego
 	LLAppearanceMgr::changeOutfit(TRUE, category->getUUID(), append);
 }
 
+// FIXME do we really want to search entire inventory for matching name?
 void LLAppearanceMgr::wearOutfitByName(const std::string& name)
 {
 	LL_INFOS("Avatar") << self_av_string() << "Wearing category " << name << LL_ENDL;
-
-//MK
-	//if (gRRenabled)
-	//{
-	//	if (gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
-	//	{
-	//		return;
-	//	}
-	//}
-//mk
 
 	LLInventoryModel::cat_array_t cat_array;
 	LLInventoryModel::item_array_t item_array;
@@ -2429,9 +2521,8 @@ bool areMatchingWearables(const LLViewerInventoryItem *a, const LLViewerInventor
 class LLDeferredCOFLinkObserver: public LLInventoryObserver
 {
 public:
-	LLDeferredCOFLinkObserver(const LLUUID& item_id, bool do_update, LLPointer<LLInventoryCallback> cb = NULL, std::string description = ""):
+	LLDeferredCOFLinkObserver(const LLUUID& item_id, LLPointer<LLInventoryCallback> cb, const std::string& description):
 		mItemID(item_id),
-		mDoUpdate(do_update),
 		mCallback(cb),
 		mDescription(description)
 	{
@@ -2447,14 +2538,13 @@ public:
 		if (item)
 		{
 			gInventory.removeObserver(this);
-			LLAppearanceMgr::instance().addCOFItemLink(item,mDoUpdate,mCallback);
+			LLAppearanceMgr::instance().addCOFItemLink(item, mCallback, mDescription);
 			delete this;
 		}
 	}
 
 private:
 	const LLUUID mItemID;
-	bool mDoUpdate;
 	std::string mDescription;
 	LLPointer<LLInventoryCallback> mCallback;
 };
@@ -2462,42 +2552,26 @@ private:
 
 // BAP - note that this runs asynchronously if the item is not already loaded from inventory.
 // Dangerous if caller assumes link will exist after calling the function.
-void LLAppearanceMgr::addCOFItemLink(const LLUUID &item_id, bool do_update, LLPointer<LLInventoryCallback> cb, const std::string description)
+void LLAppearanceMgr::addCOFItemLink(const LLUUID &item_id,
+									 LLPointer<LLInventoryCallback> cb,
+									 const std::string description)
 {
 	const LLInventoryItem *item = gInventory.getItem(item_id);
 	if (!item)
 	{
-		LLDeferredCOFLinkObserver *observer = new LLDeferredCOFLinkObserver(item_id, do_update, cb, description);
+		LLDeferredCOFLinkObserver *observer = new LLDeferredCOFLinkObserver(item_id, cb, description);
 		gInventory.addObserver(observer);
 	}
 	else
 	{
-		addCOFItemLink(item, do_update, cb, description);
+		addCOFItemLink(item, cb, description);
 	}
 }
 
-void modified_cof_cb(const LLUUID& inv_item)
+void LLAppearanceMgr::addCOFItemLink(const LLInventoryItem *item,
+									 LLPointer<LLInventoryCallback> cb,
+									 const std::string description)
 {
-	LLAppearanceMgr::instance().updateAppearanceFromCOF();
-
-	// Start editing the item if previously requested.
-	gAgentWearables.editWearableIfRequested(inv_item);
-
-	// TODO: camera mode may not be changed if a debug setting is tweaked
-	if( gAgentCamera.cameraCustomizeAvatar() )
-	{
-		// If we're in appearance editing mode, the current tab may need to be refreshed
-		LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(LLFloaterSidePanelContainer::getPanel("appearance"));
-		if (panel)
-		{
-			panel->showDefaultSubpart();
-		}
-	}
-}
-
-void LLAppearanceMgr::addCOFItemLink(const LLInventoryItem *item, bool do_update, LLPointer<LLInventoryCallback> cb, const std::string description)
-{
-	std::string link_description = description;
 	const LLViewerInventoryItem *vitem = dynamic_cast<const LLViewerInventoryItem*>(item);
 //MK
 	LLInventoryItem* item_non_const = const_cast<LLInventoryItem*>(item);;
@@ -2555,43 +2629,23 @@ void LLAppearanceMgr::addCOFItemLink(const LLInventoryItem *item, bool do_update
 			++count;
 			if (is_body_part && inv_item->getIsLinkType()  && (vitem->getWearableType() == wearable_type))
 			{
-				gInventory.purgeObject(inv_item->getUUID());
+				remove_inventory_item(inv_item->getUUID(), cb);
 			}
 			else if (count >= LLAgentWearables::MAX_CLOTHING_PER_TYPE)
 			{
 				// MULTI-WEARABLES: make sure we don't go over MAX_CLOTHING_PER_TYPE
-				gInventory.purgeObject(inv_item->getUUID());
+				remove_inventory_item(inv_item->getUUID(), cb);
 			}
 		}
 	}
 
-	if (linked_already)
-	{
-		if (do_update)
+	if (!linked_already)
 		{	
-			LLAppearanceMgr::updateAppearanceFromCOF();
+		LLViewerInventoryItem *copy_item = new LLViewerInventoryItem;
+		copy_item->copyViewerItem(vitem);
+		copy_item->setDescription(description);
+		link_inventory_object(getCOF(), copy_item, cb);
 		}
-		return;
-	}
-	else
-	{
-		if(do_update && cb.isNull())
-		{
-			cb = new LLBoostFuncInventoryCallback(modified_cof_cb);
-		}
-		if (vitem->getIsLinkType())
-		{
-			link_description = vitem->getActualDescription();
-		}
-		link_inventory_item( gAgent.getID(),
-							 vitem->getLinkedUUID(),
-							 getCOF(),
-							 vitem->getName(),
-							 link_description,
-							 LLAssetType::AT_LINK,
-							 cb);
-	}
-	return;
 }
 
 LLInventoryModel::item_array_t LLAppearanceMgr::findCOFItemLinks(const LLUUID& item_id)
@@ -2621,6 +2675,12 @@ LLInventoryModel::item_array_t LLAppearanceMgr::findCOFItemLinks(const LLUUID& i
 	return result;
 }
 
+bool LLAppearanceMgr::isLinkedInCOF(const LLUUID& item_id)
+{
+	LLInventoryModel::item_array_t links = LLAppearanceMgr::instance().findCOFItemLinks(item_id);
+	return links.size() > 0;
+}
+
 void LLAppearanceMgr::removeAllClothesFromAvatar()
 {
 	// Fetch worn clothes (i.e. the ones in COF).
@@ -2631,8 +2691,7 @@ void LLAppearanceMgr::removeAllClothesFromAvatar()
 									dummy,
 									clothing_items,
 									LLInventoryModel::EXCLUDE_TRASH,
-									is_clothing,
-									false);
+									is_clothing);
 	uuid_vec_t item_ids;
 	for (LLInventoryModel::item_array_t::iterator it = clothing_items.begin();
 		it != clothing_items.end(); ++it)
@@ -2676,18 +2735,8 @@ void LLAppearanceMgr::removeAllAttachmentsFromAvatar()
 	removeItemsFromAvatar(ids_to_remove);
 }
 
-void LLAppearanceMgr::removeCOFItemLinks(const LLUUID& item_id)
+void LLAppearanceMgr::removeCOFItemLinks(const LLUUID& item_id, LLPointer<LLInventoryCallback> cb)
 {
-//MK
-//	if (gRRenabled)
-//	{
-//		if (gAgent.mRRInterface.mContainsDetach || gAgent.mRRInterface.containsSubstr ("addoutfit") || gAgent.mRRInterface.containsSubstr ("remoutfit"))
-//		{
-//			return;
-//		}
-//	}
-//mk
-
 	gInventory.addChangedMask(LLInventoryObserver::LABEL, item_id);
 
 	LLInventoryModel::cat_array_t cat_array;
@@ -2701,7 +2750,7 @@ void LLAppearanceMgr::removeCOFItemLinks(const LLUUID& item_id)
 		const LLInventoryItem* item = item_array.at(i).get();
 		if (item->getIsLinkType() && item->getLinkedUUID() == item_id)
 		{
-			gInventory.purgeObject(item->getUUID());
+			remove_inventory_item(item->getUUID(), cb);
 //MK
 			if (gRRenabled)
 			{
@@ -2722,7 +2771,7 @@ void LLAppearanceMgr::removeCOFItemLinks(const LLUUID& item_id)
 	}
 }
 
-void LLAppearanceMgr::removeCOFLinksOfType(LLWearableType::EType type)
+void LLAppearanceMgr::removeCOFLinksOfType(LLWearableType::EType type, LLPointer<LLInventoryCallback> cb)
 {
 	LLFindWearablesOfType filter_wearables_of_type(type);
 	LLInventoryModel::cat_array_t cats;
@@ -2735,7 +2784,7 @@ void LLAppearanceMgr::removeCOFLinksOfType(LLWearableType::EType type)
 		const LLViewerInventoryItem* item = *it;
 		if (item->getIsLinkType()) // we must operate on links only
 		{
-			gInventory.purgeObject(item->getUUID());
+			remove_inventory_item(item->getUUID(), cb);
 		}
 	}
 }
@@ -2774,7 +2823,7 @@ void LLAppearanceMgr::updateIsDirty()
 
 	if (base_outfit.notNull())
 	{
-		LLIsOfAssetType collector = LLIsOfAssetType(LLAssetType::AT_LINK);
+		LLIsValidItemLink collector;
 
 		LLInventoryModel::cat_array_t cof_cats;
 		LLInventoryModel::item_array_t cof_items;
@@ -2788,6 +2837,7 @@ void LLAppearanceMgr::updateIsDirty()
 
 		if(outfit_items.size() != cof_items.size())
 		{
+			LL_DEBUGS("Avatar") << "item count different - base " << outfit_items.size() << " cof " << cof_items.size() << LL_ENDL;
 			// Current outfit folder should have one more item than the outfit folder.
 			// this one item is the link back to the outfit folder itself.
 			mOutfitIsDirty = true;
@@ -2807,11 +2857,30 @@ void LLAppearanceMgr::updateIsDirty()
 				item1->getName() != item2->getName() ||
 				item1->getActualDescription() != item2->getActualDescription())
 			{
+				if (item1->getLinkedUUID() != item2->getLinkedUUID())
+				{
+					LL_DEBUGS("Avatar") << "link id different " << LL_ENDL;
+				}
+				else
+				{
+					if (item1->getName() != item2->getName())
+					{
+						LL_DEBUGS("Avatar") << "name different " << item1->getName() << " " << item2->getName() << LL_ENDL;
+					}
+					if (item1->getActualDescription() != item2->getActualDescription())
+					{
+						LL_DEBUGS("Avatar") << "desc different " << item1->getActualDescription()
+											<< " " << item2->getActualDescription() 
+											<< " names " << item1->getName() << " " << item2->getName() << LL_ENDL;
+					}
+				}
 				mOutfitIsDirty = true;
 				return;
 			}
 		}
 	}
+	llassert(!mOutfitIsDirty);
+	LL_DEBUGS("Avatar") << "clean" << LL_ENDL;
 }
 
 // *HACK: Must match name in Library or agent inventory
@@ -2893,33 +2962,12 @@ void LLAppearanceMgr::copyLibraryGestures()
 	}
 }
 
-void LLAppearanceMgr::autopopulateOutfits()
-{
-	// If this is the very first time the user has logged into viewer2+ (from a legacy viewer, or new account)
-	// then auto-populate outfits from the library into the My Outfits folder.
-
-	LL_INFOS("Avatar") << self_av_string() << "avatar fully visible" << LL_ENDL;
-
-	static bool check_populate_my_outfits = true;
-	if (check_populate_my_outfits && 
-		(LLInventoryModel::getIsFirstTimeInViewer2() 
-		 || gSavedSettings.getBOOL("MyOutfitsAutofill")))
-	{
-		gAgentWearables.populateMyOutfitsFolder();
-	}
-	check_populate_my_outfits = false;
-}
-
 // Handler for anything that's deferred until avatar de-clouds.
 void LLAppearanceMgr::onFirstFullyVisible()
 {
 	gAgentAvatarp->outputRezTiming("Avatar fully loaded");
 	gAgentAvatarp->reportAvatarRezTime();
 	gAgentAvatarp->debugAvatarVisible();
-
-	// The auto-populate is failing at the point of generating outfits
-	// folders, so don't do the library copy until that is resolved.
-	// autopopulateOutfits();
 
 	// If this is the first time we've ever logged in,
 	// then copy default gestures from the library.
@@ -2935,9 +2983,27 @@ void appearance_mgr_update_dirty_state()
 	if (LLAppearanceMgr::instanceExists())
 	{
 		LLAppearanceMgr::getInstance()->updateIsDirty();
+		LLAppearanceMgr::getInstance()->setOutfitLocked(false);
+		gAgentWearables.notifyLoadingFinished();
 	}
 }
 
+void update_base_outfit_after_ordering()
+{
+	LLAppearanceMgr& app_mgr = LLAppearanceMgr::instance();
+	
+	LLPointer<LLInventoryCallback> dirty_state_updater =
+		new LLBoostFuncInventoryCallback(no_op_inventory_func, appearance_mgr_update_dirty_state);
+
+	//COF contains only links so we copy to the Base Outfit only links
+	const LLUUID base_outfit_id = app_mgr.getBaseOutfitUUID();
+	bool copy_folder_links = false;
+	app_mgr.slamCategoryLinks(app_mgr.getCOF(), base_outfit_id, copy_folder_links, dirty_state_updater);
+
+}
+
+// Save COF changes - update the contents of the current base outfit
+// to match the current COF. Fails if no current base outfit is set.
 bool LLAppearanceMgr::updateBaseOutfit()
 {
 	if (isOutfitLocked())
@@ -2952,17 +3018,13 @@ bool LLAppearanceMgr::updateBaseOutfit()
 
 	const LLUUID base_outfit_id = getBaseOutfitUUID();
 	if (base_outfit_id.isNull()) return false;
+	LL_DEBUGS("Avatar") << "saving cof to base outfit " << base_outfit_id << LL_ENDL;
 
-	updateClothingOrderingInfo();
-
-	// in a Base Outfit we do not remove items, only links
-	purgeCategory(base_outfit_id, false);
-
-	LLPointer<LLInventoryCallback> dirty_state_updater =
-		new LLBoostFuncInventoryCallback(no_op_inventory_func, appearance_mgr_update_dirty_state);
-
-	//COF contains only links so we copy to the Base Outfit only links
-	shallowCopyCategoryContents(getCOF(), base_outfit_id, dirty_state_updater);
+	LLPointer<LLInventoryCallback> cb =
+		new LLBoostFuncInventoryCallback(no_op_inventory_func, update_base_outfit_after_ordering);
+	// Really shouldn't be needed unless there's a race condition -
+	// updateAppearanceFromCOF() already calls updateClothingOrderingInfo.
+	updateClothingOrderingInfo(LLUUID::null, cb);
 
 	return true;
 }
@@ -3010,12 +3072,6 @@ struct WearablesOrderComparator
 
 	bool operator()(const LLInventoryItem* item1, const LLInventoryItem* item2)
 	{
-		if (!item1 || !item2)
-		{
-			LL_WARNS() << "either item1 or item2 is NULL" << LL_ENDL;
-			return true;
-		}
-		
 		const std::string& desc1 = item1->getActualDescription();
 		const std::string& desc2 = item2->getActualDescription();
 		
@@ -3029,39 +3085,23 @@ struct WearablesOrderComparator
 		//items with ordering information but not for the associated wearables type
 		if (!item1_valid && item2_valid) 
 			return false;
+		else if (item1_valid && !item2_valid)
+			return true;
 
-		return true;
+		return item1->getName() < item2->getName();
 	}
 
 	U32 mControlSize;
 };
 
-void LLAppearanceMgr::updateClothingOrderingInfo(LLUUID cat_id, bool update_base_outfit_ordering)
+void LLAppearanceMgr::getWearableOrderingDescUpdates(LLInventoryModel::item_array_t& wear_items,
+													 desc_map_t& desc_map)
 {
-	if (cat_id.isNull())
-	{
-		cat_id = getCOF();
-		if (update_base_outfit_ordering)
-		{
-			const LLUUID base_outfit_id = getBaseOutfitUUID();
-			if (base_outfit_id.notNull())
-			{
-				updateClothingOrderingInfo(base_outfit_id,false);
-			}
-		}
-	}
-
-	// COF is processed if cat_id is not specified
-	LLInventoryModel::item_array_t wear_items;
-	getDescendentsOfAssetType(cat_id, wear_items, LLAssetType::AT_CLOTHING, false);
-
 	wearables_by_type_t items_by_type(LLWearableType::WT_COUNT);
 	divvyWearablesByType(wear_items, items_by_type);
 
-	bool inventory_changed = false;
 	for (U32 type = LLWearableType::WT_SHIRT; type < LLWearableType::WT_COUNT; type++)
 	{
-		
 		U32 size = items_by_type[type].size();
 		if (!size) continue;
 
@@ -3077,157 +3117,207 @@ void LLAppearanceMgr::updateClothingOrderingInfo(LLUUID cat_id, bool update_base
 			std::string new_order_str = build_order_string((LLWearableType::EType)type, i);
 			if (new_order_str == item->getActualDescription()) continue;
 
-			item->setDescription(new_order_str);
-			item->setComplete(TRUE);
- 			item->updateServer(FALSE);
-			gInventory.updateItem(item);
-			
-			inventory_changed = true;
+			desc_map[item->getUUID()] = new_order_str;
+		}
 		}
 	}
 
-	//*TODO do we really need to notify observers?
-	if (inventory_changed) gInventory.notifyObservers();
+bool LLAppearanceMgr::validateClothingOrderingInfo(LLUUID cat_id)
+{
+	// COF is processed if cat_id is not specified
+	if (cat_id.isNull())
+	{
+		cat_id = getCOF();
 }
 
-// This is intended for use with HTTP Clients/Responders, but is not
-// specifically coupled with those classes.
-class LLHTTPRetryPolicy: public LLThreadSafeRefCount
-{
-public:
-	LLHTTPRetryPolicy() {}
-	virtual ~LLHTTPRetryPolicy() {}
-	virtual bool shouldRetry(U32 status, F32& seconds_to_wait) = 0;
-};
+	LLInventoryModel::item_array_t wear_items;
+	getDescendentsOfAssetType(cat_id, wear_items, LLAssetType::AT_CLOTHING);
 
-// Example of simplest possible policy, not necessarily recommended.
-class LLAlwaysRetryImmediatelyPolicy: public LLHTTPRetryPolicy
-{
-public:
-	LLAlwaysRetryImmediatelyPolicy() {}
-	bool shouldRetry(U32 status, F32& seconds_to_wait)
-	{
-		seconds_to_wait = 0.0;
-		return true;
-	}
-};
+	// Identify items for which desc needs to change.
+	desc_map_t desc_map;
+	getWearableOrderingDescUpdates(wear_items, desc_map);
 
-// Very general policy with geometric back-off after failures,
-// up to a maximum delay, and maximum number of retries.
-class LLAdaptiveRetryPolicy: public LLHTTPRetryPolicy
+	for (desc_map_t::const_iterator it = desc_map.begin();
+		 it != desc_map.end(); ++it)
 {
-public:
-	LLAdaptiveRetryPolicy(F32 min_delay, F32 max_delay, F32 backoff_factor, U32 max_retries):
-		mMinDelay(min_delay),
-		mMaxDelay(max_delay),
-		mBackoffFactor(backoff_factor),
-		mMaxRetries(max_retries),
-		mDelay(min_delay),
-		mRetryCount(0)
-	{
+		const LLUUID& item_id = it->first;
+		const std::string& new_order_str = it->second;
+		LLViewerInventoryItem *item = gInventory.getItem(item_id);
+		LL_WARNS() << "Order validation fails: " << item->getName()
+				<< " needs to update desc to: " << new_order_str
+				<< " (from: " << item->getActualDescription() << ")" << LL_ENDL;
 	}
 
-	bool shouldRetry(U32 status, F32& seconds_to_wait)
-	{
-		seconds_to_wait = mDelay;
-		mDelay = llclamp(mDelay*mBackoffFactor,mMinDelay,mMaxDelay);
-		mRetryCount++;
-		return (mRetryCount<=mMaxRetries);
+	return desc_map.size() == 0;
 	}
 
-private:
-	F32 mMinDelay; // delay never less than this value
-	F32 mMaxDelay; // delay never exceeds this value
-	F32 mBackoffFactor; // delay increases by this factor after each retry, up to mMaxDelay.
-	U32 mMaxRetries; // maximum number of times shouldRetry will return true.
-	F32 mDelay; // current delay.
-	U32 mRetryCount; // number of times shouldRetry has been called.
-};
+void LLAppearanceMgr::updateClothingOrderingInfo(LLUUID cat_id,
+												 LLPointer<LLInventoryCallback> cb)
+{
+	// COF is processed if cat_id is not specified
+	if (cat_id.isNull())
+	{
+		cat_id = getCOF();
+	}
+
+	LLInventoryModel::item_array_t wear_items;
+	getDescendentsOfAssetType(cat_id, wear_items, LLAssetType::AT_CLOTHING);
+
+	// Identify items for which desc needs to change.
+	desc_map_t desc_map;
+	getWearableOrderingDescUpdates(wear_items, desc_map);
+
+	for (desc_map_t::const_iterator it = desc_map.begin();
+		 it != desc_map.end(); ++it)
+	{
+		LLSD updates;
+		const LLUUID& item_id = it->first;
+		const std::string& new_order_str = it->second;
+		LLViewerInventoryItem *item = gInventory.getItem(item_id);
+		LL_DEBUGS("Avatar") << item->getName() << " updating desc to: " << new_order_str
+			<< " (was: " << item->getActualDescription() << ")" << LL_ENDL;
+		updates["desc"] = new_order_str;
+		update_inventory_item(item_id,updates,cb);
+	}
+
+}
 
 class RequestAgentUpdateAppearanceResponder: public LLHTTPClient::Responder
 {
+	LOG_CLASS(RequestAgentUpdateAppearanceResponder);
+
+	friend class LLAppearanceMgr;
+	
 public:
-	RequestAgentUpdateAppearanceResponder()
-	{
-		mRetryPolicy = new LLAdaptiveRetryPolicy(1.0, 32.0, 2.0, 10);
-	}
+	RequestAgentUpdateAppearanceResponder();
 
-	virtual ~RequestAgentUpdateAppearanceResponder()
-	{
-	}
+	virtual ~RequestAgentUpdateAppearanceResponder();
 
+private:
+	// Called when sendServerAppearanceUpdate called. May or may not
+	// trigger a request depending on various bits of state.
+	void onRequestRequested();
+
+	// Post the actual appearance request to cap.
+	void sendRequest();
+
+	void debugCOF(const LLSD& content);
+
+protected:
 	// Successful completion.
-	/* virtual */ void result(const LLSD& content)
-	{
-//MK from HB
-		gAgentWearables.checkModifiableShape();
-//mk from HB
-		LL_DEBUGS("Avatar") << "content: " << ll_pretty_print_sd(content) << LL_ENDL;
-		if (content["success"].asBoolean())
-		{
-			LL_DEBUGS("Avatar") << "OK" << LL_ENDL;
-			if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
-			{
-				dumpContents(gAgentAvatarp->getFullname() + "_appearance_request_ok", content);
-			}
-		}
-		else
-		{
-			onFailure(200);
-		}
-	}
+	/* virtual */ void httpSuccess();
 
 	// Error
-	/*virtual*/ void errorWithContent(U32 status, const std::string& reason, const LLSD& content)
+	/*virtual*/ void httpFailure();
+
+	void onFailure();
+	void onSuccess();
+
+	S32 mInFlightCounter;
+	LLTimer mInFlightTimer;
+	LLPointer<LLHTTPRetryPolicy> mRetryPolicy;
+};
+
+RequestAgentUpdateAppearanceResponder::RequestAgentUpdateAppearanceResponder()
+{
+	bool retry_on_4xx = true;
+	mRetryPolicy = new LLAdaptiveRetryPolicy(1.0, 32.0, 2.0, 10, retry_on_4xx);
+	mInFlightCounter = 0;
+}
+
+RequestAgentUpdateAppearanceResponder::~RequestAgentUpdateAppearanceResponder()
+{
+}
+
+void RequestAgentUpdateAppearanceResponder::onRequestRequested()
+{
+//MK from HB
+	gAgentWearables.checkModifiableShape();
+//mk from HB
+
+	// If we have already received an update for this or higher cof version, ignore.
+	S32 cof_version = LLAppearanceMgr::instance().getCOFVersion();
+	S32 last_rcv = gAgentAvatarp->mLastUpdateReceivedCOFVersion;
+	S32 last_req = gAgentAvatarp->mLastUpdateRequestCOFVersion;
+	LL_DEBUGS("Avatar") << "cof_version " << cof_version
+						<< " last_rcv " << last_rcv
+						<< " last_req " << last_req
+						<< " in flight " << mInFlightCounter << LL_ENDL;
+	if ((mInFlightCounter>0) && (mInFlightTimer.hasExpired()))
 	{
-		LL_WARNS() << "appearance update request failed, status: " << status << " reason: " << reason << " code: " << content["code"].asInteger() << " error: \"" << content["error"].asString() << "\"" << LL_ENDL;
-		if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+		LL_WARNS("Avatar") << "in flight timer expired, resetting " << LL_ENDL;
+		mInFlightCounter = 0;
+	}
+	if (cof_version < last_rcv)
 		{
-			dumpContents(gAgentAvatarp->getFullname() + "_appearance_request_error", content);
-			debugCOF(content);
+		LL_DEBUGS("Avatar") << "Have already received update for cof version " << last_rcv
+							<< " will not request for " << cof_version << LL_ENDL;
+		return;
+		}
+	if (mInFlightCounter>0 && last_req >= cof_version)
+		{
+		LL_DEBUGS("Avatar") << "Request already in flight for cof version " << last_req 
+							<< " will not request for " << cof_version << LL_ENDL;
+		return;
+		}
+
+	// Actually send the request.
+	LL_DEBUGS("Avatar") << "Will send request for cof_version " << cof_version << LL_ENDL;
+	mRetryPolicy->reset();
+	sendRequest();
+	}
+
+void RequestAgentUpdateAppearanceResponder::sendRequest()
+	{
+	if (gAgentAvatarp->isEditingAppearance()) 
+		{
+		// don't send out appearance updates if in appearance editing mode
+		return;
+	}
 		
+	if (!gAgent.getRegion())
+	{
+		LL_WARNS() << "Region not set, cannot request server appearance update" << LL_ENDL;
+		return;
 		}
-//MK
-		// In case of a COF version mismatch, let's not try to guess. Assume the version expected by the server and retry with that new version.
-		if (content["error"].asString().find ("Cof Version Mismatch") != -1)
-		//if (status == 400 && reason == "Bad Request" && content["code"].asInteger() == 1 && content["error"].asString().find ("Cof Version Mismatch") != -1)
+	if (gAgent.getRegion()->getCentralBakeVersion()==0)
 		{
-			LL_WARNS() << "Setting COF version to " << content["expected"].asInteger() - 1 << "\"" << LL_ENDL;
-			gAgentAvatarp->mLastUpdateRequestCOFVersion = content["expected"].asInteger() - 1;
+		LL_WARNS() << "Region does not support baking" << LL_ENDL;
 		}
-//mk
-		onFailure(status);
+	std::string url = gAgent.getRegion()->getCapability("UpdateAvatarAppearance");	
+	if (url.empty())
+	{
+		LL_WARNS() << "No cap for UpdateAvatarAppearance." << LL_ENDL;
+		return;
 	}	
 
-	void onFailure(U32 status)
-	{
-		F32 seconds_to_wait;
-		if (mRetryPolicy->shouldRetry(status,seconds_to_wait))
+	LLSD body;
+	S32 cof_version = LLAppearanceMgr::instance().getCOFVersion();
+	if (gSavedSettings.getBOOL("DebugAvatarExperimentalServerAppearanceUpdate"))
 		{
-			LL_INFOS() << "retrying" << LL_ENDL;
-			doAfterInterval(boost::bind(&LLAppearanceMgr::requestServerAppearanceUpdate,
-										LLAppearanceMgr::getInstance(),
-										LLCurl::ResponderPtr(this)),
-							seconds_to_wait);
+		body = LLAppearanceMgr::instance().dumpCOF();
 		}
 		else
 		{
-			LL_WARNS() << "giving up after too many retries" << LL_ENDL;
+		body["cof_version"] = cof_version;
+		if (gSavedSettings.getBOOL("DebugForceAppearanceRequestFailure"))
+		{
+			body["cof_version"] = cof_version+999;
 		}
 	}	
+	LL_DEBUGS("Avatar") << "request url " << url << " my_cof_version " << cof_version << LL_ENDL;
 
-	void dumpContents(const std::string outprefix, const LLSD& content)
-	{
-		std::string outfilename = get_sequential_numbered_file_name(outprefix,".xml");
-		std::string fullpath = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,outfilename);
-		std::ofstream ofs(fullpath.c_str(), std::ios_base::out);
-		ofs << LLSDOStreamer<LLSDXMLFormatter>(content, LLSDFormatter::OPTIONS_PRETTY);
-		LL_DEBUGS("Avatar") << "results saved to: " << fullpath << LL_ENDL;
+	mInFlightCounter++;
+	mInFlightTimer.setTimerExpirySec(60.0);
+	LLHTTPClient::post(url, body, this);
+	llassert(cof_version >= gAgentAvatarp->mLastUpdateRequestCOFVersion);
+	gAgentAvatarp->mLastUpdateRequestCOFVersion = cof_version;
 	}
 
-	void debugCOF(const LLSD& content)
+void RequestAgentUpdateAppearanceResponder::debugCOF(const LLSD& content)
 	{
-		LL_DEBUGS("Avatar") << "AIS COF, version found: " << content["expected"].asInteger() << LL_ENDL;
+	LL_INFOS("Avatar") << "AIS COF, version received: " << content["expected"].asInteger()
+					   << " ================================= " << LL_ENDL;
 		std::set<LLUUID> ais_items, local_items;
 		const LLSD& cof_raw = content["cof_raw"];
 		for (LLSD::array_const_iterator it = cof_raw.beginArray();
@@ -3239,30 +3329,31 @@ public:
 				ais_items.insert(item["item_id"].asUUID());
 				if (item["type"].asInteger() == 24) // link
 				{
-					LL_DEBUGS("Avatar") << "Link: item_id: " << item["item_id"].asUUID()
+				LL_INFOS("Avatar") << "AIS Link: item_id: " << item["item_id"].asUUID()
 										<< " linked_item_id: " << item["asset_id"].asUUID()
 										<< " name: " << item["name"].asString()
 										<< LL_ENDL; 
 				}
 				else if (item["type"].asInteger() == 25) // folder link
 				{
-					LL_DEBUGS("Avatar") << "Folder link: item_id: " << item["item_id"].asUUID()
+				LL_INFOS("Avatar") << "AIS Folder link: item_id: " << item["item_id"].asUUID()
 										<< " linked_item_id: " << item["asset_id"].asUUID()
 										<< " name: " << item["name"].asString()
 										<< LL_ENDL; 
-					
 				}
 				else
 				{
-					LL_DEBUGS("Avatar") << "Other: item_id: " << item["item_id"].asUUID()
+				LL_INFOS("Avatar") << "AIS Other: item_id: " << item["item_id"].asUUID()
 										<< " linked_item_id: " << item["asset_id"].asUUID()
 										<< " name: " << item["name"].asString()
+								   << " type: " << item["type"].asInteger()
 										<< LL_ENDL; 
 				}
 			}
 		}
-		LL_DEBUGS("Avatar") << LL_ENDL;
-		LL_DEBUGS("Avatar") << "Local COF, version requested: " << content["observed"].asInteger() << LL_ENDL;
+	LL_INFOS("Avatar") << LL_ENDL;
+	LL_INFOS("Avatar") << "Local COF, version requested: " << content["observed"].asInteger() 
+					   << " ================================= " << LL_ENDL;
 		LLInventoryModel::cat_array_t cat_array;
 		LLInventoryModel::item_array_t item_array;
 		gInventory.collectDescendents(LLAppearanceMgr::instance().getCOF(),
@@ -3271,30 +3362,100 @@ public:
 		{
 			const LLViewerInventoryItem* inv_item = item_array.at(i).get();
 			local_items.insert(inv_item->getUUID());
-			LL_DEBUGS("Avatar") << "item_id: " << inv_item->getUUID()
+		LL_INFOS("Avatar") << "LOCAL: item_id: " << inv_item->getUUID()
 								<< " linked_item_id: " << inv_item->getLinkedUUID()
 								<< " name: " << inv_item->getName()
+						   << " parent: " << inv_item->getParentUUID()
 								<< LL_ENDL;
 		}
-		LL_DEBUGS("Avatar") << LL_ENDL;
+	LL_INFOS("Avatar") << " ================================= " << LL_ENDL;
+	S32 local_only = 0, ais_only = 0;
 		for (std::set<LLUUID>::iterator it = local_items.begin(); it != local_items.end(); ++it)
 		{
 			if (ais_items.find(*it) == ais_items.end())
 			{
-				LL_DEBUGS("Avatar") << "LOCAL ONLY: " << *it << LL_ENDL;
+			LL_INFOS("Avatar") << "LOCAL ONLY: " << *it << LL_ENDL;
+			local_only++;
 			}
 		}
 		for (std::set<LLUUID>::iterator it = ais_items.begin(); it != ais_items.end(); ++it)
 		{
 			if (local_items.find(*it) == local_items.end())
 			{
-				LL_DEBUGS("Avatar") << "AIS ONLY: " << *it << LL_ENDL;
+			LL_INFOS("Avatar") << "AIS ONLY: " << *it << LL_ENDL;
+			ais_only++;
+		}
 			}
+	if (local_only==0 && ais_only==0)
+	{
+		LL_INFOS("Avatar") << "COF contents identical, only version numbers differ (req "
+						   << content["observed"].asInteger()
+						   << " rcv " << content["expected"].asInteger()
+						   << ")" << LL_ENDL;
+	}
+}
+
+/* virtual */ void RequestAgentUpdateAppearanceResponder::httpSuccess()
+{
+	const LLSD& content = getContent();
+	if (!content.isMap())
+	{
+		failureResult(HTTP_INTERNAL_ERROR, "Malformed response contents", content);
+		return;
+	}
+	if (content["success"].asBoolean())
+	{
+		LL_DEBUGS("Avatar") << "succeeded" << LL_ENDL;
+		if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+		{
+			dump_sequential_xml(gAgentAvatarp->getFullname() + "_appearance_request_ok", content);
+		}
+
+		onSuccess();
+	}
+	else
+	{
+		failureResult(HTTP_INTERNAL_ERROR, "Non-success response", content);
+	}
+}
+
+void RequestAgentUpdateAppearanceResponder::onSuccess()
+{
+	mInFlightCounter = llmax(mInFlightCounter-1,0);
+}
+
+/*virtual*/ void RequestAgentUpdateAppearanceResponder::httpFailure()
+{
+	LL_WARNS("Avatar") << "appearance update request failed, status "
+					   << getStatus() << " reason " << getReason() << LL_ENDL;
+
+	if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+	{
+		const LLSD& content = getContent();
+		dump_sequential_xml(gAgentAvatarp->getFullname() + "_appearance_request_error", content);
+		debugCOF(content);
+	}
+	onFailure();
+}
+
+void RequestAgentUpdateAppearanceResponder::onFailure()
+{
+	mInFlightCounter = llmax(mInFlightCounter-1,0);
+
+	F32 seconds_to_wait;
+	mRetryPolicy->onFailure(getStatus(), getResponseHeaders());
+	if (mRetryPolicy->shouldRetry(seconds_to_wait))
+	{
+		LL_INFOS() << "retrying" << LL_ENDL;
+		doAfterInterval(boost::bind(&RequestAgentUpdateAppearanceResponder::sendRequest,this),
+						seconds_to_wait);
+	}
+	else
+	{
+		LL_WARNS() << "giving up after too many retries" << LL_ENDL;
 		}
 	}
 
-	LLPointer<LLHTTPRetryPolicy> mRetryPolicy;
-};
 
 LLSD LLAppearanceMgr::dumpCOF() const
 {
@@ -3359,58 +3520,14 @@ LLSD LLAppearanceMgr::dumpCOF() const
 	return result;
 }
 
-void LLAppearanceMgr::requestServerAppearanceUpdate(LLCurl::ResponderPtr responder_ptr)
-{
-	if (gAgentAvatarp->isEditingAppearance()) 
+void LLAppearanceMgr::requestServerAppearanceUpdate()
 	{
-		// don't send out appearance updates if in appearance editing mode
-		return;
-	}
-
-	if (!gAgent.getRegion())
-	{
-		LL_WARNS() << "Region not set, cannot request server appearance update" << LL_ENDL;
-		return;
-	}
-	if (gAgent.getRegion()->getCentralBakeVersion()==0)
-	{
-		LL_WARNS() << "Region does not support baking" << LL_ENDL;
-	}
-	std::string url = gAgent.getRegion()->getCapability("UpdateAvatarAppearance");	
-	if (url.empty())
-	{
-		LL_WARNS() << "No cap for UpdateAvatarAppearance." << LL_ENDL;
-		return;
-	}
-	
-	LLSD body;
-	S32 cof_version = getCOFVersion();
-	if (gSavedSettings.getBOOL("DebugAvatarExperimentalServerAppearanceUpdate"))
-	{
-		body = dumpCOF();
-	}
-	else
-	{
-		body["cof_version"] = cof_version;
-		if (gSavedSettings.getBOOL("DebugForceAppearanceRequestFailure"))
-		{
-			body["cof_version"] = cof_version+999;
-		}
-	}
-	LL_DEBUGS("Avatar") << "request url " << url << " my_cof_version " << cof_version << LL_ENDL;
-
-	//LLCurl::ResponderPtr responder_ptr;
-	if (!responder_ptr.get())
-	{
-		responder_ptr = new RequestAgentUpdateAppearanceResponder;
-	}
-	LLHTTPClient::post(url, body, responder_ptr);
-	llassert(cof_version >= gAgentAvatarp->mLastUpdateRequestCOFVersion);
-	gAgentAvatarp->mLastUpdateRequestCOFVersion = cof_version;
+	mAppearanceResponder->onRequestRequested();
 }
 
 class LLIncrementCofVersionResponder : public LLHTTPClient::Responder
 {
+	LOG_CLASS(LLIncrementCofVersionResponder);
 public:
 	LLIncrementCofVersionResponder() : LLHTTPClient::Responder()
 	{
@@ -3421,22 +3538,31 @@ public:
 	{
 	}
 
-	virtual void result(const LLSD &pContent)
+protected:
+	virtual void httpSuccess()
 	{
 		LL_INFOS() << "Successfully incremented agent's COF." << LL_ENDL;
-		S32 new_version = pContent["category"]["version"].asInteger();
+		const LLSD& content = getContent();
+		if (!content.isMap())
+		{
+			failureResult(HTTP_INTERNAL_ERROR, "Malformed response contents", content);
+			return;
+		}
+		S32 new_version = content["category"]["version"].asInteger();
 
 		// cof_version should have increased
 		llassert(new_version > gAgentAvatarp->mLastUpdateRequestCOFVersion);
 
 		gAgentAvatarp->mLastUpdateRequestCOFVersion = new_version;
 	}
-	virtual void errorWithContent(U32 pStatus, const std::string& pReason, const LLSD& content)
+
+	virtual void httpFailure()
 	{
-		LL_WARNS() << "While attempting to increment the agent's cof we got an error with [status:"
-				<< pStatus << "]: " << content << LL_ENDL;
+		LL_WARNS("Avatar") << "While attempting to increment the agent's cof we got an error "
+						   << dumpResponse() << LL_ENDL;
 		F32 seconds_to_wait;
-		if (mRetryPolicy->shouldRetry(pStatus,seconds_to_wait))
+		mRetryPolicy->onFailure(getStatus(), getResponseHeaders());
+		if (mRetryPolicy->shouldRetry(seconds_to_wait))
 		{
 			LL_INFOS() << "retrying" << LL_ENDL;
 			doAfterInterval(boost::bind(&LLAppearanceMgr::incrementCofVersion,
@@ -3450,6 +3576,7 @@ public:
 		}
 	}
 
+private:
 	LLPointer<LLHTTPRetryPolicy> mRetryPolicy;
 };
 
@@ -3462,10 +3589,7 @@ void LLAppearanceMgr::incrementCofVersion(LLHTTPClient::ResponderPtr responder_p
 		return;
 	}
 
-//MK
 	std::string url = gAgent.getRegion()->getCapability("IncrementCofVersion");
-////	std::string url = gAgent.getRegion()->getCapability("IncrementCOFVersion");
-//mk
 	if (url.empty())
 	{
 		LL_WARNS() << "No cap for IncrementCofVersion." << LL_ENDL;
@@ -3485,6 +3609,15 @@ void LLAppearanceMgr::incrementCofVersion(LLHTTPClient::ResponderPtr responder_p
 	LLHTTPClient::get(url, body, responder_ptr, headers, 30.0f);
 }
 
+U32 LLAppearanceMgr::getNumAttachmentsInCOF()
+{
+	const LLUUID cof = getCOF();
+	LLInventoryModel::item_array_t obj_items;
+	getDescendentsOfAssetType(cof, obj_items, LLAssetType::AT_OBJECT);
+	return obj_items.size();
+}
+
+
 std::string LLAppearanceMgr::getAppearanceServiceURL() const
 {
 	if (gSavedSettings.getString("DebugAvatarAppearanceServiceURLOverride").empty())
@@ -3502,12 +3635,14 @@ void show_created_outfit(LLUUID& folder_id, bool show_panel = true)
 			return;
 		}
 
+	LL_DEBUGS("Avatar") << "called" << LL_ENDL;
 		LLSD key;
 		
 	//EXT-7727. For new accounts inventory callback is created during login process
 	// and may be processed after login process is finished
 	if (show_panel)
 		{
+		LL_DEBUGS("Avatar") << "showing panel" << LL_ENDL;
 			LLFloaterSidePanelContainer::showPanel("appearance", "panel_outfits_inventory", key);
 
 		}
@@ -3521,31 +3656,63 @@ void show_created_outfit(LLUUID& folder_id, bool show_panel = true)
 		LLAppearanceMgr::getInstance()->updateIsDirty();
 		gAgentWearables.notifyLoadingFinished(); // New outfit is saved.
 		LLAppearanceMgr::getInstance()->updatePanelOutfitName("");
+
+	// For SSB, need to update appearance after we add a base outfit
+	// link, since, the COF version has changed. There is a race
+	// condition in initial outfit setup which can lead to rez
+	// failures - SH-3860.
+	LL_DEBUGS("Avatar") << "requesting appearance update after createBaseOutfitLink" << LL_ENDL;
+	LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
+	LLAppearanceMgr::getInstance()->createBaseOutfitLink(folder_id, cb);
 	}
 
-LLUUID LLAppearanceMgr::makeNewOutfitLinks(const std::string& new_folder_name, bool show_panel)
+void LLAppearanceMgr::onOutfitFolderCreated(const LLUUID& folder_id, bool show_panel)
 {
-	if (!isAgentAvatarValid()) return LLUUID::null;
+	LLPointer<LLInventoryCallback> cb =
+		new LLBoostFuncInventoryCallback(no_op_inventory_func,
+										 boost::bind(&LLAppearanceMgr::onOutfitFolderCreatedAndClothingOrdered,this,folder_id,show_panel));
+	updateClothingOrderingInfo(LLUUID::null, cb);
+}
+
+void LLAppearanceMgr::onOutfitFolderCreatedAndClothingOrdered(const LLUUID& folder_id, bool show_panel)
+{
+	LLPointer<LLInventoryCallback> cb =
+		new LLBoostFuncInventoryCallback(no_op_inventory_func,
+										 boost::bind(show_created_outfit,folder_id,show_panel));
+	bool copy_folder_links = false;
+	slamCategoryLinks(getCOF(), folder_id, copy_folder_links, cb);
+}
+
+void LLAppearanceMgr::makeNewOutfitLinks(const std::string& new_folder_name, bool show_panel)
+{
+	if (!isAgentAvatarValid()) return;
+
+	LL_DEBUGS("Avatar") << "creating new outfit" << LL_ENDL;
 
 	gAgentWearables.notifyLoadingStarted();
 
 	// First, make a folder in the My Outfits directory.
 	const LLUUID parent_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_MY_OUTFITS);
+	if (AISCommand::isAPIAvailable())
+	{
+		// cap-based category creation was buggy until recently. use
+		// existence of AIS as an indicator the fix is present. Does
+		// not actually use AIS to create the category.
+		inventory_func_type func = boost::bind(&LLAppearanceMgr::onOutfitFolderCreated,this,_1,show_panel);
+		LLUUID folder_id = gInventory.createNewCategory(
+			parent_id,
+			LLFolderType::FT_OUTFIT,
+			new_folder_name,
+			func);
+	}
+	else
+	{		
 	LLUUID folder_id = gInventory.createNewCategory(
 		parent_id,
 		LLFolderType::FT_OUTFIT,
 		new_folder_name);
-
-	updateClothingOrderingInfo();
-
-	LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(no_op_inventory_func,
-																		 boost::bind(show_created_outfit,folder_id,show_panel));
-	shallowCopyCategoryContents(getCOF(),folder_id, cb);
-	createBaseOutfitLink(folder_id, cb);
-
-	dumpCat(folder_id,"COF, new outfit");
-
-	return folder_id;
+		onOutfitFolderCreated(folder_id, show_panel);
+	}
 }
 
 void LLAppearanceMgr::wearBaseOutfit()
@@ -3561,7 +3728,9 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove)
 	if (ids_to_remove.empty())
 	{
 		LL_WARNS() << "called with empty list, nothing to do" << LL_ENDL;
+		return;
 	}
+	LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
 	for (uuid_vec_t::const_iterator it = ids_to_remove.begin(); it != ids_to_remove.end(); ++it)
 	{
 		const LLUUID& id_to_remove = *it;
@@ -3575,14 +3744,13 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove)
 			// objects here.
 			LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
 //mk
-		removeCOFItemLinks(linked_item_id);
+		removeCOFItemLinks(linked_item_id, cb);
 		addDoomedTempAttachment(linked_item_id);
 //MK
 		}
 		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
 //mk
 	}
-	updateAppearanceFromCOF();
 }
 
 void LLAppearanceMgr::removeItemFromAvatar(const LLUUID& id_to_remove)
@@ -3613,9 +3781,9 @@ void LLAppearanceMgr::removeItemFromAvatar(const LLUUID& id_to_remove)
 		LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
 	}
 //mk
-	removeCOFItemLinks(linked_item_id);
+	LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
+	removeCOFItemLinks(linked_item_id, cb);
 	addDoomedTempAttachment(linked_item_id);
-	updateAppearanceFromCOF();
 }
 
 
@@ -3675,7 +3843,12 @@ bool LLAppearanceMgr::moveWearable(LLViewerInventoryItem* item, bool closer_to_b
 	swap_item->setDescription(item->getActualDescription());
 	item->setDescription(tmp);
 
+	// LL_DEBUGS("Inventory") << "swap, item "
+	// 					   << ll_pretty_print_sd(item->asLLSD())
+	// 					   << " swap_item "
+	// 					   << ll_pretty_print_sd(swap_item->asLLSD()) << LL_ENDL;
 
+	// FIXME switch to use AISv3 where supported.
 	//items need to be updated on a dataserver
 	item->setComplete(TRUE);
 	item->updateServer(FALSE);
@@ -3689,7 +3862,7 @@ bool LLAppearanceMgr::moveWearable(LLViewerInventoryItem* item, bool closer_to_b
 	bool result = false;
 	if (result = gAgentWearables.moveWearable(item, closer_to_body))
 	{
-		gAgentAvatarp->wearableUpdated(item->getWearableType(), FALSE);
+		gAgentAvatarp->wearableUpdated(item->getWearableType());
 	}
 
 	setOutfitDirty(true);
@@ -3751,7 +3924,8 @@ LLAppearanceMgr::LLAppearanceMgr():
 	mAttachmentInvLinkEnabled(false),
 	mOutfitIsDirty(false),
 	mOutfitLocked(false),
-	mIsInUpdateAppearanceFromCOF(false)
+	mIsInUpdateAppearanceFromCOF(false),
+	mAppearanceResponder(new RequestAgentUpdateAppearanceResponder)
 {
 	LLOutfitObserver& outfit_observer = LLOutfitObserver::instance();
 
@@ -3801,7 +3975,11 @@ void LLAppearanceMgr::registerAttachment(const LLUUID& item_id)
 		   // we have to pass do_update = true to call LLAppearanceMgr::updateAppearanceFromCOF.
 		   // it will trigger gAgentWariables.notifyLoadingFinished()
 		   // But it is not acceptable solution. See EXT-7777
-		   LLAppearanceMgr::addCOFItemLink(item_id, false);  // Add COF link for item.
+		   if (!isLinkedInCOF(item_id))
+		   {
+			   LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy();
+			   LLAppearanceMgr::addCOFItemLink(item_id, cb);  // Add COF link for item.
+		   }
 	   }
 	   else
 	   {
@@ -3825,22 +4003,21 @@ void LLAppearanceMgr::unregisterAttachment(const LLUUID& item_id)
 
 BOOL LLAppearanceMgr::getIsInCOF(const LLUUID& obj_id) const
 {
-	return gInventory.isObjectDescendentOf(obj_id, getCOF());
+	const LLUUID& cof = getCOF();
+	if (obj_id == cof)
+		return TRUE;
+	const LLInventoryObject* obj = gInventory.getObject(obj_id);
+	if (obj && obj->getParentUUID() == cof)
+		return TRUE;
+	return FALSE;
 }
 
 // static
 bool LLAppearanceMgr::isLinkInCOF(const LLUUID& obj_id)
 {
-	 LLInventoryModel::cat_array_t cats;
-	 LLInventoryModel::item_array_t items;
-	 LLLinkedItemIDMatches find_links(gInventory.getLinkedItemID(obj_id));
-	 gInventory.collectDescendentsIf(LLAppearanceMgr::instance().getCOF(),
-									 cats,
-									 items,
-	 LLInventoryModel::EXCLUDE_TRASH,
-	 find_links);
-
-	 return !items.empty();
+	const LLUUID& target_id = gInventory.getLinkedItemID(obj_id);
+	LLLinkedItemIDMatches find_links(target_id);
+	return gInventory.hasMatchingDirectDescendent(LLAppearanceMgr::instance().getCOF(), find_links);
 }
 
 BOOL LLAppearanceMgr::getIsProtectedCOFItem(const LLUUID& obj_id) const
@@ -3857,18 +4034,6 @@ BOOL LLAppearanceMgr::getIsProtectedCOFItem(const LLUUID& obj_id) const
 	// For now, don't allow direct deletion from the COF.  Instead, force users
 	// to choose "Detach" or "Take Off".
 	return TRUE;
-	/*
-	const LLInventoryObject *obj = gInventory.getObject(obj_id);
-	if (!obj) return FALSE;
-
-	// Can't delete bodyparts, since this would be equivalent to removing the item.
-	if (obj->getType() == LLAssetType::AT_BODYPART) return TRUE;
-
-	// Can't delete the folder link, since this is saved for bookkeeping.
-	if (obj->getActualType() == LLAssetType::AT_LINK_FOLDER) return TRUE;
-
-	return FALSE;
-	*/
 }
 
 class CallAfterCategoryFetchStage2: public LLInventoryFetchItemsObserver
@@ -4009,7 +4174,7 @@ public:
 			LLAppearanceMgr::getInstance()->wearInventoryCategory(category, true, false);
 
 			// *TODOw: This may not be necessary if initial outfit is chosen already -- josh
-			gAgent.setGenderChosen(TRUE);
+			gAgent.setOutfitChosen(TRUE);
 		}
 
 		// release avatar picker keyboard focus

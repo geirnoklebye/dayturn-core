@@ -100,6 +100,7 @@
 #include "llspellcheck.h"
 #include "llscenemonitor.h"
 #include "llavatarrenderinfoaccountant.h"
+#include "lllocalbitmaps.h"
 
 // Linden library includes
 #include "llavatarnamecache.h"
@@ -1837,7 +1838,9 @@ bool LLAppViewer::cleanup()
 #if 0 // this seems to get us stuck in an infinite loop...
 	gTransferManager.cleanup();
 #endif
-	
+
+	LLLocalBitmapMgr::cleanupClass();
+
 	// Note: this is where gWorldMap used to be deleted.
 
 	// Note: this is where gHUDManager used to be deleted.
@@ -3278,7 +3281,8 @@ bool LLAppViewer::initWindow()
 #ifdef LL_DARWIN
     //Satisfy both MAINT-3135 (OSX 10.6 and earlier) MAINT-3288 (OSX 10.7 and later)
    if (getOSInfo().mMajorVer == 10 && getOSInfo().mMinorVer < 7)
-       gViewerWindow->getWindow()->setOldResize(true);
+		if ( getOSInfo().mMinorVer == 6 && getOSInfo().mBuild < 8 )
+       		gViewerWindow->getWindow()->setOldResize(true);
 #endif
     
 	if (gSavedSettings.getBOOL("WindowMaximized"))
@@ -3465,6 +3469,10 @@ LLSD LLAppViewer::getViewerInfo() const
 		if (gAgent.getRegion())
 		{
 			info["SERVER_RELEASE_NOTES_URL"] = LLTrans::getString("RetrievingData");
+		}
+		else
+		{
+			info["SERVER_RELEASE_NOTES_URL"] = LLTrans::getString("NotConnected");
 		}
 	}
 	else if (LLStringUtil::startsWith(mServerReleaseNotesURL, "http")) // it's an URL
@@ -4936,7 +4944,7 @@ void LLAppViewer::idle()
 		static LLFrameStatsTimer viewer_stats_timer(SEND_STATS_PERIOD);
 
 		// Update session stats every large chunk of time
-		// *FIX: (???) SAMANTHA
+		// *FIX: (?) SAMANTHA
 		if (viewer_stats_timer.getElapsedTimeF32() >= SEND_STATS_PERIOD && !gDisconnected)
 		{
 			LL_INFOS() << "Transmitting sessions stats" << LL_ENDL;
