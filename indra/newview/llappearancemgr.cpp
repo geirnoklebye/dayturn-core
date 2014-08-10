@@ -469,14 +469,14 @@ public:
 		if (mCB)
 			{
 			mCB->fire(id);
-		}
 			}
+		}
 
 	// virtual
 	~LLTrackPhaseWrapper()
 			{
 		selfStopPhase(mTrackingPhase);
-			}
+		}
 	
 protected:
 	std::string mTrackingPhase;
@@ -1357,6 +1357,7 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear,
 			if ((replace && wearable_count != 0) ||
 				(wearable_count >= LLAgentWearables::MAX_CLOTHING_PER_TYPE) )
 			{
+
 //MK
 				if (gRRenabled && gAgent.mRRInterface.canUnwear (item_to_wear->getWearableType()))
 				{
@@ -1372,7 +1373,7 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear,
 			if (gRRenabled && gAgent.mRRInterface.canWear (item_to_wear->getWearableType()))
 			{
 //mk
-			addCOFItemLink(item_to_wear, cb);
+				addCOFItemLink(item_to_wear, cb);
 //MK
 			}
 //mk
@@ -1722,7 +1723,6 @@ bool LLAppearanceMgr::getCanRemoveFromCOF(const LLUUID& outfit_cat_id)
 	{
 		return false;
 	}
-
 	LLFindWearablesEx is_worn(/*is_worn=*/ true, /*include_body_parts=*/ false);
 	return gInventory.hasMatchingDirectDescendent(outfit_cat_id, is_worn);
 }
@@ -1773,9 +1773,9 @@ void LLAppearanceMgr::purgeBaseOutfitLink(const LLUUID& category, LLPointer<LLIn
 			if(catp && catp->getPreferredType() == LLFolderType::FT_OUTFIT)
 			{
 			remove_inventory_item(item->getUUID(), cb);
+			}
 		}
 	}
-}
 
 // Keep the last N wearables of each type.  For viewer 2.0, N is 1 for
 // both body parts and clothing items.
@@ -1808,7 +1808,7 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 	{
 		LL_WARNS() << "no category found for id " << category << LL_ENDL;
 		return;
-	}
+}
 	LL_INFOS("Avatar") << self_av_string() << "starting, cat '" << (pcat ? pcat->getName() : "[UNKNOWN]") << "'" << LL_ENDL;
 
 	const LLUUID cof = getCOF();
@@ -2143,7 +2143,7 @@ void LLAppearanceMgr::updateAppearanceFromCOF(bool enforce_item_restrictions,
 	{
 		requestServerAppearanceUpdate();
 	}
-	
+
 	LLUUID current_outfit_id = getCOF();
 
 	// Find all the wearables that are in the COF's subtree.
@@ -2318,7 +2318,6 @@ void LLAppearanceMgr::wearInventoryCategory(LLInventoryCategory* category, bool 
 		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = !append;
 	}
 //mk
-
 	selfClearPhases();
 	selfStartPhase("wear_inventory_category");
 
@@ -2326,7 +2325,6 @@ void LLAppearanceMgr::wearInventoryCategory(LLInventoryCategory* category, bool 
 
 	LL_INFOS("Avatar") << self_av_string() << "wearInventoryCategory( " << category->getName()
 			 << " )" << LL_ENDL;
-
 
 	// If we are copying from library, attempt to use AIS to copy the category.
 	bool ais_ran=false;
@@ -2640,7 +2638,7 @@ void LLAppearanceMgr::addCOFItemLink(const LLInventoryItem *item,
 	}
 
 	if (!linked_already)
-		{	
+	{
 		LLViewerInventoryItem *copy_item = new LLViewerInventoryItem;
 		copy_item->copyViewerItem(vitem);
 		copy_item->setDescription(description);
@@ -3219,22 +3217,21 @@ protected:
 };
 
 RequestAgentUpdateAppearanceResponder::RequestAgentUpdateAppearanceResponder()
-{
+	{
 	bool retry_on_4xx = true;
 	mRetryPolicy = new LLAdaptiveRetryPolicy(1.0, 32.0, 2.0, 10, retry_on_4xx);
 	mInFlightCounter = 0;
-}
+	}
 
 RequestAgentUpdateAppearanceResponder::~RequestAgentUpdateAppearanceResponder()
-{
-}
+	{
+	}
 
 void RequestAgentUpdateAppearanceResponder::onRequestRequested()
-{
+	{
 //MK from HB
 	gAgentWearables.checkModifiableShape();
 //mk from HB
-
 	// If we have already received an update for this or higher cof version, ignore.
 	S32 cof_version = LLAppearanceMgr::instance().getCOFVersion();
 	S32 last_rcv = gAgentAvatarp->mLastUpdateReceivedCOFVersion;
@@ -3244,12 +3241,12 @@ void RequestAgentUpdateAppearanceResponder::onRequestRequested()
 						<< " last_req " << last_req
 						<< " in flight " << mInFlightCounter << LL_ENDL;
 	if ((mInFlightCounter>0) && (mInFlightTimer.hasExpired()))
-	{
+		{
 		LL_WARNS("Avatar") << "in flight timer expired, resetting " << LL_ENDL;
 		mInFlightCounter = 0;
 	}
 	if (cof_version < last_rcv)
-		{
+			{
 		LL_DEBUGS("Avatar") << "Have already received update for cof version " << last_rcv
 							<< " will not request for " << cof_version << LL_ENDL;
 		return;
@@ -3294,7 +3291,7 @@ void RequestAgentUpdateAppearanceResponder::sendRequest()
 	LLSD body;
 	S32 cof_version = LLAppearanceMgr::instance().getCOFVersion();
 	if (gSavedSettings.getBOOL("DebugAvatarExperimentalServerAppearanceUpdate"))
-		{
+	{
 		body = LLAppearanceMgr::instance().dumpCOF();
 		}
 		else
@@ -3385,7 +3382,7 @@ void RequestAgentUpdateAppearanceResponder::debugCOF(const LLSD& content)
 			LL_INFOS("Avatar") << "AIS ONLY: " << *it << LL_ENDL;
 			ais_only++;
 		}
-			}
+	}
 	if (local_only==0 && ais_only==0)
 	{
 		LL_INFOS("Avatar") << "COF contents identical, only version numbers differ (req "
@@ -3435,6 +3432,17 @@ void RequestAgentUpdateAppearanceResponder::onSuccess()
 		dump_sequential_xml(gAgentAvatarp->getFullname() + "_appearance_request_error", content);
 		debugCOF(content);
 	}
+//MK
+	// In case of a COF version mismatch, let's not try to guess. Assume the version expected by the server and retry with that new version.
+	const LLSD& content = getContent();
+	LL_WARNS() << dumpResponse() << LL_ENDL;
+	if (content["error"].asString().find ("Cof Version Mismatch") != -1)
+	//if (status == 400 && reason == "Bad Request" && content["code"].asInteger() == 1 && content["error"].asString().find ("Cof Version Mismatch") != -1)
+	{
+		LL_WARNS() << "Setting COF version to " << content["expected"].asInteger() - 1 << "\"" << LL_ENDL;
+		gAgentAvatarp->mLastUpdateRequestCOFVersion = content["expected"].asInteger() - 1;
+	}
+//mk
 	onFailure();
 }
 
@@ -3449,7 +3457,7 @@ void RequestAgentUpdateAppearanceResponder::onFailure()
 		LL_INFOS() << "retrying" << LL_ENDL;
 		doAfterInterval(boost::bind(&RequestAgentUpdateAppearanceResponder::sendRequest,this),
 						seconds_to_wait);
-	}
+			}
 	else
 	{
 		LL_WARNS() << "giving up after too many retries" << LL_ENDL;
@@ -3521,7 +3529,7 @@ LLSD LLAppearanceMgr::dumpCOF() const
 }
 
 void LLAppearanceMgr::requestServerAppearanceUpdate()
-	{
+{
 	mAppearanceResponder->onRequestRequested();
 }
 
@@ -3664,7 +3672,7 @@ void show_created_outfit(LLUUID& folder_id, bool show_panel = true)
 	LL_DEBUGS("Avatar") << "requesting appearance update after createBaseOutfitLink" << LL_ENDL;
 	LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
 	LLAppearanceMgr::getInstance()->createBaseOutfitLink(folder_id, cb);
-	}
+}
 
 void LLAppearanceMgr::onOutfitFolderCreated(const LLUUID& folder_id, bool show_panel)
 {
@@ -3681,7 +3689,7 @@ void LLAppearanceMgr::onOutfitFolderCreatedAndClothingOrdered(const LLUUID& fold
 										 boost::bind(show_created_outfit,folder_id,show_panel));
 	bool copy_folder_links = false;
 	slamCategoryLinks(getCOF(), folder_id, copy_folder_links, cb);
-}
+	}
 
 void LLAppearanceMgr::makeNewOutfitLinks(const std::string& new_folder_name, bool show_panel)
 {
@@ -3979,7 +3987,7 @@ void LLAppearanceMgr::registerAttachment(const LLUUID& item_id)
 		   {
 			   LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy();
 			   LLAppearanceMgr::addCOFItemLink(item_id, cb);  // Add COF link for item.
-		   }
+	   }
 	   }
 	   else
 	   {

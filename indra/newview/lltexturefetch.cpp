@@ -265,6 +265,7 @@ static const char* e_state_name[] =
 	"WAIT_ON_WRITE",
 	"DONE"
 };
+
 class LLTextureFetchWorker : public LLWorkerClass, public LLCore::HttpHandler
 
 {
@@ -410,7 +411,7 @@ public:
 	// Inherited from LLCore::HttpHandler
 	// Threads:  Ttf
 	virtual void onCompleted(LLCore::HttpHandle handle, LLCore::HttpResponse * response);
-	
+
 protected:
 	LLTextureFetchWorker(LLTextureFetch* fetcher, FTType f_type,
 						 const std::string& url, const LLUUID& id, const LLHost& host,
@@ -1178,6 +1179,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 		mDesiredSize = llmax(mDesiredSize, TEXTURE_CACHE_ENTRY_SIZE); // min desired size is TEXTURE_CACHE_ENTRY_SIZE
 		LL_DEBUGS("Texture") << mID << ": Priority: " << llformat("%8.0f",mImagePriority)
 							 << " Desired Discard: " << mDesiredDiscard << " Desired Size: " << mDesiredSize << LL_ENDL;
+
 		// fall through
 	}
 
@@ -1582,7 +1584,6 @@ bool LLTextureFetchWorker::doWork(S32 param)
 						return true; 
 					}
 
-
 					// roll back to try UDP
 					if (mCanUseNET)
 					{
@@ -1617,7 +1618,7 @@ bool LLTextureFetchWorker::doWork(S32 param)
 
 				if (mFTType != FTT_SERVER_BAKE)
 				{
-				mUrl.clear();
+					mUrl.clear();
 				}
 				if (cur_size > 0)
 				{
@@ -1989,9 +1990,10 @@ void LLTextureFetchWorker::onCompleted(LLCore::HttpHandle handle, LLCore::HttpRe
 	}
 	
 	LL_DEBUGS("Texture") << "HTTP COMPLETE: " << mID
-			 << " status: " << status.toTerseString()
-			 << " '" << status.toString() << "'"
+						 << " status: " << status.toTerseString()
+						 << " '" << status.toString() << "'"
 						 << LL_ENDL;
+
 //	unsigned int offset(0), length(0), full_length(0);
 //	response->getRange(&offset, &length, &full_length);
 // 	LL_WARNS() << "HTTP COMPLETE: " << mID << " handle: " << handle
@@ -2007,11 +2009,11 @@ void LLTextureFetchWorker::onCompleted(LLCore::HttpHandle handle, LLCore::HttpRe
 		success = false;
 		if (mFTType != FTT_MAP_TILE) // missing map tiles are normal, don't complain about them.
 		{
-		std::string reason(status.toString());
-		setGetStatus(status, reason);
-		LL_WARNS() << "CURL GET FAILED, status: " << status.toTerseString()
-				<< " reason: " << reason << LL_ENDL;
-	}
+			std::string reason(status.toString());
+			setGetStatus(status, reason);
+			LL_WARNS() << "CURL GET FAILED, status: " << status.toTerseString()
+					<< " reason: " << reason << LL_ENDL;
+		}
 	}
 	else
 	{
@@ -2571,7 +2573,7 @@ bool LLTextureFetch::createRequest(FTType f_type, const std::string& url, const 
 	{
 		return false;
 	}
-	
+
 	if (f_type == FTT_SERVER_BAKE)
 	{
 		LL_DEBUGS("Avatar") << " requesting " << id << " " << w << "x" << h << " discard " << desired_discard << " type " << f_type << LL_ENDL;
@@ -2645,7 +2647,7 @@ bool LLTextureFetch::createRequest(FTType f_type, const std::string& url, const 
 		worker->mNeedsAux = needs_aux;
 		worker->setImagePriority(priority);
 		worker->setDesiredDiscard(desired_discard, desired_size);
-		worker->setCanUseHTTP(can_use_http) ;
+		worker->setCanUseHTTP(can_use_http);
 		worker->setUrl(url);
 		if (!worker->haveWork())
 		{

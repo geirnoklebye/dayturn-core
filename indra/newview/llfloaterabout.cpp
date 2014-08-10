@@ -76,7 +76,6 @@ class LLServerReleaseNotesURLFetcher : public LLHTTPClient::Responder
 {
 	LOG_CLASS(LLServerReleaseNotesURLFetcher);
 public:
-
 	static void startFetch();
 private:
 	/* virtual */ void httpCompleted();

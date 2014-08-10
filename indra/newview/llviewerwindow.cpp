@@ -1936,9 +1936,7 @@ void LLViewerWindow::initBase()
 	setProgressCancelButtonVisible(FALSE);
 
 	gMenuHolder = getRootView()->getChild<LLViewerMenuHolderGL>("Menu Holder");
-
 	LLMenuGL::sMenuContainer = gMenuHolder;
-
 }
 
 void LLViewerWindow::initWorldUI()
@@ -2116,6 +2114,9 @@ void LLViewerWindow::shutdownViews()
 	// access to gMenuHolder
 	cleanup_menus();
 	LL_INFOS() << "menus destroyed." << LL_ENDL ;
+
+	view_listener_t::cleanup();
+	LL_INFOS() << "view listeners destroyed." << LL_ENDL ;
 	
 	view_listener_t::cleanup();
 	LL_INFOS() << "view listeners destroyed." << LL_ENDL ;
