@@ -2,9 +2,9 @@
 	#include "linden_common.h"
 	#include "lscript_tree.h"
 
-    #ifdef __cplusplus
-    extern "C" {
-    #endif
+//    #ifdef __cplusplus
+//    extern "C" {
+//    #endif
 
 	int yylex(void);
 	int yyparse( void );
@@ -20,9 +20,10 @@
 	#pragma warning( disable : 4065 )	// warning: switch statement contains 'default' but no 'case' labels
 	#endif
 
-    #ifdef __cplusplus
-    }
-    #endif
+//    #ifdef __cplusplus
+//    }
+//    #endif
+
 %}
 
 %union
