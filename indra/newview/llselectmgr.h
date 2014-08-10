@@ -43,16 +43,45 @@
 #include "llpermissions.h"
 #include "llcontrol.h"
 #include "llviewerobject.h"	// LLObjectSelection::getSelectedTEValue template
+#include "llmaterial.h"
 
 #include <deque>
 #include <boost/iterator/filter_iterator.hpp>
 #include <boost/signals2.hpp>
+#include <boost/make_shared.hpp>	// boost::make_shared
 
 class LLMessageSystem;
 class LLViewerTexture;
 class LLColor4;
 class LLVector3;
 class LLSelectNode;
+
+const U8 UPD_NONE      		= 0x00;
+const U8 UPD_POSITION  		= 0x01;
+const U8 UPD_ROTATION  		= 0x02;
+const U8 UPD_SCALE     		= 0x04;
+const U8 UPD_LINKED_SETS 	= 0x08;
+const U8 UPD_UNIFORM 		= 0x10;	// used with UPD_SCALE
+
+// This is used by the DeRezObject message to determine where to put
+// derezed tasks.
+enum EDeRezDestination
+{
+	DRD_SAVE_INTO_AGENT_INVENTORY = 0,
+	DRD_ACQUIRE_TO_AGENT_INVENTORY = 1,		// try to leave copy in world
+	DRD_SAVE_INTO_TASK_INVENTORY = 2,
+	DRD_ATTACHMENT = 3,
+	DRD_TAKE_INTO_AGENT_INVENTORY = 4,		// delete from world
+	DRD_FORCE_TO_GOD_INVENTORY = 5,			// force take copy
+	DRD_TRASH = 6,
+	DRD_ATTACHMENT_TO_INV = 7,
+	DRD_ATTACHMENT_EXISTS = 8,
+	DRD_RETURN_TO_OWNER = 9,				// back to owner's inventory
+	DRD_RETURN_TO_LAST_OWNER = 10,			// deeded object back to last owner's inventory
+
+	DRD_COUNT = 11
+};
+
 
 const S32 SELECT_ALL_TES = -1;
 const S32 SELECT_MAX_TES = 32;
@@ -81,6 +110,12 @@ struct LLSelectedTEFunctor
 {
 	virtual ~LLSelectedTEFunctor() {};
 	virtual bool apply(LLViewerObject* object, S32 face) = 0;
+};
+
+struct LLSelectedTEMaterialFunctor
+{
+	virtual ~LLSelectedTEMaterialFunctor() {};
+	virtual LLMaterialPtr apply(LLViewerObject* object, S32 face, LLTextureEntry* tep, LLMaterialPtr& current_material) = 0;
 };
 
 template <typename T> struct LLSelectedTEGetFunctor
@@ -121,6 +156,8 @@ typedef enum e_selection_type
 	SELECT_TYPE_HUD
 }ESelectType;
 
+const S32 TE_SELECT_MASK_ALL = 0xFFFFFFFF;
+
 // Contains information about a selected object, particularly which TEs are selected.
 class LLSelectNode
 {
@@ -143,7 +180,7 @@ public:
 	// *NOTE: invalidate stored textures and colors when # faces change
 	void saveColors();
 	void saveTextures(const uuid_vec_t& textures);
-	void saveTextureScaleRatios();
+	void saveTextureScaleRatios(LLRender::eTexIndex index_to_query);
 
 	BOOL allowOperationOnNode(PermissionBit op, U64 group_proxy_power) const;
 
@@ -510,6 +547,11 @@ public:
 	void saveSelectedObjectColors();
 	void saveSelectedObjectTextures();
 
+	// Sets which texture channel to query for scale and rot of display
+	// and depends on UI state of LLPanelFace when editing
+	void setTextureChannel(LLRender::eTexIndex texIndex) { mTextureChannel = texIndex; }
+	LLRender::eTexIndex getTextureChannel() { return mTextureChannel; }
+
 	void selectionUpdatePhysics(BOOL use_physics);
 	void selectionUpdateTemporary(BOOL is_temporary);
 	void selectionUpdatePhantom(BOOL is_ghost);
@@ -540,6 +582,8 @@ public:
 	void selectionSetClickAction(U8 action);
 	void selectionSetIncludeInSearch(bool include_in_search);
 	void selectionSetGlow(const F32 glow);
+	void selectionSetMaterialParams(LLSelectedTEMaterialFunctor* material_func);
+	void selectionRemoveMaterial();
 
 	void selectionSetObjectPermissions(U8 perm_field, BOOL set, U32 perm_mask, BOOL override = FALSE);
 	void selectionSetObjectName(const std::string& name);
@@ -771,6 +815,7 @@ private:
 	EGridMode				mGridMode;
 
 	BOOL					mTEMode;			// render te
+	LLRender::eTexIndex	mTextureChannel; // diff, norm, or spec, depending on UI editing mode
 	LLVector3d				mSelectionCenterGlobal;
 	LLBBox					mSelectionBBox;
 

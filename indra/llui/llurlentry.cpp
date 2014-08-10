@@ -504,6 +504,10 @@ std::string localize_slapp_label(const std::string& url, const std::string& full
 	{
 		return LLTrans::getString("SLappAgentRequestFriend") + " " + full_name;
 	}
+	if (LLStringUtil::endsWith(url, "/removefriend"))
+	{
+		return LLTrans::getString("SLappAgentRemoveFriend") + " " + full_name;
+	}
 	return full_name;
 }
 
@@ -785,7 +789,7 @@ std::string LLUrlEntryParcel::getLabel(const std::string &url, const LLUrlLabelC
 
 	if (path_parts < 3) // no parcel id
 	{
-		llwarns << "Failed to parse url [" << url << "]" << llendl;
+		LL_WARNS() << "Failed to parse url [" << url << "]" << LL_ENDL;
 		return url;
 	}
 
@@ -925,7 +929,7 @@ std::string LLUrlEntryRegion::getLabel(const std::string &url, const LLUrlLabelC
 
 	if (path_parts < 3) // no region name
 	{
-		llwarns << "Failed to parse url [" << url << "]" << llendl;
+		LL_WARNS() << "Failed to parse url [" << url << "]" << LL_ENDL;
 		return url;
 	}
 
@@ -1063,7 +1067,8 @@ LLUrlEntrySLLabel::LLUrlEntrySLLabel()
 
 std::string LLUrlEntrySLLabel::getLabel(const std::string &url, const LLUrlLabelCallback &cb)
 {
-	return getLabelFromWikiLink(url);
+	std::string label = getLabelFromWikiLink(url);
+	return (!LLUrlRegistry::instance().hasUrl(label)) ? label : getUrl(url);
 }
 
 std::string LLUrlEntrySLLabel::getUrl(const std::string &string) const

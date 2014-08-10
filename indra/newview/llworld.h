@@ -76,6 +76,7 @@ public:
 	LLViewerRegion*			getRegionFromPosGlobal(const LLVector3d &pos);
 	LLViewerRegion*			getRegionFromPosAgent(const LLVector3 &pos);
 	LLViewerRegion*			getRegionFromHandle(const U64 &handle);
+	LLViewerRegion*			getRegionFromID(const LLUUID& region_id);
 	BOOL					positionRegionValidGlobal(const LLVector3d& pos);			// true if position is in valid region
 	LLVector3d				clipToVisibleRegions(const LLVector3d &start_pos, const LLVector3d &end_pos);
 
@@ -140,14 +141,19 @@ public:
 	void waterHeightRegionInfo(std::string const& sim_name, F32 water_height);
 	void shiftRegions(const LLVector3& offset);
 
-	void setSpaceTimeUSec(const U64 space_time_usec);
-	U64 getSpaceTimeUSec() const;
+	void setSpaceTimeUSec(const U64MicrosecondsImplicit space_time_usec);
+	U64MicrosecondsImplicit getSpaceTimeUSec() const;
 
 	void getInfo(LLSD& info);
+	U32  getNumOfActiveCachedObjects() const {return mNumOfActiveCachedObjects;}
 
+	void clearAllVisibleObjects();
 public:
 	typedef std::list<LLViewerRegion*> region_list_t;
 	const region_list_t& getRegionList() const { return mActiveRegionList; }
+
+	typedef boost::signals2::signal<void(LLViewerRegion*)> region_remove_signal_t;
+	boost::signals2::connection setRegionRemovedCallback(const region_remove_signal_t::slot_type& cb);
 
 	// Returns lists of avatar IDs and their world-space positions within a given distance of a point.
 	// All arguments are optional. Given containers will be emptied and then filled.
@@ -168,6 +174,8 @@ private:
 	region_list_t	mVisibleRegionList;
 	region_list_t	mCulledRegionList;
 
+	region_remove_signal_t mRegionRemovedSignal;
+
 	// Number of points on edge
 	static const U32 mWidth;
 
@@ -181,8 +189,8 @@ private:
 	S32 mLastPacketsIn;
 	S32 mLastPacketsOut;
 	S32 mLastPacketsLost;
-
-	U64 mSpaceTimeUSec;
+	U32 mNumOfActiveCachedObjects;
+	U64MicrosecondsImplicit mSpaceTimeUSec;
 
 	BOOL mClassicCloudsEnabled;
 

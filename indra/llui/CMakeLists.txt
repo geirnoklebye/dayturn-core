@@ -61,7 +61,6 @@ set(llui_SOURCE_FILES
     llfolderview.cpp
     llfolderviewitem.cpp
     llfolderviewmodel.cpp
-    llfunctorregistry.cpp
     lliconctrl.cpp
     llkeywords.cpp
     lllayoutstack.cpp
@@ -75,6 +74,7 @@ set(llui_SOURCE_FILES
     llmultislider.cpp
     llmultisliderctrl.cpp
     llnotifications.cpp
+    llnotificationslistener.cpp
     llnotificationsutil.cpp
     llpanel.cpp
     llprogressbar.cpp
@@ -128,6 +128,7 @@ set(llui_SOURCE_FILES
     llviewmodel.cpp
     llview.cpp
     llviewquery.cpp
+    llviewereventrecorder.cpp
     llwindowshade.cpp
     llxuiparser.cpp
     )
@@ -143,6 +144,7 @@ set(llui_HEADER_FILES
     llbutton.h
     llcallbackmap.h
     llchatentry.h
+    llchat.h
     llcheckboxctrl.h
     llclipboard.h
     llcombobox.h
@@ -183,6 +185,7 @@ set(llui_HEADER_FILES
     llmultislider.h
     llnotificationptr.h
     llnotifications.h
+    llnotificationslistener.h
     llnotificationsutil.h
     llnotificationtemplate.h
     llnotificationvisibilityrule.h
@@ -240,6 +243,7 @@ set(llui_HEADER_FILES
     llviewinject.h
     llviewmodel.h
     llview.h
+    llviewereventrecorder.h
     llviewquery.h
     llwindowshade.h
     llxuiparser.h
@@ -282,7 +286,9 @@ if(LL_TESTS)
   include(LLAddBuildTest)
   SET(llui_TEST_SOURCE_FILES
       llurlmatch.cpp
-      llurlentry.cpp
       )
   LL_ADD_PROJECT_UNIT_TESTS(llui "${llui_TEST_SOURCE_FILES}")
+  # INTEGRATION TESTS
+  set(test_libs llui llmessage llcommon ${LLCOMMON_LIBRARIES} ${WINDOWS_LIBRARIES})
+  LL_ADD_INTEGRATION_TEST(llurlentry llurlentry.cpp "${test_libs}")
 endif(LL_TESTS)

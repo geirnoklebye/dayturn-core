@@ -42,6 +42,7 @@
 #include "llfloaterscriptdebug.h"
 #include "lltooltip.h"
 #include "llhudeffecttrail.h"
+#include "llhudicon.h"
 #include "llhudmanager.h"
 #include "llkeyboard.h"
 #include "llmediaentry.h"
@@ -121,7 +122,7 @@ BOOL LLToolPie::handleMouseDown(S32 x, S32 y, MASK mask)
 BOOL LLToolPie::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
 	// don't pick transparent so users can't "pay" transparent objects
-	mPick = gViewerWindow->pickImmediate(x, y, FALSE);
+	mPick = gViewerWindow->pickImmediate(x, y, FALSE, TRUE);
 	mPick.mKeyMask = mask;
 
 //MK
@@ -599,7 +600,7 @@ BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 		// could disable it here.
 		show_highlight = true;
 		// cursor set by media object
-		lldebugst(LLERR_USER_INPUT) << "hover handled by LLToolPie (inactive)" << llendl;
+		LL_DEBUGS("UserInput") << "hover handled by LLToolPie (inactive)" << LL_ENDL;
 	}
 	else if (!mMouseOutsideSlop 
 		&& mMouseButtonDown 
@@ -636,7 +637,7 @@ BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 			show_highlight = true;
 			ECursorType cursor = cursorFromObject(click_action_object);
 			gViewerWindow->setCursor(cursor);
-			lldebugst(LLERR_USER_INPUT) << "hover handled by LLToolPie (inactive)" << llendl;
+			LL_DEBUGS("UserInput") << "hover handled by LLToolPie (inactive)" << LL_ENDL;
 		}
 		
 		else if ((object && !object->isAvatar() && object->flagUsePhysics()) 
@@ -644,19 +645,19 @@ BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 		{
 			show_highlight = true;
 			gViewerWindow->setCursor(UI_CURSOR_TOOLGRAB);
-			lldebugst(LLERR_USER_INPUT) << "hover handled by LLToolPie (inactive)" << llendl;
+			LL_DEBUGS("UserInput") << "hover handled by LLToolPie (inactive)" << LL_ENDL;
 		}
 		else if ( (object && object->flagHandleTouch()) 
 				  || (parent && parent->flagHandleTouch()))
 		{
 			show_highlight = true;
 			gViewerWindow->setCursor(UI_CURSOR_HAND);
-			lldebugst(LLERR_USER_INPUT) << "hover handled by LLToolPie (inactive)" << llendl;
+			LL_DEBUGS("UserInput") << "hover handled by LLToolPie (inactive)" << LL_ENDL;
 		}
 		else
 		{
 			gViewerWindow->setCursor(UI_CURSOR_ARROW);
-			lldebugst(LLERR_USER_INPUT) << "hover handled by LLToolPie (inactive)" << llendl;
+			LL_DEBUGS("UserInput") << "hover handled by LLToolPie (inactive)" << LL_ENDL;
 		}
 	}
 
@@ -748,7 +749,7 @@ BOOL LLToolPie::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
 	if (gDebugClicks)
 	{
-		llinfos << "LLToolPie handleDoubleClick (becoming mouseDown)" << llendl;
+		LL_INFOS() << "LLToolPie handleDoubleClick (becoming mouseDown)" << LL_ENDL;
 	}
 
 	if (gSavedSettings.getBOOL("DoubleClickAutoPilot"))
@@ -865,7 +866,7 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 			if (gCacheName->getGroupName(owner, name))
 			{
 //MK
-				if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+				if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 				{
 					name = gAgent.mRRInterface.getDummyName (name);
 				}
@@ -881,7 +882,7 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 		else if(gCacheName->getFullName(owner, name))
 		{
 //MK
-			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 			{
 				name = gAgent.mRRInterface.getDummyName (name);
 			}
@@ -1036,7 +1037,7 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 			}
 
 //MK
-			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 			{
 				final_name = gAgent.mRRInterface.getDummyName (av_name.getUserName());
 			}
@@ -1208,7 +1209,7 @@ BOOL LLToolPie::handleToolTip(S32 local_x, S32 local_y, MASK mask)
 static void show_inspector(const char* inspector, const char* param, const LLUUID& source_id)
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		return;
 	}
@@ -1813,6 +1814,13 @@ BOOL LLToolPie::handleRightClickPick()
 			gMenuObject->show(x, y);
 
 			showVisualContextMenuEffect();
+		}
+	}
+	else if (mPick.mParticleOwnerID.notNull())
+	{
+		if (gMenuMuteParticle && mPick.mParticleOwnerID != gAgent.getID())
+		{
+			gMenuMuteParticle->show(x,y);
 		}
 	}
 

@@ -116,6 +116,11 @@ extern PFNGLGETQUERYIVARBPROC glGetQueryivARB;
 extern PFNGLGETQUERYOBJECTIVARBPROC glGetQueryObjectivARB;
 extern PFNGLGETQUERYOBJECTUIVARBPROC glGetQueryObjectuivARB;
 
+// GL_ARB_timer_query
+extern PFNGLQUERYCOUNTERPROC glQueryCounter;
+extern PFNGLGETQUERYOBJECTI64VPROC glGetQueryObjecti64v;
+extern PFNGLGETQUERYOBJECTUI64VPROC glGetQueryObjectui64v;
+
 // GL_ARB_point_parameters
 extern PFNGLPOINTPARAMETERFARBPROC glPointParameterfARB;
 extern PFNGLPOINTPARAMETERFVARBPROC glPointParameterfvARB;
@@ -378,6 +383,11 @@ extern PFNGLGETQUERYIVARBPROC glGetQueryivARB;
 extern PFNGLGETQUERYOBJECTIVARBPROC glGetQueryObjectivARB;
 extern PFNGLGETQUERYOBJECTUIVARBPROC glGetQueryObjectuivARB;
 
+// GL_ARB_timer_query
+extern PFNGLQUERYCOUNTERPROC glQueryCounter;
+extern PFNGLGETQUERYOBJECTI64VPROC glGetQueryObjecti64v;
+extern PFNGLGETQUERYOBJECTUI64VPROC glGetQueryObjectui64v;
+
 // GL_ARB_point_parameters
 extern PFNGLPOINTPARAMETERFARBPROC glPointParameterfARB;
 extern PFNGLPOINTPARAMETERFVARBPROC glPointParameterfvARB;
@@ -533,6 +543,7 @@ extern PFNGLBEGINTRANSFORMFEEDBACKPROC glBeginTransformFeedback;
 extern PFNGLENDTRANSFORMFEEDBACKPROC glEndTransformFeedback;
 extern PFNGLTRANSFORMFEEDBACKVARYINGSPROC glTransformFeedbackVaryings;
 extern PFNGLBINDBUFFERRANGEPROC glBindBufferRange;
+extern PFNGLBINDBUFFERBASEPROC glBindBufferBase;
 
 
 #elif LL_WINDOWS
@@ -540,9 +551,7 @@ extern PFNGLBINDBUFFERRANGEPROC glBindBufferRange;
 // LL_WINDOWS
 
 // windows gl headers depend on things like APIENTRY, so include windows.
-#define WIN32_LEAN_AND_MEAN
-#include <winsock2.h>
-#include <windows.h>
+#include "llwin32headerslean.h"
 
 //----------------------------------------------------------------------------
 #include <GL/gl.h>
@@ -618,6 +627,12 @@ extern PFNGLENDQUERYARBPROC glEndQueryARB;
 extern PFNGLGETQUERYIVARBPROC glGetQueryivARB;
 extern PFNGLGETQUERYOBJECTIVARBPROC glGetQueryObjectivARB;
 extern PFNGLGETQUERYOBJECTUIVARBPROC glGetQueryObjectuivARB;
+
+// GL_ARB_timer_query
+extern PFNGLQUERYCOUNTERPROC glQueryCounter;
+extern PFNGLGETQUERYOBJECTI64VPROC glGetQueryObjecti64v;
+extern PFNGLGETQUERYOBJECTUI64VPROC glGetQueryObjectui64v;
+
 
 // GL_ARB_point_parameters
 extern PFNGLPOINTPARAMETERFARBPROC glPointParameterfARB;
@@ -771,6 +786,7 @@ extern PFNGLBEGINTRANSFORMFEEDBACKPROC glBeginTransformFeedback;
 extern PFNGLENDTRANSFORMFEEDBACKPROC glEndTransformFeedback;
 extern PFNGLTRANSFORMFEEDBACKVARYINGSPROC glTransformFeedbackVaryings;
 extern PFNGLBINDBUFFERRANGEPROC glBindBufferRange;
+extern PFNGLBINDBUFFERBASEPROC glBindBufferBase;
 
 //GL_ARB_debug_output
 extern PFNGLDEBUGMESSAGECONTROLARBPROC glDebugMessageControlARB;
@@ -993,12 +1009,7 @@ extern void glGetBufferPointervARB (GLenum, GLenum, GLvoid* *);
 }
 #endif
 
-#if __MAC_OS_X_VERSION_MAX_ALLOWED <= 1070
 #include <OpenGL/gl.h>
-#else
-#include <AGL/gl.h>
-#endif
-
 
 #endif // LL_MESA / LL_WINDOWS / LL_DARWIN
 

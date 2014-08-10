@@ -72,7 +72,7 @@ public:
 
 		if ((data_mask & type_mask) != data_mask)
 		{
-			llerrs << "LLVertexBuffer::setupVertexBuffer missing required components for supplied data mask." << llendl;
+			LL_ERRS() << "LLVertexBuffer::setupVertexBuffer missing required components for supplied data mask." << LL_ENDL;
 		}
 
 		if (data_mask & MAP_NORMAL)
@@ -97,10 +97,10 @@ public:
 			glTexCoordPointer(2,GL_FLOAT, LLVertexBuffer::sTypeSize[TYPE_TEXCOORD1], (void*)(base + mOffsets[TYPE_TEXCOORD1]));
 			glClientActiveTextureARB(GL_TEXTURE0_ARB);
 		}
-		if (data_mask & MAP_BINORMAL)
+		if (data_mask & MAP_TANGENT)
 		{
 			glClientActiveTextureARB(GL_TEXTURE2_ARB);
-			glTexCoordPointer(3,GL_FLOAT, LLVertexBuffer::sTypeSize[TYPE_BINORMAL], (void*)(base + mOffsets[TYPE_BINORMAL]));
+			glTexCoordPointer(3,GL_FLOAT, LLVertexBuffer::sTypeSize[TYPE_TANGENT], (void*)(base + mOffsets[TYPE_TANGENT]));
 			glClientActiveTextureARB(GL_TEXTURE0_ARB);
 		}
 		if (data_mask & MAP_TEXCOORD0)
@@ -212,7 +212,7 @@ LLDrawable *LLVOSurfacePatch::createDrawable(LLPipeline *pipeline)
 	return mDrawable;
 }
 
-static LLFastTimer::DeclareTimer FTM_UPDATE_TERRAIN("Update Terrain");
+static LLTrace::BlockTimerStatHandle FTM_UPDATE_TERRAIN("Update Terrain");
 
 void LLVOSurfacePatch::updateGL()
 {
@@ -224,7 +224,7 @@ void LLVOSurfacePatch::updateGL()
 
 BOOL LLVOSurfacePatch::updateGeometry(LLDrawable *drawable)
 {
-	LLFastTimer ftm(FTM_UPDATE_TERRAIN);
+	LL_RECORD_BLOCK_TIME(FTM_UPDATE_TERRAIN);
 
 	dirtySpatialGroup(TRUE);
 	
@@ -291,7 +291,7 @@ void LLVOSurfacePatch::updateFaceSize(S32 idx)
 {
 	if (idx != 0)
 	{
-		llwarns << "Terrain partition requested invalid face!!!" << llendl;
+		LL_WARNS() << "Terrain partition requested invalid face!!!" << LL_ENDL;
 		return;
 	}
 
@@ -936,8 +936,8 @@ void LLVOSurfacePatch::getGeomSizesEast(const S32 stride, const S32 east_stride,
 	}
 }
 
-BOOL LLVOSurfacePatch::lineSegmentIntersect(const LLVector3& start, const LLVector3& end, S32 face, BOOL pick_transparent, S32 *face_hitp,
-									  LLVector3* intersection,LLVector2* tex_coord, LLVector3* normal, LLVector3* bi_normal)
+BOOL LLVOSurfacePatch::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end, S32 face, BOOL pick_transparent, S32 *face_hitp,
+									  LLVector4a* intersection,LLVector2* tex_coord, LLVector4a* normal, LLVector4a* tangent)
 	
 {
 
@@ -946,7 +946,9 @@ BOOL LLVOSurfacePatch::lineSegmentIntersect(const LLVector3& start, const LLVect
 		return FALSE;
 	}
 
-	LLVector3 delta = end-start;
+	LLVector4a da;
+	da.setSub(end, start);
+	LLVector3 delta(da.getF32ptr());
 		
 	LLVector3 pdelta = delta;
 	pdelta.mV[2] = 0;
@@ -955,7 +957,9 @@ BOOL LLVOSurfacePatch::lineSegmentIntersect(const LLVector3& start, const LLVect
 	
 	F32 tdelta = 1.f/plength;
 
-	LLVector3 origin = start - mRegionp->getOriginAgent();
+	LLVector3 v_start(start.getF32ptr());
+
+	LLVector3 origin = v_start - mRegionp->getOriginAgent();
 
 	if (mRegionp->getLandHeightRegion(origin) > origin.mV[2])
 	{
@@ -1010,12 +1014,12 @@ BOOL LLVOSurfacePatch::lineSegmentIntersect(const LLVector3& start, const LLVect
 					{
 						sample.mV[2] = mRegionp->getLandHeightRegion(sample);
 					}
-					*intersection = sample + mRegionp->getOriginAgent();
+					intersection->load3((sample + mRegionp->getOriginAgent()).mV);
 				}
 
 				if (normal)
 				{
-					*normal = mRegionp->getLand().resolveNormalGlobal(mRegionp->getPosGlobalFromRegion(sample));
+					normal->load3((mRegionp->getLand().resolveNormalGlobal(mRegionp->getPosGlobalFromRegion(sample))).mV);
 				}
 
 				return TRUE;
@@ -1052,8 +1056,8 @@ U32 LLVOSurfacePatch::getPartitionType() const
 	return LLViewerRegion::PARTITION_TERRAIN; 
 }
 
-LLTerrainPartition::LLTerrainPartition()
-: LLSpatialPartition(LLDrawPoolTerrain::VERTEX_DATA_MASK, FALSE, GL_DYNAMIC_DRAW_ARB)
+LLTerrainPartition::LLTerrainPartition(LLViewerRegion* regionp)
+: LLSpatialPartition(LLDrawPoolTerrain::VERTEX_DATA_MASK, FALSE, GL_DYNAMIC_DRAW_ARB, regionp)
 {
 	mOcclusionEnabled = FALSE;
 	mInfiniteFarClip = TRUE;
@@ -1066,10 +1070,10 @@ LLVertexBuffer* LLTerrainPartition::createVertexBuffer(U32 type_mask, U32 usage)
 	return new LLVertexBufferTerrain();
 }
 
-static LLFastTimer::DeclareTimer FTM_REBUILD_TERRAIN_VB("Terrain VB");
+static LLTrace::BlockTimerStatHandle FTM_REBUILD_TERRAIN_VB("Terrain VB");
 void LLTerrainPartition::getGeometry(LLSpatialGroup* group)
 {
-	LLFastTimer ftm(FTM_REBUILD_TERRAIN_VB);
+	LL_RECORD_BLOCK_TIME(FTM_REBUILD_TERRAIN_VB);
 
 	LLVertexBuffer* buffer = group->mVertexBuffer;
 

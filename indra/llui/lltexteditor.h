@@ -32,10 +32,8 @@
 #include "llrect.h"
 #include "llkeywords.h"
 #include "llframetimer.h"
-#include "lldarray.h"
 #include "llstyle.h"
 #include "lleditmenuhandler.h"
-#include "lldarray.h"
 #include "llviewborder.h" // for params
 #include "lltextbase.h"
 #include "lltextvalidate.h"
@@ -144,6 +142,8 @@ public:
 	virtual void	selectAll();
 	virtual BOOL	canSelectAll()	const;
 
+	void 			selectByCursorPosition(S32 prev_cursor_pos, S32 next_cursor_pos);
+
 	virtual bool	canLoadOrSaveToFile();
 
 	void			selectNext(const std::string& search_text_in, BOOL case_insensitive, BOOL wrap = TRUE);
@@ -248,13 +248,14 @@ protected:
 	// Undoable operations
 	void			addChar(llwchar c); // at mCursorPos
 	S32				addChar(S32 pos, llwchar wc);
-	void			addLineBreakChar();
+	void			addLineBreakChar(BOOL group_together = FALSE);
 	S32				overwriteChar(S32 pos, llwchar wc);
 	void			removeChar();
 	S32 			removeChar(S32 pos);
 	S32				insert(S32 pos, const LLWString &wstr, bool group_with_next_op, LLTextSegmentPtr segment);
 	S32				remove(S32 pos, S32 length, bool group_with_next_op);
 	
+	void			focusLostHelper();
 	void			updateAllowingLanguageInput();
 	BOOL			hasPreeditString() const;
 

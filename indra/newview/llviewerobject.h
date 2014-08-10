@@ -30,8 +30,7 @@
 #include <map>
 
 #include "llassetstorage.h"
-#include "lldarrayptr.h"
-#include "llhudicon.h"
+//#include "llhudicon.h"
 #include "llinventory.h"
 #include "llrefcount.h"
 #include "llprimitive.h"
@@ -43,33 +42,30 @@
 #include "v3math.h"
 #include "llvertexbuffer.h"
 #include "llbbox.h"
-#include "llbbox.h"
 
 class LLAgent;			// TODO: Get rid of this.
 class LLAudioSource;
 class LLAudioSourceVO;
-class LLDataPacker;
 class LLColor4;
-class LLFrameTimer;
+class LLDataPacker;
+class LLDataPackerBinaryBuffer;
 class LLDrawable;
-class LLHost;
 class LLHUDText;
-class LLWorld;
-class LLNameValue;
-class LLNetMap;
+class LLHost;
 class LLMessageSystem;
+class LLNameValue;
 class LLPartSysData;
-class LLPrimitive;
 class LLPipeline;
 class LLTextureEntry;
-class LLViewerTexture;
+class LLVOAvatar;
+class LLVOInventoryListener;
 class LLViewerInventoryItem;
 class LLViewerObject;
+class LLViewerObjectMedia;
 class LLViewerPartSourceScript;
 class LLViewerRegion;
-class LLViewerObjectMedia;
-class LLVOInventoryListener;
-class LLVOAvatar;
+class LLViewerTexture;
+class LLWorld;
 
 typedef enum e_object_update_type
 {
@@ -107,7 +103,11 @@ struct PotentialReturnableObject
 
 //============================================================================
 
-class LLViewerObject : public LLPrimitive, public LLRefCount, public LLGLUpdate
+class LLViewerObject 
+:	public LLPrimitive, 
+	public LLRefCount, 
+	public LLGLUpdate,
+	public LLTrace::MemTrackable<LLViewerObject>
 {
 protected:
 	~LLViewerObject(); // use unref()
@@ -143,7 +143,7 @@ public:
 	LLNameValue*	getNVPair(const std::string& name) const;			// null if no name value pair by that name
 
 	// Object create and update functions
-	virtual void	idleUpdate(LLAgent &agent, LLWorld &world, const F64 &time);
+	virtual void	idleUpdate(LLAgent &agent, const F64 &time);
 
 	// Types of media we can associate
 	enum { MEDIA_NONE = 0, MEDIA_SET = 1 };
@@ -157,6 +157,7 @@ public:
         INVALID_UPDATE = 0x80000000
     };
 
+	static  U32     extractSpatialExtents(LLDataPackerBinaryBuffer *dp, LLVector3& pos, LLVector3& scale, LLQuaternion& rot);
 	virtual U32		processUpdateMessage(LLMessageSystem *mesgsys,
 										void **user_data,
 										U32 block_num,
@@ -171,6 +172,8 @@ public:
 	virtual BOOL	isAttachment() const { return FALSE; }
 	virtual LLVOAvatar* getAvatar() const;  //get the avatar this object is attached to, or NULL if object is not an attachment
 	virtual BOOL	isHUDAttachment() const { return FALSE; }
+	virtual BOOL	isTempAttachment() const;
+
 	virtual void 	updateRadius() {};
 	virtual F32 	getVObjRadius() const; // default implemenation is mDrawable->getRadius()
 	
@@ -211,7 +214,7 @@ public:
 	LLViewerRegion* getRegion() const				{ return mRegionp; }
 
 	BOOL isSelected() const							{ return mUserSelected; }
-	virtual void setSelected(BOOL sel)				{ mUserSelected = sel; resetRot();}
+	virtual void setSelected(BOOL sel);
 
 	const LLUUID &getID() const						{ return mID; }
 	U32 getLocalID() const							{ return mLocalID; }
@@ -258,17 +261,17 @@ public:
 
 	//detect if given line segment (in agent space) intersects with this viewer object.
 	//returns TRUE if intersection detected and returns information about intersection
-	virtual BOOL lineSegmentIntersect(const LLVector3& start, const LLVector3& end,
+	virtual BOOL lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
 									  S32 face = -1,                          // which face to check, -1 = ALL_SIDES
 									  BOOL pick_transparent = FALSE,
 									  S32* face_hit = NULL,                   // which face was hit
-									  LLVector3* intersection = NULL,         // return the intersection point
+									  LLVector4a* intersection = NULL,         // return the intersection point
 									  LLVector2* tex_coord = NULL,            // return the texture coordinates of the intersection point
-									  LLVector3* normal = NULL,               // return the surface normal at the intersection point
-									  LLVector3* bi_normal = NULL             // return the surface bi-normal at the intersection point
+									  LLVector4a* normal = NULL,               // return the surface normal at the intersection point
+									  LLVector4a* tangent = NULL             // return the surface tangent at the intersection point
 		);
 	
-	virtual BOOL lineSegmentBoundingBox(const LLVector3& start, const LLVector3& end);
+	virtual BOOL lineSegmentBoundingBox(const LLVector4a& start, const LLVector4a& end);
 
 	virtual const LLVector3d getPositionGlobal() const;
 	virtual const LLVector3 &getPositionRegion() const;
@@ -301,7 +304,11 @@ public:
 	/*virtual*/	void	setNumTEs(const U8 num_tes);
 	/*virtual*/	void	setTE(const U8 te, const LLTextureEntry &texture_entry);
 	/*virtual*/ S32		setTETexture(const U8 te, const LLUUID &uuid);
+	/*virtual*/ S32		setTENormalMap(const U8 te, const LLUUID &uuid);
+	/*virtual*/ S32		setTESpecularMap(const U8 te, const LLUUID &uuid);
 	S32 				setTETextureCore(const U8 te, LLViewerTexture *image);
+	S32 setTENormalMapCore(const U8 te, LLViewerTexture *image);
+	S32 setTESpecularMapCore(const U8 te, LLViewerTexture *image);
 	/*virtual*/ S32		setTEColor(const U8 te, const LLColor3 &color);
 	/*virtual*/ S32		setTEColor(const U8 te, const LLColor4 &color);
 	/*virtual*/ S32		setTEScale(const U8 te, const F32 s, const F32 t);
@@ -318,11 +325,25 @@ public:
 	/*virtual*/	S32		setTEFullbright(const U8 te, const U8 fullbright );
 	/*virtual*/	S32		setTEMediaFlags(const U8 te, const U8 media_flags );
 	/*virtual*/ S32     setTEGlow(const U8 te, const F32 glow);
+	/*virtual*/ S32     setTEMaterialID(const U8 te, const LLMaterialID& pMaterialID);
+	/*virtual*/ S32		setTEMaterialParams(const U8 te, const LLMaterialPtr pMaterialParams);
+
+	// Used by Materials update functions to properly kick off rebuilds
+	// of VBs etc when materials updates require changes.
+	//
+	void refreshMaterials();
+
 	/*virtual*/	BOOL	setMaterial(const U8 material);
 	virtual		void	setTEImage(const U8 te, LLViewerTexture *imagep); // Not derived from LLPrimitive
 	virtual     void    changeTEImage(S32 index, LLViewerTexture* new_image)  ;
+	virtual     void    changeTENormalMap(S32 index, LLViewerTexture* new_image)  ;
+	virtual     void    changeTESpecularMap(S32 index, LLViewerTexture* new_image)  ;
 	LLViewerTexture		*getTEImage(const U8 te) const;
+	LLViewerTexture		*getTENormalMap(const U8 te) const;
+	LLViewerTexture		*getTESpecularMap(const U8 te) const;
 	
+	bool 						isImageAlphaBlended(const U8 te) const;
+
 	void fitFaceTexture(const U8 face);
 	void sendTEUpdate() const;			// Sends packed representation of all texture entry information
 	
@@ -505,6 +526,7 @@ public:
 	virtual void	updateRegion(LLViewerRegion *regionp);
 
 	void updateFlags(BOOL physics_changed = FALSE);
+	void loadFlags(U32 flags); //load flags from cache or from message
 	BOOL setFlags(U32 flag, BOOL state);
 	BOOL setFlagsWithoutUpdate(U32 flag, BOOL state);
 	void setPhysicsShapeType(U8 type);
@@ -535,6 +557,13 @@ public:
 	friend class LLViewerMediaList;
 
 public:
+	static void unpackVector3(LLDataPackerBinaryBuffer* dp, LLVector3& value, std::string name);
+	static void unpackUUID(LLDataPackerBinaryBuffer* dp, LLUUID& value, std::string name);
+	static void unpackU32(LLDataPackerBinaryBuffer* dp, U32& value, std::string name);
+	static void unpackU8(LLDataPackerBinaryBuffer* dp, U8& value, std::string name);
+	static U32 unpackParentID(LLDataPackerBinaryBuffer* dp, U32& parent_id);
+
+public:
 	//counter-translation
 	void resetChildrenPosition(const LLVector3& offset, BOOL simplified = FALSE) ;
 	//counter-rotation
@@ -555,7 +584,9 @@ private:
     U32 checkMediaURL(const std::string &media_url);
 	
 	// Motion prediction between updates
-	void interpolateLinearMotion(const F64 & time, const F32 & dt);
+	void interpolateLinearMotion(const F64SecondsImplicit & time, const F32SecondsImplicit & dt);
+
+	static void initObjectDataMap();
 
 public:
 	//
@@ -584,6 +615,7 @@ public:
 	} EPhysicsShapeType;
 
 	LLUUID			mID;
+	LLUUID			mOwnerID; //null if unknown
 
 	// unique within region, not unique across regions
 	// Local ID = 0 is not used
@@ -596,6 +628,8 @@ public:
 	S32				mListIndex;
 
 	LLPointer<LLViewerTexture> *mTEImages;
+	LLPointer<LLViewerTexture> *mTENormalMaps;
+	LLPointer<LLViewerTexture> *mTESpecularMaps;
 
 	// Selection, picking and rendering variables
 	U32				mGLName;			// GL "name" used by selection code
@@ -605,6 +639,7 @@ private:
 	// Grabbed from UPDATE_FLAGS
 	U32				mFlags;
 
+	static std::map<std::string, U32> sObjectDataMap;
 public:
 	// Sent to sim in UPDATE_FLAGS, received in ObjectPhysicsProperties
 	U8              mPhysicsShapeType;
@@ -628,7 +663,7 @@ public:
 
 	// TODO: Make all this stuff private.  JC
 	LLPointer<LLHUDText> mText;
-	LLPointer<LLHUDIcon> mIcon;
+	LLPointer<class LLHUDIcon> mIcon;
 
 	static			BOOL		sUseSharedDrawables;
 
@@ -662,12 +697,10 @@ protected:
 	BOOL isOnMap();
 
 	void unpackParticleSource(const S32 block_num, const LLUUID& owner_id);
-	void unpackParticleSource(LLDataPacker &dp, const LLUUID& owner_id);
+	void unpackParticleSource(LLDataPacker &dp, const LLUUID& owner_id, bool legacy);
 	void deleteParticleSource();
 	void setParticleSource(const LLPartSysData& particle_parameters, const LLUUID& owner_id);
 	
-public:
-		
 private:
 	void setNameValueList(const std::string& list);		// clears nv pairs and then individually adds \n separated NV pairs from \0 terminated string
 	void deleteTEImages(); // correctly deletes list of images
@@ -678,8 +711,8 @@ protected:
 
 	child_list_t	mChildList;
 	
-	F64				mLastInterpUpdateSecs;			// Last update for purposes of interpolation
-	F64				mLastMessageUpdateSecs;			// Last update from a message from the simulator
+	F64Seconds		mLastInterpUpdateSecs;			// Last update for purposes of interpolation
+	F64Seconds		mLastMessageUpdateSecs;			// Last update from a message from the simulator
 	TPACKETID		mLatestRecvPacketID;			// Latest time stamp on message from simulator
 
 	// extra data sent from the sim...currently only used for tree species info
@@ -720,7 +753,6 @@ protected:
 	BOOL			mStatic;					// Object doesn't move.
 	S32				mNumFaces;
 
-	F32				mTimeDilation;				// Time dilation sent with the object.
 	F32				mRotTime;					// Amount (in seconds) that object has rotated according to angular velocity (llSetTargetOmega)
 	LLQuaternion	mAngularVelocityRot;		// accumulated rotation from the angular velocity computations
 	LLQuaternion	mPreviousRotation;
@@ -746,12 +778,13 @@ protected:
 
 	static			S32			sAxisArrowLength;
 
+
 	// These two caches are only correct for non-parented objects right now!
 	mutable LLVector3		mPositionRegion;
 	mutable LLVector3		mPositionAgent;
 
-	static void setPhaseOutUpdateInterpolationTime(F32 value)	{ sPhaseOutUpdateInterpolationTime = (F64) value;	}
-	static void setMaxUpdateInterpolationTime(F32 value)		{ sMaxUpdateInterpolationTime = (F64) value;	}
+	static void setPhaseOutUpdateInterpolationTime(F32 value)	{ sPhaseOutUpdateInterpolationTime = (F64Seconds) value;	}
+	static void setMaxUpdateInterpolationTime(F32 value)		{ sMaxUpdateInterpolationTime = (F64Seconds) value;	}
 
 	static void	setVelocityInterpolate(BOOL value)		{ sVelocityInterpolate = value;	}
 	static void	setPingInterpolate(BOOL value)			{ sPingInterpolate = value;	}
@@ -759,8 +792,8 @@ protected:
 private:	
 	static S32 sNumObjects;
 
-	static F64 sPhaseOutUpdateInterpolationTime;	// For motion interpolation
-	static F64 sMaxUpdateInterpolationTime;			// For motion interpolation
+	static F64Seconds sPhaseOutUpdateInterpolationTime;	// For motion interpolation
+	static F64Seconds sMaxUpdateInterpolationTime;			// For motion interpolation
 
 	static BOOL sVelocityInterpolate;
 	static BOOL sPingInterpolate;
@@ -827,7 +860,10 @@ public:
 								LLStrider<LLVector3>& normalsp, 
 								LLStrider<LLVector2>& texcoordsp,
 								LLStrider<LLColor4U>& colorsp, 
+								LLStrider<LLColor4U>& emissivep,
 								LLStrider<U16>& indicesp) = 0;
+
+	virtual void getBlendFunc(S32 face, U32& src, U32& dst);
 
 	F32 mDepth;
 };

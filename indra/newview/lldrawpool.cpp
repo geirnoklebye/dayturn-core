@@ -35,6 +35,7 @@
 #include "lldrawpoolalpha.h"
 #include "lldrawpoolavatar.h"
 #include "lldrawpoolbump.h"
+#include "lldrawpoolmaterials.h"
 #include "lldrawpoolground.h"
 #include "lldrawpoolsimple.h"
 #include "lldrawpoolsky.h"
@@ -47,6 +48,7 @@
 #include "llspatialpartition.h"
 #include "llviewercamera.h"
 #include "lldrawpoolwlsky.h"
+#include "llglslshader.h"
 
 S32 LLDrawPool::sNumDrawPools = 0;
 
@@ -63,6 +65,12 @@ LLDrawPool *LLDrawPool::createPool(const U32 type, LLViewerTexture *tex0)
 		break;
 	case POOL_GRASS:
 		poolp = new LLDrawPoolGrass();
+		break;
+	case POOL_ALPHA_MASK:
+		poolp = new LLDrawPoolAlphaMask();
+		break;
+	case POOL_FULLBRIGHT_ALPHA_MASK:
+		poolp = new LLDrawPoolFullbrightAlphaMask();
 		break;
 	case POOL_FULLBRIGHT:
 		poolp = new LLDrawPoolFullbright();
@@ -98,11 +106,14 @@ LLDrawPool *LLDrawPool::createPool(const U32 type, LLViewerTexture *tex0)
 	case POOL_BUMP:
 		poolp = new LLDrawPoolBump();
 		break;
+	case POOL_MATERIALS:
+		poolp = new LLDrawPoolMaterials();
+		break;
 	case POOL_WL_SKY:
 		poolp = new LLDrawPoolWLSky();
 		break;
 	default:
-		llerrs << "Unknown draw pool type!" << llendl;
+		LL_ERRS() << "Unknown draw pool type!" << LL_ENDL;
 		return NULL;
 	}
 
@@ -246,7 +257,7 @@ void LLFacePool::destroy()
 {
 	if (!mReferences.empty())
 	{
-		llinfos << mReferences.size() << " references left on deletion of draw pool!" << llendl;
+		LL_INFOS() << mReferences.size() << " references left on deletion of draw pool!" << LL_ENDL;
 	}
 }
 
@@ -321,7 +332,7 @@ BOOL LLFacePool::verify() const
 		const LLFace* facep = *iter;
 		if (facep->getPool() != this)
 		{
-			llinfos << "Face in wrong pool!" << llendl;
+			LL_INFOS() << "Face in wrong pool!" << LL_ENDL;
 			facep->printDebugInfo();
 			ok = FALSE;
 		}
@@ -336,7 +347,7 @@ BOOL LLFacePool::verify() const
 
 void LLFacePool::printDebugInfo() const
 {
-	llinfos << "Pool " << this << " Type: " << getType() << llendl;
+	LL_INFOS() << "Pool " << this << " Type: " << getType() << LL_ENDL;
 }
 
 BOOL LLFacePool::LLOverrideFaceColor::sOverrideFaceColor = FALSE;
@@ -374,9 +385,9 @@ LLRenderPass::~LLRenderPass()
 LLDrawPool* LLRenderPass::instancePool()
 {
 #if LL_RELEASE_FOR_DOWNLOAD
-	llwarns << "Attempting to instance a render pass.  Invalid operation." << llendl;
+	LL_WARNS() << "Attempting to instance a render pass.  Invalid operation." << LL_ENDL;
 #else
-	llerrs << "Attempting to instance a render pass.  Invalid operation." << llendl;
+	LL_ERRS() << "Attempting to instance a render pass.  Invalid operation." << LL_ENDL;
 #endif
 	return NULL;
 }
@@ -406,6 +417,27 @@ void LLRenderPass::pushBatches(U32 type, U32 mask, BOOL texture, BOOL batch_text
 		LLDrawInfo* pparams = *i;
 		if (pparams) 
 		{
+			pushBatch(*pparams, mask, texture, batch_textures);
+		}
+	}
+}
+
+void LLRenderPass::pushMaskBatches(U32 type, U32 mask, BOOL texture, BOOL batch_textures)
+{
+	for (LLCullResult::drawinfo_iterator i = gPipeline.beginRenderMap(type); i != gPipeline.endRenderMap(type); ++i)	
+	{
+		LLDrawInfo* pparams = *i;
+		if (pparams) 
+		{
+			if (LLGLSLShader::sCurBoundShaderPtr)
+			{
+				LLGLSLShader::sCurBoundShaderPtr->setMinimumAlpha(pparams->mAlphaMaskCutoff);
+			}
+			else
+			{
+				gGL.setAlphaRejectSettings(LLRender::CF_GREATER, pparams->mAlphaMaskCutoff);
+			}
+			
 			pushBatch(*pparams, mask, texture, batch_textures);
 		}
 	}
@@ -472,6 +504,7 @@ void LLRenderPass::pushBatch(LLDrawInfo& params, U32 mask, BOOL texture, BOOL ba
 		{
 			params.mGroup->rebuildMesh();
 		}
+		
 		params.mVertexBuffer->setBuffer(mask);
 		params.mVertexBuffer->drawRange(params.mDrawMode, params.mStart, params.mEnd, params.mCount, params.mOffset);
 		gPipeline.addTrianglesDrawn(params.mCount, params.mDrawMode);

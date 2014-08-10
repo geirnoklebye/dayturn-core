@@ -70,7 +70,7 @@ BOOL LLDoNotDisturbNotificationStorageTimer::tick()
 
 LLDoNotDisturbNotificationStorage::LLDoNotDisturbNotificationStorage()
 	: LLSingleton<LLDoNotDisturbNotificationStorage>()
-	, LLNotificationStorage(gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, "dnd_notifications.xml"))
+	, LLNotificationStorage("")
     , mDirty(false)
 {
     nameToPayloadParameterMap[toastName] = "SESSION_ID";
@@ -83,6 +83,7 @@ LLDoNotDisturbNotificationStorage::~LLDoNotDisturbNotificationStorage()
 
 void LLDoNotDisturbNotificationStorage::initialize()
 {
+	setFileName(gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, "dnd_notifications.xml"));
 	getCommunicationChannel()->connectFailedFilter(boost::bind(&LLDoNotDisturbNotificationStorage::onChannelChanged, this, _1));
 }
 
@@ -96,11 +97,11 @@ void LLDoNotDisturbNotificationStorage::resetDirty()
     mDirty = false;
 }
 
-static LLFastTimer::DeclareTimer FTM_SAVE_DND_NOTIFICATIONS("Save DND Notifications");
+static LLTrace::BlockTimerStatHandle FTM_SAVE_DND_NOTIFICATIONS("Save DND Notifications");
 
 void LLDoNotDisturbNotificationStorage::saveNotifications()
 {
-	LLFastTimer _(FTM_SAVE_DND_NOTIFICATIONS);
+	LL_RECORD_BLOCK_TIME(FTM_SAVE_DND_NOTIFICATIONS);
 
 	LLNotificationChannelPtr channelPtr = getCommunicationChannel();
 	const LLCommunicationChannel *commChannel = dynamic_cast<LLCommunicationChannel*>(channelPtr.get());
@@ -115,7 +116,8 @@ void LLDoNotDisturbNotificationStorage::saveNotifications()
 	{
 		LLNotificationPtr notificationPtr = historyIter->second;
 
-		if (!notificationPtr->isRespondedTo() && !notificationPtr->isCancelled() && !notificationPtr->isExpired())
+		if (!notificationPtr->isRespondedTo() && !notificationPtr->isCancelled() &&
+			!notificationPtr->isExpired() && !notificationPtr->isPersistent())
 		{
 			data.append(notificationPtr->asLLSD(true));
 		}
@@ -126,11 +128,11 @@ void LLDoNotDisturbNotificationStorage::saveNotifications()
     resetDirty();
 }
 
-static LLFastTimer::DeclareTimer FTM_LOAD_DND_NOTIFICATIONS("Load DND Notifications");
+static LLTrace::BlockTimerStatHandle FTM_LOAD_DND_NOTIFICATIONS("Load DND Notifications");
 
 void LLDoNotDisturbNotificationStorage::loadNotifications()
 {
-	LLFastTimer _(FTM_LOAD_DND_NOTIFICATIONS);
+	LL_RECORD_BLOCK_TIME(FTM_LOAD_DND_NOTIFICATIONS);
 	
 	LL_INFOS("LLDoNotDisturbNotificationStorage") << "start loading notifications" << LL_ENDL;
 
@@ -210,12 +212,8 @@ void LLDoNotDisturbNotificationStorage::loadNotifications()
 
 	}
 
-    if(imToastExists)
-    {
-        LLFloaterReg::showInstance("im_container");
-    }
-
-	if(group_ad_hoc_toast_exists)
+    bool isConversationLoggingAllowed = gSavedPerAccountSettings.getS32("KeepConversationLogTranscripts") > 0;
+	if(group_ad_hoc_toast_exists && isConversationLoggingAllowed)
 	{
 		LLFloaterReg::showInstance("conversation");
 	}
@@ -264,11 +262,6 @@ void LLDoNotDisturbNotificationStorage::updateNotifications()
             notification->setDND(true);
             instance.update(notification);
         }
-    }
-
-    if(imToastExists)
-    {   
-        LLFloaterReg::showInstance("im_container");
     }
 
     if(imToastExists || offerExists)

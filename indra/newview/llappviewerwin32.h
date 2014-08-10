@@ -44,13 +44,13 @@ public:
 	virtual bool cleanup();
 
 protected:
-	virtual bool initLogging(); // Override to clean stack_trace info.
+	virtual void initLoggingAndGetLastDuration(); // Override to clean stack_trace info.
 	virtual void initConsole(); // Initialize OS level debugging console.
 	virtual bool initHardwareTest(); // Win32 uses DX9 to test hardware.
 	virtual bool initParseCommandLine(LLCommandLineParser& clp);
 
 	virtual bool restoreErrorTrap();
-	virtual void handleCrashReporting(bool reportFreeze); 
+	virtual void initCrashReporting(bool reportFreeze); 
 
 	virtual bool sendURLToOtherInstance(const std::string& url);
 

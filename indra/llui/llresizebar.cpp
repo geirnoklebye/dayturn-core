@@ -28,11 +28,22 @@
 
 #include "llresizebar.h"
 
+#include "lllocalcliprect.h"
 #include "llmath.h"
 #include "llui.h"
 #include "llmenugl.h"
 #include "llfocusmgr.h"
 #include "llwindow.h"
+
+LLResizeBar::Params::Params()
+:	max_size("max_size", S32_MAX),
+	snapping_enabled("snapping_enabled", true),
+	resizing_view("resizing_view"),
+	side("side"),
+	allow_double_click_snapping("allow_double_click_snapping", true)
+{
+	name = "resize_bar";
+}
 
 LLResizeBar::LLResizeBar(const LLResizeBar::Params& p)
 :	LLView(p),
@@ -46,7 +57,8 @@ LLResizeBar::LLResizeBar(const LLResizeBar::Params& p)
 	mSnappingEnabled(p.snapping_enabled),
 	mAllowDoubleClickSnapping(p.allow_double_click_snapping),
 	mResizingView(p.resizing_view),
-	mResizeListener(NULL)
+	mResizeListener(NULL),
+	mImagePanel(NULL)
 {
 	setFollowsNone();
 	// set up some generically good follow code.
@@ -76,7 +88,6 @@ LLResizeBar::LLResizeBar(const LLResizeBar::Params& p)
 		break;
 	}
 }
-
 
 BOOL LLResizeBar::handleMouseDown(S32 x, S32 y, MASK mask)
 {
@@ -342,3 +353,24 @@ BOOL LLResizeBar::handleDoubleClick(S32 x, S32 y, MASK mask)
 	return TRUE;
 }
 
+void LLResizeBar::setImagePanel(LLPanel * panelp)
+{
+	const LLView::child_list_t * children = getChildList();
+	if (getChildCount() == 2)
+	{
+		LLPanel * image_panelp = dynamic_cast<LLPanel*>(children->back());
+		if (image_panelp)
+		{
+			removeChild(image_panelp);
+			delete image_panelp;
+		}
+	}
+
+	addChild(panelp);
+	sendChildToBack(panelp);
+}
+
+LLPanel * LLResizeBar::getImagePanel() const
+{
+	return getChildCount() > 0 ? (LLPanel *)getChildList()->back() : NULL;
+}

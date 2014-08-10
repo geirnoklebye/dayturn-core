@@ -34,6 +34,7 @@
 #include "llinventorymodel.h"
 #include "llinventoryobserver.h"
 #include "llviewerinventory.h"
+#include "llhttpclient.h"
 
 class LLWearableHoldingPattern;
 class LLInventoryCallback;
@@ -142,6 +143,9 @@ public:
 	void removeAllClothesFromAvatar();
 	void removeAllAttachmentsFromAvatar();
 
+	// Special handling of temp attachments, which are not in the COF
+	bool shouldRemoveTempAttachment(const LLUUID& item_id);
+
 	//has the current outfit changed since it was loaded?
 	bool isOutfitDirty() { return mOutfitIsDirty; }
 
@@ -238,6 +242,12 @@ private:
 	bool mOutfitLocked;
 
 	std::auto_ptr<LLOutfitUnLockTimer> mUnlockOutfitTimer;
+
+	// Set of temp attachment UUIDs that should be removed
+	typedef std::set<LLUUID> doomed_temp_attachments_t;
+	doomed_temp_attachments_t	mDoomedTempAttachmentIDs;
+
+	void addDoomedTempAttachment(const LLUUID& id_to_remove);
 
 	//////////////////////////////////////////////////////////////////////////////////
 	// Item-specific convenience functions 

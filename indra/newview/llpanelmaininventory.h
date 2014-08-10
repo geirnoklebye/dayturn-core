@@ -82,6 +82,9 @@ public:
 	void setSelectCallback(const LLFolderView::signal_t::slot_type& cb);
 
 	void onFilterEdit(const std::string& search_string );
+
+	void setFocusFilterEditor();
+
 protected:
 	//
 	// Misc functions
@@ -121,12 +124,15 @@ private:
 
 	LLFilterEditor*				mFilterEditor;
 	LLTabContainer*				mFilterTabs;
+    LLUICtrl*                   mCounterCtrl;
 	LLHandle<LLFloater>			mFinderHandle;
 	LLInventoryPanel*			mActivePanel;
 	bool						mResortActivePanel;
 	LLSaveFolderState*			mSavedFolderState;
 	std::string					mFilterText;
 	std::string					mFilterSubString;
+	S32							mItemCount;
+	std::string 				mItemCountString;
 
 
 	//////////////////////////////////////////////////////////////////////////////////

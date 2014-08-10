@@ -59,9 +59,8 @@ public:
 
 	virtual BOOL startDrag(EDragAndDropType* type, LLUUID* id) const = 0;
 	virtual LLToolDragAndDrop::ESource getDragSource() const = 0;
-
 protected:
-	bool								mPrevPassedAllFilters;
+    bool mPrevPassedAllFilters;
 };
 
 class LLInventorySort
@@ -105,6 +104,10 @@ class LLFolderViewModelInventory
 {
 public:
 	typedef LLFolderViewModel<LLInventorySort,   LLFolderViewModelItemInventory, LLFolderViewModelItemInventory,   LLInventoryFilter> base_t;
+
+	LLFolderViewModelInventory(const std::string& name)
+	:	base_t(new LLInventorySort(), new LLInventoryFilter(LLInventoryFilter::Params().name(name)))
+	{}
 
 	void setTaskID(const LLUUID& id) {mTaskID = id;}
 

@@ -48,6 +48,7 @@
 /* misc headers */
 #include "llscrolllistctrl.h"
 #include "llfilepicker.h"
+#include "lllocaltextureobject.h"
 #include "llviewertexturelist.h"
 #include "llviewerobjectlist.h"
 #include "llviewerobject.h"
@@ -58,6 +59,8 @@
 #include "lltexlayerparams.h"
 #include "llvovolume.h"
 #include "llnotificationsutil.h"
+#include "pipeline.h"
+#include "llmaterialmgr.h"
 
 /*=======================================*/
 /*  Formal declarations, constants, etc. */
@@ -108,8 +111,8 @@ LLLocalBitmap::LLLocalBitmap(std::string filename)
 	}
 	else
 	{
-		llwarns << "File of no valid extension given, local bitmap creation aborted." << "\n"
-			    << "Filename: " << mFilename << llendl;
+		LL_WARNS() << "File of no valid extension given, local bitmap creation aborted." << "\n"
+			    << "Filename: " << mFilename << LL_ENDL;
 		return; // no valid extension.
 	}
 
@@ -228,10 +231,10 @@ bool LLLocalBitmap::updateSelf(EUpdateType optional_firstupdate)
 					}
 					else
 					{
-						llwarns << "During the update process the following file was found" << "\n"
+						LL_WARNS() << "During the update process the following file was found" << "\n"
 							    << "but could not be opened or decoded for " << LL_LOCAL_UPDATE_RETRIES << " attempts." << "\n"
 								<< "Filename: " << mFilename << "\n"
-								<< "Disabling further update attempts for this file." << llendl;
+								<< "Disabling further update attempts for this file." << LL_ENDL;
 
 						LLSD notif_args;
 						notif_args["FNAME"] = mFilename;
@@ -247,9 +250,9 @@ bool LLLocalBitmap::updateSelf(EUpdateType optional_firstupdate)
 
 		else
 		{
-			llwarns << "During the update process, the following file was not found." << "\n" 
+			LL_WARNS() << "During the update process, the following file was not found." << "\n" 
 			        << "Filename: " << mFilename << "\n"
-				    << "Disabling further update attempts for this file." << llendl;
+				    << "Disabling further update attempts for this file." << LL_ENDL;
 
 			LLSD notif_args;
 			notif_args["FNAME"] = mFilename;
@@ -315,13 +318,13 @@ bool LLLocalBitmap::decodeBitmap(LLPointer<LLImageRaw> rawimg)
 
 		default:
 		{
-			// separating this into -several- llwarns calls because in the extremely unlikely case that this happens
+			// separating this into -several- LL_WARNS() calls because in the extremely unlikely case that this happens
 			// accessing mFilename and any other object properties might very well crash the viewer.
 			// getting here should be impossible, or there's been a pretty serious bug.
 
-			llwarns << "During a decode attempt, the following local bitmap had no properly assigned extension." << llendl;
-			llwarns << "Filename: " << mFilename << llendl;
-		    llwarns << "Disabling further update attempts for this file." << llendl;
+			LL_WARNS() << "During a decode attempt, the following local bitmap had no properly assigned extension." << LL_ENDL;
+			LL_WARNS() << "Filename: " << mFilename << LL_ENDL;
+		    LL_WARNS() << "Disabling further update attempts for this file." << LL_ENDL;
 			mLinkStatus = LS_BROKEN;
 		}
 	}
@@ -334,12 +337,17 @@ void LLLocalBitmap::replaceIDs(LLUUID old_id, LLUUID new_id)
 	// checking for misuse.
 	if (old_id == new_id)
 	{
-		llinfos << "An attempt was made to replace a texture with itself. (matching UUIDs)" << "\n"
-			    << "Texture UUID: " << old_id.asString() << llendl;
+		LL_INFOS() << "An attempt was made to replace a texture with itself. (matching UUIDs)" << "\n"
+			    << "Texture UUID: " << old_id.asString() << LL_ENDL;
 		return;
 	}
 
-	updateUserPrims(old_id, new_id);
+	// processing updates per channel; makes the process scalable.
+	// the only actual difference is in SetTE* call i.e. SetTETexture, SetTENormal, etc.
+	updateUserPrims(old_id, new_id, LLRender::DIFFUSE_MAP);
+	updateUserPrims(old_id, new_id, LLRender::NORMAL_MAP);
+	updateUserPrims(old_id, new_id, LLRender::SPECULAR_MAP);
+	
 	updateUserSculpts(old_id, new_id); // isn't there supposed to be an IMG_DEFAULT_SCULPT or something?
 	
 	// default safeguard image for layers
@@ -367,15 +375,15 @@ void LLLocalBitmap::replaceIDs(LLUUID old_id, LLUUID new_id)
 
 // this function sorts the faces from a getFaceList[getNumFaces] into a list of objects
 // in order to prevent multiple sendTEUpdate calls per object during updateUserPrims
-std::vector<LLViewerObject*> LLLocalBitmap::prepUpdateObjects(LLUUID old_id)
+std::vector<LLViewerObject*> LLLocalBitmap::prepUpdateObjects(LLUUID old_id, U32 channel)
 {
 	std::vector<LLViewerObject*> obj_list;
 	LLViewerFetchedTexture* old_texture = gTextureList.findImage(old_id);
 
-	for(U32 face_iterator = 0; face_iterator < old_texture->getNumFaces(); face_iterator++)
+	for(U32 face_iterator = 0; face_iterator < old_texture->getNumFaces(channel); face_iterator++)
 	{
 		// getting an object from a face
-		LLFace* face_to_object = (*old_texture->getFaceList())[face_iterator];
+		LLFace* face_to_object = (*old_texture->getFaceList(channel))[face_iterator];
 
 		if(face_to_object)
 		{
@@ -416,9 +424,9 @@ std::vector<LLViewerObject*> LLLocalBitmap::prepUpdateObjects(LLUUID old_id)
 	return obj_list;
 }
 
-void LLLocalBitmap::updateUserPrims(LLUUID old_id, LLUUID new_id)
+void LLLocalBitmap::updateUserPrims(LLUUID old_id, LLUUID new_id, U32 channel)
 {
-	std::vector<LLViewerObject*> objectlist = prepUpdateObjects(old_id);
+	std::vector<LLViewerObject*> objectlist = prepUpdateObjects(old_id, channel);
 
 	for(std::vector<LLViewerObject*>::iterator object_iterator = objectlist.begin();
 		object_iterator != objectlist.end(); object_iterator++)
@@ -427,7 +435,8 @@ void LLLocalBitmap::updateUserPrims(LLUUID old_id, LLUUID new_id)
 
 		if(object)
 		{
-			bool update_obj = false;
+			bool update_tex = false;
+			bool update_mat = false;
 			S32 num_faces = object->getNumFaces();
 
 			for (U8 face_iter = 0; face_iter < num_faces; face_iter++)
@@ -435,19 +444,50 @@ void LLLocalBitmap::updateUserPrims(LLUUID old_id, LLUUID new_id)
 				if (object->mDrawable)
 				{
 					LLFace* face = object->mDrawable->getFace(face_iter);
-					if (face && face->getTexture() && face->getTexture()->getID() == old_id)
+					if (face && face->getTexture(channel) && face->getTexture(channel)->getID() == old_id)
 					{
-						object->setTEImage(face_iter, LLViewerTextureManager::getFetchedTexture(
-							new_id, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE));
+						// these things differ per channel, unless there already is a universal
+						// texture setting function to setTE that takes channel as a param?
+						// p.s.: switch for now, might become if - if an extra test is needed to verify before touching normalmap/specmap
+						switch(channel)
+						{
+							case LLRender::DIFFUSE_MAP:
+					{
+                                object->setTETexture(face_iter, new_id);
+                                update_tex = true;
+								break;
+							}
 
-						update_obj = true;
+							case LLRender::NORMAL_MAP:
+							{
+								object->setTENormalMap(face_iter, new_id);
+								update_mat = true;
+								update_tex = true;
+                                break;
+							}
+
+							case LLRender::SPECULAR_MAP:
+							{
+								object->setTESpecularMap(face_iter, new_id);
+                                update_mat = true;
+								update_tex = true;
+                                break;
+							}
+						}
+						// end switch
+
 					}
 				}
 			}
 			
-			if (update_obj)
+			if (update_tex)
 			{
 				object->sendTEUpdate();
+			}
+
+			if (update_mat)
+			{
+                object->mDrawable->getVOVolume()->faceMappingChanged();
 			}
 		}
 	}
@@ -729,11 +769,11 @@ LLAvatarAppearanceDefines::ETextureIndex LLLocalBitmap::getTexIndex(
 
 		default:
 		{
-			llwarns << "Unknown wearable type: " << (int)type << "\n"
+			LL_WARNS() << "Unknown wearable type: " << (int)type << "\n"
 				    << "Baked Texture Index: " << (int)baked_texind << "\n"
 					<< "Filename: " << mFilename << "\n"
 					<< "TrackingID: " << mTrackingID << "\n"
-					<< "InworldID: " << mWorldID << llendl;
+					<< "InworldID: " << mWorldID << LL_ENDL;
 		}
 
 	}
@@ -805,8 +845,8 @@ bool LLLocalBitmapMgr::addUnit()
 			}
 			else
 			{
-				llwarns << "Attempted to add invalid or unreadable image file, attempt cancelled.\n"
-					    << "Filename: " << filename << llendl;
+				LL_WARNS() << "Attempted to add invalid or unreadable image file, attempt cancelled.\n"
+					    << "Filename: " << filename << LL_ENDL;
 
 				LLSD notif_args;
 				notif_args["FNAME"] = filename;

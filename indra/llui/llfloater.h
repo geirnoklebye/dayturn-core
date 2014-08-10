@@ -32,6 +32,7 @@
 #define LL_FLOATER_H
 
 #include "llpanel.h"
+#include "lltoolbar.h"
 #include "lluuid.h"
 //#include "llnotificationsutil.h"
 #include <set>
@@ -112,6 +113,8 @@ struct LLCoordFloater : LLCoord<LL_COORD_FLOATER>
 	bool operator!=(const LLCoordFloater& other) const { return !(*this == other); }
 
 	void setFloater(LLFloater& floater);
+
+	
 };
 
 class LLFloater : public LLPanel, public LLInstanceTracker<LLFloater>
@@ -121,6 +124,7 @@ class LLFloater : public LLPanel, public LLInstanceTracker<LLFloater>
 	friend class LLMultiFloater;
 
 public:
+
 	struct KeyCompare
 	{
 //		static bool compare(const LLSD& a, const LLSD& b);
@@ -238,6 +242,7 @@ public:
 	void			center();
 
 	LLMultiFloater* getHost();
+	bool isDetachedAndNotMinimized();
 
 	void			applyTitle();
 	std::string		getCurrentTitle() const;
@@ -261,7 +266,7 @@ public:
 	static bool     isVisible(const LLFloater* floater);
 	static bool     isMinimized(const LLFloater* floater);
 	BOOL			isFirstLook() { return mFirstLook; } // EXT-2653: This function is necessary to prevent overlapping for secondary showed toasts
-	BOOL			isFrontmost();
+	virtual BOOL	isFrontmost();
 	BOOL			isDependent()					{ return !mDependeeHandle.isDead(); }
 	void			setCanMinimize(BOOL can_minimize);
 	void			setCanClose(BOOL can_close);
@@ -285,6 +290,7 @@ public:
 	S32				getHeaderHeight() const { return mHeaderHeight; }
 
 	virtual BOOL	handleMouseDown(S32 x, S32 y, MASK mask);
+	virtual BOOL	handleMouseUp(S32 x, S32 y, MASK mask);
 	virtual BOOL	handleRightMouseDown(S32 x, S32 y, MASK mask);
 	virtual BOOL	handleDoubleClick(S32 x, S32 y, MASK mask);
 	virtual BOOL	handleMiddleMouseDown(S32 x, S32 y, MASK mask);
@@ -302,7 +308,7 @@ public:
 	virtual BOOL	canClose() { return TRUE; }
 
 	/*virtual*/ void setVisible(BOOL visible); // do not override
-	/*virtual*/ void handleVisibilityChange ( BOOL new_visibility ); // do not override
+	/*virtual*/ void onVisibilityChange ( BOOL new_visibility ); // do not override
 	
 	void			setFrontmost(BOOL take_focus = TRUE);
     virtual void	setVisibleAndFrontmost(BOOL take_focus=TRUE, const LLSD& key = LLSD());    
@@ -385,7 +391,7 @@ protected:
 
 	void			destroy(); // Don't call this directly.  You probably want to call closeFloater()
 
-	virtual	void	onClickCloseBtn();
+	virtual	void	onClickCloseBtn(bool app_quitting = false);
 
 	virtual void	updateTitleButtons();
 
@@ -509,6 +515,8 @@ private:
 // LLFloaterView
 // Parent of all floating panels
 
+const S32 FLOATER_MIN_VISIBLE_PIXELS = 16;
+
 class LLFloaterView : public LLUICtrl
 {
 public:
@@ -528,7 +536,7 @@ public:
 	LLRect			findNeighboringPosition( LLFloater* reference_floater, LLFloater* neighbor );
 
 	// Given a child of gFloaterView, make sure this view can fit entirely onscreen.
-	void			adjustToFitScreen(LLFloater* floater, BOOL allow_partial_outside);
+	void			adjustToFitScreen(LLFloater* floater, BOOL allow_partial_outside, BOOL snap_in_toolbars = false);
 
 	void			setMinimizePositionVerticalOffset(S32 offset) { mMinimizePositionVOffset = offset; }
 	void			getMinimizePosition( S32 *left, S32 *bottom);
@@ -567,10 +575,15 @@ public:
 	void setFloaterSnapView(LLHandle<LLView> snap_view) {mSnapView = snap_view; }
 	LLFloater* getFrontmostClosableFloater(); 
 
+	void setToolbarRect(LLToolBarEnums::EToolBarLocation tb, const LLRect& toolbar_rect);
+
 private:
 	void hiddenFloaterClosed(LLFloater* floater);
 
 	LLRect				mLastSnapRect;
+	LLRect				mToolbarLeftRect;
+	LLRect				mToolbarBottomRect;
+	LLRect				mToolbarRightRect;
 	LLHandle<LLView>	mSnapView;
 	BOOL			mFocusCycleMode;
 	S32				mSnapOffsetBottom;

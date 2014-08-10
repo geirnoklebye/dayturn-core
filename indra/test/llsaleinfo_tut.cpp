@@ -111,7 +111,7 @@ namespace tut
 		LLFILE* fp = LLFile::fopen("linden_file.dat","w+");
 		if(!fp)
 		{
-			llerrs << "file could not be opened\n" << llendl;
+			LL_ERRS() << "file could not be opened\n" << LL_ENDL;
 			return;
 		}
 			
@@ -128,7 +128,7 @@ namespace tut
 		
 		if(!fp)
 		{
-			llerrs << "file coudnt be opened\n" << llendl;
+			LL_ERRS() << "file coudnt be opened\n" << LL_ENDL;
 			return;
 		}
 		
@@ -156,7 +156,7 @@ namespace tut
 					
 		ensure("importStream() fn failed ",
 			llsaleinfo.getSalePrice() == llsaleinfo1.getSalePrice() &&
-			llsaleinfo.getSaleType() == llsaleinfo1.getSaleType());
+										       llsaleinfo.getSaleType() == llsaleinfo1.getSaleType());		
 	}
 
 	template<> template<>

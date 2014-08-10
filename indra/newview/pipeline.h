@@ -29,38 +29,27 @@
 
 #include "llcamera.h"
 #include "llerror.h"
-#include "lldarrayptr.h"
-#include "lldqueueptr.h"
 #include "lldrawpool.h"
 #include "llspatialpartition.h"
 #include "m4math.h"
 #include "llpointer.h"
-#include "lldrawpool.h"
+#include "lldrawpoolalpha.h"
+#include "lldrawpoolmaterials.h"
 #include "llgl.h"
 #include "lldrawable.h"
 #include "llrendertarget.h"
 
 #include <stack>
 
-#include <stack>
-
-#include <stack>
-
 class LLViewerTexture;
-class LLEdge;
 class LLFace;
 class LLViewerObject;
-class LLAgent;
-class LLDisplayPrimitive;
 class LLTextureEntry;
-class LLRenderFunc;
-class LLCubeMap;
 class LLCullResult;
 class LLVOAvatar;
+class LLVOPartGroup;
 class LLGLSLShader;
-class LLCurlRequest;
-
-class LLMeshResponder;
+class LLDrawPoolAlpha;
 
 typedef enum e_avatar_skinning_method
 {
@@ -81,25 +70,26 @@ glh::matrix4f gl_ortho(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top,
 glh::matrix4f gl_perspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloat zFar);
 glh::matrix4f gl_lookat(LLVector3 eye, LLVector3 center, LLVector3 up);
 
-extern LLFastTimer::DeclareTimer FTM_RENDER_GEOMETRY;
-extern LLFastTimer::DeclareTimer FTM_RENDER_GRASS;
-extern LLFastTimer::DeclareTimer FTM_RENDER_INVISIBLE;
-extern LLFastTimer::DeclareTimer FTM_RENDER_OCCLUSION;
-extern LLFastTimer::DeclareTimer FTM_RENDER_SHINY;
-extern LLFastTimer::DeclareTimer FTM_RENDER_SIMPLE;
-extern LLFastTimer::DeclareTimer FTM_RENDER_TERRAIN;
-extern LLFastTimer::DeclareTimer FTM_RENDER_TREES;
-extern LLFastTimer::DeclareTimer FTM_RENDER_UI;
-extern LLFastTimer::DeclareTimer FTM_RENDER_WATER;
-extern LLFastTimer::DeclareTimer FTM_RENDER_WL_SKY;
-extern LLFastTimer::DeclareTimer FTM_RENDER_ALPHA;
-extern LLFastTimer::DeclareTimer FTM_RENDER_CHARACTERS;
-extern LLFastTimer::DeclareTimer FTM_RENDER_BUMP;
-extern LLFastTimer::DeclareTimer FTM_RENDER_FULLBRIGHT;
-extern LLFastTimer::DeclareTimer FTM_RENDER_GLOW;
-extern LLFastTimer::DeclareTimer FTM_STATESORT;
-extern LLFastTimer::DeclareTimer FTM_PIPELINE;
-extern LLFastTimer::DeclareTimer FTM_CLIENT_COPY;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_GEOMETRY;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_GRASS;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_INVISIBLE;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_OCCLUSION;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_SHINY;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_SIMPLE;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_TERRAIN;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_TREES;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_UI;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_WATER;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_WL_SKY;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_ALPHA;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_CHARACTERS;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_BUMP;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_MATERIALS;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_FULLBRIGHT;
+extern LLTrace::BlockTimerStatHandle FTM_RENDER_GLOW;
+extern LLTrace::BlockTimerStatHandle FTM_STATESORT;
+extern LLTrace::BlockTimerStatHandle FTM_PIPELINE;
+extern LLTrace::BlockTimerStatHandle FTM_CLIENT_COPY;
 
 
 class LLPipeline
@@ -111,7 +101,7 @@ public:
 	void destroyGL();
 	void restoreGL();
 	void resetVertexBuffers();
-	void doResetVertexBuffers();
+	void doResetVertexBuffers(bool forced = false);
 	void resizeScreenTexture();
 	void releaseGLBuffers();
 	void releaseLUTBuffers();
@@ -173,6 +163,12 @@ public:
 	// Object related methods
 	void        markVisible(LLDrawable *drawablep, LLCamera& camera);
 	void		markOccluder(LLSpatialGroup* group);
+
+	//downsample source to dest, taking the maximum depth value per pixel in source and writing to dest
+	// if source's depth buffer cannot be bound for reading, a scratch space depth buffer must be provided
+	void		downsampleDepthBuffer(LLRenderTarget& source, LLRenderTarget& dest, LLRenderTarget* scratch_space = NULL);
+
+	void		doOcclusion(LLCamera& camera, LLRenderTarget& source, LLRenderTarget& dest, LLRenderTarget* scratch_space = NULL);
 	void		doOcclusion(LLCamera& camera);
 	void		markNotCulled(LLSpatialGroup* group, LLCamera &camera);
 	void        markMoved(LLDrawable *drawablep, BOOL damped_motion = FALSE);
@@ -185,21 +181,27 @@ public:
 	void		markMeshDirty(LLSpatialGroup* group);
 
 	//get the object between start and end that's closest to start.
-	LLViewerObject* lineSegmentIntersectInWorld(const LLVector3& start, const LLVector3& end,
+	LLViewerObject* lineSegmentIntersectInWorld(const LLVector4a& start, const LLVector4a& end,
 												BOOL pick_transparent,
 												S32* face_hit,                          // return the face hit
-												LLVector3* intersection = NULL,         // return the intersection point
+												LLVector4a* intersection = NULL,         // return the intersection point
 												LLVector2* tex_coord = NULL,            // return the texture coordinates of the intersection point
-												LLVector3* normal = NULL,               // return the surface normal at the intersection point
-												LLVector3* bi_normal = NULL             // return the surface bi-normal at the intersection point  
+												LLVector4a* normal = NULL,               // return the surface normal at the intersection point
+												LLVector4a* tangent = NULL             // return the surface tangent at the intersection point  
 		);
-	LLViewerObject* lineSegmentIntersectInHUD(const LLVector3& start, const LLVector3& end,
+
+	//get the closest particle to start between start and end, returns the LLVOPartGroup and particle index
+	LLVOPartGroup* lineSegmentIntersectParticle(const LLVector4a& start, const LLVector4a& end, LLVector4a* intersection,
+														S32* face_hit);
+
+
+	LLViewerObject* lineSegmentIntersectInHUD(const LLVector4a& start, const LLVector4a& end,
 											  BOOL pick_transparent,
 											  S32* face_hit,                          // return the face hit
-											  LLVector3* intersection = NULL,         // return the intersection point
+											  LLVector4a* intersection = NULL,         // return the intersection point
 											  LLVector2* tex_coord = NULL,            // return the texture coordinates of the intersection point
-											  LLVector3* normal = NULL,               // return the surface normal at the intersection point
-											  LLVector3* bi_normal = NULL             // return the surface bi-normal at the intersection point
+											  LLVector4a* normal = NULL,               // return the surface normal at the intersection point
+											  LLVector4a* tangent = NULL             // return the surface tangent at the intersection point
 		);
 
 	// Something about these textures has changed.  Dirty them.
@@ -243,6 +245,7 @@ public:
 	void rebuildPriorityGroups();
 	void rebuildGroups();
 	void clearRebuildGroups();
+	void clearRebuildDrawables();
 
 	//calculate pixel area of given box from vantage point of given camera
 	static F32 calcPixelArea(LLVector3 center, LLVector3 size, LLCamera& camera);
@@ -256,6 +259,8 @@ public:
 	void forAllVisibleDrawables(void (*func)(LLDrawable*));
 
 	void renderObjects(U32 type, U32 mask, BOOL texture = TRUE, BOOL batch_texture = FALSE);
+	void renderMaskedObjects(U32 type, U32 mask, BOOL texture = TRUE, BOOL batch_texture = FALSE);
+
 	void renderGroups(LLRenderPass* pass, U32 type, U32 mask, BOOL texture);
 
 	void grabReferences(LLCullResult& result);
@@ -270,13 +275,14 @@ public:
 
 	void renderGeom(LLCamera& camera, BOOL forceVBOUpdate = FALSE);
 	void renderGeomDeferred(LLCamera& camera);
-	void renderGeomPostDeferred(LLCamera& camera);
+	void renderGeomPostDeferred(LLCamera& camera, bool do_occlusion=true);
 	void renderGeomShadow(LLCamera& camera);
 	void bindDeferredShader(LLGLSLShader& shader, U32 light_index = 0, U32 noise_map = 0xFFFFFFFF);
 	void setupSpotLight(LLGLSLShader& shader, LLDrawable* drawablep);
 
 	void unbindDeferredShader(LLGLSLShader& shader);
 	void renderDeferredLighting();
+	void renderDeferredLightingToRT(LLRenderTarget* target);
 	
 	void generateWaterReflection(LLCamera& camera);
 	void generateSunShadow(LLCamera& camera);
@@ -389,12 +395,15 @@ public:
 	static void setRenderHighlights(BOOL val);
 	static void toggleRenderHighlights(void* data);
 	static BOOL getRenderHighlights(void* data);
+	static void setRenderHighlightTextureChannel(LLRender::eTexIndex channel); // sets which UV setup to display in highlight overlay
 
+	static void updateRenderBump();
 	static void updateRenderDeferred();
-	static void refreshRenderDeferred();
 	static void refreshCachedSettings();
 
 	static void throttleNewMemoryAllocation(BOOL disable);
+
+	
 
 	void addDebugBlip(const LLVector3& position, const LLColor4& color);
 
@@ -426,8 +435,11 @@ public:
 		RENDER_TYPE_TERRAIN						= LLDrawPool::POOL_TERRAIN,
 		RENDER_TYPE_SIMPLE						= LLDrawPool::POOL_SIMPLE,
 		RENDER_TYPE_GRASS						= LLDrawPool::POOL_GRASS,
+		RENDER_TYPE_ALPHA_MASK					= LLDrawPool::POOL_ALPHA_MASK,
+		RENDER_TYPE_FULLBRIGHT_ALPHA_MASK		= LLDrawPool::POOL_FULLBRIGHT_ALPHA_MASK,
 		RENDER_TYPE_FULLBRIGHT					= LLDrawPool::POOL_FULLBRIGHT,
 		RENDER_TYPE_BUMP						= LLDrawPool::POOL_BUMP,
+		RENDER_TYPE_MATERIALS					= LLDrawPool::POOL_MATERIALS,
 		RENDER_TYPE_AVATAR						= LLDrawPool::POOL_AVATAR,
 		RENDER_TYPE_TREE						= LLDrawPool::POOL_TREE,
 		RENDER_TYPE_INVISIBLE					= LLDrawPool::POOL_INVISIBLE,
@@ -448,7 +460,22 @@ public:
 		RENDER_TYPE_PASS_ALPHA					= LLRenderPass::PASS_ALPHA,
 		RENDER_TYPE_PASS_ALPHA_MASK				= LLRenderPass::PASS_ALPHA_MASK,
 		RENDER_TYPE_PASS_FULLBRIGHT_ALPHA_MASK	= LLRenderPass::PASS_FULLBRIGHT_ALPHA_MASK,
-//		RENDER_TYPE_PASS_ALPHA_SHADOW = LLRenderPass::PASS_ALPHA_SHADOW,
+		RENDER_TYPE_PASS_MATERIAL				= LLRenderPass::PASS_MATERIAL,
+		RENDER_TYPE_PASS_MATERIAL_ALPHA			= LLRenderPass::PASS_MATERIAL_ALPHA,
+		RENDER_TYPE_PASS_MATERIAL_ALPHA_MASK	= LLRenderPass::PASS_MATERIAL_ALPHA_MASK,
+		RENDER_TYPE_PASS_MATERIAL_ALPHA_EMISSIVE= LLRenderPass::PASS_MATERIAL_ALPHA_EMISSIVE,
+		RENDER_TYPE_PASS_SPECMAP				= LLRenderPass::PASS_SPECMAP,
+		RENDER_TYPE_PASS_SPECMAP_BLEND			= LLRenderPass::PASS_SPECMAP_BLEND,
+		RENDER_TYPE_PASS_SPECMAP_MASK			= LLRenderPass::PASS_SPECMAP_MASK,
+		RENDER_TYPE_PASS_SPECMAP_EMISSIVE		= LLRenderPass::PASS_SPECMAP_EMISSIVE,
+		RENDER_TYPE_PASS_NORMMAP				= LLRenderPass::PASS_NORMMAP,
+		RENDER_TYPE_PASS_NORMMAP_BLEND			= LLRenderPass::PASS_NORMMAP_BLEND,
+		RENDER_TYPE_PASS_NORMMAP_MASK			= LLRenderPass::PASS_NORMMAP_MASK,
+		RENDER_TYPE_PASS_NORMMAP_EMISSIVE		= LLRenderPass::PASS_NORMMAP_EMISSIVE,
+		RENDER_TYPE_PASS_NORMSPEC				= LLRenderPass::PASS_NORMSPEC,
+		RENDER_TYPE_PASS_NORMSPEC_BLEND			= LLRenderPass::PASS_NORMSPEC_BLEND,
+		RENDER_TYPE_PASS_NORMSPEC_MASK			= LLRenderPass::PASS_NORMSPEC_MASK,
+		RENDER_TYPE_PASS_NORMSPEC_EMISSIVE		= LLRenderPass::PASS_NORMSPEC_EMISSIVE,
 		// Following are object types (only used in drawable mRenderType)
 		RENDER_TYPE_HUD = LLRenderPass::NUM_RENDER_TYPES,
 		RENDER_TYPE_VOLUME,
@@ -495,15 +522,16 @@ public:
 		RENDER_DEBUG_SHADOW_FRUSTA		= 0x00040000,
 		RENDER_DEBUG_SCULPTED           = 0x00080000,
 		RENDER_DEBUG_AVATAR_VOLUME      = 0x00100000,
-		RENDER_DEBUG_BUILD_QUEUE		= 0x00200000,
-		RENDER_DEBUG_AGENT_TARGET       = 0x00400000,
-		RENDER_DEBUG_UPDATE_TYPE		= 0x00800000,
-		RENDER_DEBUG_PHYSICS_SHAPES     = 0x01000000,
-		RENDER_DEBUG_NORMALS	        = 0x02000000,
-		RENDER_DEBUG_LOD_INFO	        = 0x04000000,
-		RENDER_DEBUG_RENDER_COMPLEXITY  = 0x08000000,
-		RENDER_DEBUG_ATTACHMENT_BYTES	= 0x10000000,
-		RENDER_DEBUG_TEXEL_DENSITY		= 0x20000000
+		RENDER_DEBUG_AVATAR_JOINTS      = 0x00200000,
+		RENDER_DEBUG_BUILD_QUEUE		= 0x00400000,
+		RENDER_DEBUG_AGENT_TARGET       = 0x00800000,
+		RENDER_DEBUG_UPDATE_TYPE		= 0x01000000,
+		RENDER_DEBUG_PHYSICS_SHAPES     = 0x02000000,
+		RENDER_DEBUG_NORMALS	        = 0x04000000,
+		RENDER_DEBUG_LOD_INFO	        = 0x08000000,
+		RENDER_DEBUG_RENDER_COMPLEXITY  = 0x10000000,
+		RENDER_DEBUG_ATTACHMENT_BYTES	= 0x20000000,
+		RENDER_DEBUG_TEXEL_DENSITY		= 0x40000000
 	};
 
 public:
@@ -516,22 +544,13 @@ public:
 	LLQuaternion			mFlyCamRotation;
 
 	BOOL					 mBackfaceCull;
-	S32						 mBatchCount;
 	S32						 mMatrixOpCount;
 	S32						 mTextureMatrixOps;
-	S32						 mMaxBatchSize;
-	S32						 mMinBatchSize;
-	S32						 mMeanBatchSize;
-	S32						 mTrianglesDrawn;
 	S32						 mNumVisibleNodes;
-	S32						 mVerticesRelit;
 
 	S32						 mDebugTextureUploadCost;
 	S32						 mDebugSculptUploadCost;
 	S32						 mDebugMeshUploadCost;
-
-	S32						 mLightingChanges;
-	S32						 mGeometryChanges;
 
 	S32						 mNumVisibleFaces;
 
@@ -555,6 +574,7 @@ public:
 	static BOOL				sPickAvatar;
 	static BOOL				sReflectionRender;
 	static BOOL				sImpostorRender;
+	static BOOL				sImpostorRenderAlphaDepthPass;
 	static BOOL				sUnderWaterRender;
 	static BOOL				sRenderGlow;
 	static BOOL				sTextureBindTest;
@@ -565,6 +585,9 @@ public:
 	static BOOL             sMemAllocationThrottled;
 	static S32				sVisibleLightCount;
 	static F32				sMinRenderSize;	
+	static BOOL				sRenderingHUDs;
+
+	static LLTrace::EventStatHandle<S64> sStatBatchSize;
 
 	//screen texture
 	U32 					mScreenWidth;
@@ -576,6 +599,7 @@ public:
 	LLRenderTarget			mFXAABuffer;
 	LLRenderTarget			mEdgeMap;
 	LLRenderTarget			mDeferredDepth;
+	LLRenderTarget			mOcclusionDepth;
 	LLRenderTarget			mDeferredLight;
 	LLRenderTarget			mHighlight;
 	LLRenderTarget			mPhysicsDisplay;
@@ -588,6 +612,7 @@ public:
 
 	//sun shadow map
 	LLRenderTarget			mShadow[6];
+	LLRenderTarget			mShadowOcclusion[6];
 	std::vector<LLVector3>	mShadowFrustPoints[4];
 	LLVector4				mShadowError;
 	LLVector4				mShadowFOV;
@@ -775,17 +800,20 @@ protected:
 	// For quick-lookups into mPools (mapped by texture pointer)
 	std::map<uintptr_t, LLDrawPool*>	mTerrainPools;
 	std::map<uintptr_t, LLDrawPool*>	mTreePools;
-	LLDrawPool*					mAlphaPool;
+	LLDrawPoolAlpha*			mAlphaPool;
 	LLDrawPool*					mSkyPool;
 	LLDrawPool*					mTerrainPool;
 	LLDrawPool*					mWaterPool;
 	LLDrawPool*					mGroundPool;
 	LLRenderPass*				mSimplePool;
 	LLRenderPass*				mGrassPool;
+	LLRenderPass*				mAlphaMaskPool;
+	LLRenderPass*				mFullbrightAlphaMaskPool;
 	LLRenderPass*				mFullbrightPool;
 	LLDrawPool*					mInvisiblePool;
 	LLDrawPool*					mGlowPool;
 	LLDrawPool*					mBumpPool;
+	LLDrawPool*					mMaterialsPool;
 	LLDrawPool*					mWLSkyPool;
 	// Note: no need to keep an quick-lookup to avatar pools, since there's only one per avatar
 	
@@ -823,6 +851,10 @@ protected:
 public:
 	static BOOL				sRenderBeacons;
 	static BOOL				sRenderHighlight;
+
+	// Determines which set of UVs to use in highlight display
+	//
+	static LLRender::eTexIndex sRenderHighlightTextureChannel;
 
 	//debug use
 	static U32              sCurRenderPoolType ;
@@ -868,6 +900,7 @@ public:
 	static F32 RenderGlowWidth;
 	static F32 RenderGlowStrength;
 	static BOOL RenderDepthOfField;
+	static BOOL RenderDepthOfFieldInEditMode;
 	static F32 CameraFocusTransitionTime;
 	static F32 CameraFNumber;
 	static F32 CameraFocalLength;

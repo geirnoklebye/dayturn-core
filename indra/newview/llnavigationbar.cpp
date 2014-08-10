@@ -516,9 +516,10 @@ void LLNavigationBar::onTeleportFailed()
 void LLNavigationBar::onTeleportFinished(const LLVector3d& global_agent_pos)
 {
 //MK
-	if (gRRenabled)
+	if (gRRenabled && LLViewerParcelMgr::getInstance())
 	{
-		gAgent.mRRInterface.setParcelName (LLViewerParcelMgr::getInstance()->getAgentParcelName());
+		std::string parcel_name = LLViewerParcelMgr::getInstance()->getAgentParcelName();
+		gAgent.mRRInterface.mParcelName = parcel_name;
 		if (gAgent.mRRInterface.scriptsEnabled())
 		{
 			gAgent.mRRInterface.setScriptsEnabledOnce(TRUE); // we are in a script enabled area => retain this information for later
@@ -623,7 +624,7 @@ void LLNavigationBar::onRegionNameResponse(
 		LLVector3d region_pos = from_region_handle(region_handle);
 		LLVector3d global_pos = region_pos + (LLVector3d) local_coords;
 
-		llinfos << "Teleporting to: " << LLSLURL(region_name,	global_pos).getSLURLString()  << llendl;
+		LL_INFOS() << "Teleporting to: " << LLSLURL(region_name,	global_pos).getSLURLString()  << LL_ENDL;
 		gAgent.teleportViaLocation(global_pos);
 	}
 	else if (gSavedSettings.getBOOL("SearchFromAddressBar"))
@@ -637,7 +638,7 @@ void	LLNavigationBar::showTeleportHistoryMenu(LLUICtrl* btn_ctrl)
 	// Don't show the popup if teleport history is empty.
 	if (LLTeleportHistory::getInstance()->isEmpty())
 	{
-		lldebugs << "Teleport history is empty, will not show the menu." << llendl;
+		LL_DEBUGS() << "Teleport history is empty, will not show the menu." << LL_ENDL;
 		return;
 	}
 	
@@ -718,6 +719,6 @@ int LLNavigationBar::getDefFavBarHeight()
 //MK
 void LLNavigationBar::onAvatarHeightOffsetResetButtonClicked()
 {
-	gSavedSettings.setF32 ("RestrainedLoveOffsetAvatarZ", 0.0);
+	gSavedPerAccountSettings.setF32 ("RestrainedLoveOffsetAvatarZ", 0.0);
 }
 //mk

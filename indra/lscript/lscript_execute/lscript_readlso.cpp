@@ -37,7 +37,7 @@ LLScriptLSOParse::LLScriptLSOParse(LLFILE *fp)
 	S32 pos = 0;
 	if (fread(&sizearray, 1, 4, fp) != 4)
 	{
-		llwarns << "Short read" << llendl;
+		LL_WARNS() << "Short read" << LL_ENDL;
 		filesize = 0;
 	} else {
 		filesize = bytestream2integer(sizearray, pos);
@@ -46,7 +46,7 @@ LLScriptLSOParse::LLScriptLSOParse(LLFILE *fp)
 	fseek(fp, 0, SEEK_SET);
 	if (fread(mRawData, 1, filesize, fp) != filesize)
 	{
-		llwarns << "Short read" << llendl;
+		LL_WARNS() << "Short read" << LL_ENDL;
 	}
 
 	initOpCodePrinting();
@@ -145,7 +145,6 @@ void LLScriptLSOParse::printGlobals(LLFILE *fp)
 		// get offset to skip past name
 		varoffset = global_v_offset;
 		bytestream2integer(mRawData, global_v_offset);
-		
 		// get typeexport
 		type = *(mRawData + global_v_offset++);
 
@@ -347,6 +346,7 @@ void LLScriptLSOParse::printStates(LLFILE *fp)
 				S32 temp_end;
 
 				opcode_end = worst_case_opcode_end;
+				(void)opcode_end;
 
 				for (k = LSTT_STATE_BEGIN; k < LSTT_STATE_END; k++)
 				{

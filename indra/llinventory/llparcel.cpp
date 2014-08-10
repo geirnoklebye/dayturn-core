@@ -136,7 +136,7 @@ LLParcel::LLParcel(const LLUUID &owner_id,
 // virtual
 LLParcel::~LLParcel()
 {
-    // user list cleaned up by LLDynamicArray destructor.
+    // user list cleaned up by std::vector destructor.
 }
 
 void LLParcel::init(const LLUUID &owner_id,
@@ -414,117 +414,6 @@ BOOL LLParcel::allowTerraformBy(const LLUUID &agent_id) const
 }
 
 
-bool LLParcel::isAgentBlockedFromParcel(LLParcel* parcelp,
-                                        const LLUUID& agent_id,
-                                        const uuid_vec_t& group_ids,
-                                        const BOOL is_agent_identified,
-                                        const BOOL is_agent_transacted,
-                                        const BOOL is_agent_ageverified)
-{
-    S32 current_group_access = parcelp->blockAccess(agent_id, LLUUID::null, is_agent_identified, is_agent_transacted, is_agent_ageverified);
-    S32 count;
-    bool is_allowed = (current_group_access == BA_ALLOWED) ? true: false;
-    LLUUID group_id;
-    
-    count = group_ids.size();
-    for (int i = 0; i < count && !is_allowed; i++)
-    {
-        group_id = group_ids[i];
-        current_group_access = parcelp->blockAccess(agent_id, group_id, is_agent_identified, is_agent_transacted, is_agent_ageverified);
-        
-        if (current_group_access == BA_ALLOWED) is_allowed = true;
-    }
-    
-    return !is_allowed;
-}
-
-BOOL LLParcel::isAgentBanned(const LLUUID& agent_id) const
-{
-	// Test ban list
-	if (mBanList.find(agent_id) != mBanList.end())
-	{
-		return TRUE;
-	}
-    
-    return FALSE;
-}
-
-S32 LLParcel::blockAccess(const LLUUID& agent_id, const LLUUID& group_id,
-                          const BOOL is_agent_identified,
-                          const BOOL is_agent_transacted,
-                          const BOOL is_agent_ageverified) const
-{
-    // Test ban list
-    if (isAgentBanned(agent_id))
-    {
-        return BA_BANNED;
-    }
-    
-    // Always allow owner on (unless he banned himself, useful for
-    // testing). We will also allow estate owners/managers in if they 
-    // are not explicitly banned.
-    if (agent_id == mOwnerID)
-    {
-        return BA_ALLOWED;
-    }
-    
-    // Special case when using pass list where group access is being restricted but not 
-    // using access list.	 In this case group members are allowed only if they buy a pass.
-    // We return BA_NOT_IN_LIST if not in list
-    BOOL passWithGroup = getParcelFlag(PF_USE_PASS_LIST) && !getParcelFlag(PF_USE_ACCESS_LIST) 
-    && getParcelFlag(PF_USE_ACCESS_GROUP) && !mGroupID.isNull() && group_id == mGroupID;
-    
-    
-    // Test group list
-    if (getParcelFlag(PF_USE_ACCESS_GROUP)
-        && !mGroupID.isNull()
-        && group_id == mGroupID
-        && !passWithGroup)
-    {
-        return BA_ALLOWED;
-    }
-    
-    // Test access list
-    if (getParcelFlag(PF_USE_ACCESS_LIST) || passWithGroup )
-    {
-        if (mAccessList.find(agent_id) != mAccessList.end())
-        {
-            return BA_ALLOWED;
-        }
-        
-        return BA_NOT_ON_LIST; 
-    }
-    
-    // If we're not doing any other limitations, all users
-    // can enter, unless
-    if (		 !getParcelFlag(PF_USE_ACCESS_GROUP)
-                 && !getParcelFlag(PF_USE_ACCESS_LIST))
-    { 
-        //If the land is group owned, and you are in the group, bypass these checks
-        if(getIsGroupOwned() && group_id == mGroupID)
-        {
-            return BA_ALLOWED;
-        }
-        
-        // Test for "payment" access levels
-        // Anonymous - No Payment Info on File
-        if(getParcelFlag(PF_DENY_ANONYMOUS) && !is_agent_identified && !is_agent_transacted)
-        {
-            return BA_NO_ACCESS_LEVEL;
-        }
-        // AgeUnverified - Not Age Verified
-        if(getParcelFlag(PF_DENY_AGEUNVERIFIED) && !is_agent_ageverified)
-        {
-			return BA_NOT_AGE_VERIFIED;
-        }
-    
-        return BA_ALLOWED;
-    }
-    
-    return BA_NOT_IN_GROUP;
-    
-}
-
 
 void LLParcel::setArea(S32 area, S32 sim_object_limit)
 {
@@ -581,8 +470,8 @@ BOOL LLParcel::importAccessEntry(std::istream& input_stream, LLAccessEntry* entr
         }
         else
         {
-            llwarns << "Unknown keyword in parcel access entry section: <" 
-            << keyword << ">" << llendl;
+            LL_WARNS() << "Unknown keyword in parcel access entry section: <" 
+            << keyword << ">" << LL_ENDL;
         }
     }
     return input_stream.good();
@@ -1082,7 +971,7 @@ void LLParcel::startSale(const LLUUID& buyer_id, BOOL is_buyer_group)
 		mGroupID.setNull();
 	}
 	mSaleTimerExpires.start();
-	mSaleTimerExpires.setTimerExpirySec(DEFAULT_USEC_SALE_TIMEOUT / SEC_TO_MICROSEC);
+	mSaleTimerExpires.setTimerExpirySec(U64Microseconds(DEFAULT_USEC_SALE_TIMEOUT));
 	mStatus = OS_LEASE_PENDING;
 	mClaimDate = time(NULL);
 	setAuctionID(0);
@@ -1207,9 +1096,9 @@ void LLParcel::clearParcel()
 
 void LLParcel::dump()
 {
-    llinfos << "parcel " << mLocalID << " area " << mArea << llendl;
-    llinfos << "	 name <" << mName << ">" << llendl;
-    llinfos << "	 desc <" << mDesc << ">" << llendl;
+    LL_INFOS() << "parcel " << mLocalID << " area " << mArea << LL_ENDL;
+    LL_INFOS() << "	 name <" << mName << ">" << LL_ENDL;
+    LL_INFOS() << "	 desc <" << mDesc << ">" << LL_ENDL;
 }
 
 const std::string& ownership_status_to_string(LLParcel::EOwnershipStatus status)
@@ -1289,7 +1178,7 @@ LLParcel::ECategory category_string_to_category(const std::string& s)
             return (LLParcel::ECategory)i;
         }
     }
-    llwarns << "Parcel category outside of possibilities " << s << llendl;
+    LL_WARNS() << "Parcel category outside of possibilities " << s << LL_ENDL;
     return LLParcel::C_NONE;
 }
 

@@ -79,7 +79,7 @@ void LLMenuOptionPathfindingRebakeNavmesh::initialize()
 
 		if ( !mRegionCrossingSlot.connected() )
 		{
-			mRegionCrossingSlot = LLEnvManagerNew::getInstance()->setRegionChangeCallback(boost::bind(&LLMenuOptionPathfindingRebakeNavmesh::handleRegionBoundaryCrossed, this));
+			mRegionCrossingSlot = gAgent.addRegionChangedCallback(boost::bind(&LLMenuOptionPathfindingRebakeNavmesh::handleRegionBoundaryCrossed, this));
 		}
 
 		if (!mAgentStateSlot.connected())
@@ -92,7 +92,7 @@ void LLMenuOptionPathfindingRebakeNavmesh::initialize()
 
 void LLMenuOptionPathfindingRebakeNavmesh::quit()
 {
-	if (mIsInitialized)
+	if (mIsInitialized)		// Quitting from the login screen leaves this uninitialized
 	{
 		if (mNavMeshSlot.connected())
 		{

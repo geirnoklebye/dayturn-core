@@ -42,7 +42,6 @@
 #include "lllineeditor.h"
 #include "lluictrlfactory.h"
 #include "llnotifications.h"
-#include "llfunctorregistry.h"
 #include "llrootview.h"
 #include "lltransientfloatermgr.h"
 #include "llviewercontrol.h" // for gSavedSettings
@@ -175,7 +174,7 @@ LLToastAlertPanel::LLToastAlertPanel( LLNotificationPtr notification, bool modal
 	// Message: create text box using raw string, as text has been structure deliberately
 	// Use size of created text box to generate dialog box size
 	std::string msg = mNotification->getMessage();
-	llwarns << "Alert: " << msg << llendl;
+	LL_WARNS() << "Alert: " << msg << LL_ENDL;
 	LLTextBox::Params params;
 	params.name("Alert message");
 	params.font(font);
@@ -492,7 +491,7 @@ void LLToastAlertPanel::draw()
 	}
 
 	static LLUIColor shadow_color = LLUIColorTable::instance().getColor("ColorDropShadow");
-	static LLUICachedControl<S32> shadow_lines ("DropShadowFloater");
+	static LLUICachedControl<S32> shadow_lines ("DropShadowFloater", 5);
 
 	gl_drop_shadow( 0, LLToastPanel::getRect().getHeight(), LLToastPanel::getRect().getWidth(), 0,
 		shadow_color, shadow_lines);
@@ -509,7 +508,7 @@ void LLToastAlertPanel::setEditTextArgs(const LLSD& edit_args)
 	}
 	else
 	{
-		llwarns << "LLToastAlertPanel::setEditTextArgs called on dialog with no line editor" << llendl;
+		LL_WARNS() << "LLToastAlertPanel::setEditTextArgs called on dialog with no line editor" << LL_ENDL;
 	}
 }
 

@@ -90,7 +90,7 @@ static LLChatTypeTrigger sChatTypeTriggers[] = {
 
 
 LLFloaterIMNearbyChat::LLFloaterIMNearbyChat(const LLSD& llsd)
-:	LLFloaterIMSessionTab(llsd),
+:	LLFloaterIMSessionTab(LLSD(LLUUID::null)),
 	//mOutputMonitor(NULL),
 	mSpeakerMgr(NULL),
 	mExpandedHeight(COLLAPSED_HEIGHT + EXPANDED_HEIGHT)
@@ -98,7 +98,6 @@ LLFloaterIMNearbyChat::LLFloaterIMNearbyChat(const LLSD& llsd)
     mIsP2PChat = false;
 	mIsNearbyChat = true;
 	mSpeakerMgr = LLLocalSpeakerMgr::getInstance();
-	mSessionID = LLUUID();
 }
 
 //static
@@ -126,7 +125,7 @@ BOOL LLFloaterIMNearbyChat::postBuild()
 	setTitle(LLTrans::getString("NearbyChatTitle"));
 
 	// obsolete, but may be needed for backward compatibility?
-	gSavedSettings.declareS32("nearbychat_showicons_and_names", 2, "NearByChat header settings", true);
+	gSavedSettings.declareS32("nearbychat_showicons_and_names", 2, "NearByChat header settings", LLControlVariable::PERSIST_NONDFT);
 
 	if (gSavedPerAccountSettings.getBOOL("LogShowHistory"))
 	{
@@ -139,19 +138,28 @@ BOOL LLFloaterIMNearbyChat::postBuild()
 // virtual
 void LLFloaterIMNearbyChat::closeHostedFloater()
 {
-	// Should check how many conversations are ongoing. Close all if 1 only (the Nearby Chat), select next one otherwise
+	// If detached from conversations window close anyway
+	if (!getHost())
+	{
+		setVisible(FALSE);
+	}
+
+	// Should check how many conversations are ongoing. Select next to "Nearby Chat" in case there are some other besides.
+	// Close conversations window in case "Nearby Chat" is attached and the only conversation
 	LLFloaterIMContainer* floater_container = LLFloaterIMContainer::getInstance();
 	if (floater_container->getConversationListItemSize() == 1)
 	{
+		if (getHost())
+		{
 		floater_container->closeFloater();
+	}
 	}
 	else
 	{
 		if (!getHost())
 		{
-			setVisible(FALSE);
+			floater_container->selectNextConversationByID(LLUUID());
 		}
-		floater_container->selectNextConversationByID(LLUUID());
 	}
 }
 
@@ -263,7 +271,7 @@ void LLFloaterIMNearbyChat::setVisibleAndFrontmost(BOOL take_focus, const LLSD& 
 {
 	LLFloaterIMSessionTab::setVisibleAndFrontmost(take_focus, key);
 
-	if(!isTornOff() && matchesKey(key))
+	if(matchesKey(key))
 	{
 		LLFloaterIMContainer::getInstance()->selectConversationPair(mSessionID, true, take_focus);
 	}
@@ -297,23 +305,17 @@ void LLFloaterIMNearbyChat::onClose(bool app_quitting)
 {
 	// Override LLFloaterIMSessionTab::onClose() so that Nearby Chat is not removed from the conversation floater
 	LLFloaterIMSessionTab::restoreFloater();
-	onClickCloseBtn();
 }
 
 // virtual
-void LLFloaterIMNearbyChat::onClickCloseBtn()
+void LLFloaterIMNearbyChat::onClickCloseBtn(bool)
+
 {
 	if (!isTornOff())
 	{
 		return;
 	}
-	LLFloaterIMSessionTab::onTearOffClicked();
-	
-	LLFloaterIMContainer *im_box = LLFloaterIMContainer::findInstance();
-	if (im_box)
-	{
-		im_box->onNearbyChatClosed();
-	}
+	closeHostedFloater();
 }
 
 void LLFloaterIMNearbyChat::onChatFontChange(LLFontGL* fontp)
@@ -351,10 +353,16 @@ bool LLFloaterIMNearbyChat::isChatVisible() const
 void LLFloaterIMNearbyChat::showHistory()
 {
 	openFloater();
+	LLFloaterIMContainer::getInstance()->selectConversation(LLUUID(NULL));
+
 	if(!isMessagePaneExpanded())
 	{
 		restoreFloater();
 		setFocus(true);
+	}
+	else
+	{
+		LLFloaterIMContainer::getInstance()->setFocus(TRUE);
 	}
 	setResizeLimits(getMinWidth(), EXPANDED_MIN_HEIGHT);
 }
@@ -443,8 +451,10 @@ void LLFloaterIMNearbyChat::onChatBoxKeystroke()
 	LLWStringUtil::trimHead(raw_text);
 
 	S32 length = raw_text.length();
-
+//MK
+////	if( (length > 0) && (raw_text[0] != '/') )  // forward slash is used for escape (eg. emote) sequences
 	if( (length > 0) && (raw_text[0] != '/')  && (raw_text[0] != ':') )  // forward slash is used for escape (eg. emote) sequences
+//mk
 	{
 //MK
 		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
@@ -489,11 +499,11 @@ void LLFloaterIMNearbyChat::onChatBoxKeystroke()
 			if (!rest_of_match.empty())
 			{
 				mInputEditor->setText(utf8_trigger + rest_of_match); // keep original capitalization for user-entered part
-
 				// Select to end of line, starting from the character
 				// after the last one the user typed.
-				mInputEditor->selectNext(rest_of_match, false);
+				mInputEditor->selectByCursorPosition(utf8_out_str.size()-rest_of_match.size(),utf8_out_str.size());
 			}
+
 		}
 		else if (matchChatTypeTrigger(utf8_trigger, &utf8_out_str))
 		{
@@ -502,10 +512,10 @@ void LLFloaterIMNearbyChat::onChatBoxKeystroke()
 			mInputEditor->endOfDoc();
 		}
 
-		//llinfos << "GESTUREDEBUG " << trigger 
+		//LL_INFOS() << "GESTUREDEBUG " << trigger 
 		//	<< " len " << length
 		//	<< " outlen " << out_str.getLength()
-		//	<< llendl;
+		//	<< LL_ENDL;
 	}
 }
 
@@ -659,7 +669,7 @@ void LLFloaterIMNearbyChat::sendChat( EChatType type )
 			if (!utf8_revised_text.empty())
 			{
 				// Chat with animation
-				sendChatFromViewer(utf8_revised_text, type, TRUE);
+				sendChatFromViewer(utf8_revised_text, type, gSavedSettings.getBOOL("PlayChatAnim"));
 			}
 		}
 
@@ -713,10 +723,7 @@ void LLFloaterIMNearbyChat::addMessage(const LLChat& chat,bool archive,const LLS
 
 void LLFloaterIMNearbyChat::onChatBoxCommit()
 {
-	if (mInputEditor->getText().length() > 0)
-	{
 		sendChat(CHAT_TYPE_NORMAL);
-	}
 
 	gAgent.stopTyping();
 }
@@ -790,22 +797,22 @@ void LLFloaterIMNearbyChat::sendChatFromViewer(const LLWString &wtext, EChatType
 	{
 		if (type == CHAT_TYPE_WHISPER)
 		{
-			lldebugs << "You whisper " << utf8_text << llendl;
+			LL_DEBUGS() << "You whisper " << utf8_text << LL_ENDL;
 			gAgent.sendAnimationRequest(ANIM_AGENT_WHISPER, ANIM_REQUEST_START);
 		}
 		else if (type == CHAT_TYPE_NORMAL)
 		{
-			lldebugs << "You say " << utf8_text << llendl;
+			LL_DEBUGS() << "You say " << utf8_text << LL_ENDL;
 			gAgent.sendAnimationRequest(ANIM_AGENT_TALK, ANIM_REQUEST_START);
 		}
 		else if (type == CHAT_TYPE_SHOUT)
 		{
-			lldebugs << "You shout " << utf8_text << llendl;
+			LL_DEBUGS() << "You shout " << utf8_text << LL_ENDL;
 			gAgent.sendAnimationRequest(ANIM_AGENT_SHOUT, ANIM_REQUEST_START);
 		}
 		else
 		{
-			llinfos << "send_chat_from_viewer() - invalid volume" << llendl;
+			LL_INFOS() << "send_chat_from_viewer() - invalid volume" << LL_ENDL;
 			return;
 		}
 	}
@@ -813,7 +820,7 @@ void LLFloaterIMNearbyChat::sendChatFromViewer(const LLWString &wtext, EChatType
 	{
 		if (type != CHAT_TYPE_START && type != CHAT_TYPE_STOP)
 	{
-			lldebugs << "Channel chat: " << utf8_text << llendl;
+			LL_DEBUGS() << "Channel chat: " << utf8_text << LL_ENDL;
 	}
 }
 
@@ -993,7 +1000,7 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 				it++;
 			}
 
-			LLViewerStats::getInstance()->incStat(LLViewerStats::ST_CHAT_COUNT);
+			//LLViewerStats::getInstance()->incStat(LLViewerStats::ST_CHAT_COUNT);
 
 			// We have redirected the chat message, don't send it on the original channel
 			return;
@@ -1025,7 +1032,7 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 
 	gAgent.sendReliableMessage();
 
-	LLViewerStats::getInstance()->incStat(LLViewerStats::ST_CHAT_COUNT);
+	add(LLStatViewer::CHAT_COUNT, 1);
 }
 
 class LLChatCommandHandler : public LLCommandHandler

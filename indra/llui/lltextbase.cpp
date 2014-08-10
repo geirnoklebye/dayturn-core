@@ -167,6 +167,7 @@ LLTextBase::Params::Params()
 	max_text_length("max_length", 255),
 	font_shadow("font_shadow"),
 	wrap("wrap"),
+	trusted_content("trusted_content", true),
 	use_ellipses("use_ellipses", false),
 	parse_urls("parse_urls", false),
 	parse_highlights("parse_highlights", false)
@@ -180,6 +181,7 @@ LLTextBase::Params::Params()
 LLTextBase::LLTextBase(const LLTextBase::Params &p) 
 :	LLUICtrl(p, LLTextViewModelPtr(new LLTextViewModel)),
 	mURLClickSignal(NULL),
+	mIsFriendSignal(NULL),
 	mMaxTextByteLength( p.max_text_length ),
 	mFont(p.font),
 	mFontShadow(p.font_shadow),
@@ -210,6 +212,7 @@ LLTextBase::LLTextBase(const LLTextBase::Params &p)
 	mLineSpacingPixels(p.line_spacing.pixels),
 	mClip(p.clip),
 	mClipPartial(p.clip_partial && !p.allow_scroll),
+	mTrustedContent(p.trusted_content),
 	mTrackEnd( p.track_end ),
 	mScrollIndex(-1),
 	mSelectionStart( 0 ),
@@ -653,6 +656,10 @@ void LLTextBase::drawText()
 			mSpellCheckEnd = end;
 		}
 	}
+	else
+	{
+		mMisspellRanges.clear();
+	}
 
 	LLTextSegmentPtr cur_segment = *seg_iter;
 
@@ -684,7 +691,7 @@ void LLTextBase::drawText()
 				seg_iter++;
 				if (seg_iter == mSegments.end())
 				{
-					llwarns << "Ran off the segmentation end!" << llendl;
+					LL_WARNS() << "Ran off the segmentation end!" << LL_ENDL;
 
 					return;
 				}
@@ -1024,7 +1031,7 @@ BOOL LLTextBase::handleMouseDown(S32 x, S32 y, MASK mask)
 BOOL LLTextBase::handleMouseUp(S32 x, S32 y, MASK mask)
 {
 	LLTextSegmentPtr cur_segment = getSegmentAtLocalPos(x, y);
-	if (cur_segment && cur_segment->handleMouseUp(x, y, mask))
+	if (hasMouseCapture() && cur_segment && cur_segment->handleMouseUp(x, y, mask))
 	{
 		// Did we just click on a link?
 		if (mURLClickSignal
@@ -1254,13 +1261,13 @@ void LLTextBase::setReadOnlyColor(const LLColor4 &c)
 }
 
 //virtual
-void LLTextBase::handleVisibilityChange( BOOL new_visibility )
+void LLTextBase::onVisibilityChange( BOOL new_visibility )
 {
 	if(!new_visibility && mPopupMenu)
 	{
 		mPopupMenu->hide();
 	}
-	LLUICtrl::handleVisibilityChange(new_visibility);
+	LLUICtrl::onVisibilityChange(new_visibility);
 }
 
 //virtual
@@ -1313,6 +1320,7 @@ void LLTextBase::replaceWithSuggestion(U32 index)
 			// Insert the suggestion in its place
 			LLWString suggestion = utf8str_to_wstring(mSuggestionList[index]);
 			insertStringNoUndo(it->first, utf8str_to_wstring(mSuggestionList[index]));
+
 			setCursorPos(it->first + (S32)suggestion.length());
 
 			break;
@@ -1431,10 +1439,10 @@ S32 LLTextBase::getLeftOffset(S32 width)
 }
 
 
-static LLFastTimer::DeclareTimer FTM_TEXT_REFLOW ("Text Reflow");
+static LLTrace::BlockTimerStatHandle FTM_TEXT_REFLOW ("Text Reflow");
 void LLTextBase::reflow()
 {
-	LLFastTimer ft(FTM_TEXT_REFLOW);
+	LL_RECORD_BLOCK_TIME(FTM_TEXT_REFLOW);
 
 	updateSegments();
 
@@ -1476,7 +1484,7 @@ void LLTextBase::reflow()
 		// use an even number of iterations to avoid user visible oscillation of the layout
 		if(++reflow_count > 2)
 		{
-			lldebugs << "Breaking out of reflow due to possible infinite loop in " << getName() << llendl;
+			LL_DEBUGS() << "Breaking out of reflow due to possible infinite loop in " << getName() << LL_ENDL;
 			break;
 		}
 	
@@ -1773,10 +1781,10 @@ void LLTextBase::removeDocumentChild(LLView* view)
 }
 
 
-static LLFastTimer::DeclareTimer FTM_UPDATE_TEXT_SEGMENTS("Update Text Segments");
+static LLTrace::BlockTimerStatHandle FTM_UPDATE_TEXT_SEGMENTS("Update Text Segments");
 void LLTextBase::updateSegments()
 {
-	LLFastTimer ft(FTM_UPDATE_TEXT_SEGMENTS);
+	LL_RECORD_BLOCK_TIME(FTM_UPDATE_TEXT_SEGMENTS);
 	createDefaultSegment();
 }
 
@@ -1850,12 +1858,21 @@ LLTextBase::segment_set_t::iterator LLTextBase::getSegIterContaining(S32 index)
 
 	static LLPointer<LLIndexSegment> index_segment = new LLIndexSegment();
 
-	if (index > getLength()) { return mSegments.end(); }
+	S32 text_len = 0;
+	if (!useLabel())
+	{
+		text_len = getLength();
+	}
+	else
+	{
+		text_len = mLabel.getWString().length();
+	}
+
+	if (index > text_len) { return mSegments.end(); }
 
 	// when there are no segments, we return the end iterator, which must be checked by caller
 	if (mSegments.size() <= 1) { return mSegments.begin(); }
 
-	//FIXME: avoid operator new somehow (without running into refcount problems)
 	index_segment->setStart(index);
 	index_segment->setEnd(index);
 	segment_set_t::iterator it = mSegments.upper_bound(index_segment);
@@ -1866,7 +1883,17 @@ LLTextBase::segment_set_t::const_iterator LLTextBase::getSegIterContaining(S32 i
 {
 	static LLPointer<LLIndexSegment> index_segment = new LLIndexSegment();
 
-	if (index > getLength()) { return mSegments.end(); }
+	S32 text_len = 0;
+	if (!useLabel())
+	{
+		text_len = getLength();
+	}
+	else
+	{
+		text_len = mLabel.getWString().length();
+	}
+
+	if (index > text_len) { return mSegments.end(); }
 
 	// when there are no segments, we return the end iterator, which must be checked by caller
 	if (mSegments.size() <= 1) { return mSegments.begin(); }
@@ -1916,9 +1943,12 @@ void LLTextBase::createUrlContextMenu(S32 x, S32 y, const std::string &in_url)
 	registrar.add("Url.OpenInternal", boost::bind(&LLUrlAction::openURLInternal, url));
 	registrar.add("Url.OpenExternal", boost::bind(&LLUrlAction::openURLExternal, url));
 	registrar.add("Url.Execute", boost::bind(&LLUrlAction::executeSLURL, url));
+	registrar.add("Url.Block", boost::bind(&LLUrlAction::blockObject, url));
 	registrar.add("Url.Teleport", boost::bind(&LLUrlAction::teleportToLocation, url));
 	registrar.add("Url.ShowProfile", boost::bind(&LLUrlAction::showProfile, url));
 	registrar.add("Url.AddFriend", boost::bind(&LLUrlAction::addFriend, url));
+	registrar.add("Url.RemoveFriend", boost::bind(&LLUrlAction::removeFriend, url));
+	registrar.add("Url.SendIM", boost::bind(&LLUrlAction::sendIM, url));
 	registrar.add("Url.ShowOnMap", boost::bind(&LLUrlAction::showLocationOnMap, url));
 	registrar.add("Url.CopyLabel", boost::bind(&LLUrlAction::copyLabelToClipboard, url));
 	registrar.add("Url.CopyUrl", boost::bind(&LLUrlAction::copyURLToClipboard, url));
@@ -1927,6 +1957,19 @@ void LLTextBase::createUrlContextMenu(S32 x, S32 y, const std::string &in_url)
 	delete mPopupMenu;
 	mPopupMenu = LLUICtrlFactory::getInstance()->createFromFile<LLContextMenu>(xui_file, LLMenuGL::sMenuContainer,
 																		 LLMenuHolderGL::child_registry_t::instance());	
+	if (mIsFriendSignal)
+	{
+		bool isFriend = *(*mIsFriendSignal)(LLUUID(LLUrlAction::getUserID(url)));
+		LLView* addFriendButton = mPopupMenu->getChild<LLView>("add_friend");
+		LLView* removeFriendButton = mPopupMenu->getChild<LLView>("remove_friend");
+
+		if (addFriendButton && removeFriendButton)
+		{
+			addFriendButton->setEnabled(!isFriend);
+			removeFriendButton->setEnabled(isFriend);
+		}
+	}
+	
 	if (mPopupMenu)
 	{
 		mPopupMenu->show(x, y);
@@ -1979,7 +2022,7 @@ static LLUIImagePtr image_from_icon_name(const std::string& icon_name)
 	}
 }
 
-static LLFastTimer::DeclareTimer FTM_PARSE_HTML("Parse HTML");
+static LLTrace::BlockTimerStatHandle FTM_PARSE_HTML("Parse HTML");
 
 void LLTextBase::appendTextImpl(const std::string &new_text, const LLStyle::Params& input_params)
 {
@@ -1989,7 +2032,7 @@ void LLTextBase::appendTextImpl(const std::string &new_text, const LLStyle::Para
 	S32 part = (S32)LLTextParser::WHOLE;
 	if (mParseHTML && !style_params.is_link) // Don't search for URLs inside a link segment (STORM-358).
 	{
-		LLFastTimer _(FTM_PARSE_HTML);
+		LL_RECORD_BLOCK_TIME(FTM_PARSE_HTML);
 		S32 start=0,end=0;
 		LLUrlMatch match;
 		std::string text = new_text;
@@ -2056,11 +2099,11 @@ void LLTextBase::appendTextImpl(const std::string &new_text, const LLStyle::Para
 	}
 }
 
-static LLFastTimer::DeclareTimer FTM_APPEND_TEXT("Append Text");
+static LLTrace::BlockTimerStatHandle FTM_APPEND_TEXT("Append Text");
 
 void LLTextBase::appendText(const std::string &new_text, bool prepend_newline, const LLStyle::Params& input_params)
 {
-	LLFastTimer _(FTM_APPEND_TEXT);
+	LL_RECORD_BLOCK_TIME(FTM_APPEND_TEXT);
 	if (new_text.empty()) 
 		return;
 
@@ -2096,7 +2139,7 @@ void LLTextBase::resetLabel()
 	}
 }
 
-bool LLTextBase::useLabel()
+bool LLTextBase::useLabel() const
 {
     return !getLength() && !mLabel.empty() && !hasFocus();
 }
@@ -2109,7 +2152,7 @@ void LLTextBase::setFont(const LLFontGL* font)
 
 void LLTextBase::needsReflow(S32 index)
 {
-	lldebugs << "reflow on object " << (void*)this << " index = " << mReflowIndex << ", new index = " << index << llendl;
+	LL_DEBUGS() << "reflow on object " << (void*)this << " index = " << mReflowIndex << ", new index = " << index << LL_ENDL;
 	mReflowIndex = llmin(mReflowIndex, index);
 }
 
@@ -2338,7 +2381,6 @@ S32 LLTextBase::getDocIndexFromLocalCoord( S32 local_x, S32 local_y, BOOL round,
 {
 	// Figure out which line we're nearest to.
 	LLRect doc_rect = mDocumentView->getRect();
-
 	S32 doc_y = local_y - doc_rect.mBottom;
 	
 	// binary search for line that starts before local_y
@@ -2602,21 +2644,18 @@ void LLTextBase::setCursorAtLocalPos( S32 local_x, S32 local_y, bool round, bool
 void LLTextBase::changeLine( S32 delta )
 {
 	S32 line = getLineNumFromDocIndex(mCursorPos);
+	S32 max_line_nb = getLineCount() - 1;
+	max_line_nb = (max_line_nb < 0 ? 0 : max_line_nb);
+    
+	S32 new_line = llclamp(line + delta, 0, max_line_nb);
 
-	S32 new_line = line;
-	if( (delta < 0) && (line > 0 ) )
-	{
-		new_line = line - 1;
-	}
-	else if( (delta > 0) && (line < (getLineCount() - 1)) )
-	{
-		new_line = line + 1;
-	}
-
-	LLRect visible_region = getVisibleDocumentRect();
-
-	S32 new_cursor_pos = getDocIndexFromLocalCoord(mDesiredXPixel, mLineInfoList[new_line].mRect.mBottom + mVisibleTextRect.mBottom - visible_region.mBottom, TRUE);
-	setCursorPos(new_cursor_pos, true);
+    if (new_line != line)
+    {
+        LLRect visible_region = getVisibleDocumentRect();
+        S32 new_cursor_pos = getDocIndexFromLocalCoord(mDesiredXPixel,
+                                                       mLineInfoList[new_line].mRect.mBottom + mVisibleTextRect.mBottom - visible_region.mBottom, TRUE);
+        setCursorPos(new_cursor_pos, true);
+    }
 }
 
 bool LLTextBase::scrolledToStart()
@@ -2910,6 +2949,15 @@ boost::signals2::connection LLTextBase::setURLClickedCallback(const commit_signa
 	return mURLClickSignal->connect(cb);
 }
 
+boost::signals2::connection LLTextBase::setIsFriendCallback(const is_friend_signal_t::slot_type& cb)
+{
+	if (!mIsFriendSignal)
+	{
+		mIsFriendSignal = new is_friend_signal_t();
+	}
+	return mIsFriendSignal->connect(cb);
+}
+
 //
 // LLTextSegment
 //
@@ -3118,7 +3166,7 @@ BOOL LLNormalTextSegment::handleMouseUp(S32 x, S32 y, MASK mask)
 		// Only process the click if it's actually in this segment, not to the right of the end-of-line.
 		if(mEditor.getSegmentAtLocalPos(x, y, false) == this)
 		{
-			LLUrlAction::clickAction(getStyle()->getLinkHREF());
+			LLUrlAction::clickAction(getStyle()->getLinkHREF(), mEditor.isContentTrusted());
 			return TRUE;
 		}
 	}
@@ -3151,7 +3199,7 @@ void LLNormalTextSegment::setToolTip(const std::string& tooltip)
 	// we cannot replace a keyword tooltip that's loaded from a file
 	if (mToken)
 	{
-		llwarns << "LLTextSegment::setToolTip: cannot replace keyword tooltip." << llendl;
+		LL_WARNS() << "LLTextSegment::setToolTip: cannot replace keyword tooltip." << LL_ENDL;
 		return;
 	}
 	mTooltip = tooltip;
@@ -3203,21 +3251,21 @@ S32	LLNormalTextSegment::getNumChars(S32 num_pixels, S32 segment_offset, S32 lin
 		: LLFontGL::ONLY_WORD_BOUNDARIES;
 	
 	
-	LLWString offsetString(text.c_str() + segment_offset + mStart);
+	S32 offsetLength = text.length() - (segment_offset + mStart);
 
 	if(getLength() < segment_offset + mStart)
-	{
-		llerrs << "getLength() < segment_offset + mStart\t getLength()\t" << getLength() << "\tsegment_offset:\t" 
-						<< segment_offset << "\tmStart:\t" << mStart << "\tsegments\t" << mEditor.mSegments.size() << "\tmax_chars\t" << max_chars << llendl;
+	{ 
+		LL_INFOS() << "getLength() < segment_offset + mStart\t getLength()\t" << getLength() << "\tsegment_offset:\t" 
+						<< segment_offset << "\tmStart:\t" << mStart << "\tsegments\t" << mEditor.mSegments.size() << "\tmax_chars\t" << max_chars << LL_ENDL;
 	}
 
-	if(offsetString.length() + 1 < max_chars)
+	if( (offsetLength + 1) < max_chars)
 	{
-		llerrs << "offsetString.length() + 1 < max_chars\t max_chars:\t" << max_chars << "\toffsetString.length():\t" << offsetString.length()
-			<< getLength() << "\tsegment_offset:\t" << segment_offset << "\tmStart:\t" << mStart << "\tsegments\t" << mEditor.mSegments.size() << llendl;
+		LL_INFOS() << "offsetString.length() + 1 < max_chars\t max_chars:\t" << max_chars << "\toffsetString.length():\t" << offsetLength << " getLength() : "
+			<< getLength() << "\tsegment_offset:\t" << segment_offset << "\tmStart:\t" << mStart << "\tsegments\t" << mEditor.mSegments.size() << LL_ENDL;
 	}
 	
-	S32 num_chars = mStyle->getFont()->maxDrawableChars(offsetString.c_str(), 
+	S32 num_chars = mStyle->getFont()->maxDrawableChars( text.c_str() + (segment_offset + mStart),
 												(F32)num_pixels,
 												max_chars, 
 												word_wrap_style);
@@ -3244,13 +3292,13 @@ S32	LLNormalTextSegment::getNumChars(S32 num_pixels, S32 segment_offset, S32 lin
 
 void LLNormalTextSegment::dump() const
 {
-	llinfos << "Segment [" << 
+	LL_INFOS() << "Segment [" << 
 //			mColor.mV[VX] << ", " <<
 //			mColor.mV[VY] << ", " <<
 //			mColor.mV[VZ] << "]\t[" <<
 		mStart << ", " <<
 		getEnd() << "]" <<
-		llendl;
+		LL_ENDL;
 }
 
 /*virtual*/

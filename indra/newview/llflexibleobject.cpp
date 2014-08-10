@@ -47,8 +47,8 @@
 std::vector<LLVolumeImplFlexible*> LLVolumeImplFlexible::sInstanceList;
 std::vector<S32> LLVolumeImplFlexible::sUpdateDelay;
 
-static LLFastTimer::DeclareTimer FTM_FLEXIBLE_REBUILD("Rebuild");
-static LLFastTimer::DeclareTimer FTM_DO_FLEXIBLE_UPDATE("Flexible Update");
+static LLTrace::BlockTimerStatHandle FTM_FLEXIBLE_REBUILD("Rebuild");
+static LLTrace::BlockTimerStatHandle FTM_DO_FLEXIBLE_UPDATE("Flexible Update");
 
 // LLFlexibleObjectData::pack/unpack now in llprimitive.cpp
 
@@ -294,6 +294,9 @@ void LLVolumeImplFlexible::onSetVolume(const LLVolumeParams &volume_params, cons
 
 void LLVolumeImplFlexible::updateRenderRes()
 {
+	if (!mAttributes)
+		return;
+
 	LLDrawable* drawablep = mVO->mDrawable;
 
 	S32 new_res = mAttributes->getSimulateLOD();
@@ -331,14 +334,14 @@ void LLVolumeImplFlexible::updateRenderRes()
 // updated every time step. In the future, perhaps there could be an 
 // optimization similar to what Havok does for objects that are stationary. 
 //---------------------------------------------------------------------------------
-static LLFastTimer::DeclareTimer FTM_FLEXIBLE_UPDATE("Update Flexies");
+static LLTrace::BlockTimerStatHandle FTM_FLEXIBLE_UPDATE("Update Flexies");
 void LLVolumeImplFlexible::doIdleUpdate()
 {
 	LLDrawable* drawablep = mVO->mDrawable;
 
 	if (drawablep)
 	{
-		//LLFastTimer ftm(FTM_FLEXIBLE_UPDATE);
+		//LL_RECORD_BLOCK_TIME(FTM_FLEXIBLE_UPDATE);
 
 		//ensure drawable is active
 		drawablep->makeActive();
@@ -421,7 +424,7 @@ inline S32 log2(S32 x)
 
 void LLVolumeImplFlexible::doFlexibleUpdate()
 {
-	LLFastTimer ftm(FTM_DO_FLEXIBLE_UPDATE);
+	LL_RECORD_BLOCK_TIME(FTM_DO_FLEXIBLE_UPDATE);
 	LLVolume* volume = mVO->getVolume();
 	LLPath *path = &volume->getPath();
 	if ((mSimulateRes == 0 || !mInitialized) && mVO->mDrawable->isVisible()) 
@@ -435,7 +438,7 @@ void LLVolumeImplFlexible::doFlexibleUpdate()
 		}
 	}
 
-	if(!mInitialized)
+	if(!mInitialized || !mAttributes)
 	{
 		//the object is not visible
 		return ;
@@ -657,7 +660,7 @@ void LLVolumeImplFlexible::doFlexibleUpdate()
 	mSection[i].mdPosition = (mSection[i].mPosition - mSection[i-1].mPosition) * inv_section_length;
 
 	// Create points
-	llassert(mRenderRes > -1)
+	llassert(mRenderRes > -1);
 	S32 num_render_sections = 1<<mRenderRes;
 	if (path->getPathLength() != num_render_sections+1)
 	{
@@ -689,37 +692,47 @@ void LLVolumeImplFlexible::doFlexibleUpdate()
 								LLVector4(z_axis, 0.f),
 								LLVector4(delta_pos, 1.f));
 			
+	LL_CHECK_MEMORY
 	for (i=0; i<=num_render_sections; ++i)
 	{
 		new_point = &path->mPath[i];
 		LLVector3 pos = newSection[i].mPosition * rel_xform;
 		LLQuaternion rot = mSection[i].mAxisRotation * newSection[i].mRotation * delta_rot;
-		
-		if (!mUpdated || (new_point->mPos-pos).magVec()/mVO->mDrawable->mDistanceWRTCamera > 0.001f)
+	
+		LLVector3 np(new_point->mPos.getF32ptr());
+
+		if (!mUpdated || (np-pos).magVec()/mVO->mDrawable->mDistanceWRTCamera > 0.001f)
 		{
-			new_point->mPos = newSection[i].mPosition * rel_xform;
+			new_point->mPos.load3((newSection[i].mPosition * rel_xform).mV);
 			mUpdated = FALSE;
 		}
 
-		new_point->mRot = rot;
-		new_point->mScale = newSection[i].mScale;
+		new_point->mRot.loadu(LLMatrix3(rot));
+		new_point->mScale.set(newSection[i].mScale.mV[0], newSection[i].mScale.mV[1], 0,1);
 		new_point->mTexT = ((F32)i)/(num_render_sections);
 	}
-
+	LL_CHECK_MEMORY
 	mLastSegmentRotation = parentSegmentRotation;
 }
+
+static LLTrace::BlockTimerStatHandle FTM_FLEXI_PREBUILD("Flexi Prebuild");
 
 void LLVolumeImplFlexible::preRebuild()
 {
 	if (!mUpdated)
 	{
-		doFlexibleRebuild();
+		LL_RECORD_BLOCK_TIME(FTM_FLEXI_PREBUILD);
+		doFlexibleRebuild(false);
 	}
 }
 
-void LLVolumeImplFlexible::doFlexibleRebuild()
+void LLVolumeImplFlexible::doFlexibleRebuild(bool rebuild_volume)
 {
 	LLVolume* volume = mVO->getVolume();
+	if(rebuild_volume)
+	{
+		volume->setDirty();
+	}
 	volume->regen();
 	
 	mUpdated = TRUE;
@@ -771,7 +784,7 @@ BOOL LLVolumeImplFlexible::doUpdateGeometry(LLDrawable *drawable)
 
 	if (mRenderRes > -1)
 	{
-		LLFastTimer t(FTM_DO_FLEXIBLE_UPDATE);
+		LL_RECORD_BLOCK_TIME(FTM_DO_FLEXIBLE_UPDATE);
 		doFlexibleUpdate();
 	}
 	
@@ -791,8 +804,8 @@ BOOL LLVolumeImplFlexible::doUpdateGeometry(LLDrawable *drawable)
 		volume->mDrawable->setState(LLDrawable::REBUILD_VOLUME);
 		volume->dirtySpatialGroup();
 		{
-			LLFastTimer t(FTM_FLEXIBLE_REBUILD);
-			doFlexibleRebuild();
+			LL_RECORD_BLOCK_TIME(FTM_FLEXIBLE_REBUILD);
+			doFlexibleRebuild(volume->mVolumeChanged);
 		}
 		volume->genBBoxes(isVolumeGlobal());
 	}

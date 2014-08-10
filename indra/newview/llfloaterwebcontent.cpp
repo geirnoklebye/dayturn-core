@@ -29,6 +29,7 @@
 #include "llcombobox.h"
 #include "lliconctrl.h"
 #include "llfloaterreg.h"
+#include "llfacebookconnect.h"
 #include "lllayoutstack.h"
 #include "llpluginclassmedia.h"
 #include "llprogressbar.h"
@@ -46,7 +47,8 @@ LLFloaterWebContent::_Params::_Params()
 	id("id"),
 	window_class("window_class", "web_content"),
 	show_chrome("show_chrome", true),
-	allow_address_entry("allow_address_entry", true),
+    allow_address_entry("allow_address_entry", true),
+    allow_back_forward_navigation("allow_back_forward_navigation", true),
 	preferred_media_size("preferred_media_size"),
 	trusted_content("trusted_content", false),
 	show_page_title("show_page_title", true)
@@ -54,7 +56,7 @@ LLFloaterWebContent::_Params::_Params()
 
 LLFloaterWebContent::LLFloaterWebContent( const Params& params )
 :	LLFloater( params ),
-	LLInstanceTracker<LLFloaterWebContent, std::string>(params.id()),
+	LLInstanceTracker<LLFloaterWebContent, std::string, LLInstanceTrackerReplaceOnCollision>(params.id()),
 	mWebBrowser(NULL),
 	mAddressCombo(NULL),
 	mSecureLockIcon(NULL),
@@ -65,7 +67,11 @@ LLFloaterWebContent::LLFloaterWebContent( const Params& params )
 	mBtnReload(NULL),
 	mBtnStop(NULL),
 	mUUID(params.id()),
-	mShowPageTitle(params.show_page_title)
+	mShowPageTitle(params.show_page_title),
+    mAllowNavigation(true),
+    mCurrentURL(""),
+    mDisplayURL(""),
+    mSecureURL(false)
 {
 	mCommitCallbackRegistrar.add( "WebContent.Back", boost::bind( &LLFloaterWebContent::onClickBack, this ));
 	mCommitCallbackRegistrar.add( "WebContent.Forward", boost::bind( &LLFloaterWebContent::onClickForward, this ));
@@ -97,7 +103,7 @@ BOOL LLFloaterWebContent::postBuild()
 
 	// cache image for secure browsing
 	mSecureLockIcon = getChild< LLIconCtrl >("media_secure_lock_flag");
-
+    
 	// initialize the URL history using the system URL History manager
 	initializeURLHistory();
 
@@ -186,7 +192,7 @@ void LLFloaterWebContent::geometryChanged(S32 x, S32 y, S32 width, S32 height)
 						width + getRect().getWidth() - browser_rect.getWidth(), 
 						height + getRect().getHeight() - browser_rect.getHeight());
 
-	lldebugs << "geometry change: " << geom << llendl;
+	LL_DEBUGS() << "geometry change: " << geom << LL_ENDL;
 	
 	LLRect new_rect;
 	getParent()->screenRectToLocal(geom, &new_rect);
@@ -196,7 +202,7 @@ void LLFloaterWebContent::geometryChanged(S32 x, S32 y, S32 width, S32 height)
 // static
 void LLFloaterWebContent::preCreate(LLFloaterWebContent::Params& p)
 {
-	lldebugs << "url = " << p.url() << ", target = " << p.target() << ", uuid = " << p.id() << llendl;
+	LL_DEBUGS() << "url = " << p.url() << ", target = " << p.target() << ", uuid = " << p.id() << LL_ENDL;
 
 	if (!p.id.isProvided())
 	{
@@ -215,11 +221,11 @@ void LLFloaterWebContent::preCreate(LLFloaterWebContent::Params& p)
 		// and close the least recently opened one if this will put us over the limit.
 
 		LLFloaterReg::const_instance_list_t &instances = LLFloaterReg::getFloaterList(p.window_class);
-		lldebugs << "total instance count is " << instances.size() << llendl;
+		LL_DEBUGS() << "total instance count is " << instances.size() << LL_ENDL;
 
 		for(LLFloaterReg::const_instance_list_t::const_iterator iter = instances.begin(); iter != instances.end(); iter++)
 		{
-			lldebugs << "    " << (*iter)->getKey()["target"] << llendl;
+			LL_DEBUGS() << "    " << (*iter)->getKey()["target"] << LL_ENDL;
 		}
 
 		if(instances.size() >= (size_t)browser_window_limit)
@@ -243,6 +249,7 @@ void LLFloaterWebContent::open_media(const Params& p)
 	getChild<LLLayoutPanel>("status_bar")->setVisible(p.show_chrome);
 	getChild<LLLayoutPanel>("nav_controls")->setVisible(p.show_chrome);
 	bool address_entry_enabled = p.allow_address_entry && !p.trusted_content;
+    mAllowNavigation = p.allow_back_forward_navigation;
 	getChildView("address")->setEnabled(address_entry_enabled);
 	getChildView("popexternal")->setEnabled(address_entry_enabled);
 
@@ -287,6 +294,16 @@ void LLFloaterWebContent::onOpen(const LLSD& key)
 //virtual
 void LLFloaterWebContent::onClose(bool app_quitting)
 {
+    // If we close the web browsing window showing the facebook login, we need to signal to this object that the connection will not happen
+    LLFloater* fbc_web = LLFloaterReg::getInstance("fbc_web");
+    if (fbc_web == this)
+    {
+        if (!LLFacebookConnect::instance().isConnected())
+        {
+            LLFacebookConnect::instance().setConnectionState(LLFacebookConnect::FB_CONNECTION_FAILED);
+        }
+    }
+    
 	LLViewerMedia::proxyWindowClosed(mUUID);
 	destroy();
 }
@@ -295,8 +312,11 @@ void LLFloaterWebContent::onClose(bool app_quitting)
 void LLFloaterWebContent::draw()
 {
 	// this is asynchronous so we need to keep checking
-	mBtnBack->setEnabled( mWebBrowser->canNavigateBack() );
-	mBtnForward->setEnabled( mWebBrowser->canNavigateForward() );
+	mBtnBack->setEnabled( mWebBrowser->canNavigateBack() && mAllowNavigation);
+	mBtnForward->setEnabled( mWebBrowser->canNavigateForward() && mAllowNavigation);
+
+    // Show/hide the lock icon
+    mSecureLockIcon->setVisible(mSecureURL && !mAddressCombo->hasFocus());
 
 	LLFloater::draw();
 }
@@ -342,19 +362,8 @@ void LLFloaterWebContent::handleMediaEvent(LLPluginClassMedia* self, EMediaEvent
 		// we populate the status bar with URLs as they change so clear it now we're done
 		const std::string end_str = "";
 		mStatusBarText->setText( end_str );
-
-		// decide if secure browsing icon should be displayed
-		std::string prefix =  std::string("https://");
-		std::string test_prefix = mCurrentURL.substr(0, prefix.length());
-		LLStringUtil::toLower(test_prefix);
-		if(test_prefix == prefix)
-		{
-			mSecureLockIcon->setVisible(true);
-		}
-		else
-		{
-			mSecureLockIcon->setVisible(false);
-		}
+			mAddressCombo->setLeftTextPadding(22);
+			mAddressCombo->setLeftTextPadding(2);
 	}
 	else if(event == MEDIA_EVENT_CLOSE_REQUEST)
 	{
@@ -363,7 +372,10 @@ void LLFloaterWebContent::handleMediaEvent(LLPluginClassMedia* self, EMediaEvent
 	}
 	else if(event == MEDIA_EVENT_GEOMETRY_CHANGE)
 	{
+		if (mCurrentURL.find("facebook.com/dialog/oauth") == std::string::npos) // HACK to fix ACME-1317 - Cho
+		{
 		geometryChanged(self->getGeometryX(), self->getGeometryY(), self->getGeometryWidth(), self->getGeometryHeight());
+	}
 	}
 	else if(event == MEDIA_EVENT_STATUS_TEXT_CHANGED )
 	{
@@ -397,15 +409,40 @@ void LLFloaterWebContent::handleMediaEvent(LLPluginClassMedia* self, EMediaEvent
 
 void LLFloaterWebContent::set_current_url(const std::string& url)
 {
-	mCurrentURL = url;
+    if (!url.empty())
+    {
+        if (!mCurrentURL.empty())
+        {
+            // Clean up the current browsing list to show true URL
+            mAddressCombo->remove(mDisplayURL);
+            mAddressCombo->add(mCurrentURL);
+        }
 
-	// serialize url history into the system URL History manager
-	LLURLHistory::removeURL("browser", mCurrentURL);
-	LLURLHistory::addURL("browser", mCurrentURL);
+        // Update current URL
+        mCurrentURL = url;
+        LLStringUtil::trim(mCurrentURL);
 
-	mAddressCombo->remove( mCurrentURL );
-	mAddressCombo->add( mCurrentURL );
-	mAddressCombo->selectByValue( mCurrentURL );
+        // Serialize url history into the system URL History manager
+        LLURLHistory::removeURL("browser", mCurrentURL);
+        LLURLHistory::addURL("browser", mCurrentURL);
+
+		// Check if this is a secure URL
+		static const std::string secure_prefix = std::string("https://");
+		std::string prefix = mCurrentURL.substr(0, secure_prefix.length());
+		LLStringUtil::toLower(prefix);
+        mSecureURL = (prefix == secure_prefix);
+        
+        // Hack : we move the text a bit to make space for the lock icon in the secure URL case
+		mDisplayURL = (mSecureURL ? "      " + mCurrentURL : mCurrentURL);
+
+        // Clean up browsing list (prevent dupes) and add/select the new URL to it
+        mAddressCombo->remove(mCurrentURL);
+        mAddressCombo->add(mDisplayURL);
+        mAddressCombo->selectByValue(mDisplayURL);
+
+        // Set the focus back to the web page. When setting the url, there's no point to leave the focus anywhere else.
+		mWebBrowser->setFocus(TRUE);
+    }
 }
 
 void LLFloaterWebContent::onClickForward()
@@ -449,6 +486,7 @@ void LLFloaterWebContent::onEnterAddress()
 	// make sure there is at least something there.
 	// (perhaps this test should be for minimum length of a URL)
 	std::string url = mAddressCombo->getValue().asString();
+    LLStringUtil::trim(url);
 	if ( url.length() > 0 )
 	{
 		mWebBrowser->navigateTo( url, "text/html");
@@ -460,6 +498,7 @@ void LLFloaterWebContent::onPopExternal()
 	// make sure there is at least something there.
 	// (perhaps this test should be for minimum length of a URL)
 	std::string url = mAddressCombo->getValue().asString();
+    LLStringUtil::trim(url);
 	if ( url.length() > 0 )
 	{
 		LLWeb::loadURLExternal( url );

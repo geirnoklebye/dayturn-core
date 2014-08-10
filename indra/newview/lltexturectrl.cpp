@@ -133,6 +133,7 @@ public:
 	PermissionMask 	getFilterPermMask();
 	void updateFilterPermMask();
 	void commitIfImmediateSet();
+	void commitCancel();
 	
 	void onFilterEdit(const std::string& search_string );
 	
@@ -144,7 +145,7 @@ public:
 	static void		onBtnCancel( void* userdata );
 		   void		onBtnPipette( );
 	//static void		onBtnRevert( void* userdata );
-	static void		onBtnWhite( void* userdata );
+	static void		onBtnBlank( void* userdata );
 	static void		onBtnNone( void* userdata );
 	static void		onBtnClear( void* userdata );
 		   void		onSelectionChange(const std::deque<LLFolderViewItem*> &items, BOOL user_action);
@@ -165,7 +166,6 @@ protected:
 	LLUUID				mImageAssetID; // Currently selected texture
 	LLUIImagePtr		mFallbackImage; // What to show if currently selected texture is null.
 
-	LLUUID				mWhiteImageAssetID;
 	LLUUID				mSpecialCurrentImageAssetID;  // Used when the asset id has no corresponding texture in the user's inventory.
 	LLUUID				mOriginalImageAssetID;
 
@@ -209,7 +209,6 @@ LLFloaterTexturePicker::LLFloaterTexturePicker(
 	mOwner( owner ),
 	mImageAssetID( owner->getImageAssetID() ),
 	mFallbackImage( fallback_image ),
-	mWhiteImageAssetID( gSavedSettings.getString( "UIImgWhiteUUID" ) ),
 	mOriginalImageAssetID(owner->getImageAssetID()),
 	mLabel(label),
 	mTentativeLabel(NULL),
@@ -243,7 +242,7 @@ void LLFloaterTexturePicker::setImageID(const LLUUID& image_id)
 		LLUUID item_id = findItemID(mImageAssetID, FALSE);
 		if (item_id.isNull())
 		{
-			mInventoryPanel->clearSelection();
+			mInventoryPanel->getRootFolder()->clearSelection();
 		}
 		else
 		{
@@ -363,7 +362,7 @@ BOOL LLFloaterTexturePicker::handleDragAndDrop(
 	}
 
 	handled = TRUE;
-	lldebugst(LLERR_USER_INPUT) << "dragAndDrop handled by LLFloaterTexturePicker " << getName() << llendl;
+	LL_DEBUGS("UserInput") << "dragAndDrop handled by LLFloaterTexturePicker " << getName() << LL_ENDL;
 
 	return handled;
 }
@@ -433,7 +432,7 @@ BOOL LLFloaterTexturePicker::postBuild()
 
 	childSetAction("Default",LLFloaterTexturePicker::onBtnSetToDefault,this);
 	childSetAction("None", LLFloaterTexturePicker::onBtnNone,this);
-	childSetAction("Blank", LLFloaterTexturePicker::onBtnWhite,this);
+	childSetAction("Blank", LLFloaterTexturePicker::onBtnBlank,this);
 
 
 	childSetCommitCallback("show_folders_check", onShowFolders, this);
@@ -557,11 +556,11 @@ void LLFloaterTexturePicker::draw()
 
 	if (gFocusMgr.childHasMouseCapture(getDragHandle()))
 	{
-		mContextConeOpacity = lerp(mContextConeOpacity, gSavedSettings.getF32("PickerContextOpacity"), LLCriticalDamp::getInterpolant(CONTEXT_FADE_TIME));
+		mContextConeOpacity = lerp(mContextConeOpacity, gSavedSettings.getF32("PickerContextOpacity"), LLSmoothInterpolation::getInterpolant(CONTEXT_FADE_TIME));
 	}
 	else
 	{
-		mContextConeOpacity = lerp(mContextConeOpacity, 0.f, LLCriticalDamp::getInterpolant(CONTEXT_FADE_TIME));
+		mContextConeOpacity = lerp(mContextConeOpacity, 0.f, LLSmoothInterpolation::getInterpolant(CONTEXT_FADE_TIME));
 	}
 
 	updateImageStats();
@@ -588,7 +587,7 @@ void LLFloaterTexturePicker::draw()
 		}
 
 		getChildView("Default")->setEnabled(mImageAssetID != mOwner->getDefaultImageAssetID());
-		getChildView("Blank")->setEnabled(mImageAssetID != mWhiteImageAssetID );
+		getChildView("Blank")->setEnabled(mImageAssetID != mOwner->getBlankImageAssetID());
 		getChildView("None")->setEnabled(mOwner->getAllowNoTexture() && !mImageAssetID.isNull() );
 
 		LLFloater::draw();
@@ -675,10 +674,10 @@ const LLUUID& LLFloaterTexturePicker::findItemID(const LLUUID& asset_id, BOOL co
 							LLInventoryModel::INCLUDE_TRASH,
 							asset_id_matches);
 
-	if (items.count())
+	if (items.size())
 	{
 		// search for copyable version first
-		for (S32 i = 0; i < items.count(); i++)
+		for (S32 i = 0; i < items.size(); i++)
 		{
 			LLInventoryItem* itemp = items[i];
 			LLPermissions item_permissions = itemp->getPermissions();
@@ -715,6 +714,14 @@ void LLFloaterTexturePicker::commitIfImmediateSet()
 	}
 }
 
+void LLFloaterTexturePicker::commitCancel()
+{
+	if (!mNoCopyTextureSelected && mOwner && mCanApply)
+	{
+		mOwner->onFloaterCommit(LLTextureCtrl::TEXTURE_CANCEL);
+	}
+}
+
 // static
 void LLFloaterTexturePicker::onBtnSetToDefault(void* userdata)
 {
@@ -728,11 +735,11 @@ void LLFloaterTexturePicker::onBtnSetToDefault(void* userdata)
 }
 
 // static
-void LLFloaterTexturePicker::onBtnWhite(void* userdata)
+void LLFloaterTexturePicker::onBtnBlank(void* userdata)
 {
 	LLFloaterTexturePicker* self = (LLFloaterTexturePicker*) userdata;
 	self->setCanApply(true, true);
-	self->setImageID( self->mWhiteImageAssetID );
+	self->setImageID( self->mOwner->getBlankImageAssetID() );
 	self->commitIfImmediateSet();
 }
 
@@ -742,7 +749,7 @@ void LLFloaterTexturePicker::onBtnNone(void* userdata)
 {
 	LLFloaterTexturePicker* self = (LLFloaterTexturePicker*) userdata;
 	self->setImageID( LLUUID::null );
-	self->commitIfImmediateSet();
+	self->commitCancel();
 }
 
 /*
@@ -820,7 +827,7 @@ void LLFloaterTexturePicker::onSelectionChange(const std::deque<LLFolderViewItem
 			{
 				mNoCopyTextureSelected = TRUE;
 			}
-			mImageAssetID = itemp->getAssetUUID();
+			setImageID(itemp->getAssetUUID());
 			mViewModel->setDirty(); // *TODO: shouldn't we be using setValue() here?
 			if (user_action && mCanPreview)
 			{
@@ -1049,6 +1056,7 @@ LLTextureCtrl::LLTextureCtrl(const LLTextureCtrl::Params& p)
 	mDragCallback(NULL),
 	mDropCallback(NULL),
 	mOnCancelCallback(NULL),
+	mOnCloseCallback(NULL),
 	mOnSelectCallback(NULL),
 	mBorderColor( p.border_color() ),
 	mAllowNoTexture( FALSE ),
@@ -1063,6 +1071,12 @@ LLTextureCtrl::LLTextureCtrl(const LLTextureCtrl::Params& p)
 	mDefaultImageName(p.default_image_name),
 	mFallbackImage(p.fallback_image)
 {
+
+	// Default of defaults is white image for diff tex
+	//
+	LLUUID whiteImage( gSavedSettings.getString( "UIImgWhiteUUID" ) );
+	setBlankImageAssetID( whiteImage );
+
 	setAllowNoTexture(p.allow_no_texture);
 	setCanApplyImmediately(p.can_apply_immediately);
 	mCommitOnSelection = !p.no_commit_on_selection;
@@ -1299,6 +1313,10 @@ void LLTextureCtrl::onFloaterClose()
 
 	if (floaterp)
 	{
+		if (mOnCloseCallback)
+		{
+			mOnCloseCallback(this,LLSD());
+		}
 		floaterp->setOwner(NULL);
 	}
 
@@ -1331,9 +1349,9 @@ void LLTextureCtrl::onFloaterCommit(ETexturePickOp op, LLUUID id)
 			else
 			{
 			mImageItemID = floaterp->findItemID(floaterp->getAssetID(), FALSE);
-			lldebugs << "mImageItemID: " << mImageItemID << llendl;
+			LL_DEBUGS() << "mImageItemID: " << mImageItemID << LL_ENDL;
 			mImageAssetID = floaterp->getAssetID();
-			lldebugs << "mImageAssetID: " << mImageAssetID << llendl;
+			LL_DEBUGS() << "mImageAssetID: " << mImageAssetID << LL_ENDL;
 			}
 
 			if (op == TEXTURE_SELECT && mOnSelectCallback)
@@ -1434,7 +1452,7 @@ BOOL LLTextureCtrl::handleDragAndDrop(S32 x, S32 y, MASK mask,
 	}
 
 	handled = TRUE;
-	lldebugst(LLERR_USER_INPUT) << "dragAndDrop handled by LLTextureCtrl " << getName() << llendl;
+	LL_DEBUGS("UserInput") << "dragAndDrop handled by LLTextureCtrl " << getName() << LL_ENDL;
 
 	return handled;
 }

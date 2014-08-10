@@ -505,9 +505,25 @@ static std::string get_object_log(GLhandleARB ret)
 	return res;
 }
 
-void LLShaderMgr::dumpObjectLog(GLhandleARB ret, BOOL warns) 
+void LLShaderMgr::dumpObjectLog(GLhandleARB ret, BOOL warns, const std::string& filename) 
 {
 	std::string log = get_object_log(ret);
+
+	if (log.length() > 0 || warns)
+	{
+		if (!filename.empty())
+		{
+			if (warns)
+			{
+				LL_WARNS("ShaderLoading") << "From " << filename << ":" << LL_ENDL;
+			}
+			else
+			{
+				LL_INFOS("ShaderLoading") << "From " << filename << ":" << LL_ENDL;
+			}
+		}
+	}
+
 	if ( log.length() > 0 )
 	{
 		if (warns)
@@ -521,7 +537,7 @@ void LLShaderMgr::dumpObjectLog(GLhandleARB ret, BOOL warns)
 	}
 }
 
-GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shader_level, GLenum type, S32 texture_index_channels)
+GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shader_level, GLenum type, boost::unordered_map<std::string, std::string>* defines, S32 texture_index_channels)
 {
 	GLenum error = GL_NO_ERROR;
 	if (gDebugGL)
@@ -558,7 +574,7 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 		file = LLFile::fopen(fname.str(), "r");		/* Flawfinder: ignore */
 		if (file)
 		{
-			LL_INFOS("ShaderLoading") << "Loading file: shaders/class" << gpu_class << "/" << filename << " (Want class " << gpu_class << ")" << LL_ENDL;
+			LL_DEBUGS("ShaderLoading") << "Loading file: shaders/class" << gpu_class << "/" << filename << " (Want class " << gpu_class << ")" << LL_ENDL;
 			break; // done
 		}
 	}
@@ -584,7 +600,7 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 		{
 			//should NEVER get here -- if major version is 1 and minor version is less than 10, 
 			// viewer should never attempt to use shaders, continuing will result in undefined behavior
-			llerrs << "Unsupported GLSL Version." << llendl;
+			LL_ERRS() << "Unsupported GLSL Version." << LL_ENDL;
 		}
 
 		if (minor_version <= 19)
@@ -650,12 +666,14 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 			text[count++] = strdup("#define shadow2DRect(a,b) vec2(texture(a,b))\n");
 		}
 	}
-
-	//copy preprocessor definitions into buffer
-	for (std::map<std::string,std::string>::iterator iter = mDefinitions.begin(); iter != mDefinitions.end(); ++iter)
+	
+	if (defines)
+	{
+		for (boost::unordered_map<std::string,std::string>::iterator iter = defines->begin(); iter != defines->end(); ++iter)
 	{
 		std::string define = "#define " + iter->first + " " + iter->second + "\n";
 		text[count++] = (GLcharARB *) strdup(define.c_str());
+	}
 	}
 
 	if (texture_index_channels > 0 && type == GL_FRAGMENT_SHADER_ARB)
@@ -692,6 +710,8 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 			return ret;
 		}
 		*/
+
+		text[count++] = strdup("#define HAS_DIFFUSE_LOOKUP 1\n");
 
 		//uniform declartion
 		for (S32 i = 0; i < texture_index_channels; ++i)
@@ -747,8 +767,12 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 		else
 		{ //should never get here.  Indexed texture rendering requires GLSL 1.30 or later 
 			// (for passing integers between vertex and fragment shaders)
-			llerrs << "Indexed texture rendering requires GLSL 1.30 or later." << llendl;
+			LL_ERRS() << "Indexed texture rendering requires GLSL 1.30 or later." << LL_ENDL;
 		}
+	}
+	else
+	{
+		text[count++] = strdup("#define HAS_DIFFUSE_LOOKUP 0\n");
 	}
 
 	//copy file into memory
@@ -804,9 +828,8 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 			if (error != GL_NO_ERROR || success == GL_FALSE) 
 			{
 				//an error occured, print log
-				LL_WARNS("ShaderLoading") << "GLSL Compilation Error: (" << error << ") in " << filename << LL_ENDL;
-				dumpObjectLog(ret);
-
+				LL_WARNS("ShaderLoading") << "GLSL Compilation Error:" << LL_ENDL;
+				dumpObjectLog(ret, TRUE, filename);
 #if LL_WINDOWS
 				std::stringstream ostr;
 				//dump shader source for debugging
@@ -817,15 +840,27 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 					if (i % 128 == 0)
 					{ //dump every 128 lines
 
-						LL_WARNS("ShaderLoading") << "\n" << ostr.str() << llendl;
+						LL_WARNS("ShaderLoading") << "\n" << ostr.str() << LL_ENDL;
 						ostr = std::stringstream();
 					}
 
 				}
 
-				LL_WARNS("ShaderLoading") << "\n" << ostr.str() << llendl;
-#endif // LL_WINDOWS
-
+				LL_WARNS("ShaderLoading") << "\n" << ostr.str() << LL_ENDL;
+#else
+				std::string str;
+				
+				for (GLuint i = 0; i < count; i++) {
+					str.append(text[i]);
+					
+					if (i % 128 == 0)
+					{
+						LL_WARNS("ShaderLoading") << str << LL_ENDL;
+						str = "";
+					}
+				}
+#endif
+				
 				ret = 0;
 			}
 		}
@@ -854,7 +889,7 @@ GLhandleARB LLShaderMgr::loadShaderFile(const std::string& filename, S32 & shade
 		if (shader_level > 1)
 		{
 			shader_level--;
-			return loadShaderFile(filename,shader_level,type,texture_index_channels);
+			return loadShaderFile(filename,shader_level,type, defines, texture_index_channels);
 		}
 		LL_WARNS("ShaderLoading") << "Failed to load " << filename << LL_ENDL;	
 	}
@@ -905,11 +940,6 @@ BOOL LLShaderMgr::linkProgramObject(GLhandleARB obj, BOOL suppress_errors)
 		suppress_errors = FALSE;
 	}
 #endif
-	if (!suppress_errors)
-	{
-        dumpObjectLog(obj, !success);
-	}
-
 	return success;
 }
 
@@ -944,7 +974,7 @@ void LLShaderMgr::initAttribsAndUniforms()
 	mReservedAttribs.push_back("texcoord3");
 	mReservedAttribs.push_back("diffuse_color");
 	mReservedAttribs.push_back("emissive");
-	mReservedAttribs.push_back("binormal");
+	mReservedAttribs.push_back("tangent");
 	mReservedAttribs.push_back("weight");
 	mReservedAttribs.push_back("weight4");
 	mReservedAttribs.push_back("clothing");
@@ -960,7 +990,9 @@ void LLShaderMgr::initAttribsAndUniforms()
 	mReservedUniforms.push_back("texture_matrix1");
 	mReservedUniforms.push_back("texture_matrix2");
 	mReservedUniforms.push_back("texture_matrix3");
-	llassert(mReservedUniforms.size() == LLShaderMgr::TEXTURE_MATRIX3+1);
+	mReservedUniforms.push_back("object_plane_s");
+	mReservedUniforms.push_back("object_plane_t");
+	llassert(mReservedUniforms.size() == LLShaderMgr::OBJECT_PLANE_T+1);
 
 	mReservedUniforms.push_back("viewport");
 
@@ -1041,6 +1073,7 @@ void LLShaderMgr::initAttribsAndUniforms()
 
 
 	mReservedUniforms.push_back("minimum_alpha");
+	mReservedUniforms.push_back("emissive_brightness");
 
 	mReservedUniforms.push_back("shadow_matrix");
 	mReservedUniforms.push_back("env_mat");
@@ -1101,7 +1134,55 @@ void LLShaderMgr::initAttribsAndUniforms()
 	mReservedUniforms.push_back("lightMap");
 	mReservedUniforms.push_back("bloomMap");
 	mReservedUniforms.push_back("projectionMap");
+	mReservedUniforms.push_back("norm_mat");
 
+	mReservedUniforms.push_back("global_gamma");
+	mReservedUniforms.push_back("texture_gamma");
+	
+	mReservedUniforms.push_back("specular_color");
+	mReservedUniforms.push_back("env_intensity");
+
+	mReservedUniforms.push_back("matrixPalette");
+	mReservedUniforms.push_back("translationPalette");
+	
+	mReservedUniforms.push_back("screenTex");
+	mReservedUniforms.push_back("screenDepth");
+	mReservedUniforms.push_back("refTex");
+	mReservedUniforms.push_back("eyeVec");
+	mReservedUniforms.push_back("time");
+	mReservedUniforms.push_back("d1");
+	mReservedUniforms.push_back("d2");
+	mReservedUniforms.push_back("lightDir");
+	mReservedUniforms.push_back("specular");
+	mReservedUniforms.push_back("lightExp");
+	mReservedUniforms.push_back("waterFogColor");
+	mReservedUniforms.push_back("waterFogDensity");
+	mReservedUniforms.push_back("waterFogKS");
+	mReservedUniforms.push_back("refScale");
+	mReservedUniforms.push_back("waterHeight");
+	mReservedUniforms.push_back("waterPlane");
+	mReservedUniforms.push_back("normScale");
+	mReservedUniforms.push_back("fresnelScale");
+	mReservedUniforms.push_back("fresnelOffset");
+	mReservedUniforms.push_back("blurMultiplier");
+	mReservedUniforms.push_back("sunAngle");
+	mReservedUniforms.push_back("scaledAngle");
+	mReservedUniforms.push_back("sunAngle2");
+	
+	mReservedUniforms.push_back("camPosLocal");
+
+	mReservedUniforms.push_back("gWindDir");
+	mReservedUniforms.push_back("gSinWaveParams");
+	mReservedUniforms.push_back("gGravity");
+
+	mReservedUniforms.push_back("detail_0");
+	mReservedUniforms.push_back("detail_1");
+	mReservedUniforms.push_back("detail_2");
+	mReservedUniforms.push_back("detail_3");
+	mReservedUniforms.push_back("alpha_ramp");
+
+	mReservedUniforms.push_back("origin");
+	mReservedUniforms.push_back("display_gamma");
 	llassert(mReservedUniforms.size() == END_RESERVED_UNIFORMS);
 
 	std::set<std::string> dupe_check;
@@ -1110,7 +1191,7 @@ void LLShaderMgr::initAttribsAndUniforms()
 	{
 		if (dupe_check.find(mReservedUniforms[i]) != dupe_check.end())
 		{
-			llerrs << "Duplicate reserved uniform name found: " << mReservedUniforms[i] << llendl;
+			LL_ERRS() << "Duplicate reserved uniform name found: " << mReservedUniforms[i] << LL_ENDL;
 		}
 		dupe_check.insert(mReservedUniforms[i]);
 	}

@@ -77,14 +77,14 @@ void LLTeleportHistory::goToItem(int idx)
 	// Validate specified index.
 	if (idx < 0 || idx >= (int)mItems.size())
 	{
-		llwarns << "Invalid teleport history index (" << idx << ") specified" << llendl;
+		LL_WARNS() << "Invalid teleport history index (" << idx << ") specified" << LL_ENDL;
 		dump();
 		return;
 	}
 	
 	if (idx == mCurrentItem)
 	{
-		llwarns << "Will not teleport to the same location." << llendl;
+		LL_WARNS() << "Will not teleport to the same location." << LL_ENDL;
 		dump();
 		return;
 	}
@@ -165,7 +165,7 @@ void LLTeleportHistory::updateCurrentLocation(const LLVector3d& new_pos)
 		// Update current history item.
 		if (mCurrentItem < 0 || mCurrentItem >= (int) mItems.size()) // sanity check
 		{
-			llwarns << "Invalid current item. (this should not happen)" << llendl;
+			LL_WARNS() << "Invalid current item. (this should not happen)" << LL_ENDL;
 			llassert(!"Invalid current teleport history item");
 			return;
 		}
@@ -237,7 +237,6 @@ void LLTeleportHistory::dump() const
 		return;
 	}
 //mk
-	llinfos << "Teleport history dump (" << mItems.size() << " items):" << llendl;
 	
 	for (size_t i=0; i<mItems.size(); i++)
 	{
@@ -246,6 +245,6 @@ void LLTeleportHistory::dump() const
 		line << i << ": " << mItems[i].mTitle;
 		line << " REGION_ID: " << mItems[i].mRegionID;
 		line << ", pos: " << mItems[i].mGlobalPos;
-		llinfos << line.str() << llendl;
+		LL_INFOS() << line.str() << LL_ENDL;
 	}
 }

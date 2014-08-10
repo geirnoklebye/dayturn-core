@@ -42,6 +42,7 @@ class LLMessageSystem;
 class LLVolumeParams;
 class LLColor4;
 class LLColor3;
+class LLMaterialID;
 class LLTextureEntry;
 class LLDataPacker;
 class LLVolumeMgr;
@@ -309,7 +310,8 @@ struct LLTEContents
 	U8	   bump[MAX_TES];
 	U8	   media_flags[MAX_TES];
     U8     glow[MAX_TES];
-	
+	LLMaterialID material_ids[MAX_TES];
+
 	static const U32 MAX_TE_BUFFER = 4096;
 	U8 packed_buffer[MAX_TE_BUFFER];
 
@@ -359,6 +361,7 @@ public:
 	LLTextureEntry* getTE(const U8 te_num) const;
 
 	virtual void setNumTEs(const U8 num_tes);
+	virtual void setAllTESelected(bool sel);
 	virtual void setAllTETextures(const LLUUID &tex_id);
 	virtual void setTE(const U8 index, const LLTextureEntry& te);
 	virtual S32 setTEColor(const U8 te, const LLColor4 &color);
@@ -381,7 +384,10 @@ public:
 	virtual S32 setTEFullbright(const U8 te, const U8 fullbright);
 	virtual S32 setTEMediaFlags(const U8 te, const U8 flags);
 	virtual S32 setTEGlow(const U8 te, const F32 glow);
+	virtual S32 setTEMaterialID(const U8 te, const LLMaterialID& pMaterialID);
+	virtual S32 setTEMaterialParams(const U8 index, const LLMaterialPtr pMaterialParams);
 	virtual BOOL setMaterial(const U8 material); // returns TRUE if material changed
+	virtual void setTESelected(const U8 te, bool sel);
 
 	void copyTEs(const LLPrimitive *primitive);
 	S32 packTEField(U8 *cur_ptr, U8 *data_ptr, U8 data_size, U8 last_face_index, EMsgVariableType type) const;
@@ -534,7 +540,7 @@ void LLPrimitive::setPosition(const F32 x, const F32 y, const F32 z)
 	}
 	else
 	{
-		llerrs << "Non Finite in LLPrimitive::setPosition(x,y,z) for " << pCodeToString(mPrimitiveCode) << llendl;
+		LL_ERRS() << "Non Finite in LLPrimitive::setPosition(x,y,z) for " << pCodeToString(mPrimitiveCode) << LL_ENDL;
 	}
 }
 
@@ -547,7 +553,7 @@ void LLPrimitive::setPosition(const LLVector3& pos)
 	}
 	else
 	{
-		llerrs << "Non Finite in LLPrimitive::setPosition(LLVector3) for " << pCodeToString(mPrimitiveCode) << llendl;
+		LL_ERRS() << "Non Finite in LLPrimitive::setPosition(LLVector3) for " << pCodeToString(mPrimitiveCode) << LL_ENDL;
 	}
 }
 
@@ -559,7 +565,7 @@ void LLPrimitive::setAngularVelocity(const LLVector3& avel)
 	}
 	else
 	{
-		llerror("Non Finite in LLPrimitive::setAngularVelocity", 0);
+		LL_ERRS() << "Non Finite in LLPrimitive::setAngularVelocity" << LL_ENDL;
 	}
 }
 
@@ -571,7 +577,7 @@ void LLPrimitive::setAngularVelocity(const F32 x, const F32 y, const F32 z)
 	}
 	else
 	{
-		llerror("Non Finite in LLPrimitive::setAngularVelocity", 0);
+		LL_ERRS() << "Non Finite in LLPrimitive::setAngularVelocity" << LL_ENDL;
 	}
 }
 
@@ -583,7 +589,7 @@ void LLPrimitive::setVelocity(const LLVector3& vel)
 	}
 	else
 	{
-		llerrs << "Non Finite in LLPrimitive::setVelocity(LLVector3) for " << pCodeToString(mPrimitiveCode) << llendl;
+		LL_ERRS() << "Non Finite in LLPrimitive::setVelocity(LLVector3) for " << pCodeToString(mPrimitiveCode) << LL_ENDL;
 	}
 }
 
@@ -595,7 +601,7 @@ void LLPrimitive::setVelocity(const F32 x, const F32 y, const F32 z)
 	}
 	else
 	{
-		llerrs << "Non Finite in LLPrimitive::setVelocity(F32,F32,F32) for " << pCodeToString(mPrimitiveCode) << llendl;
+		LL_ERRS() << "Non Finite in LLPrimitive::setVelocity(F32,F32,F32) for " << pCodeToString(mPrimitiveCode) << LL_ENDL;
 	}
 }
 
@@ -607,7 +613,7 @@ void LLPrimitive::setVelocityX(const F32 x)
 	}
 	else
 	{
-		llerror("Non Finite in LLPrimitive::setVelocityX", 0);
+		LL_ERRS() << "Non Finite in LLPrimitive::setVelocityX" << LL_ENDL;
 	}
 }
 
@@ -619,7 +625,7 @@ void LLPrimitive::setVelocityY(const F32 y)
 	}
 	else
 	{
-		llerror("Non Finite in LLPrimitive::setVelocityY", 0);
+		LL_ERRS() << "Non Finite in LLPrimitive::setVelocityY" << LL_ENDL;
 	}
 }
 
@@ -631,7 +637,7 @@ void LLPrimitive::setVelocityZ(const F32 z)
 	}
 	else
 	{
-		llerror("Non Finite in LLPrimitive::setVelocityZ", 0);
+		LL_ERRS() << "Non Finite in LLPrimitive::setVelocityZ" << LL_ENDL;
 	}
 }
 
@@ -643,7 +649,7 @@ void LLPrimitive::addVelocity(const LLVector3& vel)
 	}
 	else
 	{
-		llerror("Non Finite in LLPrimitive::addVelocity", 0);
+		LL_ERRS() << "Non Finite in LLPrimitive::addVelocity" << LL_ENDL;
 	}
 }
 
@@ -655,7 +661,7 @@ void LLPrimitive::setAcceleration(const LLVector3& accel)
 	}
 	else
 	{
-		llerrs << "Non Finite in LLPrimitive::setAcceleration(LLVector3) for " << pCodeToString(mPrimitiveCode) << llendl;
+		LL_ERRS() << "Non Finite in LLPrimitive::setAcceleration(LLVector3) for " << pCodeToString(mPrimitiveCode) << LL_ENDL;
 	}
 }
 
@@ -667,7 +673,7 @@ void LLPrimitive::setAcceleration(const F32 x, const F32 y, const F32 z)
 	}
 	else
 	{
-		llerrs << "Non Finite in LLPrimitive::setAcceleration(F32,F32,F32) for " << pCodeToString(mPrimitiveCode) << llendl;
+		LL_ERRS() << "Non Finite in LLPrimitive::setAcceleration(F32,F32,F32) for " << pCodeToString(mPrimitiveCode) << LL_ENDL;
 	}
 }
 #endif // CHECK_FOR_FINITE

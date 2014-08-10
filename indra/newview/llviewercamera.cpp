@@ -49,11 +49,15 @@
 #include "llglheaders.h"
 #include "llquaternion.h"
 #include "llwindow.h"			// getPixelAspectRatio()
+#include "lltracerecording.h"
 
 // System includes
 #include <iomanip> // for setprecision
 
-U32 LLViewerCamera::sCurCameraID = LLViewerCamera::CAMERA_WORLD;
+LLTrace::CountStatHandle<> LLViewerCamera::sVelocityStat("camera_velocity");
+LLTrace::CountStatHandle<> LLViewerCamera::sAngularVelocityStat("camera_angular_velocity");
+
+LLViewerCamera::eCameraID LLViewerCamera::sCurCameraID = LLViewerCamera::CAMERA_WORLD;
 
 //glu pick matrix implementation borrowed from Mesa3D
 glh::matrix4f gl_pick_matrix(GLfloat x, GLfloat y, GLfloat width, GLfloat height, GLint* viewport)
@@ -151,7 +155,7 @@ void LLViewerCamera::updateCameraLocation(const LLVector3 &center,
 
 	setOriginAndLookAt(origin, up_direction, point_of_interest);
 
-	mVelocityDir = center - last_position ; 
+	mVelocityDir = origin - last_position ; 
 	F32 dpos = mVelocityDir.normVec() ;
 	LLQuaternion rotation;
 	rotation.shortestArc(last_axis, getAtAxis());
@@ -160,11 +164,11 @@ void LLViewerCamera::updateCameraLocation(const LLVector3 &center,
 	F32 drot;
 	rotation.getAngleAxis(&drot, &x, &y, &z);
 
-	mVelocityStat.addValue(dpos);
-	mAngularVelocityStat.addValue(drot);
+	add(sVelocityStat, dpos);
+	add(sAngularVelocityStat, drot);
 	
-	mAverageSpeed = mVelocityStat.getMeanPerSec() ;
-	mAverageAngularSpeed = mAngularVelocityStat.getMeanPerSec() ;
+	mAverageSpeed = LLTrace::get_frame_recording().getPeriodMeanPerSec(sVelocityStat, 50);
+	mAverageAngularSpeed = LLTrace::get_frame_recording().getPeriodMeanPerSec(sAngularVelocityStat);
 	mCosHalfCameraFOV = cosf(0.5f * getView() * llmax(1.0f, getAspect()));
 
 	// update pixel meter ratio using default fov, not modified one
@@ -873,6 +877,19 @@ BOOL LLViewerCamera::areVertsVisible(LLViewerObject* volumep, BOOL all_verts)
 void LLViewerCamera::setDefaultFOV(F32 vertical_fov_rads) 
 {
 	vertical_fov_rads = llclamp(vertical_fov_rads, getMinView(), getMaxView());
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.mCamZoomMax < EXTREMUM && DEFAULT_FIELD_OF_VIEW/vertical_fov_rads > gAgent.mRRInterface.mCamZoomMax)
+		{
+			vertical_fov_rads = DEFAULT_FIELD_OF_VIEW/gAgent.mRRInterface.mCamZoomMax;
+		}
+		if (gAgent.mRRInterface.mCamZoomMin > -EXTREMUM && DEFAULT_FIELD_OF_VIEW/vertical_fov_rads < gAgent.mRRInterface.mCamZoomMin)
+		{
+			vertical_fov_rads = DEFAULT_FIELD_OF_VIEW/gAgent.mRRInterface.mCamZoomMin;
+		}
+	}
+//mk
 	setView(vertical_fov_rads);
 	mCameraFOVDefault = vertical_fov_rads; 
 	mCosHalfCameraFOV = cosf(mCameraFOVDefault * 0.5f);

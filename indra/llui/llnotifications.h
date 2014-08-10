@@ -92,11 +92,14 @@
 #include "llevents.h"
 #include "llfunctorregistry.h"
 #include "llinitparam.h"
+#include "llinstancetracker.h"
 #include "llmortician.h"
 #include "llnotificationptr.h"
 #include "llpointer.h"
 #include "llrefcount.h"
 #include "llsdparam.h"
+
+#include "llnotificationslistener.h"
 
 class LLAvatarName;
 typedef enum e_notification_priority
@@ -138,6 +141,7 @@ typedef LLFunctorRegistration<LLNotificationResponder> LLNotificationFunctorRegi
 class LLNotificationContext : public LLInstanceTracker<LLNotificationContext, LLUUID>
 {
 public:
+
 	LLNotificationContext() : LLInstanceTracker<LLNotificationContext, LLUUID>(LLUUID::generateNewID())
 	{
 	}
@@ -845,7 +849,7 @@ public:
     Iterator begin();
     Iterator end();
 	size_t size();
-
+	
 	std::string summarize();
 
 private:
@@ -873,6 +877,13 @@ class LLNotifications :
 
 	friend class LLSingleton<LLNotifications>;
 public:
+
+    // Needed to clear up RefCounted things prior to actual destruction
+    // as the singleton nature of the class makes them do "bad things"
+    // on at least Mac, if not all 3 platforms
+    //
+    void clear();
+
 	// load all notification descriptions from file
 	// calling more than once will overwrite existing templates
 	// but never delete a template
@@ -970,6 +981,8 @@ private:
 
 	bool mIgnoreAllNotifications;
 
+	boost::scoped_ptr<LLNotificationsListener> mListener;
+
 	std::vector<LLNotificationChannelPtr> mDefaultChannels;
 };
 
@@ -1055,15 +1068,13 @@ class LLPersistentNotificationChannel : public LLNotificationChannel
 public:
 	LLPersistentNotificationChannel() 
 		:	LLNotificationChannel("Persistent", "Visible", &notificationFilter)
-	{
-	}
+	{}
 
 	typedef std::vector<LLNotificationPtr> history_list_t;
 	history_list_t::iterator beginHistory() { sortHistory(); return mHistory.begin(); }
 	history_list_t::iterator endHistory() { return mHistory.end(); }
 
 private:
-
 	struct sortByTime
 	{
 		S32 operator ()(const LLNotificationPtr& a, const LLNotificationPtr& b)
@@ -1076,7 +1087,6 @@ private:
 	{
 		std::sort(mHistory.begin(), mHistory.end(), sortByTime());
 	}
-
 
 	// The channel gets all persistent notifications except those that have been canceled
 	static bool notificationFilter(LLNotificationPtr pNotification)

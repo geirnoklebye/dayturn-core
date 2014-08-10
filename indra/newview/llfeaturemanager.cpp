@@ -30,13 +30,13 @@
 #include <fstream>
 
 #include <boost/regex.hpp>
+#include <boost/assign/list_of.hpp>
 
 #include "llfeaturemanager.h"
 #include "lldir.h"
 
 #include "llsys.h"
 #include "llgl.h"
-#include "llsecondlifeurls.h"
 
 #include "llappviewer.h"
 #include "llhttpclient.h"
@@ -52,6 +52,8 @@
 #include "llboost.h"
 #include "llweb.h"
 #include "llviewershadermgr.h"
+#include "llstring.h"
+#include "stringize.h"
 
 #if LL_WINDOWS
 #include "lldxhardware.h"
@@ -128,7 +130,7 @@ F32 LLFeatureList::getRecommendedValue(const std::string& name)
 
 BOOL LLFeatureList::maskList(LLFeatureList &mask)
 {
-	//llinfos << "Masking with " << mask.mName << llendl;
+	//LL_INFOS() << "Masking with " << mask.mName << LL_ENDL;
 	//
 	// Lookup the specified feature mask, and overlay it on top of the
 	// current feature mask.
@@ -187,6 +189,55 @@ void LLFeatureList::dump()
 	LL_DEBUGS("RenderInit") << LL_ENDL;
 }
 
+static const std::vector<std::string> sGraphicsLevelNames = boost::assign::list_of
+	("Low")
+	("LowMid")
+	("Mid")
+	("MidHigh")
+	("High")
+	("HighUltra")
+	("Ultra")
+;
+
+U32 LLFeatureManager::getMaxGraphicsLevel() const
+{
+	return sGraphicsLevelNames.size() - 1;
+}
+
+bool LLFeatureManager::isValidGraphicsLevel(U32 level) const
+{
+	return (level <= getMaxGraphicsLevel());
+}
+
+std::string LLFeatureManager::getNameForGraphicsLevel(U32 level) const
+{
+	if (isValidGraphicsLevel(level))
+	{
+		return sGraphicsLevelNames[level];
+	}
+	return STRINGIZE("Invalid graphics level " << level << ", valid are 0 .. "
+					 << getMaxGraphicsLevel());
+}
+
+S32 LLFeatureManager::getGraphicsLevelForName(const std::string& name) const
+{
+	const std::string FixedFunction("FixedFunction");
+	std::string rname(name);
+	if (LLStringUtil::endsWith(rname, FixedFunction))
+	{
+		// chop off any "FixedFunction" suffix
+		rname = rname.substr(0, rname.length() - FixedFunction.length());
+	}
+	for (S32 i(0), iend(getMaxGraphicsLevel()); i <= iend; ++i)
+	{
+		if (sGraphicsLevelNames[i] == rname)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 LLFeatureList *LLFeatureManager::findMask(const std::string& name)
 {
 	if (mMaskList.count(name))
@@ -209,7 +260,7 @@ BOOL LLFeatureManager::maskFeatures(const std::string& name)
 	return maskList(*maskp);
 }
 
-BOOL LLFeatureManager::loadFeatureTables()
+bool LLFeatureManager::loadFeatureTables()
 {
 	// *TODO - if I or anyone else adds something else to the skipped list
 	// make this data driven.  Put it in the feature table and parse it
@@ -250,28 +301,36 @@ BOOL LLFeatureManager::loadFeatureTables()
 
 	// use HTTP table if it exists
 	std::string path;
+	bool parse_ok = false;
 	if (gDirUtilp->fileExists(http_path))
 	{
-		path = http_path;
-	}
-	else
-	{
-		path = app_path;
+		parse_ok = parseFeatureTable(http_path);
+		if (!parse_ok)
+		{
+			// the HTTP table failed to parse, so delete it
+			LLFile::remove(http_path);
+			LL_WARNS("RenderInit") << "Removed invalid feature table '" << http_path << "'" << LL_ENDL;
+		}
 	}
 
-	
-	return parseFeatureTable(path);
+	if (!parse_ok)
+	{
+		parse_ok = parseFeatureTable(app_path);
+	}
+
+	return parse_ok;
 }
 
 
-BOOL LLFeatureManager::parseFeatureTable(std::string filename)
+bool LLFeatureManager::parseFeatureTable(std::string filename)
 {
-	llinfos << "Looking for feature table in " << filename << llendl;
+	LL_INFOS("RenderInit") << "Attempting to parse feature table from " << filename << LL_ENDL;
 
 	llifstream file;
 	std::string name;
 	U32		version;
 	
+	cleanupFeatureTables(); // in case an earlier attempt left partial results
 	file.open(filename); 	 /*Flawfinder: ignore*/
 
 	if (!file)
@@ -286,13 +345,14 @@ BOOL LLFeatureManager::parseFeatureTable(std::string filename)
 	if (name != "version")
 	{
 		LL_WARNS("RenderInit") << filename << " does not appear to be a valid feature table!" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	mTableVersion = version;
 
 	LLFeatureList *flp = NULL;
-	while (file >> name)
+	bool parse_ok = true;
+	while (file >> name && parse_ok)
 	{
 		char buffer[MAX_STRING];		 /*Flawfinder: ignore*/
 		
@@ -305,39 +365,58 @@ BOOL LLFeatureManager::parseFeatureTable(std::string filename)
 
 		if (name == "list")
 		{
+			LL_DEBUGS("RenderInit") << "Before new list" << std::endl;
 			if (flp)
 			{
-				//flp->dump();
+				flp->dump();
 			}
+			else
+			{
+				LL_CONT << "No current list";
+			}
+			LL_CONT << LL_ENDL;
+			
 			// It's a new mask, create it.
 			file >> name;
-			if (mMaskList.count(name))
+			if (!mMaskList.count(name))
 			{
-				LL_ERRS("RenderInit") << "Overriding mask " << name << ", this is invalid!" << LL_ENDL;
-			}
-
 			flp = new LLFeatureList(name);
 			mMaskList[name] = flp;
 		}
 		else
 		{
-			if (!flp)
-			{
-				LL_ERRS("RenderInit") << "Specified parameter before <list> keyword!" << LL_ENDL;
-				return FALSE;
+				LL_WARNS("RenderInit") << "Overriding mask " << name << ", this is invalid!" << LL_ENDL;
+				parse_ok = false;
 			}
+		}
+		else
+		{
+			if (flp)
+			{
 			S32 available;
 			F32 recommended;
 			file >> available >> recommended;
 			flp->addFeature(name, available, recommended);
 		}
+			else
+			{
+				LL_WARNS("RenderInit") << "Specified parameter before <list> keyword!" << LL_ENDL;
+				parse_ok = false;
+			}
+		}
 	}
 	file.close();
 
-	return TRUE;
+	if (!parse_ok)
+	{
+		LL_WARNS("RenderInit") << "Discarding feature table data from " << filename << LL_ENDL;
+		cleanupFeatureTables();
+	}
+	
+	return parse_ok;
 }
 
-void LLFeatureManager::loadGPUClass()
+bool LLFeatureManager::loadGPUClass()
 {
 	// defaults
 	mGPUClass = GPU_CLASS_UNKNOWN;
@@ -355,29 +434,49 @@ void LLFeatureManager::loadGPUClass()
 
 	// use HTTP table if it exists
 	std::string path;
+	bool parse_ok = false;
 	if (gDirUtilp->fileExists(http_path))
 	{
-		path = http_path;
+		parse_ok = parseGPUTable(http_path);
+		if (!parse_ok)
+		{
+			// the HTTP table failed to parse, so delete it
+			LLFile::remove(http_path);
+			LL_WARNS("RenderInit") << "Removed invalid gpu table '" << http_path << "'" << LL_ENDL;
 	}
-	else
-	{
-		path = app_path;
 	}
 
-	parseGPUTable(path);
+	if (!parse_ok)
+	{
+		parse_ok = parseGPUTable(app_path);
+	}
+
+	return parse_ok; // indicates that the file parsed correctly, not that the gpu was recognized
 }
 
 	
-void LLFeatureManager::parseGPUTable(std::string filename)
+bool LLFeatureManager::parseGPUTable(std::string filename)
 {
 	llifstream file;
 		
+	LL_INFOS("RenderInit") << "Attempting to parse GPU table from " << filename << LL_ENDL;
 	file.open(filename);
 
-	if (!file)
+	if (file)
+	{
+		const char recognizer[] = "//GPU_TABLE";
+		char first_line[MAX_STRING];
+		file.getline(first_line, MAX_STRING);
+		if (0 != strncmp(first_line, recognizer, strlen(recognizer)))
+		{
+			LL_WARNS("RenderInit") << "Invalid GPU table: " << filename << "!" << LL_ENDL;
+			return false;
+		}
+	}
+	else
 	{
 		LL_WARNS("RenderInit") << "Unable to open GPU table: " << filename << "!" << LL_ENDL;
-		return;
+		return false;
 	}
 
 	std::string rawRenderer = gGLManager.getRawGLString();
@@ -504,6 +603,7 @@ void LLFeatureManager::parseGPUTable(std::string filename)
 #if LL_DARWIN // never go over "Mid" settings by default on OS X
 	mGPUClass = llmin(mGPUClass, GPU_CLASS_2);
 #endif
+	return true;
 }
 
 // responder saves table into file
@@ -525,7 +625,7 @@ public:
 		{
 			// write to file
 
-			llinfos << "writing feature table to " << mFilename << llendl;
+			LL_INFOS() << "writing feature table to " << mFilename << LL_ENDL;
 			
 			S32 file_size = buffer->countAfter(channels.in(), NULL);
 			if (file_size > 0)
@@ -570,7 +670,7 @@ void fetch_feature_table(std::string table)
 
 	const std::string path       = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, filename);
 
-	llinfos << "LLFeatureManager fetching " << url << " into " << path << llendl;
+	LL_INFOS() << "LLFeatureManager fetching " << url << " into " << path << LL_ENDL;
 	
 	LLHTTPClient::get(url, new LLHTTPFeatureTableResponder(path));
 }
@@ -585,7 +685,7 @@ void fetch_gpu_table(std::string table)
 
 	const std::string path       = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, filename);
 
-	llinfos << "LLFeatureManager fetching " << url << " into " << path << llendl;
+	LL_INFOS() << "LLFeatureManager fetching " << url << " into " << path << LL_ENDL;
 	
 	LLHTTPClient::get(url, new LLHTTPFeatureTableResponder(path));
 }
@@ -620,9 +720,9 @@ void LLFeatureManager::applyRecommendedSettings()
 {
 	// apply saved settings
 	// cap the level at 2 (high)
-	S32 level = llmax(GPU_CLASS_0, llmin(mGPUClass, GPU_CLASS_5));
+	U32 level = llmax(GPU_CLASS_0, llmin(mGPUClass, GPU_CLASS_5));
 
-	llinfos << "Applying Recommended Features" << llendl;
+	LL_INFOS() << "Applying Recommended Features" << LL_ENDL;
 
 	setGraphicsLevel(level, false);
 	gSavedSettings.setU32("RenderQualityPerformance", level);
@@ -668,7 +768,7 @@ void LLFeatureManager::applyFeatures(bool skipFeatures)
 		LLControlVariable* ctrl = gSavedSettings.getControl(mIt->first);
 		if(ctrl == NULL)
 		{
-			llwarns << "AHHH! Control setting " << mIt->first << " does not exist!" << llendl;
+			LL_WARNS() << "AHHH! Control setting " << mIt->first << " does not exist!" << LL_ENDL;
 			continue;
 		}
 
@@ -691,66 +791,37 @@ void LLFeatureManager::applyFeatures(bool skipFeatures)
 		}
 		else
 		{
-			llwarns << "AHHH! Control variable is not a numeric type!" << llendl;
+			LL_WARNS() << "AHHH! Control variable is not a numeric type!" << LL_ENDL;
 		}
 	}
 }
 
-void LLFeatureManager::setGraphicsLevel(S32 level, bool skipFeatures)
+void LLFeatureManager::setGraphicsLevel(U32 level, bool skipFeatures)
 {
 	LLViewerShaderMgr::sSkipReload = true;
 
 	applyBaseMasks();
-	
-	switch (level)
+
+	// if we're passed an invalid level, default to "Low"
+	std::string features(isValidGraphicsLevel(level)? getNameForGraphicsLevel(level) : "Low");
+	if (features == "Low")
 	{
-		case 0:
 #if LL_DARWIN
-			// This Mac-specific change is to insure that we force 'Basic Shaders' for all Mac
-			// systems which support them instead of falling back to fixed-function unnecessarily
-			// MAINT-2157
-			//
-			if (gGLManager.mGLVersion < 2.1f)
-			{
-				maskFeatures("LowFixedFunction");			
-			}
-			else
-			{ //same as low, but with "Basic Shaders" enabled
-				maskFeatures("Low");
-			}
+		// This Mac-specific change is to insure that we force 'Basic Shaders' for all Mac
+		// systems which support them instead of falling back to fixed-function unnecessarily
+		// MAINT-2157
+		if (gGLManager.mGLVersion < 2.1f)
 #else
-			if (gGLManager.mGLVersion < 3.f || gGLManager.mIsIntel)
-			{ //only use fixed function by default if GL version < 3.0 or this is an intel graphics chip
-				maskFeatures("LowFixedFunction");			
-			}
-			else
-			{ //same as low, but with "Basic Shaders" enabled
-				maskFeatures("Low");
-			}
+		// only use fixed function by default if GL version < 3.0 or this is an intel graphics chip
+		if (gGLManager.mGLVersion < 3.f || gGLManager.mIsIntel)
 #endif
-			break;
-		case 1:
-			maskFeatures("LowMid");
-			break;
-		case 2:
-			maskFeatures("Mid");
-			break;
-		case 3:
-			maskFeatures("MidHigh");
-			break;
-		case 4:
-			maskFeatures("High");
-			break;
-		case 5:
-			maskFeatures("HighUltra");
-			break;
-		case 6:
-			maskFeatures("Ultra");
-			break;
-		default:
-			maskFeatures("Low");
-			break;
+		{
+            // same as Low, but with "Basic Shaders" disabled
+			features = "LowFixedFunction";
+		}
 	}
+
+	maskFeatures(features);
 
 	applyFeatures(skipFeatures);
 
@@ -853,6 +924,14 @@ void LLFeatureManager::applyBaseMasks()
 		maskFeatures("VRAMGT512");
 	}
 
+#if LL_DARWIN
+	const LLOSInfo& osInfo = LLAppViewer::instance()->getOSInfo();
+	if (osInfo.mMajorVer == 10 && osInfo.mMinorVer < 7)
+	{
+		maskFeatures("OSX_10_6_8");
+        }
+#endif
+
 	// now mask by gpu string
 	// Replaces ' ' with '_' in mGPUString to deal with inability for parser to handle spaces
 	std::string gpustr = mGPUString;
@@ -864,11 +943,11 @@ void LLFeatureManager::applyBaseMasks()
 		}
 	}
 
-	//llinfos << "Masking features from gpu table match: " << gpustr << llendl;
+	//LL_INFOS() << "Masking features from gpu table match: " << gpustr << LL_ENDL;
 	maskFeatures(gpustr);
 
 	// now mask cpu type ones
-	if (gSysMemory.getPhysicalMemoryClamped() <= 256*1024*1024)
+	if (gSysMemory.getPhysicalMemoryClamped() <= U32Megabytes(256))
 	{
 		maskFeatures("RAM256MB");
 	}

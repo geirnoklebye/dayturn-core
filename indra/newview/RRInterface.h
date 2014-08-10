@@ -26,9 +26,9 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2080401"
-#define RR_VERSION "2.08.04.01"
-#define RR_SLV_VERSION "3.5.2.264760"
+#define RR_VERSION_NUM "2090100"
+#define RR_VERSION "2.09.01.0"
+#define RR_SLV_VERSION "3.7.9.32089"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -38,6 +38,8 @@
 
 // Set to 1 for Tattoo and Alpha wearables support
 #define ALPHA_AND_TATTOO 1
+
+#define EXTREMUM 1000000.f
 
 // wearable types as strings
 #define WS_ALL "all"
@@ -123,6 +125,9 @@ public:
 	BOOL isAllowed (LLUUID object_uuid, std::string action, BOOL log_it = TRUE);
 	BOOL contains (std::string action); // return TRUE if the action is contained
 	BOOL containsSubstr (std::string action); // return TRUE if the action, or an action which name contains the specified name, is contained
+	F32 getMax (std::string action, F32 dflt = EXTREMUM); // returns the max value of all the @action:...=n restrictions
+	F32 getMin (std::string action, F32 dflt = -EXTREMUM); // returns the min value of all the @action:...=n restrictions
+	LLColor3 getMixedColors (std::string action, LLColor3 dflt = LLColor3::black); // return the product of all the colors specified by actions "action"
 	BOOL containsWithoutException (std::string action, std::string except = ""); // return TRUE if the action or action+"_sec" is contained, and either there is no global exception, or there is no local exception in the case of action+"_sec"
 	bool isFolderLocked(LLInventoryCategory* cat); // return true if cat has a lock specified for it or one of its parents, or not shared and @unshared is active
 	FolderLock isFolderLockedWithoutException (LLInventoryCategory* cat, std::string attach_or_detach); // attach_or_detach must be equal to either "attach" or "detach"
@@ -184,9 +189,6 @@ public:
 	BOOL getAllowCancelTp() { return mAllowCancelTp; }
 	void setAllowCancelTp(BOOL newval) { mAllowCancelTp = newval; }
 
-	std::string getParcelName () { return mParcelName; }
-	void setParcelName (std::string newval) { mParcelName = newval; }
-
 	bool getScriptsEnabledOnce () { return mScriptsEnabledOnce; }
 	void setScriptsEnabledOnce (bool newval) { mScriptsEnabledOnce = newval; }
 
@@ -239,6 +241,11 @@ public:
 
 	void listRlvRestrictions(std::string substr = "");
 
+	BOOL checkCameraLimits (BOOL and_correct = FALSE);
+	BOOL updateCameraLimits ();
+	void drawRenderLimit ();
+	void drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha);
+
 	// Some cache variables to accelerate common checks
 	BOOL mHasLockedHuds;
 	BOOL mContainsDetach;
@@ -262,6 +269,9 @@ public:
 	BOOL mContainsRun;
 	BOOL mContainsAlwaysRun;
 	BOOL mContainsTp;
+	BOOL mContainsCamTextures;
+	BOOL mContainsShownametags;
+
 	BOOL mHandleNoStrip;
 	//BOOL mContainsMoveUp;
 	//BOOL mContainsMoveDown;
@@ -274,12 +284,27 @@ public:
 	//BOOL mContainsMoveStrafeLeft;
 	//BOOL mContainsMoveStrafeRight;
 
+	F32 mCamZoomMax;
+	F32 mCamZoomMin;
+	F32 mCamDistMax;
+	F32 mCamDistMin;
+	F32 mCamDistDrawMax;
+	F32 mCamDistDrawMin;
+	LLColor3 mCamDistDrawColor;
+	F32 mCamDistDrawAlphaMin;
+	F32 mCamDistDrawAlphaMax;
+	F32 mShowavsDistMax;
+
+	std::string mParcelName; // for convenience (gAgent does not retain the name of the current parcel)
+
 	static BOOL sRRNoSetEnv;
 	static BOOL sRestrainedLoveDebug;
 	static BOOL sCanOoc; // when TRUE, the user can bypass a sendchat restriction by surrounding with (( and ))
 	static std::string sRecvimMessage; // message to replace an incoming IM, when under recvim
 	static std::string sSendimMessage; // message to replace an outgoing IM, when under sendim
 	static std::string sBlacklist; // comma-separated list of RLV commands, add "%f" after a token to indicate it is the "=force" variant
+	static F32 sLastAvatarZOffsetCommit; // timestamp of the last change of RestrainedLoveOffsetAvatarZ
+	static U32 mCamDistNbGradients; // number of spheres to draw when restricting the camera view
 
 	// Allowed debug settings (initialized in the ctor)
 	std::string mAllowedU32;
@@ -296,7 +321,8 @@ public:
 
 	// These should be private but we may want to browse them from the outside world, so let's keep them public
 	RRMAP mSpecialObjectBehaviours;
-	std::deque<Command> mRetainedCommands;
+	std::deque<Command> mRetainedCommands; // list of commands to execute later
+	std::deque<std::string> mReceivedInventoryObjects; // list of inventory objects (items or folders) received during this session
 
 	// When a locked attachment is kicked off by another one with llAttachToAvatar() in a script, retain its UUID here, to reattach it later 
 	std::deque<AssetAndTarget> mAssetsToReattach;
@@ -308,9 +334,9 @@ public:
 	LLVector3d mLastStandingLocation; // this is the global position we had when we sat down on something, and we will be teleported back there when we stand up if we are prevented from "sit-tp by rezzing stuff"
 	BOOL mSnappingBackToLastStandingLocation; // TRUE when we are teleporting back to the last standing location, in order to bypass the usual checks
 	BOOL mUserUpdateAttachmentsUpdatesAll; // TRUE when we've just called "Replace CurrentOutfit" and "Remove From Current Outfit" commands, FALSE otherwise
+	BOOL mUserUpdateAttachmentsCalledFromScript; // TRUE when we're doing a @detachall (which now uses the "Remove From Current Outfit" method), FALSE otherwise
 
 private:
-	std::string mParcelName; // for convenience (gAgent does not retain the name of the current parcel)
 	bool mScriptsEnabledOnce; // to know if we have been in a script enabled area at least once (so that no-script areas prevent detaching only when we have logged in there)
 	BOOL mInventoryFetched; // FALSE at first, used to fetch RL Share inventory once upon login
 	BOOL mAllowCancelTp; // TRUE unless forced to TP with @tpto (=> receive TP order from server, act like it is a lure from a Linden => don't show the cancel button)

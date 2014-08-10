@@ -120,6 +120,7 @@ LLTexGlobalColorInfo::LLTexGlobalColorInfo()
 LLTexGlobalColorInfo::~LLTexGlobalColorInfo()
 {
 	for_each(mParamColorInfoList.begin(), mParamColorInfoList.end(), DeletePointer());
+	mParamColorInfoList.clear();
 }
 
 BOOL LLTexGlobalColorInfo::parseXml(LLXmlTreeNode* node)
@@ -128,7 +129,7 @@ BOOL LLTexGlobalColorInfo::parseXml(LLXmlTreeNode* node)
 	static LLStdStringHandle name_string = LLXmlTree::addAttributeString("name");
 	if (!node->getFastAttributeString(name_string, mName))
 	{
-		llwarns << "<global_color> element is missing name attribute." << llendl;
+		LL_WARNS() << "<global_color> element is missing name attribute." << LL_ENDL;
 		return FALSE;
 	}
 	// <param> sub-element

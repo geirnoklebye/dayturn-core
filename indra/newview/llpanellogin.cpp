@@ -33,7 +33,6 @@
 #include "llfloaterreg.h"
 #include "llfontgl.h"
 #include "llmd5.h"
-#include "llsecondlifeurls.h"
 #include "v4color.h"
 
 #include "llappviewer.h"
@@ -82,10 +81,6 @@ const S32 MAX_PASSWORD = 16;
 LLPanelLogin *LLPanelLogin::sInstance = NULL;
 BOOL LLPanelLogin::sCapslockDidNotification = FALSE;
 
-// Helper for converting a user name into the canonical "Firstname Lastname" form.
-// For new accounts without a last name "Resident" is added as a last name.
-static std::string canonicalize_username(const std::string& name);
-
 class LLLoginRefreshHandler : public LLCommandHandler
 {
 public:
@@ -115,16 +110,6 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 {
 	setBackgroundVisible(FALSE);
 	setBackgroundOpaque(TRUE);
-
-	// instance management
-	if (LLPanelLogin::sInstance)
-	{
-		LL_WARNS("AppInit") << "Duplicate instance of login view deleted" << LL_ENDL;
-		// Don't leave bad pointer in gFocusMgr
-		gFocusMgr.setDefaultKeyboardFocus(NULL);
-
-		delete LLPanelLogin::sInstance;
-	}
 
 	mPasswordModified = FALSE;
 	LLPanelLogin::sInstance = this;
@@ -266,7 +251,6 @@ void LLPanelLogin::addFavoritesToStartLocation()
 
 	// Load favorites into the combo.
 	std::string user_defined_name = getChild<LLComboBox>("username_combo")->getSimple();
-	std::string canonical_user_name = canonicalize_username(user_defined_name);
 	std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "stored_favorites.xml");
 	LLSD fav_llsd;
 	llifstream file;
@@ -279,15 +263,15 @@ void LLPanelLogin::addFavoritesToStartLocation()
 		// The account name in stored_favorites.xml has Resident last name even if user has
 		// a single word account name, so it can be compared case-insensitive with the
 		// user defined "firstname lastname".
-		S32 res = LLStringUtil::compareInsensitive(canonical_user_name, iter->first);
+		S32 res = LLStringUtil::compareInsensitive(user_defined_name, iter->first);
 		if (res != 0)
 		{
-			lldebugs << "Skipping favorites for " << iter->first << llendl;
+			LL_DEBUGS() << "Skipping favorites for " << iter->first << LL_ENDL;
 			continue;
 		}
 
 		combo->addSeparator();
-		lldebugs << "Loading favorites for " << iter->first << llendl;
+		LL_DEBUGS() << "Loading favorites for " << iter->first << LL_ENDL;
 		LLSD user_llsd = iter->second;
 		for (LLSD::array_const_iterator iter1 = user_llsd.beginArray();
 			iter1 != user_llsd.endArray(); ++iter1)
@@ -448,6 +432,16 @@ void LLPanelLogin::show(const LLRect &rect,
 						void (*callback)(S32 option, void* user_data),
 						void* callback_data)
 {
+	// instance management
+	if (LLPanelLogin::sInstance)
+	{
+		LL_WARNS("AppInit") << "Duplicate instance of login view deleted" << LL_ENDL;
+		// Don't leave bad pointer in gFocusMgr
+		gFocusMgr.setDefaultKeyboardFocus(NULL);
+
+		delete LLPanelLogin::sInstance;
+	}
+
 	new LLPanelLogin(rect, callback, callback_data);
 
 	if( !gFocusMgr.getKeyboardFocus() )
@@ -466,7 +460,7 @@ void LLPanelLogin::setFields(LLPointer<LLCredential> credential,
 {
 	if (!sInstance)
 	{
-		llwarns << "Attempted fillFields with no login view shown" << llendl;
+		LL_WARNS() << "Attempted fillFields with no login view shown" << LL_ENDL;
 		return;
 	}
 	LL_INFOS("Credentials") << "Setting login fields to " << *credential << LL_ENDL;
@@ -524,7 +518,7 @@ void LLPanelLogin::getFields(LLPointer<LLCredential>& credential,
 {
 	if (!sInstance)
 	{
-		llwarns << "Attempted getFields with no login view shown" << llendl;
+		LL_WARNS() << "Attempted getFields with no login view shown" << LL_ENDL;
 		return;
 	}
 	
@@ -545,13 +539,13 @@ void LLPanelLogin::getFields(LLPointer<LLCredential>& credential,
 	LLStringUtil::trim(username);
 	std::string password = sInstance->getChild<LLUICtrl>("password_edit")->getValue().asString();
 
-	LL_INFOS2("Credentials", "Authentication") << "retrieving username:" << username << LL_ENDL;
+	LL_INFOS("Credentials", "Authentication") << "retrieving username:" << username << LL_ENDL;
 	// determine if the username is a first/last form or not.
 	size_t separator_index = username.find_first_of(' ');
 	if (separator_index == username.npos
 		&& !LLGridManager::getInstance()->isSystemGrid())
 	{
-		LL_INFOS2("Credentials", "Authentication") << "account: " << username << LL_ENDL;
+		LL_INFOS("Credentials", "Authentication") << "account: " << username << LL_ENDL;
 		// single username, so this is a 'clear' identifier
 		identifier["type"] = CRED_IDENTIFIER_TYPE_ACCOUNT;
 		identifier["account_name"] = username;
@@ -586,7 +580,7 @@ void LLPanelLogin::getFields(LLPointer<LLCredential>& credential,
 		
 		if (last.find_first_of(' ') == last.npos)
 		{
-			LL_INFOS2("Credentials", "Authentication") << "agent: " << username << LL_ENDL;
+			LL_INFOS("Credentials", "Authentication") << "agent: " << username << LL_ENDL;
 			// traditional firstname / lastname
 			identifier["type"] = CRED_IDENTIFIER_TYPE_AGENT;
 			identifier["first_name"] = first;
@@ -614,7 +608,7 @@ BOOL LLPanelLogin::areCredentialFieldsDirty()
 {
 	if (!sInstance)
 	{
-		llwarns << "Attempted getServer with no login view shown" << llendl;
+		LL_WARNS() << "Attempted getServer with no login view shown" << LL_ENDL;
 	}
 	else
 	{
@@ -659,8 +653,7 @@ void LLPanelLogin::updateLocationSelectorsVisibility()
 		}
 //mk
 	
-		sInstance->getChildView("start_location_combo")->setVisible( show_start);
-		sInstance->getChildView("start_location_text")->setVisible( show_start);
+		sInstance->getChild<LLLayoutPanel>("start_location_panel")->setVisible(show_start);
 	
 		BOOL show_server = gSavedSettings.getBOOL("ForceShowGrid");
 		sInstance->getChild<LLLayoutPanel>("grid_panel")->setVisible(show_server);
@@ -1028,29 +1021,4 @@ void LLPanelLogin::onLocationSLURL()
 	LL_DEBUGS("AppInit")<<location<<LL_ENDL;
 	
 	LLStartUp::setStartSLURL(location); // calls onUpdateStartSLURL, above 
-}
-
-std::string canonicalize_username(const std::string& name)
-{
-	std::string cname = name;
-	LLStringUtil::trim(cname);
-
-	// determine if the username is a first/last form or not.
-	size_t separator_index = cname.find_first_of(" ._");
-	std::string first = cname.substr(0, separator_index);
-	std::string last;
-	if (separator_index != cname.npos)
-	{
-		last = cname.substr(separator_index+1, cname.npos);
-		LLStringUtil::trim(last);
-	}
-	else
-	{
-		// ...on Linden grids, single username users as considered to have
-		// last name "Resident"
-		last = "Resident";
-	}
-
-	// Username in traditional "firstname lastname" form.
-	return first + ' ' + last;
 }

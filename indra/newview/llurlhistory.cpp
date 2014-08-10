@@ -48,15 +48,15 @@ bool LLURLHistory::loadFile(const std::string& filename)
 
 		if (file.is_open())
 		{
-			llinfos << "Loading history.xml file at " << filename << llendl;
+			LL_INFOS() << "Loading history.xml file at " << filename << LL_ENDL;
 			LLSDSerialize::fromXML(data, file);
 		}
 
 		if (data.isUndefined())
 		{
-			llinfos << "file missing, ill-formed, "
+			LL_INFOS() << "file missing, ill-formed, "
 				"or simply undefined; not changing the"
-				" file" << llendl;
+				" file" << LL_ENDL;
 			sHistorySD = LLSD();
 			return false;
 		}
@@ -71,7 +71,7 @@ bool LLURLHistory::saveFile(const std::string& filename)
 	std::string temp_str = gDirUtilp->getLindenUserDir();
 	if( temp_str.empty() )
 	{
-		llinfos << "Can't save URL history - no user directory set yet." << llendl;
+		LL_INFOS() << "Can't save URL history - no user directory set yet." << LL_ENDL;
 		return false;
 	}
 
@@ -79,7 +79,7 @@ bool LLURLHistory::saveFile(const std::string& filename)
 	llofstream out(temp_str);
 	if (!out.good())
 	{
-		llwarns << "Unable to open " << filename << " for output." << llendl;
+		LL_WARNS() << "Unable to open " << filename << " for output." << LL_ENDL;
 		return false;
 	}
 
@@ -103,22 +103,29 @@ LLSD LLURLHistory::getURLHistory(const std::string& collection)
 // static
 void LLURLHistory::addURL(const std::string& collection, const std::string& url)
 {
-	if(! url.empty())
+	if(!url.empty())
 	{
-		sHistorySD[collection].insert(0, url);
+        LLURI u(url);
+        std::string simplified_url = u.scheme() + "://" + u.authority() + u.path();
+		sHistorySD[collection].insert(0, simplified_url);
 		LLURLHistory::limitSize(collection);
 	}
 }
 // static
 void LLURLHistory::removeURL(const std::string& collection, const std::string& url)
 {
-	for(int index = 0; index < sHistorySD[collection].size(); index++)
+	if(!url.empty())
 	{
-		if(sHistorySD[collection].get(index).asString() == url)
-		{
-			sHistorySD[collection].erase(index);
-		}
-	}
+        LLURI u(url);
+        std::string simplified_url = u.scheme() + "://" + u.authority() + u.path();
+        for(int index = 0; index < sHistorySD[collection].size(); index++)
+        {
+            if(sHistorySD[collection].get(index).asString() == simplified_url)
+            {
+                sHistorySD[collection].erase(index);
+            }
+        }
+    }
 }
 
 // static

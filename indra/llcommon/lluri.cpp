@@ -129,11 +129,30 @@ std::string LLURI::unescape(const std::string& str)
 		{
 			++it;
 			if(it == end) break;
-			U8 c = hex_as_nybble(*it++);
-			c = c << 4;
-			if (it == end) break;
-			c |= hex_as_nybble(*it);
-			ostr.put((char)c);
+
+			if(is_char_hex(*it))
+			{
+				U8 c = hex_as_nybble(*it++);
+
+				c = c << 4;
+				if (it == end) break;
+
+				if(is_char_hex(*it))
+				{
+					c |= hex_as_nybble(*it);
+					ostr.put((char)c);
+				}
+				else
+				{
+					ostr.put((char)c);
+					ostr.put(*it);
+				}
+			}
+			else
+			{
+				ostr.put('%');
+				ostr.put(*it);
+			}
 		}
 		else
 		{
@@ -340,7 +359,7 @@ LLURI LLURI::buildHTTP(const std::string& prefix,
 			 it != path.endArray();
 			 ++it)
 		{
-			lldebugs << "PATH: inserting " << it->asString() << llendl;
+			LL_DEBUGS() << "PATH: inserting " << it->asString() << LL_ENDL;
 			result.mEscapedPath += "/" + escapePathComponent(it->asString());
 		}
 	}
@@ -380,8 +399,8 @@ LLURI LLURI::buildHTTP(const std::string& prefix,
 	}
 	else
 	{
-	  llwarns << "Valid path arguments to buildHTTP are array, string, or undef, you passed type" 
-			  << path.type() << llendl;
+	  LL_WARNS() << "Valid path arguments to buildHTTP are array, string, or undef, you passed type" 
+			  << path.type() << LL_ENDL;
 	}
 	result.mEscapedOpaque = "//" + result.mEscapedAuthority +
 		result.mEscapedPath;
@@ -565,7 +584,7 @@ LLSD LLURI::queryMap() const
 // static
 LLSD LLURI::queryMap(std::string escaped_query_string)
 {
-	lldebugs << "LLURI::queryMap query params: " << escaped_query_string << llendl;
+	LL_DEBUGS() << "LLURI::queryMap query params: " << escaped_query_string << LL_ENDL;
 
 	LLSD result = LLSD::emptyArray();
 	while(!escaped_query_string.empty())
@@ -591,12 +610,12 @@ LLSD LLURI::queryMap(std::string escaped_query_string)
 		{
 			std::string key = unescape(tuple.substr(0,key_end));
 			std::string value = unescape(tuple.substr(key_end+1));
-			lldebugs << "inserting key " << key << " value " << value << llendl;
+			LL_DEBUGS() << "inserting key " << key << " value " << value << LL_ENDL;
 			result[key] = value;
 		}
 		else
 		{
-			lldebugs << "inserting key " << unescape(tuple) << " value true" << llendl;
+			LL_DEBUGS() << "inserting key " << unescape(tuple) << " value true" << LL_ENDL;
 		    result[unescape(tuple)] = true;
 		}
 	}

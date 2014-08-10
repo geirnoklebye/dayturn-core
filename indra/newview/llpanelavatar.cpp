@@ -29,7 +29,6 @@
 
 #include "llagent.h"
 #include "llavataractions.h"
-#include "llavatarconstants.h"	// AVATAR_ONLINE
 #include "llcallingcard.h"
 #include "llcombobox.h"
 #include "lldateutil.h"			// ageFromDate()
@@ -100,7 +99,7 @@ LLDropTarget::~LLDropTarget()
 
 void LLDropTarget::doDrop(EDragAndDropType cargo_type, void* cargo_data)
 {
-	llinfos << "LLDropTarget::doDrop()" << llendl;
+	LL_INFOS() << "LLDropTarget::doDrop()" << LL_ENDL;
 }
 
 BOOL LLDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
@@ -122,10 +121,12 @@ BOOL LLDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 
 static LLDefaultChildRegistry::Register<LLDropTarget> r("drop_target");
 
-static LLRegisterPanelClassWrapper<LLPanelAvatarProfile> t_panel_profile("panel_profile");
-static LLRegisterPanelClassWrapper<LLPanelMyProfile> t_panel_my_profile("panel_my_profile");
-static LLRegisterPanelClassWrapper<LLPanelAvatarNotes> t_panel_notes("panel_notes");
-static LLRegisterPanelClassWrapper<LLPanelAvatarFirst> t_panel_profile_firstlife("panel_profile_firstlife");
+//MK
+static LLPanelInjector<LLPanelAvatarProfile> t_panel_profile("panel_profile");
+static LLPanelInjector<LLPanelMyProfile> t_panel_my_profile("panel_my_profile");
+static LLPanelInjector<LLPanelAvatarNotes> t_panel_notes("panel_notes");
+static LLPanelInjector<LLPanelAvatarFirst> t_panel_profile_firstlife("panel_profile_firstlife");
+//mk
 
 //-----------------------------------------------------------------------------
 // LLPanelAvatarNotes()
@@ -248,7 +249,7 @@ void LLPanelAvatarNotes::onCommitRights()
 	if (NULL == buddy_relationship)
 	{
 		// Lets have a warning log message instead of having a crash. EXT-4947.
-		llwarns << "Trying to modify rights for non-friend avatar. Skipped." << llendl;
+		LL_WARNS() << "Trying to modify rights for non-friend avatar. Skipped." << LL_ENDL;
 		return;
 	}
 

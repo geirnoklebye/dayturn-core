@@ -27,7 +27,6 @@
 #ifndef LL_LLFLOATERSNAPSHOT_H
 #define LL_LLFLOATERSNAPSHOT_H
 
-#include "llimage.h"
 #include "llfloater.h"
 
 class LLSpinCtrl;
@@ -57,6 +56,7 @@ public:
 
 	// TODO: create a snapshot model instead
 	static LLFloaterSnapshot* getInstance();
+	static LLFloaterSnapshot* findInstance();
 	static void saveTexture();
 	static BOOL saveLocal();
 	static void preUpdate();

@@ -27,7 +27,6 @@
 #ifndef LL_LLAVATARACTIONS_H
 #define LL_LLAVATARACTIONS_H
 
-#include "lldarray.h"
 #include "llsd.h"
 #include "lluuid.h"
 
@@ -109,6 +108,12 @@ public:
 	 * Give money to the avatar.
 	 */
 	static void pay(const LLUUID& id);
+
+	/**
+	 * Request teleport from other avatar
+	 */
+	static void teleportRequest(const LLUUID& id);
+	static void teleport_request_callback(const LLSD& notification, const LLSD& response);
 
 	/**
 	 * Share items with the avatar.

@@ -207,6 +207,7 @@ LLSD _basic_constraints_ext(X509* cert)
 			}
 		}
 
+		BASIC_CONSTRAINTS_free( bs );
 	}
 	return result;
 }
@@ -268,6 +269,8 @@ LLSD _ext_key_usage_ext(X509* cert)
 				ASN1_OBJECT_free(usage);
 			}
 		}
+
+		EXTENDED_KEY_USAGE_free( eku );
 	}
 	return result;
 }
@@ -280,6 +283,8 @@ LLSD _subject_key_identifier_ext(X509 *cert)
 	if(skeyid)
 	{
 		result = cert_string_from_octet_string(skeyid);
+
+		ASN1_OCTET_STRING_free( skeyid );
 	}
 	return result;
 }
@@ -300,6 +305,9 @@ LLSD _authority_key_identifier_ext(X509* cert)
 		{
 			result[CERT_AUTHORITY_KEY_IDENTIFIER_SERIAL] = cert_string_from_asn1_integer(akeyid->serial);
 		}	
+
+
+		AUTHORITY_KEYID_free( akeyid );
 	}
 	
 	// we ignore the issuer name in the authority key identifier, we check the issue name via
@@ -1049,6 +1057,8 @@ void LLBasicCertificateStore::validate(int validation_policy,
 		throw LLInvalidCertificate((*current_cert));			
 	}
 	std::string sha1_hash((const char *)cert_x509->sha1_hash, SHA_DIGEST_LENGTH);
+	X509_free( cert_x509 );
+	cert_x509 = NULL;
 	t_cert_cache::iterator cache_entry = mTrustedCertCache.find(sha1_hash);
 	if(cache_entry != mTrustedCertCache.end())
 	{
@@ -1210,7 +1220,7 @@ void LLSecAPIBasicHandler::init()
 		// grab the application CA.pem file that contains the well-known certs shipped
 		// with the product
 		std::string ca_file_path = gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, "CA.pem");
-		llinfos << "app path " << ca_file_path << llendl;
+		LL_INFOS() << "app path " << ca_file_path << LL_ENDL;
 		LLPointer<LLBasicCertificateStore> app_ca_store = new LLBasicCertificateStore(ca_file_path);
 		
 		// push the applicate CA files into the store, therefore adding any new CA certs that 
@@ -1362,7 +1372,7 @@ void LLSecAPIBasicHandler::_writeProtectedData()
 		// EXP-1825 crash in LLSecAPIBasicHandler::_writeProtectedData()
 		// Decided throwing an exception here was overkill until we figure out why this happens
 		//throw LLProtectedDataException("Error writing Protected Data Store");
-		llinfos << "LLProtectedDataException(Error writing Protected Data Store)" << llendl;
+		LL_INFOS() << "LLProtectedDataException(Error writing Protected Data Store)" << LL_ENDL;
 	}
 
 	// move the temporary file to the specified file location.
@@ -1375,7 +1385,7 @@ void LLSecAPIBasicHandler::_writeProtectedData()
 		// EXP-1825 crash in LLSecAPIBasicHandler::_writeProtectedData()
 		// Decided throwing an exception here was overkill until we figure out why this happens
 		//throw LLProtectedDataException("Could not overwrite protected data store");
-		llinfos << "LLProtectedDataException(Could not overwrite protected data store)" << llendl;
+		LL_INFOS() << "LLProtectedDataException(Could not overwrite protected data store)" << LL_ENDL;
 	}
 }
 		

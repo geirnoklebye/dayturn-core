@@ -197,7 +197,7 @@ BOOL LLInspectAvatar::postBuild(void)
 void LLInspectAvatar::onOpen(const LLSD& data)
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 	{
 		closeFloater();		
 	}
@@ -302,7 +302,7 @@ void LLInspectAvatar::processAvatarData(LLAvatarData* data)
 /*
 prep#
 			virtual void errorWithContent(U32 status, const std::string& reason, const LLSD& content)
-				llwarns << "MuteVoiceResponder error [status:" << status << "]: " << content << llendl;
+				LL_WARNS() << "MuteVoiceResponder error [status:" << status << "]: " << content << LL_ENDL;
 	*/
 
 void LLInspectAvatar::updateVolumeSlider()

@@ -56,7 +56,7 @@ private:
 	void onSaveToComputer();
 };
 
-static LLRegisterPanelClassWrapper<LLPanelSnapshotOptions> panel_class("llpanelsnapshotoptions");
+static LLPanelInjector<LLPanelSnapshotOptions> panel_class("llpanelsnapshotoptions");
 
 LLPanelSnapshotOptions::LLPanelSnapshotOptions()
 {
@@ -90,7 +90,7 @@ void LLPanelSnapshotOptions::openPanel(const std::string& panel_name)
 	LLSideTrayPanelContainer* parent = dynamic_cast<LLSideTrayPanelContainer*>(getParent());
 	if (!parent)
 	{
-		llwarns << "Cannot find panel container" << llendl;
+		LL_WARNS() << "Cannot find panel container" << LL_ENDL;
 		return;
 	}
 

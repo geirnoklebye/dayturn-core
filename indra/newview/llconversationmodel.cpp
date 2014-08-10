@@ -132,6 +132,7 @@ void LLConversationItem::buildParticipantMenuOptions(menuentry_vec_t& items, U32
 		items.push_back(std::string("view_profile"));
 		items.push_back(std::string("im"));
 		items.push_back(std::string("offer_teleport"));
+		items.push_back(std::string("request_teleport"));
 		items.push_back(std::string("voice_call"));
 		items.push_back(std::string("chat_history"));
 		items.push_back(std::string("separator_chat_history"));
@@ -360,10 +361,13 @@ void LLConversationItemSession::setDistance(const LLUUID& participant_id, F64 di
 
 void LLConversationItemSession::buildContextMenu(LLMenuGL& menu, U32 flags)
 {
-    lldebugs << "LLConversationItemParticipant::buildContextMenu()" << llendl;
+    LL_DEBUGS() << "LLConversationItemParticipant::buildContextMenu()" << LL_ENDL;
     menuentry_vec_t items;
     menuentry_vec_t disabled_items;
-
+    if((flags & ITEM_IN_MULTI_SELECTION) && (this->getType() != CONV_SESSION_NEARBY))
+    {
+    	items.push_back(std::string("close_selected_conversations"));
+    }
     if(this->getType() == CONV_SESSION_1_ON_1)
     {
         items.push_back(std::string("close_conversation"));
@@ -384,6 +388,10 @@ void LLConversationItemSession::buildContextMenu(LLMenuGL& menu, U32 flags)
     {
         items.push_back(std::string("close_conversation"));
         addVoiceOptions(items);
+        items.push_back(std::string("chat_history"));
+    }
+    else if(this->getType() == CONV_SESSION_NEARBY)
+    {
         items.push_back(std::string("chat_history"));
     }
 
@@ -431,7 +439,7 @@ const bool LLConversationItemSession::getTime(F64& time) const
 void LLConversationItemSession::dumpDebugData(bool dump_children)
 {
 	// Session info
-	llinfos << "Merov debug : session " << this << ", uuid = " << mUUID << ", name = " << mName << ", is loaded = " << mIsLoaded << llendl;
+	LL_INFOS() << "Merov debug : session " << this << ", uuid = " << mUUID << ", name = " << mName << ", is loaded = " << mIsLoaded << LL_ENDL;
 	// Children info
 	if (dump_children)
 	{
@@ -549,7 +557,7 @@ LLConversationItemSession* LLConversationItemParticipant::getParentSession()
 
 void LLConversationItemParticipant::dumpDebugData()
 {
-	llinfos << "Merov debug : participant, uuid = " << mUUID << ", name = " << mName << ", display name = " << mDisplayName << ", muted = " << isVoiceMuted() << ", moderator = " << mIsModerator << llendl;
+	LL_INFOS() << "Merov debug : participant, uuid = " << mUUID << ", name = " << mName << ", display name = " << mDisplayName << ", muted = " << isVoiceMuted() << ", moderator = " << mIsModerator << LL_ENDL;
 }
 
 void LLConversationItemParticipant::setDisplayModeratorRole(bool displayRole)

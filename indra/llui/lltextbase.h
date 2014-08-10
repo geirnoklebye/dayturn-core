@@ -51,10 +51,15 @@ class LLUrlMatch;
 /// includes a start/end offset from the start of the string, a
 /// style to render with, an optional tooltip, etc.
 ///
-class LLTextSegment : public LLRefCount, public LLMouseHandler
+class LLTextSegment 
+:	public LLRefCount, 
+	public LLMouseHandler
 {
 public:
-	LLTextSegment(S32 start, S32 end) : mStart(start), mEnd(end){};
+	LLTextSegment(S32 start, S32 end) 
+	:	mStart(start), 
+		mEnd(end)
+	{}
 	virtual ~LLTextSegment();
 
 	virtual bool				getDimensions(S32 first_char, S32 num_chars, S32& width, S32& height) const;
@@ -92,10 +97,10 @@ public:
 	/*virtual*/ void			localPointToScreen(S32 local_x, S32 local_y, S32* screen_x, S32* screen_y) const;
 	/*virtual*/ BOOL			hasMouseCapture();
 
-	S32							getStart() const 					{ return mStart; }
-	void						setStart(S32 start)					{ mStart = start; }
-	S32							getEnd() const						{ return mEnd; }
-	void						setEnd( S32 end )					{ mEnd = end; }
+	S32						getStart() const 					{ return mStart; }
+	void					setStart(S32 start)					{ mStart = start; }
+	S32						getEnd() const						{ return mEnd; }
+	void					setEnd( S32 end )					{ mEnd = end; }
 
 protected:
 	S32				mStart;
@@ -258,6 +263,8 @@ public:
 	friend class LLNormalTextSegment;
 	friend class LLUICtrlFactory;
 
+	typedef boost::signals2::signal<bool (const LLUUID& user_id)> is_friend_signal_t;
+
 	struct LineSpacingParams : public LLInitParam::ChoiceBlock<LineSpacingParams>
 	{
 		Alternative<F32>	multiple;
@@ -289,7 +296,8 @@ public:
 								parse_urls,
 								parse_highlights,
 								clip,
-								clip_partial;
+								clip_partial,
+								trusted_content;
 								
 		Optional<S32>			v_pad,
 								h_pad;
@@ -325,7 +333,7 @@ public:
 	/*virtual*/ BOOL		acceptsTextInput() const { return !mReadOnly; }
 	/*virtual*/ void		setColor( const LLColor4& c );
 	virtual     void 		setReadOnlyColor(const LLColor4 &c);
-	virtual	    void		handleVisibilityChange( BOOL new_visibility );
+	virtual	    void		onVisibilityChange( BOOL new_visibility );
 
 	/*virtual*/ void		setValue(const LLSD& value );
 	/*virtual*/ LLTextViewModel* getViewModel() const;
@@ -359,6 +367,7 @@ public:
 	bool					getWordWrap() { return mWordWrap; }
 	bool					getUseEllipses() { return mUseEllipses; }
 	bool					truncate(); // returns true of truncation occurred
+	bool					isContentTrusted() {return mTrustedContent;}
 
 	// TODO: move into LLTextSegment?
 	void					createUrlContextMenu(S32 x, S32 y, const std::string &url); // create a popup context menu for the given Url
@@ -434,6 +443,7 @@ public:
 	virtual void			appendImageSegment(const LLStyle::Params& style_params);
 	virtual void			appendWidget(const LLInlineViewSegment::Params& params, const std::string& text, bool allow_undo);
 	boost::signals2::connection setURLClickedCallback(const commit_signal_t::slot_type& cb);
+	boost::signals2::connection setIsFriendCallback(const is_friend_signal_t::slot_type& cb);
 
 	void					setWordWrap(bool wrap);
 	LLScrollContainer*		getScrollContainer() const { return mScroller; }
@@ -507,7 +517,7 @@ protected:
 	void							initFromParams(const Params& p);
     virtual void					beforeValueChange();
 	virtual void					onValueChange(S32 start, S32 end);
-    virtual bool                    useLabel();
+    virtual bool                    useLabel() const;
 
 	// draw methods
 	void							drawSelectionBackground(); // draws the black box behind the selected text
@@ -603,7 +613,7 @@ protected:
 	S32							mSelectionStart;
 	S32							mSelectionEnd;
 	LLTimer		                mTripleClickTimer;
-
+	
 	BOOL						mIsSelecting;		// Are we in the middle of a drag-select? 
 
 	// spell checking
@@ -631,6 +641,7 @@ protected:
 	bool						mBGVisible;			// render background?
 	bool						mClip;				// clip text to widget rect
 	bool						mClipPartial;		// false if we show lines that are partially inside bounding rect
+	bool						mTrustedContent;	// if false, does not allow to execute SURL links from this editor
 	bool						mPlainText;			// didn't use Image or Icon segments
 	bool						mAutoIndent;
 	S32							mMaxTextByteLength;	// Maximum length mText is allowed to be in bytes
@@ -647,6 +658,9 @@ protected:
 
 	// Fired when a URL link is clicked
 	commit_signal_t*			mURLClickSignal;
+
+	// Used to check if user with given ID is avatar's friend
+	is_friend_signal_t*         mIsFriendSignal;
 
 	LLUIString					mLabel;	// text label that is visible when no user text provided
 };

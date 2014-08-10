@@ -151,13 +151,13 @@ LLFloater* LLFloaterReg::getInstance(const std::string& name, const LLSD& key)
 				res = build_func(key);
 				if (!res)
 				{
-					llwarns << "Failed to build floater type: '" << name << "'." << llendl;
+					LL_WARNS() << "Failed to build floater type: '" << name << "'." << LL_ENDL;
 					return NULL;
 				}
 				bool success = res->buildFromFile(xui_file);
 				if (!success)
 				{
-					llwarns << "Failed to build floater type: '" << name << "'." << llendl;
+					LL_WARNS() << "Failed to build floater type: '" << name << "'." << LL_ENDL;
 					return NULL;
 				}
 
@@ -179,7 +179,7 @@ LLFloater* LLFloaterReg::getInstance(const std::string& name, const LLSD& key)
 		}
 		if (!res)
 		{
-			llwarns << "Floater type: '" << name << "' not registered." << llendl;
+			LL_WARNS() << "Floater type: '" << name << "' not registered." << LL_ENDL;
 		}
 	}
 	return res;
@@ -356,8 +356,8 @@ std::string LLFloaterReg::declareRectControl(const std::string& name)
 {
 	std::string controlname = getRectControlName(name);
 	LLFloater::getControlGroup()->declareRect(controlname, LLRect(),
-												 llformat("Window Size for %s", name.c_str()),
-												 TRUE);
+											  llformat("Window Size for %s", name.c_str()),
+											  LLControlVariable::PERSIST_NONDFT);
 	return controlname;
 }
 
@@ -367,7 +367,7 @@ std::string LLFloaterReg::declarePosXControl(const std::string& name)
 	LLFloater::getControlGroup()->declareF32(controlname, 
 											10.f,
 											llformat("Window X Position for %s", name.c_str()),
-											TRUE);
+											LLControlVariable::PERSIST_NONDFT);
 	return controlname;
 }
 
@@ -377,7 +377,7 @@ std::string LLFloaterReg::declarePosYControl(const std::string& name)
 	LLFloater::getControlGroup()->declareF32(controlname,
 											10.f,
 											llformat("Window Y Position for %s", name.c_str()),
-											TRUE);
+											LLControlVariable::PERSIST_NONDFT);
 
 	return controlname;
 }
@@ -404,7 +404,7 @@ std::string LLFloaterReg::declareVisibilityControl(const std::string& name)
 	std::string controlname = getVisibilityControlName(name);
 	LLFloater::getControlGroup()->declareBOOL(controlname, FALSE,
 												 llformat("Window Visibility for %s", name.c_str()),
-												 TRUE);
+												 LLControlVariable::PERSIST_NONDFT);
 	return controlname;
 }
 
@@ -414,7 +414,7 @@ std::string LLFloaterReg::declareDockStateControl(const std::string& name)
 	std::string controlname = getDockStateControlName(name);
 	LLFloater::getControlGroup()->declareBOOL(controlname, TRUE,
 												 llformat("Window Docking state for %s", name.c_str()),
-												 TRUE);
+												 LLControlVariable::PERSIST_NONDFT);
 	return controlname;
 
 }
@@ -475,7 +475,7 @@ void LLFloaterReg::toggleInstanceOrBringToFront(const LLSD& sdname, const LLSD& 
 
 	if (!instance)
 	{
-		lldebugs << "Unable to get instance of floater '" << name << "'" << llendl;
+		LL_DEBUGS() << "Unable to get instance of floater '" << name << "'" << LL_ENDL;
 		return;
 	}
 	

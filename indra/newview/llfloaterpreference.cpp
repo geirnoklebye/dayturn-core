@@ -37,7 +37,6 @@
 #include "message.h"
 #include "llfloaterautoreplacesettings.h"
 #include "llagent.h"
-#include "llavatarconstants.h"
 #include "llcheckboxctrl.h"
 #include "llcolorswatch.h"
 #include "llcombobox.h"
@@ -113,6 +112,10 @@
 const F32 MAX_USER_FAR_CLIP = 512.f;
 const F32 MIN_USER_FAR_CLIP = 64.f;
 const F32 BANDWIDTH_UPDATER_TIMEOUT = 0.5f;
+char const* const VISIBILITY_DEFAULT = "default";
+char const* const VISIBILITY_HIDDEN = "hidden";
+char const* const VISIBILITY_VISIBLE = "visible";
+char const* const VISIBILITY_INVISIBLE = "invisible";
 
 //control value for middle mouse as talk2push button
 const static std::string MIDDLE_MOUSE_CV = "MiddleMouse";
@@ -238,6 +241,7 @@ bool callback_clear_browser_cache(const LLSD& notification, const LLSD& response
 
 void handleNameTagOptionChanged(const LLSD& newvalue)
 {
+	LLAvatarNameCache::setUseUsernames(gSavedSettings.getBOOL("NameTagShowUsernames"));
 	LLVOAvatar::invalidateNameTags();
 }
 
@@ -337,7 +341,7 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mCommitCallbackRegistrar.add("Pref.HardwareDefaults",		boost::bind(&LLFloaterPreference::setHardwareDefaults, this));
 	mCommitCallbackRegistrar.add("Pref.VertexShaderEnable",		boost::bind(&LLFloaterPreference::onVertexShaderEnable, this));
 	mCommitCallbackRegistrar.add("Pref.WindowedMod",			boost::bind(&LLFloaterPreference::onCommitWindowedMode, this));
-	mCommitCallbackRegistrar.add("Pref.UpdateSliderText",		boost::bind(&LLFloaterPreference::onUpdateSliderText,this, _1,_2));
+	mCommitCallbackRegistrar.add("Pref.UpdateSliderText",		boost::bind(&LLFloaterPreference::refreshUI,this));
 	mCommitCallbackRegistrar.add("Pref.QualityPerformance",		boost::bind(&LLFloaterPreference::onChangeQuality, this, _2));
 	mCommitCallbackRegistrar.add("Pref.applyUIColor",			boost::bind(&LLFloaterPreference::applyUIColor, this ,_1, _2));
 	mCommitCallbackRegistrar.add("Pref.getUIColor",				boost::bind(&LLFloaterPreference::getUIColor, this ,_1, _2));
@@ -452,6 +456,7 @@ BOOL LLFloaterPreference::postBuild()
 	getChild<LLComboBox>("ConferenceIMOptions")->setCommitCallback(boost::bind(&LLFloaterPreference::onNotificationsChange, this,"ConferenceIMOptions"));
 	getChild<LLComboBox>("GroupChatOptions")->setCommitCallback(boost::bind(&LLFloaterPreference::onNotificationsChange, this,"GroupChatOptions"));
 	getChild<LLComboBox>("NearbyChatOptions")->setCommitCallback(boost::bind(&LLFloaterPreference::onNotificationsChange, this,"NearbyChatOptions"));
+	getChild<LLComboBox>("ObjectIMOptions")->setCommitCallback(boost::bind(&LLFloaterPreference::onNotificationsChange, this,"ObjectIMOptions"));
 
 	// if floater is opened before login set default localized do not disturb message
 	if (LLStartUp::getStartupState() < STATE_STARTED)
@@ -617,8 +622,11 @@ void LLFloaterPreference::cancel()
 	// hide translation settings floater
 	LLFloaterReg::hideInstance("prefs_translation");
 	
-	// hide translation settings floater
+	// hide autoreplace settings floater
 	LLFloaterReg::hideInstance("prefs_autoreplace");
+	
+	// hide spellchecker settings folder
+	LLFloaterReg::hideInstance("prefs_spellchecker");
 	
 	// cancel hardware menu
 	LLFloaterHardwareSettings* hardware_settings = LLFloaterReg::getTypedInstance<LLFloaterHardwareSettings>("prefs_hardware_settings");
@@ -721,6 +729,7 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 	onNotificationsChange("ConferenceIMOptions");
 	onNotificationsChange("GroupChatOptions");
 	onNotificationsChange("NearbyChatOptions");
+	onNotificationsChange("ObjectIMOptions");
 
 	LLPanelLogin::setAlwaysRefresh(true);
 	refresh();
@@ -826,7 +835,7 @@ void LLFloaterPreference::onBtnOK()
 	else
 	{
 		// Show beep, pop up dialog, etc.
-		llinfos << "Can't close preferences!" << llendl;
+		LL_INFOS() << "Can't close preferences!" << LL_ENDL;
 	}
 
 	LLPanelLogin::updateLocationSelectorsVisibility();	
@@ -928,7 +937,7 @@ void LLFloaterPreference::onNotificationsChange(const std::string& OptionName)
 	bool show_notifications_alert = true;
 	for (notifications_map::iterator it_notification = mNotificationOptions.begin(); it_notification != mNotificationOptions.end(); it_notification++)
 	{
-		if(it_notification->second != "None")
+		if(it_notification->second != "No action")
 		{
 			show_notifications_alert = false;
 			break;
@@ -1089,8 +1098,9 @@ void LLFloaterPreference::refreshEnabledState()
 	ctrl_reflections->setEnabled(reflections);
 	
 	// Bump & Shiny	
+	LLCheckBoxCtrl* bumpshiny_ctrl = getChild<LLCheckBoxCtrl>("BumpShiny");
 	bool bumpshiny = gGLManager.mHasCubeMap && LLCubeMap::sUseCubeMaps && LLFeatureManager::getInstance()->isFeatureAvailable("RenderObjectBump");
-	getChild<LLCheckBoxCtrl>("BumpShiny")->setEnabled(bumpshiny ? TRUE : FALSE);
+	bumpshiny_ctrl->setEnabled(bumpshiny ? TRUE : FALSE);
 	
 	radio_reflection_detail->setEnabled(reflections);
 	
@@ -1161,21 +1171,28 @@ void LLFloaterPreference::refreshEnabledState()
 
 	//Deferred/SSAO/Shadows
 	LLCheckBoxCtrl* ctrl_deferred = getChild<LLCheckBoxCtrl>("UseLightShaders");
+	LLCheckBoxCtrl* ctrl_deferred2 = getChild<LLCheckBoxCtrl>("UseLightShaders2");
+
 	
-	BOOL enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") && 
+	BOOL enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
+						((bumpshiny_ctrl && bumpshiny_ctrl->get()) ? TRUE : FALSE) &&
 						shaders && 
 						gGLManager.mHasFramebufferObject &&
 						gSavedSettings.getBOOL("RenderAvatarVP") &&
 						(ctrl_wind_light->get()) ? TRUE : FALSE;
 
 	ctrl_deferred->setEnabled(enabled);
-	
+	ctrl_deferred2->setEnabled(enabled);
+
 	LLCheckBoxCtrl* ctrl_ssao = getChild<LLCheckBoxCtrl>("UseSSAO");
 	LLCheckBoxCtrl* ctrl_dof = getChild<LLCheckBoxCtrl>("UseDoF");
 	LLComboBox* ctrl_shadow = getChild<LLComboBox>("ShadowDetail");
 
+	// note, okay here to get from ctrl_deferred as it's twin, ctrl_deferred2 will alway match it
 	enabled = enabled && LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferredSSAO") && (ctrl_deferred->get() ? TRUE : FALSE);
-		
+	
+	ctrl_deferred->set(gSavedSettings.getBOOL("RenderDeferred"));
+
 	ctrl_ssao->setEnabled(enabled);
 	ctrl_dof->setEnabled(enabled);
 
@@ -1199,6 +1216,7 @@ void LLFloaterPreference::disableUnavailableSettings()
 	LLCheckBoxCtrl* ctrl_wind_light    = getChild<LLCheckBoxCtrl>("WindLightUseAtmosShaders");
 	LLCheckBoxCtrl* ctrl_avatar_impostors = getChild<LLCheckBoxCtrl>("AvatarImpostors");
 	LLCheckBoxCtrl* ctrl_deferred = getChild<LLCheckBoxCtrl>("UseLightShaders");
+	LLCheckBoxCtrl* ctrl_deferred2 = getChild<LLCheckBoxCtrl>("UseLightShaders2");
 	LLComboBox* ctrl_shadows = getChild<LLComboBox>("ShadowDetail");
 	LLCheckBoxCtrl* ctrl_ssao = getChild<LLCheckBoxCtrl>("UseSSAO");
 	LLCheckBoxCtrl* ctrl_dof = getChild<LLCheckBoxCtrl>("UseDoF");
@@ -1232,6 +1250,8 @@ void LLFloaterPreference::disableUnavailableSettings()
 
 		ctrl_deferred->setEnabled(FALSE);
 		ctrl_deferred->setValue(FALSE);
+		ctrl_deferred2->setEnabled(FALSE);
+		ctrl_deferred2->setValue(FALSE);
 	}
 	
 	// disabled windlight
@@ -1252,6 +1272,8 @@ void LLFloaterPreference::disableUnavailableSettings()
 
 		ctrl_deferred->setEnabled(FALSE);
 		ctrl_deferred->setValue(FALSE);
+		ctrl_deferred2->setEnabled(FALSE);
+		ctrl_deferred2->setValue(FALSE);
 	}
 
 	// disabled deferred
@@ -1269,6 +1291,8 @@ void LLFloaterPreference::disableUnavailableSettings()
 
 		ctrl_deferred->setEnabled(FALSE);
 		ctrl_deferred->setValue(FALSE);
+		ctrl_deferred2->setEnabled(FALSE);
+		ctrl_deferred2->setValue(FALSE);
 	}
 	
 	// disabled deferred SSAO
@@ -1313,6 +1337,8 @@ void LLFloaterPreference::disableUnavailableSettings()
 
 		ctrl_deferred->setEnabled(FALSE);
 		ctrl_deferred->setValue(FALSE);
+		ctrl_deferred2->setEnabled(FALSE);
+		ctrl_deferred2->setValue(FALSE);
 	}
 
 	// disabled cloth
@@ -1341,6 +1367,7 @@ void LLFloaterPreference::refresh()
 	updateSliderText(getChild<LLSliderCtrl>("FlexibleMeshDetail",	true), getChild<LLTextBox>("FlexibleMeshDetailText",	true));
 	updateSliderText(getChild<LLSliderCtrl>("TreeMeshDetail",		true), getChild<LLTextBox>("TreeMeshDetailText",		true));
 	updateSliderText(getChild<LLSliderCtrl>("AvatarMeshDetail",		true), getChild<LLTextBox>("AvatarMeshDetailText",		true));
+	updateSliderText(getChild<LLSliderCtrl>("AvatarMeshDetail2",		true), getChild<LLTextBox>("AvatarMeshDetailText2",		true));
 	updateSliderText(getChild<LLSliderCtrl>("AvatarPhysicsDetail",	true), getChild<LLTextBox>("AvatarPhysicsDetailText",		true));
 	updateSliderText(getChild<LLSliderCtrl>("TerrainMeshDetail",	true), getChild<LLTextBox>("TerrainMeshDetailText",		true));
 	updateSliderText(getChild<LLSliderCtrl>("RenderPostProcess",	true), getChild<LLTextBox>("PostProcessText",			true));
@@ -1601,16 +1628,9 @@ void LLFloaterPreference::setPersonalInfo(const std::string& visibility, bool im
 	getChildView("chat_font_size")->setEnabled(TRUE);
 }
 
-void LLFloaterPreference::onUpdateSliderText(LLUICtrl* ctrl, const LLSD& name)
+void LLFloaterPreference::refreshUI()
 {
-	std::string ctrl_name = name.asString();
-	
-	if ((ctrl_name =="" )|| !hasChild(ctrl_name, TRUE))
-		return;
-	
-	LLTextBox* text_box = getChild<LLTextBox>(name.asString());
-	LLSliderCtrl* slider = dynamic_cast<LLSliderCtrl*>(ctrl);
-	updateSliderText(slider, text_box);
+	refresh();
 }
 
 void LLFloaterPreference::updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_box)
@@ -1829,7 +1849,7 @@ private:
 	callback_t mCallback;
 };
 //----------------------------------------------------------------------------
-static LLRegisterPanelClassWrapper<LLPanelPreference> t_places("panel_preference");
+static LLPanelInjector<LLPanelPreference> t_places("panel_preference");
 LLPanelPreference::LLPanelPreference()
 : LLPanel(),
   mBandWidthUpdater(NULL)
@@ -2069,8 +2089,8 @@ private:
 	std::list<std::string> mAccountIndependentSettings;
 };
 
-static LLRegisterPanelClassWrapper<LLPanelPreferenceGraphics> t_pref_graph("panel_preference_graphics");
-static LLRegisterPanelClassWrapper<LLPanelPreferencePrivacy> t_pref_privacy("panel_preference_privacy");
+static LLPanelInjector<LLPanelPreferenceGraphics> t_pref_graph("panel_preference_graphics");
+static LLPanelInjector<LLPanelPreferencePrivacy> t_pref_privacy("panel_preference_privacy");
 
 BOOL LLPanelPreferenceGraphics::postBuild()
 {
@@ -2342,3 +2362,4 @@ void LLFloaterPreferenceProxy::onChangeSocksSettings()
 	}
 
 }
+

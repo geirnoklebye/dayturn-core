@@ -151,7 +151,7 @@ void LLPanelCameraItem::setValue(const LLSD& value)
 	getChildView("selected_picture")->setVisible( value["selected"]);
 }
 
-static LLRegisterPanelClassWrapper<LLPanelCameraZoom> t_camera_zoom_panel("camera_zoom_panel");
+static LLPanelInjector<LLPanelCameraZoom> t_camera_zoom_panel("camera_zoom_panel");
 
 //-------------------------------------------------------------------------------
 // LLPanelCameraZoom
@@ -530,6 +530,13 @@ void LLFloaterCamera::updateItemsSelection()
 	getChild<LLPanelCameraItem>("fps_view")->setValue(argument);
 	argument["selected"] = preset == CAMERA_PRESET_GROUP_VIEW;
 	getChild<LLPanelCameraItem>("group_view")->setValue(argument);
+//MK
+	// More camera presets
+	argument["selected"] = preset == CAMERA_PRESET_LEFT_VIEW;
+	getChild<LLPanelCameraItem>("left_view")->setValue(argument);
+	argument["selected"] = preset == CAMERA_PRESET_RIGHT_VIEW;
+	getChild<LLPanelCameraItem>("right_view")->setValue(argument);
+//mk
 	argument["selected"] = preset == CAMERA_PRESET_FRONT_VIEW;
 	getChild<LLPanelCameraItem>("front_view")->setValue(argument);
 	argument["selected"] = gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK;
@@ -578,6 +585,17 @@ void LLFloaterCamera::switchToPreset(const std::string& name)
 	{
 		gAgentCamera.switchCameraPreset(CAMERA_PRESET_GROUP_VIEW);
 	}
+//MK
+	// More camera presets
+	else if ("left_view" == name)
+	{
+		gAgentCamera.switchCameraPreset(CAMERA_PRESET_LEFT_VIEW);
+	}
+	else if ("right_view" == name)
+	{
+		gAgentCamera.switchCameraPreset(CAMERA_PRESET_RIGHT_VIEW);
+	}
+//mk
 	else if ("top_view" == name)
 	{
 		gAgentCamera.switchCameraPreset(CAMERA_PRESET_TOPDOWN_VIEW);

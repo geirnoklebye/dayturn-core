@@ -28,7 +28,6 @@
 
 #include "llvograss.h"
 
-#include "imageids.h"
 #include "llviewercontrol.h"
 
 #include "llagentcamera.h"
@@ -98,7 +97,7 @@ void LLVOGrass::updateSpecies()
 	
 	if (!sSpeciesTable.count(mSpecies))
 	{
-		llinfos << "Unknown grass type, substituting grass type." << llendl;
+		LL_INFOS() << "Unknown grass type, substituting grass type." << LL_ENDL;
 		SpeciesMap::const_iterator it = sSpeciesTable.begin();
 		mSpecies = (*it).first;
 	}
@@ -120,7 +119,7 @@ void LLVOGrass::initClass()
 
 	if (!grass_def_grass.parseFile(xml_filename))
 	{
-		llerrs << "Failed to parse grass file." << llendl;
+		LL_ERRS() << "Failed to parse grass file." << LL_ENDL;
 		return;
 	}
 
@@ -132,7 +131,7 @@ void LLVOGrass::initClass()
 	{
 		if (!grass_def->hasName("grass"))
 		{
-			llwarns << "Invalid grass definition node " << grass_def->getName() << llendl;
+			LL_WARNS() << "Invalid grass definition node " << grass_def->getName() << LL_ENDL;
 			continue;
 		}
 		F32 F32_val;
@@ -144,13 +143,13 @@ void LLVOGrass::initClass()
 		static LLStdStringHandle species_id_string = LLXmlTree::addAttributeString("species_id");
 		if (!grass_def->getFastAttributeS32(species_id_string, species))
 		{
-			llwarns << "No species id defined" << llendl;
+			LL_WARNS() << "No species id defined" << LL_ENDL;
 			continue;
 		}
 
 		if (species < 0)
 		{
-			llwarns << "Invalid species id " << species << llendl;
+			LL_WARNS() << "Invalid species id " << species << LL_ENDL;
 			continue;
 		}
 
@@ -171,7 +170,7 @@ void LLVOGrass::initClass()
 
 		if (sSpeciesTable.count(species))
 		{
-			llinfos << "Grass species " << species << " already defined! Duplicate discarded." << llendl;
+			LL_INFOS() << "Grass species " << species << " already defined! Duplicate discarded." << LL_ENDL;
 			delete newGrass;
 			continue;
 		}
@@ -187,7 +186,7 @@ void LLVOGrass::initClass()
 			std::string name;
 			static LLStdStringHandle name_string = LLXmlTree::addAttributeString("name");
 			grass_def->getFastAttributeString(name_string, name);
-			llwarns << "Incomplete definition of grass " << name << llendl;
+			LL_WARNS() << "Incomplete definition of grass " << name << LL_ENDL;
 		}
 	}
 
@@ -241,6 +240,7 @@ void LLVOGrass::initClass()
 void LLVOGrass::cleanupClass()
 {
 	for_each(sSpeciesTable.begin(), sSpeciesTable.end(), DeletePairedPointer());
+	sSpeciesTable.clear();
 }
 
 U32 LLVOGrass::processUpdateMessage(LLMessageSystem *mesgsys,
@@ -258,7 +258,7 @@ U32 LLVOGrass::processUpdateMessage(LLMessageSystem *mesgsys,
 		||(getAcceleration().lengthSquared() > 0.f)
 		||(getAngularVelocity().lengthSquared() > 0.f))
 	{
-		llinfos << "ACK! Moving grass!" << llendl;
+		LL_INFOS() << "ACK! Moving grass!" << LL_ENDL;
 		setVelocity(LLVector3::zero);
 		setAcceleration(LLVector3::zero);
 		setAngularVelocity(LLVector3::zero);
@@ -277,7 +277,7 @@ BOOL LLVOGrass::isActive() const
 	return TRUE;
 }
 
-void LLVOGrass::idleUpdate(LLAgent &agent, LLWorld &world, const F64 &time)
+void LLVOGrass::idleUpdate(LLAgent &agent, const F64 &time)
 {
  	if (mDead || !(gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_GRASS)))
 	{
@@ -413,11 +413,11 @@ LLDrawable* LLVOGrass::createDrawable(LLPipeline *pipeline)
 	return mDrawable;
 }
 
-static LLFastTimer::DeclareTimer FTM_UPDATE_GRASS("Update Grass");
+static LLTrace::BlockTimerStatHandle FTM_UPDATE_GRASS("Update Grass");
 
 BOOL LLVOGrass::updateGeometry(LLDrawable *drawable)
 {
-	LLFastTimer ftm(FTM_UPDATE_GRASS);
+	LL_RECORD_BLOCK_TIME(FTM_UPDATE_GRASS);
 
 	dirtySpatialGroup();
 
@@ -445,7 +445,7 @@ void LLVOGrass::plantBlades()
 	// This is bad, but not the end of the world.
 	if (!sSpeciesTable.count(mSpecies))
 	{
-		llinfos << "Unknown grass species " << mSpecies << llendl;
+		LL_INFOS() << "Unknown grass species " << mSpecies << LL_ENDL;
 		return;
 	}
 	
@@ -476,6 +476,7 @@ void LLVOGrass::getGeometry(S32 idx,
 								LLStrider<LLVector3>& normalsp, 
 								LLStrider<LLVector2>& texcoordsp,
 								LLStrider<LLColor4U>& colorsp, 
+								LLStrider<LLColor4U>& emissivep,
 								LLStrider<U16>& indicesp)
 {
 	if(!mNumBlades)//stop rendering grass
@@ -603,8 +604,8 @@ U32 LLVOGrass::getPartitionType() const
 	return LLViewerRegion::PARTITION_GRASS;
 }
 
-LLGrassPartition::LLGrassPartition()
-: LLSpatialPartition(LLDrawPoolAlpha::VERTEX_DATA_MASK | LLVertexBuffer::MAP_TEXTURE_INDEX, TRUE, GL_STREAM_DRAW_ARB)
+LLGrassPartition::LLGrassPartition(LLViewerRegion* regionp)
+: LLSpatialPartition(LLDrawPoolAlpha::VERTEX_DATA_MASK | LLVertexBuffer::MAP_TEXTURE_INDEX, TRUE, GL_STREAM_DRAW_ARB, regionp)
 {
 	mDrawableType = LLPipeline::RENDER_TYPE_GRASS;
 	mPartitionType = LLViewerRegion::PARTITION_GRASS;
@@ -624,9 +625,9 @@ void LLGrassPartition::addGeometryCount(LLSpatialGroup* group, U32& vertex_count
 	LLViewerCamera* camera = LLViewerCamera::getInstance();
 	for (LLSpatialGroup::element_iter i = group->getDataBegin(); i != group->getDataEnd(); ++i)
 	{
-		LLDrawable* drawablep = *i;
+		LLDrawable* drawablep = (LLDrawable*)(*i)->getDrawable();
 		
-		if (drawablep->isDead())
+		if (!drawablep || drawablep->isDead())
 		{
 			continue;
 		}
@@ -671,11 +672,11 @@ void LLGrassPartition::addGeometryCount(LLSpatialGroup* group, U32& vertex_count
 	}
 }
 
-static LLFastTimer::DeclareTimer FTM_REBUILD_GRASS_VB("Grass VB");
+static LLTrace::BlockTimerStatHandle FTM_REBUILD_GRASS_VB("Grass VB");
 
 void LLGrassPartition::getGeometry(LLSpatialGroup* group)
 {
-	LLFastTimer ftm(FTM_REBUILD_GRASS_VB);
+	LL_RECORD_BLOCK_TIME(FTM_REBUILD_GRASS_VB);
 
 	std::sort(mFaceList.begin(), mFaceList.end(), LLFace::CompareDistanceGreater());
 
@@ -708,7 +709,11 @@ void LLGrassPartition::getGeometry(LLSpatialGroup* group)
 		facep->setIndicesIndex(index_count);
 		facep->setVertexBuffer(buffer);
 		facep->setPoolType(LLDrawPool::POOL_ALPHA);
-		object->getGeometry(facep->getTEOffset(), verticesp, normalsp, texcoordsp, colorsp, indicesp);
+
+		//dummy parameter (unused by this implementation)
+		LLStrider<LLColor4U> emissivep;
+
+		object->getGeometry(facep->getTEOffset(), verticesp, normalsp, texcoordsp, colorsp, emissivep, indicesp);
 		
 		vertex_count += facep->getGeomCount();
 		index_count += facep->getIndicesCount();
@@ -738,8 +743,10 @@ void LLGrassPartition::getGeometry(LLSpatialGroup* group)
 			LLDrawInfo* info = new LLDrawInfo(start,end,count,offset,facep->getTexture(), 
 				//facep->getTexture(),
 				buffer, fullbright); 
-			info->mExtents[0] = group->mObjectExtents[0];
-			info->mExtents[1] = group->mObjectExtents[1];
+
+			const LLVector4a* exts = group->getObjectExtents();
+			info->mExtents[0] = exts[0];
+			info->mExtents[1] = exts[1];
 			info->mVSize = vsize;
 			draw_vec.push_back(info);
 			//for alpha sorting
@@ -764,8 +771,8 @@ void LLVOGrass::updateDrawable(BOOL force_damped)
 }
 
 // virtual 
-BOOL LLVOGrass::lineSegmentIntersect(const LLVector3& start, const LLVector3& end, S32 face, BOOL pick_transparent, S32 *face_hitp,
-									  LLVector3* intersection,LLVector2* tex_coord, LLVector3* normal, LLVector3* bi_normal)
+BOOL LLVOGrass::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end, S32 face, BOOL pick_transparent, S32 *face_hitp,
+									  LLVector4a* intersection,LLVector2* tex_coord, LLVector4a* normal, LLVector4a* tangent)
 	
 {
 	BOOL ret = FALSE;
@@ -776,7 +783,8 @@ BOOL LLVOGrass::lineSegmentIntersect(const LLVector3& start, const LLVector3& en
 		return FALSE;
 	}
 
-	LLVector3 dir = end-start;
+	LLVector4a dir;
+	dir.setSub(end, start);
 
 	mPatch = mRegionp->getLand().resolvePatchRegion(getPositionRegion());
 	
@@ -844,23 +852,31 @@ BOOL LLVOGrass::lineSegmentIntersect(const LLVector3& start, const LLVector3& en
 
 		U32 idx0 = 0,idx1 = 0,idx2 = 0;
 
-		if (LLTriangleRayIntersect(v[0], v[1], v[2], start, dir, a, b, t, FALSE))
+		LLVector4a v0a,v1a,v2a,v3a;
+
+		v0a.load3(v[0].mV);
+		v1a.load3(v[1].mV);
+		v2a.load3(v[2].mV);
+		v3a.load3(v[3].mV);
+
+		
+		if (LLTriangleRayIntersect(v0a, v1a, v2a, start, dir, a, b, t))
 		{
 			hit = TRUE;
 			idx0 = 0; idx1 = 1; idx2 = 2;
 		}
-		else if (LLTriangleRayIntersect(v[1], v[3], v[2], start, dir, a, b, t, FALSE))
+		else if (LLTriangleRayIntersect(v1a, v3a, v2a, start, dir, a, b, t))
 		{
 			hit = TRUE;
 			idx0 = 1; idx1 = 3; idx2 = 2;
 		}
-		else if (LLTriangleRayIntersect(v[2], v[1], v[0], start, dir, a, b, t, FALSE))
+		else if (LLTriangleRayIntersect(v2a, v1a, v0a, start, dir, a, b, t))
 		{
 			normal1 = -normal1;
 			hit = TRUE;
 			idx0 = 2; idx1 = 1; idx2 = 0;
 		}
-		else if (LLTriangleRayIntersect(v[2], v[3], v[1], start, dir, a, b, t, FALSE))
+		else if (LLTriangleRayIntersect(v2a, v3a, v1a, start, dir, a, b, t))
 		{
 			normal1 = -normal1;
 			hit = TRUE;
@@ -883,7 +899,8 @@ BOOL LLVOGrass::lineSegmentIntersect(const LLVector3& start, const LLVector3& en
 					closest_t = t;
 					if (intersection != NULL)
 					{
-						*intersection = start+dir*closest_t;
+						dir.mul(closest_t);
+						intersection->setAdd(start, dir);
 					}
 
 					if (tex_coord != NULL)
@@ -893,7 +910,7 @@ BOOL LLVOGrass::lineSegmentIntersect(const LLVector3& start, const LLVector3& en
 
 					if (normal != NULL)
 					{
-						*normal    = normal1;
+						normal->load3(normal1.mV);
 					}
 					ret = TRUE;
 				}

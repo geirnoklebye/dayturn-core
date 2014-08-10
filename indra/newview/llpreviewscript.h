@@ -27,13 +27,13 @@
 #ifndef LL_LLPREVIEWSCRIPT_H
 #define LL_LLPREVIEWSCRIPT_H
 
-#include "lldarray.h"
 #include "llpreview.h"
 #include "lltabcontainer.h"
 #include "llinventory.h"
 #include "llcombobox.h"
 #include "lliconctrl.h"
 #include "llframetimer.h"
+#include "llfloatergotoline.h"
 
 class LLLiveLSLFile;
 class LLMessageSystem;
@@ -49,6 +49,7 @@ class LLKeywordToken;
 class LLVFS;
 class LLViewerInventoryItem;
 class LLScriptEdContainer;
+class LLFloaterGotoLine;
 
 // Inner, implementation class.  LLPreviewScript and LLLiveLSLEditor each own one of these.
 class LLScriptEdCore : public LLPanel
@@ -58,6 +59,7 @@ class LLScriptEdCore : public LLPanel
 	friend class LLLiveLSLEditor;
 	friend class LLFloaterScriptSearch;
 	friend class LLScriptEdContainer;
+	friend class LLFloaterGotoLine;
 
 protected:
 	// Supposed to be invoked only by the container.
@@ -138,7 +140,7 @@ private:
 	BOOL			mForceClose;
 	LLPanel*		mCodePanel;
 	LLScrollListCtrl* mErrorList;
-	LLDynamicArray<LLEntryAndEdCore*> mBridges;
+	std::vector<LLEntryAndEdCore*> mBridges;
 	LLHandle<LLFloater>	mLiveHelpHandle;
 	LLKeywordToken* mLastHelpToken;
 	LLFrameTimer	mLiveHelpTimer;

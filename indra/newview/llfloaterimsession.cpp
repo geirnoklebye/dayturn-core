@@ -44,6 +44,7 @@
 #include "llchicletbar.h"
 #include "lldonotdisturbnotificationstorage.h"
 #include "llfloaterreg.h"
+#include "llhttpclient.h"
 #include "llfloateravatarpicker.h"
 #include "llfloaterimcontainer.h" // to replace separate IM Floaters with multifloater container
 #include "llinventoryfunctions.h"
@@ -55,6 +56,7 @@
 #include "lltrans.h"
 #include "llchathistory.h"
 #include "llnotifications.h"
+#include "llviewerregion.h"
 #include "llviewerwindow.h"
 #include "lltransientfloatermgr.h"
 #include "llinventorymodel.h"
@@ -63,6 +65,9 @@
 #include "llviewerchat.h"
 #include "llnotificationmanager.h"
 #include "llautoreplace.h"
+
+const F32 ME_TYPING_TIMEOUT = 4.0f;
+const F32 OTHER_TYPING_TIMEOUT = 9.0f;
 
 floater_showed_signal_t LLFloaterIMSession::sIMFloaterShowedSignal;
 
@@ -78,7 +83,10 @@ LLFloaterIMSession::LLFloaterIMSession(const LLUUID& session_id)
 	mTypingTimer(),
 	mTypingTimeoutTimer(),
 	mPositioned(false),
-	mSessionInitialized(false)
+	mSessionInitialized(false),
+	mMeTypingTimer(),
+	mOtherTypingTimer(),
+	mImInfo()
 {
 	mIsNearbyChat = false;
 
@@ -100,34 +108,40 @@ void LLFloaterIMSession::refresh()
 {
 	if (mMeTyping)
 {
+		// Send an additional Start Typing packet every ME_TYPING_TIMEOUT seconds
+		if (mMeTypingTimer.getElapsedTimeF32() > ME_TYPING_TIMEOUT && false == mShouldSendTypingState)
+		{
+			LL_DEBUGS("TypingMsgs") << "Send additional Start Typing packet" << LL_ENDL;
+			LLIMModel::instance().sendTypingState(mSessionID, mOtherParticipantUUID, TRUE);
+			mMeTypingTimer.reset();
+		}
+
 		// Time out if user hasn't typed for a while.
 		if (mTypingTimeoutTimer.getElapsedTimeF32() > LLAgent::TYPING_TIMEOUT_SECS)
 		{
 	setTyping(false);
+			LL_DEBUGS("TypingMsgs") << "Send stop typing due to timeout" << LL_ENDL;
 		}
 	}
+
+	// Clear <name is typing> message if no data received for OTHER_TYPING_TIMEOUT seconds
+	if (mOtherTyping && mOtherTypingTimer.getElapsedTimeF32() > OTHER_TYPING_TIMEOUT)
+	{
+		LL_DEBUGS("TypingMsgs") << "Received: is typing cleared due to timeout" << LL_ENDL;
+		removeTypingIndicator(mImInfo);
+		mOtherTyping = false;
+	}
+
 }
 
 // virtual
 void LLFloaterIMSession::onTearOffClicked()
 {
     LLFloaterIMSessionTab::onTearOffClicked();
-
-    if(mIsP2PChat)
-    {
-        if(isTornOff())
-        {
-            mSpeakingIndicator->setSpeakerId(mOtherParticipantUUID, mSessionID);
-        }
-        else
-        {
-            mSpeakingIndicator->setSpeakerId(LLUUID::null);
-        }
-    }
 }
 
 // virtual
-void LLFloaterIMSession::onClickCloseBtn()
+void LLFloaterIMSession::onClickCloseBtn(bool)
 {
 	LLIMModel::LLIMSession* session = LLIMModel::instance().findIMSession(mSessionID);
 
@@ -149,7 +163,7 @@ void LLFloaterIMSession::onClickCloseBtn()
 	}
 	else
 	{
-		llwarns << "Empty session with id: " << (mSessionID.asString()) << llendl;
+		LL_WARNS() << "Empty session with id: " << (mSessionID.asString()) << LL_ENDL;
 		return;
 	}
 
@@ -174,7 +188,7 @@ void LLFloaterIMSession::newIMCallback(const LLSD& data)
 	}
 }
 
-void LLFloaterIMSession::onVisibilityChange(const LLSD& new_visibility)
+void LLFloaterIMSession::onVisibilityChanged(const LLSD& new_visibility)
 {
 	bool visible = new_visibility.asBoolean();
 
@@ -306,7 +320,7 @@ void LLFloaterIMSession::sendMsgFromInputEditor()
 	}
 	else
 	{
-		llinfos << "Cannot send IM to everyone unless you're a god." << llendl;
+		LL_INFOS() << "Cannot send IM to everyone unless you're a god." << LL_ENDL;
 	}
 }
 
@@ -512,8 +526,11 @@ void LLFloaterIMSession::addSessionParticipants(const uuid_vec_t& uuids)
 	}
 	else
 	{
-		// remember whom we have invited, to notify others later, when the invited ones actually join
-		mInvitedParticipants.insert(mInvitedParticipants.end(), uuids.begin(), uuids.end());
+		if(findInstance(mSessionID))
+		{
+			// remember whom we have invited, to notify others later, when the invited ones actually join
+			mInvitedParticipants.insert(mInvitedParticipants.end(), uuids.begin(), uuids.end());
+		}
 		
 		inviteToSession(uuids);
 	}
@@ -539,13 +556,18 @@ void LLFloaterIMSession::addP2PSessionParticipants(const LLSD& notification, con
 	temp_ids.insert(temp_ids.end(), uuids.begin(), uuids.end());
 
 	// then we can close the current session
-	onClose(false);
+	if(findInstance(mSessionID))
+	{
+		onClose(false);
+
+		// remember whom we have invited, to notify others later, when the invited ones actually join
+		mInvitedParticipants.insert(mInvitedParticipants.end(), uuids.begin(), uuids.end());
+	}
 
 	// we start a new session so reset the initialization flag
 	mSessionInitialized = false;
 
-	// remember whom we have invited, to notify others later, when the invited ones actually join
-	mInvitedParticipants.insert(mInvitedParticipants.end(), uuids.begin(), uuids.end());
+
 
 	// Start a new ad hoc voice call if we invite new participants to a P2P call,
 	// or start a text chat otherwise.
@@ -764,7 +786,7 @@ void LLFloaterIMSession::setVisible(BOOL visible)
 	if (visible && isInVisibleChain())
 	{
 		sIMFloaterShowedSignal(mSessionID);
-        
+        updateMessages();
 	}
 }
 
@@ -1033,12 +1055,20 @@ void LLFloaterIMSession::setTyping(bool typing)
 	// much network traffic. Only send in person-to-person IMs.
 	if ( mShouldSendTypingState && mDialog == IM_NOTHING_SPECIAL )
 	{
-		// Still typing, send 'start typing' notification or
-		// send 'stop typing' notification immediately
-		if (!mMeTyping || mTypingTimer.getElapsedTimeF32() > 1.f)
+		if ( mMeTyping )
 		{
-			LLIMModel::instance().sendTypingState(mSessionID,
-					mOtherParticipantUUID, mMeTyping);
+			if ( mTypingTimer.getElapsedTimeF32() > 1.f )
+		{
+				// Still typing, send 'start typing' notification
+				LLIMModel::instance().sendTypingState(mSessionID, mOtherParticipantUUID, TRUE);
+				mShouldSendTypingState = false;
+				mMeTypingTimer.reset();
+			}
+		}
+		else
+		{
+			// Send 'stop typing' notification immediately
+			LLIMModel::instance().sendTypingState(mSessionID, mOtherParticipantUUID, FALSE);
 				mShouldSendTypingState = false;
 			}
 		}
@@ -1055,10 +1085,12 @@ void LLFloaterIMSession::setTyping(bool typing)
 
 void LLFloaterIMSession::processIMTyping(const LLIMInfo* im_info, BOOL typing)
 {
+	LL_DEBUGS("TypingMsgs") << "typing=" << typing << LL_ENDL;
 	if ( typing )
 	{
 		// other user started typing
 		addTypingIndicator(im_info);
+		mOtherTypingTimer.reset();
 	}
 	else
 	{
@@ -1235,8 +1267,8 @@ public:
 
 	void errorWithContent(U32 statusNum, const std::string& reason, const LLSD& content)
 	{
-		llwarns << "Error inviting all agents to session [status:" 
-				<< statusNum << "]: " << content << llendl;
+		LL_WARNS() << "Error inviting all agents to session [status:" 
+				<< statusNum << "]: " << content << LL_ENDL;
 		//throw something back to the viewer here?
 	}
 
@@ -1255,7 +1287,7 @@ BOOL LLFloaterIMSession::inviteToSession(const uuid_vec_t& ids)
 
 	if( isInviteAllowed() && (count > 0) )
 	{
-			llinfos << "LLFloaterIMSession::inviteToSession() - inviting participants" << llendl;
+			LL_INFOS() << "LLFloaterIMSession::inviteToSession() - inviting participants" << LL_ENDL;
 
 		std::string url = region->getCapability("ChatSessionRequest");
 
@@ -1273,9 +1305,9 @@ BOOL LLFloaterIMSession::inviteToSession(const uuid_vec_t& ids)
 	}
 	else
 	{
-			llinfos << "LLFloaterIMSession::inviteToSession -"
+			LL_INFOS() << "LLFloaterIMSession::inviteToSession -"
 				<< " no need to invite agents for "
-				<< mDialog << llendl;
+					<< mDialog << LL_ENDL;
 		// successful add, because everyone that needed to get added
 		// was added.
 	}
@@ -1286,10 +1318,40 @@ BOOL LLFloaterIMSession::inviteToSession(const uuid_vec_t& ids)
 
 void LLFloaterIMSession::addTypingIndicator(const LLIMInfo* im_info)
 {
+/* Operation of "<name> is typing" state machine:
+Not Typing state:
+
+    User types in P2P IM chat ... Send Start Typing, save Started time,
+    start Idle Timer (N seconds) go to Typing state
+
+Typing State:
+
+    User enters a non-return character: if Now - Started > ME_TYPING_TIMEOUT, send
+    Start Typing, restart Idle Timer
+    User enters a return character: stop Idle Timer, send IM and Stop
+    Typing, go to Not Typing state
+    Idle Timer expires: send Stop Typing, go to Not Typing state
+
+The recipient has a complementary state machine in which a Start Typing
+that is not followed by either an IM or another Start Typing within OTHER_TYPING_TIMEOUT
+seconds switches the sender out of typing state.
+
+This has the nice quality of being self-healing for lost start/stop
+messages while adding messages only for the (relatively rare) case of a
+user who types a very long message (one that takes more than ME_TYPING_TIMEOUT seconds
+to type).
+
+Note: OTHER_TYPING_TIMEOUT must be > ME_TYPING_TIMEOUT for proper operation of the state machine
+
+*/
+
 	// We may have lost a "stop-typing" packet, don't add it twice
 	if ( im_info && !mOtherTyping )
 	{
 		mOtherTyping = true;
+		mOtherTypingTimer.reset();
+		// Save im_info so that removeTypingIndicator can be properly called because a timeout has occurred
+		mImInfo = im_info;
 
 		// Update speaker
 		LLIMSpeakerMgr* speaker_mgr = LLIMModel::getInstance()->getSpeakerManager(mSessionID);

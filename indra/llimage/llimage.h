@@ -29,7 +29,8 @@
 
 #include "lluuid.h"
 #include "llstring.h"
-#include "llthread.h"
+#include "llpointer.h"
+#include "lltrace.h"
 
 const S32 MIN_IMAGE_MIP =  2; // 4x4, only used for expand/contract power of 2
 const S32 MAX_IMAGE_MIP = 11; // 2048x2048
@@ -110,7 +111,9 @@ protected:
 //============================================================================
 // Image base class
 
-class LLImageBase : public LLThreadSafeRefCount
+class LLImageBase 
+:	public LLThreadSafeRefCount,
+	public LLTrace::MemTrackable<LLImageBase>
 {
 protected:
 	virtual ~LLImageBase();
@@ -161,6 +164,8 @@ public:
 	static void createPrivatePool() ;
 	static void destroyPrivatePool() ;
 	static LLPrivateMemoryPool* getPrivatePool() {return sPrivatePoolp;}
+
+	//static LLTrace::MemStatHandle sMemStat;
 
 private:
 	U8 *mData;
@@ -214,6 +219,9 @@ public:
 
 	// Copy operations
 	
+	//duplicate this raw image if refCount > 1.
+	LLPointer<LLImageRaw> duplicate();
+
 	// Src and dst can be any size.  Src and dst can each have 3 or 4 components.
 	void copy( LLImageRaw* src );
 

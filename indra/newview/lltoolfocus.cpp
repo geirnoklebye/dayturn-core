@@ -194,6 +194,26 @@ void LLToolCamera::pickCallback(const LLPickInfo& pick_info)
 	else if (pick_info.mKeyMask & MASK_ALT || 
 			(LLToolMgr::getInstance()->getCurrentTool()->getName() == "Camera")) 
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.contains ("camunlock"))
+		{
+			if (!(pick_info.mKeyMask & MASK_ALT) &&
+				gAgentCamera.cameraThirdPerson() &&
+				gViewerWindow->getLeftMouseDown() && 
+				!gSavedSettings.getBOOL("FreezeTime") &&
+				(hit_obj == gAgentAvatarp || 
+				 (hit_obj && hit_obj->isAttachment() && LLVOAvatar::findAvatarFromAttachment(hit_obj)->isSelf())))
+			{
+				// do nothing, we are steering with the mouse... but the condition is so complex it is better to
+				// check for its negative
+			}
+			else
+			{
+				LLToolCamera::getInstance()->mValidClickPoint = FALSE;
+				return;
+			}
+		}
+//mk
 		LLViewerObject* hit_obj = pick_info.getObject();
 		if (hit_obj)
 		{
@@ -334,7 +354,7 @@ BOOL LLToolCamera::handleHover(S32 x, S32 y, MASK mask)
 	{
 		if (!mValidClickPoint)
 		{
-			lldebugst(LLERR_USER_INPUT) << "hover handled by LLToolFocus [invalid point]" << llendl;
+			LL_DEBUGS("UserInput") << "hover handled by LLToolFocus [invalid point]" << LL_ENDL;
 			gViewerWindow->setCursor(UI_CURSOR_NO);
 			gViewerWindow->showCursor();
 			return TRUE;
@@ -361,7 +381,7 @@ BOOL LLToolCamera::handleHover(S32 x, S32 y, MASK mask)
 
 				gViewerWindow->moveCursorToCenter();
 			}
-			lldebugst(LLERR_USER_INPUT) << "hover handled by LLToolFocus [active]" << llendl;
+			LL_DEBUGS("UserInput") << "hover handled by LLToolFocus [active]" << LL_ENDL;
 		}
 		else if (	gCameraBtnPan ||
 					mask == MASK_PAN ||
@@ -389,7 +409,7 @@ BOOL LLToolCamera::handleHover(S32 x, S32 y, MASK mask)
 
 				gViewerWindow->moveCursorToCenter();
 			}
-			lldebugst(LLERR_USER_INPUT) << "hover handled by LLToolPan" << llendl;
+			LL_DEBUGS("UserInput") << "hover handled by LLToolPan" << LL_ENDL;
 		}
 		else if (gCameraBtnZoom)
 		{
@@ -421,7 +441,7 @@ BOOL LLToolCamera::handleHover(S32 x, S32 y, MASK mask)
 				gViewerWindow->moveCursorToCenter();
 			}
 
-			lldebugst(LLERR_USER_INPUT) << "hover handled by LLToolZoom" << llendl;		
+			LL_DEBUGS("UserInput") << "hover handled by LLToolZoom" << LL_ENDL;		
 		}
 	}
 

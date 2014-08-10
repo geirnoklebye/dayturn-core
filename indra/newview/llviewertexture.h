@@ -38,10 +38,9 @@
 #include <map>
 #include <list>
 
-#define MIN_VIDEO_RAM_IN_MEGA_BYTES    32
-#define MAX_VIDEO_RAM_IN_MEGA_BYTES    512 // 512MB max for performance reasons.
+extern const S32Megabytes gMinVideoRam;
+extern const S32Megabytes gMaxVideoRam;
 
-class LLFace;
 class LLImageGL ;
 class LLImageRaw;
 class LLViewerObject;
@@ -98,11 +97,10 @@ public:
 		DYNAMIC_TEXTURE,
 		FETCHED_TEXTURE,
 		LOD_TEXTURE,
-		ATLAS_TEXTURE,
 		INVALID_TEXTURE_TYPE
 	};
 
-	typedef std::vector<LLFace*> ll_face_list_t;
+	typedef std::vector<class LLFace*> ll_face_list_t;
 	typedef std::vector<LLVOVolume*> ll_volume_list_t;
 
 
@@ -121,10 +119,12 @@ public:
 
 	virtual S8 getType() const;
 	virtual BOOL isMissingAsset()const ;
-	virtual void dump();	// debug info to llinfos
+	virtual void dump();	// debug info to LL_INFOS()
 	
 	/*virtual*/ bool bindDefaultImage(const S32 stage = 0) ;
+	/*virtual*/ bool bindDebugImage(const S32 stage = 0) ;
 	/*virtual*/ void forceImmediateUpdate() ;
+	/*virtual*/ bool isActiveFetching();
 	
 	/*virtual*/ const LLUUID& getID() const { return mID; }
 	void setBoostLevel(S32 level);
@@ -140,12 +140,15 @@ public:
 
 	LLFrameTimer* getLastReferencedTimer() {return &mLastReferencedTimer ;}
 	
+	S32 getFullWidth() const { return mFullWidth; }
+	S32 getFullHeight() const { return mFullHeight; }	
 	/*virtual*/ void setKnownDrawSize(S32 width, S32 height);
 
-	virtual void addFace(LLFace* facep) ;
-	virtual void removeFace(LLFace* facep) ; 
-	S32 getNumFaces() const;
-	const ll_face_list_t* getFaceList() const {return &mFaceList;}
+	virtual void addFace(U32 channel, LLFace* facep) ;
+	virtual void removeFace(U32 channel, LLFace* facep) ; 
+	S32 getTotalNumFaces() const;
+	S32 getNumFaces(U32 ch) const;
+	const ll_face_list_t* getFaceList(U32 channel) const {llassert(channel < LLRender::NUM_TEXTURE_CHANNELS); return &mFaceList[channel];}
 
 	virtual void addVolume(LLVOVolume* volumep);
 	virtual void removeVolume(LLVOVolume* volumep);
@@ -182,8 +185,8 @@ protected:
 	mutable F32 mAdditionalDecodePriority;  // priority add to mDecodePriority.
 	LLFrameTimer mLastReferencedTimer;	
 
-	ll_face_list_t    mFaceList ; //reverse pointer pointing to the faces using this image as texture
-	U32               mNumFaces ;
+	ll_face_list_t    mFaceList[LLRender::NUM_TEXTURE_CHANNELS]; //reverse pointer pointing to the faces using this image as texture
+	U32               mNumFaces[LLRender::NUM_TEXTURE_CHANNELS];
 	LLFrameTimer      mLastFaceListUpdateTimer ;
 
 	ll_volume_list_t  mVolumeList;
@@ -202,11 +205,11 @@ public:
 	static LLFrameTimer sEvaluationTimer;
 	static F32 sDesiredDiscardBias;
 	static F32 sDesiredDiscardScale;
-	static S32 sBoundTextureMemoryInBytes;
-	static S32 sTotalTextureMemoryInBytes;
-	static S32 sMaxBoundTextureMemInMegaBytes;
-	static S32 sMaxTotalTextureMemInMegaBytes;
-	static S32 sMaxDesiredTextureMemInBytes ;
+	static S32Bytes sBoundTextureMemory;
+	static S32Bytes sTotalTextureMemory;
+	static S32Megabytes sMaxBoundTextureMem;
+	static S32Megabytes sMaxTotalTextureMem;
+	static S32Bytes sMaxDesiredTextureMem ;
 	static S8  sCameraMovingDiscardBias;
 	static F32 sCameraMovingBias;
 	static S32 sMaxSculptRez ;
@@ -214,7 +217,6 @@ public:
 	static S32 sMaxSmallImageSize ;
 	static BOOL sFreezeImageScalingDown ;//do not scale down image res if set.
 	static F32  sCurrentTime ;
-	static BOOL sUseTextureAtlas ;
 
 	enum EDebugTexels
 	{
@@ -395,6 +397,9 @@ public:
 	void        loadFromFastCache();
 	void        setInFastCacheList(bool in_list) { mInFastCacheList = in_list; }
 	bool        isInFastCacheList() { return mInFastCacheList; }
+
+	/*virtual*/bool  isActiveFetching(); //is actively in fetching by the fetching pipeline.
+
 protected:
 	/*virtual*/ void switchToCachedImage();
 	S32 getCurrentDiscardLevelForFetching() ;
@@ -405,11 +410,6 @@ private:
 
 	void saveRawImage() ;
 	void setCachedRawImage() ;
-
-	//for atlas
-	void resetFaceAtlas() ;
-	void invalidateAtlas(BOOL rebuild_geom) ;
-	BOOL insertToAtlas() ;
 
 private:
 	BOOL  mFullyLoaded;
@@ -496,6 +496,7 @@ public:
 	static LLPointer<LLViewerFetchedTexture> sWhiteImagep;	// Texture to show NOTHING (whiteness)
 	static LLPointer<LLViewerFetchedTexture> sDefaultImagep; // "Default" texture for error cases, the only case of fetched texture which is generated in local.
 	static LLPointer<LLViewerFetchedTexture> sSmokeImagep; // Old "Default" translucent texture
+	static LLPointer<LLViewerFetchedTexture> sFlatNormalImagep; // Flat normal map denoting no bumpiness on a surface
 };
 
 //
@@ -553,12 +554,12 @@ public:
 	void addMediaToFace(LLFace* facep) ;
 	void removeMediaFromFace(LLFace* facep) ;
 
-	/*virtual*/ void addFace(LLFace* facep) ;
-	/*virtual*/ void removeFace(LLFace* facep) ; 
+	/*virtual*/ void addFace(U32 ch, LLFace* facep) ;
+	/*virtual*/ void removeFace(U32 ch, LLFace* facep) ; 
 
 	/*virtual*/ F32  getMaxVirtualSize() ;
 private:
-	void switchTexture(LLFace* facep) ;
+	void switchTexture(U32 ch, LLFace* facep) ;
 	BOOL findFaces() ;
 	void stopPlaying() ;
 
@@ -689,18 +690,18 @@ private:
 private:
 	BOOL mUsingDefaultTexture;            //if set, some textures are still gray.
 
-	U32 mTotalBytesUsed ;                     //total bytes of textures bound/used for the current frame.
-	U32 mTotalBytesUsedForLargeImage ;        //total bytes of textures bound/used for the current frame for images larger than 256 * 256.
-	U32 mLastTotalBytesUsed ;                 //total bytes of textures bound/used for the previous frame.
-	U32 mLastTotalBytesUsedForLargeImage ;    //total bytes of textures bound/used for the previous frame for images larger than 256 * 256.
+	U32Bytes mTotalBytesUsed ;                     //total bytes of textures bound/used for the current frame.
+	U32Bytes mTotalBytesUsedForLargeImage ;        //total bytes of textures bound/used for the current frame for images larger than 256 * 256.
+	U32Bytes mLastTotalBytesUsed ;                 //total bytes of textures bound/used for the previous frame.
+	U32Bytes mLastTotalBytesUsedForLargeImage ;    //total bytes of textures bound/used for the previous frame for images larger than 256 * 256.
 		
 	//
 	//data size
 	//
-	U32 mTotalBytesLoaded ;               //total bytes fetched by texture pipeline
-	U32 mTotalBytesLoadedFromCache ;      //total bytes fetched by texture pipeline from local cache	
-	U32 mTotalBytesLoadedForLargeImage ;  //total bytes fetched by texture pipeline for images larger than 256 * 256. 
-	U32 mTotalBytesLoadedForSculpties ;   //total bytes fetched by texture pipeline for sculpties
+	U32Bytes mTotalBytesLoaded ;               //total bytes fetched by texture pipeline
+	U32Bytes mTotalBytesLoadedFromCache ;      //total bytes fetched by texture pipeline from local cache	
+	U32Bytes mTotalBytesLoadedForLargeImage ;  //total bytes fetched by texture pipeline for images larger than 256 * 256. 
+	U32Bytes mTotalBytesLoadedForSculpties ;   //total bytes fetched by texture pipeline for sculpties
 
 	//
 	//time

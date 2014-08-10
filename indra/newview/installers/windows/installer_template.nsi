@@ -72,16 +72,8 @@ LangString LanguageCode ${LANG_RUSSIAN}  "ru"
 LangString LanguageCode ${LANG_TURKISH}  "tr"
 LangString LanguageCode ${LANG_TRADCHINESE}  "zh"
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Tweak for different servers/builds (this placeholder is replaced by viewer_manifest.py)
-;; For example:
-;; !define INSTFLAGS "%(flags)s"
-;; !define INSTNAME   "SecondLife%(grid_caps)s"
-;; !define SHORTCUT   "Second Life (%(grid_caps)s)"
-;; !define URLNAME   "secondlife%(grid)s"
-;; !define UNINSTALL_SETTINGS 1
-
-%%GRID_VARS%%
+;; this placeholder is replaced by viewer_manifest.py
+%%INST_VARS%%
 
 Name ${INSTNAME}
 
@@ -109,12 +101,12 @@ Page instfiles
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Var INSTPROG
 Var INSTEXE
-Var INSTFLAGS
 Var INSTSHORTCUT
 Var COMMANDLINE         ; command line passed to this installer, set in .onInit
 Var SHORTCUT_LANG_PARAM ; "--set InstallLanguage de", passes language to viewer
 Var SKIP_DIALOGS        ; set from command line in  .onInit. autoinstall 
                         ; GUI and the defaults.
+Var SKIP_AUTORUN		; skip automatic launch of viewer after install
 Var DO_UNINSTALL_V2     ; If non-null, path to a previous Viewer 2 installation that will be uninstalled.
 
 ;;; Function definitions should go before file includes, because calls to
@@ -131,24 +123,9 @@ Var DO_UNINSTALL_V2     ; If non-null, path to a previous Viewer 2 installation 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 Function .onInstSuccess
     Push $R0	# Option value, unused
-
-    StrCmp $SKIP_DIALOGS "true" label_launch 
-
-    ${GetOptions} $COMMANDLINE "/AUTOSTART" $R0
-    # If parameter was there (no error) just launch
-    # Otherwise ask
-    IfErrors label_ask_launch label_launch
-    
-label_ask_launch:
-    # Don't launch by default when silent
-    IfSilent label_no_launch
-	MessageBox MB_YESNO $(InstSuccesssQuestion) \
-        IDYES label_launch IDNO label_no_launch
-        
-label_launch:
+	StrCmp $SKIP_AUTORUN "true" +2;
 	# Assumes SetOutPath $INSTDIR
-	Exec '"$INSTDIR\$INSTEXE" $INSTFLAGS $SHORTCUT_LANG_PARAM'
-label_no_launch:
+	Exec '"$INSTDIR\$INSTEXE" $SHORTCUT_LANG_PARAM'
 	Pop $R0
 FunctionEnd
 
@@ -308,6 +285,23 @@ Function CheckNetworkConnection
     Pop $1
     Pop $0
     Return
+FunctionEnd
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Function CheckOldExeName
+; Viewer versions < 3.6.12 used the name 'SecondLife.exe'
+; If that name is found in the install folder, delete it to invalidate any
+; old shortcuts to it that may be in non-standard locations, so that the user
+; does not end up running the old version (potentially getting caught in an 
+; infinite update loop). See MAINT-3575
+; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Function CheckOldExeName
+  IfFileExists "$INSTDIR\SecondLife.exe" CHECKOLDEXE_FOUND CHECKOLDEXE_DONE
+
+CHECKOLDEXE_FOUND:
+  Delete "$INSTDIR\SecondLife.exe"
+CHECKOLDEXE_DONE:
 FunctionEnd
 
 
@@ -682,6 +676,9 @@ Delete "$INSTDIR\*.glsl"
 Delete "$INSTDIR\motions\*.lla"
 Delete "$INSTDIR\trial\*.html"
 Delete "$INSTDIR\newview.exe"
+Delete "$INSTDIR\SecondLife.exe"
+;; MAINT-3099 workaround - prevent these log files, if present, from causing a user alert
+Delete "$INSTDIR\VivoxVoiceService-*.log"
 ;; Remove entire help directory
 Delete "$INSTDIR\help\Advanced\*"
 RMDir  "$INSTDIR\help\Advanced"
@@ -720,7 +717,6 @@ ShowUninstDetails show
 Section Uninstall
 
 ; Start with some default values.
-StrCpy $INSTFLAGS ""
 StrCpy $INSTPROG "${INSTNAME}"
 StrCpy $INSTEXE "${INSTEXE}"
 StrCpy $INSTSHORTCUT "${SHORTCUT}"
@@ -862,7 +858,12 @@ Function .onInit
     IfErrors +2 0 ; If error jump past setting SKIP_DIALOGS
         StrCpy $SKIP_DIALOGS "true"
 
+	${GetOptions} $COMMANDLINE "/SKIP_AUTORUN" $0
+    IfErrors +2 0 ; If error jump past setting SKIP_AUTORUN
+		StrCpy $SKIP_AUTORUN "true"
+
     ${GetOptions} $COMMANDLINE "/LANGID=" $0   ; /LANGID=1033 implies US English
+
     ; If no language (error), then proceed
     IfErrors lbl_configure_default_lang
     ; No error means we got a language, so use it
@@ -919,7 +920,6 @@ Section ""						; (default section)
 SetShellVarContext all			; install for all users (if you change this, change it in the uninstall as well)
 
 ; Start with some default values.
-StrCpy $INSTFLAGS "${INSTFLAGS}"
 StrCpy $INSTPROG "${INSTNAME}"
 StrCpy $INSTEXE "${INSTEXE}"
 StrCpy $INSTSHORTCUT "${SHORTCUT}"
@@ -931,6 +931,7 @@ Call CheckIfAlreadyCurrent		; Make sure that we haven't already installed this v
 Call CloseSecondLife			; Make sure we're not running
 Call CheckNetworkConnection		; ping secondlife.com
 Call CheckWillUninstallV2               ; See if a V2 install exists and will be removed.
+Call CheckOldExeName                    ; Clean up a previous version of the exe
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 StrCmp $DO_UNINSTALL_V2 "" PRESERVE_DONE
@@ -966,7 +967,7 @@ StrCpy $SHORTCUT_LANG_PARAM "--set InstallLanguage $(LanguageCode)"
 CreateDirectory	"$SMPROGRAMS\$INSTSHORTCUT"
 SetOutPath "$INSTDIR"
 CreateShortCut	"$SMPROGRAMS\$INSTSHORTCUT\$INSTSHORTCUT.lnk" \
-				"$INSTDIR\$INSTEXE" "$INSTFLAGS $SHORTCUT_LANG_PARAM"
+				"$INSTDIR\$INSTEXE" "$SHORTCUT_LANG_PARAM"
 
 
 WriteINIStr		"$SMPROGRAMS\$INSTSHORTCUT\SL Create Account.url" \
@@ -985,9 +986,9 @@ CreateShortCut	"$SMPROGRAMS\$INSTSHORTCUT\Uninstall $INSTSHORTCUT.lnk" \
 ; Other shortcuts
 SetOutPath "$INSTDIR"
 CreateShortCut "$DESKTOP\$INSTSHORTCUT.lnk" \
-        "$INSTDIR\$INSTEXE" "$INSTFLAGS $SHORTCUT_LANG_PARAM"
+        "$INSTDIR\$INSTEXE" "$SHORTCUT_LANG_PARAM"
 CreateShortCut "$INSTDIR\$INSTSHORTCUT.lnk" \
-        "$INSTDIR\$INSTEXE" "$INSTFLAGS $SHORTCUT_LANG_PARAM"
+        "$INSTDIR\$INSTEXE" "$SHORTCUT_LANG_PARAM"
 CreateShortCut "$INSTDIR\Uninstall $INSTSHORTCUT.lnk" \
 				'"$INSTDIR\uninst.exe"' ''
 
@@ -996,7 +997,6 @@ CreateShortCut "$INSTDIR\Uninstall $INSTSHORTCUT.lnk" \
 ; Write registry
 WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Linden Research, Inc.\$INSTPROG" "" "$INSTDIR"
 WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Linden Research, Inc.\$INSTPROG" "Version" "${VERSION_LONG}"
-WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Linden Research, Inc.\$INSTPROG" "Flags" "$INSTFLAGS"
 WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Linden Research, Inc.\$INSTPROG" "Shortcut" "$INSTSHORTCUT"
 WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Linden Research, Inc.\$INSTPROG" "Exe" "$INSTEXE"
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\$INSTPROG" "DisplayName" "$INSTPROG (remove only)"
@@ -1009,13 +1009,13 @@ WriteRegStr HKEY_CLASSES_ROOT "${URLNAME}" "URL Protocol" ""
 WriteRegStr HKEY_CLASSES_ROOT "${URLNAME}\DefaultIcon" "" '"$INSTDIR\$INSTEXE"'
 ;; URL param must be last item passed to viewer, it ignores subsequent params
 ;; to avoid parameter injection attacks.
-WriteRegExpandStr HKEY_CLASSES_ROOT "${URLNAME}\shell\open\command" "" '"$INSTDIR\$INSTEXE" $INSTFLAGS -url "%1"'
+WriteRegExpandStr HKEY_CLASSES_ROOT "${URLNAME}\shell\open\command" "" '"$INSTDIR\$INSTEXE" -url "%1"'
 WriteRegStr HKEY_CLASSES_ROOT "x-grid-location-info"(default)" "URL:Second Life"
 WriteRegStr HKEY_CLASSES_ROOT "x-grid-location-info" "URL Protocol" ""
 WriteRegStr HKEY_CLASSES_ROOT "x-grid-location-info\DefaultIcon" "" '"$INSTDIR\$INSTEXE"'
 ;; URL param must be last item passed to viewer, it ignores subsequent params
 ;; to avoid parameter injection attacks.
-WriteRegExpandStr HKEY_CLASSES_ROOT "x-grid-location-info\shell\open\command" "" '"$INSTDIR\$INSTEXE" $INSTFLAGS -url "%1"'
+WriteRegExpandStr HKEY_CLASSES_ROOT "x-grid-location-info\shell\open\command" "" '"$INSTDIR\$INSTEXE" -url "%1"'
 
 ; write out uninstaller
 WriteUninstaller "$INSTDIR\uninst.exe"

@@ -415,3 +415,4 @@ inline LLVector4 LLWLParamManager::getRotatedLightDir(void) const
 }
 
 #endif
+

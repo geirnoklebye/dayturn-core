@@ -166,7 +166,7 @@ void LLNetMap::draw()
 	static LLUICachedControl<bool> auto_center("MiniMapAutoCenter", true);
 	if (auto_center)
 	{
-		mCurPan = lerp(mCurPan, mTargetPan, LLCriticalDamp::getInterpolant(0.1f));
+		mCurPan = lerp(mCurPan, mTargetPan, LLSmoothInterpolation::getInterpolant(0.1f));
 	}
 
 	// Prepare a scissor region
@@ -347,15 +347,18 @@ void LLNetMap::draw()
 		// Draw avatars
 		for (U32 i = 0; i < avatar_ids.size(); i++)
 		{
-			pos_map = globalPosToView(positions[i]);
 			LLUUID uuid = avatar_ids[i];
+			// Skip self, we'll draw it later
+			if (uuid == gAgent.getID()) continue;
+
+			pos_map = globalPosToView(positions[i]);
 
 			bool show_as_friend = (LLAvatarTracker::instance().getBuddyInfo(uuid) != NULL);
 
 //MK
 				// Don't show as friend under @shownames, since it can give away an
 				// information about the avatars who are around
-				if (gRRenabled && gAgent.mRRInterface.mContainsShownames) 
+				if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 				{
 					show_as_friend = false;
 				}
@@ -673,7 +676,7 @@ BOOL LLNetMap::handleToolTipAgent(const LLUUID& avatar_id)
 		p.message(av_name.getCompleteName());
 //MK
 		std::string label = av_name.getCompleteName();
-		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			label = gAgent.mRRInterface.getDummyName(av_name.mUsername);
 		}

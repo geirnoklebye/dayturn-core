@@ -89,7 +89,7 @@ void LLWaterParamManager::loadAllPresets()
 
 void LLWaterParamManager::loadPresetsFromDir(const std::string& dir)
 {
-	LL_INFOS2("AppInit", "Shaders") << "Loading water presets from " << dir << LL_ENDL;
+	LL_INFOS("AppInit", "Shaders") << "Loading water presets from " << dir << LL_ENDL;
 
 	LLDirIterator dir_iter(dir, "*.xml");
 	while (1)
@@ -103,7 +103,7 @@ void LLWaterParamManager::loadPresetsFromDir(const std::string& dir)
 		std::string path = gDirUtilp->add(dir, file);
 		if (!loadPreset(path))
 		{
-			llwarns << "Error loading water preset from " << path << llendl;
+			LL_WARNS() << "Error loading water preset from " << path << LL_ENDL;
 		}
 	}
 }
@@ -119,7 +119,7 @@ bool LLWaterParamManager::loadPreset(const std::string& path)
 		return false;
 	}
 
-	LL_DEBUGS2("AppInit", "Shaders") << "Loading water " << name << LL_ENDL;
+	LL_DEBUGS("AppInit", "Shaders") << "Loading water " << name << LL_ENDL;
 
 	LLSD params_data;
 	LLPointer<LLSDParser> parser = new LLSDXMLParser();
@@ -188,13 +188,12 @@ void LLWaterParamManager::updateShaderUniforms(LLGLSLShader * shader)
 	if (shader->mShaderGroup == LLGLSLShader::SG_WATER)
 	{
 		shader->uniform4fv(LLViewerShaderMgr::LIGHTNORM, 1, LLWLParamManager::getInstance()->getRotatedLightDir().mV);
-		shader->uniform3fv("camPosLocal", 1, LLViewerCamera::getInstance()->getOrigin().mV);
-		shader->uniform4fv("waterFogColor", 1, LLDrawPoolWater::sWaterFogColor.mV);
-		shader->uniform1f("waterFogEnd", LLDrawPoolWater::sWaterFogEnd);
-		shader->uniform4fv("waterPlane", 1, mWaterPlane.mV);
-		shader->uniform1f("waterFogDensity", getFogDensity());
-		shader->uniform1f("waterFogKS", mWaterFogKS);
-		shader->uniform1f("distance_multiplier", 0);
+shader->uniform3fv(LLShaderMgr::WL_CAMPOSLOCAL, 1, LLViewerCamera::getInstance()->getOrigin().mV);
+		shader->uniform4fv(LLShaderMgr::WATER_FOGCOLOR, 1, LLDrawPoolWater::sWaterFogColor.mV);
+		shader->uniform4fv(LLShaderMgr::WATER_WATERPLANE, 1, mWaterPlane.mV);
+		shader->uniform1f(LLShaderMgr::WATER_FOGDENSITY, getFogDensity());
+		shader->uniform1f(LLShaderMgr::WATER_FOGKS, mWaterFogKS);
+		shader->uniform1f(LLViewerShaderMgr::DISTANCE_MULTIPLIER, 0);
 	}
 }
 
@@ -202,7 +201,7 @@ void LLWaterParamManager::applyParams(const LLSD& params, bool interpolate)
 {
 	if (params.size() == 0)
 	{
-		llwarns << "Undefined water params" << llendl;
+		LL_WARNS() << "Undefined water params" << LL_ENDL;
 		return;
 	}
 
@@ -216,11 +215,11 @@ void LLWaterParamManager::applyParams(const LLSD& params, bool interpolate)
 	}
 }
 
-static LLFastTimer::DeclareTimer FTM_UPDATE_WATERPARAM("Update Water Params");
+static LLTrace::BlockTimerStatHandle FTM_UPDATE_WATERPARAM("Update Water Params");
 
 void LLWaterParamManager::update(LLViewerCamera * cam)
 {
-	LLFastTimer ftm(FTM_UPDATE_WATERPARAM);
+	LL_RECORD_BLOCK_TIME(FTM_UPDATE_WATERPARAM);
 	
 	// update the shaders and the menu
 	propagateParameters();

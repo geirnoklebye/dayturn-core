@@ -112,7 +112,7 @@ void LLVOTree::initClass()
 
 	if (!tree_def_tree.parseFile(xml_filename))
 	{
-		llerrs << "Failed to parse tree file." << llendl;
+		LL_ERRS() << "Failed to parse tree file." << LL_ENDL;
 	}
 
 	LLXmlTreeNode* rootp = tree_def_tree.getRoot();
@@ -123,7 +123,7 @@ void LLVOTree::initClass()
 		{
 			if (!tree_def->hasName("tree"))
 			{
-				llwarns << "Invalid tree definition node " << tree_def->getName() << llendl;
+				LL_WARNS() << "Invalid tree definition node " << tree_def->getName() << LL_ENDL;
 				continue;
 			}
 			F32 F32_val;
@@ -138,19 +138,19 @@ void LLVOTree::initClass()
 			static LLStdStringHandle species_id_string = LLXmlTree::addAttributeString("species_id");
 			if (!tree_def->getFastAttributeS32(species_id_string, species))
 			{
-				llwarns << "No species id defined" << llendl;
+				LL_WARNS() << "No species id defined" << LL_ENDL;
 				continue;
 			}
 
 			if (species < 0)
 			{
-				llwarns << "Invalid species id " << species << llendl;
+				LL_WARNS() << "Invalid species id " << species << LL_ENDL;
 				continue;
 			}
 
 			if (sSpeciesTable.count(species))
 			{
-				llwarns << "Tree species " << species << " already defined! Duplicate discarded." << llendl;
+				LL_WARNS() << "Tree species " << species << " already defined! Duplicate discarded." << LL_ENDL;
 				continue;
 			}
 
@@ -241,7 +241,7 @@ void LLVOTree::initClass()
 				std::string name;
 				static LLStdStringHandle name_string = LLXmlTree::addAttributeString("name");
 				tree_def->getFastAttributeString(name_string, name);
-				llwarns << "Incomplete definition of tree " << name << llendl;
+				LL_WARNS() << "Incomplete definition of tree " << name << LL_ENDL;
 			}
 		}
 		
@@ -269,6 +269,7 @@ void LLVOTree::initClass()
 void LLVOTree::cleanupClass()
 {
 	std::for_each(sSpeciesTable.begin(), sSpeciesTable.end(), DeletePairedPointer());
+	sSpeciesTable.clear();
 }
 
 U32 LLVOTree::processUpdateMessage(LLMessageSystem *mesgsys,
@@ -283,7 +284,7 @@ U32 LLVOTree::processUpdateMessage(LLMessageSystem *mesgsys,
 		||(getAcceleration().lengthSquared() > 0.f)
 		||(getAngularVelocity().lengthSquared() > 0.f))
 	{
-		llinfos << "ACK! Moving tree!" << llendl;
+		LL_INFOS() << "ACK! Moving tree!" << LL_ENDL;
 		setVelocity(LLVector3::zero);
 		setAcceleration(LLVector3::zero);
 		setAngularVelocity(LLVector3::zero);
@@ -339,7 +340,7 @@ U32 LLVOTree::processUpdateMessage(LLMessageSystem *mesgsys,
 	return retval;
 }
 
-void LLVOTree::idleUpdate(LLAgent &agent, LLWorld &world, const F64 &time)
+void LLVOTree::idleUpdate(LLAgent &agent, const F64 &time)
 {
  	if (mDead || !(gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_TREE)))
 	{
@@ -479,11 +480,11 @@ LLDrawable* LLVOTree::createDrawable(LLPipeline *pipeline)
 const S32 LEAF_INDICES = 24;
 const S32 LEAF_VERTICES = 16;
 
-static LLFastTimer::DeclareTimer FTM_UPDATE_TREE("Update Tree");
+static LLTrace::BlockTimerStatHandle FTM_UPDATE_TREE("Update Tree");
 
 BOOL LLVOTree::updateGeometry(LLDrawable *drawable)
 {
-	LLFastTimer ftm(FTM_UPDATE_TREE);
+	LL_RECORD_BLOCK_TIME(FTM_UPDATE_TREE);
 
 	if(mTrunkLOD >= sMAX_NUM_TREE_LOD_LEVELS) //do not display the tree.
 	{
@@ -697,8 +698,8 @@ BOOL LLVOTree::updateGeometry(LLDrawable *drawable)
 			slices = sLODSlices[lod];
 			F32 base_radius = 0.65f;
 			F32 top_radius = base_radius * sSpeciesTable[mSpecies]->mTaper;
-			//llinfos << "Species " << ((U32) mSpecies) << ", taper = " << sSpeciesTable[mSpecies].mTaper << llendl;
-			//llinfos << "Droop " << mDroop << ", branchlength: " << mBranchLength << llendl;
+			//LL_INFOS() << "Species " << ((U32) mSpecies) << ", taper = " << sSpeciesTable[mSpecies].mTaper << LL_ENDL;
+			//LL_INFOS() << "Droop " << mDroop << ", branchlength: " << mBranchLength << LL_ENDL;
 			F32 angle = 0;
 			F32 angle_inc = 360.f/(slices-1);
 			F32 z = 0.f;
@@ -1085,132 +1086,6 @@ void LLVOTree::calcNumVerts(U32& vert_count, U32& index_count, S32 trunk_LOD, S3
 	}
 }
 
-U32 LLVOTree::drawBranchPipeline(LLMatrix4& matrix, U16* indicesp, S32 trunk_LOD, S32 stop_level, U16 depth, U16 trunk_depth,  F32 scale, F32 twist, F32 droop,  F32 branches, F32 alpha)
-{
-	U32 ret = 0;
-	//
-	//  Draws a tree by recursing, drawing branches and then a 'leaf' texture.
-	//  If stop_level = -1, simply draws the whole tree as a billboarded texture
-	//
-	
-	static F32 constant_twist;
-	static F32 width = 0;
-
-	//F32 length = ((scale == 1.f)? mTrunkLength:mBranchLength);
-	//F32 aspect = ((scale == 1.f)? mTrunkAspect:mBranchAspect);
-	F32 length = ((trunk_depth || (scale == 1.f))? mTrunkLength:mBranchLength);
-	F32 aspect = ((trunk_depth || (scale == 1.f))? mTrunkAspect:mBranchAspect);
-	
-	constant_twist = 360.f/branches;
-
-	if (!LLPipeline::sReflectionRender && stop_level >= 0)
-	{
-		//
-		//  Draw the tree using recursion
-		//
-		if (depth > stop_level)
-		{
-			{
-				llassert(sLODIndexCount[trunk_LOD] > 0);
-				width = scale * length * aspect;
-				LLMatrix4 scale_mat;
-				scale_mat.mMatrix[0][0] = width;
-				scale_mat.mMatrix[1][1] = width;
-				scale_mat.mMatrix[2][2] = scale*length;
-				scale_mat *= matrix;
-
-				gGL.loadMatrix((F32*) scale_mat.mMatrix);
-				gGL.syncMatrices();
- 				glDrawElements(GL_TRIANGLES, sLODIndexCount[trunk_LOD], GL_UNSIGNED_SHORT, indicesp + sLODIndexOffset[trunk_LOD]);
-				gPipeline.addTrianglesDrawn(LEAF_INDICES);
-				stop_glerror();
-				ret += sLODIndexCount[trunk_LOD];
-			}
-			
-			// Recurse to create more branches
-			for (S32 i=0; i < (S32)branches; i++) 
-			{
-				LLMatrix4 trans_mat;
-				trans_mat.setTranslation(0,0,scale*length);
-				trans_mat *= matrix;
-
-				LLQuaternion rot = 
-					LLQuaternion(20.f*DEG_TO_RAD, LLVector4(0.f, 0.f, 1.f)) *
-					LLQuaternion(droop*DEG_TO_RAD, LLVector4(0.f, 1.f, 0.f)) *
-					LLQuaternion(((constant_twist + ((i%2==0)?twist:-twist))*i)*DEG_TO_RAD, LLVector4(0.f, 0.f, 1.f));
-				
-				LLMatrix4 rot_mat(rot);
-				rot_mat *= trans_mat;
-
-				ret += drawBranchPipeline(rot_mat, indicesp, trunk_LOD, stop_level, depth - 1, 0, scale*mScaleStep, twist, droop, branches, alpha);
-			}
-			//  Recurse to continue trunk
-			if (trunk_depth)
-			{
-				LLMatrix4 trans_mat;
-				trans_mat.setTranslation(0,0,scale*length);
-				trans_mat *= matrix;
-
-				LLMatrix4 rot_mat(70.5f*DEG_TO_RAD, LLVector4(0,0,1));
-				rot_mat *= trans_mat; // rotate a bit around Z when ascending 
-				ret += drawBranchPipeline(rot_mat, indicesp, trunk_LOD, stop_level, depth, trunk_depth-1, scale*mScaleStep, twist, droop, branches, alpha);
-			}
-		}
-		else
-		{
-			//
-			//  Draw leaves as two 90 deg crossed quads with leaf textures
-			//
-			{
-				LLMatrix4 scale_mat;
-				scale_mat.mMatrix[0][0] = 
-					scale_mat.mMatrix[1][1] =
-					scale_mat.mMatrix[2][2] = scale*mLeafScale;
-
-				scale_mat *= matrix;
-
-			
-				gGL.loadMatrix((F32*) scale_mat.mMatrix);
-				gGL.syncMatrices();
-				glDrawElements(GL_TRIANGLES, LEAF_INDICES, GL_UNSIGNED_SHORT, indicesp);
-				gPipeline.addTrianglesDrawn(LEAF_INDICES);							
-				stop_glerror();
-				ret += LEAF_INDICES;
-			}
-		}
-	}
-	else
-	{
-		//
-		//  Draw the tree as a single billboard texture 
-		//
-
-		LLMatrix4 scale_mat;
-		scale_mat.mMatrix[0][0] = 
-			scale_mat.mMatrix[1][1] =
-			scale_mat.mMatrix[2][2] = mBillboardScale*mBillboardRatio;
-
-		scale_mat *= matrix;
-	
-		gGL.matrixMode(LLRender::MM_TEXTURE);
-		gGL.translatef(0.0, -0.5, 0.0);
-		gGL.matrixMode(LLRender::MM_MODELVIEW);
-					
-		gGL.loadMatrix((F32*) scale_mat.mMatrix);
-		gGL.syncMatrices();
-		glDrawElements(GL_TRIANGLES, LEAF_INDICES, GL_UNSIGNED_SHORT, indicesp);
-		gPipeline.addTrianglesDrawn(LEAF_INDICES);
-		stop_glerror();
-		ret += LEAF_INDICES;
-
-		gGL.matrixMode(LLRender::MM_TEXTURE);
-		gGL.loadIdentity();
-		gGL.matrixMode(LLRender::MM_MODELVIEW);
-	}
-
-	return ret;
-}
-
 void LLVOTree::updateRadius()
 {
 	if (mDrawable.isNull())
@@ -1238,8 +1113,8 @@ void LLVOTree::updateSpatialExtents(LLVector4a& newMin, LLVector4a& newMax)
 	mDrawable->setPositionGroup(pos);
 }
 
-BOOL LLVOTree::lineSegmentIntersect(const LLVector3& start, const LLVector3& end, S32 face, BOOL pick_transparent, S32 *face_hitp,
-									  LLVector3* intersection,LLVector2* tex_coord, LLVector3* normal, LLVector3* bi_normal)
+BOOL LLVOTree::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end, S32 face, BOOL pick_transparent, S32 *face_hitp,
+									  LLVector4a* intersection,LLVector2* tex_coord, LLVector4a* normal, LLVector4a* tangent)
 	
 {
 
@@ -1268,16 +1143,19 @@ BOOL LLVOTree::lineSegmentIntersect(const LLVector3& start, const LLVector3& end
 
 	LLVector3 pos, norm;
 		
-	if (linesegment_tetrahedron(start, end, center, size, quat, pos, norm))
+	LLVector3 start3(start.getF32ptr());
+	LLVector3 end3(end.getF32ptr());
+
+	if (linesegment_tetrahedron(start3, end3, center, size, quat, pos, norm))
 	{
 		if (intersection)
 		{
-			*intersection = pos;
+			intersection->load3(pos.mV);
 		}
 
 		if (normal)
 		{
-			*normal = norm;
+			normal->load3(norm.mV);
 		}
 		return TRUE;
 	}
@@ -1290,8 +1168,8 @@ U32 LLVOTree::getPartitionType() const
 	return LLViewerRegion::PARTITION_TREE; 
 }
 
-LLTreePartition::LLTreePartition()
-: LLSpatialPartition(0, FALSE, GL_DYNAMIC_DRAW_ARB)
+LLTreePartition::LLTreePartition(LLViewerRegion* regionp)
+: LLSpatialPartition(0, FALSE, GL_DYNAMIC_DRAW_ARB, regionp)
 {
 	mDrawableType = LLPipeline::RENDER_TYPE_TREE;
 	mPartitionType = LLViewerRegion::PARTITION_TREE;

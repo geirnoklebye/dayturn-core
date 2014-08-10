@@ -186,9 +186,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ac37d0038c91b0672fa31a02731f0eac</string>
+              <string>06dd7af75e1eb179aed54fd58d8688af</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/268347/arch/Darwin/installer/boost-1.52.0-darwin-20121218.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/270698/arch/Darwin/installer/boost-1.52.0-darwin-20130221.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -198,9 +198,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>146ed8a8c2ef8ab3f0a6c4f214fc5c22</string>
+              <string>50c8b50b7cced52cc5656fb44e9b12cf</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/268347/arch/Linux/installer/boost-1.52.0-linux-20121218.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/270698/arch/Linux/installer/boost-1.52.0-linux-20130222.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -210,9 +210,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3ea60f17d986b7e8a3351298734bdca4</string>
+              <string>742fc9675b033df7f9c6f215ff250f6c</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/268347/arch/CYGWIN/installer/boost-1.52.0-windows-20121218.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-boost/rev/270698/arch/CYGWIN/installer/boost-1.52.0-windows-20130221.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -282,9 +282,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>aaea644191807f51051cefa2fac11069</string>
+              <string>f7d9b6a9c624364389b71209881f39de</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/curl-7.21.1-darwin-20110316.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-curl/rev/280289/arch/Darwin/installer/curl-7.24.0-darwin-20130826.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -294,9 +294,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2d9377951d99a1aa4735cea8d4b5aa71</string>
+              <string>58b7bf45383c1b1bc24afb303b1519c8</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/curl-7.21.1-linux-20110316.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-curl/rev/280289/arch/Linux/installer/curl-7.24.0-linux-20130826.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -306,9 +306,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fea96aa2a7d513397317194f3d6c979b</string>
+              <string>8d9ccb0277a26bfe3f346c3c49ce4b58</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/curl-7.21.1-windows-20110211.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-curl/rev/280289/arch/CYGWIN/installer/curl-7.24.0-windows-20130826.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -498,9 +498,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ec6edb2a63a95e5ced223024bcbda5a3</string>
+              <string>b89e100838eb6746ee9106e837254333</string>
               <key>url</key>
-              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.12-darwin-20130420.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-darwin-20140326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -510,9 +510,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>037a4b122b808ab38c85eb22729b1581</string>
+              <string>cab5c55347a2c331586cc00a20c6df80</string>
               <key>url</key>
-              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.12-linux-20130420.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-linux-20140326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -522,9 +522,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>77c896ffb511763c0e530b61951efa09</string>
+              <string>a378b6cb7a3bc79a2989109b3d2ff70c</string>
               <key>url</key>
-              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.12-windows-20130420.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-windows-20140326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -764,7 +764,7 @@
               <key>hash</key>
               <string>aff5566e04003de0383941981198e04e</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-breakpad/rev/273073/arch/Darwin/installer/google_breakpad-0.0.0-rev1099-darwin-20130329.tar.bz2</string>
+          <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-breakpad/rev/273073/arch/Darwin/installer/google_breakpad-0.0.0-rev1099-darwin-20130329.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -776,7 +776,7 @@
               <key>hash</key>
               <string>52257e5eb166a0b69c9c0c38f6e1920e</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-breakpad/rev/273079/arch/Linux/installer/google_breakpad-0.0.0-rev1099-linux-20130329.tar.bz2</string>
+	         <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-breakpad/rev/273079/arch/Linux/installer/google_breakpad-0.0.0-rev1099-linux-20130329.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -786,9 +786,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d812a6dfcabe6528198a3191068dac09</string>
+              <string>a1e519d08c507c12f9d412b2ae8328c8</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-breakpad/rev/273073/arch/CYGWIN/installer/google_breakpad-0.0.0-rev1099-windows-20130329.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-breakpad/rev/279804/arch/CYGWIN/installer/google_breakpad-0.0.0-rev1099-windows-20130813.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -834,9 +834,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>98994d5b0b4b3d43be22aa6a5c36e6fa</string>
+              <string>d2542614df9dd99cbb5ff67e76d4a6c1</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-mock-graham/rev/272961/arch/CYGWIN/installer/gmock-1.6.0-windows-20130327.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-mock/rev/274899/arch/CYGWIN/installer/gmock-1.6.0-windows-20130426.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1290,9 +1290,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5bc44db15eb3cca021382e40e04a9a38</string>
+              <string>b6d29de20de5c8f31925697b30e8f727</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llappearanceutility-source/rev/271972/arch/Linux/installer/llappearanceutility_source-0.1-linux-20130315.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llappearanceutility-source/rev/283723/arch/Linux/installer/llappearanceutility_source-0.1-linux-20131109.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1948,9 +1948,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>24e735ae005f3ce7a21a09cc02cece17</string>
+              <string>88181b9f66b7db650e0d571bbb632bdc</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/231678/arch/Darwin/installer/slvoice-3.2.0002.10426-darwin-20110601.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/287264/arch/Darwin/installer/slvoice-4.6.0009.20030-darwin-20140226.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2008,9 +2008,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f62841804acb91e1309603a84f3f0ce8</string>
+              <string>ce89b881ee24977641d1ecbf8aff6dc7</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-google-perftools/rev/262672/arch/CYGWIN/installer/gperftools-2.0-windows-20120727.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/287264/arch/CYGWIN/installer/slvoice-4.6.0009.20030-windows-20140227.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2141,11 +2141,11 @@
     <key>package_description</key>
     <map>
       <key>description</key>
-      <string>Spell checking dictionaries</string>
+      <string>Second Life Viewer</string>
       <key>license</key>
-      <string>various open</string>
+      <string>LGPL</string>
       <key>name</key>
-      <string>dictionaries</string>
+      <string>Second Life Viewer</string>
       <key>platforms</key>
       <map>
         <key>common</key>
@@ -2805,7 +2805,6 @@
                 <array>
                   <string>/build</string>
                   <string>"/cfg=Release|Win32"</string>
-                  <string>"/CL_ADD=/m:1"</string>
                 </array>
               </map>
               <key>configure</key>
@@ -2873,7 +2872,6 @@
                   <string>-DFMODEX=TRUE</string>
                   <string>'-DROOT_PROJECT_NAME:STRING=Restrained Love Release'</string>
                   <string>'-DVIEWER_CHANNEL:STRING=Restrained Love Release'</string>
-                  <string>'-DVIEWER_LOGIN_CHANNEL:STRING=Restrained Love Release'</string>
                   <string>-DPACKAGE:BOOL=ON</string>
                   <string>-DGCC_DISABLE_FATAL_WARNINGS:BOOL=ON</string>
                   <string>-DLL_TESTS:BOOL=OFF</string>

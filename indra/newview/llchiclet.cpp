@@ -192,7 +192,7 @@ void LLNotificationChiclet::createMenu()
 {
 	if(mContextMenu)
 	{
-		llwarns << "Menu already exists" << llendl;
+		LL_WARNS() << "Menu already exists" << LL_ENDL;
 		return;
 	}
 
@@ -220,18 +220,25 @@ void LLNotificationChiclet::setCounter(S32 counter)
 
 bool LLNotificationChiclet::ChicletNotificationChannel::filterNotification( LLNotificationPtr notification )
 {
-	if (notification->getName() == "ScriptDialog")
+	bool displayNotification;
+	if (   (notification->getName() == "ScriptDialog") // special case for scripts
+		// if there is no toast window for the notification, filter it
+		|| (!LLNotificationWellWindow::getInstance()->findItemByID(notification->getID()))
+		)
 	{
-		return false;
+		displayNotification = false;
 	}
-
-	if( !(notification->canLogToIM() && notification->hasFormElements())
-		&& (!notification->getPayload().has("give_inventory_notification")
-			|| notification->getPayload()["give_inventory_notification"]))
+	else if( !(notification->canLogToIM() && notification->hasFormElements())
+			&& (!notification->getPayload().has("give_inventory_notification")
+				|| notification->getPayload()["give_inventory_notification"]))
 	{
-		return true;
+		displayNotification = true;
 	}
-	return false;
+	else
+	{
+		displayNotification = false;
+	}
+	return displayNotification;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -372,7 +379,7 @@ bool LLIMChiclet::canCreateMenu()
 {
 	if(mPopupMenu)
 	{
-		llwarns << "Menu already exists" << llendl;
+		LL_WARNS() << "Menu already exists" << LL_ENDL;
 		return false;
 	}
 	if(getSessionId().isNull())
@@ -718,7 +725,7 @@ void LLChicletPanel::setChicletToggleState(const LLUUID& session_id, bool toggle
 {
 	if(session_id.isNull())
 	{
-		llwarns << "Null Session ID" << llendl;
+		LL_WARNS() << "Null Session ID" << LL_ENDL;
 	}
 
 	// toggle off all chiclets, except specified

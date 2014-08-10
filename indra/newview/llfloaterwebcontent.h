@@ -40,10 +40,11 @@ class LLIconCtrl;
 class LLFloaterWebContent :
 	public LLFloater,
 	public LLViewerMediaObserver,
-	public LLInstanceTracker<LLFloaterWebContent, std::string>
+	public LLInstanceTracker<LLFloaterWebContent, std::string, LLInstanceTrackerReplaceOnCollision>
 {
 public:
-	typedef LLInstanceTracker<LLFloaterWebContent, std::string> instance_tracker_t;
+
+	typedef LLInstanceTracker<LLFloaterWebContent, std::string, LLInstanceTrackerReplaceOnCollision> instance_tracker_t;
     LOG_CLASS(LLFloaterWebContent);
 
 	struct _Params : public LLInitParam::Block<_Params>
@@ -54,6 +55,7 @@ public:
 								id;
 		Optional<bool>			show_chrome,
 								allow_address_entry,
+                                allow_back_forward_navigation,
 								trusted_content,
 								show_page_title;
 		Optional<LLRect>		preferred_media_size;
@@ -105,9 +107,12 @@ protected:
 	LLView*			mBtnReload;
 	LLView*			mBtnStop;
 
-	std::string		mCurrentURL;
+	std::string		mCurrentURL;    // Current URL
+	std::string		mDisplayURL;    // URL being displayed in the address bar (can differ by trailing / leading space)
 	std::string		mUUID;
 	bool			mShowPageTitle;
+    bool            mAllowNavigation;
+    bool            mSecureURL;     // true when the current url is prefixed "https://"
 };
 
 #endif  // LL_LLFLOATERWEBCONTENT_H

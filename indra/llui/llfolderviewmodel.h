@@ -87,12 +87,11 @@ public:
 	virtual void 				setModified(EFilterModified behavior = FILTER_RESTART) = 0;
 
 	// +-------------------------------------------------------------------+
-	// + Count
+	// + Time
 	// +-------------------------------------------------------------------+
-	virtual void 				setFilterCount(S32 count) = 0;
-	virtual S32 				getFilterCount() const = 0;
-	virtual void 				decrementFilterCount() = 0;
-
+	virtual void 				resetTime(S32 timeout) = 0;
+    virtual bool                isTimedOut() = 0;
+    
 	// +-------------------------------------------------------------------+
 	// + Default
 	// +-------------------------------------------------------------------+
@@ -109,9 +108,13 @@ public:
 	virtual S32 				getFirstRequiredGeneration() const = 0;
 };
 
-class LLFolderViewModelInterface
+class LLFolderViewModelInterface : public LLTrace::MemTrackable<LLFolderViewModelInterface>
 {
 public:
+	LLFolderViewModelInterface() 
+	:	LLTrace::MemTrackable<LLFolderViewModelInterface>("LLFolderViewModelInterface") 
+	{}
+
 	virtual ~LLFolderViewModelInterface() {}
 	virtual void requestSortAll() = 0;
 
@@ -129,10 +132,13 @@ public:
 
 // This is an abstract base class that users of the folderview classes
 // would use to bridge the folder view with the underlying data
-class LLFolderViewModelItem : public LLRefCount
+class LLFolderViewModelItem : public LLRefCount, public LLTrace::MemTrackable<LLFolderViewModelItem>
 {
 public:
-	LLFolderViewModelItem() { }
+	LLFolderViewModelItem() 
+	:	LLTrace::MemTrackable<LLFolderViewModelItem>("LLFolderViewModelItem") 
+	{}
+
 	virtual ~LLFolderViewModelItem() { }
 
 	virtual void update() {}	//called when drawing
@@ -308,26 +314,28 @@ public:
 	virtual bool potentiallyVisible()
 	{
 		return passedFilter() // we've passed the filter
-			|| getLastFilterGeneration() < mRootViewModel.getFilter().getFirstSuccessGeneration() // or we don't know yet
+			|| (getLastFilterGeneration() < mRootViewModel.getFilter().getFirstSuccessGeneration()) // or we don't know yet
 			|| descendantsPassedFilter();
 	}
 
 	virtual bool passedFilter(S32 filter_generation = -1) 
 	{ 
-		if (filter_generation < 0) 
+		if (filter_generation < 0)
+        {
 			filter_generation = mRootViewModel.getFilter().getFirstSuccessGeneration();
-
-		bool passed_folder_filter = mPassedFolderFilter && mLastFolderFilterGeneration >= filter_generation;
-		bool passed_filter = mPassedFilter && mLastFilterGeneration >= filter_generation;
-		return passed_folder_filter
-				&& (descendantsPassedFilter(filter_generation)
-					|| passed_filter);
+        }
+		bool passed_folder_filter = mPassedFolderFilter && (mLastFolderFilterGeneration >= filter_generation);
+		bool passed_filter = mPassedFilter && (mLastFilterGeneration >= filter_generation);
+		return passed_folder_filter && (passed_filter || descendantsPassedFilter(filter_generation));
 	}
 
 	virtual bool descendantsPassedFilter(S32 filter_generation = -1)
 	{ 
-		if (filter_generation < 0) filter_generation = mRootViewModel.getFilter().getFirstSuccessGeneration();
-		return mMostFilteredDescendantGeneration >= filter_generation; 
+		if (filter_generation < 0)
+        {
+            filter_generation = mRootViewModel.getFilter().getFirstSuccessGeneration();
+        }
+		return mMostFilteredDescendantGeneration >= filter_generation;
 	}
 
 
@@ -335,18 +343,18 @@ protected:
 	virtual void setParent(LLFolderViewModelItem* parent) { mParent = parent; }
 	virtual bool hasParent() { return mParent != NULL; }
 
-	S32						mSortVersion;
-	bool					mPassedFilter;
-	bool					mPassedFolderFilter;
-	std::string::size_type	mStringMatchOffsetFilter;
-	std::string::size_type	mStringFilterSize;
+	S32							mSortVersion;
+	bool						mPassedFilter;
+	bool						mPassedFolderFilter;
+	std::string::size_type		mStringMatchOffsetFilter;
+	std::string::size_type		mStringFilterSize;
 
-	S32						mLastFilterGeneration;
-	S32						mLastFolderFilterGeneration;
-	S32						mMostFilteredDescendantGeneration;
+	S32							mLastFilterGeneration,
+								mLastFolderFilterGeneration,
+								mMostFilteredDescendantGeneration;
 
-	child_list_t			mChildren;
-	LLFolderViewModelItem*	mParent;
+	child_list_t				mChildren;
+	LLFolderViewModelItem*		mParent;
 	LLFolderViewModelInterface& mRootViewModel;
 
 	void setFolderViewItem(LLFolderViewItem* folder_view_item) { mFolderViewItem = folder_view_item;}
@@ -385,26 +393,35 @@ template <typename SORT_TYPE, typename ITEM_TYPE, typename FOLDER_TYPE, typename
 class LLFolderViewModel : public LLFolderViewModelCommon
 {
 public:
-	LLFolderViewModel(){}
-	virtual ~LLFolderViewModel() {}
-
 	typedef SORT_TYPE		SortType;
 	typedef ITEM_TYPE		ItemType;
 	typedef FOLDER_TYPE		FolderType;
 	typedef FILTER_TYPE		FilterType;
 
-	virtual SortType& getSorter()					 { return mSorter; }
-	virtual const SortType& getSorter() const 		 { return mSorter; }
-	virtual void setSorter(const SortType& sorter) 	 { mSorter = sorter; requestSortAll(); }
+	LLFolderViewModel(SortType* sorter, FilterType* filter) 
+	:	mSorter(sorter),
+		mFilter(filter)
+	{}
 
-	virtual FilterType& getFilter() 				 { return mFilter; }
-	virtual const FilterType& getFilter() const		 { return mFilter; }
-	virtual void setFilter(const FilterType& filter) { mFilter = filter; }
+	virtual ~LLFolderViewModel() 
+	{
+		delete mSorter;
+		mSorter = NULL;
+		delete mFilter;
+		mFilter = NULL;
+	}
+
+	virtual SortType& getSorter()					 { return *mSorter; }
+	virtual const SortType& getSorter() const 		 { return *mSorter; }
+	virtual void setSorter(const SortType& sorter) 	 { mSorter = new SortType(sorter); requestSortAll(); }
+
+	virtual FilterType& getFilter() 				 { return *mFilter; }
+	virtual const FilterType& getFilter() const		 { return *mFilter; }
+	virtual void setFilter(const FilterType& filter) { mFilter = new FilterType(filter); }
 
 	// By default, we assume the content is available. If a network fetch mechanism is implemented for the model,
 	// this method needs to be overloaded and return the relevant fetch status.
 	virtual bool contentsReady()					{ return true; }
-
 
 	struct ViewModelCompare
 	{
@@ -437,8 +454,8 @@ public:
 	}
 
 protected:
-	SortType		mSorter;
-	FilterType		mFilter;
+	SortType*		mSorter;
+	FilterType*		mFilter;
 };
 
 #endif // LLFOLDERVIEWMODEL_H

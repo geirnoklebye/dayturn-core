@@ -30,6 +30,7 @@
 #include "llhudnametag.h"
 
 #include "llrender.h"
+#include "lltracerecording.h"
 
 #include "llagent.h"
 #include "llviewercontrol.h"
@@ -116,7 +117,7 @@ LLHUDNameTag::~LLHUDNameTag()
 }
 
 
-BOOL LLHUDNameTag::lineSegmentIntersect(const LLVector3& start, const LLVector3& end, LLVector3& intersection, BOOL debug_render)
+BOOL LLHUDNameTag::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end, LLVector4a& intersection, BOOL debug_render)
 {
 	if (!mVisible || mHidden)
 	{
@@ -199,15 +200,23 @@ BOOL LLHUDNameTag::lineSegmentIntersect(const LLVector3& start, const LLVector3&
 		bg_pos + height_vec,
 	};
 
-	LLVector3 dir = end-start;
+	LLVector4a dir;
+	dir.setSub(end,start);
 	F32 a, b, t;
 
-	if (LLTriangleRayIntersect(v[0], v[1], v[2], start, dir, a, b, t, FALSE) ||
-		LLTriangleRayIntersect(v[2], v[3], v[0], start, dir, a, b, t, FALSE) )
+	LLVector4a v0,v1,v2,v3;
+	v0.load3(v[0].mV);
+	v1.load3(v[1].mV);
+	v2.load3(v[2].mV);
+	v3.load3(v[3].mV);
+
+	if (LLTriangleRayIntersect(v0, v1, v2, start, dir, a, b, t) ||
+		LLTriangleRayIntersect(v2, v3, v0, start, dir, a, b, t) )
 	{
 		if (t <= 1.f)
 		{
-			intersection = start + dir*t;
+			dir.mul(t);
+			intersection.setAdd(start, dir);
 			return TRUE;
 		}
 	}
@@ -529,7 +538,7 @@ void LLHUDNameTag::updateVisibility()
 
 	if (!mSourceObject)
 	{
-		//llwarns << "LLHUDNameTag::updateScreenPos -- mSourceObject is NULL!" << llendl;
+		//LL_WARNS() << "LLHUDNameTag::updateScreenPos -- mSourceObject is NULL!" << LL_ENDL;
 		mVisible = TRUE;
 		sVisibleTextObjects.push_back(LLPointer<LLHUDNameTag> (this));
 		return;
@@ -737,8 +746,8 @@ void LLHUDNameTag::updateAll()
 		current_screen_area += (F32)(textp->mSoftScreenRect.getWidth() * textp->mSoftScreenRect.getHeight());
 	}
 
-	LLStat* camera_vel_stat = LLViewerCamera::getInstance()->getVelocityStat();
-	F32 camera_vel = camera_vel_stat->getCurrent();
+	LLTrace::CountStatHandle<>* camera_vel_stat = LLViewerCamera::getVelocityStat();
+	F32 camera_vel = LLTrace::get_frame_recording().getLastRecording().getPerSec(*camera_vel_stat);
 	if (camera_vel > MAX_STABLE_CAMERA_VELOCITY)
 	{
 		return;
@@ -806,7 +815,7 @@ void LLHUDNameTag::updateAll()
 	VisibleTextObjectIterator this_object_it;
 	for (this_object_it = sVisibleTextObjects.begin(); this_object_it != sVisibleTextObjects.end(); ++this_object_it)
 	{
-		(*this_object_it)->mPositionOffset = lerp((*this_object_it)->mPositionOffset, (*this_object_it)->mTargetPositionOffset, LLCriticalDamp::getInterpolant(POSITION_DAMPING_TC));
+		(*this_object_it)->mPositionOffset = lerp((*this_object_it)->mPositionOffset, (*this_object_it)->mTargetPositionOffset, LLSmoothInterpolation::getInterpolant(POSITION_DAMPING_TC));
 	}
 }
 

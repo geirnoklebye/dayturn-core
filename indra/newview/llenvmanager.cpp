@@ -40,7 +40,7 @@ std::string LLEnvPrefs::getWaterPresetName() const
 {
 	if (mWaterPresetName.empty())
 	{
-		llwarns << "Water preset name is empty" << llendl;
+		LL_WARNS() << "Water preset name is empty" << LL_ENDL;
 	}
 
 	return mWaterPresetName;
@@ -50,7 +50,7 @@ std::string LLEnvPrefs::getSkyPresetName() const
 {
 	if (mSkyPresetName.empty())
 	{
-		llwarns << "Sky preset name is empty" << llendl;
+		LL_WARNS() << "Sky preset name is empty" << LL_ENDL;
 	}
 
 	return mSkyPresetName;
@@ -60,7 +60,7 @@ std::string LLEnvPrefs::getDayCycleName() const
 {
 	if (mDayCycleName.empty())
 	{
-		llwarns << "Day cycle name is empty" << llendl;
+		LL_WARNS() << "Day cycle name is empty" << LL_ENDL;
 	}
 
 	return mDayCycleName;
@@ -92,9 +92,11 @@ void LLEnvPrefs::setUseDayCycle(const std::string& name)
 }
 
 //=============================================================================
-LLEnvManagerNew::LLEnvManagerNew()
+LLEnvManagerNew::LLEnvManagerNew():
+	mInterpNextChangeMessage(true),
+	mCurRegionUUID(LLUUID::null),
+	mLastReceivedID(LLUUID::null)
 {
-	mInterpNextChangeMessage = true;
 
 	// Set default environment settings.
 	mUserPrefs.mUseRegionSettings = true;
@@ -102,6 +104,9 @@ LLEnvManagerNew::LLEnvManagerNew()
 	mUserPrefs.mWaterPresetName = "Default";
 	mUserPrefs.mSkyPresetName = "Default";
 	mUserPrefs.mDayCycleName = "Default";
+
+	LL_DEBUGS("Windlight")<<LL_ENDL;
+	gAgent.addRegionChangedCallback(boost::bind(&LLEnvManagerNew::onRegionChange, this));
 }
 
 bool LLEnvManagerNew::getUseRegionSettings() const
@@ -196,7 +201,7 @@ bool LLEnvManagerNew::useSkyPreset(const std::string& name)
 
 	if (!sky_mgr.getParamSet(LLWLParamKey(name, LLEnvKey::SCOPE_LOCAL), param_set))
 	{
-		llwarns << "No sky preset named " << name << llendl;
+		LL_WARNS() << "No sky preset named " << name << LL_ENDL;
 		return false;
 	}
 
@@ -227,7 +232,7 @@ bool LLEnvManagerNew::useDayCycle(const std::string& name, LLEnvKey::EScope scop
 
 		if (!LLDayCycleManager::instance().getPreset(name, params))
 		{
-			llwarns << "No day cycle named " << name << llendl;
+			LL_WARNS() << "No day cycle named " << name << LL_ENDL;
 			return false;
 		}
 	}
@@ -255,7 +260,7 @@ void LLEnvManagerNew::setUseWaterPreset(const std::string& name)
 	// *TODO: make sure the preset exists.
 	if (name.empty())
 	{
-		llwarns << "Empty water preset name passed" << llendl;
+		LL_WARNS() << "Empty water preset name passed" << LL_ENDL;
 		return;
 	}
 
@@ -269,7 +274,7 @@ void LLEnvManagerNew::setUseSkyPreset(const std::string& name)
 	// *TODO: make sure the preset exists.
 	if (name.empty())
 	{
-		llwarns << "Empty sky preset name passed" << llendl;
+		LL_WARNS() << "Empty sky preset name passed" << LL_ENDL;
 		return;
 	}
 
@@ -282,7 +287,7 @@ void LLEnvManagerNew::setUseDayCycle(const std::string& name)
 {
 	if (!LLDayCycleManager::instance().presetExists(name))
 	{
-		llwarns << "Invalid day cycle name passed" << llendl;
+		LL_WARNS() << "Invalid day cycle name passed" << LL_ENDL;
 		return;
 	}
 
@@ -300,6 +305,11 @@ void LLEnvManagerNew::loadUserPrefs()
 
 	mUserPrefs.mUseRegionSettings	= gSavedSettings.getBOOL("UseEnvironmentFromRegion");
 	mUserPrefs.mUseDayCycle			= gSavedSettings.getBOOL("UseDayCycle");
+
+	if (mUserPrefs.mUseRegionSettings)
+	{
+		requestRegionSettings();
+	}
 }
 
 void LLEnvManagerNew::saveUserPrefs()
@@ -398,6 +408,7 @@ void LLEnvManagerNew::dumpPresets()
 
 void LLEnvManagerNew::requestRegionSettings()
 {
+	LL_DEBUGS("Windlight") << LL_ENDL;
 	LLEnvironmentRequest::initiate();
 }
 
@@ -420,11 +431,6 @@ boost::signals2::connection LLEnvManagerNew::setPreferencesChangeCallback(const 
 boost::signals2::connection LLEnvManagerNew::setRegionSettingsChangeCallback(const region_settings_change_signal_t::slot_type& cb)
 {
 	return mRegionSettingsChangeSignal.connect(cb);
-}
-
-boost::signals2::connection LLEnvManagerNew::setRegionChangeCallback(const region_change_signal_t::slot_type& cb)
-{
-	return mRegionChangeSignal.connect(cb);
 }
 
 boost::signals2::connection LLEnvManagerNew::setRegionSettingsAppliedCallback(const region_settings_applied_signal_t::slot_type& cb)
@@ -457,25 +463,13 @@ const std::string LLEnvManagerNew::getScopeString(LLEnvKey::EScope scope)
 	}
 }
 
-void LLEnvManagerNew::onRegionCrossing()
-{
-	LL_DEBUGS("Windlight") << "Crossed region" << LL_ENDL;
-	onRegionChange(true);
-}
-
-void LLEnvManagerNew::onTeleport()
-{
-	LL_DEBUGS("Windlight") << "Teleported" << LL_ENDL;
-	onRegionChange(false);
-}
-
 void LLEnvManagerNew::onRegionSettingsResponse(const LLSD& content)
 {
 	// If the message was valid, grab the UUID from it and save it for next outbound update message.
 	mLastReceivedID = content[0]["messageID"].asUUID();
 
 	// Refresh cached region settings.
-	LL_DEBUGS("Windlight") << "Caching region environment settings: " << content << LL_ENDL;
+	LL_DEBUGS("Windlight") << "Received region environment settings: " << content << LL_ENDL;
 	F32 sun_hour = 0; // *TODO
 	LLEnvironmentSettings new_settings(content[1], content[2], content[3], sun_hour);
 	mCachedRegionPrefs = new_settings;
@@ -592,7 +586,7 @@ void LLEnvManagerNew::updateWaterFromPrefs(bool interpolate)
 		LLWaterParamSet params;
 		if (!water_mgr.getParamSet(water, params))
 		{
-			llwarns << "No water preset named " << water << ", falling back to defaults" << llendl;
+			LL_WARNS() << "No water preset named " << water << ", falling back to defaults" << LL_ENDL;
 			water_mgr.getParamSet("Default", params);
 
 			// *TODO: Fix user preferences accordingly.
@@ -693,28 +687,35 @@ bool LLEnvManagerNew::useDefaultWater()
 }
 
 
-void LLEnvManagerNew::onRegionChange(bool interpolate)
+void LLEnvManagerNew::onRegionChange()
 {
 	// Avoid duplicating region setting requests
 	// by checking whether the region is actually changing.
 	LLViewerRegion* regionp = gAgent.getRegion();
 	LLUUID region_uuid = regionp ? regionp->getRegionID() : LLUUID::null;
-	if (region_uuid == mCurRegionUUID)
+	if (region_uuid != mCurRegionUUID)
 	{
-		return;
-	}
-
 	// Clear locally modified region settings.
 	mNewRegionPrefs.clear();
 
 	// *TODO: clear environment settings of the previous region?
 
 	// Request environment settings of the new region.
-	LL_DEBUGS("Windlight") << "New viewer region: " << region_uuid << LL_ENDL;
 	mCurRegionUUID = region_uuid;
-	mInterpNextChangeMessage = interpolate;
+		// for region crossings, interpolate the change; for teleports, don't
+		mInterpNextChangeMessage = (gAgent.getTeleportState() == LLAgent::TELEPORT_NONE);
+		LL_DEBUGS("Windlight") << (mInterpNextChangeMessage ? "Crossed" : "Teleported")
+							   << " to new region: " << region_uuid
+							   << LL_ENDL;
 	requestRegionSettings();
-
-	// Let interested parties know agent region has been changed.
-	mRegionChangeSignal();
+	}
+	else
+	{
+		LL_DEBUGS("Windlight") << "disregarding region change; interp: "
+							   << (mInterpNextChangeMessage ? "true" : "false")
+							   << " regionp: " << regionp
+							   << " old: " << mCurRegionUUID
+							   << " new: " << region_uuid
+							   << LL_ENDL;
+	}
 }

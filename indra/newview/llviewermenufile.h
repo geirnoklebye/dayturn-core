@@ -32,6 +32,8 @@
 #include "llinventorytype.h"
 #include "llinventorydefines.h"
 #include "llfilepicker.h"
+#include "llthread.h"
+#include <queue>
 
 class LLTransactionID;
 

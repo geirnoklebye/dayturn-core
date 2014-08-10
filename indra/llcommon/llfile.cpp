@@ -28,7 +28,7 @@
  */
 
 #if LL_WINDOWS
-#include <windows.h>
+#include "llwin32headerslean.h"
 #include <stdlib.h>                 // Windows errno
 #else
 #include <errno.h>
@@ -263,6 +263,37 @@ int	LLFile::rename(const std::string& filename, const std::string& newname)
 	int rc = ::rename(filename.c_str(),newname.c_str());
 #endif
 	return warnif(STRINGIZE("rename to '" << newname << "' from"), filename, rc);
+}
+
+bool LLFile::copy(const std::string from, const std::string to)
+{
+	bool copied = false;
+	LLFILE* in = LLFile::fopen(from, "rb");		/* Flawfinder: ignore */	 	
+	if (in)	 	
+	{	 	
+		LLFILE* out = LLFile::fopen(to, "wb");		/* Flawfinder: ignore */
+		if (out)
+		{
+			char buf[16384];		/* Flawfinder: ignore */ 	
+			size_t readbytes;
+			bool write_ok = true;
+			while(write_ok && (readbytes = fread(buf, 1, 16384, in))) /* Flawfinder: ignore */
+			{
+				if (fwrite(buf, 1, readbytes, out) != readbytes)
+				{
+					LL_WARNS("LLFile") << "Short write" << LL_ENDL; 
+					write_ok = false;
+				}
+			}
+			if ( write_ok )
+			{
+				copied = true;
+			}
+			fclose(out);
+		}
+		fclose(in);
+	}
+	return copied;
 }
 
 int	LLFile::stat(const std::string& filename, llstat* filestatus)
@@ -853,7 +884,8 @@ llifstream::llifstream(const std::string& _Filename,
 #if LL_WINDOWS
 	std::istream(&_M_filebuf)
 {
-	if (_M_filebuf.open(_Filename.c_str(), _Mode | ios_base::in) == 0)
+	llutf16string wideName = utf8str_to_utf16str( _Filename );
+	if (_M_filebuf.open(wideName.c_str(), _Mode | ios_base::in) == 0)
 	{
 		_Myios::setstate(ios_base::failbit);
 	}
@@ -872,7 +904,8 @@ llifstream::llifstream(const char* _Filename,
 #if LL_WINDOWS
 	std::istream(&_M_filebuf)
 {
-	if (_M_filebuf.open(_Filename, _Mode | ios_base::in) == 0)
+	llutf16string wideName = utf8str_to_utf16str( _Filename );
+	if (_M_filebuf.open(wideName.c_str(), _Mode | ios_base::in) == 0)
 	{
 		_Myios::setstate(ios_base::failbit);
 	}
@@ -917,8 +950,10 @@ bool llifstream::is_open() const
 
 void llifstream::open(const char* _Filename, ios_base::openmode _Mode)
 {	// open a C stream with specified mode
-	if (_M_filebuf.open(_Filename, _Mode | ios_base::in) == 0)
+
 #if LL_WINDOWS
+	llutf16string wideName = utf8str_to_utf16str( _Filename );
+	if (_M_filebuf.open( wideName.c_str(), _Mode | ios_base::in) == 0)
 	{
 		_Myios::setstate(ios_base::failbit);
 	}
@@ -927,6 +962,7 @@ void llifstream::open(const char* _Filename, ios_base::openmode _Mode)
 		_Myios::clear();
 	}
 #else
+	if (_M_filebuf.open(_Filename, _Mode | ios_base::in) == 0)
 	{
 		this->setstate(ios_base::failbit);
 	}
@@ -969,7 +1005,8 @@ llofstream::llofstream(const std::string& _Filename,
 #if LL_WINDOWS
 	std::ostream(&_M_filebuf)
 {
-	if (_M_filebuf.open(_Filename.c_str(), _Mode | ios_base::out) == 0)
+	llutf16string wideName = utf8str_to_utf16str( _Filename );
+	if (_M_filebuf.open( wideName.c_str(), _Mode | ios_base::out) == 0)
 	{
 		_Myios::setstate(ios_base::failbit);
 	}
@@ -988,7 +1025,8 @@ llofstream::llofstream(const char* _Filename,
 #if LL_WINDOWS
 	std::ostream(&_M_filebuf)
 {
-	if (_M_filebuf.open(_Filename, _Mode | ios_base::out) == 0)
+	llutf16string wideName = utf8str_to_utf16str( _Filename );
+	if (_M_filebuf.open( wideName.c_str(), _Mode | ios_base::out) == 0)
 	{
 		_Myios::setstate(ios_base::failbit);
 	}
@@ -1032,8 +1070,9 @@ bool llofstream::is_open() const
 
 void llofstream::open(const char* _Filename, ios_base::openmode _Mode)
 {	// open a C stream with specified mode
-	if (_M_filebuf.open(_Filename, _Mode | ios_base::out) == 0)
 #if LL_WINDOWS
+	llutf16string wideName = utf8str_to_utf16str( _Filename );
+	if (_M_filebuf.open( wideName.c_str(), _Mode | ios_base::out) == 0)
 	{
 		_Myios::setstate(ios_base::failbit);
 	}
@@ -1042,6 +1081,7 @@ void llofstream::open(const char* _Filename, ios_base::openmode _Mode)
 		_Myios::clear();
 	}
 #else
+	if (_M_filebuf.open(_Filename, _Mode | ios_base::out) == 0)
 	{
 		this->setstate(ios_base::failbit);
 	}

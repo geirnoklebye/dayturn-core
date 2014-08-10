@@ -58,7 +58,7 @@
 
 const std::string FILTERS_FILENAME("filters.xml");
 
-static LLRegisterPanelClassWrapper<LLPanelMainInventory> t_inventory("panel_main_inventory");
+static LLPanelInjector<LLPanelMainInventory> t_inventory("panel_main_inventory");
 
 void on_file_loaded_for_save(BOOL success, 
 							 LLViewerFetchedTexture *src_vi,
@@ -130,6 +130,8 @@ BOOL LLPanelMainInventory::postBuild()
 	mFilterTabs = getChild<LLTabContainer>("inventory filter tabs");
 	mFilterTabs->setCommitCallback(boost::bind(&LLPanelMainInventory::onFilterSelected, this));
 	
+    mCounterCtrl = getChild<LLUICtrl>("ItemcountText");
+    
 	//panel->getFilter().markDefault();
 
 	// Set up the default inv. panel/filter settings.
@@ -156,7 +158,7 @@ BOOL LLPanelMainInventory::postBuild()
 	// Now load the stored settings from disk, if available.
 	std::ostringstream filterSaveName;
 	filterSaveName << gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, FILTERS_FILENAME);
-	llinfos << "LLPanelMainInventory::init: reading from " << filterSaveName.str() << llendl;
+	LL_INFOS() << "LLPanelMainInventory::init: reading from " << filterSaveName.str() << LL_ENDL;
 	llifstream file(filterSaveName.str());
 	LLSD savedFilterState;
 	if (file.is_open())
@@ -242,7 +244,7 @@ LLPanelMainInventory::~LLPanelMainInventory( void )
 	llofstream filtersFile(filterSaveName.str());
 	if(!LLSDSerialize::toPrettyXML(filterRoot, filtersFile))
 	{
-		llwarns << "Could not write to filters save file " << filterSaveName << llendl;
+		LL_WARNS() << "Could not write to filters save file " << filterSaveName << LL_ENDL;
 	}
 	else
 		filtersFile.close();
@@ -540,6 +542,13 @@ void LLPanelMainInventory::changed(U32)
 	updateItemcountText();
 }
 
+void LLPanelMainInventory::setFocusFilterEditor()
+{
+	if(mFilterEditor)
+	{
+		mFilterEditor->setFocus(true);
+	}
+}
 
 // virtual
 void LLPanelMainInventory::draw()
@@ -576,13 +585,16 @@ void LLPanelMainInventory::draw()
 
 void LLPanelMainInventory::updateItemcountText()
 {
-	// *TODO: Calling setlocale() on each frame may be inefficient.
-	LLLocale locale(LLStringUtil::getLocale());
-	std::string item_count_string;
-	LLResMgr::getInstance()->getIntegerString(item_count_string, gInventory.getItemCount());
+	if(mItemCount != gInventory.getItemCount())
+	{
+		mItemCount = gInventory.getItemCount();
+		mItemCountString = "";
+		LLLocale locale(LLLocale::USER_LOCALE);
+		LLResMgr::getInstance()->getIntegerString(mItemCountString, mItemCount);
+	}
 
 	LLStringUtil::format_map_t string_args;
-	string_args["[ITEM_COUNT]"] = item_count_string;
+	string_args["[ITEM_COUNT]"] = mItemCountString;
 	string_args["[FILTER]"] = getFilterText();
 
 	std::string text = "";
@@ -600,8 +612,7 @@ void LLPanelMainInventory::updateItemcountText()
 		text = getString("ItemcountUnknown");
 	}
 	
-	// *TODO: Cache the LLUICtrl* for the ItemcountText control
-	getChild<LLUICtrl>("ItemcountText")->setValue(text);
+    mCounterCtrl->setValue(text);
 }
 
 void LLPanelMainInventory::onFocusReceived()
@@ -609,7 +620,7 @@ void LLPanelMainInventory::onFocusReceived()
 	LLSidepanelInventory *sidepanel_inventory =	LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
 	if (!sidepanel_inventory)
 	{
-		llwarns << "Could not find Inventory Panel in My Inventory floater" << llendl;
+		LL_WARNS() << "Could not find Inventory Panel in My Inventory floater" << LL_ENDL;
 		return;
 	}
 

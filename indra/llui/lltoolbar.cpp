@@ -42,9 +42,9 @@
 
 namespace LLToolBarEnums
 {
-	LLLayoutStack::ELayoutOrientation getOrientation(SideType sideType)
+	LLView::EOrientation getOrientation(SideType sideType)
 	{
-		LLLayoutStack::ELayoutOrientation orientation = LLLayoutStack::HORIZONTAL;
+		LLView::EOrientation orientation = LLLayoutStack::HORIZONTAL;
 
 		if ((sideType == SIDE_LEFT) || (sideType == SIDE_RIGHT))
 		{
@@ -118,7 +118,8 @@ LLToolBar::LLToolBar(const LLToolBar::Params& p)
 	mButtonLeaveSignal(NULL),
 	mButtonRemoveSignal(NULL),
 	mDragAndDropTarget(false),
-	mCaretIcon(NULL)
+	mCaretIcon(NULL),
+	mCenterPanel(NULL)
 {
 	mButtonParams[LLToolBarEnums::BTNTYPE_ICONS_WITH_TEXT] = p.button_icon_and_text;
 	mButtonParams[LLToolBarEnums::BTNTYPE_ICONS_ONLY] = p.button_icon;
@@ -157,7 +158,7 @@ void LLToolBar::createContextMenu()
 		}
 		else
 		{
-			llwarns << "Unable to load toolbars context menu." << llendl;
+			LL_WARNS() << "Unable to load toolbars context menu." << LL_ENDL;
 		}
 	}
 	
@@ -173,7 +174,7 @@ void LLToolBar::initFromParams(const LLToolBar::Params& p)
 	// Initialize the base object
 	LLUICtrl::initFromParams(p);
 	
-	LLLayoutStack::ELayoutOrientation orientation = getOrientation(p.side);
+	LLView::EOrientation orientation = getOrientation(p.side);
 
 	LLLayoutStack::Params centering_stack_p;
 	centering_stack_p.name = "centering_stack";
@@ -200,14 +201,15 @@ void LLToolBar::initFromParams(const LLToolBar::Params& p)
 	center_panel_p.auto_resize = false;
 	center_panel_p.user_resize = false;
 	center_panel_p.mouse_opaque = false;
-	LLLayoutPanel* center_panel = LLUICtrlFactory::create<LLLayoutPanel>(center_panel_p);
-	mCenteringStack->addChild(center_panel);
+	mCenterPanel = LLUICtrlFactory::create<LLCenterLayoutPanel>(center_panel_p);
+	mCenteringStack->addChild(mCenterPanel);
 
 	LLPanel::Params button_panel_p(p.button_panel);
-	button_panel_p.rect = center_panel->getLocalRect();
-		button_panel_p.follows.flags = FOLLOWS_BOTTOM|FOLLOWS_LEFT;
+	button_panel_p.rect = mCenterPanel->getLocalRect();
+	button_panel_p.follows.flags = FOLLOWS_BOTTOM|FOLLOWS_LEFT;
 	mButtonPanel = LLUICtrlFactory::create<LLPanel>(button_panel_p);
-	center_panel->addChild(mButtonPanel);
+	mCenterPanel->setButtonPanel(mButtonPanel);
+	mCenterPanel->addChild(mButtonPanel);
 	
 	mCenteringStack->addChild(LLUICtrlFactory::create<LLLayoutPanel>(border_panel_p));
 
@@ -381,7 +383,7 @@ bool LLToolBar::stopCommandInProgress(const LLCommandId& commandId)
 	return (command_button != NULL);
 }
 
-bool LLToolBar::flashCommand(const LLCommandId& commandId, bool flash)
+bool LLToolBar::flashCommand(const LLCommandId& commandId, bool flash, bool force_flashing/* = false */)
 {
 	LLButton * command_button = NULL;
 
@@ -391,7 +393,7 @@ bool LLToolBar::flashCommand(const LLCommandId& commandId, bool flash)
 		if (it != mButtonMap.end())
 		{
 			command_button = it->second;
-			command_button->setFlashing(flash ? TRUE : FALSE);
+			command_button->setFlashing((BOOL)(flash),(BOOL)(force_flashing));
 		}
 	}
 
@@ -525,7 +527,7 @@ int LLToolBar::getRankFromPosition(S32 x, S32 y)
 	int rank = 0;
 
 	// Convert the toolbar coord into button panel coords
-	LLLayoutStack::ELayoutOrientation orientation = getOrientation(mSideType);
+	LLView::EOrientation orientation = getOrientation(mSideType);
 	S32 button_panel_x = 0;
 	S32 button_panel_y = 0;
 	localPointToOtherView(x, y, &button_panel_x, &button_panel_y, mButtonPanel);
@@ -644,7 +646,7 @@ void LLToolBar::updateLayoutAsNeeded()
 {
 	if (!mNeedsLayout) return;
 
-	LLLayoutStack::ELayoutOrientation orientation = getOrientation(mSideType);
+	LLView::EOrientation orientation = getOrientation(mSideType);
 	
 	// our terminology for orientation-agnostic layout is such that
 	// length refers to a distance in the direction we stack the buttons 
@@ -1063,7 +1065,7 @@ BOOL LLToolBar::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 			mDragRank = getRankFromPosition(x, y);
 			// Don't DaD if we're dragging a command on itself
 			mDragAndDropTarget = ((orig_rank != RANK_NONE) && ((mDragRank == orig_rank) || ((mDragRank-1) == orig_rank)) ? false : true);
-			//llinfos << "Merov debug : DaD, rank = " << mDragRank << ", dragged uui = " << inv_item->getUUID() << llendl; 
+			//LL_INFOS() << "Merov debug : DaD, rank = " << mDragRank << ", dragged uui = " << inv_item->getUUID() << LL_ENDL; 
 			/* Do the following if you want to animate the button itself
 			LLCommandId dragged_command(inv_item->getUUID());
 			removeCommand(dragged_command);
@@ -1242,3 +1244,15 @@ const std::string LLToolBarButton::getToolTip() const
 	return tooltip;
 }
 
+void LLToolBar::LLCenterLayoutPanel::handleReshape(const LLRect& rect, bool by_user)
+{
+	LLLayoutPanel::handleReshape(rect, by_user);
+
+	if (!mReshapeCallback.empty())
+	{
+		LLRect r;
+		localRectToOtherView(mButtonPanel->getRect(), &r, gFloaterView);
+		r.stretch(FLOATER_MIN_VISIBLE_PIXELS);
+		mReshapeCallback(mLocationId, r);
+	}
+}

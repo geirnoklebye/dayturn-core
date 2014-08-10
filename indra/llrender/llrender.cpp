@@ -225,26 +225,15 @@ void LLTexUnit::disable(void)
 bool LLTexUnit::bind(LLTexture* texture, bool for_rendering, bool forceBind)
 {
 	stop_glerror();
-	if (mIndex < 0) return false;
-
+	if (mIndex >= 0)
+	{
 	gGL.flush();
 
 	LLImageGL* gl_tex = NULL ;
-	if (texture == NULL || !(gl_tex = texture->getGLTexture()))
+		if (texture != NULL && (gl_tex = texture->getGLTexture()))
 	{
-		llwarns << "NULL LLTexUnit::bind texture" << llendl;
-		return false;
-	}
-
-	if (!gl_tex->getTexName()) //if texture does not exist
+			if (gl_tex->getTexName()) //if texture exists
 	{
-		//if deleted, will re-generate it immediately
-		texture->forceImmediateUpdate() ;
-
-		gl_tex->forceUpdateBindStats() ;
-		return texture->bindDefaultImage(mIndex);
-	}
-
 	//in audit, replace the selected texture by the default one.
 	if ((mCurrTexture != gl_tex->getTexName()) || forceBind)
 	{
@@ -265,6 +254,27 @@ bool LLTexUnit::bind(LLTexture* texture, bool for_rendering, bool forceBind)
 			setTextureFilteringOption(gl_tex->mFilterOption);
 		}
 	}
+			}
+			else
+			{
+				//if deleted, will re-generate it immediately
+				texture->forceImmediateUpdate() ;
+
+				gl_tex->forceUpdateBindStats() ;
+				return texture->bindDefaultImage(mIndex);
+			}
+		}
+		else
+		{
+			LL_WARNS() << "NULL LLTexUnit::bind texture" << LL_ENDL;
+			return false;
+		}
+	}
+	else
+	{ // mIndex < 0
+		return false;
+	}
+
 	return true;
 }
 
@@ -275,7 +285,7 @@ bool LLTexUnit::bind(LLImageGL* texture, bool for_rendering, bool forceBind)
 
 	if(!texture)
 	{
-		llwarns << "NULL LLTexUnit::bind texture" << llendl;
+		LL_WARNS() << "NULL LLTexUnit::bind texture" << LL_ENDL;
 		return false;
 	}
 
@@ -325,7 +335,7 @@ bool LLTexUnit::bind(LLCubeMap* cubeMap)
 
 	if (cubeMap == NULL)
 	{
-		llwarns << "NULL LLTexUnit::bind cubemap" << llendl;
+		LL_WARNS() << "NULL LLTexUnit::bind cubemap" << LL_ENDL;
 		return false;
 	}
 
@@ -349,7 +359,7 @@ bool LLTexUnit::bind(LLCubeMap* cubeMap)
 		}
 		else
 		{
-			llwarns << "Using cube map without extension!" << llendl;
+			LL_WARNS() << "Using cube map without extension!" << LL_ENDL;
 			return false;
 		}
 	}
@@ -367,7 +377,7 @@ bool LLTexUnit::bind(LLRenderTarget* renderTarget, bool bindDepth)
 	{
 		if (renderTarget->hasStencil())
 		{
-			llerrs << "Cannot bind a render buffer for sampling.  Allocate render target without a stencil buffer if sampling of depth buffer is required." << llendl;
+			LL_ERRS() << "Cannot bind a render buffer for sampling.  Allocate render target without a stencil buffer if sampling of depth buffer is required." << LL_ENDL;
 		}
 
 		bindManual(renderTarget->getUsage(), renderTarget->getDepth());
@@ -493,7 +503,7 @@ void LLTexUnit::setTextureFilteringOption(LLTexUnit::eTextureFilterOptions optio
 			{
 				glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &gGL.mMaxAnisotropy);
 
-				llinfos << "gGL.mMaxAnisotropy: " << gGL.mMaxAnisotropy << llendl ;
+				LL_INFOS() << "gGL.mMaxAnisotropy: " << gGL.mMaxAnisotropy << LL_ENDL ;
 				gGL.mMaxAnisotropy = llmax(1.f, gGL.mMaxAnisotropy) ;
 			}
 			glTexParameterf(sGLTextureType[mCurrTexType], GL_TEXTURE_MAX_ANISOTROPY_EXT, gGL.mMaxAnisotropy);
@@ -547,7 +557,7 @@ void LLTexUnit::setTextureBlendType(eTextureBlendType type)
 			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_ARB);
 			break;
 		default:
-			llerrs << "Unknown Texture Blend Type: " << type << llendl;
+			LL_ERRS() << "Unknown Texture Blend Type: " << type << LL_ENDL;
 			break;
 	}
 	setColorScale(scale_amount);
@@ -587,7 +597,7 @@ GLint LLTexUnit::getTextureSource(eTextureBlendSrc src)
 			return GL_CONSTANT_ARB;
 
 		default:
-			llwarns << "Unknown eTextureBlendSrc: " << src << ".  Using Vertex Color instead." << llendl;
+			LL_WARNS() << "Unknown eTextureBlendSrc: " << src << ".  Using Vertex Color instead." << LL_ENDL;
 			return GL_PRIMARY_COLOR_ARB;
 	}
 }
@@ -625,7 +635,7 @@ GLint LLTexUnit::getTextureSourceType(eTextureBlendSrc src, bool isAlpha)
 			return GL_ONE_MINUS_SRC_ALPHA;
 
 		default:
-			llwarns << "Unknown eTextureBlendSrc: " << src << ".  Using Source Color or Alpha instead." << llendl;
+			LL_WARNS() << "Unknown eTextureBlendSrc: " << src << ".  Using Source Color or Alpha instead." << LL_ENDL;
 			return (isAlpha) ? GL_SRC_ALPHA: GL_SRC_COLOR;
 	}
 }
@@ -766,7 +776,7 @@ void LLTexUnit::setTextureCombiner(eTextureBlendOp op, eTextureBlendSrc src1, eT
 			break;
 
 		default:
-			llwarns << "Unknown eTextureBlendOp: " << op << ".  Setting op to replace." << llendl;
+			LL_WARNS() << "Unknown eTextureBlendOp: " << op << ".  Setting op to replace." << LL_ENDL;
 			// Slightly special syntax (no second sources), just set all and return.
 			glTexEnvi(GL_TEXTURE_ENV, comb_enum, GL_REPLACE);
 			glTexEnvi(GL_TEXTURE_ENV, src0_enum, source1);
@@ -814,7 +824,7 @@ void LLTexUnit::debugTextureUnit(void)
 	if ((GL_TEXTURE0_ARB + mIndex) != activeTexture)
 	{
 		U32 set_unit = (activeTexture - GL_TEXTURE0_ARB);
-		llwarns << "Incorrect Texture Unit!  Expected: " << set_unit << " Actual: " << mIndex << llendl;
+		LL_WARNS() << "Incorrect Texture Unit!  Expected: " << set_unit << " Actual: " << mIndex << LL_ENDL;
 	}
 }
 
@@ -1058,6 +1068,16 @@ LLRender::~LLRender()
 
 void LLRender::init()
 {
+	if (sGLCoreProfile && !LLVertexBuffer::sUseVAO)
+	{ //bind a dummy vertex array object so we're core profile compliant
+#ifdef GL_ARB_vertex_array_object
+		U32 ret;
+		glGenVertexArrays(1, &ret);
+		glBindVertexArray(ret);
+#endif
+	}
+
+
 	llassert_always(mBuffer.isNull()) ;
 	stop_glerror();
 	mBuffer = new LLVertexBuffer(immediate_mask, 0);
@@ -1383,7 +1403,7 @@ void LLRender::pushMatrix()
 		}
 		else
 		{
-			llwarns << "Matrix stack overflow." << llendl;
+			LL_WARNS() << "Matrix stack overflow." << LL_ENDL;
 		}
 	}
 }
@@ -1399,7 +1419,7 @@ void LLRender::popMatrix()
 		}
 		else
 		{
-			llwarns << "Matrix stack underflow." << llendl;
+			LL_WARNS() << "Matrix stack underflow." << LL_ENDL;
 		}
 	}
 }
@@ -1472,7 +1492,7 @@ void LLRender::translateUI(F32 x, F32 y, F32 z)
 {
 	if (mUIOffset.empty())
 	{
-		llerrs << "Need to push a UI translation frame before offsetting" << llendl;
+		LL_ERRS() << "Need to push a UI translation frame before offsetting" << LL_ENDL;
 	}
 
 	mUIOffset.back().mV[0] += x;
@@ -1484,7 +1504,7 @@ void LLRender::scaleUI(F32 x, F32 y, F32 z)
 {
 	if (mUIScale.empty())
 	{
-		llerrs << "Need to push a UI transformation frame before scaling." << llendl;
+		LL_ERRS() << "Need to push a UI transformation frame before scaling." << LL_ENDL;
 	}
 
 	mUIScale.back().scaleVec(LLVector3(x,y,z));
@@ -1515,7 +1535,7 @@ void LLRender::popUIMatrix()
 {
 	if (mUIOffset.empty())
 	{
-		llerrs << "UI offset stack blown." << llendl;
+		LL_ERRS() << "UI offset stack blown." << LL_ENDL;
 	}
 	mUIOffset.pop_back();
 	mUIScale.pop_back();
@@ -1544,7 +1564,7 @@ void LLRender::loadUIIdentity()
 {
 	if (mUIOffset.empty())
 	{
-		llerrs << "Need to push UI translation frame before clearing offset." << llendl;
+		LL_ERRS() << "Need to push UI translation frame before clearing offset." << LL_ENDL;
 	}
 	mUIOffset.back().setVec(0,0,0);
 	mUIScale.back().setVec(1,1,1);
@@ -1602,7 +1622,7 @@ void LLRender::setSceneBlendType(eBlendType type)
 			blendFunc(BF_ONE, BF_ZERO);
 			break;
 		default:
-			llerrs << "Unknown Scene Blend Type: " << type << llendl;
+			LL_ERRS() << "Unknown Scene Blend Type: " << type << LL_ENDL;
 			break;
 	}
 }
@@ -1643,7 +1663,7 @@ void LLRender::setAlphaRejectSettings(eCompareFunc func, F32 value)
 
 		if (cur_func != sGLCompareFunc[func])
 		{
-			llerrs << "Alpha test function corrupted!" << llendl;
+			LL_ERRS() << "Alpha test function corrupted!" << LL_ENDL;
 		}
 
 		F32 ref = 0.f;
@@ -1651,7 +1671,7 @@ void LLRender::setAlphaRejectSettings(eCompareFunc func, F32 value)
 
 		if (ref != value)
 		{
-			llerrs << "Alpha test value corrupted!" << llendl;
+			LL_ERRS() << "Alpha test value corrupted!" << LL_ENDL;
 		}
 	}
 }
@@ -1681,7 +1701,7 @@ void LLRender::blendFunc(eBlendFactor color_sfactor, eBlendFactor color_dfactor,
 	llassert(alpha_dfactor < BF_UNDEF);
 	if (!gGLManager.mHasBlendFuncSeparate)
 	{
-		LL_WARNS_ONCE("render") << "no glBlendFuncSeparateEXT(), using color-only blend func" << llendl;
+		LL_WARNS_ONCE("render") << "no glBlendFuncSeparateEXT(), using color-only blend func" << LL_ENDL;
 		blendFunc(color_sfactor, color_dfactor);
 		return;
 	}
@@ -1706,7 +1726,7 @@ LLTexUnit* LLRender::getTexUnit(U32 index)
 	}
 	else 
 	{
-		lldebugs << "Non-existing texture unit layer requested: " << index << llendl;
+		LL_DEBUGS() << "Non-existing texture unit layer requested: " << index << LL_ENDL;
 		return mDummyTexUnit;
 	}
 }
@@ -1742,7 +1762,7 @@ bool LLRender::verifyTexUnitActive(U32 unitToVerify)
 	}
 	else 
 	{
-		llwarns << "TexUnit currently active: " << mCurrTextureUnitIndex << " (expecting " << unitToVerify << ")" << llendl;
+		LL_WARNS() << "TexUnit currently active: " << mCurrTextureUnitIndex << " (expecting " << unitToVerify << ")" << LL_ENDL;
 		return false;
 	}
 }
@@ -1773,7 +1793,7 @@ void LLRender::begin(const GLuint& mode)
 		}
 		else if (mCount != 0)
 		{
-			llerrs << "gGL.begin() called redundantly." << llendl;
+			LL_ERRS() << "gGL.begin() called redundantly." << LL_ENDL;
 		}
 		
 		mMode = mode;
@@ -1785,7 +1805,7 @@ void LLRender::end()
 	if (mCount == 0)
 	{
 		return;
-		//IMM_ERRS << "GL begin and end called with no vertices specified." << llendl;
+		//IMM_ERRS << "GL begin and end called with no vertices specified." << LL_ENDL;
 	}
 
 	if ((mMode != LLRender::QUADS && 
@@ -1804,22 +1824,22 @@ void LLRender::flush()
 #if 0
 		if (!glIsEnabled(GL_VERTEX_ARRAY))
 		{
-			llerrs << "foo 1" << llendl;
+			LL_ERRS() << "foo 1" << LL_ENDL;
 		}
 
 		if (!glIsEnabled(GL_COLOR_ARRAY))
 		{
-			llerrs << "foo 2" << llendl;
+			LL_ERRS() << "foo 2" << LL_ENDL;
 		}
 
 		if (!glIsEnabled(GL_TEXTURE_COORD_ARRAY))
 		{
-			llerrs << "foo 3" << llendl;
+			LL_ERRS() << "foo 3" << LL_ENDL;
 		}
 
 		if (glIsEnabled(GL_NORMAL_ARRAY))
 		{
-			llerrs << "foo 7" << llendl;
+			LL_ERRS() << "foo 7" << LL_ENDL;
 		}
 
 		GLvoid* pointer;
@@ -1827,19 +1847,19 @@ void LLRender::flush()
 		glGetPointerv(GL_VERTEX_ARRAY_POINTER, &pointer);
 		if (pointer != &(mBuffer[0].v))
 		{
-			llerrs << "foo 4" << llendl;
+			LL_ERRS() << "foo 4" << LL_ENDL;
 		}
 
 		glGetPointerv(GL_COLOR_ARRAY_POINTER, &pointer);
 		if (pointer != &(mBuffer[0].c))
 		{
-			llerrs << "foo 5" << llendl;
+			LL_ERRS() << "foo 5" << LL_ENDL;
 		}
 
 		glGetPointerv(GL_TEXTURE_COORD_ARRAY_POINTER, &pointer);
 		if (pointer != &(mBuffer[0].uv))
 		{
-			llerrs << "foo 6" << llendl;
+			LL_ERRS() << "foo 6" << LL_ENDL;
 		}
 #endif
 				
@@ -1849,13 +1869,15 @@ void LLRender::flush()
 			sUIVerts += mCount;
 		}
 		
-		if (gDebugGL)
-		{
+		//store mCount in a local variable to avoid re-entrance (drawArrays may call flush)
+		U32 count = mCount;
+
 			if (mMode == LLRender::QUADS && !sGLCoreProfile)
 			{
 				if (mCount%4 != 0)
 				{
-					llerrs << "Incomplete quad rendered." << llendl;
+				count -= (mCount % 4);
+				LL_WARNS() << "Incomplete quad requested." << LL_ENDL;
 				}
 			}
 			
@@ -1863,7 +1885,8 @@ void LLRender::flush()
 			{
 				if (mCount%3 != 0)
 				{
-					llerrs << "Incomplete triangle rendered." << llendl;
+				count -= (mCount % 3);
+				LL_WARNS() << "Incomplete triangle requested." << LL_ENDL;
 				}
 			}
 			
@@ -1871,13 +1894,11 @@ void LLRender::flush()
 			{
 				if (mCount%2 != 0)
 				{
-					llerrs << "Incomplete line rendered." << llendl;
-				}
+				count -= (mCount % 2);
+				LL_WARNS() << "Incomplete line requested." << LL_ENDL;
 			}
 		}
 
-		//store mCount in a local variable to avoid re-entrance (drawArrays may call flush)
-		U32 count = mCount;
 		mCount = 0;
 
 		if (mBuffer->useVBOs() && !mBuffer->isLocked())
@@ -1924,7 +1945,7 @@ void LLRender::vertex3f(const GLfloat& x, const GLfloat& y, const GLfloat& z)
 			
 	if (mCount > 4094)
 	{
-	//	llwarns << "GL immediate mode overflow.  Some geometry not drawn." << llendl;
+	//	LL_WARNS() << "GL immediate mode overflow.  Some geometry not drawn." << LL_ENDL;
 		return;
 	}
 
@@ -1967,7 +1988,7 @@ void LLRender::vertexBatchPreTransformed(LLVector3* verts, S32 vert_count)
 {
 	if (mCount + vert_count > 4094)
 	{
-		//	llwarns << "GL immediate mode overflow.  Some geometry not drawn." << llendl;
+		//	LL_WARNS() << "GL immediate mode overflow.  Some geometry not drawn." << LL_ENDL;
 		return;
 	}
 
@@ -2024,7 +2045,7 @@ void LLRender::vertexBatchPreTransformed(LLVector3* verts, LLVector2* uvs, S32 v
 {
 	if (mCount + vert_count > 4094)
 	{
-		//	llwarns << "GL immediate mode overflow.  Some geometry not drawn." << llendl;
+		//	LL_WARNS() << "GL immediate mode overflow.  Some geometry not drawn." << LL_ENDL;
 		return;
 	}
 
@@ -2082,7 +2103,7 @@ void LLRender::vertexBatchPreTransformed(LLVector3* verts, LLVector2* uvs, LLCol
 {
 	if (mCount + vert_count > 4094)
 	{
-		//	llwarns << "GL immediate mode overflow.  Some geometry not drawn." << llendl;
+		//	LL_WARNS() << "GL immediate mode overflow.  Some geometry not drawn." << LL_ENDL;
 		return;
 	}
 
@@ -2175,7 +2196,15 @@ void LLRender::texCoord2fv(const GLfloat* tc)
 
 void LLRender::color4ub(const GLubyte& r, const GLubyte& g, const GLubyte& b, const GLubyte& a)
 {
-	mColorsp[mCount] = LLColor4U(r,g,b,a);
+	if (!LLGLSLShader::sCurBoundShaderPtr ||
+		LLGLSLShader::sCurBoundShaderPtr->mAttributeMask & LLVertexBuffer::MAP_COLOR)
+	{
+		mColorsp[mCount] = LLColor4U(r,g,b,a);
+	}
+	else
+	{ //not using shaders or shader reads color from a uniform
+		diffuseColor4ub(r,g,b,a);
+	}
 }
 void LLRender::color4ubv(const GLubyte* c)
 {
@@ -2279,6 +2308,22 @@ void LLRender::diffuseColor4ubv(const U8* c)
 		glColor4ubv(c);
 	}
 }
+
+void LLRender::diffuseColor4ub(U8 r, U8 g, U8 b, U8 a)
+{
+	LLGLSLShader* shader = LLGLSLShader::sCurBoundShaderPtr;
+	llassert(!LLGLSLShader::sNoFixedFunction || shader != NULL);
+
+	if (shader)
+	{
+		shader->uniform4f(LLShaderMgr::DIFFUSE_COLOR, r/255.f, g/255.f, b/255.f, a/255.f);
+	}
+	else
+	{
+		glColor4ub(r,g,b,a);
+	}
+}
+
 
 void LLRender::debugTexUnits(void)
 {

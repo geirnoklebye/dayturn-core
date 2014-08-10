@@ -55,7 +55,7 @@ int DebugDetailMap = 0;
 S32 LLDrawPoolTerrain::sDetailMode = 1;
 F32 LLDrawPoolTerrain::sDetailScale = DETAIL_SCALE;
 static LLGLSLShader* sShader = NULL;
-static LLFastTimer::DeclareTimer FTM_SHADOW_TERRAIN("Terrain Shadow");
+static LLTrace::BlockTimerStatHandle FTM_SHADOW_TERRAIN("Terrain Shadow");
 
 
 LLDrawPoolTerrain::LLDrawPoolTerrain(LLViewerTexture *texturep) :
@@ -129,7 +129,7 @@ void LLDrawPoolTerrain::prerender()
 
 void LLDrawPoolTerrain::beginRenderPass( S32 pass )
 {
-	LLFastTimer t(FTM_RENDER_TERRAIN);
+	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	LLFacePool::beginRenderPass(pass);
 
 	sShader = LLPipeline::sUnderWaterRender ? 
@@ -144,7 +144,7 @@ void LLDrawPoolTerrain::beginRenderPass( S32 pass )
 
 void LLDrawPoolTerrain::endRenderPass( S32 pass )
 {
-	LLFastTimer t(FTM_RENDER_TERRAIN);
+	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	//LLFacePool::endRenderPass(pass);
 
 	if (mVertexShaderLevel > 1 && sShader->mShaderLevel > 0) {
@@ -160,7 +160,7 @@ S32 LLDrawPoolTerrain::getDetailMode()
 
 void LLDrawPoolTerrain::render(S32 pass)
 {
-	LLFastTimer t(FTM_RENDER_TERRAIN);
+	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	
 	if (mDrawFace.empty())
 	{
@@ -243,7 +243,7 @@ void LLDrawPoolTerrain::render(S32 pass)
 
 void LLDrawPoolTerrain::beginDeferredPass(S32 pass)
 {
-	LLFastTimer t(FTM_RENDER_TERRAIN);
+	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	LLFacePool::beginRenderPass(pass);
 
 	sShader = &gDeferredTerrainProgram;
@@ -253,14 +253,14 @@ void LLDrawPoolTerrain::beginDeferredPass(S32 pass)
 
 void LLDrawPoolTerrain::endDeferredPass(S32 pass)
 {
-	LLFastTimer t(FTM_RENDER_TERRAIN);
+	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	LLFacePool::endRenderPass(pass);
 	sShader->unbind();
 }
 
 void LLDrawPoolTerrain::renderDeferred(S32 pass)
 {
-	LLFastTimer t(FTM_RENDER_TERRAIN);
+	LL_RECORD_BLOCK_TIME(FTM_RENDER_TERRAIN);
 	if (mDrawFace.empty())
 	{
 		return;
@@ -270,7 +270,7 @@ void LLDrawPoolTerrain::renderDeferred(S32 pass)
 
 void LLDrawPoolTerrain::beginShadowPass(S32 pass)
 {
-	LLFastTimer t(FTM_SHADOW_TERRAIN);
+	LL_RECORD_BLOCK_TIME(FTM_SHADOW_TERRAIN);
 	LLFacePool::beginRenderPass(pass);
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 	gDeferredShadowProgram.bind();
@@ -278,14 +278,14 @@ void LLDrawPoolTerrain::beginShadowPass(S32 pass)
 
 void LLDrawPoolTerrain::endShadowPass(S32 pass)
 {
-	LLFastTimer t(FTM_SHADOW_TERRAIN);
+	LL_RECORD_BLOCK_TIME(FTM_SHADOW_TERRAIN);
 	LLFacePool::endRenderPass(pass);
 	gDeferredShadowProgram.unbind();
 }
 
 void LLDrawPoolTerrain::renderShadow(S32 pass)
 {
-	LLFastTimer t(FTM_SHADOW_TERRAIN);
+	LL_RECORD_BLOCK_TIME(FTM_SHADOW_TERRAIN);
 	if (mDrawFace.empty())
 	{
 		return;
@@ -327,6 +327,13 @@ void LLDrawPoolTerrain::drawLoop()
 
 void LLDrawPoolTerrain::renderFullShader()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		renderSimple();
+		return;
+	}
+//mk
 	// Hack! Get the region that this draw pool is rendering from!
 	LLViewerRegion *regionp = mDrawFace[0]->getDrawable()->getVObj()->getRegion();
 	LLVLComposition *compp = regionp->getComposition();
@@ -354,8 +361,8 @@ void LLDrawPoolTerrain::renderFullShader()
 	LLGLSLShader* shader = LLGLSLShader::sCurBoundShaderPtr;
 	llassert(shader);
 		
-	shader->uniform4fv("object_plane_s", 1, tp0.mV);
-	shader->uniform4fv("object_plane_t", 1, tp1.mV);
+	shader->uniform4fv(LLShaderMgr::OBJECT_PLANE_S, 1, tp0.mV);
+	shader->uniform4fv(LLShaderMgr::OBJECT_PLANE_T, 1, tp1.mV);
 
 	gGL.matrixMode(LLRender::MM_TEXTURE);
 	gGL.loadIdentity();
@@ -456,6 +463,13 @@ void LLDrawPoolTerrain::renderFullShader()
 
 void LLDrawPoolTerrain::renderFull4TU()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		renderSimple();
+		return;
+	}
+//mk
 	// Hack! Get the region that this draw pool is rendering from!
 	LLViewerRegion *regionp = mDrawFace[0]->getDrawable()->getVObj()->getRegion();
 	LLVLComposition *compp = regionp->getComposition();
@@ -658,6 +672,13 @@ void LLDrawPoolTerrain::renderFull4TU()
 
 void LLDrawPoolTerrain::renderFull2TU()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		renderSimple();
+		return;
+	}
+//mk
 	// Hack! Get the region that this draw pool is rendering from!
 	LLViewerRegion *regionp = mDrawFace[0]->getDrawable()->getVObj()->getRegion();
 	LLVLComposition *compp = regionp->getComposition();
@@ -855,6 +876,16 @@ void LLDrawPoolTerrain::renderSimple()
 
 	gGL.getTexUnit(0)->activate();
 	gGL.getTexUnit(0)->enable(LLTexUnit::TT_TEXTURE);
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		gGL.getTexUnit(0)->bind(LLViewerFetchedTexture::sDefaultImagep);
+		gGL.getTexUnit(1)->bind(LLViewerFetchedTexture::sDefaultImagep);
+		gGL.getTexUnit(2)->bind(LLViewerFetchedTexture::sDefaultImagep);
+		gGL.getTexUnit(3)->bind(LLViewerFetchedTexture::sDefaultImagep);
+	}
+	else
+//mk
 	gGL.getTexUnit(0)->bind(mTexturep);
 	
 	LLVector3 origin_agent = mDrawFace[0]->getDrawable()->getVObj()->getRegion()->getOriginAgent();
@@ -864,8 +895,8 @@ void LLDrawPoolTerrain::renderSimple()
 	
 	if (LLGLSLShader::sNoFixedFunction)
 	{
-		sShader->uniform4fv("object_plane_s", 1, tp0.mV);
-		sShader->uniform4fv("object_plane_t", 1, tp1.mV);
+		sShader->uniform4fv(LLShaderMgr::OBJECT_PLANE_S, 1, tp0.mV);
+		sShader->uniform4fv(LLShaderMgr::OBJECT_PLANE_T, 1, tp1.mV);
 	}
 	else
 	{

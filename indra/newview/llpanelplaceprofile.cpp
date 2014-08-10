@@ -53,7 +53,7 @@
 #include "llviewerparcelmgr.h"
 #include "llviewerregion.h"
 
-static LLRegisterPanelClassWrapper<LLPanelPlaceProfile> t_place_profile("panel_place_profile");
+static LLPanelInjector<LLPanelPlaceProfile> t_place_profile("panel_place_profile");
 
 // Statics for textures filenames
 static std::string icon_pg;
@@ -302,9 +302,9 @@ void LLPanelPlaceProfile::processParcelInfo(const LLParcelData& parcel_data)
 }
 
 // virtual
-void LLPanelPlaceProfile::handleVisibilityChange(BOOL new_visibility)
+void LLPanelPlaceProfile::onVisibilityChange(BOOL new_visibility)
 {
-	LLPanel::handleVisibilityChange(new_visibility);
+	LLPanel::onVisibilityChange(new_visibility);
 
 	LLViewerParcelMgr* parcel_mgr = LLViewerParcelMgr::getInstance();
 	if (!parcel_mgr)

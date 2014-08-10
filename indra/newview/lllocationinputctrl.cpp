@@ -384,7 +384,7 @@ LLLocationInputCtrl::LLLocationInputCtrl(const LLLocationInputCtrl::Params& p)
 	mLocationContextMenu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_navbar.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
 	if (!mLocationContextMenu)
 	{
-		llwarns << "Error loading navigation bar context menu" << llendl;
+		LL_WARNS() << "Error loading navigation bar context menu" << LL_ENDL;
 		
 	}
 	getTextEntry()->setRightMouseUpCallback(boost::bind(&LLLocationInputCtrl::onTextEditorRightClicked,this,_2,_3,_4));
@@ -407,14 +407,14 @@ LLLocationInputCtrl::LLLocationInputCtrl(const LLLocationInputCtrl::Params& p)
 	// - Make the "Add landmark" button updated when either current parcel gets changed
 	//   or a landmark gets created or removed from the inventory.
 	// - Update the location string on parcel change.
-	mParcelMgrConnection = LLViewerParcelMgr::getInstance()->addAgentParcelChangedCallback(
+	mParcelMgrConnection = gAgent.addParcelChangedCallback(
 		boost::bind(&LLLocationInputCtrl::onAgentParcelChange, this));
 	// LLLocationHistory instance is being created before the location input control, so we have to update initial state of button manually.
 	mButton->setEnabled(LLLocationHistory::instance().getItemCount() > 0);
 	mLocationHistoryConnection = LLLocationHistory::getInstance()->setChangedCallback(
 			boost::bind(&LLLocationInputCtrl::onLocationHistoryChanged, this,_1));
 
-	mRegionCrossingSlot = LLEnvManagerNew::getInstance()->setRegionChangeCallback(boost::bind(&LLLocationInputCtrl::onRegionBoundaryCrossed, this));
+	mRegionCrossingSlot = gAgent.addRegionChangedCallback(boost::bind(&LLLocationInputCtrl::onRegionBoundaryCrossed, this));
 	createNavMeshStatusListenerForCurrentRegion();
 
 	mRemoveLandmarkObserver	= new LLRemoveLandmarkObserver(this);
@@ -804,7 +804,7 @@ void LLLocationInputCtrl::refreshLocation()
 	    (mTextEntry && mTextEntry->hasFocus()) ||
 	    (mAddLandmarkBtn->hasFocus()))
 	{
-		llwarns << "Location input should not be refreshed when having focus" << llendl;
+		LL_WARNS() << "Location input should not be refreshed when having focus" << LL_ENDL;
 		return;
 	}
 
@@ -822,7 +822,7 @@ void LLLocationInputCtrl::refreshLocation()
 //MK
 //	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 //	{
-//		location_name = gAgent.mRRInterface.stringReplace (location_name, gAgent.mRRInterface.getParcelName(), "(Hidden)");
+//		location_name = gAgent.mRRInterface.stringReplace (location_name, gAgent.mRRInterface.mParcelName, "(Hidden)");
 //		if (gAgent.getRegion()) location_name = gAgent.mRRInterface.stringReplace (location_name, gAgent.getRegion()->getName(), "(Hidden)");
 //	}
 //mk

@@ -586,9 +586,9 @@ void LLFloaterWorldMap::trackLandmark( const LLUUID& landmark_item_id )
 	buildLandmarkIDLists();
 	BOOL found = FALSE;
 	S32 idx;
-	for (idx = 0; idx < mLandmarkItemIDList.count(); idx++)
+	for (idx = 0; idx < mLandmarkItemIDList.size(); idx++)
 	{
-		if ( mLandmarkItemIDList.get(idx) == landmark_item_id)
+		if ( mLandmarkItemIDList.at(idx) == landmark_item_id)
 		{
 			found = TRUE;
 			break;
@@ -597,13 +597,13 @@ void LLFloaterWorldMap::trackLandmark( const LLUUID& landmark_item_id )
 	
 	if (found && iface->setCurrentByID( landmark_item_id ) ) 
 	{
-		LLUUID asset_id = mLandmarkAssetIDList.get( idx );
+		LLUUID asset_id = mLandmarkAssetIDList.at( idx );
 		std::string name;
 		LLComboBox* combo = getChild<LLComboBox>( "landmark combo");
 		if (combo) name = combo->getSimple();
 		mTrackedStatus = LLTracker::TRACKING_LANDMARK;
-		LLTracker::trackLandmark(mLandmarkAssetIDList.get( idx ),	// assetID
-								 mLandmarkItemIDList.get( idx ), // itemID
+		LLTracker::trackLandmark(mLandmarkAssetIDList.at( idx ),	// assetID
+								 mLandmarkItemIDList.at( idx ), // itemID
 								 name);			// name
 		
 		if( asset_id != sHomeID )
@@ -643,8 +643,8 @@ void LLFloaterWorldMap::trackLocation(const LLVector3d& pos_global)
 	if (!sim_info)
 	{
 		// We haven't found a region for that point yet, leave the tracking to the world map
-		LLWorldMap::getInstance()->setTracking(pos_global);
 		LLTracker::stopTracking(NULL);
+		LLWorldMap::getInstance()->setTracking(pos_global);
 		S32 world_x = S32(pos_global.mdV[0] / 256);
 		S32 world_y = S32(pos_global.mdV[1] / 256);
 		LLWorldMapMessage::getInstance()->sendMapBlockRequest(world_x, world_y, world_x, world_y, true);
@@ -659,9 +659,9 @@ void LLFloaterWorldMap::trackLocation(const LLVector3d& pos_global)
 	{
 		// Down region. Show the blue circle of death!
 		// i.e. let the world map that this and tell it it's invalid
+		LLTracker::stopTracking(NULL);
 		LLWorldMap::getInstance()->setTracking(pos_global);
 		LLWorldMap::getInstance()->setTrackingInvalid();
-		LLTracker::stopTracking(NULL);
 		setDefaultBtn("");
 		
 		// clicked on a down region - turn off coord display
@@ -681,8 +681,8 @@ void LLFloaterWorldMap::trackLocation(const LLVector3d& pos_global)
 	
 	std::string tooltip("");
 	mTrackedStatus = LLTracker::TRACKING_LOCATION;
-	LLTracker::trackLocation(pos_global, full_name, tooltip);
 	LLWorldMap::getInstance()->cancelTracking();		// The floater is taking over the tracking
+	LLTracker::trackLocation(pos_global, full_name, tooltip);
 	
 	LLVector3d coord_pos = LLTracker::getTrackedPositionGlobal();
 	updateTeleportCoordsDisplay( coord_pos );
@@ -927,15 +927,15 @@ void LLFloaterWorldMap::buildLandmarkIDLists()
 		list->operateOnSelection(LLCtrlListInterface::OP_DELETE);
 	}
 	
-	mLandmarkItemIDList.reset();
-	mLandmarkAssetIDList.reset();
+	mLandmarkItemIDList.clear();
+	mLandmarkAssetIDList.clear();
 	
 	// Get all of the current landmarks
-	mLandmarkAssetIDList.put( LLUUID::null );
-	mLandmarkItemIDList.put( LLUUID::null );
+	mLandmarkAssetIDList.push_back( LLUUID::null );
+	mLandmarkItemIDList.push_back( LLUUID::null );
 	
-	mLandmarkAssetIDList.put( sHomeID );
-	mLandmarkItemIDList.put( sHomeID );
+	mLandmarkAssetIDList.push_back( sHomeID );
+	mLandmarkItemIDList.push_back( sHomeID );
 	
 	LLInventoryModel::cat_array_t cats;
 	LLInventoryModel::item_array_t items;
@@ -948,15 +948,18 @@ void LLFloaterWorldMap::buildLandmarkIDLists()
 	
 	std::sort(items.begin(), items.end(), LLViewerInventoryItem::comparePointers());
 	
-	S32 count = items.count();
+	mLandmarkAssetIDList.reserve(mLandmarkAssetIDList.size() + items.size());
+	mLandmarkItemIDList.reserve(mLandmarkItemIDList.size() + items.size());
+
+	S32 count = items.size();
 	for(S32 i = 0; i < count; ++i)
 	{
-		LLInventoryItem* item = items.get(i);
+		LLInventoryItem* item = items.at(i);
 		
 		list->addSimpleElement(item->getName(), ADD_BOTTOM, item->getUUID());
 		
-		mLandmarkAssetIDList.put( item->getAssetUUID() );
-		mLandmarkItemIDList.put( item->getUUID() );
+		mLandmarkAssetIDList.push_back( item->getAssetUUID() );
+		mLandmarkItemIDList.push_back( item->getUUID() );
 	}
 	
 	list->selectFirstItem();

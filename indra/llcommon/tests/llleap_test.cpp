@@ -22,7 +22,6 @@
 // other Linden headers
 #include "../test/lltut.h"
 #include "../test/namedtempfile.h"
-#include "../test/manageapr.h"
 #include "../test/catch_and_store_what_in.h"
 #include "wrapllerrs.h"
 #include "llevents.h"
@@ -32,8 +31,6 @@
 #include <functional>
 
 using boost::assign::list_of;
-
-static ManageAPR manager;
 
 StringVec sv(const StringVec& listof) { return listof; }
 
@@ -122,13 +119,10 @@ namespace tut
                    // finding indra/lib/python. Use our __FILE__, with
                    // raw-string syntax to deal with Windows pathnames.
                    "mydir = os.path.dirname(r'" << __FILE__ << "')\n"
-                   "try:\n"
-                   "    from llbase import llsd\n"
-                   "except ImportError:\n"
                    // We expect mydir to be .../indra/llcommon/tests.
-                   "    sys.path.insert(0,\n"
-                   "        os.path.join(mydir, os.pardir, os.pardir, 'lib', 'python'))\n"
-                   "    from indra.base import llsd\n"
+                   "sys.path.insert(0,\n"
+                   "    os.path.join(mydir, os.pardir, os.pardir, 'lib', 'python'))\n"
+                   "from indra.base import llsd\n"
                    "\n"
                    "class ProtocolError(Exception):\n"
                    "    def __init__(self, msg, data):\n"

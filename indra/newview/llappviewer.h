@@ -41,9 +41,9 @@ class LLImageDecodeThread;
 class LLTextureFetch;
 class LLWatchdogTimeout;
 class LLUpdaterService;
+class LLViewerJoystick;
 
-extern LLFastTimer::DeclareTimer FTM_FRAME;
-
+extern LLTrace::BlockTimerStatHandle FTM_FRAME;
 
 class LLAppViewer : public LLApp
 {
@@ -79,17 +79,22 @@ public:
 
     bool quitRequested() { return mQuitRequested; }
     bool logoutRequestSent() { return mLogoutRequestSent; }
+	bool isSecondInstance() { return mSecondInstance; }
 
-	void writeDebugInfo();
+	void writeDebugInfo(bool isStatic=true);
 
 	const LLOSInfo& getOSInfo() const { return mSysOSInfo; }
+
+	void setServerReleaseNotesURL(const std::string& url) { mServerReleaseNotesURL = url; }
+	LLSD getViewerInfo() const;
+	std::string getViewerInfoString() const;
 
 	// Report true if under the control of a debugger. A null-op default.
 	virtual bool beingDebugged() { return false; } 
 
 	virtual bool restoreErrorTrap() = 0; // Require platform specific override to reset error handling mechanism.
 	                                     // return false if the error trap needed restoration.
-	virtual void handleCrashReporting(bool reportFreeze = false) = 0; // What to do with crash report?
+	virtual void initCrashReporting(bool reportFreeze = false) = 0; // What to do with crash report?
 	static void handleViewerCrash(); // Hey! The viewer crashed. Do this, soon.
     void checkForCrash();
     
@@ -117,8 +122,9 @@ public:
     void loadNameCache();
     void saveNameCache();
 
-	void removeMarkerFile(bool leave_logout_marker = false);
+	void removeMarkerFiles();
 	
+	void removeDumpDir();
     // LLAppViewer testing helpers.
     // *NOTE: These will potentially crash the viewer. Only for debugging.
     virtual void forceErrorLLError();
@@ -169,6 +175,8 @@ public:
 	void addOnIdleCallback(const boost::function<void()>& cb); // add a callback to fire (once) when idle
 
 	void purgeCache(); // Clear the local cache. 
+	void purgeCacheImmediate(); //clear local cache immediately.
+	S32  updateTextureThreads(F32 max_time);
 	
 	// mute/unmute the system's master audio
 	virtual void setMasterSystemAudioMute(bool mute);
@@ -183,7 +191,7 @@ public:
 	
 protected:
 	virtual bool initWindow(); // Initialize the viewer's window.
-	virtual bool initLogging(); // Initialize log files, logging system, return false on failure.
+	virtual void initLoggingAndGetLastDuration(); // Initialize log files, logging system
 	virtual void initConsole() {}; // Initialize OS level debugging console.
 	virtual bool initHardwareTest() { return true; } // A false result indicates the app should quit.
 	virtual bool initSLURLHandler();
@@ -215,9 +223,10 @@ private:
 
 	void writeSystemInfo(); // Write system info to "debug_info.log"
 
-	bool anotherInstanceRunning(); 
-	void initMarkerFile(); 
-    
+	void processMarkerFiles(); 
+	static void recordMarkerVersion(LLAPRFile& marker_file);
+	bool markerIsSameVersion(const std::string& marker_name) const;
+	
     void idle(); 
     void idleShutdown();
 	// update avatar SLID and display name caches
@@ -237,11 +246,13 @@ private:
 	LLAPRFile mMarkerFile; // A file created to indicate the app is running.
 
 	std::string mLogoutMarkerFileName;
-	apr_file_t* mLogoutMarkerFile; // A file created to indicate the app is running.
+	LLAPRFile mLogoutMarkerFile; // A file created to indicate the app is running.
 
 	
 	LLOSInfo mSysOSInfo; 
 	bool mReportedCrash;
+
+	std::string mServerReleaseNotesURL;
 
 	// Thread objects.
 	static LLTextureCache* sTextureCache; 
@@ -253,11 +264,13 @@ private:
 	std::string mSerialNumber;
 	bool mPurgeCache;
     bool mPurgeOnExit;
+	bool mMainLoopInitialized;
+	LLViewerJoystick* joystick;
 
 	bool mSavedFinalSnapshot;
 	bool mSavePerAccountSettings;		// only save per account settings if login succeeded
 
-	bool mForceGraphicsDetail;
+	boost::optional<U32> mForceGraphicsLevel;
 
     bool mQuitRequested;				// User wants to quit, may have modified documents open.
     bool mLogoutRequestSent;			// Disconnect message sent to simulator, no longer safe to send messages to the sim.
@@ -267,7 +280,7 @@ private:
 	LLWatchdogTimeout* mMainloopTimeout;
 
 	// For performance and metric gathering
-	LLThread*	mFastTimerLogThread;
+	class LLThread*	mFastTimerLogThread;
 
 	// for tracking viewer<->region circuit death
 	bool mAgentRegionLastAlive;
@@ -321,18 +334,21 @@ typedef enum
 } eLastExecEvent;
 
 extern eLastExecEvent gLastExecEvent; // llstartup
+extern S32 gLastExecDuration; ///< the duration of the previous run in seconds (<0 indicates unknown)
+
+extern const char* gPlatform;
 
 extern U32 gFrameCount;
 extern U32 gForegroundFrameCount;
 
 extern LLPumpIO* gServicePump;
 
-extern U64      gFrameTime;					// The timestamp of the most-recently-processed frame
-extern F32		gFrameTimeSeconds;			// Loses msec precision after ~4.5 hours...
-extern F32		gFrameIntervalSeconds;		// Elapsed time between current and previous gFrameTimeSeconds
+extern U64MicrosecondsImplicit	gStartTime;
+extern U64MicrosecondsImplicit   gFrameTime;					// The timestamp of the most-recently-processed frame
+extern F32SecondsImplicit		gFrameTimeSeconds;			// Loses msec precision after ~4.5 hours...
+extern F32SecondsImplicit		gFrameIntervalSeconds;		// Elapsed time between current and previous gFrameTimeSeconds
 extern F32		gFPSClamped;				// Frames per second, smoothed, weighted toward last frame
 extern F32		gFrameDTClamped;
-extern U64		gStartTime;
 extern U32 		gFrameStalls;
 
 extern LLTimer gRenderStartTime;
@@ -360,7 +376,7 @@ class LLVFS;
 extern LLVFS	*gStaticVFS;
 
 extern LLMemoryInfo gSysMemory;
-extern U64 gMemoryAllocated;
+extern U64Bytes gMemoryAllocated;
 
 extern std::string gLastVersionChannel;
 

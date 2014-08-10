@@ -620,7 +620,7 @@ void LLPanelVolume::sendIsLight()
 	
 	BOOL value = getChild<LLUICtrl>("Light Checkbox Ctrl")->getValue();
 	volobjp->setIsLight(value);
-	llinfos << "update light sent" << llendl;
+	LL_INFOS() << "update light sent" << LL_ENDL;
 }
 
 void LLPanelVolume::sendIsFlexible()
@@ -652,7 +652,7 @@ void LLPanelVolume::sendIsFlexible()
 		LLSelectMgr::getInstance()->selectionUpdatePhantom(volobjp->flagPhantom());
 	}
 
-	llinfos << "update flexible sent" << llendl;
+	LL_INFOS() << "update flexible sent" << LL_ENDL;
 }
 
 void LLPanelVolume::sendPhysicsShapeType(LLUICtrl* ctrl, void* userdata)
@@ -710,9 +710,19 @@ void LLPanelVolume::onLightCancelColor(const LLSD& data)
 void LLPanelVolume::onLightCancelTexture(const LLSD& data)
 {
 	LLTextureCtrl* LightTextureCtrl = getChild<LLTextureCtrl>("light texture control");
+
 	if (LightTextureCtrl)
 	{
-		LightTextureCtrl->setImageAssetID(mLightSavedTexture);
+		LightTextureCtrl->setImageAssetID(LLUUID::null);
+	}
+
+	LLVOVolume *volobjp = (LLVOVolume *) mObject.get();
+	if(volobjp)
+	{
+		// Cancel the light texture as requested
+		// NORSPEC-292
+		//
+		volobjp->setLightTextureID(LLUUID::null);
 	}
 }
 

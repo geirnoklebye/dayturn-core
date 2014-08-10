@@ -310,7 +310,7 @@ LLTextEditor::~LLTextEditor()
 
 	// Scrollbar is deleted by LLView
 	std::for_each(mUndoStack.begin(), mUndoStack.end(), DeletePointer());
-
+	mUndoStack.clear();
 	// context menu is owned by menu holder, not us
 	//delete mContextMenu;
 }
@@ -666,6 +666,14 @@ void LLTextEditor::selectAll()
 	updatePrimary();
 }
 
+void LLTextEditor::selectByCursorPosition(S32 prev_cursor_pos, S32 next_cursor_pos)
+{
+	setCursorPos(prev_cursor_pos);
+	startSelection();
+	setCursorPos(next_cursor_pos);
+	endSelection();
+}
+
 BOOL LLTextEditor::handleMouseDown(S32 x, S32 y, MASK mask)
 {
 	BOOL	handled = FALSE;
@@ -713,7 +721,6 @@ BOOL LLTextEditor::handleMouseDown(S32 x, S32 y, MASK mask)
 				setCursorAtLocalPos( x, y, true );
 				startSelection();
 			}
-			gFocusMgr.setMouseCapture( this );
 		}
 
 		handled = TRUE;
@@ -722,6 +729,10 @@ BOOL LLTextEditor::handleMouseDown(S32 x, S32 y, MASK mask)
 	// Delay cursor flashing
 	resetCursorBlink();
 
+	if (handled && !gFocusMgr.getMouseCapture())
+	{
+		gFocusMgr.setMouseCapture( this );
+	}
 	return handled;
 }
 
@@ -781,7 +792,7 @@ BOOL LLTextEditor::handleHover(S32 x, S32 y, MASK mask)
 			setCursorAtLocalPos( clamped_x, clamped_y, true );
 			mSelectionEnd = mCursorPos;
 		}
-		lldebugst(LLERR_USER_INPUT) << "hover handled by " << getName() << " (active)" << llendl;		
+		LL_DEBUGS("UserInput") << "hover handled by " << getName() << " (active)" << LL_ENDL;		
 		getWindow()->setCursor(UI_CURSOR_IBEAM);
 		handled = TRUE;
 	}
@@ -1125,7 +1136,8 @@ void LLTextEditor::addChar(llwchar wc)
 	}
 }
 
-void LLTextEditor::addLineBreakChar()
+
+void LLTextEditor::addLineBreakChar(BOOL group_together)
 {
 	if( !getEnabled() )
 	{
@@ -1143,7 +1155,7 @@ void LLTextEditor::addLineBreakChar()
 	LLStyleConstSP sp(new LLStyle(LLStyle::Params()));
 	LLTextSegmentPtr segment = new LLLineBreakTextSegment(sp, mCursorPos);
 
-	S32 pos = execute(new TextCmdAddChar(mCursorPos, FALSE, '\n', segment));
+	S32 pos = execute(new TextCmdAddChar(mCursorPos, group_together, '\n', segment));
 	
 	setCursorPos(mCursorPos + pos);
 }
@@ -1484,21 +1496,28 @@ void LLTextEditor::pasteTextWithLinebreaks(LLWString & clean_string)
 	std::basic_string<llwchar>::size_type start = 0;
 	std::basic_string<llwchar>::size_type pos = clean_string.find('\n',start);
 	
-	while(pos!=-1)
+	while((pos != -1) && (pos != clean_string.length() -1))
 	{
 		if(pos!=start)
 		{
 			std::basic_string<llwchar> str = std::basic_string<llwchar>(clean_string,start,pos-start);
-			setCursorPos(mCursorPos + insert(mCursorPos, str, FALSE, LLTextSegmentPtr()));
+			setCursorPos(mCursorPos + insert(mCursorPos, str, TRUE, LLTextSegmentPtr()));
 		}
-		addLineBreakChar();
-		
+		addLineBreakChar(TRUE);			// Add a line break and group with the next addition.
+
 		start = pos+1;
 		pos = clean_string.find('\n',start);
 	}
 
-	std::basic_string<llwchar> str = std::basic_string<llwchar>(clean_string,start,clean_string.length()-start);
-	setCursorPos(mCursorPos + insert(mCursorPos, str, FALSE, LLTextSegmentPtr()));
+	if (pos != start)
+	{
+		std::basic_string<llwchar> str = std::basic_string<llwchar>(clean_string,start,clean_string.length()-start);
+		setCursorPos(mCursorPos + insert(mCursorPos, str, FALSE, LLTextSegmentPtr()));
+	}
+	else
+	{
+		addLineBreakChar(FALSE);		// Add a line break and end the grouping.
+	}
 }
 
 // copy selection to primary
@@ -1601,7 +1620,7 @@ BOOL LLTextEditor::handleControlKey(const KEY key, const MASK mask)
 		}
 	}
 
-	if (handled)
+	if (handled && !gFocusMgr.getMouseCapture())
 	{
 		updatePrimary();
 	}
@@ -1964,8 +1983,7 @@ void LLTextEditor::onFocusReceived()
 	updateAllowingLanguageInput();
 }
 
-// virtual, from LLView
-void LLTextEditor::onFocusLost()
+void LLTextEditor::focusLostHelper()
 {
 	updateAllowingLanguageInput();
 
@@ -1982,7 +2000,11 @@ void LLTextEditor::onFocusLost()
 
 	// Make sure cursor is shown again
 	getWindow()->showCursorFromMouseMove();
+}
 
+void LLTextEditor::onFocusLost()
+{
+	focusLostHelper();
 	LLTextBase::onFocusLost();
 }
 
@@ -2128,12 +2150,17 @@ void LLTextEditor::drawPreeditMarker()
 					continue;
 				}
 
-				S32 preedit_left = mVisibleTextRect.mLeft;
+				line_info& line = mLineInfoList[cur_line];
+				LLRect text_rect(line.mRect);
+				text_rect.mRight = mDocumentView->getRect().getWidth(); // clamp right edge to document extents
+				text_rect.translate(mDocumentView->getRect().mLeft, mDocumentView->getRect().mBottom); // adjust by scroll position
+
+				S32 preedit_left = text_rect.mLeft;
 				if (left > line_start)
 				{
 					preedit_left += mFont->getWidth(text, line_start, left - line_start);
 				}
-				S32 preedit_right = mVisibleTextRect.mLeft;
+				S32 preedit_right = text_rect.mLeft;
 				if (right < line_end)
 				{
 					preedit_right += mFont->getWidth(text, line_start, right - line_start);
@@ -2146,18 +2173,18 @@ void LLTextEditor::drawPreeditMarker()
 				if (mPreeditStandouts[i])
 				{
 					gl_rect_2d(preedit_left + preedit_standout_gap,
-							line_y + preedit_standout_position,
-							preedit_right - preedit_standout_gap - 1,
-							line_y + preedit_standout_position - preedit_standout_thickness,
-							(mCursorColor.get() * preedit_standout_brightness + mWriteableBgColor.get() * (1 - preedit_standout_brightness)).setAlpha(1.0f));
+							   text_rect.mBottom + mFont->getDescenderHeight() - 1,
+							   preedit_right - preedit_standout_gap - 1,
+							   text_rect.mBottom + mFont->getDescenderHeight() - 1 - preedit_standout_thickness,
+							   (mCursorColor.get() * preedit_standout_brightness + mWriteableBgColor.get() * (1 - preedit_standout_brightness)).setAlpha(1.0f));
 				}
 				else
 				{
 					gl_rect_2d(preedit_left + preedit_marker_gap,
-							line_y + preedit_marker_position,
-							preedit_right - preedit_marker_gap - 1,
-							line_y + preedit_marker_position - preedit_marker_thickness,
-							(mCursorColor.get() * preedit_marker_brightness + mWriteableBgColor.get() * (1 - preedit_marker_brightness)).setAlpha(1.0f));
+							   text_rect.mBottom + mFont->getDescenderHeight() - 1,
+							   preedit_right - preedit_marker_gap - 1,
+							   text_rect.mBottom + mFont->getDescenderHeight() - 1 - preedit_marker_thickness,
+							   (mCursorColor.get() * preedit_marker_brightness + mWriteableBgColor.get() * (1 - preedit_marker_brightness)).setAlpha(1.0f));
 				}
 			}
 		}
@@ -2240,11 +2267,12 @@ void LLTextEditor::draw()
 		LLRect clip_rect(mVisibleTextRect);
 		clip_rect.stretch(1);
 		LLLocalClipRect clip(clip_rect);
-		drawPreeditMarker();
 	}
 
 	LLTextBase::draw();
 	drawLineNumbers();
+
+    drawPreeditMarker();
 
 	//RN: the decision was made to always show the orange border for keyboard focus but do not put an insertion caret
 	// when in readonly mode
@@ -2310,7 +2338,8 @@ void LLTextEditor::autoIndent()
 	S32 i;
 
 	LLWString text = getWText();
-	while( ' ' == text[line_start] )
+	S32 offset = getLineOffsetFromDocIndex(mCursorPos);
+	while(( ' ' == text[line_start] ) && (space_count < offset))
 	{
 		space_count++;
 		line_start++;
@@ -2484,13 +2513,13 @@ BOOL LLTextEditor::tryToRevertToPristineState()
 }
 
 
-static LLFastTimer::DeclareTimer FTM_SYNTAX_HIGHLIGHTING("Syntax Highlighting");
+static LLTrace::BlockTimerStatHandle FTM_SYNTAX_HIGHLIGHTING("Syntax Highlighting");
 void LLTextEditor::loadKeywords(const std::string& filename,
 								const std::vector<std::string>& funcs,
 								const std::vector<std::string>& tooltips,
 								const LLColor3& color)
 {
-	LLFastTimer ft(FTM_SYNTAX_HIGHLIGHTING);
+	LL_RECORD_BLOCK_TIME(FTM_SYNTAX_HIGHLIGHTING);
 	if(mKeywords.loadFromFile(filename))
 	{
 		S32 count = llmin(funcs.size(), tooltips.size());
@@ -2515,7 +2544,7 @@ void LLTextEditor::updateSegments()
 {
 	if (mReflowIndex < S32_MAX && mKeywords.isLoaded() && mParseOnTheFly)
 	{
-		LLFastTimer ft(FTM_SYNTAX_HIGHLIGHTING);
+		LL_RECORD_BLOCK_TIME(FTM_SYNTAX_HIGHLIGHTING);
 		// HACK:  No non-ascii keywords for now
 		segment_vec_t segment_list;
 		mKeywords.findSegments(&segment_list, getWText(), mDefaultColor.get(), *this);
@@ -2586,20 +2615,20 @@ BOOL LLTextEditor::importBuffer(const char* buffer, S32 length )
 	instream.getline(tbuf, MAX_STRING);
 	if( 1 != sscanf(tbuf, "Linden text version %d", &version) )
 	{
-		llwarns << "Invalid Linden text file header " << llendl;
+		LL_WARNS() << "Invalid Linden text file header " << LL_ENDL;
 		return FALSE;
 	}
 
 	if( 1 != version )
 	{
-		llwarns << "Invalid Linden text file version: " << version << llendl;
+		LL_WARNS() << "Invalid Linden text file version: " << version << LL_ENDL;
 		return FALSE;
 	}
 
 	instream.getline(tbuf, MAX_STRING);
 	if( 0 != sscanf(tbuf, "{") )
 	{
-		llwarns << "Invalid Linden text file format" << llendl;
+		LL_WARNS() << "Invalid Linden text file format" << LL_ENDL;
 		return FALSE;
 	}
 
@@ -2607,13 +2636,13 @@ BOOL LLTextEditor::importBuffer(const char* buffer, S32 length )
 	instream.getline(tbuf, MAX_STRING);
 	if( 1 != sscanf(tbuf, "Text length %d", &text_len) )
 	{
-		llwarns << "Invalid Linden text length field" << llendl;
+		LL_WARNS() << "Invalid Linden text length field" << LL_ENDL;
 		return FALSE;
 	}
 
 	if( text_len > mMaxTextByteLength )
 	{
-		llwarns << "Invalid Linden text length: " << text_len << llendl;
+		LL_WARNS() << "Invalid Linden text length: " << text_len << LL_ENDL;
 		return FALSE;
 	}
 
@@ -2622,21 +2651,21 @@ BOOL LLTextEditor::importBuffer(const char* buffer, S32 length )
 	char* text = new char[ text_len + 1];
 	if (text == NULL)
 	{
-		llerrs << "Memory allocation failure." << llendl;			
+		LL_ERRS() << "Memory allocation failure." << LL_ENDL;			
 		return FALSE;
 	}
 	instream.get(text, text_len + 1, '\0');
 	text[text_len] = '\0';
 	if( text_len != (S32)strlen(text) )/* Flawfinder: ignore */
 	{
-		llwarns << llformat("Invalid text length: %d != %d ",strlen(text),text_len) << llendl;/* Flawfinder: ignore */
+		LL_WARNS() << llformat("Invalid text length: %d != %d ",strlen(text),text_len) << LL_ENDL;/* Flawfinder: ignore */
 		success = FALSE;
 	}
 
 	instream.getline(tbuf, MAX_STRING);
 	if( success && (0 != sscanf(tbuf, "}")) )
 	{
-		llwarns << "Invalid Linden text file format: missing terminal }" << llendl;
+		LL_WARNS() << "Invalid Linden text file format: missing terminal }" << LL_ENDL;
 		success = FALSE;
 	}
 
@@ -2695,11 +2724,23 @@ BOOL LLTextEditor::hasPreeditString() const
 
 void LLTextEditor::resetPreedit()
 {
+    if (hasSelection())
+    {
+		if (hasPreeditString())
+        {
+            LL_WARNS() << "Preedit and selection!" << LL_ENDL;
+            deselect();
+        }
+        else
+        {
+            deleteSelection(TRUE);
+        }
+    }
 	if (hasPreeditString())
 	{
 		if (hasSelection())
 		{
-			llwarns << "Preedit and selection!" << llendl;
+			LL_WARNS() << "Preedit and selection!" << LL_ENDL;
 			deselect();
 		}
 
@@ -2750,7 +2791,10 @@ void LLTextEditor::updatePreedit(const LLWString &preedit_string,
 	{
 		mPreeditOverwrittenWString.clear();
 	}
-	insertStringNoUndo(insert_preedit_at, mPreeditWString);
+    
+	segment_vec_t segments;
+	//pass empty segments to let "insertStringNoUndo" make new LLNormalTextSegment and insert it, if needed.
+	insertStringNoUndo(insert_preedit_at, mPreeditWString, &segments); 
 
 	mPreeditStandouts = preedit_standouts;
 
@@ -2889,7 +2933,7 @@ void LLTextEditor::markAsPreedit(S32 position, S32 length)
 	setCursorPos(position);
 	if (hasPreeditString())
 	{
-		llwarns << "markAsPreedit invoked when hasPreeditString is true." << llendl;
+		LL_WARNS() << "markAsPreedit invoked when hasPreeditString is true." << LL_ENDL;
 	}
 	mPreeditWString = LLWString( getWText(), position, length );
 	if (length > 0)

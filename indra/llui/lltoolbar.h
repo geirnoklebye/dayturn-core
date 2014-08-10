@@ -125,7 +125,20 @@ namespace LLToolBarEnums
 		SIDE_TOP,
 	};
 
-	LLLayoutStack::ELayoutOrientation getOrientation(SideType sideType);
+	enum EToolBarLocation
+	{
+		TOOLBAR_NONE = 0,
+		TOOLBAR_LEFT,
+		TOOLBAR_RIGHT,
+		TOOLBAR_BOTTOM,
+
+		TOOLBAR_COUNT,
+
+		TOOLBAR_FIRST = TOOLBAR_LEFT,
+		TOOLBAR_LAST = TOOLBAR_BOTTOM,
+	};
+
+	LLView::EOrientation getOrientation(SideType sideType);
 }
 
 // NOTE: This needs to occur before Param block declaration for proper compilation.
@@ -150,6 +163,29 @@ class LLToolBar
 {
 	friend class LLToolBarButton;
 public:
+
+	class LLCenterLayoutPanel : public LLLayoutPanel
+	{
+	public:
+		typedef boost::function<void(LLToolBarEnums::EToolBarLocation tb, const LLRect& rect)> reshape_callback_t;
+
+		virtual ~LLCenterLayoutPanel() {}
+		/*virtual*/ void handleReshape(const LLRect& rect, bool by_user);
+
+		void setLocationId(LLToolBarEnums::EToolBarLocation id) { mLocationId = id; }
+		void setReshapeCallback(reshape_callback_t cb) { mReshapeCallback = cb; }
+		void setButtonPanel(LLPanel * panel) { mButtonPanel = panel; }
+
+	protected:
+		friend class LLUICtrlFactory;
+		LLCenterLayoutPanel(const Params& params) : LLLayoutPanel(params), mButtonPanel(NULL) {}
+
+	private:
+		reshape_callback_t					mReshapeCallback;
+		LLToolBarEnums::EToolBarLocation	mLocationId;
+		LLPanel *							mButtonPanel;
+	};
+
 	struct Params : public LLInitParam::Block<Params, LLUICtrl::Params>
 	{
 		Mandatory<LLToolBarEnums::ButtonType>	button_display_mode;
@@ -192,12 +228,13 @@ public:
 	bool hasCommand(const LLCommandId& commandId) const;	// is this command bound to a button in this toolbar
 	bool enableCommand(const LLCommandId& commandId, bool enabled);	// enable/disable button bound to the specified command, if it exists in this toolbar
 	bool stopCommandInProgress(const LLCommandId& commandId);	// stop command if it is currently active
-	bool flashCommand(const LLCommandId& commandId, bool flash); // flash button associated with given command, if in this toolbar
+	bool flashCommand(const LLCommandId& commandId, bool flash, bool force_flashing = false); // flash button associated with given command, if in this toolbar
 
 	void setStartDragCallback(tool_startdrag_callback_t cb)   { mStartDragItemCallback  = cb; } // connects drag and drop behavior to external logic
 	void setHandleDragCallback(tool_handledrag_callback_t cb) { mHandleDragItemCallback = cb; }
 	void setHandleDropCallback(tool_handledrop_callback_t cb) { mHandleDropCallback     = cb; }
 	bool isReadOnly() const { return mReadOnly; }
+	LLCenterLayoutPanel * getCenterLayoutPanel() const { return mCenterPanel; } 
 
 	LLToolBarButton* createButton(const LLCommandId& id);
 
@@ -270,6 +307,7 @@ private:
 
 	// related widgets
 	LLLayoutStack*					mCenteringStack;
+	LLCenterLayoutPanel*			mCenterPanel;
 	LLPanel*						mButtonPanel;
 	LLHandle<class LLContextMenu>	mPopupMenuHandle;
 	LLHandle<class LLView>			mRemoveButtonHandle;

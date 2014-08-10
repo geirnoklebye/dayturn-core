@@ -313,6 +313,10 @@ void LLConversationLogList::onCustomAction(const LLSD& userdata)
 	{
 		LLAvatarActions::offerTeleport(selected_conversation_participant_id);
 	}
+	else if ("request_teleport" == command_name)
+	{
+		LLAvatarActions::teleportRequest(selected_conversation_participant_id);
+	}
 	else if("add_friend" == command_name)
 	{
 		if (!LLAvatarActions::isFriend(selected_conversation_participant_id))
@@ -490,7 +494,7 @@ bool LLConversationLogListItemComparator::compare(const LLPanel* item1, const LL
 
 	if (!conversation_item1 || !conversation_item2)
 	{
-		llerror("conversation_item1 and conversation_item2 cannot be null", 0);
+		LL_ERRS() << "conversation_item1 and conversation_item2 cannot be null" << LL_ENDL;
 		return true;
 	}
 
@@ -518,8 +522,8 @@ bool LLConversationLogListNameComparator::doCompare(const LLConversationLogListI
 
 bool LLConversationLogListDateComparator::doCompare(const LLConversationLogListItem* conversation1, const LLConversationLogListItem* conversation2) const
 {
-	time_t date1 = conversation1->getConversation()->getTime();
-	time_t date2 = conversation2->getConversation()->getTime();
+	U64Seconds date1 = conversation1->getConversation()->getTime();
+	U64Seconds date2 = conversation2->getConversation()->getTime();
 	const LLUUID& id1 = conversation1->getConversation()->getParticipantID();
 	const LLUUID& id2 = conversation2->getConversation()->getParticipantID();
 

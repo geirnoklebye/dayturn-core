@@ -42,6 +42,7 @@
 #include "llprocessor.h"
 #include "llerrorcontrol.h"
 #include "llevents.h"
+#include "llformat.h"
 #include "lltimer.h"
 #include "llsdserialize.h"
 #include "llsdutil.h"
@@ -58,21 +59,25 @@
 using namespace llsd;
 
 #if LL_WINDOWS
-#	define WIN32_LEAN_AND_MEAN
-#	include <winsock2.h>
-#	include <windows.h>
+#	include "llwin32headerslean.h"
 #   include <psapi.h>               // GetPerformanceInfo() et al.
 #elif LL_DARWIN
 #	include <errno.h>
 #	include <sys/sysctl.h>
 #	include <sys/utsname.h>
 #	include <stdint.h>
-#	include <Carbon/Carbon.h>
+#	include <CoreServices/CoreServices.h>
 #   include <stdexcept>
 #	include <mach/host_info.h>
 #	include <mach/mach_host.h>
 #	include <mach/task.h>
 #	include <mach/task_info.h>
+
+// disable warnings about Gestalt calls being deprecated
+// until Apple get's on the ball and provides an alternative
+//
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 #elif LL_LINUX
 #	include <errno.h>
 #	include <sys/utsname.h>
@@ -80,6 +85,7 @@ using namespace llsd;
 #	include <sys/sysinfo.h>
 #   include <stdexcept>
 const char MEMINFO_FILE[] = "/proc/meminfo";
+#   include <gnu/libc-version.h>
 #elif LL_SOLARIS
 #	include <stdio.h>
 #	include <unistd.h>
@@ -107,6 +113,9 @@ static const F32 MEM_INFO_THROTTLE = 20;
 static const F32 MEM_INFO_WINDOW = 10*60;
 
 #if LL_WINDOWS
+// We cannot trust GetVersionEx function on Win8.1 , we should check this value when creating OS string
+static const U32 WINNT_WINBLUE = 0x0603;
+
 #ifndef DLLVERSIONINFO
 typedef struct _DllVersionInfo
 {
@@ -175,13 +184,67 @@ bool get_shell32_dll_version(DWORD& major, DWORD& minor, DWORD& build_number)
 }
 #endif // LL_WINDOWS
 
+// Wrap boost::regex_match() with a function that doesn't throw.
+template <typename S, typename M, typename R>
+static bool regex_match_no_exc(const S& string, M& match, const R& regex)
+{
+    try
+    {
+        return boost::regex_match(string, match, regex);
+    }
+    catch (const std::runtime_error& e)
+    {
+        LL_WARNS("LLMemoryInfo") << "error matching with '" << regex.str() << "': "
+                                 << e.what() << ":\n'" << string << "'" << LL_ENDL;
+        return false;
+    }
+}
+
+// Wrap boost::regex_search() with a function that doesn't throw.
+template <typename S, typename M, typename R>
+static bool regex_search_no_exc(const S& string, M& match, const R& regex)
+{
+    try
+    {
+        return boost::regex_search(string, match, regex);
+    }
+    catch (const std::runtime_error& e)
+    {
+        LL_WARNS("LLMemoryInfo") << "error searching with '" << regex.str() << "': "
+                                 << e.what() << ":\n'" << string << "'" << LL_ENDL;
+        return false;
+    }
+}
+
+#if LL_WINDOWS
+// GetVersionEx should not works correct with Windows 8.1 and the later version. We need to check this case 
+static bool	check_for_version(WORD wMajorVersion, WORD wMinorVersion, WORD wServicePackMajor)
+{
+    OSVERSIONINFOEXW osvi = { sizeof(osvi), 0, 0, 0, 0, {0}, 0, 0 };
+    DWORDLONG        const dwlConditionMask = VerSetConditionMask(
+        VerSetConditionMask(
+        VerSetConditionMask(
+            0, VER_MAJORVERSION, VER_GREATER_EQUAL),
+               VER_MINORVERSION, VER_GREATER_EQUAL),
+               VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
+
+    osvi.dwMajorVersion = wMajorVersion;
+    osvi.dwMinorVersion = wMinorVersion;
+    osvi.wServicePackMajor = wServicePackMajor;
+
+    return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;
+}
+#endif
+
+
 LLOSInfo::LLOSInfo() :
-	mMajorVer(0), mMinorVer(0), mBuild(0)
+	mMajorVer(0), mMinorVer(0), mBuild(0), mOSVersionString("")	 
 {
 
 #if LL_WINDOWS
 	OSVERSIONINFOEX osvi;
 	BOOL bOsVersionInfoEx;
+	BOOL bShouldUseShellVersion = false;
 
 	// Try calling GetVersionEx using the OSVERSIONINFOEX structure.
 	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
@@ -244,10 +307,18 @@ LLOSInfo::LLOSInfo() :
 				}
 				else if(osvi.dwMinorVersion == 2)
 				{
+					if (check_for_version(HIBYTE(WINNT_WINBLUE), LOBYTE(WINNT_WINBLUE), 0))
+					{
+						mOSStringSimple = "Microsoft Windows 8.1 ";
+						bShouldUseShellVersion = true; // GetVersionEx failed, going to use shell version
+					}
+					else
+					{
 					if(osvi.wProductType == VER_NT_WORKSTATION)
 						mOSStringSimple = "Microsoft Windows 8 ";
 					else
 						mOSStringSimple = "Windows Server 2012 ";
+				}
 				}
 
 				///get native system info if available..
@@ -314,9 +385,8 @@ LLOSInfo::LLOSInfo() :
 			}
 			else
 			{
-				tmpstr = llformat("%s (Build %d)",
-								  csdversion.c_str(),
-								  (osvi.dwBuildNumber & 0xffff));
+				tmpstr = !bShouldUseShellVersion ?  llformat("%s (Build %d)", csdversion.c_str(), (osvi.dwBuildNumber & 0xffff)):
+					llformat("%s (Build %d)", csdversion.c_str(), shell32_build);
 			}
 
 			mOSString = mOSStringSimple + tmpstr;
@@ -352,7 +422,7 @@ LLOSInfo::LLOSInfo() :
 	std::string compatibility_mode;
 	if(got_shell32_version)
 	{
-		if(osvi.dwMajorVersion != shell32_major || osvi.dwMinorVersion != shell32_minor)
+		if((osvi.dwMajorVersion != shell32_major || osvi.dwMinorVersion != shell32_minor) && !bShouldUseShellVersion)
 		{
 			compatibility_mode = llformat(" compatibility mode. real ver: %d.%d (Build %d)", 
 											shell32_major,
@@ -412,6 +482,102 @@ LLOSInfo::LLOSInfo() :
 		mOSString = mOSStringSimple;
 	}
 	
+#elif LL_LINUX
+	
+	struct utsname un;
+	if(uname(&un) != -1)
+	{
+		mOSStringSimple.append(un.sysname);
+		mOSStringSimple.append(" ");
+		mOSStringSimple.append(un.release);
+
+		mOSString = mOSStringSimple;
+		mOSString.append(" ");
+		mOSString.append(un.version);
+		mOSString.append(" ");
+		mOSString.append(un.machine);
+
+		// Simplify 'Simple'
+		std::string ostype = mOSStringSimple.substr(0, mOSStringSimple.find_first_of(" ", 0));
+		if (ostype == "Linux")
+		{
+			// Only care about major and minor Linux versions, truncate at second '.'
+			std::string::size_type idx1 = mOSStringSimple.find_first_of(".", 0);
+			std::string::size_type idx2 = (idx1 != std::string::npos) ? mOSStringSimple.find_first_of(".", idx1+1) : std::string::npos;
+			std::string simple = mOSStringSimple.substr(0, idx2);
+			if (simple.length() > 0)
+				mOSStringSimple = simple;
+		}
+	}
+	else
+	{
+		mOSStringSimple.append("Unable to collect OS info");
+		mOSString = mOSStringSimple;
+	}
+
+	const char OS_VERSION_MATCH_EXPRESSION[] = "([0-9]+)\\.([0-9]+)(\\.([0-9]+))?";
+	boost::regex os_version_parse(OS_VERSION_MATCH_EXPRESSION);
+	boost::smatch matched;
+
+	std::string glibc_version(gnu_get_libc_version());
+	if ( regex_match_no_exc(glibc_version, matched, os_version_parse) )
+	{
+		LL_INFOS("AppInit") << "Using glibc version '" << glibc_version << "' as OS version" << LL_ENDL;
+	
+		std::string version_value;
+
+		if ( matched[1].matched ) // Major version
+		{
+			version_value.assign(matched[1].first, matched[1].second);
+			if (sscanf(version_value.c_str(), "%d", &mMajorVer) != 1)
+			{
+			  LL_WARNS("AppInit") << "failed to parse major version '" << version_value << "' as a number" << LL_ENDL;
+			}
+		}
+		else
+		{
+			LL_ERRS("AppInit")
+				<< "OS version regex '" << OS_VERSION_MATCH_EXPRESSION 
+				<< "' returned true, but major version [1] did not match"
+				<< LL_ENDL;
+		}
+
+		if ( matched[2].matched ) // Minor version
+		{
+			version_value.assign(matched[2].first, matched[2].second);
+			if (sscanf(version_value.c_str(), "%d", &mMinorVer) != 1)
+			{
+			  LL_ERRS("AppInit") << "failed to parse minor version '" << version_value << "' as a number" << LL_ENDL;
+			}
+		}
+		else
+		{
+			LL_ERRS("AppInit")
+				<< "OS version regex '" << OS_VERSION_MATCH_EXPRESSION 
+				<< "' returned true, but minor version [1] did not match"
+				<< LL_ENDL;
+		}
+
+		if ( matched[4].matched ) // Build version (optional) - note that [3] includes the '.'
+		{
+			version_value.assign(matched[4].first, matched[4].second);
+			if (sscanf(version_value.c_str(), "%d", &mBuild) != 1)
+			{
+			  LL_ERRS("AppInit") << "failed to parse build version '" << version_value << "' as a number" << LL_ENDL;
+			}
+		}
+		else
+		{
+			LL_INFOS("AppInit")
+				<< "OS build version not provided; using zero"
+				<< LL_ENDL;
+		}
+	}
+	else
+	{
+		LL_WARNS("AppInit") << "glibc version '" << glibc_version << "' cannot be parsed to three numbers; using all zeros" << LL_ENDL;
+	}
+
 #else
 	
 	struct utsname un;
@@ -444,7 +610,12 @@ LLOSInfo::LLOSInfo() :
 		mOSStringSimple.append("Unable to collect OS info");
 		mOSString = mOSStringSimple;
 	}
+
 #endif
+
+	std::stringstream dotted_version_string;
+	dotted_version_string << mMajorVer << "." << mMinorVer << "." << mBuild;
+	mOSVersionString.append(dotted_version_string.str());
 
 }
 
@@ -473,7 +644,7 @@ S32 LLOSInfo::getMaxOpenFiles()
 			}
 			else
 			{
-				llerrs << "LLOSInfo::getMaxOpenFiles: sysconf error for _SC_OPEN_MAX" << llendl;
+				LL_ERRS() << "LLOSInfo::getMaxOpenFiles: sysconf error for _SC_OPEN_MAX" << LL_ENDL;
 			}
 		}
 	}
@@ -494,6 +665,11 @@ const std::string& LLOSInfo::getOSString() const
 const std::string& LLOSInfo::getOSStringSimple() const
 {
 	return mOSStringSimple;
+}
+
+const std::string& LLOSInfo::getOSVersionString() const
+{
+	return mOSVersionString;
 }
 
 const S32 STATUS_SIZE = 8192;
@@ -527,12 +703,12 @@ U32 LLOSInfo::getProcessVirtualSizeKB()
 	sprintf(proc_ps, "/proc/%d/psinfo", (int)getpid());
 	int proc_fd = -1;
 	if((proc_fd = open(proc_ps, O_RDONLY)) == -1){
-		llwarns << "unable to open " << proc_ps << llendl;
+		LL_WARNS() << "unable to open " << proc_ps << LL_ENDL;
 		return 0;
 	}
 	psinfo_t proc_psinfo;
 	if(read(proc_fd, &proc_psinfo, sizeof(psinfo_t)) != sizeof(psinfo_t)){
-		llwarns << "Unable to read " << proc_ps << llendl;
+		LL_WARNS() << "Unable to read " << proc_ps << LL_ENDL;
 		close(proc_fd);
 		return 0;
 	}
@@ -573,12 +749,12 @@ U32 LLOSInfo::getProcessResidentSizeKB()
 	sprintf(proc_ps, "/proc/%d/psinfo", (int)getpid());
 	int proc_fd = -1;
 	if((proc_fd = open(proc_ps, O_RDONLY)) == -1){
-		llwarns << "unable to open " << proc_ps << llendl;
+		LL_WARNS() << "unable to open " << proc_ps << LL_ENDL;
 		return 0;
 	}
 	psinfo_t proc_psinfo;
 	if(read(proc_fd, &proc_psinfo, sizeof(psinfo_t)) != sizeof(psinfo_t)){
-		llwarns << "Unable to read " << proc_ps << llendl;
+		LL_WARNS() << "Unable to read " << proc_ps << LL_ENDL;
 		close(proc_fd);
 		return 0;
 	}
@@ -687,45 +863,13 @@ private:
 	LLSD mStats;
 };
 
-// Wrap boost::regex_match() with a function that doesn't throw.
-template <typename S, typename M, typename R>
-static bool regex_match_no_exc(const S& string, M& match, const R& regex)
-{
-    try
-    {
-        return boost::regex_match(string, match, regex);
-    }
-    catch (const std::runtime_error& e)
-    {
-        LL_WARNS("LLMemoryInfo") << "error matching with '" << regex.str() << "': "
-                                 << e.what() << ":\n'" << string << "'" << LL_ENDL;
-        return false;
-    }
-}
-
-// Wrap boost::regex_search() with a function that doesn't throw.
-template <typename S, typename M, typename R>
-static bool regex_search_no_exc(const S& string, M& match, const R& regex)
-{
-    try
-    {
-        return boost::regex_search(string, match, regex);
-    }
-    catch (const std::runtime_error& e)
-    {
-        LL_WARNS("LLMemoryInfo") << "error searching with '" << regex.str() << "': "
-                                 << e.what() << ":\n'" << string << "'" << LL_ENDL;
-        return false;
-    }
-}
-
 LLMemoryInfo::LLMemoryInfo()
 {
 	refresh();
 }
 
 #if LL_WINDOWS
-static U32 LLMemoryAdjustKBResult(U32 inKB)
+static U32Kilobytes LLMemoryAdjustKBResult(U32Kilobytes inKB)
 {
 	// Moved this here from llfloaterabout.cpp
 
@@ -736,16 +880,16 @@ static U32 LLMemoryAdjustKBResult(U32 inKB)
 	// returned from the GetMemoryStatusEx function.  Here we keep the
 	// original adjustment from llfoaterabout.cpp until this can be
 	// fixed somehow.
-	inKB += 1024;
+	inKB += U32Megabytes(1);
 
 	return inKB;
 }
 #endif
 
-U32 LLMemoryInfo::getPhysicalMemoryKB() const
+U32Kilobytes LLMemoryInfo::getPhysicalMemoryKB() const
 {
 #if LL_WINDOWS
-	return LLMemoryAdjustKBResult(mStatsMap["Total Physical KB"].asInteger());
+	return LLMemoryAdjustKBResult(U32Kilobytes(mStatsMap["Total Physical KB"].asInteger()));
 
 #elif LL_DARWIN
 	// This might work on Linux as well.  Someone check...
@@ -755,17 +899,17 @@ U32 LLMemoryInfo::getPhysicalMemoryKB() const
 	size_t len = sizeof(phys);	
 	sysctl(mib, 2, &phys, &len, NULL, 0);
 	
-	return (U32)(phys >> 10);
+	return U64Bytes(phys);
 
 #elif LL_LINUX
 	U64 phys = 0;
 	phys = (U64)(getpagesize()) * (U64)(get_phys_pages());
-	return (U32)(phys >> 10);
+	return U64Bytes(phys);
 
 #elif LL_SOLARIS
 	U64 phys = 0;
 	phys = (U64)(getpagesize()) * (U64)(sysconf(_SC_PHYS_PAGES));
-	return (U32)(phys >> 10);
+	return U64Bytes(phys);
 
 #else
 	return 0;
@@ -773,32 +917,32 @@ U32 LLMemoryInfo::getPhysicalMemoryKB() const
 #endif
 }
 
-U32 LLMemoryInfo::getPhysicalMemoryClamped() const
+U32Bytes LLMemoryInfo::getPhysicalMemoryClamped() const
 {
 	// Return the total physical memory in bytes, but clamp it
 	// to no more than U32_MAX
 	
-	U32 phys_kb = getPhysicalMemoryKB();
-	if (phys_kb >= 4194304 /* 4GB in KB */)
+	U32Kilobytes phys_kb = getPhysicalMemoryKB();
+	if (phys_kb >= U32Gigabytes(4))
 	{
-		return U32_MAX;
+		return U32Bytes(U32_MAX);
 	}
 	else
 	{
-		return phys_kb << 10;
+		return phys_kb;
 	}
 }
 
 //static
-void LLMemoryInfo::getAvailableMemoryKB(U32& avail_physical_mem_kb, U32& avail_virtual_mem_kb)
+void LLMemoryInfo::getAvailableMemoryKB(U32Kilobytes& avail_physical_mem_kb, U32Kilobytes& avail_virtual_mem_kb)
 {
 #if LL_WINDOWS
 	// Sigh, this shouldn't be a static method, then we wouldn't have to
 	// reload this data separately from refresh()
 	LLSD statsMap(loadStatsMap());
 
-	avail_physical_mem_kb = statsMap["Avail Physical KB"].asInteger();
-	avail_virtual_mem_kb  = statsMap["Avail Virtual KB"].asInteger();
+	avail_physical_mem_kb = (U32Kilobytes)statsMap["Avail Physical KB"].asInteger();
+	avail_virtual_mem_kb  = (U32Kilobytes)statsMap["Avail Virtual KB"].asInteger();
 
 #elif LL_DARWIN
 	// mStatsMap is derived from vm_stat, look for (e.g.) "kb free":
@@ -815,8 +959,8 @@ void LLMemoryInfo::getAvailableMemoryKB(U32& avail_physical_mem_kb, U32& avail_v
 	// Pageins:                     2097212.
 	// Pageouts:                      41759.
 	// Object cache: 841598 hits of 7629869 lookups (11% hit rate)
-	avail_physical_mem_kb = -1 ;
-	avail_virtual_mem_kb = -1 ;
+	avail_physical_mem_kb = (U32Kilobytes)-1 ;
+	avail_virtual_mem_kb = (U32Kilobytes)-1 ;
 
 #elif LL_LINUX
 	// mStatsMap is derived from MEMINFO_FILE:
@@ -867,15 +1011,15 @@ void LLMemoryInfo::getAvailableMemoryKB(U32& avail_physical_mem_kb, U32& avail_v
 	// DirectMap4k:      434168 kB
 	// DirectMap2M:      477184 kB
 	// (could also run 'free', but easier to read a file than run a program)
-	avail_physical_mem_kb = -1 ;
-	avail_virtual_mem_kb = -1 ;
+	avail_physical_mem_kb = (U32Kilobytes)-1 ;
+	avail_virtual_mem_kb = (U32Kilobytes)-1 ;
 
 #else
 	//do not know how to collect available memory info for other systems.
 	//leave it blank here for now.
 
-	avail_physical_mem_kb = -1 ;
-	avail_virtual_mem_kb = -1 ;
+	avail_physical_mem_kb = (U32Kilobytes)-1 ;
+	avail_virtual_mem_kb = (U32Kilobytes)-1 ;
 #endif
 }
 
@@ -1288,9 +1432,14 @@ public:
             LL_CONT << "slowest framerate for last " << int(prevSize * MEM_INFO_THROTTLE)
                     << " seconds ";
         }
-        LL_CONT << std::fixed << std::setprecision(1) << framerate << '\n'
-                << LLMemoryInfo() << LL_ENDL;
 
+	S32 precision = LL_CONT.precision();
+
+        LL_CONT << std::fixed << std::setprecision(1) << framerate << '\n'
+                << LLMemoryInfo();
+
+	LL_CONT.precision(precision);
+	LL_CONT << LL_ENDL;
         return false;
     }
 
@@ -1337,7 +1486,7 @@ BOOL gunzip_file(const std::string& srcfile, const std::string& dstfile)
 		size_t nwrit = fwrite(buffer, sizeof(U8), bytes, dst);
 		if (nwrit < (size_t) bytes)
 		{
-			llwarns << "Short write on " << tmpfile << ": Wrote " << nwrit << " of " << bytes << " bytes." << llendl;
+			LL_WARNS() << "Short write on " << tmpfile << ": Wrote " << nwrit << " of " << bytes << " bytes." << LL_ENDL;
 			goto err;
 		}
 	} while(gzeof(src) == 0);
@@ -1370,14 +1519,14 @@ BOOL gzip_file(const std::string& srcfile, const std::string& dstfile)
 	{
 		if (gzwrite(dst, buffer, bytes) <= 0)
 		{
-			llwarns << "gzwrite failed: " << gzerror(dst, NULL) << llendl;
+			LL_WARNS() << "gzwrite failed: " << gzerror(dst, NULL) << LL_ENDL;
 			goto err;
 		}
 	}
 
 	if (ferror(src))
 	{
-		llwarns << "Error reading " << srcfile << llendl;
+		LL_WARNS() << "Error reading " << srcfile << LL_ENDL;
 		goto err;
 	}
 
@@ -1394,3 +1543,10 @@ BOOL gzip_file(const std::string& srcfile, const std::string& dstfile)
 	if (dst != NULL) gzclose(dst);
 	return retval;
 }
+
+#if LL_DARWIN
+// disable warnings about Gestalt calls being deprecated
+// until Apple get's on the ball and provides an alternative
+//
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif

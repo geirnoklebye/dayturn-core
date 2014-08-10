@@ -24,7 +24,7 @@
  * $/LicenseInfo$
  */
 
-#ifndef LL_LLTEXTURECACHE_
+#ifndef LL_LLTEXTURECACHE_H
 #define LL_LLTEXTURECACHE_H
 
 #include "lldir.h"
@@ -104,7 +104,7 @@ public:
 
 	/*virtual*/ S32 update(F32 max_time_ms);	
 	
-	void purgeCache(ELLPath location);
+	void purgeCache(ELLPath location, bool remove_dir = true);
 	void setReadOnly(BOOL read_only) ;
 	S64 initCache(ELLPath location, S64 maxsize, BOOL texture_cache_mismatch);
 
@@ -131,8 +131,8 @@ public:
 	// debug
 	S32 getNumReads() { return mReaders.size(); }
 	S32 getNumWrites() { return mWriters.size(); }
-	S64 getUsage() { return mTexturesSizeTotal; }
-	S64 getMaxUsage() { return sCacheMaxTexturesSize; }
+	S64Bytes getUsage() { return S64Bytes(mTexturesSizeTotal); }
+	S64Bytes getMaxUsage() { return S64Bytes(sCacheMaxTexturesSize); }
 	U32 getEntries() { return mHeaderEntriesInfo.mEntries; }
 	U32 getMaxEntries() { return sCacheMaxEntries; };
 	BOOL isInCache(const LLUUID& id) ;

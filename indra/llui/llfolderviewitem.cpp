@@ -274,6 +274,7 @@ void LLFolderViewItem::refresh()
 	}
 
 	mLabelWidthDirty = true;
+    // Dirty the filter flag of the model from the view (CHUI-849)
 	vmi.dirtyFilter();
 }
 
@@ -306,7 +307,12 @@ std::set<LLFolderViewItem*> LLFolderViewItem::getSelectionList() const
 // addToFolder() returns TRUE if it succeeds. FALSE otherwise
 void LLFolderViewItem::addToFolder(LLFolderViewFolder* folder)
 {
-	folder->addItem(this);
+	folder->addItem(this); 
+
+	// Compute indentation since parent folder changed
+	mIndentation = (getParentFolder())
+		? getParentFolder()->getIndentation() + mLocalIndentation
+		: 0; 
 }
 
 
@@ -489,7 +495,7 @@ BOOL LLFolderViewItem::handleMouseDown( S32 x, S32 y, MASK mask )
 	// No handler needed for focus lost since this class has no
 	// state that depends on it.
 	gFocusMgr.setMouseCapture( this );
-    
+
 	if (!mIsSelected)
 	{
 		if(mask & MASK_CONTROL)
@@ -520,7 +526,7 @@ BOOL LLFolderViewItem::handleMouseDown( S32 x, S32 y, MASK mask )
 
 BOOL LLFolderViewItem::handleHover( S32 x, S32 y, MASK mask )
 {
-	static LLCachedControl<S32> drag_and_drop_threshold(*LLUI::sSettingGroups["config"],"DragAndDropDistanceThreshold");
+	static LLCachedControl<S32> drag_and_drop_threshold(*LLUI::sSettingGroups["config"],"DragAndDropDistanceThreshold", 3);
 
 	mIsMouseOverTitle = (y > (getRect().getHeight() - mItemHeight));
 
@@ -636,7 +642,7 @@ BOOL LLFolderViewItem::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 	}
 	if (handled)
 	{
-		lldebugst(LLERR_USER_INPUT) << "dragAndDrop handled by LLFolderViewItem" << llendl;
+		LL_DEBUGS("UserInput") << "dragAndDrop handled by LLFolderViewItem" << LL_ENDL;
 	}
 
 	return handled;
@@ -706,7 +712,7 @@ void LLFolderViewItem::drawHighlight(const BOOL showContent, const BOOL hasKeybo
                 bg_color.mV[VALPHA] = clamp_rescale(fade_time, 0.f, 0.4f, 0.f, bg_color.mV[VALPHA]);
             }
         	gl_rect_2d(FOCUS_LEFT,
-					   focus_top,
+					   focus_top, 
 					   getRect().getWidth() - 2,
 					   focus_bottom,
 					   bg_color, hasKeyboardFocus);
@@ -860,7 +866,7 @@ void LLFolderViewItem::draw()
 						  LLFontGL::LEFT, LLFontGL::BOTTOM, LLFontGL::NORMAL, LLFontGL::NO_SHADOW,
 						  S32_MAX, S32_MAX, &right_x, FALSE );
 	}
-    
+
 	//--------------------------------------------------------------------------------//
 	// Highlight string match
 	//
@@ -882,7 +888,7 @@ const LLFolderViewModelInterface* LLFolderViewItem::getFolderViewModel( void ) c
 {
 	return getRoot()->getFolderViewModel();
 }
-
+		
 LLFolderViewModelInterface* LLFolderViewItem::getFolderViewModel( void )
 {
 	return getRoot()->getFolderViewModel();
@@ -919,11 +925,11 @@ void LLFolderViewFolder::updateLabelRotation()
 	}
 	else if (isOpen())
 	{
-		mControlLabelRotation = lerp(mControlLabelRotation, -90.f, LLCriticalDamp::getInterpolant(0.04f));
+		mControlLabelRotation = lerp(mControlLabelRotation, -90.f, LLSmoothInterpolation::getInterpolant(0.04f));
 	}
 	else
 	{
-		mControlLabelRotation = lerp(mControlLabelRotation, 0.f, LLCriticalDamp::getInterpolant(0.025f));
+		mControlLabelRotation = lerp(mControlLabelRotation, 0.f, LLSmoothInterpolation::getInterpolant(0.025f));
 	}
 }
 
@@ -939,18 +945,29 @@ LLFolderViewFolder::~LLFolderViewFolder( void )
 void LLFolderViewFolder::addToFolder(LLFolderViewFolder* folder)
 {
 	folder->addFolder(this);
+
+	// Compute indentation since parent folder changed
+	mIndentation = (getParentFolder())
+		? getParentFolder()->getIndentation() + mLocalIndentation
+		: 0; 
 }
 
-static LLFastTimer::DeclareTimer FTM_ARRANGE("Arrange");
+static LLTrace::BlockTimerStatHandle FTM_ARRANGE("Arrange");
 
-// Finds width and height of this object and its children. Also
-// makes sure that this view and its children are the right size.
+// Make everything right and in the right place ready for drawing (CHUI-849)
+// * Sort everything correctly if necessary
+// * Turn widgets visible/invisible according to their model filtering state
+// * Takes animation state into account for opening/closing of folders (this makes widgets visible/invisible)
+// * Reposition visible widgets so that they line up correctly with no gap
+// * Compute the width and height of the current folder and its children
+// * Makes sure that this view and its children are the right size
 S32 LLFolderViewFolder::arrange( S32* width, S32* height )
 {
-	// sort before laying out contents
+	// Sort before laying out contents
+    // Note that we sort from the root (CHUI-849)
 	getRoot()->getFolderViewModel()->sort(this);
 
-	LLFastTimer t2(FTM_ARRANGE);
+	LL_RECORD_BLOCK_TIME(FTM_ARRANGE);
 
 	// evaluate mHasVisibleChildren
 	mHasVisibleChildren = false;
@@ -1056,7 +1073,7 @@ S32 LLFolderViewFolder::arrange( S32* width, S32* height )
 	// animate current height towards target height
 	if (llabs(mCurHeight - mTargetHeight) > 1.f)
 	{
-		mCurHeight = lerp(mCurHeight, mTargetHeight, LLCriticalDamp::getInterpolant(isOpen() ? FOLDER_OPEN_TIME_CONSTANT : FOLDER_CLOSE_TIME_CONSTANT));
+		mCurHeight = lerp(mCurHeight, mTargetHeight, LLSmoothInterpolation::getInterpolant(isOpen() ? FOLDER_OPEN_TIME_CONSTANT : FOLDER_CLOSE_TIME_CONSTANT));
 
 		requestArrange();
 
@@ -1102,7 +1119,7 @@ S32 LLFolderViewFolder::arrange( S32* width, S32* height )
 
 BOOL LLFolderViewFolder::needsArrange()
 {
-	return mLastArrangeGeneration < getRoot()->getArrangeGeneration(); 
+	return mLastArrangeGeneration < getRoot()->getArrangeGeneration();
 }
 
 // Passes selection information on to children and record selection
@@ -1577,7 +1594,7 @@ void LLFolderViewFolder::addItem(LLFolderViewItem* item)
 	item->setVisible(FALSE);
 	
 	addChild(item);
-
+	
 	// When the model is already hooked into a hierarchy (i.e. has a parent), do not reparent it
 	// Note: this happens when models are created before views or shared between views
 	if (!item->getViewModelItem()->hasParent())
@@ -1613,16 +1630,13 @@ void LLFolderViewFolder::addFolder(LLFolderViewFolder* folder)
 }
 
 void LLFolderViewFolder::requestArrange()
-{ 
-	if ( mLastArrangeGeneration != -1)
-	{
-		mLastArrangeGeneration = -1; 
-		// flag all items up to root
-		if (mParentFolder)
-		{
-			mParentFolder->requestArrange();
-		}
-	}
+{
+    mLastArrangeGeneration = -1;
+    // flag all items up to root
+    if (mParentFolder)
+    {
+        mParentFolder->requestArrange();
+    }
 }
 
 void LLFolderViewFolder::toggleOpen()
@@ -1753,7 +1767,7 @@ BOOL LLFolderViewFolder::handleDragAndDrop(S32 x, S32 y, MASK mask,
 	{
 		handleDragAndDropToThisFolder(mask, drop, cargo_type, cargo_data, accept, tooltip_msg);
 
-		lldebugst(LLERR_USER_INPUT) << "dragAndDrop handled by LLFolderViewFolder" << llendl;
+		LL_DEBUGS("UserInput") << "dragAndDrop handled by LLFolderViewFolder" << LL_ENDL;
 	}
 
 	return TRUE;

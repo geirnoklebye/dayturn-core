@@ -573,7 +573,7 @@ void LLFloaterProperties::onClickOwner()
 // static
 void LLFloaterProperties::onCommitName()
 {
-	//llinfos << "LLFloaterProperties::onCommitName()" << llendl;
+	//LL_INFOS() << "LLFloaterProperties::onCommitName()" << LL_ENDL;
 	LLViewerInventoryItem* item = (LLViewerInventoryItem*)findItem();
 	if(!item)
 	{
@@ -609,7 +609,7 @@ void LLFloaterProperties::onCommitName()
 
 void LLFloaterProperties::onCommitDescription()
 {
-	//llinfos << "LLFloaterProperties::onCommitDescription()" << llendl;
+	//LL_INFOS() << "LLFloaterProperties::onCommitDescription()" << LL_ENDL;
 	LLViewerInventoryItem* item = (LLViewerInventoryItem*)findItem();
 	if(!item) return;
 
@@ -647,7 +647,7 @@ void LLFloaterProperties::onCommitDescription()
 // static
 void LLFloaterProperties::onCommitPermissions()
 {
-	//llinfos << "LLFloaterProperties::onCommitPermissions()" << llendl;
+	//LL_INFOS() << "LLFloaterProperties::onCommitPermissions()" << LL_ENDL;
 	LLViewerInventoryItem* item = (LLViewerInventoryItem*)findItem();
 	if(!item) return;
 	LLPermissions perm(item->getPermissions());
@@ -744,14 +744,14 @@ void LLFloaterProperties::onCommitPermissions()
 // static
 void LLFloaterProperties::onCommitSaleInfo()
 {
-	//llinfos << "LLFloaterProperties::onCommitSaleInfo()" << llendl;
+	//LL_INFOS() << "LLFloaterProperties::onCommitSaleInfo()" << LL_ENDL;
 	updateSaleInfo();
 }
 
 // static
 void LLFloaterProperties::onCommitSaleType()
 {
-	//llinfos << "LLFloaterProperties::onCommitSaleType()" << llendl;
+	//LL_INFOS() << "LLFloaterProperties::onCommitSaleType()" << LL_ENDL;
 	updateSaleInfo();
 }
 

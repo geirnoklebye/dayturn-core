@@ -146,18 +146,6 @@ positioning="relative">
       name="voice_call_btn"
       tool_tip="Open voice connection"
       width="20"/>
-      <output_monitor
-      auto_update="true"
-      follows="top|left"
-      draw_border="false"
-      height="16"
-      layout="topleft"
-      top="10"
-      left_pad="10"
-      mouse_opaque="true"
-      name="speaking_indicator"
-      visible="false"
-      width="20" />
       <button
       follows="right|top"
       height="15"
@@ -203,9 +191,13 @@ positioning="relative">
              bottom="-1">
     <layout_stack
     default_tab_group="2"
+     drag_handle_gap="6"
+     drag_handle_first_indent="0"
+     drag_handle_second_indent="1"
     follows="all"
     orientation="horizontal"
     name="im_panels"
+                 show_drag_handle="true"
     tab_group="1"
                  top="0"
                  right="-1"
@@ -285,41 +277,31 @@ positioning="relative">
                  left="0"
                  right="-1">
      <layout_panel
-                     name="input_editor_layout_panel"
-                     auto_resize="true"
-             user_resize="false"
-                     top="0"
-                     bottom="-1">
+                     name="input_editor_layout_panel">
               <chat_editor
                          layout="topleft"
         expand_lines_count="5"
         follows="left|right|bottom"
                font="SansSerifSmall"
-        height="25"
+                         height="20"    
         is_expandable="true"
         text_tentative_color="TextFgTentativeColor"
         name="chat_editor"
         max_length="1023"
         spellcheck="true"
         tab_group="3"
-                         top="1"
-                         bottom="-2"
-                         left="4"
-                         right="-4"
+                         bottom="-8"
+                         left="5"
+                         right="-5"
                          wrap="true" />
             </layout_panel>
             <layout_panel             
                      auto_resize="false"
-             user_resize="false"
                      name="input_button_layout_panel"
-                     width="30"
-                     top="0"
-                     bottom="-1">
+                     width="32">
             <button
-                         layout="topleft"
                          left="1"
-                         right="-1"
-                         top="1"
+                         top="4"
                  height="25"
                          follows="left|right|top"
                  image_hover_unselected="Toolbar_Middle_Over"
@@ -327,7 +309,7 @@ positioning="relative">
                  image_selected="Toolbar_Middle_Selected"
                  image_unselected="Toolbar_Middle_Off"
                  name="minz_btn"
-                         tool_tip="Shows/hides message panel" />
+                         tool_tip="Shows/hides message panel"
                  width="28"/>
            </layout_panel>
   </layout_stack>

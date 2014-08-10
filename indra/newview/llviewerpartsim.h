@@ -27,7 +27,6 @@
 #ifndef LL_LLVIEWERPARTSIM_H
 #define LL_LLVIEWERPARTSIM_H
 
-#include "lldarrayptr.h"
 #include "llframetimer.h"
 #include "llpointer.h"
 #include "llpartdata.h"
@@ -36,7 +35,6 @@
 class LLViewerTexture;
 class LLViewerPart;
 class LLViewerRegion;
-class LLViewerTexture;
 class LLVOPartGroup;
 
 #define LL_MAX_PARTICLE_COUNT 8192
@@ -65,15 +63,22 @@ public:
 
 	LLVPCallback		mVPCallback;				// Callback function for more complicated behaviors
 	LLPointer<LLViewerPartSource> mPartSourcep;		// Particle source used for this object
-	
+
+	LLViewerPart*		mParent;					// particle to connect to if this is part of a particle ribbon
+	LLViewerPart*		mChild;						// child particle for clean reference destruction
 
 	// Current particle state (possibly used for rendering)
 	LLPointer<LLViewerTexture>	mImagep;
 	LLVector3		mPosAgent;
 	LLVector3		mVelocity;
 	LLVector3		mAccel;
+	LLVector3		mAxis;
 	LLColor4		mColor;
 	LLVector2		mScale;
+	F32				mStartGlow;
+	F32				mEndGlow;
+	LLColor4U		mGlow;
+
 
 	static U32		sNextPartID;
 };
@@ -98,6 +103,9 @@ public:
 
 	void shift(const LLVector3 &offset);
 
+	F32 getBoxRadius() { return mBoxRadius; }
+	F32 getBoxSide() { return mBoxSide; }
+
 	typedef std::vector<LLViewerPart*>  part_list_t;
 	part_list_t mParticles;
 
@@ -118,6 +126,7 @@ public:
 protected:
 	LLVector3 mCenterAgent;
 	F32 mBoxRadius;
+	F32 mBoxSide;
 	LLVector3 mMinObjPos;
 	LLVector3 mMaxObjPos;
 
@@ -133,6 +142,8 @@ public:
 
 	typedef std::vector<LLViewerPartGroup *> group_list_t;
 	typedef std::vector<LLPointer<LLViewerPartSource> > source_list_t;
+
+	void enable(bool enabled);
 
 	void shift(const LLVector3 &offset);
 

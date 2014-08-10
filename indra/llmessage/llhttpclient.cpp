@@ -217,37 +217,38 @@ static void request(
 	Injector* body_injector,
 	LLCurl::ResponderPtr responder,
 	const F32 timeout = HTTP_REQUEST_EXPIRY_SECS,
-	const LLSD& headers = LLSD()
+	const LLSD& headers = LLSD(),
+	bool follow_redirects = true
     )
 {
 	if (!LLHTTPClient::hasPump())
 	{
 		if (responder)
 		{
-			responder->completed(U32_MAX, "No pump", LLSD());
+		responder->completed(U32_MAX, "No pump", LLSD());
 		}
 		delete body_injector;
 		return;
 	}
 	LLPumpIO::chain_t chain;
 
-	LLURLRequest* req = new LLURLRequest(method, url);
+	LLURLRequest* req = new LLURLRequest(method, url, follow_redirects);
 	if(!req->isValid())//failed
 	{
 		if (responder)
 		{
 			responder->completed(498, "Internal Error - curl failure", LLSD());
 		}
-		delete req;
+		delete req ;
 		delete body_injector;
-		return;
+		return ;
 	}
 
 	req->setSSLVerifyCallback(LLHTTPClient::getCertVerifyCallback(), (void *)req);
 
 	
-	lldebugs << LLURLRequest::actionAsVerb(method) << " " << url << " "
-		<< headers << llendl;
+	LL_DEBUGS() << LLURLRequest::actionAsVerb(method) << " " << url << " "
+		<< headers << LL_ENDL;
 
 	// Insert custom headers if the caller sent any
 	if (headers.isMap())
@@ -274,7 +275,7 @@ static void request(
                 req->useProxy(false);
             }
             header << iter->first << ": " << iter->second.asString() ;
-            lldebugs << "header = " << header.str() << llendl;
+            LL_DEBUGS() << "header = " << header.str() << LL_ENDL;
             req->addHeader(header.str().c_str());
         }
     }
@@ -334,7 +335,8 @@ void LLHTTPClient::getByteRange(
 	S32 bytes,
 	ResponderPtr responder,
 	const LLSD& hdrs,
-	const F32 timeout)
+	const F32 timeout,
+	bool follow_redirects /* = true */)
 {
 	LLSD headers = hdrs;
 	if(offset > 0 || bytes > 0)
@@ -342,37 +344,42 @@ void LLHTTPClient::getByteRange(
 		std::string range = llformat("bytes=%d-%d", offset, offset+bytes-1);
 		headers["Range"] = range;
 	}
-    request(url,LLURLRequest::HTTP_GET, NULL, responder, timeout, headers);
+    request(url,LLURLRequest::HTTP_GET, NULL, responder, timeout, headers, follow_redirects);
 }
 
 void LLHTTPClient::head(
 	const std::string& url,
 	ResponderPtr responder,
 	const LLSD& headers,
-	const F32 timeout)
+	const F32 timeout,
+	bool follow_redirects /* = true */)
 {
-	request(url, LLURLRequest::HTTP_HEAD, NULL, responder, timeout, headers);
+	request(url, LLURLRequest::HTTP_HEAD, NULL, responder, timeout, headers, follow_redirects);
 }
 
-void LLHTTPClient::get(const std::string& url, ResponderPtr responder, const LLSD& headers, const F32 timeout)
+void LLHTTPClient::get(const std::string& url, ResponderPtr responder, const LLSD& headers, const F32 timeout,
+					   bool follow_redirects /* = true */)
 {
-	request(url, LLURLRequest::HTTP_GET, NULL, responder, timeout, headers);
+	request(url, LLURLRequest::HTTP_GET, NULL, responder, timeout, headers, follow_redirects);
 }
-void LLHTTPClient::getHeaderOnly(const std::string& url, ResponderPtr responder, const LLSD& headers, const F32 timeout)
+void LLHTTPClient::getHeaderOnly(const std::string& url, ResponderPtr responder, const LLSD& headers,
+								 const F32 timeout, bool follow_redirects /* = true */)
 {
-	request(url, LLURLRequest::HTTP_HEAD, NULL, responder, timeout, headers);
+	request(url, LLURLRequest::HTTP_HEAD, NULL, responder, timeout, headers, follow_redirects);
 }
-void LLHTTPClient::getHeaderOnly(const std::string& url, ResponderPtr responder, const F32 timeout)
+void LLHTTPClient::getHeaderOnly(const std::string& url, ResponderPtr responder, const F32 timeout,
+								 bool follow_redirects /* = true */)
 {
-	getHeaderOnly(url, responder, LLSD(), timeout);
+	getHeaderOnly(url, responder, LLSD(), timeout, follow_redirects);
 }
 
-void LLHTTPClient::get(const std::string& url, const LLSD& query, ResponderPtr responder, const LLSD& headers, const F32 timeout)
+void LLHTTPClient::get(const std::string& url, const LLSD& query, ResponderPtr responder, const LLSD& headers,
+					   const F32 timeout, bool follow_redirects /* = true */)
 {
 	LLURI uri;
 	
 	uri = LLURI::buildHTTP(url, LLSD::emptyArray(), query);
-	get(uri.asString(), responder, headers, timeout);
+	get(uri.asString(), responder, headers, timeout, follow_redirects);
 }
 
 // A simple class for managing data returned from a curl http request.
@@ -436,7 +443,7 @@ static LLSD blocking_request(
 	const F32 timeout = 5
 )
 {
-	lldebugs << "blockingRequest of " << url << llendl;
+	LL_DEBUGS() << "blockingRequest of " << url << LL_ENDL;
 	char curl_error_buffer[CURL_ERROR_SIZE] = "\0";
 	CURL* curlp = LLCurl::newEasyHandle();
 	llassert_always(curlp != NULL) ;
@@ -467,7 +474,7 @@ static LLSD blocking_request(
 		{
 			std::ostringstream header;
 			header << iter->first << ": " << iter->second.asString() ;
-			lldebugs << "header = " << header.str() << llendl;
+			LL_DEBUGS() << "header = " << header.str() << LL_ENDL;
 			headers_list = curl_slist_append(headers_list, header.str().c_str());
 		}
 	}
@@ -496,12 +503,12 @@ static LLSD blocking_request(
 	}
 	
 	// * Do the action using curl, handle results
-	lldebugs << "HTTP body: " << body_str << llendl;
+	LL_DEBUGS() << "HTTP body: " << body_str << LL_ENDL;
 	headers_list = curl_slist_append(headers_list, "Accept: application/llsd+xml");
 	CURLcode curl_result = curl_easy_setopt(curlp, CURLOPT_HTTPHEADER, headers_list);
 	if ( curl_result != CURLE_OK )
 	{
-		llinfos << "Curl is hosed - can't add headers" << llendl;
+		LL_INFOS() << "Curl is hosed - can't add headers" << LL_ENDL;
 	}
 
 	LLSD response = LLSD::emptyMap();
@@ -513,19 +520,19 @@ static LLSD blocking_request(
 	if ( http_status != 404 && (http_status != 200 || curl_success != 0) )
 	{
 		// We expect 404s, don't spam for them.
-		llwarns << "CURL REQ URL: " << url << llendl;
-		llwarns << "CURL REQ METHOD TYPE: " << method << llendl;
-		llwarns << "CURL REQ HEADERS: " << headers.asString() << llendl;
-		llwarns << "CURL REQ BODY: " << body_str << llendl;
-		llwarns << "CURL HTTP_STATUS: " << http_status << llendl;
-		llwarns << "CURL ERROR: " << curl_error_buffer << llendl;
-		llwarns << "CURL ERROR BODY: " << http_buffer.asString() << llendl;
+		LL_WARNS() << "CURL REQ URL: " << url << LL_ENDL;
+		LL_WARNS() << "CURL REQ METHOD TYPE: " << method << LL_ENDL;
+		LL_WARNS() << "CURL REQ HEADERS: " << headers.asString() << LL_ENDL;
+		LL_WARNS() << "CURL REQ BODY: " << body_str << LL_ENDL;
+		LL_WARNS() << "CURL HTTP_STATUS: " << http_status << LL_ENDL;
+		LL_WARNS() << "CURL ERROR: " << curl_error_buffer << LL_ENDL;
+		LL_WARNS() << "CURL ERROR BODY: " << http_buffer.asString() << LL_ENDL;
 		response["body"] = http_buffer.asString();
 	}
 	else
 	{
 		response["body"] = http_buffer.asLLSD();
-		lldebugs << "CURL response: " << http_buffer.asString() << llendl;
+		LL_DEBUGS() << "CURL response: " << http_buffer.asString() << LL_ENDL;
 	}
 	
 	if(headers_list)

@@ -30,6 +30,8 @@
 #include "llpanelgroupinvite.h"
 #include "lltrans.h"
 #include "lldraghandle.h"
+#include "llagent.h"
+#include "llgroupmgr.h"
 
 class LLFloaterGroupInvite::impl
 {
@@ -115,7 +117,7 @@ void LLFloaterGroupInvite::showForGroup(const LLUUID& group_id, uuid_vec_t *agen
 	// Make sure group_id isn't null
 	if (group_id.isNull())
 	{
-		llwarns << "LLFloaterGroupInvite::showForGroup with null group_id!" << llendl;
+		LL_WARNS() << "LLFloaterGroupInvite::showForGroup with null group_id!" << LL_ENDL;
 		return;
 	}
 
@@ -123,6 +125,12 @@ void LLFloaterGroupInvite::showForGroup(const LLUUID& group_id, uuid_vec_t *agen
 	LLFloaterGroupInvite *fgi = get_if_there(impl::sInstances,
 											 group_id,
 											 (LLFloaterGroupInvite*)NULL);
+
+	// refresh group information
+	gAgent.sendAgentDataUpdateRequest();
+	LLGroupMgr::getInstance()->clearGroupData(group_id);
+
+
 	if (!fgi)
 	{
 		fgi = new LLFloaterGroupInvite(group_id);

@@ -72,7 +72,7 @@ LLNameListCtrl::LLNameListCtrl(const LLNameListCtrl::Params& p)
 LLScrollListItem* LLNameListCtrl::addNameItem(const LLUUID& agent_id, EAddPosition pos,
 								 BOOL enabled, const std::string& suffix)
 {
-	//llinfos << "LLNameListCtrl::addNameItem " << agent_id << llendl;
+	//LL_INFOS() << "LLNameListCtrl::addNameItem " << agent_id << LL_ENDL;
 
 	NameItem item;
 	item.value = agent_id;
@@ -125,7 +125,7 @@ BOOL LLNameListCtrl::handleDragAndDrop(
 	}
 
 	handled = TRUE;
-	lldebugst(LLERR_USER_INPUT) << "dragAndDrop handled by LLNameListCtrl " << getName() << llendl;
+	LL_DEBUGS("UserInput") << "dragAndDrop handled by LLNameListCtrl " << getName() << LL_ENDL;
 
 	return handled;
 }
@@ -178,7 +178,7 @@ void	LLNameListCtrl::mouseOverHighlightNthItem( S32 target_index )
 			}
 			else
 			{
-				llwarns << "highlighted name list item is NULL" << llendl;
+				LL_WARNS() << "highlighted name list item is NULL" << LL_ENDL;
 			}
 		}
 		if(target_index != -1)
@@ -192,7 +192,7 @@ void	LLNameListCtrl::mouseOverHighlightNthItem( S32 target_index )
 			}
 			else
 			{
-				llwarns << "target name item is NULL" << llendl;
+				LL_WARNS() << "target name item is NULL" << LL_ENDL;
 			}
 		}
 	}
@@ -416,9 +416,9 @@ void LLNameListCtrl::onAvatarNameCache(const LLUUID& agent_id,
 }
 
 
-void LLNameListCtrl::updateColumns()
+void LLNameListCtrl::updateColumns(bool force_update)
 {
-	LLScrollListCtrl::updateColumns();
+	LLScrollListCtrl::updateColumns(force_update);
 
 	if (!mNameColumn.empty())
 	{

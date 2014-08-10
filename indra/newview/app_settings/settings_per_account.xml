@@ -1,5 +1,38 @@
 <llsd>
     <map>
+    <key>RestrainedLoveOffsetAvatarX</key>
+    <map>
+      <key>Comment</key>
+      <string>Offset the avatar left or right.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.0</real>
+    </map>
+    <key>RestrainedLoveOffsetAvatarY</key>
+    <map>
+      <key>Comment</key>
+      <string>Offset the avatar back or forth.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.0</real>
+    </map>
+    <key>RestrainedLoveOffsetAvatarZ</key>
+    <map>
+      <key>Comment</key>
+      <string>Offset the avatar up or down.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.0</real>
+    </map>
     <key>DoNotDisturbResponseChanged</key>
         <map>
         <key>Comment</key>
@@ -77,6 +110,17 @@
         <key>Value</key>
             <integer>412</integer>
     </map>
+    <key>ConversationsParticipantListCollapsed</key>
+    <map>
+        <key>Comment</key>
+            <string>Stores the expanded/collapsed state of Nearby chat participant list</string>
+        <key>Persist</key>
+            <integer>1</integer>
+        <key>Type</key>
+            <string>Boolean</string>
+        <key>Value</key>
+            <integer>true</integer>
+    </map>   
     <key>InstantMessageLogPath</key>
         <map>
         <key>Comment</key>
@@ -109,18 +153,7 @@
             <string>Boolean</string>
         <key>Value</key>
             <integer>0</integer>
-    </map>
-    <key>DisplayDestinationsOnInitialRun</key>
-        <map>
-        <key>Comment</key>
-          <string>Display the destinations guide when a user first launches Second Life.</string>
-        <key>Persist</key>
-          <integer>1</integer>
-        <key>Type</key>
-          <string>Boolean</string>
-        <key>Value</key>
-          <integer>1</integer>
-        </map>
+    </map>    
     <key>LastInventoryInboxActivity</key>
         <map>
         <key>Comment</key>

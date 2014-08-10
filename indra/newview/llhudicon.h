@@ -28,7 +28,6 @@
 #define LL_LLHUDICON_H
 
 #include "llpointer.h"
-#include "lldarrayptr.h"
 
 #include "llhudobject.h"
 #include "v4color.h"
@@ -39,11 +38,8 @@
 #include "llfontgl.h"
 #include <set>
 #include <vector>
-#include "lldarray.h"
 
 // Renders a 2D icon billboard floating at the location specified.
-class LLDrawable;
-class LLViewerObject;
 class LLViewerTexture;
 
 class LLHUDIcon : public LLHUDObject
@@ -62,7 +58,7 @@ public:
 
 	static S32 generatePickIDs(S32 start_id, S32 step_size);
 	static LLHUDIcon* handlePick(S32 pick_id);
-	static LLHUDIcon* lineSegmentIntersectAll(const LLVector3& start, const LLVector3& end, LLVector3* intersection);
+	static LLHUDIcon* lineSegmentIntersectAll(const LLVector4a& start, const LLVector4a& end, LLVector4a* intersection);
 
 	static void updateAll();
 	static void cleanupDeadIcons();
@@ -73,7 +69,7 @@ public:
 	BOOL getHidden() const { return mHidden; }
 	void setHidden( BOOL hide ) { mHidden = hide; }
 
-	BOOL lineSegmentIntersect(const LLVector3& start, const LLVector3& end, LLVector3* intersection);
+	BOOL lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end, LLVector4a* intersection);
 
 protected:
 	LLHUDIcon(const U8 type);

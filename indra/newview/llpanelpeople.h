@@ -30,6 +30,7 @@
 #include <llpanel.h>
 
 #include "llcallingcard.h" // for avatar tracker
+#include "llfloaterwebcontent.h"
 #include "llvoiceclient.h"
 
 class LLAvatarList;
@@ -38,6 +39,7 @@ class LLFilterEditor;
 class LLGroupList;
 class LLMenuButton;
 class LLTabContainer;
+class LLNetMap;
 
 class LLPanelPeople 
 	: public LLPanel
@@ -54,6 +56,8 @@ public:
 	// Implements LLVoiceClientStatusObserver::onChange() to enable call buttons
 	// when voice is available
 	/*virtual*/ void onChange(EStatusType status, const std::string &channelURI, bool proximal);
+
+    bool mTryToConnectToFbc;
 
 	// internals
 	class Updater;
@@ -73,9 +77,13 @@ private:
 	// methods indirectly called by the updaters
 	void					updateFriendListHelpText();
 	void					updateFriendList();
+	bool					updateSuggestedFriendList();
 	void					updateNearbyList();
 	void					updateRecentList();
+//MK
 	void					updateNearbyRange();
+//mk
+	void					updateFacebookList(bool visible);
 
 	bool					isItemsFreeOfFriends(const uuid_vec_t& uuids);
 
@@ -83,7 +91,9 @@ private:
 	std::string				getActiveTabName() const;
 	LLUUID					getCurrentItemID() const;
 	void					getCurrentItemIDs(uuid_vec_t& selected_uuids) const;
+//MK
 	void					reportToNearbyChat(std::string message);
+//mk
 	void					showGroupMenu(LLMenuGL* menu);
 	void					setSortOrder(LLAvatarList* list, ESortOrder order, bool save = true);
 
@@ -123,6 +133,8 @@ private:
 
 	void					onFriendListRefreshComplete(LLUICtrl*ctrl, const LLSD& param);
 
+	bool					onConnectedToFacebook(const LLSD& data);
+
 	void					setAccordionCollapsedByUser(LLUICtrl* acc_tab, bool collapsed);
 	void					setAccordionCollapsedByUser(const std::string& name, bool collapsed);
 	bool					isAccordionCollapsedByUser(LLUICtrl* acc_tab);
@@ -131,6 +143,7 @@ private:
 	LLTabContainer*			mTabContainer;
 	LLAvatarList*			mOnlineFriendList;
 	LLAvatarList*			mAllFriendList;
+	LLAvatarList*			mSuggestedFriends;
 	LLAvatarList*			mNearbyList;
 	LLAvatarList*			mRecentList;
 	LLGroupList*			mGroupList;
@@ -142,9 +155,10 @@ private:
 	Updater*				mFriendListUpdater;
 	Updater*				mNearbyListUpdater;
 	Updater*				mRecentListUpdater;
+	Updater*				mFacebookListUpdater;
 	Updater*				mButtonsUpdater;
 	LLHandle< LLFloater >	mPicker;
-
+//MK
 	LLMenuButton*			mNearbyGearButton;
 	LLMenuButton*			mFriendsGearButton;
 	LLMenuButton*			mGroupsGearButton;
@@ -163,6 +177,7 @@ private:
 		S32 lastStatus;
 	}; 
 	std::map < LLUUID, radarFields > lastRadarSweep;
+//mk
 };
 
 #endif //LL_LLPANELPEOPLE_H

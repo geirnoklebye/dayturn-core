@@ -39,8 +39,8 @@
 #include <Carbon/Carbon.h>
 
 // AssertMacros.h does bad things.
-#include "fix_macros.h"
 #undef verify
+#undef check
 #undef require
 
 #include <vector>
@@ -50,6 +50,7 @@
 
 // Need commdlg.h for OPENFILENAMEA
 #ifdef LL_WINDOWS
+#include "llwin32headers.h"
 #include <commdlg.h>
 #endif
 
@@ -85,7 +86,8 @@ public:
 		FFLOAD_MODEL = 9,
 		FFLOAD_COLLADA = 10,
 		FFLOAD_SCRIPT = 11,
-		FFLOAD_DICTIONARY = 12
+		FFLOAD_DICTIONARY = 12,
+        FFLOAD_DIRECTORY = 13   //To call from lldirpicker. 
 	};
 
 	enum ESaveFilter
@@ -106,6 +108,7 @@ public:
 		FFSAVE_PNG = 13,
 		FFSAVE_JPEG = 14,
 		FFSAVE_SCRIPT = 15,
+		FFSAVE_TGAPNG = 16
 	};
 
 	// open the dialog. This is a modal operation
@@ -158,15 +161,14 @@ private:
 #endif
 
 #if LL_DARWIN
-	NavDialogCreationOptions mNavOptions;
+    S32 mPickOptions;
 	std::vector<std::string> mFileVector;
 	UInt32 mFileIndex;
 	
-	OSStatus doNavChooseDialog(ELoadFilter filter);
-	OSStatus doNavSaveDialog(ESaveFilter filter, const std::string& filename);
-	void getFilePath(SInt32 index);
-	void getFileName(SInt32 index);
-	static Boolean navOpenFilterProc(AEDesc *theItem, void *info, void *callBackUD, NavFilterModes filterMode);
+	bool doNavChooseDialog(ELoadFilter filter);
+	bool doNavSaveDialog(ESaveFilter filter, const std::string& filename);
+	//static Boolean navOpenFilterProc(AEDesc *theItem, void *info, void *callBackUD, NavFilterModes filterMode);
+    std::vector<std::string>* navOpenFilterProc(ELoadFilter filter);
 #endif
 
 #if LL_GTK
@@ -175,6 +177,8 @@ private:
 	// we remember the last path that was accessed for a particular usage
 	std::map <std::string, std::string> mContextToPathMap;
 	std::string mCurContextName;
+	// we also remember the extension of the last added file.
+	std::string mCurrentExtension;
 #endif
 
 	std::vector<std::string> mFiles;

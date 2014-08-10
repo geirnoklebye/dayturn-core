@@ -49,6 +49,7 @@
 #include "lluictrlfactory.h"
 #include "llhelp.h"
 #include "lldockablefloater.h"
+#include "llviewereventrecorder.h"
 
 static LLDefaultChildRegistry::Register<LLButton> r("button");
 
@@ -252,7 +253,7 @@ LLButton::LLButton(const LLButton::Params& p)
 	
 	if (mImageUnselected.isNull())
 	{
-		llwarns << "Button: " << getName() << " with no image!" << llendl;
+		LL_WARNS() << "Button: " << getName() << " with no image!" << LL_ENDL;
 	}
 	
 	if (p.click_callback.isProvided())
@@ -443,6 +444,8 @@ BOOL LLButton::handleMouseDown(S32 x, S32 y, MASK mask)
 		 */
 		LLUICtrl::handleMouseDown(x, y, mask);
 
+		LLViewerEventRecorder::instance().updateMouseEventInfo(x,y,-55,-55,getPathname());
+
 		if(mMouseDownSignal) (*mMouseDownSignal)(this, LLSD());
 
 		mMouseDownTimer.start();
@@ -473,6 +476,7 @@ BOOL LLButton::handleMouseUp(S32 x, S32 y, MASK mask)
 		 * by calling LLUICtrl::mMouseUpSignal(x, y, mask);
 		 */
 		LLUICtrl::handleMouseUp(x, y, mask);
+		LLViewerEventRecorder::instance().updateMouseEventInfo(x,y,-55,-55,getPathname()); 
 
 		// Regardless of where mouseup occurs, handle callback
 		if(mMouseUpSignal) (*mMouseUpSignal)(this, LLSD());
@@ -591,7 +595,7 @@ BOOL LLButton::handleHover(S32 x, S32 y, MASK mask)
 
 		// We only handle the click if the click both started and ended within us
 		getWindow()->setCursor(UI_CURSOR_ARROW);
-		lldebugst(LLERR_USER_INPUT) << "hover handled by " << getName() << llendl;
+		LL_DEBUGS("UserInput") << "hover handled by " << getName() << LL_ENDL;
 	}
 	return TRUE;
 }
@@ -637,14 +641,14 @@ void LLButton::draw()
 	
 	bool use_glow_effect = FALSE;
 	LLColor4 highlighting_color = LLColor4::white;
-	LLColor4 glow_color;
+	LLColor4 glow_color = LLColor4::white;
 	LLRender::eBlendType glow_type = LLRender::BT_ADD_WITH_ALPHA;
 	LLUIImage* imagep = NULL;
 
     //  Cancel sticking of color, if the button is pressed,
 	//  or when a flashing of the previously selected button is ended
 	if (mFlashingTimer
-		&& ((selected && !mFlashingTimer->isFlashingInProgress()) || pressed))
+		&& ((selected && !mFlashingTimer->isFlashingInProgress() && !mForceFlashing) || pressed))
 	{
 		mFlashing = false;
 	}
@@ -778,12 +782,12 @@ void LLButton::draw()
 	if (use_glow_effect)
 	{
 		mCurGlowStrength = lerp(mCurGlowStrength,
-					mFlashing ? (mFlashingTimer->isCurrentlyHighlighted() || !mFlashingTimer->isFlashingInProgress() || mNeedsHighlight? 1.0 : 0.0) : mHoverGlowStrength,
-					LLCriticalDamp::getInterpolant(0.05f));
+					mFlashing ? (mFlashingTimer->isCurrentlyHighlighted() || !mFlashingTimer->isFlashingInProgress() || mNeedsHighlight? 1.f : 0.f) : mHoverGlowStrength,
+					LLSmoothInterpolation::getInterpolant(0.05f));
 	}
 	else
 	{
-		mCurGlowStrength = lerp(mCurGlowStrength, 0.f, LLCriticalDamp::getInterpolant(0.05f));
+		mCurGlowStrength = lerp(mCurGlowStrength, 0.f, LLSmoothInterpolation::getInterpolant(0.05f));
 	}
 
 	// Draw button image, if available.
@@ -816,7 +820,7 @@ void LLButton::draw()
 	else
 	{
 		// no image
-		lldebugs << "No image for button " << getName() << llendl;
+		LL_DEBUGS() << "No image for button " << getName() << LL_ENDL;
 		// draw it in pink so we can find it
 		gl_rect_2d(0, getRect().getHeight(), getRect().getWidth(), 0, LLColor4::pink1 % alpha, FALSE);
 	}
@@ -971,8 +975,9 @@ void LLButton::setToggleState(BOOL b)
 	}
 }
 
-void LLButton::setFlashing(bool b)	
+void LLButton::setFlashing(bool b, bool force_flashing/* = false */)
 { 
+	mForceFlashing = force_flashing;
 	if (mFlashingTimer)
 	{
 		mFlashing = b; 
@@ -1039,7 +1044,7 @@ void LLButton::setImageUnselected(LLPointer<LLUIImage> image)
 	mImageUnselected = image;
 	if (mImageUnselected.isNull())
 	{
-		llwarns << "Setting default button image for: " << getName() << " to NULL" << llendl;
+		LL_WARNS() << "Setting default button image for: " << getName() << " to NULL" << LL_ENDL;
 	}
 }
 

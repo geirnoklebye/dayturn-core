@@ -41,11 +41,10 @@
 #include "llbuffer.h"
 #include "lliopipe.h"
 #include "llsd.h"
-#include "llthread.h"
 #include "llqueuedthread.h"
 #include "llframetimer.h"
 #include "llpointer.h"
-
+#include "llsingleton.h"
 
 class LLMutex;
 class LLCurlThread;
@@ -188,6 +187,8 @@ public:
 	static CURL*  newEasyHandle() ;
 	static void   deleteEasyHandle(CURL* handle) ;
 
+	static CURL*	createStandardCurlHandle();
+
 private:
 	static std::string sCAPath;
 	static std::string sCAFile;
@@ -197,6 +198,7 @@ private:
 	static LLMutex* sHandleMutexp ;
 	static S32      sTotalHandles ;
 	static S32      sMaxHandles;
+	static CURL*	sCurlTemplateStandardHandle;
 public:
 	static bool     sNotQuitting;
 	static F32      sCurlRequestTimeOut;	

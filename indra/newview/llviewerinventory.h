@@ -49,7 +49,7 @@ class LLViewerInventoryCategory;
 class LLViewerInventoryItem : public LLInventoryItem, public boost::signals2::trackable
 {
 public:
-	typedef LLDynamicArray<LLPointer<LLViewerInventoryItem> > item_array_t;
+	typedef std::vector<LLPointer<LLViewerInventoryItem> > item_array_t;
 	
 protected:
 	~LLViewerInventoryItem( void ); // ref counted
@@ -181,7 +181,7 @@ public:
 class LLViewerInventoryCategory  : public LLInventoryCategory
 {
 public:
-	typedef LLDynamicArray<LLPointer<LLViewerInventoryCategory> > cat_array_t;
+	typedef std::vector<LLPointer<LLViewerInventoryCategory> > cat_array_t;
 	
 protected:
 	~LLViewerInventoryCategory();
@@ -256,7 +256,7 @@ class AddFavoriteLandmarkCallback : public LLInventoryCallback
 public:
 	AddFavoriteLandmarkCallback() : mTargetLandmarkId(LLUUID::null) {}
 	void setTargetLandmarkId(const LLUUID& target_uuid) { mTargetLandmarkId = target_uuid; }
-
+	
 private:
 	void fire(const LLUUID& inv_item);
 
@@ -283,13 +283,13 @@ public:
 
 	// virtual
 	void fire(const LLUUID& item_id)
-	{
+{
 		mFireFunc(item_id);
 	}
 
 	// virtual
 	~LLBoostFuncInventoryCallback()
-	{
+{
 		mDestroyFunc();
 	}
 	

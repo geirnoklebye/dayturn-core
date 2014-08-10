@@ -46,6 +46,7 @@ class LLMediaCtrl :
 {
 	LOG_CLASS(LLMediaCtrl);
 public:
+
 	struct Params : public LLInitParam::Block<Params, LLPanel::Params> 
 	{
 		Optional<std::string>	start_url;
@@ -149,7 +150,7 @@ public:
 
 		// over-rides
 		virtual BOOL handleKeyHere( KEY key, MASK mask);
-		virtual void handleVisibilityChange ( BOOL new_visibility );
+		virtual void onVisibilityChange ( BOOL new_visibility );
 		virtual BOOL handleUnicodeCharHere(llwchar uni_char);
 		virtual void reshape( S32 width, S32 height, BOOL called_from_parent = TRUE);
 		virtual void draw();
@@ -171,7 +172,7 @@ public:
 		void convertInputCoords(S32& x, S32& y);
 
 	private:
-		void onVisibilityChange ( const LLSD& new_visibility );
+		void onVisibilityChanged ( const LLSD& new_visibility );
 		void onPopup(const LLSD& notification, const LLSD& response);
 
 		const S32 mTextureDepthBytes;

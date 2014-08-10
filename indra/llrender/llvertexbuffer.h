@@ -34,6 +34,7 @@
 #include "v4coloru.h"
 #include "llstrider.h"
 #include "llrender.h"
+#include "lltrace.h"
 #include <set>
 #include <vector>
 #include <list>
@@ -57,8 +58,6 @@ public:
 	static U32 sBytesPooled;
 	static U32 sIndexBytesPooled;
 	
-	static U32 sCurGLName;
-
 	LLVBOPool(U32 vboUsage, U32 vboType);
 		
 	const U32 mUsage;
@@ -86,8 +85,6 @@ public:
 		volatile U8* mClientData;
 	};
 
-	std::list<U32> mGLNamePool;
-
 	typedef std::list<Record> record_list_t;
 	std::vector<record_list_t> mFreeList;
 	std::vector<U32> mMissCount;
@@ -98,7 +95,7 @@ public:
 //============================================================================
 // base class 
 class LLPrivateMemoryPool;
-class LLVertexBuffer : public LLRefCount
+class LLVertexBuffer : public LLRefCount, public LLTrace::MemTrackable<LLVertexBuffer>
 {
 public:
 	class MappedRegion
@@ -107,27 +104,30 @@ public:
 		S32 mType;
 		S32 mIndex;
 		S32 mCount;
+		S32 mEnd;
 		
 		MappedRegion(S32 type, S32 index, S32 count);
 	};
 
 	LLVertexBuffer(const LLVertexBuffer& rhs)
-		: mUsage(rhs.mUsage)
+	:	LLTrace::MemTrackable<LLVertexBuffer>("LLVertexBuffer"),
+		mUsage(rhs.mUsage)
 	{
 		*this = rhs;
 	}
 
 	const LLVertexBuffer& operator=(const LLVertexBuffer& rhs)
 	{
-		llerrs << "Illegal operation!" << llendl;
+		LL_ERRS() << "Illegal operation!" << LL_ENDL;
 		return *this;
 	}
 
 	static LLVBOPool sStreamVBOPool;
 	static LLVBOPool sDynamicVBOPool;
+	static LLVBOPool sDynamicCopyVBOPool;
 	static LLVBOPool sStreamIBOPool;
 	static LLVBOPool sDynamicIBOPool;
-
+	
 	static std::list<U32> sAvailableVAOName;
 	static U32 sCurVAOName;
 
@@ -174,7 +174,7 @@ public:
 		TYPE_TEXCOORD3,
 		TYPE_COLOR,
 		TYPE_EMISSIVE,
-		TYPE_BINORMAL,
+		TYPE_TANGENT,
 		TYPE_WEIGHT,
 		TYPE_WEIGHT4,
 		TYPE_CLOTHWEIGHT,
@@ -192,7 +192,7 @@ public:
 		MAP_COLOR = (1<<TYPE_COLOR),
 		MAP_EMISSIVE = (1<<TYPE_EMISSIVE),
 		// These use VertexAttribPointer and should possibly be made generic
-		MAP_BINORMAL = (1<<TYPE_BINORMAL),
+		MAP_TANGENT = (1<<TYPE_TANGENT),
 		MAP_WEIGHT = (1<<TYPE_WEIGHT),
 		MAP_WEIGHT4 = (1<<TYPE_WEIGHT4),
 		MAP_CLOTHWEIGHT = (1<<TYPE_CLOTHWEIGHT),
@@ -250,8 +250,10 @@ public:
 	bool getIndexStrider(LLStrider<U16>& strider, S32 index=0, S32 count = -1, bool map_range = false);
 	bool getTexCoord0Strider(LLStrider<LLVector2>& strider, S32 index=0, S32 count = -1, bool map_range = false);
 	bool getTexCoord1Strider(LLStrider<LLVector2>& strider, S32 index=0, S32 count = -1, bool map_range = false);
+	bool getTexCoord2Strider(LLStrider<LLVector2>& strider, S32 index=0, S32 count = -1, bool map_range = false);
 	bool getNormalStrider(LLStrider<LLVector3>& strider, S32 index=0, S32 count = -1, bool map_range = false);
-	bool getBinormalStrider(LLStrider<LLVector3>& strider, S32 index=0, S32 count = -1, bool map_range = false);
+	bool getTangentStrider(LLStrider<LLVector3>& strider, S32 index=0, S32 count = -1, bool map_range = false);
+	bool getTangentStrider(LLStrider<LLVector4a>& strider, S32 index=0, S32 count = -1, bool map_range = false);
 	bool getColorStrider(LLStrider<LLColor4U>& strider, S32 index=0, S32 count = -1, bool map_range = false);
 	bool getTextureIndexStrider(LLStrider<LLColor4U>& strider, S32 index=0, S32 count = -1, bool map_range = false);
 	bool getEmissiveStrider(LLStrider<LLColor4U>& strider, S32 index=0, S32 count = -1, bool map_range = false);

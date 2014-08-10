@@ -62,8 +62,8 @@ namespace tut
             // These variables are required by machinery used by
             // LLXMLRPCTransaction. The values reflect reality for this test
             // executable; hopefully these values are correct.
-            gSavedSettings.declareBOOL("BrowserProxyEnabled", FALSE, "", FALSE); // don't persist
-            gSavedSettings.declareBOOL("NoVerifySSLCert", TRUE, "", FALSE); // don't persist
+            gSavedSettings.declareBOOL("BrowserProxyEnabled", FALSE, "", LLControlVariable::PERSIST_NO); // don't persist
+            gSavedSettings.declareBOOL("NoVerifySSLCert", TRUE, "", LLControlVariable::PERSIST_NO); // don't persist
         }
 
         // LLEventPump listener signature
@@ -85,7 +85,7 @@ namespace tut
     void object::test<1>()
     {
         set_test_name("request validation");
-        WrapLL_ERRS capture;
+        WrapLLErrs capture;
         LLSD request;
         request["uri"] = uri;
         std::string threw;
@@ -93,7 +93,7 @@ namespace tut
         {
             pumps.obtain("LLXMLRPCTransaction").post(request);
         }
-        catch (const WrapLL_ERRS::FatalException& e)
+        catch (const WrapLLErrs::FatalException& e)
         {
             threw = e.what();
         }
@@ -106,7 +106,7 @@ namespace tut
     void object::test<2>()
     {
         set_test_name("param types validation");
-        WrapLL_ERRS capture;
+        WrapLLErrs capture;
         LLSD request;
         request["uri"] = uri;
         request["method"] = "hello";
@@ -118,7 +118,7 @@ namespace tut
         {
             pumps.obtain("LLXMLRPCTransaction").post(request);
         }
-        catch (const WrapLL_ERRS::FatalException& e)
+        catch (const WrapLLErrs::FatalException& e)
         {
             threw = e.what();
         }

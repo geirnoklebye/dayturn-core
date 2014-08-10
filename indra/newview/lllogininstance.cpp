@@ -30,7 +30,6 @@
 
 // llcommon
 #include "llevents.h"
-#include "llmd5.h"
 #include "stringize.h"
 
 // llmessage (!)
@@ -40,6 +39,7 @@
 #include "lllogin.h"
 
 // newview
+#include "llhasheduniqueid.h"
 #include "llviewernetwork.h"
 #include "llviewercontrol.h"
 #include "llversioninfo.h"
@@ -202,7 +202,7 @@ MandatoryUpdateMachine::MandatoryUpdateMachine(LLLoginInstance & loginInstance, 
 
 void MandatoryUpdateMachine::start(void)
 {
-	llinfos << "starting manditory update machine" << llendl;
+	LL_INFOS() << "starting mandatory update machine" << LL_ENDL;
 	
 	if(mUpdaterService.isChecking()) {
 		switch(mUpdaterService.getState()) {
@@ -268,7 +268,7 @@ MandatoryUpdateMachine::CheckingForUpdate::CheckingForUpdate(MandatoryUpdateMach
 
 void MandatoryUpdateMachine::CheckingForUpdate::enter(void)
 {
-	llinfos << "entering checking for update" << llendl;
+	LL_INFOS() << "entering checking for update" << LL_ENDL;
 	
 	mProgressView = gViewerWindow->getProgressView();
 	mProgressView->setMessage("Looking for update...");
@@ -327,7 +327,7 @@ MandatoryUpdateMachine::Error::Error(MandatoryUpdateMachine & machine):
 
 void MandatoryUpdateMachine::Error::enter(void)
 {
-	llinfos << "entering error" << llendl;
+	LL_INFOS() << "entering error" << LL_ENDL;
 	LLNotificationsUtil::add("FailedRequiredUpdateInstall", LLSD(), LLSD(), boost::bind(&MandatoryUpdateMachine::Error::onButtonClicked, this, _1, _2));
 }
 
@@ -358,7 +358,7 @@ MandatoryUpdateMachine::ReadyToInstall::ReadyToInstall(MandatoryUpdateMachine & 
 
 void MandatoryUpdateMachine::ReadyToInstall::enter(void)
 {
-	llinfos << "entering ready to install" << llendl;
+	LL_INFOS() << "entering ready to install" << LL_ENDL;
 	// Open update ready dialog.
 }
 
@@ -383,7 +383,7 @@ MandatoryUpdateMachine::StartingUpdaterService::StartingUpdaterService(Mandatory
 
 void MandatoryUpdateMachine::StartingUpdaterService::enter(void)
 {
-	llinfos << "entering start update service" << llendl;
+	LL_INFOS() << "entering start update service" << LL_ENDL;
 	LLNotificationsUtil::add("UpdaterServiceNotRunning", LLSD(), LLSD(), boost::bind(&MandatoryUpdateMachine::StartingUpdaterService::onButtonClicked, this, _1, _2));
 }
 
@@ -420,7 +420,7 @@ MandatoryUpdateMachine::WaitingForDownload::WaitingForDownload(MandatoryUpdateMa
 
 void MandatoryUpdateMachine::WaitingForDownload::enter(void)
 {
-	llinfos << "entering waiting for download" << llendl;
+	LL_INFOS() << "entering waiting for download" << LL_ENDL;
 	mProgressView = gViewerWindow->getProgressView();
 	mProgressView->setMessage("Downloading update...");
 	std::ostringstream stream;
@@ -486,6 +486,13 @@ LLLoginInstance::LLLoginInstance() :
 	mDispatcher.add("connect",    "", boost::bind(&LLLoginInstance::handleLoginSuccess, this, _1));
 	mDispatcher.add("disconnect", "", boost::bind(&LLLoginInstance::handleDisconnect, this, _1));
 	mDispatcher.add("indeterminate", "", boost::bind(&LLLoginInstance::handleIndeterminate, this, _1));
+}
+
+void LLLoginInstance::setPlatformInfo(const std::string platform,
+									  const std::string platform_version)
+{
+	mPlatform = platform;
+	mPlatformVersion = platform_version;
 }
 
 LLLoginInstance::~LLLoginInstance()
@@ -579,26 +586,22 @@ void LLLoginInstance::constructAuthParams(LLPointer<LLCredential> user_credentia
 	// (re)initialize the request params with creds.
 	LLSD request_params = user_credential->getLoginParams();
 
-	char hashed_unique_id_string[MD5HEX_STR_SIZE];		/* Flawfinder: ignore */
-	LLMD5 hashed_unique_id;
-	unsigned char unique_id[MAC_ADDRESS_BYTES];
-	if(LLUUID::getNodeID(unique_id) == 0) {
-		if(LLMachineID::getUniqueID(unique_id, sizeof(unique_id)) == 0) {
-			llerrs << "Failed to get an id; cannot uniquely identify this machine." << llendl;
-		}
+	unsigned char hashed_unique_id_string[MD5HEX_STR_SIZE];
+	if ( ! llHashedUniqueID(hashed_unique_id_string) )
+	{
+		LL_WARNS() << "Not providing a unique id in request params" << LL_ENDL;
 	}
-	hashed_unique_id.update(unique_id, MAC_ADDRESS_BYTES);
-	hashed_unique_id.finalize();
-	hashed_unique_id.hex_digest(hashed_unique_id_string);
-	
 	request_params["start"] = construct_start_string();
 	request_params["skipoptional"] = mSkipOptionalUpdate;
 	request_params["agree_to_tos"] = false; // Always false here. Set true in 
 	request_params["read_critical"] = false; // handleTOSResponse
 	request_params["last_exec_event"] = mLastExecEvent;
-	request_params["mac"] = hashed_unique_id_string;
-	request_params["version"] = LLVersionInfo::getChannelAndVersion(); // Includes channel name
+	request_params["last_exec_duration"] = mLastExecDuration;
+	request_params["mac"] = (char*)hashed_unique_id_string;
+	request_params["version"] = LLVersionInfo::getVersion();
 	request_params["channel"] = LLVersionInfo::getChannel();
+	request_params["platform"] = mPlatform;
+	request_params["platform_version"] = mPlatformVersion;
 	request_params["id0"] = mSerialNumber;
 	request_params["host_id"] = gSavedSettings.getString("HostID");
 	request_params["extended_errors"] = true; // request message_id and message_args
@@ -618,7 +621,7 @@ bool LLLoginInstance::handleLoginEvent(const LLSD& event)
 
 	if(!(event.has("state") && event.has("change") && event.has("progress")))
 	{
-		llerrs << "Unknown message from LLLogin: " << event << llendl;
+		LL_ERRS() << "Unknown message from LLLogin: " << event << LL_ENDL;
 	}
 
 	mLoginState = event["state"].asString();
@@ -639,6 +642,8 @@ bool LLLoginInstance::handleLoginEvent(const LLSD& event)
 
 void LLLoginInstance::handleLoginFailure(const LLSD& event)
 {
+	
+
 	// Login has failed. 
 	// Figure out why and respond...
 	LLSD response = event["data"];
@@ -651,10 +656,13 @@ void LLLoginInstance::handleLoginFailure(const LLSD& event)
 	// to reconnect or to end the attempt in failure.
 	if(reason_response == "tos")
 	{
+		LL_INFOS() << "LLLoginInstance::handleLoginFailure ToS" << LL_ENDL;
+
 		LLSD data(LLSD::emptyMap());
 		data["message"] = message_response;
 		data["reply_pump"] = TOS_REPLY_PUMP;
-		gViewerWindow->setShowProgress(FALSE);
+		if (gViewerWindow)
+			gViewerWindow->setShowProgress(FALSE);
 		LLFloaterReg::showInstance("message_tos", data);
 		LLEventPumps::instance().obtain(TOS_REPLY_PUMP)
 			.listen(TOS_LISTENER_NAME,
@@ -663,6 +671,8 @@ void LLLoginInstance::handleLoginFailure(const LLSD& event)
 	}
 	else if(reason_response == "critical")
 	{
+		LL_INFOS() << "LLLoginInstance::handleLoginFailure Crit" << LL_ENDL;
+
 		LLSD data(LLSD::emptyMap());
 		data["message"] = message_response;
 		data["reply_pump"] = TOS_REPLY_PUMP;
@@ -675,7 +685,9 @@ void LLLoginInstance::handleLoginFailure(const LLSD& event)
 			data["certificate"] = response["certificate"];
 		}
 		
-		gViewerWindow->setShowProgress(FALSE);
+		if (gViewerWindow)
+			gViewerWindow->setShowProgress(FALSE);
+
 		LLFloaterReg::showInstance("message_critical", data);
 		LLEventPumps::instance().obtain(TOS_REPLY_PUMP)
 			.listen(TOS_LISTENER_NAME,
@@ -684,21 +696,28 @@ void LLLoginInstance::handleLoginFailure(const LLSD& event)
 	}
 	else if(reason_response == "update" || gSavedSettings.getBOOL("ForceMandatoryUpdate"))
 	{
+		LL_INFOS() << "LLLoginInstance::handleLoginFailure update" << LL_ENDL;
+
 		gSavedSettings.setBOOL("ForceMandatoryUpdate", FALSE);
 		updateApp(true, message_response);
 	}
 	else if(reason_response == "optional")
 	{
+		LL_INFOS() << "LLLoginInstance::handleLoginFailure optional" << LL_ENDL;
+
 		updateApp(false, message_response);
 	}
 	else
 	{	
+		LL_INFOS() << "LLLoginInstance::handleLoginFailure attemptComplete" << LL_ENDL;
 		attemptComplete();
 	}	
 }
 
 void LLLoginInstance::handleLoginSuccess(const LLSD& event)
 {
+	LL_INFOS() << "LLLoginInstance::handleLoginSuccess" << LL_ENDL;
+
 	if(gSavedSettings.getBOOL("ForceMandatoryUpdate"))
 	{
 		LLSD response = event["data"];
@@ -720,6 +739,8 @@ void LLLoginInstance::handleLoginSuccess(const LLSD& event)
 void LLLoginInstance::handleDisconnect(const LLSD& event)
 {
     // placeholder
+
+	LL_INFOS() << "LLLoginInstance::handleDisconnect placeholder " << LL_ENDL;
 }
 
 void LLLoginInstance::handleIndeterminate(const LLSD& event)
@@ -728,10 +749,13 @@ void LLLoginInstance::handleIndeterminate(const LLSD& event)
 	// gave the viewer a new url and params to try.
 	// The login module handles the retry, but it gives us the
 	// server response so that we may show
-	// the user some status.
+	// the user some status.	
+
 	LLSD message = event.get("data").get("message");
 	if(message.isDefined())
 	{
+		LL_INFOS() << "LLLoginInstance::handleIndeterminate " << message.asString() << LL_ENDL;
+
 		LLSD progress_update;
 		progress_update["desc"] = message;
 		LLEventPumps::getInstance()->obtain("LLProgressView").post(progress_update);
@@ -742,12 +766,16 @@ bool LLLoginInstance::handleTOSResponse(bool accepted, const std::string& key)
 {
 	if(accepted)
 	{	
+		LL_INFOS() << "LLLoginInstance::handleTOSResponse: accepted" << LL_ENDL;
+
 		// Set the request data to true and retry login.
 		mRequestData["params"][key] = true; 
 		reconnect();
 	}
 	else
 	{
+		LL_INFOS() << "LLLoginInstance::handleTOSResponse: attemptComplete" << LL_ENDL;
+
 		attemptComplete();
 	}
 
@@ -784,20 +812,20 @@ void LLLoginInstance::updateApp(bool mandatory, const std::string& auth_msg)
 	LLSD payload;
 	payload["mandatory"] = mandatory;
 
-/*
- We're constructing one of the following 9 strings here:
-	 "DownloadWindowsMandatory"
-	 "DownloadWindowsReleaseForDownload"
-	 "DownloadWindows"
-	 "DownloadMacMandatory"
-	 "DownloadMacReleaseForDownload"
-	 "DownloadMac"
-	 "DownloadLinuxMandatory"
-	 "DownloadLinuxReleaseForDownload"
-	 "DownloadLinux"
- 
- I've called them out explicitly in this comment so that they can be grepped for.
- */
+	/*
+	 * We're constructing one of the following 9 strings here:
+	 *   "DownloadWindowsMandatory"
+	 *	 "DownloadWindowsReleaseForDownload"
+	 *	 "DownloadWindows"
+	 *	 "DownloadMacMandatory"
+	 *	 "DownloadMacReleaseForDownload"
+	 *	 "DownloadMac"
+	 *	 "DownloadLinuxMandatory"
+	 *	 "DownloadLinuxReleaseForDownload"
+	 *	 "DownloadLinux"
+ 	 *
+	 * I've called them out explicitly in this comment so that they can be grepped for.
+	 */
 	std::string notification_name = "Download";
 	
 #if LL_WINDOWS

@@ -4,7 +4,7 @@
  *
  * $LicenseInfo:firstyear=2004&license=viewerlgpl$
  * Second Life Viewer Source Code
- * Copyright (C) 2010, Linden Research, Inc.
+ * Copyright (C) 2010-2013, Linden Research, Inc.
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,20 +31,20 @@
 #include "llapr.h"
 #include "apr_thread_cond.h"
 #include "boost/intrusive_ptr.hpp"
+#include "llmutex.h"
+#include "llrefcount.h"
 
-class LLThread;
-class LLMutex;
-class LLCondition;
+LL_COMMON_API void assert_main_thread();
 
-#if LL_WINDOWS
-#define ll_thread_local __declspec(thread)
-#else
-#define ll_thread_local __thread
-#endif
+namespace LLTrace
+{
+	class ThreadRecorder;
+}
 
 class LL_COMMON_API LLThread
 {
 private:
+	friend class LLMutex;
 	static U32 sIDIter;
 
 public:
@@ -98,11 +98,11 @@ private:
 	BOOL				mPaused;
 	
 	// static function passed to APR thread creation routine
-	static void *APR_THREAD_FUNC staticRun(apr_thread_t *apr_threadp, void *datap);
+	static void *APR_THREAD_FUNC staticRun(struct apr_thread_t *apr_threadp, void *datap);
 
 protected:
 	std::string			mName;
-	LLCondition*		mRunCondition;
+	class LLCondition*	mRunCondition;
 	LLMutex*			mDataLock;
 
 	apr_thread_t		*mAPRThreadp;
@@ -110,6 +110,7 @@ protected:
 	BOOL				mIsLocalPool;
 	EThreadStatus		mStatus;
 	U32					mID;
+	LLTrace::ThreadRecorder* mRecorder;
 
 	//a local apr_pool for APRFile operations in this thread. If it exists, LLAPRFile::sAPRFilePoolp should not be used.
 	//Note: this pool is used by APRFile ONLY, do NOT use it for any other purposes.
@@ -140,75 +141,6 @@ protected:
 	// mDataLock->unlock();
 };
 
-//============================================================================
-
-#define MUTEX_DEBUG (LL_DEBUG || LL_RELEASE_WITH_DEBUG_INFO)
-
-class LL_COMMON_API LLMutex
-{
-public:
-	typedef enum
-	{
-		NO_THREAD = 0xFFFFFFFF
-	} e_locking_thread;
-
-	LLMutex(apr_pool_t *apr_poolp); // NULL pool constructs a new pool for the mutex
-	virtual ~LLMutex();
-	
-	void lock();		// blocks
-	void unlock();
-	bool isLocked(); 	// non-blocking, but does do a lock/unlock so not free
-	bool isSelfLocked(); //return true if locked in a same thread
-	U32 lockingThread() const; //get ID of locking thread
-	
-protected:
-	apr_thread_mutex_t *mAPRMutexp;
-	mutable U32			mCount;
-	mutable U32			mLockingThread;
-	
-	apr_pool_t			*mAPRPoolp;
-	BOOL				mIsLocalPool;
-	
-#if MUTEX_DEBUG
-	std::map<U32, BOOL> mIsLocked;
-#endif
-};
-
-// Actually a condition/mutex pair (since each condition needs to be associated with a mutex).
-class LL_COMMON_API LLCondition : public LLMutex
-{
-public:
-	LLCondition(apr_pool_t *apr_poolp); // Defaults to global pool, could use the thread pool as well.
-	~LLCondition();
-	
-	void wait();		// blocks
-	void signal();
-	void broadcast();
-	
-protected:
-	apr_thread_cond_t *mAPRCondp;
-};
-
-class LLMutexLock
-{
-public:
-	LLMutexLock(LLMutex* mutex)
-	{
-		mMutex = mutex;
-		
-		if(mMutex)
-			mMutex->lock();
-	}
-	~LLMutexLock()
-	{
-		if(mMutex)
-			mMutex->unlock();
-	}
-private:
-	LLMutex* mMutex;
-};
-
-//============================================================================
 
 void LLThread::lockData()
 {
@@ -223,86 +155,6 @@ void LLThread::unlockData()
 
 //============================================================================
 
-// see llmemory.h for LLPointer<> definition
-
-class LL_COMMON_API LLThreadSafeRefCount
-{
-public:
-	static void initThreadSafeRefCount(); // creates sMutex
-	static void cleanupThreadSafeRefCount(); // destroys sMutex
-	
-private:
-	static LLMutex* sMutex;
-
-protected:
-	virtual ~LLThreadSafeRefCount(); // use unref()
-	
-public:
-	LLThreadSafeRefCount();
-	LLThreadSafeRefCount(const LLThreadSafeRefCount&);
-	LLThreadSafeRefCount& operator=(const LLThreadSafeRefCount& ref) 
-	{
-		if (sMutex)
-		{
-			sMutex->lock();
-		}
-		mRef = 0;
-		if (sMutex)
-		{
-			sMutex->unlock();
-		}
-		return *this;
-	}
-
-
-	
-	void ref()
-	{
-		if (sMutex) sMutex->lock();
-		mRef++; 
-		if (sMutex) sMutex->unlock();
-	} 
-
-	S32 unref()
-	{
-		llassert(mRef >= 1);
-		if (sMutex) sMutex->lock();
-		S32 res = --mRef;
-		if (sMutex) sMutex->unlock();
-		if (0 == res) 
-		{
-			delete this; 
-			return 0;
-		}
-		return res;
-	}	
-	S32 getNumRefs() const
-	{
-		return mRef;
-	}
-
-private: 
-	S32	mRef; 
-};
-
-/**
- * intrusive pointer support for LLThreadSafeRefCount
- * this allows you to use boost::intrusive_ptr with any LLThreadSafeRefCount-derived type
- */
-namespace boost
-{
-	inline void intrusive_ptr_add_ref(LLThreadSafeRefCount* p) 
-	{
-		p->ref();
-	}
-
-	inline void intrusive_ptr_release(LLThreadSafeRefCount* p) 
-	{
-		p->unref(); 
-	}
-};
-//============================================================================
-
 // Simple responder for self destructing callbacks
 // Pure virtual class
 class LL_COMMON_API LLResponder : public LLThreadSafeRefCount
@@ -314,5 +166,7 @@ public:
 };
 
 //============================================================================
+
+extern LL_COMMON_API void assert_main_thread();
 
 #endif // LL_LLTHREAD_H

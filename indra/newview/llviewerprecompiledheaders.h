@@ -33,8 +33,6 @@
 // in viewer.
 // It is used to precompile headers for improved build speed.
 
-#include <boost/coroutine/coroutine.hpp>
-
 #include "linden_common.h"
 
 // Work around stupid Microsoft STL warning
@@ -53,12 +51,8 @@
 #endif
 
 // Library headers from llcommon project:
-#include "bitpack.h"
-#include "lldeleteutils.h"
-#include "imageids.h"
 #include "indra_constants.h"
 #include "llinitparam.h"
-
 #include "llallocator.h"
 #include "llapp.h"
 #include "llcriticaldamp.h"
@@ -67,11 +61,7 @@
 #include "llerror.h"
 #include "llfasttimer.h"
 #include "llframetimer.h"
-#include "llhash.h"
-#include "lllocalidhashmap.h"
-#include "llnametable.h"
 #include "llpointer.h"
-#include "llpriqueuemap.h"
 #include "llprocessor.h"
 #include "llrefcount.h"
 #include "llsafehandle.h"
@@ -81,12 +71,8 @@
 #include "llstrider.h"
 #include "llstring.h"
 #include "llsys.h"
-#include "llthread.h"
 #include "lltimer.h"
-#include "lluuidhashmap.h"
-#include "stdenums.h"
 #include "stdtypes.h"
-#include "timing.h"
 #include "u64.h"
 
 // Library includes from llmath project

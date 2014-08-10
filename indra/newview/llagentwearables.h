@@ -39,6 +39,10 @@
 #include "llavatarappearancedefines.h"
 #include "llwearabledata.h"
 
+//MK
+#include "llappviewer.h" // for gFrameTimeSeconds
+//mk
+
 class LLInventoryItem;
 class LLVOAvatarSelf;
 class LLViewerWearable;
@@ -112,7 +116,7 @@ private:
 	/*virtual*/void	wearableUpdated(LLWearable *wearable, BOOL removed);
 public:
 	void			setWearableItem(LLInventoryItem* new_item, LLViewerWearable* wearable, bool do_append = false);
-	void			setWearableOutfit(const LLInventoryItem::item_array_t& items, const LLDynamicArray< LLViewerWearable* >& wearables, BOOL remove);
+	void			setWearableOutfit(const LLInventoryItem::item_array_t& items, const std::vector< LLViewerWearable* >& wearables, BOOL remove);
 	void			setWearableName(const LLUUID& item_id, const std::string& new_name);
 	// *TODO: Move this into llappearance/LLWearableData ?
 	void			addLocalTextureObject(const LLWearableType::EType wearable_type, const LLAvatarAppearanceDefines::ETextureIndex texture_type, U32 wearable_index);
@@ -207,6 +211,23 @@ public:
 	static void		userRemoveMultipleAttachments(llvo_vec_t& llvo_array);
 	static void		userAttachMultipleAttachments(LLInventoryModel::item_array_t& obj_item_array);
 
+//MK from HB
+	// These functions are for overriding the old initial wearables update
+	// message logic in SL, for when that message will stop being sent...
+	// They are only used by the LLAppearanceMgr::checkOutfit() function.
+	bool		initialWearablesUpdateReceived()	{ return mInitialWearablesUpdateReceived; }
+	void		setInitialWearablesUpdateReceived()	{ mInitialWearablesUpdateReceived = true; }
+	void		setWearablesLoaded()				{ mWearablesLoaded = true; }
+
+	void		checkModifiableShape();
+	bool		hasModifiableShape()				{ return mHasModifiableShape; }
+	void		setShapeAvatarOffset(bool send_update = true);
+//mk from HB
+
+//MK
+	void		forceUpdateShape (void);
+//mk
+
 	BOOL			itemUpdatePending(const LLUUID& item_id) const;
 	U32				itemUpdatePendingCount() const;
 
@@ -237,6 +258,11 @@ private:
 	static BOOL		mInitialWearablesUpdateReceived;
 	BOOL			mWearablesLoaded;
 	std::set<LLUUID>	mItemsAwaitingWearableUpdate;
+//MK from HB
+	bool				mHasModifiableShape;
+	LLViewerWearable*	mLastWornShape;
+	F32					mSavedOffset;
+//mk from HB
 
 	/**
 	 * True if agent's outfit is being changed now.

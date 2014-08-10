@@ -28,6 +28,7 @@
 #include "lltoastimpanel.h"
 
 #include "llagent.h"
+#include "llavatarnamecache.h"
 #include "llfloaterreg.h"
 #include "llgroupactions.h"
 #include "llgroupiconctrl.h"
@@ -61,6 +62,15 @@ LLToastIMPanel::LLToastIMPanel(LLToastIMPanel::Params &p) :	LLToastPanel(p.notif
 	style_params.font.name(font_name);
 	style_params.font.size(font_size);
 	
+	LLIMModel::LLIMSession* im_session = LLIMModel::getInstance()->findIMSession(p.session_id);
+	mIsGroupMsg = (im_session && im_session->mSessionType == LLIMModel::LLIMSession::GROUP_SESSION);
+	if(mIsGroupMsg)
+	{
+		mAvatarName->setValue(im_session->mName);
+		LLAvatarName avatar_name;
+		LLAvatarNameCache::get(p.avatar_id, &avatar_name);
+		p.message = "[From " + avatar_name.getDisplayName() + "]\n" + p.message;
+	}
 	
 	//Handle IRC styled /me messages.
 	std::string prefix = p.message.substr(0, 4);
@@ -81,11 +91,16 @@ LLToastIMPanel::LLToastIMPanel(LLToastIMPanel::Params &p) :	LLToastPanel(p.notif
 		mMessage->setText(p.message, style_params);
 	}
 
+	if(!mIsGroupMsg)
+	{
 	mAvatarName->setValue(p.from);
+	}
 	mTime->setValue(p.time);
 	mSessionID = p.session_id;
 	mAvatarID = p.avatar_id;
 	mNotification = p.notification;
+
+
 
 	initIcon();
 
@@ -147,7 +162,14 @@ void LLToastIMPanel::spawnNameToolTip()
 
 	LLToolTip::Params params;
 	params.background_visible(false);
+	if(!mIsGroupMsg)
+	{
 	params.click_callback(boost::bind(&LLFloaterReg::showInstance, "inspect_avatar", LLSD().with("avatar_id", mAvatarID), FALSE));
+	}
+	else
+	{
+		params.click_callback(boost::bind(&LLFloaterReg::showInstance, "inspect_group", LLSD().with("group_id", mSessionID), FALSE));
+	}
 	params.delay_time(0.0f);		// spawn instantly on hover
 	params.image(LLUI::getUIImage("Info_Small"));
 	params.message("");
@@ -167,7 +189,7 @@ void LLToastIMPanel::spawnGroupIconToolTip()
 	LLGroupData g_data;
 	if(!gAgent.getGroupData(mSessionID, g_data))
 	{
-		llwarns << "Error getting group data" << llendl;
+		LL_WARNS() << "Error getting group data" << LL_ENDL;
 	}
 
 	LLInspector::Params params;
@@ -200,7 +222,7 @@ void LLToastIMPanel::initIcon()
 		LLIMModel::LLIMSession* im_session = LLIMModel::getInstance()->findIMSession(mSessionID);
 		if(!im_session)
 		{
-			llwarns << "Invalid IM session" << llendl;
+			LL_WARNS() << "Invalid IM session" << LL_ENDL;
 			return;
 		}
 
@@ -220,7 +242,7 @@ void LLToastIMPanel::initIcon()
 			mAdhocIcon->setToolTip(im_session->mName);
 			break;
 		default:
-			llwarns << "Unknown IM session type" << llendl;
+			LL_WARNS() << "Unknown IM session type" << LL_ENDL;
 			break;
 		}
 	}

@@ -118,7 +118,7 @@ protected:
 
 			if (!item)
 			{
-				llwarns << "Invalid item" << llendl;
+				LL_WARNS() << "Invalid item" << LL_ENDL;
 				continue;
 			}
 
@@ -151,7 +151,7 @@ protected:
 
 std::string LLPanelAppearanceTab::sFilterSubString = LLStringUtil::null;
 
-static LLRegisterPanelClassWrapper<LLPanelWearing> t_panel_wearing("panel_wearing");
+static LLPanelInjector<LLPanelWearing> t_panel_wearing("panel_wearing");
 
 LLPanelWearing::LLPanelWearing()
 	:	LLPanelAppearanceTab()

@@ -240,7 +240,7 @@ void LLManipRotate::render()
 
 		if (mManipPart == LL_ROT_Z)
 		{
-			mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, 1.f, SELECTED_MANIPULATOR_SCALE, 1.f), LLCriticalDamp::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
+			mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, 1.f, SELECTED_MANIPULATOR_SCALE, 1.f), LLSmoothInterpolation::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
 			gGL.pushMatrix();
 			{
 				// selected part
@@ -251,7 +251,7 @@ void LLManipRotate::render()
 		}
 		else if (mManipPart == LL_ROT_Y)
 		{
-			mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, SELECTED_MANIPULATOR_SCALE, 1.f, 1.f), LLCriticalDamp::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
+			mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, SELECTED_MANIPULATOR_SCALE, 1.f, 1.f), LLSmoothInterpolation::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
 			gGL.pushMatrix();
 			{
 				gGL.rotatef( 90.f, 1.f, 0.f, 0.f );
@@ -262,7 +262,7 @@ void LLManipRotate::render()
 		}
 		else if (mManipPart == LL_ROT_X)
 		{
-			mManipulatorScales = lerp(mManipulatorScales, LLVector4(SELECTED_MANIPULATOR_SCALE, 1.f, 1.f, 1.f), LLCriticalDamp::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
+			mManipulatorScales = lerp(mManipulatorScales, LLVector4(SELECTED_MANIPULATOR_SCALE, 1.f, 1.f, 1.f), LLSmoothInterpolation::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
 			gGL.pushMatrix();
 			{
 				gGL.rotatef( 90.f, 0.f, 1.f, 0.f );
@@ -273,13 +273,13 @@ void LLManipRotate::render()
 		}
 		else if (mManipPart == LL_ROT_ROLL)
 		{
-			mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, 1.f, 1.f, SELECTED_MANIPULATOR_SCALE), LLCriticalDamp::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
+			mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, 1.f, 1.f, SELECTED_MANIPULATOR_SCALE), LLSmoothInterpolation::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
 		}
 		else if (mManipPart == LL_NO_PART)
 		{
 			if (mHighlightedPart == LL_NO_PART)
 			{
-				mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, 1.f, 1.f, 1.f), LLCriticalDamp::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
+				mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, 1.f, 1.f, 1.f), LLSmoothInterpolation::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
 			}
 
 			LLGLEnable cull_face(GL_CULL_FACE);
@@ -294,7 +294,7 @@ void LLManipRotate::render()
 				{
 					if (mHighlightedPart == LL_ROT_Z)
 					{
-						mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, 1.f, SELECTED_MANIPULATOR_SCALE, 1.f), LLCriticalDamp::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
+						mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, 1.f, SELECTED_MANIPULATOR_SCALE, 1.f), LLSmoothInterpolation::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
 						gGL.scalef(mManipulatorScales.mV[VZ], mManipulatorScales.mV[VZ], mManipulatorScales.mV[VZ]);
 						// hovering over part
 						gl_ring( mRadiusMeters, width_meters, LLColor4( 0.f, 0.f, 1.f, 1.f ), LLColor4( 0.f, 0.f, 1.f, 0.5f ), CIRCLE_STEPS, i);
@@ -312,7 +312,7 @@ void LLManipRotate::render()
 					gGL.rotatef( 90.f, 1.f, 0.f, 0.f );
 					if (mHighlightedPart == LL_ROT_Y)
 					{
-						mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, SELECTED_MANIPULATOR_SCALE, 1.f, 1.f), LLCriticalDamp::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
+						mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, SELECTED_MANIPULATOR_SCALE, 1.f, 1.f), LLSmoothInterpolation::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
 						gGL.scalef(mManipulatorScales.mV[VY], mManipulatorScales.mV[VY], mManipulatorScales.mV[VY]);
 						// hovering over part
 						gl_ring( mRadiusMeters, width_meters, LLColor4( 0.f, 1.f, 0.f, 1.f ), LLColor4( 0.f, 1.f, 0.f, 0.5f ), CIRCLE_STEPS, i);
@@ -330,7 +330,7 @@ void LLManipRotate::render()
 					gGL.rotatef( 90.f, 0.f, 1.f, 0.f );
 					if (mHighlightedPart == LL_ROT_X)
 					{
-						mManipulatorScales = lerp(mManipulatorScales, LLVector4(SELECTED_MANIPULATOR_SCALE, 1.f, 1.f, 1.f), LLCriticalDamp::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
+						mManipulatorScales = lerp(mManipulatorScales, LLVector4(SELECTED_MANIPULATOR_SCALE, 1.f, 1.f, 1.f), LLSmoothInterpolation::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
 						gGL.scalef(mManipulatorScales.mV[VX], mManipulatorScales.mV[VX], mManipulatorScales.mV[VX]);
 	
 						// hovering over part
@@ -346,7 +346,7 @@ void LLManipRotate::render()
 
 				if (mHighlightedPart == LL_ROT_ROLL)
 				{
-					mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, 1.f, 1.f, SELECTED_MANIPULATOR_SCALE), LLCriticalDamp::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
+					mManipulatorScales = lerp(mManipulatorScales, LLVector4(1.f, 1.f, 1.f, SELECTED_MANIPULATOR_SCALE), LLSmoothInterpolation::getInterpolant(MANIPULATOR_SCALE_HALF_LIFE));
 				}
 				
 			}
@@ -519,12 +519,12 @@ BOOL LLManipRotate::handleHover(S32 x, S32 y, MASK mask)
 			drag(x, y);
 		}
 
-		lldebugst(LLERR_USER_INPUT) << "hover handled by LLManipRotate (active)" << llendl;		
+		LL_DEBUGS("UserInput") << "hover handled by LLManipRotate (active)" << LL_ENDL;		
 	}
 	else
 	{
 		highlightManipulators(x, y);
-		lldebugst(LLERR_USER_INPUT) << "hover handled by LLManipRotate (inactive)" << llendl;		
+		LL_DEBUGS("UserInput") << "hover handled by LLManipRotate (inactive)" << LL_ENDL;		
 	}
 
 	gViewerWindow->setCursor(UI_CURSOR_TOOLROTATE);
@@ -1272,9 +1272,9 @@ LLVector3 LLManipRotate::getConstraintAxis()
 		else
 		{
 #ifndef LL_RELEASE_FOR_DOWNLOAD
-			llerrs << "Got bogus hit part in LLManipRotate::getConstraintAxis():" << mManipPart << llendl;
+			LL_ERRS() << "Got bogus hit part in LLManipRotate::getConstraintAxis():" << mManipPart << LL_ENDL;
 #else
-			llwarns << "Got bogus hit part in LLManipRotate::getConstraintAxis():" << mManipPart << llendl;
+			LL_WARNS() << "Got bogus hit part in LLManipRotate::getConstraintAxis():" << mManipPart << LL_ENDL;
 #endif
 			axis.mV[0] = 1.f;
 		}
@@ -1376,74 +1376,28 @@ LLQuaternion LLManipRotate::dragConstrained( S32 x, S32 y )
 		BOOL hit = getMousePointOnPlaneAgent(projected_mouse, x, y, snap_plane_center, constraint_axis);
 		projected_mouse -= snap_plane_center;
 
-		S32 snap_plane = 0;
-
-		F32 dot = cam_to_snap_plane * constraint_axis;
-		if (llabs(dot) < 0.01f)
-		{
-			// looking at ring edge on, project onto view plane and check if mouse is past ring
-			getMousePointOnPlaneAgent(projected_mouse, x, y, snap_plane_center, cam_to_snap_plane);
-			projected_mouse -= snap_plane_center;
-			dot = projected_mouse * constraint_axis;
-			if (projected_mouse * constraint_axis > 0)
-			{
-				snap_plane = 1;
-			}
-			projected_mouse -= dot * constraint_axis;
-		}
-		else if (dot > 0.f)
-		{
-			// look for mouse position outside and in front of snap circle
-			if (hit && projected_mouse.magVec() > SNAP_GUIDE_INNER_RADIUS * mRadiusMeters && projected_mouse * cam_to_snap_plane < 0.f)
-			{
-				snap_plane = 1;
-			}
-		}
-		else
-		{
-			// look for mouse position inside or in back of snap circle
-			if (projected_mouse.magVec() < SNAP_GUIDE_INNER_RADIUS * mRadiusMeters || projected_mouse * cam_to_snap_plane > 0.f || !hit)
-			{
-				snap_plane = 1;
-			}
-		}
-
-		if (snap_plane == 0)
-		{
-			// try other plane
-			snap_plane_center = (center - (constraint_axis * mRadiusMeters * 0.5f));
-			if (mObjectSelection->getSelectType() == SELECT_TYPE_HUD)
-			{
-				cam_to_snap_plane.setVec(1.f, 0.f, 0.f);
-			}
-			else
-			{
-				cam_to_snap_plane = snap_plane_center - gAgentCamera.getCameraPositionAgent();
-				cam_to_snap_plane.normVec();
-			}
-
-			hit = getMousePointOnPlaneAgent(projected_mouse, x, y, snap_plane_center, constraint_axis);
-			projected_mouse -= snap_plane_center;
-
-			dot = cam_to_snap_plane * constraint_axis;
+		if (gSavedSettings.getBOOL("SnapEnabled")) {
+			S32 snap_plane = 0;
+	
+			F32 dot = cam_to_snap_plane * constraint_axis;
 			if (llabs(dot) < 0.01f)
 			{
 				// looking at ring edge on, project onto view plane and check if mouse is past ring
 				getMousePointOnPlaneAgent(projected_mouse, x, y, snap_plane_center, cam_to_snap_plane);
 				projected_mouse -= snap_plane_center;
 				dot = projected_mouse * constraint_axis;
-				if (projected_mouse * constraint_axis < 0)
+				if (projected_mouse * constraint_axis > 0)
 				{
-					snap_plane = 2;
+					snap_plane = 1;
 				}
 				projected_mouse -= dot * constraint_axis;
 			}
-			else if (dot < 0.f)
+			else if (dot > 0.f)
 			{
 				// look for mouse position outside and in front of snap circle
 				if (hit && projected_mouse.magVec() > SNAP_GUIDE_INNER_RADIUS * mRadiusMeters && projected_mouse * cam_to_snap_plane < 0.f)
 				{
-					snap_plane = 2;
+					snap_plane = 1;
 				}
 			}
 			else
@@ -1451,78 +1405,136 @@ LLQuaternion LLManipRotate::dragConstrained( S32 x, S32 y )
 				// look for mouse position inside or in back of snap circle
 				if (projected_mouse.magVec() < SNAP_GUIDE_INNER_RADIUS * mRadiusMeters || projected_mouse * cam_to_snap_plane > 0.f || !hit)
 				{
-					snap_plane = 2;
+					snap_plane = 1;
 				}
 			}
-		}
-
-		if (snap_plane > 0)
-		{
-			LLVector3 cam_at_axis;
-			if (mObjectSelection->getSelectType() == SELECT_TYPE_HUD)
+	
+			if (snap_plane == 0)
 			{
-				cam_at_axis.setVec(1.f, 0.f, 0.f);
+				// try other plane
+				snap_plane_center = (center - (constraint_axis * mRadiusMeters * 0.5f));
+				if (mObjectSelection->getSelectType() == SELECT_TYPE_HUD)
+				{
+					cam_to_snap_plane.setVec(1.f, 0.f, 0.f);
+				}
+				else
+				{
+					cam_to_snap_plane = snap_plane_center - gAgentCamera.getCameraPositionAgent();
+					cam_to_snap_plane.normVec();
+				}
+	
+				hit = getMousePointOnPlaneAgent(projected_mouse, x, y, snap_plane_center, constraint_axis);
+				projected_mouse -= snap_plane_center;
+	
+				dot = cam_to_snap_plane * constraint_axis;
+				if (llabs(dot) < 0.01f)
+				{
+					// looking at ring edge on, project onto view plane and check if mouse is past ring
+					getMousePointOnPlaneAgent(projected_mouse, x, y, snap_plane_center, cam_to_snap_plane);
+					projected_mouse -= snap_plane_center;
+					dot = projected_mouse * constraint_axis;
+					if (projected_mouse * constraint_axis < 0)
+					{
+						snap_plane = 2;
+					}
+					projected_mouse -= dot * constraint_axis;
+				}
+				else if (dot < 0.f)
+				{
+					// look for mouse position outside and in front of snap circle
+					if (hit && projected_mouse.magVec() > SNAP_GUIDE_INNER_RADIUS * mRadiusMeters && projected_mouse * cam_to_snap_plane < 0.f)
+					{
+						snap_plane = 2;
+					}
+				}
+				else
+				{
+					// look for mouse position inside or in back of snap circle
+					if (projected_mouse.magVec() < SNAP_GUIDE_INNER_RADIUS * mRadiusMeters || projected_mouse * cam_to_snap_plane > 0.f || !hit)
+					{
+						snap_plane = 2;
+					}
+				}
 			}
-			else
-			{
-				cam_at_axis = snap_plane_center - gAgentCamera.getCameraPositionAgent();
-				cam_at_axis.normVec();
-			}
-
-			// first, project mouse onto screen plane at point tangent to rotation radius. 
-			getMousePointOnPlaneAgent(projected_mouse, x, y, snap_plane_center, cam_at_axis);
-			// project that point onto rotation plane
-			projected_mouse -= snap_plane_center;
-			projected_mouse -= projected_vec(projected_mouse, constraint_axis);
-
-			F32 mouse_lateral_dist = llmin(SNAP_GUIDE_INNER_RADIUS * mRadiusMeters, projected_mouse.magVec());
-			F32 mouse_depth = SNAP_GUIDE_INNER_RADIUS * mRadiusMeters;
-			if (llabs(mouse_lateral_dist) > 0.01f)
-			{
-				mouse_depth = sqrtf((SNAP_GUIDE_INNER_RADIUS * mRadiusMeters) * (SNAP_GUIDE_INNER_RADIUS * mRadiusMeters) - 
-									(mouse_lateral_dist * mouse_lateral_dist));
-			}
-			LLVector3 projected_camera_at = cam_at_axis - projected_vec(cam_at_axis, constraint_axis);
-			projected_mouse -= mouse_depth * projected_camera_at;
-
-			if (!mInSnapRegime)
-			{
-				mSmoothRotate = TRUE;
-			}
-			mInSnapRegime = TRUE;
-			// 0 to 360 deg
-			F32 mouse_angle = fmodf(atan2(projected_mouse * axis1, projected_mouse * axis2) * RAD_TO_DEG + 360.f, 360.f);
 			
-			F32 relative_mouse_angle = fmodf(mouse_angle + (SNAP_ANGLE_DETENTE / 2), SNAP_ANGLE_INCREMENT);
-			//fmodf(llround(mouse_angle * RAD_TO_DEG, 7.5f) + 360.f, 360.f);
-
-			LLVector3 object_axis;
-			getObjectAxisClosestToMouse(object_axis);
-			object_axis = object_axis * first_object_node->mSavedRotation;
-
-			// project onto constraint plane
-			object_axis = object_axis - (object_axis * getConstraintAxis()) * getConstraintAxis();
-			object_axis.normVec();
-
-			if (relative_mouse_angle < SNAP_ANGLE_DETENTE)
+			if (snap_plane > 0)
 			{
-				F32 quantized_mouse_angle = mouse_angle - (relative_mouse_angle - (SNAP_ANGLE_DETENTE * 0.5f));
-				angle = (quantized_mouse_angle * DEG_TO_RAD) - atan2(object_axis * axis1, object_axis * axis2);
+				LLVector3 cam_at_axis;
+				if (mObjectSelection->getSelectType() == SELECT_TYPE_HUD)
+				{
+					cam_at_axis.setVec(1.f, 0.f, 0.f);
+				}
+				else
+				{
+					cam_at_axis = snap_plane_center - gAgentCamera.getCameraPositionAgent();
+					cam_at_axis.normVec();
+				}
+	
+				// first, project mouse onto screen plane at point tangent to rotation radius. 
+				getMousePointOnPlaneAgent(projected_mouse, x, y, snap_plane_center, cam_at_axis);
+				// project that point onto rotation plane
+				projected_mouse -= snap_plane_center;
+				projected_mouse -= projected_vec(projected_mouse, constraint_axis);
+	
+				F32 mouse_lateral_dist = llmin(SNAP_GUIDE_INNER_RADIUS * mRadiusMeters, projected_mouse.magVec());
+				F32 mouse_depth = SNAP_GUIDE_INNER_RADIUS * mRadiusMeters;
+				if (llabs(mouse_lateral_dist) > 0.01f)
+				{
+					mouse_depth = sqrtf((SNAP_GUIDE_INNER_RADIUS * mRadiusMeters) * (SNAP_GUIDE_INNER_RADIUS * mRadiusMeters) - 
+										(mouse_lateral_dist * mouse_lateral_dist));
+				}
+				LLVector3 projected_camera_at = cam_at_axis - projected_vec(cam_at_axis, constraint_axis);
+				projected_mouse -= mouse_depth * projected_camera_at;
+	
+				if (!mInSnapRegime)
+				{
+					mSmoothRotate = TRUE;
+				}
+				mInSnapRegime = TRUE;
+				// 0 to 360 deg
+				F32 mouse_angle = fmodf(atan2(projected_mouse * axis1, projected_mouse * axis2) * RAD_TO_DEG + 360.f, 360.f);
+				
+				F32 relative_mouse_angle = fmodf(mouse_angle + (SNAP_ANGLE_DETENTE / 2), SNAP_ANGLE_INCREMENT);
+				//fmodf(llround(mouse_angle * RAD_TO_DEG, 7.5f) + 360.f, 360.f);
+	
+				LLVector3 object_axis;
+				getObjectAxisClosestToMouse(object_axis);
+				object_axis = object_axis * first_object_node->mSavedRotation;
+	
+				// project onto constraint plane
+				object_axis = object_axis - (object_axis * getConstraintAxis()) * getConstraintAxis();
+				object_axis.normVec();
+	
+				if (relative_mouse_angle < SNAP_ANGLE_DETENTE)
+				{
+					F32 quantized_mouse_angle = mouse_angle - (relative_mouse_angle - (SNAP_ANGLE_DETENTE * 0.5f));
+					angle = (quantized_mouse_angle * DEG_TO_RAD) - atan2(object_axis * axis1, object_axis * axis2);
+				}
+				else
+				{
+					angle = (mouse_angle * DEG_TO_RAD) - atan2(object_axis * axis1, object_axis * axis2);
+				}
+				return LLQuaternion( -angle, constraint_axis );
 			}
 			else
 			{
-				angle = (mouse_angle * DEG_TO_RAD) - atan2(object_axis * axis1, object_axis * axis2);
+				if (mInSnapRegime)
+				{
+					mSmoothRotate = TRUE;
+				}
+				mInSnapRegime = FALSE;
 			}
-			return LLQuaternion( -angle, constraint_axis );
 		}
-		else
-		{
+		else {
 			if (mInSnapRegime)
 			{
 				mSmoothRotate = TRUE;
 			}
 			mInSnapRegime = FALSE;
-
+		}
+		
+		if (!mInSnapRegime)
+		{
 			LLVector3 up_from_axis = mCenterToCamNorm % constraint_axis;
 			up_from_axis.normVec();
 			LLVector3 cur_intersection;

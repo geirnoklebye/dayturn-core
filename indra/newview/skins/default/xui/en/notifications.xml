@@ -271,7 +271,7 @@ See the [[MARKETPLACE_IMPORTS_URL] error log] for more information.
    icon="OutboxStatus_Error"
    name="OutboxImportFailed"
    type="outbox">
-Transfer failed
+Transfer failed with error &apos;[ERROR_CODE]&apos;
 
 No folders were sent to the Marketplace because of a system or network error.  Try again later.
 
@@ -284,7 +284,7 @@ No folders were sent to the Marketplace because of a system or network error.  T
    icon="OutboxStatus_Error"
    name="OutboxInitFailed"
    type="outbox">
-Marketplace initialization failed
+Marketplace initialization failed with error &apos;[ERROR_CODE]&apos;
 
 Initialization with the Marketplace failed because of a system or network error.  Try again later.
 
@@ -505,6 +505,33 @@ Add this Ability to &apos;[ROLE_NAME]&apos;?
      name="okcancelbuttons"
      notext="No"
      yestext="Yes"/>
+  </notification>
+  
+  <notification
+    icon="alertmodal.tga"
+    name="EjectGroupMemberWarning"
+    type="alertmodal">
+     You are about to eject [AVATAR_NAME] from the group.
+     <tag>group</tag>
+     <tag>confirm</tag>
+     <usetemplate
+      ignoretext="Confirm ejecting a participant from group"
+      name="okcancelignore"
+      notext="Cancel"
+      yestext="Eject"/>
+  </notification>
+  <notification
+    icon="alertmodal.tga"
+    name="EjectGroupMembersWarning"
+    type="alertmodal">
+     You are about to eject [COUNT] members from the group.
+     <tag>group</tag>
+     <tag>confirm</tag>
+     <usetemplate
+      ignoretext="Confirm ejecting multiple members from group"
+      name="okcancelignore"
+      notext="Cancel"
+      yestext="Eject"/>
   </notification>
 
   <notification
@@ -2682,7 +2709,7 @@ Please enter a higher price.
    icon="alertmodal.tga"
    name="ConfirmItemDeleteHasLinks"
    type="alertmodal">
-At least one of the items you has link items that point to it.  If you delete this item, its links will permanently stop working.  It is strongly advised to delete the links first.
+At least one of the items has links that point to it.  If you delete this item, its links will permanently stop working.  It is strongly advised to delete the links first.
 
 Are you sure you want to delete these items?
     <tag>confirm</tag>
@@ -2724,7 +2751,7 @@ Are you sure you want to delete these items?
    icon="alertmodal.tga"
    name="ConfirmObjectDeleteNoOwn"
    type="alertmodal">
-You do not own least one of the items you have selected.
+You do not own at least one of the items you have selected.
 
 Are you sure you want to delete these items?
     <tag>confirm</tag>
@@ -2754,7 +2781,7 @@ Are you sure you want to delete these items?
    name="ConfirmObjectDeleteLockNoOwn"
    type="alertmodal">
 At least one object is locked.
-You do not own least one object.
+You do not own at least one object.
 
 Are you sure you want to delete these items?
     <tag>confirm</tag>
@@ -2769,7 +2796,7 @@ Are you sure you want to delete these items?
    name="ConfirmObjectDeleteNoCopyNoOwn"
    type="alertmodal">
 At least one object is not copyable.
-You do not own least one object.
+You do not own at least one object.
 
 Are you sure you want to delete these items?
     <tag>confirm</tag>
@@ -2785,13 +2812,13 @@ Are you sure you want to delete these items?
    type="alertmodal">
 At least one object is locked.
 At least one object is not copyable.
-You do not own least one object.
+You do not own at least one object.
 
 Are you sure you want to delete these items?
     <tag>confirm</tag>
     <usetemplate
      name="okcancelbuttons"
-     notext="cancel"
+     notext="Cancel"
      yestext="OK"/>
   </notification>
 
@@ -3454,7 +3481,7 @@ or you can install it now.
    name="DownloadBackgroundTip"
    type="notify">
 We have downloaded an update to your [APP_NAME] installation.
-Version [VERSION] [[RELEASE_NOTES_FULL_URL] Information about this update]
+Version [VERSION] [[INFO_URL] Information about this update]
     <tag>confirm</tag>
     <usetemplate
      name="okcancelbuttons"
@@ -3467,7 +3494,7 @@ Version [VERSION] [[RELEASE_NOTES_FULL_URL] Information about this update]
  name="DownloadBackgroundDialog"
  type="alertmodal">
 We have downloaded an update to your [APP_NAME] installation.
-Version [VERSION] [[RELEASE_NOTES_FULL_URL] Information about this update]
+    Version [VERSION] [[INFO_URL] Information about this update]
     <tag>confirm</tag>
     <usetemplate
      name="okcancelbuttons"
@@ -3480,7 +3507,7 @@ Version [VERSION] [[RELEASE_NOTES_FULL_URL] Information about this update]
  name="RequiredUpdateDownloadedVerboseDialog"
  type="alertmodal">
 We have downloaded a required software update.
-Version [VERSION]
+Version [VERSION] [[INFO_URL] Information about this update]
 
 We must restart [APP_NAME] to install the update.
     <tag>confirm</tag>
@@ -3494,6 +3521,66 @@ We must restart [APP_NAME] to install the update.
  name="RequiredUpdateDownloadedDialog"
  type="alertmodal">
 We must restart [APP_NAME] to install the update.
+[[INFO_URL] Information about this update]
+    <tag>confirm</tag>
+    <usetemplate
+     name="okbutton"
+     yestext="OK"/>
+  </notification>
+
+  <notification
+   icon="notify.tga"
+   name="OtherChannelDownloadBackgroundTip"
+   type="notify">
+We have downloaded an update to your [APP_NAME] installation.
+Version [VERSION] 
+This experimental viewer has been replaced by a [NEW_CHANNEL] viewer;
+see [[INFO_URL] for details about this update]
+    <tag>confirm</tag>
+    <usetemplate
+     name="okcancelbuttons"
+     notext="Later..."
+     yestext="Install now and restart [APP_NAME]"/>
+  </notification>
+
+  <notification
+ icon="alertmodal.tga"
+ name="OtherChannelDownloadBackgroundDialog"
+ type="alertmodal">
+We have downloaded an update to your [APP_NAME] installation.
+Version [VERSION]
+This experimental viewer has been replaced by a [NEW_CHANNEL] viewer;
+see [[INFO_URL] Information about this update]
+    <tag>confirm</tag>
+    <usetemplate
+     name="okcancelbuttons"
+     notext="Later..."
+     yestext="Install now and restart [APP_NAME]"/>
+  </notification>
+  
+  <notification
+ icon="alertmodal.tga"
+ name="OtherChannelRequiredUpdateDownloadedVerboseDialog"
+ type="alertmodal">
+We have downloaded a required software update.
+Version [VERSION]
+This experimental viewer has been replaced by a [NEW_CHANNEL] viewer;
+see [[INFO_URL] Information about this update]
+
+We must restart [APP_NAME] to install the update.
+    <tag>confirm</tag>
+    <usetemplate
+     name="okbutton"
+     yestext="OK"/>
+  </notification>
+  
+  <notification
+ icon="alertmodal.tga"
+ name="OtherChannelRequiredUpdateDownloadedDialog"
+ type="alertmodal">
+We must restart [APP_NAME] to install the update.
+This experimental viewer has been replaced by a [NEW_CHANNEL] viewer;
+see [[INFO_URL] Information about this update]
     <tag>confirm</tag>
     <usetemplate
      name="okbutton"
@@ -3645,6 +3732,17 @@ Leave Group?
     <usetemplate
      name="okcancelbuttons"
      notext="Cancel"
+     yestext="OK"/>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="OwnerCannotLeaveGroup"
+   type="alertmodal">
+    Unable to leave group. You cannot leave the group because you are the last owner of the group. Please assign another member to the owner role first.
+    <tag>group</tag>
+    <usetemplate
+     name="okbutton"
      yestext="OK"/>
   </notification>
 
@@ -3973,6 +4071,27 @@ Join me in [REGION]
 
   <notification
    icon="alertmodal.tga"
+   name="TeleportRequestPrompt"
+   type="alertmodal">
+Request a teleport to [NAME] with the following message
+    <tag>confirm</tag>
+    <form name="form">
+      <input name="message" type="text">
+
+      </input>
+      <button
+       default="true"
+       index="0"
+       name="OK"
+       text="OK"/>
+      <button
+       index="1"
+       name="Cancel"
+       text="Cancel"/>
+    </form>
+  </notification>
+  <notification
+   icon="alertmodal.tga"
    name="TooManyTeleportOffers"
    type="alertmodal">
 You attempted to make [OFFERS] teleport offers
@@ -4018,6 +4137,19 @@ Are you sure you want to teleport to &lt;nolink&gt;[LOCATION]&lt;/nolink&gt;?
      notext="Cancel"
      yestext="Teleport"/>
   </notification>
+  
+  <notification
+   icon="alertmodal.tga"
+   name="TeleportViaSLAPP"
+   type="alertmodal">
+Are you sure you want to teleport to &lt;nolink&gt;[LOCATION]&lt;/nolink&gt;?
+    <tag>confirm</tag>
+    <usetemplate
+     ignoretext="Confirm that I want to teleport via SLAPP"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="Teleport"/>
+  </notification>	
 
   <notification
    icon="alertmodal.tga"
@@ -4635,6 +4767,14 @@ Problem importing estate covenant.
    type="alertmodal">
 Problems adding a new estate manager.  One or more estates may have a full manager list.
   <tag>fail</tag>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="ProblemAddingEstateBanManager"
+   type="alertmodal">
+Unable to add estate owner or manager to ban list.
+    <tag>fail</tag>
   </notification>
 
   <notification
@@ -5883,9 +6023,7 @@ Your calling card was declined.
    icon="notifytip.tga"
    name="TeleportToPerson"
    type="notifytip">
-    To contact Residents like &apos;[NAME]&apos;, click on the &quot;People&quot; button , select a Resident from the window that opens, then click &apos;IM&apos; at the
-    bottom of the window.
-    (You can also double-click on their name in the list, or right-click and choose &apos;IM&apos;).
+    To open a private conversation with someone, right-click on their avatar and choose &apos;IM&apos; from the menu.
   </notification>
 
   <notification
@@ -5921,6 +6059,13 @@ Please select at least one type of content to search (General, Moderate, or Adul
 [MESSAGE]
   </notification>
 
+ <notification
+  icon="notify.tga"
+  name="FacebookConnect"
+  type="notifytip">
+[MESSAGE]
+ </notification>
+    
   <notification
    icon="notify.tga"
    name="PaymentReceived"
@@ -6213,12 +6358,21 @@ You can only claim public land in the Region you&apos;re in.
   <notification
    icon="notify.tga"
    name="RegionTPAccessBlocked"
-   persist="true"
+   persist="false"
    type="notify">
    <tag>fail</tag>
     The region you're trying to visit contains content exceeding your current preferences.  You can change your preferences using Me &gt; Preferences &gt; General.
   </notification>
 
+  <notification
+	icon="notify.tga"
+   name="RegionAboutToShutdown"
+   persist="false"
+   type="notify">
+    <tag>fail</tag>
+    The region you're trying to enter is about to shut down.
+  </notification>
+  
   <notification
 	icon="notify.tga"
 	name="URBannedFromRegion"
@@ -6513,7 +6667,7 @@ Your object named &lt;nolink&gt;[OBJECTFROMNAME]&lt;/nolink&gt; has given you th
    icon="notify.tga"
    name="JoinGroup"
    persist="true"
-   type="notify">
+   type="offer">
     <tag>group</tag>
 [MESSAGE]
     <form name="form">
@@ -6541,7 +6695,7 @@ Your object named &lt;nolink&gt;[OBJECTFROMNAME]&lt;/nolink&gt; has given you th
    sound="UISndNewIncomingIMSession">
 [NAME_SLURL] has offered to teleport you to their location:
 
-“[MESSAGE]”
+"[MESSAGE]”
 &lt;icon&gt;[MATURITY_ICON]&lt;/icon&gt; - [MATURITY_STR]
     <tag>confirm</tag>
     <form name="form">
@@ -6606,6 +6760,27 @@ However, this region contains content accessible to adults only.
 	Teleport offer sent to [TO_NAME]
   </notification>
 
+  <notification
+   icon="notify.tga"
+   name="TeleportRequest"
+   log_to_im="true"
+   type="offer">
+[NAME_SLURL] is requesting to be teleported to your location.
+[MESSAGE]
+
+Offer a teleport?
+    <tag>confirm</tag>
+    <form name="form">
+      <button
+       index="0"
+       name="Yes"
+       text="Yes"/>
+      <button
+       index="1"
+       name="No"
+       text="No"/>
+    </form>
+  </notification>
 
   <notification
    icon="notify.tga"
@@ -6654,7 +6829,6 @@ However, this region contains content accessible to adults only.
    icon="notify.tga"
    name="FriendshipOffered"
    log_to_im="true"   
-   show_toast="false"   
    type="notify">
     <tag>friendship</tag>
 	You have offered friendship to [TO_NAME]
@@ -6704,7 +6878,6 @@ However, this region contains content accessible to adults only.
    icon="notify.tga"
    name="FriendshipAcceptedByMe"
    log_to_im="true"   
-   show_toast="false"
    type="notify">
     <tag>friendship</tag>
 Friendship offer accepted.
@@ -6714,7 +6887,6 @@ Friendship offer accepted.
    icon="notify.tga"
    name="FriendshipDeclinedByMe"
    log_to_im="true"   
-   show_toast="false"   
    type="notify">
     <tag>friendship</tag>
 Friendship offer declined.
@@ -6742,22 +6914,20 @@ This will add a bookmark in your inventory so you can quickly IM this Resident.
   <notification
    icon="notify.tga"
    name="RegionRestartMinutes"
+   show_toast="false"
    priority="high"
-   sound="UISndAlert"
-   persist="true"
    type="notify">
-This region will restart in [MINUTES] minutes.
+The region "[NAME]" will restart in [MINUTES] minutes.
 If you stay in this region you will be logged out.
   </notification>
 
   <notification
    icon="notify.tga"
    name="RegionRestartSeconds"
+   show_toast="false"
    priority="high"
-   sound="UISndAlert"
-   persist="true"
    type="notify">
-This region will restart in [SECONDS] seconds.
+The region "[NAME]" will restart in [SECONDS] seconds.
 If you stay in this region you will be logged out.
   </notification>
 
@@ -6865,6 +7035,28 @@ Do not allow access if you do not fully understand why it wants access to your a
   </notification>
 
   <notification
+   icon="notify.tga"
+	 name="UnknownScriptQuestion"
+	 persist="false"
+	 type="notify">
+The runtime script permission requested by &apos;&lt;nolink&gt;[OBJECTNAME]&lt;/nolink&gt;&apos;, an object owned by &apos;[NAME]&apos;, isn&apos;t recognized by the viewer and can&apos;t be granted.
+
+To grant this permission please update your viewer to the latest version from [DOWNLOADURL].
+		<tag>confirm</tag>
+		<form name="form">
+			<button
+			 default="true"
+			 index="1"
+			 name="Deny"
+			 text="Ok"/>
+			<button
+			 index="2"
+			 name="Mute"
+			 text="Block"/>
+		</form>
+	</notification>
+
+	<notification
    icon="notify.tga"
    name="ScriptDialog"
    show_toast="false"
@@ -7455,7 +7647,7 @@ Are you sure you want to share the following items:
 
 With the following Residents:
 
-[RESIDENTS]
+&lt;nolink&gt;[RESIDENTS]&lt;/nolink&gt;
   <tag>confirm</tag>
 	<usetemplate
      name="okcancelbuttons"
@@ -7475,7 +7667,7 @@ Are you sure you want to share the following items:
 
 With the following Residents:
 
-[RESIDENTS]
+&lt;nolink&gt;[RESIDENTS]&lt;/nolink&gt;
   <tag>confirm</tag>
 	<usetemplate
      name="okcancelbuttons"
@@ -8618,11 +8810,11 @@ You are no longer allowed here and have [EJECT_TIME] seconds to leave.
 
   <notification
    icon="alertmodal.tga"
-   name="NoEnterServerFull"
+   name="NoEnterRegionMaybeFull"
    type="notify">
    <tag>fail</tag>
-You can't enter this region because 
-the server is full.
+You can't enter region "[NAME]".
+It may be full or restarting soon.
   </notification>
 
   <notification
@@ -9122,8 +9314,17 @@ Object uses too many physics resources -- its dynamics have been disabled.
 
   <notification
    icon="alertmodal.tga"
+   name="EstateManagerFailedllTeleportHome"
+   persist="false"
+   type="notify">
+    <tag>fail</tag>
+The object '[OBJECT_NAME]' at [SLURL] cannot teleport estate managers home.
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
    name="TeleportedHomeByObjectOnParcel"
-   persist="true"
+   persist="false"
    type="notify">
    <tag>fail</tag>
 You have been teleported home by the object '[OBJECT_NAME]' on the parcel '[PARCEL_NAME]'
@@ -9132,7 +9333,7 @@ You have been teleported home by the object '[OBJECT_NAME]' on the parcel '[PARC
   <notification
    icon="alertmodal.tga"
    name="TeleportedHomeByObject"
-   persist="true"
+   persist="false"
    type="notify">
    <tag>fail</tag>
 You have been teleported home by the object '[OBJECT_NAME]'
@@ -9388,6 +9589,14 @@ Not enough script resources available to attach object!
 
   <notification
    icon="alertmodal.tga"
+   name="CantAttachObjectBeingRemoved"
+   type="notify">
+    <tag>fail</tag>
+    Cannot attach object because it is already being removed.
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
    name="CantDropItemTrialUser"
    type="notify">
    <tag>fail</tag>
@@ -9568,15 +9777,7 @@ Only the first 10 selected objects have been disabled. Refresh and make addition
    type="notify">
    <tag>fail</tag>
 You need to update your viewer to buy this parcel.
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="LandBuyAccessBlocked"
-   type="notify">
-   <tag>fail</tag>
-You can't buy this land due to your maturity Rating. You may need to validate your age and/or install the latest Viewer. Please go to the Knowledge Base for details on accessing areas with this maturity Rating.
-  </notification>
+  </notification>  
 
   <notification
    icon="alertmodal.tga"
@@ -9639,7 +9840,9 @@ Not enough leased parcels in selection to join.
    name="CantDivideLandMultipleParcelsSelected"
    type="notify">
    <tag>fail</tag>
-Can't divide land.\nThere is more than one parcel selected.\nTry selecting a smaller piece of land.
+Can't divide land.
+There is more than one parcel selected.
+Try selecting a smaller piece of land.
   </notification>
 
   <notification
@@ -9647,7 +9850,9 @@ Can't divide land.\nThere is more than one parcel selected.\nTry selecting a sma
    name="CantDivideLandCantFindParcel"
    type="notify">
    <tag>fail</tag>
-Can't divide land.\nCan't find the parcel.\nPlease report with Help -> Reprt Bug...
+Can't divide land.
+Can't find the parcel.
+Please report with Help -> Report Bug...
   </notification>
 
   <notification
@@ -9655,7 +9860,8 @@ Can't divide land.\nCan't find the parcel.\nPlease report with Help -> Reprt Bug
    name="CantDivideLandWholeParcelSelected"
    type="notify">
    <tag>fail</tag>
-Can't divide land. Whole parcel is selected.\nTry selecting a smaller piece of land.
+Can't divide land. Whole parcel is selected.
+Try selecting a smaller piece of land.
   </notification>
 
   <notification
@@ -9993,7 +10199,7 @@ An internal error prevented us from properly updating your viewer.  The L$ balan
    <tag>fail</tag>
 Cannot create large prims that intersect other players.  Please re-try when other players have moved.
   </notification>
-
+  
   <notification
    icon="alertmodal.tga"
    name="PreferenceChatClearLog"
@@ -10028,6 +10234,16 @@ Cannot create large prims that intersect other players.  Please re-try when othe
     <usetemplate
      ignoretext="Unable to move files. Restored previous path."
      name="okignore"
+     yestext="OK"/>
+  </notification>
+  
+  <notification
+   icon="alert.tga"
+   name="ChatHistoryIsBusyAlert"
+   type="alertmodal">
+   Chat history file is busy with previous operation. Please try again in a few minutes or choose chat with another person.
+    <usetemplate
+     name="okbutton"
      yestext="OK"/>
   </notification>
   

@@ -140,7 +140,7 @@ BOOL LLFloaterMove::postBuild()
 
 	initMovementMode();
 
-	LLViewerParcelMgr::getInstance()->addAgentParcelChangedCallback(LLFloaterMove::sUpdateFlyingStatus);
+	gAgent.addParcelChangedCallback(LLFloaterMove::sUpdateFlyingStatus);
 
 	return TRUE;
 }
@@ -581,7 +581,7 @@ void LLPanelStandStopFlying::clearStandStopFlyingMode(EStandStopFlyingMode mode)
 		panel->mStopFlyingButton->setVisible(FALSE);
 		break;
 	default:
-		llerrs << "Unexpected EStandStopFlyingMode is passed: " << mode << llendl;
+		LL_ERRS() << "Unexpected EStandStopFlyingMode is passed: " << mode << LL_ENDL;
 	}
 
 }
@@ -648,7 +648,7 @@ void LLPanelStandStopFlying::reparent(LLFloaterMove* move_view)
 	LLPanel* parent = dynamic_cast<LLPanel*>(getParent());
 	if (!parent)
 	{
-		llwarns << "Stand/stop flying panel parent is unset, already attached?: " << mAttached << ", new parent: " << (move_view == NULL ? "NULL" : "Move Floater") << llendl;
+		LL_WARNS() << "Stand/stop flying panel parent is unset, already attached?: " << mAttached << ", new parent: " << (move_view == NULL ? "NULL" : "Move Floater") << LL_ENDL;
 		return;
 	}
 
@@ -670,7 +670,7 @@ void LLPanelStandStopFlying::reparent(LLFloaterMove* move_view)
 	{
 		if (!mOriginalParent.get())
 		{
-			llwarns << "Original parent of the stand / stop flying panel not found" << llendl;
+			LL_WARNS() << "Original parent of the stand / stop flying panel not found" << LL_ENDL;
 			return;
 		}
 
@@ -698,7 +698,7 @@ LLPanelStandStopFlying* LLPanelStandStopFlying::getStandStopFlyingPanel()
 	panel->setVisible(FALSE);
 	//LLUI::getRootView()->addChild(panel);
 
-	llinfos << "Build LLPanelStandStopFlying panel" << llendl;
+	LL_INFOS() << "Build LLPanelStandStopFlying panel" << LL_ENDL;
 
 	panel->updatePosition();
 	return panel;
@@ -747,14 +747,14 @@ void LLPanelStandStopFlying::updatePosition()
 
 	S32 y_pos = 0;
 	S32 bottom_tb_center = 0;
-	if (LLToolBar* toolbar_bottom = gToolBarView->getToolbar(LLToolBarView::TOOLBAR_BOTTOM))
+	if (LLToolBar* toolbar_bottom = gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_BOTTOM))
 	{
 		y_pos = toolbar_bottom->getRect().getHeight();
 		bottom_tb_center = toolbar_bottom->getRect().getCenterX();
 	}
 
 	S32 left_tb_width = 0;
-	if (LLToolBar* toolbar_left = gToolBarView->getToolbar(LLToolBarView::TOOLBAR_LEFT))
+	if (LLToolBar* toolbar_left = gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_LEFT))
 	{
 		left_tb_width = toolbar_left->getRect().getWidth();
 	}

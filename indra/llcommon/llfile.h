@@ -35,7 +35,7 @@
  * Attempts to mostly mirror the POSIX style IO functions.
  */
 
-typedef FILE LLFILE;
+typedef FILE	LLFILE;
 
 #include <fstream>
 #include <sys/stat.h>
@@ -75,6 +75,8 @@ public:
 	static	int		rmdir(const std::string& filename);
 	static	int		remove(const std::string& filename);
 	static	int		rename(const std::string& filename,const std::string&	newname);
+	static  bool	copy(const std::string from, const std::string to);
+
 	static	int		stat(const std::string&	filename,llstat*	file_status);
 	static	bool	isdir(const std::string&	filename);
 	static	bool	isfile(const std::string&	filename);
@@ -237,7 +239,7 @@ public:
 			ios_base::openmode _Mode = ios_base::in,
 			//size_t _Size = static_cast<size_t>(BUFSIZ));
 			size_t _Size = static_cast<size_t>(1));
-
+	
 	/**
 	 *  @brief  Create a stream using an open file descriptor.
 	 *  @param  fd    An open file descriptor.

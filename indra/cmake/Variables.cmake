@@ -134,15 +134,20 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     OUTPUT_VARIABLE XCODE_VERSION )
 
   # To support a different SDK update these Xcode settings:
+  if (XCODE_VERSION GREATER 4.5)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.8)
+    set(CMAKE_OSX_SYSROOT macosx10.8)
+  else (XCODE_VERSION GREATER 4.5)
   if (XCODE_VERSION GREATER 4.2)
     set(CMAKE_OSX_DEPLOYMENT_TARGET 10.6)
+    set(CMAKE_OSX_SYSROOT macosx10.7)
   else (XCODE_VERSION GREATER 4.2)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.5)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.6)
+    set(CMAKE_OSX_SYSROOT macosx10.7)
   endif (XCODE_VERSION GREATER 4.2)
+  endif (XCODE_VERSION GREATER 4.5)
 
-  set(CMAKE_OSX_SYSROOT macosx10.6)
   set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvmgcc42")
-      
   set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT dwarf-with-dsym)
 
   # NOTE: To attempt an i386/PPC Universal build, add this on the configure line:
@@ -170,8 +175,7 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 # Default deploy grid
 set(GRID agni CACHE STRING "Target Grid")
 
-set(VIEWER_CHANNEL "LindenDeveloper" CACHE STRING "Viewer Channel Name")
-set(VIEWER_LOGIN_CHANNEL ${VIEWER_CHANNEL} CACHE STRING "Fake login channel for A/B Testing")
+set(VIEWER_CHANNEL "Restrained Love Release" CACHE STRING "Viewer Channel Name")
 
 if (XCODE_VERSION GREATER 4.2)
   set(ENABLE_SIGNING OFF CACHE BOOL "Enable signing the viewer")

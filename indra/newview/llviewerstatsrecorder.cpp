@@ -49,7 +49,7 @@ LLViewerStatsRecorder::LLViewerStatsRecorder() :
 {
 	if (NULL != sInstance)
 	{
-		llerrs << "Attempted to create multiple instances of LLViewerStatsRecorder!" << llendl;
+		LL_ERRS() << "Attempted to create multiple instances of LLViewerStatsRecorder!" << LL_ENDL;
 	}
 	sInstance = this;
 	clearStats();
@@ -132,7 +132,7 @@ void LLViewerStatsRecorder::recordObjectUpdateEvent(U32 local_id, const EObjectU
 		mObjectCacheHitSize += msg_size;
 		break;
 	default:
-		llwarns << "Unknown update_type" << llendl;
+		LL_WARNS() << "Unknown update_type" << LL_ENDL;
 		break;
 	};
 }
@@ -154,7 +154,7 @@ void LLViewerStatsRecorder::recordCacheFullUpdate(U32 local_id, const EObjectUpd
 			mObjectCacheUpdateReplacements++;
 			break;
 		default:
-			llwarns << "Unknown update_result type" << llendl;
+			LL_WARNS() << "Unknown update_result type" << LL_ENDL;
 			break;
 	};
 }
@@ -166,13 +166,14 @@ void LLViewerStatsRecorder::recordRequestCacheMissesEvent(S32 count)
 
 void LLViewerStatsRecorder::writeToLog( F32 interval )
 {
+	size_t data_size = 0;
 	F64 delta_time = LLTimer::getTotalSeconds() - mLastSnapshotTime;
 	S32 total_objects = mObjectCacheHitCount + mObjectCacheMissCrcCount + mObjectCacheMissFullCount + mObjectFullUpdates + mObjectTerseUpdates + mObjectCacheMissRequests + mObjectCacheMissResponses + mObjectCacheUpdateDupes + mObjectCacheUpdateChanges + mObjectCacheUpdateAdds + mObjectCacheUpdateReplacements + mObjectUpdateFailures;
 
 	if ( delta_time < interval || total_objects == 0) return;
 
 	mLastSnapshotTime = LLTimer::getTotalSeconds();
-	lldebugs << "ILX: " 
+	LL_DEBUGS() << "ILX: " 
 		<< mObjectCacheHitCount << " hits, " 
 		<< mObjectCacheMissFullCount << " full misses, "
 		<< mObjectCacheMissCrcCount << " crc misses, "
@@ -185,7 +186,7 @@ void LLViewerStatsRecorder::writeToLog( F32 interval )
 		<< mObjectCacheUpdateAdds << " cache update adds, "
 		<< mObjectCacheUpdateReplacements << " cache update replacements, "
 		<< mObjectUpdateFailures << " update failures"
-		<< llendl;
+		<< LL_ENDL;
 
 	if (mObjectCacheFile == NULL)
 	{
@@ -216,13 +217,15 @@ void LLViewerStatsRecorder::writeToLog( F32 interval )
 				<< "Texture Fetch bps\t"
 				<< "\n";
 
-			size_t wrote = fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile );
-			llassert(wrote == data_msg.str().size());
-			(void)wrote;
+			data_size = data_msg.str().size();
+			if (fwrite(data_msg.str().c_str(), 1, data_size, mObjectCacheFile ) != data_size)
+			{
+				LL_WARNS() << "failed to write full headers to " << STATS_FILE_NAME << LL_ENDL;
+			}
 		}
 		else
 		{
-			llwarns << "Couldn't open " << STATS_FILE_NAME << " for logging." << llendl;
+			//LL_WARNS() << "Couldn't open " << STATS_FILE_NAME << " for logging." << LL_ENDL;
 			return;
 		}
 	}
@@ -251,9 +254,12 @@ void LLViewerStatsRecorder::writeToLog( F32 interval )
 		<< "\t" << (mTextureFetchSize * 8 / delta_time)
 		<< "\n";
 
-	size_t data_written = fwrite(data_msg.str().c_str(), 1, data_msg.str().size(), mObjectCacheFile );
-	llassert(data_written == data_msg.str().size());
-	(void)data_written;
+	data_size = data_msg.str().size();
+	if ( data_size != fwrite(data_msg.str().c_str(), 1, data_size, mObjectCacheFile ))
+	{
+				LL_WARNS() << "Unable to write complete column data to " << STATS_FILE_NAME << LL_ENDL;
+	}
+
 	clearStats();
 }
 

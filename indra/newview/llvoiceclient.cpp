@@ -113,8 +113,8 @@ LLVoiceClient::LLVoiceClient()
 	:
 	mVoiceModule(NULL),
 	m_servicePump(NULL),
-	mVoiceEffectEnabled(LLCachedControl<bool>(gSavedSettings, "VoiceMorphingEnabled")),
-	mVoiceEffectDefault(LLCachedControl<std::string>(gSavedPerAccountSettings, "VoiceEffectDefault")),
+	mVoiceEffectEnabled(LLCachedControl<bool>(gSavedSettings, "VoiceMorphingEnabled", true)),
+	mVoiceEffectDefault(LLCachedControl<std::string>(gSavedPerAccountSettings, "VoiceEffectDefault", "00000000-0000-0000-0000-000000000000")),
 	mPTTDirty(true),
 	mPTT(true),
 	mUsePTT(true),
@@ -714,14 +714,7 @@ BOOL LLVoiceClient::isParticipantAvatar(const LLUUID& id)
 
 BOOL LLVoiceClient::isOnlineSIP(const LLUUID& id)
 {
-	if (mVoiceModule) 
-	{
-		return mVoiceModule->isOnlineSIP(id);
-	}
-	else
-	{
 		return FALSE;
-	}
 }
 
 BOOL LLVoiceClient::getIsSpeaking(const LLUUID& id)

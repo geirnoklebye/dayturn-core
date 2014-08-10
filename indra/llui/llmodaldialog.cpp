@@ -34,7 +34,7 @@
 #include "llui.h"
 #include "llwindow.h"
 #include "llkeyboard.h"
-
+#include "llmenugl.h"
 // static
 std::list<LLModalDialog*> LLModalDialog::sModalStack;
 
@@ -65,7 +65,7 @@ LLModalDialog::~LLModalDialog()
 	std::list<LLModalDialog*>::iterator iter = std::find(sModalStack.begin(), sModalStack.end(), this);
 	if (iter != sModalStack.end())
 	{
-		llerrs << "Attempt to delete dialog while still in sModalStack!" << llendl;
+		LL_ERRS() << "Attempt to delete dialog while still in sModalStack!" << LL_ENDL;
 	}
 }
 
@@ -126,7 +126,7 @@ void LLModalDialog::stopModal()
 		}
 		else
 		{
-			llwarns << "LLModalDialog::stopModal not in list!" << llendl;
+			LL_WARNS() << "LLModalDialog::stopModal not in list!" << LL_ENDL;
 		}
 	}
 	if (!sModalStack.empty())
@@ -161,6 +161,18 @@ void LLModalDialog::setVisible( BOOL visible )
 
 BOOL LLModalDialog::handleMouseDown(S32 x, S32 y, MASK mask)
 {
+	LLView* popup_menu = LLMenuGL::sMenuContainer->getVisibleMenu();
+	if (popup_menu != NULL)
+	{
+		S32 mx, my;
+		LLUI::getMousePositionScreen(&mx, &my);
+		LLRect menu_screen_rc = popup_menu->calcScreenRect();
+		if(!menu_screen_rc.pointInRect(mx, my))
+		{
+			LLMenuGL::sMenuContainer->hideMenus();
+		}
+	}
+
 	if (mModal)
 	{
 		if (!LLFloater::handleMouseDown(x, y, mask))
@@ -173,6 +185,8 @@ BOOL LLModalDialog::handleMouseDown(S32 x, S32 y, MASK mask)
 	{
 		LLFloater::handleMouseDown(x, y, mask);
 	}
+
+
 	return TRUE;
 }
 
@@ -181,8 +195,24 @@ BOOL LLModalDialog::handleHover(S32 x, S32 y, MASK mask)
 	if( childrenHandleHover(x, y, mask) == NULL )
 	{
 		getWindow()->setCursor(UI_CURSOR_ARROW);
-		lldebugst(LLERR_USER_INPUT) << "hover handled by " << getName() << llendl;		
+		LL_DEBUGS("UserInput") << "hover handled by " << getName() << LL_ENDL;		
 	}
+
+	LLView* popup_menu = LLMenuGL::sMenuContainer->getVisibleMenu();
+	if (popup_menu != NULL)
+	{
+		S32 mx, my;
+		LLUI::getMousePositionScreen(&mx, &my);
+		LLRect menu_screen_rc = popup_menu->calcScreenRect();
+		if(menu_screen_rc.pointInRect(mx, my))
+		{
+			S32 local_x = mx - popup_menu->getRect().mLeft;
+			S32 local_y = my - popup_menu->getRect().mBottom;
+			popup_menu->handleHover(local_x, local_y, mask);
+			gFocusMgr.setMouseCapture(NULL);
+		}
+	}
+
 	return TRUE;
 }
 
@@ -210,6 +240,7 @@ BOOL LLModalDialog::handleDoubleClick(S32 x, S32 y, MASK mask)
 
 BOOL LLModalDialog::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
+	LLMenuGL::sMenuContainer->hideMenus();
 	childrenHandleRightMouseDown(x, y, mask);
 	return TRUE;
 }
@@ -300,7 +331,7 @@ void LLModalDialog::shutdownModals()
 	// app, we shouldn't have to care WHAT's open. Put differently, if a modal
 	// dialog is so crucial that we can't let the user terminate until s/he
 	// addresses it, we should reject a termination request. The current state
-	// of affairs is that we accept it, but then produce an llerrs popup that
+	// of affairs is that we accept it, but then produce an LL_ERRS() popup that
 	// simply makes our software look unreliable.
 	sModalStack.clear();
 }

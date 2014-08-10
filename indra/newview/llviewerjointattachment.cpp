@@ -28,7 +28,6 @@
 
 #include "llviewerjointattachment.h"
 
-#include "llagentconstants.h"
 #include "llviewercontrol.h"
 #include "lldrawable.h"
 #include "llgl.h"
@@ -53,6 +52,7 @@
 //mk
 
 extern LLPipeline gPipeline;
+const F32 MAX_ATTACHMENT_DIST = 3.5f; // meters?
 
 //-----------------------------------------------------------------------------
 // LLViewerJointAttachment()
@@ -184,7 +184,6 @@ BOOL LLViewerJointAttachment::addObject(LLViewerObject* object)
 //MK
 		was_empty = false;
 //mk
-		llinfos << "(same object re-attached)" << llendl;
 		removeObject(object);
 		// Pass through anyway to let setupDrawable()
 		// re-connect object to the joint correctly
@@ -197,7 +196,7 @@ BOOL LLViewerJointAttachment::addObject(LLViewerObject* object)
 	// Request detach, and kill the object in the meantime.
 	if (getAttachedObject(object->getAttachmentItemID()))
 	{
-		llinfos << "(same object re-attached)" << llendl;
+		LL_INFOS() << "(same object re-attached)" << LL_ENDL;
 		object->markDead();
 
 		// If this happens to be attached to self, then detach.
@@ -262,7 +261,7 @@ BOOL LLViewerJointAttachment::addObject(LLViewerObject* object)
 						gInventory.notifyObservers();
 					}
 
-					llinfos << "Attached to a locked point : " << item_id << llendl;
+					LL_INFOS() << "Attached to a locked point : " << item_id << LL_ENDL;
 					gMessageSystem->newMessage("ObjectDetach");
 					gMessageSystem->nextBlockFast(_PREHASH_AgentData);
 					gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID() );
@@ -300,7 +299,7 @@ BOOL LLViewerJointAttachment::addObject(LLViewerObject* object)
 		{
 			if (it->uuid == item_id)
 			{
-				llinfos << "Reattached asset " << item_id << " automatically" << llendl;
+				LL_INFOS() << "Reattached asset " << item_id << " automatically" << LL_ENDL;
 				gAgent.mRRInterface.mReattaching = FALSE;
 				gAgent.mRRInterface.mReattachTimeout = FALSE;
 				gAgent.mRRInterface.mAssetsToReattach.erase(it);
@@ -340,7 +339,7 @@ void LLViewerJointAttachment::removeObject(LLViewerObject *object)
 			&& gAgent.mRRInterface.mJustDetached.attachpt != target_attachpt	// we didn't just detach something from this attach pt automatically
 			&& gAgent.mRRInterface.mJustReattached.attachpt != target_attachpt)	// we didn't just reattach something to this attach pt automatically
 		{
-			llinfos << "Detached a locked object : " << inv_item_id << llendl;
+			LL_INFOS() << "Detached a locked object : " << inv_item_id << LL_ENDL;
 
 			// Now notify that this object has been detached and will be reattached right away
 			gAgent.mRRInterface.notify (LLUUID::null, "detached illegally " + getName(), "");
@@ -393,7 +392,7 @@ void LLViewerJointAttachment::removeObject(LLViewerObject *object)
 	}
 	if (iter == mAttachedObjects.end())
 	{
-		llwarns << "Could not find object to detach" << llendl;
+		LL_WARNS() << "Could not find object to detach" << LL_ENDL;
 		return;
 	}
 

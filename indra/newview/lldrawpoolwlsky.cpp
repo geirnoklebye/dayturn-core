@@ -54,12 +54,12 @@ LLDrawPoolWLSky::LLDrawPoolWLSky(void) :
 	LLDrawPool(POOL_WL_SKY)
 {
 	const std::string cloudNoiseFilename(gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, "windlight", "clouds2.tga"));
-	llinfos << "loading WindLight cloud noise from " << cloudNoiseFilename << llendl;
+	LL_INFOS() << "loading WindLight cloud noise from " << cloudNoiseFilename << LL_ENDL;
 
 	LLPointer<LLImageFormatted> cloudNoiseFile(LLImageFormatted::createFromExtension(cloudNoiseFilename));
 
 	if(cloudNoiseFile.isNull()) {
-		llerrs << "Error: Failed to load cloud noise image " << cloudNoiseFilename << llendl;
+		LL_ERRS() << "Error: Failed to load cloud noise image " << cloudNoiseFilename << LL_ENDL;
 	}
 
 	if(cloudNoiseFile->load(cloudNoiseFilename))
@@ -69,8 +69,8 @@ LLDrawPoolWLSky::LLDrawPoolWLSky(void) :
 		if(cloudNoiseFile->decode(sCloudNoiseRawImage, 0.0f))
 		{
 			//debug use			
-			lldebugs << "cloud noise raw image width: " << sCloudNoiseRawImage->getWidth() << " : height: " << sCloudNoiseRawImage->getHeight() << " : components: " << 
-				(S32)sCloudNoiseRawImage->getComponents() << " : data size: " << sCloudNoiseRawImage->getDataSize() << llendl ;
+			LL_DEBUGS() << "cloud noise raw image width: " << sCloudNoiseRawImage->getWidth() << " : height: " << sCloudNoiseRawImage->getHeight() << " : components: " << 
+				(S32)sCloudNoiseRawImage->getComponents() << " : data size: " << sCloudNoiseRawImage->getDataSize() << LL_ENDL ;
 			llassert_always(sCloudNoiseRawImage->getData()) ;
 
 			sCloudNoiseTexture = LLViewerTextureManager::getLocalTexture(sCloudNoiseRawImage.get(), TRUE);
@@ -86,7 +86,7 @@ LLDrawPoolWLSky::LLDrawPoolWLSky(void) :
 
 LLDrawPoolWLSky::~LLDrawPoolWLSky()
 {
-	//llinfos << "destructing wlsky draw pool." << llendl;
+	//LL_INFOS() << "destructing wlsky draw pool." << LL_ENDL;
 	sCloudNoiseTexture = NULL;
 	sCloudNoiseRawImage = NULL;
 }
@@ -152,7 +152,8 @@ void LLDrawPoolWLSky::renderDome(F32 camHeightLocal, LLGLSLShader * shader) cons
 	gGL.translatef(0.f,-camHeightLocal, 0.f);
 	
 	// Draw WL Sky	
-	shader->uniform3f("camPosLocal", 0.f, camHeightLocal, 0.f);
+	static LLStaticHashedString sCamPosLocal("camPosLocal");
+	shader->uniform3f(sCamPosLocal, 0.f, camHeightLocal, 0.f);
 
 	gSky.mVOWLSkyp->drawDome();
 
@@ -196,7 +197,7 @@ void LLDrawPoolWLSky::renderStars(void) const
 	// If start_brightness is not set, exit
 	if( error )
 	{
-		llwarns << "star_brightness missing in mCurParams" << llendl;
+		LL_WARNS() << "star_brightness missing in mCurParams" << LL_ENDL;
 		return;
 	}
 
@@ -207,7 +208,8 @@ void LLDrawPoolWLSky::renderStars(void) const
 	if (LLGLSLShader::sNoFixedFunction)
 	{
 		gCustomAlphaProgram.bind();
-		gCustomAlphaProgram.uniform1f("custom_alpha", star_alpha.mV[3]);
+		static LLStaticHashedString sCustomAlpha("custom_alpha");
+		gCustomAlphaProgram.uniform1f(sCustomAlpha, star_alpha.mV[3]);
 	}
 	else
 	{
@@ -307,7 +309,7 @@ void LLDrawPoolWLSky::renderDeferred(S32 pass)
 	{
 		return;
 	}
-	LLFastTimer ftm(FTM_RENDER_WL_SKY);
+	LL_RECORD_BLOCK_TIME(FTM_RENDER_WL_SKY);
 
 	const F32 camHeightLocal = LLWLParamManager::getInstance()->getDomeOffset() * LLWLParamManager::getInstance()->getDomeRadius();
 
@@ -354,7 +356,7 @@ void LLDrawPoolWLSky::render(S32 pass)
 	{
 		return;
 	}
-	LLFastTimer ftm(FTM_RENDER_WL_SKY);
+	LL_RECORD_BLOCK_TIME(FTM_RENDER_WL_SKY);
 
 	const F32 camHeightLocal = LLWLParamManager::getInstance()->getDomeOffset() * LLWLParamManager::getInstance()->getDomeRadius();
 
@@ -390,7 +392,7 @@ void LLDrawPoolWLSky::render(S32 pass)
 
 void LLDrawPoolWLSky::prerender()
 {
-	//llinfos << "wlsky prerendering pass." << llendl;
+	//LL_INFOS() << "wlsky prerendering pass." << LL_ENDL;
 }
 
 LLDrawPoolWLSky *LLDrawPoolWLSky::instancePool()
@@ -421,3 +423,4 @@ void LLDrawPoolWLSky::restoreGL()
 		sCloudNoiseTexture = LLViewerTextureManager::getLocalTexture(sCloudNoiseRawImage.get(), TRUE);
 	}
 }
+

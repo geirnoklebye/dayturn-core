@@ -28,7 +28,6 @@
 #define LL_LLFACE_H
 
 #include "llstrider.h"
-
 #include "llrender.h"
 #include "v2math.h"
 #include "v3math.h"
@@ -37,11 +36,9 @@
 #include "v4coloru.h"
 #include "llquaternion.h"
 #include "xform.h"
-#include "lldarrayptr.h"
 #include "llvertexbuffer.h"
 #include "llviewertexture.h"
 #include "lldrawable.h"
-#include "lltextureatlasmanager.h"
 
 class LLFacePool;
 class LLVolume;
@@ -51,33 +48,23 @@ class LLVertexProgram;
 class LLViewerTexture;
 class LLGeometryManager;
 class LLTextureAtlasSlot;
+class LLDrawInfo;
 
 const F32 MIN_ALPHA_SIZE = 1024.f;
 const F32 MIN_TEX_ANIM_SIZE = 512.f;
 
-class LLFace
+class LLFace : public LLTrace::MemTrackableNonVirtual<LLFace, 16>
 {
 public:
-
-	void* operator new(size_t size)
-	{
-		return ll_aligned_malloc_16(size);
-	}
-
-	void operator delete(void* ptr)
-	{
-		ll_aligned_free_16(ptr);
-	}
-
-
 	LLFace(const LLFace& rhs)
+	:	LLTrace::MemTrackableNonVirtual<LLFace, 16>("LLFace")
 	{
 		*this = rhs;
 	}
 
 	const LLFace& operator=(const LLFace& rhs)
 	{
-		llerrs << "Illegal operation!" << llendl;
+		LL_ERRS() << "Illegal operation!" << LL_ENDL;
 		return *this;
 	}
 
@@ -98,7 +85,11 @@ public:
 	static void cacheFaceInVRAM(const LLVolumeFace& vf);
 
 public:
-	LLFace(LLDrawable* drawablep, LLViewerObject* objp)   { init(drawablep, objp); }
+	LLFace(LLDrawable* drawablep, LLViewerObject* objp)
+	:	LLTrace::MemTrackableNonVirtual<LLFace, 16>("LLFace")
+	{
+		init(drawablep, objp);
+	}
 	~LLFace()  { destroy(); }
 
 	const LLMatrix4& getWorldMatrix()	const	{ return mVObjp->getWorldMatrix(mXform); }
@@ -110,13 +101,17 @@ public:
 	U16				getGeomStart()		const	{ return mGeomIndex; }		// index into draw pool
 	void			setTextureIndex(U8 index);
 	U8				getTextureIndex() const		{ return mTextureIndex; }
+	void			setTexture(U32 ch, LLViewerTexture* tex);
 	void			setTexture(LLViewerTexture* tex) ;
-	void            switchTexture(LLViewerTexture* new_texture);
+	void			setDiffuseMap(LLViewerTexture* tex);
+	void			setNormalMap(LLViewerTexture* tex);
+	void			setSpecularMap(LLViewerTexture* tex);
+	void            switchTexture(U32 ch, LLViewerTexture* new_texture);
 	void            dirtyTexture();
 	LLXformMatrix*	getXform()			const	{ return mXform; }
 	BOOL			hasGeometry()		const	{ return mGeomCount > 0; }
 	LLVector3		getPositionAgent()	const;
-	LLVector2       surfaceToTexture(LLVector2 surface_coord, LLVector3 position, LLVector3 normal);
+	LLVector2       surfaceToTexture(LLVector2 surface_coord, const LLVector4a& position, const LLVector4a& normal);
 	void 			getPlanarProjectedParams(LLQuaternion* face_rot, LLVector3* face_pos, F32* scale) const;
 	bool			calcAlignedPlanarTE(const LLFace* align_to, LLVector2* st_offset,
 										LLVector2* st_scale, F32* st_rot) const;
@@ -130,8 +125,8 @@ public:
 	F32				getVirtualSize() const { return mVSize; }
 	F32				getPixelArea() const { return mPixelArea; }
 
-	S32             getIndexInTex() const {return mIndexInTex ;}
-	void            setIndexInTex(S32 index) { mIndexInTex = index ;}
+	S32             getIndexInTex(U32 ch) const {llassert(ch < LLRender::NUM_TEXTURE_CHANNELS); return mIndexInTex[ch];}
+	void            setIndexInTex(U32 ch, S32 index) { llassert(ch < LLRender::NUM_TEXTURE_CHANNELS);  mIndexInTex[ch] = index ;}
 
 	void			renderSetColor() const;
 	S32				renderElements(const U16 *index_array) const;
@@ -149,7 +144,7 @@ public:
 	S32				getLOD()			const	{ return mVObjp.notNull() ? mVObjp->getLOD() : 0; }
 	void			setPoolType(U32 type)		{ mPoolType = type; }
 	S32				getTEOffset()				{ return mTEOffset; }
-	LLViewerTexture*	getTexture() const;
+	LLViewerTexture*	getTexture(U32 ch = LLRender::DIFFUSE_MAP) const;
 
 	void			setViewerObject(LLViewerObject* object);
 	void			setPool(LLFacePool *pool, LLViewerTexture *texturep);
@@ -193,7 +188,7 @@ public:
 	void		setSize(S32 numVertices, S32 num_indices = 0, bool align = false);
 	
 	BOOL		genVolumeBBoxes(const LLVolume &volume, S32 f,
-								   const LLMatrix4& mat, const LLMatrix3& inv_trans_mat, BOOL global_volume = FALSE);
+									const LLMatrix4& mat_vert_in, BOOL global_volume = FALSE);
 	
 	void		init(LLDrawable* drawablep, LLViewerObject* objp);
 	void		destroy();
@@ -223,16 +218,6 @@ public:
 	void        setHasMedia(bool has_media)  { mHasMedia = has_media ;}
 	BOOL        hasMedia() const ;
 
-	//for atlas
-	LLTextureAtlasSlot*   getAtlasInfo() ;
-	void                  setAtlasInUse(BOOL flag);
-	void                  setAtlasInfo(LLTextureAtlasSlot* atlasp);
-	BOOL                  isAtlasInUse()const;
-	BOOL                  canUseAtlas() const;
-	const LLVector2*      getTexCoordScale() const ;
-	const LLVector2*      getTexCoordOffset()const;
-	const LLTextureAtlas* getAtlas()const ;
-	void                  removeAtlas() ;
 	BOOL                  switchTexture() ;
 
 	//vertex buffer tracking
@@ -266,6 +251,8 @@ public:
 	F32			mLastSkinTime;
 	F32			mLastMoveTime;
 	LLMatrix4*	mTextureMatrix;
+	LLMatrix4*	mSpecMapMatrix;
+	LLMatrix4*	mNormalMapMatrix;
 	LLDrawInfo* mDrawInfo;
 
 private:
@@ -281,10 +268,12 @@ private:
 	U8			mTextureIndex;		// index of texture channel to use for pseudo-atlasing
 	U32			mIndicesCount;
 	U32			mIndicesIndex;		// index into draw pool for indices (yeah, I know!)
-	S32         mIndexInTex ;
+	S32         mIndexInTex[LLRender::NUM_TEXTURE_CHANNELS];
 
 	LLXformMatrix* mXform;
-	LLPointer<LLViewerTexture> mTexture;
+
+	LLPointer<LLViewerTexture> mTexture[LLRender::NUM_TEXTURE_CHANNELS];
+	
 	LLPointer<LLDrawable> mDrawablep;
 	LLPointer<LLViewerObject> mVObjp;
 	S32			mTEOffset;
@@ -302,9 +291,6 @@ private:
 	F32         mBoundingSphereRadius ;
 	bool        mHasMedia ;
 
-	//atlas
-	LLPointer<LLTextureAtlasSlot> mAtlasInfop ;
-	BOOL                          mUsingAtlas ;
 	
 protected:
 	static BOOL	sSafeRenderSelect;

@@ -38,7 +38,7 @@ namespace
 {
 	typedef std::map<LLHost, LLHTTPSender*> SenderMap;
 	static SenderMap senderMap;
-	static LLHTTPSender* defaultSender = new LLHTTPSender();
+	static LLPointer<LLHTTPSender> defaultSender(new LLHTTPSender());
 }
 
 //virtual 
@@ -54,14 +54,14 @@ void LLHTTPSender::send(const LLHost& host, const std::string& name,
 	// Default implementation inserts sender, message and sends HTTP POST
 	std::ostringstream stream;
 	stream << "http://" << host << "/trusted-message/" << name;
-	llinfos << "LLHTTPSender::send: POST to " << stream.str() << llendl;
+	LL_INFOS() << "LLHTTPSender::send: POST to " << stream.str() << LL_ENDL;
 	LLHTTPClient::post(stream.str(), body, response);
 }
 
 //static 
 void LLHTTPSender::setSender(const LLHost& host, LLHTTPSender* sender)
 {
-	llinfos << "LLHTTPSender::setSender " << host << llendl;
+	LL_INFOS() << "LLHTTPSender::setSender " << host << LL_ENDL;
 	senderMap[host] = sender;
 }
 
@@ -90,6 +90,5 @@ void LLHTTPSender::clearSender(const LLHost& host)
 //static 
 void LLHTTPSender::setDefaultSender(LLHTTPSender* sender)
 {
-	delete defaultSender;
 	defaultSender = sender;
 }

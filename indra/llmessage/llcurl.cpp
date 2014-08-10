@@ -6,7 +6,7 @@
  *
  * $LicenseInfo:firstyear=2006&license=viewerlgpl$
  * Second Life Viewer Source Code
- * Copyright (C) 2010, Linden Research, Inc.
+ * Copyright (C) 2010-2013, Linden Research, Inc.
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -72,7 +72,8 @@
 
 static const U32 EASY_HANDLE_POOL_SIZE		= 5;
 static const S32 MULTI_PERFORM_CALL_REPEAT	= 5;
-static const S32 CURL_REQUEST_TIMEOUT = 30; // seconds per operation
+static const S32 CURL_REQUEST_TIMEOUT = 120; // seconds per operation
+static const S32 CURL_CONNECT_TIMEOUT = 30; //seconds to wait for a connection
 static const S32 MAX_ACTIVE_REQUEST_COUNT = 100;
 
 // DEBUG //
@@ -91,6 +92,7 @@ S32      LLCurl::sTotalHandles = 0 ;
 bool     LLCurl::sNotQuitting = true;
 F32      LLCurl::sCurlRequestTimeOut = 120.f; //seonds
 S32      LLCurl::sMaxHandles = 256; //max number of handles, (multi handles and easy handles combined).
+CURL*	 LLCurl::sCurlTemplateStandardHandle = NULL;
 
 void check_curl_code(CURLcode code)
 {
@@ -98,7 +100,7 @@ void check_curl_code(CURLcode code)
 	{
 		// linux appears to throw a curl error once per session for a bad initialization
 		// at a pretty random time (when enabling cookies).
-		llinfos << "curl error detected: " << curl_easy_strerror(code) << llendl;
+		LL_INFOS() << "curl error detected: " << curl_easy_strerror(code) << LL_ENDL;
 	}
 }
 
@@ -108,7 +110,7 @@ void check_curl_multi_code(CURLMcode code)
 	{
 		// linux appears to throw a curl error once per session for a bad initialization
 		// at a pretty random time (when enabling cookies).
-		llinfos << "curl multi error detected: " << curl_multi_strerror(code) << llendl;
+		LL_INFOS() << "curl multi error detected: " << curl_multi_strerror(code) << LL_ENDL;
 	}
 }
 
@@ -153,7 +155,7 @@ void LLCurl::Responder::errorWithContent(
 // virtual
 void LLCurl::Responder::error(U32 status, const std::string& reason)
 {
-	llinfos << mURL << " [" << status << "]: " << reason << llendl;
+	LL_INFOS() << mURL << " [" << status << "]: " << reason << LL_ENDL;
 }
 
 // virtual
@@ -178,7 +180,7 @@ void LLCurl::Responder::completedRaw(
 	const bool emit_errors = false;
 	if (LLSDParser::PARSE_FAILURE == LLSDSerialize::fromXML(content, istr, emit_errors))
 	{
-		llinfos << "Failed to deserialize LLSD. " << mURL << " [" << status << "]: " << reason << llendl;
+		LL_INFOS() << "Failed to deserialize LLSD. " << mURL << " [" << status << "]: " << reason << LL_ENDL;
 		content["reason"] = reason;
 	}
 
@@ -246,7 +248,7 @@ void LLCurl::Easy::releaseEasyHandle(CURL* handle)
 	if (!handle)
 	{
 		return ; //handle allocation failed.
-		//llerrs << "handle cannot be NULL!" << llendl;
+		//LL_ERRS() << "handle cannot be NULL!" << LL_ENDL;
 	}
 
 	LLMutexLock lock(sHandleMutexp) ;
@@ -268,7 +270,7 @@ void LLCurl::Easy::releaseEasyHandle(CURL* handle)
 	}
 	else
 	{
-		llerrs << "Invalid handle." << llendl;
+		LL_ERRS() << "Invalid handle." << LL_ENDL;
 	}
 }
 
@@ -287,14 +289,17 @@ LLCurl::Easy* LLCurl::Easy::getEasy()
 	if (!easy->mCurlEasyHandle)
 	{
 		// this can happen if we have too many open files (fails in c-ares/ares_init.c)
-		llwarns << "allocEasyHandle() returned NULL! Easy handles: " << gCurlEasyCount << " Multi handles: " << gCurlMultiCount << llendl;
+		LL_WARNS() << "allocEasyHandle() returned NULL! Easy handles: " << gCurlEasyCount << " Multi handles: " << gCurlMultiCount << LL_ENDL;
 		delete easy;
 		return NULL;
 	}
 	
-	// set no DNS caching as default for all easy handles. This prevents them adopting a
-	// multi handles cache if they are added to one.
-	CURLcode result = curl_easy_setopt(easy->mCurlEasyHandle, CURLOPT_DNS_CACHE_TIMEOUT, 0);
+	// Enable a brief cache period for now.  This was zero for the longest time
+	// which caused some routers grief and generated unneeded traffic.  For the
+	// threaded resolver, we're using system resolution libraries and non-zero values
+	// are preferred.  The c-ares resolver is another matter and it might not
+	// track server changes as well.
+	CURLcode result = curl_easy_setopt(easy->mCurlEasyHandle, CURLOPT_DNS_CACHE_TIMEOUT, 15);
 	check_curl_code(result);
 	result = curl_easy_setopt(easy->mCurlEasyHandle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 	check_curl_code(result);
@@ -517,6 +522,7 @@ void LLCurl::Easy::prepRequest(const std::string& url,
 	//don't verify host name so urls with scrubbed host names will work (improves DNS performance)
 	setopt(CURLOPT_SSL_VERIFYHOST, 0);
 	setopt(CURLOPT_TIMEOUT, llmax(time_out, CURL_REQUEST_TIMEOUT));
+	setopt(CURLOPT_CONNECTTIMEOUT, CURL_CONNECT_TIMEOUT);
 
 	setoptString(CURLOPT_URL, url);
 
@@ -549,7 +555,7 @@ LLCurl::Multi::Multi(F32 idle_time_out)
 	mCurlMultiHandle = LLCurl::newMultiHandle();
 	if (!mCurlMultiHandle)
 	{
-		llwarns << "curl_multi_init() returned NULL! Easy handles: " << gCurlEasyCount << " Multi handles: " << gCurlMultiCount << llendl;
+		LL_WARNS() << "curl_multi_init() returned NULL! Easy handles: " << gCurlEasyCount << " Multi handles: " << gCurlMultiCount << LL_ENDL;
 		mCurlMultiHandle = LLCurl::newMultiHandle();
 	}
 	
@@ -824,10 +830,10 @@ S32 LLCurl::Multi::process()
 			else
 			{
 				response = 499;
-				//*TODO: change to llwarns
+				//*TODO: change to LL_WARNS()
 //MK
-////				llerrs << "cleaned up curl request completed!" << llendl;
-				llwarns << "cleaned up curl request completed!" << llendl;
+////				LL_ERRS() << "cleaned up curl request completed!" << LL_ENDL;
+				LL_WARNS() << "cleaned up curl request completed!" << LL_ENDL;
 //mk
 			}
 			if (response >= 400)
@@ -873,7 +879,7 @@ bool LLCurl::Multi::addEasy(Easy* easy)
 	check_curl_multi_code(mcode);
 	//if (mcode != CURLM_OK)
 	//{
-	//	llwarns << "Curl Error: " << curl_multi_strerror(mcode) << llendl;
+	//	LL_WARNS() << "Curl Error: " << curl_multi_strerror(mcode) << LL_ENDL;
 	//	return false;
 	//}
 	return true;
@@ -990,7 +996,7 @@ void LLCurlThread::addMulti(LLCurl::Multi* multi)
 
 	if (!addRequest(req))
 	{
-		llwarns << "curl request added when the thread is quitted" << llendl;
+		LL_WARNS() << "curl request added when the thread is quitted" << LL_ENDL;
 	}
 }
 	
@@ -1098,8 +1104,8 @@ bool LLCurlRequest::addEasy(LLCurl::Easy* easy)
 	if (mProcessing)
 	{
 //MK
-		////llerrs << "Posting to a LLCurlRequest instance from within a responder is not allowed (causes DNS timeouts)." << llendl;
-		llwarns << "Posting to a LLCurlRequest instance from within a responder is not allowed (causes DNS timeouts)." << llendl;
+		////LL_ERRS() << "Posting to a LLCurlRequest instance from within a responder is not allowed (causes DNS timeouts)." << LL_ENDL;
+		LL_WARNS() << "Posting to a LLCurlRequest instance from within a responder is not allowed (causes DNS timeouts)." << LL_ENDL;
 //mk
 	}
 	bool res = mActiveMulti->addEasy(easy);
@@ -1164,7 +1170,7 @@ bool LLCurlRequest::post(const std::string& url,
 	easy->slist_append("Content-Type: application/llsd+xml");
 	easy->setHeaders();
 
-	lldebugs << "POSTING: " << bytes << " bytes." << llendl;
+	LL_DEBUGS() << "POSTING: " << bytes << " bytes." << LL_ENDL;
 	bool res = addEasy(easy);
 	return res;
 }
@@ -1192,7 +1198,7 @@ bool LLCurlRequest::post(const std::string& url,
 	easy->slist_append("Content-Type: application/octet-stream");
 	easy->setHeaders();
 
-	lldebugs << "POSTING: " << bytes << " bytes." << llendl;
+	LL_DEBUGS() << "POSTING: " << bytes << " bytes." << LL_ENDL;
 	bool res = addEasy(easy);
 	return res;
 }
@@ -1573,7 +1579,7 @@ void LLCurlEasyRequest::sendRequest(const std::string& url)
 {
 	llassert_always(!mRequestSent);
 	mRequestSent = true;
-	lldebugs << url << llendl;
+	LL_DEBUGS() << url << LL_ENDL;
 	if (isValid() && mEasy)
 	{
 		mEasy->setHeaders();
@@ -1741,6 +1747,7 @@ void LLCurl::cleanupClass()
 #if SAFE_SSL
 	CRYPTO_set_locking_callback(NULL);
 	for_each(sSSLMutex.begin(), sSSLMutex.end(), DeletePointer());
+	sSSLMutex.clear();
 #endif
 	
 	LL_CHECK_MEMORY
@@ -1780,7 +1787,7 @@ CURLM* LLCurl::newMultiHandle()
 
 	if(sTotalHandles + 1 > sMaxHandles)
 	{
-		llwarns << "no more handles available." << llendl ;
+		LL_WARNS() << "no more handles available." << LL_ENDL ;
 		return NULL ; //failed
 	}
 	sTotalHandles++;
@@ -1788,7 +1795,7 @@ CURLM* LLCurl::newMultiHandle()
 	CURLM* ret = curl_multi_init() ;
 	if(!ret)
 	{
-		llwarns << "curl_multi_init failed." << llendl ;
+		LL_WARNS() << "curl_multi_init failed." << LL_ENDL ;
 	}
 
 	return ret ;
@@ -1814,15 +1821,15 @@ CURL*  LLCurl::newEasyHandle()
 
 	if(sTotalHandles + 1 > sMaxHandles)
 	{
-		llwarns << "no more handles available." << llendl ;
+		LL_WARNS() << "no more handles available." << LL_ENDL ;
 		return NULL ; //failed
 	}
 	sTotalHandles++;
 
-	CURL* ret = curl_easy_init() ;
+	CURL* ret = createStandardCurlHandle();
 	if(!ret)
 	{
-		llwarns << "curl_easy_init failed." << llendl ;
+		LL_WARNS() << "failed to create curl handle." << LL_ENDL ;
 	}
 
 	return ret ;
@@ -1851,4 +1858,48 @@ void LLCurlFF::check_easy_code(CURLcode code)
 void LLCurlFF::check_multi_code(CURLMcode code)
 {
 	check_curl_multi_code(code);
+}
+
+
+// Static
+CURL* LLCurl::createStandardCurlHandle()
+{
+	if (sCurlTemplateStandardHandle == NULL)
+	{	// Late creation of the template curl handle
+		sCurlTemplateStandardHandle = curl_easy_init();
+		if (sCurlTemplateStandardHandle == NULL)
+		{
+			LL_WARNS() << "curl error calling curl_easy_init()" << LL_ENDL;
+		}
+		else
+		{
+			CURLcode result = curl_easy_setopt(sCurlTemplateStandardHandle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+			check_curl_code(result);
+			result = curl_easy_setopt(sCurlTemplateStandardHandle, CURLOPT_NOSIGNAL, 1);
+			check_curl_code(result);
+			result = curl_easy_setopt(sCurlTemplateStandardHandle, CURLOPT_NOPROGRESS, 1);
+			check_curl_code(result);
+			result = curl_easy_setopt(sCurlTemplateStandardHandle, CURLOPT_ENCODING, "");	
+			check_curl_code(result);
+			result = curl_easy_setopt(sCurlTemplateStandardHandle, CURLOPT_AUTOREFERER, 1);
+			check_curl_code(result);
+			result = curl_easy_setopt(sCurlTemplateStandardHandle, CURLOPT_FOLLOWLOCATION, 1);	
+			check_curl_code(result);
+			result = curl_easy_setopt(sCurlTemplateStandardHandle, CURLOPT_SSL_VERIFYPEER, 1);
+			check_curl_code(result);
+			result = curl_easy_setopt(sCurlTemplateStandardHandle, CURLOPT_SSL_VERIFYHOST, 0);
+			check_curl_code(result);
+
+			// The Linksys WRT54G V5 router has an issue with frequent
+			// DNS lookups from LAN machines.  If they happen too often,
+			// like for every HTTP request, the router gets annoyed after
+			// about 700 or so requests and starts issuing TCP RSTs to
+			// new connections.  Reuse the DNS lookups for even a few
+			// seconds and no RSTs.
+			result = curl_easy_setopt(sCurlTemplateStandardHandle, CURLOPT_DNS_CACHE_TIMEOUT, 15);
+			check_curl_code(result);
+		}
+	}
+
+	return curl_easy_duphandle(sCurlTemplateStandardHandle);
 }

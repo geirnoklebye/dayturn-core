@@ -36,6 +36,7 @@
 #include "llfilepicker.h"
 #include "llfloaterreg.h"
 #include "llimagetga.h"
+#include "llimagepng.h"
 #include "llinventory.h"
 #include "llnotificationsutil.h"
 #include "llresmgr.h"
@@ -126,9 +127,28 @@ BOOL LLPreviewTexture::postBuild()
 			getChild<LLLineEditor>("desc")->setPrevalidate(&LLTextValidate::validateASCIIPrintableNoPipe);
 		}
 	}
+
+	// Fill in ratios list with common aspect ratio values
+	mRatiosList.clear();
+	mRatiosList.push_back(LLTrans::getString("Unconstrained"));
+	mRatiosList.push_back("1:1");
+	mRatiosList.push_back("4:3");
+	mRatiosList.push_back("10:7");
+	mRatiosList.push_back("3:2");
+	mRatiosList.push_back("16:10");
+	mRatiosList.push_back("16:9");
+	mRatiosList.push_back("2:1");
 	
-	childSetCommitCallback("combo_aspect_ratio", onAspectRatioCommit, this);
+	// Now fill combo box with provided list
 	LLComboBox* combo = getChild<LLComboBox>("combo_aspect_ratio");
+	combo->removeall();
+
+	for (std::vector<std::string>::const_iterator it = mRatiosList.begin(); it != mRatiosList.end(); ++it)
+	{
+		combo->add(*it);
+	}
+
+	childSetCommitCallback("combo_aspect_ratio", onAspectRatioCommit, this);
 	combo->setCurrentByIndex(0);
 	
 	return LLPreview::postBuild();
@@ -261,7 +281,7 @@ void LLPreviewTexture::saveAs()
 
 	LLFilePicker& file_picker = LLFilePicker::instance();
 	const LLInventoryItem* item = getItem() ;
-	if( !file_picker.getSaveFile( LLFilePicker::FFSAVE_TGA, item ? LLDir::getScrubbedFileName(item->getName()) : LLStringUtil::null) )
+	if( !file_picker.getSaveFile( LLFilePicker::FFSAVE_TGAPNG, item ? LLDir::getScrubbedFileName(item->getName()) : LLStringUtil::null) )
 	{
 		// User canceled or we failed to acquire save file.
 		return;
@@ -358,14 +378,27 @@ void LLPreviewTexture::onFileLoadedForSave(BOOL success,
 
 	if( self && final && success )
 	{
-		LLPointer<LLImageTGA> image_tga = new LLImageTGA;
-		if( !image_tga->encode( src ) )
+		const U32 ext_length = 3;
+		std::string extension = self->mSaveFileName.substr( self->mSaveFileName.length() - ext_length);
+
+		// We only support saving in PNG or TGA format
+		LLPointer<LLImageFormatted> image;
+		if(extension == "png")
+		{
+			image = new LLImagePNG;
+		}
+		else if(extension == "tga")
+		{
+			image = new LLImageTGA;
+		}
+
+		if( image && !image->encode( src, 0 ) )
 		{
 			LLSD args;
 			args["FILE"] = self->mSaveFileName;
 			LLNotificationsUtil::add("CannotEncodeFile", args);
 		}
-		else if( !image_tga->save( self->mSaveFileName ) )
+		else if( image && !image->save( self->mSaveFileName ) )
 		{
 			LLSD args;
 			args["FILE"] = self->mSaveFileName;
@@ -399,6 +432,25 @@ void LLPreviewTexture::updateDimensions()
 	if ((mImage->getFullWidth() * mImage->getFullHeight()) == 0)
 	{
 		return;
+	}
+
+	if (mAssetStatus != PREVIEW_ASSET_LOADED)
+	{
+		mAssetStatus = PREVIEW_ASSET_LOADED;
+//MK
+		// Calculating the aspect ratio in order to default to the right line in the combo box sounds
+		// like a good idea... except that all the textures on the asset server are stored (or served)
+		// as 1:1, even snapshots taken on a 4:3, 16:9 or 16:10 screen, for example.
+		// So let's just keep it "unconstrained" by default, like before, instead of trying to guess 
+		// and getting it wrong.
+		if (!gRRenabled)
+		{
+//mk
+		// Asset has been fully loaded, adjust aspect ratio
+		adjustAspectRatio();
+//MK
+		}
+//mk
 	}
 	
 	// Update the width/height display every time
@@ -485,6 +537,46 @@ LLPreview::EAssetStatus LLPreviewTexture::getAssetStatus()
 		mAssetStatus = PREVIEW_ASSET_LOADED;
 	}
 	return mAssetStatus;
+}
+
+void LLPreviewTexture::adjustAspectRatio()
+{
+	S32 w = mImage->getFullWidth();
+    S32 h = mImage->getFullHeight();
+
+	// Determine aspect ratio of the image
+	S32 tmp;
+    while (h != 0)
+    {
+        tmp = w % h;
+        w = h;
+        h = tmp;
+    }
+	S32 divisor = w;
+	S32 num = mImage->getFullWidth() / divisor;
+	S32 denom = mImage->getFullHeight() / divisor;
+
+	if (setAspectRatio(num, denom))
+	{
+		// Select corresponding ratio entry in the combo list
+		LLComboBox* combo = getChild<LLComboBox>("combo_aspect_ratio");
+		if (combo)
+		{
+			std::ostringstream ratio;
+			ratio << num << ":" << denom;
+			std::vector<std::string>::const_iterator found = std::find(mRatiosList.begin(), mRatiosList.end(), ratio.str());
+			if (found == mRatiosList.end())
+			{
+				combo->setCurrentByIndex(0);
+			}
+			else
+			{
+				combo->setCurrentByIndex(found - mRatiosList.begin());
+			}
+		}
+	}
+
+	mUpdateDimensions = TRUE;
 }
 
 void LLPreviewTexture::updateImageID()

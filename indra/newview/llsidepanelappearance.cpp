@@ -49,7 +49,7 @@
 #include "llvoavatarself.h"
 #include "llviewerwearable.h"
 
-static LLRegisterPanelClassWrapper<LLSidepanelAppearance> t_appearance("sidepanel_appearance");
+static LLPanelInjector<LLSidepanelAppearance> t_appearance("sidepanel_appearance");
 
 class LLCurrentlyWornFetchObserver : public LLInventoryFetchItemsObserver
 {
@@ -142,7 +142,7 @@ BOOL LLSidepanelAppearance::postBuild()
 	mCurrOutfitPanel = getChild<LLPanel>("panel_currentlook");
 
 
-	setVisibleCallback(boost::bind(&LLSidepanelAppearance::onVisibilityChange,this,_2));
+	setVisibleCallback(boost::bind(&LLSidepanelAppearance::onVisibilityChanged,this,_2));
 
 	return TRUE;
 }
@@ -181,7 +181,7 @@ void LLSidepanelAppearance::onOpen(const LLSD& key)
 	mOpened = true;
 }
 
-void LLSidepanelAppearance::onVisibilityChange(const LLSD &new_visibility)
+void LLSidepanelAppearance::onVisibilityChanged(const LLSD &new_visibility)
 {
 	LLSD visibility;
 	visibility["visible"] = new_visibility.asBoolean();
@@ -201,7 +201,7 @@ void LLSidepanelAppearance::updateToVisibility(const LLSD &new_visibility)
 			const LLViewerWearable *wearable_ptr = mEditWearable->getWearable();
 			if (!wearable_ptr)
 			{
-				llwarns << "Visibility change to invalid wearable" << llendl;
+				LL_WARNS() << "Visibility change to invalid wearable" << LL_ENDL;
 				return;
 			}
 			// Disable camera switch is currently just for WT_PHYSICS type since we don't want to freeze the avatar

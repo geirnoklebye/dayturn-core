@@ -93,7 +93,7 @@ const outfit_accordion_tab_params& get_accordion_tab_params()
 		}
 		else
 		{
-			llwarns << "Failed to read xml of Outfit's Accordion Tab from outfit_accordion_tab.xml" << llendl;
+			LL_WARNS() << "Failed to read xml of Outfit's Accordion Tab from outfit_accordion_tab.xml" << LL_ENDL;
 		}
 	}
 
@@ -207,7 +207,7 @@ private:
 		LLWearableType::EType type = LLWearableType::typeNameToType(data.asString());
 		if (type == LLWearableType::WT_NONE)
 		{
-			llwarns << "Invalid wearable type" << llendl;
+			LL_WARNS() << "Invalid wearable type" << LL_ENDL;
 			return;
 		}
 
@@ -346,7 +346,7 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
-static LLRegisterPanelClassWrapper<LLOutfitsList> t_outfits_list("outfits_list");
+static LLPanelInjector<LLOutfitsList> t_outfits_list("outfits_list");
 
 LLOutfitsList::LLOutfitsList()
 	:	LLPanelAppearanceTab()

@@ -28,7 +28,9 @@
 
 #include "llpanelprofileview.h"
 
-#include "llavatarconstants.h"
+//MK
+////#include "llavatarconstants.h"
+//mk
 #include "llavatarnamecache.h"	// IDEVO
 #include "llclipboard.h"
 #include "lluserrelations.h"
@@ -43,7 +45,9 @@
 #include "llpanelprofile.h"
 #include "llsidetraypanelcontainer.h"
 
-static LLRegisterPanelClassWrapper<LLPanelProfileView> t_panel_target_profile("panel_profile_view");
+//MK
+static LLPanelInjector<LLPanelProfileView> t_panel_target_profile("panel_profile_view");
+//mk
 
 static std::string PANEL_NOTES = "panel_notes";
 static const std::string PANEL_PROFILE = "panel_profile";

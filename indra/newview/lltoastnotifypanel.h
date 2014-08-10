@@ -47,7 +47,7 @@ class LLNotificationForm;
  * @deprecated this class will be removed after all toast panel types are
  *  implemented in separate classes.
  */
-class LLToastNotifyPanel: public LLToastPanel, public LLInstanceTracker<LLToastNotifyPanel, LLUUID>
+class LLToastNotifyPanel: public LLToastPanel, public LLInstanceTracker<LLToastNotifyPanel, LLUUID, LLInstanceTrackerReplaceOnCollision>
 {
 public:
 	/**
@@ -68,6 +68,8 @@ public:
 	LLPanel * getControlPanel() { return mControlPanel; }
 
 	virtual void updateNotification() {}
+
+	bool isControlPanelEnabled() const;
 
 protected:
 	LLButton* createButton(const LLSD& form_element, BOOL is_option);

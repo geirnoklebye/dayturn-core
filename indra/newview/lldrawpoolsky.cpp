@@ -28,8 +28,6 @@
 
 #include "lldrawpoolsky.h"
 
-#include "imageids.h"
-
 #include "llagent.h"
 #include "lldrawable.h"
 #include "llface.h"
@@ -155,3 +153,4 @@ void LLDrawPoolSky::renderSkyCubeFace(U8 side)
 void LLDrawPoolSky::endRenderPass( S32 pass )
 {
 }
+

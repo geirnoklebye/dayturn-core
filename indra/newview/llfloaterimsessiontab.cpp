@@ -47,25 +47,24 @@
 const F32 REFRESH_INTERVAL = 1.0f;
 
 LLFloaterIMSessionTab::LLFloaterIMSessionTab(const LLSD& session_id)
-  : LLTransientDockableFloater(NULL, true, session_id)
-  ,  mIsP2PChat(false)
-  ,  mExpandCollapseBtn(NULL)
-  ,  mTearOffBtn(NULL)
-  ,  mCloseBtn(NULL)
-  ,  mSessionID(session_id.asUUID())
-  , mConversationsRoot(NULL)
-  , mScroller(NULL)
-  , mSpeakingIndicator(NULL)
-  , mChatHistory(NULL)
-  , mInputEditor(NULL)
-  , mInputEditorPad(0)
-  , mRefreshTimer(new LLTimer())
-  , mIsHostAttached(false)
-  , mHasVisibleBeenInitialized(false)
-  , mIsParticipantListExpanded(true)
-  , mChatLayoutPanel(NULL)
-  , mInputPanels(NULL)
-  , mChatLayoutPanelHeight(0)
+:	LLTransientDockableFloater(NULL, true, session_id),
+	mIsP2PChat(false),
+	mExpandCollapseBtn(NULL),
+	mTearOffBtn(NULL),
+	mCloseBtn(NULL),
+	mSessionID(session_id.asUUID()),
+	mConversationsRoot(NULL),
+	mScroller(NULL),
+	mChatHistory(NULL),
+	mInputEditor(NULL),
+	mInputEditorPad(0),
+	mRefreshTimer(new LLTimer()),
+	mIsHostAttached(false),
+	mHasVisibleBeenInitialized(false),
+	mIsParticipantListExpanded(true),
+	mChatLayoutPanel(NULL),
+	mInputPanels(NULL),
+	mChatLayoutPanelHeight(0)
 {
     setAutoFocus(FALSE);
 	mSession = LLIMModel::getInstance()->findIMSession(mSessionID);
@@ -212,7 +211,7 @@ void LLFloaterIMSessionTab::assignResizeLimits()
 	mRightPartPanel->setIgnoreReshape(is_participants_pane_collapsed);
 
     S32 participants_pane_target_width = is_participants_pane_collapsed?
-    		0 : (mParticipantListPanel->getRect().getWidth() + LLPANEL_BORDER_WIDTH);
+    		0 : (mParticipantListPanel->getRect().getWidth() + mParticipantListAndHistoryStack->getPanelSpacing());
 
     S32 new_min_width = participants_pane_target_width + mRightPartPanel->getExpandedMinDim() + mFloaterExtraWidth;
 
@@ -241,7 +240,10 @@ BOOL LLFloaterIMSessionTab::postBuild()
 	mTearOffBtn->setCommitCallback(boost::bind(&LLFloaterIMSessionTab::onTearOffClicked, this));
 
 	mGearBtn = getChild<LLButton>("gear_btn");
-
+    mAddBtn = getChild<LLButton>("add_btn");
+	mVoiceButton = getChild<LLButton>("voice_call_btn");
+    mTranslationCheckBox = getChild<LLUICtrl>("translate_chat_checkbox_lp");
+    
 	mParticipantListPanel = getChild<LLLayoutPanel>("speakers_list_panel");
 	mRightPartPanel = getChild<LLLayoutPanel>("right_part_holder");
 
@@ -256,8 +258,6 @@ BOOL LLFloaterIMSessionTab::postBuild()
 	scroller_params.rect(scroller_view_rect);
 	mScroller = LLUICtrlFactory::create<LLFolderViewScrollContainer>(scroller_params);
 	mScroller->setFollowsAll();
-	
-    mSpeakingIndicator = getChild<LLOutputMonitorCtrl>("speaking_indicator");
 
 	// Insert that scroller into the panel widgets hierarchy
 	mParticipantListPanel->addChild(mScroller);	
@@ -270,6 +270,7 @@ BOOL LLFloaterIMSessionTab::postBuild()
 	mInputPanels = getChild<LLLayoutStack>("input_panels");
 	
 	mInputEditor->setTextExpandedCallback(boost::bind(&LLFloaterIMSessionTab::reshapeChatLayoutPanel, this));
+	mInputEditor->setMouseUpCallback(boost::bind(&LLFloaterIMSessionTab::onInputEditorClicked, this));
 	mInputEditor->setCommitOnFocusLost( FALSE );
 	mInputEditor->setPassDelete(TRUE);
 	mInputEditor->setFont(LLViewerChat::getChatFont());
@@ -372,7 +373,7 @@ void LLFloaterIMSessionTab::draw()
 
 void LLFloaterIMSessionTab::enableDisableCallBtn()
 {
-    getChildView("voice_call_btn")->setEnabled(
+    mVoiceButton->setEnabled(
     		mSessionID.notNull()
     		&& mSession
     		&& mSession->mSessionInitialized
@@ -397,6 +398,16 @@ void LLFloaterIMSessionTab::onFocusLost()
 {
 	setBackgroundOpaque(false);
 	LLTransientDockableFloater::onFocusLost();
+}
+
+void LLFloaterIMSessionTab::onInputEditorClicked()
+{
+	LLFloaterIMContainer* im_box = LLFloaterIMContainer::findInstance();
+	if (im_box)
+	{
+		im_box->flashConversationItemWidget(mSessionID,false);
+	}
+	gToolBarView->flashCommand(LLCommandId("chat"), false);
 }
 
 std::string LLFloaterIMSessionTab::appendTime()
@@ -758,7 +769,7 @@ void LLFloaterIMSessionTab::reshapeChatLayoutPanel()
 
 void LLFloaterIMSessionTab::showTranslationCheckbox(BOOL show)
 {
-	getChild<LLUICtrl>("translate_chat_checkbox_lp")->setVisible(mIsNearbyChat? show : FALSE);
+	mTranslationCheckBox->setVisible(mIsNearbyChat && show);
 }
 
 // static
@@ -805,20 +816,16 @@ void LLFloaterIMSessionTab::reloadEmptyFloaters()
 
 void LLFloaterIMSessionTab::updateCallBtnState(bool callIsActive)
 {
-	LLButton* voiceButton = getChild<LLButton>("voice_call_btn");
-	voiceButton->setImageOverlay(
-			callIsActive? getString("call_btn_stop") : getString("call_btn_start"));
-
-	voiceButton->setToolTip(
-			callIsActive? getString("end_call_button_tooltip") : getString("start_call_button_tooltip"));
+	mVoiceButton->setImageOverlay(callIsActive? getString("call_btn_stop") : getString("call_btn_start"));
+	mVoiceButton->setToolTip(callIsActive? getString("end_call_button_tooltip") : getString("start_call_button_tooltip"));
 
 	enableDisableCallBtn();
-
 }
 
 void LLFloaterIMSessionTab::onSlide(LLFloaterIMSessionTab* self)
 {
 	LLFloaterIMContainer* host_floater = dynamic_cast<LLFloaterIMContainer*>(self->getHost());
+	bool should_be_expanded = false;
 	if (host_floater)
 	{
 		// Hide the messages pane if a floater is hosted in the Conversations
@@ -829,7 +836,7 @@ void LLFloaterIMSessionTab::onSlide(LLFloaterIMSessionTab* self)
 		if (!self->mIsP2PChat)
 		{
             // The state must toggle the collapsed state of the panel
-            bool should_be_expanded = self->mParticipantListPanel->isCollapsed();
+           should_be_expanded = self->mParticipantListPanel->isCollapsed();
 
 			// Update the expand/collapse flag of the participant list panel and save it
             gSavedSettings.setBOOL("IMShowControlPanel", should_be_expanded);
@@ -841,6 +848,10 @@ void LLFloaterIMSessionTab::onSlide(LLFloaterIMSessionTab* self)
 	}
 
 	self->assignResizeLimits();
+	if (should_be_expanded)
+	{
+		self->forceReshape();
+	}
 }
 
 void LLFloaterIMSessionTab::onCollapseToLine(LLFloaterIMSessionTab* self)
@@ -898,6 +909,7 @@ void LLFloaterIMSessionTab::restoreFloater()
 		mExpandCollapseLineBtn->setImageOverlay(getString("expandline_icon"));
 		setMessagePaneExpanded(true);
 		saveCollapsedState();
+		mInputEditor->enableSingleLineMode(false);
 		enableResizeCtrls(true, true, true);
 	}
 }
@@ -953,8 +965,8 @@ void LLFloaterIMSessionTab::updateGearBtn()
 	if(prevVisibility != mGearBtn->getVisible())
 	{
 		LLRect gear_btn_rect =  mGearBtn->getRect();
-		LLRect add_btn_rect = getChild<LLButton>("add_btn")->getRect();
-		LLRect call_btn_rect = getChild<LLButton>("voice_call_btn")->getRect();
+		LLRect add_btn_rect = mAddBtn->getRect();
+		LLRect call_btn_rect = mVoiceButton->getRect();
 		S32 gap_width = call_btn_rect.mLeft - add_btn_rect.mRight;
 		S32 right_shift = gear_btn_rect.getWidth() + gap_width;
 		if(mGearBtn->getVisible())
@@ -968,24 +980,24 @@ void LLFloaterIMSessionTab::updateGearBtn()
 			add_btn_rect.translate(-right_shift,0);
 			call_btn_rect.translate(-right_shift,0);
 		}
-		getChild<LLButton>("add_btn")->setRect(add_btn_rect);
-		getChild<LLButton>("voice_call_btn")->setRect(call_btn_rect);
+		mAddBtn->setRect(add_btn_rect);
+		mVoiceButton->setRect(call_btn_rect);
 	}
 }
 
 void LLFloaterIMSessionTab::initBtns()
 {
 	LLRect gear_btn_rect =  mGearBtn->getRect();
-	LLRect add_btn_rect = getChild<LLButton>("add_btn")->getRect();
-	LLRect call_btn_rect = getChild<LLButton>("voice_call_btn")->getRect();
+	LLRect add_btn_rect = mAddBtn->getRect();
+	LLRect call_btn_rect = mVoiceButton->getRect();
 	S32 gap_width = call_btn_rect.mLeft - add_btn_rect.mRight;
 	S32 right_shift = gear_btn_rect.getWidth() + gap_width;
 
 	add_btn_rect.translate(-right_shift,0);
 	call_btn_rect.translate(-right_shift,0);
 
-	getChild<LLButton>("add_btn")->setRect(add_btn_rect);
-	getChild<LLButton>("voice_call_btn")->setRect(call_btn_rect);
+	mAddBtn->setRect(add_btn_rect);
+	mVoiceButton->setRect(call_btn_rect);
 }
 
 // static
@@ -1083,21 +1095,26 @@ void LLFloaterIMSessionTab::saveCollapsedState()
 }
 BOOL LLFloaterIMSessionTab::handleKeyHere(KEY key, MASK mask )
 {
+	BOOL handled = FALSE;
+
 	if(mask == MASK_ALT)
 	{
 		LLFloaterIMContainer* floater_container = LLFloaterIMContainer::getInstance();
 		if (KEY_RETURN == key && !isTornOff())
 		{
 			floater_container->expandConversation();
+			handled = TRUE;
 		}
 		if ((KEY_UP == key) || (KEY_LEFT == key))
 		{
 			floater_container->selectNextorPreviousConversation(false);
+			handled = TRUE;
 		}
 		if ((KEY_DOWN == key ) || (KEY_RIGHT == key))
 		{
 			floater_container->selectNextorPreviousConversation(true);
+			handled = TRUE;
 		}
 	}
-	return TRUE;
+	return handled;
 }

@@ -38,10 +38,10 @@
 #include "llvector4a.h"
 #include "llquaternion.h"
 #include "xform.h"
-#include "lldarray.h"
 #include "llviewerobject.h"
 #include "llrect.h"
 #include "llappviewer.h" // for gFrameTimeSeconds
+#include "llvieweroctree.h"
 
 class LLCamera;
 class LLDrawPool;
@@ -59,33 +59,27 @@ const U32 SILHOUETTE_HIGHLIGHT = 0;
 
 // All data for new renderer goes into this class.
 LL_ALIGN_PREFIX(16)
-class LLDrawable : public LLRefCount
+class LLDrawable 
+:	public LLViewerOctreeEntryData,
+	public LLTrace::MemTrackable<LLDrawable, 16>
 {
 public:
-	LLDrawable(const LLDrawable& rhs)
+	LLDrawable(const LLDrawable& rhs) 
+	:	LLTrace::MemTrackable<LLDrawable, 16>("LLDrawable"),
+		LLViewerOctreeEntryData(rhs)
 	{
 		*this = rhs;
 	}
 
 	const LLDrawable& operator=(const LLDrawable& rhs)
 	{
-		llerrs << "Illegal operation!" << llendl;
+		LL_ERRS() << "Illegal operation!" << LL_ENDL;
 		return *this;
 	}
 
 	static void initClass();
 
-	void* operator new(size_t size)
-	{
-		return ll_aligned_malloc_16(size);
-	}
-
-	void operator delete(void* ptr)
-	{
-		ll_aligned_free_16(ptr);
-	}
-
-	LLDrawable()				{ init(); }
+	LLDrawable(LLViewerObject *vobj, bool new_entry = false);
 	
 	void markDead();			// Mark this drawable as dead
 	BOOL isDead() const			{ return isState(DEAD); }
@@ -93,11 +87,9 @@ public:
 
 	BOOL isLight() const;
 
-	BOOL isVisible() const;	
-	BOOL isRecentlyVisible() const;	
 	virtual void setVisible(LLCamera& camera_in, std::vector<LLDrawable*>* results = NULL, BOOL for_select = FALSE);
 
-
+	LLSpatialGroup* getSpatialGroup()const          {return (LLSpatialGroup*)getGroup();}
 	LLViewerRegion* getRegion()               const { return mVObjp->getRegion(); }
 	const LLTextureEntry* getTextureEntry(U8 which) const { return mVObjp->getTE(which); }
 	LLPointer<LLViewerObject>& getVObj()							  { return mVObjp; }
@@ -110,16 +102,12 @@ public:
 	const LLVector3&	  getPosition() const			{ return mXform.getPosition(); }
 	const LLVector3&      getWorldPosition() const		{ return mXform.getPositionW(); }
 	const LLVector3		  getPositionAgent() const;
-	const LLVector4a&	  getPositionGroup() const		{ return mPositionGroup; }
 	const LLVector3&	  getScale() const				{ return mCurrentScale; }
 	void				  setScale(const LLVector3& scale) { mCurrentScale = scale; }
 	const LLQuaternion&   getWorldRotation() const		{ return mXform.getWorldRotation(); }
 	const LLQuaternion&   getRotation() const			{ return mXform.getRotation(); }
 	F32			          getIntensity() const			{ return llmin(mXform.getScale().mV[0], 4.f); }
 	S32					  getLOD() const				{ return mVObjp ? mVObjp->getLOD() : 1; }
-	F32					  getBinRadius() const			{ return mBinRadius; }
-	S32					  getBinIndex() const			{ return mBinIndex; }
-	void				  setBinIndex(S32 index) const	{ mBinIndex = index; }
 
 	void  getMinMax(LLVector3& min,LLVector3& max) const { mXform.getMinMax(min,max); }
 	LLXformMatrix*		getXform() { return &mXform; }
@@ -145,12 +133,14 @@ public:
 	//void                removeFace(const S32 i); // SJB: Avoid using this, it's slow
 	LLFace*				addFace(LLFacePool *poolp, LLViewerTexture *texturep);
 	LLFace*				addFace(const LLTextureEntry *te, LLViewerTexture *texturep);
+	LLFace*				addFace(const LLTextureEntry *te, LLViewerTexture *texturep, LLViewerTexture *normalp);
+	LLFace*				addFace(const LLTextureEntry *te, LLViewerTexture *texturep, LLViewerTexture *normalp, LLViewerTexture *specularp);
 	void				deleteFaces(S32 offset, S32 count);
 	void                setNumFaces(const S32 numFaces, LLFacePool *poolp, LLViewerTexture *texturep);
 	void                setNumFacesFast(const S32 numFaces, LLFacePool *poolp, LLViewerTexture *texturep);
 	void				mergeFaces(LLDrawable* src);
 
-	void init();
+	void init(bool new_entry);
 	void destroy();
 
 	void update();
@@ -181,8 +171,12 @@ public:
 	BOOL getLit() const							{ return isState(UNLIT) ? FALSE : TRUE; }
 	void setLit(BOOL lit)						{ lit ? clearState(UNLIT) : setState(UNLIT); }
 
+	bool isVisible() const;
+	bool isRecentlyVisible() const;
+
 	virtual void cleanupReferences();
 
+	void setGroup(LLViewerOctreeGroup* group);
 	void setRadius(const F32 radius);
 	F32 getRadius() const						{ return mRadius; }
 	F32 getVisibilityRadius() const;
@@ -192,11 +186,6 @@ public:
 	const LLVector3& getBounds(LLVector3& min, LLVector3& max) const;
 	virtual void updateSpatialExtents();
 	virtual void updateBinRadius();
-	const LLVector4a* getSpatialExtents() const;
-	void setSpatialExtents(const LLVector3& min, const LLVector3& max);
-	void setSpatialExtents(const LLVector4a& min, const LLVector4a& max);
-
-	void setPositionGroup(const LLVector4a& pos);
 	
 	void setRenderType(S32 type) 				{ mRenderType = type; }
 	BOOL isRenderType(S32 type) 				{ return mRenderType == type; }
@@ -205,10 +194,13 @@ public:
 	// Debugging methods
 	S32 findReferences(LLDrawable *drawablep); // Not const because of @#$! iterators...
 
-	void setSpatialGroup(LLSpatialGroup *groupp);
-	LLSpatialGroup *getSpatialGroup() const;
 	LLSpatialPartition* getSpatialPartition();
 	
+	void removeFromOctree();
+
+	void setSpatialBridge(LLSpatialBridge* bridge) { mSpatialBridge = (LLDrawable*) bridge; }
+	LLSpatialBridge* getSpatialBridge() { return (LLSpatialBridge*) (LLDrawable*) mSpatialBridge; }
+
 	// Statics
 	static void incrementVisible();
 	static void cleanupDeadDrawables();
@@ -284,7 +276,6 @@ public:
  		NEARBY_LIGHT	= 0x00200000, // In gPipeline.mNearbyLightSet
 		BUILT			= 0x00400000,
 		FORCE_INVISIBLE = 0x00800000, // stay invis until CLEAR_INVISIBLE is set (set of orphaned)
-		CLEAR_INVISIBLE = 0x01000000, // clear FORCE_INVISIBLE next draw frame
 		REBUILD_SHADOW =  0x02000000,
 		HAS_ALPHA		= 0x04000000,
 		RIGGED			= 0x08000000,
@@ -293,10 +284,6 @@ public:
 		ACTIVE_CHILD	= 0x40000000,
 	} EDrawableFlags;
 
-private: //aligned members
-	LL_ALIGN_16(LLVector4a		mExtents[2]);
-	LL_ALIGN_16(LLVector4a		mPositionGroup);
-	
 public:
 	LLXformMatrix       mXform;
 
@@ -305,12 +292,6 @@ public:
 
 	F32				mDistanceWRTCamera;
 
-	static S32 getCurrentFrame() { return sCurVisible; }
-	static S32 getMinVisFrameRange();
-
-	void setSpatialBridge(LLSpatialBridge* bridge) { mSpatialBridge = (LLDrawable*) bridge; }
-	LLSpatialBridge* getSpatialBridge() { return (LLSpatialBridge*) (LLDrawable*) mSpatialBridge; }
-	
 	static F32 sCurPixelAngle; //current pixels per radian
 
 private:
@@ -320,39 +301,33 @@ private:
 	S32				mRenderType;
 	LLPointer<LLViewerObject> mVObjp;
 	face_list_t     mFaces;
-	LLSpatialGroup* mSpatialGroupp;
 	LLPointer<LLDrawable> mSpatialBridge;
 	
-	mutable U32		mVisible;
 	F32				mRadius;
-	F32				mBinRadius;
-	mutable S32		mBinIndex;
 	S32				mGeneration;
 	
 	LLVector3		mCurrentScale;
 	
-	static U32 sCurVisible; // Counter for what value of mVisible means currently visible
-
 	static U32 sNumZombieDrawables;
-	static LLDynamicArrayPtr<LLPointer<LLDrawable> > sDeadList;
+	static std::vector<LLPointer<LLDrawable> > sDeadList;
 } LL_ALIGN_POSTFIX(16);
 
 
 inline LLFace* LLDrawable::getFace(const S32 i) const
 {
-	//switch these asserts to llerrs -- davep
+	//switch these asserts to LL_ERRS() -- davep
 	//llassert((U32)i < mFaces.size());
 	//llassert(mFaces[i]);
 
 	if ((U32) i >= mFaces.size())
 	{
-		llwarns << "Invalid face index." << llendl;
+		LL_WARNS() << "Invalid face index." << LL_ENDL;
 		return NULL;
 	}
 
 	if (!mFaces[i])
 	{
-		llwarns << "Null face found." << llendl;
+		LL_WARNS() << "Null face found." << LL_ENDL;
 		return NULL;
 	}
 	

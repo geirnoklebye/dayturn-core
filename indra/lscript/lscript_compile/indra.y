@@ -5,7 +5,6 @@
 //    #ifdef __cplusplus
 //    extern "C" {
 //    #endif
-
 	int yylex(void);
 	int yyparse( void );
 	int yyerror(const char *fmt, ...);
