@@ -594,7 +594,7 @@ void LLGLTexMemBar::draw()
 	color = bandwidth > max_bandwidth ? LLColor4::red : bandwidth > max_bandwidth * .75f ? LLColor4::yellow : text_color;
 	color[VALPHA] = text_color[VALPHA];
 	text = llformat("BW:%.0f/%.0f",bandwidth.value(), max_bandwidth.value());
-	LLFontGL::getFontMonospace()->renderUTF8(text, 0, x_right, v_offset + line_height*2,
+	LLFontGL::getFontMonospace()->renderUTF8(text, 0, x_right, v_offset + line_height*3,
 											 color, LLFontGL::LEFT, LLFontGL::TOP);
 
 	// Mesh status line
