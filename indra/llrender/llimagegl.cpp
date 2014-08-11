@@ -943,7 +943,7 @@ BOOL LLImageGL::preAddToAtlas(S32 discard_level, const LLImageRaw* raw_image)
 			mFormatPrimary = GL_RGBA;
 			mFormatType = GL_UNSIGNED_BYTE;
 			break;
-////			llerrs << "Bad number of components for texture: " << (U32)getComponents() << llendl;
+////			LL_ERRS() << "Bad number of components for texture: " << (U32)getComponents() << LL_ENDL;
 //mk
 		}
 	}
@@ -1313,7 +1313,7 @@ BOOL LLImageGL::createGLTexture(S32 discard_level, const LLImageRaw* imageraw, S
 			mFormatPrimary = GL_RGBA;
 			mFormatType = GL_UNSIGNED_BYTE;
 			break;
-////			llerrs << "Bad number of components for texture: " << (U32)getComponents() << llendl;
+////			LL_ERRS() << "Bad number of components for texture: " << (U32)getComponents() << LL_ENDL;
 //mk
 		}
 
