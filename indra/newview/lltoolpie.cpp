@@ -1773,6 +1773,16 @@ BOOL LLToolPie::handleRightClickPick()
 				name = node->mName;
 			}
 			
+			std::string mute_msg;
+			if (LLMuteList::getInstance()->isMuted(object->getID(), name))
+			{
+				mute_msg = LLTrans::getString("UnmuteObject");
+			}
+			else
+			{
+				mute_msg = LLTrans::getString("MuteObject2");
+			}
+
 //MK
 			if (gRRenabled)
 			{
