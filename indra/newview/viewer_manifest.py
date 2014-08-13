@@ -1445,6 +1445,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libboost_signals-mt.so.*")
             self.path("libboost_system-mt.so.*")
             self.path("libboost_wave-mt.so.*")
+            self.path("libboost_coroutine-mt.so.*")
             self.path("libbreakpad_client.so*")
             self.path("libdb-5.1.so")
             self.path("libdb-5.so")
