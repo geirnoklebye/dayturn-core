@@ -2109,6 +2109,9 @@ void LLPanelLandOptions::refresh()
 				}
 			}
 		}
+//MK
+		gAgent.mRRInterface.mParcelLandingType = parcel->getLandingType();
+//mk
 	}
 }
 

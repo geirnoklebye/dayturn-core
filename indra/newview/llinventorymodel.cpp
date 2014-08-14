@@ -744,6 +744,58 @@ void LLInventoryModel::collectDescendentsIf(const LLUUID& id,
 	}
 }
 
+//MK
+// The same method, but with a boolean to let decide if we go recursive or not
+void LLInventoryModel::collectDescendentsRecIf(const LLUUID& id,
+											cat_array_t& cats,
+											item_array_t& items,
+											BOOL recursive,
+											BOOL include_trash,
+											LLInventoryCollectFunctor& add)
+{
+	// Start with categories
+	if(!include_trash)
+	{
+		const LLUUID trash_id = findCategoryUUIDForType(LLFolderType::FT_TRASH);
+		if(trash_id.notNull() && (trash_id == id))
+			return;
+	}
+	cat_array_t* cat_array = get_ptr_in_map(mParentChildCategoryTree, id);
+	if(cat_array)
+	{
+		S32 count = cat_array->size();
+		for(S32 i = 0; i < count; ++i)
+		{
+			LLViewerInventoryCategory* cat = cat_array->at(i);
+			if(add(cat,NULL))
+			{
+				cats.push_back(cat);
+			}
+			if (recursive)
+			{
+				collectDescendentsIf(cat->getUUID(), cats, items, include_trash, add);
+			}
+		}
+	}
+
+	LLViewerInventoryItem* item = NULL;
+	item_array_t* item_array = get_ptr_in_map(mParentChildItemTree, id);
+
+	// Move onto items
+	if(item_array)
+	{
+		S32 count = item_array->size();
+		for(S32 i = 0; i < count; ++i)
+		{
+			item = item_array->at(i);
+			if(add(NULL, item))
+			{
+				items.push_back(item);
+			}
+		}
+	}
+}
+
 void LLInventoryModel::addChangedMaskForLinks(const LLUUID& object_id, U32 mask)
 {
 	const LLInventoryObject *obj = getObject(object_id);

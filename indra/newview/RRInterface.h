@@ -72,6 +72,7 @@
 
 #include "llchat.h"
 #include "llchatbar.h"
+#include "llparcel.h"
 #include "llinventorymodel.h"
 #include "llviewermenu.h"
 #include "llviewerjointattachment.h"
@@ -296,6 +297,7 @@ public:
 	F32 mShowavsDistMax;
 
 	std::string mParcelName; // for convenience (gAgent does not retain the name of the current parcel)
+	LLParcel::ELandingType mParcelLandingType; // for convenience
 
 	static BOOL sRRNoSetEnv;
 	static BOOL sRestrainedLoveDebug;

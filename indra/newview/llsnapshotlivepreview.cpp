@@ -151,7 +151,7 @@ F32 LLSnapshotLivePreview::getImageAspect()
 
 void LLSnapshotLivePreview::updateSnapshot(BOOL new_snapshot, BOOL new_thumbnail, F32 delay)
 {
-	lldebugs << "updateSnapshot: mSnapshotUpToDate = " << getSnapshotUpToDate() << LL_ENDL;
+	LL_DEBUGS() << "updateSnapshot: mSnapshotUpToDate = " << getSnapshotUpToDate() << LL_ENDL;
 
 	// Update snapshot if requested.
 	if (new_snapshot)
@@ -695,7 +695,7 @@ BOOL LLSnapshotLivePreview::onIdle( void* snapshot_preview )
 	// time to produce a snapshot
 	if(!previewp->getSnapshotUpToDate())
     {
-        lldebugs << "producing snapshot" << LL_ENDL;
+        LL_DEBUGS() << "producing snapshot" << LL_ENDL;
         if (!previewp->mPreviewImage)
         {
             previewp->mPreviewImage = new LLImageRaw;
@@ -775,7 +775,7 @@ BOOL LLSnapshotLivePreview::onIdle( void* snapshot_preview )
         previewp->setVisible(gSavedSettings.getBOOL("UseFreezeFrame") && previewp->mAllowFullScreenPreview); // only show fullscreen preview when in freeze frame mode
         previewp->mSnapshotDelayTimer.stop();
         previewp->mSnapshotActive = FALSE;
-        lldebugs << "done creating snapshot" << LL_ENDL;
+        LL_DEBUGS() << "done creating snapshot" << LL_ENDL;
     }
     
     if (!previewp->getThumbnailUpToDate())
@@ -916,7 +916,7 @@ LLPointer<LLImageFormatted>	LLSnapshotLivePreview::getFormattedImage()
         
         // Create the new formatted image of the appropriate format.
         LLFloaterSnapshot::ESnapshotFormat format = getSnapshotFormat();
-        lldebugs << "Encoding new image of format " << format << LL_ENDL;
+        LL_DEBUGS() << "Encoding new image of format " << format << LL_ENDL;
             
         switch (format)
         {

@@ -721,7 +721,7 @@ void LLPanelStandStopFlying::onStandButtonClick()
 	setFocus(FALSE); // EXT-482
 	mStandButton->setVisible(FALSE); // force visibility changing to avoid seeing Stand & Move buttons at once.
 //MK
-	if (gAgent.mRRInterface.contains ("standtp"))
+	if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
 	{
 		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
 		gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);

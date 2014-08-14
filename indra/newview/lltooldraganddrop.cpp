@@ -1624,6 +1624,14 @@ static void give_inventory_cb(const LLSD& notification, const LLSD& response)
 		return;
 	}
 
+//MK
+	// Don't let the user give an item or a folder if they can't see their inventory,
+	// to thwart any plan of circumventing communication restrictions
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
+	{
+		return;
+	}
+//mk
 	LLSD payload = notification["payload"];
 	const LLUUID& session_id = payload["session_id"];
 	const LLUUID& agent_id = payload["agent_id"];
@@ -2430,7 +2438,7 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventoryObject(
 	if (mSource != SOURCE_AGENT) return ACCEPT_NO;
 
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowinv))
 	{
 		// to avoid having "so-and-so accepted/declined your inventory offer." messages
 		return ACCEPT_NO;
@@ -2473,7 +2481,7 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventory(
 	// item has to be in agent inventory.
 	if (mSource != SOURCE_AGENT) return ACCEPT_NO;
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowinv))
 	{
 		// to avoid having "so-and-so accepted/declined your inventory offer." messages
 		return ACCEPT_NO;
@@ -2501,7 +2509,7 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventoryCategory(
 {
 	LL_DEBUGS() << "LLToolDragAndDrop::dad3dGiveInventoryCategory()" << LL_ENDL;
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowinv))
 	{
 		// to avoid having "so-and-so accepted/declined your inventory offer." messages
 		return ACCEPT_NO;

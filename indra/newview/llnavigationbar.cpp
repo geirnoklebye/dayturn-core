@@ -63,6 +63,10 @@
 #include "llfavoritesbar.h"
 #include "llagentui.h"
 
+//MK
+#include "llparcel.h"
+//mk
+
 #include <boost/regex.hpp>
 
 //-- LLTeleportHistoryMenuItem -----------------------------------------------
@@ -523,6 +527,11 @@ void LLNavigationBar::onTeleportFinished(const LLVector3d& global_agent_pos)
 		if (gAgent.mRRInterface.scriptsEnabled())
 		{
 			gAgent.mRRInterface.setScriptsEnabledOnce(TRUE); // we are in a script enabled area => retain this information for later
+		}
+		LLParcel *parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
+		if (parcel)
+		{
+			gAgent.mRRInterface.mParcelLandingType = parcel->getLandingType();
 		}
 	}
 //mk

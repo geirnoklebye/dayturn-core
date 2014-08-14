@@ -2108,7 +2108,7 @@ void LLAgentCamera::resetCamera()
 void LLAgentCamera::changeCameraToMouselook(BOOL animate)
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
 	{
 //mk
 	if (!gSavedSettings.getBOOL("EnableMouselook") 
@@ -2177,7 +2177,7 @@ void LLAgentCamera::changeCameraToMouselook(BOOL animate)
 void LLAgentCamera::changeCameraToDefault()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
 	{
 //mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
@@ -2210,7 +2210,7 @@ void LLAgentCamera::changeCameraToDefault()
 void LLAgentCamera::changeCameraToFollow(BOOL animate)
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
 	{
 //mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
@@ -2269,7 +2269,7 @@ void LLAgentCamera::changeCameraToFollow(BOOL animate)
 void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
 	{
 //mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
@@ -2372,7 +2372,7 @@ void LLAgentCamera::changeCameraToCustomizeAvatar()
 //mk
 
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
 	{
 //mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera() || !isAgentAvatarValid())

@@ -235,7 +235,7 @@ void LLFlickrPhotoPanel::onVisibilityChange(BOOL visible)
 			LLSnapshotLivePreview* preview = getPreviewView();
 			if(preview)
 			{
-				lldebugs << "opened, updating snapshot" << LL_ENDL;
+				LL_DEBUGS() << "opened, updating snapshot" << LL_ENDL;
 				preview->updateSnapshot(TRUE);
 			}
 		}
@@ -340,6 +340,12 @@ void LLFlickrPhotoPanel::sendPhoto()
 
 	// Add the location if required
 	bool add_location = mLocationCheckbox->getValue().asBoolean();
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		add_location = false;
+	}
+//mk
 	if (add_location)
 	{
 		// Get the SLURL for the location
@@ -427,7 +433,7 @@ void LLFlickrPhotoPanel::updateControls()
 	BOOL got_snap = previewp && previewp->getSnapshotUpToDate();
 
 	// *TODO: Separate maximum size for Web images from postcards
-	lldebugs << "Is snapshot up-to-date? " << got_snap << LL_ENDL;
+	LL_DEBUGS() << "Is snapshot up-to-date? " << got_snap << LL_ENDL;
 
 	updateResolution(FALSE);
 }
@@ -457,13 +463,13 @@ void LLFlickrPhotoPanel::updateResolution(BOOL do_update)
 		if (width == 0 || height == 0)
 		{
 			// take resolution from current window size
-			lldebugs << "Setting preview res from window: " << gViewerWindow->getWindowWidthRaw() << "x" << gViewerWindow->getWindowHeightRaw() << LL_ENDL;
+			LL_DEBUGS() << "Setting preview res from window: " << gViewerWindow->getWindowWidthRaw() << "x" << gViewerWindow->getWindowHeightRaw() << LL_ENDL;
 			previewp->setSize(gViewerWindow->getWindowWidthRaw(), gViewerWindow->getWindowHeightRaw());
 		}
 		else
 		{
 			// use the resolution from the selected pre-canned drop-down choice
-			lldebugs << "Setting preview res selected from combo: " << width << "x" << height << LL_ENDL;
+			LL_DEBUGS() << "Setting preview res selected from combo: " << width << "x" << height << LL_ENDL;
 			previewp->setSize(width, height);
 		}
 

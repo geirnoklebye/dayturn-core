@@ -2681,6 +2681,13 @@ class LLViewCheckJoystickFlycam : public view_listener_t
 void handle_toggle_flycam()
 {
 	LLViewerJoystick::getInstance()->toggleFlycam();
+//MK
+	// Don't allow it if our camera distance is restricted
+	if (LLViewerJoystick::getInstance()->getOverrideCamera() && gAgent.mRRInterface.mCamDistMax < EXTREMUM * 0.75f)
+	{
+		LLViewerJoystick::getInstance()->toggleFlycam();
+	}
+//mk
 }
 
 class LLObjectBuild : public view_listener_t
@@ -4084,8 +4091,7 @@ bool is_object_sittable()
 	{
 		return false;
 	}
-	if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")
-		|| gAgent.mRRInterface.mContainsFartouch))
+	if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")))
 	{
 		LLPickInfo pick = LLToolPie::getInstance()->getPick();
 		LLVector3 pos = object->getPositionRegion() + pick.mObjectOffset;
@@ -4144,8 +4150,7 @@ void handle_object_sit_or_stand()
 		{
 			return;
 		}
-		if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")
-			|| gAgent.mRRInterface.mContainsFartouch))
+		if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")))
 		{
 			LLVector3 pos = object->getPositionRegion() + pick.mObjectOffset;
 			pos -= gAgent.getPositionAgent ();
@@ -6462,8 +6467,7 @@ bool enable_object_sit(LLUICtrl* ctrl)
 			{
 				return false;
 			}
-			if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")
-				|| gAgent.mRRInterface.mContainsFartouch))
+			if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")))
 			{
 				LLPickInfo pick = LLToolPie::getInstance()->getPick();
 				LLVector3 pos = dest_object->getPositionRegion() + pick.mObjectOffset;
