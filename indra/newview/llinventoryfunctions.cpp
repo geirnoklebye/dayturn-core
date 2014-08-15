@@ -229,6 +229,21 @@ BOOL get_is_item_worn(const LLUUID& id)
 	if (!item)
 		return FALSE;
 
+//MK
+	// This is to fix, well hide, a weird bug that makes some detached objects show as
+	// "worn on Invalid Attachment Point" instead of being purely detached. But they are
+	// detached, they do not count against MAX_AGENT_ATTACHMENTS, and they do not appear
+	// in the COF. It seems, though, that LLAppearanceMgr::instance().isLinkInCOF(id) returns
+	// TRUE for these objects.
+	if (gAgentAvatarp)
+	{
+		std::string attachment_point_name = gAgentAvatarp->getAttachedPointName(id);
+		if (attachment_point_name == LLStringUtil::null)
+		{
+			return FALSE;
+		}
+	}
+//mk
 	// Consider the item as worn if it has links in COF.
 	if (LLAppearanceMgr::instance().isLinkInCOF(id))
 	{
