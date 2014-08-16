@@ -43,6 +43,7 @@
 #include "llfocusmgr.h"
 #include "llgroupactions.h"
 #include "llhudtext.h"
+#include "llinventoryfunctions.h"
 #include "llmoveview.h"
 #include "llnavigationbar.h"
 //#include "llnearbychat.h"
@@ -67,6 +68,7 @@
 #include "llwaterparammanager.h"
 #include "llwlparammanager.h"
 #include "llinventorybridge.h"
+#include "llviewerjoystick.h"
 #include "llviewerregion.h"
 #include "llviewermessage.h"
 #include "llviewerparcelmgr.h"
@@ -84,7 +86,7 @@ BOOL RRInterface::sCanOoc = TRUE;
 std::string RRInterface::sRecvimMessage = "The Resident you messaged is prevented from reading your instant messages at the moment, please try again later.";
 std::string RRInterface::sSendimMessage = "*** IM blocked by sender's viewer";
 std::string RRInterface::sBlacklist = "";
-F32 RRInterface::sLastAvatarZOffsetCommit = 0.f;
+F32 RRInterface::sLastAvatarZOffsetCommit = 1.f;
 U32 RRInterface::mCamDistNbGradients = 10;
 
 
@@ -481,6 +483,7 @@ RRInterface::RRInterface():
 	, mUserUpdateAttachmentsCalledFromScript(FALSE)
 	, mScriptsEnabledOnce(FALSE)
 	, mHasLockedHuds(FALSE)
+	, mParcelLandingType(LLParcel::L_DIRECT)
 	, mContainsDetach(FALSE)
 	, mContainsShowinv(FALSE)
 	, mContainsUnsit(FALSE)
@@ -543,7 +546,7 @@ RRInterface::RRInterface():
 	mJustReattached.uuid.setNull();
 	mJustReattached.attachpt = "";
 
-	sLastAvatarZOffsetCommit = 0.f;
+	sLastAvatarZOffsetCommit = 1.f; // So a first shape update will be done shortly after the viewer has started
 
 	updateCameraLimits();
 
@@ -2674,13 +2677,17 @@ void RRInterface::detachObject(LLViewerObject* object)
 	if (!object) return;
 	if (gRRenabled && !gAgent.mRRInterface.canDetach(object)) return;
 
-	gMessageSystem->newMessage("ObjectDetach");
-	gMessageSystem->nextBlockFast(_PREHASH_AgentData);
-	gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID() );
-	gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-	gMessageSystem->nextBlockFast(_PREHASH_ObjectData);
-	gMessageSystem->addU32Fast(_PREHASH_ObjectLocalID, object->getLocalID());
-	gMessageSystem->sendReliable( gAgent.getRegionHost() );
+	LLInventoryItem* item = getItem (object->getID());
+	if (item) {
+		LLAppearanceMgr::getInstance()->removeItemFromAvatar (item->getUUID());
+	}
+	//gMessageSystem->newMessage("ObjectDetach");
+	//gMessageSystem->nextBlockFast(_PREHASH_AgentData);
+	//gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID() );
+	//gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+	//gMessageSystem->nextBlockFast(_PREHASH_ObjectData);
+	//gMessageSystem->addU32Fast(_PREHASH_ObjectLocalID, object->getLocalID());
+	//gMessageSystem->sendReliable( gAgent.getRegionHost() );
 }
 
 void RRInterface::detachAllObjectsFromAttachment(LLViewerJointAttachment* attachment)
@@ -2894,7 +2901,7 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive)
 	LLInventoryCategory* cat = getCategoryUnderRlvShare (category);
 	LLVOAvatarSelf* avatar = gAgentAvatarp;
 	if (!avatar) return FALSE;
-	BOOL isRoot = (getRlvShare() == cat);
+	//BOOL isRoot = (getRlvShare() == cat);
 	
 	// if exists, detach/unwear all the items inside it
 	if (cat) {
@@ -2905,105 +2912,137 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive)
 			if (name.find ("nostrip") != -1) return false;
 		}
 
-		if (recursive) {
-			LLAppearanceMgr::instance().takeOffOutfit( cat->getLinkedUUID() );
+		LLUUID cat_id = cat->getLinkedUUID();
+
+		// The following code is almost a carbon copy of LLAppearanceMgr::takeOffOutfit()
+		// (which is called when pressing "Remove from Current Outfit" in the inventory).
+		// We don't want it recursive all the time though, it depends on the parameter above.
+		LLInventoryModel::cat_array_t cats;
+		LLInventoryModel::item_array_t items;
+		LLFindWearablesEx collector(/*is_worn=*/ true, /*include_body_parts=*/ false);
+
+		gInventory.collectDescendentsRecIf(cat_id, cats, items, recursive, FALSE, collector);
+
+		LLInventoryModel::item_array_t::const_iterator it = items.begin();
+		const LLInventoryModel::item_array_t::const_iterator it_end = items.end();
+		uuid_vec_t uuids_to_remove;
+		for( ; it_end != it; ++it)
+		{
+			LLViewerInventoryItem* item = *it;
+			uuids_to_remove.push_back(item->getUUID());
 		}
-		else {
+		LLAppearanceMgr::instance().removeItemsFromAvatar(uuids_to_remove);
 
-			LLInventoryModel::cat_array_t* cats;
-			LLInventoryModel::item_array_t* items;
-		
-			// retrieve all the objects contained in this folder
-			gInventory.getDirectDescendentsOf (cat->getUUID(), cats, items);
-			if (items) {
-		
-				// unwear them one by one
-				S32 count = items->size();
-				for(S32 i = 0; i < count; ++i) {
-					if (!isRoot) {
-						LLViewerInventoryItem* item = (LLViewerInventoryItem*)items->at(i);
-						if (sRestrainedLoveDebug) {
-							LL_INFOS() << "trying to detach " << item->getName() << LL_ENDL;
-						}
-					
-						// this is an attached object
-						if (item->getType() == LLAssetType::AT_OBJECT) {
-							// find the attachpoint from which to detach
-							for (LLVOAvatar::attachment_map_t::iterator iter = avatar->mAttachmentPoints.begin(); 
-								 iter != avatar->mAttachmentPoints.end(); )
-							{
-								LLVOAvatar::attachment_map_t::iterator curiter = iter++;
-								LLViewerJointAttachment* attachment = curiter->second;
-								LLViewerObject* object = avatar->getWornAttachment(item->getLinkedUUID());
-								if (attachment->isObjectAttached(object)) {
-									detachObject (object);
-									break;
-								}
-							}
-						
-						}
-						// this is a piece of clothing
-						else if (item->getType() == LLAssetType::AT_CLOTHING) {
-	//						const LLWearable* layer = gAgentWearables.getWearableFromItemID (item->getLinkedUUID());
-	//						if (layer != NULL) gAgentWearables.removeWearable (layer->getType(), false, 0);
-							if (canDetach (item)) removeItemFromAvatar(item);		
-						}
-						// this is a gesture
-						else if (item->getType() == LLAssetType::AT_GESTURE) {
-							if (LLGestureMgr::instance().isGestureActive(item->getLinkedUUID())) {
-								LLGestureMgr::instance().deactivateGesture(item->getLinkedUUID());
-							}
-						}
-					}
-				}
-			}
-
-			if (cats) {
-				// for each subfolder, detach the first item it contains (only for single no-mod items contained in appropriately named folders)
-				S32 count = cats->size();
-				for(S32 i = 0; i < count; ++i) {
-					LLViewerInventoryCategory* cat_child = (LLViewerInventoryCategory*)cats->at(i);
-
-					if (mHandleNoStrip) {
-						std::string name = cat_child->getName();
-						LLStringUtil::toLower(name);
-						if (name.find ("nostrip") != -1) continue;
-					}
-
-					LLInventoryModel::cat_array_t* cats_grandchildren; // won't be used here
-					LLInventoryModel::item_array_t* items_grandchildren; // actual no-mod item(s)
-					gInventory.getDirectDescendentsOf (cat_child->getUUID(), 
-														cats_grandchildren, items_grandchildren);
-
-					if (!isRoot && items_grandchildren && items_grandchildren->size() == 1) { // only one item
-						LLViewerInventoryItem* item_grandchild = 
-								(LLViewerInventoryItem*)items_grandchildren->at(0);
-
-						if (item_grandchild && item_grandchild->getType() == LLAssetType::AT_OBJECT
-							&& !item_grandchild->getPermissions().allowModifyBy(gAgent.getID())
-							&& findAttachmentPointFromParentName (item_grandchild) != NULL) { // and it is no-mod and its parent is named correctly
-							// detach this object
-							// find the attachpoint from which to detach
-							for (LLVOAvatar::attachment_map_t::iterator iter = avatar->mAttachmentPoints.begin(); 
-								 iter != avatar->mAttachmentPoints.end(); )
-							{
-								LLVOAvatar::attachment_map_t::iterator curiter = iter++;
-								LLViewerJointAttachment* attachment = curiter->second;
-								LLViewerObject* object = avatar->getWornAttachment(item_grandchild->getUUID());
-								if (attachment->isObjectAttached(object)) {
-									detachObject (object);
-									break;
-								}
-							}
-						}
-					}
-
-					if (recursive && cat_child->getName().find (".") != 0) { // detachall and not invisible)
-						forceDetachByName (getFullPath (cat_child), recursive);
-					}
-				}
+		// deactivate all gestures in the outfit folder
+		LLInventoryModel::item_array_t gest_items;
+		LLAppearanceMgr::instance().getDescendentsOfAssetType(cat_id, gest_items, LLAssetType::AT_GESTURE);
+		for(S32 i = 0; i  < gest_items.size(); ++i)
+		{
+			LLViewerInventoryItem *gest_item = gest_items[i];
+			if ( LLGestureMgr::instance().isGestureActive( gest_item->getLinkedUUID()) )
+			{
+				LLGestureMgr::instance().deactivateGesture( gest_item->getLinkedUUID() );
 			}
 		}
+
+		//if (recursive) {
+		//	LLAppearanceMgr::instance().takeOffOutfit( cat->getLinkedUUID() );
+		//}
+		//else {
+	//		LLInventoryModel::cat_array_t* cats;
+	//		LLInventoryModel::item_array_t* items;
+	//	
+	//		// retrieve all the objects contained in this folder
+	//		gInventory.getDirectDescendentsOf (cat->getUUID(), cats, items);
+	//		if (items) {
+	//	
+	//			// unwear them one by one
+	//			S32 count = items->size();
+	//			for(S32 i = 0; i < count; ++i) {
+	//				if (!isRoot) {
+	//					LLViewerInventoryItem* item = (LLViewerInventoryItem*)items->at(i);
+	//					if (sRestrainedLoveDebug) {
+	//						LL_INFOS() << "trying to detach " << item->getName() << LL_ENDL;
+	//					}
+	//				
+	//					// this is an attached object
+	//					if (item->getType() == LLAssetType::AT_OBJECT) {
+	//						// find the attachpoint from which to detach
+	//						for (LLVOAvatar::attachment_map_t::iterator iter = avatar->mAttachmentPoints.begin(); 
+	//							 iter != avatar->mAttachmentPoints.end(); )
+	//						{
+	//							LLVOAvatar::attachment_map_t::iterator curiter = iter++;
+	//							LLViewerJointAttachment* attachment = curiter->second;
+	//							LLViewerObject* object = avatar->getWornAttachment(item->getLinkedUUID());
+	//							if (attachment->isObjectAttached(object)) {
+	//								detachObject (object);
+	//								break;
+	//							}
+	//						}
+	//					
+	//					}
+	//					// this is a piece of clothing
+	//					else if (item->getType() == LLAssetType::AT_CLOTHING) {
+	////						const LLWearable* layer = gAgentWearables.getWearableFromItemID (item->getLinkedUUID());
+	////						if (layer != NULL) gAgentWearables.removeWearable (layer->getType(), false, 0);
+	//						if (canDetach (item)) removeItemFromAvatar(item);		
+	//					}
+	//					// this is a gesture
+	//					else if (item->getType() == LLAssetType::AT_GESTURE) {
+	//						if (LLGestureMgr::instance().isGestureActive(item->getLinkedUUID())) {
+	//							LLGestureMgr::instance().deactivateGesture(item->getLinkedUUID());
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+
+	//		if (cats) {
+	//			// for each subfolder, detach the first item it contains (only for single no-mod items contained in appropriately named folders)
+	//			S32 count = cats->size();
+	//			for(S32 i = 0; i < count; ++i) {
+	//				LLViewerInventoryCategory* cat_child = (LLViewerInventoryCategory*)cats->at(i);
+
+	//				if (mHandleNoStrip) {
+	//					std::string name = cat_child->getName();
+	//					LLStringUtil::toLower(name);
+	//					if (name.find ("nostrip") != -1) continue;
+	//				}
+
+	//				LLInventoryModel::cat_array_t* cats_grandchildren; // won't be used here
+	//				LLInventoryModel::item_array_t* items_grandchildren; // actual no-mod item(s)
+	//				gInventory.getDirectDescendentsOf (cat_child->getUUID(), 
+	//													cats_grandchildren, items_grandchildren);
+
+	//				if (!isRoot && items_grandchildren && items_grandchildren->size() == 1) { // only one item
+	//					LLViewerInventoryItem* item_grandchild = 
+	//							(LLViewerInventoryItem*)items_grandchildren->at(0);
+
+	//					if (item_grandchild && item_grandchild->getType() == LLAssetType::AT_OBJECT
+	//						&& !item_grandchild->getPermissions().allowModifyBy(gAgent.getID())
+	//						&& findAttachmentPointFromParentName (item_grandchild) != NULL) { // and it is no-mod and its parent is named correctly
+	//						// detach this object
+	//						// find the attachpoint from which to detach
+	//						for (LLVOAvatar::attachment_map_t::iterator iter = avatar->mAttachmentPoints.begin(); 
+	//							 iter != avatar->mAttachmentPoints.end(); )
+	//						{
+	//							LLVOAvatar::attachment_map_t::iterator curiter = iter++;
+	//							LLViewerJointAttachment* attachment = curiter->second;
+	//							LLViewerObject* object = avatar->getWornAttachment(item_grandchild->getUUID());
+	//							if (attachment->isObjectAttached(object)) {
+	//								detachObject (object);
+	//								break;
+	//							}
+	//						}
+	//					}
+	//				}
+
+	//				if (recursive && cat_child->getName().find (".") != 0) { // detachall and not invisible)
+	//					forceDetachByName (getFullPath (cat_child), recursive);
+	//				}
+	//			}
+	//		}
+		//}
 	}
 	return TRUE;
 }
@@ -3935,9 +3974,6 @@ bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_pare
 bool RRInterface::canUnwear(LLInventoryItem* item)
 {
 	if (item) {
-		// If the item has just been received, let the user unwear it
-		if (is_inventory_item_new (item)) return true;
-
 		LLInventoryCategory* parent = gInventory.getCategory (item->getParentUUID());
 		if (item->getType() ==  LLAssetType::AT_OBJECT) {
 			if (!canDetach (item)) return false;
@@ -4034,9 +4070,6 @@ bool RRInterface::canDetach(LLInventoryItem* item)
 	LLVOAvatarSelf* avatarp = gAgentAvatarp;
 	if (!avatarp) return true;
 	
-	// If the item has just been received, let the user detach it
-	if (is_inventory_item_new (item)) return true;
-
 	if (mHandleNoStrip) {
 		std::string name = item->getName();
 		LLStringUtil::toLower(name);
@@ -4083,6 +4116,9 @@ bool RRInterface::canDetach(LLViewerObject* attached_object)
 	LLInventoryItem* item = getItem (attached_object->getRootEdit()->getID());
 
 	if (item) {
+		// If the item has just been received, let the user detach it (we know it has not issued a @detach restriction already)
+		if (is_inventory_item_new (item)) return true;
+
 		LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
 		if (cat_parent && !canDetachCategory(cat_parent, true)) return false;
 
@@ -4213,6 +4249,7 @@ bool RRInterface::canTouchFar(LLViewerObject* object, LLVector3 pick_intersectio
 	F32 dist = pos.magVec();
 	if (!object->isHUDAttachment()) {
 		if (mContainsFartouch && dist >= 1.5) return false;
+		if (dist > mCamDistDrawMax) return false; // don't allow touching or selecting something that is obstructed
 	}
 
 	return true;
@@ -4333,6 +4370,11 @@ BOOL RRInterface::updateCameraLimits ()
 
 	if (mCamDistMin > mCamDistMax) {
 		mCamDistMin = mCamDistMax;
+	}
+
+	if (LLViewerJoystick::getInstance()->getOverrideCamera() && mCamDistMax < EXTREMUM * 0.75f)
+	{
+		handle_toggle_flycam();
 	}
 
 	// And check the camera is still within the limits
@@ -4478,3 +4520,4 @@ std::deque<std::string> RRInterface::getBlacklist (std::string filter /* = ""*/)
 
 	return res;
 }
+

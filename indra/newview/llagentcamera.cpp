@@ -932,6 +932,8 @@ void LLAgentCamera::cameraZoomIn(const F32 fraction)
 	F32 max_distance = llmin(mDrawDistance - DIST_FUDGE, 
 							 LLWorld::getInstance()->getRegionWidthInMeters() - DIST_FUDGE );
 
+    max_distance = llmin(max_distance, current_distance * 4.f); //Scaled max relative to current distance.  MAINT-3154
+
 	if (new_distance > max_distance)
 	{
 		new_distance = max_distance;
@@ -2106,7 +2108,7 @@ void LLAgentCamera::resetCamera()
 void LLAgentCamera::changeCameraToMouselook(BOOL animate)
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
 	{
 //mk
 	if (!gSavedSettings.getBOOL("EnableMouselook") 
@@ -2175,7 +2177,7 @@ void LLAgentCamera::changeCameraToMouselook(BOOL animate)
 void LLAgentCamera::changeCameraToDefault()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
 	{
 //mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
@@ -2208,7 +2210,7 @@ void LLAgentCamera::changeCameraToDefault()
 void LLAgentCamera::changeCameraToFollow(BOOL animate)
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
 	{
 //mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
@@ -2267,7 +2269,7 @@ void LLAgentCamera::changeCameraToFollow(BOOL animate)
 void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
 	{
 //mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
@@ -2370,7 +2372,7 @@ void LLAgentCamera::changeCameraToCustomizeAvatar()
 //mk
 
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistMax > 0.f)
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
 	{
 //mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera() || !isAgentAvatarValid())

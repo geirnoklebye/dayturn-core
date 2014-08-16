@@ -1044,6 +1044,14 @@ bool LLViewerJoystick::toggleFlycam()
 		return false;
 	}
 
+//MK
+	// Don't allow it if our camera distance is restricted
+	if (gRRenabled && gAgent.mRRInterface.mCamDistMax < EXTREMUM * 0.75f)
+	{
+		mOverrideCamera = false;
+		return false;
+	}
+//mk
 	if (!mOverrideCamera)
 	{
 		gAgentCamera.changeCameraToDefault();

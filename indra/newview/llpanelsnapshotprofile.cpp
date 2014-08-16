@@ -38,6 +38,9 @@
 #include "llsidetraypanelcontainer.h"
 #include "llwebprofile.h"
 
+//MK
+#include "llagent.h"
+//mk
 /**
  * Posts a snapshot to My Profile feed.
  */
@@ -96,6 +99,12 @@ void LLPanelSnapshotProfile::onSend()
 	std::string caption = getChild<LLUICtrl>("caption")->getValue().asString();
 	bool add_location = getChild<LLUICtrl>("add_location_cb")->getValue().asBoolean();
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		add_location = false;
+	}
+//mk
 	LLWebProfile::uploadImage(LLFloaterSnapshot::getImageData(), caption, add_location);
 	LLFloaterSnapshot::postSave();
 }

@@ -1624,17 +1624,34 @@ static void give_inventory_cb(const LLSD& notification, const LLSD& response)
 		return;
 	}
 
+//MK
+	// Don't let the user give an item or a folder if they can't see their inventory,
+	// to thwart any plan of circumventing communication restrictions
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
+	{
+		return;
+	}
+//mk
 	LLSD payload = notification["payload"];
 	const LLUUID& session_id = payload["session_id"];
 	const LLUUID& agent_id = payload["agent_id"];
 	LLViewerInventoryItem * inv_item =  gInventory.getItem(payload["item_id"]);
-	if (NULL == inv_item)
+	LLViewerInventoryCategory * inv_cat =  gInventory.getCategory(payload["item_id"]);
+	if (NULL == inv_item && NULL == inv_cat)
 	{
-		llassert(NULL != inv_item);
+		llassert( FALSE );
 		return;
 	}
-
-	if (LLGiveInventory::doGiveInventoryItem(agent_id, inv_item, session_id))
+	bool successfully_shared;
+	if (inv_item)
+	{
+		successfully_shared = LLGiveInventory::doGiveInventoryItem(agent_id, inv_item, session_id);
+	}
+	else
+	{
+		successfully_shared = LLGiveInventory::doGiveInventoryCategory(agent_id, inv_cat, session_id);
+	}
+	if (successfully_shared)
 	{
 		if ("avatarpicker" == payload["d&d_dest"].asString())
 		{
@@ -1644,8 +1661,8 @@ static void give_inventory_cb(const LLSD& notification, const LLSD& response)
 	}
 }
 
-static void show_item_sharing_confirmation(const std::string name,
-					   LLViewerInventoryItem* inv_item,
+static void show_object_sharing_confirmation(const std::string name,
+					   LLInventoryObject* inv_item,
 					   const LLSD& dest,
 					   const LLUUID& dest_agent,
 					   const LLUUID& session_id = LLUUID::null)
@@ -1655,9 +1672,6 @@ static void show_item_sharing_confirmation(const std::string name,
 		llassert(NULL != inv_item);
 		return;
 	}
-	if(gInventory.getItem(inv_item->getUUID())
-		&& LLGiveInventory::isInventoryGiveAcceptable(inv_item))
-	{
 		LLSD substitutions;
 		substitutions["RESIDENTS"] = name;
 		substitutions["ITEMS"] = inv_item->getName();
@@ -1668,16 +1682,15 @@ static void show_item_sharing_confirmation(const std::string name,
 		payload["d&d_dest"] = dest.asString();
 		LLNotificationsUtil::add("ShareItemsConfirmation", substitutions, payload, &give_inventory_cb);
 	}
-}
 
 static void get_name_cb(const LLUUID& id,
 						const std::string& full_name,
-						LLViewerInventoryItem* inv_item,
+						LLInventoryObject* inv_obj,
 						const LLSD& dest,
 						const LLUUID& dest_agent)
 {
-	show_item_sharing_confirmation(full_name,
-								   inv_item,
+	show_object_sharing_confirmation(full_name,
+								     inv_obj,
 								   dest,
 								   id,
 								   LLUUID::null);
@@ -1706,10 +1719,11 @@ bool LLToolDragAndDrop::handleGiveDragAndDrop(LLUUID dest_agent, LLUUID session_
 	case DAD_GESTURE:
 	case DAD_CALLINGCARD:
 	case DAD_MESH:
+	case DAD_CATEGORY:
 	{
-		LLViewerInventoryItem* inv_item = (LLViewerInventoryItem*)cargo_data;
-		if (gInventory.getItem(inv_item->getUUID())
-			&& LLGiveInventory::isInventoryGiveAcceptable(inv_item))
+		LLInventoryObject* inv_obj = (LLInventoryObject*)cargo_data;
+		if(gInventory.getCategory(inv_obj->getUUID()) || (gInventory.getItem(inv_obj->getUUID())
+			&& LLGiveInventory::isInventoryGiveAcceptable(dynamic_cast<LLInventoryItem*>(inv_obj))))
 		{
 			// *TODO: get multiple object transfers working
 			*accept = ACCEPT_YES_COPY_SINGLE;
@@ -1726,40 +1740,18 @@ bool LLToolDragAndDrop::handleGiveDragAndDrop(LLUUID dest_agent, LLUUID session_
 					// Otherwise set up a callback to show the dialog when the name arrives.
 					if (gCacheName->getFullName(dest_agent, fullname))
 					{
-						show_item_sharing_confirmation(fullname, inv_item, dest, dest_agent, LLUUID::null);
+						show_object_sharing_confirmation(fullname, inv_obj, dest, dest_agent, LLUUID::null);
 					}
 					else
 					{
-						gCacheName->get(dest_agent, false, boost::bind(&get_name_cb, _1, _2, inv_item, dest, dest_agent));
+						gCacheName->get(dest_agent, false, boost::bind(&get_name_cb, _1, _2, inv_obj, dest, dest_agent));
 					}
 
 					return true;
 				}
 
 				// If an IM session with destination agent is found item offer will be logged in this session.
-				show_item_sharing_confirmation(session->mName, inv_item, dest, dest_agent, session_id);
-			}
-		}
-		else
-		{
-			// It's not in the user's inventory (it's probably
-			// in an object's contents), so disallow dragging
-			// it here.  You can't give something you don't
-			// yet have.
-			*accept = ACCEPT_NO;
-		}
-		break;
-	}
-	case DAD_CATEGORY:
-	{
-		LLViewerInventoryCategory* inv_cat = (LLViewerInventoryCategory*)cargo_data;
-		if (gInventory.getCategory(inv_cat->getUUID()))
-		{
-			// *TODO: get multiple object transfers working
-			*accept = ACCEPT_YES_COPY_SINGLE;
-			if (drop)
-			{
-				LLGiveInventory::doGiveInventoryCategory(dest_agent, inv_cat, session_id);
+				show_object_sharing_confirmation(session->mName, inv_obj, dest, dest_agent, session_id);
 			}
 		}
 		else
@@ -2446,7 +2438,7 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventoryObject(
 	if (mSource != SOURCE_AGENT) return ACCEPT_NO;
 
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowinv))
 	{
 		// to avoid having "so-and-so accepted/declined your inventory offer." messages
 		return ACCEPT_NO;
@@ -2489,7 +2481,7 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventory(
 	// item has to be in agent inventory.
 	if (mSource != SOURCE_AGENT) return ACCEPT_NO;
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowinv))
 	{
 		// to avoid having "so-and-so accepted/declined your inventory offer." messages
 		return ACCEPT_NO;
@@ -2517,7 +2509,7 @@ EAcceptance LLToolDragAndDrop::dad3dGiveInventoryCategory(
 {
 	LL_DEBUGS() << "LLToolDragAndDrop::dad3dGiveInventoryCategory()" << LL_ENDL;
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags || gAgent.mRRInterface.mContainsShowinv))
 	{
 		// to avoid having "so-and-so accepted/declined your inventory offer." messages
 		return ACCEPT_NO;

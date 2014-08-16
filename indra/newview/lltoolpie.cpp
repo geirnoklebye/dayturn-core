@@ -1187,6 +1187,14 @@ BOOL LLToolPie::handleToolTip(S32 local_x, S32 local_y, MASK mask)
 
 	LLViewerObject* hover_object = mHoverPick.getObject();
 	
+//MK
+	// Don't show a tooltip for an object we can't reach or see
+	if (gRRenabled && !gAgent.mRRInterface.canTouchFar (hover_object))
+	{
+		return TRUE;
+	}
+//mk
+
 	// update hover object and hover parcel
 	LLSelectMgr::getInstance()->setHoverObject(hover_object, mHoverPick.mObjectFace);
 	
@@ -1772,6 +1780,7 @@ BOOL LLToolPie::handleRightClickPick()
 			{
 				name = node->mName;
 			}
+			
 			std::string mute_msg;
 			if (LLMuteList::getInstance()->isMuted(object->getID(), name))
 			{
@@ -1781,7 +1790,7 @@ BOOL LLToolPie::handleRightClickPick()
 			{
 				mute_msg = LLTrans::getString("MuteObject2");
 			}
-			
+
 //MK
 			if (gRRenabled)
 			{

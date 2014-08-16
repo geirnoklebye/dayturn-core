@@ -26,9 +26,9 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2090100"
-#define RR_VERSION "2.09.01.0"
-#define RR_SLV_VERSION "3.7.9.32089"
+#define RR_VERSION_NUM "2090200"
+#define RR_VERSION "2.09.02.0"
+#define RR_SLV_VERSION "3.7.14.32726"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -72,6 +72,7 @@
 
 #include "llchat.h"
 #include "llchatbar.h"
+#include "llparcel.h"
 #include "llinventorymodel.h"
 #include "llviewermenu.h"
 #include "llviewerjointattachment.h"
@@ -296,6 +297,7 @@ public:
 	F32 mShowavsDistMax;
 
 	std::string mParcelName; // for convenience (gAgent does not retain the name of the current parcel)
+	LLParcel::ELandingType mParcelLandingType; // for convenience
 
 	static BOOL sRRNoSetEnv;
 	static BOOL sRestrainedLoveDebug;

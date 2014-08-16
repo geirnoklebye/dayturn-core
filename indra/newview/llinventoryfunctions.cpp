@@ -123,11 +123,9 @@ void rename_category(LLInventoryModel* model, const LLUUID& cat_id, const std::s
 				return;
 			}
 
-	LLPointer<LLViewerInventoryCategory> new_cat = new LLViewerInventoryCategory(cat);
-	new_cat->rename(new_name);
-	new_cat->updateServer(FALSE);
-	model->updateCategory(new_cat);
-	model->notifyObservers();
+	LLSD updates;
+	updates["name"] = new_name;
+	update_inventory_category(cat_id, updates, NULL);
 }
 
 void copy_inventory_category(LLInventoryModel* model,
@@ -231,6 +229,21 @@ BOOL get_is_item_worn(const LLUUID& id)
 	if (!item)
 		return FALSE;
 
+//MK
+	// This is to fix, well hide, a weird bug that makes some detached objects show as
+	// "worn on Invalid Attachment Point" instead of being purely detached. But they are
+	// detached, they do not count against MAX_AGENT_ATTACHMENTS, and they do not appear
+	// in the COF. It seems, though, that LLAppearanceMgr::instance().isLinkInCOF(id) returns
+	// TRUE for these objects.
+	if (gAgentAvatarp && item->getType() == LLAssetType::AT_OBJECT)
+	{
+		std::string attachment_point_name = gAgentAvatarp->getAttachedPointName(id);
+		if (attachment_point_name == LLStringUtil::null)
+		{
+			return FALSE;
+		}
+	}
+//mk
 	// Consider the item as worn if it has links in COF.
 	if (LLAppearanceMgr::instance().isLinkInCOF(id))
 	{
@@ -753,6 +766,12 @@ bool LLIsOfAssetType::operator()(LLInventoryCategory* cat, LLInventoryItem* item
 	return FALSE;
 }
 
+bool LLIsValidItemLink::operator()(LLInventoryCategory* cat, LLInventoryItem* item)
+{
+	LLViewerInventoryItem *vitem = dynamic_cast<LLViewerInventoryItem*>(item);
+	if (!vitem) return false;
+	return (vitem->getActualType() == LLAssetType::AT_LINK  && !vitem->getIsBrokenLink());
+}
 bool LLIsTypeWithPermissions::operator()(LLInventoryCategory* cat, LLInventoryItem* item)
 {
 	if(mType == LLAssetType::AT_CATEGORY)
