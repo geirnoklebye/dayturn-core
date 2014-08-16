@@ -235,7 +235,7 @@ BOOL get_is_item_worn(const LLUUID& id)
 	// detached, they do not count against MAX_AGENT_ATTACHMENTS, and they do not appear
 	// in the COF. It seems, though, that LLAppearanceMgr::instance().isLinkInCOF(id) returns
 	// TRUE for these objects.
-	if (gAgentAvatarp)
+	if (gAgentAvatarp && item->getType() == LLAssetType::AT_OBJECT)
 	{
 		std::string attachment_point_name = gAgentAvatarp->getAttachedPointName(id);
 		if (attachment_point_name == LLStringUtil::null)
