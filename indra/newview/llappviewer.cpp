@@ -230,6 +230,9 @@
 
 #include "llviewereventrecorder.h"
 
+//MK
+#include "llappearancemgr.h"
+//mk
 
 // *FIX: These extern globals should be cleaned up.
 // The globals either represent state/config/resource-storage of either 
@@ -367,6 +370,7 @@ const char* const VIEWER_WINDOW_CLASSNAME = "Second Life";
 
 //MK
 const F32 Z_OFFSET_THROTTLE_DELAY = 1.f;	// in seconds
+const F32 OUTFIT_CLEANUP_DELAY = 4.f;	// in seconds
 //mk
 
 //-- LLDeferredTaskList ------------------------------------------------------
@@ -1481,6 +1485,18 @@ bool LLAppViewer::mainLoop()
 						{
 							RRInterface::sLastAvatarZOffsetCommit = -1000.f;
 							gAgentWearables.forceUpdateShape ();
+						}
+					}
+
+					// Let's look at how much time has passed since the last chage to the outfit
+					// and trigger a cleanup if enough time has passed
+					if (RRInterface::sLastOutfitChange > 0.f)
+					{
+						if (gFrameTimeSeconds - RRInterface::sLastOutfitChange > OUTFIT_CLEANUP_DELAY)
+						{
+							RRInterface::sLastOutfitChange = -1000.f;
+							LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
+							LLAppearanceMgr::instance().enforceCOFItemRestrictions (cb);
 						}
 					}
 				}
