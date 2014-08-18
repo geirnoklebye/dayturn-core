@@ -584,7 +584,7 @@ public:
 	static BOOL				sRenderDeferred;
 	static BOOL             sMemAllocationThrottled;
 	static S32				sVisibleLightCount;
-	static F32				sMinRenderSize;
+	static F32				sMinRenderSize;	
 	static BOOL				sRenderingHUDs;
 
 	static LLTrace::EventStatHandle<S64> sStatBatchSize;

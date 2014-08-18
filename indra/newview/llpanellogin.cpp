@@ -414,17 +414,17 @@ void LLPanelLogin::showLoginWidgets()
 {
 	if (sInstance)
 	{
-		// *NOTE: Mani - This may or may not be obselete code.
-		// It seems to be part of the defunct? reg-in-client project.
-		sInstance->getChildView("login_widgets")->setVisible( true);
-		LLMediaCtrl* web_browser = sInstance->getChild<LLMediaCtrl>("login_html");
-		sInstance->reshapeBrowser();
-		// *TODO: Append all the usual login parameters, like first_login=Y etc.
-		std::string splash_screen_url = LLGridManager::getInstance()->getLoginPage();
+	// *NOTE: Mani - This may or may not be obselete code.
+	// It seems to be part of the defunct? reg-in-client project.
+	sInstance->getChildView("login_widgets")->setVisible( true);
+	LLMediaCtrl* web_browser = sInstance->getChild<LLMediaCtrl>("login_html");
+	sInstance->reshapeBrowser();
+	// *TODO: Append all the usual login parameters, like first_login=Y etc.
+	std::string splash_screen_url = LLGridManager::getInstance()->getLoginPage();
 		web_browser->navigateTo( splash_screen_url, HTTP_CONTENT_TEXT_HTML );
-		LLUICtrl* username_combo = sInstance->getChild<LLUICtrl>("username_combo");
-		username_combo->setFocus(TRUE);
-	}
+	LLUICtrl* username_combo = sInstance->getChild<LLUICtrl>("username_combo");
+	username_combo->setFocus(TRUE);
+}
 }
 
 // static
@@ -636,20 +636,37 @@ void LLPanelLogin::updateLocationSelectorsVisibility()
 	if (sInstance) 
 	{
 		BOOL show_start = gSavedSettings.getBOOL("ShowStartLocation");
-		sInstance->getChild<LLLayoutPanel>("start_location_panel")->setVisible(show_start);
+//MK
+		if (gSavedSettings.getBOOL("RestrainedLove"))
+		{
+			// sInstance->getChild<LLLayoutPanel>("start_location_panel")->setVisible(show_start);
+			// Force to "My last location"
+			LLComboBox* combo = sInstance->getChild<LLComboBox>("start_location_combo");
+			combo->setCurrentByIndex( 0 );
 
+			// Simulate a callback on this combo to take the change into account
+			std::string location = combo->getValue().asString();
+			LLStartUp::setStartSLURL(location); // calls onUpdateStartSLURL, above 
+
+			// Hide the combo
+			show_start = FALSE;
+		}
+//mk
+	
+		sInstance->getChild<LLLayoutPanel>("start_location_panel")->setVisible(show_start);
+	
 		BOOL show_server = gSavedSettings.getBOOL("ForceShowGrid");
 		sInstance->getChild<LLLayoutPanel>("grid_panel")->setVisible(show_server);
-	}	
+	}
 }
 
 // static - called from LLStartUp::setStartSLURL
 void LLPanelLogin::onUpdateStartSLURL(const LLSLURL& new_start_slurl)
 {
 	if (!sInstance) return;
-
+	
 	LL_DEBUGS("AppInit")<<new_start_slurl.asString()<<LL_ENDL;
-
+	
 	LLComboBox* location_combo = sInstance->getChild<LLComboBox>("start_location_combo");
 	/*
 	 * Determine whether or not the new_start_slurl modifies the grid.
@@ -667,9 +684,9 @@ void LLPanelLogin::onUpdateStartSLURL(const LLSLURL& new_start_slurl)
 	  {
 		std::string slurl_grid = LLGridManager::getInstance()->getGrid(new_start_slurl.getGrid());
 		if ( ! slurl_grid.empty() ) // is that a valid grid?
-		{
+	{
 			if ( slurl_grid != LLGridManager::getInstance()->getGrid() ) // new grid?
-			{
+		{
 				// the slurl changes the grid, so update everything to match
 				LLGridManager::getInstance()->setGridChoice(slurl_grid);
 
@@ -679,7 +696,7 @@ void LLPanelLogin::onUpdateStartSLURL(const LLSLURL& new_start_slurl)
 				server_combo->setSimple(server_label);
 
 				updateServer(); // to change the links and splash screen
-			}
+		}			
 			location_combo->setTextEntry(new_start_slurl.getLocationString());
 		}
 		else
@@ -688,8 +705,8 @@ void LLPanelLogin::onUpdateStartSLURL(const LLSLURL& new_start_slurl)
 			LLNotificationsUtil::add("InvalidLocationSLURL");
 			LL_WARNS("AppInit")<<"invalid LoginLocation:"<<new_start_slurl.asString()<<LL_ENDL;
 			location_combo->setTextEntry(LLStringUtil::null);
-		}
-	  }
+		}			
+	}
  	break;
 
 	case LLSLURL::HOME_LOCATION:
@@ -704,7 +721,7 @@ void LLPanelLogin::onUpdateStartSLURL(const LLSLURL& new_start_slurl)
 		LL_WARNS("AppInit")<<"invalid login slurl, using home"<<LL_ENDL;
 		location_combo->setCurrentByIndex(1); // home location
 		break;
-	}
+}
 }
 
 void LLPanelLogin::setLocation(const LLSLURL& slurl)
@@ -730,13 +747,13 @@ void LLPanelLogin::setAlwaysRefresh(bool refresh)
 {
 	if (sInstance && LLStartUp::getStartupState() < STATE_LOGIN_CLEANUP)
 	{
-		LLMediaCtrl* web_browser = sInstance->getChild<LLMediaCtrl>("login_html");
+	LLMediaCtrl* web_browser = sInstance->getChild<LLMediaCtrl>("login_html");
 
-		if (web_browser)
-		{
-			web_browser->setAlwaysRefresh(refresh);
-		}
+	if (web_browser)
+	{
+		web_browser->setAlwaysRefresh(refresh);
 	}
+}
 }
 
 
@@ -825,7 +842,7 @@ void LLPanelLogin::onClickConnect(void *)
 		// The start location SLURL has already been sent to LLStartUp::setStartSLURL
 
 		std::string username = sInstance->getChild<LLUICtrl>("username_combo")->getValue().asString();
-		
+
 		if(username.empty())
 		{
 			// user must type in something into the username field
@@ -906,7 +923,7 @@ void LLPanelLogin::onPassKey(LLLineEditor* caller, void* user_data)
 	This->mPasswordModified = TRUE;
 	if (gKeyboard->getKeyDown(KEY_CAPSLOCK) && sCapslockDidNotification == FALSE)
 	{
-		// *TODO: use another way to notify user about enabled caps lock, see EXT-6858
+// *TODO: use another way to notify user about enabled caps lock, see EXT-6858
 		sCapslockDidNotification = TRUE;
 	}
 }
@@ -916,38 +933,37 @@ void LLPanelLogin::updateServer()
 {
 	if (sInstance)
 	{
-		try 
-		{
-			// if they've selected another grid, we should load the credentials
-			// for that grid and set them to the UI.
+	try 
+	{
+		// if they've selected another grid, we should load the credentials
+		// for that grid and set them to the UI.
 			if(!sInstance->areCredentialFieldsDirty())
-			{
-				LLPointer<LLCredential> credential = gSecAPIHandler->loadCredential(LLGridManager::getInstance()->getGrid());	
-				bool remember = sInstance->getChild<LLUICtrl>("remember_check")->getValue();
-				sInstance->setFields(credential, remember);
-			}
+		{
+			LLPointer<LLCredential> credential = gSecAPIHandler->loadCredential(LLGridManager::getInstance()->getGrid());	
+			bool remember = sInstance->getChild<LLUICtrl>("remember_check")->getValue();
+			sInstance->setFields(credential, remember);
+		}
 
 			// update the login panel links 
 			bool system_grid = LLGridManager::getInstance()->isSystemGrid();
-
+	
 			// Want to vanish not only create_new_account_btn, but also the
 			// title text over it, so turn on/off the whole layout_panel element.
 			sInstance->getChild<LLLayoutPanel>("links")->setVisible(system_grid);
-			sInstance->getChildView("forgot_password_text")->setVisible(system_grid);
-
-			// grid changed so show new splash screen (possibly)
-			loadLoginPage();
-		}
-		catch (LLInvalidGridName ex)
-		{
+			sInstance->getChildView("forgot_password_text")->setVisible( system_grid);
+		// grid changed so show new splash screen (possibly)
+		loadLoginPage();
+	}
+	catch (LLInvalidGridName ex)
+	{
 			LL_WARNS("AppInit")<<"server '"<<ex.name()<<"' selection failed"<<LL_ENDL;
 			LLSD args;
 			args["GRID"] = ex.name();
 			LLNotificationsUtil::add("InvalidGrid", args);	
-			return;
+		return;	
+	}
 		}
 	}
-}
 
 void LLPanelLogin::onSelectServer()
 {
@@ -978,15 +994,15 @@ void LLPanelLogin::onSelectServer()
 	case 1: // home location
 		// do nothing - these are grid-agnostic locations
 		break;
-		
+	
 	default:
-		{
+{
 			std::string location = location_combo->getValue().asString();
 			LLSLURL slurl(location); // generata a slurl from the location combo contents
 			if (   slurl.getType() == LLSLURL::LOCATION
 				&& slurl.getGrid() != LLGridManager::getInstance()->getGrid()
 				)
-			{
+	{
 				// the grid specified by the location is not this one, so clear the combo
 				location_combo->setCurrentByIndex(0); // last location on the new grid
 				location_combo->setTextEntry(LLStringUtil::null);
@@ -1003,6 +1019,6 @@ void LLPanelLogin::onLocationSLURL()
 	LLComboBox* location_combo = getChild<LLComboBox>("start_location_combo");
 	std::string location = location_combo->getValue().asString();
 	LL_DEBUGS("AppInit")<<location<<LL_ENDL;
-
+	
 	LLStartUp::setStartSLURL(location); // calls onUpdateStartSLURL, above 
 }

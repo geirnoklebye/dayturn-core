@@ -115,7 +115,6 @@ void LLDrawPoolAlpha::beginPostDeferredPass(S32 pass)
 		fullbright_shader->uniform1f(LLShaderMgr::TEXTURE_GAMMA, 2.2f); 
 		fullbright_shader->uniform1f(LLShaderMgr::DISPLAY_GAMMA, (gamma > 0.1f) ? 1.0f / gamma : (1.0f/2.2f));
 		fullbright_shader->unbind();
-
 		//prime simple shader (loads shadow relevant uniforms)
 		gPipeline.bindDeferredShader(*simple_shader);
 
@@ -234,7 +233,7 @@ void LLDrawPoolAlpha::render(S32 pass)
 	{
 		gGL.setColorMask(true, true);
 	}
-	
+
 	bool write_depth = LLDrawPoolWater::sSkipScreenCopy
 						 || (deferred_render && pass == 1)
 						 // we want depth written so that rendered alpha will
@@ -257,15 +256,15 @@ void LLDrawPoolAlpha::render(S32 pass)
 
 		if (mVertexShaderLevel > 0)
 		{
-			if (LLPipeline::sImpostorRender)
-			{
+		if (LLPipeline::sImpostorRender)
+		{
 				fullbright_shader->bind();
 				fullbright_shader->setMinimumAlpha(0.5f);
 				simple_shader->bind();
 				simple_shader->setMinimumAlpha(0.5f);
-			}				
-			else
-			{
+		}
+		else
+		{
 				fullbright_shader->bind();
 				fullbright_shader->setMinimumAlpha(0.f);
 				simple_shader->bind();
@@ -600,7 +599,7 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 					emissive_shader->bind();
 					
 					params.mVertexBuffer->setBuffer((mask & ~LLVertexBuffer::MAP_COLOR) | LLVertexBuffer::MAP_EMISSIVE);
-					
+
 					// do the actual drawing, again
 					params.mVertexBuffer->drawRange(params.mDrawMode, params.mStart, params.mEnd, params.mCount, params.mOffset);
 					gPipeline.addTrianglesDrawn(params.mCount, params.mDrawMode);

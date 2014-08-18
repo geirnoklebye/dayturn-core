@@ -1014,9 +1014,9 @@ void create_gesture_cb(const LLUUID& inv_item)
 {
 	if (!inv_item.isNull())
 	{
-		LLGestureMgr::instance().activateGesture(inv_item);
+	LLGestureMgr::instance().activateGesture(inv_item);
 	
-		LLViewerInventoryItem* item = gInventory.getItem(inv_item);
+	LLViewerInventoryItem* item = gInventory.getItem(inv_item);
 		if (item)
 		{
 			LLPermissions perm = item->getPermissions();
@@ -1026,13 +1026,13 @@ void create_gesture_cb(const LLUUID& inv_item)
 			item->setPermissions(perm);
 
 			item->updateServer(FALSE);
-			gInventory.updateItem(item);
-			gInventory.notifyObservers();
+    gInventory.updateItem(item);
+    gInventory.notifyObservers();
 
-			LLPreviewGesture* preview = LLPreviewGesture::show(inv_item,  LLUUID::null);
-			// Force to be entirely onscreen.
-			gFloaterView->adjustToFitScreen(preview, FALSE);
-		}
+	LLPreviewGesture* preview = LLPreviewGesture::show(inv_item,  LLUUID::null);
+	// Force to be entirely onscreen.
+	gFloaterView->adjustToFitScreen(preview, FALSE);
+}
 	}
 }
 
@@ -1770,7 +1770,7 @@ void create_new_item(const std::string& name,
 	next_owner_perm = (next_owner_perm) ? next_owner_perm : PERM_MOVE | PERM_TRANSFER;
 
 	LLPointer<LLInventoryCallback> cb = NULL;
-
+	
 	switch (inv_type)
 	{
 		case LLInventoryType::IT_LSL:
@@ -1781,14 +1781,14 @@ void create_new_item(const std::string& name,
 		}
 
 		case LLInventoryType::IT_GESTURE:
-		{
+	{
 			cb = new LLBoostFuncInventoryCallback(create_gesture_cb);
 			next_owner_perm = LLFloaterPerms::getNextOwnerPerms("Gestures");
 			break;
-		}
+	}
 
 		case LLInventoryType::IT_NOTECARD:
-		{
+	{
 			cb = new LLBoostFuncInventoryCallback(create_notecard_cb);
 			next_owner_perm = LLFloaterPerms::getNextOwnerPerms("Notecards");
 			break;
@@ -1796,7 +1796,7 @@ void create_new_item(const std::string& name,
 		default:
 			break;
 	}
-
+	
 	create_inventory_item(gAgent.getID(),
 						  gAgent.getSessionID(),
 						  parent_id,

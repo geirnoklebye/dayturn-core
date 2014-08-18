@@ -171,7 +171,6 @@ LLGLSLShader		gImpostorProgram;
 LLGLSLShader			gWLSkyProgram;
 LLGLSLShader			gWLCloudProgram;
 
-
 // Effects Shaders
 LLGLSLShader			gGlowProgram;
 LLGLSLShader			gGlowExtractProgram;
@@ -418,7 +417,7 @@ void LLViewerShaderMgr::setShaders()
 	
 	//setup preprocessor definitions
 	LLShaderMgr::instance()->mDefinitions["NUM_TEX_UNITS"] = llformat("%d", gGLManager.mNumTextureImageUnits);
-	
+
 	// Make sure the compiled shader map is cleared before we recompile shaders.
 	mShaderObjects.clear();
 	
@@ -488,9 +487,9 @@ void LLViewerShaderMgr::setShaders()
 			gSavedSettings.getBOOL("WindLightUseAtmosShaders"))
 		{
 			if (gSavedSettings.getS32("RenderShadowDetail") > 0)
-			{ //shadows
-				deferred_class = 2;
-			}
+				{ //shadows
+					deferred_class = 2;
+				}
 			else
 			{ //no shadows
 				deferred_class = 1;
@@ -512,7 +511,7 @@ void LLViewerShaderMgr::setShaders()
 			wl_class = 1;
 		}
 
-		
+
 		// Trigger a full rebuild of the fallback skybox / cubemap if we've toggled windlight shaders
 		if (mVertexShaderLevel[SHADER_WINDLIGHT] != wl_class && gSky.mVOSkyp.notNull())
 		{
@@ -866,7 +865,7 @@ BOOL LLViewerShaderMgr::loadBasicShaders()
 	shaders.push_back( make_pair( "avatar/objectSkinV.glsl",				1 ) );
 	if (gGLManager.mGLSLVersionMajor >= 2 || gGLManager.mGLSLVersionMinor >= 30)
 	{
-		shaders.push_back( make_pair( "objects/indexedTextureV.glsl",			1 ) );
+	shaders.push_back( make_pair( "objects/indexedTextureV.glsl",			1 ) );
 	}
 	shaders.push_back( make_pair( "objects/nonindexedTextureV.glsl",		1 ) );
 
@@ -1174,7 +1173,7 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 
 	if (success)
 	{
-		gDeferredDiffuseProgram.mName = "Deferred Diffuse Shader";
+		gDeferredDiffuseProgram.mName = "Deferred Diffuse Shader";		
 		gDeferredDiffuseProgram.mShaderFiles.clear();
 		gDeferredDiffuseProgram.mShaderFiles.push_back(make_pair("deferred/diffuseV.glsl", GL_VERTEX_SHADER_ARB));
 		gDeferredDiffuseProgram.mShaderFiles.push_back(make_pair("deferred/diffuseIndexedF.glsl", GL_FRAGMENT_SHADER_ARB));
@@ -1404,7 +1403,7 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 	}
 
 	if (success)
-	{		
+	{
 		gDeferredLightProgram.mName = "Deferred Light Shader";
 		gDeferredLightProgram.mShaderFiles.clear();
 		gDeferredLightProgram.mShaderFiles.push_back(make_pair("deferred/pointLightV.glsl", GL_VERTEX_SHADER_ARB));
@@ -1416,8 +1415,8 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 
 	for (U32 i = 0; i < LL_DEFERRED_MULTI_LIGHT_COUNT; i++)
 	{
-	if (success)
-	{
+		if (success)
+		{
 			gDeferredMultiLightProgram[i].mName = llformat("Deferred MultiLight Shader %d", i);
 			gDeferredMultiLightProgram[i].mShaderFiles.clear();
 			gDeferredMultiLightProgram[i].mShaderFiles.push_back(make_pair("deferred/multiPointLightV.glsl", GL_VERTEX_SHADER_ARB));
@@ -1457,16 +1456,16 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 
 		if (gSavedSettings.getBOOL("RenderDeferredSSAO"))
 		{
-			fragment = "deferred/sunLightSSAOF.glsl";
-		}
-		else
-		{
-			fragment = "deferred/sunLightF.glsl";
+				fragment = "deferred/sunLightSSAOF.glsl";
+			}
+			else
+			{
+				fragment = "deferred/sunLightF.glsl";
 			if (mVertexShaderLevel[SHADER_DEFERRED] == 1)
 			{ //no shadows, no SSAO, no frag coord
 				vertex = "deferred/sunLightNoFragCoordV.glsl";
 			}
-		}
+			}
 
 		gDeferredSunProgram.mName = "Deferred Sun Shader";
 		gDeferredSunProgram.mShaderFiles.clear();
@@ -1903,10 +1902,10 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 		gFXAAProgram.mShaderFiles.push_back(make_pair("deferred/fxaaF.glsl", GL_FRAGMENT_SHADER_ARB));
 		gFXAAProgram.mShaderLevel = mVertexShaderLevel[SHADER_DEFERRED];
 		success = gFXAAProgram.createShader(NULL, NULL);
-	}
+		}
 
 	if (success)
-	{
+		{
 		gDeferredPostProgram.mName = "Deferred Post Shader";
 		gDeferredPostProgram.mShaderFiles.clear();
 		gDeferredPostProgram.mShaderFiles.push_back(make_pair("deferred/postDeferredNoTCV.glsl", GL_VERTEX_SHADER_ARB));
@@ -1923,17 +1922,17 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 		gDeferredCoFProgram.mShaderFiles.push_back(make_pair("deferred/cofF.glsl", GL_FRAGMENT_SHADER_ARB));
 		gDeferredCoFProgram.mShaderLevel = mVertexShaderLevel[SHADER_DEFERRED];
 		success = gDeferredCoFProgram.createShader(NULL, NULL);
-	}
+		}
 
 	if (success)
-	{
+		{
 		gDeferredDoFCombineProgram.mName = "Deferred DoFCombine Shader";
 		gDeferredDoFCombineProgram.mShaderFiles.clear();
 		gDeferredDoFCombineProgram.mShaderFiles.push_back(make_pair("deferred/postDeferredNoTCV.glsl", GL_VERTEX_SHADER_ARB));
 		gDeferredDoFCombineProgram.mShaderFiles.push_back(make_pair("deferred/dofCombineF.glsl", GL_FRAGMENT_SHADER_ARB));
 		gDeferredDoFCombineProgram.mShaderLevel = mVertexShaderLevel[SHADER_DEFERRED];
 		success = gDeferredDoFCombineProgram.createShader(NULL, NULL);
-	}
+		}
 
 	if (success)
 	{
@@ -1979,8 +1978,8 @@ BOOL LLViewerShaderMgr::loadShadersDeferred()
 		success = gDeferredStarProgram.createShader(NULL, NULL);
 	}
 
-	if (success)
-	{
+		if (success)
+		{
 		gNormalMapGenProgram.mName = "Normal Map Generation Program";
 		gNormalMapGenProgram.mShaderFiles.clear();
 		gNormalMapGenProgram.mShaderFiles.push_back(make_pair("deferred/normgenV.glsl", GL_VERTEX_SHADER_ARB));
@@ -2426,7 +2425,7 @@ BOOL LLViewerShaderMgr::loadShadersObject()
 		gObjectSimpleProgram.mShaderLevel = mVertexShaderLevel[SHADER_OBJECT];
 		success = gObjectSimpleProgram.createShader(NULL, NULL);
 	}
-
+	
 	if (success)
 	{
 		gObjectSimpleImpostorProgram.mName = "Simple Impostor Shader";
@@ -2479,6 +2478,7 @@ BOOL LLViewerShaderMgr::loadShadersObject()
 		gObjectBumpProgram.mShaderFiles.push_back(make_pair("objects/bumpF.glsl", GL_FRAGMENT_SHADER_ARB));
 		gObjectBumpProgram.mShaderLevel = mVertexShaderLevel[SHADER_OBJECT];
 		success = gObjectBumpProgram.createShader(NULL, NULL);
+
 		if (success)
 		{ //lldrawpoolbump assumes "texture0" has channel 0 and "texture1" has channel 1
 			gObjectBumpProgram.bind();
@@ -2523,7 +2523,7 @@ BOOL LLViewerShaderMgr::loadShadersObject()
 		gObjectSimpleWaterAlphaMaskProgram.mShaderGroup = LLGLSLShader::SG_WATER;
 		success = gObjectSimpleWaterAlphaMaskProgram.createShader(NULL, NULL);
 	}
-
+	
 	if (success)
 	{
 		gObjectFullbrightProgram.mName = "Fullbright Shader";

@@ -786,6 +786,13 @@ void LLFloaterIMPanel::sendMsg()
 	if (mInputEditor)
 	{
 		LLWString text = mInputEditor->getConvertedText();
+//MK
+		if (gRRenabled && gAgent.mRRInterface.containsWithoutException ("sendim", mOtherParticipantUUID.asString()))
+		{
+			// user is forbidden to send IMs and the receiver is no exception
+			text = utf8str_to_wstring("*** IM blocked by sender's viewer"); // signal both the sender and the receiver
+		}
+//mk
 		if(!text.empty())
 		{
 			// store sent line in history, duplicates will get filtered

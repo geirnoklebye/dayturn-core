@@ -1424,6 +1424,9 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					coloru.mV[3] = 255 - coloru.mV[3];
 					mText->setColor(LLColor4(coloru));
 					mText->setString(temp_string);
+//MK
+					mText->mLastMessageText = temp_string;
+//mk
 
 					setChanged(MOVED | SILHOUETTE);
 				}
@@ -1804,6 +1807,9 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					coloru.mV[3] = 255 - coloru.mV[3];
 					mText->setColor(LLColor4(coloru));
 					mText->setString(temp_string);
+//MK
+					mText->mLastMessageText = temp_string;
+//mk
 
 					setChanged(TEXTURE);
 				}

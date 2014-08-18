@@ -44,20 +44,24 @@
 #include "llhudeffectlookat.h"
 #include "llagentcamera.h"
 
+//MK
+#include "llvoavatarself.h"
+//mk
+
 LLAgentListener::LLAgentListener(LLAgent &agent)
   : LLEventAPI("LLAgent",
                "LLAgent listener to (e.g.) teleport, sit, stand, etc."),
     mAgent(agent)
 {
-    add("requestTeleport",
+	add("requestTeleport",
         "Teleport: [\"regionname\"], [\"x\"], [\"y\"], [\"z\"]\n"
         "If [\"skip_confirmation\"] is true, use LLURLDispatcher rather than LLCommandDispatcher.",
         &LLAgentListener::requestTeleport);
-    add("requestSit",
+	add("requestSit",
 		"[\"obj_uuid\"]: id of object to sit on, use this or [\"position\"] to indicate the sit target"
 		"[\"position\"]: region position {x, y, z} where to find closest object to sit on",
         &LLAgentListener::requestSit);
-    add("requestStand",
+	add("requestStand",
         "Ask to stand up",
         &LLAgentListener::requestStand);
     add("requestTouch",
@@ -141,32 +145,32 @@ LLAgentListener::LLAgentListener(LLAgent &agent)
 
 void LLAgentListener::requestTeleport(LLSD const & event_data) const
 {
-    if(event_data["skip_confirmation"].asBoolean())
-    {
-        LLSD params(LLSD::emptyArray());
-        params.append(event_data["regionname"]);
-        params.append(event_data["x"]);
-        params.append(event_data["y"]);
-        params.append(event_data["z"]);
-        LLCommandDispatcher::dispatch("teleport", params, LLSD(), NULL, "clicked", true);
-        // *TODO - lookup other LLCommandHandlers for "agent", "classified", "event", "group", "floater", "parcel", "login", login_refresh", "balance", "chat"
-        // should we just compose LLCommandHandler and LLDispatchListener?
-    }
-    else
-    {
-        std::string url = LLSLURL(event_data["regionname"], 
-                                  LLVector3(event_data["x"].asReal(), 
-                                            event_data["y"].asReal(), 
-                                            event_data["z"].asReal())).getSLURLString();
-        LLURLDispatcher::dispatch(url, "clicked", NULL, false);
-    }
+	if(event_data["skip_confirmation"].asBoolean())
+	{
+		LLSD params(LLSD::emptyArray());
+		params.append(event_data["regionname"]);
+		params.append(event_data["x"]);
+		params.append(event_data["y"]);
+		params.append(event_data["z"]);
+		LLCommandDispatcher::dispatch("teleport", params, LLSD(), NULL, "clicked", true);
+		// *TODO - lookup other LLCommandHandlers for "agent", "classified", "event", "group", "floater", "parcel", "login", login_refresh", "balance", "chat"
+		// should we just compose LLCommandHandler and LLDispatchListener?
+	}
+	else
+	{
+		std::string url = LLSLURL(event_data["regionname"], 
+								  LLVector3(event_data["x"].asReal(), 
+											event_data["y"].asReal(), 
+											event_data["z"].asReal())).getSLURLString();
+		LLURLDispatcher::dispatch(url, "clicked", NULL, false);
+	}
 }
 
 void LLAgentListener::requestSit(LLSD const & event_data) const
 {
-    //mAgent.getAvatarObject()->sitOnObject();
-    // shamelessly ripped from llviewermenu.cpp:handle_sit_or_stand()
-    // *TODO - find a permanent place to share this code properly.
+	//mAgent.getAvatarObject()->sitOnObject();
+	// shamelessly ripped from llviewermenu.cpp:handle_sit_or_stand()
+	// *TODO - find a permanent place to share this code properly.
 
 	LLViewerObject *object = NULL;
 	if (event_data.has("obj_uuid"))
@@ -180,17 +184,24 @@ void LLAgentListener::requestSit(LLSD const & event_data) const
 	}
 
     if (object && object->getPCode() == LL_PCODE_VOLUME)
-    {
-        gMessageSystem->newMessageFast(_PREHASH_AgentRequestSit);
-        gMessageSystem->nextBlockFast(_PREHASH_AgentData);
-        gMessageSystem->addUUIDFast(_PREHASH_AgentID, mAgent.getID());
-        gMessageSystem->addUUIDFast(_PREHASH_SessionID, mAgent.getSessionID());
-        gMessageSystem->nextBlockFast(_PREHASH_TargetObject);
-        gMessageSystem->addUUIDFast(_PREHASH_TargetID, object->mID);
-        gMessageSystem->addVector3Fast(_PREHASH_Offset, LLVector3(0,0,0));
+	{
+//MK
+		if (gRRenabled && gAgentAvatarp && !gAgentAvatarp->mIsSitting)
+		{
+			// We are now standing, and we want to sit down => store our current location so that we can snap back here when we stand up, if under @standtp
+			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+		}
+//mk
+		gMessageSystem->newMessageFast(_PREHASH_AgentRequestSit);
+		gMessageSystem->nextBlockFast(_PREHASH_AgentData);
+		gMessageSystem->addUUIDFast(_PREHASH_AgentID, mAgent.getID());
+		gMessageSystem->addUUIDFast(_PREHASH_SessionID, mAgent.getSessionID());
+		gMessageSystem->nextBlockFast(_PREHASH_TargetObject);
+		gMessageSystem->addUUIDFast(_PREHASH_TargetID, object->mID);
+		gMessageSystem->addVector3Fast(_PREHASH_Offset, LLVector3(0,0,0));
 
-        object->getRegion()->sendReliableMessage();
-    }
+		object->getRegion()->sendReliableMessage();
+	}
 	else
 	{
 		LL_WARNS() << "LLAgent requestSit could not find the sit target: " 
@@ -201,8 +212,23 @@ void LLAgentListener::requestSit(LLSD const & event_data) const
 void LLAgentListener::requestStand(LLSD const & event_data) const
 {
     mAgent.setControlFlags(AGENT_CONTROL_STAND_UP);
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit)
+	{
+		return;
+	}
+	gAgent.setFlying(FALSE);
+//mk
+	mAgent.setControlFlags(AGENT_CONTROL_STAND_UP);
+//MK
+	if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
+	{
+		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
+		gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
+		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
+	}
+//mk
 }
-
 
 LLViewerObject * LLAgentListener::findObjectClosestTo( const LLVector3 & position ) const
 {

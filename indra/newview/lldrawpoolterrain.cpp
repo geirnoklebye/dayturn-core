@@ -327,6 +327,13 @@ void LLDrawPoolTerrain::drawLoop()
 
 void LLDrawPoolTerrain::renderFullShader()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		renderSimple();
+		return;
+	}
+//mk
 	// Hack! Get the region that this draw pool is rendering from!
 	LLViewerRegion *regionp = mDrawFace[0]->getDrawable()->getVObj()->getRegion();
 	LLVLComposition *compp = regionp->getComposition();
@@ -456,6 +463,13 @@ void LLDrawPoolTerrain::renderFullShader()
 
 void LLDrawPoolTerrain::renderFull4TU()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		renderSimple();
+		return;
+	}
+//mk
 	// Hack! Get the region that this draw pool is rendering from!
 	LLViewerRegion *regionp = mDrawFace[0]->getDrawable()->getVObj()->getRegion();
 	LLVLComposition *compp = regionp->getComposition();
@@ -658,6 +672,13 @@ void LLDrawPoolTerrain::renderFull4TU()
 
 void LLDrawPoolTerrain::renderFull2TU()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		renderSimple();
+		return;
+	}
+//mk
 	// Hack! Get the region that this draw pool is rendering from!
 	LLViewerRegion *regionp = mDrawFace[0]->getDrawable()->getVObj()->getRegion();
 	LLVLComposition *compp = regionp->getComposition();
@@ -855,6 +876,16 @@ void LLDrawPoolTerrain::renderSimple()
 
 	gGL.getTexUnit(0)->activate();
 	gGL.getTexUnit(0)->enable(LLTexUnit::TT_TEXTURE);
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		gGL.getTexUnit(0)->bind(LLViewerFetchedTexture::sDefaultImagep);
+		gGL.getTexUnit(1)->bind(LLViewerFetchedTexture::sDefaultImagep);
+		gGL.getTexUnit(2)->bind(LLViewerFetchedTexture::sDefaultImagep);
+		gGL.getTexUnit(3)->bind(LLViewerFetchedTexture::sDefaultImagep);
+	}
+	else
+//mk
 	gGL.getTexUnit(0)->bind(mTexturep);
 	
 	LLVector3 origin_agent = mDrawFace[0]->getDrawable()->getVObj()->getRegion()->getOriginAgent();

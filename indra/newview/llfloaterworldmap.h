@@ -105,6 +105,9 @@ public:
 
 	// teleport to the tracked item, if there is one
 	void			teleport();
+//MK
+    /*virtual*/ void    open();
+//mk
 	void			onChangeMaturity();
 	
 	

@@ -56,7 +56,21 @@ enum ECameraPreset
 	CAMERA_PRESET_FRONT_VIEW, 
 
 	/** "Above and to the left, over the shoulder, pulled back a little on the zoom" */
-	CAMERA_PRESET_GROUP_VIEW
+	CAMERA_PRESET_GROUP_VIEW,
+
+	/** "Above, top down view" S21*/
+	CAMERA_PRESET_TOPDOWN_VIEW,
+
+	/** "Front, FPS view" S21*/
+	CAMERA_PRESET_FPS_VIEW
+
+//MK
+	// More camera presets, and add the number at the end
+	, CAMERA_PRESET_RIGHT_VIEW
+	, CAMERA_PRESET_LEFT_VIEW
+
+	, CAMERA_PRESET_NB
+//mk
 };
 
 //------------------------------------------------------------------------

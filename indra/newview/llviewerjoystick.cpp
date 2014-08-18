@@ -327,6 +327,9 @@ void LLViewerJoystick::handleRun(F32 inc)
 		{
 			++mJoystickRun;
 			gAgent.setRunning();
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsRun) gAgent.clearRunning();
+//mk
 			gAgent.sendWalkRun(gAgent.getRunning());
 		}
 		else if (0 == mJoystickRun)
@@ -352,6 +355,10 @@ void LLViewerJoystick::handleRun(F32 inc)
 // -----------------------------------------------------------------------------
 void LLViewerJoystick::agentJump()
 {
+//MK
+	//if (gRRenabled && gAgent.mRRInterface.mContainsMoveUp) {}
+	//else
+//mk
     gAgent.moveUp(1);
 }
 
@@ -360,10 +367,18 @@ void LLViewerJoystick::agentSlide(F32 inc)
 {
 	if (inc < 0.f)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveStrafeRight) {}
+		//else
+//mk
 		gAgent.moveLeft(1);
 	}
 	else if (inc > 0.f)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveStrafeLeft) {}
+		//else
+//mk
 		gAgent.moveLeft(-1);
 	}
 }
@@ -373,10 +388,18 @@ void LLViewerJoystick::agentPush(F32 inc)
 {
 	if (inc < 0.f)                            // forward
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveForward) {}
+		//else
+//mk
 		gAgent.moveAt(1, false);
 	}
 	else if (inc > 0.f)                       // backward
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveBackward) {}
+		//else
+//mk
 		gAgent.moveAt(-1, false);
 	}
 }
@@ -393,11 +416,19 @@ void LLViewerJoystick::agentFly(F32 inc)
 		{
 			gAgent.setFlying(true);
 		}
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveUp) {}
+		//else
+//mk
 		gAgent.moveUp(1);
 	}
 	else if (inc > 0.f)
 	{
 		// crouch
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveDown) {}
+		//else
+//mk
 		gAgent.moveUp(-1);
 	}
 }
@@ -407,10 +438,18 @@ void LLViewerJoystick::agentPitch(F32 pitch_inc)
 {
 	if (pitch_inc < 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnUp) {}
+		//else
+//mk
 		gAgent.setControlFlags(AGENT_CONTROL_PITCH_POS);
 	}
 	else if (pitch_inc > 0)
 	{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnDown) {}
+		//else
+//mk
 		gAgent.setControlFlags(AGENT_CONTROL_PITCH_NEG);
 	}
 	
@@ -429,10 +468,18 @@ void LLViewerJoystick::agentYaw(F32 yaw_inc)
 	{
 		if (yaw_inc < 0)
 		{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnRight) {}
+		//else
+//mk
 			gAgent.setControlFlags(AGENT_CONTROL_YAW_POS);
 		}
 		else if (yaw_inc > 0)
 		{
+//MK
+		//if (gRRenabled && gAgent.mRRInterface.mContainsMoveTurnLeft) {}
+		//else
+//mk
 			gAgent.setControlFlags(AGENT_CONTROL_YAW_NEG);
 		}
 
@@ -623,6 +670,10 @@ void LLViewerJoystick::moveAvatar(bool reset)
 		{
 			if (!gAgent.getFlying())
 			{
+//MK
+				//if (gRRenabled && gAgent.mRRInterface.mContainsMoveUp) {}
+				//else
+//mk
 				gAgent.moveUp(1);
 			}
 			else if (!button_held)
@@ -993,6 +1044,14 @@ bool LLViewerJoystick::toggleFlycam()
 		return false;
 	}
 
+//MK
+	// Don't allow it if our camera distance is restricted
+	if (gRRenabled && gAgent.mRRInterface.mCamDistMax < EXTREMUM * 0.75f)
+	{
+		mOverrideCamera = false;
+		return false;
+	}
+//mk
 	if (!mOverrideCamera)
 	{
 		gAgentCamera.changeCameraToDefault();
