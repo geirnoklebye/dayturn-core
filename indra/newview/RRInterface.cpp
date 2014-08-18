@@ -87,6 +87,7 @@ std::string RRInterface::sRecvimMessage = "The Resident you messaged is prevente
 std::string RRInterface::sSendimMessage = "*** IM blocked by sender's viewer";
 std::string RRInterface::sBlacklist = "";
 F32 RRInterface::sLastAvatarZOffsetCommit = 1.f;
+F32 RRInterface::sLastOutfitChange = -1000.f;
 U32 RRInterface::mCamDistNbGradients = 10;
 
 
@@ -547,7 +548,7 @@ RRInterface::RRInterface():
 	mJustReattached.attachpt = "";
 
 	sLastAvatarZOffsetCommit = 1.f; // So a first shape update will be done shortly after the viewer has started
-
+	sLastOutfitChange = -1000.f;
 	updateCameraLimits();
 
 	// Calling gSavedSettings here crashes the viewer when compiled with VS2005.

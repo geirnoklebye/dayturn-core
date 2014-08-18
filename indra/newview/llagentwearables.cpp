@@ -1795,6 +1795,8 @@ void LLAgentWearables::forceUpdateShape (void)
 		return;
 	}
 
+	RRInterface::sLastOutfitChange = gFrameTimeSeconds;
+
 	F32 offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
 	mSavedOffset = offset;
 	mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset * OFFSET_FACTOR);
@@ -1840,6 +1842,7 @@ void LLAgentWearables::forceUpdateShape (void)
 
 		gAgentWearables.saveWearable(mLastWornShape->getType(), index, new_name);
 		//LLAppearanceMgr::instance().updateAppearanceFromCOF();
+		LLAppearanceMgr::instance().enforceCOFItemRestrictions(cb);
 	}
 
 	//// To force the update of the shape, we need to remove the link to it from the COF

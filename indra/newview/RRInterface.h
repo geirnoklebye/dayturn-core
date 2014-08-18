@@ -306,6 +306,7 @@ public:
 	static std::string sSendimMessage; // message to replace an outgoing IM, when under sendim
 	static std::string sBlacklist; // comma-separated list of RLV commands, add "%f" after a token to indicate it is the "=force" variant
 	static F32 sLastAvatarZOffsetCommit; // timestamp of the last change of RestrainedLoveOffsetAvatarZ
+	static F32 sLastOutfitChange; // timestamp of the last change in the outfit (including Hover on the shape)
 	static U32 mCamDistNbGradients; // number of spheres to draw when restricting the camera view
 
 	// Allowed debug settings (initialized in the ctor)
