@@ -1187,9 +1187,12 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 
 	gAgentAvatarp->dumpAvatarTEs("setWearableOutfit");
 //MK
-	LLAppearanceMgr::instance().removeCOFLinksOfType (LLWearableType::WT_SHAPE);
-	// Force an update on the shape because the outfit has changed.
-	forceUpdateShape ();
+	if (gAgentAvatarp && !gAgentAvatarp->getIsCloud())
+	{
+		//LLAppearanceMgr::instance().removeCOFLinksOfType (LLWearableType::WT_SHAPE);
+		// Force an update on the shape because the outfit has changed.
+		forceUpdateShape ();
+	}
 //mk
 
 	LL_DEBUGS("Avatar") << "setWearableOutfit() end" << LL_ENDL;
