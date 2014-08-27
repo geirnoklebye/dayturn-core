@@ -1339,11 +1339,56 @@ void LLAgentWearables::userRemoveWearablesOfType(const LLWearableType::EType &ty
 // get attachments into desired state with minimal number of adds/removes.
 void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj_item_array)
 {
+//MK
+	// When calling this function, one of two purposes are expected :
+	// - If this is the first time (i.e. immediately after logging on), look at all the links in the COF, request to wear the items that are not worn
+	// (since normally an item which has a link in the COF must necessarily be worn, this is a good way to make things straight)
+	// - If this is not the first time (i.e. immediately after wearing and unwearing items and outfits), then there might be a problem : links are created slowly
+	// and the user may unwear those items before all the links are done being created, which makes those belated links be worn again. In practice, you wear a folder
+	// then unwear it before all the links appear, and the belated items are automatically worn again. We don't want that, so we need to DELETE those links
+	// instead of automatically wearing them.
+	// To distinguish between these two cases is the purpose of the boolean gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall
+	if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall)
+	{
+		LLInventoryModel::cat_array_t cat_array;
+		LLInventoryModel::item_array_t item_array;
+		gInventory.collectDescendents(LLAppearanceMgr::instance().getCOF(),cat_array,item_array,LLInventoryModel::EXCLUDE_TRASH);
+		for (S32 i=0; i<item_array.size(); i++)
+		{
+			const LLViewerInventoryItem* inv_item = item_array.at(i).get();
+			if (inv_item)
+			{
+				if (LLAssetType::AT_LINK == inv_item->getActualType())
+				{
+					const LLViewerInventoryItem* linked_item = inv_item->getLinkedItem();
+					if (NULL == linked_item)
+					{
+						// Broken link => remove
+					}
+					else
+					{
+						if (LLAssetType::AT_OBJECT == linked_item->getType())
+						{
+							std::string attachment_point_name = gAgentAvatarp->getAttachedPointName(linked_item->getUUID());
+							if (attachment_point_name == LLStringUtil::null)
+							{
+								LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
+							}
+						}
+					}
+				}
+			}
+			LLUUID item_id(inv_item->getUUID());
+		}
+		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
+		return;
+	}
+//mk
+
 	// Possible cases:
 	// already wearing but not in request set -> take off.
 	// already wearing and in request set -> leave alone.
 	// not wearing and in request set -> put on.
-
 	if (!isAgentAvatarValid()) return;
 
 	std::set<LLUUID> requested_item_ids;
@@ -1438,6 +1483,7 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 
 //MK
 	gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
+	gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall = FALSE;
 //mk
 }
 

@@ -338,6 +338,7 @@ public:
 	BOOL mSnappingBackToLastStandingLocation; // TRUE when we are teleporting back to the last standing location, in order to bypass the usual checks
 	BOOL mUserUpdateAttachmentsUpdatesAll; // TRUE when we've just called "Replace CurrentOutfit" and "Remove From Current Outfit" commands, FALSE otherwise
 	BOOL mUserUpdateAttachmentsCalledFromScript; // TRUE when we're doing a @detachall (which now uses the "Remove From Current Outfit" method), FALSE otherwise
+	BOOL mUserUpdateAttachmentsFirstCall; // TRUE the first time the method LLAgentWearables::userUpdateAttachments() is called, FALSE afterwards
 
 private:
 	bool mScriptsEnabledOnce; // to know if we have been in a script enabled area at least once (so that no-script areas prevent detaching only when we have logged in there)
