@@ -740,10 +740,10 @@ void LLKeywords::insertSegment(std::vector<LLTextSegmentPtr>& seg_list, LLTextSe
 #ifdef _DEBUG
 void LLKeywords::dump()
 {
-	llinfos << "LLKeywords" << LL_ENDL;
+	LL_INFOS() << "LLKeywords" << LL_ENDL;
 
 
-	llinfos << "LLKeywords::sWordTokenMap" << LL_ENDL;
+	LL_INFOS() << "LLKeywords::sWordTokenMap" << LL_ENDL;
 	word_token_map_t::iterator word_token_iter = mWordTokenMap.begin();
 	while( word_token_iter != mWordTokenMap.end() )
 	{
@@ -752,7 +752,7 @@ void LLKeywords::dump()
 		++word_token_iter;
 	}
 
-	llinfos << "LLKeywords::sLineTokenList" << LL_ENDL;
+	LL_INFOS() << "LLKeywords::sLineTokenList" << LL_ENDL;
 	for (token_list_t::iterator iter = mLineTokenList.begin();
 		 iter != mLineTokenList.end(); ++iter)
 	{
@@ -761,7 +761,7 @@ void LLKeywords::dump()
 	}
 
 
-	llinfos << "LLKeywords::sDelimiterTokenList" << LL_ENDL;
+	LL_INFOS() << "LLKeywords::sDelimiterTokenList" << LL_ENDL;
 	for (token_list_t::iterator iter = mDelimiterTokenList.begin();
 		 iter != mDelimiterTokenList.end(); ++iter)
 	{
@@ -772,7 +772,7 @@ void LLKeywords::dump()
 
 void LLKeywordToken::dump()
 {
-	llinfos << "[" <<
+	LL_INFOS() << "[" <<
 		mColor.mV[VX] << ", " <<
 		mColor.mV[VY] << ", " <<
 		mColor.mV[VZ] << "] [" <<

@@ -621,10 +621,16 @@ void LLOutfitsList::performAction(std::string action)
 
 	if ("replaceoutfit" == action)
 	{
+//MK
+		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 		LLAppearanceMgr::instance().wearInventoryCategory( cat, FALSE, FALSE );
 	}
 	else if ("addtooutfit" == action)
 	{
+//MK
+		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 		LLAppearanceMgr::instance().wearInventoryCategory( cat, FALSE, TRUE );
 	}
 	else if ("rename_outfit" == action)

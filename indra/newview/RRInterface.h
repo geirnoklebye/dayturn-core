@@ -28,7 +28,7 @@
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
 #define RR_VERSION_NUM "2090200"
 #define RR_VERSION "2.09.02.0"
-#define RR_SLV_VERSION "3.7.14.32726"
+#define RR_SLV_VERSION "3.7.14.32779"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -339,6 +339,7 @@ public:
 	BOOL mUserUpdateAttachmentsUpdatesAll; // TRUE when we've just called "Replace CurrentOutfit" and "Remove From Current Outfit" commands, FALSE otherwise
 	BOOL mUserUpdateAttachmentsCalledFromScript; // TRUE when we're doing a @detachall (which now uses the "Remove From Current Outfit" method), FALSE otherwise
 	BOOL mUserUpdateAttachmentsFirstCall; // TRUE the first time the method LLAgentWearables::userUpdateAttachments() is called, FALSE afterwards
+	BOOL mUserUpdateAttachmentsCalledManually; // TRUE when we just did a "Add to Current Outfit" or "Replace Current Outfit", FALSE otherwise
 
 private:
 	bool mScriptsEnabledOnce; // to know if we have been in a script enabled area at least once (so that no-script areas prevent detaching only when we have logged in there)

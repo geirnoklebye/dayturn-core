@@ -510,6 +510,7 @@ RRInterface::RRInterface():
 	, mHandleNoStrip(TRUE)
 	, mContainsCamTextures(FALSE)
 	, mUserUpdateAttachmentsFirstCall(TRUE)
+	, mUserUpdateAttachmentsCalledManually(FALSE)
 	//, mContainsMoveUp(FALSE)
 	//, mContainsMoveDown(FALSE)
 	//, mContainsMoveForward(FALSE)
