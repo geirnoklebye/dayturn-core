@@ -1427,6 +1427,9 @@ void LLAppearanceMgr::changeOutfit(bool proceed, const LLUUID& category, bool ap
 
 void LLAppearanceMgr::replaceCurrentOutfit(const LLUUID& new_outfit)
 {
+//MK
+	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 	LLViewerInventoryCategory* cat = gInventory.getCategory(new_outfit);
 	wearInventoryCategory(cat, false, false);
 }
@@ -1488,6 +1491,9 @@ void LLAppearanceMgr::setOutfitLocked(bool locked)
 
 void LLAppearanceMgr::addCategoryToCurrentOutfit(const LLUUID& cat_id)
 {
+//MK
+	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 	LLViewerInventoryCategory* cat = gInventory.getCategory(cat_id);
 	wearInventoryCategory(cat, false, true);
 }
@@ -2501,6 +2507,9 @@ void LLAppearanceMgr::wearOutfitByName(const std::string& name)
 
 	if(cat)
 	{
+//MK
+		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 		LLAppearanceMgr::wearInventoryCategory(cat, copy_items, false);
 	}
 	else
@@ -4179,6 +4188,9 @@ public:
 		LLSD::UUID folder_uuid = query_map["folder_id"].asUUID();
 		if ( gInventory.getCategory( folder_uuid ) != NULL )
 		{
+//MK
+			gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 			LLAppearanceMgr::getInstance()->wearInventoryCategory(category, true, false);
 
 			// *TODOw: This may not be necessary if initial outfit is chosen already -- josh
