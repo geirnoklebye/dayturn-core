@@ -1348,7 +1348,8 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 	// then unwear it before all the links appear, and the belated items are automatically worn again. We don't want that, so we need to DELETE those links
 	// instead of automatically wearing them.
 	// To distinguish between these two cases is the purpose of the boolean gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall
-	if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall)
+	// Attention : we need to call the regular part of the function if we did a "Add to Current Outfit" or "Replace Current Outfit" in the inventory
+	if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall && !gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
 	{
 		LLInventoryModel::cat_array_t cat_array;
 		LLInventoryModel::item_array_t item_array;
@@ -1380,7 +1381,6 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 			}
 			LLUUID item_id(inv_item->getUUID());
 		}
-		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
 		return;
 	}
 //mk
@@ -1484,6 +1484,7 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 //MK
 	gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
 	gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall = FALSE;
+	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = FALSE;
 //mk
 }
 

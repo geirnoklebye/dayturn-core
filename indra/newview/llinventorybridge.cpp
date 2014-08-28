@@ -3823,6 +3823,7 @@ void LLFolderBridge::modifyOutfit(BOOL append)
 			return;
 		}
 	}
+	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
 //mk
 	LLInventoryModel* model = getInventoryModel();
 	if(!model) return;
