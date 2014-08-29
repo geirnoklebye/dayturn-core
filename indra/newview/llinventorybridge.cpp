@@ -2493,6 +2493,9 @@ BOOL LLFolderBridge::dragCategoryIntoFolder(LLInventoryCategory* inv_cat,
 					{
 						// traverse category and add all contents to currently worn.
 						BOOL append = true;
+//MK
+						gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 						LLAppearanceMgr::instance().wearInventoryCategory(inv_cat, false, append);
 					}
 			else if (move_is_into_outbox && !move_is_from_outbox)
@@ -2543,6 +2546,9 @@ BOOL LLFolderBridge::dragCategoryIntoFolder(LLInventoryCategory* inv_cat,
 
 		if (accept && drop)
 		{
+//MK
+			gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 			LLAppearanceMgr::instance().wearInventoryCategory(inv_cat, true, false);
 		}
 	}
@@ -2842,6 +2848,9 @@ void LLInventoryCopyAndWearObserver::changed(U32 mask)
 				    mContentsCount)
 				{
 					gInventory.removeObserver(this);
+//MK
+					gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 					LLAppearanceMgr::instance().wearInventoryCategory(category, FALSE, FALSE);
 					delete this;
 				}

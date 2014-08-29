@@ -1427,6 +1427,9 @@ void LLAppearanceMgr::changeOutfit(bool proceed, const LLUUID& category, bool ap
 
 void LLAppearanceMgr::replaceCurrentOutfit(const LLUUID& new_outfit)
 {
+//MK
+	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 	LLViewerInventoryCategory* cat = gInventory.getCategory(new_outfit);
 	wearInventoryCategory(cat, false, false);
 }
@@ -1488,6 +1491,9 @@ void LLAppearanceMgr::setOutfitLocked(bool locked)
 
 void LLAppearanceMgr::addCategoryToCurrentOutfit(const LLUUID& cat_id)
 {
+//MK
+	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 	LLViewerInventoryCategory* cat = gInventory.getCategory(cat_id);
 	wearInventoryCategory(cat, false, true);
 }
@@ -1719,10 +1725,13 @@ bool LLAppearanceMgr::getCanRemoveOutfit(const LLUUID& outfit_cat_id)
 // static
 bool LLAppearanceMgr::getCanRemoveFromCOF(const LLUUID& outfit_cat_id)
 {
-	if (gAgentWearables.isCOFChangeInProgress())
-	{
-		return false;
-	}
+//MK
+	// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
+	////if (gAgentWearables.isCOFChangeInProgress())
+	////{
+	////	return false;
+	////}
+//mk
 	LLFindWearablesEx is_worn(/*is_worn=*/ true, /*include_body_parts=*/ false);
 	return gInventory.hasMatchingDirectDescendent(outfit_cat_id, is_worn);
 }
@@ -1730,10 +1739,13 @@ bool LLAppearanceMgr::getCanRemoveFromCOF(const LLUUID& outfit_cat_id)
 // static
 bool LLAppearanceMgr::getCanAddToCOF(const LLUUID& outfit_cat_id)
 {
-	if (gAgentWearables.isCOFChangeInProgress())
-	{
-		return false;
-	}
+//MK
+	// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
+	////if (gAgentWearables.isCOFChangeInProgress())
+	////{
+	////	return false;
+	////}
+//mk
 
 	LLFindWearablesEx not_worn(/*is_worn=*/ false, /*include_body_parts=*/ false);
 	return gInventory.hasMatchingDirectDescendent(outfit_cat_id, not_worn);
@@ -1741,11 +1753,14 @@ bool LLAppearanceMgr::getCanAddToCOF(const LLUUID& outfit_cat_id)
 
 bool LLAppearanceMgr::getCanReplaceCOF(const LLUUID& outfit_cat_id)
 {
-	// Don't allow wearing anything while we're changing appearance.
-	if (gAgentWearables.isCOFChangeInProgress())
-	{
-		return false;
-	}
+//MK
+	// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
+	////// Don't allow wearing anything while we're changing appearance.
+	////if (gAgentWearables.isCOFChangeInProgress())
+	////{
+	////	return false;
+	////}
+//mk
 
 	// Check whether it's the base outfit.
 	if (outfit_cat_id.isNull() || outfit_cat_id == getBaseOutfitUUID())
@@ -2501,6 +2516,9 @@ void LLAppearanceMgr::wearOutfitByName(const std::string& name)
 
 	if(cat)
 	{
+//MK
+		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 		LLAppearanceMgr::wearInventoryCategory(cat, copy_items, false);
 	}
 	else
@@ -4179,6 +4197,9 @@ public:
 		LLSD::UUID folder_uuid = query_map["folder_id"].asUUID();
 		if ( gInventory.getCategory( folder_uuid ) != NULL )
 		{
+//MK
+			gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 			LLAppearanceMgr::getInstance()->wearInventoryCategory(category, true, false);
 
 			// *TODOw: This may not be necessary if initial outfit is chosen already -- josh

@@ -1430,21 +1430,21 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 				if (remove_attachment)
 				{
 					// LL_INFOS() << "found object to remove, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << LL_ENDL;
-//MK
-					// There are two ways to receive this list of objects :
-					// - from a burst of "attach this here" messages
-					// - from a change of outfit
-					// In the first case, the list is partial and we don't want to remove what we are going to wear
-					// In the second case, the list is complete and describes what we are going to wear
-					// => We need to use RRInterface::mUserUpdateAttachmentsUpdatesAll to determine what we want to do
-					// with objects that are not in the list
-					if (gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll)
-					{
-//mk
+////MK
+//					// There are two ways to receive this list of objects :
+//					// - from a burst of "attach this here" messages
+//					// - from a change of outfit
+//					// In the first case, the list is partial and we don't want to remove what we are going to wear
+//					// In the second case, the list is complete and describes what we are going to wear
+//					// => We need to use RRInterface::mUserUpdateAttachmentsUpdatesAll to determine what we want to do
+//					// with objects that are not in the list
+//					if (gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll)
+//					{
+////mk
 						objects_to_remove.push_back(objectp);
-//MK
-					}
-//mk
+////MK
+//					}
+////mk
 				}
 				else
 				{

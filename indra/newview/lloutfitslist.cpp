@@ -168,6 +168,9 @@ private:
 		LLViewerInventoryCategory* selected_outfit = getSelectedOutfit();
 		if (selected_outfit)
 		{
+//MK
+			gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 			LLAppearanceMgr::instance().wearInventoryCategory(
 				selected_outfit, /*copy=*/ FALSE, /*append=*/ FALSE);
 		}

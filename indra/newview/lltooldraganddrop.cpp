@@ -2247,6 +2247,9 @@ EAcceptance LLToolDragAndDrop::dad3dWearCategory(
 		if (drop)
 		{
 		    BOOL append = ( (mask & MASK_SHIFT) ? TRUE : FALSE );
+//MK
+			gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 			LLAppearanceMgr::instance().wearInventoryCategory(category, false, append);
 		}
 		return ACCEPT_YES_MULTI;
@@ -2255,6 +2258,9 @@ EAcceptance LLToolDragAndDrop::dad3dWearCategory(
 	{
 		if (drop)
 		{
+//MK
+			gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 			LLAppearanceMgr::instance().wearInventoryCategory(category, true, false);
 		}
 		return ACCEPT_YES_MULTI;
