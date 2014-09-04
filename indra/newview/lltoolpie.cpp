@@ -716,7 +716,13 @@ BOOL LLToolPie::handleMouseUp(S32 x, S32 y, MASK mask)
 			// pretend we picked some point a bit in front of avatar
 			mPick.mPosGlobal = gAgent.getPositionGlobal() + LLVector3d(LLViewerCamera::instance().getAtAxis()) * SELF_CLICK_WALK_DISTANCE;
 		}
-		gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
+//MK
+////		gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
+		//look at the target
+		LLVector3 look_at = (LLVector3)mPick.mPosGlobal - (LLVector3)gAgent.getPositionGlobal();
+		look_at.normVec();
+		gAgentCamera.slamLookAt(look_at);
+//mk
 		walkToClickedLocation();
 		LLFirstUse::notMoving(false);
 
@@ -757,6 +763,12 @@ BOOL LLToolPie::handleDoubleClick(S32 x, S32 y, MASK mask)
 		if ((mPick.mPickType == LLPickInfo::PICK_LAND && !mPick.mPosGlobal.isExactlyZero()) ||
 			(mPick.mObjectID.notNull()  && !mPick.mPosGlobal.isExactlyZero()))
 		{
+//MK
+			//look at the target
+			LLVector3 look_at = (LLVector3)mPick.mPosGlobal - (LLVector3)gAgent.getPositionGlobal();
+			look_at.normVec();
+			gAgentCamera.slamLookAt(look_at);
+//mk
 			walkToClickedLocation();
 			return TRUE;
 		}
