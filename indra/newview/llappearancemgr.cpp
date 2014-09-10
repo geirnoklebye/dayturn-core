@@ -1887,6 +1887,25 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 	std::copy(obj_items.begin(), obj_items.end(), std::back_inserter(all_items));
 	std::copy(gest_items.begin(), gest_items.end(), std::back_inserter(all_items));
 
+//MK
+	// Also keep the locked clothes and objects
+	if (gRRenabled)
+	{
+		LLInventoryModel::cat_array_t* cats; // unused here
+		LLInventoryModel::item_array_t* items;
+		gInventory.getDirectDescendentsOf (cof, cats, items);
+		S32 count = items->size();
+		LLViewerInventoryItem* item = NULL;
+		for (S32 i = 0; i < count; ++i) {
+			item = (LLViewerInventoryItem*)items->at(i);
+			if (!gAgent.mRRInterface.canDetach (item))
+			{
+				all_items.push_back (item);
+			}
+		}
+	}
+//mk
+
 	// Find any wearables that need description set to enforce ordering.
 	desc_map_t desc_map;
 	getWearableOrderingDescUpdates(wear_items, desc_map);
@@ -2766,7 +2785,16 @@ void LLAppearanceMgr::removeCOFItemLinks(const LLUUID& item_id, LLPointer<LLInve
 		const LLInventoryItem* item = item_array.at(i).get();
 		if (item->getIsLinkType() && item->getLinkedUUID() == item_id)
 		{
+//MK
+			// If we can't detach this item, don't do anything with it, leave it there.
+			LLInventoryItem* item_non_const = const_cast<LLInventoryItem*>(item);
+			if (gRRenabled && !gAgent.mRRInterface.canDetach (item_non_const))
+			{
+				continue;
+			}
+//mk
 			remove_inventory_item(item->getUUID(), cb);
+
 //MK
 			if (gRRenabled)
 			{
