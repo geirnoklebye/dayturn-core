@@ -3138,7 +3138,7 @@ bool LLVOAvatar::isVisuallyMuted()
 	if (!isSelf())
 	{
 //MK
-		if (gRRenabled && gAgentAvatarp)
+		if (gRRenabled && gAgentAvatarp && getRezzedStatus() >= 3) // fully rezzed & textured
 		{
 			LLVector3d my_head_pos (gAgent.getPosGlobalFromAgent(gAgentAvatarp->mHeadp->getWorldPosition()));
 			LLVector3d their_head_pos (gAgent.getPosGlobalFromAgent(mHeadp->getWorldPosition()));
