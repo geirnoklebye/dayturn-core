@@ -1974,7 +1974,7 @@ LLVector3d LLAgentCamera::calcCameraPositionTargetGlobal(BOOL *hit_limit)
 	if (gRRenabled)
 	{
 		// Don't do it for mouselook because it would force the camera to the crotch
-		if (mCameraMode != CAMERA_MODE_MOUSELOOK && mCameraMode != CAMERA_MODE_FOLLOW)
+		if (mCameraMode != CAMERA_MODE_MOUSELOOK)
 		{
 			if (isAgentAvatarValid())
 			{
