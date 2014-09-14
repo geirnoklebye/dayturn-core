@@ -832,7 +832,9 @@ FolderLock RRInterface::isFolderLockedWithoutException (LLInventoryCategory* cat
 			LL_INFOS() << "command = " << command << LL_ENDL;
 		}
 		// param will always be equal to "n" in this case since we added it to command, but we don't care about this here
-		if (parseCommand (command+"=n", behav, option, param)) // detach=n, recvchat=n, recvim=n, unsit=n, recvim:<uuid>=add, clear=tplure:
+		// Attention, an option must absolutely be specified here (there must be a ":" character), or we wouldn't be able to tell "detachthis" from "detachthis:"
+		// and both have different meanings
+		if (command.find (":") != -1 && parseCommand (command+"=n", behav, option, param)) // detach=n, recvchat=n, recvim=n, unsit=n, recvim:<uuid>=add, clear=tplure:
 		{
 			// find whether this object has issued a "{attach|detach}[all]this" command on a folder that is either this one, or a parent
 			this_object_locks = false;
@@ -4114,6 +4116,8 @@ bool RRInterface::canDetach(LLViewerObject* attached_object)
 
 //	if (!isAllowed (attached_object->getRootEdit()->getID(), "detach", FALSE)) return false;
 	if (!isAllowed (attached_object->getID(), "detach", FALSE)) return false;
+	if (!isAllowed (attached_object->getID(), "detachthis", FALSE)) return false;
+	if (!isAllowed (attached_object->getID(), "detachallthis", FALSE)) return false;
 
 	LLInventoryItem* item = getItem (attached_object->getRootEdit()->getID());
 
