@@ -4358,7 +4358,7 @@ BOOL RRInterface::updateCameraLimits ()
 	if (mCamDistMax >= mCamDistDrawMin) { // make sure we can't move the camera outside the minimum render limit
 		mCamDistMax = mCamDistDrawMin * 0.75f;
 	}
-	else if (mCamDistMax >= mCamDistDrawMax) { // make sure we can't move the camera outside the maximum render limit
+	if (mCamDistMax >= mCamDistDrawMax) { // make sure we can't move the camera outside the maximum render limit
 		mCamDistMax = mCamDistDrawMax * 0.75f;
 	}
 
