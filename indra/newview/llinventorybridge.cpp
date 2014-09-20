@@ -5457,15 +5457,17 @@ std::string LLObjectBridge::getLabelSuffix() const
 void rez_attachment(LLViewerInventoryItem* item, LLViewerJointAttachment* attachment, bool replace)
 {
 	const LLUUID& item_id = item->getLinkedUUID();
-
-	// Check for duplicate request.
-	if (isAgentAvatarValid() &&
-		(gAgentAvatarp->attachmentWasRequested(item_id) ||
-		 gAgentAvatarp->isWearingAttachment(item_id)))
-	{
-		LL_WARNS() << "duplicate attachment request, ignoring" << LL_ENDL;
-		return;
-	}
+//MK
+	// Don't check duplicate attachment requests
+	////// Check for duplicate request.
+	////if (isAgentAvatarValid() &&
+	////	(gAgentAvatarp->attachmentWasRequested(item_id) ||
+	////	 gAgentAvatarp->isWearingAttachment(item_id)))
+	////{
+	////	LL_WARNS() << "duplicate attachment request, ignoring" << LL_ENDL;
+	////	return;
+	////}
+//mk
 	gAgentAvatarp->addAttachmentRequest(item_id);
 
 	S32 attach_pt = 0;

@@ -1186,14 +1186,14 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 	notifyLoadingFinished();
 
 	gAgentAvatarp->dumpAvatarTEs("setWearableOutfit");
-//MK
-	if (gAgentAvatarp && !gAgentAvatarp->getIsCloud())
-	{
-		//LLAppearanceMgr::instance().removeCOFLinksOfType (LLWearableType::WT_SHAPE);
-		// Force an update on the shape because the outfit has changed.
-		forceUpdateShape ();
-	}
-//mk
+////MK
+//	if (gAgentAvatarp && !gAgentAvatarp->getIsCloud())
+//	{
+//		//LLAppearanceMgr::instance().removeCOFLinksOfType (LLWearableType::WT_SHAPE);
+//		// Force an update on the shape because the outfit has changed.
+//		forceUpdateShape ();
+//	}
+////mk
 
 	LL_DEBUGS("Avatar") << "setWearableOutfit() end" << LL_ENDL;
 }
@@ -1886,9 +1886,9 @@ void LLAgentWearables::forceUpdateShape (void)
 		link_inventory_array(LLAppearanceMgr::instance().getCOF(),
 								obj_array, 
 								gAgentAvatarp->mEndCustomizeCallback);
-		// Remove old link
+		//// Remove old link
 		LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
-		LLAppearanceMgr::instance().removeCOFItemLinks(link_item->getUUID(), cb);
+		//LLAppearanceMgr::instance().removeCOFItemLinks(link_item->getUUID(), cb);
 
 		gAgentWearables.saveWearable(mLastWornShape->getType(), index, new_name);
 		//LLAppearanceMgr::instance().updateAppearanceFromCOF();
