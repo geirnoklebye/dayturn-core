@@ -1903,6 +1903,7 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 				all_items.push_back (item);
 			}
 		}
+		removeDuplicateItems(all_items);
 	}
 //mk
 

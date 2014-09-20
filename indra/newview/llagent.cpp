@@ -1090,13 +1090,13 @@ void LLAgent::setRegion(LLViewerRegion *regionp)
 
 	LLFloaterMove::sUpdateFlyingStatus();
 
-//MK from HB
-	// Make sure to use the proper method to account for the Z-Offset: as the
-	// value for the Hover shape visual parameter in SSB sims, or as a simple
-	// offset added to the size sent by sendAgentSetAppearance() in non-SSB
-	// sims (with the shape Hover reset to zero in that latter case).
-	gAgentWearables.setShapeAvatarOffset();
-//mk from HB
+////MK from HB
+//	// Make sure to use the proper method to account for the Z-Offset: as the
+//	// value for the Hover shape visual parameter in SSB sims, or as a simple
+//	// offset added to the size sent by sendAgentSetAppearance() in non-SSB
+//	// sims (with the shape Hover reset to zero in that latter case).
+//	gAgentWearables.setShapeAvatarOffset();
+////mk from HB
 	LL_DEBUGS("AgentLocation") << "Calling RegionChanged callbacks" << LL_ENDL;
 	mRegionChangedSignal();
 }
