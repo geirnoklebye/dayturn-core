@@ -1216,7 +1216,6 @@ void LLPanelLogin::onSelectServer(LLUICtrl*, void*)
 	}
 
 	std::string new_combo_value = combo_val.asString();
-	addFavoritesToStartLocation();
 	if (!new_combo_value.empty())
 	{
 		std::string match = "://";
