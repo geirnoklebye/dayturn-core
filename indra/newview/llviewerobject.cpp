@@ -2272,7 +2272,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 		}
 	}
 
-	if ((new_rot != getRotation())
+	if ((new_rot.isNotEqualEps(getRotation(), F_ALMOST_ZERO))
 		|| (new_angv != old_angv))
 	{
 		if (new_rot != mPreviousRotation)
@@ -6200,6 +6200,17 @@ const LLUUID &LLViewerObject::extractAttachmentItemID()
 	}
 	setAttachmentItemID(item_id);
 	return getAttachmentItemID();
+}
+
+const std::string& LLViewerObject::getAttachmentItemName()
+{
+	static std::string empty;
+	LLInventoryItem *item = gInventory.getItem(getAttachmentItemID());
+	if (isAttachment() && item)
+	{
+		return item->getName();
+	}
+	return empty;
 }
 
 //virtual
