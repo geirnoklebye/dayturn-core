@@ -348,26 +348,6 @@ void LLApp::setupErrorHandling(bool second_instance)
 		}
 		else
 		{
-
-			std::wstring wpipe_name;
-			wpipe_name =  mCrashReportPipeStr + wstringize(getPid());
-
-			const std::wstring wdump_path(wstringize(mDumpPath));
-
-			int retries = 30;
-			for (; retries > 0; --retries)
-			{
-				if (mExceptionHandler != 0) delete mExceptionHandler;
-
-			mExceptionHandler = new google_breakpad::ExceptionHandler(
-															L"C:\\Temp\\",		
-															0,		//No filter
-															windows_post_minidump_callback,
-															0,
-															google_breakpad::ExceptionHandler::HANDLER_ALL);  //No custom client info.
-		}
-		else
-		{
 			LL_WARNS() << "adding breakpad exception handler" << LL_ENDL;
 
 			std::wstring wpipe_name;
