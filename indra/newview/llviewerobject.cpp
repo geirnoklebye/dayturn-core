@@ -101,6 +101,7 @@
 #include "llmediaentry.h"
 #include "llfloaterperms.h"
 #include "llvocache.h"
+#include "llinventorymodel.h"
 
 //#define DEBUG_UPDATE_TYPE
 
