@@ -372,6 +372,9 @@ Please try logging in again in a minute.</string>
 	<string name="AvatarEditingAppearance">(Editing Appearance)</string>
 	<string name="AvatarAway">Away</string>
 	<string name="AvatarDoNotDisturb">Do Not Disturb</string>
+//MK
+    <string name="AvatarTyping">Typing</string>
+//mk	
 	<string name="AvatarMuted">Blocked</string>
 
 	<!-- animations -->
@@ -4094,8 +4097,11 @@ The [[MARKETPLACE_CREATE_STORE_URL] Marketplace store] is returning errors.
 	<string name="Stomach">Stomach</string>
 	<string name="Left Pec">Left Pec</string>
 	<string name="Right Pec">Right Pec</string>
-        <string name="Neck">Neck</string>
-        <string name="Avatar Center">Avatar Center</string>
+    <string name="Neck">Neck</string>
+    <string name="Avatar Center">Avatar Center</string>
+//MK
+    <string name="Root">Root</string>
+//mk
 	<string name="Invalid Attachment">Invalid Attachment Point</string>
 	<string name="ATTACHMENT_MISSING_ITEM">Error: missing item</string>
 	<string name="ATTACHMENT_MISSING_BASE_ITEM">Error: missing base item</string>

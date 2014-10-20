@@ -2835,6 +2835,13 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 //MK
 	bool is_typing = getTyping();
 //mk
+
+	static LLCachedControl<bool> show_nearby_avatars_typing(gSavedSettings, "ShowNearbyAvatarsTyping", true);
+	if (!show_nearby_avatars_typing)
+	{
+		is_typing = false;
+	}
+
 	bool is_appearance = mSignaledAnimations.find(ANIM_AGENT_CUSTOMIZE) != mSignaledAnimations.end();
 	bool is_muted;
 	if (isSelf())
@@ -2896,8 +2903,8 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				line += ", ";
 			}
 //MK
-					if (is_typing)
-					{
+			if (is_typing)
+			{
 				line += LLTrans::getString("AvatarTyping");
 				line += ", ";
 			}
@@ -3185,6 +3192,10 @@ void LLVOAvatar::idleUpdateNameTagPosition(const LLVector3& root_pos_last)
 
 
 	// position is based on head position, does not require mAvatarOffset here. - Nyx
+	LLVector3 name_position;
+	static LLCachedControl<bool> default_name_tag_behaviour(gSavedSettings, "DefaultNameTagBehaviour", true);
+	if (default_name_tag_behaviour)
+	{
 	LLVector3 avatar_ellipsoid(mBodySize.mV[VX] * 0.4f,
 								mBodySize.mV[VY] * 0.4f,
 								mBodySize.mV[VZ] * NAMETAG_VERT_OFFSET_WEIGHT);
@@ -3201,9 +3212,22 @@ void LLVOAvatar::idleUpdateNameTagPosition(const LLVector3& root_pos_last)
 	
 	mCurRootToHeadOffset = lerp(mCurRootToHeadOffset, mTargetRootToHeadOffset, LLSmoothInterpolation::getInterpolant(0.2f));
 
-	LLVector3 name_position = mRoot->getLastWorldPosition() + (mCurRootToHeadOffset * root_rot);
+//	LLVector3 name_position = mRoot->getLastWorldPosition() + (mCurRootToHeadOffset * root_rot);
+	name_position = mRoot->getLastWorldPosition() + (mCurRootToHeadOffset * root_rot);
 	name_position += (local_camera_up * root_rot) - (projected_vec(local_camera_at * root_rot, camera_to_av));	
 	name_position += pixel_up_vec * NAMETAG_VERTICAL_SCREEN_OFFSET;
+	}
+	else
+	{
+		local_camera_up.scaleVec((mBodySize + mAvatarOffset) * 0.42f);
+		local_camera_at.scaleVec((mBodySize + mAvatarOffset) * 0.42f);
+
+		name_position = mRoot->getWorldPosition();
+		name_position[VZ] -= mPelvisToFoot;
+		name_position[VZ] += ((mBodySize[VZ] + mAvatarOffset[VZ])* 0.7f);
+		name_position += (local_camera_up * root_rot) - (projected_vec(local_camera_at * root_rot, camera_to_av));
+		name_position += pixel_up_vec * 15.f;
+	}
 
 	mNameText->setPositionAgent(name_position);				
 }
