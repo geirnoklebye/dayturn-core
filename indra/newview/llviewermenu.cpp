@@ -4804,6 +4804,30 @@ private:
 		{
 			return false;
 		}
+
+		// Don't let another avatar return a locked object
+		if (gRRenabled)
+		{
+			BOOL locked_but_takeable_object = FALSE;
+	
+			for (LLObjectSelection::root_iterator iter = LLSelectMgr::getInstance()->getSelection()->root_begin();
+				 iter != LLSelectMgr::getInstance()->getSelection()->root_end(); iter++)
+			{
+				LLSelectNode* node = *iter;
+				LLViewerObject* object = node->getObject();
+				if(object)
+				{
+					if(!object->permMove())
+					{
+						locked_but_takeable_object = TRUE;
+					}
+				}
+			}
+			if (locked_but_takeable_object)
+			{
+				return false;
+			}
+		}
 //mk
 		
 		mObjectSelection = LLSelectMgr::getInstance()->getEditSelection();
@@ -8919,6 +8943,16 @@ class LLToolsSelectTool : public view_listener_t
 		{
 			return true;
 		}
+
+		// Check we're not selecting an object that we do not have the right to edit
+		if (gRRenabled && !LLSelectMgr::getInstance()->getSelection()->isEmpty())
+		{
+			if (!gAgent.mRRInterface.canEdit (LLSelectMgr::getInstance()->getSelection()->getPrimaryObject()))
+			{
+				return true;
+			}
+		}
+
 //mk
 		std::string tool_name = userdata.asString();
 		if (tool_name == "focus")

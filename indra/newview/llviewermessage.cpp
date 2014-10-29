@@ -4016,7 +4016,9 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				|| !chatter) // or this may be a HUD (visible only to the other party) or an unrezzed avatar or object
 			{
 				if (gAgent.mRRInterface.containsWithoutException ("recvchat", from_id.asString())
-					|| gAgent.mRRInterface.contains ("recvchatfrom:"+from_id.asString()))
+					|| gAgent.mRRInterface.contains ("recvchatfrom:"+from_id.asString())
+					|| gAgent.mRRInterface.contains ("recvchatfrom:"+owner_id.asString())
+					)
 				{
 					chat.mFromName = from_name;				
 					chat.mText = gAgent.mRRInterface.crunchEmote (mesg, 20); // + '\0';
@@ -4027,7 +4029,9 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				}
 
 				if (gAgent.mRRInterface.containsWithoutException ("recvemote", from_id.asString())
-					|| gAgent.mRRInterface.contains ("recvemotefrom:"+from_id.asString()))
+					|| gAgent.mRRInterface.contains ("recvemotefrom:"+from_id.asString())
+					|| gAgent.mRRInterface.contains ("recvemotefrom:"+owner_id.asString())
+					)
 				{
 					std::string prefix = mesg.substr(0, 4);
 					if (prefix == "/me " || prefix == "/me'")
