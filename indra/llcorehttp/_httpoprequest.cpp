@@ -1162,9 +1162,8 @@ void check_curl_easy_code(CURLcode code, int curl_setopt_option)
 		//
 		// linux appears to throw a curl error once per session for a bad initialization
 		// at a pretty random time (when enabling cookies).
-		LL_WARNS("CoreHttp") << "libcurl error detected:  " << curl_easy_strerror(code)
-							 << ", curl_easy_setopt option:  " << curl_setopt_option
-							 << LL_ENDL;
+						   << ", curl_easy_setopt option:  " << curl_setopt_option
+						   << LL_ENDL;
 	}
 }
 
@@ -1177,8 +1176,8 @@ void check_curl_easy_code(CURLcode code)
 		//
 		// linux appears to throw a curl error once per session for a bad initialization
 		// at a pretty random time (when enabling cookies).
-		LL_WARNS("CoreHttp") << "libcurl error detected:  " << curl_easy_strerror(code)
-							 << LL_ENDL;
+		LL_WARNS(LOG_CORE) << "libcurl error detected:  " << curl_easy_strerror(code)
+						   << LL_ENDL;
 	}
 }
 
