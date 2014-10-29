@@ -291,6 +291,16 @@ LLAgentCamera::~LLAgentCamera()
 //-----------------------------------------------------------------------------
 void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
 {
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.mCamDistMax <= 0.0)
+		{
+			changeCameraToMouselook(FALSE);
+			return;
+		}
+	}
+//mk
 	if (gAgent.getAutoPilot())
 	{
 		gAgent.stopAutoPilot(TRUE);
