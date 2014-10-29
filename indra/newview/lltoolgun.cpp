@@ -93,7 +93,7 @@ BOOL LLToolGun::handleHover(S32 x, S32 y, MASK mask)
 		// If Shift is held, divide the sensibility by 10
 		if (mask & MASK_SHIFT) 
 		{
-			mouse_sensitivity *= 0.1f;
+			mouse_sensitivity *= 0.25f;
 		}
 		
 //		if (mask & MASK_CONTROL)
