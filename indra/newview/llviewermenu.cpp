@@ -8919,6 +8919,16 @@ class LLToolsSelectTool : public view_listener_t
 		{
 			return true;
 		}
+
+		// Check we're not selecting an object that we do not have the right to edit
+		if (gRRenabled && !LLSelectMgr::getInstance()->getSelection()->isEmpty())
+		{
+			if (!gAgent.mRRInterface.canEdit (LLSelectMgr::getInstance()->getSelection()->getPrimaryObject()))
+			{
+				return true;
+			}
+		}
+
 //mk
 		std::string tool_name = userdata.asString();
 		if (tool_name == "focus")
