@@ -673,25 +673,6 @@ void LLPanelLogin::updateLocationSelectorsVisibility()
 {
 	if (sInstance) 
 	{
-		BOOL show_start = gSavedSettings.getBOOL("ShowStartLocation");
-//MK
-		if (gSavedSettings.getBOOL("RestrainedLove"))
-		{
-			// sInstance->getChild<LLLayoutPanel>("start_location_panel")->setVisible(show_start);
-			// Force to "My last location"
-			LLComboBox* combo = sInstance->getChild<LLComboBox>("start_location_combo");
-			combo->setCurrentByIndex( 0 );
-
-			// Simulate a callback on this combo to take the change into account
-			std::string location = combo->getValue().asString();
-			LLStartUp::setStartSLURL(location); // calls onUpdateStartSLURL, above 
-
-			// Hide the combo
-			show_start = FALSE;
-		}
-		sInstance->getChild<LLLayoutPanel>("start_location_panel")->setVisible(show_start);
-//mk
-	
 		BOOL show_server = gSavedSettings.getBOOL("ForceShowGrid");
 		LLComboBox* server_combo = sInstance->getChild<LLComboBox>("server_combo");
 		if ( server_combo ) 
@@ -911,6 +892,14 @@ void LLPanelLogin::onClickConnect(void *)
 {
 	if (sInstance && sInstance->mCallback)
 	{
+//MK
+		// If the RLV is active, force logging at the last location, always.
+		if (gSavedSettings.getBOOL("RestrainedLove"))
+		{
+			std::string location = LLSLURL::SIM_LOCATION_LAST;
+			LLStartUp::setStartSLURL(location);
+		}
+//mk
 		// JC - Make sure the fields all get committed.
 		sInstance->setFocus(FALSE);
 
