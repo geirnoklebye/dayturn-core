@@ -254,7 +254,7 @@
       <layout_panel
        top_delta="0"
        top="0"
-       height="20"
+       height="26"
        bottom="-1"
        auto_resize="false"
        name="chat_layout_panel">
