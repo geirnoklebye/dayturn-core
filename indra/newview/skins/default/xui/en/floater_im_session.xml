@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <floater
 background_visible="true"
-default_tab_group="1"
 height="355"
 help_topic="floater_im_box"
 layout="topleft"
@@ -70,9 +69,10 @@ positioning="relative">
   top="0"
   left="0"
      right="-1"
-     bottom="-3">
+     bottom="-1">
    <layout_stack
    animate="false" 
+         bottom="-1"
    default_tab_group="2"
    follows="all"
          right="-5"
