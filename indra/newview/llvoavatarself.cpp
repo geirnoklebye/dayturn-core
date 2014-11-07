@@ -1309,9 +1309,19 @@ LLViewerObject* LLVOAvatarSelf::getWornAttachment(const LLUUID& inv_item_id)
 	return NULL;
 }
 
-const std::string LLVOAvatarSelf::getAttachedPointName(const LLUUID& inv_item_id) const
+bool LLVOAvatarSelf::getAttachedPointName(const LLUUID& inv_item_id, std::string& name) const
 {
+	if (!gInventory.getItem(inv_item_id))
+	{
+		name = "ATTACHMENT_MISSING_ITEM";
+		return false;
+	}
 	const LLUUID& base_inv_item_id = gInventory.getLinkedItemID(inv_item_id);
+	if (!gInventory.getItem(base_inv_item_id))
+	{
+		name = "ATTACHMENT_MISSING_BASE_ITEM";
+		return false;
+	}
 	for (attachment_map_t::const_iterator iter = mAttachmentPoints.begin(); 
 		 iter != mAttachmentPoints.end(); 
 		 ++iter)
@@ -1319,11 +1329,13 @@ const std::string LLVOAvatarSelf::getAttachedPointName(const LLUUID& inv_item_id
 		const LLViewerJointAttachment* attachment = iter->second;
 		if (attachment->getAttachedObject(base_inv_item_id))
 		{
-			return attachment->getName();
+			name = attachment->getName();
+			return true;
 		}
 	}
 
-	return LLStringUtil::null;
+	name = "ATTACHMENT_NOT_ATTACHED";
+	return false;
 }
 
 //virtual
@@ -1358,8 +1370,6 @@ BOOL LLVOAvatarSelf::detachObject(LLViewerObject *viewer_object)
 	const LLUUID attachment_id = viewer_object->getAttachmentItemID();
 	if ( LLVOAvatar::detachObject(viewer_object) )
 	{
-		LLVOAvatar::cleanupAttachedMesh( viewer_object );
-		
 		// the simulator should automatically handle permission revocation
 		
 		stopMotionFromSource(attachment_id);
