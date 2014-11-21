@@ -237,7 +237,7 @@ BOOL LLViewerJointAttachment::addObject(LLViewerObject* object)
 		{
 			std::string name = getName();
 			LLStringUtil::toLower(name);
-			if (!gAgent.mRRInterface.canAttach(object, name, true))
+			if (!gAgent.mRRInterface.canAttach(object, name, false))
 			{
 				bool just_reattaching = false;
 				std::deque<AssetAndTarget>::iterator it = gAgent.mRRInterface.mAssetsToReattach.begin();

@@ -294,7 +294,7 @@ void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
 //MK
 	if (gRRenabled)
 	{
-		if (gAgent.mRRInterface.mCamDistMax <= 0.0)
+		if (mCameraMode != CAMERA_MODE_MOUSELOOK && gAgent.mRRInterface.mCamDistMax <= 0.0)
 		{
 			changeCameraToMouselook(FALSE);
 			return;
