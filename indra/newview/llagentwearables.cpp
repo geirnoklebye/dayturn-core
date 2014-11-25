@@ -1012,7 +1012,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 		// Don't care about this case - ordering of wearables with the same asset id has no effect.
 		// Causes the two-alphas error case in MAINT-4158.
 		// We should actually disallow wearing two wearables with the same asset id.
-#if 0
+#if 1
 		if (curr_wearable->getName() != new_item->getName() ||
 			curr_wearable->getItemID() != new_item->getUUID())
 		{
