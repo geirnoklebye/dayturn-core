@@ -807,15 +807,48 @@ void LLWearableHoldingPattern::onAllComplete()
 		}
 	}
 
-	// Update wearables.
-	LL_INFOS("Avatar") << self_av_string() << "HP " << index() << " updating agent wearables with " << mResolved << " wearable items " << LL_ENDL;
-	LLAppearanceMgr::instance().updateAgentWearables(this);
-	
-	// Update attachments to match those requested.
 	if (isAgentAvatarValid())
 	{
 		LL_DEBUGS("Avatar") << self_av_string() << "Updating " << mObjItems.size() << " attachments" << LL_ENDL;
-		LLAgentWearables::userUpdateAttachments(mObjItems);
+		LLAgentWearables::llvo_vec_t objects_to_remove;
+		LLAgentWearables::llvo_vec_t objects_to_retain;
+		LLInventoryModel::item_array_t items_to_add;
+
+		LLAgentWearables::findAttachmentsAddRemoveInfo(mObjItems,
+													   objects_to_remove,
+													   objects_to_retain,
+													   items_to_add);
+
+		LL_DEBUGS("Avatar") << self_av_string() << "Removing " << objects_to_remove.size()
+							<< " attachments" << LL_ENDL;
+
+		// Here we remove the attachment pos overrides for *all*
+		// attachments, even those that are not being removed. This is
+		// needed to get joint positions all slammed down to their
+		// pre-attachment states.
+		gAgentAvatarp->clearAttachmentPosOverrides();
+
+		// Take off the attachments that will no longer be in the outfit.
+		LLAgentWearables::userRemoveMultipleAttachments(objects_to_remove);
+		
+		// Update wearables.
+		LL_INFOS("Avatar") << self_av_string() << "HP " << index() << " updating agent wearables with "
+						   << mResolved << " wearable items " << LL_ENDL;
+		LLAppearanceMgr::instance().updateAgentWearables(this);
+		
+		// Restore attachment pos overrides for the attachments that
+		// are remaining in the outfit.
+		for (LLAgentWearables::llvo_vec_t::iterator it = objects_to_retain.begin();
+			 it != objects_to_retain.end();
+			 ++it)
+		{
+			LLViewerObject *objectp = *it;
+			gAgentAvatarp->addAttachmentPosOverridesForObject(objectp);
+		}
+		
+		// Add new attachments to match those requested.
+		LL_DEBUGS("Avatar") << self_av_string() << "Adding " << items_to_add.size() << " attachments" << LL_ENDL;
+		LLAgentWearables::userAttachMultipleAttachments(items_to_add);
 	}
 
 	if (isFetchCompleted() && isMissingCompleted())
