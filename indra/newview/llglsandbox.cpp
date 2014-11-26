@@ -906,23 +906,6 @@ F32 gpu_benchmark()
 
 	LLGLDisable blend(GL_BLEND);
 	
-	{
-		LLViewerShaderMgr::instance()->initAttribsAndUniforms();
-
-		gBenchmarkProgram.mName = "Benchmark Shader";
-		gBenchmarkProgram.mFeatures.attachNothing = true;
-		gBenchmarkProgram.mShaderFiles.clear();
-		gBenchmarkProgram.mShaderFiles.push_back(std::make_pair("interface/benchmarkV.glsl", GL_VERTEX_SHADER_ARB));
-		gBenchmarkProgram.mShaderFiles.push_back(std::make_pair("interface/benchmarkF.glsl", GL_FRAGMENT_SHADER_ARB));
-		gBenchmarkProgram.mShaderLevel = 1;
-		if (!gBenchmarkProgram.createShader(NULL, NULL))
-		{
-			return -1.f;
-		}
-	}
-
-	LLGLDisable blend(GL_BLEND);
-	
 	//measure memory bandwidth by:
 	// - allocating a batch of textures and render targets
 	// - rendering those textures to those render targets
@@ -994,8 +977,6 @@ F32 gpu_benchmark()
 
 	buff->setBuffer(LLVertexBuffer::MAP_VERTEX);
 	glFinish();
-
-	bool busted_finish = false;
 
 	for (S32 c = -1; c < samples; ++c)
 	{
@@ -1069,8 +1050,6 @@ F32 gpu_benchmark()
     }
 #endif
 
-	if (gGLManager.mHasTimerQuery)
-	{
 		F32 ms = gBenchmarkProgram.mTimeElapsed/1000000.f;
 		F32 seconds = ms/1000.f;
 
@@ -1079,8 +1058,6 @@ F32 gpu_benchmark()
 		gbps = samples_sec*8;
 
 	LL_INFOS() << "Memory bandwidth is " << llformat("%.3f", gbps) << "GB/sec according to ARB_timer_query" << LL_ENDL;
-
-	return gbps;
 
 	return gbps;
 }
