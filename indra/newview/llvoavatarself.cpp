@@ -892,7 +892,7 @@ void LLVOAvatarSelf::writeWearablesToAvatar()
 void LLVOAvatarSelf::idleUpdateAppearanceAnimation()
 {
 	// Animate all top-level wearable visual parameters
-	gAgentWearables.animateAllWearableParams(calcMorphAmount());
+	gAgentWearables.animateAllWearableParams(calcMorphAmount(), FALSE);
 
 	// Apply wearable visual params to avatar
 	writeWearablesToAvatar();
