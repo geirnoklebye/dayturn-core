@@ -5,7 +5,7 @@
 #  HACD_LIBRARY, the library needed to use HACD.
 #  HACD_FOUND, If false, do not try to use HACD.
 
-find_path(HACD_INCLUDE_DIR llconvexdecomposition.h
+find_path(HACD_INCLUDE_DIR hadHACD.h
   PATH_SUFFIXES hacd
   )
 
@@ -14,7 +14,7 @@ find_library(HACD_LIBRARY
   NAMES ${HACD_NAMES}
   )
 
-find_library( LLCONVEXDECOMP_LIBRARY NAMES  nd_hacdConvexDecomposition )
+find_library( LLCONVEXDECOMP_LIBRARY NAMES  k_hacdConvexDecomposition )
 
 if (HACD_LIBRARY AND HACD_INCLUDE_DIR AND LLCONVEXDECOMP_LIBRARY)
   set(HACD_FOUND "YES")
