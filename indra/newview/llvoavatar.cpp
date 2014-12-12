@@ -8028,6 +8028,7 @@ void LLVOAvatar::dumpArchetypeXML(const std::string& prefix, bool group_by_weara
 			apr_file_printf( file, "\t\t<joint_offset name=\"%s\" position=\"%f %f %f\" mesh_id=\"%s\"/>\n", 
 							 pJoint->getName().c_str(), pos[0], pos[1], pos[2], mesh_id.asString().c_str());
 		}
+	}
 	F32 pelvis_fixup;
 	LLUUID mesh_id;
 	if (hasPelvisFixup(pelvis_fixup, mesh_id))
