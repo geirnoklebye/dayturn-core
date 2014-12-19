@@ -245,6 +245,13 @@ bool LLInventoryFilter::checkFolder(const LLUUID& folder_id) const
 		LLInventoryModelBackgroundFetch::instance().start(folder_id);
 	}
 
+	// when applying a filter, matching folders get their contents downloaded first
+	if (mFilterSubString.size()
+		&& !gInventory.isCategoryComplete(folder_id))
+	{
+		LLInventoryModelBackgroundFetch::instance().start(folder_id);
+	}
+
 	// show folder links
 	LLViewerInventoryItem* item = gInventory.getItem(folder_id);
 	if (item && item->getActualType() == LLAssetType::AT_LINK_FOLDER)

@@ -1050,12 +1050,12 @@ F32 gpu_benchmark()
     }
 #endif
 
-		F32 ms = gBenchmarkProgram.mTimeElapsed/1000000.f;
-		F32 seconds = ms/1000.f;
+	F32 ms = gBenchmarkProgram.mTimeElapsed/1000000.f;
+	F32 seconds = ms/1000.f;
 
-		F64 samples_drawn = res*res*count*samples;
-		F32 samples_sec = (samples_drawn/1000000000.0)/seconds;
-		gbps = samples_sec*8;
+	F64 samples_drawn = res*res*count*samples;
+	F32 samples_sec = (samples_drawn/1000000000.0)/seconds;
+	gbps = samples_sec*8;
 
 	LL_INFOS() << "Memory bandwidth is " << llformat("%.3f", gbps) << "GB/sec according to ARB_timer_query" << LL_ENDL;
 
