@@ -237,8 +237,8 @@ BOOL get_is_item_worn(const LLUUID& id)
 	// TRUE for these objects.
 	if (gAgentAvatarp && item->getType() == LLAssetType::AT_OBJECT)
 	{
-		std::string attachment_point_name = gAgentAvatarp->getAttachedPointName(id);
-		if (attachment_point_name == LLStringUtil::null)
+		std::string attachment_point_name;
+		if (!gAgentAvatarp->getAttachedPointName(id, attachment_point_name))
 		{
 			return FALSE;
 		}

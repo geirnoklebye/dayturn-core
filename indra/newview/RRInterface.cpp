@@ -2045,7 +2045,7 @@ std::deque<LLInventoryItem*> RRInterface::getListOfLockedItems (LLInventoryCateg
 			if (item && item->getType() == LLAssetType::AT_OBJECT) {
 				LLViewerObject* attached_object = avatar->getWornAttachment (item->getLinkedUUID());
 				if (attached_object) {
-					attach_point_name = avatar->getAttachedPointName (item->getLinkedUUID());
+					avatar->getAttachedPointName (item->getLinkedUUID(), attach_point_name);
 					if (!gAgent.mRRInterface.canDetach(attached_object)) {
 						if (sRestrainedLoveDebug) {
 							LL_INFOS() << "found a locked object : " << item->getName() << " on " << attach_point_name << LL_ENDL;
@@ -3943,8 +3943,12 @@ bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_pare
 					}
 					LLViewerObject* attached_object = avatar->getWornAttachment (item->getLinkedUUID());
 					if (attached_object) {
-						if (!isAllowed(attached_object->getRootEdit()->getID(), restriction)) return false;
-						if (contains (restriction+":"+avatar->getAttachedPointName(item->getLinkedUUID()))) return false;
+						std::string attach_point_name;
+						if (avatar->getAttachedPointName(item->getLinkedUUID(), attach_point_name))
+						{
+							if (!isAllowed(attached_object->getRootEdit()->getID(), restriction)) return false;
+							if (contains (restriction+":"+attach_point_name)) return false;
+						}
 					}
 				}
 				else if (item->getType() == LLAssetType::AT_CLOTHING || item->getType() == LLAssetType::AT_BODYPART) {
@@ -4136,10 +4140,13 @@ bool RRInterface::canDetach(LLViewerObject* attached_object)
 
 		LLVOAvatarSelf* avatarp = gAgentAvatarp;
 		if (avatarp) {
-			std::string attachpt = avatarp->getAttachedPointName(item->getLinkedUUID());
-			if (contains("detach:"+attachpt)) return false;
-			if (contains("remattach")) return false;
-			if (contains("remattach:"+attachpt)) return false;
+			std::string attachpt;
+			if (avatarp->getAttachedPointName(item->getLinkedUUID(), attachpt))
+			{
+				if (contains("detach:"+attachpt)) return false;
+				if (contains("remattach")) return false;
+				if (contains("remattach:"+attachpt)) return false;
+			}
 	//				if (!canDetach(attachpt)) return false;
 		}
 	}

@@ -333,7 +333,10 @@ void LLViewerJointAttachment::removeObject(LLViewerObject *object)
 		LLInventoryItem* inv_item = gAgent.mRRInterface.getItem(object->getRootEdit()->getID());
 		if (inv_item) inv_item_id = inv_item->getUUID();
 		std::string target_attachpt = "";
-		if (avatarp) target_attachpt = avatarp->getAttachedPointName(inv_item_id);
+		if (avatarp) 
+		{
+			avatarp->getAttachedPointName(inv_item_id, target_attachpt);
+		}
 		gAgent.mRRInterface.mHandleNoStrip = FALSE;
 		if (!gAgent.mRRInterface.canDetach(object)
 			&& gAgent.mRRInterface.mJustDetached.attachpt != target_attachpt	// we didn't just detach something from this attach pt automatically
