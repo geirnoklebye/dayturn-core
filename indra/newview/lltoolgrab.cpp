@@ -142,8 +142,12 @@ BOOL LLToolGrab::handleMouseDown(S32 x, S32 y, MASK mask)
 
 	// call the base class to propogate info to sim
 	LLTool::handleMouseDown(x, y, mask);
-	
-	if (!gAgent.leftButtonGrabbed())
+
+//MK
+	// We need to be able to click on stuff, even when the controls are grabbed
+	////if (!gAgent.leftButtonGrabbed())
+	if (!gAgent.leftButtonGrabbed() || (mask & MASK_ALT) || (mask & MASK_SHIFT) || (mask & MASK_CONTROL))
+//mk
 	{
 		// can grab transparent objects (how touch event propagates, scripters rely on this)
 		gViewerWindow->pickAsync(x, y, mask, pickCallback, TRUE);
@@ -186,6 +190,18 @@ BOOL LLToolGrab::handleObjectHit(const LLPickInfo& info)
 {
 	mGrabPick = info;
 	LLViewerObject* objectp = mGrabPick.getObject();
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	{
+		// hide grab tool immediately
+		if (gGrabTransientTool)
+		{
+			gBasicToolset->selectTool( gGrabTransientTool );
+			gGrabTransientTool = NULL;
+		}
+		return TRUE;
+	}
+//mk
 
 	if (gDebugClicks)
 	{
@@ -299,7 +315,10 @@ BOOL LLToolGrab::handleObjectHit(const LLPickInfo& info)
 		local_edit_point -= edit_object->getPositionAgent();
 		local_edit_point = local_edit_point * ~edit_object->getRenderRotation();
 		gAgentCamera.setPointAt(POINTAT_TARGET_GRAB, edit_object, local_edit_point );
-		gAgentCamera.setLookAt(LOOKAT_TARGET_SELECT, edit_object, local_edit_point );
+//MK
+		// Do not lose focus when clicking on something
+////		gAgentCamera.setLookAt(LOOKAT_TARGET_SELECT, edit_object, local_edit_point );
+//mk
 	}
 
 	// on transient grabs (clicks on world objects), kill the grab immediately
@@ -327,6 +346,12 @@ void LLToolGrab::startSpin()
 	// Was saveSelectedObjectTransform()
 	LLViewerObject *root = (LLViewerObject *)objectp->getRoot();
 	mSpinRotation = root->getRotation();
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	{
+		return;
+	}
+//mk
 
 	LLMessageSystem *msg = gMessageSystem;
 	msg->newMessageFast(_PREHASH_ObjectSpinStart);
@@ -387,6 +412,24 @@ void LLToolGrab::startGrab()
 
 	// drag from center
 	LLVector3d grab_start_global = root->getPositionGlobal();
+
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	{
+		return;
+	}
+//	if (gRRenabled && gAgent.mRRInterface.mContainsFartouch
+//		&& !objectp->isHUDAttachment())
+//	{
+////		LLVector3 pos = objectp->getPositionRegion ();
+//		LLVector3 pos = mGrabPick.mIntersection;
+//		pos -= gAgent.getPositionAgent ();
+//		if (pos.magVec () >= 1.5)
+//		{
+//			return;
+//		}
+//	}
+//mk
 
 	// Where the grab starts, relative to the center of the root object of the set.
 	// JC - This code looks wonky, but I believe it does the right thing.
@@ -476,6 +519,13 @@ void LLToolGrab::handleHoverActive(S32 x, S32 y, MASK mask)
 		setMouseCapture(FALSE);
 		return;
 	}
+
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	{
+		return;
+	}
+//mk
 
 	//--------------------------------------------------
 	// Toggle spinning
@@ -876,7 +926,10 @@ void LLToolGrab::handleHoverNonPhysical(S32 x, S32 y, MASK mask)
 		local_edit_point -= objectp->getPositionAgent();
 		local_edit_point = local_edit_point * ~objectp->getRenderRotation();
 		gAgentCamera.setPointAt(POINTAT_TARGET_GRAB, objectp, local_edit_point );
-		gAgentCamera.setLookAt(LOOKAT_TARGET_SELECT, objectp, local_edit_point );
+//MK
+		// Do not lose focus when clicking on something
+////		gAgentCamera.setLookAt(LOOKAT_TARGET_SELECT, objectp, local_edit_point );
+//mk
 	}
 	
 	
@@ -1025,7 +1078,10 @@ void LLToolGrab::onMouseCaptureLost()
 
 	LLSelectMgr::getInstance()->updateSelectionCenter();
 	gAgentCamera.setPointAt(POINTAT_TARGET_CLEAR);
-	gAgentCamera.setLookAt(LOOKAT_TARGET_CLEAR);
+//MK
+	// Do not lose focus when clicking on something
+////	gAgentCamera.setLookAt(LOOKAT_TARGET_CLEAR);
+//mk
 
 	dialog_refresh_all();
 }
@@ -1038,6 +1094,13 @@ void LLToolGrab::stopGrab()
 	{
 		return;
 	}
+
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	{
+		return;
+	}
+//mk
 
 	LLPickInfo pick = mGrabPick;
 

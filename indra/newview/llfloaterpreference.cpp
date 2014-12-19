@@ -353,7 +353,7 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mClickActionDirty(false)
 {
 	LLConversationLog::instance().addObserver(this);
-
+	
 	//Build Floater is now Called from 	LLFloaterReg::add("preferences", "floater_preferences.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterPreference>);
 	
 	static bool registered_dialog = false;
@@ -397,7 +397,7 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 
 	sSkin = gSavedSettings.getString("SkinCurrent");
 
-	mCommitCallbackRegistrar.add("Pref.ClickActionChange",		boost::bind(&LLFloaterPreference::onClickActionChange, this));
+	mCommitCallbackRegistrar.add("Pref.ClickActionChange",				boost::bind(&LLFloaterPreference::onClickActionChange, this));
 
 	gSavedSettings.getControl("NameTagShowUsernames")->getCommitSignal()->connect(boost::bind(&handleNameTagOptionChanged,  _2));	
 	gSavedSettings.getControl("NameTagShowFriends")->getCommitSignal()->connect(boost::bind(&handleNameTagOptionChanged,  _2));	
@@ -614,7 +614,7 @@ void LLFloaterPreference::onDoNotDisturbResponseChanged()
 					!= getChild<LLUICtrl>("do_not_disturb_response")->getValue().asString();
 
 	gSavedPerAccountSettings.setBOOL("DoNotDisturbResponseChanged", response_changed_flag );
-}
+	}
 
 LLFloaterPreference::~LLFloaterPreference()
 {
@@ -1289,6 +1289,20 @@ void LLFloaterPreference::refreshEnabledState()
 	// maybe some cards that use shaders, but don't support windlight
 	ctrl_wind_light->setEnabled(ctrl_shader_enable->getEnabled() && shaders);
 
+//MK
+	// If unable to change windlight or debug settings, make sure the Basic & Advanced
+	// Shaders checkboxes are ticked and disabled
+	if (gRRenabled && (gAgent.mRRInterface.mContainsSetenv || gAgent.mRRInterface.mContainsSetdebug))
+	{
+		gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
+		gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
+		ctrl_shader_enable->setValue(TRUE);
+		ctrl_wind_light->setValue(TRUE);
+		ctrl_shader_enable->setEnabled(FALSE);
+		ctrl_wind_light->setEnabled(FALSE);
+	}
+//mk
+
 	//Deferred/SSAO/Shadows
 	LLCheckBoxCtrl* ctrl_deferred = getChild<LLCheckBoxCtrl>("UseLightShaders");
 	LLCheckBoxCtrl* ctrl_deferred2 = getChild<LLCheckBoxCtrl>("UseLightShaders2");
@@ -1740,6 +1754,15 @@ void LLFloaterPreference::setPersonalInfo(const std::string& visibility, bool im
 	getChild<LLUICtrl>("online_visibility")->setLabelArg("[DIR_VIS]", mDirectoryVisibility);
 	getChildView("send_im_to_email")->setEnabled(TRUE);
 	getChild<LLUICtrl>("send_im_to_email")->setValue(im_via_email);
+
+//MK
+	if (gRRenabled && gAgent.mRRInterface.containsWithoutException ("sendim"))
+	{
+		getChildView("do_not_disturb_response")->setEnabled(false);
+	}
+//mk
+
+	
 	getChildView("favorites_on_login_check")->setEnabled(TRUE);
 	getChildView("log_path_button")->setEnabled(TRUE);
 	getChildView("chat_font_size")->setEnabled(TRUE);

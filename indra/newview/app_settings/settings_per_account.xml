@@ -1,5 +1,39 @@
 <llsd>
     <map>
+    <key>RestrainedLoveOffsetAvatarX</key>
+    <map>
+      <key>Comment</key>
+      <string>Offset the avatar left or right.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.0</real>
+    </map>
+    <key>RestrainedLoveOffsetAvatarY</key>
+    <map>
+      <key>Comment</key>
+      <string>Offset the avatar back or forth.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.0</real>
+    </map>
+    <key>RestrainedLoveOffsetAvatarZ</key>
+    <map>
+      <key>Comment</key>
+      <string>Offset the avatar up or down.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.0</real>
+    </map>
+
 <!--Kokua settings-->
 
 <!--Firestorm settings-->

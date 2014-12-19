@@ -134,6 +134,14 @@ void LLToolSelectRect::handleRectangleSelection(S32 x, S32 y, MASK mask)
 		LLViewerCamera::getInstance()->setFar(new_far);
 		LLViewerCamera::getInstance()->setNear(new_near);
 	}
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsFartouch)
+	{
+		// don't allow select by rectangle while under fartouch
+		LLViewerCamera::getInstance()->setFar(0.0f);
+		LLViewerCamera::getInstance()->setNear(0.0f);
+	}
+//mk
 	LLViewerCamera::getInstance()->setPerspective(FOR_SELECTION, 
 							center_x-width/2, center_y-height/2, width, height, 
 							limit_select_distance);
@@ -149,6 +157,12 @@ void LLToolSelectRect::handleRectangleSelection(S32 x, S32 y, MASK mask)
 				{
 					return true;
 				}
+//MK
+				if (gRRenabled && !gAgent.mRRInterface.canEdit (vobjp))
+				{
+					return true;
+				}
+//mk
 				S32 result = LLViewerCamera::getInstance()->sphereInFrustum(drawable->getPositionAgent(), drawable->getRadius());
 				switch (result)
 				{
@@ -203,6 +217,12 @@ void LLToolSelectRect::handleRectangleSelection(S32 x, S32 y, MASK mask)
 				continue;
 			}
 
+//MK
+			if (gRRenabled && !gAgent.mRRInterface.canEdit (vobjp))
+			{
+				continue;
+			}
+//mk
 			if (limit_select_distance && dist_vec_squared(drawable->getWorldPosition(), av_pos) > select_dist_squared)
 			{
 				continue;
@@ -621,7 +641,7 @@ void LLViewerParcelMgr::renderCollisionSegments(U8* segments, BOOL use_pass, LLV
 	F32 pos_y = pos.mV[VY];
 
 	LLGLSUIDefault gls_ui;
-	LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
+	LLGLDepthTest gls_depth(GL_TRUE);
 	LLGLDisable cull(GL_CULL_FACE);
 	
 	if (mCollisionBanned == BA_BANNED ||
@@ -1050,12 +1070,12 @@ F32 gpu_benchmark()
     }
 #endif
 
-		F32 ms = gBenchmarkProgram.mTimeElapsed/1000000.f;
-		F32 seconds = ms/1000.f;
+	F32 ms = gBenchmarkProgram.mTimeElapsed/1000000.f;
+	F32 seconds = ms/1000.f;
 
-		F64 samples_drawn = res*res*count*samples;
-		F32 samples_sec = (samples_drawn/1000000000.0)/seconds;
-		gbps = samples_sec*8;
+	F64 samples_drawn = res*res*count*samples;
+	F32 samples_sec = (samples_drawn/1000000000.0)/seconds;
+	gbps = samples_sec*8;
 
 	LL_INFOS() << "Memory bandwidth is " << llformat("%.3f", gbps) << "GB/sec according to ARB_timer_query" << LL_ENDL;
 

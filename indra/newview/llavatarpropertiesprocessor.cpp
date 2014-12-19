@@ -472,6 +472,10 @@ void LLAvatarPropertiesProcessor::notifyObservers(const LLUUID& id,void* data, E
 
 	observer_multimap_t::iterator oi = observers.begin();
 	observer_multimap_t::iterator end = observers.end();
+//MK
+	// debug code
+	int count = 0;
+//mk
 	for (; oi != end; ++oi)
 	{
 		// only notify observers for the same agent, or if the observer
@@ -479,8 +483,19 @@ void LLAvatarPropertiesProcessor::notifyObservers(const LLUUID& id,void* data, E
 		const LLUUID &agent_id = oi->first;
 		if (agent_id == id || agent_id.isNull())
 		{
-			oi->second->processProperties(data,type);
+//MK
+			//LL_INFOS() << count << LL_ENDL;
+			// We're getting crashes here...
+			LLAvatarPropertiesObserver* tmp = dynamic_cast<LLAvatarPropertiesObserver*> (oi->second);
+			if (tmp != NULL)
+			{
+				tmp->processProperties(data,type);
+			}
+////			oi->second->processProperties(data,type);
 		}
+		// debug code
+		count++;
+//mk
 	}
 }
 

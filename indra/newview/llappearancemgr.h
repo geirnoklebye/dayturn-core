@@ -234,13 +234,19 @@ protected:
 	~LLAppearanceMgr();
 
 private:
-
 	void filterWearableItems(LLInventoryModel::item_array_t& items, S32 max_per_type);
 	
+//MK
+// I need this one public.
+public:
+//mk
 	void getDescendentsOfAssetType(const LLUUID& category, 
 										  LLInventoryModel::item_array_t& items,
 										  LLAssetType::EType type);
 
+//MK
+private:
+//mk
 	void getUserDescendents(const LLUUID& category, 
 								   LLInventoryModel::item_array_t& wear_items,
 								   LLInventoryModel::item_array_t& obj_items,

@@ -50,6 +50,9 @@
 #include "lluictrlfactory.h"
 #include "llviewerwindow.h"
 
+//MK
+#include "llagent.h"
+//mk
 
 LLFloaterOpenObject::LLFloaterOpenObject(const LLSD& key)
 :	LLFloater(key),
@@ -91,6 +94,16 @@ void LLFloaterOpenObject::onOpen(const LLSD& key)
 		closeFloater();
 		return;
 	}
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.mContainsEdit)
+		{
+			closeFloater();
+			return;
+		}
+	}
+//mk
 	mObjectSelection = LLSelectMgr::getInstance()->getEditSelection();
 	refresh();
 }
@@ -246,7 +259,27 @@ void LLFloaterOpenObject::onClickMoveToInventory()
 
 void LLFloaterOpenObject::onClickMoveAndWear()
 {
-	moveToInventory(true, false);
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsDetach)
+	{
+		moveToInventory(false, false);
+	}
+	else
+	{
+		moveToInventory(true, false);
+	}
+//mk
+	closeFloater();
+}
+
+void LLFloaterOpenObject::onClickReplace()
+{
+	moveToInventory(true, true);
+	closeFloater();
+}
+
+void LLFloaterOpenObject::onClickCancel()
+{
 	closeFloater();
 }
 

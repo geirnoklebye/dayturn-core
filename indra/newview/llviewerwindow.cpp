@@ -236,7 +236,7 @@ LLViewerObject*  gDebugRaycastObject = NULL;
 LLVOPartGroup* gDebugRaycastParticle = NULL;
 LLVector4a       gDebugRaycastIntersection;
 LLVector4a		gDebugRaycastParticleIntersection;
-LLVector2        gDebugRaycastTexCoord;
+LLVector2       gDebugRaycastTexCoord;
 LLVector4a       gDebugRaycastNormal;
 LLVector4a       gDebugRaycastTangent;
 S32				gDebugRaycastFaceHit;
@@ -1074,6 +1074,15 @@ BOOL LLViewerWindow::handleRightMouseDown(LLWindow *window,  LLCoordGL pos, MASK
 	x = llround((F32)x / mDisplayScale.mV[VX]);
 	y = llround((F32)y / mDisplayScale.mV[VY]);
 
+//MK
+	// HACK : Since we can't get the right click context menu in mouselook, we have to
+	// use Alt to sit, and we must handle it here
+	if (CAMERA_MODE_MOUSELOOK == gAgentCamera.getCameraMode() && (mask & MASK_ALT))
+	{
+		LLToolPie::getInstance()->handleRightMouseDown(x, y, mask);
+		return true;
+	}
+//mk
 	BOOL down = TRUE;
 	BOOL handle = handleAnyMouseClick(window,pos,mask,LLMouseHandler::CLICK_RIGHT,down);
 	if (handle)
@@ -1081,7 +1090,11 @@ BOOL LLViewerWindow::handleRightMouseDown(LLWindow *window,  LLCoordGL pos, MASK
 
 	// *HACK: this should be rolled into the composite tool logic, not
 	// hardcoded at the top level.
-	if (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && LLToolMgr::getInstance()->getCurrentTool() != LLToolPie::getInstance() && gAgent.isInitialized())
+//MK
+////	if (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && LLToolMgr::getInstance()->getCurrentTool() != LLToolPie::getInstance())
+	// We need to handle right clicks even in mouselook
+	if (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && !(mask & MASK_SHIFT))
+//mk
 	{
 		// If the current tool didn't process the click, we should show
 		// the pie menu.  This can be done by passing the event to the pie
@@ -2004,6 +2017,19 @@ void LLViewerWindow::initWorldUI()
 		navbar->setVisible(FALSE);
 	}
 
+//MK
+	if (gRRenabled && gStatusBar)
+	{
+		bool navbar_visible = gSavedSettings.getBOOL("ShowNavbarNavigationPanel");
+		// if we show the navigation bar or the mini location bar, we don't need the parcel info and sliders on the top status bar
+		// and vice-versa
+		gStatusBar->childSetVisible("parcel_info_panel", !navbar_visible);
+		gStatusBar->childSetVisible("drawdistance", !navbar_visible);
+		gStatusBar->childSetVisible("avatar_z_offset", !navbar_visible);
+		gStatusBar->childSetVisible("avatar_z_offset_reset_btn", !navbar_visible);
+	}
+//mk
+
 	// Top Info bar
 	LLPanel* topinfo_bar_container = getRootView()->getChild<LLPanel>("topinfo_bar_container");
 	LLPanelTopInfoBar* topinfo_bar = LLPanelTopInfoBar::getInstance();
@@ -2177,6 +2203,9 @@ void LLViewerWindow::shutdownViews()
 	cleanup_menus();
 	LL_INFOS() << "menus destroyed." << LL_ENDL ;
 
+	view_listener_t::cleanup();
+	LL_INFOS() << "view listeners destroyed." << LL_ENDL ;
+	
 	view_listener_t::cleanup();
 	LL_INFOS() << "view listeners destroyed." << LL_ENDL ;
 	
@@ -2433,7 +2462,7 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
 	
 //    else if(god_mode && LLGridManager::getInstance()->isInSLBeta())
 //		{
-			new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionGodBgColor" );
+        new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionGodBgColor" );
 //		}
     }
 	else if (boost::regex_search(channel, is_beta_channel))
@@ -2443,7 +2472,7 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
 	else if (boost::regex_search(channel, is_project_channel))
 	{
 		new_bg_color = LLUIColorTable::instance().getColor( "MenuBarProjectBgColor" );
-	}
+    }
 	else if (boost::regex_search(channel, is_test_channel))
 	{
 		new_bg_color = LLUIColorTable::instance().getColor( "MenuBarTestBgColor" );
@@ -2452,10 +2481,10 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
 //	{
 //		new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionBgColor" );
 //	}
-	else 
-	{
-		new_bg_color = LLUIColorTable::instance().getColor( "MenuBarBgColor" );
-	}
+    else 
+    {
+        new_bg_color = LLUIColorTable::instance().getColor( "MenuBarBgColor" );
+    }
 
 
     if(gMenuBarView)
@@ -2786,8 +2815,15 @@ BOOL LLViewerWindow::handleKey(KEY key, MASK mask)
 	// If "Pressing letter keys starts local chat" option is selected, we are not in mouselook, 
 	// no view has keyboard focus, this is a printable character key (and no modifier key is 
 	// pressed except shift), then give focus to nearby chat (STORM-560)
-	if ( gSavedSettings.getS32("LetterKeysFocusChatBar") && !gAgentCamera.cameraMouselook() && 
+//MK
+	// Actually do not check we are in Mouselook, it confuses the user when they have to press Enter first
+	// only when being in Mouselook, while not having to do it in 3rd-person view. I don't see a reason why
+	// the two camera modes should be treated any differently.
+////	if ( gSavedSettings.getS32("LetterKeysFocusChatBar") && !gAgentCamera.cameraMouselook() && 
+////		!keyboard_focus && key < 0x80 && (mask == MASK_NONE || mask == MASK_SHIFT) )
+	if ( gSavedSettings.getS32("LetterKeysFocusChatBar") &&  
 		!keyboard_focus && key < 0x80 && (mask == MASK_NONE || mask == MASK_SHIFT) )
+//mk
 	{
 		// Initialize nearby chat if it's missing
 		LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
@@ -3767,6 +3803,20 @@ void LLViewerWindow::renderSelections( BOOL for_gl_pick, BOOL pick_parcel_walls,
 						{
 							moveable_object_selected = TRUE;
 							this_object_movable = TRUE;
+//MK
+							// can't edit objects that someone is sitting on,
+							// when prevented from sit-tping
+							LLVOAvatar* avatar = gAgentAvatarp;
+							if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")
+									|| (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
+							{
+								if (object->isSeat())
+								{
+									moveable_object_selected = FALSE;
+									this_object_movable = FALSE;
+								}
+							}
+//mk
 						}
 						all_selected_objects_move = all_selected_objects_move && this_object_movable;
 						all_selected_objects_modify = all_selected_objects_modify && object->permModify();
@@ -3923,7 +3973,7 @@ LLPickInfo LLViewerWindow::pickImmediate(S32 x, S32 y_from_bot,  BOOL pick_trans
 		// "Show Debug Alpha" means no object actually transparent
 		pick_transparent = TRUE;
 	}
-	
+
 	// shortcut queueing in mPicks and just update mLastPick in place
 	MASK	key_mask = gKeyboard->currentMask(TRUE);
 	mLastPick = LLPickInfo(LLCoordGL(x, y_from_bot), key_mask, pick_transparent, pick_particle, TRUE, NULL);
@@ -3954,7 +4004,7 @@ LLHUDIcon* LLViewerWindow::cursorIntersectIcon(S32 mouse_x, S32 mouse_y, F32 dep
 	LLVector4a start, end;
 	start.load3(mouse_world_start.mV);
 	end.load3(mouse_world_end.mV);
-	
+
 	return LLHUDIcon::lineSegmentIntersectAll(start, end, intersection);
 }
 
@@ -4051,7 +4101,17 @@ LLViewerObject* LLViewerWindow::cursorIntersect(S32 mouse_x, S32 mouse_y, F32 de
 	{
 		found = gPipeline.lineSegmentIntersectInHUD(mh_start, mh_end, pick_transparent,
 													face_hit, intersection, uv, normal, tangent);
-
+//MK
+		// HACK : don't allow focusing on HUDs unless we are in Mouselook mode
+		if (gRRenabled && gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+		{
+			MASK mask = gKeyboard->currentMask(TRUE);
+			if (mask & MASK_ALT)
+			{
+				found = NULL;
+			}
+		}
+//mk
 		if (!found) // if not found in HUD, look in world:
 		{
 			found = gPipeline.lineSegmentIntersectInWorld(mw_start, mw_end, pick_transparent,
@@ -4462,6 +4522,13 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 	// if not showing ui, use full window to render world view
 	updateWorldViewRect(!show_ui);
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mHasLockedHuds)
+	{
+		LLPipeline::sShowHUDAttachments = TRUE;
+	}
+//mk
+	
 	// Copy screen to a buffer
 	// crop sides or top and bottom, if taking a snapshot of different aspect ratio
 	// from window
@@ -5388,7 +5455,6 @@ void LLPickInfo::fetchResults()
 		delta.setSub(intersection, origin);
 		icon_dist = delta.getLength3().getF32();
 	}
-
 	LLViewerObject* hit_object = gViewerWindow->cursorIntersect(mMousePt.mX, mMousePt.mY, 512.f,
 									NULL, -1, mPickTransparent, &face_hit,
 									&intersection, &uv, &normal, &tangent, &start, &end);
@@ -5408,7 +5474,7 @@ void LLPickInfo::fetchResults()
 			particle_end = end;
 		}
 	}
-
+	
 	LLViewerObject* objectp = hit_object;
 
 
@@ -5423,7 +5489,6 @@ void LLPickInfo::fetchResults()
 		mHUDIcon = hit_icon;
 		mPickType = PICK_ICON;
 		mPosGlobal = mHUDIcon->getPositionGlobal();
-
 	}
 	else if (objectp)
 	{

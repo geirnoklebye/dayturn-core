@@ -22,7 +22,7 @@
  * 
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
- */ 
+ */
 
 #ifndef LL_LLPANELPEOPLE_H
 #define LL_LLPANELPEOPLE_H
@@ -92,6 +92,9 @@ private:
 	bool					updateSuggestedFriendList();
 	void					updateNearbyList();
 	void					updateRecentList();
+//MK
+	void					updateNearbyRange();
+//mk
 	void					updateFacebookList(bool visible);
 
 	bool					isItemsFreeOfFriends(const uuid_vec_t& uuids);
@@ -100,6 +103,9 @@ private:
 	std::string				getActiveTabName() const;
 	LLUUID					getCurrentItemID() const;
 	void					getCurrentItemIDs(uuid_vec_t& selected_uuids) const;
+//MK
+	void					reportToNearbyChat(std::string message);
+//mk
 	void					showGroupMenu(LLMenuGL* menu);
 	void					setSortOrder(LLAvatarList* list, ESortOrder order, bool save = true);
 
@@ -174,7 +180,27 @@ private:
 	Updater*				mRecentListUpdater;
 	Updater*				mFacebookListUpdater;
 	Updater*				mButtonsUpdater;
-    LLHandle< LLFloater >	mPicker;
+	LLHandle< LLFloater >	mPicker;
+//MK
+	LLMenuButton*			mNearbyGearButton;
+	LLMenuButton*			mFriendsGearButton;
+	LLMenuButton*			mGroupsGearButton;
+	LLMenuButton*			mRecentGearButton;
+
+	std::string				mFilterSubString;
+	std::string				mFilterSubStringOrig;
+	
+	struct radarFields 
+	{
+		std::string avName;
+		F32 lastDistance;
+		LLVector3d lastGlobalPos;
+		LLUUID lastRegion;
+		time_t firstSeen;
+		S32 lastStatus;
+	}; 
+	std::map < LLUUID, radarFields > lastRadarSweep;
+//mk
 };
 
 #endif //LL_LLPANELPEOPLE_H

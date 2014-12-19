@@ -212,6 +212,13 @@ boost::signals2::connection LLPanelTopInfoBar::setResizeCallback( const resize_s
 
 void LLPanelTopInfoBar::draw()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		toggle_show_mini_location_panel(LLSD(false));
+		gSavedSettings.setBOOL ("ShowMiniLocationPanel", FALSE);
+	}
+//mk
 	updateParcelInfoText();
 	updateHealth();
 
@@ -237,6 +244,13 @@ void LLPanelTopInfoBar::setParcelInfoText(const std::string& new_text)
 
 	mParcelInfoText->setText(new_text);
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		std::string dummy_text = "(Hidden)";
+		mParcelInfoText->setText(dummy_text);
+	}
+//mk
 	LLRect rect = mParcelInfoText->getRect();
 	rect.setOriginAndSize(rect.mLeft, rect.mBottom, new_text_width, rect.getHeight());
 
@@ -266,7 +280,21 @@ void LLPanelTopInfoBar::updateParcelInfoText()
 {
 	static LLUICachedControl<bool> show_coords("NavBarShowCoordinates", false);
 
-	if (show_coords)
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		std::string dummy_text = "(Hidden)";
+		mParcelInfoText->setText(dummy_text);
+		toggle_show_mini_location_panel(LLSD(false));
+		return;
+	}
+//mk
+
+//MK
+	// Update the location whether the coordinates are shown or not, because
+	// buildLocationString() is where the parcel, region and coords are hidden
+////	if (show_coords)
+//mk
 	{
 		std::string new_text;
 

@@ -138,6 +138,23 @@ BOOL LLToolPie::handleRightMouseDown(S32 x, S32 y, MASK mask)
 	mPick = gViewerWindow->pickImmediate(x, y, FALSE, TRUE);
 	mPick.mKeyMask = mask;
 
+//MK
+	// HACK : if alt-right-clicking and not in mouselook, HUDs are passed through and we risk
+	// right-clicking in-world
+	// => sit on this object instead of selecting it (this may be convenient if the whole screen is obstructed by a HUD prim
+	if (gRRenabled && (mask & MASK_ALT)) // && gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+	{
+		if (isAgentAvatarValid())
+		{
+			handle_object_sit_or_stand();
+			resetSelection();
+			// put focus in world when sitting on an object
+			//gFocusMgr.setKeyboardFocus(NULL);
+		}
+		return TRUE;
+	}
+//mk
+
 	// claim not handled so UI focus stays same
 	if(gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
 	{
@@ -178,8 +195,15 @@ BOOL LLToolPie::handleLeftClickPick()
 			}
 			else
 			{
-				// not selling passes, get info
-				LLFloaterReg::showInstance("about_land");
+//MK
+				if (!gRRenabled || !gAgent.mRRInterface.mContainsShowloc)
+				{
+//mk
+					// not selling passes, get info
+					LLFloaterReg::showInstance("about_land");
+//MK
+				}
+//mk
 			}
 		}
 
@@ -209,6 +233,13 @@ BOOL LLToolPie::handleLeftClickPick()
 	// If it's a left-click, and we have a special action, do it.
 	if (useClickAction(mask, object, parent))
 	{
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (object, mPick.mIntersection))
+	{
+		return FALSE;
+	}
+//mk
+
 		mClickAction = 0;
 		if (object && object->getClickAction()) 
 		{
@@ -546,6 +577,17 @@ void LLToolPie::selectionPropertiesReceived()
 				}
 				break;
 			case CLICK_ACTION_OPEN:
+//MK
+				if (gRRenabled && !gAgent.mRRInterface.canEdit (LLSelectMgr::getInstance()->getSelection()->getPrimaryObject()))
+				{
+					return;
+				}
+
+				if (gRRenabled && !gAgent.mRRInterface.canTouchFar (selected_object, LLToolPie::getInstance()->getPick().mIntersection))
+				{
+					return;
+				}
+//mk
 				LLFloaterReg::showInstance("openobject");
 				break;
 			default:
@@ -692,7 +734,13 @@ BOOL LLToolPie::handleMouseUp(S32 x, S32 y, MASK mask)
 			// pretend we picked some point a bit in front of avatar
 			mPick.mPosGlobal = gAgent.getPositionGlobal() + LLVector3d(LLViewerCamera::instance().getAtAxis()) * SELF_CLICK_WALK_DISTANCE;
 		}
-		gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
+//MK
+////		gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
+		//look at the target
+		LLVector3 look_at = (LLVector3)mPick.mPosGlobal - (LLVector3)gAgent.getPositionGlobal();
+		look_at.normVec();
+		gAgentCamera.slamLookAt(look_at);
+//mk
 		walkToClickedLocation();
 		LLFirstUse::notMoving(false);
 
@@ -733,6 +781,12 @@ BOOL LLToolPie::handleDoubleClick(S32 x, S32 y, MASK mask)
 		if ((mPick.mPickType == LLPickInfo::PICK_LAND && !mPick.mPosGlobal.isExactlyZero()) ||
 			(mPick.mObjectID.notNull()  && !mPick.mPosGlobal.isExactlyZero()))
 		{
+//MK
+			//look at the target
+			LLVector3 look_at = (LLVector3)mPick.mPosGlobal - (LLVector3)gAgent.getPositionGlobal();
+			look_at.normVec();
+			gAgentCamera.slamLookAt(look_at);
+//mk
 			walkToClickedLocation();
 			return TRUE;
 		}
@@ -841,6 +895,12 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 		{
 			if (gCacheName->getGroupName(owner, name))
 			{
+//MK
+				if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+				{
+					name = gAgent.mRRInterface.getDummyName (name);
+				}
+//mk
 				line.append(name);
 				line.append(LLTrans::getString("TooltipIsGroup"));
 			}
@@ -851,6 +911,12 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 		}
 		else if(gCacheName->getFullName(owner, name))
 		{
+//MK
+			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+			{
+				name = gAgent.mRRInterface.getDummyName (name);
+			}
+//mk
 			line.append(name);
 		}
 		else
@@ -1000,6 +1066,12 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 				final_name = LLTrans::getString("TooltipPerson");;
 			}
 
+//MK
+			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+			{
+				final_name = gAgent.mRRInterface.getDummyName (av_name.getUserName());
+			}
+//mk
 			// *HACK: We may select this object, so pretend it was clicked
 			mPick = mHoverPick;
 			LLInspector::Params p;
@@ -1145,6 +1217,14 @@ BOOL LLToolPie::handleToolTip(S32 local_x, S32 local_y, MASK mask)
 
 	LLViewerObject* hover_object = mHoverPick.getObject();
 	
+//MK
+	// Don't show a tooltip for an object we can't reach or see
+	if (gRRenabled && !gAgent.mRRInterface.canTouchFar (hover_object))
+	{
+		return TRUE;
+	}
+//mk
+
 	// update hover object and hover parcel
 	LLSelectMgr::getInstance()->setHoverObject(hover_object, mHoverPick.mObjectFace);
 	
@@ -1166,6 +1246,12 @@ BOOL LLToolPie::handleToolTip(S32 local_x, S32 local_y, MASK mask)
 
 static void show_inspector(const char* inspector, const char* param, const LLUUID& source_id)
 {
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	{
+		return;
+	}
+//mk
 	LLSD params;
 	params[param] = source_id;
 	if (LLToolTipMgr::instance().toolTipVisible())
@@ -1722,6 +1808,40 @@ BOOL LLToolPie::handleRightClickPick()
 			if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
 				gPieMenuAttachmentSelf->show(x, y);
 			else
+//MK
+			if (gRRenabled)
+			{
+				// For convenience, if Control or Shift (or both) is down while right clicking, change the current tool
+				// We can't use Alt, because when Alt is pressed clicks pass through HUDs and we don't want to be able
+				// to use an object if going through a HUD
+				if (mask & MASK_CONTROL && mask & MASK_SHIFT)
+				{
+					// Edit (add to selection)
+					handle_object_edit();
+					return TRUE;
+				}
+				else if (mask & MASK_CONTROL)
+				{
+					// Edit (clear previous selection)
+					// The current selection will be cleared first, because SHIFT is not held
+					// (see the change about the mask in LLToolSelect::handleObjectSelection() )
+					handle_object_edit();
+					return TRUE;
+				}
+				else if (mask & MASK_SHIFT)
+				{
+					// Detach object
+					gAgent.mRRInterface.mHandleNoStrip = FALSE;
+					if (gAgent.mRRInterface.canDetachAllSelectedObjects()) //canDetach (object, false))
+					{
+						LLSelectMgr::getInstance()->sendDetach();
+					}
+					gAgent.mRRInterface.mHandleNoStrip = TRUE;
+//					gAgent.mRRInterface.detachObject (object);
+					return TRUE;
+				}
+			}
+//mk
 			gMenuAttachmentSelf->show(x, y);
 		}
 		else
@@ -1733,10 +1853,49 @@ BOOL LLToolPie::handleRightClickPick()
 			{
 				name = node->mName;
 			}
-
+			
 				if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
 					gPieMenuObject->show(x, y);
 				else
+			std::string mute_msg;
+			if (LLMuteList::getInstance()->isMuted(object->getID(), name))
+			{
+				mute_msg = LLTrans::getString("UnmuteObject");
+			}
+			else
+			{
+				mute_msg = LLTrans::getString("MuteObject2");
+			}
+
+//MK
+			if (gRRenabled)
+			{
+				// For convenience, if Control or Shift (or both) is down while right clicking, change the current tool
+				// We can't use Alt, because when Alt is pressed clicks pass through HUDs and we don't want to be able
+				// to use an object if going through a HUD
+				if (mask & MASK_CONTROL && mask & MASK_SHIFT)
+				{
+					// Edit (add to selection)
+					handle_object_edit();
+					return TRUE;
+				}
+				else if (mask & MASK_CONTROL)
+				{
+					// Edit (clear previous selection)
+					// The current selection will be cleared first, because SHIFT is not held
+					// (see the change about the mask in LLToolSelect::handleObjectSelection() )
+					handle_object_edit();
+					return TRUE;
+				}
+				else if (mask & MASK_SHIFT)
+				{
+					// Open object
+					handle_object_open();
+					return TRUE;
+				}
+			}
+//mk
+			gMenuHolder->getChild<LLUICtrl>("Object Mute")->setValue(mute_msg);
 			gMenuObject->show(x, y);
 
 			showVisualContextMenuEffect();

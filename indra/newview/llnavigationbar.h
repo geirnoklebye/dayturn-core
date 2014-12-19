@@ -109,6 +109,9 @@ private:
 	void showTeleportHistoryMenu(LLUICtrl* btn_ctrl);
 	void invokeSearch(std::string search_text);
 	// callbacks
+//MK
+	void onAvatarHeightOffsetResetButtonClicked();
+//mk
 	void onTeleportHistoryMenuItemClicked(const LLSD& userdata);
 	void onTeleportHistoryChanged();
 	void onBackButtonClicked();
@@ -139,6 +142,9 @@ private:
 	LLPullButton*				mBtnBack;
 	LLPullButton*				mBtnForward;
 	LLButton*					mBtnHome;
+//MK
+	LLButton*					mAvatarHeightOffsetResetBtn;
+//mk
 	LLLocationInputCtrl*		mCmbLocation;
 	LLRect						mDefaultNbRect;
 	LLRect						mDefaultFpRect;

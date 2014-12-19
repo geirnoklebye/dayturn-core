@@ -62,7 +62,7 @@
      length="1"
      embedded_items="true"
      follows="left|top|right|bottom"
-     font="SansSerif"
+     font="Monospace"
      height="281"
      ignore_tab="false"
      layout="topleft"

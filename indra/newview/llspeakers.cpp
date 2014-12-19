@@ -243,6 +243,10 @@ void LLSpeakersDelayActionsStorage::removeAllTimers()
 	for (; iter != mActionTimersMap.end(); ++iter)
 	{
 		delete iter->second;
+//MK
+		// Never forget to set a deleted pointer to NULL if its not a local one.
+		iter->second = NULL;
+//mk
 	}
 	mActionTimersMap.clear();
 }
@@ -306,7 +310,6 @@ protected:
 private:
 	LLUUID mSessionID;
 };
-
 //
 // LLSpeakerMgr
 //
@@ -326,6 +329,10 @@ LLSpeakerMgr::LLSpeakerMgr(LLVoiceChannel* channelp) :
 LLSpeakerMgr::~LLSpeakerMgr()
 {
 	delete mSpeakerDelayRemover;
+//MK
+	// Never forget to set a deleted pointer to NULL if its not a local one.
+	mSpeakerDelayRemover;
+//mk
 }
 
 LLPointer<LLSpeaker> LLSpeakerMgr::setSpeaker(const LLUUID& id, const std::string& name, LLSpeaker::ESpeakerStatus status, LLSpeaker::ESpeakerType type)
@@ -401,6 +408,12 @@ void LLSpeakerMgr::initVoiceModerateMode()
 
 void LLSpeakerMgr::update(BOOL resort_ok)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		return;
+	}
+//mk
 	if (!LLVoiceClient::getInstance())
 	{
 		return;
@@ -518,11 +531,17 @@ void LLSpeakerMgr::update(BOOL resort_ok)
 
 void LLSpeakerMgr::updateSpeakerList()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		return;
+	}
+//mk
 	// Are we bound to the currently active voice channel?
 	if ((!mVoiceChannel && LLVoiceClient::getInstance()->inProximalChannel()) || (mVoiceChannel && mVoiceChannel->isActive()))
 	{
-		std::set<LLUUID> participants;
-		LLVoiceClient::getInstance()->getParticipantList(participants);
+	        std::set<LLUUID> participants;
+	        LLVoiceClient::getInstance()->getParticipantList(participants);
 		// If we are, add all voice client participants to our list of known speakers
 		for (std::set<LLUUID>::iterator participant_it = participants.begin(); participant_it != participants.end(); ++participant_it)
 		{
@@ -530,6 +549,8 @@ void LLSpeakerMgr::updateSpeakerList()
 						   LLVoiceClient::getInstance()->getDisplayName(*participant_it),
 						   LLSpeaker::STATUS_VOICE_ACTIVE, 
 						   (LLVoiceClient::getInstance()->isParticipantAvatar(*participant_it)?LLSpeaker::SPEAKER_AGENT:LLSpeaker::SPEAKER_EXTERNAL));
+
+
 		}
 	}
 	else 
@@ -1020,6 +1041,18 @@ LLLocalSpeakerMgr::~LLLocalSpeakerMgr ()
 
 void LLLocalSpeakerMgr::updateSpeakerList()
 {
+//MK
+	// When @shownames is active, the list of nearby speakers must be emptied completely
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		for (speaker_map_t::iterator speaker_it = mSpeakers.begin(); speaker_it != mSpeakers.end(); ++speaker_it)
+		{
+			LLSpeaker* speakerp = speaker_it->second;
+			setSpeakerNotInChannel(speakerp);
+		}
+		return;
+	}
+//mk
 	// pull speakers from voice channel
 	LLSpeakerMgr::updateSpeakerList();
 

@@ -198,6 +198,13 @@ BOOL LLInspectAvatar::postBuild(void)
 //virtual
 void LLInspectAvatar::onOpen(const LLSD& data)
 {
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	{
+		closeFloater();		
+	}
+//mk
+
 	// Start open animation
 	LLInspect::onOpen(data);
 

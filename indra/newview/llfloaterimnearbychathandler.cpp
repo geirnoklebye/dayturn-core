@@ -372,7 +372,7 @@ void LLFloaterIMNearbyChatScreenChannel::arrangeToasts()
 	{
 		mFloaterSnapRegion = gViewerWindow->getRootView()->getChildView("floater_snap_region");
 	}
-	
+
 	if (!getParent())
 	{
 		// connect to floater snap region just to get resize events, we don't care about being a proper widget 

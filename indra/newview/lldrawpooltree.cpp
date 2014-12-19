@@ -63,7 +63,7 @@ void LLDrawPoolTree::prerender()
 void LLDrawPoolTree::beginRenderPass(S32 pass)
 {
 	LL_RECORD_BLOCK_TIME(FTM_RENDER_TREES);
-		
+	
 	if (LLPipeline::sUnderWaterRender)
 	{
 		shader = &gTreeWaterProgram;
@@ -132,7 +132,7 @@ void LLDrawPoolTree::render(S32 pass)
 void LLDrawPoolTree::endRenderPass(S32 pass)
 {
 	LL_RECORD_BLOCK_TIME(FTM_RENDER_TREES);
-		
+	
 	if (gPipeline.canUseWindLightShadersOnObjects())
 	{
 		shader->unbind();
@@ -164,7 +164,7 @@ void LLDrawPoolTree::renderDeferred(S32 pass)
 void LLDrawPoolTree::endDeferredPass(S32 pass)
 {
 	LL_RECORD_BLOCK_TIME(FTM_RENDER_TREES);
-		
+	
 	shader->unbind();
 }
 
@@ -190,7 +190,7 @@ void LLDrawPoolTree::renderShadow(S32 pass)
 void LLDrawPoolTree::endShadowPass(S32 pass)
 {
 	LL_RECORD_BLOCK_TIME(FTM_SHADOW_TREE);
-	
+
 	glPolygonOffset(gSavedSettings.getF32("RenderDeferredSpotShadowOffset"),
 						gSavedSettings.getF32("RenderDeferredSpotShadowBias"));
 	gDeferredTreeShadowProgram.unbind();

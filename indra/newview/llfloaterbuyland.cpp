@@ -29,6 +29,7 @@
 #include "llfloaterbuyland.h"
 
 // viewer includes
+#include "llxmlrpctransaction.h"
 #include "llagent.h"
 #include "llbutton.h"
 #include "llcachename.h"
@@ -59,7 +60,6 @@
 #include "llweb.h"
 #include "llwindow.h"
 #include "llworld.h"
-#include "llxmlrpctransaction.h"
 #include "llviewernetwork.h"
 #include "roles_constants.h"
 
@@ -838,6 +838,12 @@ void LLFloaterBuyLandUI::updateNames()
 	{
 		mParcelSellerName = LLSLURL("agent", parcelp->getOwnerID(), "completename").getSLURLString();
 	}
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		mParcelSellerName = gAgent.mRRInterface.getDummyName (mParcelSellerName);
+	}
+//mk
 }
 
 void LLFloaterBuyLandUI::updateGroupName(const LLUUID& id,

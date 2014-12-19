@@ -383,6 +383,14 @@ void LLGiveInventory::commitGiveInventoryItem(const LLUUID& to_agent,
 												const LLUUID& im_session_id)
 {
 	if (!item) return;
+//MK
+	// Don't let the user give an item or a folder if they can't see their inventory,
+	// to thwart any plan of circumventing communication restrictions
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
+	{
+		return;
+	}
+//mk
 	std::string name;
 	LLAgentUI::buildFullname(name);
 	LLUUID transaction_id;
@@ -485,6 +493,14 @@ bool LLGiveInventory::commitGiveInventoryCategory(const LLUUID& to_agent,
 	{
 		return false;
 	}
+//MK
+	// Don't let the user give an item or a folder if they can't see their inventory,
+	// to thwart any plan of circumventing communication restrictions
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
+	{
+		return false;
+	}
+//mk
 	LL_INFOS() << "LLGiveInventory::commitGiveInventoryCategory() - "
 		<< cat->getUUID() << LL_ENDL;
 

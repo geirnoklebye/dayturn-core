@@ -40,6 +40,7 @@ endif (WINDOWS)
     use_prebuilt_binary(gtk-etc)
 
     set(UI_LIBRARIES
+	freetype
         atk-1.0
         cairo
         gdk-x11-2.0

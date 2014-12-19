@@ -382,6 +382,12 @@ BOOL LLTaskInvFVBridge::isItemRenameable() const
 	LLViewerObject* object = gObjectList.findObject(mPanel->getTaskUUID());
 	if(object)
 	{
+//MK
+		if (gRRenabled && !gAgent.mRRInterface.canDetach(object))
+		{
+			return FALSE;
+		}
+//mk
 		LLInventoryItem* item = (LLInventoryItem*)(object->getInventoryObject(mUUID));
 		if(item && gAgent.allowOperation(PERM_MODIFY, item->getPermissions(),
 										 GP_OBJECT_MANIPULATE, GOD_LIKE))
@@ -426,7 +432,25 @@ BOOL LLTaskInvFVBridge::isItemMovable() const
 
 BOOL LLTaskInvFVBridge::isItemRemovable() const
 {
-	const LLViewerObject* object = gObjectList.findObject(mPanel->getTaskUUID());
+	LLViewerObject* object = gObjectList.findObject(mPanel->getTaskUUID());
+//MK
+	// can't edit objects that someone is sitting on,
+	// when prevented from sit-tping
+	if (gRRenabled && object && (gAgent.mRRInterface.contains ("sittp")
+		|| gAgent.mRRInterface.mContainsUnsit))
+	{
+		if (object->isSeat())
+		{
+			return FALSE;
+		}
+	}
+
+	if (gRRenabled && object && !gAgent.mRRInterface.canDetach(object))
+	{
+		return FALSE;
+	}
+//mk
+
 	if(object
 	   && (object->permModify() || object->permYouOwner()))
 	{
@@ -906,7 +930,11 @@ public:
 
 void LLTaskTextureBridge::openItem()
 {
-	LL_INFOS() << "LLTaskTextureBridge::openItem()" << LL_ENDL;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains ("viewtexture")) {
+		return;
+	}
+//mk
 	LLPreviewTexture* preview = LLFloaterReg::showTypedInstance<LLPreviewTexture>("preview_texture", LLSD(mUUID), TAKE_FOCUS_YES);
 	if(preview)
 	{
@@ -1100,8 +1128,26 @@ public:
 
 void LLTaskLSLBridge::openItem()
 {
-	LL_INFOS() << "LLTaskLSLBridge::openItem() " << mUUID << LL_ENDL;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains ("viewscript")) {
+		return;
+	}
+//mk
 	LLViewerObject* object = gObjectList.findObject(mPanel->getTaskUUID());
+//MK
+	if (gRRenabled && object)
+	{
+		if (!gAgent.mRRInterface.canDetach(object))
+		{
+			return;
+		}
+
+		if (gAgent.mRRInterface.contains ("viewnote"))
+		{
+			return;
+		}
+	}
+//mk
 	if(!object || object->isInventoryPending())
 	{
 		return;
@@ -1160,6 +1206,16 @@ public:
 void LLTaskNotecardBridge::openItem()
 {
 	LLViewerObject* object = gObjectList.findObject(mPanel->getTaskUUID());
+//MK
+	if (gRRenabled && object && !gAgent.mRRInterface.canDetach(object))
+	{
+		return;
+	}
+
+	if (gRRenabled && gAgent.mRRInterface.contains ("viewnote")) {
+		return;
+	}
+//mk
 	if(!object || object->isInventoryPending())
 	{
 		return;

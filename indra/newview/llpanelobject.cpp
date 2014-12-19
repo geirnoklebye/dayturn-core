@@ -63,6 +63,10 @@
 #include "llviewerregion.h"
 #include "llviewerwindow.h"
 #include "llviewerinventory.h"
+//MK
+#include "llvoavatar.h"
+#include "llvoavatarself.h"
+//mk
 #include "llvovolume.h"
 #include "llworld.h"
 #include "pipeline.h"
@@ -423,6 +427,24 @@ void LLPanelObject::getState( )
 		enable_rotate = FALSE;
 	}
 	
+//MK
+	LLVOAvatarSelf* avatar = gAgentAvatarp;
+	if (gRRenabled && 
+		(gAgent.mRRInterface.contains ("sittp") || (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
+	{
+		// don't allow modification if someone is sitting on this object and avatar
+		// is prevented from sit-tping
+		if (gAgentAvatarp && gAgentAvatarp->mIsSitting)
+		{
+			if (objectp->getRootEdit()->isSeat ())
+			{
+				enable_move = FALSE;
+				enable_scale = FALSE;
+				enable_rotate = FALSE;
+			}
+		}
+	}
+//mk
 	LLVector3 vec;
 	if (enable_move)
 	{

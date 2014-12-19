@@ -207,10 +207,23 @@ void LLAgentCamera::init()
 	mCameraOffsetInitial[CAMERA_PRESET_REAR_VIEW] = gSavedSettings.getControl("CameraOffsetRearView");
 	mCameraOffsetInitial[CAMERA_PRESET_FRONT_VIEW] = gSavedSettings.getControl("CameraOffsetFrontView");
 	mCameraOffsetInitial[CAMERA_PRESET_GROUP_VIEW] = gSavedSettings.getControl("CameraOffsetGroupView");
+//MK
+	// More camera presets
+	mCameraOffsetInitial[CAMERA_PRESET_LEFT_VIEW] = gSavedSettings.getControl("CameraOffsetLeftView");
+	mCameraOffsetInitial[CAMERA_PRESET_RIGHT_VIEW] = gSavedSettings.getControl("CameraOffsetRightView");
+	mCameraOffsetInitial[CAMERA_PRESET_TOPDOWN_VIEW] = gSavedSettings.getControl("CameraOffsetTopView");
+//mk
 
 	mFocusOffsetInitial[CAMERA_PRESET_REAR_VIEW] = gSavedSettings.getControl("FocusOffsetRearView");
 	mFocusOffsetInitial[CAMERA_PRESET_FRONT_VIEW] = gSavedSettings.getControl("FocusOffsetFrontView");
 	mFocusOffsetInitial[CAMERA_PRESET_GROUP_VIEW] = gSavedSettings.getControl("FocusOffsetGroupView");
+
+//MK
+	// More camera presets
+	mFocusOffsetInitial[CAMERA_PRESET_LEFT_VIEW] = gSavedSettings.getControl("FocusOffsetLeftView");
+	mFocusOffsetInitial[CAMERA_PRESET_RIGHT_VIEW] = gSavedSettings.getControl("FocusOffsetRightView");
+	mFocusOffsetInitial[CAMERA_PRESET_TOPDOWN_VIEW] = gSavedSettings.getControl("FocusOffsetTopView");
+//mk
 
 	mCameraCollidePlane.clearVec();
 	mCurrentCameraDistance = getCameraOffsetInitial().magVec() * gSavedSettings.getF32("CameraOffsetScale");
@@ -279,6 +292,16 @@ LLAgentCamera::~LLAgentCamera()
 //-----------------------------------------------------------------------------
 void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
 {
+//MK
+	if (gRRenabled)
+	{
+		if (mCameraMode != CAMERA_MODE_MOUSELOOK && gAgent.mRRInterface.mCamDistMax <= 0.0)
+		{
+			changeCameraToMouselook(FALSE);
+			return;
+		}
+	}
+//mk
 	if (gAgent.getAutoPilot())
 	{
 		gAgent.stopAutoPilot(TRUE);
@@ -355,6 +378,12 @@ void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
 //-----------------------------------------------------------------------------
 void LLAgentCamera::unlockView()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains ("camunlock"))
+	{
+		return;
+	}
+//mk
 	if (getFocusOnAvatar())
 	{
 		if (isAgentAvatarValid())
@@ -949,6 +978,17 @@ void LLAgentCamera::cameraZoomIn(const F32 fraction)
 //-----------------------------------------------------------------------------
 void LLAgentCamera::cameraOrbitIn(const F32 meters)
 {
+//MK
+	if (gRRenabled)
+	{
+		// If we have to force the camera distance because of RLV restrictions,
+		// don't do anything else
+		if (!gAgent.mRRInterface.checkCameraLimits(TRUE))
+		{
+			return;
+		}
+	}
+//mk
 	if (mFocusOnAvatar && mCameraMode == CAMERA_MODE_THIRD_PERSON)
 	{
 		F32 camera_offset_dist = llmax(0.001f, getCameraOffsetInitial().magVec() * gSavedSettings.getF32("CameraOffsetScale"));
@@ -1497,6 +1537,24 @@ void LLAgentCamera::updateCamera()
 		torso_joint->setScale(torso_scale);
 		chest_joint->setScale(chest_scale);
 	}
+//MK
+	if (mCameraMode != CAMERA_MODE_FOLLOW)
+	{
+		if (gRRenabled)
+		{
+			BOOL isfirstPerson = mCameraMode == CAMERA_MODE_MOUSELOOK;
+
+			if (isfirstPerson && gAgent.mRRInterface.mCamDistMin > 0.f)
+			{
+				changeCameraToDefault();
+			}
+			else if (!isfirstPerson && gAgent.mRRInterface.mCamDistMax <= 0.f)
+			{
+				changeCameraToMouselook();
+			}
+		}
+	}
+//mk
 }
 
 void LLAgentCamera::updateLastCamera()
@@ -1947,6 +2005,35 @@ LLVector3d LLAgentCamera::calcCameraPositionTargetGlobal(BOOL *hit_limit)
 			camera_position_global.mdV[VZ] = camera_land_height + camera_min_off_ground;
 			isConstrained = TRUE;
 		}
+//MK
+	// Constrain the distance by RLV restrictions here
+	// (code inspired by "DisableCameraConstraints" above)
+	if (gRRenabled)
+	{
+		// Don't do it for mouselook because it would force the camera to the crotch
+		if (mCameraMode != CAMERA_MODE_MOUSELOOK)
+		{
+			if (isAgentAvatarValid())
+			{
+				LLVector3d head_pos (gAgent.getPosGlobalFromAgent(gAgentAvatarp->mHeadp->getWorldPosition()));
+
+				LLVector3d camera_offset = camera_position_global - head_pos;
+				F32 camera_distance = (F32)camera_offset.magVec();
+
+				if(camera_distance > gAgent.mRRInterface.mCamDistMax)
+				{
+					camera_position_global = head_pos + (gAgent.mRRInterface.mCamDistMax/camera_distance)*camera_offset;
+					isConstrained = TRUE;
+				}
+				else if(camera_distance < gAgent.mRRInterface.mCamDistMin)
+				{
+					camera_position_global = head_pos + (gAgent.mRRInterface.mCamDistMin/camera_distance)*camera_offset;
+					isConstrained = TRUE;
+				}
+			}
+		}
+	}
+//mk
 	if (hit_limit)
 	{
 		*hit_limit = isConstrained;
@@ -2058,11 +2145,18 @@ void LLAgentCamera::resetCamera()
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToMouselook(BOOL animate)
 {
+//MK
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
+	{
+//mk
 	if (!gSavedSettings.getBOOL("EnableMouselook") 
 		|| LLViewerJoystick::getInstance()->getOverrideCamera())
 	{
 		return;
 	}
+//MK
+	}
+//mk
 	
 	// visibility changes at end of animation
 	gViewerWindow->getWindow()->resetBusyCount();
@@ -2087,7 +2181,9 @@ void LLAgentCamera::changeCameraToMouselook(BOOL animate)
 	gViewerWindow->hideCursor();
 	gViewerWindow->moveCursorToCenter();
 
-	if (mCameraMode != CAMERA_MODE_MOUSELOOK)
+//MK
+////	if (mCameraMode != CAMERA_MODE_MOUSELOOK)
+//mk
 	{
 		gFocusMgr.setKeyboardFocus(NULL);
 		
@@ -2119,10 +2215,17 @@ void LLAgentCamera::changeCameraToMouselook(BOOL animate)
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToDefault()
 {
+//MK
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
+	{
+//mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
 	{
 		return;
 	}
+//MK
+	}
+//mk
 
 	if (LLFollowCamMgr::getActiveFollowCamParams())
 	{
@@ -2145,11 +2248,17 @@ void LLAgentCamera::changeCameraToDefault()
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToFollow(BOOL animate)
 {
+//MK
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
+	{
+//mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
 	{
 		return;
 	}
-
+//MK
+	}
+//mk
 	if(mCameraMode != CAMERA_MODE_FOLLOW)
 	{
 		if (mCameraMode == CAMERA_MODE_MOUSELOOK)
@@ -2199,10 +2308,17 @@ void LLAgentCamera::changeCameraToFollow(BOOL animate)
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 {
+//MK
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
+	{
+//mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera())
 	{
 		return;
 	}
+//MK
+	}
+//mk
 
 	gViewerWindow->getWindow()->resetBusyCount();
 
@@ -2222,8 +2338,9 @@ void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 
 	// unpause avatar animation
 	gAgent.unpauseAnimation();
-
-	if (mCameraMode != CAMERA_MODE_THIRD_PERSON)
+//MK
+////	if (mCameraMode != CAMERA_MODE_THIRD_PERSON)
+//mk
 	{
 		if (gBasicToolset)
 		{
@@ -2270,6 +2387,17 @@ void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 		mCameraAnimating = FALSE;
 		gAgent.endAnimationUpdateUI();
 	}
+
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.mCamDistMax <= 0.f)
+		{
+			changeCameraToMouselook(false); // make sure we stay in mouselook
+			return;
+		}
+	}
+//mk
 }
 
 //-----------------------------------------------------------------------------
@@ -2277,10 +2405,24 @@ void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 //-----------------------------------------------------------------------------
 void LLAgentCamera::changeCameraToCustomizeAvatar()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit)
+	{
+		return;
+	}
+//mk
+
+//MK
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax > 0.f)
+	{
+//mk
 	if (LLViewerJoystick::getInstance()->getOverrideCamera() || !isAgentAvatarValid())
 	{
 		return;
 	}
+//MK
+	}
+//mk
 
 	gAgent.standUp(); // force stand up
 	gViewerWindow->getWindow()->resetBusyCount();

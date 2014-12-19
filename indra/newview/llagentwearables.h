@@ -39,6 +39,10 @@
 #include "llavatarappearancedefines.h"
 #include "llwearabledata.h"
 
+//MK
+#include "llappviewer.h" // for gFrameTimeSeconds
+//mk
+
 class LLInventoryItem;
 class LLVOAvatarSelf;
 class LLViewerWearable;
@@ -104,6 +108,7 @@ public:
 	//--------------------------------------------------------------------
 	// Setters
 	//--------------------------------------------------------------------
+
 private:
 	/*virtual*/void	wearableUpdated(LLWearable *wearable, BOOL removed);
 public:
@@ -208,6 +213,23 @@ public:
 	BOOL			itemUpdatePending(const LLUUID& item_id) const;
 	U32				itemUpdatePendingCount() const;
 
+//MK from HB
+	// These functions are for overriding the old initial wearables update
+	// message logic in SL, for when that message will stop being sent...
+	// They are only used by the LLAppearanceMgr::checkOutfit() function.
+	bool		initialWearablesUpdateReceived()	{ return mInitialWearablesUpdateReceived; }
+	void		setInitialWearablesUpdateReceived()	{ mInitialWearablesUpdateReceived = true; }
+	void		setWearablesLoaded()				{ mWearablesLoaded = true; }
+
+	void		checkModifiableShape();
+	bool		hasModifiableShape()				{ return mHasModifiableShape; }
+	void		setShapeAvatarOffset(bool send_update = true);
+//mk from HB
+
+//MK
+	void		forceUpdateShape (void);
+//mk
+
 	//--------------------------------------------------------------------
 	// Signals
 	//--------------------------------------------------------------------
@@ -235,6 +257,11 @@ private:
 	static BOOL		mInitialWearablesUpdateReceived;
 	BOOL			mWearablesLoaded;
 	std::set<LLUUID>	mItemsAwaitingWearableUpdate;
+//MK from HB
+	bool				mHasModifiableShape;
+	LLViewerWearable*	mLastWornShape;
+	F32					mSavedOffset;
+//mk from HB
 
 	/**
 	 * True if agent's outfit is being changed now.

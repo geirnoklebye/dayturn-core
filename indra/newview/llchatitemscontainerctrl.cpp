@@ -41,6 +41,10 @@
 
 #include "llslurl.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 static const S32 msg_left_offset = 10;
 static const S32 msg_right_offset = 10;
 static const S32 msg_height_pad = 5;
@@ -376,6 +380,13 @@ void LLFloaterIMNearbyChatToastPanel::draw()
 				icon->setValue(mFromID);
 			else if(!mFromID.isNull())
 				icon->setValue(mFromID);
+//MK
+			// Hide the icon of the avatar under @shownames (picked from newview\skins\default\textures\textures.xml)
+			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			{
+				icon->setValue(LLSD("Generic_Person"));
+			}
+//mk
 		}
 		mIsDirty = false;
 	}

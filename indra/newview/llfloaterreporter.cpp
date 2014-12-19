@@ -123,6 +123,18 @@ BOOL LLFloaterReporter::postBuild()
 	LLAgentUI::buildSLURL(slurl);
 	getChild<LLUICtrl>("abuse_location_edit")->setValue(slurl.getSLURLString());
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		childSetVisible("abuse_location_edit", false);
+	}
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	{
+		childSetVisible("owner_name", false);
+		childSetVisible("abuser_name_edit", false);
+	}
+//mk
+
 	enableControls(TRUE);
 
 	// convert the position to a string
@@ -256,7 +268,18 @@ void LLFloaterReporter::getObjectInfo(const LLUUID& object_id)
 			LLViewerRegion *regionp = objectp->getRegion();
 			if (regionp)
 			{
-				getChild<LLUICtrl>("sim_field")->setValue(regionp->getName());
+//MK
+				if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+				{
+					getChild<LLUICtrl>("sim_field")->setValue(std::string ("(Region hidden)"));
+				}
+				else
+				{
+//mk
+					getChild<LLUICtrl>("sim_field")->setValue(regionp->getName());
+//MK
+				}
+//mk
 				LLVector3d global_pos;
 				global_pos.setVec(objectp->getPositionRegion());
 				setPosBox(global_pos);
@@ -853,6 +876,12 @@ void LLFloaterReporter::setPosBox(const LLVector3d &pos)
 		mPosition.mV[VX],
 		mPosition.mV[VY],
 		mPosition.mV[VZ]);
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		pos_string = "";
+	}
+//mk
 	getChild<LLUICtrl>("pos_field")->setValue(pos_string);
 }
 

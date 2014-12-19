@@ -99,6 +99,14 @@ BOOL LLAgentUI::buildLocationString(std::string& str, ELocationFormat fmt,const 
 	// create a default name and description for the landmark
 	std::string parcel_name = LLViewerParcelMgr::getInstance()->getAgentParcelName();
 	std::string region_name = region->getName();
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		parcel_name = "(Parcel hidden)";
+		region_name = "(Region hidden)";
+		pos_x = pos_y = pos_z = 9999;
+	}
+//mk
 	std::string sim_access_string = region->getSimAccessString();
 	std::string buffer;
 	if( parcel_name.empty() )

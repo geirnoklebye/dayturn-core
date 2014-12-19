@@ -168,6 +168,14 @@ void LLDrawPoolWater::render(S32 pass)
 
 	std::sort(mDrawFace.begin(), mDrawFace.end(), LLFace::CompareDistanceGreater());
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		renderOpaqueLegacyWater();
+		return;
+	}
+//mk
+
 	// See if we are rendering water as opaque or not
 	if (!gSavedSettings.getBOOL("RenderTransparentWater"))
 	{
@@ -368,7 +376,15 @@ void LLDrawPoolWater::renderOpaqueLegacyWater()
 	// texture since all images will have the same texture
 	gGL.getTexUnit(0)->activate();
 	gGL.getTexUnit(0)->enable(LLTexUnit::TT_TEXTURE);
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		gGL.getTexUnit(0)->bind(LLViewerFetchedTexture::sDefaultImagep);
+	}
+	else
+//mk
 	gGL.getTexUnit(0)->bind(mOpaqueWaterImagep);
+
 
 	// Automatically generate texture coords for water texture
 	if (!shader)

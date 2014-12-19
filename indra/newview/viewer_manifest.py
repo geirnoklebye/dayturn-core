@@ -362,6 +362,7 @@ class Windows_i686_Manifest(ViewerManifest):
                            "slplugin.exe")
         
         self.path(src="../viewer_components/updater/scripts/windows/update_install.bat", dst="update_install.bat")
+
         # Get shared libs from the shared libs staging directory
         if self.prefix(src=os.path.join(os.pardir, 'sharedlibs', self.args['configuration']),
                        dst=""):
@@ -404,14 +405,14 @@ class Windows_i686_Manifest(ViewerManifest):
             else:
                 self.path("openjpeg.dll")
 
-            # These need to be installed as a SxS assembly, currently a 'private' assembly.
-            # See http://msdn.microsoft.com/en-us/library/ms235291(VS.80).aspx
-            if self.args['configuration'].lower() == 'debug':
-                 self.path("msvcr100d.dll")
-                 self.path("msvcp100d.dll")
-            else:
-                 self.path("msvcr100.dll")
-                 self.path("msvcp100.dll")
+                # These need to be installed as a SxS assembly, currently a 'private' assembly.
+                # See http://msdn.microsoft.com/en-us/library/ms235291(VS.80).aspx
+                if self.args['configuration'].lower() == 'debug':
+                    self.path("msvcr100d.dll")
+                    self.path("msvcp100d.dll")
+                else:
+                    self.path("msvcr100.dll")
+                    self.path("msvcp100.dll")
 
             # Vivox runtimes
 #            self.path("wrap_oal.dll") no longer in archive
@@ -1078,7 +1079,6 @@ class Darwin_i386_Manifest(ViewerManifest):
                 home_path = os.environ['HOME']
                 keychain_pwd_path = os.path.join(build_secrets_checkout,'code-signing-osx','password.txt')
                 keychain_pwd = open(keychain_pwd_path).read().rstrip()
-
                 self.run_command('security unlock-keychain -p "%s" "%s/Library/Keychains/viewer.keychain"' % ( keychain_pwd, home_path ) )
                 signed=False
                 sign_attempts=3

@@ -662,18 +662,22 @@ LLParcel *LLViewerParcelMgr::getAgentParcel() const
 // Return whether the agent can build on the land they are on
 bool LLViewerParcelMgr::allowAgentBuild() const
 {
-	if (gAgent.isGodlike())
-	{
-		return true;
-	}
-	else if (!mAgentParcel)
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsRez)
 	{
 		return false;
 	}
-	return (
-		mAgentParcel->allowModifyBy(gAgent.getID(), gAgent.getGroupID()) ||
-			gAgent.hasPowerInGroup(mAgentParcel->getGroupID(), GP_LAND_ALLOW_CREATE)
-	);
+//mk
+	if (mAgentParcel)
+	{
+		return (gAgent.isGodlike() ||
+				(mAgentParcel->allowModifyBy(gAgent.getID(), gAgent.getGroupID())) ||
+				(isParcelOwnedByAgent(mAgentParcel, GP_LAND_ALLOW_CREATE)));
+	}
+	else
+	{
+		return gAgent.isGodlike();
+	}
 }
 
 // Return whether anyone can build on the given parcel
@@ -2164,6 +2168,12 @@ bool LLViewerParcelMgr::canAgentBuyParcel(LLParcel* parcel, bool forGroup) const
 
 void LLViewerParcelMgr::startBuyLand(BOOL is_for_group)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	LLFloaterBuyLand::buyLand(getSelectionRegion(), mCurrentParcelSelection, is_for_group == TRUE);
 }
 

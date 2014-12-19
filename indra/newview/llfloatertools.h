@@ -30,8 +30,12 @@
 #include "llfloater.h"
 #include "llcoord.h"
 #include "llparcelselection.h"
+//MK
+#include "llselectmgr.h"
+//mk
 
 class LLButton;
+class LLComboBox;
 class LLCheckBoxCtrl;
 class LLComboBox;
 class LLPanelPermissions;
@@ -111,6 +115,9 @@ public:
 	bool selectedMediaEditable();
 	void updateLandImpacts();
 	void onClickBtnCopyKeys();
+//MK
+	void setGridMode(EGridMode mode);
+//mk
 
 	static void setGridMode(S32 mode);
 

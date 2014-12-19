@@ -572,3 +572,5 @@ void QToolAlign::align()
 	
 	LLSelectMgr::getInstance()->sendMultipleUpdate(UPD_POSITION);
 }
+	LLSelectMgr::getInstance()->sendMultipleUpdate(UPD_POSITION);
+}

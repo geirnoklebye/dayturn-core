@@ -197,7 +197,15 @@ class LLAvatarPropertiesObserver
 {
 public:
 	virtual ~LLAvatarPropertiesObserver() {}
-	virtual void processProperties(void* data, EAvatarProcessorType type) = 0;
+//MK
+	// For some reason, the list of observers sometimes gets added a bogus LLAvatarPropertiesObserver
+	// that will make the viewer crash with a "Pure Virtual Function Call" error displayed to the user.
+	// I have no idea what makes the viewer accept bogus objects or where.
+	// Let's make this method non-pure virtual so we get rid of that crash once and for all, even if this
+	// is not the best nor the most elegant solution.
+////	virtual void processProperties(void* data, EAvatarProcessorType type) = 0;
+	virtual void processProperties(void* data, EAvatarProcessorType type) { LL_WARNS() << "Defensive code against the Pure Virtual Function Call error in LLAvatarPropertiesProcessor" << LL_ENDL; }
+//mk
 };
 
 class LLAvatarPropertiesProcessor

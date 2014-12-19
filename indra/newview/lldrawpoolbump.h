@@ -45,6 +45,10 @@ protected :
 public:
 	static U32 sVertexMask;
 	BOOL mShiny;
+
+//MK
+	static BOOL sRenderDeferredShowInvisiprims;
+//mk
 	
 	virtual U32 getVertexDataMask() { return sVertexMask; }
 

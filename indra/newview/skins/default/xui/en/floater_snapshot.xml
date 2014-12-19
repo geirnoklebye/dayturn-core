@@ -60,11 +60,11 @@
  	    Saved to Computer!
  	</string>
  	<string
-     name="facebook_failed_str">
+        name="facebook_failed_str">
  	    Failed to upload image to your Facebook timeline.
  	</string>
  	<string
-     name="profile_failed_str">
+        name="profile_failed_str">
  	    Failed to upload image to your Profile Feed.
  	</string>
  	<string
@@ -158,7 +158,7 @@
         </text>
         <combo_box
          follows="left|top|right"
-         height="23"
+     height="23"
          label="Image Layers"
          layout="topleft"
          left="30"
@@ -175,7 +175,7 @@
         </combo_box>
         <check_box
          label="Interface"
-         layout="topleft"
+     layout="topleft"
          left="30"
 		 height="16"
          top_pad="8"
@@ -281,20 +281,20 @@
       <panel
        class="llpanelsnapshotlocal"
        follows="all"
-       layout="topleft"
+    layout="topleft"
        name="panel_snapshot_local"
        filename="panel_snapshot_local.xml" />
     </panel_container>
 	<view_border 
          bevel_style="in"
-         follows="left|top" 
+    follows="left|top"
          height="1"
          left="10"
          layout="topleft"
          name="status_hr"
          width="199"
          top_pad="-16"/>
-	<panel
+      <panel
        background_visible="false"
        follows="left|top"
        font="SansSerifLarge"
@@ -369,7 +369,7 @@
        follows="left|top"
        font="SansSerifBold"
        height="14"
-       layout="topleft"
+     layout="topleft"
        left_pad="3"
        length="1"
        halign="left"
@@ -409,19 +409,19 @@
   <view_border 
    bevel_style="in" 
    height="21"
-   layout="topleft"
+     layout="topleft"
    name="img_info_border"
    top_pad="0"
    right="-10"
    follows="left|top|right"
    left_delta="0"/>
-   <text
-    type="string"
+    <text
+     type="string"
     font="SansSerifSmall"
-    length="1"
+     length="1"
     follows="left|top|right"
     height="14"
-    layout="topleft"
+     layout="topleft"
     left="220"
 	right="-20"
     halign="left"
@@ -429,21 +429,21 @@
     top_delta="5"
     width="200">
        [WIDTH]px (width) x [HEIGHT]px (height)
-   </text>
-   <text
+    </text>
+    <text
     follows="right|top"
     font="SansSerifSmall"
     height="14"
     layout="topleft"
     left="-65"
-    length="1"
+     length="1"
     halign="right"
     name="file_size_label"
-    top_delta="0"
+     top_delta="0"
     type="string"
     width="50">
        [SIZE] KB
-   </text>
+    </text>
          control_name="HideBalanceInSnapshots"
          label="Hide L$ balance"
          layout="topleft"

@@ -665,6 +665,16 @@ S32 LLPanelRegionTools::getPricePerMeter() const
 
 void LLPanelRegionTools::setSimName(const std::string& name)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		getChild<LLUICtrl>("region name")->setVisible(false);
+	}
+	else
+ 	{
+		getChild<LLUICtrl>("region name")->setVisible(true);
+	}
+//mk
 	getChild<LLUICtrl>("region name")->setValue(name);
 }
 
@@ -949,6 +959,16 @@ void LLPanelObjectTools::setTargetAvatar(const LLUUID &target_id)
 
 void LLPanelObjectTools::refresh()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		childSetVisible("region name", false);
+	}
+	else
+	{
+		childSetVisible("region name", true);
+	}
+//mk
 	LLViewerRegion *regionp = gAgent.getRegion();
 	if (regionp)
 	{
@@ -1241,6 +1261,12 @@ void LLPanelRequestTools::refresh()
 	{
 		LLViewerRegion* regionp = *iter;
 		std::string name = regionp->getName();
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+		{
+			name = "(Hidden)";
+		}
+//mk
 		if (!name.empty())
 		{
 			list->addSimpleElement(name);

@@ -513,7 +513,7 @@ void stream_groups(std::ostream& s, const char* app)
 
 void wouldHaveCrashed(const std::string& message)
 {
-	tut::fail("llerrs message: " + message);
+	tut::fail("LL_ERRS() message: " + message);
 }
 
 static LLTrace::ThreadRecorder* sMasterThreadRecorder = NULL;

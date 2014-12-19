@@ -144,6 +144,13 @@ bool LLImageDecodeThread::ImageRequest::processRequest()
 											  mFormattedImage->getHeight(),
 											  mFormattedImage->getComponents());
 		}
+//MK
+		// Seems it's likely to crash here when there are too many textures, or when the memory is full
+		if (mFormattedImage.isNull() || mDecodedImageRaw.isNull())
+		{
+			return true; // done (failed)
+		}
+//mk
 		done = mFormattedImage->decode(mDecodedImageRaw, decode_time_slice); // 1ms
 		mDecodedRaw = done;
 	}

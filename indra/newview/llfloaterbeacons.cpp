@@ -31,7 +31,9 @@
 #include "lluictrlfactory.h"
 #include "llcheckboxctrl.h"
 #include "pipeline.h"
-
+//MK
+#include "llagent.h"
+//mk
 
 LLFloaterBeacons::LLFloaterBeacons(const LLSD& seed)
 :	LLFloater(seed)
@@ -64,6 +66,25 @@ void LLFloaterBeacons::onClickUICheck(LLUICtrl *ctrl)
 {
 	LLCheckBoxCtrl *check = (LLCheckBoxCtrl *)ctrl;
 	std::string name = check->getName();
+
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsEdit)
+	{
+		LLPipeline::setRenderScriptedBeacons(FALSE);
+		LLPipeline::setRenderScriptedTouchBeacons(FALSE);
+		getChild<LLCheckBoxCtrl>("scripted")->setControlValue(LLSD(FALSE));
+		getChild<LLCheckBoxCtrl>("touch_only")->setControlValue(LLSD(FALSE));
+		LLPipeline::setRenderPhysicalBeacons(FALSE);
+		LLPipeline::setRenderSoundBeacons(FALSE);
+		LLPipeline::setRenderParticleBeacons(FALSE);
+		LLPipeline::setRenderBeacons(FALSE);
+		LLPipeline::setRenderHighlights(FALSE);
+		getChild<LLCheckBoxCtrl>("beacons")->setControlValue(LLSD(FALSE));
+		getChild<LLCheckBoxCtrl>("highlights")->setControlValue(LLSD(FALSE));
+		return;
+	}
+//mk
+
 	if(name == "touch_only")
 	{
 		LLPipeline::toggleRenderScriptedTouchBeacons(NULL);

@@ -877,6 +877,19 @@ BOOL LLViewerCamera::areVertsVisible(LLViewerObject* volumep, BOOL all_verts)
 void LLViewerCamera::setDefaultFOV(F32 vertical_fov_rads) 
 {
 	vertical_fov_rads = llclamp(vertical_fov_rads, getMinView(), getMaxView());
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.mCamZoomMax < EXTREMUM && DEFAULT_FIELD_OF_VIEW/vertical_fov_rads > gAgent.mRRInterface.mCamZoomMax)
+		{
+			vertical_fov_rads = DEFAULT_FIELD_OF_VIEW/gAgent.mRRInterface.mCamZoomMax;
+		}
+		if (gAgent.mRRInterface.mCamZoomMin > -EXTREMUM && DEFAULT_FIELD_OF_VIEW/vertical_fov_rads < gAgent.mRRInterface.mCamZoomMin)
+		{
+			vertical_fov_rads = DEFAULT_FIELD_OF_VIEW/gAgent.mRRInterface.mCamZoomMin;
+		}
+	}
+//mk
 	setView(vertical_fov_rads);
 	mCameraFOVDefault = vertical_fov_rads; 
 	mCosHalfCameraFOV = cosf(mCameraFOVDefault * 0.5f);

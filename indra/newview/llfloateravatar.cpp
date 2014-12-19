@@ -36,6 +36,9 @@
 #include "lluictrlfactory.h"
 #include "llmediactrl.h"
 
+//MK
+#include "llagent.h"
+//mk
 
 LLFloaterAvatar::LLFloaterAvatar(const LLSD& key)
 	:	LLFloater(key)
@@ -60,3 +63,14 @@ BOOL LLFloaterAvatar::postBuild()
 }
 
 
+//MK
+void LLFloaterAvatar::draw()
+{
+	if (gRRenabled && gAgent.mRRInterface.mContainsDetach)
+	{
+		closeFloater();
+		return;
+	}
+	LLFloater::draw();
+}
+//mk

@@ -82,11 +82,11 @@ void parse_string();
 #define yyrealloc indra_realloc
 #define yyfree indra_free
 
-
+/*
 int yyparse( void );
 int yylex( void );
 int yyerror(const char *fmt, ...);
-
+*/
 %}
 
 %%

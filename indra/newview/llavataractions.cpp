@@ -328,17 +328,31 @@ void LLAvatarActions::startConference(const uuid_vec_t& ids, const LLUUID& float
 static const char* get_profile_floater_name(const LLUUID& avatar_id)
 {
 	// Use different floater XML for our profile to be able to save its rect.
-	return avatar_id == gAgentID ? "my_profile" : "profile";
+//MK
+////	return avatar_id == gAgentID ? "my_profile" : "profile";
+	return "profile";
+//mk
 }
 
 static void on_avatar_name_show_profile(const LLUUID& agent_id, const LLAvatarName& av_name)
 {
+//MK	
+	if ( (!gSavedSettings.getBOOL("ShowProfileFloaters")) || ((gAgent.getID() == agent_id)) )
+	{
+//mk
 	std::string url = getProfileURL(av_name.getAccountName());
 
 	// PROFILES: open in webkit window
 	LLFloaterWebContent::Params p;
 	p.url(url).id(agent_id.asString());
 	LLFloaterReg::showInstance(get_profile_floater_name(agent_id), p);
+//MK
+	}
+	else
+	{
+		LLFloaterReg::showInstance("floater_profile_view", LLSD().with("id", agent_id));
+	}
+//mk
 }
 
 // static
@@ -481,6 +495,15 @@ void LLAvatarActions::teleport_request_callback(const LLSD& notification, const 
 		LLAgentUI::buildFullname(name);
 
 		msg->addStringFast(_PREHASH_FromAgentName, name);
+//MK
+		LLUUID target_id = notification["substitutions"]["uuid"].asUUID();
+        if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim") || gAgent.mRRInterface.containsSubstr ("sendimto:"+target_id.asString())))
+		{
+	 		msg->addStringFast(_PREHASH_Message, "(Hidden)");
+		}
+
+		else
+//mk
 		msg->addStringFast(_PREHASH_Message, response["message"]);
 		msg->addU32Fast(_PREHASH_ParentEstateID, 0);
 		msg->addUUIDFast(_PREHASH_RegionID, LLUUID::null);
@@ -682,6 +705,7 @@ void LLAvatarActions::rightsConfirmationCallback(const LLSD &notification, const
 
 namespace action_give_inventory
 {
+
 	/**
 	 * Returns a pointer to 'Add More' inventory panel of Edit Outfit SP.
 	 */
@@ -711,7 +735,6 @@ namespace action_give_inventory
 	/**
 	 * Checks My Inventory visibility.
 	 */
-
 	static bool is_give_inventory_acceptable()
 	{
 		// check selection in the panel
@@ -973,7 +996,7 @@ void LLAvatarActions::buildResidentsString(const uuid_vec_t& avatar_uuids, std::
 			avatar_names.push_back(av_name);
 		}
 	}
-	
+
 	// We should check whether the vector is not empty to pass the assertion
 	// that avatar_names.size() > 0 in LLAvatarActions::buildResidentsString.
 	if (!avatar_names.empty())

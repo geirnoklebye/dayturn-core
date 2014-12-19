@@ -46,6 +46,10 @@
 #include "llworld.h"
 #include "llagent.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 //
 // Constants
 //
@@ -181,6 +185,13 @@ void LLFloaterMap::updateMinorDirections()
 // virtual
 void LLFloaterMap::draw()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowminimap)
+	{
+		closeFloater();
+		return;
+	}
+//mk
 	F32 rotation = 0;
 
 	static LLUICachedControl<bool> rotate_map("MiniMapRotate", true);

@@ -154,12 +154,19 @@ protected:
 	LLPanelStandStopFlying();
 
 
-private:
+//MK
+// Sorry Mister, but I need these public.
+////private:
+public:
+//mk
 	static LLPanelStandStopFlying* getStandStopFlyingPanel();
 	void onStandButtonClick();
 	void onStopFlyingButtonClick();
 	void updatePosition();
 
+//MK
+private:
+//mk
 	LLButton* mStandButton;
 	LLButton* mStopFlyingButton;
 

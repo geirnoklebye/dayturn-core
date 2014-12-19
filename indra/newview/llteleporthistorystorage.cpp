@@ -116,6 +116,12 @@ bool LLTeleportHistoryStorage::compareByTitleAndGlobalPos(const LLTeleportHistor
 
 void LLTeleportHistoryStorage::addItem(const std::string title, const LLVector3d& global_pos, const LLDate& date)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	LLTeleportHistoryPersistentItem item(title, global_pos, date);
 
 	slurl_list_t::iterator item_iter = std::find_if(mItems.begin(), mItems.end(),

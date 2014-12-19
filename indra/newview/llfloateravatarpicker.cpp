@@ -288,6 +288,13 @@ void LLFloaterAvatarPicker::populateNearMe()
 	LLScrollListCtrl* near_me_scroller = getChild<LLScrollListCtrl>("NearMe");
 	near_me_scroller->deleteAllItems();
 
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+	{
+		return;
+	}
+//mk
+
 	uuid_vec_t avatar_ids;
 	LLWorld::getInstance()->getAvatars(&avatar_ids, NULL, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
 	for(U32 i=0; i<avatar_ids.size(); i++)

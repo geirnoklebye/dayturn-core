@@ -318,7 +318,7 @@ void LLFloaterRegionInfo::processRegionInfo(LLMessageSystem* msg)
 	// so our environment won't be updated.
 	// This is also the way to know about externally changed region environment.
 	LLEnvManagerNew::instance().requestRegionSettings();
-	
+
 	LLTabContainer* tab = floater->getChild<LLTabContainer>("region_panels");
 
 	LLViewerRegion* region = gAgent.getRegion();
@@ -473,6 +473,13 @@ void LLFloaterRegionInfo::onTabSelected(const LLSD& param)
 
 void LLFloaterRegionInfo::refreshFromRegion(LLViewerRegion* region)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		LLFloaterReg::hideInstance("region_info");
+		return;
+	}
+//mk
 	if (!region)
 	{
 		return; 

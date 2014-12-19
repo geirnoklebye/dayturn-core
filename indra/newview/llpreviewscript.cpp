@@ -87,6 +87,11 @@
 #include "llappviewer.h"
 #include "llfloatergotoline.h"
 
+//MK
+#include "llvoavatar.h"
+//mk
+
+
 const std::string HELLO_LSL =
 	"default\n"
 	"{\n"
@@ -409,7 +414,7 @@ BOOL LLScriptEdCore::postBuild()
 {
 	mErrorList = getChild<LLScrollListCtrl>("lsl errors");
 
-	mFunctions = getChild<LLComboBox>("Insert...");
+	mFunctions = getChild<LLComboBox>( "Insert...");
 
 	childSetCommitCallback("Insert...", &LLScriptEdCore::onBtnInsertFunction, this);
 
@@ -422,14 +427,14 @@ BOOL LLScriptEdCore::postBuild()
 	initMenu();
 
 	mSyntaxIDConnection = LLSyntaxIdLSL::getInstance()->addSyntaxIDCallback(boost::bind(&LLScriptEdCore::processKeywords, this));
-
+			
 	// Intialise keyword highlighting for the current simulator's version of LSL
 	LLSyntaxIdLSL::getInstance()->initialize();
 	processKeywords();
-
+			
 	return TRUE;
-}
-
+			}
+			
 void LLScriptEdCore::processKeywords()
 {
 	LL_DEBUGS("SyntaxLSL") << "Processing keywords" << LL_ENDL;
@@ -454,12 +459,12 @@ void LLScriptEdCore::processKeywords()
 		}
 	}
 	for (string_vec_t::const_iterator iter = primary_keywords.begin();
-		 iter!= primary_keywords.end(); ++iter)
+			iter!= primary_keywords.end(); ++iter)
 	{
 		mFunctions->add(*iter);
 	}
 	for (string_vec_t::const_iterator iter = secondary_keywords.begin();
-		 iter!= secondary_keywords.end(); ++iter)
+			iter!= secondary_keywords.end(); ++iter)
 	{
 		mFunctions->add(*iter);
 	}
@@ -1288,6 +1293,7 @@ void* LLPreviewLSL::createScriptEdPanel(void* userdata)
 								   self,
 								   false,
 								   0);
+
 	return self->mScriptEd;
 }
 
@@ -1302,7 +1308,7 @@ LLPreviewLSL::LLPreviewLSL(const LLSD& key )
 // virtual
 BOOL LLPreviewLSL::postBuild()
 {
-	const LLInventoryItem* item = getItem();
+	const LLInventoryItem* item = getItem();	
 
 	llassert(item);
 	if (item)
@@ -1745,6 +1751,7 @@ void* LLLiveLSLEditor::createScriptEdPanel(void* userdata)
 								   self,
 								   true,
 								   0);
+
 	return self->mScriptEd;
 }
 
@@ -1980,6 +1987,13 @@ void LLLiveLSLEditor::onRunningCheckboxClicked( LLUICtrl*, void* userdata )
 	LLCheckBoxCtrl* runningCheckbox = self->getChild<LLCheckBoxCtrl>("running");
 	BOOL running =  runningCheckbox->get();
 	//self->mRunningCheckbox->get();
+//MK
+	if (gRRenabled && !gAgent.mRRInterface.canDetach(object))
+	{
+		runningCheckbox->set(!running);
+		return;
+	}
+//mk
 	if( object )
 	{
 		LLMessageSystem* msg = gMessageSystem;
@@ -2007,6 +2021,12 @@ void LLLiveLSLEditor::onReset(void *userdata)
 	LLViewerObject* object = gObjectList.findObject( self->mObjectUUID );
 	if(object)
 	{
+//MK
+		if (gRRenabled && !gAgent.mRRInterface.canDetach(object))
+		{
+			return;
+		}
+//mk
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessageFast(_PREHASH_ScriptReset);
 		msg->nextBlockFast(_PREHASH_AgentData);
@@ -2397,7 +2417,17 @@ void LLLiveLSLEditor::onLoad(void* userdata)
 // static
 void LLLiveLSLEditor::onSave(void* userdata, BOOL close_after_save)
 {
-	LLLiveLSLEditor* self = (LLLiveLSLEditor*)userdata;
+	LLLiveLSLEditor* self = (LLLiveLSLEditor*) userdata;
+//MK
+	if (gRRenabled)
+	{
+		LLViewerObject* object = gObjectList.findObject(self->mObjectUUID);
+		if (!gAgent.mRRInterface.canDetach(object))
+		{
+			return;
+		}
+	}
+//mk
 	self->mCloseAfterSave = close_after_save;
 	self->saveIfNeeded();
 }

@@ -323,6 +323,13 @@ BOOL LLFloaterTexturePicker::handleDragAndDrop(
 		EAcceptance *accept,
 		std::string& tooltip_msg)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
+	{
+		*accept = ACCEPT_NO;
+		return TRUE; 
+	}
+//mk
 	BOOL handled = FALSE;
 
 	bool is_mesh = cargo_type == DAD_MESH;

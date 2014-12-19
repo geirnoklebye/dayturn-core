@@ -572,6 +572,17 @@ void LLPanelMainInventory::setFocusFilterEditor()
 // virtual
 void LLPanelMainInventory::draw()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
+	{
+		LLFloater* parent_floater = gFloaterView->getParentFloater(this);
+		if (parent_floater)
+		{
+			parent_floater->closeFloater(false);
+		}
+		return;
+	}
+//mk
 	if (mActivePanel && mFilterEditor)
 	{
 		mFilterEditor->setText(mFilterSubString);

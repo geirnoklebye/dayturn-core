@@ -372,6 +372,9 @@ Please try logging in again in a minute.</string>
 	<string name="AvatarEditingAppearance">(Editing Appearance)</string>
 	<string name="AvatarAway">Away</string>
 	<string name="AvatarDoNotDisturb">Do Not Disturb</string>
+//MK
+  <string name="AvatarTyping">Typing</string>
+//mk
 	<string name="AvatarMuted">Blocked</string>
 
 	<!-- animations -->
@@ -4094,9 +4097,12 @@ The [[MARKETPLACE_CREATE_STORE_URL] Marketplace store] is returning errors.
 	<string name="Stomach">Stomach</string>
 	<string name="Left Pec">Left Pec</string>
 	<string name="Right Pec">Right Pec</string>
-        <string name="Neck">Neck</string>
-        <string name="Avatar Center">Avatar Center</string>
-	<string name="Invalid Attachment">Invalid Attachment Point</string>
+    <string name="Neck">Neck</string>
+    <string name="Avatar Center">Avatar Center</string>
+//MK
+  <string name="Root">Root</string>
+//mk
+  <string name="Invalid Attachment">Invalid Attachment Point</string>
 	<string name="ATTACHMENT_MISSING_ITEM">Error: missing item</string>
 	<string name="ATTACHMENT_MISSING_BASE_ITEM">Error: missing base item</string>
 	<string name="ATTACHMENT_NOT_ATTACHED">Error: object is in current outfit but not attached</string>
@@ -4367,6 +4373,7 @@ The [[MARKETPLACE_CREATE_STORE_URL] Marketplace store] is returning errors.
 	<string name="GroupMoneyCredits">Credits</string>
 	<string name="GroupMoneyDebits">Debits</string>
 	<string name="GroupMoneyDate">[weekday,datetime,utc] [mth,datetime,utc] [day,datetime,utc], [year,datetime,utc]</string>
+
 
 	<!-- Viewer menu -->
 	<string name="AcquiredItems">Acquired Items</string>
@@ -5177,7 +5184,7 @@ If you continue to receive this message, contact the [SUPPORT_SITE].
 	<string name="you_started_call">You started a voice call</string>
 	<string name="you_joined_call">You joined the voice call</string>
   <string name="you_auto_rejected_call-im">You automatically rejected the voice call while &apos;Do Not Disturb&apos; was on.</string>
-  <string name="name_started_call">[NAME] started a voice call</string>
+	<string name="name_started_call">[NAME] started a voice call</string>
 
   <string name="ringing-im">
     Joining voice call...

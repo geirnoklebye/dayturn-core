@@ -840,6 +840,14 @@ void LLFacebookCheckinPanel::sendCheckin()
 	// Get the caption
 	std::string caption = mMessageTextEditor->getValue().asString();
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		region_name = "(Region hidden)";
+		description = "";
+		map_url = DEFAULT_CHECKIN_ICON_URL;
+	}
+//mk
 	// Post to Facebook
 	LLFacebookConnect::instance().postCheckin(slurl_string, region_name, description, map_url, caption);
 }

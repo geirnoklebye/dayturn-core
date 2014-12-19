@@ -351,7 +351,10 @@ class LLLocalSpeakerMgr : public LLSpeakerMgr, public LLSingleton<LLLocalSpeaker
 public:
 	LLLocalSpeakerMgr();
 	~LLLocalSpeakerMgr ();
-protected:
+//MK
+////protected:
+public:
+//mk
 	virtual void updateSpeakerList();
 };
 

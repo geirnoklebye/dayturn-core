@@ -30,6 +30,9 @@
 #include "lltoolplacer.h"
 
 // viewer headers
+//MK
+#include "llagent.h"
+//mk
 #include "llbutton.h"
 #include "llviewercontrol.h"
 //#include "llfirstuse.h"
@@ -529,6 +532,13 @@ BOOL LLToolPlacer::addDuplicate(S32 x, S32 y)
 BOOL LLToolPlacer::placeObject(S32 x, S32 y, MASK mask)
 {
 	BOOL added = TRUE;
+
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsEdit || gAgent.mRRInterface.mContainsRez))
+	{
+		return TRUE;
+	}
+//mk
 	
 	if (gSavedSettings.getBOOL("CreateToolCopySelection"))
 	{

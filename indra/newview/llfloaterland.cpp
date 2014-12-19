@@ -209,6 +209,13 @@ void LLFloaterLand::onOpen(const LLSD& key)
 {
 	// moved from triggering show instance in llviwermenu.cpp
 	
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		closeFloater();
+		return;
+	}
+//mk
 	if (LLViewerParcelMgr::getInstance()->selectionEmpty())
 	{
 		LLViewerParcelMgr::getInstance()->selectParcelAt(gAgent.getPositionGlobal());
@@ -903,6 +910,12 @@ void LLPanelLandGeneral::setGroup(const LLUUID& group_id)
 void LLPanelLandGeneral::onClickBuyLand(void* data)
 {
 	BOOL* for_group = (BOOL*)data;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	LLViewerParcelMgr::getInstance()->startBuyLand(*for_group);
 }
 
@@ -2101,6 +2114,9 @@ void LLPanelLandOptions::refresh()
 				}
 			}
 		}
+//MK
+		gAgent.mRRInterface.mParcelLandingType = parcel->getLandingType();
+//mk
 	}
 }
 

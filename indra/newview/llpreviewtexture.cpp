@@ -436,8 +436,20 @@ void LLPreviewTexture::updateDimensions()
 	if (mAssetStatus != PREVIEW_ASSET_LOADED)
 	{
 		mAssetStatus = PREVIEW_ASSET_LOADED;
+//MK
+		// Calculating the aspect ratio in order to default to the right line in the combo box sounds
+		// like a good idea... except that all the textures on the asset server are stored (or served)
+		// as 1:1, even snapshots taken on a 4:3, 16:9 or 16:10 screen, for example.
+		// So let's just keep it "unconstrained" by default, like before, instead of trying to guess 
+		// and getting it wrong.
+		if (!gRRenabled)
+		{
+//mk
 		// Asset has been fully loaded, adjust aspect ratio
 		adjustAspectRatio();
+//MK
+		}
+//mk
 	}
 	
 	// Update the width/height display every time

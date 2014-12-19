@@ -7,6 +7,8 @@
            tooltip_ref="Command_AboutLand_Tooltip"
            execute_function="Floater.ToggleOrBringToFront"
            execute_parameters="about_land"
+           is_enabled_function="Agent.IsActionAllowed"
+           is_enabled_parameters="aboutland"
            is_running_function="Floater.IsOpen"
            is_running_parameters="about_land"
            />
@@ -37,6 +39,8 @@
            tooltip_ref="Command_Avatar_Tooltip"
            execute_function="Floater.ToggleOrBringToFront"
            execute_parameters="avatar"
+           is_enabled_function="Agent.IsActionAllowed"
+           is_enabled_parameters="avatar"
            is_running_function="Floater.IsOpen"
            is_running_parameters="avatar"
            />
@@ -70,9 +74,23 @@
            tooltip_ref="Command_Compass_Tooltip"
            execute_function="Floater.ToggleOrBringToFront"
            execute_parameters="compass"
+           is_enabled_function="Agent.IsActionAllowed"
+           is_enabled_parameters="compass"
            is_running_function="Floater.IsOpen"
            is_running_parameters="compass"
            />
+  <!--
+  <command name="conversations"
+           available_in_toybox="true"
+           icon="Command_Conversations_Icon"
+           label_ref="Command_Conversations_Label"
+           tooltip_ref="Command_Conversations_Tooltip"
+           execute_function="Communicate.Conversations"
+           execute_parameters="conversations"
+           is_running_function="Communicate.CheckConversations"
+           is_running_parameters="conversations"
+           />
+-->
   <command name="destinations"
            available_in_toybox="true"
            icon="Command_Destinations_Icon"
@@ -80,6 +98,8 @@
            tooltip_ref="Command_Destinations_Tooltip"
            execute_function="Floater.ToggleOrBringToFront"
            execute_parameters="destinations"
+           is_enabled_function="Agent.IsActionAllowed"
+           is_enabled_parameters="destinations"
            is_running_function="Floater.IsOpen"
            is_running_parameters="destinations"
            />
@@ -108,6 +128,8 @@
            tooltip_ref="Command_Inventory_Tooltip"
            execute_function="Floater.ToggleOrBringToFront"
            execute_parameters="inventory"
+           is_enabled_function="Agent.IsActionAllowed"
+           is_enabled_parameters="inventory"
            is_running_function="Floater.IsOpen"
            is_running_parameters="inventory"
            />
@@ -118,6 +140,8 @@
            tooltip_ref="Command_Map_Tooltip"
            execute_function="Floater.ToggleOrBringToFront"
            execute_parameters="world_map"
+           is_enabled_function="Agent.IsActionAllowed"
+           is_enabled_parameters="map"
            is_running_function="Floater.IsOpen"
            is_running_parameters="world_map"
            />
@@ -135,6 +159,8 @@
            tooltip_ref="Command_MiniMap_Tooltip"
            execute_function="Floater.ToggleOrBringToFront"
            execute_parameters="mini_map"
+           is_enabled_function="Agent.IsActionAllowed"
+           is_enabled_parameters="minimap"
            is_running_function="Floater.IsOpen"
            is_running_parameters="mini_map"
            />

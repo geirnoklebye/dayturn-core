@@ -36,12 +36,13 @@
 #include "llstyle.h"
 
 #include "llcallingcard.h" // for LLFriendObserver
+#include "llavatarpropertiesprocessor.h"
 
 class LLAvatarIconCtrl;
 class LLAvatarName;
 class LLIconCtrl;
 
-class LLAvatarListItem : public LLPanel, public LLFriendObserver
+class LLAvatarListItem : public LLPanel, public LLFriendObserver, public LLAvatarPropertiesObserver
 {
 public:
 	struct Params : public LLInitParam::Block<Params, LLPanel::Params>
@@ -93,6 +94,7 @@ public:
 
 	void setOnline(bool online);
 	void updateAvatarName(); // re-query the name cache
+	void updateAvatarProperties(); // (re)query the avatar's server properties
 	void setAvatarName(const std::string& name);
 	void setAvatarToolTip(const std::string& tooltip);
 	void setHighlight(const std::string& highlight);
@@ -103,7 +105,23 @@ public:
 	void setShowProfileBtn(bool show);
 	void setShowInfoBtn(bool show);
 	void showSpeakingIndicator(bool show);
-	void setShowPermissions(bool show) { mShowPermissions = show; };
+	void showRange(bool show);
+	void setRange(F32 distance);
+	F32  getRange();
+	void setPosition(LLVector3d globalPos);
+	LLVector3d getPosition();
+	void setAvStatus(S32 statusFlags);
+	S32  getAvStatus();
+	void setFirstSeen(time_t seenTime);
+	time_t	 getFirstSeen();
+	void showDisplayName(bool show);
+	void showFirstSeen(bool show);
+	void showStatusFlags(bool show);
+	void showAvatarAge(bool show);
+	void showPaymentStatus(bool show);
+	void updateFirstSeen(int nb = 5);
+	void showUsername(bool show);
+	void setShowPermissions(bool show);
 	void showLastInteractionTime(bool show);
 	void setAvatarIconVisible(bool visible);
 	
@@ -113,6 +131,13 @@ public:
 
 	void onInfoBtnClick();
 	void onProfileBtnClick();
+
+	//Radar state-specific
+	// [Ansariel: Colorful radar]
+	void setUseRangeColors(bool UseRangeColors);
+	void setShoutRangeColor(const LLUIColor& shoutRangeColor);
+	void setBeyondShoutRangeColor(const LLUIColor& beyondShoutRangeColor);
+	// [/Ansariel: Colorful radar]
 
 	/*virtual*/ BOOL handleDoubleClick(S32 x, S32 y, MASK mask);
 
@@ -132,6 +157,18 @@ protected:
 	LLIconCtrl* mIconPermissionEditMine;
 	/// Indicator for permission to edit their objects.
 	LLIconCtrl* mIconPermissionEditTheirs;
+
+	//radar_specific
+	LLTextBox* mNearbyRange;
+	bool mShowDisplayName;
+	bool mShowUsername;
+	bool mShowFirstSeen;
+	
+	// [Ansariel: Colorful radar]
+	bool mUseRangeColors;
+	LLUIColor mShoutRangeColor;
+	LLUIColor mBeyondShoutRangeColor;
+	// [/Ansariel: Colorful radar]
 
 private:
 
@@ -164,6 +201,7 @@ private:
 
 	void setNameInternal(const std::string& name, const std::string& highlight);
 	void onAvatarNameCache(const LLAvatarName& av_name);
+	void processProperties(void* data, EAvatarProcessorType type);
 
 	std::string formatSeconds(U32 secs);
 
@@ -199,12 +237,21 @@ private:
 
 	LLTextBox* mAvatarName;
 	LLTextBox* mLastInteractionTime;
+	LLTextBox* mFirstSeenDisplay;
+	LLTextBox* mAvatarAgeDisplay;
+	LLIconCtrl* mPaymentStatus;
 	LLStyle::Params mAvatarNameStyle;
 	
 	LLButton* mInfoBtn;
 	LLButton* mProfileBtn;
 
 	LLUUID mAvatarId;
+	time_t	mFirstSeen;
+	S32	mAvStatus;
+	LLVector3d mAvPosition;
+	S32	mAvatarAge;
+	F32 mDistance;
+	
 	std::string mHighlihtSubstring; // substring to highlight
 	EOnlineStatus mOnlineStatus;
 	//Flag indicating that info/profile button shouldn't be shown at all.
@@ -214,6 +261,9 @@ private:
 
 	/// indicates whether to show icons representing permissions granted
 	bool mShowPermissions;
+	bool mShowStatusFlags;
+	bool mShowAvatarAge;
+	bool mShowPaymentStatus;
 
 	/// true when the mouse pointer is hovering over this item
 	bool mHovered;

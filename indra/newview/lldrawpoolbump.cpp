@@ -67,6 +67,9 @@ const U32 VERTEX_MASK_BUMP = LLVertexBuffer::MAP_VERTEX |LLVertexBuffer::MAP_TEX
 
 U32 LLDrawPoolBump::sVertexMask = VERTEX_MASK_SHINY;
 
+//MK
+BOOL LLDrawPoolBump::sRenderDeferredShowInvisiprims = TRUE; //gSavedSettings.getBOOL("RenderDeferredShowInvisiprims");
+//mk
 
 static LLGLSLShader* shader = NULL;
 static S32 cube_channel = -1;
@@ -1611,18 +1614,41 @@ void LLDrawPoolInvisible::endDeferredPass( S32 pass )
 
 void LLDrawPoolInvisible::renderDeferred( S32 pass )
 { //render invisiprims; this doesn't work becaue it also blocks all the post-deferred stuff
-#if 0 
-	LL_RECORD_BLOCK_TIME(FTM_RENDER_INVISIBLE);
+#if 1
+//MK
+	if (!sRenderDeferredShowInvisiprims)
+	{
+		return;
+	}
+//mk
+
+//MK with thanks to Henri Beauchamp
+	if (gPipeline.canUseVertexShaders())
+	{
+		gOcclusionProgram.bind();
+	}
+//mk
   
 	U32 invisi_mask = LLVertexBuffer::MAP_VERTEX;
 	glStencilMask(0);
-	glStencilOp(GL_ZERO, GL_KEEP, GL_REPLACE);
+//MK with thanks to Henri Beauchamp
+////	glStencilOp(GL_ZERO, GL_KEEP, GL_REPLACE);
+//mk
 	gGL.setColorMask(false, false);
 	pushBatches(LLRenderPass::PASS_INVISIBLE, invisi_mask, FALSE);
 	gGL.setColorMask(true, true);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+//MK with thanks to Henri Beauchamp
+////	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+//mk
 	glStencilMask(0xFFFFFFFF);
-	
+
+//MK with thanks to Henri Beauchamp
+	if (gPipeline.canUseVertexShaders())
+	{
+		gOcclusionProgram.unbind();
+	}
+//mk
+
 	if (gPipeline.hasRenderBatches(LLRenderPass::PASS_INVISI_SHINY))
 	{
 		beginShiny(true);

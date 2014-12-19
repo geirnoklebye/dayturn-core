@@ -102,6 +102,10 @@ void handle_object_touch();
 bool enable_object_open();
 void handle_object_open();
 
+//MK
+void handle_object_edit();
+//mk
+
 bool visible_take_object();
 bool tools_visible_take_object();
 bool enable_object_take_copy();

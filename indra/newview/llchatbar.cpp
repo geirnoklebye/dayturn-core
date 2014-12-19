@@ -24,6 +24,10 @@
  * $/LicenseInfo$
  */
 
+//MK
+#include "linden_common.h"
+//mk
+
 #include "llviewerprecompiledheaders.h"
 
 #include "llchat.h"
@@ -150,6 +154,14 @@ BOOL LLChatBar::handleKeyHere( KEY key, MASK mask )
 			sendChat(CHAT_TYPE_SHOUT);
 			handled = TRUE;
 		}
+//MK
+		else if (mask == MASK_SHIFT)
+		{
+			// whisper
+			sendChat( CHAT_TYPE_WHISPER );
+			handled = TRUE;
+		}
+//mk
 		else if (mask == MASK_NONE)
 		{
 			// say
@@ -368,11 +380,84 @@ void LLChatBar::sendChat( EChatType type )
 			std::string utf8_revised_text;
 			if (0 == channel)
 			{
-				// discard returned "found" boolean
-				LLGestureMgr::instance().triggerAndReviseString(utf8text, &utf8_revised_text);
+//-TT Patch MU_OOC from Satomi Ahn
+//				if (gSavedSettings.getBOOL("AutoCloseOOC"))
+				{
+					// Try to find any unclosed OOC chat (i.e. an opening
+					// double parenthesis without a matching closing double
+					// parenthesis.
+					if (utf8text.find("(( ") != -1 && utf8text.find("))") == -1)
+					{
+						// add the missing closing double parenthesis.
+						utf8text += " ))";
+					}
+					else if (utf8text.find("((") != -1 && utf8text.find("))") == -1)
+					{
+						if (utf8text.at(utf8text.length() - 1) == ')')
+						{
+							// cosmetic: add a space first to avoid a closing triple parenthesis
+							utf8text += " ";
+						}
+						// add the missing closing double parenthesis.
+						utf8text += "))";
+					}
+					else if (utf8text.find("[[ ") != -1 && utf8text.find("]]") == -1)
+					{
+						// add the missing closing double parenthesis.
+						utf8text += " ]]";
+					}
+					else if (utf8text.find("[[") != -1 && utf8text.find("]]") == -1)
+					{
+						if (utf8text.at(utf8text.length() - 1) == ']')
+						{
+							// cosmetic: add a space first to avoid a closing triple parenthesis
+							utf8text += " ";
+						}
+						// add the missing closing double parenthesis.
+						utf8text += "]]";
+					}
+				}
+
+				// Convert MU*s style poses into IRC emotes here.
+				if (gSavedSettings.getBOOL("AllowMUpose"))
+				{
+					if (utf8text.find(":") == 0 && utf8text.length() > 3)
+					{
+						if (utf8text.find(":'") == 0)
+						{
+							utf8text.replace(0, 1, "/me");
+	 					}
+	 					else if (isalpha(utf8text.at(1)))	// Do not prevent smileys and such.
+						{
+							utf8text.replace(0, 1, "/me ");
+						}
+					}
+				}
+//-TT Patch MU_OOC from Satomi Ahn
+//MK
+////			// discard returned "found" boolean
+////				LLGestureMgr::instance().triggerAndReviseString(utf8text, &utf8_revised_text);
+				BOOL found_gesture=LLGestureMgr::instance().triggerAndReviseString(utf8text, &utf8_revised_text);
+
+				if (gRRenabled && gAgent.mRRInterface.contains ("sendchat") && !gAgent.mRRInterface.containsSubstr ("redirchat:"))
+				{
+					// user is forbidden to send any chat message on channel 0 except emotes and OOC text
+					utf8_revised_text = gAgent.mRRInterface.crunchEmote (utf8_revised_text, 20);
+					if (found_gesture && utf8_revised_text=="...") utf8_revised_text="";
+				}
+//mk
 			}
 			else
 			{
+//MK
+				std::ostringstream stream;
+				stream << "" << channel;
+				if (gRRenabled && gAgent.mRRInterface.containsWithoutException ("sendchannel", stream.str()))
+				{
+					utf8_revised_text = "";
+				}
+				else
+//mk
 				utf8_revised_text = utf8text;
 			}
 
@@ -473,7 +558,10 @@ void LLChatBar::onInputEditorKeystroke( LLLineEditor* caller, void* userdata )
 
 	if( (length > 0) && (raw_text[0] != '/') )  // forward slash is used for escape (eg. emote) sequences
 	{
-		gAgent.startTyping();
+//MK
+		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
+//mk
+			gAgent.startTyping();
 	}
 	else
 	{
@@ -583,6 +671,30 @@ void LLChatBar::sendChatFromViewer(const LLWString &wtext, EChatType type, BOOL 
 		utf8_text = utf8str_truncate(utf8_text, MAX_STRING - 1);
 	}
 
+//MK
+	if (gRRenabled && channel == 0)
+	{
+		// transform the type according to chatshout, chatnormal and chatwhisper restrictions
+		if (type == CHAT_TYPE_WHISPER && gAgent.mRRInterface.contains ("chatwhisper"))
+		{
+			type = CHAT_TYPE_NORMAL;
+		}
+		if (type == CHAT_TYPE_SHOUT && gAgent.mRRInterface.contains ("chatshout"))
+		{
+			type = CHAT_TYPE_NORMAL;
+		}
+		if ((type == CHAT_TYPE_SHOUT || type == CHAT_TYPE_NORMAL)
+			&& gAgent.mRRInterface.contains ("chatnormal"))
+		{
+			type = CHAT_TYPE_WHISPER;
+		}
+		
+		if (gAgent.mRRInterface.containsSubstr ("redirchat:"))
+		{
+			animate = false;
+		}
+	}
+//mk
 	// Don't animate for chats people can't hear (chat to scripts)
 	if (animate && (channel == 0))
 	{
@@ -630,18 +742,25 @@ void LLChatBar::onCommitGesture(LLUICtrl* ctrl)
 		}
 		const std::string& trigger = gestures->getSelectedValue().asString();
 
-		// pretend the user chatted the trigger string, to invoke
-		// substitution and logging.
-		std::string text(trigger);
-		std::string revised_text;
-		LLGestureMgr::instance().triggerAndReviseString(text, &revised_text);
-
-		revised_text = utf8str_trim(revised_text);
-		if (!revised_text.empty())
+//MK
+		if (!gRRenabled || !gAgent.mRRInterface.contains ("sendchat"))
 		{
-			// Don't play nodding animation
-			sendChatFromViewer(revised_text, CHAT_TYPE_NORMAL, FALSE);
+//mk
+			// pretend the user chatted the trigger string, to invoke
+			// substitution and logging.
+			std::string text(trigger);
+			std::string revised_text;
+			LLGestureMgr::instance().triggerAndReviseString(text, &revised_text);
+
+			revised_text = utf8str_trim(revised_text);
+			if (!revised_text.empty())
+			{
+				// Don't play nodding animation
+				sendChatFromViewer(revised_text, CHAT_TYPE_NORMAL, FALSE);
+			}
+//MK
 		}
+//mk
 	}
 	mGestureLabelTimer.start();
 	if (mGestureCombo != NULL)

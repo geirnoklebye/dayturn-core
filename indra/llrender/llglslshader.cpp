@@ -585,7 +585,6 @@ void LLGLSLShader::mapUniform(GLint index, const vector<LLStaticHashedString> * 
     char name[1024];        /* Flawfinder: ignore */
     name[0] = 0;
 
-
     glGetActiveUniformARB(mProgramObject, index, 1024, &length, &size, &type, (GLcharARB *)name);
 #if !LL_DARWIN
     if (size > 0)
@@ -676,7 +675,7 @@ void LLGLSLShader::mapUniform(GLint index, const vector<LLStaticHashedString> * 
             }
         }
     }
-}
+ }
 
 void LLGLSLShader::addPermutation(std::string name, std::string value)
 {
@@ -1194,7 +1193,7 @@ GLint LLGLSLShader::getUniformLocation(const LLStaticHashedString& uniform)
 }
 
 GLint LLGLSLShader::getUniformLocation(U32 index)
-{
+	{
     GLint ret = -1;
     if (mProgramObject > 0)
     {

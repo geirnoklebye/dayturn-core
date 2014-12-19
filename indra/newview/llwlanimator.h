@@ -126,9 +126,16 @@ public:
 	/// get local time between 0 and 1
 	static F64 getLocalTime();
 
-private:
+//MK
+	// Sorry Mister, but I need these public !
+////private:
+public:
+//mk
 	ETime mTimeType;
 	bool mIsRunning, mIsInterpolating;
+//MK
+private:
+//mk
 	LLWLParamSet *mInterpBeginWL;
 	LLWaterParamSet *mInterpBeginWater, *mInterpEndWater;
 	clock_t mInterpStartTime, mInterpEndTime;

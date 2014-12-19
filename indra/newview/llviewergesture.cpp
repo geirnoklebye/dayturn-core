@@ -131,8 +131,14 @@ void LLViewerGesture::doTrigger( BOOL send_chat )
 	{
 		// Don't play nodding animation, since that might not blend
 		// with the gesture animation.
-		(LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat"))->
-				sendChatFromViewer(mOutputString, CHAT_TYPE_NORMAL, FALSE);
+//MK
+		if (!gRRenabled || !gAgent.mRRInterface.contains ("sendchat"))
+		{
+//mk
+			(LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat"))->sendChatFromViewer(mOutputString, CHAT_TYPE_NORMAL, FALSE);
+//MK
+		}
+//mk
 	}
 }
 

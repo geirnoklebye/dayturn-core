@@ -41,6 +41,11 @@
 ##   driver bug, try enabling this option and report whether it helps:
 #export LL_ATI_MOUSE_CURSOR_BUG=x
 
+## - missing fontconfig file causes massive freezes every time the viewer needs
+##   to find some fonts
+##   fix is simple: set the fontconfig_path variable properly
+[ -f /etc/fonts/fonts.conf ] && export FONTCONFIG_PATH=/etc/fonts
+
 if [ "`uname -m`" = "x86_64" ]; then
     echo '64-bit Linux detected.'
 fi

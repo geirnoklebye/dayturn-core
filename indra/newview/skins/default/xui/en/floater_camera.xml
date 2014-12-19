@@ -21,19 +21,19 @@
      name="flat_ui_title">
     </floater.string>
 
-    <floater.string
-     name="rotate_tooltip">
-        Rotate Camera Around Focus
-    </floater.string>
-    <floater.string
-     name="zoom_tooltip">
-        Zoom Camera Towards Focus
-    </floater.string>
-    <floater.string
-     name="move_tooltip">
-        Move Camera Up and Down, Left and Right
-    </floater.string>
-    <floater.string
+  <floater.string
+   name="rotate_tooltip">
+    Rotate Camera Around Focus
+  </floater.string>
+  <floater.string
+   name="zoom_tooltip">
+    Zoom Camera Towards Focus
+  </floater.string>
+  <floater.string
+   name="move_tooltip">
+    Move Camera Up and Down, Left and Right
+  </floater.string>
+  <floater.string
      name="camera_modes_title">
 camera_modes_title
     </floater.string>
@@ -46,17 +46,17 @@ pan_mode_title
 presets_mode_title
     </floater.string>
     <floater.string
-     name="free_mode_title">
+   name="free_mode_title">
 free_mode_title
-    </floater.string>
-    <panel
-     border="false"
+  </floater.string>
+  <panel
+   border="false"
      height="57"
      left="8"
      top="8"
      name="buttons_view"
      width="18">
-        <panel_camera_item
+      <panel_camera_item
           name="front_view"
           tool_tip="Front view"
           width="16"
@@ -64,8 +64,8 @@ free_mode_title
           left="0"
           top="0">
             <panel_camera_item.mousedown_callback
-            function="CameraPresets.ChangeView"
-            parameter="front_view" />
+          function="CameraPresets.ChangeView"
+          parameter="front_view" />
             <panel_camera_item.icon_over
             height="16"
             width="16" />
@@ -75,27 +75,27 @@ free_mode_title
             <panel_camera_item.picture
             height="16"
             width="16"
-            image_name="Cam_Preset_Front_Off" />
+          image_name="Cam_Preset_Front_Off" />
             <panel_camera_item.selected_picture
             height="16"
             width="16"
-            image_name="Cam_Preset_Front_On" />
+          image_name="Cam_Preset_Front_On" />
             <panel_camera_item.text
             width="0"
-            name="front_view_text">
+          name="front_view_text">
             ""
             </panel_camera_item.text>
-        </panel_camera_item>
-        <panel_camera_item
-          name="group_view"
+      </panel_camera_item>
+      <panel_camera_item
+        name="group_view"
           tool_tip="Side view"
           width="16"
           height="16"
           left="0"
           top_pad="3">
             <panel_camera_item.mousedown_callback
-            function="CameraPresets.ChangeView"
-            parameter="group_view" />
+          function="CameraPresets.ChangeView"
+          parameter="group_view" />
             <panel_camera_item.icon_over
             height="16"
             width="16" />
@@ -105,27 +105,74 @@ free_mode_title
             <panel_camera_item.picture
             height="16"
             width="16"
-            image_name="Cam_Preset_Side_Off" />
+          image_name="Cam_Preset_Side_Off" />
             <panel_camera_item.selected_picture
             height="16"
             width="16"
-            image_name="Cam_Preset_Side_On" />
+          image_name="Cam_Preset_Side_On" />
             <panel_camera_item.text
             width="0"
             name="group_view_text">
             ""
             </panel_camera_item.text>
-        </panel_camera_item>
-        <panel_camera_item
-          name="rear_view"
+      </panel_camera_item>
+      <!-- MK : More camera presets -->
+      <panel_camera_item
+        name="left_view"
+        top_pad="4">
+        <panel_camera_item.mousedown_callback
+          function="CameraPresets.ChangeView"
+          parameter="left_view" />
+        <panel_camera_item.picture
+          image_name="Cam_Preset_Side_Off" />
+        <panel_camera_item.selected_picture
+          image_name="Cam_Preset_Side_On" />
+        <panel_camera_item.text
+          name="Left_view_text">
+          Left View
+        </panel_camera_item.text>
+      </panel_camera_item>
+      <panel_camera_item
+        name="right_view"
+        top_pad="4">
+        <panel_camera_item.mousedown_callback
+          function="CameraPresets.ChangeView"
+          parameter="right_view" />
+        <panel_camera_item.picture
+          image_name="Cam_Preset_Side_Off" />
+        <panel_camera_item.selected_picture
+          image_name="Cam_Preset_Side_On" />
+        <panel_camera_item.text
+          name="Right_view_text">
+          Right View
+        </panel_camera_item.text>
+      </panel_camera_item>
+      <panel_camera_item
+        name="top_view"
+        top_pad="4">
+        <panel_camera_item.mousedown_callback
+          function="CameraPresets.ChangeView"
+          parameter="top_view" />
+        <panel_camera_item.picture
+          image_name="Cam_Preset_Side_Off" />
+        <panel_camera_item.selected_picture
+          image_name="Cam_Preset_Side_On" />
+        <panel_camera_item.text
+          name="Top_view_text">
+          Top View
+        </panel_camera_item.text>
+      </panel_camera_item>
+      <!-- mk -->
+      <panel_camera_item
+        name="rear_view"
           tool_tip="Rear view"
           width="16"
           height="16"
           left="0"
           top_pad="3">
             <panel_camera_item.mousedown_callback
-            function="CameraPresets.ChangeView"
-            parameter="rear_view" />
+          function="CameraPresets.ChangeView"
+          parameter="rear_view" />
             <panel_camera_item.icon_over
             height="16"
             width="16" />
@@ -135,17 +182,17 @@ free_mode_title
             <panel_camera_item.picture
             height="16"
             width="16"
-            image_name="Cam_Preset_Back_Off" />
+          image_name="Cam_Preset_Back_Off" />
             <panel_camera_item.selected_picture
             height="16"
             width="16"
-            image_name="Cam_Preset_Back_On" />
+          image_name="Cam_Preset_Back_On" />
             <panel_camera_item.text
             width="0"
-            name="rear_view_text">
+          name="rear_view_text">
             ""
             </panel_camera_item.text>
-        </panel_camera_item>
+      </panel_camera_item>
     </panel>
     <panel
        border="false"
@@ -228,14 +275,14 @@ free_mode_title
      sound_flags="3"
      tool_tip="Move camera up and down, left and right"
      top="4"/>
-    </panel>
-    <panel
-     border="false"
+  </panel>
+  <panel
+   border="false"
      height="56"
-     layout="topleft"
+   layout="topleft"
      left_pad="0"
      top="8"
-     name="buttons"
+   name="buttons"
      width="19">
         <panel_camera_item
           name="object_view"
@@ -330,5 +377,5 @@ free_mode_title
             ""
             </panel_camera_item.text>
         </panel_camera_item>
-    </panel>
+  </panel>
 </floater>
