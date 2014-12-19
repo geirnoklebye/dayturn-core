@@ -3892,8 +3892,6 @@ void LLFolderBridge::modifyOutfit(BOOL append)
 
 	// checking amount of items to wear
 	U32 max_items = gSavedSettings.getU32("WearFolderLimit");
-	if (cat->getDescendentCount() > max_items)
-	{
 		LLInventoryModel::cat_array_t cats;
 		LLInventoryModel::item_array_t items;
 		LLFindWearablesEx not_worn(/*is_worn=*/ false, /*include_body_parts=*/ false);
@@ -3910,7 +3908,6 @@ void LLFolderBridge::modifyOutfit(BOOL append)
 			LLNotificationsUtil::add("TooManyWearables", args);
 			return;
 		}
-	}
 
 	LLAppearanceMgr::instance().wearInventoryCategory( cat, FALSE, append );
 }
@@ -3929,7 +3926,8 @@ bool move_task_inventory_callback(const LLSD& notification, const LLSD& response
 			LLInventoryObject::object_list_t inventory_objects;
 			object->getInventoryContents(inventory_objects);
 			int contents_count = inventory_objects.size()-1; //subtract one for containing folder
-			LLInventoryCopyAndWearObserver* inventoryObserver = new LLInventoryCopyAndWearObserver(cat_and_wear->mCatID, contents_count, cat_and_wear->mFolderResponded);
+			LLInventoryCopyAndWearObserver* inventoryObserver = new LLInventoryCopyAndWearObserver(cat_and_wear->mCatID, contents_count, cat_and_wear->mFolderResponded,
+																									cat_and_wear->mReplace);
 			
 			gInventory.addObserver(inventoryObserver);
 		}
@@ -4667,6 +4665,23 @@ void LLSoundBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	}
 
 	hide_context_entries(menu, items, disabled_items);
+}
+
+void LLSoundBridge::performAction(LLInventoryModel* model, std::string action)
+{
+	if ("sound_play" == action)
+	{
+		LLViewerInventoryItem* item = getItem();
+		if(item)
+		{
+			send_sound_trigger(item->getAssetUUID(), SOUND_GAIN);
+		}
+	}
+	else if ("open" == action)
+	{
+		openSoundPreview((void*)this);
+	}
+	else LLItemBridge::performAction(model, action);
 }
 
 // +=================================================+
@@ -5525,16 +5540,20 @@ std::string LLObjectBridge::getLabelSuffix() const
 		{
 			return LLItemBridge::getLabelSuffix() + LLTrans::getString("worn");
 		}
-		std::string attachment_point_name = gAgentAvatarp->getAttachedPointName(mUUID);
-		if (attachment_point_name == LLStringUtil::null) // Error condition, invalid attach point
+		std::string attachment_point_name;
+		if (gAgentAvatarp->getAttachedPointName(mUUID, attachment_point_name))
 		{
-			attachment_point_name = "Invalid Attachment";
-		}
-		// e.g. "(worn on ...)" / "(attached to ...)"
 		LLStringUtil::format_map_t args;
 		args["[ATTACHMENT_POINT]"] =  LLTrans::getString(attachment_point_name);
 
 		return LLItemBridge::getLabelSuffix() + LLTrans::getString("WornOnAttachmentPoint", args);
+	}
+		else
+		{
+			LLStringUtil::format_map_t args;
+			args["[ATTACHMENT_ERROR]"] =  LLTrans::getString(attachment_point_name);
+			return LLItemBridge::getLabelSuffix() + LLTrans::getString("AttachmentErrorMessage", args);
+		}
 	}
 	return LLItemBridge::getLabelSuffix();
 }
@@ -6397,7 +6416,7 @@ public:
 		LLViewerInventoryItem* item = getItem();
 		if (item)
 		{
-			LLFloaterReg::showInstance("preview_sound", LLSD(mUUID), TAKE_FOCUS_YES);
+			send_sound_trigger(item->getAssetUUID(), SOUND_GAIN);
 		}
 		LLInvFVBridgeAction::doIt();
 	}
