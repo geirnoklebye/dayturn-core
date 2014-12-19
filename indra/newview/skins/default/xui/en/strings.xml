@@ -2310,6 +2310,7 @@ The [[MARKETPLACE_CREATE_STORE_URL] Marketplace store] is returning errors.
 	<string name="LoadingContents">Loading contents...</string>
 	<string name="NoContents">No contents</string>
 	<string name="WornOnAttachmentPoint" value=" (worn on [ATTACHMENT_POINT])" />
+	<string name="AttachmentErrorMessage" value=" ([ATTACHMENT_ERROR])" />
 	<string name="ActiveGesture" value="[GESLABEL] (active)"/>
 	<!-- Inventory permissions -->
 	<string name="PermYes">Yes</string>
@@ -2442,6 +2443,9 @@ The [[MARKETPLACE_CREATE_STORE_URL] Marketplace store] is returning errors.
   <string name="Root">Root</string>
 //mk
   <string name="Invalid Attachment">Invalid Attachment Point</string>
+	<string name="ATTACHMENT_MISSING_ITEM">Error: missing item</string>
+	<string name="ATTACHMENT_MISSING_BASE_ITEM">Error: missing base item</string>
+	<string name="ATTACHMENT_NOT_ATTACHED">Error: object is in current outfit but not attached</string>
 
   <!-- Avatar age computation, see LLDateUtil::ageFromDate -->
   <string name="YearsMonthsOld">[AGEYEARS] [AGEMONTHS] old</string>

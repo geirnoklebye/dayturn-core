@@ -87,6 +87,8 @@ void copy_slurl_to_clipboard_callback_inv(const std::string& slurl);
 typedef std::pair<LLUUID, LLUUID> two_uuids_t;
 typedef std::list<two_uuids_t> two_uuids_list_t;
 
+const F32 SOUND_GAIN = 1.0f;
+
 struct LLMoveInv
 {
 	LLUUID mObjectID;
@@ -2836,8 +2838,8 @@ void LLRightClickInventoryFetchDescendentsObserver::execute(bool clear_observer)
 class LLInventoryCopyAndWearObserver : public LLInventoryObserver
 {
 public:
-	LLInventoryCopyAndWearObserver(const LLUUID& cat_id, int count, bool folder_added=false) :
-		mCatID(cat_id), mContentsCount(count), mFolderAdded(folder_added) {}
+	LLInventoryCopyAndWearObserver(const LLUUID& cat_id, int count, bool folder_added=false, bool replace=false) :
+		mCatID(cat_id), mContentsCount(count), mFolderAdded(folder_added), mReplace(replace){}
 	virtual ~LLInventoryCopyAndWearObserver() {}
 	virtual void changed(U32 mask);
 
@@ -2845,6 +2847,7 @@ protected:
 	LLUUID mCatID;
 	int    mContentsCount;
 	bool   mFolderAdded;
+	bool   mReplace;
 };
 
 
@@ -2886,7 +2889,7 @@ void LLInventoryCopyAndWearObserver::changed(U32 mask)
 //MK
 					gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
 //mk
-					LLAppearanceMgr::instance().wearInventoryCategory(category, FALSE, FALSE);
+					LLAppearanceMgr::instance().wearInventoryCategory(category, FALSE, !mReplace);
 					delete this;
 				}
 			}

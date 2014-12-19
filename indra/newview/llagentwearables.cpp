@@ -1034,6 +1034,10 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 			continue;
 					}
 
+		// Don't care about this case - ordering of wearables with the same asset id has no effect.
+		// Causes the two-alphas error case in MAINT-4158.
+		// We should actually disallow wearing two wearables with the same asset id.
+#if 0
 		if (curr_wearable->getName() != new_item->getName() ||
 			curr_wearable->getItemID() != new_item->getUUID())
 					{
@@ -1044,6 +1048,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 			mismatched++;
 			continue;
 					}
+#endif
 		// If we got here, everything matches.
 		matched++;
 				}
@@ -1168,7 +1173,6 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 	if (isAgentAvatarValid())
 	{
 		gAgentAvatarp->setCompositeUpdatesEnabled(TRUE);
-		gAgentAvatarp->updateVisualParams();
 
 		// If we have not yet declouded, we may want to use
 		// baked texture UUIDs sent from the first objectUpdate message
@@ -1186,15 +1190,13 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 
 	notifyLoadingFinished();
 
+	// Copy wearable params to avatar.
+	gAgentAvatarp->writeWearablesToAvatar();
+
+	// Then update the avatar based on the copied params.
+	gAgentAvatarp->updateVisualParams();
+
 	gAgentAvatarp->dumpAvatarTEs("setWearableOutfit");
-////MK
-//	if (gAgentAvatarp && !gAgentAvatarp->getIsCloud())
-//	{
-//		//LLAppearanceMgr::instance().removeCOFLinksOfType (LLWearableType::WT_SHAPE);
-//		// Force an update on the shape because the outfit has changed.
-//		forceUpdateShape ();
-//	}
-////mk
 
 	LL_DEBUGS("Avatar") << "setWearableOutfit() end" << LL_ENDL;
 }
@@ -1336,9 +1338,13 @@ void LLAgentWearables::userRemoveWearablesOfType(const LLWearableType::EType &ty
 	}
 }
 
-// Combines userRemoveMulipleAttachments() and userAttachMultipleAttachments() logic to
-// get attachments into desired state with minimal number of adds/removes.
-void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj_item_array)
+// Given a desired set of attachments, find what objects need to be
+// removed, and what additional inventory items need to be added.
+void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array_t& obj_item_array,
+													llvo_vec_t& objects_to_remove,
+													llvo_vec_t& objects_to_retain,
+													LLInventoryModel::item_array_t& items_to_add)
+
 {
 //MK
 	// When calling this function, one of two purposes are expected :
@@ -1402,7 +1408,6 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 	}
 
 	// Build up list of objects to be removed and items currently attached.
-	llvo_vec_t objects_to_remove;
 	for (LLVOAvatar::attachment_map_t::iterator iter = gAgentAvatarp->mAttachmentPoints.begin(); 
 		 iter != gAgentAvatarp->mAttachmentPoints.end();)
 	{
@@ -1431,32 +1436,18 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 				if (remove_attachment)
 				{
 					// LL_INFOS() << "found object to remove, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << LL_ENDL;
-////MK
-//					// There are two ways to receive this list of objects :
-//					// - from a burst of "attach this here" messages
-//					// - from a change of outfit
-//					// In the first case, the list is partial and we don't want to remove what we are going to wear
-//					// In the second case, the list is complete and describes what we are going to wear
-//					// => We need to use RRInterface::mUserUpdateAttachmentsUpdatesAll to determine what we want to do
-//					// with objects that are not in the list
-//					if (gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll)
-//					{
-////mk
 						objects_to_remove.push_back(objectp);
-////MK
-//					}
-////mk
 				}
 				else
 				{
 					// LL_INFOS() << "found object to keep, id " << objectp->getID() << ", item " << objectp->getAttachmentItemID() << LL_ENDL;
 					current_item_ids.insert(object_item_id);
+					objects_to_retain.push_back(objectp);
 					}
 			}
 		}
 	}
 
-	LLInventoryModel::item_array_t items_to_add;
 	for (LLInventoryModel::item_array_t::iterator it = obj_item_array.begin();
 		 it != obj_item_array.end();
 		 ++it)
@@ -1475,12 +1466,6 @@ void LLAgentWearables::userUpdateAttachments(LLInventoryModel::item_array_t& obj
 	// S32 remove_count = objects_to_remove.size();
 	// S32 add_count = items_to_add.size();
 	// LL_INFOS() << "remove " << remove_count << " add " << add_count << LL_ENDL;
-
-	// Remove everything in objects_to_remove
-	userRemoveMultipleAttachments(objects_to_remove);
-
-	// Add everything in items_to_add
-	userAttachMultipleAttachments(items_to_add);
 
 //MK
 	gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
