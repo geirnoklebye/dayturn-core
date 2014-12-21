@@ -17,8 +17,6 @@
    top="5"
    orientation="vertical"
    width="242">
-<!-- MK : remove translate checkbox panel -->
-<!--
     <layout_panel
      auto_resize="false"
      height="26"
@@ -39,7 +37,6 @@
        name="translate_chat_checkbox"
        width="230" />
     </layout_panel>
--->
     <layout_panel
      auto_resize="true"
      height="138"

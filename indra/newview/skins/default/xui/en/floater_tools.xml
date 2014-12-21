@@ -3,7 +3,6 @@
  positioning="cascading"
  legacy_header_height="18"
  height="618"
- height="600"
  layout="topleft"
  bg_opaque_image="Window_NoTitle_Foreground"
  bg_alpha_image="Window_NoTitle_Background"
@@ -74,26 +73,6 @@
     <floater.string
      name="status_remaining_capacity">
         Remaining capacity [LAND_CAPACITY].
-    </floater.string>
-		<floater.string
-     name="grid_screen_text">
-        Screen
-    </floater.string>
-    <floater.string
-     name="grid_local_text">
-        Local
-    </floater.string>
-    <floater.string
-     name="grid_world_text">
-        World
-    </floater.string>
-    <floater.string
-     name="grid_reference_text">
-        Reference
-    </floater.string>
-    <floater.string
-     name="grid_attachment_text">
-        Attachment
     </floater.string>
     <button
      follows="left|top"
@@ -293,7 +272,7 @@
 		  <check_box.commit_callback
 			function="BuildTool.selectComponent"/>
 	</check_box>
-<!-- MK: Removing those very dangerous buttons. Too easy to click on by mistake.
+
    <button
      follows="left|top"
      height="20"
@@ -317,32 +296,7 @@
 	  <button.commit_callback
 	     function="BuildTool.UnlinkObjects"/>
     </button>
--->
-<!-- MK: This combo box, on the other hand, is too useful to hide. -->
-    <combo_box
-     height="23"
-     layout="topleft"
-     follows="left|top"
-     name="combobox grid mode"
-     tool_tip="Choose the type of grid ruler for positioning the object"
-     top="108"
-		 left="143"
-     width="108">
-        <combo_box.item
-         label="World grid"
-         name="World"
-         value="World" />
-        <combo_box.item
-         label="Local grid"
-         name="Local"
-         value="Local" />
-        <combo_box.item
-         label="Reference grid"
-         name="Reference"
-         value="Reference" />
-		 <combo_box.commit_callback
-	     function="BuildTool.gridMode"/>
-    </combo_box>    <check_box
+    <check_box
      control_name="ScaleUniform"
      height="19"
      label="Stretch Both Sides"
@@ -373,7 +327,6 @@
      top_pad="0"
      name="checkbox snap to grid"
      width="134" />
-  <!-- MK: What's this doing here ?
     <combo_box
       height="20"
       layout="topleft"
@@ -399,7 +352,7 @@
       <combo_box.commit_callback
       function="BuildTool.gridMode"/>
     </combo_box>  
-  -->
+  
   <button
      left="259"
      label=""
@@ -801,7 +754,7 @@
 	  layout="topleft"
 	  left="10"
 	  name="selection_empty"
-	  top_pad="10"
+	  top_pad="0"
 	  width="100">
 		Nothing selected.
 	</text>
@@ -867,7 +820,7 @@
     layout="topleft"
     left="6"
     name="cost_text_border"
-    top="145"
+    top="135"
     width="282"/>
     <tab_container
      follows="left|top"
@@ -880,7 +833,7 @@
      tab_position="top"
      tab_height="25"
      open_tabs_on_drag_and_drop="true"
-     top="183"
+     top="173"
      width="295">
 	
 <panel
@@ -1161,7 +1114,7 @@ even though the user gets a free copy.
       min_val="0"
       height="20"
       max_val="999999999" />
-<!-- NEW SALE TYPE COMBO BOX -->
+  <!-- NEW SALE TYPE COMBO BOX -->
       <combo_box
             left_pad="8"
             layout="topleft"
@@ -1400,7 +1353,7 @@ even though the user gets a free copy.
          left_pad="0">
       </text>
     </panel>
-      </panel>
+  </panel>
       <!-- Object tab -->
       <panel
          border="false"
@@ -1447,8 +1400,7 @@ even though the user gets a free copy.
              tool_tip="Causes object to not collide with other objects or avatars"
              top_pad="0"
              width="123" />
-
-            <text
+        <text
              type="string"
              length="1"
              follows="left|top"
