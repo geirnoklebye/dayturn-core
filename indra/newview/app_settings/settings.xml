@@ -178,7 +178,17 @@
       <key>Value</key>
       <string></string>
     </map>
-
+    <key>RenderDeferredShowInvisiprims</key>
+    <map>
+      <key>Comment</key>
+      <string>Render invisiprims (prims that hide the avatar) when "Lighting and Shadows" is selected. Only works if your graphics card supports OpenGl v3.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
 	<key>UIImgInvisibleUUID</key>
 	<map>
 	  <key>Comment</key>

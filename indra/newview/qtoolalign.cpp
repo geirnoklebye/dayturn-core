@@ -1,7 +1,6 @@
 /** 
- * @file qtoolalign.cpp
+ * @file lltoolface.cpp
  * @brief A tool to align objects
- * @slight modification for use in S21 thanks Qarl!
  */
 
 #include "llviewerprecompiledheaders.h"
@@ -106,7 +105,7 @@ void QToolAlign::handleSelect()
 {
 	// no parts, please
 
-	llwarns << "in select" << llendl;
+	LL_WARNS() << "in select" << LL_ENDL;
 	LLSelectMgr::getInstance()->promoteSelectionToRoot();
 }
 
@@ -213,6 +212,8 @@ void setup_transforms_bbox(LLBBox bbox)
 	LLQuaternion rotation = bbox.getRotation();
 	F32 angle_radians, x, y, z;
 	rotation.getAngleAxis(&angle_radians, &x, &y, &z);
+	// gGL has no rotate method (despite having translate and scale) presumably because
+	// its authors smoke crack.  so we hack.
 	gGL.flush();
 	gGL.rotatef(angle_radians * RAD_TO_DEG, x, y, z); 
 
@@ -237,7 +238,7 @@ void render_bbox(LLBBox bbox)
 
 void render_cone_bbox(LLBBox bbox)
 {
-	gGL.matrixMode(LLRender::MM_MODELVIEW);
+	glMatrixMode(GL_MODELVIEW);
 	gGL.pushMatrix();
 
 	setup_transforms_bbox(bbox);
@@ -247,6 +248,7 @@ void render_cone_bbox(LLBBox bbox)
 
 	gGL.popMatrix();
 }
+
 
 
 // the selection bbox isn't axis aligned, so we must construct one
@@ -354,7 +356,6 @@ void QToolAlign::renderManipulators()
 				manipulator_bbox.addPointLocal(LLVector3(1, 1, 0.75) * size * 0.5);
 			
 				gGL.color4fv(color.mV);
-				gGL.color4fv(color.mV);
 
 				render_cone_bbox(manipulator_bbox);
 			}
@@ -384,7 +385,7 @@ void QToolAlign::render()
 // only works for our specialized (AABB, position centered) bboxes
 BOOL bbox_overlap(LLBBox bbox1, LLBBox bbox2)
 {
-	const F32 FUDGE = 0.001f;  // because of SL precision/rounding
+	double FUDGE = 0.001;  // because of stupid SL precision/rounding
 	
 	LLVector3 delta = bbox1.getCenterAgent() - bbox2.getCenterAgent();
 
@@ -508,21 +509,22 @@ void QToolAlign::align()
 			// check to see if it overlaps the previously placed objects
 			BOOL overlap = FALSE;
 
-			llwarns << "i=" << i << " j=" << j << llendl;
+			LL_WARNS() << "i=" << i << " j=" << j << LL_ENDL;
 			
 			if (!mForce) // well, don't check if in force mode
 			{
 				for (U32 k = 0; k < i; k++)
 				{
 					LLViewerObject* other_object = objects[k];
+
 					LLBBox other_bbox = new_bboxes[other_object];
 
 					BOOL overlaps_this = bbox_overlap(other_bbox, new_bbox);
 
 					if (overlaps_this)
 					{
-						llwarns << "overlap" << new_bbox.getCenterAgent() << other_bbox.getCenterAgent() << llendl;
-						llwarns << "extent" << new_bbox.getExtentLocal() << other_bbox.getExtentLocal() << llendl;
+						LL_WARNS() << "overlap" << new_bbox.getCenterAgent() << other_bbox.getCenterAgent() << LL_ENDL;
+						LL_WARNS() << "extent" << new_bbox.getExtentLocal() << other_bbox.getExtentLocal() << LL_ENDL;
 					}
 
 					overlap = (overlap || overlaps_this);
@@ -553,9 +555,9 @@ void QToolAlign::align()
 	}
 
 	
-	// now move them in (Unsigned not Signed in 2.0)
+	// now move them
 	for (U32 i = 0; i < objects.size(); i++)
-{
+	{
 		LLViewerObject* object = objects[i];
 
 		LLBBox original_bbox = original_bboxes[object];
@@ -570,7 +572,5 @@ void QToolAlign::align()
 	}
 	
 	
-	LLSelectMgr::getInstance()->sendMultipleUpdate(UPD_POSITION);
-}
 	LLSelectMgr::getInstance()->sendMultipleUpdate(UPD_POSITION);
 }

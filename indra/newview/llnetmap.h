@@ -137,8 +137,6 @@ private:
 	LLUUID				mClosestAgentToCursor;
 	LLVector3d			mClosestAgentPosition;
 
-	LLVector3d		mClosestAgentPosition;
-
 	std::string	mToolTipMsg;
 
 public:

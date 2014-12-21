@@ -283,13 +283,3 @@ void LLFloaterOpenObject::onClickCancel()
 	closeFloater();
 }
 
-void LLFloaterOpenObject::onClickReplace()
-{
-	moveToInventory(true, true);
-	closeFloater();
-}
-
-void LLFloaterOpenObject::onClickCancel()
-{
-	closeFloater();
-}

@@ -2210,7 +2210,7 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 			{
 				//mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset - mSavedOffset * OFFSET_FACTOR);
 				//mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset);
-				mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset * 0.88);
+				mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset * 0.88,false);
 				mLastWornShape->writeToAvatar(gAgentAvatarp);
 				gAgentAvatarp->updateVisualParams();
 
@@ -2224,9 +2224,9 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 	else
 	{
 		if (mHasModifiableShape && mLastWornShape &&
-			mLastWornShape->getVisualParamWeight(AVATAR_HOVER) != 0.f)
+			mLastWornShape->getVisualParamWeight(AVATAR_HOVER) != 0.f, true)
 		{
-			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, 0.f);
+			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, 0.f, false);
 			saveWearable(LLWearableType::WT_SHAPE, 0);
 		}
 	}
@@ -2246,7 +2246,7 @@ void LLAgentWearables::forceUpdateShape (void)
 
 	F32 offset = gSavedPerAccountSettings.getF32("RestrainedLoveOffsetAvatarZ");
 	mSavedOffset = offset;
-	mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset * OFFSET_FACTOR);
+	mLastWornShape->setVisualParamWeight(AVATAR_HOVER, offset * OFFSET_FACTOR, true);
 	//mLastWornShape->writeToAvatar(gAgentAvatarp);
 	//gAgentAvatarp->updateVisualParams();
 
@@ -2287,7 +2287,7 @@ void LLAgentWearables::forceUpdateShape (void)
 		LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
 		//LLAppearanceMgr::instance().removeCOFItemLinks(link_item->getUUID(), cb);
 
-		gAgentWearables.saveWearable(mLastWornShape->getType(), index, new_name);
+		gAgentWearables.saveWearable(mLastWornShape->getType(), true, index, new_name);
 		//LLAppearanceMgr::instance().updateAppearanceFromCOF();
 		LLAppearanceMgr::instance().enforceCOFItemRestrictions(cb);
 	}

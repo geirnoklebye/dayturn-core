@@ -1806,39 +1806,43 @@ BOOL LLToolPie::handleRightClickPick()
 		else if (object->isAttachment())
 		{
 			if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
-				gPieMenuAttachmentSelf->show(x, y);
-			else
-//MK
-			if (gRRenabled)
 			{
-				// For convenience, if Control or Shift (or both) is down while right clicking, change the current tool
-				// We can't use Alt, because when Alt is pressed clicks pass through HUDs and we don't want to be able
-				// to use an object if going through a HUD
-				if (mask & MASK_CONTROL && mask & MASK_SHIFT)
+				gPieMenuAttachmentSelf->show(x, y);
+			}
+			else
+			{
+//MK
+				if (gRRenabled)
 				{
-					// Edit (add to selection)
-					handle_object_edit();
-					return TRUE;
-				}
-				else if (mask & MASK_CONTROL)
-				{
-					// Edit (clear previous selection)
-					// The current selection will be cleared first, because SHIFT is not held
-					// (see the change about the mask in LLToolSelect::handleObjectSelection() )
-					handle_object_edit();
-					return TRUE;
-				}
-				else if (mask & MASK_SHIFT)
-				{
-					// Detach object
-					gAgent.mRRInterface.mHandleNoStrip = FALSE;
-					if (gAgent.mRRInterface.canDetachAllSelectedObjects()) //canDetach (object, false))
+					// For convenience, if Control or Shift (or both) is down while right clicking, change the current tool
+					// We can't use Alt, because when Alt is pressed clicks pass through HUDs and we don't want to be able
+					// to use an object if going through a HUD
+					if (mask & MASK_CONTROL && mask & MASK_SHIFT)
 					{
-						LLSelectMgr::getInstance()->sendDetach();
+						// Edit (add to selection)
+						handle_object_edit();
+						return TRUE;
 					}
-					gAgent.mRRInterface.mHandleNoStrip = TRUE;
-//					gAgent.mRRInterface.detachObject (object);
-					return TRUE;
+					else if (mask & MASK_CONTROL)
+					{
+						// Edit (clear previous selection)
+						// The current selection will be cleared first, because SHIFT is not held
+						// (see the change about the mask in LLToolSelect::handleObjectSelection() )
+						handle_object_edit();
+						return TRUE;
+					}
+					else if (mask & MASK_SHIFT)
+					{
+						// Detach object
+						gAgent.mRRInterface.mHandleNoStrip = FALSE;
+						if (gAgent.mRRInterface.canDetachAllSelectedObjects()) //canDetach (object, false))
+						{
+							LLSelectMgr::getInstance()->sendDetach();
+						}
+						gAgent.mRRInterface.mHandleNoStrip = TRUE;
+	//					gAgent.mRRInterface.detachObject (object);
+						return TRUE;
+					}
 				}
 			}
 //mk
@@ -1854,51 +1858,55 @@ BOOL LLToolPie::handleRightClickPick()
 				name = node->mName;
 			}
 			
-				if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
-					gPieMenuObject->show(x, y);
-				else
-			std::string mute_msg;
-			if (LLMuteList::getInstance()->isMuted(object->getID(), name))
+			if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
 			{
-				mute_msg = LLTrans::getString("UnmuteObject");
+     			gPieMenuObject->show(x, y);
 			}
 			else
 			{
-				mute_msg = LLTrans::getString("MuteObject2");
-			}
+				std::string mute_msg;
+				if (LLMuteList::getInstance()->isMuted(object->getID(), name))
+				{
+					mute_msg = LLTrans::getString("UnmuteObject");
+				}
+				else
+				{
+					mute_msg = LLTrans::getString("MuteObject2");
+				}
 
-//MK
-			if (gRRenabled)
-			{
-				// For convenience, if Control or Shift (or both) is down while right clicking, change the current tool
-				// We can't use Alt, because when Alt is pressed clicks pass through HUDs and we don't want to be able
-				// to use an object if going through a HUD
-				if (mask & MASK_CONTROL && mask & MASK_SHIFT)
+	//MK
+				if (gRRenabled)
 				{
-					// Edit (add to selection)
-					handle_object_edit();
-					return TRUE;
+					// For convenience, if Control or Shift (or both) is down while right clicking, change the current tool
+					// We can't use Alt, because when Alt is pressed clicks pass through HUDs and we don't want to be able
+					// to use an object if going through a HUD
+					if (mask & MASK_CONTROL && mask & MASK_SHIFT)
+					{
+						// Edit (add to selection)
+						handle_object_edit();
+						return TRUE;
+					}
+					else if (mask & MASK_CONTROL)
+					{
+						// Edit (clear previous selection)
+						// The current selection will be cleared first, because SHIFT is not held
+						// (see the change about the mask in LLToolSelect::handleObjectSelection() )
+						handle_object_edit();
+						return TRUE;
+					}
+					else if (mask & MASK_SHIFT)
+					{
+						// Open object
+						handle_object_open();
+						return TRUE;
+					}
 				}
-				else if (mask & MASK_CONTROL)
-				{
-					// Edit (clear previous selection)
-					// The current selection will be cleared first, because SHIFT is not held
-					// (see the change about the mask in LLToolSelect::handleObjectSelection() )
-					handle_object_edit();
-					return TRUE;
-				}
-				else if (mask & MASK_SHIFT)
-				{
-					// Open object
-					handle_object_open();
-					return TRUE;
-				}
-			}
 //mk
-			gMenuHolder->getChild<LLUICtrl>("Object Mute")->setValue(mute_msg);
-			gMenuObject->show(x, y);
+				gMenuHolder->getChild<LLUICtrl>("Object Mute")->setValue(mute_msg);
+				gMenuObject->show(x, y);
 
-			showVisualContextMenuEffect();
+				showVisualContextMenuEffect();
+			}
 		}
 	}
 	else if (mPick.mParticleOwnerID.notNull())
