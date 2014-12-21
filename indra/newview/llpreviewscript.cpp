@@ -733,6 +733,24 @@ bool LLScriptEdCore::isKeyword(LLKeywordToken* token)
 	}
 }
 
+bool LLScriptEdCore::isKeyword(LLKeywordToken* token)
+{
+	switch(token->getType())
+	{
+		case LLKeywordToken::TT_CONSTANT:
+		case LLKeywordToken::TT_CONTROL:
+		case LLKeywordToken::TT_EVENT:
+		case LLKeywordToken::TT_FUNCTION:
+		case LLKeywordToken::TT_SECTION:
+		case LLKeywordToken::TT_TYPE:
+		case LLKeywordToken::TT_WORD:
+			return true;
+
+		default:
+			return false;
+	}
+}
+
 void LLScriptEdCore::setHelpPage(const std::string& help_string)
 {
 	LLFloater* help_floater = mLiveHelpHandle.get();
