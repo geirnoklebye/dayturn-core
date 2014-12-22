@@ -2123,6 +2123,87 @@
 		<menu_item_separator/>
 		
   </menu>
+<!-- MK -->
+  <!-- RLV menu here -->
+  <menu
+   create_jump_keys="true"
+   label="RLV"
+   name="RLV"
+   tear_off="true"
+   visible="true">
+    <menu_item_call
+     label="List restrictions"
+     name="List restrictions"
+     visible="true">
+      <menu_item_call.on_click
+       function="Rlv.ListRlvRestrictions" />
+    </menu_item_call>
+    <menu_item_separator/>
+    <menu_item_check
+     label="Show Debug Messages"
+     name="Show Debug Messages">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RestrainedLoveDebug" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RestrainedLoveDebug" />
+    </menu_item_check>
+    <menu_item_check
+     label="Forbid offers to #RLV"
+     name="Forbid offers to #RLV">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RestrainedLoveForbidGiveToRLV" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RestrainedLoveForbidGiveToRLV" />
+    </menu_item_check>
+    <menu_item_check
+     label="Show '...'"
+     name="ShowEllipsis">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RestrainedLoveShowEllipsis" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RestrainedLoveShowEllipsis" />
+    </menu_item_check>
+    <menu_item_check
+     label="Double-click to replace items"
+     name="RestrainedLoveDoubleClickWear">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RestrainedLoveDoubleClickWear" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RestrainedLoveDoubleClickWear" />
+    </menu_item_check>
+    <menu_item_separator/>
+    <menu_item_check
+     label="Report avatar entering chat range"
+     name="RadarReportChatRange">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RadarReportChatRange" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RadarReportChatRange" />
+    </menu_item_check>
+    <menu_item_check
+     label="Report avatar entering draw range"
+     name="RadarReportDrawRange">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="RadarReportDrawRange" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="RadarReportDrawRange" />
+    </menu_item_check>
+  </menu>
+  <!-- End RLV menu -->
+<!-- mk -->
+  
   <menu
      create_jump_keys="true"
      label="Help"
