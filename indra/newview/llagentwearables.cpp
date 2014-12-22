@@ -1761,7 +1761,7 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 						if (LLAssetType::AT_OBJECT == linked_item->getType())
 						{
 							std::string attachment_point_name;
-							if (gAgentAvatarp->getAttachedPointName(linked_item->getUUID(), attachment_point_name))
+							if (!gAgentAvatarp->getAttachedPointName(linked_item->getUUID(), attachment_point_name))
 							{
 								LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
 							}
