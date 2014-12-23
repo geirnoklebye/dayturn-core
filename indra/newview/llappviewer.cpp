@@ -3507,6 +3507,7 @@ LLSD LLAppViewer::getViewerInfo() const
 		info["GRAPHICS_DRIVER_VERSION"] = driver_info["DriverVersion"];
 	}
 #endif
+	info["RLV_VERSION"] = gAgent.mRRInterface.getVersion();
 	info["OPENGL_VERSION"] = (const char*)(glGetString(GL_VERSION));
 	info["LIBCURL_VERSION"] = LLCurl::getVersionString();
 	info["J2C_VERSION"] = LLImageJ2C::getEngineInfo();
