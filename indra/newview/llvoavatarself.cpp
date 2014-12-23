@@ -262,7 +262,7 @@ void LLVOAvatarSelf::markDead()
 {
 	BOOL success = LLVOAvatar::loadAvatar();
 
-	// set all parameters sotred directly in the avatar to have
+	// set all parameters stored directly in the avatar to have
 	// the isSelfParam to be TRUE - this is used to prevent
 	// them from being animated or trigger accidental rebakes
 	// when we copy params from the wearable to the base avatar.
@@ -718,13 +718,8 @@ void LLVOAvatarSelf::updateVisualParams()
 	LLVOAvatar::updateVisualParams();
 }
 
-/*virtual*/
-void LLVOAvatarSelf::idleUpdateAppearanceAnimation()
+void LLVOAvatarSelf::writeWearablesToAvatar()
 {
-	// Animate all top-level wearable visual parameters
-	gAgentWearables.animateAllWearableParams(calcMorphAmount());
-
-	// apply wearable visual params to avatar
 	for (U32 type = 0; type < LLWearableType::WT_COUNT; type++)
 	{
 		LLWearable *wearable = gAgentWearables.getTopWearable((LLWearableType::EType)type);
@@ -733,6 +728,17 @@ void LLVOAvatarSelf::idleUpdateAppearanceAnimation()
 			wearable->writeToAvatar(this);
 		}
 	}
+
+}
+
+/*virtual*/
+void LLVOAvatarSelf::idleUpdateAppearanceAnimation()
+{
+	// Animate all top-level wearable visual parameters
+	gAgentWearables.animateAllWearableParams(calcMorphAmount());
+
+	// Apply wearable visual params to avatar
+	writeWearablesToAvatar();
 
 	//allow avatar to process updates
 	LLVOAvatar::idleUpdateAppearanceAnimation();
@@ -1093,9 +1099,19 @@ LLViewerObject* LLVOAvatarSelf::getWornAttachment(const LLUUID& inv_item_id)
 	return NULL;
 }
 
-const std::string LLVOAvatarSelf::getAttachedPointName(const LLUUID& inv_item_id) const
+bool LLVOAvatarSelf::getAttachedPointName(const LLUUID& inv_item_id, std::string& name) const
 {
+	if (!gInventory.getItem(inv_item_id))
+	{
+		name = "ATTACHMENT_MISSING_ITEM";
+		return false;
+	}
 	const LLUUID& base_inv_item_id = gInventory.getLinkedItemID(inv_item_id);
+	if (!gInventory.getItem(base_inv_item_id))
+	{
+		name = "ATTACHMENT_MISSING_BASE_ITEM";
+		return false;
+	}
 	for (attachment_map_t::const_iterator iter = mAttachmentPoints.begin(); 
 		 iter != mAttachmentPoints.end(); 
 		 ++iter)
@@ -1103,11 +1119,13 @@ const std::string LLVOAvatarSelf::getAttachedPointName(const LLUUID& inv_item_id
 		const LLViewerJointAttachment* attachment = iter->second;
 		if (attachment->getAttachedObject(base_inv_item_id))
 		{
-			return attachment->getName();
+			name = attachment->getName();
+			return true;
 		}
 	}
 
-	return LLStringUtil::null;
+	name = "ATTACHMENT_NOT_ATTACHED";
+	return false;
 }
 
 //virtual
@@ -1131,43 +1149,46 @@ const LLViewerJointAttachment *LLVOAvatarSelf::attachObject(LLViewerObject *view
 			{
 				if (item->isFinished())
 				{
-					std::string attach_name = getAttachedPointName (item->getUUID());
-					LLStringUtil::toLower (attach_name);
-					std::string item_name = item->getName();
-					if (item_name.length() >= DB_INV_ITEM_NAME_STR_LEN - 16)
+					std::string attach_name;
+					if (getAttachedPointName (item->getUUID(), attach_name))
 					{
-						// truncate if the original name is too long
-						item_name = item_name.substr (0, DB_INV_ITEM_NAME_STR_LEN - 16);
-					}
-					
-					if (item->getPermissions().allowModifyBy(gAgent.getID()))
-					{
-						// add the name of the attach point at the end of the name of the item
-						item->rename(item_name + " (" + attach_name + ")");
-						item->updateServer (FALSE);
-					}
-					else
-					{
-						// this item is no-mod, so we have to rename its parent directory instead,
-						// provided it is at least 2 levels below the shared root (we already know
-						// that the item is shared)
-						LLViewerInventoryCategory* cat_parent;
-						LLViewerInventoryCategory* cat_grandparent;
-						LLInventoryCategory* rlv_share = gAgent.mRRInterface.getRlvShare();
-						const LLUUID& parent_id = item->getParentUUID();
-						cat_parent = gInventory.getCategory (parent_id);
-						const LLUUID& grandparent_id = cat_parent->getParentUUID();
-						cat_grandparent = gInventory.getCategory (grandparent_id);
-						if (cat_parent && cat_grandparent
-							&& (LLInventoryCategory*)cat_parent != rlv_share
-							&& (LLInventoryCategory*)cat_grandparent != rlv_share)
+						LLStringUtil::toLower (attach_name);
+						std::string item_name = item->getName();
+						if (item_name.length() >= DB_INV_ITEM_NAME_STR_LEN - 16)
 						{
-							if (gAgent.mRRInterface.findAttachmentPointFromName (cat_parent->getName())
-								 == NULL)
+							// truncate if the original name is too long
+							item_name = item_name.substr (0, DB_INV_ITEM_NAME_STR_LEN - 16);
+						}
+					
+						if (item->getPermissions().allowModifyBy(gAgent.getID()))
+						{
+							// add the name of the attach point at the end of the name of the item
+							item->rename(item_name + " (" + attach_name + ")");
+							item->updateServer (FALSE);
+						}
+						else
+						{
+							// this item is no-mod, so we have to rename its parent directory instead,
+							// provided it is at least 2 levels below the shared root (we already know
+							// that the item is shared)
+							LLViewerInventoryCategory* cat_parent;
+							LLViewerInventoryCategory* cat_grandparent;
+							LLInventoryCategory* rlv_share = gAgent.mRRInterface.getRlvShare();
+							const LLUUID& parent_id = item->getParentUUID();
+							cat_parent = gInventory.getCategory (parent_id);
+							const LLUUID& grandparent_id = cat_parent->getParentUUID();
+							cat_grandparent = gInventory.getCategory (grandparent_id);
+							if (cat_parent && cat_grandparent
+								&& (LLInventoryCategory*)cat_parent != rlv_share
+								&& (LLInventoryCategory*)cat_grandparent != rlv_share)
 							{
-								cat_parent->rename(".(" + attach_name + ")"); // don't write the whole name, it could contain commas (",") and fool @getinv
-								cat_parent->updateServer (FALSE);
-								gInventory.updateCategory (cat_parent);
+								if (gAgent.mRRInterface.findAttachmentPointFromName (cat_parent->getName())
+									 == NULL)
+								{
+									cat_parent->rename(".(" + attach_name + ")"); // don't write the whole name, it could contain commas (",") and fool @getinv
+									cat_parent->updateServer (FALSE);
+									gInventory.updateCategory (cat_parent);
+								}
 							}
 						}
 					}
@@ -1199,8 +1220,6 @@ BOOL LLVOAvatarSelf::detachObject(LLViewerObject *viewer_object)
 	const LLUUID attachment_id = viewer_object->getAttachmentItemID();
 	if ( LLVOAvatar::detachObject(viewer_object) )
 	{
-		LLVOAvatar::cleanupAttachedMesh( viewer_object );
-		
 		// the simulator should automatically handle permission revocation
 		
 		stopMotionFromSource(attachment_id);
