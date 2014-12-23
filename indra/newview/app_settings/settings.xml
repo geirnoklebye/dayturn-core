@@ -403,6 +403,123 @@
         <key>Value</key>
         <integer>0</integer>
       </map>
+    <key>ShowProfileFloaters</key>
+    <map>
+      <key>Comment</key>
+      <string>Shows resident profiles in a floater rather than the side tray</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>TemporaryUpload</key>
+    <map>
+      <key>Comment</key>
+      <string>Temporary texture upload flag (volatile)</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>RadarReportChatRange</key>
+    <map>
+      <key>Comment</key>
+      <string>Display a chat message when avatar leaves/enters chat distance</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>RadarReportDrawRange</key>
+    <map>
+      <key>Comment</key>
+      <string>Display a chat message when avatar leaves/enters draw distance</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>OnlineOfflinetoNearbyChat</key>
+    <map>
+      <key>Comment</key>
+      <string>Send online/offline notifications to Nearby Chat panel (v1-style behavior)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>CameraOffsetTopView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial camera offset from avatar in TopDown View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>0.0</real>
+        <real>3.75</real>
+      </array>
+    </map>
+    <key>CameraOffsetFpsView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial camera offset from avatar in FPS View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3</string>
+      <key>Value</key>
+      <array>
+        <real>0.2</real>
+        <real>0.0</real>
+        <real>0.0</real>
+      </array>
+    </map>
+    <key>FocusOffsetTopView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial focus point offset relative to avatar for the camera preset TopDown View (x-axis is forward)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3D</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>0.0</real>
+        <real>0.0</real>
+      </array>
+    </map>
+    <key>FocusOffsetFpsView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial focus point offset relative to avatar for the camera preset Fps View (x-axis is forward)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3D</string>
+      <key>Value</key>
+      <array>
+        <real>10.0</real>
+        <real>0.0</real>
+        <real>0.1</real>
+      </array>
+    </map>
+
+
       <key>BuildPrefs_Shiny</key>
       <map>
         <key>Comment</key>
@@ -893,7 +1010,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>AudioLevelAmbient</key>
     <map>
@@ -5030,6 +5147,17 @@
       <key>Value</key>
       <integer>255</integer>
     </map>
+    <key>ForceLoginURL</key>
+    <map>
+      <key>Comment</key>
+      <string>Force a specified URL for login page content - used if exists</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string></string>
+    </map>
     <key>ForceShowGrid</key>
     <map>
       <key>Comment</key>
@@ -6185,6 +6313,18 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+  <key>LoginContentVersion</key>
+  <map>
+    <key>Comment</key>
+    <string>Version of login page web based content to display</string>
+    <key>Persist</key>
+    <integer>0</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string>2</string>
+  </map>
+
     <key>LoginSRVTimeout</key>
     <map>
       <key>Comment</key>
@@ -7622,7 +7762,7 @@
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>none</string>
+      <string>toast</string>
     </map>
     <key>NotificationNearbyChatOptions</key>
     <map>
@@ -7636,7 +7776,7 @@
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>none</string>
+      <string>toast</string>
     </map>
     <key>NotificationNonFriendIMOptions</key>
     <map>
@@ -9121,7 +9261,7 @@
       <key>Comment</key>
       <string>Render textures using anisotropic filtering (Unused setting - Set RenderAnisotropicSamples instead of this one)</string>
       <key>Persist</key>
-      <integer>0</integer>
+      <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -11017,7 +11157,7 @@
     <key>RenderUseStreamVBO</key>
     <map>
       <key>Comment</key>
-    <string>Use VBOs for stream buffers</string>
+      <string>Use VBO's for stream buffers</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -12303,8 +12443,8 @@
       <string>Display results of find land sales that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
-      <integer>1</integer>
       <key>HideFromEditor</key>
+      <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12326,6 +12466,8 @@
       <key>Comment</key>
       <string>Display results of find places or find popular that are in general sims</string>
       <key>Persist</key>
+      <integer>1</integer>
+      <key>HideFromEditor</key>
       <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
@@ -13575,17 +13717,6 @@
       <string>String</string>
       <key>Value</key>
       <string>5748decc-f629-461c-9a36-a35a221fe21f</string>
-    </map>
-    <key>UIImgTransUUID</key>
-    <map>
-      <key>Comment</key>
-      <string>Default Transparent texture UUID</string>
-      <key>Persist</key>
-      <integer>0</integer>
-      <key>Type</key>
-      <string>String</string>
-      <key>Value</key>
-      <string>8dcd4a48-2d37-4909-9f78-f7a9eb4ef903</string>
     </map>
     <key>UILineEditorCursorThickness</key>
     <map>
