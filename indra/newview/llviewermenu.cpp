@@ -6308,10 +6308,13 @@ void show_debug_menus()
 	{
 		BOOL debug = gSavedSettings.getBOOL("UseDebugMenus");
 		BOOL qamode = gSavedSettings.getBOOL("QAMode");
+        BOOL rlvmode = gSavedSettings.getBOOL("ShowRlvMenu");
 
 		gMenuBarView->setItemVisible("Advanced", debug);
 // 		gMenuBarView->setItemEnabled("Advanced", debug); // Don't disable Advanced keyboard shortcuts when hidden
-		
+ 		gMenuBarView->setItemVisible("RLV", rlvmode);
+
+//		gMenuBarView->setItemEnabled("RLV", rlvmode); // Don't disable RLV when hidden
 		gMenuBarView->setItemVisible("Debug", qamode);
 		gMenuBarView->setItemEnabled("Debug", qamode);
 

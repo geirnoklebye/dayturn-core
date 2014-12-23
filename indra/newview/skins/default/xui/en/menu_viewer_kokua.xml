@@ -3046,7 +3046,16 @@
         </menu> <!--Shortcuts-->
 
         <menu_item_separator/>
-
+        <menu_item_check
+         label="Show RLV Menu"
+         name="Show RLV Menu">
+            <menu_item_check.on_check
+             function="CheckControl"
+             parameter="ShowRlvMenu" />
+            <menu_item_check.on_click
+             function="ToggleControl"
+             parameter="ShowRlvMenu" />
+        </menu_item_check>
         <menu_item_call
          label="Show Debug Settings"
          name="Debug Settings">
