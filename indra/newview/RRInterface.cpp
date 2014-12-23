@@ -3947,6 +3947,7 @@ bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_pare
 						if (avatar->getAttachedPointName(item->getLinkedUUID(), attach_point_name))
 						{
 							if (!isAllowed(attached_object->getRootEdit()->getID(), restriction)) return false;
+							if (!in_parent && !isAllowed(attached_object->getRootEdit()->getID(), "detachallthis")) return false; // special case for objects contained into this folder and that issued a @detachallthis command without any parameter without issuing a @detachthis command along with it
 							if (contains (restriction+":"+attach_point_name)) return false;
 						}
 					}
