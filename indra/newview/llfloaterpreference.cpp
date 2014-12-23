@@ -507,7 +507,13 @@ BOOL LLFloaterPreference::postBuild()
 	if (LLStartUp::getStartupState() < STATE_STARTED)
 	{
 		gSavedPerAccountSettings.setString("DoNotDisturbModeResponse", LLTrans::getString("DoNotDisturbModeResponseDefault"));
+		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(FALSE);
 	}
+	else
+	{
+		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(TRUE);
+	}	
+	
 // ## Zi: Pie menu
 	gSavedSettings.getControl("OverridePieColors")->getSignal()->connect(boost::bind(&LLFloaterPreference::onPieColorsOverrideChanged, this));
 	// make sure pie color controls are enabled or greyed out properly
@@ -1332,8 +1338,17 @@ void LLFloaterPreference::refreshEnabledState()
 
 	getChildView("block_list")->setEnabled(LLLoginInstance::getInstance()->authSuccess());
 
+
 	// Cannot have floater active until caps have been received
 	getChild<LLButton>("default_creation_permissions")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
+	if (LLStartUp::getStartupState() != STATE_STARTED)
+	{
+		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(FALSE);
+	}
+	else
+	{
+		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(TRUE);
+	}
 }
 
 void LLFloaterPreference::disableUnavailableSettings()
