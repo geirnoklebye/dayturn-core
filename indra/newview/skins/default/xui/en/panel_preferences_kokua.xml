@@ -389,6 +389,26 @@
 		width="200">
 		(0 = Show all names)
 	    </text>
+		<check_box
+		control_name="ShowNearbyAvatarsTyping"
+		name="ShowNearbyAvatarsTyping"
+		label="Show nearby avatar typing indicator"
+		layout="topleft"
+		top_pad="15"
+		left="15"
+		height="18"
+		width="400"
+		tool_tip="If enabled displays 'Typing' over the name of an avatar who is typing in chat." />
+	    <check_box
+		control_name="DefaultNameTagBehaviour"
+		name="DefaultNameTagBehaviour"
+		label="Use the default name tag behaviour (follows animation)"
+		layout="topleft"
+		top_pad="5"
+		left="15"
+		height="18"
+		width="400"
+		tool_tip="Disable to use V1 style behaviour, name tag fixed to avatar position." />
 	</panel>
 	<!--Privacy-->
 	<panel

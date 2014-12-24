@@ -17710,7 +17710,28 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-
+    <key>ShowNearbyAvatarsTyping</key>
+    <map>
+      <key>Comment</key>
+      <string>Displays 'Typing' over the name of an avatar who is typing in chat.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>DefaultNameTagBehaviour</key>
+    <map>
+      <key>Comment</key>
+      <string>Default v3 nametag behaviour, follows avatar head and moves with animation.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
   </map>
 </llsd>
 
