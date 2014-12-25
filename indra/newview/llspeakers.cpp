@@ -331,7 +331,7 @@ LLSpeakerMgr::~LLSpeakerMgr()
 	delete mSpeakerDelayRemover;
 //MK
 	// Never forget to set a deleted pointer to NULL if its not a local one.
-	mSpeakerDelayRemover;
+	mSpeakerDelayRemover = NULL;
 //mk
 }
 
