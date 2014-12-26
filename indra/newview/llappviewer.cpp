@@ -3507,7 +3507,16 @@ LLSD LLAppViewer::getViewerInfo() const
 		info["GRAPHICS_DRIVER_VERSION"] = driver_info["DriverVersion"];
 	}
 #endif
-	info["RLV_VERSION"] = gAgent.mRRInterface.getVersion();
+	if (gRRenabled)
+	{
+		info["RLV_VERSION"] = gAgent.mRRInterface.getVersion2();
+	}
+	else
+	{
+		info["RLV_VERSION"] = "Disabled";
+	}
+	
+	
 	info["OPENGL_VERSION"] = (const char*)(glGetString(GL_VERSION));
 	info["LIBCURL_VERSION"] = LLCurl::getVersionString();
 	info["J2C_VERSION"] = LLImageJ2C::getEngineInfo();
@@ -3559,7 +3568,7 @@ LLSD LLAppViewer::getViewerInfo() const
 //MK
 	if (gRRenabled)
 	{
-		info["CHANNEL"] = gAgent.mRRInterface.getVersion2 ();
+//		info["CHANNEL"] = gAgent.mRRInterface.getVersion2 ();
 	}
 
 	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
