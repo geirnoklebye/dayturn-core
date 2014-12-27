@@ -6309,7 +6309,21 @@ void show_debug_menus()
 		BOOL debug = gSavedSettings.getBOOL("UseDebugMenus");
 		BOOL qamode = gSavedSettings.getBOOL("QAMode");
         BOOL rlvmode = gSavedSettings.getBOOL("ShowRlvMenu");
-
+		if (rlvmode)
+		{
+			gSavedSettings.setBOOL("RestrainedLove", true );
+		}
+		else
+		{
+			gSavedSettings.setBOOL("RestrainedLove", false );
+		}
+		if (rlvmode != gRRenabled) //XOR to determine if change is needed
+		{	
+			LLSD args;
+			args["MESSAGE"] = 
+			llformat("RestrainedLove Support will be %s after you restart", (rlvmode) ? "enabled" : "disabled" );
+			LLNotificationsUtil::add("GenericAlert", args);	
+		}	
 		gMenuBarView->setItemVisible("Advanced", debug);
 // 		gMenuBarView->setItemEnabled("Advanced", debug); // Don't disable Advanced keyboard shortcuts when hidden
  		gMenuBarView->setItemVisible("RLV", rlvmode);

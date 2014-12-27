@@ -3047,7 +3047,7 @@
 
         <menu_item_separator/>
         <menu_item_check
-         label="Show RLV Menu"
+         label="RLV Enable / Disable"
          name="Show RLV Menu">
             <menu_item_check.on_check
              function="CheckControl"
