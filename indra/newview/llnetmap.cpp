@@ -62,7 +62,7 @@
 #include "llworldmapview.h"		// shared draw code
 
 //MK
-#include <strstream>
+#include <sstream>
 //mk
 
 static LLDefaultChildRegistry::Register<LLNetMap> r1("net_map");
