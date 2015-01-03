@@ -6865,6 +6865,12 @@ BOOL LLPipeline::toggleRenderTypeControlNegated(void* data)
 void LLPipeline::toggleRenderDebug(void* data)
 {
 	U32 bit = (U32)(intptr_t)data;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		bit = 0;
+	}
+//mk
 	if (gPipeline.hasRenderDebugMask(bit))
 	{
 		LL_INFOS() << "Toggling render debug mask " << std::hex << bit << " off" << std::dec << LL_ENDL;
@@ -11454,7 +11460,11 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	F32 distance = (pos-camera.getOrigin()).length();
 	F32 fov = atanf(tdim.mV[1]/distance)*2.f*RAD_TO_DEG;
 	F32 aspect = tdim.mV[0]/tdim.mV[1];
-	glh::matrix4f persp = gl_perspective(fov, aspect, 1.f, 256.f);
+//MK
+	// Make the near clip plane closer for impostors
+////	glh::matrix4f persp = gl_perspective(fov, aspect, 1.f, 256.f);
+	glh::matrix4f persp = gl_perspective(fov, aspect, 0.001f, 256.f);
+//mk
 	glh_set_current_projection(persp);
 	gGL.loadMatrix(persp.m);
 
