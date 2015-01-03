@@ -2217,6 +2217,18 @@ bool idle_startup()
 		// LLUserAuth::getInstance()->reset();
 
 		LLStartUp::setStartupState( STATE_STARTED );
+//MK
+		// We are beginning a session that may or may not have the avatar wear stuff
+		// that restricts from seeing the location, names or even to look around.
+		// Make the viewer believe it has received a bunch of restrictions and let them
+		// be flushed out by the garbage collector later, after the actual restrictions
+		// have been received.
+		// For this, we simulate the reception of those commands from a non-existent object.
+		if (gRRenabled)
+		{
+			gAgent.mRRInterface.handleCommand (LLUUID::generateNewID(), "camavdist:0=n,shownames=n,showloc=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n");
+		}
+//mk
 		display_startup();
 
 		// Unmute audio if desired and setup volumes.
