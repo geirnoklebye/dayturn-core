@@ -42,6 +42,7 @@
 
 //MK
 #include "llagent.h"
+#include "llvoavatarself.h"
 //mk
 
 //
@@ -89,7 +90,10 @@ void LLToolFace::pickCallback(const LLPickInfo& pick_info)
 //MK
 		if (gRRenabled && !gAgent.mRRInterface.canTouch (hit_obj))
 		{
-			return;
+			if (!hit_obj->isAttachment() || hit_obj->getAvatar() != gAgentAvatarp)
+			{
+				return;
+			}
 		}
 //mk
 		S32 hit_face = pick_info.mObjectFace;
