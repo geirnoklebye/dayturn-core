@@ -1805,12 +1805,6 @@ BOOL LLToolPie::handleRightClickPick()
 		}
 		else if (object->isAttachment())
 		{
-			if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
-			{
-				gPieMenuAttachmentSelf->show(x, y);
-			}
-			else
-			{
 //MK
 				if (gRRenabled)
 				{
@@ -1844,9 +1838,15 @@ BOOL LLToolPie::handleRightClickPick()
 						return TRUE;
 					}
 				}
-			}
 //mk
+			if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
+			{
+				gPieMenuAttachmentSelf->show(x, y);
+			}
+			else
+			{
 			gMenuAttachmentSelf->show(x, y);
+			}
 		}
 		else
 		{
