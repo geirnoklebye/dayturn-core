@@ -5607,7 +5607,8 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 		}
 		gFocusMgr.setKeyboardFocus(NULL);
 	}
-// [SL:KB] - Patch: Inventory-AttachmentActions - Checked: 2012-05-05 (Catznip-3.3)
+
+	// [SL:KB] - Patch: Inventory-AttachmentActions - Checked: 2012-05-05 (Catznip-3.3)
 	else if ("touch" == action)
 	{
 		handle_attachment_touch(mUUID);
@@ -5622,11 +5623,11 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 	}
 	// <FS:Ansariel> Touch worn objects
 // [/SL:KB]
-	else if ("touch" == action)
+/*	else if ("touch" == action)
 	{
 		handle_attachment_touch(mUUID);
 	}
-	// </FS:Ansariel>
+*/	// </FS:Ansariel>
 	else if (isRemoveAction(action))
 	{
 //MK
