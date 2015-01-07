@@ -54,6 +54,10 @@
 #include "llviewertexture.h"
 #include "llvoavatar.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 #if LL_LINUX
 // Work-around spurious used before init warning on Vector4a
 //
@@ -508,6 +512,14 @@ void LLFace::updateCenterAgent()
 
 void LLFace::renderSelected(LLViewerTexture *imagep, const LLColor4& color)
 {
+//MK
+	// Due to a rendering bug, displaying the face overlay over the texture makes it poke a hole
+	// through the vision sphere, if any. So when the vision is restricted, we need to hide the selection overlay.
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		return;
+	}
+//mk
 	if (mDrawablep->getSpatialGroup() == NULL)
 	{
 		return;
@@ -2491,6 +2503,12 @@ void LLFace::setViewerObject(LLViewerObject* objp)
 
 const LLColor4& LLFace::getRenderColor() const
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures && !(getViewerObject()->isAttachment()))
+	{
+		return LLColor4::white;
+	}
+//mk
 	if (isState(USE_FACE_COLOR))
 	{
 		  return mFaceColor; // Face Color
