@@ -1546,6 +1546,9 @@ bool LLAppViewer::mainLoop()
 				{
 					pingMainloopTimeout("Main:Display");
 					gGLActive = TRUE;
+//MK
+					RRInterface::sRenderLimitRenderedThisFrame = FALSE;
+//mk
 					display();
 					pingMainloopTimeout("Main:Snapshot");
 					LLFloaterSnapshot::update(); // take snapshots

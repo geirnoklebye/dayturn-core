@@ -4687,13 +4687,13 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 
 							if (is_alpha)
 							{ //this face needs alpha blending, override alpha mode
-//MK
-								if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-								{
-									alpha_mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
-								}
-								else
-//mk
+////MK
+//								if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+//								{
+//									alpha_mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
+//								}
+//								else
+////mk
 								alpha_mode = LLMaterial::DIFFUSE_ALPHA_MODE_BLEND;
 							}
 
@@ -4711,15 +4711,15 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							bool can_be_shiny = mode == LLMaterial::DIFFUSE_ALPHA_MODE_NONE ||
 												mode == LLMaterial::DIFFUSE_ALPHA_MODE_EMISSIVE;
 							
-//MK
-							if (mode == LLMaterial::DIFFUSE_ALPHA_MODE_BLEND)
-							{ //this face needs alpha blending, override alpha mode
-								if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-								{
-									mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
-								}
-							}
-//mk
+////MK
+//							if (mode == LLMaterial::DIFFUSE_ALPHA_MODE_BLEND)
+//							{ //this face needs alpha blending, override alpha mode
+//								if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+//								{
+//									mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
+//								}
+//							}
+////mk
 							if (mode == LLMaterial::DIFFUSE_ALPHA_MODE_MASK && te->getColor().mV[3] >= 0.999f)
 							{
 								pool->addRiggedFace(facep, fullbright ? LLDrawPoolAvatar::RIGGED_FULLBRIGHT : LLDrawPoolAvatar::RIGGED_SIMPLE);

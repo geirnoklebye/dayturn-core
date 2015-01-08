@@ -308,6 +308,7 @@ public:
 	static F32 sLastAvatarZOffsetCommit; // timestamp of the last change of RestrainedLoveOffsetAvatarZ
 	static F32 sLastOutfitChange; // timestamp of the last change in the outfit (including Hover on the shape)
 	static U32 mCamDistNbGradients; // number of spheres to draw when restricting the camera view
+	static BOOL sRenderLimitRenderedThisFrame; // true when already rendered the vision spheres during this rendering frame
 
 	// Allowed debug settings (initialized in the ctor)
 	std::string mAllowedU32;

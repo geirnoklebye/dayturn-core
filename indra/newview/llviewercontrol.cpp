@@ -129,11 +129,12 @@ static bool handleRenderDeferredShowInvisiprimsChanged(const LLSD& newvalue)
 
 static bool handleRestrainedLoveCamDistNbGradientsChanged(const LLSD& newvalue)
 {
-	RRInterface::mCamDistNbGradients = newvalue.asInteger();
-	if (RRInterface::mCamDistNbGradients == 0)
-	{
-		RRInterface::mCamDistNbGradients = 1;
-	}
+	//RRInterface::mCamDistNbGradients = newvalue.asInteger();
+	//if (RRInterface::mCamDistNbGradients == 0)
+	//{
+	//	RRInterface::mCamDistNbGradients = 1;
+	//}
+	// Let's keep it constant for now, because there are ways to make the vision restriction less tight by playing with this setting.
 	return true;
 }
 //mk

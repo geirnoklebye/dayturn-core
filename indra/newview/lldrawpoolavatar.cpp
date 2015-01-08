@@ -51,6 +51,10 @@
 #include "llviewerpartsim.h"
 #include "llviewercontrol.h" // for gSavedSettings
 
+//MK
+#include "llvoavatarself.h"
+//mk
+
 static U32 sDataMask = LLDrawPoolAvatar::VERTEX_DATA_MASK;
 static U32 sBufferUsage = GL_STREAM_DRAW_ARB;
 static U32 sShaderLevel = 0;
@@ -1199,6 +1203,14 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 
 	if (mDrawFace.empty() && !single_avatar)
 	{
+////MK
+//		// When the vision is restricted, we need to render the avatar in all cases.
+//		// Draw a big black sphere around our avatar if the camera render is limited by RLV
+//		if (gRRenabled && pass == 6)
+//		{
+//			gAgent.mRRInterface.drawRenderLimit();
+//		}
+////mk
 		return;
 	}
 
@@ -1368,6 +1380,13 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 
 	if (pass == 6)
 	{
+////MK
+//		// Draw a big black sphere around our avatar if the camera render is limited by RLV
+//		if (gRRenabled && avatarp == gAgentAvatarp)
+//		{
+//			gAgent.mRRInterface.drawRenderLimit();
+//		}
+////mk
 		renderRiggedFullbrightShiny(avatarp);
 		return;
 	}
@@ -1962,6 +1981,13 @@ void LLDrawPoolAvatar::renderRiggedFullbrightShiny(LLVOAvatar* avatar)
 
 void LLDrawPoolAvatar::renderRiggedAlpha(LLVOAvatar* avatar)
 {
+//MK
+	// If the vision is restricted, rendering alpha rigged attachments may poke a hole through the vision spheres.
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		return;
+	}
+//mk
 	if (!mRiggedFace[RIGGED_ALPHA].empty())
 	{
 		LLGLEnable blend(GL_BLEND);
@@ -1979,6 +2005,13 @@ void LLDrawPoolAvatar::renderRiggedAlpha(LLVOAvatar* avatar)
 
 void LLDrawPoolAvatar::renderRiggedFullbrightAlpha(LLVOAvatar* avatar)
 {
+//MK
+	// If the vision is restricted, rendering alpha rigged attachments may poke a hole through the vision spheres.
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		return;
+	}
+//mk
 	if (!mRiggedFace[RIGGED_FULLBRIGHT_ALPHA].empty())
 	{
 		LLGLEnable blend(GL_BLEND);
@@ -1996,6 +2029,13 @@ void LLDrawPoolAvatar::renderRiggedFullbrightAlpha(LLVOAvatar* avatar)
 
 void LLDrawPoolAvatar::renderRiggedGlow(LLVOAvatar* avatar)
 {
+//MK
+	// If the vision is restricted, rendering glowing rigged attachments may help see through the vision spheres.
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		return;
+	}
+//mk
 	if (!mRiggedFace[RIGGED_GLOW].empty())
 	{
 		LLGLEnable blend(GL_BLEND);

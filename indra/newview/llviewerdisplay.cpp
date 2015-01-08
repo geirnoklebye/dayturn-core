@@ -965,7 +965,6 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 				gOcclusionProgram.unbind();
 			}
 
-
 			gGL.setColorMask(true, false);
 			if (LLPipeline::sRenderDeferred)
 			{
@@ -1000,6 +999,8 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			}
 		}
 
+		LLAppViewer::instance()->pingMainloopTimeout("Display:RenderFlush");		
+		
 ////MK
 //		// Draw a big black sphere around our avatar if the camera render is limited by RLV
 //		if (gRRenabled)
@@ -1007,9 +1008,6 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 //			gAgent.mRRInterface.drawRenderLimit();
 //		}
 ////mk
-//
-		LLAppViewer::instance()->pingMainloopTimeout("Display:RenderFlush");		
-		
 		if (to_texture)
 		{
 			if (LLPipeline::sRenderDeferred)
