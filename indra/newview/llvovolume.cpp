@@ -5627,6 +5627,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						fullbright = FALSE;
 						opaque = true;
 						can_be_shiny = false;
+						no_materials = TRUE;
 					}
 				}
 			}
