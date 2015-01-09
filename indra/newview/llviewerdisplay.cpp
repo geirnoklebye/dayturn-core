@@ -1316,7 +1316,7 @@ void render_ui(F32 zoom_factor, int subfield)
 		
 //MK
 		// Draw a big black sphere around our avatar if the camera render is limited by RLV
-		if (gRRenabled)
+		if (gRRenabled && (!gAgentAvatarp || !gAgentAvatarp->isFullyLoaded()))
 		{
 			gAgent.mRRInterface.drawRenderLimit();
 		}

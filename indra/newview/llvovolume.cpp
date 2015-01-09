@@ -5607,35 +5607,35 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 			bool use_legacy_bump = te->getBumpmap() && (te->getBumpmap() < 18) && (!mat || mat->getNormalID().isNull());
 			bool opaque = te->getColor().mV[3] >= 0.999f;
 
-////MK
-//			// Due to a rendering bug, we must completely ignore the alpha and fullbright of any object (except our own attachments and 100% invisible objects) when the vision is restricted
-//			if ((is_alpha || fullbright) && gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && facep->getFaceColor().mV[3] > 0.f)
-//			{
-//				LLDrawable* drawablep = facep->getDrawable();
-//				LLVOVolume* vobj = drawablep->getVOVolume();
-//				if (vobj->getAvatar() != gAgentAvatarp ) {
-//					// If the object is phantom or an attachment, no need to even render it at all
-//					// If it is solid and in the world, then a blind avatar will have to "see" it since it may bump into it
-//					if (vobj->flagPhantom() || vobj->isAttachment())
-//					{
-//						++face_iter;
-//						continue;
-//					}
-//					else
-//					{
-//						is_alpha = FALSE;
-//						fullbright = FALSE;
-//						opaque = true;
-//						can_be_shiny = false;
-//					}
-//				}
-//			}
-//
-//			if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
-//			{
-//				facep->unsetFaceColor ();
-//			}
-////mk
+//MK
+			// Due to a rendering bug, we must completely ignore the alpha and fullbright of any object (except our own attachments and 100% invisible objects) when the vision is restricted
+			if ((is_alpha || fullbright) && gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && facep->getFaceColor().mV[3] > 0.f)
+			{
+				LLDrawable* drawablep = facep->getDrawable();
+				LLVOVolume* vobj = drawablep->getVOVolume();
+				if (vobj && vobj->getAvatar() != gAgentAvatarp ) {
+					// If the object is phantom or an attachment, no need to even render it at all
+					// If it is solid and in the world, then a blind avatar will have to "see" it since it may bump into it
+					if (vobj->flagPhantom() || vobj->isAttachment())
+					{
+						++face_iter;
+						continue;
+					}
+					else
+					{
+						is_alpha = FALSE;
+						fullbright = FALSE;
+						opaque = true;
+						can_be_shiny = false;
+					}
+				}
+			}
+
+			if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+			{
+				facep->unsetFaceColor ();
+			}
+//mk
 			if (mat && LLPipeline::sRenderDeferred && !hud_group)
 			{
 				bool material_pass = false;
@@ -5857,8 +5857,8 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						else
 						{
 						registerFace(group, facep, LLRenderPass::PASS_SIMPLE);
+						}
 					}
-				}
 				}
 				
 				

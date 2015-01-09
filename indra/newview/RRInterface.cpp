@@ -4392,6 +4392,11 @@ BOOL RRInterface::updateCameraLimits ()
 		handle_toggle_flycam();
 	}
 
+	// Force all the rendering types back to TRUE (and we won't be able to switch them off while the vision is restricted)
+	if (mCamDistDrawMin < EXTREMUM || mCamDistDrawMax < EXTREMUM) {
+		gPipeline.setAllRenderTypes();
+	}
+
 	// And check the camera is still within the limits
 	return checkCameraLimits (TRUE);
 }

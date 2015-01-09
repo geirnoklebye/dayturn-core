@@ -6824,6 +6824,13 @@ void LLPipeline::setLight(LLDrawable *drawablep, BOOL is_light)
 void LLPipeline::toggleRenderType(U32 type)
 {
 	gPipeline.mRenderTypeEnabled[type] = !gPipeline.mRenderTypeEnabled[type];
+//MK
+	// Force the render type to TRUE if our vision is restricted
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		gPipeline.mRenderTypeEnabled[type] = TRUE;
+	}
+//mk
 	if (type == LLPipeline::RENDER_TYPE_WATER)
 	{
 		gPipeline.mRenderTypeEnabled[LLPipeline::RENDER_TYPE_VOIDWATER] = !gPipeline.mRenderTypeEnabled[LLPipeline::RENDER_TYPE_VOIDWATER];
@@ -7551,14 +7558,14 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 
 	LLVector2 tc1(0,0);
 	LLVector2 tc2((F32) mScreen.getWidth()*2,
-		(F32) mScreen.getHeight()*2);
+				  (F32) mScreen.getHeight()*2);
 
 	LL_RECORD_BLOCK_TIME(FTM_RENDER_BLOOM);
 	gGL.color4f(1,1,1,1);
 	LLGLDepthTest depth(GL_FALSE);
 	LLGLDisable blend(GL_BLEND);
 	LLGLDisable cull(GL_CULL_FACE);
-
+	
 	enableLightsFullbright(LLColor4(1,1,1,1));
 
 	gGL.matrixMode(LLRender::MM_PROJECTION);
@@ -7572,14 +7579,14 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 
 	gGL.setColorMask(true, true);
 	glClearColor(0,0,0,0);
-
-	{
+		
+			{
 		{
 			LL_RECORD_BLOCK_TIME(FTM_RENDER_BLOOM_FBO);
 			mGlow[2].bindTarget();
 			mGlow[2].clear();
 		}
-
+		
 		gGlowExtractProgram.bind();
 		F32 minLum = llmax((F32) RenderGlowMinLuminance, 0.0f);
 		F32 maxAlpha = RenderGlowMaxExtractAlpha;		
@@ -7595,9 +7602,9 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 		gGlowExtractProgram.uniform1f(LLShaderMgr::GLOW_WARMTH_AMOUNT, warmthAmount);
 		LLGLEnable blend_on(GL_BLEND);
 		LLGLEnable test(GL_ALPHA_TEST);
-
+		
 		gGL.setSceneBlendType(LLRender::BT_ADD_WITH_ALPHA);
-
+		
 		mScreen.bindTexture(0, 0);
 
 		gGL.color4f(1,1,1,1);
@@ -7605,15 +7612,15 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 		gGL.begin(LLRender::TRIANGLE_STRIP);
 		gGL.texCoord2f(tc1.mV[0], tc1.mV[1]);
 		gGL.vertex2f(-1,-1);
-
+		
 		gGL.texCoord2f(tc1.mV[0], tc2.mV[1]);
 		gGL.vertex2f(-1,3);
-
+		
 		gGL.texCoord2f(tc2.mV[0], tc1.mV[1]);
 		gGL.vertex2f(3,-1);
-
+		
 		gGL.end();
-
+		
 		gGL.getTexUnit(0)->unbind(mScreen.getUsage());
 
 		mGlow[2].flush();
@@ -7647,7 +7654,7 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 			mGlow[i%2].bindTarget();
 			mGlow[i%2].clear();
 		}
-
+			
 		if (i == 0)
 		{
 			gGL.getTexUnit(0)->bind(&mGlow[2]);
@@ -7669,15 +7676,15 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 		gGL.begin(LLRender::TRIANGLE_STRIP);
 		gGL.texCoord2f(tc1.mV[0], tc1.mV[1]);
 		gGL.vertex2f(-1,-1);
-
+		
 		gGL.texCoord2f(tc1.mV[0], tc2.mV[1]);
 		gGL.vertex2f(-1,3);
-
+		
 		gGL.texCoord2f(tc2.mV[0], tc1.mV[1]);
 		gGL.vertex2f(3,-1);
-
+		
 		gGL.end();
-
+		
 		mGlow[i%2].flush();
 	}
 
@@ -7685,8 +7692,8 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 
 	/*if (LLRenderTarget::sUseFBO)
 	{
-	LL_RECORD_BLOCK_TIME(FTM_RENDER_BLOOM_FBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		LL_RECORD_BLOCK_TIME(FTM_RENDER_BLOOM_FBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}*/
 
 	gGLViewport[0] = gViewerWindow->getWorldViewRectRaw().mLeft;
@@ -7696,10 +7703,10 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 	glViewport(gGLViewport[0], gGLViewport[1], gGLViewport[2], gGLViewport[3]);
 
 	tc2.setVec((F32) mScreen.getWidth(),
-		(F32) mScreen.getHeight());
+			(F32) mScreen.getHeight());
 
 	gGL.flush();
-
+	
 	LLVertexBuffer::unbind();
 
 	if (LLPipeline::sRenderDeferred)
@@ -7707,9 +7714,9 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 
 		bool dof_enabled = !LLViewerCamera::getInstance()->cameraUnderWater() &&
 			(RenderDepthOfFieldInEditMode || !LLToolMgr::getInstance()->inBuildMode()) &&
-			RenderDepthOfField;
-
-
+							RenderDepthOfField;
+		
+		
 		bool multisample = RenderFSAASamples > 1 && mFXAABuffer.isComplete();
 
 		gViewerWindow->setup3DViewport();
@@ -7740,7 +7747,7 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 					}
 				}
 			}
-
+		
 			if (focus_point.isExactlyZero())
 			{
 				if (LLViewerJoystick::getInstance()->getOverrideCamera())
@@ -7753,8 +7760,8 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 					result.clear();
 
 					gViewerWindow->cursorIntersect(-1, -1, 512.f, NULL, -1, FALSE,
-						NULL,
-						&result);
+												  NULL,
+													&result);
 
 					focus_point.set(result.getF32ptr());
 				}
@@ -7766,7 +7773,7 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 					{
 						focus_point = LLVector3(gAgentCamera.getFocusGlobal()-region->getOriginGlobal());
 					}
-				}
+			}
 			}
 
 			LLVector3 eye = LLViewerCamera::getInstance()->getOrigin();
@@ -7801,19 +7808,19 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 			F32 default_focal_length = CameraFocalLength;
 
 			F32 fov = LLViewerCamera::getInstance()->getView();
-
+		
 			const F32 default_fov = CameraFieldOfView * F_PI/180.f;
 			//const F32 default_aspect_ratio = gSavedSettings.getF32("CameraAspectRatio");
-
+		
 			//F32 aspect_ratio = (F32) mScreen.getWidth()/(F32)mScreen.getHeight();
-
+		
 			F32 dv = 2.f*default_focal_length * tanf(default_fov/2.f);
 			//F32 dh = 2.f*default_focal_length * tanf(default_fov*default_aspect_ratio/2.f);
 
 			F32 focal_length = dv/(2*tanf(fov/2.f));
-
+		 
 			//F32 tan_pixel_angle = tanf(LLDrawable::sCurPixelAngle);
-
+	
 			// from wikipedia -- c = |s2-s1|/s2 * f^2/(N(S1-f))
 			// where	 N = fnumber
 			//			 s2 = dot distance
@@ -7847,22 +7854,22 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 				gGL.begin(LLRender::TRIANGLE_STRIP);
 				gGL.texCoord2f(tc1.mV[0], tc1.mV[1]);
 				gGL.vertex2f(-1,-1);
-
+		
 				gGL.texCoord2f(tc1.mV[0], tc2.mV[1]);
 				gGL.vertex2f(-1,3);
-
+		
 				gGL.texCoord2f(tc2.mV[0], tc1.mV[1]);
 				gGL.vertex2f(3,-1);
-
+		
 				gGL.end();
 
 				unbindDeferredShader(*shader);
 				mDeferredLight.flush();
-			}
+		}
 
 			U32 dof_width = (U32) (mScreen.getWidth()*CameraDoFResScale);
 			U32 dof_height = (U32) (mScreen.getHeight()*CameraDoFResScale);
-
+			
 			{ //perform DoF sampling at half-res (preserve alpha channel)
 				mScreen.bindTarget();
 				glViewport(0,0, dof_width, dof_height);
@@ -7882,20 +7889,20 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 				gGL.begin(LLRender::TRIANGLE_STRIP);
 				gGL.texCoord2f(tc1.mV[0], tc1.mV[1]);
 				gGL.vertex2f(-1,-1);
-
+		
 				gGL.texCoord2f(tc1.mV[0], tc2.mV[1]);
 				gGL.vertex2f(-1,3);
-
+		
 				gGL.texCoord2f(tc2.mV[0], tc1.mV[1]);
 				gGL.vertex2f(3,-1);
-
+		
 				gGL.end();
 
 				unbindDeferredShader(*shader);
 				mScreen.flush();
 				gGL.setColorMask(true, true);
 			}
-
+	
 			{ //combine result based on alpha
 				if (multisample)
 				{
@@ -7913,13 +7920,13 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 
 				shader = &gDeferredDoFCombineProgram;
 				bindDeferredShader(*shader);
-
+				
 				S32 channel = shader->enableTexture(LLShaderMgr::DEFERRED_DIFFUSE, mScreen.getUsage());
-				if (channel > -1)
-				{
-					mScreen.bindTexture(0, channel);
+		if (channel > -1)
+		{
+			mScreen.bindTexture(0, channel);
 					gGL.getTexUnit(channel)->setTextureFilteringOption(LLTexUnit::TFO_BILINEAR);
-				}
+		}
 
 				if (!LLViewerCamera::getInstance()->cameraUnderWater())
 				{
@@ -7933,34 +7940,34 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 				shader->uniform1f(LLShaderMgr::DOF_WIDTH, dof_width-1);
 				shader->uniform1f(LLShaderMgr::DOF_HEIGHT, dof_height-1);
 
-				gGL.begin(LLRender::TRIANGLE_STRIP);
-				gGL.texCoord2f(tc1.mV[0], tc1.mV[1]);
-				gGL.vertex2f(-1,-1);
+		gGL.begin(LLRender::TRIANGLE_STRIP);
+		gGL.texCoord2f(tc1.mV[0], tc1.mV[1]);
+		gGL.vertex2f(-1,-1);
+		
+		gGL.texCoord2f(tc1.mV[0], tc2.mV[1]);
+		gGL.vertex2f(-1,3);
+		
+		gGL.texCoord2f(tc2.mV[0], tc1.mV[1]);
+		gGL.vertex2f(3,-1);
+		
+		gGL.end();
 
-				gGL.texCoord2f(tc1.mV[0], tc2.mV[1]);
-				gGL.vertex2f(-1,3);
-
-				gGL.texCoord2f(tc2.mV[0], tc1.mV[1]);
-				gGL.vertex2f(3,-1);
-
-				gGL.end();
-
-				unbindDeferredShader(*shader);
+		unbindDeferredShader(*shader);
 
 				if (multisample)
 				{
 					mDeferredLight.flush();
 				}
 			}
-		}
-		else
-		{
+	}
+	else
+	{
 			if (multisample)
 			{
 				mDeferredLight.bindTarget();
 			}
 			LLGLSLShader* shader = &gDeferredPostNoDoFProgram;
-
+			
 			bindDeferredShader(*shader);
 
 			S32 channel = shader->enableTexture(LLShaderMgr::DEFERRED_DIFFUSE, mScreen.getUsage());
@@ -7979,13 +7986,13 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 			gGL.begin(LLRender::TRIANGLE_STRIP);
 			gGL.texCoord2f(tc1.mV[0], tc1.mV[1]);
 			gGL.vertex2f(-1,-1);
-
+		
 			gGL.texCoord2f(tc1.mV[0], tc2.mV[1]);
 			gGL.vertex2f(-1,3);
-
+		
 			gGL.texCoord2f(tc2.mV[0], tc1.mV[1]);
 			gGL.vertex2f(3,-1);
-
+		
 			gGL.end();
 
 			unbindDeferredShader(*shader);
@@ -8000,7 +8007,7 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 		{
 			//bake out texture2D with RGBL for FXAA shader
 			mFXAABuffer.bindTarget();
-
+			
 			S32 width = mScreen.getWidth();
 			S32 height = mScreen.getHeight();
 			glViewport(0, 0, width, height);
@@ -8015,7 +8022,7 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 			{
 				mDeferredLight.bindTexture(0, channel);
 			}
-
+						
 			gGL.begin(LLRender::TRIANGLE_STRIP);
 			gGL.vertex2f(-1,-1);
 			gGL.vertex2f(-1,3);
@@ -8026,7 +8033,7 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 
 			shader->disableTexture(LLShaderMgr::DEFERRED_DIFFUSE, mDeferredLight.getUsage());
 			shader->unbind();
-
+			
 			mFXAABuffer.flush();
 
 			shader = &gFXAAProgram;
@@ -8038,7 +8045,7 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 				mFXAABuffer.bindTexture(0, channel);
 				gGL.getTexUnit(channel)->setTextureFilteringOption(LLTexUnit::TFO_BILINEAR);
 			}
-
+			
 			gGLViewport[0] = gViewerWindow->getWorldViewRectRaw().mLeft;
 			gGLViewport[1] = gViewerWindow->getWorldViewRectRaw().mBottom;
 			gGLViewport[2] = gViewerWindow->getWorldViewRectRaw().getWidth();
@@ -8051,7 +8058,7 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 			shader->uniform2f(LLShaderMgr::FXAA_RCP_SCREEN_RES, 1.f/width*scale_x, 1.f/height*scale_y);
 			shader->uniform4f(LLShaderMgr::FXAA_RCP_FRAME_OPT, -0.5f/width*scale_x, -0.5f/height*scale_y, 0.5f/width*scale_x, 0.5f/height*scale_y);
 			shader->uniform4f(LLShaderMgr::FXAA_RCP_FRAME_OPT2, -2.f/width*scale_x, -2.f/height*scale_y, 2.f/width*scale_x, 2.f/height*scale_y);
-
+			
 			gGL.begin(LLRender::TRIANGLE_STRIP);
 			gGL.vertex2f(-1,-1);
 			gGL.vertex2f(-1,3);
@@ -8075,19 +8082,19 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 		buff->getVertexStrider(v);
 		buff->getTexCoord0Strider(uv1);
 		buff->getTexCoord1Strider(uv2);
-
+		
 		uv1[0] = LLVector2(0, 0);
 		uv1[1] = LLVector2(0, 2);
 		uv1[2] = LLVector2(2, 0);
-
+		
 		uv2[0] = LLVector2(0, 0);
 		uv2[1] = LLVector2(0, tc2.mV[1]*2.f);
 		uv2[2] = LLVector2(tc2.mV[0]*2.f, 0);
-
+		
 		v[0] = LLVector3(-1,-1,0);
 		v[1] = LLVector3(-1,3,0);
 		v[2] = LLVector3(3,-1,0);
-
+				
 		buff->flush();
 
 		LLGLDisable blend(GL_BLEND);
@@ -8098,32 +8105,32 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 		}
 		else
 		{
-			//tex unit 0
-			gGL.getTexUnit(0)->setTextureColorBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_TEX_COLOR);
-			//tex unit 1
-			gGL.getTexUnit(1)->setTextureColorBlend(LLTexUnit::TBO_ADD, LLTexUnit::TBS_TEX_COLOR, LLTexUnit::TBS_PREV_COLOR);
+		//tex unit 0
+		gGL.getTexUnit(0)->setTextureColorBlend(LLTexUnit::TBO_REPLACE, LLTexUnit::TBS_TEX_COLOR);
+		//tex unit 1
+		gGL.getTexUnit(1)->setTextureColorBlend(LLTexUnit::TBO_ADD, LLTexUnit::TBS_TEX_COLOR, LLTexUnit::TBS_PREV_COLOR);
 		}
-
+		
 		gGL.getTexUnit(0)->bind(&mGlow[1]);
 		gGL.getTexUnit(1)->bind(&mScreen);
-
+		
 		LLGLEnable multisample(RenderFSAASamples > 0 ? GL_MULTISAMPLE_ARB : 0);
-
+		
 		buff->setBuffer(mask);
 		buff->drawArrays(LLRender::TRIANGLE_STRIP, 0, 3);
-
+		
 		if (LLGLSLShader::sNoFixedFunction)
 		{
 			gGlowCombineProgram.unbind();
 		}
 		else
 		{
-			gGL.getTexUnit(1)->disable();
-			gGL.getTexUnit(1)->setTextureBlendType(LLTexUnit::TB_MULT);
+		gGL.getTexUnit(1)->disable();
+		gGL.getTexUnit(1)->setTextureBlendType(LLTexUnit::TB_MULT);
 
-			gGL.getTexUnit(0)->activate();
-			gGL.getTexUnit(0)->setTextureBlendType(LLTexUnit::TB_MULT);
-		}
+		gGL.getTexUnit(0)->activate();
+		gGL.getTexUnit(0)->setTextureBlendType(LLTexUnit::TB_MULT);
+	}
 
 	}
 
@@ -8140,7 +8147,7 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 
 		LLVector2 tc1(0,0);
 		LLVector2 tc2((F32) gViewerWindow->getWorldViewWidthRaw()*2,
-			(F32) gViewerWindow->getWorldViewHeightRaw()*2);
+				  (F32) gViewerWindow->getWorldViewHeightRaw()*2);
 
 		LLGLEnable blend(GL_BLEND);
 		gGL.color4f(1,1,1,0.75f);
@@ -8150,13 +8157,13 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 		gGL.begin(LLRender::TRIANGLES);
 		gGL.texCoord2f(tc1.mV[0], tc1.mV[1]);
 		gGL.vertex2f(-1,-1);
-
+		
 		gGL.texCoord2f(tc1.mV[0], tc2.mV[1]);
 		gGL.vertex2f(-1,3);
-
+		
 		gGL.texCoord2f(tc2.mV[0], tc1.mV[1]);
 		gGL.vertex2f(3,-1);
-
+		
 		gGL.end();
 		gGL.flush();
 
@@ -8166,13 +8173,13 @@ void LLPipeline::renderBloom(BOOL for_snapshot, F32 zoom_factor, int subfield)
 		}
 	}
 
-
+	
 	if (LLRenderTarget::sUseFBO)
 	{ //copy depth buffer from mScreen to framebuffer
 		LLRenderTarget::copyContentsToFramebuffer(mScreen, 0, 0, mScreen.getWidth(), mScreen.getHeight(), 
 			0, 0, mScreen.getWidth(), mScreen.getHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
-
+	
 
 	gGL.matrixMode(LLRender::MM_PROJECTION);
 	gGL.popMatrix();

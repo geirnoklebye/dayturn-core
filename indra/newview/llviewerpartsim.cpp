@@ -723,31 +723,31 @@ void LLViewerPartSim::updateSimulation()
 				}
 			}
 
-////MK
-//			// If our vision is obscured enough, particles in world and worn by other avatars
-//			// may give their position away (because of a rendering issue) => hide them if their source object is too far.
-//			if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-//			{
-//				LLViewerObject* vobj = mViewerPartSources[i]->mSourceObjectp;
-//				if (vobj && (vobj->getPCode() == LL_PCODE_VOLUME))
-//				{
-//					LLVOVolume* vvo = (LLVOVolume *)vobj;
-//					if (vvo && vvo->getAvatar() != gAgentAvatarp)
-//					//if (vvo && gAgentAvatarp && gAgentAvatarp->mHeadp) // && (vvo->getAvatar() != gAgentAvatarp || !vvo->isAttachment()))
-//					{
-//					//	LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
-//
-//					//	LLVector3 offset = vvo->getPositionRegion() - head_pos;
-//					//	F32 distance = (F32)offset.magVec();
-//
-//					//	if(distance > gAgent.mRRInterface.mCamDistMax)
-//					//	{
-//							upd = FALSE;
-//					//	}
-//					}
-//				}
-//			}
-////mk
+//MK
+			// If our vision is obscured enough, particles in world and worn by other avatars
+			// may give their position away (because of a rendering issue) => hide them if their source object is too far.
+			if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+			{
+				LLViewerObject* vobj = mViewerPartSources[i]->mSourceObjectp;
+				if (vobj && (vobj->getPCode() == LL_PCODE_VOLUME))
+				{
+					LLVOVolume* vvo = (LLVOVolume *)vobj;
+					//if (vvo && vvo->getAvatar() != gAgentAvatarp)
+					if (vvo && gAgentAvatarp && gAgentAvatarp->mHeadp) // && (vvo->getAvatar() != gAgentAvatarp || !vvo->isAttachment()))
+					{
+						LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
+
+						LLVector3 offset = vvo->getPositionRegion() - head_pos;
+						F32 distance = (F32)offset.magVec();
+
+						if(distance > gAgent.mRRInterface.mCamDistDrawMax)
+						{
+							upd = FALSE;
+						}
+					}
+				}
+			}
+//mk
 			if (upd) 
 			{
 				mViewerPartSources[i]->update(dt);
