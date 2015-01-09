@@ -29,6 +29,10 @@
 
 #include "lldrawpool.h"
 
+//MK
+#include "llvoavatar.h"
+//mk
+
 class LLVOAvatar;
 class LLGLSLShader;
 class LLFace;
@@ -275,6 +279,15 @@ public:
 	static F32 sMinimumAlpha;
 
 	static LLGLSLShader* sVertexProgram;
+
+//MK
+	// We need a reference to the avatar we are rendering
+	LLVOAvatar* getAvatar() { return mAvatar; }
+	void setAvatar (LLVOAvatar* newval) { mAvatar = newval; }
+
+private:
+	LLVOAvatar* mAvatar;
+//mk
 };
 
 class LLVertexBufferAvatar : public LLVertexBuffer

@@ -409,6 +409,9 @@ public:
 
 	S32			mReportedVisualComplexity;			// Numbers as reported by the SL server
 
+//MK
+	BOOL 		getVisible() { return mVisible; }
+//mk
 private:
 	bool		shouldAlphaMask();
 
