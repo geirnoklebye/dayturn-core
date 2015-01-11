@@ -5609,7 +5609,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 
 //MK
 			// Due to a rendering bug, we must completely ignore the alpha and fullbright of any object (except our own attachments and 100% invisible objects) when the vision is restricted
-			if ((is_alpha || fullbright) && gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && facep->getFaceColor().mV[3] > 0.f)
+			if ((is_alpha || fullbright) && gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && te->getColor().mV[3] > 0.f)
 			{
 				LLDrawable* drawablep = facep->getDrawable();
 				LLVOVolume* vobj = drawablep->getVOVolume();
