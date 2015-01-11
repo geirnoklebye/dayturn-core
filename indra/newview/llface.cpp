@@ -512,14 +512,6 @@ void LLFace::updateCenterAgent()
 
 void LLFace::renderSelected(LLViewerTexture *imagep, const LLColor4& color)
 {
-//MK
-	// Due to a rendering bug, displaying the face overlay over the texture makes it poke a hole
-	// through the vision sphere, if any. So when the vision is restricted, we need to hide the selection overlay.
-	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-	{
-		return;
-	}
-//mk
 	if (mDrawablep->getSpatialGroup() == NULL)
 	{
 		return;

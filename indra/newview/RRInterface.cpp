@@ -1354,15 +1354,15 @@ static void force_sit(LLUUID object_uuid)
 		{
 			return;
 		}
-		if (gAgent.mRRInterface.contains ("sittp")) {
-			// Do not allow a script to force the avatar to sit somewhere far when under @sittp
-			LLVector3 pos = object->getPositionRegion();
-			pos -= gAgent.getPositionAgent ();
-			if (pos.magVec () >= 1.5)
-			{
-				return;
-			}
-		}
+		//if (gAgent.mRRInterface.contains ("sittp")) {
+		//	// Do not allow a script to force the avatar to sit somewhere far when under @sittp
+		//	LLVector3 pos = object->getPositionRegion();
+		//	pos -= gAgent.getPositionAgent ();
+		//	if (pos.magVec () >= 1.5)
+		//	{
+		//		return;
+		//	}
+		//}
 
 		if (gAgentAvatarp && !gAgentAvatarp->mIsSitting)
 		{
@@ -4395,6 +4395,15 @@ BOOL RRInterface::updateCameraLimits ()
 	// Force all the rendering types back to TRUE (and we won't be able to switch them off while the vision is restricted)
 	if (mCamDistDrawMin < EXTREMUM || mCamDistDrawMax < EXTREMUM) {
 		gPipeline.setAllRenderTypes();
+	}
+
+	// silly hack, but we need to force all textures in world to be updated (code copied from camtextures above)
+	S32 i;
+	for (i=0; i<gObjectList.getNumObjects(); ++i) {
+		LLViewerObject* object = gObjectList.getObject(i);
+		if (object) {
+			object->setSelected(FALSE);
+		}
 	}
 
 	// And check the camera is still within the limits
