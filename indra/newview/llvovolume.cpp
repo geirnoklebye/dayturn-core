@@ -5608,11 +5608,11 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 			bool opaque = te->getColor().mV[3] >= 0.999f;
 
 //MK
+			LLDrawable* drawablep = facep->getDrawable();
+			LLVOVolume* vobj = drawablep->getVOVolume();
 			// Due to a rendering bug, we must completely ignore the alpha and fullbright of any object (except our own attachments and 100% invisible objects) when the vision is restricted
 			if ((is_alpha || fullbright) && gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && te->getColor().mV[3] > 0.f)
 			{
-				LLDrawable* drawablep = facep->getDrawable();
-				LLVOVolume* vobj = drawablep->getVOVolume();
 				if (vobj && vobj->getAvatar() != gAgentAvatarp ) {
 					// If the object is phantom or an attachment, no need to even render it at all
 					// If it is solid and in the world, then a blind avatar will have to "see" it since it may bump into it
@@ -5628,13 +5628,16 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						opaque = true;
 						can_be_shiny = false;
 						no_materials = TRUE;
+						//LLColor4 new_color (te->getColor());
+						//new_color.mV[3] = 1.0f;
+						//const_cast<LLTextureEntry*>(te)->setColor(new_color);
 					}
 				}
 			}
-
-			if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+			else if (te->getColor().mV[3] == 0.f && vobj && !vobj->isAttachment()) // completely transparent and not an attachment => don't bother rendering it at all (even when highlighting transparent)
 			{
-				facep->unsetFaceColor ();
+				++face_iter;
+				continue;
 			}
 //mk
 			if (mat && LLPipeline::sRenderDeferred && !hud_group)
