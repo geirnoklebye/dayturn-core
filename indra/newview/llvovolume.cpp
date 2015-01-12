@@ -5634,7 +5634,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 					}
 				}
 			}
-			else if (te->getColor().mV[3] == 0.f && vobj && !vobj->isAttachment()) // completely transparent and not an attachment => don't bother rendering it at all (even when highlighting transparent)
+			else if (te->getColor().mV[3] == 0.f && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && vobj && !vobj->isAttachment()) // completely transparent and not an attachment => don't bother rendering it at all (even when highlighting transparent)
 			{
 				++face_iter;
 				continue;
