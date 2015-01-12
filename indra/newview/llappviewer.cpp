@@ -1312,7 +1312,7 @@ bool LLAppViewer::mainLoop()
 #endif
 	}
 //MK
-	int garbage_collector_cnt=-3000; // give the garbage collector a few minutes before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
+	int garbage_collector_cnt=-100; // give the garbage collector a moment before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
 //mk
     // As we do not (yet) send data on the mainloop LLEventPump that varies
     // with each frame, no need to instantiate a new LLSD event object each
@@ -1449,7 +1449,7 @@ bool LLAppViewer::mainLoop()
 						gAgent.mRRInterface.fireCommands ();
 						
 						// fire the garbage collector for orphaned restrictions
-						if (++garbage_collector_cnt >= 600) {
+						if (++garbage_collector_cnt >= 100) {
 							gAgent.mRRInterface.garbageCollector (FALSE);
 							garbage_collector_cnt = 0;
 						}
@@ -1561,6 +1561,9 @@ bool LLAppViewer::mainLoop()
 				{
 					pingMainloopTimeout("Main:Display");
 					gGLActive = TRUE;
+//MK
+					RRInterface::sRenderLimitRenderedThisFrame = FALSE;
+//mk
 					display();
 					pingMainloopTimeout("Main:Snapshot");
 					LLFloaterSnapshot::update(); // take snapshots

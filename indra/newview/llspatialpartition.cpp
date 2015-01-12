@@ -53,6 +53,10 @@
 #include "lltextureatlas.h"
 #include "llviewershadermgr.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 static LLTrace::BlockTimerStatHandle FTM_FRUSTUM_CULL("Frustum Culling");
 static LLTrace::BlockTimerStatHandle FTM_CULL_REBOUND("Cull Rebound Partition");
 
@@ -3672,7 +3676,12 @@ void LLSpatialPartition::renderDebug()
 	{
 		return;
 	}
-	
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		return;
+	}
+//mk
 	if (LLGLSLShader::sNoFixedFunction)
 	{
 		gDebugProgram.bind();

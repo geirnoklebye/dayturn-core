@@ -392,7 +392,8 @@ bool idle_startup()
 	RRInterface::sRecvimMessage = gSavedSettings.getString("RestrainedLoveRecvimMessage");
 	RRInterface::sSendimMessage = gSavedSettings.getString("RestrainedLoveSendimMessage");
 	RRInterface::sBlacklist = gSavedSettings.getString("RestrainedLoveBlacklist");
-	RRInterface::mCamDistNbGradients = gSavedSettings.getU32("RestrainedLoveCamDistNbGradients");
+	// Let's keep it constant for now, because there are ways to make the vision restriction less tight by playing with this setting.
+	//RRInterface::mCamDistNbGradients = gSavedSettings.getU32("RestrainedLoveCamDistNbGradients");
 	if (RRInterface::mCamDistNbGradients == 0)
 	{
 		RRInterface::mCamDistNbGradients = 1;
@@ -1670,6 +1671,18 @@ bool idle_startup()
 	//---------------------------------------------------------------------
 	if(STATE_WORLD_WAIT == LLStartUp::getStartupState())
 	{
+//MK
+		// We are beginning a session that may or may not have the avatar wear stuff
+		// that restricts from seeing the location, names or even to look around.
+		// Make the viewer believe it has received a bunch of restrictions and let them
+		// be flushed out by the garbage collector later, after the actual restrictions
+		// have been received.
+		// For this, we simulate the reception of those commands from a non-existent object.
+		if (gRRenabled)
+		{
+			gAgent.mRRInterface.handleCommand (LLUUID::generateNewID(), "camavdist:0=n,shownames=n,showloc=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
+		}
+//mk
 		LL_DEBUGS("AppInit") << "Waiting for simulator ack...." << LL_ENDL;
 		set_startup_status(0.59f, LLTrans::getString("LoginWaitingForRegionHandshake"), gAgent.mMOTD);
 		if(gGotUseCircuitCodeAck)
@@ -2284,6 +2297,10 @@ bool idle_startup()
 
 	if (STATE_CLEANUP == LLStartUp::getStartupState())
 	{
+//MK
+		// fire all the stored commands that we received while initializing
+		gAgent.mRRInterface.fireCommands ();
+//mk
 		set_startup_status(1.0, "", "");
 		display_startup();
 

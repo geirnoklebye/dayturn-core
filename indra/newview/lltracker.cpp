@@ -346,13 +346,13 @@ void LLTracker::trackLocation(const LLVector3d& pos_global, const std::string& f
 {
 	instance()->stopTrackingAvatar();
 	instance()->stopTrackingLandmark();
-//MK
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShowminimap || gAgent.mRRInterface.mContainsShowworldmap))
-	{
-		instance()->stopTrackingLocation(true);
-		return;
-	}
-//mk
+////MK
+//	if (gRRenabled && (gAgent.mRRInterface.mContainsShowminimap || gAgent.mRRInterface.mContainsShowworldmap))
+//	{
+//		instance()->stopTrackingLocation(true);
+//		return;
+//	}
+////mk
 
 	instance()->mTrackedPositionGlobal = pos_global;
 	instance()->mTrackedLocationName = full_name;

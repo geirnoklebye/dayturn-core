@@ -54,6 +54,10 @@
 #include "llviewertexture.h"
 #include "llvoavatar.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 #if LL_LINUX
 // Work-around spurious used before init warning on Vector4a
 //
@@ -1274,6 +1278,13 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 	LLColor4U color = tep->getColor();
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures && !(getViewerObject()->isAttachment()))
+	{
+		color = LLColor4::white;
+	}
+//mk
+
 	if (rebuild_color)
 	{ //decide if shiny goes in alpha channel of color
 		if (tep && 
@@ -2492,6 +2503,12 @@ void LLFace::setViewerObject(LLViewerObject* objp)
 
 const LLColor4& LLFace::getRenderColor() const
 {
+////MK
+//	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures && !(getViewerObject()->isAttachment()))
+//	{
+//		return LLColor4::white;
+//	}
+////mk
 	if (isState(USE_FACE_COLOR))
 	{
 		  return mFaceColor; // Face Color

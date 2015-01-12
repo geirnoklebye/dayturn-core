@@ -1338,8 +1338,15 @@ void LLAgentCamera::updateCamera()
 
 	// perform field of view correction
 	mCameraFOVZoomFactor = calcCameraFOVZoomFactor();
+//MK
+	// Don't reposition the camera at all when the camera is RLV-restricted
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistMax >= EXTREMUM * 0.75)
+	{
+//mk
 	camera_target_global = focus_target_global + (camera_target_global - focus_target_global) * (1.f + mCameraFOVZoomFactor);
-
+//MK
+	}
+//mk
 	gAgent.setShowAvatar(TRUE); // can see avatar by default
 
 	// Adjust position for animation

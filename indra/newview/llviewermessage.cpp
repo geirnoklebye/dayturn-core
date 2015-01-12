@@ -3963,7 +3963,10 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 								|| from_name == av_name.mLegacyLastName
 								)
 							{
-								chat.mFromID = owner_id;
+								if (!gAgent.mRRInterface.mContainsShownames)
+								{
+									chat.mFromID = owner_id;
+								}
 								chat.mSourceType = CHAT_SOURCE_AGENT;
 							}
 						}
@@ -7152,7 +7155,7 @@ void process_script_question(LLMessageSystem *msg, void **user_data)
 			}
 
 			// can't auto-accept attach request from a non-owned object
-			if (questions & LSCRIPTRunTimePermissionBits[4] && owner_name != self_name)
+			if (questions & LSCRIPTRunTimePermissionBits[4] && owner_name != self_name && owner_name != self_name + " Resident")
 			{
 				auto_acceptable_permission = FALSE;
 			}

@@ -88,7 +88,8 @@ std::string RRInterface::sSendimMessage = "*** IM blocked by sender's viewer";
 std::string RRInterface::sBlacklist = "";
 F32 RRInterface::sLastAvatarZOffsetCommit = 1.f;
 F32 RRInterface::sLastOutfitChange = -1000.f;
-U32 RRInterface::mCamDistNbGradients = 10;
+U32 RRInterface::mCamDistNbGradients = 40;
+BOOL RRInterface::sRenderLimitRenderedThisFrame = FALSE;
 
 
 #if !defined(max)
@@ -1251,7 +1252,7 @@ BOOL RRInterface::handleCommand (LLUUID uuid, std::string command)
 	// as well to avoid an infinite loop if the one it will kick off is also locked.
 	// This is valid as the object that would possibly be kicked off by the one to reattach, will have
 	// its restrictions wiped out by the garbage collector
-	if (LLStartUp::getStartupState() != STATE_STARTED
+	if (LLStartUp::getStartupState() < STATE_CLEANUP
 		|| (!mAssetsToReattach.empty() && !mReattachTimeout)) {
 		Command cmd;
 		cmd.uuid=uuid;
@@ -1353,15 +1354,15 @@ static void force_sit(LLUUID object_uuid)
 		{
 			return;
 		}
-		if (gAgent.mRRInterface.contains ("sittp")) {
-			// Do not allow a script to force the avatar to sit somewhere far when under @sittp
-			LLVector3 pos = object->getPositionRegion();
-			pos -= gAgent.getPositionAgent ();
-			if (pos.magVec () >= 1.5)
-			{
-				return;
-			}
-		}
+		//if (gAgent.mRRInterface.contains ("sittp")) {
+		//	// Do not allow a script to force the avatar to sit somewhere far when under @sittp
+		//	LLVector3 pos = object->getPositionRegion();
+		//	pos -= gAgent.getPositionAgent ();
+		//	if (pos.magVec () >= 1.5)
+		//	{
+		//		return;
+		//	}
+		//}
 
 		if (gAgentAvatarp && !gAgentAvatarp->mIsSitting)
 		{
@@ -4391,6 +4392,20 @@ BOOL RRInterface::updateCameraLimits ()
 		handle_toggle_flycam();
 	}
 
+	// Force all the rendering types back to TRUE (and we won't be able to switch them off while the vision is restricted)
+	if (mCamDistDrawMin < EXTREMUM || mCamDistDrawMax < EXTREMUM) {
+		gPipeline.setAllRenderTypes();
+	}
+
+	// silly hack, but we need to force all textures in world to be updated (code copied from camtextures above)
+	S32 i;
+	for (i=0; i<gObjectList.getNumObjects(); ++i) {
+		LLViewerObject* object = gObjectList.getObject(i);
+		if (object) {
+			object->setSelected(FALSE);
+		}
+	}
+
 	// And check the camera is still within the limits
 	return checkCameraLimits (TRUE);
 }
@@ -4432,23 +4447,53 @@ F32 calculateDesiredAlphaPerStep (F32 desired_alpha, int nb_layers)
 //   complain.
 void RRInterface::drawRenderLimit ()
 {
-	if (mCamDistDrawMin >= EXTREMUM && mCamDistDrawMax >= EXTREMUM) {
+	//if (sRenderLimitRenderedThisFrame) { // already rendered the vision spheres during this rendering frame ? => bail
+	//	return;
+	//}
+
+	if (mCamDistDrawMin >= EXTREMUM && mCamDistDrawMax >= EXTREMUM) { // not vision restricted ? => bail
 		return;
 	}
 
+	gGL.setColorMask(true, true);
 	if (LLGLSLShader::sNoFixedFunction) {
 		gUIProgram.bind();
 	}
 
+	//gGL.flush();
+	//glClearColor(0,0,0,1);
+	//glClearColor(0,0,0,0);
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 	LLGLEnable gls_blend(GL_BLEND);
 	LLGLEnable gls_cull(GL_CULL_FACE);
+	LLGLEnable alpha_test (GL_ALPHA_TEST);
 	LLGLDepthTest gls_depth(GL_TRUE, GL_FALSE);
 	gGL.matrixMode(LLRender::MM_MODELVIEW);
 
+	//gGL.setSceneBlendType(LLRender::BT_ADD_WITH_ALPHA);
+	//gGL.setColorMask(true, true);
+	gGL.setSceneBlendType(LLRender::BT_ALPHA);
+	gPipeline.disableLights();
+	gGL.blendFunc(LLRender::BF_SOURCE_ALPHA,
+					LLRender::BF_ONE_MINUS_SOURCE_ALPHA,
+					LLRender::BF_ZERO,
+					LLRender::BF_ONE_MINUS_SOURCE_ALPHA);
+
+	//gGL.flush();
+	//glClearColor(0,0,0,1);
+	//gGL.setColorMask(true, true);
+	//glClearColor(0,0,0,0);
+
+	gGL.setColorMask(true, false);
 	LLVector3 center = isAgentAvatarValid() 
 		? gAgentAvatarp->mHeadp->getWorldPosition()
 		: gAgent.getPositionAgent();
+
+	//LLVector3 center = gAgentAvatarp->mHeadp->getWorldPosition();
+
+	//LLVector3 center = gAgentAvatarp && gAgentAvatarp->mHeadp 
+	//	? gAgentAvatarp->mHeadp->getWorldPosition()
+	//	: gAgent.getPositionAgent();
 
 	// Render the inner sphere first
 	if (mCamDistDrawMin < mCamDistDrawMax) {
@@ -4482,13 +4527,21 @@ void RRInterface::drawRenderLimit ()
 
 	} while (false);
 
+	gGL.flush();
+
+	if (LLGLSLShader::sNoFixedFunction) {
+		gUIProgram.unbind();
+	}
+
+	sRenderLimitRenderedThisFrame = TRUE;
 }
 
 void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha)
 {
-//	gGL.pushMatrix();
+	//gGL.pushMatrix();
 	{
 		gGL.pushMatrix();
+		//gGL.loadIdentity();
 		{
 			gGL.translatef(center[0], center[1], center[2]);
 			gGL.scalef(scale, scale, scale);
@@ -4503,7 +4556,7 @@ void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 a
 		}
 		gGL.popMatrix();
 	}
-//	gGL.popMatrix();
+	//gGL.popMatrix();
 }
 
 

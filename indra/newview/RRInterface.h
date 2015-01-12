@@ -26,8 +26,8 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2090400"
-#define RR_VERSION "2.09.04.0"
+#define RR_VERSION_NUM "2090601"
+#define RR_VERSION "2.09.06.1"
 #define RR_SLV_VERSION "3.7.24.33329"
 
 #define RR_PREFIX "@"
@@ -308,6 +308,7 @@ public:
 	static F32 sLastAvatarZOffsetCommit; // timestamp of the last change of RestrainedLoveOffsetAvatarZ
 	static F32 sLastOutfitChange; // timestamp of the last change in the outfit (including Hover on the shape)
 	static U32 mCamDistNbGradients; // number of spheres to draw when restricting the camera view
+	static BOOL sRenderLimitRenderedThisFrame; // true when already rendered the vision spheres during this rendering frame
 
 	// Allowed debug settings (initialized in the ctor)
 	std::string mAllowedU32;

@@ -5876,6 +5876,13 @@ LLDrawable *LLVOAvatar::createDrawable(LLPipeline *pipeline)
 
 	LLDrawPoolAvatar *poolp = (LLDrawPoolAvatar*) gPipeline.getPool(LLDrawPool::POOL_AVATAR);
 
+//MK
+	if (poolp)
+	{
+		poolp->setAvatar (this);
+	}
+//mk
+
 	// Only a single face (one per avatar)
 	//this face will be splitted into several if its vertex buffer is too long.
 	mDrawable->setState(LLDrawable::ACTIVE);

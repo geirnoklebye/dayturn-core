@@ -80,6 +80,7 @@
 
 //MK
 #include "llagent.h"
+#include "llvoavatarself.h"
 //mk
 
 const S32 MIN_QUIET_FRAMES_COALESCE = 30;
@@ -4275,7 +4276,8 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 		if (!facep->getViewerObject()->isAttachment())
 		{
 			tex = LLViewerFetchedTexture::sDefaultImagep;
-			facep->setFaceColor (LLColor4::white);
+			//facep->setFaceColor (LLColor4::white);
+			//facep->unsetFaceColor ();
 		}
 		else
 		{
@@ -4287,7 +4289,6 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 		tex = facep->getTexture();
 	}
 //mk
-
 
 	U8 index = facep->getTextureIndex();
 
@@ -4698,6 +4699,13 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 
 							if (is_alpha)
 							{ //this face needs alpha blending, override alpha mode
+////MK
+//								if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+//								{
+//									alpha_mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
+//								}
+//								else
+////mk
 								alpha_mode = LLMaterial::DIFFUSE_ALPHA_MODE_BLEND;
 							}
 
@@ -4715,6 +4723,15 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							bool can_be_shiny = mode == LLMaterial::DIFFUSE_ALPHA_MODE_NONE ||
 												mode == LLMaterial::DIFFUSE_ALPHA_MODE_EMISSIVE;
 							
+////MK
+//							if (mode == LLMaterial::DIFFUSE_ALPHA_MODE_BLEND)
+//							{ //this face needs alpha blending, override alpha mode
+//								if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+//								{
+//									mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
+//								}
+//							}
+////mk
 							if (mode == LLMaterial::DIFFUSE_ALPHA_MODE_MASK && te->getColor().mV[3] >= 0.999f)
 							{
 								pool->addRiggedFace(facep, fullbright ? LLDrawPoolAvatar::RIGGED_FULLBRIGHT : LLDrawPoolAvatar::RIGGED_SIMPLE);
@@ -4888,7 +4905,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							if (simple_count < MAX_FACE_COUNT)
 							{
 								sSimpleFaces[simple_count++] = facep;
-						}
+							}
 						}
 						else
 						{
@@ -4899,8 +4916,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							if (alpha_count < MAX_FACE_COUNT)
 							{
 								sAlphaFaces[alpha_count++] = facep;
+							}
 						}
-					}
 					}
 					else
 					{
@@ -4922,44 +4939,44 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 										if (normspec_count < MAX_FACE_COUNT)
 										{
 											sNormSpecFaces[normspec_count++] = facep;
-									}
+										}
 									}
 									else
 									{ //has normal map (needs texcoord1 and tangent)
 										if (norm_count < MAX_FACE_COUNT)
 										{
 											sNormFaces[norm_count++] = facep;
+										}
 									}
-								}
 								}
 								else if (mat->getSpecularID().notNull())
 								{ //has specular map but no normal map, needs texcoord2
 									if (spec_count < MAX_FACE_COUNT)
 									{
 										sSpecFaces[spec_count++] = facep;
-								}
+									}
 								}
 								else
 								{ //has neither specular map nor normal map, only needs texcoord0
 									if (simple_count < MAX_FACE_COUNT)
 									{
 										sSimpleFaces[simple_count++] = facep;
-								}									
-							}
+									}									
+								}
 							}
 							else if (te->getBumpmap())
 							{ //needs normal + tangent
 								if (bump_count < MAX_FACE_COUNT)
 								{
 									sBumpFaces[bump_count++] = facep;
-							}
+								}
 							}
 							else if (te->getShiny() || !te->getFullbright())
 							{ //needs normal
 								if (simple_count < MAX_FACE_COUNT)
 								{
 									sSimpleFaces[simple_count++] = facep;
-							}
+								}
 							}
 							else 
 							{ //doesn't need normal
@@ -4967,8 +4984,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (fullbright_count < MAX_FACE_COUNT)
 								{
 									sFullbrightFaces[fullbright_count++] = facep;
+								}
 							}
-						}
 						}
 						else
 						{
@@ -4977,7 +4994,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (bump_count < MAX_FACE_COUNT)
 								{
 									sBumpFaces[bump_count++] = facep;
-							}
+								}
 							}
 							else if ((te->getShiny() && LLPipeline::sRenderBump) ||
 								!(te->getFullbright() || bake_sunlight))
@@ -4985,7 +5002,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (simple_count < MAX_FACE_COUNT)
 								{
 									sSimpleFaces[simple_count++] = facep;
-							}
+								}
 							}
 							else 
 							{ //doesn't need normal
@@ -4993,10 +5010,10 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 								if (fullbright_count < MAX_FACE_COUNT)
 								{
 									sFullbrightFaces[fullbright_count++] = facep;
+								}
 							}
 						}
 					}
-				}
 				}
 				else
 				{	//face has no renderable geometry
@@ -5602,6 +5619,39 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 			bool use_legacy_bump = te->getBumpmap() && (te->getBumpmap() < 18) && (!mat || mat->getNormalID().isNull());
 			bool opaque = te->getColor().mV[3] >= 0.999f;
 
+//MK
+			LLDrawable* drawablep = facep->getDrawable();
+			LLVOVolume* vobj = drawablep->getVOVolume();
+			// Due to a rendering bug, we must completely ignore the alpha and fullbright of any object (except our own attachments and 100% invisible objects) when the vision is restricted
+			if ((is_alpha || fullbright) && gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && te->getColor().mV[3] > 0.f)
+			{
+				if (vobj && vobj->getAvatar() != gAgentAvatarp ) {
+					// If the object is phantom or an attachment, no need to even render it at all
+					// If it is solid and in the world, then a blind avatar will have to "see" it since it may bump into it
+					if (vobj->flagPhantom() || vobj->isAttachment())
+					{
+						++face_iter;
+						continue;
+					}
+					else
+					{
+						is_alpha = FALSE;
+						fullbright = FALSE;
+						opaque = true;
+						can_be_shiny = false;
+						no_materials = TRUE;
+						//LLColor4 new_color (te->getColor());
+						//new_color.mV[3] = 1.0f;
+						//const_cast<LLTextureEntry*>(te)->setColor(new_color);
+					}
+				}
+			}
+			else if (te->getColor().mV[3] == 0.f && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && vobj && !vobj->isAttachment()) // completely transparent and not an attachment => don't bother rendering it at all (even when highlighting transparent)
+			{
+				++face_iter;
+				continue;
+			}
+//mk
 			if (mat && LLPipeline::sRenderDeferred && !hud_group)
 			{
 				bool material_pass = false;
@@ -5694,6 +5744,13 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 				U8 mode = mat->getDiffuseAlphaMode();
 				if (te->getColor().mV[3] < 0.999f)
 				{
+////MK
+//					if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+//					{
+//						mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
+//					}
+//					else
+////mk
 					mode = LLMaterial::DIFFUSE_ALPHA_MODE_BLEND;
 				}
 
@@ -5816,8 +5873,8 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						else
 						{
 						registerFace(group, facep, LLRenderPass::PASS_SIMPLE);
+						}
 					}
-				}
 				}
 				
 				
