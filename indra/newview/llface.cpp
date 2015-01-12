@@ -1278,6 +1278,13 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 	LLColor4U color = tep->getColor();
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures && !(getViewerObject()->isAttachment()))
+	{
+		color = LLColor4::white;
+	}
+//mk
+
 	if (rebuild_color)
 	{ //decide if shiny goes in alpha channel of color
 		if (tep && 
@@ -2495,12 +2502,12 @@ void LLFace::setViewerObject(LLViewerObject* objp)
 
 const LLColor4& LLFace::getRenderColor() const
 {
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures && !(getViewerObject()->isAttachment()))
-	{
-		return LLColor4::white;
-	}
-//mk
+////MK
+//	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures && !(getViewerObject()->isAttachment()))
+//	{
+//		return LLColor4::white;
+//	}
+////mk
 	if (isState(USE_FACE_COLOR))
 	{
 		  return mFaceColor; // Face Color
