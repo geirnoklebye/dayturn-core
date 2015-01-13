@@ -622,7 +622,7 @@ bool LLWearableItemCreationDateComparator::doCompare(const LLPanelInventoryListI
 static LLWearableItemTypeNameComparator WEARABLE_TYPE_NAME_COMPARATOR;
 static const LLWearableItemTypeNameComparator WEARABLE_TYPE_LAYER_COMPARATOR;
 static const LLWearableItemNameComparator WEARABLE_NAME_COMPARATOR;
-static const LLWearableItemCreationDateComparator WEARABLE_CREATION_DATE_COMPARATOR;
+static LLWearableItemCreationDateComparator WEARABLE_CREATION_DATE_COMPARATOR;
 
 static const LLDefaultChildRegistry::Register<LLWearableItemsList> r("wearable_items_list");
 

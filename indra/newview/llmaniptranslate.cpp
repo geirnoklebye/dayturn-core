@@ -472,13 +472,18 @@ BOOL LLManipTranslate::handleHover(S32 x, S32 y, MASK mask)
 			if (mask == MASK_COPY)
 			{
 				// ...we're trying to make a copy
-				LLSelectMgr::getInstance()->selectDuplicate(LLVector3::zero, FALSE);
-				mCopyMadeThisDrag = TRUE;
+//MK
+				if (!gRRenabled || !gAgent.mRRInterface.mContainsRez)
+				{
+//mk
+					LLSelectMgr::getInstance()->selectDuplicate(LLVector3::zero, FALSE);
+					mCopyMadeThisDrag = TRUE;
 
-				// When we make the copy, we don't want to do any other processing.
-				// If so, the object will also be moved, and the copy will be offset.
+					// When we make the copy, we don't want to do any other processing.
+					// If so, the object will also be moved, and the copy will be offset.
 				LL_DEBUGS("UserInput") << "hover handled by LLManipTranslate (made copy)" << LL_ENDL;
-				gViewerWindow->setCursor(UI_CURSOR_TOOLTRANSLATE);
+					gViewerWindow->setCursor(UI_CURSOR_TOOLTRANSLATE);
+				}
 			}
 		}
 	}

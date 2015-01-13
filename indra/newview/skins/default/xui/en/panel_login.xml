@@ -1,17 +1,17 @@
 <panel
-  follows="all"
+follows="all"
   height="768"
-  layout="topleft"
-  name="panel_login"
-  focus_root="true"
+layout="topleft"
+name="panel_login"
+focus_root="true" 
   background_visible="true"
   bg_opaque_color="0.16 0.16 0.16 1"
   background_opaque="true"
   width="1024">
-  <panel.string
-    name="forgot_password_url">
-    http://secondlife.com/account/request.php
-  </panel.string>
+<panel.string
+     name="forgot_password_url">
+       http://secondlife.com/account/request.php
+</panel.string>
   <layout_stack
   follows="left|right|top"
   height="172"
@@ -26,8 +26,8 @@
       auto_resize="true"
       name="ui_elastic_pad_left"
       width="32" />
-    <layout_panel
-      auto_resize="false"
+<layout_panel
+auto_resize="false"
       follows="left|right|top"
       name="ui_container"
       width="960"
@@ -41,39 +41,39 @@
     left="0"
     top="25"
     name="sl_logo_small" />
-  <combo_box
+<combo_box
     left_pad="22"
     bottom_delta="-7"
-    allow_text_entry="true"
+allow_text_entry="true"
     follows="left|top"
     height="32"
     label="Username"
     combo_editor.font="SansSerifLarge"
-    max_chars="128"
-    commit_on_focus_lost="false"
-    combo_editor.prevalidate_callback="ascii"
-    tool_tip="The username you chose when you registered, like bobsmith12 or Steller Sunshine"
-    name="username_combo"
+max_chars="128"
+          commit_on_focus_lost="false"
+combo_editor.prevalidate_callback="ascii"
+tool_tip="The username you chose when you registered, like bobsmith12 or Steller Sunshine"
+name="username_combo"
     width="232">
     <combo_box.combo_editor
       text_pad_left="8" />
-    <combo_box.combo_button
-      visible="false" />
-    <combo_box.drop_down_button
-      visible="false" />
-  </combo_box>
-  <line_editor
+  <combo_box.combo_button
+   visible ="false"/>
+  <combo_box.drop_down_button
+   visible ="false"/>
+</combo_box>
+<line_editor
     follows="left|top"
     height="32"
     left_pad="0"
-    max_length_bytes="16"
+  max_length_bytes="16"
     text_pad_left="8"
-    name="password_edit"
+name="password_edit"
     label="Password"
     font="SansSerifLarge"
-    is_password="true"
-    select_on_focus="true"
-    commit_on_focus_lost="false"
+is_password="true" 
+select_on_focus="true"
+          commit_on_focus_lost="false"
     bottom_delta="0"
     width="200" />
   <check_box
@@ -91,7 +91,7 @@
     follows="left|top"
     font="SansSerifMedium"
     text_color="EmphasisColor"
-    height="16"
+          height="16"
     name="forgot_password_text"
     left_delta="0"
     bottom_delta="16"
@@ -121,24 +121,24 @@
     bottom_delta="1"
     width="120">
     at last location
-  </text>
-  <combo_box
-    control_name="NextLoginLocation"
+ </text>
+<combo_box
+control_name="NextLoginLocation"
     follows="left|top"
     label="My favorite places"
     height="26"
-    max_chars="128"
+max_chars="128"
     combo_editor.font="SansSerifMedium"
     left_pad="20"
     bottom_delta="0"
-    name="start_location_combo"
+name="start_location_combo"
     width="175"
     combo_button.scale_image="true">
-    <combo_box.item
-      label="My home"
-      name="MyHome"
-      value="home" />
-  </combo_box>
+<combo_box.item
+label="My home"
+name="MyHome"
+         value="home" />
+</combo_box>
   <button
     follows="left|top"
     image_unselected="PushButton_Login"
@@ -179,8 +179,8 @@
     width="80"
     height="26"
     bottom_delta="0" />
-  <combo_box
-    allow_text_entry="false"
+<combo_box
+          allow_text_entry="false"
     font="SansSerifTiny"
     follows="left|top"
     height="26"
@@ -188,9 +188,9 @@
     label="Select grid"
     left_pad="40"
     bottom_delta="0"
-    layout="topleft"
-    top_pad="2"
-    name="server_combo"
+layout="topleft"
+top_pad="2"
+name="server_combo"
     width="128" />
     </layout_panel>
     <layout_panel
@@ -200,7 +200,7 @@
       width="32" />
   </layout_stack>
   <web_browser
-    tab_stop="false"
+        tab_stop="false"
     trusted_content="true"
     bg_opaque_color="Black"
     border_visible="false"

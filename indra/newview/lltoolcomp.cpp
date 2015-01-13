@@ -752,6 +752,10 @@ BOOL LLToolCompGun::handleMouseDown(S32 x, S32 y, MASK mask)
 	if (gAgent.leftButtonGrabbed())
 	{
 		gAgent.setControlFlags(AGENT_CONTROL_ML_LBUTTON_DOWN);
+//MK
+		// Allow left clicking on things while holding Alt down
+		if (!(mask & MASK_ALT) && !(mask & MASK_SHIFT) && !(mask & MASK_CONTROL))
+//mk
 		return FALSE;
 	}
 

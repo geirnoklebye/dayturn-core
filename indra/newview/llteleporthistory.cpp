@@ -120,6 +120,15 @@ void LLTeleportHistory::updateCurrentLocation(const LLVector3d& new_pos)
 	{
 		mTeleportHistoryStorage = LLTeleportHistoryStorage::getInstance();
 	}
+
+//MK
+	// don't add to the teleport history if we are under showloc
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
+
 	if (mRequestedItem != -1) // teleport within the history in progress?
 	{
 		mCurrentItem = mRequestedItem;
@@ -222,7 +231,12 @@ std::string LLTeleportHistory::getCurrentLocationTitle(bool full, const LLVector
 
 void LLTeleportHistory::dump() const
 {
-	LL_INFOS() << "Teleport history dump (" << mItems.size() << " items):" << LL_ENDL;
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		return;
+	}
+//mk
 	
 	for (size_t i=0; i<mItems.size(); i++)
 	{

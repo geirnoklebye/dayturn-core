@@ -363,11 +363,14 @@ public:
 	F32 mDomeOffset;
 	F32 mDomeRadius;
 	
-
 private:
 
 	friend class LLWLAnimator;
 
+//MK
+// Sorry Mister, but I need these public !
+public:
+//mk
 	void loadAllPresets();
 	void loadPresetsFromDir(const std::string& dir);
 	bool loadPreset(const std::string& path);

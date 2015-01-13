@@ -46,6 +46,10 @@
 #include "llstatusbar.h"
 #include "llmenugl.h"
 #include "pipeline.h"
+//MK
+#include "llviewerregion.h"
+#include "llvoavatarself.h"
+//mk
 #include <boost/tokenizer.hpp>
 
 
@@ -132,14 +136,34 @@ void LLHUDText::renderText()
 	LLColor4 shadow_color(0.f, 0.f, 0.f, 1.f);
 	F32 alpha_factor = 1.f;
 	LLColor4 text_color = mColor;
+//MK
+	////if (mDoFade)
+	////{
+	////	if (mLastDistance > mFadeDistance)
+	////	{
+	////		alpha_factor = llmax(0.f, 1.f - (mLastDistance - mFadeDistance)/mFadeRange);
+	////		text_color.mV[3] = text_color.mV[3]*alpha_factor;
+	////	}
+	////}
+
+	F32 fade_distance = mFadeDistance;
+	F32 fade_range = mFadeRange;
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMin < fade_distance)
+	{
+		fade_distance = gAgent.mRRInterface.mCamDistDrawMin;
+		fade_range = 1.0f;
+	}
+
 	if (mDoFade)
 	{
-		if (mLastDistance > mFadeDistance)
+		if (mLastDistance > fade_distance)
 		{
-			alpha_factor = llmax(0.f, 1.f - (mLastDistance - mFadeDistance)/mFadeRange);
+			alpha_factor = llmax(0.f, 1.f - (mLastDistance - fade_distance)/fade_range);
 			text_color.mV[3] = text_color.mV[3]*alpha_factor;
 		}
 	}
+//mk
+
 	if (text_color.mV[3] < 0.01f)
 	{
 		return;
@@ -252,7 +276,41 @@ void LLHUDText::renderText()
 void LLHUDText::setString(const std::string &text_utf8)
 {
 	mTextSegments.clear();
-	addLine(text_utf8, mColor);
+//MK
+	if (gRRenabled)
+	{
+		std::string local_wtext = text_utf8;
+		if (gAgent.mRRInterface.mContainsShowhovertextall)
+		{
+			local_wtext = ""; //utf8str_to_wstring("", 0);
+		}
+		else if ((mOnHUDAttachment && gAgent.mRRInterface.mContainsShowhovertexthud)
+				|| (!mOnHUDAttachment && gAgent.mRRInterface.mContainsShowhovertextworld)
+				|| (mSourceObject && gAgent.mRRInterface.contains("showhovertext:"+mSourceObject->getID().asString())))
+		{
+			local_wtext = ""; //utf8str_to_wstring("", 0);
+		}
+		else
+		{
+			if (gAgent.mRRInterface.mContainsShowloc)
+			{
+				std::string str = local_wtext; //wstring_to_utf8str(local_wtext, local_wtext.length());
+				str = gAgent.mRRInterface.stringReplace(str, gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
+				if (gAgent.getRegion()) str = gAgent.mRRInterface.stringReplace(str, gAgent.getRegion()->getName(), "(Region hidden)");
+				local_wtext = str; //utf8str_to_wstring(str, str.length());
+			}
+			if (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags)
+			{
+				std::string str = local_wtext; //wstring_to_utf8str(local_wtext, local_wtext.length());
+				str = gAgent.mRRInterface.getCensoredMessage(str);
+				local_wtext = str; //utf8str_to_wstring(str, str.length());
+			}
+		}
+		addLine(local_wtext, mColor);
+	}
+	else
+//mk
+		addLine(text_utf8, mColor);
 }
 
 void LLHUDText::clearString()
@@ -395,7 +453,23 @@ void LLHUDText::updateVisibility()
 		mPositionAgent -= dir_from_camera * mSourceObject->getVObjRadius();
 	}
 
+
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMin < EXTREMUM)
+	{
+		mLastDistance = (mPositionAgent - (isAgentAvatarValid() ? gAgentAvatarp->mHeadp->getWorldPosition() : gAgent.getPositionAgent())).magVec();
+	}
+	else
+//mk
 	mLastDistance = (mPositionAgent - LLViewerCamera::getInstance()->getOrigin()).magVec();
+
+//MK
+	//if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMin < mLastDistance)
+	//{
+	//	mVisible = FALSE;
+	//	return;
+	//}
+//mk
 
 	if (!mTextSegments.size() || (mDoFade && (mLastDistance > mFadeDistance + mFadeRange)))
 	{

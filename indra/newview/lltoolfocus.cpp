@@ -206,6 +206,26 @@ void LLToolCamera::pickCallback(const LLPickInfo& pick_info)
 	else if (pick_info.mKeyMask & MASK_ALT || 
 			(LLToolMgr::getInstance()->getCurrentTool()->getName() == "Camera")) 
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.contains ("camunlock"))
+		{
+			if (!(pick_info.mKeyMask & MASK_ALT) &&
+				gAgentCamera.cameraThirdPerson() &&
+				gViewerWindow->getLeftMouseDown() && 
+				!gSavedSettings.getBOOL("FreezeTime") &&
+				(hit_obj == gAgentAvatarp || 
+				 (hit_obj && hit_obj->isAttachment() && LLVOAvatar::findAvatarFromAttachment(hit_obj)->isSelf())))
+			{
+				// do nothing, we are steering with the mouse... but the condition is so complex it is better to
+				// check for its negative
+			}
+			else
+			{
+				LLToolCamera::getInstance()->mValidClickPoint = FALSE;
+				return;
+			}
+		}
+//mk
 		LLViewerObject* hit_obj = pick_info.getObject();
 		if (hit_obj)
 		{

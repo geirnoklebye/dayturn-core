@@ -343,6 +343,21 @@ bool idle_startup()
 
 	//static bool stipend_since_login = false;
 
+//MK
+	gRRenabled = gSavedSettings.getBOOL("RestrainedLove");
+	RRInterface::sRRNoSetEnv = gSavedSettings.getBOOL("RestrainedLoveNoSetEnv");
+	RRInterface::sRestrainedLoveDebug = gSavedSettings.getBOOL("RestrainedLoveDebug");
+	RRInterface::sCanOoc = gSavedSettings.getBOOL("RestrainedLoveCanOoc");
+	RRInterface::sRecvimMessage = gSavedSettings.getString("RestrainedLoveRecvimMessage");
+	RRInterface::sSendimMessage = gSavedSettings.getString("RestrainedLoveSendimMessage");
+	RRInterface::sBlacklist = gSavedSettings.getString("RestrainedLoveBlacklist");
+	// Let's keep it constant for now, because there are ways to make the vision restriction less tight by playing with this setting.
+	//RRInterface::mCamDistNbGradients = gSavedSettings.getU32("RestrainedLoveCamDistNbGradients");
+	if (RRInterface::mCamDistNbGradients == 0)
+	{
+		RRInterface::mCamDistNbGradients = 1;
+	}
+//mk
 	// HACK: These are things from the main loop that usually aren't done
 	// until initialization is complete, but need to be done here for things
 	// to work.
@@ -752,7 +767,7 @@ bool idle_startup()
 		{
 			LL_DEBUGS("AppInit") << "initializing menu bar" << LL_ENDL;
 			display_startup();
-			initialize_edit_menu();
+		initialize_edit_menu();
 			initialize_spellcheck_menu();
 			display_startup();
 			init_menus();
@@ -766,7 +781,7 @@ bool idle_startup()
 			// NOTE: Hits "Attempted getFields with no login view shown" warning, since we don't
 			// show the login view until login_show() is called below.  
 			if (gUserCredential.isNull())                                                                          
-			{                                                  
+			{                                                                                                      
 				LL_DEBUGS("AppInit") << "loading credentials from gLoginHandler" << LL_ENDL;
 				display_startup();
 				gUserCredential = gLoginHandler.initializeLoginInfo();                 
@@ -780,10 +795,10 @@ bool idle_startup()
 			login_show();
 			display_startup();
 			// connect dialog is already shown, so fill in the names
-			if (gUserCredential.notNull())
-			{
-				LLPanelLogin::setFields( gUserCredential, gRememberPassword);
-			}
+			if (gUserCredential.notNull())                                                                         
+			{                                                                                                      
+				LLPanelLogin::setFields( gUserCredential, gRememberPassword);                                  
+			}     
 			display_startup();
 			LLPanelLogin::giveFocus();
 
@@ -993,19 +1008,33 @@ bool idle_startup()
 		// their last location, or some URL "-url //sim/x/y[/z]"
 		// All accounts have both a home and a last location, and we don't support
 		// more locations than that.  Choose the appropriate one.  JC
-		switch (LLStartUp::getStartSLURL().getType())
-		  {
-		  case LLSLURL::LOCATION:
-		    agent_location_id = START_LOCATION_ID_URL;
-		    break;
-		  case LLSLURL::LAST_LOCATION:
-		    agent_location_id = START_LOCATION_ID_LAST;
-		    break;
-		  default:
-		    agent_location_id = START_LOCATION_ID_HOME;
-		    break;
-		  }
+//MK
+		if (!gRRenabled)
+		{
+//mk
+			switch (LLStartUp::getStartSLURL().getType())
+			{
+			  case LLSLURL::LOCATION:
+				agent_location_id = START_LOCATION_ID_URL;
+				break;
+			  case LLSLURL::LAST_LOCATION:
+				agent_location_id = START_LOCATION_ID_LAST;
+				break;
+			  default:
+				agent_location_id = START_LOCATION_ID_HOME;
+				break;
+			}
+//MK
+		}
+//mk
 
+//MK
+		if (gRRenabled)
+		{
+			gSavedSettings.setBOOL("LoginLastLocation", TRUE);
+			agent_location_id = START_LOCATION_ID_LAST;	// always last location (actually ignore list)
+		}
+//mk
 		gViewerWindow->getWindow()->setCursor(UI_CURSOR_WAIT);
 
 		init_start_screen(agent_location_id);
@@ -1271,7 +1300,7 @@ bool idle_startup()
 		// Pre-load floaters, like the world map, that are slow to spawn
 		// due to XML complexity.
 		gViewerWindow->initWorldUI();
-		
+
 		display_startup();
 
 		// This is where we used to initialize gWorldp. Original comment said:
@@ -1537,6 +1566,18 @@ bool idle_startup()
 	//---------------------------------------------------------------------
 	if(STATE_WORLD_WAIT == LLStartUp::getStartupState())
 	{
+//MK
+		// We are beginning a session that may or may not have the avatar wear stuff
+		// that restricts from seeing the location, names or even to look around.
+		// Make the viewer believe it has received a bunch of restrictions and let them
+		// be flushed out by the garbage collector later, after the actual restrictions
+		// have been received.
+		// For this, we simulate the reception of those commands from a non-existent object.
+		if (gRRenabled)
+		{
+			gAgent.mRRInterface.handleCommand (LLUUID::generateNewID(), "camavdist:0=n,shownames=n,showloc=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
+		}
+//mk
 		LL_DEBUGS("AppInit") << "Waiting for simulator ack...." << LL_ENDL;
 		set_startup_status(0.59f, LLTrans::getString("LoginWaitingForRegionHandshake"), gAgent.mMOTD);
 		if(gGotUseCircuitCodeAck)
@@ -2136,6 +2177,10 @@ bool idle_startup()
 
 	if (STATE_CLEANUP == LLStartUp::getStartupState())
 	{
+//MK
+		// fire all the stored commands that we received while initializing
+		gAgent.mRRInterface.fireCommands ();
+//mk
 		set_startup_status(1.0, "", "");
 		display_startup();
 
@@ -2833,12 +2878,12 @@ void LLStartUp::cleanupNameCache()
 bool LLStartUp::dispatchURL()
 {
 	// ok, if we've gotten this far and have a startup URL
-    if (!getStartSLURL().isValid())
+        if (!getStartSLURL().isValid())
 	{
 	  return false;
 	}
-    if(getStartSLURL().getType() != LLSLURL::APP)
-	{
+        if(getStartSLURL().getType() != LLSLURL::APP)
+	  {
 	    
 		// If we started with a location, but we're already
 		// at that location, don't pop dialogs open.
@@ -2862,10 +2907,10 @@ bool LLStartUp::dispatchURL()
 
 void LLStartUp::setStartSLURL(const LLSLURL& slurl) 
 {
-	LL_DEBUGS("AppInit")<<slurl.asString()<<LL_ENDL;
+  LL_DEBUGS("AppInit")<<slurl.asString()<<LL_ENDL;
 
 	if ( slurl.isSpatial() )
-	{
+    {
 		std::string new_start = slurl.getSLURLString();
 		LL_DEBUGS("AppInit")<<new_start<<LL_ENDL;
 		sStartSLURL = slurl;
@@ -2876,7 +2921,7 @@ void LLStartUp::setStartSLURL(const LLSLURL& slurl)
 		gSavedSettings.setString("NextLoginLocation", new_start);
 		// following a successful login, this is cleared
 		// and the default reverts to LoginLocation
-	}
+    }
 	else
 	{
 		LL_WARNS("AppInit")<<"Invalid start SLURL (ignored): "<<slurl.asString()<<LL_ENDL;
@@ -2887,7 +2932,7 @@ void LLStartUp::setStartSLURL(const LLSLURL& slurl)
 LLSLURL& LLStartUp::getStartSLURL()
 {
 	return sStartSLURL;
-} 
+}
 
 /**
  * Read all proxy configuration settings and set up both the HTTP proxy and
@@ -3334,9 +3379,14 @@ bool process_login_success_response()
 		LLVector3 position = ll_vector3_from_sd(sd["position"]);
 		gAgent.setHomePosRegion(region_handle, position);
 	}
-
 	gAgent.mMOTD.assign(response["message"]);
 
+//MK
+	if (gRRenabled)
+	{
+		gAgent.mMOTD.assign("");
+	}
+//mk
 	// Options...
 	// Each 'option' is an array of submaps. 
 	// It appears that we only ever use the first element of the array.

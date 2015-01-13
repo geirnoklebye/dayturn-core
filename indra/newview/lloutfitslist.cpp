@@ -49,6 +49,9 @@
 #include "llvoavatarself.h"
 #include "llwearableitemslist.h"
 
+//MK
+#include "llagent.h"
+//mk
 static bool is_tab_header_clicked(LLAccordionCtrlTab* tab, S32 y);
 
 static const LLOutfitTabNameComparator OUTFIT_TAB_NAME_COMPARATOR;
@@ -165,6 +168,9 @@ private:
 		LLViewerInventoryCategory* selected_outfit = getSelectedOutfit();
 		if (selected_outfit)
 		{
+//MK
+			gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 			LLAppearanceMgr::instance().wearInventoryCategory(
 				selected_outfit, /*copy=*/ FALSE, /*append=*/ FALSE);
 		}
@@ -618,10 +624,16 @@ void LLOutfitsList::performAction(std::string action)
 
 	if ("replaceoutfit" == action)
 	{
+//MK
+		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 		LLAppearanceMgr::instance().wearInventoryCategory( cat, FALSE, FALSE );
 	}
 	else if ("addtooutfit" == action)
 	{
+//MK
+		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 		LLAppearanceMgr::instance().wearInventoryCategory( cat, FALSE, TRUE );
 	}
 	else if ("rename_outfit" == action)

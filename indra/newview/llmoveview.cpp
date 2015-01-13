@@ -318,6 +318,16 @@ void LLFloaterMove::setMovementMode(const EMovementMode mode)
 	case MM_RUN:
 		gAgent.setAlwaysRun();
 		gAgent.setRunning();
+//MK
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.mContainsRun || gAgent.mRRInterface.mContainsAlwaysRun) 
+			{
+				gAgent.clearRunning();
+				gAgent.clearAlwaysRun();
+			}
+		}
+//mk
 		break;
 	case MM_WALK:
 		gAgent.clearAlwaysRun();
@@ -331,6 +341,15 @@ void LLFloaterMove::setMovementMode(const EMovementMode mode)
 	gAgent.sendWalkRun(gAgent.getAlwaysRun());
 	
 	updateButtonsWithMovementMode(mode);
+//MK
+		if (gRRenabled && mode == MM_RUN)
+		{
+			if (gAgent.mRRInterface.mContainsRun || gAgent.mRRInterface.mContainsAlwaysRun) 
+			{
+				updateButtonsWithMovementMode(MM_WALK);
+			}
+		}
+//mk
 
 	bool bHideModeButtons = MM_FLY == mode
 		|| (isAgentAvatarValid() && gAgentAvatarp->isSitting());
@@ -533,6 +552,19 @@ void LLPanelStandStopFlying::setStandStopFlyingMode(EStandStopFlyingMode mode)
 	panel->mStandButton->setVisible(SSFM_STAND == mode);
 	panel->mStopFlyingButton->setVisible(SSFM_STOP_FLYING == mode);
 
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.mContainsUnsit)
+		{
+			panel->mStandButton->setVisible(FALSE);
+		}
+		if (gAgent.mRRInterface.contains ("fly"))
+		{
+			panel->mStopFlyingButton->setVisible(FALSE);
+		}
+	}
+//mk
 	//visibility of it should be updated after updating visibility of the buttons
 	panel->setVisible(TRUE);
 }
@@ -573,8 +605,10 @@ BOOL LLPanelStandStopFlying::postBuild()
 //virtual
 void LLPanelStandStopFlying::setVisible(BOOL visible)
 {
-	//we dont need to show the panel if these buttons are not activated
-	if (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK) visible = false;
+//MK
+	//////we dont need to show the panel if these buttons are not activated
+	////if (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK) visible = false;
+//mk
 
 	if (visible)
 	{
@@ -673,12 +707,27 @@ LLPanelStandStopFlying* LLPanelStandStopFlying::getStandStopFlyingPanel()
 void LLPanelStandStopFlying::onStandButtonClick()
 {
 	LLFirstUse::sit(false);
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsUnsit)
+ 	{
+		return;
+	}
+	gAgent.setFlying(FALSE);
+//mk
 
 	LLSelectMgr::getInstance()->deselectAllForStandingUp();
 	gAgent.setControlFlags(AGENT_CONTROL_STAND_UP);
 
 	setFocus(FALSE); // EXT-482
 	mStandButton->setVisible(FALSE); // force visibility changing to avoid seeing Stand & Move buttons at once.
+//MK
+	if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
+	{
+		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
+		gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
+		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
+	}
+//mk
 }
 
 void LLPanelStandStopFlying::onStopFlyingButtonClick()

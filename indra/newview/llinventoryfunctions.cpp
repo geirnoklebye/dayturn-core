@@ -119,9 +119,9 @@ void rename_category(LLInventoryModel* model, const LLUUID& cat_id, const std::s
 		!get_is_category_renameable(model, cat_id) ||
 		(cat = model->getCategory(cat_id)) == NULL ||
 		cat->getName() == new_name)
-	{
-		return;
-	}
+			{
+				return;
+			}
 
 	LLSD updates;
 	updates["name"] = new_name;
@@ -136,7 +136,7 @@ void copy_inventory_category(LLInventoryModel* model,
 	// Create the initial folder
 	LLUUID new_cat_uuid = gInventory.createNewCategory(parent_id, LLFolderType::FT_NONE, cat->getName());
 	model->notifyObservers();
-	
+
 	// We need to exclude the initial root of the copy to avoid recursively copying the copy, etc...
 	LLUUID root_id = (root_copy_id.isNull() ? new_cat_uuid : root_copy_id);
 
@@ -157,17 +157,17 @@ void copy_inventory_category(LLInventoryModel* model,
 							new_cat_uuid,
 							std::string(),
 							LLPointer<LLInventoryCallback>(NULL));
-	}
-	
+}
+
 	// Copy all the folders
 	LLInventoryModel::cat_array_t cat_array_copy = *cat_array;
 	for (LLInventoryModel::cat_array_t::iterator iter = cat_array_copy.begin(); iter != cat_array_copy.end(); iter++)
-	{
+{
 		LLViewerInventoryCategory* category = *iter;
 		if (category->getUUID() != root_id)
-		{
+	{
 			copy_inventory_category(model, category, new_cat_uuid, root_id);
-		}
+	}
 	}
 }
 
@@ -229,6 +229,21 @@ BOOL get_is_item_worn(const LLUUID& id)
 	if (!item)
 		return FALSE;
 
+//MK
+	// This is to fix, well hide, a weird bug that makes some detached objects show as
+	// "worn on Invalid Attachment Point" instead of being purely detached. But they are
+	// detached, they do not count against MAX_AGENT_ATTACHMENTS, and they do not appear
+	// in the COF. It seems, though, that LLAppearanceMgr::instance().isLinkInCOF(id) returns
+	// TRUE for these objects.
+	if (gAgentAvatarp && item->getType() == LLAssetType::AT_OBJECT)
+	{
+		std::string attachment_point_name;
+		if (!gAgentAvatarp->getAttachedPointName(id, attachment_point_name))
+		{
+			return FALSE;
+		}
+	}
+//mk
 	// Consider the item as worn if it has links in COF.
 	if (LLAppearanceMgr::instance().isLinkInCOF(id))
 	{
@@ -408,6 +423,19 @@ BOOL get_is_category_renameable(const LLInventoryModel* model, const LLUUID& id)
 	}
 
 	LLViewerInventoryCategory* cat = model->getCategory(id);
+
+//MK
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.isUnderRlvShare(cat))
+		{
+			if (gAgent.mRRInterface.isFolderLocked(cat))
+			{
+				return FALSE;
+			}
+		}
+	}
+//mk
 
 	if (cat && !LLFolderType::lookupIsProtectedType(cat->getPreferredType()) &&
 		cat->getOwnerID() == gAgent.getID())
@@ -744,7 +772,6 @@ bool LLIsValidItemLink::operator()(LLInventoryCategory* cat, LLInventoryItem* it
 	if (!vitem) return false;
 	return (vitem->getActualType() == LLAssetType::AT_LINK  && !vitem->getIsBrokenLink());
 }
-
 bool LLIsTypeWithPermissions::operator()(LLInventoryCategory* cat, LLInventoryItem* item)
 {
 	if(mType == LLAssetType::AT_CATEGORY)
@@ -977,8 +1004,8 @@ void LLSaveFolderState::doFolder(LLFolderViewFolder* folder)
 		{
 			if (!folder->isOpen())
 			{
-				folder->setOpen(TRUE);
-			}
+			folder->setOpen(TRUE);
+		}
 		}
 		else
 		{

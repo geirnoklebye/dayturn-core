@@ -78,6 +78,11 @@
 #include "llvocache.h"
 #include "llmaterialmgr.h"
 
+//MK
+#include "llagent.h"
+#include "llvoavatarself.h"
+//mk
+
 const S32 MIN_QUIET_FRAMES_COALESCE = 30;
 const F32 FORCE_SIMPLE_RENDER_AREA = 512.f;
 const F32 FORCE_CULL_AREA = 8.f;
@@ -1125,7 +1130,7 @@ void LLVOVolume::sculpt()
 		S32 max_discard = mSculptTexture->getMaxDiscardLevel();
 		if (discard_level > max_discard)
 		{
-			discard_level = max_discard;    // clamp to the best we can do			
+			discard_level = max_discard;    // clamp to the best we can do
 		}
 		if(discard_level > MAX_DISCARD_LEVEL)
 		{
@@ -4014,6 +4019,7 @@ void LLRiggedVolume::update(const LLMeshSkinInfo* skin, LLVOAvatar* avatar, cons
 						llassert(idx[k] < kMaxJoints);
 						// clamp k to kMaxJoints to avoid reading garbage off stack in release
 						src.setMul(mp[idx[(k < kMaxJoints) ? k : 0]], w);
+
 						final_mat.add(src);
 					}
 
@@ -4194,7 +4200,11 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 		LL_WARNS("RenderMaterials") << "Oh no! No binormals for this alpha blended face!" << LL_ENDL;
 	}
 
-	if (facep->getViewerObject()->isSelected() && LLSelectMgr::getInstance()->mHideSelectedObjects)
+	if (facep->getViewerObject()->isSelected() 
+//MK
+		&& (!gRRenabled || !gAgent.mRRInterface.mContainsEdit)
+//mk
+		&& LLSelectMgr::getInstance()->mHideSelectedObjects)
 	{
 		return;
 	}
@@ -4244,7 +4254,29 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 	U8 bump = (type == LLRenderPass::PASS_BUMP || type == LLRenderPass::PASS_POST_BUMP) ? facep->getTextureEntry()->getBumpmap() : 0;
 	U8 shiny = facep->getTextureEntry()->getShiny();
 	
-	LLViewerTexture* tex = facep->getTexture();
+//MK
+////	LLViewerTexture* tex = facep->getTexture();
+	LLViewerTexture* tex;
+
+	// If @camtexture is set, don't show any texture in world (but show attachments normally)
+	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures)
+	{
+		if (!facep->getViewerObject()->isAttachment())
+		{
+			tex = LLViewerFetchedTexture::sDefaultImagep;
+			//facep->setFaceColor (LLColor4::white);
+			//facep->unsetFaceColor ();
+		}
+		else
+		{
+			tex = facep->getTexture();
+		}
+	}
+	else
+	{
+		tex = facep->getTexture();
+	}
+//mk
 
 	U8 index = facep->getTextureIndex();
 
@@ -4613,8 +4645,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 					is_rigged = true;
 				
 					//get drawpool of avatar with rigged face
-					LLDrawPoolAvatar* pool = get_avatar_drawpool(vobj);				
-					
+					LLDrawPoolAvatar* pool = get_avatar_drawpool(vobj);
+				
 					// FIXME should this be inside the face loop?
 					// doesn't seem to depend on any per-face state.
 					if ( pAvatarVO )
@@ -4655,6 +4687,13 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 
 							if (is_alpha)
 							{ //this face needs alpha blending, override alpha mode
+////MK
+//								if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+//								{
+//									alpha_mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
+//								}
+//								else
+////mk
 								alpha_mode = LLMaterial::DIFFUSE_ALPHA_MODE_BLEND;
 							}
 
@@ -4672,6 +4711,15 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							bool can_be_shiny = mode == LLMaterial::DIFFUSE_ALPHA_MODE_NONE ||
 												mode == LLMaterial::DIFFUSE_ALPHA_MODE_EMISSIVE;
 							
+////MK
+//							if (mode == LLMaterial::DIFFUSE_ALPHA_MODE_BLEND)
+//							{ //this face needs alpha blending, override alpha mode
+//								if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+//								{
+//									mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
+//								}
+//							}
+////mk
 							if (mode == LLMaterial::DIFFUSE_ALPHA_MODE_MASK && te->getColor().mV[3] >= 0.999f)
 							{
 								pool->addRiggedFace(facep, fullbright ? LLDrawPoolAvatar::RIGGED_FULLBRIGHT : LLDrawPoolAvatar::RIGGED_SIMPLE);
@@ -4901,8 +4949,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 									if (simple_count < MAX_FACE_COUNT)
 									{
 										sSimpleFaces[simple_count++] = facep;
-									}
-								}									
+									}									
+								}
 							}
 							else if (te->getBumpmap())
 							{ //needs normal + tangent
@@ -4965,7 +5013,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 			{
 				if (!drawablep->isState(LLDrawable::RIGGED))
 				{
-					drawablep->setState(LLDrawable::RIGGED);
+				drawablep->setState(LLDrawable::RIGGED);
 
 					//first time this is drawable is being marked as rigged,
 					// do another LoD update to use avatar bounding box
@@ -5012,7 +5060,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 		alpha_mask = alpha_mask | LLVertexBuffer::MAP_TEXTURE_INDEX | LLVertexBuffer::MAP_TANGENT | LLVertexBuffer::MAP_TEXCOORD1 | LLVertexBuffer::MAP_TEXCOORD2;
 		fullbright_mask = fullbright_mask | LLVertexBuffer::MAP_TEXTURE_INDEX;
 	}
-
+	
 	genDrawInfo(group, simple_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, sSimpleFaces, simple_count, FALSE, batch_textures, FALSE);
 	genDrawInfo(group, fullbright_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, sFullbrightFaces, fullbright_count, FALSE, batch_textures);
 	genDrawInfo(group, alpha_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, sAlphaFaces, alpha_count, TRUE, batch_textures);
@@ -5400,7 +5448,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 							if (texture_count < MAX_TEXTURE_COUNT)
 							{
 								texture_list[texture_count++] = tex;
-							}
+						}
 						}
 
 						if (geom_count + facep->getGeomCount() > max_vertices)
@@ -5526,6 +5574,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 			index_offset += facep->getGeomCount();
 			indices_index += facep->getIndicesCount();
 
+
 			//append face to appropriate render batch
 
 			BOOL force_simple = facep->getPixelArea() < FORCE_SIMPLE_RENDER_AREA;
@@ -5558,6 +5607,39 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 			bool use_legacy_bump = te->getBumpmap() && (te->getBumpmap() < 18) && (!mat || mat->getNormalID().isNull());
 			bool opaque = te->getColor().mV[3] >= 0.999f;
 
+//MK
+			LLDrawable* drawablep = facep->getDrawable();
+			LLVOVolume* vobj = drawablep->getVOVolume();
+			// Due to a rendering bug, we must completely ignore the alpha and fullbright of any object (except our own attachments and 100% invisible objects) when the vision is restricted
+			if ((is_alpha || fullbright) && gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && te->getColor().mV[3] > 0.f)
+			{
+				if (vobj && vobj->getAvatar() != gAgentAvatarp ) {
+					// If the object is phantom or an attachment, no need to even render it at all
+					// If it is solid and in the world, then a blind avatar will have to "see" it since it may bump into it
+					if (vobj->flagPhantom() || vobj->isAttachment())
+					{
+						++face_iter;
+						continue;
+					}
+					else
+					{
+						is_alpha = FALSE;
+						fullbright = FALSE;
+						opaque = true;
+						can_be_shiny = false;
+						no_materials = TRUE;
+						//LLColor4 new_color (te->getColor());
+						//new_color.mV[3] = 1.0f;
+						//const_cast<LLTextureEntry*>(te)->setColor(new_color);
+					}
+				}
+			}
+			else if (te->getColor().mV[3] == 0.f && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && vobj && !vobj->isAttachment()) // completely transparent and not an attachment => don't bother rendering it at all (even when highlighting transparent)
+			{
+				++face_iter;
+				continue;
+			}
+//mk
 			if (mat && LLPipeline::sRenderDeferred && !hud_group)
 			{
 				bool material_pass = false;
@@ -5650,6 +5732,13 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 				U8 mode = mat->getDiffuseAlphaMode();
 				if (te->getColor().mV[3] < 0.999f)
 				{
+////MK
+//					if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+//					{
+//						mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
+//					}
+//					else
+////mk
 					mode = LLMaterial::DIFFUSE_ALPHA_MODE_BLEND;
 				}
 
@@ -5772,8 +5861,8 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						else
 						{
 						registerFace(group, facep, LLRenderPass::PASS_SIMPLE);
+						}
 					}
-				}
 				}
 				
 				
@@ -5880,4 +5969,5 @@ void LLHUDPartition::shift(const LLVector4a &offset)
 {
 	//HUD objects don't shift with region crossing.  That would be silly.
 }
+
 

@@ -52,6 +52,8 @@
 #include "lluictrlfactory.h"
 #include "llviewershadermgr.h"
 #include "llviewertexturelist.h"
+#include "llviewercontrol.h"
+#include "lleconomy.h"
 #include "llstring.h"
 
 #include "llendianswizzle.h"
@@ -117,6 +119,12 @@ BOOL LLFloaterImagePreview::postBuild()
 
 		if (mRawImagep->getWidth() * mRawImagep->getHeight () <= LL_IMAGE_REZ_LOSSLESS_CUTOFF * LL_IMAGE_REZ_LOSSLESS_CUTOFF)
 			getChildView("lossless_check")->setEnabled(TRUE);
+
+		//gSavedSettings.setBOOL("TemporaryUpload", FALSE);
+		//if (LLGlobalEconomy::Singleton::getInstance()->getPriceUpload() == 0)
+		//{
+		//	//childHide("temp_check");
+		//}
 	}
 	else
 	{

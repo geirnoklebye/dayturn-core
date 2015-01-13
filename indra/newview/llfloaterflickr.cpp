@@ -331,6 +331,12 @@ void LLFlickrPhotoPanel::sendPhoto()
 
 	// Add the location if required
 	bool add_location = mLocationCheckbox->getValue().asBoolean();
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+	{
+		add_location = false;
+	}
+//mk
 	if (add_location)
 	{
 		// Get the SLURL for the location
