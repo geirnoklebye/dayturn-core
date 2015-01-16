@@ -10825,4 +10825,13 @@ Shape import failed. Are you sure [FILENAME] is an avatar file?
 
 [ARTIST_TITLE]
     </notification>
+	
+  <notification
+   icon="alertmodal.tga"
+   name="RLVTouchRestricted"
+   type="notify">
+   <tag>fail</tag>
+RLV Touch is resricted. 
+  </notification>
+
 </notifications>

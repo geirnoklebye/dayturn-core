@@ -5514,6 +5514,7 @@ void handle_attachment_touch(const LLUUID& idItem)
 
 	if (gRRenabled && !gAgent.mRRInterface.canTouch (pAttachObj, pick.mIntersection))
 	{
+		LLNotificationsUtil::add("RLVTouchRestricted");
 		return;
 	}
 	LLMessageSystem	*msg = gMessageSystem;
