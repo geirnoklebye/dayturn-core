@@ -65,6 +65,7 @@
 #include "llselectmgr.h"
 #include "llsidepanelappearance.h"
 #include "lltooldraganddrop.h"
+#include "lltoolpie.h"
 #include "lltrans.h"
 #include "llviewerassettype.h"
 #include "llviewerfoldertype.h"
@@ -5509,7 +5510,12 @@ void handle_attachment_touch(const LLUUID& idItem)
 	LLViewerObject* pAttachObj = gAgentAvatarp->getWornAttachment(pItem->getLinkedUUID());
 	if (!pAttachObj)
 		return;
+	LLPickInfo pick = LLToolPie::getInstance()->getPick();
 
+	if (gRRenabled && !gAgent.mRRInterface.canTouch (pAttachObj, pick.mIntersection))
+	{
+		return;
+	}
 	LLMessageSystem	*msg = gMessageSystem;
 
 	msg->newMessageFast(_PREHASH_ObjectGrab);
