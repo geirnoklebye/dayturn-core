@@ -5611,12 +5611,12 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 			LLDrawable* drawablep = facep->getDrawable();
 			LLVOVolume* vobj = drawablep->getVOVolume();
 			// Due to a rendering bug, we must completely ignore the alpha and fullbright of any object (except our own attachments and 100% invisible objects) when the vision is restricted
-			if ((is_alpha || fullbright) && gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && te->getColor().mV[3] > 0.f)
+			if ((is_alpha || fullbright) && gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && te->getColor().mV[3] > 0.f && !vobj->isAttachment())
 			{
 				if (vobj && vobj->getAvatar() != gAgentAvatarp ) {
 					// If the object is phantom or an attachment, no need to even render it at all
 					// If it is solid and in the world, then a blind avatar will have to "see" it since it may bump into it
-					if (vobj->flagPhantom() || vobj->isAttachment())
+					if (vobj->flagPhantom()) // || vobj->isAttachment())
 					{
 						++face_iter;
 						continue;

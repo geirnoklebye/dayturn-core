@@ -419,17 +419,6 @@ void updateOneHudText (LLUUID uuid)
 	}
 }
 
-void printOnChat (std::string message)
-{
-	LLChat chat(message);
-	chat.mSourceType = CHAT_SOURCE_SYSTEM;
-	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
-	if(nearby_chat)
-	{
-		nearby_chat->addMessage(chat);
-	}
-}
-
 bool is_inventory_item_new (LLInventoryItem* item)
 {
 	// Return true if the item or its parent category has been received during this session
@@ -4281,6 +4270,17 @@ bool RRInterface::scriptsEnabled()
 	return vpm->allowAgentScripts(agent_region, agent_parcel);
 }
 
+void RRInterface::printOnChat (std::string message)
+{
+	LLChat chat(message);
+	chat.mSourceType = CHAT_SOURCE_SYSTEM;
+	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
+	if(nearby_chat)
+	{
+		nearby_chat->addMessage(chat);
+	}
+}
+
 void RRInterface::listRlvRestrictions(std::string substr /*= ""*/)
 {
 	RRMAP::iterator it = mSpecialObjectBehaviours.begin();
@@ -4394,6 +4394,14 @@ BOOL RRInterface::updateCameraLimits ()
 
 	// Force all the rendering types back to TRUE (and we won't be able to switch them off while the vision is restricted)
 	if (mCamDistDrawMin < EXTREMUM || mCamDistDrawMax < EXTREMUM) {
+		LLPipeline::setRenderBeacons(FALSE);
+		LLPipeline::setRenderScriptedBeacons(FALSE);
+		LLPipeline::setRenderScriptedTouchBeacons(FALSE);
+		LLPipeline::setRenderPhysicalBeacons(FALSE);
+		LLPipeline::setRenderSoundBeacons(FALSE);
+		LLPipeline::setRenderParticleBeacons(FALSE);
+		LLPipeline::setRenderHighlights(FALSE);
+		LLDrawPoolAlpha::sShowDebugAlpha = FALSE;
 		gPipeline.setAllRenderTypes();
 	}
 
