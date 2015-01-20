@@ -4347,6 +4347,11 @@ BOOL RRInterface::updateCameraLimits ()
 
 	}
 
+	F32 old_mCamDistDrawMax = mCamDistDrawMax;
+	F32 old_mCamDistDrawMin = mCamDistDrawMin;
+	F32 old_mCamDistDrawAlphaMax = mCamDistDrawAlphaMax;
+	F32 old_mCamDistDrawAlphaMin = mCamDistDrawAlphaMin;
+
 	mCamZoomMax = getMin ("camzoommax", EXTREMUM);
 	mCamZoomMin = getMax ("camzoommin", -EXTREMUM);
 	mCamDistMax = getMin ("camdistmax", EXTREMUM);
@@ -4392,25 +4397,33 @@ BOOL RRInterface::updateCameraLimits ()
 		handle_toggle_flycam();
 	}
 
-	// Force all the rendering types back to TRUE (and we won't be able to switch them off while the vision is restricted)
-	if (mCamDistDrawMin < EXTREMUM || mCamDistDrawMax < EXTREMUM) {
-		LLPipeline::setRenderBeacons(FALSE);
-		LLPipeline::setRenderScriptedBeacons(FALSE);
-		LLPipeline::setRenderScriptedTouchBeacons(FALSE);
-		LLPipeline::setRenderPhysicalBeacons(FALSE);
-		LLPipeline::setRenderSoundBeacons(FALSE);
-		LLPipeline::setRenderParticleBeacons(FALSE);
-		LLPipeline::setRenderHighlights(FALSE);
-		LLDrawPoolAlpha::sShowDebugAlpha = FALSE;
-		gPipeline.setAllRenderTypes();
-	}
-
 	// silly hack, but we need to force all textures in world to be updated (code copied from camtextures above)
-	S32 i;
-	for (i=0; i<gObjectList.getNumObjects(); ++i) {
-		LLViewerObject* object = gObjectList.getObject(i);
-		if (object) {
-			object->setSelected(FALSE);
+	// Do so only when the camera limits have changed, though, because this method is called every time a new RLV restriction
+	// is received or removed, so it would slow down the viewer otherwise.
+	if (old_mCamDistDrawMax != mCamDistDrawMax 
+		|| old_mCamDistDrawMin != mCamDistDrawMin 
+		|| old_mCamDistDrawAlphaMax != mCamDistDrawAlphaMax 
+		|| old_mCamDistDrawAlphaMin != mCamDistDrawAlphaMin) {
+
+		// Force all the rendering types back to TRUE (and we won't be able to switch them off while the vision is restricted)
+		if (mCamDistDrawMin < EXTREMUM || mCamDistDrawMax < EXTREMUM) {
+			LLPipeline::setRenderBeacons(FALSE);
+			LLPipeline::setRenderScriptedBeacons(FALSE);
+			LLPipeline::setRenderScriptedTouchBeacons(FALSE);
+			LLPipeline::setRenderPhysicalBeacons(FALSE);
+			LLPipeline::setRenderSoundBeacons(FALSE);
+			LLPipeline::setRenderParticleBeacons(FALSE);
+			LLPipeline::setRenderHighlights(FALSE);
+			LLDrawPoolAlpha::sShowDebugAlpha = FALSE;
+			gPipeline.setAllRenderTypes();
+		}
+
+		S32 i;
+		for (i=0; i<gObjectList.getNumObjects(); ++i) {
+			LLViewerObject* object = gObjectList.getObject(i);
+			if (object) {
+				object->setSelected(FALSE);
+			}
 		}
 	}
 
