@@ -495,6 +495,12 @@ void LLHUDEffectLookAt::render()
 {
 	if (sDebugLookAt && mSourceObject.notNull())
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+		{
+			return;
+		}
+//mk
 		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 
 		LLVector3 target = mTargetPos + ((LLVOAvatar*)(LLViewerObject*)mSourceObject)->mHeadp->getWorldPosition();
@@ -571,6 +577,12 @@ void LLHUDEffectLookAt::update()
 
 	if (sDebugLookAt)
 	{
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+		{
+			return;
+		}
+//mk
 		((LLVOAvatar*)(LLViewerObject*)mSourceObject)->addDebugText((*mAttentions)[mTargetType].mName);
 	}
 }
