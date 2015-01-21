@@ -4065,6 +4065,12 @@ void LLPipeline::postSort(LLCamera& camera)
 
 void render_hud_elements()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		return;
+	}
+//mk
 	LL_RECORD_BLOCK_TIME(FTM_RENDER_UI);
 	gPipeline.disableLights();		
 	
