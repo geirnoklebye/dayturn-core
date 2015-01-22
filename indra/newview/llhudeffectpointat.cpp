@@ -319,6 +319,12 @@ void LLHUDEffectPointAt::setSourceObject(LLViewerObject* objectp)
 //-----------------------------------------------------------------------------
 void LLHUDEffectPointAt::render()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		return;
+	}
+//mk
 	update();
 	if (sDebugPointAt && mTargetType != POINTAT_TARGET_NONE)
 	{
