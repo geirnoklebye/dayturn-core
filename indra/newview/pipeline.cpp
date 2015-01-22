@@ -4065,12 +4065,6 @@ void LLPipeline::postSort(LLCamera& camera)
 
 void render_hud_elements()
 {
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-	{
-		return;
-	}
-//mk
 	LL_RECORD_BLOCK_TIME(FTM_RENDER_UI);
 	gPipeline.disableLights();		
 	
@@ -4098,11 +4092,21 @@ void render_hud_elements()
 		// Draw the tracking overlays
 		LLTracker::render3D();
 		
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+		{
+
+		}
+		else
+		{
+//mk
 		// Show the property lines
 		LLWorld::getInstance()->renderPropertyLines();
 		LLViewerParcelMgr::getInstance()->render();
 		LLViewerParcelMgr::getInstance()->renderParcelCollision();
-	
+//MK
+		}
+//mk
 		// Render name tags.
 		LLHUDObject::renderAll();
 	}
