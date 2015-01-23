@@ -540,15 +540,17 @@ void LLHUDEffectLookAt::setSourceObject(LLViewerObject* objectp)
 //-----------------------------------------------------------------------------
 void LLHUDEffectLookAt::render()
 {
-	static LLUICachedControl<bool> show_lookat("ShowLookAt", false);
-	static LLUICachedControl<bool> lookat_names("ShowLookAtNames", false);
+
 //MK
 		if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
 		{
 			return;
 		}
 //mk
-
+	static LLUICachedControl<bool> show_lookat("ShowLookAt", false);
+	static LLUICachedControl<bool> lookat_names("ShowLookAtNames", false);
+	static LLUICachedControl<bool> lookat_limited("ShowLookAtLimited", false);
+	
 	if (show_lookat && mSourceObject.notNull() && (
 		!lookat_limited || (
 			!((LLVOAvatar*)(LLViewerObject*)mSourceObject)->isSelf() && (
