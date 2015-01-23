@@ -320,9 +320,16 @@ void LLHUDEffectPointAt::setSourceObject(LLViewerObject* objectp)
 //-----------------------------------------------------------------------------
 void LLHUDEffectPointAt::render()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		return;
+	}
+//mk
 	static LLUICachedControl<bool> show_pointat("ShowPointAt", false);
 	static LLUICachedControl<bool> pointat_names("ShowPointAtNames", false);
 	static LLUICachedControl<bool> pointat_limited("ShowPointAtLimited", false);
+
 
 	update();
 

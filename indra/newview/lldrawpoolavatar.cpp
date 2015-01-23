@@ -1710,6 +1710,15 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 
 	stop_glerror();
 
+//MK
+	// Calculate the position of the avatar here so we don't have to do it for each face
+	if (!gAgentAvatarp)
+	{
+		return;
+	}
+	LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
+//mk
+
 	for (U32 i = 0; i < mRiggedFace[type].size(); ++i)
 	{
 		LLFace* face = mRiggedFace[type][i];
@@ -1725,6 +1734,11 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 		{
 			continue;
 		}
+
+//MK
+		LLVector3 offset = vobj->getPositionRegion() - head_pos;
+		F32 distance_to_avatar = (F32)offset.magVec();
+//mk
 
 		LLVolume* volume = vobj->getVolume();
 		S32 te = face->getTEOffset();
@@ -1868,6 +1882,24 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 				}
 				else
 				{
+//MK
+					// If the vision is restricted, rendering alpha rigged attachments may allow to cheat through the vision spheres.
+					if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+					{
+						// Other avatars only
+						if (avatar != gAgentAvatarp)
+						{
+							// This rigged mesh is diffuse alpha blend
+							if (mat->getDiffuseAlphaMode() == LLMaterial::DIFFUSE_ALPHA_MODE_BLEND)
+							{
+								if (distance_to_avatar > gAgent.mRRInterface.mCamDistDrawMax)
+								{
+									continue;
+								}
+							}
+						}
+					}
+//mk
 					sVertexProgram->setMinimumAlpha(0.f);
 				}
 

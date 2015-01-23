@@ -26,9 +26,9 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2090601"
-#define RR_VERSION "2.09.06.1"
-#define RR_SLV_VERSION "3.7.24.33329"
+#define RR_VERSION_NUM "2090604"
+#define RR_VERSION "2.09.06.4"
+#define RR_SLV_VERSION "3.7.25.33375"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -240,6 +240,7 @@ public:
 	
 	bool scriptsEnabled(); // returns true if scripts are enabled for us in this parcel
 
+	void printOnChat (std::string message);
 	void listRlvRestrictions(std::string substr = "");
 
 	BOOL checkCameraLimits (BOOL and_correct = FALSE);

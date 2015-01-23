@@ -3684,6 +3684,12 @@ void LLViewerWindow::renderSelections( BOOL for_gl_pick, BOOL pick_parcel_walls,
 		LLSelectMgr::getInstance()->updateSilhouettes();
 	}
 	
+////MK
+//	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && !for_hud)
+//	{
+//		return;
+//	}
+////mk
 	// Draw fence around land selections
 	if (for_gl_pick)
 	{

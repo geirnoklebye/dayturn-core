@@ -629,6 +629,13 @@ void LLFloaterTools::refresh()
 
 void LLFloaterTools::draw()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsEdit)
+	{
+		closeFloater();
+		return;
+	}
+//mk
 	if (mDirty)
 	{
 		refresh();

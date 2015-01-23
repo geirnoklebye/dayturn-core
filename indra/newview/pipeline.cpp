@@ -4106,11 +4106,21 @@ void render_hud_elements()
 		// Draw the tracking overlays
 		LLTracker::render3D();
 		
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+		{
+
+		}
+		else
+		{
+//mk
 		// Show the property lines
 		LLWorld::getInstance()->renderPropertyLines();
 		LLViewerParcelMgr::getInstance()->render();
 		LLViewerParcelMgr::getInstance()->renderParcelCollision();
-	
+//MK
+		}
+//mk
 		// Render name tags.
 		LLHUDObject::renderAll();
 	}
@@ -11380,37 +11390,42 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	bool visually_muted = avatar->isVisuallyMuted();		
 
 	pushRenderTypeMask();
-	
-	if (visually_muted)
+//MK
+	// Render everything
+	// For some reason, unrigged mesh objects do not render on silhouettes, but they don't render on regular
+	// impostors either.
+	////if (visually_muted)
+	////{
+	////	andRenderTypeMask(LLPipeline::RENDER_TYPE_AVATAR, END_RENDER_TYPES);
+	////}
+	////else
+//mk
 	{
-		andRenderTypeMask(LLPipeline::RENDER_TYPE_AVATAR, END_RENDER_TYPES);
-	}
-	else
-	{
-		andRenderTypeMask(LLPipeline::RENDER_TYPE_ALPHA,
+		andRenderTypeMask(
+			LLPipeline::RENDER_TYPE_ALPHA,
 			LLPipeline::RENDER_TYPE_FULLBRIGHT,
 			LLPipeline::RENDER_TYPE_VOLUME,
 			LLPipeline::RENDER_TYPE_GLOW,
-						LLPipeline::RENDER_TYPE_BUMP,
-						LLPipeline::RENDER_TYPE_PASS_SIMPLE,
-						LLPipeline::RENDER_TYPE_PASS_ALPHA,
-						LLPipeline::RENDER_TYPE_PASS_ALPHA_MASK,
+			LLPipeline::RENDER_TYPE_BUMP,
+			LLPipeline::RENDER_TYPE_PASS_SIMPLE,
+			LLPipeline::RENDER_TYPE_PASS_ALPHA,
+			LLPipeline::RENDER_TYPE_PASS_ALPHA_MASK,
 			LLPipeline::RENDER_TYPE_PASS_BUMP,
 			LLPipeline::RENDER_TYPE_PASS_POST_BUMP,
-						LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT,
-						LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_ALPHA_MASK,
-						LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_SHINY,
+			LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT,
+			LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_ALPHA_MASK,
+			LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_SHINY,
 			LLPipeline::RENDER_TYPE_PASS_GLOW,
 			LLPipeline::RENDER_TYPE_PASS_GRASS,
-						LLPipeline::RENDER_TYPE_PASS_SHINY,
-						LLPipeline::RENDER_TYPE_PASS_INVISIBLE,
-						LLPipeline::RENDER_TYPE_PASS_INVISI_SHINY,
+			LLPipeline::RENDER_TYPE_PASS_SHINY,
+			LLPipeline::RENDER_TYPE_PASS_INVISIBLE,
+			LLPipeline::RENDER_TYPE_PASS_INVISI_SHINY,
 			LLPipeline::RENDER_TYPE_AVATAR,
 			LLPipeline::RENDER_TYPE_ALPHA_MASK,
 			LLPipeline::RENDER_TYPE_FULLBRIGHT_ALPHA_MASK,
 			LLPipeline::RENDER_TYPE_INVISIBLE,
 			LLPipeline::RENDER_TYPE_SIMPLE,
-						END_RENDER_TYPES);
+		END_RENDER_TYPES);
 	}
 	
 	S32 occlusion = sUseOcclusion;
@@ -11549,7 +11564,12 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	////	LLDrawPoolAvatar::sMinimumAlpha = 0.f;
 	////}
 //mk
+
+//MK
+	// Choose the non-deferred rendering when rendering silhouettes
 	if (LLPipeline::sRenderDeferred)
+////	if (LLPipeline::sRenderDeferred && !visually_muted)
+//mk
 	{
 		avatar->mImpostor.clear();
 		renderGeomDeferred(camera);
@@ -11598,7 +11618,11 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 
 	{ //create alpha mask based on depth buffer (grey out if muted)
 		LL_RECORD_BLOCK_TIME(FTM_IMPOSTOR_BACKGROUND);
-		if (LLPipeline::sRenderDeferred)
+//MK
+		// Choose the non-deferred rendering when rendering silhouettes
+////		if (LLPipeline::sRenderDeferred)
+		if (LLPipeline::sRenderDeferred && !visually_muted)
+//mk
 		{
 			GLuint buff = GL_COLOR_ATTACHMENT0;
 			glDrawBuffersARB(1, &buff);

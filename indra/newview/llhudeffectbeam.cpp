@@ -235,6 +235,12 @@ void LLHUDEffectBeam::render()
 		return;
 	}
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		return;
+	}
+//mk
 	F32 time = mTimer.getElapsedTimeF32();
 
 	// Kill us if our time is over...

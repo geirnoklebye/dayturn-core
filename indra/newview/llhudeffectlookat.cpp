@@ -542,7 +542,12 @@ void LLHUDEffectLookAt::render()
 {
 	static LLUICachedControl<bool> show_lookat("ShowLookAt", false);
 	static LLUICachedControl<bool> lookat_names("ShowLookAtNames", false);
-	static LLUICachedControl<bool> lookat_limited("ShowLookAtLimited", false);
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+		{
+			return;
+		}
+//mk
 
 	if (show_lookat && mSourceObject.notNull() && (
 		!lookat_limited || (
@@ -651,6 +656,12 @@ void LLHUDEffectLookAt::update()
 			}
 		}
 	}
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+		{
+			return;
+		}
+//mk
 }
 
 /**

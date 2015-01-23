@@ -4569,6 +4569,15 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 
 	bool emissive = false;
 
+////MK
+//	// Calculate the position of the avatar here so we don't have to do it for each face
+//	if (!gAgentAvatarp)
+//	{
+//		return;
+//	}
+//	LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
+////mk
+
 	//Determine if we've received skininfo that contains an
 	//alternate bind matrix - if it does then apply the translational component
 	//to the joints of the avatar.
@@ -4618,6 +4627,11 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 			vobj->updateTextureVirtualSize(true);
 			vobj->preRebuild();
 
+////MK
+//			// Calculate the distance between this object and our avatar
+//			LLVector3 offset = vobj->getPositionRegion() - head_pos;
+//			F32 distance_to_avatar = (F32)offset.magVec();
+////mk
 			drawablep->clearState(LLDrawable::HAS_ALPHA);
 
 			bool rigged = vobj->isAttachment() && 
@@ -4700,7 +4714,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							if (is_alpha)
 							{ //this face needs alpha blending, override alpha mode
 ////MK
-//								if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+//								if (gRRenabled && distance_to_avatar > gAgent.mRRInterface.mCamDistDrawMax)
 //								{
 //									alpha_mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
 //								}
@@ -4726,7 +4740,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 ////MK
 //							if (mode == LLMaterial::DIFFUSE_ALPHA_MODE_BLEND)
 //							{ //this face needs alpha blending, override alpha mode
-//								if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+//								if (gRRenabled && distance_to_avatar > gAgent.mRRInterface.mCamDistDrawMax)
 //								{
 //									mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
 //								}
@@ -5362,6 +5376,15 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 
 	bool flexi = false;
 
+//MK
+	// Calculate the position of the avatar here so we don't have to do it for each face
+	if (!gAgentAvatarp)
+	{
+		return;
+	}
+	LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
+//mk
+
 	while (face_iter != end_faces)
 	{
 		//pull off next face
@@ -5622,27 +5645,43 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 //MK
 			LLDrawable* drawablep = facep->getDrawable();
 			LLVOVolume* vobj = drawablep->getVOVolume();
+
 			// Due to a rendering bug, we must completely ignore the alpha and fullbright of any object (except our own attachments and 100% invisible objects) when the vision is restricted
 			if ((is_alpha || fullbright) && gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && te->getColor().mV[3] > 0.f)
 			{
-				if (vobj && vobj->getAvatar() != gAgentAvatarp ) {
-					// If the object is phantom or an attachment, no need to even render it at all
-					// If it is solid and in the world, then a blind avatar will have to "see" it since it may bump into it
-					if (vobj->flagPhantom() || vobj->isAttachment())
+				if (vobj && vobj->getAvatar() != gAgentAvatarp )
+				{
+					// If this is an attachment with materials and alpha, and its wearer is farther than the vision range, do not render it at all
+					if (vobj->isAttachment())
 					{
-						++face_iter;
-						continue;
+						//if (mat && LLPipeline::sRenderDeferred)
+						{
+							LLVector3 offset = vobj->getPositionRegion() - head_pos;
+							F32 distance_to_avatar = (F32)offset.magVec();
+							if (distance_to_avatar > gAgent.mRRInterface.mCamDistDrawMax)
+							{
+								++face_iter;
+								continue;
+							}
+						}
 					}
 					else
 					{
-						is_alpha = FALSE;
-						fullbright = FALSE;
-						opaque = true;
-						can_be_shiny = false;
-						no_materials = TRUE;
-						//LLColor4 new_color (te->getColor());
-						//new_color.mV[3] = 1.0f;
-						//const_cast<LLTextureEntry*>(te)->setColor(new_color);
+						// If the object is phantom, no need to even render it at all
+						// If it is solid, then a blind avatar will have to "see" it since it may bump into it
+						if (vobj->flagPhantom())
+						{
+							++face_iter;
+							continue;
+						}
+						else
+						{
+							is_alpha = FALSE;
+							fullbright = FALSE;
+							opaque = true;
+							can_be_shiny = false;
+							no_materials = TRUE;
+						}
 					}
 				}
 			}
