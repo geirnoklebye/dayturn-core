@@ -1007,6 +1007,7 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 		// which would be rather silly.
 		if (action == "standtp") {
 			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+			gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 		}
 
 		return TRUE;
@@ -1359,6 +1360,7 @@ static void force_sit(LLUUID object_uuid)
 			if (gAgent.mRRInterface.contains ("standtp"))
 			{
 				gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+				gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 			}
 		}
 		gMessageSystem->newMessageFast(_PREHASH_AgentRequestSit);

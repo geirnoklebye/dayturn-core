@@ -4178,6 +4178,7 @@ void handle_object_sit_or_stand()
 			if (gAgent.mRRInterface.contains ("standtp"))
 			{
 				gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+				gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 			}
 		}
 //mk
@@ -4210,6 +4211,7 @@ void near_sit_down_point(BOOL success, void *)
 			if (gAgent.mRRInterface.contains ("standtp"))
 			{
 				gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+				gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 			}
 		}
 //mk

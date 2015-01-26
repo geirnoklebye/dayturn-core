@@ -46,6 +46,7 @@
 
 //MK
 #include "llvoavatarself.h"
+#include "llviewercontrol.h"
 //mk
 
 LLAgentListener::LLAgentListener(LLAgent &agent)
@@ -192,6 +193,7 @@ void LLAgentListener::requestSit(LLSD const & event_data) const
 			if (gAgent.mRRInterface.contains ("standtp"))
 			{
 				gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+				gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 			}
 		}
 //mk

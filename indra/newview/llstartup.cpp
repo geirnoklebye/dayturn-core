@@ -2180,6 +2180,17 @@ bool idle_startup()
 //MK
 		// fire all the stored commands that we received while initializing
 		gAgent.mRRInterface.fireCommands ();
+
+		// If we logged off while under @standtp (or rather while our last standing location wasn't null), then we need
+		// to TP right back now in order to prevent from cheating through @standtp by relogging after sitting down elsewhere.
+		gAgent.mRRInterface.mLastStandingLocation.set (gSavedPerAccountSettings.getVector3d ("RestrainedLoveLastStandingLocation"));
+		LL_INFOS() << "RestrainedLoveLastStandingLocation = " << gAgent.mRRInterface.mLastStandingLocation << LL_ENDL;
+		if (!gAgent.mRRInterface.mLastStandingLocation.isExactlyZero())
+		{
+			gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
+			gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
+			gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
+		}
 //mk
 		set_startup_status(1.0, "", "");
 		display_startup();
