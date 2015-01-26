@@ -1007,6 +1007,7 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 		// which would be rather silly.
 		if (action == "standtp") {
 			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+			gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 		}
 
 		return TRUE;
@@ -1356,7 +1357,11 @@ static void force_sit(LLUUID object_uuid)
 		if (gAgentAvatarp && !gAgentAvatarp->mIsSitting)
 		{
 			// We are now standing, and we want to sit down => store our current location so that we can snap back here when we stand up, if under @standtp
-			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+			if (gAgent.mRRInterface.contains ("standtp"))
+			{
+				gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+				gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
+			}
 		}
 		gMessageSystem->newMessageFast(_PREHASH_AgentRequestSit);
 		gMessageSystem->nextBlockFast(_PREHASH_AgentData);
