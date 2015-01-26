@@ -407,17 +407,21 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
 	//.xml file intially makes info panel only follow left/right/top. This is so that when control buttons are added the info panel 
 	//can shift upward making room for the buttons inside mControlPanel. After the buttons are added, the info panel can then be set to follow 'all'.
 	mInfoPanel->setFollowsAll();
+/* Comment out panel height adjustments. See Kokua Ticket #331
 //MK
 	// If we are a script dialog, don't allow changing the height of the toast
 	if (!mIsScriptDialog)
 	{
 //mk
+*/
     snapToMessageHeight(mTextBox, MAX_LENGTH);
+
+/*
 //MK
 		adjustPanelForScriptNotice(mControlPanel->getRect().getWidth(), mControlPanel->getRect().getHeight()+20);
 	}
 //mk
-
+*/
 	// reshape the panel to its previous size
 	if (current_rect.notEmpty())
 	{
