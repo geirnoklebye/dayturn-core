@@ -979,7 +979,8 @@ void LLAgent::standUp()
 //mk
 	setControlFlags(AGENT_CONTROL_STAND_UP);
 //MK
-	if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
+	//if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
+	if (!gAgent.mRRInterface.mLastStandingLocation.isExactlyZero() && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
 	{
 		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
 		gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
@@ -1322,7 +1323,10 @@ void LLAgent::sitDown()
 	if (gRRenabled && gAgentAvatarp && !gAgentAvatarp->mIsSitting)
 	{
 		// We are now standing, and we want to sit down => store our current location so that we can snap back here when we stand up, if under @standtp
-		gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+		if (gAgent.mRRInterface.contains ("standtp"))
+		{
+			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+		}
 	}
 //mk
 	setControlFlags(AGENT_CONTROL_SIT_ON_GROUND);
@@ -4327,6 +4331,11 @@ void LLAgent::doTeleportViaLocationLookAt(const LLVector3d& pos_global)
 			{
 				return;
 			}
+		}
+		else
+		{
+			// We are snapping back to the last standing location => set it back to zero now
+			gAgent.mRRInterface.mLastStandingLocation.clear();
 		}
 	}
 //mk

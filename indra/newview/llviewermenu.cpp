@@ -4175,7 +4175,10 @@ void handle_object_sit_or_stand()
 		if (gRRenabled && gAgentAvatarp && !gAgentAvatarp->mIsSitting)
 		{
 			// We are now standing, and we want to sit down => store our current location so that we can snap back here when we stand up, if under @standtp
-			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+			if (gAgent.mRRInterface.contains ("standtp"))
+			{
+				gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+			}
 		}
 //mk
 
@@ -4204,7 +4207,10 @@ void near_sit_down_point(BOOL success, void *)
 		if (gRRenabled && gAgentAvatarp && !gAgentAvatarp->mIsSitting)
 		{
 			// We are now standing, and we want to sit down => store our current location so that we can snap back here when we stand up, if under @standtp
-			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+			if (gAgent.mRRInterface.contains ("standtp"))
+			{
+				gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+			}
 		}
 //mk
 		gAgent.setControlFlags(AGENT_CONTROL_SIT_ON_GROUND);
