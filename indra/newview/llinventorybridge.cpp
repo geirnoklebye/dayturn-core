@@ -2568,8 +2568,11 @@ BOOL LLFolderBridge::dragCategoryIntoFolder(LLInventoryCategory* inv_cat,
 						// traverse category and add all contents to currently worn.
 						BOOL append = true;
 //MK
-						gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
-//mk
+						if (gRRenabled)
+						{
+							gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+						}
+						//mk
 						LLAppearanceMgr::instance().wearInventoryCategory(inv_cat, false, append);
 					}
 			else if (move_is_into_outbox && !move_is_from_outbox)
@@ -5557,47 +5560,61 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 {
 	if (isAddAction(action))
 	{
-//MK
-		bool replace = true;
-		if (gSavedSettings.controlExists("RestrainedLoveDoubleClickWear") && !gSavedSettings.getBOOL("RestrainedLoveDoubleClickWear"))
+		if (!gRRenabled)
 		{
-			replace = false;
-		}
-//mk
-		LLUUID object_id = mUUID;
-		LLViewerInventoryItem* item;
-		item = (LLViewerInventoryItem*)gInventory.getItem(object_id);
-		if(item && gInventory.isObjectDescendentOf(object_id, gInventory.getRootFolderID()))
-		{
-//MK
-			if (gRRenabled && gAgent.mRRInterface.mContainsDetach)
+			LLUUID object_id = mUUID;
+			LLViewerInventoryItem* item;
+			item = (LLViewerInventoryItem*)gInventory.getItem(object_id);
+			if(item && gInventory.isObjectDescendentOf(object_id, gInventory.getRootFolderID()))
 			{
-				LLViewerJointAttachment* attachmentp = NULL;
-				// if it's a no-mod item, the containing folder has priority to decide where to wear it
-				if (!item->getPermissions().allowModifyBy(gAgent.getID()))
+				rez_attachment(item, NULL, true); // Replace if "Wear"ing.
+			}
+		}
+		else
+		{
+//MK
+			bool replace = true;
+			if (gSavedSettings.controlExists("RestrainedLoveDoubleClickWear") && !gSavedSettings.getBOOL("RestrainedLoveDoubleClickWear"))
+			{
+				replace = false;
+			}
+//mk
+			LLUUID object_id = mUUID;
+			LLViewerInventoryItem* item;
+			item = (LLViewerInventoryItem*)gInventory.getItem(object_id);
+			if(item && gInventory.isObjectDescendentOf(object_id, gInventory.getRootFolderID()))
+			{
+//MK
+				if (gRRenabled && gAgent.mRRInterface.mContainsDetach)
 				{
-					attachmentp = gAgent.mRRInterface.findAttachmentPointFromParentName (item);
-					if (attachmentp) rez_attachment(item, attachmentp, replace);
+					LLViewerJointAttachment* attachmentp = NULL;
+					// if it's a no-mod item, the containing folder has priority to decide where to wear it
+					if (!item->getPermissions().allowModifyBy(gAgent.getID()))
+					{
+						attachmentp = gAgent.mRRInterface.findAttachmentPointFromParentName (item);
+						if (attachmentp) rez_attachment(item, attachmentp, replace);
+						else
+						{
+							// but the name itself could also have the information => check
+							attachmentp = gAgent.mRRInterface.findAttachmentPointFromName (item->getName());
+							if (attachmentp) rez_attachment(item, attachmentp, replace);
+							else if (!gAgent.mRRInterface.mContainsDefaultwear && gSavedSettings.getBOOL("RestrainedLoveAllowWear")) rez_attachment(item, NULL, replace);
+						}
+					}
 					else
 					{
-						// but the name itself could also have the information => check
+						// this is a mod item, wear it according to its name
 						attachmentp = gAgent.mRRInterface.findAttachmentPointFromName (item->getName());
 						if (attachmentp) rez_attachment(item, attachmentp, replace);
-						else if (!gAgent.mRRInterface.mContainsDefaultwear && gSavedSettings.getBOOL("RestrainedLoveAllowWear")) rez_attachment(item, NULL, replace);
+ 						else if (!gAgent.mRRInterface.mContainsDefaultwear && gSavedSettings.getBOOL("RestrainedLoveAllowWear")) rez_attachment(item, NULL, replace);
+
 					}
 				}
 				else
 				{
-					// this is a mod item, wear it according to its name
-					attachmentp = gAgent.mRRInterface.findAttachmentPointFromName (item->getName());
-					if (attachmentp) rez_attachment(item, attachmentp, replace);
- 					else if (!gAgent.mRRInterface.mContainsDefaultwear && gSavedSettings.getBOOL("RestrainedLoveAllowWear")) rez_attachment(item, NULL, replace);
-
+					////			rez_attachment(item, NULL, true); // Replace if "Wear"ing.
+					rez_attachment(item, NULL, replace);
 				}
-			}
-			else
-////			rez_attachment(item, NULL, true); // Replace if "Wear"ing.
-			rez_attachment(item, NULL, replace);
 //mk
 		}
 		else if(item && item->isFinished())
@@ -5612,9 +5629,9 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 				std::string(),
 				cb);
 		}
-		gFocusMgr.setKeyboardFocus(NULL);
+			gFocusMgr.setKeyboardFocus(NULL);
+		}
 	}
-
 	// [SL:KB] - Patch: Inventory-AttachmentActions - Checked: 2012-05-05 (Catznip-3.3)
 	else if ("touch" == action)
 	{
@@ -5638,17 +5655,24 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 	else if (isRemoveAction(action))
 	{
 //MK
-		LLInventoryItem* item = gInventory.getItem(mUUID);
-		if(item)
+		if (gRRenabled)
 		{
-			gAgent.mRRInterface.mHandleNoStrip = FALSE;
-			if (!gRRenabled || gAgent.mRRInterface.canDetach (item))
-  			{
-//mk
-				LLAppearanceMgr::instance().removeItemFromAvatar(mUUID);
-//MK
+			LLInventoryItem* item = gInventory.getItem(mUUID);
+			if(item)
+			{
+				gAgent.mRRInterface.mHandleNoStrip = FALSE;
+				if (!gRRenabled || gAgent.mRRInterface.canDetach (item))
+				{
+	//mk
+					LLAppearanceMgr::instance().removeItemFromAvatar(mUUID);
+	//MK
+				}
+				gAgent.mRRInterface.mHandleNoStrip = TRUE;
 			}
-			gAgent.mRRInterface.mHandleNoStrip = TRUE;
+		}
+		else
+		{
+			LLAppearanceMgr::instance().removeItemFromAvatar(mUUID);
 		}
 //mk
 	}
@@ -5853,12 +5877,15 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 // [/SL:KB]
 				items.push_back(std::string("Detach From Yourself"));
  //MK
-				gAgent.mRRInterface.mHandleNoStrip = FALSE;
- 				if (gRRenabled && !gAgent.mRRInterface.canDetach(gAgentAvatarp->getWornAttachment(mUUID)))
- 				{
- 					disabled_items.push_back(std::string("Detach From Yourself"));
- 				}
-	 			gAgent.mRRInterface.mHandleNoStrip = TRUE;
+				if (gRRenabled)
+				{
+					gAgent.mRRInterface.mHandleNoStrip = FALSE;
+					if (gRRenabled && !gAgent.mRRInterface.canDetach(gAgentAvatarp->getWornAttachment(mUUID)))
+					{
+						disabled_items.push_back(std::string("Detach From Yourself"));
+					}
+					gAgent.mRRInterface.mHandleNoStrip = TRUE;
+				}
 //mk
 			}
 			else if (!isItemInTrash() && !isLinkedObjectInTrash() && !isLinkedObjectMissing() && !isCOFFolder())
@@ -6048,11 +6075,11 @@ void LLWearableBridge::performAction(LLInventoryModel* model, std::string action
 	else if (isRemoveAction(action))
 	{
 //MK
-		gAgent.mRRInterface.mHandleNoStrip = FALSE;
+		if (gRRenabled) gAgent.mRRInterface.mHandleNoStrip = FALSE;
 //mk
 		removeFromAvatar();
 //MK
-		gAgent.mRRInterface.mHandleNoStrip = TRUE;
+		if (gRRenabled) gAgent.mRRInterface.mHandleNoStrip = TRUE;
 //mk
 		return;
 	}
@@ -6142,12 +6169,15 @@ void LLWearableBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 				case LLAssetType::AT_CLOTHING:
 					items.push_back(std::string("Take Off"));
  //MK
-					gAgent.mRRInterface.mHandleNoStrip = FALSE;
- 					if (gRRenabled && !gAgent.mRRInterface.canUnwear(item))
- 					{
- 						disabled_items.push_back(std::string("Take Off"));
- 					}
-		 			gAgent.mRRInterface.mHandleNoStrip = TRUE;
+					if (gRRenabled)
+					{
+						gAgent.mRRInterface.mHandleNoStrip = FALSE;
+						if (gRRenabled && !gAgent.mRRInterface.canUnwear(item))
+						{
+							disabled_items.push_back(std::string("Take Off"));
+						}
+						gAgent.mRRInterface.mHandleNoStrip = TRUE;
+					}
 //mk
 					// Fallthrough since clothing and bodypart share wear options
 				case LLAssetType::AT_BODYPART:
@@ -6213,8 +6243,16 @@ void LLWearableBridge::wearOnAvatar()
 //MK
 		// Should use getLinkedUUID, or we are not being consistent with double click.
 ////		LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, true);
-		LLAppearanceMgr::instance().wearItemOnAvatar(item->getLinkedUUID(), true, true);
+		if (gRRenabled)
+		{
+			LLAppearanceMgr::instance().wearItemOnAvatar(item->getLinkedUUID(), true, true);
+		}
+		else
+		{
+			LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, true);
+		}
 //mk
+
 	}
 }
 
@@ -6746,15 +6784,21 @@ void LLWearableBridgeAction::wearOnAvatar()
 	if(item)
 	{
 //MK
-////		LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, true);
-		bool replace = true;
-		if (gSavedSettings.controlExists("RestrainedLoveDoubleClickWear") && !gSavedSettings.getBOOL("RestrainedLoveDoubleClickWear"))
+		if (!gRRenabled)
 		{
-			replace = false;
+			LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, true);
 		}
-		gAgent.mRRInterface.mHandleNoStrip = FALSE;
-		LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, replace);
-		gAgent.mRRInterface.mHandleNoStrip = TRUE;
+		else
+		{
+			bool replace = true;
+			if (gSavedSettings.controlExists("RestrainedLoveDoubleClickWear") && !gSavedSettings.getBOOL("RestrainedLoveDoubleClickWear"))
+			{
+				replace = false;
+			}
+			gAgent.mRRInterface.mHandleNoStrip = FALSE;
+			LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, replace);
+			gAgent.mRRInterface.mHandleNoStrip = TRUE;
+		}
 //mk
 	}
 }
