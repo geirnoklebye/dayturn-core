@@ -39,6 +39,8 @@
       <string>Location before sitting down last.</string>
       <key>Persist</key>
       <integer>1</integer>
+      <key>HideFromEditor</key>
+      <integer>1</integer>
       <key>Type</key>
       <string>Vector3D</string>
       <key>Value</key>

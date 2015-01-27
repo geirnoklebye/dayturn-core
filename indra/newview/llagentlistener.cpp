@@ -226,8 +226,8 @@ void LLAgentListener::requestStand(LLSD const & event_data) const
 //mk
 	mAgent.setControlFlags(AGENT_CONTROL_STAND_UP);
 //MK
-	//if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
-	if (!gAgent.mRRInterface.mLastStandingLocation.isExactlyZero() && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
+	if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
+	//if (!gAgent.mRRInterface.mLastStandingLocation.isExactlyZero() && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
 	{
 		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
 		gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
