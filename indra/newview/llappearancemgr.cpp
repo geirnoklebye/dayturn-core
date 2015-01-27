@@ -1390,19 +1390,31 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear,
 			if ((replace && wearable_count != 0) ||
 				(wearable_count >= LLAgentWearables::MAX_CLOTHING_PER_TYPE) )
 			{
-
 //MK
+				if (!gRRenabled)
+				{
+					LLUUID item_id = gAgentWearables.getWearableItemID(item_to_wear->getWearableType(),
+																   wearable_count-1);
+					removeCOFItemLinks(item_id, cb);
+				}
+
+
 				if (gRRenabled && gAgent.mRRInterface.canUnwear (item_to_wear->getWearableType()))
 				{
 //mk
-				LLUUID item_id = gAgentWearables.getWearableItemID(item_to_wear->getWearableType(),
-																   wearable_count-1);
-				removeCOFItemLinks(item_id, cb);
+					LLUUID item_id = gAgentWearables.getWearableItemID(item_to_wear->getWearableType(),
+																	   wearable_count-1);
+					removeCOFItemLinks(item_id, cb);
 //MK
 				}
 //mk
 			}
+
 //MK
+			if (!gRRenabled)
+			{
+				addCOFItemLink(item_to_wear, cb);
+			}
 			if (gRRenabled && gAgent.mRRInterface.canWear (item_to_wear->getWearableType()))
 			{
 //mk
@@ -1414,20 +1426,35 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear,
 		break;
 	case LLAssetType::AT_BODYPART:
 //MK
+		if (!gRRenabled)
+		{
+			// TODO: investigate wearables may not be loaded at this point EXT-8231
+		
+			// Remove the existing wearables of the same type.
+			// Remove existing body parts anyway because we must not be able to wear e.g. two skins.
+			removeCOFLinksOfType(item_to_wear->getWearableType());
+
+			if (!cb && do_update)
+			{
+				cb = new LLUpdateAppearanceAndEditWearableOnDestroy(item_id_to_wear);
+			}
+			addCOFItemLink(item_to_wear, cb);
+		}
+//MK
 		if (gRRenabled && gAgent.mRRInterface.canUnwear (item_to_wear->getWearableType()))
 		{
 //mk
-		// TODO: investigate wearables may not be loaded at this point EXT-8231
+			// TODO: investigate wearables may not be loaded at this point EXT-8231
 		
-		// Remove the existing wearables of the same type.
-		// Remove existing body parts anyway because we must not be able to wear e.g. two skins.
-		removeCOFLinksOfType(item_to_wear->getWearableType());
+			// Remove the existing wearables of the same type.
+			// Remove existing body parts anyway because we must not be able to wear e.g. two skins.
+			removeCOFLinksOfType(item_to_wear->getWearableType());
 
-		if (!cb && do_update)
-		{
-			cb = new LLUpdateAppearanceAndEditWearableOnDestroy(item_id_to_wear);
-		}
-		addCOFItemLink(item_to_wear, cb);
+			if (!cb && do_update)
+			{
+				cb = new LLUpdateAppearanceAndEditWearableOnDestroy(item_id_to_wear);
+			}
+			addCOFItemLink(item_to_wear, cb);
 //MK
 		}
 //mk
@@ -1461,7 +1488,10 @@ void LLAppearanceMgr::changeOutfit(bool proceed, const LLUUID& category, bool ap
 void LLAppearanceMgr::replaceCurrentOutfit(const LLUUID& new_outfit)
 {
 //MK
-	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+	if (!gRRenabled)
+	{
+		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+	}
 //mk
 	LLViewerInventoryCategory* cat = gInventory.getCategory(new_outfit);
 	wearInventoryCategory(cat, false, false);
@@ -1525,7 +1555,10 @@ void LLAppearanceMgr::setOutfitLocked(bool locked)
 void LLAppearanceMgr::addCategoryToCurrentOutfit(const LLUUID& cat_id)
 {
 //MK
-	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+	if (!gRRenabled)
+	{
+		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+	}
 //mk
 	LLViewerInventoryCategory* cat = gInventory.getCategory(cat_id);
 	wearInventoryCategory(cat, false, true);
@@ -1759,11 +1792,14 @@ bool LLAppearanceMgr::getCanRemoveOutfit(const LLUUID& outfit_cat_id)
 bool LLAppearanceMgr::getCanRemoveFromCOF(const LLUUID& outfit_cat_id)
 {
 //MK
-	// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
-	////if (gAgentWearables.isCOFChangeInProgress())
-	////{
-	////	return false;
-	////}
+		if (!gRRenabled)
+		{
+			// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
+			if (gAgentWearables.isCOFChangeInProgress())
+			{
+			return false;
+			}
+		}
 //mk
 	LLFindWearablesEx is_worn(/*is_worn=*/ true, /*include_body_parts=*/ false);
 	return gInventory.hasMatchingDirectDescendent(outfit_cat_id, is_worn);
@@ -1773,11 +1809,14 @@ bool LLAppearanceMgr::getCanRemoveFromCOF(const LLUUID& outfit_cat_id)
 bool LLAppearanceMgr::getCanAddToCOF(const LLUUID& outfit_cat_id)
 {
 //MK
-	// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
-	////if (gAgentWearables.isCOFChangeInProgress())
-	////{
-	////	return false;
-	////}
+		if (!gRRenabled)
+		{
+			// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
+			if (gAgentWearables.isCOFChangeInProgress())
+			{
+			return false;
+			}
+		}
 //mk
 
 	LLInventoryModel::cat_array_t cats;
@@ -1795,12 +1834,14 @@ bool LLAppearanceMgr::getCanAddToCOF(const LLUUID& outfit_cat_id)
 bool LLAppearanceMgr::getCanReplaceCOF(const LLUUID& outfit_cat_id)
 {
 //MK
-	// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
-	////// Don't allow wearing anything while we're changing appearance.
-	////if (gAgentWearables.isCOFChangeInProgress())
-	////{
-	////	return false;
-	////}
+		if (!gRRenabled)
+		{
+			// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
+			if (gAgentWearables.isCOFChangeInProgress())
+			{
+			return false;
+			}
+		}
 //mk
 
 	// Check whether it's the base outfit.
@@ -2588,7 +2629,11 @@ void LLAppearanceMgr::wearOutfitByName(const std::string& name)
 	if(cat)
 	{
 //MK
+	if (gRRenabled)
+	{
 		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+	}
+	
 //mk
 		LLAppearanceMgr::wearInventoryCategory(cat, copy_items, false);
 	}
@@ -2661,7 +2706,7 @@ void LLAppearanceMgr::addCOFItemLink(const LLInventoryItem *item,
 {
 	const LLViewerInventoryItem *vitem = dynamic_cast<const LLViewerInventoryItem*>(item);
 //MK
-	LLInventoryItem* item_non_const = const_cast<LLInventoryItem*>(item);;
+	LLInventoryItem* item_non_const = const_cast<LLInventoryItem*>(item);
 //mk
 	if (!vitem)
 	{
@@ -2839,7 +2884,9 @@ void LLAppearanceMgr::removeCOFItemLinks(const LLUUID& item_id, LLPointer<LLInve
 		{
 //MK
 			// If we can't detach this item, don't do anything with it, leave it there.
+
 			LLInventoryItem* item_non_const = const_cast<LLInventoryItem*>(item);
+
 			if (gRRenabled && !gAgent.mRRInterface.canDetach (item_non_const))
 			{
 				continue;
@@ -3835,19 +3882,28 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove)
 		const LLUUID& id_to_remove = *it;
 		const LLUUID& linked_item_id = gInventory.getLinkedItemID(id_to_remove);
 //MK
-		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = TRUE;
-		LLViewerInventoryItem* item_to_remove = gInventory.getItem(id_to_remove);
+		if (gRRenabled)
+		{
+			gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = TRUE;
+			LLViewerInventoryItem* item_to_remove = gInventory.getItem(id_to_remove);
+		
 		if (!gRRenabled || gAgent.mRRInterface.canDetach (item_to_remove))
 		{
 			// The code below does not take attachments into account, so we need to specifically detach
 			// objects here.
 			LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
 //mk
-		removeCOFItemLinks(linked_item_id, cb);
-		addDoomedTempAttachment(linked_item_id);
+			removeCOFItemLinks(linked_item_id, cb);
+			addDoomedTempAttachment(linked_item_id);
 //MK
 		}
-		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
+			gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
+		}
+		else
+		{
+			removeCOFItemLinks(linked_item_id, cb);
+			addDoomedTempAttachment(linked_item_id);
+		}
 //mk
 	}
 }
@@ -4284,7 +4340,11 @@ public:
 			if ( gInventory.getCategory( folder_uuid ) != NULL )
 			{
 //MK
+			if (gRRenabled)
+			{
+
 				gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+			}
 //mk
 				LLAppearanceMgr::getInstance()->wearInventoryCategory(category, true, false);
 				
