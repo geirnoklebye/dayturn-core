@@ -1055,6 +1055,10 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 			else if (canon_action.find ("cam") == 0) {
 				updateCameraLimits ();
 			}
+			else if (action == "standtp" && gAgentAvatarp && !gAgentAvatarp->isSitting()) { // If we are not sitting, then we can remove the @standtp restriction normally
+				gAgent.mRRInterface.mLastStandingLocation.clear();
+				gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
+			}
 
 			return TRUE;
 		}
@@ -1095,6 +1099,11 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 	}
 	updateAllHudTexts();
 	updateCameraLimits();
+	if (gAgentAvatarp && !gAgentAvatarp->isSitting()) { // If we are not sitting, then we can remove the @standtp restriction normally
+		gAgent.mRRInterface.mLastStandingLocation.clear();
+		gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
+	}
+
 	return TRUE;
 }
 

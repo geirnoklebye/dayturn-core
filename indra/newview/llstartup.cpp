@@ -1575,7 +1575,7 @@ bool idle_startup()
 		// For this, we simulate the reception of those commands from a non-existent object.
 		if (gRRenabled)
 		{
-			gAgent.mRRInterface.handleCommand (LLUUID::generateNewID(), "camavdist:0=n,shownames=n,showloc=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
+			gAgent.mRRInterface.handleCommand (LLUUID::generateNewID(), "camavdist:0=n,shownames=n,showloc=n,showworldmap=n,showminimap=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
 		}
 //mk
 		LL_DEBUGS("AppInit") << "Waiting for simulator ack...." << LL_ENDL;
@@ -2178,9 +2178,6 @@ bool idle_startup()
 	if (STATE_CLEANUP == LLStartUp::getStartupState())
 	{
 //MK
-		// fire all the stored commands that we received while initializing
-		gAgent.mRRInterface.fireCommands ();
-
 		// If we logged off while under @standtp (or rather while our last standing location wasn't null), then we need
 		// to TP right back now in order to prevent from cheating through @standtp by relogging after sitting down elsewhere.
 		gAgent.mRRInterface.mLastStandingLocation.set (gSavedPerAccountSettings.getVector3d ("RestrainedLoveLastStandingLocation"));
@@ -2191,6 +2188,9 @@ bool idle_startup()
 			gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
 			gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
 		}
+
+		// fire all the stored commands that we received while initializing
+		gAgent.mRRInterface.fireCommands ();
 //mk
 		set_startup_status(1.0, "", "");
 		display_startup();
