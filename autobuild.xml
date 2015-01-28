@@ -2083,9 +2083,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>eb35e0da356163387272167bd81771f4</string>
+              <string>349a77a236137afa34743bcee1d0ffa3</string>
               <key>url</key>
-              <string>http://phoenixviewer.com/app/packages/ndPhysicsStub-0.1.1-Darwin_ao10.5.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.0-darwin-20150125.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
