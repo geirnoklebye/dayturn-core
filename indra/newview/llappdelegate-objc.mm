@@ -94,6 +94,7 @@
 	callWindowUnhide();
 }
 
+- (NSApplicationDelegateReply) applicationShouldTerminate:(NSApplication *)sender
 {
 	if (!runMainLoop())
 	{
