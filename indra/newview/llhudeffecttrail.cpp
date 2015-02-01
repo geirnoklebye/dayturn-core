@@ -172,10 +172,16 @@ void LLHUDEffectSpiral::unpackData(LLMessageSystem *mesgsys, S32 blocknum)
 
 void LLHUDEffectSpiral::triggerLocal()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && gAgent.mRRInterface.mCamDistDrawAlphaMax >= 0.25)
+	{
+		return;
+	}
+//mk
+
 	mKillTime = mTimer.getElapsedTimeF32() + mDuration;
 
 	BOOL show_beam = gSavedSettings.getBOOL("ShowSelectionBeam");
-
 	LLColor4 color;
 	color.setVec(mColor);
 

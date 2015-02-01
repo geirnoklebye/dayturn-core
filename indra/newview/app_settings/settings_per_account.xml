@@ -33,7 +33,24 @@
       <key>Value</key>
       <real>0.0</real>
     </map>
-
+    <key>RestrainedLoveLastStandingLocation</key>
+    <map>
+      <key>Comment</key>
+      <string>Location before sitting down last.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>HideFromEditor</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3D</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>0.0</real>
+        <real>0.0</real>
+      </array>
+    </map>
+ 
 <!--Kokua settings-->
 
 <!--Firestorm settings-->

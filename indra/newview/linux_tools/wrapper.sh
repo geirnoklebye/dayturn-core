@@ -64,6 +64,14 @@ fi
 ##   may need but back in pl for 32 bit
 #export LL_WRAPPER='valgrind --smc-check=all --error-limit=no --log-file=secondlife.vg --leak-check=full --suppressions=secondlife-i686.supp'
 
+##
+## detect bumblebee architecture:
+## - bbswitch module is loaded
+## - optirun exist and is executable
+## if so, set LL_WRAPPER to optirun (and hope for the best)
+OPTIRUN=$(type -p optirun)
+[ -s /sys/module/bbswitch/version -a -n ${OPTIRUN} -a -x ${OPTIRUN} ] && LL_WRAPPER=${OPTIRUN}
+
 ## - Avoids an often-buggy X feature that doesn't really benefit us anyway.
 export SDL_VIDEO_X11_DGAMOUSE=0
 

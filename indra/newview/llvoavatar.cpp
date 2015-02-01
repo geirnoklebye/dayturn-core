@@ -3308,7 +3308,7 @@ bool LLVOAvatar::isVisuallyMuted()
 	if (!isSelf())
 	{
 //MK
-		if (gRRenabled && gAgentAvatarp && getRezzedStatus() >= 3) // fully rezzed & textured
+		if (gRRenabled && gAgentAvatarp && getRezzedStatus() >= 2) // fully rezzed
 		{
 			LLVector3d my_head_pos (gAgent.getPosGlobalFromAgent(gAgentAvatarp->mHeadp->getWorldPosition()));
 			LLVector3d their_head_pos (gAgent.getPosGlobalFromAgent(mHeadp->getWorldPosition()));
@@ -6261,9 +6261,10 @@ void LLVOAvatar::sitDown(BOOL bSitting)
 	{
 		// If we are being forced to stand up (prim derezzing or calling llUnsit() ), snap back to the previous
 		// standing location if under @standtp
-		if (was_sitting)
+		if (was_sitting && !gAgent.mRRInterface.mSnappingBackToLastStandingLocation)
 		{
 			if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
+			//if (!gAgent.mRRInterface.mLastStandingLocation.isExactlyZero() && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
 			{
 				gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
 				gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);

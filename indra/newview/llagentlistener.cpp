@@ -46,6 +46,7 @@
 
 //MK
 #include "llvoavatarself.h"
+#include "llviewercontrol.h"
 //mk
 
 LLAgentListener::LLAgentListener(LLAgent &agent)
@@ -189,7 +190,11 @@ void LLAgentListener::requestSit(LLSD const & event_data) const
 		if (gRRenabled && gAgentAvatarp && !gAgentAvatarp->mIsSitting)
 		{
 			// We are now standing, and we want to sit down => store our current location so that we can snap back here when we stand up, if under @standtp
-			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+			if (gAgent.mRRInterface.contains ("standtp"))
+			{
+				gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+				gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
+			}
 		}
 //mk
 		gMessageSystem->newMessageFast(_PREHASH_AgentRequestSit);
@@ -222,6 +227,7 @@ void LLAgentListener::requestStand(LLSD const & event_data) const
 	mAgent.setControlFlags(AGENT_CONTROL_STAND_UP);
 //MK
 	if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
+	//if (!gAgent.mRRInterface.mLastStandingLocation.isExactlyZero() && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
 	{
 		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
 		gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);

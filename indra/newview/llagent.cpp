@@ -984,6 +984,7 @@ void LLAgent::standUp()
 	setControlFlags(AGENT_CONTROL_STAND_UP);
 //MK
 	if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
+	//if (!gAgent.mRRInterface.mLastStandingLocation.isExactlyZero() && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
 	{
 		gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
 		gAgent.teleportViaLocationLookAt (gAgent.mRRInterface.mLastStandingLocation);
@@ -1371,7 +1372,11 @@ void LLAgent::sitDown()
 	if (gRRenabled && gAgentAvatarp && !gAgentAvatarp->mIsSitting)
 	{
 		// We are now standing, and we want to sit down => store our current location so that we can snap back here when we stand up, if under @standtp
-		gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+		if (gAgent.mRRInterface.contains ("standtp"))
+		{
+			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
+			gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
+		}
 	}
 //mk
 	setControlFlags(AGENT_CONTROL_SIT_ON_GROUND);
@@ -4301,11 +4306,17 @@ void LLAgent::teleportRequest(
 	bool look_at_from_camera)
 {
 	LLViewerRegion* regionp = getRegion();
-	bool is_local = (region_handle == regionp->getHandle());
+//MK
+////	bool is_local = (region_handle == regionp->getHandle());
+	bool is_local = (regionp && (region_handle == regionp->getHandle()));
+//mk
 	if(regionp && teleportCore(is_local))
 	{
-		LL_INFOS("") << "TeleportLocationRequest: '" << region_handle << "':"
-					 << pos_local << LL_ENDL;
+//MK
+		// This crashes when we are logging off
+		////LL_INFOS("") << "TeleportLocationRequest: '" << region_handle << "':"
+		////			 << pos_local << LL_ENDL;
+//mk
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessage("TeleportLocationRequest");
 		msg->nextBlockFast(_PREHASH_AgentData);
@@ -4499,6 +4510,14 @@ void LLAgent::teleportViaLocationLookAt(const LLVector3d& pos_global)
 void LLAgent::doTeleportViaLocationLookAt(const LLVector3d& pos_global)
 {
 //MK
+	if (gDisconnected || LLApp::isQuitting())
+	{
+		// We can't TP while disconnected or quitting, but just to be sure, refresh the value of RestrainedLoveLastStandingLocation with the stored location.
+		// In case the user has tampered with that value directly in the debug settings, y'know.
+		gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
+		return;
+	}
+
 	if (gRRenabled)
 	{
 		// Do not perform these checks if we are automatically snapping back to the last standing location
@@ -4512,6 +4531,12 @@ void LLAgent::doTeleportViaLocationLookAt(const LLVector3d& pos_global)
 			{
 				return;
 			}
+		}
+		else
+		{
+			// We are snapping back to the last standing location => set it back to zero now
+			gAgent.mRRInterface.mLastStandingLocation.clear();
+			gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 		}
 	}
 //mk

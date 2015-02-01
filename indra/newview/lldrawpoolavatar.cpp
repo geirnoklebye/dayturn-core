@@ -1889,7 +1889,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 						// Other avatars only
 						if (avatar != gAgentAvatarp)
 						{
-							// This rigged mesh is diffuse alpha blend
+							// This rigged mesh is diffuse alpha blend with materials
 							if (mat->getDiffuseAlphaMode() == LLMaterial::DIFFUSE_ALPHA_MODE_BLEND)
 							{
 								if (distance_to_avatar > gAgent.mRRInterface.mCamDistDrawMax)
@@ -1914,6 +1914,24 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 			}
 			else
 			{
+//MK
+				// If the vision is restricted, rendering alpha rigged attachments may allow to cheat through the vision spheres.
+				if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+				{
+					// Other avatars only
+					if (avatar != gAgentAvatarp)
+					{
+						// This rigged mesh is diffuse alpha blend without materials
+						if (gPipeline.getPoolTypeFromTE(te, face->getTexture()) == LLDrawPool::POOL_ALPHA)
+						{
+							if (distance_to_avatar > gAgent.mRRInterface.mCamDistDrawMax)
+							{
+								continue;
+							}
+						}
+					}
+				}
+//mk
 				gGL.getTexUnit(sDiffuseChannel)->bind(face->getTexture());
 				sVertexProgram->setMinimumAlpha(0.f);
 				if (normal_channel > -1)

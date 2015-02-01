@@ -120,6 +120,13 @@ static bool handleRestrainedLoveOffsetAvatarChanged(const LLSD& newvalue)
 	return true;
 }
 
+static bool handleRestrainedLoveLastStandingLocationChanged(const LLSD& newvalue)
+{
+	// Do not let the user change these values manually (could lead to cheating through @standtp)
+	//gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
+	return true;
+}
+
 static bool handleRenderDeferredShowInvisiprimsChanged(const LLSD& newvalue)
 {
 	bool status = newvalue.asBoolean();
@@ -689,6 +696,7 @@ void settings_setup_listeners()
 	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarX")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
 	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarY")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
 	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarZ")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
+	gSavedPerAccountSettings.getControl("RestrainedLoveLastStandingLocation")->getSignal()->connect(boost::bind(&handleRestrainedLoveLastStandingLocationChanged, _2));
 	gSavedSettings.getControl("RenderDeferredShowInvisiprims")->getSignal()->connect(boost::bind(&handleRenderDeferredShowInvisiprimsChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveCamDistNbGradients")->getSignal()->connect(boost::bind(&handleRestrainedLoveCamDistNbGradientsChanged, _2));
 //mk

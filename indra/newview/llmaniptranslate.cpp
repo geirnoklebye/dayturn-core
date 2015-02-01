@@ -1605,6 +1605,12 @@ void LLManipTranslate::renderSnapGuides()
 
 void LLManipTranslate::renderGrid(F32 x, F32 y, F32 size, F32 r, F32 g, F32 b, F32 a)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && gAgent.mRRInterface.mCamDistDrawAlphaMax >= 0.25)
+	{
+		return;
+	}
+//mk
 	F32 d = size*0.5f;
 
 	for (F32 xx = -size-d; xx < size+d; xx += d)
@@ -1645,6 +1651,12 @@ void LLManipTranslate::highlightIntersection(LLVector3 normal,
 											 LLQuaternion grid_rotation, 
 											 LLColor4 inner_color)
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && gAgent.mRRInterface.mCamDistDrawAlphaMax >= 0.25)
+	{
+		return;
+	}
+//mk
 	if (!gSavedSettings.getBOOL("GridCrossSections") || !LLGLSLShader::sNoFixedFunction)
 	{
 		return;
