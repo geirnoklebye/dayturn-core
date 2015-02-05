@@ -3887,20 +3887,21 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove)
 			gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = TRUE;
 			LLViewerInventoryItem* item_to_remove = gInventory.getItem(id_to_remove);
 		
-		if (!gRRenabled || gAgent.mRRInterface.canDetach (item_to_remove))
-		{
-			// The code below does not take attachments into account, so we need to specifically detach
-			// objects here.
-			LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
-//mk
-			removeCOFItemLinks(linked_item_id, cb);
-			addDoomedTempAttachment(linked_item_id);
-//MK
-		}
+			if (!gRRenabled || gAgent.mRRInterface.canDetach (item_to_remove))
+			{
+				// The code below does not take attachments into account, so we need to specifically detach
+				// objects here.
+				LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
+	//mk
+				removeCOFItemLinks(linked_item_id, cb);
+				addDoomedTempAttachment(linked_item_id);
+	//MK
+			}
 			gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
 		}
 		else
 		{
+			LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
 			removeCOFItemLinks(linked_item_id, cb);
 			addDoomedTempAttachment(linked_item_id);
 		}
