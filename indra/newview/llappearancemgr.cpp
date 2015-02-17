@@ -279,9 +279,9 @@ public:
 		if (!mTrackingPhase.empty())
 		{
 			selfStopPhase(mTrackingPhase);
-	}
+		}
 		if (!mFailCount)
-	{
+		{
 			onCompletion();
 		}
 		else
@@ -1488,10 +1488,15 @@ void LLAppearanceMgr::changeOutfit(bool proceed, const LLUUID& category, bool ap
 void LLAppearanceMgr::replaceCurrentOutfit(const LLUUID& new_outfit)
 {
 //MK
-	if (!gRRenabled)
-	{
+//NP
+// The variable mUserUpdateAttachmentsCalledManually doesn't isolate properly
+// from gRRenabled or !gRRenabled. At present it is needed to remove attachments
+// when replacing outfits. Leaving these comments until this is sorted out.
+//	if (gRRenabled)
+//	{
 		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
-	}
+//	}
+//np
 //mk
 	LLViewerInventoryCategory* cat = gInventory.getCategory(new_outfit);
 	wearInventoryCategory(cat, false, false);
