@@ -223,7 +223,9 @@ namespace
 		}
 		return "Unknown";
 	}
-
+/*
+//NP
+//defined but not used gcc4-9
 	std::string compute_CPUFamilyName(const char* cpu_vendor, int family, int ext_family) 
 	{
 		const char* intel_string = "GenuineIntel";
@@ -242,7 +244,7 @@ namespace
 		}
 		return "Unknown";
 	}
-
+*/
 } // end unnamed namespace
 
 // The base class for implementations.
