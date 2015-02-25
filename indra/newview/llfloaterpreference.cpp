@@ -830,24 +830,20 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 				maturity_list->deleteItems(LLSD(SIM_ACCESS_ADULT));
 			}
 		}
-		maturity_combo->setEnabled(true);
-
-		//
-		//	display selected maturity icons
-		//
-		onChangeMaturity();
+		getChildView("maturity_desired_combobox")->setEnabled( true);
+		getChildView("maturity_desired_textbox")->setVisible( false);
 	}
 	else
 	{
-		maturity_combo->setEnabled(false);
-
-		getChildView("rating_icon_general")->setVisible(false);
-		getChildView("rating_icon_moderate")->setVisible(false);
-		getChildView("rating_icon_adult")->setVisible(false);
+		getChild<LLUICtrl>("maturity_desired_textbox")->setValue(maturity_combo->getSelectedItemLabel());
+		getChildView("maturity_desired_combobox")->setEnabled( false);
 	}
 
 	// Forget previous language changes.
 	mLanguageChanged = false;
+
+	// Display selected maturity icons.
+	onChangeMaturity();
 	
 	// Load (double-)click to walk/teleport settings.
 	updateClickActionControls();
@@ -888,6 +884,16 @@ void LLFloaterPreference::initDoNotDisturbResponse()
 			gSavedPerAccountSettings.setString("DoNotDisturbModeResponse", LLTrans::getString("DoNotDisturbModeResponseDefault"));
 		}
 	}
+
+//static 
+void LLFloaterPreference::updateShowFavoritesCheckbox(bool val)
+{
+	LLFloaterPreference* instance = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
+	if (instance)
+	{
+		instance->getChild<LLUICtrl>("favorites_on_login_check")->setValue(val);
+	}	
+}
 
 void LLFloaterPreference::setHardwareDefaults()
 {
@@ -1324,9 +1330,7 @@ void LLFloaterPreference::refreshEnabledState()
 	// now turn off any features that are unavailable
 	disableUnavailableSettings();
 
-	bool logged_in = LLLoginInstance::getInstance()->authSuccess();
-	getChildView("block_list")->setEnabled(logged_in);
-	getChildView("pick_current_search_url")->setEnabled(logged_in);
+	getChildView("block_list")->setEnabled(LLLoginInstance::getInstance()->authSuccess());
 
 	// Cannot have floater active until caps have been received
 	getChild<LLButton>("default_creation_permissions")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
@@ -1745,6 +1749,7 @@ void LLFloaterPreference::setPersonalInfo(const std::string& visibility, bool im
 	getChildView("chat_font_size")->setEnabled(TRUE);
 }
 
+
 void LLFloaterPreference::refreshUI()
 {
 	refresh();
@@ -2037,6 +2042,8 @@ BOOL LLPanelPreference::postBuild()
 	if (hasChild("favorites_on_login_check", TRUE))
 	{
 		getChild<LLCheckBoxCtrl>("favorites_on_login_check")->setCommitCallback(boost::bind(&showFavoritesOnLoginWarning, _1, _2));
+		bool show_favorites_at_login = LLPanelLogin::getShowFavorites();
+		getChild<LLCheckBoxCtrl>("favorites_on_login_check")->setValue(show_favorites_at_login);
 	}
 
 	//////////////////////PanelAdvanced ///////////////////
@@ -2134,6 +2141,12 @@ void LLPanelPreference::cancel()
 	{
 		LLControlVariable* control = iter->first;
 		LLSD ctrl_value = iter->second;
+
+		if((control->getName() == "InstantMessageLogPath") && (ctrl_value.asString() == ""))
+		{
+			continue;
+		}
+
 		control->set(ctrl_value);
 	}
 

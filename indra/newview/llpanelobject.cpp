@@ -320,6 +320,7 @@ LLPanelObject::LLPanelObject()
 	mSelectedType(MI_BOX),
 	mSculptTextureRevert(LLUUID::null),
 	mSculptTypeRevert(0),
+	mSizeChanged(FALSE)
 	mLimitsNeedUpdate(true),
 	mHasPosClipboard(FALSE),
 	mHasSizeClipboard(FALSE),
@@ -1710,6 +1711,7 @@ void LLPanelObject::sendScale(BOOL btn_down)
 // </AW: opensim-limits>
 
 	LLVector3 delta = newscale - mObject->getScale();
+		mSizeChanged = btn_down;
 	
 	if (delta.magVec() >= 0.00005f)
 	{
@@ -1758,6 +1760,8 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 		const F32 min_height = LLWorld::getInstance()->getMinAllowedZ(mObject, mObject->getPositionGlobal());
 		const F32 max_height = LLWorld::getInstance()->getRegionMaxHeight();
 
+	if (!mObject->isAttachment())
+	{
 		if ( height < min_height)
 		{
 			newpos.mV[VZ] = min_height;
@@ -1774,10 +1778,11 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 		{
 			mCtrlPosZ->set(LLWorld::getInstance()->resolveLandHeightAgent(newpos) + 1.f);
 		}
-		// Make sure new position is in a valid region, so the object
-		// won't get dumped by the simulator.
-		new_pos_global = regionp->getPosGlobalFromRegion(newpos);
 	}
+
+	// Make sure new position is in a valid region, so the object
+	// won't get dumped by the simulator.
+	LLVector3d new_pos_global = regionp->getPosGlobalFromRegion(newpos);
 
 	// partly copied from llmaniptranslate.cpp to get the positioning right
 	if (mObject->isAttachment())
