@@ -778,21 +778,11 @@ std::string LLUrlEntryObjectIM::getLabel(const std::string &url, const LLUrlLabe
 		return query_map["name"];
 	return unescapeUrl(url);
 }
-
 std::string LLUrlEntryObjectIM::getLocation(const std::string &url) const
 {
 	LLURI uri(url);
 	LLSD query_map = uri.queryMap();
 	if (query_map.has("slurl"))
-	{
-		ret = query_map["slurl"].asString();
-	}
-	else
-	{
-		ret = LLUrlEntryBase::getLocation(url);
-	}
-	LL_DEBUGS("UrlEntry") << "location " << ret << LL_ENDL;
-	return ret;
 		return query_map["slurl"];
 	return LLUrlEntryBase::getLocation(url);
 }

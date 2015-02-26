@@ -320,7 +320,7 @@ LLPanelObject::LLPanelObject()
 	mSelectedType(MI_BOX),
 	mSculptTextureRevert(LLUUID::null),
 	mSculptTypeRevert(0),
-	mSizeChanged(FALSE)
+	mSizeChanged(FALSE),
 	mLimitsNeedUpdate(true),
 	mHasPosClipboard(FALSE),
 	mHasSizeClipboard(FALSE),
@@ -1746,8 +1746,9 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 
 	LLVector3 newpos(mCtrlPosX->get(), mCtrlPosY->get(), mCtrlPosZ->get());
 	LLViewerRegion* regionp = mObject->getRegion();
-
-	LLVector3d new_pos_global;
+	// Make sure new position is in a valid region, so the object
+	// won't get dumped by the simulator.
+	LLVector3d new_pos_global = regionp->getPosGlobalFromRegion(newpos);
 
 	if (mObject->isAttachment())
 	{
@@ -1759,30 +1760,27 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 		const F32 height = newpos.mV[VZ];
 		const F32 min_height = LLWorld::getInstance()->getMinAllowedZ(mObject, mObject->getPositionGlobal());
 		const F32 max_height = LLWorld::getInstance()->getRegionMaxHeight();
+		if (!mObject->isAttachment())
+		{
+			if ( height < min_height)
+			{
+				newpos.mV[VZ] = min_height;
+				mCtrlPosZ->set( min_height );
+			}
+			else if ( height > max_height )
+			{
+				newpos.mV[VZ] = max_height;
+				mCtrlPosZ->set( max_height );
+			}
 
-	if (!mObject->isAttachment())
-	{
-		if ( height < min_height)
-		{
-			newpos.mV[VZ] = min_height;
-			mCtrlPosZ->set( min_height );
-		}
-		else if ( height > max_height )
-		{
-			newpos.mV[VZ] = max_height;
-			mCtrlPosZ->set( max_height );
-		}
-
-		// Grass is always drawn on the ground, so clamp its position to the ground
-		if (mObject->getPCode() == LL_PCODE_LEGACY_GRASS)
-		{
-			mCtrlPosZ->set(LLWorld::getInstance()->resolveLandHeightAgent(newpos) + 1.f);
+			// Grass is always drawn on the ground, so clamp its position to the ground
+			if (mObject->getPCode() == LL_PCODE_LEGACY_GRASS)
+			{
+				mCtrlPosZ->set(LLWorld::getInstance()->resolveLandHeightAgent(newpos) + 1.f);
+			}
 		}
 	}
 
-	// Make sure new position is in a valid region, so the object
-	// won't get dumped by the simulator.
-	LLVector3d new_pos_global = regionp->getPosGlobalFromRegion(newpos);
 
 	// partly copied from llmaniptranslate.cpp to get the positioning right
 	if (mObject->isAttachment())

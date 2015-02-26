@@ -1265,5 +1265,9 @@ void LLPanelLogin::updateLoginPanelLinks()
 	sInstance->getChildView("create_new_account_text")->setVisible( system_grid || has_register);
 	sInstance->getChildView("forgot_password_text")->setVisible( system_grid || has_password);
 }
-
+// static
+bool LLPanelLogin::getShowFavorites()
+{
+	return gSavedPerAccountSettings.getBOOL("ShowFavoritesOnLogin");
+}
 
