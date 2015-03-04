@@ -2642,14 +2642,14 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		{
 			render_name = FALSE;
 		}
-		else if (gAgent.mRRInterface.mCamDistDrawMin && gAgentAvatarp && gAgentAvatarp != this)
+		else if (gAgent.mRRInterface.mCamDistDrawMin < EXTREMUM && gAgentAvatarp && gAgentAvatarp != this)
 		{
 			LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
 
 			LLVector3 camera_offset = mHeadp->getWorldPosition() - head_pos;
 			F32 camera_distance = (F32)camera_offset.magVec();
 
-			if(camera_distance > gAgent.mRRInterface.mCamDistMax)
+			if(camera_distance > gAgent.mRRInterface.mCamDistDrawMin)
 			{
 				render_name = FALSE;
 			}
