@@ -5589,6 +5589,21 @@ class LLToolsRestartAllAnimations : public view_listener_t
 		return true;
 	}
 };
+
+class LLToolsRefreshVisibility : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		S32 i;
+		for (i=0; i<gObjectList.getNumObjects(); ++i) {
+			LLViewerObject* object = gObjectList.getObject(i);
+			if (object) {
+				object->setSelected(FALSE);
+			}
+		}
+		return true;
+	}
+};
 //mk
 
 class LLToolsReleaseKeys : public view_listener_t
@@ -9499,6 +9514,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLGridModeLocal(), "Tools.GridModeLocal");
 	view_listener_t::addMenu(new LLGridModeReference(), "Tools.GridModeReference");
 	view_listener_t::addMenu(new LLToolsRestartAllAnimations(), "Tools.RestartAllAnimations");
+	view_listener_t::addMenu(new LLToolsRefreshVisibility(), "Tools.RefreshVisibility");
 //mk
 	view_listener_t::addMenu(new LLToolsReleaseKeys(), "Tools.ReleaseKeys");
 	view_listener_t::addMenu(new LLToolsEnableReleaseKeys(), "Tools.EnableReleaseKeys");	
