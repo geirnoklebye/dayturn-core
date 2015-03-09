@@ -5604,6 +5604,60 @@ class LLToolsRefreshVisibility : public view_listener_t
 		return true;
 	}
 };
+
+class LLRlvFocusHead : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mHeadp;
+		return true;
+	}
+};
+
+class LLRlvFocusPelvis : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mTorsop;
+		return true;
+	}
+};
+
+class LLRlvFocusLeftHand : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mWristLeftp;
+		return true;
+	}
+};
+
+class LLRlvFocusRightHand : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mWristRightp;
+		return true;
+	}
+};
+
+class LLRlvFocusLeftFoot : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mFootLeftp;
+		return true;
+	}
+};
+
+class LLRlvFocusRightFoot : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mFootRightp;
+		return true;
+	}
+};
 //mk
 
 class LLToolsReleaseKeys : public view_listener_t
@@ -9511,6 +9565,12 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLGridModeReference(), "Tools.GridModeReference");
 	view_listener_t::addMenu(new LLToolsRestartAllAnimations(), "Tools.RestartAllAnimations");
 	view_listener_t::addMenu(new LLToolsRefreshVisibility(), "Tools.RefreshVisibility");
+	view_listener_t::addMenu(new LLRlvFocusHead(), "RLV.FocusHead");
+	view_listener_t::addMenu(new LLRlvFocusPelvis(), "RLV.FocusPelvis");
+	view_listener_t::addMenu(new LLRlvFocusLeftHand(), "RLV.FocusLeftHand");
+	view_listener_t::addMenu(new LLRlvFocusRightHand(), "RLV.FocusRightHand");
+	view_listener_t::addMenu(new LLRlvFocusLeftFoot(), "RLV.FocusLeftFoot");
+	view_listener_t::addMenu(new LLRlvFocusRightFoot(), "RLV.FocusRightFoot");
 //mk
 	view_listener_t::addMenu(new LLToolsReleaseKeys(), "Tools.ReleaseKeys");
 	view_listener_t::addMenu(new LLToolsEnableReleaseKeys(), "Tools.EnableReleaseKeys");	
