@@ -501,6 +501,7 @@ RRInterface::RRInterface():
 	, mContainsCamTextures(FALSE)
 	, mUserUpdateAttachmentsFirstCall(TRUE)
 	, mUserUpdateAttachmentsCalledManually(FALSE)
+	, mCamDistDrawFromJoint(NULL)
 	//, mContainsMoveUp(FALSE)
 	//, mContainsMoveDown(FALSE)
 	//, mContainsMoveForward(FALSE)
@@ -4521,7 +4522,7 @@ void RRInterface::drawRenderLimit ()
 
 	gGL.setColorMask(true, false);
 	LLVector3 center = isAgentAvatarValid() 
-		? gAgentAvatarp->mHeadp->getWorldPosition()
+		? getCamDistDrawFromJoint()->getWorldPosition()
 		: gAgent.getPositionAgent();
 
 	//LLVector3 center = gAgentAvatarp->mHeadp->getWorldPosition();
@@ -4594,6 +4595,16 @@ void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 a
 	//gGL.popMatrix();
 }
 
+LLJoint* RRInterface::getCamDistDrawFromJoint ()
+{
+	if (!gAgentAvatarp) {
+		return NULL;
+	}
+	if (!mCamDistDrawFromJoint || CAMERA_MODE_MOUSELOOK == gAgentCamera.getCameraMode()) {
+		return gAgentAvatarp->mHeadp;
+	}
+	return mCamDistDrawFromJoint;
+}
 
 BOOL RRInterface::isBlacklisted (std::string action, bool force)
 {

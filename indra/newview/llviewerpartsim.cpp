@@ -735,9 +735,9 @@ void LLViewerPartSim::updateSimulation()
 					//if (vvo && vvo->getAvatar() != gAgentAvatarp)
 					if (vvo && gAgentAvatarp && gAgentAvatarp->mHeadp) // && (vvo->getAvatar() != gAgentAvatarp || !vvo->isAttachment()))
 					{
-						LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
+						LLVector3 joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
 
-						LLVector3 offset = vvo->getPositionRegion() - head_pos;
+						LLVector3 offset = vvo->getPositionRegion() - joint_pos;
 						F32 distance = (F32)offset.magVec();
 
 						if(distance > gAgent.mRRInterface.mCamDistDrawMax)

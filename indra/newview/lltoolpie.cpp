@@ -1755,6 +1755,20 @@ BOOL LLToolPie::handleRightClickPick()
 	}
 	else if (object)
 	{
+//MK
+		// If this object cannot be edited but we already have a build window open, close it (or we could cheat around the restriction)
+		if (gRRenabled)
+		{
+			if (!gAgent.mRRInterface.canEdit (object))
+			{
+				if (LLFloaterReg::instanceVisible("build"))
+				{
+					LLFloaterReg::hideInstance("build");
+				}
+
+			}
+		}
+//mk
 		gMenuHolder->setObjectSelection(LLSelectMgr::getInstance()->getSelection());
 
 		bool is_other_attachment = (object->isAttachment() && !object->isHUDAttachment() && !object->permYouOwner());

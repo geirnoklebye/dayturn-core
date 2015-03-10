@@ -3918,12 +3918,16 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	}
 	else
 	{
-		// make sure that we don't have an empty or all-whitespace name
-		LLStringUtil::trim(from_name);
-		if (from_name.empty())
-		{
-			from_name = LLTrans::getString("Unnamed");
-		}
+//MK
+		// Let's allow empty names actually. We used to allow them and some scripts are still relying on that feature.
+		// Forbidding them now breaks such scripts. FYI this code was added in rev cca6fde77183 for MAINT-3621.
+////		// make sure that we don't have an empty or all-whitespace name
+////		LLStringUtil::trim(from_name);
+////		if (from_name.empty())
+////		{
+////			from_name = LLTrans::getString("Unnamed");
+////		}
+//mk
 		chat.mFromName = from_name;
 	}
 

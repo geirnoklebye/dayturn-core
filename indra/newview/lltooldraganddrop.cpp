@@ -1560,7 +1560,12 @@ EAcceptance LLToolDragAndDrop::willObjectAcceptInventory(LLViewerObject* obj, LL
 	if (!item || !obj) return ACCEPT_NO;
 	// HACK: downcast
 	LLViewerInventoryItem* vitem = (LLViewerInventoryItem*)item;
-	if (!vitem->isFinished()) return ACCEPT_NO;
+//MK
+	// We don't care if the item is finished or not. We see it in the inventory, it is finished enough for us.
+	// The rest is up to the asset server. Too many times were drag-and-drops denied for no actual reason and no
+	// actual consistency.
+////	if (!vitem->isFinished()) return ACCEPT_NO;
+//mk
 	if (vitem->getIsLinkType()) return ACCEPT_NO; // No giving away links
 
 	// deny attempts to drop from an object onto itself. This is to

@@ -13,6 +13,7 @@ include(LLWindow)
 include(LLVFS)
 include(LLXML)
 include(Teapot)
+include(URIPARSER)
 
 include_directories(
     ${LLCOMMON_INCLUDE_DIRS}
@@ -30,6 +31,7 @@ include_directories(
 include_directories(SYSTEM
     ${LLCOMMON_SYSTEM_INCLUDE_DIRS}
     ${LLXML_SYSTEM_INCLUDE_DIRS}
+    ${URIPARSER_INCLUDE_DIRS}
     )
 
 set(llui_SOURCE_FILES
@@ -281,6 +283,7 @@ target_link_libraries(llui
     ${LLMATH_LIBRARIES}
     ${TEAPOT_LIBRARIES}
     ${HUNSPELL_LIBRARY}
+    ${URIPARSER_LIBRARIES}
     ${LLCOMMON_LIBRARIES} # must be after llimage, llwindow, llrender
     )
 

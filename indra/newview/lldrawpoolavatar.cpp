@@ -1716,7 +1716,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 	{
 		return;
 	}
-	LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
+	LLVector3 joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
 //mk
 
 	for (U32 i = 0; i < mRiggedFace[type].size(); ++i)
@@ -1736,8 +1736,8 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 		}
 
 //MK
-		LLVector3 offset = vobj->getPositionRegion() - head_pos;
-		F32 distance_to_avatar = (F32)offset.magVec();
+		LLVector3 offset = vobj->getPositionRegion() - joint_pos;
+		F32 distance_to_avatar = (F32)offset.magVec() - vobj->getRadius();
 //mk
 
 		LLVolume* volume = vobj->getVolume();

@@ -2032,6 +2032,8 @@ static LLUIImagePtr image_from_icon_name(const std::string& icon_name)
 
 static LLTrace::BlockTimerStatHandle FTM_PARSE_HTML("Parse HTML");
 
+
+
 void LLTextBase::appendTextImpl(const std::string &new_text, const LLStyle::Params& input_params)
 {
 	LLStyle::Params style_params(input_params);
@@ -2068,21 +2070,26 @@ void LLTextBase::appendTextImpl(const std::string &new_text, const LLStyle::Para
 				std::string subtext=text.substr(0,start);
 				appendAndHighlightText(subtext, part, style_params); 
 			}
+
+			// add icon before url if need
+			LLTextUtil::processUrlMatch(&match, this, isContentTrusted() || match.isTrusted());
+
+			std::string label = match.getLabel();
+			LLTextUtil::normalizeUri(label);
+
 			// output the styled Url
-			appendAndHighlightTextImpl(match.getLabel(), part, link_params, match.underlineOnHoverOnly());
+			appendAndHighlightTextImpl(label, part, link_params, match.underlineOnHoverOnly());
 			
 			// set the tooltip for the Url label
 			if (! match.getTooltip().empty())
 			{
 				segment_set_t::iterator it = getSegIterContaining(getLength()-1);
 				if (it != mSegments.end())
-					{
-						LLTextSegmentPtr segment = *it;
-						segment->setToolTip(match.getTooltip());
-					}
+				{
+					LLTextSegmentPtr segment = *it;
+					segment->setToolTip(match.getTooltip());
+				}
 			}
-
-			LLTextUtil::processUrlMatch(&match,this,isContentTrusted());
 
 			// move on to the rest of the text after the Url
 			if (end < (S32)text.length()) 

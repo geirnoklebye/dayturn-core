@@ -26,9 +26,9 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2090606"
-#define RR_VERSION "2.09.06.6"
-#define RR_SLV_VERSION "3.7.25.33375"
+#define RR_VERSION_NUM "2090608"
+#define RR_VERSION "2.09.06.8"
+#define RR_SLV_VERSION "3.7.25.33492"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -248,6 +248,8 @@ public:
 	void drawRenderLimit ();
 	void drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha);
 
+	LLJoint* getCamDistDrawFromJoint ();
+
 	// Some cache variables to accelerate common checks
 	BOOL mHasLockedHuds;
 	BOOL mContainsDetach;
@@ -342,6 +344,8 @@ public:
 	BOOL mUserUpdateAttachmentsCalledFromScript; // TRUE when we're doing a @detachall (which now uses the "Remove From Current Outfit" method), FALSE otherwise
 	BOOL mUserUpdateAttachmentsFirstCall; // TRUE the first time the method LLAgentWearables::userUpdateAttachments() is called, FALSE afterwards
 	BOOL mUserUpdateAttachmentsCalledManually; // TRUE when we just did a "Add to Current Outfit" or "Replace Current Outfit", FALSE otherwise
+
+	LLJoint* mCamDistDrawFromJoint; // mHeadp by default, but we can set it to another joint so the user can "see" the world with vision spheres centered around that joint instead of around the head.
 
 private:
 	bool mScriptsEnabledOnce; // to know if we have been in a script enabled area at least once (so that no-script areas prevent detaching only when we have logged in there)

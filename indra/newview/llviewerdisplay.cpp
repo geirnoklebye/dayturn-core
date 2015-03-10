@@ -464,7 +464,10 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			gAgent.setTeleportMessage(
 				LLAgent::sTeleportProgressMessages["arriving"]);
 			gTextureList.mForceResetTextureStats = TRUE;
-			gAgentCamera.resetView(TRUE, TRUE);
+//MK
+			// Let's not reset the view, we could be stuck in mouselook with @camdistmax set to 0
+////			gAgentCamera.resetView(TRUE, TRUE);
+//mk
 			
 			break;
 

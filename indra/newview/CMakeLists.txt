@@ -50,6 +50,7 @@ include(CMakeCopyIfDifferent)
 include(LLAppearance)
 include(PNG)
 include(ZLIB)
+include(URIPARSER)
 
 # <FS:ND> if using ndPhysicsstub this variable will be unset, we don't need to build any stub code viewer side in that case
 if( LLPHYSICSEXTENSIONS_SRC_DIR )
@@ -2012,6 +2013,7 @@ endif (WINDOWS)
 target_link_libraries(${VIEWER_BINARY_NAME}
     ${PNG_PRELOAD_ARCHIVES}
     ${ZLIB_PRELOAD_ARCHIVES}
+    ${URIPARSER_PRELOAD_ARCHIVES}
     ${UPDATER_LIBRARIES}
     ${GOOGLE_PERFTOOLS_LIBRARIES}
     ${LLAUDIO_LIBRARIES}

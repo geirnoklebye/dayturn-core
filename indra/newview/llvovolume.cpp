@@ -4575,7 +4575,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 //	{
 //		return;
 //	}
-//	LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
+//	LLVector3 joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
 ////mk
 
 	//Determine if we've received skininfo that contains an
@@ -4629,7 +4629,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 
 ////MK
 //			// Calculate the distance between this object and our avatar
-//			LLVector3 offset = vobj->getPositionRegion() - head_pos;
+//			LLVector3 offset = vobj->getPositionRegion() - joint_pos;
 //			F32 distance_to_avatar = (F32)offset.magVec();
 ////mk
 			drawablep->clearState(LLDrawable::HAS_ALPHA);
@@ -5382,7 +5382,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 	{
 		return;
 	}
-	LLVector3 head_pos = gAgentAvatarp->mHeadp->getWorldPosition();
+	LLVector3 joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
 //mk
 
 	while (face_iter != end_faces)
@@ -5656,8 +5656,8 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 					{
 						//if (mat && LLPipeline::sRenderDeferred)
 						{
-							LLVector3 offset = vobj->getPositionRegion() - head_pos;
-							F32 distance_to_avatar = (F32)offset.magVec();
+							LLVector3 offset = vobj->getPositionRegion() - joint_pos;
+							F32 distance_to_avatar = (F32)offset.magVec() - vobj->getRadius();
 							if (distance_to_avatar > gAgent.mRRInterface.mCamDistDrawMax)
 							{
 								++face_iter;

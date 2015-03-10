@@ -3981,7 +3981,7 @@ bool enable_sitstand_self()
 
 bool enable_sitdown_self()
 {
-    return isAgentAvatarValid() && !gAgentAvatarp->isSitting() && !gAgent.getFlying();
+    return isAgentAvatarValid() && !gAgentAvatarp->isSitting() && !gAgentAvatarp->isEditingAppearance() && !gAgent.getFlying();
 }
 
 class LLCheckPanelPeopleTab : public view_listener_t
@@ -5842,6 +5842,75 @@ class LLToolsRestartAllAnimations : public view_listener_t
 				}
 			}
 		}
+		return true;
+	}
+};
+
+class LLToolsRefreshVisibility : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		S32 i;
+		for (i=0; i<gObjectList.getNumObjects(); ++i) {
+			LLViewerObject* object = gObjectList.getObject(i);
+			if (object) {
+				object->setSelected(FALSE);
+			}
+		}
+		return true;
+	}
+};
+
+class LLRlvFocusHead : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mHeadp;
+		return true;
+	}
+};
+
+class LLRlvFocusPelvis : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mTorsop;
+		return true;
+	}
+};
+
+class LLRlvFocusLeftHand : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mWristLeftp;
+		return true;
+	}
+};
+
+class LLRlvFocusRightHand : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mWristRightp;
+		return true;
+	}
+};
+
+class LLRlvFocusLeftFoot : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mFootLeftp;
+		return true;
+	}
+};
+
+class LLRlvFocusRightFoot : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		gAgent.mRRInterface.mCamDistDrawFromJoint = gAgentAvatarp->mFootRightp;
 		return true;
 	}
 };
@@ -8185,10 +8254,6 @@ void handle_selected_texture_info(void*)
    		std::string msg;
    		msg.assign("Texture info for: ");
    		msg.append(node->mName);
-
-		LLSD args;
-		args["MESSAGE"] = msg;
-		LLNotificationsUtil::add("SystemMessage", args);
 	   
    		U8 te_count = node->getObject()->getNumTEs();
    		// map from texture ID to list of faces using it
@@ -8212,10 +8277,10 @@ void handle_selected_texture_info(void*)
    			S32 height = img->getHeight();
    			S32 width = img->getWidth();
    			S32 components = img->getComponents();
-   			msg = llformat("%dx%d %s on face ",
+   			msg.append(llformat("\n%dx%d %s on face ",
    								width,
    								height,
-   								(components == 4 ? "alpha" : "opaque"));
+   								(components == 4 ? "alpha" : "opaque")));
    			for (U8 i = 0; i < it->second.size(); ++i)
    			{
    				msg.append( llformat("%d ", (S32)(it->second[i])));
@@ -10094,6 +10159,13 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLGridModeLocal(), "Tools.GridModeLocal");
 	view_listener_t::addMenu(new LLGridModeReference(), "Tools.GridModeReference");
 	view_listener_t::addMenu(new LLToolsRestartAllAnimations(), "Tools.RestartAllAnimations");
+	view_listener_t::addMenu(new LLToolsRefreshVisibility(), "Tools.RefreshVisibility");
+	view_listener_t::addMenu(new LLRlvFocusHead(), "RLV.FocusHead");
+	view_listener_t::addMenu(new LLRlvFocusPelvis(), "RLV.FocusPelvis");
+	view_listener_t::addMenu(new LLRlvFocusLeftHand(), "RLV.FocusLeftHand");
+	view_listener_t::addMenu(new LLRlvFocusRightHand(), "RLV.FocusRightHand");
+	view_listener_t::addMenu(new LLRlvFocusLeftFoot(), "RLV.FocusLeftFoot");
+	view_listener_t::addMenu(new LLRlvFocusRightFoot(), "RLV.FocusRightFoot");
 //mk
 	view_listener_t::addMenu(new LLToolsReleaseKeys(), "Tools.ReleaseKeys");
 	view_listener_t::addMenu(new LLToolsEnableReleaseKeys(), "Tools.EnableReleaseKeys");	

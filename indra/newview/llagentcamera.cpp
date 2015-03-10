@@ -2022,19 +2022,19 @@ LLVector3d LLAgentCamera::calcCameraPositionTargetGlobal(BOOL *hit_limit)
 		{
 			if (isAgentAvatarValid())
 			{
-				LLVector3d head_pos (gAgent.getPosGlobalFromAgent(gAgentAvatarp->mHeadp->getWorldPosition()));
+				LLVector3d joint_pos (gAgent.getPosGlobalFromAgent(gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition()));
 
-				LLVector3d camera_offset = camera_position_global - head_pos;
+				LLVector3d camera_offset = camera_position_global - joint_pos;
 				F32 camera_distance = (F32)camera_offset.magVec();
 
 				if(camera_distance > gAgent.mRRInterface.mCamDistMax)
 				{
-					camera_position_global = head_pos + (gAgent.mRRInterface.mCamDistMax/camera_distance)*camera_offset;
+					camera_position_global = joint_pos + (gAgent.mRRInterface.mCamDistMax/camera_distance)*camera_offset;
 					isConstrained = TRUE;
 				}
 				else if(camera_distance < gAgent.mRRInterface.mCamDistMin)
 				{
-					camera_position_global = head_pos + (gAgent.mRRInterface.mCamDistMin/camera_distance)*camera_offset;
+					camera_position_global = joint_pos + (gAgent.mRRInterface.mCamDistMin/camera_distance)*camera_offset;
 					isConstrained = TRUE;
 				}
 			}
