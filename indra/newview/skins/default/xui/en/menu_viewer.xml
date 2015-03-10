@@ -1577,37 +1577,43 @@
      tear_off="true">
       <menu_item_call
        label="Head"
-       name="RLV.FocusHead">
+       name="RLV.FocusHead"
+       shortcut="control|alt|shift|U">
         <menu_item_call.on_click
          function="RLV.FocusHead" />
       </menu_item_call>
       <menu_item_call
        label="Pelvis"
-       name="RLV.FocusPelvis">
+       name="RLV.FocusPelvis"
+       shortcut="control|alt|shift|J">
         <menu_item_call.on_click
          function="RLV.FocusPelvis" />
       </menu_item_call>
       <menu_item_call
        label="Left hand"
-       name="RLV.FocusLeftHand">
+       name="RLV.FocusLeftHand"
+       shortcut="control|alt|shift|I">
         <menu_item_call.on_click
          function="RLV.FocusLeftHand" />
       </menu_item_call>
       <menu_item_call
        label="Right hand"
-       name="RLV.FocusRightHand">
+       name="RLV.FocusRightHand"
+       shortcut="control|alt|shift|O">
         <menu_item_call.on_click
          function="RLV.FocusRightHand" />
       </menu_item_call>
       <menu_item_call
        label="Left foot"
-       name="RLV.FocusLeftFoot">
+       name="RLV.FocusLeftFoot"
+       shortcut="control|alt|shift|K">
         <menu_item_call.on_click
          function="RLV.FocusLeftFoot" />
       </menu_item_call>
       <menu_item_call
        label="Right foot"
-       name="RLV.FocusRightFoot">
+       name="RLV.FocusRightFoot"
+       shortcut="control|alt|shift|L">
         <menu_item_call.on_click
          function="RLV.FocusRightFoot" />
       </menu_item_call>
@@ -2582,8 +2588,7 @@
 
       <menu_item_check
        label="Show Updates to Objects"
-       name="Show Updates"
-       shortcut="control|alt|shift|U">
+       name="Show Updates">
         <menu_item_check.on_check
          function="Advanced.CheckShowObjectUpdates"
          parameter="ObjectUpdates" />
@@ -3971,8 +3976,7 @@
      tear_off="true">
       <menu_item_call
        label="Take Copy"
-       name="Admin Take Copy"
-       shortcut="control|alt|shift|O">
+       name="Admin Take Copy">
         <menu_item_call.on_click
          function="Admin.ForceTakeCopy" />
         <menu_item_call.on_enable
@@ -4005,8 +4009,7 @@
       </menu_item_call>
       <menu_item_call
        label="Lock"
-       name="Lock"
-       shortcut="control|alt|shift|L">
+       name="Lock">
         <menu_item_call.on_click
          function="Admin.HandleObjectLock" />
         <menu_item_call.on_enable
@@ -4014,8 +4017,7 @@
       </menu_item_call>
       <menu_item_call
        label="Get Assets IDs"
-       name="Get Assets IDs"
-       shortcut="control|alt|shift|I">
+       name="Get Assets IDs">
         <menu_item_call.on_click
          function="Admin.HandleObjectAssetIDs" />
         <menu_item_call.on_enable
