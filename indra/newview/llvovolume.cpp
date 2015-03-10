@@ -5645,7 +5645,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						//if (mat && LLPipeline::sRenderDeferred)
 						{
 							LLVector3 offset = vobj->getPositionRegion() - joint_pos;
-							F32 distance_to_avatar = (F32)offset.magVec();
+							F32 distance_to_avatar = (F32)offset.magVec() - vobj->getRadius();
 							if (distance_to_avatar > gAgent.mRRInterface.mCamDistDrawMax)
 							{
 								++face_iter;

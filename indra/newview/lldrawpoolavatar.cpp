@@ -1733,7 +1733,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 
 //MK
 		LLVector3 offset = vobj->getPositionRegion() - joint_pos;
-		F32 distance_to_avatar = (F32)offset.magVec();
+		F32 distance_to_avatar = (F32)offset.magVec() - vobj->getRadius();
 //mk
 
 		LLVolume* volume = vobj->getVolume();
