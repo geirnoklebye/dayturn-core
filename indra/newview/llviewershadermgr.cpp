@@ -42,6 +42,10 @@
 #include "llvosky.h"
 #include "llrender.h"
 
+//MK
+#include "llagent.h"
+//mk
+
 #ifdef LL_RELEASE_FOR_DOWNLOAD
 #define UNIFORM_ERRS LL_WARNS_ONCE("Shader")
 #else
@@ -414,6 +418,17 @@ void LLViewerShaderMgr::setShaders()
 			gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
 		}
 	}
+	
+//MK
+	// Make sure the basic shaders are enabled when the vision is restricted.
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{  
+		if (!gSavedSettings.getBOOL("VertexShaderEnable"))
+		{
+			gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
+		}
+	}
+//mk
 	
 	//setup preprocessor definitions
 	LLShaderMgr::instance()->mDefinitions["NUM_TEX_UNITS"] = llformat("%d", gGLManager.mNumTextureImageUnits);
