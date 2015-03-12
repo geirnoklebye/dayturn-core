@@ -324,7 +324,7 @@ LLPanelObject::LLPanelObject()
 	mSelectedType(MI_BOX),
 	mSculptTextureRevert(LLUUID::null),
 	mSculptTypeRevert(0),
-	mSizeChanged(FALSE)
+	mSizeChanged(FALSE),
 	mLimitsNeedUpdate(true),
 	mHasPosClipboard(FALSE),
 	mHasSizeClipboard(FALSE),
@@ -1733,7 +1733,8 @@ void LLPanelObject::sendScale(BOOL btn_down)
 // </AW: opensim-limits>
 
 	LLVector3 delta = newscale - mObject->getScale();
-	if (delta.magVec() >= 0.0005f || (mSizeChanged && !btn_down))
+	if (delta.magVec() >= 0.00005f || (mSizeChanged && !btn_down))
+	{
 		mSizeChanged = btn_down;
 
 		// check to see if we aren't scaling the textures
@@ -1752,10 +1753,11 @@ void LLPanelObject::sendScale(BOOL btn_down)
 		}
 
 		LLSelectMgr::getInstance()->adjustTexturesByScale(TRUE, !dont_stretch_textures);
+	//		LL_INFOS() << "scale sent" << LL_ENDL;
 	}
 	else
 	{
-
+//		LL_INFOS() << "scale not changed" << LL_ENDL;
 	}
 }
 

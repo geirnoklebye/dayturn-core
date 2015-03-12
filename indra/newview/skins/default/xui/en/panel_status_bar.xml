@@ -52,7 +52,7 @@
                 v_pad="4"
                 halign="right"
                 wrap="false"
-     value="L$??" 
+                value="L$ --" />
         </layout_panel>
 
         <layout_panel

@@ -555,6 +555,22 @@
            function="Floater.ToggleOrBringToFront"
            parameter="moveview" />
         </menu_item_call>
+      <!-- MK -->
+      <menu_item_call
+       label="Restart All Animations"
+       name="Restart All Animations"
+       shortcut="control|alt|shift|A">
+        <menu_item_call.on_click
+         function="Tools.RestartAllAnimations" />
+      </menu_item_call>
+      <menu_item_call
+       label="Refresh visibility of objects"
+       name="Refresh visibility of objects"
+       shortcut="control|alt|shift|V">
+        <menu_item_call.on_click
+         function="Tools.RefreshVisibility" />
+      </menu_item_call>
+      <!-- mk -->		
       </menu>
 
       <menu
@@ -2200,6 +2216,55 @@
        function="ToggleControl"
        parameter="RadarReportDrawRange" />
     </menu_item_check>
+    <menu_item_separator/>
+    <menu
+     create_jump_keys="true"
+     label="Focus"
+     name="Focus"
+     tear_off="true">
+      <menu_item_call
+       label="Head"
+       name="RLV.FocusHead"
+       shortcut="control|alt|shift|U">
+        <menu_item_call.on_click
+         function="RLV.FocusHead" />
+      </menu_item_call>
+      <menu_item_call
+       label="Pelvis"
+       name="RLV.FocusPelvis"
+       shortcut="control|alt|shift|J">
+        <menu_item_call.on_click
+         function="RLV.FocusPelvis" />
+      </menu_item_call>
+      <menu_item_call
+       label="Left hand"
+       name="RLV.FocusLeftHand"
+       shortcut="control|alt|shift|I">
+        <menu_item_call.on_click
+         function="RLV.FocusLeftHand" />
+      </menu_item_call>
+      <menu_item_call
+       label="Right hand"
+       name="RLV.FocusRightHand"
+       shortcut="control|alt|shift|O">
+        <menu_item_call.on_click
+         function="RLV.FocusRightHand" />
+      </menu_item_call>
+      <menu_item_call
+       label="Left foot"
+       name="RLV.FocusLeftFoot"
+       shortcut="control|alt|shift|K">
+        <menu_item_call.on_click
+         function="RLV.FocusLeftFoot" />
+      </menu_item_call>
+      <menu_item_call
+       label="Right foot"
+       name="RLV.FocusRightFoot"
+       shortcut="control|alt|shift|L">
+        <menu_item_call.on_click
+         function="RLV.FocusRightFoot" />
+      </menu_item_call>
+    </menu>
   </menu>
   <!-- End RLV menu -->
 <!-- mk -->
@@ -2277,6 +2342,7 @@
              parameter="sl_about" />
         </menu_item_call>
     </menu>
+
     <menu
      create_jump_keys="true"
      label="Advanced"
