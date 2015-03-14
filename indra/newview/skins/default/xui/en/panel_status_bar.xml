@@ -183,7 +183,7 @@
                 visible="true"
                 scale_image="false" />
             <slider
-                name="drawdistance"
+                name="drawdistance2"
                 control_name="RenderFarClip"
                 tool_tip="Maximum distance away from camera to be rezzed (meters)"
                 follows="top|left"
