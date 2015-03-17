@@ -243,6 +243,11 @@ public:
 	void getDescendentsOfAssetType(const LLUUID& category, 
 										  LLInventoryModel::item_array_t& items,
 										  LLAssetType::EType type);
+//MK
+	void getAttachableDescendentsOfAssetType(const LLUUID& category, 
+												LLInventoryModel::item_array_t& items,
+												LLAssetType::EType type);
+//mk
 
 //MK
 private:
