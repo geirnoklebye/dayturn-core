@@ -1268,7 +1268,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		{
 			url = gAgent.getRegion()->getCapability("UpdateScriptAgent");
 			body["item_id"] = inventory_item;
-			if (gSavedSettings.getBOOL("FSSaveInventoryScriptsAsMono"))
+			if (gSavedSettings.getBOOL("SaveInventoryScriptsAsMono"))
 			{
 				body["target"] = "mono";
 			}
