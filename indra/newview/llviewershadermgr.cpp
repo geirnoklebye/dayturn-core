@@ -425,7 +425,10 @@ void LLViewerShaderMgr::setShaders()
 	{  
 		if (!gSavedSettings.getBOOL("VertexShaderEnable"))
 		{
-			gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
+			if (gGLManager.mGLVersion >= 3.f || !gGLManager.mIsIntel)
+			{
+				gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
+			}
 		}
 	}
 //mk

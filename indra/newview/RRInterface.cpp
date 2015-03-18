@@ -4444,7 +4444,9 @@ BOOL RRInterface::updateCameraLimits ()
 
 			// Also make sure the basic shaders are enabled. On some video cards, turning them off completely hides the vision spheres.
 			if (gSavedSettings.getBOOL("VertexShaderEnable") == FALSE) {
-				gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
+				if (gGLManager.mGLVersion >= 3.f || !gGLManager.mIsIntel) {
+					gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
+				}
 			}
 
 		}
