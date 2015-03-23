@@ -64,6 +64,13 @@
                      function="File.UploadBulk"
                      parameter="" />
                 </menu_item_call>
+     			<menu_item_call
+				 label="Set Default Permissions..."
+				 name="Set default permissions">
+					<menu_item_call.on_click
+					 function="Floater.ToggleOrBringToFront"
+					 parameter="perms_default" />
+				</menu_item_call>				
             </menu>
 
             <menu_item_call
