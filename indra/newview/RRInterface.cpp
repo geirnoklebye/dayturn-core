@@ -502,6 +502,7 @@ RRInterface::RRInterface():
 	, mUserUpdateAttachmentsFirstCall(TRUE)
 	, mUserUpdateAttachmentsCalledManually(FALSE)
 	, mCamDistDrawFromJoint(NULL)
+	, mGarbageCollectorCalledOnce(FALSE)
 	//, mContainsMoveUp(FALSE)
 	//, mContainsMoveDown(FALSE)
 	//, mContainsMoveForward(FALSE)
@@ -1156,6 +1157,7 @@ BOOL RRInterface::garbageCollector (BOOL all) {
 			it++;
 		}
     }
+	mGarbageCollectorCalledOnce = TRUE;
     return res;
 }
 

@@ -237,7 +237,7 @@ BOOL LLViewerJointAttachment::addObject(LLViewerObject* object)
 		{
 			std::string name = getName();
 			LLStringUtil::toLower(name);
-			if (!gAgent.mRRInterface.canAttach(object, name, false))
+			if (gAgent.mRRInterface.mGarbageCollectorCalledOnce && !gAgent.mRRInterface.canAttach(object, name, false)) // little trick to ignore illegal attaches while we're still loading (dummy restrictions are still active and the garbage collector hasn't been called yet)
 			{
 				bool just_reattaching = false;
 				std::deque<AssetAndTarget>::iterator it = gAgent.mRRInterface.mAssetsToReattach.begin();
