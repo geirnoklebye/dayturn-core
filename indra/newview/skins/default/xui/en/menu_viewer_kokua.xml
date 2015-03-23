@@ -78,13 +78,13 @@
                  function="Upload.CalculateCosts"
                  parameter="Bulk Upload" />
             </menu_item_call>
-            <menu_item_call
-             label="Set Default Upload Permissions"
-             name="perm prefs">
-                <menu_item_call.on_click
-                 function="Floater.Toggle"
-                 parameter="perm_prefs" />
-            </menu_item_call>
+			<menu_item_call
+			   label="Set Default Permissions..."
+			   name="Set default permissions">
+				<menu_item_call.on_click
+				 function="Floater.ToggleOrBringToFront"
+				 parameter="perms_default" />
+			</menu_item_call>
             <menu_item_call
              label="Import Linkset"
              visibility_control="FSEnableObjectExports"
@@ -95,16 +95,6 @@
             </menu_item_call>			
         </menu>
         <menu_item_separator/>
-        <menu_item_call
-         label="TODO: Minimize all windows"
-         name="Minimize Window"
-         shortcut=""
-	     enabled="false">
-            <menu_item_call.on_click
-             function="" />
-            <menu_item_call.on_enable
-             function="" />
-        </menu_item_call>	
         <menu_item_call
          label="Close Window"
          name="Close Window"
@@ -1604,6 +1594,13 @@
          function="Tools.EnableToolNotPie" />
       </menu_item_call>
       <menu_item_call
+       label="Set Default Permissions..."
+       name="Set default permissions">
+        <menu_item_call.on_click
+         function="Floater.ToggleOrBringToFront"
+         parameter="perms_default" />
+      </menu_item_call>
+      <menu_item_call
         label="Advanced Build Options"
         name="Advanced Build Options"
         shortcut="control|alt|B">
@@ -1682,11 +1679,11 @@
          parameter="" />
       </menu_item_call>
       <menu_item_call
-       label="Set Default Upload Permissions"
-       name="perm prefs">
+       label="Set Default Permissions..."
+       name="Set default permissions">
         <menu_item_call.on_click
-         function="Floater.Toggle"
-         parameter="perm_prefs" />
+         function="Floater.ToggleOrBringToFront"
+         parameter="perms_default" />
       </menu_item_call>
 	  <menu_item_call
          label="Import Linkset"
