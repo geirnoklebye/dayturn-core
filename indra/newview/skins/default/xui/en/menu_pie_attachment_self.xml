@@ -115,7 +115,15 @@
            <pie_slice.on_enable
                function="Edit.EnableCustomizeAvatar" />
         </pie_slice>
-
+        <pie_separator />
+		<pie_slice
+		 label="Hover Height"
+		 name="Hover Height">
+			<pie_slice.on_click
+			 function="HoverHeight" />
+			<pie_slice.on_enable
+			 function="Edit.EnableHoverHeight" />
+		</pie_slice>		
     </pie_menu>
 
     <pie_slice
