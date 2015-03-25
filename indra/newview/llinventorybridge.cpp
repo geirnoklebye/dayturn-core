@@ -3914,21 +3914,21 @@ void LLFolderBridge::createWearable(LLFolderBridge* bridge, LLWearableType::ETyp
 void LLFolderBridge::modifyOutfit(BOOL append)
 {
 //MK
-	if (gRRenabled)
-	{
-		if (gAgent.mRRInterface.mContainsDetach && !append)
-		{
-			return;
-		}
-		if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
-		{
-			return;
-		}
-		if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
-		{
-			return;
-		}
-	}
+	//if (gRRenabled)
+	//{
+	//	if (gAgent.mRRInterface.mContainsDetach && !append)
+	//	{
+	//		return;
+	//	}
+	//	if (gAgent.mRRInterface.containsSubstr ("addoutfit"))
+	//	{
+	//		return;
+	//	}
+	//	if (gAgent.mRRInterface.containsSubstr ("remoutfit") && !append)
+	//	{
+	//		return;
+	//	}
+	//}
 	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
 //mk
 	LLInventoryModel* model = getInventoryModel();

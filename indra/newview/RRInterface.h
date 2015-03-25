@@ -26,9 +26,9 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2090608"
-#define RR_VERSION "2.09.06.8"
-#define RR_SLV_VERSION "3.7.25.33492"
+#define RR_VERSION_NUM "2090700"
+#define RR_VERSION "2.09.07.00"
+#define RR_SLV_VERSION "3.7.25.33539"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -346,6 +346,8 @@ public:
 	BOOL mUserUpdateAttachmentsCalledManually; // TRUE when we just did a "Add to Current Outfit" or "Replace Current Outfit", FALSE otherwise
 
 	LLJoint* mCamDistDrawFromJoint; // mHeadp by default, but we can set it to another joint so the user can "see" the world with vision spheres centered around that joint instead of around the head.
+
+	BOOL mGarbageCollectorCalledOnce; // TRUE when the garbageCollector() method has been called at least once since the beginning of the session
 
 private:
 	bool mScriptsEnabledOnce; // to know if we have been in a script enabled area at least once (so that no-script areas prevent detaching only when we have logged in there)

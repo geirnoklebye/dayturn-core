@@ -1956,7 +1956,10 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 	LLInventoryModel::item_array_t wear_items;
 	if (append)
 		getDescendentsOfAssetType(cof, wear_items, LLAssetType::AT_CLOTHING);
-	getDescendentsOfAssetType(category, wear_items, LLAssetType::AT_CLOTHING);
+//MK
+////	getDescendentsOfAssetType(category, wear_items, LLAssetType::AT_CLOTHING);
+	getAttachableDescendentsOfAssetType(category, wear_items, LLAssetType::AT_CLOTHING);
+//mk
 	// Reduce wearables to max of one per type.
 	removeDuplicateItems(wear_items);
 	filterWearableItems(wear_items, LLAgentWearables::MAX_CLOTHING_PER_TYPE);
@@ -1965,7 +1968,10 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 	LLInventoryModel::item_array_t obj_items;
 	if (append)
 		getDescendentsOfAssetType(cof, obj_items, LLAssetType::AT_OBJECT);
-	getDescendentsOfAssetType(category, obj_items, LLAssetType::AT_OBJECT);
+//MK
+////	getDescendentsOfAssetType(category, obj_items, LLAssetType::AT_OBJECT);
+	getAttachableDescendentsOfAssetType(category, obj_items, LLAssetType::AT_OBJECT);
+//mk
 	removeDuplicateItems(obj_items);
 
 	// - Gestures: include COF contents only if appending.
@@ -1993,7 +1999,7 @@ void LLAppearanceMgr::updateCOF(const LLUUID& category, bool append)
 		LLViewerInventoryItem* item = NULL;
 		for (S32 i = 0; i < count; ++i) {
 			item = (LLViewerInventoryItem*)items->at(i);
-			if (!gAgent.mRRInterface.canDetach (item))
+			if (!gAgent.mRRInterface.canUnwear (item))
 			{
 				all_items.push_back (item);
 			}
@@ -2401,6 +2407,31 @@ void LLAppearanceMgr::getDescendentsOfAssetType(const LLUUID& category,
 									LLInventoryModel::EXCLUDE_TRASH,
 									is_of_type);
 }
+
+//MK
+void LLAppearanceMgr::getAttachableDescendentsOfAssetType(const LLUUID& category,
+															LLInventoryModel::item_array_t& items,
+															LLAssetType::EType type)
+{
+	LLInventoryModel::cat_array_t cats;
+	LLInventoryModel::item_array_t items_tmp;
+	LLIsType is_of_type(type);
+	gInventory.collectDescendentsIf(category,
+									cats,
+									items_tmp,
+									LLInventoryModel::EXCLUDE_TRASH,
+									is_of_type);
+	S32 count = items_tmp.size();
+	for(S32 i = 0; i < count; ++i)
+	{
+		LLViewerInventoryItem* item = items_tmp.at(i);
+		if (gAgent.mRRInterface.canWear (item))
+		{
+			items.push_back(item);
+		}
+	}
+}
+//mk
 
 void LLAppearanceMgr::getUserDescendents(const LLUUID& category, 
 											 LLInventoryModel::item_array_t& wear_items,
