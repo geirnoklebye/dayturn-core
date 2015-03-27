@@ -697,6 +697,7 @@ const LLUUID LLVOAvatar::sStepSounds[LL_MCODE_END] =
 	SND_RUBBER_RUBBER
 };
 
+BOOL LLVOAvatar::sRenderGroupTitles = TRUE;
 S32 LLVOAvatar::sNumVisibleChatBubbles = 0;
 BOOL LLVOAvatar::sDebugInvisible = FALSE;
 BOOL LLVOAvatar::sShowAttachmentPoints = FALSE;
@@ -2713,7 +2714,7 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	static LLCachedControl<S32> AVATAR_NAME_TAG_MODE(gSavedSettings, "AvatarNameTagMode", 1);
 	static LLCachedControl<bool> NAME_TAG_SHOW_GROUP_TITLES(gSavedSettings, "NameTagShowGroupTitles", true);
 
-	const bool render_group_titles = (NAME_TAG_SHOW_GROUP_TITLES && AVATAR_NAME_TAG_MODE);
+//	const bool render_group_titles = (NAME_TAG_SHOW_GROUP_TITLES && AVATAR_NAME_TAG_MODE);
 
 	BOOL visible_avatar = isVisible() || mNeedsAnimUpdate;
 	BOOL visible_chat = USE_CHAT_BUBBLES && (mChats.size() || mTyping);
@@ -2770,14 +2771,9 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		mVisibleChat = visible_chat;
 		new_name = TRUE;
 	}
-	if (mRenderGroupTitles)
+	if (sRenderGroupTitles != (BOOL)mRenderGroupTitles)
 	{
-		mRenderGroupTitles = FALSE;
-		new_name = TRUE;
-	}
-	if ((BOOL)render_group_titles != mRenderGroupTitles)
-	{
-		mRenderGroupTitles = (BOOL)render_group_titles;
+		mRenderGroupTitles = sRenderGroupTitles;
 		new_name = TRUE;
 	}
 
