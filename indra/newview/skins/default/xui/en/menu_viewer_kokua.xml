@@ -4320,7 +4320,8 @@
 
         <menu_item_check
          label="HTTP Textures"
-         name="HTTP Textures">
+         name="HTTP Textures"
+         enabled="false">
             <menu_item_check.on_check
              function="CheckControl"
              parameter="ImagePipelineUseHTTP" />
@@ -4330,7 +4331,8 @@
         </menu_item_check>
        <menu_item_check
          label="HTTP Inventory"
-         name="HTTP Inventory">
+         name="HTTP Inventory"
+         enabled="false">
             <menu_item_check.on_check
              function="CheckControl"
              parameter="UseHTTPInventory" />
