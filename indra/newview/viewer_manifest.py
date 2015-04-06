@@ -1492,13 +1492,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
             # plugin runtime
             if self.prefix(src="../packages/lib/release", dst="lib64"):
-                self.path("libQtCore.so*")
-                self.path("libQtGui.so*")
-                self.path("libQtNetwork.so*")
-                self.path("libQtOpenGL.so*")
-                self.path("libQtSvg.so*")
                 self.path("libQtWebKit.so*")
-                self.path("libQtXml.so*")
                 self.end_prefix("lib64")
 
             # For WebKit/Qt plugin runtimes (image format plugins)
