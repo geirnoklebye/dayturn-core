@@ -1400,13 +1400,7 @@ class Linux_i686_Manifest(LinuxManifest):
 
             # plugin runtime
             if self.prefix(src="../packages/lib/release", dst="lib"):
-                self.path("libQtCore.so*")
-                self.path("libQtGui.so*")
-                self.path("libQtNetwork.so*")
-                self.path("libQtOpenGL.so*")
-                self.path("libQtSvg.so*")
                 self.path("libQtWebKit.so*")
-                self.path("libQtXml.so*")
                 self.end_prefix("lib")
 
             # For WebKit/Qt plugin runtimes (image format plugins)
