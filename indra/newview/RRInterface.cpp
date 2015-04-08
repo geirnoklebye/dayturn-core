@@ -4198,6 +4198,9 @@ bool RRInterface::canAttach(LLViewerObject* object_to_attach, std::string attach
 	if (object_to_attach) {
 		LLInventoryItem* item = getItem(object_to_attach->getRootEdit()->getID());
 		if (item) {
+			// If the item has just been received, let the user attach it
+			if (is_inventory_item_new (item)) return true;
+
 			LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
 			if (cat_parent && !canAttachCategory(cat_parent)) return false;
 		}
