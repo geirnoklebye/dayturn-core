@@ -1668,7 +1668,8 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		return res;
 	}
     else if (command == "adjustheight") { // adjustheight:adjustment_centimeters=force or adjustheight:ref_pelvis_to_foot;scalar[;delta]=force
-        if (!gSavedPerAccountSettings.controlExists("RestrainedLoveOffsetAvatarZ")) {
+//        if (!gSavedPerAccountSettings.controlExists("RestrainedLoveOffsetAvatarZ")) {
+        if (!gSavedPerAccountSettings.controlExists("AvatarHoverOffsetZ")) {
             return FALSE;
         }
         LLVOAvatar* avatar = gAgentAvatarp;
@@ -1689,13 +1690,14 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
                     }
                 }
             }
-            if (val > 1.0f) {
-                val = 1.0f;
+            if (val > 2.0f) {
+                val = 2.0f;
             }
-			else if (val < -1.0f) {
-                val = -1.0f;
+			else if (val < -2.0f) {
+                val = -2.0f;
             }
-            gSavedPerAccountSettings.setF32("RestrainedLoveOffsetAvatarZ", val);
+//            gSavedPerAccountSettings.setF32("RestrainedLoveOffsetAvatarZ", val);
+            gSavedPerAccountSettings.setF32("AvatarHoverOffsetZ", val);
         }
 	}
 	else if (command == "setgroup") {

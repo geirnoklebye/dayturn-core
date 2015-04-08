@@ -293,7 +293,7 @@
       top="2"
       width="16"/>
 		<slider bottom="-20"
-			control_name="RestrainedLoveOffsetAvatarZ"
+			control_name="AvatarHoverOffsetZ"
 			decimal_digits="2"
 			enabled="true"
 			follows="right|top"
@@ -311,7 +311,7 @@
 			width="300"
 			hidden="false"
 			initial_val="0.0"
-			max_val="1.0"
-			min_val="-1.0" />
+			max_val="2.0"
+			min_val="-2.0" />
 <!-- end Avatar Z Offset widget -->
 </panel>
