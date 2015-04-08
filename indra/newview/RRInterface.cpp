@@ -3237,6 +3237,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 			LLWLParamManager::getInstance()->mAnimator.mIsRunning = true;
 			//LLWLParamManager::getInstance()->mAnimator.mUseLindenTime = true;
 			LLWLParamManager::getInstance()->mAnimator.setTimeType(LLWLAnimator::TIME_LINDEN);
+			LLEnvManagerNew::instance().useRegionSettings();
 		}
 	}
 	else if (command == "bluehorizonr") {
