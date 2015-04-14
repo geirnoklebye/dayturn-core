@@ -1668,7 +1668,8 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		return res;
 	}
     else if (command == "adjustheight") { // adjustheight:adjustment_centimeters=force or adjustheight:ref_pelvis_to_foot;scalar[;delta]=force
-        if (!gSavedPerAccountSettings.controlExists("RestrainedLoveOffsetAvatarZ")) {
+//        if (!gSavedPerAccountSettings.controlExists("RestrainedLoveOffsetAvatarZ")) {
+        if (!gSavedPerAccountSettings.controlExists("AvatarHoverOffsetZ")) {
             return FALSE;
         }
         LLVOAvatar* avatar = gAgentAvatarp;
@@ -1689,13 +1690,14 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
                     }
                 }
             }
-            if (val > 1.0f) {
-                val = 1.0f;
+            if (val > 2.0f) {
+                val = 2.0f;
             }
-			else if (val < -1.0f) {
-                val = -1.0f;
+			else if (val < -2.0f) {
+                val = -2.0f;
             }
-            gSavedPerAccountSettings.setF32("RestrainedLoveOffsetAvatarZ", val);
+//            gSavedPerAccountSettings.setF32("RestrainedLoveOffsetAvatarZ", val);
+            gSavedPerAccountSettings.setF32("AvatarHoverOffsetZ", val);
         }
 	}
 	else if (command == "setgroup") {
@@ -3235,6 +3237,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 			LLWLParamManager::getInstance()->mAnimator.mIsRunning = true;
 			//LLWLParamManager::getInstance()->mAnimator.mUseLindenTime = true;
 			LLWLParamManager::getInstance()->mAnimator.setTimeType(LLWLAnimator::TIME_LINDEN);
+			LLEnvManagerNew::instance().useRegionSettings();
 		}
 	}
 	else if (command == "bluehorizonr") {
@@ -4195,6 +4198,9 @@ bool RRInterface::canAttach(LLViewerObject* object_to_attach, std::string attach
 	if (object_to_attach) {
 		LLInventoryItem* item = getItem(object_to_attach->getRootEdit()->getID());
 		if (item) {
+			// If the item has just been received, let the user attach it
+			if (is_inventory_item_new (item)) return true;
+
 			LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
 			if (cat_parent && !canAttachCategory(cat_parent)) return false;
 		}

@@ -146,7 +146,11 @@ private:
 
 	void httpSuccess()
 	{
-		LL_INFOS() << dumpResponse() << LL_ENDL;
+//MK
+		// We need to get rid of that log, because it slows down the viewer for a bit when we have done a lot
+		// of height adjustments
+////		LL_INFOS() << dumpResponse() << LL_ENDL;
+//mk
 	}
 };
 

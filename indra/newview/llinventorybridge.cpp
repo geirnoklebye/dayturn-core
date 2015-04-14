@@ -5587,6 +5587,9 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 //MK
 				if (gRRenabled && gAgent.mRRInterface.mContainsDetach)
 				{
+				// We have at least one locked object on the body => err on the safe side, don't allow to replace
+				replace = false;
+
 					LLViewerJointAttachment* attachmentp = NULL;
 					// if it's a no-mod item, the containing folder has priority to decide where to wear it
 					if (!item->getPermissions().allowModifyBy(gAgent.getID()))

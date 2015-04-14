@@ -1468,6 +1468,14 @@ bool LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear,
 				break;
 			}
 		}
+
+		// If we have at least one locked object on the body, err on the safe side, don't allow to replace (especially
+		// in the case we are trying to replace with an item that doesn't have the attach point name in its own name,
+		// so the viewer has no way to know where that object is supposed to go, until it is actually attached).
+		if (gRRenabled && gAgent.mRRInterface.mContainsDetach)
+		{
+			replace = false;
+		}
 //mk
 		rez_attachment(item_to_wear, NULL, replace);
 		break;

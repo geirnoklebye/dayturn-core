@@ -728,6 +728,7 @@ int LLNavigationBar::getDefFavBarHeight()
 //MK
 void LLNavigationBar::onAvatarHeightOffsetResetButtonClicked()
 {
-	gSavedPerAccountSettings.setF32 ("RestrainedLoveOffsetAvatarZ", 0.0);
+//	gSavedPerAccountSettings.setF32 ("RestrainedLoveOffsetAvatarZ", 0.0);
+	gSavedPerAccountSettings.setF32 ("AvatarHoverOffsetZ", 0.0);
 }
 //mk

@@ -2312,6 +2312,13 @@ bool idle_startup()
 			gAgent.mRRInterface.mSnappingBackToLastStandingLocation = FALSE;
 		}
 
+		// Quickly show and hide the Hover Height floater, to make it bind AvatarHoverOffsetZ to its callback.
+		// Maybe it is a bit hacky to that, but this ensures we don't have to call anything when we modify that debug setting
+		// later on. If we didn't, we'd have to call gAgentAvatarp->setHoverOffset(offset) every time we modified that debug
+		// setting, and as soon as we displayed that floater, it would have been called twice until we relogged.
+		LLFloaterReg::showInstance("edit_hover_height", LLSD(), FALSE);
+		LLFloaterReg::hideInstance("edit_hover_height", LLSD());
+
 		// fire all the stored commands that we received while initializing
 		gAgent.mRRInterface.fireCommands ();
 //mk

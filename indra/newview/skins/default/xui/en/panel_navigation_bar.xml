@@ -120,6 +120,7 @@
 	         tool_tip="Teleport to my home location"
 	         top_delta="0"
 	         width="32" />
+       control_name="AvatarHoverOffsetZ"
 	        <location_input
                        follows="all"
 	         halign="right"
