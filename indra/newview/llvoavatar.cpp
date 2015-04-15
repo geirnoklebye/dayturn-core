@@ -775,7 +775,9 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mUseLocalAppearance(FALSE),
 	mUseServerBakes(FALSE), // FIXME DRANO consider using boost::optional, defaulting to unknown.
 	mLastUpdateRequestCOFVersion(-1),
-	mLastUpdateReceivedCOFVersion(-1)
+	mLastUpdateReceivedCOFVersion(-1),
+	mCachedMuteListUpdateTime(0),
+	mCachedInMuteList(false)
 {
 	//VTResume();  // VTune
 	setHoverOffset(LLVector3(0.0, 0.0, 0.0));
@@ -3281,10 +3283,9 @@ bool LLVOAvatar::isVisuallyMuted()
 
 					U32 max_cost = (U32) (max_render_cost*(LLVOAvatar::sLODFactor+0.5));
 
-					muted = LLMuteList::getInstance()->isMuted(getID()) ||
-						(mAttachmentGeometryBytes > max_attachment_bytes && max_attachment_bytes > 0) ||
-						(geometry_overload_protection && mAttachmentSurfaceArea > max_attachment_area && max_attachment_area > 0.f) ||
-						(mVisualComplexity > max_cost && max_render_cost > 0);
+					muted = (mAttachmentGeometryBytes > max_attachment_bytes && max_attachment_bytes > 0) ||
+						    (geometry_overload_protection && mAttachmentSurfaceArea > max_attachment_area && max_attachment_area > 0.f) ||
+							(mVisualComplexity > max_cost && max_render_cost > 0);
 
 					// Could be part of the grand || collection above, but yanked out to make the logic visible
 					if (!muted)
@@ -3316,7 +3317,7 @@ bool LLVOAvatar::isVisuallyMuted()
 		}
 	}
 
-	return muted;
+	return muted || isInMuteList();
 }
 
 void	LLVOAvatar::forceUpdateVisualMuteSettings()
@@ -3325,6 +3326,24 @@ void	LLVOAvatar::forceUpdateVisualMuteSettings()
 	mCachedVisualMuteUpdateTime = LLFrameTimer::getTotalSeconds() - 1.0;
 }
 
+bool LLVOAvatar::isInMuteList()
+{
+	bool muted = false;
+	F64 now = LLFrameTimer::getTotalSeconds();
+	if (now < mCachedMuteListUpdateTime)
+	{
+		muted = mCachedInMuteList;
+	}
+	else
+	{
+		muted = LLMuteList::getInstance()->isMuted(getID());
+
+		const F64 SECONDS_BETWEEN_MUTE_UPDATES = 1;
+		mCachedMuteListUpdateTime = now + SECONDS_BETWEEN_MUTE_UPDATES;
+		mCachedInMuteList = muted;
+	}
+	return muted;
+}
 
 void LLVOAvatar::updateDebugText()
 {
@@ -8402,7 +8421,7 @@ void LLVOAvatar::updateImpostors()
 
 BOOL LLVOAvatar::isImpostor()
 {
-	return sUseImpostors && (isVisuallyMuted() || (mUpdatePeriod >= IMPOSTOR_PERIOD)) ? TRUE : FALSE;
+	return (sUseImpostors && (isVisuallyMuted() || (mUpdatePeriod >= IMPOSTOR_PERIOD))) || isInMuteList() ? TRUE : FALSE;
 }
 
 

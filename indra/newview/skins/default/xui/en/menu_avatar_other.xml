@@ -203,13 +203,10 @@
          function="Avatar.Share" />
     </menu_item_call>
     <menu_item_call
-     enabled="false"
      label="Pay"
      name="Pay...">
         <menu_item_call.on_click
-         function="PayObject" />
-        <menu_item_call.on_enable
-         function="EnablePayAvatar" />
+         function="PayObject" />       
     </menu_item_call>
 
    <menu_item_separator />
