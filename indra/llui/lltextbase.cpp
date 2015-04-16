@@ -2074,9 +2074,6 @@ void LLTextBase::appendTextImpl(const std::string &new_text, const LLStyle::Para
 			// add icon before url if need
 			LLTextUtil::processUrlMatch(&match, this, isContentTrusted() || match.isTrusted());
 
-			std::string label = match.getLabel();
-			LLTextUtil::normalizeUri(label);
-
 			// output the styled Url
 			appendAndHighlightTextImpl(match.getLabel(), part, link_params, match.underlineOnHoverOnly());
 

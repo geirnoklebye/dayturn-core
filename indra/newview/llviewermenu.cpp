@@ -2687,6 +2687,9 @@ bool enable_object_touch(LLUICtrl* ctrl)
 	LLViewerObject* obj = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
 	if (obj)
 	{
+		LLViewerObject* parent = (LLViewerObject*)obj->getParent();
+		new_value = obj->flagHandleTouch() || (parent && parent->flagHandleTouch());
+	}
 //Adapted from
 // [RLVa:KB] - Checked: 2010-11-12 (RLVa-1.2.1g) | Added: RLVa-1.2.1g
 	if ( (gRRenabled) && (new_value) )
@@ -2739,9 +2742,9 @@ void handle_object_open()
 	{
 		return;
 	}
-//mk
 	LLFloaterReg::showInstance("openobject");
 }
+//mk
 
 bool enable_object_open()
 {

@@ -31,6 +31,7 @@
 #include "lluri.h"
 #include "llurlmatch.h"
 #include "llurlregistry.h"
+#include "lluriparser.h"
 
 #include "llavatarnamecache.h"
 #include "llcachename.h"
@@ -39,7 +40,9 @@
 #include "lluicolortable.h"
 #include "message.h"
 
-#define APP_HEADER_REGEX "(((hop|x-grid-location-info)://[-\\w\\.\\:\\@]+/app)|((hop|secondlife):///app))"
+#include "uriparser/Uri.h"
+
+#define APP_HEADER_REGEX "((x-grid-location-info://[-\\w\\.]+/app)|(secondlife:///app))"
 
 // Utility functions
 std::string localize_slapp_label(const std::string& url, const std::string& full_name);
@@ -228,7 +231,7 @@ static std::string getStringAfterToken(const std::string str, const std::string 
 LLUrlEntryHTTP::LLUrlEntryHTTP()
 	: LLUrlEntryBase()
 {
-	mPattern = boost::regex("https?://([\\w.-]+)+(:\\d+)?(:\\w+)?(@\\d+)?(@\\w+)?(/[^\\s?]*(\\?[^\\s?]+)?)?",
+	mPattern = boost::regex("https?://([-\\w\\.]+)+(:\\d+)?(:\\w+)?(@\\d+)?(@\\w+)?/?\\S*",
 							boost::regex::perl|boost::regex::icase);
 	mMenuName = "menu_url_http.xml";
 	mTooltip = LLTrans::getString("TooltipHttpUrl");
@@ -472,29 +475,17 @@ std::string LLUrlEntrySLURL::getLabel(const std::string &url, const LLUrlLabelCa
 std::string LLUrlEntrySLURL::getLocation(const std::string &url) const
 {
 	// return the part of the Url after slurl.com/secondlife/
-	std::string search_string = "/secondlife";
+	const std::string search_string = "/secondlife";
 	size_t pos = url.find(search_string);
-	std::string ret;
-
 	if (pos == std::string::npos)
 	{
-		search_string = "/region";
-		pos = url.find(search_string);
-
-		if (pos == std::string::npos)
-		{
-				ret = std::string();
-		}
+		return "";
 	}
-	else
-	{
+
 		pos += search_string.size() + 1;
-		ret =  url.substr(pos, url.size() - pos);
+	return url.substr(pos, url.size() - pos);
 	}
 
-	LL_DEBUGS("UrlEntry") << "location " << ret << LL_ENDL;
-	return ret;
-}
 //
 // LLUrlEntrySeconlifeURL Describes *secondlife.com/ and *lindenlab.com/ urls to substitute icon 'hand.png' before link
 //
@@ -958,17 +949,9 @@ std::string LLUrlEntryObjectIM::getLocation(const std::string &url) const
 {
 	LLURI uri(url);
 	LLSD query_map = uri.queryMap();
-	std::string ret;
 	if (query_map.has("slurl"))
-	{
-		ret = query_map["slurl"].asString();
-	}
-	else
-	{
-		ret = LLUrlEntryBase::getLocation(url);
-	}
-	LL_DEBUGS("UrlEntry") << "location " << ret << LL_ENDL;
-	return ret;
+		return query_map["slurl"];
+	return LLUrlEntryBase::getLocation(url);
 }
 
 // LLUrlEntryParcel statics.
@@ -1115,9 +1098,7 @@ std::string LLUrlEntryPlace::getLabel(const std::string &url, const LLUrlLabelCa
 std::string LLUrlEntryPlace::getLocation(const std::string &url) const
 {
 	// return the part of the Url after secondlife:// part
-	std::string ret = ::getStringAfterToken(url, "://");
-	LL_DEBUGS("UrlEntry") << "location " << ret << LL_ENDL;
-	return ret;
+	return ::getStringAfterToken(url, "://");
 }
 
 //
@@ -1172,7 +1153,6 @@ std::string LLUrlEntryRegion::getLabel(const std::string &url, const LLUrlLabelC
 
 		label += ")";
 	}
-	LL_DEBUGS("UrlEntry") << "label " << label << LL_ENDL;
 
 	return label;
 }
@@ -1181,7 +1161,6 @@ std::string LLUrlEntryRegion::getLocation(const std::string &url) const
 {
 	LLSD path_array = LLURI(url).pathArray();
 	std::string region_name = unescapeUrl(path_array[2]);
-	LL_DEBUGS("UrlEntry") << "location " << region_name << LL_ENDL;
 	return region_name;
 }
 
@@ -1246,16 +1225,14 @@ std::string LLUrlEntryTeleport::getLabel(const std::string &url, const LLUrlLabe
 		std::string location = unescapeUrl(path_array[path_parts-1]);
 		return label + " " + location;
 	}
-	LL_DEBUGS("UrlEntry") << "url " << url << LL_ENDL;
+
 	return url;
 }
 
 std::string LLUrlEntryTeleport::getLocation(const std::string &url) const
 {
 	// return the part of the Url after ///app/teleport
-	std::string ret = ::getStringAfterToken(url, "app/teleport/");
-	LL_DEBUGS("UrlEntry") << "location: " << ret << LL_ENDL;
-	return ret;
+	return ::getStringAfterToken(url, "app/teleport/");
 }
 
 //
@@ -1272,9 +1249,7 @@ LLUrlEntrySL::LLUrlEntrySL()
 
 std::string LLUrlEntrySL::getLabel(const std::string &url, const LLUrlLabelCallback &cb)
 {
-	std::string ret = unescapeUrl(url);
-	LL_DEBUGS("UrlEntry") << "url " << ret << LL_ENDL;
-	return ret;
+	return unescapeUrl(url);
 }
 
 //
@@ -1297,9 +1272,7 @@ std::string LLUrlEntrySLLabel::getLabel(const std::string &url, const LLUrlLabel
 
 std::string LLUrlEntrySLLabel::getUrl(const std::string &string) const
 {
-	std::string ret = getUrlFromWikiLink(string);
-	LL_DEBUGS("UrlEntry") << "url " << ret << LL_ENDL;
-	return ret;
+	return getUrlFromWikiLink(string);
 }
 
 std::string LLUrlEntrySLLabel::getTooltip(const std::string &string) const
@@ -1361,18 +1334,13 @@ std::string LLUrlEntryWorldMap::getLabel(const std::string &url, const LLUrlLabe
 	std::string x = (path_parts > 3) ? path_array[3] : "128";
 	std::string y = (path_parts > 4) ? path_array[4] : "128";
 	std::string z = (path_parts > 5) ? path_array[5] : "0";
-
-	std::string ret = label + " " + location + " (" + x + "," + y + "," + z + ")";
-	LL_DEBUGS("UrlEntry") << "label " << ret << LL_ENDL;
-	return ret;
+	return label + " " + location + " (" + x + "," + y + "," + z + ")";
 }
 
 std::string LLUrlEntryWorldMap::getLocation(const std::string &url) const
 {
 	// return the part of the Url after secondlife:///app/worldmap/ part
-	std::string ret = ::getStringAfterToken(url, "app/worldmap/");
-	LL_DEBUGS("UrlEntry") << "location " << ret << LL_ENDL;
-	return ret;
+	return ::getStringAfterToken(url, "app/worldmap/");
 }
 
 //
