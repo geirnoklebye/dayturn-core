@@ -632,11 +632,14 @@ void LLSpeakerMgr::updateSpeakerList()
 	setSpeaker(gAgentID, "", LLSpeaker::STATUS_VOICE_ACTIVE, LLSpeaker::SPEAKER_AGENT);
 }
 
-void LLSpeakerMgr::setSpeakerNotInChannel(LLSpeaker* speakerp)
+void LLSpeakerMgr::setSpeakerNotInChannel(LLPointer<LLSpeaker> speakerp)
 {
-	speakerp->mStatus = LLSpeaker::STATUS_NOT_IN_CHANNEL;
-	speakerp->mDotColor = INACTIVE_COLOR;
-	mSpeakerDelayRemover->setActionTimer(speakerp->mID);
+	if  (speakerp.notNull())
+	{
+		speakerp->mStatus = LLSpeaker::STATUS_NOT_IN_CHANNEL;
+		speakerp->mDotColor = INACTIVE_COLOR;
+		mSpeakerDelayRemover->setActionTimer(speakerp->mID);
+	}
 }
 
 bool LLSpeakerMgr::removeSpeaker(const LLUUID& speaker_id)
@@ -816,7 +819,7 @@ void LLIMSpeakerMgr::updateSpeakers(const LLSD& update)
 
 			if (agent_data.isMap() && agent_data.has("transition"))
 			{
-				if (agent_data["transition"].asString() == "LEAVE" && speakerp.notNull())
+				if (agent_data["transition"].asString() == "LEAVE")
 				{
 					setSpeakerNotInChannel(speakerp);
 				}
@@ -827,7 +830,7 @@ void LLIMSpeakerMgr::updateSpeakers(const LLSD& update)
 				}
 				else
 				{
-					LL_WARNS() << "bad membership list update " << ll_print_sd(agent_data["transition"]) << LL_ENDL;
+					LL_WARNS() << "bad membership list update from 'agent_updates' for agent " << agent_id << ", transition " << ll_print_sd(agent_data["transition"]) << LL_ENDL;
 				}
 			}
 
@@ -869,7 +872,7 @@ void LLIMSpeakerMgr::updateSpeakers(const LLSD& update)
 			LLPointer<LLSpeaker> speakerp = findSpeaker(agent_id);
 
 			std::string agent_transition = update_it->second.asString();
-			if (agent_transition == "LEAVE" && speakerp.notNull())
+			if (agent_transition == "LEAVE")
 			{
 				setSpeakerNotInChannel(speakerp);
 			}
@@ -880,8 +883,7 @@ void LLIMSpeakerMgr::updateSpeakers(const LLSD& update)
 			}
 			else
 			{
-				LL_WARNS() << "bad membership list update "
-						<< agent_transition << LL_ENDL;
+				LL_WARNS() << "bad membership list update from 'updates' for agent " << agent_id << ", transition " << agent_transition << LL_ENDL;
 			}
 		}
 	}
@@ -1074,8 +1076,8 @@ void LLLocalSpeakerMgr::updateSpeakerList()
 	for (speaker_map_t::iterator speaker_it = mSpeakers.begin(); speaker_it != mSpeakers.end(); ++speaker_it)
 	{
 		LLUUID speaker_id = speaker_it->first;
-		LLSpeaker* speakerp = speaker_it->second;
-		if (speakerp->mStatus == LLSpeaker::STATUS_TEXT_ONLY)
+		LLPointer<LLSpeaker> speakerp = speaker_it->second;
+		if (speakerp.notNull() && speakerp->mStatus == LLSpeaker::STATUS_TEXT_ONLY)
 		{
 			LLVOAvatar* avatarp = (LLVOAvatar*)gObjectList.findObject(speaker_id);
 			F32 say_distance_squared = (LLWorld::getInstance()->getSayDistance() * LLWorld::getInstance()->getSayDistance());
