@@ -53,6 +53,18 @@ extern const char* DEFAULT_LOGIN_PAGE;
 #define GRID_FORGOT_PASSWORD "password"
 #define MAINGRID "login.agni.lindenlab.com"
 #define GRID_LOGIN_IDENTIFIER_TYPES "login_identifier_types"
+// <FS:CR> Aurora Sim
+#define GRID_HELP "help"
+#define GRID_ABOUT "about"
+#define GRID_SEARCH	"search"
+#define GRID_PROFILE_URI_VALUE "profileuri"
+#define GRID_SENDGRIDINFO "SendGridInfoToViewerOnLogin"
+#define GRID_DIRECTORY_FEE "DirectoryFee"
+#define GRID_CURRENCY_SYMBOL "CurrencySymbol"
+#define GRID_REAL_CURRENCY_SYMBOL "RealCurrencySymbol"
+#define GRID_MAXGROUPS "MaxGroups"
+#define GRID_PLATFORM "platform"
+#define GRID_MESSAGE "message"
 /**
 * defines slurl formats associated with various grids.
 * we need to continue to support existing forms, as slurls
@@ -61,6 +73,7 @@ extern const char* DEFAULT_LOGIN_PAGE;
 */
 #define GRID_SLURL_BASE "slurl_base"
 #define GRID_APP_SLURL_BASE "app_slurl_base"
+S32 sDirectoryFee = 0; // <FS:CR> Variable directory listing fee
 class GridInfoRequestResponder;
 
 
@@ -221,7 +234,10 @@ public:
 	bool isInSecondLife() { return (isInSLMain() || isInSLBeta()); }	// <FS:CR>
 	void saveGridList();
 	void clearFavorites();
-	
+	// <FS:CR> Variable parcel listing fee
+	void setDirectoryFee(const S32 directory_fee) { sDirectoryFee = directory_fee; }
+	S32 getDirectoryFee() { return sDirectoryFee; }
+	// </FS:CR>	
 private:
 	friend class GridInfoRequestResponder;
 	void addGrid(GridEntry* grid_info, AddState state);

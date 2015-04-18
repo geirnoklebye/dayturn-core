@@ -39,6 +39,8 @@
 #include "lllogininstance.h"        /// to check if logged in yet
 #include "llnotificationsutil.h"
 #include "llhttpclient.h"
+
+
 #if LL_WINDOWS
 #include <Winsock2.h>
 #else
@@ -490,6 +492,50 @@ void LLGridManager::gridInfoResponderCB(GridEntry* grid_entry)
 			LL_DEBUGS("GridManager") << "[\""<<check<<"\"]: " << grid_entry->grid[check] << LL_ENDL;
 			continue;
 		}
+// <FS:CR> Aurora Sim
+		check = "search";
+		if (node->hasName(check))
+		{
+			grid_entry->grid[GRID_SEARCH] = node->getTextContents();
+			LL_DEBUGS("GridManager") << "[\""<<check<<"\"]: " << grid_entry->grid[GRID_SEARCH] << LL_ENDL;
+			continue;
+		}
+		check = "profileuri";
+		if (node->hasName(check))
+		{
+			grid_entry->grid[GRID_PROFILE_URI_VALUE] = node->getTextContents();
+			LL_DEBUGS("GridManager") << "[\""<<check<<"\"]: " << grid_entry->grid[GRID_PROFILE_URI_VALUE] << LL_ENDL;
+			continue;
+		}
+		check = "SendGridInfoToViewerOnLogin";
+		if (node->hasName(check))
+		{
+			grid_entry->grid[GRID_SENDGRIDINFO] = node->getTextContents();
+			LL_DEBUGS("GridManager") << "[\""<<check<<"\"]: " << grid_entry->grid[GRID_SENDGRIDINFO] << LL_ENDL;
+			continue;
+		}
+		check = "DirectoryFee";
+		if (node->hasName(check))
+		{
+			grid_entry->grid[GRID_DIRECTORY_FEE] = node->getTextContents();
+			LL_DEBUGS("GridManager") << "[\""<<check<<"\"]: " << grid_entry->grid[GRID_DIRECTORY_FEE] << LL_ENDL;
+			continue;
+		}
+		check = "platform";
+		if (node->hasName(check))
+		{
+			grid_entry->grid[GRID_PLATFORM] = node->getTextContents();
+			LL_DEBUGS("GridManager") << "[\""<<check<<"\"]: " << grid_entry->grid[GRID_PLATFORM] << LL_ENDL;
+			continue;
+		}
+		check = "message";
+		if (node->hasName(check))
+		{
+			grid_entry->grid[GRID_MESSAGE] = node->getTextContents();
+			LL_DEBUGS("GridManager") << "[\""<<check<<"\"]: " << grid_entry->grid[GRID_MESSAGE] << LL_ENDL;
+			continue;
+		}
+// </FS:CR> Aurora Sim
 		check = "helperuri";
 		if (node->hasName(check))
 		{
