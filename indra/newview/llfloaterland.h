@@ -317,6 +317,7 @@ public:
 	/*virtual*/ void draw();
 	/*virtual*/ void refresh();
 
+
 private:
 	// Refresh the "show in search" checkbox and category selector.
 	void refreshSearch();
@@ -326,6 +327,7 @@ private:
 	static void onClickClear(void* userdata);
 
 private:
+	S32 getDirectoryFee();
 	LLCheckBoxCtrl*	mCheckEditObjects;
 	LLCheckBoxCtrl*	mCheckEditGroupObjects;
 	LLCheckBoxCtrl*	mCheckAllObjectEntry;

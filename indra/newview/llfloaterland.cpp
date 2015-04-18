@@ -67,6 +67,7 @@
 #include "lluictrlfactory.h"
 #include "llviewertexturelist.h"		// LLUIImageList
 #include "llviewermessage.h"
+#include "llviewernetwork.h"
 #include "llviewerparcelmgr.h"
 #include "llviewerregion.h"
 #include "llviewerstats.h"
@@ -2115,10 +2116,40 @@ void LLPanelLandOptions::refresh()
 				}
 			}
 		}
+		S32 fee = getDirectoryFee();
+		if (fee == 0)
+		{
+			mCheckShowDirectory->setLabel(getString("DirectoryFree"));
+		}
+		else
+		{
+			LLStringUtil::format_map_t map;
+			map["DIRECTORY_FEE"] = llformat("%d", fee);
+			mCheckShowDirectory->setLabel(getString("DirectoryFee", map));
+		}
 //MK
 		gAgent.mRRInterface.mParcelLandingType = parcel->getLandingType();
 //mk
 	}
+}
+S32 LLPanelLandOptions::getDirectoryFee()
+{
+	S32 fee = PARCEL_DIRECTORY_FEE;
+#ifdef OPENSIM
+	if (LLGridManager::getInstance()->isInOpenSim())
+	{
+		fee = LLGridManager::getInstance()->getDirectoryFee();
+	}
+/*
+	if (LLGridManager::getInstance()->isInAuroraSim())
+	{
+		LLSD grid_info;
+		LLGridManager::getInstance()->getGridData(grid_info);
+		fee = grid_info[GRID_DIRECTORY_FEE].asInteger();
+	}
+*/
+#endif // OPENSIM
+	return fee;
 }
 
 // virtual
@@ -3055,3 +3086,4 @@ void insert_maturity_into_textbox(LLTextBox* target_textbox, LLFloater* names_fl
 	target_textbox->appendText(LLViewerParcelMgr::getInstance()->getSelectionRegion()->getSimAccessString(), false);
 	target_textbox->appendText(text_after_rating, false);
 }
+
