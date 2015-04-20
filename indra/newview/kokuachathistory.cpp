@@ -116,7 +116,6 @@ class LLChatHistoryHeader: public LLPanel
 public:
 	LLChatHistoryHeader()
 	:	LLPanel(),
-		mInfoCtrl(NULL),
 		mPopupMenuHandleAvatar(),
 		mPopupMenuHandleObject(),
 		mAvatarID(),
