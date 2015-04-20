@@ -73,7 +73,7 @@ extern const char* DEFAULT_LOGIN_PAGE;
 */
 #define GRID_SLURL_BASE "slurl_base"
 #define GRID_APP_SLURL_BASE "app_slurl_base"
-S32 sDirectoryFee = 0; // <FS:CR> Variable directory listing fee
+
 class GridInfoRequestResponder;
 
 
@@ -235,6 +235,7 @@ public:
 	void saveGridList();
 	void clearFavorites();
 	// <FS:CR> Variable parcel listing fee
+	S32 sDirectoryFee;
 	void setDirectoryFee(const S32 directory_fee) { sDirectoryFee = directory_fee; }
 	S32 getDirectoryFee() { return sDirectoryFee; }
 	// </FS:CR>	
