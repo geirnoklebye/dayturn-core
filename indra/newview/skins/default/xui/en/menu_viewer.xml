@@ -1396,102 +1396,11 @@
        function="Edit.EnableRedo" />
     </menu_item_call>
   </menu>
-  <menu
-   create_jump_keys="true"
-   label="Help"
-   name="Help"
-   tear_off="true">
-    <menu_item_call
-     label="How to..."
-     name="How To"
-     shortcut="F1">
-      <menu_item_call.on_click
-       function="Help.ToggleHowTo"
-       parameter="" />
-    </menu_item_call>
-    <menu_item_call
-       label="Quickstart"
-       name="Quickstart">
-      <menu_item_call.on_click
-      function="Advanced.ShowURL"
-      parameter="http://community.secondlife.com/t5/English-Knowledge-Base/Second-Life-Quickstart/ta-p/1087919"/>
-    </menu_item_call>
-    <!--        <menu_item_call
-         label="Tutorial"
-         name="Tutorial">
-            <menu_item_call.on_click
-             function="Floater.Show"
-             parameter="hud" />
-        </menu_item_call>-->
-    <menu_item_separator/>
-    <menu_item_call
-         label="Knowledge Base"
-         name="Knowledge Base">
-      <menu_item_call.on_click
-          function="Advanced.ShowURL"
-     parameter="http://community.secondlife.com/t5/English-Knowledge-Base/Second-Life-User-s-Guide/ta-p/1244857"/>
-    </menu_item_call>
-    <menu_item_call
-         label="Wiki"
-         name="Wiki">
-      <menu_item_call.on_click
-          function="Advanced.ShowURL"
-          parameter="http://wiki.secondlife.com"/>
-    </menu_item_call>
-    <menu_item_call
-         label="Community Forums"
-         name="Community Forums">
-      <menu_item_call.on_click
-          function="Advanced.ShowURL"
-          parameter="http://community.secondlife.com/t5/Forums/ct-p/Forums"/>
-    </menu_item_call>
-    <menu_item_call
-         label="Support portal"
-         name="Support portal">
-      <menu_item_call.on_click
-          function="Advanced.ShowURL"
-          parameter="https://support.secondlife.com/"/>
-    </menu_item_call>
-    <menu_item_separator/>
-    <menu_item_call
-         label="[SECOND_LIFE] News"
-         name="Second Life News">
-      <menu_item_call.on_click
-          function="Advanced.ShowURL"
-          parameter="http://community.secondlife.com/t5/Featured-News/bg-p/blog_feature_news"/>
-    </menu_item_call>
-    <menu_item_call
-         label="[SECOND_LIFE] Blogs"
-         name="Second Life Blogs">
-      <menu_item_call.on_click
-          function="Advanced.ShowURL"
-          parameter="http://community.secondlife.com/t5/Blogs/ct-p/Blogs"/>
-    </menu_item_call>
-    <menu_item_separator/>
 
-    <menu_item_call
-         label="Report Abuse"
-         name="Report Abuse">
-      <menu_item_call.on_click
-       function="ReportAbuse" />
-    </menu_item_call>
-    <menu_item_call
-         label="Report Bug"
-         name="Report Bug">
-      <menu_item_call.on_click
-       function="Advanced.ReportBug"/>
-    </menu_item_call>
 
-    <menu_item_separator/>
 
-    <menu_item_call
-     label="About [APP_NAME]"
-     name="About Second Life">
-      <menu_item_call.on_click
-       function="Floater.Show"
-       parameter="sl_about" />
-    </menu_item_call>
-  </menu>
+
+
   <!-- MK -->
   <!-- RLV menu here -->
   <menu
@@ -1621,6 +1530,119 @@
   </menu>
   <!-- End RLV menu -->
   <!-- mk -->
+
+
+
+
+
+
+
+
+
+
+  <menu
+   create_jump_keys="true"
+   label="Help"
+   name="Help"
+   tear_off="true">
+    <menu_item_call
+     label="How to..."
+     name="How To"
+     shortcut="F1">
+      <menu_item_call.on_click
+       function="Help.ToggleHowTo"
+       parameter="" />
+    </menu_item_call>
+    <menu_item_call
+       label="Quickstart"
+       name="Quickstart">
+      <menu_item_call.on_click
+      function="Advanced.ShowURL"
+      parameter="http://community.secondlife.com/t5/English-Knowledge-Base/Second-Life-Quickstart/ta-p/1087919"/>
+    </menu_item_call>
+    <!--        <menu_item_call
+         label="Tutorial"
+         name="Tutorial">
+            <menu_item_call.on_click
+             function="Floater.Show"
+             parameter="hud" />
+        </menu_item_call>-->
+    <menu_item_separator/>
+    <menu_item_call
+         label="Knowledge Base"
+         name="Knowledge Base">
+      <menu_item_call.on_click
+          function="Advanced.ShowURL"
+     parameter="http://community.secondlife.com/t5/English-Knowledge-Base/Second-Life-User-s-Guide/ta-p/1244857"/>
+    </menu_item_call>
+    <menu_item_call
+         label="Wiki"
+         name="Wiki">
+      <menu_item_call.on_click
+          function="Advanced.ShowURL"
+          parameter="http://wiki.secondlife.com"/>
+    </menu_item_call>
+    <menu_item_call
+         label="Community Forums"
+         name="Community Forums">
+      <menu_item_call.on_click
+          function="Advanced.ShowURL"
+          parameter="http://community.secondlife.com/t5/Forums/ct-p/Forums"/>
+    </menu_item_call>
+    <menu_item_call
+         label="Support portal"
+         name="Support portal">
+      <menu_item_call.on_click
+          function="Advanced.ShowURL"
+          parameter="https://support.secondlife.com/"/>
+    </menu_item_call>
+    <menu_item_separator/>
+    <menu_item_call
+         label="[SECOND_LIFE] News"
+         name="Second Life News">
+      <menu_item_call.on_click
+          function="Advanced.ShowURL"
+          parameter="http://community.secondlife.com/t5/Featured-News/bg-p/blog_feature_news"/>
+    </menu_item_call>
+    <menu_item_call
+         label="[SECOND_LIFE] Blogs"
+         name="Second Life Blogs">
+      <menu_item_call.on_click
+          function="Advanced.ShowURL"
+          parameter="http://community.secondlife.com/t5/Blogs/ct-p/Blogs"/>
+    </menu_item_call>
+    <menu_item_separator/>
+
+    <menu_item_call
+         label="Report Abuse"
+         name="Report Abuse">
+      <menu_item_call.on_click
+       function="ReportAbuse" />
+    </menu_item_call>
+    <menu_item_call
+         label="Report Bug"
+         name="Report Bug">
+      <menu_item_call.on_click
+       function="Advanced.ReportBug"/>
+    </menu_item_call>
+
+    <menu_item_separator/>
+		<menu_item_call
+             label="Bumps, Pushes &amp; Hits"
+             name="Bumps, Pushes &amp;amp; Hits">
+                <menu_item_call.on_click
+                 function="Floater.Show"
+                 parameter="bumps" />
+        </menu_item_call>
+        <menu_item_separator/>    
+    <menu_item_call
+     label="About [APP_NAME]"
+     name="About Second Life">
+      <menu_item_call.on_click
+       function="Floater.Show"
+       parameter="sl_about" />
+    </menu_item_call>
+  </menu>
   <menu
      create_jump_keys="true"
      label="Advanced"
@@ -3277,14 +3299,6 @@
       <menu_item_call.on_click
        function="Advanced.DumpScriptedCamera" />
     </menu_item_call>
-    <menu_item_call
-         label="Bumps, Pushes &amp; Hits"
-         name="Bumps, Pushes &amp;amp; Hits">
-      <menu_item_call.on_click
-       function="Floater.Show"
-       parameter="bumps" />
-    </menu_item_call>
-
     <menu
      create_jump_keys="true"
      label="Recorder"

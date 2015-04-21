@@ -38,6 +38,7 @@
 #include "lltextutil.h"
 #include "lltooltip.h"
 #include "lluictrl.h"
+#include "lluriparser.h"
 #include "llurlaction.h"
 #include "llurlregistry.h"
 #include "llview.h"
@@ -2061,11 +2062,17 @@ void LLTextBase::appendTextImpl(const std::string &new_text, const LLStyle::Para
 			// add icon before url if need
 			LLTextUtil::processUrlMatch(&match, this, isContentTrusted() || match.isTrusted());
 
-			std::string label = match.getLabel();
-			LLTextUtil::normalizeUri(label);
-
 			// output the styled Url
+			appendAndHighlightTextImpl(match.getLabel(), part, link_params, match.underlineOnHoverOnly());
+
+			// show query part of url with gray color only for LLUrlEntryHTTP and LLUrlEntryHTTPNoProtocol url entries
+			std::string label = match.getQuery();
+			if (label.size())
+			{
+				link_params.color = LLColor4::grey;
+				link_params.readonly_color = LLColor4::grey;
 			appendAndHighlightTextImpl(label, part, link_params, match.underlineOnHoverOnly());
+			}
 			
 			// set the tooltip for the Url label
 			if (! match.getTooltip().empty())
@@ -2856,13 +2863,44 @@ void LLTextBase::updateRects()
 		needsReflow();
 	}
 
+	// update mTextBoundingRect after mVisibleTextRect took scrolls into account
+	if (!mLineInfoList.empty() && mScroller)
+	{
+		S32 delta_pos = 0;
+
+		switch(mVAlign)
+		{
+		case LLFontGL::TOP:
+			delta_pos = llmax(mVisibleTextRect.getHeight() - mTextBoundingRect.mTop, -mTextBoundingRect.mBottom);
+			break;
+		case LLFontGL::VCENTER:
+			delta_pos = (llmax(mVisibleTextRect.getHeight() - mTextBoundingRect.mTop, -mTextBoundingRect.mBottom) + (mVisibleTextRect.mBottom - mTextBoundingRect.mBottom)) / 2;
+			break;
+		case LLFontGL::BOTTOM:
+			delta_pos = mVisibleTextRect.mBottom - mTextBoundingRect.mBottom;
+			break;
+		case LLFontGL::BASELINE:
+			// do nothing
+			break;
+		}
+		// move line segments to fit new visible rect
+		if (delta_pos != 0)
+		{
+			for (line_list_t::iterator it = mLineInfoList.begin(); it != mLineInfoList.end(); ++it)
+			{
+				it->mRect.translate(0, delta_pos);
+			}
+			mTextBoundingRect.translate(0, delta_pos);
+		}
+	}
+
 	// update document container again, using new mVisibleTextRect (that has scrollbars enabled as needed)
 	doc_rect.mBottom = llmin(mVisibleTextRect.mBottom,  mTextBoundingRect.mBottom);
 	doc_rect.mLeft = 0;
 	doc_rect.mRight = mScroller 
 		? llmax(mVisibleTextRect.getWidth(), mTextBoundingRect.mRight)
 		: mVisibleTextRect.getWidth();
-	doc_rect.mTop = llmax(mVisibleTextRect.mTop, mTextBoundingRect.mTop);
+	doc_rect.mTop = llmax(mVisibleTextRect.getHeight(), mTextBoundingRect.getHeight()) + doc_rect.mBottom;
 	if (!mScroller)
 	{
 		// push doc rect to top of text widget
