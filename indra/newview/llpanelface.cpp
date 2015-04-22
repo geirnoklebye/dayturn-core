@@ -1566,6 +1566,12 @@ void LLPanelFace::onSelectShinyColor(const LLSD& data)
 	LLSelectMgr::getInstance()->saveSelectedShinyColors();
 }
 
+void LLPanelFace::onSelectShinyColor(const LLSD& data)
+{
+	LLSelectedTEMaterial::setSpecularLightColor(this, getChild<LLColorSwatchCtrl>("shinycolorswatch")->get());
+	LLSelectMgr::getInstance()->saveSelectedShinyColors();
+}
+
 // static
 void LLPanelFace::onCommitMaterialsMedia(LLUICtrl* ctrl, void* userdata)
 {

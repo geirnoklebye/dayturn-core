@@ -684,6 +684,7 @@ LLAppViewer::LLAppViewer()
 	mSavePerAccountSettings(false),		// don't save settings on logout unless login succeeded.
 	mQuitRequested(false),
 	mLogoutRequestSent(false),
+	mYieldTime(-1),
 	mLastAgentControlFlags(0),
 	mLastAgentForceUpdate(0),
 	mMainloopTimeout(NULL),

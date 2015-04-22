@@ -430,6 +430,9 @@ private:
 	bool		mCachedInMuteList;
 	F64			mCachedMuteListUpdateTime;
 
+	bool		mCachedInMuteList;
+	F64			mCachedMuteListUpdateTime;
+
 	VisualMuteSettings		mVisuallyMuteSetting;			// Always or never visually mute this AV
 
 	//--------------------------------------------------------------------

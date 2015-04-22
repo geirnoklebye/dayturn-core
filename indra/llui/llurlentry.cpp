@@ -36,7 +36,6 @@
 #include "llavatarnamecache.h"
 #include "llcachename.h"
 #include "lltrans.h"
-#include "lltextutil.h"
 #include "lluicolortable.h"
 #include "message.h"
 
@@ -526,7 +525,7 @@ std::string LLUrlEntrySecondlifeURL::getUrl(const std::string &string) const
 // LLUrlEntrySimpleSecondlifeURL Describes *secondlife.com and *lindenlab.com urls to substitute icon 'hand.png' before link
 //
 LLUrlEntrySimpleSecondlifeURL::LLUrlEntrySimpleSecondlifeURL()
-  {
+{
 	mPattern = boost::regex("(https?://)?([-\\w\\.]*\\.)?(secondlife|lindenlab)\\.com(?!\\S)",
 		boost::regex::perl|boost::regex::icase);
 
