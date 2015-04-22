@@ -2071,7 +2071,7 @@ void LLTextBase::appendTextImpl(const std::string &new_text, const LLStyle::Para
 			{
 				link_params.color = LLColor4::grey;
 				link_params.readonly_color = LLColor4::grey;
-			appendAndHighlightTextImpl(label, part, link_params, match.underlineOnHoverOnly());
+				appendAndHighlightTextImpl(label, part, link_params, match.underlineOnHoverOnly());
 			}
 			
 			// set the tooltip for the Url label
