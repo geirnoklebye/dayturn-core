@@ -399,7 +399,6 @@ public:
 
 	LLMaterialPtr getTEMaterialParams(const U8 index);
 
-	LLMaterialPtr getTEMaterialParams(const U8 index);
 
 	void copyTEs(const LLPrimitive *primitive);
 	S32 packTEField(U8 *cur_ptr, U8 *data_ptr, U8 data_size, U8 last_face_index, EMsgVariableType type) const;
