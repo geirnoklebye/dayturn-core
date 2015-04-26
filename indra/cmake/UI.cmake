@@ -32,9 +32,10 @@ if (USESYSTEMLIBS)
     add_definitions(${${pkg}_CFLAGS_OTHERS})
   endforeach(pkg)
 else (USESYSTEMLIBS)
-if (WINDOWS)
-  use_prebuilt_binary(gtk-atk-pango-glib)
-endif (WINDOWS)
+  if (LINUX OR WINDOWS)
+    use_prebuilt_binary(gtk-atk-pango-glib)
+  endif (LINUX OR WINDOWS)
+
   if (LINUX)
     use_prebuilt_binary(glib)		# gtk-etc needs glib
     use_prebuilt_binary(gtk-etc)

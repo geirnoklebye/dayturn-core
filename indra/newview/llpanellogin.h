@@ -93,7 +93,6 @@ private:
 	void reshapeBrowser();
 	void addFavoritesToStartLocation();
 	void addUsersWithFavoritesToUsername();
-//	void onSelectServer();
 	void onLocationSLURL();
 
     static void onClickConnect(void*);

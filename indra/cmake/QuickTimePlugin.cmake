@@ -5,7 +5,9 @@ endif(INSTALL_PROPRIETARY OR QUICKTIME)
 
 if(QUICKTIME)
   include(Prebuilt)
-  use_prebuilt_binary(quicktime)
+  if (WINDOWS)
+    use_prebuilt_binary(quicktime)
+  endif (WINDOWS)
 
   if (DARWIN)
     include(CMakeFindFrameworks)

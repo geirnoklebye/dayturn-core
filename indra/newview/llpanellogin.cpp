@@ -76,9 +76,6 @@
 
 #include "llsdserialize.h"
 
-const S32 BLACK_BORDER_HEIGHT = 160;
-const S32 MAX_PASSWORD = 16;
-
 LLPanelLogin *LLPanelLogin::sInstance = NULL;
 BOOL LLPanelLogin::sCapslockDidNotification = FALSE;
 
@@ -178,16 +175,23 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	// Logo
 	mLogoImage = LLUI::getUIImage("startup_logo");
 
-	buildFromFile( "panel_login.xml");
+		buildFromFile( "panel_login.xml");
 
 	reshape(rect.getWidth(), rect.getHeight());
 
 	getChild<LLLineEditor>("password_edit")->setKeystrokeCallback(onPassKey, this);
+	password_edit->setCommitCallback(boost::bind(&LLPanelLogin::onClickConnect, this));
 
 	// change z sort of clickable text to be behind buttons
 	sendChildToBack(getChildView("forgot_password_text"));
 
 	if(LLStartUp::getStartSLURL().getType() != LLSLURL::LOCATION)
+	favorites_combo->setReturnCallback(boost::bind(&LLPanelLogin::onClickConnect, this));
+	favorites_combo->setFocusLostCallback(boost::bind(&LLPanelLogin::onLocationSLURL, this));
+	
+	LLComboBox* server_choice_combo = getChild<LLComboBox>("server_combo");
+	server_choice_combo->setCommitCallback(boost::bind(&LLPanelLogin::onSelectServer, this));
+	
 	{
 		LLSLURL slurl(gSavedSettings.getString("LoginLocation"));
 		LLStartUp::setStartSLURL(slurl);
@@ -268,10 +272,10 @@ void LLPanelLogin::addFavoritesToStartLocation()
 	std::string old_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "stored_favorites.xml");
 	LLSD fav_llsd;
 	llifstream file;
-	file.open(filename);
+	file.open(filename.c_str());
 	if (!file.is_open())
 	{
-		file.open(old_filename);
+		file.open(old_filename.c_str());
 		if (!file.is_open()) return;
 	}
 	LLSDSerialize::fromXML(fav_llsd, file);
@@ -299,6 +303,10 @@ void LLPanelLogin::addFavoritesToStartLocation()
 			if(label != "" && value != "")
 			{
 				combo->add(label, value);
+				if ( LLStartUp::getStartSLURL().getSLURLString() == value)
+				{
+					combo->selectByValue(value);
+				}
 			}
 		}
 		break;
@@ -709,6 +717,9 @@ void LLPanelLogin::updateLocationCombo( bool force_visible )
 			combo->setCurrentByIndex( 2 );	
 			combo->setTextEntry(LLStartUp::getStartSLURL().getLocationString());	
 			break;
+				{
+					location_combo->setLabel(new_start_slurl.getLocationString());
+				}
 		}
 		case LLSLURL::HOME_LOCATION:
 			combo->setCurrentByIndex(1);
@@ -912,8 +923,6 @@ void LLPanelLogin::handleMediaEvent(LLPluginClassMedia* /*self*/, EMediaEvent ev
 //---------------------------------------------------------------------------
 // Protected methods
 //---------------------------------------------------------------------------
-
-// static
 void LLPanelLogin::onClickConnect(void *)
 {
 	if (sInstance && sInstance->mCallback)
@@ -1125,25 +1134,19 @@ void LLPanelLogin::gridListChanged(bool success)
 	updateServerCombo();
 }
 // </FS:AW  grid management>
-
 void LLPanelLogin::updateServerCombo()
 {
 	if (!sInstance) 
-	{
 			return;
 		}
-
 	LL_DEBUGS("PanelLogin") << __FUNCTION__ << LL_ENDL;
 // <FS:AW  grid management>
 	LLGridManager::getInstance()->addGridListChangedCallback(&LLPanelLogin::gridListChanged);
 // </FS:AW  grid management>
-
 	// We add all of the possible values, sorted, and then add a bar and the current value at the top
 	LLComboBox* server_choice_combo = sInstance->getChild<LLComboBox>("server_combo");	
 	server_choice_combo->removeall();
-
 	std::string add_grid_item = LLTrans::getString("ServerComboAddGrid");
-
 	std::map<std::string, std::string> known_grids = LLGridManager::getInstance()->getKnownGrids();
 
 	for (std::map<std::string, std::string>::iterator grid_choice = known_grids.begin();
@@ -1159,7 +1162,6 @@ void LLPanelLogin::updateServerCombo()
 				std::string entry = grid_choice->second + " ("+ login_uri +")";
 				server_choice_combo->add(entry, grid_choice->first);
 			}
-	}
 	}
 	server_choice_combo->sortByName();
 	std::string grid_id = " (" + LLGridManager::getInstance()->getGridLoginID() + ")";
