@@ -2298,9 +2298,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a176c100a3556d0162e9892592d3739f</string>
+              <string>a73088e519d2b340e01538ae205e09e4</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/ndphysicsstub/downloads/ndPhysicsStub-0.1.1-r167-win32-20130111.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.0-windows-201504262316.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -3160,8 +3160,6 @@
         <map>
           <key>configurations</key>
           <map>
-                  <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
-                  <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
             <key>RelWithDebInfo</key>
             <map>
               <key>build</key>
@@ -3254,24 +3252,16 @@
           <string>build-darwin-i386</string>
           <key>configurations</key>
           <map>
-                  <string>|</string>
-                  <string>grep</string>
-                  <string>-v</string>
-                <key>command</key>
-                <string>xcodebuild</string>
             <key>RelWithDebInfo</key>
             <map>
               <key>build</key>
               <map>
-                <key>arguments</key>
-                <array>
-                  <string>|</string>
-                  <string>grep</string>
-                  <string>-v</string>
-                  <string>setenv</string>
-                </array>
                 <key>command</key>
                 <string>xcodebuild</string>
+                <key>filters</key>
+                <array>
+                  <string>setenv</string>
+                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration RelWithDebInfo</string>
@@ -3322,15 +3312,12 @@
             <map>
               <key>build</key>
               <map>
-                <key>arguments</key>
-                <array>
-                  <string>|</string>
-                  <string>grep</string>
-                  <string>-v</string>
-                  <string>setenv</string>
-                </array>
                 <key>command</key>
                 <string>xcodebuild</string>
+                <key>filters</key>
+                <array>
+                  <string>setenv</string>
+                </array>
                 <key>options</key>
                 <array>
                   <string>-configuration Release</string>
@@ -3676,13 +3663,6 @@
           <string>build-vc120</string>
           <key>configurations</key>
           <map>
-                  <string>Kokua.sln</string>
-                  <string>Kokua.sln</string>
-                  <string>kokua-bin</string>
-                  <string>Kokua.sln</string>
-                  <string>Kokua.sln</string>
-                  <string>kokua-bin</string>
-                  <string>-DUNATTENDED:BOOL=OFF</string>
             <key>RelWithDebInfo</key>
             <map>
               <key>build</key>
@@ -3819,16 +3799,11 @@
                   <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
-                <string>msbuild.exe</string>
+                <string>devenv.com</string>
                 <key>options</key>
                 <array>
-                  <string>/p:Configuration=Release</string>
-                  <string>/p:Platform=Win32</string>
-                  <string>/t:Build</string>
-                  <string>/p:useenv=true</string>
-                  <string>/verbosity:minimal</string>
-                  <string>/toolsversion:4.0</string>
-                  <string>/p:"VCBuildAdditionalOptions= /incremental"</string>
+                  <string>/build</string>
+                  <string>"Release|Win32"</string>
                 </array>
               </map>
               <key>configure</key>
