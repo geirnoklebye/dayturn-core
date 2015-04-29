@@ -643,19 +643,7 @@ const std::string LLSLURL::typeName[NUM_SLURL_TYPES] =
 	"APP",
 	"HELP"
 };
-bool LLSLURL::operator !=(const LLSLURL& rhs)
-{
-	return !(*this == rhs);
-}
 
-std::string LLSLURL::getLocationString() const
-{
-	return llformat("%s/%d/%d/%d",
-					mRegion.c_str(),
-					(int)llround(mPosition[0]),
-					(int)llround(mPosition[1]),
-					(int)llround(mPosition[2]));
-}
 std::string LLSLURL::asString() const
 {
 	std::ostringstream result;

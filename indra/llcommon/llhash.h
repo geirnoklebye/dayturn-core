@@ -29,8 +29,6 @@
 
 #include <boost/functional/hash.hpp>
 
-#    include <hashtable.h>
-#  elif GCC_VERSION >= 40300 // gcc 4.3 and up
 // Warning - an earlier template-based version of this routine did not do
 // the correct thing on Windows.   Since this is only used to get
 // a string hash, it was converted to a regular routine and

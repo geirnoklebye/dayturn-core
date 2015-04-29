@@ -1144,7 +1144,6 @@ char * os_strltrim(char * lstr)
 	return lstr;
 }
 
-
 void check_curl_easy_code(CURLcode code, int curl_setopt_option)
 {
 	if (CURLE_OK != code)
@@ -1159,35 +1158,4 @@ void check_curl_easy_code(CURLcode code, int curl_setopt_option)
 	}
 }
 
-
-
-
-
-void check_curl_easy_code(CURLcode code, int curl_setopt_option)
-{
-	if (CURLE_OK != code)
-	{
-		// Comment from old llcurl code which may no longer apply:
-		//
-		// linux appears to throw a curl error once per session for a bad initialization
-		// at a pretty random time (when enabling cookies).
-		LL_WARNS(LOG_CORE) << "libcurl error detected:  " << curl_easy_strerror(code)
-						   << LL_ENDL;
-	}
-}
-
-
-void check_curl_easy_code(CURLcode code)
-{
-	if (CURLE_OK != code)
-	{
-		// Comment from old llcurl code which may no longer apply:
-		//
-		// linux appears to throw a curl error once per session for a bad initialization
-		// at a pretty random time (when enabling cookies).
-		LL_WARNS(LOG_CORE) << "libcurl error detected:  " << curl_easy_strerror(code)
-						   << LL_ENDL;
-	}
-}
-*/
 }  // end anonymous namespace

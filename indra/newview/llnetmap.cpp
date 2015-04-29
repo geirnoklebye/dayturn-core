@@ -1088,7 +1088,7 @@ void LLNetMap::renderPropertyLinesForRegion(const LLViewerRegion* region)
 	const F32 real_width(region->getWidth());
 	const S32 borderY = originY + llround(real_width * mObjectMapTPM);
 	if (borderY >= 0 && borderY < imgHeight) {
-		S32 curX = llclamp(originX, 0, imgWidth), endX = llclamp(originX + llround(real_width * mObjectMapTPM), 0, imgWidth - 1);
+		S32 curX = llclamp(originX, 0, imgWidth), endX = llclamp(originX + (S32)llround(real_width * mObjectMapTPM), 0, imgWidth - 1);
 		for (; curX <= endX; curX++) {
 			pTextureData[borderY * imgWidth + curX] = colour_property_lines;
 		}
@@ -1096,7 +1096,7 @@ void LLNetMap::renderPropertyLinesForRegion(const LLViewerRegion* region)
 
 	const S32 borderX = originX + llround(real_width * mObjectMapTPM);
 	if (borderX >= 0 && borderX < imgWidth) {
-		S32 curY = llclamp(originY, 0, imgHeight), endY = llclamp(originY + llround(real_width * mObjectMapTPM), 0, imgHeight - 1);
+		S32 curY = llclamp(originY, 0, imgHeight), endY = llclamp(originY + (S32)lround(real_width * mObjectMapTPM), 0, imgHeight - 1);
 		for (; curY <= endY; curY++) {
 			pTextureData[curY * imgWidth + borderX] = colour_property_lines;
 		}
@@ -1130,9 +1130,9 @@ void LLNetMap::renderPropertyLinesForRegion(const LLViewerRegion* region)
 			const S32 posY = originY + llround(row * GRID_STEP * mObjectMapTPM);
 
 			if ((for_sale_parcels && detected_for_sale) || (collision_parcels && detected_collision)) {
-				S32 curY = llclamp(posY, 0, imgHeight), endY = llclamp(posY + llround(GRID_STEP * mObjectMapTPM), 0, imgHeight - 1);
+				S32 curY = llclamp(posY, 0, imgHeight), endY = llclamp(posY + (S32)llround(GRID_STEP * mObjectMapTPM), 0, imgHeight - 1);
 				for (; curY <= endY; curY++) {
-					S32 curX = llclamp(posX, 0, imgWidth) , endX = llclamp(posX + llround(GRID_STEP * mObjectMapTPM), 0, imgWidth - 1);
+					S32 curX = llclamp(posX, 0, imgWidth) , endX = llclamp(posX + (S32)llround(GRID_STEP * mObjectMapTPM), 0, imgWidth - 1);
 					for (; curX <= endX; curX++) {
 						pTextureData[(curY * imgWidth) + curX] = detected_for_sale ? colour_for_sale : LLColor4U(255, 128, 128, 192).asRGBA();
 					}
@@ -1141,7 +1141,7 @@ void LLNetMap::renderPropertyLinesForRegion(const LLViewerRegion* region)
 
 			if (overlay & PARCEL_SOUTH_LINE) {
 				if (posY >= 0 && posY < imgHeight) {
-					S32 curX = llclamp(posX, 0, imgWidth), endX = llclamp(posX + llround(GRID_STEP * mObjectMapTPM), 0, imgWidth - 1);
+					S32 curX = llclamp(posX, 0, imgWidth), endX = llclamp(posX + (S32)llround(GRID_STEP * mObjectMapTPM), 0, imgWidth - 1);
 					for (; curX <= endX; curX++) {
 						pTextureData[(posY * imgWidth) + curX] = colour_property_lines;
 					}
@@ -1150,7 +1150,7 @@ void LLNetMap::renderPropertyLinesForRegion(const LLViewerRegion* region)
 
 			if (overlay & PARCEL_WEST_LINE) {
 				if (posX >= 0 && posX < imgWidth) {
-					S32 curY = llclamp(posY, 0, imgHeight), endY = llclamp(posY + llround(GRID_STEP * mObjectMapTPM), 0, imgHeight - 1);
+					S32 curY = llclamp(posY, 0, imgHeight), endY = llclamp(posY + (S32)llround(GRID_STEP * mObjectMapTPM), 0, imgHeight - 1);
 					for (; curY <= endY; curY++) {
 						pTextureData[(curY * imgWidth) + posX] = colour_property_lines;
 					}

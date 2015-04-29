@@ -412,6 +412,7 @@ LLAgent::LLAgent() :
 	mOutfitChosen(FALSE),
 
 	mVoiceConnected(false),
+	mAppearanceSerialNum(0),
 
 	mMouselookModeInSignal(NULL),
 	mMouselookModeOutSignal(NULL),
