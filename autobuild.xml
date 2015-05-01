@@ -27,18 +27,6 @@
           </map>
         </map>
       </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>965f4bc30ef85a91b197da83ccd2363e</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4-linux64-20121216.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
       <key>SDL</key>
       <map>
         <key>copyright</key>
@@ -910,6 +898,41 @@
         <key>version</key>
         <string>0.0.0</string>
       </map>
+      <key>glib</key>
+      <map>
+        <key>license</key>
+        <string>gpl</string>
+        <key>license-url</key>
+        <string>http://www.gnu.org/licenses/gpl.html</string>
+        <key>name</key>
+        <string>glib</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>58c11add6b275c163950364df5b2964a</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/glib-2.20.5-linux64-20100515.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+      </map>
       <key>glod</key>
       <map>
         <key>copyright</key>
@@ -979,64 +1002,6 @@
         </map>
         <key>version</key>
         <string>1.0pre4.296895</string>
-      </map>
-      <key>glib</key>
-      <map>
-        <key>license</key>
-        <string>gpl</string>
-        <key>license-url</key>
-        <string>http://www.gnu.org/licenses/gpl.html</string>
-        <key>name</key>
-        <string>glib</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/i686-linux/include</key>
-                <string>include</string>
-                <key>libraries/i686-linux/lib_release_client</key>
-                <string>lib/release</string>
-                <key>libraries/include</key>
-                <string>include</string>
-              </map>
-              <key>hash</key>
-              <string>566cc47a572303bc4aef12ca02670902</string>
-              <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/glib-2.20.5-linux32-20100529.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
-              <key>hash</key>
-              <string>58c11add6b275c163950364df5b2964a</string>
-              <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/glib-2.20.5-linux64-20100515.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
       </map>
       <key>glui</key>
       <map>
@@ -1390,29 +1355,6 @@
         <string>gtk-etc</string>
         <key>platforms</key>
         <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/i686-linux/include</key>
-                <string>include</string>
-                <key>libraries/i686-linux/lib_release_client</key>
-                <string>lib/release</string>
-                <key>libraries/include</key>
-                <string>include</string>
-              </map>
-              <key>hash</key>
-              <string>349ee367e0ac1e878b24b66e449c6ff8</string>
-              <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/gtk-etc-linux-20101106.1.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -1971,6 +1913,18 @@
         <key>version</key>
         <string>2.9.1.297050</string>
       </map>
+      <key>linux64</key>
+      <map>
+        <key>archive</key>
+        <map>
+          <key>hash</key>
+          <string>965f4bc30ef85a91b197da83ccd2363e</string>
+          <key>url</key>
+          <string>http://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4-linux64-20121216.tar.bz2</string>
+        </map>
+        <key>name</key>
+        <string>linux64</string>
+      </map>
       <key>llappearance_utility</key>
       <map>
         <key>copyright</key>
@@ -2285,30 +2239,6 @@
           <map>
             <key>archive</key>
             <map>
-              <key>hash</key>
-              <string>db7a32f5fe194bf9b6967e3386eddd4a</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/ndphysicsstub/downloads/ndPhysicsStub-0.1.1--r167-Linux64-20130112.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-          <key>windows</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>a73088e519d2b340e01538ae205e09e4</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.0-windows-201504262316.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>windows</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
               <key>dir_structure</key>
               <map>
                 <key>LICENSES</key>
@@ -2327,6 +2257,18 @@
             </map>
             <key>name</key>
             <string>linux64</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>a73088e519d2b340e01538ae205e09e4</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.0-windows-201504262316.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
           </map>
         </map>
         <key>version</key>
