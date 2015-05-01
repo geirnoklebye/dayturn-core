@@ -1197,6 +1197,9 @@ class Linux_i686_Manifest(LinuxManifest):
     def construct(self):
         super(Linux_i686_Manifest, self).construct()
 
+        pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
+        relpkgdir = os.path.join(pkgdir, "lib", "release")
+        debpkgdir = os.path.join(pkgdir, "lib", "debug")
 
 
         # install either the libllkdu we just built, or a prebuilt one, in
@@ -1222,7 +1225,7 @@ class Linux_i686_Manifest(LinuxManifest):
     
 
 
-
+        if self.prefix("../packages/lib/release", dst="lib"):
             self.path("libapr-1.so")
             self.path("libapr-1.so.0")
             self.path("libapr-1.so.0.4.5")

@@ -320,8 +320,7 @@ public:
 	{
 		std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "grids.remote.xml");
 
-		llofstream out_file;
-		out_file.open(filename);
+		llofstream out_file(filename.c_str(), std::ios_base::out | std::ios_base::binary);
 		LLSDSerialize::toPrettyXML(content, out_file);
 		out_file.close();
 		llinfos << "GridListRequest: got new list." << llendl;

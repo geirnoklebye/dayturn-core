@@ -267,11 +267,10 @@ void LLPanelLogin::addFavoritesToStartLocation()
 	std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "stored_favorites_" + LLGridManager::getInstance()->getGrid() + ".xml");
 	std::string old_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "stored_favorites.xml");
 	LLSD fav_llsd;
-	llifstream file;
-	file.open(filename);
+	llifstream file(filename.c_str(), std::ios_base::in | std::ios_base::binary);;
 	if (!file.is_open())
 	{
-		file.open(old_filename);
+		llifstream file(old_filename.c_str(), std::ios_base::in | std::ios_base::binary);;;
 	if (!file.is_open()) return;
 	}
 	LLSDSerialize::fromXML(fav_llsd, file);
