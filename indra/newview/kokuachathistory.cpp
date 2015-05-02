@@ -482,7 +482,7 @@ public:
 		mTimeBoxTextBox = getChild<LLTextBox>("time_box");
 
 		sInfoCtrl = LLUICtrlFactory::getInstance()->createFromFile<LLUICtrl>("inspector_info_ctrl.xml", this, LLPanel::child_registry_t::instance());
-		llassert(aInfoCtrl != NULL);
+		llassert(sInfoCtrl != NULL);
 		sInfoCtrl->setCommitCallback(boost::bind(&LLChatHistoryHeader::onClickInfoCtrl, sInfoCtrl));
 		sInfoCtrl->setVisible(FALSE);
 
