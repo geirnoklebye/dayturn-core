@@ -36,7 +36,7 @@
             <color_swatch
              can_apply_immediately="true"
              follows="left|top"
-             height="22"
+             height="64"
              label=""
              layout="topleft"
              left="10"
