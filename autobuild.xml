@@ -653,9 +653,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>dd0135d53706a4040d65974f7e804d6f</string>
+              <string>17eef6303b1e8802256ee665c03b568e</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/fmodex_3p-update-fmodex/rev/297261/arch/Linux/installer/fmodex-4.44.31.297261-linux-297261.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.50-linux-201502011947.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
