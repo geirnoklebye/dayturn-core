@@ -2442,11 +2442,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>15ebe611213c9577691ffbade081549d</string>
+              <string>faec46f0ea4df43519b7f72c09aac2ff</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/openal_3p-update-openal/rev/297677/arch/Linux/installer/openal-1.12.854-1.1.0.297677-linux-297677.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201505071449-linux-201505071449.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>

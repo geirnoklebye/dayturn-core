@@ -1252,9 +1252,7 @@ class Linux_i686_Manifest(LinuxManifest):
             self.path("libhunspell-1.3.so.0.0.0")
             self.path("libalut.so.0")
             self.path("libalut.so.0.0.0")
-            self.path("libopenal.so")
-            self.path("libopenal.so.1")
-            self.path("libopenal.so.1.15.1")
+            self.path("libopenal.so*")
             self.path("libopenal.so", "libvivoxoal.so.1") # vivox's sdk expects this soname
             self.path("libfontconfig.so*")
             self.path("libpng15.so.15") 
