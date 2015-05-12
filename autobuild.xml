@@ -112,9 +112,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>46cfc1e55d071deaf2e3406140ae9da1</string>
+              <string>f609bdacb3fa461890889bc4e659bac5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-apr/downloads/apr_suite-1.4.5-linux64-20120619.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-apr/downloads/apr_suite-1.4.5.201505112108-linux64-201505112108.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -601,9 +601,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5f6c43f46c0b23f8924e07f89def2fe9</string>
+              <string>7eee24f7309849b14283a4c529b384b2</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-expat/downloads/expat-2.0.1-linux64-20120616.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-expat/downloads/expat-2.0.1.201505112037-linux64-201505112037.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
