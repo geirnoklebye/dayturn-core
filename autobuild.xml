@@ -178,9 +178,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>12a5e3d8e6126aaa160812242348bbdc</string>
+              <string>6078b2a47f4231ed9822738c07d6bb39</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-ares/downloads/ares-1.10.0-linux64-gcc-4.6-20140909.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-ares/downloads/ares-1.10.0.201505130838-linux64-201505130838.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -374,9 +374,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>959a0035cb4ab630278e8b5704578a50</string>
+              <string>b1d69a6c24b8258752201a4f011eb72e</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.37.0-linux64-gcc-4.6-20141017.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.38.0.201505141355-linux64-201505141355.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2969,21 +2969,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>dc67b896c56116df8e18f2d1bbd07031</string>
+              <string>b438780c670b00b53d01d3efe622ac82</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/xmlrpc-epi-0.51-linux64-20080909.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-xmlrpc-epi/downloads/xmlrpc_epi-0.54.1.201505141438-linux64-201505141438.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
