@@ -244,9 +244,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>0398ef062fe48334cdbffade120b89ff</string>
+              <string>96aa4118932a4b255e7e7ab6df1a9875</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.55.0-linux64-gcc-4.6-20140902.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201505121847.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2590,9 +2590,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4001d38e2477a1f184788f816191f304</string>
+              <string>c870be3262a73b83684b4e8113469a7e</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-openssl-ll/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
+              <string>http://bitbucket.org/NickyP/kokuant/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3049,9 +3049,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>54978827de8f2ccbb8255b7198808cd0</string>
+              <string>b025386ce8d91d319c1b8fb216ac2d81</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-zlib/downloads/zlib-1.2.8-linux64-gcc-4.6-20140908.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-zlib/downloads/zlib-1.2.8.201505121042-linux64-201505121042.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
