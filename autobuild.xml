@@ -58,9 +58,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>bf4dc73067a960b6dea25f5ee0b39b63</string>
+              <string>3e1b46a1e9dba76ecea7176a99c2a26c</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-sdl/downloads/SDL-1.2.15-linux64-gcc-4.6.3-20140905.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-sdl/downloads/SDL-1.2.15-linux64-201505150959.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -791,9 +791,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f6be9cb15b6338fd9ee8da446a905d74</string>
+              <string>796da5acf9bdaeea633cd40a0cba655f</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.4.4-linux64-gcc-4.6.3-20140904.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.4.4.201505141819-linux64-201505141819.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -845,9 +845,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5de58ca0fe19abf68b25956762ee0d29</string>
+              <string>b26cf6cb678d63b28600bdf3fc354033</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/glext-68-windows-20110406.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-glext/downloads/glext-68-linux64-201505150822.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1100,9 +1100,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>399c446286ef03849729af18fa2f6f21</string>
+              <string>14cdd3390ace3a91edf80655a570c1af</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-google-mock/downloads/gmock-1.7.0-linux64-gcc-4.6-20140909.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-breakpad/downloads/google_breakpad-0.0.0-rev1099-linux64-20130506.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1166,9 +1166,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>14cdd3390ace3a91edf80655a570c1af</string>
+              <string>399c446286ef03849729af18fa2f6f21</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-google-breakpad/downloads/google_breakpad-0.0.0-rev1099-linux64-20130506.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-google-mock/downloads/gmock-1.7.0-linux64-gcc-4.6-20140909.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1477,9 +1477,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>1293364aa62a6b6377e838004554467c</string>
+              <string>56f8925102d9e17498fbe7b0f0119b68</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-jpeglib/downloads/jpeglib-8c-linux64-20120728.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-jpeglib/downloads/jpeglib-8c.201505141845-linux64-201505141845.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1771,9 +1771,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>88d76e12ad4104cf00dfb06b4b8889b8</string>
+              <string>e7afbce0432a1d133c9ba78012cdffb5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-libpng/downloads/libpng-1.6.8-linux64-20140901.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-libpng/downloads/libpng-1.6.8.201505150925-linux64-201505150925.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
