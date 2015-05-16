@@ -1166,9 +1166,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>399c446286ef03849729af18fa2f6f21</string>
+              <string>1704941c7920f62ce6e8682028bcffd0</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-google-mock/downloads/gmock-1.7.0-linux64-gcc-4.6-20140909.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201505151338-linux64-201505151338.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2239,22 +2239,11 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>d1986d287655f159be50d661c125ba19</string>
+              <string>54c312d898f08609a71acb22cfe80406</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/ndofdev-linux64-0.3.1-20100817.tar.bz2</string>
-            </map>
+              <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.201505151905-linux64-201505151905.tar.bz2</string>
+             </map>
             <key>name</key>
             <string>linux64</string>
           </map>
@@ -2512,21 +2501,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>d7806f46c136793f5a8e784f24a4fb7a</string>
+              <string>109696609aeec4e31b10f982422426f7</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/openjpeg-1.4-Linux-x86_64-20110823.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-openjpeg/downloads/openjpeg-1.4.201505151441-linux64-201505151441.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
