@@ -32,22 +32,21 @@ if (USESYSTEMLIBS)
     add_definitions(${${pkg}_CFLAGS_OTHERS})
   endforeach(pkg)
 else (USESYSTEMLIBS)
-  if (LINUX OR WINDOWS)
+  if ((LINUX AND ${ARCH} STREQUAL "i686") OR WINDOWS)
     use_prebuilt_binary(gtk-atk-pango-glib)
-  endif (LINUX OR WINDOWS)
+  endif ((LINUX AND ${ARCH} STREQUAL "i686") OR WINDOWS)
 
-  if (LINUX)
-#    use_prebuilt_binary(glib)		# gtk-etc needs glib
-#    use_prebuilt_binary(gtk-etc)
-
+  if (LINUX AND ${ARCH} STREQUAL "x86_64")
+    use_prebuilt_binary(gtk-etc)
+    use_prebuilt_binary(glib)		# gtk-etc needs glib
     set(UI_LIBRARIES
         atk-1.0
- #       cairo
+        cairo
         gdk-x11-2.0
         gdk_pixbuf-2.0
         Xinerama
         glib-2.0
-#        gio-2.0
+        gio-2.0
         gmodule-2.0
         gobject-2.0
         gthread-2.0
@@ -56,16 +55,35 @@ else (USESYSTEMLIBS)
         pangoft2-1.0
         pangox-1.0
         pangoxft-1.0
-#        pixman-1
+        pixman-1
         ${FREETYPE_LIBRARIES}
-#        pangocairo-1.0
+        pangocairo-1.0
         )
-  endif (LINUX)
+  endif (LINUX AND ${ARCH} STREQUAL "x86_64")
+
+	if (LINUX AND ${ARCH} STREQUAL="i686")
+    set(UI_LIBRARIES
+        atk-1.0
+        gdk-x11-2.0
+        gdk_pixbuf-2.0
+        Xinerama
+        glib-2.0
+        gmodule-2.0
+        gobject-2.0
+        gthread-2.0
+        gtk-x11-2.0
+        pango-1.0
+        pangoft2-1.0
+        pangox-1.0
+        pangoxft-1.0
+        ${FREETYPE_LIBRARIES}
+        )
+    endif(LINUX AND ${ARCH} STREQUAL="i686")
 
   include_directories (
       ${LIBS_PREBUILT_DIR}/include
-#      ${LIBS_PREBUILT_DIR}/include/cairo
-#      ${LIBS_PREBUILT_DIR}/include/pixman-1
+      ${LIBS_PREBUILT_DIR}/include/cairo
+      ${LIBS_PREBUILT_DIR}/include/pixman-1
 
       )
   foreach(include ${${LL_ARCH}_INCLUDES})
