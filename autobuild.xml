@@ -58,9 +58,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>996e5a988d6eb7def0a39eeda32dd72f</string>
+              <string>a9b1a2b55f9f54bd915a0b5dcaa78644</string>
               <key>url</key>
-              <string>file:///opt/3p/SDL-1.2.15-linux64-201505162257.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/SDL-1.2.15-linux64-201505162257.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -308,9 +308,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>57dfceccc99d987c138b5071cbadc1ab</string>
+              <string>4ce74a7fff983435816a20ff83796804</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3-linux64-gcc-4.6-20140909.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/colladadom-2.3.201505170602-linux64-201505170602.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -374,9 +374,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>0abbd6789b3066fe08ca3b48346fc298</string>
+              <string>5f968deffa034a22afecbabf70a1f7a9</string>
               <key>url</key>
-              <string>file:///opt/3p/curl-7.38.0.201505162257-r143d-linux64-201505162257-r143d.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/curl-7.38.0.201505170555-r143d-linux64-201505170555-r143d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -469,21 +469,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>09be41e3145e1a960e50f2f9ce0a5e7d</string>
+              <string>aab8ac9af9d8a99a612a19940ee07978</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/dbusglib-linux64-20101007.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/dbus_glib-0.76-201505170616-linux64-201505170616.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -707,9 +696,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>06b36f68034e7ab57e57fc9070812b7f</string>
+              <string>a553ddf858f1c9554d641206b7080bad</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-fontconfig/downloads/fontconfig-2.11.0-linux64-gcc-4.6-20140905.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/fontconfig-2.11.0-linux64-201505170929-r22d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -791,9 +780,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>32ec4fafd3d930ee216d6e978f446ffc</string>
+              <string>c4f33e613e5de6b7634d9e2c79950312</string>
               <key>url</key>
-              <string>file:///opt/3p/freetype-2.4.4.201505162338-r57d-linux64-201505162338-r57d.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/freetype-2.4.4.201505170600-r57d-linux64-201505170600-r57d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -887,9 +876,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f577144536fd7c9d26d9f989acf17857</string>
+              <string>c0f648de940bf7f48c9b98db6b9d28c9</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/glh-linear_3p-update-glh-linear/rev/297692/arch/Linux/installer/glh_linear-0.0.0-common-297692.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/glh_linear-0.0.0-common-201505170835-r13.tar.bz2</string>
             </map>
             <key>name</key>
             <string>common</string>
@@ -943,9 +932,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>26f2df1f0b0fa01e94e0253e322f3583</string>
+              <string>5131320515607322ed99930006d9c9a8</string>
               <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/glh_linear-linux-20101001.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/glod-1.0pre4.201505170841-r81d-linux64-201505170841-r81d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1065,9 +1054,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>14cdd3390ace3a91edf80655a570c1af</string>
+              <string>166d479c47ffd1afdf0bf1b64f92bfca</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-google-breakpad/downloads/google_breakpad-0.0.0-rev1099-linux64-20130506.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/google_breakpad-1398.201505170725-r75d-linux64-201505170725-r75d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1605,9 +1594,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>32491873ed138ef804b2c0d1526bad07</string>
+              <string>2a4bebc77d3bbc81beee69a40e940253</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-hunspell/downloads/libhunspell-1.3.2-linux64-20120702.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/libhunspell-1.3.2.201505170907-r21d-linux64-201505170907-r21d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1713,9 +1702,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fa202e834aa3373e931e2bf6320241f8</string>
+              <string>11b1b1f4a2943cff0be33f91981fd820</string>
               <key>url</key>
-              <string>file:///opt/3p/libpng-1.6.8.201505162329-r52d-linux64-201505162329-r52d.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/libpng-1.6.8.201505170602-r52d-linux64-201505170602-r52d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1766,21 +1755,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>3f2a0b553a2a72d3b9a39f528f057b18</string>
+              <string>e0fb78ca703edbd3d1861a9487ac2631</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/libuuid-linux64-lenny-20091130.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/libuuid-1.6.2-linux64-201505170914-r8d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1832,9 +1810,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>73a981c63cbffc34986fed1bc609fad8</string>
+              <string>7679fe77ba97631993c44ae040391663</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-libxml/downloads/libxml2-2.9.1-linux64-gcc-4.6-20140905.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/libxml2-2.9.1.201505170807-r41d-linux64-201505170807-r41d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1860,7 +1838,7 @@
         <key>archive</key>
         <map>
           <key>hash</key>
-          <string>965f4bc30ef85a91b197da83ccd2363e</string>
+          <string>5131320515607322ed99930006d9c9a8</string>
           <key>url</key>
           <string>http://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4-linux64-20121216.tar.bz2</string>
         </map>
@@ -2326,6 +2304,18 @@
             </map>
             <key>name</key>
             <string>linux</string>
+            </map>
+           <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>09ae2ed2711be0cb05c6ef0732e8d345</string>
+              <key>url</key>
+              <string>https://bitbucket.org/Drakeo/firestorm-testing-boost/downloads/open_libndofdev-0.3-linux-x86-64-1.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
         </map>
         <key>version</key>
@@ -2576,9 +2566,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a322ddf8479cec722d8d54cfb5af6bfe</string>
+              <string>36b28f1a41aaa36ce97b2017897ccad7</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-pcre/downloads/pcre-8.35-linux64-gcc-4-6-20140905.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/pcre-8.35.-linux64-201505170748-r49d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2716,9 +2706,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>48ed7ddcf93fa3c751d677f5eb5f9367</string>
+              <string>eaf9c620a353faf7a496a3f82ca0a0cc</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/slvoice_3p-update-slvoice/rev/298329/arch/Linux/installer/slvoice-3.2.0002.10426.298329-linux-298329.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/3p-voice/downloads/slvoice-3.2.0002.10426.298329-linux-298329.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2824,9 +2814,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4ff7fffcc08ffde0fc6684257a175e7d</string>
+              <string>36a0c8b596e941cd0c1752978f299afa</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-uriparser/downloads/uriparser-0.8.0.1-linux64-20150226.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/uriparser-0.8.0.1-201505170634-linux64-201505170634.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
