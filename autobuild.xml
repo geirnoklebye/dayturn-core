@@ -58,9 +58,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3e1b46a1e9dba76ecea7176a99c2a26c</string>
+              <string>996e5a988d6eb7def0a39eeda32dd72f</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-sdl/downloads/SDL-1.2.15-linux64-201505150959.tar.bz2</string>
+              <string>file:///opt/3p/SDL-1.2.15-linux64-201505162257.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -374,9 +374,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b1d69a6c24b8258752201a4f011eb72e</string>
+              <string>0abbd6789b3066fe08ca3b48346fc298</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.38.0.201505141355-linux64-201505141355.tar.bz2</string>
+              <string>file:///opt/3p/curl-7.38.0.201505162257-r143d-linux64-201505162257-r143d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -791,9 +791,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>796da5acf9bdaeea633cd40a0cba655f</string>
+              <string>32ec4fafd3d930ee216d6e978f446ffc</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.4.4.201505141819-linux64-201505141819.tar.bz2</string>
+              <string>file:///opt/3p/freetype-2.4.4.201505162338-r57d-linux64-201505162338-r57d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -897,41 +897,6 @@
         </map>
         <key>version</key>
         <string>0.0.0</string>
-      </map>
-      <key>glib</key>
-      <map>
-        <key>license</key>
-        <string>gpl</string>
-        <key>license-url</key>
-        <string>http://www.gnu.org/licenses/gpl.html</string>
-        <key>name</key>
-        <string>glib</string>
-        <key>platforms</key>
-        <map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
-              <key>hash</key>
-              <string>58c11add6b275c163950364df5b2964a</string>
-              <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/glib-2.20.5-linux64-20100515.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
       </map>
       <key>glod</key>
       <map>
@@ -1340,45 +1305,22 @@
             </map>
             <key>name</key>
             <string>linux</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>0.0</string>
-      </map>
-      <key>gtk-etc</key>
-      <map>
-        <key>license</key>
-        <string>lgpl</string>
-        <key>license-file</key>
-        <string>LICENSES/gtk-etc.txt</string>
-        <key>name</key>
-        <string>gtk-etc</string>
-        <key>platforms</key>
-        <map>
+            </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>e8cb3f28379b7730004da44f04263936</string>
+              <string>ba03a4186de0100572e5f38ed0c5bd8f</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/gtk-etc-linux64-20091231.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/3p-gtk-atk-pango-glib-linux64-kokua/downloads/gtk_atk_pango_glib-0.1-linux64-201505170404.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
           </map>
         </map>
+        <key>version</key>
+        <string>0.0</string>
       </map>
       <key>havok-source</key>
       <map>
@@ -1771,9 +1713,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e7afbce0432a1d133c9ba78012cdffb5</string>
+              <string>fa202e834aa3373e931e2bf6320241f8</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-libpng/downloads/libpng-1.6.8.201505150925-linux64-201505150925.tar.bz2</string>
+              <string>file:///opt/3p/libpng-1.6.8.201505162329-r52d-linux64-201505162329-r52d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
