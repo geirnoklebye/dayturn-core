@@ -58,9 +58,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3e1b46a1e9dba76ecea7176a99c2a26c</string>
+              <string>44e213cc79d66cc4f332d828e49e05dc</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-sdl/downloads/SDL-1.2.15-linux64-201505150959.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-sdl/downloads/SDL-1.2.15-linux64-201505170936.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -244,9 +244,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>96aa4118932a4b255e7e7ab6df1a9875</string>
+              <string>49e81fbbacfd60e0e364a35ad248e664</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201505121847.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201505161612.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -308,9 +308,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>57dfceccc99d987c138b5071cbadc1ab</string>
+              <string>8c0b96d8c9e19c2f0035476e1efd0836</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3-linux64-gcc-4.6-20140909.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201505161723-linux64-201505161723.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -374,9 +374,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b1d69a6c24b8258752201a4f011eb72e</string>
+              <string>332b06d47fe5c9ac6dbceab537ff608f</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.38.0.201505141355-linux64-201505141355.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.38.0.201505161957-linux64-201505161957.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -791,9 +791,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>796da5acf9bdaeea633cd40a0cba655f</string>
+              <string>5e529c5fd598cf16972e2d096630a791</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.4.4.201505141819-linux64-201505141819.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.4.4.201505162052-linux64-201505162052.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1102,7 +1102,7 @@
               <key>hash</key>
               <string>14cdd3390ace3a91edf80655a570c1af</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-google-breakpad/downloads/google_breakpad-0.0.0-rev1099-linux64-20130506.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-google-breakpad/downloads/google_breakpad-0.0.0-rev1099-linux64-20130506.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1166,9 +1166,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>1704941c7920f62ce6e8682028bcffd0</string>
+              <string>182c6e70bf78d80fc5c2eeb5efdfd36a</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201505151338-linux64-201505151338.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201505171213-linux64-201505171213.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1771,9 +1771,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e7afbce0432a1d133c9ba78012cdffb5</string>
+              <string>05efb58926b4bf4d00491380fb77647f</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-libpng/downloads/libpng-1.6.8.201505150925-linux64-201505150925.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libpng/downloads/libpng-1.6.8.201505162036-linux64-201505162036.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1890,9 +1890,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>73a981c63cbffc34986fed1bc609fad8</string>
+              <string>a38a810ce8821dc36f3a82295f858602</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-libxml/downloads/libxml2-2.9.1-linux64-gcc-4.6-20140905.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libxml/downloads/libxml2-2.9.1.201505161214-linux64-201505161214.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2568,9 +2568,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c870be3262a73b83684b4e8113469a7e</string>
+              <string>328c247a063e35657c224973e27eaa19</string>
               <key>url</key>
-              <string>http://bitbucket.org/NickyP/kokuant/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-openssl-ll/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2?pk=606060</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2634,9 +2634,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a322ddf8479cec722d8d54cfb5af6bfe</string>
+              <string>4707e7dcee810c401eb65c79d93bd8ee</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-pcre/downloads/pcre-8.35-linux64-gcc-4-6-20140905.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-pcre/downloads/pcre-8.35.-linux64-201505161257.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3016,9 +3016,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b025386ce8d91d319c1b8fb216ac2d81</string>
+              <string>3a7334ad1e1aa55439a7e73720cae770</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-zlib/downloads/zlib-1.2.8.201505121042-linux64-201505121042.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-zlib/downloads/zlib-1.2.8.201505161535-linux64-201505161535.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
