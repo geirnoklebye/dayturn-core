@@ -24,6 +24,15 @@
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
+// <FS:ND> Disable some warnings on newer GCC versions.
+// This might also trigger on something like 4.8, but I did not such a GCC to test anything lower than 4.9 and higher than 4.6
+#if LL_LINUX
+ #pragma GCC diagnostic ignored "-Wuninitialized"
+ #if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+#endif
+// </FS:ND>
 
 #include "linden_common.h"
 #include "llallocator_heap_profile.h"

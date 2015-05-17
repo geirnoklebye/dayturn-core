@@ -1300,9 +1300,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ba03a4186de0100572e5f38ed0c5bd8f</string>
+              <string>0b4099b878fe65e1372e37abba951145</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/3p-gtk-atk-pango-glib-linux64-kokua/downloads/gtk_atk_pango_glib-0.1-linux64-201505170404.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/3p-gtk-atk-pango-glib-linux64-kokua/downloads/gtk_atk_pango_glib-0.1-linux64-201505171022-r1d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2656,6 +2656,18 @@
             </map>
             <key>name</key>
             <string>linux</string>
+            </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>3b4ce61d4de519dbe06b696a97c4166b</string>
+              <key>url</key>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/slplugins-3.7.24.297623.201505150628-r10-linux64-201505150628-r10.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
