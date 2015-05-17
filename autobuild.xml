@@ -244,9 +244,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>96aa4118932a4b255e7e7ab6df1a9875</string>
+              <string>11569b66ac94ebe97ef02add01a5f525</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201505121847.tar.bz2</string>
+              <string>file:///opt/3p/boost-1.57-linux64-201505121847.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -374,9 +374,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5f968deffa034a22afecbabf70a1f7a9</string>
+              <string>a54557475ca7281469ce129c2bec9837</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/curl-7.38.0.201505170555-r143d-linux64-201505170555-r143d.tar.bz2</string>
+              <string>file:///opt/3p/curl-7.38.0.201505171331-r143d-linux64-201505171331-r143d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1120,9 +1120,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>1704941c7920f62ce6e8682028bcffd0</string>
+              <string>bbefceb5ddbe027ab0b3360a06eabdde</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201505151338-linux64-201505151338.tar.bz2</string>
+              <string>file:///opt/3p/googlemock-1.7.0.201505171505-r58d-linux64-201505171505-r58d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2730,9 +2730,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>957773fff7148ffaca42b1ea4a18d192</string>
+              <string>82d10cdac0dc2bc5cd51817c4fcdf47d</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-slvoice/rev/270512/arch/Linux/installer/slvoice-4.5.0009.17865-linux-20130216.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/3p-voice/downloads/slvoice-3.2.0002.10426.298329-linux64-298329.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
