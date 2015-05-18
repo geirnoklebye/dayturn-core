@@ -244,9 +244,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>11569b66ac94ebe97ef02add01a5f525</string>
+              <string>a62c838b06866f5be4592ec3c6dc0d8d</string>
               <key>url</key>
-              <string>file:///opt/3p/boost-1.57-linux64-201505121847.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/boost-1.57-linux64-201505172158-r138d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -376,7 +376,7 @@
               <key>hash</key>
               <string>a54557475ca7281469ce129c2bec9837</string>
               <key>url</key>
-              <string>file:///opt/3p/curl-7.38.0.201505171331-r143d-linux64-201505171331-r143d.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/curl-7.38.0.201505171331-r143d-linux64-201505171331-r143d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1122,7 +1122,7 @@
               <key>hash</key>
               <string>bbefceb5ddbe027ab0b3360a06eabdde</string>
               <key>url</key>
-              <string>file:///opt/3p/googlemock-1.7.0.201505171505-r58d-linux64-201505171505-r58d.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/googlemock-1.7.0.201505171505-r58d-linux64-201505171505-r58d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2500,9 +2500,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c870be3262a73b83684b4e8113469a7e</string>
+              <string>b83cfd6e81557e7079e0f196e27fde9f</string>
               <key>url</key>
-              <string>http://bitbucket.org/NickyP/kokuant/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/openssl-1.0.1m.201505172238-r127d-linux-201505172238-r127d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2960,9 +2960,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b025386ce8d91d319c1b8fb216ac2d81</string>
+              <string>a2db87a7dbc46d7d848cb497bc64eabe</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-zlib/downloads/zlib-1.2.8.201505121042-linux64-201505121042.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/zlib-1.2.8.201505172051-r125d-linux64-201505172051-r125d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
