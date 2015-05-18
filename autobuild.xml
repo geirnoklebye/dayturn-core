@@ -469,21 +469,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>09be41e3145e1a960e50f2f9ce0a5e7d</string>
+              <string>4068ae75858d5eaf44d9ac19d2cf27c9</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/dbusglib-linux64-20101007.tar.bz2</string>
+              <string>file:///home/nicky/3p-dbus-glib/dbus_glib-0.76-linux64-201505171442.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -973,18 +962,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>26f2df1f0b0fa01e94e0253e322f3583</string>
-              <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/glh_linear-linux-20101001.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
+		  <key>linux64</key>
+		  <map>
+		    <key>archive</key>
+		    <map>
+		      <key>hash</key>
+		      <string>965f4bc30ef85a91b197da83ccd2363e</string>
+		      <key>url</key>
+		      <string>http://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4-linux64-20121216.tar.bz2</string>
+		    </map>
+		    <key>name</key>
+		    <string>linux64</string>
+		  </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1890,9 +1879,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a38a810ce8821dc36f3a82295f858602</string>
+              <string>b8b0c54cedcf1b77b9dfdfdcd6221cfb</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-libxml/downloads/libxml2-2.9.1.201505161214-linux64-201505161214.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libxml/downloads/libxml2-2.9.1.201505161544-linux64-201505161544.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1912,18 +1901,6 @@
         </map>
         <key>version</key>
         <string>2.9.1.297050</string>
-      </map>
-      <key>linux64</key>
-      <map>
-        <key>archive</key>
-        <map>
-          <key>hash</key>
-          <string>965f4bc30ef85a91b197da83ccd2363e</string>
-          <key>url</key>
-          <string>http://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4-linux64-20121216.tar.bz2</string>
-        </map>
-        <key>name</key>
-        <string>linux64</string>
       </map>
       <key>llappearance_utility</key>
       <map>
