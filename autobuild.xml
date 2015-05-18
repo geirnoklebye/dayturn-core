@@ -649,6 +649,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
+           <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>5b1f7ef52a5083ee8b62d7cfff0cf659</string>
+              <key>url</key>
+              <string>file:///opt/kokua/fmodex-44453-linux64-201505151801-r21.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+            </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1474,9 +1486,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>022a5a8d273aa00e7697667cfc311710</string>
+              <string>6f1b32569d663b4768b417b289548ced</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-jsoncpp/downloads/jsoncpp-0.5.0-linux64-20141113.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/jsoncpp-0.5.0.201505172349-r30-linux64-201505172349-r30.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>

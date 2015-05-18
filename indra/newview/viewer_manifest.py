@@ -1378,6 +1378,15 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libfreetype.so.*.*")
             self.path("libpng16.so.16") 
             self.path("libpng16.so.16.8.0")
+
+            try:
+                self.path("libfmodex64-*.so")
+                self.path("libfmodex.so")
+                pass
+            except:
+                print "Skipping libfmodex.so - not found"
+                pass
+
             self.end_prefix("lib64")
 
             # plugin runtime
