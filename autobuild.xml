@@ -962,18 +962,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
-		  <key>linux64</key>
-		  <map>
-		    <key>archive</key>
-		    <map>
-		      <key>hash</key>
-		      <string>965f4bc30ef85a91b197da83ccd2363e</string>
-		      <key>url</key>
-		      <string>http://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4-linux64-20121216.tar.bz2</string>
-		    </map>
-		    <key>name</key>
-		    <string>linux64</string>
-		  </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>965f4bc30ef85a91b197da83ccd2363e</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4-linux64-20121216.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1825,9 +1825,9 @@
                 <string>lib/release</string>
               </map>
               <key>hash</key>
-              <string>3f2a0b553a2a72d3b9a39f528f057b18</string>
+              <string>4f5ca7f26ffa697a72f6217c820ae5de</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/libuuid-linux64-lenny-20091130.tar.bz2</string>
+              <string>file:///home/nicky/3p-libuuid/libuuid-1.6.2-linux64-201505172012.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2220,7 +2220,7 @@
               <string>54c312d898f08609a71acb22cfe80406</string>
               <key>url</key>
               <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.201505151905-linux64-201505151905.tar.bz2</string>
-             </map>
+            </map>
             <key>name</key>
             <string>linux64</string>
           </map>
@@ -2361,6 +2361,18 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>b09df0298a9659962e3e10a25718dd03</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-libndofdev-linux/downloads/open_libndofdev-0.3-linux64-201505171912.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
         </map>
         <key>version</key>
