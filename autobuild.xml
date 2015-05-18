@@ -1827,7 +1827,7 @@
               <key>hash</key>
               <string>4f5ca7f26ffa697a72f6217c820ae5de</string>
               <key>url</key>
-              <string>file:///home/nicky/3p-libuuid/libuuid-1.6.2-linux64-201505172012.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libuuid/downloads/libuuid-1.6.2-linux64-201505172012.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
