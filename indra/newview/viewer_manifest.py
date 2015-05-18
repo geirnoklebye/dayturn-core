@@ -1381,6 +1381,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
             try:
                 self.path("libfmodex64-*.so")
+                self.path("libfmodex64.so")
                 self.path("libfmodex.so")
                 pass
             except:
