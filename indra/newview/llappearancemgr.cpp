@@ -3914,7 +3914,11 @@ void LLAppearanceMgr::removeItemFromAvatar(const LLUUID& id_to_remove)
 	{
 		// Otherwise, since the code below does not take attachments into account, we need to specifically detach
 		// objects here. Then the pieces of clothing will follow.
-		LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
+		LLInventoryItem* item = gInventory.getItem (linked_item_id);
+		if (!gRRenabled || gAgent.mRRInterface.canDetach (item))
+		{
+			LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
+		}
 	}
 //mk
 	LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
