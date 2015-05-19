@@ -2690,6 +2690,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>bb5139612564a3882292153e51a815d6</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-update-slplugins/downloads/slplugins-3.7.27.35441.201505191200-linux64-201505191200.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -2706,7 +2718,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>3.7.24.297623.298079</string>
+        <string>3.7.27.35441.201505191200</string>
       </map>
       <key>slvoice</key>
       <map>
