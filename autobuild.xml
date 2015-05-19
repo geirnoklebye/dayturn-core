@@ -696,9 +696,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>06b36f68034e7ab57e57fc9070812b7f</string>
+              <string>926b3873f51f18ead54bef5b88c5fb9f</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-fontconfig/downloads/fontconfig-2.11.0-linux64-gcc-4.6-20140905.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-fontconfig/downloads/fontconfig-2.11.0-linux64-201505182117.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
