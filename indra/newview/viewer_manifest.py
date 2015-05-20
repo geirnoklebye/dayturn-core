@@ -1319,7 +1319,6 @@ class Linux_i686_Manifest(LinuxManifest):
 class Linux_x86_64_Manifest(LinuxManifest):
     def construct(self):
         super(Linux_x86_64_Manifest, self).construct()
-        pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
 
         # support file for valgrind debug tool
         self.path("secondlife-i686.supp")
@@ -1349,7 +1348,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libboost_coroutine-mt.so.*")
             self.path("libdb*.so")
             self.path("libcrypto.so.1.0.0")
-            self.path("libuuid.so*")
             self.path("libssl.so")
             self.path("libssl.so.1.0.0")
             self.path("libexpat.so.*")
@@ -1378,42 +1376,30 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libfreetype.so.*.*")
             self.path("libpng16.so.16") 
             self.path("libpng16.so.16.8.0")
-
-            try:
-                self.path("libfmodex64-*.so")
-                self.path("libfmodex64.so")
-                self.path("libfmodex.so")
-                pass
-            except:
-                print "Skipping libfmodex.so - not found"
-                pass
-
             self.end_prefix("lib64")
 
             # plugin runtime
-            if self.prefix(src="../packages/lib/", dst="lib64"):
-                self.path("libQtWebKit.so*")
-                self.end_prefix("lib64")
+            if self.prefix("../packages/lib/release", dst="lib"):
+                    self.path("libQtWebKit.so*")
+                    self.end_prefix("lib")
 
             # For WebKit/Qt plugin runtimes (image format plugins)
-            if self.prefix(src=os.path.join(pkgdir, "llplugin", "imageformats"),
-                           dst="bin/llplugin/imageformats"):
-                self.path("libqgif.so")
-                self.path("libqico.so")
-                self.path("libqjpeg.so")
-                self.path("libqmng.so")
-                self.path("libqsvg.so")
-                self.path("libqtiff.so")
-                self.end_prefix("bin/llplugin/imageformats")
+            if self.prefix("../packages/plugins/imageformats", dst="bin/llplugin/imageformats"):
+                    self.path("libqgif.so")
+                    self.path("libqico.so")
+                    self.path("libqjpeg.so")
+                    self.path("libqmng.so")
+                    self.path("libqsvg.so")
+                    self.path("libqtiff.so")
+                    self.end_prefix("bin/llplugin/imageformats")
 
             # For WebKit/Qt plugin runtimes (codec/character encoding plugins)
-            if self.prefix(src=os.path.join(pkgdir, "llplugin", "codecs"),
-                           dst="bin/llplugin/codecs"):
-                self.path("libqcncodecs.so")
-                self.path("libqjpcodecs.so")
-                self.path("libqkrcodecs.so")
-                self.path("libqtwcodecs.so")
-                self.end_prefix("bin/llplugin/codecs")
+            if self.prefix("../packages/plugins/codecs", dst="bin/llplugin/codecs"):
+                    self.path("libqcncodecs.so")
+                    self.path("libqjpcodecs.so")
+                    self.path("libqkrcodecs.so")
+                    self.path("libqtwcodecs.so")
+                    self.end_prefix("bin/llplugin/codecs")
 
 
             # Vivox runtimes
@@ -1426,16 +1412,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
                     self.path("libvivoxsdk.so")
                     self.path("libvivoxplatform.so")
                     self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
-                    self.end_prefix("lib32")
-
-            # 32bit libs needed for voice
-            if self.prefix("../packages/lib/release/32compat", dst="lib32"):
-                    self.path("libalut.so")
-                    self.path("libalut.so.0")
-                    self.path("libopenal.so")
-                    self.path("libopenal.so.1")
-                    self.path("libalut.so.0.0.0")
-                    self.path("libopenal.so.1.15.1")
                     self.end_prefix("lib32")
 
 	if self.args['buildtype'].lower() == 'debug':
