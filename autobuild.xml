@@ -177,6 +177,38 @@
         <key>version</key>
         <string>1.10.0.295506</string>
       </map>
+      <key>atk</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright 2001, 2002, 2003, 2006, 2007 Sun Microsystems Inc.</string>
+        <key>description</key>
+        <string> Accessibility Toolkit (ATK) refers in particular to the GNOME ATK. ATK is an application programming interface (API) for developing free/open source accessible applications for free and open platforms such as Linux or OpenBSD, led by the GNOME Project.</string>
+        <key>license</key>
+        <string>GNOME LGPL(V2)</string>
+        <key>license_file</key>
+        <string>LICENSES/atk.txt</string>
+        <key>name</key>
+        <string>atk</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>946b62c00144afa78a3a40762c1d98d8</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-atk/downloads/atk-2.16.0-linux64-201505201608.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>2.16.0</string>
+      </map>
       <key>boost</key>
       <map>
         <key>copyright</key>

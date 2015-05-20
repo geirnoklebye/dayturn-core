@@ -62,7 +62,7 @@ else (USESYSTEMLIBS)
         )
   endif (LINUX AND ${ARCH} STREQUAL "x86_64")
 
-	if (LINUX AND ${ARCH} STREQUAL="i686")
+	if (LINUX AND ${ARCH} STREQUAL "i686")
     set(UI_LIBRARIES
         atk-1.0
         gdk-x11-2.0
@@ -79,7 +79,7 @@ else (USESYSTEMLIBS)
         pangoxft-1.0
         ${FREETYPE_LIBRARIES}
         )
-    endif(LINUX AND ${ARCH} STREQUAL="i686")
+    endif(LINUX AND ${ARCH} STREQUAL "i686")
 
   include_directories (
       ${LIBS_PREBUILT_DIR}/include
