@@ -1351,6 +1351,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libssl.so")
             self.path("libssl.so.1.0.0")
             self.path("libexpat.so.*")
+            self.path("libuuid.so*")
             self.path("libSDL-1.2.so.*")
             self.path("libdirectfb-1.*.so.*")
             self.path("libfusion-1.*.so.*")
