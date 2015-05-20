@@ -13,7 +13,7 @@ include(UI)
 include(Linking)
 include(PluginAPI)
 include(MediaPluginBase)
-include(OpenGL)
+include(FindOpenGL)
 include(PulseAudio)
 
 include(WebKitLibPlugin)
@@ -29,9 +29,6 @@ include_directories(
     ${LLWINDOW_INCLUDE_DIRS}
     ${LLQTWEBKIT_INCLUDE_DIR}
 )
-include_directories(SYSTEM
-    ${LLCOMMON_SYSTEM_INCLUDE_DIRS}
-    )
 
 
 ### media_plugin_webkit

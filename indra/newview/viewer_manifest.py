@@ -1380,9 +1380,9 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.end_prefix("lib64")
 
             # plugin runtime
-            if self.prefix("../packages/lib/release", dst="lib"):
+            if self.prefix("../packages/lib/release", dst="lib64"):
                     self.path("libQtWebKit.so*")
-                    self.end_prefix("lib")
+                    self.end_prefix("lib64")
 
             # For WebKit/Qt plugin runtimes (image format plugins)
             if self.prefix("../packages/plugins/imageformats", dst="bin/llplugin/imageformats"):
