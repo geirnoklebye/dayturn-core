@@ -897,10 +897,16 @@
       </map>
       <key>glib</key>
       <map>
+        <key>copyright</key>
+        <string>Unknown. Sources maintained by GNOME Library.</string>
+        <key>description</key>
+        <string>GLib provides the core application building blocks for libraries and applications written in C. It provides the core object system used in GNOME, the main loop implementation, and a large set of utility functions for strings and common data structures.</string>
         <key>license</key>
-        <string>gpl</string>
+        <string>GLib is released under the GNU Library General Public License (GNU LGPL).</string>
         <key>license-url</key>
         <string>http://www.gnu.org/licenses/gpl.html</string>
+        <key>license_file</key>
+        <string>LICENSES/glib.txt</string>
         <key>name</key>
         <string>glib</string>
         <key>platforms</key>
@@ -921,14 +927,16 @@
                 <string>lib/release</string>
               </map>
               <key>hash</key>
-              <string>58c11add6b275c163950364df5b2964a</string>
+              <string>c1dcb98e0e77cf6991fdb398e66ba9e4</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/glib-2.20.5-linux64-20100515.tar.bz2</string>
+              <string>file:///home/nicky/3p-glib/glib-2.45.1-linux64-201505211404.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
           </map>
         </map>
+        <key>version</key>
+        <string>2.45.1</string>
       </map>
       <key>glod</key>
       <map>
