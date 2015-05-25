@@ -3971,6 +3971,11 @@ void LLPipeline::postSort(LLCamera& camera)
 		std::sort(sCull->beginAlphaGroups(), sCull->endAlphaGroups(), LLSpatialGroup::CompareDepthGreater());
 	}
 	LL_PUSH_CALLSTACKS();
+//MK
+	// Don't render beacons when our vision is restricted
+	if (!gRRenabled || gAgent.mRRInterface.mCamDistDrawMax >= EXTREMUM)
+	{
+//mk
 	// only render if the flag is set. The flag is only set if we are in edit mode or the toggle is set in the menus
 	if (LLFloaterReg::instanceVisible("beacons") && !sShadowRender)
 	{
@@ -4058,6 +4063,9 @@ void LLPipeline::postSort(LLCamera& camera)
 		}
 	}
 
+//MK
+	}
+//mk
 	//LLSpatialGroup::sNoDelete = FALSE;
 	LL_PUSH_CALLSTACKS();
 }
