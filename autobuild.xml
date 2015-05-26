@@ -196,11 +196,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>946b62c00144afa78a3a40762c1d98d8</string>
+              <string>927890f5f10ce72582fe5f0dab8d9037</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-atk/downloads/atk-2.16.0-linux64-201505201608.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-atk/downloads/atk-2.16.0-linux64-201505251053.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -274,6 +274,38 @@
         </map>
         <key>version</key>
         <string>1.57</string>
+      </map>
+      <key>cairo</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright © 2002 University of Southern California Copyright © 2005 Red Hat, In</string>
+        <key>description</key>
+        <string>Cairo is a 2D graphics library with support for multiple output devices.</string>
+        <key>license</key>
+        <string>LGPL(2.1)</string>
+        <key>license_file</key>
+        <string>LICENSES/cairo.txt</string>
+        <key>name</key>
+        <string>cairo</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>f0e16e843eba1cc821d5c4cba37e4453</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-cairo/downloads/cairo-1.14.2-linux64-201505251058.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>1.14.2</string>
       </map>
       <key>colladadom</key>
       <map>
@@ -479,8 +511,10 @@
             <map>
               <key>hash</key>
               <string>4068ae75858d5eaf44d9ac19d2cf27c9</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>file:///home/nicky/3p-dbus-glib/dbus_glib-0.76-linux64-201505171442.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-dbus-glib/downloads/dbus_glib-0.76-linux64-201505171442.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -811,6 +845,38 @@
         <key>version</key>
         <string>2.4.4.297053</string>
       </map>
+      <key>gdk-pixbuf</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright (C) 1999 The Free Software Foundation. See source code for other copyright holders.</string>
+        <key>description</key>
+        <string>Gdk Pixbuf is a toolkit for image loading and pixel buffer manipulation.</string>
+        <key>license</key>
+        <string>LGPL(2)</string>
+        <key>license_file</key>
+        <string>LICENSES/gdk-pixbuf.txt</string>
+        <key>name</key>
+        <string>gdk-pixbuf</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>ab8ac6316d18b72ca16f4a5c48630704</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-gdk-pixbuf/downloads/gdk_pixbuf-2.30.8-linux64-201505252111.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>2.30.8</string>
+      </map>
       <key>glext</key>
       <map>
         <key>copyright</key>
@@ -927,9 +993,11 @@
                 <string>lib/release</string>
               </map>
               <key>hash</key>
-              <string>c1dcb98e0e77cf6991fdb398e66ba9e4</string>
+              <string>233f5d381c061c78a9e75ddebaa8c9e0</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>file:///home/nicky/3p-glib/glib-2.45.1-linux64-201505211404.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-glib/downloads/glib-2.45.1-linux64-201505251047.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1321,6 +1389,38 @@
         </map>
         <key>version</key>
         <string>0.10.6.294903</string>
+      </map>
+      <key>gtk+</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright (C) 2001 CodeFactory AB, Copyright (C) 2001, 2002 Anders Carlsson, Copyright (C) 2003, 2004 Matthias Clasen</string>
+        <key>description</key>
+        <string>GTK+, or the GIMP Toolkit, is a multi-platform toolkit for creating graphical user interfaces. Offering a complete set of widgets, GTK+ is suitable for projects ranging from small one-off tools to complete application suites.</string>
+        <key>license</key>
+        <string>LGPL(2)</string>
+        <key>license_file</key>
+        <string>LICENSES/gtk+.txt</string>
+        <key>name</key>
+        <string>gtk+</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>4e74daea58103b2e514289a00d7d8803</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-gtk/downloads/gtk+-2.24.28-linux64-201505252116.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>2.24.28</string>
       </map>
       <key>gtk-atk-pango-glib</key>
       <map>
@@ -2596,6 +2696,38 @@
         <key>version</key>
         <string>1.0.1h.297168</string>
       </map>
+      <key>pango</key>
+      <map>
+        <key>copyright</key>
+        <string>on internationalization.Copyright (C) 1999 Red Hat Software</string>
+        <key>description</key>
+        <string>Pango is a library for layout and rendering of text, with an emphasis</string>
+        <key>license</key>
+        <string>GNU LGPL(2)</string>
+        <key>license_file</key>
+        <string>LICENSES/pango.txt</string>
+        <key>name</key>
+        <string>pango</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>6e241624a42d372df507d322b3eb2e03</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-pango/downloads/pango-1.36.8-linux64-201505251105.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>1.36.8</string>
+      </map>
       <key>pcre</key>
       <map>
         <key>copyright</key>
@@ -2661,6 +2793,38 @@
         </map>
         <key>version</key>
         <string>8.35.</string>
+      </map>
+      <key>pixman</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright © 2009 ARM Ltd, Movial Creative Technologies Oy and others as noted by top header in each source code file.</string>
+        <key>description</key>
+        <string>Pixman is a low-level software library for pixel manipulation, providing features such as image compositing and trapezoid rasterization. Important users of pixman are the cario graphics library and the X server.</string>
+        <key>license</key>
+        <string>MIT</string>
+        <key>license_file</key>
+        <string>LICENSES/pixman.txt</string>
+        <key>name</key>
+        <string>pixman</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>3ed962006a80f65280239eaa7e4edb8c</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux64-201505231044.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>0.32.6</string>
       </map>
       <key>quicktime</key>
       <map>
