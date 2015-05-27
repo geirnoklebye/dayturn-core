@@ -252,9 +252,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>49e81fbbacfd60e0e364a35ad248e664</string>
+              <string>75bdf1ad2b38b22fed27ec0ff0e2616e</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201505161612.tar.bz2</string>
+              <string>file:///home/nicky/3p-boost-bm/boost-1.57-linux64-201505270909.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -348,9 +348,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>8c0b96d8c9e19c2f0035476e1efd0836</string>
+              <string>0c7ca696d2cfda8db8b512068cd7a506</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201505161723-linux64-201505161723.tar.bz2</string>
+              <string>file:///home/nicky/3p-colladadom/colladadom-2.3.201505270932-linux64-201505270932.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -369,7 +369,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.3.297450</string>
+        <string>2.3.201505270932</string>
       </map>
       <key>curl</key>
       <map>
@@ -1241,9 +1241,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>182c6e70bf78d80fc5c2eeb5efdfd36a</string>
+              <string>6d0758af0a19ef67562cbd504ffdb06b</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201505171213-linux64-201505171213.tar.bz2</string>
+              <string>file:///home/nicky/3p-google-mock/googlemock-1.7.0.201505271458-linux64-201505271458.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1262,7 +1262,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.7.0.297460</string>
+        <string>1.7.0.201505271458</string>
       </map>
       <key>gperftools</key>
       <map>
