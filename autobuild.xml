@@ -414,9 +414,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>332b06d47fe5c9ac6dbceab537ff608f</string>
+              <string>9395430ada4f89a7ffb015d3805eaa80</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.38.0.201505161957-linux64-201505161957.tar.bz2</string>
+              <string>file:///home/nicky/3p-curl/curl-7.38.0.201505261345-linux64-201505261345.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -435,7 +437,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>7.38.0.297172</string>
+        <string>7.38.0.201505261345</string>
       </map>
       <key>db</key>
       <map>
@@ -2674,8 +2676,10 @@
             <map>
               <key>hash</key>
               <string>328c247a063e35657c224973e27eaa19</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-openssl-ll/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2?pk=606060</string>
+              <string>http://bitbucket.org/kokua/3p-openssl-ll/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2694,7 +2698,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.0.1h.297168</string>
+        <string>1.0.1h.20140815</string>
       </map>
       <key>pango</key>
       <map>
