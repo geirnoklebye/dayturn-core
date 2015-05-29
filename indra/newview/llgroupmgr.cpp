@@ -30,7 +30,12 @@
  */
 
 #include "llviewerprecompiledheaders.h"
-
+#if LL_LINUX
+ #if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40600
+   #pragma GCC diagnostic ignored "-Wuninitialized"
+   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+ #endif
+#endif
 #include "llgroupmgr.h"
 
 #include <vector>
