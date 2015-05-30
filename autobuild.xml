@@ -414,11 +414,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9395430ada4f89a7ffb015d3805eaa80</string>
+              <string>ab183bf38d32b017a0bb937622a18e13</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///home/nicky/3p-curl/curl-7.38.0.201505261345-linux64-201505261345.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.38.0.201505290832-linux64-201505290832.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -437,7 +437,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>7.38.0.201505261345</string>
+        <string>7.38.0.201505290832</string>
       </map>
       <key>db</key>
       <map>
@@ -2821,7 +2821,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux64-201505231044.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux64-201505231044.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
