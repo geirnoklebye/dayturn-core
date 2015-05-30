@@ -42,7 +42,7 @@ else (USESYSTEMLIBS)
 	use_prebuilt_binary(cairo)
 	use_prebuilt_binary(pango)
 	use_prebuilt_binary(pixman)
-    use_prebuilt_binary(gtk+)
+    use_prebuilt_binary(gtk)
 	use_prebuilt_binary(gdk-pixbuf)	
     set(UI_LIBRARIES
         atk-1.0

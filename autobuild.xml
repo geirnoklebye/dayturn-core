@@ -1392,7 +1392,7 @@
         <key>version</key>
         <string>0.10.6.294903</string>
       </map>
-      <key>gtk+</key>
+      <key>gtk</key>
       <map>
         <key>copyright</key>
         <string>Copyright (C) 2001 CodeFactory AB, Copyright (C) 2001, 2002 Anders Carlsson, Copyright (C) 2003, 2004 Matthias Clasen</string>
@@ -1401,9 +1401,9 @@
         <key>license</key>
         <string>LGPL(2)</string>
         <key>license_file</key>
-        <string>LICENSES/gtk+.txt</string>
+        <string>LICENSES/gtk.txt</string>
         <key>name</key>
-        <string>gtk+</string>
+        <string>gtk</string>
         <key>platforms</key>
         <map>
           <key>linux64</key>
@@ -1411,11 +1411,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4e74daea58103b2e514289a00d7d8803</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>4d8f1858f31d39205d39914864cbace8</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-gtk/downloads/gtk+-2.24.28-linux64-201505252116.tar.bz2</string>
+              <string>file:///home/nicky/3p-gtk/gtk-2.24.28-linux64-201505301224.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
