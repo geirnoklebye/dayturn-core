@@ -1435,8 +1435,13 @@ if (LINUX)
     SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed")
 
     set(viewer_LIBRARIES
+        X11
         Xinerama
         )
+#X11 is needed to prevent DSO symbol resolution error to the version of libX11 used
+#some Debian versions. This occurs when another lib calls libX11. So, an explict
+#link to the X11 surpresses it and link completes.
+#https://github.com/tum-vision/lsd_slam/issues/29#issuecomment-61084472
     if (OPENAL)
       LIST(APPEND viewer_LIBRARIES ${OPENAL_LIBRARIES})
     endif (OPENAL)
