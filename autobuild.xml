@@ -180,11 +180,11 @@
       <key>atk</key>
       <map>
         <key>copyright</key>
-        <string>Copyright 2001, 2002, 2003, 2006, 2007 Sun Microsystems Inc.</string>
+        <string>Copyright 2001, 2002, 2003, 2006, 2007 Sun Microsystems Inc. See source code for additional copyright holders.</string>
         <key>description</key>
-        <string> Accessibility Toolkit (ATK) refers in particular to the GNOME ATK. ATK is an application programming interface (API) for developing free/open source accessible applications for free and open platforms such as Linux or OpenBSD, led by the GNOME Project.</string>
+        <string>ATK provides the set of accessibility interfaces that are implemented by other toolkits and applications. Using the ATK interfaces, accessibility tools have full access to view and control running applications.</string>
         <key>license</key>
-        <string>GNOME LGPL(V2)</string>
+        <string>GNOME LPGL(2)</string>
         <key>license_file</key>
         <string>LICENSES/atk.txt</string>
         <key>name</key>
@@ -196,11 +196,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>927890f5f10ce72582fe5f0dab8d9037</string>
+              <string>498557fac76f02fab5af14382ca4df8b</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-atk/downloads/atk-2.16.0-linux64-201505251053.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-atk/downloads/atk-2.16.0-linux64-201506010908.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -294,11 +294,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f0e16e843eba1cc821d5c4cba37e4453</string>
+              <string>d9e8ebccffc6434b8e0eafca8b4d5c93</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-cairo/downloads/cairo-1.14.2-linux64-201505251058.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-cairo/downloads/cairo-1.14.2-linux64-201506040945.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -850,9 +850,9 @@
       <key>gdk-pixbuf</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (C) 1999 The Free Software Foundation. See source code for other copyright holders.</string>
+        <string>Original Authors:Peter Mattis, Spencer Kimball, Josh MacDonald. See top of code file for others.</string>
         <key>description</key>
-        <string>Gdk Pixbuf is a toolkit for image loading and pixel buffer manipulation.</string>
+        <string>GdkPixbuf is a toolkit for image loading and pixel buffer manipulation. In GTK+ version 2.22 from 2010-09-23 GdkPixbuf was split off from GDK into a separate package in preparation for the transition to GTK+ 3.</string>
         <key>license</key>
         <string>LGPL(2)</string>
         <key>license_file</key>
@@ -866,11 +866,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ab8ac6316d18b72ca16f4a5c48630704</string>
+              <string>04ca7ec5d4ff232c2012132b95955f7e</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-gdk-pixbuf/downloads/gdk_pixbuf-2.30.8-linux64-201505252111.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gdk-pixbuf/downloads/gdk_pixbuf-2.30.8-linux64-201506041921.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -995,11 +995,11 @@
                 <string>lib/release</string>
               </map>
               <key>hash</key>
-              <string>233f5d381c061c78a9e75ddebaa8c9e0</string>
+              <string>c133c727dd787a811d8dec925a64fa5a</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-glib/downloads/glib-2.45.1-linux64-201505251047.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-glib/downloads/glib-2.45.1-linux64-201505312131.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1411,9 +1411,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4d8f1858f31d39205d39914864cbace8</string>
+              <string>742d44a6609a29ca4bf101370f8300fb</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gtk/downloads/gtk-2.24.28-linux64-201505301224.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gtk/downloads/gtk-2.24.28-linux64-201506051634.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1484,6 +1486,38 @@
             <string>linux64</string>
           </map>
         </map>
+      </map>
+      <key>harfbuzz</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright © 2010,2011,2012  Google, Inc., Copyright © 2012  Mozilla Foundation, Copyright © 2011  Codethink Limited, Copyright © 2008,2010  Nokia Corporation and/or its subsidiary(-ies), Copyright © 2009  Keith Stribley, Copyright © 2009  Martin Hosken and SIL International, Copyright © 2007  Chris Wilson, Copyright © 2006  Behdad Esfahbod, Copyright © 2005  David Turner, Copyright © 2004,2007,2008,2009,2010  Red Hat, Inc., Copyright © 1998-2004  David Turner and Werner Lemberg; For full copyright notices consult the individual files in the package.</string>
+        <key>description</key>
+        <string>HarfBuzz is an OpenType text shaping engine.</string>
+        <key>license</key>
+        <string>HarfBuzz is licensed under the so-called "Old MIT" license.</string>
+        <key>license_file</key>
+        <string>LICENSES/harfbuzz.txt</string>
+        <key>name</key>
+        <string>harfbuzz</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>b927e0337a72d146718a393730ecde0d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-harfbuzz/downloads/harfbuzz-0.9.40-linux64-201506041046.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>0.9.40</string>
       </map>
       <key>havok-source</key>
       <map>
@@ -2717,11 +2751,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6e241624a42d372df507d322b3eb2e03</string>
+              <string>5dc224dc6d4e0288f9503b1627fad3a1</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-pango/downloads/pango-1.36.8-linux64-201505251105.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-pango/downloads/pango-1.36.8-linux64-201506041413.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2799,11 +2833,11 @@
       <key>pixman</key>
       <map>
         <key>copyright</key>
-        <string>Copyright © 2009 ARM Ltd, Movial Creative Technologies Oy and others as noted by top header in each source code file.</string>
+        <string>Copyright © 2000 Keith Packard, member of The XFree86 Project, Inc.  2005 Lars Knoll Zack Rusin, Trolltech 2008 Aaron Plattner, NVIDIA Corporation. See code headers</string>
         <key>description</key>
-        <string>Pixman is a low-level software library for pixel manipulation, providing features such as image compositing and trapezoid rasterization. Important users of pixman are the cario graphics library and the X server.</string>
+        <string>Pixman is a low-level software library for pixel manipulation, providing features such as image compositing and trapezoid rasterization.</string>
         <key>license</key>
-        <string>MIT</string>
+        <string>MIT License</string>
         <key>license_file</key>
         <string>LICENSES/pixman.txt</string>
         <key>name</key>
@@ -2815,11 +2849,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3ed962006a80f65280239eaa7e4edb8c</string>
+              <string>504c19255873cea1273e2d5e3214a61d</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux64-201505231044.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux64-201506011032.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>

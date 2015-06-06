@@ -43,7 +43,8 @@ else (USESYSTEMLIBS)
 	use_prebuilt_binary(pango)
 	use_prebuilt_binary(pixman)
     use_prebuilt_binary(gtk)
-	use_prebuilt_binary(gdk-pixbuf)	
+	use_prebuilt_binary(gdk-pixbuf)
+	use_prebuilt_binary(harfbuzz)		
     set(UI_LIBRARIES
         atk-1.0
         cairo
