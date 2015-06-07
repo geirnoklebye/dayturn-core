@@ -1177,9 +1177,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>14cdd3390ace3a91edf80655a570c1af</string>
+              <string>c493451c04f5527c76d92c863454f76f</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-google-breakpad/downloads/google_breakpad-0.0.0-rev1099-linux64-20130506.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-breakpad/downloads/google_breakpad-1413.201506071040-linux64-201506071040.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1198,7 +1198,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1413.298127</string>
+        <string>1413.201506071040</string>
       </map>
       <key>googlemock</key>
       <map>
