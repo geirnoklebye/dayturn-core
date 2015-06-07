@@ -556,16 +556,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>92398d45c81bbac7009e6da423be5953</string>
+              <string>6909a15bdf7beddecbaae71c45cba05e</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-dictionaries/downloads/dictionaries-1-linux64-20120702.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-dictionaries/downloads/dictionaries-1.201506061533-linux64-201506061533.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.297347</string>
+        <string>1.201506061533</string>
       </map>
       <key>elfio</key>
       <map>
@@ -1684,9 +1684,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>022a5a8d273aa00e7697667cfc311710</string>
+              <string>93be1f25037bf118be445bb3399522d7</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-jsoncpp/downloads/jsoncpp-0.5.0-linux64-20141113.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-jsoncpp/downloads/jsoncpp-0.5.0.201506061927-linux64-201506061927.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1705,7 +1705,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.5.0.297580</string>
+        <string>0.5.0.201506061927</string>
       </map>
       <key>kdu</key>
       <map>
@@ -1804,9 +1804,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>32491873ed138ef804b2c0d1526bad07</string>
+              <string>6a60d6a82b8be6ed3a97c125905b1339</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-hunspell/downloads/libhunspell-1.3.2-linux64-20120702.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-hunspell/downloads/libhunspell-1.3.2.201506061803-linux64-201506061803.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1825,7 +1825,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.3.2.296916</string>
+        <string>1.3.2.201506061803</string>
       </map>
       <key>libndofdev</key>
       <map>
