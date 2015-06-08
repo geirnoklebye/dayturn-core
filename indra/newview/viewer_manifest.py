@@ -1415,12 +1415,12 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
             # 32bit libs needed for voice
             if self.prefix("../packages/lib/release/32bit-compat", dst="lib32"):
-                    self.path("libalut.so")
-                    self.path("libalut.so.0")
-                    self.path("libopenal.so")
-                    self.path("libopenal.so.1")
-                    self.path("libalut.so.0.0.0")
-                    self.path("libopenal.so.1.15.1")
+                    self.path("32bit-libalut.so" , "libalut.so")
+                    self.path("32bit-libalut.so.0" , "libalut.so.0")
+                    self.path("32bit-libopenal.so" , "libopenal.so")
+                    self.path("32bit-libopenal.so.1" , "libopenal.so.1")
+                    self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
+                    self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
                     self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
                     self.end_prefix("lib32")
 

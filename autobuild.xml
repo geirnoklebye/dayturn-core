@@ -3,6 +3,30 @@
 <map>
     <key>installables</key>
     <map>
+      <key>32bitcompatibilitylibs</key>
+      <map>
+        <key>license</key>
+        <string>lgpl</string>
+        <key>license_file</key>
+        <string>LICENSES/*.txt</string>
+        <key>name</key>
+        <string>32bitcompatibilitylibs</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>83aeef2ca7481f2a34302d9680a2c14a</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-32bitcompatibilitylibs/downloads/32bit_compatibility_libs-0.0.3-linux64-20130809.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+      </map>
       <key>SDL</key>
       <map>
         <key>copyright</key>
@@ -3005,9 +3029,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7f3439c64b1a8296450fd6411b7c50e9</string>
+              <string>fbb264b5998f3e4286825241b95960de</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-4.5.0009.17865.201506071709-linux64-201506071709.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-4.5.0009.17865.201506081416-linux64-201506081416.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3026,7 +3052,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.5.0009.17865.201506071709</string>
+        <string>4.5.0009.17865.201506081416</string>
       </map>
       <key>tut</key>
       <map>
