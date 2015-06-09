@@ -79,6 +79,7 @@ add_subdirectory(${LIBS_OPEN_PREFIX}media_plugins)
 endif (ENABLE_MEDIA_PLUGINS)
 
 if (LINUX)
+  add_subdirectory(${LIBS_OPEN_PREFIX}media_plugins)
   add_subdirectory(${VIEWER_PREFIX}linux_crash_logger)
   if (INSTALL_PROPRIETARY)
       include(LLAppearanceUtility)
