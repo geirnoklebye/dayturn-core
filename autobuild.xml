@@ -2244,7 +2244,7 @@
         <key>copyright</key>
         <string>Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).</string>
         <key>description</key>
-        <string>QT cross-platform application and UI framework.</string>
+        <string>QT cross-platform applicaiton and UI framework.</string>
         <key>license</key>
         <string>LGPL</string>
         <key>license_file</key>
@@ -2286,9 +2286,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5a3905c518809ffe6a131025f3b7023a</string>
+              <string>a74e21beaf739563d323c55386c05296</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-llqtwebkit2/downloads/llqtwebkit-4.7.1-linux64-gcc-4.6.3-20141022.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-llqtwebkit2/downloads/llqtwebkit-4.7.1-linux64-201506082044.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2737,7 +2737,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-openssl-ll/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-openssl-ll/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3029,11 +3029,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fbb264b5998f3e4286825241b95960de</string>
+              <string>8fe64c0ec45c9ab46d65389fea451251</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-4.5.0009.17865.201506081416-linux64-201506081416.tar.bz2</string>
+              <string>file:///home/nicky/3p-slvoice/slvoice-4.5.0009.17865.201506081519-linux64-201506081519.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3052,7 +3052,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.5.0009.17865.201506081416</string>
+        <string>4.5.0009.17865.201506081519</string>
       </map>
       <key>tut</key>
       <map>

@@ -1411,6 +1411,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
                     self.path("libsndfile.so.1")
                     self.path("libvivoxsdk.so")
                     self.path("libvivoxplatform.so")
+                    self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
                     self.end_prefix("lib32")
 
             # 32bit libs needed for voice
@@ -1421,7 +1422,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
                     self.path("32bit-libopenal.so.1" , "libopenal.so.1")
                     self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
                     self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
-                    self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
+
                     self.end_prefix("lib32")
 
 	if self.args['buildtype'].lower() == 'debug':
