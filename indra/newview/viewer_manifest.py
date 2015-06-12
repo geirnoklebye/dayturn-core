@@ -1088,11 +1088,6 @@ class Darwin_i386_Manifest(ViewerManifest):
 class LinuxManifest(ViewerManifest):
     def construct(self):
         super(LinuxManifest, self).construct()
-
-        pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
-        relpkgdir = os.path.join(pkgdir, "lib", "release")
-        debpkgdir = os.path.join(pkgdir, "lib", "debug")
-
         self.path("licenses-linux.txt","licenses.txt")
         self.path("icons/kokua/kokua_icon.png", "kokua_icon.png")
         self.path("VivoxAUP.txt")
@@ -1112,7 +1107,7 @@ class LinuxManifest(ViewerManifest):
         if self.prefix(src="", dst="bin"):
             self.path("kokua-bin","do-not-directly-run-kokua-bin")
             self.path("../linux_crash_logger/linux-crash-logger","linux-crash-logger.bin")
-            self.path2basename(pkgdir, "SLPlugin")
+            self.path2basename("../llplugin/slplugin", "SLPlugin")
             self.path2basename("../viewer_components/updater/scripts/linux", "update_install")
             self.end_prefix("bin")
 
@@ -1132,9 +1127,9 @@ class LinuxManifest(ViewerManifest):
             self.end_prefix(icon_path)
 
         # plugins
-        if self.prefix(src=os.path.join(pkgdir, "llplugin"), dst="bin/llplugin"):
-            self.path("libmedia_plugin_webkit.so")
-            self.path("libmedia_plugin_gstreamer.so")
+        if self.prefix(src="", dst="bin/llplugin"):
+            self.path2basename("../media_plugins/webkit", "libmedia_plugin_webkit.so")
+            self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
             self.end_prefix("bin/llplugin")
 
         # llcommon
@@ -1191,6 +1186,7 @@ class LinuxManifest(ViewerManifest):
         if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
             print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
             self.run_command(r"find %(d)r/bin %(d)r/lib %(d)r/lib32 %(d)r/lib64 -type f \! -name update_install | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
+
 
 
 class Linux_i686_Manifest(LinuxManifest):
@@ -1362,6 +1358,9 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libjpeg.so")
             self.path("libjpeg.so.8")
             self.path("libjpeg.so.8.3.0")
+            self.path("libuuid.so")
+            self.path("libuuid.so.16")
+            self.path("libuuid.so.16.0.22")
             self.path("libhunspell-1.3.so*")
             self.path("libGLOD.so")
 
@@ -1424,7 +1423,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
                     self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
 
                     self.end_prefix("lib32")
-
 	if self.args['buildtype'].lower() == 'debug':
     	 if self.prefix("../packages/lib/debug", dst="lib64"):
              self.path("libapr-1.so*")

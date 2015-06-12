@@ -684,7 +684,9 @@
       <key>fmodex</key>
       <map>
         <key>copyright</key>
-        <string>COPYRIGHT 2014 FIRELIGHT TECHNOLOGIES PTY LTD. ALL RIGHTS RESERVED</string>
+        <string>FMOD Sound System, copyright © Firelight Technologies Pty, Ltd., 1994-2014.</string>
+        <key>description</key>
+        <string>FMOD Ex audio system library</string>
         <key>license</key>
         <string>fmodex</string>
         <key>license_file</key>
@@ -717,6 +719,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>2043fef7903b7c5b88d06061353aeb1e</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-fmodex-d/downloads/fmodex-4.44.52-linux64-201506112127.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -731,7 +745,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.44.31.297261</string>
+        <string>4.44.52</string>
       </map>
       <key>fontconfig</key>
       <map>
@@ -1347,9 +1361,11 @@
       <key>gstreamer</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (C) 2007 Free Software Foundation, Inc. &lt;http://fsf.org/&gt;</string>
+        <string>Copyright (C) 1991 Free Software Foundation, Inc.</string>
+        <key>description</key>
+        <string>GStreamer is a streaming media framework that enables applications to share a common set of plugins for things like video decoding and encoding, audio encoding and decoding, audio and video filters, audio visualisation, Web streaming and anything else that streams in real-time or otherwise. It is modelled after research software worked on at the Oregon Graduate Institute. After installing GStreamer, you'll likely need to install one or more of the gst-plugins-bad-0.10.23, gst-plugins-good-0.10.31, gst-plugins-ugly-0.10.19 and gst-ffmpeg-0.10.13 packages. </string>
         <key>license</key>
-        <string>LGPL</string>
+        <string>LGPL(2)</string>
         <key>license_file</key>
         <string>LICENSES/gstreamer.txt</string>
         <key>name</key>
@@ -1395,9 +1411,11 @@
                 <string>lib/release</string>
               </map>
               <key>hash</key>
-              <string>7e6fc4e185e8444a07b58ba7c0df255a</string>
+              <string>530a06db4a096049d27804831fb85b6e</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/gstreamer-0.10.24-linux64-20091230.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201506112018-linux64-201506112018.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1416,7 +1434,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.10.6.294903</string>
+        <string>0.10.36.201506112018</string>
       </map>
       <key>gtk</key>
       <map>
@@ -2599,9 +2617,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>091c274d684f74fd5f21f3ec0f643e18</string>
+              <string>648759bcf58a3c0c04d7e725ae64b3d8</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201505111103-linux64-201505111103.tar.bz2</string>
+              <string>file:///home/nicky/3p-openal/openal-1.15.1-1.1.0.201506110807-linux64-201506110807.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2622,7 +2640,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.12.854-1.1.0.297677</string>
+        <string>1.15.1-1.1.0.201506110807</string>
       </map>
       <key>openjpeg</key>
       <map>

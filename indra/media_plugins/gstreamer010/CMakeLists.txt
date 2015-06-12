@@ -55,7 +55,11 @@ set(media_plugin_gstreamer010_HEADER_FILES
     llmediaimplgstreamertriviallogging.h
     )
 if(LINUX)
-     LIST(APPEND media_plugin_gstreamer010_ HEADER_FILES llmediaimplgstreamer_syms.h)
+     LIST(APPEND media_plugin_gstreamer010_HEADER_FILES
+     llmediaimplgstreamer_syms.h
+     )
+
+
 endif(LINUX)
 	
 set_source_files_properties(${media_plugin_gstreamer010_HEADER_FILES}

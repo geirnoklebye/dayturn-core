@@ -912,8 +912,10 @@ MediaPluginGStreamer010::startup()
 	// only do global GStreamer initialization once.
 	if (!mDoneInit)
 	{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 		g_thread_init(NULL);
-
+#pragma GCC diagnostic push
 		// Init the glib type system - we need it.
 		g_type_init();
 		set_gst_plugin_path();
