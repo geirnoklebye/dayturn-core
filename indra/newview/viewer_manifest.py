@@ -1363,7 +1363,9 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libuuid.so.16.0.22")
             self.path("libhunspell-1.3.so*")
             self.path("libGLOD.so")
-
+            self.path("libfmodex64-*.so")
+            self.path("libfmodex64.so")
+           
             # OpenAL
             self.path("libalut.so")
             self.path("libalut.so.0")
@@ -1399,7 +1401,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
                 self.path("libqkrcodecs.so")
                 self.path("libqtwcodecs.so")
                 self.end_prefix("bin/llplugin/codecs")
-
+ 
 
             # Vivox runtimes
             if self.prefix(src="../packages/lib/release", dst="bin"):
