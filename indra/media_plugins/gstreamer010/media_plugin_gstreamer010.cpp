@@ -915,9 +915,9 @@ MediaPluginGStreamer010::startup()
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 		g_thread_init(NULL);
-#pragma GCC diagnostic push
 		// Init the glib type system - we need it.
 		g_type_init();
+#pragma GCC diagnostic pop
 		set_gst_plugin_path();
 
 		// Kokua: removed case gst_segtrap_set_enabled doesn't exist

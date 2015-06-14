@@ -65,6 +65,10 @@ else (WINDOWS)
 	use_prebuilt_binary(gdk-pixbuf)
 	use_prebuilt_binary(harfbuzz)		
     set(GSTREAMER010_LIBRARIES
+        gstvideo-0.10
+        gstaudio-0.10
+        gstbase-0.10
+        gstreamer-0.10
         atk-1.0
         cairo
         gdk-x11-2.0
