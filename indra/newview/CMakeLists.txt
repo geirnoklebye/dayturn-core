@@ -1435,6 +1435,7 @@ if (LINUX)
     SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed")
 
     set(viewer_LIBRARIES
+        X11
         Xinerama
         )
     if (OPENAL)
