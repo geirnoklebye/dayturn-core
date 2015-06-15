@@ -1326,9 +1326,10 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
        # Use the build system libstdc++.so An attempt try to allow versions earlier than
         # then wheezy to run the viewer without complaining about GLIBCXX version.
-        if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
-            self.path("libstdc++.so.*")
-            self.end_prefix("lib64") 
+#        if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
+#            self.path("libstdc++.so.*")
+#            self.end_prefix("lib64") 
+
 
         if self.prefix("../packages/lib/release", dst="lib64"):
             self.path("libapr-1.so*")
