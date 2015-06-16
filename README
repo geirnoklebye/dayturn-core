@@ -1,0 +1,62 @@
+
+
+New Tools Update
+================
+Linux 64 Bit
+------------
+
+Development system:
+-------------
+
+Development system is Debian Jessie (stable). The compiler is gcc-4.9. If starting with a new Jessie you will need to install
+    build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.  
+    Debian packages of the build tools work. Python27 is required so, after installing Python use 'python --version' to check the
+    active version. Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine. 
+  Library archives for the most part are built with gcc-4.6.4. Boost, Colladadom, and Googlemock are built with gcc-4.9. This was necessary to get past viewer compile errors. If you need to build libraries you need gcc-4.6 which doesn't come with Debian Jessie but, is in Debian Stretch (Testing). With careful apt-pinning gcc-4.6.4 can be installed in Jessie from Stretch. Stretch was first choice as a development system but, after much work it turned out to have a compatabilty issue with VirtualBox Linux Guest Additions and 'X' which killed graphics and the ability to test a viewer.    
+
+
+Preprations to build:
+--------------
+
+Autobuild and Python:
+
+- Clone Autobuild
+    cd ~/
+    hg clone https://bitbucket.org/lindenlab/autobuild or if your have ssh setup ssh://hg@bitbucket.org/lindenlab/autobuild
+- Prepare Python
+Install python-pip 
+sudo apt-get install python-pip
+Install python-dev  but, it might already be installed
+sudo apt-get install python-dev
+Pip Install autobuild python dependencies 
+sudo pip install 'hg+https://bitbucket.org/oz_linden/autobuild-metadata#egg=autobuild'
+
+Clone, configure, and build Kokua-NT
+----------------------
+
+-  hg clone https://NickyP@bitbucket.org/NickyP/kokuant
+
+  KokuaNT can be built with opensource or properity audio engine. The opensource solution uses openal for sounds and gstreamer for streaming music and audio visual files like mp4's. Use of the properity FMOD Ex library for sounds and streaming audio is supported but, the FMOD Ex library must be provided separately.
+
+-  Configure for an openal and gstreamer build:
+Following assumes a clean build tree.
+cd kokuant
+autobuild configure -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DOPENAL:BOOL=ON -DPACKAGE:BOOL=ON 2>&1 |tee configure.log
+
+- Build the viewer
+-autobuild build -c ReleaseOS 2>&1 |tee build.log
+
+- Configuration and building takes about 1.5 hours on a 2 core machine.
+
+- Test the build
+cd build-linux-x86_64/newview/packaged
+Install the viewer with
+./install.sh skect Y to place in user space.
+This places the viewer in ~/.kokua-install and places a Kokua menu entry under Applications->Internet
+
+Disclaimer
+-----
+-      This software is not provided nor supported by Linden Lab, the makers     of Second Life.
+
+
+
