@@ -1411,11 +1411,11 @@
                 <string>lib/release</string>
               </map>
               <key>hash</key>
-              <string>2cbca5333f1fb34eef6c75973c79f5d4</string>
+              <string>1fe57c2774982f1cae0764999ddcb13a</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201506131839-linux64-201506131839.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201506151839-linux64-201506151839.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1434,7 +1434,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.10.36.201506131839</string>
+        <string>0.10.36.201506151839</string>
       </map>
       <key>gtk</key>
       <map>
