@@ -988,7 +988,7 @@ void LLPanelEditWearable::onTexturePickerCommit(const LLUICtrl* ctrl)
 							{
 								gAgentAvatarp->setLocalTexture(entry->mTextureIndex, image, FALSE, index);
 								LLVisualParamHint::requestHintUpdates();
-								AgentAvatarp->wearableUpdated(type, FALSE);
+								gAgentAvatarp->wearableUpdated(type, FALSE);
 							}
 							else
 							{

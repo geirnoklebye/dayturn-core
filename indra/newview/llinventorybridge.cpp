@@ -833,7 +833,9 @@ bool get_selection_item_uuids(LLFolderView::selected_items_t& selected_items, uu
 	}
 	return false;
 }
-
+void LLInvFVBridge::addTrashContextMenuOptions(
+	U32 flags,
+	menuentry_vec_t &items,
 	menuentry_vec_t &disabled_items)
 {
 	const LLInventoryObject *obj = getInventoryObject();
