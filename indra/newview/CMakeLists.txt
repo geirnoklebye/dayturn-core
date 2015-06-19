@@ -1855,7 +1855,7 @@ if (WINDOWS)
       SLPlugin
       media_plugin_quicktime
       media_plugin_webkit
-      media_plugin_gstreamer010
+#      media_plugin_gstreamer010
       winmm_shim
       windows-crash-logger
       )
