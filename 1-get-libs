@@ -46,3 +46,4 @@ wget -c http://slackbuilds.org/slackbuilds/14.1/libraries/OpenAL.tar.gz
 
 wget -c http://slackbuilds.org/slackbuilds/14.1/libraries/freealut.tar.gz
 
+wget -c https://bitbucket.org/Drakeo/firestorm-testing-boost/downloads/fmodapi-build-script.tar.gz

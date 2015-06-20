@@ -87,6 +87,15 @@ CXXFLAGS="$SLKCFLAGS" \
   upgradepkg --reinstall --install-new /tmp/pangox-compat-0.0.2-x86_64-1_SBo.tgz
   
   cd $CWD
+  tar  xvf fmodapi-build-script.tar.gz
+  cd  fmodapi-build-script
+  wget -c http://www.fmod.org/download/fmodex/api/Linux/fmodapi44454linux.tar.gz
+  sh fmodapi.SlackBuild
+  upgradepkg --reinstall --install-new /tmp/fmodapi-4.44.54-x86_64-1_SBo.tgz
+  #we need this in /opt it makes the build work
+  cp -aR /tmp/SBo/fmodapi44454linux /opt/
+  
+  cd $CWD
   upgradepkg --reinstall --install-new  tut-common-noarch-USL.tgz
   
   cd $CWD
@@ -200,3 +209,7 @@ CXXFLAGS="$SLKCFLAGS" \
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 
   upgradepkg --reinstall --install-new  /tmp/SLKW14-1-USESYSTEMLIBS-0.0.1-x86_64-1.tgz
+  
+  ldconfig
+  
+echo it is time to build the viewer. Look in the readme for the build command.
