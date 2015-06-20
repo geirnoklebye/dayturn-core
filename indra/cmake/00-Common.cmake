@@ -157,7 +157,7 @@ if (LINUX)
 
   # gcc 4.8 and above added a new spammy warning!
   if (${CXX_VERSION_NUMBER} GREATER 479)
-    set(CMAKE_CXX_FLAGS "-Wno-unused-local-typedefs ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-Wno-unused-local-typedefs -Wno-deprecated-declarations ${CMAKE_CXX_FLAGS}")
   endif (${CXX_VERSION_NUMBER} GREATER 479)
   # End of hacks.
 
@@ -267,6 +267,7 @@ if (USESYSTEMLIBS)
   endif (LINUX AND ${ARCH} STREQUAL "i686")
 
 else (USESYSTEMLIBS)
+if (LINUX AND ${ARCH} STREQUAL "i686")
   set(${ARCH}_linux_INCLUDES
       ELFIO
       atk-1.0
@@ -275,6 +276,23 @@ else (USESYSTEMLIBS)
       gtk-2.0
       pango-1.0
       )
+endif (LINUX AND ${ARCH} STREQUAL "i686")
+
+if (LINUX AND ${ARCH} STREQUAL "x86_64")
+  set(${ARCH}_linux_INCLUDES
+      ELFIO
+      atk
+	  cairo
+      gdk
+      gdk-pixbuf
+      gdk-pixbuf-xlib
+      glib
+      gmodule
+      gstreamer-0.10
+      gtk
+      pango
+      )
+endif (LINUX AND ${ARCH} STREQUAL "x86_64")
 endif (USESYSTEMLIBS)
 
 endif(NOT DEFINED ${CMAKE_CURRENT_LIST_FILE}_INCLUDED)

@@ -37,7 +37,7 @@ if(WINDOWS)
     set(debug_files
  #       alut.dll
  #       openal32.dll
-        openjpegd.dll
+ #       openjpegd.dll
         libapr-1.dll
         libaprutil-1.dll
         libapriconv-1.dll
@@ -56,7 +56,7 @@ if(WINDOWS)
     set(release_files
  #       alut.dll
  #       openal32.dll
-        openjpeg.dll
+ #       openjpeg.dll
         libapr-1.dll
         libaprutil-1.dll
         libapriconv-1.dll
@@ -246,8 +246,8 @@ elseif(LINUX)
 #          libgtest.so.0
 #          libminizip.so
           libopenal.so
-          libopenjpeg.so
-          libopenjpeg.so.1.4.0
+#          libopenjpeg.so
+#          libopenjpeg.so.1.4.0
 #           libstacktrace.so
 #           libtcmalloc.so
 #          libssl.so
@@ -282,7 +282,7 @@ elseif(LINUX)
         libgobject-2.0.so
         libhunspell-1.3.so.0.0.0
         libopenal.so
-        libopenjpeg.so
+#        libopenjpeg.so
         libuuid.so.16
         libuuid.so.16.0.22
         libfontconfig.so.1.8.0
@@ -290,6 +290,10 @@ elseif(LINUX)
 # Remove OPenMP from build of viewer causes conflict starting at Viewer-Beta 3.3.3
 #        libgomp.so.1
 #        libgomp.so.1.0.0
+		if (FMODEX)
+		  set(debug_files ${debug_files} "libfmodexL64.so")
+		  set(release_files ${release_files} "libfmodex64.so")
+		endif (FMODEX)
        )
     endif(${ARCH} STREQUAL "x86_64")
 
@@ -297,10 +301,6 @@ elseif(LINUX)
       set(release_files ${release_files} "libtcmalloc_minimal.so")
     endif (USE_TCMALLOC)
 
-    if (FMODEX)
-      set(debug_files ${debug_files} "libfmodexL.so")
-      set(release_files ${release_files} "libfmodex.so")
-    endif (FMODEX)
 
 else(WINDOWS)
     message(STATUS "WARNING: unrecognized platform for staging 3rd party libs, skipping...")

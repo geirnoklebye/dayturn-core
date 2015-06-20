@@ -1,7 +1,7 @@
 # -*- cmake -*-
 include(Prebuilt)
 if (USESYSTEMLIBS)
-  set(USESYSTEMLIBS OFF)
+  set(USESYSTEMLIBS ON)
   use_prebuilt_binary(slvoice)
   use_prebuilt_binary(libhunspell)
 #kokuafixme
@@ -15,6 +15,7 @@ else (USESYSTEMLIBS)
      use_prebuilt_binary(fontconfig)
      if (${ARCH} STREQUAL "x86_64")
 #      use_prebuilt_binary(32bitcompatibilitylibs)
+# putting out of the away for now autobuild metadata does not allow file overwrites amoungst archives
       # for mesh, this is built with colladadom and
       # KOKUAFIXME: should be packaged with colladadom the next time packaging it
       #use_prebuilt_binary(minizip)

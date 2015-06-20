@@ -1088,11 +1088,6 @@ class Darwin_i386_Manifest(ViewerManifest):
 class LinuxManifest(ViewerManifest):
     def construct(self):
         super(LinuxManifest, self).construct()
-
-        pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
-        relpkgdir = os.path.join(pkgdir, "lib", "release")
-        debpkgdir = os.path.join(pkgdir, "lib", "debug")
-
         self.path("licenses-linux.txt","licenses.txt")
         self.path("icons/kokua/kokua_icon.png", "kokua_icon.png")
         self.path("VivoxAUP.txt")
@@ -1112,7 +1107,7 @@ class LinuxManifest(ViewerManifest):
         if self.prefix(src="", dst="bin"):
             self.path("kokua-bin","do-not-directly-run-kokua-bin")
             self.path("../linux_crash_logger/linux-crash-logger","linux-crash-logger.bin")
-            self.path2basename(pkgdir, "SLPlugin")
+            self.path2basename("../llplugin/slplugin", "SLPlugin")
             self.path2basename("../viewer_components/updater/scripts/linux", "update_install")
             self.end_prefix("bin")
 
@@ -1132,9 +1127,9 @@ class LinuxManifest(ViewerManifest):
             self.end_prefix(icon_path)
 
         # plugins
-        if self.prefix(src=os.path.join(pkgdir, "llplugin"), dst="bin/llplugin"):
-            self.path("libmedia_plugin_webkit.so")
-            self.path("libmedia_plugin_gstreamer.so")
+        if self.prefix(src="", dst="bin/llplugin"):
+            self.path2basename("../media_plugins/webkit", "libmedia_plugin_webkit.so")
+            self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
             self.end_prefix("bin/llplugin")
 
         # llcommon
@@ -1191,6 +1186,7 @@ class LinuxManifest(ViewerManifest):
         if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
             print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
             self.run_command(r"find %(d)r/bin %(d)r/lib %(d)r/lib32 %(d)r/lib64 -type f \! -name update_install | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
+
 
 
 class Linux_i686_Manifest(LinuxManifest):
@@ -1330,9 +1326,10 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
        # Use the build system libstdc++.so An attempt try to allow versions earlier than
         # then wheezy to run the viewer without complaining about GLIBCXX version.
-        if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
-            self.path("libstdc++.so.*")
-            self.end_prefix("lib64") 
+#        if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
+#            self.path("libstdc++.so.*")
+#            self.end_prefix("lib64") 
+
 
         if self.prefix("../packages/lib/release", dst="lib64"):
             self.path("libapr-1.so*")
@@ -1351,7 +1348,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libssl.so")
             self.path("libssl.so.1.0.0")
             self.path("libexpat.so.*")
-            self.path("libuuid.so*")
             self.path("libSDL-1.2.so.*")
             self.path("libdirectfb-1.*.so.*")
             self.path("libfusion-1.*.so.*")
@@ -1363,9 +1359,14 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libjpeg.so")
             self.path("libjpeg.so.8")
             self.path("libjpeg.so.8.3.0")
+            self.path("libuuid.so")
+            self.path("libuuid.so.16")
+            self.path("libuuid.so.16.0.22")
             self.path("libhunspell-1.3.so*")
             self.path("libGLOD.so")
-
+            self.path("libfmodex64-*.so")
+            self.path("libfmodex64.so")
+           
             # OpenAL
             self.path("libalut.so")
             self.path("libalut.so.0")
@@ -1380,28 +1381,28 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.end_prefix("lib64")
 
             # plugin runtime
-            if self.prefix("../packages/lib/release", dst="lib64"):
-                    self.path("libQtWebKit.so*")
-                    self.end_prefix("lib64")
+            if self.prefix(src="../packages/lib/release", dst="lib64"):
+                self.path("libQtWebKit.so*")
+                self.end_prefix("lib64")
 
             # For WebKit/Qt plugin runtimes (image format plugins)
-            if self.prefix("../packages/plugins/imageformats", dst="bin/llplugin/imageformats"):
-                    self.path("libqgif.so")
-                    self.path("libqico.so")
-                    self.path("libqjpeg.so")
-                    self.path("libqmng.so")
-                    self.path("libqsvg.so")
-                    self.path("libqtiff.so")
-                    self.end_prefix("bin/llplugin/imageformats")
+            if self.prefix(src="../packages/plugins/imageformats", dst="bin/llplugin/imageformats"):
+                self.path("libqgif.so")
+                self.path("libqico.so")
+                self.path("libqjpeg.so")
+                self.path("libqmng.so")
+                self.path("libqsvg.so")
+                self.path("libqtiff.so")
+                self.end_prefix("bin/llplugin/imageformats")
 
             # For WebKit/Qt plugin runtimes (codec/character encoding plugins)
-            if self.prefix("../packages/plugins/codecs", dst="bin/llplugin/codecs"):
-                    self.path("libqcncodecs.so")
-                    self.path("libqjpcodecs.so")
-                    self.path("libqkrcodecs.so")
-                    self.path("libqtwcodecs.so")
-                    self.end_prefix("bin/llplugin/codecs")
-
+            if self.prefix(src="../packages/plugins/codecs", dst="bin/llplugin/codecs"):
+                self.path("libqcncodecs.so")
+                self.path("libqjpcodecs.so")
+                self.path("libqkrcodecs.so")
+                self.path("libqtwcodecs.so")
+                self.end_prefix("bin/llplugin/codecs")
+ 
 
             # Vivox runtimes
             if self.prefix(src="../packages/lib/release", dst="bin"):
@@ -1415,6 +1416,16 @@ class Linux_x86_64_Manifest(LinuxManifest):
                     self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
                     self.end_prefix("lib32")
 
+            # 32bit libs needed for voice
+            if self.prefix("../packages/lib/release/32bit-compat", dst="lib32"):
+                    self.path("32bit-libalut.so" , "libalut.so")
+                    self.path("32bit-libalut.so.0" , "libalut.so.0")
+                    self.path("32bit-libopenal.so" , "libopenal.so")
+                    self.path("32bit-libopenal.so.1" , "libopenal.so.1")
+                    self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
+                    self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
+
+                    self.end_prefix("lib32")
 	if self.args['buildtype'].lower() == 'debug':
     	 if self.prefix("../packages/lib/debug", dst="lib64"):
              self.path("libapr-1.so*")

@@ -58,9 +58,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a9b1a2b55f9f54bd915a0b5dcaa78644</string>
+              <string>44e213cc79d66cc4f332d828e49e05dc</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/SDL-1.2.15-linux64-201505162257.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-sdl/downloads/SDL-1.2.15-linux64-201505170936.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -201,6 +201,38 @@
         <key>version</key>
         <string>1.10.0.295506</string>
       </map>
+      <key>atk</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright 2001, 2002, 2003, 2006, 2007 Sun Microsystems Inc. See source code for additional copyright holders.</string>
+        <key>description</key>
+        <string>ATK provides the set of accessibility interfaces that are implemented by other toolkits and applications. Using the ATK interfaces, accessibility tools have full access to view and control running applications.</string>
+        <key>license</key>
+        <string>GNOME LPGL(2)</string>
+        <key>license_file</key>
+        <string>LICENSES/atk.txt</string>
+        <key>name</key>
+        <string>atk</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>498557fac76f02fab5af14382ca4df8b</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-atk/downloads/atk-2.16.0-linux64-201506010908.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>2.16.0</string>
+      </map>
       <key>boost</key>
       <map>
         <key>copyright</key>
@@ -244,9 +276,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a62c838b06866f5be4592ec3c6dc0d8d</string>
+              <string>c933ed1eff3648068026a1b27b41ba5c</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/boost-1.57-linux64-201505172158-r138d.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201505270909.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -266,6 +298,38 @@
         </map>
         <key>version</key>
         <string>1.57</string>
+      </map>
+      <key>cairo</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright © 2002 University of Southern California Copyright © 2005 Red Hat, In</string>
+        <key>description</key>
+        <string>Cairo is a 2D graphics library with support for multiple output devices.</string>
+        <key>license</key>
+        <string>LGPL(2.1)</string>
+        <key>license_file</key>
+        <string>LICENSES/cairo.txt</string>
+        <key>name</key>
+        <string>cairo</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>d9e8ebccffc6434b8e0eafca8b4d5c93</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-cairo/downloads/cairo-1.14.2-linux64-201506040945.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>1.14.2</string>
       </map>
       <key>colladadom</key>
       <map>
@@ -308,9 +372,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4ce74a7fff983435816a20ff83796804</string>
+              <string>9b2f6f941613ca7454fecbc9870a5ffd</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/colladadom-2.3.201505170602-linux64-201505170602.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201505282019-linux64-201505282019.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -329,7 +393,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.3.297450</string>
+        <string>2.3.201505282019</string>
       </map>
       <key>curl</key>
       <map>
@@ -374,9 +438,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a54557475ca7281469ce129c2bec9837</string>
+              <string>ab183bf38d32b017a0bb937622a18e13</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/curl-7.38.0.201505171331-r143d-linux64-201505171331-r143d.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.38.0.201505290832-linux64-201505290832.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -395,7 +461,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>7.38.0.297172</string>
+        <string>7.38.0.201505290832</string>
       </map>
       <key>db</key>
       <map>
@@ -470,9 +536,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>aab8ac9af9d8a99a612a19940ee07978</string>
+              <string>4068ae75858d5eaf44d9ac19d2cf27c9</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/dbus_glib-0.76-201505170616-linux64-201505170616.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-dbus-glib/downloads/dbus_glib-0.76-linux64-201505171442.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -512,16 +580,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>92398d45c81bbac7009e6da423be5953</string>
+              <string>6909a15bdf7beddecbaae71c45cba05e</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-dictionaries/downloads/dictionaries-1-linux64-20120702.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-dictionaries/downloads/dictionaries-1.201506061533-linux64-201506061533.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.297347</string>
+        <string>1.201506061533</string>
       </map>
       <key>elfio</key>
       <map>
@@ -616,7 +684,9 @@
       <key>fmodex</key>
       <map>
         <key>copyright</key>
-        <string>COPYRIGHT 2014 FIRELIGHT TECHNOLOGIES PTY LTD. ALL RIGHTS RESERVED</string>
+        <string>FMOD Sound System, copyright © Firelight Technologies Pty, Ltd., 1994-2014.</string>
+        <key>description</key>
+        <string>FMOD Ex audio system library</string>
         <key>license</key>
         <string>fmodex</string>
         <key>license_file</key>
@@ -649,18 +719,18 @@
             <key>name</key>
             <string>linux</string>
           </map>
-           <key>linux64</key>
+          <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5b1f7ef52a5083ee8b62d7cfff0cf659</string>
+              <string>2043fef7903b7c5b88d06061353aeb1e</string>
               <key>url</key>
-              <string>file:///opt/kokua/fmodex-44453-linux64-201505151801-r21.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-fmodex-d/downloads/fmodex-4.44.52-linux64-201506112127.tar.bz2</string>
             </map>
             <key>name</key>
-            <string>linux</string>
-            </map>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -675,7 +745,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.44.31.297261</string>
+        <string>4.44.52</string>
       </map>
       <key>fontconfig</key>
       <map>
@@ -708,9 +778,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a553ddf858f1c9554d641206b7080bad</string>
+              <string>926b3873f51f18ead54bef5b88c5fb9f</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/fontconfig-2.11.0-linux64-201505170929-r22d.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-fontconfig/downloads/fontconfig-2.11.0-linux64-201505182117.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -792,9 +862,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c4f33e613e5de6b7634d9e2c79950312</string>
+              <string>5e529c5fd598cf16972e2d096630a791</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/freetype-2.4.4.201505170600-r57d-linux64-201505170600-r57d.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.4.4.201505162052-linux64-201505162052.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -814,6 +884,38 @@
         </map>
         <key>version</key>
         <string>2.4.4.297053</string>
+      </map>
+      <key>gdk-pixbuf</key>
+      <map>
+        <key>copyright</key>
+        <string>Original Authors:Peter Mattis, Spencer Kimball, Josh MacDonald. See top of code file for others.</string>
+        <key>description</key>
+        <string>GdkPixbuf is a toolkit for image loading and pixel buffer manipulation. In GTK+ version 2.22 from 2010-09-23 GdkPixbuf was split off from GDK into a separate package in preparation for the transition to GTK+ 3.</string>
+        <key>license</key>
+        <string>LGPL(2)</string>
+        <key>license_file</key>
+        <string>LICENSES/gdk-pixbuf.txt</string>
+        <key>name</key>
+        <string>gdk-pixbuf</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>04ca7ec5d4ff232c2012132b95955f7e</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-gdk-pixbuf/downloads/gdk_pixbuf-2.30.8-linux64-201506041921.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>2.30.8</string>
       </map>
       <key>glext</key>
       <map>
@@ -888,9 +990,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c0f648de940bf7f48c9b98db6b9d28c9</string>
+              <string>f577144536fd7c9d26d9f989acf17857</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/glh_linear-0.0.0-common-201505170835-r13.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/glh-linear_3p-update-glh-linear/rev/297692/arch/Linux/installer/glh_linear-0.0.0-common-297692.tar.bz2</string>
             </map>
             <key>name</key>
             <string>common</string>
@@ -898,6 +1000,51 @@
         </map>
         <key>version</key>
         <string>0.0.0</string>
+      </map>
+      <key>glib</key>
+      <map>
+        <key>copyright</key>
+        <string>Unknown. Sources maintained by GNOME Library.</string>
+        <key>description</key>
+        <string>GLib provides the core application building blocks for libraries and applications written in C. It provides the core object system used in GNOME, the main loop implementation, and a large set of utility functions for strings and common data structures.</string>
+        <key>license</key>
+        <string>GLib is released under the GNU Library General Public License (GNU LGPL).</string>
+        <key>license-url</key>
+        <string>http://www.gnu.org/licenses/gpl.html</string>
+        <key>license_file</key>
+        <string>LICENSES/glib.txt</string>
+        <key>name</key>
+        <string>glib</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>c133c727dd787a811d8dec925a64fa5a</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-glib/downloads/glib-2.45.1-linux64-201505312131.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>2.45.1</string>
       </map>
       <key>glod</key>
       <map>
@@ -944,9 +1091,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5131320515607322ed99930006d9c9a8</string>
+              <string>1217cefeeb77db7cdb338f7bc48f9f21</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/glod-1.0pre4.201505170841-r81d-linux64-201505170841-r81d.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4.201506061259-linux64-201506061259.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -967,7 +1116,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.0pre4.296895</string>
+        <string>1.0pre4.201506061259</string>
       </map>
       <key>glui</key>
       <map>
@@ -1066,9 +1215,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>166d479c47ffd1afdf0bf1b64f92bfca</string>
+              <string>c493451c04f5527c76d92c863454f76f</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/google_breakpad-1398.201505170725-r75d-linux64-201505170725-r75d.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-breakpad/downloads/google_breakpad-1413.201506071040-linux64-201506071040.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1087,7 +1236,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1413.298127</string>
+        <string>1413.201506071040</string>
       </map>
       <key>googlemock</key>
       <map>
@@ -1132,9 +1281,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>bbefceb5ddbe027ab0b3360a06eabdde</string>
+              <string>f55b4f8c55ff1f7a18351051798d0c06</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/googlemock-1.7.0.201505171505-r58d-linux64-201505171505-r58d.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201505282006-linux64-201505282006.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1153,7 +1302,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.7.0.297460</string>
+        <string>1.7.0.201505282006</string>
       </map>
       <key>gperftools</key>
       <map>
@@ -1212,9 +1361,11 @@
       <key>gstreamer</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (C) 2007 Free Software Foundation, Inc. &lt;http://fsf.org/&gt;</string>
+        <string>Copyright (C) 1991 Free Software Foundation, Inc.</string>
+        <key>description</key>
+        <string>GStreamer is a streaming media framework that enables applications to share a common set of plugins for things like video decoding and encoding, audio encoding and decoding, audio and video filters, audio visualisation, Web streaming and anything else that streams in real-time or otherwise. It is modelled after research software worked on at the Oregon Graduate Institute. After installing GStreamer, you'll likely need to install one or more of the gst-plugins-bad-0.10.23, gst-plugins-good-0.10.31, gst-plugins-ugly-0.10.19 and gst-ffmpeg-0.10.13 packages. </string>
         <key>license</key>
-        <string>LGPL</string>
+        <string>LGPL(2)</string>
         <key>license_file</key>
         <string>LICENSES/gstreamer.txt</string>
         <key>name</key>
@@ -1224,11 +1375,22 @@
           <key>linux</key>
           <map>
             <key>archive</key>
+            <map>
+              <key>dir_structure</key>
               <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/i686-linux/include</key>
+                <string>include</string>
+                <key>libraries/i686-linux/lib_release_client</key>
+                <string>lib/release</string>
+                <key>libraries/include</key>
+                <string>include</string>
+              </map>
               <key>hash</key>
-              <string>fb1479533a7699b44d34e3a550037eb7</string>
+              <string>2cd3f6499f8444f1d119d097e4047252</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/gstreamer_3p-update-gstreamer/rev/294903/arch/Linux/installer/gstreamer-0.10.6.294903-linux-294903.tar.bz2</string>
+              <string>http://imprudenceviewer.org/download/libs/gstreamer-0.10.24-linux-20091125.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1236,11 +1398,24 @@
           <key>linux64</key>
           <map>
             <key>archive</key>
+            <map>
+              <key>dir_structure</key>
               <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
               <key>hash</key>
-              <string>fb1479533a7699b44d34e3a550037eb7</string>
+              <string>1fe57c2774982f1cae0764999ddcb13a</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/gstreamer_3p-update-gstreamer/rev/294903/arch/Linux/installer/gstreamer-0.10.6.294903-linux-294903.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201506151839-linux64-201506151839.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1259,7 +1434,39 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.10.6.294903</string>
+        <string>0.10.36.201506151839</string>
+      </map>
+      <key>gtk</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright (C) 2001 CodeFactory AB, Copyright (C) 2001, 2002 Anders Carlsson, Copyright (C) 2003, 2004 Matthias Clasen</string>
+        <key>description</key>
+        <string>GTK+, or the GIMP Toolkit, is a multi-platform toolkit for creating graphical user interfaces. Offering a complete set of widgets, GTK+ is suitable for projects ranging from small one-off tools to complete application suites.</string>
+        <key>license</key>
+        <string>LGPL(2)</string>
+        <key>license_file</key>
+        <string>LICENSES/gtk.txt</string>
+        <key>name</key>
+        <string>gtk</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>742d44a6609a29ca4bf101370f8300fb</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-gtk/downloads/gtk-2.24.28-linux64-201506051634.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>2.24.28</string>
       </map>
       <key>gtk-atk-pango-glib</key>
       <map>
@@ -1284,22 +1491,77 @@
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>0.0</string>
+      </map>
+      <key>gtk-etc</key>
+      <map>
+        <key>license</key>
+        <string>lgpl</string>
+        <key>license-file</key>
+        <string>LICENSES/gtk-etc.txt</string>
+        <key>name</key>
+        <string>gtk-etc</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>e8cb3f28379b7730004da44f04263936</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/gtk-etc-linux64-20091231.tar.bz2</string>
             </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+      </map>
+      <key>harfbuzz</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright © 2010,2011,2012  Google, Inc., Copyright © 2012  Mozilla Foundation, Copyright © 2011  Codethink Limited, Copyright © 2008,2010  Nokia Corporation and/or its subsidiary(-ies), Copyright © 2009  Keith Stribley, Copyright © 2009  Martin Hosken and SIL International, Copyright © 2007  Chris Wilson, Copyright © 2006  Behdad Esfahbod, Copyright © 2005  David Turner, Copyright © 2004,2007,2008,2009,2010  Red Hat, Inc., Copyright © 1998-2004  David Turner and Werner Lemberg; For full copyright notices consult the individual files in the package.</string>
+        <key>description</key>
+        <string>HarfBuzz is an OpenType text shaping engine.</string>
+        <key>license</key>
+        <string>HarfBuzz is licensed under the so-called "Old MIT" license.</string>
+        <key>license_file</key>
+        <string>LICENSES/harfbuzz.txt</string>
+        <key>name</key>
+        <string>harfbuzz</string>
+        <key>platforms</key>
+        <map>
           <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>0b4099b878fe65e1372e37abba951145</string>
+              <string>b927e0337a72d146718a393730ecde0d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/3p-gtk-atk-pango-glib-linux64-kokua/downloads/gtk_atk_pango_glib-0.1-linux64-201505171022-r1d.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-harfbuzz/downloads/harfbuzz-0.9.40-linux64-201506041046.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
           </map>
         </map>
         <key>version</key>
-        <string>0.0</string>
+        <string>0.9.40</string>
       </map>
       <key>havok-source</key>
       <map>
@@ -1464,9 +1726,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6f1b32569d663b4768b417b289548ced</string>
+              <string>93be1f25037bf118be445bb3399522d7</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/jsoncpp-0.5.0.201505172349-r30-linux64-201505172349-r30.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-jsoncpp/downloads/jsoncpp-0.5.0.201506061927-linux64-201506061927.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1485,7 +1747,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.5.0.297580</string>
+        <string>0.5.0.201506061927</string>
       </map>
       <key>kdu</key>
       <map>
@@ -1584,9 +1846,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2a4bebc77d3bbc81beee69a40e940253</string>
+              <string>6a60d6a82b8be6ed3a97c125905b1339</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/libhunspell-1.3.2.201505170907-r21d-linux64-201505170907-r21d.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-hunspell/downloads/libhunspell-1.3.2.201506061803-linux64-201506061803.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1605,7 +1867,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.3.2.296916</string>
+        <string>1.3.2.201506061803</string>
       </map>
       <key>libndofdev</key>
       <map>
@@ -1692,9 +1954,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>11b1b1f4a2943cff0be33f91981fd820</string>
+              <string>05efb58926b4bf4d00491380fb77647f</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/libpng-1.6.8.201505170602-r52d-linux64-201505170602-r52d.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libpng/downloads/libpng-1.6.8.201505162036-linux64-201505162036.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1745,10 +2007,21 @@
           <map>
             <key>archive</key>
             <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
               <key>hash</key>
-              <string>e0fb78ca703edbd3d1861a9487ac2631</string>
+              <string>4f5ca7f26ffa697a72f6217c820ae5de</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/libuuid-1.6.2-linux64-201505170914-r8d.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libuuid/downloads/libuuid-1.6.2-linux64-201505172012.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1800,9 +2073,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7679fe77ba97631993c44ae040391663</string>
+              <string>b8b0c54cedcf1b77b9dfdfdcd6221cfb</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/libxml2-2.9.1.201505170807-r41d-linux64-201505170807-r41d.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libxml/downloads/libxml2-2.9.1.201505161544-linux64-201505161544.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1822,18 +2095,6 @@
         </map>
         <key>version</key>
         <string>2.9.1.297050</string>
-      </map>
-      <key>linux64</key>
-      <map>
-        <key>archive</key>
-        <map>
-          <key>hash</key>
-          <string>5131320515607322ed99930006d9c9a8</string>
-          <key>url</key>
-          <string>http://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4-linux64-20121216.tar.bz2</string>
-        </map>
-        <key>name</key>
-        <string>linux64</string>
       </map>
       <key>llappearance_utility</key>
       <map>
@@ -2001,7 +2262,7 @@
         <key>copyright</key>
         <string>Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).</string>
         <key>description</key>
-        <string>QT cross-platform application and UI framework.</string>
+        <string>QT cross-platform applicaiton and UI framework.</string>
         <key>license</key>
         <string>LGPL</string>
         <key>license_file</key>
@@ -2043,9 +2304,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5c6ed5cf51b90c4ba64e89051a8fc1d1</string>
+              <string>a74e21beaf739563d323c55386c05296</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/llqtwebkit-4.7.1-linux64-201505191251.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-llqtwebkit2/downloads/llqtwebkit-4.7.1-linux64-201506082044.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2153,7 +2414,7 @@
               <string>54c312d898f08609a71acb22cfe80406</string>
               <key>url</key>
               <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.201505151905-linux64-201505151905.tar.bz2</string>
-             </map>
+            </map>
             <key>name</key>
             <string>linux64</string>
           </map>
@@ -2294,15 +2555,15 @@
             </map>
             <key>name</key>
             <string>linux</string>
-            </map>
-           <key>linux64</key>
+          </map>
+          <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>09ae2ed2711be0cb05c6ef0732e8d345</string>
+              <string>b09df0298a9659962e3e10a25718dd03</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/firestorm-testing-boost/downloads/open_libndofdev-0.3-linux-x86-64-1.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libndofdev-linux/downloads/open_libndofdev-0.3-linux64-201505171912.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2356,9 +2617,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>091c274d684f74fd5f21f3ec0f643e18</string>
+              <string>43fd028ba47dd35cbb6e8dd853ef1cfb</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201505111103-linux64-201505111103.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201506132204-linux64-201506132204.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2379,7 +2642,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.12.854-1.1.0.297677</string>
+        <string>1.15.1-1.1.0.201506132204</string>
       </map>
       <key>openjpeg</key>
       <map>
@@ -2490,9 +2753,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b83cfd6e81557e7079e0f196e27fde9f</string>
+              <string>328c247a063e35657c224973e27eaa19</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/openssl-1.0.1m.201505172238-r127d-linux-201505172238-r127d.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-openssl-ll/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2511,7 +2776,39 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.0.1h.297168</string>
+        <string>1.0.1h.20140815</string>
+      </map>
+      <key>pango</key>
+      <map>
+        <key>copyright</key>
+        <string>on internationalization.Copyright (C) 1999 Red Hat Software</string>
+        <key>description</key>
+        <string>Pango is a library for layout and rendering of text, with an emphasis</string>
+        <key>license</key>
+        <string>GNU LGPL(2)</string>
+        <key>license_file</key>
+        <string>LICENSES/pango.txt</string>
+        <key>name</key>
+        <string>pango</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>5dc224dc6d4e0288f9503b1627fad3a1</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-pango/downloads/pango-1.36.8-linux64-201506041413.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>1.36.8</string>
       </map>
       <key>pcre</key>
       <map>
@@ -2556,9 +2853,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>36b28f1a41aaa36ce97b2017897ccad7</string>
+              <string>4707e7dcee810c401eb65c79d93bd8ee</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/pcre-8.35.-linux64-201505170748-r49d.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-pcre/downloads/pcre-8.35.-linux64-201505161257.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2578,6 +2875,38 @@
         </map>
         <key>version</key>
         <string>8.35.</string>
+      </map>
+      <key>pixman</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright © 2000 Keith Packard, member of The XFree86 Project, Inc.  2005 Lars Knoll Zack Rusin, Trolltech 2008 Aaron Plattner, NVIDIA Corporation. See code headers</string>
+        <key>description</key>
+        <string>Pixman is a low-level software library for pixel manipulation, providing features such as image compositing and trapezoid rasterization.</string>
+        <key>license</key>
+        <string>MIT License</string>
+        <key>license_file</key>
+        <string>LICENSES/pixman.txt</string>
+        <key>name</key>
+        <string>pixman</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>504c19255873cea1273e2d5e3214a61d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux64-201506011032.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>0.32.6</string>
       </map>
       <key>quicktime</key>
       <map>
@@ -2646,15 +2975,15 @@
             </map>
             <key>name</key>
             <string>linux</string>
-            </map>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3b4ce61d4de519dbe06b696a97c4166b</string>
+              <string>bb5139612564a3882292153e51a815d6</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/slplugins-3.7.24.297623.201505150628-r10-linux64-201505150628-r10.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-update-slplugins/downloads/slplugins-3.7.27.35441.201505191200-linux64-201505191200.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2675,7 +3004,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>3.7.24.297623.298079</string>
+        <string>3.7.27.35441.201505191200</string>
       </map>
       <key>slvoice</key>
       <map>
@@ -2708,9 +3037,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>eaf9c620a353faf7a496a3f82ca0a0cc</string>
+              <string>48ed7ddcf93fa3c751d677f5eb5f9367</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/3p-voice/downloads/slvoice-3.2.0002.10426.298329-linux-298329.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/slvoice_3p-update-slvoice/rev/298329/arch/Linux/installer/slvoice-3.2.0002.10426.298329-linux-298329.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2720,9 +3049,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>82d10cdac0dc2bc5cd51817c4fcdf47d</string>
+              <string>8fe64c0ec45c9ab46d65389fea451251</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/3p-voice/downloads/slvoice-3.2.0002.10426.298329-linux64-298329.tar.bz2</string>
+              <string>file:///home/nicky/3p-slvoice/slvoice-4.5.0009.17865.201506081519-linux64-201506081519.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2741,7 +3072,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.6.0017.21209.2988329</string>
+        <string>4.5.0009.17865.201506081519</string>
       </map>
       <key>tut</key>
       <map>
@@ -2816,9 +3147,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>36a0c8b596e941cd0c1752978f299afa</string>
+              <string>baa5a4f37d4e222ee1e46a900015e623</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/uriparser-0.8.0.1-201505170634-linux64-201505170634.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-uriparser/downloads/uriparser-0.8.0.1-linux64-201506060849.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2950,9 +3283,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a2db87a7dbc46d7d848cb497bc64eabe</string>
+              <string>3a7334ad1e1aa55439a7e73720cae770</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/zlib-1.2.8.201505172051-r125d-linux64-201505172051-r125d.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-zlib/downloads/zlib-1.2.8.201505161535-linux64-201505161535.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>

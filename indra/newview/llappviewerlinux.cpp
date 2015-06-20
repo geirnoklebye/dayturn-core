@@ -124,12 +124,16 @@ LLAppViewerLinux::~LLAppViewerLinux()
 
 bool LLAppViewerLinux::init()
 {
+
+
 	// g_thread_init() must be called before *any* use of glib, *and*
 	// before any mutexes are held, *and* some of our third-party
 	// libraries likes to use glib functions; in short, do this here
 	// really early in app startup!
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 	if (!g_thread_supported ()) g_thread_init (NULL);
-	
+#pragma GCC diagnostic pop	
 	bool success = LLAppViewer::init();
 
 #if LL_SEND_CRASH_REPORTS
@@ -267,8 +271,10 @@ bool LLAppViewerLinux::initSLURLHandler()
 	{
 		return false; // failed
 	}
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 	g_type_init();
+#pragma GCC diagnostic pop
 
 	//ViewerAppAPI *api_server = (ViewerAppAPI*)
 	g_object_new(viewerappapi_get_type(), NULL);
@@ -288,7 +294,10 @@ bool LLAppViewerLinux::sendURLToOtherInstance(const std::string& url)
 	DBusGConnection *bus;
 	GError *error = NULL;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 	g_type_init();
+#pragma GCC diagnostic pop
 	
 	bus = lldbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (bus)

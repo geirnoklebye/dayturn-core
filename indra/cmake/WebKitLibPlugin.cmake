@@ -1,7 +1,6 @@
 # -*- cmake -*-
 include(Linking)
 include(Prebuilt)
-include(OpenSSL)
 
 if (USESYSTEMLIBS)
   # The minimal version, 4.4.3, is rather arbitrary: it's the version in Debian/Lenny.
@@ -30,9 +29,9 @@ if (USESYSTEMLIBS)
     set(WEBKITLIBPLUGIN OFF CACHE BOOL
         "WEBKITLIBPLUGIN support for the llplugin/llmedia test apps.")
 else (USESYSTEMLIBS)
-  use_prebuilt_binary(llqtwebkit)
-  set(WEBKITLIBPLUGIN ON CACHE BOOL
-      "WEBKITLIBPLUGIN support for the llplugin/llmedia test apps.")
+    use_prebuilt_binary(llqtwebkit)
+    set(WEBKITLIBPLUGIN ON CACHE BOOL
+        "WEBKITLIBPLUGIN support for the llplugin/llmedia test apps.")
 endif (USESYSTEMLIBS)
 
 if (WINDOWS)
@@ -60,11 +59,13 @@ elseif (DARWIN)
         ${ARCH_PREBUILT_DIRS_RELEASE}/libQtNetwork.4.dylib
         ${ARCH_PREBUILT_DIRS_RELEASE}/libQtGui.4.dylib
         ${ARCH_PREBUILT_DIRS_RELEASE}/libQtCore.4.dylib
-       )
+        )
 elseif (LINUX)
-    # *HUH:  What does this do?
-    set(WEBKIT_PLUGIN_LIBRARIES ${LLQTWEBKIT_LIBRARY} ${QT_LIBRARIES} ${QT_PLUGIN_LIBRARIES})
-    set(WEBKIT_PLUGIN_LIBRARIES
+    # FIRE-6108, add missing if clause for standalone builds - TL
+    if (USESYSTEMLIBS)
+      set(WEBKIT_PLUGIN_LIBRARIES ${LLQTWEBKIT_LIBRARY} ${QT_LIBRARIES} ${QT_PLUGIN_LIBRARIES})
+    else (USESYSTEMLIBS)
+      set(WEBKIT_PLUGIN_LIBRARIES
         llqtwebkit
 #        qico
 #        qpng
@@ -77,8 +78,7 @@ elseif (LINUX)
         ${OPENSSL_LIBRARIES}
         QtGui
         QtCore
-        crypto
-        ssl
+          jpeg
 #        jscore
 #        qgif
 #        qjpeg
@@ -86,11 +86,10 @@ elseif (LINUX)
         fontconfig
         X11
         Xrender
-        Xext
         GL
-
 #        sqlite3
 #        Xi
 #        SM
         )
+    endif (USESYSTEMLIBS)	
 endif (WINDOWS)

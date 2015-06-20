@@ -1,0 +1,202 @@
+#!/bin/bash 
+
+
+
+if [ -z "$ARCH" ]; then
+  case "$( uname -m )" in
+    i?86) ARCH=i486 ;;
+    arm*) ARCH=arm ;;
+      *) ARCH=$( uname -m ) ;;
+  esac
+fi
+PRGNAM=SLKW14-1-USESYSTEMLIBS
+VERSION=0.0.1
+NUMJOBS=${NUMJOBS:-" -j8 "} #//Edit for your cores.
+BUILD=${BUILD:-1}
+TAG=${TAG:_}
+CWD=$(pwd)
+TMP=${TMP:-/$CWD/build}
+PKG=$TMP/package-stage
+OUTPUT=${OUTPUT:-/tmp}
+
+if [ "$ARCH" = "i486" ]; then
+  SLKCFLAGS="-O2 -march=i486 -mtune=i686"
+  LIBDIRSUFFIX=""
+elif [ "$ARCH" = "i686" ]; then
+  SLKCFLAGS="-O2 -march=i686 -mtune=i686"
+  LIBDIRSUFFIX=""
+elif [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+  LIBDIRSUFFIX="64"
+else
+  SLKCFLAGS="-O2"
+  LIBDIRSUFFIX=""
+fi
+
+set -e
+
+cd autobuild-1.0 
+./setup.py install
+
+cd $CWD
+rm -rf build
+mkdir -p $TMP $PKG 
+mkdir -p $PKG/usr/local/lib64
+mkdir -p $PKG/usr/local/include 
+
+cd 3p-xmlrpc-epi/xmlrpc-epi-0.54.1
+chown -R root:root .
+find -L . \
+ \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 -o -perm 511 \) \
+ -exec chmod 755 {} \; -o \
+ \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
+ -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
+
+CFLAGS="$SLKCFLAGS" \
+CXXFLAGS="$SLKCFLAGS" \
+./configure \
+  --prefix=/usr \
+  --with-expat-lib=/usr/lib${LIBDIRSUFFIX} \
+  --with-expat-inc=/usr/lib/include/expat \
+  --build=$ARCH-slackware-linux \
+  
+  make $NUMJOBS
+  make install DESTDIR=$PKG
+  mv  $PKG/usr/include/  $PKG/usr/local/include/xmlrpc-epi
+  mv  $PKG/usr/lib/* $PKG/usr/local/lib64
+  mkdir -p $PKG/usr/local/include   
+  
+    cd $CWD
+  tar xvf c-ares.tar.gz 
+  cd c-ares
+  wget -c  http://c-ares.haxx.se/download/c-ares-1.10.0.tar.gz
+  sh c-ares.SlackBuild 
+  upgradepkg --reinstall --install-new /tmp/c-ares-1.10.0-x86_64-1_SBo.tgz 
+  
+  cd $CWD
+  tar xvf hunspell-USL.tar.gz
+  cd hunspell-USL
+  sh hunspell.SlackBuild
+  upgradepkg --reinstall -install-new /tmp/hunspell-1.3.2-x86_64-1.txz
+  
+  cd $CWD
+  tar xvf pangox-compat.tar.gz
+  cd pangox-compat
+  wget -c http://ftp.gnome.org/pub/gnome/sources/pangox-compat/0.0/pangox-compat-0.0.2.tar.xz
+  sh pangox-compat.SlackBuild
+  upgradepkg --reinstall --install-new /tmp/pangox-compat-0.0.2-x86_64-1_SBo.tgz
+  
+  cd $CWD
+  upgradepkg --reinstall --install-new  tut-common-noarch-USL.tgz
+  
+  cd $CWD
+  tar xvf libminizip.tar.gz
+  cd libminizip
+  wget -c http://downloads.sourceforge.net/libpng/zlib-1.2.8.tar.xz
+  sh libminizip.SlackBuild
+  upgradepkg --reinstall --install-new /tmp/libminizip-1.2.8-x86_64-1_SBo.tgz
+  
+  cd $CWD
+  tar xvf OpenAL.tar.gz
+  cd OpenAL
+  wget -c http://kcat.strangesoft.net/openal-releases/openal-soft-1.16.0.tar.bz2
+  sh OpenAL.SlackBuild
+  upgradepkg --reinstall --install-new /tmp/OpenAL-1.16.0-x86_64-1_SBo.tgz
+  
+  cd $CWD
+  tar xvf freealut.tar.gz
+  cd freealut
+  wget -c http://pkgs.fedoraproject.org/repo/pkgs/freealut/freealut-1.1.0.tar.gz/e089b28a0267faabdb6c079ee173664a/freealut-1.1.0.tar.gz
+  sh freealut.SlackBuild
+  upgradepkg --reinstall --install-new /tmp/freealut-1.1.0-x86_64-1_SBo.tgz
+  
+  cd $CWD
+  tar xvf boost-FS-USL-157.tar.gz
+  cd boost-FS-USL-157
+  sh boost.SlackBuild
+  upgradepkg --reinstall --install-new /tmp/boost-1.57.0-x86_64-4.txz
+  
+  cd $CWD/3p-glod
+  autobuild -m64 build 
+  cp -aR stage/include/glod /$PKG/usr/local/include 
+  cp -aR stage/lib/release/libGLOD.so /$PKG/usr/local/lib64
+  cp /$PKG/usr/local/lib64/libGLOD.so  /$PKG/usr/local/lib64/libglod.so
+  
+  cd $CWD/3p-google-breakpad
+  autoreconf -i
+  autobuild -m64 build 
+  cp -aR stage/include/google_breakpad /$PKG/usr/local/include 
+  cp -aR stage/lib/release/* /$PKG/usr/local/lib64
+  
+  cd $CWD/3p-ndphysicsstub
+  autobuild -m64 build 
+  cp -aR stage/include/* /$PKG/usr/local/include 
+  cp -aR stage/lib/release/* /$PKG/usr/local/lib64  
+  
+  cd $CWD/jsoncpp
+  cmake -G 'Unix Makefiles'
+  make
+  cp -aR jsoncpp/include/json /$PKG/usr/local/include
+  cp -aR /$PKG/usr/local/include/json /$PKG/usr/local/include/jsoncpp  # different viewers use json 
+  cp jsoncpp/libjson.so /$PKG/usr/local/lib64 
+  
+  cd $CWD/3p-colladadom-usl
+  mkdir -p stage/packages
+  cd stage/packages
+  wget -c http://downloads.phoenixviewer.com/boost-1.57-linux-x64-201505150230-r138.tar.bz2
+  tar xvf boost-1.57-linux-x64-201505150230-r138.tar.bz2
+  
+  wget -c http://downloads.phoenixviewer.com/libxml2-2.9.1.201505150226-r42-linux-x64-201505150226-r42.tar.bz2
+  tar xvf libxml2-2.9.1.201505150226-r42-linux-x64-201505150226-r42.tar.bz2
+  
+  wget -c http://downloads.phoenixviewer.com/pcre-8.35.-linux-x64-201505150212-r52.tar.bz2
+  tar xvf pcre-8.35.-linux-x64-201505150212-r52.tar.bz2
+  
+  wget -c http://downloads.phoenixviewer.com/zlib-1.2.8.201505150226-r125-linux-x64-201505150226-r125.tar.bz2
+  tar xvf zlib-1.2.8.201505150226-r125-linux-x64-201505150226-r125.tar.bz2
+  
+  cd $CWD/3p-colladadom-usl
+  make $NUMJOBS
+  mkdir -p /$PKG/usr/local/include/collada
+  cp -a include/* /$PKG/usr/local/include/collada
+  cp -aR build/linux-1.4/lib* /$PKG/usr/local/lib64 
+  
+  cd $CWD/llqtwebkit-64
+  export PATH=$PATH:"$install/bin/"
+  qmake CONFIG-=debug
+  make
+  cp llqtwebkit.h     /$PKG/usr/local/include
+  cp libllqtwebkit.a  /$PKG/usr/local/lib64  
+    
+  cd $CWD/3p-glh-linear
+  cp -a glh_linear/include/*  /$PKG/usr/local/include/
+  
+  cd $CWD/3p-libndofdev-linux64
+  autobuild install
+  autobuild -m64 build
+  cp libndofdev/include/ndofdev_external.h /$PKG/usr/local/include/
+  cp libndofdev/lib/release/libndofdev.a  /$PKG/usr/local/lib64 
+  
+  cd $CWD/3p-uriparser-64-usl 
+  autobuild -m64 build
+  cp -aR stage/include/uriparser  /$PKG/usr/local/include
+  cp -aR stage/lib/release/* /$PKG/usr/local/lib64 
+  
+  cd $CWD
+  mkdir -p gstreamer/pkg-gstreamer/usr
+  cd gstreamer
+  wget -c http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/gstreamer_3p-update-gstreamer/rev/294903/arch/Linux/installer/gstreamer-0.10.6.294903-linux-294903.tar.bz2
+  tar xvf gstreamer-0.10.6.294903-linux-294903.tar.bz2
+  cp -aR include/  pkg-gstreamer/usr
+  cd pkg-gstreamer
+  /sbin/makepkg -l y -c n /tmp/gstreamer-0.10-noarch-headers-1_DKo.tgz
+  mv /usr/include/gstreamer-0.10  /usr/include/gstreamer-0.10-orig-$(date +%Y-%m-%d)
+  upgradepkg --reinstall --install-new /tmp/gstreamer-0.10-noarch-headers-1_DKo.tgz
+  
+  cd $CWD
+  upgradepkg --reinstall --install-new fmodstudio-1.0.6-x86_64-slw-14.1-USL-1_DKo.tgz
+   
+   cd $PKG
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+
+  upgradepkg --reinstall --install-new  /tmp/SLKW14-1-USESYSTEMLIBS-0.0.1-x86_64-1.tgz
