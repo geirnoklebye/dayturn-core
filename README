@@ -28,7 +28,7 @@ take those two files "1-get-libs and 2-build-libs" and create a directory put th
  The boost headers are Linden Labs  custom tweaked headers. I have been using them for a few years no problems to my system.
   
 The build script builds many things it takes them from the official SlackBuilds.org Repo's
-and from NickyD and  tonyasouther  bitbucket. and my modified forks of them. all of the SlackBuild stuff can
+and from NickyD and  Tonyasouther  bitbucket. and my modified forks of them. all of the SlackBuild stuff can
 stay if you want to uninstall it. The last package we build has all the System lib's we need to build and run the viewer.
 and all the others are their USL dependency's for everything.  
 
@@ -58,13 +58,15 @@ IF you used my 1-get-libs and 2-build-libs then you can use my BuildMe.sh script
  Installed packages file '/media/63a10037-fcdb-4cab-851c-f6783cb383c0/Z-build/bukdfirestorm/firestorm32/NewFolder/nelib/phoenix-firestorm-lgpl/build-linux-x86_64/packages/installed-packages.xml' not found; creating.
 Unrecognized --versions output: 
 
-If it does just type make -jX again and it will now go onto make2 setup. and it will finish the build and pack it. 
+If it does just type make -jX again and it will now go onto make2 setup. and it will finish the build and pack it.
+Or re-run the sh Buildme.sh
 
  Now after it is built in build-linux-x86_64/newview/packaged/
+ easiest way to install voice and plugins and dictionary 
  you can drop my dictionary voice and media plugins in how. cd inside build-linux-x86_64/newview/packaged/ open a terminal and type 
  "wget https://bitbucket.org/Drakeo/firestorm-testing-boost/downloads/diction-voice-media-codecs-webkit.tar.bz2" it will download the tar ball now run
  tar xvf diction-voice-media-codecs-webkit.tar.bz2  this will put everything in the right place. now you can delete the tarball.
- Remember Firestorm has a hidden 1.4 gig file name ".debug" in the packaged/bin folder. you can delete it. you can delete the built package also
+ the packaged/bin folder. you can delete it. you can delete the built package also
  and re run make -jX and it will rebuild a package for you to put on your other Slackware machines. 
  have fun this has been tested on fresh installs of Slackware and heavily modified ones also.
  
