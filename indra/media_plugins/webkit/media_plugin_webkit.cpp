@@ -117,7 +117,7 @@ private:
 	F32 mBackgroundB;
 	std::string mTarget;
 	LLTimer mElapsedTime;
-	
+		
 	VolumeCatcher mVolumeCatcher;
 
 	void postDebugMessage( const std::string& msg )
@@ -220,7 +220,7 @@ private:
 		char cwd[ FILENAME_MAX ];	// I *think* this is defined on all platforms we use
 		if (NULL == getcwd( cwd, FILENAME_MAX - 1 ))
 		{
-			llwarns << "Couldn't get cwd - probably too long - failing to init." << llendl;
+			LL_WARNS() << "Couldn't get cwd - probably too long - failing to init." << LL_ENDL;
 			return false;
 		}
 		std::string application_dir = std::string( cwd );
@@ -229,12 +229,11 @@ private:
 		// take care to initialize glib properly, because some
 		// versions of Qt don't, and we indirectly need it for (some
 		// versions of) Flash to not crash the browser.
-
-#if ( !defined(GLIB_MAJOR_VERSION) && !defined(GLIB_MINOR_VERSION) ) || ( GLIB_MAJOR_VERSION < 2 ) || ( GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 32 )
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 		if (!g_thread_supported ()) g_thread_init (NULL);
-#endif
-
 		g_type_init();
+#pragma GCC diagnostic pop
 #endif
 
 #if LL_DARWIN
@@ -357,7 +356,7 @@ private:
 		// append details to agent string
 		LLQtWebKit::getInstance()->setBrowserAgentId( mUserAgent );
 		postDebugMessage( "Updating user agent with " + mUserAgent );
-		
+
 #if !LL_QTWEBKIT_USES_PIXMAPS
 		// don't flip bitmap
 		LLQtWebKit::getInstance()->flipWindow( mBrowserWindowId, true );
@@ -384,15 +383,14 @@ private:
 		url << std::setfill('0') << std::setw(2) << std::hex << int(mBackgroundB * 255.0f);
 		url << "%22%3E%3C/body%3E%3C/html%3E";
 		
-		//lldebugs << "data url is: " << url.str() << llendl;
-		
+		//LL_DEBUGS() << "data url is: " << url.str() << LL_ENDL;
+
 		// always display loading overlay now
 #if LLQTWEBKIT_API_VERSION >= 16
 		LLQtWebKit::getInstance()->enableLoadingOverlay(mBrowserWindowId, true);
 #else
-		llwarns << "Ignoring enableLoadingOverlay() call (llqtwebkit version is too old)." << llendl;
+		LL_WARNS() << "Ignoring enableLoadingOverlay() call (llqtwebkit version is too old)." << LL_ENDL;
 #endif
-
 		str.clear();
 		str << "Loading overlay enabled = " << mEnableMediaPluginDebugging << " for mBrowserWindowId = " << mBrowserWindowId;
 		postDebugMessage( str.str() );
@@ -431,7 +429,7 @@ private:
 			break;
 			
 			default:
-				llwarns << "Unknown cursor ID: " << (int)llqt_cursor << llendl;
+				LL_WARNS() << "Unknown cursor ID: " << (int)llqt_cursor << LL_ENDL;
 			break;
 		}
 		
@@ -607,7 +605,7 @@ private:
 //		message.setValueBoolean("dead", (event.getIntValue() != 0))
 
 		// debug spam
-		//postDebugMessage( "Sending cookie_set message from plugin: " + event.getStringValue() );
+		postDebugMessage( "Sending cookie_set message from plugin: " + event.getStringValue() );
 
 		sendMessage(message);
 	}
@@ -996,7 +994,7 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 		{
 			if(message_name == "set_volume")
 			{
-				F32 volume = message_in.getValueReal("volume");
+				F32 volume = (F32)message_in.getValueReal("volume");
 				setVolume(volume);
 			}
 		}
@@ -1062,9 +1060,9 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 				S32 height = message_in.getValueS32("height");
 				S32 texture_width = message_in.getValueS32("texture_width");
 				S32 texture_height = message_in.getValueS32("texture_height");
-				mBackgroundR = message_in.getValueReal("background_r");
-				mBackgroundG = message_in.getValueReal("background_g");
-				mBackgroundB = message_in.getValueReal("background_b");
+				mBackgroundR = (F32)message_in.getValueReal("background_r");
+				mBackgroundG = (F32)message_in.getValueReal("background_g");
+				mBackgroundB = (F32)message_in.getValueReal("background_b");
 //				mBackgroundA = message_in.setValueReal("background_a");		// Ignore any alpha
 								
 				if(!name.empty())
@@ -1238,7 +1236,6 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 			{
 				mEnableMediaPluginDebugging = message_in.getValueBoolean( "enable" );
 			}
-
 			else
 			if(message_name == "js_enable_object")
 			{
@@ -1251,9 +1248,9 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 			if(message_name == "js_agent_location")
 			{
 #if LLQTWEBKIT_API_VERSION >= 9
-				F32 x = message_in.getValueReal("x");
-				F32 y = message_in.getValueReal("y");
-				F32 z = message_in.getValueReal("z");
+				F32 x = (F32)message_in.getValueReal("x");
+				F32 y = (F32)message_in.getValueReal("y");
+				F32 z = (F32)message_in.getValueReal("z");
 				LLQtWebKit::getInstance()->setAgentLocation( x, y, z );
 				LLQtWebKit::getInstance()->emitLocation();
 #endif
@@ -1262,9 +1259,9 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 			if(message_name == "js_agent_global_location")
 			{
 #if LLQTWEBKIT_API_VERSION >= 9
-				F32 x = message_in.getValueReal("x");
-				F32 y = message_in.getValueReal("y");
-				F32 z = message_in.getValueReal("z");
+				F32 x = (F32)message_in.getValueReal("x");
+				F32 y = (F32)message_in.getValueReal("y");
+				F32 z = (F32)message_in.getValueReal("z");
 				LLQtWebKit::getInstance()->setAgentGlobalLocation( x, y, z );
 				LLQtWebKit::getInstance()->emitLocation();
 #endif
@@ -1273,7 +1270,7 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 			if(message_name == "js_agent_orientation")
 			{
 #if LLQTWEBKIT_API_VERSION >= 9
-				F32 angle = message_in.getValueReal("angle");
+				F32 angle = (F32)message_in.getValueReal("angle");
 				LLQtWebKit::getInstance()->setAgentOrientation( angle );
 				LLQtWebKit::getInstance()->emitLocation();
 #endif
@@ -1329,10 +1326,10 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 			else if(message_name == "set_page_zoom_factor")
 			{
 #if LLQTWEBKIT_API_VERSION >= 15
-				F32 factor = message_in.getValueReal("factor");
+				F32 factor = (F32)message_in.getValueReal("factor");
 				LLQtWebKit::getInstance()->setPageZoomFactor(factor);
 #else
-				llwarns << "Ignoring setPageZoomFactor message (llqtwebkit version is too old)." << llendl;
+				LL_WARNS() << "Ignoring setPageZoomFactor message (llqtwebkit version is too old)." << LL_ENDL;
 #endif
 			}
 			else if(message_name == "clear_cache")
@@ -1363,7 +1360,7 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 				LLQtWebKit::getInstance()->setCookies(message_in.getValue("cookies"));
 
 				// debug spam
-				//postDebugMessage( "Plugin setting cookie: " + message_in.getValue("cookies") );
+				postDebugMessage( "Plugin setting cookie: " + message_in.getValue("cookies") );
 			}
 			else if(message_name == "proxy_setup")
 			{
@@ -1411,7 +1408,7 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 				bool val = message_in.getValueBoolean("show");
 				LLQtWebKit::getInstance()->showWebInspector( val );
 #else
-				llwarns << "Ignoring showWebInspector message (llqtwebkit version is too old)." << llendl;
+				LL_WARNS() << "Ignoring showWebInspector message (llqtwebkit version is too old)." << LL_ENDL;
 #endif
 			}
 			else if(message_name == "ignore_ssl_cert_errors")
@@ -1419,7 +1416,7 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 #if LLQTWEBKIT_API_VERSION >= 3
 				LLQtWebKit::getInstance()->setIgnoreSSLCertErrors( message_in.getValueBoolean("ignore") );
 #else
-				llwarns << "Ignoring ignore_ssl_cert_errors message (llqtwebkit version is too old)." << llendl;
+				LL_WARNS() << "Ignoring ignore_ssl_cert_errors message (llqtwebkit version is too old)." << LL_ENDL;
 #endif
 			}
 			else if(message_name == "add_certificate_file_path")
@@ -1427,7 +1424,7 @@ void MediaPluginWebKit::receiveMessage(const char *message_string)
 #if LLQTWEBKIT_API_VERSION >= 6
 				LLQtWebKit::getInstance()->setCAFile( message_in.getValue("path") );
 #else
-				llwarns << "Ignoring add_certificate_file_path message (llqtwebkit version is too old)." << llendl;
+				LL_WARNS() << "Ignoring add_certificate_file_path message (llqtwebkit version is too old)." << LL_ENDL;
 #endif
 			}
 			else if(message_name == "init_history")
