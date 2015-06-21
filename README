@@ -51,7 +51,7 @@ autobuild configure -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DOPEN
 - Test the build
 cd build-linux-x86_64/newview/packaged
 Install the viewer with
-./install.sh skect Y to place in user space.
+./install.sh select Y to place in user space.
 This places the viewer in ~/.kokua-install and places a Kokua menu entry under Applications->Internet
 
 Disclaimer
