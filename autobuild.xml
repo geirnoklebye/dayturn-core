@@ -3049,11 +3049,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>8fe64c0ec45c9ab46d65389fea451251</string>
+              <string>fbb264b5998f3e4286825241b95960de</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///home/nicky/3p-slvoice/slvoice-4.5.0009.17865.201506081519-linux64-201506081519.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-4.5.0009.17865.201506081416-linux64-201506081416.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3072,7 +3072,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.5.0009.17865.201506081519</string>
+        <string>4.5.0009.17865.201506081416</string>
       </map>
       <key>tut</key>
       <map>
