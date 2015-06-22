@@ -390,9 +390,13 @@ class Windows_i686_Manifest(ViewerManifest):
             if self.args['configuration'].lower() == 'debug':
                  self.path("msvcr120d.dll")
                  self.path("msvcp120d.dll")
+                 self.path("msvcr100d.dll")
+                 self.path("msvcp100d.dll")
             else:
                  self.path("msvcr120.dll")
                  self.path("msvcp120.dll")
+                 self.path("msvcr100.dll")
+                 self.path("msvcp100.dll")
 
             # Vivox runtimes
 #            self.path("wrap_oal.dll") no longer in archive
@@ -450,88 +454,6 @@ class Windows_i686_Manifest(ViewerManifest):
             except:
                 print "Skipping media_plugin_gstreamer010.dll" 
             self.end_prefix()
-
-        # Gstreamer plugins
-        if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release', 'gstreamer-plugins'),
-            dst="llplugin/gstreamer-plugins"):
-            try:
-               #self.path("*.dll") #why does this nothing?
-               self.path("libgsta52dec.dll")
-               self.path("libgstadder.dll")
-               self.path("libgstapetag.dll")
-               self.path("libgstapp.dll")
-               self.path("libgstasf.dll")
-               self.path("libgstasfmux.dll")
-               self.path("libgstaudioconvert.dll")
-               self.path("libgstaudiofx.dll")
-               self.path("libgstaudiorate.dll")
-               self.path("libgstaudioresample.dll")
-               self.path("libgstauparse.dll")
-               self.path("libgstautoconvert.dll")
-               self.path("libgstautodetect.dll")
-               self.path("libgstbz2.dll")
-               self.path("libgstcelt.dll")
-               self.path("libgstcoreelements.dll")
-               self.path("libgstdecodebin.dll")
-               self.path("libgstdecodebin2.dll")
-               self.path("libgstdirectsound.dll")
-               self.path("libgstdirectsoundsrc.dll")
-               self.path("libgstdtsdec.dll")
-               self.path("libgstequalizer.dll")
-               self.path("libgstfaad.dll")
-               self.path("libgstffmpeg-gpl.dll")
-               self.path("libgstflac.dll")
-               self.path("libgstfreeze.dll")
-               self.path("libgstgdp.dll")
-               self.path("libgstgio.dll")
-               self.path("libgsth264parse.dll")
-               self.path("libgsticydemux.dll")
-               self.path("libgstid3demux.dll")
-               self.path("libgstinterleave.dll")
-               self.path("libgstlegacyresample.dll")
-               self.path("libgstlevel.dll")
-               self.path("libgstliveadder.dll")
-               self.path("libgstmms.dll")
-               self.path("libgstmpeg2dec.dll")
-               self.path("libgstmpegaudioparse.dll")
-               self.path("libgstmpegdemux.dll")
-               self.path("libgstmpegpsmux.dll")
-               self.path("libgstmpegstream.dll")
-               self.path("libgstmpegtsmux.dll")
-               self.path("libgstneonhttpsrc.dll")
-               self.path("libgstogg.dll")
-               self.path("libgstplaybin.dll")
-               self.path("libgstqtdemux.dll")
-               self.path("libgstqtmux.dll")
-               self.path("libgstrawparse.dll")
-               self.path("libgstreal.dll")
-               self.path("libgstrtp.dll")
-               self.path("libgstrtpdemux.dll")
-               self.path("libgstrtpjitterbuffer.dll")
-               self.path("libgstrtpmanager.dll")
-               self.path("libgstrtpmux.dll")
-               self.path("libgstrtppayloads.dll")
-               self.path("libgstrtsp.dll")
-               self.path("libgstscaletempoplugin.dll")
-               self.path("libgstsdl.dll")
-               self.path("libgstsdpelem.dll")
-               self.path("libgstsouphttpsrc.dll")
-               self.path("libgststereo.dll")
-               self.path("libgsttta.dll")
-               self.path("libgsttypefindfunctions.dll")
-               self.path("libgstudp.dll")
-               self.path("libgstvalve.dll")
-               self.path("libgstvolume.dll")
-               self.path("libgstvorbis.dll")
-               self.path("libgstwasapi.dll")
-               self.path("libgstwaveformsink.dll")
-               self.path("libgstwavpack.dll")
-               self.path("libgstwavparse.dll")
-               self.path("libgstwininet.dll")
-               self.path("libgstx264.dll")
-            except:
-                print "Skipping gstreamer-plugins"
-        self.end_prefix()
 
         # Media plugins - QuickTime
         # Media plugins - WebKit/Qt
