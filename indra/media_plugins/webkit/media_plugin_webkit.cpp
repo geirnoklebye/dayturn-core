@@ -41,8 +41,8 @@
 #if LL_LINUX
 # define LL_QTWEBKIT_USES_PIXMAPS 0
 extern "C" {
-# include <glib.h>
-# include <glib-object.h>
+# include <glib/glib.h>
+# include <glib/glib-object.h>
 }
 #else
 # define LL_QTWEBKIT_USES_PIXMAPS 0

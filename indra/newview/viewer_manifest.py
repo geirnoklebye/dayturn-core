@@ -1168,13 +1168,21 @@ class Linux_i686_Manifest(LinuxManifest):
             self.path("libhunspell-1.3.so")
             self.path("libhunspell-1.3.so.0")
             self.path("libhunspell-1.3.so.0.0.0")
+#            self.path("libfontconfig.so*")
+#            self.path("libpng15.so.15") 
+#            self.path("libpng15.so.15.10.0") 
+
+            # OpenAL
+            self.path("libalut.so")
             self.path("libalut.so.0")
+            self.path("libopenal.so")
+            self.path("libopenal.so.1")
             self.path("libalut.so.0.0.0")
-            self.path("libopenal.so*")
-            self.path("libopenal.so", "libvivoxoal.so.1") # vivox's sdk expects this soname
+            self.path("libopenal.so.1.15.1")
             self.path("libfontconfig.so*")
-            self.path("libpng15.so.15") 
-            self.path("libpng15.so.15.10.0")            
+            self.path("libfreetype.so.*.*")
+            self.path("libpng16.so.16") 
+            self.path("libpng16.so.16.8.0")          
 
             # Include libfreetype.so. but have it work as libfontconfig does.
             self.path("libfreetype.so.*.*")
@@ -1203,19 +1211,18 @@ class Linux_i686_Manifest(LinuxManifest):
             if self.prefix(src=relpkgdir, dst="lib"):
                 self.path("libortp.so")
                 self.path("libsndfile.so.1")
-                #self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
+                self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
                 self.path("libvivoxsdk.so")
                 self.path("libvivoxplatform.so")
                 self.end_prefix("lib")
 
             # plugin runtime
-            if self.prefix(src=os.path.join(pkgdir, "lib"), dst="lib"):
+            if self.prefix(src="../packages/lib/release", dst="lib"):
                 self.path("libQtWebKit.so*")
                 self.end_prefix("lib")
 
             # For WebKit/Qt plugin runtimes (image format plugins)
-            if self.prefix(src=os.path.join(pkgdir, "llplugin", "imageformats"),
-                           dst="bin/llplugin/imageformats"):
+            if self.prefix(src="../packages/plugins/imageformats", dst="bin/llplugin/imageformats"):
                 self.path("libqgif.so")
                 self.path("libqico.so")
                 self.path("libqjpeg.so")
@@ -1225,8 +1232,7 @@ class Linux_i686_Manifest(LinuxManifest):
                 self.end_prefix("bin/llplugin/imageformats")
 
             # For WebKit/Qt plugin runtimes (codec/character encoding plugins)
-            if self.prefix(src=os.path.join(pkgdir, "llplugin", "codecs"),
-                           dst="bin/llplugin/codecs"):
+            if self.prefix(src="../packages/plugins/codecs", dst="bin/llplugin/codecs"):
                 self.path("libqcncodecs.so")
                 self.path("libqjpcodecs.so")
                 self.path("libqkrcodecs.so")

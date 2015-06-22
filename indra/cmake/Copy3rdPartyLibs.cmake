@@ -301,10 +301,6 @@ elseif(LINUX)
 # Remove OPenMP from build of viewer causes conflict starting at Viewer-Beta 3.3.3
 #        libgomp.so.1
 #        libgomp.so.1.0.0
-		if (FMODEX)
-		  set(debug_files ${debug_files} "libfmodexL64.so")
-		  set(release_files ${release_files} "libfmodex64.so")
-		endif (FMODEX)
        )
     endif(${ARCH} STREQUAL "x86_64")
 

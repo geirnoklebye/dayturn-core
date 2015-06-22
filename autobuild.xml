@@ -1017,6 +1017,20 @@
         <string>glib</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>79097818c3bc528c53f0a8ee1ec62374</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-glib/downloads/glib-2.45.1-linux-201506210854.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -1376,21 +1390,12 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/i686-linux/include</key>
-                <string>include</string>
-                <key>libraries/i686-linux/lib_release_client</key>
-                <string>lib/release</string>
-                <key>libraries/include</key>
-                <string>include</string>
-              </map>
               <key>hash</key>
-              <string>2cd3f6499f8444f1d119d097e4047252</string>
+              <string>691d7328f7e927bf438adf3b873d9811</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/gstreamer-0.10.24-linux-20091125.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.24.201506192112-linux-201506192112.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1434,7 +1439,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.10.36.201506151839</string>
+        <string>0.10.24.201506192112</string>
       </map>
       <key>gtk</key>
       <map>
@@ -1485,16 +1490,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>15af375116f5c943ea6f4190bc764224</string>
+              <string>28d65a53a22b1cf77d6f937f3f3537ab</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/gtk_3p-gtk-atk-pango-glib/rev/294804/arch/Linux/installer/gtk_atk_pango_glib-0.1-linux-294804.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gtk-atk-pango-glib/downloads/gtk_atk_pango_glib-0.1-linux-201506202150.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
           </map>
         </map>
         <key>version</key>
-        <string>0.0</string>
+        <string>0.1</string>
       </map>
       <key>gtk-etc</key>
       <map>
@@ -2603,11 +2610,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>faec46f0ea4df43519b7f72c09aac2ff</string>
+              <string>4fa14f9746b34e109af68af7759969bb</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201505071449-linux-201505071449.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201506211217-linux-201506211217.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2642,7 +2649,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.15.1-1.1.0.201506132204</string>
+        <string>1.15.1-1.1.0.201506211217</string>
       </map>
       <key>openjpeg</key>
       <map>

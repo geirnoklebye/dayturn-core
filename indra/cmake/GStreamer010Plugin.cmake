@@ -7,7 +7,7 @@ if (USESYSTEMLIBS)
   pkg_check_modules(GSTREAMER010 REQUIRED gstreamer-0.10)
   pkg_check_modules(GSTREAMER010_PLUGINS_BASE REQUIRED gstreamer-plugins-base-0.10)
  else (USESYSTEMLIBS)
-  use_prebuilt_binary(gstreamer)
+#  use_prebuilt_binary(gstreamer)
   # possible libxml2 should have its own .cmake file instead
   use_prebuilt_binary(libxml2)
   # Possibly libxml and glib should have their own .cmake file instead...
@@ -25,16 +25,29 @@ if (USESYSTEMLIBS)
 		${LIBS_PREBUILT_DIR}/include/libxml2
 		)
   else (WINDOWS)
-    use_prebuilt_binary(glib)			# gstreamer needs glib
+	use_prebuilt_binary(glib)		# gstreamer needs glib
+	use_prebuilt_binary(gstreamer)
 	use_prebuilt_binary(libxml2)
+      if (LINUX AND ${ARCH} STREQUAL "x86_64")
 	set(GSTREAMER010_INCLUDE_DIRS
 		${LIBS_PREBUILT_DIR}/include/gstreamer-0.10
-		${LIBS_PREBUILT_DIR}/include/glib
+		${LIBS_PREBUILT_DIR}/include/glib # Linux 64 bit new lib
 		${LIBS_PREBUILT_DIR}/include/gobject
 		${LIBS_PREBUILT_DIR}/include/gio
 		${LIBS_PREBUILT_DIR}/include/gmodule
 		${LIBS_PREBUILT_DIR}/include/libxml2
 		)
+      endif (LINUX AND ${ARCH} STREQUAL "x86_64")
+      if (LINUX AND ${ARCH} STREQUAL "i686")
+	set(GSTREAMER010_INCLUDE_DIRS
+		${LIBS_PREBUILT_DIR}/include/gstreamer-0.10
+		${LIBS_PREBUILT_DIR}/include/glib 
+		${LIBS_PREBUILT_DIR}/include/gobject
+		${LIBS_PREBUILT_DIR}/include/gio
+		${LIBS_PREBUILT_DIR}/include/gmodule
+		${LIBS_PREBUILT_DIR}/include/libxml2
+		)
+     endif (LINUX AND ${ARCH} STREQUAL "i686")
   endif (WINDOWS)
 
 endif (USESYSTEMLIBS)
@@ -48,7 +61,7 @@ if (WINDOWS)
          gstbase-0.10.lib
          gstreamer-0.10.lib
          gstvideo-0.10.lib #slvideoplugin
-		 gstinterfaces-0.10.lib
+	 gstinterfaces-0.10.lib
          gobject-2.0
          gmodule-2.0
          gthread-2.0
@@ -92,17 +105,20 @@ else (WINDOWS)
         )
   endif (LINUX AND ${ARCH} STREQUAL "x86_64")
 
-#         gstvideo-0.10
-#         gstaudio-0.10
-#         gstbase-0.10
-#         gstreamer-0.10
-#         gobject-2.0
-#         gmodule-2.0
-#         dl
-#         gthread-2.0
-#         rt
-#         glib-2.0
-
+  if (LINUX AND ${ARCH} STREQUAL "i686")
+    set(GSTREAMER010_LIBRARIES
+         gstvideo-0.10
+         gstaudio-0.10
+         gstbase-0.10
+         gstreamer-0.10
+         gobject-2.0
+         gmodule-2.0
+         dl
+         gthread-2.0
+         rt
+         glib-2.0
+     )
+  endif (LINUX AND ${ARCH} STREQUAL "i686")
 endif (WINDOWS)
 
 
