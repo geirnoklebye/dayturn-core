@@ -2297,11 +2297,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d31358176b9ba8c676458cc061767c0b</string>
+              <string>de0364a30095d3018e3c893e091e8099</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/canonical_3p-llqtwebkit2/rev/295522/arch/Linux/installer/llqtwebkit-4.7.1-linux-20141015.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-llqtwebkit2/downloads/llqtwebkit-4.7.1-linux-201506221336.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
