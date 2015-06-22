@@ -3049,11 +3049,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>8fe64c0ec45c9ab46d65389fea451251</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>eaf9c620a353faf7a496a3f82ca0a0cc</string>
               <key>url</key>
-              <string>file:///home/nicky/3p-slvoice/slvoice-4.5.0009.17865.201506081519-linux64-201506081519.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/3p-voice/downloads/slvoice-3.2.0002.10426.298329-linux-298329.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>

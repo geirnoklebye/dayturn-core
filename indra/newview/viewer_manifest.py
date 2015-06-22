@@ -1281,7 +1281,7 @@ class Linux_i686_Manifest(LinuxManifest):
             if self.prefix(src=relpkgdir, dst="lib"):
                 self.path("libortp.so")
                 self.path("libsndfile.so.1")
-                #self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
+                self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
                 self.path("libvivoxsdk.so")
                 self.path("libvivoxplatform.so")
                 self.end_prefix("lib")

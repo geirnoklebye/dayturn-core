@@ -9,3 +9,4 @@ cd build-linux-x86_64
 
 make -j$NPROC
 
+#cmake -G Ninja
