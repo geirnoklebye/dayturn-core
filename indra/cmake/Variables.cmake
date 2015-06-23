@@ -9,6 +9,14 @@
 #   LINUX   - Linux
 #   WINDOWS - Windows
 
+set(DKOTARGET_ARCH "x86" CACHE STRING "Build 64 or 32 bit viewer. Defaults to 32 bit.")
+
+if( ${DKOTARGET_ARCH} STREQUAL "x86_64" )
+  set( DKO_BUILD64BIT_ARCH ON )
+elseif( ${DKOTARGET_ARCH} STREQUAL "universal" )
+  set( DKO_BUILD64BIT_ARCH ON )
+  set( OSX_UNIVERSAL_ARCH ON )
+endif()
 
 # Relative and absolute paths to subtrees.
 

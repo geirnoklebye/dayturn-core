@@ -31,6 +31,7 @@ set(cmake_SOURCE_FILES
     FindCARes.cmake
     FindFMODEX.cmake
     FindGLH.cmake
+    FindGLOD.cmake
     FindGoogleBreakpad.cmake
     FindGooglePerfTools.cmake
     FindHUNSPELL.cmake

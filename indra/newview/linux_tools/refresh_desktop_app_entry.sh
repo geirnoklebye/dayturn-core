@@ -12,7 +12,7 @@ function install_desktop_entry()
 
     local desktop_entry="\
 [Desktop Entry]\n\
-Name=Kokua\n\
+Name=Kokua64\n\
 Comment=Client for the On-line Virtual Worlds\n\
 Exec=${installation_prefix}/kokua\n\
 Icon=${installation_prefix}/kokua_icon.png\n\
@@ -25,7 +25,7 @@ X-Desktop-File-Install-Version=3.0"
 
     echo " - Installing menu entries in ${desktop_entries_dir}"
     mkdir -vp "${desktop_entries_dir}"
-    echo -e $desktop_entry > "${desktop_entries_dir}/kokua-viewer.desktop" || "Failed to install application menu!"
+    echo -e $desktop_entry > "${desktop_entries_dir}/kokua64-viewer.desktop" || "Failed to install application menu!"
 }
 
 if [ "$UID" == "0" ]; then
