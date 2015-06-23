@@ -66,126 +66,91 @@ if(WINDOWS)
       set(release_files ${release_files} fmodex.dll)
     endif (FMODEX)
 
-#*******************************
-# Copy MS C runtime dlls, required for packaging.
-# *TODO - Adapt this to support VC9
-if (MSVC80)
-    FIND_PATH(debug_msvc8_redist_path msvcr80d.dll
-        PATHS
-        ${MSVC_DEBUG_REDIST_PATH}
-         [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\8.0\\Setup\\VC;ProductDir]/redist/Debug_NonRedist/x86/Microsoft.VC80.DebugCRT
-        NO_DEFAULT_PATH
-        NO_DEFAULT_PATH
-        )
+    #*******************************
+    # Copy MS C runtime dlls, required for packaging.
+    # *TODO - Adapt this to support VC9
+    if (MSVC80)
+        list(APPEND LMSVC_VER 80)
+        list(APPEND LMSVC_VERDOT 8.0)
+    elseif (MSVC_VERSION EQUAL 1600) # VisualStudio 2010
+        MESSAGE(STATUS "MSVC_VERSION ${MSVC_VERSION}")
+    elseif (MSVC_VERSION EQUAL 1800) # VisualStudio 2013, which is (sigh) VS 12
+        list(APPEND LMSVC_VER 120)
+        list(APPEND LMSVC_VERDOT 12.0)
+    else (MSVC80)
+        MESSAGE(WARNING "New MSVC_VERSION ${MSVC_VERSION} of MSVC: adapt Copy3rdPartyLibs.cmake")
+    endif (MSVC80)
 
-    if(EXISTS ${debug_msvc8_redist_path})
-        set(debug_msvc8_files
-            msvcr80d.dll
-            msvcp80d.dll
-            Microsoft.VC80.DebugCRT.manifest
+    # try to copy VS2010 redist independently of system version
+    list(APPEND LMSVC_VER 100)
+    list(APPEND LMSVC_VERDOT 10.0)
+    
+    list(LENGTH LMSVC_VER count)
+    math(EXPR count "${count}-1")
+    foreach(i RANGE ${count})
+        list(GET LMSVC_VER ${i} MSVC_VER)
+        list(GET LMSVC_VERDOT ${i} MSVC_VERDOT)
+        MESSAGE(STATUS "Copying redist libs for VC ${MSVC_VERDOT}")
+        FIND_PATH(debug_msvc_redist_path NAME msvcr${MSVC_VER}d.dll
+            PATHS            
+            [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\${MSVC_VERDOT}\\Setup\\VC;ProductDir]/redist/Debug_NonRedist/x86/Microsoft.VC${MSVC_VER}.DebugCRT
+            [HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/SysWOW64
+            [HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/System32
+            ${MSVC_DEBUG_REDIST_PATH}
+            NO_DEFAULT_PATH
             )
 
-        copy_if_different(
-            ${debug_msvc8_redist_path}
-            "${SHARED_LIB_STAGING_DIR_DEBUG}"
-            out_targets
-            ${debug_msvc8_files}
-            )
-        set(third_party_targets ${third_party_targets} ${out_targets})
+        if(EXISTS ${debug_msvc_redist_path})
+            set(debug_msvc_files
+                msvcr${MSVC_VER}d.dll
+                msvcp${MSVC_VER}d.dll
+                )
 
-    endif (EXISTS ${debug_msvc8_redist_path})
+            copy_if_different(
+                ${debug_msvc_redist_path}
+                "${SHARED_LIB_STAGING_DIR_DEBUG}"
+                out_targets
+                ${debug_msvc_files}
+                )
+            set(third_party_targets ${third_party_targets} ${out_targets})
 
-    FIND_PATH(release_msvc8_redist_path msvcr80.dll
-        PATHS
-        ${MSVC_REDIST_PATH}
-         [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\8.0\\Setup\\VC;ProductDir]/redist/x86/Microsoft.VC80.CRT
-        NO_DEFAULT_PATH
-        NO_DEFAULT_PATH
-        )
+            unset(debug_msvc_redist_path CACHE)
+        endif()
 
-    if(EXISTS ${release_msvc8_redist_path})
-        set(release_msvc8_files
-            msvcr80.dll
-            msvcp80.dll
-            Microsoft.VC80.CRT.manifest
-            )
-
-        copy_if_different(
-            ${release_msvc8_redist_path}
-            "${SHARED_LIB_STAGING_DIR_RELEASE}"
-            out_targets
-            ${release_msvc8_files}
-            )
-        set(third_party_targets ${third_party_targets} ${out_targets})
-
-        copy_if_different(
-            ${release_msvc8_redist_path}
-            "${SHARED_LIB_STAGING_DIR_RELWITHDEBINFO}"
-            out_targets
-            ${release_msvc8_files}
-            )
-        set(third_party_targets ${third_party_targets} ${out_targets})
-          
-    endif (EXISTS ${release_msvc8_redist_path})
-elseif (MSVC_VERSION EQUAL 1600) # VisualStudio 2010
-    FIND_PATH(debug_msvc10_redist_path msvcr100d.dll
-        PATHS
-        ${MSVC_DEBUG_REDIST_PATH}
-         [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\10.0\\Setup\\VC;ProductDir]/redist/Debug_NonRedist/x86/Microsoft.VC100.DebugCRT
-        [HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/SysWOW64
-        [HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/System32
-        NO_DEFAULT_PATH
-        )
-
-    if(EXISTS ${debug_msvc10_redist_path})
-        set(debug_msvc10_files
-            msvcr100d.dll
-            msvcp100d.dll
+        FIND_PATH(release_msvc_redist_path NAME msvcr${MSVC_VER}.dll
+            PATHS            
+            [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\${MSVC_VERDOT}\\Setup\\VC;ProductDir]/redist/x86/Microsoft.VC${MSVC_VER}.CRT
+            [HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/SysWOW64
+            [HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/System32
+            ${MSVC_REDIST_PATH}
+            NO_DEFAULT_PATH
             )
 
-        copy_if_different(
-            ${debug_msvc10_redist_path}
-            "${SHARED_LIB_STAGING_DIR_DEBUG}"
-            out_targets
-            ${debug_msvc10_files}
-            )
-        set(third_party_targets ${third_party_targets} ${out_targets})
+        if(EXISTS ${release_msvc_redist_path})
+            set(release_msvc_files
+                msvcr${MSVC_VER}.dll
+                msvcp${MSVC_VER}.dll
+                )
 
-    endif ()
+            copy_if_different(
+                ${release_msvc_redist_path}
+                "${SHARED_LIB_STAGING_DIR_RELEASE}"
+                out_targets
+                ${release_msvc_files}
+                )
+            set(third_party_targets ${third_party_targets} ${out_targets})
 
-    FIND_PATH(release_msvc10_redist_path msvcr100.dll
-        PATHS
-        ${MSVC_REDIST_PATH}
-         [HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\10.0\\Setup\\VC;ProductDir]/redist/x86/Microsoft.VC100.CRT
-        [HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/SysWOW64
-        [HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Windows;Directory]/System32
-        NO_DEFAULT_PATH
-        )
+            copy_if_different(
+                ${release_msvc_redist_path}
+                "${SHARED_LIB_STAGING_DIR_RELWITHDEBINFO}"
+                out_targets
+                ${release_msvc_files}
+                )
+            set(third_party_targets ${third_party_targets} ${out_targets})
 
-    if(EXISTS ${release_msvc10_redist_path})
-        set(release_msvc10_files
-            msvcr100.dll
-            msvcp100.dll
-            )
-
-        copy_if_different(
-            ${release_msvc10_redist_path}
-            "${SHARED_LIB_STAGING_DIR_RELEASE}"
-            out_targets
-            ${release_msvc10_files}
-            )
-        set(third_party_targets ${third_party_targets} ${out_targets})
-
-        copy_if_different(
-            ${release_msvc10_redist_path}
-            "${SHARED_LIB_STAGING_DIR_RELWITHDEBINFO}"
-            out_targets
-            ${release_msvc10_files}
-            )
-        set(third_party_targets ${third_party_targets} ${out_targets})
-          
-    endif ()
-endif (MSVC80)
+            unset(release_msvc_redist_path CACHE)
+        endif()
+    endforeach()
 
 elseif(DARWIN)
     set(SHARED_LIB_STAGING_DIR_DEBUG            "${SHARED_LIB_STAGING_DIR}/Debug/Resources")

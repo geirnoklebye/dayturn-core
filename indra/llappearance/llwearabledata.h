@@ -60,7 +60,9 @@ public:
 	const LLWearable*	getBottomWearable(const LLWearableType::EType type) const;
 	U32				getWearableCount(const LLWearableType::EType type) const;
 	U32				getWearableCount(const U32 tex_index) const;
-	U32				getWearableIndex(const LLWearable *wearable) const;
+	BOOL			getWearableIndex(const LLWearable *wearable, U32& index) const;
+	U32				getClothingLayerCount() const;
+	BOOL			canAddWearable(const LLWearableType::EType type) const;
 
 	BOOL			isOnTop(LLWearable* wearable) const;
 
@@ -69,17 +71,19 @@ public:
 	static const U32 MAX_CLOTHING_PER_TYPE = 10; 
 //mk
 
+	static const U32 MAX_CLOTHING_LAYERS = 60;
+
 	//--------------------------------------------------------------------
 	// Setters
 	//--------------------------------------------------------------------
 protected:
 	// Low-level data structure setter - public access is via setWearableItem, etc.
 	void 			setWearable(const LLWearableType::EType type, U32 index, LLWearable *wearable);
-	U32 			pushWearable(const LLWearableType::EType type, LLWearable *wearable, 
+	void 			pushWearable(const LLWearableType::EType type, LLWearable *wearable, 
 								 bool trigger_updated = true);
 	virtual void	wearableUpdated(LLWearable *wearable, BOOL removed);
-	void 			popWearable(LLWearable *wearable);
-	void			popWearable(const LLWearableType::EType type, U32 index);
+	void 			eraseWearable(LLWearable *wearable);
+	void			eraseWearable(const LLWearableType::EType type, U32 index);
 	void			clearWearableType(const LLWearableType::EType type);
 	bool			swapWearables(const LLWearableType::EType type, U32 index_a, U32 index_b);
 

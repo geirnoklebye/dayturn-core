@@ -642,10 +642,13 @@ void LLAgentWearables::wearableUpdated(LLWearable *wearable, BOOL removed)
 		// the versions themselves are compatible. This code can be removed before release.
 		if( wearable->getDefinitionVersion() == 24 )
 		{
-			wearable->setDefinitionVersion(22);
-			U32 index = getWearableIndex(wearable);
+			U32 index;
+			if (getWearableIndex(wearable,index))
+			{
 				LL_INFOS() << "forcing wearable type " << wearable->getType() << " to version 22 from 24" << LL_ENDL;
+			wearable->setDefinitionVersion(22);
 			saveWearable(wearable->getType(),index);
+		}
 		}
 
 		checkWearableAgainstInventory(viewer_wearable);
@@ -974,7 +977,7 @@ void LLAgentWearables::removeWearableFinal(const LLWearableType::EType type, boo
 			LLViewerWearable* old_wearable = getViewerWearable(type,i);
 			if (old_wearable)
 			{
-				popWearable(old_wearable);
+				eraseWearable(old_wearable);
 				old_wearable->removeFromAvatar();
 			}
 		}
@@ -986,7 +989,7 @@ void LLAgentWearables::removeWearableFinal(const LLWearableType::EType type, boo
 
 		if (old_wearable)
 		{
-			popWearable(old_wearable);
+			eraseWearable(old_wearable);
 			old_wearable->removeFromAvatar();
 		}
 	}
@@ -1248,7 +1251,13 @@ bool LLAgentWearables::onSetWearableDialog(const LLSD& notification, const LLSD&
 {
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
 	LLInventoryItem* new_item = gInventory.getItem(notification["payload"]["item_id"].asUUID());
-	U32 index = gAgentWearables.getWearableIndex(wearable);
+	U32 index;
+	if (!gAgentWearables.getWearableIndex(wearable,index))
+	{
+		LL_WARNS() << "Wearable not found" << LL_ENDL;
+		delete wearable;
+		return false;
+	}
 	if (!new_item)
 	{
 		delete wearable;
