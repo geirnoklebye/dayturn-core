@@ -65,17 +65,17 @@ BUILDTYPE="X86_64"    # uncommentment when building the viewer x86_64
 #PKGBUILD="i686"         # uncommentment when building the viewer 1686 
 PKGBUILD="X86_64"
 PRGNAM=Kokua"$VTYPE"                           
-VERSION=${VERSION:-_3.7.31.36818}      
-BUILD=${BUILD:--1b}
+VERSION=${VERSION:-_3.7.31.3746}      
+BUILD=${BUILD:--2}
 TAG=${TAG:-DRKO}
 CWD=$(pwd)
 TMP=${TMP:-/tmp/Drko}
-CHAN=Drakeo$PKGBUILD
+CHAN=USL-Drakeo-$PKGBUILD
 PKG=$TMP/package-$PRGNAM-$CHAN
 OUTPUT=${OUTPUT:-/tmp/Drko}
 
-VERSIONMV=kokua$VTYPE-install
-DESKTOP=kokua_$VTYPE-viewer
+VERSIONMV=kokua$VTYPE-USL-install
+DESKTOP=kokua_$VTYPE-USL-viewer
 BUILDNAME=Slackware-installer.sh
 SHORTV=3.7.31              # edit for version change in indra/Version text 
 mkdir -p $TMP/slin
@@ -108,19 +108,19 @@ pause 'Press [Enter] key to continue or ctrl c to stop...'
 #
 
 
-echo -e "\e[1;34m Removing old kokua$VTYPE-install-backup.\e[0m"
+echo -e "\e[1;34m Removing old kokua$VTYPE-USL-install-backup.\e[0m"
 
 sleep 3 
-rm -rf /opt/kokua$VTYPE-install.backup*
+rm -rf /opt/kokua$VTYPE-USL-install.backup*
 
-echo -e "\e[1;32m Backing up kokua$VTYPE-install time and date.\e[0m"
+echo -e "\e[1;32m Backing up kokua$VTYPE-USL-install time and date.\e[0m"
 
 sleep 3
 /sbin/makepkg -l n -c n $TMP/slin/$PRGNAM-$CHAN$VERSION.tar.gz
 
 mv $TMP/slin/$PRGNAM-$CHAN$VERSION.tar.gz  $CWD
 
-cp -aR /opt/kokua"$VTYPE"-install  /opt/kokua"$VTYPE"-install.backup-$(date +%Y-%m-%d)
+cp -aR /opt/kokua"$VTYPE"-USL-install  /opt/kokua"$VTYPE"-USL-install.backup-$(date +%Y-%m-%d)
 
 
 if [ -r  $PRGNAM-$CHAN$VERSION.tar.gz ]; then
@@ -154,13 +154,13 @@ mkdir -p $PKG/opt/$VERSIONMV
 cd $TMP/$PRGNAM-$CHAN$VERSION 
  cp -a * $PKG/opt/$VERSIONMV
 # avoid overwriting the previous configuration
-mkdir -p $PKG/usr/doc/kokua64-$SHORTV
+mkdir -p $PKG/usr/doc/kokua64-USL-$SHORTV
 
 
 cd $TMP/$PRGNAM-$CHAN$VERSIONMV
 
-cp -a README*.txt licenses.txt gpu_table.txt   $PKG/usr/doc/kokua64-$SHORTV
-cat $CWD/$BUILDNAME > $PKG/usr/doc/kokua64-$SHORTV/$BUILDNAME
+cp -a README*.txt licenses.txt gpu_table.txt   $PKG/usr/doc/kokua64-USL-$SHORTV
+cat $CWD/$BUILDNAME > $PKG/usr/doc/kokua64-USL-$SHORTV/$BUILDNAME
 mkdir -p $PKG/install
 
 
@@ -169,7 +169,7 @@ cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$CHAN$VERSION-$TAG$BUILD.${PKGTYPE:-tgz}
 
 echo -e "\e[1;32m The slackware installer package has been made.\e[0m"
-echo -e "\e[1;32m it is located at /tmp/.\e[0m"
+echo -e "\e[1;32m it is located at /tmp/Drko.\e[0m"
 
 # ...
 function pause(){
@@ -183,7 +183,7 @@ pause 'Press [Enter] key to continue or ctrl c to stop...'
 
 upgradepkg --reinstall --install-new  $OUTPUT/$PRGNAM-$CHAN$VERSION-$TAG$BUILD.${PKGTYPE:-tgz}
 
-sh /opt/kokua$VTYPE-install/etc/refresh_desktop_app_entry.sh 
+sh /opt/kokua$VTYPE-USL-install/etc/refresh_desktop_app_entry.sh 
 
 update-desktop-database
 cd $CWD
