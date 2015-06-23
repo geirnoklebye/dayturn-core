@@ -14,7 +14,7 @@ function install_desktop_entry()
 [Desktop Entry]\n\
 Name=Kokua64-USL\n\
 Comment=Client for the On-line Virtual Worlds\n\
-Exec=${installation_prefix}/kokua\n\
+Exec=${installation_prefix}/kokua64-USL\n\
 Icon=${installation_prefix}/kokua_icon.png\n\
 Terminal=false\n\
 Type=Application\n\
