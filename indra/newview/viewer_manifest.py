@@ -386,15 +386,15 @@ class Windows_i686_Manifest(ViewerManifest):
                 # These need to be installed as a SxS assembly, currently a 'private' assembly.
                 # See http://msdn.microsoft.com/en-us/library/ms235291(VS.80).aspx
                 if self.args['configuration'].lower() == 'debug':
-                 self.path("msvcr120d.dll")
-                 self.path("msvcp120d.dll")
-                    self.path("msvcr100d.dll")
-                    self.path("msvcp100d.dll")
+                  self.path("msvcr120d.dll")
+                  self.path("msvcp120d.dll")
+                  self.path("msvcr100d.dll")
+                  self.path("msvcp100d.dll")
                 else:
-                 self.path("msvcr120.dll")
-                 self.path("msvcp120.dll")
-                    self.path("msvcr100.dll")
-                    self.path("msvcp100.dll")
+                  self.path("msvcr120.dll")
+                  self.path("msvcp120.dll")
+                  self.path("msvcr100.dll")
+                  self.path("msvcp100.dll")
 
             # Vivox runtimes
             self.path("SLVoice.exe")
@@ -433,30 +433,30 @@ class Windows_i686_Manifest(ViewerManifest):
         if self.prefix(src=os.path.join(pkgdir, "llplugin"), dst="llplugin"):
             self.path("media_plugin_quicktime.dll")
             self.path("media_plugin_webkit.dll")
-                self.path("qtcore4.dll")
-                self.path("qtgui4.dll")
-                self.path("qtnetwork4.dll")
-                self.path("qtopengl4.dll")
-                self.path("qtwebkit4.dll")
-                self.path("qtxmlpatterns4.dll")
+            self.path("qtcore4.dll")
+            self.path("qtgui4.dll")
+            self.path("qtnetwork4.dll")
+            self.path("qtopengl4.dll")
+            self.path("qtwebkit4.dll")
+            self.path("qtxmlpatterns4.dll")
 
-                # For WebKit/Qt plugin runtimes (image format plugins)
-                if self.prefix(src="imageformats", dst="imageformats"):
-                    self.path("qgif4.dll")
-                    self.path("qico4.dll")
-                    self.path("qjpeg4.dll")
-                    self.path("qmng4.dll")
-                    self.path("qsvg4.dll")
-                    self.path("qtiff4.dll")
-                    self.end_prefix()
+            # For WebKit/Qt plugin runtimes (image format plugins)
+            if self.prefix(src="imageformats", dst="imageformats"):
+                self.path("qgif4.dll")
+                self.path("qico4.dll")
+                self.path("qjpeg4.dll")
+                self.path("qmng4.dll")
+                self.path("qsvg4.dll")
+                self.path("qtiff4.dll")
+                self.end_prefix()
 
-                # For WebKit/Qt plugin runtimes (codec/character encoding plugins)
-                if self.prefix(src="codecs", dst="codecs"):
-                    self.path("qcncodecs4.dll")
-                    self.path("qjpcodecs4.dll")
-                    self.path("qkrcodecs4.dll")
-                    self.path("qtwcodecs4.dll")
-                    self.end_prefix()
+            # For WebKit/Qt plugin runtimes (codec/character encoding plugins)
+            if self.prefix(src="codecs", dst="codecs"):
+                self.path("qcncodecs4.dll")
+                self.path("qjpcodecs4.dll")
+                self.path("qkrcodecs4.dll")
+                self.path("qtwcodecs4.dll")
+                self.end_prefix()
 
                 self.end_prefix()
 

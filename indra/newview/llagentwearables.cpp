@@ -1848,7 +1848,11 @@ void LLAgentWearables::forceUpdateShape (void)
 	//mLastWornShape->writeToAvatar(gAgentAvatarp);
 	//gAgentAvatarp->updateVisualParams();
 
-	U32 index = gAgentWearables.getWearableIndex(mLastWornShape);
+	U32 index;
+	if (!gAgentWearables.getWearableIndex(mLastWornShape, index))
+	{
+		return;
+	}
 
     std::string new_name = mLastWornShape->getName();
 
