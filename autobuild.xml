@@ -3044,9 +3044,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>48ed7ddcf93fa3c751d677f5eb5f9367</string>
+              <string>fc20b7a69bf4b3ed0152c569f51f614d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/slvoice_3p-update-slvoice/rev/298329/arch/Linux/installer/slvoice-3.2.0002.10426.298329-linux-298329.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-4.5.0009.17865.201506251848-linux-201506251848.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -3079,7 +3081,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.5.0009.17865.201506081416</string>
+        <string>4.5.0009.17865.201506251848</string>
       </map>
       <key>tut</key>
       <map>

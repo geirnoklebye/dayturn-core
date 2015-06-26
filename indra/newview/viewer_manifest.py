@@ -1205,17 +1205,27 @@ class Linux_i686_Manifest(LinuxManifest):
             self.end_prefix("lib")
 
             # Vivox runtimes
-            if self.prefix(src=relpkgdir, dst="bin"):
-                self.path("SLVoice")
-                self.end_prefix()
-            if self.prefix(src=relpkgdir, dst="lib"):
-                self.path("libortp.so")
-                self.path("libsndfile.so.1")
-                self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
-                self.path("libvivoxsdk.so")
-                self.path("libvivoxplatform.so")
-                self.end_prefix("lib")
+            if self.prefix(src="../packages/lib/release", dst="bin"):
+                    self.path("SLVoice")
+                    self.end_prefix()
+            if self.prefix(src="../packages/lib/release", dst="lib"):
+                    self.path("libortp.so")
+                    self.path("libsndfile.so.1")
+                    self.path("libvivoxsdk.so")
+                    self.path("libvivoxplatform.so")
+                    self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
+                    self.end_prefix("lib")
 
+            # 32bit libs needed for voice
+            if self.prefix("../packages/lib/release/32bit-compat", dst="lib"):
+                    self.path("32bit-libalut.so" , "libalut.so")
+                    self.path("32bit-libalut.so.0" , "libalut.so.0")
+                    self.path("32bit-libopenal.so" , "libopenal.so")
+                    self.path("32bit-libopenal.so.1" , "libopenal.so.1")
+                    self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
+                    self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
+
+                    self.end_prefix("lib")
             # plugin runtime
             if self.prefix(src="../packages/lib/release", dst="lib"):
                 self.path("libQtWebKit.so*")
