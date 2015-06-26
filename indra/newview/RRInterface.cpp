@@ -973,13 +973,13 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 //			LLFloaterPostProcess::instance()->close();
 //			LLFloaterDayCycle::instance()->close();
 //			LLFloaterWindLight::instance()->close();
+			gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
+			gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
 			LLFloaterReg::hideInstance("env_settings");
 			LLFloaterReg::hideInstance("env_water");
 			LLFloaterReg::hideInstance("env_post_process");
 			LLFloaterReg::hideInstance("env_day_cycle");
 			LLFloaterReg::hideInstance("env_windlight");
-			gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
-			gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
 		}
 		else if (action=="setdebug") {
 			if (!sRRNoSetEnv) {
@@ -3300,7 +3300,8 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 
 	else if (command == "densitymultiplier") {
-		params->mDensityMult.x = val/1000;
+		params->mDensityMult.x = val / 1000;
+		params->mDensityMult.mult = 1.0;
 		updateAndSave (&(params->mDensityMult));
 //		LLWaterParamManager* water_params = LLWaterParamManager::instance();
 //		water_params->mFogDensity.mExp = 5.0;
@@ -3308,6 +3309,7 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "distancemultiplier") {
 		params->mDistanceMult.x = val;
+		params->mDistanceMult.mult = 1.0;
 		updateAndSave (&(params->mDistanceMult));
 //		LLWaterParamManager* water_params = LLWaterParamManager::instance();
 //		water_params->mUnderWaterFogMod.mX = 1.0;
