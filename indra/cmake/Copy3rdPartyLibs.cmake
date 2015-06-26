@@ -256,7 +256,7 @@ elseif(LINUX)
 #          libgtest_main.so
 #          libgtest.so.0
 #          libminizip.so
-          libopenal.so
+#          libopenal.so
           libopenjpeg.so
           libopenjpeg.so.1.4.0
 #           libstacktrace.so
@@ -292,7 +292,7 @@ elseif(LINUX)
         libgmodule-2.0.so
         libgobject-2.0.so
         libhunspell-1.3.so.0.0.0
-        libopenal.so
+#        libopenal.so
         libopenjpeg.so
         libuuid.so.16
         libuuid.so.16.0.22
