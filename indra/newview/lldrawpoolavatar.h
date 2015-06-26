@@ -146,6 +146,9 @@ public:
 	void updateRiggedVertexBuffers(LLVOAvatar* avatar);
 
 	void renderRigged(LLVOAvatar* avatar, U32 type, bool glow = false);
+//MK from CY
+	void renderRiggedShadows(LLVOAvatar* avatar);
+//mk from cy
 	void renderRiggedSimple(LLVOAvatar* avatar);
 	void renderRiggedAlpha(LLVOAvatar* avatar);
 	void renderRiggedFullbrightAlpha(LLVOAvatar* avatar);

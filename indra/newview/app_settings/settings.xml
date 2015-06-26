@@ -189,6 +189,17 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <key>RestrainedLoveAvatarShadows</key>
+    <map>
+      <key>Comment</key>
+      <string>How to render deferred avatar shadows. 0=none, 1=simplified (no rigged mesh shadows), 2=optimized (slower but still faster than legacy when several avatars are around), 2=legacy (like the SL viewer, slow with complex rigged attachments).</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>U32</string>
+      <key>Value</key>
+      <integer>2</integer>
+    </map>
     <key>ShowProfileFloaters</key>
     <map>
       <key>Comment</key>
@@ -5789,17 +5800,17 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
-  <key>LoginContentVersion</key>
-  <map>
-    <key>Comment</key>
-    <string>Version of login page web based content to display</string>
-    <key>Persist</key>
-    <integer>0</integer>
-    <key>Type</key>
-    <string>String</string>
-    <key>Value</key>
-    <string>2</string>
-  </map>
+    <key>LoginContentVersion</key>
+    <map>
+      <key>Comment</key>
+      <string>Version of login page web based content to display</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string>2</string>
+    </map>
 
     <key>LoginSRVTimeout</key>
     <map>
@@ -6613,7 +6624,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-            <real>600.0</real>
+      <real>600.0</real>
     </map>
     <key>MemoryPrivatePoolEnabled</key>
     <map>
@@ -8510,16 +8521,16 @@
       <integer>128</integer>
     </map>
 
-  <key>OctreeMinimumNodeSize</key>
+    <key>OctreeMinimumNodeSize</key>
     <map>
       <key>Comment</key>
-    <string>Minimum size of any octree node</string>
+      <string>Minimum size of any octree node</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
-    <string>F32</string>
+      <string>F32</string>
       <key>Value</key>
-    <real>0.01</real>
+      <real>0.01</real>
     </map>
 
     <key>OctreeStaticObjectSizeFactor</key>
@@ -8717,8 +8728,10 @@
     <key>RenderComplexityStaticMax</key>
     <map>
       <key>Comment</key>
-      <string>Sets a static max value for scaling of RenderComplexity 
-        display (-1 for dynamic scaling)</string>
+      <string>
+        Sets a static max value for scaling of RenderComplexity
+        display (-1 for dynamic scaling)
+      </string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -9448,7 +9461,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-    <real>368.0</real>
+      <real>368.0</real>
     </map>
 
     <key>RenderDeferred</key>
@@ -12192,17 +12205,17 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-  <key>TextureFetchFakeFailureRate</key>
-  <map>
-    <key>Comment</key>
-    <string>Simulate HTTP fetch failures for some server bake textures.</string>
-    <key>Persist</key>
-    <integer>1</integer>
-    <key>Type</key>
-    <string>F32</string>
-    <key>Value</key>
-    <real>0.0</real>
-  </map>
+    <key>TextureFetchFakeFailureRate</key>
+    <map>
+      <key>Comment</key>
+      <string>Simulate HTTP fetch failures for some server bake textures.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>F32</string>
+      <key>Value</key>
+      <real>0.0</real>
+    </map>
     <key>TextureFetchSource</key>
     <map>
       <key>Comment</key>
@@ -13653,7 +13666,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>UseDayCycle</key>
     <map>
@@ -13699,7 +13712,8 @@
       <key>Value</key>
       <string>Default</string>
     </map>
-    <key>UseExternalBrowser</key> <!-- deprecated (see MAINT-4127) -->
+    <key>UseExternalBrowser</key>
+    <!-- deprecated (see MAINT-4127) -->
     <map>
       <key>Comment</key>
       <string>Use default browser when opening web pages instead of in-world browser.</string>
@@ -14009,14 +14023,14 @@
     </map>
     <key>VivoxLogDirectory</key>
     <map>
-        <key>Comment</key>
-        <string>Default log path is Application Support/SecondLife/logs specify alternate absolute path here.</string>
-        <key>Persist</key>
-        <integer>1</integer>
-        <key>Type</key>
-        <string>String</string>
-        <key>Value</key>
-        <string></string>
+      <key>Comment</key>
+      <string>Default log path is Application Support/SecondLife/logs specify alternate absolute path here.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string></string>
     </map>
     <key>VivoxShutdownTimeout</key>
     <map>
@@ -15247,13 +15261,13 @@
     <key>ObjectsEveryoneCopy</key>
     <map>
       <key>Comment</key>
-        <string>Everyone can copy the newly created object</string>
+      <string>Everyone can copy the newly created object</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
-        <string>Boolean</string>
+      <string>Boolean</string>
       <key>Value</key>
-        <integer>0</integer>
+      <integer>0</integer>
     </map>
     <key>ObjectsShareWithGroup</key>
     <map>
@@ -15302,7 +15316,7 @@
     <key>UploadsEveryoneCopy</key>
     <map>
       <key>Comment</key>
-        <string>Everyone can copy the newly uploaded item</string>
+      <string>Everyone can copy the newly uploaded item</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -15357,13 +15371,13 @@
     <key>ScriptsEveryoneCopy</key>
     <map>
       <key>Comment</key>
-        <string>Everyone can copy the newly created script</string>
+      <string>Everyone can copy the newly created script</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-        <integer>0</integer>
+      <integer>0</integer>
     </map>
     <key>ScriptsShareWithGroup</key>
     <map>
@@ -15412,13 +15426,13 @@
     <key>NotecardsEveryoneCopy</key>
     <map>
       <key>Comment</key>
-        <string>Everyone can copy the newly created notecard</string>
+      <string>Everyone can copy the newly created notecard</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-        <integer>0</integer>
+      <integer>0</integer>
     </map>
     <key>NotecardsShareWithGroup</key>
     <map>
@@ -15467,13 +15481,13 @@
     <key>GesturesEveryoneCopy</key>
     <map>
       <key>Comment</key>
-        <string>Everyone can copy the newly created gesture</string>
+      <string>Everyone can copy the newly created gesture</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-        <integer>0</integer>
+      <integer>0</integer>
     </map>
     <key>GesturesShareWithGroup</key>
     <map>
@@ -15522,13 +15536,13 @@
     <key>WearablesEveryoneCopy</key>
     <map>
       <key>Comment</key>
-        <string>Everyone can copy the newly created clothing or body part</string>
+      <string>Everyone can copy the newly created clothing or body part</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
-        <string>Boolean</string>
+      <string>Boolean</string>
       <key>Value</key>
-        <integer>0</integer>
+      <integer>0</integer>
     </map>
     <key>WearablesShareWithGroup</key>
     <map>
@@ -15938,17 +15952,17 @@
       <key>Value</key>
       <integer>7000</integer>
     </map>
-  <key>DisablePrecacheDelayAfterTeleporting</key>
-  <map>
-    <key>Comment</key>
-    <string>Disables the artificial delay in the viewer that precaches some incoming assets</string>
-    <key>Persist</key>
-    <integer>0</integer>
-    <key>Type</key>
-    <string>Boolean</string>
-    <key>Value</key>
-    <integer>0</integer>
-  </map>
+    <key>DisablePrecacheDelayAfterTeleporting</key>
+    <map>
+      <key>Comment</key>
+      <string>Disables the artificial delay in the viewer that precaches some incoming assets</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>VersionChannelName</key>
     <map>
       <key>Comment</key>
@@ -15960,27 +15974,27 @@
       <key>Value</key>
       <string />
     </map>
-  <key>WearFolderLimit</key>
-  <map>
-    <key>Comment</key>
-    <string>Limits number of items in the folder that can be replaced/added to current outfit</string>
-    <key>Persist</key>
-    <integer>1</integer>
-    <key>Type</key>
-    <string>U32</string>
-    <key>Value</key>
-    <integer>125</integer>
-  </map>
+    <key>WearFolderLimit</key>
+    <map>
+      <key>Comment</key>
+      <string>Limits number of items in the folder that can be replaced/added to current outfit</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>U32</string>
+      <key>Value</key>
+      <integer>125</integer>
+    </map>
     <key>EveryoneCopy</key>
-      <map>
-        <key>Comment</key>
-        <string>(obsolete) Everyone can copy the newly created objects</string>
-        <key>Persist</key>
-        <integer>1</integer>
-        <key>Type</key>
-        <string>Boolean</string>
-        <key>Value</key>
-        <integer>0</integer>
+    <map>
+      <key>Comment</key>
+      <string>(obsolete) Everyone can copy the newly created objects</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
     </map>
     <key>NextOwnerCopy</key>
     <map>
