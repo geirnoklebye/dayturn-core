@@ -32,7 +32,7 @@ if (USESYSTEMLIBS)
     add_definitions(${${pkg}_CFLAGS_OTHERS})
   endforeach(pkg)
 else (USESYSTEMLIBS)
-  if ((LINUX AND ${ARCH} STREQUAL "i686") OR WINDOWS)
+  if (LINUX AND ${ARCH} STREQUAL "i686")
     use_prebuilt_binary(gtk-atk-pango-glib)
     use_prebuilt_binary(glib)
     set(UI_LIBRARIES
@@ -55,7 +55,7 @@ else (USESYSTEMLIBS)
         ${FREETYPE_LIBRARIES}
 #        pangocairo-1.0
         )
-  endif ((LINUX AND ${ARCH} STREQUAL "i686") OR WINDOWS)
+  endif (LINUX AND ${ARCH} STREQUAL "i686")
 
   if (LINUX AND ${ARCH} STREQUAL "x86_64")
     use_prebuilt_binary(glib)
