@@ -684,11 +684,11 @@
       <key>fmodex</key>
       <map>
         <key>copyright</key>
-        <string>FMOD Sound System, copyright © Firelight Technologies Pty, Ltd., 1994-2014.</string>
+        <string>Copyright c 2005-2015 Firelight Technologies Pty, Ltd.</string>
         <key>description</key>
-        <string>FMOD Ex audio system library</string>
+        <string>FMOD Ex Programmer's API</string>
         <key>license</key>
-        <string>fmodex</string>
+        <string>FMOD NON-COMMERCIAL LICENSE</string>
         <key>license_file</key>
         <string>LICENSES/fmodex.txt</string>
         <key>name</key>
@@ -736,16 +736,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9276d38d3f738903a4e854ec9fbb1c70</string>
+              <string>7d3b6f91cf59bd6701b4d593e896dfc0</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.50-windows-201502012148.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.54-windows-201507041457.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
           </map>
         </map>
         <key>version</key>
-        <string>4.44.52</string>
+        <string>4.44.54</string>
       </map>
       <key>fontconfig</key>
       <map>
@@ -3334,6 +3334,25 @@
         <map>
           <key>configurations</key>
           <map>
+            <key>Doxygen</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>arguments</key>
+                <array>
+                  <string>Doxyfile</string>
+                </array>
+                <key>command</key>
+                <string>doxygen</string>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>command</key>
+                <string>cmake</string>
+              </map>
+              <key>name</key>
+              <string>Doxygen</string>
+            </map>
             <key>RelWithDebInfo</key>
             <map>
               <key>configure</key>
@@ -3418,25 +3437,6 @@
               <key>name</key>
               <string>ReleaseOS</string>
             </map>
-            <key>Doxygen</key>
-            <map>
-              <key>build</key>
-              <map>
-                <key>arguments</key>
-                <array>
-                  <string>Doxyfile</string>
-                </array>
-                <key>command</key>
-                <string>doxygen</string>
-              </map>
-              <key>configure</key>
-              <map>
-                <key>command</key>
-                <string>cmake</string>
-              </map>
-              <key>name</key>
-              <string>Doxygen</string>
-            </map>
           </map>
           <key>name</key>
           <string>common</string>
@@ -3454,16 +3454,16 @@
               </map>
               <key>configure</key>
               <map>
+                <key>arguments</key>
+                <array>
+                  <string>../indra</string>
+                </array>
                 <key>options</key>
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
                   <string>-DWORD_SIZE:STRING=32</string>
                   <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>
-                </array>
-                <key>arguments</key>
-                <array>
-                  <string>../indra</string>
                 </array>
               </map>
               <key>name</key>
