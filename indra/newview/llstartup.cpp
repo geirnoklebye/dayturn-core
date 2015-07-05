@@ -51,6 +51,7 @@
 #include "fsfloatersearchlegacy.h"	// <FS:CR> FIRE-6310
 #include "llares.h"
 #include "llavatarnamecache.h"
+#include "llexperiencecache.h"
 #include "lllandmark.h"
 #include "llcachename.h"
 #include "lldir.h"
@@ -197,6 +198,7 @@
 #include "llevents.h"
 #include "llstartuplistener.h"
 #include "lltoolbarview.h"
+#include "llexperiencelog.h"
 
 #include "tea.h"
 
@@ -1408,6 +1410,9 @@ bool idle_startup()
 		// Set agent's initial position, which will be read by LLVOAvatar when the avatar
 		// object is created.  I think this must be done after setting the region.  JC
 		gAgent.setPositionAgent(agent_start_position_region);
+
+		display_startup();
+		LLStartUp::initExperiences();
 
 		display_startup();
 		LLStartUp::setStartupState( STATE_MULTIMEDIA_INIT );
@@ -2963,6 +2968,14 @@ void LLStartUp::initNameCache()
 	LLAvatarNameCache::setUseUsernames(gSavedSettings.getBOOL("NameTagShowUsernames"));
 }
 
+
+void LLStartUp::initExperiences()
+{
+	LLAppViewer::instance()->loadExperienceCache();
+	LLExperienceCache::initClass();
+	LLExperienceLog::instance().initialize();
+}
+
 void LLStartUp::cleanupNameCache()
 {
 	LLAvatarNameCache::cleanupClass();
@@ -3749,3 +3762,4 @@ void transition_back_to_login_panel(const std::string& emsg)
 	reset_login(); // calls LLStartUp::setStartupState( STATE_LOGIN_SHOW );
 	gSavedSettings.setBOOL("AutoLogin", FALSE);
 }
+
