@@ -264,9 +264,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fb1537f7ad0b490fcb4f096c15dce9cd</string>
+              <string>43816a90bf84efba67117636b9bdf9da</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/boost_3p-update-boost/rev/297445/arch/Linux/installer/boost-1.57-linux-297445.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux-201507031353.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -360,9 +362,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7ff636034665555e4b3d918d86ef9566</string>
+              <string>bcd1d4ef42c6a40f8261655fa5580683</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/colladadom_3p-update-colladadom/rev/301371/arch/Linux/installer/colladadom-2.3.301371-linux-301371.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201507031700-linux-201507031700.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -393,7 +397,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.3.301371</string>
+        <string>2.3.201507031700</string>
       </map>
       <key>curl</key>
       <map>
@@ -1022,11 +1026,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>79097818c3bc528c53f0a8ee1ec62374</string>
+              <string>0891aac3dd4be134d72d08b2d0a4165c</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-glib/downloads/glib-2.45.1-linux-201506210854.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-glib/downloads/glib-2.44.1-linux-201507131131.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1058,7 +1062,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.45.1</string>
+        <string>2.44.1</string>
       </map>
       <key>glod</key>
       <map>
@@ -1283,9 +1287,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e08b0e9e269b80b549f6044c4e608fb5</string>
+              <string>16c8fb1debbd4caa64735302ae914457</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/googlemock_3p-update-googlemock/rev/297460/arch/Linux/installer/googlemock-1.7.0.297460-linux-297460.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201507031820-linux-201507031820.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1316,7 +1322,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.7.0.201505282006</string>
+        <string>1.7.0.201507031820</string>
       </map>
       <key>gperftools</key>
       <map>
