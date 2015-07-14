@@ -65,7 +65,7 @@ Development system is Debian Stretch (testing). The compiler is ~~gcc-4.6.4~~ gc
 -  Configure for a Gstreamer/Openal build:
 Following assumes a clean build tree.
 cd kokuant
-autobuild autobuild -v configure -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DOPENAL:BOOL=ON 2>&1 |tee configure.log
+autobuild -v configure -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DOPENAL:BOOL=ON 2>&1 |tee configure.log
 
 - Build the viewer
 -autobuild build -c ReleaseOS 2>&1 |tee build.log
