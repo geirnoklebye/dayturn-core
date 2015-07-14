@@ -302,8 +302,12 @@ elseif(LINUX)
 #        libgomp.so.1
 #        libgomp.so.1.0.0
        )
+    if (OPENAL)
+           set(release_files ${release_files} "libopenal.so")
+    endif (OPENAL)
     endif(${ARCH} STREQUAL "x86_64")
 
+    
     if (USE_TCMALLOC)
       set(release_files ${release_files} "libtcmalloc_minimal.so")
     endif (USE_TCMALLOC)

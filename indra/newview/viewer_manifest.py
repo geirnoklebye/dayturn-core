@@ -1175,10 +1175,12 @@ class Linux_i686_Manifest(LinuxManifest):
             # OpenAL
             self.path("libalut.so")
             self.path("libalut.so.0")
-            self.path("libopenal.so")
-            self.path("libopenal.so.1")
+# Packaged openal is killing the audio engine. This allows use of system openal
+# which lets the audio engine work. 
+#            self.path("libopenal.so")
+#            self.path("libopenal.so.1")
             self.path("libalut.so.0.0.0")
-            self.path("libopenal.so.1.15.1")
+#            self.path("libopenal.so.1.15.1")
             self.path("libfontconfig.so*")
             self.path("libfreetype.so.*.*")
             self.path("libpng16.so.16") 
