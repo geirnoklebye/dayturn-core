@@ -1168,23 +1168,11 @@ class Linux_i686_Manifest(LinuxManifest):
             self.path("libhunspell-1.3.so")
             self.path("libhunspell-1.3.so.0")
             self.path("libhunspell-1.3.so.0.0.0")
-#            self.path("libfontconfig.so*")
-#            self.path("libpng15.so.15") 
-#            self.path("libpng15.so.15.10.0") 
-
-            # OpenAL
-            self.path("libalut.so")
-            self.path("libalut.so.0")
-# Packaged openal is killing the audio engine. This allows use of system openal
-# which lets the audio engine work. 
-#            self.path("libopenal.so")
-#            self.path("libopenal.so.1")
-            self.path("libalut.so.0.0.0")
-#            self.path("libopenal.so.1.15.1")
             self.path("libfontconfig.so*")
             self.path("libfreetype.so.*.*")
             self.path("libpng16.so.16") 
-            self.path("libpng16.so.16.8.0")          
+            self.path("libpng16.so.16.8.0")         
+
 
             # Include libfreetype.so. but have it work as libfontconfig does.
             self.path("libfreetype.so.*.*")
@@ -1210,24 +1198,23 @@ class Linux_i686_Manifest(LinuxManifest):
             if self.prefix(src="../packages/lib/release", dst="bin"):
                     self.path("SLVoice")
                     self.end_prefix()
-            if self.prefix(src="../packages/lib/release", dst="lib"):
+            if self.prefix(src="../packages/lib/release", dst="bin"):
                     self.path("libortp.so")
                     self.path("libsndfile.so.1")
                     self.path("libvivoxsdk.so")
                     self.path("libvivoxplatform.so")
                     self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
-                    self.end_prefix("lib")
+                    self.end_prefix("bin")
 
             # 32bit libs needed for voice
-            if self.prefix("../packages/lib/release/32bit-compat", dst="lib"):
+            if self.prefix("../packages/lib/release/32bit-compat", dst="bin"):
                     self.path("32bit-libalut.so" , "libalut.so")
                     self.path("32bit-libalut.so.0" , "libalut.so.0")
                     self.path("32bit-libopenal.so" , "libopenal.so")
                     self.path("32bit-libopenal.so.1" , "libopenal.so.1")
                     self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
                     self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
-
-                    self.end_prefix("lib")
+                    self.end_prefix("bin")
             # plugin runtime
             if self.prefix(src="../packages/lib/release", dst="lib"):
                 self.path("libQtWebKit.so*")
