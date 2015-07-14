@@ -9,10 +9,10 @@ Development system:
 -------------
 
 Development system is Debian Jessie (stable). The compiler is gcc-4.9. If starting with a new Jessie you will need to install
-    build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.  
+    build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
     Debian packages of the build tools work. Python27 is required so, after installing Python use 'python --version' to check the
-    active version. Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine. 
-  Library archives for the most part are built with gcc-4.6.4. Boost, Colladadom, and Googlemock are built with gcc-4.9. This was necessary to get past viewer compile errors. If you need to build libraries you need gcc-4.6 which doesn't come with Debian Jessie but, is in Debian Stretch (Testing). With careful apt-pinning gcc-4.6.4 can be installed in Jessie from Stretch. Stretch was first choice as a development system but, after much work it turned out to have a compatabilty issue with VirtualBox Linux Guest Additions and 'X' which killed graphics and the ability to test a viewer.    
+    active version. Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine.
+  Library archives for the most part are built with gcc-4.6.4. Boost, Colladadom, and Googlemock are built with gcc-4.9. This was necessary to get past viewer compile errors. If you need to build libraries you need gcc-4.6 which doesn't come with Debian Jessie but, is in Debian Stretch (Testing). With careful apt-pinning gcc-4.6.4 can be installed in Jessie from Stretch. Stretch was first choice as a development system but, after much work it turned out to have a compatabilty issue with VirtualBox Linux Guest Additions and 'X' which killed graphics and the ability to test a viewer.
 
 
 Preprations to build:
@@ -28,7 +28,7 @@ Install python-pip
 sudo apt-get install python-pip
 Install python-dev  but, it might already be installed
 sudo apt-get install python-dev
-Pip Install autobuild python dependencies 
+Pip Install autobuild python dependencies
 sudo pip install 'hg+https://bitbucket.org/oz_linden/autobuild-metadata#egg=autobuild'
 
 Clone, configure, and build Kokua-NT
@@ -57,18 +57,15 @@ This places the viewer in ~/.kokua-install and places a Kokua menu entry under A
 Linux 32 Bit
 ------------
 
-Development system is Debian Stretch (testing). The compiler is gcc-4.6.4. If starting with a new Stretch you will need to install
-    build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.  
-    Debian packages of the build tools work. Python27 is required so, after installing Python use 'python --version' to check the
-    active version. Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine. 
-  Library archives for the most part are from lindenlab viewer-release. Some libraries have been rebuilt on gcc-4.6.4. See the commits with [Linux 32 bit] tag in the message for a record of rebuilt libraries.     
+Development system is Debian Stretch (testing). The compiler is ~~gcc-4.6.4~~ gcc-4.9.2. If starting with a new Stretch you will need to install build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
+    Debian packages of the build tools work. Python27 is required so, after installing Python use 'python --version' to check the active version. Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine.
+  Library archives for the most part are from lindenlab viewer-release. Some libraries have been rebuilt on gcc-4.6.4. Boost, Colladadom, Googlemock, are built on gcc-4.9.2 to allow the viewer to be built. See the commits with [Linux 32 bit] tag in the message for a record of rebuilt libraries.
 
-  At this writing {Changeset(37623 (29eb1accd2b0)} the build with openal and gstreamer doesn't produce a working audio engine. So, for audio to work the viewer will need built with a user supplied Fmod Ex library. 
 
--  Configure for an Fmod Ex build:
+-  Configure for a Gstreamer/Openal build:
 Following assumes a clean build tree.
 cd kokuant
-autobuild autobuild -v configure -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=ON -DOPENAL:BOOL=OFF 2>&1 |tee configure.log
+autobuild autobuild -v configure -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DOPENAL:BOOL=ON 2>&1 |tee configure.log
 
 - Build the viewer
 -autobuild build -c ReleaseOS 2>&1 |tee build.log
@@ -82,9 +79,10 @@ TBP
 Mac
 --------
 TBP
+
 Disclaimer
 -----
--      This software is not provided nor supported by Linden Lab, the makers     of Second Life.
+-      This software is not provided nor supported by Linden Lab, the makers of Second Life.
 
 
 
