@@ -1141,7 +1141,7 @@ class Linux_i686_Manifest(LinuxManifest):
 
         # Use the build system libstdc++.so An attempt try to allow versions earlier than
         # then wheezy to run the viewer without complaining about GLIBCXX version.
-        if self.prefix("/lib/i386-linux-gnu", dst="lib"):
+        if self.prefix("/usr/lib/i386-linux-gnu", dst="lib"):
             self.path("libstdc++.so.*")
             self.end_prefix("lib") 
     
