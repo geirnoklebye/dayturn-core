@@ -1148,6 +1148,8 @@ class Linux_i686_Manifest(LinuxManifest):
 
 
         if self.prefix("../packages/lib/release", dst="lib"):
+            self.path("libalut.so")
+            self.path("libalut.so.*")            
             self.path("libapr-1.so")
             self.path("libapr-1.so.0")
             self.path("libapr-1.so.0.4.5")
