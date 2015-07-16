@@ -72,6 +72,16 @@ autobuild -v configure -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DO
 
 - Configuration and building takes about 1.5 hours on a 2 core machine.
 
+- Test the build
+
+./install.sh select Y to place in user space.
+This places the viewer in ~/.kokua-install and places a Kokua menu entry under Applications->Internet
+
+If you enconuter missing libalut.so at viewer start install the package libalut-dev. This well also install libalut0.
+
+ For debain based sudo apt-get install libalut-dev.
+ 
+
 Windows
 --------
 TBP
