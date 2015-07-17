@@ -35,6 +35,7 @@ else (USESYSTEMLIBS)
   if (LINUX AND ${ARCH} STREQUAL "i686")
     use_prebuilt_binary(gtk-atk-pango-glib)
     use_prebuilt_binary(glib)
+    use_prebuilt_binary(atk)
     set(UI_LIBRARIES
         atk-1.0
  #       cairo
