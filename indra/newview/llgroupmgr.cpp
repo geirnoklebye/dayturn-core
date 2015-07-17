@@ -63,15 +63,13 @@
 #include "lltrans.h"
 #include "llviewerregion.h"
 #include <boost/regex.hpp>
-///Kokua linux 32 bit uses gcc-4.6 which is buggy with respect to
-///"-Wuninitialized" and "-Wmaybe-uninitialized"
-#if (LL_LINUX) && defined(__amd64__)
- #if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+
+#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
    #pragma GCC diagnostic push
    #pragma GCC diagnostic ignored "-Wuninitialized"
    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
- #endif
 #endif
+
 
 #if LL_MSVC
 #pragma warning(push)   
@@ -85,13 +83,11 @@
 #pragma warning(pop)   // Restore all warnings to the previous state
 #endif
 
-#if (LL_LINUX) && defined(__amd64__)
- #if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
    #pragma GCC diagnostic pop 
 ///No idea of the scope of   #pragma GCC diagnostic ignored"-Wuninitialized" 
 ///or    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 ///but using push and pop in case a problem occurs later.
- #endif
 #endif
 
 const U32 MAX_CACHED_GROUPS = 20;
@@ -892,15 +888,12 @@ LLGroupMgrGroupData* LLGroupMgr::getGroupData(const LLUUID& id)
 // Helper function for LLGroupMgr::processGroupMembersReply
 // This reformats date strings from MM/DD/YYYY to YYYY-MM-DD ( e.g. 1/27/2008 -> 2008-01-27 )
 // so that the sorter can sort by year before month before day.
-///Kokua linux 32 bit uses gcc-4.6 which is buggy with respect to
-///"-Wuninitialized" and "-Wmaybe-uninitialized"
-#if (LL_LINUX) && defined(__amd64__)
- #if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
    #pragma GCC diagnostic push
    #pragma GCC diagnostic ignored "-Wuninitialized"
    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
- #endif
 #endif
+
 static void formatDateString(std::string &date_string)
 {
 	using namespace boost;
@@ -917,14 +910,14 @@ static void formatDateString(std::string &date_string)
 		date_string = llformat("%04d-%02d-%02d", year, month, day);
 	}
 }
-#if (LL_LINUX) && defined(__amd64__)
- #if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+
+#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
    #pragma GCC diagnostic pop 
 ///No idea of the scope of   #pragma GCC diagnostic ignored"-Wuninitialized" 
 ///or    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 ///but using push and pop in case a problem occurs later.
- #endif
 #endif
+
 
 // static
 void LLGroupMgr::processGroupMembersReply(LLMessageSystem* msg, void** data)

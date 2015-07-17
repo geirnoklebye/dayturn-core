@@ -282,7 +282,7 @@ if (LINUX AND ${ARCH} STREQUAL "x86_64")
   set(${ARCH}_linux_INCLUDES
       ELFIO
       atk
-	  cairo
+      cairo
       gdk
       gdk-pixbuf
       gdk-pixbuf-xlib

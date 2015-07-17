@@ -68,6 +68,9 @@
 #include "llfloatereditsky.h"
 #include "llfloatereditwater.h"
 #include "llfloaterenvironmentsettings.h"
+#include "llfloaterexperienceprofile.h"
+#include "llfloaterexperiences.h"
+#include "llfloaterexperiencepicker.h"
 #include "llfloaterevent.h"
 #include "llfloaterfacebook.h"
 #include "llfloaterflickr.h"
@@ -157,6 +160,7 @@
 #include "llsyswellwindow.h"
 
 // *NOTE: Please add files in alphabetical order to keep merges easy.
+#include "fspanelclassified.h"
 #include "fsfloaterimport.h"
 
 // handle secondlife:///app/openfloater/{NAME} URLs
@@ -224,7 +228,10 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("env_edit_water", "floater_edit_water_preset.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterEditWater>);
 	LLFloaterReg::add("env_edit_day_cycle", "floater_edit_day_cycle.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterEditDayCycle>);
 
-	LLFloaterReg::add("event", "floater_event.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterEvent>);
+    LLFloaterReg::add("event", "floater_event.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterEvent>);
+    LLFloaterReg::add("experiences", "floater_experiences.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterExperiences>);
+	LLFloaterReg::add("experience_profile", "floater_experienceprofile.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterExperienceProfile>);
+	LLFloaterReg::add("experience_search", "floater_experience_search.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterExperiencePicker>);
 
 //<FS:KC legacy profiles>
 	LLFloaterReg::add("floater_profile", "floater_profile_view.xml",&LLFloaterReg::build<FSFloaterProfile>);
@@ -367,5 +374,6 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("fs_import", "floater_fs_import.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterImport>);
 	// <FS:CR> FIRE-6310: Include Legacy Search
 	LLFloaterReg::add("search_legacy", "floater_fs_search_legacy.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterSearchLegacy>);
+	LLFloaterReg::add("publish_classified_fs", "floater_publish_classified.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSPublishClassifiedFloater>);
 	LLFloaterReg::registerControlVariables(); // Make sure visibility and rect controls get preserved when saving
 }

@@ -26,13 +26,12 @@
  */
 ///Kokua linux 32 bit uses gcc-4.6 which is buggy with respect to
 ///"-Wuninitialized" and "-Wmaybe-uninitialized"
-#if (LL_LINUX) && defined(__amd64__)
- #if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
-   #pragma GCC diagnostic push
-   #pragma GCC diagnostic ignored "-Wuninitialized"
-   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
- #endif
+#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wuninitialized"
+    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
+
 #include "linden_common.h"
 #include "llallocator_heap_profile.h"
 
@@ -46,13 +45,11 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
-#if (LL_LINUX) && defined(__amd64__)
- #if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
-   #pragma GCC diagnostic pop 
+#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+  #pragma GCC diagnostic pop 
 ///No idea of the scope of   #pragma GCC diagnostic ignored"-Wuninitialized" 
 ///or    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 ///but using push and pop in case a problem occurs later.
- #endif
 #endif
 #include <boost/range/iterator_range.hpp>
 
