@@ -374,7 +374,7 @@ std::string LLDir::buildSLOSCacheDir() const
 	}
 	else
 	{
-		res = getOSCacheDir() + mDirDelimiter + "kokua-USL";
+		res = getOSCacheDir() + mDirDelimiter + "kokua-CEF";
 	}
 	return res;
 }

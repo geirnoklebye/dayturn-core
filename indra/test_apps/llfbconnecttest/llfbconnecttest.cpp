@@ -1569,7 +1569,7 @@ std::string LLFBConnectTest::pluginNameFromMimeType( std::string& mime_type )
 		plugin_name = "media_plugin_quicktime.dylib";
 	else
 	if ( mime_type == "text/html" )
-		plugin_name = "media_plugin_webkit.dylib";
+		plugin_name = "media_plugin_cef.dylib";
 
 #elif LL_WINDOWS
 	std::string plugin_name( "media_plugin_null.dll" );
@@ -1578,7 +1578,7 @@ std::string LLFBConnectTest::pluginNameFromMimeType( std::string& mime_type )
 		plugin_name = "media_plugin_quicktime.dll";
 	else
 	if ( mime_type == "text/html" )
-		plugin_name = "media_plugin_webkit.dll";
+		plugin_name = "media_plugin_cef.dll";
 	else
 	if ( mime_type == "example/example" )
 		plugin_name = "media_plugin_example.dll";
@@ -1590,7 +1590,7 @@ std::string LLFBConnectTest::pluginNameFromMimeType( std::string& mime_type )
 		plugin_name = "libmedia_plugin_quicktime.so";
 	else
 	if ( mime_type == "text/html" )
-		plugin_name = "libmedia_plugin_webkit.so";
+		plugin_name = "libmedia_plugin_cef.so";
 #endif
 	return plugin_name;
 }

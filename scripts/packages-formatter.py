@@ -57,9 +57,6 @@ def autobuild(*args):
     # no exceptions yet, let caller read stdout
     return child.stdout
 
-if len( sys.argv ) > 1 and sys.argv[1] == "-m64":
-       os.environ[ "DKO_AUTOBUILD_ARCH" ] = "x86_64"
-
 version={}
 versions=autobuild('install', '--versions')
 for line in versions:
@@ -68,7 +65,7 @@ for line in versions:
         pkg = pkg_info.group(1)
         if pkg not in version:
             version[pkg] = pkg_info.group(2).strip()
-        elif version[pkg] != pkg_info.group(2).strip():
+        else:
             sys.exit("Duplicate version for %s" % pkg)
     else:
         sys.exit("Unrecognized --versions output: %s" % line)

@@ -13,7 +13,7 @@ include(UI)
 include(Linking)
 include(PluginAPI)
 include(MediaPluginBase)
-include(FindOpenGL)
+include(OpenGL)
 include(PulseAudio)
 
 include(WebKitLibPlugin)
@@ -29,6 +29,9 @@ include_directories(
     ${LLWINDOW_INCLUDE_DIRS}
     ${LLQTWEBKIT_INCLUDE_DIR}
 )
+include_directories(SYSTEM
+    ${LLCOMMON_SYSTEM_INCLUDE_DIRS}
+    )
 
 
 ### media_plugin_webkit
@@ -67,6 +70,7 @@ if (LINUX)
   endif (PULSEAUDIO_FOUND)
   list(APPEND media_plugin_webkit_LINK_LIBRARIES
        ${UI_LIBRARIES}     # for glib/GTK
+       Xext #<FS:ND/> force pulling libXext in, otherwise we get undefined symbols.
        )
 elseif (DARWIN)
   list(APPEND media_plugin_webkit_SOURCE_FILES mac_volume_catcher.cpp)

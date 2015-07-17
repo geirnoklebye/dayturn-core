@@ -1017,7 +1017,7 @@ class LinuxManifest(ViewerManifest):
             self.path("client-readme.txt","README-linux.txt")
             self.path("client-readme-voice.txt","README-linux-voice.txt")
             self.path("client-readme-joystick.txt","README-linux-joystick.txt")
-            self.path("wrapper.sh","kokua64-USL")
+            self.path("wrapper.sh","kokua64-CEF")
             self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
             self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
             self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
@@ -1050,9 +1050,87 @@ class LinuxManifest(ViewerManifest):
 
         # plugins
         if self.prefix(src="", dst="bin/llplugin"):
-            self.path2basename("../media_plugins/webkit", "libmedia_plugin_webkit.so")
+            #self.path2basename("../media_plugins/webkit", "libmedia_plugin_webkit.so")
             self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
+            self.path( "../media_plugins/cef/libmedia_plugin_cef.so", "libmedia_plugin_cef.so" )
             self.end_prefix("bin/llplugin")
+        # CEF files 
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
+            self.path( "libcef.so" )
+            self.path( "libllceflib.so" )
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="bin"):
+            self.path( "chrome-sandbox" )
+            self.path( "llceflib_host" )
+            self.path( "natives_blob.bin" )
+            self.path( "snapshot_blob.bin" )
+            self.path( "libffmpegsumo.so" )
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources'), dst="bin"):
+            self.path( "cef.pak" )
+            self.path( "cef_100_percent.pak" )
+            self.path( "cef_200_percent.pak" )
+            self.path( "devtools_resources.pak" )
+            self.path( "icudtl.dat" )
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources', 'locales'), dst=os.path.join('bin', 'locales')):
+            self.path("am.pak")
+            self.path("ar.pak")
+            self.path("bg.pak")
+            self.path("bn.pak")
+            self.path("ca.pak")
+            self.path("cs.pak")
+            self.path("da.pak")
+            self.path("de.pak")
+            self.path("el.pak")
+            self.path("en-GB.pak")
+            self.path("en-US.pak")
+            self.path("es-419.pak")
+            self.path("es.pak")
+            self.path("et.pak")
+            self.path("fa.pak")
+            self.path("fi.pak")
+            self.path("fil.pak")
+            self.path("fr.pak")
+            self.path("gu.pak")
+            self.path("he.pak")
+            self.path("hi.pak")
+            self.path("hr.pak")
+            self.path("hu.pak")
+            self.path("id.pak")
+            self.path("it.pak")
+            self.path("ja.pak")
+            self.path("kn.pak")
+            self.path("ko.pak")
+            self.path("lt.pak")
+            self.path("lv.pak")
+            self.path("ml.pak")
+            self.path("mr.pak")
+            self.path("ms.pak")
+            self.path("nb.pak")
+            self.path("nl.pak")
+            self.path("pl.pak")
+            self.path("pt-BR.pak")
+            self.path("pt-PT.pak")
+            self.path("ro.pak")
+            self.path("ru.pak")
+            self.path("sk.pak")
+            self.path("sl.pak")
+            self.path("sr.pak")
+            self.path("sv.pak")
+            self.path("sw.pak")
+            self.path("ta.pak")
+            self.path("te.pak")
+            self.path("th.pak")
+            self.path("tr.pak")
+            self.path("uk.pak")
+            self.path("vi.pak")
+            self.path("zh-CN.pak")
+            self.path("zh-TW.pak")
+            self.end_prefix()
 
         # llcommon
         if not self.path("../llcommon/libllcommon.so", "lib/libllcommon.so"):
@@ -1063,7 +1141,7 @@ class LinuxManifest(ViewerManifest):
     def copy_finish(self):
         # Force executable permissions to be set for scripts
         # see CHOP-223 and http://mercurial.selenic.com/bts/issue1802
-        for script in 'kokua64-USL', 'bin/update_install':
+        for script in 'kokua64-CEF', 'bin/update_install':
             self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
 
     def package_finish(self):

@@ -264,9 +264,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fb1537f7ad0b490fcb4f096c15dce9cd</string>
+              <string>43816a90bf84efba67117636b9bdf9da</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/boost_3p-update-boost/rev/297445/arch/Linux/installer/boost-1.57-linux-297445.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux-201507031353.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -276,9 +278,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c933ed1eff3648068026a1b27b41ba5c</string>
+              <string>a62c838b06866f5be4592ec3c6dc0d8d</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201505270909.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/boost-1.57-linux64-201505172158-r138d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -360,9 +362,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7ff636034665555e4b3d918d86ef9566</string>
+              <string>bcd1d4ef42c6a40f8261655fa5580683</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/colladadom_3p-update-colladadom/rev/301371/arch/Linux/installer/colladadom-2.3.301371-linux-301371.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201507031700-linux-201507031700.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -372,9 +376,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9b2f6f941613ca7454fecbc9870a5ffd</string>
+              <string>4ce74a7fff983435816a20ff83796804</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201505282019-linux64-201505282019.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/colladadom-2.3.201505170602-linux64-201505170602.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -393,7 +397,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.3.301371</string>
+        <string>2.3.201507031700</string>
       </map>
       <key>curl</key>
       <map>
@@ -684,11 +688,11 @@
       <key>fmodex</key>
       <map>
         <key>copyright</key>
-        <string>FMOD Sound System, copyright © Firelight Technologies Pty, Ltd., 1994-2014.</string>
+        <string>Copyright c 2005-2015 Firelight Technologies Pty, Ltd.</string>
         <key>description</key>
-        <string>FMOD Ex audio system library</string>
+        <string>FMOD Ex Programmer's API</string>
         <key>license</key>
-        <string>fmodex</string>
+        <string>FMOD NON-COMMERCIAL LICENSE</string>
         <key>license_file</key>
         <string>LICENSES/fmodex.txt</string>
         <key>name</key>
@@ -736,16 +740,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9276d38d3f738903a4e854ec9fbb1c70</string>
+              <string>7d3b6f91cf59bd6701b4d593e896dfc0</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.50-windows-201502012148.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.54-windows-201507041457.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
           </map>
         </map>
         <key>version</key>
-        <string>4.44.52</string>
+        <string>4.44.54</string>
       </map>
       <key>fontconfig</key>
       <map>
@@ -990,9 +994,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f577144536fd7c9d26d9f989acf17857</string>
+              <string>6799c2ec7da5eba3542f74761e88a143</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/glh-linear_3p-update-glh-linear/rev/297692/arch/Linux/installer/glh_linear-0.0.0-common-297692.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-glh-linear/downloads/glh_linear-0.0.0-common-201507131759.tar.bz2</string>
             </map>
             <key>name</key>
             <string>common</string>
@@ -1017,6 +1021,20 @@
         <string>glib</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>0891aac3dd4be134d72d08b2d0a4165c</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-glib/downloads/glib-2.44.1-linux-201507131131.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -1044,7 +1062,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.45.1</string>
+        <string>2.44.1</string>
       </map>
       <key>glod</key>
       <map>
@@ -1191,9 +1209,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c2395f77c581da0a085a352ff3566d0f</string>
+              <string>171b39db6d0702535b41fad5b476e39d</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/google-breakpad_3p-update-google-breakpad/rev/298127/arch/Darwin/installer/google_breakpad-1413.298127-darwin-298127.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/google-breakpad_3p-update-google-breakpad/rev/298033/arch/Darwin/installer/google_breakpad-1413.298033-darwin-298033.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -1269,9 +1287,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e08b0e9e269b80b549f6044c4e608fb5</string>
+              <string>16c8fb1debbd4caa64735302ae914457</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/googlemock_3p-update-googlemock/rev/297460/arch/Linux/installer/googlemock-1.7.0.297460-linux-297460.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201507031820-linux-201507031820.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1281,9 +1301,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f55b4f8c55ff1f7a18351051798d0c06</string>
+              <string>bbefceb5ddbe027ab0b3360a06eabdde</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201505282006-linux64-201505282006.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/googlemock-1.7.0.201505171505-r58d-linux64-201505171505-r58d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1302,7 +1322,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.7.0.201505282006</string>
+        <string>1.7.0.201507031820</string>
       </map>
       <key>gperftools</key>
       <map>
@@ -1376,21 +1396,12 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/i686-linux/include</key>
-                <string>include</string>
-                <key>libraries/i686-linux/lib_release_client</key>
-                <string>lib/release</string>
-                <key>libraries/include</key>
-                <string>include</string>
-              </map>
               <key>hash</key>
-              <string>2cd3f6499f8444f1d119d097e4047252</string>
+              <string>691d7328f7e927bf438adf3b873d9811</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/gstreamer-0.10.24-linux-20091125.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.24.201506192112-linux-201506192112.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1434,7 +1445,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.10.36.201506151839</string>
+        <string>0.10.24.201506192112</string>
       </map>
       <key>gtk</key>
       <map>
@@ -1485,16 +1496,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>15af375116f5c943ea6f4190bc764224</string>
+              <string>28d65a53a22b1cf77d6f937f3f3537ab</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/gtk_3p-gtk-atk-pango-glib/rev/294804/arch/Linux/installer/gtk_atk_pango_glib-0.1-linux-294804.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gtk-atk-pango-glib/downloads/gtk_atk_pango_glib-0.1-linux-201506202150.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
           </map>
         </map>
         <key>version</key>
-        <string>0.0</string>
+        <string>0.1</string>
       </map>
       <key>gtk-etc</key>
       <map>
@@ -2290,11 +2303,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d31358176b9ba8c676458cc061767c0b</string>
+              <string>de0364a30095d3018e3c893e091e8099</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/canonical_3p-llqtwebkit2/rev/295522/arch/Linux/installer/llqtwebkit-4.7.1-linux-20141015.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-llqtwebkit2/downloads/llqtwebkit-4.7.1-linux-201506221336.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2328,6 +2341,80 @@
         </map>
         <key>version</key>
         <string>4.7.1</string>
+      </map>
+       <key>llceflib</key>
+      <map>
+        <key>copyright</key>
+        <string>>Copyright (c) 2008-2014 Marshall A. Greenblatt. Portions Copyright (c) 2006-2009 Google Inc. All rights reserved</string>
+        <key>description</key>
+        <string>Chromium Embedded Framework (CEF) Standard Binary Distribution</string>
+        <key>license</key>
+        <string>BSD</string>
+        <key>license_file</key>
+        <string>LICENSES/CEF_BSD.txt</string>
+        <key>name</key>
+        <string>llceflib</string>
+        <key>platforms</key>
+        <map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>68012c406b5c2514794b7cf1c7ea5564</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>file:///opt/cef/llceflib-1.0-windows-201507022122-r22.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>d32c6e5eeb91d06a8811cb0d7aa15003</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://callum-linden.s3.amazonaws.com/llceflib-0.3.2171.2069.5020-darwin-5020.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>c2a85e799db6ebb4958be27d5ae01c55</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>file:///opt/cef/llceflib-cef_binary_3.2272.32.gbda8dc7-linux-201507161208.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>27e98b5cf61a241b16a2397f963f00ca</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>file:///opt/cef/llceflib-cef_binary_3.2272.32.gbda8dc7-linux64-201507161206.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>3.2272.2035.999999</string>
       </map>
       <key>mesa</key>
       <map>
@@ -2603,11 +2690,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>faec46f0ea4df43519b7f72c09aac2ff</string>
+              <string>4fa14f9746b34e109af68af7759969bb</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201505071449-linux-201505071449.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201506211217-linux-201506211217.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2642,7 +2729,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.15.1-1.1.0.201506132204</string>
+        <string>1.15.1-1.1.0.201506211217</string>
       </map>
       <key>openjpeg</key>
       <map>
@@ -3037,9 +3124,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>48ed7ddcf93fa3c751d677f5eb5f9367</string>
+              <string>fc20b7a69bf4b3ed0152c569f51f614d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/slvoice_3p-update-slvoice/rev/298329/arch/Linux/installer/slvoice-3.2.0002.10426.298329-linux-298329.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-4.5.0009.17865.201506251848-linux-201506251848.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -3072,7 +3161,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.5.0009.17865.201506081416</string>
+        <string>4.5.0009.17865.201506251848</string>
       </map>
       <key>tut</key>
       <map>
@@ -3325,8 +3414,30 @@
         <map>
           <key>configurations</key>
           <map>
+            <key>Doxygen</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>arguments</key>
+                <array>
+                  <string>Doxyfile</string>
+                </array>
+                <key>command</key>
+                <string>doxygen</string>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>command</key>
+                <string>cmake</string>
+              </map>
+              <key>name</key>
+              <string>Doxygen</string>
+            </map>
             <key>RelWithDebInfo</key>
             <map>
+              <key>build</key>
+              <map>
+              </map>
               <key>configure</key>
               <map>
                 <key>arguments</key>
@@ -3419,6 +3530,28 @@
           <string>build-darwin-i386</string>
           <key>configurations</key>
           <map>
+            <key>Doxygen</key>
+            <map>
+              <key>build</key>
+              <map>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>arguments</key>
+                <array>
+                  <string>../indra</string>
+                </array>
+                <key>options</key>
+                <array>
+                  <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
+                  <string>-DWORD_SIZE:STRING=32</string>
+                  <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
+                  <string>-DINSTALL_PROPRIETARY=TRUE</string>
+                </array>
+              </map>
+              <key>name</key>
+              <string>Doxygen</string>
+            </map>
             <key>RelWithDebInfo</key>
             <map>
               <key>build</key>
@@ -3535,6 +3668,26 @@
           <string>build-linux-i686</string>
           <key>configurations</key>
           <map>
+            <key>Doxygen</key>
+            <map>
+              <key>build</key>
+              <map>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>arguments</key>
+                <array>
+                  <string>../indra</string>
+                </array>
+                <key>options</key>
+                <array>
+                  <string>-G</string>
+                  <string>'Unix Makefiles'</string>
+                </array>
+              </map>
+              <key>name</key>
+              <string>Doxygen</string>
+            </map>
             <key>RelWithDebInfo</key>
             <map>
               <key>build</key>

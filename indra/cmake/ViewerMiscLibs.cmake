@@ -1,7 +1,7 @@
 # -*- cmake -*-
 include(Prebuilt)
 if (USESYSTEMLIBS)
-  set(USESYSTEMLIBS ON)
+  set(USESYSTEMLIBS OFF)
   use_prebuilt_binary(slvoice)
   use_prebuilt_binary(libhunspell)
 #kokuafixme

@@ -1,21 +1,21 @@
 # -*- cmake -*-
-
 add_subdirectory(base)
 
-add_subdirectory(webkit)
-# *FIXME: Gstreamer darwin package
-if (NOT DARWIN)
-	if (NOT FMODEX)
-    	add_subdirectory(gstreamer010)
-	endif (NOT FMODEX)
-endif (NOT DARWIN)
+if (LINUX)
+    add_subdirectory(gstreamer010)
+endif (LINUX)
 
-if (QUICKTIME)
+if (WINDOWS OR DARWIN)
     add_subdirectory(quicktime)
-endif (QUICKTIME)
+    add_subdirectory(cef)
+endif (WINDOWS OR DARWIN)
+
+if( LINUX )
+    add_subdirectory(cef)
+endif( LINUX )
 
 if (WINDOWS)
     add_subdirectory(winmmshim)
 endif (WINDOWS)
 
-add_subdirectory(example)
+### add_subdirectory(example)

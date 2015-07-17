@@ -12,9 +12,9 @@ function install_desktop_entry()
 
     local desktop_entry="\
 [Desktop Entry]\n\
-Name=Kokua64-USL\n\
+Name=Kokua64-CEF\n\
 Comment=Client for the On-line Virtual Worlds\n\
-Exec=${installation_prefix}/kokua64-USL\n\
+Exec=${installation_prefix}/kokua64-CEF\n\
 Icon=${installation_prefix}/kokua_icon.png\n\
 Terminal=false\n\
 Type=Application\n\
@@ -25,7 +25,7 @@ X-Desktop-File-Install-Version=3.0"
 
     echo " - Installing menu entries in ${desktop_entries_dir}"
     mkdir -vp "${desktop_entries_dir}"
-    echo -e $desktop_entry > "${desktop_entries_dir}/kokua64-USL-viewer.desktop" || "Failed to install application menu!"
+    echo -e $desktop_entry > "${desktop_entries_dir}/kokua64-CEF-viewer.desktop" || "Failed to install application menu!"
 }
 
 if [ "$UID" == "0" ]; then
