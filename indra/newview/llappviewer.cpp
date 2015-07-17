@@ -769,7 +769,7 @@ bool LLAppViewer::init()
 	//initialize particle index pool
 	LLVOPartGroup::initClass();
 
-	gDirUtilp->initAppDirs("Kokua");// this is setting up $HOME/.kokua
+	gDirUtilp->initAppDirs("Kokua-CEF");// this is setting up $HOME/.kokua
 	// set skin search path to default, will be overridden later
 	// this allows simple skinned file lookups to work
 	gDirUtilp->setSkinFolder("default", "en");
@@ -2250,12 +2250,12 @@ void LLAppViewer::initLoggingAndGetLastDuration()
 
 	// Remove the last ".old" log file.
 	std::string old_log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-							     "Kokua.old");
+							     "Kokua-CEF.old");
 	LLFile::remove(old_log_file);
 
 	// Get name of the log file
 	std::string log_file = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-							     "Kokua.log");
+							     "Kokua-CEF.log");
  	/*
 	 * Before touching any log files, compute the duration of the last run
 	 * by comparing the ctime of the previous start marker file with the ctime
@@ -3421,7 +3421,7 @@ LLSD LLAppViewer::getViewerInfo() const
 	}
 
 	// TODO: Implement media plugin version query
-	info["QT_WEBKIT_VERSION"] = "4.7.1 (version number hard-coded)";
+	info["EMBEDDED_BROWSER_VERSION"] = "CEF 1.0.0 (version number hard-coded)";
 
 	S32 packets_in = LLViewerStats::instance().getRecording().getSum(LLStatViewer::PACKETS_IN);
 	if (packets_in > 0)
@@ -3579,10 +3579,10 @@ void LLAppViewer::writeSystemInfo()
         gDebugInfo["Dynamic"] = LLSD::emptyMap();
     
 #if LL_WINDOWS
-	gDebugInfo["SLLog"] = gDirUtilp->getExpandedFilename(LL_PATH_DUMP,"Kokua.log");
+	gDebugInfo["SLLog"] = gDirUtilp->getExpandedFilename(LL_PATH_DUMP,"Kokua-CEF.log");
 #else
     //Not ideal but sufficient for good reporting.
-    gDebugInfo["SLLog"] = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Kokua.old");  //LLError::logFileName();
+    gDebugInfo["SLLog"] = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,"Kokua-CEF.old");  //LLError::logFileName();
 #endif
 
 	gDebugInfo["ClientInfo"]["Name"] = LLVersionInfo::getChannel();

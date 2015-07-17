@@ -278,9 +278,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c933ed1eff3648068026a1b27b41ba5c</string>
+              <string>a62c838b06866f5be4592ec3c6dc0d8d</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201505270909.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/boost-1.57-linux64-201505172158-r138d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -376,9 +376,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9b2f6f941613ca7454fecbc9870a5ffd</string>
+              <string>4ce74a7fff983435816a20ff83796804</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201505282019-linux64-201505282019.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/colladadom-2.3.201505170602-linux64-201505170602.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1301,9 +1301,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f55b4f8c55ff1f7a18351051798d0c06</string>
+              <string>bbefceb5ddbe027ab0b3360a06eabdde</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201505282006-linux64-201505282006.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant/downloads/googlemock-1.7.0.201505171505-r58d-linux64-201505171505-r58d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2341,6 +2341,80 @@
         </map>
         <key>version</key>
         <string>4.7.1</string>
+      </map>
+       <key>llceflib</key>
+      <map>
+        <key>copyright</key>
+        <string>>Copyright (c) 2008-2014 Marshall A. Greenblatt. Portions Copyright (c) 2006-2009 Google Inc. All rights reserved</string>
+        <key>description</key>
+        <string>Chromium Embedded Framework (CEF) Standard Binary Distribution</string>
+        <key>license</key>
+        <string>BSD</string>
+        <key>license_file</key>
+        <string>LICENSES/CEF_BSD.txt</string>
+        <key>name</key>
+        <string>llceflib</string>
+        <key>platforms</key>
+        <map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>68012c406b5c2514794b7cf1c7ea5564</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>file:///opt/cef/llceflib-1.0-windows-201507022122-r22.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>d32c6e5eeb91d06a8811cb0d7aa15003</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://callum-linden.s3.amazonaws.com/llceflib-0.3.2171.2069.5020-darwin-5020.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>c2a85e799db6ebb4958be27d5ae01c55</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>file:///opt/cef/llceflib-cef_binary_3.2272.32.gbda8dc7-linux-201507161208.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>27e98b5cf61a241b16a2397f963f00ca</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>file:///opt/cef/llceflib-cef_binary_3.2272.32.gbda8dc7-linux64-201507161206.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>3.2272.2035.999999</string>
       </map>
       <key>mesa</key>
       <map>

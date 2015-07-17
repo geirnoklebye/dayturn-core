@@ -659,10 +659,6 @@ class Darwin_i386_Manifest(ViewerManifest):
             self.path("Info.plist", dst="Info.plist")
 
             # copy additional libs in <bundle>/Contents/MacOS/
-            self.path(os.path.join(relpkgdir, "libndofdev.dylib"), dst="Resources/libndofdev.dylib")
-            self.path(os.path.join(relpkgdir, "libhunspell-1.3.0.dylib"), dst="Resources/libhunspell-1.3.0.dylib")
-
-            # copy additional libs in <bundle>/Contents/MacOS/
             if self.prefix(src="../packages/lib/release", dst="MacOS"):
                 self.path("libalut.0.dylib")
                 self.path("libopenal.1.dylib")
@@ -1021,7 +1017,7 @@ class LinuxManifest(ViewerManifest):
             self.path("client-readme.txt","README-linux.txt")
             self.path("client-readme-voice.txt","README-linux-voice.txt")
             self.path("client-readme-joystick.txt","README-linux-joystick.txt")
-            self.path("wrapper.sh","kokua")
+            self.path("wrapper.sh","kokua64-CEF")
             self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
             self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
             self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
@@ -1054,9 +1050,84 @@ class LinuxManifest(ViewerManifest):
 
         # plugins
         if self.prefix(src="", dst="bin/llplugin"):
-            self.path2basename("../media_plugins/webkit", "libmedia_plugin_webkit.so")
+            #self.path2basename("../media_plugins/webkit", "libmedia_plugin_webkit.so")
             self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
+            self.path( "../media_plugins/cef/libmedia_plugin_cef.so", "libmedia_plugin_cef.so" )
             self.end_prefix("bin/llplugin")
+        # CEF files 
+
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="bin"):
+            self.path( "chrome-sandbox" )
+            self.path( "llceflib_host" )
+            self.path( "natives_blob.bin" )
+            self.path( "snapshot_blob.bin" )
+            self.path( "libffmpegsumo.so" )
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources'), dst="bin"):
+            self.path( "cef.pak" )
+            self.path( "cef_100_percent.pak" )
+            self.path( "cef_200_percent.pak" )
+            self.path( "devtools_resources.pak" )
+            self.path( "icudtl.dat" )
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources', 'locales'), dst=os.path.join('bin', 'locales')):
+            self.path("am.pak")
+            self.path("ar.pak")
+            self.path("bg.pak")
+            self.path("bn.pak")
+            self.path("ca.pak")
+            self.path("cs.pak")
+            self.path("da.pak")
+            self.path("de.pak")
+            self.path("el.pak")
+            self.path("en-GB.pak")
+            self.path("en-US.pak")
+            self.path("es-419.pak")
+            self.path("es.pak")
+            self.path("et.pak")
+            self.path("fa.pak")
+            self.path("fi.pak")
+            self.path("fil.pak")
+            self.path("fr.pak")
+            self.path("gu.pak")
+            self.path("he.pak")
+            self.path("hi.pak")
+            self.path("hr.pak")
+            self.path("hu.pak")
+            self.path("id.pak")
+            self.path("it.pak")
+            self.path("ja.pak")
+            self.path("kn.pak")
+            self.path("ko.pak")
+            self.path("lt.pak")
+            self.path("lv.pak")
+            self.path("ml.pak")
+            self.path("mr.pak")
+            self.path("ms.pak")
+            self.path("nb.pak")
+            self.path("nl.pak")
+            self.path("pl.pak")
+            self.path("pt-BR.pak")
+            self.path("pt-PT.pak")
+            self.path("ro.pak")
+            self.path("ru.pak")
+            self.path("sk.pak")
+            self.path("sl.pak")
+            self.path("sr.pak")
+            self.path("sv.pak")
+            self.path("sw.pak")
+            self.path("ta.pak")
+            self.path("te.pak")
+            self.path("th.pak")
+            self.path("tr.pak")
+            self.path("uk.pak")
+            self.path("vi.pak")
+            self.path("zh-CN.pak")
+            self.path("zh-TW.pak")
+            self.end_prefix()
 
         # llcommon
         if not self.path("../llcommon/libllcommon.so", "lib/libllcommon.so"):
@@ -1067,7 +1138,7 @@ class LinuxManifest(ViewerManifest):
     def copy_finish(self):
         # Force executable permissions to be set for scripts
         # see CHOP-223 and http://mercurial.selenic.com/bts/issue1802
-        for script in 'kokua', 'bin/update_install':
+        for script in 'kokua64-CEF', 'bin/update_install':
             self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
 
     def package_finish(self):
@@ -1141,7 +1212,7 @@ class Linux_i686_Manifest(LinuxManifest):
 
         # Use the build system libstdc++.so An attempt try to allow versions earlier than
         # then wheezy to run the viewer without complaining about GLIBCXX version.
-        if self.prefix("/usr/lib/i386-linux-gnu", dst="lib"):
+        if self.prefix("/lib/i386-linux-gnu", dst="lib"):
             self.path("libstdc++.so.*")
             self.end_prefix("lib") 
     
@@ -1172,11 +1243,13 @@ class Linux_i686_Manifest(LinuxManifest):
             self.path("libhunspell-1.3.so")
             self.path("libhunspell-1.3.so.0")
             self.path("libhunspell-1.3.so.0.0.0")
+            self.path("libalut.so.0")
+            self.path("libalut.so.0.0.0")
+            self.path("libopenal.so*")
+            self.path("libopenal.so", "libvivoxoal.so.1") # vivox's sdk expects this soname
             self.path("libfontconfig.so*")
-            self.path("libfreetype.so.*.*")
-            self.path("libpng16.so.16") 
-            self.path("libpng16.so.16.8.0")         
-
+            self.path("libpng15.so.15") 
+            self.path("libpng15.so.15.10.0")            
 
             # Include libfreetype.so. but have it work as libfontconfig does.
             self.path("libfreetype.so.*.*")
@@ -1199,33 +1272,25 @@ class Linux_i686_Manifest(LinuxManifest):
             self.end_prefix("lib")
 
             # Vivox runtimes
-            if self.prefix(src="../packages/lib/release", dst="bin"):
-                    self.path("SLVoice")
-                    self.end_prefix()
-            if self.prefix(src="../packages/lib/release", dst="bin"):
-                    self.path("libortp.so")
-                    self.path("libsndfile.so.1")
-                    self.path("libvivoxsdk.so")
-                    self.path("libvivoxplatform.so")
-                    self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
-                    self.end_prefix("bin")
+            if self.prefix(src=relpkgdir, dst="bin"):
+                self.path("SLVoice")
+                self.end_prefix()
+            if self.prefix(src=relpkgdir, dst="lib"):
+                self.path("libortp.so")
+                self.path("libsndfile.so.1")
+                self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
+                self.path("libvivoxsdk.so")
+                self.path("libvivoxplatform.so")
+                self.end_prefix("lib")
 
-            # 32bit libs needed for voice
-            if self.prefix("../packages/lib/release/32bit-compat", dst="bin"):
-                    self.path("32bit-libalut.so" , "libalut.so")
-                    self.path("32bit-libalut.so.0" , "libalut.so.0")
-                    self.path("32bit-libopenal.so" , "libopenal.so")
-                    self.path("32bit-libopenal.so.1" , "libopenal.so.1")
-                    self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
-                    self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
-                    self.end_prefix("bin")
             # plugin runtime
-            if self.prefix(src="../packages/lib/release", dst="lib"):
+            if self.prefix(src=os.path.join(pkgdir, "lib"), dst="lib"):
                 self.path("libQtWebKit.so*")
                 self.end_prefix("lib")
 
             # For WebKit/Qt plugin runtimes (image format plugins)
-            if self.prefix(src="../packages/plugins/imageformats", dst="bin/llplugin/imageformats"):
+            if self.prefix(src=os.path.join(pkgdir, "llplugin", "imageformats"),
+                           dst="bin/llplugin/imageformats"):
                 self.path("libqgif.so")
                 self.path("libqico.so")
                 self.path("libqjpeg.so")
@@ -1235,13 +1300,19 @@ class Linux_i686_Manifest(LinuxManifest):
                 self.end_prefix("bin/llplugin/imageformats")
 
             # For WebKit/Qt plugin runtimes (codec/character encoding plugins)
-            if self.prefix(src="../packages/plugins/codecs", dst="bin/llplugin/codecs"):
+            if self.prefix(src=os.path.join(pkgdir, "llplugin", "codecs"),
+                           dst="bin/llplugin/codecs"):
                 self.path("libqcncodecs.so")
                 self.path("libqjpcodecs.so")
                 self.path("libqkrcodecs.so")
                 self.path("libqtwcodecs.so")
                 self.end_prefix("bin/llplugin/codecs")
 
+            #cef plugin
+            if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
+                self.path( "libcef.so" )
+                self.path( "libllceflib.so" )
+                self.end_prefix()
 
 class Linux_x86_64_Manifest(LinuxManifest):
     def construct(self):
@@ -1257,9 +1328,9 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
        # Use the build system libstdc++.so An attempt try to allow versions earlier than
         # then wheezy to run the viewer without complaining about GLIBCXX version.
-        if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
-            self.path("libstdc++.so.*")
-            self.end_prefix("lib64") 
+#        if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
+#            self.path("libstdc++.so.*")
+#            self.end_prefix("lib64") 
 
 
         if self.prefix("../packages/lib/release", dst="lib64"):
@@ -1309,6 +1380,10 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libfreetype.so.*.*")
             self.path("libpng16.so.16") 
             self.path("libpng16.so.16.8.0")
+
+            #cef plugin
+            self.path( "libcef.so" )
+            self.path( "libllceflib.so" )
             self.end_prefix("lib64")
 
             # plugin runtime

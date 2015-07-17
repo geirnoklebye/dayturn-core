@@ -84,13 +84,8 @@ int LLPluginInstance::load(const std::string& plugin_dir, std::string &plugin_fi
 	if ( plugin_dir.length() )
 	{
 #if LL_WINDOWS
-		// VWR-21275:
-		// *SOME* Windows systems fail to load the Qt plugins if the current working
-		// directory is not the same as the directory with the Qt DLLs in.
-		// This should not cause any run time issues since we are changing the cwd for the
-		// plugin shell process and not the viewer.
-		// Changing back to the previous directory is not necessary since the plugin shell
-		// quits once the plugin exits.
+		// this used to be required for Q t/Webkit plugins - not using it anymore but leave this
+		// here just in case.
 		_chdir( plugin_dir.c_str() );	
 #endif
 	};

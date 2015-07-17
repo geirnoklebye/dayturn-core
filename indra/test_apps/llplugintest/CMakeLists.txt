@@ -295,7 +295,7 @@ add_dependencies(llmediaplugintest
   stage_third_party_libs
   SLPlugin
   media_plugin_quicktime
-  media_plugin_webkit
+  media_plugin_cef
   media_plugin_example
   ${LLPLUGIN_LIBRARIES}
   ${LLMESSAGE_LIBRARIES}
@@ -346,10 +346,10 @@ add_custom_command(TARGET llmediaplugintest POST_BUILD
   DEPENDS ${BUILT_LLCOMMON}
 )
 
-set(BUILT_WEBKIT_PLUGIN $<TARGET_FILE:media_plugin_webkit>)
+set(BUILT_CEF_PLUGIN $<TARGET_FILE:media_plugin_cef>)
 add_custom_command(TARGET llmediaplugintest POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy ${BUILT_WEBKIT_PLUGIN}  ${PLUGINS_DESTINATION_DIR}
-  DEPENDS ${BUILT_WEBKIT_PLUGIN}
+  COMMAND ${CMAKE_COMMAND} -E copy ${BUILT_CEF_PLUGIN}  ${PLUGINS_DESTINATION_DIR}
+  DEPENDS ${BUILT_CEF_PLUGIN}
 )
 
 if (DARWIN OR WINDOWS)

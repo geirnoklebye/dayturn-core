@@ -495,7 +495,7 @@ void LLFloaterWebContent::onClickStop()
 		mWebBrowser->getMediaPlugin()->browse_stop();
 
 	// still should happen when we catch the navigate complete event
-	// but sometimes (don't know why) that event isn't sent from Qt
+	// but sometimes (don't know why) that event isn't sent from media plugin
 	// and we ghetto a point where the stop button stays active.
 	mBtnReload->setVisible( true );
 	mBtnStop->setVisible( false );

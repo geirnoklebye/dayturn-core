@@ -52,6 +52,7 @@ include(TemplateCheck)
 include(UI)
 include(UnixInstall)
 include(ViewerMiscLibs)
+include(ColladaDom)
 # include(VisualLeakDetector)
 include(ZLIB)
 include(URIPARSER)
@@ -102,6 +103,7 @@ include_directories(
     ${LSCRIPT_INCLUDE_DIRS}/lscript_compile
     ${LLLOGIN_INCLUDE_DIRS}
     ${TEAPOT_INCLUDE_DIRS}
+    ${COLLADA_INCLUDE_DIRS}
     ${UPDATER_INCLUDE_DIRS}
     ${LIBS_PREBUILT_DIR}/include/collada
     ${LIBS_PREBUILD_DIR}/include/hunspell
@@ -1881,7 +1883,7 @@ if (WINDOWS)
       ${ARCH_PREBUILT_DIRS_RELEASE}/codecs/qtwcodecsd4.dll
       SLPlugin
       media_plugin_quicktime
-      media_plugin_webkit
+      media_plugin_cef
 #      media_plugin_gstreamer010
       winmm_shim
       windows-crash-logger
@@ -2100,9 +2102,9 @@ if (LINUX)
   set(COPY_INPUT_DEPENDENCIES
     ${VIEWER_BINARY_NAME}
     linux-crash-logger
-##    SLPlugin
-##    media_plugin_webkit
-##    media_plugin_gstreamer010
+    SLPlugin
+    media_plugin_cef
+    media_plugin_gstreamer010
     llcommon
     )
 
@@ -2210,8 +2212,7 @@ if (DARWIN)
       ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
     )
 
-##add_dependencies(${VIEWER_BINARY_NAME} SLPlugin media_plugin_quicktime media_plugin_webkit mac-crash-logger)
-  add_dependencies(${VIEWER_BINARY_NAME} mac-crash-logger)
+  add_dependencies(${VIEWER_BINARY_NAME} SLPlugin media_plugin_quicktime media_plugin_cef mac-crash-logger)
 
   if (ENABLE_SIGNING)
       set(SIGNING_SETTING "--signature=${SIGNING_IDENTITY}")
@@ -2264,14 +2265,12 @@ if (PACKAGE)
   if (DARWIN)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}")
     # *TODO: Generate these search dirs in the cmake files related to each binary.
-    # *TODO: Generate these search dirs in the cmake files related to each binary.
-##  list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/llplugin/slplugin/${CMAKE_CFG_INTDIR}")
+    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/llplugin/slplugin/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/mac_crash_logger/${CMAKE_CFG_INTDIR}")
-##  list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
-##  list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
-##  list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/webkit/${CMAKE_CFG_INTDIR}")
-    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-darwin.tar.bz2")
-##  set(VIEWER_EXE_GLOBS "'Second Life' SLPlugin mac-crash-logger")
+    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
+    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
+#    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/webkit/${CMAKE_CFG_INTDIR}")
+    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-darwin.tar.bz2")
     set(VIEWER_EXE_GLOBS "'Kokua' SLPlugin mac-crash-logger")
     set(VIEWER_LIB_GLOB "*.dylib")
   endif (DARWIN)

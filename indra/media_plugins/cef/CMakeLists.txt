@@ -1,6 +1,6 @@
 # -*- cmake -*-
 
-project(media_plugin_gstreamer010)
+project(media_plugin_cef)
 
 include(00-Common)
 include(LLCommon)
@@ -14,7 +14,7 @@ include(PluginAPI)
 include(MediaPluginBase)
 include(OpenGL)
 
-include(GStreamer010Plugin)
+include(CEFPlugin)
 
 include_directories(
     ${LLPLUGIN_INCLUDE_DIRS}
@@ -24,14 +24,14 @@ include_directories(
     ${LLIMAGE_INCLUDE_DIRS}
     ${LLRENDER_INCLUDE_DIRS}
     ${LLWINDOW_INCLUDE_DIRS}
-    ${GSTREAMER010_INCLUDE_DIRS}
-    ${GSTREAMER010_PLUGINS_BASE_INCLUDE_DIRS}
+    ${CEF_INCLUDE_DIR}
 )
 include_directories(SYSTEM
     ${LLCOMMON_SYSTEM_INCLUDE_DIRS}
     )
 
-### media_plugin_gstreamer010
+
+### media_plugin_cef
 
 if(NOT WORD_SIZE EQUAL 32)
   if(WINDOWS)
@@ -41,35 +41,26 @@ if(NOT WORD_SIZE EQUAL 32)
   endif(WINDOWS)
 endif(NOT WORD_SIZE EQUAL 32)
 
-set(media_plugin_gstreamer010_SOURCE_FILES
-    media_plugin_gstreamer010.cpp
-    llmediaimplgstreamer_syms.cpp
-    llmediaimplgstreamervidplug.cpp
+set(media_plugin_cef_SOURCE_FILES
+    media_plugin_cef.cpp
     )
 
-set(media_plugin_gstreamer010_HEADER_FILES
-    llmediaimplgstreamervidplug.h
-    llmediaimplgstreamer_syms.h
-    llmediaimplgstreamertriviallogging.h
-    )
-
-add_library(media_plugin_gstreamer010
+add_library(media_plugin_cef
     SHARED
-    ${media_plugin_gstreamer010_SOURCE_FILES}
+    ${media_plugin_cef_SOURCE_FILES}
 )
 
-target_link_libraries(media_plugin_gstreamer010
+target_link_libraries(media_plugin_cef
   ${LLPLUGIN_LIBRARIES}
   ${MEDIA_PLUGIN_BASE_LIBRARIES}
   ${LLCOMMON_LIBRARIES}
   ${PLUGIN_API_WINDOWS_LIBRARIES}
-  ${GSTREAMER010_LIBRARIES}
+  ${CEF_PLUGIN_LIBRARIES}
 )
 
-add_dependencies(media_plugin_gstreamer010
+add_dependencies(media_plugin_cef
   ${LLPLUGIN_LIBRARIES}
   ${MEDIA_PLUGIN_BASE_LIBRARIES}
   ${LLCOMMON_LIBRARIES}
 )
-
 

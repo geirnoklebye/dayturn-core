@@ -198,7 +198,7 @@ public:
 // N.B. this is defined to work exactly like the classic secondlife://{REGION}
 // However, the later syntax cannot support spaces in the region name because
 // spaces (and %20 chars) are illegal in the hostname of an http URL. Some
-// browsers let you get away with this, but some do not (such as Qt's Webkit).
+// browsers let you get away with this, but some do not (such as googles cef).
 // Hence we introduced the newer secondlife:///app/region alternative.
 class LLRegionHandler : public LLCommandHandler
 {

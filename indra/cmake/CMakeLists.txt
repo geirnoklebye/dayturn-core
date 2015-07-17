@@ -14,8 +14,10 @@ set(cmake_SOURCE_FILES
     Boost.cmake
     BuildVersion.cmake
     CARes.cmake
+    CEFPlugin.cmake
     CMakeCopyIfDifferent.cmake
     ConfigurePkgConfig.cmake
+    ColladaDom.cmake
     CURL.cmake
     Copy3rdPartyLibs.cmake
     DBusGlib.cmake
@@ -30,6 +32,7 @@ set(cmake_SOURCE_FILES
     FindCARes.cmake
     FindFMODEX.cmake
     FindGLH.cmake
+    FindGLOD.cmake
     FindGoogleBreakpad.cmake
     FindGooglePerfTools.cmake
     FindHUNSPELL.cmake
@@ -103,7 +106,7 @@ set(cmake_SOURCE_FILES
     Variables.cmake
     ViewerMiscLibs.cmake
     VisualLeakDetector.cmake
-    WebKitLibPlugin.cmake
+#    WebKitLibPlugin.cmake
     XmlRpcEpi.cmake
     ZLIB.cmake
     )
