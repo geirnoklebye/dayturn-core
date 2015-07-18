@@ -1409,11 +1409,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>691d7328f7e927bf438adf3b873d9811</string>
+              <string>db3cc85787ea2fcc99937e13d2404983</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.24.201506192112-linux-201506192112.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201507172110-linux-201507172110.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1457,7 +1457,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.10.24.201506192112</string>
+        <string>0.10.36.201507172110</string>
       </map>
       <key>gtk</key>
       <map>
