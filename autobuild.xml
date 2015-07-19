@@ -2927,6 +2927,18 @@
         <string>pixman</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>c82806f21c99e6de0981c5e0ef3b8a9a</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux-201507182102.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>

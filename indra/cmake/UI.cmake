@@ -36,6 +36,7 @@ else (USESYSTEMLIBS)
     use_prebuilt_binary(gtk-atk-pango-glib)
     use_prebuilt_binary(glib)
     use_prebuilt_binary(atk)
+    use_prebuilt_binary(pixman)
     set(UI_LIBRARIES
         atk-1.0
  #       cairo
@@ -52,7 +53,7 @@ else (USESYSTEMLIBS)
         pangoft2-1.0
         pangox-1.0
         pangoxft-1.0
-#        pixman-1
+        pixman-1
         ${FREETYPE_LIBRARIES}
 #        pangocairo-1.0
         )
