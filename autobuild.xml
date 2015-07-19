@@ -2438,7 +2438,7 @@
               <key>hash</key>
               <string>084a1e92472b066b62f15755f34978de</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.201504301548-linux-201504301548.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.201504301548-linux-201504301548.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2450,7 +2450,7 @@
               <key>hash</key>
               <string>54c312d898f08609a71acb22cfe80406</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.201505151905-linux64-201505151905.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.201505151905-linux64-201505151905.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2462,7 +2462,7 @@
               <key>hash</key>
               <string>a73088e519d2b340e01538ae205e09e4</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.0-windows-201504262316.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.0-windows-201504262316.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
