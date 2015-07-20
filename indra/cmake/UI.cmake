@@ -38,6 +38,8 @@ else (USESYSTEMLIBS)
     use_prebuilt_binary(glib)
     use_prebuilt_binary(atk)
     use_prebuilt_binary(pixman)
+	use_prebuilt_binary(harfbuzz)
+	use_prebuilt_binary(pango)	    
     set(UI_LIBRARIES
         atk-1.0
         cairo

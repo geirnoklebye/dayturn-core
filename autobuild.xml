@@ -1522,7 +1522,7 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b8cddefd4986d556ae27f56c565fb32c</string>
+              <string>d659f79495a1ec2960a26c79f3a5e046</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
@@ -1584,6 +1584,18 @@
         <string>harfbuzz</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>622c10c4361a9b8de46c9a885d270402</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-harfbuzz/downloads/harfbuzz-0.9.40-linux-201507201105.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -2841,6 +2853,20 @@
         <string>pango</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>6dca707cb897d3c360f5dd0ffcb2cd2c</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-pango/downloads/pango-1.36.8-linux-201507201400.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
