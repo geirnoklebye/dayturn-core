@@ -732,7 +732,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///Users/dayturn/Library/Developer/3p-fmodex/fmodex-4.44.54-darwin-201507191100.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.54-darwin-201507191100.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2438,7 +2438,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///Users/dayturn/Library/Developer/3p-ndphysicsstub/ndPhysicsStub-1.0-darwin-201507191036.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.0-darwin-201507191036.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
