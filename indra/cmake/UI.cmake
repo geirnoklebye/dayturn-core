@@ -34,12 +34,13 @@ if (USESYSTEMLIBS)
 else (USESYSTEMLIBS)
   if (LINUX AND ${ARCH} STREQUAL "i686")
     use_prebuilt_binary(gtk-atk-pango-glib)
+	use_prebuilt_binary(cairo)    
     use_prebuilt_binary(glib)
     use_prebuilt_binary(atk)
     use_prebuilt_binary(pixman)
     set(UI_LIBRARIES
         atk-1.0
- #       cairo
+        cairo
         gdk-x11-2.0
         gdk_pixbuf-2.0
         Xinerama

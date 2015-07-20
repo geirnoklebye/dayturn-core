@@ -327,6 +327,18 @@
         <string>cairo</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>17b59cc991c8d7a50ec55a99c1c21e8b</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-cairo/downloads/cairo-1.14.2-linux-201507192252.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -2932,9 +2944,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c82806f21c99e6de0981c5e0ef3b8a9a</string>
+              <string>c99e94652ddf7d72691d16eb0bc61efa</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux-201507182102.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux-201507192238.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
