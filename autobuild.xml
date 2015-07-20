@@ -728,11 +728,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7b0ea87001590d6e5425c0eb95129c80</string>
+              <string>5214392bdeadd363a5982b10f9c3da7a</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.54-darwin-201507181150.tar.bz2</string>
+              <string>file:///Users/dayturn/Library/Developer/3p-fmodex/fmodex-4.44.54-darwin-201507191100.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2434,11 +2434,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>763be73c43334c687cd21ed769ec1765</string>
+              <string>1d13960c86fc1aacfcfaeb986be80d5d</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.0-darwin-201507181448.tar.bz2</string>
+              <string>file:///Users/dayturn/Library/Developer/3p-ndphysicsstub/ndPhysicsStub-1.0-darwin-201507191036.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
