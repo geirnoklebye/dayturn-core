@@ -704,9 +704,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ed0d8767652aecd65a7fef3e28645bad</string>
+              <string>5214392bdeadd363a5982b10f9c3da7a</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/fmodex_3p-update-fmodex/rev/297261/arch/Darwin/installer/fmodex-4.44.31.297261-darwin-297261.tar.bz2</string>
+              <string>file:///Users/dayturn/Library/Developer/3p-fmodex/fmodex-4.44.54-darwin-201507191100.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2391,6 +2391,14 @@
       </map>
       <key>ndPhysicsStub</key>
       <map>
+        <key>copyright</key>
+        <string>Khaled Mamou (HACD) / Nicky Dasmijn (integration into for SL viewer)</string>
+        <key>description</key>
+        <string>Mesh dcomposition using HACD and physics sub implementation.</string>
+        <key>license</key>
+        <string>HACD/LGPL</string>
+        <key>license_file</key>
+        <string>LICENSES/ndPhysicsStub.txt</string>
         <key>name</key>
         <string>ndPhysicsStub</string>
         <key>platforms</key>
@@ -2400,9 +2408,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>eb35e0da356163387272167bd81771f4</string>
+              <string>1d13960c86fc1aacfcfaeb986be80d5d</string>
               <key>url</key>
-              <string>http://phoenixviewer.com/app/packages/ndPhysicsStub-0.1.1-Darwin_ao10.5.tar.bz2</string>
+              <string>file:///Users/dayturn/Library/Developer/3p-ndphysicsstub/ndPhysicsStub-1.0-darwin-201507191036.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2445,7 +2453,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>7.11.1.297294</string>
+        <string>1.0</string>
       </map>
       <key>nvapi</key>
       <map>
