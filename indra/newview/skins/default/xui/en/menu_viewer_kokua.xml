@@ -480,6 +480,13 @@
          parameter="places" />
       </menu_item_call>
       <menu_item_call
+        label="Experiences..."
+        name="Experiences">
+        <menu_item_call.on_click
+          function="Floater.ToggleOrBringToFront"
+          parameter="experiences"/>
+      </menu_item_call>
+      <menu_item_call
        label="Picks..."
        name="Picks">
         <menu_item_call.on_click
@@ -1738,6 +1745,13 @@
             <menu_item_call.on_click
              function="Floater.Toggle"
              parameter="area_search" />
+        </menu_item_call>
+        <menu_item_call
+          label="Experiences..."
+          name="Experiences">
+          <menu_item_call.on_click
+            function="Floater.ToggleOrBringToFront"
+            parameter="experiences"/>
         </menu_item_call>
         <menu_item_call
          label="Stop Animating Me"
