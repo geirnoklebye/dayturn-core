@@ -2763,7 +2763,7 @@ BOOL LLAgentCamera::setPointAt(EPointAtType target_type, LLViewerObject *object,
 {
 	static LLUICachedControl<bool> private_pointat("PrivatePointAtTarget", true);
 
-	if (object && (object->isAttachment() || object->isAvatar()) || private_pointat)
+	if ((object && (object->isAttachment() || object->isAvatar())) || private_pointat)
 	{
 		return FALSE;
 	}
