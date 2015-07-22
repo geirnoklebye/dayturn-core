@@ -190,7 +190,7 @@ bool LLInventoryFilter::check(const LLFolderViewModelItem* item)
 	passed = passed && checkAgainstFilterType(listener);
 	passed = passed && checkAgainstPermissions(listener);
 	passed = passed && checkAgainstFilterLinks(listener);
-	passed = passed && passed_clipboard;
+	// passed = passed && passed_clipboard;
 
 	return passed;
 }
@@ -1396,13 +1396,13 @@ U32	LLInventoryFilter::getFilterSubStringCount() const
 
 std::string::size_type LLInventoryFilter::getFilterSubStringPos(U32 index) const
 {
-	if (index < 0 || index >= mSubStringMatchOffsets.size()) return std::string::npos;
+	if (index >= mSubStringMatchOffsets.size()) return std::string::npos;
 	return mSubStringMatchOffsets[index];
 }
 
 std::string::size_type LLInventoryFilter::getFilterSubStringLen(U32 index) const
 {
-	if (index < 0 || index >= mFilterSubStrings.size()) return 0;
+	if (index >= mFilterSubStrings.size()) return 0;
 	return mFilterSubStrings[index].size();
 }
 //	End Multi-substring inventory search
