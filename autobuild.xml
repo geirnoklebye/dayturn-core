@@ -929,6 +929,18 @@
         <string>gdk-pixbuf</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>87358dc3e3bcfd220e77b08de50272e3</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-gdk-pixbuf/downloads/gdk_pixbuf-2.30.8-linux-201507210933.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -1487,6 +1499,18 @@
         <string>gtk</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>db3c9a733395f2b1b45acf4afae6e77d</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-gtk/downloads/gtk-2.24.28-linux-201507211717.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -1504,36 +1528,6 @@
         </map>
         <key>version</key>
         <string>2.24.28</string>
-      </map>
-      <key>gtk-atk-pango-glib</key>
-      <map>
-        <key>copyright</key>
-        <string>Copyright (various, see sources)</string>
-        <key>license</key>
-        <string>lgpl</string>
-        <key>license_file</key>
-        <string>LICENSES/gtk-atk-pango-glib.txt</string>
-        <key>name</key>
-        <string>gtk-atk-pango-glib</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>d659f79495a1ec2960a26c79f3a5e046</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gtk-atk-pango-glib/downloads/gtk_atk_pango_glib-0.1-linux-201506202150.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>0.1</string>
       </map>
       <key>gtk-etc</key>
       <map>

@@ -270,11 +270,16 @@ else (USESYSTEMLIBS)
 if (LINUX AND ${ARCH} STREQUAL "i686")
   set(${ARCH}_linux_INCLUDES
       ELFIO
-      atk-1.0
-      glib-2.0
+      atk
+      cairo
+      gdk
+      gdk-pixbuf
+      gdk-pixbuf-xlib
+      glib
+      gmodule
       gstreamer-0.10
-      gtk-2.0
-      pango-1.0
+      gtk
+      pango
       )
 endif (LINUX AND ${ARCH} STREQUAL "i686")
 
