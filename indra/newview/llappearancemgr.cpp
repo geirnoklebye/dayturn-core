@@ -3821,9 +3821,9 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove)
 		addDoomedTempAttachment(linked_item_id);
 	}
 }
-
 void LLAppearanceMgr::removeItemFromAvatar(const LLUUID& id_to_remove)
 {
+	LLUUID linked_item_id = gInventory.getLinkedItemID(id_to_remove); //this line was dropped in a merge
 	uuid_vec_t ids_to_remove;
 	ids_to_remove.push_back(id_to_remove);
  //MK
@@ -3851,8 +3851,8 @@ void LLAppearanceMgr::removeItemFromAvatar(const LLUUID& id_to_remove)
 		LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
 	}
  //mk
-}
 
+}
 
 // Adds the given item ID to mDoomedTempAttachmentIDs iff it's a temp attachment
 void LLAppearanceMgr::addDoomedTempAttachment(const LLUUID& id_to_remove)
