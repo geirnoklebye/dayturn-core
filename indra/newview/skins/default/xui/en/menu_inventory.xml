@@ -53,9 +53,9 @@
          parameter="rename" />
     </menu_item_call>
     <menu_item_call
-     label="Delete"
+     label="Move to Trash"
      layout="topleft"
-     name="Task Remove">
+     name="Delete">
         <menu_item_call.on_click
          function="Inventory.DoToSelected"
          parameter="delete" />
@@ -512,7 +512,7 @@
          parameter="delete" />
     </menu_item_call>
     <menu_item_call
-     label="Delete"
+     label="Move to Trash"
      layout="topleft"
      name="Delete">
         <menu_item_call.on_click
