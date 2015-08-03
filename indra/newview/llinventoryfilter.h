@@ -56,9 +56,12 @@ public:
 		FILTERTYPE_UUID	= 0x1 << 2,		// find the object with UUID and any links to it
 		FILTERTYPE_DATE = 0x1 << 3,		// search by date range
 		FILTERTYPE_WEARABLE = 0x1 << 4,	// search by wearable type
-		FILTERTYPE_EMPTYFOLDERS = 0x1 << 5,	// pass if folder is not a system   folder to be hidden if
-		FILTERTYPE_WORN = 0x1 << 6,	// search by wearable type
-		FILTERTYPE_NO_EMPTYFOLDERS = (~0x0) & (0 << 5) // <FS:Ansariel> Filter to disable hidden system folder filtering
+		FILTERTYPE_EMPTYFOLDERS = 0x1 << 5,		// pass if folder is not a system folder to be hidden if empty
+	        FILTERTYPE_MARKETPLACE_ACTIVE = 0x1 << 6,		// pass if folder is a marketplace active folder
+	        FILTERTYPE_MARKETPLACE_INACTIVE = 0x1 << 7,		// pass if folder is a marketplace inactive folder
+	        FILTERTYPE_MARKETPLACE_UNASSOCIATED = 0x1 << 8,	// pass if folder is a marketplace non associated (no market ID) folder
+	        FILTERTYPE_MARKETPLACE_LISTING_FOLDER = 0x1 << 9,	// pass iff folder is a listing folder
+	        FILTERTYPE_NO_MARKETPLACE_ITEMS = 0x1 << 10         // pass iff folder is not under the marketplace
 	};
 
 	enum EFilterDateDirection
@@ -79,7 +82,8 @@ public:
 		SO_NAME = 0,						// Sort inventory by name
 		SO_DATE = 0x1,						// Sort inventory by date
 		SO_FOLDERS_BY_NAME = 0x1 << 1,		// Force folder sort by name
-		SO_SYSTEM_FOLDERS_TO_TOP = 0x1 << 2	// Force system folders to be on top
+		SO_SYSTEM_FOLDERS_TO_TOP = 0x1 << 2,// Force system folders to be on top
+		SO_FOLDERS_BY_WEIGHT = 0x1 << 3,    // Force folder sort by weight, usually, amount of some elements in their descendents
 	};
 	// ## Zi: Extended Inventory Search
 	enum EFilterSubstringTarget
@@ -188,6 +192,11 @@ public:
 	void				setFilterWearableTypes(U64 types);
 	void				setFilterEmptySystemFolders();
 	void				removeFilterEmptySystemFolders(); // <FS:Ansariel> Optional hiding of empty system folders
+	void				setFilterMarketplaceActiveFolders();
+	void				setFilterMarketplaceInactiveFolders();
+	void				setFilterMarketplaceUnassociatedFolders();
+	void				setFilterMarketplaceListingFolders(bool select_only_listing_folders);
+	void				setFilterNoMarketplaceFolder();
 	void				updateFilterTypes(U64 types, U64& current_types);
 
 	void 				setFilterSubString(const std::string& string);

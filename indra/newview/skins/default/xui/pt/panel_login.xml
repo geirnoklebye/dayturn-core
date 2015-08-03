@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <panel name="panel_login">
-	<panel.string name="forgot_password_url">
-		http://secondlife.com/account/request.php?lang=pt
-	</panel.string>
+	<panel.string name="forgot_password_url">http://secondlife.com/account/request.php?lang=pt</panel.string>
 	<layout_stack name="login_widgets">
 		<layout_panel name="login">
 			<text name="log_in_text">
 				LOGIN
-			</text>
 			<text name="username_text">
 				Nome de usuário:
-			</text>
 			<combo_box name="username_combo" tool_tip="O nome de usuário que você escolheu ao fazer seu cadastro, como zecazc12 or Magia Solar"/>
 			<text name="password_text">
 				Senha:
