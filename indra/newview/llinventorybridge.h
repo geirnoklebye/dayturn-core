@@ -78,6 +78,7 @@ public:
 
 	bool canShare() const;
 	bool canListOnMarketplace() const;
+	bool canListOnOutboxNow() const;
 	bool canListOnMarketplaceNow() const;
 
 	//--------------------------------------------------------------------
@@ -116,7 +117,7 @@ public:
 	virtual void move(LLFolderViewModelItem* new_parent_bridge) {}
 	virtual BOOL isItemCopyable() const { return FALSE; }
 	virtual BOOL copyToClipboard() const;
-	virtual BOOL cutToClipboard() const;
+	virtual BOOL cutToClipboard();
 	virtual BOOL isClipboardPasteable() const;
 	virtual BOOL isClipboardPasteableAsLink() const;
 	virtual void pasteFromClipboard() {}
@@ -148,6 +149,9 @@ protected:
 	virtual void addOutboxContextMenuOptions(U32 flags,
 											 menuentry_vec_t &items,
 											 menuentry_vec_t &disabled_items);
+	virtual void addMarketplaceContextMenuOptions(U32 flags,
+											 menuentry_vec_t &items,
+											 menuentry_vec_t &disabled_items);
 protected:
 	LLInvFVBridge(LLInventoryPanel* inventory, LLFolderView* root, const LLUUID& uuid);
 
@@ -162,6 +166,7 @@ protected:
 	BOOL isInboxFolder() const;     // true if COF or descendant of   marketplace inbox
 
 	BOOL isOutboxFolderDirectParent() const;
+	BOOL isMarketplaceListingsFolder() const;     // true if descendant of Marketplace listings folder
 	const LLUUID getOutboxFolder() const;
 
 	virtual BOOL isItemPermissive() const;
@@ -174,6 +179,9 @@ protected:
 									 const LLUUID& new_parent,
 									 BOOL restamp);
 	void removeBatchNoCheck(std::vector<LLFolderViewModelItem*>& batch);
+    
+    BOOL callback_cutToClipboard(const LLSD& notification, const LLSD& response);
+    BOOL perform_cutToClipboard();
 
 public:
 	BOOL isOutboxFolder() const;    // true if COF or descendant of   marketplace outbox
@@ -189,6 +197,7 @@ protected:
 	mutable std::string			mSearchableName;
 
 	void purgeItem(LLInventoryModel *model, const LLUUID &uuid);
+	void removeObject(LLInventoryModel *model, const LLUUID &uuid);
 	virtual void buildDisplayName() const {}
 	// <FS:ND> Reintegrate search by uuid/creator/descripting from Zi Ree after CHUI Merge
 public:
@@ -272,8 +281,10 @@ public:
 		mIsLoading(false)
 	{}
 		
-	BOOL dragItemIntoFolder(LLInventoryItem* inv_item, BOOL drop, std::string& tooltip_msg);
-	BOOL dragCategoryIntoFolder(LLInventoryCategory* inv_category, BOOL drop, std::string& tooltip_msg);
+	BOOL dragItemIntoFolder(LLInventoryItem* inv_item, BOOL drop, std::string& tooltip_msg, BOOL user_confirm = TRUE);
+	BOOL dragCategoryIntoFolder(LLInventoryCategory* inv_category, BOOL drop, std::string& tooltip_msg, BOOL user_confirm = TRUE);
+    void callback_dropItemIntoFolder(const LLSD& notification, const LLSD& response, LLInventoryItem* inv_item);
+    void callback_dropCategoryIntoFolder(const LLSD& notification, const LLSD& response, LLInventoryCategory* inv_category);
 
     virtual void buildDisplayName() const;
 
@@ -288,10 +299,9 @@ public:
 	virtual LLUIImagePtr getIcon() const;
 	virtual LLUIImagePtr getIconOpen() const;
 	virtual LLUIImagePtr getIconOverlay() const;
-
 	static LLUIImagePtr getIcon(LLFolderType::EType preferred_type);
-	
 	virtual std::string getLabelSuffix() const;
+	virtual LLFontGL::StyleFlags getLabelStyle() const;
 
 	virtual BOOL renameItem(const std::string& new_name);
 
@@ -363,12 +373,17 @@ public:
 	static LLHandle<LLFolderBridge> sSelf;
 	static void staticFolderOptionsMenu();
 
-private:
+protected:
+    void callback_pasteFromClipboard(const LLSD& notification, const LLSD& response);
+    void perform_pasteFromClipboard();
+    void gatherMessage(std::string& message, S32 depth, LLError::ELevel log_level);
+    LLUIImagePtr getFolderIcon(BOOL is_open) const;
 
 	bool							mCallingCards;
 	bool							mWearables;
 	bool							mIsLoading;
 	LLTimer							mTimeSinceRequestStart;
+    std::string                     mMessage;
 	LLRootHandle<LLFolderBridge> mHandle;
 };
 
@@ -449,6 +464,7 @@ public:
 					 const LLUUID& uuid) :
 		LLItemBridge(inventory, root, uuid) {}
 	virtual void openItem();
+	virtual void buildContextMenu(LLMenuGL& menu, U32 flags);
 };
 
 class LLGestureBridge : public LLItemBridge
@@ -492,6 +508,7 @@ public:
 	virtual LLUIImagePtr	getIcon() const;
 	virtual void			performAction(LLInventoryModel* model, std::string action);
 	virtual void			openItem();
+    virtual BOOL isItemWearable() const { return TRUE; }
 	virtual std::string getLabelSuffix() const;
 	virtual void			buildContextMenu(LLMenuGL& menu, U32 flags);
 	virtual BOOL renameItem(const std::string& new_name);
@@ -524,6 +541,7 @@ public:
 	virtual LLUIImagePtr getIcon() const;
 	virtual void	performAction(LLInventoryModel* model, std::string action);
 	virtual void	openItem();
+    virtual BOOL isItemWearable() const { return TRUE; }
 	virtual void	buildContextMenu(LLMenuGL& menu, U32 flags);
 	virtual std::string getLabelSuffix() const;
 	virtual BOOL renameItem(const std::string& new_name);
@@ -676,6 +694,31 @@ public:
 		const LLUUID& uuid,
 		U32 flags = 0x00) const;
 };
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Marketplace Inventory Panel related classes
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class LLMarketplaceFolderBridge : public LLFolderBridge
+{
+public:
+    // Overloads some display related methods specific to folders in a marketplace floater context
+	LLMarketplaceFolderBridge(LLInventoryPanel* inventory,
+							  LLFolderView* root,
+                              const LLUUID& uuid);
+    
+	virtual LLUIImagePtr getIcon() const;
+	virtual LLUIImagePtr getIconOpen() const;
+	virtual std::string getLabelSuffix() const;
+	virtual LLFontGL::StyleFlags getLabelStyle() const;
+    
+private:
+    LLUIImagePtr getMarketplaceFolderIcon(BOOL is_open) const;
+    // Those members are mutable because they are cached variablse to speed up display, not a state variables
+    mutable S32 m_depth;
+    mutable S32 m_stockCountCache;
+};
+
 
 void rez_attachment(LLViewerInventoryItem* item, 
 					LLViewerJointAttachment* attachment,

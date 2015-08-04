@@ -521,19 +521,8 @@
 	    mouse_opaque="true"
 	    name="kokua_inv"
 	    width="517">
-        <check_box
-         top_pad="15"
-         layout="topleft"
-         height="16"
-         label="Hide empty system folders from inventory"
-         left="15"
-         name="DebugHideEmptySystemFolders"
-         width="270"
-         control_name="DebugHideEmptySystemFolders"
-         tool_tip="If enabled, the inventory windows will hide all empty system folders like Favorites, Landmarks etc.">
-		</check_box>
          <check_box
-         top_pad="5"
+         top_pad="15"
          follows="left|top"
          height="16"
          label="Show the Received Items folder in normal inventory"

@@ -98,6 +98,7 @@ public:
 		mByDate = (mSortOrder & LLInventoryFilter::SO_DATE);
 		mSystemToTop = (mSortOrder & LLInventoryFilter::SO_SYSTEM_FOLDERS_TO_TOP);
 		mFoldersByName = (mSortOrder & LLInventoryFilter::SO_FOLDERS_BY_NAME);
+		mFoldersByWeight = (mSortOrder & LLInventoryFilter::SO_FOLDERS_BY_WEIGHT);
 	}
 
 	bool operator()(const LLFolderViewModelItemInventory* const& a, const LLFolderViewModelItemInventory* const& b) const;
@@ -106,6 +107,7 @@ private:
 	bool mByDate;
 	bool mSystemToTop;
 	bool mFoldersByName;
+	bool mFoldersByWeight;
 };
 
 class LLFolderViewModelInventory
