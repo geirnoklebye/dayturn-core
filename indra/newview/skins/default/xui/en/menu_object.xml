@@ -231,7 +231,7 @@
   <menu_item_separator />
   <menu_item_call
       enabled="false"
-      label="Move to Trash"
+      label="Delete"
       name="Delete">
     <menu_item_call.on_click
         function="Object.Delete" />
