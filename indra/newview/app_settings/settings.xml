@@ -383,7 +383,7 @@
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
-      <real>300</real>
+      <real>300.0</real>
     </map>
     <key>AckCollectTime</key>
     <map>
@@ -416,7 +416,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <real>1</real>
+      <real>1.0</real>
     </map>
     <key>AdvanceSnapshot</key>
     <map>
@@ -5106,17 +5106,6 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-    <key>InventoryDisplayOutbox</key>
-    <map>
-      <key>Comment</key>
-      <string>Override merchant inventory outbox display</string>
-      <key>Persist</key>
-      <integer>0</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
     <key>InventoryInboxToggleState</key>
     <map>
       <key>Comment</key>
@@ -5138,6 +5127,17 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+    </map>
+    <key>InventoryOutboxDisplayBoth</key>
+    <map>
+        <key>Comment</key>
+        <string>Show the legacy Merchant Outbox UI as well as the Marketplace Listings UI</string>
+        <key>Persist</key>
+        <integer>1</integer>
+        <key>Type</key>
+        <string>Boolean</string>
+        <key>Value</key>
+        <integer>0</integer>
     </map>
     <key>InventoryOutboxLogging</key>
     <map>
@@ -5194,6 +5194,17 @@
       <key>Value</key>
       <integer>200</integer>
     </map>
+    <key>InventoryOutboxMaxStockItemCount</key>
+    <map>
+        <key>Comment</key>
+        <string>Maximum number of items allowed in a stock folder.</string>
+        <key>Persist</key>
+        <integer>0</integer>
+        <key>Type</key>
+        <string>U32</string>
+        <key>Value</key>
+        <integer>200</integer>
+    </map>
     <key>InventorySortOrder</key>
     <map>
       <key>Comment</key>
@@ -5204,6 +5215,17 @@
       <string>U32</string>
       <key>Value</key>
       <integer>7</integer>
+    </map>
+    <key>MarketplaceListingsSortOrder</key>
+    <map>
+      <key>Comment</key>
+      <string>Specifies sort for marketplace listings</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>U32</string>
+      <key>Value</key>
+      <integer>2</integer>
     </map>
     <key>InvertMouse</key>
     <map>
@@ -6054,6 +6076,17 @@
       <key>Value</key>
       <string />
     </map>
+	<key>MarketplaceListingsLogging</key>
+	<map>
+		<key>Comment</key>
+		<string>Enable debug output associated with the Marketplace Listings (SLM) API.</string>
+		<key>Persist</key>
+		<integer>1</integer>
+		<key>Type</key>
+		<string>Boolean</string>
+		<key>Value</key>
+		<integer>0</integer>
+	</map>
     <key>MarketplaceURL</key>
     <map>
       <key>Comment</key>
@@ -8729,8 +8762,7 @@
     <map>
       <key>Comment</key>
       <string>Sets a static max value for scaling of RenderComplexity 
-        display (-1 for dynamic scaling)
-      </string>
+        display (-1 for dynamic scaling)</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
