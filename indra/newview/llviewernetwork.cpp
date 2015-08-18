@@ -200,7 +200,7 @@ void LLGridManager::initGrids()
 
 	std::string grid_fallback_file  = gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS,  "grids.fallback.xml");
 
-  	addSystemGrid(LLTrans::getString("AgniGridLabel"),
+	std::string grid_user_file = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS,  "grids.user.xml");
 
 	std::string grid_remote_file = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS,  "grids.remote.xml");
 
@@ -232,7 +232,7 @@ void LLGridManager::initSystemGrids()
 							  DEFAULT_LOGIN_PAGE,
 							  SL_UPDATE_QUERY_URL,
 							  "Agni");
-	addSystemGrid(LLTrans::getString("AditiGridLabel"),
+	addSystemGrid("Second Life Beta Test Grid (Aditi)",
 							  "util.aditi.lindenlab.com",
 							  "https://login.aditi.lindenlab.com/cgi-bin/login.cgi",
 							  "http://aditi-secondlife.webdev.lindenlab.com/helpers/",
