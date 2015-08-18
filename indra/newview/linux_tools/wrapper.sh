@@ -35,7 +35,14 @@
 ##   the Linux Client Testers forum along with the minimal
 ##   LL_GL_BLACKLIST which solves your problems.
 #export LL_GL_BLACKLIST=abcdefghijklmno
+## - missing fontconfig file causes massive freezes every time the viewer needs
+##   to find some fonts
+##   fix is simple: set the fontconfig_path variable properly
+[ -f /etc/fonts/fonts.conf ] && export FONTCONFIG_PATH=/etc/fonts
 
+if [ "`uname -m`" = "x86_64" ]; then
+    echo '64-bit Linux detected.'
+fi
 ## - Some ATI/Radeon users report random X server crashes when the mouse
 ##   cursor changes shape.  If you suspect that you are a victim of this
 ##   driver bug, try enabling this option and report whether it helps:
@@ -53,6 +60,13 @@
 ##   --suppressions=/usr/lib/valgrind/glibc-2.5.supp  this switch causes valgrid to not run on 64 bit
 ##   may need but back in pl for 32 bit
 #export LL_WRAPPER='valgrind --smc-check=all --error-limit=no --log-file=secondlife.vg --leak-check=full --suppressions=secondlife-i686.supp'
+
+## detect bumblebee architecture:
+## - bbswitch module is loaded
+## - optirun exist and is executable
+## if so, set LL_WRAPPER to optirun (and hope for the best)
+#OPTIRUN=$(type -p optirun)
+#[ -s /sys/module/bbswitch/version -a -n ${OPTIRUN} -a -x ${OPTIRUN} ] && LL_WRAPPER=${OPTIRUN}
 
 
 
