@@ -236,7 +236,7 @@ void LLFloaterHardwareSettings::onBtnOK( void* userdata )
 void LLFloaterHardwareSettings::onClose(bool app_quitting)
 {
 	gSavedSettings.setBOOL("RenderVBOEnable", mUseVBO);
-	gSavedSettings.setBOOL("RenderAnisotropic", mUseAniso);
+	gSavedSettings.setF32("RenderAnisotropicSamples", mUseAnisoSamples);
 	gSavedSettings.setU32("RenderFSAASamples", mFSAASamples);
 	gSavedSettings.setF32("RenderGamma", mGamma);
 	gSavedSettings.setS32("TextureMemory", mVideoCardMem);

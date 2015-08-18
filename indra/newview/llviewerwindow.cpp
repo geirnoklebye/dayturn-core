@@ -2420,15 +2420,15 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
 	// god more important than project, proj more important than grid
     if(god_mode && !LLGridManager::getInstance()->isInSLBeta())
     {
-//		if ( LLGridManager::getInstance()->isInProductionGrid() )
-//		{
-//			new_bg_color = LLUIColorTable::instance().getColor( "MenuBarGodBgColor" );
-//		}
+		if ( LLGridManager::getInstance()->isInSLMain() )
+		{
+			new_bg_color = LLUIColorTable::instance().getColor( "MenuBarGodBgColor" );
+		}
 	
-//    else if(god_mode && LLGridManager::getInstance()->isInSLBeta())
-//		{
+		else if(god_mode && LLGridManager::getInstance()->isInSLBeta())
+		{
 			new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionGodBgColor" );
-//		}
+		}
     }
     else
     {
@@ -2447,7 +2447,7 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
             break;
             
         case LLVersionInfo::RELEASE_VIEWER:
-            if(!LLGridManager::getInstance()->isInProductionGrid())
+            if(!LLGridManager::getInstance()->isInSLBeta())
             {
                 new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionBgColor" );
             }
