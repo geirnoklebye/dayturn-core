@@ -201,6 +201,11 @@ Function CheckWindowsServPack
     DetailPrint $(UseLatestServPackDP)
     Return
   ${EndIf}
+# Create *.bat file to specify lang params on first run from installer - see MAINT-5259
+FileOpen $9 "$INSTDIR\autorun.bat" w
+FileWrite $9 'start "$INSTDIR\$INSTEXE" "$INSTDIR\$INSTEXE" $SHORTCUT_LANG_PARAM$\r$\n'
+FileClose $9
+
 
   ${If} ${IsWin2008}
   ${AndIfNot} ${IsServicePack} 2

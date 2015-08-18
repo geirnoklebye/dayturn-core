@@ -396,6 +396,7 @@ class LLPanelLandCovenant
 public:
 	LLPanelLandCovenant(LLSafeHandle<LLParcelSelection>& parcelp);
 	virtual ~LLPanelLandCovenant();
+	virtual BOOL postBuild();
 	void refresh();
 	static void updateCovenantText(const std::string& string);
 	static void updateEstateName(const std::string& name);
@@ -404,6 +405,10 @@ public:
 
 protected:
 	LLSafeHandle<LLParcelSelection>&	mParcel;
+
+private:
+	LLUUID mLastRegionID;
+	F64 mNextUpdateTime; //seconds since client start
 };
 
 #endif

@@ -230,6 +230,8 @@ public:
 
 	void 				setFilterWorn(BOOL sl);
 	BOOL 				getFilterWorn() { return mFilterOps.mFilterTypes & FILTERTYPE_WORN; }
+	// sets params for Link-only search and backs up search settings for future restoration
+	void				setFindAllLinksMode(const std::string &search_name, const LLUUID& search_id);
 
 	// +-------------------------------------------------------------------+
 	// + Execution And Results
@@ -313,6 +315,7 @@ private:
 
 	FilterOps				mFilterOps;
 	FilterOps				mDefaultFilterOps;
+	FilterOps				mBackupFilterOps; // for backup purposes when leaving 'search link' mode
 
 	std::string				mFilterSubString;
 	
