@@ -1600,9 +1600,13 @@ void LLDrawPoolAvatar::updateRiggedFaceVertexBuffer(LLVOAvatar* avatar, LLFace* 
 		for (U32 j = 0; j < count; ++j)
 		{
 			LLJoint* joint = avatar->getJoint(skin->mJointNames[j]);
-			if(!joint)
+			if (!joint)
 			{
-				joint = avatar->getJoint("mRoot");
+				joint = avatar->getJoint("mPelvis");
+			}
+			if (!joint)
+			{
+				LL_DEBUGS("Avatar") << "Failed to find " << skin->mJointNames[j] << LL_ENDL;
 			}
 			if (joint)
 			{
