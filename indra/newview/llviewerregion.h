@@ -137,7 +137,8 @@ public:
 
 	bool isAlive() const; // can become false if circuit disconnects
 
-	LLViewerTexture* getWorldMapTile() const;
+	typedef std::vector<LLPointer<LLViewerTexture> > tex_matrix_t;
+	const tex_matrix_t& getWorldMapTiles() const;
 
 	void setWaterHeight(F32 water_level);
 	F32 getWaterHeight() const;
@@ -532,7 +533,7 @@ private:
 	typedef std::map<U32, std::vector<U32> > orphan_list_t;
 	orphan_list_t mOrphanMap;
 
-	mutable LLPointer<LLViewerTexture>		mWorldMapTile;
+	mutable tex_matrix_t mWorldMapTiles;
 
 	class CacheMissItem
 	{

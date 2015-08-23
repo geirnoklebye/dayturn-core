@@ -537,6 +537,8 @@ LLViewerRegion::~LLViewerRegion()
 
 	delete mImpl;
 	mImpl = NULL;
+	for (tex_matrix_t::iterator i = mWorldMapTiles.begin(), iend = mWorldMapTiles.end(); i != iend; ++i)
+		(*i)->setBoostLevel(LLViewerTexture::BOOST_NONE);
 }
 
 LLEventPump& LLViewerRegion::getCapAPI() const
@@ -1871,17 +1873,31 @@ F32 LLViewerRegion::getLandHeightRegion(const LLVector3& region_pos)
 	return mImpl->mLandp->resolveHeightRegion( region_pos );
 }
 
-LLViewerTexture* LLViewerRegion::getWorldMapTile() const
+const LLViewerRegion::tex_matrix_t& LLViewerRegion::getWorldMapTiles() const
 {
-	if (!mWorldMapTile) {
-		U32 gridX, gridY;
+	if (mWorldMapTiles.empty()) 
+	{
+		U32 gridX ,gridY;
 		grid_from_region_handle(mHandle, &gridX, &gridY);
-		std::string strImgURL = gSavedSettings.getString("CurrentMapServerURL") + llformat("map-1-%d-%d-objects.jpg", gridX, gridY);
-
-		mWorldMapTile = LLViewerTextureManager::getFetchedTextureFromUrl(strImgURL, FTT_MAP_TILE, TRUE, LLViewerTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE);
-		mWorldMapTile->setBoostLevel(LLViewerTexture::BOOST_MAP);
+		U32 totalX(getWidth() / REGION_WIDTH_U32);
+		if (!totalX) ++totalX; // If this region is too small, still get an image.
+		/* TODO: Nonsquare regions?
+		U32 totalY(getLength()/REGION_WIDTH_U32);
+		if (!totalY) ++totalY; // If this region is too small, still get an image.
+		*/
+		const U32 totalY(totalX);
+		mWorldMapTiles.reserve(totalX * totalY);
+		for (U32 x = 0; x != totalX; ++x)
+			for (U32 y = 0; y != totalY; ++y)
+			{
+				const std::string map_url = gSavedSettings.getString("CurrentMapServerURL") + llformat("map-1-%d-%d-objects.jpg", gridX + x, gridY + y);
+				LLPointer<LLViewerTexture> tex(LLViewerTextureManager::getFetchedTextureFromUrl(map_url, FTT_MAP_TILE, TRUE,
+																			LLViewerTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE));
+				mWorldMapTiles.push_back(tex);
+				tex->setBoostLevel(LLViewerTexture::BOOST_MAP);
+			}
 	}
-	return mWorldMapTile;
+	return mWorldMapTiles;
 }
 
 bool LLViewerRegion::isAlive() const
