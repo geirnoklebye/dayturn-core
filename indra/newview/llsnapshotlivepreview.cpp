@@ -801,7 +801,14 @@ S32 LLSnapshotLivePreview::getEncodedImageWidth() const
     S32 width = getWidth();
     if (getSnapshotType() == SNAPSHOT_TEXTURE)
     {
-        width = LLImageRaw::biasedDimToPowerOfTwo(width,MAX_TEXTURE_SIZE);
+		if (gIsInSecondLife)
+		{
+			width = LLImageRaw::biasedDimToPowerOfTwo(width, MAX_TEXTURE_SIZE);
+		}
+		else
+		{
+			width = LLImageRaw::biasedDimToPowerOfTwo(width, (MAX_TEXTURE_SIZE * 2));
+		}
     }
     return width;
 }
@@ -810,7 +817,15 @@ S32 LLSnapshotLivePreview::getEncodedImageHeight() const
     S32 height = getHeight();
     if (getSnapshotType() == SNAPSHOT_TEXTURE)
     {
-        height = LLImageRaw::biasedDimToPowerOfTwo(height,MAX_TEXTURE_SIZE);
+		if (gIsInSecondLife)
+		{
+			height = LLImageRaw::biasedDimToPowerOfTwo(height, MAX_TEXTURE_SIZE);
+		}
+		else
+		{
+			height = LLImageRaw::biasedDimToPowerOfTwo(height, (MAX_TEXTURE_SIZE * 2));
+		}
+        
     }
     return height;
 }
@@ -838,7 +853,14 @@ LLPointer<LLImageRaw> LLSnapshotLivePreview::getEncodedImage()
                                                           mPreviewImage->getHeight(),
                                                           mPreviewImage->getComponents());
             // Scale it as required by J2C
-			scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
+			if (gIsInSecondLife)
+			{
+				scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
+			}
+			else
+			{
+				scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE * 2);
+			}
 			setImageScaled(TRUE);
             // Compress to J2C
 			if (formatted->encode(scaled, 0.f))
@@ -994,7 +1016,14 @@ void LLSnapshotLivePreview::saveTexture()
 		}
 	}
 
-	scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
+	if (gIsInSecondLife)
+	{
+		scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
+	}
+	else
+	{
+		scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE * 2);
+	}
 	LL_DEBUGS() << "scaled texture to " << scaled->getWidth() << "x" << scaled->getHeight() << LL_ENDL;
 
 	if (formatted->encode(scaled, 0.0f))
