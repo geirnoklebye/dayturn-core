@@ -1276,12 +1276,16 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
         # Use the build system libstdc++.so An attempt try to allow versions earlier than
         # than stretch to run the viewer without complaining about GLIBCXX version.
-        # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
+
         if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
             self.path("libstdc++.so.*")
-            self.path("libpng12.so*")
-            self.path("libpng12.so.*")
             self.end_prefix("lib64") 
+
+        # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
+        if self.prefix("/lib/x86_64-linux-gnu", dst="lib64"):
+            self.path("libpng12.so.0*")
+            self.end_prefix("lib64") 
+  
 
 
         if self.prefix("../packages/lib/release", dst="lib64"):
