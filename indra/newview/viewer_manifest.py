@@ -1140,11 +1140,16 @@ class Linux_i686_Manifest(LinuxManifest):
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
         # Use the build system libstdc++.so An attempt try to allow versions earlier than
-        # then wheezy to run the viewer without complaining about GLIBCXX version.
+        # than stretch to run the viewer without complaining about GLIBCXX version.
         if self.prefix("/usr/lib/i386-linux-gnu", dst="lib"):
             self.path("libstdc++.so.*")
+            self.end_prefix("lib")
+             
+        # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
+        if self.prefix("/lib/i386-linux-gnu", dst="lib"):
+            self.path("libpng12.so.0*")
             self.end_prefix("lib") 
-    
+  
 
 
         if self.prefix("../packages/lib/release", dst="lib"):
@@ -1232,15 +1237,7 @@ class Linux_i686_Manifest(LinuxManifest):
                     self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
                     self.end_prefix("bin")
 
-            # 32bit libs needed for voice
-            if self.prefix("../packages/lib/release/32bit-compat", dst="bin"):
-                    self.path("32bit-libalut.so" , "libalut.so")
-                    self.path("32bit-libalut.so.0" , "libalut.so.0")
-                    self.path("32bit-libopenal.so" , "libopenal.so")
-                    self.path("32bit-libopenal.so.1" , "libopenal.so.1")
-                    self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
-                    self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
-                    self.end_prefix("bin")
+
             # plugin runtime
             if self.prefix(src="../packages/lib/release", dst="lib"):
                 self.path("libQtWebKit.so*")
@@ -1277,10 +1274,13 @@ class Linux_x86_64_Manifest(LinuxManifest):
         except:
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
-       # Use the build system libstdc++.so An attempt try to allow versions earlier than
-        # then wheezy to run the viewer without complaining about GLIBCXX version.
+        # Use the build system libstdc++.so An attempt try to allow versions earlier than
+        # than stretch to run the viewer without complaining about GLIBCXX version.
+        # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
         if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
             self.path("libstdc++.so.*")
+            self.path("libpng12.so*")
+            self.path("libpng12.so.*")
             self.end_prefix("lib64") 
 
 
