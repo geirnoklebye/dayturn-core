@@ -6304,7 +6304,6 @@ void rez_attachment(LLViewerInventoryItem* item, LLViewerJointAttachment* attach
 	////	return;
 	////}
 //mk
-	gAgentAvatarp->addAttachmentRequest(item_id);
 
 	S32 attach_pt = 0;
 	if (isAgentAvatarValid() && attachment)
