@@ -1827,6 +1827,9 @@ bool LLAppearanceMgr::getCanRemoveFromCOF(const LLUUID& outfit_cat_id)
 	////	return false;
 	////}
 //mk
+	LLInventoryModel::cat_array_t cats;
+	LLInventoryModel::item_array_t items;
+
 	LLFindWearablesEx is_worn(/*is_worn=*/ true, /*include_body_parts=*/ false);
 	gInventory.collectDescendentsIf(outfit_cat_id,
 		cats,
