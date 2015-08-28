@@ -1428,32 +1428,32 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 				if ((replace && wearable_count != 0) || !gAgentWearables.canAddWearable(type))
 				{
 
-					//MK
+//MK
 					if (gRRenabled && gAgent.mRRInterface.canUnwear(item_to_wear->getWearableType()))
 					{
-						//mk
+//mk
 						LLUUID item_id = gAgentWearables.getWearableItemID(item_to_wear->getWearableType(),
 							wearable_count - 1);
 						removeCOFItemLinks(item_id, cb);
-						//MK
+//MK
 					}
-					//mk
+//mk
 				}
-				//MK
+//MK
 				if (gRRenabled && gAgent.mRRInterface.canWear(item_to_wear->getWearableType()))
 				{
-					//mk
+//mk
 					items_to_link.push_back(item_to_wear);
-					//MK
+//MK
 				}
-				//mk
+//mk
 			}
 			break;
 		case LLAssetType::AT_BODYPART:
-			//MK
+//MK
 			if (gRRenabled && gAgent.mRRInterface.canUnwear(item_to_wear->getWearableType()))
 			{
-				//mk
+//mk
 				// TODO: investigate wearables may not be loaded at this point EXT-8231
 
 				// Remove the existing wearables of the same type.
@@ -1465,12 +1465,12 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 					cb = new LLUpdateAppearanceAndEditWearableOnDestroy(item_id_to_wear);
 				}
 				items_to_link.push_back(item_to_wear);
-				//MK
+//MK
 			}
-			//mk
+//mk
 			break;
 		case LLAssetType::AT_OBJECT:
-			//MK
+//MK
 			if (gRRenabled && replace)
 			{
 				if (!gAgent.mRRInterface.canAttach(item_to_wear))
@@ -1486,7 +1486,7 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 			{
 				replace = false;
 			}
-			//mk
+//mk
 			rez_attachment(item_to_wear, NULL, replace);
 			break;
 
@@ -1828,7 +1828,12 @@ bool LLAppearanceMgr::getCanRemoveFromCOF(const LLUUID& outfit_cat_id)
 	////}
 //mk
 	LLFindWearablesEx is_worn(/*is_worn=*/ true, /*include_body_parts=*/ false);
-	return gInventory.hasMatchingDirectDescendent(outfit_cat_id, is_worn);
+	gInventory.collectDescendentsIf(outfit_cat_id,
+		cats,
+		items,
+		LLInventoryModel::EXCLUDE_TRASH,
+		is_worn);
+	return items.size() > 0;
 }
 
 // static
@@ -2581,7 +2586,7 @@ void LLAppearanceMgr::wearInventoryCategory(LLInventoryCategory* category, bool 
 		LLPointer<LLInventoryCallback> copy_cb = new LLWearCategoryAfterCopy(append);
 		LLPointer<LLInventoryCallback> track_cb = new LLTrackPhaseWrapper(
 													std::string("wear_inventory_category_callback"), copy_cb);
-		LLPointer<AISCommand> cmd_ptr = new CopyLibraryCategoryCommand(category->getUUID(), parent_id, track_cb);
+		LLPointer<AISCommand> cmd_ptr = new CopyLibraryCategoryCommand(category->getUUID(), parent_id, track_cb, false);
 		ais_ran=cmd_ptr->run_command();
 	}
 

@@ -209,11 +209,13 @@ private:
 
 	std::map<std::string, std::string> mStatusText;
 
+
 protected:
 	LLSD				mMediaSettings;
 
 public:
 	static bool		sShowObjectCost;
+	static bool		sPreviousFocusOnAvatar;
 	
 };
 
