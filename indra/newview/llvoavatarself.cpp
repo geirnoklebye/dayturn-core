@@ -3370,3 +3370,12 @@ void LLVOAvatarSelf::dumpWearableInfo(LLAPRFile& outfile)
 	}
 	apr_file_printf( file, "\n</wearable_info>\n" );
 }
+
+F32 LLVOAvatarSelf::getAvatarOffset() /*const*/
+{
+	if (!gIsInSecondLife)
+	{
+		return (isUsingServerBakes()) ? LLAvatarAppearance::getAvatarOffset() : gSavedPerAccountSettings.getF32("AvatarHoverOffsetZ");
+	}
+	return LLAvatarAppearance::getAvatarOffset();
+}

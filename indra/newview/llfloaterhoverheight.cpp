@@ -52,16 +52,7 @@ void LLFloaterHoverHeight::syncFromPreferenceSetting(void *user_data)
 	LLSliderCtrl* sldrCtrl = self->getChild<LLSliderCtrl>("HoverHeightSlider");
 	sldrCtrl->setValue(value,FALSE);
 
-	// <FS:Ansariel> Legacy baking avatar z-offset
-	//if (isAgentAvatarValid())
-	//{
-	//	LLVector3 offset(0.0, 0.0, llclamp(value,MIN_HOVER_Z,MAX_HOVER_Z));
-	//	LL_INFOS("Avatar") << "setting hover from preference setting " << offset[2] << LL_ENDL;
-	//	gAgentAvatarp->setHoverOffset(offset);
 
-	//	//gAgentAvatarp->sendHoverHeight();
-	//}
-	// </FS:Ansariel>
 }
 
 BOOL LLFloaterHoverHeight::postBuild()
@@ -112,8 +103,6 @@ void LLFloaterHoverHeight::onSliderMoved(LLUICtrl* ctrl, void* userData)
 	F32 value = sldrCtrl->getValueF32();
 	LLVector3 offset(0.0, 0.0, llclamp(value,MIN_HOVER_Z,MAX_HOVER_Z));
 	LL_INFOS("Avatar") << "setting hover from slider moved" << offset[2] << LL_ENDL;
-	// <FS:Ansariel> Legacy baking avatar z-offset
-	//gAgentAvatarp->setHoverOffset(offset, false);
 	if (gAgent.getRegion() && gAgent.getRegion()->avatarHoverHeightEnabled())
 	{
 		gAgentAvatarp->setHoverOffset(offset, false);
@@ -122,7 +111,6 @@ void LLFloaterHoverHeight::onSliderMoved(LLUICtrl* ctrl, void* userData)
 	{
 		gSavedPerAccountSettings.setF32("AvatarHoverOffsetZ", value);
 	}
-	// </FS:Ansariel>
 }
 
 // Do send-to-the-server work when slider drag completes, or new
@@ -131,15 +119,11 @@ void LLFloaterHoverHeight::onFinalCommit()
 {
 	LLSliderCtrl* sldrCtrl = getChild<LLSliderCtrl>("HoverHeightSlider");
 	F32 value = sldrCtrl->getValueF32();
-	// <FS:Ansariel> Legacy baking avatar z-offset
 	LLVector3 offset(0.0, 0.0, llclamp(value,MIN_HOVER_Z,MAX_HOVER_Z));
 	gSavedPerAccountSettings.setF32("AvatarHoverOffsetZ",value);
 
-	// <FS:Ansariel> Legacy baking avatar z-offset
-	//LLVector3 offset(0.0, 0.0, llclamp(value,MIN_HOVER_Z,MAX_HOVER_Z));
 	LL_INFOS("Avatar") << "setting hover from slider final commit " << offset[2] << LL_ENDL;
-	// <FS:Ansariel> Legacy baking avatar z-offset
-	//gAgentAvatarp->setHoverOffset(offset, true); // will send update this time.
+	gAgentAvatarp->setHoverOffset(offset, true); // will send update this time.
 }
 
 void LLFloaterHoverHeight::onRegionChanged()
@@ -167,12 +151,10 @@ void LLFloaterHoverHeight::onSimulatorFeaturesReceived(const LLUUID &region_id)
 void LLFloaterHoverHeight::updateEditEnabled()
 {
 	bool enabled = gAgent.getRegion() && gAgent.getRegion()->avatarHoverHeightEnabled();
-	// <FS:Ansariel> Legacy baking avatar z-offset
 	if (!enabled && isAgentAvatarValid() && !gAgentAvatarp->isUsingServerBakes())
 	{
 		enabled = true;
 	}
-	// </FS:Ansariel>
 	LLSliderCtrl* sldrCtrl = getChild<LLSliderCtrl>("HoverHeightSlider");
 	sldrCtrl->setEnabled(enabled);
 	if (enabled)

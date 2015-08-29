@@ -4176,10 +4176,7 @@ class LLEnableHoverHeight : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		// <FS:Ansariel> Legacy baking avatar z-offset
-		//return gAgent.getRegion() && gAgent.getRegion()->avatarHoverHeightEnabled();
 		return (gAgent.getRegion() && gAgent.getRegion()->avatarHoverHeightEnabled()) || (isAgentAvatarValid() && !gAgentAvatarp->isUsingServerBakes());
-		// </FS:Ansariel>
 	}
 };
 

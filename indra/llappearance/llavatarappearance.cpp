@@ -504,7 +504,10 @@ void LLAvatarAppearance::computeBodySize()
 		bodySizeChanged();
 	}
 }
-
+F32 LLAvatarAppearance::getAvatarOffset()
+{
+	return getVisualParamWeight(AVATAR_HOVER);
+}
 //-----------------------------------------------------------------------------
 // parseSkeletonFile()
 //-----------------------------------------------------------------------------

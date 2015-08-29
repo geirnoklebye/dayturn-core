@@ -344,6 +344,8 @@ public:
 
 private:
 	mutable LLVector3 mLastHoverOffsetSent;
+protected:
+	/*virtual*/ F32	getAvatarOffset() /*const*/;
 
 /**                    Appearance
  **                                                                            **
