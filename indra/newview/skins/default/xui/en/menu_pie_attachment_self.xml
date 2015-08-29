@@ -118,7 +118,8 @@
         <pie_separator />
 		<pie_slice
 		 label="Hover Height"
-		 name="Hover Height">
+		 name="Hover Height"
+		 only_in_sl="true">
 			<pie_slice.on_click
 			 function="HoverHeight" />
 			<pie_slice.on_enable
