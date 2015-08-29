@@ -1398,12 +1398,9 @@ class Linux_x86_64_Manifest(LinuxManifest):
             if self.prefix("../packages/lib/release/32bit-compat", dst="lib32"):
                     self.path("32bit-libalut.so" , "libalut.so")
                     self.path("32bit-libalut.so.0" , "libalut.so.0")
-                    self.path("32bit-libopenal.so" , "libopenal.so")
-                    self.path("32bit-libopenal.so.1" , "libopenal.so.1")
                     self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
-                    self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
-
                     self.end_prefix("lib32")
+
 	if self.args['buildtype'].lower() == 'debug':
     	 if self.prefix("../packages/lib/debug", dst="lib64"):
              self.path("libapr-1.so*")
