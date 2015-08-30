@@ -77,6 +77,11 @@ additional_packages = "EDU"
 EDU_sourceid = ""
 EDU_viewer_channel_suffix = "edu"
 
+# The EDU package allows us to create a separate release channel whose expirations
+# are synchronized as much as possible with the academic year
+EDU_sourceid = ""
+EDU_viewer_channel_suffix = "edu"
+
 # ========================================
 # Merov
 # ========================================

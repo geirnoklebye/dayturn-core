@@ -994,6 +994,11 @@ void LLPanelEditWearable::onTexturePickerCommit(const LLUICtrl* ctrl)
 							{
 								LL_WARNS() << "wearable not found in gAgentWearables" << LL_ENDL;
 							}
+							}
+							else
+							{
+								LL_WARNS() << "wearable not found in gAgentWearables" << LL_ENDL;
+							}
                         }
                 }
                 else

@@ -63,7 +63,6 @@
 #include "llsdutil.h"
 #include "llvfs.h"
 #include "tea.h"
-
 void dialog_refresh_all();
 
 void on_new_single_inventory_upload_complete(

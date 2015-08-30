@@ -114,6 +114,8 @@ const F32 ICON_TIMER_EXPIRY		= 3.f; // How long the balance and health icons sho
 static void onClickVolume(void*);
 
 //MK
+const S32 MENU_PARCEL_SPACING = 1;
+
 class LLStatusBar::LLParcelChangeObserver : public LLParcelObserver
 {
 public:

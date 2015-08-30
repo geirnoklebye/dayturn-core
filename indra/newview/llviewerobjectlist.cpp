@@ -502,10 +502,10 @@ void LLViewerObjectList::processObjectUpdate(LLMessageSystem *mesgsys,
                 
 				if(flags & FLAGS_TEMPORARY_ON_REZ)
 				{
-					compressed_dp.unpackUUID(fullid, "ID");
-					compressed_dp.unpackU32(local_id, "LocalID");
-					compressed_dp.unpackU8(pcode, "PCode");
-				}
+                    compressed_dp.unpackUUID(fullid, "ID");
+                    compressed_dp.unpackU32(local_id, "LocalID");
+                    compressed_dp.unpackU8(pcode, "PCode");
+                }
 				else //send to object cache
 				{
 					regionp->cacheFullUpdate(compressed_dp, flags);

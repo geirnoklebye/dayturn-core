@@ -1330,8 +1330,8 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 	BOOL update_inventory = FALSE;
 	std::fill(type_counts,type_counts+arr_size,0);
 	for (S32 i = 0; i < count; i++)
-					{
-						LLViewerWearable* new_wearable = wearables[i];
+	{
+		LLViewerWearable* new_wearable = wearables[i];
 		LLPointer<LLInventoryItem> new_item = items[i];
 
 		const LLWearableType::EType type = new_wearable->getType();
@@ -1370,7 +1370,8 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 					}
 		// If we got here, everything matches.
 		matched++;
-				}
+	}
+
 	LL_DEBUGS("Avatar") << "matched " << matched << " mismatched " << mismatched << LL_ENDL;
 	for (S32 j=0; j<LLWearableType::WT_COUNT; j++)
 	{
@@ -1379,8 +1380,9 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 		{
 			LL_DEBUGS("Avatar") << "count mismatch for type " << j << " current " << getWearableCount(j) << " requested " << type_counts[j] << LL_ENDL; 
 			mismatched++;
-			}
 		}
+	}
+
 	if (mismatched == 0 && !update_inventory)
 	{
 		LL_DEBUGS("Avatar") << "no changes, bailing out" << LL_ENDL;
@@ -1476,12 +1478,12 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 				{
 					// exactly one wearable per body part
 					setWearable(type,0,new_wearable);
-				if (old_wearable_id.notNull())
-				{
-					// we changed id before setting wearable, update old item manually
-					// to complete the swap.
-					gInventory.addChangedMask(LLInventoryObserver::LABEL, old_wearable_id);
-				}
+					if (old_wearable_id.notNull())
+					{
+						// we changed id before setting wearable, update old item manually
+						// to complete the swap.
+						gInventory.addChangedMask(LLInventoryObserver::LABEL, old_wearable_id);
+					}
 				}
 				else
 				{
@@ -1932,10 +1934,7 @@ void LLAgentWearables::userAttachMultipleAttachments(LLInventoryModel::item_arra
 	// Build a compound message to send all the objects that need to be rezzed.
 	S32 obj_count = obj_item_array.size();
 	if (obj_count > 0)
-	{
 		LL_DEBUGS("Avatar") << "ATT attaching multiple, total obj_count " << obj_count << LL_ENDL;
-	}
-
     for(LLInventoryModel::item_array_t::const_iterator it = obj_item_array.begin();
         it != obj_item_array.end();
         ++it)
@@ -1944,7 +1943,6 @@ void LLAgentWearables::userAttachMultipleAttachments(LLInventoryModel::item_arra
         LLAttachmentsMgr::instance().addAttachmentRequest(item->getLinkedUUID(), 0, TRUE);
     }
 }
-
 void LLAgentWearables::checkWearablesLoaded() const
 {
 #ifdef SHOW_ASSERT
@@ -1954,9 +1952,11 @@ void LLAgentWearables::checkWearablesLoaded() const
 		llassert(item_pend_count==0);
 	}
 #endif
-}
+	}
 
-void LLAgentWearables::checkWearablesLoaded() const
+    for(LLInventoryModel::item_array_t::const_iterator it = obj_item_array.begin();
+        it != obj_item_array.end();
+        ++it)
 {
 #ifdef SHOW_ASSERT
 	U32 item_pend_count = itemUpdatePendingCount();
@@ -2275,7 +2275,11 @@ void LLAgentWearables::forceUpdateShape (void)
 	//mLastWornShape->writeToAvatar(gAgentAvatarp);
 	//gAgentAvatarp->updateVisualParams();
 
-	U32 index = gAgentWearables.getWearableIndex(mLastWornShape);
+	U32 index;
+	if (!gAgentWearables.getWearableIndex(mLastWornShape, index))
+	{
+		return;
+	}
 
     std::string new_name = mLastWornShape->getName();
 

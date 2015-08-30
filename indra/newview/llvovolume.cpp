@@ -4430,11 +4430,12 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 		LL_WARNS("RenderMaterials") << "Oh no! No binormals for this alpha blended face!" << LL_ENDL;
 	}
 
-	if (facep->getViewerObject()->isSelected() 
 //MK
+	////if (facep->getViewerObject()->isSelected() && LLSelectMgr::getInstance()->mHideSelectedObjects)
+	if (facep->getViewerObject()->isSelected() && LLSelectMgr::getInstance()->mHideSelectedObjects
 		&& (!gRRenabled || !gAgent.mRRInterface.mContainsEdit)
-//mk
 		&& LLSelectMgr::getInstance()->mHideSelectedObjects)
+//mk
 	{
 		return;
 	}

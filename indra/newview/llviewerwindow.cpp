@@ -2206,9 +2206,6 @@ void LLViewerWindow::shutdownViews()
 	view_listener_t::cleanup();
 	LL_INFOS() << "view listeners destroyed." << LL_ENDL ;
 	
-	view_listener_t::cleanup();
-	LL_INFOS() << "view listeners destroyed." << LL_ENDL ;
-	
 	// Delete all child views.
 	delete mRootView;
 	mRootView = NULL;

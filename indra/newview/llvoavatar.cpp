@@ -8896,6 +8896,16 @@ BOOL LLVOAvatar::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex type,
 	}
 	else
 	{
+//MK
+		if (LLPipeline::sShadowRender)
+		{
+			static LLCachedControl<U32> RestrainedLoveAvatarShadows(gSavedSettings, "RestrainedLoveAvatarShadows", 2);
+			if (RestrainedLoveAvatarShadows == 1)
+			{
+				return TRUE;
+			}
+		}
+//mk
 		// baked textures can use TE images directly
 		return ((isTextureDefined(type) || isSelf())
 				&& (getTEImage(type)->getID() != IMG_INVISIBLE 

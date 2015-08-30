@@ -3250,3 +3250,103 @@ void LLPanelLandExperiences::refresh()
 	refreshPanel(mBlocked, EXPERIENCE_KEY_TYPE_BLOCKED);
 }
 
+LLPanelLandExperiences::LLPanelLandExperiences( LLSafeHandle<LLParcelSelection>& parcelp ) 
+	: mParcel(parcelp)
+{
+
+}
+
+
+BOOL LLPanelLandExperiences::postBuild()
+{
+	mAllowed = setupList("panel_allowed", EXPERIENCE_KEY_TYPE_ALLOWED, AL_ALLOW_EXPERIENCE);
+	mBlocked = setupList("panel_blocked", EXPERIENCE_KEY_TYPE_BLOCKED, AL_BLOCK_EXPERIENCE);
+
+	// only non-grid-wide experiences
+	mAllowed->addFilter(boost::bind(LLPanelExperiencePicker::FilterWithProperty, _1, LLExperienceCache::PROPERTY_GRID));
+
+	// no privileged ones
+	mBlocked->addFilter(boost::bind(LLPanelExperiencePicker::FilterWithoutProperties, _1, LLExperienceCache::PROPERTY_PRIVILEGED|LLExperienceCache::PROPERTY_GRID));
+
+	getChild<LLLayoutPanel>("trusted_layout_panel")->setVisible(FALSE);
+	getChild<LLTextBox>("experiences_help_text")->setVisible(FALSE);
+	getChild<LLTextBox>("allowed_text_help")->setText(getString("allowed_parcel_text"));
+	getChild<LLTextBox>("blocked_text_help")->setText(getString("blocked_parcel_text"));
+	
+	return LLPanel::postBuild();
+}
+
+LLPanelExperienceListEditor* LLPanelLandExperiences::setupList( const char* control_name, U32 xp_type, U32 access_type )
+{
+	LLPanelExperienceListEditor* child = findChild<LLPanelExperienceListEditor>(control_name);
+	if(child)
+	{
+		child->getChild<LLTextBox>("text_name")->setText(child->getString(control_name));
+		child->setMaxExperienceIDs(PARCEL_MAX_EXPERIENCE_LIST);
+		child->setAddedCallback(boost::bind(&LLPanelLandExperiences::experienceAdded, this, _1, xp_type, access_type));
+		child->setRemovedCallback(boost::bind(&LLPanelLandExperiences::experienceRemoved, this, _1, access_type));
+	}
+
+	return child;
+}
+
+void LLPanelLandExperiences::experienceAdded( const LLUUID& id, U32 xp_type, U32 access_type )
+{
+	LLParcel* parcel = mParcel->getParcel();
+	if (parcel)
+	{			
+		parcel->setExperienceKeyType(id, xp_type);
+		LLViewerParcelMgr::getInstance()->sendParcelAccessListUpdate(access_type);
+		refresh();
+	}
+}
+
+void LLPanelLandExperiences::experienceRemoved( const LLUUID& id, U32 access_type )
+{
+	LLParcel* parcel = mParcel->getParcel();
+	if (parcel)
+	{			
+		parcel->setExperienceKeyType(id, EXPERIENCE_KEY_TYPE_NONE);
+		LLViewerParcelMgr::getInstance()->sendParcelAccessListUpdate(access_type);
+		refresh();
+	}
+}
+
+void LLPanelLandExperiences::refreshPanel(LLPanelExperienceListEditor* panel, U32 xp_type)
+{
+	LLParcel *parcel = mParcel->getParcel();
+
+	// Display options
+	if (panel == NULL)
+	{
+		return;
+	}
+	if (parcel == NULL)
+	{
+		// disable the panel
+		panel->setEnabled(FALSE);
+		panel->setExperienceIds(LLSD::emptyArray());
+	}
+	else
+	{
+		// enable the panel
+		panel->setEnabled(TRUE);
+		LLAccessEntry::map entries = parcel->getExperienceKeysByType(xp_type);
+		LLAccessEntry::map::iterator it = entries.begin();
+		LLSD ids = LLSD::emptyArray();
+		for (/**/; it != entries.end(); ++it)
+		{
+			ids.append(it->second.mID);
+		}
+		panel->setExperienceIds(ids);
+		panel->setReadonly(!LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_OPTIONS));
+		panel->refreshExperienceCounter();
+	}
+}
+
+void LLPanelLandExperiences::refresh()
+{
+	refreshPanel(mAllowed, EXPERIENCE_KEY_TYPE_ALLOWED);
+	refreshPanel(mBlocked, EXPERIENCE_KEY_TYPE_BLOCKED);
+}
+

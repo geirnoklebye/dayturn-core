@@ -91,9 +91,14 @@ void LLModel::offsetMesh( const LLVector3& pivotPoint )
 	
 	for (std::vector<LLVolumeFace>::iterator faceIt = mVolumeFaces.begin(); faceIt != mVolumeFaces.end(); )
 	{
-		std::vector<LLVolumeFace>:: iterator currentFaceIt = faceIt++;
-		LLVolumeFace& face = *currentFaceIt;
-		LLVector4a *pos = (LLVector4a*) face.mPositions;
+			std::string material;
+
+			if (tri->getMaterial())
+			{
+				material = std::string(tri->getMaterial());
+			}
+
+			materials.push_back(material);
 		
 		for (U32 i=0; i<face.mNumVertices; ++i )
 		{
@@ -164,6 +169,14 @@ void LLModel::trimVolumeFacesToSize(U32 new_count, LLVolume::face_list_t* remain
 		// Copy out remaining volume faces for alternative handling, if provided
 		//
 		if (remainder)
+				std::string material;
+
+				if (poly->getMaterial())
+				{
+					material = std::string(poly->getMaterial());
+				}
+
+				materials.push_back(material);
 		{
 			(*remainder).assign(mVolumeFaces.begin() + new_count, mVolumeFaces.end());
 		}		

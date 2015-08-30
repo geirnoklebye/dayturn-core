@@ -1821,7 +1821,17 @@ BOOL LLVOAvatarSelf::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex t
 	}
 
 	LLUUID tex_id = getLocalTextureID(type,index);
-	return (tex_id != IMG_INVISIBLE) 
+//MK
+	if (LLPipeline::sShadowRender)
+	{
+		static LLCachedControl<U32> RestrainedLoveAvatarShadows(gSavedSettings, "RestrainedLoveAvatarShadows", 2);
+		if (RestrainedLoveAvatarShadows == 1)
+		{
+			return TRUE;
+		}
+	}
+	//mk
+	return (tex_id != IMG_INVISIBLE)
 			|| (LLDrawPoolAlpha::sShowDebugAlpha);
 }
 
@@ -1837,6 +1847,12 @@ BOOL LLVOAvatarSelf::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex t
 	if (gAgentWearables.getWearableIndex(wearable,index))
 	{
 		return isTextureVisible(type,index);
+	}
+	else
+	{
+		LL_WARNS() << "Wearable not found" << LL_ENDL;
+		return FALSE;
+	}
 	}
 	else
 	{

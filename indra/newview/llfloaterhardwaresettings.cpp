@@ -239,6 +239,13 @@ void LLFloaterHardwareSettings::onBtnCancel( void* userdata )
 }
 
 // static
+void LLFloaterHardwareSettings::onBtnCancel( void* userdata )
+{
+	LLFloaterHardwareSettings *fp =(LLFloaterHardwareSettings *)userdata;
+	fp->cancel();
+}
+
+// static
 void LLFloaterHardwareSettings::onBtnOK( void* userdata )
 {
 	LLFloaterHardwareSettings *fp =(LLFloaterHardwareSettings *)userdata;

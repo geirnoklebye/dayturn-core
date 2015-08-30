@@ -97,7 +97,6 @@ S32 LLFloaterModelPreview::sUploadAmount = 10;
 LLFloaterModelPreview* LLFloaterModelPreview::sInstance = NULL;
 
 bool LLModelPreview::sIgnoreLoadedCallback = false;
-
 // "Retain%" decomp parameter has values from 0.0 to 1.0 by 0.01
 // But according to the UI spec for upload model floater, this parameter
 // should be represented by Retain spinner with values from 1 to 100 by 1.
@@ -1229,6 +1228,7 @@ void LLFloaterModelPreview::onMouseCaptureLostModelPreview(LLMouseHandler* handl
     mJointMap["Right_Foot"] = "Right Foot";
     mJointMap["Left_Foot"] = "Left Foot";
 // <FS:WF> FIRE-7937 end
+	llifstream ifstream(filename.c_str(), std::ifstream::in | std::ifstream::binary);
 
 
 // LLModelPreview
@@ -3217,8 +3217,7 @@ void LLModelPreview::genBuffers(S32 lod, bool include_skin_weights)
 		LLModel* base_mdl = *base_iter;
 		base_iter++;
 
-		S32 num_faces = mdl->getNumVolumeFaces();
-		for (S32 i = 0; i < num_faces; ++i)
+		for (S32 i = 0, e = mdl->getNumVolumeFaces(); i < e; ++i)
 		{
 			const LLVolumeFace &vf = mdl->getVolumeFace(i);
 			U32 num_vertices = vf.mNumVertices;
@@ -3688,6 +3687,10 @@ BOOL LLModelPreview::render()
 		if (regen)
 		{
 			genBuffers(mPreviewLOD, skin_weight);
+			{
+				LL_INFOS(" ") << "Vertex Buffer[" << mPreviewLOD << "]" << " is EMPTY!!!" << LL_ENDL;
+				regen = TRUE;
+			}
 		}
 
 		if (!skin_weight)
@@ -3708,7 +3711,7 @@ BOOL LLModelPreview::render()
 
 					gGL.multMatrix((GLfloat*) mat.mMatrix);
 
-
+				for (U32 i = 0, e = mVertexBuffer[mPreviewLOD][model].size(); i < e; ++i)
 					U32 num_models = mVertexBuffer[mPreviewLOD][model].size();
 					for (U32 i = 0; i < num_models; ++i)
 					{
@@ -4055,7 +4058,7 @@ BOOL LLModelPreview::render()
 								position[j] = v;
 							}
 
-							llassert(model->mMaterialList.size() > i); 
+							llassert(model->mMaterialList.size() > i);
 							const std::string& binding = instance.mModel->mMaterialList[i];
 							const LLImportMaterial& material = instance.mMaterial[binding];
 
