@@ -41,8 +41,8 @@
 #if LL_LINUX
 # define LL_QTWEBKIT_USES_PIXMAPS 0
 extern "C" {
-# include <glib.h>
-# include <glib-object.h>
+# include <glib/glib.h>
+# include <glib/glib-object.h>
 }
 #else
 # define LL_QTWEBKIT_USES_PIXMAPS 0
@@ -231,8 +231,11 @@ private:
 		// take care to initialize glib properly, because some
 		// versions of Qt don't, and we indirectly need it for (some
 		// versions of) Flash to not crash the browser.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 		if (!g_thread_supported ()) g_thread_init (NULL);
 		g_type_init();
+#pragma GCC diagnostic pop
 #endif
 
 #if LL_DARWIN

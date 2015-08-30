@@ -86,7 +86,7 @@ public:
 
 	/// to be called from LLStartUp::setStartSLURL
 	static void onUpdateStartSLURL(const LLSLURL& new_start_slurl);
-
+	static bool getShowFavorites();
 private:
 	friend class LLPanelLoginListener;
 	void reshapeBrowser();

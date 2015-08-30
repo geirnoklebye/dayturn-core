@@ -37,6 +37,7 @@ set(llcommon_SOURCE_FILES
     llbase32.cpp
     llbase64.cpp
     llbitpack.cpp
+    llcallbacklist.cpp
     llcommon.cpp
     llcommonutils.cpp
     llcoros.cpp
@@ -129,6 +130,7 @@ set(llcommon_HEADER_FILES
     llbase64.h
     llbitpack.h
     llboost.h
+    llcallbacklist.h
     llcommon.h
     llcommonutils.h
     llcoros.h
@@ -326,7 +328,7 @@ if (LL_TESTS)
   LL_ADD_INTEGRATION_TEST(llunits "" "${test_libs}")
   LL_ADD_INTEGRATION_TEST(stringize "" "${test_libs}")
   LL_ADD_INTEGRATION_TEST(lleventdispatcher "" "${test_libs}")
-  LL_ADD_INTEGRATION_TEST(lleventcoro "" "${test_libs};${BOOST_CONTEXT_LIBRARY};${BOOST_COROUTINE_LIBRARY};${BOOST_SYSTEM_LIBRARY}")
+  LL_ADD_INTEGRATION_TEST(lleventcoro "" "${test_libs};${BOOST_CONTEXT_LIBRARY};${BOOST_THREAD_LIBRARY};${BOOST_COROUTINE_LIBRARY};${BOOST_SYSTEM_LIBRARY}")
   LL_ADD_INTEGRATION_TEST(llprocess "" "${test_libs}")
   LL_ADD_INTEGRATION_TEST(llleap "" "${test_libs}")
   LL_ADD_INTEGRATION_TEST(llstreamqueue "" "${test_libs}")

@@ -501,9 +501,9 @@ void LLPanelObject::getState( )
 	LLQuaternion object_rot = objectp->getRotationEdit();
 	object_rot.getEulerAngles(&(mCurEulerDegrees.mV[VX]), &(mCurEulerDegrees.mV[VY]), &(mCurEulerDegrees.mV[VZ]));
 	mCurEulerDegrees *= RAD_TO_DEG;
-	mCurEulerDegrees.mV[VX] = fmod(llround(mCurEulerDegrees.mV[VX], OBJECT_ROTATION_PRECISION) + 360.f, 360.f);
-	mCurEulerDegrees.mV[VY] = fmod(llround(mCurEulerDegrees.mV[VY], OBJECT_ROTATION_PRECISION) + 360.f, 360.f);
-	mCurEulerDegrees.mV[VZ] = fmod(llround(mCurEulerDegrees.mV[VZ], OBJECT_ROTATION_PRECISION) + 360.f, 360.f);
+	mCurEulerDegrees.mV[VX] = fmod(ll_round(mCurEulerDegrees.mV[VX], OBJECT_ROTATION_PRECISION) + 360.f, 360.f);
+	mCurEulerDegrees.mV[VY] = fmod(ll_round(mCurEulerDegrees.mV[VY], OBJECT_ROTATION_PRECISION) + 360.f, 360.f);
+	mCurEulerDegrees.mV[VZ] = fmod(ll_round(mCurEulerDegrees.mV[VZ], OBJECT_ROTATION_PRECISION) + 360.f, 360.f);
 
 	if (enable_rotate)
 	{
@@ -1669,9 +1669,9 @@ void LLPanelObject::sendRotation(BOOL btn_down)
 	if (mObject.isNull()) return;
 
 	LLVector3 new_rot(mCtrlRotX->get(), mCtrlRotY->get(), mCtrlRotZ->get());
-	new_rot.mV[VX] = llround(new_rot.mV[VX], OBJECT_ROTATION_PRECISION);
-	new_rot.mV[VY] = llround(new_rot.mV[VY], OBJECT_ROTATION_PRECISION);
-	new_rot.mV[VZ] = llround(new_rot.mV[VZ], OBJECT_ROTATION_PRECISION);
+	new_rot.mV[VX] = ll_round(new_rot.mV[VX], OBJECT_ROTATION_PRECISION);
+	new_rot.mV[VY] = ll_round(new_rot.mV[VY], OBJECT_ROTATION_PRECISION);
+	new_rot.mV[VZ] = ll_round(new_rot.mV[VZ], OBJECT_ROTATION_PRECISION);
 
 	// Note: must compare before conversion to radians
 	LLVector3 delta = new_rot - mCurEulerDegrees;
@@ -1733,10 +1733,11 @@ void LLPanelObject::sendScale(BOOL btn_down)
 // </AW: opensim-limits>
 
 	LLVector3 delta = newscale - mObject->getScale();
-	if (delta.magVec() >= 0.00005f || (mSizeChanged && !btn_down))
-	{
 		mSizeChanged = btn_down;
-
+	
+	if (delta.magVec() >= 0.00005f)
+	{
+		// scale changed by more than 1/20 millimeter
 		// check to see if we aren't scaling the textures
 		// (in which case the tex coord's need to be recomputed)
 		BOOL dont_stretch_textures = !LLManipScale::getStretchTextures();
@@ -1753,11 +1754,10 @@ void LLPanelObject::sendScale(BOOL btn_down)
 		}
 
 		LLSelectMgr::getInstance()->adjustTexturesByScale(TRUE, !dont_stretch_textures);
-	//		LL_INFOS() << "scale sent" << LL_ENDL;
 	}
 	else
 	{
-//		LL_INFOS() << "scale not changed" << LL_ENDL;
+
 	}
 }
 
@@ -1768,6 +1768,9 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 
 	LLVector3 newpos(mCtrlPosX->get(), mCtrlPosY->get(), mCtrlPosZ->get());
 	LLViewerRegion* regionp = mObject->getRegion();
+	// Make sure new position is in a valid region, so the object
+	// won't get dumped by the simulator.
+	LLVector3d new_pos_global = regionp->getPosGlobalFromRegion(newpos);
 
 	LLVector3d new_pos_global;
 
@@ -1781,23 +1784,26 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 		const F32 height = newpos.mV[VZ];
 		const F32 min_height = LLWorld::getInstance()->getMinAllowedZ(mObject, mObject->getPositionGlobal());
 		const F32 max_height = LLWorld::getInstance()->getRegionMaxHeight();
+		if (!mObject->isAttachment())
+		{
+			if ( height < min_height)
+			{
+				newpos.mV[VZ] = min_height;
+				mCtrlPosZ->set( min_height );
+			}
+			else if ( height > max_height )
+			{
+				newpos.mV[VZ] = max_height;
+				mCtrlPosZ->set( max_height );
+			}
 
-		if ( height < min_height)
-		{
-			newpos.mV[VZ] = min_height;
-			mCtrlPosZ->set( min_height );
+			// Grass is always drawn on the ground, so clamp its position to the ground
+			if (mObject->getPCode() == LL_PCODE_LEGACY_GRASS)
+			{
+				mCtrlPosZ->set(LLWorld::getInstance()->resolveLandHeightAgent(newpos) + 1.f);
+			}
 		}
-		else if ( height > max_height )
-		{
-			newpos.mV[VZ] = max_height;
-			mCtrlPosZ->set( max_height );
-		}
-
-		// Grass is always drawn on the ground, so clamp its position to the ground
-		if (mObject->getPCode() == LL_PCODE_LEGACY_GRASS)
-		{
-			mCtrlPosZ->set(LLWorld::getInstance()->resolveLandHeightAgent(newpos) + 1.f);
-		}
+	}
 		// Make sure new position is in a valid region, so the object
 		// won't get dumped by the simulator.
 		new_pos_global = regionp->getPosGlobalFromRegion(newpos);

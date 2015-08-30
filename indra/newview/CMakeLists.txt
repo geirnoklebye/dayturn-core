@@ -4,17 +4,19 @@ project(viewer)
 
 include(00-Common)
 include(Boost)
+include(BuildPackagesInfo)
 include(BuildVersion)
+include(CMakeCopyIfDifferent)
 include(DBusGlib)
 include(DirectX)
-include(OpenSSL)
 include(DragDrop)
 include(EXPAT)
 include(FMODEX)
-include(OPENAL)
-include(OpenGL)
+include(GLOD)
+include(GooglePerfTools)
 include(Hunspell)
 include(JsonCpp)
+include(LLAppearance)
 include(LLAudio)
 include(LLCharacter)
 include(LLCommon)
@@ -22,6 +24,8 @@ include(LLCoreHttp)
 include(LLImage)
 include(LLImageJ2COJ)
 include(LLInventory)
+include(LLKDU)
+include(LLLogin)
 include(LLMath)
 include(LLMessage)
 include(LLPhysicsExtensions)
@@ -36,19 +40,19 @@ include(LScript)
 include(Linking)
 include(NDOF)
 include(NVAPI)
-include(GooglePerfTools)
+include(OPENAL)
 include(Teapot)
+include(OpenGL)
+include(OpenSSL)
+include(PNG)
+if (NOT LINUX)
+    include(Prebuilt)
+endif (NOT LINUX)
 include(TemplateCheck)
 include(UI)
 include(UnixInstall)
-include(LLKDU)
 include(ViewerMiscLibs)
-include(LLLogin)
 # include(VisualLeakDetector)
-include(GLOD)
-include(CMakeCopyIfDifferent)
-include(LLAppearance)
-include(PNG)
 include(ZLIB)
 include(URIPARSER)
 
@@ -58,16 +62,19 @@ if( LLPHYSICSEXTENSIONS_SRC_DIR )
 
 if (NOT HAVOK_TPV)
    # When using HAVOK_TPV, the library is precompiled, so no need for this
-#  add_subdirectory(${LLPHYSICSEXTENSIONS_SRC_DIR} llphysicsextensions)
+   add_subdirectory(${LLPHYSICSEXTENSIONS_SRC_DIR} llphysicsextensions)
 endif (NOT HAVOK_TPV)
 
 # <FS:ND>
 endif( LLPHYSICSEXTENSIONS_SRC_DIR )
 # </FS:ND>
-
 if(FMODEX)
   include_directories(${FMODEX_INCLUDE_DIR})
 endif(FMODEX)
+# install SLPlugin host executable and its dynamic-library plugins
+if (NOT LINUX)
+    use_prebuilt_binary(slplugins)
+endif (NOT LINUX)
 
 include_directories(
     ${DBUSGLIB_INCLUDE_DIRS}
@@ -77,16 +84,13 @@ include_directories(
     ${LLCHARACTER_INCLUDE_DIRS}
     ${LLCOMMON_INCLUDE_DIRS}
     ${LLCOREHTTP_INCLUDE_DIRS}
-    ${LLCONVEXDECOMP_INCLUDE_DIRS}
     ${LLPHYSICS_INCLUDE_DIRS}
-    ${FMOD_INCLUDE_DIR}
     ${LLIMAGE_INCLUDE_DIRS}
     ${LLKDU_INCLUDE_DIRS}
     ${LLINVENTORY_INCLUDE_DIRS}
     ${LLMATH_INCLUDE_DIRS}
     ${LLPHYSICSEXTENSIONS_INCLUDE_DIRS}
     ${LLMESSAGE_INCLUDE_DIRS}
-    ${LLPHYSICSEXTENSIONS_INCLUDE_DIRS}
     ${LLPLUGIN_INCLUDE_DIRS}
     ${LLPRIMITIVE_INCLUDE_DIRS}
     ${LLRENDER_INCLUDE_DIRS}
@@ -104,7 +108,6 @@ include_directories(
     ${OPENAL_LIB_INCLUDE_DIRS}
     ${LIBS_PREBUILT_DIR}/include/collada/1.4
     ${LLAPPEARANCE_INCLUDE_DIRS}
-    ${HACD_INCLUDE_DIR} 
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
@@ -115,7 +118,6 @@ include_directories(SYSTEM
     )
 
 set(viewer_SOURCE_FILES
-    RRInterface.cpp
     fsareasearch.cpp
     fscommon.cpp
     fsexport.cpp
@@ -168,7 +170,6 @@ set(viewer_SOURCE_FILES
     llbreadcrumbview.cpp
     llbrowsernotification.cpp
     llbuycurrencyhtml.cpp
-    llcallbacklist.cpp
     llcallingcard.cpp
     llcapabilitylistener.cpp
     llcaphttpsender.cpp
@@ -224,6 +225,8 @@ set(viewer_SOURCE_FILES
     lleventnotifier.cpp
     lleventpoll.cpp
     llexpandabletextbox.cpp
+    llexperienceassociationresponder.cpp
+    llexperiencelog.cpp
     llexternaleditor.cpp
     llface.cpp
     llfacebookconnect.cpp
@@ -266,6 +269,9 @@ set(viewer_SOURCE_FILES
     llfloatereditwater.cpp
     llfloaterenvironmentsettings.cpp
     llfloaterevent.cpp
+    llfloaterexperiencepicker.cpp
+    llfloaterexperienceprofile.cpp
+    llfloaterexperiences.cpp
     llfloaterfacebook.cpp
     llfloaterflickr.cpp
     llfloaterfonttest.cpp
@@ -290,6 +296,7 @@ set(viewer_SOURCE_FILES
     llfloaterlagmeter.cpp
     llfloaterland.cpp
     llfloaterlandholdings.cpp
+    llfloatermarketplacelistings.cpp
     llfloatermap.cpp
     llfloatermediasettings.cpp
     llfloatermemleak.cpp
@@ -446,11 +453,16 @@ set(viewer_SOURCE_FILES
     llpanelclassified.cpp
     llpanelcontents.cpp
     llpaneleditwearable.cpp
+    llpanelexperiencelisteditor.cpp
+    llpanelexperiencelog.cpp
+    llpanelexperiencepicker.cpp
+    llpanelexperiences.cpp
     llpanelface.cpp
     llpanelgenerictip.cpp
     llpanelgroup.cpp
     llpanelgroupbulk.cpp
     llpanelgroupbulkban.cpp
+    llpanelgroupexperiences.cpp
     llpanelgroupgeneral.cpp
     llpanelgroupinvite.cpp
     llpanelgrouplandmoney.cpp
@@ -745,7 +757,6 @@ set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
 set(viewer_HEADER_FILES
     CMakeLists.txt
     ViewerInstall.cmake
-    RRInterface.h
     ao.h
     aoengine.h
     aoset.h
@@ -800,7 +811,6 @@ set(viewer_HEADER_FILES
     llbox.h
     llbreadcrumbview.h
     llbuycurrencyhtml.h
-    llcallbacklist.h
     llcallingcard.h
     llcapabilitylistener.h
     llcapabilityprovider.h
@@ -857,6 +867,8 @@ set(viewer_HEADER_FILES
     lleventnotifier.h
     lleventpoll.h
     llexpandabletextbox.h
+    llexperienceassociationresponder.h
+    llexperiencelog.h
     llexternaleditor.h
     llface.h
     llfacebookconnect.h
@@ -899,6 +911,9 @@ set(viewer_HEADER_FILES
     llfloatereditwater.h
     llfloaterenvironmentsettings.h
     llfloaterevent.h
+    llfloaterexperiencepicker.h
+    llfloaterexperienceprofile.h
+    llfloaterexperiences.h
     llfloaterfacebook.h
     llfloaterflickr.h
     llfloaterfonttest.h
@@ -927,6 +942,7 @@ set(viewer_HEADER_FILES
     llfloaterland.h
     llfloaterlandholdings.h
     llfloatermap.h
+    llfloatermarketplacelistings.h
     llfloatermediasettings.h
     llfloatermemleak.h
     llfloatermodelpreview.h
@@ -1072,12 +1088,17 @@ set(viewer_HEADER_FILES
     llpanelclassified.h
     llpanelcontents.h
     llpaneleditwearable.h
+    llpanelexperiencelisteditor.h
+    llpanelexperiencelog.h
+    llpanelexperiencepicker.h
+    llpanelexperiences.h
     llpanelface.h
     llpanelgenerictip.h
     llpanelgroup.h
     llpanelgroupbulk.h
     llpanelgroupbulkimpl.h
     llpanelgroupbulkban.h
+    llpanelgroupexperiences.h
     llpanelgroupgeneral.h
     llpanelgroupinvite.h
     llpanelgrouplandmoney.h
@@ -1361,7 +1382,6 @@ set(viewer_HEADER_FILES
     pipeline.h
     streamtitledisplay.h
     roles_constants.h
-    qtoolalign.h
     VertexCache.h
     viewerinfo.h
     VorbisFramework.h
@@ -1369,19 +1389,17 @@ set(viewer_HEADER_FILES
 
 source_group("CMake Rules" FILES ViewerInstall.cmake)
 
-# the viewer_version.txt file created here is for passing to viewer_manifest
+# the viewer_version.txt file created here is for passing to viewer_manifest and autobuild
 # the summary.json file is created for the benefit of the TeamCity builds, where
 #   it is used to provide descriptive information to the build results page
-add_custom_target(generate_viewer_version ALL
-                  COMMAND printf '${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}' > ${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
-                  COMMAND printf '{"Type":"viewer","Version":"${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}"}' > ${CMAKE_BINARY_DIR}/summary.json
-                  COMMENT Generating viewer_version.txt for manifest processing
-                  )
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt"
+           "${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}\n")
+file(WRITE "${CMAKE_BINARY_DIR}/summary.json"
+           "{\"Type\":\"viewer\",\"Version\":\"${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}\"}\n")
 
 set_source_files_properties(
    llversioninfo.cpp tests/llversioninfo_test.cpp 
    PROPERTIES
-   DEPENDS generate_viewer_version  # dummy dependency to force recompile every time
    COMPILE_DEFINITIONS "${VIEWER_CHANNEL_VERSION_DEFINES}" # see BuildVersion.cmake
    )
 
@@ -1438,11 +1456,16 @@ if (LINUX)
     SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--as-needed")
 
     set(viewer_LIBRARIES
+        X11
         Xinerama
         )
-# Removing openmp @ viewer-beta 3.3.3
-   # OpenMP is used with HACD. OpenMP is not available for VS2010 Express
-    # Edition. So, It is restricted to Linux 
+#X11 is needed to prevent DSO symbol resolution error to the version of libX11 used
+#some Debian versions. This occurs when another lib calls libX11. So, an explict
+#link to the X11 surpresses it and link completes.
+#https://github.com/tum-vision/lsd_slam/issues/29#issuecomment-61084472
+    if (OPENAL)
+      LIST(APPEND viewer_LIBRARIES ${OPENAL_LIBRARIES})
+    endif (OPENAL)
     # To do NP Move to windows and drawin. 
     include_directories(${CMAKE_COMMON_INC})
 
@@ -1673,6 +1696,7 @@ set(viewer_APPSETTINGS_FILES
     app_settings/viewerart.xml
     ${CMAKE_SOURCE_DIR}/../etc/message.xml
     ${CMAKE_SOURCE_DIR}/../scripts/messages/message_template.msg
+    packages-info.txt
     )
 
 source_group("App Settings" FILES ${viewer_APPSETTINGS_FILES})
@@ -1753,6 +1777,7 @@ if (WINDOWS)
         LINK_FLAGS_DEBUG "/NODEFAULTLIB:\"LIBCMT;LIBCMTD;MSVCRT\" /INCREMENTAL:NO /LARGEADDRESSAWARE"
         LINK_FLAGS_RELEASE "/FORCE:MULTIPLE /MAP\"secondlife-bin.MAP\" /OPT:REF /LARGEADDRESSAWARE"
         )
+
     if(USE_PRECOMPILED_HEADERS)
         set_target_properties(
             ${VIEWER_BINARY_NAME}
@@ -1857,7 +1882,7 @@ if (WINDOWS)
       SLPlugin
       media_plugin_quicktime
       media_plugin_webkit
-      media_plugin_gstreamer010
+#      media_plugin_gstreamer010
       winmm_shim
       windows-crash-logger
       )
@@ -1889,7 +1914,6 @@ if (WINDOWS)
         --touch=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/copy_touched.bat
       DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
-        generate_viewer_version
         stage_third_party_libs
         ${COPY_INPUT_DEPENDENCIES}
       COMMENT "Performing viewer_manifest copy"
@@ -1903,10 +1927,12 @@ if (WINDOWS)
       add_dependencies(${VIEWER_BINARY_NAME} copy_win_scripts)
     endif (EXISTS ${CMAKE_SOURCE_DIR}/copy_win_scripts)
 
-    add_dependencies(${VIEWER_BINARY_NAME}
-      SLPlugin
-      windows-crash-logger
-      )
+    if (LINUX)
+        add_dependencies(${VIEWER_BINARY_NAME}
+          SLPlugin
+          windows-crash-logger
+        )
+    endif (LINUX)
 
     # sets the 'working directory' for debugging from visual studio.
     if (NOT UNATTENDED)
@@ -1961,10 +1987,9 @@ if (WINDOWS)
             ${COPY_INPUT_DEPENDENCIES}
         )
 
-      add_custom_target(package ALL DEPENDS
+      add_custom_target(llpackage ALL DEPENDS
         ${CMAKE_CFG_INTDIR}/touched.bat
         windows-setup-build-all
-        generate_viewer_version
         )
         # temporarily disable packaging of event_host until hg subrepos get
         # sorted out on the parabuild cluster...
@@ -2059,17 +2084,14 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${OPENSSL_LIBRARIES}
     ${CRYPTO_LIBRARIES}
     ${LLLOGIN_LIBRARIES}
-    ${LLCONVEXDECOMP_LIBRARY}
     ${LLPHYSICS_LIBRARIES}
     ${LLPHYSICSEXTENSIONS_LIBRARIES}
     ${TCMALLOC_LIBRARIES}
-    ${HACD_LIBRARY}
     ${LLAPPEARANCE_LIBRARIES}
      )
 
 set(ARTWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH
     "Path to artwork files.")
-
 
 if (LINUX)
   set(product kokua-${ARCH}-${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION})
@@ -2078,9 +2100,9 @@ if (LINUX)
   set(COPY_INPUT_DEPENDENCIES
     ${VIEWER_BINARY_NAME}
     linux-crash-logger
-    SLPlugin
-#    media_plugin_webkit
-#    media_plugin_gstreamer010
+##    SLPlugin
+##    media_plugin_webkit
+##    media_plugin_gstreamer010
     llcommon
     )
 
@@ -2102,12 +2124,12 @@ if (LINUX)
         --touch=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.touched
       DEPENDS
         ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
-        generate_viewer_version
         ${COPY_INPUT_DEPENDENCIES}
       )
 
   if (PACKAGE)
   endif (PACKAGE)
+
   add_custom_command(
     OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.copy_touched
     COMMAND ${PYTHON_EXECUTABLE}
@@ -2126,7 +2148,6 @@ if (LINUX)
       --source=${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDS
       ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
-      generate_viewer_version
       ${COPY_INPUT_DEPENDENCIES}
     COMMENT "Performing viewer_manifest copy"
     )
@@ -2134,10 +2155,10 @@ if (LINUX)
   add_custom_target(copy_l_viewer_manifest ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.copy_touched)
 
   if (PACKAGE)
-    add_custom_target(package ALL DEPENDS ${product}.tar.bz2)
+    add_custom_target(llpackage ALL DEPENDS ${product}.tar.bz2)
     # Make sure we don't run two instances of viewer_manifest.py at the same time.
-    add_dependencies(package copy_l_viewer_manifest)
-    check_message_template(package)
+    add_dependencies(llpackage copy_l_viewer_manifest)
+    check_message_template(llpackage)
   endif (PACKAGE)
 endif (LINUX)
 
@@ -2187,10 +2208,10 @@ if (DARWIN)
     DEPENDS
       ${VIEWER_BINARY_NAME}
       ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
-      generate_viewer_version
     )
 
-  add_dependencies(${VIEWER_BINARY_NAME} SLPlugin media_plugin_quicktime media_plugin_webkit mac-crash-logger)
+##add_dependencies(${VIEWER_BINARY_NAME} SLPlugin media_plugin_quicktime media_plugin_webkit mac-crash-logger)
+  add_dependencies(${VIEWER_BINARY_NAME} mac-crash-logger)
 
   if (ENABLE_SIGNING)
       set(SIGNING_SETTING "--signature=${SIGNING_IDENTITY}")
@@ -2199,11 +2220,10 @@ if (DARWIN)
   endif (ENABLE_SIGNING)
 
   if (PACKAGE)
-      add_custom_target(package ALL DEPENDS ${VIEWER_BINARY_NAME})
-      add_dependencies(package generate_viewer_version)
+      add_custom_target(llpackage ALL DEPENDS ${VIEWER_BINARY_NAME})
 
       add_custom_command(
-        TARGET package POST_BUILD
+        TARGET llpackage POST_BUILD
         COMMAND ${PYTHON_EXECUTABLE}
         ARGS
           ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
@@ -2222,7 +2242,6 @@ if (DARWIN)
           ${SIGNING_SETTING}
         DEPENDS
           ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
-          generate_viewer_version
       )
   endif (PACKAGE)
 endif (DARWIN)
@@ -2245,12 +2264,14 @@ if (PACKAGE)
   if (DARWIN)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}")
     # *TODO: Generate these search dirs in the cmake files related to each binary.
-    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/llplugin/slplugin/${CMAKE_CFG_INTDIR}")
+    # *TODO: Generate these search dirs in the cmake files related to each binary.
+##  list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/llplugin/slplugin/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/mac_crash_logger/${CMAKE_CFG_INTDIR}")
-    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
-    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
-    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/webkit/${CMAKE_CFG_INTDIR}")
-    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-darwin.tar.bz2")
+##  list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
+##  list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
+##  list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/webkit/${CMAKE_CFG_INTDIR}")
+    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-darwin.tar.bz2")
+##  set(VIEWER_EXE_GLOBS "'Second Life' SLPlugin mac-crash-logger")
     set(VIEWER_EXE_GLOBS "'Kokua' SLPlugin mac-crash-logger")
     set(VIEWER_LIB_GLOB "*.dylib")
   endif (DARWIN)
@@ -2283,9 +2304,8 @@ if (PACKAGE)
     DEPENDS generate_breakpad_symbols.py
         VERBATIM)
 
-  add_custom_target(generate_breakpad_symbols DEPENDS "${VIEWER_SYMBOL_FILE}")
-  add_dependencies(generate_breakpad_symbols "${VIEWER_BINARY_NAME}" "${VIEWER_COPY_MANIFEST}")
-  add_dependencies(package generate_breakpad_symbols)
+  add_custom_target(generate_breakpad_symbols DEPENDS "${VIEWER_SYMBOL_FILE}" "${VIEWER_BINARY_NAME}" "${VIEWER_COPY_MANIFEST}")
+  add_dependencies(llpackage generate_breakpad_symbols)
   endif(RELEASE_CRASH_REPORTING OR NON_RELEASE_CRASH_REPORTING)
 endif (PACKAGE)
 
@@ -2305,6 +2325,7 @@ if (LL_TESTS)
     llworldmap.cpp
     llworldmipmap.cpp
   )
+
   set_source_files_properties(
     llworldmap.cpp
     llworldmipmap.cpp
@@ -2462,11 +2483,6 @@ include(LLAddBuildTest)
 SET(viewer_TEST_SOURCE_FILES
   llagentaccess.cpp
   llwlparammanager.cpp
-  # Not *actually* a unit test, it's an integration test.
-  # Because it won't work in the new unit test iface, i've commented out
-  # and notified Nat. Delete this when it's replaced!
-  # + poppy & brad 2009-06-05
-  # llcapabilitylistener.cpp
   )
 set_source_files_properties(
   ${viewer_TEST_SOURCE_FILES}

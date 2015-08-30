@@ -54,6 +54,13 @@
 #include "llviewerregion.h"
 #include <boost/regex.hpp>
 
+#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+   #pragma GCC diagnostic push
+   #pragma GCC diagnostic ignored "-Wuninitialized"
+   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
+
+
 #if LL_MSVC
 #pragma warning(push)   
 // disable boost::lexical_cast warning
@@ -64,6 +71,13 @@
 
 #if LL_MSVC
 #pragma warning(pop)   // Restore all warnings to the previous state
+#endif
+
+#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+   #pragma GCC diagnostic pop 
+///No idea of the scope of   #pragma GCC diagnostic ignored"-Wuninitialized" 
+///or    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+///but using push and pop in case a problem occurs later.
 #endif
 
 const U32 MAX_CACHED_GROUPS = 20;
@@ -864,6 +878,12 @@ LLGroupMgrGroupData* LLGroupMgr::getGroupData(const LLUUID& id)
 // Helper function for LLGroupMgr::processGroupMembersReply
 // This reformats date strings from MM/DD/YYYY to YYYY-MM-DD ( e.g. 1/27/2008 -> 2008-01-27 )
 // so that the sorter can sort by year before month before day.
+#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+   #pragma GCC diagnostic push
+   #pragma GCC diagnostic ignored "-Wuninitialized"
+   #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
+
 static void formatDateString(std::string &date_string)
 {
 	using namespace boost;
@@ -880,6 +900,14 @@ static void formatDateString(std::string &date_string)
 		date_string = llformat("%04d-%02d-%02d", year, month, day);
 	}
 }
+
+#if (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 40800
+   #pragma GCC diagnostic pop 
+///No idea of the scope of   #pragma GCC diagnostic ignored"-Wuninitialized" 
+///or    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+///but using push and pop in case a problem occurs later.
+#endif
+
 
 // static
 void LLGroupMgr::processGroupMembersReply(LLMessageSystem* msg, void** data)
@@ -1970,7 +1998,8 @@ void LLGroupMgr::processGroupBanRequest(const LLSD& content)
 	LLGroupMgrGroupData* gdatap = LLGroupMgr::getInstance()->getGroupData(group_id);
 	if (!gdatap)
 		return;
-	
+
+	gdatap->clearBanList();
 	LLSD::map_const_iterator i		= content["ban_list"].beginMap();
 	LLSD::map_const_iterator iEnd	= content["ban_list"].endMap();
 	for(;i != iEnd; ++i)

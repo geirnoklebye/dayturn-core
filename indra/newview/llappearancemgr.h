@@ -67,7 +67,8 @@ public:
 	void addCategoryToCurrentOutfit(const LLUUID& cat_id);
 	S32 findExcessOrDuplicateItems(const LLUUID& cat_id,
 								   LLAssetType::EType type,
-								   S32 max_items,
+								   S32 max_items_per_type,
+								   S32 max_items_total,
 								   LLInventoryObject::object_list_t& items_to_kill);
 	void findAllExcessOrDuplicateItems(const LLUUID& cat_id,
 									  LLInventoryObject::object_list_t& items_to_kill);
@@ -99,6 +100,9 @@ public:
 	// Determine whether we can replace current outfit with the given one.
 	bool getCanReplaceCOF(const LLUUID& outfit_cat_id);
 
+    // Can we add all referenced items to the avatar?
+    bool canAddWearables(const uuid_vec_t& item_ids);
+    
 	// Copy all items in a category.
 	void shallowCopyCategoryContents(const LLUUID& src_id, const LLUUID& dst_id,
 									 LLPointer<LLInventoryCallback> cb);
@@ -117,8 +121,13 @@ public:
 	// find the UUID of the currently worn outfit (Base Outfit)
 	const LLUUID getBaseOutfitUUID();
 
+    void wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
+                           bool do_update,
+                           bool replace,
+                           LLPointer<LLInventoryCallback> cb = NULL);
+
 	// Wear/attach an item (from a user's inventory) on the agent
-	bool wearItemOnAvatar(const LLUUID& item_to_wear, bool do_update, bool replace = false,
+	void wearItemOnAvatar(const LLUUID& item_to_wear, bool do_update, bool replace = false,
 						  LLPointer<LLInventoryCallback> cb = NULL);
 
 	// Update the displayed outfit name in UI.
@@ -234,7 +243,7 @@ protected:
 	~LLAppearanceMgr();
 
 private:
-	void filterWearableItems(LLInventoryModel::item_array_t& items, S32 max_per_type);
+	void filterWearableItems(LLInventoryModel::item_array_t& items, S32 max_per_type, S32 max_total);
 	
 //MK
 // I need this one public.
@@ -286,11 +295,6 @@ public:
 	BOOL getIsInCOF(const LLUUID& obj_id) const;
 	// Is this in the COF and can the user delete it from the COF?
 	BOOL getIsProtectedCOFItem(const LLUUID& obj_id) const;
-
-	/**
-	 * Checks if COF contains link to specified object.
-	 */
-	static bool isLinkInCOF(const LLUUID& obj_id);
 };
 
 class LLUpdateAppearanceOnDestroy: public LLInventoryCallback
@@ -320,6 +324,15 @@ public:
 	
 private:
 	LLUUID mItemID;
+};
+
+class LLRequestServerAppearanceUpdateOnDestroy: public LLInventoryCallback
+{
+public:
+	LLRequestServerAppearanceUpdateOnDestroy() {}
+	~LLRequestServerAppearanceUpdateOnDestroy();
+
+	/* virtual */ void fire(const LLUUID& item_id) {}
 };
 
 LLUUID findDescendentCategoryIDByName(const LLUUID& parent_id,const std::string& name);

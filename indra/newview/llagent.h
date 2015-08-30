@@ -810,7 +810,6 @@ public:
 private:
 	BOOL			mShowAvatar; 		// Should we render the avatar?
 	U32				mAppearanceSerialNum;
-	
 	//--------------------------------------------------------------------
 	// Rendering state bitmap helpers
 	//--------------------------------------------------------------------

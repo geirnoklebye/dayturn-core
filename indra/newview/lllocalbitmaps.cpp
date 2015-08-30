@@ -76,7 +76,6 @@ bool                        LLLocalBitmapMgr::sNeedsRebake;
 static const F32 LL_LOCAL_TIMER_HEARTBEAT   = 3.0;
 static const BOOL LL_LOCAL_USE_MIPMAPS      = true;
 static const S32 LL_LOCAL_DISCARD_LEVEL     = 0;
-static const U32 LL_LOCAL_TEXLAYER_FOR_IDX  = 0;
 static const bool LL_LOCAL_SLAM_FOR_DEBUG   = true;
 static const bool LL_LOCAL_REPLACE_ON_DEL   = true;
 static const S32 LL_LOCAL_UPDATE_RETRIES    = 5;
@@ -129,7 +128,7 @@ LLLocalBitmap::LLLocalBitmap(std::string filename)
 LLLocalBitmap::~LLLocalBitmap()
 {
 	// replace IDs with defaults, if set to do so.
-	if(LL_LOCAL_REPLACE_ON_DEL && mValid) // fix for STORM-1837
+	if(LL_LOCAL_REPLACE_ON_DEL && mValid && gAgentAvatarp) // fix for STORM-1837
 	{
 		replaceIDs(mWorldID, IMG_DEFAULT);
 		LLLocalBitmapMgr::doRebake();
@@ -546,12 +545,14 @@ void LLLocalBitmap::updateUserLayers(LLUUID old_id, LLUUID new_id, LLWearableTyp
 					LLAvatarAppearanceDefines::ETextureIndex reg_texind = getTexIndex(type, baked_texind);
 					if (reg_texind != LLAvatarAppearanceDefines::TEX_NUM_INDICES)
 					{
-						U32 index = gAgentWearables.getWearableIndex(wearable);
-						gAgentAvatarp->setLocalTexture(reg_texind, gTextureList.getImage(new_id), FALSE, index);
-						gAgentAvatarp->wearableUpdated(type, FALSE);
-
-						/* telling the manager to rebake once update cycle is fully done */
-						LLLocalBitmapMgr::setNeedsRebake();
+						U32 index;
+						if (gAgentWearables.getWearableIndex(wearable,index))
+						{
+							gAgentAvatarp->setLocalTexture(reg_texind, gTextureList.getImage(new_id), FALSE, index);
+							gAgentAvatarp->wearableUpdated(type, FALSE);
+							/* telling the manager to rebake once update cycle is fully done */
+							LLLocalBitmapMgr::setNeedsRebake();
+						}
 					}
 
 				}

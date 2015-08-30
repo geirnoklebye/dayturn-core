@@ -42,7 +42,6 @@
 #include "llflexibleobject.h"
 #include "llfeaturemanager.h"
 #include "llviewershadermgr.h"
-
 #include "llsky.h"
 #include "llvieweraudio.h"
 #include "llviewermenu.h"
@@ -667,6 +666,24 @@ bool toggle_show_mini_location_panel(const LLSD& newvalue)
 
 	return true;
 }
+
+bool handleAvatarZOffsetChanged(const LLSD& sdValue)
+{
+ 	if ( isAgentAvatarValid() )
+  	{
+ 		if (gAgent.getRegion()->avatarHoverHeightEnabled())
+ 		{
+ 			LLVector3 avOffset(0.0f, 0.0f, llclamp<F32>(sdValue.asReal(), MIN_HOVER_Z, MAX_HOVER_Z));
+ 			gAgentAvatarp->setHoverOffset(avOffset, true);
+ 		}
+ 		else if (!gAgentAvatarp->isUsingServerBakes())
+ 		{
+ 			gAgentAvatarp->computeBodySize();
+ 		}
+  	}
+  	return true;
+}
+
 
 bool toggle_show_object_render_cost(const LLSD& newvalue)
 {

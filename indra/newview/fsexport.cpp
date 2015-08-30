@@ -152,8 +152,8 @@ void FSExport::onIdle()
 			}
 			mWaitTimer.stop();
 
-			llofstream file;
-			file.open(mFileName, std::ios_base::out | std::ios_base::binary);
+			//llofstream file;
+			llofstream file(mFileName.c_str(), std::ios_base::out | std::ios_base::binary);
 			std::string zip_data = zip_llsd(mFile);
 			file.write(zip_data.data(), zip_data.size());
 			file.close();

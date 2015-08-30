@@ -113,12 +113,13 @@ namespace {
 	public:
 		RecordToFile(const std::string& filename)
 		{
-			mFile.open(filename, llofstream::out | llofstream::app);
+			mFile.open(filename.c_str(), std::ios_base::out | std::ios_base::app);
 			if (!mFile)
 			{
 				LL_INFOS() << "Error setting log file to " << filename << LL_ENDL;
 			}
 			mWantsTime = true;
+            mWantsTags = true;
 		}
 		
 		~RecordToFile()
@@ -126,7 +127,7 @@ namespace {
 			mFile.close();
 		}
 		
-		bool okay() { return mFile; }
+		bool okay() { return mFile.good(); }
 		
 		virtual void recordMessage(LLError::ELevel level,
 									const std::string& message)
@@ -335,7 +336,7 @@ namespace
 		LLSD configuration;
 
 		{
-			llifstream file(filename());
+			llifstream file(filename().c_str());
 			if (file.is_open())
 			{
 				LLSDSerialize::fromXML(configuration, file);
@@ -558,7 +559,7 @@ namespace LLError
 		mFunctionString += std::string(mFunction) + ":";
 		for (size_t i = 0; i < mTagCount; i++)
 		{
-			mTagString += std::string("#") + mTags[i] + ((i == mTagCount - 1) ? "" : " ");
+			mTagString += std::string("#") + mTags[i] + ((i == mTagCount - 1) ? "" : ",");
 		}
 	}
 
@@ -931,14 +932,19 @@ namespace
 			}
 
 			if (show_level && r->wantsLevel())
-				{
-				message_stream << site.mLevelString << " ";
-				}
+            {
+				message_stream << site.mLevelString;
+            }
 				
 			if (show_tags && r->wantsTags())
 			{
-				message_stream << site.mTagString << " ";
+				message_stream << site.mTagString;
 			}
+			if ((show_level && r->wantsLevel())||
+                (show_tags && r->wantsTags()))
+            {
+                message_stream << " ";
+            }
 
 			if (show_function && r->wantsFunctionName())
 			{

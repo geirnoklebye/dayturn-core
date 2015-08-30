@@ -28,6 +28,7 @@
 #define LL_LLFLOATERSNAPSHOT_H
 
 #include "llfloater.h"
+extern BOOL gIsInSecondLife;
 
 class LLSpinCtrl;
 

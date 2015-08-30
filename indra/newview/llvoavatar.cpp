@@ -45,6 +45,7 @@
 #include "llavatarnamecache.h"
 #include "llavatarpropertiesprocessor.h"
 #include "lldateutil.h"
+#include "llexperiencecache.h"
 #include "llphysicsmotion.h"
 #include "llviewercontrol.h"
 #include "llcallingcard.h"		// IDEVO for LLAvatarTracker
@@ -139,10 +140,6 @@ const LLUUID ANIM_AGENT_PHYSICS_MOTION = LLUUID("7360e029-3cb8-ebc4-863e-212df44
 //-----------------------------------------------------------------------------
 // Constants
 //-----------------------------------------------------------------------------
-
-const S32 MIN_PIXEL_AREA_FOR_COMPOSITE = 1024;
-const F32 SHADOW_OFFSET_AMT = 0.03f;
-
 const F32 DELTA_TIME_MIN = 0.01f;	// we clamp measured deltaTime to this
 const F32 DELTA_TIME_MAX = 0.2f;	// range to insure stability of computations.
 
@@ -150,22 +147,15 @@ const F32 PELVIS_LAG_FLYING		= 0.22f;// pelvis follow half life while flying
 const F32 PELVIS_LAG_WALKING	= 0.4f;	// ...while walking
 const F32 PELVIS_LAG_MOUSELOOK = 0.15f;
 const F32 MOUSELOOK_PELVIS_FOLLOW_FACTOR = 0.5f;
-const F32 PELVIS_LAG_WHEN_FOLLOW_CAM_IS_ON = 0.0001f; // not zero! - something gets divided by this!
 const F32 TORSO_NOISE_AMOUNT = 1.0f;	// Amount of deviation from up-axis, in degrees
 const F32 TORSO_NOISE_SPEED = 0.2f;	// Time scale factor on torso noise.
 
 const F32 BREATHE_ROT_MOTION_STRENGTH = 0.05f;
-const F32 BREATHE_SCALE_MOTION_STRENGTH = 0.005f;
-
-const F32 MIN_SHADOW_HEIGHT = 0.f;
-const F32 MAX_SHADOW_HEIGHT = 0.3f;
 
 const S32 MIN_REQUIRED_PIXEL_AREA_BODY_NOISE = 10000;
 const S32 MIN_REQUIRED_PIXEL_AREA_BREATHE = 10000;
 const S32 MIN_REQUIRED_PIXEL_AREA_PELVIS_FIX = 40;
 
-const S32 TEX_IMAGE_SIZE_SELF = 512;
-const S32 TEX_IMAGE_AREA_SELF = TEX_IMAGE_SIZE_SELF * TEX_IMAGE_SIZE_SELF;
 const S32 TEX_IMAGE_SIZE_OTHER = 512 / 4;  // The size of local textures for other (!isSelf()) avatars
 
 const F32 HEAD_MOVEMENT_AVG_TIME = 0.9f;
@@ -788,7 +778,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	const BOOL needsSendToSim = false; // currently, this HUD effect doesn't need to pack and unpack data to do its job
 	mVoiceVisualizer = ( LLVoiceVisualizer *)LLHUDManager::getInstance()->createViewerEffect( LLHUDObject::LL_HUD_EFFECT_VOICE_VISUALIZER, needsSendToSim );
 
-	LL_DEBUGS("Avatar") << "LLVOAvatar Constructor (0x" << this << ") id:" << mID << LL_ENDL;
+	LL_DEBUGS("Avatar","Message") << "LLVOAvatar Constructor (0x" << this << ") id:" << mID << LL_ENDL;
 
 	mPelvisp = NULL;
 
@@ -2235,7 +2225,7 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 		idleUpdateBelowWater();	// wind effect uses this
 		idleUpdateWindEffect();
 	}
-	
+		
 	idleUpdateNameTag( root_pos_last );
 	idleUpdateRenderCost();
 }
@@ -3374,7 +3364,7 @@ bool LLVOAvatar::isVisuallyMuted()
 					U32 max_cost = (U32) (max_render_cost*(LLVOAvatar::sLODFactor+0.5));
 
 					muted = (mAttachmentGeometryBytes > max_attachment_bytes && max_attachment_bytes > 0) ||
-						(geometry_overload_protection && mAttachmentSurfaceArea > max_attachment_area && max_attachment_area > 0.f) ||
+						    (geometry_overload_protection && mAttachmentSurfaceArea > max_attachment_area && max_attachment_area > 0.f) ||
 						(mVisualComplexity > max_cost && max_render_cost > 0);
 
 					// Could be part of the grand || collection above, but yanked out to make the logic visible
@@ -4455,8 +4445,8 @@ U32 LLVOAvatar::renderTransparent(BOOL first_pass)
 		}
 		// Can't test for baked hair being defined, since that won't always be the case (not all viewers send baked hair)
 		// TODO: 1.25 will be able to switch this logic back to calling isTextureVisible();
-		if ( getImage(TEX_HAIR_BAKED, 0) && 
-		     getImage(TEX_HAIR_BAKED, 0)->getID() != IMG_INVISIBLE || LLDrawPoolAlpha::sShowDebugAlpha)		
+		if ( ( getImage(TEX_HAIR_BAKED, 0) && 
+		     getImage(TEX_HAIR_BAKED, 0)->getID() != IMG_INVISIBLE ) || LLDrawPoolAlpha::sShowDebugAlpha)		
 		{
 			LLViewerJoint* hair_mesh = getViewerJoint(MESH_ID_HAIR);
 			if (hair_mesh)
@@ -6078,12 +6068,20 @@ BOOL LLVOAvatar::setParent(LLViewerObject* parent)
 void LLVOAvatar::addChild(LLViewerObject *childp)
 {
 	childp->extractAttachmentItemID(); // find the inventory item this object is associated with.
+	if (isSelf())
+	{
+	    const LLUUID& item_id = childp->getAttachmentItemID();
+		LLViewerInventoryItem *item = gInventory.getItem(item_id);
+		LL_DEBUGS("Avatar") << "ATT attachment child added " << (item ? item->getName() : "UNKNOWN") << " id " << item_id << LL_ENDL;
+
+	}
+
 	LLViewerObject::addChild(childp);
 	if (childp->mDrawable)
 	{
 		if (!attachObject(childp))
 		{
-			LL_WARNS() << "addChild() failed for " 
+			LL_WARNS() << "ATT addChild() failed for " 
 					<< childp->getID()
 					<< " item " << childp->getAttachmentItemID()
 					<< LL_ENDL;
@@ -6153,10 +6151,21 @@ LLViewerJointAttachment* LLVOAvatar::getTargetAttachmentPoint(LLViewerObject* vi
 //-----------------------------------------------------------------------------
 const LLViewerJointAttachment *LLVOAvatar::attachObject(LLViewerObject* viewer_object)
 {
+	if (isSelf())
+	{
+		const LLUUID& item_id = viewer_object->getAttachmentItemID();
+		LLViewerInventoryItem *item = gInventory.getItem(item_id);
+		LL_DEBUGS("Avatar") << "ATT attaching object "
+							<< (item ? item->getName() : "UNKNOWN") << " id " << item_id << LL_ENDL;	
+	}
 	LLViewerJointAttachment* attachment = getTargetAttachmentPoint(viewer_object);
 
 	if (!attachment || !attachment->addObject(viewer_object))
 	{
+		const LLUUID& item_id = viewer_object->getAttachmentItemID();
+		LLViewerInventoryItem *item = gInventory.getItem(item_id);
+		LL_WARNS("Avatar") << "ATT attach failed "
+						   << (item ? item->getName() : "UNKNOWN") << " id " << item_id << LL_ENDL;	
 		return 0;
 	}
 
@@ -6216,6 +6225,13 @@ void LLVOAvatar::lazyAttach()
 		LLPointer<LLViewerObject> cur_attachment = mPendingAttachment[i];
 		if (cur_attachment->mDrawable)
 		{
+			if (isSelf())
+			{
+				const LLUUID& item_id = cur_attachment->getAttachmentItemID();
+				LLViewerInventoryItem *item = gInventory.getItem(item_id);
+				LL_DEBUGS("Avatar") << "ATT attaching object "
+									<< (item ? item->getName() : "UNKNOWN") << " id " << item_id << LL_ENDL;
+			}
 			if (!attachObject(cur_attachment))
 			{	// Drop it
 				LL_WARNS() << "attachObject() failed for " 
@@ -7669,7 +7685,7 @@ void LLVOAvatar::parseAppearanceMessage(LLMessageSystem* mesgsys, LLAppearanceMe
 		if (it != contents.mParams.end())
 		{
 			S32 index = it - contents.mParams.begin();
-			contents.mParamAppearanceVersion = llround(contents.mParamWeights[index]);
+			contents.mParamAppearanceVersion = ll_round(contents.mParamWeights[index]);
 			LL_DEBUGS("Avatar") << "appversion req by appearance_version param: " << contents.mParamAppearanceVersion << LL_ENDL;
 		}
 	}
@@ -8906,6 +8922,7 @@ void LLVOAvatar::process_avatar_birthdate(const LLDate birthdate)
 {
 	mAvatarBirthdate = birthdate;
 	clearNameTag();
+	delete mAvatarBirthdateRequest;
 	delete mAvatarBirthdateRequest;
 	mAvatarBirthdateRequest = NULL;
 }

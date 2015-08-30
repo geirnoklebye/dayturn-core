@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <panel name="panel_login">
-	<panel.string name="forgot_password_url">
-		http://secondlife.com/account/request.php?lang=ja
-	</panel.string>
+	<panel.string name="forgot_password_url">http://secondlife.com/account/request.php?lang=ja</panel.string>
 	<layout_stack name="login_widgets">
 		<layout_panel name="login">
 			<text name="log_in_text">
 				ログイン
-			</text>
 			<text name="username_text">
 				ユーザーネーム：
-			</text>
 			<combo_box name="username_combo" tool_tip="登録時に自分で選んだユーザー名（例：bobsmith12、Steller Sunshineなど）"/>
 			<text name="password_text">
 				パスワード：

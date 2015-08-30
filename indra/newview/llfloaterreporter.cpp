@@ -81,8 +81,7 @@
 #include "llagentui.h"
 
 #include "lltrans.h"
-
-const U32 INCLUDE_SCREENSHOT  = 0x01 << 0;
+#include "llexperiencecache.h"
 
 //-----------------------------------------------------------------------------
 // Globals
@@ -108,14 +107,6 @@ LLFloaterReporter::LLFloaterReporter(const LLSD& key)
 {
 }
 
-// static
-void LLFloaterReporter::processRegionInfo(LLMessageSystem* msg)
-{
-	if ( LLFloaterReg::instanceVisible("reporter") )
-	{
-		LLNotificationsUtil::add("HelpReportAbuseEmailLL");
-	};
-}
 // virtual
 BOOL LLFloaterReporter::postBuild()
 {
@@ -161,16 +152,6 @@ BOOL LLFloaterReporter::postBuild()
 
 	mDefaultSummary = getChild<LLUICtrl>("details_edit")->getValue().asString();
 
-	// send a message and ask for information about this region - 
-	// result comes back in processRegionInfo(..)
-	LLMessageSystem* msg = gMessageSystem;
-	msg->newMessage("RequestRegionInfo");
-	msg->nextBlock("AgentData");
-	msg->addUUID("AgentID", gAgent.getID());
-	msg->addUUID("SessionID", gAgent.getSessionID());
-	gAgent.sendReliableMessage();
-	
-	
 	// abuser name is selected from a list
 	LLUICtrl* le = getChild<LLUICtrl>("abuser_name_edit");
 	le->setEnabled( false );
@@ -237,6 +218,30 @@ void LLFloaterReporter::enableControls(BOOL enable)
 	getChildView("details_edit")->setEnabled(enable);
 	getChildView("send_btn")->setEnabled(enable);
 	getChildView("cancel_btn")->setEnabled(enable);
+}
+
+void LLFloaterReporter::getExperienceInfo(const LLUUID& experience_id)
+{
+	mExperienceID = experience_id;
+
+	if (LLUUID::null != mExperienceID)
+	{
+		const LLSD& experience = LLExperienceCache::get(mExperienceID);
+		std::stringstream desc;
+
+		if(experience.isDefined())
+		{
+			setFromAvatarID(experience[LLExperienceCache::AGENT_ID]);
+			desc << "Experience id: " << mExperienceID;
+		}
+		else
+		{
+			desc << "Unable to retrieve details for id: "<< mExperienceID;
+		}
+		
+		LLUICtrl* details = getChild<LLUICtrl>("details_edit");
+		details->setValue(desc.str());
+	}
 }
 
 void LLFloaterReporter::getObjectInfo(const LLUUID& object_id)
@@ -495,7 +500,7 @@ void LLFloaterReporter::showFromMenu(EReportType report_type)
 }
 
 // static
-void LLFloaterReporter::show(const LLUUID& object_id, const std::string& avatar_name)
+void LLFloaterReporter::show(const LLUUID& object_id, const std::string& avatar_name, const LLUUID& experience_id)
 {
 	LLFloaterReporter* f = LLFloaterReg::showTypedInstance<LLFloaterReporter>("reporter");
 
@@ -508,6 +513,23 @@ void LLFloaterReporter::show(const LLUUID& object_id, const std::string& avatar_
 	{
 		f->setFromAvatarID(object_id);
 	}
+	if(experience_id.notNull())
+	{
+		f->getExperienceInfo(experience_id);
+	}
+
+	// Need to deselect on close
+	f->mDeselectOnClose = TRUE;
+
+	f->openFloater();
+}
+
+
+
+void LLFloaterReporter::showFromExperience( const LLUUID& experience_id )
+{
+	LLFloaterReporter* f = LLFloaterReg::showTypedInstance<LLFloaterReporter>("reporter");
+	f->getExperienceInfo(experience_id);
 
 	// Need to deselect on close
 	f->mDeselectOnClose = TRUE;
@@ -517,9 +539,9 @@ void LLFloaterReporter::show(const LLUUID& object_id, const std::string& avatar_
 
 
 // static
-void LLFloaterReporter::showFromObject(const LLUUID& object_id)
+void LLFloaterReporter::showFromObject(const LLUUID& object_id, const LLUUID& experience_id)
 {
-	show(object_id);
+	show(object_id, LLStringUtil::null, experience_id);
 }
 
 // static
@@ -884,6 +906,7 @@ void LLFloaterReporter::setPosBox(const LLVector3d &pos)
 //mk
 	getChild<LLUICtrl>("pos_field")->setValue(pos_string);
 }
+
 
 // void LLFloaterReporter::setDescription(const std::string& description, LLMeanCollisionData *mcd)
 // {

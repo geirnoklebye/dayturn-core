@@ -115,7 +115,7 @@ private:
 
 private:
 	LLUUID mInitialBakeIDs[6];
-	bool mInitialBakesLoaded;
+	//bool mInitialBakesLoaded;
 
 
 /********************************************************************************
@@ -305,18 +305,11 @@ protected:
 public:
 	void 				updateAttachmentVisibility(U32 camera_mode);
 	BOOL 				isWearingAttachment(const LLUUID& inv_item_id) const;
-	BOOL				attachmentWasRequested(const LLUUID& inv_item_id) const;
-	void				addAttachmentRequest(const LLUUID& inv_item_id);
-	void				removeAttachmentRequest(const LLUUID& inv_item_id);
 	LLViewerObject* 	getWornAttachment(const LLUUID& inv_item_id);
 	bool				getAttachedPointName(const LLUUID& inv_item_id, std::string& name) const;
 	/*virtual*/ const LLViewerJointAttachment *attachObject(LLViewerObject *viewer_object);
 	/*virtual*/ BOOL 	detachObject(LLViewerObject *viewer_object);
 	static BOOL			detachAttachmentIntoInventory(const LLUUID& item_id);
-
-private:
-	// Track attachments that have been requested but have not arrived yet.
-	mutable std::map<LLUUID,LLTimer> mAttachmentRequests;
 
 	//--------------------------------------------------------------------
 	// HUDs
@@ -351,6 +344,8 @@ public:
 
 private:
 	mutable LLVector3 mLastHoverOffsetSent;
+protected:
+	/*virtual*/ F32	getAvatarOffset() /*const*/;
 
 /**                    Appearance
  **                                                                            **

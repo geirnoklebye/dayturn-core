@@ -497,9 +497,8 @@ LLAgent::LLAgent() :
 	mCurrentFidget(0),
 	mFirstLogin(FALSE),
 	mOutfitChosen(FALSE),
-	
-	mVoiceConnected(false),
 
+	mVoiceConnected(false),
 	mAppearanceSerialNum(0),
 
 	mMouselookModeInSignal(NULL),
@@ -2527,8 +2526,6 @@ void LLAgent::heardChat(const LLUUID& id)
 	mChatTimer.reset();
 }
 
-const F32 SIT_POINT_EXTENTS = 0.2f;
-
 LLSD ll_sdmap_from_vector3(const LLVector3& vec)
 {
     LLSD ret;
@@ -4279,6 +4276,12 @@ void LLAgent::handleTeleportFinished()
 		LLNotificationsUtil::add("PreferredMaturityChanged", args);
 		mIsMaturityRatingChangingDuringTeleport = false;
 	}
+    
+    // Init SLM Marketplace connection so we know which UI should be used for the user as a merchant
+    // Note: Eventually, all merchant will be migrated to the new SLM system and there will be no reason to show the old UI at all.
+    // Note: Some regions will not support the SLM cap for a while so we need to do that check for each teleport.
+    // *TODO : Suppress that line from here once the whole grid migrated to SLM and move it to idle_startup() (llstartup.cpp)
+    check_merchant_status();
 }
 
 void LLAgent::handleTeleportFailed()
@@ -5064,6 +5067,23 @@ void LLAgent::renderAutoPilotTarget()
 }
 
 /********************************************************************************/
+
+LLAgentQueryManager gAgentQueryManager;
+
+LLAgentQueryManager::LLAgentQueryManager() :
+	mWearablesCacheQueryID(0),
+	mNumPendingQueries(0),
+	mUpdateSerialNum(0)
+{
+	for (U32 i = 0; i < BAKED_NUM_INDICES; i++)
+	{
+		mActiveCacheQueries[i] = 0;
+	}
+}
+
+LLAgentQueryManager::~LLAgentQueryManager()
+{
+}
 
 LLAgentQueryManager gAgentQueryManager;
 

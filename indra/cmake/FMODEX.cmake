@@ -33,10 +33,14 @@ if (FMODEX)
         set(FMODEX_LIBRARY 
             debug fmodexL
             optimized fmodex)
-      elseif (LINUX)
+      elseif (LINUX AND ${ARCH} STREQUAL "i686")
         set(FMODEX_LIBRARY 
             debug fmodexL
             optimized fmodex)
+      elseif (LINUX AND ${ARCH} STREQUAL "x86_64")
+        set(FMODEX_LIBRARY 
+            debug fmodexL64
+            optimized fmodex64)
       endif (WINDOWS)
       set(FMODEX_LIBRARIES ${FMODEX_LIBRARY})
       set(FMODEX_INCLUDE_DIR ${LIBS_PREBUILT_DIR}/include/fmodex)

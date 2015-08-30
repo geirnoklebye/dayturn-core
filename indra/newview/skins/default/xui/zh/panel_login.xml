@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <panel name="panel_login">
-	<panel.string name="forgot_password_url">
-		http://secondlife.com/account/request.php
-	</panel.string>
+	<panel.string name="forgot_password_url">http://secondlife.com/account/request.php</panel.string>
 	<layout_stack name="login_widgets">
 		<layout_panel name="login">
 			<text name="log_in_text">
 				登入
-			</text>
 			<text name="username_text">
 				使用者名稱：
-			</text>
 			<combo_box name="username_combo" tool_tip="使用者名稱是你註冊時所挑選的，像是 bobsmith12 或 Steller Sunshine"/>
 			<text name="password_text">
 				密碼：

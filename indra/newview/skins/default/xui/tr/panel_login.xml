@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <panel name="panel_login">
-	<panel.string name="forgot_password_url">
-		http://secondlife.com/account/request.php
-	</panel.string>
+	<panel.string name="forgot_password_url">http://secondlife.com/account/request.php</panel.string>
 	<layout_stack name="login_widgets">
 		<layout_panel name="login">
 			<text name="log_in_text">
@@ -30,17 +28,14 @@
 			<text name="login_help">
 				Oturum açarken yardım mı gerekiyor?
 			</text>
-			<text name="forgot_password_text">
 				Kullanıcı adınızı veya parolanızı mı unuttunuz?
-			</text>
-			<button label="Oturum Aç" name="connect_btn"/>
 			<check_box label="Parolayı hatırla" name="remember_check"/>
 		</layout_panel>
 		<layout_panel name="links">
 			<text name="create_account_text">
 				HESABINIZI OLUŞTURUN
-			</text>
 			<button label="Şimdi başla" name="create_new_account_btn"/>
+				<combo_box.item label="Son konumum" name="MyLastLocation"/>
 		</layout_panel>
 	</layout_stack>
 </panel>

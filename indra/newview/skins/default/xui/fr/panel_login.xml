@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <panel name="panel_login">
+	<panel.string name="forgot_password_url">http://secondlife.com/account/request.php?lang=fr</panel.string>
 	<panel.string name="forgot_password_url">
 		http://secondlife.com/account/request.php?lang=fr
 	</panel.string>
-	<layout_stack name="login_widgets">
-		<layout_panel name="login">
-			<text name="log_in_text">
 				CONNEXION
-			</text>
 			<text name="username_text">
 				Nom d&apos;utilisateur :
-			</text>
 			<combo_box name="username_combo" tool_tip="Nom d&apos;utilisateur que vous avez choisi lors de votre inscription (par exemple, bobsmith12 ou Steller Sunshine)."/>
 			<text name="password_text">
 				Mot de passe :
@@ -36,7 +32,7 @@
 			<button label="Connexion" name="connect_btn"/>
 			<check_box label="Enregistrer" name="remember_check"/>
 		</layout_panel>
-		<layout_panel name="links">
+			<combo_box label="Sélectionner la grille" name="server_combo" left_pad="20"/>
 			<text name="create_account_text">
 				CRÉER VOTRE COMPTE
 			</text>

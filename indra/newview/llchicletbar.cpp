@@ -35,17 +35,11 @@
 namespace
 {
 	const std::string& PANEL_CHICLET_NAME	= "chiclet_list_panel";
-
 //gcc-4.9 defined but not used
 /*
-	S32 get_curr_width(LLUICtrl* ctrl)
-	{
-		S32 cur_width = 0;
-		if ( ctrl && ctrl->getVisible() )
-		{
-			cur_width = ctrl->getRect().getWidth();
-		}
-		return cur_width;
+	
+//gcc-4.9 defined but not used
+/*
 	
 }
 */

@@ -4245,6 +4245,10 @@ version 2.0
 		{	ObjectOwner		Variable	1	}
 		{	Questions		S32	}
 	}
+	{
+		Experience	Single
+		{	ExperienceID	LLUUID	}
+	}
 }
 
 // ScriptControlChange
@@ -8710,6 +8714,11 @@ version 2.0
 		{	WaterHeight	U8				}	// meters
 		{	Agents		U8				}
 		{	MapImageID	LLUUID			}
+	}
+	{
+		Size			Variable
+		{	SizeX		U16				}
+		{	SizeY		U16				}
 	}
 	{
 		Size			Variable

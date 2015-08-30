@@ -39,17 +39,8 @@
 	<string name="local_failed_str">
 		Error al guardar en el equipo.
 	</string>
-	<button name="advanced_options_btn" tool_tip="Opciones avanzadas"/>
-	<text name="image_res_text">
-		[WIDTH] x [HEIGHT] px
-	</text>
-	<text name="file_size_label">
-		[SIZE] kB
-	</text>
+	<button label="ACTUALIZAR" name="new_snapshot_btn"/>
 	<panel name="advanced_options_panel">
-		<text name="advanced_options_label">
-			OPCIONES AVANZADAS
-		</text>
 		<text name="layer_type_label">
 			Captura:
 		</text>
@@ -62,4 +53,10 @@
 		<check_box label="Congelar la toma (pantalla completa)" name="freeze_frame_check"/>
 		<check_box label="Actualizar automáticamente" name="auto_snapshot_check"/>
 	</panel>
+	<text name="image_res_text">
+		[WIDTH] px (ancho) × [HEIGHT] px (alto)
+	</text>
+	<text name="file_size_label">
+		[SIZE] kB
+	</text>
 </floater>

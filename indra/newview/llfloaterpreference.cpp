@@ -116,13 +116,9 @@
 #include "llviewermedia.h"
 #include "llviewermedia_streamingaudio.h"
 
-const F32 MAX_USER_FAR_CLIP = 512.f;
-const F32 MIN_USER_FAR_CLIP = 64.f;
 const F32 BANDWIDTH_UPDATER_TIMEOUT = 0.5f;
 char const* const VISIBILITY_DEFAULT = "default";
 char const* const VISIBILITY_HIDDEN = "hidden";
-char const* const VISIBILITY_VISIBLE = "visible";
-char const* const VISIBILITY_INVISIBLE = "invisible";
 
 //control value for middle mouse as talk2push button
 const static std::string MIDDLE_MOUSE_CV = "MiddleMouse";
@@ -343,8 +339,8 @@ void fractionFromDecimal(F32 decimal_val, S32& numerator, S32& denominator)
 	{
 		if (fmodf((decimal_val * test_denominator) + 0.01f, 1.f) < 0.02f)
 		{
-			numerator = llround(decimal_val * test_denominator);
-			denominator = llround(test_denominator);
+			numerator = ll_round(decimal_val * test_denominator);
+			denominator = ll_round(test_denominator);
 			break;
 		}
 	}
@@ -527,6 +523,33 @@ BOOL LLFloaterPreference::postBuild()
 		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(TRUE);
 		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(TRUE);
 	}	
+	else
+	{
+		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(TRUE);
+		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(TRUE);
+	}	
+	
+// ## Zi: Pie menu
+	gSavedSettings.getControl("OverridePieColors")->getSignal()->connect(boost::bind(&LLFloaterPreference::onPieColorsOverrideChanged, this));
+	// make sure pie color controls are enabled or greyed out properly
+	onPieColorsOverrideChanged();
+// ## Zi: Pie menu
+
+	gSavedSettings.getControl("StreamMetadataAnnounceToChat")->getSignal()->connect(boost::bind(&LLFloaterPreference::onStreamMetadataAnnounceChanged, this));
+	gSavedSettings.getControl("MiniMapChatRing")->getSignal()->connect(boost::bind(&LLFloaterPreference::onMiniMapChatRingChanged, this));
+	gSavedSettings.getControl("ShowLookAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowLookAtChanged, this));
+	gSavedSettings.getControl("ShowPointAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowPointAtChanged, this));
+	gSavedSettings.getControl("NameTagShowAge")->getSignal()->connect(boost::bind(&LLFloaterPreference::onNameTagShowAgeChanged, this));
+	gSavedSettings.getControl("NameTagShowAgeLimit")->getSignal()->connect(boost::bind(&LLFloaterPreference::onNameTagShowAgeLimitChanged, this));
+	gSavedSettings.getControl("WindowTitleAvatarName")->getSignal()->connect(boost::bind(&LLAppViewer::setViewerWindowTitle));
+	gSavedSettings.getControl("WindowTitleGridName")->getSignal()->connect(boost::bind(&LLAppViewer::setViewerWindowTitle));
+
+	onStreamMetadataAnnounceChanged();
+	onMiniMapChatRingChanged();
+	onShowLookAtChanged();
+	onShowPointAtChanged();
+	onNameTagShowAgeChanged();
+	onNameTagShowAgeLimitChanged();
 	
 // ## Zi: Pie menu
 	gSavedSettings.getControl("OverridePieColors")->getSignal()->connect(boost::bind(&LLFloaterPreference::onPieColorsOverrideChanged, this));
@@ -1362,6 +1385,7 @@ void LLFloaterPreference::refreshEnabledState()
 	getChildView("block_list")->setEnabled(logged_in);
 
 	getChildView("pick_current_search_url")->setEnabled(logged_in);
+
 
 	// Cannot have floater active until caps have been received
 	getChild<LLButton>("default_creation_permissions")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);

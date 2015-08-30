@@ -32,13 +32,16 @@ if (USESYSTEMLIBS)
     add_definitions(${${pkg}_CFLAGS_OTHERS})
   endforeach(pkg)
 else (USESYSTEMLIBS)
-if (WINDOWS)
-  use_prebuilt_binary(gtk-atk-pango-glib)
-endif (WINDOWS)
-  if (LINUX)
-    use_prebuilt_binary(glib)		# gtk-etc needs glib
-    use_prebuilt_binary(gtk-etc)
-
+  if (LINUX AND ${ARCH} STREQUAL "i686")
+#    use_prebuilt_binary(gtk-atk-pango-glib)
+	use_prebuilt_binary(cairo)    
+    use_prebuilt_binary(glib)
+    use_prebuilt_binary(atk)
+    use_prebuilt_binary(pixman)
+	use_prebuilt_binary(harfbuzz)
+	use_prebuilt_binary(pango)
+    use_prebuilt_binary(gtk)
+	use_prebuilt_binary(gdk-pixbuf)		    
     set(UI_LIBRARIES
         atk-1.0
         cairo
@@ -53,13 +56,45 @@ endif (WINDOWS)
         gtk-x11-2.0
         pango-1.0
         pangoft2-1.0
-        pangox-1.0
+        #pangox-1.0 this library is obsolete http://ftp.gnome.org/pub/GNOME/sources/pangox-compat/ if need here is the source
         pangoxft-1.0
         pixman-1
         ${FREETYPE_LIBRARIES}
         pangocairo-1.0
         )
-  endif (LINUX)
+  endif (LINUX AND ${ARCH} STREQUAL "i686")
+
+  if (LINUX AND ${ARCH} STREQUAL "x86_64")
+    use_prebuilt_binary(glib)
+    use_prebuilt_binary(atk)
+	use_prebuilt_binary(cairo)
+	use_prebuilt_binary(pango)
+	use_prebuilt_binary(pixman)
+    use_prebuilt_binary(gtk)
+	use_prebuilt_binary(gdk-pixbuf)
+	use_prebuilt_binary(harfbuzz)		
+    set(UI_LIBRARIES
+        atk-1.0
+        cairo
+        gdk-x11-2.0
+        gdk_pixbuf-2.0
+        Xinerama
+        glib-2.0
+        gio-2.0
+        gmodule-2.0
+        gobject-2.0
+        gthread-2.0
+        gtk-x11-2.0
+        pango-1.0
+        pangoft2-1.0
+        #pangox-1.0 this library is obsolete http://ftp.gnome.org/pub/GNOME/sources/pangox-compat/ if need here is the source
+        pangoxft-1.0
+        pixman-1
+        ${FREETYPE_LIBRARIES}
+        pangocairo-1.0
+        )
+  endif (LINUX AND ${ARCH} STREQUAL "x86_64")
+
 
   include_directories (
       ${LIBS_PREBUILT_DIR}/include

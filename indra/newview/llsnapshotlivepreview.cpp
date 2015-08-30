@@ -179,14 +179,14 @@ void LLSnapshotLivePreview::updateSnapshot(BOOL new_snapshot, BOOL new_thumbnail
             if (image_aspect_ratio > window_aspect_ratio)
             {
                 // trim off top and bottom
-                S32 new_height = llround((F32)getRect().getWidth() / image_aspect_ratio); 
+                S32 new_height = ll_round((F32)getRect().getWidth() / image_aspect_ratio); 
                 rect.mBottom += (getRect().getHeight() - new_height) / 2;
                 rect.mTop -= (getRect().getHeight() - new_height) / 2;
             }
             else if (image_aspect_ratio < window_aspect_ratio)
             {
                 // trim off left and right
-                S32 new_width = llround((F32)getRect().getHeight() * image_aspect_ratio); 
+                S32 new_width = ll_round((F32)getRect().getHeight() * image_aspect_ratio); 
                 rect.mLeft += (getRect().getWidth() - new_width) / 2;
                 rect.mRight -= (getRect().getWidth() - new_width) / 2;
             }
@@ -347,9 +347,9 @@ void LLSnapshotLivePreview::draw()
 			LLLocalClipRect clip(getLocalRect());
 			{
 				// draw diagonal stripe with gradient that passes over screen
-				S32 x1 = gViewerWindow->getWindowWidthScaled() * llround((clamp_rescale(shine_interp, 0.f, 1.f, -1.f - SHINE_WIDTH, 1.f)));
-				S32 x2 = x1 + llround(gViewerWindow->getWindowWidthScaled() * SHINE_WIDTH);
-				S32 x3 = x2 + llround(gViewerWindow->getWindowWidthScaled() * SHINE_WIDTH);
+				S32 x1 = gViewerWindow->getWindowWidthScaled() * ll_round((clamp_rescale(shine_interp, 0.f, 1.f, -1.f - SHINE_WIDTH, 1.f)));
+				S32 x2 = x1 + ll_round(gViewerWindow->getWindowWidthScaled() * SHINE_WIDTH);
+				S32 x3 = x2 + ll_round(gViewerWindow->getWindowWidthScaled() * SHINE_WIDTH);
 				S32 y1 = 0;
 				S32 y2 = gViewerWindow->getWindowHeightScaled();
 
@@ -431,7 +431,7 @@ void LLSnapshotLivePreview::draw()
 			gGL.pushMatrix();
 			{
 				LLRect& rect = mImageRect[old_image_index];
-				gGL.translatef((F32)rect.mLeft, (F32)rect.mBottom - llround(getRect().getHeight() * 2.f * (fall_interp * fall_interp)), 0.f);
+				gGL.translatef((F32)rect.mLeft, (F32)rect.mBottom - ll_round(getRect().getHeight() * 2.f * (fall_interp * fall_interp)), 0.f);
 				gGL.rotatef(-45.f * fall_interp, 0.f, 0.f, 1.f);
 				gGL.begin(LLRender::QUADS);
 				{
@@ -485,13 +485,13 @@ BOOL LLSnapshotLivePreview::setThumbnailImageSize()
 	{
 		// image too wide, shrink to width
 		mThumbnailWidth = max_width;
-		mThumbnailHeight = llround((F32)max_width / aspect_ratio);
+		mThumbnailHeight = ll_round((F32)max_width / aspect_ratio);
 	}
 	else
 	{
 		// image too tall, shrink to height
 		mThumbnailHeight = max_height;
-		mThumbnailWidth = llround((F32)max_height * aspect_ratio);
+		mThumbnailWidth = ll_round((F32)max_height * aspect_ratio);
 	}
     
 	if (mThumbnailWidth > width || mThumbnailHeight > height)
@@ -801,7 +801,14 @@ S32 LLSnapshotLivePreview::getEncodedImageWidth() const
     S32 width = getWidth();
     if (getSnapshotType() == SNAPSHOT_TEXTURE)
     {
-        width = LLImageRaw::biasedDimToPowerOfTwo(width,MAX_TEXTURE_SIZE);
+		if (gIsInSecondLife)
+		{
+			width = LLImageRaw::biasedDimToPowerOfTwo(width, MAX_TEXTURE_SIZE);
+		}
+		else
+		{
+			width = LLImageRaw::biasedDimToPowerOfTwo(width, (MAX_TEXTURE_SIZE * 2));
+		}
     }
     return width;
 }
@@ -810,7 +817,15 @@ S32 LLSnapshotLivePreview::getEncodedImageHeight() const
     S32 height = getHeight();
     if (getSnapshotType() == SNAPSHOT_TEXTURE)
     {
-        height = LLImageRaw::biasedDimToPowerOfTwo(height,MAX_TEXTURE_SIZE);
+		if (gIsInSecondLife)
+		{
+			height = LLImageRaw::biasedDimToPowerOfTwo(height, MAX_TEXTURE_SIZE);
+		}
+		else
+		{
+			height = LLImageRaw::biasedDimToPowerOfTwo(height, (MAX_TEXTURE_SIZE * 2));
+		}
+        
     }
     return height;
 }
@@ -838,7 +853,14 @@ LLPointer<LLImageRaw> LLSnapshotLivePreview::getEncodedImage()
                                                           mPreviewImage->getHeight(),
                                                           mPreviewImage->getComponents());
             // Scale it as required by J2C
-			scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
+			if (gIsInSecondLife)
+			{
+				scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
+			}
+			else
+			{
+				scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE * 2);
+			}
 			setImageScaled(TRUE);
             // Compress to J2C
 			if (formatted->encode(scaled, 0.f))
@@ -994,7 +1016,14 @@ void LLSnapshotLivePreview::saveTexture()
 		}
 	}
 
-	scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
+	if (gIsInSecondLife)
+	{
+		scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
+	}
+	else
+	{
+		scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE * 2);
+	}
 	LL_DEBUGS() << "scaled texture to " << scaled->getWidth() << "x" << scaled->getHeight() << LL_ENDL;
 
 	if (formatted->encode(scaled, 0.0f))

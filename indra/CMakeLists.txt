@@ -29,12 +29,6 @@ if (HAS_OPENSIM_SUPPORT)
   message("compiling with OpenSim support")
 endif (HAS_OPENSIM_SUPPORT)
 add_definitions(-DLL_SEND_CRASH_REPORTS=1)
-# For the library installation process;
-# see cmake/Prebuild.cmake for the counterpart code.
-if ("${CMAKE_SOURCE_DIR}/../autobuild.xml" IS_NEWER_THAN "${CMAKE_BINARY_DIR}/temp/sentinel_installed")
-  file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/temp)
-  file(WRITE ${CMAKE_BINARY_DIR}/temp/sentinel_installed "0")
-endif ("${CMAKE_SOURCE_DIR}/../autobuild.xml" IS_NEWER_THAN "${CMAKE_BINARY_DIR}/temp/sentinel_installed")
 add_subdirectory(cmake)
 
 add_subdirectory(${LIBS_OPEN_PREFIX}llaudio)
@@ -68,20 +62,24 @@ add_subdirectory(${LIBS_OPEN_PREFIX}viewer_components)
 
 # Legacy C++ tests. Build always, run if LL_TESTS is true.
 add_subdirectory(${VIEWER_PREFIX}test)
+# teapot
+add_subdirectory(${LIBS_OPEN_PREFIX}teapot)
 
+if (ENABLE_MEDIA_PLUGINS)
 # viewer media plugins
 add_subdirectory(${LIBS_OPEN_PREFIX}media_plugins)
 
-# teapot
-add_subdirectory(${LIBS_OPEN_PREFIX}teapot)
+
 
   # llplugin testbed code (is this the right way to include it?)
   if (LL_TESTS AND NOT LINUX)
     add_subdirectory(${VIEWER_PREFIX}test_apps/llplugintest)
     add_subdirectory(${VIEWER_PREFIX}test_apps/llfbconnecttest)
   endif (LL_TESTS AND NOT LINUX)
+endif (ENABLE_MEDIA_PLUGINS)
 
 if (LINUX)
+  add_subdirectory(${LIBS_OPEN_PREFIX}media_plugins)
   add_subdirectory(${VIEWER_PREFIX}linux_crash_logger)
   if (INSTALL_PROPRIETARY)
       include(LLAppearanceUtility)
@@ -107,8 +105,11 @@ endif (LINUX)
 add_subdirectory(${VIEWER_PREFIX}newview)
   add_dependencies(viewer kokua-bin)
 
+add_subdirectory(${VIEWER_PREFIX}doxygen EXCLUDE_FROM_ALL)
+
 if (LL_TESTS)
   # Define after the custom targets are created so
   # individual apps can add themselves as dependencies
   add_subdirectory(${INTEGRATION_TESTS_PREFIX}integration_tests)
 endif (LL_TESTS)
+

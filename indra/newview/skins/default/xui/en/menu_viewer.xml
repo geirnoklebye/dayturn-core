@@ -66,6 +66,13 @@
        function="Floater.ToggleOrBringToFront"
        parameter="picks" />
     </menu_item_call>
+      <menu_item_call
+        label="Experiences..."
+        name="Experiences">
+        <menu_item_call.on_click
+          function="Floater.ToggleOrBringToFront"
+          parameter="experiences"/>
+      </menu_item_call>
     <menu_item_separator/>
     <menu_item_call
      label="Camera Controls..."
@@ -177,13 +184,20 @@
     </menu_item_call>
     <menu_item_call
        label="Merchant Outbox..."
-         name="MerchantOutbox">
+         name="MerchantOutbox"
          only_in_sl="true">
       <menu_item_call.on_click
        function="Floater.ToggleOrBringToFront"
        parameter="outbox" />
     </menu_item_call>
-    <menu_item_call
+        <menu_item_call
+            label="Marketplace listings..."
+            name="MarketplaceListings">
+            <menu_item_call.on_click
+            function="Floater.ToggleOrBringToFront"
+            parameter="marketplace_listings" />
+        </menu_item_call>
+      <menu_item_call
          label="Account dashboard..."
            name="Manage My Account"
            only_in_sl="true">
@@ -1305,6 +1319,7 @@
                     <menu_item_call.on_enable
                      function="Tools.EnableToolNotPie" />
                 </menu_item_call>				
+<<<<<<< local
     </menu>
     <menu
      create_jump_keys="true"
@@ -1353,10 +1368,77 @@
          parameter="Upload Animation" />
       </menu_item_call>
       <menu_item_call
-           label="Mesh Model..."
+       label="Mesh Model..."
+    </menu>
+    <menu
+     create_jump_keys="true"
+     label="Upload"
      layout="topleft"
+     name="Upload"
+     tear_off="true">
+      <menu_item_call
+       label="Image ([COST])..."
+       layout="topleft"
+       name="Upload Image"
+       shortcut="control|U">
+        <menu_item_call.on_click
+         function="File.UploadImage"
+         parameter="" />
+        <menu_item_call.on_enable
+         function="File.EnableUpload" />
+        <menu_item_call.on_visible
+         function="Upload.CalculateCosts"
+         parameter="Upload Image" />
+      </menu_item_call>
+      <menu_item_call
+       label="Sound ([COST])..."
+       layout="topleft"
+       name="Upload Sound">
+        <menu_item_call.on_click
+         function="File.UploadSound"
+         parameter="" />
+        <menu_item_call.on_enable
+         function="File.EnableUpload" />
+        <menu_item_call.on_visible
+         function="Upload.CalculateCosts"
+         parameter="Upload Sound" />
+      </menu_item_call>
+      <menu_item_call
+       label="Animation ([COST])..."
+       layout="topleft"
+       name="Upload Animation">
+        <menu_item_call.on_click
+         function="File.UploadAnim"
+         parameter="" />
+        <menu_item_call.on_enable
+         function="File.EnableUpload" />
+        <menu_item_call.on_visible
+         function="Upload.CalculateCosts"
+         parameter="Upload Animation" />
+      </menu_item_call>
+      <menu_item_call
+>>>>>>> other
+           label="Mesh Model..."
+           layout="topleft"
            name="Upload Model"
            shortcut="control|alt|U">
+<<<<<<< local
+        <menu_item_call.on_click
+         function="File.UploadModel"
+         parameter="" />
+        <menu_item_call.on_enable
+         function="File.EnableUploadModel" />
+        <menu_item_call.on_visible
+        function="File.VisibleUploadModel"/>
+      </menu_item_call>
+      <menu_item_call
+              label="Bulk ([COST] per file)..."
+              layout="topleft"
+              name="Bulk Upload">
+        <menu_item_call.on_click
+         function="File.UploadBulk"
+         parameter="" />
+      </menu_item_call>
         <menu_item_call.on_click
          function="File.UploadModel"
          parameter="" />
@@ -1540,59 +1622,90 @@
        function="Help.ToggleHowTo"
        parameter="" />
     </menu_item_call>
-    <menu_item_call
+<!--       <menu_item_call
        label="Quickstart"
-       name="Quickstart">
+           name="Quickstart"
+           only_in_sl="true">
       <menu_item_call.on_click
       function="Advanced.ShowURL"
       parameter="http://community.secondlife.com/t5/English-Knowledge-Base/Second-Life-Quickstart/ta-p/1087919"/>
+        </menu_item_call>-->
+        <menu_item_call
+         label="[CURRENT_GRID] Help"
+         name="current_grid_help">
+            <menu_item_call.on_click
+             function="ShowHelp"
+             parameter="grid_help" />
+        </menu_item_call>
+        <menu_item_call
+         label="About [CURRENT_GRID]"
+         name="current_grid_about">
+            <menu_item_call.on_click
+             function="ShowHelp"
+             parameter="grid_about" />
     </menu_item_call>
     <!--        <menu_item_call
          label="Tutorial"
-         name="Tutorial">
+         name="Tutorial"
+         only_in_sl="true">
             <menu_item_call.on_click
              function="Floater.Show"
              parameter="hud" />
         </menu_item_call>-->
-    <menu_item_separator/>
+
+      <menu_item_separator only_in_sl="true" />
+
     <menu_item_call
          label="Knowledge Base"
-         name="Knowledge Base">
+             name="Knowledge Base"
+             only_in_sl="true">
       <menu_item_call.on_click
           function="Advanced.ShowURL"
      parameter="http://community.secondlife.com/t5/English-Knowledge-Base/Second-Life-User-s-Guide/ta-p/1244857"/>
     </menu_item_call>
     <menu_item_call
          label="Wiki"
-         name="Wiki">
+             name="Wiki"
+             only_in_sl="true">
       <menu_item_call.on_click
           function="Advanced.ShowURL"
           parameter="http://wiki.secondlife.com"/>
     </menu_item_call>
     <menu_item_call
          label="Community Forums"
-         name="Community Forums">
+             name="Community Forums"
+             only_in_sl="true">
       <menu_item_call.on_click
           function="Advanced.ShowURL"
           parameter="http://community.secondlife.com/t5/Forums/ct-p/Forums"/>
     </menu_item_call>
     <menu_item_call
-         label="Support portal"
-         name="Support portal">
+             label="Support Portal"
+             name="Support portal"
+             only_in_sl="true">
       <menu_item_call.on_click
           function="Advanced.ShowURL"
           parameter="https://support.secondlife.com/"/>
     </menu_item_call>
+        <menu_item_call
+             label="[APP_NAME] Support Group"
+             name="Viewer Support Group"
+             visible="false">
+             <menu_item_call.on_click
+                 function="Advanced.ShowGroup" />
+             <menu_item_call.on_visible
+                 function="Advanced.ViewerSupportGroupExists" />
+        </menu_item_call>
     <menu_item_separator/>
     <menu_item_call
-         label="[SECOND_LIFE] News"
+             label="[CURRENT_GRID] News"
          name="Second Life News">
       <menu_item_call.on_click
           function="Advanced.ShowURL"
           parameter="http://community.secondlife.com/t5/Featured-News/bg-p/blog_feature_news"/>
     </menu_item_call>
     <menu_item_call
-         label="[SECOND_LIFE] Blogs"
+             label="[CURRENT_GRID] Blogs"
          name="Second Life Blogs">
       <menu_item_call.on_click
           function="Advanced.ShowURL"

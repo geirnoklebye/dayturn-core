@@ -76,8 +76,13 @@
 #include "llviewercontrol.h"
 #include "roles_constants.h"
 #include "lltrans.h"
+#include "llpanelexperiencelisteditor.h"
+#include "llpanelexperiencepicker.h"
+#include "llexperiencecache.h"
 
 #include "llgroupactions.h"
+
+const F64 COVENANT_REFRESH_TIME_SEC = 60.0f;
 
 static std::string OWNER_ONLINE 	= "0";
 static std::string OWNER_OFFLINE	= "1";
@@ -109,6 +114,28 @@ public:
 	{
 		return mLabel;
 	}
+};
+
+
+class LLPanelLandExperiences
+	:	public LLPanel
+{
+public:	
+	LLPanelLandExperiences(LLSafeHandle<LLParcelSelection>& parcelp);
+	virtual BOOL postBuild();
+	void refresh();
+
+	void experienceAdded(const LLUUID& id, U32 xp_type, U32 access_type);
+	void experienceRemoved(const LLUUID& id, U32 access_type);
+protected:
+	LLPanelExperienceListEditor* setupList( const char* control_name, U32 xp_type, U32 access_type );
+	void refreshPanel(LLPanelExperienceListEditor* panel, U32 xp_type);
+
+	LLSafeHandle<LLParcelSelection>&	mParcel;
+
+
+	LLPanelExperienceListEditor* mAllowed;
+	LLPanelExperienceListEditor* mBlocked;
 };
 
 // inserts maturity info(icon and text) into target textbox 
@@ -256,6 +283,7 @@ LLFloaterLand::LLFloaterLand(const LLSD& seed)
 	mFactoryMap["land_audio_panel"] =	LLCallbackMap(createPanelLandAudio, this);
 	mFactoryMap["land_media_panel"] =	LLCallbackMap(createPanelLandMedia, this);
 	mFactoryMap["land_access_panel"] =	LLCallbackMap(createPanelLandAccess, this);
+	mFactoryMap["land_experiences_panel"] =	LLCallbackMap(createPanelLandExperiences, this);
 
 	sObserver = new LLParcelSelectionObserver();
 	LLViewerParcelMgr::getInstance()->addObserver( sObserver );
@@ -296,6 +324,7 @@ void LLFloaterLand::refresh()
 	mPanelMedia->refresh();
 	mPanelAccess->refresh();
 	mPanelCovenant->refresh();
+	mPanelExperiences->refresh();
 }
 
 
@@ -355,6 +384,15 @@ void* LLFloaterLand::createPanelLandAccess(void* data)
 	self->mPanelAccess = new LLPanelLandAccess(self->mParcel);
 	return self->mPanelAccess;
 }
+
+// static
+void* LLFloaterLand::createPanelLandExperiences(void* data)
+{
+	LLFloaterLand* self = (LLFloaterLand*)data;
+	self->mPanelExperiences = new LLPanelLandExperiences(self->mParcel);
+	return self->mPanelExperiences;
+}
+
 
 //---------------------------------------------------------------------------
 // LLPanelLandGeneral
@@ -1238,7 +1276,7 @@ void LLPanelLandObjects::refresh()
 	{
 		S32 sw_max = parcel->getSimWideMaxPrimCapacity();
 		S32 sw_total = parcel->getSimWidePrimCount();
-		S32 max = llround(parcel->getMaxPrimCapacity() * parcel->getParcelPrimBonus());
+		S32 max = ll_round(parcel->getMaxPrimCapacity() * parcel->getParcelPrimBonus());
 		S32 total = parcel->getPrimCount();
 		S32 owned = parcel->getOwnerPrimCount();
 		S32 group = parcel->getGroupPrimCount();
@@ -2065,9 +2103,9 @@ void LLPanelLandOptions::refresh()
 		else
 		{
 			mLocationText->setTextArg("[LANDING]",llformat("%d, %d, %d (%d\xC2\xB0)",
-														   llround(pos.mV[VX]),
-														   llround(pos.mV[VY]),
-		   												   llround(pos.mV[VZ]),
+														   ll_round(pos.mV[VX]),
+														   ll_round(pos.mV[VY]),
+		   												   ll_round(pos.mV[VZ]),
 														   user_look_at_angle));
 		}
 
@@ -2143,6 +2181,13 @@ S32 LLPanelLandOptions::getDirectoryFee()
 /*
 	if (LLGridManager::getInstance()->isInAuroraSim())
 	{
+		LLSD grid_info;
+		LLGridManager::getInstance()->getGridData(grid_info);
+		fee = grid_info[GRID_DIRECTORY_FEE].asInteger();
+	}
+*/
+#endif // OPENSIM
+	return fee;
 		LLSD grid_info;
 		LLGridManager::getInstance()->getGridData(grid_info);
 		fee = grid_info[GRID_DIRECTORY_FEE].asInteger();
@@ -2451,37 +2496,37 @@ void LLPanelLandAccess::refresh()
 			getChild<LLUICtrl>("AccessList")->setToolTipArg(LLStringExplicit("[LISTED]"), llformat("%d",count));
 			getChild<LLUICtrl>("AccessList")->setToolTipArg(LLStringExplicit("[MAX]"), llformat("%d",PARCEL_MAX_ACCESS_LIST));
 
-			for (access_map_const_iterator cit = parcel->mAccessList.begin();
+			for (LLAccessEntry::map::const_iterator cit = parcel->mAccessList.begin();
 				 cit != parcel->mAccessList.end(); ++cit)
 			{
 				const LLAccessEntry& entry = (*cit).second;
-				std::string suffix;
+				std::string prefix;
 				if (entry.mTime != 0)
 				{
 					LLStringUtil::format_map_t args;
 					S32 now = time(NULL);
 					S32 seconds = entry.mTime - now;
 					if (seconds < 0) seconds = 0;
-					suffix.assign(" (");
+					prefix.assign(" (");
 					if (seconds >= 120)
 					{
 						args["[MINUTES]"] = llformat("%d", (seconds/60));
 						std::string buf = parent_floater->getString ("Minutes", args);
-						suffix.append(buf);
+						prefix.append(buf);
 					}
 					else if (seconds >= 60)
 					{
-						suffix.append("1 " + parent_floater->getString("Minute"));
+						prefix.append("1 " + parent_floater->getString("Minute"));
 					}
 					else
 					{
 						args["[SECONDS]"] = llformat("%d", seconds);
 						std::string buf = parent_floater->getString ("Seconds", args);
-						suffix.append(buf);
+						prefix.append(buf);
 					}
-					suffix.append(" " + parent_floater->getString("Remaining") + ")");
+					prefix.append(" " + parent_floater->getString("Remaining") + ") ");
 				}
-				mListAccess->addNameItem(entry.mID, ADD_DEFAULT, TRUE, suffix);
+				mListAccess->addNameItem(entry.mID, ADD_DEFAULT, TRUE, "", prefix);
 			}
 			mListAccess->sortByName(TRUE);
 		}
@@ -2497,37 +2542,37 @@ void LLPanelLandAccess::refresh()
 			getChild<LLUICtrl>("BannedList")->setToolTipArg(LLStringExplicit("[LISTED]"), llformat("%d",count));
 			getChild<LLUICtrl>("BannedList")->setToolTipArg(LLStringExplicit("[MAX]"), llformat("%d",PARCEL_MAX_ACCESS_LIST));
 
-			for (access_map_const_iterator cit = parcel->mBanList.begin();
+			for (LLAccessEntry::map::const_iterator cit = parcel->mBanList.begin();
 				 cit != parcel->mBanList.end(); ++cit)
 			{
 				const LLAccessEntry& entry = (*cit).second;
-				std::string suffix;
+				std::string prefix;
 				if (entry.mTime != 0)
 				{
 					LLStringUtil::format_map_t args;
 					S32 now = time(NULL);
 					S32 seconds = entry.mTime - now;
 					if (seconds < 0) seconds = 0;
-					suffix.assign(" (");
+					prefix.assign(" (");
 					if (seconds >= 120)
 					{
 						args["[MINUTES]"] = llformat("%d", (seconds/60));
 						std::string buf = parent_floater->getString ("Minutes", args);
-						suffix.append(buf);
+						prefix.append(buf);
 					}
 					else if (seconds >= 60)
 					{
-						suffix.append("1 " + parent_floater->getString("Minute"));
+						prefix.append("1 " + parent_floater->getString("Minute"));
 					}
 					else
 					{
 						args["[SECONDS]"] = llformat("%d", seconds);
 						std::string buf = parent_floater->getString ("Seconds", args);
-						suffix.append(buf);
+						prefix.append(buf);
 					}
-					suffix.append(" " + parent_floater->getString("Remaining") + ")");
+					prefix.append(" " + parent_floater->getString("Remaining") + ") ");
 				}
-				mListBanned->addNameItem(entry.mID, ADD_DEFAULT, TRUE, suffix);
+				mListBanned->addNameItem(entry.mID, ADD_DEFAULT, TRUE, "",  prefix);
 			}
 			mListBanned->sortByName(TRUE);
 		}
@@ -2930,12 +2975,21 @@ void LLPanelLandAccess::onClickRemoveBanned(void* data)
 //---------------------------------------------------------------------------
 LLPanelLandCovenant::LLPanelLandCovenant(LLParcelSelectionHandle& parcel)
 	: LLPanel(),
-	  mParcel(parcel)
-{	
+	  mParcel(parcel),
+	  mNextUpdateTime(0)
+{
 }
 
 LLPanelLandCovenant::~LLPanelLandCovenant()
 {
+}
+
+BOOL LLPanelLandCovenant::postBuild()
+{
+	mLastRegionID = LLUUID::null;
+	mNextUpdateTime = 0;
+
+	return TRUE;
 }
 
 // virtual
@@ -2984,14 +3038,23 @@ void LLPanelLandCovenant::refresh()
 			changeable_clause->setText(getString("can_not_change"));
 		}
 	}
-	
-	// send EstateCovenantInfo message
-	LLMessageSystem *msg = gMessageSystem;
-	msg->newMessage("EstateCovenantRequest");
-	msg->nextBlockFast(_PREHASH_AgentData);
-	msg->addUUIDFast(_PREHASH_AgentID,	gAgent.getID());
-	msg->addUUIDFast(_PREHASH_SessionID,gAgent.getSessionID());
-	msg->sendReliable(region->getHost());
+
+	if (mLastRegionID != region->getRegionID()
+		|| mNextUpdateTime < LLTimer::getElapsedSeconds())
+	{
+		// Request Covenant Info
+		// Note: LLPanelLandCovenant doesn't change Covenant's content and any
+		// changes made by Estate floater should be requested by Estate floater
+		LLMessageSystem *msg = gMessageSystem;
+		msg->newMessage("EstateCovenantRequest");
+		msg->nextBlockFast(_PREHASH_AgentData);
+		msg->addUUIDFast(_PREHASH_AgentID,	gAgent.getID());
+		msg->addUUIDFast(_PREHASH_SessionID,gAgent.getSessionID());
+		msg->sendReliable(region->getHost());
+
+		mLastRegionID = region->getRegionID();
+		mNextUpdateTime = LLTimer::getElapsedSeconds() + COVENANT_REFRESH_TIME_SEC;
+	}
 }
 
 // static
@@ -3085,5 +3148,105 @@ void insert_maturity_into_textbox(LLTextBox* target_textbox, LLFloater* names_fl
 
 	target_textbox->appendText(LLViewerParcelMgr::getInstance()->getSelectionRegion()->getSimAccessString(), false);
 	target_textbox->appendText(text_after_rating, false);
+}
+
+LLPanelLandExperiences::LLPanelLandExperiences( LLSafeHandle<LLParcelSelection>& parcelp ) 
+	: mParcel(parcelp)
+{
+
+}
+
+
+BOOL LLPanelLandExperiences::postBuild()
+{
+	mAllowed = setupList("panel_allowed", EXPERIENCE_KEY_TYPE_ALLOWED, AL_ALLOW_EXPERIENCE);
+	mBlocked = setupList("panel_blocked", EXPERIENCE_KEY_TYPE_BLOCKED, AL_BLOCK_EXPERIENCE);
+
+	// only non-grid-wide experiences
+	mAllowed->addFilter(boost::bind(LLPanelExperiencePicker::FilterWithProperty, _1, LLExperienceCache::PROPERTY_GRID));
+
+	// no privileged ones
+	mBlocked->addFilter(boost::bind(LLPanelExperiencePicker::FilterWithoutProperties, _1, LLExperienceCache::PROPERTY_PRIVILEGED|LLExperienceCache::PROPERTY_GRID));
+
+	getChild<LLLayoutPanel>("trusted_layout_panel")->setVisible(FALSE);
+	getChild<LLTextBox>("experiences_help_text")->setVisible(FALSE);
+	getChild<LLTextBox>("allowed_text_help")->setText(getString("allowed_parcel_text"));
+	getChild<LLTextBox>("blocked_text_help")->setText(getString("blocked_parcel_text"));
+	
+	return LLPanel::postBuild();
+}
+
+LLPanelExperienceListEditor* LLPanelLandExperiences::setupList( const char* control_name, U32 xp_type, U32 access_type )
+{
+	LLPanelExperienceListEditor* child = findChild<LLPanelExperienceListEditor>(control_name);
+	if(child)
+	{
+		child->getChild<LLTextBox>("text_name")->setText(child->getString(control_name));
+		child->setMaxExperienceIDs(PARCEL_MAX_EXPERIENCE_LIST);
+		child->setAddedCallback(boost::bind(&LLPanelLandExperiences::experienceAdded, this, _1, xp_type, access_type));
+		child->setRemovedCallback(boost::bind(&LLPanelLandExperiences::experienceRemoved, this, _1, access_type));
+	}
+
+	return child;
+}
+
+void LLPanelLandExperiences::experienceAdded( const LLUUID& id, U32 xp_type, U32 access_type )
+{
+	LLParcel* parcel = mParcel->getParcel();
+	if (parcel)
+	{			
+		parcel->setExperienceKeyType(id, xp_type);
+		LLViewerParcelMgr::getInstance()->sendParcelAccessListUpdate(access_type);
+		refresh();
+	}
+}
+
+void LLPanelLandExperiences::experienceRemoved( const LLUUID& id, U32 access_type )
+{
+	LLParcel* parcel = mParcel->getParcel();
+	if (parcel)
+	{			
+		parcel->setExperienceKeyType(id, EXPERIENCE_KEY_TYPE_NONE);
+		LLViewerParcelMgr::getInstance()->sendParcelAccessListUpdate(access_type);
+		refresh();
+	}
+}
+
+void LLPanelLandExperiences::refreshPanel(LLPanelExperienceListEditor* panel, U32 xp_type)
+{
+	LLParcel *parcel = mParcel->getParcel();
+
+	// Display options
+	if (panel == NULL)
+	{
+		return;
+	}
+	if (parcel == NULL)
+	{
+		// disable the panel
+		panel->setEnabled(FALSE);
+		panel->setExperienceIds(LLSD::emptyArray());
+	}
+	else
+	{
+		// enable the panel
+		panel->setEnabled(TRUE);
+		LLAccessEntry::map entries = parcel->getExperienceKeysByType(xp_type);
+		LLAccessEntry::map::iterator it = entries.begin();
+		LLSD ids = LLSD::emptyArray();
+		for (/**/; it != entries.end(); ++it)
+		{
+			ids.append(it->second.mID);
+		}
+		panel->setExperienceIds(ids);
+		panel->setReadonly(!LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_OPTIONS));
+		panel->refreshExperienceCounter();
+	}
+}
+
+void LLPanelLandExperiences::refresh()
+{
+	refreshPanel(mAllowed, EXPERIENCE_KEY_TYPE_ALLOWED);
+	refreshPanel(mBlocked, EXPERIENCE_KEY_TYPE_BLOCKED);
 }
 

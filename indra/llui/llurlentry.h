@@ -199,11 +199,11 @@ class LLUrlEntrySecondlifeURL : public LLUrlEntryBase
 {
 public:
 	LLUrlEntrySecondlifeURL();
-	bool isTrusted() const { return true; }
+	/*virtual*/ bool isTrusted() const { return true; }
+	/*virtual*/ std::string getUrl(const std::string &string) const;
 	/*virtual*/ std::string getLabel(const std::string &url, const LLUrlLabelCallback &cb);
 	/*virtual*/ std::string getQuery(const std::string &url) const;
 	/*virtual*/ std::string getTooltip(const std::string &url) const;
-	/*virtual*/ std::string getUrl(const std::string &string) const;
 };
 
 ///
@@ -307,6 +307,20 @@ public:
 private:
 	/*virtual*/ std::string getName(const LLAvatarName& avatar_name);
 };
+
+///
+/// LLUrlEntryExperienceProfile Describes a Second Life experience profile Url, e.g.,
+/// secondlife:///app/experience/0e346d8b-4433-4d66-a6b0-fd37083abc4c/profile
+/// that displays the experience name
+class LLUrlEntryExperienceProfile : public LLUrlEntryBase
+{
+public:
+    LLUrlEntryExperienceProfile();
+    /*virtual*/ std::string getLabel(const std::string &url, const LLUrlLabelCallback &cb);
+private:
+    void onExperienceDetails(const LLSD& experience_details);
+};
+
 
 ///
 /// LLUrlEntryGroup Describes a Second Life group Url, e.g.,

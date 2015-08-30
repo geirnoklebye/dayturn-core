@@ -51,6 +51,7 @@
 #include "fsfloatersearchlegacy.h"	// <FS:CR> FIRE-6310
 #include "llares.h"
 #include "llavatarnamecache.h"
+#include "llexperiencecache.h"
 #include "lllandmark.h"
 #include "llcachename.h"
 #include "lldir.h"
@@ -197,6 +198,9 @@
 #include "llevents.h"
 #include "llstartuplistener.h"
 #include "lltoolbarview.h"
+#include "llexperiencelog.h"
+
+#include "tea.h"
 
 #include "tea.h"
 
@@ -247,7 +251,8 @@ static LLVector3 gAgentStartLookAt(1.0f, 0.f, 0.f);
 static std::string gAgentStartLocation = "safe";
 static bool mLoginStatePastUI = false;
 
-const S32 DEFAULT_MAX_AGENT_GROUPS = 25;
+const S32 DEFAULT_MAX_AGENT_GROUPS = 42;
+const S32 ALLOWED_MAX_AGENT_GROUPS = 500;
 
 boost::scoped_ptr<LLEventPump> LLStartUp::sStateWatcher(new LLEventStream("StartupState"));
 boost::scoped_ptr<LLStartupListener> LLStartUp::sListener(new LLStartupListener());
@@ -320,8 +325,7 @@ public:
 	{
 		std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "grids.remote.xml");
 
-		llofstream out_file;
-		out_file.open(filename);
+		llofstream out_file(filename.c_str(), std::ios_base::out | std::ios_base::binary);
 		LLSDSerialize::toPrettyXML(content, out_file);
 		out_file.close();
 		llinfos << "GridListRequest: got new list." << llendl;
@@ -341,6 +345,7 @@ public:
 	}
 };
 // </AW: opensim>
+
 
 void update_texture_fetch()
 {
@@ -1440,6 +1445,9 @@ bool idle_startup()
 		gAgent.setPositionAgent(agent_start_position_region);
 
 		display_startup();
+		LLStartUp::initExperiences();
+
+		display_startup();
 		LLStartUp::setStartupState( STATE_MULTIMEDIA_INIT );
 		
 		LLConversationLog::getInstance();
@@ -2022,6 +2030,11 @@ bool idle_startup()
 			LLFloaterReg::toggleInstanceOrBringToFront("im_container");
 
 		}
+
+		display_startup();
+        
+        // *TODO : Uncomment that line once the whole grid migrated to SLM and suppress it from LLAgent::handleTeleportFinished() (llagent.cpp)
+        //check_merchant_status();
 
 		display_startup();
 
@@ -3030,6 +3043,14 @@ void LLStartUp::initNameCache()
 	LLAvatarNameCache::setUseUsernames(gSavedSettings.getBOOL("NameTagShowUsernames"));
 }
 
+
+void LLStartUp::initExperiences()
+{
+	LLAppViewer::instance()->loadExperienceCache();
+	LLExperienceCache::initClass();
+	LLExperienceLog::instance().initialize();
+}
+
 void LLStartUp::cleanupNameCache()
 {
 	LLAvatarNameCache::cleanupClass();
@@ -3748,21 +3769,24 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 		LLViewerMedia::openIDSetup(openid_url, openid_token);
 	}
 
-	if (response.has("max_groups")) {		
-		std::string max_agent_groups(response["max_groups"]);
-		gMaxAgentGroups = atoi(max_agent_groups.c_str());
-		LL_INFOS("LLStartup") << "gMaxAgentGroups (max_groups) read from login.cgi: "
-							  << gMaxAgentGroups << LL_ENDL;
-	}
-	else if (response.has("max-agent-groups")) {		
-		std::string max_agent_groups(response["max-agent-groups"]);
-		gMaxAgentGroups = atoi(max_agent_groups.c_str());
-		LL_INFOS("LLStartup") << "gMaxAgentGroups (max-agent-groups) read from login.cgi: "
-							  << gMaxAgentGroups << LL_ENDL;
+	gMaxAgentGroups = DEFAULT_MAX_AGENT_GROUPS;
+	if(response.has("max-agent-groups"))
+	{
+		S32 agent_groups = atoi(std::string(response["max-agent-groups"]).c_str());
+		if (agent_groups > 0 && agent_groups <= ALLOWED_MAX_AGENT_GROUPS)
+		{
+			gMaxAgentGroups = agent_groups;
+			LL_INFOS("LLStartup") << "gMaxAgentGroups read from login.cgi: "
+				<< gMaxAgentGroups << LL_ENDL;
+		}
+		else
+		{
+			LL_INFOS("LLStartup") << "Invalid value received, using defaults for gMaxAgentGroups: "
+				<< gMaxAgentGroups << LL_ENDL;
+		}
 	}
 	else {
-		gMaxAgentGroups = DEFAULT_MAX_AGENT_GROUPS;
-		LL_INFOS("LLStartup") << "using gMaxAgentGroups default: "
+		LL_INFOS("LLStartup") << "Missing max-agent-groups, using default value for gMaxAgentGroups: "
 							  << gMaxAgentGroups << LL_ENDL;
 	}
 
@@ -3821,3 +3845,4 @@ void transition_back_to_login_panel(const std::string& emsg)
 	reset_login(); // calls LLStartUp::setStartupState( STATE_LOGIN_SHOW );
 	gSavedSettings.setBOOL("AutoLogin", FALSE);
 }
+

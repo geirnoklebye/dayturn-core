@@ -1963,6 +1963,11 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 				
 				if (sent_parentp && (sent_parentp != this) && !sent_parentp->isDead())
 				{
+                    if (((LLViewerObject*)sent_parentp)->isAvatar())
+                    {
+                        //LL_DEBUGS("Avatar") << "ATT got object update for attachment " << LL_ENDL; 
+                    }
+                    
 					//
 					// We have a viewer object for the parent, and it's not dead.
 					// Do the actual reparenting here.
@@ -3006,7 +3011,7 @@ void LLViewerObject::processTaskInvFile(void** user_data, S32 error_code, LLExtS
 BOOL LLViewerObject::loadTaskInvFile(const std::string& filename)
 {
 	std::string filename_and_local_path = gDirUtilp->getExpandedFilename(LL_PATH_CACHE, filename);
-	llifstream ifs(filename_and_local_path);
+	llifstream ifs(filename_and_local_path.c_str());
 	if(ifs.good())
 	{
 		char buffer[MAX_STRING];	/* Flawfinder: ignore */

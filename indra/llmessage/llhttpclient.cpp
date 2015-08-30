@@ -157,7 +157,7 @@ namespace
 		{
 			LLBufferStream ostream(channels, buffer.get());
 
-			llifstream fstream(mFilename, std::iostream::binary | std::iostream::out);
+			llifstream fstream(mFilename.c_str(), std::iostream::binary | std::iostream::out);
 			if(fstream.is_open())
 			{
 				fstream.seekg(0, std::ios::end);
@@ -582,6 +582,17 @@ void LLHTTPClient::patch(
 	const F32 timeout)
 {
 	request(url, HTTP_PATCH, new LLSDInjector(body), responder, timeout, headers);
+}
+
+void LLHTTPClient::putRaw(
+    const std::string& url,
+    const U8* data,
+    S32 size,
+    ResponderPtr responder,
+    const LLSD& headers,
+    const F32 timeout)
+{
+	request(url, HTTP_PUT, new RawInjector(data, size), responder, timeout, headers);
 }
 
 void LLHTTPClient::post(

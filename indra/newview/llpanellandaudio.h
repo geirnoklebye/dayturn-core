@@ -53,7 +53,6 @@ private:
 	LLCheckBoxCtrl* mCheckParcelVoiceLocal;	
 	LLLineEditor*	mMusicURLEdit;
 	LLButton*	mMusicURLCopy;
-	LLCheckBoxCtrl* mMusicUrlCheck;
 	LLCheckBoxCtrl* mCheckAVSoundAny;
 	LLCheckBoxCtrl* mCheckAVSoundGroup;
 

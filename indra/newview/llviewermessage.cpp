@@ -72,6 +72,7 @@
 #include "llinventoryobserver.h"
 #include "llinventorypanel.h"
 #include "llfloaterimnearbychat.h"
+#include "llmarketplacefunctions.h"
 #include "llnotifications.h"
 #include "llnotificationsutil.h"
 #include "llpanelgrouplandmoney.h"
@@ -120,6 +121,7 @@
 
 #include "llnotificationmanager.h" //
 #include "tea.h"
+#include "llexperiencecache.h"
 #if LL_MSVC
 // disable boost::lexical_cast warning
 #pragma warning (disable:4702)
@@ -133,10 +135,7 @@ extern void on_new_message(const LLSD& msg);
 //
 // Constants
 //
-const F32 BIRD_AUDIBLE_RADIUS = 32.0f;
-const F32 SIT_DISTANCE_FROM_TARGET = 0.25f;
 const F32 CAMERA_POSITION_THRESHOLD_SQUARED = 0.001f * 0.001f;
-static const F32 LOGOUT_REPLY_TIME = 3.f;	// Wait this long after LogoutReply before quitting.
 
 // Determine how quickly residents' scripts can issue question dialogs
 // Allow bursts of up to 5 dialogs in 10 seconds. 10*2=20 seconds recovery if throttle kicks in
@@ -150,6 +149,7 @@ extern bool gShiftFrame;
 bool check_offer_throttle(const std::string& from_name, bool check_only);
 bool check_asset_previewable(const LLAssetType::EType asset_type);
 static void process_money_balance_reply_extended(LLMessageSystem* msg);
+bool handle_trusted_experiences_notification(const LLSD&);
 
 //inventory offer throttle globals
 LLFrameTimer gThrottleTimer;
@@ -2475,7 +2475,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 	BOOL is_do_not_disturb = gAgent.isDoNotDisturb();
 	BOOL is_muted = LLMuteList::getInstance()->isMuted(from_id, name, LLMute::flagTextChat)
 		// object IMs contain sender object id in session_id (STORM-1209)
-		|| dialog == IM_FROM_TASK && LLMuteList::getInstance()->isMuted(session_id);
+		|| (dialog == IM_FROM_TASK && LLMuteList::getInstance()->isMuted(session_id));
 	BOOL is_owned_by_me = FALSE;
 	BOOL is_friend = (LLAvatarTracker::instance().getBuddyInfo(from_id) == NULL) ? false : true;
 	BOOL accept_im_from_only_friend = gSavedSettings.getBOOL("VoiceCallsFriendsOnly");
@@ -2897,6 +2897,13 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 		break;
 	case IM_GROUP_INVITATION:
 		{
+			if (!is_muted)
+			{
+				// group is not blocked, but we still need to check agent that sent the invitation
+				// and we have no agent's id
+				// Note: server sends username "first.last".
+				is_muted |= LLMuteList::getInstance()->isMuted(name);
+			}
 			if (is_do_not_disturb || is_muted)
 			{
 				send_do_not_disturb_message(msg, from_id);
@@ -3944,6 +3951,11 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		|| LLMuteList::getInstance()->isMuted(owner_id, LLMute::flagTextChat);
 	is_linden = chat.mSourceType != CHAT_SOURCE_OBJECT &&
 		LLMuteList::getInstance()->isLinden(from_name);
+
+	if (is_muted && (chat.mSourceType == CHAT_SOURCE_OBJECT))
+	{
+		return;
+	}
 
 	BOOL is_audible = (CHAT_AUDIBLE_FULLY == chat.mAudible);
 	chatter = gObjectList.findObject(from_id);
@@ -5577,6 +5589,15 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 			{
 				LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
 			}
+			else
+			if (stat_id == 16) //cut log spam on opensim
+			{
+				LL_DEBUGS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
+			}
+			else
+			{
+				LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
+			}
 			
 		}
 	}
@@ -5786,7 +5807,7 @@ void process_avatar_sit_response(LLMessageSystem *mesgsys, void **user_data)
 	if (object)
 	{
 		LLVector3 sit_spot = object->getPositionAgent() + (sitPosition * object->getRotation());
-		if (!use_autopilot || isAgentAvatarValid() && gAgentAvatarp->isSitting() && gAgentAvatarp->getRoot() == object->getRoot())
+		if (!use_autopilot || (isAgentAvatarValid() && gAgentAvatarp->isSitting() && gAgentAvatarp->getRoot() == object->getRoot()))
 		{
 			//we're already sitting on this object, so don't autopilot
 		}
@@ -6366,164 +6387,192 @@ bool handle_prompt_for_maturity_level_change_and_reteleport_callback(const LLSD&
 // some of the server notifications need special handling. This is where we do that.
 bool handle_special_notification(std::string notificationID, LLSD& llsdBlock)
 {
-	U8 regionAccess = static_cast<U8>(llsdBlock["_region_access"].asInteger());
-	std::string regionMaturity = LLViewerRegion::accessToString(regionAccess);
-	LLStringUtil::toLower(regionMaturity);
-	llsdBlock["REGIONMATURITY"] = regionMaturity;
 	bool returnValue = false;
-	LLNotificationPtr maturityLevelNotification;
-	std::string notifySuffix = "_Notify";
-	if (regionAccess == SIM_ACCESS_MATURE)
+	if(llsdBlock.has("_region_access"))
 	{
-		if (gAgent.isTeen())
+		U8 regionAccess = static_cast<U8>(llsdBlock["_region_access"].asInteger());
+		std::string regionMaturity = LLViewerRegion::accessToString(regionAccess);
+		LLStringUtil::toLower(regionMaturity);
+		llsdBlock["REGIONMATURITY"] = regionMaturity;
+		LLNotificationPtr maturityLevelNotification;
+		std::string notifySuffix = "_Notify";
+		if (regionAccess == SIM_ACCESS_MATURE)
 		{
-			gAgent.clearTeleportRequest();
-			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
-			returnValue = true;
+			if (gAgent.isTeen())
+			{
+				gAgent.clearTeleportRequest();
+				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
+				returnValue = true;
 
-			notifySuffix = "_NotifyAdultsOnly";
+				notifySuffix = "_NotifyAdultsOnly";
+			}
+			else if (gAgent.prefersPG())
+			{
+				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+				returnValue = true;
+			}
+			else if (LLStringUtil::compareStrings(notificationID, "RegionEntryAccessBlocked") == 0)
+			{
+				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock);
+				returnValue = true;
+			}
 		}
-		else if (gAgent.prefersPG())
+		else if (regionAccess == SIM_ACCESS_ADULT)
 		{
-			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-			returnValue = true;
+			if (!gAgent.isAdult())
+			{
+				gAgent.clearTeleportRequest();
+				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
+				returnValue = true;
+
+				notifySuffix = "_NotifyAdultsOnly";
+			}
+			else if (gAgent.prefersPG() || gAgent.prefersMature())
+			{
+				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+				returnValue = true;
+			}
+			else if (LLStringUtil::compareStrings(notificationID, "RegionEntryAccessBlocked") == 0)
+			{
+				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock);
+				returnValue = true;
+			}
 		}
-		else if (LLStringUtil::compareStrings(notificationID, "RegionEntryAccessBlocked") == 0)
-		{
-			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock);
-			returnValue = true;
-		}
-	}
-	else if (regionAccess == SIM_ACCESS_ADULT)
-	{
-		if (!gAgent.isAdult())
-		{
-			gAgent.clearTeleportRequest();
-			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
-			returnValue = true;
 	
-			notifySuffix = "_NotifyAdultsOnly";
-		}
-		else if (gAgent.prefersPG() || gAgent.prefersMature())
+		if ((maturityLevelNotification == NULL) || maturityLevelNotification->isIgnored())
 		{
-			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-			returnValue = true;
+			// Given a simple notification if no maturityLevelNotification is set or it is ignore
+			LLNotificationsUtil::add(notificationID + notifySuffix, llsdBlock);
 		}
-		else if (LLStringUtil::compareStrings(notificationID, "RegionEntryAccessBlocked") == 0)
-		{
-			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock);
-			returnValue = true;
-		}
-	}
-	
-	if ((maturityLevelNotification == NULL) || maturityLevelNotification->isIgnored())
-	{
-		// Given a simple notification if no maturityLevelNotification is set or it is ignore
-		LLNotificationsUtil::add(notificationID + notifySuffix, llsdBlock);
 	}
 
 	return returnValue;
 }
 
+bool handle_trusted_experiences_notification(const LLSD& llsdBlock)
+{
+	if(llsdBlock.has("trusted_experiences"))
+	{
+		std::ostringstream str;
+		const LLSD& experiences = llsdBlock["trusted_experiences"];
+		LLSD::array_const_iterator it = experiences.beginArray();
+		for(/**/; it != experiences.endArray(); ++it)
+		{
+			str<<LLSLURL("experience", it->asUUID(), "profile").getSLURLString() << "\n";
+		}
+		std::string str_list = str.str();
+		if(!str_list.empty())
+		{
+			LLNotificationsUtil::add("TrustedExperiencesAvailable", LLSD::emptyMap().with("EXPERIENCE_LIST", (LLSD)str_list));
+			return true;
+		}
+	}
+	return false;
+}
+
 // some of the server notifications need special handling. This is where we do that.
 bool handle_teleport_access_blocked(LLSD& llsdBlock, const std::string & notificationID, const std::string & defaultMessage)
 {
-	U8 regionAccess = static_cast<U8>(llsdBlock["_region_access"].asInteger());
-	std::string regionMaturity = LLViewerRegion::accessToString(regionAccess);
-	LLStringUtil::toLower(regionMaturity);
-	llsdBlock["REGIONMATURITY"] = regionMaturity;
-	
 	bool returnValue = false;
-	LLNotificationPtr tp_failure_notification;
-	std::string notifySuffix;
-
-	if (notificationID == std::string("TeleportEntryAccessBlocked"))
+	if(llsdBlock.has("_region_access"))
 	{
-		notifySuffix = "_Notify";
-	if (regionAccess == SIM_ACCESS_MATURE)
-	{
-		if (gAgent.isTeen())
-		{
-			gAgent.clearTeleportRequest();
-				tp_failure_notification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
-			returnValue = true;
+		U8 regionAccess = static_cast<U8>(llsdBlock["_region_access"].asInteger());
+		std::string regionMaturity = LLViewerRegion::accessToString(regionAccess);
+		LLStringUtil::toLower(regionMaturity);
+		llsdBlock["REGIONMATURITY"] = regionMaturity;
 
-			notifySuffix = "_NotifyAdultsOnly";
-		}
-		else if (gAgent.prefersPG())
+		LLNotificationPtr tp_failure_notification;
+		std::string notifySuffix;
+
+		if (notificationID == std::string("TeleportEntryAccessBlocked"))
 		{
-			if (gAgent.hasRestartableFailedTeleportRequest())
+			notifySuffix = "_Notify";
+			if (regionAccess == SIM_ACCESS_MATURE)
 			{
-					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_ChangeAndReTeleport", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_and_reteleport_callback);
-				returnValue = true;
+				if (gAgent.isTeen())
+				{
+					gAgent.clearTeleportRequest();
+					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
+					returnValue = true;
+
+					notifySuffix = "_NotifyAdultsOnly";
+				}
+				else if (gAgent.prefersPG())
+				{
+					if (gAgent.hasRestartableFailedTeleportRequest())
+					{
+						tp_failure_notification = LLNotificationsUtil::add(notificationID+"_ChangeAndReTeleport", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_and_reteleport_callback);
+						returnValue = true;
+					}
+					else
+					{
+						gAgent.clearTeleportRequest();
+						tp_failure_notification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+						returnValue = true;
+					}
+				}
+				else
+				{
+					gAgent.clearTeleportRequest();
+					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+					returnValue = true;
+				}
+			}
+			else if (regionAccess == SIM_ACCESS_ADULT)
+			{
+				if (!gAgent.isAdult())
+				{
+					gAgent.clearTeleportRequest();
+					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
+					returnValue = true;
+
+					notifySuffix = "_NotifyAdultsOnly";
+				}
+				else if (gAgent.prefersPG() || gAgent.prefersMature())
+				{
+					if (gAgent.hasRestartableFailedTeleportRequest())
+					{
+						tp_failure_notification = LLNotificationsUtil::add(notificationID+"_ChangeAndReTeleport", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_and_reteleport_callback);
+						returnValue = true;
+					}
+					else
+					{
+						gAgent.clearTeleportRequest();
+						tp_failure_notification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+						returnValue = true;
+					}
+				}
+				else
+				{
+					gAgent.clearTeleportRequest();
+					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+					returnValue = true;
+				}
+			}
+		}		// End of special handling for "TeleportEntryAccessBlocked"
+		else
+		{	// Normal case, no message munging
+			gAgent.clearTeleportRequest();
+			if (LLNotifications::getInstance()->templateExists(notificationID))
+			{
+				tp_failure_notification = LLNotificationsUtil::add(notificationID, llsdBlock, llsdBlock);
 			}
 			else
 			{
-				gAgent.clearTeleportRequest();
-					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-				returnValue = true;
+				llsdBlock["MESSAGE"] = defaultMessage;
+				tp_failure_notification = LLNotificationsUtil::add("GenericAlertOK", llsdBlock);
 			}
-		}
-		else
-		{
-			gAgent.clearTeleportRequest();
-				tp_failure_notification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
 			returnValue = true;
 		}
-	}
-	else if (regionAccess == SIM_ACCESS_ADULT)
-	{
-		if (!gAgent.isAdult())
-		{
-			gAgent.clearTeleportRequest();
-				tp_failure_notification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
-			returnValue = true;
 
-			notifySuffix = "_NotifyAdultsOnly";
-		}
-		else if (gAgent.prefersPG() || gAgent.prefersMature())
+		if ((tp_failure_notification == NULL) || tp_failure_notification->isIgnored())
 		{
-			if (gAgent.hasRestartableFailedTeleportRequest())
-			{
-					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_ChangeAndReTeleport", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_and_reteleport_callback);
-				returnValue = true;
+			// Given a simple notification if no tp_failure_notification is set or it is ignore
+			LLNotificationsUtil::add(notificationID + notifySuffix, llsdBlock);
 		}
-			else
-			{
-				gAgent.clearTeleportRequest();
-					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-				returnValue = true;
-			}
-		}
-		else
-		{
-			gAgent.clearTeleportRequest();
-				tp_failure_notification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-			returnValue = true;
-		}
-		}
-	}		// End of special handling for "TeleportEntryAccessBlocked"
-	else
-	{	// Normal case, no message munging
-		gAgent.clearTeleportRequest();
-		if (LLNotifications::getInstance()->templateExists(notificationID))
-		{
-			tp_failure_notification = LLNotificationsUtil::add(notificationID, llsdBlock, llsdBlock);
-		}
-		else
-		{
-			llsdBlock["MESSAGE"] = defaultMessage;
-			tp_failure_notification = LLNotificationsUtil::add("GenericAlertOK", llsdBlock);
-		}
-		returnValue = true;
 	}
 
-	if ((tp_failure_notification == NULL) || tp_failure_notification->isIgnored())
-	{
-		// Given a simple notification if no tp_failure_notification is set or it is ignore
-		LLNotificationsUtil::add(notificationID + notifySuffix, llsdBlock);
-	}
-
+	handle_trusted_experiences_notification(llsdBlock);
 	return returnValue;
 }
 
@@ -6551,6 +6600,9 @@ bool attempt_standard_notification(LLMessageSystem* msgsystem)
 				LL_WARNS() << "attempt_standard_notification: Attempted to read notification parameter data into LLSD but failed:" << llsdRaw << LL_ENDL;
 			}
 		}
+
+
+		handle_trusted_experiences_notification(llsdBlock);
 		
 		if (
 			(notificationID == "RegionEntryAccessBlocked") ||
@@ -6632,7 +6684,25 @@ bool attempt_standard_notification(LLMessageSystem* msgsystem)
 
 			make_ui_sound("UISndRestart");
 		}
-
+        
+        // Special Marketplace update notification
+		if (notificationID == "SLM_UPDATE_FOLDER")
+        {
+            std::string state = llsdBlock["state"].asString();
+            if (state == "deleted")
+            {
+                // Perform the deletion viewer side, no alert shown in this case
+                LLMarketplaceData::instance().deleteListing(llsdBlock["listing_id"].asInteger());
+                return true;
+            }
+            else
+            {
+                // In general, no message will be displayed, all we want is to get the listing updated in the marketplace floater
+                // If getListing() fails though, the message of the alert will be shown by the caller of attempt_standard_notification()
+                return LLMarketplaceData::instance().getListing(llsdBlock["listing_id"].asInteger());
+            }
+        }
+        
 		LLNotificationsUtil::add(notificationID, llsdBlock);
 		return true;
 	}	
@@ -7044,6 +7114,12 @@ bool script_question_cb(const LLSD& notification, const LLSD& response)
 		return false;
 	}
 
+	LLUUID experience;
+	if(notification["payload"].has("experience"))
+	{
+		experience = notification["payload"]["experience"].asUUID();
+	}
+
 	// check whether permissions were granted or denied
 	BOOL allowed = TRUE;
 	// the "yes/accept" button is the first button in the template, making it button 0
@@ -7053,6 +7129,16 @@ bool script_question_cb(const LLSD& notification, const LLSD& response)
 		new_questions = 0;
 		allowed = FALSE;
 	}	
+	else if(experience.notNull())
+	{
+		LLSD permission;
+		LLSD data;
+		permission["permission"]="Allow";
+
+		data[experience.asString()]=permission;
+		data["experience"]=experience;
+		LLEventPumps::instance().obtain("experience_permission").post(data);
+	}
 
 	LLUUID task_id = notification["payload"]["task_id"].asUUID();
 	LLUUID item_id = notification["payload"]["item_id"].asUUID();
@@ -7079,7 +7165,27 @@ bool script_question_cb(const LLSD& notification, const LLSD& response)
 	{
 		script_question_mute(task_id,notification["payload"]["object_name"].asString());
 	}
+	if ( response["BlockExperience"] )
+	{
+		if(experience.notNull())
+		{
+			LLViewerRegion* region = gAgent.getRegion();
+			if (!region)
+			    return false;
 
+			std::string lookup_url=region->getCapability("ExperiencePreferences"); 
+			if(lookup_url.empty())
+				return false;
+			LLSD permission;
+			LLSD data;
+			permission["permission"]="Block";
+
+			data[experience.asString()]=permission;
+			LLHTTPClient::put(lookup_url, data, NULL);
+			data["experience"]=experience;
+			LLEventPumps::instance().obtain("experience_permission").post(data);
+		}
+}
 	return false;
 }
 
@@ -7112,7 +7218,23 @@ void script_question_mute(const LLUUID& task_id, const std::string& object_name)
 
 static LLNotificationFunctorRegistration script_question_cb_reg_1("ScriptQuestion", script_question_cb);
 static LLNotificationFunctorRegistration script_question_cb_reg_2("ScriptQuestionCaution", script_question_cb);
+static LLNotificationFunctorRegistration script_question_cb_reg_3("ScriptQuestionExperience", script_question_cb);
 static LLNotificationFunctorRegistration unknown_script_question_cb_reg("UnknownScriptQuestion", unknown_script_question_cb);
+
+void process_script_experience_details(const LLSD& experience_details, LLSD args, LLSD payload)
+{
+	if(experience_details[LLExperienceCache::PROPERTIES].asInteger() & LLExperienceCache::PROPERTY_GRID)
+	{
+		args["GRID_WIDE"] = LLTrans::getString("Grid-Scope");
+	}
+	else
+	{
+		args["GRID_WIDE"] = LLTrans::getString("Land-Scope");
+	}
+	args["EXPERIENCE"] = LLSLURL("experience", experience_details[LLExperienceCache::EXPERIENCE_ID].asUUID(), "profile").getSLURLString();
+
+	LLNotificationsUtil::add("ScriptQuestionExperience", args, payload);
+}
 
 void process_script_question(LLMessageSystem *msg, void **user_data)
 {
@@ -7125,6 +7247,7 @@ void process_script_question(LLMessageSystem *msg, void **user_data)
 	S32		questions;
 	std::string object_name;
 	std::string owner_name;
+	LLUUID experienceid;
 
 	// taskid -> object key of object requesting permissions
 	msg->getUUIDFast(_PREHASH_Data, _PREHASH_TaskID, taskid );
@@ -7133,6 +7256,11 @@ void process_script_question(LLMessageSystem *msg, void **user_data)
 	msg->getStringFast(_PREHASH_Data, _PREHASH_ObjectName, object_name);
 	msg->getStringFast(_PREHASH_Data, _PREHASH_ObjectOwner, owner_name);
 	msg->getS32Fast(_PREHASH_Data, _PREHASH_Questions, questions );
+
+	if(msg->has(_PREHASH_Experience))
+	{
+		msg->getUUIDFast(_PREHASH_Experience, _PREHASH_ExperienceID, experienceid);
+	}
 
 	// Special case. If the objects are owned by this agent, throttle per-object instead
 	// of per-owner. It's common for residents to reset a ton of scripts that re-request
@@ -7268,20 +7396,21 @@ void process_script_question(LLMessageSystem *msg, void **user_data)
 		}
 //mk
 		// check whether cautions are even enabled or not
-		if (gSavedSettings.getBOOL("PermissionsCautionEnabled"))
-		{
-			if (caution)
+			const char* notification = "ScriptQuestion";
+
+			if(caution && gSavedSettings.getBOOL("PermissionsCautionEnabled"))
 			{
 				args["FOOTERTEXT"] = (count > 1) ? LLTrans::getString("AdditionalPermissionsRequestHeader") + "\n\n" + script_question : "";
+				notification = "ScriptQuestionCaution";
 			}
-			// display the caution permissions prompt
-			LLNotificationsUtil::add(caution ? "ScriptQuestionCaution" : "ScriptQuestion", args, payload);
-		}
-		else
+			else if(experienceid.notNull())
 		{
-			// fall back to default behavior if cautions are entirely disabled
-			LLNotificationsUtil::add("ScriptQuestion", args, payload);
+				payload["experience"]=experienceid;
+				LLExperienceCache::get(experienceid, boost::bind(process_script_experience_details, _1, args, payload));
+				return;
 		}
+
+			LLNotificationsUtil::add(notification, args, payload);
 		}
 	}
 }
@@ -7891,8 +8020,6 @@ void process_user_info_reply(LLMessageSystem* msg, void**)
 //---------------------------------------------------------------------------
 
 const S32 SCRIPT_DIALOG_MAX_BUTTONS = 12;
-const S32 SCRIPT_DIALOG_BUTTON_STR_SIZE = 24;
-const S32 SCRIPT_DIALOG_MAX_MESSAGE_SIZE = 512;
 const char* SCRIPT_DIALOG_HEADER = "Script Dialog:\n";
 
 bool callback_script_dialog(const LLSD& notification, const LLSD& response)

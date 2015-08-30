@@ -148,6 +148,7 @@ LLAgentCamera::LLAgentCamera() :
 	mCameraUpVector(LLVector3::z_axis), // default is straight up
 
 	mFocusOnAvatar(TRUE),
+	mAllowChangeToFollow(FALSE),
 	mFocusGlobal(),
 	mFocusTargetGlobal(),
 	mFocusObject(NULL),
@@ -918,7 +919,6 @@ void LLAgentCamera::cameraZoomIn(const F32 fraction)
 	}
 
 
-	LLVector3d	camera_offset(mCameraFocusOffsetTarget);
 	LLVector3d	camera_offset_unit(mCameraFocusOffsetTarget);
 	F32 min_zoom = LAND_MIN_ZOOM;
 	F32 current_distance = (F32)camera_offset_unit.normalize();
@@ -1006,7 +1006,6 @@ void LLAgentCamera::cameraOrbitIn(const F32 meters)
 	}
 	else
 	{
-		LLVector3d	camera_offset(mCameraFocusOffsetTarget);
 		LLVector3d	camera_offset_unit(mCameraFocusOffsetTarget);
 		F32 current_distance = (F32)camera_offset_unit.normalize();
 		F32 new_distance = current_distance - meters;
@@ -1218,8 +1217,10 @@ void LLAgentCamera::updateCamera()
 		mCameraUpVector = mCameraUpVector * gAgentAvatarp->getRenderRotation();
 	}
 
-	if (cameraThirdPerson() && mFocusOnAvatar && LLFollowCamMgr::getActiveFollowCamParams())
+	if (cameraThirdPerson() && (mFocusOnAvatar || mAllowChangeToFollow) && LLFollowCamMgr::getActiveFollowCamParams())
 	{
+		mAllowChangeToFollow = FALSE;
+		mFocusOnAvatar = TRUE;
 		changeCameraToFollow();
 	}
 
@@ -2024,10 +2025,8 @@ LLVector3d LLAgentCamera::calcCameraPositionTargetGlobal(BOOL *hit_limit)
 			if (isAgentAvatarValid())
 			{
 				LLVector3d joint_pos (gAgent.getPosGlobalFromAgent(gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition()));
-
 				LLVector3d camera_offset = camera_position_global - joint_pos;
 				F32 camera_distance = (F32)camera_offset.magVec();
-
 				if(camera_distance > gAgent.mRRInterface.mCamDistMax)
 				{
 					camera_position_global = joint_pos + (gAgent.mRRInterface.mCamDistMax/camera_distance)*camera_offset;
@@ -2792,6 +2791,7 @@ void LLAgentCamera::setFocusOnAvatar(BOOL focus_on_avatar, BOOL animate)
 	{
 		// keep camera focus point consistent, even though it is now unlocked
 		setFocusGlobal(gAgent.getPositionGlobal() + calcThirdPersonFocusOffset(), gAgent.getID());
+		mAllowChangeToFollow = FALSE;
 	}
 	
 	mFocusOnAvatar = focus_on_avatar;
@@ -2914,7 +2914,7 @@ BOOL LLAgentCamera::setPointAt(EPointAtType target_type, LLViewerObject *object,
 {
 	static LLUICachedControl<bool> private_pointat("PrivatePointAtTarget", true);
 
-	if (object && (object->isAttachment() || object->isAvatar()) || private_pointat)
+	if ((object && (object->isAttachment() || object->isAvatar())) || private_pointat)
 	{
 		return FALSE;
 	}

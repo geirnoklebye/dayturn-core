@@ -59,7 +59,8 @@ public:
 													item_top_pad;
 
 		Optional<time_t>							creation_date;
-		Optional<bool>								allow_open;
+		Optional<bool>								allow_wear;
+		Optional<bool>								allow_drop;
 
 		Optional<LLUIColor>                         font_color;
 		Optional<LLUIColor>                         font_highlight_color;
@@ -120,7 +121,8 @@ protected:
 								mIsCurSelection,
 								mDragAndDropTarget,
 								mIsMouseOverTitle,
-								mAllowOpen,
+								mAllowWear,
+                                mAllowDrop,
 								mSelectPending;
 	
 	LLUIColor                   mFontColor;
@@ -457,5 +459,12 @@ public:
 	template<typename SORT_FUNC> void sortItems(const SORT_FUNC& func) { mItems.sort(func); }
 };
 
+typedef std::deque<LLFolderViewItem*> folder_view_item_deque;
+
+class LLFolderViewGroupedItemModel: public LLRefCount
+{
+public:
+    virtual void groupFilterContextMenu(folder_view_item_deque& selected_items, LLMenuGL& menu) = 0;
+};
 
 #endif  // LLFOLDERVIEWITEM_H

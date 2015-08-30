@@ -38,8 +38,7 @@
 #include "lltrans.h"
 #include "lluicolortable.h"
 #include "message.h"
-
-#include "uriparser/Uri.h"
+#include "llexperiencecache.h"
 
 #define APP_HEADER_REGEX "(((hop|x-grid-location-info)://[-\\w\\.\\:\\@]+/app)|((hop|secondlife):///app))"
 
@@ -495,6 +494,17 @@ LLUrlEntrySecondlifeURL::LLUrlEntrySecondlifeURL()
 	
 	mIcon = "Hand";
 	mMenuName = "menu_url_http.xml";
+	mTooltip = LLTrans::getString("TooltipHttpUrl");
+}
+
+/// Return the url from a string that matched the regex
+std::string LLUrlEntrySecondlifeURL::getUrl(const std::string &string) const
+{
+	if (string.find("://") == std::string::npos)
+	{
+		return "https://" + escapeUrl(string);
+	}
+	return escapeUrl(string);
 }
 
 std::string LLUrlEntrySecondlifeURL::getLabel(const std::string &url, const LLUrlLabelCallback &cb)
@@ -510,15 +520,6 @@ std::string LLUrlEntrySecondlifeURL::getQuery(const std::string &url) const
 std::string LLUrlEntrySecondlifeURL::getTooltip(const std::string &url) const
 {
 	return url;
-}
-
-std::string LLUrlEntrySecondlifeURL::getUrl(const std::string &string) const
-{
-	if (string.find("://") == std::string::npos)
-	{
-		return "http://" + escapeUrl(string);
-	}
-	return escapeUrl(string);
 }
 
 //
@@ -943,7 +944,6 @@ std::string LLUrlEntryObjectIM::getLabel(const std::string &url, const LLUrlLabe
 		return query_map["name"];
 	return unescapeUrl(url);
 }
-
 std::string LLUrlEntryObjectIM::getLocation(const std::string &url) const
 {
 	LLURI uri(url);
@@ -1033,9 +1033,9 @@ void LLUrlEntryParcel::processParcelInfo(const LLParcelData& parcel_data)
 	// If parcel name is empty use Sim_name (x, y, z) for parcel label.
 	else if (!parcel_data.sim_name.empty())
 	{
-		S32 region_x = llround(parcel_data.global_x) % REGION_WIDTH_UNITS;
-		S32 region_y = llround(parcel_data.global_y) % REGION_WIDTH_UNITS;
-		S32 region_z = llround(parcel_data.global_z);
+		S32 region_x = ll_round(parcel_data.global_x) % REGION_WIDTH_UNITS;
+		S32 region_y = ll_round(parcel_data.global_y) % REGION_WIDTH_UNITS;
+		S32 region_z = ll_round(parcel_data.global_z);
 
 		label = llformat("%s (%d, %d, %d)",
 				parcel_data.sim_name.c_str(), region_x, region_y, region_z);
@@ -1399,3 +1399,57 @@ std::string LLUrlEntryIcon::getIcon(const std::string &url)
 	LLStringUtil::trim(mIcon);
 	return mIcon;
 }
+
+LLUrlEntryExperienceProfile::LLUrlEntryExperienceProfile()
+{
+    mPattern = boost::regex(APP_HEADER_REGEX "/experience/[\\da-f-]+/\\w+\\S*",
+        boost::regex::perl|boost::regex::icase);
+    mIcon = "Generic_Experience";
+	mMenuName = "menu_url_experience.xml";
+}
+
+std::string LLUrlEntryExperienceProfile::getLabel( const std::string &url, const LLUrlLabelCallback &cb )
+{
+    if (!gCacheName)
+    {
+        // probably at the login screen, use short string for layout
+        return LLTrans::getString("LoadingData");
+    }
+
+    std::string experience_id_string = getIDStringFromUrl(url);
+    if (experience_id_string.empty())
+    {
+        // something went wrong, just give raw url
+        return unescapeUrl(url);
+    }
+
+    LLUUID experience_id(experience_id_string);
+    if (experience_id.isNull())
+    {
+        return LLTrans::getString("ExperienceNameNull");
+    }
+
+    const LLSD& experience_details = LLExperienceCache::get(experience_id);
+    if(!experience_details.isUndefined())
+    {
+		std::string experience_name_string = experience_details[LLExperienceCache::NAME].asString();
+        return experience_name_string.empty() ? LLTrans::getString("ExperienceNameUntitled") : experience_name_string;
+    }
+
+    addObserver(experience_id_string, url, cb);
+    LLExperienceCache::get(experience_id, boost::bind(&LLUrlEntryExperienceProfile::onExperienceDetails, this, _1));
+    return LLTrans::getString("LoadingData");
+
+}
+
+void LLUrlEntryExperienceProfile::onExperienceDetails( const LLSD& experience_details )
+{
+	std::string name = experience_details[LLExperienceCache::NAME].asString();
+	if(name.empty())
+	{
+		name = LLTrans::getString("ExperienceNameUntitled");
+	}
+    callObservers(experience_details[LLExperienceCache::EXPERIENCE_ID].asString(), name, LLStringUtil::null);
+}
+
+

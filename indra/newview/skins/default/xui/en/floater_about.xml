@@ -51,44 +51,20 @@
       name="credits_panel">
       <text
           follows="top|left|right"
-          height="10"
+          height="20"
           layout="topleft"
           left="5"
           name="linden_intro"
           top="10"
           width="435"
           wrap="true">
-Second Life is brought to you by the Lindens:
-      </text>
-      <text_editor
-       enabled="false" 
-       follows="top|left"
-       height="98"
-       bg_readonly_color="Transparent"
-       left="5"
-       text_color="LtGray"
-       max_length="65536"
-       name="linden_names"
-       top_pad="10"
-       width="435"
-       word_wrap="true">
-Philip, Andrew, Doug, Richard, Phoenix, Ian, Mark, Robin, Dan, Char, Ryan, Eric, Jim, Lee, Jeff, Michael, Kelly, Steve, Catherine, Bub, Ramzi, Jill, Jeska, Don, Kona, Callum, Charity, Jack, Shawn, babbage, James, Lauren, Blue, Brent, Reuben, Pathfinder, Jesse, Patsy, Torley, Bo, Cyn, Jonathan, Gia, Annette, Ginsu, Harry, Lex, Runitai, Guy, Cornelius, Beth, Swiss, Thumper, Wendy, Teeple, Seth, Dee, Mia, Sally, Liana, Aura, Beez, Milo, Red, Gulliver, Marius, Joe, Jose, Dore, Justin, Nora, Morpheus, Lexie, Amber, Chris, Xan, Leyla, Walker, Sabin, Joshua, Hiromi, Tofu, Fritz, June, Jean, Ivy, Dez, Ken, Betsy, Which, Spike, Rob, Zee, Dustin, George, Claudia, del, Matthew, jane, jay, Adrian, Yool, Rika, Yoz, siobhan, Qarl, Benjamin, Beast, Everett, madhavi, Christopher, Izzy, stephany, Jeremy, sean, adreanne, Pramod, Tobin, sejong, Iridium, maurice, kj, Meta, kari, JP, bert, kyle, Jon, Socrates, Bridie, Ivan, maria, Aric, Coco, Periapse, sandy, Storrs, Lotte, Colossus, Brad, Pastrami, Zen, BigPapi, Banzai, Sardonyx, Mani, Garry, Jaime, Neuro, Samuel, Niko, CeeLo, Austin, Soft, Poppy, emma, tessa, angelo, kurz, alexa, Sue, CG, Blake, Erica, Brett, Bevis, kristen, Q, simon, Enus, MJ, laurap, Kip, Scouse, Ron, Ram, kend, Marty, Prospero, melissa, kraft, Nat, Seraph, Hamilton, Lordan, Green, miz, Ashlei, Trinity, Ekim, Echo, Charlie, Rowan, Rome, Jt, Doris, benoc, Christy, Bao, Kate, Tj, Patch, Cheah, Johan, Brandy, Angela, Oreh, Cogsworth, Lan, Mitchell, Space, Bambers, Einstein, Bender, Malbers, Matias, Maggie, Rothman, Milton, Niall, Marin, Allison, Mango, Andrea, Katt, Yi, Ambroff, Rico, Raymond, Gail, Christa, William, Dawn, Usi, Dynamike, M, Corr, Dante, Molly, kaylee, Danica, Kelv, Lil, jacob, Nya, Rodney, elsie, Blondin, Grant, Nyx, Devin, Monty, Minerva, Keira, Katie, Jenn, Makai, Clare, Joy, Cody, Gayathri, FJ, spider, Oskar, Landon, Jarv, Noelle, Al, Doc, Gray, Vir, t, Maestro, Simone, Shannon, yang, Courtney, Scott, charlene, Quixote, Susan, Zed, Amanda, Katelin, Esbee, JoRoan, Enkidu, roxie, Scarlet, Merov, Kevin, Judy, Rand, Newell, Les, Dessie, Galen, Michon, Geo, Siz, Calyle, Pete, Praveen, Callen, Sheldon, Pink, Nelson, jenelle, Terrence, Nathan, Juan, Sascha, Huseby, Karina, Kaye, Kotler, Lis, Darv, Charrell, Dakota, Kimmora, Theeba, Taka, Mae, Perry, Ducot, dana, Esther, Dough, gisele, Doten, Viale, Fisher, jessieann, ashley, Torres, delby, rountree, kurt, Slaton, Madison, Rue, Gino, Wen, Casssandra, Brodesky, Squid, Gez, Rakesh, Gecko, Ladan, Tony, Tatem, Squire, Falcon, BK, Crimp, Tiggs, Bacon, Coyot, Carmilla, Webb, Sea, Arch, Jillian, Jason, Bernard, Vogt, Peggy, dragon, Pup, xandix, Wallace, Bewest, Inoshiro, Rhett, AG, Aimee, Ghengis, Itiaes, Eli, Steffan, Epic, Grapes, Stone, Prep, Scobu, Robert, Alain, Carla, Vicky, Tia, Alec, Taras, Lisa, Oz, Ariane, Log, House, Kazu, Kim, Drofnas, Tyler, Campbell, Michele, Madeline, Nelly, Baron, Thor, Lori, Hele, Fredrik, Teddy, Pixie, Berry, Gabrielle, Alfonso, Brooke, Wolf, Ringo, Cru, Charlar, Rodvik, Gibson, Elise, Bagman, Greger, Leonidas, Jerm, Leslie, CB, Brenda, Durian, Carlo, mm, Zeeshan, Caleb, Max, Elikak, Mercille, Steph, Chase, Baker
-      </text_editor>
-      <text
-          follows="top|left"
-          height="10"
-          layout="topleft"
-          left="5"
-          name="contrib_intro"
-          top_pad="10"
-          width="435"
-          wrap="true">
+Second Life is brought to you by the Lindens, 
 with open source contributions from:
       </text>
       <text_editor
        enabled="false" 
        follows="top|left"
-       height="98"
+       height="340"
        bg_readonly_color="Transparent"
        left="5"
        text_color="LtGray"
@@ -99,31 +75,147 @@ with open source contributions from:
        word_wrap="true">
 Dummy Name replaced at run time
       </text_editor>
+    </panel>
+    <panel
+      border="true"
+      label="Kokua Credits"
+      help_topic="about_kokua_credits_tab"
+      name="kokua_credits_panel">
+      <text
+          follows="top|left|right"
+          height="65"
+          layout="topleft"
+          left="5"
+          name="kokua_intro"
+          top="10"
+          width="435"
+          wrap="true">
+Kokua is an open source viewer for Second Life and OpenSim-based virtual worlds.  The goal of Kokua is to improve the user interface and usability of the viewer through community involvement, thoughtful design, modern development methods, and a pro-change atmosphere. 
+
+The Kokua Development Team:
+      </text>
+      <text_editor
+       enabled="false"
+       follows="top|left"
+       height="35"
+       bg_readonly_color="Transparent"
+       left="5"
+       text_color="LtGray"
+       max_length="65536"
+       name="kokua_names"
+       top_pad="15"
+       width="435"
+       word_wrap="true">
+Boroondas Gupta, Kentron Katana, McCabe Maxstead, Nicky Perian, Onefang Rejected.
+      </text_editor>
       <text
           follows="top|left"
           height="10"
           layout="topleft"
           left="5"
-          name="trans_intro"
+          name="kokua_retired_intro"
           top_pad="10"
           width="435"
           wrap="true">
-and translations from:
+Retired or inactive team members who contributed to Kokua:
       </text>
       <text_editor
-       enabled="false" 
+       enabled="false"
        follows="top|left"
-       height="98"
+       height="45"
        bg_readonly_color="Transparent"
        left="5"
        text_color="LtGray"
        max_length="65536"
-       name="trans_names"
+       name="kokua_retired_names"
        top_pad="10"
        width="435"
        word_wrap="true">
-Dummy Name replaced at run time
+Armin Weatherwax, Jacek Antonelli, and others.
       </text_editor>
+      <text
+          follows="top|left"
+          height="10"
+          layout="topleft"
+          left="5"
+          name="kokua_contrib_intro"
+          top_pad="10"
+          width="435"
+          wrap="true">
+Additional code contributed to Kokua by:
+      </text>
+      <text_editor
+       enabled="false"
+       follows="top|left"
+       height="45"
+       bg_readonly_color="Transparent"
+       left="5"
+       text_color="LtGray"
+       max_length="65536"
+       name="kokua_contrib_names"
+       top_pad="10"
+       width="435"
+       word_wrap="true">
+Cinder Roxley, David Rowe, Jessica Wabbit,  Kadah Coba, Kitty Barnett, Lance Corimal, Latif Khalifa, Liny Odell, Llirusaito, Marine Kelley, Nicky Dasmijn, Tankmaster Finesmith, Trinity Dejavu, tx Oh, and others.
+      </text_editor>
+    </panel>
+    <panel
+      border="true"
+      label="Firestorm Credits"
+      help_topic="about_fscredits_tab"
+      name="fs_credits_panel">
+      <text
+          follows="top|left|right"
+          height="80"
+          layout="topleft"
+          left="5"
+          name="firestorm_intro"
+          top="10"
+          width="435"
+          wrap="true">
+Kokua uses code from Firestorm and recognizes significant contributions by Firestorm and its developers to all Third Party Viewers and specifically to Kokua. Firestorm is developed and distributed by The Phoenix Firestorm Project, Inc., a non-profit organization.
+
+The Firestorm Development Team:
+      </text>
+      <text_editor
+       enabled="false"
+       follows="top|left"
+       height="80"
+       bg_readonly_color="Transparent"
+       left="5"
+       text_color="LtGray"
+       max_length="65536"
+       name="firestorm_names"
+       top_pad="10"
+       width="435"
+       word_wrap="true">
+Ansariel Hiller, ArminWeatherHax, Arrehn Oberlander, Cinder Roxley, Holy Gavenkrantz, Jessica Lyon, Kadah Coba, Kitty Barnett, Liny Odell, LordGregGreg Back, Mobius Ryba, Nicky Dasmijn, PanteraPolnocy, Selo Jacobus, Tankmaster Finesmith, Techwolf Lupindo, Tonya Souther, Tozh Taurog, Vortex Saito, WoLf Loonie, Wolfspirit Magic and Zi Ree.
+      </text_editor>
+      <text
+          follows="top|left"
+          height="10"
+          layout="topleft"
+          left="5"
+          name="fs_contrib_intro"
+          top_pad="10"
+          width="435"
+          wrap="true">
+Additional code generously contributed to Firestorm by:
+      </text>
+      <text_editor
+       enabled="false"
+       follows="top|left"
+       height="125"
+       bg_readonly_color="Transparent"
+       left="5"
+       text_color="LtGray"
+       max_length="65536"
+       name="fs_contrib_names"
+       top_pad="10"
+       width="435"
+       word_wrap="true">
+Albatroz Hird, Alexie Birman, Andromeda Rage, Armin Weatherwax, Casper Warden, Chalice Yao, Cron Stardust, Damian Zhaoying, Dan Threebeards, Dawa Gurbux, Drake Arconis, Felyza Wishbringer, f0rbidden, Fractured Crystal, Geenz Spad, Gibson Firehawk, Hitomi Tiponi, Inusaito Sayori, Katharine Berry, Kittin Ninetails, Kool Koolhoven, Lance Corrimal, Latif Khalifa, Magne Metaverse LLC, Magus Freston, Manami Hokkigai, MartinRJ Fayray, McCabe Maxstead, Melancholy Lemon, Miguael Liamano, Mimika Oh, Mister Acacia, Mysty Saunders, Nagi Michinaga, Name Short, nhede Core, NiranV Dean, Nogardrevlis Lectar, Paladin Forzane, paperwork, Peyton Menges, programmtest, Qwerty Venom, Revolution Smythe, Sahkolihaa Contepomi, sal Kaligawa, Samm Florian, Satomi Ahn, Sei Lisa, Sempervirens Oddfellow, Shin Wasp, Shyotl Kuhr, Sione Lomu, Skills Hak, StarlightShining, Sunset Faulkes, Thickbrick Sleaford, Vaalith Jinn, Whirly Fizzle, Zwagoth Klaar and others.
+	  </text_editor>
     </panel>
     <panel
       border="true"
@@ -279,7 +371,7 @@ Albatroz Hird, Alexie Birman, Andromeda Rage, Armin Weatherwax, Casper Warden, C
        left="5"
        text_color="LtGray"
        max_length="65536"
-       name="credits_editor"
+       name="licenses_editor"
        top="5"
        width="435"
        word_wrap="true">

@@ -33,6 +33,8 @@
 #include "llfolderviewitem.h"
 #include "llinventorymodel.h"
 #include "llinventorymodelbackgroundfetch.h"
+#include "llinventoryfunctions.h"
+#include "llmarketplacefunctions.h"
 #include "llviewercontrol.h"
 #include "llfolderview.h"
 #include "llinventorybridge.h"
@@ -72,6 +74,7 @@ LLInventoryFilter::LLInventoryFilter(const Params& p)
 	mEmptyLookupMessage("InventoryNoMatchingItems"),
 	mFilterSubStringTarget(SUBST_TARGET_NAME),	// ## Zi: Extended Inventory Search
 	mFilterOps(p.filter_ops),
+	mBackupFilterOps(mFilterOps),
 	mFilterSubString(p.substring),
 	mCurrentGeneration(0),
 	mFirstRequiredGeneration(0),
@@ -190,7 +193,7 @@ bool LLInventoryFilter::check(const LLFolderViewModelItem* item)
 	passed = passed && checkAgainstFilterType(listener);
 	passed = passed && checkAgainstPermissions(listener);
 	passed = passed && checkAgainstFilterLinks(listener);
-	passed = passed && passed_clipboard;
+	// passed = passed && passed_clipboard;
 
 	return passed;
 }
@@ -239,7 +242,7 @@ bool LLInventoryFilter::checkFolder(const LLUUID& folder_id) const
 	}
 
 	// when applying a filter, matching folders get their contents downloaded first
-	if (mFilterSubString.size()
+	if (isNotDefault()
 		&& !gInventory.isCategoryComplete(folder_id))
 	{
 		LLInventoryModelBackgroundFetch::instance().start(folder_id);
@@ -252,6 +255,58 @@ bool LLInventoryFilter::checkFolder(const LLUUID& folder_id) const
 		LLInventoryModelBackgroundFetch::instance().start(folder_id);
 	}
 
+	// Marketplace folder filtering
+    const U32 filterTypes = mFilterOps.mFilterTypes;
+    const U32 marketplace_filter = FILTERTYPE_MARKETPLACE_ACTIVE | FILTERTYPE_MARKETPLACE_INACTIVE |
+                                   FILTERTYPE_MARKETPLACE_UNASSOCIATED | FILTERTYPE_MARKETPLACE_LISTING_FOLDER |
+                                   FILTERTYPE_NO_MARKETPLACE_ITEMS;
+    if (filterTypes & marketplace_filter)
+    {
+        S32 depth = depth_nesting_in_marketplace(folder_id);
+
+        if (filterTypes & FILTERTYPE_NO_MARKETPLACE_ITEMS)
+        {
+            if (depth >= 0)
+            {
+                return false;
+            }
+        }
+
+        if (filterTypes & FILTERTYPE_MARKETPLACE_LISTING_FOLDER)
+        {
+            if (depth > 1)
+            {
+                return false;
+            }
+        }
+        
+        if (depth > 0)
+        {
+            LLUUID listing_uuid = nested_parent_id(folder_id, depth);
+            if (filterTypes & FILTERTYPE_MARKETPLACE_ACTIVE)
+            {
+                if (!LLMarketplaceData::instance().getActivationState(listing_uuid))
+                {
+                    return false;
+                }
+            }
+            else if (filterTypes & FILTERTYPE_MARKETPLACE_INACTIVE)
+            {
+                if (!LLMarketplaceData::instance().isListed(listing_uuid) || LLMarketplaceData::instance().getActivationState(listing_uuid))
+                {
+                    return false;
+                }
+            }
+            else if (filterTypes & FILTERTYPE_MARKETPLACE_UNASSOCIATED)
+            {
+                if (LLMarketplaceData::instance().isListed(listing_uuid))
+                {
+                    return false;
+                }
+            }
+        }
+    }
+    
 	// show folder links
 	LLViewerInventoryItem* item = gInventory.getItem(folder_id);
 	if (item && item->getActualType() == LLAssetType::AT_LINK_FOLDER)
@@ -637,6 +692,40 @@ void LLInventoryFilter::setFilterEmptySystemFolders()
 	mFilterOps.mFilterTypes |= FILTERTYPE_EMPTYFOLDERS;
 }
 
+void LLInventoryFilter::setFilterMarketplaceActiveFolders()
+{
+	mFilterOps.mFilterTypes |= FILTERTYPE_MARKETPLACE_ACTIVE;
+}
+
+void LLInventoryFilter::setFilterMarketplaceInactiveFolders()
+{
+	mFilterOps.mFilterTypes |= FILTERTYPE_MARKETPLACE_INACTIVE;
+}
+
+void LLInventoryFilter::setFilterMarketplaceUnassociatedFolders()
+{
+	mFilterOps.mFilterTypes |= FILTERTYPE_MARKETPLACE_UNASSOCIATED;
+}
+
+void LLInventoryFilter::setFilterMarketplaceListingFolders(bool select_only_listing_folders)
+{
+    if (select_only_listing_folders)
+    {
+        mFilterOps.mFilterTypes |= FILTERTYPE_MARKETPLACE_LISTING_FOLDER;
+        setModified(FILTER_MORE_RESTRICTIVE);
+    }
+    else
+    {
+        mFilterOps.mFilterTypes &= ~FILTERTYPE_MARKETPLACE_LISTING_FOLDER;
+        setModified(FILTER_LESS_RESTRICTIVE);
+    }
+}
+
+void LLInventoryFilter::setFilterNoMarketplaceFolder()
+{
+    mFilterOps.mFilterTypes |= FILTERTYPE_NO_MARKETPLACE_ITEMS;
+}
+
 // <FS:Ansariel> Optional hiding of empty system folders
 void LLInventoryFilter::removeFilterEmptySystemFolders()
 {
@@ -714,20 +803,30 @@ void LLInventoryFilter::setFilterSubString(const std::string& string)
 			setModified(FILTER_RESTART);
 		}
 
+		// Cancel out filter links once the search string is modified
+		if (mFilterOps.mFilterLinks == FILTERLINK_ONLY_LINKS)
+		{
+			if (mBackupFilterOps.mFilterLinks == FILTERLINK_ONLY_LINKS)
+			{
+				// we started viewer/floater in 'only links' mode
+				mFilterOps.mFilterLinks = FILTERLINK_INCLUDE_LINKS;
+			}
+			else
+			{
+				mFilterOps = mBackupFilterOps;
+				setModified(FILTER_RESTART);
+			}
+		}
+
 		// Cancel out UUID once the search string is modified
 		if (mFilterOps.mFilterTypes == FILTERTYPE_UUID)
 		{
 			mFilterOps.mFilterTypes &= ~FILTERTYPE_UUID;
-			mFilterOps.mFilterUUID == LLUUID::null;
+			mFilterOps.mFilterUUID = LLUUID::null;
 			setModified(FILTER_RESTART);
 		}
-
 		// ## Zi: Filter Links Menu
 		// We don't do this anymore, we have a menu option for it now. -Zi
-		// Cancel out filter links once the search string is modified
-//		{
-//			mFilterOps.mFilterLinks = FILTERLINK_INCLUDE_LINKS;
-//		}
 		// ## Zi: Filter Links Menu
 	}
 	//	End Multi-substring inventory search
@@ -835,13 +934,13 @@ void LLInventoryFilter::setHoursAgo(U32 hours)
 		BOOL more_restrictive;
 		if (FILTERDATEDIRECTION_NEWER == mFilterOps.mDateSearchDirection)
 		{
-			less_restrictive = (are_date_limits_valid && ((is_increasing && mFilterOps.mHoursAgo)) || !hours);
-			more_restrictive = (are_date_limits_valid && (!is_increasing && hours) || is_increasing_from_zero);
+			less_restrictive = ((are_date_limits_valid && ((is_increasing && mFilterOps.mHoursAgo))) || !hours);
+			more_restrictive = ((are_date_limits_valid && (!is_increasing && hours)) || is_increasing_from_zero);
 		}
 		else
 		{
-			less_restrictive = (are_date_limits_valid && ((is_decreasing && mFilterOps.mHoursAgo)) || !hours);
-			more_restrictive = (are_date_limits_valid && (!is_decreasing && hours) || is_increasing_from_zero);
+			less_restrictive = ((are_date_limits_valid && ((is_decreasing && mFilterOps.mHoursAgo))) || !hours);
+			more_restrictive = ((are_date_limits_valid && (!is_decreasing && hours)) || is_increasing_from_zero);
 		}
 
 		mFilterOps.mHoursAgo = hours;
@@ -937,6 +1036,22 @@ void LLInventoryFilter::setShowFolderState(EFolderShow state)
 			setModified();
 		}
 	}
+}
+
+void LLInventoryFilter::setFindAllLinksMode(const std::string &search_name, const LLUUID& search_id)
+{
+	// Save a copy of settings so that we will be able to restore it later
+	// but make sure we are not searching for links already
+	if(mFilterOps.mFilterLinks != FILTERLINK_ONLY_LINKS)
+	{
+		mBackupFilterOps = mFilterOps;
+	}
+	
+	// set search options
+	setFilterSubString(search_name);
+	setFilterUUID(search_id);
+	setShowFolderState(SHOW_NON_EMPTY_FOLDERS);
+	setFilterLinks(FILTERLINK_ONLY_LINKS);
 }
 
 void LLInventoryFilter::setFilterWorn(BOOL sl)
@@ -1396,13 +1511,13 @@ U32	LLInventoryFilter::getFilterSubStringCount() const
 
 std::string::size_type LLInventoryFilter::getFilterSubStringPos(U32 index) const
 {
-	if (index < 0 || index >= mSubStringMatchOffsets.size()) return std::string::npos;
+	if (index >= mSubStringMatchOffsets.size()) return std::string::npos;
 	return mSubStringMatchOffsets[index];
 }
 
 std::string::size_type LLInventoryFilter::getFilterSubStringLen(U32 index) const
 {
-	if (index < 0 || index >= mFilterSubStrings.size()) return 0;
+	if (index >= mFilterSubStrings.size()) return 0;
 	return mFilterSubStrings[index].size();
 }
 //	End Multi-substring inventory search

@@ -35,7 +35,14 @@
 ##   the Linux Client Testers forum along with the minimal
 ##   LL_GL_BLACKLIST which solves your problems.
 #export LL_GL_BLACKLIST=abcdefghijklmno
+## - missing fontconfig file causes massive freezes every time the viewer needs
+##   to find some fonts
+##   fix is simple: set the fontconfig_path variable properly
+[ -f /etc/fonts/fonts.conf ] && export FONTCONFIG_PATH=/etc/fonts
 
+if [ "`uname -m`" = "x86_64" ]; then
+    echo '64-bit Linux detected.'
+fi
 ## - Some ATI/Radeon users report random X server crashes when the mouse
 ##   cursor changes shape.  If you suspect that you are a victim of this
 ##   driver bug, try enabling this option and report whether it helps:
@@ -45,11 +52,6 @@
 ##   to find some fonts
 ##   fix is simple: set the fontconfig_path variable properly
 [ -f /etc/fonts/fonts.conf ] && export FONTCONFIG_PATH=/etc/fonts
-
-if [ "`uname -m`" = "x86_64" ]; then
-    echo '64-bit Linux detected.'
-fi
-
 
 ## Everything below this line is just for advanced troubleshooters.
 ##-------------------------------------------------------------------
@@ -64,16 +66,18 @@ fi
 ##   may need but back in pl for 32 bit
 #export LL_WRAPPER='valgrind --smc-check=all --error-limit=no --log-file=secondlife.vg --leak-check=full --suppressions=secondlife-i686.supp'
 
-##
 ## detect bumblebee architecture:
 ## - bbswitch module is loaded
 ## - optirun exist and is executable
 ## if so, set LL_WRAPPER to optirun (and hope for the best)
-OPTIRUN=$(type -p optirun)
-[ -s /sys/module/bbswitch/version -a -n ${OPTIRUN} -a -x ${OPTIRUN} ] && LL_WRAPPER=${OPTIRUN}
+#OPTIRUN=$(type -p optirun)
+#[ -s /sys/module/bbswitch/version -a -n ${OPTIRUN} -a -x ${OPTIRUN} ] && LL_WRAPPER=${OPTIRUN}
 
-## - Avoids an often-buggy X feature that doesn't really benefit us anyway.
-export SDL_VIDEO_X11_DGAMOUSE=0
+
+
+ ## - Avoids an often-buggy X feature that doesn't really benefit us anyway.
+ export SDL_VIDEO_X11_DGAMOUSE=0
+ 
 
 ## - Works around a problem with misconfigured 64-bit systems not finding GL
 I386_MULTIARCH="$(dpkg-architecture -ai386 -qDEB_HOST_MULTIARCH 2>/dev/null)"
@@ -81,9 +85,9 @@ MULTIARCH_ERR=$?
 if [ $MULTIARCH_ERR -eq 0 ]; then
     echo 'Multi-arch support detected.'
     MULTIARCH_GL_DRIVERS="/usr/lib/${I386_MULTIARCH}/dri"
-    export LIBGL_DRIVERS_PATH="${LIBGL_DRIVERS_PATH}:${MULTIARCH_GL_DRIVERS}:/usr/lib64/dri:/usr/lib32/dri:/usr/lib/dri"
+    export LIBGL_DRIVERS_PATH="/usr/lib64/dri:/usr/lib32/dri:/usr/lib/dri:/usr/lib/i386-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri"
 else
-    export LIBGL_DRIVERS_PATH="${LIBGL_DRIVERS_PATH}:/usr/lib64/dri:/usr/lib32/dri:/usr/lib/dri"
+    export export LIBGL_DRIVERS_PATH="${LIBGL_DRIVERS_PATH}:/usr/lib64/dri:/usr/lib32/dri:/usr/lib/dri:/usr/lib/i386-linux-gnu/dri:/usr/lib/x86_64-linux-gnu/dri"
 fi
 
 ## - The 'scim' GTK IM module widely crashes the viewer.  Avoid it.

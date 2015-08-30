@@ -38,6 +38,7 @@
 #include "pipeline.h"
 
 #include "llagent.h" //  Get state values from here
+#include "llattachmentsmgr.h"
 #include "llagentcamera.h"
 #include "llagentwearables.h"
 #include "llhudeffecttrail.h"
@@ -186,7 +187,6 @@ LLVOAvatarSelf::LLVOAvatarSelf(const LLUUID& id,
 	mScreenp(NULL),
 	mLastRegionHandle(0),
 	mRegionCrossingCount(0),
-	mInitialBakesLoaded(false),
 	// Value outside legal range, so will always be a mismatch the
 	// first time through.
 	mLastHoverOffsetSent(LLVector3(0.0f, 0.0f, -999.0f))
@@ -1352,44 +1352,6 @@ BOOL LLVOAvatarSelf::isWearingAttachment(const LLUUID& inv_item_id) const
 }
 
 //-----------------------------------------------------------------------------
-BOOL LLVOAvatarSelf::attachmentWasRequested(const LLUUID& inv_item_id) const
-{
-	const F32 REQUEST_EXPIRATION_SECONDS = 5.0;  // any request older than this is ignored/removed.
-	std::map<LLUUID,LLTimer>::iterator it = mAttachmentRequests.find(inv_item_id);
-	if (it != mAttachmentRequests.end())
-	{
-		const LLTimer& request_time = it->second;
-		F32 request_time_elapsed = request_time.getElapsedTimeF32();
-		if (request_time_elapsed > REQUEST_EXPIRATION_SECONDS)
-		{
-			mAttachmentRequests.erase(it);
-			return FALSE;
-		}
-		else
-		{
-			return TRUE;
-		}
-	}
-	else
-	{
-		return FALSE;
-	}
-}
-
-//-----------------------------------------------------------------------------
-void LLVOAvatarSelf::addAttachmentRequest(const LLUUID& inv_item_id)
-{
-	LLTimer current_time;
-	mAttachmentRequests[inv_item_id] = current_time;
-}
-
-//-----------------------------------------------------------------------------
-void LLVOAvatarSelf::removeAttachmentRequest(const LLUUID& inv_item_id)
-{
-	mAttachmentRequests.erase(inv_item_id);
-}
-
-//-----------------------------------------------------------------------------
 // getWornAttachment()
 //-----------------------------------------------------------------------------
 LLViewerObject* LLVOAvatarSelf::getWornAttachment(const LLUUID& inv_item_id)
@@ -1515,8 +1477,6 @@ const LLViewerJointAttachment *LLVOAvatarSelf::attachObject(LLViewerObject *view
 	{
 		const LLUUID& attachment_id = viewer_object->getAttachmentItemID();
 		LLAppearanceMgr::instance().registerAttachment(attachment_id);
-		// Clear any pending requests once the attachment arrives.
-		removeAttachmentRequest(attachment_id);
 		updateLODRiggedAttachments();		
 	}
 
@@ -1873,8 +1833,39 @@ BOOL LLVOAvatarSelf::isTextureVisible(LLAvatarAppearanceDefines::ETextureIndex t
 		return LLVOAvatar::isTextureVisible(type);
 	}
 
-	U32 index = gAgentWearables.getWearableIndex(wearable);
-	return isTextureVisible(type,index);
+	U32 index;
+	if (gAgentWearables.getWearableIndex(wearable,index))
+	{
+		return isTextureVisible(type,index);
+	}
+	else
+	{
+		LL_WARNS() << "Wearable not found" << LL_ENDL;
+		return FALSE;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// requestLayerSetUploads()
+//-----------------------------------------------------------------------------
+void LLVOAvatarSelf::requestLayerSetUploads()
+{
+	for (U32 i = 0; i < mBakedTextureDatas.size(); i++)
+	{
+		requestLayerSetUpload((EBakedTextureIndex)i);
+	}
+}
+
+void LLVOAvatarSelf::requestLayerSetUpload(LLAvatarAppearanceDefines::EBakedTextureIndex i)
+{
+	ETextureIndex tex_index = mBakedTextureDatas[i].mTextureIndex;
+	const BOOL layer_baked = isTextureDefined(tex_index, gAgentWearables.getWearableCount(tex_index));
+	LLViewerTexLayerSet *layerset = getLayerSet(i);
+	if (!layer_baked && layerset)
+	{
+		layerset->requestUpload();
+	}
 }
 
 
@@ -3478,4 +3469,13 @@ void LLVOAvatarSelf::dumpWearableInfo(LLAPRFile& outfile)
 		}
 	}
 	apr_file_printf( file, "\n</wearable_info>\n" );
+}
+
+F32 LLVOAvatarSelf::getAvatarOffset() /*const*/
+{
+	if (!gIsInSecondLife)
+	{
+		return (isUsingServerBakes()) ? LLAvatarAppearance::getAvatarOffset() : gSavedPerAccountSettings.getF32("AvatarHoverOffsetZ");
+	}
+	return LLAvatarAppearance::getAvatarOffset();
 }

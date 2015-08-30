@@ -75,8 +75,6 @@ extern BOOL gUseGLPick;
 
 F32 CLOTHING_GRAVITY_EFFECT = 0.7f;
 F32 CLOTHING_ACCEL_FORCE_FACTOR = 0.2f;
-const S32 NUM_TEST_AVATARS = 30;
-const S32 MIN_PIXEL_AREA_2_PASS_SKINNING = 500000000;
 
 // Format for gAGPVertices
 // vertex format for bumpmapping:
@@ -1635,9 +1633,13 @@ void LLDrawPoolAvatar::updateRiggedFaceVertexBuffer(LLVOAvatar* avatar, LLFace* 
 		for (U32 j = 0; j < count; ++j)
 		{
 			LLJoint* joint = avatar->getJoint(skin->mJointNames[j]);
-			if(!joint)
+			if (!joint)
 			{
-				joint = avatar->getJoint("mRoot");
+				joint = avatar->getJoint("mPelvis");
+			}
+			if (!joint)
+			{
+				LL_DEBUGS("Avatar") << "Failed to find " << skin->mJointNames[j] << LL_ENDL;
 			}
 			if (joint)
 			{
@@ -1854,9 +1856,12 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 
 			if (mat)
 			{
-				gGL.getTexUnit(sDiffuseChannel)->bind(face->getTexture(LLRender::DIFFUSE_MAP));
-				gGL.getTexUnit(normal_channel)->bind(face->getTexture(LLRender::NORMAL_MAP));
+				//order is important here LLRender::DIFFUSE_MAP should be last, becouse it change 
+				//(gGL).mCurrTextureUnitIndex
 				gGL.getTexUnit(specular_channel)->bind(face->getTexture(LLRender::SPECULAR_MAP));
+				gGL.getTexUnit(normal_channel)->bind(face->getTexture(LLRender::NORMAL_MAP));
+				gGL.getTexUnit(sDiffuseChannel)->bind(face->getTexture(LLRender::DIFFUSE_MAP), false, true);
+
 
 				LLColor4 col = mat->getSpecularLightColor();
 				F32 spec = mat->getSpecularLightExponent()/255.f;

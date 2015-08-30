@@ -3,7 +3,7 @@
 include(00-Common)
 
 project(cmake)
-
+if (LINUX)
 set(cmake_SOURCE_FILES
     CMakeLists.txt
 
@@ -107,6 +107,105 @@ set(cmake_SOURCE_FILES
     XmlRpcEpi.cmake
     ZLIB.cmake
     )
+else (LINUX)
+set(cmake_SOURCE_FILES
+    CMakeLists.txt
+
+    00-Common.cmake
+    APR.cmake
+    Audio.cmake
+    BerkeleyDB.cmake
+    Boost.cmake
+    BuildVersion.cmake
+    CARes.cmake
+    CMakeCopyIfDifferent.cmake
+    ConfigurePkgConfig.cmake
+    CURL.cmake
+    Copy3rdPartyLibs.cmake
+    DBusGlib.cmake
+    DeploySharedLibs.cmake
+    DirectX.cmake
+    DragDrop.cmake
+    EXPAT.cmake
+    FindAPR.cmake
+    FindAutobuild.cmake
+    FindBerkeleyDB.cmake
+    FindCARes.cmake
+    FindFMODEX.cmake
+    FindGLH.cmake
+    FindGoogleBreakpad.cmake
+    FindGooglePerfTools.cmake
+    FindHUNSPELL.cmake
+    FindJsonCpp.cmake
+    FindNDOF.cmake
+    FindOpenJPEG.cmake
+    FindSCP.cmake
+    FindURIPARSER.cmake
+    FindXmlRpcEpi.cmake
+    FindZLIB.cmake
+    FMODEX.cmake
+    FreeType.cmake
+    GLEXT.cmake
+    GLH.cmake
+    GLOD.cmake
+    GetPrerequisites_2_8.cmake
+    Glut.cmake
+    GoogleBreakpad.cmake
+    GoogleMock.cmake
+    GooglePerfTools.cmake
+    Havok.cmake
+    Hunspell.cmake
+    JPEG.cmake
+    JsonCpp.cmake
+    LLAddBuildTest.cmake
+    LLAppearance.cmake
+    LLAppearanceUtility.cmake
+    LLAudio.cmake
+    LLCharacter.cmake
+    LLCommon.cmake
+    LLCrashLogger.cmake
+    LLImage.cmake
+    LLImageJ2COJ.cmake
+    LLInventory.cmake
+    LLKDU.cmake
+    LLLogin.cmake
+    LLMath.cmake
+    LLMessage.cmake
+    LLPhysicsExtensions.cmake
+    LLPlugin.cmake
+    LLPrimitive.cmake
+    LLRender.cmake
+    LLSharedLibs.cmake
+    LLTestCommand.cmake
+    LLUI.cmake
+    LLVFS.cmake
+    LLWindow.cmake
+    LLXML.cmake
+    LScript.cmake
+    Linking.cmake
+    NDOF.cmake
+    OPENAL.cmake
+    OpenGL.cmake
+    OpenJPEG.cmake
+    OpenSSL.cmake
+    PNG.cmake
+    Prebuilt.cmake
+    PulseAudio.cmake
+    Python.cmake
+    TemplateCheck.cmake
+    Teapot.cmake
+    Tut.cmake
+    UI.cmake
+    UnixInstall.cmake
+    URIPARSER.cmake
+    Variables.cmake
+    ViewerMiscLibs.cmake
+    VisualLeakDetector.cmake
+    XmlRpcEpi.cmake
+    ZLIB.cmake
+    )
+endif (LINUX)
+
 
 source_group("Shared Rules" FILES ${cmake_SOURCE_FILES})
 

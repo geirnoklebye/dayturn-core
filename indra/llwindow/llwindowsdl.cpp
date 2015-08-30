@@ -100,6 +100,8 @@ void maybe_unlock_display(void)
 #if LL_GTK
 // Lazily initialize and check the runtime GTK version for goodness.
 // static
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 bool LLWindowSDL::ll_try_gtk_init(void)
 {
 	static BOOL done_gtk_diag = FALSE;
@@ -158,6 +160,7 @@ bool LLWindowSDL::ll_try_gtk_init(void)
 
 	return gtk_is_good;
 }
+#pragma GCC diagnostic pop
 #endif // LL_GTK
 
 

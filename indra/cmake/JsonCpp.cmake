@@ -11,10 +11,10 @@ else (USESYSTEMLIBS)
   use_prebuilt_binary(jsoncpp)
   if (WINDOWS)
     set(JSONCPP_LIBRARIES 
-      debug json_vc100debug_libmt.lib
-      optimized json_vc100_libmt)
+      debug json_libmdd.lib
+      optimized json_libmd.lib)
   elseif (DARWIN)
-    set(JSONCPP_LIBRARIES libjson_linux-gcc-4.0.1_libmt.a)
+    set(JSONCPP_LIBRARIES libjson_darwin_libmt.a)
   elseif (LINUX)
     if(${ARCH} STREQUAL "x86_64")
       set(JSONCPP_LIBRARIES libjson_linux-gcc-4.6_libmt.a)

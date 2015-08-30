@@ -267,11 +267,10 @@ void LLPanelLogin::addFavoritesToStartLocation()
 	std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "stored_favorites_" + LLGridManager::getInstance()->getGrid() + ".xml");
 	std::string old_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "stored_favorites.xml");
 	LLSD fav_llsd;
-	llifstream file;
-	file.open(filename);
+	llifstream file(filename.c_str(), std::ios_base::in | std::ios_base::binary);;
 	if (!file.is_open())
 	{
-		file.open(old_filename);
+		llifstream file(old_filename.c_str(), std::ios_base::in | std::ios_base::binary);;;
 	if (!file.is_open()) return;
 	}
 	LLSDSerialize::fromXML(fav_llsd, file);
@@ -755,6 +754,9 @@ void LLPanelLogin::updateStartSLURL()
 		}			
 		case 1:
 	  {
+			LLStartUp::setStartSLURL(LLSLURL(LLSLURL::SIM_LOCATION_HOME));
+			break;
+		}
 			LLStartUp::setStartSLURL(LLSLURL(LLSLURL::SIM_LOCATION_HOME));
 			break;
 		}
@@ -1247,6 +1249,31 @@ void LLPanelLogin::onServerComboLostFocus(LLFocusableElement* fe)
 	if (!sInstance)
 			{
 		return;
+			}
+
+	LLComboBox* combo = sInstance->getChild<LLComboBox>("server_combo");
+	if(fe == combo)
+	{
+		onSelectServer(combo, NULL);	
+		}			
+	}
+
+void LLPanelLogin::updateLoginPanelLinks()
+{
+	if(!sInstance) return;
+
+	LLSD grid_info;
+	LLGridManager::getInstance()->getGridData(grid_info);
+
+	bool system_grid = grid_info.has(GRID_IS_SYSTEM_GRID_VALUE);
+	bool has_register = LLGridManager::getInstance()->isInOpenSim() 
+				&& grid_info.has(GRID_REGISTER_NEW_ACCOUNT);
+	bool has_password = LLGridManager::getInstance()->isInOpenSim() 
+				&& grid_info.has(GRID_FORGOT_PASSWORD);
+	// need to call through sInstance, as it's called from onSelectServer, which
+	// is static.
+	sInstance->getChildView("create_new_account_text")->setVisible( system_grid || has_register);
+	sInstance->getChildView("forgot_password_text")->setVisible( system_grid || has_password);
 			}
 
 	LLComboBox* combo = sInstance->getChild<LLComboBox>("server_combo");

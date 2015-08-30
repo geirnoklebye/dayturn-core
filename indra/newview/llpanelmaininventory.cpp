@@ -175,10 +175,9 @@ BOOL LLPanelMainInventory::postBuild()
 	}
 
 	// Now load the stored settings from disk, if available.
-	std::ostringstream filterSaveName;
-	filterSaveName << gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, FILTERS_FILENAME);
-	LL_INFOS() << "LLPanelMainInventory::init: reading from " << filterSaveName.str() << LL_ENDL;
-	llifstream file(filterSaveName.str());
+	std::string filterSaveName(gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, FILTERS_FILENAME));
+	LL_INFOS() << "LLPanelMainInventory::init: reading from " << filterSaveName << LL_ENDL;
+	llifstream file(filterSaveName.c_str());
 	LLSD savedFilterState;
 	if (file.is_open())
 	{
@@ -274,16 +273,17 @@ LLPanelMainInventory::~LLPanelMainInventory( void )
 		}
 	}
 
-	std::ostringstream filterSaveName;
-	filterSaveName << gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, FILTERS_FILENAME);
-	llofstream filtersFile(filterSaveName.str());
+	std::string filterSaveName(gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, FILTERS_FILENAME));
+	llofstream filtersFile(filterSaveName.c_str());
 	if(!LLSDSerialize::toPrettyXML(filterRoot, filtersFile))
 	{
 		LL_WARNS() << "Could not write to filters save file " << filterSaveName << LL_ENDL;
 	}
 	else
+    {
 		filtersFile.close();
-
+    }
+    
 	gInventory.removeObserver(this);
 	delete mSavedFolderState;
 }
@@ -1177,14 +1177,12 @@ void LLPanelMainInventory::onCustomAction(const LLSD& userdata)
 		const LLUUID& item_id = static_cast<LLFolderViewModelItemInventory*>(current_item->getViewModelItem())->getUUID();
 		const std::string &item_name = current_item->getViewModelItem()->getName();
 		mFilterSubString = item_name;
-		LLInventoryFilter &filter = mActivePanel->getFilter();
-		filter.setFilterSubString(item_name);
-		mFilterEditor->setText(item_name);
 
+		LLInventoryFilter &filter = mActivePanel->getFilter();
+		filter.setFindAllLinksMode(item_name, item_id);
+
+		mFilterEditor->setText(item_name);
 		mFilterEditor->setFocus(TRUE);
-		filter.setFilterUUID(item_id);
-		filter.setShowFolderState(LLInventoryFilter::SHOW_NON_EMPTY_FOLDERS);
-		filter.setFilterLinks(LLInventoryFilter::FILTERLINK_ONLY_LINKS);
 	}
 }
 

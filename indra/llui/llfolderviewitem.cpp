@@ -104,7 +104,8 @@ LLFolderViewItem::Params::Params()
 	item_height("item_height"),
 	item_top_pad("item_top_pad"),
 	creation_date(),
-	allow_open("allow_open", true),
+    allow_wear("allow_wear", true),
+    allow_drop("allow_drop", true),
 	font_color("font_color"),
 	font_highlight_color("font_highlight_color"),
     left_pad("left_pad", 0),
@@ -137,7 +138,8 @@ LLFolderViewItem::LLFolderViewItem(const LLFolderViewItem::Params& p)
 	mRoot(p.root),
 	mViewModelItem(p.listener),
 	mIsMouseOverTitle(false),
-	mAllowOpen(p.allow_open),
+	mAllowWear(p.allow_wear),
+    mAllowDrop(p.allow_drop),
 	mFontColor(p.font_color),
 	mFontHighlightColor(p.font_highlight_color),
     mLeftPad(p.left_pad),
@@ -471,7 +473,7 @@ void LLFolderViewItem::buildContextMenu(LLMenuGL& menu, U32 flags)
 
 void LLFolderViewItem::openItem( void )
 {
-	if (mAllowOpen)
+	if (mAllowWear || !getViewModelItem()->isItemWearable())
 	{
 		getViewModelItem()->openItem();
 	}
@@ -865,7 +867,7 @@ void LLFolderViewItem::draw()
 
 	if (filter_string_length > 0)
 	{
-		S32 left = llround(text_left) + font->getWidth(combined_string, 0, mViewModelItem->getFilterStringOffset()) - 2;
+		S32 left = ll_round(text_left) + font->getWidth(combined_string, 0, mViewModelItem->getFilterStringOffset()) - 2;
 		S32 right = left + font->getWidth(combined_string, mViewModelItem->getFilterStringOffset(), filter_string_length) + 2;
 		S32 bottom = llfloor(getRect().getHeight() - font->getLineHeight() - 3 - TOP_PAD);
 		S32 top = getRect().getHeight() - TOP_PAD;
@@ -1066,7 +1068,7 @@ S32 LLFolderViewFolder::arrange( S32* width, S32* height )
 				{
 					S32 child_width = *width;
 					S32 child_height = 0;
-					S32 child_top = parent_item_height - llround(running_height);
+					S32 child_top = parent_item_height - ll_round(running_height);
 
 					target_height += folderp->arrange( &child_width, &child_height );
 
@@ -1085,7 +1087,7 @@ S32 LLFolderViewFolder::arrange( S32* width, S32* height )
 				{
 					S32 child_width = *width;
 					S32 child_height = 0;
-					S32 child_top = parent_item_height - llround(running_height);
+					S32 child_top = parent_item_height - ll_round(running_height);
 
 					target_height += itemp->arrange( &child_width, &child_height );
 					// don't change width, as this item is as wide as its parent folder by construction
@@ -1122,7 +1124,7 @@ S32 LLFolderViewFolder::arrange( S32* width, S32* height )
 			folders_t::iterator fit = iter++;
 			// number of pixels that bottom of folder label is from top of parent folder
 			if (getRect().getHeight() - (*fit)->getRect().mTop + (*fit)->getItemHeight() 
-				> llround(mCurHeight) + mMaxFolderItemOverlap)
+				> ll_round(mCurHeight) + mMaxFolderItemOverlap)
 			{
 				// hide if beyond current folder height
 				(*fit)->setVisible(FALSE);
@@ -1135,7 +1137,7 @@ S32 LLFolderViewFolder::arrange( S32* width, S32* height )
 			items_t::iterator iit = iter++;
 			// number of pixels that bottom of item label is from top of parent folder
 			if (getRect().getHeight() - (*iit)->getRect().mBottom
-				> llround(mCurHeight) + mMaxFolderItemOverlap)
+				> ll_round(mCurHeight) + mMaxFolderItemOverlap)
 			{
 				(*iit)->setVisible(FALSE);
 			}
@@ -1147,12 +1149,12 @@ S32 LLFolderViewFolder::arrange( S32* width, S32* height )
 	}
 
 	// don't change width as this item is already as wide as its parent folder
-	reshape(getRect().getWidth(),llround(mCurHeight));
+	reshape(getRect().getWidth(),ll_round(mCurHeight));
 
 	// pass current height value back to parent
-	*height = llround(mCurHeight);
+	*height = ll_round(mCurHeight);
 
-	return llround(mTargetHeight);
+	return ll_round(mTargetHeight);
 }
 
 BOOL LLFolderViewFolder::needsArrange()
@@ -1358,7 +1360,7 @@ void LLFolderViewFolder::gatherChildRangeExclusive(LLFolderViewItem* start, LLFo
 			{
 				return;
 			}
-			if (selecting)
+			if (selecting && (*it)->getVisible())
 			{
 				items.push_back(*it);
 			}
@@ -1377,7 +1379,7 @@ void LLFolderViewFolder::gatherChildRangeExclusive(LLFolderViewItem* start, LLFo
 				return;
 			}
 
-			if (selecting)
+			if (selecting && (*it)->getVisible())
 			{
 				items.push_back(*it);
 			}
@@ -1399,7 +1401,7 @@ void LLFolderViewFolder::gatherChildRangeExclusive(LLFolderViewItem* start, LLFo
 				return;
 			}
 
-			if (selecting)
+			if (selecting && (*it)->getVisible())
 			{
 				items.push_back(*it);
 			}
@@ -1418,7 +1420,7 @@ void LLFolderViewFolder::gatherChildRangeExclusive(LLFolderViewItem* start, LLFo
 				return;
 			}
 
-			if (selecting)
+			if (selecting && (*it)->getVisible())
 			{
 				items.push_back(*it);
 			}
@@ -1515,12 +1517,14 @@ void LLFolderViewFolder::destroyView()
     while (!mItems.empty())
     {
     	LLFolderViewItem *itemp = mItems.back();
+        mItems.pop_back();
     	itemp->destroyView(); // LLFolderViewItem::destroyView() removes entry from mItems
     }
 
 	while (!mFolders.empty())
 	{
 		LLFolderViewFolder *folderp = mFolders.back();
+        mFolders.pop_back();
 		folderp->destroyView(); // LLFolderVievFolder::destroyView() removes entry from mFolders
 	}
 
@@ -1818,9 +1822,16 @@ BOOL LLFolderViewFolder::handleDragAndDropToThisFolder(MASK mask,
 													   EAcceptance* accept,
 													   std::string& tooltip_msg)
 {
+    if (!mAllowDrop)
+    {
+		*accept = ACCEPT_NO;
+        tooltip_msg = LLTrans::getString("TooltipOutboxCannotDropOnRoot");
+        return TRUE;
+    }
+    
 	BOOL accepted = getViewModelItem()->dragOrDrop(mask,drop,cargo_type,cargo_data, tooltip_msg);
-	
-	if (accepted) 
+
+	if (accepted)
 	{
 		mDragAndDropTarget = TRUE;
 		*accept = ACCEPT_YES_MULTI;

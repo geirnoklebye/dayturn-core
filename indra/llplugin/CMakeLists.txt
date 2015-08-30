@@ -68,7 +68,9 @@ list(APPEND llplugin_SOURCE_FILES ${llplugin_HEADER_FILES})
 
 add_library (llplugin ${llplugin_SOURCE_FILES})
 
-add_subdirectory(slplugin)
+if (LINUX)
+   add_subdirectory(slplugin)
+endif (LINUX)
 
 # Add tests
 if (LL_TESTS)

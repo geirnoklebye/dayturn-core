@@ -72,12 +72,6 @@
 #include "llfloaterreg.h"
 #include "lllocalbitmaps.h"
 
-static const S32 HPAD = 4;
-static const S32 VPAD = 4;
-static const S32 LINE = 16;
-static const S32 FOOTER_HEIGHT = 100;
-static const S32 BORDER_PAD = HPAD;
-static const S32 TEXTURE_INVENTORY_PADDING = 30;
 static const F32 CONTEXT_CONE_IN_ALPHA = 0.0f;
 static const F32 CONTEXT_CONE_OUT_ALPHA = 1.f;
 static const F32 CONTEXT_FADE_TIME = 0.08f;
@@ -196,6 +190,7 @@ protected:
 private:
 	bool mCanApply;
 	bool mCanPreview;
+	bool mPreviewSettingChanged;
 	texture_selected_callback mTextureSelectedCallback;
 };
 
@@ -224,7 +219,8 @@ LLFloaterTexturePicker::LLFloaterTexturePicker(
 	mContextConeOpacity(0.f),
 	mSelectedItemPinned( FALSE ),
 	mCanApply(true),
-	mCanPreview(true)
+	mCanPreview(true),
+	mPreviewSettingChanged(false)
 {
 	buildFromFile("floater_texture_ctrl.xml");
 	mCanApplyImmediately = can_apply_immediately;
@@ -850,6 +846,16 @@ void LLFloaterTexturePicker::onSelectionChange(const std::deque<LLFolderViewItem
 			}
 			setImageID(itemp->getAssetUUID(),false);
 			mViewModel->setDirty(); // *TODO: shouldn't we be using setValue() here?
+
+			if(!mPreviewSettingChanged)
+			{
+				mCanPreview = gSavedSettings.getBOOL("TextureLivePreview");
+			}
+			else
+			{
+				mPreviewSettingChanged = false;
+			}
+
 			if (user_action && mCanPreview)
 			{
 				// only commit intentional selections, not implicit ones
@@ -1007,6 +1013,7 @@ void LLFloaterTexturePicker::setCanApply(bool can_preview, bool can_apply)
 
 	mCanApply = can_apply;
 	mCanPreview = can_preview ? gSavedSettings.getBOOL("TextureLivePreview") : false;
+	mPreviewSettingChanged = true;
 }
 
 void LLFloaterTexturePicker::onFilterEdit(const std::string& search_string )

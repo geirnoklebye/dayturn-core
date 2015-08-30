@@ -201,7 +201,7 @@ void FSFloaterImport::onClickBtnPickFile()
 	mAnimsTotal = 0;
 	mSoundsTotal = 0;
 
-	llifstream filestream(mFileFullName, std::ios_base::in | std::ios_base::binary);
+	llifstream filestream(mFileFullName.c_str(), std::ios_base::in | std::ios_base::binary);
 	if(filestream.is_open())
 	{
 		filestream.seekg(0, std::ios::end);
