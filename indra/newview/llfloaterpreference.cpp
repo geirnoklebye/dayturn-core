@@ -523,11 +523,6 @@ BOOL LLFloaterPreference::postBuild()
 		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(TRUE);
 		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(TRUE);
 	}	
-	else
-	{
-		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(TRUE);
-		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(TRUE);
-	}	
 	
 // ## Zi: Pie menu
 	gSavedSettings.getControl("OverridePieColors")->getSignal()->connect(boost::bind(&LLFloaterPreference::onPieColorsOverrideChanged, this));

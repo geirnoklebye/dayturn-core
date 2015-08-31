@@ -748,15 +748,12 @@ void LLPanelLogin::updateStartSLURL()
 	switch (index)
 	{
 		case 0:
-	{
+		{
 			LLStartUp::setStartSLURL(LLSLURL(LLSLURL::SIM_LOCATION_LAST));
 			break;
 		}			
 		case 1:
-	  {
-			LLStartUp::setStartSLURL(LLSLURL(LLSLURL::SIM_LOCATION_HOME));
-			break;
-		}
+		{
 			LLStartUp::setStartSLURL(LLSLURL(LLSLURL::SIM_LOCATION_HOME));
 			break;
 		}
@@ -770,10 +767,10 @@ void LLPanelLogin::updateStartSLURL()
 			}
 			break;
 		}
-		}
+	}
 
 	update_grid_help(); //llviewermenu
-	  }
+}
 
 
 void LLPanelLogin::setLocation(const LLSLURL& slurl)
@@ -1275,30 +1272,5 @@ void LLPanelLogin::updateLoginPanelLinks()
 	sInstance->getChildView("create_new_account_text")->setVisible( system_grid || has_register);
 	sInstance->getChildView("forgot_password_text")->setVisible( system_grid || has_password);
 			}
-
-	LLComboBox* combo = sInstance->getChild<LLComboBox>("server_combo");
-	if(fe == combo)
-	{
-		onSelectServer(combo, NULL);	
-		}			
-	}
-
-void LLPanelLogin::updateLoginPanelLinks()
-{
-	if(!sInstance) return;
-
-	LLSD grid_info;
-	LLGridManager::getInstance()->getGridData(grid_info);
-
-	bool system_grid = grid_info.has(GRID_IS_SYSTEM_GRID_VALUE);
-	bool has_register = LLGridManager::getInstance()->isInOpenSim() 
-				&& grid_info.has(GRID_REGISTER_NEW_ACCOUNT);
-	bool has_password = LLGridManager::getInstance()->isInOpenSim() 
-				&& grid_info.has(GRID_FORGOT_PASSWORD);
-	// need to call through sInstance, as it's called from onSelectServer, which
-	// is static.
-	sInstance->getChildView("create_new_account_text")->setVisible( system_grid || has_register);
-	sInstance->getChildView("forgot_password_text")->setVisible( system_grid || has_password);
-}
 
 

@@ -1772,8 +1772,6 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 	// won't get dumped by the simulator.
 	LLVector3d new_pos_global = regionp->getPosGlobalFromRegion(newpos);
 
-	LLVector3d new_pos_global;
-
 	if (mObject->isAttachment())
 	{
 		newpos.clamp(LLVector3(-MAX_ATTACHMENT_DIST,-MAX_ATTACHMENT_DIST,-MAX_ATTACHMENT_DIST),LLVector3(MAX_ATTACHMENT_DIST,MAX_ATTACHMENT_DIST,MAX_ATTACHMENT_DIST));
@@ -1803,10 +1801,6 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 				mCtrlPosZ->set(LLWorld::getInstance()->resolveLandHeightAgent(newpos) + 1.f);
 			}
 		}
-	}
-		// Make sure new position is in a valid region, so the object
-		// won't get dumped by the simulator.
-		new_pos_global = regionp->getPosGlobalFromRegion(newpos);
 	}
 
 	// partly copied from llmaniptranslate.cpp to get the positioning right

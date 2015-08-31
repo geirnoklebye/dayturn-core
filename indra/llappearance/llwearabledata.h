@@ -71,7 +71,6 @@ public:
 	static const U32 MAX_CLOTHING_PER_TYPE = 10; 
 //mk
 
-	static const U32 MAX_CLOTHING_LAYERS = 60;
 
 	//--------------------------------------------------------------------
 	// Setters

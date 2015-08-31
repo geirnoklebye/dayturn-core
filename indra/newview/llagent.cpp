@@ -99,7 +99,9 @@
 //MK
 #include "llstartup.h"
 //mk
-
+//MK
+#include "RRInterface.h"
+//mk
 using namespace LLAvatarAppearanceDefines;
 
 extern LLMenuBarGL* gMenuBarView;
@@ -499,6 +501,8 @@ LLAgent::LLAgent() :
 	mOutfitChosen(FALSE),
 
 	mVoiceConnected(false),
+	mAppearanceSerialNum(0),
+
 	mMouselookModeInSignal(NULL),
 	mMouselookModeOutSignal(NULL),
 
@@ -5079,22 +5083,6 @@ LLAgentQueryManager::LLAgentQueryManager() :
 	}
 }
 
-LLAgentQueryManager::~LLAgentQueryManager()
-{
-}
-
-LLAgentQueryManager gAgentQueryManager;
-
-LLAgentQueryManager::LLAgentQueryManager() :
-	mWearablesCacheQueryID(0),
-	mNumPendingQueries(0),
-	mUpdateSerialNum(0)
-{
-	for (U32 i = 0; i < BAKED_NUM_INDICES; i++)
-	{
-		mActiveCacheQueries[i] = 0;
-	}
-}
 
 LLAgentQueryManager::~LLAgentQueryManager()
 {

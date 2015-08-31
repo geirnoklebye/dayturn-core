@@ -623,17 +623,6 @@ void LLWorld::updateLimits()
 	*/
 }
 
-// </opensim-limits>
-LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host, const U32 &region_size_x, const U32 &region_size_y)
-{
-	// <AW: opensim-limits>
-	if(mLimitsNeedRefresh)
-	{
-		refreshLimits();
-	}
-// </AW: opensim-limits>
-
-}
 
 // </opensim-limits>
 LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host, const U32 &region_size_x, const U32 &region_size_y)

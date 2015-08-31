@@ -7621,6 +7621,23 @@ LLInvFVBridge* LLRecentInventoryBridgeBuilder::createBridge(
 	return new_listener;
 
 }
+LLFolderViewGroupedItemBridge::LLFolderViewGroupedItemBridge()
+{
+}
+
+void LLFolderViewGroupedItemBridge::groupFilterContextMenu(folder_view_item_deque& selected_items, LLMenuGL& menu)
+{
+	uuid_vec_t ids;
+	menuentry_vec_t disabled_items;
+	if (get_selection_item_uuids(selected_items, ids))
+	{
+		if (!LLAppearanceMgr::instance().canAddWearables(ids))
+		{
+			disabled_items.push_back(std::string("Wearable Add"));
+		}
+	}
+	disable_context_entries_if_present(menu, disabled_items);
+}
 
 // <FS:ND> Reintegrate search by uuid/creator/descripting from Zi Ree after CHUI Merge
 std::string LLInvFVBridge::getSearchableCreator( void ) const
@@ -7681,56 +7698,4 @@ std::string LLInvFVBridge::getSearchableAll( void ) const
 		getSearchableUUID();
 }
 // </FS:ND>
-		if( gCacheName->getFullName( pItem->getCreatorUUID(), strCreator ) )
-			LLStringUtil::toUpper( strCreator );
-	}
-
-	return strCreator;
-}
-
-std::string LLInvFVBridge::getSearchableDescription( void ) const
-{
-	LLInventoryItem *pItem( dynamic_cast< LLInventoryItem* >( getInventoryObject() ) );
-
-	std::string strDescr;
-
-	if(pItem)
-	{
-		if(!pItem->getDescription().empty() )
-		{
-			strDescr =  pItem->getDescription();
-			LLStringUtil::toUpper( strDescr );
-		}
-	}
-
-	return strDescr;
-}
-
-std::string LLInvFVBridge::getSearchableUUID( void ) const
-{
-	LLInventoryItem *pItem( dynamic_cast< LLInventoryItem* >( getInventoryObject() ) );
-
-	std::string strUUID;
-	if(pItem)
-	{
-		if(!pItem->getAssetUUID().isNull())
-		{
-			strUUID = pItem->getAssetUUID().asString();
-			LLStringUtil::toUpper( strUUID );
-		}
-
-	}
-	return strUUID;
-
-}
-
-std::string LLInvFVBridge::getSearchableAll( void ) const
-{
-	return getSearchableName() + "+" +
-		getSearchableCreator() + "+" + 
-		getSearchableDescription() + "+" +
-		getSearchableUUID();
-}
-// </FS:ND>
-
 // EOF

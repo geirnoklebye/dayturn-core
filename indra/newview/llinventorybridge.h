@@ -755,6 +755,6 @@ public:
     LLFolderViewGroupedItemBridge();
     virtual void groupFilterContextMenu(folder_view_item_deque& selected_items, LLMenuGL& menu);
 };
-};
+
 
 #endif // LL_LLINVENTORYBRIDGE_H

@@ -118,6 +118,7 @@ include_directories(SYSTEM
     )
 
 set(viewer_SOURCE_FILES
+    RRInterface.cpp
     fsareasearch.cpp
     fscommon.cpp
     fsexport.cpp
@@ -757,6 +758,7 @@ set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
 set(viewer_HEADER_FILES
     CMakeLists.txt
     ViewerInstall.cmake
+    RRInterface.h
     ao.h
     aoengine.h
     aoset.h

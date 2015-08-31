@@ -1203,34 +1203,6 @@ void LLFloaterModelPreview::onMouseCaptureLostModelPreview(LLMouseHandler* handl
 	gViewerWindow->showCursor();
 }
 
-// <FS:WF> FIRE-7937 : Patch from Magus Freston - allows ALL bones including all attachment points to be weighted to mesh and animated	
-	mJointMap["Right_Ear"] = "Right Ear";
-    mJointMap["Left_Ear"] = "Left Ear";
-    mJointMap["Right_Eyeball"] = "Right Eyeball";
-    mJointMap["Left_Eyeball"] = "Left Eyeball";
-    mJointMap["Right_Shoulder"] = "Right Shoulder";
-    mJointMap["Left_Shoulder"] = "Left Shoulder";
-    mJointMap["R_Upper_Arm"] = "R Upper Arm";
-    mJointMap["L_Upper_Arm"] = "L Upper Arm";
-    mJointMap["R_Forearm"] = "R Forearm";
-    mJointMap["L_Forearm"] = "L Forearm";
-    mJointMap["Right_Hand"] = "Right Hand";
-    mJointMap["Left_Hand"] = "Left Hand";
-    mJointMap["Right_Pec"] = "Right Pec";
-    mJointMap["Left_Pec"] = "Left Pec";
-    mJointMap["Avatar_Center"] = "Avatar Center";
-    mJointMap["Right_Hip"] = "Right Hip";
-    mJointMap["Left_Hip"] = "Left Hip";
-    mJointMap["R_Upper_Leg"] = "R Upper Leg";
-    mJointMap["L_Upper_Leg"] = "L Upper Leg";
-    mJointMap["R_Lower_Leg"] = "R Lower Leg";
-    mJointMap["R_Lower_Leg"] = "R Lower Leg";
-    mJointMap["Right_Foot"] = "Right Foot";
-    mJointMap["Left_Foot"] = "Left Foot";
-// <FS:WF> FIRE-7937 end
-	llifstream ifstream(filename.c_str(), std::ifstream::in | std::ifstream::binary);
-
-
 // LLModelPreview
 //-----------------------------------------------------------------------------
 
@@ -3711,7 +3683,6 @@ BOOL LLModelPreview::render()
 
 					gGL.multMatrix((GLfloat*) mat.mMatrix);
 
-				for (U32 i = 0, e = mVertexBuffer[mPreviewLOD][model].size(); i < e; ++i)
 					U32 num_models = mVertexBuffer[mPreviewLOD][model].size();
 					for (U32 i = 0; i < num_models; ++i)
 					{

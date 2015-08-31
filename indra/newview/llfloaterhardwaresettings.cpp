@@ -223,22 +223,7 @@ void LLFloaterHardwareSettings::onRenderVBOEnableChange()
 	getChild<LLCheckBoxCtrl>("streamed_vbo")->setEnabled(enable);
 }
 
-void LLFloaterHardwareSettings::onRenderVBOEnableChange()
-{
-	const BOOL enable = gSavedSettings.getBOOL("RenderVBOEnable");
-
-	getChild<LLTextBox>("streamed_vbo_label")->setEnabled(enable);
-	getChild<LLCheckBoxCtrl>("streamed_vbo")->setEnabled(enable);
-}
-
 // static 
-void LLFloaterHardwareSettings::onBtnCancel( void* userdata )
-{
-	LLFloaterHardwareSettings *fp =(LLFloaterHardwareSettings *)userdata;
-	fp->cancel();
-}
-
-// static
 void LLFloaterHardwareSettings::onBtnCancel( void* userdata )
 {
 	LLFloaterHardwareSettings *fp =(LLFloaterHardwareSettings *)userdata;

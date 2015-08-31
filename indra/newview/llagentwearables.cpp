@@ -788,15 +788,6 @@ U32 LLAgentWearables::itemUpdatePendingCount() const
 {
 	return mItemsAwaitingWearableUpdate.size();
 }
-BOOL LLAgentWearables::itemUpdatePending(const LLUUID& item_id) const
-{
-	return mItemsAwaitingWearableUpdate.find(item_id) != mItemsAwaitingWearableUpdate.end();
-}
-
-U32 LLAgentWearables::itemUpdatePendingCount() const
-{
-	return mItemsAwaitingWearableUpdate.size();
-}
 
 const LLUUID LLAgentWearables::getWearableItemID(LLWearableType::EType type, U32 index) const
 {
@@ -1952,19 +1943,6 @@ void LLAgentWearables::checkWearablesLoaded() const
 		llassert(item_pend_count==0);
 	}
 #endif
-	}
-
-    for(LLInventoryModel::item_array_t::const_iterator it = obj_item_array.begin();
-        it != obj_item_array.end();
-        ++it)
-{
-#ifdef SHOW_ASSERT
-	U32 item_pend_count = itemUpdatePendingCount();
-	if (mWearablesLoaded)
-	{
-		llassert(item_pend_count==0);
-	}
-#endif
 }
 
 // Returns false if the given wearable is already topmost/bottommost
@@ -2173,13 +2151,6 @@ void LLAgentWearables::updateServer()
 	sendAgentWearablesUpdate();
 	gAgent.sendAgentSetAppearance();
 }
-
-void LLAgentWearables::updateServer()
-{
-	sendAgentWearablesUpdate();
-	gAgent.sendAgentSetAppearance();
-}
-
 //MK from HB
 void LLAgentWearables::checkModifiableShape()
 {
