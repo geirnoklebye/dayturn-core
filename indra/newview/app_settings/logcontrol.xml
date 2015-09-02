@@ -2,7 +2,7 @@
 	<map>
 		<!-- default-level can be ALL, DEBUG, INFO, WARN, ERROR, or NONE -->
 		<key>default-level</key>    <string>INFO</string>
-		<key>print-location</key>   <boolean>true</boolean>
+		<key>print-location</key>   <boolean>false</boolean>
 		<key>settings</key>
 			<array>
 				<!-- sample entry for changing settings on specific items -->
@@ -42,9 +42,9 @@
 						</array>
 					<key>tags</key>
 						<array>
-  							<string>Message</string> 
-   							<string>AppInit</string>               
 						<!-- sample entry for debugging specific items	
+  							<string>Message</string> 
+   							<string>AppInit</string>          
 						     <string>Avatar</string>
 						     <string>Inventory</string>
 						     <string>SceneLoadTiming</string>
