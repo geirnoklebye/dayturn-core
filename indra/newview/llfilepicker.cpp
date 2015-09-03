@@ -48,7 +48,7 @@ LLFilePicker LLFilePicker::sInstance;
 
 #if LL_WINDOWS
 #define SOUND_FILTER L"Sounds (*.wav)\0*.wav\0"
-#define IMAGE_FILTER L"Images (*.tga; *.bmp; *.jpg; *.jpeg; *.png)\0*.tga;*.bmp;*.jpg;*.jpeg;*.png\0"
+#define IMAGE_FILTER L"Images (*.tga; *.bmp; *.jpg; *.jpeg; *.png; *.j2c)\0*.tga;*.bmp;*.jpg;*.jpeg;*.png;*.j2c\0"
 #define ANIM_FILTER L"Animations (*.bvh; *.anim)\0*.bvh;*.anim\0"
 #define COLLADA_FILTER L"Scene (*.dae)\0*.dae\0"
 #ifdef _CORY_TESTING
@@ -443,6 +443,9 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename)
 		mOFN.lpstrFilter =
 			L"PNG Images (*.png)\0*.png\0" \
 			L"Targa Images (*.tga)\0*.tga\0" \
+			L"Jpeg Images (*.jpg)\0*.jpg\0" \
+			L"Jpeg2000 Images (*.j2c)\0*.j2c\0" \
+			L"Bitmap Images (*.bmp)\0*.bmp\0" \
 			L"\0";
 		break;
 		
@@ -606,6 +609,7 @@ std::vector<std::string>* LLFilePicker::navOpenFilterProc(ELoadFilter filter) //
             allowedv->push_back("bmpf");
             allowedv->push_back("tpic");
             allowedv->push_back("png");
+            allowedv->push_back("j2c");
             break;
         case FFLOAD_EXE:
             allowedv->push_back("app");
@@ -696,9 +700,9 @@ bool	LLFilePicker::doNavSaveDialog(ESaveFilter filter, const std::string& filena
 			extension = "tga";
 			break;
 		case FFSAVE_TGAPNG:
-			type = "PNG";
+			type = "PNG ";
 			creator = "prvw";
-			extension = "png,tga";
+			extension = "png,tga,jpg,jpeg,j2c,bmp";
 			break;
 		case FFSAVE_BMP:
 			type = "BMPf";
@@ -1195,6 +1199,37 @@ static std::string add_export_filter_to_gtkchooser(GtkWindow *picker)
 	return filtername;
 }
 // </FS:CR>
+
+static std::string add_save_texture_filter_to_gtkchooser(GtkWindow *picker)
+{
+	GtkFileFilter *gfilter_tga = gtk_file_filter_new();
+	GtkFileFilter *gfilter_png = gtk_file_filter_new();
+	GtkFileFilter *gfilter_jpg = gtk_file_filter_new();
+	GtkFileFilter *gfilter_j2c = gtk_file_filter_new();
+	GtkFileFilter *gfilter_bmp = gtk_file_filter_new();
+
+	gtk_file_filter_add_pattern(gfilter_tga, "*.tga");
+	gtk_file_filter_add_mime_type(gfilter_png, "image/png");
+	gtk_file_filter_add_mime_type(gfilter_jpg, "image/jpeg");
+	gtk_file_filter_add_mime_type(gfilter_j2c, "image/j2c");
+	gtk_file_filter_add_mime_type(gfilter_bmp, "image/bmp");
+	
+	std::string caption = LLTrans::getString("save_texture_image_files") + " (*.tga; *.png; *.jpg; *.jpeg; *,j2c; *.bmp)";
+	gtk_file_filter_set_name(gfilter_tga, LLTrans::getString("targa_image_files").c_str());
+	gtk_file_filter_set_name(gfilter_png, LLTrans::getString("png_image_files").c_str());
+	gtk_file_filter_set_name(gfilter_jpg, LLTrans::getString("jpg_image_files").c_str());
+	gtk_file_filter_set_name(gfilter_j2c, LLTrans::getString("j2c_image_files").c_str());
+	gtk_file_filter_set_name(gfilter_bmp, LLTrans::getString("bitmap_image_files").c_str());
+
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(picker), gfilter_png);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(picker), gfilter_tga);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(picker), gfilter_jpg);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(picker), gfilter_j2c);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(picker), gfilter_bmp);
+	
+	return caption;
+}
+
 BOOL LLFilePicker::getSaveFile( ESaveFilter filter, const std::string& filename)
 {
 	BOOL rtn = FALSE;
