@@ -212,7 +212,8 @@
 			<pie_slice
 				enabled="false"
 				label="Compile (Mono)"
-				name="CompileMono">
+				name="CompileMono"
+				only_in_sl="true">
 				<pie_slice.on_click
 					function="Tools.SelectedScriptAction"
 					parameter="compile mono" />
@@ -223,7 +224,8 @@
 			<pie_slice
 				enabled="false"
 				label="Compile (LSL)"
-				name="CompileLSL">
+				name="CompileLSL"
+				only_in_sl="true">
 				<pie_slice.on_click
 					function="Tools.SelectedScriptAction"
 					parameter="compile lsl" />
@@ -264,7 +266,7 @@
 					function="EditableSelected" />
 			</pie_slice>
 
-			<pie_slice
+<!--			<pie_slice
 				enabled="false"
 				label="Remove Scripts"
 				name="Remove Scripts From Selection">
@@ -275,7 +277,7 @@
 					function="EditableSelected" />
 			</pie_slice>
 			
-<!--			<pie_slice
+			<pie_slice
 				enabled="true"
 				label="Script Info"
 				name="ScriptInfo">
