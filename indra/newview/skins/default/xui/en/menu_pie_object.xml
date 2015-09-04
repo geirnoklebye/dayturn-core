@@ -275,7 +275,7 @@
 					function="EditableSelected" />
 			</pie_slice>
 			
-			<pie_slice
+<!--			<pie_slice
 				enabled="true"
 				label="Script Info"
 				name="ScriptInfo">
@@ -284,6 +284,7 @@
                 <pie_slice.on_enable
                     function="Object.EnableScriptInfo" />
 			</pie_slice>
+-->
 		
 		</pie_menu>
 		
