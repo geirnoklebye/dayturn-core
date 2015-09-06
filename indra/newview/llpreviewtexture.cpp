@@ -37,9 +37,6 @@
 #include "llfloaterreg.h"
 #include "llimagetga.h"
 #include "llimagepng.h"
-#include "llimagejpeg.h"
-#include "llimagej2c.h"
-#include "llimagebmp.h"
 #include "llinventory.h"
 #include "llnotificationsutil.h"
 #include "llresmgr.h"
@@ -186,12 +183,6 @@ void LLPreviewTexture::draw()
 
 		if ( mImage.notNull() )
 		{
-			// Automatically bring up SaveAs dialog if we opened this to save the texture.
-			if (mPreviewToSave)
-			{
-				mPreviewToSave = FALSE;
-				saveAs();
-			}
 			// Draw the texture
 			gGL.diffuseColor3f( 1.f, 1.f, 1.f );
 			gl_draw_scaled_image(interior.mLeft,
@@ -399,18 +390,6 @@ void LLPreviewTexture::onFileLoadedForSave(BOOL success,
 		else if(extension == "tga")
 		{
 			image = new LLImageTGA;
-		}
-		else if(extension == "jpg" || extension == "jpeg")
-		{
-			image = new LLImageJPEG;
-		}
-		else if(extension == "j2c")
-		{
-			image = new LLImageJ2C;
-		}
-		else if(extension == "bmp")
-		{
-			image = new LLImageBMP;
 		}
 
 		if( image && !image->encode( src, 0 ) )
