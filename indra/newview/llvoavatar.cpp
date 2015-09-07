@@ -8932,7 +8932,7 @@ void LLVOAvatar::process_avatar_birthdate(const LLDate birthdate)
 {
 	mAvatarBirthdate = birthdate;
 	clearNameTag();
-	delete mAvatarBirthdateRequest;
+
 	delete mAvatarBirthdateRequest;
 	mAvatarBirthdateRequest = NULL;
 }
