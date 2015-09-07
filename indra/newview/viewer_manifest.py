@@ -1022,6 +1022,7 @@ class LinuxManifest(ViewerManifest):
             self.path("client-readme-voice.txt","README-linux-voice.txt")
             self.path("client-readme-joystick.txt","README-linux-joystick.txt")
             self.path("client-readme-streamingmedia.txt","README-linux-streamingmedia.txt")
+            self.path("client-readme-install-setup.txt","README-linux-install-setup.txt")
             self.path("wrapper.sh","kokua")
             self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
             self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
