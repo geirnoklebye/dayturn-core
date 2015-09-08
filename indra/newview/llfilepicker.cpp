@@ -991,6 +991,19 @@ void LLFilePicker::chooser_responder(GtkWidget *widget, gint response, gpointer 
 		g_slist_foreach(file_list, (GFunc)g_free, NULL);
 		g_slist_free (file_list);
 	}
+	// let's save the extension of the last added file(considering current filter)
+	GtkFileFilter *gfilter = gtk_file_chooser_get_filter(GTK_FILE_CHOOSER(widget));
+	std::string filter = gtk_file_filter_get_name(gfilter);
+
+	if(filter == LLTrans::getString("png_image_files"))
+	{
+		picker->mCurrentExtension = ".png";
+	}
+	else if(filter == LLTrans::getString("targa_image_files"))
+	{
+		picker->mCurrentExtension = ".tga";
+	}
+
 
 	// <ND>
 	// FIRE-3827; Only do this if the user accepted the dialog with ok.
@@ -1176,6 +1189,25 @@ static std::string add_dictionary_filter_to_gtkchooser(GtkWindow *picker)
 							LLTrans::getString("dictionary_files") + " (*.dic; *.xcu)");
 }
 
+static std::string add_save_texture_filter_to_gtkchooser(GtkWindow *picker)
+{
+	GtkFileFilter *gfilter_tga = gtk_file_filter_new();
+	GtkFileFilter *gfilter_png = gtk_file_filter_new();
+
+	gtk_file_filter_add_pattern(gfilter_tga, "*.tga");
+	gtk_file_filter_add_mime_type(gfilter_png, "image/png");
+	std::string caption = LLTrans::getString("save_texture_image_files") + " (*.tga; *.png)";
+	gtk_file_filter_set_name(gfilter_tga, LLTrans::getString("targa_image_files").c_str());
+	gtk_file_filter_set_name(gfilter_png, LLTrans::getString("png_image_files").c_str());
+
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(picker),
+					gfilter_png);
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(picker),
+					gfilter_tga);
+	return caption;
+}
+
+
 // <FS:CR> GTK Import/Export filters
 static std::string add_import_filter_to_gtkchooser(GtkWindow *picker)
 {
@@ -1241,8 +1273,7 @@ BOOL LLFilePicker::getSaveFile( ESaveFilter filter, const std::string& filename)
 			suggest_ext = ".png";
 			break;
 		case FFSAVE_TGAPNG:
-			caption += add_simple_mime_filter_to_gtkchooser
-				(picker, "image/png", LLTrans::getString("png_image_files") + " (*.png)");
+			caption += add_save_texture_filter_to_gtkchooser(picker);
 			suggest_ext = ".png";
 			break;
 		case FFSAVE_AVI:

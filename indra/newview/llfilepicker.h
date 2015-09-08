@@ -91,6 +91,7 @@ public:
         FFLOAD_EXE = 14,          // Note: EXE will be treated as ALL on Windows and Linux but not on Darwin
 // <FS:CR> Export filter
 		FFLOAD_IMPORT = 15
+
 // </FS:CR>
 	};
 
