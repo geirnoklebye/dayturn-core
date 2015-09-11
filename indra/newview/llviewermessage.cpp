@@ -2636,6 +2636,13 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				// censor object IMs but not avatar IMs
 				message = gAgent.mRRInterface.getCensoredMessage (message);
 			}
+
+			// Don't display any notification containing the name of a muted Resident
+			if (LLMuteList::getInstance()->containsMutedName(message))
+			{
+				LL_INFOS("Messaging") << "process_improved_im: Notification received containing the name of a Blocked Resident." << LL_ENDL;
+				break;
+			}
 //mk
 			args["MESSAGE"] = message;
 			LLNotificationsUtil::add("SystemMessage", args);
@@ -6237,7 +6244,16 @@ static void process_money_balance_reply_extended(LLMessageSystem* msg)
 	}
 	else 
 	{
-		LLAvatarNameCache::get(name_id, boost::bind(&money_balance_avatar_notify, _1, _2, notification, final_args, payload));										   
+//MK
+		// Don't display the name if the UUID is that of a muted Resident
+		const LLUUID uuid = name_id;
+		if (!LLMuteList::getInstance()->isMuted (uuid))
+		{
+//mk
+		LLAvatarNameCache::get(name_id, boost::bind(&money_balance_avatar_notify, _1, _2, notification, final_args, payload));		
+//MK
+		}
+//mk
 	}
 }
 

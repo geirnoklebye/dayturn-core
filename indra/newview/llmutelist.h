@@ -105,6 +105,12 @@ public:
 	// Workaround for username-based mute search, a lot of string conversions so use cautiously
 	BOOL isMuted(const std::string& username, U32 flags = 0) const;
 
+//MK
+	// Search in the mute list for any name that is contained in the message "s"
+	// Workaround for username-based mute search, a lot of string conversions so use cautiously
+	BOOL containsMutedName(const std::string& s, U32 flags = 0) const;
+//mk
+
 	// Alternate (convenience) form for places we don't need to pass the name, but do need flags
 	BOOL isMuted(const LLUUID& id, U32 flags) const { return isMuted(id, LLStringUtil::null, flags); };
 	
