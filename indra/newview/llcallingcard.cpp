@@ -796,7 +796,11 @@ static void on_avatar_name_cache_notify(const LLUUID& agent_id,
 	if (gSavedSettings.getBOOL("OnlineOfflinetoNearbyChat")) {
 		LLChat chat;
 		chat.mText = notify_msg;
-		chat.mSourceType = CHAT_SOURCE_SYSTEM;
+//MK
+		// Avoid surrounding with brackets
+////		chat.mSourceType = CHAT_SOURCE_SYSTEM;
+		chat.mSourceType = CHAT_SOURCE_UNKNOWN;
+//mk
 		LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
 		if(nearby_chat)
 		{

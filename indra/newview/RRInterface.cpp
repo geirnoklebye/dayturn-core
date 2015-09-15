@@ -27,6 +27,7 @@
 #include "llagentcamera.h"
 #include "llagentwearables.h"
 #include "llappearancemgr.h"
+#include "llavatarnamecache.h"
 #include "lldrawpoolalpha.h"
 //#include "llfloaterenvsettings.h"
 #include "llfloatereditsky.h"
@@ -3176,18 +3177,27 @@ std::string RRInterface::getCensoredMessage (std::string str)
 	for (i=0; i<gObjectList.getNumObjects(); ++i) {
 		LLViewerObject* object = gObjectList.getObject(i);
 		if (object) {
-			std::string name;
+			LLAvatarName av_name;
+			std::string clean_user_name;
+			std::string user_name;
+			std::string display_name;
 			std::string dummy_name;
 			
 			if (object->isAvatar()) {
-				if (gCacheName->getFullName (object->getID(), name)) {
-					dummy_name = getDummyName (name);
-					str = stringReplace (str,
-						name, dummy_name); // full name first
-//					str = stringReplace (str,
-//						 getFirstName (name), dummy_name); // first name
-//					str = stringReplace (str,
-//						 getLastName (name), dummy_name); // last name
+				if (LLAvatarNameCache::get(object->getID(), &av_name))
+				{
+					user_name = av_name.getUserName();
+					clean_user_name = LLCacheName::cleanFullName(user_name);
+					display_name = av_name.mDisplayName; // not "getDisplayName()" because we need this whether we use display names or user names
+
+					dummy_name = getDummyName(clean_user_name);
+					str = stringReplace(str, clean_user_name, dummy_name);
+
+					dummy_name = getDummyName(user_name);
+					str = stringReplace(str, user_name, dummy_name);
+
+					dummy_name = getDummyName(display_name);
+					str = stringReplace(str, display_name, dummy_name);
 				}
 			}
 		}
@@ -4308,7 +4318,7 @@ bool RRInterface::scriptsEnabled()
 void RRInterface::printOnChat (std::string message)
 {
 	LLChat chat(message);
-	chat.mSourceType = CHAT_SOURCE_SYSTEM;
+	chat.mSourceType = CHAT_SOURCE_UNKNOWN;
 	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
 	if(nearby_chat)
 	{

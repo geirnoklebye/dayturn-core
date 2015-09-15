@@ -662,6 +662,24 @@ BOOL LLMuteList::isMuted(const std::string& username, U32 flags) const
 	return FALSE;
 }
 
+//MK
+BOOL LLMuteList::containsMutedName(const std::string& s, U32 flags) const
+{
+	mute_set_t::const_iterator mute_iter = mMutes.begin();
+	while (mute_iter != mMutes.end())
+	{
+		// can't convert "leha.test" into "LeHa TesT" so username comparison is more reliable
+		if (mute_iter->mType == LLMute::AGENT
+			&& s.find(LLCacheName::cleanFullName(" " + mute_iter->mName + " ")) != -1)
+		{
+			return TRUE;
+		}
+		mute_iter++;
+	}
+	return FALSE;
+}
+//mk
+
 //-----------------------------------------------------------------------------
 // requestFromServer()
 //-----------------------------------------------------------------------------
