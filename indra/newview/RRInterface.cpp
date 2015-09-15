@@ -4308,7 +4308,7 @@ bool RRInterface::scriptsEnabled()
 void RRInterface::printOnChat (std::string message)
 {
 	LLChat chat(message);
-	chat.mSourceType = CHAT_SOURCE_SYSTEM;
+	chat.mSourceType = CHAT_SOURCE_UNKNOWN;
 	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
 	if(nearby_chat)
 	{
