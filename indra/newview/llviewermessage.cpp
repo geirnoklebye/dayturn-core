@@ -3419,7 +3419,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 					message = "(Hidden)";
 				}
 
-				if (gRRenabled && (gAgent.mRRInterface.contains ("accepttp:"+from_id.asString())
+				if (gRRenabled && dialog == IM_LURE_USER && (gAgent.mRRInterface.contains("accepttp:" + from_id.asString())
 									|| gAgent.mRRInterface.contains ("accepttp")))
 				{
 					// accepttp => the viewer acts like it was teleported by a god
