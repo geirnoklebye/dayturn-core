@@ -1137,11 +1137,6 @@ void LLTaskLSLBridge::openItem()
 		{
 			return;
 		}
-
-		if (gAgent.mRRInterface.contains ("viewnote"))
-		{
-			return;
-		}
 	}
 //mk
 	if(!object || object->isInventoryPending())
