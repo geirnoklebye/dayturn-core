@@ -3129,11 +3129,12 @@ std::string RRInterface::stringReplace (std::string s, std::string what, std::st
 std::string RRInterface::getDummyName (std::string name, EChatAudible audible /* = CHAT_AUDIBLE_FULLY */)
 {
 	int len = name.length();
-	if (len < 2) return ""; // just to avoid crashing in some cases
+	int at = 3;
+	if (len <= 3) at = len-1; // just to avoid crashing in some cases
 	// We use mLaunchTimestamp in order to modify the scrambling when the session restarts (it stays consistent during the session though)
 	// But in crashy situations, let's not make it change at EVERY session, more like once a day or so
 	// A day is 86400 seconds, the closest power of two is 65536, that's a 16-bit shift
-	unsigned char hash = name.at(3) + len + (mLaunchTimestamp >> 16); // very lame hash function I know... but it should be linear enough (the old length method was way too gaussian with a peak at 11 to 16 characters)
+	unsigned char hash = name.at(at) + len + (mLaunchTimestamp >> 16); // very lame hash function I know... but it should be linear enough (the old length method was way too gaussian with a peak at 11 to 16 characters)
 	unsigned char mod = hash % 28;
 	std::string res = "";
 	switch (mod) {
