@@ -74,7 +74,7 @@
             name="WindowTitleGridName"
             control_name="WindowTitleGridName"
             label="Show the grid's name in the viewer window's title bar"
-            tool_tip="Show the grid's name in the viewer window's title bar."
+            tool_tip="Show the grid's name in the viewer window's title bar.\nUse debug variable WindowTitleGridName"
             layout="topleft"
             follows="left|top"
             left="15"
