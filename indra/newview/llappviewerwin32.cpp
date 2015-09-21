@@ -157,22 +157,6 @@ void ll_nvapi_init(NvDRSSessionHandle hSession)
 	std::string app_name = LLTrans::getString("APP_NAME");
 	llutf16string w_app_name = utf8str_to_utf16str(app_name);
 	wsprintf(profile_name, L"%s", w_app_name.c_str());
-	// <FS:Ansariel> FIRE-16667 / BUG-9906: Viewer messing up the global NVIDIA driver profile
-	//status = NvAPI_DRS_SetCurrentGlobalProfile(hSession, profile_name);
-	//if (status != NVAPI_OK)
-	//{
-	//	nvapi_error(status);
-	//	return;
-	//}
-
-	//// (3) Obtain the current profile. 
-	//NvDRSProfileHandle hProfile = 0;
-	//status = NvAPI_DRS_GetCurrentGlobalProfile(hSession, &hProfile);
-	//if (status != NVAPI_OK) 
-	//{
-	//	nvapi_error(status);
-	//	return;
-	//}
 
 	NvDRSProfileHandle hProfile = 0;
 	// Check if we already have a Firestorm profile
@@ -184,8 +168,8 @@ void ll_nvapi_init(NvDRSSessionHandle hSession)
 	}
 	else if (status == NVAPI_PROFILE_NOT_FOUND)
 	{
-		// Don't have a Firestorm profile yet - create one
-		LL_INFOS() << "Creating Firestorm profile for NVIDIA driver" << LL_ENDL;
+		// Don't have a Viewer profile yet - create one
+		LL_INFOS() << "Creating Viewer profile for NVIDIA driver" << LL_ENDL;
 
 		NVDRS_PROFILE profileInfo;
 		profileInfo.version = NVDRS_PROFILE_VER;
@@ -243,7 +227,6 @@ void ll_nvapi_init(NvDRSSessionHandle hSession)
 			return;
 		}
 	}
-	// </FS:Ansariel>
 
 	// load settings for querying 
 	status = NvAPI_DRS_LoadSettings(hSession);
