@@ -71,6 +71,7 @@
             height="20"
             width="400" />
         <check_box
+		    enabled="true"
             name="WindowTitleGridName"
             control_name="WindowTitleGridName"
             label="Show the grid's name in the viewer window's title bar"

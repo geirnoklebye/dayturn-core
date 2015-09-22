@@ -1354,10 +1354,12 @@ void LLFloaterPreference::refreshEnabledState()
 	if (LLStartUp::getStartupState() != STATE_STARTED)
 	{
 		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(FALSE);
+		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(FALSE);
 	}
 	else
 	{
 		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(TRUE);
+		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(TRUE);
 	}
 }
 
