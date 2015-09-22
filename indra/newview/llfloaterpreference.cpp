@@ -546,27 +546,6 @@ BOOL LLFloaterPreference::postBuild()
 	onNameTagShowAgeChanged();
 	onNameTagShowAgeLimitChanged();
 	
-// ## Zi: Pie menu
-	gSavedSettings.getControl("OverridePieColors")->getSignal()->connect(boost::bind(&LLFloaterPreference::onPieColorsOverrideChanged, this));
-	// make sure pie color controls are enabled or greyed out properly
-	onPieColorsOverrideChanged();
-// ## Zi: Pie menu
-
-	gSavedSettings.getControl("StreamMetadataAnnounceToChat")->getSignal()->connect(boost::bind(&LLFloaterPreference::onStreamMetadataAnnounceChanged, this));
-	gSavedSettings.getControl("MiniMapChatRing")->getSignal()->connect(boost::bind(&LLFloaterPreference::onMiniMapChatRingChanged, this));
-	gSavedSettings.getControl("ShowLookAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowLookAtChanged, this));
-	gSavedSettings.getControl("ShowPointAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowPointAtChanged, this));
-	gSavedSettings.getControl("NameTagShowAge")->getSignal()->connect(boost::bind(&LLFloaterPreference::onNameTagShowAgeChanged, this));
-	gSavedSettings.getControl("NameTagShowAgeLimit")->getSignal()->connect(boost::bind(&LLFloaterPreference::onNameTagShowAgeLimitChanged, this));
-	gSavedSettings.getControl("WindowTitleAvatarName")->getSignal()->connect(boost::bind(&LLAppViewer::setViewerWindowTitle));
-	gSavedSettings.getControl("WindowTitleGridName")->getSignal()->connect(boost::bind(&LLAppViewer::setViewerWindowTitle));
-
-	onStreamMetadataAnnounceChanged();
-	onMiniMapChatRingChanged();
-	onShowLookAtChanged();
-	onShowPointAtChanged();
-	onNameTagShowAgeChanged();
-	onNameTagShowAgeLimitChanged();
 
 	// set 'enable' property for 'Clear log...' button
 	changed();
@@ -1387,10 +1366,12 @@ void LLFloaterPreference::refreshEnabledState()
 	if (LLStartUp::getStartupState() != STATE_STARTED)
 	{
 		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(FALSE);
+		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(FALSE);
 	}
 	else
 	{
 		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(TRUE);
+		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(TRUE);
 	}
 }
 
