@@ -18,7 +18,7 @@ Development system:
 
 
 
-Development system is Debian Stretch (testing). The compiler is gcc-4.9. If starting with a new Jessie you will need to install
+Development system is Debian Stretch (testing). The compiler is gcc-4.9. If starting with a new Stretch you will need to install
 
     build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
 
@@ -116,11 +116,17 @@ Linux 32 Bit
 
 
 
-Development system is Debian Stretch (testing). The compiler is ~~gcc-4.6.4~~ gcc-4.9.2. If starting with a new Stretch you will need to install build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
+Development system is Debian Stretch (testing). The compiler is ~~gcc-4.6.4~~ gcc-4.9.2. If starting with a new Stretch you will need to install build tools;
 
-    Debian packages of the build tools work. Python27 is required so, after installing Python use 'python --version' to check the active version. Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine.
+    Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
 
-  Library archives for the most part are from lindenlab viewer-release. Some libraries have been rebuilt on gcc-4.6.4. Boost, Colladadom, Googlemock, are built on gcc-4.9.2 to allow the viewer to be built. See the commits with [Linux 32 bit] tag in the message for a record of rebuilt libraries.
+    Debian packages of the build tools work. Python27 is required so, after installing Python use 'python --version' to check the active version.
+
+   	Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine.
+
+    Library archives for the most part are from lindenlab viewer-release. Some libraries have been rebuilt on gcc-4.6.4. Boost, Colladadom, Googlemock, are built on gcc-4.9.2
+	
+	to allow the viewer to be built. See the commits with [Linux 32 bit] tag in the message for a record of rebuilt libraries.
 
 
 
