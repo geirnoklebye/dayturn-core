@@ -20,13 +20,13 @@ Development system:
 
 Development system is Debian Stretch (testing). The compiler is gcc-4.9. If starting with a new Stretch you will need to install
 
-    build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
+build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
 
-    Debian packages of the build tools work. Python27 is required so, after installing Python use 'python --version' to check the
+Debian packages of the build tools work. Python27 is required so, after installing Python use 'python --version' to check the
 
-    active version. Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine.
+active version. Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine.
 
-  Library archives for the most part are built with gcc-4.6.4. Boost, Colladadom, and Googlemock are built with gcc-4.9.
+Library archives for the most part are built with gcc-4.6.4. Boost, Colladadom, and Googlemock are built with gcc-4.9.
 
 
 
@@ -118,15 +118,17 @@ Linux 32 Bit
 
 Development system is Debian Stretch (testing). The compiler is ~~gcc-4.6.4~~ gcc-4.9.2. If starting with a new Stretch you will need to install build tools;
 
-    Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
+Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
 
-    Debian packages of the build tools work. Python27 is required so, after installing Python use 'python --version' to check the active version.
+Debian packages of the build tools work. Python27 is required so, after installing Python use 'python --version' to check the active version.
 
-   	Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine.
+Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine.
 
-    Library archives for the most part are from lindenlab viewer-release. Some libraries have been rebuilt on gcc-4.6.4. Boost, Colladadom, Googlemock, are built on gcc-4.9.2
-	
-	to allow the viewer to be built. See the commits with [Linux 32 bit] tag in the message for a record of rebuilt libraries.
+Library archives for the most part are from lindenlab viewer-release. Some libraries have been rebuilt on gcc-4.6.4. 
+
+Boost, Colladadom, Googlemock, are built on gcc-4.9.2to allow the viewer to be built.
+
+See the commits with [Linux 32 bit] tag in the message for a record of rebuilt libraries.
 
 
 
@@ -174,9 +176,9 @@ If you enconuter missing libalut.so at viewer start install the package libalut-
 
 Windows
 
---------
+To be published
 
-TBP
+--------
 
 
 
