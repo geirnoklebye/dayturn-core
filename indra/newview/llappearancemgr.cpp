@@ -1427,7 +1427,13 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 				S32 wearable_count = gAgentWearables.getWearableCount(type);
 				if ((replace && wearable_count != 0) || !gAgentWearables.canAddWearable(type))
 				{
-
+					if (!gRRenabled)
+					{
+						LLUUID item_id = gAgentWearables.getWearableItemID(item_to_wear->getWearableType(),
+                                                                           wearable_count-1);
+                        removeCOFItemLinks(item_id, cb);
+					}
+			
 //MK
 					if (gRRenabled && gAgent.mRRInterface.canUnwear(item_to_wear->getWearableType()))
 					{
@@ -1440,6 +1446,7 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 //mk
 				}
 //MK
+				
 				if (gRRenabled && gAgent.mRRInterface.canWear(item_to_wear->getWearableType()))
 				{
 //mk
@@ -1447,6 +1454,10 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 //MK
 				}
 //mk
+				if (!gRRenabled)
+				{
+					items_to_link.push_back(item_to_wear);
+				}
 			}
 			break;
 		case LLAssetType::AT_BODYPART:
