@@ -1431,7 +1431,7 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 					{
 						LLUUID item_id = gAgentWearables.getWearableItemID(item_to_wear->getWearableType(),
                                                                            wearable_count-1);
-                        removeCOFItemLinks(item_id, cb);
+						removeCOFItemLinks(item_id, cb);
 					}
 			
 //MK
