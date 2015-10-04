@@ -247,8 +247,7 @@ class ViewerManifest(LLManifest):
         return ''.join(self.app_name().split())
     
     def icon_path(self):
-        #return "icons/" + self.channel_type() used for selection of icon by type not used for kokua
-		return "icons/kokua"
+        return "icons/" + self.channel_type()
 
     def extract_names(self,src):
         try:
