@@ -158,6 +158,31 @@ Additional code contributed to Kokua by:
        word_wrap="true">
 Cinder Roxley, David Rowe, Geir Nøklebye, Jessica Wabbit,  Kadah Coba, Kitty Barnett, Lance Corimal, Latif Khalifa, Liny Odell, Llirusaito, Marine Kelley, Nicky Dasmijn, Tankmaster Finesmith, Trinity Dejavu, tx Oh, and others.
       </text_editor>
+      <text
+          follows="top|left"
+          height="10"
+          layout="topleft"
+          left="5"
+          name="kokua_artists_intro"
+          top_pad="10"
+          width="435"
+          wrap="true">
+Artwork and documentation contributed to Kokua by:
+      </text>
+      <text_editor
+       enabled="false"
+       follows="top|left"
+       height="45"
+       bg_readonly_color="Transparent"
+       left="5"
+       text_color="LtGray"
+       max_length="65536"
+       name="kokua_artists_names"
+       top_pad="10"
+       width="435"
+       word_wrap="true">
+Topaz Harley, and others.
+      </text_editor>
     </panel>
     <panel
       border="true"
