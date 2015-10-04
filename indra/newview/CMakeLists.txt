@@ -1504,20 +1504,20 @@ if (WINDOWS)
 
     # Replace the icons with the appropriate ones for the channel
     # ('test' is the default)
-    set(ICON_PATH "kokua")
+    set(ICON_PATH "test")
     set(VIEWER_MACOSX_PHASE "d")
     string(TOLOWER ${VIEWER_CHANNEL} channel_lower)
-    if(channel_lower MATCHES "^second life release")
+    if(channel_lower MATCHES "^kokua release")
         set(ICON_PATH "release")
         set(VIEWER_MACOSX_PHASE "f")
-    elseif(channel_lower MATCHES "^second life beta")
+    elseif(channel_lower MATCHES "^kokua beta")
         set(ICON_PATH "beta")
         set(VIEWER_MACOSX_PHASE "b")
-    elseif(channel_lower MATCHES "^second life project")
-        set(ICON_PATH "project")
+#    elseif(channel_lower MATCHES "^second life project")
+#        set(ICON_PATH "project")
         set(VIEWER_MACOSX_PHASE "a")
-    elseif(channel_lower MATCHES "kokua")
-        set(ICON_PATH "kokua")        
+    #elseif(channel_lower MATCHES "kokua")
+     #   set(ICON_PATH "kokua")        
     endif()
 
     message("Copying icons for ${ICON_PATH}")
@@ -1529,12 +1529,12 @@ if (WINDOWS)
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.BMP"
-        "${CMAKE_CURRENT_SOURCE_DIR}/res/kokua_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/res/ll_icon.BMP"
 	  )
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.BMP"
-        "${CMAKE_CURRENT_SOURCE_DIR}/res-sdl/kokua_icon.BMP"
+        "${CMAKE_CURRENT_SOURCE_DIR}/res-sdl/ll_icon.BMP"
       )
 
     # Add resource files to the project.
@@ -1571,8 +1571,11 @@ if (WINDOWS)
         res/lltooltranslate.cur
         res/lltoolzoomin.cur
         res/lltoolzoomout.cur
-        res/kokua_icon.BMP
-        res/kokua_icon.ico
+        res-sdl/ll_icon.BMP
+        res/ll_icon.BMP
+        res/ll_icon.ico
+        #res/kokua_icon.BMP
+        #res/kokua_icon.ico
         res/resource.h
         res/toolpickobject.cur
         res/toolpickobject2.cur
