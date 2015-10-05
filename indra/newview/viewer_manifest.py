@@ -1014,7 +1014,6 @@ class LinuxManifest(ViewerManifest):
     def construct(self):
         super(LinuxManifest, self).construct()
         self.path("licenses-linux.txt","licenses.txt")
-        self.path("icons/kokua/kokua_icon.png", "kokua_icon.png")
         self.path("VivoxAUP.txt")
         if self.prefix("linux_tools", dst=""):
             self.path("client-readme.txt","README-linux.txt")
@@ -1047,9 +1046,9 @@ class LinuxManifest(ViewerManifest):
         icon_path = self.icon_path()
         print "DEBUG: icon_path '%s'" % icon_path
         if self.prefix(src=icon_path, dst="") :
-            self.path("kokua_icon.png")
-            if self.prefix(src="",dst="res-sdl") :
-                self.path("kokua_icon.BMP")
+            self.path("kokua_icon.png","kokua_icon.png" )
+            if self.prefix(src="", dst="res-sdl") :
+                self.path("kokua_icon.bmp","kokua_icon.BMP")
                 self.end_prefix("res-sdl")
             self.end_prefix(icon_path)
 
