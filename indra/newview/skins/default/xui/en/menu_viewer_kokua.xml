@@ -514,7 +514,16 @@
           <menu_item_call.on_click
            function="Floater.ToggleOrBringToFront"
            parameter="moveview" />
-      </menu_item_call>	  
+      </menu_item_call>
+      <!-- MK -->
+      <menu_item_call
+       label="Restart All Animations"
+       name="Restart All Animations"
+       shortcut="control|alt|shift|A">
+        <menu_item_call.on_click
+         function="Tools.RestartAllAnimations" />
+      </menu_item_call>
+      <!-- mk -->	  
       <menu
        create_jump_keys="true"
        label="Movement"
