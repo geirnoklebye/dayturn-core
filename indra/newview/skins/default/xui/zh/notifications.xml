@@ -2748,9 +2748,6 @@ Replace texture [TEXTURE_NUM] with a 24-bit 1024 x 1024 or smaller image then cl
 	<notification name="NoValidCircuit">
 		沒有有效的線路碼。
 	</notification>
-	<notification name="NoValidTimestamp">
-		沒有有效的時間戳記。
-	</notification>
 	<notification name="NoPendingConnection">
 		無法建立待通的連線。
 	</notification>

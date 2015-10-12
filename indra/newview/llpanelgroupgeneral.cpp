@@ -304,11 +304,6 @@ void LLPanelGroupGeneral::activate()
 	{
 		LLGroupMgr::getInstance()->sendGroupTitlesRequest(mGroupID);
 		LLGroupMgr::getInstance()->sendGroupPropertiesRequest(mGroupID);
-		
-		if (!gdatap || !gdatap->isMemberDataComplete() )
-		{
-			LLGroupMgr::getInstance()->sendCapGroupMembersRequest(mGroupID);
-		}
 
 		mFirstUse = FALSE;
 	}
