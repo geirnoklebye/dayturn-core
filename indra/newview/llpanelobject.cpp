@@ -2440,11 +2440,7 @@ void LLPanelObject::onPasteParams(const LLSD& data)
 		LLSculptParams sculpt_params;
 
 		if (mPramsClipboard.has("sculptid"))
-			sculpt_params.setSculptTexture(mPramsClipboard["sculptid"].asUUID());
-
-		if (mPramsClipboard.has("sculptid"))
-			sculpt_params.setSculptType((U8)mPramsClipboard["sculpt_type"].asInteger());
-
+			sculpt_params.setSculptTexture(mPramsClipboard["sculptid"].asUUID(), (U8)mPramsClipboard["sculpt_type"].asInteger());
 		objectp->setParameterEntry(LLNetworkData::PARAMS_SCULPT, sculpt_params, TRUE);
 	}
 	else

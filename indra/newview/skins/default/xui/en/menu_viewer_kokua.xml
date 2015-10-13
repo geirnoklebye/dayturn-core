@@ -574,6 +574,7 @@
        name="Status"
        tear_off="true">
         <menu_item_check
+         name="Away"
          label="Away">
           <menu_item_check.on_check
            function="View.Status.CheckAway" />
@@ -581,6 +582,7 @@
            function="World.SetAway" />
         </menu_item_check>
         <menu_item_check
+         name="Do Not Disturb"
          label="Do Not Disturb">
           <menu_item_check.on_check
            function="View.Status.CheckDoNotDisturb" />
