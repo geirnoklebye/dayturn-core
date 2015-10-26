@@ -72,6 +72,9 @@
 #include "llviewermenu.h"
 #include "llviewermessage.h"
 #include "llviewerobjectlist.h"
+//MK from Kokua
+#include "llviewerparcelmgr.h"
+//mk from Kokua
 #include "llviewerregion.h"
 #include "llviewerwindow.h"
 #include "llvoavatarself.h"
@@ -1817,6 +1820,12 @@ void LLItemBridge::restoreItem()
 
 void LLItemBridge::restoreToWorld()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsRez)
+	{
+		return;
+	}
+//mk
 	//Similar functionality to the drag and drop rez logic
 	bool remove_from_inventory = false;
 
@@ -1824,6 +1833,45 @@ void LLItemBridge::restoreToWorld()
 	if (itemp)
 	{
 		LLMessageSystem* msg = gMessageSystem;
+
+//MK from Kokua
+		if (gSavedSettings.getBOOL("RezUnderLandGroup")) {
+			LLParcel *parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
+			LLUUID parcel_group_id = parcel->getGroupID();
+			LLUUID group_id = gAgent.getGroupID();
+
+			if (gAgent.isInGroup(parcel_group_id)) {
+				if (group_id != parcel_group_id) {
+					//
+					//	agent is in the required group
+					//	but does not have the tag
+					//	active.  The tag correct group
+					//	tag must be active for this
+					//	operation to succeed
+					//
+					//	this code temporarily makes the
+					//	agent wear the correct tag, and
+					//	code in llagent.cpp restores the
+					//	agent's selected tag after the
+					//	rez operation completes
+					//
+					gAgent.restoreToWorld = true;
+					gAgent.restoreToWorldGroup = group_id;
+					gAgent.restoreToWorldItem = itemp;
+
+					msg->newMessageFast(_PREHASH_ActivateGroup);
+					msg->nextBlockFast(_PREHASH_AgentData);
+					msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+					msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+					msg->addUUIDFast(_PREHASH_GroupID, parcel_group_id);
+
+					gAgent.sendReliableMessage();
+					return;
+				}
+			}
+		}
+//mk from Kokua
+
 		msg->newMessage("RezRestoreToWorld");
 		msg->nextBlockFast(_PREHASH_AgentData);
 		msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
@@ -6448,6 +6496,16 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 				items.push_back(std::string("Wearable Add"));
 				items.push_back(std::string("Attach To"));
 				items.push_back(std::string("Attach To HUD"));
+//MK from Kokua
+				items.push_back(std::string("Restore to Last Position"));
+//mk from Kokua
+
+//MK
+				if (gRRenabled && gAgent.mRRInterface.mContainsRez)
+				{
+					disabled_items.push_back(std::string("Restore to Last Position"));
+				}
+//mk
 				// commented out for DEV-32347
 				//items.push_back(std::string("Restore to Last Position"));
 
