@@ -204,6 +204,7 @@ public:
 private:
 	BOOL					mDirty;
 	U32						mPrecision;
+	BOOL                    mHasSelection;
 
 	std::map<std::string, std::string> mStatusText;
 

@@ -906,7 +906,11 @@ void LLTaskTextureBridge::openItem()
 	LLPreviewTexture* preview = LLFloaterReg::showTypedInstance<LLPreviewTexture>("preview_texture", LLSD(mUUID), TAKE_FOCUS_YES);
 	if(preview)
 	{
-		preview->setAuxItem(findItem());
+	    LLInventoryItem* item = findItem();
+	    if(item)
+	    {
+	        preview->setAuxItem(item);
+	    }
 		preview->setObjectID(mPanel->getTaskUUID());
 	}
 }
@@ -1172,7 +1176,10 @@ void LLTaskNotecardBridge::openItem()
 		|| object->permModify()
 		|| gAgent.isGodlike())
 	{
-		LLPreviewNotecard* preview = LLFloaterReg::showTypedInstance<LLPreviewNotecard>("preview_notecard", LLSD(mUUID), TAKE_FOCUS_YES);
+	    LLSD floater_key;
+	    floater_key["taskid"] = mPanel->getTaskUUID();
+	    floater_key["itemid"] = mUUID;
+	    LLPreviewNotecard* preview = LLFloaterReg::showTypedInstance<LLPreviewNotecard>("preview_notecard", floater_key, TAKE_FOCUS_YES);
 		if (preview)
 		{
 			preview->setObjectID(mPanel->getTaskUUID());
