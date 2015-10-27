@@ -505,10 +505,11 @@ LLAgent::LLAgent() :
 
 	mMouselookModeInSignal(NULL),
 	mMouselookModeOutSignal(NULL),
-
+//MK from Kokua
 	restoreToWorld(false),
 	restoreToWorldGroup(NULL),
 	restoreToWorldItem(NULL)
+//mk from Kokua
 {
 	for (U32 i = 0; i < TOTAL_CONTROLS; i++)
 	{
@@ -3774,6 +3775,7 @@ void LLAgent::processAgentDataUpdate(LLMessageSystem *msg, void **)
 		gAgent.mGroupName.clear();
 	}		
 
+//MK from Kokua
 	if (gAgent.restoreToWorld) {
 		LLViewerInventoryItem *inv_item = gAgent.restoreToWorldItem;
 		const LLUUID trash_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_TRASH);
@@ -3832,7 +3834,7 @@ void LLAgent::processAgentDataUpdate(LLMessageSystem *msg, void **)
 		gAgent.restoreToWorld = false;
 		gAgent.sendReliableMessage();
 	}
-
+//mk from Kokua
 	update_group_floaters(active_id);
 }
 

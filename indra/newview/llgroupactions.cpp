@@ -227,6 +227,13 @@ void LLGroupActions::join(const LLUUID& group_id)
 		return;
 	}
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains ("setgroup"))
+	{
+		return;
+	}
+//mk
+
 	LLGroupMgrGroupData* gdatap = 
 		LLGroupMgr::getInstance()->getGroupData(group_id);
 

@@ -3129,6 +3129,10 @@ std::string RRInterface::stringReplace (std::string s, std::string what, std::st
 std::string RRInterface::getDummyName (std::string name, EChatAudible audible /* = CHAT_AUDIBLE_FULLY */)
 {
 	int len = name.length();
+	if (len == 0)
+	{
+		return "";
+	}
 	int at = 3;
 	if (len <= 3) at = len-1; // just to avoid crashing in some cases
 	// We use mLaunchTimestamp in order to modify the scrambling when the session restarts (it stays consistent during the session though)

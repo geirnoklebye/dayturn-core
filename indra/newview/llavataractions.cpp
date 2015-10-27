@@ -497,7 +497,7 @@ void LLAvatarActions::teleport_request_callback(const LLSD& notification, const 
 		msg->addStringFast(_PREHASH_FromAgentName, name);
 //MK
 		LLUUID target_id = notification["substitutions"]["uuid"].asUUID();
-        if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim") || gAgent.mRRInterface.containsSubstr ("sendimto:"+target_id.asString())))
+		if (gRRenabled && (gAgent.mRRInterface.containsWithoutException("sendim", target_id.asString()) || gAgent.mRRInterface.containsSubstr("sendimto:" + target_id.asString())))
 		{
 	 		msg->addStringFast(_PREHASH_Message, "(Hidden)");
 		}
@@ -1293,9 +1293,24 @@ bool LLAvatarActions::callbackAddFriendWithMessage(const LLSD& notification, con
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
 	if (option == 0)
 	{
-		requestFriendship(notification["payload"]["id"].asUUID(), 
+//MK
+		LLUUID target_id = notification["payload"]["uuid"].asUUID();
+		if (gRRenabled && (gAgent.mRRInterface.containsWithoutException("sendim", target_id.asString()) || gAgent.mRRInterface.containsSubstr("sendimto:" + target_id.asString())))
+		{
+			requestFriendship(notification["payload"]["id"].asUUID(),
+				notification["payload"]["name"].asString(),
+				"(Hidden)");
+		}
+
+		else
+		{
+//mk
+			requestFriendship(notification["payload"]["id"].asUUID(),
 		    notification["payload"]["name"].asString(),
 		    response["message"].asString());
+//MK
+		}
+//mk
 	}
 	return false;
 }

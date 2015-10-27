@@ -302,11 +302,12 @@ private:
 	F64				mDistanceTraveled;		// Stat - how far has the avatar moved?
 	LLVector3d		mLastPositionGlobal;	// Used to calculate travel distance
 
+//MK from Kokua	
   public:
 	bool restoreToWorld;
 	LLUUID restoreToWorldGroup;
 	LLViewerInventoryItem *restoreToWorldItem;
-
+//mk from Kokua
 
 	
 /**                    Position

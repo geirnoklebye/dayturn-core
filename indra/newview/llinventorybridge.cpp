@@ -74,7 +74,9 @@
 #include "llviewermenu.h"
 #include "llviewermessage.h"
 #include "llviewerobjectlist.h"
+//MK from Kokua
 #include "llviewerparcelmgr.h"
+//mk from Kokua
 #include "llviewerregion.h"
 #include "llviewerwindow.h"
 #include "llvoavatarself.h"
@@ -1821,6 +1823,12 @@ void LLItemBridge::restoreItem()
 
 void LLItemBridge::restoreToWorld()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsRez)
+	{
+		return;
+	}
+//mk
 	//Similar functionality to the drag and drop rez logic
 	bool remove_from_inventory = false;
 
@@ -1829,6 +1837,7 @@ void LLItemBridge::restoreToWorld()
 	{
 		LLMessageSystem* msg = gMessageSystem;
 
+//MK from Kokua
 		if (gSavedSettings.getBOOL("RezUnderLandGroup")) {
 			LLParcel *parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
 			LLUUID parcel_group_id = parcel->getGroupID();
@@ -1864,6 +1873,7 @@ void LLItemBridge::restoreToWorld()
 				}
 			}
 		}
+//mk from Kokua
 
 		msg->newMessage("RezRestoreToWorld");
 		msg->nextBlockFast(_PREHASH_AgentData);
@@ -6620,6 +6630,16 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 				items.push_back(std::string("Attach To"));
 				items.push_back(std::string("Attach To HUD"));
 				items.push_back(std::string("Restore to Last Position"));
+//MK from Kokua
+				items.push_back(std::string("Restore to Last Position"));
+//mk from Kokua
+
+//MK
+				if (gRRenabled && gAgent.mRRInterface.mContainsRez)
+				{
+					disabled_items.push_back(std::string("Restore to Last Position"));
+				}
+//mk
 				// commented out for DEV-32347
 				//items.push_back(std::string("Restore to Last Position"));
 
