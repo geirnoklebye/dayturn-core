@@ -201,6 +201,10 @@
 #include "lldxhardware.h"
 #endif
 
+//MK
+#include "lldrawpoolbump.h"
+//mk
+
 //
 // exported globals
 //
@@ -360,6 +364,7 @@ bool idle_startup()
 	{
 		RRInterface::mCamDistNbGradients = 1;
 	}
+	LLDrawPoolBump::sRenderDeferredShowInvisiprims = gSavedSettings.getBOOL("RenderDeferredShowInvisiprims");
 //mk
 	// HACK: These are things from the main loop that usually aren't done
 	// until initialization is complete, but need to be done here for things
