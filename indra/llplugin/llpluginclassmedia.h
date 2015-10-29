@@ -255,6 +255,8 @@ public:
 	void showConsole();
     #endif
 
+	std::string getOverrideClickTarget() const { return mOverrideClickTarget; };
+
 	// These are valid during MEDIA_EVENT_DEBUG_MESSAGE
 	std::string getDebugMessageText() const { return mDebugMessageText; };
 	std::string getDebugMessageLevel() const { return mDebugMessageLevel; };
@@ -415,6 +417,8 @@ protected:
 	std::string		mClickNavType;
 	std::string		mClickTarget;
 	std::string		mClickUUID;
+	bool			mClickEnforceTarget;
+	std::string		mOverrideClickTarget;
 	std::string		mDebugMessageText;
 	std::string		mDebugMessageLevel;
 	S32				mGeometryX;

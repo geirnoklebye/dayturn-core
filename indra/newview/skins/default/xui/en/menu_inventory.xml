@@ -80,14 +80,6 @@
     layout="topleft"
     name="Marketplace Listings Separator" />
     <menu_item_call
-     label="Share"
-     layout="topleft"
-     name="Share"
-     visible="true">
-        <menu_item_call.on_click
-         function="Inventory.Share" />
-    </menu_item_call>
-    <menu_item_call
      label="Buy"
      layout="topleft"
      name="Task Buy">
@@ -575,17 +567,17 @@
          function="Inventory.DoToSelected"
          parameter="paste_link" />
     </menu_item_call>
+    <menu_item_call
+     label="Share"
+     layout="topleft"
+     name="Share"
+     visible="true">
+      <menu_item_call.on_click
+       function="Inventory.Share" />
+    </menu_item_call>
     <menu_item_separator
      layout="topleft" 
      name="Paste Separator" />
-    <menu_item_call
-     label="Delete"
-     layout="topleft"
-     name="Remove Link">
-        <menu_item_call.on_click
-         function="Inventory.DoToSelected"
-         parameter="delete" />
-    </menu_item_call>
     <menu_item_call
      label="Delete"
      layout="topleft"
@@ -784,10 +776,14 @@
          parameter="take_off" />
     </menu_item_call>
         label="Copy to Marketplace Listings"
-        layout="topleft"
+     layout="topleft"
         name="Marketplace Copy">
-        function="Inventory.DoToSelected"
+         function="Inventory.DoToSelected"
         parameter="copy_to_marketplace_listings" />
+<!-- mk -->
+	<menu_item_separator
+	 layout="topleft"
+	 name="Marketplace Separator" />
 	<menu_item_call
         label="Move to Marketplace Listings"
         layout="topleft"

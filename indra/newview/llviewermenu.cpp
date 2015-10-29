@@ -57,6 +57,7 @@
 #include "llfacebookconnect.h"
 #include "llfilepicker.h"
 #include "llfirstuse.h"
+#include "llfloaterabout.h"
 #include "llfloaterbuy.h"
 #include "llfloaterbuycontents.h"
 #include "llbuycurrencyhtml.h"
@@ -2179,6 +2180,22 @@ class LLAdvancedCheckShowObjectUpdates : public view_listener_t
 
 
 
+///////////////////////
+// CHECK FOR UPDATES //
+///////////////////////
+
+
+
+class LLAdvancedCheckViewerUpdates : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		LLFloaterAboutUtil::checkUpdatesAndNotify();
+		return true;
+	}
+};
+
+
 ////////////////////
 // COMPRESS IMAGE //
 ////////////////////
@@ -2804,6 +2821,7 @@ void handle_object_open()
 	{
 		return;
 	}
+//mk
 	LLFloaterReg::showInstance("openobject");
 }
 //mk
@@ -8388,11 +8406,10 @@ void handle_selected_texture_info(void*)
    			{
    				msg.append( llformat("%d ", (S32)(it->second[i])));
    			}
-
-			LLSD args;
-			args["MESSAGE"] = msg;
-			LLNotificationsUtil::add("SystemMessage", args);
    		}
+   		LLSD args;
+   		args["MESSAGE"] = msg;
+   		LLNotificationsUtil::add("SystemMessage", args);
 	}
 }
 
@@ -10478,6 +10495,7 @@ void initialize_menus()
 	// Advanced (toplevel)
 	view_listener_t::addMenu(new LLAdvancedToggleShowObjectUpdates(), "Advanced.ToggleShowObjectUpdates");
 	view_listener_t::addMenu(new LLAdvancedCheckShowObjectUpdates(), "Advanced.CheckShowObjectUpdates");
+	view_listener_t::addMenu(new LLAdvancedCheckViewerUpdates(), "Advanced.CheckViewerUpdates");
 	view_listener_t::addMenu(new LLAdvancedCompressImage(), "Advanced.CompressImage");
 	view_listener_t::addMenu(new LLAdvancedShowDebugSettings(), "Advanced.ShowDebugSettings");
 	view_listener_t::addMenu(new LLAdvancedEnableViewAdminOptions(), "Advanced.EnableViewAdminOptions");

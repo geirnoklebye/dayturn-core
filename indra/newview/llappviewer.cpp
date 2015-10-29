@@ -2400,6 +2400,7 @@ void LLAppViewer::initLoggingAndGetLastDuration()
 	// Rename current log file to ".old"
 	LLFile::rename(log_file, old_log_file);
 
+
 	LLError::logToFile(log_file);
 	if (!duration_log_msg.empty())
 	{
@@ -2933,10 +2934,12 @@ bool LLAppViewer::initConfiguration()
 	//
 	gWindowTitle = LLTrans::getString("APP_NAME") + " " + LLVersionInfo::getVersion();
 #if LL_DEBUG
-	gWindowTitle += std::string(" [DEBUG] ") + gArgs;
-#else
-	gWindowTitle += std::string(" ") + gArgs;
+	gWindowTitle += std::string(" [DEBUG]")
 #endif
+	if (!gArgs.empty())
+	{
+		gWindowTitle += std::string(" ") + gArgs;
+	}
 	LLStringUtil::truncate(gWindowTitle, 255);
 
 	//RN: if we received a URL, hand it off to the existing instance.
@@ -5144,6 +5147,7 @@ void LLAppViewer::idle()
 		
 		gIdleCallbacks.callFunctions();
 		gInventory.idleNotifyObservers();
+		LLAvatarTracker::instance().idleNotifyObservers();
 	}
 	
 	// Metrics logging (LLViewerAssetStats, etc.)

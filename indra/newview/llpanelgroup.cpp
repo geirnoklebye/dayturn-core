@@ -338,8 +338,7 @@ void LLPanelGroup::update(LLGroupChange gc)
 		group_name_ctrl->setToolTip(group_name);
 		
 		LLGroupData agent_gdatap;
-		LLUICtrl *count_textbox = getChild<LLUICtrl>("group_member_count");
-		bool is_member = gAgent.getGroupData(mID,agent_gdatap) || gAgent.isGodlike();
+		bool is_member = gAgent.getGroupData(mID,agent_gdatap) || gAgent.isGodlikeWithoutAdminMenuFakery();
 		bool join_btn_visible = !is_member && gdatap->mOpenEnrollment;
 
 		if (count_textbox) {
@@ -478,7 +477,7 @@ void LLPanelGroup::setGroupID(const LLUUID& group_id)
 		}
 
 		LLGroupData agent_gdatap;
-		bool is_member = gAgent.getGroupData(mID,agent_gdatap) || gAgent.isGodlike();
+		bool is_member = gAgent.getGroupData(mID,agent_gdatap) || gAgent.isGodlikeWithoutAdminMenuFakery();
 		
 		tab_roles->setVisible(is_member);
 		tab_notices->setVisible(is_member);

@@ -68,6 +68,7 @@ endif (NOT HAVOK_TPV)
 # <FS:ND>
 endif( LLPHYSICSEXTENSIONS_SRC_DIR )
 # </FS:ND>
+
 if(FMODEX)
   include_directories(${FMODEX_INCLUDE_DIR})
 endif(FMODEX)
@@ -305,6 +306,7 @@ set(viewer_SOURCE_FILES
     llfloatermodeluploadbase.cpp
     llfloaternamedesc.cpp
     llfloaternotificationsconsole.cpp
+    llfloaternotificationstabbed.cpp 
     llfloaterobjectweights.cpp
     llfloateropenobject.cpp
     llfloateroutbox.cpp
@@ -439,6 +441,8 @@ set(viewer_SOURCE_FILES
     llnotificationgrouphandler.cpp
     llnotificationhandlerutil.cpp
     llnotificationhinthandler.cpp
+    llnotificationlistitem.cpp
+    llnotificationlistview.cpp
     llnotificationmanager.cpp
     llnotificationofferhandler.cpp
     llnotificationscripthandler.cpp
@@ -502,6 +506,7 @@ set(viewer_SOURCE_FILES
     llpanelplacestab.cpp
     llpanelprimmediacontrols.cpp
     llpanelprofile.cpp
+	llpanelprofileview.cpp
     llpanelsnapshot.cpp
     llpanelsnapshotinventory.cpp
     llpanelsnapshotlocal.cpp
@@ -951,6 +956,7 @@ set(viewer_HEADER_FILES
     llfloatermodeluploadbase.h
     llfloaternamedesc.h
     llfloaternotificationsconsole.h
+    llfloaternotificationstabbed.h 
     llfloaterobjectweights.h
     llfloateropenobject.h
     llfloateroutbox.h
@@ -1078,6 +1084,8 @@ set(viewer_HEADER_FILES
     llnavigationbar.h
     llnetmap.h
     llnotificationhandler.h
+    llnotificationlistitem.h
+    llnotificationlistview.h
     llnotificationmanager.h
     llnotificationstorage.h
     lloutfitslist.h
@@ -1139,6 +1147,7 @@ set(viewer_HEADER_FILES
     llpanelplacestab.h
     llpanelprimmediacontrols.h
     llpanelprofile.h
+	llpanelprofileview.h
     llpanelsnapshot.h
     llpanelteleporthistory.h
     llpaneltiptoast.h
@@ -1384,6 +1393,7 @@ set(viewer_HEADER_FILES
     pipeline.h
     streamtitledisplay.h
     roles_constants.h
+    qtoolalign.h
     VertexCache.h
     viewerinfo.h
     VorbisFramework.h
@@ -2098,6 +2108,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
 set(ARTWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH
     "Path to artwork files.")
 
+
 if (LINUX)
   set(product kokua-${ARCH}-${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION})
 
@@ -2134,7 +2145,6 @@ if (LINUX)
 
   if (PACKAGE)
   endif (PACKAGE)
-
   add_custom_command(
     OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.copy_touched
     COMMAND ${PYTHON_EXECUTABLE}
@@ -2276,7 +2286,7 @@ if (PACKAGE)
 ##  list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
 ##  list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/webkit/${CMAKE_CFG_INTDIR}")
     set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-darwin.tar.bz2")
-##  set(VIEWER_EXE_GLOBS "'Second Life' SLPlugin mac-crash-logger")
+##  set(VIEWER_EXE_GLOBS "'RestrainedLove' SLPlugin mac-crash-logger")
     set(VIEWER_EXE_GLOBS "'Kokua' SLPlugin mac-crash-logger")
     set(VIEWER_LIB_GLOB "*.dylib")
   endif (DARWIN)
@@ -2330,7 +2340,6 @@ if (LL_TESTS)
     llworldmap.cpp
     llworldmipmap.cpp
   )
-
   set_source_files_properties(
     llworldmap.cpp
     llworldmipmap.cpp

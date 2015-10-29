@@ -402,7 +402,7 @@ void copy_inventory_category(LLInventoryModel* model,
 	LLInventoryModel::cat_array_t* cat_array;
 	LLInventoryModel::item_array_t* item_array;
 	gInventory.getDirectDescendentsOf(cat->getUUID(),cat_array,item_array);
-    
+
     // If root_copy_id is null, tell the marketplace model we'll be waiting for new items to be copied over for this folder
     if (root_copy_id.isNull())
     {
@@ -430,12 +430,12 @@ void copy_inventory_category(LLInventoryModel* model,
         }
         else
         {
-            copy_inventory_item(
-                                gAgent.getID(),
-                                item->getPermissions().getOwner(),
-                                item->getUUID(),
-                                new_cat_uuid,
-                                std::string(),
+		copy_inventory_item(
+							gAgent.getID(),
+							item->getPermissions().getOwner(),
+							item->getUUID(),
+							new_cat_uuid,
+							std::string(),
                                 cb);
         }
 }
@@ -1804,14 +1804,14 @@ bool validate_marketplacelistings(LLInventoryCategory* cat, validation_callback_
         {
             // So we have no item and no folder. That's at least a warning.
             if (depth == 2)
-            {
+		{
                 // If this is an empty version folder, warn only (listing won't be delivered by AIS, but only AIS should unlist)
                 if (cb)
-                {
+			{
                     std::string message = indent + cat->getName() + LLTrans::getString("Marketplace Validation Error Empty Version");
                     cb(message,depth,LLError::LEVEL_WARN);
-                }
-            }
+			}
+		}
             else if ((folder_type == LLFolderType::FT_MARKETPLACE_STOCK) && (depth > 2))
             {
                 // If this is a legit but empty stock folder, warn only (listing must stay searchable when out of stock)
@@ -1819,44 +1819,44 @@ bool validate_marketplacelistings(LLInventoryCategory* cat, validation_callback_
                 {
                     std::string message = indent + cat->getName() + LLTrans::getString("Marketplace Validation Error Empty Stock");
                     cb(message,depth,LLError::LEVEL_WARN);
-                }
-            }
+	}
+}
             else if (cb)
-            {
+{
                 // We warn if there's nothing in a regular folder (may be it's an under construction listing)
                 std::string message = indent + cat->getName() + LLTrans::getString("Marketplace Validation Warning Empty");
                 cb(message,depth,LLError::LEVEL_WARN);
             }
-        }
+}
         else
         {
             // Done with that folder : Print out the folder name unless we already found an error here
             if (cb && result && (depth >= 1))
-            {
+{
                 std::string message = indent + cat->getName() + LLTrans::getString("Marketplace Validation Log");
                 cb(message,depth,LLError::LEVEL_INFO);
             }
         }
-    }
+}
     // If we have a single type of items of the right type in the right place, we're done
     else if ((count == 1) && !has_bad_items && (((unique_key == default_key) && (depth > 1)) || ((folder_type == LLFolderType::FT_MARKETPLACE_STOCK) && (depth > 2) && (cat_array->size() == 0))))
     {
         // Done with that folder : Print out the folder name unless we already found an error here
         if (cb && result && (depth >= 1))
-        {
+{
             std::string message = indent + cat->getName() + LLTrans::getString("Marketplace Validation Log");
             cb(message,depth,LLError::LEVEL_INFO);
         }
-    }
+}
     else
-    {
+{
         if (fix_hierarchy && !has_bad_items)
-        {
+	{	
             // Alert the user when an existing stock folder has to be split
             if ((folder_type == LLFolderType::FT_MARKETPLACE_STOCK) && ((count >= 2) || (cat_array->size() > 0)))
-            {
+		{
                 LLNotificationsUtil::add("AlertMerchantStockFolderSplit");
-            }
+		}
             // If we have more than 1 type of items or we are at the listing level or we have stock/no stock type mismatch, wrap the items in subfolders
             if ((count > 1) || (depth == 1) ||
                 ((folder_type == LLFolderType::FT_MARKETPLACE_STOCK) && (unique_key == default_key)) ||
@@ -1872,40 +1872,40 @@ bool validate_marketplacelistings(LLInventoryCategory* cat, validation_callback_
                     std::string folder_name = (depth >= 1 ? viewer_cat->getName() : viewer_inv_item->getName());
                     LLFolderType::EType new_folder_type = (items_vector_it->first == default_key ? LLFolderType::FT_NONE : LLFolderType::FT_MARKETPLACE_STOCK);
                     if (cb)
-                    {
+		{
                         std::string message = "";
                         if (new_folder_type == LLFolderType::FT_MARKETPLACE_STOCK)
-                        {
+			{
                             message = indent + folder_name + LLTrans::getString("Marketplace Validation Warning Create Stock");
                         }
                         else
-                        {
+				{
                             message = indent + folder_name + LLTrans::getString("Marketplace Validation Warning Create Version");
                         }
                         cb(message,depth,LLError::LEVEL_WARN);
-                    }
+				}
                     LLUUID folder_uuid = gInventory.createNewCategory(parent_uuid, new_folder_type, folder_name);
-                    
+
                     // Move each item to the new folder
                     while (!items_vector_it->second.empty())
                     {
                         LLViewerInventoryItem* viewer_inv_item = gInventory.getItem(items_vector_it->second.back());
                         if (cb)
-                        {
+				{
                             std::string message = indent + viewer_inv_item->getName() + LLTrans::getString("Marketplace Validation Warning Move");
                             cb(message,depth,LLError::LEVEL_WARN);
                         }
                         gInventory.changeItemParent(viewer_inv_item, folder_uuid, true);
                         items_vector_it->second.pop_back();
-                    }
-                    
+				}
+
                     // Next type
                     update_marketplace_category(parent_uuid);
                     update_marketplace_category(folder_uuid);
                     gInventory.notifyObservers();
                     items_vector_it++;
-                }
-            }
+			}
+		}
             // Stock folder should have no sub folder so reparent those up
             if (folder_type == LLFolderType::FT_MARKETPLACE_STOCK)
             {
@@ -1918,8 +1918,8 @@ bool validate_marketplacelistings(LLInventoryCategory* cat, validation_callback_
                     gInventory.changeCategoryParent(viewer_cat, parent_uuid, false);
                     result &= validate_marketplacelistings(viewer_cat, cb, fix_hierarchy, depth);
                 }
-            }
-        }
+	}
+}
         else if (cb)
         {
             // We are not fixing the hierarchy but reporting problems, report everything we can find
@@ -1927,84 +1927,84 @@ bool validate_marketplacelistings(LLInventoryCategory* cat, validation_callback_
             if (result && (depth >= 1))
             {
                 if ((folder_type == LLFolderType::FT_MARKETPLACE_STOCK) && (count >= 2))
-                {
+{
                     // Report if a stock folder contains a mix of items
                     result = false;
                     std::string message = indent + cat->getName() + LLTrans::getString("Marketplace Validation Error Mixed Stock");
                     cb(message,depth,LLError::LEVEL_ERROR);
                 }
                 else if ((folder_type == LLFolderType::FT_MARKETPLACE_STOCK) && (cat_array->size() != 0))
-                {
+	{
                     // Report if a stock folder contains subfolders
                     result = false;
                     std::string message = indent + cat->getName() + LLTrans::getString("Marketplace Validation Error Subfolder In Stock");
                     cb(message,depth,LLError::LEVEL_ERROR);
-                }
-                else
-                {
+	}
+	else
+	{
                     // Simply print the folder name
                     std::string message = indent + cat->getName() + LLTrans::getString("Marketplace Validation Log");
                     cb(message,depth,LLError::LEVEL_INFO);
                 }
-            }
+		}
             // Scan each item and report if there's a problem
             LLInventoryModel::item_array_t item_array_copy = *item_array;
             for (LLInventoryModel::item_array_t::iterator iter = item_array_copy.begin(); iter != item_array_copy.end(); iter++)
-            {
+		{
                 LLInventoryItem* item = *iter;
                 LLViewerInventoryItem * viewer_inv_item = (LLViewerInventoryItem *) item;
                 std::string error_msg;
                 if (!can_move_to_marketplace(item, error_msg, false))
-                {
+			{
                     // Report items that shouldn't be there to start with
                     result = false;
                     std::string message = indent + "    " + viewer_inv_item->getName() + LLTrans::getString("Marketplace Validation Error") + " " + error_msg;
                     cb(message,depth,LLError::LEVEL_ERROR);
-                }
+			}
                 else if ((!viewer_inv_item->getPermissions().allowOperationBy(PERM_COPY, gAgent.getID(), gAgent.getGroupID())) && (folder_type != LLFolderType::FT_MARKETPLACE_STOCK))
                 {
                     // Report stock items that are misplaced
                     result = false;
                     std::string message = indent + "    " + viewer_inv_item->getName() + LLTrans::getString("Marketplace Validation Error Stock Item");
                     cb(message,depth,LLError::LEVEL_ERROR);
-                }
+		}
                 else if (depth == 1)
-                {
+		{
                     // Report items not wrapped in version folder
                     result = false;
                     std::string message = indent + "    " + viewer_inv_item->getName() + LLTrans::getString("Marketplace Validation Warning Unwrapped Item");
                     cb(message,depth,LLError::LEVEL_ERROR);
-                }
-            }
-        }
-        
+		}
+	}
+}
+
         // Clean up
         if (viewer_cat->getDescendentCount() == 0)
-        {
+{
             // Remove the current folder if it ends up empty
             if (cb)
-            {
+	{
                 std::string message = indent + viewer_cat->getName() + LLTrans::getString("Marketplace Validation Warning Delete");
                 cb(message,depth,LLError::LEVEL_WARN);
-            }
+	}
             gInventory.removeCategory(cat->getUUID());
             gInventory.notifyObservers();
             return result && !has_bad_items;
-        }
-    }
+}
+	}
 
     // Recursion : Perform the same validation on each nested folder
     gInventory.getDirectDescendentsOf(cat->getUUID(),cat_array,item_array);
 	LLInventoryModel::cat_array_t cat_array_copy = *cat_array;
     // Sort the folders in alphabetical order first
     std::sort(cat_array_copy.begin(), cat_array_copy.end(), sort_alpha);
-   
+
 	for (LLInventoryModel::cat_array_t::iterator iter = cat_array_copy.begin(); iter != cat_array_copy.end(); iter++)
 	{
 		LLInventoryCategory* category = *iter;
 		result &= validate_marketplacelistings(category, cb, fix_hierarchy, depth + 1);
 	}
-    
+
     update_marketplace_category(cat->getUUID());
     gInventory.notifyObservers();
     return result && !has_bad_items;
@@ -2501,7 +2501,7 @@ void LLInventoryAction::doToSelected(LLInventoryModel* model, LLFolderView* root
     }
     // Copying to the marketplace needs confirmation if nocopy items are involved
     if (user_confirm && ("copy_to_marketplace_listings" == action))
-    {
+{
         std::set<LLFolderViewItem*>::iterator set_iter = selected_items.begin();
         LLFolderViewModelItemInventory * viewModel = dynamic_cast<LLFolderViewModelItemInventory *>((*set_iter)->getViewModelItem());
         if (contains_nocopy_items(viewModel->getUUID()))
@@ -2526,7 +2526,7 @@ void LLInventoryAction::doToSelected(LLInventoryModel* model, LLFolderView* root
 	{
 		LLSD args;
 		args["QUESTION"] = LLTrans::getString(root->getSelectedCount() > 1 ? "DeleteItems" :  "DeleteItem");
-		LLNotificationsUtil::add("DeleteItems", args, LLSD(), boost::bind(&onItemsRemovalConfirmation, _1, _2, root->getHandle()));
+		LLNotificationsUtil::add("DeleteItems", args, LLSD(), boost::bind(&LLInventoryAction::onItemsRemovalConfirmation, _1, _2, root->getHandle()));
         // Note: marketplace listings will be updated in the callback if delete confirmed
 		return;
 	}

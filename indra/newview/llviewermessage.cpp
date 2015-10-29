@@ -58,6 +58,7 @@
 #include "llcallingcard.h"
 #include "llbuycurrencyhtml.h"
 #include "llfirstuse.h"
+#include "llfloaterbump.h"
 #include "llfloaterbuyland.h"
 #include "llfloaterland.h"
 #include "llfloaterregioninfo.h"
@@ -2412,7 +2413,8 @@ static void god_message_name_cb(const LLAvatarName& av_name, LLChat chat, std::s
 	LLNotificationsUtil::add("GodMessage", args);
 
 	// Treat like a system message and put in chat history.
-	chat.mText = av_name.getCompleteName() + ": " + message;
+	chat.mSourceType = CHAT_SOURCE_SYSTEM;
+	chat.mText = message;
 
 	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
 	if(nearby_chat)
@@ -2584,6 +2586,29 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			std::string my_name;
 			LLAgentUI::buildFullname(my_name);
 			std::string response = gAgent.mRRInterface.getVersion ();
+			pack_instant_message(
+				gMessageSystem,
+				gAgent.getID(),
+				FALSE,
+				gAgent.getSessionID(),
+				from_id,
+				my_name.c_str(),
+				response.c_str(),
+				IM_ONLINE,
+				IM_DO_NOT_DISTURB_AUTO_RESPONSE,
+				session_id);
+			gAgent.sendReliableMessage();
+
+			// remove the "XXX is typing..." label from the IM window
+			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
+			gIMMgr->processIMTypingStop(im_info);
+		}
+		else if (gRRenabled && message == "@getblacklist")
+		{
+			// return the contents of  the blacklist, without a filter
+			std::string my_name;
+			LLAgentUI::buildFullname(my_name);
+			std::string response = gAgent.mRRInterface.sBlacklist;
 			pack_instant_message(
 				gMessageSystem,
 				gAgent.getID(),
@@ -2878,6 +2903,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				payload["sender_name"] = name;
 				payload["group_id"] = group_id;
 				payload["inventory_name"] = item_name;
+ 				payload["received_time"] = LLDate::now();
 				if(info && info->asLLSD())
 				{
 					payload["inventory_offer"] = info->asLLSD();
@@ -3201,17 +3227,13 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			payload["from_id"] = from_id;
 			payload["slurl"] = location;
 			payload["name"] = name;
-			std::string session_name;
+
 			if (from_group)
 			{
 				payload["group_owned"] = "true";
 			}
 
-			LLNotification::Params params("ServerObjectMessage");
-			params.substitutions = substitutions;
-			params.payload = payload;
-
-			LLPostponedNotification::add<LLPostponedServerObjectNotification>(params, from_id, from_group);
+			LLNotificationsUtil::add("ServerObjectMessage", substitutions, payload);
 		}
 		break;
 
@@ -3412,6 +3434,17 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 						IM_DO_NOT_DISTURB_AUTO_RESPONSE);
 					gAgent.sendReliableMessage();
 					return;
+				}
+				
+				if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString())
+					|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
+				{
+					message = "(Hidden)";
+				}
+				
+				if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+				{
+					message = "(Hidden)";
 				}
 				
 				if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString())
@@ -4078,6 +4111,23 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 					}
 				}
 				
+				if (gAgent.mRRInterface.containsWithoutException ("recvemote", from_id.asString())
+					|| gAgent.mRRInterface.contains ("recvemotefrom:"+from_id.asString())
+					|| gAgent.mRRInterface.contains ("recvemotefrom:"+owner_id.asString())
+					)
+				{
+					std::string prefix = mesg.substr(0, 4);
+					if (prefix == "/me " || prefix == "/me'")
+					{
+						chat.mFromName = from_name;				
+						chat.mText = "/me ...";
+						if (!gSavedSettings.getBOOL ("RestrainedLoveShowEllipsis")) {
+							chat.mText = "";
+						}
+						mesg = chat.mText;
+					}
+				}
+				
 				if (from_id != gAgent.getID() && gAgent.mRRInterface.mContainsShownames)
 				{
 					// Special case : if the object is an attachment and imitates the name of its owner, scramble its name as if it were an agent
@@ -4347,11 +4397,15 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			}
 		}
 
+		if (mesg != "")
+		{
 		LLSD msg_notify = LLSD(LLSD::emptyMap());
 		msg_notify["session_id"] = LLUUID();
         msg_notify["from_id"] = chat.mFromID;
 		msg_notify["source_type"] = chat.mSourceType;
         on_new_message(msg_notify);
+	}
+
 	}
 }
 
@@ -6310,6 +6364,7 @@ static void process_money_balance_reply_extended(LLMessageSystem* msg)
 			}
 		}
 		final_args["MESSAGE"] = message;
+		payload["dest_id"] = dest_id;
 		notification = success ? "PaymentSent" : "PaymentFailure";
 	}
 	else {
@@ -6396,60 +6451,60 @@ bool handle_special_notification(std::string notificationID, LLSD& llsdBlock)
 	bool returnValue = false;
 	if(llsdBlock.has("_region_access"))
 	{
-		U8 regionAccess = static_cast<U8>(llsdBlock["_region_access"].asInteger());
-		std::string regionMaturity = LLViewerRegion::accessToString(regionAccess);
-		LLStringUtil::toLower(regionMaturity);
-		llsdBlock["REGIONMATURITY"] = regionMaturity;
-		LLNotificationPtr maturityLevelNotification;
-		std::string notifySuffix = "_Notify";
-		if (regionAccess == SIM_ACCESS_MATURE)
+	U8 regionAccess = static_cast<U8>(llsdBlock["_region_access"].asInteger());
+	std::string regionMaturity = LLViewerRegion::accessToString(regionAccess);
+	LLStringUtil::toLower(regionMaturity);
+	llsdBlock["REGIONMATURITY"] = regionMaturity;
+	LLNotificationPtr maturityLevelNotification;
+	std::string notifySuffix = "_Notify";
+	if (regionAccess == SIM_ACCESS_MATURE)
+	{
+		if (gAgent.isTeen())
 		{
-			if (gAgent.isTeen())
-			{
-				gAgent.clearTeleportRequest();
-				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
-				returnValue = true;
+			gAgent.clearTeleportRequest();
+			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
+			returnValue = true;
 
-				notifySuffix = "_NotifyAdultsOnly";
-			}
-			else if (gAgent.prefersPG())
-			{
-				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-				returnValue = true;
-			}
-			else if (LLStringUtil::compareStrings(notificationID, "RegionEntryAccessBlocked") == 0)
-			{
-				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock);
-				returnValue = true;
-			}
+			notifySuffix = "_NotifyAdultsOnly";
 		}
-		else if (regionAccess == SIM_ACCESS_ADULT)
+		else if (gAgent.prefersPG())
 		{
-			if (!gAgent.isAdult())
-			{
-				gAgent.clearTeleportRequest();
-				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
-				returnValue = true;
-
-				notifySuffix = "_NotifyAdultsOnly";
-			}
-			else if (gAgent.prefersPG() || gAgent.prefersMature())
-			{
-				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-				returnValue = true;
-			}
-			else if (LLStringUtil::compareStrings(notificationID, "RegionEntryAccessBlocked") == 0)
-			{
-				maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock);
-				returnValue = true;
-			}
+			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+			returnValue = true;
 		}
+		else if (LLStringUtil::compareStrings(notificationID, "RegionEntryAccessBlocked") == 0)
+		{
+			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock);
+			returnValue = true;
+		}
+	}
+	else if (regionAccess == SIM_ACCESS_ADULT)
+	{
+		if (!gAgent.isAdult())
+		{
+			gAgent.clearTeleportRequest();
+			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
+			returnValue = true;
 	
-		if ((maturityLevelNotification == NULL) || maturityLevelNotification->isIgnored())
-		{
-			// Given a simple notification if no maturityLevelNotification is set or it is ignore
-			LLNotificationsUtil::add(notificationID + notifySuffix, llsdBlock);
+			notifySuffix = "_NotifyAdultsOnly";
 		}
+		else if (gAgent.prefersPG() || gAgent.prefersMature())
+		{
+			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+			returnValue = true;
+		}
+		else if (LLStringUtil::compareStrings(notificationID, "RegionEntryAccessBlocked") == 0)
+		{
+			maturityLevelNotification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock);
+			returnValue = true;
+		}
+	}
+	
+	if ((maturityLevelNotification == NULL) || maturityLevelNotification->isIgnored())
+	{
+		// Given a simple notification if no maturityLevelNotification is set or it is ignore
+		LLNotificationsUtil::add(notificationID + notifySuffix, llsdBlock);
+	}
 	}
 
 	return returnValue;
@@ -6482,100 +6537,100 @@ bool handle_teleport_access_blocked(LLSD& llsdBlock, const std::string & notific
 	bool returnValue = false;
 	if(llsdBlock.has("_region_access"))
 	{
-		U8 regionAccess = static_cast<U8>(llsdBlock["_region_access"].asInteger());
-		std::string regionMaturity = LLViewerRegion::accessToString(regionAccess);
-		LLStringUtil::toLower(regionMaturity);
-		llsdBlock["REGIONMATURITY"] = regionMaturity;
+	U8 regionAccess = static_cast<U8>(llsdBlock["_region_access"].asInteger());
+	std::string regionMaturity = LLViewerRegion::accessToString(regionAccess);
+	LLStringUtil::toLower(regionMaturity);
+	llsdBlock["REGIONMATURITY"] = regionMaturity;
+	
+	LLNotificationPtr tp_failure_notification;
+	std::string notifySuffix;
 
-		LLNotificationPtr tp_failure_notification;
-		std::string notifySuffix;
-
-		if (notificationID == std::string("TeleportEntryAccessBlocked"))
+	if (notificationID == std::string("TeleportEntryAccessBlocked"))
+	{
+		notifySuffix = "_Notify";
+	if (regionAccess == SIM_ACCESS_MATURE)
+	{
+		if (gAgent.isTeen())
 		{
-			notifySuffix = "_Notify";
-			if (regionAccess == SIM_ACCESS_MATURE)
-			{
-				if (gAgent.isTeen())
-				{
-					gAgent.clearTeleportRequest();
-					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
-					returnValue = true;
-
-					notifySuffix = "_NotifyAdultsOnly";
-				}
-				else if (gAgent.prefersPG())
-				{
-					if (gAgent.hasRestartableFailedTeleportRequest())
-					{
-						tp_failure_notification = LLNotificationsUtil::add(notificationID+"_ChangeAndReTeleport", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_and_reteleport_callback);
-						returnValue = true;
-					}
-					else
-					{
-						gAgent.clearTeleportRequest();
-						tp_failure_notification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-						returnValue = true;
-					}
-				}
-				else
-				{
-					gAgent.clearTeleportRequest();
-					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-					returnValue = true;
-				}
-			}
-			else if (regionAccess == SIM_ACCESS_ADULT)
-			{
-				if (!gAgent.isAdult())
-				{
-					gAgent.clearTeleportRequest();
-					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
-					returnValue = true;
-
-					notifySuffix = "_NotifyAdultsOnly";
-				}
-				else if (gAgent.prefersPG() || gAgent.prefersMature())
-				{
-					if (gAgent.hasRestartableFailedTeleportRequest())
-					{
-						tp_failure_notification = LLNotificationsUtil::add(notificationID+"_ChangeAndReTeleport", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_and_reteleport_callback);
-						returnValue = true;
-					}
-					else
-					{
-						gAgent.clearTeleportRequest();
-						tp_failure_notification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-						returnValue = true;
-					}
-				}
-				else
-				{
-					gAgent.clearTeleportRequest();
-					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
-					returnValue = true;
-				}
-			}
-		}		// End of special handling for "TeleportEntryAccessBlocked"
-		else
-		{	// Normal case, no message munging
 			gAgent.clearTeleportRequest();
-			if (LLNotifications::getInstance()->templateExists(notificationID))
+				tp_failure_notification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
+			returnValue = true;
+
+			notifySuffix = "_NotifyAdultsOnly";
+		}
+		else if (gAgent.prefersPG())
+		{
+			if (gAgent.hasRestartableFailedTeleportRequest())
 			{
-				tp_failure_notification = LLNotificationsUtil::add(notificationID, llsdBlock, llsdBlock);
+					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_ChangeAndReTeleport", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_and_reteleport_callback);
+				returnValue = true;
 			}
 			else
 			{
-				llsdBlock["MESSAGE"] = defaultMessage;
-				tp_failure_notification = LLNotificationsUtil::add("GenericAlertOK", llsdBlock);
+				gAgent.clearTeleportRequest();
+					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+				returnValue = true;
 			}
+		}
+		else
+		{
+			gAgent.clearTeleportRequest();
+				tp_failure_notification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
 			returnValue = true;
 		}
-
-		if ((tp_failure_notification == NULL) || tp_failure_notification->isIgnored())
+	}
+	else if (regionAccess == SIM_ACCESS_ADULT)
+	{
+		if (!gAgent.isAdult())
 		{
-			// Given a simple notification if no tp_failure_notification is set or it is ignore
-			LLNotificationsUtil::add(notificationID + notifySuffix, llsdBlock);
+			gAgent.clearTeleportRequest();
+				tp_failure_notification = LLNotificationsUtil::add(notificationID+"_AdultsOnlyContent", llsdBlock);
+			returnValue = true;
+
+			notifySuffix = "_NotifyAdultsOnly";
 		}
+		else if (gAgent.prefersPG() || gAgent.prefersMature())
+		{
+			if (gAgent.hasRestartableFailedTeleportRequest())
+			{
+					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_ChangeAndReTeleport", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_and_reteleport_callback);
+				returnValue = true;
+		}
+			else
+			{
+				gAgent.clearTeleportRequest();
+					tp_failure_notification = LLNotificationsUtil::add(notificationID+"_Change", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+				returnValue = true;
+			}
+		}
+		else
+		{
+			gAgent.clearTeleportRequest();
+				tp_failure_notification = LLNotificationsUtil::add(notificationID+"_PreferencesOutOfSync", llsdBlock, llsdBlock, handle_prompt_for_maturity_level_change_callback);
+			returnValue = true;
+		}
+		}
+	}		// End of special handling for "TeleportEntryAccessBlocked"
+	else
+	{	// Normal case, no message munging
+		gAgent.clearTeleportRequest();
+		if (LLNotifications::getInstance()->templateExists(notificationID))
+		{
+			tp_failure_notification = LLNotificationsUtil::add(notificationID, llsdBlock, llsdBlock);
+		}
+		else
+		{
+			llsdBlock["MESSAGE"] = defaultMessage;
+			tp_failure_notification = LLNotificationsUtil::add("GenericAlertOK", llsdBlock);
+		}
+		returnValue = true;
+	}
+
+	if ((tp_failure_notification == NULL) || tp_failure_notification->isIgnored())
+	{
+		// Given a simple notification if no tp_failure_notification is set or it is ignore
+		LLNotificationsUtil::add(notificationID + notifySuffix, llsdBlock);
+	}
 	}
 
 	handle_trusted_experiences_notification(llsdBlock);
@@ -6945,6 +7000,11 @@ void process_mean_collision_alert_message(LLMessageSystem *msgsystem, void **use
 			gMeanCollisionList.push_front(mcd);
 			gCacheName->get(perp, false, boost::bind(&mean_name_callback, _1, _2, _3));
 		}
+	}
+	LLFloaterBump* bumps_floater = LLFloaterBump::getInstance();
+	if(bumps_floater && bumps_floater->isInVisibleChain())
+	{
+		bumps_floater->populateCollisionList();
 	}
 }
 

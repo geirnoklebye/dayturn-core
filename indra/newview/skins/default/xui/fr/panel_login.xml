@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <panel name="panel_login">
 	<panel.string name="forgot_password_url">http://secondlife.com/account/request.php?lang=fr</panel.string>
-	<panel.string name="forgot_password_url">
-		http://secondlife.com/account/request.php?lang=fr
-	</panel.string>
 				CONNEXION
 			<text name="username_text">
 				Nom d&apos;utilisateur :

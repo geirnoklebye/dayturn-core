@@ -484,9 +484,7 @@ bool idle_startup()
 		gSavedSettings.setS32("LastFeatureVersion", LLFeatureManager::getInstance()->getVersion());
 		gSavedSettings.setString("LastGPUString", thisGPU);
 
-		// load dynamic GPU/feature tables from website (S3)
-		LLFeatureManager::getInstance()->fetchHTTPTables();
-		
+
 		std::string xml_file = LLUI::locateSkin("xui_version.xml");
 		LLXMLNodePtr root;
 		bool xml_ok = false;
@@ -3096,13 +3094,20 @@ bool LLStartUp::dispatchURL()
 
 void LLStartUp::setStartSLURL(const LLSLURL& slurl) 
 {
-  sStartSLURL = slurl;
-  switch(slurl.getType())
-  {
-    case LLSLURL::HOME_LOCATION:
-	{
-		  gSavedSettings.setString("LoginLocation", LLSLURL::SIM_LOCATION_HOME);
-	break;
+  LL_DEBUGS("AppInit")<<slurl.asString()<<LL_ENDL;
+
+	if ( slurl.isSpatial() )
+    {
+		std::string new_start = slurl.getSLURLString();
+		LL_DEBUGS("AppInit")<<new_start<<LL_ENDL;
+		sStartSLURL = slurl;
+		LLPanelLogin::onUpdateStartSLURL(slurl); // updates grid if needed
+
+		// remember that this is where we wanted to log in...if the login fails,
+		// the next attempt will default to the same place.
+		gSavedSettings.setString("NextLoginLocation", new_start);
+		// following a successful login, this is cleared
+		// and the default reverts to LoginLocation
     }
     case LLSLURL::LAST_LOCATION:
 	{
@@ -3450,6 +3455,23 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 			LLStringUtil::trim(gDisplayName);
 		}
 	}
+	std::string first_name;
+	if(response.has("first_name"))
+	{
+		first_name = response["first_name"].asString();
+		LLStringUtil::replaceChar(first_name, '"', ' ');
+		LLStringUtil::trim(first_name);
+		gAgentUsername = first_name;
+	}
+
+	if(response.has("last_name") && !gAgentUsername.empty() && (gAgentUsername != "Resident"))
+	{
+		std::string last_name = response["last_name"].asString();
+		LLStringUtil::replaceChar(last_name, '"', ' ');
+		LLStringUtil::trim(last_name);
+		gAgentUsername = gAgentUsername + " " + last_name;
+	}
+
 	if(gDisplayName.empty())
 	{
 		if(response.has("first_name"))
@@ -3470,6 +3492,7 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 			gDisplayName += text;
 		}
 	}
+
 	if(gDisplayName.empty())
 	{
 		gDisplayName.assign(gUserCredential->asString());
