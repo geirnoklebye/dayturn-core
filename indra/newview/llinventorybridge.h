@@ -182,7 +182,7 @@ public:
 									 const LLUUID& new_parent,
 									 BOOL restamp);
 	void removeBatchNoCheck(std::vector<LLFolderViewModelItem*>& batch);
-    
+
     BOOL callback_cutToClipboard(const LLSD& notification, const LLSD& response);
     BOOL perform_cutToClipboard();
 
@@ -285,7 +285,7 @@ public:
 	{}
 		
 	BOOL dragItemIntoFolder(LLInventoryItem* inv_item, BOOL drop, std::string& tooltip_msg, BOOL user_confirm = TRUE);
-	BOOL dragCategoryIntoFolder(LLInventoryCategory* inv_category, BOOL drop, std::string& tooltip_msg, BOOL user_confirm = TRUE);
+	BOOL dragCategoryIntoFolder(LLInventoryCategory* inv_category, BOOL drop, std::string& tooltip_msg, BOOL is_link = FALSE, BOOL user_confirm = TRUE);
     void callback_dropItemIntoFolder(const LLSD& notification, const LLSD& response, LLInventoryItem* inv_item);
     void callback_dropCategoryIntoFolder(const LLSD& notification, const LLSD& response, LLInventoryCategory* inv_category);
 
