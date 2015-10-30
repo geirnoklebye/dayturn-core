@@ -255,6 +255,11 @@ public:
 	void showConsole();
     #endif
 
+	// mClickTarget is received from message and governs how link will be opened
+	// use this to enforce your own way of opening links inside plugins
+	void setOverrideClickTarget(const std::string &target);
+	void resetOverrideClickTarget() { mClickEnforceTarget = false; };
+	bool isOverrideClickTarget() const { return mClickEnforceTarget; }
 	std::string getOverrideClickTarget() const { return mOverrideClickTarget; };
 
 	// These are valid during MEDIA_EVENT_DEBUG_MESSAGE

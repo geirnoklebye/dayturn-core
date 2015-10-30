@@ -751,7 +751,7 @@ bool FSFloaterImport::processPrimCreated(LLViewerObject* object)
 		
 		if (mAssetMap[sculpt_params.getSculptTexture()].notNull())
 		{
-			sculpt_params.setSculptTexture(mAssetMap[sculpt_params.getSculptTexture()]);
+			sculpt_params.setSculptTexture(mAssetMap[sculpt_params.getSculptTexture()], sculpt_params.getSculptType());
 			LL_DEBUGS("import") << "Replaced " << prim["sculpt"]["texture"].asUUID().asString() << " with " << sculpt_params.getSculptTexture().asString() << LL_ENDL;
 		}
 

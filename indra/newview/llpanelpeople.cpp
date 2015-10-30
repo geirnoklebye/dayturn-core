@@ -72,10 +72,8 @@
 #include "llspeakers.h"
 #include "llfloaterwebcontent.h"
 
-//MK
-#include "llfloaterimnearbychat.h"
-#include "llviewerregion.h"
-//mk
+#include "llagentui.h"
+#include "llslurl.h"
 
 //MK
 #include "llfloaterimnearbychat.h"
@@ -990,123 +988,6 @@ void LLPanelPeople::updateNearbyList()
 	updateNearbyRange();
 	LLActiveSpeakerMgr::instance().update(TRUE);
 //mk
-			// Hide some of the fields if the window is too small
-			int width = getRect().getWidth();
-			int nb = 5;
-			if (width < 330) nb = 4;
-			if (width < 280) nb = 3;
-			if (width < 230) nb = 2;
-			if (width < 160) nb = 1;
-			av->updateFirstSeen(nb);
-
-			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
-			{
-				if (gSavedSettings.getBOOL("RadarReportChatRange"))
-				{
-					if ((r <= CHAT_NORMAL_RADIUS) && (lastRadarSweep[avId].lastDistance > CHAT_NORMAL_RADIUS))
-					{
-						reportToNearbyChat(av->getAvatarName() + " entered chat range.");
-					}
-					else if ((r > CHAT_NORMAL_RADIUS) && (lastRadarSweep[avId].lastDistance <= CHAT_NORMAL_RADIUS))
-					{
-						reportToNearbyChat(av->getAvatarName() + " left chat range.");
-					}
-				}
-				if (gSavedSettings.getBOOL("RadarReportDrawRange"))
-				{
-					if ((r <= drawRadius) && (lastRadarSweep[avId].lastDistance > drawRadius))
-					{
-						reportToNearbyChat(av->getAvatarName() + " entered draw distance.");
-					}
-					else if ((r > drawRadius) && (lastRadarSweep[avId].lastDistance <= drawRadius))
-					{
-						reportToNearbyChat(av->getAvatarName() + " left draw distance.");
-					}			
-				}
-			}
-			lastRadarSweep.erase(avId);
-		}
-		// Handle new entries
-		else 
-		{
-			av->setFirstSeen(time(NULL));
-			
-			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
-			{
-				if (gSavedSettings.getBOOL("RadarReportChatRange") && (r <= CHAT_NORMAL_RADIUS))
-				{			
-					reportToNearbyChat(av->getAvatarName()+llformat(" entered chat range (%3.2f m)\n",r));
-				}
-				if (gSavedSettings.getBOOL("RadarReportDrawRange") && (r <= drawRadius))
-				{
-					reportToNearbyChat(av->getAvatarName()+llformat(" entered draw distance (%3.2f m)\n",r));
-				}				
-			}
-				
-			// TODO Alert if we entered the sim
-		}
-	}
-	// At this point, anything left in the lastRadarSweep map is an avatar that disappeared from scans.
-	for (std::map <LLUUID, radarFields>::const_iterator i = lastRadarSweep.begin(); i != lastRadarSweep.end(); ++i)
-	{
-		radarFields rf = i->second;
-		
-		if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
-		{
-			if (gSavedSettings.getBOOL("RadarReportChatRange") && (rf.lastDistance <= CHAT_NORMAL_RADIUS))
-			{
-				reportToNearbyChat(rf.avName + " left chat range.");
-			}
-			if (gSavedSettings.getBOOL("RadarReportDrawRange") && (rf.lastDistance <= drawRadius))
-			{
-				reportToNearbyChat(rf.avName + " left draw distance.");
-			}
-		}
-	}
-
-	lastRadarSweep.clear();
-	for (std::vector<LLPanel*>::const_iterator itItem = items.begin(); itItem != items.end(); ++itItem)
-	{
-		LLAvatarListItem* av = static_cast<LLAvatarListItem*>(*itItem);
-		radarFields rf;
-		rf.avName = av->getAvatarName();
-		rf.lastDistance = av->getRange();
-		av->setShowPermissions (false);
-		if (av->getPosition() != LLVector3d(0.0f,0.0f,0.0f))
-		{
-			LLViewerRegion* r = LLWorld::getInstance()->getRegionFromPosGlobal(av->getPosition());
-			if (r)
-			{
-				rf.lastRegion = r->getRegionID();
-			}
-		}
-		else 
-		{
-			rf.lastRegion = LLUUID(0);
-		}
-		
-		rf.firstSeen = av->getFirstSeen();
-		rf.lastStatus = av->getAvStatus();
-		rf.lastGlobalPos = av->getPosition();
-		
-		lastRadarSweep[av->getAvatarId()] = rf;
-	}
-
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
-	{
-		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
-		if (nearby_tab && nearby_tab->getVisible())
-		{
-//			nearby_tab->setVisible(FALSE);
-			nearby_tab->childSetVisible("avatar_list", FALSE);
-		}
-		return;
-	}
-
-	// Update various display fields
-	updateNearbyRange();
-	LLActiveSpeakerMgr::instance().update(TRUE);
-//mk
 	LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
 	mNearbyList->setDirty();
 
@@ -1134,43 +1015,6 @@ void LLPanelPeople::updateRecentList()
 	}
 //mk
 }
-
-//MK
-void LLPanelPeople::updateNearbyRange()
-// Iterates through nearbyList elements, updating the range field.
-// Thanks to Kitty Barnett for this logic.
-{
-	
-	// Make sure we're using the same data as the distance comparator
-	const LLAvatarItemDistanceComparator::id_to_pos_map_t& posAvatars = DISTANCE_COMPARATOR.getAvatarsPositions();
-	const LLVector3d& posSelf = gAgent.getPositionGlobal();
-	std::vector<LLPanel*> items;
-	mNearbyList->getItems(items);
-	for (std::vector<LLPanel*>::const_iterator itItem = items.begin(); itItem != items.end(); ++itItem)
-	{
-		LLAvatarListItem* pItem = static_cast<LLAvatarListItem*>(*itItem);
-		const LLVector3d& posOtherAvatar = posAvatars.find(pItem->getAvatarId())->second;
-		pItem->setPosition(posOtherAvatar);
-		pItem->setRange(dist_vec(posOtherAvatar, posSelf));
-	}
-}
-void LLPanelPeople::reportToNearbyChat(std::string message)
-// small utility method for radar alerts.
-{
-	
-	LLChat chat;
-    chat.mText = message;
-	chat.mSourceType = CHAT_SOURCE_SYSTEM;
-	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
-	if(nearby_chat)
-	{
-		nearby_chat->addMessage(chat);
-	}
-//	LLSD args;
-//	args["type"] = LLNotificationsUi::NT_NEARBYCHAT;
-//	LLNotificationsUi::LLNotificationManager::instance().onChat(chat, args);
-}
-//mk
 
 //MK
 void LLPanelPeople::updateNearbyRange()
@@ -1763,16 +1607,16 @@ bool LLPanelPeople::onNearbyViewSortMenuItemCheck(const LLSD& userdata)
 	std::string item = userdata.asString();
 	static LLCachedControl<U32> sort_order(gSavedSettings, "NearbyPeopleSortOrder", E_SORT_BY_RECENT_SPEAKERS);
 
-	if (item == "sort_by_recent_speakers") {
+	if (item == "sort_by_recent_speakers")
 		return sort_order == E_SORT_BY_RECENT_SPEAKERS;
-	}
-	else if (item == "sort_name") {
+	if (item == "sort_name")
 		return sort_order == E_SORT_BY_NAME;
-	}
-	else if (item == "sort_distance") {
+	if (item == "sort_distance")
+	{
 		return sort_order == E_SORT_BY_DISTANCE;
 	}
-	else if (item == "view_login_names") {
+	else if (item == "view_login_names") 
+	{
 		return gSavedSettings.getBOOL("UseCompleteNameInLists");
 	}
 
@@ -1808,7 +1652,6 @@ void LLPanelPeople::onRecentViewSortMenuItemClicked(const LLSD& userdata)
 bool LLPanelPeople::onFriendsViewSortMenuItemCheck(const LLSD& userdata) 
 {
 	std::string item = userdata.asString();
-
 	static LLCachedControl<U32> sort_order(gSavedSettings, "FriendsSortOrder", E_SORT_BY_NAME);
 
 	if (item == "sort_name") {

@@ -66,7 +66,7 @@ public:
 	static void 	onCommitTemporary(		LLUICtrl* ctrl, void* userdata);
 	static void 	onCommitPhantom(		LLUICtrl* ctrl, void* userdata);
 	static void 	onCommitPhysics(		LLUICtrl* ctrl, void* userdata);
-	
+
 	void 	onCopyPos(				const LLSD& data);
 	void 	onPastePos(				const LLSD& data);
 	void 	onPastePosClip(			const LLSD& data);

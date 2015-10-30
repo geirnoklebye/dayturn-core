@@ -132,8 +132,6 @@ Var SKIP_DIALOGS        ; set from command line in  .onInit. autoinstall
 Function .onInstSuccess
 Call CheckWindowsServPack				; Warn if not on the latest SP before asking to launch.
     Push $R0	# Option value, unused
-    StrCpy $SKIP_AUTORUN "true"
-    Goto lbl_return
 
     StrCmp $SKIP_DIALOGS "true" label_launch 
 

@@ -807,7 +807,7 @@ LLMeshRepoThread::LLMeshRepoThread()
 	mHttpLargePolicyClass = app_core_http.getPolicy(LLAppCoreHttp::AP_LARGE_MESH);
 }
 
-			
+
 LLMeshRepoThread::~LLMeshRepoThread()
 {
 	LL_INFOS(LOG_MESH) << "Small GETs issued:  " << LLMeshRepository::sHTTPRequestCount
@@ -885,7 +885,7 @@ void LLMeshRepoThread::run()
 		sRequestWaterLevel = mHttpRequestSet.size();			// Stats data update
 
 		// NOTE: order of queue processing intentionally favors LOD requests over header requests
-			
+
 		while (!mLODReqQ.empty() && mHttpRequestSet.size() < sRequestHighWater)
 		{
 			if (! mMutex)
@@ -949,7 +949,7 @@ void LLMeshRepoThread::run()
 					mSkinRequests.erase(iter);
 					mMutex->unlock();
 
-					if (!fetchMeshSkinInfo(mesh_id))
+					if (! fetchMeshSkinInfo(mesh_id))
 					{
 						incomplete.insert(mesh_id);
 					}
@@ -1230,7 +1230,7 @@ bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 	}
 
 	++LLMeshRepository::sMeshRequestCount;
-	bool ret = true ;
+	bool ret = true;
 	U32 header_size = mMeshHeaderSize[mesh_id];
 	
 	if (header_size > 0)
@@ -1278,7 +1278,7 @@ bool LLMeshRepoThread::fetchMeshSkinInfo(const LLUUID& mesh_id)
 			constructUrl(mesh_id, &http_url, &cap_version);
 
 			if (!http_url.empty())
-			{				
+			{
 				LLMeshSkinInfoHandler * handler = new LLMeshSkinInfoHandler(mesh_id, offset, size);
 				LLCore::HttpHandle handle = getByteRange(http_url, cap_version, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
@@ -1324,7 +1324,7 @@ bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id)
 
 	++LLMeshRepository::sMeshRequestCount;
 	U32 header_size = mMeshHeaderSize[mesh_id];
-	bool ret = true ;
+	bool ret = true;
 	
 	if (header_size > 0)
 	{
@@ -1370,9 +1370,9 @@ bool LLMeshRepoThread::fetchMeshDecomposition(const LLUUID& mesh_id)
 			int cap_version(2);
 			std::string http_url;
 			constructUrl(mesh_id, &http_url, &cap_version);
-
+			
 			if (!http_url.empty())
-			{				
+			{
 				LLMeshDecompositionHandler * handler = new LLMeshDecompositionHandler(mesh_id, offset, size);
 				LLCore::HttpHandle handle = getByteRange(http_url, cap_version, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
@@ -1418,7 +1418,7 @@ bool LLMeshRepoThread::fetchMeshPhysicsShape(const LLUUID& mesh_id)
 
 	++LLMeshRepository::sMeshRequestCount;
 	U32 header_size = mMeshHeaderSize[mesh_id];
-	bool ret = true ;
+	bool ret = true;
 
 	if (header_size > 0)
 	{
@@ -1554,7 +1554,7 @@ bool LLMeshRepoThread::fetchMeshHeader(const LLVolumeParams& mesh_params)
 	}
 
 	//either cache entry doesn't exist or is corrupt, request header from simulator	
-	bool retval = true ;
+	bool retval = true;
 	int cap_version(2);
 	std::string http_url;
 	constructUrl(mesh_params.getSculptID(), &http_url, &cap_version);
@@ -1648,7 +1648,7 @@ bool LLMeshRepoThread::fetchMeshLOD(const LLVolumeParams& mesh_params, S32 lod)
 			constructUrl(mesh_id, &http_url, &cap_version);
 
 			if (!http_url.empty())
-			{				
+			{
 				LLMeshLODHandler * handler = new LLMeshLODHandler(mesh_params, lod, offset, size);
 				LLCore::HttpHandle handle = getByteRange(http_url, cap_version, offset, size, handler);
 				if (LLCORE_HTTP_HANDLE_INVALID == handle)
@@ -1920,7 +1920,7 @@ LLMeshUploadThread::LLMeshUploadThread(LLMeshUploadThread::instance_list& data, 
 
 	mOrigin += gAgent.getAtAxis() * scale.magVec();
 
-	mMeshUploadTimeOut = gSavedSettings.getS32("MeshUploadTimeOut") ;
+	mMeshUploadTimeOut = gSavedSettings.getS32("MeshUploadTimeOut");
 
 	mHttpRequest = new LLCore::HttpRequest;
 	mHttpOptions = new LLCore::HttpOptions;
@@ -1988,14 +1988,14 @@ void LLMeshUploadThread::preStart()
 
 void LLMeshUploadThread::discard()
 {
-	LLMutexLock lock(mMutex) ;
+	LLMutexLock lock(mMutex);
 	mDiscarded = true;
 }
 
 bool LLMeshUploadThread::isDiscarded() const
 {
-	LLMutexLock lock(mMutex) ;
-	return mDiscarded ;
+	LLMutexLock lock(mMutex);
+	return mDiscarded;
 }
 
 void LLMeshUploadThread::run()
@@ -2320,7 +2320,7 @@ void LLMeshUploadThread::wholeModelToLLSD(LLSD& dest, bool include_textures)
 				{
 					texture = FindViewerTexture(material);
 				}
-				
+
 				if ((texture != NULL) &&
 					(textures.find(texture) == textures.end()))
 				{
@@ -2729,7 +2729,7 @@ void LLMeshRepoThread::notifyLoadedMeshes()
 		LODRequest req = mUnavailableQ.front();
 		mUnavailableQ.pop();
 		mMutex->unlock();
-		
+
 		update_metrics = true;
 		gMeshRepo.notifyMeshUnavailable(req.mMeshParams, req.mLOD);
 	}
@@ -2865,7 +2865,7 @@ void LLMeshRepository::cacheOutgoingMesh(LLMeshUploadData& data, LLSD& header)
 void LLMeshHandlerBase::onCompleted(LLCore::HttpHandle handle, LLCore::HttpResponse * response)
 {
 	mProcessed = true;
-	
+
 	unsigned int retries(0U);
 	response->getRetries(NULL, &retries);
 	LLMeshRepository::sHTTPRetryCount += retries;
@@ -3061,7 +3061,7 @@ void LLMeshHeaderHandler::processData(LLCore::BufferArray * /* body */, S32 /* b
 				// zero out the rest of the file 
 				U8 block[MESH_HEADER_SIZE];
 				memset(block, 0, sizeof(block));
-	
+
 				while (bytes-file.tell() > sizeof(block))
 				{
 					file.write(block, sizeof(block));
@@ -3087,8 +3087,8 @@ LLMeshLODHandler::~LLMeshLODHandler()
 			gMeshRepo.mThread->lockAndLoadMeshLOD(mMeshParams, mLOD);
 		}
 		LLMeshRepoThread::decActiveLODRequests();
-		}
 	}
+}
 
 void LLMeshLODHandler::processFailure(LLCore::HttpStatus status)
 {
@@ -3552,7 +3552,7 @@ void LLMeshRepository::notifyLoadedMeshes()
 
 	//call completed callbacks on finished decompositions
 	mDecompThread->notifyCompleted();
-	
+
 	// For major operations, attempt to get the required locks
 	// without blocking and punt if they're not available.  The
 	// longest run of holdoffs is kept in sMaxLockHoldoffs just
@@ -3947,7 +3947,7 @@ LLSD& LLMeshRepoThread::getMeshHeader(const LLUUID& mesh_id)
 
 
 void LLMeshRepository::uploadModel(std::vector<LLModelInstance>& data, LLVector3& scale, bool upload_textures,
-									bool upload_skin, bool upload_joints, std::string upload_url, bool do_upload,
+								   bool upload_skin, bool upload_joints, std::string upload_url, bool do_upload,
 								   LLHandle<LLWholeModelFeeObserver> fee_observer, LLHandle<LLWholeModelUploadObserver> upload_observer)
 {
 	LLMeshUploadThread* thread = new LLMeshUploadThread(data, scale, upload_textures, upload_skin, upload_joints, upload_url, 
@@ -4462,15 +4462,15 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 		//stub. do nothing.
 		return;
 	}
-	
-	LLCDMeshData mesh;	
-//MK
+
+	LLCDMeshData mesh;
+	//MK
 #if 0
-//mk
+	//mk
 	setMeshData(mesh, true);
 
 	LLCDResult ret = decomp->buildSingleHull() ;
-	if(ret)
+	if (ret)
 	{
 		LL_WARNS(LOG_MESH) << "Could not execute decomposition stage when attempting to create single hull." << LL_ENDL;
 		make_box(mCurRequest);
@@ -4479,14 +4479,14 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 	{
 		{
 			LLMutexLock lock(mMutex);
-		mCurRequest->mHull.clear();
-		mCurRequest->mHull.resize(1);
-		mCurRequest->mHullMesh.clear();
+			mCurRequest->mHull.clear();
+			mCurRequest->mHull.resize(1);
+			mCurRequest->mHullMesh.clear();
 		}
 
 		std::vector<LLVector3> p;
 		LLCDHull hull;
-		
+
 		// if LLConvexDecomposition is a stub, num_hulls should have been set to 0 above, and we should not reach this code
 		decomp->getSingleHull(&hull);
 
@@ -4498,12 +4498,12 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 			p.push_back(vert);
 			v = (F32*) (((U8*) v) + hull.mVertexStrideBytes);
 		}
-						
+
 		{
 			LLMutexLock lock(mMutex);
-		mCurRequest->mHull[0] = p;
+			mCurRequest->mHull[0] = p;
 		}
-//MK
+		//MK
 #else
 	setMeshData(mesh, false);
 
@@ -4517,24 +4517,24 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 	{
 		param_count = decomp->getParameters(&params);
 	}
-	
+
 	for (S32 i = 0; i < param_count; ++i)
 	{
 		decomp->setParam(params[i].mName, params[i].mDefault.mIntOrEnumValue);
 	}
 
-	const S32 STAGE_DECOMPOSE = mStageID["Decompose"];	
+	const S32 STAGE_DECOMPOSE = mStageID["Decompose"];
 	const S32 STAGE_SIMPLIFY = mStageID["Simplify"];
 	const S32 DECOMP_PREVIEW = 0;
 	const S32 SIMPLIFY_RETAIN = 0;
-	
+
 	decomp->setParam("Decompose Quality", DECOMP_PREVIEW);
 	decomp->setParam("Simplify Method", SIMPLIFY_RETAIN);
 	decomp->setParam("Retain%", 0.f);
 
 	LLCDResult ret = LLCD_OK;
 	ret = decomp->executeStage(STAGE_DECOMPOSE);
-	
+
 	if (ret)
 	{
 		LL_WARNS() << "Could not execute decomposition stage when attempting to create single hull." << LL_ENDL;
@@ -4551,56 +4551,17 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 		}
 		else
 		{
-			S32 num_hulls =0;
-			if (LLConvexDecomposition::getInstance() != NULL)
-			{
-				num_hulls = LLConvexDecomposition::getInstance()->getNumHullsFromStage(STAGE_SIMPLIFY);
-			}
-	
-	for (S32 i = 0; i < param_count; ++i)
-	{
-		decomp->setParam(params[i].mName, params[i].mDefault.mIntOrEnumValue);
-	}
-
-	const S32 STAGE_DECOMPOSE = mStageID["Decompose"];	
-	const S32 STAGE_SIMPLIFY = mStageID["Simplify"];
-	const S32 DECOMP_PREVIEW = 0;
-	const S32 SIMPLIFY_RETAIN = 0;
-	
-	decomp->setParam("Decompose Quality", DECOMP_PREVIEW);
-	decomp->setParam("Simplify Method", SIMPLIFY_RETAIN);
-	decomp->setParam("Retain%", 0.f);
-
-	LLCDResult ret = LLCD_OK;
-	ret = decomp->executeStage(STAGE_DECOMPOSE);
-	
-	if (ret)
-	{
-		LL_WARNS() << "Could not execute decomposition stage when attempting to create single hull." << LL_ENDL;
-		make_box(mCurRequest);
-	}
-	else
-	{
-		ret = decomp->executeStage(STAGE_SIMPLIFY);
-
-		if (ret)
-		{
-			LL_WARNS() << "Could not execute simiplification stage when attempting to create single hull." << LL_ENDL;
-			make_box(mCurRequest);
-		}
-		else
-		{
-			S32 num_hulls =0;
+			S32 num_hulls = 0;
 			if (LLConvexDecomposition::getInstance() != NULL)
 			{
 				num_hulls = LLConvexDecomposition::getInstance()->getNumHullsFromStage(STAGE_SIMPLIFY);
 			}
 
 			{
-			LLMutexLock lock(mMutex);
-			mCurRequest->mHull.clear();
-			mCurRequest->mHull.resize(num_hulls);
-			mCurRequest->mHullMesh.clear();
+				LLMutexLock lock(mMutex);
+				mCurRequest->mHull.clear();
+				mCurRequest->mHull.resize(num_hulls);
+				mCurRequest->mHullMesh.clear();
 			}
 
 			for (S32 i = 0; i < num_hulls; ++i)
@@ -4614,57 +4575,25 @@ void LLPhysicsDecomp::doDecompositionSingleHull()
 
 				for (S32 j = 0; j < hull.mNumVertices; ++j)
 				{
-					LLVector3 vert(v[0], v[1], v[2]); 
+					LLVector3 vert(v[0], v[1], v[2]);
 					p.push_back(vert);
-					v = (F32*) (((U8*) v) + hull.mVertexStrideBytes);
-	}
+					v = (F32*)(((U8*)v) + hull.mVertexStrideBytes);
+				}
 
 	{
-				LLMutexLock lock(mMutex);
-				mCurRequest->mHull[i] = p;
-				}
+		LLMutexLock lock(mMutex);
+		mCurRequest->mHull[i] = p;
+	}
 			}
 		}
 	}
 #endif
-//mk
-			{
-			LLMutexLock lock(mMutex);
-			mCurRequest->mHull.clear();
-			mCurRequest->mHull.resize(num_hulls);
-			mCurRequest->mHullMesh.clear();
-			}
-
-			for (S32 i = 0; i < num_hulls; ++i)
-			{
-				std::vector<LLVector3> p;
-				LLCDHull hull;
-				// if LLConvexDecomposition is a stub, num_hulls should have been set to 0 above, and we should not reach this code
-				LLConvexDecomposition::getInstance()->getHullFromStage(STAGE_SIMPLIFY, i, &hull);
-
-				const F32* v = hull.mVertexBase;
-
-				for (S32 j = 0; j < hull.mNumVertices; ++j)
-				{
-					LLVector3 vert(v[0], v[1], v[2]); 
-					p.push_back(vert);
-					v = (F32*) (((U8*) v) + hull.mVertexStrideBytes);
-	}
-
-	{
-				LLMutexLock lock(mMutex);
-				mCurRequest->mHull[i] = p;
-				}
-			}
-		}
-	}
-#endif
-//mk
+	//mk
 	{
 		completeCurrent();
-		
+
 	}
-}
+	}
 
 //MK
 #ifdef K_HASCONVEXDECOMP_TRACER
@@ -4719,6 +4648,7 @@ public:
 #endif
 //mk
 
+
 void LLPhysicsDecomp::run()
 {
 	LLConvexDecomposition* decomp = LLConvexDecomposition::getInstance();
@@ -4729,15 +4659,6 @@ void LLPhysicsDecomp::run()
 		mInited = true;
 		return;
 	}
-
-//MK
-#ifdef K_HASCONVEXDECOMP_TRACER
-	kConvexDecompositionTracable *pTraceable = dynamic_cast< kConvexDecompositionTracable* >( decomp );
-
-	if( pTraceable )
-		pTraceable->setTracer( new kDecompTracer() );
-#endif
-//mk
 
 //MK
 #ifdef K_HASCONVEXDECOMP_TRACER
