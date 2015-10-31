@@ -506,6 +506,8 @@ public:
 
 	bool unlinkObjects();
 
+	void confirmUnlinkObjects(const LLSD& notification, const LLSD& response);
+
 	bool enableLinkObjects();
 
 	bool enableUnlinkObjects();
@@ -525,7 +527,7 @@ public:
 	void			clearGridObjects();
 	void			setGridMode(EGridMode mode);
 	EGridMode		getGridMode() { return mGridMode; }
-	void			getGrid(LLVector3& origin, LLQuaternion& rotation, LLVector3 &scale);
+	void			getGrid(LLVector3& origin, LLQuaternion& rotation, LLVector3 &scale, bool for_snap_guides = false);
 
 	BOOL getTEMode()		{ return mTEMode; }
 	void setTEMode(BOOL b)	{ mTEMode = b; }
@@ -759,6 +761,7 @@ private:
 	void sendListToRegions(	const std::string& message_name,
 							void (*pack_header)(void *user_data), 
 							void (*pack_body)(LLSelectNode* node, void *user_data), 
+							void (*log_func)(LLSelectNode* node, void *user_data), 
 							void *user_data,
 							ESendType send_type);
 
@@ -794,6 +797,9 @@ private:
 	static void packHingeHead(void *user_data);
 	static void packPermissionsHead(void* user_data);
 	static void packGodlikeHead(void* user_data);
+    static void logNoOp(LLSelectNode* node, void *user_data);
+    static void logAttachmentRequest(LLSelectNode* node, void *user_data);
+    static void logDetachRequest(LLSelectNode* node, void *user_data);
 	static bool confirmDelete(const LLSD& notification, const LLSD& response, LLObjectSelectionHandle handle);
 
 	// Get the first ID that matches test and whether or not all ids are identical in selected objects.

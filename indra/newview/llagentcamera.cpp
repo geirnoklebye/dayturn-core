@@ -148,6 +148,7 @@ LLAgentCamera::LLAgentCamera() :
 	mCameraUpVector(LLVector3::z_axis), // default is straight up
 
 	mFocusOnAvatar(TRUE),
+	mAllowChangeToFollow(FALSE),
 	mFocusGlobal(),
 	mFocusTargetGlobal(),
 	mFocusObject(NULL),
@@ -1176,8 +1177,10 @@ void LLAgentCamera::updateCamera()
 		mCameraUpVector = mCameraUpVector * gAgentAvatarp->getRenderRotation();
 	}
 
-	if (cameraThirdPerson() && mFocusOnAvatar && LLFollowCamMgr::getActiveFollowCamParams())
+	if (cameraThirdPerson() && (mFocusOnAvatar || mAllowChangeToFollow) && LLFollowCamMgr::getActiveFollowCamParams())
 	{
+		mAllowChangeToFollow = FALSE;
+		mFocusOnAvatar = TRUE;
 		changeCameraToFollow();
 	}
 
@@ -2641,6 +2644,7 @@ void LLAgentCamera::setFocusOnAvatar(BOOL focus_on_avatar, BOOL animate)
 	{
 		// keep camera focus point consistent, even though it is now unlocked
 		setFocusGlobal(gAgent.getPositionGlobal() + calcThirdPersonFocusOffset(), gAgent.getID());
+		mAllowChangeToFollow = FALSE;
 	}
 	
 	mFocusOnAvatar = focus_on_avatar;
@@ -2763,7 +2767,7 @@ BOOL LLAgentCamera::setPointAt(EPointAtType target_type, LLViewerObject *object,
 {
 	static LLUICachedControl<bool> private_pointat("PrivatePointAtTarget", true);
 
-	if (object && (object->isAttachment() || object->isAvatar()) || private_pointat)
+	if ((object && (object->isAttachment() || object->isAvatar())) || private_pointat)
 	{
 		return FALSE;
 	}

@@ -318,6 +318,7 @@ bool LLAvatarIconCtrl::updateFromCache()
 	else
 	{
 		LLIconCtrl::setValue(mDefaultIconName);
+        return false;
 	}
 
 	return true;

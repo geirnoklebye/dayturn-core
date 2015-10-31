@@ -249,27 +249,27 @@ void LLStreamingAudio_FMODEX::update()
 						case(FMOD_TAGDATATYPE_INT):
 						{
 							(mMetadata)[name]=*(LLSD::Integer*)(tag.data);
-							LL_DEBUGS("StreamMetadata") << tag.name << ": " << *(int*)(tag.data) << LL_ENDL;
+							LL_DEBUGS("FmodEX") << tag.name << ": " << *(int*)(tag.data) << LL_ENDL;
 							break;
 						}
 						case(FMOD_TAGDATATYPE_FLOAT):
 						{
 							(mMetadata)[name]=*(LLSD::Real*)(tag.data);
-							LL_DEBUGS("StreamMetadata") << tag.name << ": " << *(float*)(tag.data) << LL_ENDL;
+							LL_DEBUGS("FmodEX") << tag.name << ": " << *(float*)(tag.data) << LL_ENDL;
 							break;
 						}
 						case(FMOD_TAGDATATYPE_STRING):
 						{
 							std::string out = rawstr_to_utf8(std::string((char*)tag.data,tag.datalen));
 							(mMetadata)[name]=out;
-							LL_DEBUGS("StreamMetadata") << tag.name << ": " << out << LL_ENDL;
+							LL_DEBUGS("FmodEX") << tag.name << ": " << out << LL_ENDL;
 							break;
 						}
 						case(FMOD_TAGDATATYPE_STRING_UTF16):
 						{
 							std::string out((char*)tag.data,tag.datalen);
 							(mMetadata)[std::string(tag.name)]=out;
-							LL_DEBUGS("StreamMetadata") << tag.name << ": " << out << LL_ENDL;
+							LL_DEBUGS("FmodEX") << tag.name << ": " << out << LL_ENDL;
 							break;
 						}
 						case(FMOD_TAGDATATYPE_STRING_UTF16BE):
@@ -279,7 +279,7 @@ void LLStreamingAudio_FMODEX::update()
 							//for(U32 j = 0; j < out.size()/2; ++j)
 								//(((buf[j] & 0xff)<<8) | ((buf[j] & 0xff00)>>8));
 							(mMetadata)[std::string(tag.name)]=out;
-							LL_DEBUGS("StreamMetadata") << tag.name << ": " << out << LL_ENDL;
+							LL_DEBUGS("FmodEX") << tag.name << ": " << out << LL_ENDL;
 							break;
 						}
 						default:

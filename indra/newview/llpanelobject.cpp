@@ -1865,9 +1865,10 @@ void LLPanelObject::sendSculpt()
 		return;
 	
 	LLSculptParams sculpt_params;
+	LLUUID sculpt_id = LLUUID::null;
 
 	if (mCtrlSculptTexture)
-		sculpt_params.setSculptTexture(mCtrlSculptTexture->getImageAssetID());
+		sculpt_id = mCtrlSculptTexture->getImageAssetID();
 
 	U8 sculpt_type = 0;
 	
@@ -1891,7 +1892,7 @@ void LLPanelObject::sendSculpt()
 	if ((mCtrlSculptInvert) && (mCtrlSculptInvert->get()))
 		sculpt_type |= LL_SCULPT_FLAG_INVERT;
 	
-	sculpt_params.setSculptType(sculpt_type);
+	sculpt_params.setSculptTexture(sculpt_id, sculpt_type);
 	mObject->setParameterEntry(LLNetworkData::PARAMS_SCULPT, sculpt_params, TRUE);
 }
 
@@ -2131,7 +2132,11 @@ void LLPanelObject::onCancelSculpt(const LLSD& data)
 	LLTextureCtrl* mTextureCtrl = getChild<LLTextureCtrl>("sculpt texture control");
 	if(!mTextureCtrl)
 		return;
-	
+
+	if(mSculptTextureRevert == LLUUID::null)
+	{
+		mSculptTextureRevert = LLUUID(SCULPT_DEFAULT_TEXTURE);
+	}
 	mTextureCtrl->setImageAssetID(mSculptTextureRevert);
 	
 	sendSculpt();
@@ -2435,11 +2440,7 @@ void LLPanelObject::onPasteParams(const LLSD& data)
 		LLSculptParams sculpt_params;
 
 		if (mPramsClipboard.has("sculptid"))
-			sculpt_params.setSculptTexture(mPramsClipboard["sculptid"].asUUID());
-
-		if (mPramsClipboard.has("sculptid"))
-			sculpt_params.setSculptType((U8)mPramsClipboard["sculpt_type"].asInteger());
-
+			sculpt_params.setSculptTexture(mPramsClipboard["sculptid"].asUUID(), (U8)mPramsClipboard["sculpt_type"].asInteger());
 		objectp->setParameterEntry(LLNetworkData::PARAMS_SCULPT, sculpt_params, TRUE);
 	}
 	else

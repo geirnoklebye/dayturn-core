@@ -157,20 +157,75 @@ void ll_nvapi_init(NvDRSSessionHandle hSession)
 	std::string app_name = LLTrans::getString("APP_NAME");
 	llutf16string w_app_name = utf8str_to_utf16str(app_name);
 	wsprintf(profile_name, L"%s", w_app_name.c_str());
-	status = NvAPI_DRS_SetCurrentGlobalProfile(hSession, profile_name);
-	if (status != NVAPI_OK)
+
+	NvDRSProfileHandle hProfile = 0;
+	// Check if we already have a Firestorm profile
+	status = NvAPI_DRS_FindProfileByName(hSession, profile_name, &hProfile);
+	if (status != NVAPI_OK && status != NVAPI_PROFILE_NOT_FOUND)
 	{
 		nvapi_error(status);
 		return;
 	}
+	else if (status == NVAPI_PROFILE_NOT_FOUND)
+	{
+		// Don't have a Viewer profile yet - create one
+		LL_INFOS() << "Creating Viewer profile for NVIDIA driver" << LL_ENDL;
 
-	// (3) Obtain the current profile. 
-	NvDRSProfileHandle hProfile = 0;
-	status = NvAPI_DRS_GetCurrentGlobalProfile(hSession, &hProfile);
-	if (status != NVAPI_OK) 
+		NVDRS_PROFILE profileInfo;
+		profileInfo.version = NVDRS_PROFILE_VER;
+		profileInfo.isPredefined = 0;
+		wsprintf(profileInfo.profileName, L"%s", w_app_name.c_str());
+
+		status = NvAPI_DRS_CreateProfile(hSession, &profileInfo, &hProfile);
+		if (status != NVAPI_OK)
+		{
+			nvapi_error(status);
+			return;
+		}
+	}
+
+	// Check if current exe is part of the profile
+	std::string exe_name = gDirUtilp->getExecutableFilename();
+	NVDRS_APPLICATION profile_application;
+	profile_application.version = NVDRS_APPLICATION_VER;
+
+	llutf16string w_exe_name = utf8str_to_utf16str(exe_name);
+	NvAPI_UnicodeString profile_app_name;
+	wsprintf(profile_app_name, L"%s", w_exe_name.c_str());
+
+	status = NvAPI_DRS_GetApplicationInfo(hSession, hProfile, profile_app_name, &profile_application);
+	if (status != NVAPI_OK && status != NVAPI_EXECUTABLE_NOT_FOUND)
 	{
 		nvapi_error(status);
 		return;
+	}
+	else if (status == NVAPI_EXECUTABLE_NOT_FOUND)
+	{
+		LL_INFOS() << "Creating application for " << exe_name << " for NVIDIA driver" << LL_ENDL;
+
+		// Add this exe to the profile
+		NVDRS_APPLICATION application;
+		application.version = NVDRS_APPLICATION_VER;
+		application.isPredefined = 0;
+		wsprintf(application.appName, L"%s", w_exe_name.c_str());
+		wsprintf(application.userFriendlyName, L"%s", w_exe_name.c_str());
+		wsprintf(application.launcher, L"%s", w_exe_name.c_str());
+		wsprintf(application.fileInFolder, L"%s", "");
+
+		status = NvAPI_DRS_CreateApplication(hSession, hProfile, &application);
+		if (status != NVAPI_OK)
+		{
+			nvapi_error(status);
+			return;
+		}
+
+		// Save application in case we added one
+		status = NvAPI_DRS_SaveSettings(hSession);
+		if (status != NVAPI_OK) 
+		{
+			nvapi_error(status);
+			return;
+		}
 	}
 
 	// load settings for querying 
@@ -517,7 +572,7 @@ bool LLAppViewerWin32::init()
 	// (Don't send our data to Microsoft--at least until we are Logo approved and have a way
 	// of getting the data back from them.)
 	//
-	// LL_INFOS() << "Turning off Windows error reporting." << LL_ENDL;
+	LL_INFOS() << "Turning off Windows error reporting." << LL_ENDL;
 	disableWinErrorReporting();
 
 #ifndef LL_RELEASE_FOR_DOWNLOAD
@@ -630,6 +685,7 @@ bool LLAppViewerWin32::initHardwareTest()
 		std::string splash_msg;
 		LLStringUtil::format_map_t args;
 		args["[APP_NAME]"] = LLAppViewer::instance()->getSecondLifeTitle();
+		args["[CURRENT_GRID]"] = LLGridManager::getInstance()->getGridLabel();
 		splash_msg = LLTrans::getString("StartupLoading", args);
 
 		LLSplashScreen::update(splash_msg);

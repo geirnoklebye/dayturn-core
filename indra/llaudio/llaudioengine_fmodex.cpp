@@ -69,7 +69,7 @@ inline bool Check_FMOD_Error(FMOD_RESULT result, const char *string)
 {
 	if(result == FMOD_OK)
 		return false;
-	LL_DEBUGS() << string << " Error: " << FMOD_ErrorString(result) << LL_ENDL;
+	LL_DEBUGS("FmodEX") << string << " Error: " << FMOD_ErrorString(result) << LL_ENDL;
 	return true;
 }
 
@@ -100,7 +100,7 @@ bool LLAudioEngine_FMODEX::init(const S32 num_channels, void* userdata)
 	U32 version;
 	FMOD_RESULT result;
 
-	LL_DEBUGS("AppInit") << "LLAudioEngine_FMODEX::init() initializing FMOD" << LL_ENDL;
+	LL_DEBUGS("FmodEX") << "LLAudioEngine_FMODEX::init() initializing FMOD" << LL_ENDL;
 
 	//result = FMOD::Memory_Initialize(NULL, 0, &decode_alloc, &decode_realloc, &decode_dealloc, FMOD_MEMORY_STREAM_DECODE | FMOD_MEMORY_STREAM_FILE);
 	//if(Check_FMOD_Error(result, "FMOD::Memory_Initialize"))
@@ -121,7 +121,7 @@ bool LLAudioEngine_FMODEX::init(const S32 num_channels, void* userdata)
 
 	if (version < FMOD_VERSION)
 	{
-		LL_WARNS("AppInit") << "Error : You are using the wrong FMOD Ex version (" << version
+		LL_WARNS("FmodEX") << "Error : You are using the wrong FMOD Ex version (" << version
 			<< ")!  You should be using FMOD Ex" << FMOD_VERSION << LL_ENDL;
 	}
 
@@ -149,11 +149,11 @@ bool LLAudioEngine_FMODEX::init(const S32 num_channels, void* userdata)
 	{
 		if (NULL == getenv("LL_BAD_FMOD_PULSEAUDIO")) /*Flawfinder: ignore*/
 		{
-			LL_DEBUGS("AppInit") << "Trying PulseAudio audio output..." << LL_ENDL;
+			LL_DEBUGS("FmodEX") << "Trying PulseAudio audio output..." << LL_ENDL;
 			if(mSystem->setOutput(FMOD_OUTPUTTYPE_PULSEAUDIO) == FMOD_OK &&
 				(result = mSystem->init(num_channels + 2, fmod_flags, 0)) == FMOD_OK)
 			{
-				LL_DEBUGS("AppInit") << "PulseAudio output initialized OKAY"	<< LL_ENDL;
+				LL_DEBUGS("FmodEX") << "PulseAudio output initialized OKAY"	<< LL_ENDL;
 				audio_ok = true;
 			}
 			else 
@@ -163,18 +163,18 @@ bool LLAudioEngine_FMODEX::init(const S32 num_channels, void* userdata)
 		} 
 		else 
 		{
-			LL_DEBUGS("AppInit") << "PulseAudio audio output SKIPPED" << LL_ENDL;
+			LL_DEBUGS("FmodEX") << "PulseAudio audio output SKIPPED" << LL_ENDL;
 		}	
 	}
 	if (!audio_ok)
 	{
 		if (NULL == getenv("LL_BAD_FMOD_ALSA"))		/*Flawfinder: ignore*/
 		{
-			LL_DEBUGS("AppInit") << "Trying ALSA audio output..." << LL_ENDL;
+			LL_DEBUGS("FmodEX") << "Trying ALSA audio output..." << LL_ENDL;
 			if(mSystem->setOutput(FMOD_OUTPUTTYPE_ALSA) == FMOD_OK &&
 			    (result = mSystem->init(num_channels + 2, fmod_flags, 0)) == FMOD_OK)
 			{
-				LL_DEBUGS("AppInit") << "ALSA audio output initialized OKAY" << LL_ENDL;
+				LL_DEBUGS("FmodEX") << "ALSA audio output initialized OKAY" << LL_ENDL;
 				audio_ok = true;
 			} 
 			else 
@@ -184,18 +184,18 @@ bool LLAudioEngine_FMODEX::init(const S32 num_channels, void* userdata)
 		} 
 		else 
 		{
-			LL_DEBUGS("AppInit") << "ALSA audio output SKIPPED" << LL_ENDL;
+			LL_DEBUGS("FmodEX") << "ALSA audio output SKIPPED" << LL_ENDL;
 		}
 	}
 	if (!audio_ok)
 	{
 		if (NULL == getenv("LL_BAD_FMOD_OSS")) 	 /*Flawfinder: ignore*/
 		{
-			LL_DEBUGS("AppInit") << "Trying OSS audio output..." << LL_ENDL;
+			LL_DEBUGS("FmodEX") << "Trying OSS audio output..." << LL_ENDL;
 			if(mSystem->setOutput(FMOD_OUTPUTTYPE_OSS) == FMOD_OK &&
 			    (result = mSystem->init(num_channels + 2, fmod_flags, 0)) == FMOD_OK)
 			{
-				LL_DEBUGS("AppInit") << "OSS audio output initialized OKAY" << LL_ENDL;
+				LL_DEBUGS("FmodEX") << "OSS audio output initialized OKAY" << LL_ENDL;
 				audio_ok = true;
 			}
 			else
@@ -205,12 +205,12 @@ bool LLAudioEngine_FMODEX::init(const S32 num_channels, void* userdata)
 		}
 		else 
 		{
-			LL_DEBUGS("AppInit") << "OSS audio output SKIPPED" << LL_ENDL;
+			LL_DEBUGS("FmodEX") << "OSS audio output SKIPPED" << LL_ENDL;
 		}
 	}
 	if (!audio_ok)
 	{
-		LL_WARNS("AppInit") << "Overall audio init failure." << LL_ENDL;
+		LL_WARNS("FmodEX") << "Overall audio init failure." << LL_ENDL;
 		return false;
 	}
 
@@ -221,15 +221,15 @@ bool LLAudioEngine_FMODEX::init(const S32 num_channels, void* userdata)
 	switch (output_type)
 	{
 		case FMOD_OUTPUTTYPE_NOSOUND: 
-			LL_INFOS("AppInit") << "Audio output: NoSound" << LL_ENDL; break;
+			LL_INFOS("FmodEX") << "Audio output: NoSound" << LL_ENDL; break;
 		case FMOD_OUTPUTTYPE_PULSEAUDIO:	
-			LL_INFOS("AppInit") << "Audio output: PulseAudio" << LL_ENDL; break;
+			LL_INFOS("FmodEX") << "Audio output: PulseAudio" << LL_ENDL; break;
 		case FMOD_OUTPUTTYPE_ALSA: 
-			LL_INFOS("AppInit") << "Audio output: ALSA" << LL_ENDL; break;
+			LL_INFOS("FmodEX") << "Audio output: ALSA" << LL_ENDL; break;
 		case FMOD_OUTPUTTYPE_OSS:	
-			LL_INFOS("AppInit") << "Audio output: OSS" << LL_ENDL; break;
+			LL_INFOS("FmodEX") << "Audio output: OSS" << LL_ENDL; break;
 		default:
-			LL_INFOS("AppInit") << "Audio output: Unknown!" << LL_ENDL; break;
+			LL_INFOS("FmodEX") << "Audio output: Unknown!" << LL_ENDL; break;
 	};
 #else // LL_LINUX
 
@@ -256,32 +256,32 @@ bool LLAudioEngine_FMODEX::init(const S32 num_channels, void* userdata)
 	if (!getStreamingAudioImpl()) // no existing implementation added
 		setStreamingAudioImpl(new LLStreamingAudio_FMODEX(mSystem));
 
-	LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::init() FMOD Ex initialized correctly" << LL_ENDL;
+	LL_INFOS("FmodEX") << "LLAudioEngine_FMODEX::init() FMOD Ex initialized correctly" << LL_ENDL;
 
 	int r_numbuffers, r_samplerate, r_channels, r_bits;
 	unsigned int r_bufferlength;
 	mSystem->getDSPBufferSize(&r_bufferlength, &r_numbuffers);
-	LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::init(): r_bufferlength=" << r_bufferlength << " bytes" << LL_ENDL;
-	LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::init(): r_numbuffers=" << r_numbuffers << LL_ENDL;
+	LL_INFOS("FmodEX") << "LLAudioEngine_FMODEX::init(): r_bufferlength=" << r_bufferlength << " bytes" << LL_ENDL;
+	LL_INFOS("FmodEX") << "LLAudioEngine_FMODEX::init(): r_numbuffers=" << r_numbuffers << LL_ENDL;
 
 	mSystem->getSoftwareFormat(&r_samplerate, NULL, &r_channels, NULL, NULL, &r_bits);
-	LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::init(): r_samplerate=" << r_samplerate << "Hz" << LL_ENDL;
-	LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::init(): r_channels=" << r_channels << LL_ENDL;
-	LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::init(): r_bits =" << r_bits << LL_ENDL;
+	LL_INFOS("FmodEX") << "LLAudioEngine_FMODEX::init(): r_samplerate=" << r_samplerate << "Hz" << LL_ENDL;
+	LL_INFOS("FmodEX") << "LLAudioEngine_FMODEX::init(): r_channels=" << r_channels << LL_ENDL;
+	LL_INFOS("FmodEX") << "LLAudioEngine_FMODEX::init(): r_bits =" << r_bits << LL_ENDL;
 
 	char r_name[512];
 	mSystem->getDriverInfo(0, r_name, 511, 0);
 	r_name[511] = '\0';
-	LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::init(): r_name=\"" << r_name << "\"" <<  LL_ENDL;
+	LL_INFOS("FmodEX") << "LLAudioEngine_FMODEX::init(): r_name=\"" << r_name << "\"" <<  LL_ENDL;
 
 	int latency = 100; // optimistic default - i suspect if sample rate is 0, everything breaks. 
 	if ( r_samplerate != 0 )
 		latency = (int)(1000.0f * r_bufferlength * r_numbuffers / r_samplerate);
-	LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::init(): latency=" << latency << "ms" << LL_ENDL;
+	LL_INFOS("FmodEX") << "LLAudioEngine_FMODEX::init(): latency=" << latency << "ms" << LL_ENDL;
 
 	mInited = true;
 
-	LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::init(): initialization complete." << LL_ENDL;
+	LL_INFOS("FmodEX") << "LLAudioEngine_FMODEX::init(): initialization complete." << LL_ENDL;
 
 	return true;
 }
@@ -307,7 +307,7 @@ void LLAudioEngine_FMODEX::allocateListener(void)
 	mListenerp = (LLListener *) new LLListener_FMODEX(mSystem);
 	if (!mListenerp)
 	{
-		LL_WARNS() << "Listener creation failed" << LL_ENDL;
+		LL_WARNS("FmodEX") << "Listener creation failed" << LL_ENDL;
 	}
 }
 

@@ -448,9 +448,9 @@ void LLFloaterSnapshot::Impl::updateControls(LLFloaterSnapshot* floater)
 
 	floater->getChild<LLUICtrl>("file_size_label")->setTextArg("[SIZE]", got_snap ? bytes_string : floater->getString("unknown"));
 	floater->getChild<LLUICtrl>("file_size_label")->setColor(
-		shot_type == LLSnapshotLivePreview::SNAPSHOT_POSTCARD 
-		&& got_bytes
-		&& previewp->getDataSize() > MAX_POSTCARD_DATASIZE ? LLUIColor(LLColor4::red) : LLUIColorTable::instance().getColor( "LabelTextColor" ));
+			shot_type == LLSnapshotLivePreview::SNAPSHOT_POSTCARD
+			&& got_bytes
+			&& previewp->getDataSize() > MAX_POSTCARD_DATASIZE ? LLUIColor(LLColor4::red) : LLUIColorTable::instance().getColor( "LabelTextColor" ));
 
 	// Update the width and height spinners based on the corresponding resolution combos. (?)
 	switch(shot_type)
@@ -600,7 +600,11 @@ void LLFloaterSnapshot::Impl::onClickUICheck(LLUICtrl *ctrl, void* data)
 	LLFloaterSnapshot *view = (LLFloaterSnapshot *)data;
 	if (view)
 	{
-		checkAutoSnapshot(getPreviewView(view), TRUE);
+		LLSnapshotLivePreview* previewp = getPreviewView(view);
+		if(previewp)
+		{
+			previewp->updateSnapshot(TRUE, TRUE);
+		}
 		updateControls(view);
 	}
 }
@@ -614,7 +618,11 @@ void LLFloaterSnapshot::Impl::onClickHUDCheck(LLUICtrl *ctrl, void* data)
 	LLFloaterSnapshot *view = (LLFloaterSnapshot *)data;
 	if (view)
 	{
-		checkAutoSnapshot(getPreviewView(view), TRUE);
+		LLSnapshotLivePreview* previewp = getPreviewView(view);
+		if(previewp)
+		{
+			previewp->updateSnapshot(TRUE, TRUE);
+		}
 		updateControls(view);
 	}
 }
@@ -655,13 +663,19 @@ void LLFloaterSnapshot::Impl::onCommitFreezeFrame(LLUICtrl* ctrl, void* data)
 {
 	LLCheckBoxCtrl* check_box = (LLCheckBoxCtrl*)ctrl;
 	LLFloaterSnapshot *view = (LLFloaterSnapshot *)data;
+	LLSnapshotLivePreview* previewp = getPreviewView(view);
 		
-	if (!view || !check_box)
+	if (!view || !check_box || !previewp)
 	{
 		return;
 	}
 
 	gSavedSettings.setBOOL("UseFreezeFrame", check_box->get());
+
+	if (check_box->get())
+	{
+		previewp->prepareFreezeFrame();
+	}
 
 	updateLayout(view);
 }
@@ -801,8 +815,16 @@ void LLFloaterSnapshot::Impl::updateResolution(LLUICtrl* ctrl, void* data, BOOL 
 				// Limit custom size for inventory snapshots to 512x512 px.
 				if (getActiveSnapshotType(view) == LLSnapshotLivePreview::SNAPSHOT_TEXTURE)
 				{
-					new_width = llmin(new_width, MAX_TEXTURE_SIZE);
-					new_height = llmin(new_height, MAX_TEXTURE_SIZE);
+					if (gIsInSecondLife)
+					{
+						new_width = llmin(new_width, MAX_TEXTURE_SIZE);
+						new_height = llmin(new_height, MAX_TEXTURE_SIZE);
+					}
+					else
+					{
+						new_width = llmin(new_width, (MAX_TEXTURE_SIZE * 2));
+						new_height = llmin(new_height, (MAX_TEXTURE_SIZE * 2));
+					}
 				}
 			}
 			else

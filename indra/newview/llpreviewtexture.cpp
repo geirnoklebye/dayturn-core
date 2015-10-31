@@ -37,6 +37,9 @@
 #include "llfloaterreg.h"
 #include "llimagetga.h"
 #include "llimagepng.h"
+#include "llimagejpeg.h"
+#include "llimagej2c.h"
+#include "llimagebmp.h"
 #include "llinventory.h"
 #include "llnotificationsutil.h"
 #include "llresmgr.h"
@@ -391,6 +394,18 @@ void LLPreviewTexture::onFileLoadedForSave(BOOL success,
 		{
 			image = new LLImageTGA;
 		}
+		else if(extension == "jpg" || extension == "jpeg")
+		{
+			image = new LLImageJPEG;
+		}
+		else if(extension == "j2c")
+		{
+			image = new LLImageJ2C;
+		}
+		else if(extension == "bmp")
+		{
+			image = new LLImageBMP;
+		}
 
 		if( image && !image->encode( src, 0 ) )
 		{
@@ -623,4 +638,5 @@ void LLPreviewTexture::setObjectID(const LLUUID& object_id)
 		mAssetStatus = PREVIEW_ASSET_UNLOADED;
 		loadAsset();
 	}
+	refreshFromItem();
 }

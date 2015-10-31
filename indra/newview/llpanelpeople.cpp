@@ -85,6 +85,8 @@ static const std::string RECENT_TAB_NAME	= "recent_panel";
 static const std::string BLOCKED_TAB_NAME	= "blocked_panel"; // blocked avatars
 static const std::string COLLAPSED_BY_USER  = "collapsed_by_user";
 
+const S32 BASE_MAX_AGENT_GROUPS = 42;
+const S32 PREMIUM_MAX_AGENT_GROUPS = 60;
 
 extern S32 gMaxAgentGroups;
 
@@ -588,6 +590,7 @@ BOOL LLPanelPeople::postBuild()
 	getChild<LLFilterEditor>("groups_filter_input")->setCommitCallback(boost::bind(&LLPanelPeople::onFilterEdit, this, _2));
 	getChild<LLFilterEditor>("recent_filter_input")->setCommitCallback(boost::bind(&LLPanelPeople::onFilterEdit, this, _2));
 	getChild<LLFilterEditor>("fbc_filter_input")->setCommitCallback(boost::bind(&LLPanelPeople::onFilterEdit, this, _2));
+	getChild<LLTextBox>("groupcount")->setURLClickedCallback(boost::bind(&LLPanelPeople::onGroupLimitInfo, this));
 
 	mTabContainer = getChild<LLTabContainer>("tabs");
 	mTabContainer->setCommitCallback(boost::bind(&LLPanelPeople::onTabSelected, this, _2));
@@ -905,8 +908,11 @@ void LLPanelPeople::updateButtons()
 
 		LLPanel* groups_panel = mTabContainer->getCurrentPanel();
 		groups_panel->getChildView("minus_btn")->setEnabled(item_selected && selected_id.notNull()); // a real group selected
-		groups_panel->getChild<LLUICtrl>("groupcount")->setTextArg("[COUNT]", llformat("%d",gAgent.mGroups.size()));
-		groups_panel->getChild<LLUICtrl>("groupcount")->setTextArg("[REMAINING]", llformat("%d",(gMaxAgentGroups-gAgent.mGroups.size())));
+
+		U32 groups_count = gAgent.mGroups.size();
+		U32 groups_ramaining = gMaxAgentGroups > groups_count ? gMaxAgentGroups - groups_count : 0;
+		groups_panel->getChild<LLUICtrl>("groupcount")->setTextArg("[COUNT]", llformat("%d", groups_count));
+		groups_panel->getChild<LLUICtrl>("groupcount")->setTextArg("[REMAINING]", llformat("%d", groups_ramaining));
 	}
 	else
 	{
@@ -1117,6 +1123,14 @@ void LLPanelPeople::onFilterEdit(const std::string& search_string)
 	}
 }
 
+void LLPanelPeople::onGroupLimitInfo()
+{
+	LLSD args;
+	args["MAX_BASIC"] = BASE_MAX_AGENT_GROUPS;
+	args["MAX_PREMIUM"] = PREMIUM_MAX_AGENT_GROUPS;
+	LLNotificationsUtil::add("GroupLimitInfo", args);
+}
+
 void LLPanelPeople::onTabSelected(const LLSD& param)
 {
 	std::string tab_name = getChild<LLPanel>(param.asString())->getName();
@@ -1315,8 +1329,12 @@ void LLPanelPeople::onFriendsViewSortMenuItemClicked(const LLSD& userdata)
 	}
 	else if (chosen_item == "view_icons")
 	{
-		mAllFriendList->toggleIcons();
-		mOnlineFriendList->toggleIcons();
+		std::string param = mAllFriendList->getIconParamName();
+		gSavedSettings.setBOOL(param, !(gSavedSettings.getBOOL(param) && !gSavedSettings.getBOOL("GlobalShowIconsOverride")));
+		gSavedSettings.setBOOL("GlobalShowIconsOverride", (!gSavedSettings.getBOOL(param) && gSavedSettings.getBOOL("GlobalShowIconsOverride")));
+		gSavedSettings.setBOOL(mOnlineFriendList->getIconParamName(), gSavedSettings.getBOOL(param));
+		mAllFriendList->setIconsVisible(gSavedSettings.getBOOL(param));
+		mOnlineFriendList->setIconsVisible(gSavedSettings.getBOOL(param));
 	}
 	else if (chosen_item == "view_permissions")
 	{
@@ -1361,7 +1379,10 @@ void LLPanelPeople::onNearbyViewSortMenuItemClicked(const LLSD& userdata)
 	}
 	else if (chosen_item == "view_icons")
 	{
-		mNearbyList->toggleIcons();
+		std::string param = mNearbyList->getIconParamName();
+		gSavedSettings.setBOOL(param, !(gSavedSettings.getBOOL(param) && !gSavedSettings.getBOOL("GlobalShowIconsOverride")));
+		gSavedSettings.setBOOL("GlobalShowIconsOverride", (!gSavedSettings.getBOOL(param) && gSavedSettings.getBOOL("GlobalShowIconsOverride")));
+		mNearbyList->setIconsVisible(gSavedSettings.getBOOL(param));
 	}
 	else if (chosen_item == "sort_distance")
 	{
@@ -1394,6 +1415,8 @@ bool LLPanelPeople::onNearbyViewSortMenuItemCheck(const LLSD& userdata)
 	else if (item == "view_login_names") {
 		return gSavedSettings.getBOOL("UseCompleteNameInLists");
 	}
+	if (item == "view_icons")
+		return gSavedSettings.getBOOL(mNearbyList->getIconParamName()) && !gSavedSettings.getBOOL("GlobalShowIconsOverride");
 
 	return false;
 }
@@ -1412,7 +1435,10 @@ void LLPanelPeople::onRecentViewSortMenuItemClicked(const LLSD& userdata)
 	}
 	else if (chosen_item == "view_icons")
 	{
-		mRecentList->toggleIcons();
+		std::string param = mRecentList->getIconParamName();
+		gSavedSettings.setBOOL(param, !(gSavedSettings.getBOOL(param) && !gSavedSettings.getBOOL("GlobalShowIconsOverride")));
+		gSavedSettings.setBOOL("GlobalShowIconsOverride", (!gSavedSettings.getBOOL(param) && gSavedSettings.getBOOL("GlobalShowIconsOverride")));
+		mRecentList->setIconsVisible(gSavedSettings.getBOOL(param));
 	}
 	else if (chosen_item == "view_login_names") {
 		gSavedSettings.setBOOL(
@@ -1439,6 +1465,8 @@ bool LLPanelPeople::onFriendsViewSortMenuItemCheck(const LLSD& userdata)
 	else if (item == "view_login_names") {
 		return gSavedSettings.getBOOL("UseCompleteNameInLists");
 	}
+	if (item == "view_icons")
+		return gSavedSettings.getBOOL(mAllFriendList->getIconParamName()) && !gSavedSettings.getBOOL("GlobalShowIconsOverride");
 
 	return false;
 }
@@ -1457,6 +1485,8 @@ bool LLPanelPeople::onRecentViewSortMenuItemCheck(const LLSD& userdata)
 	else if (item == "view_login_names") {
 		return gSavedSettings.getBOOL("UseCompleteNameInLists");
 	}
+	if (item == "view_icons")
+		return gSavedSettings.getBOOL(mRecentList->getIconParamName()) && !gSavedSettings.getBOOL("GlobalShowIconsOverride");
 
 	return false;
 }

@@ -58,6 +58,7 @@
 #include "llcallingcard.h"
 #include "llbuycurrencyhtml.h"
 #include "llfirstuse.h"
+#include "llfloaterbump.h"
 #include "llfloaterbuyland.h"
 #include "llfloaterland.h"
 #include "llfloaterregioninfo.h"
@@ -72,6 +73,7 @@
 #include "llinventoryobserver.h"
 #include "llinventorypanel.h"
 #include "llfloaterimnearbychat.h"
+#include "llmarketplacefunctions.h"
 #include "llnotifications.h"
 #include "llnotificationsutil.h"
 #include "llpanelgrouplandmoney.h"
@@ -2354,7 +2356,8 @@ static void god_message_name_cb(const LLAvatarName& av_name, LLChat chat, std::s
 	LLNotificationsUtil::add("GodMessage", args);
 
 	// Treat like a system message and put in chat history.
-	chat.mText = av_name.getCompleteName() + ": " + message;
+	chat.mSourceType = CHAT_SOURCE_SYSTEM;
+	chat.mText = message;
 
 	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
 	if (nearby_chat)
@@ -2686,6 +2689,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				payload["sender_name"] = name;
 				payload["group_id"] = group_id;
 				payload["inventory_name"] = item_name;
+ 				payload["received_time"] = LLDate::now();
 				if(info && info->asLLSD())
 				{
 					payload["inventory_offer"] = info->asLLSD();
@@ -2712,6 +2716,13 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 		break;
 	case IM_GROUP_INVITATION:
 		{
+			if (!is_muted)
+			{
+				// group is not blocked, but we still need to check agent that sent the invitation
+				// and we have no agent's id
+				// Note: server sends username "first.last".
+				is_muted |= LLMuteList::getInstance()->isMuted(name);
+			}
 			if (is_do_not_disturb || is_muted)
 			{
 				send_do_not_disturb_message(msg, from_id);
@@ -2858,6 +2869,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 	
 	case IM_FROM_TASK:
 		{
+
 			if (is_do_not_disturb && !is_owned_by_me)
 			{
 				return;
@@ -2941,17 +2953,13 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			payload["from_id"] = from_id;
 			payload["slurl"] = location;
 			payload["name"] = name;
-			std::string session_name;
+
 			if (from_group)
 			{
 				payload["group_owned"] = "true";
 			}
 
-			LLNotification::Params params("ServerObjectMessage");
-			params.substitutions = substitutions;
-			params.payload = payload;
-
-			LLPostponedNotification::add<LLPostponedServerObjectNotification>(params, from_id, from_group);
+			LLNotificationsUtil::add("ServerObjectMessage", substitutions, payload);
 		}
 		break;
 
@@ -3606,6 +3614,11 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	is_linden = chat.mSourceType != CHAT_SOURCE_OBJECT &&
 		LLMuteList::getInstance()->isLinden(from_name);
 
+	if (is_muted && (chat.mSourceType == CHAT_SOURCE_OBJECT))
+	{
+		return;
+	}
+
 	BOOL is_audible = (CHAT_AUDIBLE_FULLY == chat.mAudible);
 	chatter = gObjectList.findObject(from_id);
 	if (chatter)
@@ -3782,11 +3795,15 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			}
 		}
 
-		LLSD msg_notify = LLSD(LLSD::emptyMap());
-		msg_notify["session_id"] = LLUUID();
-        msg_notify["from_id"] = chat.mFromID;
-		msg_notify["source_type"] = chat.mSourceType;
-        on_new_message(msg_notify);
+		if (mesg != "")
+		{
+			LLSD msg_notify = LLSD(LLSD::emptyMap());
+			msg_notify["session_id"] = LLUUID();
+			msg_notify["from_id"] = chat.mFromID;
+			msg_notify["source_type"] = chat.mSourceType;
+			on_new_message(msg_notify);
+		}
+
 	}
 }
 
@@ -5722,6 +5739,7 @@ static void process_money_balance_reply_extended(LLMessageSystem* msg)
 			}
 		}
 		final_args["MESSAGE"] = message;
+		payload["dest_id"] = dest_id;
 		notification = success ? "PaymentSent" : "PaymentFailure";
 	}
 	else {
@@ -6010,7 +6028,7 @@ bool attempt_standard_notification(LLMessageSystem* msgsystem)
 				LL_WARNS() << "attempt_standard_notification: Attempted to read notification parameter data into LLSD but failed:" << llsdRaw << LL_ENDL;
 			}
 		}
-		
+
 
 		handle_trusted_experiences_notification(llsdBlock);
 		
@@ -6094,7 +6112,25 @@ bool attempt_standard_notification(LLMessageSystem* msgsystem)
 
 			make_ui_sound("UISndRestart");
 		}
-
+        
+        // Special Marketplace update notification
+		if (notificationID == "SLM_UPDATE_FOLDER")
+        {
+            std::string state = llsdBlock["state"].asString();
+            if (state == "deleted")
+            {
+                // Perform the deletion viewer side, no alert shown in this case
+                LLMarketplaceData::instance().deleteListing(llsdBlock["listing_id"].asInteger());
+                return true;
+            }
+            else
+            {
+                // In general, no message will be displayed, all we want is to get the listing updated in the marketplace floater
+                // If getListing() fails though, the message of the alert will be shown by the caller of attempt_standard_notification()
+                return LLMarketplaceData::instance().getListing(llsdBlock["listing_id"].asInteger());
+            }
+        }
+        
 		LLNotificationsUtil::add(notificationID, llsdBlock);
 		return true;
 	}	
@@ -6331,6 +6367,11 @@ void process_mean_collision_alert_message(LLMessageSystem *msgsystem, void **use
 			gMeanCollisionList.push_front(mcd);
 			gCacheName->get(perp, false, boost::bind(&mean_name_callback, _1, _2, _3));
 		}
+	}
+	LLFloaterBump* bumps_floater = LLFloaterBump::getInstance();
+	if(bumps_floater && bumps_floater->isInVisibleChain())
+	{
+		bumps_floater->populateCollisionList();
 	}
 }
 

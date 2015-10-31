@@ -38,6 +38,7 @@ RequestExecutionLevel admin	; on Vista we must be admin because we write to Prog
 ;;; Project flags
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+# This placeholder is replaced by viewer_manifest.py
 %%VERSION%%
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -201,6 +202,11 @@ Function CheckWindowsServPack
     DetailPrint $(UseLatestServPackDP)
     Return
   ${EndIf}
+# Create *.bat file to specify lang params on first run from installer - see MAINT-5259
+FileOpen $9 "$INSTDIR\autorun.bat" w
+FileWrite $9 'start "$INSTDIR\$INSTEXE" "$INSTDIR\$INSTEXE" $SHORTCUT_LANG_PARAM$\r$\n'
+FileClose $9
+
 
   ${If} ${IsWin2008}
   ${AndIfNot} ${IsServicePack} 2
@@ -641,6 +647,8 @@ Call un.CloseSecondLife
 ; Clean up registry keys and subkeys (these should all be !defines somewhere)
 DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Kokua and Imprudence\$INSTPROG"
 DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$INSTPROG"
+# BUG-2707 Remove entry that disabled SEHOP
+DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$INSTEXE"
 
 ; Clean up shortcuts
 Delete "$SMPROGRAMS\$INSTSHORTCUT\*.*"
@@ -799,7 +807,8 @@ WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Kokua and Imprudence\$INSTPROG" "Shortc
 WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Kokua and Imprudence\$INSTPROG" "Exe" "$INSTEXE"
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\$INSTPROG" "DisplayName" "$INSTPROG (remove only)"
 WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\$INSTPROG" "UninstallString" '"$INSTDIR\uninst.exe"'
-
+# BUG-2707 Disable SEHOP for installed viewer.
+WriteRegDWORD HKEY_LOCAL_MACHINE "Software\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$INSTEXE" "DisableExceptionChainValidation" 1
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Write URL registry info
 WriteRegStr HKEY_CLASSES_ROOT "${URLNAME}" "(default)" "URL:Second Life"

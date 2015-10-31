@@ -162,6 +162,9 @@ const F32 HEAD_MOVEMENT_AVG_TIME = 0.9f;
 
 const S32 MORPH_MASK_REQUESTED_DISCARD = 0;
 
+const F32 MAX_STANDOFF_FROM_ORIGIN = 3;
+const F32 MAX_STANDOFF_DISTANCE_CHANGE = 32;
+
 // Discard level at which to switch to baked textures
 // Should probably be 4 or 3, but didn't want to change it while change other logic - SJB
 const S32 SWITCH_TO_BAKED_DISCARD = 5;
@@ -776,7 +779,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	const BOOL needsSendToSim = false; // currently, this HUD effect doesn't need to pack and unpack data to do its job
 	mVoiceVisualizer = ( LLVoiceVisualizer *)LLHUDManager::getInstance()->createViewerEffect( LLHUDObject::LL_HUD_EFFECT_VOICE_VISUALIZER, needsSendToSim );
 
-	LL_DEBUGS("Avatar") << "LLVOAvatar Constructor (0x" << this << ") id:" << mID << LL_ENDL;
+	LL_DEBUGS("Avatar","Message") << "LLVOAvatar Constructor (0x" << this << ") id:" << mID << LL_ENDL;
 
 	mPelvisp = NULL;
 
@@ -1573,6 +1576,7 @@ void LLVOAvatar::renderJoints()
 BOOL LLVOAvatar::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
 									  S32 face,
 									  BOOL pick_transparent,
+									  BOOL pick_rigged,
 									  S32* face_hit,
 									  LLVector4a* intersection,
 									  LLVector2* tex_coord,
@@ -1672,6 +1676,7 @@ BOOL LLVOAvatar::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 LLViewerObject* LLVOAvatar::lineSegmentIntersectRiggedAttachments(const LLVector4a& start, const LLVector4a& end,
 									  S32 face,
 									  BOOL pick_transparent,
+									  BOOL pick_rigged,
 									  S32* face_hit,
 									  LLVector4a* intersection,
 									  LLVector2* tex_coord,
@@ -1702,7 +1707,7 @@ LLViewerObject* LLVOAvatar::lineSegmentIntersectRiggedAttachments(const LLVector
 			{
 				LLViewerObject* attached_object = (*attachment_iter);
 					
-				if (attached_object->lineSegmentIntersect(start, local_end, face, pick_transparent, face_hit, &local_intersection, tex_coord, normal, tangent))
+				if (attached_object->lineSegmentIntersect(start, local_end, face, pick_transparent, pick_rigged, face_hit, &local_intersection, tex_coord, normal, tangent))
 				{
 					local_end = local_intersection;
 					if (intersection)
@@ -2203,7 +2208,7 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 	
 	// animate the character
 	// store off last frame's root position to be consistent with camera position
-	LLVector3 root_pos_last = mRoot->getWorldPosition();
+	mLastRootPos = mRoot->getWorldPosition();
 	BOOL detailed_update = updateCharacter(agent);
 
 	static LLUICachedControl<bool> visualizers_in_calls("ShowVoiceVisualizersInCalls", false);
@@ -2221,7 +2226,7 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 		idleUpdateWindEffect();
 	}
 		
-	idleUpdateNameTag( root_pos_last );
+	idleUpdateNameTag( mLastRootPos );
 	idleUpdateRenderCost();
 }
 
@@ -5958,12 +5963,20 @@ BOOL LLVOAvatar::setParent(LLViewerObject* parent)
 void LLVOAvatar::addChild(LLViewerObject *childp)
 {
 	childp->extractAttachmentItemID(); // find the inventory item this object is associated with.
+	if (isSelf())
+	{
+	    const LLUUID& item_id = childp->getAttachmentItemID();
+		LLViewerInventoryItem *item = gInventory.getItem(item_id);
+		LL_DEBUGS("Avatar") << "ATT attachment child added " << (item ? item->getName() : "UNKNOWN") << " id " << item_id << LL_ENDL;
+
+	}
+
 	LLViewerObject::addChild(childp);
 	if (childp->mDrawable)
 	{
 		if (!attachObject(childp))
 		{
-			LL_WARNS() << "addChild() failed for " 
+			LL_WARNS() << "ATT addChild() failed for " 
 					<< childp->getID()
 					<< " item " << childp->getAttachmentItemID()
 					<< LL_ENDL;
@@ -6033,10 +6046,21 @@ LLViewerJointAttachment* LLVOAvatar::getTargetAttachmentPoint(LLViewerObject* vi
 //-----------------------------------------------------------------------------
 const LLViewerJointAttachment *LLVOAvatar::attachObject(LLViewerObject *viewer_object)
 {
+	if (isSelf())
+	{
+		const LLUUID& item_id = viewer_object->getAttachmentItemID();
+		LLViewerInventoryItem *item = gInventory.getItem(item_id);
+		LL_DEBUGS("Avatar") << "ATT attaching object "
+							<< (item ? item->getName() : "UNKNOWN") << " id " << item_id << LL_ENDL;	
+	}
 	LLViewerJointAttachment* attachment = getTargetAttachmentPoint(viewer_object);
 
 	if (!attachment || !attachment->addObject(viewer_object))
 	{
+		const LLUUID& item_id = viewer_object->getAttachmentItemID();
+		LLViewerInventoryItem *item = gInventory.getItem(item_id);
+		LL_WARNS("Avatar") << "ATT attach failed "
+						   << (item ? item->getName() : "UNKNOWN") << " id " << item_id << LL_ENDL;	
 		return 0;
 	}
 
@@ -6096,6 +6120,13 @@ void LLVOAvatar::lazyAttach()
 		LLPointer<LLViewerObject> cur_attachment = mPendingAttachment[i];
 		if (cur_attachment->mDrawable)
 		{
+			if (isSelf())
+			{
+				const LLUUID& item_id = cur_attachment->getAttachmentItemID();
+				LLViewerInventoryItem *item = gInventory.getItem(item_id);
+				LL_DEBUGS("Avatar") << "ATT attaching object "
+									<< (item ? item->getName() : "UNKNOWN") << " id " << item_id << LL_ENDL;
+			}
 			if (!attachObject(cur_attachment))
 			{	// Drop it
 				LL_WARNS() << "attachObject() failed for " 
@@ -6278,10 +6309,10 @@ void LLVOAvatar::getOffObject()
 	{
 		return;
 	}
-	
+
 	LLViewerObject* sit_object = (LLViewerObject*)getParent();
 
-	if (sit_object) 
+	if (sit_object)
 	{
 		stopMotionFromSource(sit_object->getID());
 		LLFollowCamMgr::setCameraActive(sit_object->getID(), FALSE);
@@ -6298,8 +6329,18 @@ void LLVOAvatar::getOffObject()
 	}
 
 	// assumes that transform will not be updated with drawable still having a parent
+	// or that drawable had no parent from the start
 	LLVector3 cur_position_world = mDrawable->getWorldPosition();
 	LLQuaternion cur_rotation_world = mDrawable->getWorldRotation();
+
+	if (mLastRootPos.length() >= MAX_STANDOFF_FROM_ORIGIN
+		&& (cur_position_world.length() < MAX_STANDOFF_FROM_ORIGIN
+			|| dist_vec(cur_position_world, mLastRootPos) > MAX_STANDOFF_DISTANCE_CHANGE))
+	{
+		// Most likely drawable got updated too early or some updates were missed - we got relative position to non-existing parent
+		// restore coordinates from cache
+		cur_position_world = mLastRootPos;
+	}
 
 	// set *local* position based on last *world* position, since we're unparenting the avatar
 	mDrawable->mXform.setPosition(cur_position_world);
@@ -6476,6 +6517,7 @@ void LLVOAvatar::onGlobalColorChanged(const LLTexGlobalColor* global_color, BOOL
 BOOL LLVOAvatar::isVisible() const
 {
 	return mDrawable.notNull()
+		&& (!mOrphaned || isSelf())
 		&& (mDrawable->isVisible() || mIsDummy);
 }
 

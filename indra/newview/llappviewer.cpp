@@ -2820,12 +2820,14 @@ bool LLAppViewer::initConfiguration()
 	//
 	// Set the name of the window
 	//
-	gWindowTitle = LLTrans::getString("APP_NAME") + " " + LLVersionInfo::getShortVersion();
+	gWindowTitle = LLTrans::getString("APP_NAME") + " " + LLVersionInfo::getVersion();
 #if LL_DEBUG
-	gWindowTitle += std::string(" [DEBUG] ") + gArgs;
-#else
-	gWindowTitle += std::string(" ") + gArgs;
+	gWindowTitle += std::string(" [DEBUG]")
 #endif
+	if (!gArgs.empty())
+	{
+		gWindowTitle += std::string(" ") + gArgs;
+	}
 	LLStringUtil::truncate(gWindowTitle, 255);
 
 	//RN: if we received a URL, hand it off to the existing instance.
@@ -3136,8 +3138,8 @@ void LLAppViewer::initUpdater()
 	U32 check_period = gSavedSettings.getU32("UpdaterServiceCheckPeriod");
 	bool willing_to_test;
 	LL_DEBUGS("UpdaterService") << "channel " << channel << LL_ENDL;
-	static const boost::regex is_test_channel("\\bTest$");
-	if (boost::regex_search(channel, is_test_channel)) 
+
+	if (LLVersionInfo::TEST_VIEWER == LLVersionInfo::getViewerMaturity()) 
 	{
 		LL_INFOS("UpdaterService") << "Test build: overriding willing_to_test by sending testno" << LL_ENDL;
 		willing_to_test = false;
@@ -5009,6 +5011,7 @@ void LLAppViewer::idle()
 		
 		gIdleCallbacks.callFunctions();
 		gInventory.idleNotifyObservers();
+		LLAvatarTracker::instance().idleNotifyObservers();
 	}
 	
 	// Metrics logging (LLViewerAssetStats, etc.)

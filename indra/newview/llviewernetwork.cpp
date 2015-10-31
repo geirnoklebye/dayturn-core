@@ -100,7 +100,7 @@ public:
 				mOwner->addGrid(mData, LLGridManager::FAIL);
 			}
 		}
-		else if (304 == getStatus() && !LLGridManager::TRYLEGACY == mState) /// not modified
+		else if (304 == getStatus() && LLGridManager::TRYLEGACY != mState) /// not modified
 		{
 			mOwner->addGrid(mData, LLGridManager::FINISH);
 		}

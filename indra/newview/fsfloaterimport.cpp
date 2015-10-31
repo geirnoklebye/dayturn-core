@@ -751,13 +751,13 @@ bool FSFloaterImport::processPrimCreated(LLViewerObject* object)
 		
 		if (mAssetMap[sculpt_params.getSculptTexture()].notNull())
 		{
-			sculpt_params.setSculptTexture(mAssetMap[sculpt_params.getSculptTexture()]);
+			sculpt_params.setSculptTexture(mAssetMap[sculpt_params.getSculptTexture()], sculpt_params.getSculptType());
 			LL_DEBUGS("import") << "Replaced " << prim["sculpt"]["texture"].asUUID().asString() << " with " << sculpt_params.getSculptTexture().asString() << LL_ENDL;
 		}
 
-		object->setParameterEntry(LLNetworkData::PARAMS_SCULPT, sculpt_params, true); // sets locally and fires off an update to the regine.
+		object->setParameterEntry(LLNetworkData::PARAMS_SCULPT, sculpt_params, true); // sets locally and fires off an update to the region.
 	}
-
+	
 	if (prim.has("flexible"))
 	{
 		LL_DEBUGS("import") << "Found flexiable for " << prim_uuid.asString() << LL_ENDL;

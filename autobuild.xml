@@ -215,6 +215,18 @@
         <string>atk</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>ad9889e60710414d6242219d505af199</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-atk/downloads/atk-2.16.0-linux-201507162046.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -315,6 +327,18 @@
         <string>cairo</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>17b59cc991c8d7a50ec55a99c1c21e8b</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-cairo/downloads/cairo-1.14.2-linux-201507192252.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -704,9 +728,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ed0d8767652aecd65a7fef3e28645bad</string>
+              <string>5214392bdeadd363a5982b10f9c3da7a</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/fmodex_3p-update-fmodex/rev/297261/arch/Darwin/installer/fmodex-4.44.31.297261-darwin-297261.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.54-darwin-201507191100.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -903,6 +929,18 @@
         <string>gdk-pixbuf</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>87358dc3e3bcfd220e77b08de50272e3</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-gdk-pixbuf/downloads/gdk_pixbuf-2.30.8-linux-201507210933.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -1397,11 +1435,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>691d7328f7e927bf438adf3b873d9811</string>
+              <string>db3cc85787ea2fcc99937e13d2404983</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.24.201506192112-linux-201506192112.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201507172110-linux-201507172110.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1445,7 +1483,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.10.24.201506192112</string>
+        <string>0.10.36.201507172110</string>
       </map>
       <key>gtk</key>
       <map>
@@ -1461,6 +1499,18 @@
         <string>gtk</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>db3c9a733395f2b1b45acf4afae6e77d</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-gtk/downloads/gtk-2.24.28-linux-201507211717.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -1478,36 +1528,6 @@
         </map>
         <key>version</key>
         <string>2.24.28</string>
-      </map>
-      <key>gtk-atk-pango-glib</key>
-      <map>
-        <key>copyright</key>
-        <string>Copyright (various, see sources)</string>
-        <key>license</key>
-        <string>lgpl</string>
-        <key>license_file</key>
-        <string>LICENSES/gtk-atk-pango-glib.txt</string>
-        <key>name</key>
-        <string>gtk-atk-pango-glib</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>28d65a53a22b1cf77d6f937f3f3537ab</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gtk-atk-pango-glib/downloads/gtk_atk_pango_glib-0.1-linux-201506202150.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>0.1</string>
       </map>
       <key>gtk-etc</key>
       <map>
@@ -1558,6 +1578,18 @@
         <string>harfbuzz</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>622c10c4361a9b8de46c9a885d270402</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-harfbuzz/downloads/harfbuzz-0.9.40-linux-201507201105.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -2465,6 +2497,14 @@
       </map>
       <key>ndPhysicsStub</key>
       <map>
+        <key>copyright</key>
+        <string>Khaled Mamou (HACD) / Nicky Dasmijn (integration into for SL viewer)</string>
+        <key>description</key>
+        <string>Mesh dcomposition using HACD and physics sub implementation.</string>
+        <key>license</key>
+        <string>HACD/LGPL</string>
+        <key>license_file</key>
+        <string>LICENSES/ndPhysicsStub.txt</string>
         <key>name</key>
         <string>ndPhysicsStub</string>
         <key>platforms</key>
@@ -2474,9 +2514,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>eb35e0da356163387272167bd81771f4</string>
+              <string>1d13960c86fc1aacfcfaeb986be80d5d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://phoenixviewer.com/app/packages/ndPhysicsStub-0.1.1-Darwin_ao10.5.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.0-darwin-201507191036.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2488,7 +2530,7 @@
               <key>hash</key>
               <string>084a1e92472b066b62f15755f34978de</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.201504301548-linux-201504301548.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.201504301548-linux-201504301548.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2500,7 +2542,7 @@
               <key>hash</key>
               <string>54c312d898f08609a71acb22cfe80406</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.201505151905-linux64-201505151905.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.201505151905-linux64-201505151905.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2512,14 +2554,14 @@
               <key>hash</key>
               <string>a73088e519d2b340e01538ae205e09e4</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/physicsstub/downloads/ndPhysicsStub-1.0-windows-201504262316.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.0-windows-201504262316.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
           </map>
         </map>
         <key>version</key>
-        <string>7.11.1.297294</string>
+        <string>1.0</string>
       </map>
       <key>nvapi</key>
       <map>
@@ -2879,6 +2921,20 @@
         <string>pango</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>6dca707cb897d3c360f5dd0ffcb2cd2c</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-pango/downloads/pango-1.36.8-linux-201507201400.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -2977,6 +3033,20 @@
         <string>pixman</string>
         <key>platforms</key>
         <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>c99e94652ddf7d72691d16eb0bc61efa</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux-201507192238.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -3138,11 +3208,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fbb264b5998f3e4286825241b95960de</string>
+              <string>8fe64c0ec45c9ab46d65389fea451251</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-4.5.0009.17865.201506081416-linux64-201506081416.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-4.5.0009.17865.201506081519-linux64-201506081519.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3161,7 +3231,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.5.0009.17865.201506251848</string>
+        <string>4.5.0009.17865.201506081519</string>
       </map>
       <key>tut</key>
       <map>

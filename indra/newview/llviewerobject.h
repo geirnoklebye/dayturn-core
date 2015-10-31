@@ -269,6 +269,7 @@ public:
 	virtual BOOL lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
 									  S32 face = -1,                          // which face to check, -1 = ALL_SIDES
 									  BOOL pick_transparent = FALSE,
+									  BOOL pick_rigged = FALSE,
 									  S32* face_hit = NULL,                   // which face was hit
 									  LLVector4a* intersection = NULL,         // return the intersection point
 									  LLVector2* tex_coord = NULL,            // return the texture coordinates of the intersection point
@@ -331,7 +332,7 @@ public:
 	/*virtual*/	S32		setTEMediaFlags(const U8 te, const U8 media_flags );
 	/*virtual*/ S32     setTEGlow(const U8 te, const F32 glow);
 	/*virtual*/ S32     setTEMaterialID(const U8 te, const LLMaterialID& pMaterialID);
-	/*virtual*/ S32		setTEMaterialParams(const U8 te, const LLMaterialPtr pMaterialParams);
+	/*virtual*/ S32		setTEMaterialParams(const U8 te, const LLMaterialPtr pMaterialParams, bool isInitFromServer);
 
 	// Used by Materials update functions to properly kick off rebuilds
 	// of VBs etc when materials updates require changes.
@@ -437,8 +438,8 @@ public:
 	void removeInventoryListener(LLVOInventoryListener* listener);
 	BOOL isInventoryPending() { return mInventoryPending; }
 	void clearInventoryListeners();
+	bool hasInventoryListeners();
 	void requestInventory();
-	void fetchInventoryFromServer();
 	static void processTaskInv(LLMessageSystem* msg, void** user_data);
 	void removeInventory(const LLUUID& item_id);
 
@@ -598,6 +599,9 @@ private:
 	void interpolateLinearMotion(const F64SecondsImplicit & time, const F32SecondsImplicit & dt);
 
 	static void initObjectDataMap();
+
+	// forms task inventory request if none are pending
+	void fetchInventoryFromServer();
 
 public:
 	//

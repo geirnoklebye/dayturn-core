@@ -126,7 +126,7 @@
         </menu_item_call>
         <menu_item_call
          label="Walk / run / fly..."
-         name="Walk / run / fly">
+         name="WalkRunFly">
           <menu_item_call.on_click
            function="Floater.ToggleOrBringToFront"
            parameter="moveview" />
@@ -174,6 +174,13 @@
          function="Floater.ToggleOrBringToFront"
          parameter="outbox" />
       </menu_item_call>
+        <menu_item_call
+            label="Marketplace listings..."
+            name="MarketplaceListings">
+            <menu_item_call.on_click
+            function="Floater.ToggleOrBringToFront"
+            parameter="marketplace_listings" />
+        </menu_item_call>
       <menu_item_call
            label="Account dashboard..."
            name="Manage My Account"
@@ -531,7 +538,7 @@
         </menu_item_call>
         <menu_item_call
          label="Region / Estate"
-         name="Region/Estate">
+         name="RegionEstate">
             <menu_item_call.on_click
              function="Floater.Show"
              parameter="region_info" />
@@ -1602,13 +1609,19 @@
                  function="Floater.Show"
                  parameter="bumps" />
         </menu_item_call>
-        <menu_item_separator/>    
+        <menu_item_separator/>
         <menu_item_call
          label="About [APP_NAME]"
          name="About Second Life">
             <menu_item_call.on_click
              function="Floater.Show"
              parameter="sl_about" />
+        </menu_item_call>
+        <menu_item_call
+         label="Check for Updates"
+         name="Check for Updates">
+          <menu_item_call.on_click
+           function="Advanced.CheckViewerUpdates"/>
         </menu_item_call>
     </menu>
     <menu

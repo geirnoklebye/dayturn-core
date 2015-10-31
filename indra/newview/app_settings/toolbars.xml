@@ -34,4 +34,7 @@
     <command name="twitter"/>
     <command name="flickr"/>
   </left_toolbar>
+  <right_toolbar
+    button_display_mode="icons_only">
+  </right_toolbar>
 </toolbars>

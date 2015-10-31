@@ -376,6 +376,13 @@
                   function="Floater.ToggleOrBringToFront"
                   parameter="outbox" />
           </menu_item_call>
+         <menu_item_call
+            label="Marketplace listings..."
+            name="MarketplaceListings">
+            <menu_item_call.on_click
+            function="Floater.ToggleOrBringToFront"
+            parameter="marketplace_listings" />
+        </menu_item_call> 
 
           <menu_item_separator/>
       
@@ -480,6 +487,13 @@
          parameter="places" />
       </menu_item_call>
       <menu_item_call
+        label="Experiences..."
+        name="Experiences">
+        <menu_item_call.on_click
+          function="Floater.ToggleOrBringToFront"
+          parameter="experiences"/>
+      </menu_item_call>
+      <menu_item_call
        label="Picks..."
        name="Picks">
         <menu_item_call.on_click
@@ -500,7 +514,16 @@
           <menu_item_call.on_click
            function="Floater.ToggleOrBringToFront"
            parameter="moveview" />
-      </menu_item_call>	  
+      </menu_item_call>
+      <!-- MK -->
+      <menu_item_call
+       label="Restart All Animations"
+       name="Restart All Animations"
+       shortcut="control|alt|shift|A">
+        <menu_item_call.on_click
+         function="Tools.RestartAllAnimations" />
+      </menu_item_call>
+      <!-- mk -->	  
       <menu
        create_jump_keys="true"
        label="Movement"
@@ -547,7 +570,7 @@
         </menu_item_call>
         <menu_item_call
          label="Walk / run / fly..."
-         name="Walk / run / fly">
+         name="WalkRunFly">
           <menu_item_call.on_click
            function="Floater.ToggleOrBringToFront"
            parameter="moveview" />
@@ -560,6 +583,7 @@
        name="Status"
        tear_off="true">
         <menu_item_check
+         name="Away"
          label="Away">
           <menu_item_check.on_check
            function="View.Status.CheckAway" />
@@ -567,6 +591,7 @@
            function="World.SetAway" />
         </menu_item_check>
         <menu_item_check
+         name="Do Not Disturb"
          label="Do Not Disturb">
           <menu_item_check.on_check
            function="View.Status.CheckDoNotDisturb" />
@@ -1738,6 +1763,20 @@
             <menu_item_call.on_click
              function="Floater.Toggle"
              parameter="area_search" />
+        </menu_item_call>
+        <menu_item_call
+            label="Marketplace listings..."
+            name="MarketplaceListings">
+            <menu_item_call.on_click
+            function="Floater.ToggleOrBringToFront"
+            parameter="marketplace_listings" />
+        </menu_item_call>
+        <menu_item_call
+          label="Experiences..."
+          name="Experiences">
+          <menu_item_call.on_click
+            function="Floater.ToggleOrBringToFront"
+            parameter="experiences"/>
         </menu_item_call>
         <menu_item_call
          label="Stop Animating Me"

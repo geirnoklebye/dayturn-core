@@ -247,8 +247,9 @@ void LLNetMap::draw()
 			// background region rectangle
 			F32 bottom =	relative_y;
 			F32 left =		relative_x;
-			F32 top =		bottom + mScale ;
-			F32 right =		left + mScale ;
+			const F32 real_width(regionp->getWidth());
+			F32 top =		bottom + (real_width / region_width) * mScale ;
+			F32 right =		left + (real_width / region_width) * mScale ;
 
 			if (regionp == gAgent.getRegion())
 			{
@@ -265,30 +266,41 @@ void LLNetMap::draw()
 			}
 
 			static LLCachedControl<bool> use_world_map_textures(gSavedSettings, "MiniMapWorldMapTextures", true);
-			bool render_terrain = true;
+			bool fRenderTerrain = true;
 
 			if (use_world_map_textures) {
-				LLViewerTexture *region_image = regionp->getWorldMapTile();
-
-				if (region_image && region_image->hasGLTexture()) {
-					gGL.getTexUnit(0)->bind(region_image);
-					gGL.begin(LLRender::QUADS);
-						gGL.texCoord2f(0.f, 1.f);
-						gGL.vertex2f(left, top);
-						gGL.texCoord2f(0.f, 0.f);
-						gGL.vertex2f(left, bottom);
-						gGL.texCoord2f(1.f, 0.f);
-						gGL.vertex2f(right, bottom);
-						gGL.texCoord2f(1.f, 1.f);
-						gGL.vertex2f(right, top);
-					gGL.end();
-
-					region_image->setBoostLevel(LLViewerTexture::BOOST_MAP_VISIBLE);
-					render_terrain = false;
+				const LLViewerRegion::tex_matrix_t& tiles(regionp->getWorldMapTiles());
+				for (S32 i(0), scaled_width(real_width / region_width), square_width(scaled_width * scaled_width);
+					i < square_width; ++i)
+				{
+					const F32 y(i / scaled_width);
+					const F32 x(i - y * scaled_width);
+					const F32 local_left(left + x * mScale);
+					const F32 local_right(local_left + mScale);
+					const F32 local_bottom(bottom + y * mScale);
+					const F32 local_top(local_bottom + mScale);
+					LLViewerTexture* pRegionImage = tiles[x * scaled_width + y];
+					if (pRegionImage && pRegionImage->hasGLTexture())
+					{
+						gGL.getTexUnit(0)->bind(pRegionImage);
+						gGL.begin(LLRender::QUADS);
+							gGL.texCoord2f(0.f, 1.f);
+							gGL.vertex2f(local_left, local_top);
+							gGL.texCoord2f(0.f, 0.f);
+							gGL.vertex2f(local_left, local_bottom);
+							gGL.texCoord2f(1.f, 0.f);
+							gGL.vertex2f(local_right, local_bottom);
+							gGL.texCoord2f(1.f, 1.f);
+							gGL.vertex2f(local_right, local_top);
+						gGL.end();
+						pRegionImage->setBoostLevel(LLViewerTexture::BOOST_MAP_VISIBLE);
+						fRenderTerrain = false;
+					}
 				}
 			}
 
-			if (render_terrain) {
+			if (fRenderTerrain) 
+			{
 				// Draw using texture.
 				gGL.getTexUnit(0)->bind(regionp->getLand().getSTexture());
 				gGL.begin(LLRender::QUADS);

@@ -204,14 +204,17 @@ public:
 private:
 	BOOL					mDirty;
 	U32						mPrecision;
+	BOOL                    mHasSelection;
 
 	std::map<std::string, std::string> mStatusText;
+
 
 protected:
 	LLSD				mMediaSettings;
 
 public:
 	static bool		sShowObjectCost;
+	static bool		sPreviousFocusOnAvatar;
 	
 };
 
