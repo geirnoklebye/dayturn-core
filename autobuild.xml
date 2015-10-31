@@ -2403,11 +2403,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>27e98b5cf61a241b16a2397f963f00ca</string>
+              <string>4363979c998d9b4c82f9fceeb001c867</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///opt/cef/llceflib-cef_binary_3.2272.32.gbda8dc7-linux64-201507161206.tar.bz2</string>
+              <string>file:///opt/cef/llceflib-cef_binary_3.2272.32.gbda8dc7-linux64-201507171457.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>

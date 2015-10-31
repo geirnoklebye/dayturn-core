@@ -16,6 +16,11 @@ include(OpenGL)
 
 include(CEFPlugin)
 
+# <FS:ND> Linux volume catcher
+include(PulseAudio)
+include_directories( ${PULSEAUDIO_INCLUDE_DIRS} )
+# </FS:ND>
+
 include_directories(
     ${LLPLUGIN_INCLUDE_DIRS}
     ${MEDIA_PLUGIN_BASE_INCLUDE_DIRS}
@@ -45,17 +50,51 @@ set(media_plugin_cef_SOURCE_FILES
     media_plugin_cef.cpp
     )
 
-add_library(media_plugin_cef
-    SHARED
-    ${media_plugin_cef_SOURCE_FILES}
-)
+set(media_plugin_cef_HEADER_FILES
+    volume_catcher.h
+    )
 
-target_link_libraries(media_plugin_cef
+set (media_plugin_cef_LINK_LIBRARIES
   ${LLPLUGIN_LIBRARIES}
   ${MEDIA_PLUGIN_BASE_LIBRARIES}
   ${LLCOMMON_LIBRARIES}
-  ${PLUGIN_API_WINDOWS_LIBRARIES}
   ${CEF_PLUGIN_LIBRARIES}
+  ${PLUGIN_API_WINDOWS_LIBRARIES})
+
+
+# Select which VolumeCatcher implementation to use
+if (LINUX)
+  #message(FATAL_ERROR "CEF plugin has been enabled for a Linux compile.\n"
+  #  "  Please create a volume_catcher implementation for this platform.")
+  if (PULSEAUDIO_FOUND)
+    list(APPEND media_plugin_cef_SOURCE_FILES linux_volume_catcher.cpp)
+  else (PULSEAUDIO_FOUND)
+    list(APPEND media_plugin_cef_SOURCE_FILES dummy_volume_catcher.cpp)
+  endif (PULSEAUDIO_FOUND)
+  list(APPEND media_plugin_cef_LINK_LIBRARIES
+       ${UI_LIBRARIES}     # for glib/GTK
+       Xext #<FS:ND/> force pulling libXext in, otherwise we get undefined symbols.
+       )
+elseif (DARWIN)
+  list(APPEND media_plugin_cef_SOURCE_FILES mac_volume_catcher.cpp)
+  find_library(CORESERVICES_LIBRARY CoreServices)
+  find_library(AUDIOUNIT_LIBRARY AudioUnit)
+  list(APPEND media_plugin_cef_LINK_LIBRARIES
+       ${CORESERVICES_LIBRARY}     # for Component Manager calls
+       ${AUDIOUNIT_LIBRARY}        # for AudioUnit calls
+       )
+elseif (WINDOWS)
+  list(APPEND media_plugin_cef_SOURCE_FILES windows_volume_catcher.cpp)
+endif (LINUX)
+
+set_source_files_properties(${media_plugin_cef_HEADER_FILES}
+                            PROPERTIES HEADER_FILE_ONLY TRUE)
+
+list(APPEND media_plugin_cef_SOURCE_FILES ${media_plugin_cef_HEADER_FILES})
+
+add_library(media_plugin_cef
+    SHARED
+    ${media_plugin_cef_SOURCE_FILES}
 )
 
 add_dependencies(media_plugin_cef
@@ -64,3 +103,28 @@ add_dependencies(media_plugin_cef
   ${LLCOMMON_LIBRARIES}
 )
 
+target_link_libraries(media_plugin_cef
+  ${media_plugin_cef_LINK_LIBRARIES}
+)
+
+if (WINDOWS)
+  set_target_properties(
+    media_plugin_cef
+    PROPERTIES
+    LINK_FLAGS "/MANIFEST:NO /SAFESEH:NO /NODEFAULTLIB:LIBCMT"
+    LINK_FLAGS_DEBUG "/MANIFEST:NO /SAFESEH:NO /NODEFAULTLIB:LIBCMTD"
+    )
+endif (WINDOWS)
+
+if (DARWIN)
+  # Don't prepend 'lib' to the executable name, and don't embed a full path in the library's install name
+  set_target_properties(
+    media_plugin_cef
+    PROPERTIES
+    PREFIX ""
+    BUILD_WITH_INSTALL_RPATH 1
+    INSTALL_NAME_DIR "@executable_path"
+    LINK_FLAGS "-exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/../base/media_plugin_base.exp"
+  )
+
+endif (DARWIN)

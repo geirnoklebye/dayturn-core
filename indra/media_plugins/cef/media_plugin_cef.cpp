@@ -27,8 +27,10 @@
 */
 
 #include "linden_common.h"
+#include "indra_constants.h" // for indra keyboard codes
 
 #include "llgl.h"
+#include "llsdutil.h"
 #include "llplugininstance.h"
 #include "llpluginmessage.h"
 #include "llpluginmessageclasses.h"
@@ -36,7 +38,8 @@
 
 #include "boost/function.hpp"
 #include "boost/bind.hpp"
-#include "llceflib.h"
+#include "llCEFLib.h"
+#include "volume_catcher.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -53,19 +56,51 @@ public:
 private:
 	bool init();
 
-	void pageChangedCallback(unsigned char* pixels, int width, int height);
+	void onPageChangedCallback(unsigned char* pixels, int width, int height);
 	void onCustomSchemeURLCallback(std::string url);
 	void onConsoleMessageCallback(std::string message, std::string source, int line);
 	void onStatusMessageCallback(std::string value);
 	void onTitleChangeCallback(std::string title);
 	void onLoadStartCallback();
 	void onLoadEndCallback(int httpStatusCode);
-	void onNavigateURLCallback(std::string url);
+	void onAddressChangeCallback(std::string url);
+	void onNavigateURLCallback(std::string url, std::string target);
+	bool onHTTPAuthCallback(const std::string host, const std::string realm, std::string& username, std::string& password);
+	void onCursorChangedCallback(LLCEFLib::ECursorType type, unsigned int handle);
 
 	void postDebugMessage(const std::string& msg);
+	void authResponse(LLPluginMessage &message);
+
+	LLCEFLib::EKeyboardModifier decodeModifiers(std::string &modifiers);
+	void deserializeKeyboardData(LLSD native_key_data, uint32_t& native_scan_code, uint32_t& native_virtual_key, uint32_t& native_modifiers);
+	void keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::EKeyboardModifier modifiers, LLSD native_key_data);
+	void unicodeInput(const std::string &utf8str, LLCEFLib::EKeyboardModifier modifiers, LLSD native_key_data);
+
+	void checkEditState();
+    void setVolume(F32 vol);
 
 	bool mEnableMediaPluginDebugging;
+	std::string mHostLanguage;
+	bool mCookiesEnabled;
+	bool mPluginsEnabled;
+	bool mJavascriptEnabled;
+	std::string mUserAgentSubtring;
+	std::string mAuthUsername;
+	std::string mAuthPassword;
+	bool mAuthOK;
+	bool mCanCut;
+	bool mCanCopy;
+	bool mCanPaste;
+	std::string mCachePath;
+	std::string mCookiePath;
 	LLCEFLib* mLLCEFLib;
+
+    VolumeCatcher mVolumeCatcher;
+
+	// <FS:ND> FS specific CEF settings
+	bool mFlashEnabled;
+	bool mFlipY;
+	// </FS:ND>
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,8 +113,25 @@ MediaPluginBase(host_send_func, host_user_data)
 	mDepth = 4;
 	mPixels = 0;
 	mEnableMediaPluginDebugging = true;
-
+	mHostLanguage = "en";
+	mCookiesEnabled = true;
+	mPluginsEnabled = false;
+	mJavascriptEnabled = true;
+	mUserAgentSubtring = "";
+	mAuthUsername = "";
+	mAuthPassword = "";
+	mAuthOK = false;
+	mCanCut = false;
+	mCanCopy = false;
+	mCanPaste = false;
+	mCachePath = "";
+	mCookiePath = "";
 	mLLCEFLib = new LLCEFLib();
+
+	// <FS:ND> FS specific CEF settings
+	mFlashEnabled = false;
+	mFlipY = false;
+	// </FS:ND>
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -107,7 +159,7 @@ void MediaPluginCEF::postDebugMessage(const std::string& msg)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-void MediaPluginCEF::pageChangedCallback(unsigned char* pixels, int width, int height)
+void MediaPluginCEF::onPageChangedCallback(unsigned char* pixels, int width, int height)
 {
 	if (mPixels && pixels)
 	{
@@ -117,16 +169,6 @@ void MediaPluginCEF::pageChangedCallback(unsigned char* pixels, int width, int h
 		}
 		setDirty(0, 0, mWidth, mHeight);
 	}
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-void MediaPluginCEF::onCustomSchemeURLCallback(std::string url)
-{
-	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER, "click_nofollow");
-	message.setValue("uri", url);
-	message.setValue("nav_type", "clicked");	// TODO: differentiate between click and navigate to
-	sendMessage(message);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -181,11 +223,97 @@ void MediaPluginCEF::onLoadEndCallback(int httpStatusCode)
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-void MediaPluginCEF::onNavigateURLCallback(std::string url)
+void MediaPluginCEF::onAddressChangeCallback(std::string url)
 {
 	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER, "location_changed");
 	message.setValue("uri", url);
 	sendMessage(message);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+void MediaPluginCEF::onNavigateURLCallback(std::string url, std::string target)
+{
+	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER, "click_href");
+	message.setValue("uri", url);
+	message.setValue("target", target);
+	message.setValue("uuid", "");	// not used right now
+	sendMessage(message);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+void MediaPluginCEF::onCustomSchemeURLCallback(std::string url)
+{
+	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER, "click_nofollow");
+	message.setValue("uri", url);
+	message.setValue("nav_type", "clicked");	// TODO: differentiate between click and navigate to
+	sendMessage(message);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+bool MediaPluginCEF::onHTTPAuthCallback(const std::string host, const std::string realm, std::string& username, std::string& password)
+{
+	mAuthOK = false;
+
+	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA, "auth_request");
+	message.setValue("url", host);
+	message.setValue("realm", realm);
+	message.setValueBoolean("blocking_request", true);
+
+	// The "blocking_request" key in the message means this sendMessage call will block until a response is received.
+	sendMessage(message);
+
+	if (mAuthOK)
+	{
+		username = mAuthUsername;
+		password = mAuthPassword;
+	}
+
+	return mAuthOK;
+}
+
+void MediaPluginCEF::onCursorChangedCallback(LLCEFLib::ECursorType type, unsigned int handle)
+{
+	std::string name = "";
+
+	switch (type)
+	{
+		case LLCEFLib::CT_POINTER:
+			name = "arrow";
+			break;
+		case LLCEFLib::CT_IBEAM:
+			name = "ibeam";
+			break;
+		case LLCEFLib::CT_NORTHSOUTHRESIZE:
+			name = "splitv";
+			break;
+		case LLCEFLib::CT_EASTWESTRESIZE:
+			name = "splith";
+			break;
+		case LLCEFLib::CT_HAND:
+			name = "hand";
+			break;
+
+		default:
+			LL_WARNS() << "Unknown cursor ID: " << (int)type << LL_ENDL;
+			break;
+	}
+
+	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA, "cursor_changed");
+	message.setValue("name", name);
+	sendMessage(message);
+}
+
+void MediaPluginCEF::authResponse(LLPluginMessage &message)
+{
+	mAuthOK = message.getValueBoolean("ok");
+	if (mAuthOK)
+	{
+		mAuthUsername = message.getValue("username");
+		mAuthPassword = message.getValue("password");
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -217,6 +345,12 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			else if (message_name == "idle")
 			{
 				mLLCEFLib->update();
+
+                mVolumeCatcher.pump();
+				// this seems bad but unless the state changes (it won't until we figure out
+				// how to get CEF to tell us if copy/cut/paste is available) then this function
+				// will return immediately
+				checkEditState();
 			}
 			else if (message_name == "cleanup")
 			{
@@ -263,26 +397,42 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 		{
 			if (message_name == "init")
 			{
+				// <FS:ND> FS specific CEF settings
+#if defined( LL_WINDOWS ) || defined( LL_LINUX )
+				mLLCEFLib->enableFlash( mFlashEnabled );
+				mLLCEFLib->setFlipY( mFlipY );
+#endif
+				// </FS:ND>
+
 				// event callbacks from LLCefLib
-				mLLCEFLib->setPageChangedCallback(boost::bind(&MediaPluginCEF::pageChangedCallback, this, _1, _2, _3));
+				mLLCEFLib->setOnPageChangedCallback(boost::bind(&MediaPluginCEF::onPageChangedCallback, this, _1, _2, _3));
 				mLLCEFLib->setOnCustomSchemeURLCallback(boost::bind(&MediaPluginCEF::onCustomSchemeURLCallback, this, _1));
 				mLLCEFLib->setOnConsoleMessageCallback(boost::bind(&MediaPluginCEF::onConsoleMessageCallback, this, _1, _2, _3));
 				mLLCEFLib->setOnStatusMessageCallback(boost::bind(&MediaPluginCEF::onStatusMessageCallback, this, _1));
 				mLLCEFLib->setOnTitleChangeCallback(boost::bind(&MediaPluginCEF::onTitleChangeCallback, this, _1));
 				mLLCEFLib->setOnLoadStartCallback(boost::bind(&MediaPluginCEF::onLoadStartCallback, this));
 				mLLCEFLib->setOnLoadEndCallback(boost::bind(&MediaPluginCEF::onLoadEndCallback, this, _1));
-				mLLCEFLib->setOnNavigateURLCallback(boost::bind(&MediaPluginCEF::onNavigateURLCallback, this, _1));
+				mLLCEFLib->setOnAddressChangeCallback(boost::bind(&MediaPluginCEF::onAddressChangeCallback, this, _1));
+				mLLCEFLib->setOnNavigateURLCallback(boost::bind(&MediaPluginCEF::onNavigateURLCallback, this, _1, _2));
+				mLLCEFLib->setOnHTTPAuthCallback(boost::bind(&MediaPluginCEF::onHTTPAuthCallback, this, _1, _2, _3, _4));
+				mLLCEFLib->setOnCursorChangedCallback(boost::bind(&MediaPluginCEF::onCursorChangedCallback, this, _1, _2));
 
-	            LLCEFLibSettings settings;
-	            settings.inital_width = 1024;
-	            settings.inital_height = 1024;
-	            settings.javascript_enabled = true;
-	            settings.cookies_enabled = true;
+				LLCEFLib::LLCEFLibSettings settings;
+				settings.initial_width = 1024;
+				settings.initial_height = 1024;
+				settings.plugins_enabled = mPluginsEnabled;
+				settings.javascript_enabled = mJavascriptEnabled;
+				settings.cookies_enabled = mCookiesEnabled;
+				settings.cookie_store_path = mCookiePath;
+				settings.cache_enabled = true;
+				settings.cache_path = mCachePath;
+				settings.accept_language_list = mHostLanguage;
+				settings.user_agent_substring = mUserAgentSubtring;
+
 				bool result = mLLCEFLib->init(settings);
 				if (!result)
 				{
-// TODO - return something to indicate failure
-					//MessageBoxA(0, "FAIL INIT", 0, 0);
+					// if this fails, the media system in viewer will put up a message
 				}
 
 				// Plugin gets to decide the texture parameters to use.
@@ -294,8 +444,21 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				message.setValueU32("internalformat", GL_RGB);
 				message.setValueU32("format", GL_BGRA);
 				message.setValueU32("type", GL_UNSIGNED_BYTE);
-				message.setValueBoolean("coords_opengl", false);
+
+				// <FS:ND> if mFlipY is true, teh CEF plugin will flip the texture and it will be in correct opengl format. 
+				// If false, it needs to be flipped by the viewer.
+				// message.setValueBoolean("coords_opengl", true);
+				message.setValueBoolean("coords_opengl", mFlipY );
+				// </FS:ND>
+
 				sendMessage(message);
+			}
+			else if (message_name == "set_user_data_path")
+			{
+				std::string user_data_path_cache = message_in.getValue("cache_path");
+				std::string user_data_path_cookies = message_in.getValue("cookies_path");
+				mCachePath = user_data_path_cache + "cef_cache";
+				mCookiePath = user_data_path_cookies + "cef_cookies";
 			}
 			else if (message_name == "size_change")
 			{
@@ -331,36 +494,52 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				sendMessage(message);
 
 			}
+			else if (message_name == "set_language_code")
+			{
+				mHostLanguage = message_in.getValue("language");
+			}
 			else if (message_name == "load_uri")
 			{
 				std::string uri = message_in.getValue("uri");
 				mLLCEFLib->navigate(uri);
 			}
+			else if (message_name == "set_cookie")
+			{
+				std::string uri = message_in.getValue("uri");
+				std::string name = message_in.getValue("name");
+				std::string value = message_in.getValue("value");
+				std::string domain = message_in.getValue("domain");
+				std::string path = message_in.getValue("path");
+				mLLCEFLib->setCookie(uri, name, value, domain, path);
+			}
 			else if (message_name == "mouse_event")
 			{
 				std::string event = message_in.getValue("event");
-				
+
 				S32 x = message_in.getValueS32("x");
 				S32 y = message_in.getValueS32("y");
 
 				//std::string modifiers = message_in.getValue("modifiers");
 
 				S32 button = message_in.getValueS32("button");
-				EMouseButton btn = MB_MOUSE_BUTTON_LEFT;
-				if (button == 0) btn = MB_MOUSE_BUTTON_LEFT;
-				if (button == 1) btn = MB_MOUSE_BUTTON_RIGHT;
-				if (button == 2) btn = MB_MOUSE_BUTTON_MIDDLE;
+				LLCEFLib::EMouseButton btn = LLCEFLib::MB_MOUSE_BUTTON_LEFT;
+				if (button == 0) btn = LLCEFLib::MB_MOUSE_BUTTON_LEFT;
+				if (button == 1) btn = LLCEFLib::MB_MOUSE_BUTTON_RIGHT;
+				if (button == 2) btn = LLCEFLib::MB_MOUSE_BUTTON_MIDDLE;
 
 				if (event == "down")
 				{
-					mLLCEFLib->mouseButton(btn, ME_MOUSE_DOWN, x, y);
+					mLLCEFLib->mouseButton(btn, LLCEFLib::ME_MOUSE_DOWN, x, y);
+					mLLCEFLib->setFocus(true);
+
 					std::stringstream str;
 					str << "Mouse down at = " << x << ", " << y;
 					postDebugMessage(str.str());
 				}
 				else if (event == "up")
 				{
-					mLLCEFLib->mouseButton(btn, ME_MOUSE_UP, x, y);
+					mLLCEFLib->mouseButton(btn, LLCEFLib::ME_MOUSE_UP, x, y);
+
 					std::stringstream str;
 					str << "Mouse up at = " << x << ", " << y;
 					postDebugMessage(str.str());
@@ -384,46 +563,68 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			}
 			else if (message_name == "text_event")
 			{
-				std::string event = message_in.getValue("event");
-				S32 key = message_in.getValue("text")[0];
+				std::string text = message_in.getValue("text");
 				std::string modifiers = message_in.getValue("modifiers");
 				LLSD native_key_data = message_in.getValueLLSD("native_key_data");
 
-				//int native_scan_code = (uint32_t)(native_key_data["scan_code"].asInteger());
-
-				//if (event == "down")
-				{
-					mLLCEFLib->keyPress(key, true);
-				}
-				//else
-				//if (event == "up")
-				{
-					mLLCEFLib->keyPress(key, false);
-				}
+				unicodeInput(text, decodeModifiers(modifiers), native_key_data);
 			}
 			else if (message_name == "key_event")
 			{
+#if LL_DARWIN
 				std::string event = message_in.getValue("event");
-				//S32 key = message_in.getValueS32("key");
+				S32 key = message_in.getValueS32("key");
+				if (event == "down")
+				{
+					//mLLCEFLib->keyPress(key, true);
+					mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_DOWN, (uint32_t)key, 0, LLCEFLib::KM_MODIFIER_NONE, 0, 0, 0);
+
+				}
+				else if (event == "up")
+				{
+					//mLLCEFLib->keyPress(key, false);
+					mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_UP, (uint32_t)key, 0, LLCEFLib::KM_MODIFIER_NONE, 0, 0, 0);
+				}
+
+#elif LL_WINDOWS
+				std::string event = message_in.getValue("event");
+				S32 key = message_in.getValueS32("key");
 				std::string modifiers = message_in.getValue("modifiers");
 				LLSD native_key_data = message_in.getValueLLSD("native_key_data");
 
-				int native_scan_code = (uint32_t)(native_key_data["scan_code"].asInteger());
-				native_scan_code = 8;
-
+				// Treat unknown events as key-up for safety.
+				LLCEFLib::EKeyEvent key_event = LLCEFLib::KE_KEY_UP;
 				if (event == "down")
 				{
-					mLLCEFLib->keyPress(native_scan_code, true);
+					key_event = LLCEFLib::KE_KEY_DOWN;
 				}
-				else
-				if (event == "up")
+				else if (event == "repeat")
 				{
-					mLLCEFLib->keyPress(native_scan_code, false);
+					key_event = LLCEFLib::KE_KEY_REPEAT;
 				}
+
+				keyEvent(key_event, key, decodeModifiers(modifiers), native_key_data);
+#endif
 			}
 			else if (message_name == "enable_media_plugin_debugging")
 			{
 				mEnableMediaPluginDebugging = message_in.getValueBoolean("enable");
+			}
+			if (message_name == "auth_response")
+			{
+				authResponse(message_in);
+			}
+			if (message_name == "edit_cut")
+			{
+				mLLCEFLib->editCut();
+			}
+			if (message_name == "edit_copy")
+			{
+				mLLCEFLib->editCopy();
+			}
+			if (message_name == "edit_paste")
+			{
+				mLLCEFLib->editPaste();
 			}
 		}
 		else if (message_class == LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER)
@@ -450,12 +651,198 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			{
 				mLLCEFLib->goBack();
 			}
+			else if (message_name == "cookies_enabled")
+			{
+				mCookiesEnabled = message_in.getValueBoolean("enable");
+			}
+			else if (message_name == "set_user_agent")
+			{
+				mUserAgentSubtring = message_in.getValue("user_agent");
+			}
+			else if (message_name == "plugins_enabled")
+			{
+				mPluginsEnabled = message_in.getValueBoolean("enable");
+			}
+			else if (message_name == "javascript_enabled")
+			{
+				mJavascriptEnabled = message_in.getValueBoolean("enable");
+			}
+			else if( message_name == "cef_flash_enabled" )
+			{
+				mFlashEnabled = message_in.getValueBoolean("enable");
+			}
+			else if( message_name == "cef_flipy" )
+			{
+				mFlipY = message_in.getValueBoolean("enable");
+			}
 		}
-		else
+        else if (message_class == LLPLUGIN_MESSAGE_CLASS_MEDIA_TIME)
+        {
+            if (message_name == "set_volume")
+            {
+                F32 volume = (F32)message_in.getValueReal("volume");
+                setVolume(volume);
+            }
+        }
+        else
 		{
 			//std::cerr << "MediaPluginWebKit::receiveMessage: unknown message class: " << message_class << std::endl;
 		};
 	}
+}
+
+LLCEFLib::EKeyboardModifier MediaPluginCEF::decodeModifiers(std::string &modifiers)
+{
+	int result = 0;
+
+	if (modifiers.find("shift") != std::string::npos)
+		result |= LLCEFLib::KM_MODIFIER_SHIFT;
+
+	if (modifiers.find("alt") != std::string::npos)
+		result |= LLCEFLib::KM_MODIFIER_ALT;
+
+	if (modifiers.find("control") != std::string::npos)
+		result |= LLCEFLib::KM_MODIFIER_CONTROL;
+
+	if (modifiers.find("meta") != std::string::npos)
+		result |= LLCEFLib::KM_MODIFIER_META;
+
+	return (LLCEFLib::EKeyboardModifier)result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+void MediaPluginCEF::deserializeKeyboardData(LLSD native_key_data, uint32_t& native_scan_code, uint32_t& native_virtual_key, uint32_t& native_modifiers)
+{
+	native_scan_code = 0;
+	native_virtual_key = 0;
+	native_modifiers = 0;
+
+	if (native_key_data.isMap())
+	{
+#if LL_DARWIN
+		native_scan_code = (uint32_t)(native_key_data["char_code"].asInteger());
+		native_virtual_key = (uint32_t)(native_key_data["key_code"].asInteger());
+		native_modifiers = (uint32_t)(native_key_data["modifiers"].asInteger());
+#elif LL_WINDOWS
+		native_scan_code = (uint32_t)(native_key_data["scan_code"].asInteger());
+		native_virtual_key = (uint32_t)(native_key_data["virtual_key"].asInteger());
+		// TODO: I don't think we need to do anything with native modifiers here -- please verify
+#endif
+
+#if LL_LINUX
+	native_scan_code = (uint32_t)(native_key_data["scan_code"].asInteger());
+	native_virtual_key = (uint32_t)(native_key_data["virtual_key"].asInteger());
+	native_modifiers = (uint32_t)(native_key_data["cef_modifiers"].asInteger());
+#endif
+	};
+};
+
+////////////////////////////////////////////////////////////////////////////////
+//
+void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::EKeyboardModifier modifiers, LLSD native_key_data = LLSD::emptyMap())
+{
+#if LL_DARWIN || LL_LINUX
+	std::string utf8_text;
+
+	if (key < 128)
+	{
+		utf8_text = (char)key;
+	}
+
+	switch ((KEY)key)
+	{
+		case KEY_BACKSPACE:		utf8_text = (char)8;		break;
+		case KEY_TAB:			utf8_text = (char)9;		break;
+		case KEY_RETURN:		utf8_text = (char)13;		break;
+		case KEY_PAD_RETURN:	utf8_text = (char)13;		break;
+		case KEY_ESCAPE:		utf8_text = (char)27;		break;
+
+	default:
+		break;
+	}
+
+	uint32_t native_scan_code = 0;
+	uint32_t native_virtual_key = 0;
+	uint32_t native_modifiers = 0;
+	deserializeKeyboardData(native_key_data, native_scan_code, native_virtual_key, native_modifiers);
+
+	mLLCEFLib->keyboardEvent(key_event, (uint32_t)key, utf8_text.c_str(), modifiers, native_scan_code, native_virtual_key, native_modifiers);
+#elif LL_WINDOWS
+	U32 msg = ll_U32_from_sd(native_key_data["msg"]);
+	U32 wparam = ll_U32_from_sd(native_key_data["w_param"]);
+	U64 lparam = ll_U32_from_sd(native_key_data["l_param"]);
+	mLLCEFLib->nativeKeyboardEvent(msg, wparam, lparam);
+#endif
+};
+
+void MediaPluginCEF::unicodeInput(const std::string &utf8str, LLCEFLib::EKeyboardModifier modifiers, LLSD native_key_data = LLSD::emptyMap())
+{
+#if LL_DARWIN
+	//mLLCEFLib->keyPress(utf8str[0], true);
+	mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_DOWN, (uint32_t)(utf8str[0]), 0, LLCEFLib::KM_MODIFIER_NONE, 0, 0, 0);
+#elif LL_WINDOWS
+	U32 msg = ll_U32_from_sd(native_key_data["msg"]);
+	U32 wparam = ll_U32_from_sd(native_key_data["w_param"]);
+	U64 lparam = ll_U32_from_sd(native_key_data["l_param"]);
+	mLLCEFLib->nativeKeyboardEvent(msg, wparam, lparam);
+#endif
+
+// <FS:ND> Keyboard handling for Linux, code written by Henri Beauchamp
+#if LL_LINUX
+	uint32_t key = KEY_NONE;
+
+	if (utf8str.size() == 1)
+		key = utf8str[0];
+
+	uint32_t native_scan_code = 0;
+	uint32_t native_virtual_key = 0;
+	uint32_t native_modifiers = 0;
+	deserializeKeyboardData(native_key_data, native_scan_code, native_virtual_key, native_modifiers);
+	
+	mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_DOWN, (uint32_t)key, utf8str.c_str(), modifiers, 0, native_virtual_key, native_modifiers);
+	mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_UP, (uint32_t)key, utf8str.c_str(), modifiers, 0, native_virtual_key, native_modifiers);
+#endif
+// </FS:ND>
+};
+
+////////////////////////////////////////////////////////////////////////////////
+//
+void MediaPluginCEF::checkEditState()
+{
+	bool can_cut = mLLCEFLib->editCanCut();
+	bool can_copy = mLLCEFLib->editCanCopy();
+	bool can_paste = mLLCEFLib->editCanPaste();
+
+	if ((can_cut != mCanCut) || (can_copy != mCanCopy) || (can_paste != mCanPaste))
+	{
+		LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA, "edit_state");
+
+		if (can_cut != mCanCut)
+		{
+			mCanCut = can_cut;
+			message.setValueBoolean("cut", can_cut);
+		}
+
+		if (can_copy != mCanCopy)
+		{
+			mCanCopy = can_copy;
+			message.setValueBoolean("copy", can_copy);
+		}
+
+		if (can_paste != mCanPaste)
+		{
+			mCanPaste = can_paste;
+			message.setValueBoolean("paste", can_paste);
+		}
+
+		sendMessage(message);
+	}
+}
+
+void MediaPluginCEF::setVolume(F32 vol)
+{
+    mVolumeCatcher.setVolume(vol);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -482,4 +869,3 @@ int init_media_plugin(LLPluginInstance::sendMessageFunction host_send_func,
 
 	return 0;
 }
-

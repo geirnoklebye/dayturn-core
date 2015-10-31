@@ -1054,11 +1054,13 @@ class LinuxManifest(ViewerManifest):
             self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
             self.path( "../media_plugins/cef/libmedia_plugin_cef.so", "libmedia_plugin_cef.so" )
             self.end_prefix("bin/llplugin")
-        # CEF files 
+            
+            # CEF files 
         if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
             self.path( "libcef.so" )
             self.path( "libllceflib.so" )
             self.end_prefix()
+
 
         if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="bin"):
             self.path( "chrome-sandbox" )
@@ -1311,6 +1313,11 @@ class Linux_i686_Manifest(LinuxManifest):
                 self.path("libqtwcodecs.so")
                 self.end_prefix("bin/llplugin/codecs")
 
+            #cef plugin
+            if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
+                self.path( "libcef.so" )
+                self.path( "libllceflib.so" )
+                self.end_prefix()
 
 class Linux_x86_64_Manifest(LinuxManifest):
     def construct(self):
@@ -1378,6 +1385,10 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libfreetype.so.*.*")
             self.path("libpng16.so.16") 
             self.path("libpng16.so.16.8.0")
+
+            #cef plugin
+            self.path( "libcef.so" )
+            self.path( "libllceflib.so" )
             self.end_prefix("lib64")
 
             # plugin runtime
