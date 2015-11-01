@@ -244,6 +244,7 @@ attributedStringInfo getSegments(NSAttributedString *str)
 		// Tried using ObjC 'nonnull' keyword as per SO article but didn't build
         GLint glVsync = vsync ? 1 : 0;
 		[glContext setValues:&glVsync forParameter:NSOpenGLCPSwapInterval];	}
+	}
 	
     mOldResize = false;
     
