@@ -17,7 +17,6 @@ set(cmake_SOURCE_FILES
     CEFPlugin.cmake
     CMakeCopyIfDifferent.cmake
     ConfigurePkgConfig.cmake
-    ColladaDom.cmake
     CURL.cmake
     Copy3rdPartyLibs.cmake
     DBusGlib.cmake
@@ -32,7 +31,6 @@ set(cmake_SOURCE_FILES
     FindCARes.cmake
     FindFMODEX.cmake
     FindGLH.cmake
-    FindGLOD.cmake
     FindGoogleBreakpad.cmake
     FindGooglePerfTools.cmake
     FindHUNSPELL.cmake

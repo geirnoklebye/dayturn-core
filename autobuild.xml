@@ -754,9 +754,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2043fef7903b7c5b88d06061353aeb1e</string>
+              <string>67aab8a9f179d7eab7536a1617858b75</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex-d/downloads/fmodex-4.44.52-linux64-201506112127.tar.bz2</string>
+              <string>file:///opt/kokua/fmodex-44456-linux-x64-201508070712-r21d.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>

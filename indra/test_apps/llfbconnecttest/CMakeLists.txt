@@ -71,7 +71,7 @@ endif (DARWIN)
 add_dependencies(llfbconnecttest
   stage_third_party_libs
   SLPlugin
-  media_plugin_webkit
+  media_plugin_cef
   ${LLPLUGIN_LIBRARIES}
   ${LLMESSAGE_LIBRARIES}
   ${LLCOMMON_LIBRARIES}
@@ -122,10 +122,10 @@ add_custom_command(TARGET llfbconnecttest POST_BUILD
 )
 
 
-set(BUILT_WEBKIT_PLUGIN $<TARGET_FILE:media_plugin_webkit>)
+set(BUILT_CEF_PLUGIN $<TARGET_FILE:media_plugin_cef>)
 add_custom_command(TARGET llfbconnecttest POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy ${BUILT_WEBKIT_PLUGIN}  ${PLUGINS_DESTINATION_DIR}
-  DEPENDS ${BUILT_WEBKIT_PLUGIN}
+  COMMAND ${CMAKE_COMMAND} -E copy ${BUILT_CEF_PLUGIN}  ${PLUGINS_DESTINATION_DIR}
+  DEPENDS ${BUILT_CEF_PLUGIN}
 )
 
 # copy over bookmarks file if llfbconnecttest gets built
