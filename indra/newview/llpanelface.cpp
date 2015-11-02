@@ -2194,7 +2194,7 @@ struct LLPanelFaceSetMediaFunctor : public LLSelectedTEFunctor
 
 				// set scale and adjust offset
 				object->setTEScaleS( te, scale_s );
-				object->setTEScaleT( te, scale_t );	// don't need to flip Y anymore since QT does this for us now.
+				object->setTEScaleT( te, scale_t );	// don't need to flip Y anymore since web plugin does this for us now.
 				object->setTEOffsetS( te, -( 1.0f - scale_s ) / 2.0f );
 				object->setTEOffsetT( te, -( 1.0f - scale_t ) / 2.0f );
 			}
