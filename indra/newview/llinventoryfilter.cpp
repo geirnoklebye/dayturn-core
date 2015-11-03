@@ -905,6 +905,12 @@ void LLInventoryFilter::setDateRangeLastLogoff(BOOL sl)
 	}
 }
 
+bool LLInventoryFilter::isTransferrable() const
+{
+	static LLCachedControl<bool> s_transferrable(gSavedSettings, "InventoryFilterTransfer", false);
+	return (mFilterOps.mFilterTypes & FILTERTYPE_TRANSFERRABLE);
+}
+
 bool LLInventoryFilter::isSinceLogoff() const
 {
 	static LLCachedControl<U32> s_last_logoff(gSavedSettings, "LastLogoff", 0);
@@ -1058,6 +1064,12 @@ void LLInventoryFilter::setFilterWorn(BOOL sl)
 {
 	setModified();
 	mFilterOps.mFilterTypes |= FILTERTYPE_WORN;
+}
+
+void LLInventoryFilter::setFilterTransfer(BOOL xfer)
+{
+	setModified();
+	mFilterOps.mFilterTypes |= FILTERTYPE_TRANSFERRABLE;
 }
 
 void LLInventoryFilter::markDefault()
@@ -1257,7 +1269,14 @@ const std::string& LLInventoryFilter::getFilterText()
 		not_filtered_types +=  LLTrans::getString("Snapshots");
 		filtered_by_all_types = FALSE;
 	}
-
+	if (isTransferrable())
+	{
+		mFilterText += LLTrans::getString("Transferable Items");
+	}
+	else
+	{
+		mFilterText += LLTrans::getString("No Filters");
+	}
 	if (!LLInventoryModelBackgroundFetch::instance().folderFetchActive()
 		&& filtered_by_type
 		&& !filtered_by_all_types)
