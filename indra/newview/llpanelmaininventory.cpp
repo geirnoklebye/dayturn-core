@@ -88,6 +88,7 @@ public:
 	void updateElementsFromFilter();
 	BOOL getCheckShowEmpty();
 	BOOL getCheckSinceLogoff();
+	BOOL getCheckTransferrable();
 	U32 getDateSearchDirection();
 
 	static void onTimeAgo(LLUICtrl*, void *);
@@ -593,6 +594,7 @@ void LLPanelMainInventory::setFocusFilterEditor()
 // virtual
 void LLPanelMainInventory::draw()
 {
+	static LLCachedControl<bool> s_transfer(gSavedSettings, "InventoryFilterTransfer", false);
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mContainsShowinv)
 	{
@@ -618,6 +620,14 @@ void LLPanelMainInventory::draw()
 		mActivePanel->setSortOrder(LLInventoryFilter::SO_NAME);
 		mActivePanel->setSortOrder(order);
 		mResortActivePanel = false;
+	}
+	if (s_transfer)
+	{
+		mActivePanel->setFilterPermMask(PERM_TRANSFER);
+	}
+	else
+	{
+		mActivePanel->setFilterPermMask(PERM_NONE);
 	}
 	LLPanel::draw();
 	updateItemcountText();
@@ -810,6 +820,7 @@ void LLFloaterInventoryFinder::updateElementsFromFilter()
 	getChild<LLUICtrl>("check_sound")->setValue((S32) (filter_types & 0x1 << LLInventoryType::IT_SOUND));
 	getChild<LLUICtrl>("check_texture")->setValue((S32) (filter_types & 0x1 << LLInventoryType::IT_TEXTURE));
 	getChild<LLUICtrl>("check_snapshot")->setValue((S32) (filter_types & 0x1 << LLInventoryType::IT_SNAPSHOT));
+	getChild<LLUICtrl>("check_transferrable")->setValue(mFilter->isTransferrable());
 	getChild<LLUICtrl>("check_show_empty")->setValue(show_folders == LLInventoryFilter::SHOW_ALL_FOLDERS);
 	getChild<LLUICtrl>("check_since_logoff")->setValue(mFilter->isSinceLogoff());
 	mSpinSinceHours->set((F32)(hours % 24));
@@ -928,6 +939,15 @@ void LLFloaterInventoryFinder::draw()
 	}
 	hours += days * 24;
 
+	if (getCheckTransferrable())
+	{ 
+		gSavedSettings.setBOOL("InventoryFilterTransfer", true);
+	}
+	else
+	{
+		gSavedSettings.setBOOL("InventoryFilterTransfer", false);
+	}
+
 	mPanelMainInventory->getPanel()->setHoursAgo(hours);
 	mPanelMainInventory->getPanel()->setSinceLogoff(getCheckSinceLogoff());
 	mPanelMainInventory->setFilterTextFromFilter();
@@ -945,7 +965,10 @@ BOOL LLFloaterInventoryFinder::getCheckSinceLogoff()
 {
 	return getChild<LLUICtrl>("check_since_logoff")->getValue();
 }
-
+BOOL LLFloaterInventoryFinder::getCheckTransferrable()
+{
+	return getChild<LLUICtrl>("check_transferrable")->getValue();
+}
 U32 LLFloaterInventoryFinder::getDateSearchDirection()
 {
 	return 	getChild<LLRadioGroup>("date_search_direction")->getSelectedIndex();
@@ -956,7 +979,6 @@ void LLFloaterInventoryFinder::onCloseBtn(void* user_data)
 	LLFloaterInventoryFinder* finderp = (LLFloaterInventoryFinder*)user_data;
 	finderp->closeFloater();
 }
-
 // static
 void LLFloaterInventoryFinder::selectAllTypes(void* user_data)
 {

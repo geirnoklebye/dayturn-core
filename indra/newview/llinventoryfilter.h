@@ -62,7 +62,8 @@ public:
         FILTERTYPE_MARKETPLACE_UNASSOCIATED = 0x1 << 8, // pass if folder is a marketplace non associated (no market ID) folder
         FILTERTYPE_MARKETPLACE_LISTING_FOLDER = 0x1 << 9,	// pass iff folder is a listing folder
         FILTERTYPE_NO_MARKETPLACE_ITEMS = 0x1 << 10,         // pass iff folder is not under the marketplace
-		FILTERTYPE_WORN = 0x1 << 11,	// search by wearable type
+		FILTERTYPE_WORN = 0x1 << 11, // search by wearable type
+		FILTERTYPE_TRANSFERRABLE = 0x1 << 12, //search by transferrable property
 	};
 
 	enum EFilterDateDirection
@@ -230,6 +231,9 @@ public:
 
 	void 				setFilterWorn(BOOL sl);
 	BOOL 				getFilterWorn() { return mFilterOps.mFilterTypes & FILTERTYPE_WORN; }
+
+	void 				setFilterTransfer(BOOL xfer);
+	BOOL 				getFilterTransfer() { return mFilterOps.mFilterTypes & FILTERTYPE_TRANSFERRABLE; }
 	// sets params for Link-only search and backs up search settings for future restoration
 	void				setFindAllLinksMode(const std::string &search_name, const LLUUID& search_id);
 
@@ -268,6 +272,7 @@ public:
 	bool 				isActive() const;
 	bool 				isModified() const;
 	bool 				isSinceLogoff() const;
+	bool				isTransferrable() const;
 	void 				clearModified();
 	const std::string& 	getName() const { return mName; }
 	const std::string& 	getFilterText();
