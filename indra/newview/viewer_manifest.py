@@ -1054,12 +1054,6 @@ class LinuxManifest(ViewerManifest):
             self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
             self.path( "../media_plugins/cef/libmedia_plugin_cef.so", "libmedia_plugin_cef.so" )
             self.end_prefix("bin/llplugin")
-            
-            # CEF files 
-        if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
-            self.path( "libcef.so" )
-            self.path( "libllceflib.so" )
-            self.end_prefix()
 
 
         if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="bin"):
@@ -1148,7 +1142,6 @@ class LinuxManifest(ViewerManifest):
 
     def package_finish(self):
         installer_name = self.installer_base_name()
-
         self.strip_binaries()
 
         # Fix access permissions
@@ -1171,13 +1164,13 @@ class LinuxManifest(ViewerManifest):
             if self.args['buildtype'].lower() == 'release':
                 # --numeric-owner hides the username of the builder for
                 # security etc.
-                self.run_command('tar -C %(dir)s --numeric-owner -cjf '
-                                 '%(inst_path)s.tar.bz2 %(inst_name)s' % {
+                self.run_command('tar -C %(dir)s --numeric-owner -cJf '
+                                 '%(inst_path)s.tar.txz %(inst_name)s' % {
                         'dir': self.get_build_prefix(),
                         'inst_name': installer_name,
                         'inst_path':self.build_path_of(installer_name)})
             else:
-                print "Skipping %s.tar.bz2 for non-Release build (%s)" % \
+                print "Skipping %s.tar.txz for non-Release build (%s)" % \
                       (installer_name, self.args['buildtype'])
         finally:
             self.run_command("mv %(inst)s %(dst)s" % {
@@ -1187,7 +1180,7 @@ class LinuxManifest(ViewerManifest):
     def strip_binaries(self):
         if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
             print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
-            self.run_command(r"find %(d)r/bin %(d)r/lib %(d)r/lib32 %(d)r/lib64 -type f \! -name update_install | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
+            self.run_command(r"find %(d)r/bin %(d)r/lib %(d)r/lib32 %(d)r/lib64 -type f \! -name update_install \! -name *.pak \! -name *.dat \! -name *.bin | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
 
 
 
