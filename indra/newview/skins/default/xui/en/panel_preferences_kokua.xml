@@ -77,17 +77,6 @@
                 control_name="RezUnderLandGroup"
                 tool_tip="Attempts to rez objects under the land group, if you're in the land group, regardless of which group tag you're currently wearing." />
             <check_box
-            font="SansSerifSmall"
-            height="20"
-            initial_value="false"
-            label="Save scripts in inventory as Mono instead of LSL2"
-            layout="topleft"
-            left="15"
-            name="SaveInventoryScriptsAsMono"
-            width="350"
-            control_name="SaveInventoryScriptsAsMono"
-            tool_tip="If true then scripts saved in inventory will be saved as Mono.  Otherwise they will be saved as LSL2.  This applies when compiling scripts and not when simply copying them." />
-            <check_box
                 enabled="true"
                 name="WindowTitleAvatarName"
                 control_name="WindowTitleAvatarName"
@@ -600,7 +589,7 @@
          follows="left|top"
          height="10"
          layout="topleft"
-         left="10"
+         left="20"
          name="Web:"
          top_pad="5"
          width="2">
@@ -625,6 +614,18 @@
                tool_tip="Limits amount of dialogs per script \n0 - per object \n1 - per channel \n2 - per channel for attachments  \n3 - per channel for HUDs \n4 - unconstrained for HUDs"
                top_delta="23"
                width="170" >
+            <check_box
+                top_delta="50"
+                font="SansSerifSmall"
+                height="20"
+                initial_value="false"
+                label="Save scripts in inventory as Mono instead of LSL2"
+                layout="topleft"
+                left="0"
+                name="SaveInventoryScriptsAsMono"
+                width="350"
+                control_name="SaveInventoryScriptsAsMono"
+                tool_tip="If true then scripts saved in inventory will be saved as Mono.  Otherwise they will be saved as LSL2.  This applies when compiling scripts and not when simply copying them." />
 
 
                 <!--
