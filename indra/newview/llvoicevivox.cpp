@@ -449,6 +449,23 @@ void LLVivoxVoiceClient::userAuthorized(const std::string& user_id, const LLUUID
 }
 
 void LLVivoxVoiceClient::setLoginInfo(
+	// <FS:ND> CAP can return 404 on first try, repeat until num retries are reached or we get 200
+	S32 i = 0;
+	do {
+	// </FS:ND>
+
+	// <FS:ND> CAP can return 404 on first try, repeat until num retries are reached or we get 200
+	if( !status )
+	{
+		if( i++ < retries )
+			continue;
+	}
+	// </FS:ND>
+
+	// <FS:ND> CAP can return 404 on first try, repeat until num retries are reached or we get 200
+	return;
+	} while( true );
+	// </FS:ND>
 	const std::string& account_name,
 	const std::string& password,
 	const std::string& voice_sip_uri_hostname,
