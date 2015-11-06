@@ -58,8 +58,6 @@
 #include "llcorehttputil.h"
 #ifdef OPENSIM
 #include "llviewernetwork.h"
-#endif // OPENSIM
-
 
 const S32 MINIMUM_PRICE_FOR_LISTING = 50;	// L$
 

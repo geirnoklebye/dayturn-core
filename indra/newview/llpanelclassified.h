@@ -195,7 +195,10 @@ private:
 	S32 mMapClicksNew;
 	S32 mProfileClicksNew;
 
-    static void handleSearchStatResponse(LLUUID classifiedId, LLSD result);
+public: // <FS:ND> Need this public for fspanelclassified
+	static void handleSearchStatResponse(LLUUID classifiedId, LLSD result);
+
+private: // </FS:ND>
 
 
 	typedef std::list<LLPanelClassifiedInfo*> panel_list_t;
