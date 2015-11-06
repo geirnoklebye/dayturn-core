@@ -1428,7 +1428,8 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 			body["everyone_mask"] = LLSD::Integer(LLFloaterPerms::getEveryonePerms());
 		}
 		
-		LLHTTPClient::post(url, body, new FSAssetResponder(body, new_asset_id, asset_type, data));
+		//<FS:ND> MERGE_TODO Needs an implementation post coroutine merge.
+		// LLHTTPClient::post(url, body, new FSAssetResponder(body, new_asset_id, asset_type, data));
 		LL_DEBUGS("import") << "Asset upload via capability of " << new_asset_id.asString() << " to " << url << " of " << asset_id.asString() << LL_ENDL;
 	} 
 	else
@@ -1757,7 +1758,8 @@ void FSCreateItemCallback::fire(const LLUUID& inv_item)
 		self->uploadAsset(data->uuid, inv_item);
 	}
 }
-
+//<FS:ND> MERGE_TODO Needs an implementation post coroutine merge.
+#if 0
 
 FSAssetResponder::FSAssetResponder(const LLSD& post_data,
 				       const LLUUID& vfile_id,
@@ -1956,3 +1958,4 @@ void FSAssetResponder::error(U32 statusNum, const std::string& reason)
 	delete fs_data;
 	delete data;
 }
+#endif

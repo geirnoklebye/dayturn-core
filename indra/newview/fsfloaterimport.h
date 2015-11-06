@@ -128,7 +128,8 @@ private:
 	LLFrameTimer mWaitTimer;
 	F32 mThrottleTime;
 };
-
+//<FS:ND> MERGE_TODO Needs an implementation post coroutine merge.
+#if 0
 class FSAssetResponder : public LLAssetUploadResponder
 {
 	LOG_CLASS(FSAssetResponder);
@@ -145,7 +146,7 @@ public:
 
 	LLResourceData* mData;
 };
-
+#endif
 class FSCreateItemCallback : public LLInventoryCallback
 {
 	LOG_CLASS(FSCreateItemCallback);
