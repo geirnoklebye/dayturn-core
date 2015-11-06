@@ -34,14 +34,14 @@
 
 #include "lldispatcher.h"
 #include "llfloaterreg.h"
-#include "llhttpclient.h"
+
 #include "llnotifications.h"
 #include "llnotificationsutil.h"
 #include "llparcel.h"
 
 #include "llagent.h"
 #include "llclassifiedflags.h"
-#include "llclassifiedstatsresponder.h"
+
 #include "llcommandhandler.h" // for classified HTML detail page click tracking
 #include "lliconctrl.h"
 #include "lllineeditor.h"

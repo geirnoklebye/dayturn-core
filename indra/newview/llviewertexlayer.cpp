@@ -37,7 +37,6 @@
 #include "llglslshader.h"
 #include "llvoavatarself.h"
 #include "pipeline.h"
-#include "llassetuploadresponders.h"
 #include "llviewercontrol.h"
 
 static const S32 BAKE_UPLOAD_ATTEMPTS = 7;

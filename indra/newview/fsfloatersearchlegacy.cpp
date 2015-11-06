@@ -33,7 +33,6 @@
 #include "llavatarnamecache.h"
 #include "llcallingcard.h"
 #include "llclassifiedflags.h"
-#include "llclassifiedstatsresponder.h"
 #include "llfloatersidepanelcontainer.h"
 #include "llqueryflags.h"
 #include "llgroupmgr.h"

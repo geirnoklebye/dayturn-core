@@ -48,7 +48,7 @@ struct FSResourceData
 	LLUUID post_asset_upload_id;
 };
 
-#include "llassetuploadresponders.h"
+
 
 class FSFloaterImport : public LLFloater, public LLSingleton<FSFloaterImport>
 {
