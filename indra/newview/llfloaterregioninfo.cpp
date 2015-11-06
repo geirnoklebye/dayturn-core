@@ -1035,7 +1035,7 @@ void LLPanelRegionOpenSettingsInfo::onClickOrs(void* userdata)
 		body["enable_teen_mode"] = (LLSD::Boolean)self->childGetValue("enable_teen_mode");
 		body["enforce_max_build"] = (LLSD::Boolean)self->childGetValue("enforce_max_build");
 
-		LLHTTPClient::post(url, body, new LLHTTPClient::Responder());
+        LLCoreHttpUtil::HttpCoroutineAdapter::messageHttpPost(url, body, "Posted onClickOrs", "Error posting onClickOrs");
 		//LL_INFOS() << "data: " << LLSDXMLStreamer(body) << LL_ENDL;
 	}
 }
