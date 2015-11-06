@@ -658,7 +658,8 @@ void FSFloaterSearchLegacy::processGroupData()
 		setLoadingProgress(FALSE);
 	}
 }
-
+//<FS:ND> MERGE_TODO Needs an implementation post coroutine merge
+#if 0
 //virtual
 void FSFloaterSearchLegacy::processProperties(void* data, EAvatarProcessorType type)
 {
@@ -695,7 +696,7 @@ void FSFloaterSearchLegacy::processProperties(void* data, EAvatarProcessorType t
 		}
 	}
 }
-
+#endif
 void FSFloaterSearchLegacy::onOpen(const LLSD &params)
 {
 	const std::string category = params["category"].asString();
