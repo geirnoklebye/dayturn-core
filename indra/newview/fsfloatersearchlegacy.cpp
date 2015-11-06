@@ -61,6 +61,7 @@
 #include "llgroupactions.h"
 #include "llfloaterworldmap.h"
 #include "fspanelclassified.h"
+#include "llpanelclassified.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -658,8 +659,6 @@ void FSFloaterSearchLegacy::processGroupData()
 		setLoadingProgress(FALSE);
 	}
 }
-//<FS:ND> MERGE_TODO Needs an implementation post coroutine merge
-#if 0
 //virtual
 void FSFloaterSearchLegacy::processProperties(void* data, EAvatarProcessorType type)
 {
@@ -691,12 +690,11 @@ void FSFloaterSearchLegacy::processProperties(void* data, EAvatarProcessorType t
 				LL_INFOS() << "Classified stat request via capability" << LL_ENDL;
 				LLSD body;
 				body["classified_id"] = getSelectedID();
-				LLHTTPClient::post(url, body, new LLClassifiedStatsResponder(getSelectedID()));
+				LLCoreHttpUtil::HttpCoroutineAdapter::callbackHttpPost(url, body, boost::bind(&LLPanelClassifiedInfo::handleSearchStatResponse, getSelectedID(), _1));
 			}
 		}
 	}
 }
-#endif
 void FSFloaterSearchLegacy::onOpen(const LLSD &params)
 {
 	const std::string category = params["category"].asString();
