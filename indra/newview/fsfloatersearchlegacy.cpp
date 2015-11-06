@@ -176,7 +176,8 @@ public:
 	}
 };
 static FSDispatchClassifiedClickThrough sClassifiedClickThrough;
-
+//<FS:ND> MERGE_TODO Needs an implementation post coroutine merge
+#if 0
 // Just to debug errors. Can be thrown away later.
 class FSClassifiedClickMessageResponder : public LLHTTPClient::Responder
 {
@@ -192,7 +193,7 @@ public:
 		LL_WARNS() << "Content: [" << content << "]" << LL_ENDL;
 	}
 };
-
+#endif
 ////////////////////////////////////////
 //         The floater itself         //
 ////////////////////////////////////////
