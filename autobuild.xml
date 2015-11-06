@@ -3431,9 +3431,6 @@
             </map>
             <key>RelWithDebInfo</key>
             <map>
-              <key>build</key>
-              <map>
-              </map>
               <key>configure</key>
               <map>
                 <key>arguments</key>
@@ -3516,6 +3513,25 @@
               <key>name</key>
               <string>ReleaseOS</string>
             </map>
+            <key>Doxygen</key>
+            <map>
+              <key>build</key>
+              <map>
+                <key>arguments</key>
+                <array>
+                  <string>doxygen/Doxyfile</string>
+                </array>
+                <key>command</key>
+                <string>doxygen</string>
+              </map>
+              <key>configure</key>
+              <map>
+                <key>command</key>
+                <string>cmake</string>
+              </map>
+              <key>name</key>
+              <string>Doxygen</string>
+            </map>
           </map>
           <key>name</key>
           <string>common</string>
@@ -3539,7 +3555,7 @@
                 </array>
                 <key>options</key>
                 <array>
-                  <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
+                  <string>-DCMAKE_BUILD_TYPE:STRING=Release</string>
                   <string>-DWORD_SIZE:STRING=32</string>
                   <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>
