@@ -2602,7 +2602,8 @@ void LLVOAvatarSelf::sendViewerAppearanceChangeMetrics()
 		mTimeSinceLastRezMessage.reset();
 	}
 }
-
+//<FS:ND> MERGE_TODO Needs an implementation post coroutine merge
+#if 0
 class CheckAgentAppearanceServiceResponder: public LLHTTPClient::Responder
 {
 	LOG_CLASS(CheckAgentAppearanceServiceResponder);
@@ -2642,6 +2643,28 @@ public:
 									gAgentAvatarp.get(), true), 5.0);
 	}
 };
+#endif
+void CheckAgentAppearanceService_httpSuccess( LLSD const &aData )
+{
+		LL_DEBUGS("Avatar") << "OK" << LL_ENDL;
+}
+
+void forceAppearanceUpdate()
+{
+	// Trying to rebake immediately after crossing region boundary
+	// seems to be failure prone; adding a delay factor. Yes, this
+	// fix is ad-hoc and not guaranteed to work in all cases.
+	doAfterInterval(boost::bind(&LLVOAvatarSelf::forceBakeAllTextures,	gAgentAvatarp.get(), true), 5.0);
+}
+
+void CheckAgentAppearanceService_httpFailure( LLSD const &aData )
+{
+	if (isAgentAvatarValid())
+	{
+		LL_DEBUGS("Avatar") << "failed, will rebake " << aData << LL_ENDL;
+		forceAppearanceUpdate();
+	}	
+}
 
 void LLVOAvatarSelf::checkForUnsupportedServerBakeAppearance()
 {
@@ -2655,13 +2678,15 @@ void LLVOAvatarSelf::checkForUnsupportedServerBakeAppearance()
 	// if baked image service is unknown, need to refresh.
 	if (LLAppearanceMgr::instance().getAppearanceServiceURL().empty())
 	{
-		CheckAgentAppearanceServiceResponder::forceAppearanceUpdate();
+		forceAppearanceUpdate();
 	}
 	// query baked image service to check status.
 	std::string image_url = gAgentAvatarp->getImageURL(TEX_HEAD_BAKED,
 													   getTE(TEX_HEAD_BAKED)->getID());
-	LLHTTPClient::head(image_url, new CheckAgentAppearanceServiceResponder);
+
+	LLCoreHttpUtil::HttpCoroutineAdapter::callbackHttpGet( image_url, CheckAgentAppearanceService_httpSuccess, CheckAgentAppearanceService_httpFailure );
 }
+
 
 const LLUUID& LLVOAvatarSelf::grabBakedTexture(EBakedTextureIndex baked_index) const
 {
