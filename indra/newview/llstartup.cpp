@@ -298,33 +298,140 @@ void callback_cache_name(const LLUUID& id, const std::string& full_name, bool is
 
 // <AW: opensim>
 static bool sGridListRequestReady = false;
-class GridListRequestResponder : public LLHTTPClient::Responder
+void downloadGridlistComplete( LLSD const &aData )
 {
-public:
-	//If we get back a normal response, handle it here
-	virtual void result(const LLSD& content)
-	{
-		std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "grids.remote.xml");
+	LL_DEBUGS() << aData << LL_ENDL;
+	
+	LLSD header = aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ][ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_HEADERS];
 
-		llofstream out_file(filename.c_str(), std::ios_base::out | std::ios_base::binary);
-		LLSDSerialize::toPrettyXML(content, out_file);
-		out_file.close();
-		LL_INFOS() << "GridListRequest: got new list." << LL_ENDL;
-		sGridListRequestReady = true;
-	}
-
-	//If we get back an error (not found, etc...), handle it here
-	virtual void error(U32 status, const std::string& reason)
+	LLDate lastModified;
+	if (header.has("last-modified"))
 	{
-		sGridListRequestReady = true;
-		if (304 == status)
+		lastModified.secondsSinceEpoch( FSCommon::secondsSinceEpochFromString( "%a, %d %b %Y %H:%M:%S %ZP", header["last-modified"].asString() ) );
+ 	}
+	LLSD data = aData;
+	data.erase( LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS );
+	
+	std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "grids.remote.xml");
+
+	llofstream out_file;
+	out_file.open(filename.c_str());
+	LLSDSerialize::toPrettyXML( aData, out_file);
+	out_file.close();
+	LL_INFOS() << "GridListRequest: got new list." << LL_ENDL;
+	sGridListRequestReady = true;
+}
+void downloadGridlistError( LLSD const &aData, std::string const &aURL )
+{
+	LL_WARNS() << "Failed to download grid list from " << aURL << LL_ENDL;
+}
+
+void downloadGridstatusComplete( LLSD const &aData )
+{
+	LLSD header = aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ][ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_HEADERS];
+    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD( aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ] );
+
+    const LLSD::Binary &rawData = aData[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_RAW].asBinary();
+
+	if( status.getType() 
+	{
+		if (status.getType() == HTTP_INTERNAL_ERROR)
 		{
-			LL_DEBUGS("GridManager") << "<- no error :P ... GridListRequest: List not modified since last session" << LL_ENDL;
+			reportToNearbyChat(LLTrans::getString("SLGridStatusTimedOut"));
 		}
 		else
-			LL_WARNS() << "GridListRequest::error("<< status << ": " << reason << ")" << LL_ENDL;
+		{
+			LLStringUtil::format_map_t args;
+			args["STATUS"] = llformat("%d", status.getType());
+			reportToNearbyChat(LLTrans::getString("SLGridStatusOtherError", args));
+		}
+		LL_WARNS("SLGridStatusResponder") << "Error - status " << status.getType() << LL_ENDL;
+		return;
 	}
-};
+	if (rawData.size() == 0)
+	{
+		reportToNearbyChat(LLTrans::getString("SLGridStatusInvalidMsg"));
+		LL_WARNS("SLGridStatusResponder") << "Error - empty output" << LL_ENDL;
+		return;
+	}
+	std::string fetchedNews;
+	fetchedNews.assign( rawData.begin(), rawData.end() );
+	size_t itemStart = fetchedNews.find("<item>");
+	size_t itemEnd = fetchedNews.find("</item>");
+	if (itemEnd != std::string::npos && itemStart != std::string::npos)
+	{
+		// Isolate latest news data
+		itemStart += 6;
+		std::string theNews = fetchedNews.substr(itemStart, itemEnd - itemStart);
+		// Check for and remove CDATA characters if they're present
+		size_t titleStart = theNews.find("<title><![CDATA[");
+		if (titleStart != std::string::npos)
+		{
+			theNews.replace(titleStart, 16, "<title>");
+		}
+		size_t titleEnd = theNews.find("]]></title>");
+		if (titleEnd != std::string::npos)
+		{
+			theNews.replace(titleEnd, 11, "</title>");
+		}
+		size_t descStart = theNews.find("<description><![CDATA[");
+		if (descStart != std::string::npos)
+		{
+			theNews.replace(descStart, 22, "<description>");
+		}
+		size_t descEnd = theNews.find("]]></description>");
+		if (descEnd != std::string::npos)
+		{
+			theNews.replace(descEnd, 17, "</description>");
+		}
+		size_t linkStart = theNews.find("<link><![CDATA[");
+		if (linkStart != std::string::npos)
+		{
+			theNews.replace(linkStart, 15, "<link>");
+		}
+		size_t linkEnd = theNews.find("]]></link>");
+		if (linkEnd != std::string::npos)
+		{
+			theNews.replace(linkEnd, 10, "</link>");
+		}
+		// Get indexes
+		titleStart = theNews.find("<title>");
+		descStart = theNews.find("<description>");
+		linkStart = theNews.find("<link>");
+		titleEnd = theNews.find("</title>");
+		descEnd = theNews.find("</description>");
+		linkEnd = theNews.find("</link>");
+
+		if (titleStart != std::string::npos &&
+			descStart != std::string::npos &&
+			linkStart != std::string::npos &&
+			titleEnd != std::string::npos &&
+			descEnd != std::string::npos &&
+			linkEnd != std::string::npos)
+		{
+			titleStart = 7;
+			descStart = 13;
+			linkStart = 6;
+			std::string newsTitle = theNews.substr(titleStart, titleEnd - titleStart);
+			std::string newsDesc = theNews.substr(descStart, descEnd - descStart);
+			std::string newsLink = theNews.substr(linkStart, linkEnd - linkStart);
+			LLStringUtil::trim(newsTitle);
+			LLStringUtil::trim(newsDesc);
+			LLStringUtil::trim(newsLink);
+			reportToNearbyChat("[ " + newsTitle + " ] " + newsDesc + " [ " + newsLink + " ]");
+		}
+		else
+		{
+			reportToNearbyChat(LLTrans::getString("SLGridStatusInvalidMsg"));
+			LL_WARNS("SLGridStatusResponder") << "Error - inner tag(s) missing" << LL_ENDL;
+		}
+	}
+	else
+	{
+		reportToNearbyChat(LLTrans::getString("SLGridStatusInvalidMsg"));
+		LL_WARNS("SLGridStatusResponder") << "Error - output without </item>" << LL_ENDL;
+	}
+}
 // </AW: opensim>
 
 void update_texture_fetch()
@@ -654,7 +761,7 @@ bool idle_startup()
 			}
 
 			std::string url = gSavedSettings.getString("GridListDownloadURL");
-			LLHTTPClient::getIfModified(url, new GridListRequestResponder(), last_modified );
+			LLCoreHttpUtil::HttpCoroutineAdapter::callbackHttpGet( url, boost::bind( downloadGridlistComplete, _1 ), boost::bind( downloadGridlistError, _1, url ) );
 		}
 		// Fetch grid infos as needed
 		LLGridManager::getInstance()->initGrids();
