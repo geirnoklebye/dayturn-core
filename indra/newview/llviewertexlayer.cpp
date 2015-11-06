@@ -447,8 +447,8 @@ void LLViewerTexLayerSetBuffer::doUpload()
 				{
 					LLSD body = LLSD::emptyMap();
 					// The responder will call LLViewerTexLayerSetBuffer::onTextureUploadComplete()
-					LLHTTPClient::post(url, body, new LLSendTexLayerResponder(body, mUploadID, LLAssetType::AT_TEXTURE, baked_upload_data));
-					LL_INFOS() << "Baked texture upload via capability of " << mUploadID << " to " << url << LL_ENDL;
+					//<FS:ND> MERGE_TODO Needs an implementation post coroutine merge
+					//LLHTTPClient::post(url, body, new LLSendTexLayerResponder(body, mUploadID, LLAssetType::AT_TEXTURE, baked_upload_data));
 				} 
 				else
 				{
