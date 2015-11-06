@@ -63,13 +63,13 @@ namespace {
 		const std::string& grid_label = LLGridManager::getInstance()->getGridNick();
 		const std::string& grid_label_lower = utf8str_tolower(grid_label);
 
-		if (grid_label_lower == "damballah")
+		if (grid_id_lower == "damballah")
             {
                 domain = "secondlife-staging.com";
             }
             else
             {
-			domain = llformat("%s.lindenlab.com", grid_label_lower.c_str());
+			domain = llformat("%s.lindenlab.com", grid_id_lower.c_str());
             }
         }
 
