@@ -1436,7 +1436,6 @@ if (DARWIN)
   set(viewer_RESOURCE_FILES
     kokua_icon.icns
     macview.r
-    gpu_table.txt
     Info-SecondLife.plist
     Kokua.xib/
     # CMake doesn't seem to support Xcode language variants well just yet
