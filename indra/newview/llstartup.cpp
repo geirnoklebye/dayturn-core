@@ -48,6 +48,8 @@
 #include "llaudioengine_openal.h"
 #endif
 
+
+#include "fscommon.h"
 #include "fsfloatersearchlegacy.h"	// <FS:CR> FIRE-6310
 #include "llavatarnamecache.h"
 #include "llexperiencecache.h"
@@ -333,7 +335,7 @@ void downloadGridstatusComplete( LLSD const &aData )
 
     const LLSD::Binary &rawData = aData[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_RAW].asBinary();
 
-	if( status.getType() 
+	if( status.getType())
 	{
 		if (status.getType() == HTTP_INTERNAL_ERROR)
 		{
