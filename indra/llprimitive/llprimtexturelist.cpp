@@ -372,11 +372,14 @@ S32 LLPrimTextureList::setMaterialParams(const U8 index, const LLMaterialPtr pMa
 {
 	if (index < mEntryList.size())
 	{
-		if (!isInitFromServer && mEntryList[index]->isMatParamsInitFromServer())
-		{
-			return TEM_CHANGE_NONE;
-		}
-		else
+//MK
+		// Attempt at fixing BUG-10601 (Fix recommended by Ansariel Hiller)
+		////if (!isInitFromServer && mEntryList[index]->isMatParamsInitFromServer())
+		////{
+		////	return TEM_CHANGE_NONE;
+		////}
+		////else
+//mk
 		{
 			return mEntryList[index]->setMaterialParams(pMaterialParams);
 		}
