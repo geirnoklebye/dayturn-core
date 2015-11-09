@@ -4679,8 +4679,11 @@ S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMateri
 		return 0;
 	}
 
-	setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
-	setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
+//MK
+	// Attempt at fixing BUG-10601 (Fix recommended by Ansariel Hiller) : move these lines after the call to setTEMaterialParams()
+	////setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
+	////setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
+//mk
 
 	retval = LLPrimitive::setTEMaterialParams(te, pMaterialParams, isInitFromServer);
 	LL_DEBUGS("Material") << "Changing material params for te " << (S32)te
@@ -4688,6 +4691,11 @@ S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMateri
 			               << " (" << retval << ")"
 							<< LL_ENDL;
 
+//MK
+	// Attempt at fixing BUG-10601 (Fix recommended by Ansariel Hiller)
+	setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
+	setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
+//mk
 	refreshMaterials();
 	return retval;
 }
