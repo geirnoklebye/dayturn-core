@@ -165,7 +165,7 @@ public:
 			LLViewerInventoryItem *item = gInventory.getItem(*it);
 			if (!item)
 			{
-				LL_WARNS() << "fetch failed!" << LL_ENDL;
+				LL_WARNS() << "fetch failed for item " << (*it) << "!" << LL_ENDL;
 				continue;
 			}
 

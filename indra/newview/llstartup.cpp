@@ -326,7 +326,7 @@ public:
 		llofstream out_file(filename.c_str(), std::ios_base::out | std::ios_base::binary);
 		LLSDSerialize::toPrettyXML(content, out_file);
 		out_file.close();
-		llinfos << "GridListRequest: got new list." << llendl;
+		LL_INFOS() << "GridListRequest: got new list." << LL_ENDL;
 		sGridListRequestReady = true;
 	}
 
@@ -339,7 +339,7 @@ public:
 			LL_DEBUGS("GridManager") << "<- no error :P ... GridListRequest: List not modified since last session" << LL_ENDL;
 		}
 		else
-			llwarns << "GridListRequest::error("<< status << ": " << reason << ")" << llendl;
+			LL_WARNS() << "GridListRequest::error("<< status << ": " << reason << ")" << LL_ENDL;
 	}
 };
 // </AW: opensim>
@@ -3739,32 +3739,32 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 	if(response.has("currency"))
 	{
 		currency = response["currency"].asString();
-		LL_DEBUGS("OS_SETTINGS") << "currency " << currency << llendl;
+		LL_DEBUGS("OS_SETTINGS") << "currency " << currency << LL_ENDL;
 	}
 	else if (LLGridManager::getInstance()->isInOpenSim())
 	{
 		currency = "T$";
-		LL_DEBUGS("OS_SETTINGS") << "no currency in login response" << llendl;
+		LL_DEBUGS("OS_SETTINGS") << "no currency in login response" << LL_ENDL;
 	}
 	Tea::setCurrency(currency);
 
 
 	if(response.has("profile-server-url"))
 	{
-		LL_DEBUGS("OS_SETTINGS") << "profile-server-url " << response["profile-server-url"] << llendl;
+		LL_DEBUGS("OS_SETTINGS") << "profile-server-url " << response["profile-server-url"] << LL_ENDL;
 	}
 	else if (LLGridManager::getInstance()->isInOpenSim())
 	{
-		LL_DEBUGS("OS_SETTINGS") << "no profile-server-url in login response" << llendl;	
+		LL_DEBUGS("OS_SETTINGS") << "no profile-server-url in login response" << LL_ENDL;	
 	}
 
 	if(response.has("search"))
 	{
-		LL_DEBUGS("OS_SETTINGS") << "search " << response["search"] << llendl;
+		LL_DEBUGS("OS_SETTINGS") << "search " << response["search"] << LL_ENDL;
 	}
 	else if (LLGridManager::getInstance()->isInOpenSim())
 	{
-		LL_DEBUGS("OS_SETTINGS") << "no search url in login response" << llendl;
+		LL_DEBUGS("OS_SETTINGS") << "no search url in login response" << LL_ENDL;
 	}
 
 	

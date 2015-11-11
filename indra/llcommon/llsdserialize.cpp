@@ -2151,7 +2151,7 @@ bool unzip_llsd(LLSD& data, std::istream& is, S32 size)
 		ret = inflate(&strm, Z_NO_FLUSH);
 		if (ret == Z_STREAM_ERROR)
 		{
-			llwarns << "Unzip error: Z_STREAM_ERROR" << llendl;
+			LL_WARNS() << "Unzip error: Z_STREAM_ERROR" << LL_ENDL;
 			inflateEnd(&strm);
 			free(result);
 			delete [] in;
@@ -2164,7 +2164,7 @@ bool unzip_llsd(LLSD& data, std::istream& is, S32 size)
 			ret = Z_DATA_ERROR;
 		case Z_DATA_ERROR:
 		case Z_MEM_ERROR:
-			llwarns << "Unzip error: " << ret << llendl;
+			LL_WARNS() << "Unzip error: " << ret << LL_ENDL;
 			inflateEnd(&strm);
 			free(result);
 			delete [] in;
@@ -2185,7 +2185,7 @@ bool unzip_llsd(LLSD& data, std::istream& is, S32 size)
 
 	if (ret != Z_STREAM_END)
 	{
-		llwarns << "Unzip error: !Z_STREAM_END" << llendl;
+		LL_WARNS() << "Unzip error: !Z_STREAM_END" << LL_ENDL;
 		free(result);
 		return false;
 	}

@@ -309,7 +309,7 @@ void LLLandmarksPanel::onShare()
 	LLFloater *floater = gFloaterView->getParentFloater(this);
 
 	if (!floater) {
-		llwarns << "Can't find our floater" << llendl;
+		LL_WARNS() << "Can't find our floater" << LL_ENDL;
 		return;
 	}
 
@@ -322,7 +322,7 @@ void LLLandmarksPanel::onShare()
 	);
 
 	if (!picker) {
-		llwarns << "Can't open the avatar picker" << llendl;
+		LL_WARNS() << "Can't open the avatar picker" << LL_ENDL;
 		return;
 	}
 
@@ -1579,14 +1579,14 @@ void LLLandmarksPanel::shareLandmarks(LLLandmarksPanel *self, const uuid_vec_t &
 	LLFolderView *folder = self->mCurrentSelectedList->getRootFolder();
 
 	if (!folder) {
-		llwarns << "Can't open the root folder" << llendl;
+		LL_WARNS() << "Can't open the root folder" << LL_ENDL;
 		return;
 	}
 
 	std::set<LLFolderViewItem*> landmarks_selected = folder->getSelectionList();
 
 	if (landmarks_selected.empty()) {
-		llwarns << "No landmarks selected" << llendl;
+		LL_WARNS() << "No landmarks selected" << LL_ENDL;
 		return;
 	}
 
@@ -1606,7 +1606,7 @@ void LLLandmarksPanel::shareLandmarks(LLLandmarksPanel *self, const uuid_vec_t &
 		LLFolderViewModelItemInventory *item = static_cast<LLFolderViewModelItemInventory*>((*iter)->getViewModelItem());
 
 		if (!item) {
-			llwarns << "Failed to get a folder view for a landmark" << llendl;
+			LL_WARNS() << "Failed to get a folder view for a landmark" << LL_ENDL;
 			continue;
 		}
 
@@ -1641,13 +1641,13 @@ void LLLandmarksPanel::shareLandmarks(LLLandmarksPanel *self, const uuid_vec_t &
 				landmark_uuids.push_back(item->getUUID());
 			}
 			else {
-				llwarns << "Found a non-landmark item in the selection (type=" << item->getInventoryType() << ")" << llendl;
+				LL_WARNS() << "Found a non-landmark item in the selection (type=" << item->getInventoryType() << ")" << LL_ENDL;
 			}
 		}
 	}
 
 	if (landmark_uuids.empty()) {
-		llwarns << "No landmark UUIDs found" << llendl;
+		LL_WARNS() << "No landmark UUIDs found" << LL_ENDL;
 		return;
 	}
 
@@ -1690,7 +1690,7 @@ void LLLandmarksPanel::shareLandmarksCommit(const LLSD &notification, const LLSD
 	}
 
 	if (avatar_uuids.empty() || landmark_uuids.empty()) {
-		llwarns << "No avatars or no landmarks selected" << llendl;
+		LL_WARNS() << "No avatars or no landmarks selected" << LL_ENDL;
 		return;
 	}
 

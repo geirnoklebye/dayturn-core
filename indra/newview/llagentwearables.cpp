@@ -166,12 +166,12 @@ void LLAgentWearables::dump()
 			
 		}
 	}
-	llinfos << "Total items awaiting wearable update " << mItemsAwaitingWearableUpdate.size() << llendl;
+	LL_INFOS() << "Total items awaiting wearable update " << mItemsAwaitingWearableUpdate.size() << LL_ENDL;
 	for (std::set<LLUUID>::iterator it = mItemsAwaitingWearableUpdate.begin();
 		 it != mItemsAwaitingWearableUpdate.end();
 		 ++it)
 	{
-		llinfos << (*it).asString() << llendl;
+		LL_INFOS() << (*it).asString() << LL_ENDL;
 	}
 }
 
@@ -234,7 +234,7 @@ void LLAgentWearables::setAvatarObject(LLVOAvatarSelf *avatar)
 // wearables
 LLAgentWearables::createStandardWearablesAllDoneCallback::~createStandardWearablesAllDoneCallback()
 {
-	llinfos << "destructor - all done?" << llendl;
+	LL_INFOS() << "destructor - all done?" << LL_ENDL;
 	gAgentWearables.createStandardWearablesAllDone();
 }
 
@@ -368,7 +368,7 @@ void LLAgentWearables::sendAgentWearablesUpdate()
 	gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
 	gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
 
-	lldebugs << "sendAgentWearablesUpdate()" << llendl;
+	LL_DEBUGS() << "sendAgentWearablesUpdate()" << LL_ENDL;
 	// MULTI-WEARABLE: DEPRECATED: HACK: index to 0- server database tables don't support concept of multiwearables.
 	for (S32 type=0; type < LLWearableType::WT_COUNT; ++type)
 	{
@@ -380,7 +380,7 @@ void LLAgentWearables::sendAgentWearablesUpdate()
 		LLViewerWearable* wearable = getViewerWearable((LLWearableType::EType)type, 0);
 		if (wearable)
 		{
-			//llinfos << "Sending wearable " << wearable->getName() << llendl;
+			//LL_INFOS() << "Sending wearable " << wearable->getName() << LL_ENDL;
 			LLUUID item_id = wearable->getItemID();
 			const LLViewerInventoryItem *item = gInventory.getItem(item_id);
 			if (item && item->getIsLinkType())
@@ -393,11 +393,11 @@ void LLAgentWearables::sendAgentWearablesUpdate()
 		}
 		else
 		{
-			//llinfos << "Not wearing wearable type " << LLWearableType::getTypeName((LLWearableType::EType)i) << llendl;
+			//LL_INFOS() << "Not wearing wearable type " << LLWearableType::getTypeName((LLWearableType::EType)i) << LL_ENDL;
 			gMessageSystem->addUUIDFast(_PREHASH_ItemID, LLUUID::null);
 		}
 
-		lldebugs << "       " << LLWearableType::getTypeLabel((LLWearableType::EType)type) << ": " << (wearable ? wearable->getAssetID() : LLUUID::null) << llendl;
+		LL_DEBUGS() << "       " << LLWearableType::getTypeLabel((LLWearableType::EType)type) << ": " << (wearable ? wearable->getAssetID() : LLUUID::null) << LL_ENDL;
 	}
 	gAgent.sendReliableMessage();
 }
@@ -860,7 +860,7 @@ void LLAgentWearables::processAgentInitialWearablesUpdate(LLMessageSystem* mesgs
 		const LLUUID current_outfit_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_CURRENT_OUTFIT);
 		LLInitialWearablesFetch* outfit = new LLInitialWearablesFetch(current_outfit_id);
 		
-		//lldebugs << "processAgentInitialWearablesUpdate()" << llendl;
+		//LL_DEBUGS() << "processAgentInitialWearablesUpdate()" << LL_ENDL;
 		// Add wearables
 		// MULTI-WEARABLE: DEPRECATED: Message only supports one wearable per type, will be ignored in future.
 		gAgentWearables.mItemsAwaitingWearableUpdate.clear();
@@ -899,7 +899,7 @@ void LLAgentWearables::processAgentInitialWearablesUpdate(LLMessageSystem* mesgs
 				outfit->add(wearable_data);
 			}
 			
-			lldebugs << "       " << LLWearableType::getTypeLabel(type) << llendl;
+			LL_DEBUGS() << "       " << LLWearableType::getTypeLabel(type) << LL_ENDL;
 		}
 		
 		// Get the complete information on the items in the inventory and set up an observer
@@ -927,7 +927,7 @@ void LLAgentWearables::recoverMissingWearable(const LLWearableType::EType type, 
 {
 	// Try to recover by replacing missing wearable with a new one.
 	LLNotificationsUtil::add("ReplacedMissingWearable");
-	lldebugs << "Wearable " << LLWearableType::getTypeLabel(type) << " could not be downloaded.  Replaced inventory item with default wearable." << llendl;
+	LL_DEBUGS() << "Wearable " << LLWearableType::getTypeLabel(type) << " could not be downloaded.  Replaced inventory item with default wearable." << LL_ENDL;
 	LLViewerWearable* new_wearable = LLWearableList::instance().createNewWearable(type, gAgentAvatarp);
 
 	setWearable(type,index,new_wearable);
@@ -1133,7 +1133,7 @@ void LLAgentWearables::sendDummyAgentWearablesUpdate()
 
 void LLAgentWearables::createStandardWearablesDone(S32 type, U32 index)
 {
-	llinfos << "type " << type << " index " << index << llendl;
+	LL_INFOS() << "type " << type << " index " << index << LL_ENDL;
 
 	if (!isAgentAvatarValid()) return;
 	gAgentAvatarp->updateVisualParams();
@@ -1143,7 +1143,7 @@ void LLAgentWearables::createStandardWearablesAllDone()
 {
 	// ... because sendAgentWearablesUpdate will notify inventory
 	// observers.
-	llinfos << "all done?" << llendl;
+	LL_INFOS() << "all done?" << LL_ENDL;
 
 	mWearablesLoaded = TRUE; 
 	checkWearablesLoaded();
@@ -1654,7 +1654,7 @@ void LLAgentWearables::setWearableFinal(LLInventoryItem* new_item, LLViewerWeara
 				<< " size is now " << getWearableCount(type) << LL_ENDL;
 	}
 
-	//llinfos << "LLVOAvatar::setWearableItem()" << llendl;
+	//LL_INFOS() << "LLVOAvatar::setWearableItem()" << LL_ENDL;
 	queryWearableCache();
 	//new_wearable->writeToAvatar(TRUE);
 
@@ -1695,7 +1695,7 @@ void LLAgentWearables::queryWearableCache()
 
 			ETextureIndex te_index = LLAvatarAppearanceDictionary::bakedToLocalTextureIndex((EBakedTextureIndex)baked_index);
 
-			//llinfos << "Requesting texture for hash " << hash << " in baked texture slot " << baked_index << llendl;
+			//LL_INFOS() << "Requesting texture for hash " << hash << " in baked texture slot " << baked_index << LL_ENDL;
 			gMessageSystem->nextBlockFast(_PREHASH_WearableData);
 			gMessageSystem->addUUIDFast(_PREHASH_ID, hash_id);
 			gMessageSystem->addU8Fast(_PREHASH_TextureIndex, (U8)te_index);

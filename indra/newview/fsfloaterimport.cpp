@@ -1880,7 +1880,7 @@ void FSAssetResponder::uploadComplete(const LLSD& content)
 					inventory_item_flags = (U32) content["inventory_flags"].asInteger();
 					if (inventory_item_flags != 0)
 					{
-						llinfos << "inventory_item_flags " << inventory_item_flags << llendl;
+						LL_INFOS() << "inventory_item_flags " << inventory_item_flags << LL_ENDL;
 					}
 				}
 				S32 creation_date_now = time_corrected();

@@ -2733,7 +2733,7 @@ public:
 private:
 	/* virtual */ void httpSuccess()
 	{
-		LL_DEBUGS("Avatar") << "OK" << llendl;
+		LL_DEBUGS("Avatar") << "OK" << LL_ENDL;
 	}
 
 	// Error
@@ -2958,16 +2958,16 @@ void LLVOAvatarSelf::setNewBakedTexture( ETextureIndex te, const LLUUID& uuid )
 
 	/* switch(te)
 		case TEX_HEAD_BAKED:
-			llinfos << "New baked texture: HEAD" << llendl; */
+			LL_INFOS() << "New baked texture: HEAD" << LL_ENDL; */
 	const LLAvatarAppearanceDictionary::TextureEntry *texture_dict = LLAvatarAppearanceDictionary::getInstance()->getTexture(te);
 	if (texture_dict->mIsBakedTexture)
 	{
 		debugBakedTextureUpload(texture_dict->mBakedTextureIndex, TRUE); // FALSE for start of upload, TRUE for finish.
-		llinfos << "New baked texture: " << texture_dict->mName << " UUID: " << uuid <<llendl;
+		LL_INFOS() << "New baked texture: " << texture_dict->mName << " UUID: " << uuid <<LL_ENDL;
 	}
 	else
 	{
-		llwarns << "New baked texture: unknown te " << te << llendl;
+		LL_WARNS() << "New baked texture: unknown te " << te << LL_ENDL;
 	}
 	
 	//	dumpAvatarTEs( "setNewBakedTexture() send" );
@@ -2990,7 +2990,7 @@ void LLVOAvatarSelf::setNewBakedTexture( ETextureIndex te, const LLUUID& uuid )
 						<< "RuthTimer " << (U32)mRuthDebugTimer.getElapsedTimeF32()
 						<< " SelfLoadTimer " << (U32)mDebugSelfLoadTimer.getElapsedTimeF32()
 						<< " Notification " << "AvatarRezSelfBakedDoneNotification"
-						<< llendl;
+						<< LL_ENDL;
 			}
 			else
 			{
@@ -3002,7 +3002,7 @@ void LLVOAvatarSelf::setNewBakedTexture( ETextureIndex te, const LLUUID& uuid )
 						<< "RuthTimer " << (U32)mRuthDebugTimer.getElapsedTimeF32()
 						<< " SelfLoadTimer " << (U32)mDebugSelfLoadTimer.getElapsedTimeF32()
 						<< " Notification " << "AvatarRezSelfBakedUpdateNotification"
-						<< llendl;
+						<< LL_ENDL;
 			}
 		}
 
@@ -3106,11 +3106,11 @@ void LLVOAvatarSelf::setCachedBakedTexture( ETextureIndex te, const LLUUID& uuid
 			{
 				if (mInitialBakeIDs[i] == uuid)
 				{
-					llinfos << "baked texture correctly loaded at login! " << i << llendl;
+					LL_INFOS() << "baked texture correctly loaded at login! " << i << LL_ENDL;
 				}
 				else
 				{
-					llwarns << "baked texture does not match id loaded at login!" << i << llendl;
+					LL_WARNS() << "baked texture does not match id loaded at login!" << i << LL_ENDL;
 				}
 				mInitialBakeIDs[i] = LLUUID::null;
 			}
@@ -3146,7 +3146,7 @@ void LLVOAvatarSelf::processRebakeAvatarTextures(LLMessageSystem* msg, void**)
 				LLViewerTexLayerSet* layer_set = gAgentAvatarp->getLayerSet(index);
 				if (layer_set)
 				{
-					llinfos << "TAT: rebake - matched entry " << (S32)index << llendl;
+					LL_INFOS() << "TAT: rebake - matched entry " << (S32)index << LL_ENDL;
 					gAgentAvatarp->invalidateComposite(layer_set, TRUE);
 					found = TRUE;
 				}

@@ -104,7 +104,7 @@ void LLInventoryFilter::setFilterSubStringTarget(const std::string& targetName)
 	else if(targetName=="all")
 		mFilterSubStringTarget=SUBST_TARGET_ALL;
 	else
-		llwarns << "Unknown sub string target: " << targetName << llendl;
+		LL_WARNS() << "Unknown sub string target: " << targetName << LL_ENDL;
 }
 
 LLInventoryFilter::EFilterSubstringTarget LLInventoryFilter::getFilterSubStringTarget() const
@@ -158,7 +158,7 @@ bool LLInventoryFilter::check(const LLFolderViewModelItem* item)
 				searchLabel = listener->getSearchableAll();
 				break;
 			default:
-				llwarns << "Unknown search substring target: " << mFilterSubStringTarget << llendl;
+				LL_WARNS() << "Unknown search substring target: " << mFilterSubStringTarget << LL_ENDL;
 				searchLabel = listener->getSearchableName();
 				break;
 		}

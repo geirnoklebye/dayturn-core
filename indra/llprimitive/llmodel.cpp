@@ -1866,7 +1866,7 @@ bool validate_face(const LLVolumeFace& face)
 
 		if (ll_is_degenerate(v1,v2,v3))
 		{
-			llwarns << "Degenerate face found!" << LL_ENDL;
+			LL_WARNS() << "Degenerate face found!" << LL_ENDL;
 			return false;
 		}
 	}*/

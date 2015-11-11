@@ -2487,7 +2487,7 @@ void LLPanelPreferenceOpensim::refreshGridList(bool success)
 
 	if (!mGridListControl)
 	{
-		llwarns << "No GridListControl - bug or out of memory" << llendl;
+		LL_WARNS() << "No GridListControl - bug or out of memory" << LL_ENDL;
 		return;
 	}
 

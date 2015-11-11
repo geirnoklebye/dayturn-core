@@ -634,7 +634,7 @@ BOOL LLPanelLogin::isGridComboDirty()
 	BOOL user_picked = FALSE;
 	if (!sInstance)
 	{
-		llwarns << "Attempted getServer with no login view shown" << llendl;
+		LL_WARNS() << "Attempted getServer with no login view shown" << LL_ENDL;
 	}
 	else
 	{

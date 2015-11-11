@@ -2265,7 +2265,7 @@ void LLPanelObject::onPastePosClip(const LLSD& data)
 	}
 	else
 	{
-		llinfos << "Couldn't get position vector from clipboard" << llendl;
+		LL_INFOS() << "Couldn't get position vector from clipboard" << LL_ENDL;
 	}
 }
 void LLPanelObject::onPasteSizeClip(const LLSD& data)
@@ -2277,7 +2277,7 @@ void LLPanelObject::onPasteSizeClip(const LLSD& data)
 	}
 	else
 	{
-		llinfos << "Couldn't get size vector from clipboard" << llendl;
+		LL_INFOS() << "Couldn't get size vector from clipboard" << LL_ENDL;
 	}
 }
 void LLPanelObject::onPasteRotClip(const LLSD& data)
@@ -2289,7 +2289,7 @@ void LLPanelObject::onPasteRotClip(const LLSD& data)
 	}
 	else
 	{
-		llinfos << "Couldn't get rotation vector from clipboard" << llendl;
+		LL_INFOS() << "Couldn't get rotation vector from clipboard" << LL_ENDL;
 	}
 }
 

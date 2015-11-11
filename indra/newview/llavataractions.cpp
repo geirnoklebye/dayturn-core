@@ -1475,7 +1475,7 @@ void LLAvatarActions::teleportHome(const LLUUID &id)
 	//	before we go any further
 	//
 	if (!isOnYourLand(id)) {
-		llwarns << "Can't teleport avatars home from land we don't own or manage" << llendl;
+		LL_WARNS() << "Can't teleport avatars home from land we don't own or manage" << LL_ENDL;
 		return;
 	}
 
@@ -1519,7 +1519,7 @@ void LLAvatarActions::teleportHomeCommit(const LLSD &notification, const LLSD &r
 	}
 
 	if (!avatar) {
-		llwarns << "Can't find the avatar" << llendl;
+		LL_WARNS() << "Can't find the avatar" << LL_ENDL;
 		return;
 	}
 
@@ -1528,7 +1528,7 @@ void LLAvatarActions::teleportHomeCommit(const LLSD &notification, const LLSD &r
 	//
 	const LLViewerRegion *region = avatar->getRegion();
 	if (!region) {
-		llwarns << "Can't find the region the avatar is in" << llendl;
+		LL_WARNS() << "Can't find the region the avatar is in" << LL_ENDL;
 		return;
 	}
 
@@ -1544,7 +1544,7 @@ void LLAvatarActions::teleportHomeCommit(const LLSD &notification, const LLSD &r
 		region->getOwner() == gAgent.getID() ||
 		region->isEstateManager()
 	)) {
-		llwarns << "Can't teleport avatars home from land we don't own or manage" << llendl;
+		LL_WARNS() << "Can't teleport avatars home from land we don't own or manage" << LL_ENDL;
 		return;
 	}
 
@@ -1582,7 +1582,7 @@ void LLAvatarActions::estateBan(const LLUUID &id)
 	}
 
 	if (!avatar) {
-		llwarns << "Can't find the avatar" << llendl;
+		LL_WARNS() << "Can't find the avatar" << LL_ENDL;
 		return;
 	}
 
@@ -1591,7 +1591,7 @@ void LLAvatarActions::estateBan(const LLUUID &id)
 	//
 	const LLViewerRegion *region = avatar->getRegion();
 	if (!region) {
-		llwarns << "Can't find the region the avatar is in" << llendl;
+		LL_WARNS() << "Can't find the region the avatar is in" << LL_ENDL;
 		return;
 	}
 
@@ -1618,7 +1618,7 @@ void LLAvatarActions::estateBan(const LLUUID &id)
 		args["ALL_ESTATES"] = LLTrans::getString("RegionInfoAllEstatesYouManage", tokens);
 	}
 	else {
-		llwarns << "Can't estate ban avatars from land we don't own or manage" << llendl;
+		LL_WARNS() << "Can't estate ban avatars from land we don't own or manage" << LL_ENDL;
 		return;
 	}
 
@@ -1660,7 +1660,7 @@ void LLAvatarActions::estateBanCommit(const LLSD &notification, const LLSD &resp
 	}
 
 	if (!avatar) {
-		llwarns << "Can't find the avatar" << llendl;
+		LL_WARNS() << "Can't find the avatar" << LL_ENDL;
 		return;
 	}
 
@@ -1669,7 +1669,7 @@ void LLAvatarActions::estateBanCommit(const LLSD &notification, const LLSD &resp
 	//
 	const LLViewerRegion *region = avatar->getRegion();
 	if (!region) {
-		llwarns << "Can't find the region the avatar is in" << llendl;
+		LL_WARNS() << "Can't find the region the avatar is in" << LL_ENDL;
 		return;
 	}
 

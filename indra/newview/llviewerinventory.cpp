@@ -1184,12 +1184,12 @@ void link_inventory_item(
 	const LLInventoryObject *baseobj = gInventory.getObject(item_id);
 	if (!baseobj)
 	{
-		llwarns << "attempt to link to unknown item, linked-to-item's itemID " << item_id << llendl;
+		LL_WARNS() << "attempt to link to unknown item, linked-to-item's itemID " << item_id << LL_ENDL;
 		return;
 	}
 	if (baseobj && baseobj->getIsLinkType())
 	{
-		llwarns << "attempt to create a link to a link, linked-to-item's itemID " << item_id << llendl;
+		LL_WARNS() << "attempt to create a link to a link, linked-to-item's itemID " << item_id << LL_ENDL;
 		return;
 	}
 
@@ -1198,7 +1198,7 @@ void link_inventory_item(
 		// Fail if item can be found but is of a type that can't be linked.
 		// Arguably should fail if the item can't be found too, but that could
 		// be a larger behavioral change.
-		llwarns << "attempt to link an unlinkable item, type = " << baseobj->getActualType() << llendl;
+		LL_WARNS() << "attempt to link an unlinkable item, type = " << baseobj->getActualType() << LL_ENDL;
 		return;
 	}
 	
@@ -1219,7 +1219,7 @@ void link_inventory_item(
 
 #if 1 // debugging stuff
 	LLViewerInventoryCategory* cat = gInventory.getCategory(parent_id);
-	lldebugs << "cat: " << cat << llendl;
+	LL_DEBUGS() << "cat: " << cat << LL_ENDL;
 	
 #endif
 	LLMessageSystem* msg = gMessageSystem;

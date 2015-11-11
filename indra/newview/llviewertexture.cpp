@@ -1614,7 +1614,7 @@ F32 LLViewerFetchedTexture::calcDecodePriority()
 		// <FS:ND> NaN has some very special comparison characterisctics. Those would make comparing by decode-prio wrong and destroy strict weak ordering of stl containers.
 		if( llisnan(mDecodePriority ) )
 		{
-			llwarns << "Detected NaN for decode priority" << llendl;
+			LL_WARNS() << "Detected NaN for decode priority" << LL_ENDL;
 			mDecodePriority = 0; // What to put here? Something low? high? zero?
 		}
 		// </FS:NS>
@@ -1761,7 +1761,7 @@ F32 LLViewerFetchedTexture::calcDecodePriority()
 	// <FS:ND> NaN has some very special comparison characterisctics. Those would make comparing by decode-prio wrong and destroy strict weak ordering of stl containers.
 	if( llisnan(priority) )
 	{
-		llwarns << "Detected NaN for decode priority" << llendl;
+		LL_WARNS() << "Detected NaN for decode priority" << LL_ENDL;
 		priority = 0; // What to put here? Something low? high? zero?
 	}
 	// </FS:ND>
@@ -1788,7 +1788,7 @@ void LLViewerFetchedTexture::setDecodePriority(F32 priority)
 	// <FS:ND> NaN has some very special comparison characterisctics. Those would make comparing by decode-prio wrong and destroy strict weak ordering of stl containers.
 	if( llisnan(priority) )
 	{
-		llwarns << "Detected NaN for decode priority" << llendl;
+		LL_WARNS() << "Detected NaN for decode priority" << LL_ENDL;
 		priority = 0; // What to put here? Something low? high? zero?
 	}
 	// </FS:ND>
@@ -1992,9 +1992,9 @@ bool LLViewerFetchedTexture::updateFetch()
 				if(mFullWidth > MAX_IMAGE_SIZE || mFullHeight > MAX_IMAGE_SIZE)
 				{ 
 					//discard all oversized textures.
-					llinfos << "Discarding oversized texture, width= "
+					LL_INFOS() << "Discarding oversized texture, width= "
 						<< mFullWidth << ", height= "
-						<< mFullHeight << llendl;
+						<< mFullHeight << LL_ENDL;
 					destroyRawImage();
 					LL_WARNS() << "oversize, setting as missing" << LL_ENDL;
 					setIsMissingAsset();

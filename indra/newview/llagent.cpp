@@ -1011,7 +1011,7 @@ boost::signals2::connection LLAgent::addParcelChangedCallback(parcel_changed_cal
 
 void LLAgent::handleServerBakeRegionTransition(const LLUUID& region_id)
 {
-	llinfos << "called" << llendl;
+	LL_INFOS() << "called" << LL_ENDL;
 
 
 	// Old-style appearance entering a server-bake region.
@@ -1019,7 +1019,7 @@ void LLAgent::handleServerBakeRegionTransition(const LLUUID& region_id)
 		!gAgentAvatarp->isUsingServerBakes() &&
 		(mRegionp->getCentralBakeVersion()>0))
 	{
-		llinfos << "update requested due to region transition" << llendl;
+		LL_INFOS() << "update requested due to region transition" << LL_ENDL;
 		LLAppearanceMgr::instance().requestServerAppearanceUpdate();
 	}
 	// new-style appearance entering a non-bake region,
@@ -3981,7 +3981,7 @@ void LLAgent::processAgentCachedTextureResponse(LLMessageSystem *mesgsys, void *
 
 	if (!isAgentAvatarValid() || gAgentAvatarp->isDead())
 	{
-		llwarns << "No avatar for user in cached texture update!" << llendl;
+		LL_WARNS() << "No avatar for user in cached texture update!" << LL_ENDL;
 		return;
 	}
 
@@ -4018,7 +4018,7 @@ void LLAgent::processAgentCachedTextureResponse(LLMessageSystem *mesgsys, void *
 				{
 					if (texture_id.notNull())
 					{
-						//llinfos << "Received cached texture " << (U32)texture_index << ": " << texture_id << llendl;
+						//LL_INFOS() << "Received cached texture " << (U32)texture_index << ": " << texture_id << LL_ENDL;
 						gAgentAvatarp->setCachedBakedTexture((ETextureIndex)texture_index, texture_id);
 						//gAgentAvatarp->setTETexture( LLVOAvatar::sBakedTextureIndices[texture_index], texture_id );
 						gAgentQueryManager.mActiveCacheQueries[baked_index] = 0;
@@ -4033,7 +4033,7 @@ void LLAgent::processAgentCachedTextureResponse(LLMessageSystem *mesgsys, void *
 			}
 		}
 	}
-	llinfos << "Received cached texture response for " << num_results << " textures." << llendl;
+	LL_INFOS() << "Received cached texture response for " << num_results << " textures." << LL_ENDL;
 	gAgentAvatarp->outputRezTiming("Fetched agent wearables textures from cache. Will now load them");
 
 	gAgentAvatarp->updateMeshTextures();
@@ -4756,7 +4756,7 @@ void LLAgent::dumpSentAppearance(const std::string& dump_prefix)
 	}
 	else
 	{
-		LL_DEBUGS("Avatar") << "dumping sent appearance message to " << fullpath << llendl;
+		LL_DEBUGS("Avatar") << "dumping sent appearance message to " << fullpath << LL_ENDL;
 	}
 
 	LLVisualParam* appearance_version_param = gAgentAvatarp->getVisualParam(11000);
@@ -4799,7 +4799,7 @@ void LLAgent::sendAgentSetAppearance()
 	gAgentAvatarp->bakedTextureOriginCounts(sb_count, host_count, both_count, neither_count);
 	if (both_count != 0 || neither_count != 0)
 	{
-		llwarns << "bad bake texture state " << sb_count << "," << host_count << "," << both_count << "," << neither_count << llendl;
+		LL_WARNS() << "bad bake texture state " << sb_count << "," << host_count << "," << both_count << "," << neither_count << LL_ENDL;
 	}
 	if (sb_count != 0 && host_count == 0)
 	{
@@ -4811,7 +4811,7 @@ void LLAgent::sendAgentSetAppearance()
 	}
 	else if (sb_count + host_count > 0)
 	{
-		llwarns << "unclear baked texture state, not sending appearance" << llendl;
+		LL_WARNS() << "unclear baked texture state, not sending appearance" << LL_ENDL;
 		return;
 	}
 	
@@ -4857,7 +4857,7 @@ void LLAgent::sendAgentSetAppearance()
 		// IMG_DEFAULT_AVATAR means not baked. 0 index should be ignored for baked textures
 		if (!gAgentAvatarp->isTextureDefined(texture_index, 0))
 		{
-			LL_DEBUGS("Avatar") << "texture not current for baked " << (S32)baked_index << " local " << (S32)texture_index << llendl;
+			LL_DEBUGS("Avatar") << "texture not current for baked " << (S32)baked_index << " local " << (S32)texture_index << LL_ENDL;
 			textures_current = FALSE;
 			break;
 		}
@@ -4926,7 +4926,7 @@ void LLAgent::sendAgentSetAppearance()
 		}
 	}
 
-//	llinfos << "Avatar XML num VisualParams transmitted = " << transmitted_params << llendl;
+//	LL_INFOS() << "Avatar XML num VisualParams transmitted = " << transmitted_params << LL_ENDL;
 	sendReliableMessage();
 }
 

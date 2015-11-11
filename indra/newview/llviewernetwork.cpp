@@ -57,13 +57,13 @@ public:
 		mData = grid_data;
 		mState = state;
 
-		llwarns << "hello " << this << llendl;
+		LL_WARNS() << "hello " << this << LL_ENDL;
 		mOwner->incResponderCount();
 	}
 
 	~GridInfoRequestResponder()
 	{
-		llwarns << "goodbye " << this << llendl;
+		LL_WARNS() << "goodbye " << this << LL_ENDL;
 	}
 
 
@@ -73,7 +73,7 @@ public:
 			const LLIOPipe::buffer_ptr_t& buffer)
 	{
 		mOwner->decResponderCount();
-		LL_DEBUGS("GridManager") << mData->grid[GRID_VALUE] << " status: " << getStatus() << " reason: " << getReason() << llendl;
+		LL_DEBUGS("GridManager") << mData->grid[GRID_VALUE] << " status: " << getStatus() << " reason: " << getReason() << LL_ENDL;
 		if(LLGridManager::TRYLEGACY == mState && 200 == getStatus())
 		{
 			mOwner->addGrid(mData, LLGridManager::SYSTEM);
@@ -95,8 +95,8 @@ public:
 				args["REASON"] = "Server provided broken grid info xml. Please";
 				///[REASON] contact support of [GRID].
 				LLNotificationsUtil::add("CantAddGrid", args);
-				llwarns << " Could not parse grid info xml from server."
-					<< mData->grid[GRID_VALUE] << " skipping." << llendl;
+				LL_WARNS() << " Could not parse grid info xml from server."
+					<< mData->grid[GRID_VALUE] << " skipping." << LL_ENDL;
 				mOwner->addGrid(mData, LLGridManager::FAIL);
 			}
 		}
@@ -138,7 +138,7 @@ public:
 			///[REASON] contact support of [GRID].
 			LLNotificationsUtil::add("CantAddGrid", args);
 
-			llwarns << "No legacy login page. Giving up for " << mData->grid[GRID_VALUE] << llendl;
+			LL_WARNS() << "No legacy login page. Giving up for " << mData->grid[GRID_VALUE] << LL_ENDL;
 			mOwner->addGrid(mData, LLGridManager::FAIL);
 		}
 		else
@@ -573,7 +573,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 {
 	if(!grid_entry)
 	{
-		llwarns << "addGrid called with NULL grid_entry. Please send a bug report." << llendl;
+		LL_WARNS() << "addGrid called with NULL grid_entry. Please send a bug report." << LL_ENDL;
 		state = FAIL;
 	}
 	if(!grid_entry->grid.has(GRID_VALUE))
@@ -713,7 +713,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 		}
 		uri.append("cgi-bin/login.cgi");
 
-		llwarns << "No gridinfo found. Trying if legacy login page exists: " << uri << llendl;
+		LL_WARNS() << "No gridinfo found. Trying if legacy login page exists: " << uri << LL_ENDL;
 		LLHTTPClient::get(uri, new GridInfoRequestResponder(this, grid_entry, state));
 		return;
 	}
@@ -726,14 +726,14 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 		if (!grid_entry->grid.has(GRID_LABEL_VALUE)) 
 				{
 			grid_entry->grid[GRID_LABEL_VALUE] = grid;
-			llwarns << "No \"gridname\" found in grid info, setting to " << grid_entry->grid[GRID_LABEL_VALUE].asString() << llendl;
+			LL_WARNS() << "No \"gridname\" found in grid info, setting to " << grid_entry->grid[GRID_LABEL_VALUE].asString() << LL_ENDL;
 				}
 
 
 		if (!grid_entry->grid.has(GRID_NICK_VALUE))
 				{
 			grid_entry->grid[GRID_NICK_VALUE] = grid;
-			llwarns << "No \"gridnick\" found in grid info, setting to " << grid_entry->grid[GRID_NICK_VALUE].asString() << llendl;
+			LL_WARNS() << "No \"gridnick\" found in grid info, setting to " << grid_entry->grid[GRID_NICK_VALUE].asString() << LL_ENDL;
 				}
 	}
 
@@ -748,18 +748,18 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 				{
 			grid_entry->grid[GRID_LOGIN_URI_VALUE] = LLSD::emptyArray();
 			grid_entry->grid[GRID_LOGIN_URI_VALUE].append(std::string("https://") + grid + "/cgi-bin/login.cgi");
-			llwarns << "Adding Legacy Login Service at:" << grid_entry->grid[GRID_LOGIN_URI_VALUE].asString() << llendl;
+			LL_WARNS() << "Adding Legacy Login Service at:" << grid_entry->grid[GRID_LOGIN_URI_VALUE].asString() << LL_ENDL;
 				}
 
 		/// Populate to the default values
 		if (!grid_entry->grid.has(GRID_LOGIN_PAGE_VALUE)) 
 				{
 			grid_entry->grid[GRID_LOGIN_PAGE_VALUE] = std::string("http://") + grid + "/app/login/";
-			llwarns << "Adding Legacy Login Screen at:" << grid_entry->grid[GRID_LOGIN_PAGE_VALUE].asString() << llendl;
+			LL_WARNS() << "Adding Legacy Login Screen at:" << grid_entry->grid[GRID_LOGIN_PAGE_VALUE].asString() << LL_ENDL;
 				}
 		if (!grid_entry->grid.has(GRID_HELPER_URI_VALUE)) 
 				{
-			llwarns << "Adding Legacy Economy at:" << grid_entry->grid[GRID_HELPER_URI_VALUE].asString() << llendl;
+			LL_WARNS() << "Adding Legacy Economy at:" << grid_entry->grid[GRID_HELPER_URI_VALUE].asString() << LL_ENDL;
 			grid_entry->grid[GRID_HELPER_URI_VALUE] = std::string("https://") + grid + "/helpers/";
 				}
 
@@ -767,7 +767,7 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 
 	if(FAIL != state)
 	{
-	lldebugs << "GRID_VALUE:" << grid_entry->grid[GRID_VALUE] << llendl;
+	LL_DEBUGS() << "GRID_VALUE:" << grid_entry->grid[GRID_VALUE] << LL_ENDL;
     std::string grid = utf8str_tolower(grid_entry->grid[GRID_VALUE]);
 		if(grid.empty())
  		{

@@ -2068,7 +2068,7 @@ LLViewerFetchedTexture *LLVOAvatar::getBakedTextureImage(const U8 te, const LLUU
 
 		if (!url.empty())
 	{
-			LL_DEBUGS("Avatar") << avString() << "get server-bake image from URL " << url << llendl;
+			LL_DEBUGS("Avatar") << avString() << "get server-bake image from URL " << url << LL_ENDL;
 			result = LLViewerTextureManager::getFetchedTextureFromUrl(
 				url, FTT_SERVER_BAKE, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE, 0, 0, uuid);
 			if (result->isMissingAsset())
@@ -2078,7 +2078,7 @@ LLViewerFetchedTexture *LLVOAvatar::getBakedTextureImage(const U8 te, const LLUU
 }
 		else
 		{
-			LL_DEBUGS("Avatar") << avString() << "get old-bake image from host " << uuid << llendl;
+			LL_DEBUGS("Avatar") << avString() << "get old-bake image from host " << uuid << LL_ENDL;
 			LLHost host = getObjectHost();
 			result = LLViewerTextureManager::getFetchedTexture(
 				uuid, FTT_HOST_BAKE, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE, 0, 0, host);
@@ -4860,7 +4860,7 @@ void LLVOAvatar::updateTextures()
 				LL_WARNS_ONCE("Texture") << "LLVOAvatar::updateTextures No host for texture "
 										 << imagep->getID() << " for avatar "
 										 << (isSelf() ? "<myself>" : getID().asString()) 
-										 << " on host " << getRegion()->getHost() << llendl;
+										 << " on host " << getRegion()->getHost() << LL_ENDL;
 			}
 
 			addBakedTextureStats( imagep, mPixelArea, texel_area_ratio, boost_level );			
@@ -7778,7 +7778,7 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 
 		if (getRegion() && (getRegion()->getCentralBakeVersion()==0))
 		{
-			llwarns << avString() << "Received AvatarAppearance message for self in non-server-bake region" << llendl;
+			LL_WARNS() << avString() << "Received AvatarAppearance message for self in non-server-bake region" << LL_ENDL;
 		}
 		if( mFirstTEMessageReceived && (appearance_version == 0))
 		{
@@ -8482,7 +8482,7 @@ BOOL LLVOAvatar::isUsingServerBakes() const
 	F32 expect_wt = mUseServerBakes ? 1.0 : 0.0;
 	if (!is_approx_equal(wt,expect_wt))
 	{
-		llwarns << "wt " << wt << " differs from expected " << expect_wt << llendl;
+		LL_WARNS() << "wt " << wt << " differs from expected " << expect_wt << LL_ENDL;
 	}
 #endif
 

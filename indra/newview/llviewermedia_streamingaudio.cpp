@@ -58,7 +58,7 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 		return;
 	}
 	
-	//llinfos << "Starting internet stream: " << test_url << llendl;
+	//LL_INFOS() << "Starting internet stream: " << test_url << LL_ENDL;
 	// note: it's okay if mURL is empty here
 	if (mURL != url)
 	{
@@ -110,14 +110,14 @@ void LLStreamingAudio_MediaPlugins::start(const std::string& url)
 #endif //LL_DARWIN
 		mURL = test_url;
 		mMediaPlugin->loadURI ( test_url );
-		llinfos << "Attempting to play internet stream: " << mURL << llendl;	
+		LL_INFOS() << "Attempting to play internet stream: " << mURL << LL_ENDL;	
 		mMediaPlugin->start();
 		LL_INFOS() << "Playing stream..." << LL_ENDL;
 	}
 	else
 	{
 		LL_INFOS() << "setting stream to NULL"<< LL_ENDL;
-		//llinfos << "setting stream to NULL"<< llendl;
+		//LL_INFOS() << "setting stream to NULL"<< LL_ENDL;
 		stop();
 	}
 }

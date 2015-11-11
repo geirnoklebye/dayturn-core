@@ -1655,9 +1655,9 @@ void LLModelPreview::rebuildUploadData()
 	if (!(gIsInSecondLife))
 	// Some other simulator like OpenSim, Aurora or a self named version.
     {
-    llinfos << "Type: Float , Region Max Prim: " << region_max_prim_scale << llendl;
-    llinfos << "Type: Float , Max Import Scale: " << max_import_scale << llendl;
-    llinfos << "Type: Float , Max Scale: " << max_scale << llendl;
+    LL_INFOS() << "Type: Float , Region Max Prim: " << region_max_prim_scale << LL_ENDL;
+    LL_INFOS() << "Type: Float , Max Import Scale: " << max_import_scale << LL_ENDL;
+    LL_INFOS() << "Type: Float , Max Scale: " << max_scale << LL_ENDL;
     //clamp scale so that total imported model bounding box is smaller than 256m on a side
 		max_import_scale = llmin(max_import_scale, 256.f/max_axis);
    	}
