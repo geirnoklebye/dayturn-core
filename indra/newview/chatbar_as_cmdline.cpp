@@ -715,10 +715,10 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
 			else if (command == std::string(sFSCmdLineOfferTp))
             {
                 std::string avatarKey;
-//				llinfos << "CMD DEBUG 0 " << command << " " << avatarName << llendl;
+//				LL_INFOS() << "CMD DEBUG 0 " << command << " " << avatarName << LL_ENDL;
                 if (i >> avatarKey)
                 {
-//				llinfos << "CMD DEBUG 0 afterif " << command << " " << avatarName << llendl;
+//				LL_INFOS() << "CMD DEBUG 0 afterif " << command << " " << avatarName << LL_ENDL;
                     LLUUID tempUUID;
                     if (LLUUID::parseUUID(avatarKey, &tempUUID))
                     {
