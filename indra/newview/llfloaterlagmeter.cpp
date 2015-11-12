@@ -39,6 +39,7 @@
 #include "llbutton.h"
 #include "llfocusmgr.h"
 #include "lltextbox.h"
+#include "llviewernetwork.h"
 
 const std::string LAG_CRITICAL_IMAGE_NAME = "lag_status_critical.tga";
 const std::string LAG_WARNING_IMAGE_NAME  = "lag_status_warning.tga";
@@ -91,8 +92,16 @@ BOOL LLFloaterLagMeter::postBuild()
 	config_string = getString("server_frame_rate_critical_fps", mStringArgs);
 
 	mServerFrameTimeCritical = F32Seconds(1.0f / (float)atof( config_string.c_str() ));
+	if (!gIsInSecondLife) 
+	{
+		mServerFrameTimeCritical = F32Seconds(1.0f / ((float)atof( config_string.c_str() ) * 11.0f / 55.0f));
+	}
 	config_string = getString("server_frame_rate_warning_fps", mStringArgs);
 	mServerFrameTimeWarning = F32Seconds(1.0f / (float)atof( config_string.c_str() ));
+	if (!gIsInSecondLife)
+	{
+		mServerFrameTimeWarning = F32Seconds(1.0f / ((float)atof( config_string.c_str() ) * 11.0f / 55.0f));
+	}
 	config_string = getString("server_single_process_max_time_ms", mStringArgs);
 	mServerSingleProcessMaxTime = F32Seconds((float)atof( config_string.c_str() ));
 
