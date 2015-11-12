@@ -90,17 +90,22 @@ BOOL LLFloaterLagMeter::postBuild()
 	config_string = getString("network_ping_warning_ms", mStringArgs);
 	mNetworkPingWarning = F32Milliseconds((float)atof( config_string.c_str() ));
 	config_string = getString("server_frame_rate_critical_fps", mStringArgs);
-
-	mServerFrameTimeCritical = F32Seconds(1.0f / (float)atof( config_string.c_str() ));
 	if (!gIsInSecondLife) 
 	{
 		mServerFrameTimeCritical = F32Seconds(1.0f / ((float)atof( config_string.c_str() ) * 11.0f / 55.0f));
 	}
+	else
+	{
+		mServerFrameTimeCritical = F32Seconds(1.0f / (float)atof( config_string.c_str() ));
+	}
 	config_string = getString("server_frame_rate_warning_fps", mStringArgs);
-	mServerFrameTimeWarning = F32Seconds(1.0f / (float)atof( config_string.c_str() ));
 	if (!gIsInSecondLife)
 	{
 		mServerFrameTimeWarning = F32Seconds(1.0f / ((float)atof( config_string.c_str() ) * 11.0f / 55.0f));
+	}
+	else
+	{
+		mServerFrameTimeWarning = F32Seconds(1.0f / (float)atof( config_string.c_str() ));
 	}
 	config_string = getString("server_single_process_max_time_ms", mStringArgs);
 	mServerSingleProcessMaxTime = F32Seconds((float)atof( config_string.c_str() ));
