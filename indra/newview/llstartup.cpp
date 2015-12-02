@@ -386,6 +386,9 @@ bool idle_startup()
 
 	//static bool stipend_since_login = false;
 
+//MK
+	gRRenabled = gSavedSettings.getBOOL("RestrainedLove");
+//mk
 	// HACK: These are things from the main loop that usually aren't done
 	// until initialization is complete, but need to be done here for things
 	// to work.
