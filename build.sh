@@ -101,7 +101,7 @@ pre_build()
     && [ -r "$master_message_template_checkout/message_template.msg" ] \
     && template_verifier_master_url="-DTEMPLATE_VERIFIER_MASTER_URL=file://$master_message_template_checkout/message_template.msg"
 
-    "$autobuild" configure -c $variant -- \
+    "$autobuild" configure --quiet -c $variant -- \
      -DPACKAGE:BOOL=ON \
      -DRELEASE_CRASH_REPORTING:BOOL=ON \
      -DVIEWER_CHANNEL:STRING="\"$viewer_channel\"" \
@@ -109,7 +109,7 @@ pre_build()
      -DLL_TESTS:BOOL="$run_tests" \
      -DTEMPLATE_VERIFIER_OPTIONS:STRING="$template_verifier_options" $template_verifier_master_url
 
- end_section "Configure $variant"
+  end_section "Configure $variant"
 }
 
 package_llphysicsextensions_tpv()
@@ -119,12 +119,12 @@ package_llphysicsextensions_tpv()
   if [ "$variant" = "Release" ]
   then 
       llpetpvcfg=$build_dir/packages/llphysicsextensions/autobuild-tpv.xml
-      "$autobuild" build --verbose --config-file $llpetpvcfg -c Tpv
+      "$autobuild" build --quiet --config-file $llpetpvcfg -c Tpv
       
       # capture the package file name for use in upload later...
       PKGTMP=`mktemp -t pgktpv.XXXXXX`
       trap "rm $PKGTMP* 2>/dev/null" 0
-      "$autobuild" package --verbose --config-file $llpetpvcfg --results-file "$(native_path $PKGTMP)"
+      "$autobuild" package --quiet --config-file $llpetpvcfg --results-file "$(native_path $PKGTMP)"
       tpv_status=$?
       if [ -r "${PKGTMP}" ]
       then
@@ -146,7 +146,7 @@ build()
   local variant="$1"
   if $build_viewer
   then
-    "$autobuild" build --no-configure -c $variant
+    "$autobuild" build --quiet --no-configure -c $variant
     build_ok=$?
 
     # Run build extensions
@@ -223,24 +223,23 @@ do
   # Only the last built arch is available for upload
   last_built_variant="$variant"
 
-  begin_section "$variant"
   build_dir=`build_dir_$arch $variant`
   build_dir_stubs="$build_dir/win_setup/$variant"
 
-  begin_section "Initialize Build Directory"
+  begin_section "Initialize $variant Build Directory"
   rm -rf "$build_dir"
   mkdir -p "$build_dir"
   mkdir -p "$build_dir/tmp"
-  end_section "Initialize Build Directory"
+  end_section "Initialize $variant Build Directory"
 
-  if pre_build "$variant" "$build_dir" >> "$build_log" 2>&1
+  if pre_build "$variant" "$build_dir"
   then
       begin_section "Build $variant"
       build "$variant" "$build_dir" 2>&1 | tee -a "$build_log" | sed -n 's/^ *\(##teamcity.*\)/\1/p'
       if `cat "$build_dir/build_ok"`
       then
-          if [ "$variant" == "Release" ]
-          then
+          case "$variant" in
+            Release)
               if [ -r "$build_dir/autobuild-package.xml" ]
               then
                   begin_section "Autobuild metadata"
@@ -255,15 +254,31 @@ do
               else
                   record_event "no autobuild metadata at '$build_dir/autobuild-package.xml'"
               fi
-          else
-              record_event "do not record autobuild metadata for $variant"
-          fi
+              ;;
+            Doxygen)
+              if [ -r "$build_dir/doxygen_warnings.log" ]
+              then
+                  record_event "Doxygen warnings generated; see doxygen_warnings.log"
+                  upload_item log "$build_dir/doxygen_warnings.log" text/plain
+              fi
+              if [ -d "$build_dir/doxygen/html" ]
+              then
+                  tar -c -f "$build_dir/viewer-doxygen.tar.bz2" --strip-components 3  "$build_dir/doxygen/html"
+                  upload_item docs "$build_dir/viewer-doxygen.tar.bz2" binary/octet-stream
+              fi
+              ;;
+            *)
+              ;;
+          esac
+
       else
           record_failure "Build of \"$variant\" failed."
       fi
       end_section "Build $variant"
+  else
+      record_event "configure for $variant failed: build skipped"
   fi
-  end_section "$variant"
+
   if ! $succeeded 
   then
       record_event "remaining variants skipped due to $variant failure"
@@ -395,43 +410,27 @@ then
         then
             llphysicsextensions_package=$(cat $build_dir/llphysicsextensions_package)
             upload_item private_artifact "$llphysicsextensions_package" binary/octet-stream
-        else
-            echo "No llphysicsextensions_package"
-        fi
-        ;;
-      Doxygen)
-        if [ -r "$build_dir/doxygen_warnings.log" ]
-        then
-            record_event "Doxygen warnings generated; see doxygen_warnings.log"
-            upload_item log "$build_dir/doxygen_warnings.log" binary/octet-stream
-        fi
-        if [ -d "$build_dir/doxygen/html" ]
-        then
-            (cd "$build_dir/doxygen/html"; tar cjf "$build_dir/viewer-doxygen.tar.bz2" .)
-            upload_item docs "$build_dir/viewer-doxygen.tar.bz2" binary/octet-stream
         fi
         ;;
       *)
-        echo "Skipping mapfile for $last_built_variant"
         ;;
       esac
 
       # Run upload extensions
       if [ -d ${build_dir}/packages/upload-extensions ]; then
           for extension in ${build_dir}/packages/upload-extensions/*.sh; do
-              begin_section "Upload Extenstion $extension"
+              begin_section "Upload Extension $extension"
               . $extension
-              end_section "Upload Extenstion $extension"
+              end_section "Upload Extension $extension"
           done
       fi
-
-      # Upload stub installers
-      upload_stub_installers "$build_dir_stubs"
     fi
     end_section Upload Installer
   else
     echo skipping upload of installer
   fi
+
+  
 else
   echo skipping upload of installer due to failed build.
 fi
