@@ -90,7 +90,8 @@ private:
 	ECursorType cursorFromObject(LLViewerObject* object);
 
 	bool handleMediaClick(const LLPickInfo& info, int button = 0);
-	bool handleMediaHover(const LLPickInfo& info);
+    bool handleMediaDblClick(const LLPickInfo& info);
+    bool handleMediaHover(const LLPickInfo& info);
 	bool handleMediaMouseUp(); 
 	BOOL handleTooltipLand(std::string line, std::string tooltip_msg);
 	BOOL handleTooltipObject( LLViewerObject* hover_object, std::string line, std::string tooltip_msg);
