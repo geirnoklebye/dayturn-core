@@ -2630,7 +2630,10 @@ void LLViewerWindow::draw()
 	LLView::sIsDrawing = FALSE;
 //#endif
 }
-
+void LLViewerWindow::setTitle(const std::string& win_title)
+{
+	mWindow->setTitle(win_title);
+}
 // Takes a single keyup event, usually when UI is visible
 BOOL LLViewerWindow::handleKeyUp(KEY key, MASK mask)
 {
