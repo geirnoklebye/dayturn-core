@@ -117,7 +117,7 @@ public:
 	
 	/*virtual*/ void setErrorStatus(S32 status, const std::string& reason)
 	{
-		llerrs << "Can't complete remote parcel request. Http Status: " << status << ". Reason : " << reason << llendl;
+		LL_ERRS() << "Can't complete remote parcel request. Http Status: " << status << ". Reason : " << reason << LL_ENDL;
 	}
 private:
 	std::set<LLUUID>	mParcelIDs;
@@ -189,8 +189,8 @@ public:
 								  const std::string& reason,
 								  const LLSD& content)
 	{
-		llwarns << "Sending click message failed (" << status << "): [" << reason << "]" << llendl;
-		llwarns << "Content: [" << content << "]" << llendl;
+		LL_WARNS() << "Sending click message failed (" << status << "): [" << reason << "]" << LL_ENDL;
+		LL_WARNS() << "Content: [" << content << "]" << LL_ENDL;
 	}
 };
 
@@ -356,7 +356,7 @@ void FSFloaterSearchLegacy::onModeSelect(LLUICtrl *ctrl, void *userdata)
 		self->ESearchMode = SM_CLASSIFIEDS;
 	else {
 		self->ESearchMode = SM_PEOPLE;
-		llwarns << "Invalid search category.  Defaulting to people" << llendl;
+		LL_WARNS() << "Invalid search category.  Defaulting to people" << LL_ENDL;
 	}
 	self->refreshSearchVerbs();
 	self->resetSearch();
@@ -687,7 +687,7 @@ void FSFloaterSearchLegacy::processProperties(void* data, EAvatarProcessorType t
 			std::string url = gAgent.getRegion()->getCapability("SearchStatRequest");
 			if (!url.empty())
 			{
-				llinfos << "Classified stat request via capability" << llendl;
+				LL_INFOS() << "Classified stat request via capability" << LL_ENDL;
 				LLSD body;
 				body["classified_id"] = getSelectedID();
 				LLHTTPClient::post(url, body, new LLClassifiedStatsResponder(getSelectedID()));
@@ -959,7 +959,7 @@ void FSFloaterSearchLegacy::find()
 		}
 		case SM_EVENTS:
 		{
-			llwarns << "Event searching is not implimented yet. Stay tuned!" << llendl;
+			LL_WARNS() << "Event searching is not implimented yet. Stay tuned!" << LL_ENDL;
 			break;
 		}
 		case SM_CLASSIFIEDS:
@@ -1008,7 +1008,7 @@ void FSFloaterSearchLegacy::sendSearchQuery(LLMessageSystem* msg,
 	msg->addS32("QueryStart", query_start);
 	gAgent.sendReliableMessage();
 	
-	llinfos << "Firing off search request: " << query_id << llendl;
+	LL_INFOS() << "Firing off search request: " << query_id << LL_ENDL;
 }
 
 void FSFloaterSearchLegacy::sendPlacesSearchQuery(LLMessageSystem* msg,
@@ -1031,7 +1031,7 @@ void FSFloaterSearchLegacy::sendPlacesSearchQuery(LLMessageSystem* msg,
 	msg->addS32("QueryStart", query_start);
 	gAgent.sendReliableMessage();
 	
-	llinfos << "Firing off places search request: " << query_id << llendl;
+	LL_INFOS() << "Firing off places search request: " << query_id << LL_ENDL;
 }
 
 void FSFloaterSearchLegacy::sendLandSearchQuery(LLMessageSystem* msg,
@@ -1055,7 +1055,7 @@ void FSFloaterSearchLegacy::sendLandSearchQuery(LLMessageSystem* msg,
 	msg->addS32("QueryStart", query_start);
 	gAgent.sendReliableMessage();
 	
-	llinfos << "Firing off places search request: " << query_id << category << llendl;
+	LL_INFOS() << "Firing off places search request: " << query_id << category << LL_ENDL;
 }
 
 void FSFloaterSearchLegacy::sendClassifiedsSearchQuery(LLMessageSystem* msg,
@@ -1077,7 +1077,7 @@ void FSFloaterSearchLegacy::sendClassifiedsSearchQuery(LLMessageSystem* msg,
 	msg->addS32Fast(_PREHASH_QueryStart, query_start);
 	gAgent.sendReliableMessage();
 	
-	llinfos << "Firing off classified ad search request: " << query_id << llendl;
+	LL_INFOS() << "Firing off classified ad search request: " << query_id << LL_ENDL;
 }
 
 ////////////////////////////////////////
@@ -1099,7 +1099,7 @@ void FSFloaterSearchLegacy::processSearchPeopleReply(LLMessageSystem* msg, void*
 	
 	// This result is not for us.
 	if (agent_id != gAgent.getID()) return;
-	lldebugs << "received search results - QueryID: " << query_id << " AgentID: " << agent_id << llendl;
+	LL_DEBUGS() << "received search results - QueryID: " << query_id << " AgentID: " << agent_id << LL_ENDL;
 	
 	FSFloaterSearchLegacy* self = LLFloaterReg::findTypedInstance<FSFloaterSearchLegacy>("search_legacy");
 	// floater is closed or these are not results from our last request
@@ -1188,7 +1188,7 @@ void FSFloaterSearchLegacy::processSearchPeopleReply(LLMessageSystem* msg, void*
 		//msg->getU8Fast(	_PREHASH_QueryReplies,	_PREHASH_Online,	online, i);
 		
 		if (agent_id.isNull()) {
-			lldebugs << "No results returned for QueryID: " << query_id << llendl;
+			LL_DEBUGS() << "No results returned for QueryID: " << query_id << LL_ENDL;
 			LLStringUtil::format_map_t map;
 			map["[TEXT]"] = self->getChild<LLUICtrl>("search_terms")->getValue().asString();
 			search_results->setEnabled(FALSE);
@@ -1198,7 +1198,7 @@ void FSFloaterSearchLegacy::processSearchPeopleReply(LLMessageSystem* msg, void*
 			self->setLoadingProgress(FALSE);
 		}
 		else {
-			lldebugs << "Got: " << first_name << " " << last_name << " AgentID: " << agent_id << llendl;
+			LL_DEBUGS() << "Got: " << first_name << " " << last_name << " AgentID: " << agent_id << LL_ENDL;
 			search_results->setEnabled(TRUE);
 			found_one = TRUE;
 			
@@ -1245,7 +1245,7 @@ void FSFloaterSearchLegacy::processSearchGroupsReply(LLMessageSystem* msg, void*
 	
 	// Not for us
 	if (agent_id != gAgent.getID()) return;
-	lldebugs << "received directory request - QueryID: " << query_id << " AgentID: " << agent_id << llendl;
+	LL_DEBUGS() << "received directory request - QueryID: " << query_id << " AgentID: " << agent_id << LL_ENDL;
 	
 	FSFloaterSearchLegacy* self = LLFloaterReg::findTypedInstance<FSFloaterSearchLegacy>("search_legacy");
 	
@@ -1335,7 +1335,7 @@ void FSFloaterSearchLegacy::processSearchGroupsReply(LLMessageSystem* msg, void*
 		msg->getF32Fast(	_PREHASH_QueryReplies,	_PREHASH_SearchOrder,	search_order,i);
 
 		if (group_id.isNull()) {
-			lldebugs << "No results returned for QueryID: " << query_id << llendl;
+			LL_DEBUGS() << "No results returned for QueryID: " << query_id << LL_ENDL;
 			LLStringUtil::format_map_t map;
 			map["[TEXT]"] = self->getChild<LLUICtrl>("search_terms")->getValue().asString();
 			search_results->setEnabled(FALSE);
@@ -1345,7 +1345,7 @@ void FSFloaterSearchLegacy::processSearchGroupsReply(LLMessageSystem* msg, void*
 			self->setLoadingProgress(FALSE);
 		}
 		else {
-			lldebugs << "Got: " << group_name << " GroupID: " << group_id << llendl;
+			LL_DEBUGS() << "Got: " << group_name << " GroupID: " << group_id << LL_ENDL;
 			search_results->setEnabled(TRUE);
 			found_one = TRUE;
 			
@@ -1393,7 +1393,7 @@ void FSFloaterSearchLegacy::processSearchPlacesReply(LLMessageSystem* msg, void*
 	
 	// Not for us
 	if (agent_id != gAgent.getID()) return;
-	lldebugs << "received directory request - QueryID: " << query_id << " AgentID: " << agent_id << llendl;
+	LL_DEBUGS() << "received directory request - QueryID: " << query_id << " AgentID: " << agent_id << LL_ENDL;
 	
 	FSFloaterSearchLegacy* self = LLFloaterReg::findTypedInstance<FSFloaterSearchLegacy>("search_legacy");
 	// floater is closed or these are not results from our last request
@@ -1482,7 +1482,7 @@ void FSFloaterSearchLegacy::processSearchPlacesReply(LLMessageSystem* msg, void*
 		msg->getBOOL(	"QueryReplies",	"Auction",	is_auction,	i);
 		msg->getF32(	"QueryReplies",	"Dwell",	dwell,		i);
 		if (parcel_id.isNull()) {
-			lldebugs << "Null result returned for QueryID: " << query_id << llendl;
+			LL_DEBUGS() << "Null result returned for QueryID: " << query_id << LL_ENDL;
 			LLStringUtil::format_map_t map;
 			map["[TEXT]"] = self->getChild<LLUICtrl>("search_terms")->getValue().asString();
 			search_results->setEnabled(FALSE);
@@ -1492,7 +1492,7 @@ void FSFloaterSearchLegacy::processSearchPlacesReply(LLMessageSystem* msg, void*
 			self->setLoadingProgress(FALSE);
 		}
 		else {
-			lldebugs << "Got: " << name << " ParcelID: " << parcel_id << llendl;
+			LL_DEBUGS() << "Got: " << name << " ParcelID: " << parcel_id << LL_ENDL;
 			search_results->setEnabled(TRUE);
 			found_one = TRUE;
 			
@@ -1558,7 +1558,7 @@ void FSFloaterSearchLegacy::processSearchLandReply(LLMessageSystem* msg, void**)
 	
 	// Not for us
 	if (agent_id != gAgent.getID()) return;
-	llinfos << "received directory request - QueryID: " << query_id << " AgentID: " << agent_id << llendl;
+	LL_INFOS() << "received directory request - QueryID: " << query_id << " AgentID: " << agent_id << LL_ENDL;
 	
 	FSFloaterSearchLegacy* self = LLFloaterReg::findTypedInstance<FSFloaterSearchLegacy>("search_legacy");
 	// floater is closed or these are not results from our last request
@@ -1695,7 +1695,7 @@ void FSFloaterSearchLegacy::processSearchLandReply(LLMessageSystem* msg, void**)
 // static
 void FSFloaterSearchLegacy::processSearchEventsReply(LLMessageSystem* msg, void**)
 {
-	llwarns << "Received an event search reply, but we don't handle these yet!" << llendl;
+	LL_WARNS() << "Received an event search reply, but we don't handle these yet!" << LL_ENDL;
 }
 
 // static
@@ -1714,7 +1714,7 @@ void FSFloaterSearchLegacy::processSearchClassifiedsReply(LLMessageSystem* msg, 
 	
 	// Not for us
 	if (agent_id != gAgent.getID()) return;
-	lldebugs << "received directory request - QueryID: " << query_id << " AgentID: " << agent_id << llendl;
+	LL_DEBUGS() << "received directory request - QueryID: " << query_id << " AgentID: " << agent_id << LL_ENDL;
 	
 	if (msg->getNumberOfBlocks("StatusData"))
 	{
@@ -1813,7 +1813,7 @@ void FSFloaterSearchLegacy::processSearchClassifiedsReply(LLMessageSystem* msg, 
 		msg->getU32(	"QueryReplies", "ExpirationDate",	expiration_date,i);
 		msg->getS32(	"QueryReplies", "PriceForListing",	price_for_listing,i);
 		if (classified_id.isNull()) {
-			lldebugs << "Null result returned for QueryID: " << query_id << llendl;
+			LL_DEBUGS() << "Null result returned for QueryID: " << query_id << LL_ENDL;
 			LLStringUtil::format_map_t map;
 			map["[TEXT]"] = self->getChild<LLUICtrl>("search_terms")->getValue().asString();
 			search_results->setEnabled(FALSE);
@@ -1823,7 +1823,7 @@ void FSFloaterSearchLegacy::processSearchClassifiedsReply(LLMessageSystem* msg, 
 			self->setLoadingProgress(FALSE);
 		}
 		else {
-			lldebugs << "Got: " << name << " ClassifiedID: " << classified_id << llendl;
+			LL_DEBUGS() << "Got: " << name << " ClassifiedID: " << classified_id << LL_ENDL;
 			search_results->setEnabled(TRUE);
 			found_one = TRUE;
 			

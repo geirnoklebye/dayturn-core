@@ -126,7 +126,7 @@ public:
 			LLConstPointer<LLInventoryObject> item = gInventory.getItem(*it);
 			if (!item)
 			{
-				llwarns << "fetch failed for item " << (*it) << "!" << llendl;
+				LL_WARNS() << "fetch failed for item " << (*it) << "!" << LL_ENDL;
 				continue;
 			}
 			item_array.push_back(item);
@@ -152,8 +152,8 @@ void LLInitialWearablesFetch::processWearablesMessage()
 			}
 			else
 			{
-				llinfos << "Invalid wearable, type " << wearable_data->mType << " itemID "
-				<< wearable_data->mItemID << " assetID " << wearable_data->mAssetID << llendl;
+				LL_INFOS() << "Invalid wearable, type " << wearable_data->mType << " itemID "
+				<< wearable_data->mItemID << " assetID " << wearable_data->mAssetID << LL_ENDL;
 				delete wearable_data;
 			}
 		}

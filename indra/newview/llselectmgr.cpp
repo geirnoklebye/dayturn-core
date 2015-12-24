@@ -2149,7 +2149,7 @@ void LLSelectMgr::selectionRemoveMaterial()
 			{
 			        LL_DEBUGS("Materials") << "Removing material from object " << object->getID() << " face " << face << LL_ENDL;
 				LLMaterialMgr::getInstance()->remove(object->getID(),face);
-				object->setTEMaterialParams(face, NULL, FALSE);
+				object->setTEMaterialParams(face, NULL);
 			}
 			return true;
 		}
@@ -5305,7 +5305,7 @@ void LLSelectMgr::processObjectProperties(LLMessageSystem* msg, void** user_data
 			FSAreaSearch *area_search_floater = LLFloaterReg::getTypedInstance<FSAreaSearch>("area_search");
 
 			if (!area_search_floater || !area_search_floater->isSearchActive()) {
-				llwarns << "Couldn't find object " << id << " selected." << llendl;
+				LL_WARNS() << "Couldn't find object " << id << " selected." << LL_ENDL;
 			}
 		}
 		else

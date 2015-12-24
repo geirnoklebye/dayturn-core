@@ -1313,9 +1313,24 @@ class LLAdvancedToggleWireframe : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		gUseWireframe = !(gUseWireframe);
+
+		if (gUseWireframe)
+		{
+			gInitialDeferredModeForWireframe = LLPipeline::sRenderDeferred;
+		}
+
 		gWindowResized = TRUE;
 		LLPipeline::updateRenderDeferred();
 		gPipeline.resetVertexBuffers();
+
+		if (!gUseWireframe && !gInitialDeferredModeForWireframe && LLPipeline::sRenderDeferred != gInitialDeferredModeForWireframe && gPipeline.isInit())
+		{
+			LLPipeline::refreshCachedSettings();
+			gPipeline.releaseGLBuffers();
+			gPipeline.createGLBuffers();
+			LLViewerShaderMgr::instance()->setShaders();
+		}
+
 		return true;
 	}
 };
@@ -6666,13 +6681,13 @@ bool update_grid_help()
 		if (!LLLoginInstance::getInstance()->hasResponse("destination_guide_url") 
 		||LLLoginInstance::getInstance()->getResponse("destination_guide_url").asString().empty())
 		{
-			llwarns << "Destinations Guide Off" << llendl;
+			LL_WARNS() << "Destinations Guide Off" << LL_ENDL;
 			gMenuHolder->childSetVisible("Destinations", false);
 		}
 	
 		if (!LLLoginInstance::getInstance()->hasResponse("avatar_picker_url") 
 		||LLLoginInstance::getInstance()->getResponse("avatar_picker_url").asString().empty())
-			llwarns << "Avatar Picker Off" << llendl;
+			LL_WARNS() << "Avatar Picker Off" << LL_ENDL;
 			gMenuHolder->childSetVisible("Avatar Picker", false);
 		{
 

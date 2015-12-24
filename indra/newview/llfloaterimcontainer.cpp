@@ -925,11 +925,6 @@ void LLFloaterIMContainer::onCustomAction(const LLSD& userdata)
 	{
 		setSortOrderParticipants(LLConversationFilter::SO_DISTANCE);
 	}
-	if ("view_icons" == command)
-	{
-		gSavedSettings.setBOOL("ChatShowIcons", !(gSavedSettings.getBOOL("ChatShowIcons") && !gSavedSettings.getBOOL("GlobalShowIconsOverride")));
-		gSavedSettings.setBOOL("GlobalShowIconsOverride", (!gSavedSettings.getBOOL("ChatShowIcons") && gSavedSettings.getBOOL("GlobalShowIconsOverride")));
-	}
 	if ("chat_preferences" == command)
 	{
 		LLFloaterPreference * floater_prefp = LLFloaterReg::showTypedInstance<LLFloaterPreference>("preferences");
@@ -979,10 +974,6 @@ BOOL LLFloaterIMContainer::isActionChecked(const LLSD& userdata)
 	if ("sort_participants_by_distance" == command)
 	{
 		return (order.getSortOrderParticipants() == LLConversationFilter::SO_DISTANCE);
-	}
-	if ("view_icons" == command)
-	{
-		return gSavedSettings.getBOOL("ChatShowIcons") && !gSavedSettings.getBOOL("GlobalShowIconsOverride");
 	}
 	if ("Translating.Enabled" == command)
 	{
@@ -1930,19 +1921,17 @@ bool LLFloaterIMContainer::canBanSelectedMember(const LLUUID& participant_uuid)
 
 	if (gdatap->isRoleMemberDataComplete())
 	{
-		if (!gdatap->mMembers.size())
-		{
-			return false;
-		}
-
-		LLGroupMgrGroupData::member_list_t::iterator mi = gdatap->mMembers.find((participant_uuid));
-		if (mi != gdatap->mMembers.end())
-		{
-			LLGroupMemberData* member_data = (*mi).second;
-			// Is the member an owner?
-			if (member_data && member_data->isInRole(gdatap->mOwnerRole))
+		if (gdatap->mMembers.size())
+		{			
+			LLGroupMgrGroupData::member_list_t::iterator mi = gdatap->mMembers.find((participant_uuid));
+			if (mi != gdatap->mMembers.end())
 			{
-				return false;
+				LLGroupMemberData* member_data = (*mi).second;
+				// Is the member an owner?
+				if (member_data && member_data->isInRole(gdatap->mOwnerRole))
+				{
+					return false;
+				}
 			}
 		}
 	}

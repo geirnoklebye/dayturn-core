@@ -136,7 +136,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
 
-
 #if LL_WINDOWS
 #	include <share.h> // For _SH_DENYWR in processMarkerFiles
 #else
@@ -331,7 +330,10 @@ BOOL				gDisconnected = FALSE;
 // used to restore texture state after a mode switch
 LLFrameTimer	gRestoreGLTimer;
 BOOL			gRestoreGL = FALSE;
-BOOL				gUseWireframe = FALSE;
+BOOL			gUseWireframe = FALSE;
+
+//use for remember deferred mode in wireframe switch
+BOOL			gInitialDeferredModeForWireframe = FALSE;
 
 // VFS globals - see llappviewer.h
 LLVFS* gStaticVFS = NULL;
@@ -1767,6 +1769,9 @@ bool LLAppViewer::cleanup()
 	// to ensure shutdown order
 	LLMortician::setZealous(TRUE);
 
+    // Give any remaining SLPlugin instances a chance to exit cleanly.
+    LLPluginProcessParent::shutdown();
+
 	LLVoiceClient::getInstance()->terminate();
 	
 	disconnectViewer();
@@ -2825,11 +2830,11 @@ bool LLAppViewer::initConfiguration()
 	//
 	gWindowTitle = LLTrans::getString("APP_NAME") + " " + LLVersionInfo::getVersion();
 #if LL_DEBUG
-	gWindowTitle += std::string(" [DEBUG]")
+    gWindowTitle += std::string(" [DEBUG]");
 #endif
 	if (!gArgs.empty())
 	{
-		gWindowTitle += std::string(" ") + gArgs;
+	gWindowTitle += std::string(" ") + gArgs;
 	}
 	LLStringUtil::truncate(gWindowTitle, 255);
 
@@ -3425,8 +3430,11 @@ LLSD LLAppViewer::getViewerInfo() const
 		info["VOICE_VERSION"] = LLTrans::getString("NotConnected");
 	}
 
-	// TODO: Implement media plugin version query
-	info["EMBEDDED_BROWSER_VERSION"] = "CEF 1.0.0 (version number hard-coded)";
+#if !LL_LINUX
+	info["LLCEFLIB_VERSION"] = LLCEFLIB_VERSION;
+#else
+	info["LLCEFLIB_VERSION"] = "Undefined";
+#endif
 
 	S32 packets_in = LLViewerStats::instance().getRecording().getSum(LLStatViewer::PACKETS_IN);
 	if (packets_in > 0)

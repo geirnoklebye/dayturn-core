@@ -37,7 +37,7 @@ PieSlice::PieSlice(const PieSlice::Params& p) :
 	mAutohide(p.autohide)	
 {
 
-	lldebugs << "PieSlice::PieSlice(): " << mLabel << " " << mAutohide << llendl;
+	LL_DEBUGS() << "PieSlice::PieSlice(): " << mLabel << " " << mAutohide << LL_ENDL;
 }
 
 // pick up parameters from the XUI definition

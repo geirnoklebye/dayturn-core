@@ -42,6 +42,7 @@
 #include <fstream>
 #endif
 
+static const F32 GOODBYE_SECONDS = 20.0f;
 static const F32 HEARTBEAT_SECONDS = 1.0f;
 static const F32 PLUGIN_IDLE_SECONDS = 1.0f / 100.0f;  // Each call to idle will give the plugin this much time.
 
@@ -203,17 +204,27 @@ void LLPluginProcessChild::idle(void)
 					}
 				}
 				// receivePluginMessage will transition to STATE_UNLOADING
-			break;
+			    break;
+
+            case STATE_SHUTDOWNREQ:
+                if (mInstance != NULL)
+                {
+                    sendMessageToPlugin(LLPluginMessage("base", "cleanup"));
+                    delete mInstance;
+                    mInstance = NULL;
+                }
+                setState(STATE_UNLOADING);
+                mWaitGoodbye.setTimerExpirySec(GOODBYE_SECONDS);
+                break;
 
 			case STATE_UNLOADING:
-				if(mInstance != NULL)
-				{
-					sendMessageToPlugin(LLPluginMessage("base", "cleanup"));
-					delete mInstance;
-					mInstance = NULL;
-				}
-				setState(STATE_UNLOADED);
-			break;
+                // waiting for goodbye from plugin.
+                if (mWaitGoodbye.hasExpired())
+                {
+                    LL_WARNS() << "Wait for goodbye expired.  Advancing to UNLOADED" << LL_ENDL;
+                    setState(STATE_UNLOADED);
+                }
+			    break;
 
 			// Special case for when the plugin knows it's cleaned up -- MC
 			case STATE_UNLOADING_CLEANED:
@@ -228,18 +239,18 @@ void LLPluginProcessChild::idle(void)
 			case STATE_UNLOADED:
 				killSockets();
 				setState(STATE_DONE);
-			break;
+			    break;
 
 			case STATE_ERROR:
 				// Close the socket to the launcher
 				killSockets();				
 				// TODO: Where do we go from here?  Just exit()?
 				setState(STATE_DONE);
-			break;
+			    break;
 			
 			case STATE_DONE:
 				// just sit here.
-			break;
+			    break;
 		}
 	
 	} while (idle_again);
@@ -369,6 +380,10 @@ void LLPluginProcessChild::receiveMessageRaw(const std::string &message)
 				mPluginFile = parsed.getValue("file");
 				mPluginDir = parsed.getValue("dir");
 			}
+            else if (message_name == "shutdown_plugin")
+            {
+                setState(STATE_SHUTDOWNREQ);
+            }
 			else if(message_name == "shm_add")
 			{
 				std::string name = parsed.getValue("name");
@@ -520,6 +535,10 @@ void LLPluginProcessChild::receivePluginMessage(const std::string &message)
 				// Let the parent know it's loaded and initialized.
 				sendMessageToParent(new_message);
 			}
+            else if (message_name == "goodbye")
+            {
+                setState(STATE_UNLOADED);
+            }
 			else if(message_name == "shm_remove_response")
 			{
 				// Don't pass this message up to the parent

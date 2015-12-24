@@ -109,6 +109,7 @@
 #include "llpluginclassmedia.h"
 #include "llteleporthistorystorage.h"
 #include "llproxy.h"
+#include "llweb.h"
 #include "llviewernetwork.h"
 #include "lllogininstance.h"        // to check if logged in yet
 #include "llsdserialize.h"
@@ -2091,6 +2092,16 @@ BOOL LLPanelPreference::postBuild()
 		gSavedSettings.getControl("ThrottleBandwidthKBPS")->getSignal()->connect(boost::bind(&LLPanelPreference::Updater::update, mBandWidthUpdater, _2));
 	}
 
+#ifdef EXTERNAL_TOS
+	LLRadioGroup* ext_browser_settings = getChild<LLRadioGroup>("preferred_browser_behavior");
+	if (ext_browser_settings)
+	{
+		// turn off ability to set external/internal browser
+		ext_browser_settings->setSelectedByValue(LLWeb::BROWSER_EXTERNAL_ONLY, true);
+		ext_browser_settings->setEnabled(false);
+	}
+#endif
+
 	apply();
 	return true;
 }
@@ -2469,7 +2480,7 @@ void LLPanelPreferenceOpensim::refreshGridList(bool success)
 
 	if (!mGridListControl)
 	{
-		llwarns << "No GridListControl - bug or out of memory" << llendl;
+		LL_WARNS() << "No GridListControl - bug or out of memory" << LL_ENDL;
 		return;
 	}
 

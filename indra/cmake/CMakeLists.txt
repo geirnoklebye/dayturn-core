@@ -121,6 +121,7 @@ set(cmake_SOURCE_FILES
     Boost.cmake
     BuildVersion.cmake
     CARes.cmake
+    CEFPlugin.cmake
     CMakeCopyIfDifferent.cmake
     ConfigurePkgConfig.cmake
     CURL.cmake
@@ -186,15 +187,18 @@ set(cmake_SOURCE_FILES
     LLXML.cmake
     LScript.cmake
     Linking.cmake
+    MediaPluginBase.cmake
     NDOF.cmake
     OPENAL.cmake
     OpenGL.cmake
     OpenJPEG.cmake
     OpenSSL.cmake
     PNG.cmake
+    PluginAPI.cmake
     Prebuilt.cmake
     PulseAudio.cmake
     Python.cmake
+    QuickTimePlugin.cmake
     TemplateCheck.cmake
     Teapot.cmake
     Tut.cmake

@@ -45,9 +45,6 @@ include(Teapot)
 include(OpenGL)
 include(OpenSSL)
 include(PNG)
-if (NOT LINUX)
-    include(Prebuilt)
-endif (NOT LINUX)
 include(TemplateCheck)
 include(UI)
 include(UnixInstall)
@@ -72,11 +69,6 @@ endif( LLPHYSICSEXTENSIONS_SRC_DIR )
 if(FMODEX)
   include_directories(${FMODEX_INCLUDE_DIR})
 endif(FMODEX)
-# install SLPlugin host executable and its dynamic-library plugins
-if (NOT LINUX)
-    use_prebuilt_binary(slplugins)
-endif (NOT LINUX)
-
 include_directories(
     ${DBUSGLIB_INCLUDE_DIRS}
     ${JSONCPP_INCLUDE_DIR}
@@ -1438,7 +1430,6 @@ if (DARWIN)
   set(viewer_RESOURCE_FILES
     kokua_icon.icns
     macview.r
-    gpu_table.txt
     Info-SecondLife.plist
     Kokua.xib/
     # CMake doesn't seem to support Xcode language variants well just yet
@@ -1786,7 +1777,8 @@ if (WINDOWS)
         # *TODO -reenable this once we get server usage sorted out
         LINK_FLAGS "/debug /NODEFAULTLIB:LIBCMT /SUBSYSTEM:WINDOWS ${TCMALLOC_LINK_FLAGS} /LARGEADDRESSAWARE"
         LINK_FLAGS_DEBUG "/NODEFAULTLIB:\"LIBCMT;LIBCMTD;MSVCRT\" /INCREMENTAL:NO /LARGEADDRESSAWARE"
-        LINK_FLAGS_RELEASE "/FORCE:MULTIPLE /MAP\"secondlife-bin.MAP\" /OPT:REF /LARGEADDRESSAWARE"
+        LINK_FLAGS_RELWITHDEBINFO "/NODEFAULTLIB:\"LIBCMT;LIBCMTD;MSVCRT\" /INCREMENTAL:NO /LTCG /LARGEADDRESSAWARE"
+        LINK_FLAGS_RELEASE "/FORCE:MULTIPLE /MAP\"secondlife-bin.MAP\" /OPT:REF /INCREMENTAL:NO /LTCG /LARGEADDRESSAWARE"
         )
 
     if(USE_PRECOMPILED_HEADERS)
@@ -1855,41 +1847,9 @@ if (WINDOWS)
       ${CMAKE_CURRENT_SOURCE_DIR}/featuretable.txt
       ${CMAKE_CURRENT_SOURCE_DIR}/featuretable_xp.txt
       ${ARCH_PREBUILT_DIRS_RELEASE}/libeay32.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/qtcore4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/qtgui4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/qtnetwork4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/qtopengl4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/qtwebkit4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/qtxmlpatterns4.dll
       ${ARCH_PREBUILT_DIRS_RELEASE}/ssleay32.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/imageformats/qgif4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/imageformats/qico4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/imageformats/qjpeg4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/imageformats/qmng4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/imageformats/qsvg4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/imageformats/qtiff4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/codecs/qcncodecs4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/codecs/qjpcodecs4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/codecs/qkrcodecs4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/codecs/qtwcodecs4.dll
       ${ARCH_PREBUILT_DIRS_DEBUG}/libeay32.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/qtcored4.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/qtguid4.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/qtnetworkd4.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/qtopengld4.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/qtwebkitd4.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/qtxmlpatternsd4.dll
       ${ARCH_PREBUILT_DIRS_DEBUG}/ssleay32.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/imageformats/qgifd4.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/imageformats/qicod4.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/imageformats/qjpegd4.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/imageformats/qmngd4.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/imageformats/qsvgd4.dll
-      ${ARCH_PREBUILT_DIRS_DEBUG}/imageformats/qtiffd4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/codecs/qcncodecsd4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/codecs/qjpcodecsd4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/codecs/qkrcodecsd4.dll
-      ${ARCH_PREBUILT_DIRS_RELEASE}/codecs/qtwcodecsd4.dll
       SLPlugin
       media_plugin_quicktime
       media_plugin_cef
@@ -1938,12 +1898,10 @@ if (WINDOWS)
       add_dependencies(${VIEWER_BINARY_NAME} copy_win_scripts)
     endif (EXISTS ${CMAKE_SOURCE_DIR}/copy_win_scripts)
 
-    if (LINUX)
-        add_dependencies(${VIEWER_BINARY_NAME}
-          SLPlugin
-          windows-crash-logger
-        )
-    endif (LINUX)
+    add_dependencies(${VIEWER_BINARY_NAME}
+      SLPlugin
+   windows-crash-logger
+    )
 
     # sets the 'working directory' for debugging from visual studio.
     if (NOT UNATTENDED)
@@ -2222,7 +2180,7 @@ if (DARWIN)
     )
 
   add_dependencies(${VIEWER_BINARY_NAME} SLPlugin media_plugin_quicktime media_plugin_cef mac-crash-logger)
-
+  add_dependencies(${VIEWER_BINARY_NAME} mac-crash-logger)
   if (ENABLE_SIGNING)
       set(SIGNING_SETTING "--signature=${SIGNING_IDENTITY}")
   else (ENABLE_SIGNING)
@@ -2287,6 +2245,7 @@ if (PACKAGE)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_CURRENT_BINARY_DIR}/packaged")
     set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-linux.tar.bz2")
     set(VIEWER_EXE_GLOBS "do-not-directly-run-kokua-bin SLPlugin")
+    set(VIEWER_EXE_GLOBS "do-not-directly-run-kokua-bin")
     set(VIEWER_LIB_GLOB "*${CMAKE_SHARED_MODULE_SUFFIX}*")
     set(VIEWER_COPY_MANIFEST copy_l_viewer_manifest)
   endif (LINUX)
