@@ -2226,6 +2226,7 @@
             </map>
             <key>name</key>
             <string>linux64</string>
+            </map>
           <key>windows</key>
           <map>
             <key>archive</key>

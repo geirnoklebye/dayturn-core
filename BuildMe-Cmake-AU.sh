@@ -8,9 +8,9 @@ autobuild  configure -c ReleaseOS -- -DFMODEX:BOOL=ON -DLL_TESTS:BOOL=OFF  \
 ln -s build-linux-x86_64  build-linux-i686
 
 
-#cd $CWD/build-linux-x86_64 
+cd $CWD/build-linux-x86_64 
 
-#make -j$NPROC
+make -j$NPROC
 
 
 
