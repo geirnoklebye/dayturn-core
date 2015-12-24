@@ -2199,6 +2199,33 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>22c1e14dfc9dee0aeadf364eae914871</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/Drakeo/3p-llceflib/downloads/llceflib-1.0-linux-201512212205.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>2bffeaed07d551dcfd0b20a22840f923</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/Drakeo/3p-llceflib/downloads/llceflib-1.0-linux64-201512212201.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           <key>windows</key>
           <map>
             <key>archive</key>
