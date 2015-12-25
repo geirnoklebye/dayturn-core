@@ -77,4 +77,5 @@ glob:indra/newview/avatar_lad.log
 glob:*.diff
 indra/newview/pilot.txt
 indra/newview/pilot.xml
+configure.log
 *.rej

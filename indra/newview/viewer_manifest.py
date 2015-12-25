@@ -247,7 +247,8 @@ class ViewerManifest(LLManifest):
         return ''.join(self.app_name().split())
     
     def icon_path(self):
-        return "icons/" + self.channel_type()
+        #return "icons/" + self.channel_type() used for selection of icon by type not used for kokua
+		return "icons/kokua"
 
     def extract_names(self,src):
         try:
@@ -725,10 +726,6 @@ class Darwin_i386_Manifest(ViewerManifest):
             self.path("Info.plist", dst="Info.plist")
 
             # copy additional libs in <bundle>/Contents/MacOS/
-            self.path(os.path.join(relpkgdir, "libndofdev.dylib"), dst="Resources/libndofdev.dylib")
-            self.path(os.path.join(relpkgdir, "libhunspell-1.3.0.dylib"), dst="Resources/libhunspell-1.3.0.dylib")
-
-            # copy additional libs in <bundle>/Contents/MacOS/
             if self.prefix(src="../packages/lib/release", dst="MacOS"):
                 self.path("libalut.0.dylib")
                 self.path("libopenal.1.dylib")
@@ -1090,14 +1087,13 @@ class LinuxManifest(ViewerManifest):
     def construct(self):
         super(LinuxManifest, self).construct()
         self.path("licenses-linux.txt","licenses.txt")
+        self.path("icons/kokua/kokua_icon.png", "kokua_icon.png")
         self.path("VivoxAUP.txt")
         if self.prefix("linux_tools", dst=""):
             self.path("client-readme.txt","README-linux.txt")
             self.path("client-readme-voice.txt","README-linux-voice.txt")
             self.path("client-readme-joystick.txt","README-linux-joystick.txt")
-            self.path("client-readme-streamingmedia.txt","README-linux-streamingmedia.txt")
-            self.path("client-readme-install-setup.txt","README-linux-install-setup.txt")
-            self.path("wrapper.sh","kokua")
+            self.path("wrapper.sh","kokua64-CEF")
             self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
             self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
             self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
@@ -1122,16 +1118,90 @@ class LinuxManifest(ViewerManifest):
         icon_path = self.icon_path()
         print "DEBUG: icon_path '%s'" % icon_path
         if self.prefix(src=icon_path, dst="") :
-            self.path("kokua_icon.png","kokua_icon.png" )
-            if self.prefix(src="", dst="res-sdl") :
-                self.path("kokua_icon.bmp","kokua_icon.BMP")
+            self.path("kokua_icon.png")
+            if self.prefix(src="",dst="res-sdl") :
+                self.path("kokua_icon.BMP")
                 self.end_prefix("res-sdl")
             self.end_prefix(icon_path)
 
         # plugins
         if self.prefix(src="", dst="bin/llplugin"):
             self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
+            self.path( "../media_plugins/cef/libmedia_plugin_cef.so", "libmedia_plugin_cef.so" )
             self.end_prefix("bin/llplugin")
+
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="bin"):
+            self.path( "chrome-sandbox" )
+            self.path( "llceflib_host" )
+            self.path( "natives_blob.bin" )
+            self.path( "snapshot_blob.bin" )
+            self.path( "libffmpegsumo.so" )
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources'), dst="bin"):
+            self.path( "cef.pak" )
+            self.path( "cef_100_percent.pak" )
+            self.path( "cef_200_percent.pak" )
+            self.path( "devtools_resources.pak" )
+            self.path( "icudtl.dat" )
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources', 'locales'), dst=os.path.join('bin', 'locales')):
+            self.path("am.pak")
+            self.path("ar.pak")
+            self.path("bg.pak")
+            self.path("bn.pak")
+            self.path("ca.pak")
+            self.path("cs.pak")
+            self.path("da.pak")
+            self.path("de.pak")
+            self.path("el.pak")
+            self.path("en-GB.pak")
+            self.path("en-US.pak")
+            self.path("es-419.pak")
+            self.path("es.pak")
+            self.path("et.pak")
+            self.path("fa.pak")
+            self.path("fi.pak")
+            self.path("fil.pak")
+            self.path("fr.pak")
+            self.path("gu.pak")
+            self.path("he.pak")
+            self.path("hi.pak")
+            self.path("hr.pak")
+            self.path("hu.pak")
+            self.path("id.pak")
+            self.path("it.pak")
+            self.path("ja.pak")
+            self.path("kn.pak")
+            self.path("ko.pak")
+            self.path("lt.pak")
+            self.path("lv.pak")
+            self.path("ml.pak")
+            self.path("mr.pak")
+            self.path("ms.pak")
+            self.path("nb.pak")
+            self.path("nl.pak")
+            self.path("pl.pak")
+            self.path("pt-BR.pak")
+            self.path("pt-PT.pak")
+            self.path("ro.pak")
+            self.path("ru.pak")
+            self.path("sk.pak")
+            self.path("sl.pak")
+            self.path("sr.pak")
+            self.path("sv.pak")
+            self.path("sw.pak")
+            self.path("ta.pak")
+            self.path("te.pak")
+            self.path("th.pak")
+            self.path("tr.pak")
+            self.path("uk.pak")
+            self.path("vi.pak")
+            self.path("zh-CN.pak")
+            self.path("zh-TW.pak")
+            self.end_prefix()
 
         # llcommon
         if not self.path("../llcommon/libllcommon.so", "lib/libllcommon.so"):
@@ -1142,12 +1212,11 @@ class LinuxManifest(ViewerManifest):
     def copy_finish(self):
         # Force executable permissions to be set for scripts
         # see CHOP-223 and http://mercurial.selenic.com/bts/issue1802
-        for script in 'kokua', 'bin/update_install':
+        for script in 'kokua64-CEF', 'bin/update_install':
             self.run_command("chmod +x %r" % os.path.join(self.get_dst_prefix(), script))
 
     def package_finish(self):
         installer_name = self.installer_base_name()
-
         self.strip_binaries()
 
         # Fix access permissions
@@ -1170,13 +1239,13 @@ class LinuxManifest(ViewerManifest):
             if self.args['buildtype'].lower() == 'release':
                 # --numeric-owner hides the username of the builder for
                 # security etc.
-                self.run_command('tar -C %(dir)s --numeric-owner -cjf '
-                                 '%(inst_path)s.tar.bz2 %(inst_name)s' % {
+                self.run_command('tar -C %(dir)s --numeric-owner -cJf '
+                                 '%(inst_path)s.tar.txz %(inst_name)s' % {
                         'dir': self.get_build_prefix(),
                         'inst_name': installer_name,
                         'inst_path':self.build_path_of(installer_name)})
             else:
-                print "Skipping %s.tar.bz2 for non-Release build (%s)" % \
+                print "Skipping %s.tar.txz for non-Release build (%s)" % \
                       (installer_name, self.args['buildtype'])
         finally:
             self.run_command("mv %(inst)s %(dst)s" % {
@@ -1186,7 +1255,7 @@ class LinuxManifest(ViewerManifest):
     def strip_binaries(self):
         if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
             print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
-            self.run_command(r"find %(d)r/bin %(d)r/lib %(d)r/lib32 %(d)r/lib64 -type f \! -name update_install | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
+            self.run_command(r"find %(d)r/bin %(d)r/lib %(d)r/lib32 %(d)r/lib64 -type f \! -name update_install \! -name *.pak \! -name *.dat \! -name *.bin | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
 
 
 
@@ -1215,22 +1284,12 @@ class Linux_i686_Manifest(LinuxManifest):
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
         # Use the build system libstdc++.so An attempt try to allow versions earlier than
-        # than stretch to run the viewer without complaining about GLIBCXX version.
-        if self.prefix("/usr/lib/i386-linux-gnu", dst="lib"):
-            self.path("libstdc++.so.*")
-            self.end_prefix("lib")
-             
-        # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
+        # then wheezy to run the viewer without complaining about GLIBCXX version.
         if self.prefix("/lib/i386-linux-gnu", dst="lib"):
-            self.path("libpng12.so.0*")
+            self.path("libstdc++.so.*")
             self.end_prefix("lib") 
-  
-		# Newer Arch linux has web kit failures due to confilcts with libpangoft2-1.0 versions
-        # Moving the older Kokua library to reside next to media_plugin_webkit and allow
-        # UI to use the system supplied version.
-        if self.prefix(src="../packages/lib/release", dst="bin/llplugin"):
-            self.path("libpangoft2-1.0.so*")
-            self.end_prefix("bin/llplugin")
+    
+
 
         if self.prefix("../packages/lib/release", dst="lib"):
             self.path("libapr-1.so")
@@ -1257,33 +1316,13 @@ class Linux_i686_Manifest(LinuxManifest):
             self.path("libhunspell-1.3.so")
             self.path("libhunspell-1.3.so.0")
             self.path("libhunspell-1.3.so.0.0.0")
+            self.path("libalut.so.0")
+            self.path("libalut.so.0.0.0")
+            self.path("libopenal.so*")
+            self.path("libopenal.so", "libvivoxoal.so.1") # vivox's sdk expects this soname
             self.path("libfontconfig.so*")
-            self.path("libfreetype.so*")
-            self.path("libpng16.so.16") 
-            self.path("libpng16.so.16.8.0") 
-            
-            # Use prebuilt gtk and friends for backward compatibility
-            self.path("libatk-1.0.so*")
-            self.path("libcairo-gobject.so*")
-            self.path("libcairo-script-interpreter.so*")
-            self.path("libcairo.so*")
-            self.path("libgdk_pixbuf-2.0.so*")
-            self.path("libgdk_pixbuf_xlib-2.0.so*")
-            self.path("libgdk-x11-2.0.so*")
-            self.path("libgtk-x11-2.0.so*")
-            self.path("libgio-2.0.so*")
-            self.path("libglib-2.0.so*")
-            self.path("libgmodule-2.0.so*")
-            self.path("libgobject-2.0.so*")
-            self.path("libgthread-2.0.so*")
-            self.path("libgtk-x11-2.0.so*")
-            self.path("libharfbuzz.so*")
-            self.path("libpango-1.0.so*")
-            self.path("libpangocairo-1.0.so*")
-            self.path("libpangoxft-1.0.so*")
-            self.path("libpixman-1.so*")
-      
-
+            self.path("libpng15.so.15") 
+            self.path("libpng15.so.15.10.0")            
 
             # Include libfreetype.so. but have it work as libfontconfig does.
             self.path("libfreetype.so.*.*")
@@ -1306,18 +1345,23 @@ class Linux_i686_Manifest(LinuxManifest):
             self.end_prefix("lib")
 
             # Vivox runtimes
-            if self.prefix(src="../packages/lib/release", dst="bin"):
-                    self.path("SLVoice")
-                    self.end_prefix()
-            if self.prefix(src="../packages/lib/release", dst="bin"):
-                    self.path("libortp.so")
-                    self.path("libsndfile.so.1")
-                    self.path("libvivoxsdk.so")
-                    self.path("libvivoxplatform.so")
-                    self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
-                    self.end_prefix("bin")
+            if self.prefix(src=relpkgdir, dst="bin"):
+                self.path("SLVoice")
+                self.end_prefix()
+            if self.prefix(src=relpkgdir, dst="lib"):
+                self.path("libortp.so")
+                self.path("libsndfile.so.1")
+                self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
+                self.path("libvivoxsdk.so")
+                self.path("libvivoxplatform.so")
+                self.end_prefix("lib")
 
 
+            #cef plugin
+            if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
+                self.path( "libcef.so" )
+                self.path( "libllceflib.so" )
+                self.end_prefix()
 
 class Linux_x86_64_Manifest(LinuxManifest):
     def construct(self):
@@ -1331,18 +1375,11 @@ class Linux_x86_64_Manifest(LinuxManifest):
         except:
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
-        # Use the build system libstdc++.so An attempt try to allow versions earlier than
-        # than stretch to run the viewer without complaining about GLIBCXX version.
-
-        if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
-            self.path("libstdc++.so.*")
-            self.end_prefix("lib64") 
-
-        # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
-        if self.prefix("/lib/x86_64-linux-gnu", dst="lib64"):
-            self.path("libpng12.so.0*")
-            self.end_prefix("lib64") 
-  
+       # Use the build system libstdc++.so An attempt try to allow versions earlier than
+        # then wheezy to run the viewer without complaining about GLIBCXX version.
+#        if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
+#            self.path("libstdc++.so.*")
+#            self.end_prefix("lib64") 
 
 
         if self.prefix("../packages/lib/release", dst="lib64"):
@@ -1389,45 +1426,19 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libalut.so.0.0.0")
             self.path("libopenal.so.1.15.1")
             self.path("libfontconfig.so*")
-            self.path("libfreetype.so*")
+            self.path("libfreetype.so.*.*")
             self.path("libpng16.so.16") 
             self.path("libpng16.so.16.8.0")
-            
-            # Use prebuilt gtk and friends for backward compatibility
-            self.path("libatk-1.0.so*")
-            self.path("libcairo-gobject.so*")
-            self.path("libcairo-script-interpreter.so*")
-            self.path("libcairo.so*")
-            self.path("libgdk_pixbuf-2.0.so*")
-            self.path("libgdk_pixbuf_xlib-2.0.so*")
-            self.path("libgdk-x11-2.0.so*")
-            self.path("libgtk-x11-2.0.so*")
-            self.path("libgio-2.0.so*")
-            self.path("libglib-2.0.so*")
-            self.path("libgmodule-2.0.so*")
-            self.path("libgobject-2.0.so*")
-            self.path("libgthread-2.0.so*")
-            self.path("libgtk-x11-2.0.so*")
-            self.path("libharfbuzz.so*")
-            self.path("libpango-1.0.so*")
-            self.path("libpangocairo-1.0.so*")
-            self.path("libpangoxft-1.0.so*")
 
-            self.path("libpixman-1.so*")
+            #cef plugin
+            self.path( "libcef.so" )
+            self.path( "libllceflib.so" )
             self.end_prefix("lib64")
 
             # plugin runtime
             if self.prefix(src="../packages/lib/release", dst="lib64"):
                 self.path("libQtWebKit.so*")
                 self.end_prefix("lib64")
-
-			# Newer Arch linux has web kit failures due to confilcts with libpangoft2-1.0 versions
-            # Moving the older Kokua library to reside next to media_plugin_webkit and allow
-            # UI to use the system supplied version.
-            if self.prefix(src="../packages/lib/release", dst="bin/llplugin"):
-                self.path("libpangoft2-1.0.so*")
-                self.end_prefix("bin/llplugin")
-
 
             # For WebKit/Qt plugin runtimes (image format plugins)
             if self.prefix(src="../packages/plugins/imageformats", dst="bin/llplugin/imageformats"):
@@ -1464,9 +1475,12 @@ class Linux_x86_64_Manifest(LinuxManifest):
             if self.prefix("../packages/lib/release/32bit-compat", dst="lib32"):
                     self.path("32bit-libalut.so" , "libalut.so")
                     self.path("32bit-libalut.so.0" , "libalut.so.0")
+                    self.path("32bit-libopenal.so" , "libopenal.so")
+                    self.path("32bit-libopenal.so.1" , "libopenal.so.1")
                     self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
-                    self.end_prefix("lib32")
+                    self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
 
+                    self.end_prefix("lib32")
 	if self.args['buildtype'].lower() == 'debug':
     	 if self.prefix("../packages/lib/debug", dst="lib64"):
              self.path("libapr-1.so*")

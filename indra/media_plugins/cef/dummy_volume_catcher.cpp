@@ -1,10 +1,9 @@
 /** 
- * @file llmediaimplgstreamer.h
- * @author Tofu Linden
- * @brief implementation that supports media playback via GStreamer.
+ * @file dummy_volume_catcher.cpp
+ * @brief A null implementation of the "VolumeCatcher" class for platforms where it's not implemented yet.
  *
  * @cond
- * $LicenseInfo:firstyear=2007&license=viewerlgpl$
+ * $LicenseInfo:firstyear=2010&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
  * 
@@ -27,27 +26,33 @@
  * @endcond
  */
 
-// header guard
-#ifndef llmediaimplgstreamer_h
-#define llmediaimplgstreamer_h
+#include "volume_catcher.h"
 
-#if LL_GSTREAMER010_ENABLED
 
-extern "C" {
-#include <stdio.h>
-#include <gst/gst.h>
+class VolumeCatcherImpl
+{
+};
 
-#include "apr_pools.h"
-#include "apr_dso.h"
+/////////////////////////////////////////////////////
+
+VolumeCatcher::VolumeCatcher()
+{
+	pimpl = NULL;
 }
 
-
-extern "C" {
-gboolean llmediaimplgstreamer_bus_callback (GstBus     *bus,
-					    GstMessage *message,
-					    gpointer    data);
+VolumeCatcher::~VolumeCatcher()
+{
 }
 
-#endif // LL_GSTREAMER010_ENABLED
+void VolumeCatcher::setVolume(F32 volume)
+{
+}
 
-#endif // llmediaimplgstreamer_h
+void VolumeCatcher::setPan(F32 pan)
+{
+}
+
+void VolumeCatcher::pump()
+{
+}
+
