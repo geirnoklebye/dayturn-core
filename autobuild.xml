@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <llsd>
 <map>
-    <key>installables</key>
+     <key>installables</key>
     <map>
       <key>32bitcompatibilitylibs</key>
       <map>
@@ -2204,11 +2204,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>22c1e14dfc9dee0aeadf364eae914871</string>
+              <string>75618c6c45b372f840c004862f125d9a</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/3p-llceflib/downloads/llceflib-1.0-linux-201512212205.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/3p-llceflib/downloads/llceflib-1.0-kokua-linux-201512241723.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2218,11 +2218,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2bffeaed07d551dcfd0b20a22840f923</string>
+              <string>420bd9b4b4f272e18b7e9ea89f5853c8</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/3p-llceflib/downloads/llceflib-1.0-linux64-201512212201.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/3p-llceflib/downloads/llceflib-1.0-kokua-linux64-201512241653.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2441,80 +2441,6 @@
         </map>
         <key>version</key>
         <string>1.0.298370</string>
-      </map>
-       <key>llceflib</key>
-      <map>
-        <key>copyright</key>
-        <string>>Copyright (c) 2008-2014 Marshall A. Greenblatt. Portions Copyright (c) 2006-2009 Google Inc. All rights reserved</string>
-        <key>description</key>
-        <string>Chromium Embedded Framework (CEF) Standard Binary Distribution</string>
-        <key>license</key>
-        <string>BSD</string>
-        <key>license_file</key>
-        <string>LICENSES/CEF_BSD.txt</string>
-        <key>name</key>
-        <string>llceflib</string>
-        <key>platforms</key>
-        <map>
-          <key>windows</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>68012c406b5c2514794b7cf1c7ea5564</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>file:///opt/cef/llceflib-1.0-windows-201507022122-r22.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>windows</string>
-          </map>
-          <key>darwin</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>d32c6e5eeb91d06a8811cb0d7aa15003</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://callum-linden.s3.amazonaws.com/llceflib-0.3.2171.2069.5020-darwin-5020.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>darwin</string>
-          </map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>c2a85e799db6ebb4958be27d5ae01c55</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>file:///opt/cef/llceflib-cef_binary_3.2272.32.gbda8dc7-linux-201507161208.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-           </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>4363979c998d9b4c82f9fceeb001c867</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>file:///opt/cef/llceflib-cef_binary_3.2272.32.gbda8dc7-linux64-201507171457.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>3.2272.2035.999999</string>
       </map>
       <key>mesa</key>
       <map>
