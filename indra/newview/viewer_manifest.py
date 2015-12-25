@@ -1136,13 +1136,13 @@ class LinuxManifest(ViewerManifest):
             self.path( "llceflib_host" )
             self.path( "natives_blob.bin" )
             self.path( "snapshot_blob.bin" )
-            self.path( "libffmpegsumo.so" )
             self.end_prefix()
 
         if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources'), dst="bin"):
             self.path( "cef.pak" )
             self.path( "cef_100_percent.pak" )
             self.path( "cef_200_percent.pak" )
+            self.path( "cef_extensions.pak" )
             self.path( "devtools_resources.pak" )
             self.path( "icudtl.dat" )
             self.end_prefix()
