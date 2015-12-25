@@ -3475,7 +3475,7 @@ void LLViewerMediaTexture::addMediaToFace(LLFace* facep)
 			}
 		}
 		// </FS:ND>
-	}
+	}	
 	if(!mIsPlaying)
 	{
 		return; //no need to add the face because the media is not in playing.
