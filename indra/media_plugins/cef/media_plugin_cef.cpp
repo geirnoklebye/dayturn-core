@@ -98,6 +98,10 @@ private:
 	LLCEFLib* mLLCEFLib;
 
     VolumeCatcher mVolumeCatcher;
+
+	// <FS:ND> FS specific CEF settings
+	bool mFlipY;
+	// </FS:ND>
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -124,6 +128,10 @@ MediaPluginBase(host_send_func, host_user_data)
 	mCachePath = "";
 	mCookiePath = "";
 	mLLCEFLib = new LLCEFLib();
+
+	// <FS:ND> FS specific CEF settings
+	mFlipY = false;
+	// </FS:ND>
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -427,6 +435,12 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 		{
 			if (message_name == "init")
 			{
+				// <FS:ND> FS specific CEF settings
+#if defined( LL_WINDOWS ) || defined( LL_LINUX )
+				mLLCEFLib->setFlipY( mFlipY );
+#endif
+				// </FS:ND>
+
 				// event callbacks from LLCefLib
 				mLLCEFLib->setOnPageChangedCallback(boost::bind(&MediaPluginCEF::onPageChangedCallback, this, _1, _2, _3, _4, _5, _6));
 				mLLCEFLib->setOnCustomSchemeURLCallback(boost::bind(&MediaPluginCEF::onCustomSchemeURLCallback, this, _1));
@@ -469,7 +483,13 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				message.setValueU32("internalformat", GL_RGB);
 				message.setValueU32("format", GL_BGRA);
 				message.setValueU32("type", GL_UNSIGNED_BYTE);
-				message.setValueBoolean("coords_opengl", true);
+
+				// <FS:ND> if mFlipY is true, teh CEF plugin will flip the texture and it will be in correct opengl format. 
+				// If false, it needs to be flipped by the viewer.
+				// message.setValueBoolean("coords_opengl", true);
+				message.setValueBoolean("coords_opengl", mFlipY );
+				// </FS:ND>
+
 				sendMessage(message);
 			}
 			else if (message_name == "set_user_data_path")
@@ -708,6 +728,10 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			{
 				mJavascriptEnabled = message_in.getValueBoolean("enable");
 			}
+			else if( message_name == "cef_flipy" )
+			{
+				mFlipY = message_in.getValueBoolean("enable");
+			}
 		}
         else if (message_class == LLPLUGIN_MESSAGE_CLASS_MEDIA_TIME)
         {
@@ -761,6 +785,12 @@ void MediaPluginCEF::deserializeKeyboardData(LLSD native_key_data, uint32_t& nat
 		native_virtual_key = (uint32_t)(native_key_data["virtual_key"].asInteger());
 		// TODO: I don't think we need to do anything with native modifiers here -- please verify
 #endif
+
+#if LL_LINUX
+	native_scan_code = (uint32_t)(native_key_data["scan_code"].asInteger());
+	native_virtual_key = (uint32_t)(native_key_data["virtual_key"].asInteger());
+	native_modifiers = (uint32_t)(native_key_data["cef_modifiers"].asInteger());
+#endif
 	};
 };
 
@@ -768,7 +798,7 @@ void MediaPluginCEF::deserializeKeyboardData(LLSD native_key_data, uint32_t& nat
 //
 void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::EKeyboardModifier modifiers_x, LLSD native_key_data = LLSD::emptyMap())
 {
-#if LL_DARWIN
+#if LL_DARWIN || LL_LINUX
 
     if (!native_key_data.has("event_type") ||
             !native_key_data.has("event_modifiers") ||
@@ -785,7 +815,6 @@ void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::
     char eventUChars = static_cast<char>(native_key_data["event_umodchars"].isUndefined() ? 0 : native_key_data["event_umodchars"].asInteger());
     bool eventIsRepeat = native_key_data["event_isrepeat"].asBoolean();
     
- //fix me   
 //    mLLCEFLib->keyboardEventOSX(eventType, eventModifiers, (eventChars) ? &eventChars : NULL,
 //                                (eventUChars) ? &eventUChars : NULL, eventIsRepeat, eventKeycode);
     
@@ -819,6 +848,23 @@ void MediaPluginCEF::unicodeInput(const std::string &utf8str, LLCEFLib::EKeyboar
 	U64 lparam = ll_U32_from_sd(native_key_data["l_param"]);
 	mLLCEFLib->nativeKeyboardEvent(msg, wparam, lparam);
 #endif
+
+// <FS:ND> Keyboard handling for Linux, code written by Henri Beauchamp
+#if LL_LINUX
+	uint32_t key = KEY_NONE;
+
+	if (utf8str.size() == 1)
+		key = utf8str[0];
+
+	uint32_t native_scan_code = 0;
+	uint32_t native_virtual_key = 0;
+	uint32_t native_modifiers = 0;
+	deserializeKeyboardData(native_key_data, native_scan_code, native_virtual_key, native_modifiers);
+	
+	mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_DOWN, (uint32_t)key, utf8str.c_str(), modifiers, 0, native_virtual_key, native_modifiers);
+	mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_UP, (uint32_t)key, utf8str.c_str(), modifiers, 0, native_virtual_key, native_modifiers);
+#endif
+// </FS:ND>
 };
 
 ////////////////////////////////////////////////////////////////////////////////
