@@ -436,7 +436,9 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			if (message_name == "init")
 			{
 				// <FS:ND> FS specific CEF settings
-#if defined( LL_WINDOWS ) || defined( LL_LINUX )
+				// Use LL's windows ceflib
+//#if defined( LL_WINDOWS ) || defined( LL_LINUX )
+#if defined( LL_LINUX )
 				mLLCEFLib->setFlipY( mFlipY );
 #endif
 				// </FS:ND>
@@ -486,9 +488,12 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 
 				// <FS:ND> if mFlipY is true, teh CEF plugin will flip the texture and it will be in correct opengl format. 
 				// If false, it needs to be flipped by the viewer.
-				// message.setValueBoolean("coords_opengl", true);
+#if defined( LL_WINDOWS )
+				message.setValueBoolean("coords_opengl", true);
+#else
 				message.setValueBoolean("coords_opengl", mFlipY );
-				// </FS:ND>
+#endif
+			// </FS:ND>
 
 				sendMessage(message);
 			}
@@ -815,9 +820,10 @@ void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::
     char eventUChars = static_cast<char>(native_key_data["event_umodchars"].isUndefined() ? 0 : native_key_data["event_umodchars"].asInteger());
     bool eventIsRepeat = native_key_data["event_isrepeat"].asBoolean();
     
-//    mLLCEFLib->keyboardEventOSX(eventType, eventModifiers, (eventChars) ? &eventChars : NULL,
-//                                (eventUChars) ? &eventUChars : NULL, eventIsRepeat, eventKeycode);
-    
+#if LL_DARWIN
+    mLLCEFLib->keyboardEventOSX(eventType, eventModifiers, (eventChars) ? &eventChars : NULL,
+                                (eventUChars) ? &eventUChars : NULL, eventIsRepeat, eventKeycode);
+#endif    
 #elif LL_WINDOWS
 	U32 msg = ll_U32_from_sd(native_key_data["msg"]);
 	U32 wparam = ll_U32_from_sd(native_key_data["w_param"]);
