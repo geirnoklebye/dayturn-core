@@ -85,6 +85,7 @@ private:
 	std::string mHostLanguage;
 	bool mCookiesEnabled;
 	bool mPluginsEnabled;
+	bool mSystemFlashEnabled;
 	bool mJavascriptEnabled;
 	std::string mUserAgentSubtring;
 	std::string mAuthUsername;
