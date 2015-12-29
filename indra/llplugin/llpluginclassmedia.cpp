@@ -1525,10 +1525,10 @@ void LLPluginClassMedia::initializeUrlHistory(const LLSD& url_history)
 }
 
 //FS
-void LLPluginClassMedia::setFlipY( bool enabled )
-{
-	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER, "cef_flipy");
-	message.setValueBoolean("enable", enabled);
-	sendMessage(message);
-}
+//void LLPluginClassMedia::setFlipY( bool enabled )
+//{
+//	LLPluginMessage message(LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER, "cef_flipy");
+//	message.setValueBoolean("enable", enabled);
+//	sendMessage(message);
+//}
 //FS

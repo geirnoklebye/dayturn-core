@@ -1227,7 +1227,7 @@ class LinuxManifest(ViewerManifest):
                 find %(dst)s -type f -perm 0600 | xargs --no-run-if-empty chmod 0644;
                 find %(dst)s -type f -perm 0400 | xargs --no-run-if-empty chmod 0444;
                 true""" %  {'dst':self.get_dst_prefix() })
-        self.package_file = installer_name + '.tar.bz2'
+        self.package_file = installer_name + '.tar.xz'
 
         # temporarily move directory tree so that it has the right
         # name in the tarfile
