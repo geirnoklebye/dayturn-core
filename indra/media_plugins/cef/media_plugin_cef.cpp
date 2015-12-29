@@ -131,7 +131,7 @@ MediaPluginBase(host_send_func, host_user_data)
 	mLLCEFLib = new LLCEFLib();
 
 	// <FS:ND> FS specific CEF settings
-	mFlipY = false;
+	mFlipY = true;
 	// </FS:ND>
 }
 
