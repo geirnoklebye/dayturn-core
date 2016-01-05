@@ -280,7 +280,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///opt/3p-boost-bm/boost-1.57-linux-201601041224.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/boost-1.57-linux-201601041224.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -294,7 +294,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///opt/3p-boost-bm/boost-1.57-linux64-201601041141.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/boost-1.57-linux64-201601041141.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -390,7 +390,7 @@
               <key>hash</key>
               <string>49c474900c2ad08d1c1b64a5f598b753</string>
               <key>url</key>
-              <string>file:///opt/colladadom-ll/colladadom-2.3.201601041326-linux-201601041326.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/colladadom-2.3.201601041326-linux-201601041326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -402,7 +402,7 @@
               <key>hash</key>
               <string>9fac891135636f14d110f692a31cdbaf</string>
               <key>url</key>
-              <string>file:///opt/colladadom-ll/colladadom-2.3.201601041158-linux64-201601041158.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/colladadom-2.3.201601041158-linux64-201601041158.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1329,7 +1329,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///opt/3p-google-mock/googlemock-1.7.0.201601041342-linux-201601041342.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/googlemock-1.7.0.201601041342-linux-201601041342.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1343,7 +1343,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///opt/3p-google-mock/googlemock-1.7.0.201601041214-linux64-201601041214.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/googlemock-1.7.0.201601041214-linux64-201601041214.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2210,7 +2210,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///opt/cef/llceflib-1.5.1.201601042003-kokua-linux-201601042003.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/llceflib-1.5.1.201601042003-kokua-linux-201601042003.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2224,7 +2224,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///opt/cef/llceflib-1.5.1.201601041244-kokua-linux64-201601041244.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/llceflib-1.5.1.201601041244-kokua-linux64-201601041244.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
