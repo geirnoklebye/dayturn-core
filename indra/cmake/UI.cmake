@@ -56,7 +56,7 @@ else (USESYSTEMLIBS)
         gtk-x11-2.0
         pango-1.0
         pangoft2-1.0
-        #pangox-1.0 this library is obsolete http://ftp.gnome.org/pub/GNOME/sources/pangox-compat/ if need here is the source
+#        pangox-1.0 this library is obsolete http://ftp.gnome.org/pub/GNOME/sources/pangox-compat/ if need here is the source
         pangoxft-1.0
         pixman-1
         ${FREETYPE_LIBRARIES}

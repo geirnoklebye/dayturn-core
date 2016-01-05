@@ -1240,12 +1240,12 @@ class LinuxManifest(ViewerManifest):
                 # --numeric-owner hides the username of the builder for
                 # security etc.
                 self.run_command('tar -C %(dir)s --numeric-owner -cJf '
-                                 '%(inst_path)s.tar.txz %(inst_name)s' % {
+                                 '%(inst_path)s.tar.xz %(inst_name)s' % {
                         'dir': self.get_build_prefix(),
                         'inst_name': installer_name,
                         'inst_path':self.build_path_of(installer_name)})
             else:
-                print "Skipping %s.tar.txz for non-Release build (%s)" % \
+                print "Skipping %s.tar.xz for non-Release build (%s)" % \
                       (installer_name, self.args['buildtype'])
         finally:
             self.run_command("mv %(inst)s %(dst)s" % {
