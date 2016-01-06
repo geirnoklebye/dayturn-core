@@ -1323,6 +1323,25 @@ class Linux_i686_Manifest(LinuxManifest):
             self.path("libfontconfig.so*")
             self.path("libpng15.so.15") 
             self.path("libpng15.so.15.10.0")            
+            # Use prebuilt gtk and friends for backward compatibility
+            self.path("libatk-1.0.so*")
+            self.path("libcairo-gobject.so*")
+            self.path("libcairo-script-interpreter.so*")
+            self.path("libcairo.so*")
+            self.path("libgdk_pixbuf-2.0.so*")
+            self.path("libgdk_pixbuf_xlib-2.0.so*")
+            self.path("libgdk-x11-2.0.so*")
+            self.path("libgtk-x11-2.0.so*")
+            self.path("libgio-2.0.so*")
+            self.path("libglib-2.0.so*")
+            self.path("libgmodule-2.0.so*")
+            self.path("libgobject-2.0.so*")
+            self.path("libgthread-2.0.so*")
+            self.path("libgtk-x11-2.0.so*")
+            self.path("libharfbuzz.so*")
+            self.path("libpangocairo-1.0.so*")
+            self.path("libpangoxft-1.0.so*")
+            self.path("libpixman-1.so*")
 
             # Include libfreetype.so. but have it work as libfontconfig does.
             self.path("libfreetype.so.*.*")
@@ -1375,25 +1394,16 @@ class Linux_x86_64_Manifest(LinuxManifest):
         except:
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
-       # Use the build system libstdc++.so An attempt try to allow versions earlier than
-        # then wheezy to run the viewer without complaining about GLIBCXX version.
-#        if self.prefix("/usr/lib/x86_64-linux-gnu", dst="lib64"):
-#            self.path("libstdc++.so.*")
-#            self.end_prefix("lib64") 
+
+        # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
+        if self.prefix("/lib/x86_64-linux-gnu", dst="lib64"):
+            self.path("libpng12.so.0*")
+            self.end_prefix("lib64") 
 
 
         if self.prefix("../packages/lib/release", dst="lib64"):
             self.path("libapr-1.so*")
             self.path("libaprutil-1.so*")
-            self.path("libboost_context-mt.so.*")
-            self.path("libboost_program_options-mt.so.*")
-            self.path("libboost_regex-mt.so.*")
-            self.path("libboost_thread-mt.so.*")
-            self.path("libboost_filesystem-mt.so.*")
-            self.path("libboost_signals-mt.so.*")
-            self.path("libboost_system-mt.so.*")
-            self.path("libboost_wave-mt.so.*")
-            self.path("libboost_coroutine-mt.so.*")
             self.path("libdb*.so")
             self.path("libcrypto.so.1.0.0")
             self.path("libssl.so")
@@ -1430,7 +1440,27 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libpng16.so.16") 
             self.path("libpng16.so.16.8.0")
 
-            #cef plugin
+            # Use prebuilt gtk and friends for DISTRO compatibility
+            self.path("libatk-1.0.so*")
+            self.path("libcairo-gobject.so*")
+            self.path("libcairo-script-interpreter.so*")
+            self.path("libcairo.so*")
+            self.path("libgdk_pixbuf-2.0.so*")
+            self.path("libgdk_pixbuf_xlib-2.0.so*")
+            self.path("libgdk-x11-2.0.so*")
+            self.path("libgtk-x11-2.0.so*")
+            self.path("libgio-2.0.so*")
+            self.path("libglib-2.0.so*")
+            self.path("libgmodule-2.0.so*")
+            self.path("libgobject-2.0.so*")
+            self.path("libgthread-2.0.so*")
+            self.path("libgtk-x11-2.0.so*")
+            self.path("libharfbuzz.so*")
+            self.path("libpangocairo-1.0.so*")
+            self.path("libpangoxft-1.0.so*")
+            self.path("libpixman-1.so*")
+ 
+           #cef plugin
             self.path( "libcef.so" )
             self.path( "libllceflib.so" )
             self.end_prefix("lib64")
