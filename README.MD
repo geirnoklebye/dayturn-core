@@ -1,7 +1,3 @@
-
-# This is built in slackware Current GCC 5.3.0
-Windows only tested at this commit.
-
 New Tools Update
 
 ================
