@@ -247,8 +247,7 @@ class ViewerManifest(LLManifest):
         return ''.join(self.app_name().split())
     
     def icon_path(self):
-        #return "icons/" + self.channel_type() used for selection of icon by type not used for kokua
-		return "icons/kokua"
+        return "icons/" + self.channel_type()
 
     def extract_names(self,src):
         try:
@@ -726,6 +725,10 @@ class Darwin_i386_Manifest(ViewerManifest):
             self.path("Info.plist", dst="Info.plist")
 
             # copy additional libs in <bundle>/Contents/MacOS/
+            self.path(os.path.join(relpkgdir, "libndofdev.dylib"), dst="Resources/libndofdev.dylib")
+            self.path(os.path.join(relpkgdir, "libhunspell-1.3.0.dylib"), dst="Resources/libhunspell-1.3.0.dylib")
+
+            # copy additional libs in <bundle>/Contents/MacOS/
             if self.prefix(src="../packages/lib/release", dst="MacOS"):
                 self.path("libalut.0.dylib")
                 self.path("libopenal.1.dylib")
@@ -1087,12 +1090,13 @@ class LinuxManifest(ViewerManifest):
     def construct(self):
         super(LinuxManifest, self).construct()
         self.path("licenses-linux.txt","licenses.txt")
-        self.path("icons/kokua/kokua_icon.png", "kokua_icon.png")
         self.path("VivoxAUP.txt")
         if self.prefix("linux_tools", dst=""):
             self.path("client-readme.txt","README-linux.txt")
             self.path("client-readme-voice.txt","README-linux-voice.txt")
             self.path("client-readme-joystick.txt","README-linux-joystick.txt")
+            self.path("client-readme-streamingmedia.txt","README-linux-streamingmedia.txt")
+            self.path("client-readme-install-setup.txt","README-linux-install-setup.txt")
             self.path("wrapper.sh","kokua")
             self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
             self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
@@ -1119,7 +1123,7 @@ class LinuxManifest(ViewerManifest):
         print "DEBUG: icon_path '%s'" % icon_path
         if self.prefix(src=icon_path, dst="") :
             self.path("kokua_icon.png","kokua_icon.png" )
-            if self.prefix(src="",dst="res-sdl") :
+            if self.prefix(src="", dst="res-sdl") :
                 self.path("kokua_icon.bmp","kokua_icon.BMP")
                 self.end_prefix("res-sdl")
             self.end_prefix(icon_path)
@@ -1217,6 +1221,7 @@ class LinuxManifest(ViewerManifest):
 
     def package_finish(self):
         installer_name = self.installer_base_name()
+
         self.strip_binaries()
 
         # Fix access permissions
@@ -1283,12 +1288,10 @@ class Linux_i686_Manifest(LinuxManifest):
         except:
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
-        # Use the build system libstdc++.so An attempt try to allow versions earlier than
-        # then wheezy to run the viewer without complaining about GLIBCXX version.
+        # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
         if self.prefix("/lib/i386-linux-gnu", dst="lib"):
-            self.path("libstdc++.so.*")
+            self.path("libpng12.so.0*")
             self.end_prefix("lib") 
-    
 
 
         if self.prefix("../packages/lib/release", dst="lib"):
@@ -1322,7 +1325,7 @@ class Linux_i686_Manifest(LinuxManifest):
             self.path("libopenal.so", "libvivoxoal.so.1") # vivox's sdk expects this soname
             self.path("libfontconfig.so*")
             self.path("libpng15.so.15") 
-            self.path("libpng15.so.15.10.0")            
+            self.path("libpng15.so.15.10.0")
             # Use prebuilt gtk and friends for backward compatibility
             self.path("libatk-1.0.so*")
             self.path("libcairo-gobject.so*")
