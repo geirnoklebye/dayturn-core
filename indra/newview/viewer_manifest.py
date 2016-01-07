@@ -456,9 +456,9 @@ class Windows_i686_Manifest(ViewerManifest):
             self.end_prefix()
 
         # Media plugins - QuickTime
-        if self.prefix(src='../media_plugins/quicktime/%s' % self.args['configuration'], dst="llplugin"):
-            self.path("media_plugin_quicktime.dll")
-            self.end_prefix()
+        # if self.prefix(src='../media_plugins/quicktime/%s' % self.args['configuration'], dst="llplugin"):
+        #    self.path("media_plugin_quicktime.dll")
+        #    self.end_prefix()
 
         # Media plugins - CEF
         if self.prefix(src='../media_plugins/cef/%s' % self.args['configuration'], dst="llplugin"):
@@ -893,7 +893,7 @@ class Darwin_i386_Manifest(ViewerManifest):
 
                 self.end_prefix("Resources")
 
-                # CEF framework goes inside Second Life.app/Contents/Frameworks
+                # CEF framework goes inside Kokua.app/Contents/Frameworks
                 if self.prefix(src="", dst="Frameworks"):
                     frameworkfile="Chromium Embedded Framework.framework"
                     self.path2basename(relpkgdir, frameworkfile)
@@ -907,9 +907,9 @@ class Darwin_i386_Manifest(ViewerManifest):
                 # to terminate the process if we get an error since without
                 # this symlink, Second Life web media can't possibly work.
                 # Real Framework folder:
-                #   Second Life.app/Contents/Frameworks/Chromium Embedded Framework.framework/
+                #   Kokua.app/Contents/Frameworks/Chromium Embedded Framework.framework/
                 # Location of symlink and why it'ds relavie 
-                #   Second Life.app/Contents/Resources/SLPlugin.app/Contents/Frameworks/Chromium Embedded Framework.framework/
+                #   Kokua.app/Contents/Resources/SLPlugin.app/Contents/Frameworks/Chromium Embedded Framework.framework/
                 frameworkpath = os.path.join(os.pardir, os.pardir, os.pardir, os.pardir, "Frameworks", "Chromium Embedded Framework.framework")
                 try:
                     symlinkf(frameworkpath, pluginframeworkpath)
@@ -920,7 +920,7 @@ class Darwin_i386_Manifest(ViewerManifest):
             self.end_prefix("Contents")
 
         # fix up media_plugin.dylib so it knows where to look for CEF files it needs
-        self.run_command('install_name_tool -change "@executable_path/Chromium Embedded Framework" "@executable_path/../Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" "%(config)s/Second Life.app/Contents/Resources/llplugin/media_plugin_cef.dylib"' %
+        self.run_command('install_name_tool -change "@executable_path/Chromium Embedded Framework" "@executable_path/../Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" "%(config)s/Kokua.app/Contents/Resources/llplugin/media_plugin_cef.dylib"' %
                         { 'config' : self.args['configuration'] })
 
         # NOTE: the -S argument to strip causes it to keep enough info for
