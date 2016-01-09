@@ -2210,7 +2210,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/llceflib-1.5.1.201601042003-kokua-linux-201601042003.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/kokua-cef-testing/downloads/llceflib-1.5.1.201601090851-kokua-linux-201601090851.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2220,11 +2220,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f4244255cde847d0d5b867e2bf3e95fd</string>
+              <string>74630522044c3cc34d03988590a42c68</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/llceflib-1.5.1.201601041244-kokua-linux64-201601041244.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/kokua-cef-testing/downloads/llceflib-1.5.1.201601090833-kokua-linux64-201601090833.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
