@@ -2206,11 +2206,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ed70a96f9c546e95a5ed1994e795e588</string>
+              <string>2afffdc0df770b8b97d953df856755ed</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/kokua-cef-testing/downloads/llceflib-1.5.1.201601090851-kokua-linux-201601090851.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/kokua-cef-testing/downloads/llceflib-1.5.1.201601091702-kokua-linux-201601091702.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2220,11 +2220,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>74630522044c3cc34d03988590a42c68</string>
+              <string>921f135eb2a3becb2e74d5c6c977a63b</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/kokua-cef-testing/downloads/llceflib-1.5.1.201601090833-kokua-linux64-201601090833.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/kokua-cef-testing/downloads/llceflib-1.5.1.201601091656-kokua-linux64-201601091656.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
