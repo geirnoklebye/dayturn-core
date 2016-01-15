@@ -85,7 +85,6 @@ private:
 	std::string mHostLanguage;
 	bool mCookiesEnabled;
 	bool mPluginsEnabled;
-	bool mSystemFlashEnabled;
 	bool mJavascriptEnabled;
 	std::string mUserAgentSubtring;
 	std::string mAuthUsername;
@@ -99,10 +98,6 @@ private:
 	LLCEFLib* mLLCEFLib;
 
     VolumeCatcher mVolumeCatcher;
-
-	// <FS:ND> FS specific CEF settings
-	bool mFlipY;
-	// </FS:ND>
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -130,9 +125,6 @@ MediaPluginBase(host_send_func, host_user_data)
 	mCookiePath = "";
 	mLLCEFLib = new LLCEFLib();
 
-	// <FS:ND> FS specific CEF settings
-	mFlipY = true;
-	// </FS:ND>
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -436,13 +428,6 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 		{
 			if (message_name == "init")
 			{
-				// <FS:ND> FS specific CEF settings
-				// Use LL's windows ceflib
-//#if defined( LL_WINDOWS ) || defined( LL_LINUX )
-#if defined( LL_LINUX )
-				mLLCEFLib->setFlipY( mFlipY );
-#endif
-				// </FS:ND>
 
 				// event callbacks from LLCefLib
 				mLLCEFLib->setOnPageChangedCallback(boost::bind(&MediaPluginCEF::onPageChangedCallback, this, _1, _2, _3, _4, _5, _6));
@@ -487,15 +472,8 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				message.setValueU32("internalformat", GL_RGB);
 				message.setValueU32("format", GL_BGRA);
 				message.setValueU32("type", GL_UNSIGNED_BYTE);
-
-				// <FS:ND> if mFlipY is true, teh CEF plugin will flip the texture and it will be in correct opengl format. 
-				// If false, it needs to be flipped by the viewer.
-#if defined( LL_WINDOWS )
 				message.setValueBoolean("coords_opengl", true);
-#else
-				message.setValueBoolean("coords_opengl", mFlipY );
-#endif
-			// </FS:ND>
+
 
 				sendMessage(message);
 			}
@@ -735,10 +713,6 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			{
 				mJavascriptEnabled = message_in.getValueBoolean("enable");
 			}
-			else if( message_name == "cef_flipy" )
-			{
-				mFlipY = message_in.getValueBoolean("enable");
-			}
 		}
         else if (message_class == LLPLUGIN_MESSAGE_CLASS_MEDIA_TIME)
         {
@@ -821,8 +795,7 @@ void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::
     char eventChars = static_cast<char>(native_key_data["event_chars"].isUndefined() ? 0 : native_key_data["event_chars"].asInteger());
     char eventUChars = static_cast<char>(native_key_data["event_umodchars"].isUndefined() ? 0 : native_key_data["event_umodchars"].asInteger());
     bool eventIsRepeat = native_key_data["event_isrepeat"].asBoolean();
-#endif    
-#if LL_DARWIN    
+  
     mLLCEFLib->keyboardEventOSX(eventType, eventModifiers, (eventChars) ? &eventChars : NULL,
                                (eventUChars) ? &eventUChars : NULL, eventIsRepeat, eventKeycode);
 
