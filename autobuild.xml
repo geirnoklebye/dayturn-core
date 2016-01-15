@@ -742,9 +742,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>aceca8dbbc1ef3f90dbb3706f11e9496</string>
+              <string>15850bb80ac520d80ac97b1c5a0158a6</string>
               <key>url</key>
-              <string>file:///opt/kokua/fmodex-4.44.52-linux-201505011637.tar.bz2</string>
+              <string>file:///opt/kokua/fmodex-44453-linux-201505151801-r21.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
