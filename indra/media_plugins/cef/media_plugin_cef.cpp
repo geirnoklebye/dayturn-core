@@ -118,6 +118,7 @@ MediaPluginBase(host_send_func, host_user_data)
 	mHostLanguage = "en";
 	mCookiesEnabled = true;
 	mPluginsEnabled = false;
+	mSystemFlashEnabled=true;
 	mJavascriptEnabled = true;
 	mUserAgentSubtring = "";
 	mAuthUsername = "";
