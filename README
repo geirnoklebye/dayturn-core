@@ -1,6 +1,3 @@
-
-# This is built in GCC 4.8.2 glibc 2.17
-
 New Tools Update
 
 ================
@@ -17,7 +14,7 @@ Development system:
 
 
 
-Development system is Debian Stretch (testing). The compiler is gcc-4.8.2. If starting with a new Stretch you will need to install
+Development system is Debian Stretch (testing). The compiler is gcc-4.9. If starting with a new Stretch you will need to install
 
 build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
 
@@ -25,7 +22,7 @@ Debian packages of the build tools work. Python27 is required so, after installi
 
 active version. Debian as with most linux distributions if difficult to make right on a hardware box but, it is easy to put in  a virtual machine.
 
-Library archives for the most part are built with gcc-4.6.4. Boost are built with gcc-4.7.
+Library archives for the most part are built with gcc-4.6.4. Boost, Colladadom, and Googlemock are built with gcc-4.9.
 
 
 

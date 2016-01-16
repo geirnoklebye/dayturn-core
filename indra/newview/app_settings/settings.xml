@@ -17361,6 +17361,17 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+    <key>FSFlipCEFY</key>
+    <map>
+      <key>Comment</key>
+      <string>Let CEF internally flip the generated image rather than do it on the GPU. More memory and CPU intensive if enabled. Requires restart.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
     <key>InventoryFilterTransfer</key>
     <map>
       <key>Comment</key>
@@ -17372,6 +17383,6 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-</map>
+  </map>
 </llsd>
 
