@@ -41,8 +41,8 @@
 #include <set>
 
 extern "C" {
-#include <glib/glib.h>
-#include <glib/glib-object.h>
+#include <glib.h>
+#include <glib-object.h>
 #include <stdio.h>
 
 #include <pulse/introspect.h>

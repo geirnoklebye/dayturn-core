@@ -12,12 +12,13 @@ if (PULSEAUDIO)
   elseif (LINUX)    
     set(PULSEAUDIO_FOUND ON FORCE BOOL)
     set(PULSEAUDIO_INCLUDE_DIRS
-    ${LIBS_PREBUILT_DIR}/include
+    ${LIBS_PREBUILT_DIR}/include/glib
         )
     # We don't need to explicitly link against pulseaudio itself, because
     # the viewer probes for the system's copy at runtime.
-    set(PULSEAUDIO_LIBRARIES
-      # none needed!
+    set(PULSEAUDIO_LIB_NAMES
+        glib
+        gobject
       )
   endif (USESYSTEMLIBS)
 endif (PULSEAUDIO)
