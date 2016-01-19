@@ -1,7 +1,7 @@
 # -*- cmake -*-
 include(Prebuilt)
 
-set(PULSEAUDIO OFF CACHE BOOL "Build with PulseAudio support, if available.")
+set(PULSEAUDIO ON CACHE BOOL "Build with PulseAudio support, if available.")
 
 if (PULSEAUDIO)
   if (USESYSTEMLIBS)
@@ -9,11 +9,10 @@ if (PULSEAUDIO)
 
     pkg_check_modules(PULSEAUDIO libpulse)
 
-  elseif (LINUX)
-    use_prebuilt_binary(pulseaudio)
+  elseif (LINUX)    
     set(PULSEAUDIO_FOUND ON FORCE BOOL)
     set(PULSEAUDIO_INCLUDE_DIRS
-        ${LIBS_PREBUILT_DIR}/include
+    ${LIBS_PREBUILT_DIR}/include
         )
     # We don't need to explicitly link against pulseaudio itself, because
     # the viewer probes for the system's copy at runtime.

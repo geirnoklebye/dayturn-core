@@ -38,11 +38,12 @@
 #include "linden_common.h"
 
 #include "volume_catcher.h"
-
+#include <set>
 
 extern "C" {
-#include <glib.h>
-#include <glib-object.h>
+#include <glib/glib.h>
+#include <glib/glib-object.h>
+#include <stdio.h>
 
 #include <pulse/introspect.h>
 #include <pulse/context.h>
@@ -174,7 +175,7 @@ public:
 	void update_index_volume(U32 index, F32 volume);
 	void connected_okay();
 
-	std::set<U32> mSinkInputIndices;
+   	std::set<U32> mSinkInputIndices;
 	std::map<U32,U32> mSinkInputNumChannels;
 	F32 mDesiredVolume;
 	pa_glib_mainloop *mMainloop;
