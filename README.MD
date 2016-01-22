@@ -14,7 +14,7 @@ Development system:
 
 
 
-Development system is Debian Stretch (testing). The compiler is gcc-4.9. If starting with a new Stretch you will need to install
+Development system is Debian Stretch (testing).  The compiler is gcc-4.9. If starting with a new Stretch you will need to install
 
 build tools; Cmake, Mercurial, Bison, Flex, Tortoisehg, Kdiff3 (or another desired merge tool) and Python27.
 
