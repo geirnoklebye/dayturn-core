@@ -276,11 +276,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>43816a90bf84efba67117636b9bdf9da</string>
+              <string>274a7854f2bda43fe7e46eab3bef707d</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux-201507031353.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/boost-1.57-linux-201601041224.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -290,9 +290,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c933ed1eff3648068026a1b27b41ba5c</string>
+              <string>97004c714bb5717aa5c836e323e5c541</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201505270909.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/boost-1.57-linux64-201601041141.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -386,11 +388,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>bcd1d4ef42c6a40f8261655fa5580683</string>
+              <string>49c474900c2ad08d1c1b64a5f598b753</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201507031700-linux-201507031700.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/colladadom-2.3.201601041326-linux-201601041326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -400,9 +402,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9b2f6f941613ca7454fecbc9870a5ffd</string>
+              <string>9fac891135636f14d110f692a31cdbaf</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201505282019-linux64-201505282019.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/colladadom-2.3.201601041158-linux64-201601041158.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -421,7 +425,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.3.201507031700</string>
+        <string>2.3.201601041326</string>
       </map>
       <key>curl</key>
       <map>
@@ -1327,11 +1331,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>16c8fb1debbd4caa64735302ae914457</string>
+              <string>41ec5984613832ec7fdab55633397b01</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201507031820-linux-201507031820.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/googlemock-1.7.0.201601041342-linux-201601041342.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1341,9 +1345,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f55b4f8c55ff1f7a18351051798d0c06</string>
+              <string>825df0eee0befc926ffbeaf3d6601501</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201505282006-linux64-201505282006.tar.bz2</string>
+              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/googlemock-1.7.0.201601041214-linux64-201601041214.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1362,7 +1368,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.7.0.201507031820</string>
+        <string>1.7.0.201601041214</string>
       </map>
       <key>gperftools</key>
       <map>
