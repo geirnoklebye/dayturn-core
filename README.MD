@@ -28,8 +28,11 @@ Preprations to build:
 --------------
 
 sudo apt-get update
+
 sudo apt-get upgrade
+
 sudo apt-get install --install-recommends bison bzip2 cmake curl flex g++-4.8 m4 mercurial python2.7 python2.7-dev python-pip
+
 sudo apt-get install --install-recommends libgl1-mesa-dev libglu1-mesa-dev libstdc++6 \
 libX11-dev libxinerama-dev libxml2-dev libxrender-dev libpulse-dev libalut-dev 
 
