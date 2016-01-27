@@ -5,6 +5,63 @@
 New Tools Update
 
 ================
+Contributing Code to Kokua
+
+--------------------------
+
+Contributing one patch with less than 3 files touched can be submitted as a diff or patch file. Please open a ticket and attach the file to a ticket.
+
+Tickets are found on SourceForge at https://sourceforge.net/p/team-purple/kokua/tickets/
+
+Contributions by frequent contributors or Kokua Team members requires a formalized work flow as outlined below.
+
+Kokua repositories use mercurial bookmarks instead of branches. Reference mercurial wiki https://www.mercurial-scm.org/wiki/Bookmarks
+
+Work Flow:
+
+On bitbucket fork kokua-dev to your Bitbucket account. The repository name will default to kokua-dev, but can be named as desired.
+
+Open the repository and notice bookmark icons that are named Kokua_MKRLV and KokuaNT; these represent our current working default branches
+
+that are assigned to bookmarks. If the bookmarks where not there two (2) default branches would be present. The bookmarks tie the bookmark names
+
+to each default branch mercurial hash. 
+
+Using mercurial command hg clone place you forked kokua-dev repository on your local file system. Example: 
+
+hg clone https://bitucket.org/nickyp/kokua-dev
+
+An important step is to pull and update Bookmarks from your respository. This allows the bookmarks to advance to the tip with each commit.
+
+A bookmark pull is hg pull -B KokuaNT https://bitucket.org/nickyp/kokua-dev --Notice that it is a capital B. Now repeat with Kokua-MKRLV bookmark.
+
+If your bitbucket repository's bookmarks have fallen behind or do not show up then push the bookmark name. For example:
+
+hg push -B KokuaNT https://bitucket.org/nickyp/kokua-dev notice the capital B again. Capital B is for bookmark exchange only. No changes are made to
+
+the working tree.
+
+Next use hg update to activate the bookmarks. "hg update KokuaNT" and then "hg update Kokua-MKRLV". Your working tree is now at Kokua-MKRLV.
+
+If you want to work on KokuaNT just "hg update KokuaNT". In a terminal enter "hg bookmarks" and terminal response will be a list of all bookmarks
+
+with an * next to the active bookmark.
+ 
+Use of the tortoisehg program will allow a graphical view of bookmarks and provides bookmark management. In tortioisehg right click on a commit and
+
+and select Bookmarks... a popup will show bookmark management options. 
+
+Any collorative repository system will be frought with frusations and what seems as lost time resolving merge conflicts if the users
+
+of the system do not check for incoming upstream changes before beginning work. Any upstream incoming changes should be pulled and
+
+merged before beginning work. Use of mercurial queues MQ can be helpful by working in a patch queue and by uninstalling patches and pulling
+
+and merging upstream and then reinstall from the patch queue. This insures that your changes are allways on top of the upstream repository.
+
+Once sure that no upstream incoming are pending and you ready for merge into upstream push to your bitbucket repo and submit a pull request.
+
+
 
 Linux 64 Bit
 
