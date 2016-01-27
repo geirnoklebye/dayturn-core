@@ -18,7 +18,9 @@ Development system:
 
 
 
-Development system: Ubuntu 14.04.3 
+
+Development system is UBUNTU 14.04 LTS (testing). The compiler is gcc-4.8. If starting with a new Stretch you will need to install
+Library archives for the most part are built with gcc-4.6.4.  except Boost gcc-4.7 
 
 3.19.0-47-generic #53~14.04.1-Ubuntu SMP Mon Jan 18 16:09:14 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
 

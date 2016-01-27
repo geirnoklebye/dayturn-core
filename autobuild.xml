@@ -276,11 +276,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>274a7854f2bda43fe7e46eab3bef707d</string>
+              <string>137b180149defda6b671a2f7121d6b43</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/boost-1.57-linux-201601041224.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux-201601261128.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -290,11 +290,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>97004c714bb5717aa5c836e323e5c541</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/boost-1.57-linux64-201601041141.tar.bz2</string>
+          <string>a8befbc4bf31a07f3d4e8e2fc09a0a4b</string>
+          <key>hash_algorithm</key>
+          <string>md5</string>
+          <key>url</key>
+          <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201601261153.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -388,9 +388,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>49c474900c2ad08d1c1b64a5f598b753</string>
+              <string>cefa37661a7d8fb5016b425d20cd07a3</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/colladadom-2.3.201601041326-linux-201601041326.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201601261914-linux-201601261914.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -400,9 +400,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9fac891135636f14d110f692a31cdbaf</string>
+              <string>bdc7c0ba484f97828b8ccc1b44c04be9</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/colladadom-2.3.201601041158-linux64-201601041158.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201601261224-linux64-201601261224.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -742,11 +742,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>17eef6303b1e8802256ee665c03b568e</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>15850bb80ac520d80ac97b1c5a0158a6</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.50-linux-201502011947.tar.bz2</string>
+              <string>file:///opt/kokua/fmodex-44453-linux-201505151801-r21.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -777,7 +775,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.44.50</string>
+        <string>4.44.54</string>
       </map>
       <key>fontconfig</key>
       <map>
@@ -1327,11 +1325,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>41ec5984613832ec7fdab55633397b01</string>
+              <string>0103b3fa182d23e404361fce0529eeb8</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/googlemock-1.7.0.201601041342-linux-201601041342.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201601261942-linux-201601261942.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1341,11 +1339,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>825df0eee0befc926ffbeaf3d6601501</string>
+              <string>6144f0d870aa8dc0bd38ad2703f37a45</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/googlemock-1.7.0.201601041214-linux64-201601041214.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201601261238-linux64-201601261238.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2194,11 +2192,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6b9eaaf83fcf8bfd4bb6966c24df7f29</string>
+              <string>5a0f74f8e736d91d2c2c6cbc71db90bd</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llceflib_3p-llceflib/rev/310043/arch/Darwin/installer/llceflib-1.5.1.310043-darwin-310043.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llceflib_3p-llceflib/rev/309177/arch/Darwin/installer/llceflib-1.5.1.309177-darwin-309177.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2208,11 +2206,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4f00821fdc218af395aeb6f64d5b065b</string>
+              <string>1db6cf7859d1539e35b9e21f36f0667f</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/3p-llceflib-dko/downloads/llceflib-1.5.3.201601160926-kokua-linux-201601160926.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201601262112-kokua-linux-201601262112.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2222,11 +2220,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>dddad03aa746798b4880ec54d4b337b3</string>
+              <string>0d0a3af839ae5fdfd2d6f8a2fa46492e</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/3p-llceflib-dko/downloads/llceflib-1.5.3.201601160311-kokua-linux64-201601160311.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201601262110-kokua-linux64-201601262110.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2236,18 +2234,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>578f21be02efc98bbf426529f916fce8</string>
+              <string>5ed007e503cd768681ba282fd6d7aa76</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llceflib_3p-llceflib/rev/310043/arch/CYGWIN/installer/llceflib-1.5.1.310043-windows-310043.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llceflib_3p-llceflib/rev/309177/arch/CYGWIN/installer/llceflib-1.5.1.309177-windows-309177.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.5.3.201601160926-kokua</string>
+        <string>1.5.1.201601091656-kokua</string>
       </map>
       <key>llphysicsextensions_source</key>
       <map>
