@@ -21,7 +21,6 @@ include(PulseAudio)
 include_directories( ${PULSEAUDIO_INCLUDE_DIRS} )
 # </FS:ND>
 
-
 include_directories(
     ${LLPLUGIN_INCLUDE_DIRS}
     ${MEDIA_PLUGIN_BASE_INCLUDE_DIRS}
@@ -65,7 +64,6 @@ set (media_plugin_cef_LINK_LIBRARIES
 
 # Select which VolumeCatcher implementation to use
 if (LINUX)
-set (CMAKE_CXX_STANDARD 11) #need cmake 3.1 or higher
   #message(FATAL_ERROR "CEF plugin has been enabled for a Linux compile.\n"
   #  "  Please create a volume_catcher implementation for this platform.")
   if (PULSEAUDIO_FOUND)
