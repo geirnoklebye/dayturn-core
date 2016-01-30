@@ -135,18 +135,6 @@
         <key>version</key>
         <string>1.4.5.297252</string>
       </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>6078b2a47f4231ed9822738c07d6bb39</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-ares/downloads/ares-1.10.0.201505130838-linux64-201505130838.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
       <key>atk</key>
       <map>
         <key>copyright</key>
@@ -237,10 +225,10 @@
             <map>
               <key>hash</key>
               <string>a8befbc4bf31a07f3d4e8e2fc09a0a4b</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201601261153.tar.bz2</string>
+          <key>hash_algorithm</key>
+          <string>md5</string>
+          <key>url</key>
+          <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201601261153.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -322,7 +310,7 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>66849777a83cb69cec3c06b07da7cd3d</string>
+              <string>40bd4dd220749a7f0fc8e4d62e61b4a2</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/colladadom_3p-update-colladadom/rev/297450/arch/Darwin/installer/colladadom-2.3.297450-darwin-297450.tar.bz2</string>
             </map>
@@ -334,9 +322,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d627c2a679f3afb8d3e090d42f53cd2e</string>
+              <string>cefa37661a7d8fb5016b425d20cd07a3</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/colladadom_3p-update-colladadom/rev/297450/arch/Linux/installer/colladadom-2.3.297450-linux-297450.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201601261914-linux-201601261914.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -691,10 +679,8 @@
             <map>
               <key>hash</key>
               <string>c7a04e14382bc3627782f6f8a28a4ba8</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.61-linux-201601311850.tar.bz2</string>
+              <string>file:///opt/kokua/fmodex-44453-linux-201505151801-r21.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2116,9 +2102,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>faa1e5b7cf70c143caabe190fa5588ce</string>
+              <string>ce1261a54d877ab5530ae6a9134a77a3</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llappearance_viewer-update-llappearance-utility/rev/304432/arch/Linux/installer/llappearance_utility-0.0.1-linux-304432.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llappearance_viewer-update-llappearance-utility/rev/294906/arch/Linux/installer/llappearance_utility-0.0.1-linux-294906.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
