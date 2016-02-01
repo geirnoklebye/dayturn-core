@@ -431,12 +431,12 @@ class Windows_i686_Manifest(ViewerManifest):
         # Media plugins - QuickTime
         if self.prefix(src='../media_plugins/quicktime/%s' % self.args['configuration'], dst="llplugin"):
             self.path("media_plugin_quicktime.dll")
-                self.end_prefix()
+            self.end_prefix()
 
         # Media plugins - CEF
         if self.prefix(src='../media_plugins/cef/%s' % self.args['configuration'], dst="llplugin"):
             self.path("media_plugin_cef.dll")
-                self.end_prefix()
+            self.end_prefix()
 
         # winmm.dll shim
         if self.prefix(src='../media_plugins/winmmshim/%s' % self.args['configuration'], dst=""):
@@ -542,7 +542,7 @@ class Windows_i686_Manifest(ViewerManifest):
             self.path("vi.pak")
             self.path("zh-CN.pak")
             self.path("zh-TW.pak")
-                self.end_prefix()
+            self.end_prefix()
 
         # pull in the crash logger and updater from other projects
         # tag:"crash-logger" here as a cue to the exporter

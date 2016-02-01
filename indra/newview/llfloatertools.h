@@ -111,10 +111,6 @@ public:
 	bool selectedMediaEditable();
 	void updateLandImpacts();
 
-//MK
-	void setGridMode(EGridMode mode);
-//mk
-
 	static void setGridMode(S32 mode);
 
 	LLPanelFace* getPanelFace() { return mPanelFace; }
