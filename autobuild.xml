@@ -1755,9 +1755,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>8084ced172704ff09b364f7af82a2d6f</string>
+              <string>b25a4f480e07c670ffef00c3da578f87</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/jsoncpp_3p-update-jsoncpp/rev/297580/arch/Darwin/installer/jsoncpp-0.5.0.297580-darwin-297580.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/jsoncpp_3p-update-jsoncpp/rev/297281/arch/Darwin/installer/jsoncpp-0.5.0.297281-darwin-297281.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2198,11 +2198,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6b9eaaf83fcf8bfd4bb6966c24df7f29</string>
+              <string>fe4b09930b509d322b10bd27821bd876</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llceflib_3p-llceflib/rev/310043/arch/Darwin/installer/llceflib-1.5.1.310043-darwin-310043.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llceflib_3p-llceflib/rev/310159/arch/Darwin/installer/llceflib-1.5.3.310159-darwin-310159.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
