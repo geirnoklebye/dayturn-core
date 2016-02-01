@@ -716,11 +716,11 @@
       <key>fmodex</key>
       <map>
         <key>copyright</key>
-        <string>FMOD Sound System, copyright © Firelight Technologies Pty, Ltd., 1994-2014.</string>
+        <string>Copyright c 2005-2015 Firelight Technologies Pty, Ltd.</string>
         <key>description</key>
-        <string>FMOD Ex audio system library</string>
+        <string>FMOD Ex Programmer's API</string>
         <key>license</key>
-        <string>fmodex</string>
+        <string>FMOD NON-COMMERCIAL LICENSE</string>
         <key>license_file</key>
         <string>LICENSES/fmodex.txt</string>
         <key>name</key>
@@ -772,9 +772,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7d3b6f91cf59bd6701b4d593e896dfc0</string>
+              <string>4459a5e970f0a1fc10c04a353581ddcb</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.54-windows-201507041457.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.61-windows-201601310754.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
