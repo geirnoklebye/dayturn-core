@@ -36,7 +36,7 @@
       <key>apr_suite</key>
       <map>
         <key>copyright</key>
-        <string>Copyright © 2012 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.</string>
+        <string>Copyright (C) 2012 The Apache Software Foundation, Licensed under the Apache License, Version 2.0.</string>
         <key>description</key>
         <string>Apache portable runtime project</string>
         <key>license</key>
@@ -524,7 +524,7 @@
       <key>fontconfig</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (C) 2000,2001,2002,2003,2004,2006,2007 Keith Packard, 2005 Patrick Lam, 2009 Roozbeh Pournader, 2008,2009 Red Hat, Inc., 2008 Danilo Šegan, 2012 Google, Inc.</string>
+        <string>Copyright (C) 2000,2001,2002,2003,2004,2006,2007 Keith Packard, 2005 Patrick Lam, 2009 Roozbeh Pournader, 2008,2009 Red Hat, Inc., 2008 Danilo Segan, 2012 Google, Inc.</string>
         <key>description</key>
         <string>Fontconfig is a library for configuring and customizing font access.</string>
         <key>license</key>
@@ -1608,7 +1608,8 @@
         </map>
         <key>version</key>
         <string>1.5.1.310043</string>
-      </map>      <key>llconvexdecomposition</key>
+      </map>
+      <key>llconvexdecomposition</key>
       <map>
         <key>license</key>
         <string>havok</string>
@@ -1945,11 +1946,11 @@
       <key>nvapi</key>
       <map>
         <key>copyright</key>
-        <string>Copyright © 2012 NVIDIA Corporation.  All rights reserved.</string>
+        <string>Copyright (C) 2012 NVIDIA Corporation.  All rights reserved.</string>
         <key>description</key>
         <string>NVAPI provides an interface to NVIDIA devices.</string>
         <key>license</key>
-        <string>NVIDIA Corporation Software License Agreement – NVAPI SDK</string>
+        <string>NVIDIA Corporation Software License Agreement - NVAPI SDK</string>
         <key>license_file</key>
         <string>LICENSES/NVAPI_SDK_License_Agreement.pdf</string>
         <key>name</key>
@@ -2297,7 +2298,7 @@
       <key>slvoice</key>
       <map>
         <key>copyright</key>
-        <string>2010 Vivox, including audio coding using Polycom¨ Siren14TM (ITU-T Rec. G.722.1 Annex C)</string>
+        <string>2010 Vivox, including audio coding using Polycom Siren14TM (ITU-T Rec. G.722.1 Annex C)</string>
         <key>description</key>
         <string>Vivox SDK components</string>
         <key>license</key>
