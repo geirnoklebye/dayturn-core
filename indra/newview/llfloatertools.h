@@ -206,6 +206,7 @@ public:
 
 private:
 	BOOL					mDirty;
+	BOOL                    mHasSelection;
 
 	std::map<std::string, std::string> mStatusText;
 
