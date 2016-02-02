@@ -1312,9 +1312,24 @@ class LLAdvancedToggleWireframe : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		gUseWireframe = !(gUseWireframe);
+
+		if (gUseWireframe)
+		{
+			gInitialDeferredModeForWireframe = LLPipeline::sRenderDeferred;
+		}
+
 		gWindowResized = TRUE;
 		LLPipeline::updateRenderDeferred();
 		gPipeline.resetVertexBuffers();
+
+		if (!gUseWireframe && !gInitialDeferredModeForWireframe && LLPipeline::sRenderDeferred != gInitialDeferredModeForWireframe && gPipeline.isInit())
+		{
+			LLPipeline::refreshCachedSettings();
+			gPipeline.releaseGLBuffers();
+			gPipeline.createGLBuffers();
+			LLViewerShaderMgr::instance()->setShaders();
+		}
+
 		return true;
 	}
 };
@@ -9137,18 +9152,7 @@ class LLGridModeWorld : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		LLSelectMgr::getInstance()->setGridMode(GRID_MODE_WORLD);
-
-		LLFloaterBuildOptions* build_options_floater = LLFloaterReg::getTypedInstance<LLFloaterBuildOptions>("build_options");
-		if (build_options_floater && build_options_floater->getVisible())
-		{
-			build_options_floater->setGridMode(GRID_MODE_WORLD);
-		}
-
-		LLFloaterTools* tools_floater = LLFloaterReg::getTypedInstance<LLFloaterTools>("build");
-		if (tools_floater && tools_floater->getVisible())
-		{
-			tools_floater->setGridMode(GRID_MODE_WORLD);
-		}
+		LLFloaterTools::setGridMode(GRID_MODE_WORLD);
 		return true;
 	}
 };
@@ -9158,18 +9162,7 @@ class LLGridModeLocal : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		LLSelectMgr::getInstance()->setGridMode(GRID_MODE_LOCAL);
-
-		LLFloaterBuildOptions* build_options_floater = LLFloaterReg::getTypedInstance<LLFloaterBuildOptions>("build_options");
-		if (build_options_floater && build_options_floater->getVisible())
-		{
-			build_options_floater->setGridMode(GRID_MODE_LOCAL);
-		}
-
-		LLFloaterTools* tools_floater = LLFloaterReg::getTypedInstance<LLFloaterTools>("build");
-		if (tools_floater && tools_floater->getVisible())
-		{
-			tools_floater->setGridMode(GRID_MODE_LOCAL);
-		}
+		LLFloaterTools::setGridMode(GRID_MODE_LOCAL);
 		return true;
 	}
 };
@@ -9179,18 +9172,7 @@ class LLGridModeReference : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		LLSelectMgr::getInstance()->setGridMode(GRID_MODE_REF_OBJECT);
-
-		LLFloaterBuildOptions* build_options_floater = LLFloaterReg::getTypedInstance<LLFloaterBuildOptions>("build_options");
-		if (build_options_floater && build_options_floater->getVisible())
-		{
-			build_options_floater->setGridMode(GRID_MODE_REF_OBJECT);
-		}
-
-		LLFloaterTools* tools_floater = LLFloaterReg::getTypedInstance<LLFloaterTools>("build");
-		if (tools_floater && tools_floater->getVisible())
-		{
-			tools_floater->setGridMode(GRID_MODE_REF_OBJECT);
-		}
+		LLFloaterTools::setGridMode(GRID_MODE_REF_OBJECT);
 		return true;
 	}
 };

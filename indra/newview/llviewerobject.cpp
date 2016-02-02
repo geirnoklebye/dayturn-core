@@ -231,6 +231,8 @@ LLViewerObject::LLViewerObject(const LLUUID &id, const LLPCode pcode, LLViewerRe
 	mRenderMedia(FALSE),
 	mBestUpdatePrecision(0),
 	mText(),
+	mHudText(""),
+	mHudTextColor(LLColor4::white),
 	mLastInterpUpdateSecs(0.f),
 	mLastMessageUpdateSecs(0.f),
 	mLatestRecvPacketID(0),
@@ -1412,12 +1414,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					// Setup object text
 					if (!mText)
 					{
-						mText = (LLHUDText *)LLHUDObject::addHUDObject(LLHUDObject::LL_HUD_TEXT);
-						mText->setFont(LLFontGL::getFontSansSerif());
-						mText->setVertAlignment(LLHUDText::ALIGN_VERT_TOP);
-						mText->setMaxLines(-1);
-						mText->setSourceObject(this);
-						mText->setOnHUDAttachment(isHUDAttachment());
+					    initHudText();
 					}
 
 					std::string temp_string;
@@ -1433,6 +1430,9 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 //MK
 					mText->mLastMessageText = temp_string;
 //mk
+
+					mHudText = temp_string;
+					mHudTextColor = LLColor4(coloru);
 
 					setChanged(MOVED | SILHOUETTE);
 				}
@@ -1796,12 +1796,7 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 				// Setup object text
 				if (!mText && (value & 0x4))
 				{
-					mText = (LLHUDText *)LLHUDObject::addHUDObject(LLHUDObject::LL_HUD_TEXT);
-					mText->setFont(LLFontGL::getFontSansSerif());
-					mText->setVertAlignment(LLHUDText::ALIGN_VERT_TOP);
-					mText->setMaxLines(-1); // Set to match current agni behavior.
-					mText->setSourceObject(this);
-					mText->setOnHUDAttachment(isHUDAttachment());
+				    initHudText();
 				}
 
 				if (value & 0x4)
@@ -1816,6 +1811,9 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 //MK
 					mText->mLastMessageText = temp_string;
 //mk
+
+                    mHudText = temp_string;
+                    mHudTextColor = LLColor4(coloru);
 
 					setChanged(TEXTURE);
 				}
@@ -2845,6 +2843,11 @@ void LLViewerObject::clearInventoryListeners()
 	mInventoryCallbacks.clear();
 }
 
+bool LLViewerObject::hasInventoryListeners()
+{
+	return !mInventoryCallbacks.empty();
+}
+
 void LLViewerObject::requestInventory()
 {
 	if(mInventoryDirty && mInventory && !mInventoryCallbacks.empty())
@@ -2852,15 +2855,19 @@ void LLViewerObject::requestInventory()
 		mInventory->clear(); // will deref and delete entries
 		delete mInventory;
 		mInventory = NULL;
-		mInventoryDirty = FALSE; //since we are going to request it now
 	}
 	if(mInventory)
 	{
+		// inventory is either up to date or doesn't has a listener
+		// if it is dirty, leave it this way in case we gain a listener
 		doInventoryCallback();
 	}
-	// throw away duplicate requests
 	else
 	{
+		// since we are going to request it now
+		mInventoryDirty = FALSE;
+
+		// Note: throws away duplicate requests
 		fetchInventoryFromServer();
 	}
 }
@@ -2870,8 +2877,6 @@ void LLViewerObject::fetchInventoryFromServer()
 	if (!mInventoryPending)
 	{
 		delete mInventory;
-		mInventory = NULL;
-		mInventoryDirty = FALSE;
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessageFast(_PREHASH_RequestTaskInventory);
 		msg->nextBlockFast(_PREHASH_AgentData);
@@ -4106,6 +4111,7 @@ LLViewerObject* LLViewerObject::getRootEdit() const
 BOOL LLViewerObject::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
 										  S32 face,
 										  BOOL pick_transparent,
+										  BOOL pick_rigged,
 										  S32* face_hit,
 										  LLVector4a* intersection,
 										  LLVector2* tex_coord,
@@ -4668,7 +4674,7 @@ S32 LLViewerObject::setTEMaterialID(const U8 te, const LLMaterialID& pMaterialID
 	return retval;
 }
 
-S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMaterialParams, bool isInitFromServer)
+S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMaterialParams)
 {
 	S32 retval = 0;
 	const LLTextureEntry *tep = getTE(te);
@@ -4678,23 +4684,14 @@ S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMateri
 		return 0;
 	}
 
-//MK
-	// Attempt at fixing BUG-10601 (Fix recommended by Ansariel Hiller) : move these lines after the call to setTEMaterialParams()
-	////setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
-	////setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
-//mk
-
-	retval = LLPrimitive::setTEMaterialParams(te, pMaterialParams, isInitFromServer);
+	retval = LLPrimitive::setTEMaterialParams(te, pMaterialParams);
 	LL_DEBUGS("Material") << "Changing material params for te " << (S32)te
 							<< ", object " << mID
 			               << " (" << retval << ")"
 							<< LL_ENDL;
-
-//MK
-	// Attempt at fixing BUG-10601 (Fix recommended by Ansariel Hiller)
 	setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
 	setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
-//mk
+
 	refreshMaterials();
 	return retval;
 }
@@ -4987,6 +4984,17 @@ void LLViewerObject::setDebugText(const std::string &utf8text)
 
 	if (!mText)
 	{
+	    initHudText();
+	}
+	mText->setColor(LLColor4::white);
+	mText->setString(utf8text);
+	mText->setZCompare(FALSE);
+	mText->setDoFade(FALSE);
+	updateText();
+}
+
+void LLViewerObject::initHudText()
+{
 		mText = (LLHUDText *)LLHUDObject::addHUDObject(LLHUDObject::LL_HUD_TEXT);
 		mText->setFont(LLFontGL::getFontSansSerif());
 		mText->setVertAlignment(LLHUDText::ALIGN_VERT_TOP);
@@ -4994,11 +5002,14 @@ void LLViewerObject::setDebugText(const std::string &utf8text)
 		mText->setSourceObject(this);
 		mText->setOnHUDAttachment(isHUDAttachment());
 	}
-	mText->setColor(LLColor4::white);
-	mText->setString(utf8text);
-	mText->setZCompare(FALSE);
-	mText->setDoFade(FALSE);
-	updateText();
+
+void LLViewerObject::restoreHudText()
+{
+    if(mText)
+    {
+        mText->setColor(mHudTextColor);
+        mText->setString(mHudText);
+    }
 }
 
 void LLViewerObject::setIcon(LLViewerTexture* icon_image)
@@ -5047,6 +5058,12 @@ void LLViewerObject::updateText()
 	{
 		if (mText.notNull())
 		{		
+		    LLVOAvatar* avatar = getAvatar();
+		    if (avatar)
+		    {
+		        mText->setHidden(avatar->isInMuteList());
+		    }
+
 			LLVector3 up_offset(0,0,0);
 			up_offset.mV[2] = getScale().mV[VZ]*0.6f;
 			

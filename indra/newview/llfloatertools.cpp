@@ -36,9 +36,7 @@
 #include "llagentcamera.h"
 #include "llbutton.h"
 #include "llcheckboxctrl.h"
-//MK
 #include "llcombobox.h"
-//mk
 #include "lldraghandle.h"
 #include "llerror.h"
 #include "llfloaterbuildoptions.h"
@@ -112,6 +110,7 @@ const std::string PANEL_NAMES[LLFloaterTools::PANEL_COUNT] =
 };
 
 // Local prototypes
+void commit_grid_mode(LLUICtrl *ctrl);
 void commit_select_component(void *data);
 void click_show_more(void*);
 void click_popup_info(void*);
@@ -123,9 +122,6 @@ void commit_radio_group_focus(LLUICtrl* ctrl);
 void commit_radio_group_move(LLUICtrl* ctrl);
 void commit_radio_group_edit(LLUICtrl* ctrl);
 void commit_radio_group_land(LLUICtrl* ctrl);
-//MK
-void commit_grid_mode(LLUICtrl *);
-//mk
 void commit_slider_zoom(LLUICtrl *ctrl);
 
 /**
@@ -319,9 +315,7 @@ BOOL	LLFloaterTools::postBuild()
 	getChild<LLUICtrl>("checkbox uniform")->setValue((BOOL)gSavedSettings.getBOOL("ScaleUniform"));
 	mCheckStretchTexture	= getChild<LLCheckBoxCtrl>("checkbox stretch textures");
 	getChild<LLUICtrl>("checkbox stretch textures")->setValue((BOOL)gSavedSettings.getBOOL("ScaleStretchTextures"));
-//MK
 	mComboGridMode			= getChild<LLComboBox>("combobox grid mode");
-//mk
 	mCheckStretchUniformLabel = getChild<LLTextBox>("checkbox uniform label");
 
 	updateToolsSizeLimits();
@@ -403,9 +397,7 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 	mCheckSnapToGrid(NULL),
 	mBtnGridOptions(NULL),
 	mTitleMedia(NULL),
-//MK
 	mComboGridMode(NULL),
-//mk
 	mCheckStretchUniform(NULL),
 	mCheckStretchTexture(NULL),
 	mCheckStretchUniformLabel(NULL),
@@ -445,6 +437,7 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 
 	mDirty(TRUE),
 	mPrecision(3),
+	mHasSelection(TRUE),
 	mNeedMediaTitle(TRUE)
 {
 	gFloaterTools = this;
@@ -463,12 +456,10 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 	mCommitCallbackRegistrar.add("BuildTool.commitRadioMove",	boost::bind(&commit_radio_group_move,_1));
 	mCommitCallbackRegistrar.add("BuildTool.commitRadioEdit",	boost::bind(&commit_radio_group_edit,_1));
 
+	mCommitCallbackRegistrar.add("BuildTool.gridMode",			boost::bind(&commit_grid_mode,_1));
 	mCommitCallbackRegistrar.add("BuildTool.selectComponent",	boost::bind(&commit_select_component, this));
 	mCommitCallbackRegistrar.add("BuildTool.gridOptions",		boost::bind(&LLFloaterTools::onClickGridOptions,this));
 	mCommitCallbackRegistrar.add("BuildTool.applyToSelection",	boost::bind(&click_apply_to_selection, this));
-//MK
-	mCommitCallbackRegistrar.add("BuildTool.gridMode",			boost::bind(&commit_grid_mode,_1));
-//mk
 	mCommitCallbackRegistrar.add("BuildTool.commitRadioLand",	boost::bind(&commit_radio_group_land,_1));
 	mCommitCallbackRegistrar.add("BuildTool.LandBrushForce",	boost::bind(&commit_slider_dozer_force,_1));
 	mCommitCallbackRegistrar.add("BuildTool.AddMedia",			boost::bind(&LLFloaterTools::onClickBtnAddMedia,this));
@@ -636,6 +627,13 @@ void LLFloaterTools::draw()
 		return;
 	}
 //mk
+    BOOL has_selection = !LLSelectMgr::getInstance()->getSelection()->isEmpty();
+    if(!has_selection && (mHasSelection != has_selection))
+    {
+        mDirty = TRUE;
+    }
+    mHasSelection = has_selection;
+
 	if (mDirty)
 	{
 		refresh();
@@ -749,9 +747,6 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 						tool == LLToolCompScale::getInstance() ||
 						tool == LLToolFace::getInstance() ||
 						tool == LLToolIndividual::getInstance() ||
-//MK
-						tool == QToolAlign::getInstance() ||
-//mk
 						tool == LLToolPipette::getInstance();
 
 	mBtnEdit	->setToggleState( edit_visible );
@@ -788,11 +783,6 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 	{
 		mRadioGroupEdit->setValue("radio select face");
 	}
-//MK
-	else if ( tool == QToolAlign::getInstance() )
-	{
-		mRadioGroupEdit->setValue("radio align");
-	}
 	if (mComboGridMode) 
 	{
 		mComboGridMode->setVisible( edit_visible );
@@ -804,7 +794,6 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 		case SELECT_TYPE_HUD:
 		  mComboGridMode->add(getString("grid_screen_text"));
 		  mComboGridMode->add(getString("grid_local_text"));
-		  //mComboGridMode->add(getString("grid_reference_text"));
 		  break;
 		case SELECT_TYPE_WORLD:
 		  mComboGridMode->add(getString("grid_world_text"));
@@ -819,7 +808,7 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 		}
 		mComboGridMode->setCurrentByIndex(index);
 	}
-//mk
+
 	// Snap to grid disabled for grab tool - very confusing
 	if (mCheckSnapToGrid) mCheckSnapToGrid->setVisible( edit_visible /* || tool == LLToolGrab::getInstance() */ );
 	if (mBtnGridOptions) mBtnGridOptions->setVisible( edit_visible /* || tool == LLToolGrab::getInstance() */ );
@@ -932,12 +921,6 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 	mPanelLandInfo->setVisible(land_visible);
 }
 
-//MK
-void LLFloaterTools::setGridMode(EGridMode mode)
-{
-	mComboGridMode->setCurrentByIndex((S32)mode);
-}
-//mk
 
 // virtual
 BOOL LLFloaterTools::canClose()
@@ -1171,6 +1154,13 @@ void LLFloaterTools::setObjectType( LLPCode pcode )
 	LLToolPlacer::setObjectType( pcode );
 	gSavedSettings.setBOOL("CreateToolCopySelection", FALSE);
 	gFocusMgr.setMouseCapture(NULL);
+}
+
+void commit_grid_mode(LLUICtrl *ctrl)
+{
+	LLComboBox* combo = (LLComboBox*)ctrl;
+
+	LLSelectMgr::getInstance()->setGridMode((EGridMode)combo->getCurrentIndex());
 }
 
 // static

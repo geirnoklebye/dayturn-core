@@ -342,9 +342,9 @@ class Windows_i686_Manifest(ViewerManifest):
             self.path(src='%s/kokua-bin.exe' % self.args['configuration'], dst=self.final_exe())
 
         # Plugin host application
-        # The current slplugin package places slplugin.exe right into the
-        # packages base directory.
-        self.path2basename(pkgdir, "slplugin.exe")
+        self.path2basename(os.path.join(os.pardir,
+                                        'llplugin', 'slplugin', self.args['configuration']),
+                           "slplugin.exe")
         
         self.path(src="../viewer_components/updater/scripts/windows/update_install.bat", dst="update_install.bat")
         # Get shared libs from the shared libs staging directory
@@ -455,53 +455,120 @@ class Windows_i686_Manifest(ViewerManifest):
             self.end_prefix()
 
         # Media plugins - QuickTime
-        # Media plugins - WebKit/Qt
-        if self.prefix(src=os.path.join(pkgdir, "llplugin"), dst="llplugin"):
+        if self.prefix(src='../media_plugins/quicktime/%s' % self.args['configuration'], dst="llplugin"):
             self.path("media_plugin_quicktime.dll")
-            self.path("media_plugin_webkit.dll")
-            self.path("qtcore4.dll")
-            self.path("qtgui4.dll")
-            self.path("qtnetwork4.dll")
-            self.path("qtopengl4.dll")
-            self.path("qtwebkit4.dll")
-            self.path("qtxmlpatterns4.dll")
+            self.end_prefix()
 
-            # For WebKit/Qt plugin runtimes (image format plugins)
-            if self.prefix(src="imageformats", dst="imageformats"):
-                self.path("qgif4.dll")
-                self.path("qico4.dll")
-                self.path("qjpeg4.dll")
-                self.path("qmng4.dll")
-                self.path("qsvg4.dll")
-                self.path("qtiff4.dll")
-                self.end_prefix()
-
-            # For WebKit/Qt plugin runtimes (codec/character encoding plugins)
-            if self.prefix(src="codecs", dst="codecs"):
-                self.path("qcncodecs4.dll")
-                self.path("qjpcodecs4.dll")
-                self.path("qkrcodecs4.dll")
-                self.path("qtwcodecs4.dll")
-                self.end_prefix()
-
-        self.end_prefix()
+        # Media plugins - CEF
+        if self.prefix(src='../media_plugins/cef/%s' % self.args['configuration'], dst="llplugin"):
+            self.path("media_plugin_cef.dll")
+            self.end_prefix()
 
         # winmm.dll shim
         if self.prefix(src='../media_plugins/winmmshim/%s' % self.args['configuration'], dst=""):
             self.path("winmm.dll")
             self.end_prefix()
 
+        # CEF runtime files - debug
         if self.args['configuration'].lower() == 'debug':
-            if self.prefix(src=debpkgdir, dst="llplugin"):
-                self.path("libeay32.dll")
-                self.path("ssleay32.dll")
+            if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'debug'), dst="llplugin"):
+                self.path("d3dcompiler_43.dll")
+                self.path("d3dcompiler_47.dll")
+                self.path("libcef.dll")
+                self.path("libEGL.dll")
+                self.path("libGLESv2.dll")
+                self.path("llceflib_host.exe")
+                self.path("natives_blob.bin")
+                self.path("snapshot_blob.bin")
+                self.path("widevinecdmadapter.dll")
+                self.path("wow_helper.exe")
+                self.end_prefix()
+        else:
+        # CEF runtime files - not debug (release, relwithdebinfo etc.)
+            if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="llplugin"):
+                self.path("d3dcompiler_43.dll")
+                self.path("d3dcompiler_47.dll")
+                self.path("libcef.dll")
+                self.path("libEGL.dll")
+                self.path("libGLESv2.dll")
+                self.path("llceflib_host.exe")
+                self.path("natives_blob.bin")
+                self.path("snapshot_blob.bin")
+                self.path("widevinecdmadapter.dll")
+                self.path("wow_helper.exe")
                 self.end_prefix()
 
-        else:
-            if self.prefix(src=relpkgdir, dst="llplugin"):
-                self.path("libeay32.dll")
-                self.path("ssleay32.dll")
-                self.end_prefix()
+        # MSVC DLLs needed for CEF and have to be in same directory as plugin
+        if self.prefix(src=os.path.join(os.pardir, 'sharedlibs', 'Release'), dst="llplugin"):
+            self.path("msvcp120.dll")
+            self.path("msvcr120.dll")
+            self.end_prefix()
+
+        # CEF files common to all configurations
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources'), dst="llplugin"):
+            self.path("cef.pak")
+            self.path("cef_100_percent.pak")
+            self.path("cef_200_percent.pak")
+            self.path("cef_extensions.pak")
+            self.path("devtools_resources.pak")
+            self.path("icudtl.dat")
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources', 'locales'), dst=os.path.join('llplugin', 'locales')):
+            self.path("am.pak")
+            self.path("ar.pak")
+            self.path("bg.pak")
+            self.path("bn.pak")
+            self.path("ca.pak")
+            self.path("cs.pak")
+            self.path("da.pak")
+            self.path("de.pak")
+            self.path("el.pak")
+            self.path("en-GB.pak")
+            self.path("en-US.pak")
+            self.path("es-419.pak")
+            self.path("es.pak")
+            self.path("et.pak")
+            self.path("fa.pak")
+            self.path("fi.pak")
+            self.path("fil.pak")
+            self.path("fr.pak")
+            self.path("gu.pak")
+            self.path("he.pak")
+            self.path("hi.pak")
+            self.path("hr.pak")
+            self.path("hu.pak")
+            self.path("id.pak")
+            self.path("it.pak")
+            self.path("ja.pak")
+            self.path("kn.pak")
+            self.path("ko.pak")
+            self.path("lt.pak")
+            self.path("lv.pak")
+            self.path("ml.pak")
+            self.path("mr.pak")
+            self.path("ms.pak")
+            self.path("nb.pak")
+            self.path("nl.pak")
+            self.path("pl.pak")
+            self.path("pt-BR.pak")
+            self.path("pt-PT.pak")
+            self.path("ro.pak")
+            self.path("ru.pak")
+            self.path("sk.pak")
+            self.path("sl.pak")
+            self.path("sr.pak")
+            self.path("sv.pak")
+            self.path("sw.pak")
+            self.path("ta.pak")
+            self.path("te.pak")
+            self.path("th.pak")
+            self.path("tr.pak")
+            self.path("uk.pak")
+            self.path("vi.pak")
+            self.path("zh-CN.pak")
+            self.path("zh-TW.pak")
+            self.end_prefix()
 
         # pull in the crash logger and updater from other projects
         # tag:"crash-logger" here as a cue to the exporter
@@ -789,14 +856,13 @@ class Darwin_i386_Manifest(ViewerManifest):
                                                              libfile), libfile)
                 
                 # our apps
-                for app_bld_dir, app in ((os.path.join(os.pardir,
-                                                       "mac_crash_logger",
-                                                       self.args['configuration']),
-                                          "mac-crash-logger.app"),
+                for app_bld_dir, app in (("mac_crash_logger", "mac-crash-logger.app"),
                                          # plugin launcher
-                                         (pkgdir, "SLPlugin.app"),
+                                         (os.path.join("llplugin", "slplugin"), "SLPlugin.app"),
                                          ):
-                    self.path2basename(app_bld_dir, app)
+                    self.path2basename(os.path.join(os.pardir,
+                                                    app_bld_dir, self.args['configuration']),
+                                       app)
 
                     # our apps dependencies on shared libs
                     # for each app, for each dylib we collected in dylibs,
@@ -809,45 +875,56 @@ class Darwin_i386_Manifest(ViewerManifest):
                             symlinkf(src, dst)
                         except OSError as err:
                             print "Can't symlink %s -> %s: %s" % (src, dst, err)
-                # SLPlugin.app/Contents/Resources gets those Qt4 libraries it needs.
-                if self.prefix(src="", dst="SLPlugin.app/Contents/Resources"):
-                    for libfile in ('libQtCore.4.dylib',
-                                    'libQtCore.4.7.1.dylib',
-                                    'libQtGui.4.dylib',
-                                    'libQtGui.4.7.1.dylib',
-                                    'libQtNetwork.4.dylib',
-                                    'libQtNetwork.4.7.1.dylib',
-                                    'libQtOpenGL.4.dylib',
-                                    'libQtOpenGL.4.7.1.dylib',
-                                    'libQtSvg.4.dylib',
-                                    'libQtSvg.4.7.1.dylib',
-                                    'libQtWebKit.4.dylib',
-                                    'libQtWebKit.4.7.1.dylib',
-                                    'libQtXml.4.dylib',
-                                    'libQtXml.4.7.1.dylib'):
-                        self.path2basename(relpkgdir, libfile)
-                    self.end_prefix("SLPlugin.app/Contents/Resources")
 
-                # Qt4 codecs go to llplugin.  Not certain why but this is the first
-                # location probed according to dtruss so we'll go with that.
-                if self.prefix(src=os.path.join(pkgdir, "llplugin/codecs/"), dst="llplugin/codecs"):
-                    self.path("libq*.dylib")
-                    self.end_prefix("llplugin/codecs")
+                # LLCefLib helper apps go inside SLPlugin.app
+                if self.prefix(src="", dst="SLPlugin.app/Contents/Frameworks"):
+                    for helperappfile in ('LLCefLib Helper.app',
+                                          'LLCefLib Helper EH.app'):
+                        self.path2basename(relpkgdir, helperappfile)
 
-                # Similarly for imageformats.
-                if self.prefix(src=os.path.join(pkgdir, "llplugin/imageformats/"), dst="llplugin/imageformats"):
-                    self.path("libq*.dylib")
-                    self.end_prefix("llplugin/imageformats")
+                    pluginframeworkpath = self.dst_path_of('Chromium Embedded Framework.framework');
 
-                # SLPlugin plugins proper
-                if self.prefix(src=os.path.join(pkgdir, "llplugin"), dst="llplugin"):
-                    self.path("media_plugin_quicktime.dylib")
-                    self.path("media_plugin_webkit.dylib")
+                    self.end_prefix()
+
+                # SLPlugin plugins
+                if self.prefix(src="", dst="llplugin"):
+                    self.path2basename("../media_plugins/quicktime/" + self.args['configuration'],
+                                       "media_plugin_quicktime.dylib")
+                    self.path2basename("../media_plugins/cef/" + self.args['configuration'],
+                                       "media_plugin_cef.dylib")
                     self.end_prefix("llplugin")
 
                 self.end_prefix("Resources")
 
+                # CEF framework goes inside Second Life.app/Contents/Frameworks
+                if self.prefix(src="", dst="Frameworks"):
+                    frameworkfile="Chromium Embedded Framework.framework"
+                    self.path2basename(relpkgdir, frameworkfile)
+                    self.end_prefix("Frameworks")
+
+                # This code constructs a relative path from the
+                # target framework folder back to the location of the symlink.
+                # It needs to be relative so that the symlink still works when
+                # (as is normal) the user moves the app bunlde out of the DMG
+                # and into the /Applications folder. Note we also call 'raise'
+                # to terminate the process if we get an error since without
+                # this symlink, Second Life web media can't possibly work.
+                # Real Framework folder:
+                #   Second Life.app/Contents/Frameworks/Chromium Embedded Framework.framework/
+                # Location of symlink and why it'ds relavie 
+                #   Second Life.app/Contents/Resources/SLPlugin.app/Contents/Frameworks/Chromium Embedded Framework.framework/
+                frameworkpath = os.path.join(os.pardir, os.pardir, os.pardir, os.pardir, "Frameworks", "Chromium Embedded Framework.framework")
+                try:
+                    symlinkf(frameworkpath, pluginframeworkpath)
+                except OSError as err:
+                    print "Can't symlink %s -> %s: %s" % (frameworkpath, pluginframeworkpath, err)
+                    raise
+
             self.end_prefix("Contents")
+
+        # fix up media_plugin.dylib so it knows where to look for CEF files it needs
+        self.run_command('install_name_tool -change "@executable_path/Chromium Embedded Framework" "@executable_path/../Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" "%(config)s/Second Life.app/Contents/Resources/llplugin/media_plugin_cef.dylib"' %
+                        { 'config' : self.args['configuration'] })
 
         # NOTE: the -S argument to strip causes it to keep enough info for
         # annotated backtraces (i.e. function names in the crash log).  'strip' with no
@@ -1054,7 +1131,6 @@ class LinuxManifest(ViewerManifest):
 
         # plugins
         if self.prefix(src="", dst="bin/llplugin"):
-            self.path2basename("../media_plugins/webkit", "libmedia_plugin_webkit.so")
             self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
             self.end_prefix("bin/llplugin")
 
@@ -1242,29 +1318,6 @@ class Linux_i686_Manifest(LinuxManifest):
                     self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
                     self.end_prefix("bin")
 
-
-            # plugin runtime
-            if self.prefix(src="../packages/lib/release", dst="lib"):
-                self.path("libQtWebKit.so*")
-                self.end_prefix("lib")
-
-            # For WebKit/Qt plugin runtimes (image format plugins)
-            if self.prefix(src="../packages/plugins/imageformats", dst="bin/llplugin/imageformats"):
-                self.path("libqgif.so")
-                self.path("libqico.so")
-                self.path("libqjpeg.so")
-                self.path("libqmng.so")
-                self.path("libqsvg.so")
-                self.path("libqtiff.so")
-                self.end_prefix("bin/llplugin/imageformats")
-
-            # For WebKit/Qt plugin runtimes (codec/character encoding plugins)
-            if self.prefix(src="../packages/plugins/codecs", dst="bin/llplugin/codecs"):
-                self.path("libqcncodecs.so")
-                self.path("libqjpcodecs.so")
-                self.path("libqkrcodecs.so")
-                self.path("libqtwcodecs.so")
-                self.end_prefix("bin/llplugin/codecs")
 
 
 class Linux_x86_64_Manifest(LinuxManifest):

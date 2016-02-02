@@ -107,8 +107,8 @@ BOOL LLToolPie::handleMouseDown(S32 x, S32 y, MASK mask)
 	mMouseDownX = x;
 	mMouseDownY = y;
 
-	//left mouse down always picks transparent
-	mPick = gViewerWindow->pickImmediate(x, y, TRUE);
+	//left mouse down always picks transparent (but see handleMouseUp)
+	mPick = gViewerWindow->pickImmediate(x, y, TRUE, FALSE);
 	mPick.mKeyMask = mask;
 
 	mMouseButtonDown = true;
@@ -135,7 +135,7 @@ BOOL LLToolPie::handleMiddleMouseUp(S32 x, S32 y, MASK mask)
 BOOL LLToolPie::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
 	// don't pick transparent so users can't "pay" transparent objects
-	mPick = gViewerWindow->pickImmediate(x, y, FALSE, TRUE);
+	mPick = gViewerWindow->pickImmediate(x, y, /*BOOL pick_transparent*/ FALSE, /*BOOL pick_rigged*/ TRUE, /*BOOL pick_particle*/ TRUE);
 	mPick.mKeyMask = mask;
 
 //MK
@@ -601,7 +601,7 @@ void LLToolPie::selectionPropertiesReceived()
 
 BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 {
-	mHoverPick = gViewerWindow->pickImmediate(x, y, FALSE);
+	mHoverPick = gViewerWindow->pickImmediate(x, y, FALSE, FALSE);
 	LLViewerObject *parent = NULL;
 	LLViewerObject *object = mHoverPick.getObject();
 	LLSelectMgr::getInstance()->setHoverObject(object, mHoverPick.mObjectFace);
@@ -647,7 +647,7 @@ BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 	else
 	{
 		// perform a separate pick that detects transparent objects since they respond to 1-click actions
-		LLPickInfo click_action_pick = gViewerWindow->pickImmediate(x, y, TRUE);
+		LLPickInfo click_action_pick = gViewerWindow->pickImmediate(x, y, TRUE, FALSE);
 
 		LLViewerObject* click_action_object = click_action_pick.getObject();
 
@@ -716,7 +716,18 @@ BOOL LLToolPie::handleMouseUp(S32 x, S32 y, MASK mask)
 		&& gAgentAvatarp
 		&& !gAgentAvatarp->isSitting()
 		&& !mBlockClickToWalk							// another behavior hasn't cancelled click to walk
-		&& !mPick.mPosGlobal.isExactlyZero()			// valid coordinates for pick
+        )
+	{
+        // We may be doing click to walk, but we don't want to use a target on
+        // a transparent object because the user thought they were clicking on
+        // whatever they were seeing through it, so recompute what was clicked on
+        // ignoring transparent objects
+        LLPickInfo savedPick = mPick;
+        mPick = gViewerWindow->pickImmediate(savedPick.mMousePt.mX, savedPick.mMousePt.mY,
+                                             FALSE /* ignore transparent */,
+                                             FALSE /* ignore particles */);
+
+        if (!mPick.mPosGlobal.isExactlyZero()			// valid coordinates for pick
 		&& (mPick.mPickType == LLPickInfo::PICK_LAND	// we clicked on land
 			|| mPick.mObjectID.notNull()))				// or on an object
 	{
@@ -746,6 +757,17 @@ BOOL LLToolPie::handleMouseUp(S32 x, S32 y, MASK mask)
 		LLFirstUse::notMoving(false);
 
 		return TRUE;
+	}
+        else
+        {
+            LL_DEBUGS("maint5901") << "walk target was "
+                                   << (mPick.mPosGlobal.isExactlyZero() ? "zero" : "not zero")
+                                   << ", pick type was " << (mPick.mPickType == LLPickInfo::PICK_LAND ? "land" : "not land")
+                                   << ", pick object was " << mPick.mObjectID
+                                   << LL_ENDL;
+            // we didn't click to walk, so restore the original target
+            mPick = savedPick;
+        }
 	}
 	gViewerWindow->setCursor(UI_CURSOR_ARROW);
 	if (hasMouseCapture())
@@ -777,8 +799,22 @@ BOOL LLToolPie::handleDoubleClick(S32 x, S32 y, MASK mask)
 		LL_INFOS() << "LLToolPie handleDoubleClick (becoming mouseDown)" << LL_ENDL;
 	}
 
+    if (handleMediaDblClick(mPick))
+    {
+        return TRUE;
+    }
+
 	if (gSavedSettings.getBOOL("DoubleClickAutoPilot"))
 	{
+        // We may be doing double click to walk, but we don't want to use a target on
+        // a transparent object because the user thought they were clicking on
+        // whatever they were seeing through it, so recompute what was clicked on
+        // ignoring transparent objects
+        LLPickInfo savedPick = mPick;
+        mPick = gViewerWindow->pickImmediate(savedPick.mMousePt.mX, savedPick.mMousePt.mY,
+                                             FALSE /* ignore transparent */,
+                                             FALSE /* ignore particles */);
+
 		if ((mPick.mPickType == LLPickInfo::PICK_LAND && !mPick.mPosGlobal.isExactlyZero()) ||
 			(mPick.mObjectID.notNull()  && !mPick.mPosGlobal.isExactlyZero()))
 		{
@@ -791,6 +827,11 @@ BOOL LLToolPie::handleDoubleClick(S32 x, S32 y, MASK mask)
 			walkToClickedLocation();
 			return TRUE;
 		}
+        else
+        {
+            // restore the original pick for any other purpose
+            mPick = savedPick;
+        }
 	}
 	else if (gSavedSettings.getBOOL("DoubleClickTeleport"))
 	{
@@ -1557,6 +1598,60 @@ bool LLToolPie::handleMediaClick(const LLPickInfo& pick, int button)
 	LLViewerMediaFocus::getInstance()->clearFocus();
 
 	return false;
+}
+
+bool LLToolPie::handleMediaDblClick(const LLPickInfo& pick)
+{
+    //FIXME: how do we handle object in different parcel than us?
+    LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
+    LLPointer<LLViewerObject> objectp = pick.getObject();
+
+
+    if (!parcel ||
+        objectp.isNull() ||
+        pick.mObjectFace < 0 ||
+        pick.mObjectFace >= objectp->getNumTEs())
+    {
+        LLViewerMediaFocus::getInstance()->clearFocus();
+
+        return false;
+    }
+
+    // Does this face have media?
+    const LLTextureEntry* tep = objectp->getTE(pick.mObjectFace);
+    if (!tep)
+        return false;
+
+    LLMediaEntry* mep = (tep->hasMedia()) ? tep->getMediaData() : NULL;
+    if (!mep)
+        return false;
+
+    viewer_media_t media_impl = LLViewerMedia::getMediaImplFromTextureID(mep->getMediaID());
+
+    if (gSavedSettings.getBOOL("MediaOnAPrimUI"))
+    {
+        if (!LLViewerMediaFocus::getInstance()->isFocusedOnFace(pick.getObject(), pick.mObjectFace) || media_impl.isNull())
+        {
+            // It's okay to give this a null impl
+            LLViewerMediaFocus::getInstance()->setFocusFace(pick.getObject(), pick.mObjectFace, media_impl, pick.mNormal);
+        }
+        else
+        {
+            // Make sure keyboard focus is set to the media focus object.
+            gFocusMgr.setKeyboardFocus(LLViewerMediaFocus::getInstance());
+            LLEditMenuHandler::gEditMenuHandler = LLViewerMediaFocus::instance().getFocusedMediaImpl();
+
+            media_impl->mouseDoubleClick(pick.mUVCoords, gKeyboard->currentMask(TRUE));
+            mMediaMouseCaptureID = mep->getMediaID();
+            setMouseCapture(TRUE);  // This object will send a mouse-up to the media when it loses capture.
+        }
+
+        return true;
+    }
+
+    LLViewerMediaFocus::getInstance()->clearFocus();
+
+    return false;
 }
 
 bool LLToolPie::handleMediaHover(const LLPickInfo& pick)

@@ -739,45 +739,78 @@ BOOL LLGLSLShader::mapUniforms(const vector<LLStaticHashedString> * uniforms)
 	, even if the "diffuseMap" will be appear and use first in shader code.
 
 	As example where this situation appear see: "Deferred Material Shader 28/29/30/31"
-	And tickets: MAINT-4165, MAINT-4839
+	And tickets: MAINT-4165, MAINT-4839, MAINT-3568
 	*/
 	
 
 	S32 diffuseMap = glGetUniformLocationARB(mProgramObject, "diffuseMap");
 	S32 bumpMap = glGetUniformLocationARB(mProgramObject, "bumpMap");
+	S32 environmentMap = glGetUniformLocationARB(mProgramObject, "environmentMap");
 
 	std::set<S32> skip_index;
 
-	if(diffuseMap != -1 && bumpMap != -1)
+	if (-1 != diffuseMap && (-1 != bumpMap || -1 != environmentMap))
 	{
 		GLenum type;
 		GLsizei length;
 		GLint size = -1;
 		char name[1024];        
 
-		//diffuse map
+		diffuseMap = bumpMap = environmentMap = -1;
+
 		for (S32 i = 0; i < activeCount; i++)
 		{
-			name[0] = 0;
+			name[0] = '\0';
 			
 			glGetActiveUniformARB(mProgramObject, i, 1024, &length, &size, &type, (GLcharARB *)name);
 
-			if(std::string(name) == "diffuseMap") {
+			if (-1 == diffuseMap && std::string(name) == "diffuseMap")
+			{
 				diffuseMap = i;
+				continue;
 			}
 
-			if(std::string(name) == "bumpMap") {
+			if (-1 == bumpMap && std::string(name) == "bumpMap")
+			{
 				bumpMap = i;
+				continue;
+			}
+
+			if (-1 == environmentMap && std::string(name) == "environmentMap")
+			{
+				environmentMap = i;
+				continue;
 			}
 		}
 		
-		if(bumpMap < diffuseMap)
+		bool bumpLessDiff = bumpMap < diffuseMap && -1 != bumpMap;
+		bool envLessDiff = environmentMap < diffuseMap && -1 != environmentMap;
+
+		if (bumpLessDiff && envLessDiff)
+		{
+			mapUniform(diffuseMap, uniforms);
+			mapUniform(bumpMap, uniforms);
+			mapUniform(environmentMap, uniforms);
+
+			skip_index.insert(diffuseMap);
+			skip_index.insert(bumpMap);
+			skip_index.insert(environmentMap);
+		}
+		else if (bumpLessDiff)
 		{
 			mapUniform(diffuseMap, uniforms);
 			mapUniform(bumpMap, uniforms);
 
 			skip_index.insert(diffuseMap);
 			skip_index.insert(bumpMap);
+		}
+		else if (envLessDiff)
+		{
+			mapUniform(diffuseMap, uniforms);
+			mapUniform(environmentMap, uniforms);
+
+			skip_index.insert(diffuseMap);
+			skip_index.insert(environmentMap);
 		}
 	}
 

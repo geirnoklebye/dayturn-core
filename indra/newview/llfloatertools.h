@@ -115,10 +115,6 @@ public:
 	bool selectedMediaEditable();
 	void updateLandImpacts();
 	void onClickBtnCopyKeys();
-//MK
-	void setGridMode(EGridMode mode);
-//mk
-
 	static void setGridMode(S32 mode);
 
 	LLPanelFace* getPanelFace() { return mPanelFace; }
@@ -211,6 +207,7 @@ public:
 private:
 	BOOL					mDirty;
 	U32						mPrecision;
+	BOOL                    mHasSelection;
 
 	std::map<std::string, std::string> mStatusText;
 

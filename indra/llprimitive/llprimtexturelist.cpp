@@ -368,7 +368,7 @@ S32 LLPrimTextureList::setMaterialID(const U8 index, const LLMaterialID& pMateri
 	return TEM_CHANGE_NONE;
 }
 
-S32 LLPrimTextureList::setMaterialParams(const U8 index, const LLMaterialPtr pMaterialParams, bool isInitFromServer)
+S32 LLPrimTextureList::setMaterialParams(const U8 index, const LLMaterialPtr pMaterialParams)
 {
 	if (index < mEntryList.size())
 	{

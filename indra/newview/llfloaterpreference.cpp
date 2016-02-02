@@ -109,7 +109,7 @@
 #include "llpluginclassmedia.h"
 #include "llteleporthistorystorage.h"
 #include "llproxy.h"
-#include "llviewernetwork.h"
+#include "llweb.h"
 #include "lllogininstance.h"        // to check if logged in yet
 #include "llsdserialize.h"
 #include "llaudioengine.h"
@@ -2108,6 +2108,16 @@ BOOL LLPanelPreference::postBuild()
 		mBandWidthUpdater = new LLPanelPreference::Updater(boost::bind(&handleBandwidthChanged, _1), BANDWIDTH_UPDATER_TIMEOUT);
 		gSavedSettings.getControl("ThrottleBandwidthKBPS")->getSignal()->connect(boost::bind(&LLPanelPreference::Updater::update, mBandWidthUpdater, _2));
 	}
+
+#ifdef EXTERNAL_TOS
+	LLRadioGroup* ext_browser_settings = getChild<LLRadioGroup>("preferred_browser_behavior");
+	if (ext_browser_settings)
+	{
+		// turn off ability to set external/internal browser
+		ext_browser_settings->setSelectedByValue(LLWeb::BROWSER_EXTERNAL_ONLY, true);
+		ext_browser_settings->setEnabled(false);
+	}
+#endif
 
 	apply();
 	return true;
