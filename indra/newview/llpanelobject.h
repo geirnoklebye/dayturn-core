@@ -66,6 +66,18 @@ public:
 	static void 	onCommitTemporary(		LLUICtrl* ctrl, void* userdata);
 	static void 	onCommitPhantom(		LLUICtrl* ctrl, void* userdata);
 	static void 	onCommitPhysics(		LLUICtrl* ctrl, void* userdata);
+	
+	void 	onCopyPos(				const LLSD& data);
+	void 	onPastePos(				const LLSD& data);
+	void 	onPastePosClip(			const LLSD& data);
+	void 	onCopySize(				const LLSD& data);
+	void 	onPasteSize(			const LLSD& data);
+	void 	onPasteSizeClip(		const LLSD& data);
+	void 	onCopyRot(				const LLSD& data);
+	void 	onPasteRot(				const LLSD& data);
+	void 	onPasteRotClip(			const LLSD& data);
+	void 	onCopyParams(			const LLSD& data);
+	void 	onPasteParams(			const LLSD& data);
 
 	void 	onCopyPos(				const LLSD& data);
 	void 	onPastePos(				const LLSD& data);

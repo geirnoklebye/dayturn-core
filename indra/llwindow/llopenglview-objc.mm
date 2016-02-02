@@ -263,8 +263,8 @@ attributedStringInfo getSegments(NSAttributedString *str)
 		// supress this error after move to Xcode 7:
 		// error: null passed to a callee that requires a non-null argument [-Werror,-Wnonnull]
 		// Tried using ObjC 'nonnull' keyword as per SO article but didn't build
-		GLint swapInterval=0;
-		[glContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
+        GLint glVsync = vsync ? 1 : 0;
+		[glContext setValues:&glVsync forParameter:NSOpenGLCPSwapInterval];	
 	}
 	
     mOldResize = false;

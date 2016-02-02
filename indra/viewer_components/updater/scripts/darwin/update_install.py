@@ -3,7 +3,7 @@
 @file   update_install.py
 @author Nat Goodspeed
 @date   2012-12-20
-@brief  Update the containing Second Life application bundle to the version in
+@brief  Update the containing Kokua application bundle to the version in
         the specified disk image file.
 
         This Python implementation is derived from the previous mac-updater

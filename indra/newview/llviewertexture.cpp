@@ -62,6 +62,8 @@
 #include "lltexturecache.h"
 ///////////////////////////////////////////////////////////////////////////////
 
+#include "llmimetypes.h"
+
 // extern
 const S32Megabytes gMinVideoRam(32);
 //MK

@@ -1434,6 +1434,9 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					mHudText = temp_string;
 					mHudTextColor = LLColor4(coloru);
 
+					mHudText = temp_string;
+					mHudTextColor = LLColor4(coloru);
+
 					setChanged(MOVED | SILHOUETTE);
 				}
 				else if (mText.notNull())
@@ -1811,6 +1814,9 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 //MK
 					mText->mLastMessageText = temp_string;
 //mk
+
+                    mHudText = temp_string;
+                    mHudTextColor = LLColor4(coloru);
 
                     mHudText = temp_string;
                     mHudTextColor = LLColor4(coloru);
@@ -2856,6 +2862,7 @@ void LLViewerObject::requestInventory()
 		delete mInventory;
 		mInventory = NULL;
 	}
+
 	if(mInventory)
 	{
 		// inventory is either up to date or doesn't has a listener
@@ -4684,6 +4691,12 @@ S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMateri
 		return 0;
 	}
 
+//MK
+	// Attempt at fixing BUG-10601 (Fix recommended by Ansariel Hiller) : move these lines after the call to setTEMaterialParams()
+	////setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
+	////setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
+//mk
+
 	retval = LLPrimitive::setTEMaterialParams(te, pMaterialParams);
 	LL_DEBUGS("Material") << "Changing material params for te " << (S32)te
 							<< ", object " << mID
@@ -4692,6 +4705,11 @@ S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMateri
 	setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
 	setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
 
+//MK
+	// Attempt at fixing BUG-10601 (Fix recommended by Ansariel Hiller)
+	setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
+	setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
+//mk
 	refreshMaterials();
 	return retval;
 }
@@ -4995,13 +5013,13 @@ void LLViewerObject::setDebugText(const std::string &utf8text)
 
 void LLViewerObject::initHudText()
 {
-		mText = (LLHUDText *)LLHUDObject::addHUDObject(LLHUDObject::LL_HUD_TEXT);
-		mText->setFont(LLFontGL::getFontSansSerif());
-		mText->setVertAlignment(LLHUDText::ALIGN_VERT_TOP);
-		mText->setMaxLines(-1);
-		mText->setSourceObject(this);
-		mText->setOnHUDAttachment(isHUDAttachment());
-	}
+    mText = (LLHUDText *)LLHUDObject::addHUDObject(LLHUDObject::LL_HUD_TEXT);
+    mText->setFont(LLFontGL::getFontSansSerif());
+    mText->setVertAlignment(LLHUDText::ALIGN_VERT_TOP);
+    mText->setMaxLines(-1);
+    mText->setSourceObject(this);
+    mText->setOnHUDAttachment(isHUDAttachment());
+}
 
 void LLViewerObject::restoreHudText()
 {
@@ -5064,7 +5082,7 @@ void LLViewerObject::updateText()
 		        mText->setHidden(avatar->isInMuteList());
 		    }
 
-			LLVector3 up_offset(0,0,0);
+		    LLVector3 up_offset(0,0,0);
 			up_offset.mV[2] = getScale().mV[VZ]*0.6f;
 			
 			if (mDrawable.notNull())

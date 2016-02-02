@@ -49,7 +49,7 @@ set(test_SOURCE_FILES
     llpermissions_tut.cpp
     llpipeutil.cpp
     llsaleinfo_tut.cpp
-    llscriptresource_tut.cpp
+    #llscriptresource_tut.cpp
     llsdmessagebuilder_tut.cpp
     llsdmessagereader_tut.cpp
     llsd_new_tut.cpp

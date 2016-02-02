@@ -416,13 +416,7 @@ void LLStatusBar::refresh()
 	{
 		gMenuBarView->reshape(MENU_RIGHT, gMenuBarView->getRect().getHeight());
 	}
-//MK
-	// also update the parcel info panel pos -KC
-	if ((MENU_RIGHT + MENU_PARCEL_SPACING) != mParcelInfoPanel->getRect().mLeft)
-	{
-		updateParcelPanel();
-	}
-//mk
+
 	// update the master volume button state
 	bool mute_audio = LLAppViewer::instance()->getMasterSystemAudioMute();
 	mBtnVolume->setToggleState(mute_audio);
@@ -688,6 +682,11 @@ BOOL can_afford_transaction(S32 cost)
 void LLStatusBar::onVolumeChanged(const LLSD& newvalue)
 {
 	refresh();
+}
+
+void LLStatusBar::onClickStatistics()
+{
+	LLFloaterReg::toggleInstance("stats");
 }
 
 void LLStatusBar::onClickStatistics()

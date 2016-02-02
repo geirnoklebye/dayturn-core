@@ -470,6 +470,11 @@ private:
 	std::string mStreamName;
 	std::string mStreamLocation;
 
+	//<FS:ND> Special settings for CEF
+public:
+	void setFlipY( bool );
+	// </FS:ND>
+
 //--------------------------------------
 	//debug use only
 	//

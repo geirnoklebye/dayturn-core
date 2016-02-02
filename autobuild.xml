@@ -276,11 +276,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>274a7854f2bda43fe7e46eab3bef707d</string>
+              <string>137b180149defda6b671a2f7121d6b43</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/boost-1.57-linux-201601041224.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux-201601261128.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -290,11 +290,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>97004c714bb5717aa5c836e323e5c541</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/boost-1.57-linux64-201601041141.tar.bz2</string>
+          <string>a8befbc4bf31a07f3d4e8e2fc09a0a4b</string>
+          <key>hash_algorithm</key>
+          <string>md5</string>
+          <key>url</key>
+          <string>https://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201601261153.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -388,11 +388,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>49c474900c2ad08d1c1b64a5f598b753</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>cefa37661a7d8fb5016b425d20cd07a3</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/colladadom-2.3.201601041326-linux-201601041326.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201601261914-linux-201601261914.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -402,11 +400,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9fac891135636f14d110f692a31cdbaf</string>
+              <string>bdc7c0ba484f97828b8ccc1b44c04be9</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/colladadom-2.3.201601041158-linux64-201601041158.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201601261224-linux64-201601261224.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1335,11 +1333,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>41ec5984613832ec7fdab55633397b01</string>
+              <string>0103b3fa182d23e404361fce0529eeb8</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/googlemock-1.7.0.201601041342-linux-201601041342.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201601261942-linux-201601261942.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1349,11 +1347,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>825df0eee0befc926ffbeaf3d6601501</string>
+              <string>6144f0d870aa8dc0bd38ad2703f37a45</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/Drakeo/drakeo-kokuant-glibc-2.17/downloads/googlemock-1.7.0.201601041214-linux64-201601041214.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201601261238-linux64-201601261238.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1759,9 +1757,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>8084ced172704ff09b364f7af82a2d6f</string>
+              <string>b25a4f480e07c670ffef00c3da578f87</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/jsoncpp_3p-update-jsoncpp/rev/297580/arch/Darwin/installer/jsoncpp-0.5.0.297580-darwin-297580.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/jsoncpp_3p-update-jsoncpp/rev/297281/arch/Darwin/installer/jsoncpp-0.5.0.297281-darwin-297281.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2229,6 +2227,79 @@
         <key>version</key>
         <string>1.5.1.310043</string>
       </map>
+      <map>
+        <key>copyright</key>
+        <string>Copyright (c) 2008-2014 Marshall A. Greenblatt. Portions Copyright (c) 2006-2009 Google Inc. All rights reserved</string>
+        <key>description</key>
+        <string>CEF plugin for Second Life</string>
+        <key>license</key>
+        <string>BSD</string>
+        <key>license_file</key>
+        <string>LICENSES/CEF_BSD.txt</string>
+        <key>name</key>
+        <string>llceflib</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>fe4b09930b509d322b10bd27821bd876</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llceflib_3p-llceflib/rev/310159/arch/Darwin/installer/llceflib-1.5.3.310159-darwin-310159.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>1db6cf7859d1539e35b9e21f36f0667f</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201601262112-kokua-linux-201601262112.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>0d0a3af839ae5fdfd2d6f8a2fa46492e</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201601262110-kokua-linux64-201601262110.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>578f21be02efc98bbf426529f916fce8</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llceflib_3p-llceflib/rev/310043/arch/CYGWIN/installer/llceflib-1.5.1.310043-windows-310043.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>1.5.1.310043</string>
+      </map>
       <key>llphysicsextensions_source</key>
       <map>
         <key>copyright</key>
@@ -2325,21 +2396,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>2d4aee5c3e83a238cdf4c995854299f8</string>
+              <string>a74e21beaf739563d323c55386c05296</string>
               <key>url</key>
-              <string>http://download.kokuaviewer.org/files/libs/llconvexdecompositionstub-0.3-Linux-Linux-x86_64-20110906.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-llqtwebkit2/downloads/llqtwebkit-4.7.1-linux64-201506082044.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2359,78 +2419,6 @@
         </map>
         <key>version</key>
         <string>1.0.298370</string>
-      </map>
-      <key>llqtwebkit</key>
-      <map>
-        <key>copyright</key>
-        <string>Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).</string>
-        <key>description</key>
-        <string>QT cross-platform applicaiton and UI framework.</string>
-        <key>license</key>
-        <string>LGPL</string>
-        <key>license_file</key>
-        <string>LICENSES/llqtwebkit.txt</string>
-        <key>name</key>
-        <string>llqtwebkit</string>
-        <key>platforms</key>
-        <map>
-          <key>darwin</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>3c2b6be4c78b2479c3fae612e1053d37</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/canonical_3p-llqtwebkit2/rev/295522/arch/Darwin/installer/llqtwebkit-4.7.1-darwin-20141015.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>darwin</string>
-          </map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>de0364a30095d3018e3c893e091e8099</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-llqtwebkit2/downloads/llqtwebkit-4.7.1-linux-201506221336.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>a74e21beaf739563d323c55386c05296</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-llqtwebkit2/downloads/llqtwebkit-4.7.1-linux64-201506082044.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-          <key>windows</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>bb4e8c8006c8a7aef6d3e3c36a8cebbf</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/canonical_3p-llqtwebkit2/rev/295522/arch/CYGWIN/installer/llqtwebkit-4.7.1-windows-20141015.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>windows</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>4.7.1</string>
       </map>
       <key>mesa</key>
       <map>
@@ -3418,7 +3406,7 @@
               <map>
                 <key>arguments</key>
                 <array>
-                  <string>Doxyfile</string>
+                  <string>doxygen/Doxyfile</string>
                 </array>
                 <key>command</key>
                 <string>doxygen</string>
@@ -3433,9 +3421,6 @@
             </map>
             <key>RelWithDebInfo</key>
             <map>
-              <key>build</key>
-              <map>
-              </map>
               <key>configure</key>
               <map>
                 <key>arguments</key>
@@ -3541,7 +3526,7 @@
                 </array>
                 <key>options</key>
                 <array>
-                  <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
+                  <string>-DCMAKE_BUILD_TYPE:STRING=Release</string>
                   <string>-DWORD_SIZE:STRING=32</string>
                   <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>

@@ -7149,7 +7149,7 @@ LLVOPartGroup* LLPipeline::lineSegmentIntersectParticle(const LLVector4a& start,
 }
 
 LLViewerObject* LLPipeline::lineSegmentIntersectInWorld(const LLVector4a& start, const LLVector4a& end,
-														BOOL pick_transparent,												
+														BOOL pick_transparent,
 														BOOL pick_rigged,
 														S32* face_hit,
 														LLVector4a* intersection,         // return the intersection point

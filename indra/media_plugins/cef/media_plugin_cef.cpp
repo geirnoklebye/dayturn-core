@@ -124,6 +124,7 @@ MediaPluginBase(host_send_func, host_user_data)
 	mCachePath = "";
 	mCookiePath = "";
 	mLLCEFLib = new LLCEFLib();
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -369,7 +370,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				versions[LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER] = LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER_VERSION;
 				message.setValueLLSD("versions", versions);
 
-				std::string plugin_version = "CEF plugin 1.1.3";
+				std::string plugin_version = "CEF plugin 1.3.1";
 				message.setValue("plugin_version", plugin_version);
 				sendMessage(message);
 			}
@@ -427,6 +428,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 		{
 			if (message_name == "init")
 			{
+
 				// event callbacks from LLCefLib
 				mLLCEFLib->setOnPageChangedCallback(boost::bind(&MediaPluginCEF::onPageChangedCallback, this, _1, _2, _3, _4, _5, _6));
 				mLLCEFLib->setOnCustomSchemeURLCallback(boost::bind(&MediaPluginCEF::onCustomSchemeURLCallback, this, _1));
@@ -471,6 +473,8 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				message.setValueU32("format", GL_BGRA);
 				message.setValueU32("type", GL_UNSIGNED_BYTE);
 				message.setValueBoolean("coords_opengl", true);
+
+
 				sendMessage(message);
 			}
 			else if (message_name == "set_user_data_path")
@@ -762,6 +766,12 @@ void MediaPluginCEF::deserializeKeyboardData(LLSD native_key_data, uint32_t& nat
 		native_virtual_key = (uint32_t)(native_key_data["virtual_key"].asInteger());
 		// TODO: I don't think we need to do anything with native modifiers here -- please verify
 #endif
+
+#if LL_LINUX
+	native_scan_code = (uint32_t)(native_key_data["scan_code"].asInteger());
+	native_virtual_key = (uint32_t)(native_key_data["virtual_key"].asInteger());
+	native_modifiers = (uint32_t)(native_key_data["cef_modifiers"].asInteger());
+#endif
 	};
 };
 
@@ -769,7 +779,7 @@ void MediaPluginCEF::deserializeKeyboardData(LLSD native_key_data, uint32_t& nat
 //
 void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::EKeyboardModifier modifiers_x, LLSD native_key_data = LLSD::emptyMap())
 {
-#if LL_DARWIN
+#if LL_DARWIN || LL_LINUX
 
     if (!native_key_data.has("event_type") ||
             !native_key_data.has("event_modifiers") ||
@@ -785,9 +795,9 @@ void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::
     char eventChars = static_cast<char>(native_key_data["event_chars"].isUndefined() ? 0 : native_key_data["event_chars"].asInteger());
     char eventUChars = static_cast<char>(native_key_data["event_umodchars"].isUndefined() ? 0 : native_key_data["event_umodchars"].asInteger());
     bool eventIsRepeat = native_key_data["event_isrepeat"].asBoolean();
-
+  
     mLLCEFLib->keyboardEventOSX(eventType, eventModifiers, (eventChars) ? &eventChars : NULL,
-                                (eventUChars) ? &eventUChars : NULL, eventIsRepeat, eventKeycode);
+                               (eventUChars) ? &eventUChars : NULL, eventIsRepeat, eventKeycode);
 
 #elif LL_WINDOWS
 	U32 msg = ll_U32_from_sd(native_key_data["msg"]);
@@ -819,6 +829,23 @@ void MediaPluginCEF::unicodeInput(const std::string &utf8str, LLCEFLib::EKeyboar
 	U64 lparam = ll_U32_from_sd(native_key_data["l_param"]);
 	mLLCEFLib->nativeKeyboardEvent(msg, wparam, lparam);
 #endif
+
+// <FS:ND> Keyboard handling for Linux, code written by Henri Beauchamp
+#if LL_LINUX
+	uint32_t key = KEY_NONE;
+
+	if (utf8str.size() == 1)
+		key = utf8str[0];
+
+	uint32_t native_scan_code = 0;
+	uint32_t native_virtual_key = 0;
+	uint32_t native_modifiers = 0;
+	deserializeKeyboardData(native_key_data, native_scan_code, native_virtual_key, native_modifiers);
+	
+	mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_DOWN, (uint32_t)key, utf8str.c_str(), modifiers, 0, native_virtual_key, native_modifiers);
+	mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_UP, (uint32_t)key, utf8str.c_str(), modifiers, 0, native_virtual_key, native_modifiers);
+#endif
+// </FS:ND>
 };
 
 ////////////////////////////////////////////////////////////////////////////////

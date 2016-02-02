@@ -6883,7 +6883,21 @@ Please re-install the plugin or contact the vendor if you continue to experience
        text="A Media Plugin fails to run"/>
     </form>
   </notification>
- 
+  <notification
+   icon="alertmodal.tga"
+   name="MediaPluginFailedcef"
+   type="alertmodal">
+The following Media Plugin has failed:
+    [PLUGIN]
+
+Please re-install the plugin or contact the vendor if you continue to experience problems.
+  <tag>fail</tag>
+    <form name="form">
+      <ignore name="ignore"
+       text="A Media Plugin fails to run"/>
+    </form>
+  </notification>
+
 <notification
  icon="alert.tga"
  name="MediaPluginFailedWebkit"

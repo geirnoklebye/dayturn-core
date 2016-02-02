@@ -89,18 +89,16 @@ BOOL LLToolGun::handleHover(S32 x, S32 y, MASK mask)
 		F32 mouse_sensitivity = gSavedSettings.getF32("MouseSensitivity");
 		mouse_sensitivity = clamp_rescale(mouse_sensitivity, 0.f, 15.f, 0.5f, 2.75f) * NOMINAL_MOUSE_SENSITIVITY;
 
-//MK
-		// If Shift is held, divide the sensibility by 10
-		if (mask & MASK_SHIFT) 
-		{
+ 		// if the shift key is held then divide the sensitivity by 10
+		if (mask & MASK_SHIFT) {
+			mouse_sensitivity *= 0.1f;
+		}
+
+ 		// if the control key is held then divide the sensitivity by 25
+		if (mask & MASK_CONTROL) {
 			mouse_sensitivity *= 0.25f;
 		}
-		
-//		if (mask & MASK_CONTROL)
-//		{
-//			mouse_sensitivity *= 0.25f;
-//		}
-//mk
+
 		// ...move the view with the mouse
 
 		// get mouse movement delta

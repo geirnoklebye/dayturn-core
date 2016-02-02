@@ -3257,8 +3257,8 @@ void LLWindowWin32::spawnWebBrowser(const std::string& escaped_url, bool async)
 }
 
 /*
-	Make the raw keyboard data available - used to poke through to LLQtWebKit so
-	that Qt/Webkit has access to the virtual keycodes etc. that it needs
+	Make the raw keyboard data available - used to poke through to media plugin
+	so it has access to the virtual keycodes etc. that it needs
 */
 LLSD LLWindowWin32::getNativeKeyData()
 {

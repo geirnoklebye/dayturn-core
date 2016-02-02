@@ -1,5 +1,4 @@
 # -*- cmake -*-
-
 add_subdirectory(base)
 
 if (LINUX)
@@ -10,6 +9,10 @@ if (WINDOWS OR DARWIN)
     add_subdirectory(quicktime)
     add_subdirectory(cef)
 endif (WINDOWS OR DARWIN)
+
+if( LINUX )
+    add_subdirectory(cef)
+endif( LINUX )
 
 if (WINDOWS)
     add_subdirectory(winmmshim)

@@ -4399,12 +4399,12 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 
 		if (mesg != "")
 		{
-		LLSD msg_notify = LLSD(LLSD::emptyMap());
-		msg_notify["session_id"] = LLUUID();
-        msg_notify["from_id"] = chat.mFromID;
-		msg_notify["source_type"] = chat.mSourceType;
-        on_new_message(msg_notify);
-	}
+			LLSD msg_notify = LLSD(LLSD::emptyMap());
+			msg_notify["session_id"] = LLUUID();
+			msg_notify["from_id"] = chat.mFromID;
+			msg_notify["source_type"] = chat.mSourceType;
+			on_new_message(msg_notify);
+		}
 
 	}
 }
@@ -7000,6 +7000,11 @@ void process_mean_collision_alert_message(LLMessageSystem *msgsystem, void **use
 			gMeanCollisionList.push_front(mcd);
 			gCacheName->get(perp, false, boost::bind(&mean_name_callback, _1, _2, _3));
 		}
+	}
+	LLFloaterBump* bumps_floater = LLFloaterBump::getInstance();
+	if(bumps_floater && bumps_floater->isInVisibleChain())
+	{
+		bumps_floater->populateCollisionList();
 	}
 	LLFloaterBump* bumps_floater = LLFloaterBump::getInstance();
 	if(bumps_floater && bumps_floater->isInVisibleChain())

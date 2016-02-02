@@ -12,7 +12,7 @@ function install_desktop_entry()
 
     local desktop_entry="\
 [Desktop Entry]\n\
-Name=Kokua\n\
+Name=kokua\n\
 Comment=Client for the On-line Virtual Worlds\n\
 Exec=${installation_prefix}/kokua\n\
 Icon=${installation_prefix}/kokua_icon.png\n\

@@ -634,7 +634,7 @@ void LLFloaterTools::draw()
     }
     mHasSelection = has_selection;
 
-	if (mDirty)
+    if (mDirty)
 	{
 		refresh();
 		mDirty = FALSE;

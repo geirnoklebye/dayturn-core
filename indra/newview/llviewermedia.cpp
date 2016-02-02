@@ -800,7 +800,7 @@ void LLViewerMedia::updateMedia(void *dummy_arg)
 	// Enable/disable the plugin read thread
 	LLPluginProcessParent::setUseReadThread(gSavedSettings.getBOOL("PluginUseReadThread"));
 
-	// HACK: we always try to keep a spare running webkit plugin around to improve launch times.
+	// HACK: we always try to keep a spare running cef plugin around to improve launch times.
 	createSpareBrowserMediaSource();
 
 	sAnyMediaShowing = false;
@@ -1163,11 +1163,11 @@ void LLViewerMedia::clearAllCookies()
 	getCookieStore()->setAllCookies("");
 
 	// FIXME: this may not be sufficient, since the on-disk cookie file won't get written until some browser instance exits cleanly.
-	// It also won't clear cookies for other accounts, or for any account if we're not logged in, and won't do anything at all if there are no webkit plugins loaded.
+	// It also won't clear cookies for other accounts, or for any account if we're not logged in, and won't do anything at all if there are no cef plugins loaded.
 	// Until such time as we can centralize cookie storage, the following hack should cover these cases:
 
 	// HACK: Look for cookie files in all possible places and delete them.
-	// NOTE: this assumes knowledge of what happens inside the webkit plugin (it's what adds 'browser_profile' to the path and names the cookie file)
+	// NOTE: this assumes knowledge of what happens inside the cef plugin (it's what adds 'browser_profile' to the path and names the cookie file)
 
 	// Places that cookie files can be:
 	// <getOSUserAppDir>/browser_profile/cookies
@@ -1888,7 +1888,7 @@ LLPluginClassMedia* LLViewerMediaImpl::newSourceFromMediaType(std::string media_
 	std::string plugin_basename = LLMIMETypes::implType(media_type);
 	LLPluginClassMedia* media_source = NULL;
 
-	// HACK: we always try to keep a spare running webkit plugin around to improve launch times.
+	// HACK: we always try to keep a spare running cef plugin around to improve launch times.
 	// If a spare was already created before PluginAttachDebuggerToPlugins was set, don't use it.
     // Do not use a spare if launching with full viewer control (e.g. Facebook, Twitter and few others)
 	if ((plugin_basename == "media_plugin_cef") &&
@@ -1963,6 +1963,8 @@ LLPluginClassMedia* LLViewerMediaImpl::newSourceFromMediaType(std::string media_
 
 			bool media_plugin_debugging_enabled = gSavedSettings.getBOOL("MediaPluginDebugging");
 			media_source->enableMediaPluginDebugging( media_plugin_debugging_enabled  || clean_browser);
+
+//			media_source->setFlipY( gSavedSettings.getBOOL( "FSFlipCEFY" ) );
 
 			// need to set agent string here before instance created
 			media_source->setBrowserUserAgent(LLViewerMedia::getCurrentUserAgent());
@@ -2043,7 +2045,7 @@ bool LLViewerMediaImpl::initializePlugin(const std::string& media_type)
 		}
 
 		// the correct way to deal with certs it to load ours from CA.pem and append them to the ones
-		// Qt/WebKit loads from your system location.
+		// media plugin for web loads from your system location.
 		// Note: This needs the new CA.pem file with the Equifax Secure Certificate Authority
 		// cert at the bottom: (MIIDIDCCAomgAwIBAgIENd70zzANBg)
 		std::string ca_path = gDirUtilp->getExpandedFilename( LL_PATH_APP_SETTINGS, "CA.pem" );
@@ -2091,7 +2093,7 @@ void LLViewerMediaImpl::loadURI()
 
 		// *HACK: we don't know if the URI coming in is properly escaped
 		// (the contract doesn't specify whether it is escaped or not.
-		// but LLQtWebKit expects it to be, so we do our best to encode
+		// but media plugin for web expects it to be, so we do our best to encode
 		// special characters)
 		// The strings below were taken right from http://www.ietf.org/rfc/rfc1738.txt
 		// Note especially that '%' and '/' are there.
@@ -3329,9 +3331,9 @@ void LLViewerMediaImpl::handleMediaEvent(LLPluginClassMedia* plugin, LLPluginCla
 			{
 				notification_name = "MediaPluginFailedQuickTime";
 			}
-			else if (plugin_name.find("webkit") != std::string::npos)
+			else if (plugin_name.find("cef") != std::string::npos)
 			{
-				notification_name = "MediaPluginFailedWebkit";
+				notification_name = "MediaPluginFailedcef";
 			}
 			else
 			{
