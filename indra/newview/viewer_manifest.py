@@ -1293,12 +1293,7 @@ class Linux_i686_Manifest(LinuxManifest):
             self.path("libpng12.so.0*")
             self.end_prefix("lib") 
 
-		# Newer Arch linux has web kit failures due to confilcts with libpangoft2-1.0 versions
-        # Moving the older Kokua library to reside next to media_plugin_webkit and allow
-        # UI to use the system supplied version.
-        if self.prefix(src="../packages/lib/release", dst="bin/llplugin"):
-            self.path("libpangoft2-1.0.so*")
-            self.end_prefix("bin/llplugin")
+
         if self.prefix("../packages/lib/release", dst="lib"):
             self.path("libapr-1.so")
             self.path("libapr-1.so.0")
@@ -1381,6 +1376,9 @@ class Linux_i686_Manifest(LinuxManifest):
                 self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
                 self.path("libvivoxsdk.so")
                 self.path("libvivoxplatform.so")
+                self.end_prefix("lib")
+
+
             #cef plugin
             if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
                 self.path( "libcef.so" )
@@ -1463,7 +1461,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libharfbuzz.so*")
             self.path("libpangocairo-1.0.so*")
             self.path("libpangoxft-1.0.so*")
-
             self.path("libpixman-1.so*")
  
            #cef plugin
@@ -1475,14 +1472,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
             if self.prefix(src="../packages/lib/release", dst="lib64"):
                 self.path("libQtWebKit.so*")
                 self.end_prefix("lib64")
-
-			# Newer Arch linux has web kit failures due to confilcts with libpangoft2-1.0 versions
-            # Moving the older Kokua library to reside next to media_plugin_webkit and allow
-            # UI to use the system supplied version.
-            if self.prefix(src="../packages/lib/release", dst="bin/llplugin"):
-                self.path("libpangoft2-1.0.so*")
-                self.end_prefix("bin/llplugin")
-
 
             # For WebKit/Qt plugin runtimes (image format plugins)
             if self.prefix(src="../packages/plugins/imageformats", dst="bin/llplugin/imageformats"):

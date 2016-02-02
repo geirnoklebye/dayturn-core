@@ -1156,12 +1156,6 @@ void LLFloaterTools::setObjectType( LLPCode pcode )
 	gFocusMgr.setMouseCapture(NULL);
 }
 
-void commit_grid_mode(LLUICtrl *ctrl)
-{
-	LLComboBox* combo = (LLComboBox*)ctrl;
-
-	LLSelectMgr::getInstance()->setGridMode((EGridMode)combo->getCurrentIndex());
-}
 
 // static
 void LLFloaterTools::setGridMode(S32 mode)

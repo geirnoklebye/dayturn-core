@@ -7006,11 +7006,6 @@ void process_mean_collision_alert_message(LLMessageSystem *msgsystem, void **use
 	{
 		bumps_floater->populateCollisionList();
 	}
-	LLFloaterBump* bumps_floater = LLFloaterBump::getInstance();
-	if(bumps_floater && bumps_floater->isInVisibleChain())
-	{
-		bumps_floater->populateCollisionList();
-	}
 }
 
 void process_frozen_message(LLMessageSystem *msgsystem, void **user_data)

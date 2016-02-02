@@ -2654,10 +2654,9 @@ void LLLiveLSLEditor::onSave(void* userdata, BOOL close_after_save)
 		}
 	}
 //mk
-		self->mCloseAfterSave = close_after_save;
-		self->mScriptEd->mErrorList->setCommentText("");
-		self->saveIfNeeded();
-	}
+	self->mCloseAfterSave = close_after_save;
+	self->mScriptEd->mErrorList->setCommentText("");
+	self->saveIfNeeded();
 }
 
 

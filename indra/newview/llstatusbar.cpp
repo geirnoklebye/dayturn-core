@@ -689,12 +689,6 @@ void LLStatusBar::onClickStatistics()
 	LLFloaterReg::toggleInstance("stats");
 }
 
-void LLStatusBar::onClickStatistics()
-{
-	LLFloaterReg::toggleInstance("stats");
-}
-
-
 // Implements secondlife:///app/balance/request to request a L$ balance
 // update via UDP message system. JC
 class LLBalanceHandler : public LLCommandHandler

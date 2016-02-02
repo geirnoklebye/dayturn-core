@@ -110,6 +110,7 @@
 #include "llteleporthistorystorage.h"
 #include "llproxy.h"
 #include "llweb.h"
+#include "llviewernetwork.h"
 #include "lllogininstance.h"        // to check if logged in yet
 #include "llsdserialize.h"
 #include "llaudioengine.h"
@@ -360,7 +361,7 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mClickActionDirty(false)
 {
 	LLConversationLog::instance().addObserver(this);
-	
+
 	//Build Floater is now Called from 	LLFloaterReg::add("preferences", "floater_preferences.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterPreference>);
 	
 	static bool registered_dialog = false;
@@ -404,7 +405,7 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 
 	sSkin = gSavedSettings.getString("SkinCurrent");
 
-	mCommitCallbackRegistrar.add("Pref.ClickActionChange",				boost::bind(&LLFloaterPreference::onClickActionChange, this));
+	mCommitCallbackRegistrar.add("Pref.ClickActionChange",		boost::bind(&LLFloaterPreference::onClickActionChange, this));
 
 	gSavedSettings.getControl("NameTagShowUsernames")->getCommitSignal()->connect(boost::bind(&handleNameTagOptionChanged,  _2));	
 	gSavedSettings.getControl("NameTagShowFriends")->getCommitSignal()->connect(boost::bind(&handleNameTagOptionChanged,  _2));	
@@ -546,7 +547,6 @@ BOOL LLFloaterPreference::postBuild()
 	onShowPointAtChanged();
 	onNameTagShowAgeChanged();
 	onNameTagShowAgeLimitChanged();
-	
 
 	// set 'enable' property for 'Clear log...' button
 	changed();
@@ -632,7 +632,7 @@ void LLFloaterPreference::onDoNotDisturbResponseChanged()
 					!= getChild<LLUICtrl>("do_not_disturb_response")->getValue().asString();
 
 	gSavedPerAccountSettings.setBOOL("DoNotDisturbResponseChanged", response_changed_flag );
-	}
+}
 
 LLFloaterPreference::~LLFloaterPreference()
 {
@@ -848,24 +848,20 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 				maturity_list->deleteItems(LLSD(SIM_ACCESS_ADULT));
 			}
 		}
-		maturity_combo->setEnabled(true);
-
-		//
-		//	display selected maturity icons
-		//
-		onChangeMaturity();
+		getChildView("maturity_desired_combobox")->setEnabled( true);
+		getChildView("maturity_desired_textbox")->setVisible( false);
 	}
 	else
 	{
-		maturity_combo->setEnabled(false);
-
-		getChildView("rating_icon_general")->setVisible(false);
-		getChildView("rating_icon_moderate")->setVisible(false);
-		getChildView("rating_icon_adult")->setVisible(false);
+		getChild<LLUICtrl>("maturity_desired_textbox")->setValue(maturity_combo->getSelectedItemLabel());
+		getChildView("maturity_desired_combobox")->setEnabled( false);
 	}
 
 	// Forget previous language changes.
 	mLanguageChanged = false;
+
+	// Display selected maturity icons.
+	onChangeMaturity();
 	
 	// Load (double-)click to walk/teleport settings.
 	updateClickActionControls();
@@ -906,6 +902,16 @@ void LLFloaterPreference::initDoNotDisturbResponse()
 			gSavedPerAccountSettings.setString("DoNotDisturbModeResponse", LLTrans::getString("DoNotDisturbModeResponseDefault"));
 		}
 	}
+
+//static 
+void LLFloaterPreference::updateShowFavoritesCheckbox(bool val)
+{
+	LLFloaterPreference* instance = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
+	if (instance)
+	{
+		instance->getChild<LLUICtrl>("favorites_on_login_check")->setValue(val);
+	}	
+}
 
 void LLFloaterPreference::setHardwareDefaults()
 {
@@ -1798,6 +1804,7 @@ void LLFloaterPreference::setPersonalInfo(const std::string& visibility, bool im
 	getChildView("chat_font_size")->setEnabled(TRUE);
 }
 
+
 void LLFloaterPreference::refreshUI()
 {
 	refresh();
@@ -2090,6 +2097,8 @@ BOOL LLPanelPreference::postBuild()
 	if (hasChild("favorites_on_login_check", TRUE))
 	{
 		getChild<LLCheckBoxCtrl>("favorites_on_login_check")->setCommitCallback(boost::bind(&handleFavoritesOnLoginChanged, _1, _2));
+		bool show_favorites_at_login = LLPanelLogin::getShowFavorites();
+		getChild<LLCheckBoxCtrl>("favorites_on_login_check")->setValue(show_favorites_at_login);
 	}
 
 	//////////////////////PanelAdvanced ///////////////////

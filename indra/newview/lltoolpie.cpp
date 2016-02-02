@@ -1654,60 +1654,6 @@ bool LLToolPie::handleMediaDblClick(const LLPickInfo& pick)
     return false;
 }
 
-bool LLToolPie::handleMediaDblClick(const LLPickInfo& pick)
-{
-    //FIXME: how do we handle object in different parcel than us?
-    LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
-    LLPointer<LLViewerObject> objectp = pick.getObject();
-
-
-    if (!parcel ||
-        objectp.isNull() ||
-        pick.mObjectFace < 0 ||
-        pick.mObjectFace >= objectp->getNumTEs())
-    {
-        LLViewerMediaFocus::getInstance()->clearFocus();
-
-        return false;
-    }
-
-    // Does this face have media?
-    const LLTextureEntry* tep = objectp->getTE(pick.mObjectFace);
-    if (!tep)
-        return false;
-
-    LLMediaEntry* mep = (tep->hasMedia()) ? tep->getMediaData() : NULL;
-    if (!mep)
-        return false;
-
-    viewer_media_t media_impl = LLViewerMedia::getMediaImplFromTextureID(mep->getMediaID());
-
-    if (gSavedSettings.getBOOL("MediaOnAPrimUI"))
-    {
-        if (!LLViewerMediaFocus::getInstance()->isFocusedOnFace(pick.getObject(), pick.mObjectFace) || media_impl.isNull())
-        {
-            // It's okay to give this a null impl
-            LLViewerMediaFocus::getInstance()->setFocusFace(pick.getObject(), pick.mObjectFace, media_impl, pick.mNormal);
-        }
-        else
-        {
-            // Make sure keyboard focus is set to the media focus object.
-            gFocusMgr.setKeyboardFocus(LLViewerMediaFocus::getInstance());
-            LLEditMenuHandler::gEditMenuHandler = LLViewerMediaFocus::instance().getFocusedMediaImpl();
-
-            media_impl->mouseDoubleClick(pick.mUVCoords, gKeyboard->currentMask(TRUE));
-            mMediaMouseCaptureID = mep->getMediaID();
-            setMouseCapture(TRUE);  // This object will send a mouse-up to the media when it loses capture.
-        }
-
-        return true;
-    }
-
-    LLViewerMediaFocus::getInstance()->clearFocus();
-
-    return false;
-}
-
 bool LLToolPie::handleMediaHover(const LLPickInfo& pick)
 {
 	//FIXME: how do we handle object in different parcel than us?
