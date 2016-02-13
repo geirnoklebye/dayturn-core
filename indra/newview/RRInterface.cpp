@@ -4442,7 +4442,7 @@ BOOL RRInterface::updateCameraLimits ()
 		mCamDistMin = mCamDistMax;
 	}
 
-	if (LLViewerJoystick::getInstance()->getOverrideCamera() && mCamDistMax < EXTREMUM * 0.75f)
+	if (gRRenabled && (LLViewerJoystick::getInstance()->getOverrideCamera() && mCamDistMax < EXTREMUM * 0.75))
 	{
 		handle_toggle_flycam();
 	}
