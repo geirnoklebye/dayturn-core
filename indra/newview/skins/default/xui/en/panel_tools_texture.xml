@@ -36,7 +36,7 @@
             <color_swatch
              can_apply_immediately="true"
              follows="left|top"
-             height="64"
+             height="44"
              label=""
              layout="topleft"
              left="10"
@@ -97,10 +97,21 @@
              height="19"
              label="Full Bright"
              layout="topleft"
-             left="87"
+             left="6"
              name="checkbox fullbright"
-             top_pad="4"
+             top_pad="5"
              width="81" />
+             <check_box
+             follows="top|left"
+             height="19"
+             initial_value="false"
+             label="Align planar faces"
+             layout="topleft"
+             left="88"
+             name="checkbox planar align"
+             tool_tip="Align textures on all selected faces with the last selected face. Requires Planar texture mapping."
+             top_delta="0"
+             width="260" />
             <combo_box
              height="23"
              layout="topleft"
@@ -129,7 +140,7 @@
                 <radio_item
                 label="Texture (diffuse)"
                 name="Texture (diffuse)"
-                top="0" 
+                top="4"
                 layout="topleft"
                 height="16" 
                 value="0"/>
@@ -648,9 +659,9 @@
              label="Duplicate Values"
              name="TexDuplicate"
              tool_tip="Copy these diffuse map scale, rotation and offset values to the normal and specular maps"
-             height="20"
-             right="-7"
-             top_pad="7"
+             height="18"
+             Left="6"
+             top_pad="0"
              width="110" />
             <spinner
              follows="left|top"
@@ -737,9 +748,9 @@
              label="Duplicate Values"
              name="bumpyDuplicate"
              tool_tip="Copy these normal map scale, rotation and offset values to the diffuse and specular maps"
-             height="20"
-             right="-7"
-             top_pad="7"
+             height="18"
+             Left="6"
+             top_pad="0"
              width="110" />
             <spinner
              follows="left|top"
@@ -826,21 +837,10 @@
              label="Duplicate Values"
              name="shinyDuplicate"
              tool_tip="Copy these specular map scale, rotation and offset values to the diffuse and normal maps"
-             height="20"
-             right="-7"
-             top_pad="7"
+             height="18"
+             Left="6"
+             top_pad="0"
              width="110" />
-            <check_box
-             follows="top|left"
-             height="16"
-             initial_value="false"
-             label="Align planar faces"
-             layout="topleft"
-             left="7"
-             name="checkbox planar align"
-             tool_tip="Align textures on all selected faces with the last selected face. Requires Planar texture mapping."
-             top_delta="5"
-             width="260" />
             <web_browser
              visible="false"
              enabled="false"
