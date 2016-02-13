@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel
          border="false"
-         follows="all"
-         height="420"
+         follows="left|top|right|bottom"
+         bottom="-500"
+         width="295"
+         height="480"
          label="Texture"
          layout="topleft"
-         left="0"
+         left="1"
          mouse_opaque="false"
          help_topic="toolbox_texture_tab"
-         name="Texture"
-         top="0"
-         width="295">
+         name="Texture">
             <panel.string
              name="string repeats per meter">
                 Repeats Per Meter
@@ -36,7 +36,7 @@
             <color_swatch
              can_apply_immediately="true"
              follows="left|top"
-             height="44"
+             height="64"
              label=""
              layout="topleft"
              left="10"
@@ -97,21 +97,10 @@
              height="19"
              label="Full Bright"
              layout="topleft"
-             left="6"
+             left="87"
              name="checkbox fullbright"
-             top_pad="5"
+             top_pad="4"
              width="81" />
-             <check_box
-             follows="top|left"
-             height="19"
-             initial_value="false"
-             label="Align planar faces"
-             layout="topleft"
-             left="88"
-             name="checkbox planar align"
-             tool_tip="Align textures on all selected faces with the last selected face. Requires Planar texture mapping."
-             top_delta="0"
-             width="260" />
             <combo_box
              height="23"
              layout="topleft"
@@ -140,14 +129,14 @@
                 <radio_item
                 label="Texture (diffuse)"
                 name="Texture (diffuse)"
-                top="4"
+                top="0" 
                 layout="topleft"
                 height="16" 
                 value="0"/>
                 <radio_item
                 label="Bumpiness (normal)"
                 layout="topleft"
-                top_pad="1" 
+                top_pad="0" 
                 height="16" 
                 name="Bumpiness (normal)"
                 value="1"/>
@@ -156,7 +145,7 @@
                 name="Shininess (specular)"
                 height="16"
                 layout="topleft"
-                top_pad="1"
+                top_pad="0"
                 value="2"/>
             </radio_group> 
             <texture_picker
@@ -170,7 +159,7 @@
              left="10"
              name="texture control"
              tool_tip="Click to choose a picture"
-             top_pad="7"
+             top_pad="0"
              width="64" />
             <text
              type="string"
@@ -542,7 +531,7 @@
              left="10"
              name="tex gen"
              text_readonly_color="LabelDisabledColor"
-             top_pad="46"
+             top_pad="44"
              width="140">
                 Mapping
             </text>
@@ -659,9 +648,9 @@
              label="Duplicate Values"
              name="TexDuplicate"
              tool_tip="Copy these diffuse map scale, rotation and offset values to the normal and specular maps"
-             height="18"
-             Left="6"
-             top_pad="0"
+             height="20"
+             right="-7"
+             top_pad="7"
              width="110" />
             <spinner
              follows="left|top"
@@ -748,9 +737,9 @@
              label="Duplicate Values"
              name="bumpyDuplicate"
              tool_tip="Copy these normal map scale, rotation and offset values to the diffuse and specular maps"
-             height="18"
-             Left="6"
-             top_pad="0"
+             height="20"
+             right="-7"
+             top_pad="7"
              width="110" />
             <spinner
              follows="left|top"
@@ -837,10 +826,21 @@
              label="Duplicate Values"
              name="shinyDuplicate"
              tool_tip="Copy these specular map scale, rotation and offset values to the diffuse and normal maps"
-             height="18"
-             Left="6"
-             top_pad="0"
+             height="20"
+             right="-7"
+             top_pad="7"
              width="110" />
+            <check_box
+             follows="top|left"
+             height="16"
+             initial_value="false"
+             label="Align planar faces"
+             layout="topleft"
+             left="7"
+             name="checkbox planar align"
+             tool_tip="Align textures on all selected faces with the last selected face. Requires Planar texture mapping."
+             top_delta="5"
+             width="260" />
             <web_browser
              visible="false"
              enabled="false"
