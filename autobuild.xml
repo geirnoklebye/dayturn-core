@@ -2253,51 +2253,6 @@
         <key>version</key>
         <string>1.5.1.310043</string>
       </map>
-      <map>
-        <key>copyright</key>
-        <string>Copyright (c) 2014, Linden Research, Inc.</string>
-        <key>description</key>
-        <string>LLCefLib implements a headless web browser, rendering modern web content to a memory buffer and providing an API for injecting mouse and keyboard events. It uses the Chromium Embedded Framework (https://bitbucket.org/chromiumembedded/cef)</string>
-        <key>license</key>
-        <string>LGPL</string>
-        <key>license_file</key>
-        <string>LICENSES/LICENSE-source.txt</string>
-        <key>name</key>
-        <string>llceflib</string>
-        <key>platforms</key>
-        <map>
-          <key>darwin</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>6b9eaaf83fcf8bfd4bb6966c24df7f29</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llceflib_3p-llceflib/rev/310043/arch/Darwin/installer/llceflib-1.5.1.310043-darwin-310043.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>darwin</string>
-          </map>
-          <key>windows</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>578f21be02efc98bbf426529f916fce8</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-llceflib_3p-llceflib/rev/310043/arch/CYGWIN/installer/llceflib-1.5.1.310043-windows-310043.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>windows</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>1.5.1.310043</string>
-      </map>
       <key>llphysicsextensions_source</key>
       <map>
         <key>copyright</key>
@@ -2336,6 +2291,60 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>922aad5261aac150e5ce3c094e57f373</string>
+              <key>url</key>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llphysicsextensions-source_llphysicsextensions-update/rev/298369/arch/CYGWIN/installer/llphysicsextensions_source-1.0.298369-windows-298369.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>1.0.298369</string>
+      </map>
+      <key>llphysicsextensions_stub</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright (c) 2010, Linden Research, Inc.</string>
+        <key>license</key>
+        <string>internal</string>
+        <key>license_file</key>
+        <string>LICENSES/llphysicsextensions.txt</string>
+        <key>name</key>
+        <string>llphysicsextensions_stub</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>1175977a191ffc936fd0ccca433c8278</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/llphysicsextensions-stub_llphysicsextensions-update/rev/298370/arch/Darwin/installer/llphysicsextensions_stub-1.0.298370-darwin-298370.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>d13d7927692eab2d6a63e36166b72a8a</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/llphysicsextensions-stub_llphysicsextensions-update/rev/298370/arch/Linux/installer/llphysicsextensions_stub-1.0.298370-linux-298370.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
           <map>
             <key>archive</key>
@@ -2353,16 +2362,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>922aad5261aac150e5ce3c094e57f373</string>
+              <string>9594f6fd79ee924fe675a4a23e30516e</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llphysicsextensions-source_llphysicsextensions-update/rev/298369/arch/CYGWIN/installer/llphysicsextensions_source-1.0.298369-windows-298369.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/llphysicsextensions-stub_llphysicsextensions-update/rev/298370/arch/CYGWIN/installer/llphysicsextensions_stub-1.0.298370-windows-298370.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.0.298369</string>
+        <string>1.0.298370</string>
       </map>
       <key>mesa</key>
       <map>
@@ -2415,6 +2424,7 @@
       <map>
         <key>copyright</key>
         <string>Khaled Mamou (HACD) / Nicky Dasmijn (integration into for SL viewer)</string>
+        <key>description</key>
         <string>Mesh dcomposition using HACD and physics sub implementation.</string>
         <key>license</key>
         <string>HACD/LGPL</string>
@@ -3010,13 +3020,48 @@
         <key>version</key>
         <string>7.3</string>
       </map>
+      <key>slplugins</key>
+      <map>
+        <key>copyright</key>
+        <string>Second Life Viewer Source Code - Copyright (C) 2010, Linden Research, Inc.</string>
+        <key>description</key>
+        <string>Second Life Viewer Plugins and launcher</string>
+        <key>license</key>
+        <string>LGPL</string>
+        <key>license_file</key>
+        <string>LICENSES/slplugins-license.txt</string>
+        <key>name</key>
+        <string>slplugins</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
               <string>beab28c47f469e5cb6763b8d3f26a79c</string>
+              <key>url</key>
               <string>http://bitbucket.org/kokua/3p-update-slplugins/downloads/slplugins-3.7.27.Kokua-Release-linux.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
           <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
               <string>bb5139612564a3882292153e51a815d6</string>
+              <key>url</key>
               <string>https://bitbucket.org/kokua/3p-update-slplugins/downloads/slplugins-3.7.27.35441.201505191200-linux64-201505191200.tar.bz2</string>
+            </map>
+            <key>name</key>
             <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
         <string>3.7.27.35441.201505191200</string>
+      </map>
       <key>slvoice</key>
       <map>
         <key>copyright</key>

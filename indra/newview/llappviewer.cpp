@@ -128,8 +128,6 @@
 #include "llcoros.h"
 #include "cef/llceflib.h"
 
-#endif
-
 // Third party library includes
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
@@ -3375,10 +3373,16 @@ LLSD LLAppViewer::getViewerInfo() const
 	url += LLURI::escape(LLVersionInfo::getVersion());
 
 	info["VIEWER_RELEASE_NOTES_URL"] = url;
-
+#if LL_MSVC
+	info["COMPILER"] = "MSVC";
+	info["COMPILER_VERSION"] = _MSC_VER;
 #elif LL_CLANG
 	info["COMPILER"] = "Clang";
 	info["COMPILER_VERSION"] = CLANG_VERSION_STRING;
+#elif LL_GNUC
+	info["COMPILER"] = "GCC";
+	info["COMPILER_VERSION"] = GCC_VERSION;
+#endif
 	// Position
 	LLViewerRegion* region = gAgent.getRegion();
 	if (region)
