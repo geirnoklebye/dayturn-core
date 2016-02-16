@@ -3020,48 +3020,6 @@
         <key>version</key>
         <string>7.3</string>
       </map>
-      <key>slplugins</key>
-      <map>
-        <key>copyright</key>
-        <string>Second Life Viewer Source Code - Copyright (C) 2010, Linden Research, Inc.</string>
-        <key>description</key>
-        <string>Second Life Viewer Plugins and launcher</string>
-        <key>license</key>
-        <string>LGPL</string>
-        <key>license_file</key>
-        <string>LICENSES/slplugins-license.txt</string>
-        <key>name</key>
-        <string>slplugins</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>beab28c47f469e5cb6763b8d3f26a79c</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-update-slplugins/downloads/slplugins-3.7.27.Kokua-Release-linux.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>bb5139612564a3882292153e51a815d6</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-update-slplugins/downloads/slplugins-3.7.27.35441.201505191200-linux64-201505191200.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>3.7.27.35441.201505191200</string>
-      </map>
       <key>slvoice</key>
       <map>
         <key>copyright</key>
