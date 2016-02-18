@@ -699,7 +699,7 @@ bool	LLFilePicker::doNavSaveDialog(ESaveFilter filter, const std::string& filena
 			extension = "tga";
 			break;
 		case FFSAVE_TGAPNG:
-			type = "PNG ";
+			type = "PNG";
 			creator = "prvw";
 			extension = "png,tga,jpg,jpeg,j2c,bmp";
 			break;
@@ -991,32 +991,28 @@ void LLFilePicker::chooser_responder(GtkWidget *widget, gint response, gpointer 
 		g_slist_foreach(file_list, (GFunc)g_free, NULL);
 		g_slist_free (file_list);
 	}
+
 	// let's save the extension of the last added file(considering current filter)
 	GtkFileFilter *gfilter = gtk_file_chooser_get_filter(GTK_FILE_CHOOSER(widget));
-	std::string filter = gtk_file_filter_get_name(gfilter);
-
-	if(filter == LLTrans::getString("png_image_files"))
+	if(gfilter)
 	{
-		picker->mCurrentExtension = ".png";
+		std::string filter = gtk_file_filter_get_name(gfilter);
+
+		if(filter == LLTrans::getString("png_image_files"))
+		{
+			picker->mCurrentExtension = ".png";
+		}
+		else if(filter == LLTrans::getString("targa_image_files"))
+		{
+			picker->mCurrentExtension = ".tga";
+		}
 	}
-	else if(filter == LLTrans::getString("targa_image_files"))
+
+	// set the default path for this usage context.
+	const char* cur_folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(widget));
+	if (cur_folder != NULL)
 	{
-		picker->mCurrentExtension = ".tga";
-	}
-
-
-	// <ND>
-	// FIRE-3827; Only do this if the user accepted the dialog with ok.
-	// FIRE-3851, FIRE-3671, CTS-627; gtk_file_chooser_get_current_folder can return 0
-	if( GTK_RESPONSE_ACCEPT == response )
-	{
-		// set the default path for this usage context.
-		//		picker->mContextToPathMap[picker->mCurContextName] =
-		//	gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(widget));
-
-		char const *pSelDir(gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(widget)));
-		if( pSelDir )
-			picker->mContextToPathMap[picker->mCurContextName] = pSelDir;
+		picker->mContextToPathMap[picker->mCurContextName] = cur_folder;
 	}
 
 	gtk_widget_destroy(widget);
