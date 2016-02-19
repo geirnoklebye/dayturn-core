@@ -1140,26 +1140,33 @@ even though the user gets a free copy.
            label="Original"
            value="1" />
       </combo_box>
-	  <button
-	   top_pad="7"
-	   left="10"
-	   follows="top|right"
-	   height="20"
-	   label="Copy Keys"
-	   name="btnCopyKeys"
-	   tool_tip="Copies the selected objects' keys to the clipboard."
-	   width="80">
-		<button.commit_callback
-		function="BuildTool.CopyKeys"/>
-	</button>
+       <check_box
+        height="19"
+        label="Exportable"
+        layout="topleft"
+        left="7"
+        name="checkbox allow export"
+        width="75" />
       <check_box
-	   height="15"
-	   width="110"
-	   left_pad="15"
+	   height="19"
+	   width="90"
+	   left_pad="7"
 	   label="Show in search"
        layout="topleft"
        name="search_check"
        tool_tip="Let people see this object in search results" />
+	  <button
+	   follows="top|left"
+	   layout="topleft"
+	   left_pad="17"
+	   height="20"
+	   label="Copy Keys"
+	   name="btnCopyKeys"
+	   tool_tip="Copies the selected objects' keys to the clipboard."
+	   width="89">
+		<button.commit_callback
+		function="BuildTool.CopyKeys"/>
+	</button>
 		<panel
          border="false"
          follows="left|top"
@@ -1207,7 +1214,7 @@ even though the user gets a free copy.
              layout="topleft"
              left_pad="0"
              name="checkbox allow everyone copy"
-             width="90" />
+             width="80" />
             <text
                type="string"
                follows="left|top"
