@@ -458,7 +458,7 @@
         label="Exportable"
         layout="topleft"
         left="20"
-        name="CheckOwnerExport"
+        name="CheckExportable"
         top_pad="15"
         width="106" />
     </panel>

@@ -49,6 +49,10 @@ const PermissionBit PERM_COPY				= (1 << 15); // 0x00008000
 // parcels, allow entry, deprecated
 //const PermissionBit PERM_ENTER			= (1 << 16); // 0x00010000
 
+// <FS:CR> OpenSim export permission
+const PermissionBit PERM_EXPORT				= (1 << 16); // 0x00010000
+// </FS:CR>
+
 // parcels, allow terraform, deprecated
 //const PermissionBit PERM_TERRAFORM		= (1 << 17); // 0x00020000
 
