@@ -48,6 +48,8 @@
 #include "llexperiencecache.h"
 #include "lltrans.h"
 
+#include "llviewernetwork.h"	// <FS:CR> For OpenSim export perms
+#include "llappviewer.h"
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Class LLItemPropertiesObserver
@@ -252,7 +254,8 @@ void LLSidepanelItemInfo::refresh()
 			"CheckNextOwnerCopy",
 			"CheckNextOwnerTransfer",
 			"CheckPurchase",
-			"Edit Cost"
+			"Edit Cost",
+			"CheckExportable"
 		};
 
 		for(size_t t=0; t<LL_ARRAY_SIZE(no_item_names); ++t)
@@ -452,7 +455,8 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 		"SaleLabel",
 		"ComboBoxSaleType",
 		"Edit Cost",
-		"TextPrice"
+		"TextPrice",
+		"CheckExportable"
 	};
 	
 	const std::string debug_items[]={
@@ -483,6 +487,10 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 		for(size_t t=0; t<LL_ARRAY_SIZE(perm_and_sale_items); ++t)
 		{
 			getChildView(perm_and_sale_items[t])->setVisible(true);
+			if(gIsInSecondLife && perm_and_sale_items[t] == "CheckExportable")
+			    {
+			    getChildView(perm_and_sale_items[t])->setVisible(false);
+			}
 		}
 	}
 
