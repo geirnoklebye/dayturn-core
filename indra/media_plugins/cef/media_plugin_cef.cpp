@@ -98,6 +98,15 @@ private:
 	LLCEFLib* mLLCEFLib;
 
     VolumeCatcher mVolumeCatcher;
+
+
+	// <FS:ND> Buffer for a popup image to be rendered as an overlay
+	U8 *mPopupBuffer;
+	U32 mPopupW;
+	U32 mPopupH;
+	U32 mPopupX;
+	U32 mPopupY;
+	// </FS:ND>
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -125,12 +134,22 @@ MediaPluginBase(host_send_func, host_user_data)
 	mCookiePath = "";
 	mLLCEFLib = new LLCEFLib();
 
+
+	// <FS:ND> Buffer for a popup image to be rendered as an overlay
+	mPopupBuffer = NULL;
+	mPopupW = 0;
+	mPopupH = 0;
+	mPopupX = 0;
+	mPopupY = 0;
+	// </FS:ND>
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 MediaPluginCEF::~MediaPluginCEF()
 {
+	delete [] mPopupBuffer; // <FS:ND> Buffer for a popup image to be rendered as an overlay
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -370,7 +389,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				versions[LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER] = LLPLUGIN_MESSAGE_CLASS_MEDIA_BROWSER_VERSION;
 				message.setValueLLSD("versions", versions);
 
-				std::string plugin_version = "CEF plugin 1.3.1";
+				std::string plugin_version = "CEF plugin 1.5.3";
 				message.setValue("plugin_version", plugin_version);
 				sendMessage(message);
 			}
@@ -628,7 +647,8 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
                 keyEvent(key_event, key, LLCEFLib::KM_MODIFIER_NONE, native_key_data);
 
 #endif
-#elif LL_WINDOWS
+//#elif LL_WINDOWS // <FS:ND/> Windows & Linux
+#else
 				std::string event = message_in.getValue("event");
 				S32 key = message_in.getValueS32("key");
 				std::string modifiers = message_in.getValue("modifiers");
@@ -768,9 +788,12 @@ void MediaPluginCEF::deserializeKeyboardData(LLSD native_key_data, uint32_t& nat
 #endif
 
 #if LL_LINUX
-	native_scan_code = (uint32_t)(native_key_data["scan_code"].asInteger());
-	native_virtual_key = (uint32_t)(native_key_data["virtual_key"].asInteger());
-	native_modifiers = (uint32_t)(native_key_data["cef_modifiers"].asInteger());
+		native_scan_code = (uint32_t)(native_key_data["sdl_sym"].asInteger());
+		native_virtual_key = (uint32_t)(native_key_data["virtual_key"].asInteger());
+		native_modifiers = (uint32_t)(native_key_data["cef_modifiers"].asInteger());
+
+		if( native_scan_code == '\n' )
+			native_scan_code = '\r';
 #endif
 	};
 };
@@ -779,8 +802,7 @@ void MediaPluginCEF::deserializeKeyboardData(LLSD native_key_data, uint32_t& nat
 //
 void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::EKeyboardModifier modifiers_x, LLSD native_key_data = LLSD::emptyMap())
 {
-#if LL_DARWIN || LL_LINUX
-
+#if LL_DARWIN
     if (!native_key_data.has("event_type") ||
             !native_key_data.has("event_modifiers") ||
             !native_key_data.has("event_keycode") ||
@@ -795,9 +817,9 @@ void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::
     char eventChars = static_cast<char>(native_key_data["event_chars"].isUndefined() ? 0 : native_key_data["event_chars"].asInteger());
     char eventUChars = static_cast<char>(native_key_data["event_umodchars"].isUndefined() ? 0 : native_key_data["event_umodchars"].asInteger());
     bool eventIsRepeat = native_key_data["event_isrepeat"].asBoolean();
-  
+
     mLLCEFLib->keyboardEventOSX(eventType, eventModifiers, (eventChars) ? &eventChars : NULL,
-                               (eventUChars) ? &eventUChars : NULL, eventIsRepeat, eventKeycode);
+                                (eventUChars) ? &eventUChars : NULL, eventIsRepeat, eventKeycode);
 
 #elif LL_WINDOWS
 	U32 msg = ll_U32_from_sd(native_key_data["msg"]);
@@ -806,7 +828,18 @@ void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::
 
 	mLLCEFLib->nativeKeyboardEvent(msg, wparam, lparam);
 #endif
-};
+
+// <FS:ND> Keyboard handling for Linux.
+#if LL_LINUX
+	uint32_t native_scan_code = 0;
+	uint32_t native_virtual_key = 0;
+	uint32_t native_modifiers = 0;
+	deserializeKeyboardData(native_key_data, native_scan_code, native_virtual_key, native_modifiers);
+
+	mLLCEFLib->nativeKeyboardEvent(key_event, native_scan_code, native_virtual_key, native_modifiers);
+#endif
+// </FS:ND>
+}
 
 void MediaPluginCEF::unicodeInput(const std::string &utf8str, LLCEFLib::EKeyboardModifier modifiers, LLSD native_key_data = LLSD::emptyMap())
 {
@@ -830,20 +863,15 @@ void MediaPluginCEF::unicodeInput(const std::string &utf8str, LLCEFLib::EKeyboar
 	mLLCEFLib->nativeKeyboardEvent(msg, wparam, lparam);
 #endif
 
-// <FS:ND> Keyboard handling for Linux, code written by Henri Beauchamp
+// <FS:ND> Keyboard handling for Linux.
 #if LL_LINUX
-	uint32_t key = KEY_NONE;
-
-	if (utf8str.size() == 1)
-		key = utf8str[0];
-
 	uint32_t native_scan_code = 0;
 	uint32_t native_virtual_key = 0;
 	uint32_t native_modifiers = 0;
 	deserializeKeyboardData(native_key_data, native_scan_code, native_virtual_key, native_modifiers);
 	
-	mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_DOWN, (uint32_t)key, utf8str.c_str(), modifiers, 0, native_virtual_key, native_modifiers);
-	mLLCEFLib->keyboardEvent(LLCEFLib::KE_KEY_UP, (uint32_t)key, utf8str.c_str(), modifiers, 0, native_virtual_key, native_modifiers);
+	mLLCEFLib->nativeKeyboardEvent(LLCEFLib::KE_KEY_DOWN, native_scan_code, native_virtual_key, native_modifiers);
+	mLLCEFLib->nativeKeyboardEvent(LLCEFLib::KE_KEY_UP, native_scan_code, native_virtual_key, native_modifiers);
 #endif
 // </FS:ND>
 };

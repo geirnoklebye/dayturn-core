@@ -2212,11 +2212,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>1db6cf7859d1539e35b9e21f36f0667f</string>
+              <string>b8d1d965e660d73108f44d8f7a51229d</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201601262112-kokua-linux-201601262112.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201602240836-kokua-linux-201602240836.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2226,11 +2226,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>0d0a3af839ae5fdfd2d6f8a2fa46492e</string>
+              <string>6fa28e43e7ebd9c5dd4239a03e7e414f</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201601262110-kokua-linux64-201601262110.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201602240841-kokua-linux64-201602240841.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3019,6 +3019,48 @@
         </map>
         <key>version</key>
         <string>7.3</string>
+      </map>
+      <key>slplugins</key>
+      <map>
+        <key>copyright</key>
+        <string>Second Life Viewer Source Code - Copyright (C) 2010, Linden Research, Inc.</string>
+        <key>description</key>
+        <string>Second Life Viewer Plugins and launcher</string>
+        <key>license</key>
+        <string>LGPL</string>
+        <key>license_file</key>
+        <string>LICENSES/slplugins-license.txt</string>
+        <key>name</key>
+        <string>slplugins</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>beab28c47f469e5cb6763b8d3f26a79c</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-update-slplugins/downloads/slplugins-3.7.27.Kokua-Release-linux.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>bb5139612564a3882292153e51a815d6</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-update-slplugins/downloads/slplugins-3.7.27.35441.201505191200-linux64-201505191200.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>3.7.27.35441.201505191200</string>
       </map>
       <key>slvoice</key>
       <map>
