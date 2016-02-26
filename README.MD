@@ -1,16 +1,3 @@
-Ticket #395. Add Do not let me fly preference.
-
-Add Do not let me fly to Preferencs->Kokua and a corresponding menu item in Commands.
-
-The use case is for combat and games on a Flying region and inadvertent fly causes
-
-a pause in action to halt flying and retrun to game action. While the feature of not flying
-
-with page up is present it doesn't disable to Home key pad key. Some user desire to use
-
-the key pad with number lock off since those keys a larger.
-
-
 New Tools Update
 
 ================
