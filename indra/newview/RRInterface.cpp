@@ -4464,7 +4464,7 @@ BOOL RRInterface::updateCameraLimits ()
 		mCamDistMin = mCamDistMax;
 	}
 
-	if (LLViewerJoystick::getInstance()->getOverrideCamera() && mCamDistMax < EXTREMUM * 0.75f)
+	if (gRRenabled && (LLViewerJoystick::getInstance()->getOverrideCamera() && mCamDistMax < EXTREMUM * 0.75f)) // RLV_108 : don't toggle flycam if RLV is disabled since we call this method at startup
 	{
 		handle_toggle_flycam();
 	}
