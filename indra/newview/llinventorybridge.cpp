@@ -6701,6 +6701,15 @@ void LLWearableBridge::performAction(LLInventoryModel* model, std::string action
 
 void LLWearableBridge::openItem()
 {
+//MK
+	// 
+	if (gSavedSettings.controlExists("RestrainedLoveDoubleClickWear") && !gSavedSettings.getBOOL("RestrainedLoveDoubleClickWear"))
+	{
+		performAction(getInventoryModel(),
+			get_is_item_worn(mUUID) ? "take_off" : "wear_add");
+	}
+	else
+//mk
 	performAction(getInventoryModel(),
 			      get_is_item_worn(mUUID) ? "take_off" : "wear");
 }
