@@ -7309,27 +7309,27 @@ void process_script_question(LLMessageSystem *msg, void **user_data)
 	if (gRRenabled && gAgent.mRRInterface.contains ("acceptpermission"))
 	{
 		auto_acceptable_permission = (questions	&
-										(LSCRIPTRunTimePermissionBits[1] |	//LSCRIPTRunTimePermissions::SCRIPT_PERMISSION_TAKE_CONTROLS]
-					   					 LSCRIPTRunTimePermissionBits[3] |	//LSCRIPTRunTimePermissions::SCRIPT_PERMISSION_TRIGGER_ANIMATION]
-					   					 LSCRIPTRunTimePermissionBits[4]));	//LSCRIPTRunTimePermissions::SCRIPT_PERMISSION_ATTACH]
+			(SCRIPT_PERMISSIONS[1].permbit |  //"ScriptTakeMoney"
+			 SCRIPT_PERMISSIONS[3].permbit |  //"RemapControlInputs"
+			 SCRIPT_PERMISSIONS[4].permbit)); //"AnimateYourAvatar"
 	
 		if (auto_acceptable_permission)
 		{
 			// security check : if there is any other permission contained in this package, we can't automatically grant anything
-			unsigned int other_perms = questions & ~ (LSCRIPTRunTimePermissionBits[1] | LSCRIPTRunTimePermissionBits[3] | LSCRIPTRunTimePermissionBits[4]);
+			unsigned int other_perms = questions & ~(SCRIPT_PERMISSIONS[1].permbit | SCRIPT_PERMISSIONS[3].permbit | SCRIPT_PERMISSIONS[4].permbit);
 			if (other_perms)
 			{
 				auto_acceptable_permission = FALSE;
 			}
 
 			// can't auto-accept animation permission if not sitting
-			if (gAgentAvatarp && !gAgentAvatarp->mIsSitting && (questions & LSCRIPTRunTimePermissionBits[3]))
+			if (gAgentAvatarp && !gAgentAvatarp->mIsSitting && (questions & SCRIPT_PERMISSIONS[3].permbit))
 			{
 				auto_acceptable_permission = FALSE;
 			}
 
 			// can't auto-accept attach request from a non-owned object
-			if (questions & LSCRIPTRunTimePermissionBits[4] && owner_name != self_name && owner_name != self_name + " Resident")
+			if (questions & SCRIPT_PERMISSIONS[4].permbit && owner_name != self_name && owner_name != self_name + " Resident")
 			{
 				auto_acceptable_permission = FALSE;
 			}
