@@ -1454,12 +1454,6 @@ void draw_axes()
 
 void render_ui_3d()
 {
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-	{
-		return;
-	}
-//mk
 	LLGLSPipeline gls_pipeline;
 
 	//////////////////////////////////////
