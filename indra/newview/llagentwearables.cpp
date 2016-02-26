@@ -1270,6 +1270,15 @@ bool LLAgentWearables::onRemoveWearableDialog(const LLSD& notification, const LL
 // Called by removeWearable() and onRemoveWearableDialog() to actually do the removal.
 void LLAgentWearables::removeWearableFinal(const LLWearableType::EType type, bool do_remove_all, U32 index)
 {
+//MK
+	// At this point, all the RLV checks have been done and passed, the wearable has been removed legally => notify
+	if (gRRenabled)
+	{
+		std::string layer = gAgent.mRRInterface.getOutfitLayerAsString(type);
+		gAgent.mRRInterface.notify(LLUUID::null, "unworn legally " + layer, "");
+	}
+//mk
+
 	//LLAgentDumper dumper("removeWearable");
 	if (do_remove_all)
 	{
@@ -1479,6 +1488,10 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 				else
 				{
 					pushWearable(type,new_wearable);
+//MK
+					// Notify that this layer has been worn
+					gAgent.mRRInterface.notify (LLUUID::null, "worn legally " + gAgent.mRRInterface.getOutfitLayerAsString(type), "");
+//mk
 				}
 
 				const BOOL removed = FALSE;

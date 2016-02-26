@@ -1156,6 +1156,15 @@ void LLFloaterTools::setObjectType( LLPCode pcode )
 	gFocusMgr.setMouseCapture(NULL);
 }
 
+//MK
+// This function is already defined in llfloatertoolsoptions.cpp, avoid a LNK warning by removing this one
+////void commit_grid_mode(LLUICtrl *ctrl)
+////{
+////	LLComboBox* combo = (LLComboBox*)ctrl;
+////
+////	LLSelectMgr::getInstance()->setGridMode((EGridMode)combo->getCurrentIndex());
+////}
+//mk
 
 // static
 void LLFloaterTools::setGridMode(S32 mode)

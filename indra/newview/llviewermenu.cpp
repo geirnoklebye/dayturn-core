@@ -1312,6 +1312,17 @@ class LLAdvancedToggleWireframe : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		gUseWireframe = !(gUseWireframe);
+//MK
+		// If we are supposed to be blindfolded (i.e. there is at least one locked HUD or the vision restrictions are in effect)
+		// then force wireframe to FALSE, as it could help cheating through.
+		if (gRRenabled)
+		{
+			if (gAgent.mRRInterface.hasLockedHuds() || gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+			{
+				gUseWireframe = FALSE;
+			}
+		}
+//mk
 
 		if (gUseWireframe)
 		{

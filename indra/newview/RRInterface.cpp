@@ -69,6 +69,7 @@
 #include "llwaterparammanager.h"
 #include "llwlparammanager.h"
 #include "llinventorybridge.h"
+#include "llviewerdisplay.h"
 #include "llviewerjoystick.h"
 #include "llviewerregion.h"
 #include "llviewermessage.h"
@@ -1004,7 +1005,28 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 		else if (canon_action.find ("cam") == 0) {
 			updateCameraLimits ();
 		}
-		
+
+		// Check if we can see wireframe or not, deactivate if our vision is restricted (we have locked HUDs or mCamDistDrawMax is not infinite)
+		if (gAgent.mRRInterface.hasLockedHuds() || gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+		{
+			if (gUseWireframe)
+			{
+				gUseWireframe = FALSE;
+				// Copied from LLAdvancedToggleWireframe::handle_event() in llviewermenu.cpp
+				gWindowResized = TRUE;
+				LLPipeline::updateRenderDeferred();
+				gPipeline.resetVertexBuffers();
+
+				if (!gUseWireframe && !gInitialDeferredModeForWireframe && LLPipeline::sRenderDeferred != gInitialDeferredModeForWireframe && gPipeline.isInit())
+				{
+					LLPipeline::refreshCachedSettings();
+					gPipeline.releaseGLBuffers();
+					gPipeline.createGLBuffers();
+					LLViewerShaderMgr::instance()->setShaders();
+				}
+			}
+		}
+
 		// Update the stored last standing location, to allow grabbers to transport a victim inside a cage while sitting, and restrict them
 		// before standing up. If we didn't do this, the avatar would snap back to a safe location when being unsitted by the grabber,
 		// which would be rather silly.
@@ -4442,7 +4464,7 @@ BOOL RRInterface::updateCameraLimits ()
 		mCamDistMin = mCamDistMax;
 	}
 
-	if (gRRenabled && (LLViewerJoystick::getInstance()->getOverrideCamera() && mCamDistMax < EXTREMUM * 0.75))
+	if (gRRenabled && (LLViewerJoystick::getInstance()->getOverrideCamera() && mCamDistMax < EXTREMUM * 0.75f)) // RLV_108 : don't toggle flycam if RLV is disabled since we call this method at startup
 	{
 		handle_toggle_flycam();
 	}

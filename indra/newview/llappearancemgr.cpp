@@ -2832,16 +2832,17 @@ void LLAppearanceMgr::addCOFItemLink(const LLInventoryItem *item,
 //MK
 	if (gRRenabled)
 	{
-		if (vitem->isWearableType())
-		{
-			if (!gAgent.mRRInterface.canWear(item_non_const))
-			{
-				return;
-			}
+		// Apparently this piece of code is dead now => move to LLAgentWearables::setWearableOutfit()
+		//if (vitem->isWearableType())
+		//{
+		//	if (!gAgent.mRRInterface.canWear(item_non_const))
+		//	{
+		//		return;
+		//	}
 
-			// Notify that this layer has been worn
-			gAgent.mRRInterface.notify (LLUUID::null, "worn legally " + gAgent.mRRInterface.getOutfitLayerAsString(vitem->getWearableType()), "");
-		}
+		//	// Notify that this layer has been worn
+		//	gAgent.mRRInterface.notify (LLUUID::null, "worn legally " + gAgent.mRRInterface.getOutfitLayerAsString(vitem->getWearableType()), "");
+		//}
 	}
 //mk
 
@@ -3007,20 +3008,21 @@ void LLAppearanceMgr::removeCOFItemLinks(const LLUUID& item_id, LLPointer<LLInve
 			}
 			remove_inventory_item(item->getUUID(), cb, immediate_delete);
 //MK
-			if (gRRenabled)
-			{
-				// Notify that this layer has been unworn
-				const LLViewerInventoryItem* vitem = dynamic_cast<const LLViewerInventoryItem*>(item);
-				LLViewerInventoryItem* vitem_non_const = const_cast<LLViewerInventoryItem*>(vitem);
-				if (vitem_non_const)
-				{
-					std::string layer = gAgent.mRRInterface.getOutfitLayerAsString(vitem_non_const->getWearableType());
-					if (layer != "")
-					{
-						gAgent.mRRInterface.notify (LLUUID::null, "unworn legally " + layer, "");
-					}
-				}
-			}
+			// This piece of code has been moved to LLAgentWearables::removeWearableFinal()
+			//if (gRRenabled)
+			//{
+			//	// Notify that this layer has been unworn
+			//	const LLViewerInventoryItem* vitem = dynamic_cast<const LLViewerInventoryItem*>(item);
+			//	LLViewerInventoryItem* vitem_non_const = const_cast<LLViewerInventoryItem*>(vitem);
+			//	if (vitem_non_const)
+			//	{
+			//		std::string layer = gAgent.mRRInterface.getOutfitLayerAsString(vitem_non_const->getWearableType());
+			//		if (layer != "")
+			//		{
+			//			gAgent.mRRInterface.notify (LLUUID::null, "unworn legally " + layer, "");
+			//		}
+			//	}
+			//}
 //mk
 		}
 	}

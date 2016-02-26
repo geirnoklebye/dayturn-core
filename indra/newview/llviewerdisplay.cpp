@@ -861,9 +861,8 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			gSky.updateSky();
 		}
 
-//MK
-		if(gUseWireframe && (!gRRenabled || !gAgent.mRRInterface.mContainsDetach))
-//mk
+
+		if(gUseWireframe)
 		{
 			glClearColor(0.5f, 0.5f, 0.5f, 0.f);
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -1460,12 +1459,6 @@ void draw_axes()
 
 void render_ui_3d()
 {
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-	{
-		return;
-	}
-//mk
 	LLGLSPipeline gls_pipeline;
 
 	//////////////////////////////////////
