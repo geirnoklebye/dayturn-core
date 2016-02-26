@@ -453,6 +453,14 @@
         height="23"
         max_val="999999999"
         top_pad="10"/>
+      <check_box
+        height="16"
+        label="Exportable"
+        layout="topleft"
+        left="20"
+        name="CheckExportable"
+        top_pad="15"
+        width="106" />
     </panel>
 
   </scroll_container>

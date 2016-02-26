@@ -1786,16 +1786,15 @@
            function="Tools.StopAllAnimations" />
         </menu_item_call>
         <menu_item_check
-         label="Legacy Search"
-         name="Legacy Search"
-         shortcut="control|alt|F">
+         label="Do not let me Fly"
+         name="Disable Fly">
           <menu_item_check.on_check
-            function="Floater.Visible"
-            parameter="search_legacy" />
+           function="CheckControl"
+           parameter="DisableFly" />
           <menu_item_check.on_click
-            function="Floater.Toggle"
-            parameter="search_legacy" />
-       </menu_item_check>
+           function="ToggleControl"
+           parameter="DisableFly" />
+        </menu_item_check>
     <menu_item_check
            label="Highlight Transparent"
            name="Highlight Transparent"

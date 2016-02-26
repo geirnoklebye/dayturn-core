@@ -321,6 +321,8 @@ Cinder Roxley
     BUG-8786
     OPEN-185
     OPEN-282
+    OPEN-292
+    OPEN-297
     STORM-1703
     STORM-1888
     STORM-1949
@@ -1003,7 +1005,7 @@ Nicky Dasmijn
 	STORM-1937
 	OPEN-187
     STORM-2010
-Nicky Perian
+Nicky Perian 
 	OPEN-1
 	STORM-1087
 	STORM-1090

@@ -1290,6 +1290,17 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <key>DisableFly</key>
+    <map>
+      <key>Comment</key>
+      <string>Prevent fly commands 'Home' 'F' 'Page Up'. This prevents flying even on regions that allow flying</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>AvalinePhoneSeparator</key>
     <map>
       <key>Comment</key>

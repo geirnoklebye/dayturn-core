@@ -65,6 +65,8 @@ protected:
 	LLViewerObject*  findObject() const;
 	
 	void refreshFromItem(LLViewerInventoryItem* item);
+	
+	static void onCommitExport(LLUICtrl* ctrl, void* data);	// <FS:CR> OpenSim export permissions
 
 private:
     static void setAssociatedExperience( LLHandle<LLSidepanelItemInfo> hInfo, const LLSD& experience );
