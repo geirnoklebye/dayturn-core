@@ -4464,9 +4464,13 @@ BOOL RRInterface::updateCameraLimits ()
 		mCamDistMin = mCamDistMax;
 	}
 
-	if (gRRenabled && (LLViewerJoystick::getInstance()->getOverrideCamera() && mCamDistMax < EXTREMUM * 0.75f)) // RLV_108 : don't toggle flycam if RLV is disabled since we call this method at startup
+	if (gRRenabled) // RLV_108 : don't toggle flycam if RLV is disabled since we call this method at startup
 	{
-		handle_toggle_flycam();
+		LLViewerJoystick::getInstance()->getOverrideCamera();
+		if (mCamDistMax < EXTREMUM * 0.75f)
+		{
+			handle_toggle_flycam();
+		}
 	}
 
 	// silly hack, but we need to force all textures in world to be updated (code copied from camtextures above)
