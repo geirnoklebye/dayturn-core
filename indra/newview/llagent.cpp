@@ -718,6 +718,11 @@ BOOL LLAgent::canFly()
 {
 	if (isGodlike()) return TRUE;
 
+	if (gSavedSettings.getBOOL("DisableFly"))
+	{
+		LL_INFOS() << "Flying disbled by:  'Do not let me fly'." << LL_ENDL;
+		return FALSE;
+	}
 	LLViewerRegion* regionp = getRegion();
 	if (regionp && regionp->getBlockFly()) return FALSE;
 	
@@ -787,6 +792,7 @@ void LLAgent::setFlying(BOOL fly)
 
 	// Update Movement Controls according to Fly mode
 	LLFloaterMove::setFlyingMode(fly);
+	LLFloaterMove::sUpdateFlyingStatus();
 
 	mbFlagsDirty = TRUE;
 }
@@ -808,8 +814,15 @@ void LLAgent::toggleFlying()
 
 	gAgent.mMoveTimer.reset();
 	LLFirstUse::notMoving(false);
-
-	gAgent.setFlying( fly );
+	if (gSavedSettings.getBOOL("DisableFly"))
+	{
+		LL_INFOS() << "Flying disbled by:  'Do not let me fly'." << LL_ENDL;
+		gAgent.setFlying(false);
+	}
+	else
+	{
+		gAgent.setFlying(fly);
+	}
 	gAgentCamera.resetView();
 }
 
