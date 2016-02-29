@@ -175,7 +175,7 @@ if (LINUX)
       -mfpmath=sse
       -pthread
       )
-
+    add_definitions(-std=gnu++11)
     add_definitions(-DAPPID=kokua)
   # force this platform to accept TOS via external browser #DKO  will break use internal browser
   #add_definitions(-DEXTERNAL_TOS)
@@ -232,12 +232,6 @@ if (LINUX OR DARWIN)
   if (CMAKE_CXX_COMPILER MATCHES ".*clang")
     set(CMAKE_COMPILER_IS_CLANGXX 1)
   endif (CMAKE_CXX_COMPILER MATCHES ".*clang")
-  
-if (LINUX OR DARWIN)
-add_definitions()
-set(CMAKE_CXX_FLAGS_RELEASE "-std=gnu++11 ${CMAKE_CXX_FLAGS_RELEASE}") #need this for G++
-set(CMAKE_C_FLAGS_RELEASE "-std=c99 ${CMAKE_C_FLAGS_RELEASE}") # need this for GCC needed for USESYSTEMLIBS builds openjpeg 1.5.2
-endif (LINUX OR DARWIN)
 
   if (CMAKE_COMPILER_IS_GNUCXX)
     set(GCC_WARNINGS "-Wall -Wno-sign-compare -Wno-trigraphs")
