@@ -177,8 +177,8 @@ if (LINUX)
       )
 
     add_definitions(-DAPPID=kokua)
-  # force this platform to accept TOS via external browser
-  add_definitions(-DEXTERNAL_TOS)
+  # force this platform to accept TOS via external browser #DKO  will break use internal browser
+  #add_definitions(-DEXTERNAL_TOS)
 
   add_definitions(-fvisibility=hidden)
   # don't catch SIGCHLD in our base application class for the viewer - some of our 3rd party libs may need their *own* SIGCHLD handler to work.  Sigh!  The viewer doesn't need to catch SIGCHLD anyway.
