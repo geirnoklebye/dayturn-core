@@ -46,7 +46,7 @@
 				<string>application/x-grid-location-info</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>RestrainedLove SLURL</string>
+			<string>Kokua SLURL</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>SLRL</string>
@@ -56,7 +56,7 @@
 			<key>LSTypeIsPackage</key>
 			<true/>
 			<key>NSDocumentClass</key>
-			<string>RestrainedLoveSLURL</string>
+			<string>KokuaSLURL</string>
 		</dict>
 	</array>
 	<key>CFBundleURLTypes</key>
