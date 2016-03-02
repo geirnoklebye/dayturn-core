@@ -1451,7 +1451,7 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 			break;
 		case LLAssetType::AT_BODYPART:
 //MK
-			if (gRRenabled && gAgent.mRRInterface.canUnwear(item_to_wear->getWearableType()))
+			if (!gRRenabled || (gRRenabled && gAgent.mRRInterface.canWear(item_to_wear->getWearableType())))
 			{
 //mk
 				// TODO: investigate wearables may not be loaded at this point EXT-8231
