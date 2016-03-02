@@ -3992,26 +3992,46 @@ void LLAppearanceMgr::removeItemsFromAvatar(const uuid_vec_t& ids_to_remove)
 		const LLUUID& id_to_remove = *it;
 		const LLUUID& linked_item_id = gInventory.getLinkedItemID(id_to_remove);
 //MK
-		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = TRUE;
-		LLViewerInventoryItem* item_to_remove = gInventory.getItem(id_to_remove);
-		if (!gRRenabled || gAgent.mRRInterface.canDetach (item_to_remove))
+		LLViewerObject * attachmentp = gAgentAvatarp->findAttachmentByID(id_to_remove);
+		if (attachmentp &&
+			attachmentp->isTempAttachment())
 		{
-			// The code below does not take attachments into account, so we need to specifically detach
-			// objects here.
-			LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
+			// Special case : if the object is a temporary object, it does not have a counterpart in
+			// the inventory => detach immediately
+			if (gMessageSystem)
+			{
+				gMessageSystem->newMessage("ObjectDetach");
+				gMessageSystem->nextBlockFast(_PREHASH_AgentData);
+				gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID() );
+				gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());	
+				gMessageSystem->nextBlockFast(_PREHASH_ObjectData);
+				gMessageSystem->addU32Fast(_PREHASH_ObjectLocalID, attachmentp->getLocalID());
+				gMessageSystem->sendReliable( gAgent.getRegionHost() );
+			}
+		}
+		else
+		{
+			gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = TRUE;
+			LLViewerInventoryItem* item_to_remove = gInventory.getItem(id_to_remove);
+			if (!gRRenabled || gAgent.mRRInterface.canDetach (item_to_remove))
+			{
+				// The code below does not take attachments into account, so we need to specifically detach
+				// objects here.
+				LLVOAvatarSelf::detachAttachmentIntoInventory(linked_item_id);
 //mk
-		LLViewerInventoryItem *item = gInventory.getItem(linked_item_id);
-		if (item && item->getType() == LLAssetType::AT_OBJECT)
-		{
-			LL_DEBUGS("Avatar") << "ATT removing attachment " << item->getName() << " id " << item->getUUID() << LL_ENDL;
-		}
-		if (item && item->getType() == LLAssetType::AT_BODYPART)
-		{
-		    continue;
-		}
-		removeCOFItemLinks(linked_item_id, cb);
-		addDoomedTempAttachment(linked_item_id);
+				LLViewerInventoryItem *item = gInventory.getItem(linked_item_id);
+				if (item && item->getType() == LLAssetType::AT_OBJECT)
+				{
+					LL_DEBUGS("Avatar") << "ATT removing attachment " << item->getName() << " id " << item->getUUID() << LL_ENDL;
+				}
+				if (item && item->getType() == LLAssetType::AT_BODYPART)
+				{
+					continue;
+				}
+				removeCOFItemLinks(linked_item_id, cb);
+				addDoomedTempAttachment(linked_item_id);
 //MK
+			}
 		}
 		gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
 //mk
