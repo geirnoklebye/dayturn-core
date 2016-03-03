@@ -1451,7 +1451,7 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 			break;
 		case LLAssetType::AT_BODYPART:
 //MK
-			if (!gRRenabled || (gRRenabled && gAgent.mRRInterface.canWear(item_to_wear->getWearableType())))
+			if (!gRRenabled || (gRRenabled && gAgent.mRRInterface.canUnwear(item_to_wear->getWearableType())))
 			{
 //mk
 				// TODO: investigate wearables may not be loaded at this point EXT-8231
@@ -1464,7 +1464,10 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 				{
 					cb = new LLUpdateAppearanceAndEditWearableOnDestroy(item_id_to_wear);
 				}
-				items_to_link.push_back(item_to_wear);
+				if (!gRRenabled || (gRRenabled && gAgent.mRRInterface.canWear(item_to_wear->getWearableType())))
+				{
+					items_to_link.push_back(item_to_wear);
+				}
 //MK
 			}
 //mk
