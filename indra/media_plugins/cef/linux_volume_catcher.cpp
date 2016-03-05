@@ -41,10 +41,10 @@
 #include <set>
 
 extern "C" {
+
 #include <glib.h>
 #include <glib-object.h>
 #include <stdio.h>
-
 #include <pulse/introspect.h>
 #include <pulse/context.h>
 #include <pulse/subscribe.h>

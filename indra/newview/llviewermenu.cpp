@@ -10096,6 +10096,20 @@ void show_topinfobar_context_menu(LLView* ctrl, S32 x, S32 y)
 	LLMenuGL::showPopup(ctrl, show_topbarinfo_context_menu, x, y);
 }
 
+// <FS:Ansariel> For web browser toolbar button
+void toggleWebBrowser(const LLSD& sdParam)
+{
+	if (LLFloaterReg::instanceVisible("web_content"))
+	{
+		LLFloaterReg::hideInstance("web_content");
+	}
+	else
+	{
+		LLWeb::loadURLInternal(sdParam.asString());
+	}
+}
+// </FS:Ansariel> For web browser toolbar button
+
 class FSObjectExport : public view_listener_t
 {
 	bool handleEvent( const LLSD& userdata)

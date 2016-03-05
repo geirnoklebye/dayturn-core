@@ -146,6 +146,9 @@ if [ "${BINARY_TYPE}" == "ELF 32-bit LSB executable" ]; then
 else
 	export LD_LIBRARY_PATH="$PWD/lib:$PWD/lib64:$PWD/lib32:${LD_LIBRARY_PATH}"
 fi
+
+export FS_CEF_PRELOAD=libcef.so
+
 # Copy "$@" to ARGS array specifically to delete the --skip-gridargs switch.
 # The gridargs.dat file is no more, but we still want to avoid breaking
 # scripts that invoke this one with --skip-gridargs.
