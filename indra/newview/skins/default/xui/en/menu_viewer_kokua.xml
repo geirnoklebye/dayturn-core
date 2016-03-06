@@ -1795,6 +1795,16 @@
            function="ToggleControl"
            parameter="DisableFly" />
         </menu_item_check>
+        <menu_item_check
+         label="Do not jump with keys"
+         name="Disable Jump">
+          <menu_item_check.on_check
+           function="CheckControl"
+           parameter="DisableJump" />
+          <menu_item_check.on_click
+           function="ToggleControl"
+           parameter="DisableJump" />
+        </menu_item_check>
     <menu_item_check
            label="Highlight Transparent"
            name="Highlight Transparent"

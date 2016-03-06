@@ -63,7 +63,8 @@ LLViewerKeyboard gViewerKeyboard;
 
 void agent_jump( EKeystate s )
 {
-	if( KEYSTATE_UP == s  ) return;
+    static LLCachedControl<bool> disable_jump(gSavedSettings, "DisableJump", false);
+	if( KEYSTATE_UP == s  || disable_jump) return;
 	F32 time = gKeyboard->getCurKeyElapsedTime();
 	S32 frame_count = ll_round(gKeyboard->getCurKeyElapsedFrameCount());
 
