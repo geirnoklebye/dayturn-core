@@ -361,24 +361,28 @@
              <menu_item_check.on_click
                  function="View.ShowHUDAttachments" />
           </menu_item_check>
-      <menu_item_separator/>
+      <menu_item_separator
+        only_in_sl="true"/>
 
           <menu_item_call
           label="Buy L$..."
-          name="Buy and Sell L$">
+          name="Buy and Sell L$"
+          only_in_sl="true">
               <menu_item_call.on_click
                  function="BuyCurrency" />
           </menu_item_call>
           <menu_item_call
           label="Merchant Outbox..."
-          name="MerchantOutbox">
+          name="MerchantOutbox"
+          only_in_sl="true">
               <menu_item_call.on_click
                   function="Floater.ToggleOrBringToFront"
                   parameter="outbox" />
           </menu_item_call>
          <menu_item_call
             label="Marketplace listings..."
-            name="MarketplaceListings">
+            name="MarketplaceListings"
+            only_in_sl="true">
             <menu_item_call.on_click
             function="Floater.ToggleOrBringToFront"
             parameter="marketplace_listings" />
@@ -488,7 +492,8 @@
       </menu_item_call>
       <menu_item_call
         label="Experiences..."
-        name="Experiences">
+        name="Experiences"
+        only_in_sl="true">
         <menu_item_call.on_click
           function="Floater.ToggleOrBringToFront"
           parameter="experiences"/>
