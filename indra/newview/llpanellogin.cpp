@@ -963,11 +963,16 @@ void LLPanelLogin::onClickConnect(void *)
 		}
 		updateStartSLURL();
 		std::string username = sInstance->getChild<LLUICtrl>("username_combo")->getValue().asString();
+		std::string password = sInstance->getChild<LLUICtrl>("password_edit")->getValue().asString();
 
 		
 			if(username.empty())
 			{
 			LLNotificationsUtil::add("MustHaveAccountToLogIn");
+		}
+		else if(password.empty())
+		{
+		    LLNotificationsUtil::add("MustEnterPasswordToLogIn");
 			}
 			else
 			{
