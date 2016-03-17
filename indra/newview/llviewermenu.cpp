@@ -117,6 +117,8 @@
 #include "llviewermenufile.h"	// init_menu_file()
 #include "llviewermessage.h"
 #include "llviewernetwork.h"
+#include "llviewertexture.h"
+#include "llviewertexturelist.h"
 #include "llworld.h"
 #include "llviewerobjectlist.h"
 #include "llviewerparcelmgr.h"
