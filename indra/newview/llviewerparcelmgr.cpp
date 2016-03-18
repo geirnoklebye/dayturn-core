@@ -670,10 +670,6 @@ bool LLViewerParcelMgr::allowAgentBuild() const
 		return false;
 	}
 //mk
-	{
-		return false;
-	}
-//mk
 	if (gAgent.isGodlike())
 
 	{

@@ -2041,9 +2041,6 @@ LLVector3d LLAgentCamera::calcCameraPositionTargetGlobal(BOOL *hit_limit)
 		}
 	}
 //mk
-		}
-	}
-//mk
 	if (hit_limit)
 	{
 		*hit_limit = isConstrained;
