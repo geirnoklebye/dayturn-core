@@ -3322,6 +3322,10 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			{
 				send_do_not_disturb_message(msg, from_id);
 			}
+			else if (gSavedSettings.getBOOL("VoiceCallsFriendsOnly") && (LLAvatarTracker::instance().getBuddyInfo(from_id) == NULL))
+			{
+				return;
+			}
 			else
 			{
 				LLVector3 pos, look_at;
@@ -3409,6 +3413,11 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				
 				if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString())
 					|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
+				{
+					message = "(Hidden)";
+				}
+				
+				if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 				{
 					message = "(Hidden)";
 				}
@@ -4359,12 +4368,12 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 
 		if (mesg != "")
 		{
-			LLSD msg_notify = LLSD(LLSD::emptyMap());
-			msg_notify["session_id"] = LLUUID();
-			msg_notify["from_id"] = chat.mFromID;
-			msg_notify["source_type"] = chat.mSourceType;
-			on_new_message(msg_notify);
-		}
+		LLSD msg_notify = LLSD(LLSD::emptyMap());
+		msg_notify["session_id"] = LLUUID();
+        msg_notify["from_id"] = chat.mFromID;
+		msg_notify["source_type"] = chat.mSourceType;
+        on_new_message(msg_notify);
+	}
 
 	}
 }
@@ -4577,6 +4586,13 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 		LL_WARNS("Messaging") << "Got teleport notification for wrong agent!" << LL_ENDL;
 		return;
 	}
+
+    if (gAgent.getTeleportState() == LLAgent::TELEPORT_NONE)
+    {
+        // Server either ignored teleport cancel message or did not receive it in time.
+        // This message can't be ignored since teleport is complete at server side
+        gAgent.restoreCanceledTeleportRequest();
+    }
 	
 	// Teleport is finished; it can't be cancelled now.
 	gViewerWindow->setProgressCancelButtonVisible(FALSE);

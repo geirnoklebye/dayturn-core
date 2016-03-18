@@ -1729,7 +1729,7 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 		return TRUE; // No update to complete
 	}
 
-	if (mVolumeChanged || mFaceMappingChanged)
+	if (mVolumeChanged || mFaceMappingChanged )
 	{
 		dirtySpatialGroup(drawable->isState(LLDrawable::IN_REBUILD_Q1));
 
@@ -1744,7 +1744,7 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 		{
 			compiled = TRUE;
 			was_regen_faces = lodOrSculptChanged(drawable, compiled);
-		}
+			}
 
 		if (!was_regen_faces) {
 				LL_RECORD_BLOCK_TIME(FTM_GEN_TRIANGLES);
@@ -1753,7 +1753,7 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 				genBBoxes(FALSE);
 	}
 	else if (mLODChanged || mSculptChanged)
-	{
+					{
 		dirtySpatialGroup(drawable->isState(LLDrawable::IN_REBUILD_Q1));
 		compiled = TRUE;
 		lodOrSculptChanged(drawable, compiled);
@@ -2119,6 +2119,8 @@ bool LLVOVolume::notifyAboutMissingAsset(LLViewerTexture *texture)
 	for(mmap_UUID_MAP_t::iterator range_it = range.first; range_it != range.second; ++range_it)
 	{
 		LLMaterialPtr cur_material = getTEMaterialParams(range_it->second.te);
+		if (cur_material.isNull())
+			continue;
 
 		switch(range_it->second.map)
 		{
@@ -3918,7 +3920,7 @@ BOOL LLVOVolume::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 
 	if (mDrawable->isState(LLDrawable::RIGGED))
 	{
-		if ((pick_rigged) || ((getAvatar()->isSelf()) && (LLFloater::isVisible(gFloaterTools))))
+		if ((pick_rigged) || (getAvatar() && (getAvatar()->isSelf()) && (LLFloater::isVisible(gFloaterTools))))
 		{
 			updateRiggedVolume(true);
 			volume = mRiggedVolume;
@@ -4100,7 +4102,7 @@ BOOL LLVOVolume::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 bool LLVOVolume::treatAsRigged()
 {
 	return isSelected() &&
-			isAttachment() &&
+			isAttachment() && 
 			mDrawable.notNull() &&
 			mDrawable->isState(LLDrawable::RIGGED);
 }
@@ -4250,7 +4252,7 @@ void LLRiggedVolume::update(const LLMeshSkinInfo* skin, LLVOAvatar* avatar, cons
 					}
                     // This is enforced  in unpackVolumeFaces()
                     llassert(scale>0.f);
-                    wght *= 1.f / scale;
+					wght *= 1.f/scale;
 
 					for (U32 k = 0; k < 4; k++)
 					{

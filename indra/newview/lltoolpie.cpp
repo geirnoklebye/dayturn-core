@@ -87,7 +87,8 @@ LLToolPie::LLToolPie()
 	mBlockClickToWalk(false),
 	mClickAction(0),
 	mClickActionBuyEnabled( gSavedSettings.getBOOL("ClickActionBuyEnabled") ),
-	mClickActionPayEnabled( gSavedSettings.getBOOL("ClickActionPayEnabled") )
+	mClickActionPayEnabled( gSavedSettings.getBOOL("ClickActionPayEnabled") ),
+	mDoubleClickTimer()
 {
 }
 
@@ -103,7 +104,12 @@ BOOL LLToolPie::handleAnyMouseClick(S32 x, S32 y, MASK mask, EClickType clicktyp
 
 BOOL LLToolPie::handleMouseDown(S32 x, S32 y, MASK mask)
 {
-	mMouseOutsideSlop = FALSE;
+    if (mDoubleClickTimer.getStarted())
+    {
+        mDoubleClickTimer.stop();
+    }
+
+    mMouseOutsideSlop = FALSE;
 	mMouseDownX = x;
 	mMouseDownY = y;
 
@@ -699,7 +705,15 @@ BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 
 BOOL LLToolPie::handleMouseUp(S32 x, S32 y, MASK mask)
 {
-	LLViewerObject* obj = mPick.getObject();
+    if (!mDoubleClickTimer.getStarted())
+    {
+        mDoubleClickTimer.start();
+    }
+    else
+    {
+        mDoubleClickTimer.reset();
+    }
+    LLViewerObject* obj = mPick.getObject();
 	U8 click_action = final_click_action(obj);
 
 	// let media have first pass at click
@@ -728,24 +742,24 @@ BOOL LLToolPie::handleMouseUp(S32 x, S32 y, MASK mask)
                                              FALSE /* ignore particles */);
 
         if (!mPick.mPosGlobal.isExactlyZero()			// valid coordinates for pick
-            && (mPick.mPickType == LLPickInfo::PICK_LAND	// we clicked on land
-                || mPick.mObjectID.notNull()))				// or on an object
-        {
-            // handle special cases of steering picks
-            LLViewerObject* avatar_object = mPick.getObject();
+		&& (mPick.mPickType == LLPickInfo::PICK_LAND	// we clicked on land
+			|| mPick.mObjectID.notNull()))				// or on an object
+	{
+		// handle special cases of steering picks
+		LLViewerObject* avatar_object = mPick.getObject();
 
-            // get pointer to avatar
-            while (avatar_object && !avatar_object->isAvatar())
-            {
-                avatar_object = (LLViewerObject*)avatar_object->getParent();
-            }
+		// get pointer to avatar
+		while (avatar_object && !avatar_object->isAvatar())
+		{
+			avatar_object = (LLViewerObject*)avatar_object->getParent();
+		}
 
-            if (avatar_object && ((LLVOAvatar*)avatar_object)->isSelf())
-            {
-                const F64 SELF_CLICK_WALK_DISTANCE = 3.0;
-                // pretend we picked some point a bit in front of avatar
-                mPick.mPosGlobal = gAgent.getPositionGlobal() + LLVector3d(LLViewerCamera::instance().getAtAxis()) * SELF_CLICK_WALK_DISTANCE;
-            }
+		if (avatar_object && ((LLVOAvatar*)avatar_object)->isSelf())
+		{
+			const F64 SELF_CLICK_WALK_DISTANCE = 3.0;
+			// pretend we picked some point a bit in front of avatar
+			mPick.mPosGlobal = gAgent.getPositionGlobal() + LLVector3d(LLViewerCamera::instance().getAtAxis()) * SELF_CLICK_WALK_DISTANCE;
+		}
 //MK
 ////		gAgentCamera.setFocusOnAvatar(TRUE, TRUE);
 		//look at the target
@@ -753,11 +767,11 @@ BOOL LLToolPie::handleMouseUp(S32 x, S32 y, MASK mask)
 		look_at.normVec();
 		gAgentCamera.slamLookAt(look_at);
 //mk
-            walkToClickedLocation();
-            LLFirstUse::notMoving(false);
+		walkToClickedLocation();
+		LLFirstUse::notMoving(false);
 
-            return TRUE;
-        }
+		return TRUE;
+	}
         else
         {
             LL_DEBUGS("maint5901") << "walk target was "
@@ -799,10 +813,17 @@ BOOL LLToolPie::handleDoubleClick(S32 x, S32 y, MASK mask)
 		LL_INFOS() << "LLToolPie handleDoubleClick (becoming mouseDown)" << LL_ENDL;
 	}
 
-    if (handleMediaDblClick(mPick))
-    {
-        return TRUE;
-    }
+	if (handleMediaDblClick(mPick))
+	{
+		return TRUE;
+	}
+    
+    	if (!mDoubleClickTimer.getStarted() || (mDoubleClickTimer.getElapsedTimeF32() > 0.3f))
+	{
+		mDoubleClickTimer.stop();
+		return FALSE;
+	}
+	mDoubleClickTimer.stop();
 
 	if (gSavedSettings.getBOOL("DoubleClickAutoPilot"))
 	{
@@ -814,6 +835,15 @@ BOOL LLToolPie::handleDoubleClick(S32 x, S32 y, MASK mask)
         mPick = gViewerWindow->pickImmediate(savedPick.mMousePt.mX, savedPick.mMousePt.mY,
                                              FALSE /* ignore transparent */,
                                              FALSE /* ignore particles */);
+
+        if(mPick.mPickType == LLPickInfo::PICK_OBJECT)
+        {
+            if (mPick.getObject() && mPick.getObject()->isHUDAttachment())
+            {
+                mPick = savedPick;
+                return FALSE;
+            }
+        }
 
 		if ((mPick.mPickType == LLPickInfo::PICK_LAND && !mPick.mPosGlobal.isExactlyZero()) ||
 			(mPick.mObjectID.notNull()  && !mPick.mPosGlobal.isExactlyZero()))
@@ -1548,56 +1578,56 @@ static void handle_click_action_play()
 
 bool LLToolPie::handleMediaClick(const LLPickInfo& pick, int button)
 {
-    //FIXME: how do we handle object in different parcel than us?
-    LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
-    LLPointer<LLViewerObject> objectp = pick.getObject();
+	//FIXME: how do we handle object in different parcel than us?
+	LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
+	LLPointer<LLViewerObject> objectp = pick.getObject();
 
 
-    if (!parcel ||
-        objectp.isNull() ||
-        pick.mObjectFace < 0 ||
-        pick.mObjectFace >= objectp->getNumTEs())
-    {
-        LLViewerMediaFocus::getInstance()->clearFocus();
+	if (!parcel ||
+		objectp.isNull() ||
+		pick.mObjectFace < 0 || 
+		pick.mObjectFace >= objectp->getNumTEs()) 
+	{
+		LLViewerMediaFocus::getInstance()->clearFocus();
 
-        return false;
-    }
+		return false;
+	}
 
-    // Does this face have media?
-    const LLTextureEntry* tep = objectp->getTE(pick.mObjectFace);
-    if (!tep)
-        return false;
+	// Does this face have media?
+	const LLTextureEntry* tep = objectp->getTE(pick.mObjectFace);
+	if(!tep)
+		return false;
 
-    LLMediaEntry* mep = (tep->hasMedia()) ? tep->getMediaData() : NULL;
-    if (!mep)
-        return false;
+	LLMediaEntry* mep = (tep->hasMedia()) ? tep->getMediaData() : NULL;
+	if(!mep)
+		return false;
+	
+	viewer_media_t media_impl = LLViewerMedia::getMediaImplFromTextureID(mep->getMediaID());
 
-    viewer_media_t media_impl = LLViewerMedia::getMediaImplFromTextureID(mep->getMediaID());
+	if (gSavedSettings.getBOOL("MediaOnAPrimUI"))
+	{
+		if (!LLViewerMediaFocus::getInstance()->isFocusedOnFace(pick.getObject(), pick.mObjectFace) || media_impl.isNull())
+		{
+			// It's okay to give this a null impl
+			LLViewerMediaFocus::getInstance()->setFocusFace(pick.getObject(), pick.mObjectFace, media_impl, pick.mNormal);
+		}
+		else
+		{
+			// Make sure keyboard focus is set to the media focus object.
+			gFocusMgr.setKeyboardFocus(LLViewerMediaFocus::getInstance());
+			LLEditMenuHandler::gEditMenuHandler = LLViewerMediaFocus::instance().getFocusedMediaImpl();
+			
+			media_impl->mouseDown(pick.mUVCoords, gKeyboard->currentMask(TRUE));
+			mMediaMouseCaptureID = mep->getMediaID();
+			setMouseCapture(TRUE);  // This object will send a mouse-up to the media when it loses capture.
+		}
 
-    if (gSavedSettings.getBOOL("MediaOnAPrimUI"))
-    {
-        if (!LLViewerMediaFocus::getInstance()->isFocusedOnFace(pick.getObject(), pick.mObjectFace) || media_impl.isNull())
-        {
-            // It's okay to give this a null impl
-            LLViewerMediaFocus::getInstance()->setFocusFace(pick.getObject(), pick.mObjectFace, media_impl, pick.mNormal);
-        }
-        else
-        {
-            // Make sure keyboard focus is set to the media focus object.
-            gFocusMgr.setKeyboardFocus(LLViewerMediaFocus::getInstance());
-            LLEditMenuHandler::gEditMenuHandler = LLViewerMediaFocus::instance().getFocusedMediaImpl();
+		return true;
+	}
 
-            media_impl->mouseDown(pick.mUVCoords, gKeyboard->currentMask(TRUE));
-            mMediaMouseCaptureID = mep->getMediaID();
-            setMouseCapture(TRUE);  // This object will send a mouse-up to the media when it loses capture.
-        }
+	LLViewerMediaFocus::getInstance()->clearFocus();
 
-        return true;
-    }
-
-    LLViewerMediaFocus::getInstance()->clearFocus();
-
-    return false;
+	return false;
 }
 
 bool LLToolPie::handleMediaDblClick(const LLPickInfo& pick)

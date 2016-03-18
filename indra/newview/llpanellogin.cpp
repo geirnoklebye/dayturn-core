@@ -188,6 +188,7 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	sendChildToBack(getChildView("forgot_password_text"));
 
 	if(LLStartUp::getStartSLURL().getType() != LLSLURL::LOCATION)
+
 	{
 		LLSLURL slurl(gSavedSettings.getString("LoginLocation"));
 		LLStartUp::setStartSLURL(slurl);
@@ -737,7 +738,7 @@ void LLPanelLogin::updateLocationCombo( bool force_visible )
 
 // static
 void LLPanelLogin::updateStartSLURL()
-{
+		{
 	if (!sInstance) return;
 	LL_DEBUGS("PanelLogin") << " " << LL_ENDL;
 
@@ -766,7 +767,7 @@ void LLPanelLogin::updateStartSLURL()
 				LLStartUp::setStartSLURL(slurl);
 			}
 			break;
-		}
+}
 	}
 
 	update_grid_help(); //llviewermenu
@@ -963,12 +964,17 @@ void LLPanelLogin::onClickConnect(void *)
 		}
 		updateStartSLURL();
 		std::string username = sInstance->getChild<LLUICtrl>("username_combo")->getValue().asString();
+		std::string password = sInstance->getChild<LLUICtrl>("password_edit")->getValue().asString();
 
 		
 			if(username.empty())
 			{
 			LLNotificationsUtil::add("MustHaveAccountToLogIn");
 			}
+		else if(password.empty())
+		{
+		    LLNotificationsUtil::add("MustEnterPasswordToLogIn");
+		}
 			else
 			{
 				LLPointer<LLCredential> cred;
@@ -1115,6 +1121,7 @@ void LLPanelLogin::updateServer()
 			bool remember = sInstance->getChild<LLUICtrl>("remember_check")->getValue();
 			sInstance->setFields(credential, remember);
 		}
+	
 		loadLoginPage();
 		updateLocationCombo(LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION);
 
@@ -1122,15 +1129,15 @@ void LLPanelLogin::updateServer()
 	catch (LLInvalidGridName ex)
 	{
 		// do nothing
-		}
 	}
+		}
 
 // <FS:AW  grid management>
 void LLPanelLogin::gridListChanged(bool success)
 {
 	LL_DEBUGS("PanelLogin") << __FUNCTION__ << LL_ENDL;
 	updateServerCombo();
-}
+	}
 // </FS:AW  grid management>
 
 void LLPanelLogin::updateServerCombo()
@@ -1207,10 +1214,10 @@ void LLPanelLogin::onSelectServer(LLUICtrl*, void*)
 		if (found != std::string::npos)	
 			new_combo_value.erase( 0,found+match.length());
 	}
-
+	
 	// e.g user clicked into loginpage
 	if(LLGridManager::getInstance()->getGrid() == new_combo_value)
-	{
+{
 		return;
 	}
 

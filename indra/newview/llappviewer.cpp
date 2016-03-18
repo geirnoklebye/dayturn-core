@@ -2407,6 +2407,7 @@ void LLAppViewer::initLoggingAndGetLastDuration()
 	LLFile::rename(log_file, old_log_file);
 
 
+
 	LLError::logToFile(log_file);
 	if (!duration_log_msg.empty())
 	{
@@ -3596,7 +3597,7 @@ LLSD LLAppViewer::getViewerInfo() const
 //MK
 	if (gRRenabled)
 	{
-//		info["CHANNEL"] = gAgent.mRRInterface.getVersion2 ();
+		info["CHANNEL"] = gAgent.mRRInterface.getVersion2 ();
 	}
 
 	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
@@ -4747,7 +4748,13 @@ void LLAppViewer::purgeCache()
 	LL_INFOS("AppCache") << "Purging Cache and Texture Cache..." << LL_ENDL;
 	LLAppViewer::getTextureCache()->purgeCache(LL_PATH_CACHE);
 	LLVOCache::getInstance()->removeCache(LL_PATH_CACHE);
-	gDirUtilp->deleteFilesInDir(gDirUtilp->getExpandedFilename(LL_PATH_CACHE, ""), "*.*");
+	std::string browser_cache = gDirUtilp->getExpandedFilename(LL_PATH_CACHE, "cef_cache");
+	if (LLFile::isdir(browser_cache))
+	{
+		// cef does not support clear_cache and clear_cookies, so clear what we can manually.
+		gDirUtilp->deleteDirAndContents(browser_cache);
+	}
+	gDirUtilp->deleteFilesInDir(gDirUtilp->getExpandedFilename(LL_PATH_CACHE, ""), "*");
 }
 
 //purge cache immediately, do not wait until the next login.

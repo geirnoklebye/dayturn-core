@@ -6163,6 +6163,13 @@ void LLPipeline::calcNearbyLights(LLCamera& camera)
 		{
 			const Light* light = &(*iter);
 			LLDrawable* drawable = light->drawable;
+            const LLViewerObject *vobj = light->drawable->getVObj();
+            if(vobj && vobj->getAvatar() && vobj->getAvatar()->isInMuteList())
+            {
+                drawable->clearState(LLDrawable::NEARBY_LIGHT);
+                continue;
+            }
+
 			LLVOVolume* volight = drawable->getVOVolume();
 			if (!volight || !drawable->isState(LLDrawable::LIGHT))
 			{
@@ -7149,7 +7156,7 @@ LLVOPartGroup* LLPipeline::lineSegmentIntersectParticle(const LLVector4a& start,
 }
 
 LLViewerObject* LLPipeline::lineSegmentIntersectInWorld(const LLVector4a& start, const LLVector4a& end,
-														BOOL pick_transparent,
+														BOOL pick_transparent,												
 														BOOL pick_rigged,
 														S32* face_hit,
 														LLVector4a* intersection,         // return the intersection point
@@ -8722,6 +8729,11 @@ void LLPipeline::renderDeferredLighting()
 						}
 					}
 
+					const LLViewerObject *vobj = drawablep->getVObj();
+					if(vobj && vobj->getAvatar() && vobj->getAvatar()->isInMuteList())
+					{
+						continue;
+					}
 
 					LLVector4a center;
 					center.load3(drawablep->getPositionAgent().mV);

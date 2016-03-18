@@ -1663,7 +1663,11 @@ void LLSelectMgr::selectionSetImage(const LLUUID& imageid)
 		f(LLViewerInventoryItem* item, const LLUUID& id) : mItem(item), mImageID(id) {}
 		bool apply(LLViewerObject* objectp, S32 te)
 		{
-			if (mItem)
+		    if(objectp && !objectp->permModify())
+		    {
+		        return false;
+		    }
+		    if (mItem)
 			{
 				if (te == -1) // all faces
 				{
@@ -5820,6 +5824,13 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
 	}
 //mk
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		return;
+	}
+//mk
+
 	gGL.getTexUnit(0)->bind(mSilhouetteImagep);
 	LLGLSPipelineSelection gls_select;
 	LLGLEnable blend(GL_BLEND);
@@ -6824,7 +6835,8 @@ LLBBox LLSelectMgr::getBBoxOfSelection() const
 //-----------------------------------------------------------------------------
 BOOL LLSelectMgr::canUndo() const
 {
-	return const_cast<LLSelectMgr*>(this)->mSelectedObjects->getFirstEditableObject() != NULL; // HACK: casting away constness - MG
+	// Can edit or can move
+	return const_cast<LLSelectMgr*>(this)->mSelectedObjects->getFirstUndoEnabledObject() != NULL; // HACK: casting away constness - MG;
 }
 
 //-----------------------------------------------------------------------------
@@ -7747,6 +7759,22 @@ LLViewerObject* LLObjectSelection::getFirstMoveableObject(BOOL get_parent)
 		}
 	} func;
 	return getFirstSelectedObject(&func, get_parent);
+}
+
+//-----------------------------------------------------------------------------
+// getFirstUndoEnabledObject()
+//-----------------------------------------------------------------------------
+LLViewerObject* LLObjectSelection::getFirstUndoEnabledObject(BOOL get_parent)
+{
+    struct f : public LLSelectedNodeFunctor
+    {
+        bool apply(LLSelectNode* node)
+        {
+            LLViewerObject* obj = node->getObject();
+            return obj && (obj->permModify() || (obj->permMove() && !obj->isPermanentEnforced()));
+        }
+    } func;
+    return getFirstSelectedObject(&func, get_parent);
 }
 
 //-----------------------------------------------------------------------------
