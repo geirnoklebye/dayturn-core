@@ -325,14 +325,20 @@ LLGLSLShader::~LLGLSLShader()
 
 void LLGLSLShader::unload()
 {
+    mShaderFiles.clear();
+    mDefines.clear();
+
+    unloadInternal();
+}
+
+void LLGLSLShader::unloadInternal()
+{
 	sInstances.erase(this);
 
 	stop_glerror();
 	mAttribute.clear();
 	mTexture.clear();
 	mUniform.clear();
-	mShaderFiles.clear();
-	mDefines.clear();
 
 	if (mProgramObject)
 	{
@@ -378,6 +384,8 @@ BOOL LLGLSLShader::createShader(std::vector<LLStaticHashedString> * attributes,
 								U32 varying_count,
 								const char** varyings)
 {
+    unloadInternal();
+
 	sInstances.insert(this);
 
 	//reloading, reset matrix hash values
