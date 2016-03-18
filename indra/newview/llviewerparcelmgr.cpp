@@ -68,6 +68,8 @@
 #include "llweb.h"
 #include "llvieweraudio.h"
 
+#include "llviewernetwork.h"
+
 const F32 PARCEL_COLLISION_DRAW_SECS = 1.f;
 
 
@@ -1715,7 +1717,17 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 			}
 
 			// Request access list information for this land
-			parcel_mgr.sendParcelAccessListRequest(AL_ACCESS | AL_BAN | AL_ALLOW_EXPERIENCE | AL_BLOCK_EXPERIENCE);
+            
+            // <FA.Ansariel> FIRE-17280: Requestion experience access and block list interferes with Opensim land flags
+            
+            if (LLGridManager::instance().isInSecondLife())
+            {
+			    parcel_mgr.sendParcelAccessListRequest(AL_ACCESS | AL_BAN | AL_ALLOW_EXPERIENCE | AL_BLOCK_EXPERIENCE);
+            } else {
+                parcel_mgr.sendParcelAccessListRequest(AL_ACCESS | AL_BAN );
+            }
+            
+            // <FA.Ansariel>
 
 			// Request dwell for this land, if it's not public land.
 			parcel_mgr.mSelectedDwell = DWELL_NAN;

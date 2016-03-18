@@ -970,6 +970,10 @@ void LLPanelLogin::onClickConnect(void *)
 			if(username.empty())
 			{
 			LLNotificationsUtil::add("MustHaveAccountToLogIn");
+		}
+		else if(password.empty())
+		{
+		    LLNotificationsUtil::add("MustEnterPasswordToLogIn");
 			}
 		else if(password.empty())
 		{

@@ -360,13 +360,13 @@ void LLGLSLShader::unloadInternal()
 
 		mProgramObject = 0;
 	}
-	
+
 	if (mTimerQuery)
 	{
 		glDeleteQueriesARB(1, &mTimerQuery);
 		mTimerQuery = 0;
 	}
-	
+
 	if (mSamplesQuery)
 	{
 		glDeleteQueriesARB(1, &mSamplesQuery);
@@ -375,7 +375,7 @@ void LLGLSLShader::unloadInternal()
 
 	//hack to make apple not complain
 	glGetError();
-	
+
 	stop_glerror();
 }
 
