@@ -257,6 +257,7 @@ Maximum animation length is [MAX_LENGTH] seconds.
      height="23"
      layout="topleft"
      left_pad="20"
+     initial_value="Hands_Relaxed"
      name="hand_pose_combo"
      tool_tip="Controls what hands do during animation"
      width="130">
