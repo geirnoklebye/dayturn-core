@@ -176,7 +176,7 @@
          parameter="outbox" />
       </menu_item_call>
         <menu_item_call
-            label="Marketplace listings..."
+            label="Marketplace Listings..."
             name="MarketplaceListings">
             <menu_item_call.on_click
             function="Floater.ToggleOrBringToFront"
@@ -218,7 +218,7 @@
                  parameter="fs_import" />
             </menu_item_call>
          <menu_item_call
-         label="Hide all controls"
+         label="Hide All Controls"
          name="Hide UI"
          shortcut="control|shift|U">
            <menu_item_call.on_click
@@ -237,7 +237,7 @@
         <menu_item_separator/>
 
         <menu_item_call
-         label="Exit [APP_NAME]"
+         label="Quit [APP_NAME]"
          name="Quit"
          shortcut="control|Q">
             <menu_item_call.on_click
@@ -492,7 +492,7 @@
         </menu_item_check>
         <menu_item_separator/>
         <menu_item_call
-         label="Teleport home"
+         label="Teleport Home"
          name="Teleport Home"
          shortcut="control|shift|H">
         <menu_item_call.on_click
@@ -501,7 +501,7 @@
          function="World.EnableTeleportHome" />
         </menu_item_call>
             <menu_item_call
-             label="Set home to here"
+             label="Set Home to Here"
              name="Set Home to Here">
                 <menu_item_call.on_click
                  function="World.SetHomeLocation" />
@@ -548,14 +548,14 @@
              parameter="region_info" />
         </menu_item_call>
         <menu_item_call
-         label="My land holdings..."
+         label="My Land Holdings..."
          name="My Land">
             <menu_item_call.on_click
              function="Floater.Show"
              parameter="land_holdings" />
         </menu_item_call>
         <menu_item_call
-         label="Buy this land"
+         label="Buy This Land"
          name="Buy Land">
             <menu_item_call.on_click
              function="Land.Buy" />
@@ -1477,7 +1477,7 @@
          label="Redo"
          name="Redo"
          allow_key_repeat="true"
-         shortcut="control|Y">
+         shortcut="control|shift|Z">
             <on_click
              function="Edit.Redo"
              userdata="" />

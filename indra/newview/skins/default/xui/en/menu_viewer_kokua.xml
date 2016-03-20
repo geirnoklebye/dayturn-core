@@ -152,7 +152,7 @@
              function="Advanced.LeaveAdminStatus" />
         </menu_item_call>
         <menu_item_call
-         label="Exit [APP_NAME]"
+         label="Quit [APP_NAME]"
          name="Quit"
          shortcut="control|Q">
             <menu_item_call.on_click
@@ -177,8 +177,9 @@
          </menu_item_check>
          <menu_item_separator/>
          <menu_item_call
-             label="My Dashboard"
-             name="Manage My Account">
+           label="Account dashboard..."
+           name="Manage My Account"
+           only_in_sl="true">
                 <menu_item_call.on_click
                  function="PromptShowURL"
                  name="ManageMyAccount_url"
@@ -208,7 +209,7 @@
              function="Advanced.RebakeTextures" />
         </menu_item_call>
         <menu_item_call
-         label="Change Outfit"
+         label="Appearance..."
          name="ChangeOutfit">
             <menu_item_call.on_click
              function="CustomizeAvatar" />
@@ -346,7 +347,7 @@
               parameter="toybox" />
            </menu_item_call>
           <menu_item_call
-          label="Hide all controls"
+          label="Hide All Controls"
           name="Hide UI"
           shortcut="control|shift|U">
              <menu_item_call.on_click
@@ -380,7 +381,7 @@
                   parameter="outbox" />
           </menu_item_call>
          <menu_item_call
-            label="Marketplace listings..."
+            label="Marketplace Listings..."
             name="MarketplaceListings"
             only_in_sl="true">
             <menu_item_call.on_click
@@ -852,7 +853,7 @@
         </menu_item_call>
     <menu_item_separator/>
     <menu_item_call
-     label="Teleport home"
+     label="Teleport Home"
      name="Teleport Home"
      shortcut="control|shift|H">
       <menu_item_call.on_click
@@ -861,7 +862,7 @@
        function="World.EnableTeleportHome" />
     </menu_item_call>
     <menu_item_call
-     label="Set home to here"
+     label="Set Home to Here"
      name="Set Home to Here">
       <menu_item_call.on_click
        function="World.SetHomeLocation" />
@@ -900,14 +901,14 @@
        parameter="region_info" />
     </menu_item_call>
     <menu_item_call
-     label="My land holdings..."
+     label="My Land Holdings..."
      name="My Land">
       <menu_item_call.on_click
        function="Floater.Show"
        parameter="land_holdings" />
     </menu_item_call>
     <menu_item_call
-     label="Buy this land"
+     label="Buy This Land"
      name="Buy Land">
       <menu_item_call.on_click
        function="Land.Buy" />
@@ -1734,7 +1735,7 @@
      label="Redo"
      name="Redo"
      allow_key_repeat="true"
-     shortcut="control|Y">
+     shortcut="control|shift|Z">
       <on_click
        function="Edit.Redo"
        userdata="" />
@@ -1770,7 +1771,7 @@
              parameter="area_search" />
         </menu_item_call>
         <menu_item_call
-            label="Marketplace listings..."
+            label="Marketplace Listings..."
             name="MarketplaceListings">
             <menu_item_call.on_click
             function="Floater.ToggleOrBringToFront"
@@ -1792,7 +1793,7 @@
            function="Tools.StopAllAnimations" />
         </menu_item_call>
         <menu_item_check
-         label="Do not let me Fly"
+         label="Do Not Let Me Fly"
          name="Disable Fly">
           <menu_item_check.on_check
            function="CheckControl"
@@ -1802,7 +1803,7 @@
            parameter="DisableFly" />
         </menu_item_check>
         <menu_item_check
-         label="Do not jump with keys"
+         label="Do Not Jump With Keys"
          name="Disable Jump">
           <menu_item_check.on_check
            function="CheckControl"

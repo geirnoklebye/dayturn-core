@@ -41,7 +41,7 @@
 		height="20"
 		initial_value="false"
 		control_name="DisableFly"
-		label="Do not let me fly."
+		label="Do not let me Fly"
 		left="15"
 		name="automatic_fly"
 		tool_tip="Prevents your avatar from flying even when the region allows avatars to fly."

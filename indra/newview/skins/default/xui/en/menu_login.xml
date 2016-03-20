@@ -22,7 +22,7 @@
         </menu_item_call>
         <menu_item_separator />
         <menu_item_call
-         label="Exit [APP_NAME]"
+         label="Quit [APP_NAME]"
          name="Quit"
          shortcut="control|Q">
             <menu_item_call.on_click

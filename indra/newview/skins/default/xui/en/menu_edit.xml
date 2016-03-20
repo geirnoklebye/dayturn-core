@@ -17,7 +17,7 @@
    label="Redo"
    name="Redo"
    allow_key_repeat="true"
-   shortcut="control|Y">
+   shortcut="control|shift|Z">
     <menu_item_call.on_click
      function="Edit.Redo" />
     <menu_item_call.on_enable
