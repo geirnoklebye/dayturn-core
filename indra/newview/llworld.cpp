@@ -84,6 +84,8 @@ U32 LLWorld::mWidth = 256;
 const F32 LLWorld::mScale = 1.f;
 F32 LLWorld::mWidthInMeters = mWidth * mScale;
 
+
+
 //
 // Functions
 //
@@ -276,12 +278,12 @@ void LLWorld::refreshLimits()
 		mAllowPhysicalPrims = TRUE;
 		mAllowRenderWater = TRUE;
 
-		mMaxPrimXPos = F32_MAX;
-		mMaxPrimYPos = F32_MAX;
-		mMaxPrimZPos = F32_MAX;
+		mMaxPrimXPos = OS_MAX_OBJECT_XY;
+		mMaxPrimYPos = OS_MAX_OBJECT_XY;
+		mMaxPrimZPos = OS_MAX_OBJECT_Z;
 		mMinPrimXPos = 0;
 		mMinPrimYPos = 0;
-		mMinPrimZPos = 0;
+		mMinPrimZPos = OS_MIN_OBJECT_Z;
 		mMaxDragDistance = gSavedSettings.getF32("MaxDragDistance");
 		mClassicCloudsEnabled = FALSE;
 		mAllowParcelWindLight = TRUE;
@@ -295,6 +297,8 @@ void LLWorld::refreshLimits()
 
 		mDrawDistance = -1.f;
 		mTerrainDetailScale = -1.f;
+        
+        mRegionWidth = OS_MAX_OBJECT_XY;  // this is NOT correct for Opensim - need to be able to find the exact size of a VAR.
 	}
 	else
 	{
@@ -323,7 +327,7 @@ void LLWorld::refreshLimits()
 		mMaxPrimZPos = 4096;
 		mMinPrimXPos = 0;
 		mMinPrimYPos = 0;
-		mMinPrimZPos = 0;
+		mMinPrimZPos = SL_MIN_OBJECT_Z;
 		mMaxDragDistance = gSavedSettings.getF32("MaxDragDistance");
 		mClassicCloudsEnabled = FALSE;
 		mAllowParcelWindLight = FALSE;
@@ -337,6 +341,8 @@ void LLWorld::refreshLimits()
 
 		mDrawDistance = -1.f;
 		mTerrainDetailScale = -1.f;
+        
+        mRegionWidth = SL_MAX_OBJECT_XY; 
 	}
 	LL_DEBUGS("OS_SETTINGS") << "RegionMaxHeight    " << mRegionMaxHeight << LL_ENDL;
 	LL_DEBUGS("OS_SETTINGS") << "RegionMinPrimScale " << mRegionMinPrimScale << LL_ENDL;
@@ -435,16 +441,16 @@ void LLWorld::setMaxInventoryItemsTransfer(S32 val)
 
 void LLWorld::setMaxPrimXPos(F32 val)
 {
-	if(val <= 0.0f)
-		mMaxPrimXPos = F32_MAX;
+    if(val <= 0.0f)
+		mMaxPrimXPos = mRegionWidth;
 	else
 		mMaxPrimXPos = val;
 }
 
 void LLWorld::setMaxPrimYPos(F32 val)
-{
+{  
 	if(val <= 0.0f)
-		mMaxPrimYPos = F32_MAX;
+		mMaxPrimYPos = mRegionWidth;
 	else
 		mMaxPrimYPos = val;
 }
@@ -475,8 +481,15 @@ void LLWorld::setMinPrimYPos(F32 val)
 
 void LLWorld::setMinPrimZPos(F32 val)
 {
-	if(val < 0.0f)
-		mMinPrimZPos = 0.0f;
+	F32 minZLimit = SL_MIN_OBJECT_Z;
+    
+    if (!LLGridManager::instance().isInSecondLife())
+    {
+        minZLimit = OS_MIN_OBJECT_Z;
+    }
+    
+    if(val < minZLimit)
+		mMinPrimZPos = minZLimit;
 	else
 		mMinPrimZPos = val;
 }
