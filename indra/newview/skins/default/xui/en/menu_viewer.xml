@@ -922,7 +922,7 @@
                  parameter="EditLinkedParts" />
                 <menu_item_check.on_enable
                  function="Tools.EnableToolNotPie" />
-            </menu_item_check>
+        </menu_item_check>
         <menu
          create_jump_keys="true"
          label="Select Linked Parts"
@@ -978,7 +978,8 @@
               parameter="pathfinding_linksets" />
           <menu_item_call.on_enable
               function="Tools.EnablePathfinding" />
-        </menu_item_call> 
+        </menu_item_call>
+         
         <menu_item_separator/>
 
         <menu_item_call
@@ -1106,7 +1107,7 @@
           </menu_item_call>
         </menu>
 
-      <menu
+        <menu
          create_jump_keys="true"
          label="Pathfinding"
          name="Pathfinding"
@@ -1147,10 +1148,9 @@
           <menu_item_call.on_enable
               function="Tools.EnablePathfindingRebakeRegion" />
         </menu_item_call>
-      </menu>
+        </menu>
 
-
-      <menu_item_separator/>
+        <menu_item_separator/>
 
         <menu
          create_jump_keys="true"
@@ -1304,7 +1304,6 @@
                     <menu_item_call.on_enable
                      function="Tools.EnableToolNotPie" />
                 </menu_item_call>				
-<<<<<<< local
         </menu>
         <menu
          create_jump_keys="true"
@@ -1352,9 +1351,7 @@
                  function="Upload.CalculateCosts"
                  parameter="Upload Animation" />
             </menu_item_call>
-            <menu_item_call
-=======
-    </menu>
+        </menu>
     <menu
      create_jump_keys="true"
      label="Upload"
@@ -1402,12 +1399,10 @@
          parameter="Upload Animation" />
       </menu_item_call>
       <menu_item_call
->>>>>>> other
            label="Mesh Model..."
            layout="topleft"
            name="Upload Model"
            shortcut="control|alt|U">
-<<<<<<< local
             <menu_item_call.on_click
              function="File.UploadModel"
              parameter="" />
@@ -1415,51 +1410,37 @@
              function="File.EnableUploadModel" />
             <menu_item_call.on_visible
             function="File.VisibleUploadModel"/>
-            </menu_item_call>
-	   <menu_item_call
+      </menu_item_call>
+	  <menu_item_call
              label="Bulk (L$[COST] per file)..."
              layout="topleft"
              name="Bulk Upload">
                 <menu_item_call.on_click
                  function="File.UploadBulk"
                  parameter="" />
-            </menu_item_call>
-=======
-        <menu_item_call.on_click
-         function="File.UploadModel"
-         parameter="" />
-        <menu_item_call.on_enable
-         function="File.EnableUploadModel" />
-        <menu_item_call.on_visible
-        function="File.VisibleUploadModel"/>
       </menu_item_call>
-      <menu_item_call
-              label="Bulk ([COST] per file)..."
-              layout="topleft"
-              name="Bulk Upload">
-        <menu_item_call.on_click
-         function="File.UploadBulk"
-         parameter="" />
-      </menu_item_call>
->>>>>>> other
-	    <menu_item_call
+	  <menu_item_call
              label="Restore Linkset Backup (OXP Format)"
              visibility_control="FSEnableObjectExports"
              name="import linkset">
                 <menu_item_call.on_click
                  function="Floater.Toggle"
                  parameter="fs_import" />
-            </menu_item_call>
-            <menu_item_separator/>
-            <menu_item_call
+      </menu_item_call>
+      
+      <menu_item_separator/>
+      
+      <menu_item_call
              label="Set Default Upload Permissions"
              name="perm prefs">
                 <menu_item_call.on_click
                  function="Floater.Toggle"
                  parameter="perm_prefs" />
-            </menu_item_call>
-        </menu>
+       </menu_item_call>
+    </menu>
+        
         <menu_item_separator/>
+        
         <menu_item_call
          enabled="false"
          label="Undo"
