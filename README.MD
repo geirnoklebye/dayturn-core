@@ -279,15 +279,13 @@ Mac
 
 --------
 
-Current development system is OS X 10.10.4 with Xcode 6.4 and the latest Mac version of Mercurial for source management. 
+The current development environment is XCode 7.3 running on OS X 10.11.4 where the viewer is built 32-bit with OS X SDK 10.11 and Deployment Target of OS X 10.9.
 
-The viewer is built with the OS X 10.9 SDK with a deployment target of 10.9.
+Still building for i386 as there are dependencies in the LL code to old Carbon framework that prevents successfull 64-bit build. A 32-bit build is not such a big issue on OS X as the application can use the full 32-bit address space of 4 GB which should be sufficient unless you run in an OpenSim grid with very large VAR regions.
 
-There currently exist some dependencies in the code base to the old Carbon frameworks (specifically Text Edit) that cannot be compiled 64-bit, so we are going to build a 32-bit version meaning all dependencies should also be built 32-bit. 
+You can both build from the command line in terminal or build the XCode project that is generatedduing configuration.
 
-Performance-wise a 32-bit build should be more or less identical to a 64-bit version as the biggest performance factor lies in the renderer which would have to be rewritten to something else to gain significant performance increase (METAL). 
-
-The 32-bit viewer can address and use a full 4GB of system memory which is more than sufficient unless you are in very large OpenSim VAR regions. In addition it will use the memory installed on the GPU for texture cacheing.
+NOTE: On Upgrading XCode to a new version you probably should delete the Derived Data folder that is found in Development/XCode as it may contain links to old system library locations preventing your build from linking.
 
 	-- 
 
