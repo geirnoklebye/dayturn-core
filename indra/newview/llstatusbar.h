@@ -42,8 +42,10 @@ class LLUUID;
 class LLFrameTimer;
 class LLLayoutPanel;
 class LLStatGraph;
+class LLPanelPresetsPulldown;
 class LLPanelVolumePulldown;
 class LLPanelNearByMedia;
+class LLIconCtrl;
 
 class LLStatusBar
 :	public LLPanel
@@ -93,6 +95,7 @@ private:
 	void onClickBuyCurrency();
 	void onVolumeChanged(const LLSD& newvalue);
 
+	void onMouseEnterPresets();
 	void onMouseEnterVolume();
 	void onMouseEnterNearbyMedia();
 	void onClickStatistics();
@@ -112,6 +115,7 @@ private:
 
 	LLStatGraph	*mSGBandwidth;
 	LLStatGraph	*mSGPacketLoss;
+	LLIconCtrl	*mIconPresets;
 	LLButton	*mBtnVolume;
 	LLTextBox	*mBoxBalance;
 	LLButton	*mMediaToggle;
@@ -127,6 +131,7 @@ private:
 	S32				mSquareMetersCommitted;
 	LLFrameTimer*	mBalanceTimer;
 	LLFrameTimer*	mHealthTimer;
+	LLPanelPresetsPulldown* mPanelPresetsPulldown;
 	LLPanelVolumePulldown* mPanelVolumePulldown;
 	LLPanelNearByMedia*	mPanelNearByMedia;
 };

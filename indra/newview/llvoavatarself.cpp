@@ -69,6 +69,7 @@
 #include "llsdutil.h"
 #include "llstartup.h"
 #include "llsdserialize.h"
+#include "llcorehttputil.h"
 
 #if LL_MSVC
 // disable boost::lexical_cast warning
@@ -110,6 +111,9 @@ void selfClearPhases()
 
 using namespace LLAvatarAppearanceDefines;
 
+
+LLSD summarize_by_buckets(std::vector<LLSD> in_records, std::vector<std::string> by_fields, std::string val_field);
+
 /*********************************************************************************
  **                                                                             **
  ** Begin private LLVOAvatarSelf Support classes
@@ -130,25 +134,6 @@ struct LocalTextureData
 	S32 mDiscard;
 	LLUUID mWearableID;	// UUID of the wearable that this texture belongs to, not of the image itself
 	LLTextureEntry *mTexEntry;
-};
-
-// TODO - this class doesn't really do anything, could just use a base
-// class responder if nothing else gets added.
-class LLHoverHeightResponder: public LLHTTPClient::Responder
-{
-public:
-	LLHoverHeightResponder(): LLHTTPClient::Responder() {}
-
-private:
-	void httpFailure()
-	{
-		LL_WARNS() << dumpResponse() << LL_ENDL;
-	}
-
-	void httpSuccess()
-	{
-		LL_INFOS() << dumpResponse() << LL_ENDL;
-	}
 };
 
 //-----------------------------------------------------------------------------
@@ -185,7 +170,9 @@ LLVOAvatarSelf::LLVOAvatarSelf(const LLUUID& id,
 	mRegionCrossingCount(0),
 	// Value outside legal range, so will always be a mismatch the
 	// first time through.
-	mLastHoverOffsetSent(LLVector3(0.0f, 0.0f, -999.0f))
+	mLastHoverOffsetSent(LLVector3(0.0f, 0.0f, -999.0f)),
+    mInitialMetric(true),
+    mMetricSequence(0)
 {
 	gAgentWearables.setAvatarObject(this);
 
@@ -515,7 +502,7 @@ BOOL LLVOAvatarSelf::buildMenus()
 				 ++iter)
 			{
 				LLViewerJointAttachment* attachment = iter->second;
-				if (attachment->getGroup() == i)
+				if (attachment && attachment->getGroup() == i)
 				{
 					LLMenuItemCallGL::Params item_params;
 					PieSlice::Params slice_params;	// ## Zi: Pie menu
@@ -569,7 +556,7 @@ BOOL LLVOAvatarSelf::buildMenus()
 				 ++iter)
 			{
 				LLViewerJointAttachment* attachment = iter->second;
-				if (attachment->getGroup() == i)
+				if (attachment && attachment->getGroup() == i)
 				{
 					LLMenuItemCallGL::Params item_params;
 					PieSlice::Params slice_params;	// ## Zi: Pie menu
@@ -616,7 +603,7 @@ BOOL LLVOAvatarSelf::buildMenus()
 		 ++iter)
 	{
 		LLViewerJointAttachment* attachment = iter->second;
-		if (attachment->getGroup() == 8)
+		if (attachment && attachment->getGroup() == 8)
 		{
 			LLMenuItemCallGL::Params item_params;
 			PieSlice::Params slice_params;	// ## Zi: Pie menu
@@ -738,7 +725,7 @@ BOOL LLVOAvatarSelf::buildMenus()
 			 ++iter)
 		{
 			LLViewerJointAttachment* attachment = iter->second;
-			if(attachment->getGroup() == group)
+			if(attachment && attachment->getGroup() == group)
 			{
 				// use multimap to provide a partial order off of the pie slice key
 				S32 pie_index = attachment->getPieSlice();
@@ -2157,7 +2144,7 @@ void LLVOAvatarSelf::dumpTotalLocalTextureByteCount()
 	LL_INFOS() << "Total Avatar LocTex GL:" << (gl_bytes/1024) << "KB" << LL_ENDL;
 }
 
-BOOL LLVOAvatarSelf::getIsCloud() const
+bool LLVOAvatarSelf::getIsCloud() const
 {
 	// Let people know why they're clouded without spamming them into oblivion.
 	bool do_warn = false;
@@ -2185,7 +2172,7 @@ BOOL LLVOAvatarSelf::getIsCloud() const
 					<< (skin_count ? "" : "SKIN ")
 					<< LL_ENDL;
 		}
-		return TRUE;
+		return true;
 	}
 
 	if (!isTextureDefined(TEX_HAIR, 0))
@@ -2194,7 +2181,7 @@ BOOL LLVOAvatarSelf::getIsCloud() const
 		{
 			LL_INFOS() << "Self is clouded because of no hair texture" << LL_ENDL;
 		}
-		return TRUE;
+		return true;
 	}
 
 	if (!mPreviousFullyLoaded)
@@ -2206,7 +2193,7 @@ BOOL LLVOAvatarSelf::getIsCloud() const
 			{
 				LL_INFOS() << "Self is clouded because lower textures not baked" << LL_ENDL;
 			}
-			return TRUE;
+			return true;
 		}
 
 		if (!isLocalTextureDataAvailable(getLayerSet(BAKED_UPPER)) &&
@@ -2216,7 +2203,7 @@ BOOL LLVOAvatarSelf::getIsCloud() const
 			{
 				LL_INFOS() << "Self is clouded because upper textures not baked" << LL_ENDL;
 			}
-			return TRUE;
+			return true;
 		}
 
 		for (U32 i = 0; i < mBakedTextureDatas.size(); i++)
@@ -2237,13 +2224,13 @@ BOOL LLVOAvatarSelf::getIsCloud() const
 					LL_INFOS() << "Self is clouded because texture at index " << i
 							<< " (texture index is " << texture_data.mTextureIndex << ") is not loaded" << LL_ENDL;
 				}
-				return TRUE;
+				return true;
 			}
 		}
 
 		LL_DEBUGS() << "Avatar de-clouded" << LL_ENDL;
 	}
-	return FALSE;
+	return false;
 }
 
 /*static*/
@@ -2436,7 +2423,7 @@ const std::string LLVOAvatarSelf::debugDumpAllLocalTextureDataInfo() const
 	return text;
 }
 
-
+void LLVOAvatarSelf::appearanceChangeMetricsCoro(std::string url)
 #if 0
 // Dump avatar metrics data.
 LLSD LLVOAvatarSelf::metricsData()
@@ -2455,43 +2442,75 @@ LLSD LLVOAvatarSelf::metricsData()
 }
 #endif
 
-class ViewerAppearanceChangeMetricsResponder: public LLCurl::Responder
 {
-	LOG_CLASS(ViewerAppearanceChangeMetricsResponder);
-public:
-	ViewerAppearanceChangeMetricsResponder( S32 expected_sequence,
-											volatile const S32 & live_sequence,
-											volatile bool & reporting_started):
-		mExpectedSequence(expected_sequence),
-		mLiveSequence(live_sequence),
-		mReportingStarted(reporting_started)
-	{
-	}
+    LLCore::HttpRequest::policy_t httpPolicy(LLCore::HttpRequest::DEFAULT_POLICY_ID);
+    LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t
+        httpAdapter(new LLCoreHttpUtil::HttpCoroutineAdapter("appearanceChangeMetrics", httpPolicy));
+    LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest);
+    LLCore::HttpOptions::ptr_t httpOpts = LLCore::HttpOptions::ptr_t(new LLCore::HttpOptions);
 
-private:
-	/* virtual */ void httpSuccess()
-	{
-		LL_DEBUGS("Avatar") << "OK" << LL_ENDL;
+    S32 currentSequence = mMetricSequence;
+    if (S32_MAX == ++mMetricSequence)
+        mMetricSequence = 0;
 
-		gPendingMetricsUploads--;
-		if (mLiveSequence == mExpectedSequence)
-		{
-			mReportingStarted = true;
-		}
-	}
+    LLSD msg;
+    msg["message"] = "ViewerAppearanceChangeMetrics";
+    msg["session_id"] = gAgentSessionID;
+    msg["agent_id"] = gAgentID;
+    msg["sequence"] = currentSequence;
+    msg["initial"] = mInitialMetric;
+    msg["break"] = false;
+    msg["duration"] = mTimeSinceLastRezMessage.getElapsedTimeF32();
 
-	/* virtual */ void httpFailure()
-	{
-		// if we add retry, this should be removed from the httpFailure case
-		LL_WARNS("Avatar") << dumpResponse() << LL_ENDL;
-		gPendingMetricsUploads--;
-	}
+    // Status of our own rezzing.
+    msg["rez_status"] = LLVOAvatar::rezStatusToString(getRezzedStatus());
 
-private:
-	S32 mExpectedSequence;
-	volatile const S32 & mLiveSequence;
-	volatile bool & mReportingStarted;
-};
+    // Status of all nearby avs including ourself.
+    msg["nearby"] = LLSD::emptyArray();
+    std::vector<S32> rez_counts;
+    LLVOAvatar::getNearbyRezzedStats(rez_counts);
+    for (S32 rez_stat = 0; rez_stat < rez_counts.size(); ++rez_stat)
+    {
+        std::string rez_status_name = LLVOAvatar::rezStatusToString(rez_stat);
+        msg["nearby"][rez_status_name] = rez_counts[rez_stat];
+    }
+
+    //	std::vector<std::string> bucket_fields("timer_name","is_self","grid_x","grid_y","is_using_server_bake");
+    std::vector<std::string> by_fields;
+    by_fields.push_back("timer_name");
+    by_fields.push_back("completed");
+    by_fields.push_back("grid_x");
+    by_fields.push_back("grid_y");
+    by_fields.push_back("is_using_server_bakes");
+    by_fields.push_back("is_self");
+    by_fields.push_back("central_bake_version");
+    LLSD summary = summarize_by_buckets(mPendingTimerRecords, by_fields, std::string("elapsed"));
+    msg["timers"] = summary;
+
+    mPendingTimerRecords.clear();
+
+    LL_DEBUGS("Avatar") << avString() << "message: " << ll_pretty_print_sd(msg) << LL_ENDL;
+
+    gPendingMetricsUploads++;
+
+    LLSD result = httpAdapter->postAndSuspend(httpRequest, url, msg);
+
+    LLSD httpResults = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS];
+    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD(httpResults);
+
+    gPendingMetricsUploads--;
+
+    if (!status)
+    {
+        LL_WARNS("Avatar") << "Unable to upload statistics" << LL_ENDL;
+        return;
+    }
+    else
+    {
+        LL_INFOS("Avatar") << "Statistics upload OK" << LL_ENDL;
+        mInitialMetric = false;
+    }
+}
 
 bool LLVOAvatarSelf::updateAvatarRezMetrics(bool force_send)
 {
@@ -2569,51 +2588,7 @@ LLSD summarize_by_buckets(std::vector<LLSD> in_records,
 
 void LLVOAvatarSelf::sendViewerAppearanceChangeMetrics()
 {
-	static volatile bool reporting_started(false);
-	static volatile S32 report_sequence(0);
-
-	LLSD msg; // = metricsData();
-	msg["message"] = "ViewerAppearanceChangeMetrics";
-	msg["session_id"] = gAgentSessionID;
-	msg["agent_id"] = gAgentID;
-	msg["sequence"] = report_sequence;
-	msg["initial"] = !reporting_started;
-	msg["break"] = false;
-	msg["duration"] = mTimeSinceLastRezMessage.getElapsedTimeF32();
-
-	// Status of our own rezzing.
-	msg["rez_status"] = LLVOAvatar::rezStatusToString(getRezzedStatus());
-
-	// Status of all nearby avs including ourself.
-	msg["nearby"] = LLSD::emptyArray();
-	std::vector<S32> rez_counts;
-	LLVOAvatar::getNearbyRezzedStats(rez_counts);
-	for (S32 rez_stat=0; rez_stat < rez_counts.size(); ++rez_stat)
-	{
-		std::string rez_status_name = LLVOAvatar::rezStatusToString(rez_stat);
-		msg["nearby"][rez_status_name] = rez_counts[rez_stat];
-	}
-
-	//	std::vector<std::string> bucket_fields("timer_name","is_self","grid_x","grid_y","is_using_server_bake");
-	std::vector<std::string> by_fields;
-	by_fields.push_back("timer_name");
-	by_fields.push_back("completed");
-	by_fields.push_back("grid_x");
-	by_fields.push_back("grid_y");
-	by_fields.push_back("is_using_server_bakes");
-	by_fields.push_back("is_self");
-	by_fields.push_back("central_bake_version");
-	LLSD summary = summarize_by_buckets(mPendingTimerRecords, by_fields, std::string("elapsed"));
-	msg["timers"] = summary;
-
-	mPendingTimerRecords.clear();
-
-	// Update sequence number
-	if (S32_MAX == ++report_sequence)
-		report_sequence = 0;
-
-	LL_DEBUGS("Avatar") << avString() << "message: " << ll_pretty_print_sd(msg) << LL_ENDL;
-	std::string	caps_url;
+    std::string	caps_url;
 	if (getRegion())
 	{
 		// runway - change here to activate.
@@ -2621,13 +2596,9 @@ void LLVOAvatarSelf::sendViewerAppearanceChangeMetrics()
 	}
 	if (!caps_url.empty())
 	{
-		gPendingMetricsUploads++;
-		LLCurlRequest::headers_t headers;
-		LLHTTPClient::post(caps_url,
-						   msg,
-						   new ViewerAppearanceChangeMetricsResponder(report_sequence,
-																	  report_sequence,
-																	  reporting_started));
+
+        LLCoros::instance().launch("LLVOAvatarSelf::appearanceChangeMetricsCoro",
+            boost::bind(&LLVOAvatarSelf::appearanceChangeMetricsCoro, this, caps_url));
 		mTimeSinceLastRezMessage.reset();
 	}
 }
@@ -3274,8 +3245,12 @@ void LLVOAvatarSelf::sendHoverHeight() const
 		update["hover_height"] = hover_offset[2];
 
 		LL_DEBUGS("Avatar") << avString() << "sending hover height value " << hover_offset[2] << LL_ENDL;
-		LLHTTPClient::post(url, update, new LLHoverHeightResponder);
 
+        // *TODO: - this class doesn't really do anything, could just use a base
+        // class responder if nothing else gets added. 
+        // (comment from removed Responder)
+        LLCoreHttpUtil::HttpCoroutineAdapter::messageHttpPost(url, update, 
+            "Hover hight sent to sim", "Hover hight not sent to sim");
 		mLastHoverOffsetSent = hover_offset;
 	}
 }

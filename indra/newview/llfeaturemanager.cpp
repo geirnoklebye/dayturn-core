@@ -40,7 +40,6 @@
 
 #include "llappviewer.h"
 #include "llbufferstream.h"
-#include "llhttpclient.h"
 #include "llnotificationsutil.h"
 #include "llviewercontrol.h"
 #include "llworld.h"
@@ -55,6 +54,7 @@
 #include "llviewershadermgr.h"
 #include "llstring.h"
 #include "stringize.h"
+#include "llcorehttputil.h"
 
 #if LL_WINDOWS
 #include "lldxhardware.h"
@@ -98,6 +98,10 @@ void LLFeatureList::addFeature(const std::string& name, const BOOL available, co
 	}
 
 	LLFeatureInfo fi(name, available, level);
+    LL_DEBUGS_ONCE("RenderInit") << "Feature '" << name << "' "
+                                 << (available ? "" : "not " ) << "available"
+                                 << " at " << level
+                                 << LL_ENDL;
 	mFeatures[name] = fi;
 }
 
@@ -119,6 +123,7 @@ F32 LLFeatureList::getRecommendedValue(const std::string& name)
 {
 	if (mFeatures.count(name) && isFeatureAvailable(name))
 	{
+        LL_DEBUGS_ONCE("RenderInit") << "Setting '" << name << "' to recommended value " <<  mFeatures[name].mRecommendedLevel << LL_ENDL;
 		return mFeatures[name].mRecommendedLevel;
 	}
 
@@ -128,7 +133,7 @@ F32 LLFeatureList::getRecommendedValue(const std::string& name)
 
 BOOL LLFeatureList::maskList(LLFeatureList &mask)
 {
-	//LL_INFOS() << "Masking with " << mask.mName << LL_ENDL;
+	LL_DEBUGS_ONCE() << "Masking with " << mask.mName << LL_ENDL;
 	//
 	// Lookup the specified feature mask, and overlay it on top of the
 	// current feature mask.
@@ -294,7 +299,7 @@ bool LLFeatureManager::loadFeatureTables()
 	app_path += filename;
 
 	
-	// second table is downloaded with HTTP
+	// second table is downloaded with HTTP - note that this will only be used on the run _after_ it is downloaded
 	std::string http_path = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, http_filename);
 
 	// use HTTP table if it exists
@@ -378,11 +383,11 @@ bool LLFeatureManager::parseFeatureTable(std::string filename)
 			file >> name;
 			if (!mMaskList.count(name))
 			{
-			flp = new LLFeatureList(name);
-			mMaskList[name] = flp;
-		}
-		else
-		{
+                flp = new LLFeatureList(name);
+                mMaskList[name] = flp;
+            }
+            else
+            {
 				LL_WARNS("RenderInit") << "Overriding mask " << name << ", this is invalid!" << LL_ENDL;
 				parse_ok = false;
 			}
@@ -391,11 +396,11 @@ bool LLFeatureManager::parseFeatureTable(std::string filename)
 		{
 			if (flp)
 			{
-			S32 available;
-			F32 recommended;
-			file >> available >> recommended;
-			flp->addFeature(name, available, recommended);
-		}
+                S32 available;
+                F32 recommended;
+                file >> available >> recommended;
+                flp->addFeature(name, available, recommended);
+            }
 			else
 			{
 				LL_WARNS("RenderInit") << "Specified parameter before <list> keyword!" << LL_ENDL;
@@ -490,94 +495,69 @@ bool LLFeatureManager::loadGPUClass()
 	return true; // indicates that a gpu value was established
 }
 
-	
-// responder saves table into file
-class LLHTTPFeatureTableResponder : public LLHTTPClient::Responder
+void LLFeatureManager::fetchFeatureTableCoro(std::string tableName)
 {
-	LOG_CLASS(LLHTTPFeatureTableResponder);
-public:
+    LLCore::HttpRequest::policy_t httpPolicy(LLCore::HttpRequest::DEFAULT_POLICY_ID);
+    LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t
+        httpAdapter(new LLCoreHttpUtil::HttpCoroutineAdapter("FeatureManagerHTTPTable", httpPolicy));
+    LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest);
 
-	LLHTTPFeatureTableResponder(std::string filename) :
-		mFilename(filename)
-	{
-	}
+    const std::string base = gSavedSettings.getString("FeatureManagerHTTPTable");
 
-	
-	virtual void completedRaw(const LLChannelDescriptors& channels,
-							  const LLIOPipe::buffer_ptr_t& buffer)
-	{
-		if (isGoodStatus())
-		{
-			// write to file
-
-			LL_INFOS() << "writing feature table to " << mFilename << LL_ENDL;
-			
-			S32 file_size = buffer->countAfter(channels.in(), NULL);
-			if (file_size > 0)
-			{
-				// read from buffer
-				U8* copy_buffer = new U8[file_size];
-				buffer->readAfter(channels.in(), NULL, copy_buffer, file_size);
-
-				// write to file
-				LLAPRFile out(mFilename, LL_APR_WB);
-				out.write(copy_buffer, file_size);
-				out.close();
-			}
-		}
-		else
-		{
-			char body[1025]; 
-			body[1024] = '\0';
-			LLBufferStream istr(channels, buffer.get());
-			istr.get(body,1024);
-			if (strlen(body) > 0)
-			{
-				mContent["body"] = body;
-			}
-			LL_WARNS() << dumpResponse() << LL_ENDL;
-		}
-	}
-	
-private:
-	std::string mFilename;
-};
-
-void fetch_feature_table(std::string table)
-{
-	const std::string base       = gSavedSettings.getString("FeatureManagerHTTPTable");
 
 #if LL_WINDOWS
-	std::string os_string = LLAppViewer::instance()->getOSInfo().getOSStringSimple();
-	std::string filename;
-	if (os_string.find("Microsoft Windows XP") == 0)
-	{
-		filename = llformat(table.c_str(), "_xp", LLVersionInfo::getVersion().c_str());
-	}
-	else
-	{
-		filename = llformat(table.c_str(), "", LLVersionInfo::getVersion().c_str());
-	}
+    std::string os_string = LLAppViewer::instance()->getOSInfo().getOSStringSimple();
+    std::string filename;
+
+    if (os_string.find("Microsoft Windows XP") == 0)
+    {
+        filename = llformat(tableName.c_str(), "_xp", LLVersionInfo::getVersion().c_str());
+    }
+    else
+    {
+        filename = llformat(tableName.c_str(), "", LLVersionInfo::getVersion().c_str());
+    }
 #else
-	const std::string filename   = llformat(table.c_str(), LLVersionInfo::getVersion().c_str());
+    const std::string filename   = llformat(tableName.c_str(), LLVersionInfo::getVersion().c_str());
 #endif
 
-	const std::string url        = base + "/" + filename;
+    std::string url        = base + "/" + filename;
+    // testing url below
+    //url = "http://viewer-settings.secondlife.com/featuretable.2.1.1.208406.txt";
+    const std::string path       = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, filename);
 
-	const std::string path       = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, filename);
 
-	LL_INFOS() << "LLFeatureManager fetching " << url << " into " << path << LL_ENDL;
-	
-	LLHTTPClient::get(url, new LLHTTPFeatureTableResponder(path));
+    LL_INFOS() << "LLFeatureManager fetching " << url << " into " << path << LL_ENDL;
+
+    LLSD result = httpAdapter->getRawAndSuspend(httpRequest, url);
+
+    LLSD httpResults = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS];
+    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD(httpResults);
+
+    if (status)
+    {   // There was a newer feature table on the server. We've grabbed it and now should write it.
+        // write to file
+        const LLSD::Binary &raw = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_RAW].asBinary();
+
+        LL_INFOS() << "writing feature table to " << path << LL_ENDL;
+
+        S32 size = raw.size();
+        if (size > 0)
+        {
+            // write to file
+            LLAPRFile out(path, LL_APR_WB);
+            out.write(raw.data(), size);
+            out.close();
+        }
+    }
 }
-
 
 // fetch table(s) from a website (S3)
 void LLFeatureManager::fetchHTTPTables()
 {
-	fetch_feature_table(FEATURE_TABLE_VER_FILENAME);
+    LLCoros::instance().launch("LLFeatureManager::fetchFeatureTableCoro",
+        boost::bind(&LLFeatureManager::fetchFeatureTableCoro, this, FEATURE_TABLE_VER_FILENAME));
 }
-
 
 void LLFeatureManager::cleanupFeatureTables()
 {
@@ -604,7 +584,7 @@ void LLFeatureManager::applyRecommendedSettings()
 	// cap the level at 2 (high)
 	U32 level = llmax(GPU_CLASS_0, llmin(mGPUClass, GPU_CLASS_5));
 
-	LL_INFOS() << "Applying Recommended Features" << LL_ENDL;
+	LL_INFOS("RenderInit") << "Applying Recommended Features for level " << level << LL_ENDL;
 
 	setGraphicsLevel(level, false);
 	gSavedSettings.setU32("RenderQualityPerformance", level);
@@ -811,7 +791,7 @@ void LLFeatureManager::applyBaseMasks()
 	if (osInfo.mMajorVer == 10 && osInfo.mMinorVer < 7)
 	{
 		maskFeatures("OSX_10_6_8");
-        }
+	}
 #endif
 
 	// now mask by gpu string
