@@ -117,6 +117,7 @@
 #include "llviewermedia.h"
 #include "llviewermedia_streamingaudio.h"
 #include "llviewertexturelist.h"
+#include "llpresetsmanager.h"
 
 const F32 BANDWIDTH_UPDATER_TIMEOUT = 0.5f;
 char const* const VISIBILITY_DEFAULT = "default";
@@ -2900,7 +2901,6 @@ void LLPanelPreferenceOpensim::refreshGridList(bool success)
 
 	if (!mGridListControl)
 	{
-		LL_WARNS() << "No GridListControl - bug or out of memory" << LL_ENDL;
 		return;
 	}
 

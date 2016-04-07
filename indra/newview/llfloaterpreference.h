@@ -272,7 +272,7 @@ protected:
 private:
 
 	void onPresetsListChange();
-	LOG_CLASS(LLPanelPreferenceGraphics);
+
 };
 
 class LLFloaterPreferenceGraphicsAdvanced : public LLFloater

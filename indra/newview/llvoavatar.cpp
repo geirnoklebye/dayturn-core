@@ -107,6 +107,7 @@
 #include "llsdutil.h"
 #include "llscenemonitor.h"
 #include "llsdserialize.h"
+#include "lldateutil.h"
 
 extern F32 SPEED_ADJUST_MAX;
 extern F32 SPEED_ADJUST_MAX_SEC;

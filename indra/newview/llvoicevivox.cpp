@@ -449,23 +449,6 @@ void LLVivoxVoiceClient::userAuthorized(const std::string& user_id, const LLUUID
 }
 
 void LLVivoxVoiceClient::setLoginInfo(
-	// <FS:ND> CAP can return 404 on first try, repeat until num retries are reached or we get 200
-	S32 i = 0;
-	do {
-	// </FS:ND>
-
-	// <FS:ND> CAP can return 404 on first try, repeat until num retries are reached or we get 200
-	if( !status )
-	{
-		if( i++ < retries )
-			continue;
-	}
-	// </FS:ND>
-
-	// <FS:ND> CAP can return 404 on first try, repeat until num retries are reached or we get 200
-	return;
-	} while( true );
-	// </FS:ND>
 	const std::string& account_name,
 	const std::string& password,
 	const std::string& voice_sip_uri_hostname,
@@ -474,19 +457,19 @@ void LLVivoxVoiceClient::setLoginInfo(
 	mVoiceSIPURIHostName = voice_sip_uri_hostname;
 	mVoiceAccountServerURI = voice_account_server_uri;
 
-	if(mAccountLoggedIn)
+	if (mAccountLoggedIn)
 	{
 		// Already logged in.
 		LL_WARNS("Voice") << "Called while already logged in." << LL_ENDL;
-		
+
 		// Don't process another login.
 		return;
 	}
-	else if ( account_name != mAccountName )
+	else if (account_name != mAccountName)
 	{
 		//TODO: error?
 		LL_WARNS("Voice") << "Wrong account name! " << account_name
-				<< " instead of " << mAccountName << LL_ENDL;
+			<< " instead of " << mAccountName << LL_ENDL;
 	}
 	else
 	{
@@ -494,18 +477,18 @@ void LLVivoxVoiceClient::setLoginInfo(
 	}
 
 	std::string debugSIPURIHostName = gSavedSettings.getString("VivoxDebugSIPURIHostName");
-	
-	if( !debugSIPURIHostName.empty() )
+
+	if (!debugSIPURIHostName.empty())
 	{
 		mVoiceSIPURIHostName = debugSIPURIHostName;
 	}
-	
-	if( mVoiceSIPURIHostName.empty() )
+
+	if (mVoiceSIPURIHostName.empty())
 	{
 		// we have an empty account server name
 		// so we fall back to hardcoded defaults
 
-		if(!LLGridManager::getInstance()->isInSLBeta())
+		if (!LLGridManager::getInstance()->isInSLBeta())
 		{
 			// Use the release account server
 			mVoiceSIPURIHostName = "bhr.vivox.com";
@@ -516,18 +499,18 @@ void LLVivoxVoiceClient::setLoginInfo(
 			mVoiceSIPURIHostName = "bhd.vivox.com";
 		}
 	}
-	
+
 	std::string debugAccountServerURI = gSavedSettings.getString("VivoxDebugVoiceAccountServerURI");
 
-	if( !debugAccountServerURI.empty() )
+	if (!debugAccountServerURI.empty())
 	{
 		mVoiceAccountServerURI = debugAccountServerURI;
 	}
-	
-	if( mVoiceAccountServerURI.empty() )
+
+	if (mVoiceAccountServerURI.empty())
 	{
 		// If the account server URI isn't specified, construct it from the SIP URI hostname
-		mVoiceAccountServerURI = "https://www." + mVoiceSIPURIHostName + "/api2/";		
+		mVoiceAccountServerURI = "https://www." + mVoiceSIPURIHostName + "/api2/";
 	}
 }
 

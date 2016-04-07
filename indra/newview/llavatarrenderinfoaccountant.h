@@ -47,12 +47,17 @@ class LLAvatarRenderInfoAccountant : public LLSingleton<LLAvatarRenderInfoAccoun
 
 	void sendRenderInfoToRegion(LLViewerRegion * regionp);
 	void getRenderInfoFromRegion(LLViewerRegion * regionp);
+	static void expireRenderInfoReportTimer(const LLUUID& region_id);
 
 	void idle(); // called once per frame 
+
+	static bool logRenderInfo();
 
 	void resetRenderInfoScanTimer();
 	
 	static void scanNewRegion(const LLUUID& region_id);
+
+	static LLFrameTimer sRenderInfoReportTimer;
 
   private:
 	// frequency of region scans,

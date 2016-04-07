@@ -1834,8 +1834,8 @@ void LLViewerParcelMgr::processParcelProperties(LLMessageSystem *msg, void **use
 				LLViewerAudio::getInstance()->stopInternetStreamWithAutoFade();
 			}
 		}//if gAudiop
-	};
-}
+};
+
 
 void LLViewerParcelMgr::optionally_start_music(const std::string& music_url)
 {

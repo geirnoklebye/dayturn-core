@@ -56,8 +56,7 @@
 #include "llstatusbar.h"
 #include "llviewertexture.h"
 #include "llcorehttputil.h"
-#ifdef OPENSIM
-#include "llviewernetwork.h"
+#include "llviewernetwork.h" //opensim
 
 const S32 MINIMUM_PRICE_FOR_LISTING = 50;	// L$
 

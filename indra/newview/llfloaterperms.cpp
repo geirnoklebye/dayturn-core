@@ -262,38 +262,9 @@ void LLFloaterPermsDefault::updateCapCoro(std::string url)
 	LLFloaterPermsDefault::setCapSent(true);
 
     LL_INFOS("ObjectPermissionsFloater") << "Default permissions successfully sent to simulator" << LL_ENDL;
-	}
+	
 }
 
-void LLFloaterPermsDefault::updateCap()
-{
-	std::string object_url = gAgent.getRegion()->getCapability("AgentPreferences");
-
-	if(!object_url.empty())
-	{
-		LLSD report = LLSD::emptyMap();
-		report["default_object_perm_masks"]["Group"] =
-			(LLSD::Integer)LLFloaterPerms::getGroupPerms(sCategoryNames[CAT_OBJECTS]);
-		report["default_object_perm_masks"]["Everyone"] =
-			(LLSD::Integer)LLFloaterPerms::getEveryonePerms(sCategoryNames[CAT_OBJECTS]);
-		report["default_object_perm_masks"]["NextOwner"] =
-			(LLSD::Integer)LLFloaterPerms::getNextOwnerPerms(sCategoryNames[CAT_OBJECTS]);
-
-        {
-            LL_DEBUGS("ObjectPermissionsFloater") << "Sending default permissions to '"
-                                                  << object_url << "'\n";
-            std::ostringstream sent_perms_log;
-            LLSDSerialize::toPrettyXML(report, sent_perms_log);
-            LL_CONT << sent_perms_log.str() << LL_ENDL;
-        }
-        LLFloaterPermsRequester::init(object_url, report, MAX_HTTP_RETRIES);
-        LLFloaterPermsRequester::instance()->start();
-	}
-    else
-    {
-        LL_DEBUGS("ObjectPermissionsFloater") << "AgentPreferences cap not available." << LL_ENDL;
-    }
-}
 
 void LLFloaterPermsDefault::setCapSent(bool cap_sent)
 {
