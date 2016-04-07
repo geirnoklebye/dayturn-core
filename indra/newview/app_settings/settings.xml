@@ -761,7 +761,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>AudioLevelAmbient</key>
     <map>
@@ -2442,6 +2442,19 @@
       <key>Value</key>
       <string />
     </map>
+    <key>CmdLineLoginURI</key>
+    <map>
+      <key>Comment</key>
+      <string>Command line specified login server and CGI prefix to use.</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>LLSD</string>
+      <key>Value</key>
+      <array>
+        <string />
+      </array>
+    </map>
   <key>CmdLineLoginURI1</key>
   <map>
     <key>Comment</key>
@@ -2478,8 +2491,8 @@
       <integer>210</integer>
       <integer>300</integer>
       <integer>0</integer>
-    </array>
-  </map>  
+      </array>
+    </map>
     <key>CmdLineLoginLocation</key>
     <map>
       <key>Comment</key>
@@ -3646,7 +3659,7 @@
     <key>Value</key>
     <string>5b53359e-59dd-d8a2-04c3-9e65134da47a</string>
   </map>
-  <key>DefaultFemaleAvatar</key>
+	<key>DefaultFemaleAvatar</key>
 	<map>
 	  <key>Comment</key>
 	  <string>Default Female Avatar</string>
@@ -4867,6 +4880,17 @@
       <key>Value</key>
       <integer>255</integer>
     </map>
+    <key>ForceLoginURL</key>
+    <map>
+      <key>Comment</key>
+      <string>Force a specified URL for login page content - used if exists</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string></string>
+    </map>
     <key>ForceShowGrid</key>
     <map>
       <key>Comment</key>
@@ -6045,6 +6069,18 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+  <key>LoginContentVersion</key>
+  <map>
+    <key>Comment</key>
+    <string>Version of login page web based content to display</string>
+    <key>Persist</key>
+    <integer>0</integer>
+    <key>Type</key>
+    <string>String</string>
+    <key>Value</key>
+    <string>2</string>
+  </map>
+
   <key>LoginSRVTimeout</key>
   <map>
     <key>Comment</key>
@@ -8990,9 +9026,9 @@
     <key>RenderAnisotropic</key>
     <map>
       <key>Comment</key>
-      <string>Render textures using anisotropic filtering (Unused setting - Set RenderAnisotropicSamples instead of this one)</string>
+      <string>Render textures using anisotropic filtering</string>
       <key>Persist</key>
-      <integer>0</integer>
+      <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -10798,13 +10834,13 @@
   <key>ShowMyComplexityChanges</key>
   <map>
     <key>Comment</key>
-    <string>(If RenderGeometryOverloadProtection is true) Maximum surface area of attachments before an avatar is rendered as a simple impostor (0 to not use this limit).</string>
+    <string>How long to show notices about avatar complexity (set to zero to disable those notices)</string>
     <key>Persist</key>
     <integer>1</integer>
     <key>Type</key>
     <string>U32</string>
     <key>Value</key>
-    <integer>2500</integer>
+    <integer>20</integer>
   </map>
   <key>RenderAvatarMaxComplexity</key>
   <map>
@@ -10902,7 +10938,7 @@
   <key>RenderUseStreamVBO</key>
   <map>
     <key>Comment</key>
-    <string>Use VBOs for stream buffers</string>
+    <string>Use VBO's for stream buffers</string>
     <key>Persist</key>
     <integer>1</integer>
     <key>Type</key>
@@ -11031,7 +11067,6 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
-    
     <key>RotateRight</key>
     <map>
       <key>Comment</key>
@@ -11995,6 +12030,8 @@
       <string>Display results of search All that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12006,6 +12043,8 @@
       <string>Display results of search All that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12017,6 +12056,8 @@
       <string>Display results of search All that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12028,6 +12069,8 @@
       <string>Display results of find groups that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12039,6 +12082,8 @@
       <string>Display results of find groups that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12050,6 +12095,8 @@
       <string>Display results of find groups that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12061,6 +12108,8 @@
       <string>Display results of find classifieds that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12072,6 +12121,8 @@
       <string>Display results of find classifieds that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12083,6 +12134,8 @@
       <string>Display results of find classifieds that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12094,6 +12147,8 @@
       <string>Display results of find events that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12105,6 +12160,8 @@
       <string>Display results of find events that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12116,6 +12173,8 @@
       <string>Display results of find events that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12127,6 +12186,8 @@
       <string>Display results of find land sales that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12138,6 +12199,8 @@
       <string>Display results of find land sales that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12148,6 +12211,8 @@
       <key>Comment</key>
       <string>Display results of find land sales that are flagged as adult</string>
       <key>Persist</key>
+      <integer>1</integer>
+      <key>HideFromEditor</key>
       <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
@@ -12171,6 +12236,8 @@
       <string>Display results of find places or find popular that are in general sims</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12182,6 +12249,8 @@
       <string>Display results of find places or find popular that are in moderate sims</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12193,6 +12262,8 @@
       <string>Display results of find places or find popular that are in adult sims</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -16543,8 +16614,6 @@
     <integer>0</integer>
   </map>
 
-
-     <key>DebugSearch</key>
   <key>SimulateFBOFailure</key>
   <map>
     <key>Comment</key>
@@ -16622,6 +16691,7 @@
     <key>Value</key>
     <integer>0</integer>
   </map>
+    <key>DebugSearch</key>
     <map>
       <key>Comment</key>
       <string>If TRUE use search url as given  in SearchURLDebug</string>
