@@ -466,11 +466,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ab183bf38d32b017a0bb937622a18e13</string>
+              <string>d260709ee0c1f402efb0dba24c60df82</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.38.0.201505290832-linux64-201505290832.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.47.0.201604111501-linux64-201604111501.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -489,7 +489,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>7.42.1.301717</string>
+        <string>7.47.0.201604111501</string>
       </map>
       <key>db</key>
       <map>
