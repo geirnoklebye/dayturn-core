@@ -108,7 +108,7 @@ function fail {
     # add boilerplate
     errorbox "An error occurred while updating Kokua:
 $*
-Please download the latest viewer from www.secondlife.com."
+Please download the latest viewer from http://wiki.kokuaviewer.org/wiki/Kokua/Downloads."
     exit 1
 }
 
