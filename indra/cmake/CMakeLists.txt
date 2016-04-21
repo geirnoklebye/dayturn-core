@@ -27,7 +27,6 @@ set(cmake_SOURCE_FILES
     FindAutobuild.cmake
     FindFMODSTUDIO.cmake
     FindGLH.cmake
-    FindGooglePerfTools.cmake
     FindHUNSPELL.cmake
     FindJsonCpp.cmake
     FindNDOF.cmake
@@ -43,7 +42,6 @@ set(cmake_SOURCE_FILES
     Glui.cmake
     Glut.cmake
     GoogleMock.cmake
-    GooglePerfTools.cmake
     Hunspell.cmake
     JPEG.cmake
     JsonCpp.cmake
