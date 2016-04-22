@@ -213,8 +213,6 @@ LL_COMMON_API extern const LLUUID TERRAIN_ROCK_DETAIL;
 
 LL_COMMON_API extern const LLUUID DEFAULT_WATER_NORMAL;
 
-LL_COMMON_API extern const LLUUID IMG_BLACK_SQUARE;
-
 
 // radius within which a chat message is fully audible
 const F32 CHAT_WHISPER_RADIUS = 10.f;
