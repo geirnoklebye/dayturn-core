@@ -1311,6 +1311,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	LLInventoryType::EType inventory_type = LLInventoryType::defaultForAssetType(asset_type);
 	bool new_file_agent_inventory = false;
 	LLWearableType::EType wearable_type = NOT_WEARABLE;
+	std::string perms_prefix = "";
 
 	if (name.empty())
 	{
@@ -1321,6 +1322,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	{
 	case LLAssetType::AT_TEXTURE:
 	{
+		perms_prefix = "Uploads";
 		temporary = getChild<LLCheckBoxCtrl>("temp_asset")->get();
 		if (temporary)
 		{
@@ -1336,6 +1338,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		break;
 	case LLAssetType::AT_SOUND:
 	{
+		perms_prefix = "Uploads";
 		temporary = getChild<LLCheckBoxCtrl>("temp_asset")->get();
 		if (temporary)
 		{
@@ -1355,6 +1358,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	case LLAssetType::AT_CLOTHING:
 	case LLAssetType::AT_BODYPART:
 	{
+		perms_prefix = "Wearables";
 		std::string asset(asset_data.begin(), asset_data.end());
 
 		S32 position = asset.rfind("type");
@@ -1398,6 +1402,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		break;
 	case LLAssetType::AT_NOTECARD:
 	{
+		perms_prefix = "Notecards";
 		if (inventory_item.isNull())
 		{
 			// create inventory item first
@@ -1421,6 +1426,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		break;
 	case LLAssetType::AT_LSL_TEXT:
 	{
+		perms_prefix = "Scripts";
 		if (inventory_item.isNull())
 		{
 			// create inventory item first
@@ -1452,6 +1458,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		break;
 	case LLAssetType::AT_ANIMATION:
 	{
+		perms_prefix = "Uploads";
 		temporary = getChild<LLCheckBoxCtrl>("temp_asset")->get();
 		if (temporary)
 		{
@@ -1469,6 +1476,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		break;
 	case LLAssetType::AT_GESTURE:
 	{
+		perms_prefix = "Gestures";
 		if (inventory_item.isNull())
 		{
 			// create inventory item first
@@ -1572,7 +1580,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	data->mAssetInfo.mType = asset_type;
 	data->mAssetInfo.mCreatorID = gAgentID;
 	data->mInventoryType = inventory_type;
-	data->mNextOwnerPerm = LLFloaterPerms::getNextOwnerPerms();
+	data->mNextOwnerPerm = LLFloaterPerms::getNextOwnerPerms(perms_prefix);
 	data->mExpectedUploadCost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
 	FSResourceData* fs_data = new FSResourceData;
 	fs_data->uuid = asset_id;
@@ -1595,9 +1603,9 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 			body["inventory_type"] = LLInventoryType::lookup(inventory_type);
 			body["name"] = name;
 			body["description"] = description;
-			body["next_owner_mask"] = LLSD::Integer(LLFloaterPerms::getNextOwnerPerms());
-			body["group_mask"] = LLSD::Integer(LLFloaterPerms::getGroupPerms());
-			body["everyone_mask"] = LLSD::Integer(LLFloaterPerms::getEveryonePerms());
+			body["next_owner_mask"] = LLSD::Integer(LLFloaterPerms::getNextOwnerPerms(perms_prefix));
+			body["group_mask"] = LLSD::Integer(LLFloaterPerms::getGroupPerms(perms_prefix));
+			body["everyone_mask"] = LLSD::Integer(LLFloaterPerms::getEveryonePerms(perms_prefix));
 		}
 		
 
