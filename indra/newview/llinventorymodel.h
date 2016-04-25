@@ -446,7 +446,7 @@ public:
 	LLUUID createNewCategory(const LLUUID& parent_id,
 							 LLFolderType::EType preferred_type,
 							 const std::string& name,
-							 boost::optional<inventory_func_type> callback = boost::optional<inventory_func_type>());
+							 inventory_func_type callback = NULL);
 //MK
 ////protected:
 public:
