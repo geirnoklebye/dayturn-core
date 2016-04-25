@@ -2842,7 +2842,7 @@ void LLAppearanceMgr::addCOFItemLink(const LLInventoryItem *item,
 {
 	const LLViewerInventoryItem *vitem = dynamic_cast<const LLViewerInventoryItem*>(item);
 //MK
-//	LLInventoryItem* item_non_const = const_cast<LLInventoryItem*>(item);
+	//LLInventoryItem* item_non_const = const_cast<LLInventoryItem*>(item);;
 //mk
 	if (!vitem)
 	{
