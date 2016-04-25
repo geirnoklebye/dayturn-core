@@ -1996,7 +1996,7 @@ LLViewerFetchedTexture *LLVOAvatar::getBakedTextureImage(const U8 te, const LLUU
 		uuid == IMG_INVISIBLE)
 	{
 		// Should already exist, don't need to find it on sim or baked-texture host.
-		result = gTextureList.findImage(uuid, TEX_LIST_STANDARD);
+		result = gTextureList.findImage(uuid, TEX_LIST_DISCARD);
 	}
 
 	if (!result)
@@ -4387,7 +4387,7 @@ bool LLVOAvatar::allTexturesCompletelyDownloaded(std::set<LLUUID>& ids) const
 {
 	for (std::set<LLUUID>::const_iterator it = ids.begin(); it != ids.end(); ++it)
 	{
-		LLViewerFetchedTexture *imagep = gTextureList.findImage(*it, TEX_LIST_STANDARD);
+		LLViewerFetchedTexture *imagep = gTextureList.findImage(*it, TEX_LIST_DISCARD);
 		if (imagep && imagep->getDiscardLevel()!=0)
 		{
 			return false;
@@ -4459,7 +4459,7 @@ S32Bytes LLVOAvatar::totalTextureMemForUUIDS(std::set<LLUUID>& ids)
 	S32Bytes result(0);
 	for (std::set<LLUUID>::const_iterator it = ids.begin(); it != ids.end(); ++it)
 	{
-		LLViewerFetchedTexture *imagep = gTextureList.findImage(*it, TEX_LIST_STANDARD);
+		LLViewerFetchedTexture *imagep = gTextureList.findImage(*it, TEX_LIST_DISCARD);
 		if (imagep)
 		{
 			result += imagep->getTextureMemory();
@@ -4547,7 +4547,7 @@ void LLVOAvatar::releaseOldTextures()
 	{
 		if (new_texture_ids.find(*it) == new_texture_ids.end())
 		{
-			LLViewerFetchedTexture *imagep = gTextureList.findImage(*it, TEX_LIST_STANDARD);
+			LLViewerFetchedTexture *imagep = gTextureList.findImage(*it, TEX_LIST_DISCARD);
 			if (imagep)
 			{
 				current_texture_mem += imagep->getTextureMemory();
@@ -7491,6 +7491,7 @@ bool resolve_appearance_version(const LLAppearanceMessageContents& contents, S32
 //-----------------------------------------------------------------------------
 void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 {
+    static S32 largestSelfCOFSeen(LLViewerInventoryCategory::VERSION_UNKNOWN);
 	LL_DEBUGS("Avatar") << "starts" << LL_ENDL;
 	
 	bool enable_verbose_dumps = gSavedSettings.getBOOL("DebugAvatarAppearanceMessage");
@@ -7532,6 +7533,15 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 		LL_DEBUGS("Avatar") << "this_update_cof_version " << this_update_cof_version
 				<< " last_update_request_cof_version " << last_update_request_cof_version
 				<<  " my_cof_version " << LLAppearanceMgr::instance().getCOFVersion() << LL_ENDL;
+
+        if (largestSelfCOFSeen > this_update_cof_version)
+        {
+            LL_WARNS("Avatar") << "Already processed appearance for COF version " <<
+                largestSelfCOFSeen << ", discarding appearance with COF " << this_update_cof_version << LL_ENDL;
+            return;
+        }
+        largestSelfCOFSeen = this_update_cof_version;
+
 	}
 	else
 	{
@@ -7566,6 +7576,7 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 	}
 
 	// No backsies zone - if we get here, the message should be valid and usable, will be processed.
+    LL_INFOS("Avatar") << "Processing appearance message version " << this_update_cof_version << LL_ENDL;
 
 	// Note:
 	// RequestAgentUpdateAppearanceResponder::onRequestRequested()
@@ -8246,7 +8257,7 @@ LLHost LLVOAvatar::getObjectHost() const
 	}
 	else
 	{
-		return LLHost::invalid;
+		return LLHost();
 	}
 }
 
