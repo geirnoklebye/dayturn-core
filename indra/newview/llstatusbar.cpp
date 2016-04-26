@@ -38,6 +38,7 @@
 #include "llfloaterbuycurrency.h"
 #include "llbuycurrencyhtml.h"
 #include "llpanelnearbymedia.h"
+#include "llpanelpresetspulldown.h"
 #include "llpanelvolumepulldown.h"
 #include "llfloaterregioninfo.h"
 #include "llfloaterscriptdebug.h"
@@ -244,6 +245,9 @@ BOOL LLStatusBar::postBuild()
 	mBoxBalance = getChild<LLTextBox>("balance");
 	mBoxBalance->setClickedCallback( &LLStatusBar::onClickBalance, this );
 
+	mIconPresets = getChild<LLIconCtrl>( "presets_icon" );
+	mIconPresets->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterPresets, this));
+
 	mBtnVolume = getChild<LLButton>( "volume_btn" );
 	mBtnVolume->setClickedCallback( onClickVolume, this );
 	mBtnVolume->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterVolume, this));
@@ -275,6 +279,11 @@ BOOL LLStatusBar::postBuild()
 	mDrawDistancePanel = getChild<LLLayoutPanel>("draw_distance_panel");
 	mStatisticsPanel = getChild<LLLayoutPanel>("statistics_panel");
 	mFPSPanel = getChild<LLLayoutPanel>("fps_panel");
+
+	mPanelPresetsPulldown = new LLPanelPresetsPulldown();
+	addChild(mPanelPresetsPulldown);
+	mPanelPresetsPulldown->setFollows(FOLLOWS_TOP|FOLLOWS_RIGHT);
+	mPanelPresetsPulldown->setVisible(FALSE);
 
 	mPanelVolumePulldown = new LLPanelVolumePulldown();
 	addChild(mPanelVolumePulldown);
@@ -457,6 +466,7 @@ void LLStatusBar::setVisibleForMouselook(bool visible)
 	mStatisticsPanel->setVisible(visible && net_stats_visible);
 	mFPSPanel->setVisible(visible && fps_stats_visible);
 	setBackgroundVisible(visible);
+	mIconPresets->setVisible(visible);
 }
 
 void LLStatusBar::debitBalance(S32 debit)
@@ -606,8 +616,32 @@ void LLStatusBar::onClickBuyCurrency()
 	LLFirstUse::receiveLindens(false);
 }
 
+void LLStatusBar::onMouseEnterPresets()
+{
+	LLView* popup_holder = gViewerWindow->getRootView()->getChildView("popup_holder");
+	LLIconCtrl* icon =  getChild<LLIconCtrl>( "presets_icon" );
+	LLRect icon_rect = icon->getRect();
+	LLRect pulldown_rect = mPanelPresetsPulldown->getRect();
+	pulldown_rect.setLeftTopAndSize(icon_rect.mLeft -
+	     (pulldown_rect.getWidth() - icon_rect.getWidth()),
+			       icon_rect.mBottom,
+			       pulldown_rect.getWidth(),
+			       pulldown_rect.getHeight());
+
+	pulldown_rect.translate(popup_holder->getRect().getWidth() - pulldown_rect.mRight, 0);
+	mPanelPresetsPulldown->setShape(pulldown_rect);
+
+	// show the master presets pull-down
+	LLUI::clearPopups();
+	LLUI::addPopup(mPanelPresetsPulldown);
+	mPanelNearByMedia->setVisible(FALSE);
+	mPanelVolumePulldown->setVisible(FALSE);
+	mPanelPresetsPulldown->setVisible(TRUE);
+}
+
 void LLStatusBar::onMouseEnterVolume()
 {
+	LLView* popup_holder = gViewerWindow->getRootView()->getChildView("popup_holder");
 	LLButton* volbtn =  getChild<LLButton>( "volume_btn" );
 	LLRect volume_pulldown_rect = mPanelVolumePulldown->getRect();
 	LLRect vol_btn_rect;
@@ -620,12 +654,14 @@ void LLStatusBar::onMouseEnterVolume()
 			       volume_pulldown_rect.getWidth(),
 			       volume_pulldown_rect.getHeight());
 
+	volume_pulldown_rect.translate(popup_holder->getRect().getWidth() - volume_pulldown_rect.mRight, 0);
 	mPanelVolumePulldown->setShape(volume_pulldown_rect);
 
 
 	// show the master volume pull-down
 	LLUI::clearPopups();
 	LLUI::addPopup(mPanelVolumePulldown);
+	mPanelPresetsPulldown->setVisible(FALSE);
 	mPanelNearByMedia->setVisible(FALSE);
 	mPanelVolumePulldown->setVisible(TRUE);
 }
@@ -652,6 +688,7 @@ void LLStatusBar::onMouseEnterNearbyMedia()
 	LLUI::clearPopups();
 	LLUI::addPopup(mPanelNearByMedia);
 
+	mPanelPresetsPulldown->setVisible(FALSE);
 	mPanelVolumePulldown->setVisible(FALSE);
 	mPanelNearByMedia->setVisible(TRUE);
 }

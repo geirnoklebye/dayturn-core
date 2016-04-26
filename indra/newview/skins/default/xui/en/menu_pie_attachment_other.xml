@@ -119,7 +119,7 @@
                     function="Tools.LookAtSelection"
                     parameter="zoom" />
             </pie_slice>
-	    <pie_slice
+	        <pie_slice
               enabled="false"
               label="Export"
               name="Export">
@@ -127,6 +127,27 @@
                function="Object.Export" />
              <pie_slice.on_enable
                function="Object.EnableExport" />
+            </pie_slice>
+            <pie_slice
+                name="RenderNormally"
+                label=" Render Normal">
+                <pie_slice.on_click
+                  function="Avatar.SetImpostorMode"
+                  parameter="0" />>
+            </pie_slice> 
+            <pie_slice
+                name="DoNotRender"
+                label="Do Not Render">
+                <pie_slice.on_click
+                  function="Avatar.SetImpostorMode"
+                  parameter="1" />
+            </pie_slice>
+            <pie_slice
+                name="AlwaysRenderFully"
+                label="Render Fully">
+                <pie_slice.on_click
+                  function="Avatar.SetImpostorMode"
+                  parameter="2" />
             </pie_slice>
 
         </pie_menu>

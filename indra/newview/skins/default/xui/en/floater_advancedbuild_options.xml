@@ -339,7 +339,7 @@
     <check_box
      control_name="RenderHighlightSelections" 
      name="BuildPrefsRenderHighlight_toggle"
-     label="Show selection outlines"
+     label="Show prim selection outlines"
      enabled="true"
      bottom_delta="-70"
      left_delta="143"
@@ -351,6 +351,21 @@
      mouse_opaque="true"
      radio_style="false"
     />
+      <check_box
+     control_name="RenderParcelSelection" 
+     name="BuildPrefsRenderParcel_toggle"
+     label="Show parcel selection outlines"
+     enabled="true"
+     bottom_delta="22"
+     left_delta="0"
+     height="16"
+     width="270"
+     follows="left|bottom"
+     font="SansSerifSmall"
+     initial_value="true"
+     mouse_opaque="true"
+     radio_style="false"
+    />  
   <!--
   Holding for future work cant get the listener function to run for here
      <check_box

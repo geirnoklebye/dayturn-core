@@ -33,7 +33,6 @@
 #include "llavatarnamecache.h"
 #include "llcallingcard.h"
 #include "llclassifiedflags.h"
-#include "llclassifiedstatsresponder.h"
 #include "llfloatersidepanelcontainer.h"
 #include "llqueryflags.h"
 #include "llgroupmgr.h"
@@ -62,6 +61,7 @@
 #include "llgroupactions.h"
 #include "llfloaterworldmap.h"
 #include "fspanelclassified.h"
+#include "llpanelclassified.h"
 
 #include <boost/algorithm/string.hpp>
 
@@ -177,7 +177,8 @@ public:
 	}
 };
 static FSDispatchClassifiedClickThrough sClassifiedClickThrough;
-
+//<FS:ND> MERGE_TODO Needs an implementation post coroutine merge
+#if 0
 // Just to debug errors. Can be thrown away later.
 class FSClassifiedClickMessageResponder : public LLHTTPClient::Responder
 {
@@ -193,7 +194,7 @@ public:
 		LL_WARNS() << "Content: [" << content << "]" << LL_ENDL;
 	}
 };
-
+#endif
 ////////////////////////////////////////
 //         The floater itself         //
 ////////////////////////////////////////
@@ -658,7 +659,6 @@ void FSFloaterSearchLegacy::processGroupData()
 		setLoadingProgress(FALSE);
 	}
 }
-
 //virtual
 void FSFloaterSearchLegacy::processProperties(void* data, EAvatarProcessorType type)
 {
@@ -690,12 +690,11 @@ void FSFloaterSearchLegacy::processProperties(void* data, EAvatarProcessorType t
 				LL_INFOS() << "Classified stat request via capability" << LL_ENDL;
 				LLSD body;
 				body["classified_id"] = getSelectedID();
-				LLHTTPClient::post(url, body, new LLClassifiedStatsResponder(getSelectedID()));
+				LLCoreHttpUtil::HttpCoroutineAdapter::callbackHttpPost(url, body, boost::bind(&LLPanelClassifiedInfo::handleSearchStatResponse, getSelectedID(), _1));
 			}
 		}
 	}
 }
-
 void FSFloaterSearchLegacy::onOpen(const LLSD &params)
 {
 	const std::string category = params["category"].asString();

@@ -419,32 +419,10 @@ void set_underclothes_menu_options()
 
 void set_merchant_SLM_menu()
 {
-    // DD-170 : SLM Alpha and Beta program : for the moment, we always show the SLM menu and 
-    // tools so that all merchants can try out the UI, even if not migrated.
-    // *TODO : Keep SLM UI hidden for non migrated merchant in released viewer
-    
-    //if (LLMarketplaceData::instance().getSLMStatus() == MarketplaceStatusCodes::MARKET_PLACE_NOT_MIGRATED_MERCHANT)
-    //{
-        // Merchant not migrated: show only the old Merchant Outbox menu
-    //    gMenuHolder->getChild<LLView>("MerchantOutbox")->setVisible(TRUE);
-    //}
-    //else
-    //{
-        // All other cases (new merchant, not merchant, migrated merchant): show the new Marketplace Listings menu and enable the tool
-        gMenuHolder->getChild<LLView>("MarketplaceListings")->setVisible(TRUE);
-        LLCommand* command = LLCommandManager::instance().getCommand("marketplacelistings");
-		gToolBarView->enableCommand(command->id(), true);
-    //}
-}
-
-void set_merchant_outbox_menu(U32 status, const LLSD& content)
-{
-    // If the merchant is fully migrated, the API is disabled (503) and we won't show the old menu item.
-    // In all other cases, we show it.
-    if (status != MarketplaceErrorCodes::IMPORT_SERVER_API_DISABLED)
-    {
-        gMenuHolder->getChild<LLView>("MerchantOutbox")->setVisible(TRUE);
-    }
+    // All other cases (new merchant, not merchant, migrated merchant): show the new Marketplace Listings menu and enable the tool
+    gMenuHolder->getChild<LLView>("MarketplaceListings")->setVisible(TRUE);
+    LLCommand* command = LLCommandManager::instance().getCommand("marketplacelistings");
+	gToolBarView->enableCommand(command->id(), true);
 }
 
 void check_merchant_status()
@@ -463,17 +441,6 @@ void check_merchant_status()
         
         // Launch an SLM test connection to get the merchant status
         LLMarketplaceData::instance().initializeSLM(boost::bind(&set_merchant_SLM_menu));
-
-        // Do the Merchant Outbox init only once per session
-        if (LLMarketplaceInventoryImporter::instance().getMarketPlaceStatus() == MarketplaceStatusCodes::MARKET_PLACE_NOT_INITIALIZED)
-        {
-            // Hide merchant outbox related menu item
-            gMenuHolder->getChild<LLView>("MerchantOutbox")->setVisible(FALSE);
-            
-            // Launch a Merchant Outbox test connection to get the migration status
-            LLMarketplaceInventoryImporter::instance().setStatusReportCallback(boost::bind(&set_merchant_outbox_menu,_1, _2));
-            LLMarketplaceInventoryImporter::instance().initialize();
-        }
     }
 }
 
@@ -1110,10 +1077,6 @@ U32 info_display_from_string(std::string info_display)
 	{
 		return LLPipeline::RENDER_DEBUG_TEXTURE_PRIORITY;
 	}
-	else if ("shame" == info_display)
-	{
-		return LLPipeline::RENDER_DEBUG_SHAME;
-	}
 	else if ("texture area" == info_display)
 	{
 		return LLPipeline::RENDER_DEBUG_TEXTURE_AREA;
@@ -1142,9 +1105,9 @@ U32 info_display_from_string(std::string info_display)
 	{
 		return LLPipeline::RENDER_DEBUG_COMPOSITION;
 	}
-	else if ("attachment bytes" == info_display)
+	else if ("avatardrawinfo" == info_display)
 	{
-		return LLPipeline::RENDER_DEBUG_ATTACHMENT_BYTES;
+		return (LLPipeline::RENDER_DEBUG_AVATAR_DRAW_INFO);
 	}
 	else if ("glow" == info_display)
 	{
@@ -1180,6 +1143,7 @@ U32 info_display_from_string(std::string info_display)
 	}
 	else
 	{
+		LL_WARNS() << "unrecognized feature name '" << info_display << "'" << LL_ENDL;
 		return 0;
 	}
 };
@@ -3232,6 +3196,8 @@ BOOL enable_object_build(void*)
 
 bool enable_object_edit()
 {
+	if (!isAgentAvatarValid()) return false;
+	
 //MK
 	LLViewerObject* obj = LLSelectMgr::getInstance()->getSelection()->getPrimaryObject();
 	if (gRRenabled && obj && !gAgent.mRRInterface.canEdit(obj))
@@ -3431,11 +3397,11 @@ class LLAvatarCheckImpostorMode : public view_listener_t
 		switch (mode) 
 		{
 			case 0:
-				return (avatar->getVisualMuteSettings() == LLVOAvatar::VISUAL_MUTE_NOT_SET);
+				return (avatar->getVisualMuteSettings() == LLVOAvatar::AV_RENDER_NORMALLY);
 			case 1:
-				return (avatar->getVisualMuteSettings() == LLVOAvatar::ALWAYS_VISUAL_MUTE);
+				return (avatar->getVisualMuteSettings() == LLVOAvatar::AV_DO_NOT_RENDER);
 			case 2:
-				return (avatar->getVisualMuteSettings() == LLVOAvatar::NEVER_VISUAL_MUTE);
+				return (avatar->getVisualMuteSettings() == LLVOAvatar::AV_ALWAYS_RENDER);
 			default:
 				return false;
 		}
@@ -3457,19 +3423,18 @@ class LLAvatarSetImpostorMode : public view_listener_t
 		switch (mode) 
 		{
 			case 0:
-				avatar->setVisualMuteSettings(LLVOAvatar::VISUAL_MUTE_NOT_SET);
+				avatar->setVisualMuteSettings(LLVOAvatar::AV_RENDER_NORMALLY);
 				break;
 			case 1:
-				avatar->setVisualMuteSettings(LLVOAvatar::ALWAYS_VISUAL_MUTE);
+				avatar->setVisualMuteSettings(LLVOAvatar::AV_DO_NOT_RENDER);
 				break;
 			case 2:
-				avatar->setVisualMuteSettings(LLVOAvatar::NEVER_VISUAL_MUTE);
+				avatar->setVisualMuteSettings(LLVOAvatar::AV_ALWAYS_RENDER);
 				break;
 			default:
 				return false;
 		}
 
-		avatar->forceUpdateVisualMuteSettings();
 		LLVOAvatar::cullAvatarsByPixelArea();
 		return true;
 	}	// handleEvent()
@@ -3495,6 +3460,8 @@ class LLObjectMute : public view_listener_t
 		LLVOAvatar* avatar = find_avatar_from_object(object); 
 		if (avatar)
 		{
+			avatar->mNeedsImpostorUpdate = TRUE;
+
 			id = avatar->getID();
 
 			LLNameValue *firstname = avatar->getNVPair("FirstName");

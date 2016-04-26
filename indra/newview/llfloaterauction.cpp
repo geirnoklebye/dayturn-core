@@ -57,6 +57,7 @@
 #include "llsdutil.h"
 #include "llsdutil_math.h"
 #include "lltrans.h"
+#include "llcorehttputil.h"
 #include "tea.h"
 
 ///----------------------------------------------------------------------------
@@ -362,7 +363,10 @@ void LLFloaterAuction::doResetParcel()
 
 		LL_INFOS() << Tea::wrapCurrency("Sending parcel update to sell to anyone for L$1 via capability to: ")
 			<< mParcelUpdateCapUrl << LL_ENDL;
-		LLHTTPClient::post(mParcelUpdateCapUrl, body, new LLHTTPClient::Responder());
+
+        LLCoreHttpUtil::HttpCoroutineAdapter::messageHttpPost(mParcelUpdateCapUrl, body,
+            "Parcel reset for auction",
+            "Parcel not set for auction.");
 
 		// Send a message to clear the object return time
 		LLMessageSystem *msg = gMessageSystem;
@@ -491,7 +495,10 @@ void LLFloaterAuction::doSellToAnyone()
 
 		LL_INFOS() << "Sending parcel update to sell to anyone for L$1 via capability to: "
 			<< mParcelUpdateCapUrl << LL_ENDL;
-		LLHTTPClient::post(mParcelUpdateCapUrl, body, new LLHTTPClient::Responder());
+
+        LLCoreHttpUtil::HttpCoroutineAdapter::messageHttpPost(mParcelUpdateCapUrl, body,
+            "Parcel set as sell to everyone.",
+            "Parcel sell to everyone failed.");
 
 		// clean up floater, and get out
 		cleanupAndClose();

@@ -208,6 +208,8 @@ with the same filename but different name
 
   <texture name="Facebook_Icon" file_name="icons/Facebook.png" preload="false" />
 
+  <texture name="Presets_Icon" file_name="icons/Presets_Icon.png" preload="true" />
+
   <texture name="eye_button_active.tga" preload="false" />
   <texture name="eye_button_inactive.tga" preload="false" />
 

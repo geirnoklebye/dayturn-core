@@ -58,7 +58,6 @@ typedef enum
 		
 	} EGraphicsSettings;
 
-
 // Floater to control preferences (display, audio, bandwidth, general.
 class LLFloaterPreference : public LLFloater, public LLAvatarPropertiesObserver, public LLConversationLogObserver
 {
@@ -83,19 +82,21 @@ public:
 	
 	// translate user's do not disturb response message according to current locale if message is default, otherwise do nothing
 	static void initDoNotDisturbResponse();
+
 	// update Show Favorites checkbox
 	static void updateShowFavoritesCheckbox(bool val);
+
 	void processProperties( void* pData, EAvatarProcessorType type );
 	void processProfileProperties(const LLAvatarData* pAvatarData );
 	void storeAvatarProperties( const LLAvatarData* pAvatarData );
 	void saveAvatarProperties( void );
 	void selectPrivacyPanel();
 	void selectChatPanel();
+	void getControlNames(std::vector<std::string>& names);
 
 protected:	
-	void		onBtnOK();
-	void		onBtnCancel();
-	void		onBtnApply();
+	void		onBtnOK(const LLSD& userdata);
+	void		onBtnCancel(const LLSD& userdata);
 
 	void		onClickClearCache();			// Clear viewer texture cache, vfs, and VO cache on next startup
 	void		onClickBrowserClearCache();		// Clear web history and caches as well as viewer caches above
@@ -121,11 +122,13 @@ protected:
 	// if the custom settings box is clicked
 	void onChangeCustom();
 	void updateMeterText(LLUICtrl* ctrl);
-	void onOpenHardwareSettings();
 	// callback for defaults
 	void setHardwareDefaults();
+	void setRecommended();
 	// callback for when client turns on shaders
 	void onVertexShaderEnable();
+	// callback for when client turns on impostors
+	void onAvatarImpostorsEnable();
 
 	// callback for commit in the "Single click on land" and "Double click on land" comboboxes.
 	void onClickActionChange();
@@ -133,13 +136,11 @@ protected:
 	void updateClickActionSettings();
 	// updates click/double-click action controls depending on values from settings.xml
 	void updateClickActionControls();
-	
+
+public:
 	// This function squirrels away the current values of the controls so that
 	// cancel() can restore them.	
 	void saveSettings();
-		
-
-public:
 
 	void setCacheLocation(const LLStringExplicit& location);
 
@@ -160,13 +161,11 @@ public:
 	void enableHistory();
 	void setPersonalInfo(const std::string& visibility, bool im_via_email);
 	void refreshEnabledState();
-	void disableUnavailableSettings();
 	void onCommitWindowedMode();
 	void refresh();	// Refresh enable/disable
 	// if the quality radio buttons are changed
 	void onChangeQuality(const LLSD& data);
 	
-	void updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_box);
 	void refreshUI();
 
 	void onCommitParcelMediaAutoPlayEnable();
@@ -180,12 +179,14 @@ public:
 	void onClickPermsDefault();
 	void onClickAutoReplace();
 	void onClickSpellChecker();
+	void onClickAdvanced();
 	void applyUIColor(LLUICtrl* ctrl, const LLSD& param);
 	void getUIColor(LLUICtrl* ctrl, const LLSD& param);
 	void onLogChatHistorySaved();	
 	void buildPopupLists();
 	static void refreshSkin(void* data);
 	void selectPanel(const LLSD& name);
+	void saveGraphicsPreset(std::string& preset);
 
 private:
 
@@ -206,6 +207,8 @@ private:
 	std::string mDirectoryVisibility;
 	
 	LLAvatarData mAvatarProperties;
+	std::string mSavedGraphicsPreset;
+	LOG_CLASS(LLFloaterPreference);
 };
 
 class LLPanelPreference : public LLPanel
@@ -219,7 +222,7 @@ public:
 	virtual void apply();
 	virtual void cancel();
 	void setControlFalse(const LLSD& user_data);
-	virtual void setHardwareDefaults(){};
+	virtual void setHardwareDefaults();
 
 	// Disables "Allow Media to auto play" check box only when both
 	// "Streaming Music" and "Media" are unchecked. Otherwise enables it.
@@ -228,7 +231,11 @@ public:
 	// This function squirrels away the current values of the controls so that
 	// cancel() can restore them.
 	virtual void saveSettings();
-	
+
+	void deletePreset(const LLSD& user_data);
+	void savePreset(const LLSD& user_data);
+	void loadPreset(const LLSD& user_data);
+
 	class Updater;
 
 protected:
@@ -245,6 +252,7 @@ private:
 	string_color_map_t mSavedColors;
 
 	Updater* mBandWidthUpdater;
+	LOG_CLASS(LLPanelPreference);
 };
 
 class LLPanelPreferenceGraphics : public LLPanelPreference
@@ -252,14 +260,45 @@ class LLPanelPreferenceGraphics : public LLPanelPreference
 public:
 	BOOL postBuild();
 	void draw();
-	void apply();
 	void cancel();
 	void saveSettings();
+	void resetDirtyChilds();
 	void setHardwareDefaults();
+	void setPresetText();
+
+	static const std::string getPresetsPath();
+
 protected:
 	bool hasDirtyChilds();
-	void resetDirtyChilds();
-	
+
+private:
+
+	void onPresetsListChange();
+	LOG_CLASS(LLPanelPreferenceGraphics);
+};
+
+class LLFloaterPreferenceGraphicsAdvanced : public LLFloater
+{
+public: 
+	LLFloaterPreferenceGraphicsAdvanced(const LLSD& key);
+	~LLFloaterPreferenceGraphicsAdvanced();
+	void onOpen(const LLSD& key);
+	void onClickCloseBtn(bool app_quitting);
+	void disableUnavailableSettings();
+	void refreshEnabledGraphics();
+	void refreshEnabledState();
+	void updateSliderText(LLSliderCtrl* ctrl, LLTextBox* text_box);
+	void updateMaxNonImpostors();
+	void setMaxNonImpostorsText(U32 value, LLTextBox* text_box);
+	void updateMaxComplexity();
+	void setMaxComplexityText(U32 value, LLTextBox* text_box);
+	static void setIndirectControls();
+	static void setIndirectMaxNonImpostors();
+	static void setIndirectMaxArc();
+	void refresh();
+	// callback for when client turns on shaders
+	void onVertexShaderEnable();
+	LOG_CLASS(LLFloaterPreferenceGraphicsAdvanced);
 };
 
 // <FS:AW  opensim preferences>
@@ -317,7 +356,7 @@ private:
 	bool mSocksSettingsDirty;
 	typedef std::map<LLControlVariable*, LLSD> control_values_map_t;
 	control_values_map_t mSavedValues;
-
+	LOG_CLASS(LLFloaterPreferenceProxy);
 };
 
 

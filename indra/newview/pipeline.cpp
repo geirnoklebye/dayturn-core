@@ -105,7 +105,6 @@
 #include "llspatialpartition.h"
 #include "llmutelist.h"
 #include "lltoolpie.h"
-#include "llcurl.h"
 #include "llnotifications.h"
 #include "llpathinglib.h"
 #include "llfloaterpathfindingconsole.h"
@@ -571,7 +570,7 @@ void LLPipeline::init()
 	connectRefreshCachedSettingsSafe("RenderAutoMaskAlphaDeferred");
 	connectRefreshCachedSettingsSafe("RenderAutoMaskAlphaNonDeferred");
 	connectRefreshCachedSettingsSafe("RenderUseFarClip");
-	connectRefreshCachedSettingsSafe("RenderAvatarMaxVisible");
+	connectRefreshCachedSettingsSafe("RenderAvatarMaxNonImpostors");
 	connectRefreshCachedSettingsSafe("RenderDelayVBUpdate");
 	connectRefreshCachedSettingsSafe("UseOcclusion");
 	connectRefreshCachedSettingsSafe("VertexShaderEnable");
@@ -1101,7 +1100,8 @@ void LLPipeline::refreshCachedSettings()
 	LLPipeline::sAutoMaskAlphaDeferred = gSavedSettings.getBOOL("RenderAutoMaskAlphaDeferred");
 	LLPipeline::sAutoMaskAlphaNonDeferred = gSavedSettings.getBOOL("RenderAutoMaskAlphaNonDeferred");
 	LLPipeline::sUseFarClip = gSavedSettings.getBOOL("RenderUseFarClip");
-	LLVOAvatar::sMaxVisible = (U32)gSavedSettings.getS32("RenderAvatarMaxVisible");
+	LLVOAvatar::sMaxNonImpostors = gSavedSettings.getU32("RenderAvatarMaxNonImpostors");
+	LLVOAvatar::updateImpostorRendering(LLVOAvatar::sMaxNonImpostors);
 	LLPipeline::sDelayVBUpdate = gSavedSettings.getBOOL("RenderDelayVBUpdate");
 
 	LLPipeline::sUseOcclusion = 
@@ -3142,7 +3142,9 @@ void LLPipeline::markVisible(LLDrawable *drawablep, LLCamera& camera)
 					if (vobj) // this test may not be needed, see above
 					{
 						LLVOAvatar* av = vobj->asAvatar();
-						if (av && av->isImpostor())
+						if (av && (av->isImpostor() 
+							|| av->isInMuteList() 
+							|| (LLVOAvatar::AV_DO_NOT_RENDER == av->getVisualMuteSettings() && !av->needsImpostorUpdate()) ))
 						{
 							return;
 						}
@@ -6164,7 +6166,9 @@ void LLPipeline::calcNearbyLights(LLCamera& camera)
 			const Light* light = &(*iter);
 			LLDrawable* drawable = light->drawable;
             const LLViewerObject *vobj = light->drawable->getVObj();
-            if(vobj && vobj->getAvatar() && vobj->getAvatar()->isInMuteList())
+            if(vobj && vobj->getAvatar() 
+               && (vobj->getAvatar()->isTooComplex() || vobj->getAvatar()->isInMuteList())
+               )
             {
                 drawable->clearState(LLDrawable::NEARBY_LIGHT);
                 continue;
@@ -11387,14 +11391,28 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	
 	if (!avatar || !avatar->mDrawable)
 	{
+        LL_WARNS_ONCE("AvatarRenderPipeline") << "Avatar is " << (avatar ? "not drawable" : "null") << LL_ENDL;
 		return;
 	}
+    LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " is drawable" << LL_ENDL;
 
 	assertInitialized();
 
 	bool visually_muted = avatar->isVisuallyMuted();		
+    LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID()
+                              << " is " << ( visually_muted ? "" : "not ") << "visually muted"
+                              << LL_ENDL;
+	bool too_complex = avatar->isTooComplex();		
+    LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID()
+                              << " is " << ( too_complex ? "" : "not ") << "too complex"
+                              << LL_ENDL;
 
 	pushRenderTypeMask();
+		if (visually_muted || too_complex)
+	{
+		andRenderTypeMask(LLPipeline::RENDER_TYPE_AVATAR, END_RENDER_TYPES);
+	}
+	else
 //MK
 	// Render everything
 	// For some reason, unrigged mesh objects do not render on silhouettes, but they don't render on regular
@@ -11443,7 +11461,7 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	{
 		LL_RECORD_BLOCK_TIME(FTM_IMPOSTOR_MARK_VISIBLE);
 	markVisible(avatar->mDrawable, *viewer_camera);
-	LLVOAvatar::sUseImpostors = FALSE;
+		LLVOAvatar::sUseImpostors = false; // @TODO ???
 
 	LLVOAvatar::attachment_map_t::iterator iter;
 	for (iter = avatar->mAttachmentPoints.begin();
@@ -11569,6 +11587,10 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	////}
 //mk
 
+	if (visually_muted || too_complex)
+	{ //disable alpha masking for muted avatars (get whole skin silhouette)
+		LLDrawPoolAvatar::sMinimumAlpha = 0.f;
+	}
 //MK
 	// Choose the non-deferred rendering when rendering silhouettes
 	if (LLPipeline::sRenderDeferred)
@@ -11634,7 +11656,7 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 
 		LLGLDisable blend(GL_BLEND);
 
-		if (visually_muted)
+		if (visually_muted || too_complex)
 		{
 			gGL.setColorMask(true, true);
 		}
@@ -11663,20 +11685,23 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		}
 
 
-		if (LLMuteList::getInstance()->isMuted(avatar->getID()))
-		{ //grey muted avatar
-			gGL.diffuseColor4ub(64,64,64,255);
+		if (visually_muted)
+		{	// Visually muted avatar
+            LLColor4 muted_color(avatar->getMutedAVColor());
+            LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " MUTED set solid color " << muted_color << LL_ENDL;
+			gGL.diffuseColor4fv( muted_color.mV );
 		}
 		else
-		{	// Visually muted avatar
+		{ //grey muted avatar
 //MK
 			if (gRRenabled && gAgent.mRRInterface.mShowavsDistMax < EXTREMUM)
+            LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " MUTED set grey" << LL_ENDL;
+			gGL.diffuseColor4fv(LLColor4::pink.mV );
 			{
 				gGL.diffuseColor4ub (32, 32, 32, 255); // pitch black
 			}
 			else
 //mk
-			gGL.diffuseColor4fv( avatar->getMutedAVColor().mV );
 		}
 
 		{
@@ -11703,7 +11728,7 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 
 	avatar->setImpostorDim(tdim);
 
-	LLVOAvatar::sUseImpostors = TRUE;
+	LLVOAvatar::sUseImpostors = true; // @TODO ???
 	sUseOcclusion = occlusion;
 	sReflectionRender = FALSE;
 	sImpostorRender = FALSE;

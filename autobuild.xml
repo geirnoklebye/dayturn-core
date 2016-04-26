@@ -442,9 +442,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>89db4a1aa22599cf377ae49630b7b5b1</string>
+              <string>ad0061db7188a1b9a974eb0512eeeb8d</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/curl_3p-update-curl/rev/301717/arch/Darwin/installer/curl-7.42.1.301717-darwin-301717.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-curl/rev/312763/arch/Darwin/installer/curl-7.47.0.312763-darwin-312763.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -454,9 +454,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>de9e0c855ff6ee30c9e027a70bbef032</string>
+              <string>f49d4ed203b03852a3f6b01b18319f7a</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/curl_3p-update-curl/rev/301717/arch/Linux/installer/curl-7.42.1.301717-linux-301717.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-curl/rev/312763/arch/Linux/installer/curl-7.47.0.312763-linux-312763.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -466,11 +466,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ab183bf38d32b017a0bb937622a18e13</string>
+              <string>d260709ee0c1f402efb0dba24c60df82</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.38.0.201505290832-linux64-201505290832.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.47.0.201604111501-linux64-201604111501.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -480,16 +480,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>98d15713de8c439b7f54cc14f2df07ac</string>
+               <string>5e0d4f4a5a5bbcba610aafbb91c30b2b</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/curl_3p-update-curl/rev/301717/arch/CYGWIN/installer/curl-7.42.1.301717-windows-301717.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-curl/rev/312763/arch/CYGWIN/installer/curl-7.47.0.312763-windows-312763.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
           </map>
         </map>
         <key>version</key>
-        <string>7.42.1.301717</string>
+        <string>7.47.0.201604111501</string>
       </map>
       <key>db</key>
       <map>
@@ -2296,9 +2298,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>922aad5261aac150e5ce3c094e57f373</string>
+              <string>e760be34addeb0cd6e2ec43394834bac</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llphysicsextensions-source_llphysicsextensions-update/rev/298369/arch/CYGWIN/installer/llphysicsextensions_source-1.0.298369-windows-298369.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llphysicsextensions/rev/313564/arch/CYGWIN/installer/llphysicsextensions_source-1.0.313564-windows-313564.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>

@@ -36,6 +36,8 @@
 
 // project includes
 #include "llviewerobject.h"
+#include "lleventcoro.h"
+#include "llcoros.h"
 
 class LLCamera;
 class LLNetMap;
@@ -139,6 +141,13 @@ public:
 	void removeFromMap(LLViewerObject *objectp);
 
 	void clearDebugText();
+	
+	// <FS:CR> Import
+	typedef boost::function<bool (LLViewerObject* object)> new_object_callback_t;
+	typedef boost::signals2::signal<bool (LLViewerObject* object)> new_object_signal_t;
+	boost::signals2::connection setNewObjectCallback(new_object_callback_t cb);
+	new_object_signal_t mNewObjectSignal;
+	// </FS:CR>
 
 	////////////////////////////////////////////
 	//
@@ -204,17 +213,17 @@ protected:
 
 	vobj_list_t mMapObjects;
 
-	std::set<LLUUID> mDeadObjects;	
+    uuid_set_t   mDeadObjects;
 
 	std::map<LLUUID, LLPointer<LLViewerObject> > mUUIDObjectMap;
 
 	//set of objects that need to update their cost
-	std::set<LLUUID> mStaleObjectCost;
-	std::set<LLUUID> mPendingObjectCost;
+    uuid_set_t   mStaleObjectCost;
+    uuid_set_t   mPendingObjectCost;
 
 	//set of objects that need to update their physics flags
-	std::set<LLUUID> mStalePhysicsFlags;
-	std::set<LLUUID> mPendingPhysicsFlags;
+    uuid_set_t   mStalePhysicsFlags;
+    uuid_set_t   mPendingPhysicsFlags;
 
 	std::vector<LLDebugBeacon> mDebugBeacons;
 
@@ -228,6 +237,14 @@ protected:
 	std::set<LLViewerObject *> mSelectPickList;
 
 	friend class LLViewerObject;
+
+private:
+    static void reportObjectCostFailure(LLSD &objectList);
+    void fetchObjectCostsCoro(std::string url);
+
+    static void reportPhysicsFlagFailure(LLSD &obejectList);
+    void fetchPhisicsFlagsCoro(std::string url);
+
 };
 
 

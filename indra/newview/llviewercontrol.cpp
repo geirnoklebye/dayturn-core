@@ -214,11 +214,6 @@ static bool handleRenderPerfTestChanged(const LLSD& newvalue)
        return true;
 }
 
-bool handleRenderAvatarComplexityLimitChanged(const LLSD& newvalue)
-{
-	return true;
-}
-
 bool handleRenderTransparentWaterChanged(const LLSD& newvalue)
 {
 	LLWorld::getInstance()->updateWaterObjects();
@@ -268,12 +263,6 @@ static bool handleAvatarLODChanged(const LLSD& newvalue)
 static bool handleAvatarPhysicsLODChanged(const LLSD& newvalue)
 {
 	LLVOAvatar::sPhysicsLODFactor = (F32) newvalue.asReal();
-	return true;
-}
-
-static bool handleAvatarMaxVisibleChanged(const LLSD& newvalue)
-{
-	LLVOAvatar::sMaxVisible = (U32) newvalue.asInteger();
 	return true;
 }
 
@@ -470,18 +459,12 @@ static bool handleRenderBumpChanged(const LLSD& newval)
 	return true;
 }
 
-static bool handleRenderUseImpostorsChanged(const LLSD& newvalue)
-{
-	LLVOAvatar::sUseImpostors = newvalue.asBoolean();
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mShowavsDistMax < EXTREMUM)
 	{
 		LLVOAvatar::sUseImpostors = TRUE;
 	}
 //mk
-	return true;
-}
-
 static bool handleRenderDebugGLChanged(const LLSD& newvalue)
 {
 	gDebugGL = newvalue.asBoolean() || gDebugSession;
@@ -743,8 +726,6 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("RenderAvatarCloth")->getSignal()->connect(boost::bind(&handleSetShaderChanged, _2));
 	gSavedSettings.getControl("WindLightUseAtmosShaders")->getSignal()->connect(boost::bind(&handleSetShaderChanged, _2));
 	gSavedSettings.getControl("RenderGammaFull")->getSignal()->connect(boost::bind(&handleSetShaderChanged, _2));
-	gSavedSettings.getControl("RenderAvatarMaxVisible")->getSignal()->connect(boost::bind(&handleAvatarMaxVisibleChanged, _2));
-	gSavedSettings.getControl("RenderAvatarComplexityLimit")->getSignal()->connect(boost::bind(&handleRenderAvatarComplexityLimitChanged, _2));
 	gSavedSettings.getControl("RenderVolumeLODFactor")->getSignal()->connect(boost::bind(&handleVolumeLODChanged, _2));
 	gSavedSettings.getControl("RenderAvatarLODFactor")->getSignal()->connect(boost::bind(&handleAvatarLODChanged, _2));
 	gSavedSettings.getControl("RenderAvatarPhysicsLODFactor")->getSignal()->connect(boost::bind(&handleAvatarPhysicsLODChanged, _2));
@@ -762,7 +743,6 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("RenderObjectBump")->getSignal()->connect(boost::bind(&handleRenderBumpChanged, _2));
 	gSavedSettings.getControl("RenderMaxVBOSize")->getSignal()->connect(boost::bind(&handleResetVertexBuffersChanged, _2));
 	gSavedSettings.getControl("RenderDeferredNoise")->getSignal()->connect(boost::bind(&handleReleaseGLBufferChanged, _2));
-	gSavedSettings.getControl("RenderUseImpostors")->getSignal()->connect(boost::bind(&handleRenderUseImpostorsChanged, _2));
 	gSavedSettings.getControl("RenderDebugGL")->getSignal()->connect(boost::bind(&handleRenderDebugGLChanged, _2));
 	gSavedSettings.getControl("RenderDebugPipeline")->getSignal()->connect(boost::bind(&handleRenderDebugPipelineChanged, _2));
 	gSavedSettings.getControl("RenderResolutionDivisor")->getSignal()->connect(boost::bind(&handleRenderResolutionDivisorChanged, _2));

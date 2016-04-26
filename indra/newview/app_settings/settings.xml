@@ -1003,7 +1003,7 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>0</integer>
+      <integer>1</integer>
     </map>
     <key>AudioLevelAmbient</key>
     <map>
@@ -2684,6 +2684,19 @@
       <key>Value</key>
       <string />
     </map>
+    <key>CmdLineLoginURI</key>
+    <map>
+      <key>Comment</key>
+      <string>Command line specified login server and CGI prefix to use.</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>LLSD</string>
+      <key>Value</key>
+      <array>
+        <string />
+      </array>
+    </map>
   <key>CmdLineLoginURI1</key>
   <map>
     <key>Comment</key>
@@ -2720,8 +2733,8 @@
       <integer>210</integer>
       <integer>300</integer>
       <integer>0</integer>
-    </array>
-  </map>  
+      </array>
+    </map>
     <key>CmdLineLoginLocation</key>
     <map>
       <key>Comment</key>
@@ -3249,6 +3262,17 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+    </map>
+  <key>DebugSlshareLogTag</key>
+    <map>
+      <key>Comment</key>
+      <string>Request slshare-service debug logging</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string/>
     </map>
   <key>DebugStatModeFPS</key>
     <map>
@@ -3877,7 +3901,7 @@
     <key>Value</key>
     <string>5b53359e-59dd-d8a2-04c3-9e65134da47a</string>
   </map>
-  <key>DefaultFemaleAvatar</key>
+	<key>DefaultFemaleAvatar</key>
 	<map>
 	  <key>Comment</key>
 	  <string>Default Female Avatar</string>
@@ -5098,6 +5122,17 @@
       <key>Value</key>
       <integer>255</integer>
     </map>
+    <key>ForceLoginURL</key>
+    <map>
+      <key>Comment</key>
+      <string>Force a specified URL for login page content - used if exists</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string></string>
+    </map>
     <key>ForceShowGrid</key>
     <map>
       <key>Comment</key>
@@ -6287,6 +6322,7 @@
       <key>Value</key>
       <string>2</string>
     </map>
+
   <key>LoginSRVTimeout</key>
   <map>
     <key>Comment</key>
@@ -9232,9 +9268,9 @@
     <key>RenderAnisotropic</key>
     <map>
       <key>Comment</key>
-      <string>Render textures using anisotropic filtering (Unused setting - Set RenderAnisotropicSamples instead of this one)</string>
+      <string>Render textures using anisotropic filtering</string>
       <key>Persist</key>
-      <integer>0</integer>
+      <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -9306,21 +9342,10 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
-  <key>RenderAvatarComplexityLimit</key>
-    <map>
-      <key>Comment</key>
-      <string>Max visual complexity of avatars in a scene</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>S32</string>
-      <key>Value</key>
-      <integer>-1</integer>
-    </map>
   <key>RenderComplexityColorMin</key>
     <map>
       <key>Comment</key>
-      <string>Max visual complexity of avatars in a scene</string>
+      <string>Unused obsolete setting</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -9336,7 +9361,7 @@
   <key>RenderComplexityColorMid</key>
     <map>
       <key>Comment</key>
-      <string>Max visual complexity of avatars in a scene</string>
+      <string>Unused obsolete setting</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -9352,7 +9377,7 @@
   <key>RenderComplexityColorMax</key>
     <map>
       <key>Comment</key>
-      <string>Max visual complexity of avatars in a scene</string>
+      <string>Unused obsolete setting</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -9368,7 +9393,7 @@
   <key>RenderComplexityThreshold</key>
     <map>
       <key>Comment</key>
-      <string>Only color objects higher than render threshold</string>
+      <string>Unused obsolete setting</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -9379,8 +9404,7 @@
   <key>RenderComplexityStaticMax</key>
     <map>
       <key>Comment</key>
-      <string>Sets a static max value for scaling of RenderComplexity
-        display (-1 for dynamic scaling)</string>
+      <string>Unused obsolete setting</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -9402,13 +9426,13 @@
     <key>RenderAvatarMaxVisible</key>
     <map>
       <key>Comment</key>
-      <string>Maximum number of avatars to display at any one time</string>
+      <string>OBSOLETE and UNUSED. See RenderAvatarMaxNonImpostors</string>
       <key>Persist</key>
-      <integer>1</integer>
+      <integer>0</integer>
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
-      <integer>12</integer>
+      <integer>0</integer>
     </map>
     <key>RenderAvatarPhysicsLODFactor</key>
     <map>
@@ -10874,13 +10898,13 @@
     <key>RenderTerrainDetail</key>
     <map>
       <key>Comment</key>
-      <string>Detail applied to terrain texturing (0 = none, 1 or 2 = full)</string>
+      <string>Detail applied to terrain texturing (0 = none, 1 = full)</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
-      <integer>2</integer>
+      <integer>1</integer>
     </map>
     <key>RenderTerrainLODFactor</key>
     <map>
@@ -10992,44 +11016,79 @@
     <key>Value</key>
     <integer>0</integer>
   </map>
-    <key>RenderUseFarClip</key>
-    <map>
-      <key>Comment</key>
-      <string>If false, frustum culling will ignore far clip plane.</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>1</integer>
-    </map>
-    <key>RenderUseImpostors</key>
-    <map>
-      <key>Comment</key>
-      <string>Whether we want to use impostors for far away avatars.</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>1</integer>
-    </map>
-
+  <key>RenderUseFarClip</key>
+  <map>
+    <key>Comment</key>
+    <string>If false, frustum culling will ignore far clip plane.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>1</integer>
+  </map>
+  <key>RenderUseImpostors</key>
+  <map>
+    <key>Comment</key>
+    <string>OBSOLETE and UNUSED. See RenderAvatarMaxNonImpostors and RenderAvatarMaxComplexity.</string>
+    <key>Persist</key>
+    <integer>0</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
   <key>RenderAutoMuteByteLimit</key>
   <map>
     <key>Comment</key>
-    <string>Maximum bytes of attachments before an avatar is rendered as a simple impostor (0 for no limit).</string>
+    <string>OBSOLETE and UNUSED.</string>
     <key>Persist</key>
-    <integer>1</integer>
+    <integer>0</integer>
     <key>Type</key>
     <string>U32</string>
     <key>Value</key>
     <integer>0</integer>
   </map>
+  <key>RenderAvatarMaxNonImpostors</key>
+  <map>
+    <key>Comment</key>
+    <string>Maximum number of avatars to fully render at one time;
+    over this limit uses impostor rendering (simplified rendering
+    with less frequent updates), reducing client lag.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>U32</string>
+    <key>Value</key>
+    <integer>12</integer>
+  </map>
   <key>RenderAutoMuteRenderWeightLimit</key>
   <map>
     <key>Comment</key>
-    <string>Maximum render weight before an avatar is rendered as a simple impostor (0 to not use this limit).</string>
+    <string>OBSOLETE. This setting has been renamed RenderAvatarMaxNonImpostors.</string>
+    <key>Persist</key>
+    <integer>0</integer>
+    <key>Type</key>
+    <string>U32</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
+  <key>ShowMyComplexityChanges</key>
+  <map>
+    <key>Comment</key>
+    <string>How long to show notices about avatar complexity (set to zero to disable those notices)</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>U32</string>
+    <key>Value</key>
+    <integer>20</integer>
+  </map>
+  <key>RenderAvatarMaxComplexity</key>
+  <map>
+    <key>Comment</key>
+    <string>Maximum Avatar Complexity; above this value, the avatar is
+    rendered as a solid color outline (0 to disable this limit).</string>
     <key>Persist</key>
     <integer>1</integer>
     <key>Type</key>
@@ -11040,24 +11099,15 @@
   <key>RenderAutoMuteSurfaceAreaLimit</key>
   <map>
     <key>Comment</key>
-    <string>(If RenderGeometryOverloadProtection is true) Maximum surface area of attachments before an avatar is rendered as a simple impostor (0 to not use this limit).</string>
+    <string>Maximum surface area of attachments before an avatar is
+    rendered as a simple impostor (to not use this limit, set to zero
+    or set RenderAvatarMaxComplexity to zero).</string>
     <key>Persist</key>
     <integer>1</integer>
     <key>Type</key>
     <string>F32</string>
     <key>Value</key>
-    <integer>2500</integer>
-  </map>
-  <key>RenderAutoMuteFunctions</key>
-  <map>
-    <key>Comment</key>
-    <string>Developing feature to render some avatars using simple impostors or colored silhouettes.  (Set to 7 for all functionality)</string>
-    <key>Persist</key>
-    <integer>1</integer>
-    <key>Type</key>
-    <string>U32</string>
-    <key>Value</key>
-    <integer>0</integer>
+    <real>10.0E6</real>
   </map>
   <key>RenderAutoMuteLogging</key>
   <map>
@@ -11079,7 +11129,7 @@
     <key>Type</key>
     <string>F32</string>
     <key>Value</key>
-    <integer>130</integer>
+    <real>10.0E6</real>
   </map>
 
     <key>RenderVBOEnable</key>
@@ -11130,7 +11180,7 @@
   <key>RenderUseStreamVBO</key>
   <map>
     <key>Comment</key>
-    <string>Use VBOs for stream buffers</string>
+    <string>Use VBO's for stream buffers</string>
     <key>Persist</key>
     <integer>1</integer>
     <key>Type</key>
@@ -11259,7 +11309,6 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
-    
     <key>RotateRight</key>
     <map>
       <key>Comment</key>
@@ -11697,17 +11746,6 @@
       <integer>1</integer>
       <key>Type</key>
       <string>S32</string>
-      <key>Value</key>
-      <integer>0</integer>
-    </map>
-    <key>ShowAdvancedGraphicsSettings</key>
-    <map>
-      <key>Comment</key>
-      <string>Show advanced graphics settings</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
     </map>
@@ -12234,6 +12272,8 @@
       <string>Display results of search All that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12245,6 +12285,8 @@
       <string>Display results of search All that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12256,6 +12298,8 @@
       <string>Display results of search All that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12267,6 +12311,8 @@
       <string>Display results of find groups that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12278,6 +12324,8 @@
       <string>Display results of find groups that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12289,6 +12337,8 @@
       <string>Display results of find groups that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12300,6 +12350,8 @@
       <string>Display results of find classifieds that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12311,6 +12363,8 @@
       <string>Display results of find classifieds that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12322,6 +12376,8 @@
       <string>Display results of find classifieds that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12333,6 +12389,8 @@
       <string>Display results of find events that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12344,6 +12402,8 @@
       <string>Display results of find events that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12355,6 +12415,8 @@
       <string>Display results of find events that are flagged as adult</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12366,6 +12428,8 @@
       <string>Display results of find land sales that are flagged as general</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12377,6 +12441,8 @@
       <string>Display results of find land sales that are flagged as moderate</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12387,6 +12453,8 @@
       <key>Comment</key>
       <string>Display results of find land sales that are flagged as adult</string>
       <key>Persist</key>
+      <integer>1</integer>
+      <key>HideFromEditor</key>
       <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
@@ -12410,6 +12478,8 @@
       <string>Display results of find places or find popular that are in general sims</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12421,6 +12491,8 @@
       <string>Display results of find places or find popular that are in moderate sims</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -12432,6 +12504,8 @@
       <string>Display results of find places or find popular that are in adult sims</string>
       <key>Persist</key>
       <integer>1</integer>
+	  <key>HideFromEditor</key>
+	  <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
@@ -15613,6 +15687,24 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
+    <key>PoolSizeAIS</key>
+        <map>
+        <key>Comment</key>
+            <string>Coroutine Pool size for AIS</string>
+        <key>Type</key>
+            <string>U32</string>
+        <key>Value</key>
+            <integer>25</integer>
+        </map>
+    <key>PoolSizeUpload</key>
+        <map>
+        <key>Comment</key>
+            <string>Coroutine Pool size for Upload</string>
+        <key>Type</key>
+            <string>U32</string>
+        <key>Value</key>
+            <real>1</real>
+        </map>
 
     <!-- Settings below are for back compatibility only.
     They are not used in current viewer anymore. But they can't be removed to avoid
@@ -16764,8 +16856,6 @@
     <integer>0</integer>
   </map>
 
-
-     <key>DebugSearch</key>
   <key>SimulateFBOFailure</key>
   <map>
     <key>Comment</key>
@@ -16843,6 +16933,7 @@
     <key>Value</key>
     <integer>0</integer>
   </map>
+    <key>DebugSearch</key>
     <map>
       <key>Comment</key>
       <string>If TRUE use search url as given  in SearchURLDebug</string>
@@ -17644,6 +17735,41 @@
       <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+  <key>PresetGraphicActive</key>
+    <map>
+      <key>Comment</key>
+      <string>Name of currently selected preference</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string />
+    </map>
+    <key>IndirectMaxComplexity</key>
+    <map>
+      <key>Comment</key>
+      <string>Controls RenderAvatarMaxComplexity in a non-linear fashion (do
+      not set this value)</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>U32</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>IndirectMaxNonImpostors</key>
+    <map>
+      <key>Comment</key>
+      <string>Controls RenderAvatarMaxNonImpostors in a non-linear fashion (do
+      not set this value)</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>U32</string>
       <key>Value</key>
       <integer>0</integer>
     </map>

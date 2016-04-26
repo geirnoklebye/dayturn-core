@@ -24,7 +24,6 @@ if(WINDOWS)
 #       added from archive
         vivoxsdk.dll
         ortp.dll
-        libsndfile-1.dll
         vivoxoal.dll
         vivoxplatform.dll
         zlib1.dll

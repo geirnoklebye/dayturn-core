@@ -167,17 +167,10 @@
         <menu_item_call.on_click
          function="BuyCurrency" />
       </menu_item_call>
-      <menu_item_call
-         label="Merchant Outbox..."
-         name="MerchantOutbox"
-         only_in_sl="true">
-        <menu_item_call.on_click
-         function="Floater.ToggleOrBringToFront"
-         parameter="outbox" />
-      </menu_item_call>
         <menu_item_call
             label="Marketplace Listings..."
             name="MarketplaceListings">
+         only_in_sl="true">
             <menu_item_call.on_click
             function="Floater.ToggleOrBringToFront"
             parameter="marketplace_listings" />
@@ -1713,14 +1706,14 @@
                  parameter="scene_load_stats" />
             </menu_item_call>
       <menu_item_check
-        label="Show Draw Weight for Avatars"
-        name="Avatar Rendering Cost">
+        label="Show avatar complexity information"
+        name="Avatar Draw Info">
            <menu_item_check.on_check
             function="Advanced.CheckInfoDisplay"
-            parameter="shame" />
+            parameter="avatardrawinfo" />
            <menu_item_check.on_click
             function="Advanced.ToggleInfoDisplay"
-            parameter="shame" />
+            parameter="avatardrawinfo" />
        </menu_item_check>
         </menu>
         <menu
@@ -2836,26 +2829,6 @@
            function="Advanced.ToggleInfoDisplay"
            parameter="wind vectors" />
         </menu_item_check>
-        <menu_item_check
-         label="Render Complexity"
-         name="rendercomplexity">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="rendercomplexity" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="rendercomplexity" />
-        </menu_item_check>
-        <menu_item_check
-         label="Attachment Bytes"
-         name="attachment bytes">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="attachment bytes" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="attachment bytes" />
-        </menu_item_check>
 		<menu_item_check
          label="Sculpt"
          name="Sculpt">
@@ -3734,7 +3707,7 @@
                  function="Advanced.ToggleInfoDisplay"
                  parameter="agent target" />
             </menu_item_check>
-<!-- Appears not to exist anymore
+            <!-- Appears not to exist anymore
             <menu_item_check
              label="Debug Rotation"
              name="Debug Rotation">
@@ -3745,7 +3718,6 @@
                  function="ToggleControl"
                  parameter="DebugAvatarRotation" />
             </menu_item_check> -->
--->
             <menu_item_call
              label="Dump Attachments"
              name="Dump Attachments">

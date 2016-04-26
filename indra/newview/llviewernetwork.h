@@ -246,6 +246,8 @@ public:
 	// <FS:CR> Variable parcel listing fee
 private:
 	friend class GridInfoRequestResponder;
+	friend void downloadComplete( LLSD const &aData, LLGridManager* mOwner, GridEntry* mData, LLGridManager::AddState mState );
+	friend void downloadError( LLSD const &aData, LLGridManager* mOwner, GridEntry* mData, LLGridManager::AddState mState );
 	void addGrid(GridEntry* grid_info, AddState state);
 	void incResponderCount(){++mResponderCount;}
 	void decResponderCount(){--mResponderCount;}

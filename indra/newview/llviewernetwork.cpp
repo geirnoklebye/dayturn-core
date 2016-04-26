@@ -38,7 +38,6 @@
 #include "llbufferstream.h"
 #include "lllogininstance.h"        /// to check if logged in yet
 #include "llnotificationsutil.h"
-#include "llhttpclient.h"
 
 
 #if LL_WINDOWS
@@ -48,117 +47,98 @@
 #endif
 /// url base for update queries
 
-class GridInfoRequestResponder : public LLHTTPClient::Responder
+#include "llcorehttputil.h"
+
+void downloadError( LLSD const &aData, LLGridManager* mOwner, GridEntry* mData, LLGridManager::AddState mState )
 {
-public:
-	GridInfoRequestResponder(LLGridManager* owner, GridEntry* grid_data, LLGridManager::AddState state)
-	{
-		mOwner = owner;
-		mData = grid_data;
-		mState = state;
+    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD( aData );
 
-		LL_WARNS() << "hello " << this << LL_ENDL;
-		mOwner->incResponderCount();
+	if (HTTP_GATEWAY_TIME_OUT == status.getType() )// gateway timeout ... well ... retry once >_>
+	{
+		if (LLGridManager::FETCH == mState)
+		{
+			mOwner->addGrid(mData,	LLGridManager::RETRY);
+		}
+
 	}
-
-	~GridInfoRequestResponder()
+	else if (LLGridManager::TRYLEGACY == mState) //we did TRYLEGACY and faild
 	{
-		LL_WARNS() << "goodbye " << this << LL_ENDL;
+		LLSD args;
+		args["GRID"] = mData->grid[GRID_VALUE];
+		//Could not add [GRID] to the grid list.
+		std::string reason_dialog = "Server didn't provide grid info: ";
+		reason_dialog.append(mData->last_http_error);
+		reason_dialog.append("\nPlease check if the loginuri is correct and");
+		args["REASON"] = reason_dialog;
+		//[REASON] contact support of [GRID].
+		LLNotificationsUtil::add("CantAddGrid", args);
+
+		LL_WARNS() << "No legacy login page. Giving up for " << mData->grid[GRID_VALUE] << LL_ENDL;
+		mOwner->addGrid(mData, LLGridManager::FAIL);
 	}
-
-
-	/// the grid info is no LLSD *sigh* ... override the default LLSD parsing behaviour 
-	virtual void completedRaw(
-			const LLChannelDescriptors& channels,
-			const LLIOPipe::buffer_ptr_t& buffer)
+	else
 	{
-		mOwner->decResponderCount();
-		LL_DEBUGS("GridManager") << mData->grid[GRID_VALUE] << " status: " << getStatus() << " reason: " << getReason() << LL_ENDL;
-		if(LLGridManager::TRYLEGACY == mState && 200 == getStatus())
+		// remember the error we got when trying to get grid info where we expect it
+		std::ostringstream last_error;
+		last_error << status.getType() << " " << status.getMessage();
+		mData->last_http_error = last_error.str();
+
+		mOwner->addGrid(mData, LLGridManager::TRYLEGACY);
+	}
+}
+
+void downloadComplete( LLSD const &aData, LLGridManager* mOwner, GridEntry* mData, LLGridManager::AddState mState )
+{
+	mOwner->decResponderCount();
+	LLSD header = aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ][ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_HEADERS];
+    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD( aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ] );
+
+    const LLSD::Binary &rawData = aData[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_RAW].asBinary();
+
+	// LL_DEBUGS("GridManager") << mData->grid[GRID_VALUE] << " status: " << getStatus() << " reason: " << getReason() << LL_ENDL;
+	if(LLGridManager::TRYLEGACY == mState && HTTP_OK ==  status.getType() )
+	{
+		mOwner->addGrid(mData, LLGridManager::SYSTEM);
+	}
+	else if (HTTP_OK ==  status.getType() )// OK
+	{
+		LL_DEBUGS("GridManager") << "Parsing gridinfo xml file from "
+			<< mData->grid[GRID_VALUE] << LL_ENDL;
+
+		std::string stringData;
+		stringData.assign( rawData.begin(), rawData.end() ); // LLXMLNode::parseBuffer wants a U8*, not a const U8*, so need to copy here just to be safe
+		if(LLXMLNode::parseBuffer( reinterpret_cast< U8*> ( &stringData[0] ), stringData.size(), mData->info_root, NULL))
 		{
-			mOwner->addGrid(mData, LLGridManager::SYSTEM);
-		}
-		else if (200 == getStatus())/// OK
-		{
-			LL_DEBUGS("GridManager") << "Parsing gridinfo xml file from "
-				<< mData->grid[GRID_VALUE] << LL_ENDL;
-			LLBufferStream istr(channels, buffer.get());
-			if(LLXMLNode::parseStream( istr, mData->info_root, NULL))
-			{
-				mOwner->gridInfoResponderCB(mData);
-			}
-			else
-			{
-				LLSD args;
-				args["GRID"] = mData->grid[GRID_VALUE];
-				///Could not add [GRID] to the grid list.
-				args["REASON"] = "Server provided broken grid info xml. Please";
-				///[REASON] contact support of [GRID].
-				LLNotificationsUtil::add("CantAddGrid", args);
-				LL_WARNS() << " Could not parse grid info xml from server."
-					<< mData->grid[GRID_VALUE] << " skipping." << LL_ENDL;
-				mOwner->addGrid(mData, LLGridManager::FAIL);
-			}
-		}
-		else if (304 == getStatus() && LLGridManager::TRYLEGACY != mState) /// not modified
-		{
-			mOwner->addGrid(mData, LLGridManager::FINISH);
-		}
-		else if (LLGridManager::LOCAL == mState) ///always add localhost, no matter
-		{
-			mOwner->addGrid(mData,	LLGridManager::FINISH);
-			///since we know now that its not up we could also start it
+			mOwner->gridInfoResponderCB(mData);
 		}
 		else
-		{
-			error(getStatus(), getReason());
-		}
-	}
-
-
-	virtual void error(U32 status, const std::string& reason)
-	{
-		if (504 == status)/// gateway timeout ... well ... retry once >_>
-		{
-			if (LLGridManager::FETCH == mState)
-			{
-				mOwner->addGrid(mData,	LLGridManager::RETRY);
-			}
-
-		}
-		else if (LLGridManager::TRYLEGACY == mState) ///we did TRYLEGACY and faild
 		{
 			LLSD args;
 			args["GRID"] = mData->grid[GRID_VALUE];
-			///Could not add [GRID] to the grid list.
-			std::string reason_dialog = "Server didn't provide grid info: ";
-			reason_dialog.append(mData->last_http_error);
-			reason_dialog.append("\nPlease check if the loginuri is correct and");
-			args["REASON"] = reason_dialog;
-			///[REASON] contact support of [GRID].
+			//Could not add [GRID] to the grid list.
+			args["REASON"] = "Server provided broken grid info xml. Please";
+			//[REASON] contact support of [GRID].
 			LLNotificationsUtil::add("CantAddGrid", args);
 
-			LL_WARNS() << "No legacy login page. Giving up for " << mData->grid[GRID_VALUE] << LL_ENDL;
+			LL_WARNS() << " Could not parse grid info xml from server."
+				<< mData->grid[GRID_VALUE] << " skipping." << LL_ENDL;
 			mOwner->addGrid(mData, LLGridManager::FAIL);
 		}
-		else
-		{
-			/// remember the error we got when trying to get grid info where we expect it
-			std::ostringstream last_error;
-			last_error << status << " " << reason;
-			mData->last_http_error = last_error.str();
-
-			mOwner->addGrid(mData, LLGridManager::TRYLEGACY);
-		}
-
 	}
-
-private:
-	LLGridManager* mOwner;
-	GridEntry* mData;
-	LLGridManager::AddState mState;
-};
-
+	else if (HTTP_NOT_MODIFIED ==  status.getType() && LLGridManager::TRYLEGACY != mState)// not modified
+	{
+		mOwner->addGrid(mData, LLGridManager::FINISH);
+	}
+	else if (HTTP_INTERNAL_ERROR ==  status.getType() && LLGridManager::LOCAL == mState) //add localhost even if its not up
+	{
+		mOwner->addGrid(mData,	LLGridManager::FINISH);
+		//since we know now that its not up we cold also start it
+	}
+	else
+	{
+		downloadError( aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ], mOwner, mData, mState );
+	}
+}
 
 const std::string  GRID_UPDATE_SERVICE_URL = "update_query_url_base";
 const std::string SL_UPDATE_QUERY_URL = "https://update.secondlife.com/update";
@@ -696,7 +676,8 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 				last_modified = (time_t)saved_value.secondsSinceEpoch();
 			}
 	
-			LLHTTPClient::getIfModified(uri, new GridInfoRequestResponder(this, grid_entry, state), last_modified);
+			FSCoreHttpUtil::callbackHttpGetRaw( uri, boost::bind( downloadComplete, _1, this, grid_entry, state ),
+												boost::bind( downloadError, _1, this, grid_entry, state ) );
 			return;
 		}
 	}
@@ -714,7 +695,9 @@ void LLGridManager::addGrid(GridEntry* grid_entry,  AddState state)
 		uri.append("cgi-bin/login.cgi");
 
 		LL_WARNS() << "No gridinfo found. Trying if legacy login page exists: " << uri << LL_ENDL;
-		LLHTTPClient::get(uri, new GridInfoRequestResponder(this, grid_entry, state));
+
+		FSCoreHttpUtil::callbackHttpGetRaw( uri, boost::bind( downloadComplete, _1, this, grid_entry, state ),
+											boost::bind( downloadError, _1, this, grid_entry, state ) );
 		return;
 	}
 

@@ -26,9 +26,7 @@
  */
 
 #include "llviewerprecompiledheaders.h"
-
 #include "fsfloaterimport.h"
-
 #include "llagent.h"
 #include "llagentcamera.h"
 #include "llappviewer.h"
@@ -64,9 +62,35 @@
 #include "llvfile.h"
 #include "llvfs.h"
 #include "llvolumemessage.h"
-#include "material_codes.h"
+#include "lltrace.h"
+//#include "fsexportperms.h"
 #include <boost/algorithm/string_regex.hpp>
 #include <boost/lexical_cast.hpp>
+#include "llcoros.h"
+#include "llcoproceduremanager.h"
+#include "llsdutil.h"
+#include "material_codes.h"
+
+struct FSResourceData
+{
+	LLUUID uuid;
+	bool temporary;
+	LLAssetType::EType asset_type;
+	LLUUID inventory_item;
+	LLWearableType::EType wearable_type;
+	bool post_asset_upload;
+	LLUUID post_asset_upload_id;
+	FSFloaterImport *mFloater;
+};
+
+void resourceDeleter( LLResourceData *aData )
+{
+	FSResourceData *data = (FSResourceData*)aData->mUserData;
+	delete data;
+	delete aData;
+}
+
+void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter, std::string aURL,  LLSD aBody, LLAssetID aAssetId, LLAssetType::EType aAssetType, boost::shared_ptr< LLResourceData > aResourceData );
 
 FSFloaterImport::FSFloaterImport(const LLSD& key) :
 	LLFloater(key),
@@ -78,11 +102,10 @@ FSFloaterImport::FSFloaterImport(const LLSD& key) :
 	mFileReady(false)
 {
 	mInstance = this;
-
-	mCommitCallbackRegistrar.add("Import.PickFile",boost::bind(&FSFloaterImport::onClickBtnPickFile,this));
-	mCommitCallbackRegistrar.add("Import.ImportLinkset",boost::bind(&FSFloaterImport::onClickBtnImport,this));
-	mCommitCallbackRegistrar.add("Import.UploadAsset",boost::bind(&FSFloaterImport::onClickCheckBoxUploadAsset,this));
-	mCommitCallbackRegistrar.add("Import.TempAsset",boost::bind(&FSFloaterImport::onClickCheckBoxTempAsset,this));
+	mCommitCallbackRegistrar.add("Import.PickFile", boost::bind(&FSFloaterImport::onClickBtnPickFile, this));
+	mCommitCallbackRegistrar.add("Import.ImportLinkset", boost::bind(&FSFloaterImport::onClickBtnImport, this));
+//	mCommitCallbackRegistrar.add("Import.UploadAsset",boost::bind(&FSFloaterImport::onClickCheckBoxUploadAsset,this));
+//	mCommitCallbackRegistrar.add("Import.TempAsset",boost::bind(&FSFloaterImport::onClickCheckBoxTempAsset,this));
 
 	gIdleCallbacks.addFunction(onIdle, this);
 
@@ -95,8 +118,27 @@ FSFloaterImport::~FSFloaterImport()
 	{
 		LL_WARNS("import") << "FSFloaterImport::~FSFloaterImport() failed to delete idle callback" << LL_ENDL;
 	}
+	if (mObjectCreatedCallback.connected())
+	{
+		mObjectCreatedCallback.disconnect();
+	}
 
 	gSavedSettings.setBOOL("ShowNewInventory", mSavedSettingShowNewInventory);
+}
+
+BOOL FSFloaterImport::postBuild()
+{
+	if (LLGlobalEconomy::Singleton::getInstance()->getPriceUpload() == 0 
+		|| gAgent.getRegion()->getCentralBakeVersion() > 0)
+	{
+		getChild<LLCheckBoxCtrl>("temp_asset")->setVisible(FALSE);   
+		getChild<LLCheckBoxCtrl>("temp_asset")->set(FALSE);
+	}
+	getChild<LLButton>("import_btn")->setCommitCallback(boost::bind(&FSFloaterImport::onClickBtnImport, this));
+	loadFile();
+	populateBackupInfo();
+	
+	return TRUE;
 }
 
 // static
@@ -108,6 +150,9 @@ void FSFloaterImport::onIdle(void* user_data)
 
 void FSFloaterImport::onIdle()
 {
+	if( getUploads() < 1 )
+		popNextAsset();
+
 	switch(mImportState)
 	{
 	case IDLE:
@@ -177,39 +222,30 @@ void FSFloaterImport::onIdle()
 	}
 }
 
-void FSFloaterImport::onClickBtnPickFile()
+void FSFloaterImport::loadFile()
 {
-	// pick a file
-	LLFilePicker& file_picker = LLFilePicker::instance();
-	if(!file_picker.getOpenFile(LLFilePicker::FFLOAD_IMPORT))
-	{
-		// User canceled or we failed to acquire file.
-		return;
-	}
-	mFileFullName = file_picker.getFirstFile();
 	mFilePath = gDirUtilp->getDirName(mFileName);
-	mFileName= gDirUtilp->getBaseFileName(mFileFullName);
-	getChild<LLLineEditor>("filename")->setValue(LLSD(mFileName));
+	mFileName = gDirUtilp->getBaseFileName(mFileFullName);
 
-	mFile.clear();
+	mManifest.clear();
 	mTextureQueue.clear();
 	mAnimQueue.clear();
 	mSoundQueue.clear();
-	mFileReady = false;
 	mLinksetSize = 0;
 	mTexturesTotal = 0;
 	mAnimsTotal = 0;
 	mSoundsTotal = 0;
 
+	bool file_loaded = false;
 	llifstream filestream(mFileFullName.c_str(), std::ios_base::in | std::ios_base::binary);
 	if(filestream.is_open())
 	{
 		filestream.seekg(0, std::ios::end);
 		S32 file_size = (S32)filestream.tellg();
 		filestream.seekg(0, std::ios::beg);
-		if (unzip_llsd(mFile, filestream, file_size))
+		if (unzip_llsd(mManifest, filestream, file_size))
 		{
-			mFileReady = true;
+			file_loaded = true;
 		}
 		else
 		{
@@ -222,22 +258,22 @@ void FSFloaterImport::onClickBtnPickFile()
 	}
 	filestream.close();
 
-	if (mFileReady)
+	if (file_loaded)
 	{
-		if (mFile.has("format_version") && mFile["format_version"].asInteger() == 1)
+		if (mManifest.has("format_version") && mManifest["format_version"].asInteger() <= OXP_FORMAT_VERSION)
 		{
-			LLSD& linksetsd = mFile["linkset"];
+			LLSD& linksetsd = mManifest["linkset"];
 			U32 prims = 0;
 			for (LLSD::array_iterator linkset_iter = linksetsd.beginArray();
 				linkset_iter != linksetsd.endArray();
 				++linkset_iter)
 			{
-				LLSD& objectsd = mFile["linkset"][mLinksetSize];
+				LLSD& objectsd = mManifest["linkset"][mLinksetSize];
 				for (LLSD::array_iterator prim_iter = objectsd.beginArray();
 					prim_iter != objectsd.endArray();
 					++prim_iter)
 				{
-					processPrim(mFile["prim"][(*prim_iter).asString()]);
+					processPrim(mManifest["prim"][(*prim_iter).asString()]);
 					prims++;
 				}
 				mLinksetSize++;
@@ -265,18 +301,32 @@ void FSFloaterImport::onClickBtnPickFile()
 	LL_DEBUGS("import") << "Linkset size is " << mLinksetSize << LL_ENDL;
 	if (mLinksetSize != 0)
 	{
-		getChild<LLButton>("import_file")->setEnabled(TRUE);
+		getChild<LLButton>("import_btn")->setEnabled(TRUE);
 		getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(TRUE);
 		getChild<LLCheckBoxCtrl>("region_position")->setEnabled(TRUE);
 		getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(TRUE);
 	}
 	else
 	{
-		getChild<LLButton>("import_file")->setEnabled(FALSE);
+		getChild<LLButton>("import_btn")->setEnabled(FALSE);
 		getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(FALSE);
 		getChild<LLCheckBoxCtrl>("region_position")->setEnabled(FALSE);
 		getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(FALSE);
 	}
+}
+
+void FSFloaterImport::populateBackupInfo()
+{
+	childSetTextArg("filename_text", "[FILENAME]", mFileName);
+	childSetTextArg("client_text", "[VERSION]", mManifest["format_version"].asString());
+	childSetTextArg("client_text", "[CLIENT]", (mManifest.has("client") ? mManifest["client"].asString() : LLTrans::getString("Unknown")));
+	childSetTextArg("author_text", "[AUTHOR]", (mManifest.has("author") ? mManifest["author"].asString() : LLTrans::getString("Unknown")));
+	childSetTextArg("author_text", "[GRID]", (mManifest.has("grid") ? "@ " + mManifest["grid"].asString() : LLTrans::getString("Unknown")));
+	childSetTextArg("creation_date_text", "[DATE_STRING]", (mManifest.has("creation_date") ? mManifest["creation_date"].asString(): LLTrans::getString("Unknown")));
+	
+	LLUIString title = getString("floater_title");
+	title.setArg("[FILENAME]", mFileName);
+	setTitle(title);
 }
 
 void FSFloaterImport::processPrim(LLSD& prim)
@@ -307,21 +357,21 @@ void FSFloaterImport::processPrim(LLSD& prim)
 	      content_iter != contentsd.endArray();
 	      ++content_iter)
 	{
-		if (!mFile["inventory"].has((*content_iter).asString()))
+		if (!mManifest["inventory"].has((*content_iter).asString()))
 		{
 			continue;
 		}
 
-		LLAssetType::EType asset_type = LLAssetType::lookup(mFile["inventory"][(*content_iter).asString()]["type"].asString().c_str());
-		LLUUID asset_id = mFile["inventory"][(*content_iter).asString()]["asset_id"].asUUID();
+		LLAssetType::EType asset_type = LLAssetType::lookup(mManifest["inventory"][(*content_iter).asString()]["type"].asString().c_str());
+		LLUUID asset_id = mManifest["inventory"][(*content_iter).asString()]["asset_id"].asUUID();
 
-		if (!mFile["asset"].has(asset_id.asString()))
+		if (!mManifest["asset"].has(asset_id.asString()))
 		{
 			continue;
 		}
 
 		addAsset(asset_id, asset_type);
-		std::vector<U8> buffer = mFile["asset"][asset_id.asString()]["data"].asBinary();
+		std::vector<U8> buffer = mManifest["asset"][asset_id.asString()]["data"].asBinary();
 
 		switch(asset_type)
 		{
@@ -355,6 +405,8 @@ void FSFloaterImport::processPrim(LLSD& prim)
 			if (!gesture->deserialize(dp))
 			{
 				LL_WARNS("export") << "Unable to load gesture " << asset_id << LL_ENDL;
+				delete gesture;
+				gesture = NULL;
 				break;
 			}
 
@@ -393,7 +445,7 @@ void FSFloaterImport::processPrim(LLSD& prim)
 
 void FSFloaterImport::addAsset(LLUUID asset_id, LLAssetType::EType asset_type)
 {
-	if (!mFile["asset"].has(asset_id.asString()))
+	if (!mManifest["asset"].has(asset_id.asString()))
 	{
 		LL_DEBUGS("import") << "Missing "<< asset_id.asString() << " asset data." << LL_ENDL;
 		return;
@@ -452,13 +504,12 @@ void FSFloaterImport::onClickBtnImport()
 	mStartPosition = gAgent.getPositionAgent();
 	LL_DEBUGS("import") << "gAgent position is " << mStartPosition << LL_ENDL;
 	LLVector3 offset;
-	offset.set(5.0f, 0.0f, 2.0f); // TODO: add debug settings for this and maybe expose in the UI.
+	offset.set(gSavedSettings.getVector3("FSImportBuildOffset"));
 	mStartPosition = mStartPosition + offset * gAgent.getQuat();
 	LL_DEBUGS("import") << "mStartPosition is " << mStartPosition << LL_ENDL;
 
 	// don't allow change during a long upload/import
-	getChild<LLButton>("pick_file")->setEnabled(FALSE);
-	getChild<LLButton>("import_file")->setEnabled(FALSE);
+	getChild<LLButton>("import_btn")->setEnabled(FALSE);
 	getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(FALSE);
 	getChild<LLCheckBoxCtrl>("region_position")->setEnabled(FALSE);
 	getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(FALSE);
@@ -479,8 +530,7 @@ void FSFloaterImport::onClickBtnImport()
 				LLBuyCurrencyHTML::openCurrencyFloater(LLTrans::getString("UploadingCosts", args), expected_upload_cost);
 
 				// re-enable the controls
-				getChild<LLButton>("pick_file")->setEnabled(TRUE);
-				getChild<LLButton>("import_file")->setEnabled(TRUE);
+				getChild<LLButton>("import_btn")->setEnabled(TRUE);
 				getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(TRUE);
 				getChild<LLCheckBoxCtrl>("region_position")->setEnabled(TRUE);
 				getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(TRUE);
@@ -536,6 +586,110 @@ void FSFloaterImport::onClickBtnImport()
 	}
 }
 
+void FSFloaterImport::onClickBtnPickFile()
+{
+	// pick a file
+	LLFilePicker& file_picker = LLFilePicker::instance();
+	if (!file_picker.getOpenFile(LLFilePicker::FFLOAD_IMPORT))
+	{
+		// User canceled or we failed to acquire file.
+		return;
+	}
+	mFileFullName = file_picker.getFirstFile();
+	mFilePath = gDirUtilp->getDirName(mFileName);
+	mFileName = gDirUtilp->getBaseFileName(mFileFullName);
+	getChild<LLLineEditor>("filename")->setValue(LLSD(mFileName));
+
+	mFile.clear();
+	mTextureQueue.clear();
+	mAnimQueue.clear();
+	mSoundQueue.clear();
+	mFileReady = false;
+	mLinksetSize = 0;
+	mTexturesTotal = 0;
+	mAnimsTotal = 0;
+	mSoundsTotal = 0;
+
+
+	llifstream filestream(mFileFullName.c_str(), std::ios_base::in | std::ios_base::binary);
+	if (filestream.is_open())
+	{
+		filestream.seekg(0, std::ios::end);
+		S32 file_size = (S32)filestream.tellg();
+		filestream.seekg(0, std::ios::beg);
+		if (unzip_llsd(mFile, filestream, file_size))
+		{
+
+			mFileReady = true;
+		}
+		else
+		{
+			LL_WARNS("import") << "Failed to deserialize " << mFileFullName << LL_ENDL;
+		}
+	}
+	else
+	{
+		LL_WARNS("import") << "Unable to open file: " << mFileFullName << LL_ENDL;
+	}
+	filestream.close();
+
+
+	if (mFileReady)
+	{
+		if (mFile.has("format_version") && mFile["format_version"].asInteger() == 1)
+		{
+			LLSD& linksetsd = mFile["linkset"];
+			U32 prims = 0;
+			for (LLSD::array_iterator linkset_iter = linksetsd.beginArray();
+				linkset_iter != linksetsd.endArray();
+				++linkset_iter)
+			{
+				LLSD& objectsd = mFile["linkset"][mLinksetSize];
+				for (LLSD::array_iterator prim_iter = objectsd.beginArray();
+					prim_iter != objectsd.endArray();
+					++prim_iter)
+				{
+					processPrim(mFile["prim"][(*prim_iter).asString()]);
+					prims++;
+				}
+				mLinksetSize++;
+			}
+
+			LLUIString stats = getString("file_status");
+			stats.setArg("[LINKSETS]", llformat("%u", mLinksetSize));
+			stats.setArg("[PRIMS]", llformat("%u", prims));
+			stats.setArg("[TEXTURES]", llformat("%u", mTexturesTotal));
+			stats.setArg("[SOUNDS]", llformat("%u", mSoundsTotal));
+			stats.setArg("[ANIMATIONS]", llformat("%u", mAnimsTotal));
+			stats.setArg("[ASSETS]", llformat("%u", mAssetsTotal));
+			getChild<LLTextBox>("file_status_text")->setText(stats.getString());
+		}
+		else
+		{
+			getChild<LLTextBox>("file_status_text")->setText(getString("file_version_error"));
+		}
+	}
+	else
+	{
+		getChild<LLTextBox>("file_status_text")->setText(getString("file_status_error"));
+	}
+
+	LL_DEBUGS("import") << "Linkset size is " << mLinksetSize << LL_ENDL;
+	if (mLinksetSize != 0)
+	{
+		getChild<LLButton>("import_file")->setEnabled(TRUE);
+		getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(TRUE);
+		getChild<LLCheckBoxCtrl>("region_position")->setEnabled(TRUE);
+		getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(TRUE);
+	}
+	else
+	{
+		getChild<LLButton>("import_file")->setEnabled(FALSE);
+		getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(FALSE);
+		getChild<LLCheckBoxCtrl>("region_position")->setEnabled(FALSE);
+		getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(FALSE);
+	}
+}
 void FSFloaterImport::onClickCheckBoxUploadAsset()
 {
 	if (getChild<LLCheckBoxCtrl>("upload_asset")->get())
@@ -574,7 +728,7 @@ void FSFloaterImport::onClickCheckBoxTempAsset()
 void FSFloaterImport::importPrims()
 {
 	mObjectSize = 0;
-	LLSD& objectsd = mFile["linkset"][mLinkset];
+	LLSD& objectsd = mManifest["linkset"][mLinkset];
 	for (LLSD::array_iterator iter = objectsd.beginArray();
 		iter != objectsd.endArray();
 		++iter)
@@ -587,8 +741,8 @@ void FSFloaterImport::importPrims()
 		LL_WARNS("import") << "Object size is to large to link. " << mObjectSize << " is greater then max linking size of " << MAX_PRIMS_PER_OBJECT << LL_ENDL;
 	}
 	mRootPosition = mStartPosition;
-	LLUUID linkset_root_prim_uuid = mFile["linkset"][0][0].asUUID();
-	LLSD& linkset_root_prim = mFile["prim"][linkset_root_prim_uuid.asString()];
+	LLUUID linkset_root_prim_uuid = mManifest["linkset"][0][0].asUUID();
+	LLSD& linkset_root_prim = mManifest["prim"][linkset_root_prim_uuid.asString()];
 	mLinksetPosition.setValue(linkset_root_prim["position"]);
 	mCreatingActive = true;
 	createPrim();
@@ -602,7 +756,7 @@ void FSFloaterImport::createPrim()
 	status.setArg("[PRIM]", llformat("%u", mObject + 1));
 	status.setArg("[PRIMS]", llformat("%u", mObjectSize));
 	getChild<LLTextBox>("file_status_text")->setText(status.getString());
-  
+
 	LLUUID prim_uuid = mFile["linkset"][mLinkset][mObject].asUUID();
 	LL_DEBUGS("import") << "Creating prim from " << prim_uuid.asString() << LL_ENDL;
 	LLSD& prim = mFile["prim"][prim_uuid.asString()];
@@ -644,7 +798,7 @@ void FSFloaterImport::createPrim()
 	LLVector3 scale;
 	scale.setValue(prim["scale"]);
 	LL_DEBUGS("import") << "Creating prim scale of " << scale << LL_ENDL;
-	gMessageSystem->addVector3Fast(_PREHASH_Scale, scale );
+	gMessageSystem->addVector3Fast(_PREHASH_Scale, scale);
 
 	LLQuaternion rotation = ll_quaternion_from_sd(prim["rotation"]);
 	if (mObject != 0)
@@ -668,6 +822,7 @@ void FSFloaterImport::createPrim()
 	{
 		position = mRootPosition;
 	}
+
 	LL_DEBUGS("import") << "Creating prim at position " << position << LL_ENDL;
 	gMessageSystem->addVector3Fast(_PREHASH_RayStart, position);
 	gMessageSystem->addVector3Fast(_PREHASH_RayEnd, position);
@@ -677,8 +832,8 @@ void FSFloaterImport::createPrim()
 	gMessageSystem->addU8Fast(_PREHASH_State, (U8)0);
 	gMessageSystem->addUUIDFast(_PREHASH_RayTargetID, LLUUID::null);
 	gMessageSystem->sendReliable(gAgent.getRegion()->getHost());
-}
 
+}
 bool FSFloaterImport::processPrimCreated(LLViewerObject* object)
 {
 	if (!(mInstance && mCreatingActive))
@@ -688,8 +843,8 @@ bool FSFloaterImport::processPrimCreated(LLViewerObject* object)
 
 	LLSelectMgr::getInstance()->selectObjectAndFamily(object, TRUE);
 
-	LLUUID prim_uuid = mFile["linkset"][mLinkset][mObject].asUUID();
-	LLSD& prim = mFile["prim"][prim_uuid.asString()];
+	LLUUID prim_uuid = mManifest["linkset"][mLinkset][mObject].asUUID();
+	LLSD& prim = mManifest["prim"][prim_uuid.asString()];
 	LL_DEBUGS("import") << "Processing prim " << prim_uuid.asString() << " for object " << object->getID().asString() << LL_ENDL;
 	mPrimObjectMap[prim_uuid] = object->getID();
 	U32 object_local_id = object->getLocalID();
@@ -741,6 +896,23 @@ bool FSFloaterImport::processPrimCreated(LLViewerObject* object)
 		}
 	}
 	object->sendTEUpdate();
+	
+	// [FS:CR] Materials
+	if(prim.has("materials"))
+	{
+		U8 te = 0;
+		LLSD materials = prim["materials"];
+		for (LLSD::array_iterator m_itr = materials.beginArray() ;
+			 m_itr != materials.endArray() ;
+			 ++m_itr)
+		{
+			LL_DEBUGS("import") << "Setting materials" << LL_ENDL;
+			LLMaterial* mat = new LLMaterial();
+			mat->fromLLSD(*m_itr);
+			object->setTEMaterialParams(te, mat);
+			++te;
+		}
+	}
 
 	if (prim.has("sculpt"))
 	{
@@ -757,7 +929,7 @@ bool FSFloaterImport::processPrimCreated(LLViewerObject* object)
 
 		object->setParameterEntry(LLNetworkData::PARAMS_SCULPT, sculpt_params, true); // sets locally and fires off an update to the region.
 	}
-	
+
 	if (prim.has("flexible"))
 	{
 		LL_DEBUGS("import") << "Found flexiable for " << prim_uuid.asString() << LL_ENDL;
@@ -936,13 +1108,13 @@ bool FSFloaterImport::processPrimCreated(LLViewerObject* object)
 		      content_iter != contentsd.endArray();
 		      ++content_iter)
 		{
-			if (!mFile["inventory"].has((*content_iter).asString()))
+			if (!mManifest["inventory"].has((*content_iter).asString()))
 			{
 				LL_WARNS("import") << "Inventory content " << (*content_iter) << " was not found in import file." << LL_ENDL;
 				continue;
 			}
 
-			LLSD& item_sd = mFile["inventory"][(*content_iter).asString()];
+			LLSD& item_sd = mManifest["inventory"][(*content_iter).asString()];
 			LLUUID asset_id = item_sd["asset_id"].asUUID();
 
 			if (asset_id.isNull())
@@ -1011,7 +1183,7 @@ void FSFloaterImport::searchInventory(LLUUID asset_id, LLViewerObject* object, s
 
 	if (items.size())
 	{
-		LLViewerInventoryItem* item = items.operator[](0);
+		LLViewerInventoryItem* item = items.at(0);
 		
 		FSInventoryQueue item_queue;
 		item_queue.item = item;
@@ -1033,8 +1205,8 @@ void FSFloaterImport::postLink()
 		return;
 	}
   
-	LLUUID root_prim_uuid = mFile["linkset"][mLinkset][0].asUUID();
-	LLSD& root_prim = mFile["prim"][root_prim_uuid.asString()];
+	LLUUID root_prim_uuid = mManifest["linkset"][mLinkset][0].asUUID();
+	LLSD& root_prim = mManifest["prim"][root_prim_uuid.asString()];
 	if (root_prim.has("attachment_point") && !getChild<LLCheckBoxCtrl>("do_not_attach")->get())
 	{
 		LL_DEBUGS("import") << "Attaching to " << root_prim["attachment_point"].asInteger() << LL_ENDL;
@@ -1068,9 +1240,6 @@ void FSFloaterImport::postLink()
 		LL_DEBUGS("import") << "Finished with " << mLinkset << " linksets and " << mObject << " prims in last linkset" << LL_ENDL;
 		mObjectSelection = NULL;
 		getChild<LLTextBox>("file_status_text")->setText(getString("file_status_done"));
-
-		// re-enable the controls, but force to pick file due to need to re-create the upload queues.
-		getChild<LLButton>("pick_file")->setEnabled(TRUE);
 	}
 	else
 	{
@@ -1078,7 +1247,7 @@ void FSFloaterImport::postLink()
 		mLinkset++;
 
 		mObjectSize = 0;
-		LLSD& objectsd = mFile["linkset"][mLinkset];
+		LLSD& objectsd = mManifest["linkset"][mLinkset];
 		for (
 		      LLSD::array_iterator iter = objectsd.beginArray();
 		      iter != objectsd.endArray();
@@ -1088,8 +1257,8 @@ void FSFloaterImport::postLink()
 		}
 		LL_DEBUGS("import") << "Next linkset Object size is " << mObjectSize << LL_ENDL;
 
-		LLUUID root_prim_uuid = mFile["linkset"][mLinkset][0].asUUID();
-		LLSD& root_prim = mFile["prim"][root_prim_uuid.asString()];
+		LLUUID root_prim_uuid = mManifest["linkset"][mLinkset][0].asUUID();
+		LLSD& root_prim = mManifest["prim"][root_prim_uuid.asString()];
 		LLVector3 root_prim_location(root_prim["position"]);
 		mRootPosition = mStartPosition + (root_prim_location - mLinksetPosition);
 		createPrim();
@@ -1130,11 +1299,11 @@ void FSFloaterImport::setPrimPosition(U8 type, LLViewerObject* object, LLVector3
 
 void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 {
-	bool tempary = false;
-	std::vector<U8> asset_data = mFile["asset"][asset_id.asString()]["data"].asBinary();
-	std::string name = mFile["asset"][asset_id.asString()]["name"].asString();
-	std::string description = mFile["asset"][asset_id.asString()]["description"].asString();
-	LLAssetType::EType asset_type = LLAssetType::lookup(mFile["asset"][asset_id.asString()]["type"].asString().c_str());
+	bool temporary = false;
+	std::vector<U8> asset_data = mManifest["asset"][asset_id.asString()]["data"].asBinary();
+	std::string name = mManifest["asset"][asset_id.asString()]["name"].asString();
+	std::string description = mManifest["asset"][asset_id.asString()]["description"].asString();
+	LLAssetType::EType asset_type = LLAssetType::lookup(mManifest["asset"][asset_id.asString()]["type"].asString().c_str());
 	std::string url;
 	LLSD body = LLSD::emptyMap();
 	LLFolderType::EType folder_type = LLFolderType::assetTypeToFolderType(asset_type);
@@ -1142,6 +1311,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	LLInventoryType::EType inventory_type = LLInventoryType::defaultForAssetType(asset_type);
 	bool new_file_agent_inventory = false;
 	LLWearableType::EType wearable_type = NOT_WEARABLE;
+	std::string perms_prefix = "";
 
 	if (name.empty())
 	{
@@ -1152,8 +1322,9 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	{
 	case LLAssetType::AT_TEXTURE:
 	{
-		tempary = getChild<LLCheckBoxCtrl>("temp_asset")->get();
-		if (tempary)
+		perms_prefix = "Uploads";
+		temporary = getChild<LLCheckBoxCtrl>("temp_asset")->get();
+		if (temporary)
 		{
 			url = gAgent.getRegion()->getCapability("UploadBakedTexture");
 		}
@@ -1162,21 +1333,24 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 			url = gAgent.getRegion()->getCapability("NewFileAgentInventory");
 			new_file_agent_inventory = true;
 		}
+		LLTrace::add(LLStatViewer::UPLOAD_TEXTURE,1);
 	}
 		break;
 	case LLAssetType::AT_SOUND:
 	{
-		tempary = getChild<LLCheckBoxCtrl>("temp_asset")->get();
-		if (tempary)
+		perms_prefix = "Uploads";
+		temporary = getChild<LLCheckBoxCtrl>("temp_asset")->get();
+		if (temporary)
 		{
 			// skip upload due to no temp support for sound
-			nextAsset(LLUUID::null, asset_id, asset_type);
+			pushNextAsset(LLUUID::null, asset_id, asset_type);
 			return;
 		}
 		else
 		{
 			url = gAgent.getRegion()->getCapability("NewFileAgentInventory");
 			new_file_agent_inventory = true;
+			LLTrace::add(LLStatViewer::UPLOAD_SOUND,1);
 		}
 		
 	}
@@ -1184,6 +1358,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	case LLAssetType::AT_CLOTHING:
 	case LLAssetType::AT_BODYPART:
 	{
+		perms_prefix = "Wearables";
 		std::string asset(asset_data.begin(), asset_data.end());
 
 		S32 position = asset.rfind("type");
@@ -1227,12 +1402,13 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		break;
 	case LLAssetType::AT_NOTECARD:
 	{
+		perms_prefix = "Notecards";
 		if (inventory_item.isNull())
 		{
 			// create inventory item first
 			FSResourceData* ci_data = new FSResourceData;
 			ci_data->uuid = asset_id;
-			ci_data->user_data = this;
+			ci_data->mFloater = this;
 			ci_data->asset_type = asset_type;
 			ci_data->post_asset_upload = false;
 			LLPointer<LLInventoryCallback> cb = new FSCreateItemCallback(ci_data);
@@ -1250,12 +1426,13 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		break;
 	case LLAssetType::AT_LSL_TEXT:
 	{
+		perms_prefix = "Scripts";
 		if (inventory_item.isNull())
 		{
 			// create inventory item first
 			FSResourceData* ci_data = new FSResourceData;
 			ci_data->uuid = asset_id;
-			ci_data->user_data = this;
+			ci_data->mFloater = this;
 			ci_data->asset_type = asset_type;
 			ci_data->post_asset_upload = false;
 			LLPointer<LLInventoryCallback> cb = new FSCreateItemCallback(ci_data);
@@ -1268,7 +1445,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		{
 			url = gAgent.getRegion()->getCapability("UpdateScriptAgent");
 			body["item_id"] = inventory_item;
-			if (gSavedSettings.getBOOL("SaveInventoryScriptsAsMono"))
+			if (gSavedSettings.getBOOL("FSSaveInventoryScriptsAsMono"))
 			{
 				body["target"] = "mono";
 			}
@@ -1281,28 +1458,31 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		break;
 	case LLAssetType::AT_ANIMATION:
 	{
-		tempary = getChild<LLCheckBoxCtrl>("temp_asset")->get();
-		if (tempary)
+		perms_prefix = "Uploads";
+		temporary = getChild<LLCheckBoxCtrl>("temp_asset")->get();
+		if (temporary)
 		{
 			// no temp support, skip
-			nextAsset(LLUUID::null, asset_id, asset_type);
+			pushNextAsset(LLUUID::null, asset_id, asset_type);
 			return;
 		}
 		else
 		{
 			url = gAgent.getRegion()->getCapability("NewFileAgentInventory");
 			new_file_agent_inventory = true;
+			LLTrace::add(LLStatViewer::ANIMATION_UPLOADS,1);
 		}
 	}
 		break;
 	case LLAssetType::AT_GESTURE:
 	{
+		perms_prefix = "Gestures";
 		if (inventory_item.isNull())
 		{
 			// create inventory item first
 			FSResourceData* ci_data = new FSResourceData;
 			ci_data->uuid = asset_id;
-			ci_data->user_data = this;
+			ci_data->mFloater = this;
 			ci_data->asset_type = asset_type;
 			ci_data->post_asset_upload = false;
 			LLPointer<LLInventoryCallback> cb = new FSCreateItemCallback(ci_data);
@@ -1394,18 +1574,18 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 
 	LLVFile::writeFile((U8*)&asset_data[0], (S32)asset_data.size(), gVFS, new_asset_id, asset_type);
 
-	LLResourceData* data = new LLResourceData;
+	LLResourceData* data( new LLResourceData );
 	data->mAssetInfo.mTransactionID = tid;
 	data->mAssetInfo.mUuid = new_asset_id;
 	data->mAssetInfo.mType = asset_type;
 	data->mAssetInfo.mCreatorID = gAgentID;
 	data->mInventoryType = inventory_type;
-	data->mNextOwnerPerm = LLFloaterPerms::getNextOwnerPerms();
+	data->mNextOwnerPerm = LLFloaterPerms::getNextOwnerPerms(perms_prefix);
 	data->mExpectedUploadCost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
 	FSResourceData* fs_data = new FSResourceData;
 	fs_data->uuid = asset_id;
-	fs_data->user_data = this;
-	fs_data->tempary = tempary;
+	fs_data->mFloater = this;
+	fs_data->temporary = temporary;
 	fs_data->inventory_item = inventory_item;
 	fs_data->wearable_type = wearable_type;
 	fs_data->asset_type = asset_type;
@@ -1423,23 +1603,21 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 			body["inventory_type"] = LLInventoryType::lookup(inventory_type);
 			body["name"] = name;
 			body["description"] = description;
-			body["next_owner_mask"] = LLSD::Integer(LLFloaterPerms::getNextOwnerPerms());
-			body["group_mask"] = LLSD::Integer(LLFloaterPerms::getGroupPerms());
-			body["everyone_mask"] = LLSD::Integer(LLFloaterPerms::getEveryonePerms());
+			body["next_owner_mask"] = LLSD::Integer(LLFloaterPerms::getNextOwnerPerms(perms_prefix));
+			body["group_mask"] = LLSD::Integer(LLFloaterPerms::getGroupPerms(perms_prefix));
+			body["everyone_mask"] = LLSD::Integer(LLFloaterPerms::getEveryonePerms(perms_prefix));
 		}
 		
-		LLHTTPClient::post(url, body, new FSAssetResponder(body, new_asset_id, asset_type, data));
+
+		boost::shared_ptr< LLResourceData> pData( data, resourceDeleter );
+
+		LLCoprocedureManager::instance().enqueueCoprocedure( "FSImporter", "Upload asset", boost::bind( uploadCoroutine, _1, url, body, new_asset_id, asset_type, pData ) );
+
 		LL_DEBUGS("import") << "Asset upload via capability of " << new_asset_id.asString() << " to " << url << " of " << asset_id.asString() << LL_ENDL;
-	} 
+	}
 	else
 	{
-		gAssetStorage->storeAssetData(tid,
-					      asset_type,
-					      FSFloaterImport::onAssetUploadComplete,
-					      data,
-					      tempary,
-					      tempary,
-					      tempary);
+		gAssetStorage->storeAssetData(tid,asset_type,FSFloaterImport::onAssetUploadComplete, data, temporary, temporary, temporary);
 		LL_DEBUGS("import") << "Asset upload via AssetStorage of " << new_asset_id.asString() << " of " << asset_id.asString() << LL_ENDL;
 	}
 }
@@ -1460,7 +1638,7 @@ void FSFloaterImport::onAssetUploadComplete(const LLUUID& uuid, void* userdata, 
 		LL_WARNS("import")  << "Missing FSResourceData, can not continue." << LL_ENDL;
 		return;
 	}
-	FSFloaterImport* self = (FSFloaterImport*)fs_data->user_data;
+	FSFloaterImport* self = fs_data->mFloater;
 	LLUUID asset_id = uuid;
 
 	if (result >= 0)
@@ -1469,7 +1647,7 @@ void FSFloaterImport::onAssetUploadComplete(const LLUUID& uuid, void* userdata, 
 		
 		if (fs_data->inventory_item.isNull())
 		{
-			if (fs_data->tempary)
+			if (fs_data->temporary)
 			{
 				LLUUID item_id;
 				item_id.generate();
@@ -1582,7 +1760,7 @@ void FSFloaterImport::onAssetUploadComplete(const LLUUID& uuid, void* userdata, 
 
 	if (self)
 	{
-		self->nextAsset(asset_id, fs_data->uuid, data->mAssetInfo.mType);
+		self->pushNextAsset(asset_id, fs_data->uuid, data->mAssetInfo.mType);
 	}
 	else
 	{
@@ -1593,8 +1771,27 @@ void FSFloaterImport::onAssetUploadComplete(const LLUUID& uuid, void* userdata, 
 	delete data;
 }
 
-void FSFloaterImport::nextAsset(LLUUID new_uuid, LLUUID asset_id, LLAssetType::EType asset_type)
+void FSFloaterImport::pushNextAsset( LLUUID new_uuid, LLUUID asset_id, LLAssetType::EType asset_type )
 {
+	NextAsset oAsset;
+	oAsset.new_uuid = new_uuid;
+	oAsset.asset_id = asset_id;
+	oAsset.asset_type = asset_type;
+	m_NextAssets.push_back( oAsset );
+}
+
+void FSFloaterImport::popNextAsset()
+{
+	if( m_NextAssets.empty() )
+		return;
+
+	NextAsset oAsset = m_NextAssets.front();
+	m_NextAssets.pop_front();
+
+	LLUUID new_uuid = oAsset.new_uuid;
+	LLUUID asset_id = oAsset.asset_id;
+	LLAssetType::EType asset_type = oAsset.asset_type;
+
 	if (gDisconnected)
 	{
 		// on logout, all assest uploads callbacks are fired.
@@ -1722,7 +1919,6 @@ void FSFloaterImport::nextAsset(LLUUID new_uuid, LLUUID asset_id, LLAssetType::E
 	importPrims();
 }
 
-
 FSCreateItemCallback::FSCreateItemCallback(FSResourceData* data) :
 	mData(data)
 {
@@ -1730,15 +1926,14 @@ FSCreateItemCallback::FSCreateItemCallback(FSResourceData* data) :
 
 void FSCreateItemCallback::fire(const LLUUID& inv_item)
 {
-	FSResourceData* data = (FSResourceData*)mData;
-	FSFloaterImport* self = (FSFloaterImport*)data->user_data;
+	FSFloaterImport* self = mData->mFloater;
 
 	if (inv_item.isNull())
 	{
-		LL_WARNS("import")  << "Item creation for asset failed, skipping " << data->uuid.asString() << LL_ENDL;
+		LL_WARNS( "import" ) << "Item creation for asset failed, skipping " << mData->uuid.asString() << LL_ENDL;
 		if (self)
 		{
-			self->nextAsset(LLUUID::null, data->uuid, data->asset_type);
+			self->pushNextAsset( LLUUID::null, mData->uuid, mData->asset_type );
 		}
 		else
 		{
@@ -1747,93 +1942,161 @@ void FSCreateItemCallback::fire(const LLUUID& inv_item)
 		return;
 	}
 
-	if (data->post_asset_upload)
+	if( mData->post_asset_upload )
 	{
-		self->mAssetItemMap[data->post_asset_upload_id] = inv_item;
-		self->nextAsset(data->post_asset_upload_id, data->uuid, data->asset_type);
+		self->mAssetItemMap[ mData->post_asset_upload_id ] = inv_item;
+		self->pushNextAsset( mData->post_asset_upload_id, mData->uuid, mData->asset_type );
 	}
 	else
 	{
-		self->uploadAsset(data->uuid, inv_item);
+		self->uploadAsset( mData->uuid, inv_item );
 	}
 }
 
-
-FSAssetResponder::FSAssetResponder(const LLSD& post_data,
-				       const LLUUID& vfile_id,
-				       LLAssetType::EType asset_type,
-				       LLResourceData* data) : 
-	LLAssetUploadResponder(post_data, vfile_id, asset_type),
-	mData(data)
+class UploadFlag
 {
-}
+	FSFloaterImport *mFloater;
+public:
+	UploadFlag( FSFloaterImport *aFloater )
+		: mFloater( aFloater )
+	{ 
+		if( mFloater )
+			mFloater->startUpload();
+	}
 
-FSAssetResponder::~FSAssetResponder()
-{
-}
-
-void FSAssetResponder::uploadComplete(const LLSD& content)
-{
-	LLUUID item_id = mPostData["item_id"];
-
-	std::string result = content["state"];
-	LLUUID new_id = content["new_asset"];
-
-	LL_DEBUGS("import")  << "result: " << result << " new_id: " << new_id << LL_ENDL;
-
-	LLResourceData* data = (LLResourceData*)mData;
-	FSResourceData* fs_data = (FSResourceData*)data->mUserData;
-	FSFloaterImport* self = (FSFloaterImport*)fs_data->user_data;
-
-	if (item_id.isNull())
+	~UploadFlag()
 	{
-		if (fs_data->tempary)
+		if( mFloater )
+			mFloater->uploadDone();
+	}
+};
+
+void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter, std::string aURL, LLSD aBody, LLAssetID aAssetId, LLAssetType::EType aAssetType, boost::shared_ptr< LLResourceData > aResourceData )
+{
+	FSResourceData* fs_data = (FSResourceData*)aResourceData->mUserData;
+	FSFloaterImport* self = fs_data->mFloater;
+	UploadFlag uploadDone( self );
+
+	LLCore::HttpRequest::ptr_t pRequest( new LLCore::HttpRequest() );
+	LLSD postResult = a_httpAdapter->postAndSuspend( pRequest, aURL, aBody );
+
+	LLSD httpResults = postResult[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ];
+	LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD(httpResults);
+
+	if( !status )
+	{
+		LL_WARNS( "import" ) << "Error " << status.toULong() << " reason: " << status.toString() << LL_ENDL;
+		LL_WARNS( "import" ) << "Skipping " << fs_data->uuid.asString() << " due to upload error." << LL_ENDL;
+		if( self )
 		{
-			if (result == "complete")
+			self->pushNextAsset( LLUUID::null, fs_data->uuid, aResourceData->mAssetInfo.mType );
+		}
+		else
+		{
+			LL_WARNS( "import" ) << "Unable to upload next asset due to missing self." << LL_ENDL;
+		}
+	}
+
+	std::string uploader = postResult[ "uploader" ].asString();
+
+	if( uploader.empty() )
+	{
+		LL_WARNS( "import" ) << "No upload url provided. Nothing uploaded." << LL_ENDL;
+		self->pushNextAsset( LLUUID::null, fs_data->uuid, aResourceData->mAssetInfo.mType );
+		return;
+	}
+
+	if (!gVFS->getExists(aAssetId, aAssetType))
+	{
+		LL_WARNS() << "Asset doesn't exist in VFS anymore. Nothing uploaded." << LL_ENDL;
+		self->pushNextAsset( LLUUID::null, fs_data->uuid, aResourceData->mAssetInfo.mType );
+		return;
+	}
+
+	LLSD postContentResult;
+	{
+		pRequest.reset( new LLCore::HttpRequest() );
+
+		postContentResult = a_httpAdapter->postFileAndSuspend( pRequest, uploader, aAssetId, aAssetType );
+		LLSD httpResults = postContentResult[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ];
+		LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD( httpResults );
+
+		std::string ulstate = postContentResult[ "state" ].asString();
+		
+
+		if( (!status) || (ulstate != "complete") )
+		{
+			self->pushNextAsset( LLUUID::null, fs_data->uuid, aResourceData->mAssetInfo.mType );
+			LL_WARNS( "import" ) << "Asset upload failed." << ll_pretty_print_sd( postContentResult) << LL_ENDL;
+			return;
+		}
+	}
+
+	LLUUID item_id = aBody[ "item_id" ];
+	std::string responseResult = postContentResult[ "state" ];
+	LLUUID new_id = postContentResult[ "new_asset" ];
+
+	LL_DEBUGS( "import" ) << "result: " << responseResult << " new_id: " << new_id << LL_ENDL;
+
+	// rename the file in the VFS to the actual asset id
+	gVFS->renameFile(aAssetId, aAssetType, new_id, aAssetType);
+
+	// rename the file in the VFS to the actual asset id
+	gVFS->renameFile(aAssetId, aAssetType, new_id, aAssetType);
+
+	if( item_id.isNull() )
+	{
+		if( fs_data->temporary )
+		{
+			if( responseResult == "complete" )
 			{
-				LLUUID folder_id(gInventory.findCategoryUUIDForType(data->mPreferredLocation));
+				LLUUID folder_id( gInventory.findCategoryUUIDForType( aResourceData->mPreferredLocation ) );
+
 				LLUUID temp_item_id;
 				temp_item_id.generate();
 				LLPermissions perm;
-				perm.init(gAgentID, gAgentID, gAgentID, gAgentID);
-				perm.setMaskBase(PERM_ALL);
-				perm.setMaskOwner(PERM_ALL);
-				perm.setMaskEveryone(PERM_ALL);
-				perm.setMaskGroup(PERM_ALL);
-				LLPointer<LLViewerInventoryItem> item = new LLViewerInventoryItem(temp_item_id, folder_id, perm,
-												  new_id,
-												  data->mAssetInfo.mType, data->mInventoryType, data->mAssetInfo.getName(),
-												  "Temporary asset", LLSaleInfo::DEFAULT, LLInventoryItemFlags::II_FLAGS_NONE,
-												  time_corrected());
-				gInventory.updateItem(item);
+				perm.init( gAgentID, gAgentID, gAgentID, gAgentID );
+				perm.setMaskBase( PERM_ALL );
+				perm.setMaskOwner( PERM_ALL );
+				perm.setMaskEveryone( PERM_ALL );
+				perm.setMaskGroup( PERM_ALL );
+
+				LLPointer<LLViewerInventoryItem> item = new LLViewerInventoryItem(	temp_item_id, folder_id, perm, new_id, aResourceData->mAssetInfo.mType, aResourceData->mInventoryType, aResourceData->mAssetInfo.getName(),
+																					"Temporary asset", LLSaleInfo::DEFAULT, LLInventoryItemFlags::II_FLAGS_NONE, time_corrected() );
+				gInventory.updateItem( item );
 				gInventory.notifyObservers();
 			}
 			else
 			{
-				LL_WARNS("import")  << "Unable to add texture, got bad result." << LL_ENDL;
+				LL_WARNS( "import" ) << "Unable to add texture, got bad result." << LL_ENDL;
 				new_id = LLUUID::null;
 			}
 		}
 		else
 		{
-			LLAssetType::EType asset_type = LLAssetType::lookup(mPostData["asset_type"].asString());
-			LLInventoryType::EType inventory_type = LLInventoryType::lookup(mPostData["inventory_type"].asString());
+			LLAssetType::EType asset_type = LLAssetType::lookup( aBody[ "asset_type" ].asString() );
+			LLInventoryType::EType inventory_type = LLInventoryType::lookup( aBody[ "inventory_type" ].asString() );
 			S32 upload_price = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
 
-			const std::string inventory_type_string = mPostData["asset_type"].asString();
-			const LLUUID& item_folder_id = mPostData["folder_id"].asUUID();
-			const std::string& item_name = mPostData["name"];
-			const std::string& item_description = mPostData["description"];
+			const std::string inventory_type_string = aBody[ "asset_type" ].asString();
+			const LLUUID& item_folder_id = aBody[ "folder_id" ].asUUID();
+			const std::string& item_name = aBody[ "name" ];
+			const std::string& item_description = aBody[ "description" ];
 
-			if ( upload_price > 0 )
+			if( upload_price > 0 )
 			{
 				// this upload costed us L$, update our balance
 				// and display something saying that it cost L$
 				LLStatusBar::sendMoneyBalanceRequest();
 
-				LLSD args;
-				args["AMOUNT"] = llformat("%d", upload_price);
-				LLNotificationsUtil::add("UploadPayment", args);
+				// <FS:CR> FIRE-10628 - Option to supress upload cost notification
+				if( gSavedSettings.getBOOL( "FSShowUploadPaymentToast" ) )
+				{
+					LLSD args;
+					args[ "AMOUNT" ] = llformat( "%d", upload_price );
+					LLNotificationsUtil::add( "UploadPayment", args );
+				}
+				// </FS:CR>
 			}
 
 			if( item_folder_id.notNull() )
@@ -1841,118 +2104,80 @@ void FSAssetResponder::uploadComplete(const LLSD& content)
 				U32 everyone_perms = PERM_NONE;
 				U32 group_perms = PERM_NONE;
 				U32 next_owner_perms = PERM_ALL;
-				if( content.has("new_next_owner_mask") )
+				if( postContentResult.has( "new_next_owner_mask" ) )
 				{
 					// The server provided creation perms so use them.
 					// Do not assume we got the perms we asked for in
 					// since the server may not have granted them all.
-					everyone_perms = content["new_everyone_mask"].asInteger();
-					group_perms = content["new_group_mask"].asInteger();
-					next_owner_perms = content["new_next_owner_mask"].asInteger();
+					everyone_perms = postContentResult[ "new_everyone_mask" ].asInteger();
+					group_perms = postContentResult[ "new_group_mask" ].asInteger();
+					next_owner_perms = postContentResult[ "new_next_owner_mask" ].asInteger();
 				}
-				else 
+				else
 				{
 					// The server doesn't provide creation perms
 					// so use old assumption-based perms.
-					if( inventory_type_string != "snapshot")
+					if( inventory_type_string != "snapshot" )
 					{
 						next_owner_perms = PERM_MOVE | PERM_TRANSFER;
 					}
 				}
 
 				LLPermissions new_perms;
-				new_perms.init(
-					gAgent.getID(),
-					gAgent.getID(),
-					LLUUID::null,
-					LLUUID::null);
+				new_perms.init( gAgent.getID(), gAgent.getID(), LLUUID::null, LLUUID::null );
 
-				new_perms.initMasks(
-					PERM_ALL,
-					PERM_ALL,
-					everyone_perms,
-					group_perms,
-					next_owner_perms);
+				new_perms.initMasks( PERM_ALL, PERM_ALL, everyone_perms, group_perms, next_owner_perms );
 
 				U32 inventory_item_flags = 0;
-				if (content.has("inventory_flags"))
+				if( postContentResult.has( "inventory_flags" ) )
 				{
-					inventory_item_flags = (U32) content["inventory_flags"].asInteger();
-					if (inventory_item_flags != 0)
+					inventory_item_flags = (U32)postContentResult[ "inventory_flags" ].asInteger();
+					if( inventory_item_flags != 0 )
 					{
 						LL_INFOS() << "inventory_item_flags " << inventory_item_flags << LL_ENDL;
 					}
 				}
 				S32 creation_date_now = time_corrected();
-				LLPointer<LLViewerInventoryItem> item = new LLViewerInventoryItem(content["new_inventory_item"].asUUID(),
-												  item_folder_id,
-												  new_perms,
-												  content["new_asset"].asUUID(),
-												  asset_type,
-												  inventory_type,
-												  item_name,
-												  item_description,
-												  LLSaleInfo::DEFAULT,
-												  inventory_item_flags,
-												  creation_date_now);
 
-				gInventory.updateItem(item);
+				LLPointer<LLViewerInventoryItem> item = new LLViewerInventoryItem( postContentResult[ "new_inventory_item" ].asUUID(), item_folder_id, new_perms, postContentResult[ "new_asset" ].asUUID(),
+																					asset_type, inventory_type, item_name, item_description, LLSaleInfo::DEFAULT, inventory_item_flags, creation_date_now );
+
+				gInventory.updateItem( item );
 				gInventory.notifyObservers();
 			}
 			else
 			{
-				LL_WARNS("import")  << "Can't find a folder to put the texture in" << LL_ENDL;
+				LL_WARNS( "import" ) << "Can't find a folder to put the texture in" << LL_ENDL;
 			}
 		}
 	}
 	else
 	{
-		LLViewerInventoryItem* item = (LLViewerInventoryItem*)gInventory.getItem(item_id);
-		if(!item)
+		LLViewerInventoryItem* item = (LLViewerInventoryItem*)gInventory.getItem( item_id );
+		if( !item )
 		{
-			LL_WARNS("import") << "Inventory item for " << mVFileID << " is no longer in agent inventory. Skipping to next asset upload." << LL_ENDL;
+			LL_WARNS( "import" ) << "Inventory item for " << aAssetId << " is no longer in agent inventory. Skipping to next asset upload." << LL_ENDL;
 			new_id = LLUUID::null;
 		}
 		else
 		{
 			// Update viewer inventory item
-			LLPointer<LLViewerInventoryItem> new_item = new LLViewerInventoryItem(item);
-			new_item->setAssetUUID(content["new_asset"].asUUID());
-			gInventory.updateItem(new_item);
+			LLPointer<LLViewerInventoryItem> new_item = new LLViewerInventoryItem( item );
+			new_item->setAssetUUID( postContentResult[ "new_asset" ].asUUID() );
+			gInventory.updateItem( new_item );
 			gInventory.notifyObservers();
 
-			LL_DEBUGS("import") << "Asset " << content["new_asset"].asString() << " saved into "  << "inventory item " << item->getName() << LL_ENDL;
-			self->mAssetItemMap[content["new_asset"].asUUID()] = item_id;
+			LL_DEBUGS( "import" ) << "Asset " << postContentResult[ "new_asset" ].asString() << " saved into " << "inventory item " << item->getName() << LL_ENDL;
+			self->mAssetItemMap[ postContentResult[ "new_asset" ].asUUID() ] = item_id;
 		}
 	}
-	
-	if (self)
-	{
-		self->nextAsset(new_id, fs_data->uuid, data->mAssetInfo.mType);
-	}
-	else
-	{
-		LL_WARNS("import")  << "Unable to upload next asset due to missing self." << LL_ENDL;
-	}
-	delete fs_data;
-	delete data;
-}
 
-void FSAssetResponder::error(U32 statusNum, const std::string& reason)
-{
-	LL_WARNS("import")  << "Error " << statusNum << " reason: " << reason << LL_ENDL;
-	LLResourceData* data = (LLResourceData*)mData;
-	FSResourceData* fs_data = (FSResourceData*)data->mUserData;
-	FSFloaterImport* self = (FSFloaterImport*)fs_data->user_data;
-	LL_WARNS("import")  << "Skipping " << fs_data->uuid.asString() << " due to upload error." << LL_ENDL;
-	if (self)
+	if( self )
 	{
-		self->nextAsset(LLUUID::null, fs_data->uuid, data->mAssetInfo.mType);
+		self->pushNextAsset( new_id, fs_data->uuid, aResourceData->mAssetInfo.mType );
 	}
 	else
 	{
-		LL_WARNS("import")  << "Unable to upload next asset due to missing self." << LL_ENDL;
+		LL_WARNS( "import" ) << "Unable to upload next asset due to missing self." << LL_ENDL;
 	}
-	delete fs_data;
-	delete data;
 }
