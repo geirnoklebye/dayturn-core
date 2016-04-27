@@ -3323,7 +3323,7 @@ bool LLVOAvatar::isVisuallyMuted()
 				// Note that mCachedVisualMute is set to false, we will use that
 				// later to distinguish between really muted avatars and those muted
 				// because of an RLV restriction.
-				mCachedVisualMute = false;
+				//mCachedVisualMute = false;
 				return true;
 			}
 		}
@@ -3520,7 +3520,7 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 //MK
 			// If the cached value is not set, that means this avatar is muted for RLV reasons
 			// => update every frame
-			if (gRRenabled && !mCachedVisualMute)
+			if (gRRenabled )    //&& !mCachedVisualMutef)
 			{
 				mUpdatePeriod = 1;
 			}

@@ -459,12 +459,6 @@ static bool handleRenderBumpChanged(const LLSD& newval)
 	return true;
 }
 
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mShowavsDistMax < EXTREMUM)
-	{
-		LLVOAvatar::sUseImpostors = TRUE;
-	}
-//mk
 static bool handleRenderDebugGLChanged(const LLSD& newvalue)
 {
 	gDebugGL = newvalue.asBoolean() || gDebugSession;

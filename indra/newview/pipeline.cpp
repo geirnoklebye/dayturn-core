@@ -11695,13 +11695,12 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		{ //grey muted avatar
 //MK
 			if (gRRenabled && gAgent.mRRInterface.mShowavsDistMax < EXTREMUM)
-            LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " MUTED set grey" << LL_ENDL;
-			gGL.diffuseColor4fv(LLColor4::pink.mV );
 			{
 				gGL.diffuseColor4ub (32, 32, 32, 255); // pitch black
 			}
 			else
 //mk
+			gGL.diffuseColor4fv(avatar->getMutedAVColor().mV);
 		}
 
 		{
