@@ -11642,7 +11642,7 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	
 	LLDrawPoolAvatar::sMinimumAlpha = old_alpha;
 
-	{ //create alpha mask based on depth buffer (grey out if muted)
+	 //create alpha mask based on depth buffer (grey out if muted)
 		LL_RECORD_BLOCK_TIME(FTM_IMPOSTOR_BACKGROUND);
 //MK
 		// Choose the non-deferred rendering when rendering silhouettes
@@ -11693,17 +11693,18 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		}
 		else
 		{ //grey muted avatar
-//MK
+            LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " MUTED set grey" << LL_ENDL;
+            //MK
 			if (gRRenabled && gAgent.mRRInterface.mShowavsDistMax < EXTREMUM)
 			{
 				gGL.diffuseColor4ub (32, 32, 32, 255); // pitch black
 			}
 			else
 //mk
-			gGL.diffuseColor4fv(avatar->getMutedAVColor().mV);
+            {
+                gGL.diffuseColor4fv(LLColor4::pink.mV );
+            }
 		}
-
-		{
 		gGL.begin(LLRender::QUADS);
 		gGL.vertex3f(-1, -1, clip_plane);
 		gGL.vertex3f(1, -1, clip_plane);
@@ -11711,17 +11712,17 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		gGL.vertex3f(-1, 1, clip_plane);
 		gGL.end();
 		gGL.flush();
-		}
+		
 
 		if (LLGLSLShader::sNoFixedFunction)
 		{
 			gDebugProgram.unbind();
-	}
+        }
 
 		gGL.popMatrix();
 		gGL.matrixMode(LLRender::MM_MODELVIEW);
 		gGL.popMatrix();
-	}
+	
 
 	avatar->mImpostor.flush();
 
