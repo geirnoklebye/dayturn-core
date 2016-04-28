@@ -21,12 +21,10 @@ if(WINDOWS)
     set(vivox_files
         SLVoice.exe
         ca-bundle.crt
-#       added from archive
+        libsndfile-1.dll
         vivoxsdk.dll
         ortp.dll
         vivoxoal.dll
-        vivoxplatform.dll
-        zlib1.dll
         )
 
     #*******************************
