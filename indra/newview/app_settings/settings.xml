@@ -327,6 +327,8 @@
 		  <string>Disable prim size limit enforcement in the viewer (i.e. makes the sim enforce size instead). Doesn't actually toggle megas</string>
 		  <key>Persist</key>
 		  <integer>1</integer>
+		<integer>0</integer>
+		  <integer>1</integer>
 		  <key>Type</key>
 		  <string>Boolean</string>
 		  <key>Value</key>
@@ -11082,7 +11084,7 @@
     <key>Type</key>
     <string>U32</string>
     <key>Value</key>
-    <integer>20</integer>
+    <integer>10</integer>
   </map>
   <key>RenderAvatarMaxComplexity</key>
   <map>
