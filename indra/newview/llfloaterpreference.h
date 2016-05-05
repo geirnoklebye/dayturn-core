@@ -193,6 +193,7 @@ private:
 	void onDeleteTranscripts();
 	void onDeleteTranscriptsResponse(const LLSD& notification, const LLSD& response);
 	void updateDeleteTranscriptsButton();
+	void updateMaxComplexity();
 
 	static std::string sSkin;
 	notifications_map mNotificationOptions;
@@ -279,7 +280,7 @@ private:
 
 class LLFloaterPreferenceGraphicsAdvanced : public LLFloater
 {
-public: 
+  public: 
 	LLFloaterPreferenceGraphicsAdvanced(const LLSD& key);
 	~LLFloaterPreferenceGraphicsAdvanced();
 	void onOpen(const LLSD& key);
@@ -299,6 +300,17 @@ public:
 	// callback for when client turns on shaders
 	void onVertexShaderEnable();
 	LOG_CLASS(LLFloaterPreferenceGraphicsAdvanced);
+};
+
+class LLAvatarComplexityControls
+{
+  public: 
+	static void updateMax(LLSliderCtrl* slider, LLTextBox* value_label);
+	static void setText(U32 value, LLTextBox* text_box);
+	static void setIndirectControls();
+	static void setIndirectMaxNonImpostors();
+	static void setIndirectMaxArc();
+	LOG_CLASS(LLAvatarComplexityControls);
 };
 
 // <FS:AW  opensim preferences>
