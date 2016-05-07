@@ -336,6 +336,7 @@
       function="Pref.PrefLoad"
 	  parameter="graphic"/>
   </button>
+         min_val="0.125"
 
   <button
     follows="top|left"
