@@ -5783,10 +5783,12 @@ BOOL LLViewerObject::permTransfer() const
 		if (LLGridManager::getInstance()->isInSLBeta()
             && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
 		{
+			LL_WARNS() << "God Level return TRUE" << LL_ENDL;
 			return TRUE;
 		}
 # endif
-		return flagObjectTransfer(); 
+		LL_WARNS() << "FlagObjectTransfer return " << flagObjectTransfer() << LL_ENDL;
+		return flagObjectTransfer();
 #endif
 	}
 	else
