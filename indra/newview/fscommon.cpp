@@ -36,10 +36,12 @@
 #include "llpanel.h"
 #include "lltooldraganddrop.h"
 #include "llviewerinventory.h"
+#include "llviewernetwork.h"
 #include "llviewerregion.h"
 
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+extern BOOL gIsInSecondLife; //Opensim or SecondLife
 using namespace boost::posix_time;
 using namespace boost::gregorian;
 
@@ -208,7 +210,7 @@ void FSCommon::applyDefaultBuildPreferences(LLViewerObject* object)
 	
 	U32 object_local_id = object->getLocalID();
 #ifdef OPENSIM
-	if (!LLGridManager::getInstance()->isInSecondLife() || !LLFloaterPermsDefault::getCapSent())
+	if (!gIsInSecondLife || !LLFloaterPermsDefault::getCapSent())
 	{
 		gMessageSystem->newMessageFast(_PREHASH_ObjectPermissions);
 		gMessageSystem->nextBlockFast(_PREHASH_AgentData);
