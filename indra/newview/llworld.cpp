@@ -149,7 +149,7 @@ F32 LLWorld::getRegionMinPrimScale() const
 {
 	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
 	{
-		return ( mRegionMinPrimScale * 0.1f );
+		return ( mRegionMinPrimScale ); //set to give no change sl server set back to 0.01 so no need to go lower
 	}
 	else
 	{
