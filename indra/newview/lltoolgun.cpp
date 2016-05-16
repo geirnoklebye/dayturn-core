@@ -145,9 +145,20 @@ BOOL LLToolGun::handleHover(S32 x, S32 y, MASK mask)
 
 void LLToolGun::draw()
 {
-	if( gSavedSettings.getBOOL("ShowCrosshairs") )
+	static LLCachedControl<bool> showCrosshairs(gSavedSettings, "ShowCrosshairs");
+
+	if (showCrosshairs)
 	{
+	
 		LLUIImagePtr crosshair = LLUI::getUIImage("crosshairs.tga");
+		static LLCachedControl<std::string> uuid_cross(gSavedSettings, "UIImgCrosshairsUUID");
+
+		if (LLUUID::validate(uuid_cross))
+		{
+			LL_DEBUGS_ONCE() << "Using user supplied crosshair. " << LLUUID::validate(uuid_cross) << LL_ENDL;
+			LLUIImagePtr crosshair = LLUI::getUIImageByID(LLUUID(uuid_cross));
+		}
+		
 		crosshair->draw(
 			( gViewerWindow->getWorldViewRectScaled().getWidth() - crosshair->getWidth() ) / 2,
 			( gViewerWindow->getWorldViewRectScaled().getHeight() - crosshair->getHeight() ) / 2);

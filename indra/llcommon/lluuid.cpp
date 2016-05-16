@@ -232,7 +232,7 @@ BOOL LLUUID::set(const std::string& in_string, BOOL emit)
 		{
 			if(emit)
 			{
-				LL_WARNS() << "Warning! Using broken UUID string format" << LL_ENDL;
+				LL_WARNS_ONCE() << "Warning! Using broken UUID string format" << LL_ENDL;
 			}
 			broken_format = TRUE;
 		}
@@ -242,7 +242,7 @@ BOOL LLUUID::set(const std::string& in_string, BOOL emit)
 			if(emit)
 			{
 				//don't spam the logs because a resident can't spell.
-				LL_WARNS() << "Bad UUID string: " << in_string << LL_ENDL;
+				LL_WARNS_ONCE() << "Bad UUID string: " << in_string << LL_ENDL;
 			}
 			setNull();
 			return FALSE;
@@ -281,7 +281,7 @@ BOOL LLUUID::set(const std::string& in_string, BOOL emit)
 		{
 			if(emit)
 			{							
-				LL_WARNS() << "Invalid UUID string character" << LL_ENDL;
+				LL_WARNS_ONCE() << "Invalid UUID string character" << LL_ENDL;
 			}
 			setNull();
 			return FALSE;
@@ -306,7 +306,7 @@ BOOL LLUUID::set(const std::string& in_string, BOOL emit)
 		{
 			if(emit)
 			{
-				LL_WARNS() << "Invalid UUID string character" << LL_ENDL;
+				LL_WARNS_ONCE() << "Invalid UUID string character" << LL_ENDL;
 			}
 			setNull();
 			return FALSE;
@@ -317,7 +317,7 @@ BOOL LLUUID::set(const std::string& in_string, BOOL emit)
 	return TRUE;
 }
 
-BOOL LLUUID::validate(const std::string& in_string)
+bool LLUUID::validate(const std::string& in_string)
 {
 	BOOL broken_format = FALSE;
 	if (in_string.length() != (UUID_STR_LENGTH - 1))		/* Flawfinder: ignore */

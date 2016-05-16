@@ -2,6 +2,17 @@
 <llsd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="llsd.xsd">
 <map>
+    <key>UIImgCrosshairsUUID</key>
+    <map>
+      <key>Comment</key>
+      <string>Image to use for crosshair display (UUID texture reference)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string></string>
+    </map>
     <key>ShowRlvMenu</key>
     <map>
       <key>Comment</key>
