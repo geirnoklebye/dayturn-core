@@ -118,7 +118,7 @@ public:
 	U16 getCRC16() const;
 	U32 getCRC32() const;
 
-	static BOOL validate(const std::string& in_string); // Validate that the UUID string is legal.
+	static bool validate(const std::string& in_string); // Validate that the UUID string is legal.
 
 	static const LLUUID null;
 	static LLMutex * mMutex;
