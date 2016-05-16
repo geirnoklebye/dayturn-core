@@ -190,6 +190,7 @@ set(viewer_SOURCE_FILES
     lldaycyclemanager.cpp
     lldebugmessagebox.cpp
     lldebugview.cpp
+    lldeferredsounds.cpp
     lldelayedgestureerror.cpp
     lldirpicker.cpp
     lldonotdisturbnotificationstorage.cpp
@@ -833,6 +834,7 @@ set(viewer_HEADER_FILES
     lldaycyclemanager.h
     lldebugmessagebox.h
     lldebugview.h
+    lldeferredsounds.h
     lldelayedgestureerror.h
     lldirpicker.h
     lldonotdisturbnotificationstorage.h
