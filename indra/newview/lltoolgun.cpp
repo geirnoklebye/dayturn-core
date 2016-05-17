@@ -151,7 +151,7 @@ void LLToolGun::draw()
 	{
 	
 		LLUIImagePtr crosshair = LLUI::getUIImage("crosshairs.tga");
-		static LLCachedControl<std::string> uuid_cross(gSavedSettings, "UIImgCrosshairsUUID");
+		static LLCachedControl<std::string> uuid_cross(gSavedPerAccountSettings, "UIImgCrosshairsUUID");
 
 		if (LLUUID::validate(uuid_cross))
 		{
