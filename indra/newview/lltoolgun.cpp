@@ -150,17 +150,24 @@ void LLToolGun::draw()
 	if (showCrosshairs)
 	{
 	
-		LLUIImagePtr crosshair = LLUI::getUIImage("crosshairs.tga");
+
 		static LLCachedControl<std::string> uuid_cross(gSavedPerAccountSettings, "UIImgCrosshairsUUID");
 
 		if (LLUUID::validate(uuid_cross))
 		{
 			LL_DEBUGS_ONCE() << "Using user supplied crosshair. " << LLUUID::validate(uuid_cross) << LL_ENDL;
-			LLUIImagePtr crosshair = LLUI::getUIImageByID(LLUUID(uuid_cross));
+			LLUIImagePtr crosshairalt = LLUI::getUIImageByID(LLUUID(uuid_cross));
+			crosshairalt->draw(
+				(gViewerWindow->getWorldViewRectScaled().getWidth() - crosshairalt->getWidth()) / 2,
+				(gViewerWindow->getWorldViewRectScaled().getHeight() - crosshairalt->getHeight()) / 2);
+
 		}
-		
-		crosshair->draw(
-			( gViewerWindow->getWorldViewRectScaled().getWidth() - crosshair->getWidth() ) / 2,
-			( gViewerWindow->getWorldViewRectScaled().getHeight() - crosshair->getHeight() ) / 2);
+		else
+		{
+			LLUIImagePtr crosshair = LLUI::getUIImage("crosshairs.tga");
+			crosshair->draw(
+				(gViewerWindow->getWorldViewRectScaled().getWidth() - crosshair->getWidth()) / 2,
+				(gViewerWindow->getWorldViewRectScaled().getHeight() - crosshair->getHeight()) / 2);
+		}
 	}
 }
