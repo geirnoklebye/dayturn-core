@@ -786,6 +786,22 @@ void LLInventoryModel::collectDescendentsIf(const LLUUID& id,
 	}
 }
 
+U32 LLInventoryModel::getDescendentsCountRecursive(const LLUUID& id, U32 max_item_limit)
+{
+	LLInventoryModel::cat_array_t cats;
+	LLInventoryModel::item_array_t items;
+	gInventory.collectDescendents(id, cats, items, LLInventoryModel::INCLUDE_TRASH);
+
+	U32 items_found = items.size() + cats.size();
+
+	for (U32 i = 0; i < cats.size() && items_found <= max_item_limit; ++i)
+	{
+		items_found += getDescendentsCountRecursive(cats[i]->getUUID(), max_item_limit - items_found);
+	}
+
+	return items_found;
+}
+
 //MK
 // The same method, but with a boolean to let decide if we go recursive or not
 void LLInventoryModel::collectDescendentsRecIf(const LLUUID& id,
