@@ -1051,7 +1051,7 @@ BOOL LLViewerWindow::handleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask
     {
         mMouseDownTimer.reset();
     }    
-    BOOL down = TRUE;	
+    BOOL down = TRUE;
     return handleAnyMouseClick(window,pos,mask,LLMouseHandler::CLICK_LEFT,down);
 }
 
@@ -1070,7 +1070,7 @@ BOOL LLViewerWindow::handleDoubleClick(LLWindow *window,  LLCoordGL pos, MASK ma
 
 BOOL LLViewerWindow::handleMouseUp(LLWindow *window,  LLCoordGL pos, MASK mask)
 {
-	if (mMouseDownTimer.getStarted())
+    if (mMouseDownTimer.getStarted())
     {
         mMouseDownTimer.stop();
     }
@@ -5145,6 +5145,13 @@ void LLViewerWindow::stopGL(BOOL save_state)
 		
 		gGLManager.mIsDisabled = TRUE;
 		stop_glerror();
+
+		//unload shader's
+		while (LLGLSLShader::sInstances.size())
+		{
+			LLGLSLShader* shader = *(LLGLSLShader::sInstances.begin());
+			shader->unload();
+		}
 		
 		LL_INFOS() << "Remaining allocated texture memory: " << LLImageGL::sGlobalTextureMemory.value() << " bytes" << LL_ENDL;
 	}

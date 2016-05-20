@@ -2010,6 +2010,7 @@ BOOL LLItemBridge::removeItem()
 	}
 	
 	LLNotifications::instance().forceResponse(params, 0);
+	model->checkTrashOverflow();
 	return TRUE;
 }
 

@@ -4691,11 +4691,8 @@ S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMateri
 		return 0;
 	}
 
-//MK
-	// Attempt at fixing BUG-10601 (Fix recommended by Ansariel Hiller) : move these lines after the call to setTEMaterialParams()
-	////setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
-	////setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
-//mk
+	setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
+	setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
 
 	retval = LLPrimitive::setTEMaterialParams(te, pMaterialParams);
 	LL_DEBUGS("Material") << "Changing material params for te " << (S32)te
@@ -4705,11 +4702,6 @@ S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMateri
 	setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
 	setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
 
-//MK
-	// Attempt at fixing BUG-10601 (Fix recommended by Ansariel Hiller)
-	setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
-	setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
-//mk
 	refreshMaterials();
 	return retval;
 }
@@ -5806,7 +5798,7 @@ BOOL LLViewerObject::permTransfer() const
 			return TRUE;
 		}
 # endif
-		return flagObjectTransfer(); 
+		return flagObjectTransfer();
 #endif
 	}
 	else

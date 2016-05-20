@@ -1613,13 +1613,6 @@
          function="Tools.EnableToolNotPie" />
       </menu_item_call>
       <menu_item_call
-       label="Set Default Permissions..."
-       name="Set default permissions">
-        <menu_item_call.on_click
-         function="Floater.ToggleOrBringToFront"
-         parameter="perms_default" />
-      </menu_item_call>
-      <menu_item_call
         label="Advanced Build Options"
         name="Advanced Build Options"
         shortcut="control|alt|B">
@@ -1628,6 +1621,15 @@
          parameter="advancedbuild_options" />
         <menu_item_call.on_enable
          function="Tools.EnableToolNotPie" />
+      </menu_item_call>      
+      <menu_item_call
+       label="Set Default Permissions..."
+       name="Set default permissions">
+        <menu_item_call.on_click
+         function="Floater.ToggleOrBringToFront"
+         parameter="perms_default" />
+        <menu_item_call.on_enable
+         function="Tools.EnableToolNotPie" />        
       </menu_item_call>
     </menu>
     <menu
@@ -4538,17 +4540,6 @@
             <menu_item_check.on_click
              function="ToggleControl"
              parameter="ImagePipelineUseHTTP" />
-        </menu_item_check>
-       <menu_item_check
-         label="HTTP Inventory"
-         name="HTTP Inventory"
-         enabled="false">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="UseHTTPInventory" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="UseHTTPInventory" />
         </menu_item_check>
         <menu_item_call
          label="Compress Images"

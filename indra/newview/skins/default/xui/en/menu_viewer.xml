@@ -1182,15 +1182,6 @@
                      parameter="movable" />
                 </menu_item_check>
                 <menu_item_check
-                 label="Select Only Copyable Objects"
-                 name="Select Only Copyable Objects">
-                    <menu_item_check.on_check
-                     control="SelectCopyableOnly" />
-                    <menu_item_check.on_click
-                     function="Tools.SelectOnlyCopyableObjects"
-                     parameter="copyable" />
-                </menu_item_check>
-                <menu_item_check
                  label="Select By Surrounding"
                  name="Select By Surrounding">
                     <menu_item_check.on_check

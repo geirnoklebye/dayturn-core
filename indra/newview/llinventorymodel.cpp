@@ -44,6 +44,7 @@
 #include "llmarketplacefunctions.h"
 #include "llwindow.h"
 #include "llviewercontrol.h"
+#include "llviewernetwork.h"
 #include "llpreview.h" 
 #include "llviewermessage.h"
 #include "llviewerfoldertype.h"
@@ -77,7 +78,8 @@ BOOL LLInventoryModel::sFirstTimeInViewer2 = TRUE;
 ///----------------------------------------------------------------------------
 
 //BOOL decompress_file(const char* src_filename, const char* dst_filename);
-static const char CACHE_FORMAT_STRING[] = "%s.inv"; 
+static const char PRODUCTION_CACHE_FORMAT_STRING[] = "%s.inv";
+static const char GRID_CACHE_FORMAT_STRING[] = "%s.%s.inv";
 static const char * const LOG_INV("Inventory");
 
 struct InventoryIDPtrLess
@@ -1741,6 +1743,29 @@ bool LLInventoryModel::fetchDescendentsOf(const LLUUID& folder_id) const
 	return cat->fetch();
 }
 
+//static
+std::string LLInventoryModel::getInvCacheAddres(const LLUUID& owner_id)
+{
+    std::string inventory_addr;
+    std::string owner_id_str;
+    owner_id.toString(owner_id_str);
+    std::string path(gDirUtilp->getExpandedFilename(LL_PATH_CACHE, owner_id_str));
+    if (LLGridManager::getInstance()->isInSLMain())
+    {
+        inventory_addr = llformat(PRODUCTION_CACHE_FORMAT_STRING, path.c_str());
+    }
+    else
+    {
+        // NOTE: The inventory cache filenames now include the grid name.
+        // Add controls against directory traversal or problematic pathname lengths
+        // if your viewer uses grid names from an untrusted source.
+        const std::string& grid_id_str = LLGridManager::getInstance()->getGridNick();
+        const std::string& grid_id_lower = utf8str_tolower(grid_id_str);
+        inventory_addr = llformat(GRID_CACHE_FORMAT_STRING, path.c_str(), grid_id_lower.c_str());
+    }
+    return inventory_addr;
+}
+
 void LLInventoryModel::cache(
 	const LLUUID& parent_folder_id,
 	const LLUUID& agent_id)
@@ -1761,11 +1786,7 @@ void LLInventoryModel::cache(
 		items,
 		INCLUDE_TRASH,
 		can_cache);
-	std::string agent_id_str;
-	std::string inventory_filename;
-	agent_id.toString(agent_id_str);
-	std::string path(gDirUtilp->getExpandedFilename(LL_PATH_CACHE, agent_id_str));
-	inventory_filename = llformat(CACHE_FORMAT_STRING, path.c_str());
+	std::string inventory_filename = getInvCacheAddres(agent_id);
 	saveToFile(inventory_filename, categories, items);
 	std::string gzip_filename(inventory_filename);
 	gzip_filename.append(".gz");
@@ -2069,11 +2090,7 @@ bool LLInventoryModel::loadSkeleton(
 		item_array_t items;
 		item_array_t possible_broken_links;
 		cat_set_t invalid_categories; // Used to mark categories that weren't successfully loaded.
-		std::string owner_id_str;
-		owner_id.toString(owner_id_str);
-		std::string path(gDirUtilp->getExpandedFilename(LL_PATH_CACHE, owner_id_str));
-		std::string inventory_filename;
-		inventory_filename = llformat(CACHE_FORMAT_STRING, path.c_str());
+		std::string inventory_filename = getInvCacheAddres(owner_id);
 		const S32 NO_VERSION = LLViewerInventoryCategory::VERSION_UNKNOWN;
 		std::string gzip_filename(inventory_filename);
 		gzip_filename.append(".gz");
@@ -3488,6 +3505,7 @@ void LLInventoryModel::processMoveInventoryItem(LLMessageSystem* msg, void**)
 //----------------------------------------------------------------------------
 
 // Trash: LLFolderType::FT_TRASH, "ConfirmEmptyTrash"
+// Trash: LLFolderType::FT_TRASH, "TrashIsFull" when trash exceeds maximum capacity
 // Lost&Found: LLFolderType::FT_LOST_AND_FOUND, "ConfirmEmptyLostAndFound"
 
 bool LLInventoryModel::callbackEmptyFolderType(const LLSD& notification, const LLSD& response, LLFolderType::EType preferred_type)
@@ -3569,10 +3587,17 @@ void LLInventoryModel::removeCategory(const LLUUID& category_id)
 			changeCategoryParent(cat, trash_id, TRUE);
 		}
 	}
+
+	checkTrashOverflow();
 }
 
 void LLInventoryModel::removeObject(const LLUUID& object_id)
 {
+	if(object_id.isNull())
+	{
+		return;
+	}
+
 	LLInventoryObject* obj = getObject(object_id);
 	if (dynamic_cast<LLViewerInventoryItem*>(obj))
 	{
@@ -3591,6 +3616,16 @@ void LLInventoryModel::removeObject(const LLUUID& object_id)
 	else
 	{
 		LL_WARNS("Inventory") << "object ID " << object_id << " not found" << LL_ENDL;
+	}
+}
+
+void  LLInventoryModel::checkTrashOverflow()
+{
+	static const U32 trash_max_capacity = gSavedSettings.getU32("InventoryTrashMaxCapacity");
+	const LLUUID trash_id = findCategoryUUIDForType(LLFolderType::FT_TRASH);
+	if (getDescendentsCountRecursive(trash_id, trash_max_capacity) >= trash_max_capacity)
+	{
+		gInventory.emptyFolderType("TrashIsFull", LLFolderType::FT_TRASH);
 	}
 }
 

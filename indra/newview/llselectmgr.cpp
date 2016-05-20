@@ -1032,14 +1032,9 @@ void LLSelectMgr::highlightObjectOnly(LLViewerObject* objectp)
 	}
 	
 	if ((gSavedSettings.getBOOL("SelectOwnedOnly") && !objectp->permYouOwner()) 
-		|| (gSavedSettings.getBOOL("SelectMovableOnly") && (!objectp->permMove() || objectp->isPermanentEnforced()))
-		|| (gSavedSettings.getBOOL("SelectCopyableOnly") && !objectp->permCopy())
-	) {
-		//
-		//	reject objects I don't own (SelectOwnedOnly)
-		//	and/or objects I can't move (SelectMovableOnly)
-		//	and/or objects I can't copy (SelectCopyableOnly)
-		//
+		|| (gSavedSettings.getBOOL("SelectMovableOnly") && (!objectp->permMove() ||  objectp->isPermanentEnforced())))
+	{
+		// only select my own objects
 		return;
 	}
 
@@ -6977,13 +6972,12 @@ BOOL LLSelectMgr::canSelectObject(LLViewerObject* object, BOOL ignore_select_own
 	{
 		return TRUE;
 	}
-
 	if(!ignore_select_owned)
 	{
-		if ((gSavedSettings.getBOOL("SelectOwnedOnly") && !object->permYouOwner()) ||
-				(gSavedSettings.getBOOL("SelectMovableOnly") && (!object->permMove() ||  object->isPermanentEnforced())))
-		{
-			// only select my own objects
+	if ((gSavedSettings.getBOOL("SelectOwnedOnly") && !object->permYouOwner()) ||
+		(gSavedSettings.getBOOL("SelectMovableOnly") && (!object->permMove() ||  object->isPermanentEnforced())))
+	{
+		// only select my own objects
 			return FALSE;
 		}
 	}

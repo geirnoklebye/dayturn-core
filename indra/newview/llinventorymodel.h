@@ -165,7 +165,9 @@ public:
 	bool loadSkeleton(const LLSD& options, const LLUUID& owner_id);
 	void buildParentChildMap(); // brute force method to rebuild the entire parent-child relations
 	void createCommonSystemCategories();
-	
+
+	static std::string getInvCacheAddres(const LLUUID& owner_id);
+
 	// Call on logout to save a terse representation.
 	void cache(const LLUUID& parent_folder_id, const LLUUID& agent_id);
 private:
@@ -271,6 +273,9 @@ public:
 
 	// Follow parent chain to the top.
 	bool getObjectTopmostAncestor(const LLUUID& object_id, LLUUID& result) const;
+
+private:
+	U32 getDescendentsCountRecursive(const LLUUID& id, U32 max_item_limit);
 	
 	//--------------------------------------------------------------------
 	// Find
@@ -411,6 +416,8 @@ public:
 	void removeCategory(const LLUUID& category_id);
 	/// removeItem() or removeCategory(), whichever is appropriate
 	void removeObject(const LLUUID& object_id);
+
+	void checkTrashOverflow();
 
 	// Delete a particular inventory object by ID, and delete it from
 	// the server. Also updates linked items.

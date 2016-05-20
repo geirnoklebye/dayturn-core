@@ -2918,7 +2918,7 @@ bool LLAppViewer::initConfiguration()
 	//
 	gWindowTitle = LLTrans::getString("APP_NAME") + " " + LLVersionInfo::getVersion();
 #if LL_DEBUG
-    gWindowTitle += std::string(" [DEBUG]");
+	gWindowTitle += std::string(" [DEBUG]");
 #endif
 	if (!gArgs.empty())
 	{

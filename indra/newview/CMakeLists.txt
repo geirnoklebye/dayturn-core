@@ -216,7 +216,6 @@ set(viewer_SOURCE_FILES
     lleventpoll.cpp
     llexpandabletextbox.cpp
     llexperiencelog.cpp
-    llexperiencelog.cpp
     llexternaleditor.cpp
     llface.cpp
     llfacebookconnect.cpp
@@ -2213,7 +2212,7 @@ if (PACKAGE)
   set(SYMBOL_SEARCH_DIRS "")
   if (WINDOWS)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}")
-    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-windows.tar.bz2")
+    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-windows.tar.bz2")
     # slplugin.exe failing symbols dump - need to debug, might have to do with updated version of google breakpad
     # set(VIEWER_EXE_GLOBS "${VIEWER_BINARY_NAME}${CMAKE_EXECUTABLE_SUFFIX} slplugin.exe")
     set(VIEWER_EXE_GLOBS "${VIEWER_BINARY_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
@@ -2233,7 +2232,7 @@ if (PACKAGE)
   endif (DARWIN)
   if (LINUX)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_CURRENT_BINARY_DIR}/packaged")
-    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-linux.tar.bz2")
+    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-linux.tar.bz2")
     set(VIEWER_EXE_GLOBS "do-not-directly-run-kokua-bin SLPlugin")
     set(VIEWER_EXE_GLOBS "do-not-directly-run-kokua-bin")
     set(VIEWER_LIB_GLOB "*${CMAKE_SHARED_MODULE_SUFFIX}*")
@@ -2262,6 +2261,10 @@ if (PACKAGE)
         VERBATIM)
 
   add_custom_target(generate_breakpad_symbols DEPENDS "${VIEWER_SYMBOL_FILE}" "${VIEWER_BINARY_NAME}" "${VIEWER_COPY_MANIFEST}")
+  add_dependencies(generate_breakpad_symbols "${VIEWER_BINARY_NAME}")
+  if (WINDOWS OR LINUX)
+    add_dependencies(generate_breakpad_symbols "${VIEWER_COPY_MANIFEST}")
+  endif (WINDOWS OR LINUX)
   add_dependencies(llpackage generate_breakpad_symbols)
   endif(RELEASE_CRASH_REPORTING OR NON_RELEASE_CRASH_REPORTING)
 endif (PACKAGE)

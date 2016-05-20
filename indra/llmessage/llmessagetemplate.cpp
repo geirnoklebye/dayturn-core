@@ -39,8 +39,8 @@ void LLMsgVarData::addData(const void *data, S32 size, EMsgVariableType type, S3
 	{
 		if (mType != type)
 		{
-			LL_WARNS() << "Type mismatch in LLMsgVarData::addData for " << mName
-					<< LL_ENDL;
+			LL_WARNS_ONCE("Messaging") << "Type mismatch in LLMsgVarData::addData for " << mName << " mType = " << mType << " type = " << type << " "
+				<< LL_ENDL;
 		}
 	}
 	if(size)

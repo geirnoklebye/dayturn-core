@@ -1458,8 +1458,15 @@ void LLWindowMacOSX::updateCursor()
 		mNextCursor = UI_CURSOR_WORKING;
 	}
 	
-	if(mCurrentCursor == mNextCursor)
-		return;
+    if(mCurrentCursor == mNextCursor)
+    {
+        if(mCursorHidden && mHideCursorPermanent && isCGCursorVisible())
+        {
+            hideNSCursor();            
+            adjustCursorDecouple();
+        }
+        return;
+    }
 
 	// RN: replace multi-drag cursors with single versions
 	if (mNextCursor == UI_CURSOR_ARROWDRAGMULTI)

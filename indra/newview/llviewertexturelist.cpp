@@ -72,11 +72,7 @@ static LLTrace::BlockTimerStatHandle FTM_PROCESS_IMAGES("Process Images");
 
 ETexListType get_element_type(S32 priority)
 {
-    if (priority == LLViewerFetchedTexture::BOOST_ICON)
-    {
-        return TEX_LIST_SCALE;
-    }
-    return TEX_LIST_STANDARD;
+    return (priority == LLViewerFetchedTexture::BOOST_ICON) ? TEX_LIST_SCALE : TEX_LIST_STANDARD;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -454,10 +450,16 @@ LLViewerFetchedTexture* LLViewerTextureList::getImageFromUrl(const std::string& 
 
 		if (boost_priority != 0)
 		{
-			if (boost_priority == LLViewerFetchedTexture::BOOST_UI
-				|| boost_priority == LLViewerFetchedTexture::BOOST_ICON)
+			if (boost_priority == LLViewerFetchedTexture::BOOST_UI)
 			{
 				imagep->dontDiscard();
+			}
+			if (boost_priority == LLViewerFetchedTexture::BOOST_ICON)
+			{
+				// Agent and group Icons are downloadable content, nothing manages
+				// icon deletion yet, so they should not persist
+				imagep->dontDiscard();
+				imagep->forceActive();
 			}
 			imagep->setBoostLevel(boost_priority);
 		}
@@ -558,10 +560,16 @@ LLViewerFetchedTexture* LLViewerTextureList::createImage(const LLUUID &image_id,
 
 	if (boost_priority != 0)
 	{
-		if (boost_priority == LLViewerFetchedTexture::BOOST_UI
-			|| boost_priority == LLViewerFetchedTexture::BOOST_ICON)
+		if (boost_priority == LLViewerFetchedTexture::BOOST_UI)
 		{
 			imagep->dontDiscard();
+		}
+		if (boost_priority == LLViewerFetchedTexture::BOOST_ICON)
+		{
+			// Agent and group Icons are downloadable content, nothing manages
+			// icon deletion yet, so they should not persist.
+			imagep->dontDiscard();
+			imagep->forceActive();
 		}
 		imagep->setBoostLevel(boost_priority);
 	}
