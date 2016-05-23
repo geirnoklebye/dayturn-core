@@ -6,7 +6,7 @@
  can_minimize="false"
  can_close="true"
  follows="bottom"
- height="68"
+ height="76"
  chrome="true"
  layout="topleft"
  name="camera_floater"
@@ -150,7 +150,7 @@ free_mode_title
     <panel
        border="false"
        class="camera_zoom_panel"
-       height="56"
+       height="60"
        layout="topleft"
        left="28"
        mouse_opaque="false"
@@ -174,14 +174,14 @@ free_mode_title
          top="3" />
       <button
          follows="top|left"
-         height="18"
+         height="24"
          image_disabled="AddItem_Disabled"
          image_selected="AddItem_Press"
          image_unselected="AddItem_Off"
          layout="topleft"
          left_pad="2" 
          name="zoom_plus_btn"
-         width="18"
+         width="24"
          top="0">
         <commit_callback
            function="Zoom.plus" />
@@ -197,19 +197,19 @@ free_mode_title
          top="16"
          min_val="0"
          max_val="1" 
-         width="18">
+         width="24">
         <commit_callback function="Slider.value_changed"/>
       </slider_bar>
       <button
          follows="top|left"
-         height="18"
+         height="24"
          image_disabled="MinusItem_Disabled"
          image_selected="MinusItem_Press"
          image_unselected="MinusItem_Off"
          layout="topleft"
          name="zoom_minus_btn"
-         top="46"
-         width="18">
+         top="44"
+         width="24">
         <commit_callback
            function="Zoom.minus" />
         <mouse_held_callback
