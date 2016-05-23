@@ -6,7 +6,7 @@
  can_minimize="false"
  can_close="true"
  follows="bottom"
- height="76"
+ height="68"
  chrome="true"
  layout="topleft"
  name="camera_floater"
