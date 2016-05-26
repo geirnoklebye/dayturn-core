@@ -232,7 +232,7 @@ export AUTOBUILD_PLATFORM_OVERRIDE='linux64'
 
   KokuaNT can be built with opensource or properity audio engine. The opensource solution uses openal for sounds and gstreamer for streaming music and audio visual files like mp4's. Use of the properity FMOD Ex library for sounds and streaming audio is supported but, the FMOD Ex library must be provided separately.
 
--  hg clone https://NickyP@bitbucket.org/NickyP/kokuant
+-  hg clone https://bitbucket.org/kokua/kokua-dev
 
   KokuaNT can be built with opensource or properity audio engine. The opensource solution uses openal for sounds and gstreamer for streaming music and audio visual files like mp4's. Use of the properity FMOD Ex library for sounds and streaming audio is supported but, the FMOD Ex library must be provided separately.
 
