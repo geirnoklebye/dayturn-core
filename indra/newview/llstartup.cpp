@@ -1746,6 +1746,7 @@ bool idle_startup()
 	//---------------------------------------------------------------------
 	if(STATE_WORLD_WAIT == LLStartUp::getStartupState())
 	{
+/*
 //MK
 		// We are beginning a session that may or may not have the avatar wear stuff
 		// that restricts from seeing the location, names or even to look around.
@@ -1758,6 +1759,7 @@ bool idle_startup()
 			gAgent.mRRInterface.handleCommand (LLUUID::generateNewID(), "camavdist:0=n,shownames=n,showloc=n,showworldmap=n,showminimap=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
 		}
 //mk
+*/
 		LL_DEBUGS("AppInit") << "Waiting for simulator ack...." << LL_ENDL;
 		set_startup_status(0.59f, LLTrans::getString("LoginWaitingForRegionHandshake"), gAgent.mMOTD);
 		if(gGotUseCircuitCodeAck)
