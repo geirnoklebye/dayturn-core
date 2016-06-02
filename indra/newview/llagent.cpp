@@ -2454,7 +2454,7 @@ void LLAgent::endAnimationUpdateUI()
 	//---------------------------------------------------------------------
 	if (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK)
 	{
-		if (!gRRenabled) //closing } inside preprocessing conditionals below
+		if (!gRRenabled) 
 		{
 	//MK
 			// Don't hide the UI while in Mouselook mode, we can do this through
@@ -2500,15 +2500,13 @@ void LLAgent::endAnimationUpdateUI()
 			std::set<std::string> exceptions;
 			exceptions.insert("mini_map");
 			LLFloaterReg::hideVisibleInstances(exceptions);
-			} //if (!gRRenabled)
 	#else // Use this for now
 			LLFloaterView::skip_list_t skip_list;
 			skip_list.insert(LLFloaterReg::findInstance("mini_map"));
 			gFloaterView->pushVisibleAll(FALSE, skip_list);
-			} //if (!gRRenabled)
 	#endif
 	//MK
-
+		} //if (!gRRenabled)
 	//mk
 			if( gMorphView )
 			{
