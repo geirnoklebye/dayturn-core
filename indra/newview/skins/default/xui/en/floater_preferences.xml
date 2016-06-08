@@ -127,13 +127,6 @@
          layout="topleft"
          help_topic="preferences_kokua_tab"
          name="kokua" />
-        <panel
-         class="panel_preference_opensim"
-         filename="panel_preferences_opensim.xml"
-         label="Grids..."
-         layout="topleft"
-         help_topic="preferences_opensim_tab"
-         name="opensim" />
     </tab_container>
 
 </floater>
