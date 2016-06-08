@@ -168,6 +168,7 @@ top="10"
   visible="true" >
 </combo_box>
 <button
+  visible="false"
   follows="left|bottom"
   height="19"
   image_unselected="PushButton_Off"
@@ -180,6 +181,7 @@ top="10"
   top_delta="1"
   width="20" />
 <button
+  visible="false"
   follows="left|bottom"
   height="23"
   image_unselected="PushButton_Off"
@@ -192,6 +194,7 @@ top="10"
   width="86" />
     </layout_panel>
     <layout_panel
+        visible="true"
         tab_stop="false"
         follows="right|bottom"
         name="links"
