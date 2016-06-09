@@ -92,6 +92,7 @@ public:
 	LLInvalidGridName(std::string grid) : mGrid(grid)
 	{
 	}
+    std::string name() { return mGrid; }
 protected:
 	std::string mGrid;
 };
