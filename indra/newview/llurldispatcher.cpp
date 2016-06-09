@@ -276,13 +276,24 @@ void LLURLDispatcherImpl::regionHandleCallback(U64 region_handle, const LLSLURL&
 {
  // <FS:AW optional opensim support>
 #ifndef OPENSIM
-  // we can't teleport cross grid at this point
-	if (LLGridManager::getInstance()->getGrid(slurl.getGrid()) != LLGridManager::getInstance()->getGrid())
+	// we can't teleport cross grid at this point
+	if (LLGridManager::getInstance()->getGridByGridNick(slurl.getGrid())
+		!= LLGridManager::getInstance()->getGrid())
 	{
 		LLSD args;
 		args["SLURL"] = slurl.getLocationString();
 		args["CURRENT_GRID"] = LLGridManager::getInstance()->getGridLabel();
-		args["GRID"] = LLGridManager::getInstance()->getGridLabel(slurl.getGrid());
+		std::string grid_label =
+			LLGridManager::getInstance()->getGridByLabel(slurl.getGrid());
+
+		if (!grid_label.empty())
+		{
+			args["GRID"] = grid_label;
+		}
+		else
+		{
+			args["GRID"] = slurl.getGrid();
+		}
 		LLNotificationsUtil::add("CantTeleportToGrid", args);
 		return;
 	}

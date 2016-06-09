@@ -20,7 +20,7 @@ if (NOT CMAKE_BUILD_TYPE)
       "Build type.  One of: Debug Release RelWithDebInfo" FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
 #<FS:AW optional opensim support>
-set(HAS_OPENSIM_SUPPORT ON)
+set(HAS_OPENSIM_SUPPORT OFF)
 if (HAS_OPENSIM_SUPPORT)
 #hack for firestorm renaming HAS_OPENSIM_SUPPORT to OPENSIM
   option(OPENSIM "OpenSim support" ON)
