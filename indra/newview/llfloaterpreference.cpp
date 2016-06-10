@@ -2814,7 +2814,7 @@ LLFloaterPreferenceGraphicsAdvanced::LLFloaterPreferenceGraphicsAdvanced(const L
 LLFloaterPreferenceGraphicsAdvanced::~LLFloaterPreferenceGraphicsAdvanced()
 {
 }
-
+#ifdef HAS_OPENSIM_SUPPORT
 //<FS:AW  opensim preferences>
 static LLRegisterPanelClassWrapper<LLPanelPreferenceOpensim> t_pref_opensim("panel_preference_opensim");
 
@@ -2975,6 +2975,7 @@ void LLPanelPreferenceOpensim::onClickPickDebugSearchURL()
 }
 // </FS:AW  opensim search support>
 // </FS:AW  opensim preferences>
+#endif
 
 LLFloaterPreferenceProxy::LLFloaterPreferenceProxy(const LLSD& key)
 	: LLFloater(key),

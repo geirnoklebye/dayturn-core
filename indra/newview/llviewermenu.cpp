@@ -6609,7 +6609,7 @@ class LLShowHelp : public view_listener_t
 bool update_grid_help()
 {
 	LLSD grid_info;
-	LLGridManager::getInstance()->getGridData(grid_info);
+	LLGridManager::getInstance()->getGrid(grid_info);
 	std::string grid_label = LLGridManager::getInstance()->getGridLabel();
 
 	bool needs_seperator = false;

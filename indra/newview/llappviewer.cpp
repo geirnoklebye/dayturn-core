@@ -3614,7 +3614,7 @@ void LLAppViewer::writeSystemInfo()
 
 	// The user is not logged on yet, but record the current grid choice login url
 	// which may have been the intended grid. 
-	gDebugInfo["GridName"] = LLGridManager::getInstance()->getGridNick();
+	gDebugInfo["GridName"] = LLGridManager::getInstance()->getGridId();
 
 	// *FIX:Mani - move this down in llappviewerwin32
 #ifdef LL_WINDOWS
@@ -5758,7 +5758,7 @@ void LLAppViewer::launchUpdater()
 
 	// *TODO change userserver to be grid on both viewer and sim, since
 	// userserver no longer exists.
-	query_map["userserver"] = LLGridManager::getInstance()->getGridLabel();
+	query_map["userserver"] = LLGridManager::getInstance()->getGridId();
 	query_map["channel"] = LLVersionInfo::getChannel();
 	// *TODO constantize this guy
 	// *NOTE: This URL is also used in win_setup/lldownloader.cpp

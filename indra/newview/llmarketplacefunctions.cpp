@@ -60,7 +60,7 @@ namespace {
 
 	if (!LLGridManager::getInstance()->isInSLMain())
         {
-		const std::string& grid_id = LLGridManager::getInstance()->getGridNick();
+		const std::string& grid_id = LLGridManager::getInstance()->getGridId();
 		const std::string& grid_id_lower = utf8str_tolower(grid_id);
 
 		if (grid_id_lower == "damballah")

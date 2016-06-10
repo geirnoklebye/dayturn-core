@@ -386,7 +386,7 @@ BOOL LLFloaterModelPreview::postBuild()
 	//	validate_url = llformat("http://secondlife.%s.lindenlab.com/my/account/mesh.php",current_grid.c_str());
 	//}
 
-	std::string current_grid = LLGridManager::getInstance()->getGridNick();
+	std::string current_grid = LLGridManager::getInstance()->getGridId();
 	std::transform(current_grid.begin(),current_grid.end(),current_grid.begin(),::tolower);
 	std::string validate_url;
 	if (LLGridManager::getInstance()->isInSLMain())
