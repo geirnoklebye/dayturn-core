@@ -36,7 +36,9 @@ static const S32 REGION_WIDTH_UNITS = 256;
 static const U32 REGION_WIDTH_U32 = 256;
 
 //Kokua:Removed. Use instead: LLWorld::getInstance()->getRegionMaxHeight()
-// const F32 REGION_HEIGHT_METERS = 4096.f;
+#ifndef HAS_OPENSIM_SUPPORT
+const F32 REGION_HEIGHT_METERS = 4096.f;
+#endif
 const F32 MAX_ATTACHMENT_DIST = 3.5f; // meters? Compatiability add back after interesting merge
 
 const 	F32 	DEFAULT_AGENT_DEPTH 	= 0.45f;

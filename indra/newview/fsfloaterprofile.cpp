@@ -102,7 +102,7 @@ BOOL FSFloaterProfile::postBuild()
         LLTabContainer* tab_container = getChild<LLTabContainer>("tabs");
         if (tab_container)
         {
-            std::string nick = LLGridManager::getInstance()->getGridNick();
+            std::string nick = LLGridManager::getInstance()->getGridId();
             tab_container->setCurrentTabName(nick);
         }
     }
