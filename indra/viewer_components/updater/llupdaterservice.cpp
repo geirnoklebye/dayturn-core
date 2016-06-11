@@ -624,12 +624,12 @@ bool LLUpdaterServiceImpl::onMainLoop(LLSD const & event)
 		else
 		{
 			std::string query_url = LLGridManager::getInstance()->getUpdateServiceURL();
-			std::string grid_nickname = LLGridManager::getInstance()->getGridNick();
+			std::string grid_nickname = LLGridManager::getInstance()->getGrid();
 			if ( ( !grid_nickname.empty() ) && ( mCheckPeriod < 3600 ) )
 			{
 				mCheckPeriod = 3600;//set back to default
 			}
-			LL_DEBUGS("UpdaterService","onMainlood")
+			LL_WARNS("UpdaterService","onMainlood")
 				<< "The grid nick: " << grid_nickname
 				<< LL_ENDL;
 			if ( !query_url.empty() )
@@ -646,7 +646,7 @@ bool LLUpdaterServiceImpl::onMainLoop(LLSD const & event)
 					mCheckPeriod = 20; //give the viewer time to get grid data
 				}
 				LL_WARNS("UpdaterService")
-					<< "No updater service defined for grid '" << LLGridManager::getInstance()->getGridNick()
+					<< "No updater service defined for grid '" << LLGridManager::getInstance()->getGrid()
 					<< "' will check again in " << mCheckPeriod << " seconds"
 					<< LL_ENDL;
 				// Because the grid can be changed after the viewer is started (when the first check takes place)

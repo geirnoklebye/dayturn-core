@@ -97,14 +97,6 @@ bool LLLoginHandler::handle(const LLSD& tokens,
 	}
 
 	if (tokens.size() == 1
-		&& tokens[0].asString() == "show")
-	{
-		// We're using reg-in-client, so show the XUI login widgets
-		LLPanelLogin::showLoginWidgets();
-		return true;
-	}
-
-	if (tokens.size() == 1
 		&& tokens[0].asString() == "reg")
 	{
 		LLWindow* window = gViewerWindow->getWindow();
