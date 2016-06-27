@@ -420,11 +420,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>8a34d81fd73ce8950dc973a805789341</string>
+              <string>14900c097f740fd18d1d1b582f0c849b</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/314257/arch/Darwin/installer/colladadom-2.3.314257-darwin64-314257.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/316978/arch/Darwin/installer/colladadom-2.3.316978-darwin64-316978.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -470,18 +470,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c4522ce234050aafb5b1e490b6778843</string>
+              <string>61835052b807e5d1e2ee651fe464e9de</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/314257/arch/CYGWIN/installer/colladadom-2.3.314257-windows64-314257.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/316978/arch/CYGWIN/installer/colladadom-2.3.316978-windows64-316978.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>2.3.314257</string>
+        <string>2.3.316978</string>
       </map>
       <key>curl</key>
       <map>
@@ -1561,11 +1561,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e0e78e0d009de3e9bd8b6bd272cbdada</string>
+              <string>b9c6eb4cf7fe48172a566ce0307d3c61</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-googlemock/rev/314259/arch/Darwin/installer/googlemock-1.7.0.314259-darwin64-314259.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-googlemock/rev/316979/arch/Darwin/installer/googlemock-1.7.0.316979-darwin64-316979.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -1615,18 +1615,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>bc4d4cf194b843f18e7cc67caea87f8c</string>
+              <string>5014823154fafb27cd9a0451049259f4</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-googlemock/rev/314259/arch/CYGWIN/installer/googlemock-1.7.0.314259-windows64-314259.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-googlemock/rev/316979/arch/CYGWIN/installer/googlemock-1.7.0.316979-windows64-316979.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.7.0.314259</string>
+        <string>1.7.0.316979</string>
       </map>
       <key>gstreamer</key>
       <map>
@@ -2648,11 +2648,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>120a020cff13fd46296860efb36dfb5c</string>
+              <string>a865a677e8ef30a9b571ab38b29f645a</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-llceflib/rev/314446/arch/CYGWIN/installer/llceflib-1.5.3.314446-windows-314446.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-llceflib/rev/316980/arch/CYGWIN/installer/llceflib-1.5.3.316980-windows-316980.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2662,18 +2662,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>062403f09f34f79d1bb5eec81d470973</string>
+              <string>663da7496b3cbad4901889a5efeb1e04</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-llceflib/rev/314446/arch/CYGWIN/installer/llceflib-1.5.3.314446-windows64-314446.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-llceflib/rev/316980/arch/CYGWIN/installer/llceflib-1.5.3.316980-windows64-316980.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.5.3.314446</string>
+        <string>1.5.3.316980</string>
       </map>
       <key>llphysicsextensions_source</key>
       <map>
