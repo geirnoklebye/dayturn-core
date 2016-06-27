@@ -719,7 +719,8 @@ void LLViewerTexture::setBoostLevel(S32 level)
 	{
 		mBoostLevel = level;
 		if(mBoostLevel != LLViewerTexture::BOOST_NONE && 
-			mBoostLevel != LLViewerTexture::BOOST_SELECTED)
+			mBoostLevel != LLViewerTexture::BOOST_SELECTED && 
+			mBoostLevel != LLViewerTexture::BOOST_ICON)
 		{
 			setNoDelete();		
 		}
@@ -1120,6 +1121,7 @@ void LLViewerFetchedTexture::init(bool firstinit)
 	mLastCallBackActiveTime = 0.f;
 	mForceCallbackFetch = FALSE;
 	mInDebug = FALSE;
+	mUnremovable = FALSE;
 
 	mFTType = FTT_UNKNOWN;
 }

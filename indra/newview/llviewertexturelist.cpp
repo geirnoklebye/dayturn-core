@@ -72,11 +72,7 @@ static LLTrace::BlockTimerStatHandle FTM_PROCESS_IMAGES("Process Images");
 
 ETexListType get_element_type(S32 priority)
 {
-    if (priority == LLViewerFetchedTexture::BOOST_ICON)
-    {
-        return TEX_LIST_SCALE;
-    }
-    return TEX_LIST_STANDARD;
+    return (priority == LLViewerFetchedTexture::BOOST_ICON) ? TEX_LIST_SCALE : TEX_LIST_STANDARD;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -182,6 +178,12 @@ void LLViewerTextureList::doPreloadImages()
 		mImagePreloads.insert(image);
 	}
 	
+	LLPointer<LLImageRaw> img_blak_square_tex(new LLImageRaw(2, 2, 3));
+	memset(img_blak_square_tex->getData(), 0, img_blak_square_tex->getDataSize());
+	LLPointer<LLViewerFetchedTexture> img_blak_square(new LLViewerFetchedTexture(img_blak_square_tex, FTT_DEFAULT, FALSE));
+	gBlackSquareID = img_blak_square->getID();
+	img_blak_square->setUnremovable(TRUE);
+	addImage(img_blak_square, TEX_LIST_STANDARD);
 }
 
 static std::string get_texture_list_name()
@@ -448,10 +450,16 @@ LLViewerFetchedTexture* LLViewerTextureList::getImageFromUrl(const std::string& 
 
 		if (boost_priority != 0)
 		{
-			if (boost_priority == LLViewerFetchedTexture::BOOST_UI
-				|| boost_priority == LLViewerFetchedTexture::BOOST_ICON)
+			if (boost_priority == LLViewerFetchedTexture::BOOST_UI)
 			{
 				imagep->dontDiscard();
+			}
+			if (boost_priority == LLViewerFetchedTexture::BOOST_ICON)
+			{
+				// Agent and group Icons are downloadable content, nothing manages
+				// icon deletion yet, so they should not persist
+				imagep->dontDiscard();
+				imagep->forceActive();
 			}
 			imagep->setBoostLevel(boost_priority);
 		}
@@ -552,10 +560,16 @@ LLViewerFetchedTexture* LLViewerTextureList::createImage(const LLUUID &image_id,
 
 	if (boost_priority != 0)
 	{
-		if (boost_priority == LLViewerFetchedTexture::BOOST_UI
-			|| boost_priority == LLViewerFetchedTexture::BOOST_ICON)
+		if (boost_priority == LLViewerFetchedTexture::BOOST_UI)
 		{
 			imagep->dontDiscard();
+		}
+		if (boost_priority == LLViewerFetchedTexture::BOOST_ICON)
+		{
+			// Agent and group Icons are downloadable content, nothing manages
+			// icon deletion yet, so they should not persist.
+			imagep->dontDiscard();
+			imagep->forceActive();
 		}
 		imagep->setBoostLevel(boost_priority);
 	}
@@ -852,7 +866,7 @@ void LLViewerTextureList::updateImagesDecodePriorities()
 			LLPointer<LLViewerFetchedTexture> imagep = iter->second;
 			++iter; // safe to increment now
 
-			if(imagep->isInDebug())
+			if(imagep->isInDebug() || imagep->isUnremovable())
 			{
 				update_counter--;
 				continue; //is in debug, ignore.

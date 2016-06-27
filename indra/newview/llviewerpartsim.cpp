@@ -39,6 +39,7 @@
 #include "llworld.h"
 #include "pipeline.h"
 #include "llspatialpartition.h"
+#include "llvoavatarself.h"
 #include "llvovolume.h"
 
 //MK
@@ -707,16 +708,24 @@ void LLViewerPartSim::updateSimulation()
 		if (!mViewerPartSources[i]->isDead())
 		{
 			BOOL upd = TRUE;
-			if (!LLPipeline::sRenderAttachedParticles)
+			LLViewerObject* vobj = mViewerPartSources[i]->mSourceObjectp;
+
+			if (vobj && vobj->isAvatar() && ((LLVOAvatar*)vobj)->isInMuteList())
 			{
-				LLViewerObject* vobj = mViewerPartSources[i]->mSourceObjectp;
-				if (vobj && (vobj->getPCode() == LL_PCODE_VOLUME))
+				upd = FALSE;
+			}
+
+			if (upd && vobj && (vobj->getPCode() == LL_PCODE_VOLUME))
+			{
+				if(vobj->getAvatar() && vobj->getAvatar()->isTooComplex())
 				{
-					LLVOVolume* vvo = (LLVOVolume *)vobj;
-					if (vvo && vvo->isAttachment())
-					{
-						upd = FALSE;
-					}
+					upd = FALSE;
+				}
+
+				LLVOVolume* vvo = (LLVOVolume *)vobj;
+				if (!LLPipeline::sRenderAttachedParticles && vvo && vvo->isAttachment())
+				{
+					upd = FALSE;
 				}
 			}
 
