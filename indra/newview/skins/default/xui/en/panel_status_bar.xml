@@ -280,7 +280,7 @@
      top="5"
      label="Draw:"
      label_length="40"
-     left_delta="-520"
+     left_delta="-600"
      max_val="992"
      min_val="32"
      name="drawdistance" 

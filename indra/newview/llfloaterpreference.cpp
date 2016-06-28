@@ -1303,31 +1303,42 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 	LLSliderCtrl* sky = getChild<LLSliderCtrl>("SkyMeshDetail");
 	LLTextBox* sky_text = getChild<LLTextBox>("SkyMeshDetailText");
 	
+
+	// *HACK just checks to see if we can use shaders... 
+	// maybe some cards that use shaders, but don't support windlight
+	ctrl_wind_light->setEnabled(ctrl_shader_enable->getEnabled() && shaders);
+	
+	sky->setEnabled(ctrl_wind_light->get() && shaders);
+	sky_text->setEnabled(ctrl_wind_light->get() && shaders);
+	
+	//Deferred/SSAO/Shadows
+	LLCheckBoxCtrl* ctrl_deferred = getChild<LLCheckBoxCtrl>("UseLightShaders");
+		
+	BOOL enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
+						((bumpshiny_ctrl && bumpshiny_ctrl->get()) ? TRUE : FALSE) &&
+						shaders && 
+						gGLManager.mHasFramebufferObject &&
+						gSavedSettings.getBOOL("RenderAvatarVP") &&
+						(ctrl_wind_light->get()) ? TRUE : FALSE;
+	
+	ctrl_deferred->setEnabled(enabled);
+
 //MK
 	// If unable to change windlight or debug settings, make sure the Basic & Advanced
 	// Shaders checkboxes are ticked and disabled
 	if (gRRenabled && (gAgent.mRRInterface.mContainsSetenv || gAgent.mRRInterface.mContainsSetdebug))
 	{
+		gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
+		gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
 
-		// *HACK just checks to see if we can use shaders... 
-		// maybe some cards that use shaders, but don't support windlight
-		ctrl_wind_light->setEnabled(ctrl_shader_enable->getEnabled() && shaders);
-	
-		sky->setEnabled(ctrl_wind_light->get() && shaders);
-		sky_text->setEnabled(ctrl_wind_light->get() && shaders);
-	
-		//Deferred/SSAO/Shadows
-		LLCheckBoxCtrl* ctrl_deferred = getChild<LLCheckBoxCtrl>("UseLightShaders");
-		
-		BOOL enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
-							((bumpshiny_ctrl && bumpshiny_ctrl->get()) ? TRUE : FALSE) &&
-							shaders && 
-							gGLManager.mHasFramebufferObject &&
-							gSavedSettings.getBOOL("RenderAvatarVP") &&
-							(ctrl_wind_light->get()) ? TRUE : FALSE;
-	
-		ctrl_deferred->setEnabled(enabled);
+		ctrl_shader_enable->setEnabled(FALSE);
+		ctrl_shader_enable->setValue(TRUE);
+
+		ctrl_wind_light->setEnabled(FALSE);
+		ctrl_wind_light->setValue(TRUE);
 	}
+//mk
+
 	LLCheckBoxCtrl* ctrl_ssao = getChild<LLCheckBoxCtrl>("UseSSAO");
 	LLCheckBoxCtrl* ctrl_dof = getChild<LLCheckBoxCtrl>("UseDoF");
 	LLComboBox* ctrl_shadow = getChild<LLComboBox>("ShadowDetail");

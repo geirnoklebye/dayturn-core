@@ -411,9 +411,11 @@ public:
 	S32			mSpecialRenderMode; // special lighting
 //MK
 	BOOL 		getVisible() { return mVisible; }
+	BOOL		isSilhouette() { return mRenderAsSilhouette; }
 //mk
 
 private:
+	F32			mAttachmentSurfaceArea; //estimated surface area of attachments
 	bool		shouldAlphaMask();
 
 	BOOL 		mNeedsSkin; // avatar has been animated and verts have not been updated
@@ -429,6 +431,10 @@ private:
 
 	bool		mCachedInMuteList;
 	F64			mCachedMuteListUpdateTime;
+
+//MK
+	BOOL		mRenderAsSilhouette; // TRUE when the avatar is farther than RRInterface::mShowavsDistMax, calculated once during each frame
+//mk
 
 	VisualMuteSettings		mVisuallyMuteSetting;			// Always or never visually mute this AV
 

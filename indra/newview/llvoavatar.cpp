@@ -3152,22 +3152,11 @@ bool LLVOAvatar::isVisuallyMuted()
 	if (!isSelf())
 	{
 //MK
-		if (gRRenabled && gAgentAvatarp && getRezzedStatus() >= 2) // fully rezzed
+		if (isSilhouette ())
 		{
-			LLVector3d my_head_pos (gAgent.getPosGlobalFromAgent(gAgentAvatarp->mHeadp->getWorldPosition()));
-			LLVector3d their_head_pos (gAgent.getPosGlobalFromAgent(mHeadp->getWorldPosition()));
-			LLVector3d offset (their_head_pos - my_head_pos);
-			F32 distance = (F32)offset.magVec();
-
-			if (distance > gAgent.mRRInterface.mShowavsDistMax)
-			{
-				// Note that mCachedVisualMute is set to false, we will use that
-				// later to distinguish between really muted avatars and those muted
-				// because of an RLV restriction.
-				mCachedVisualMute = false;
-				return true;
-			}
+			muted = true;
 		}
+		else
 //mk
 		if (mVisuallyMuteSetting == AV_ALWAYS_RENDER)
 		{
@@ -3334,6 +3323,18 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		mTimeVisible.reset();
 	}
 
+//MK
+	mRenderAsSilhouette = FALSE;
+	if (gRRenabled && !isSelf() && gAgentAvatarp && getRezzedStatus() >= 2) // fully rezzed
+	{
+		LLVector3d my_head_pos (gAgent.getPosGlobalFromAgent(gAgentAvatarp->mHeadp->getWorldPosition()));
+		LLVector3d their_head_pos (gAgent.getPosGlobalFromAgent(mHeadp->getWorldPosition()));
+		LLVector3d offset (their_head_pos - my_head_pos);
+		F32 distance = (F32)offset.magVec();
+
+		mRenderAsSilhouette = (distance > gAgent.mRRInterface.mShowavsDistMax);
+	}
+//mk
 	//--------------------------------------------------------------------
 	// the rest should only be done occasionally for far away avatars
 	//--------------------------------------------------------------------
@@ -3350,15 +3351,6 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		F32 impostor_area = 256.f*512.f*(8.125f - LLVOAvatar::sLODFactor*8.f);
 		if (visually_muted)
 		{ // visually muted avatars update at 16 hz
-//MK
-			// If the cached value is not set, that means this avatar is muted for RLV reasons
-			// => update every frame
-			if (gRRenabled && !mCachedVisualMute)
-			{
-				mUpdatePeriod = 1;
-			}
-			else
-//mk
 			mUpdatePeriod = 16;
 		}
 		else if (   ! shouldImpostor()
@@ -3385,6 +3377,13 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 			//nearby avatars, update the impostors more frequently.
 			mUpdatePeriod = 4;
 		}
+//MK
+		// Update silhouettes often
+		if (isSilhouette ())
+		{
+			mUpdatePeriod = 1;
+		}
+//mk
 
 		visible = (LLDrawable::getCurrentFrame()+mID.mData[0])%mUpdatePeriod == 0 ? TRUE : FALSE;
 	}
@@ -8313,7 +8312,10 @@ void LLVOAvatar::updateImpostors()
 
 BOOL LLVOAvatar::isImpostor()
 {
-	return sUseImpostors && (isVisuallyMuted() || (mUpdatePeriod >= IMPOSTOR_PERIOD)) ? TRUE : FALSE;
+//MK
+////	return sUseImpostors && (isVisuallyMuted() || (mUpdatePeriod >= IMPOSTOR_PERIOD)) ? TRUE : FALSE;
+	return sUseImpostors && (isVisuallyMuted() || isSilhouette() || (mUpdatePeriod >= IMPOSTOR_PERIOD)) ? TRUE : FALSE;
+//mk
 }
 
 BOOL LLVOAvatar::shouldImpostor(const U32 rank_factor) const
@@ -8323,6 +8325,12 @@ BOOL LLVOAvatar::shouldImpostor(const U32 rank_factor) const
 
 BOOL LLVOAvatar::needsImpostorUpdate() const
 {
+//MK
+	if (mRenderAsSilhouette)
+	{
+		return TRUE;
+	}
+//mk
 	return mNeedsImpostorUpdate;
 }
 

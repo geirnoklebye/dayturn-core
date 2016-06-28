@@ -1,28 +1,28 @@
-/** 
- * @file llstatusbar.h
- * @brief LLStatusBar class definition
- *
- * $LicenseInfo:firstyear=2002&license=viewerlgpl$
- * Second Life Viewer Source Code
- * Copyright (C) 2010, Linden Research, Inc.
- * 
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation;
- * version 2.1 of the License only.
- * 
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
- * $/LicenseInfo$
- */
+/**
+* @file llstatusbar.h
+* @brief LLStatusBar class definition
+*
+* $LicenseInfo:firstyear=2002&license=viewerlgpl$
+* Second Life Viewer Source Code
+* Copyright (C) 2010, Linden Research, Inc.
+*
+* This library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU Lesser General Public
+* License as published by the Free Software Foundation;
+* version 2.1 of the License only.
+*
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* Lesser General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this library; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*
+* Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
+* $/LicenseInfo$
+*/
 
 #ifndef LL_LLSTATUSBAR_H
 #define LL_LLSTATUSBAR_H
@@ -46,13 +46,52 @@ class LLPanelVolumePulldown;
 class LLPanelNearByMedia;
 class LLIconCtrl;
 
-class LLStatusBar
-:	public LLPanel
+//MK
+class LLParcelChangeObserver;
+class LLPanel;
+
+
+class LLRegionDetails
 {
 public:
-	LLStatusBar(const LLRect& rect );
+	LLRegionDetails() :
+		mRegionName("Unknown"),
+		mParcelName("Unknown"),
+		mAccessString("Unknown"),
+		mX(0),
+		mY(0),
+		mZ(0),
+		mArea (0),
+		mForSale(FALSE),
+		mOwner("Unknown"),
+		mTraffic(0),
+		mBalance(0),
+		mPing(0)
+	{
+	}
+	std::string mRegionName;
+	std::string	mParcelName;
+	std::string	mAccessString;
+	S32		mX;
+	S32		mY;
+	S32		mZ;
+	S32		mArea;
+	BOOL	mForSale;
+	std::string	mOwner;
+	F32		mTraffic;
+	S32		mBalance;
+	std::string mTime;
+	U32		mPing;
+};
+//mk
+
+class LLStatusBar
+	: public LLPanel
+{
+public:
+	LLStatusBar(const LLRect& rect);
 	/*virtual*/ ~LLStatusBar();
-	
+
 	/*virtual*/ void draw();
 
 	/*virtual*/ BOOL handleRightMouseDown(S32 x, S32 y, MASK mask);
@@ -73,7 +112,14 @@ public:
 
 	void		refresh();
 	void setVisibleForMouselook(bool visible);
-		// some elements should hide in mouselook
+	// some elements should hide in mouselook
+
+//MK
+	/**
+	 * Updates location and parcel icons on login complete
+	 */
+	void handleLoginComplete();
+//mk
 
 	// ACCESSORS
 	S32			getBalance() const;
@@ -83,11 +129,18 @@ public:
 	S32 getSquareMetersCredit() const;
 	S32 getSquareMetersCommitted() const;
 	S32 getSquareMetersLeft() const;
+//MK
+	LLRegionDetails mRegionDetails;
+//mk
 
 	LLPanelNearByMedia* getNearbyMediaPanel() { return mPanelNearByMedia; }
 
+//MK
+	void setBackgroundColor( const LLColor4& color );
+//mk
+
 private:
-	
+
 	void onClickBuyCurrency();
 	void onVolumeChanged(const LLSD& newvalue);
 
@@ -99,7 +152,116 @@ private:
 	static void onClickMediaToggle(void* data);
 	static void onClickBalance(void* data);
 
+//MK
+	class LLParcelChangeObserver;
+
+	friend class LLParcelChangeObserver;
+
+	enum EParcelIcon
+	{
+		VOICE_ICON = 0,
+		FLY_ICON,
+		PUSH_ICON,
+		BUILD_ICON,
+		SCRIPTS_ICON,
+		DAMAGE_ICON,
+		ICON_COUNT
+	};
+
+	/**
+	 * Initializes parcel icons controls. Called from the constructor.
+	 */
+	void initParcelIcons();
+
+	/**
+	 * Handles clicks on the parcel icons.
+	 */
+	void onParcelIconClick(EParcelIcon icon);
+
+	/**
+	 * Handles clicks on the info buttons.
+	 */
+	void onInfoButtonClicked();
+
+	/**
+	 * Handles clicks on the parcel wl info button.
+	 */
+	void onParcelWLClicked();
+
+	/**
+	 * Called when agent changes the parcel.
+	 */
+	void onAgentParcelChange();
+
+	/**
+	 * Called when context menu item is clicked.
+	 */
+	void onContextMenuItemClicked(const LLSD::String& userdata);
+
+	/**
+	 * Called when user checks/unchecks Show Coordinates menu item.
+	 */
+	void onNavBarShowParcelPropertiesCtrlChanged();
+
+	/**
+	 * Handles clicks on the info buttons.
+	 */
+	void onAvatarHeightOffsetResetButtonClicked();
+
+	/**
+	 * Shorthand to call updateParcelInfoText() and updateParcelIcons().
+	 */
+	void update();
+
+	/**
+	 * Updates parcel info text (mParcelInfoText).
+	 */
+	void updateParcelInfoText();
+
+public:
+
+	/**
+	 * Updates parcel panel pos (mParcelPanel).
+	 */
+	void updateParcelPanel();
+
+	/**
+	 * Updates parcel icons (mParcelIcon[]).
+	 */
+	void updateParcelIcons();
+
 private:
+//MK
+	/**
+	 * Updates health information (mDamageText).
+	 */
+	void updateHealth();
+
+	/**
+	 * Lays out all parcel icons starting from right edge of the mParcelInfoText + 11px
+	 * (see screenshots in EXT-5808 for details).
+	 */
+	void layoutParcelIcons();
+
+	/**
+	 * Lays out a widget. Widget's rect mLeft becomes equal to the 'left' argument.
+	 */
+	S32 layoutWidget(LLUICtrl* ctrl, S32 left);
+
+	/**
+	 * Generates location string and returns it in the loc_str parameter.
+	 */
+	void buildLocationString(std::string& loc_str, bool show_coords);
+
+	/**
+	 * Sets new value to the mParcelInfoText and updates the size of the top bar.
+	 */
+	void setParcelInfoText(const std::string& new_text);
+
+private:
+	LLTextBox	*mTextHealth;
+	LLTextBox*	mTextParcelName;
+//mk
 	LLTextBox	*mTextTime;
 
 	LLStatGraph *mSGBandwidth;
@@ -132,11 +294,11 @@ private:
 	LLParcelChangeObserver*	mParcelChangedObserver;
 	LLButton* 				mPWLBtn;
 	LLButton* 				mAvatarHeightOffsetResetBtn;
-//mk
 
 	boost::signals2::connection	mParcelPropsCtrlConnection;
 	boost::signals2::connection	mShowCoordsCtrlConnection;
 	boost::signals2::connection	mParcelMgrConnection;
+//mk
 };
 
 // *HACK: Status bar owns your cached money balance. JC
