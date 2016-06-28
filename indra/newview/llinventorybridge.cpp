@@ -4313,6 +4313,9 @@ void LLFolderBridge::createWearable(LLFolderBridge* bridge, LLWearableType::ETyp
 
 void LLFolderBridge::modifyOutfit(BOOL append)
 {
+//MK
+	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 	LLInventoryModel* model = getInventoryModel();
 	if(!model) return;
 	LLViewerInventoryCategory* cat = getCategory();
