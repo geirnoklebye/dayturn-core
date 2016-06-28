@@ -1480,6 +1480,7 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 
 		ctrl_wind_light->setEnabled(FALSE);
 		ctrl_wind_light->setValue(TRUE);
+    }
 //mk
 
 	LLCheckBoxCtrl* ctrl_ssao = getChild<LLCheckBoxCtrl>("UseSSAO");
