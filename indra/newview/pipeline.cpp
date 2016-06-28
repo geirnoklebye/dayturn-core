@@ -11396,21 +11396,11 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
                               << LL_ENDL;
 
 	pushRenderTypeMask();
-		if (visually_muted || too_complex)
+	if (visually_muted || too_complex)
 	{
 		andRenderTypeMask(LLPipeline::RENDER_TYPE_AVATAR, END_RENDER_TYPES);
 	}
 	else
-//MK
-	// Render everything
-	// For some reason, unrigged mesh objects do not render on silhouettes, but they don't render on regular
-	// impostors either.
-	////if (visually_muted)
-	////{
-	////	andRenderTypeMask(LLPipeline::RENDER_TYPE_AVATAR, END_RENDER_TYPES);
-	////}
-	////else
-//mk
 	{
 		andRenderTypeMask(LLPipeline::RENDER_TYPE_ALPHA,
 			LLPipeline::RENDER_TYPE_FULLBRIGHT,
@@ -11634,8 +11624,8 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		LL_RECORD_BLOCK_TIME(FTM_IMPOSTOR_BACKGROUND);
 //MK
 		// Choose the non-deferred rendering when rendering silhouettes
-////		if (LLPipeline::sRenderDeferred)
-		if (LLPipeline::sRenderDeferred && !visually_muted)
+		if (LLPipeline::sRenderDeferred)
+////		if (LLPipeline::sRenderDeferred && !visually_muted)
 //mk
 		{
 			GLuint buff = GL_COLOR_ATTACHMENT0;
