@@ -15,31 +15,31 @@ Kokua repositories use mercurial bookmarks instead of branches. Reference mercur
 
 Work Flow:
 
-On bitbucket fork kokua-dev to your Bitbucket account. The repository name will default to kokua-dev, but can be named as desired.
+On bitbucket fork kokua-sl to your Bitbucket account. The repository name will default to kokua-sl, but can be named as desired.
 
-Open the repository and notice bookmark icons that are named Kokua_MKRLV and KokuaNT; these represent our current working default branches
+Open the repository and notice bookmark icons that are named Kokua-MKRLV and KokuaSL-NORLV; these represent our current working default branches
 
 that are assigned to bookmarks. If the bookmarks where not there two (2) default branches would be present. The bookmarks tie the bookmark names
 
 to each default branch mercurial hash. 
 
-Using mercurial command hg clone place you forked kokua-dev repository on your local file system. Example: 
+Using mercurial command hg clone place you forked kokua-sl repository on your local file system. Example: 
 
-hg clone https://bitucket.org/nickyp/kokua-dev
+hg clone https://bitucket.org/nickyp/kokua-sl
 
 An important step is to pull and update Bookmarks from your respository. This allows the bookmarks to advance to the tip with each commit.
 
-A bookmark pull is hg pull -B KokuaNT https://bitucket.org/nickyp/kokua-dev --Notice that it is a capital B. Now repeat with Kokua-MKRLV bookmark.
+A bookmark pull is hg pull -B KokuaSL-NORLV https://bitucket.org/nickyp/kokua-sl --Notice that it is a capital B. Now repeat with Kokua-MKRLV bookmark.
 
 If your bitbucket repository's bookmarks have fallen behind or do not show up then push the bookmark name. For example:
 
-hg push -B KokuaNT https://bitucket.org/nickyp/kokua-dev notice the capital B again. Capital B is for bookmark exchange only. No changes are made to
+hg push -B KokuaSL-NORLV https://bitucket.org/nickyp/kokua-sl notice the capital B again. Capital B is for bookmark exchange only. No changes are made to
 
 the working tree.
 
-Next use hg update to activate the bookmarks. "hg update KokuaNT" and then "hg update Kokua-MKRLV". Your working tree is now at Kokua-MKRLV.
+Next use hg update to activate the bookmarks. "hg update KokuaSL-NORLV" and then "hg update Kokua-MKRLV". Your working tree is now at Kokua-MKRLV.
 
-If you want to work on KokuaNT just "hg update KokuaNT". In a terminal enter "hg bookmarks" and terminal response will be a list of all bookmarks
+If you want to work on KokuaSL-NORLV just "hg update KokuaSL-NORLV". In a terminal enter "hg bookmarks" and terminal response will be a list of all bookmarks
 
 with an * next to the active bookmark.
  
@@ -55,7 +55,7 @@ merged before beginning work. Use of mercurial queues MQ can be helpful by worki
 
 and merging upstream and then reinstall from the patch queue. This insures that your changes are allways on top of the upstream repository.
 
-Once sure that no upstream incoming are pending and you ready for merge into upstream push to your bitbucket repo and submit a pull request.
+Once sure that no upstream incoming are pending and you are ready to merge into upstream; push to your bitbucket repo and submit a pull request.
 
 
 
@@ -73,10 +73,9 @@ Development system:
 
 3.19.0-47-generic #53~14.04.1-Ubuntu SMP Mon Jan 18 16:09:14 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
 
-Development system is UBUNTU 14.04 LTS (testing). The compiler is gcc-4.8. If starting with a new Stretch you will need to install
-Library archives for the most part are built with gcc-4.6.4.  except Boost gcc-4.7 
+Development system is UBUNTU 14.04 LTS (testing). The compiler is gcc-4.8. If starting with a new Ubuntu you will need to install
+Library archives for the most part are built with gcc-4.6.4.  except Boost which is compiled with gcc-4.7 
 
-3.19.0-47-generic #53~14.04.1-Ubuntu SMP Mon Jan 18 16:09:14 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
 
 --------------
 
@@ -231,19 +230,19 @@ export AUTOBUILD_PLATFORM_OVERRIDE='linux64'
 
   KokuaNT can be built with opensource or properity audio engine. The opensource solution uses openal for sounds and gstreamer for streaming music and audio visual files like mp4's. Use of the properity FMOD Ex library for sounds and streaming audio is supported but, the FMOD Ex library must be provided separately.
 
--  hg clone https://bitbucket.org/kokua/kokua-dev
+-  hg clone https://bitbucket.org/kokua/kokua-sl
 
-  KokuaNT can be built with opensource or properity audio engine. The opensource solution uses openal for sounds and gstreamer for streaming music and audio visual files like mp4's. Use of the properity FMOD Ex library for sounds and streaming audio is supported but, the FMOD Ex library must be provided separately.
+  KokuaSL-NORLV can be built with opensource or properity audio engine. The opensource solution uses openal for sounds and gstreamer for streaming music and audio visual files like mp4's. Use of the properity FMOD Ex library for sounds and streaming audio is supported but, the FMOD Ex library must be provided separately.
 
 -  Configure for an openal and gstreamer build:
 
 Following assumes a clean build tree.
 
-cd kokuant
+cd Kokua-SL
 
-Update the source tree to KokuaNT. This is a build without RLV or if you want RLV it would be hg update Kokua-MKRLV
+Update the source tree to KokuaSL-NORLV. This is a build without RLV or if you want RLV it would be hg update Kokua-MKRLV
 
-hg update KokuaNT
+hg update KokuaSL-NORLV
 
 
 autobuild configure -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DOPENAL:BOOL=ON -DPACKAGE:BOOL=ON 2>&1 |tee configure.log
@@ -338,7 +337,7 @@ The root cause of this is that it tries to run autobuild by spawning a shell fro
 
 To build Kokua first download the Kokua source code with the following command in terminal:
 
-hg clone https://NickyP@bitbucket.org/NickyP/kokuant 
+hg clone https://bitbucket.org/kokua/Kokua-SL 
 
 You can configure the build with:
 
