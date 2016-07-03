@@ -648,6 +648,7 @@ Function un.ProgramFiles
 %%DELETE_FILES%%
 
 # Optional/obsolete files.  Delete won't fail if they don't exist.
+Delete "$INSTDIR\autorun.bat"
 Delete "$INSTDIR\dronesettings.ini"
 Delete "$INSTDIR\message_template.msg"
 Delete "$INSTDIR\newview.pdb"

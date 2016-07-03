@@ -83,6 +83,7 @@ public:
 	void setShowIcons(std::string param_name);
 	bool getIconsVisible() const { return mShowIcons; }
 	const std::string getIconParamName() const{return mIconParamName;}
+	std::string getAvatarName(LLAvatarName av_name);
 	virtual BOOL handleRightMouseDown(S32 x, S32 y, MASK mask);
 	/*virtual*/ BOOL handleMouseDown( S32 x, S32 y, MASK mask );
 	/*virtual*/ BOOL handleMouseUp(S32 x, S32 y, MASK mask);
@@ -128,6 +129,7 @@ private:
 	bool mShowProfileBtn;
 	bool mShowSpeakingIndicator;
 	bool mShowPermissions;
+	bool mShowCompleteName;
 
 	LLTimer*				mLITUpdateTimer; // last interaction time update timer
 	std::string				mIconParamName;
