@@ -7591,8 +7591,8 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
             " (highest seen #" << mLastUpdateReceivedCOFVersion <<
             ") (AISCOF=#" << aisCOFVersion << ")" << LL_ENDL;
 
-        if (mLastUpdateReceivedCOFVersion >= thisAppearanceVersion)
-		&& (appearance_version>0)
+        if (mLastUpdateReceivedCOFVersion >= thisAppearanceVersion
+						&& (appearance_version>0))
         {
             LL_WARNS("Avatar") << "Stale appearance received #" << thisAppearanceVersion <<
                 " attempt to roll back from #" << mLastUpdateReceivedCOFVersion <<

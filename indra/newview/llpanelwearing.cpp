@@ -211,11 +211,11 @@ protected:
 // [/SL:KB]
 		menu->setItemVisible("show_original",	bp_selected || clothes_selected || attachments_selected);
 		menu->setItemEnabled("show_original",	1 == mUUIDs.size());
+		menu->setItemVisible("show_original", mUUIDs.size() == 1);        
 		menu->setItemVisible("take_off",	allow_take_off);
 		menu->setItemVisible("detach",		allow_detach);
 // [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-09-04 (Catznip-2.2.0a) | Added: Catznip-2.1.2a
 		menu->setItemVisible("take_off_or_detach", (!allow_detach) && (!allow_take_off) && (clothes_selected) && (attachments_selected));
-		menu->setItemVisible("show_original", mUUIDs.size() == 1);
 // [/SL:KB]
 
 
