@@ -144,7 +144,7 @@ protected:
 		LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
 
 		registrar.add("Wearing.TouchAttach", boost::bind(handleMultiple, touch_item, mUUIDs));
-
+		registrar.add("Wearing.ShowOriginal", boost::bind(show_item_original, mUUIDs.front()));
 // [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-09-04 (Catznip-2.2.0a) | Added: Catznip-2.1.2a
 		registrar.add("Wearing.EditItem", boost::bind(handleMultiple, edit_item, mUUIDs));
 		registrar.add("Wearing.EditOutfit", boost::bind(&edit_outfit));
@@ -213,6 +213,8 @@ protected:
 		menu->setItemEnabled("show_original",	1 == mUUIDs.size());
 		menu->setItemVisible("take_off",	allow_take_off);
 		menu->setItemVisible("detach",		allow_detach);
+		menu->setItemVisible("edit_outfit_separator", allow_take_off || allow_detach);
+		menu->setItemVisible("show_original", mUUIDs.size() == 1);
 // [SL:KB] - Patch: Inventory-AttachmentEdit - Checked: 2010-09-04 (Catznip-2.2.0a) | Added: Catznip-2.1.2a
 		menu->setItemVisible("take_off_or_detach", (!allow_detach) && (!allow_take_off) && (clothes_selected) && (attachments_selected));
 // [/SL:KB]

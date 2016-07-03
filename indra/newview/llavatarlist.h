@@ -90,6 +90,7 @@ public:
 	void setShowIcons(std::string param_name);
 	bool getIconsVisible() const { return mShowIcons; }
 	const std::string getIconParamName() const{return mIconParamName;}
+	std::string getAvatarName(LLAvatarName av_name);
 	virtual BOOL handleRightMouseDown(S32 x, S32 y, MASK mask);
 	/*virtual*/ BOOL handleMouseDown( S32 x, S32 y, MASK mask );
 	/*virtual*/ BOOL handleMouseUp(S32 x, S32 y, MASK mask);
@@ -111,7 +112,7 @@ public:
 	void addAvalineItem(const LLUUID& item_id, const LLUUID& session_id, const std::string& item_name);
 	void handleDisplayNamesOptionChanged();
 
-	static std::string getNameToDisplay(const LLAvatarName &av_name);
+	void setShowCompleteName(bool show) { mShowCompleteName = show;};
 
 protected:
 	void refresh();
@@ -139,6 +140,7 @@ private:
 	bool mShowProfileBtn;
 	bool mShowSpeakingIndicator;
 	bool mShowPermissions;
+	bool mShowCompleteName;
 	bool mShowRange;
 	bool mShowFirstSeen;
 	bool mShowStatusFlags;
