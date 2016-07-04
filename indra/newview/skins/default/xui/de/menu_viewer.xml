@@ -38,6 +38,9 @@
 		<menu_item_check label="Chat in der Nähe..." name="Nearby Chat"/>
 		<menu_item_check label="Sprechen" name="Speak"/>
 		<menu_item_check label="Unterhaltungsprotokoll..." name="Conversation Log..."/>
+		<menu_item_call label="Facebook..." name="Facebook"/>
+		<menu_item_call label="Twitter..." name="Twitter"/>
+		<menu_item_call label="Flickr..." name="Flickr"/>
 		<menu label="Voice-Morphing" name="VoiceMorphing">
 			<menu_item_check label="Kein Voice-Morphing" name="NoVoiceMorphing"/>
 			<menu_item_check label="Vorschau..." name="Preview"/>
@@ -152,7 +155,8 @@
 			<menu_item_check label="An Raster ausrichten" name="Snap to Grid"/>
 			<menu_item_call label="Objekt-XY an Raster ausrichten" name="Snap Object XY to Grid"/>
 			<menu_item_call label="Auswahl für Raster verwenden" name="Use Selection for Grid"/>
-			<menu_item_call label="Rasteroptionen" name="Grid Options"/>
+			<menu_item_call label="Rasteroptionen..." name="Grid Options"/>
+			<menu_item_call label="Standard-Berechtigungen einstellen..." name="Set default permissions"/>
 		</menu>
 		<menu label="Hochladen" name="Upload">
 			<menu_item_call label="Bild ([COST])..." name="Upload Image"/>
@@ -230,7 +234,6 @@
 		<menu_item_check label="Weiche Mausbewegung" name="Mouse Smoothing"/>
 		<menu_item_call label="Tasten freigeben" name="Release Keys"/>
 		<menu label="Tastaturkürzel" name="Shortcuts">
-+			<menu_item_call label="Bild hochladen ([COST])..." name="Upload Image"/>		
 			<menu_item_check label="Erweitert-Menü anzeigen - veraltetet" name="Show Advanced Menu - legacy shortcut"/>
 			<menu_item_call label="Fenster schließen" name="Close Window"/>
 			<menu_item_call label="Alle Fenster schließen" name="Close All Windows"/>
@@ -310,6 +313,7 @@
 			<menu_item_check label="Detailstufeninfos" name="LOD Info"/>
 			<menu_item_check label="Konstruktionswarteschlange" name="Build Queue"/>
 			<menu_item_check label="Lichter" name="Lights"/>
+			<menu_item_check label="Partikel" name="Particles"/>
 			<menu_item_check label="Gelenkpunkte" name="Collision Skeleton"/>
 			<menu_item_check label="Gelenke" name="Joints"/>
 			<menu_item_check label="Raycast" name="Raycast"/>
