@@ -418,6 +418,10 @@ public:
 	void			calcDisplayScale();
 	static LLRect 	calcScaledRect(const LLRect & rect, const LLVector2& display_scale);
 
+//MK
+	BOOL			mPickThroughHuds; // if TRUE, don't pick HUD objects under the mouse cursor
+//mk
+
 private:
 	bool                    shouldShowToolTipFor(LLMouseHandler *mh);
 
