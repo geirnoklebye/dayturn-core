@@ -62,7 +62,7 @@ public:
 		HELP,
 		NUM_SLURL_TYPES // must be last
 	};
-#ifdef HAS_OPENSIM_SUPPORT
+
 	LLSLURL(): mType(INVALID)  { }
 	LLSLURL(const std::string& slurl);
 	LLSLURL(const std::string& grid, const std::string& region, bool hyper = false);
@@ -72,16 +72,6 @@ public:
 	LLSLURL(const std::string& region, const LLVector3d& global_position, bool hyper = false);
 	LLSLURL(const std::string& command, const LLUUID&id, const std::string& verb);
 	LLSLURL(const LLSD& path_array, bool from_app);
-#else
-	LLSLURL() : mType(INVALID)  { }
-	LLSLURL(const std::string& slurl);
-	LLSLURL(const std::string& grid, const std::string& region);
-	LLSLURL(const std::string& region, const LLVector3& position);
-	LLSLURL(const std::string& grid, const std::string& region, const LLVector3& position);
-	LLSLURL(const std::string& grid, const std::string& region, const LLVector3d& global_position);
-	LLSLURL(const std::string& region, const LLVector3d& global_position);
-	LLSLURL(const std::string& command, const LLUUID&id, const std::string& verb);
-#endif
 
 	SLURL_TYPE getType() const { return mType; }
 //<AW: opensim>
