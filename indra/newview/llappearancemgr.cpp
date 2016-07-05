@@ -3542,9 +3542,6 @@ void LLAppearanceMgr::requestServerAppearanceUpdate()
     }
 }
 
-//MK from HB
-	gAgentWearables.checkModifiableShape();
-//mk from HB
 void LLAppearanceMgr::serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &httpAdapter)
 {
     mRerequestAppearanceBake = false;

@@ -113,7 +113,7 @@ public:
 	void handleDisplayNamesOptionChanged();
 
 	void setShowCompleteName(bool show) { mShowCompleteName = show;};
-
+	static std::string getNameToDisplay(const LLAvatarName &av_name);
 protected:
 	void refresh();
 

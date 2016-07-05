@@ -87,7 +87,7 @@ LLAvatarListItem::LLAvatarListItem(bool not_from_ui_factory/* = true*/)
 	mShowDisplayName(true),
 	mShowUsername(true),
 	mAvatarNameCacheConnection(),
-	mGreyOutUsername("")
+	mGreyOutUsername(""),
 	mFirstSeen(time(NULL)),
 	mAvStatus(0),
 	mAvPosition(LLVector3d(0.0f,0.0f,0.0f)),
@@ -97,7 +97,6 @@ LLAvatarListItem::LLAvatarListItem(bool not_from_ui_factory/* = true*/)
 	mShowPaymentStatus(false),
 	mPaymentStatus(NULL),
 	mAvatarAge(0),
-	mAvatarNameCacheConnection(),
 	// [Ansariel: Colorful radar]
 	mUseRangeColors(false),
 	// [Ansariel: Colorful radar]
