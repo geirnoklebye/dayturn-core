@@ -312,7 +312,7 @@ class LLAvatarComplexityControls
 	static void setIndirectMaxArc();
 	LOG_CLASS(LLAvatarComplexityControls);
 };
-#ifdef HAS_OPENSIM_SUPPORT
+
 // <FS:AW  opensim preferences>
 class LLPanelPreferenceOpensim : public LLPanelPreference
 {
@@ -341,7 +341,7 @@ protected:
 	LLScrollListCtrl* mGridListControl;
 };
 // </FS:AW  opensim preferences>
-#endif
+
 class LLFloaterPreferenceProxy : public LLFloater
 {
 public: 
