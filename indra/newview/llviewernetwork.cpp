@@ -1414,7 +1414,6 @@ std::string LLGridManager::getAppSLURLBase(const std::string& grid)
 	return  ret;
 }
 #else
-#include "llappviewer.h" //global variable gIsInSecondLife and 
 
 #include "llviewernetwork.h"
 #include "llviewercontrol.h"
@@ -1464,10 +1463,7 @@ const char* DEFAULT_SLURL_BASE = "https://%s/region/";
 const char* DEFAULT_APP_SLURL_BASE = "x-grid-location-info://%s/app";
 
 LLGridManager::LLGridManager()
-	: mIsInProductionGrid(false),
-	mIsInSLMain(false),
-	mIsInSLBeta(false),
-	mIsInOpenSim(false)
+	: mIsInProductionGrid(false)
 {
 	// by default, we use the 'grids.xml' file in the user settings directory
 	// this file is an LLSD file containing multiple grid definitions.
@@ -1964,9 +1960,6 @@ std::string LLGridManager::getUpdateServiceURL()
 void LLGridManager::updateIsInProductionGrid()
 {
 	mIsInProductionGrid = false;
-	mIsInSLMain = false;
-	mIsInSLBeta = false;
-	mIsInOpenSim = false;
 
 	// *NOTE:Mani This used to compare GRID_INFO_AGNI to gGridChoice,
 	// but it seems that loginURI trumps that.
@@ -1975,9 +1968,6 @@ void LLGridManager::updateIsInProductionGrid()
 	if (uris.empty())
 	{
 		mIsInProductionGrid = true;
-		mIsInSLMain = true;
-		gSimulatorType = "SecondLife";
-		gIsInSecondLife = true;
 	}
 	else
 	{
@@ -1989,9 +1979,6 @@ void LLGridManager::updateIsInProductionGrid()
 			if (MAIN_GRID_LOGIN_URI == *uri_it)
 			{
 				mIsInProductionGrid = true;
-				mIsInSLMain = true;
-				gSimulatorType = "SecondLife";
-				gIsInSecondLife = true;
 			}
 		}
 	}
@@ -2051,19 +2038,6 @@ std::string LLGridManager::getAppSLURLBase(const std::string& grid)
 	}
 	LL_DEBUGS("GridManager") << "returning '" << grid_base << "'" << LL_ENDL;
 	return grid_base;
-}
-bool LLGridManager::isInSLMain()
-{
-	return mIsInSLMain;
-}
-
-bool LLGridManager::isInSLBeta()
-{
-	return mIsInSLBeta;
-}
-bool LLGridManager::isInOpenSim()
-{
-	return mIsInOpenSim;
 }
 
 #endif
