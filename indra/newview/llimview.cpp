@@ -2620,6 +2620,9 @@ LLIMMgr::LLIMMgr()
 	mPendingAgentListUpdates = LLSD::emptyMap();
 
 	LLIMModel::getInstance()->addNewMsgCallback(boost::bind(&LLFloaterIMSession::sRemoveTypingIndicator, _1));
+//MK
+	mIgnoreStartIm = FALSE;
+//mk
 }
 
 // Add a message to a session. 
@@ -2843,7 +2846,7 @@ LLUUID LLIMMgr::addSession(
 	std::vector<LLUUID> ids;
 	ids.push_back(other_participant_id);
 //MK
-	if (gRRenabled && (gAgent.mRRInterface.containsWithoutException("startim", other_participant_id.asString())
+	if (gRRenabled && !mIgnoreStartIm && (gAgent.mRRInterface.containsWithoutException("startim", other_participant_id.asString())
 		|| gAgent.mRRInterface.contains ("startimto:"+other_participant_id.asString())))
 	{
 		return LLUUID::null;
