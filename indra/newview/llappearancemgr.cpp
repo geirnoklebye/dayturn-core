@@ -2145,8 +2145,6 @@ void LLAppearanceMgr::updateAgentWearables(LLWearableHoldingPattern* holder)
 				{
 					items.push_back(item);
 					wearables.push_back(wearable);
-					items.push_back(item);
-					wearables.push_back(wearable);
 				}
 			}
 		}
