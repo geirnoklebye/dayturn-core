@@ -210,7 +210,7 @@ LLPanelLogin::LLPanelLogin(const LLRect &rect,
 	
 	LLComboBox* server_choice_combo = getChild<LLComboBox>("server_combo");
 	server_choice_combo->setCommitCallback(boost::bind(&LLPanelLogin::onSelectServer, this));
-	
+
 	// Load all of the grids, sorted, and then add a bar and the current grid at the top
 	server_choice_combo->removeall();
 
@@ -312,7 +312,6 @@ void LLPanelLogin::addFavoritesToStartLocation()
 		if (!file.is_open()) return;
 	}
 	LLSDSerialize::fromXML(fav_llsd, file);
-
 	for (LLSD::map_const_iterator iter = fav_llsd.beginMap();
 		iter != fav_llsd.endMap(); ++iter)
 	{
@@ -638,7 +637,7 @@ void LLPanelLogin::updateLocationSelectorsVisibility()
 		{
 			server_combo->setVisible(show_server);
 		}
-	}	
+	}
 }
 
 // static - called from LLStartUp::setStartSLURL
@@ -694,8 +693,8 @@ void LLPanelLogin::onUpdateStartSLURL(const LLSLURL& new_start_slurl)
 			LLNotificationsUtil::add("InvalidLocationSLURL");
 			LL_WARNS("AppInit")<<"invalid LoginLocation:"<<new_start_slurl.asString()<<LL_ENDL;
 			location_combo->setTextEntry(LLStringUtil::null);
-		}
-	  }
+		}			
+	}
  	break;
 
 	case LLSLURL::HOME_LOCATION:
@@ -826,6 +825,14 @@ void LLPanelLogin::onClickConnect(void *)
 {
 	if (sInstance && sInstance->mCallback)
 	{
+//MK
+		// If the RLV is active, force logging at the last location, always.
+		if (gSavedSettings.getBOOL("RestrainedLove"))
+		{
+			std::string location = LLSLURL::SIM_LOCATION_LAST;
+			LLStartUp::setStartSLURL(location);
+		}
+//mk
 		// JC - Make sure the fields all get committed.
 		sInstance->setFocus(FALSE);
 
@@ -850,7 +857,7 @@ void LLPanelLogin::onClickConnect(void *)
 
 		std::string username = sInstance->getChild<LLUICtrl>("username_combo")->getValue().asString();
 		std::string password = sInstance->getChild<LLUICtrl>("password_edit")->getValue().asString();
-		
+
 		if(username.empty())
 		{
 			// user must type in something into the username field
@@ -953,7 +960,7 @@ void LLPanelLogin::updateServer()
 	
 			// update the login panel links 
 			bool system_grid = LLGridManager::getInstance()->isSystemGrid();
-
+	
 			// Want to vanish not only create_new_account_btn, but also the
 			// title text over it, so turn on/off the whole layout_panel element.
 			sInstance->getChild<LLLayoutPanel>("links")->setVisible(system_grid);
@@ -1010,7 +1017,7 @@ void LLPanelLogin::onSelectServer()
 	case 1: // home location
 		// do nothing - these are grid-agnostic locations
 		break;
-		
+
 	default:
 		{
 			std::string location = location_combo->getValue().asString();
@@ -1037,7 +1044,7 @@ void LLPanelLogin::onLocationSLURL()
 	LL_DEBUGS("AppInit")<<location<<LL_ENDL;
 
 	LLStartUp::setStartSLURL(location); // calls onUpdateStartSLURL, above 
-			}
+}
 
 // static
 bool LLPanelLogin::getShowFavorites()
