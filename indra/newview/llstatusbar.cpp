@@ -748,15 +748,9 @@ void LLStatusBar::onClickStreamToggle(void* data)
 			// 'false' means unpause
 			gAudiop->pauseInternetStream(false);
 		}
-		else {
-			if (gSavedSettings.getBOOL("MediaEnableFilter"))
-			{
-				LLViewerParcelMedia::filterAudioUrl(LLViewerMedia::getParcelAudioURL());
-			}
-			else
-			{
-				gAudiop->startInternetStream(LLViewerMedia::getParcelAudioURL());
-			}
+		else
+		{
+			gAudiop->startInternetStream(LLViewerMedia::getParcelAudioURL());
 		}
 	}
 	else

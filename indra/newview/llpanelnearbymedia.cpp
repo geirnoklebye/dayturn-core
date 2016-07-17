@@ -880,6 +880,7 @@ void LLPanelNearByMedia::onClickParcelMediaPause()
 	LLViewerParcelMedia::pause();
 }
 
+/*
 void LLPanelNearByMedia::onClickParcelAudioPlay()
 {
 	// User *explicitly* started the internet stream, so keep the stream
@@ -928,7 +929,7 @@ void LLPanelNearByMedia::onClickParcelAudioPause()
 	// 'true' means pause
 	gAudiop->pauseInternetStream(true);
 }
-## Zi: Media/Stream separation
+ ## Zi: Media/Stream separation
 */
 bool LLPanelNearByMedia::shouldShow(LLViewerMediaImpl* impl)
 {	
