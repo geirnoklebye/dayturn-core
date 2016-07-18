@@ -305,13 +305,6 @@ void LLVivoxVoiceClient::terminate()
 	{
 		killGateway();
 	}
-
-	// <FS:Ansariel> Delete useless Vivox logs on logout
-	if (gSavedSettings.getString("VivoxDebugLevel") == "0")
-	{
-		gDirUtilp->deleteFilesInDir(gDirUtilp->getExpandedFilename(LL_PATH_EXECUTABLE, ""), "VivoxVoiceService-*.log");
-	}
-	// </FS:Ansariel>
 }
 
 //---------------------------------------------------
@@ -421,18 +414,7 @@ bool viewerChoosesConnectionHandles()
 void LLVivoxVoiceClient::connectorCreate()
 {
 	std::ostringstream stream;
-	// <FS:Ansariel> Set custom Vivox log path everywhere necessary
-	//std::string logpath = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "");
-	std::string logpath = gSavedSettings.getString("VivoxLogDirectory");
-	if (logpath.empty())
-	{
-		logpath = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "");
-	}
-	if (LLStringUtil::endsWith(logpath, gDirUtilp->getDirDelimiter()))
-	{
-		logpath = logpath.substr(0, logpath.size() - gDirUtilp->getDirDelimiter().size());
-	}
-	// </FS:Ansariel>
+	std::string logpath = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "");
 	std::string loglevel = "0";
 	
 	// Transition to stateConnectorStarted when the connector handle comes back.
@@ -441,24 +423,14 @@ void LLVivoxVoiceClient::connectorCreate()
 	if(savedLogLevel != "0")
 	{
 		LL_DEBUGS("Voice") << "creating connector with logging enabled" << LL_ENDL;
-		// <FS:Ansariel> Fixing Vivox debug level
-		loglevel = savedLogLevel;
-		// </FS:Ansariel>
 	}
 
-    // <FS:ND> Check if using the old SLVoice for Linux. the SDK in that version is too old to handle the extra args
-    std::string strConnectorHandle;
-    if( viewerChoosesConnectionHandles() )
-        strConnectorHandle = "<ConnectorHandle>" + LLVivoxSecurity::getInstance()->connectorHandle() + "</ConnectorHandle>";
-    // </FS:ND>
-	
 	stream 
 	<< "<Request requestId=\"" << mCommandCookie++ << "\" action=\"Connector.Create.1\">"
 		<< "<ClientName>V2 SDK</ClientName>"
 		<< "<AccountManagementServer>" << mVoiceAccountServerURI << "</AccountManagementServer>"
 		<< "<Mode>Normal</Mode>"
-        << strConnectorHandle
-		// <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
+        // <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
 		<< (gSavedSettings.getBOOL("VoiceMultiInstance") ? "<MinimumPort>30000</MinimumPort><MaximumPort>50000</MaximumPort>" : "")
 		// </FS:Ansariel>
 		<< "<Logging>"
@@ -722,12 +694,6 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
                 log_folder = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "");
             }
 
-			// <FS:Ansariel> Strip trailing directory delimiter
-			if (LLStringUtil::endsWith(log_folder, gDirUtilp->getDirDelimiter()))
-			{
-				log_folder = log_folder.substr(0, log_folder.size() - gDirUtilp->getDirDelimiter().size());
-			}
-			// </FS:Ansariel>
             params.args.add("-lf");
             params.args.add(log_folder);
 
@@ -2671,10 +2637,6 @@ void LLVivoxVoiceClient::sendPositionAndVolumeUpdate(void)
 		LLVector3	earVelocity;
 		LLMatrix3	earRot;
 		
-		// <FS:Ansariel> Equal voice volume; by Tigh MacFanatic
-		if (mEarLocation != earLocSpeaker)
-		{
-		// </FS:Ansariel>
 		switch(mEarLocation)
 		{
 			case earLocCamera:
@@ -2707,9 +2669,6 @@ void LLVivoxVoiceClient::sendPositionAndVolumeUpdate(void)
 //		LL_DEBUGS("Voice") << "Sending listener position " << earPosition << LL_ENDL;
 		
 		oldSDKTransform(l, u, a, pos, vel);
-		// <FS:Ansariel> Equal voice volume; by Tigh MacFanatic
-		}
-		// </FS:Ansariel>
 		
         if (mHidden)
         {
@@ -3946,20 +3905,18 @@ void LLVivoxVoiceClient::auxAudioPropertiesEvent(F32 energy)
 void LLVivoxVoiceClient::muteListChanged()
 {
 	// The user's mute list has been updated.  Go through the current participant list and sync it with the mute list.
-	if(mAudioSession)
+	if (mAudioSession)
 	{
 		participantMap::iterator iter = mAudioSession->mParticipantsByURI.begin();
-		
-		for(; iter != mAudioSession->mParticipantsByURI.end(); iter++)
+
+		for (; iter != mAudioSession->mParticipantsByURI.end(); iter++)
 		{
 			participantStatePtr_t p(iter->second);
-			
+
 			// Check to see if this participant is on the mute list already
-			if(p->updateMuteState())
+			if (p->updateMuteState())
 			{
 				mAudioSession->mVolumeDirty = true;
-				// <FS:Ansariel> Add callback for user volume change
-				mUserVolumeUpdateSignal(p->mAvatarID);
 			}
 		}
 	}
@@ -4234,7 +4191,6 @@ bool LLVivoxVoiceClient::checkParcelChanged(bool update)
 				{
 					mCurrentParcelLocalID = parcelLocalID;
 					mCurrentRegionName = regionName;
-					mAreaVoiceDisabled = false;
 				}
 				return true;
 			}
@@ -4920,22 +4876,13 @@ void LLVivoxVoiceClient::setVoiceEnabled(bool enabled)
 	}
 }
 
-// <FS:Ansariel> Bypass LLCachedControls for voice status update
-//bool LLVivoxVoiceClient::voiceEnabled()
-bool LLVivoxVoiceClient::voiceEnabled(bool no_cache)
+bool LLVivoxVoiceClient::voiceEnabled()
 {
-	// <FS:Ansariel> Replace frequently called gSavedSettings
-	//return gSavedSettings.getBOOL("EnableVoiceChat") && !gSavedSettings.getBOOL("CmdLineDisableVoice");
-	if (no_cache)
-	{
-		return gSavedSettings.getBOOL("EnableVoiceChat") && !gSavedSettings.getBOOL("CmdLineDisableVoice");
-	}
+
 	static LLCachedControl<bool> sEnableVoiceChat(gSavedSettings, "EnableVoiceChat");
 	static LLCachedControl<bool> sCmdLineDisableVoice(gSavedSettings, "CmdLineDisableVoice");
 	return sEnableVoiceChat && !sCmdLineDisableVoice;
-	// </FS:Ansariel>
 }
-// </FS:Ansariel>
 
 void LLVivoxVoiceClient::setLipSyncEnabled(BOOL enabled)
 {
@@ -5137,8 +5084,6 @@ void LLVivoxVoiceClient::setUserVolume(const LLUUID& id, F32 volume)
 			participant->mVolume = llclamp(volume, LLVoiceClient::VOLUME_MIN, LLVoiceClient::VOLUME_MAX);
 			participant->mVolumeDirty = true;
 			mAudioSession->mVolumeDirty = true;
-			// <FS:Ansariel> Add callback for user volume change
-			mUserVolumeUpdateSignal(id);
 		}
 	}
 }
@@ -5747,11 +5692,8 @@ void LLVivoxVoiceClient::notifyStatusObservers(LLVoiceClientStatusObserver::ESta
 		&& status != LLVoiceClientStatusObserver::STATUS_LEFT_CHANNEL
 		&& status != LLVoiceClientStatusObserver::STATUS_VOICE_DISABLED)
 	{
-		// <FS:Ansariel> Bypass LLCachedControls for voice status update
-		//bool voice_status = LLVoiceClient::getInstance()->voiceEnabled() && LLVoiceClient::getInstance()->isVoiceWorking();
-		bool voice_status = LLVoiceClient::getInstance()->voiceEnabled(true) && LLVoiceClient::getInstance()->isVoiceWorking();
-		// </FS:Ansariel>
-
+		bool voice_status = LLVoiceClient::getInstance()->voiceEnabled() && LLVoiceClient::getInstance()->isVoiceWorking();
+		
 		gAgent.setVoiceConnected(voice_status);
 
 		if (voice_status)
