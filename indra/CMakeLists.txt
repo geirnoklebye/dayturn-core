@@ -128,7 +128,6 @@ endif (USE_BUGSPLAT)
 add_subdirectory(${VIEWER_PREFIX}newview)
   add_dependencies(viewer kokua-bin)
 
-add_subdirectory(${VIEWER_PREFIX}doxygen EXCLUDE_FROM_ALL)
 
 if (LL_TESTS)
   # Define after the custom targets are created so

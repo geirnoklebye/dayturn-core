@@ -96,7 +96,7 @@ Compilation
 
     Level Debug Syms    -gdwarf-2                "                   "
 
-    Optimization           -O3                  -O0                 -O0
+    Optimization           -O3                  -O3                 -O0
 
     PIC                -fPIC -DPIC               "                   "
 
