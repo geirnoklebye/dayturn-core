@@ -280,11 +280,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c59749f019f13b198bcb22ea30bb9ada</string>
+              <string>b2271aaf49210b7346c612492b36d903</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/316951/arch/Darwin/installer/boost-1.57-darwin64-316951.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/317807/arch/Darwin/installer/boost-1.57-darwin64-317807.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -322,9 +322,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>eef5afdba83fa4403f246b4f551c7dcd</string>
+              <string>f54be5e7a42742a80932f1cb4d9c1c4c</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/316951/arch/CYGWIN/installer/boost-1.57-windows-316951.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/317807/arch/CYGWIN/installer/boost-1.57-windows-317807.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -334,11 +334,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>34935d95fd67d7db2ab89ee4c18c16c5</string>
+              <string>228fba9e3b62044de3b2e5a5e2977a06</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/316951/arch/CYGWIN/installer/boost-1.57-windows64-316951.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/317807/arch/CYGWIN/installer/boost-1.57-windows64-317807.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
