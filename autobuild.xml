@@ -1573,11 +1573,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b9c6eb4cf7fe48172a566ce0307d3c61</string>
+              <string>cb7ee4b54e14dee34c61547783f177b3</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-googlemock/rev/316979/arch/Darwin/installer/googlemock-1.7.0.316979-darwin64-316979.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-googlemock/rev/317828/arch/Darwin/installer/googlemock-1.7.0.317828-darwin64-317828.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -1615,9 +1615,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f30de5bf36e8ca8681883fe8fd8e0092</string>
+              <string>78e78331d0fcedfceae195f5531383e8</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/googlemock_3p-update-googlemock/rev/297460/arch/CYGWIN/installer/googlemock-1.7.0.297460-windows-297460.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-googlemock/rev/317828/arch/CYGWIN/installer/googlemock-1.7.0.317828-windows-317828.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1627,18 +1627,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5014823154fafb27cd9a0451049259f4</string>
+              <string>700de1d5ac0fc2f99f03c06ef352afdc</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-googlemock/rev/316979/arch/CYGWIN/installer/googlemock-1.7.0.316979-windows64-316979.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-googlemock/rev/317828/arch/CYGWIN/installer/googlemock-1.7.0.317828-windows64-317828.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.7.0.316979</string>
+        <string>1.7.0.317828</string>
       </map>
       <key>gstreamer</key>
       <map>
