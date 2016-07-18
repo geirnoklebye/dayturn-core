@@ -3053,11 +3053,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fc20b7a69bf4b3ed0152c569f51f614d</string>
+              <string>6e7b0961d6489a1b3c3090eccfd6e80e</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-4.5.0009.17865.201506251848-linux-201506251848.tar.bz2</string>
+              <string>http://downloads.phoenixviewer.com/slvoice-3.2.0002.10426.298329-linux-20160717.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>

@@ -171,7 +171,10 @@ public:
 	/////////////////////////
 	/// @name enable disable voice and features
 	//@{
-	virtual bool voiceEnabled();
+	// <FS:Ansariel> Bypass LLCachedControls for voice status update
+	//virtual bool voiceEnabled();
+	virtual bool voiceEnabled(bool no_cache = false);
+	// </FS:Ansariel>
 	virtual void setVoiceEnabled(bool enabled);
 	virtual BOOL lipSyncEnabled();	
 	virtual void setLipSyncEnabled(BOOL enabled);
@@ -205,6 +208,13 @@ public:
 	virtual void removeObserver(LLFriendObserver* observer);		
 	virtual void addObserver(LLVoiceClientParticipantObserver* observer);
 	virtual void removeObserver(LLVoiceClientParticipantObserver* observer);
+
+	// <FS:Ansariel> Add callback for user volume change
+	boost::signals2::connection setUserVolumeUpdateCallback(const user_voice_volume_change_callback_t::slot_type& cb)
+	{
+		return mUserVolumeUpdateSignal.connect(cb);
+	}
+	// </FS:Ansariel>
 	//@}
 	
 	virtual std::string sipURIFromID(const LLUUID &id);
@@ -696,7 +706,7 @@ private:
 
 	S32 mCurrentParcelLocalID;			// Used to detect parcel boundary crossings
 	std::string mCurrentRegionName;		// Used to detect parcel boundary crossings
-	
+	bool mRegionHasVoice;
     bool mConnectorEstablished; // set by "Create Connector" response
     bool mAccountLoggedIn;		// set by login message		
 	int  mNumberOfAliases;
@@ -786,6 +796,9 @@ private:
 	{
 		earLocCamera = 0,		// ear at camera
 		earLocAvatar,			// ear at avatar
+		// <FS:Ansariel> Equal voice volume; by Tigh MacFanatic
+		earLocSpeaker,			// ear at speaker, speakers not affected by position
+		// </FS:Ansariel>
 		earLocMixed				// ear at avatar location/camera direction
 	};
 	
@@ -818,6 +831,9 @@ private:
 	typedef std::set<LLFriendObserver*> friend_observer_set_t;
 	friend_observer_set_t mFriendObservers;
 	void notifyFriendObservers();
+
+	// <FS:Ansariel> Add callback for user volume change
+	user_voice_volume_change_callback_t mUserVolumeUpdateSignal;
 
 	// Voice Fonts
 
@@ -1034,6 +1050,11 @@ class LLVivoxSecurity :	public LLSingleton<LLVivoxSecurity>
     std::string     connectorHandle() { return mConnectorHandle; };
     std::string     accountHandle()    { return mAccountHandle;    };
 
+    // <FS:ND> For the old Vivox SDK used on Linux
+    void setConnectorHandle(const std::string& handle) { mConnectorHandle = handle; }
+    void setAccountHandle(const std::string& handle) { mAccountHandle = handle; }
+    // </FS:ND>
+	
   private:
     std::string     mConnectorHandle;
     std::string     mAccountHandle;

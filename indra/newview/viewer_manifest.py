@@ -1272,7 +1272,7 @@ class LinuxManifest(ViewerManifest):
     def strip_binaries(self):
         if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
             print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
-            self.run_command(r"find %(d)r/bin %(d)r/lib %(d)r/lib32 %(d)r/lib64 -type f \! -name update_install \! -name *.pak \! -name *.dat \! -name *.bin | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
+            self.run_command(r"find %(d)r/bin %(d)r/lib %(d)r/lib32 %(d)r/lib64 -type f \! -name update_install \! -name *.pak \! -name *.dat \! -name *.bin \! -path '*win32*'| xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
 
 
 
@@ -1484,6 +1484,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
             # Vivox runtimes
             if self.prefix(src="../packages/lib/release", dst="bin"):
                     self.path("SLVoice")
+                    self.path("win32")
                     self.end_prefix()
             if self.prefix(src="../packages/lib/release", dst="lib32"):
                     self.path("libortp.so")
