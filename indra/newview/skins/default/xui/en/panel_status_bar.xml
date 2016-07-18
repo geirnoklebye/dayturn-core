@@ -60,7 +60,7 @@
             follows="top|left"
             layout="topleft"
             height="19"
-            width="155"
+            width="135"
             auto_resize="false"
             user_resize="false"
             visible="true">
@@ -105,7 +105,7 @@
             follows="top|left"
             layout="topleft"
             height="19"
-            width="155"
+            width="190"
             auto_resize="false"
             user_resize="false"
             visible="true">
@@ -124,6 +124,14 @@
                 text_readonly_color="TimeTextColor">
                 --:--
             </text>
+            <icon
+             follows="right|top"
+             height="16"
+             image_name="Presets_Icon"
+             left_pad="8"
+             top="2"
+             name="presets_icon"
+             width="18" />
         </layout_panel>
 
         <layout_panel
@@ -142,7 +150,7 @@
                 width="16"
                 height="16"
                 top="2"
-                left="10"
+                left="4"
                 image_selected="Music_Off"
                 image_unselected="Pause_Off"
                 image_pressed="Pause_Press"
