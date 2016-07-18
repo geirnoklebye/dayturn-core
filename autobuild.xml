@@ -420,11 +420,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>14900c097f740fd18d1d1b582f0c849b</string>
+              <string>d0a18ab688d8961a6a794e9d3cdf2f6c</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/316978/arch/Darwin/installer/colladadom-2.3.316978-darwin64-316978.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/317826/arch/Darwin/installer/colladadom-2.3.317826-darwin64-317826.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -458,9 +458,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>24e1fac1fd6feef7915c958687fd7c56</string>
+              <string>6c0bb83ab8c0ad018e8eb93e8a33bd36</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/colladadom_3p-update-colladadom/rev/301371/arch/CYGWIN/installer/colladadom-2.3.301371-windows-301371.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/317826/arch/CYGWIN/installer/colladadom-2.3.317826-windows-317826.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -470,18 +470,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>61835052b807e5d1e2ee651fe464e9de</string>
+              <string>43cc41eb9b81e4729e60550fa8822c79</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/316978/arch/CYGWIN/installer/colladadom-2.3.316978-windows64-316978.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/317826/arch/CYGWIN/installer/colladadom-2.3.317826-windows64-317826.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>2.3.316978</string>
+        <string>2.3.317826</string>
       </map>
       <key>curl</key>
       <map>
