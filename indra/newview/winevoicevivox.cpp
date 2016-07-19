@@ -388,6 +388,26 @@ bool LLVivoxVoiceClient::writeString(const std::string &str)
 	return result;
 }
 
+// <FS:ND> On Linux the viewer can run SLVoice.exe through wine (https://www.winehq.org/)
+// Vivox does not support Linux anymore and the SDK SLVoice for Linux uses is old and according to LL
+// will stop working 'soon' (as of 2016-07-17). See also FIRE-19663
+bool viewerUsesWineForVoice()
+{
+#ifndef LL_LINUX
+    return false;
+#else
+    static LLCachedControl<bool> sEnableVoiceChat(gSavedSettings, "FSLinuxEnableWin32VoiceProxy" );
+
+    return sEnableVoiceChat;
+#endif
+}
+
+bool viewerChoosesConnectionHandles()
+{
+    return viewerUsesWineForVoice();
+}
+// </FS:ND>
+
 
 /////////////////////////////
 // session control messages
@@ -404,14 +424,13 @@ void LLVivoxVoiceClient::connectorCreate()
 	{
 		LL_DEBUGS("Voice") << "creating connector with logging enabled" << LL_ENDL;
 	}
-	
+
 	stream 
 	<< "<Request requestId=\"" << mCommandCookie++ << "\" action=\"Connector.Create.1\">"
 		<< "<ClientName>V2 SDK</ClientName>"
 		<< "<AccountManagementServer>" << mVoiceAccountServerURI << "</AccountManagementServer>"
 		<< "<Mode>Normal</Mode>"
-        << "<ConnectorHandle>" << LLVivoxSecurity::getInstance()->connectorHandle() << "</ConnectorHandle>"
-		// <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
+        // <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
 		<< (gSavedSettings.getBOOL("VoiceMultiInstance") ? "<MinimumPort>30000</MinimumPort><MaximumPort>50000</MaximumPort>" : "")
 		// </FS:Ansariel>
 		<< "<Logging>"
@@ -430,7 +449,10 @@ void LLVivoxVoiceClient::connectorCreate()
 
 void LLVivoxVoiceClient::connectorShutdown()
 {
-	if(!mConnectorEstablished)
+	// <FS:Ansariel> Voice fix
+	//if(!mConnectorEstablished)
+	if(mConnectorEstablished)
+	// </FS:Ansariel>
 	{
 		std::ostringstream stream;
 		stream
@@ -465,19 +487,19 @@ void LLVivoxVoiceClient::setLoginInfo(
 	mVoiceSIPURIHostName = voice_sip_uri_hostname;
 	mVoiceAccountServerURI = voice_account_server_uri;
 
-	if (mAccountLoggedIn)
+	if(mAccountLoggedIn)
 	{
 		// Already logged in.
 		LL_WARNS("Voice") << "Called while already logged in." << LL_ENDL;
-
+		
 		// Don't process another login.
 		return;
 	}
-	else if (account_name != mAccountName)
+	else if ( account_name != mAccountName )
 	{
 		//TODO: error?
 		LL_WARNS("Voice") << "Wrong account name! " << account_name
-			<< " instead of " << mAccountName << LL_ENDL;
+				<< " instead of " << mAccountName << LL_ENDL;
 	}
 	else
 	{
@@ -485,18 +507,18 @@ void LLVivoxVoiceClient::setLoginInfo(
 	}
 
 	std::string debugSIPURIHostName = gSavedSettings.getString("VivoxDebugSIPURIHostName");
-
-	if (!debugSIPURIHostName.empty())
+	
+	if( !debugSIPURIHostName.empty() )
 	{
 		mVoiceSIPURIHostName = debugSIPURIHostName;
 	}
-
-	if (mVoiceSIPURIHostName.empty())
+	
+	if( mVoiceSIPURIHostName.empty() )
 	{
 		// we have an empty account server name
 		// so we fall back to hardcoded defaults
 
-		if (!LLGridManager::getInstance()->isInSLBeta())
+		if(!LLGridManager::getInstance()->isInSLBeta())
 		{
 			// Use the release account server
 			mVoiceSIPURIHostName = "bhr.vivox.com";
@@ -507,18 +529,18 @@ void LLVivoxVoiceClient::setLoginInfo(
 			mVoiceSIPURIHostName = "bhd.vivox.com";
 		}
 	}
-
+	
 	std::string debugAccountServerURI = gSavedSettings.getString("VivoxDebugVoiceAccountServerURI");
 
-	if (!debugAccountServerURI.empty())
+	if( !debugAccountServerURI.empty() )
 	{
 		mVoiceAccountServerURI = debugAccountServerURI;
 	}
-
-	if (mVoiceAccountServerURI.empty())
+	
+	if( mVoiceAccountServerURI.empty() )
 	{
 		// If the account server URI isn't specified, construct it from the SIP URI hostname
-		mVoiceAccountServerURI = "https://www." + mVoiceSIPURIHostName + "/api2/";
+		mVoiceAccountServerURI = "https://www." + mVoiceSIPURIHostName + "/api2/";		
 	}
 }
 
@@ -628,7 +650,13 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
 #elif LL_DARWIN
         exe_path += "../Resources/SLVoice";
 #else
-        exe_path += "SLVoice";
+        // <FS:ND> On Linux the viewer can run SLVoice.exe through wine (https://www.winehq.org/)
+        // exe_path += "SLVoice";
+        if( !viewerUsesWineForVoice() )
+            exe_path += "SLVoice"; // native version
+        else
+            exe_path += "win32/SLVoice.exe"; // use bundled win32 version
+        // </FS:ND>
 #endif
         // See if the vivox executable exists
         llstat s;
@@ -636,8 +664,19 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
         {
             // vivox executable exists.  Build the command line and launch the daemon.
             LLProcess::Params params;
+
+			// <FS:ND> On Linux the viewer can run SLVoice.exe through wine (https://www.winehq.org/)
             params.executable = exe_path;
 
+            if( !viewerUsesWineForVoice() )
+                params.executable = exe_path;
+            else
+            {
+                params.executable = "wine";
+                params.args.add( exe_path );
+            }
+            //</FS:ND>
+			
             std::string loglevel = gSavedSettings.getString("VivoxDebugLevel");
             std::string shutdown_timeout = gSavedSettings.getString("VivoxShutdownTimeout");
             if (loglevel.empty())
@@ -655,12 +694,6 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
                 log_folder = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "");
             }
 
-			// <FS:Ansariel> Strip trailing directory delimiter
-			if (LLStringUtil::endsWith(log_folder, gDirUtilp->getDirDelimiter()))
-			{
-				log_folder = log_folder.substr(0, log_folder.size() - gDirUtilp->getDirDelimiter().size());
-			}
-			// </FS:Ansariel>
             params.args.add("-lf");
             params.args.add(log_folder);
 
@@ -669,21 +702,26 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
                 params.args.add("-st");
                 params.args.add(shutdown_timeout);
             }
-						// <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
-						if (gSavedSettings.getBOOL("VoiceMultiInstance"))
-						{
-							S32 port_nr = 30000 + ll_rand(20000);
-							LLControlVariable* voice_port = gSavedSettings.getControl("VivoxVoicePort");
-							if (voice_port)
-							{
-								voice_port->setValue(LLSD(port_nr), false);
-								params.args.add("-i");
-								params.args.add(llformat("127.0.0.1:%u",  gSavedSettings.getU32("VivoxVoicePort")));
-							}
-						}
-						// </FS:Ansariel>
+
+			// <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
+			if (gSavedSettings.getBOOL("VoiceMultiInstance"))
+			{
+				S32 port_nr = 30000 + ll_rand(20000);
+				LLControlVariable* voice_port = gSavedSettings.getControl("VivoxVoicePort");
+				if (voice_port)
+				{
+					voice_port->setValue(LLSD(port_nr), false);
+					params.args.add("-i");
+					params.args.add(llformat("127.0.0.1:%u",  gSavedSettings.getU32("VivoxVoicePort")));
+				}
+			}
+			// </FS:Ansariel>
+
+
             params.cwd = gDirUtilp->getAppRODataDir();
 
+            // <FS:ND> Check if using the old SLVoice for Linux. the SDK in that version is too old to handle the extra args
+            if( viewerChoosesConnectionHandles() ) { // </FS:ND>
 #           ifdef VIVOX_HANDLE_ARGS
             params.args.add("-ah");
             params.args.add(LLVivoxSecurity::getInstance()->accountHandle());
@@ -691,6 +729,7 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
             params.args.add("-ch");
             params.args.add(LLVivoxSecurity::getInstance()->connectorHandle());
 #           endif // VIVOX_HANDLE_ARGS
+			} // <FS:ND/> 
 
             sGatewayPtr = LLProcess::create(params);
 
@@ -961,14 +1000,17 @@ bool LLVivoxVoiceClient::loginToVivox()
                     errs << mVoiceAccountServerURI << "\n:UDP: 3478, 3479, 5060, 5062, 12000-17000";
                     args["HOSTID"] = errs.str();
                     mTerminateDaemon = true;
-                    if (LLGridManager::getInstance()->isSystemGrid())
-                    {
-                        LLNotificationsUtil::add("NoVoiceConnect", args);
-                    }
-                    else
-                    {
-                        LLNotificationsUtil::add("NoVoiceConnect-GIAB", args);
-                    }
+                    // <FS:Ansariel> FIRE-13130 / FIRE-19552: Unknown notification "NoVoiceConnect-GIAB"
+                    //if (LLGridManager::getInstance()->isSystemGrid())
+                    //{
+                    //    LLNotificationsUtil::add("NoVoiceConnect", args);
+                    //}
+                    //else
+                    //{
+                    //    LLNotificationsUtil::add("NoVoiceConnect-GIAB", args);
+                    //}
+                    LLNotificationsUtil::add("NoVoiceConnect", args);
+                    // </FS:Ansariel>
 
                     mIsLoggingIn = false;
                     return false;
@@ -1851,12 +1893,18 @@ void LLVivoxVoiceClient::loginSendMessage()
 
 	bool autoPostCrashDumps = gSavedSettings.getBOOL("VivoxAutoPostCrashDumps");
 
+    // <FS:ND> Check if using the old SLVoice for Linux. the SDK in that version is too old to handle the extra args
+    std::string strAccountHandle;
+    if( viewerChoosesConnectionHandles() )
+        strAccountHandle = "<AccountHandle>" +  LLVivoxSecurity::getInstance()->accountHandle() + "</AccountHandle>";
+    // </FS:ND>
+    
 	stream
 	<< "<Request requestId=\"" << mCommandCookie++ << "\" action=\"Account.Login.1\">"
 		<< "<ConnectorHandle>" << LLVivoxSecurity::getInstance()->connectorHandle() << "</ConnectorHandle>"
 		<< "<AccountName>" << mAccountName << "</AccountName>"
         << "<AccountPassword>" << mAccountPassword << "</AccountPassword>"
-        << "<AccountHandle>" << LLVivoxSecurity::getInstance()->accountHandle() << "</AccountHandle>"
+        << strAccountHandle
 		<< "<AudioSessionAnswerMode>VerifyAnswer</AudioSessionAnswerMode>"
 		<< "<EnableBuddiesAndPresence>false</EnableBuddiesAndPresence>"
 		<< "<EnablePresencePersistence>0</EnablePresencePersistence>"
@@ -2853,20 +2901,25 @@ void LLVivoxVoiceClient::connectorCreateResponse(int statusCode, std::string &st
 		errs << mVoiceAccountServerURI << "\n:UDP: 3478, 3479, 5060, 5062, 12000-17000";
 		args["HOSTID"] = errs.str();
 		mTerminateDaemon = true;
-		if (LLGridManager::getInstance()->isSystemGrid())
-		{
-			LLNotificationsUtil::add("NoVoiceConnect", args);	
-		}
-		else
-		{
-			LLNotificationsUtil::add("NoVoiceConnect-GIAB", args);	
-		}
+		// <FS:Ansariel> FIRE-13130 / FIRE-19552: Unknown notification "NoVoiceConnect-GIAB"
+		//if (LLGridManager::getInstance()->isSystemGrid())
+		//{
+		//	LLNotificationsUtil::add("NoVoiceConnect", args);	
+		//}
+		//else
+		//{
+		//	LLNotificationsUtil::add("NoVoiceConnect-GIAB", args);	
+		//}
+		LLNotificationsUtil::add("NoVoiceConnect", args);
+		// </FS:Ansariel>
 
         result["connector"] = LLSD::Boolean(false);
 	}
 	else
 	{
 		// Connector created, move forward.
+        // <FS:ND> Check if using the old SLVoice for Linux. the SDK in that version is too old to handle the extra args
+        if( viewerChoosesConnectionHandles() ) { // </FS:ND>
         if (connectorHandle == LLVivoxSecurity::getInstance()->connectorHandle())
         {
             LL_INFOS("Voice") << "Connector.Create succeeded, Vivox SDK version is " << versionID << " connector handle " << connectorHandle << LL_ENDL;
@@ -2884,6 +2937,15 @@ void LLVivoxVoiceClient::connectorCreateResponse(int statusCode, std::string &st
                               << LL_ENDL;
             result["connector"] = LLSD::Boolean(false);
         }
+		} else { // <FS:ND/> For old Linux Voice
+		LL_INFOS("Voice") << "Connector.Create succeeded, Vivox SDK version is " << versionID << LL_ENDL;
+		mVoiceVersion.serverVersion = versionID;
+		LLVivoxSecurity::getInstance()->setConnectorHandle(connectorHandle);
+		mConnectorEstablished = true;
+		mTerminateDaemon = false;
+
+		result["connector"] = LLSD::Boolean(true);
+		} // <FS:ND/> For old Linux voice
 	}
 
     LLEventPumps::instance().post("vivoxClientPump", result);
@@ -2911,6 +2973,11 @@ void LLVivoxVoiceClient::loginResponse(int statusCode, std::string &statusString
 	else
 	{
 		// Login succeeded, move forward.
+
+        // <FS:ND> Check if using the old SLVoice for Linux.
+        if( !viewerChoosesConnectionHandles() )
+            LLVivoxSecurity::getInstance()->setAccountHandle(accountHandle);
+        // </FS:ND>
 		mAccountLoggedIn = true;
 		mNumberOfAliases = numberOfAliases;
         result["login"] = LLSD::String("response_ok");
@@ -3838,17 +3905,19 @@ void LLVivoxVoiceClient::auxAudioPropertiesEvent(F32 energy)
 void LLVivoxVoiceClient::muteListChanged()
 {
 	// The user's mute list has been updated.  Go through the current participant list and sync it with the mute list.
-	if(mAudioSession)
+	if (mAudioSession)
 	{
 		participantMap::iterator iter = mAudioSession->mParticipantsByURI.begin();
-		
-		for(; iter != mAudioSession->mParticipantsByURI.end(); iter++)
+
+		for (; iter != mAudioSession->mParticipantsByURI.end(); iter++)
 		{
 			participantStatePtr_t p(iter->second);
-			
+
 			// Check to see if this participant is on the mute list already
-			if(p->updateMuteState())
+			if (p->updateMuteState())
+			{
 				mAudioSession->mVolumeDirty = true;
+			}
 		}
 	}
 }
@@ -4809,7 +4878,10 @@ void LLVivoxVoiceClient::setVoiceEnabled(bool enabled)
 
 bool LLVivoxVoiceClient::voiceEnabled()
 {
-	return gSavedSettings.getBOOL("EnableVoiceChat") && !gSavedSettings.getBOOL("CmdLineDisableVoice");
+
+	static LLCachedControl<bool> sEnableVoiceChat(gSavedSettings, "EnableVoiceChat");
+	static LLCachedControl<bool> sCmdLineDisableVoice(gSavedSettings, "CmdLineDisableVoice");
+	return sEnableVoiceChat && !sCmdLineDisableVoice;
 }
 
 void LLVivoxVoiceClient::setLipSyncEnabled(BOOL enabled)
@@ -5621,7 +5693,7 @@ void LLVivoxVoiceClient::notifyStatusObservers(LLVoiceClientStatusObserver::ESta
 		&& status != LLVoiceClientStatusObserver::STATUS_VOICE_DISABLED)
 	{
 		bool voice_status = LLVoiceClient::getInstance()->voiceEnabled() && LLVoiceClient::getInstance()->isVoiceWorking();
-
+		
 		gAgent.setVoiceConnected(voice_status);
 
 		if (voice_status)
