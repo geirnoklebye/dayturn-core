@@ -191,7 +191,7 @@ BOOL LLToolGrab::handleObjectHit(const LLPickInfo& info)
 	mGrabPick = info;
 	LLViewerObject* objectp = mGrabPick.getObject();
 //MK
-	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	if (gRRenabled && (!gAgent.mRRInterface.canTouch(objectp, mGrabPick.mIntersection) || gAgent.mRRInterface.mContainsEdit))
 	{
 		// hide grab tool immediately
 		if (gGrabTransientTool)
@@ -347,7 +347,7 @@ void LLToolGrab::startSpin()
 	LLViewerObject *root = (LLViewerObject *)objectp->getRoot();
 	mSpinRotation = root->getRotation();
 //MK
-	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	if (gRRenabled && (!gAgent.mRRInterface.canTouch(objectp, mGrabPick.mIntersection) || gAgent.mRRInterface.mContainsEdit))
 	{
 		return;
 	}
@@ -414,7 +414,7 @@ void LLToolGrab::startGrab()
 	LLVector3d grab_start_global = root->getPositionGlobal();
 
 //MK
-	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	if (gRRenabled && (!gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection) || gAgent.mRRInterface.mContainsEdit))
 	{
 		return;
 	}
@@ -521,7 +521,7 @@ void LLToolGrab::handleHoverActive(S32 x, S32 y, MASK mask)
 	}
 
 //MK
-	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
+	if (gRRenabled && (!gAgent.mRRInterface.canTouch(objectp, mGrabPick.mIntersection) || gAgent.mRRInterface.mContainsEdit))
 	{
 		return;
 	}
@@ -1089,13 +1089,6 @@ void LLToolGrab::stopGrab()
 	{
 		return;
 	}
-
-//MK
-	if (gRRenabled && !gAgent.mRRInterface.canTouch (objectp, mGrabPick.mIntersection))
-	{
-		return;
-	}
-//mk
 
 	LLPickInfo pick = mGrabPick;
 
