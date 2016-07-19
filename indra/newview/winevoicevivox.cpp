@@ -26,7 +26,7 @@
 
 #include "llviewerprecompiledheaders.h"
 #include <algorithm>
-#include "llvoicevivox.h"
+#include "winevoicevivox.h"
 
 #include "llsdutil.h"
 
