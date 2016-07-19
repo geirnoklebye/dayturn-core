@@ -1381,6 +1381,7 @@ class Linux_i686_Manifest(LinuxManifest):
             # Vivox runtimes
             if self.prefix(src=relpkgdir, dst="bin"):
                 self.path("SLVoice")
+                self.path("win32")
                 self.end_prefix()
             if self.prefix(src=relpkgdir, dst="lib"):
                 self.path("libortp.so")
