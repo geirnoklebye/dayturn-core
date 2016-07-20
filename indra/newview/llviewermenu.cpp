@@ -8806,6 +8806,16 @@ class LLViewHighlightTransparent : public view_listener_t
 		{
 			return true;
 		}
+		// Hack : If we activate the highlighting, force updating all the objects so we're sure to see the transparent ones as well.
+		S32 i;
+		for (i = 0; i<gObjectList.getNumObjects(); ++i) {
+			LLViewerObject* object = gObjectList.getObject(i);
+			if (object) {
+				//object->setSelected(FALSE);
+				object->dirtySpatialGroup();
+			}
+		}
+		gPipeline.rebuildGroups();
 //mk
 		LLDrawPoolAlpha::sShowDebugAlpha = !LLDrawPoolAlpha::sShowDebugAlpha;
 		return true;

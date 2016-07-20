@@ -5898,6 +5898,13 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 				++face_iter;
 				continue;
 			}
+
+			// Do not render faces which alpha is 0, unless we highlight transparent.
+			if (!LLDrawPoolAlpha::sShowDebugAlpha && te->getColor().mV[3] <= 0.001f)
+			{
+				++face_iter;
+				continue;
+			}
 //mk
 			if (mat && LLPipeline::sRenderDeferred && !hud_group)
 			{
