@@ -135,6 +135,10 @@ BOOL LLToolCamera::handleMouseDown(S32 x, S32 y, MASK mask)
 
 	gViewerWindow->hideCursor();
 
+//MK
+	gViewerWindow->mPickThroughHuds = TRUE;
+//mk
+
 	gViewerWindow->pickAsync(x, y, mask, pickCallback, /*BOOL pick_transparent*/ FALSE, /*BOOL pick_rigged*/ FALSE, /*BOOL pick_unselectable*/ TRUE);
 
 	return TRUE;
@@ -244,6 +248,9 @@ void LLToolCamera::pickCallback(const LLPickInfo& pick_info)
 
 		gAgentCamera.setCameraPosAndFocusGlobal( cam_pos, pick_info.mPosGlobal, pick_info.mObjectID);
 	}
+//MK
+	gViewerWindow->mPickThroughHuds = FALSE;
+//mk
 }
 
 
