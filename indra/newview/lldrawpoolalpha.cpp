@@ -381,9 +381,6 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 		if (group->getSpatialPartition()->mRenderByGroup &&
 		    !group->isDead())
 		{
-//MK
-			bool is_hud = group->getSpatialPartition()->mPartitionType == LLViewerRegion::PARTITION_HUD;
-//mk
 			bool is_particle_or_hud_particle = group->getSpatialPartition()->mPartitionType == LLViewerRegion::PARTITION_PARTICLE
 													  || group->getSpatialPartition()->mPartitionType == LLViewerRegion::PARTITION_HUD_PARTICLE;
 
@@ -406,23 +403,6 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 					LL_WARNS() << "Missing required components, skipping render batch." << LL_ENDL;
 					continue;
 				}
-
-//MK
-				// Do not render faces which alpha is 0, unless we highlight transparent or the surface is on a HUD.
-				if (!sShowDebugAlpha && !is_hud)
-				{
-					LLFace*	face = params.mFace;
-					if (face)
-					{
-						const LLTextureEntry* tep = face->getTextureEntry();
-						if (tep)
-						{
-							if (tep->getColor().mV[3] < 0.01f)
-								continue;
-						}
-					}
-				}
-//mk
 
 				// Fix for bug - NORSPEC-271
 				// If the face is more than 90% transparent, then don't update the Depth buffer for Dof
