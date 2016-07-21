@@ -315,6 +315,17 @@
 		width="110"/>
 	<!-- -->
 	<check_box
+        name="audio_auto_play_btn"
+        control_name="FSParcelMusicAutoPlay"
+        enabled_control="AudioStreamingMedia"
+        layout="topleft"
+        height="16"
+        width="230"
+        tool_tip="Check this to automatically start audio streams."
+        label="Allow Audio to auto-play"
+        top_pad="5"
+        left="25"/>
+    <check_box
 		name="media_auto_play_btn"
 		control_name="ParcelMediaAutoPlayEnable"
 		enabled_control="AudioStreamingMedia"
