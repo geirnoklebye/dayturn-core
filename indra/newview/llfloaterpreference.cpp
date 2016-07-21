@@ -2589,14 +2589,19 @@ void LLPanelPreference::updateMediaAutoPlayCheckbox(LLUICtrl* ctrl)
 
 	// Disable "Allow Media to auto play" only when both
 	// "Streaming Music" and "Media" are unchecked. STORM-513.
-	if ((name == "enable_music") || (name == "enable_media"))
+	if ((name == "enable_media"))
 	{
-		bool music_enabled = getChild<LLCheckBoxCtrl>("enable_music")->get();
 		bool media_enabled = getChild<LLCheckBoxCtrl>("enable_media")->get();
 
-		getChild<LLCheckBoxCtrl>("media_auto_play_btn")->setEnabled(music_enabled || media_enabled);
+		getChild<LLCheckBoxCtrl>("media_auto_play_btn")->setEnabled( media_enabled );
 	}
 	//enable_music is confusing it is any click of the enable check mark
+	if ((name == "enable_music") )
+	{
+		bool music_enabled = getChild<LLCheckBoxCtrl>("enable_music")->get();
+
+		getChild<LLCheckBoxCtrl>("audio_auto_play_btn")->setEnabled( music_enabled );
+	}    
 	if (name == "enable_music" && LLViewerMedia::isParcelAudioPlaying())
 	{
 		LLViewerAudio::getInstance()->stopInternetStreamWithAutoFade();

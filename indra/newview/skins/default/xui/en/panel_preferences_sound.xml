@@ -317,7 +317,6 @@
 	<check_box
         name="audio_auto_play_btn"
         control_name="FSParcelMusicAutoPlay"
-        enabled_control="AudioStreamingMedia"
         layout="topleft"
         height="16"
         width="230"
@@ -328,7 +327,6 @@
     <check_box
 		name="media_auto_play_btn"
 		control_name="ParcelMediaAutoPlayEnable"
-		enabled_control="AudioStreamingMedia"
 		value="true"
 		follows="left|bottom|right"
 		height="15"
