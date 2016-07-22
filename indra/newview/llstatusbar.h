@@ -145,8 +145,8 @@ private:
 	static void onClickStreamToggle(void* data);		// ## Zi: Media/Stream separation
 	static void onClickMediaToggle(void* data);
 	static void onClickBalance(void* data);
-
-	class LLParcelChangeObserver;
+	// <FS:Ansariel> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
+	void onPopupRolloverChanged(const LLSD& newvalue);
 
 	friend class LLParcelChangeObserver;
 
@@ -263,7 +263,7 @@ private:
 
 	LLStatGraph	*mSGBandwidth;
 	LLStatGraph	*mSGPacketLoss;
-	LLIconCtrl	*mIconPresets;
+	LLButton	*mIconPresets;
 	LLButton	*mBtnVolume;
 	LLTextBox	*mBoxBalance;
 	LLButton	*mStreamToggle;		// ## Zi: Media/Stream separation
@@ -284,6 +284,11 @@ private:
 	LLPanelPresetsPulldown* mPanelPresetsPulldown;
 	LLPanelVolumePulldown* mPanelVolumePulldown;
 	LLPanelNearByMedia*	mPanelNearByMedia;
+	// <FS:Ansariel> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
+	boost::signals2::connection mMouseEnterPresetsConnection;
+	boost::signals2::connection mMouseEnterVolumeConnection;
+	boost::signals2::connection mMouseEnterNearbyMediaConnection;
+	// </FS:Ansariel
 	
 //MK
 	LLPanel* 				mParcelInfoPanel;
@@ -300,6 +305,10 @@ private:
 	boost::signals2::connection	mShowCoordsCtrlConnection;
 	boost::signals2::connection	mParcelMgrConnection;
 };
+
+
+
+
 
 // *HACK: Status bar owns your cached money balance. JC
 BOOL can_afford_transaction(S32 cost);
