@@ -17666,7 +17666,7 @@
     <key>FSStatusBarMenuButtonPopupOnRollover</key>
     <map>
       <key>Comment</key>
-      <string>Enable rollover popups on top status bar menu icons: Quick Graphics Presets, Volume, and Media. (Restart Required)</string>
+      <string>Enable rollover popups on top status bar menu icons: Quick Graphics Presets, Volume, and Media.</string>
        <key>Persist</key>
        <integer>1</integer>
        <key>Type</key>
