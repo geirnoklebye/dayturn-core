@@ -1,1502 +1,233 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <menu_bar name="Main Menu">
-    <menu label="Ablage"  name="File"> 
-            <menu_item_call label="Bild ([COST])..."   name="Upload Image"/>
-            <menu_item_call label="Sound ([COST])..."   name="Upload Sound"/>
-            <menu_item_call label="Animation ([COST])..."  name="Upload Animation"/>
-            <menu_item_call label="Mesh Modell..."  name="Upload Model"/>
-            <menu_item_call label="Mehrfach-Upload ([COST] pro Datei)..."  name="Bulk Upload"/>
-			<menu_item_call label="Standard-Berechtigungen einstellen..."  name="Set default permissions"/>
-            <menu_item_call label="Linkset importieren"  name="import linkset"/>
+    <menu label="Ablage"  name="File">
+            <menu label="Hochladen"  name="Upload">
+                <menu_item_call label="Bild ([COST])..."   name="Upload Image"/>
+                <menu_item_call label="Sound ([COST])..."   name="Upload Sound"/>
+                <menu_item_call label="Animation ([COST])..."  name="Upload Animation"/>
+                <menu_item_call label="Mesh Modell..."  name="Upload Model"/>
+                <menu_item_call label="Mehrfach-Hochladen ([COST] pro Datei)..."  name="Bulk Upload"/>
+			    <menu_item_call label="Standard-Berechtigungen einstellen..."  name="Set default permissions"/>
+                <menu_item_call label="Linkset importieren"  name="import linkset"/>
+            </menu>
             <menu_item_call label="Fenster schließen"  name="Close Window"/>
             <menu_item_call label="Alle Fenster schließen"  name="Close All Windows"/>
             <menu_item_call label="Foto"  name="Take Snapshot"/>
             <menu_item_call label="Foto auf Datenträger"  name="Snapshot to Disk"/>
+            <menu_item_call label="Admin-Status anfordern"  name="Request Admin Options"/>
             <menu_item_call label="Admin-Status verlassen"  name="Leave Admin Options"/>
             <menu_item_call label="Shließen [APP_NAME]"  name="Quit"/>
     </menu>
+    
+<!-- START OF EDIT MENU -->    
     <menu label="Bearbeiten" name="Edit">
+            <menu_item_call label="Suchen"  name="Search"/>
             <menu_item_call label="Kontoübersicht..."  name="Manage My Account"/>
             <menu_item_call label="L$ kaufen"  name="Buy and Sell L$"/>
-            <menu_item_call label="Profil"  name="Profile">
+            <menu_item_call label="Profil"  name="Profile"/>
 	        <menu_item_call label="Textur neu laden"  name="Rebake Texture"/>
-            <menu_item_call label="Aussehen...  name="ChangeOutfit"/>
+            <menu_item_call label="Aussehen..."  name="ChangeOutfit"/>
             <menu_item_check label="Inventar"  name="Inventory"/>
             <menu_item_check label="Gesten"  name="Gestures"/>
+            <menu label="Status" name="Status">
+                <menu_item_check label="My Voice"  name="ShowVoice"/>
+                <menu_item_call label="Abwesend"  name="Set Away"/>
+                <menu_item_check label="Nicht stören"  name="Do Not Disturb"/>
+            </menu>
+            <menu_item_call label="Freunde"  name="My Friends"/>
+            <menu_item_call label="Gruppen"  name="My Groups"/>
+	        <menu_item_call label="Einstellungen..."  name="Preferences"/>
     </menu>
-	<menu label="Status" name="Status">
-	        <menu_item_check label="My Voice"  name="ShowVoice"/>
-		    <menu_item_call label="Abwesend"  name="Set Away"/>
-            <menu_item_check label="Nicht stören"  name="Do Not Disturb"/>
-	</menu>
-        <menu_item_call
-         label="Friends"
-         name="My Friends"
-         shortcut="control|shift|F">
-            <menu_item_call.on_click
-             function="SideTray.PanelPeopleTab"
-             parameter="friends_panel" />
-            </menu_item_call>
-        <menu_item_call
-         label="Groups"
-         name="My Groups"
-         shortcut="control|shift|G">
-            <menu_item_call.on_click
-             function="SideTray.PanelPeopleTab"
-             parameter="groups_panel" />
-        </menu_item_call>
-        <menu_item_separator/>	
-	      <menu_item_call
-         label="Preferences"
-         name="Preferences"
-         shortcut="control|P">
-            <menu_item_call.on_click
-             function="Floater.Show"
-             parameter="preferences" />
-        </menu_item_call>
-    </menu>
-    <menu
-     create_jump_keys="true"
-     label="View"
-     name="View"
-     tear_off="true">
-            <menu_item_call
-             label="Mouselook"
-             name="Mouselook"
-             shortcut="M">
-                <menu_item_call.on_click
-                 function="View.Mouselook" />
-                <menu_item_call.on_enable
-                 function="View.EnableMouselook" />
-            </menu_item_call>
-            <menu_item_check
-             label="Joystick Flycam"
-             name="Joystick Flycam"
-             shortcut="alt|shift|F">
-                <menu_item_check.on_check
-                 function="View.CheckJoystickFlycam" />
-                <menu_item_check.on_click
-                 function="View.JoystickFlycam" />
-                <menu_item_check.on_enable
-                 function="View.EnableJoystickFlycam" />
-            </menu_item_check>
-            <menu_item_call
-             label="Reset View"
-             name="Reset View"
-             shortcut="Esc">
-                <menu_item_call.on_click
-                 function="View.ResetView" />
-            </menu_item_call>
-            <menu_item_call
-             label="Look at Last Chatter"
-             name="Look at Last Chatter"
-             shortcut="control|\">
-                <menu_item_call.on_click
-                 function="View.LookAtLastChatter" />
-                <menu_item_call.on_enable
-                 function="View.EnableLastChatter" />
-            </menu_item_call>
-           <menu_item_call
-           label="Toolbar buttons..."
-           name="Toolbars">
-              <menu_item_call.on_click
-              function="Floater.Toggle"
-              parameter="toybox" />
-           </menu_item_call>
-          <menu_item_call
-          label="Hide All Controls"
-          name="Hide UI"
-          shortcut="control|shift|U">
-             <menu_item_call.on_click
-               function="View.ToggleUI" />
-          </menu_item_call>
-          <menu_item_check
-          label="Show HUD Attachments"
-          name="Show HUD Attachments"
-          shortcut="alt|shift|H">
-             <menu_item_check.on_check
-                 function="View.CheckHUDAttachments" />
-             <menu_item_check.on_click
-                 function="View.ShowHUDAttachments" />
-          </menu_item_check>
-      <menu_item_separator
-        only_in_sl="true"/>
-
-          <menu_item_call
-          label="Buy L$..."
-          name="Buy and Sell L$"
-          only_in_sl="true">
-              <menu_item_call.on_click
-                 function="BuyCurrency" />
-          </menu_item_call>
-         <menu_item_call
-            label="Marketplace Listings..."
-            name="MarketplaceListings"
-            only_in_sl="true">
-            <menu_item_call.on_click
-            function="Floater.ToggleOrBringToFront"
-            parameter="marketplace_listings" />
-        </menu_item_call> 
-
-          <menu_item_separator/>
-      
-
-
-
-        <!--menu_item_call
-         label="Chat"
-         name="Chat">
-            <menu_item_call.on_click
-             function="World.Chat" />
-        </menu_item_call-->
-	<menu_item_check
-         label="Conversations..."
-         name="Conversations"
-         shortcut="control|T">
-            <menu_item_check.on_check
-             function="Floater.IsOpen"
-             parameter="im_container" />
-            <menu_item_check.on_click
-             function="Floater.ToggleOrBringToFront"
-             parameter="im_container" />
-	</menu_item_check>
-    <menu_item_separator/>
-      <menu_item_call
-        label="Facebook..."
-        name="Facebook">
-        <menu_item_call.on_click
-          function="Floater.Toggle"
-          parameter="facebook"/>
-      </menu_item_call>
-      <menu_item_call
-        label="Twitter..."
-        name="Twitter">
-        <menu_item_call.on_click
-          function="Floater.Toggle"
-          parameter="twitter"/>
-      </menu_item_call>
-      <menu_item_call
-        label="Flickr..."
-        name="Flickr">
-        <menu_item_call.on_click
-          function="Floater.Toggle"
-          parameter="flickr"/>
-      </menu_item_call>
-    <menu_item_separator/>
-        <menu_item_check
-         label="Nearby Chat"
-         name="Nearby Chat"
-         shortcut="control|H"
-         use_mac_ctrl="true">
-            <menu_item_check.on_check
-             function="Floater.Visible"
-             parameter="nearby_chat" />
-            <menu_item_check.on_click
-             function="Floater.Toggle"
-             parameter="nearby_chat" />
-        </menu_item_check>
-        <menu_item_call
-         label="Nearby People"
-         name="Active Speakers"
-         shortcut="control|shift|A">
-            <menu_item_call.on_click
-             function="SideTray.PanelPeopleTab"
-             parameter="nearby_panel" />
-            </menu_item_call>
-        <menu_item_separator/>
-      <menu_item_call
-       label="Choose an avatar..."
-       name="Avatar Picker">
-        <menu_item_call.on_click
-         function="Floater.ToggleOrBringToFront"
-         parameter="avatar" />
-      </menu_item_call>
-      <menu_item_separator/>
-      <menu_item_check
-         label="Inventory..."
-         name="Inventory"
-         shortcut="control|I"
-		     visible="true">
-        <menu_item_check.on_check
-         function="Floater.Visible"
-         parameter="inventory" />
-        <menu_item_check.on_click
-         function="Floater.Toggle"
-         parameter="inventory" />
-      </menu_item_check>
-      <menu_item_call
-       label="New Inventory Window"
-       name="NewInventoryWindow"
-       shortcut="control|shift|I"
-       visible="false">
-        <menu_item_call.on_click
-         function="Inventory.NewWindow"
-         parameter="" />
-      </menu_item_call>
-      <menu_item_call
-       label="Places..."
-       name="Places">
-        <menu_item_call.on_click
-         function="Floater.ToggleOrBringToFront"
-         parameter="places" />
-      </menu_item_call>
-      <menu_item_call
-        label="Experiences..."
-        name="Experiences"
-        only_in_sl="true">
-        <menu_item_call.on_click
-          function="Floater.ToggleOrBringToFront"
-          parameter="experiences"/>
-      </menu_item_call>
-      <menu_item_call
-       label="Picks..."
-       name="Picks">
-        <menu_item_call.on_click
-         function="Floater.ToggleOrBringToFront"
-         parameter="picks" />
-      </menu_item_call>
-      <menu_item_separator/>
-      <menu_item_call
-       label="Camera Controls..."
-       name="Camera Controls">
-        <menu_item_call.on_click
-         function="Floater.ToggleOrBringToFront"
-         parameter="camera" />
-      </menu_item_call>
-      <menu_item_call
-         label="Movement Controls..."
-         name="Walk / run / fly">
-          <menu_item_call.on_click
-           function="Floater.ToggleOrBringToFront"
-           parameter="moveview" />
-      </menu_item_call>
-      <!-- MK -->
-      <menu_item_call
-       label="Restart All Animations"
-       name="Restart All Animations"
-       shortcut="control|alt|shift|A">
-        <menu_item_call.on_click
-         function="Tools.RestartAllAnimations" />
-      </menu_item_call>
-      <!-- mk -->	  
-      <menu
-       create_jump_keys="true"
-       label="Movement"
-       name="Movement"
-       tear_off="true">
-        <menu_item_check
-         label="Sit Down"
-         layout="topleft"
-         shortcut="alt|shift|S"
-         name="Sit Down Here">
-          <menu_item_check.on_check
-           function="Self.EnableStandUp" />
-          <menu_item_check.on_click
-           function="Self.ToggleSitStand" />
-          <menu_item_check.on_enable
-           function="Self.EnableSitStand" />
-        </menu_item_check>
-        <menu_item_check
-         label="Fly"
-         name="Fly"
-         shortcut="Home">
-          <menu_item_check.on_check
-           function="Agent.getFlying" />
-          <menu_item_check.on_click
-           function="Agent.toggleFlying" />
-          <menu_item_check.on_enable
-           function="Agent.enableFlying" />
-        </menu_item_check>
-        <menu_item_check
-         label="Always Run"
-         name="Always Run"
-         shortcut="control|R">
-          <menu_item_check.on_check
-           function="World.CheckAlwaysRun" />
-          <menu_item_check.on_click
-           function="World.AlwaysRun" />
-        </menu_item_check>
-        <menu_item_call
-         label="Stop Animating Me"
-         name="Stop Animating My Avatar"
-		 shortcut="shift|S">
-          <menu_item_call.on_click
-           function="Tools.StopAllAnimations" />
-        </menu_item_call>
-        <menu_item_call
-         label="Walk / run / fly..."
-         name="WalkRunFly">
-          <menu_item_call.on_click
-           function="Floater.ToggleOrBringToFront"
-           parameter="moveview" />
-        </menu_item_call>
-      </menu>
-
-      <menu
-       create_jump_keys="true"
-       label="Status"
-       name="Status"
-       tear_off="true">
-        <menu_item_check
-         name="Away"
-         label="Away">
-          <menu_item_check.on_check
-           function="View.Status.CheckAway" />
-          <menu_item_check.on_click
-           function="World.SetAway" />
-        </menu_item_check>
-        <menu_item_check
-         name="Do Not Disturb"
-         label="Do Not Disturb">
-          <menu_item_check.on_check
-           function="View.Status.CheckDoNotDisturb" />
-          <menu_item_check.on_click
-           function="World.SetDoNotDisturb"/>
-        </menu_item_check>
-      </menu>
-        <menu_item_separator/>
-            <menu_item_check
-             label="Statistics Bar"
-             name="Statistics Bar"
-             shortcut="control|shift|1">
-                <menu_item_check.on_check
-                 function="Floater.Visible"
-                 parameter="stats" />
-                <menu_item_check.on_click
-                 function="Floater.Toggle"
-                 parameter="stats" />
-          </menu_item_check>
-            <menu_item_separator/>
-		<menu
-		create_jump_keys="true"
-		label="Zoom Level"
-		name="Zoom Level"
-		tear_off="true">
-			<menu_item_call
-			label="Zoom In"
-			name="Zoom In"
-			shortcut="control|0">
-				<menu_item_call.on_click
-				function="View.ZoomIn" />
-			</menu_item_call>
-			<menu_item_call
-			label="Zoom Default"
-			name="Zoom Default"
-			shortcut="control|9">
-				<menu_item_call.on_click
-				function="View.ZoomDefault" />
-			</menu_item_call>
-			<menu_item_call
-			label="Zoom Out"
-			name="Zoom Out"
-			shortcut="control|8">
-				<menu_item_call.on_click
-				function="View.ZoomOut" />
-			</menu_item_call>
-		</menu>
-        <menu
-         create_jump_keys="true"
-         label="Highlighting and Visibility"
-         name="Highlighting and Visibility"
-         tear_off="true">
-         <menu_item_check
-                 label="Cheesy Beacon"
-                 name="Cheesy Beacon">
-                    <menu_item_check.on_check
-                     function="CheckControl"
-                     parameter="CheesyBeacon" />
-                    <menu_item_check.on_click
-                     function="ToggleControl"
-                     parameter="CheesyBeacon" />
-                </menu_item_check>
-            <menu_item_check
-             label="Hide Particles"
-             name="Hide Particles"
-             shortcut="control|alt|shift|=">
-                <menu_item_check.on_check
-                 function="View.CheckRenderType"
-                 parameter="hideparticles" />
-                <menu_item_check.on_click
-                 function="View.ToggleRenderType"
-                 parameter="hideparticles" />
-            </menu_item_check>
-            <menu_item_check
-             label="Hide Selected"
-             name="Hide Selected">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="HideSelectedObjects" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="HideSelectedObjects" />
-            </menu_item_check>
-            <menu_item_check
-             label="Highlight Transparent"
-             name="Highlight Transparent"
-             shortcut="control|alt|T">
-                <menu_item_check.on_check
-                 function="View.CheckHighlightTransparent" />
-                <menu_item_check.on_click
-                 function="View.HighlightTransparent" />
-            </menu_item_check>
-            <menu_item_check
-             label="Show HUD Attachments"
-             name="Show HUD Attachments"
-             shortcut="alt|shift|H">
-                <menu_item_check.on_check
-                 function="View.CheckHUDAttachments" />
-                <menu_item_check.on_click
-                 function="View.ShowHUDAttachments" />
-            </menu_item_check>
-            <menu_item_check
-             label="Show Mouselook Crosshairs"
-             name="ShowCrosshairs">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="ShowCrosshairs" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="ShowCrosshairs" />
-            </menu_item_check>
- <menu
-         create_jump_keys="true"
-         label="Hover Tips"
-         name="Hover Tips"
-         tear_off="true">
-            <menu_item_check
-             label="Show Tips"
-             name="Show Tips"
-             shortcut="control|shift|T">
-                <menu_item_check.on_check
-                 function="View.CheckShowHoverTips" />
-                <menu_item_check.on_click
-                 function="View.ShowHoverTips" />
-            </menu_item_check>
-
-            <menu_item_separator/>
-
-            <menu_item_check
-             label="Show Land Tooltips"
-             name="Land Tips">
-                <menu_item_check.on_check
-                 control="ShowLandHoverTip" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="ShowLandHoverTip" />
-                <menu_item_check.on_enable
-                 function="View.CheckShowHoverTips" />
-            </menu_item_check>
-           <menu_item_check
-             label="Show Tips On All Objects"
-             name="Tips On All Objects">
-                <menu_item_check.on_check
-                 control="ShowAllObjectHoverTip" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="ShowAllObjectHoverTip" />
-                <menu_item_check.on_enable
-                 function="View.CheckShowHoverTips" />
-            </menu_item_check>
+<!-- END OF EDIT MENU -->
+    
+<!-- START OF VIEW MENU --> 
+    <menu label="Ansicht"  name="View">
+            <menu_item_call label="Mouselook"  name="Mouselook"/>
+            <menu_item_check label="Joystick Flycam"  name="Joystick Flycam"/>
+            <menu_item_call label="Ansicht zurücksetzen"  name="Reset View"/>
+            <menu_item_call label="Letzten Chatter ansehen"  name="Look at Last Chatter"/>
+            <menu_item_call label="Symbolleistenschaltflächen..."  name="Toolbars"/>
+            <menu_item_call label="Alle Steuerelemente ausblenden"  name="Hide UI"/>
+            <menu_item_check label="HUD-Anhänge anzeigen"  name="Show HUD Attachments"/>
+            <menu_item_call label="L$ kaufen..."  name="Buy and Sell L$"/>
+            <menu_item_call label="Marktplatz-Auflistungen..."  name="MarketplaceListings"/>
+            <menu_item_check label="Unterhaltungen..."  name="Conversations"/>
+            <menu_item_call label="Facebook..."  name="Facebook"/>
+            <menu_item_call label="Twitter..."  name="Twitter"/>
+            <menu_item_call label="Flickr..."  name="Flickr"/>
+            <menu_item_check label="Chat in der Nähe"  name="Nearby Chat"/>
+            <menu_item_call label="Leute in der Nähe"  name="Active Speakers"/>
+            <menu_item_call label="Avatar auswählen..."  name="Avatar Picker"/>
+            <menu_item_check label="Inventar..."  name="Inventory"/>
+            <menu_item_call label="Neues Inventarfenster"  name="NewInventoryWindow"/>
+            <menu_item_call label="Orte..."  name="Places"/>
+            <menu_item_call label="Erlebnisse..."  name="Experiences"/>
+            <menu_item_call label="Auswahlen..."  name="Picks"/>
+            <menu_item_call label="Kamerasteuerungen..."  name="Camera Controls"/>
+            <menu_item_call label="Gehen/Rennen/Fliegen..."  name="Walk / run / fly"/>
+            <menu_item_call label="Restart All Animations"  name="Restart All Animations"/>
+            <menu label="Bewegung"  name="Movement">
+                <menu_item_check label="Hinsetzen"  name="Sit Down Here"/>
+                <menu_item_check label="Fliegen"  name="Fly"/>
+                <menu_item_check label="Immer rennen"  name="Always Run"/>
+                <menu_item_call label="Animation meines Avatars stoppen"  name="Stop Animating My Avatar"/>
+                <menu_item_call label="Gehen/Rennen/Fliegen..." name="WalkRunFly"/>
+            </menu>
+            <menu label="Status"  name="Status">
+                <menu_item_check name="Abwesend"  label="Away"/>
+                <menu_item_check name="Nicht stören"  label="Do Not Disturb"/>
+            </menu>
+            <menu_item_check label="Statistikleiste"  name="Statistics Bar"/>
+		    <menu label="Zoom-Stufe"  name="Zoom Level">
+			    <menu_item_call label="Hineinzoomen" name="Zoom In"/>
+			    <menu_item_call label="Zoom-Standard"  name="Zoom Default"/>
+			    <menu_item_call label="Wegzoomen"  name="Zoom Out"/>
+		    </menu>
+            <menu label="Hervorhebung und Sichtbarkeit"  name="Highlighting and Visibility">
+                <menu_item_check label="Pulsierender Strahl"  name="Cheesy Beacon"/>
+                <menu_item_check label="Partikel ausblenden"  name="Hide Particles"/>
+                <menu_item_check label="Auswahl ausblenden"  name="Hide Selected"/>
+                <menu_item_check label="Durchsichtig hervorheben"  name="Highlight Transparent"/>
+                <menu_item_check label="HUD-Anhänge anzeigen"  name="Show HUD Attachments"/>
+                <menu_item_check label="Fadenkreuz für Mouselook anzeigen" name="ShowCrosshairs"/>
+            </menu>
+            <menu label="Hover Tips"  name="Hover Tips">
+                <menu_item_check label="Show Tips"  name="Show Tips"/>
+                <menu_item_check label="Show Land Tooltips"  name="Land Tips"/>
+                <menu_item_check label="Show Tips On All Objects"  name="Tips On All Objects"/>
+            </menu>
+            <menu_item_check label="Menü „Erweitert“"  name="Show Advanced Menu"/>
+            <menu_item_check label="Menü „Erweitert“ Linux"  name="Show Advanced Menu"/>
         </menu>
-
+<!-- END OF VIEW MENU --> 
+    
+<!-- START OF WORLD MENU -->     
+    <menu label="Welt"  name="World">
+    <menu_item_call label="Landmarke für diesen Ort setzen"  name="Create Landmark Here"/>
+    <menu_item_check label="Karte"  name="World Map"/>
+    <menu_item_check label="Minikarte"  name="Mini-Map"/>
+    <menu_item_check label="Suchen"  name="Search"/>
+    <menu_item_check label="Ursprünglich suchen"  name="Legacy Search"/>
+    <menu_item_call label="Nähe suchen"  name="area_search"/>
+    <menu_item_call label="Nach Hause teleportieren"  name="Teleport Home"/>
+    <menu_item_call label="Hier als Zuhause wählen"  name="Set Home to Here"/>
+    <menu_item_call label="Foto"  name="Take Snapshot"/>
+    <menu_item_call label="Ortsprofil"  name="Place Profile"/>
+    <menu_item_call label="Landinformationen"  name="About Land"/>
+    <menu_item_call label="Region/Grundbesitz"  name="Region/Estate"/>
+    <menu_item_call label="Mein Landbesitz..."  name="My Land"/>
+    <menu_item_call label="Dieses Land kaufen"  name="Buy Land"/>
+    <menu label="Anzeigen"  name="LandShow">
+        <menu_item_check label="Bannlinien"  name="Ban Lines"/>
+        <menu_item_check label="Strahlen"  name="beacons"/>
+        <menu_item_check label="Grundstücksgrenzen"  name="Property Lines"/>
+        <menu_item_check label="Landeigentümer"  name="Land Owners"/>
+        <menu_item_check label="Koordinaten"  name="Coordinates"/>
+        <menu_item_check label="Parzelleneigenschaften"  name="Parcel Properties"/>
+        <menu_item_check label="Menü „Erweitert“"  name="Show Advanced Menu"/>
+    </menu>
+    <menu label="Sonne"  name="Sun">
+        <menu_item_call label="Sonnenaufgang"  name="Sunrise"/>
+        <menu_item_call label="Mittag"  name="Noon"/>
+        <menu_item_call label="Sonnenuntergang"  name="Sunset"/>
+        <menu_item_call label="Mitternacht"  name="Midnight"/>
+        <menu_item_call label="Regionseinstellungen verwenden"  name="Use Region Settings"/>
+    </menu>
+    <menu label="Umwelt-Editor"  name="Environment Editor">
+        <menu_item_call label="Umwelt-Einstellungen..."  name="Environment Settings"/>
+        <menu label="Wasser-Voreinstellungen"  name="Water Presets">
+            <menu_item_call label="Neue Voreinstellung..."  name="new_water_preset"/>
+            <menu_item_call label="Voreinstellung bearbeiten..."  name="edit_water_preset"/>
+            <menu_item_call label="Voreinstellung löschen..."  name="delete_water_preset"/>
         </menu>
-          <menu_item_separator/>
-            <menu_item_check
-             label="Show Advanced Menu"
-             name="Show Advanced Menu"
-             shortcut="control|alt|D"
-             visible="true">
-                <on_check
-                 function="CheckControl"
-                 parameter="UseDebugMenus" />
-                <on_click
-                 function="ToggleControl"
-                 parameter="UseDebugMenus" />
-        </menu_item_check>
-	<menu_item_check
-             label="Show Advanced Menu Linux"
-             name="Show Advanced Menu"
-             shortcut="control|alt|shift|D"
-             visible="false">
-                <on_check
-                 function="CheckControl"
-                 parameter="UseDebugMenus" />
-                <on_click
-                 function="ToggleControl"
-                 parameter="UseDebugMenus" />
-        </menu_item_check>
-    </menu>
-  <menu
-   create_jump_keys="true"
-   label="World"
-   name="World"
-   tear_off="true">
-    <menu_item_call
-     label="Landmark This Place"
-     name="Create Landmark Here"
-	 shortcut="control|shift|D">
-      <menu_item_call.on_click
-       function="World.CreateLandmark" />
-      <menu_item_call.on_enable
-       function="World.EnableCreateLandmark" />
-    </menu_item_call>
-    <menu_item_call
-     label="Destinations..."
-     name="Destinations">
-      <menu_item_call.on_click
-       function="Floater.ToggleOrBringToFront"
-       parameter="destinations" />
-    </menu_item_call>
-    <menu_item_check
-     label="World map"
-     name="World Map"
-     shortcut="control|M"
-     use_mac_ctrl="true">
-      <menu_item_check.on_check
-       function="Floater.Visible"
-       parameter="world_map" />
-      <menu_item_check.on_click
-       function="Floater.Toggle"
-       parameter="world_map" />
-    </menu_item_check>
-    <menu_item_check
- label="Mini-map"
- name="Mini-Map"
- shortcut="control|shift|M">
-      <menu_item_check.on_check
-       function="Floater.Visible"
-       parameter="mini_map" />
-      <menu_item_check.on_click
-       function="Floater.Toggle"
-       parameter="mini_map" />
-    </menu_item_check>
-        <menu_item_check
-        label="Search"
-        name="Search"
-        shortcut="control|F">
-            <menu_item_check.on_check
-             function="Floater.Visible"
-             parameter="search" />
-            <menu_item_check.on_click
-             function="Floater.Toggle"
-             parameter="search" />
-            </menu_item_check>
-        <menu_item_check
-			label="Legacy Search"
-			name="Legacy Search"
-      shortcut="control|alt|F">
-            <menu_item_check.on_check
-			function="Floater.Visible"
-			parameter="search_legacy" />
-            <menu_item_check.on_click
-			function="Floater.Toggle"
-			parameter="search_legacy" />
-		</menu_item_check>
-       <menu_item_call
-         label="Area Search"
-         name="area_search"
-         shortcut="alt|A">
-            <menu_item_call.on_click
-             function="Floater.Toggle"
-             parameter="area_search" />
-        </menu_item_call>
-    <menu_item_separator/>
-    <menu_item_call
-     label="Teleport Home"
-     name="Teleport Home"
-     shortcut="control|shift|H">
-      <menu_item_call.on_click
-       function="World.TeleportHome" />
-      <menu_item_call.on_enable
-       function="World.EnableTeleportHome" />
-    </menu_item_call>
-    <menu_item_call
-     label="Set Home to Here"
-     name="Set Home to Here">
-      <menu_item_call.on_click
-       function="World.SetHomeLocation" />
-      <menu_item_call.on_enable
-       function="World.EnableSetHomeLocation" />
-    </menu_item_call>
-    <menu_item_separator/>
-    <menu_item_call
-     label="Snapshot"
-     name="Take Snapshot"
-     shortcut="control|shift|S">
-      <menu_item_call.on_click
-       function="Floater.Show"
-       parameter="snapshot" />
-    </menu_item_call>
-    <menu_item_separator/>
-    <menu_item_call
-     label="Place profile"
-     layout="topleft"
-     name="Place Profile">
-      <menu_item_call.on_click
-       function="World.PlaceProfile" />
-    </menu_item_call>
-    <menu_item_call
-     label="About land"
-     name="About Land">
-      <menu_item_call.on_click
-       function="Floater.Show"
-       parameter="about_land" />
-    </menu_item_call>
-    <menu_item_call
-     label="Region / Estate"
-     name="Region/Estate">
-      <menu_item_call.on_click
-       function="Floater.Show"
-       parameter="region_info" />
-    </menu_item_call>
-    <menu_item_call
-     label="My Land Holdings..."
-     name="My Land">
-      <menu_item_call.on_click
-       function="Floater.Show"
-       parameter="land_holdings" />
-    </menu_item_call>
-    <menu_item_call
-     label="Buy This Land"
-     name="Buy Land">
-      <menu_item_call.on_click
-       function="Land.Buy" />
-      <menu_item_call.on_enable
-       function="World.EnableBuyLand" />
-    </menu_item_call>
-
-    <menu_item_separator/>
-
-    <menu
-       create_jump_keys="true"
-       label="Show"
-       name="LandShow"
-       tear_off="true">
-      <menu_item_check
-         label="Ban Lines"
-         name="Ban Lines">
-        <menu_item_check.on_check
-           control="ShowBanLines" />
-        <menu_item_check.on_click
-           function="ToggleControl"
-           parameter="ShowBanLines" />
-      </menu_item_check>
-      <menu_item_check
-            label="Beacons"
-            name="beacons"
-            shortcut="control|alt|shift|N">
-        <menu_item_check.on_check
-         function="Floater.Visible"
-         parameter="beacons" />
-        <menu_item_check.on_click
-         function="Floater.Toggle"
-         parameter="beacons" />
-      </menu_item_check>
-      <menu_item_check
-         label="Property Lines"
-         name="Property Lines"
-         shortcut="control|alt|shift|P">
-        <menu_item_check.on_check
-           control="ShowPropertyLines" />
-        <menu_item_check.on_click
-           function="ToggleControl"
-           parameter="ShowPropertyLines" />
-      </menu_item_check>
-      <menu_item_check
-         label="Land Owners"
-         name="Land Owners">
-        <menu_item_check.on_check
-           control="ShowParcelOwners" />
-        <menu_item_check.on_click
-           function="ToggleControl"
-           parameter="ShowParcelOwners" />
-      </menu_item_check>
-      <menu_item_check
-         label="Coordinates"
-         name="Coordinates">
-        <menu_item_check.on_click
-           function="ToggleControl"
-           parameter="NavBarShowCoordinates" />
-        <menu_item_check.on_check
-           control="NavBarShowCoordinates" />
-      </menu_item_check>
-      <menu_item_check
-         label="Parcel Properties"
-         name="Parcel Properties">
-        <menu_item_check.on_click
-           function="ToggleControl"
-           parameter="NavBarShowParcelProperties" />
-        <menu_item_check.on_check
-           control="NavBarShowParcelProperties" />
-      </menu_item_check>
-      <menu_item_separator />
-      <menu_item_check
-         label="Advanced Menu"
-         name="Show Advanced Menu"
-         shortcut="control|alt|shift|D">
-        <on_check
-           function="CheckControl"
-           parameter="UseDebugMenus" />
-        <on_click
-           function="ToggleControl"
-           parameter="UseDebugMenus" />
-      </menu_item_check>
-    </menu>
-
-    <menu_item_separator/>
-    <!--    <menu_item_check
-         label="Show Navigation Bar"
-         name="ShowNavbarNavigationPanel">
-           <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="ShowNavbarNavigationPanel" />
-             <menu_item_check.on_check
-             function="CheckControl"
-             parameter="ShowNavbarNavigationPanel" />
-        </menu_item_check>
-       <menu_item_check
-         label="Show Favorites Bar"
-         name="ShowNavbarFavoritesPanel">
-           <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="ShowNavbarFavoritesPanel" />
-             <menu_item_check.on_check
-             function="CheckControl"
-             parameter="ShowNavbarFavoritesPanel" />
-        </menu_item_check>
-        <menu_item_separator/>-->
-
-    <menu
-     create_jump_keys="true"
-     label="Sun"
-     name="Sun"
-     tear_off="true">
-      <menu_item_call
-       label="Sunrise"
-       name="Sunrise">
-        <menu_item_call.on_click
-         function="World.EnvSettings"
-         parameter="sunrise" />
-      </menu_item_call>
-      <menu_item_separator/>
-       <menu_item_call
-       label="Midday"
-       name="Noon"
-       shortcut="control|shift|Y">
-        <menu_item_call.on_click
-         function="World.EnvSettings"
-         parameter="noon" />
-      </menu_item_call>
-      <menu_item_call
-       label="Sunset"
-       name="Sunset"
-       shortcut="control|shift|N">
-        <menu_item_call.on_click
-         function="World.EnvSettings"
-         parameter="sunset" />
-      </menu_item_call>
-      <menu_item_call
-       label="Midnight"
-       name="Midnight">
-        <menu_item_call.on_click
-         function="World.EnvSettings"
-         parameter="midnight" />
-      </menu_item_call>
-      <menu_item_separator/>
-      <menu_item_call
-       label="Use Region Settings"
-       name="Use Region Settings">
-        <menu_item_call.on_click
-         function="World.EnvSettings"
-         parameter="region" />
-      </menu_item_call>
-    </menu>
-
-
-    <menu
-     create_jump_keys="true"
-     label="Environment Editor"
-     name="Environment Editor"
-     tear_off="true">
-
-      <menu_item_call
-       label="Environment Settings..."
-       name="Environment Settings">
-        <menu_item_call.on_click
-         function="World.EnvSettings"
-               parameter="editor"/>
-      </menu_item_call>
-
-      <menu_item_separator/>
-
-      <menu
-       name="Water Presets"
-       label="Water Presets">
-        <menu_item_call
-         label="New preset..."
-         name="new_water_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="new_water"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Edit preset..."
-         name="edit_water_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="edit_water"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Delete preset..."
-         name="delete_water_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="delete_water"/>
-          <menu_item_call.on_enable
-          function="World.EnableEnvPreset"
-          parameter="delete_water"/>
-        </menu_item_call>
-      </menu>
-
-      <menu
-       name="Sky Presets"
-       label="Sky Presets">
-        <menu_item_call
-         label="New preset..."
-         name="new_sky_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="new_sky"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Edit preset..."
-         name="edit_sky_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="edit_sky"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Delete preset..."
-         name="delete_sky_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="delete_sky"/>
-          <menu_item_call.on_enable
-          function="World.EnableEnvPreset"
-          parameter="delete_sky"/>
-        </menu_item_call>
-      </menu>
-
-      <menu
-       name="Day Presets"
-       label="Day Presets">
-        <menu_item_call
-         label="New preset..."
-         name="new_day_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="new_day_cycle"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Edit preset..."
-         name="edit_day_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="edit_day_cycle"/>
-        </menu_item_call>
-        <menu_item_call
-         label="Delete preset..."
-         name="delete_day_preset">
-          <menu_item_call.on_click
-          function="World.EnvPreset"
-          parameter="delete_day_cycle"/>
-          <menu_item_call.on_enable
-          function="World.EnableEnvPreset"
-          parameter="delete_day_cycle"/>
-        </menu_item_call>
-      </menu>
+        <menu label="Himmel-Voreinstellungen"  name="Sky Presets">
+            <menu_item_call label="Neue Voreinstellung..."  name="new_sky_preset"/>
+            <menu_item_call label="Voreinstellung bearbeiten..."  name="edit_sky_preset"/>
+            <menu_item_call label="Voreinstellung löschen..."  name="delete_sky_preset"/>
+        </menu>
+        <menu label="Tag-Voreinstellunge"  name="Day Presets">
+            <menu_item_call label="Neue Voreinstellung..."  name="new_day_preset"/>
+            <menu_item_call label="Voreinstellung bearbeitent..."  name="edit_day_preset"/>
+            <menu_item_call label="Voreinstellung löschen..."  name="delete_day_preset"/>
+        </menu>
     </menu>
   </menu>
+<!-- END OF WORLD MENU -->
 
-  <menu
-   create_jump_keys="true"
-   label="Build"
-   name="BuildTools"
-   tear_off="true"
-   visible="true">
-    <menu_item_check
-      label="Build"
-      name="Show Build Tools"
-      shortcut="control|B">
-      <menu_item_check.on_check
-       function="Build.Active" />
-      <menu_item_check.on_click
-       function="Build.Toggle" />
-      <menu_item_check.on_enable
-       function="Build.Enabled" />
-    </menu_item_check>
-    <menu
-       create_jump_keys="true"
-       label="Select Build Tool"
-       name="Select Tool"
-       tear_off="true">
-      <menu_item_call
-   label="Focus Tool"
-   name="Focus"
-   shortcut="control|1">
-        <menu_item_call.on_click
-           function="Tools.SelectTool"
-           parameter="focus" />
-      </menu_item_call>
-      <menu_item_call
-   label="Move Tool"
-   name="Move"
-   shortcut="control|2">
-        <menu_item_call.on_click
-           function="Tools.SelectTool"
-           parameter="move" />
-      </menu_item_call>
-      <menu_item_call
-   label="Edit Tool"
-   name="Edit"
-   shortcut="control|3">
-        <menu_item_call.on_click
-           function="Tools.SelectTool"
-           parameter="edit" />
-      </menu_item_call>
-      <menu_item_call
-   label="Create Tool"
-   name="Create"
-   shortcut="control|4">
-        <menu_item_call.on_click
-           function="Tools.SelectTool"
-           parameter="create" />
-      </menu_item_call>
-      <menu_item_call
-   label="Land Tool"
-   name="Land"
-   shortcut="control|5">
-        <menu_item_call.on_click
-           function="Tools.SelectTool"
-           parameter="land" />
-      </menu_item_call>
+<!-- START OF BUILD MENU -->
+    <menu label="Bauen"  name="BuildTools">
+    <menu_item_check label="Bauen"  name="Show Build Tools"/>
+    <menu label="Bauwerkzeug auswählen"  name="Select Tool">
+        <menu_item_call label="Fokus"  name="Focus"/>
+        <menu_item_call label="Verschieben"  name="Move"/>
+        <menu_item_call label="Bearbeiten"  name="Edit"/>
+        <menu_item_call label="Erstellen"  name="Create"/>
+      <menu_item_call label="Land"  name="Land"/>
     </menu>
-    <menu_item_call
-       label="Link"
-       name="Link"
-       shortcut="control|L">
-      <menu_item_call.on_click
-         function="Tools.Link" />
-      <menu_item_call.on_enable
-         function="Tools.EnableLink" />
-    </menu_item_call>
-    <menu_item_call
-       label="Unlink"
-       name="Unlink"
-       shortcut="control|shift|L">
-      <menu_item_call.on_click
-         function="Tools.Unlink" />
-      <menu_item_call.on_enable
-         function="Tools.EnableUnlink" />
-    </menu_item_call>
-    <menu_item_check
-         label="Edit Linked Parts"
-         name="Edit Linked Parts">
-      <menu_item_check.on_check
-       control="EditLinkedParts" />
-      <menu_item_check.on_click
-       function="Tools.EditLinkedParts"
-       parameter="EditLinkedParts" />
-      <menu_item_check.on_enable
-       function="Tools.EnableToolNotPie" />
-    </menu_item_check>
-    <menu
-     create_jump_keys="true"
-     label="Select Linked Parts"
-     name="Select Linked Parts"
-     tear_off="true">
-      <menu_item_call
-       label="Select Next Part"
-       name="Select Next Part"
- shortcut="control|.">
-        <menu_item_call.on_click
-         function="Tools.SelectNextPart"
-         parameter="next" />
-        <menu_item_call.on_enable
-         function="Tools.EnableSelectNextPart" />
-      </menu_item_call>
-      <menu_item_call
-       label="Select Previous Part"
-       name="Select Previous Part"
- shortcut="control|,">
-        <menu_item_call.on_click
-         function="Tools.SelectNextPart"
-         parameter="previous" />
-        <menu_item_call.on_enable
-         function="Tools.EnableSelectNextPart" />
-      </menu_item_call>
-      <menu_item_call
-       label="Include Next Part"
-       name="Include Next Part"
- shortcut="control|shift|.">
-        <menu_item_call.on_click
-         function="Tools.SelectNextPart"
-         parameter="includenext" />
-        <menu_item_call.on_enable
-         function="Tools.EnableSelectNextPart" />
-      </menu_item_call>
-      <menu_item_call
-       label="Include Previous Part"
-       name="Include Previous Part"
- shortcut="control|shift|,">
-        <menu_item_call.on_click
-         function="Tools.SelectNextPart"
-         parameter="includeprevious" />
-        <menu_item_call.on_enable
-         function="Tools.EnableSelectNextPart" />
-      </menu_item_call>
+    <menu_item_call label="Verknüpfung"  name="Link"/>
+    <menu_item_call label="Verknüpfung auflösen"  name="Unlink"/>
+    <menu_item_check label="Verknüpfte Teile bearbeiten"  name="Edit Linked Parts"/>
+    <menu label="Verknüpfte Teile auswählen"  name="Select Linked Parts">
+        <menu_item_call label="Nächstes Teil auswählen"  name="Select Next Part"/>
+        <menu_item_call label="Vorheriges Teil auswählen"  name="Select Previous Part"/>
+        <menu_item_call label="Nächsten Teil mit einsschließen"  name="Include Next Part"/>
+        <menu_item_call label="Vorherige Teile mit einschließen"  name="Include Previous Part"/>
     </menu>
-    <menu_item_separator/>
-
-    <menu_item_call
-       label="Focus on Selection"
-       name="Focus on Selection"
-       shortcut="H">
-      <menu_item_call.on_click
-         function="Tools.LookAtSelection"
-         parameter="focus" />
-      <menu_item_call.on_enable
-         function="Tools.SomethingSelectedNoHUD" />
-    </menu_item_call>
-    <menu_item_call
-       label="Zoom to Selection"
-       name="Zoom to Selection"
-       shortcut="shift|H">
-      <menu_item_call.on_click
-         function="Tools.LookAtSelection"
-         parameter="zoom" />
-      <menu_item_call.on_enable
-         function="Tools.SomethingSelectedNoHUD" />
-    </menu_item_call>
-
-    <menu_item_separator/>
-
-    <menu
-     create_jump_keys="true"
-     label="Object"
-     name="Object"
-     tear_off="true">
-      <menu_item_call
-         label="Buy"
-         name="Menu Object Buy">
-        <menu_item_call.on_click
-           function="Tools.BuyOrTake"/>
-        <menu_item_call.on_visible
-           function="Tools.VisibleBuyObject"/>
-        <menu_item_call.on_enable
-           function="Tools.EnableBuyOrTake"/>
-      </menu_item_call>
-      <menu_item_call
-         label="Take"
-         name="Menu Object Take">
-        <menu_item_call.on_click
-           function="Tools.BuyOrTake"/>
-        <menu_item_call.on_visible
-           function="Tools.VisibleTakeObject"/>
-        <menu_item_call.on_enable
-           function="Tools.EnableBuyOrTake"/>
-      </menu_item_call>
-      <menu_item_call
-   label="Take Copy"
-   name="Take Copy">
-        <menu_item_call.on_click
-                 function="Tools.TakeCopy" />
-        <menu_item_call.on_enable
-                 function="Tools.EnableTakeCopy" />
-      </menu_item_call>
-      <menu_item_call
-   label="Save Back to Object Contents"
-   name="Save Object Back to Object Contents">
-        <menu_item_call.on_click
-                 function="Tools.SaveToObjectInventory" />
-        <menu_item_call.on_enable
-                 function="Tools.EnableSaveToObjectInventory" />
-      </menu_item_call>
-      <menu_item_call
-   label="Return Object"
-   name="Return Object back to Owner">
-        <menu_item_call.on_click
-                 function="Object.Return" />
-        <menu_item_call.on_enable
-                 function="Object.EnableReturn" />
-      </menu_item_call>
+    <menu_item_call label="Fokus auf Auswahl"  name="Focus on Selection"/>
+    <menu_item_call label="Auf Auswahl zoomen"  name="Zoom to Selection"/>
+    <menu label="Objekt"  name="Object">
+        <menu_item_call label="Kaufen"  name="Menu Object Buy"/>
+        <menu_item_call label="Nehmen"  name="Menu Object Take"/>
+        <menu_item_call label="Kopie nehmen"  name="Take Copy"/>
+        <menu_item_call label="Wieder in Objektinhalt speichern"  name="Save Object Back to Object Contents"/>
+        <menu_item_call label="Objekt zurückgeben"  name="Return Object back to Owner"/>
     </menu>
-    <menu
-       create_jump_keys="true"
-       label="Scripts"
-       name="Scripts"
-       tear_off="true">
-      <menu_item_call
-         label="Recompile Scripts (Mono)"
-         name="Mono">
-        <menu_item_call.on_click
-           function="Tools.SelectedScriptAction"
-           parameter="compile mono" />
-        <menu_item_call.on_enable
-           function="EditableSelectedMono" />
-      </menu_item_call>
-      <menu_item_call
-         label="Recompile Scripts (LSL)"
-         name="LSL">
-        <menu_item_call.on_click
-           function="Tools.SelectedScriptAction"
-           parameter="compile lsl" />
-        <menu_item_call.on_enable
-           function="EditableSelected" />
-      </menu_item_call>
-      <menu_item_call
-         label="Reset Scripts"
-         name="Reset Scripts">
-        <menu_item_call.on_click
-           function="Tools.SelectedScriptAction"
-           parameter="reset" />
-        <menu_item_call.on_enable
-           function="EditableSelected" />
-      </menu_item_call>
-      <menu_item_call
-         label="Set Scripts to Running"
-         name="Set Scripts to Running">
-        <menu_item_call.on_click
-           function="Tools.SelectedScriptAction"
-           parameter="start" />
-        <menu_item_call.on_enable
-           function="EditableSelected" />
-      </menu_item_call>
-      <menu_item_call
-         label="Set Scripts to Not Running"
-         name="Set Scripts to Not Running">
-        <menu_item_call.on_click
-           function="Tools.SelectedScriptAction"
-           parameter="stop" />
-        <menu_item_call.on_enable
-           function="EditableSelected" />
-      </menu_item_call>
-      <menu_item_call
-        label="Scripting LSL wiki"
-        name="scripting_wiki">
-           <menu_item_call.on_click
-            function="PromptShowURL"
-            name="wiki_lslscripting_url"
-            parameter="WebLaunchExternalTarget,http://wiki.secondlife.com/wiki/LSL_Portal" />
-      </menu_item_call>
+    <menu label="Skripts"  name="Scripts">
+        <menu_item_call label="Skripts rekompilieren (Mono)"  name="Mono"/>
+        <menu_item_call label="Skripts rekompilieren (LSL)"  name="LSL"/>
+        <menu_item_call label="Skripts zurücksetzen"  name="Reset Scripts"/>
+        <menu_item_call label="Skripts auf ausführen einstellen"  name="Set Scripts to Running"/>
+        <menu_item_call label="Skripts auf nicht ausführen einstellen"  name="Set Scripts to Not Running"/>
+        <menu_item_call label="Wiki des LSL Skriptsprache"  name="scripting_wiki"/>
     </menu>
-
-    <menu
-       create_jump_keys="true"
-       label="Pathfinding"
-       name="Pathfinding"
-       tear_off="true">
-      <menu_item_call
-          label="Linksets..."
-          name="pathfinding_linksets_menu_item">
-        <menu_item_call.on_click
-            function="Floater.ToggleOrBringToFront"
-            parameter="pathfinding_linksets" />
-        <menu_item_call.on_enable
-            function="Tools.EnablePathfinding" />
-      </menu_item_call>
-      <menu_item_call
-          label="Characters..."
-          name="pathfinding_characters_menu_item">
-        <menu_item_call.on_click
-            function="Floater.ToggleOrBringToFront"
-            parameter="pathfinding_characters" />
-        <menu_item_call.on_enable
-            function="Tools.EnablePathfinding" />
-      </menu_item_call>
-      <menu_item_call
-          label="View / test..."
-          name="pathfinding_console_menu_item">
-        <menu_item_call.on_click
-            function="Floater.ToggleOrBringToFront"
-            parameter="pathfinding_console" />
-        <menu_item_call.on_enable
-            function="Tools.EnablePathfindingView" />
-      </menu_item_call>
-      <menu_item_call
-          label="Rebake region"
-          name="pathfinding_rebake_navmesh_item">
-        <menu_item_call.on_click
-            function="Tools.DoPathfindingRebakeRegion"/>
-        <menu_item_call.on_enable
-            function="Tools.EnablePathfindingRebakeRegion" />
-      </menu_item_call>
+    <menu label="Pathfinding"  name="Pathfinding">
+      <menu_item_call label="Linksets..."  name="pathfinding_linksets_menu_item"/>
+      <menu_item_call label="Figuren..."  name="pathfinding_characters_menu_item"/>
+      <menu_item_call label="Anzeigen/Testen..."  name="pathfinding_console_menu_item"/>
+      <menu_item_call label="Region neu formen"  name="pathfinding_rebake_navmesh_item"/>
     </menu>
-
-
-    <menu_item_separator/>
-
-    <menu
-     create_jump_keys="true"
-     label="Options"
-     name="Options"
-     tear_off="true">
-      <menu_item_check
-          label="Show Advanced Permissions"
-          name="DebugPermissions">
-        <menu_item_check.on_check
-				 function="CheckControl"
-				 parameter="DebugPermissions" />
-        <menu_item_check.on_click
-				 function="ToggleControl"
-				 parameter="DebugPermissions" />
-      </menu_item_check>
-
-      <menu_item_separator/>
-
-      <menu_item_check
-           label="Select Only My Objects"
-           name="Select Only My Objects">
-        <menu_item_check.on_check
-         control="SelectOwnedOnly" />
-        <menu_item_check.on_click
-         function="Tools.SelectOnlyMyObjects"
-         parameter="agents" />
-      </menu_item_check>
-      <menu_item_check
-       label="Select Only Movable Objects"
-       name="Select Only Movable Objects">
-        <menu_item_check.on_check
-         control="SelectMovableOnly" />
-        <menu_item_check.on_click
-         function="Tools.SelectOnlyMovableObjects"
-         parameter="movable" />
-      </menu_item_check>
-      <menu_item_check
-       label="Select By Surrounding"
-       name="Select By Surrounding">
-        <menu_item_check.on_check
-         control="RectangleSelectInclusive" />
-        <menu_item_check.on_click
-         function="Tools.SelectBySurrounding" />
-      </menu_item_check>
-
-      <menu_item_separator/>
-
-      <menu_item_check
-       label="Show Selection Outlines"
-       name="Show Selection Outlines">
-        <menu_item_check.on_check
-         function="CheckControl"
-         parameter="RenderHighlightSelections" />
-        <menu_item_check.on_click
-         function="ToggleControl"
-         parameter="RenderHighlightSelections" />
-      </menu_item_check>
-      <menu_item_check
-       label="Show Hidden Selection"
-       name="Show Hidden Selection">
-        <menu_item_check.on_check
-         control="RenderHiddenSelections" />
-        <menu_item_check.on_click
-         function="Tools.ShowHiddenSelection" />
-      </menu_item_check>
-      <menu_item_check
-       label="Show Light Radius for Selection"
-       name="Show Light Radius for Selection">
-        <menu_item_check.on_check
-         control="RenderLightRadius" />
-        <menu_item_check.on_click
-         function="Tools.ShowSelectionLightRadius" />
-      </menu_item_check>
-      <menu_item_check
-       label="Show Selection Beam"
-       name="Show Selection Beam">
-        <menu_item_check.on_check
-         control="ShowSelectionBeam" />
-        <menu_item_check.on_click
-         function="ToggleControl"
-         parameter="ShowSelectionBeam" />
-      </menu_item_check>
-
-      <menu_item_separator/>
-
-      <menu_item_check
-       label="Snap to Grid"
-       name="Snap to Grid"
-       shortcut="G">
-        <menu_item_check.on_check
-         control="SnapEnabled" />
-        <menu_item_check.on_click
-         function="ToggleControl"
-         parameter="SnapEnabled" />
-        <menu_item_check.on_enable
-         function="Tools.EnableToolNotPie" />
-      </menu_item_check>
-      <menu_item_call
-       label="Snap Object XY to Grid"
-       name="Snap Object XY to Grid"
-       shortcut="shift|X">
-        <menu_item_call.on_click
-         function="Tools.SnapObjectXY" />
-        <menu_item_call.on_enable
-         function="Tools.EnableToolNotPie" />
-      </menu_item_call>
-      <menu_item_call
-       label="Use Selection for Grid"
-       name="Use Selection for Grid"
-       shortcut="shift|G">
-        <menu_item_call.on_click
-         function="Tools.UseSelectionForGrid" />
-        <menu_item_call.on_enable
-         function="SomethingSelected" />
-      </menu_item_call>
-      <menu_item_call
-       label="Grid Options"
-       name="Grid Options"
-       shortcut="control|shift|B">
-        <menu_item_call.on_click
-         function="Floater.Show"
-         parameter="build_options" />
-        <menu_item_call.on_enable
-         function="Tools.EnableToolNotPie" />
-      </menu_item_call>
-      <menu_item_call
-       label="Set Default Permissions..."
-       name="Set default permissions">
-        <menu_item_call.on_click
-         function="Floater.ToggleOrBringToFront"
-         parameter="perms_default" />
-      </menu_item_call>
-      <menu_item_call
-        label="Advanced Build Options"
-        name="Advanced Build Options"
-        shortcut="control|alt|B">
-        <menu_item_call.on_click
-         function="Floater.Show"
-         parameter="advancedbuild_options" />
-        <menu_item_call.on_enable
-         function="Tools.EnableToolNotPie" />
-      </menu_item_call>
+    <menu label="Optionen"  name="Options">
+      <menu_item_check label="Erweiterte Berechtigungen anzeigen"  name="DebugPermissions"/>
+      <menu_item_check label="Nur meine Objekte auswählen"  name="Select Only My Objects"/>
+      <menu_item_check label="Nur bewegliche Objekte auswählen"  name="Select Only Movable Objects"/>
+      <menu_item_check label="Nach Umgebung auswählen"  name="Select By Surrounding"/>
+      <menu_item_check label="Auswahlumrandung anzeigen"  name="Show Selection Outlines"/>
+      <menu_item_check label="Ausgeblendete Auswahl anzeigen"  name="Show Hidden Selection"/>
+      <menu_item_check label="Lichtradius für Auswahl anzeigen"  name="Show Light Radius for Selection"/>
+      <menu_item_check label="Auswahlstrahl anzeigen"  name="Show Selection Beam"/>
+      <menu_item_check label="An Raster ausrichten"  name="Snap to Grid"/>
+      <menu_item_call label="Objekt-XY an Raster ausrichten"  name="Snap Object XY to Grid"/>
+      <menu_item_call label="Auswahl für Raster verwenden"  name="Use Selection for Grid"/>
+      <menu_item_call label="Rasteroptionen"  name="Grid Options"/>
+      <menu_item_call label="Standard-Berechtigungen einstellen..."  name="Set default permissions"/>
+      <menu_item_call label="Erweiterte Build-Optionen"  name="Advanced Build Options"/>
     </menu>
-    <menu
-     create_jump_keys="true"
-     label="Upload"
-     layout="topleft"
-     name="Upload"
-     tear_off="true">
-      <menu_item_call
-       label="Image ([COST])..."
-       layout="topleft"
-       name="Upload Image"
-       shortcut="control|U">
-        <menu_item_call.on_click
-         function="File.UploadImage"
-         parameter="" />
-        <menu_item_call.on_enable
-         function="File.EnableUpload" />
-        <menu_item_call.on_visible
-         function="Upload.CalculateCosts"
-         parameter="Upload Image" />
-      </menu_item_call>
-      <menu_item_call
-       label="Sound ([COST])..."
-       layout="topleft"
-       name="Upload Sound">
-        <menu_item_call.on_click
-         function="File.UploadSound"
-         parameter="" />
-        <menu_item_call.on_enable
-         function="File.EnableUpload" />
-        <menu_item_call.on_visible
-         function="Upload.CalculateCosts"
-         parameter="Upload Sound" />
-      </menu_item_call>
-      <menu_item_call
-       label="Animation ([COST])..."
-       layout="topleft"
-       name="Upload Animation">
-        <menu_item_call.on_click
-         function="File.UploadAnim"
-         parameter="" />
-        <menu_item_call.on_enable
-         function="File.EnableUpload" />
-        <menu_item_call.on_visible
-         function="Upload.CalculateCosts"
-         parameter="Upload Animation" />
-      </menu_item_call>
-      <menu_item_call
-     label="Mesh Model..."
-     layout="topleft"
-     name="Upload Model"
-     shortcut="control|alt|U">
-        <menu_item_call.on_click
-         function="File.UploadModel"
-         parameter="" />
-        <menu_item_call.on_enable
-         function="File.EnableUploadModel" />
-        <menu_item_call.on_visible
-        function="File.VisibleUploadModel"/>
-      </menu_item_call>
-      <menu_item_call
-              label="Bulk ([COST] per file)..."
-              layout="topleft"
-              name="Bulk Upload">
-        <menu_item_call.on_click
-         function="File.UploadBulk"
-         parameter="" />
-        <menu_item_call.on_enable
-          function="File.EnableUpload" />
-      </menu_item_call>
-      <menu_item_call
-       label="Set Default Permissions..."
-       name="Set default permissions">
-        <menu_item_call.on_click
-         function="Floater.ToggleOrBringToFront"
-         parameter="perms_default" />
-      </menu_item_call>
-	  <menu_item_call
-         label="Import Linkset"
-         visibility_control="FSEnableObjectExports"
-         name="import linkset">
-          <menu_item_call.on_click
-           function="Floater.Toggle"
-           parameter="fs_import" />
-          <menu_item_call.on_enable
-            function="File.EnableUpload" />
-    </menu_item_call> 
+    <menu label="Hochladen"  name="Upload">
+      <menu_item_call label="Bild ([COST])..."  name="Upload Image"/>
+      <menu_item_call label="Sound ([COST])..."  name="Upload Sound"/>
+      <menu_item_call label="Animation ([COST])..."  name="Upload Animation"/>
+      <menu_item_call label="Mesh Modell..."  name="Upload Model"/>
+      <menu_item_call label="Mehrfach-Hochladen ([COST] pro Datei)..."  name="Bulk Upload"/>
+      <menu_item_call label="Standard-Berechtigungen einstellen..."  name="Set default permissions"/>
     </menu>
-    <menu_item_separator/>
-    <menu_item_call
-     enabled="false"
-     label="Undo"
-     name="Undo"
-     allow_key_repeat="true"
-     shortcut="control|Z">
-      <on_click
-       function="Edit.Undo"
-       userdata="" />
-      <on_enable
-       function="Edit.EnableUndo" />
-    </menu_item_call>
-    <menu_item_call
-     enabled="false"
-     label="Redo"
-     name="Redo"
-     allow_key_repeat="true"
-     shortcut="control|shift|Z">
-      <on_click
-       function="Edit.Redo"
-       userdata="" />
-      <on_enable
-       function="Edit.EnableRedo" />
-    </menu_item_call>
+    <menu_item_call label="Rückgängig"  name="Undo"/>
+    <menu_item_call label="Wiederholen"  name="Redo"/>
   </menu>
-  <menu
-  create_jum_keys="true"
-  label="Commands"
-  name="Commands"
-  tear_off="true">
+<!-- END OF BUILD MENU -->
+
+
+<!-- START OF COMMANDS MENU -->
+    <menu label="Commands"  name="Commands">
        <menu_item_call
          label="Rebake Textures"
          name="Rebake Texture"
@@ -1885,2614 +616,351 @@
 		<menu_item_separator/>
 		
   </menu>
-  <menu
-     create_jump_keys="true"
-     label="Help"
-     name="Help"
-     tear_off="true">
-        <menu_item_call
-         label="[APP_NAME] Help"
-         name="Second Life Help"
-         shortcut="F1">
-            <menu_item_call.on_click
-            function="PromptShowURL"
-            name="wiki_kokua_viewer_org_url"
-            parameter="WebLaunchExternalTarget,http://wiki.kokuaviewer.org/wiki/Support" />
-        </menu_item_call>
-        <menu_item_call
-             label="Second Life Grid Status"
-             name="Second Life Grid Status"
-             only_in_sl="true">
-             <menu_item_call.on_click
-                 function="Advanced.ShowURL"
-                 parameter="http://status.secondlifegrid.net/" />
-        </menu_item_call>
-        <menu_item_call
-          label="Scripting LSL wiki"
-          name="scripting_wiki">
-           <menu_item_call.on_click
-            function="PromptShowURL"
-            name="wiki_lslscripting_url"
-            parameter="WebLaunchExternalTarget,http://wiki.secondlife.com/wiki/LSL_Portal" />
-        </menu_item_call>
-<!--        <menu_item_call
-         label="Tutorial"
-         name="Tutorial">
-            <menu_item_call.on_click
-             function="Floater.Show"
-             parameter="hud" />
-        </menu_item_call>-->
-        <menu_item_call
-             label="[APP_NAME] Support Group"
-             name="Viewer Support Group"
-             visible="false">
-             <menu_item_call.on_click
-                 function="Advanced.ShowGroup" />
-             <menu_item_call.on_visible
-                 function="Advanced.ViewerSupportGroupExists" />
-        </menu_item_call>
-
-        <menu_item_separator/>
-
-        <menu_item_call
-             label="Report Abuse"
-             name="Report Abuse">
-                <menu_item_call.on_click
-                 function="ReportAbuse" />
-            </menu_item_call>
-        <menu_item_call
-             label="Report Bug"
-             name="Report Bug">
-                <menu_item_call.on_click
-                 function="ShowHelp"
-                 parameter="report_bug" />
-        </menu_item_call>
-
-        <menu_item_separator/>
-
-        <menu_item_call
-         label="About [APP_NAME]"
-         name="About Second Life">
-            <menu_item_call.on_click
-             function="Floater.Show"
-             parameter="sl_about" />
-        </menu_item_call>
+<!-- END OF COMMANDS MENU -->
+  
+<!-- START OF HELP MENU -->   
+    <menu label="Hilfe"  name="Help">
+        <menu_item_call label="[APP_NAME] Hilfe"  name="Second Life Help"/>
+        <menu_item_call label="Second Life Grid Status"  name="Second Life Grid Status"/>
+        <menu_item_call label="Wiki des LSL Skriptsprache"  name="scripting_wiki"/>
+        <menu_item_call label="[APP_NAME] Fürsorgegruppe"  name="Viewer Support Group"/>
+        <menu_item_call label="Missbrauch melden"  name="Report Abuse"/>
+        <menu_item_call label="Fehler melden"  name="Report Bug"/>
+        <menu_item_call label="About [APP_NAME]"  name="About Second Life"/>
     </menu>
-    <menu
-     create_jump_keys="true"
-     label="Advanced"
-     name="Advanced"
-     tear_off="true"
-     visible="false">
-        <menu_item_call
-         label="Rebake Textures"
-         name="Rebake Texture"
-         shortcut="control|alt|R">
-            <menu_item_call.on_click
-             function="Advanced.RebakeTextures" />
-        </menu_item_call>
-        <menu_item_call
-         label="Refresh Scene"
-         name="Refresh Scene"
-         shortcut="control|alt|shift|R">
-            <menu_item_call.on_click
-             function="Advanced.RefreshScene" />
-        </menu_item_call> 
-        <menu_item_call
-           label="Set UI Size to Default"
-           name="Set UI Size to Default">
-          <menu_item_call.on_click
-             function="View.DefaultUISize" />
-        </menu_item_call>
-        <menu_item_call
-         label="Set Window Size..."
-         name="Set Window Size...">
-          <menu_item_call.on_click
-           function="Floater.Show"
-           parameter="window_size" />
-        </menu_item_call>
-
-        <menu_item_separator/>
-
-        <menu_item_check
-         label="Limit Select Distance"
-         name="Limit Select Distance">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="LimitSelectDistance" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="LimitSelectDistance" />
-        </menu_item_check>
-
-        <menu_item_check
-        label="Disable Build Constraints"
-        name="Disable Max Build Constraints">
-          <on_click 
-          function="Advanced.ToggleMaxBuildConstraints"
-          userdata="" />
-          <menu_item_check.on_check
-          function="CheckControl"
-          parameter="DisableMaxBuildConstraints" />
-        </menu_item_check>
-
-        <menu_item_check
-         label="Disable Camera Constraints"
-         name="Disable Camera Distance">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="DisableCameraConstraints" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="DisableCameraConstraints" />
-        </menu_item_check>
-        <menu_item_check
-         label="Disable Simulator Camera Move(restart needed)"
-         name="Disable Simulator Camera Move">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="IgnoreSimulatorCameraConstraints" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="IgnoreSimulatorCameraConstraints" />
-        </menu_item_check>
-        <menu_item_check
-         label="Disable Minimum Camera Object Zoom"
-         name="Disable Minimum Camera Object Zoom">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="DisableMinZoomDist" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="DisableMinZoomDist" />
-        </menu_item_check>
-
-        <menu_item_separator/>
-
-        <menu_item_check
-         label="High-res Snapshot"
-         name="HighResSnapshot">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="HighResSnapshot" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="HighResSnapshot" />
-        </menu_item_check>
-        <menu_item_check
-         label="Quiet Snapshots to Disk"
-         name="QuietSnapshotsToDisk">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="QuietSnapshotsToDisk" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="QuietSnapshotsToDisk" />
-        </menu_item_check>
-        <menu_item_check
-         label="Compress Snapshots to Disk"
-         name="CompressSnapshotsToDisk">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="CompressSnapshotsToDisk" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="CompressSnapshotsToDisk" />
-        </menu_item_check>
-
-        <menu_item_separator/>
-
-        <menu
-         create_jump_keys="true"
-         label="Performance Tools"
-         name="Performance Tools"
-         tear_off="true">
-            <menu_item_call
-             label="Lag Meter"
-             name="Lag Meter">
-                <menu_item_call.on_click
-                 function="Floater.Show"
-                 parameter="lagmeter" />
-            </menu_item_call>
-            <menu_item_check
-             label="Statistics Bar"
-             name="Statistics Bar"
-             shortcut="control|shift|1">
-                <menu_item_check.on_check
-                 function="Floater.Visible"
-                 parameter="stats" />
-                <menu_item_check.on_click
-                 function="Floater.Toggle"
-                 parameter="stats" />
-            </menu_item_check>
-      <menu_item_check
-        label="Show Avatar Rendering Cost"
-        name="Avatar Rendering Cost">
-           <menu_item_check.on_check
-            function="Advanced.CheckInfoDisplay"
-            parameter="shame" />
-           <menu_item_check.on_click
-            function="Advanced.ToggleInfoDisplay"
-            parameter="shame" />
-       </menu_item_check>
-        </menu>
-        <menu
-         create_jump_keys="true"
-         label="Highlighting and Visibility"
-         name="Highlighting and Visibility"
-         tear_off="true">
-         <menu_item_check
-                 label="Cheesy Beacon"
-                 name="Cheesy Beacon">
-                    <menu_item_check.on_check
-                     function="CheckControl"
-                     parameter="CheesyBeacon" />
-                    <menu_item_check.on_click
-                     function="ToggleControl"
-                     parameter="CheesyBeacon" />
-                </menu_item_check>
-            <menu_item_check
-             label="Hide Particles"
-             name="Hide Particles"
-             shortcut="control|alt|shift|=">
-                <menu_item_check.on_check
-                 function="View.CheckRenderType"
-                 parameter="hideparticles" />
-                <menu_item_check.on_click
-                 function="View.ToggleRenderType"
-                 parameter="hideparticles" />
-            </menu_item_check>
-            <menu_item_check
-             label="Hide Selected"
-             name="Hide Selected">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="HideSelectedObjects" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="HideSelectedObjects" />
-            </menu_item_check>
-            <menu_item_check
-             label="Highlight Transparent"
-             name="Highlight Transparent"
-             shortcut="control|alt|T">
-                <menu_item_check.on_check
-                 function="View.CheckHighlightTransparent" />
-                <menu_item_check.on_click
-                 function="View.HighlightTransparent" />
-            </menu_item_check>
-            <menu_item_check
-             label="Show HUD Attachments"
-             name="Show HUD Attachments"
-             shortcut="alt|shift|H">
-                <menu_item_check.on_check
-                 function="View.CheckHUDAttachments" />
-                <menu_item_check.on_click
-                 function="View.ShowHUDAttachments" />
-            </menu_item_check>
-            <menu_item_check
-             label="Show Mouselook Crosshairs"
-             name="ShowCrosshairs">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="ShowCrosshairs" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="ShowCrosshairs" />
-            </menu_item_check>
-  <!-- <menu
-         create_jump_keys="true"
-         label="Hover Tips"
-         name="Hover Tips"
-         tear_off="true">
-            <menu_item_check
-             label="Show Tips"
-             name="Show Tips"
-             shortcut="control|shift|T">
-                <menu_item_check.on_check
-                 function="View.CheckShowHoverTips" />
-                <menu_item_check.on_click
-                 function="View.ShowHoverTips" />
-            </menu_item_check>
-
-            <menu_item_separator/>
-
-            <menu_item_check
-             label="Show Land Tooltips"
-             name="Land Tips">
-                <menu_item_check.on_check
-                 control="ShowLandHoverTip" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="ShowLandHoverTip" />
-                <menu_item_check.on_enable
-                 function="View.CheckShowHoverTips" />
-            </menu_item_check>
-           <menu_item_check
-             label="Show Tips On All Objects"
-             name="Tips On All Objects">
-                <menu_item_check.on_check
-                 control="ShowAllObjectHoverTip" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="ShowAllObjectHoverTip" />
-                <menu_item_check.on_enable
-                 function="View.CheckShowHoverTips" />
-            </menu_item_check>
-        </menu>-->
-
-        </menu>
-
-        <menu
-         create_jump_keys="true"
-         label="Rendering Types"
-         name="Rendering Types"
-         tear_off="true">
-            <menu_item_check
-             label="Simple"
-             name="Simple"
-             shortcut="control|alt|shift|1">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="simple" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="simple" />
-            </menu_item_check>
-            <menu_item_check
-             label="Alpha"
-             name="Alpha"
-             shortcut="control|alt|shift|2">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="alpha" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="alpha" />
-            </menu_item_check>
-            <menu_item_check
-             label="Tree"
-             name="Tree"
-             shortcut="control|alt|shift|3">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="tree" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="tree" />
-            </menu_item_check>
-            <menu_item_check
-             label="Avatars"
-             name="Character"
-             shortcut="control|alt|shift|4">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="character" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="character" />
-            </menu_item_check>
-            <menu_item_check
-             label="SurfacePath"
-             name="SurfacePath"
-             shortcut="control|alt|shift|5">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="surfacePath" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="surfacePath" />
-            </menu_item_check>
-            <menu_item_check
-             label="Sky"
-             name="Sky"
-             shortcut="control|alt|shift|6">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="sky" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="sky" />
-            </menu_item_check>
-            <menu_item_check
-             label="Water"
-             name="Water"
-             shortcut="control|alt|shift|7">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="water" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="water" />
-            </menu_item_check>
-            <menu_item_check
-             label="Ground"
-             name="Ground"
-             shortcut="control|alt|shift|8">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="ground" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="ground" />
-            </menu_item_check>
-            <menu_item_check
-             label="Volume"
-             name="Volume"
-             shortcut="control|alt|shift|9">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="volume" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="volume" />
-            </menu_item_check>
-            <menu_item_check
-             label="Grass"
-             name="Grass"
-             shortcut="control|alt|shift|0">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="grass" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="grass" />
-            </menu_item_check>
-            <menu_item_check
-             label="Clouds"
-             name="Clouds"
-             shortcut="control|alt|shift|-">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="clouds" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="clouds" />
-            </menu_item_check>
-            <menu_item_check
-             label="Particles"
-             name="Particles"
-             shortcut="control|alt|shift|=">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="particles" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="particles" />
-            </menu_item_check>
-            <menu_item_check
-             label="Bump"
-             name="Bump"
-             shortcut="control|alt|shift|\">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRenderType"
-                 parameter="bump" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRenderType"
-                 parameter="bump" />
-            </menu_item_check>
-        </menu>
-        <menu
-         create_jump_keys="true"
-         label="Rendering Features"
-         name="Rendering Features"
-         tear_off="true">
-            <menu_item_check
-             label="UI"
-             name="UI"
-             shortcut="control|alt|F1">
-                <menu_item_check.on_check
-                 function="Advanced.CheckFeature"
-                 parameter="ui" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleFeature"
-                 parameter="ui" />
-            </menu_item_check>
-            <menu_item_check
-             label="Selected"
-             name="Selected"
-             shortcut="control|alt|F2">
-                <menu_item_check.on_check
-                 function="Advanced.CheckFeature"
-                 parameter="selected" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleFeature"
-                 parameter="selected" />
-            </menu_item_check>
-            <menu_item_check
-             label="Highlighted"
-             name="Highlighted"
-             shortcut="control|alt|F3">
-                <menu_item_check.on_check
-                 function="Advanced.CheckFeature"
-                 parameter="highlighted" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleFeature"
-                 parameter="highlighted" />
-            </menu_item_check>
-            <menu_item_check
-             label="Dynamic Textures"
-             name="Dynamic Textures"
-             shortcut="control|alt|F4">
-                <menu_item_check.on_check
-                 function="Advanced.CheckFeature"
-                 parameter="dynamic textures" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleFeature"
-                 parameter="dynamic textures" />
-            </menu_item_check>
-            <menu_item_check
-             label="Foot Shadows"
-             name="Foot Shadows"
-             shortcut="control|alt|F5">
-                <menu_item_check.on_check
-                 function="Advanced.CheckFeature"
-                 parameter="foot shadows" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleFeature"
-                 parameter="foot shadows" />
-            </menu_item_check>
-            <menu_item_check
-             label="Fog"
-             name="Fog"
-             shortcut="control|alt|F6">
-                <menu_item_check.on_check
-                 function="Advanced.CheckFeature"
-                 parameter="fog" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleFeature"
-                 parameter="fog" />
-            </menu_item_check>
-            <menu_item_check
-             label="Test FRInfo"
-             name="Test FRInfo"
-             shortcut="control|alt|F8">
-                <menu_item_check.on_check
-                 function="Advanced.CheckFeature"
-                 parameter="fr info" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleFeature"
-                 parameter="fr info" />
-            </menu_item_check>
-            <menu_item_check
-             label="Flexible Objects"
-             name="Flexible Objects"
-             shortcut="control|alt|F9">
-                <menu_item_check.on_check
-                 function="Advanced.CheckFeature"
-                 parameter="flexible" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleFeature"
-                 parameter="flexible" />
-            </menu_item_check>
-        </menu>        
-        <menu_item_check
-         label="Use Plugin Read Thread"
-         name="Use Plugin Read Thread">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="PluginUseReadThread" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="PluginUseReadThread" />
-        </menu_item_check>
-        <menu_item_call
-         label="Clear Group Cache"
-         name="ClearGroupCache">
-            <menu_item_call.on_click
-             function="Advanced.ClearGroupCache"
-             parameter="ClearGroupCache" />
-        </menu_item_call>
-        <menu_item_check
-         label="Mouse Smoothing"
-         name="Mouse Smoothing">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="MouseSmooth" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="MouseSmooth" />
-        </menu_item_check>
-
-        <menu_item_separator/>
-
-        <menu
-         create_jump_keys="true"
-         label="Shortcuts"
-         name="Shortcuts"
-         tear_off="true"
-         visible="false">
-          <menu_item_call
-             label="Image ([COST])..."
-             name="Upload Image"
-             shortcut="control|U">
-            <menu_item_call.on_click
-               function="File.UploadImage"
-               parameter="" />
-            <menu_item_call.on_enable
-               function="File.EnableUpload" />
-            </menu_item_call>
-            <menu_item_check
-               label="Search"
-               name="Search"
-               shortcut="control|F">
-            <menu_item_check.on_check
-             function="Floater.Visible"
-             parameter="search" />
-            <menu_item_check.on_click
-             function="Floater.Toggle"
-             parameter="search" />
-            </menu_item_check>
-            <menu_item_call
-             enabled="false"
-             label="Release Keys"
-             name="Release Keys">
-                <menu_item_call.on_click
-                 function="Tools.ReleaseKeys"
-                 parameter="" />
-                <menu_item_call.on_enable
-                 function="Tools.EnableReleaseKeys"
-                 parameter="" />
-            </menu_item_call>
-            <menu_item_call
-             label="Set UI Size to Default"
-             name="Set UI Size to Default">
-                <menu_item_call.on_click
-                 function="View.DefaultUISize" />
-            </menu_item_call>
-
-            <menu_item_separator/>
-
-            <menu_item_check
-             label="Always Run"
-             name="Always Run"
-             shortcut="control|R">
-                <menu_item_check.on_check
-                 function="World.CheckAlwaysRun" />
-                <menu_item_check.on_click
-                 function="World.AlwaysRun" />
-            </menu_item_check>
-            <menu_item_check
-             label="Fly"
-             name="Fly"
-             shortcut="Home">
-                <menu_item_check.on_check
-                 function="Agent.getFlying" />
-                <menu_item_check.on_click
-                 function="Agent.toggleFlying" />
-                <menu_item_check.on_enable
-                 function="Agent.enableFlying" />
-            </menu_item_check>
-
-            <menu_item_separator/>
-
-            <menu_item_call
-             label="Close Window"
-             name="Close Window"
-             shortcut="control|W">
-                <menu_item_call.on_click
-                 function="File.CloseWindow" />
-                <menu_item_call.on_enable
-                 function="File.EnableCloseWindow" />
-            </menu_item_call>
-            <menu_item_call
-             label="Close All Windows"
-             name="Close All Windows"
-             shortcut="control|shift|W">
-                <menu_item_call.on_click
-                 function="File.CloseAllWindows" />
-                <menu_item_call.on_enable
-                 function="File.EnableCloseAllWindows" />
-            </menu_item_call>
-
-            <menu_item_separator/>
-
-            <menu_item_call
-             label="Snapshot to Disk"
-             name="Snapshot to Disk"
-             shortcut="control|`"
-             use_mac_ctrl="true">
-                <menu_item_call.on_click
-                 function="File.TakeSnapshotToDisk" />
-            </menu_item_call>
-
-            <menu_item_separator/>
-
-            <menu_item_call
-             label="Mouselook"
-             name="Mouselook"
-             shortcut="M">
-                <menu_item_call.on_click
-                 function="View.Mouselook" />
-                <menu_item_call.on_enable
-                 function="View.EnableMouselook" />
-            </menu_item_call>
-            <menu_item_check
-             label="Joystick Flycam"
-             name="Joystick Flycam"
-             shortcut="alt|shift|F">
-                <menu_item_check.on_check
-                 function="View.CheckJoystickFlycam" />
-                <menu_item_check.on_click
-                 function="View.JoystickFlycam" />
-                <menu_item_check.on_enable
-                 function="View.EnableJoystickFlycam" />
-            </menu_item_check>
-            <menu_item_call
-             label="Reset View"
-             name="Reset View"
-             shortcut="Esc">
-                <menu_item_call.on_click
-                 function="View.ResetView" />
-            </menu_item_call>
-            <menu_item_call
-             label="Look at Last Chatter"
-             name="Look at Last Chatter"
-             shortcut="control|\">
-                <menu_item_call.on_click
-                 function="View.LookAtLastChatter" />
-                <menu_item_call.on_enable
-                 function="View.EnableLastChatter" />
-            </menu_item_call>
-
-            <menu_item_separator/>
-
-            <menu
-             create_jump_keys="true"
-             label="Select Build Tool"
-             name="Select Tool"
-             tear_off="true">
-                <menu_item_call
-                 label="Focus Tool"
-                 name="Focus"
-                 shortcut="control|1">
-                    <menu_item_call.on_click
-                     function="Tools.SelectTool"
-                     parameter="focus" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Move Tool"
-                 name="Move"
-                 shortcut="control|2">
-                    <menu_item_call.on_click
-                     function="Tools.SelectTool"
-                     parameter="move" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Edit Tool"
-                 name="Edit"
-                 shortcut="control|3">
-                    <menu_item_call.on_click
-                     function="Tools.SelectTool"
-                     parameter="edit" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Create Tool"
-                 name="Create"
-                 shortcut="control|4">
-                    <menu_item_call.on_click
-                     function="Tools.SelectTool"
-                     parameter="create" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Land Tool"
-                 name="Land"
-                 shortcut="control|5">
-                    <menu_item_call.on_click
-                     function="Tools.SelectTool"
-                     parameter="land" />
-                </menu_item_call>
-            </menu>
-
-            <menu_item_separator/>
-
-            <menu_item_call
-             label="Zoom In"
-             name="Zoom In"
-             shortcut="control|0">
-                <menu_item_call.on_click
-                 function="View.ZoomIn" />
-            </menu_item_call>
-            <menu_item_call
-             label="Zoom Default"
-             name="Zoom Default"
-             shortcut="control|9">
-                <menu_item_call.on_click
-                 function="View.ZoomDefault" />
-            </menu_item_call>
-            <menu_item_call
-             label="Zoom Out"
-             name="Zoom Out"
-             shortcut="control|8">
-                <menu_item_call.on_click
-                 function="View.ZoomOut" />
-            </menu_item_call>
-            <menu_item_separator
-             visible="false"/>
-            <!-- Made invisible to avoid a dissonance: menu item toggles the menu where it is located. EXT-8069.
-              Can't be removed, to keep shortcut workable.
-            -->
-            <menu_item_check
-             label="Show Advanced Menu"
-             name="Show Advanced Menu"
-             shortcut="control|alt|D"
-             visible="false">
-                <on_check
-                 function="CheckControl"
-                 parameter="UseDebugMenus" />
-                <on_click
-                 function="ToggleControl"
-                 parameter="UseDebugMenus" />
-        </menu_item_check>
-        </menu> <!--Shortcuts-->
-
-        <menu_item_separator/>
-
-        <menu_item_call
-         label="Show Debug Settings"
-         name="Debug Settings">
-            <menu_item_call.on_click
-             function="Advanced.ShowDebugSettings"
-             parameter="all" />
-        </menu_item_call>
-     <menu_item_check
-         label="Show Develop Menu"
-         name="Debug Mode"
-         shortcut="control|alt|Q">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="QAMode" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="QAMode" />
-        </menu_item_check>
+<!-- END OF HELP MENU -->    
     
-    </menu>
-    <menu
-     create_jump_keys="true"
-     label="Develop"
-     name="Develop"
-     tear_off="true"
-     visible="false">
-        <menu
-         create_jump_keys="true"
-         label="Consoles"
-         name="Consoles"
-         tear_off="true">
-            <menu_item_check
-             label="Texture Console"
-             name="Texture Console"
-             shortcut="control|shift|3"
-             use_mac_ctrl="true">
-                <menu_item_check.on_check
-                 function="Advanced.CheckConsole"
-                 parameter="texture" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleConsole"
-                 parameter="texture" />
-            </menu_item_check>
-            <menu_item_check
-             label="Debug Console"
-             name="Debug Console"
-             shortcut="control|shift|4"
-             use_mac_ctrl="true">
-                <menu_item_check.on_check
-                 function="Advanced.CheckConsole"
-                 parameter="debug" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleConsole"
-                 parameter="debug" />
-            </menu_item_check>
-            <menu_item_call
-             label="Notifications Console"
-             name="Notifications"
-             shortcut="control|shift|5">
-              <menu_item_call.on_click
-               function="Floater.Toggle"
-               parameter="notifications_console" />
-            </menu_item_call>
-            <menu_item_check
-               label="Texture Size Console"
-               name="Texture Size"
-               shortcut="control|shift|6">
-              <menu_item_check.on_check
-               function="Advanced.CheckConsole"
-               parameter="texture size" />
-              <menu_item_check.on_click
-               function="Advanced.ToggleConsole"
-               parameter="texture size" />
-            </menu_item_check>
-            <menu_item_check
-               label="Texture Category Console"
-               name="Texture Category"
-               shortcut="control|shift|7">
-              <menu_item_check.on_check
-               function="Advanced.CheckConsole"
-               parameter="texture category" />
-              <menu_item_check.on_click
-               function="Advanced.ToggleConsole"
-               parameter="texture category" />
-            </menu_item_check>
-            <menu_item_check
-             label="Fast Timers"
-             name="Fast Timers"
-             shortcut="control|shift|9"
-             use_mac_ctrl="true">
-                <menu_item_check.on_check
-                 function="Advanced.CheckConsole"
-                 parameter="fast timers" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleConsole"
-                 parameter="fast timers" />
-            </menu_item_check>
-            <menu_item_check
-             label="Memory"
-             name="Memory"
-             shortcut="control|shift|0"
-             use_mac_ctrl="true">
-                <menu_item_check.on_check
-                 function="Advanced.CheckConsole"
-                 parameter="memory view" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleConsole"
-                 parameter="memory view" />
-            </menu_item_check>
-
-            <menu_item_separator/>
-
-            <menu_item_call
-             label="Region Info to Debug Console"
-             name="Region Info to Debug Console">
-                <menu_item_call.on_click
-                 function="Advanced.DumpInfoToConsole"
-                 parameter="region" />
-            </menu_item_call>
-            <menu_item_call
-             label="Group Info to Debug Console"
-             name="Group Info to Debug Console">
-                <menu_item_call.on_click
-                 function="Advanced.DumpInfoToConsole"
-                 parameter="group" />
-            </menu_item_call>
-            <menu_item_call
-             label="Capabilities Info to Debug Console"
-             name="Capabilities Info to Debug Console">
-                <menu_item_call.on_click
-                 function="Advanced.DumpInfoToConsole"
-                 parameter="capabilities" />
-            </menu_item_call>
-
-            <menu_item_separator/>
-
-            <menu_item_check
-             label="Camera"
-             name="Camera">
-                <menu_item_check.on_check
-                 function="Advanced.CheckHUDInfo"
-                 parameter="camera" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleHUDInfo"
-                 parameter="camera" />
-            </menu_item_check>
-            <menu_item_check
-             label="Wind"
-             name="Wind">
-                <menu_item_check.on_check
-                 function="Advanced.CheckHUDInfo"
-                 parameter="wind" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleHUDInfo"
-                 parameter="wind" />
-            </menu_item_check>
-            <menu_item_check
-             label="FOV"
-             name="FOV">
-                <menu_item_check.on_check
-                 function="Advanced.CheckHUDInfo"
-                 parameter="fov" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleHUDInfo"
-                 parameter="fov" />
-            </menu_item_check>
-            <menu_item_check
-             label="Badge"
-             name="Badge"
-			 shortcut="alt|control|shift|h">
-                <menu_item_check.on_check
-                 function="Advanced.CheckHUDInfo"
-                 parameter="badge" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleHUDInfo"
-                 parameter="badge" />
-            </menu_item_check>
+<!-- START OF ADVANCED MENU -->    
+    <menu label="Advanced"  name="Advanced">
+        <menu_item_call label="Textur neu laden"  name="Rebake Texture"/>
+        <menu_item_call label="Szene neu laden"  name="Refresh Scene"/>
+        <menu_item_call label="UI-Größe auf Standard setzen"  name="Set UI Size to Default"/>
+        <menu_item_call label="Fenstergröße einstellen..."  name="Set Window Size..."/>
+        <menu_item_check label="Auswahldistanz einschränken"  name="Limit Select Distance"/>
+        <menu_item_check label="Bauenbeschränkungen deaktivieren"  name="Disable Max Build Constraints"/>
+        <menu_item_check label="Kamerabeschränkungen deaktivieren"  name="Disable Camera Distance"/>
+        <menu_item_check label="Simulator Kamerabewegung deaktivieren(Neustart erforderlich)"  name="Disable Simulator Camera Move"/>
+        <menu_item_check label="Minimale Kamerazoom Objekt deaktivieren"  name="Disable Minimum Camera Object Zoom"/>
+        <menu_item_check label="Hochauflösendes Foto"  name="HighResSnapshot"/>
+        <menu_item_check label="Fotos auf Festplatte leise speichern"  name="QuietSnapshotsToDisk"/>
+        <menu_item_check label="Fotos auf Festplatte komprimieren"  name="CompressSnapshotsToDisk"/>
+        <menu label="Leistung Werkzeuge"  name="Performance Tools">
+            <menu_item_call label="Lag-Anzeig"  name="Lag Meter"/>
+            <menu_item_check label="Statistikleiste"  name="Statistics Bar"/>
+            <menu_item_check label="Avatar Rendern Kosten"  name="Avatar Rendering Cost"/>
         </menu>
-        <menu
-         create_jump_keys="true"
-         label="Show Info"
-         name="Display Info"
-         tear_off="true">
-            <menu_item_check
-             label="Show Time"
-             name="Show Time">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="DebugShowTime" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="DebugShowTime" />
-            </menu_item_check>
-            <menu_item_check
-             label="Show Render Info"
-             name="Show Render Info">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="DebugShowRenderInfo" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="DebugShowRenderInfo" />
-            </menu_item_check>
-            <menu_item_check
-             label="Show Matrices"
-             name="Show Matrices">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="DebugShowRenderMatrices" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="DebugShowRenderMatrices" />
-            </menu_item_check>
-            <menu_item_check
-             label="Show Color Under Cursor"
-             name="Show Color Under Cursor">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="DebugShowColor" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="DebugShowColor" />
-            </menu_item_check>
-
-            <menu_item_separator/>
-
-            <menu_item_check
-             label="Show Updates to Objects"
-             name="Show Updates"
-             shortcut="control|alt|shift|U">
-                <menu_item_check.on_check
-                 function="Advanced.CheckShowObjectUpdates"
-                 parameter="ObjectUpdates" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleShowObjectUpdates" />
-            </menu_item_check>
+        <menu label="Hervorhebung und Sichtbarkeit"  name="Highlighting and Visibility">
+            <menu_item_check label="Pulsierender Strahl"  name="Cheesy Beacon"/>
+            <menu_item_check label="Partikel ausblenden"  name="Hide Particles"/>
+            <menu_item_check label="Auswahl ausblenden"  name="Hide Selected"/>
+            <menu_item_check label="Durchsichtig hervorhebe"  name="Highlight Transparent"/>
+            <menu_item_check label="HUD-Anhänge anzeigen"  name="Show HUD Attachments"/>
+            <menu_item_check label="Fadenkreuz für Mouselook anzeigen"  name="ShowCrosshairs"/>
         </menu>
-
-        <menu_item_separator/>
-
-        <menu
-         create_jump_keys="true"
-         label="Force an Error"
-         name="Force Errors"
-         tear_off="true">
-            <menu_item_call
-             label="Force Breakpoint"
-             name="Force Breakpoint"
-             shortcut="control|alt|shift|B">
-                <menu_item_call.on_click
-                 function="Advanced.ForceErrorBreakpoint" />
-            </menu_item_call>
-            <menu_item_call
-             label="Force LLError And Crash"
-             name="Force LLError And Crash">
-                <menu_item_call.on_click
-                 function="Advanced.ForceErrorLlerror" />
-            </menu_item_call>
-            <menu_item_call
-             label="Force Bad Memory Access"
-             name="Force Bad Memory Access">
-                <menu_item_call.on_click
-                 function="Advanced.ForceErrorBadMemoryAccess" />
-            </menu_item_call>
-            <menu_item_call
-             label="Force Infinite Loop"
-             name="Force Infinite Loop">
-                <menu_item_call.on_click
-                 function="Advanced.ForceErrorInfiniteLoop" />
-            </menu_item_call>
-            <menu_item_call
-             label="Force Driver Crash"
-             name="Force Driver Carsh">
-                <menu_item_call.on_click
-                 function="Advanced.ForceErrorDriverCrash" />
-            </menu_item_call>
-            <menu_item_call
-             label="Force Software Exception"
-             name="Force Software Exception">
-                <menu_item_call.on_click
-                 function="Advanced.ForceErrorSoftwareException" />
-            </menu_item_call>
-            <menu_item_call
-             label="Force Disconnect Viewer"
-             name="Force Disconnect Viewer">
-                <menu_item_call.on_click
-                 function="Advanced.ForceErrorDisconnectViewer" />
-            </menu_item_call>
-            <menu_item_call
-             label="Simulate a Memory Leak"
-             name="Memory Leaking Simulation">
-               <menu_item_call.on_click
-                function="Floater.Show"
-                parameter="mem_leaking" />
-               </menu_item_call>
+        <menu label="Rendering typen"  name="Rendering Types">
+            <menu_item_check label="Einfach"  name="Simple"/>
+            <menu_item_check label="Alpha"  name="Alpha"/>
+            <menu_item_check label="Baum"  name="Tree"/>
+            <menu_item_check label="Avatare"  name="Character"/>
+            <menu_item_check label="Flächenpatch"  name="SurfacePath"/>
+            <menu_item_check label="Himmel"  name="Sky"/>
+            <menu_item_check label="Wasser"   name="Water"/>
+            <menu_item_check label="Boden"   name="Ground"/>
+            <menu_item_check label="Volumen"  name="Volume"/>
+            <menu_item_check label="Gras"  name="Grass"/>
+            <menu_item_check label="Wolken"  name="Clouds"/>
+            <menu_item_check label="Partikel"  name="Particles"/>
+            <menu_item_check label="Bump"  name="Bump"/>
         </menu>
-        <menu
-         create_jump_keys="true"
-         label="Render Tests"
-         name="Render Tests"
-         tear_off="true">
-            <menu_item_check
-             label="Camera Offset"
-             name="Camera Offset">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="CameraOffset" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="CameraOffset" />
-            </menu_item_check>
-            <menu_item_check
-             label="Randomize Framerate"
-             name="Randomize Framerate">
-                <menu_item_check.on_check
-                 function="Advanced.CheckRandomizeFramerate"
-                 parameter="Randomize Framerate" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleRandomizeFramerate" />
-            </menu_item_check>
-            <menu_item_check
-             label="Periodic Slow Frame"
-             name="Periodic Slow Frame">
-                <menu_item_check.on_check
-                 function="Advanced.CheckPeriodicSlowFrame"
-                 parameter="points" />
-                <menu_item_check.on_click
-                 function="Advanced.TogglePeriodicSlowFrame"
-                 parameter="points" />
-            </menu_item_check>
-            <menu_item_check
-             label="Frame Test"
-             name="Frame Test">
-                <menu_item_check.on_check
-                 function="Advanced.CheckFrameTest"
-                 parameter="Frame Test" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleFrameTest" />
-            </menu_item_check>
-        </menu>
-      <menu
-        create_jump_keys="true"
-        label="Render Metadata"
-        name="Render Metadata"
-        tear_off="true">
-        <menu_item_check
-         label="Bounding Boxes"
-         name="Bounding Boxes">
-        <menu_item_check.on_check
-         function="Advanced.CheckInfoDisplay"
-         parameter="bboxes" />
-        <menu_item_check.on_click
-         function="Advanced.ToggleInfoDisplay"
-         parameter="bboxes" />
-        </menu_item_check>
-        <menu_item_check
-         label="Octree"
-         name="Octree">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="octree" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="octree" />
-        </menu_item_check>
-        <menu_item_check
-         label="Shadow Frusta"
-         name="Shadow Frusta">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="shadow frusta" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="shadow frusta" />
-        </menu_item_check>
-        <menu_item_check
-         label="Occlusion"
-         name="Occlusion">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="occlusion" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="occlusion" />
-        </menu_item_check>
-        <menu_item_check
-         label="Render Batches"
-         name="Render Batches">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="render batches" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="render batches" />
-        </menu_item_check>
-        <menu_item_check
-         label="Texture Anim"
-         name="Texture Anim">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="texture anim" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="texture anim" />
-        </menu_item_check>
-        <menu_item_check
-         label="Texture Priority"
-         name="Texture Priority">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="texture priority" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="texture priority" />
-        </menu_item_check>
-        <menu_item_check
-         label="Texture Area"
-         name="Texture Area">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="texture area" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="texture area" />
-        </menu_item_check>
-        <menu_item_check
-         label="Face Area"
-         name="Face Area">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="face area" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="face area" />
-        </menu_item_check>
-        <menu_item_check
-         label="Lights"
-         name="Lights">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="lights" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="lights" />
-        </menu_item_check>
-        <menu_item_check
-         label="Collision Skeleton"
-         name="Collision Skeleton">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="collision skeleton" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="collision skeleton" />
-        </menu_item_check>
-       <menu_item_check
-         label="Joints"
-         name="Joints">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="joints" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="joints" />
-        </menu_item_check>
-        <menu_item_check
-         label="Raycast"
-         name="Raycast">
-          <menu_item_check.on_check
-           function="Advanced.CheckInfoDisplay"
-           parameter="raycast" />
-          <menu_item_check.on_click
-           function="Advanced.ToggleInfoDisplay"
-           parameter="raycast" />
-        </menu_item_check>
-      </menu>
-        <menu
-         create_jump_keys="true"
-         label="Rendering"
-         name="Rendering"
-         tear_off="true">
-            <menu_item_check
-             label="Axes"
-             name="Axes">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="ShowAxes" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="ShowAxes" />
-            </menu_item_check>
-            <menu_item_check
-             label="Tangent Basis"
-             name="Tangent Basis">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="ShowTangentBasis" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="ShowTangentBasis" />
-            </menu_item_check>
-            <menu_item_call
-             label="Selected Texture Info Basis"
-             name="Selected Texture Info Basis"
-             shortcut="control|alt|shift|T">
-                <menu_item_call.on_click
-                 function="Advanced.SelectedTextureInfo" />
-            </menu_item_call>
-            <menu_item_check
-             label="Wireframe"
-             name="Wireframe"
-             shortcut="control|shift|R">
-                <menu_item_check.on_check
-                 function="Advanced.CheckWireframe"
-                 parameter="Wireframe" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleWireframe" />
-            </menu_item_check>
-            <menu_item_check
-             label="Object-Object Occlusion"
-             name="Object-Object Occlusion"
-             shortcut="control|shift|O">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="UseOcclusion" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="UseOcclusion" />
-                <menu_item_check.on_enable
-                 function="Advanced.EnableObjectObjectOcclusion" />
-            </menu_item_check>
-          <menu_item_check
-             label="Framebuffer Objects"
-             name="Framebuffer Objects">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="RenderUseFBO" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="RenderUseFBO" />
-            <menu_item_check.on_enable
-                 function="Advanced.EnableRenderFBO" />
-           </menu_item_check>
-
-          <menu_item_separator />
-
-          <menu_item_check
-                       label="Lighting and Shadows"
-                       name="Lighting and Shadows">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="RenderDeferred" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="RenderDeferred" />
-            <menu_item_check.on_enable
-                 function="Advanced.EnableRenderDeferred" />
-          </menu_item_check>
-          <menu_item_check
-                       label="   Shadows from Sun/Moon/Projectors"
-                       name="Shadows from Sun/Moon/Projectors">
-            <menu_item_check.on_check
-             function="Advanced.CheckRenderShadowOption"
-             parameter="RenderShadowDetail" />
-            <menu_item_check.on_click
-             function="Advanced.ClickRenderShadowOption"
-             parameter="RenderShadowDetail" />
-            <menu_item_check.on_enable
-                 function="Advanced.EnableRenderDeferredOptions" />
-          </menu_item_check>
-          <menu_item_check
-                   label="   SSAO and Shadow Smoothing"
-                   name="SSAO and Shadow Smoothing">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="RenderDeferredSSAO" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="RenderDeferredSSAO" />
-            <menu_item_check.on_enable
-                 function="Advanced.EnableRenderDeferredOptions" />
-          </menu_item_check>
-          <menu_item_check
-                   label="   Global Illumination (experimental)"
-                   name="Global Illumination">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="RenderDeferredGI" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="RenderDeferredGI" />
-            <menu_item_check.on_enable
-                 function="Advanced.EnableRenderDeferredOptions" />
-          </menu_item_check>
-
-          <menu_item_separator />
-
-          <menu_item_check
-             label="Debug GL"
-             name="Debug GL">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="RenderDebugGL" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="RenderDebugGL" />
-            </menu_item_check>
-            <menu_item_check
-             label="Debug Pipeline"
-             name="Debug Pipeline">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="RenderDebugPipeline" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="RenderDebugPipeline" />
-            </menu_item_check>
-            <menu_item_check
-             label="Automatic Alpha Masks (deferred)"
-             name="Automatic Alpha Masks (deferred)">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="RenderAutoMaskAlphaDeferred" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="RenderAutoMaskAlphaDeferred" />
-            </menu_item_check>
-            <menu_item_check
-             label="Automatic Alpha Masks (non-deferred)"
-             name="Automatic Alpha Masks (non-deferred)">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="RenderAutoMaskAlphaNonDeferred" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="RenderAutoMaskAlphaNonDeferred" />
-            </menu_item_check>
-            <menu_item_check
-             label="Animation Textures"
-             name="Animation Textures">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="AnimateTextures" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="AnimateTextures" />
-            </menu_item_check>
-            <menu_item_check
-             label="Disable Textures"
-             name="Disable Textures">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="TextureDisable" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="TextureDisable" />
-            </menu_item_check>
-            <menu_item_check
-              label="Full Res Textures"
-             name="Rull Res Textures">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="TextureLoadFullRes" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="TextureLoadFullRes" />
-            </menu_item_check>
-            <menu_item_check
-               label="Audit Textures"
-               name="Audit Textures">
-              <menu_item_check.on_check
-               function="CheckControl"
-               parameter="AuditTexture" />
-              <menu_item_check.on_click
-               function="ToggleControl"
-               parameter="AuditTexture" />
-            </menu_item_check>
-            <menu_item_check
-             label="Texture Atlas (experimental)"
-             name="Texture Atlas">
-              <menu_item_check.on_check
-               function="CheckControl"
-               parameter="EnableTextureAtlas" />
-              <menu_item_check.on_click
-               function="ToggleControl"
-               parameter="EnableTextureAtlas" />
-            </menu_item_check>
-              <menu_item_check
-             label="Render Attached Lights"
-             name="Render Attached Lights">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="RenderAttachedLights" />
-                <menu_item_check.on_click
-                 function="Advanced.HandleAttachedLightParticles"
-                 parameter="RenderAttachedLights" />
-            </menu_item_check>
-            <menu_item_check
-             label="Render Attached Particles"
-             name="Render Attached Particles">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="RenderAttachedParticles" />
-                <menu_item_check.on_click
-                 function="Advanced.HandleAttachedLightParticles"
-                 parameter="RenderAttachedParticles" />
-            </menu_item_check>
-            <menu_item_check
-             label="Hover Glow Objects"
-             name="Hover Glow Objects">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="RenderHoverGlowEnable" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="RenderHoverGlowEnable" />
-            </menu_item_check>
-        </menu>
-
-        <menu
-         create_jump_keys="true"
-         label="Network"
-         name="Network"
-         tear_off="true">
-            <menu_item_check
-             label="Pause Agent"
-             name="AgentPause">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="AgentPause" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="AgentPause" />
-            </menu_item_check>
-
-            <menu_item_separator/>
-
-            <menu_item_call
-             label="Enable Message Log"
-             name="Enable Message Log">
-                <menu_item_call.on_click
-                 function="Advanced.EnableMessageLog" />
-            </menu_item_call>
-            <menu_item_call
-             label="Disable Message Log"
-             name="Disable Message Log">
-                <menu_item_call.on_click
-                 function="Advanced.DisableMessageLog" />
-            </menu_item_call>
-
-            <menu_item_separator/>
-
-            <menu_item_check
-             label="Velocity Interpolate Objects"
-             name="Velocity Interpolate Objects">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="VelocityInterpolate" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="VelocityInterpolate" />
-            </menu_item_check>
-            <menu_item_check
-             label="Ping Interpolate Object Positions"
-             name="Ping Interpolate Object Positions">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="PingInterpolate" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="PingInterpolate" />
-            </menu_item_check>
-
-            <menu_item_separator/>
-
-            <menu_item_call
-             label="Drop a Packet"
-             name="Drop a Packet"
-             shortcut="control|alt|L">
-                <menu_item_call.on_click
-                 function="Advanced.DropPacket" />
-            </menu_item_call>
-        </menu>
-        <menu_item_call
-         label="Dump Scripted Camera"
-         name="Dump Scripted Camera">
-            <menu_item_call.on_click
-             function="Advanced.DumpScriptedCamera" />
-        </menu_item_call>
-        <menu_item_call
-             label="Bumps, Pushes &amp; Hits"
-             name="Bumps, Pushes &amp;amp; Hits">
-                <menu_item_call.on_click
-                 function="Floater.Show"
-                 parameter="bumps" />
-            </menu_item_call>
-
-        <menu
-         create_jump_keys="true"
-         label="Recorder"
-         name="Recorder"
-         tear_off="true">
-            <menu_item_call
-             label="Start Playback"
-             name="Start Playback">
-                <menu_item_call.on_click
-                 function="Advanced.AgentPilot"
-                 parameter="start playback" />
-            </menu_item_call>
-            <menu_item_call
-             label="Stop Playback"
-             name="Stop Playback">
-                <menu_item_call.on_click
-                 function="Advanced.AgentPilot"
-                 parameter="stop playback" />
-            </menu_item_call>
-            <menu_item_check
-             label="Loop Playback"
-             name="Loop Playback">
-                <menu_item_check.on_check
-                 function="Advanced.CheckAgentPilotLoop"
-                 parameter="loopPlayback" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleAgentPilotLoop" />
-            </menu_item_check>
-            <menu_item_call
-             label="Start Record"
-             name="Start Record">
-                <menu_item_call.on_click
-                 function="Advanced.AgentPilot"
-                 parameter="start record" />
-            </menu_item_call>
-            <menu_item_call
-             label="Stop Record"
-             name="Stop Record">
-                <menu_item_call.on_click
-                 function="Advanced.AgentPilot"
-                 parameter="stop record" />
-            </menu_item_call>
-        </menu>
-
-        <menu
-         create_jump_keys="true"
-         label="World"
-         name="World"
-         tear_off="true">
-            <menu_item_check
-             label="Sim Sun Override"
-             name="Sim Sun Override">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="SkyOverrideSimSunPosition" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="SkyOverrideSimSunPosition" />
-            </menu_item_check>
-            <menu_item_check
-             label="Cheesy Beacon"
-             name="Cheesy Beacon">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="CheesyBeacon" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="CheesyBeacon" />
-            </menu_item_check>
-            <menu_item_check
-             label="Fixed Weather"
-             name="Fixed Weather">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="FixedWeather" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="FixedWeather" />
-            </menu_item_check>
-            <menu_item_call
-             label="Dump Region Object Cache"
-             name="Dump Region Object Cache">
-                <menu_item_call.on_click
-                 function="Advanced.DumpRegionObjectCache" />
-            </menu_item_call>
-        </menu>
-        <menu
-         create_jump_keys="true"
-         label="UI"
-         name="UI"
-         tear_off="true">
-         <!--   <menu_item_check
-             label="New Bottom Bar"
-             name="New Bottom Bar">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="BottomPanelNew" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="BottomPanelNew" />
-            </menu_item_check>-->
-            <menu_item_call
-             label="Web Browser Test"
-             name="Web Browser Test">
-                <menu_item_call.on_click
-                 function="Advanced.WebBrowserTest"
-                 parameter="http://secondlife.com/app/search/slurls.html"/>
-            </menu_item_call>
-            <menu_item_call
-             label="Dump SelectMgr"
-             name="Dump SelectMgr">
-                <menu_item_call.on_click
-                 function="Advanced.DumpSelectMgr" />
-            </menu_item_call>
-            <menu_item_call
-             label="Dump Inventory"
-             name="Dump Inventory">
-                <menu_item_call.on_click
-                 function="Advanced.DumpInventory" />
-            </menu_item_call>
-            <menu_item_call
-             label="Dump Timers"
-             name="Dump Timers">
-                <menu_item_call.on_click
-                 function="Advanced.DumpTimers" />
-            </menu_item_call>
-            <menu_item_call
-             label="Dump Focus Holder"
-             name="Dump Focus Holder">
-                <menu_item_call.on_click
-                 function="Advanced.DumpFocusHolder" />
-            </menu_item_call>
-            <menu_item_call
-             label="Print Selected Object Info"
-             name="Print Selected Object Info"
-             shortcut="control|shift|P">
-                <menu_item_call.on_click
-                 function="Advanced.PrintSelectedObjectInfo" />
-            </menu_item_call>
-            <menu_item_call
-             label="Print Agent Info"
-             name="Print Agent Info"
-             shortcut="shift|P">
-                <menu_item_call.on_click
-                 function="Advanced.PrintAgentInfo" />
-            </menu_item_call>
-            <menu_item_call
-             label="Memory Stats"
-             name="Memory Stats"
-             shortcut="control|alt|shift|M">
-                <menu_item_call.on_click
-                 function="Advanced.PrintTextureMemoryStats" />
-            </menu_item_call>
-            <menu_item_check
-             label="Double-Click Auto-Pilot"
-             name="Double-Click Auto-Pilot">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="DoubleClickAutoPilot" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="DoubleClickAutoPilot" />
-            </menu_item_check>
-            <menu_item_check
-             label="Double-Click Teleport"
-             name="DoubleClick Teleport">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="DoubleClickTeleport" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="DoubleClickTeleport" />
-            </menu_item_check>
-
-            <menu_item_separator />
-
-            <menu_item_check
-             label="Debug SelectMgr"
-             name="Debug SelectMgr">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="DebugSelectMgr" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="DebugSelectMgr" />
-            </menu_item_check>
-            <menu_item_check
-             label="Debug Clicks"
-             name="Debug Clicks">
-                <menu_item_check.on_check
-                 function="Advanced.CheckDebugClicks"
-                 parameter="DebugClicks" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleDebugClicks"
-                 parameter="DebugClicks" />
-            </menu_item_check>
-            <menu_item_check
-             label="Debug Views"
-             name="Debug Views">
-                <menu_item_check.on_check
-                 function="Advanced.CheckDebugViews" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleDebugViews" />
-            </menu_item_check>
-            <menu_item_check
-             label="Debug Name Tooltips"
-             name="Debug Name Tooltips">
-                <menu_item_check.on_check
-                 function="Advanced.CheckXUINameTooltips"
-                 parameter="XUINameTooltips" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleXUINameTooltips" />
-            </menu_item_check>
-            <menu_item_check
-             label="Debug Mouse Events"
-             name="Debug Mouse Events">
-                <menu_item_check.on_check
-                 function="Advanced.CheckDebugMouseEvents"
-                 parameter="MouseEvents" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleDebugMouseEvents" />
-            </menu_item_check>
-            <menu_item_check
-             label="Debug Keys"
-             name="Debug Keys">
-                <menu_item_check.on_check
-                 function="Advanced.CheckDebugKeys"
-                 parameter="DebugKeys" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleDebugKeys" />
-            </menu_item_check>
-            <menu_item_check
-             label="Debug WindowProc"
-             name="Debug WindowProc">
-                <menu_item_check.on_check
-                 function="Advanced.CheckDebugWindowProc"
-                 parameter="DebugWindowProc" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleDebugWindowProc"
-                 parameter="DebugWindowProc" />
-            </menu_item_check>
-        </menu>
-        <menu
-         create_jump_keys="true"
-         label="XUI"
-         name="XUI"
-         tear_off="true">
-            <menu_item_call
-               label="Reload Color Settings"
-               name="Reload Color Settings">
-              <menu_item_call.on_click
-               function="Advanced.ReloadColorSettings" />
-            </menu_item_call>
-            <menu_item_call
-             label="Show Font Test"
-             name="Show Font Test">
-                <menu_item_call.on_click
-                 function="Floater.Show"
-                 parameter="font_test" />
-            </menu_item_call>
-            <menu_item_call
-             label="Load from XML"
-             name="Load from XML">
-                <menu_item_call.on_click
-                 function="Advanced.LoadUIFromXML" />
-            </menu_item_call>
-            <menu_item_call
-             label="Save to XML"
-             name="Save to XML">
-                <menu_item_call.on_click
-                 function="Advanced.SaveUIToXML" />
-            </menu_item_call>
-            <menu_item_check
-             label="Show XUI Names"
-             name="Show XUI Names">
-                <menu_item_check.on_check
-                 function="Advanced.CheckXUINames"
-                 parameter="showUIname" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleXUINames" />
-            </menu_item_check>
-          <menu_item_call
-           label="Send Test IMs"
-           name="Send Test IMs">
-            <menu_item_call.on_click
-             function="Advanced.SendTestIMs" />
-          </menu_item_call>
-        </menu>
-        <menu
-         create_jump_keys="true"
-         label="Avatar"
-         name="Character"
-         tear_off="true">
-            <menu
-             create_jump_keys="true"
-             label="Grab Baked Texture"
-             name="Grab Baked Texture"
-             tear_off="true">
-                <menu_item_call
-                 label="Iris"
-                 name="Iris">
-                    <menu_item_call.on_click
-                     function="Advanced.GrabBakedTexture"
-                     parameter="iris" />
-                    <menu_item_call.on_enable
-                     function="Advanced.EnableGrabBakedTexture"
-					 parameter="iris" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Head"
-                 name="Head">
-                    <menu_item_call.on_click
-                     function="Advanced.GrabBakedTexture"
-                     parameter="head" />
-                    <menu_item_call.on_enable
-                     function="Advanced.EnableGrabBakedTexture"
-					 parameter="head" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Upper Body"
-                 name="Upper Body">
-                    <menu_item_call.on_click
-                     function="Advanced.GrabBakedTexture"
-                     parameter="upper" />
-                    <menu_item_call.on_enable
-                     function="Advanced.EnableGrabBakedTexture"
-					 parameter="upper" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Lower Body"
-                 name="Lower Body">
-                    <menu_item_call.on_click
-                     function="Advanced.GrabBakedTexture"
-                     parameter="lower" />
-                    <menu_item_call.on_enable
-                     function="Advanced.EnableGrabBakedTexture"
-					 parameter="lower" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Skirt"
-                 name="Skirt">
-                    <menu_item_call.on_click
-                     function="Advanced.GrabBakedTexture"
-                     parameter="skirt" />
-                    <menu_item_call.on_enable
-                     function="Advanced.EnableGrabBakedTexture"
-					 parameter="skirt" />
-                </menu_item_call>
+        <menu label="Rendering-Funktionen"  name="Rendering Features">
+            <menu_item_check label="UI"  name="UI"/>
+            <menu_item_check label="Ausgewählt"  name="Selected"/>
+            <menu_item_check label="Hervorgehoben"  name="Highlighted"/>
+            <menu_item_check label="Dynamische Texturens"  name="Dynamic Textures"/>
+            <menu_item_check label="Fußschattens"  name="Foot Shadows"/>
+            <menu_item_check label="Nebel"  name="Fog"/>
+            <menu_item_check label="FRInfo testen"  name="Test FRInfo"/>
+            <menu_item_check label="Flexible Objekte"  name="Flexible Objects" />
+        </menu>        
+        <menu_item_check label="Plugin Read Thread verwenden"  name="Use Plugin Read Thread"/>
+        <menu_item_call label="Gruppen-Cache löschen"  name="ClearGroupCache"/>
+        <menu_item_check label="Weiche Mausbewegung"  name="Mouse Smoothing"/>
+        <menu label="Tastaturkürzel"  name="Shortcuts">
+            <menu_item_call label="Bild ([COST])..."  name="Upload Image"/>
+            <menu_item_check label="Suchen" name="Search"/>
+            <menu_item_call label="Tasten freigebe" name="Release Keys"/>
+            <menu_item_call label="UI-Größe auf Standard setzen"  name="Set UI Size to Default"/>
+            <menu_item_check label="Immer rennen"  name="Always Run"/>
+            <menu_item_check label="Fliegen"  name="Fly"/>
+            <menu_item_call label="Fenster schließen"  name="Close Window"/>
+            <menu_item_call label="Alle Fenster schließen"  name="Close All Windows"/>
+            <menu_item_call label="Foto auf Datenträger"  name="Snapshot to Disk"/>
+            <menu_item_call label="Mouselook"  name="Mouselook"/>
+            <menu_item_check label="Joystick Flycam"  name="Joystick Flycam"/>
+            <menu_item_call label="Ansicht zurücksetzen"  name="Reset View"/>
+            <menu_item_call label="Letzten Chatter ansehen"  name="Look at Last Chatter"/>
+            <menu label="Bauwerkzeug auswählen"  name="Select Tool">
+                <menu_item_call label="Fokus"  name="Focus"/>
+                <menu_item_call label="Verschieben"  name="Move"/>
+                <menu_item_call label="Bearbeiten"  name="Edit"/>
+                <menu_item_call label="Erstellen"  name="Create"/>
+                <menu_item_call label="Land"  name="Land"/>
             </menu>
-            <menu
-             create_jump_keys="true"
-             label="Character Tests"
-             name="Character Tests"
-             tear_off="true">
-                <menu_item_call
-                 label="Appearance To XML"
-                 name="Appearance To XML">
-                    <menu_item_call.on_click
-                     function="Advanced.AppearanceToXML" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Toggle Character Geometry"
-                 name="Toggle Character Geometry">
-                    <menu_item_call.on_click
-                     function="Advanced.ToggleCharacterGeometry" />
-                    <menu_item_call.on_enable
-                     function="IsGodCustomerService" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Test Male"
-                 name="Test Male">
-                    <menu_item_call.on_click
-                     function="Advanced.TestMale" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Test Female"
-                 name="Test Female">
-                    <menu_item_call.on_click
-                     function="Advanced.TestFemale" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Toggle PG"
-                 name="Toggle PG">
-                    <menu_item_call.on_click
-                     function="Advanced.TogglePG" />
-                </menu_item_call>
-                <menu_item_check
-                 label="Allow Select Avatar"
-                 name="Allow Select Avatar">
-                    <menu_item_check.on_check
-                     function="CheckControl"
-                     parameter="AllowSelectAvatar" />
-                    <menu_item_check.on_click
-                     function="ToggleControl"
-                     parameter="AllowSelectAvatar" />
-                </menu_item_check>
-            </menu>
-            <menu_item_call
-             label="Force Params to Default"
-             name="Force Params to Default">
-                <menu_item_call.on_click
-                 function="Advanced.ForceParamsToDefault" />
-            </menu_item_call>
-            <menu_item_check
-             label="Animation Info"
-             name="Animation Info">
-                <menu_item_check.on_check
-                 function="Advanced.CheckAnimationInfo"
-                 parameter="AnimationInfo" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleAnimationInfo"
-                 parameter="" />
-            </menu_item_check>
-            <menu_item_check
-             label="Slow Motion Animations"
-             name="Slow Motion Animations">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="SlowMotionAnimation" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="SlowMotionAnimation" />
-            </menu_item_check>
-            <menu_item_check
-		label="Show Look-At">
-		name="Show Look-At"
-		<menu_item_check.on_check
-		    function="CheckControl"
-		    parameter="ShowLookAt" />
-		<menu_item_check.on_click
-		    function="ToggleControl"
-		    parameter="ShowLookAt" />
-            </menu_item_check>
-	    <menu_item_check
-		label="Show Point-At">
-		name="Show Point-At"
-		<menu_item_check.on_check
-		    function="CheckControl"
-		    parameter="ShowPointAt" />
-		<menu_item_check.on_click
-		    function="ToggleControl"
-		    parameter="ShowPointAt" />
-            </menu_item_check>
-            <menu_item_check
-	     label="Private Look At"
-	     name="Private Look At">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="PrivateLookAtTarget" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="PrivateLookAtTarget" />
-            </menu_item_check>
-            <menu_item_check
-	     label="Private Point At"
-	     name="Private Point At">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="PrivatePointAtTarget" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="PrivatePointAtTarget" />
-            </menu_item_check>
-			<menu_item_check name="Cat Mode"
-			label="Cat Mode (head follows mouse)">
-			<menu_item_check.on_check
-			function="CheckControl"
-			parameter="CatMode" />
-			<menu_item_check.on_click
-			function="ToggleControl"
-			parameter="CatMode" />
-			</menu_item_check>
-            <menu_item_check
-             label="Debug Joint Updates"
-             name="Debug Joint Updates">
-                <menu_item_check.on_check
-                 function="Advanced.CheckDebugJointUpdates"
-                 parameter="DebugJointUpdates" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleDebugJointUpdates" />
-            </menu_item_check>
-            <menu_item_check
-             label="Disable LOD"
-             name="Disable LOD">
-                <menu_item_check.on_check
-                 function="Advanced.CheckDisableLOD"
-                 parameter="DisableLOD" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleDisableLOD" />
-            </menu_item_check>
-            <menu_item_check
-             label="Debug Character Vis"
-             name="Debug Character Vis">
-                <menu_item_check.on_check
-                 function="Advanced.CheckDebugCharacterVis"
-                 parameter="DebugCharacterVis" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleDebugCharacterVis" />
-            </menu_item_check>
-            <menu_item_check
-             label="Show Collision Skeleton"
-             name="Show Collision Skeleton">
-                <menu_item_check.on_check
-                 function="Advanced.CheckInfoDisplay"
-                 parameter="collision skeleton" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleInfoDisplay"
-                 parameter="collision skeleton" />
-            </menu_item_check>
-            <menu_item_check
-             label="Display Agent Target"
-             name="Display Agent Target">
-                <menu_item_check.on_check
-                 function="Advanced.CheckInfoDisplay"
-                 parameter="agent target" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleInfoDisplay"
-                 parameter="agent target" />
-            </menu_item_check>
-<!-- Appears not to exist anymore
-            <menu_item_check
-             label="Debug Rotation"
-             name="Debug Rotation">
-                <menu_item_check.on_check
-                 function="CheckControl"
-                 parameter="DebugAvatarRotation" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="DebugAvatarRotation" />
-            </menu_item_check> -->
--->
-            <menu_item_call
-             label="Dump Attachments"
-             name="Dump Attachments">
-                <menu_item_call.on_click
-                 function="Advanced.DumpAttachments" />
-            </menu_item_call>
-            <menu_item_call
-             label="Debug Avatar Textures"
-             name="Debug Avatar Textures"
-             shortcut="control|alt|shift|A">
-                <menu_item_call.on_click
-                 function="Advanced.DebugAvatarTextures" />
-            </menu_item_call>
-            <menu_item_call
-             label="Dump Local Textures"
-             name="Dump Local Textures"
-             shortcut="alt|shift|M">
-                <menu_item_call.on_click
-                 function="Advanced.DumpAvatarLocalTextures" />
-            </menu_item_call>
-        </menu>
-
-        <menu_item_separator/>
-
-        <menu_item_check
-         label="HTTP Textures"
-         name="HTTP Textures"
-         enabled="true">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="ImagePipelineUseHTTP" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="ImagePipelineUseHTTP" />
-        </menu_item_check>
-       <menu_item_check
-         label="HTTP Inventory"
-         name="HTTP Inventory"
-         enabled="false">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="UseHTTPInventory" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="UseHTTPInventory" />
-        </menu_item_check>
-        <menu_item_call
-         label="Compress Images"
-         name="Compress Images">
-            <menu_item_call.on_click
-             function="Advanced.CompressImage" />
-        </menu_item_call>
-        <menu_item_check
-         label="Output Debug Minidump"
-         name="Output Debug Minidump">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="SaveMinidump" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="SaveMinidump" />
-        </menu_item_check>
-        <menu_item_check
-         label="Console Window on next Run"
-         name="Console Window">
-            <menu_item_check.on_check
-             function="CheckControl"
-             parameter="ShowConsoleWindow" />
-            <menu_item_check.on_click
-             function="ToggleControl"
-             parameter="ShowConsoleWindow" />
-        </menu_item_check>
-
-        <menu_item_separator/>
-
-        <menu_item_check
-         label="Show Admin Menu"
-         name="View Admin Options">
-            <menu_item_check.on_check
-             function="Advanced.CheckViewAdminOptions"
-             parameter="ViewAdminOptions" />
-            <menu_item_check.on_click
-             function="Advanced.ToggleViewAdminOptions" />
-        </menu_item_check>
-        <menu_item_call
-         label="Request Admin Status"
-         name="Request Admin Options"
-         shortcut="control|alt|G">
-            <menu_item_call.on_click
-             function="Advanced.RequestAdminStatus" />
-        </menu_item_call>
-        <menu_item_call
-         label="Leave Admin Status"
-         name="Leave Admin Options"
-         shortcut="control|alt|shift|G">
-            <menu_item_call.on_click
-             function="Advanced.LeaveAdminStatus" />
-        </menu_item_call>
+            <menu_item_call label="Hineinzoomen"  name="Zoom In"/>
+            <menu_item_call label="Zoom-Standard"  name="Zoom Default"/>
+            <menu_item_call label="Wegzoomen"  name="Zoom Out"/>
+            <menu_item_check label="Menü „Erweitert“"  name="Show Advanced Menu"/>
+        </menu> <!--Shortcuts-->
+        <menu_item_call label="Debug-Einstellungen anzeigen"  name="Debug Settings"/>
+        <menu_item_check label="Menü „Entwickler“ anzeigen"  name="Debug Mode"/>    
     </menu>
-    <menu
-     create_jump_keys="true"
-     label="Admin"
-     name="Admin"
-     tear_off="true"
-     visible="false">
-        <menu
-         create_jump_keys="true"
-         label="Object"
-         tear_off="true">
-            <menu_item_call
-             label="Take Copy"
-             name="Take Copy"
-             shortcut="control|alt|shift|O">
-                <menu_item_call.on_click
-                 function="Admin.ForceTakeCopy" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-            <menu_item_call
-             label="Force Owner To Me"
-             name="Force Owner To Me">
-                <menu_item_call.on_click
-                 function="Admin.HandleObjectOwnerSelf" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-            <menu_item_call
-             label="Force Owner Permissive"
-             name="Force Owner Permissive">
-                <menu_item_call.on_click
-                 function="Admin.HandleObjectOwnerPermissive" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-            <menu_item_call
-             label="Delete"
-             name="Delete"
-             shortcut="control|alt|shift|Del">
-                <menu_item_call.on_click
-                 function="Admin.HandleForceDelete" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-            <menu_item_call
-             label="Lock"
-             name="Lock"
-             shortcut="control|alt|shift|L">
-                <menu_item_call.on_click
-                 function="Admin.HandleObjectLock" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-            <menu_item_call
-             label="Get Assets IDs"
-             name="Get Assets IDs"
-             shortcut="control|alt|shift|I">
-                <menu_item_call.on_click
-                 function="Admin.HandleObjectAssetIDs" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-        </menu>
-        <menu
-         create_jump_keys="true"
-         label="Parcel"
-         name="Parcel"
-         tear_off="true">
-            <menu_item_call
-             label="Force Owner To Me"
-             name="Owner To Me">
-                <menu_item_call.on_click
-                 function="Admin.HandleForceParcelOwnerToMe" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-            <menu_item_call
-             label="Set to Linden Content"
-             name="Set to Linden Content"
-             shortcut="control|alt|shift|C">
-                <menu_item_call.on_click
-                 function="Admin.HandleForceParcelToContent" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-            <menu_item_call
-             label="Claim Public Land"
-             name="Claim Public Land">
-                <menu_item_call.on_click
-                 function="Admin.HandleClaimPublicLand" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-        </menu>
-        <menu
-         create_jump_keys="true"
-         label="Region"
-         name="Region"
-         tear_off="true">
-            <menu_item_call
-             label="Dump Temp Asset Data"
-             name="Dump Temp Asset Data">
-                <menu_item_call.on_click
-                 function="Admin.HandleRegionDumpTempAssetData" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-            <menu_item_call
-             label="Save Region State"
-             name="Save Region State">
-                <menu_item_call.on_click
-                 function="Admin.OnSaveState" />
-                <menu_item_call.on_enable
-                 function="IsGodCustomerService" />
-            </menu_item_call>
-        </menu>
-        <menu_item_call
-         label="God Tools"
-         name="God Tools">
-            <menu_item_call.on_click
-             function="Floater.Show"
-             parameter="god_tools" />
-            <menu_item_call.on_enable
-             function="IsGodCustomerService" />
-        </menu_item_call>
-    </menu>
-    <menu
-     create_jump_keys="true"
-     label="Admin"
-     name="Deprecated"
-     tear_off="true"
-     visible="false">
-        <menu
-         create_jump_keys="true"
-         label="Attach Object"
-         mouse_opaque="false"
-         name="Attach Object"
-         tear_off="true" />
-        <menu
-         create_jump_keys="true"
-         label="Detach Object"
-         mouse_opaque="false"
-         name="Detach Object"
-         tear_off="true" />
-        <menu
-         create_jump_keys="true"
-         label="Take Off Clothing"
-         mouse_opaque="false"
-         name="Take Off Clothing"
-         tear_off="true">
-            <menu_item_call
-             label="Shirt"
-             name="Shirt">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="shirt" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="shirt" />
-            </menu_item_call>
-            <menu_item_call
-             label="Pants"
-             name="Pants">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="pants" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="pants" />
-            </menu_item_call>
-            <menu_item_call
-             label="Shoes"
-             name="Shoes">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="shoes" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="shoes" />
-            </menu_item_call>
-            <menu_item_call
-             label="Socks"
-             name="Socks">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="socks" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="socks" />
-            </menu_item_call>
-            <menu_item_call
-             label="Jacket"
-             name="Jacket">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="jacket" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="jacket" />
-            </menu_item_call>
-            <menu_item_call
-             label="Gloves"
-             name="Gloves">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="gloves" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="gloves" />
-            </menu_item_call>
-            <menu_item_call
-             label="Undershirt"
-             name="Menu Undershirt">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="undershirt" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="undershirt" />
-            </menu_item_call>
-            <menu_item_call
-             label="Underpants"
-             name="Menu Underpants">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="underpants" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="underpants" />
-            </menu_item_call>
-            <menu_item_call
-             label="Skirt"
-             name="Skirt">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="skirt" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="skirt" />
-            </menu_item_call>
-            <menu_item_call
-             label="Alpha"
-             name="Alpha">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="alpha" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="alpha" />
-            </menu_item_call>
-            <menu_item_call
-             label="Tattoo"
-             name="Tattoo">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="tattoo" />
-                <menu_item_call.on_enable
-                 function="Edit.EnableTakeOff"
-                 parameter="tattoo" />
-            </menu_item_call>
-            <menu_item_call
-             label="All Clothes"
-             name="All Clothes">
-                <menu_item_call.on_click
-                 function="Edit.TakeOff"
-                 parameter="all" />
-            </menu_item_call>
-        </menu>
-        <menu
-         create_jump_keys="true"
-         label="Help"
-         name="Help"
-         tear_off="true">
-            <menu_item_call
-             label="Official Linden Blog"
-             name="Official Linden Blog">
-                <menu_item_call.on_click
-                 function="PromptShowURL"
-                 name="OfficialLindenBlog_url"
-                 parameter="WebLaunchSupportWiki,http://blog.secondlife.com/" />
-            </menu_item_call>
-            <menu_item_call
-             label="Scripting Portal"
-             name="Scripting Portal">
-                <menu_item_call.on_click
-                 function="PromptShowURL"
-                 name="ScriptingPortal_url"
-                 parameter="WebLaunchLSLWiki,http://wiki.secondlife.com/wiki/LSL_Portal" />
-            </menu_item_call>
-            <menu
-             create_jump_keys="true"
-             label="Bug Reporting"
-             name="Bug Reporting"
-             tear_off="true">
-                <menu_item_call
-                 label="Public Issue Tracker"
-                 name="Public Issue Tracker">
-                    <menu_item_call.on_click
-                     function="PromptShowURL"
-                     name="PublicIssueTracker_url"
-                     parameter="WebLaunchPublicIssue,http://jira.secondlife.com" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Public Issue Tracker Help"
-                 name="Publc Issue Tracker Help">
-                    <menu_item_call.on_click
-                     function="PromptShowURL"
-                     name="PublicIssueTrackerHelp_url"
-                     parameter="WebLaunchPublicIssueHelp,http://wiki.secondlife.com/wiki/Issue_tracker" />
-                </menu_item_call>
-
-                <menu_item_separator/>
-
-                <menu_item_call
-                 label="Bug Reporting 101"
-                 name="Bug Reporing 101">
-                    <menu_item_call.on_click
-                     function="PromptShowURL"
-                     name="BugReporting101_url"
-                     parameter="WebLaunchBugReport101,http://wiki.secondlife.com/wiki/Bug_Reporting_101" />
-                </menu_item_call>
-                <menu_item_call
-                 label="Security Issues"
-                 name="Security Issues">
-                    <menu_item_call.on_click
-                     function="PromptShowURL"
-                     name="SecurityIssues_url"
-                     parameter="WebLaunchSecurityIssues,http://wiki.secondlife.com/wiki/Security_issues" />
-                </menu_item_call>
-                <menu_item_call
-                 label="QA Wiki"
-                 name="QA Wiki">
-                    <menu_item_call.on_click
-                     function="PromptShowURL"
-                     name="QAWiki_url"
-                     parameter="WebLaunchQAWiki,http://wiki.secondlife.com/wiki/QA_Portal" />
-                </menu_item_call>
-            </menu>
-        </menu>
-    </menu>
+<!-- END OF ADVANCED MENU -->    
+    
+<!-- START OF DEVELOP MENU -->  
+<menu label="Entwickler" name="Develop">
+		<menu label="Konsolen" name="Consoles">
+			<menu_item_check label="Textur" name="Texture Console"/>
+			<menu_item_check label="Fehler beseitigen" name="Debug Console"/>
+			<menu_item_call label="Meldungen" name="Notifications"/>
+			<menu_item_check label="Regions-Debug-Konsole" name="Region Debug Console"/>
+			<menu_item_check label="Schnelle Timer" name="Fast Timers"/>
+			<menu_item_check label="Speicher" name="Memory"/>
+			<menu_item_check label="Szenestatistiken" name="Scene Statistics"/>
+			<menu_item_check label="Monitor zum Laden von Szenen" name="Scene Loading Monitor"/>
+			<menu_item_call label="Debug-Konsole für Texturabruffehler" name="Texture Fetch Debug Console"/>
+			<menu_item_call label="Info zu Region in Fenster Fehler beseitigen" name="Region Info to Debug Console"/>
+			<menu_item_call label="Gruppeninfo in Fenster Fehler beseitigen" name="Group Info to Debug Console"/>
+			<menu_item_call label="Info zu Fähigkeiten in Fenster Fehler beseitigen" name="Capabilities Info to Debug Console"/>
+			<menu_item_check label="Kamera" name="Camera"/>
+			<menu_item_check label="Wind" name="Wind"/>
+			<menu_item_check label="FOV" name="FOV"/>
+			<menu_item_check label="Gütesiegel" name="Badge"/>
+		</menu>
+		<menu label="Info anzeigen" name="Display Info">
+			<menu_item_check label="Zeit anzeigen" name="Show Time"/>
+			<menu_item_check label="Kosten für Hochladen anzeigen" name="Show Upload Cost"/>
+			<menu_item_check label="Render-Info anzeigen" name="Show Render Info"/>
+			<menu_item_check label="Texturinfos anzeigen" name="Show Texture Info"/>
+			<menu_item_check label="Matrizen anzeigen" name="Show Matrices"/>
+			<menu_item_check label="Farbe unter Cursor anzeigen" name="Show Color Under Cursor"/>
+			<menu_item_check label="Speicher anzeigen" name="Show Memory"/>
+			<menu_item_check label="Info über privaten Speicher anzeigen" name="Show Private Mem Info"/>
+			<menu_item_check label="Akutalisierungen an Objekten anzeigen" name="Show Updates"/>
+		</menu>
+		<menu label="Fehler erzwingen" name="Force Errors">
+			<menu_item_call label="Haltepunkt erzwingen" name="Force Breakpoint"/>
+			<menu_item_call label="LLError erzwingen und abstürzen" name="Force LLError And Crash"/>
+			<menu_item_call label="Erzwinge fehlerhaften Speicherzugriff" name="Force Bad Memory Access"/>
+			<menu_item_call label="Endlosschleife erzwingen" name="Force Infinite Loop"/>
+			<menu_item_call label="Treiber-Crash erzwingen" name="Force Driver Carsh"/>
+			<menu_item_call label="Softwareausnahme erzwingen" name="Force Software Exception"/>
+			<menu_item_call label="Verbindungsabbruch erzwingen" name="Force Disconnect Viewer"/>
+			<menu_item_call label="Speicherverlust simulieren" name="Memory Leaking Simulation"/>
+		</menu>
+		<menu label="Render-Tests" name="Render Tests">
+			<menu_item_check label="Kamera-Versatz" name="Camera Offset"/>
+			<menu_item_check label="Framerate randomisieren" name="Randomize Framerate"/>
+			<menu_item_check label="Periodic Slow Frame" name="Periodic Slow Frame"/>
+			<menu_item_check label="Frame-Test" name="Frame Test"/>
+			<menu_item_call label="Rahmenprofil" name="Frame Profile"/>
+			<menu_item_call label="Benchmark" name="Benchmark"/>
+		</menu>
+		<menu label="Metadaten darstellen" name="Render Metadata">
+			<menu_item_check label="Bonding Boxes" name="Bounding Boxes"/>
+			<menu_item_check label="Normalen" name="Normals"/>
+			<menu_item_check label="Octree" name="Octree"/>
+			<menu_item_check label="Shadow Frusta" name="Shadow Frusta"/>
+			<menu_item_check label="Physische Formen" name="Physics Shapes"/>
+			<menu_item_check label="Okklusion" name="Occlusion"/>
+			<menu_item_check label="Bündel rendern" name="Render Batches"/>
+			<menu_item_check label="Typ aktualisieren" name="Update Type"/>
+			<menu_item_check label="Texture-Anim" name="Texture Anim"/>
+			<menu_item_check label="Textur-Priorität" name="Texture Priority"/>
+			<menu_item_check label="Texturbereich" name="Texture Area"/>
+			<menu_item_check label="Oberflächenbereich" name="Face Area"/>
+			<menu_item_check label="Detailstufeninfos" name="LOD Info"/>
+			<menu_item_check label="Konstruktionswarteschlange" name="Build Queue"/>
+			<menu_item_check label="Lichter" name="Lights"/>
+			<menu_item_check label="Partikel" name="Particles"/>
+			<menu_item_check label="Gelenkpunkte" name="Collision Skeleton"/>
+			<menu_item_check label="Gelenke" name="Joints"/>
+			<menu_item_check label="Raycast" name="Raycast"/>
+			<menu_item_check label="Windvektoren" name="Wind Vectors"/>
+			<menu_item_check label="Formen" name="Sculpt"/>
+			<menu label="Texturdichte" name="Texture Density">
+				<menu_item_check label="Keine" name="None"/>
+				<menu_item_check label="Aktuelle" name="Current"/>
+				<menu_item_check label="Gewünschte" name="Desired"/>
+				<menu_item_check label="Volle" name="Full"/>
+			</menu>
+		</menu>
+		<menu label="Rendering" name="Rendering">
+			<menu_item_check label="Achsen" name="Axes"/>
+			<menu_item_check label="Tangentenbasis" name="Tangent Basis"/>
+			<menu_item_call label="Texturinfo für ausgewähltes Objekt" name="Selected Texture Info Basis"/>
+			<menu_item_call label="Ausgewählte Materialinfos" name="Selected Material Info"/>
+			<menu_item_check label="Wireframe" name="Wireframe"/>
+			<menu_item_check label="Objekt-Objekt Okklusion" name="Object-Object Occlusion"/>
+			<menu_item_check label="Erweitertes Beleuchtungsmodell" name="Advanced Lighting Model"/>
+			<menu_item_check label="Schatten von Sonne-/Mond-Projektoren" name="Shadows from Sun/Moon/Projectors"/>
+			<menu_item_check label="SSAO und Schattenglättung" name="SSAO and Shadow Smoothing"/>
+			<menu_item_check label="Fehler in GL beseitigen" name="Debug GL"/>
+			<menu_item_check label="Fehler in Pipeline beseitigen" name="Debug Pipeline"/>
+			<menu_item_check label="Automatische Alpha-Masken (aufgeschoben)" name="Automatic Alpha Masks (deferred)"/>
+			<menu_item_check label="Automatische Alpha-Masken (nicht aufgeschoben)" name="Automatic Alpha Masks (non-deferred)"/>
+			<menu_item_check label="Animationstexturen" name="Animation Textures"/>
+			<menu_item_check label="Texturen deaktivieren" name="Disable Textures"/>
+			<menu_item_check label="Voll-Res-Texturen" name="Rull Res Textures"/>
+			<menu_item_check label="Angehängte Lichter rendern" name="Render Attached Lights"/>
+			<menu_item_check label="Angehängte Partikel rendern" name="Render Attached Particles"/>
+			<menu_item_check label="Leucht-Objekte schweben lassen" name="Hover Glow Objects"/>
+			<menu_item_call label="Cache sofort leeren" name="Cache Clear"/>
+		</menu>
+		<menu label="Netzwerk" name="Network">
+			<menu_item_check label="Agent pausieren" name="AgentPause"/>
+			<menu_item_call label="Meldungsprotokoll aktivieren" name="Enable Message Log"/>
+			<menu_item_call label="Meldungsprotokoll deaktivieren" name="Disable Message Log"/>
+			<menu_item_check label="Objektposition laut Geschwindigkeit interpolieren" name="Velocity Interpolate Objects"/>
+			<menu_item_check label="Positionen der interpolierten Objekte anfragen" name="Ping Interpolate Object Positions"/>
+			<menu_item_call label="Ein Paket fallenlassen" name="Drop a Packet"/>
+		</menu>
+		<menu_item_call label="Geskriptete Kamera ausgeben" name="Dump Scripted Camera"/>
+		<menu label="Rekorder" name="Recorder">
+			<menu_item_call label="Wiedergabe starten" name="Start Playback"/>
+			<menu_item_call label="Wiedergabe stoppen" name="Stop Playback"/>
+			<menu_item_check label="Wiedergabeschleife" name="Loop Playback"/>
+			<menu_item_call label="Aufnahme starten" name="Start Record"/>
+			<menu_item_call label="Aufnahme stoppen" name="Stop Record"/>
+		</menu>
+		<menu label="Welt" name="DevelopWorld">
+			<menu_item_check label="Sonnen-Override für Sim" name="Sim Sun Override"/>
+			<menu_item_check label="Festgelegtes Wetter" name="Fixed Weather"/>
+			<menu_item_call label="Regionsobjekt-Cache ausgeben" name="Dump Region Object Cache"/>
+		</menu>
+		<menu label="UI" name="UI">
+			<menu_item_call label="Test Medienbrowser" name="Web Browser Test"/>
+			<menu_item_call label="Webinhaltsbrowser" name="Web Content Browser"/>
+			<menu_item_call label="SelectMgr ausgeben" name="Dump SelectMgr"/>
+			<menu_item_call label="Inventarinfo ausgeben" name="Dump Inventory"/>
+			<menu_item_call label="Timer ausgeben" name="Dump Timers"/>
+			<menu_item_call label="Fokus ausgeben" name="Dump Focus Holder"/>
+			<menu_item_call label="Ausgewählte Objektinfo drucken" name="Print Selected Object Info"/>
+			<menu_item_call label="Agent-Info drucken" name="Print Agent Info"/>
+			<menu_item_check label="Fehler in SelectMgr beseitigen" name="Debug SelectMgr"/>
+			<menu_item_check label="Fehler in Klicks beseitigen" name="Debug Clicks"/>
+			<menu_item_check label="Debug-Ansichten" name="Debug Views"/>
+			<menu_item_check label="Kurzinfos: Debug-Namen" name="Debug Name Tooltips"/>
+			<menu_item_check label="Fehler in Maus-Events beseitigen" name="Debug Mouse Events"/>
+			<menu_item_check label="Fehler in Keys beseitigen" name="Debug Keys"/>
+			<menu_item_check label="Fehler in WindowProc beseitigen" name="Debug WindowProc"/>
+		</menu>
+		<menu label="XUI" name="XUI">
+			<menu_item_call label="Farbeinstellungen neu laden" name="Reload Color Settings"/>
+			<menu_item_call label="Schriftarttest anzeigen" name="Show Font Test"/>
+			<menu_item_check label="XUI-Namen anzeigen" name="Show XUI Names"/>
+			<menu_item_call label="Test-IMs senden" name="Send Test IMs"/>
+			<menu_item_call label="Namen-Cache leeren" name="Flush Names Caches"/>
+		</menu>
+		<menu label="Avatar" name="Character">
+			<menu label="Geladene Textur nehmen" name="Grab Baked Texture">
+				<menu_item_call label="Iris" name="Grab Iris"/>
+				<menu_item_call label="Kopf" name="Grab Head"/>
+				<menu_item_call label="Oberkörper" name="Grab Upper Body"/>
+				<menu_item_call label="Unterkörper" name="Grab Lower Body"/>
+				<menu_item_call label="Rock" name="Grab Skirt"/>
+			</menu>
+			<menu label="Avatar-Tests" name="Character Tests">
+				<menu_item_call label="Aussehen als XML speichern" name="Appearance To XML"/>
+				<menu_item_call label="Avatargeometry ein-/ausschalten" name="Toggle Character Geometry"/>
+				<menu_item_call label="Männlich testen" name="Test Male"/>
+				<menu_item_call label="Weiblich testen" name="Test Female"/>
+				<menu_item_check label="Avatarauswahl zulassen" name="Allow Select Avatar"/>
+			</menu>
+			<menu_item_call label="Param auf Standard erzwingen" name="Force Params to Default"/>
+			<menu_item_check label="Animations-Info" name="Animation Info"/>
+			<menu_item_check label="Kamerafokus anzeigen" name="Show Look At"/>
+			<menu_item_check label="Klickpunkt anzeigen??" name="Show Point At"/>
+			<menu_item_check label="Fehler in Landaktualisierung beseitigen" name="Debug Joint Updates"/>
+			<menu_item_check label="LOD deaktiveren" name="Disable LOD"/>
+			<menu_item_check label="Fehler für sichtbare Agenten beseitigen" name="Debug Character Vis"/>
+			<menu_item_check label="Gelenkpunkte anzeigen" name="Show Collision Skeleton"/>
+			<menu_item_check label="Agent-Ziel anzeigen" name="Display Agent Target"/>
+			<menu_item_call label="Anhänge ausgeben" name="Dump Attachments"/>
+			<menu_item_call label="Fehler in Avatar-Texturen beseitigen" name="Debug Avatar Textures"/>
+			<menu_item_call label="Lokale Texturen ausgeben" name="Dump Local Textures"/>
+		</menu>
+		<menu_item_check label="HTTP-Texturen" name="HTTP Textures"/>
+		<menu_item_check label="HTTP-Inventar" name="HTTP Inventory"/>
+		<menu_item_call label="Bilder komprimieren" name="Compress Images"/>
+		<menu_item_call label="Visual Leak Detector aktivieren" name="Enable Visual Leak Detector"/>
+		<menu_item_check label="Ausgabe Fehlerbeseitigung ausgeben" name="Output Debug Minidump"/>
+		<menu_item_check label="Bei nächster Ausführung Fenster öffnen" name="Console Window"/>
+		<menu label="Protokollierungsstufe festlegen" name="Set Logging Level">
+			<menu_item_check label="Debug" name="Debug"/>
+			<menu_item_check label="Info" name="Info"/>
+			<menu_item_check label="Warnung" name="Warning"/>
+			<menu_item_check label="Fehler" name="Error"/>
+			<menu_item_check label="Keine" name="None"/>
+		</menu>
+		<menu_item_call label="Admin-Status anfordern" name="Request Admin Options"/>
+		<menu_item_call label="Admin-Status verlassen" name="Leave Admin Options"/>
+		<menu_item_check label="Admin-Menü anzeigen" name="View Admin Options"/>
+	</menu>
+<!-- END OF DEVELOP MENU -->    
+  
+<!-- START OF ADMIN MENU -->   
+    <menu label="Admin" name="Admin">
+		<menu label="Objekt" name="AdminObject">
+			<menu_item_call label="Kopie nehmen" name="Admin Take Copy"/>
+			<menu_item_call label="Mich zum Besitzer machen" name="Force Owner To Me"/>
+			<menu_item_call label="Besitzererlaubnis erzwingen" name="Force Owner Permissive"/>
+			<menu_item_call label="Löschen" name="Delete"/>
+			<menu_item_call label="Sperren" name="Lock"/>
+			<menu_item_call label="Asset-IDs abrufen" name="Get Assets IDs"/>
+		</menu>
+		<menu label="Parzelle" name="Parcel">
+			<menu_item_call label="Besitzer zu mir zwingen" name="Owner To Me"/>
+			<menu_item_call label="Auf Linden-Inhalt festlegen" name="Set to Linden Content"/>
+			<menu_item_call label="Öffentiches Land in Besitz nehmen" name="Claim Public Land"/>
+		</menu>
+		<menu label="Region" name="Region">
+			<menu_item_call label="Temp-Asset-Daten ausgeben" name="Dump Temp Asset Data"/>
+			<menu_item_call label="Regions-Status speichern" name="Save Region State"/>
+		</menu>
+		<menu_item_call label="Gott-Werkzeuge" name="God Tools"/>
+	</menu>
+<!-- END OF ADMIN MENU -->    
+    
+<!-- START OF ADMIN DEPRECATED MENU -->    
+    <menu label="Admin" name="Deprecated">
+		<menu label="Objekt anhängen" name="Attach Object"/>
+		<menu label="Objekt abnehmen" name="Detach Object"/>
+		<menu label="Kleider ausziehen" name="Take Off Clothing">
+			<menu_item_call label="Hemd" name="Shirt"/>
+			<menu_item_call label="Hose" name="Pants"/>
+			<menu_item_call label="Schuhe" name="Shoes"/>
+			<menu_item_call label="Socken" name="Socks"/>
+			<menu_item_call label="Jacke" name="Jacket"/>
+			<menu_item_call label="Handschuhe" name="Gloves"/>
+			<menu_item_call label="Unterhemd" name="Menu Undershirt"/>
+			<menu_item_call label="Unterhose" name="Menu Underpants"/>
+			<menu_item_call label="Rock" name="Skirt"/>
+			<menu_item_call label="Alpha" name="Alpha"/>
+			<menu_item_call label="Tätowierung" name="Tattoo"/>
+			<menu_item_call label="Physik" name="Physics"/>
+			<menu_item_call label="Alle Kleider" name="All Clothes"/>
+		</menu>
+		<menu label="Hilfe" name="DeprecatedHelp">
+			<menu_item_call label="Offizielles Linden-Blog" name="Official Linden Blog"/>
+			<menu_item_call label="Scripting-Portal" name="Scripting Portal"/>
+			<menu label="Fehlermeldungen" name="Bug Reporting">
+				<menu_item_call label="Allgemeiner Probleme-Tracker" name="Public Issue Tracker"/>
+				<menu_item_call label="Hilfe zum Allgemeinen Probleme-Tracker" name="Publc Issue Tracker Help"/>
+				<menu_item_call label="Fehlermeldungs-1x1" name="Bug Reporing 101"/>
+				<menu_item_call label="Sicherheitsprobleme" name="Security Issues"/>
+				<menu_item_call label="QA-Wiki" name="QA Wiki"/>
+			</menu>
+		</menu>
+	</menu>
+<!-- END OF ADMIN DEPRECATED MENU -->
 </menu_bar>
