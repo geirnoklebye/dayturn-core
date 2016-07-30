@@ -201,6 +201,7 @@ set(cmake_SOURCE_FILES
     Variables.cmake
     ViewerMiscLibs.cmake
     VisualLeakDetector.cmake
+    LibVLCPlugin.cmake
     XmlRpcEpi.cmake
     ZLIB.cmake
     )

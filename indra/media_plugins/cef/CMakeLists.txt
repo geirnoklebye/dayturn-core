@@ -63,7 +63,8 @@ set (media_plugin_cef_LINK_LIBRARIES
   ${MEDIA_PLUGIN_BASE_LIBRARIES}
   ${CEF_PLUGIN_LIBRARIES}
   ${LLCOMMON_LIBRARIES}
-  ${PLUGIN_API_WINDOWS_LIBRARIES})
+  ${PLUGIN_API_WINDOWS_LIBRARIES}
+  )
 
 
 # Select which VolumeCatcher implementation to use
