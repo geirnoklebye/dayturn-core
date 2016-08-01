@@ -1155,10 +1155,8 @@ class LinuxManifest(ViewerManifest):
         if self.prefix(src="", dst="bin/llplugin"):
             self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
             self.path("../media_plugins/libvlc/libmedia_plugin_libvlc.so", "libmedia_plugin_libvlc.so")
+            self.path("../media_plugins/cef/libmedia_plugin_cef.so", "libmedia_plugin_cef.so")
             self.end_prefix("bin/llplugin")
-self.path("../media_plugins/cef/libmedia_plugin_cef.so", "libmedia_plugin_cef.so")
-            self.end_prefix("bin/llplugin")
-
         if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'vlc', 'plugins'), dst="bin/llplugin/vlc/plugins"):
             self.path( "plugins.dat" )
             self.path( "*/*.so" )
@@ -1521,6 +1519,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
 	if self.args['buildtype'].lower() == 'debug':
     	 if self.prefix("../packages/lib/debug", dst="lib64"):
              self.path("libapr-1.so*")
+
              self.path("libaprutil-1.so*")
              self.path("libboost_context-mt-d.so.*")
              self.path("libboost_program_options-mt-d.so.*")
