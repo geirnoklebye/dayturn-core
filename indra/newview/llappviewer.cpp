@@ -253,6 +253,10 @@
 // define a self-registering event API object
 #include "llappviewerlistener.h"
 
+#if LL_LINUX
+#include "vlc/libvlc_version.h"
+#endif
+
 #if (LL_LINUX || LL_SOLARIS) && LL_GTK
 #include "glib.h"
 #endif // (LL_LINUX || LL_SOLARIS) && LL_GTK
@@ -3540,15 +3544,16 @@ LLSD LLAppViewer::getViewerInfo() const
 #if LL_LINUX
 	info["LLCEFLIB_VERSION"] = LLCEFLIB_VERSION;
 #elif LL_DARWIN
-    info["LLCEFLIB_VERSION"] = LLCEFLIB_VERSION;
+        info["LLCEFLIB_VERSION"] = LLCEFLIB_VERSION;
 #elif LL_WINDOWS
 	info["LLCEFLIB_VERSION"] = LLCEFLIB_VERSION;
 #else
 	info["LLCEFLIB_VERSION"] = "Undefined";
-
 #endif
 
-#if LL_WINDOWS
+#if LL_DARWIN
+	info["LIBVLC_VERSION"] = "Undefined";
+#else
 	std::ostringstream ver_codec;
 	ver_codec << LIBVLC_VERSION_MAJOR;
 	ver_codec << ".";
@@ -3556,8 +3561,6 @@ LLSD LLAppViewer::getViewerInfo() const
 	ver_codec << ".";
 	ver_codec << LIBVLC_VERSION_REVISION;
 	info["LIBVLC_VERSION"] = ver_codec.str();
-#else
-	info["LIBVLC_VERSION"] = "Undefined";
 #endif
 
 	S32 packets_in = LLViewerStats::instance().getRecording().getSum(LLStatViewer::PACKETS_IN);
