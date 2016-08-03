@@ -3552,7 +3552,7 @@ LLSD LLAppViewer::getViewerInfo() const
 #endif
 
 #if LL_DARWIN
-	info["LIBVLC_VERSION"] = "Undefined";
+	info["LIBVLC_VERSION"] = "Unsupported";
 #else
 	std::ostringstream ver_codec;
 	ver_codec << LIBVLC_VERSION_MAJOR;
