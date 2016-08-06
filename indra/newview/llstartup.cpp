@@ -51,6 +51,7 @@
 
 #include "fscommon.h"
 #include "fsfloatersearchlegacy.h"	// <FS:CR> FIRE-6310
+#include "fscorehttputil.h"
 #include "llavatarnamecache.h"
 #include "llexperiencecache.h"
 #include "lllandmark.h"
