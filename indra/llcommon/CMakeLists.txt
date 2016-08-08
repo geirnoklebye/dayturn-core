@@ -273,6 +273,11 @@ set(llcommon_HEADER_FILES
     StackWalker.h
     )
 
+# <AV:CR>
+  list(APPEND llcommon_HEADER_FILES llsys_objc.h)
+  list(APPEND llcommon_SOURCE_FILES llsys_objc.mm)
+# </AV:CR>
+
 set_source_files_properties(${llcommon_HEADER_FILES}
                             PROPERTIES HEADER_FILE_ONLY TRUE)
 
