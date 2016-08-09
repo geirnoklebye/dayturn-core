@@ -449,7 +449,7 @@ void LLVivoxVoiceClient::connectorCreate()
 
 void LLVivoxVoiceClient::connectorShutdown()
 {
-	// <FS:Ansariel> Voice fix
+	if(mConnectorEstablished)
 	//if(!mConnectorEstablished)
 	if(mConnectorEstablished)
 	// </FS:Ansariel>
