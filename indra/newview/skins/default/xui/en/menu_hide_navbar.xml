@@ -66,4 +66,15 @@
              function="CheckControl"
              parameter="ShowFPSStats" />
     </menu_item_check>
+    <menu_item_check
+         label="Show Media Popup"
+         layout="topleft"
+         name="ShowMediaPopupsOnRollover">
+           <on_click
+             function="ToggleControl"
+             parameter="ShowMediaPopupsOnRollover" />
+             <on_check
+             function="CheckControl"
+             parameter="ShowMediaPopupsOnRollover" />
+    </menu_item_check>    
 </menu>
