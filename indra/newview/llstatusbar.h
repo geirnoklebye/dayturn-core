@@ -145,6 +145,8 @@ private:
 	static void onClickStreamToggle(void* data);		// ## Zi: Media/Stream separation
 	static void onClickMediaToggle(void* data);
 	static void onClickBalance(void* data);
+
+	class LLParcelChangeObserver;
 	// <FS:Ansariel> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
 	//NP graphics presets no longer disabled
 	void onPopupRolloverChanged(const LLSD& newvalue);
