@@ -146,6 +146,7 @@ private:
 	static void onClickMediaToggle(void* data);
 	static void onClickBalance(void* data);
 	// <FS:Ansariel> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
+	//NP graphics presets no longer disabled
 	void onPopupRolloverChanged(const LLSD& newvalue);
 
 	friend class LLParcelChangeObserver;
@@ -263,7 +264,7 @@ private:
 
 	LLStatGraph	*mSGBandwidth;
 	LLStatGraph	*mSGPacketLoss;
-	LLButton	*mIconPresets;
+	LLIconCtrl	*mIconPresets;
 	LLButton	*mBtnVolume;
 	LLTextBox	*mBoxBalance;
 	LLButton	*mStreamToggle;		// ## Zi: Media/Stream separation
@@ -285,7 +286,7 @@ private:
 	LLPanelVolumePulldown* mPanelVolumePulldown;
 	LLPanelNearByMedia*	mPanelNearByMedia;
 	// <FS:Ansariel> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
-	boost::signals2::connection mMouseEnterPresetsConnection;
+	//NP graphics presets no longer disabled
 	boost::signals2::connection mMouseEnterVolumeConnection;
 	boost::signals2::connection mMouseEnterNearbyMediaConnection;
 	// </FS:Ansariel

@@ -156,7 +156,6 @@ LLStatusBar::LLStatusBar(const LLRect& rect)
 	mAudioStreamEnabled(FALSE),	// ## Zi: Media/Stream separation
 	mIconPresets(NULL),
 	mMediaToggle(NULL),
-	mMouseEnterPresetsConnection(),
 	mMouseEnterVolumeConnection(),
 	mMouseEnterNearbyMediaConnection()    
 {
@@ -184,10 +183,7 @@ LLStatusBar::~LLStatusBar()
 	delete mHealthTimer;
 	mHealthTimer = NULL;
 	// <FS:Ansariel> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
-	if (mMouseEnterPresetsConnection.connected())
-	{
-		mMouseEnterPresetsConnection.disconnect();
-	}
+	//NP graphics presets no longer disabled
 	if (mMouseEnterVolumeConnection.connected())
 	{
 		mMouseEnterVolumeConnection.disconnect();
@@ -267,21 +263,13 @@ BOOL LLStatusBar::postBuild()
 	mBoxBalance = getChild<LLTextBox>("balance");
 	mBoxBalance->setClickedCallback(&LLStatusBar::onClickBalance, this);
 
-	mIconPresets = getChild<LLButton>( "presets_icon" );
-    // <FS: KC> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
-	// mIconPresets->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterPresets, this));
-    if (gSavedSettings.getBOOL("FSStatusBarMenuButtonPopupOnRollover"))
-    {
-        mMouseEnterPresetsConnection = mIconPresets->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterPresets, this));
-    }
-    // </FS: KC> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
-	mIconPresets->setClickedCallback(boost::bind(&LLStatusBar::onMouseEnterPresets, this));
+	mIconPresets = getChild<LLIconCtrl>( "presets_icon" );
+    mIconPresets->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterPresets, this));
 
 	mBtnVolume = getChild<LLButton>("volume_btn");
 	mBtnVolume->setClickedCallback(onClickVolume, this);
-    // <FS: KC> FIRE-19697: Add setting to disable status bar icon menu popup on mouseover
-	// mBtnVolume->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterVolume, this));
-    if (gSavedSettings.getBOOL("FSStatusBarMenuButtonPopupOnRollover"))
+ 
+    if (gSavedSettings.getBOOL("ShowMediaPopupsOnRollover"))
     {
         mMouseEnterVolumeConnection = mBtnVolume->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterVolume, this));
     }
@@ -296,7 +284,7 @@ BOOL LLStatusBar::postBuild()
 	mMediaToggle->setClickedCallback(&LLStatusBar::onClickMediaToggle, this);
     // <FS: KC> FIRE-19697: Add setting to disable status bar icon menu popup on mouseover
     // mMediaToggle->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterNearbyMedia, this));
-    if (gSavedSettings.getBOOL("FSStatusBarMenuButtonPopupOnRollover"))
+    if (gSavedSettings.getBOOL("ShowMediaPopupsOnRollover"))
     {
         mMouseEnterNearbyMediaConnection = mMediaToggle->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterNearbyMedia, this));
     }
@@ -306,7 +294,8 @@ BOOL LLStatusBar::postBuild()
 
 	gSavedSettings.getControl("MuteAudio")->getSignal()->connect(boost::bind(&LLStatusBar::onVolumeChanged, this, _2));
 	// <FS:Ansariel> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
-	gSavedSettings.getControl("FSStatusBarMenuButtonPopupOnRollover")->getSignal()->connect(boost::bind(&LLStatusBar::onPopupRolloverChanged, this, _2));    
+	//NP graphics presets no longer disabled
+	gSavedSettings.getControl("ShowMediaPopupsOnRollover")->getSignal()->connect(boost::bind(&LLStatusBar::onPopupRolloverChanged, this, _2));    
 
 	mSGBandwidth = getChild<LLStatGraph>("bandwidth_graph");
 	if (mSGBandwidth) {
@@ -402,7 +391,7 @@ void LLStatusBar::refresh()
 	static LLCachedControl<bool> net_stats_visible(gSavedSettings, "ShowNetStats", true);
 	static LLCachedControl<bool> fps_stats_visible(gSavedSettings, "ShowFPSStats", true);
 	static LLCachedControl<bool> show_draw_distance(gSavedSettings, "ShowDDSlider", false);
-
+	static LLCachedControl<bool> show_media_popups(gSavedSettings, "ShowMediaPopupsOnRollover", true);
 	//
 	//	update the netstat graph and FPS counter text
 	//
@@ -506,7 +495,7 @@ void LLStatusBar::setVisibleForMouselook(bool visible)
 	static LLCachedControl<bool> net_stats_visible(gSavedSettings, "ShowNetStats", true);
 	static LLCachedControl<bool> fps_stats_visible(gSavedSettings, "ShowFPSStats", true);
 	static LLCachedControl<bool> show_draw_distance(gSavedSettings, "ShowDDSlider", true);
-
+	static LLCachedControl<bool> show_media_popups(gSavedSettings, "ShowMediaPopupsOnRollover", true);
 	mInMouselookMode = !visible;
 
 	mTextTime->setVisible(visible);
@@ -823,22 +812,18 @@ void LLStatusBar::onClickStatistics()
 }
 
 // <FS:Ansariel> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
+//NP graphics presets no longer disabled
 void LLStatusBar::onPopupRolloverChanged(const LLSD& newvalue)
 {
 	bool new_value = newvalue.asBoolean();
 
 	if (new_value)
 	{
-		mMouseEnterPresetsConnection = mIconPresets->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterPresets, this));
 		mMouseEnterVolumeConnection = mBtnVolume->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterVolume, this));
 		mMouseEnterNearbyMediaConnection = mMediaToggle->setMouseEnterCallback(boost::bind(&LLStatusBar::onMouseEnterNearbyMedia, this));
 	}
 	else
 	{
-		if (mMouseEnterPresetsConnection.connected())
-		{
-			mMouseEnterPresetsConnection.disconnect();
-		}
 		if (mMouseEnterVolumeConnection.connected())
 		{
 			mMouseEnterVolumeConnection.disconnect();
