@@ -1364,7 +1364,6 @@ set(viewer_HEADER_FILES
     llworldmapview.h
     llxmlrpclistener.h
     llxmlrpctransaction.h
-    macmain.h
     noise.h
     qtoolalign.h
     piemenu.h
@@ -1419,7 +1418,6 @@ if (DARWIN)
   # Add resource files to the project.
   set(viewer_RESOURCE_FILES
     kokua_icon.icns
-    macview.r
     Info-SecondLife.plist
     Kokua.xib/
     # CMake doesn't seem to support Xcode language variants well just yet
