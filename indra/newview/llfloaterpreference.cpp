@@ -528,17 +528,8 @@ BOOL LLFloaterPreference::postBuild()
 	getChild<LLComboBox>("ObjectIMOptions")->setCommitCallback(boost::bind(&LLFloaterPreference::onNotificationsChange, this,"ObjectIMOptions"));
 
 	// if floater is opened before login set default localized do not disturb message
-	if (LLStartUp::getStartupState() < STATE_STARTED)
-	{
-		gSavedPerAccountSettings.setString("DoNotDisturbModeResponse", LLTrans::getString("DoNotDisturbModeResponseDefault"));
-		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(FALSE);
-		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(FALSE);
-	}
-	else
-	{
-		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(TRUE);
-		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(TRUE);
-	}	
+	getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
+	getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
 	
 // ## Zi: Pie menu
 	gSavedSettings.getControl("OverridePieColors")->getSignal()->connect(boost::bind(&LLFloaterPreference::onPieColorsOverrideChanged, this));
@@ -1364,6 +1355,11 @@ void LLFloaterPreference::refreshEnabledState()
 						(ctrl_wind_light->get()) ? TRUE : FALSE;
 
 	ctrl_deferred->setEnabled(enabled);
+	// Cannot have floater active until caps have been received
+	getChild<LLButton>("default_creation_permissions")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
+	getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
+	getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
+
 }
 
 void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
@@ -1501,20 +1497,6 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 	disableUnavailableSettings();
 
 	getChildView("block_list")->setEnabled(LLLoginInstance::getInstance()->authSuccess());
-
-
-	// Cannot have floater active until caps have been received
-	getChild<LLButton>("default_creation_permissions")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
-	if (LLStartUp::getStartupState() != STATE_STARTED)
-	{
-		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(FALSE);
-		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(FALSE);
-	}
-	else
-	{
-		getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(TRUE);
-		getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(TRUE);
-	}
 }
 
 // static
