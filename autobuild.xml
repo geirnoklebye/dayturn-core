@@ -480,7 +480,7 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-               <string>5e0d4f4a5a5bbcba610aafbb91c30b2b</string>
+              <string>5e0d4f4a5a5bbcba610aafbb91c30b2b</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
@@ -3214,6 +3214,20 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>e13f98994be48f15b2098dc88a441068</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-vlc-linux/downloads/vlc_bin-2.2.3-linux64-201608040849.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -3228,7 +3242,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.2.4.317935</string>
+        <string>2.2.3</string>
       </map>
       <key>xmlrpc-epi</key>
       <map>
