@@ -4302,6 +4302,14 @@ void LLSelectMgr::deselectAllIfTooFar()
 		return;
 	}
 
+//MK from KB
+	if (gRRenabled && gAgent.mRRInterface.mContainsInteract)
+	{
+		deselectAll();
+		return;
+	}
+//mk from KB
+
 	// HACK: Don't deselect when we're navigating to rate an object's
 	// owner or creator.  JC
 	if (gMenuObject->getVisible())

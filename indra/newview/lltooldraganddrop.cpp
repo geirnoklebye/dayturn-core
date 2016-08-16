@@ -1316,7 +1316,7 @@ void LLToolDragAndDrop::dropObject(LLViewerObject* raycast_target,
 	}
 
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsRez)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsRez || gAgent.mRRInterface.mContainsInteract))
 	{
 		return;
 	}
@@ -1874,6 +1874,13 @@ EAcceptance LLToolDragAndDrop::dad3dRezAttachmentFromInv(
 EAcceptance LLToolDragAndDrop::dad3dRezObjectOnLand(
 	LLViewerObject* obj, S32 face, MASK mask, BOOL drop)
 {
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsRez || gAgent.mRRInterface.mContainsInteract))
+	{
+		return ACCEPT_NO_LOCKED;
+	}
+//mk
+
 	if (mSource == SOURCE_WORLD)
 	{
 		return dad3dRezFromObjectOnLand(obj, face, mask, drop);
@@ -1936,6 +1943,13 @@ EAcceptance LLToolDragAndDrop::dad3dRezObjectOnLand(
 EAcceptance LLToolDragAndDrop::dad3dRezObjectOnObject(
 	LLViewerObject* obj, S32 face, MASK mask, BOOL drop)
 {
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsRez || gAgent.mRRInterface.mContainsInteract))
+	{
+		return ACCEPT_NO_LOCKED;
+	}
+//mk
+
 	// handle objects coming from object inventory
 	if (mSource == SOURCE_WORLD)
 	{
