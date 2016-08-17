@@ -3207,9 +3207,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2f410640df3f9812d1abff02a414cfa8</string>
+              <string>34e580c2c80d497ae9e555137f953652</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-vlc-bin/rev/315283/arch/Linux/vlc_bin-2.2.3-linux-201606011750-r10.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-vlc-linux/downloads/vlc_bin-2.2.4-linux-201608171315.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
