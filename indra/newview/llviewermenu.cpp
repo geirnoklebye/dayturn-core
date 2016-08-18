@@ -2726,15 +2726,6 @@ bool enable_object_open()
 	{
 		return true;
 	}
-	//if (gRRenabled && gAgent.mRRInterface.mContainsFartouch)
-	//{
-	//	LLVector3 pos = LLToolPie::getInstance()->getPick().mIntersection;
-	//	pos -= gAgent.getPositionAgent ();
-	//	if (pos.magVec () >= 1.5)
-	//	{
-	//		return true;
-	//	}
-	//}
 //mk
 	LLViewerObject* root = obj->getRootEdit();
 	if (!root) return false;
@@ -2914,19 +2905,6 @@ class LLLandBuild : public view_listener_t
 		{
 			return false;
 		}
-//		if (gRRenabled && gAgent.mRRInterface.mContainsFartouch
-//			&& LLSelectMgr::getInstance()->getSelection()->getFirstObject()
-//			&& !LLSelectMgr::getInstance()->getSelection()->getFirstObject()->isHUDAttachment()
-//			)
-//		{
-////			LLVector3 pos = LLSelectMgr::getInstance()->getSelection()->getFirstObject()->getPositionRegion ();
-//			LLVector3 pos = LLToolPie::getInstance()->getPick().mIntersection;
-//			pos -= gAgent.getPositionAgent ();
-//			if (pos.magVec () >= 1.5)
-//			{
-//				return false;
-//			}
-//		}
 //mk
 		LLViewerParcelMgr::getInstance()->deselectLand();
 
@@ -4193,12 +4171,12 @@ bool is_object_sittable()
 	{
 		return false;
 	}
-	if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")))
+	if (gRRenabled && (gAgent.mRRInterface.mSittpMax < EXTREMUM))
 	{
 		LLPickInfo pick = LLToolPie::getInstance()->getPick();
 		LLVector3 pos = object->getPositionRegion() + pick.mObjectOffset;
 		pos -= gAgent.getPositionAgent ();
-		if (pos.magVec () >= 1.5)
+		if (pos.magVec () >= gAgent.mRRInterface.mSittpMax)
 		{
 			return false;
 		}
@@ -4252,11 +4230,11 @@ void handle_object_sit_or_stand()
 		{
 			return;
 		}
-		if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")))
+		if (gRRenabled && (gAgent.mRRInterface.mSittpMax < EXTREMUM))
 		{
 			LLVector3 pos = object->getPositionRegion() + pick.mObjectOffset;
 			pos -= gAgent.getPositionAgent ();
-			if (pos.magVec () >= 1.5)
+			if (pos.magVec() >= gAgent.mRRInterface.mSittpMax)
 			{
 				return;
 			}
@@ -6694,12 +6672,12 @@ bool enable_object_sit(LLUICtrl* ctrl)
 			{
 				return false;
 			}
-			if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")))
+			if (gRRenabled && (gAgent.mRRInterface.mSittpMax < EXTREMUM))
 			{
 				LLPickInfo pick = LLToolPie::getInstance()->getPick();
 				LLVector3 pos = dest_object->getPositionRegion() + pick.mObjectOffset;
 				pos -= gAgent.getPositionAgent ();
-				if (pos.magVec () >= 1.5)
+				if (pos.magVec() >= gAgent.mRRInterface.mSittpMax)
 				{
 					return false;
 				}

@@ -364,7 +364,7 @@ void LLPanelObject::getState( )
 //MK
 	LLVOAvatarSelf* avatar = gAgentAvatarp;
 	if (gRRenabled && 
-		(gAgent.mRRInterface.contains ("sittp") || (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
+		(gAgent.mRRInterface.mSittpMax < EXTREMUM || (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
 	{
 		// don't allow modification if someone is sitting on this object and avatar
 		// is prevented from sit-tping
