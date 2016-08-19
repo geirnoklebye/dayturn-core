@@ -384,6 +384,10 @@ void LLAgentCamera::unlockView()
 	{
 		return;
 	}
+	if (gRRenabled && gAgent.mRRInterface.contains("setcam_unlock"))
+	{
+		return;
+	}
 //mk
 	if (getFocusOnAvatar())
 	{

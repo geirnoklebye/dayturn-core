@@ -210,7 +210,7 @@ void LLToolCamera::pickCallback(const LLPickInfo& pick_info)
 			(LLToolMgr::getInstance()->getCurrentTool()->getName() == "Camera")) 
 	{
 //MK
-		if (gRRenabled && gAgent.mRRInterface.contains ("camunlock"))
+		if (gRRenabled && (gAgent.mRRInterface.contains("camunlock") || gAgent.mRRInterface.contains("setcam_unlock")))
 		{
 			if (!(pick_info.mKeyMask & MASK_ALT) &&
 				gAgentCamera.cameraThirdPerson() &&
