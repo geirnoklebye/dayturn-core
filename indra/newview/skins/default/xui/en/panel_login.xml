@@ -41,13 +41,6 @@
     left="0"
     top="28"
     name="kokua_logo_small" />
-  <icon
-    height="73"
-    width="123"
-    image_name="login_sl_logo"
-    left_pad="20"
-    top="32"
-    name="sl_logo_small" />
   <combo_box
     left_pad="22"
     bottom_delta="-7"
@@ -123,12 +116,19 @@
     width="120"
     height="32"
   	left_pad="15"
-    bottom_delta="0" />  
+    bottom_delta="0" /> 
+   <icon
+    height="82"
+    width="82"
+    image_name="login_kokua_logo"
+    right="-86"
+    top="28"
+    name="kokua_logo_small" />   
   <check_box
     control_name="RememberPassword"
     follows="left|top"
     font="SansSerifMedium"
-    left="245"
+    left="100"
     bottom_delta="21"  	
     height="24"
     label="Remember me"
@@ -141,7 +141,7 @@
     text_color="EmphasisColor"
     height="16"
     name="forgot_password_text"
-    left="471"    
+    left="326"    
     bottom_delta="0"
     width="200">
     Forgotten password
@@ -151,7 +151,7 @@
     font="SansSerifTiny"
     follows="left|top"
     height="26"
-  	left="648"
+  	left="505"
   	bottom_delta="10"
     max_chars="128"
     label="Select grid"    
