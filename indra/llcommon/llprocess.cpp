@@ -34,6 +34,7 @@
 #include "llapr.h"
 #include "apr_signal.h"
 #include "llevents.h"
+#include "llexception.h"
 
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
@@ -472,9 +473,9 @@ private:
 *****************************************************************************/
 /// Need an exception to avoid constructing an invalid LLProcess object, but
 /// internal use only
-struct LLProcessError: public std::runtime_error
+struct LLProcessError: public LLException
 {
-	LLProcessError(const std::string& msg): std::runtime_error(msg) {}
+	LLProcessError(const std::string& msg): LLException(msg) {}
 };
 
 LLProcessPtr LLProcess::create(const LLSDOrParams& params)
@@ -564,8 +565,8 @@ LLProcess::LLProcess(const LLSDOrParams& params):
 
 	if (! params.validateBlock(true))
 	{
-		throw LLProcessError(STRINGIZE("not launched: failed parameter validation\n"
-									   << LLSDNotationStreamer(params)));
+		LLTHROW(LLProcessError(STRINGIZE("not launched: failed parameter validation\n"
+										 << LLSDNotationStreamer(params))));
 	}
 
 	mPostend = params.postend;
@@ -630,10 +631,10 @@ LLProcess::LLProcess(const LLSDOrParams& params):
 		}
 		else
 		{
-			throw LLProcessError(STRINGIZE("For " << params.executable()
-										   << ": unsupported FileParam for " << which
-										   << ": type='" << fparam.type()
-										   << "', name='" << fparam.name() << "'"));
+			LLTHROW(LLProcessError(STRINGIZE("For " << params.executable()
+											 << ": unsupported FileParam for " << which
+											 << ": type='" << fparam.type()
+											 << "', name='" << fparam.name() << "'")));
 		}
 	}
 	// By default, pass APR_NO_PIPE for unspecified slots.
@@ -714,11 +715,8 @@ LLProcess::LLProcess(const LLSDOrParams& params):
 	if (ll_apr_warn_status(apr_proc_create(&mProcess, argv[0], &argv[0], NULL, procattr,
 										   gAPRPoolp)))
 	{
-		uninstallPreloadHack( params.preload, strOldPreload ); // <FS:ND/> Remove preload hack
-		throw LLProcessError(STRINGIZE(params << " failed"));
+		LLTHROW(LLProcessError(STRINGIZE(params << " failed")));
 	}
-	
-	uninstallPreloadHack( params.preload, strOldPreload ); // <FS:ND/> Remove preload hack
 
 	// arrange to call status_callback()
 	apr_proc_other_child_register(&mProcess, &LLProcess::status_callback, this, mProcess.in,
@@ -1102,7 +1100,7 @@ PIPETYPE& LLProcess::getPipe(FILESLOT slot)
 	PIPETYPE* wp = getPipePtr<PIPETYPE>(error, slot);
 	if (! wp)
 	{
-		throw NoPipe(error);
+		LLTHROW(NoPipe(error));
 	}
 	return *wp;
 }
