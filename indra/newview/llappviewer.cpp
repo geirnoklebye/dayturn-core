@@ -1472,7 +1472,7 @@ bool LLAppViewer::frame()
 				if(mYield_Time >= 0)
 			{
 				LL_RECORD_BLOCK_TIME(FTM_YIELD);
-				ms_sleep(mYieldTime);
+				ms_sleep(mYield_Time);
 			}
 
 			// yield cooperatively when not running as foreground window
