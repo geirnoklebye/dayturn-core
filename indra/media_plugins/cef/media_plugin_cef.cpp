@@ -687,8 +687,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
                 keyEvent(key_event, key, LLCEFLib::KM_MODIFIER_NONE, native_key_data);
 
 #endif
-//#elif LL_WINDOWS // <FS:ND/> Windows & Linux
-#else
+#else //Windows and Linux
 				std::string event = message_in.getValue("event");
 				S32 key = message_in.getValueS32("key");
 				std::string modifiers = message_in.getValue("modifiers");
