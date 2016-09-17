@@ -136,6 +136,7 @@
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
+#include <boost/throw_exception.hpp>
 
 #if LL_WINDOWS
 #	include <share.h> // For _SH_DENYWR in processMarkerFiles
@@ -206,6 +207,7 @@
 #include "llcommandlineparser.h"
 #include "llfloatermemleak.h"
 #include "llfloaterreg.h"
+#include "llfloateroutfitsnapshot.h"
 #include "llfloatersnapshot.h"
 #include "llfloaterinventory.h"
 
@@ -1553,6 +1555,7 @@ bool LLAppViewer::frame()
 				display();
 				pingMainloopTimeout("Main:Snapshot");
 				LLFloaterSnapshot::update(); // take snapshots
+					LLFloaterOutfitSnapshot::update();
 				gGLActive = FALSE;
 			}
 		}

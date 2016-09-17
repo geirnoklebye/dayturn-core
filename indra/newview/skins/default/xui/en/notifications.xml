@@ -11478,6 +11478,18 @@ Creating animation link for animation "[NAME]" failed!
      yestext="OK"/>
   </notification>
 
+  
+  <notification
+   icon="alert.tga"
+   name="OutfitPhotoLoadError"
+   type="alertmodal">
+    [REASON]
+    <tag>fail</tag>
+    <usetemplate
+     name="okbutton"
+     yestext="OK"/>
+  </notification>
+
   <notification
     icon="notify.tga"
     name="DAEExportComplete"
