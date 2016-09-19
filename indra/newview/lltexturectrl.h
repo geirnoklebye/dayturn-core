@@ -309,6 +309,7 @@ public:
 	void			onBtnPipette();
 	//static void		onBtnRevert( void* userdata );
 	static void		onBtnBlank(void* userdata);
+	static void		onBtnTrans( void* userdata );
 	static void		onBtnNone(void* userdata);
 	static void		onBtnClear(void* userdata);
 	void			onSelectionChange(const std::deque<LLFolderViewItem*> &items, BOOL user_action);
@@ -336,6 +337,7 @@ protected:
 	BOOL				mAllowNoTexture;
 	LLUUID				mSpecialCurrentImageAssetID;  // Used when the asset id has no corresponding texture in the user's inventory.
 	LLUUID				mOriginalImageAssetID;
+ 	LLUUID				mTransImageAssetID;
 
 	std::string			mLabel;
 
