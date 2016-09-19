@@ -101,7 +101,6 @@ LLFloaterTexturePicker::LLFloaterTexturePicker(
 	mImageAssetID( image_asset_id ),
 	mOriginalImageAssetID(image_asset_id),
 	mFallbackImage(fallback_image),
-//	mTransImageAssetID( gSavedSettings.getString( "UIImgTransUUID" ) ),
 	mDefaultImageAssetID(default_image_asset_id),
 	mBlankImageAssetID(blank_image_asset_id),
     mTransImageAssetID( gSavedSettings.getString( "UIImgTransUUID" ) ),
@@ -504,7 +503,7 @@ void LLFloaterTexturePicker::draw()
 
 		getChildView("Default")->setEnabled(mImageAssetID != mDefaultImageAssetID || mTentative);
 		getChildView("Blank")->setEnabled(mImageAssetID != mBlankImageAssetID || mTentative);
-//		getChildView("Trans")->setEnabled(mImageAssetID != mTransImageAssetID );
+		getChildView("Trans")->setEnabled(mImageAssetID != mTransImageAssetID );
 		getChildView("None")->setEnabled(mAllowNoTexture && (!mImageAssetID.isNull() || mTentative));
 
 		LLFloater::draw();
