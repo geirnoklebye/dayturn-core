@@ -336,7 +336,7 @@ BOOL LLFloaterTexturePicker::postBuild()
 	childSetAction("Default",LLFloaterTexturePicker::onBtnSetToDefault,this);
 	childSetAction("None", LLFloaterTexturePicker::onBtnNone,this);
 	childSetAction("Blank", LLFloaterTexturePicker::onBtnBlank,this);
-//	childSetAction("Trans", LLFloaterTexturePicker::onBtnTrans,this);
+	childSetAction("Trans", LLFloaterTexturePicker::onBtnTrans,this);
 
 
 	childSetCommitCallback("show_folders_check", onShowFolders, this);
@@ -652,14 +652,12 @@ void LLFloaterTexturePicker::onBtnBlank(void* userdata)
 }
 
 // static
-/*
 void LLFloaterTexturePicker::onBtnTrans(void* userdata)
 {
 	LLFloaterTexturePicker* self = (LLFloaterTexturePicker*) userdata;
 	self->setImageID( self->mTransImageAssetID );
 	self->commitIfImmediateSet();
 }
-*/
 
 // static
 void LLFloaterTexturePicker::onBtnNone(void* userdata)
