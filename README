@@ -300,11 +300,11 @@ Xcode should have created the directory ~/Library/Developer during installation.
 
 In terminal cd to the above directory and type the command:
 
-hg clone https://bitbucket.org/lindenlab/autobuild
+hg clone https://bitbucket.org/lindenlab/autobuild-1.0
 
 Pip Install auto build python dependencies by typing:
 
-sudo pip install ‘hg+https://bitbucket.org/oz_linden/autobuild-metadata#egg=autobuild'
+sudo pip install ‘hg+https://bitbucket.org/lindenlab/autobuild-1.0#egg=autobuild'
 
 If everything goes well it should be installed in /opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/autobuild
 

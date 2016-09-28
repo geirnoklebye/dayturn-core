@@ -131,10 +131,9 @@ Voice 32 bit libraries are not needed to build the viewer but, are needed to tes
 sudo dpkg --add-architecture i386
 
 sudo apt-get update
- 
+
 sudo apt-get install --install-recommends libasound2:i386 libasound2-plugins:i386 libasyncns0:i386 libattr1:i386 libc6:i386 libc6-i686:i386 libcap2:i386 libdbus-1-3:i386 libflac8:i386 libgcc1:i386 libice6:i386 libidn11:i386 libjson0:i386 libogg0:i386 libpulse0:i386 libsm6:i386 libsndfile1:i386 libstdc++6:i386 libvorbis0a:i386 libvorbisenc2:i386 libwrap0:i386 libuuid1:i386 libx11-6:i386 libx11-xcb1:i386 libxau6:i386 libxcb1:i386 libxdmcp6:i386 libxext6:i386 libxi6:i386 libxtst6:i386 zlib1g:i386 
 
-ubuntu-14.04.3-desktop-i386.iso
  
 Following applies to building 32 bit kokua by using a 32 bit virtual machine(vm). If building on 32 bit hardware -- follow 64 bit instructions from above.
 
@@ -265,7 +264,6 @@ This places the viewer in /opt/kokua-install and places a Kokua menu entry under
 
 sudo is the perferred method as the chrome-sandbox a part of Chrome Embedded Framework requies root permissions.
 
-To be published
 
 Windows
 
@@ -285,8 +283,6 @@ You can both build from the command line in terminal or build the XCode project 
 
 NOTE: On Upgrading XCode to a new version you probably should delete the Derived Data folder that is found in Development/XCode as it may contain links to old system library locations preventing your build from linking.
 
-	-- 
-
 Linden’s version of autobuild requires a different version of Python than the system installed so the best way to get it installed is to first install MacPorts from https://www.macports.org with the latest current release (2.3.3).
 
 With MacPorts installed, in terminal install the following ports:
@@ -302,14 +298,15 @@ When prompted by the installer run python_select to use the version you just ins
 If you have newer versions of Xcode installed then you also need to run xcode-select to make sure you use 6.4 for your build
 
 --
+
 Xcode should have created the directory ~/Library/Developer during installation. If not create it (or use the location of your choice) and shortcut it to the Finder sidebar. 
 In terminal cd to the above directory and type the command:
 
-hg clone https://bitbucket.org/lindenlab/autobuild
+hg clone https://bitbucket.org/lindenlab/autobuild-1.0
 
 Pip Install auto build python dependencies by typing:
 
-sudo pip install ‘hg+https://bitbucket.org/oz_linden/autobuild-metadata#egg=autobuild'
+sudo pip install ‘hg+https://bitbucket.org/lindenlab/autobuild-1.0#egg=autobuild'
 
 If everything goes well it should be installed in /opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/autobuild
 
