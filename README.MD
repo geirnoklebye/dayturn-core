@@ -280,8 +280,6 @@ You can both build from the command line in terminal or build the XCode project 
 
 NOTE: On Upgrading XCode to a new version you probably should delete the Derived Data folder that is found in Development/XCode as it may contain links to old system library locations preventing your build from linking.
 
-	-- 
-
 Linden’s version of autobuild requires a different version of Python than the system installed so the best way to get it installed is to first install MacPorts from https://www.macports.org with the latest current release (2.3.3).
 
 With MacPorts installed, in terminal install the following ports:
@@ -302,11 +300,11 @@ Xcode should have created the directory ~/Library/Developer during installation.
 
 In terminal cd to the above directory and type the command:
 
-hg clone https://bitbucket.org/lindenlab/autobuild
+hg clone https://bitbucket.org/lindenlab/autobuild-1.0
 
 Pip Install auto build python dependencies by typing:
 
-sudo pip install ‘hg+https://bitbucket.org/oz_linden/autobuild-metadata#egg=autobuild'
+sudo pip install ‘hg+https://bitbucket.org/lindenlab/autobuild-1.0#egg=autobuild'
 
 If everything goes well it should be installed in /opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/autobuild
 
