@@ -31,6 +31,8 @@
 #include "llmenugl.h"
 #include "llframetimer.h"
 
+const S32 PIE_MAX_SLICES = 8;
+
 // PieChildRegistry contains a list of allowed child types for the XUI definition
 struct PieChildRegistry : public LLChildRegistry<PieChildRegistry>
 {};
@@ -107,7 +109,11 @@ class PieMenu : public LLContextMenu
 		S32 mCenterX;
 		S32 mCenterY;
 		// this is TRUE when the first mouseclick came to display the menu, used for borderless menu
-		BOOL mFirstClick;
+	bool mFirstClick;
+
+	F32 getScaleFactor();
+
+	S32 mCurrentSegment;
 };
 
 #endif // PIEMENU_H
