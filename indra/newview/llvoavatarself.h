@@ -222,12 +222,12 @@ private:
 	// Baked textures
 	//--------------------------------------------------------------------
 public:
-	LLAvatarAppearanceDefines::ETextureIndex getBakedTE(const LLViewerTexLayerSet* layerset ) const;
-	void				setNewBakedTexture(LLAvatarAppearanceDefines::EBakedTextureIndex i, const LLUUID &uuid);
-	void				setNewBakedTexture(LLAvatarAppearanceDefines::ETextureIndex i, const LLUUID& uuid);
-	void				setCachedBakedTexture(LLAvatarAppearanceDefines::ETextureIndex i, const LLUUID& uuid);
-	void				forceBakeAllTextures(bool slam_for_debug = false);
-	static void			processRebakeAvatarTextures(LLMessageSystem* msg, void**);
+    LLAvatarAppearanceDefines::ETextureIndex getBakedTE(const LLViewerTexLayerSet* layerset) const;
+    void				setNewBakedTexture(LLAvatarAppearanceDefines::EBakedTextureIndex i, const LLUUID &uuid);
+    void				setNewBakedTexture(LLAvatarAppearanceDefines::ETextureIndex i, const LLUUID& uuid);
+    void				setCachedBakedTexture(LLAvatarAppearanceDefines::ETextureIndex i, const LLUUID& uuid);
+    void				forceBakeAllTextures(bool slam_for_debug = false);
+    static void			processRebakeAvatarTextures(LLMessageSystem* msg, void**);
 protected:
 	/*virtual*/ void	removeMissingBakedTextures();
 
