@@ -913,7 +913,8 @@ LLWString LLFloaterIMNearbyChat::stripChannelNumber(const LLWString &mesg, S32* 
 		}
 	else if (mesg[0] == '/'
 			 && mesg[1]
-			 && LLStringOps::isDigit(mesg[1]))
+			 && (LLStringOps::isDigit(mesg[1])
+				 || (mesg[1] == '-' && mesg[2] && LLStringOps::isDigit(mesg[2]))))
 		{
 		// This a special "/20" speak on a channel
 		S32 pos = 0;
@@ -927,7 +928,7 @@ LLWString LLFloaterIMNearbyChat::stripChannelNumber(const LLWString &mesg, S32* 
 			channel_string.push_back(c);
 			pos++;
 		}
-		while(c && pos < 64 && LLStringOps::isDigit(c));
+		while(c && pos < 64 && (LLStringOps::isDigit(c) || (pos==1 && c =='-')));
 
 		// Move the pointer forward to the first non-whitespace char
 		// Check isspace before looping, so we can handle "/33foo"
@@ -997,14 +998,17 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 					{
 						if (ch > 0 && ch < 2147483647)
 						{
-							LLMessageSystem* msg = gMessageSystem;
-							msg->newMessageFast(_PREHASH_ChatFromViewer);
-							msg->nextBlockFast(_PREHASH_AgentData);
-							msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
-							msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-							msg->nextBlockFast(_PREHASH_ChatData);
-							msg->addStringFast(_PREHASH_Message, utf8_out_text);
-							msg->addU8Fast(_PREHASH_Type, type);
+    LLMessageSystem* msg = gMessageSystem;
+
+    if (channel >= 0)
+    {
+        msg->newMessageFast(_PREHASH_ChatFromViewer);
+        msg->nextBlockFast(_PREHASH_AgentData);
+        msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+        msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+        msg->nextBlockFast(_PREHASH_ChatData);
+        msg->addStringFast(_PREHASH_Message, utf8_out_text);
+        msg->addU8Fast(_PREHASH_Type, type);
 							msg->addS32("Channel", ch);
 
 							gAgent.sendReliableMessage();
@@ -1042,11 +1046,25 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 	msg->addStringFast(_PREHASH_Message, crunchedText);
 //mk
 	msg->addU8Fast(_PREHASH_Type, type);
-	msg->addS32("Channel", channel);
+        msg->addS32("Channel", channel);
 
-	gAgent.sendReliableMessage();
+    }
+    else
+    {
+        // Hack: ChatFromViewer doesn't allow negative channels
+        msg->newMessage("ScriptDialogReply");
+        msg->nextBlock("AgentData");
+        msg->addUUID("AgentID", gAgentID);
+        msg->addUUID("SessionID", gAgentSessionID);
+        msg->nextBlock("Data");
+        msg->addUUID("ObjectID", gAgentID);
+        msg->addS32("ChatChannel", channel);
+        msg->addS32("ButtonIndex", 0);
+        msg->addString("ButtonLabel", utf8_out_text);
+    }
 
-	add(LLStatViewer::CHAT_COUNT, 1);
+    gAgent.sendReliableMessage();
+    add(LLStatViewer::CHAT_COUNT, 1);
 }
 
 class LLChatCommandHandler : public LLCommandHandler

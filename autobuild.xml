@@ -3974,9 +3974,6 @@
                   <string>..\indra\tools\vstool\VSTool.exe</string>
                   <string>--solution</string>
                   <string>Kokua.sln</string>
-                  <string>--config</string>
-                  <string>RelWithDebInfo</string>
-                  <string>--startup</string>
                   <string>kokua-bin</string>
                 </array>
                 <key>options</key>
