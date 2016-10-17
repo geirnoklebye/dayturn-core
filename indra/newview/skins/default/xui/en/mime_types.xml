@@ -482,7 +482,6 @@
 			movie
 		</widgettype>
 		<impl>
-      media_plugin_quicktime
     </impl>
   </mimetype>
   <mimetype menu="1" name="video/quicktime">

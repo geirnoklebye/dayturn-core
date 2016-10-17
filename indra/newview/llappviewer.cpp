@@ -125,11 +125,12 @@
 #include "stringize.h"
 #include "llcoros.h"
 #include "llexception.h"
+#if !LL_LINUX
 #include "cef/llceflib.h"
 #if LL_WINDOWS
 #include "vlc/libvlc_version.h"
 #endif // LL_WINDOWS
-
+#endif // LL_LINUX
 
 // Third party library includes
 #include <boost/bind.hpp>
@@ -600,6 +601,7 @@ static void settings_to_globals()
 	LLImageGL::sGlobalAnisotropicSamples= gSavedSettings.getF32("RenderAnisotropicSamples");
 	LLImageGL::sCompressTextures		= gSavedSettings.getBOOL("RenderCompressTextures");
 	LLVOVolume::sLODFactor				= gSavedSettings.getF32("RenderVolumeLODFactor");
+	LLVOVolume::sRiggedFactorMultiplier	= gSavedSettings.getF32("RenderRiggedFactorMultiplier");
 	LLVOVolume::sDistanceFactor			= 1.f-LLVOVolume::sLODFactor * 0.1f;
 	LLVolumeImplFlexible::sUpdateFactor = gSavedSettings.getF32("RenderFlexTimeFactor");
 	LLVOTree::sTreeFactor				= gSavedSettings.getF32("RenderTreeLODFactor");
@@ -708,7 +710,8 @@ LLAppViewer::LLAppViewer()
 	mPeriodicSlowFrame(LLCachedControl<bool>(gSavedSettings,"Periodic Slow Frame", FALSE)),
 	mFastTimerLogThread(NULL),
 	mUpdater(new LLUpdaterService()),
-	mSettingsLocationList(NULL)
+	mSettingsLocationList(NULL),
+	mIsFirstRun(false)
 {
 	if(NULL != sInstance)
 	{
@@ -1132,17 +1135,23 @@ bool LLAppViewer::init()
 #if LL_WINDOWS
 	if (gGLManager.mGLVersion < LLFeatureManager::getInstance()->getExpectedGLVersion())
 	{
+		std::string url;
 		if (gGLManager.mIsIntel)
 		{
-			LLNotificationsUtil::add("IntelOldDriver");
+			url = LLTrans::getString("IntelDriverPage");
 		}
 		else if (gGLManager.mIsNVIDIA)
 		{
-			LLNotificationsUtil::add("NVIDIAOldDriver");
+			url = LLTrans::getString("NvidiaDriverPage");
 		}
 		else if (gGLManager.mIsATI)
 		{
-			LLNotificationsUtil::add("AMDOldDriver");
+			url = LLTrans::getString("AMDDriverPage");
+		}
+
+		if (!url.empty())
+		{
+			LLNotificationsUtil::add("OldGPUDriver", LLSD().with("URL", url));
 		}
 	}
 #endif
@@ -1229,6 +1238,8 @@ bool LLAppViewer::init()
     LLCoprocedureManager::getInstance()->setPropertyMethods(
         boost::bind(&LLControlGroup::getU32, boost::ref(gSavedSettings), _1),
         boost::bind(&LLControlGroup::declareU32, boost::ref(gSavedSettings), _1, _2, _3, LLControlVariable::PERSIST_ALWAYS));
+
+	showReleaseNotesIfRequired();
 
 	/*----------------------------------------------------------------------*/
 	// nat 2016-06-29 moved the following here from the former mainLoop().
@@ -2526,7 +2537,10 @@ bool LLAppViewer::initConfiguration()
 
 	if (gSavedSettings.getBOOL("FirstRunThisInstall"))
 	{
-		// Note that the "FirstRunThisInstall" settings is currently unused.
+		// Set firstrun flag to indicate that some further init actiona should be taken 
+		// like determining screen DPI value and so on
+		mIsFirstRun = true;
+
 		gSavedSettings.setBOOL("FirstRunThisInstall", FALSE);
 	}
 
@@ -3195,7 +3209,8 @@ bool LLAppViewer::initWindow()
 		.min_width(gSavedSettings.getU32("MinWindowWidth"))
 		.min_height(gSavedSettings.getU32("MinWindowHeight"))
 		.fullscreen(gSavedSettings.getBOOL("FullScreen"))
-		.ignore_pixel_depth(ignorePixelDepth);
+		.ignore_pixel_depth(ignorePixelDepth)
+		.first_run(mIsFirstRun);
 
 	gViewerWindow = new LLViewerWindow(window_params);
 
