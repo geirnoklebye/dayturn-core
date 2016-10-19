@@ -117,6 +117,7 @@ LLInventoryFilter::EFilterSubstringTarget LLInventoryFilter::getFilterSubStringT
 bool LLInventoryFilter::check(const LLFolderViewModelItem* item) 
 {
 	const LLFolderViewModelItemInventory* listener = dynamic_cast<const LLFolderViewModelItemInventory*>(item);
+	// Clipboard cut items are *always* filtered so we need this value upfront
 	// <FS:Ansariel> FIRE-6714: Don't move objects to trash during cut&paste
 	// Don't hide cut items in inventory
 	//const BOOL passed_clipboard = (listener ? checkAgainstClipboard(listener->getUUID()) : TRUE);
@@ -127,7 +128,7 @@ bool LLInventoryFilter::check(const LLFolderViewModelItem* item)
 	const BOOL is_folder = listener->getInventoryType() == LLInventoryType::IT_CATEGORY;
 	if (is_folder && (mFilterOps.mShowFolderState == LLInventoryFilter::SHOW_ALL_FOLDERS))
 	{
-		return true;
+		return passed_clipboard;
 	}
 
 	//bool passed = (mFilterSubString.size() ? listener->getSearchableName().find(mFilterSubString) != std::string::npos : true); <FS:TM> 3.6.4 check this, ll repoaced the line in CHUI (2 down) with this
@@ -208,7 +209,7 @@ bool LLInventoryFilter::check(const LLInventoryItem* item)
 	const bool passed_clipboard = true;
 	// </FS:Ansariel> Don't filter cut items
 
-	return passed_filtertype && passed_permissions && passed_string;
+	return passed_filtertype && passed_permissions && passed_clipboard && passed_string;
 }
 
 bool LLInventoryFilter::checkFolder(const LLFolderViewModelItem* item) const
@@ -227,15 +228,17 @@ bool LLInventoryFilter::checkFolder(const LLFolderViewModelItem* item) const
 
 bool LLInventoryFilter::checkFolder(const LLUUID& folder_id) const
 {
+	// Always check against the clipboard
 	// <FS:Ansariel> FIRE-6714: Don't move objects to trash during cut&paste
 	// Don't hide cut items in inventory
 	//const BOOL passed_clipboard = checkAgainstClipboard(folder_id);
 	const BOOL passed_clipboard = TRUE;
 	// </FS:Ansariel> FIRE-6714: Don't move objects to trash during cut&paste
+	
 	// we're showing all folders, overriding filter
 	if (mFilterOps.mShowFolderState == LLInventoryFilter::SHOW_ALL_FOLDERS)
 	{
-		return true;
+		return passed_clipboard;
 	}
 
 	// when applying a filter, matching folders get their contents downloaded first
@@ -308,7 +311,7 @@ bool LLInventoryFilter::checkFolder(const LLUUID& folder_id) const
 	LLViewerInventoryItem* item = gInventory.getItem(folder_id);
 	if (item && item->getActualType() == LLAssetType::AT_LINK_FOLDER)
 	{
-		return true;
+		return passed_clipboard;
 	}
 
 	if (mFilterOps.mFilterTypes & FILTERTYPE_CATEGORY)
@@ -323,7 +326,7 @@ bool LLInventoryFilter::checkFolder(const LLUUID& folder_id) const
 			return false;
 	}
 
-	return true;
+	return passed_clipboard;
 }
 
 bool LLInventoryFilter::checkAgainstFilterType(const LLFolderViewModelItemInventory* listener) const

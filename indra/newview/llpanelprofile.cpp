@@ -46,15 +46,6 @@ static const std::string PANEL_PICKS = "panel_picks";
 std::string getProfileURL(const std::string& agent_name)
 {
 	std::string url = "[WEB_PROFILE_URL][AGENT_NAME]";
-	if (LLGridManager::getInstance()->isInSLMain())
-	else if (LLGridManager::getInstance()->isInSLBeta())
-	else if (LLLoginInstance::getInstance()->hasResponse("profile-server-url"))
-	{
-		url = LLLoginInstance::getInstance()->getResponse("profile-server-url").asString();
-	}
-
-		//			* capability (better for decentaliced environment)
-
 	LLSD subs;
 	subs["WEB_PROFILE_URL"] = LLGridManager::getInstance()->getWebProfileURL();
 	subs["AGENT_NAME"] = agent_name;
@@ -62,7 +53,6 @@ std::string getProfileURL(const std::string& agent_name)
 	LLStringUtil::toLower(url);
 	return url;
 }
-
 class LLProfileHandler : public LLCommandHandler
 {
 public:
