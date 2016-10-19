@@ -6048,6 +6048,20 @@ void LLAppViewer::launchUpdater()
 	// LLAppViewer::instance()->forceQuit();
 }
 
+/**
+* Check if user is running a new version of the viewer.
+* Display the Release Notes if it's not overriden by the "UpdaterShowReleaseNotes" setting.
+*/
+void LLAppViewer::showReleaseNotesIfRequired()
+{
+	if (LLVersionInfo::getChannelAndVersion() != gLastRunVersion
+		&& gSavedSettings.getBOOL("UpdaterShowReleaseNotes")
+		&& !gSavedSettings.getBOOL("FirstLoginThisInstall"))
+	{
+		LLSD info(getViewerInfo());
+		LLWeb::loadURLInternal(info["VIEWER_RELEASE_NOTES_URL"]);
+	}
+}
 // static
 void LLAppViewer::setViewerWindowTitle()
 {
