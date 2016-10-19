@@ -1693,7 +1693,7 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	mResDirty(false),
 	mStatesDirty(false),
 	mCurrResolutionIndex(0),
-	mProgressView(NULL),
+	mProgressView(NULL)
 //MK
 	, mPickThroughHuds(FALSE)
 //mk
