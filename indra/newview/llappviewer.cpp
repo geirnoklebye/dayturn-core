@@ -125,12 +125,10 @@
 #include "stringize.h"
 #include "llcoros.h"
 #include "llexception.h"
-#if !LL_LINUX
 #include "cef/llceflib.h"
 #if LL_WINDOWS
 #include "vlc/libvlc_version.h"
 #endif // LL_WINDOWS
-#endif // LL_LINUX
 
 // Third party library includes
 #include <boost/bind.hpp>
