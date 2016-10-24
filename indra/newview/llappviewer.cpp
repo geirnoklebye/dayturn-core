@@ -599,7 +599,7 @@ static void settings_to_globals()
 	LLImageGL::sGlobalAnisotropicSamples= gSavedSettings.getF32("RenderAnisotropicSamples");
 	LLImageGL::sCompressTextures		= gSavedSettings.getBOOL("RenderCompressTextures");
 	LLVOVolume::sLODFactor				= gSavedSettings.getF32("RenderVolumeLODFactor");
-	LLVOVolume::sRiggedFactorMultiplier	= gSavedSettings.getF32("RenderRiggedFactorMultiplier");
+	LLVOVolume::sRiggedLODCompensation	= llmax(0.25f, gSavedSettings.getF32("RenderRiggedLodCompensation"));
 	LLVOVolume::sDistanceFactor			= 1.f-LLVOVolume::sLODFactor * 0.1f;
 	LLVolumeImplFlexible::sUpdateFactor = gSavedSettings.getF32("RenderFlexTimeFactor");
 	LLVOTree::sTreeFactor				= gSavedSettings.getF32("RenderTreeLODFactor");
