@@ -241,6 +241,11 @@
 #include "llappearancemgr.h"
 //mk
 
+//MK
+int garbage_collector_cnt = -100; // give the garbage collector a moment before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
+//mk
+
+
 // *FIX: These extern globals should be cleaned up.
 // The globals either represent state/config/resource-storage of either 
 // this app, or another 'component' of the viewer. App globals should be 
@@ -1321,10 +1326,6 @@ LLTrace::BlockTimerStatHandle FTM_FRAME("Frame");
 
 bool LLAppViewer::frame()
 {
-//MK
-	int garbage_collector_cnt=-100; // give the garbage collector a moment before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
-//mk
-
 	LLEventPump& mainloop(LLEventPumps::instance().obtain("mainloop"));
     LLSD newFrame;
 

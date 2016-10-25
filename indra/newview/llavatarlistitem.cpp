@@ -96,7 +96,7 @@ LLAvatarListItem::LLAvatarListItem(bool not_from_ui_factory/* = true*/)
 	mAvatarAge(0),
 //mk from FS
 	mAvatarNameCacheConnection(),
-	mGreyOutUsername("")
+	mGreyOutUsername(""),
 	// [Ansariel: Colorful radar]
 	mUseRangeColors(false),
 	// [Ansariel: Colorful radar]
@@ -407,6 +407,7 @@ void LLAvatarListItem::updateFirstSeen(int nb /* = 5 */)
 	S32 secs = (S32)((seentime - hours * 3600 - mins * 60));
 	mFirstSeenDisplay->setValue(llformat("%d:%02d:%02d", hours, mins, secs));
 	showPaymentStatus(nb >= 5);
+	showAvatarAge(nb >= 4);
 	showFirstSeen(nb >= 3);
 	showRange(nb >= 2);
 	updateChildren();
@@ -496,6 +497,18 @@ void LLAvatarListItem::setAvatarIconVisible(bool visible)
 	updateChildren();
 }
 
+void LLAvatarListItem::showDisplayName(bool show)
+{
+	mShowDisplayName = show;
+	updateAvatarName();
+}
+
+void LLAvatarListItem::showUsername(bool show)
+{
+	mShowUsername = show;
+	updateAvatarName();
+}
+
 // [Ansariel: Colorful radar]
 void LLAvatarListItem::setShoutRangeColor(const LLUIColor& shoutRangeColor)
 {
@@ -565,7 +578,37 @@ void LLAvatarListItem::updateAvatarName()
 	fetchAvatarName();
 }
 
+void LLAvatarListItem::showAvatarAge(bool display)
+{
+//MK
+	// I need to deactivate this for now, because the observer for this datum tends to corrupt
+	// the list of observers in LLAvatarPropertiesProcessor, leading to a quick crash very often.
+	return;
+	////	mAvatarAgeDisplay->setVisible(display);
+	////	updateAvatarProperties();
+//mk
+}
+
 //== PRIVATE SECITON ==========================================================
+
+void LLAvatarListItem::processProperties(void* data, EAvatarProcessorType type)
+{
+
+	// route the data to the inspector
+	if (data
+		&& type == APT_PROPERTIES)
+	{
+		LLAvatarData* avatar_data = static_cast<LLAvatarData*>(data);
+		mAvatarAge = ((LLDate::now().secondsSinceEpoch() - (avatar_data->born_on).secondsSinceEpoch()) / 86400);
+		mAvatarAgeDisplay->setValue(mAvatarAge);
+
+		if (mShowPaymentStatus)
+		{
+			mPaymentStatus->setVisible(avatar_data->flags);
+		}
+
+	}
+}
 
 void LLAvatarListItem::setNameInternal(const std::string& name, const std::string& highlight)
 {
@@ -798,6 +841,12 @@ void LLAvatarListItem::updateChildren()
 	name_view->setShape(name_view_rect);
 
 	LL_DEBUGS("AvatarItemReshape") << "name rect after: " << name_view_rect << LL_ENDL;
+}
+
+void LLAvatarListItem::setShowPermissions(bool show)
+{
+	mShowPermissions = show;
+	showPermissions(show);
 }
 
 bool LLAvatarListItem::showPermissions(bool visible)

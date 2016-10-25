@@ -106,6 +106,6 @@ void LLPanelSnapshotProfile::onSend()
 	}
 //mk
 
-	LLWebProfile::uploadImage(LLFloaterSnapshot::getImageData(), caption, add_location);
-	LLFloaterSnapshot::postSave();
+	LLWebProfile::uploadImage(mSnapshotFloater->getImageData(), caption, add_location);
+	mSnapshotFloater->postSave();
 }
