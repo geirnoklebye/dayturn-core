@@ -143,6 +143,13 @@ LLSnapshotModel::ESnapshotLayerType LLFloaterSnapshot::Impl::getLayerType(LLFloa
 		type = LLSnapshotModel::SNAPSHOT_TYPE_COLOR;
 	else if (id == "depth")
 		type = LLSnapshotModel::SNAPSHOT_TYPE_DEPTH;
+//MK
+	// When the vision is restricted, do not render depth or it lets us cheat through the vision spheres
+	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+	{
+		type = LLSnapshotModel::SNAPSHOT_TYPE_COLOR;
+	}
+//mk
 	return type;
 }
 
