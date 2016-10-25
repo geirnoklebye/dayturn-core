@@ -93,9 +93,7 @@ static const std::string COLLAPSED_BY_USER  = "collapsed_by_user";
 const S32 BASE_MAX_AGENT_GROUPS = 42;
 const S32 PREMIUM_MAX_AGENT_GROUPS = 60;
 
-//MK
 extern S32 gMaxAgentGroups;
-//mk
 
 /** Comparator for comparing avatar items by last interaction date */
 class LLAvatarItemRecentComparator : public LLAvatarItemComparator
@@ -621,9 +619,11 @@ BOOL LLPanelPeople::postBuild()
 	mOnlineFriendList->setNoItemsCommentText(getString("no_friends_online"));
 	mOnlineFriendList->setShowIcons("FriendsListShowIcons");
 	mOnlineFriendList->showPermissions("FriendsListShowPermissions");
+	mOnlineFriendList->setShowCompleteName(!gSavedSettings.getBOOL("FriendsListHideUsernames"));
 	mAllFriendList->setNoItemsCommentText(getString("no_friends"));
 	mAllFriendList->setShowIcons("FriendsListShowIcons");
 	mAllFriendList->showPermissions("FriendsListShowPermissions");
+	mAllFriendList->setShowCompleteName(!gSavedSettings.getBOOL("FriendsListHideUsernames"));
 
 	LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
 	nearby_tab->setVisibleCallback(boost::bind(&Updater::setActive, mNearbyListUpdater, _2));
@@ -632,6 +632,7 @@ BOOL LLPanelPeople::postBuild()
 	mNearbyList->setNoItemsMsg(getString("no_one_near"));
 	mNearbyList->setNoFilteredItemsMsg(getString("no_one_filtered_near"));
 	mNearbyList->setShowIcons("NearbyListShowIcons");
+	mNearbyList->setShowCompleteName(!gSavedSettings.getBOOL("NearbyListHideUsernames"));
 	mMiniMap = (LLNetMap*)getChildView("Net Map",true);
 	mMiniMap->setToolTipMsg(gSavedSettings.getBOOL("DoubleClickTeleport") ? 
 		getString("AltMiniMapToolTipMsg") :	getString("MiniMapToolTipMsg"));
@@ -847,15 +848,15 @@ void LLPanelPeople::updateNearbyList()
 {
 	if (!mNearbyList)
 		return;
-//MK
+//MK from FS
 	std::vector<LLPanel*> items;
 	F32 drawRadius = gSavedSettings.getF32("RenderFarClip");
 	mNearbyList->getItems(items);	
 
 	// Fetch new list of surrounding Avs
-//mk
+//mk from FS
 	std::vector<LLVector3d> positions;
-//MK
+//MK from FS
 	LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
 	mNearbyList->setDirty(true,true); // AO: These optional arguements force updating even when we're not a visible window.
 	DISTANCE_COMPARATOR.updateAvatarsPositions(positions, mNearbyList->getIDs());
@@ -989,7 +990,7 @@ void LLPanelPeople::updateNearbyList()
 	// Update various display fields
 	updateNearbyRange();
 	LLActiveSpeakerMgr::instance().update(TRUE);
-//mk
+//mk from FS
 	LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
 	mNearbyList->setDirty();
 
@@ -1018,7 +1019,7 @@ void LLPanelPeople::updateRecentList()
 //mk
 }
 
-//MK
+//MK from FS
 void LLPanelPeople::updateNearbyRange()
 // Iterates through nearbyList elements, updating the range field.
 // Thanks to Kitty Barnett for this logic.
@@ -1053,7 +1054,7 @@ void LLPanelPeople::reportToNearbyChat(std::string message)
 //	args["type"] = LLNotificationsUi::NT_NEARBYCHAT;
 //	LLNotificationsUi::LLNotificationManager::instance().onChat(chat, args);
 }
-//mk
+//mk from FS
 
 bool LLPanelPeople::onConnectedToFacebook(const LLSD& data)
 {
@@ -1556,6 +1557,16 @@ void LLPanelPeople::onFriendsViewSortMenuItemClicked(const LLSD& userdata)
 		mAllFriendList->showPermissions(show_permissions);
 		mOnlineFriendList->showPermissions(show_permissions);
 	}
+	else if (chosen_item == "view_usernames")
+	{
+		bool hide_usernames = !gSavedSettings.getBOOL("FriendsListHideUsernames");
+		gSavedSettings.setBOOL("FriendsListHideUsernames", hide_usernames);
+
+		mAllFriendList->setShowCompleteName(!hide_usernames);
+		mAllFriendList->handleDisplayNamesOptionChanged();
+		mOnlineFriendList->setShowCompleteName(!hide_usernames);
+		mOnlineFriendList->handleDisplayNamesOptionChanged();
+	}
 }
 
 void LLPanelPeople::onGroupsViewSortMenuItemClicked(const LLSD& userdata)
@@ -1587,6 +1598,14 @@ void LLPanelPeople::onNearbyViewSortMenuItemClicked(const LLSD& userdata)
 	else if (chosen_item == "sort_distance")
 	{
 		setSortOrder(mNearbyList, E_SORT_BY_DISTANCE);
+	}
+	else if (chosen_item == "view_usernames")
+	{
+	    bool hide_usernames = !gSavedSettings.getBOOL("NearbyListHideUsernames");
+	    gSavedSettings.setBOOL("NearbyListHideUsernames", hide_usernames);
+
+	    mNearbyList->setShowCompleteName(!hide_usernames);
+	    mNearbyList->handleDisplayNamesOptionChanged();
 	}
 }
 

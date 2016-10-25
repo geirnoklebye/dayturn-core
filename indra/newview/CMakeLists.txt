@@ -272,6 +272,7 @@ set(viewer_SOURCE_FILES
     llfloaternamedesc.cpp
     llfloaternotificationsconsole.cpp
     llfloaternotificationstabbed.cpp 
+    llfloateroutfitsnapshot.cpp
     llfloaterobjectweights.cpp
     llfloateropenobject.cpp
     llfloaterpathfindingcharacters.cpp
@@ -412,6 +413,7 @@ set(viewer_SOURCE_FILES
     llnotificationscripthandler.cpp
     llnotificationstorage.cpp
     llnotificationtiphandler.cpp
+    lloutfitgallery.cpp
     lloutfitslist.cpp
     lloutfitobserver.cpp
     lloutputmonitorctrl.cpp
@@ -891,6 +893,7 @@ set(viewer_HEADER_FILES
     llfloaternamedesc.h
     llfloaternotificationsconsole.h
     llfloaternotificationstabbed.h 
+    llfloateroutfitsnapshot.h
     llfloaterobjectweights.h
     llfloateropenobject.h
     llfloaterpathfindingcharacters.h
@@ -1021,6 +1024,7 @@ set(viewer_HEADER_FILES
     llnotificationlistview.h
     llnotificationmanager.h
     llnotificationstorage.h
+    lloutfitgallery.h
     lloutfitslist.h
     lloutfitobserver.h
     lloutputmonitorctrl.h
@@ -1153,6 +1157,7 @@ set(viewer_HEADER_FILES
     llsky.h
     llslurl.h
     llsnapshotlivepreview.h
+    llsnapshotmodel.h
     llspatialpartition.h
     llspeakers.h
     llspeakingindicatormanager.h
@@ -1329,13 +1334,10 @@ set(viewer_HEADER_FILES
 
 source_group("CMake Rules" FILES ViewerInstall.cmake)
 
+#summary.json creation moved to viewer_manifest.py MAINT-6413
 # the viewer_version.txt file created here is for passing to viewer_manifest and autobuild
-# the summary.json file is created for the benefit of the TeamCity builds, where
-#   it is used to provide descriptive information to the build results page
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt"
            "${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}\n")
-file(WRITE "${CMAKE_BINARY_DIR}/summary.json"
-           "{\"Type\":\"viewer\",\"Version\":\"${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}\"}\n")
 
 set_source_files_properties(
    llversioninfo.cpp tests/llversioninfo_test.cpp 
@@ -1768,6 +1770,7 @@ if (WINDOWS)
       SLPlugin
       media_plugin_quicktime
       media_plugin_cef
+      media_plugin_libvlc
       winmm_shim
       windows-crash-logger
       )
@@ -1984,6 +1987,7 @@ if (LINUX)
     linux-crash-logger
     SLPlugin
     media_plugin_gstreamer010
+    media_plugin_libvlc
     llcommon
     )
 
@@ -2090,7 +2094,7 @@ if (DARWIN)
       ${CMAKE_CURRENT_SOURCE_DIR}/viewer_manifest.py
     )
 
-  add_dependencies(${VIEWER_BINARY_NAME} SLPlugin media_plugin_quicktime media_plugin_cef mac-crash-logger)
+  add_dependencies(${VIEWER_BINARY_NAME} SLPlugin media_plugin_quicktime media_plugin_libvlc media_plugin_cef mac-crash-logger)
   add_dependencies(${VIEWER_BINARY_NAME} mac-crash-logger)
 
   if (ENABLE_SIGNING)

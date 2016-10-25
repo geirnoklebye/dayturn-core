@@ -122,15 +122,20 @@
 #include "llleap.h"
 #include "stringize.h"
 #include "llcoros.h"
+#include "llexception.h"
 #if !LL_LINUX
 #include "cef/llceflib.h"
-#endif
+#if LL_WINDOWS
+#include "vlc/libvlc_version.h"
+#endif // LL_WINDOWS
+#endif // LL_LINUX
 
 // Third party library includes
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
+#include <boost/throw_exception.hpp>
 
 #if LL_WINDOWS
 #	include <share.h> // For _SH_DENYWR in processMarkerFiles
@@ -201,6 +206,7 @@
 #include "llcommandlineparser.h"
 #include "llfloatermemleak.h"
 #include "llfloaterreg.h"
+#include "llfloateroutfitsnapshot.h"
 #include "llfloatersnapshot.h"
 #include "llfloaterinventory.h"
 
@@ -775,10 +781,6 @@ bool LLAppViewer::init()
 	// Start of the application
 	//
 
-#ifdef LL_DARWIN
-	mMainLoopInitialized = false;
-#endif
-
 	// initialize LLWearableType translation bridge.
 	// Memory will be cleaned up in ::cleanupClass()
 	LLWearableType::initClass(new LLUITranslationBridge());
@@ -931,7 +933,7 @@ bool LLAppViewer::init()
 	
 	// Provide the text fields with callbacks for opening Urls
 	LLUrlAction::setOpenURLCallback(boost::bind(&LLWeb::loadURL, _1, LLStringUtil::null, LLStringUtil::null));
-	LLUrlAction::setOpenURLInternalCallback(boost::bind(&LLWeb::loadURLInternal, _1, LLStringUtil::null, LLStringUtil::null));
+	LLUrlAction::setOpenURLInternalCallback(boost::bind(&LLWeb::loadURLInternal, _1, LLStringUtil::null, LLStringUtil::null, false));
 	LLUrlAction::setOpenURLExternalCallback(boost::bind(&LLWeb::loadURLExternal, _1, true, LLStringUtil::null));
 	LLUrlAction::setExecuteSLURLCallback(&LLURLDispatcher::dispatchFromTextEditor);
 
@@ -1226,6 +1228,23 @@ bool LLAppViewer::init()
         boost::bind(&LLControlGroup::getU32, boost::ref(gSavedSettings), _1),
         boost::bind(&LLControlGroup::declareU32, boost::ref(gSavedSettings), _1, _2, _3, LLControlVariable::PERSIST_ALWAYS));
 
+	/*----------------------------------------------------------------------*/
+	// nat 2016-06-29 moved the following here from the former mainLoop().
+	mMainloopTimeout = new LLWatchdogTimeout();
+
+	// Create IO Pump to use for HTTP Requests.
+	gServicePump = new LLPumpIO(gAPRPoolp);
+
+	// Note: this is where gLocalSpeakerMgr and gActiveSpeakerMgr used to be instantiated.
+
+	LLVoiceChannel::initClass();
+	LLVoiceClient::getInstance()->init(gServicePump);
+	LLVoiceChannel::setCurrentVoiceChannelChangedCallback(boost::bind(&LLFloaterIMContainer::onCurrentChannelChanged, _1), true);
+
+	joystick = LLViewerJoystick::getInstance();
+	joystick->setNeedsReset(true);
+	/*----------------------------------------------------------------------*/
+
 	return true;
 }
 
@@ -1300,46 +1319,13 @@ static LLTrace::BlockTimerStatHandle FTM_AGENT_UPDATE("Update");
 // externally visible timers
 LLTrace::BlockTimerStatHandle FTM_FRAME("Frame");
 
-bool LLAppViewer::mainLoop()
+bool LLAppViewer::frame()
 {
-#ifdef LL_DARWIN
-	if (!mMainLoopInitialized)
-#endif
-	{
-        LL_INFOS() << "Entering main_loop" << LL_ENDL;
-	mMainloopTimeout = new LLWatchdogTimeout();
-	
-	//-------------------------------------------
-	// Run main loop until time to quit
-	//-------------------------------------------
-
-	// Create IO Pump to use for HTTP Requests.
-	gServicePump = new LLPumpIO(gAPRPoolp);
-
-	// Note: this is where gLocalSpeakerMgr and gActiveSpeakerMgr used to be instantiated.
-
-	LLVoiceChannel::initClass();
-	LLVoiceClient::getInstance()->init(gServicePump);
-	LLVoiceChannel::setCurrentVoiceChannelChangedCallback(boost::bind(&LLFloaterIMContainer::onCurrentChannelChanged, _1), true);
-
-		joystick = LLViewerJoystick::getInstance();
-	joystick->setNeedsReset(true);
-
-#ifdef LL_DARWIN
-		// Ensure that this section of code never gets called again on OS X.
-		mMainLoopInitialized = true;
-#endif
-	}
 //MK
 	int garbage_collector_cnt=-100; // give the garbage collector a moment before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
 //mk
-    // As we do not (yet) send data on the mainloop LLEventPump that varies
-    // with each frame, no need to instantiate a new LLSD event object each
-    // time. Obviously, if that changes, just instantiate the LLSD at the
-    // point of posting.
-	
+
 	LLEventPump& mainloop(LLEventPumps::instance().obtain("mainloop"));
-	
     LLSD newFrame;
 
 	LLTimer frameTimer,idleTimer;
@@ -1349,13 +1335,6 @@ bool LLAppViewer::mainLoop()
 	//LLPrivateMemoryPoolTester::getInstance()->run(true) ;
 	//LLPrivateMemoryPoolTester::destroy() ;
 
-	// Handle messages
-#ifdef LL_DARWIN
-	if (!LLApp::isExiting())
-#else
-	while (!LLApp::isExiting())
-#endif
-	{
 		LL_RECORD_BLOCK_TIME(FTM_FRAME);
 		LLTrace::BlockTimer::processTimes();
 		LLTrace::get_frame_recording().nextPeriod();
@@ -1542,6 +1521,7 @@ bool LLAppViewer::mainLoop()
 					display();
 					pingMainloopTimeout("Main:Snapshot");
 					LLFloaterSnapshot::update(); // take snapshots
+					LLFloaterOutfitSnapshot::update();
 					gGLActive = FALSE;
 				}
 			}
@@ -1661,6 +1641,10 @@ bool LLAppViewer::mainLoop()
 				pingMainloopTimeout("Main:End");
 			}	
 		}
+	catch (const LLContinueError&)
+	{
+		LOG_UNHANDLED_EXCEPTION("");
+	}
 		catch(std::bad_alloc)
 		{			
 			LLMemory::logMemoryInfo(TRUE) ;
@@ -1671,16 +1655,19 @@ bool LLAppViewer::mainLoop()
 			if(mem_leak_instance)
 			{
 				mem_leak_instance->stop() ;				
-				LL_WARNS() << "Bad memory allocation in LLAppViewer::mainLoop()!" << LL_ENDL ;
+			LL_WARNS() << "Bad memory allocation in LLAppViewer::frame()!" << LL_ENDL ;
 			}
 			else
 			{
 				//output possible call stacks to log file.
 				LLError::LLCallStacks::print() ;
 
-				LL_ERRS() << "Bad memory allocation in LLAppViewer::mainLoop()!" << LL_ENDL ;
+			LL_ERRS() << "Bad memory allocation in LLAppViewer::frame()!" << LL_ENDL ;
 			}
 		}
+	catch (...)
+	{
+		CRASH_ON_UNHANDLED_EXCEPTION("");
 	}
 
 	if (LLApp::isExiting())
@@ -1704,6 +1691,10 @@ bool LLAppViewer::mainLoop()
 				mem_leak_instance->stop() ;				
 			}	
 		}
+			catch (...)
+			{
+				CRASH_ON_UNHANDLED_EXCEPTION("saveFinalSnapshot()");
+			}
 	}
 	
 	delete gServicePump;
@@ -1713,7 +1704,7 @@ bool LLAppViewer::mainLoop()
 		LL_INFOS() << "Exiting main_loop" << LL_ENDL;
 	}
 
-	return LLApp::isExiting();
+	return ! LLApp::isRunning();
 }
 
 S32 LLAppViewer::updateTextureThreads(F32 max_time)
@@ -3452,6 +3443,19 @@ LLSD LLAppViewer::getViewerInfo() const
 	info["LLCEFLIB_VERSION"] = LLCEFLIB_VERSION;
 #else
 	info["LLCEFLIB_VERSION"] = "Undefined";
+
+#endif
+
+#if LL_WINDOWS
+	std::ostringstream ver_codec;
+	ver_codec << LIBVLC_VERSION_MAJOR;
+	ver_codec << ".";
+	ver_codec << LIBVLC_VERSION_MINOR;
+	ver_codec << ".";
+	ver_codec << LIBVLC_VERSION_REVISION;
+	info["LIBVLC_VERSION"] = ver_codec.str();
+#else
+	info["LIBVLC_VERSION"] = "Undefined";
 #endif
 
 	S32 packets_in = LLViewerStats::instance().getRecording().getSum(LLStatViewer::PACKETS_IN);
@@ -3563,6 +3567,12 @@ std::string LLAppViewer::getViewerInfoString() const
 	{
 		support << '\n' << LLTrans::getString("AboutTraffic", args);
 	}
+
+	// SLT timestamp
+	LLSD substitution;
+	substitution["datetime"] = (S32)time(NULL);//(S32)time_corrected();
+	support << "\n" << LLTrans::getString("AboutTime", substitution);
+
 	return support.str();
 }
 
@@ -5665,8 +5675,7 @@ void LLAppViewer::forceErrorInfiniteLoop()
 void LLAppViewer::forceErrorSoftwareException()
 {
    	LL_WARNS() << "Forcing a deliberate exception" << LL_ENDL;
-    // *FIX: Any way to insure it won't be handled?
-    throw; 
+    LLTHROW(LLException("User selected Force Software Exception"));
 }
 
 void LLAppViewer::forceErrorDriverCrash()
