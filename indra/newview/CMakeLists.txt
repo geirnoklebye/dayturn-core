@@ -295,6 +295,7 @@ set(viewer_SOURCE_FILES
     llfloaternamedesc.cpp
     llfloaternotificationsconsole.cpp
     llfloaternotificationstabbed.cpp 
+    llfloateroutfitsnapshot.cpp
     llfloaterobjectweights.cpp
     llfloateropenobject.cpp
     llfloaterpathfindingcharacters.cpp
@@ -435,6 +436,7 @@ set(viewer_SOURCE_FILES
     llnotificationscripthandler.cpp
     llnotificationstorage.cpp
     llnotificationtiphandler.cpp
+    lloutfitgallery.cpp
     lloutfitslist.cpp
     lloutfitobserver.cpp
     lloutputmonitorctrl.cpp
@@ -940,6 +942,7 @@ set(viewer_HEADER_FILES
     llfloaternamedesc.h
     llfloaternotificationsconsole.h
     llfloaternotificationstabbed.h 
+    llfloateroutfitsnapshot.h
     llfloaterobjectweights.h
     llfloateropenobject.h
     llfloaterpathfindingcharacters.h
@@ -1070,6 +1073,7 @@ set(viewer_HEADER_FILES
     llnotificationlistview.h
     llnotificationmanager.h
     llnotificationstorage.h
+    lloutfitgallery.h
     lloutfitslist.h
     lloutfitobserver.h
     lloutputmonitorctrl.h
@@ -1202,6 +1206,7 @@ set(viewer_HEADER_FILES
     llsky.h
     llslurl.h
     llsnapshotlivepreview.h
+    llsnapshotmodel.h
     llspatialpartition.h
     llspeakers.h
     llspeakingindicatormanager.h

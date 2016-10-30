@@ -32,6 +32,7 @@
 #include "llagentwearables.h"
 #include "llappearancemgr.h"
 #include "llavatarnamecache.h"
+#include "llcamera.h"
 #include "lldrawpoolalpha.h"
 //#include "llfloaterenvsettings.h"
 #include "llfloatereditsky.h"
@@ -56,6 +57,7 @@
 #include "llnotifications.h"
 #include "llpanelmaininventory.h"
 #include "llpaneltopinfobar.h"
+#include "llregionhandle.h"
 #include "llrendersphere.h"
 #include "llselectmgr.h"
 #include "llspeakers.h"
@@ -69,6 +71,7 @@
 #include "llviewercontrol.h"
 #include "llviewermenu.h"
 #include "llviewerobjectlist.h"
+#include "llviewertexturelist.h"
 #include "llviewerwindow.h"
 #include "llwaterparammanager.h"
 #include "llwlparammanager.h"
@@ -78,7 +81,10 @@
 #include "llviewerregion.h"
 #include "llviewermessage.h"
 #include "llviewerparcelmgr.h"
+#include "llworldmapmessage.h"
 #include "pipeline.h"
+
+#include <boost/algorithm/string.hpp>
 
 #include <cstdlib>
 
@@ -204,8 +210,7 @@ void refreshCachedVariable (std::string var)
 	}
 	else if (var == "showinv")				gAgent.mRRInterface.mContainsShowinv = contained;
 	else if (var == "unsit")				gAgent.mRRInterface.mContainsUnsit = contained;
-	else if (var == "fartouch")				gAgent.mRRInterface.mContainsFartouch = contained;
-	else if (var == "touchfar")				gAgent.mRRInterface.mContainsFartouch = contained;
+	else if (var == "interact")				gAgent.mRRInterface.mContainsInteract = contained;
 	else if (var == "showworldmap")			gAgent.mRRInterface.mContainsShowworldmap = contained;
 	else if (var == "showminimap")			gAgent.mRRInterface.mContainsShowminimap = contained;
 	else if (var == "showloc")				gAgent.mRRInterface.mContainsShowloc = contained;
@@ -223,7 +228,6 @@ void refreshCachedVariable (std::string var)
 	else if (var == "permissive")			gAgent.mRRInterface.mContainsPermissive = contained;
 	else if (var == "temprun")					gAgent.mRRInterface.mContainsRun = contained;
 	else if (var == "alwaysrun")				gAgent.mRRInterface.mContainsAlwaysRun = contained;
-	else if (var == "camtextures")				gAgent.mRRInterface.mContainsCamTextures = contained;
 	//else if (var == "moveup")					gAgent.mRRInterface.mContainsMoveUp = contained;
 	//else if (var == "movedown")				gAgent.mRRInterface.mContainsMoveDown = contained;
 	//else if (var == "moveleft")			gAgent.mRRInterface.mContainsMoveStrafeLeft = contained;
@@ -234,6 +238,8 @@ void refreshCachedVariable (std::string var)
 	//else if (var == "moveturndown")			gAgent.mRRInterface.mContainsMoveTurnDown = contained;
 	//else if (var == "moveturnleft")			gAgent.mRRInterface.mContainsMoveTurnLeft = contained;
 	//else if (var == "moveturnright")			gAgent.mRRInterface.mContainsMoveTurnRight = contained;
+
+	gAgent.mRRInterface.mContainsCamTextures = (gAgent.mRRInterface.containsSubstr("camtextures") || gAgent.mRRInterface.containsSubstr("setcam_textures"));
 
 	if (var == "showinv") {
 		if (gAgent.mRRInterface.mContainsShowinv) {
@@ -363,7 +369,7 @@ void refreshCachedVariable (std::string var)
 			}
 		}
 	}
-	else if (var == "camtextures") {
+	else if (var.find ("camtextures") == 0 || var.find ("setcam_textures") == 0) {
 		// silly hack, but we need to force all textures in world to be updated
 		S32 i;
 		for (i=0; i<gObjectList.getNumObjects(); ++i) {
@@ -372,13 +378,38 @@ void refreshCachedVariable (std::string var)
 				object->setSelected(FALSE);
 			}
 		}
+
+		// Is there a uuid specified ?
+		int ind = var.find(":");
+		if (ind != -1) {
+			std::string uuid_str = var.substr(ind + 1);
+			LLUUID uuid;
+			if (uuid.set(uuid_str)) {
+				//if (gAgent.mRRInterface.mCamTexturesCustom != LLViewerFetchedTexture::sDefaultImagep) {
+				//	delete (gAgent.mRRInterface.mCamTexturesCustom);
+				//}
+				gAgent.mRRInterface.mCamTexturesCustom = LLViewerTextureManager::getFetchedTexture(uuid, FTT_DEFAULT, MIPMAP_TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE);
+			}
+		}
+		else {
+			//if (gAgent.mRRInterface.mCamTexturesCustom != LLViewerFetchedTexture::sDefaultImagep) {
+			//	delete (gAgent.mRRInterface.mCamTexturesCustom);
+			//}
+			gAgent.mRRInterface.mCamTexturesCustom = LLViewerFetchedTexture::sDefaultImagep;
+		}
 	}
-	else if (var == "camunlock") {
+	else if (var == "camunlock" || var == "setcam_unlock") {
 		gAgentCamera.resetView(TRUE, TRUE);
 	}
-	else if (var == "camzoommax" || var == "camzoommin") {
-		LLViewerCamera::getInstance()->setDefaultFOV(gSavedSettings.getF32("CameraAngle"));
-	}
+	//else if (var.find ("camzoommax") == 0 || var.find ("camzoommin") == 0) {
+	//	LLViewerCamera::getInstance()->setDefaultFOV(gSavedSettings.getF32("CameraAngle"));
+	//	gSavedSettings.setF32("CameraAngle", LLViewerCamera::getInstance()->getView()); // setView may have clamped it.
+	//}
+
+	//else if (var.find("setcam_fovmin") == 0 || var.find("setcam_fovmax") == 0) {
+	//	LLViewerCamera::getInstance()->setDefaultFOV(gSavedSettings.getF32("CameraAngle"));
+	//	gSavedSettings.setF32("CameraAngle", LLViewerCamera::getInstance()->getView()); // setView may have clamped it.
+	//}
 
 	if (gAgent.mRRInterface.contains("tplm")
 	|| gAgent.mRRInterface.contains("tploc")
@@ -484,7 +515,7 @@ RRInterface::RRInterface():
 	, mContainsDetach(FALSE)
 	, mContainsShowinv(FALSE)
 	, mContainsUnsit(FALSE)
-	, mContainsFartouch(FALSE)
+	, mContainsInteract(FALSE)
 	, mContainsShowworldmap(FALSE)
 	, mContainsShowminimap(FALSE)
 	, mContainsShowloc(FALSE)
@@ -520,23 +551,18 @@ RRInterface::RRInterface():
 	//, mContainsMoveStrafeLeft(FALSE)
 	//, mContainsMoveStrafeRight(FALSE)
 	, mLaunchTimestamp(LLDate::now().secondsSinceEpoch())
+	, mCamTexturesCustom(LLViewerFetchedTexture::sDefaultImagep)
 {
-	mAllowedS32 = ",";
+	mAllowedGetDebug.clear();
+	mAllowedGetDebug.push_back("AvatarSex"); // 0 female, 1 male
+	mAllowedGetDebug.push_back("RenderResolutionDivisor"); // simulate blur, default is 1
+	mAllowedGetDebug.push_back("RestrainedLoveForbidGiveToRLV");
+	mAllowedGetDebug.push_back("RestrainedLoveNoSetEnv");
+	mAllowedGetDebug.push_back("WindLightUseAtmosShaders");
 
-	mAllowedU32 = 
-	",AvatarSex"			// 0 female, 1 male
-	",RenderResolutionDivisor"	// simulate blur, default is 1
-	",";
-
-	mAllowedF32 = ",";
-	mAllowedBOOLEAN = ",";
-	mAllowedSTRING = ",";
-	mAllowedVEC3 = ",";
-	mAllowedVEC3D = ",";
-	mAllowedRECT = ",";
-	mAllowedCOL4 = ",";
-	mAllowedCOL3 = ",";
-	mAllowedCOL4U = ",";
+	mAllowedSetDebug.clear();
+	mAllowedSetDebug.push_back("AvatarSex"); // 0 female, 1 male
+	mAllowedSetDebug.push_back("RenderResolutionDivisor"); // simulate blur, default is 1
 
 	mParcelName = "";
 
@@ -550,6 +576,7 @@ RRInterface::RRInterface():
 	sLastAvatarZOffsetCommit = 1.f; // So a first shape update will be done shortly after the viewer has started
 	sLastOutfitChange = -1000.f;
 	updateCameraLimits();
+	updateLimits();
 
 	// Calling gSavedSettings here crashes the viewer when compiled with VS2005.
 	// OK under Linux. Moved this initialization to llstartup.cpp as a consequence.
@@ -658,7 +685,9 @@ BOOL RRInterface::containsSubstr (std::string action)
 
 F32 RRInterface::getMax (std::string action, F32 dflt /*= EXTREMUM*/)
 {
+	// action can be a list of behavs separated by commas
 	LLStringUtil::toLower(action);
+	action = "," + action + ",";
 	F32 res = -EXTREMUM;
 	F32 tmp;
 	std::string command;
@@ -670,8 +699,11 @@ F32 RRInterface::getMax (std::string action, F32 dflt /*= EXTREMUM*/)
 		command = it->second;
 		LLStringUtil::toLower(command);
 		if (parseCommand (command+"=n", behav, option, param)) {
-			if (behav == action) {
+			if (action.find ("," + behav + ",") != -1) {
 				tmp = atof (option.c_str());
+				if (option == "") {
+					tmp = 1.5;
+				}
 				if (tmp > res) {
 					res = tmp;
 					found_one = TRUE;
@@ -687,7 +719,9 @@ F32 RRInterface::getMax (std::string action, F32 dflt /*= EXTREMUM*/)
 
 F32 RRInterface::getMin (std::string action, F32 dflt /*= -EXTREMUM*/)
 {
+	// action can be a list of behavs separated by commas
 	LLStringUtil::toLower(action);
+	action = "," + action + ",";
 	F32 res = EXTREMUM;
 	F32 tmp;
 	std::string command;
@@ -699,8 +733,11 @@ F32 RRInterface::getMin (std::string action, F32 dflt /*= -EXTREMUM*/)
 		command = it->second;
 		LLStringUtil::toLower(command);
 		if (parseCommand (command+"=n", behav, option, param)) {
-			if (behav == action) {
-				tmp = atof (option.c_str());
+			if (action.find("," + behav + ",") != -1) {
+				tmp = atof(option.c_str());
+				if (option == "") {
+					tmp = 1.5;
+				}
 				if (tmp < res) {
 					res = tmp;
 					found_one = TRUE;
@@ -716,7 +753,9 @@ F32 RRInterface::getMin (std::string action, F32 dflt /*= -EXTREMUM*/)
 
 LLColor3 RRInterface::getMixedColors (std::string action, LLColor3 dflt /*= LLColor3::black*/)
 {
+	// action can be a list of behavs separated by commas
 	LLStringUtil::toLower(action);
+	action = "," + action + ",";
 	LLColor3 res = dflt;
 	LLColor3 tmp;
 	std::string command;
@@ -731,8 +770,8 @@ LLColor3 RRInterface::getMixedColors (std::string action, LLColor3 dflt /*= LLCo
 		command = it->second;
 		LLStringUtil::toLower(command);
 		if (parseCommand (command+"=n", behav, option, param)) {
-			if (behav == action) {
-				tokens = parse (option, ";");
+			if (action.find("," + behav + ",") != -1) {
+				tokens = parse(option, ";");
 				tmp.mV[0] = atof (tokens[0].c_str());
 				tmp.mV[1] = atof (tokens[1].c_str());
 				tmp.mV[2] = atof (tokens[2].c_str());
@@ -798,7 +837,9 @@ bool RRInterface::isFolderLocked(LLInventoryCategory* cat)
 //	const LLFolderType::EType folder_type = cat->getPreferredType();
 //	if (LLFolderType::lookupIsProtectedType(folder_type)) return false;
 
-	if (contains ("unsharedwear") && !isUnderRlvShare(cat)) return true;
+	bool shared = isUnderRlvShare(cat);
+	if (!shared && contains("unsharedwear")) return true;
+	if (shared && contains("sharedwear")) return true;
 	if (isFolderLockedWithoutException(cat, "attach") != FolderLock_unlocked) return true;
 	if (isFolderLockedWithoutException(cat, "detach") != FolderLock_unlocked) return true;
 	return false;
@@ -1006,8 +1047,20 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 		else if (canon_action == "showhovertext") {
 			updateOneHudText(LLUUID(option));
 		}
-		else if (canon_action.find ("cam") == 0) {
+		else if (canon_action.find("cam") == 0 || canon_action.find("setcam") == 0) {
 			updateCameraLimits ();
+			// Force an update of the zoom if necessary
+			if (canon_action == "camzoommax" || canon_action == "camzoommin" || canon_action == "setcam_fovmin" || canon_action == "setcam_fovmax") {
+				LLViewerCamera::getInstance()->setDefaultFOV(gSavedSettings.getF32("CameraAngle"));
+				gSavedSettings.setF32("CameraAngle", LLViewerCamera::getInstance()->getView()); // setView may have clamped it.
+			}
+		}
+		else if (canon_action == "fartouch"
+			|| canon_action == "touchfar"
+			|| canon_action == "sittp"
+			|| canon_action == "tplocal"
+			) {
+			updateLimits();
 		}
 
 		// Check if we can see wireframe or not, deactivate if our vision is restricted (we have locked HUDs or mCamDistDrawMax is not infinite)
@@ -1081,8 +1134,15 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 			if (canon_action == "showhovertext") {
 				updateOneHudText(LLUUID(option));
 			}
-			else if (canon_action.find ("cam") == 0) {
+			else if (canon_action.find("cam") == 0 || canon_action.find("setcam") == 0) {
 				updateCameraLimits ();
+			}
+			else if (canon_action == "fartouch"
+				|| canon_action == "touchfar"
+				|| canon_action == "sittp"
+				|| canon_action == "tplocal"
+				) {
+				updateLimits();
 			}
 			else if (action == "standtp" && gAgentAvatarp && !gAgentAvatarp->isSitting()) { // If we are not sitting, then we can remove the @standtp restriction normally
 				gAgent.mRRInterface.mLastStandingLocation.clear();
@@ -1128,6 +1188,7 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 	}
 	updateAllHudTexts();
 	updateCameraLimits();
+	updateLimits();
 	if (gAgentAvatarp && !gAgentAvatarp->isSitting()) { // If we are not sitting, then we can remove the @standtp restriction normally
 		gAgent.mRRInterface.mLastStandingLocation.clear();
 		gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
@@ -1322,13 +1383,68 @@ BOOL RRInterface::handleCommand (LLUUID uuid, std::string command)
 		else if (behav=="getsitid") return answerOnChat (param, getSitTargetId ().asString());
 		else if (behav=="getpath") return answerOnChat (param, getFullPath (getItem(uuid), option, false)); // option can be empty (=> find path to object) or the name of an attach pt or the name of a clothing layer
 		else if (behav=="getpathnew") return answerOnChat (param, getFullPath (getItem(uuid), option)); // option can be empty (=> find path to object) or the name of an attach pt or the name of a clothing layer
-		else if (behav=="findfolder") return answerOnChat (param, getFullPath (findCategoryUnderRlvShare (option)));
+		else if (behav == "findfolder") return answerOnChat(param, getFullPath(findCategoryUnderRlvShare(option)));
+		else if (behav == "findfolders") {
+			std::deque<std::string> options = parse(option, ";");
+			std::string folder_to_find = options.at(0);
+			std::string separator = (options.size() > 1) ? options.at(1) : ",";
+			std::deque<LLInventoryCategory*> cats = findCategoriesUnderRlvShare(folder_to_find);
+			std::string response = "";
+			for (int i = 0; i < cats.size(); i++) {
+				if (i > 0) response += separator;
+				response += getFullPath(cats.at(i));
+			}
+			return answerOnChat(param, response);
+		}
 		else if (behav.find ("getenv_") == 0) return answerOnChat (param, getEnvironment (behav));
 		else if (behav.find ("getdebug_") == 0) return answerOnChat (param, getDebugSetting (behav));
 		else if (behav=="getgroup") {
 			std::string group_name = gAgent.getGroupName();
 			if (gAgent.getGroupID() == LLUUID::null) group_name = "none"; // "none" is not localized here because a script should not have to bother about viewer language
 			return answerOnChat (param, group_name);
+		}
+		else if (behav=="getcam_avdistmin") {
+			std::stringstream str;
+			str << std::fixed << mCamDistMin;
+			return answerOnChat(param, str.str());
+		}
+		else if (behav == "getcam_avdistmax") {
+			std::stringstream str;
+			str << std::fixed << mCamDistMax;
+			return answerOnChat(param, str.str());
+		}
+		else if (behav == "getcam_zoommin") {
+			std::stringstream str;
+			str << std::fixed << mCamZoomMin;
+			return answerOnChat(param, str.str());
+		}
+		else if (behav == "getcam_zoommax") {
+			std::stringstream str;
+			str << std::fixed << mCamZoomMax;
+			return answerOnChat(param, str.str());
+		}
+		else if (behav == "getcam_fovmin") {
+			std::stringstream str;
+			str << std::fixed << DEFAULT_FIELD_OF_VIEW / mCamZoomMax;
+			return answerOnChat(param, str.str());
+		}
+		else if (behav == "getcam_fovmax") {
+			std::stringstream str;
+			str << std::fixed << DEFAULT_FIELD_OF_VIEW / mCamZoomMin;
+			return answerOnChat(param, str.str());
+		}
+		else if (behav == "getcam_zoom") {
+			std::stringstream str;
+			str << std::fixed << DEFAULT_FIELD_OF_VIEW / LLViewerCamera::getInstance()->getView();
+			return answerOnChat(param, str.str());
+		}
+		else if (behav == "getcam_fov") {
+			std::stringstream str;
+			str << std::fixed << LLViewerCamera::getInstance()->getView();
+			return answerOnChat(param, str.str());
+		}
+		else if (behav == "getcam_textures") {
+			return answerOnChat(param, mCamTexturesCustom->getID().asString());
 		}
 
 		else {
@@ -1379,19 +1495,16 @@ static void force_sit(LLUUID object_uuid)
 			// Do not allow a script to force the avatar to sit somewhere if already forced to stay sitting here
 			return;
 		}
-		if (gAgent.mRRInterface.contains ("sit"))
+
+		if (gAgent.mRRInterface.mContainsInteract)
 		{
 			return;
 		}
-		//if (gAgent.mRRInterface.contains ("sittp")) {
-		//	// Do not allow a script to force the avatar to sit somewhere far when under @sittp
-		//	LLVector3 pos = object->getPositionRegion();
-		//	pos -= gAgent.getPositionAgent ();
-		//	if (pos.magVec () >= 1.5)
-		//	{
-		//		return;
-		//	}
-		//}
+
+		if (gAgent.mRRInterface.contains("sit"))
+		{
+			return;
+		}
 
 		if (gAgentAvatarp && !gAgentAvatarp->mIsSitting)
 		{
@@ -1506,15 +1619,26 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		}
 	}
 	else if (command=="detach" || command=="remattach") { // detach:chest=force OR detach:restraints/cuffs=force (@remattach is a synonym)
-		LLViewerJointAttachment* attachpt = findAttachmentPointFromName (option, TRUE); // exact name
-		if (attachpt != NULL || option == "") return forceDetach (option); // remove by attach pt
-		else forceDetachByName (option, FALSE);
+		if (LLUUID::validate (option)) { // if option is a UUID, detach this object only
+			return forceDetachByUuid(option); // remove by uuid
+		}
+		else {
+			LLViewerJointAttachment* attachpt = findAttachmentPointFromName(option, TRUE); // exact name
+			if (attachpt != NULL || option == "") return forceDetach(option); // remove by attach pt
+			else forceDetachByName(option, FALSE);
+		}
 	}
 	else if (command=="detachme") { // detachme=force to detach this object specifically
 		return forceDetachByUuid (object_uuid.asString()); // remove by uuid
 	}
 	else if (command=="detachthis") { // detachthis=force to detach the folder containing this object
-		std::string pathes_str = getFullPath (getItem(object_uuid), option);
+		std::string pathes_str;
+		if (LLUUID::validate(option)) { // if option is a UUID, we're not detaching the folder contain the calling object, but the referenced object
+			pathes_str = getFullPath(getItem(LLUUID (option)));
+		}
+		else {
+			pathes_str = getFullPath(getItem(object_uuid), option);
+		}
 		std::deque<std::string> pathes = parse (pathes_str, ",");
 		BOOL res = TRUE;
 		for (unsigned int i = 0; i < pathes.size(); ++i) {
@@ -1532,16 +1656,31 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		return res;
 	}
 	else if (command=="detachallthis") { // detachallthis=force to detach the folder containing this object and also its subfolders
-		std::string pathes_str = getFullPath (getItem(object_uuid), option);
-		std::deque<std::string> pathes = parse (pathes_str, ",");
+		std::string pathes_str;
+		if (LLUUID::validate(option)) { // if option is a UUID, we're not detaching the folder contain the calling object, but the referenced object
+			pathes_str = getFullPath(getItem(LLUUID(option)));
+		}
+		else {
+			pathes_str = getFullPath(getItem(object_uuid), option);
+		}
+		std::deque<std::string> pathes = parse(pathes_str, ",");
 		BOOL res = TRUE;
 		for (unsigned int i = 0; i < pathes.size(); ++i) {
 			res &= forceDetachByName (pathes.at(i), TRUE);
 		}
 		return res;
 	}
-	else if (command=="tpto") { // tpto:X/Y/Z=force (X, Y, Z are GLOBAL coordinates)
-		BOOL allowed_to_tploc=TRUE;
+	else if (command=="tpto") { // tpto:[region/]X/Y/Z[;lookat]=force (X, Y, Z are local or global coordinates, depending on the existence of the region)
+		size_t ind = option.find(";"); // lookat present ? (FIXME : broken at the moment because gAgent.teleportViaLocationLookAt () does not take a "lookat" parameter (to add it we have to change a whole lot of calls all over the code)
+		LLVector3 vecLookAt = LLVector3::zero;
+		if (ind != std::string::npos && ind + 1 < option.length()) {
+			F32 lookat = (F32)atof(option.substr(ind + 1).c_str());
+			vecLookAt = LLVector3::x_axis;
+			vecLookAt.rotVec(lookat, LLVector3::z_axis);
+			vecLookAt.normalize();
+			option = option.substr(0, ind); // keep the coordinates only
+		}
+		BOOL allowed_to_tploc = TRUE;
 		BOOL allowed_to_unsit=TRUE;
 		BOOL allowed_to_sittp=TRUE;
 		BOOL res;
@@ -1557,7 +1696,7 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 			allowed_to_sittp=FALSE;
 			remove (object_uuid, "sittp", "");
 		}
-		res = forceTeleport (option);
+		res = forceTeleport(option, vecLookAt);
 		if (!allowed_to_tploc) add (object_uuid, "tploc", "");
 		if (!allowed_to_unsit) add (object_uuid, "unsit", "");
 		if (!allowed_to_sittp) add (object_uuid, "sittp", "");
@@ -1747,10 +1886,15 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		}
 		// not found => do nothing
 	}
+	else if (command == "setcam_fov") {
+		F32 new_fov_rad = atof(option.c_str());
+		LLViewerCamera::getInstance()->setDefaultFOV(new_fov_rad);
+		gSavedSettings.setF32("CameraAngle", LLViewerCamera::getInstance()->getView()); // setView may have clamped it.
+	}
 	return TRUE;
 }
 
-void RRInterface::removeItemFromAvatar (LLViewerInventoryItem* item)
+void RRInterface::removeItemFromAvatar(LLViewerInventoryItem* item)
 {
 	if (!item) return;
 	std::string name = item->getName();
@@ -2535,10 +2679,14 @@ LLInventoryCategory* RRInterface::findCategoryUnderRlvShare (std::string catName
 			{
 				cat = cats->at(i);
 				
-				// search deeper first
-				LLInventoryCategory* found = findCategoryUnderRlvShare (catName, cat);
-				if (found != NULL) return found;
-				
+				std::string name = cat->getName();
+				LLStringUtil::toLower(name);
+				// We can't find invisible folders ('.') and dropped folders ('~')
+				if (name != "" && name[0] != '.' && name[0] != '~') {
+					// search deeper first
+					LLInventoryCategory* found = findCategoryUnderRlvShare(catName, cat);
+					if (found != NULL) return found;
+				}
 			}
 		}
 		// return this category if it matches
@@ -2551,7 +2699,52 @@ LLInventoryCategory* RRInterface::findCategoryUnderRlvShare (std::string catName
 	return NULL;
 }
 
-std::string RRInterface::findAttachmentNameFromPoint (LLViewerJointAttachment* attachpt)
+std::deque<LLInventoryCategory*> RRInterface::findCategoriesUnderRlvShare(std::string catName, LLInventoryCategory* root)
+{
+	if (root == NULL) root = getRlvShare();
+	LLStringUtil::toLower(catName);
+	std::deque<std::string> tokens = parse(catName, "&&");
+	std::deque<LLInventoryCategory*> res;
+
+	if (root) {
+		LLInventoryModel::cat_array_t* cats;
+		LLInventoryModel::item_array_t* items;
+		gInventory.getDirectDescendentsOf(root->getUUID(), cats, items);
+
+		if (cats)
+		{
+			S32 count = cats->size();
+			LLInventoryCategory* cat = NULL;
+
+			for (S32 i = 0; i < count; ++i)
+			{
+				cat = cats->at(i);
+
+				std::string name = cat->getName();
+				LLStringUtil::toLower(name);
+				// We can't find invisible folders ('.') and dropped folders ('~')
+				if (name != "" && name[0] != '.' && name[0] != '~') {
+					// search deeper first
+					std::deque<LLInventoryCategory*> found = findCategoriesUnderRlvShare(catName, cat);
+					for (int i = 0; i < found.size(); i++) {
+						res.push_back(found.at(i));
+					}
+				}
+
+			}
+		}
+
+		// add this category if it matches
+		std::string name = root->getName();
+		LLStringUtil::toLower(name);
+		// We can't find invisible folders ('.') and dropped folders ('~')
+		if (name != "" && name[0] != '.' && name[0] != '~' && findMultiple(tokens, name)) res.push_back(root);
+	}
+
+	return res;
+}
+
+std::string RRInterface::findAttachmentNameFromPoint(LLViewerJointAttachment* attachpt)
 {
 	// return the lowercased name of the attachment, or empty if null
 	if (attachpt == NULL) return "";
@@ -3087,19 +3280,26 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive)
 	return TRUE;
 }
 
-BOOL RRInterface::forceTeleport (std::string location)
+BOOL RRInterface::forceTeleport(std::string location, const LLVector3& vecLookAt)
 {
 	// location must be X/Y/Z where X, Y and Z are ABSOLUTE coordinates => use a script in-world to translate from local to global
+	// OR it can be Region/X/Y/Z where X, Y and Z are LOCAL coordinates => no need to use a script in-world
 	std::string loc (location);
-	std::string region_name;
-	S32 x = 128;
-	S32 y = 128;
-	S32 z = 0;
+	std::string region_name = "";
+	S64 x = 128;
+	S64 y = 128;
+	S64 z = 0;
 	std::deque<std::string> tokens=parse (location, "/");
 	if (tokens.size()==3) {
 		x=atoi (tokens.at(0).c_str());
 		y=atoi (tokens.at(1).c_str());
 		z=atoi (tokens.at(2).c_str());
+	}
+	else if (tokens.size() == 4) {
+		region_name = tokens.at(0);
+		x = atoi(tokens.at(1).c_str());
+		y = atoi(tokens.at(2).c_str());
+		z = atoi(tokens.at(3).c_str());
 	}
 	else {
 		return FALSE;
@@ -3108,18 +3308,48 @@ BOOL RRInterface::forceTeleport (std::string location)
 	if (sRestrainedLoveDebug) {
 		LL_INFOS() << tokens.at(0) << "," << tokens.at(1) << "," << tokens.at(2) << "     " << x << "," << y << "," << z << LL_ENDL;
 	}
-	LLVector3d pos_global;
-	pos_global.mdV[VX] = (F32)x;
-	pos_global.mdV[VY] = (F32)y;
-	pos_global.mdV[VZ] = (F32)z;
-	
+
 	mAllowCancelTp = FALSE; // will be checked once receiving the tp order from the sim, then set to TRUE again
 
-	gAgent.teleportViaLocation (pos_global);
+	if (region_name == "")
+	{
+		LLVector3d pos_global;
+		pos_global.mdV[VX] = (F64)x;
+		pos_global.mdV[VY] = (F64)y;
+		pos_global.mdV[VZ] = (F64)z;
+
+		gAgent.teleportViaLocation(pos_global);
+	}
+	else {
+		LLVector3 pos_local;
+		pos_local.mV[VX] = (F32)x;
+		pos_local.mV[VY] = (F32)y;
+		pos_local.mV[VZ] = (F32)z;
+
+		LLWorldMapMessage::url_callback_t cb = boost::bind(&RRInterface::forceTeleportCallback, _1, pos_local, vecLookAt);
+		LLWorldMapMessage::getInstance()->sendNamedRegionRequest(region_name, cb, std::string(""), true);
+	}
+
 	return TRUE;
 }
 
-std::string RRInterface::stringReplace (std::string s, std::string what, std::string by, BOOL caseSensitive /* = FALSE */)
+// From KB
+void RRInterface::forceTeleportCallback(U64 hRegion, const LLVector3& posRegion, const LLVector3& vecLookAt)
+{
+	if (hRegion)
+	{
+		const LLVector3d posGlobal = from_region_handle(hRegion) + (LLVector3d)posRegion;
+		if (vecLookAt.isExactlyZero()) {
+			gAgent.teleportViaLocation(posGlobal);
+		}
+		else {
+			gAgent.teleportViaLocationLookAt(posGlobal);
+		}
+	}
+}
+// from KB
+
+std::string RRInterface::stringReplace(std::string s, std::string what, std::string by, BOOL caseSensitive /* = FALSE */)
 {
 //	LL_INFOS() << "trying to replace <" << what << "> in <" << s << "> by <" << by << ">" << LL_ENDL;
 	if (what == "" || what == " ") return s; // avoid an infinite loop
@@ -3203,6 +3433,35 @@ std::string RRInterface::getDummyName (std::string name, EChatAudible audible /*
 
 std::string RRInterface::getCensoredMessage (std::string str)
 {
+	// HACK: if the message is under the form secondlife:///app/agent/UUID/about, clear it
+	// (we could just as well clear just the first part, or return a bogus message, 
+	// the purpose here is to avoid showing the profile of an avatar and displaying their name on the chat)
+	if (str.find("secondlife:///app/agent/") == 0)
+	{
+		return "";
+	}
+
+	// First we need to build a list of all the exceptions to @shownames and @shownametags
+	// Each avatar object which UUID is contained in this list should not be censored
+	std::string command;
+	std::string behav;
+	std::string option;
+	std::string param;
+	std::deque<LLUUID> exceptions;
+	RRMAP::iterator it = mSpecialObjectBehaviours.begin();
+	while (it != mSpecialObjectBehaviours.end()) {
+		command = it->second;
+		LLStringUtil::toLower(command);
+		if (command.find("shownames:") == 0 || command.find("shownametags:") == 0) {
+			if (parseCommand(command, behav, option, param)) {
+				LLUUID uuid;
+				uuid.set(option, FALSE);
+				exceptions.push_back(uuid);
+			}
+		}
+		it++;
+	}
+
 	// Hide every occurrence of the name of anybody around (found in cache, so not completely accurate nor completely immediate)
 	S32 i;
 	for (i=0; i<gObjectList.getNumObjects(); ++i) {
@@ -3215,20 +3474,23 @@ std::string RRInterface::getCensoredMessage (std::string str)
 			std::string dummy_name;
 			
 			if (object->isAvatar()) {
-				if (LLAvatarNameCache::get(object->getID(), &av_name))
+				if (std::find(exceptions.begin(), exceptions.end(), object->getID()) == exceptions.end()) // ignore exceptions
 				{
-					user_name = av_name.getUserName();
-					clean_user_name = LLCacheName::cleanFullName(user_name);
-					display_name = av_name.mDisplayName; // not "getDisplayName()" because we need this whether we use display names or user names
+					if (LLAvatarNameCache::get(object->getID(), &av_name))
+					{
+						user_name = av_name.getUserName();
+						clean_user_name = LLCacheName::cleanFullName(user_name);
+						display_name = av_name.mDisplayName; // not "getDisplayName()" because we need this whether we use display names or user names
 
-					dummy_name = getDummyName(clean_user_name);
-					str = stringReplace(str, clean_user_name, dummy_name);
+						dummy_name = getDummyName(clean_user_name);
+						str = stringReplace(str, clean_user_name, dummy_name);
 
-					dummy_name = getDummyName(user_name);
-					str = stringReplace(str, user_name, dummy_name);
+						dummy_name = getDummyName(user_name);
+						str = stringReplace(str, user_name, dummy_name);
 
-					dummy_name = getDummyName(display_name);
-					str = stringReplace(str, display_name, dummy_name);
+						dummy_name = getDummyName(display_name);
+						str = stringReplace(str, display_name, dummy_name);
+					}
 				}
 			}
 		}
@@ -3597,36 +3859,152 @@ BOOL RRInterface::forceDebugSetting (std::string command, std::string option)
 	int length = 9; // size of "setdebug_"
 	command = command.substr (length);
 	LLStringUtil::toLower(command);
-	std::string allowed;
+
+	// Find the index of the command in the list of allowed commands, ignoring the case
+	int ind = -1;
+	std::string real_command = "";
 	std::string tmp;
-	int ind;
-	
-	allowed = mAllowedU32;
-	tmp = allowed;
-	LLStringUtil::toLower(tmp);
-	if ((ind = tmp.find (","+command+",")) != -1) {
-		gSavedSettings.setU32 (allowed.substr(++ind, command.length()), atoi(option.c_str()));
+	int nb = mAllowedSetDebug.size();
+	for (int i = 0; i < nb; i++)
+	{
+		tmp = mAllowedSetDebug.at(i);
+		LLStringUtil::toLower(tmp);
+		if (tmp == command)
+		{
+			real_command = mAllowedSetDebug.at(i);
+			ind = i;
+			break;
+		}
+	}
+
+	if (ind != -1) {
+		if (gSavedSettings.controlExists(real_command))
+		{
+			switch (gSavedSettings.getControl(real_command)->type())
+			{
+			case TYPE_U32:
+				gSavedSettings.setU32(real_command, atoi(option.c_str()));
+				break;
+
+			case TYPE_S32:
+				gSavedSettings.setS32(real_command, atoi(option.c_str()));
+				break;
+
+			case TYPE_F32:
+				gSavedSettings.setF32(real_command, atoi(option.c_str()));
+				break;
+
+			case TYPE_BOOLEAN:
+				gSavedSettings.setBOOL(real_command, atoi(option.c_str()));
+				break;
+
+			case TYPE_STRING:
+				gSavedSettings.setString(real_command, option.c_str());
+				break;
+
+			case TYPE_VEC3:
+				//gSavedSettings.setVector3(real_command, atoi(option.c_str()));
+				break;
+
+			case TYPE_VEC3D:
+				//gSavedSettings.setVector3d(real_command, atoi(option.c_str()));
+				break;
+
+			case TYPE_RECT:
+				//gSavedSettings.setRect(real_command, atoi(option.c_str()));
+				break;
+
+			case TYPE_COL4:
+				//gSavedSettings.setColor4(real_command, atoi(option.c_str()));
+				break;
+
+			case TYPE_COL3:
+				//gSavedSettings.setColor4(real_command, atoi(option.c_str()));
+				break;
+
+			default:
+				break;
+			}
+		}
 		return TRUE;
 	}
 	
-	return TRUE;
+	return FALSE;
 }
 
 std::string RRInterface::getDebugSetting (std::string command)
 {
 	std::stringstream res;
-	int length = 9; // size of "getdebug_"
-	command = command.substr (length);
+	int length = 9; // size of "setdebug_"
+	command = command.substr(length);
 	LLStringUtil::toLower(command);
-	std::string allowed;
+
+	// Find the index of the command in the list of allowed commands, ignoring the case
+	int ind = -1;
+	std::string real_command = "";
 	std::string tmp;
-	int ind;
-	
-	allowed = mAllowedU32;
-	tmp = allowed;
-	LLStringUtil::toLower(tmp);
-	if ((ind = tmp.find (","+command+",")) != -1) {
-		res << gSavedSettings.getU32 (allowed.substr(++ind, command.length()));
+	int nb = mAllowedGetDebug.size();
+	for (int i = 0; i < nb; i++)
+	{
+		tmp = mAllowedGetDebug.at(i);
+		LLStringUtil::toLower(tmp);
+		if (tmp == command)
+		{
+			real_command = mAllowedGetDebug.at(i);
+			ind = i;
+			break;
+		}
+	}
+
+	if (ind != -1) {
+		if (gSavedSettings.controlExists(real_command))
+		{
+			switch (gSavedSettings.getControl(real_command)->type())
+			{
+			case TYPE_U32:
+				res << gSavedSettings.getU32(real_command);
+				break;
+
+			case TYPE_S32:
+				res << gSavedSettings.getS32(real_command);
+				break;
+
+			case TYPE_F32:
+				res << gSavedSettings.getF32(real_command);
+				break;
+
+			case TYPE_BOOLEAN:
+				res << gSavedSettings.getBOOL(real_command);
+				break;
+
+			case TYPE_STRING:
+				res << gSavedSettings.getString(real_command);
+				break;
+
+			case TYPE_VEC3:
+				res << gSavedSettings.getVector3(real_command);
+				break;
+
+			case TYPE_VEC3D:
+				res << gSavedSettings.getVector3d(real_command);
+				break;
+
+			case TYPE_RECT:
+				res << gSavedSettings.getRect(real_command);
+				break;
+
+			case TYPE_COL4:
+				res << gSavedSettings.getColor4(real_command);
+				break;
+
+			case TYPE_COL3:
+				res << gSavedSettings.getColor3(real_command);
+				break;
+
+			default:
+				break;
+			}
+		}
 	}
 	
 	return res.str();
@@ -3656,9 +4034,25 @@ std::string RRInterface::getFullPath (LLInventoryItem* item, std::string option,
 	// Returns the path from the shared root to this object, or to the object worn at the attach point or clothing layer pointed by option if any
 	if (option != "") {
 		item = NULL; // an option is specified => we don't want to check the item that issued the command, but something else that is currently worn (object or clothing)
-		
-		LLWearableType::EType wearable_type = gAgent.mRRInterface.getOutfitLayerAsType (option);
-		if (wearable_type != LLWearableType::WT_INVALID) { // this is a clothing layer => replace item with the piece clothing
+		LLWearableType::EType wearable_type;
+
+		if (LLUUID::validate(option)) { // if option is a UUID, get the path of the viewer object which has this UUID
+			std::deque<std::string> res;
+			LLUUID id;
+			id.set(option, FALSE);
+			item = getItem(id); // we want the viewer object from the UUID, no the inventory object
+			if (item != NULL && !gAgent.mRRInterface.isUnderRlvShare(item)) item = NULL; // security : we would return the path even if the item was not shared otherwise
+			else {
+				// We have found the inventory item => add its path to the list
+				// it appears to be a recursive call but the level of recursivity is only 2, we won't execute this instruction again in the called method since "option" will be empty
+				res.push_back(getFullPath(item, ""));
+				if (sRestrainedLoveDebug) {
+					LL_INFOS() << "res=" << dumpList2String(res, ", ") << LL_ENDL;
+				}
+			}
+			return dumpList2String(res, ",");
+		}
+		else if ((wearable_type = gAgent.mRRInterface.getOutfitLayerAsType(option)) != LLWearableType::WT_INVALID) { // this is a clothing layer => replace item with the piece clothing
 			std::deque<std::string> res;
 			for (unsigned int i = 0; i < LLAgentWearables::MAX_CLOTHING_PER_TYPE; ++i) {
 				LLUUID id = gAgentWearables.getWearableItemID (wearable_type, i);
@@ -3832,9 +4226,13 @@ bool RRInterface::canAttachCategory(LLInventoryCategory* folder, bool with_excep
 	LLVOAvatarSelf* avatar = gAgentAvatarp;
 	if (!avatar) return true;
 	LLInventoryCategory* rlvShare = getRlvShare();
-	if (!rlvShare || !isUnderRlvShare(folder)) {
+	bool shared = isUnderRlvShare(folder);
+	if (!rlvShare || !shared) {
 		if (contains ("unsharedwear")) return false;
 		else return true;
+	}
+	else {
+		if (contains("sharedwear")) return false;
 	}
 	return canAttachCategoryAux(folder, false, false, with_exceptions);
 }
@@ -3935,9 +4333,13 @@ bool RRInterface::canDetachCategory(LLInventoryCategory* folder, bool with_excep
 	LLVOAvatarSelf* avatar = gAgentAvatarp;
 	if (!avatar) return true;
 	LLInventoryCategory* rlvShare = getRlvShare();
-	if (!rlvShare || !isUnderRlvShare(folder)) {
+	bool shared = isUnderRlvShare(folder);
+	if (!rlvShare || !shared) {
 		if (contains ("unsharedunwear")) return false;
 		else return true;
+	}
+	else {
+		if (contains("sharedunwear")) return false;
 	}
 	return canDetachCategoryAux(folder, false, false, with_exceptions);
 }
@@ -4274,6 +4676,7 @@ bool RRInterface::canEdit(LLViewerObject* object)
 	if (!object || !object->getRootEdit()) return false;
 	if (containsWithoutException ("edit", object->getRootEdit()->getID().asString())) return false;
 	if (contains ("editobj:"+object->getRootEdit()->getID().asString())) return false;
+	if (!object->isHUDAttachment() && mContainsInteract) return false;
 	return true;
 }
 
@@ -4290,7 +4693,7 @@ bool RRInterface::canTouch(LLViewerObject* object, LLVector3 pick_intersection /
 
 //	if (!root->isHUDAttachment() && contains ("touchallnonhud")) return false;
 
-//	if (root->isHUDAttachment() && contains ("touchhud")) return false;
+	if (root->isHUDAttachment() && containsWithoutException("touchhud", object->getRootEdit()->getID().asString())) return false;
 
 	if (contains ("touchthis:"+object->getRootEdit()->getID().asString())) return false;
 
@@ -4323,12 +4726,17 @@ bool RRInterface::canTouchFar(LLViewerObject* object, LLVector3 pick_intersectio
 {
 	if (!object) return true;
 
+	if (mContainsInteract && !object->isHUDAttachment())
+	{
+		return false;
+	}
+
 	LLVector3 pos = object->getPositionRegion ();
 	if (pick_intersection != LLVector3::zero) pos = pick_intersection;
 	pos -= gAgent.getPositionAgent ();
 	F32 dist = pos.magVec();
 	if (!object->isHUDAttachment()) {
-		if (mContainsFartouch && dist >= 1.5) return false;
+		if (dist > mFartouchMax) return false;
 		if (dist > mCamDistDrawMax) return false; // don't allow touching or selecting something that is obstructed
 	}
 
@@ -4435,10 +4843,34 @@ BOOL RRInterface::updateCameraLimits ()
 	F32 old_mCamDistDrawAlphaMax = mCamDistDrawAlphaMax;
 	F32 old_mCamDistDrawAlphaMin = mCamDistDrawAlphaMin;
 
-	mCamZoomMax = getMin ("camzoommax", EXTREMUM);
-	mCamZoomMin = getMax ("camzoommin", -EXTREMUM);
-	mCamDistMax = getMin ("camdistmax", EXTREMUM);
-	mCamDistMin = getMax ("camdistmin", -EXTREMUM);
+    mCamZoomMax = getMin("camzoommax", EXTREMUM);
+    if (mCamZoomMax == 0.f) mCamZoomMax = EXTREMUM;
+    mCamZoomMin = getMax("camzoommin", -EXTREMUM);
+    if (mCamZoomMin == 0.f) mCamZoomMin = -EXTREMUM;
+
+    // setcam_fovmin and setcam_fovmax set the FOV, i.e. 60°/multiplier;
+    // in other words, they are equivalent to camzoommin and camzoommax.
+    F32 fovmin = getMax("setcam_fovmin", 0.001f);
+    if (fovmin != 0.f && fovmin != 0.001f)
+    {
+        F32 zoommax_from_fovmin = DEFAULT_FIELD_OF_VIEW / fovmin;
+        if (zoommax_from_fovmin < mCamZoomMax)
+        {
+            mCamZoomMax = zoommax_from_fovmin;
+        }
+    }
+    F32 fovmax = getMin("setcam_fovmax", EXTREMUM);
+    if (fovmax != 0.f && fovmax != EXTREMUM)
+    {
+        F32 zoommin_from_fovmax = DEFAULT_FIELD_OF_VIEW / fovmax;
+        if (zoommin_from_fovmax > mCamZoomMin)
+        {
+            mCamZoomMin = zoommin_from_fovmax;
+        }
+    }
+
+    mCamDistMax = getMin("camdistmax,setcam_avdistmax", EXTREMUM);
+    mCamDistMin = getMax("camdistmin,setcam_avdistmin", -EXTREMUM);
 
 	mCamDistDrawMax = getMin ("camdrawmax", EXTREMUM);
 	mCamDistDrawMin = getMin ("camdrawmin", EXTREMUM);
@@ -4714,3 +5146,22 @@ std::deque<std::string> RRInterface::getBlacklist (std::string filter /* = ""*/)
 	return res;
 }
 
+void RRInterface::updateLimits() {
+	// Update all the min and max that are not related to camera and vision restrictions
+	// For example, tplocal, fartouch, sittp etc
+
+	// fartouch/touchfar
+	// First we need to find the lowest betwen 
+	float fartouch_max = getMin("fartouch", EXTREMUM);
+	float touchfar_max = getMin("touchfar", EXTREMUM);
+	if (fartouch_max > touchfar_max){
+		fartouch_max = touchfar_max;
+	}
+	mFartouchMax = fartouch_max;
+
+	// sittp
+	mSittpMax = getMin("sittp", EXTREMUM);
+
+	// tplocal
+	mTplocalMax = getMin("tplocal", EXTREMUM);
+}

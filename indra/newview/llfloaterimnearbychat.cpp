@@ -632,7 +632,7 @@ void LLFloaterIMNearbyChat::sendChat( EChatType type )
 				}
 
 				// Convert MU*s style poses into IRC emotes here.
-//				if (gSavedSettings.getBOOL("AllowMUpose"))
+				if (gSavedSettings.getBOOL("AllowMUpose"))
 				{
 					if (utf8text.find(":") == 0 && utf8text.length() > 3)
 					{
@@ -665,7 +665,9 @@ void LLFloaterIMNearbyChat::sendChat( EChatType type )
 //MK
 				std::ostringstream stream;
 				stream << "" << channel;
-				if (gRRenabled && gAgent.mRRInterface.containsWithoutException ("sendchannel", stream.str()))
+				if (gRRenabled && 
+					(gAgent.mRRInterface.containsWithoutException("sendchannel", stream.str()) || gAgent.mRRInterface.contains("sendchannel_except:" + stream.str()))
+					)
 				{
 					utf8_revised_text = "";
 				}
@@ -802,6 +804,17 @@ void LLFloaterIMNearbyChat::sendChatFromViewer(const LLWString &wtext, EChatType
 			animate = false;
 		}
 	}
+	else if (gRRenabled && channel != 0)
+	{
+		std::ostringstream stream;
+		stream << "" << channel;
+		if (gRRenabled &&
+			(gAgent.mRRInterface.containsWithoutException("sendchannel", stream.str()) || gAgent.mRRInterface.contains("sendchannel_except:" + stream.str()))
+			)
+		{
+			return;
+		}
+	}
 //mk
 
 	// Don't animate for chats people can't hear (chat to scripts)
@@ -911,7 +924,8 @@ LLWString LLFloaterIMNearbyChat::stripChannelNumber(const LLWString &mesg, S32* 
 		}
 	else if (mesg[0] == '/'
 			 && mesg[1]
-			 && LLStringOps::isDigit(mesg[1]))
+			 && (LLStringOps::isDigit(mesg[1])
+				 || (mesg[1] == '-' && mesg[2] && LLStringOps::isDigit(mesg[2]))))
 		{
 		// This a special "/20" speak on a channel
 		S32 pos = 0;
@@ -925,7 +939,7 @@ LLWString LLFloaterIMNearbyChat::stripChannelNumber(const LLWString &mesg, S32* 
 			channel_string.push_back(c);
 			pos++;
 		}
-		while(c && pos < 64 && LLStringOps::isDigit(c));
+		while(c && pos < 64 && (LLStringOps::isDigit(c) || (pos==1 && c =='-')));
 
 		// Move the pointer forward to the first non-whitespace char
 		// Check isspace before looping, so we can handle "/33foo"
@@ -991,23 +1005,26 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 					S32 ch = atoi (behav.substr (restriction.length()).c_str());
 					std::ostringstream stream;
 					stream << "" << ch;
-					if (!gAgent.mRRInterface.containsWithoutException ("sendchannel", stream.str()))
+					if (!gAgent.mRRInterface.containsWithoutException("sendchannel", stream.str()) && !gAgent.mRRInterface.contains("sendchannel_except:" + stream.str()))
 					{
 						if (ch > 0 && ch < 2147483647)
 						{
-							LLMessageSystem* msg = gMessageSystem;
-							msg->newMessageFast(_PREHASH_ChatFromViewer);
-							msg->nextBlockFast(_PREHASH_AgentData);
-							msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
-							msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-							msg->nextBlockFast(_PREHASH_ChatData);
-							msg->addStringFast(_PREHASH_Message, utf8_out_text);
-							msg->addU8Fast(_PREHASH_Type, type);
-							msg->addS32("Channel", ch);
-
-							gAgent.sendReliableMessage();
-						}
-					}
+                            LLMessageSystem* msg = gMessageSystem;
+                            if (channel >= 0)
+                            {
+                                msg->newMessageFast(_PREHASH_ChatFromViewer);
+                                msg->nextBlockFast(_PREHASH_AgentData);
+                                msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+                                msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+                                msg->nextBlockFast(_PREHASH_ChatData);
+                                msg->addStringFast(_PREHASH_Message, utf8_out_text);
+                                msg->addU8Fast(_PREHASH_Type, type);
+                                msg->addS32("Channel", ch);
+                                gAgent.sendReliableMessage();
+                            }
+                            
+                        }
+                    }
 				}
 				it++;
 			}
@@ -1040,11 +1057,11 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 	msg->addStringFast(_PREHASH_Message, crunchedText);
 //mk
 	msg->addU8Fast(_PREHASH_Type, type);
-	msg->addS32("Channel", channel);
+        msg->addS32("Channel", channel);
 
 	gAgent.sendReliableMessage();
 
-	add(LLStatViewer::CHAT_COUNT, 1);
+    add(LLStatViewer::CHAT_COUNT, 1);
 }
 
 class LLChatCommandHandler : public LLCommandHandler

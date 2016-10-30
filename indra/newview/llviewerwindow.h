@@ -46,6 +46,7 @@
 #include "llhandle.h"
 #include "llinitparam.h"
 #include "lltrace.h"
+#include "llsnapshotmodel.h"
 
 #include <boost/function.hpp>
 #include <boost/signals2.hpp>
@@ -155,7 +156,8 @@ public:
 									min_width,
 									min_height;
 		Optional<bool>				fullscreen,
-									ignore_pixel_depth;
+									ignore_pixel_depth,
+									first_run;
 
 		Params();
 	};
@@ -209,6 +211,7 @@ public:
 	/*virtual*/ void handleDataCopy(LLWindow *window, S32 data_type, void *data);
 	/*virtual*/ BOOL handleTimerEvent(LLWindow *window);
 	/*virtual*/ BOOL handleDeviceChange(LLWindow *window);
+	/*virtual*/ void handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height);
 
 	/*virtual*/ void handlePingWatchdog(LLWindow *window, const char * msg);
 	/*virtual*/ void handlePauseWatchdog(LLWindow *window);
@@ -342,15 +345,11 @@ public:
 
 	// snapshot functionality.
 	// perhaps some of this should move to llfloatershapshot?  -MG
-	typedef enum
-	{
-		SNAPSHOT_TYPE_COLOR,
-		SNAPSHOT_TYPE_DEPTH
-	} ESnapshotType;
-	BOOL			saveSnapshot(const std::string&  filename, S32 image_width, S32 image_height, BOOL show_ui = TRUE, BOOL do_rebuild = FALSE, ESnapshotType type = SNAPSHOT_TYPE_COLOR);
+
+	BOOL			saveSnapshot(const std::string&  filename, S32 image_width, S32 image_height, BOOL show_ui = TRUE, BOOL do_rebuild = FALSE, LLSnapshotModel::ESnapshotLayerType type = LLSnapshotModel::SNAPSHOT_TYPE_COLOR);
 	BOOL			rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_height, BOOL keep_window_aspect = TRUE, BOOL is_texture = FALSE,
-								BOOL show_ui = TRUE, BOOL do_rebuild = FALSE, ESnapshotType type = SNAPSHOT_TYPE_COLOR, S32 max_size = MAX_SNAPSHOT_IMAGE_SIZE );
-	BOOL			thumbnailSnapshot(LLImageRaw *raw, S32 preview_width, S32 preview_height, BOOL show_ui, BOOL do_rebuild, ESnapshotType type) ;
+		BOOL show_ui = TRUE, BOOL do_rebuild = FALSE, LLSnapshotModel::ESnapshotLayerType type = LLSnapshotModel::SNAPSHOT_TYPE_COLOR, S32 max_size = MAX_SNAPSHOT_IMAGE_SIZE);
+	BOOL			thumbnailSnapshot(LLImageRaw *raw, S32 preview_width, S32 preview_height, BOOL show_ui, BOOL do_rebuild, LLSnapshotModel::ESnapshotLayerType type);
 	BOOL			isSnapshotLocSet() const { return ! sSnapshotDir.empty(); }
 	void			resetSnapshotLoc() const { sSnapshotDir.clear(); }
 	BOOL		    saveImageNumbered(LLImageFormatted *image, bool force_picker = false);
@@ -425,6 +424,9 @@ public:
 	BOOL			mPickThroughHuds; // if TRUE, don't pick HUD objects under the mouse cursor
 //mk
 
+	bool getSystemUIScaleFactorChanged() { return mSystemUIScaleFactorChanged; }
+	static void showSystemUIScaleFactorChanged();
+
 private:
 	bool                    shouldShowToolTipFor(LLMouseHandler *mh);
 
@@ -438,6 +440,7 @@ private:
 	S32				getChatConsoleBottomPad(); // Vertical padding for child console rect, varied by bottom clutter
 	LLRect			getChatConsoleRect(); // Get optimal cosole rect.
 
+	static bool onSystemUIScaleFactorChanged(const LLSD& notification, const LLSD& response);
 private:
 	LLWindow*		mWindow;						// graphical window object
 	bool			mActive;
@@ -516,6 +519,7 @@ private:
 	LLPointer<LLViewerObject>	mDragHoveredObject;
 
 	static LLTrace::SampleStatHandle<>	sMouseVelocityStat;
+	bool mSystemUIScaleFactorChanged; // system UI scale factor changed from last run
 };
 
 //

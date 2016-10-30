@@ -480,7 +480,7 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-               <string>5e0d4f4a5a5bbcba610aafbb91c30b2b</string>
+              <string>5e0d4f4a5a5bbcba610aafbb91c30b2b</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
@@ -2170,9 +2170,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ce1261a54d877ab5530ae6a9134a77a3</string>
+              <string>fddd634dec5ec03924d62cc774f7f8ea</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llappearance_viewer-update-llappearance-utility/rev/294906/arch/Linux/installer/llappearance_utility-0.0.1-linux-294906.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/p64_viewer-llappearance-utility/rev/317266/arch/Linux/installer/llappearance_utility-0.0.1-linux-317266.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -3207,9 +3207,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2f410640df3f9812d1abff02a414cfa8</string>
+              <string>34e580c2c80d497ae9e555137f953652</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-vlc-bin/rev/315283/arch/Linux/vlc_bin-2.2.3-linux-201606011750-r10.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-vlc-linux/downloads/vlc_bin-2.2.4-linux-201608171315.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -3219,9 +3221,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3124ffd9ac4f831adb05c366a200bf8d</string>
+              <string>9673ebf6b274e8852232a5f437190c4b</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://downloads.phoenixviewer.com/vlc_bin-2.2.3-linux-x64-201607071831-r16.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-vlc-linux/downloads/vlc_bin-2.2.4-linux64-201608170713.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3240,7 +3244,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.2.4.317935</string>
+        <string>2.2.4</string>
       </map>
       <key>xmlrpc-epi</key>
       <map>
@@ -3970,9 +3974,6 @@
                   <string>..\indra\tools\vstool\VSTool.exe</string>
                   <string>--solution</string>
                   <string>Kokua.sln</string>
-                  <string>--config</string>
-                  <string>RelWithDebInfo</string>
-                  <string>--startup</string>
                   <string>kokua-bin</string>
                 </array>
                 <key>options</key>

@@ -355,7 +355,6 @@ void callMouseDragged(float *pos, MASK mask)
     gWindowImplementation->getCallbacks()->handleMouseDragged(gWindowImplementation, outCoords, gKeyboard->currentMask(TRUE));
 }
 
-
 void callScrollMoved(float delta)
 {
 	gWindowImplementation->getCallbacks()->handleScrollWheel(gWindowImplementation, delta);
@@ -368,14 +367,14 @@ void callMouseExit()
 
 void callWindowFocus()
 {
-    if ( gWindowImplementation && gWindowImplementation->getCallbacks() )
-    {
-        gWindowImplementation->getCallbacks()->handleFocus (gWindowImplementation);
-    }
-    else
-    {
-        LL_WARNS("COCOA") << "Window Implementation or callbacks not yet initialized." << LL_ENDL;
-    }
+   if ( gWindowImplementation && gWindowImplementation->getCallbacks() )
+	{
+		gWindowImplementation->getCallbacks()->handleFocus (gWindowImplementation);
+	}
+	else
+	{
+		LL_WARNS("COCOA") << "Window Implementation or callbacks not yet initialized." << LL_ENDL;
+	}
 
 
 }

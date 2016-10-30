@@ -34,6 +34,7 @@
 #include "llapr.h"
 #include "apr_signal.h"
 #include "llevents.h"
+#include "llexception.h"
 
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
@@ -472,9 +473,9 @@ private:
 *****************************************************************************/
 /// Need an exception to avoid constructing an invalid LLProcess object, but
 /// internal use only
-struct LLProcessError: public std::runtime_error
+struct LLProcessError: public LLException
 {
-	LLProcessError(const std::string& msg): std::runtime_error(msg) {}
+	LLProcessError(const std::string& msg): LLException(msg) {}
 };
 
 LLProcessPtr LLProcess::create(const LLSDOrParams& params)
@@ -507,40 +508,6 @@ LLProcessPtr LLProcess::create(const LLSDOrParams& params)
 	}
 }
 
-// <FS:ND> Annoying preload hack to make tcmalloc in libcef.so play nicely.
-std::string installPreloadHack( std::string const &preload )
-{
-	std::string strOldPreload;
-#ifdef LL_LINUX
-	if( preload.size() )
-	{
-		std::string strPreload = preload;
-		if( getenv( "LD_PRELOAD" ) )
-		{
-			strOldPreload = getenv( "PRELOAD" );
-			strPreload = ":" + strOldPreload;
-		}
-
-		setenv( "LD_PRELOAD", strPreload.c_str(), 1 );
-	}
-#endif
-	return strOldPreload;
-}
-
-void uninstallPreloadHack( std::string const &preload, std::string const &strOldPreload )
-{
-#ifdef LL_LINUX
-	if( preload.empty() )
-		return;
-
-	if( strOldPreload.size() )
-		setenv( "LD_PRELOAD", strOldPreload.c_str(), 1 );
-	else
-		unsetenv( "LD_PRELOAD" );
-#endif	
-}
-// </FS:ND>
-
 /// Call an apr function returning apr_status_t. On failure, log warning and
 /// throw LLProcessError mentioning the function call that produced that
 /// result.
@@ -564,8 +531,8 @@ LLProcess::LLProcess(const LLSDOrParams& params):
 
 	if (! params.validateBlock(true))
 	{
-		throw LLProcessError(STRINGIZE("not launched: failed parameter validation\n"
-									   << LLSDNotationStreamer(params)));
+		LLTHROW(LLProcessError(STRINGIZE("not launched: failed parameter validation\n"
+										 << LLSDNotationStreamer(params))));
 	}
 
 	mPostend = params.postend;
@@ -630,10 +597,10 @@ LLProcess::LLProcess(const LLSDOrParams& params):
 		}
 		else
 		{
-			throw LLProcessError(STRINGIZE("For " << params.executable()
-										   << ": unsupported FileParam for " << which
-										   << ": type='" << fparam.type()
-										   << "', name='" << fparam.name() << "'"));
+			LLTHROW(LLProcessError(STRINGIZE("For " << params.executable()
+											 << ": unsupported FileParam for " << which
+											 << ": type='" << fparam.type()
+											 << "', name='" << fparam.name() << "'")));
 		}
 	}
 	// By default, pass APR_NO_PIPE for unspecified slots.
@@ -705,8 +672,6 @@ LLProcess::LLProcess(const LLSDOrParams& params):
 
 	// terminate with a null pointer
 	argv.push_back(NULL);
-	
-	std::string strOldPreload = installPreloadHack( params.preload ); // FS:ND/> Install preload hack (if needed)
 
 	// Launch! The NULL would be the environment block, if we were passing
 	// one. Hand-expand chkapr() macro so we can fill in the actual command
@@ -714,11 +679,8 @@ LLProcess::LLProcess(const LLSDOrParams& params):
 	if (ll_apr_warn_status(apr_proc_create(&mProcess, argv[0], &argv[0], NULL, procattr,
 										   gAPRPoolp)))
 	{
-		uninstallPreloadHack( params.preload, strOldPreload ); // <FS:ND/> Remove preload hack
-		throw LLProcessError(STRINGIZE(params << " failed"));
+		LLTHROW(LLProcessError(STRINGIZE(params << " failed")));
 	}
-	
-	uninstallPreloadHack( params.preload, strOldPreload ); // <FS:ND/> Remove preload hack
 
 	// arrange to call status_callback()
 	apr_proc_other_child_register(&mProcess, &LLProcess::status_callback, this, mProcess.in,
@@ -778,11 +740,11 @@ LLProcess::LLProcess(const LLSDOrParams& params):
 			mPipes.replace(i, new ReadPipeImpl(desc, pipe, FILESLOT(i)));
 		}
 		// Removed temporaily for Xcode 7 build tests: error was:
-		// "error: expression with side effects will be evaluated despite
+		// "error: expression with side effects will be evaluated despite 
 		// being used as an operand to 'typeid' [-Werror,-Wpotentially-evaluated-expression]""
 		//LL_DEBUGS("LLProcess") << "Instantiating " << typeid(mPipes[i]).name()
 		//					   << "('" << desc << "')" << LL_ENDL;
-    }
+	}
 }
 
 // Helper to obtain a description string, given a Params block
@@ -1102,7 +1064,7 @@ PIPETYPE& LLProcess::getPipe(FILESLOT slot)
 	PIPETYPE* wp = getPipePtr<PIPETYPE>(error, slot);
 	if (! wp)
 	{
-		throw NoPipe(error);
+		LLTHROW(NoPipe(error));
 	}
 	return *wp;
 }

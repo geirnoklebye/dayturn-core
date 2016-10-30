@@ -30,9 +30,9 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2091902"
-#define RR_VERSION "2.09.19.02"
-#define RR_SLV_VERSION "4.0.5.36541"
+#define RR_VERSION_NUM "2092002"
+#define RR_VERSION "2.09.20.02"
+#define RR_SLV_VERSION "4.1.1.36943"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -80,6 +80,7 @@
 #include "llinventorymodel.h"
 #include "llviewermenu.h"
 #include "llviewerjointattachment.h"
+#include "llviewertexture.h"
 #include "llwearable.h"
 #include "llwearabletype.h"
 
@@ -152,7 +153,7 @@ public:
 	BOOL handleCommand (LLUUID uuid, std::string command);
 	BOOL fireCommands (); // execute commands buffered while the viewer was initializing (mostly useful for force-sit as when the command is sent the object is not necessarily rezzed yet)
 	BOOL force (LLUUID object_uuid, std::string command, std::string option);
-	void removeItemFromAvatar (LLViewerInventoryItem* item);
+	void removeItemFromAvatar(LLViewerInventoryItem* item);
 
 	BOOL answerOnChat (std::string channel, std::string msg);
 	std::string crunchEmote (std::string msg, unsigned int truncateTo = 0);
@@ -178,7 +179,8 @@ public:
 //	void renameAttachment (LLInventoryItem* item, LLViewerJointAttachment* attachment); // DEPRECATED
 	LLInventoryCategory* getCategoryUnderRlvShare (std::string catName, LLInventoryCategory* root = NULL);
 	LLInventoryCategory* findCategoryUnderRlvShare (std::string catName, LLInventoryCategory* root = NULL);
-	std::string findAttachmentNameFromPoint (LLViewerJointAttachment* attachpt);
+	std::deque<LLInventoryCategory*> findCategoriesUnderRlvShare(std::string catName, LLInventoryCategory* root = NULL);
+	std::string findAttachmentNameFromPoint(LLViewerJointAttachment* attachpt);
 	LLViewerJointAttachment* findAttachmentPointFromName (std::string objectName, BOOL exactName = FALSE);
 	LLViewerJointAttachment* findAttachmentPointFromParentName (LLInventoryItem* item);
 	S32 findAttachmentPointNumber (LLViewerJointAttachment* attachment);
@@ -197,7 +199,8 @@ public:
 	bool getScriptsEnabledOnce () { return mScriptsEnabledOnce; }
 	void setScriptsEnabledOnce (bool newval) { mScriptsEnabledOnce = newval; }
 
-	BOOL forceTeleport (std::string location);
+	BOOL forceTeleport(std::string location, const LLVector3& vecLookAt);
+	static void forceTeleportCallback(U64 hRegion, const LLVector3& posRegion, const LLVector3& vecLookAt);
 
 	std::string stringReplace (std::string s, std::string what, std::string by, BOOL caseSensitive = FALSE);
 
@@ -253,6 +256,8 @@ public:
 	void drawRenderLimit ();
 	void drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha);
 
+	void updateLimits();
+
 	LLJoint* getCamDistDrawFromJoint ();
 
 	// Some cache variables to accelerate common checks
@@ -260,7 +265,7 @@ public:
 	BOOL mContainsDetach;
 	BOOL mContainsShowinv;
 	BOOL mContainsUnsit;
-	BOOL mContainsFartouch;
+	BOOL mContainsInteract;
 	BOOL mContainsShowworldmap;
 	BOOL mContainsShowminimap;
 	BOOL mContainsShowloc;
@@ -303,6 +308,11 @@ public:
 	F32 mCamDistDrawAlphaMin;
 	F32 mCamDistDrawAlphaMax;
 	F32 mShowavsDistMax;
+	F32 mTplocalMax;
+	F32 mSittpMax;
+	F32 mFartouchMax;
+
+	LLViewerFetchedTexture* mCamTexturesCustom;
 
 	std::string mParcelName; // for convenience (gAgent does not retain the name of the current parcel)
 	LLParcel::ELandingType mParcelLandingType; // for convenience
@@ -319,17 +329,8 @@ public:
 	static BOOL sRenderLimitRenderedThisFrame; // true when already rendered the vision spheres during this rendering frame
 
 	// Allowed debug settings (initialized in the ctor)
-	std::string mAllowedU32;
-	std::string mAllowedS32;
-	std::string mAllowedF32;
-	std::string mAllowedBOOLEAN;
-	std::string mAllowedSTRING;
-	std::string mAllowedVEC3;
-	std::string mAllowedVEC3D;
-	std::string mAllowedRECT;
-	std::string mAllowedCOL4;
-	std::string mAllowedCOL3;
-	std::string mAllowedCOL4U;
+	std::deque<std::string> mAllowedGetDebug;
+	std::deque<std::string> mAllowedSetDebug;
 
 	// These should be private but we may want to browse them from the outside world, so let's keep them public
 	RRMAP mSpecialObjectBehaviours;

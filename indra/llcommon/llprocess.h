@@ -30,13 +30,13 @@
 #include "llinitparam.h"
 #include "llsdparam.h"
 #include "llwin32headerslean.h"
+#include "llexception.h"
 #include "apr_thread_proc.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/optional.hpp>
 #include <boost/noncopyable.hpp>
 #include <iosfwd>                   // std::ostream
-#include <stdexcept>
 
 #if LL_WINDOWS
 #include "llwin32headerslean.h"	// for HANDLE
@@ -227,14 +227,6 @@ public:
 		 * executable name.
 		 */
 		Optional<std::string> desc;
-
-		/**
-		   <FS:ND> HACK! libcef.so bleeds that intrusive tcmalloc hacks all over the process.
-		   This then causes awesome effects like crashes and memory corruption when the so is loaded dynamically.
-		   We uses this argument to force libcef.so be preloaded, which fixes this.
-		   The other solution would be to recompile CEF twice (x86/x64) for each CEF update. Which I really would like to avoid.
-		*/
-		Optional<std::string> preload;
 	};
 	typedef LLSDParamAdapter<Params> LLSDOrParams;
 
@@ -487,9 +479,9 @@ public:
 
 	/// Exception thrown by getWritePipe(), getReadPipe() if you didn't ask to
 	/// create a pipe at the corresponding FILESLOT.
-	struct NoPipe: public std::runtime_error
+	struct NoPipe: public LLException
 	{
-		NoPipe(const std::string& what): std::runtime_error(what) {}
+		NoPipe(const std::string& what): LLException(what) {}
 	};
 
 	/**

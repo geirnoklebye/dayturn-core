@@ -174,8 +174,9 @@ public:
 	// Gender
 	//--------------------------------------------------------------------
 public:
-	// On the very first login, gender isn't chosen until the user clicks
-	// in a dialog.  We don't render the avatar until they choose.
+	// On the very first login, outfit needs to be chosen by some
+	// mechanism, usually by loading the requested initial outfit.  We
+	// don't render the avatar until the choice is made.
 	BOOL 			isOutfitChosen() const 	{ return mOutfitChosen; }
 	void			setOutfitChosen(BOOL b)	{ mOutfitChosen = b; }
 private:
@@ -694,6 +695,8 @@ private:
 	void            handleTeleportFinished();
 	void            handleTeleportFailed();
 	void			handleServerBakeRegionTransition(const LLUUID& region_id);
+
+    static void     onCapabilitiesReceivedAfterTeleport();
 
 	//--------------------------------------------------------------------
 	// Teleport State

@@ -252,6 +252,11 @@ BOOL				gDisplayBadge = FALSE;
 static const U8 NO_FACE = 255;
 BOOL gQuietSnapshot = FALSE;
 
+// Minimum value for UIScaleFactor, also defined in preferences, ui_scale_slider
+static const F32 MIN_UI_SCALE = 0.75f;
+// 2.0 in preferences, but win10 supports larger scaling and value is used more as
+// sanity check, so leaving space for larger values from DPI updates.
+static const F32 MAX_UI_SCALE = 7.0f;
 static const F32 MIN_DISPLAY_SCALE = 0.75f;
 
 std::string	LLViewerWindow::sSnapshotBaseName;
@@ -1612,6 +1617,20 @@ BOOL LLViewerWindow::handleDeviceChange(LLWindow *window)
 	return FALSE;
 }
 
+void LLViewerWindow::handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height)
+{
+    if (ui_scale_factor >= MIN_UI_SCALE && ui_scale_factor <= MAX_UI_SCALE)
+    {
+        gSavedSettings.setF32("UIScaleFactor", ui_scale_factor);
+        LLViewerWindow::reshape(window_width, window_height);
+        mResDirty = true;
+    }
+    else
+    {
+        LL_WARNS() << "DPI change caused UI scale to go out of bounds: " << ui_scale_factor << LL_ENDL;
+    }
+}
+
 void LLViewerWindow::handlePingWatchdog(LLWindow *window, const char * msg)
 {
 	LLAppViewer::instance()->pingMainloopTimeout(msg);
@@ -1765,9 +1784,24 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 		gSavedSettings.setS32("FullScreenHeight",scr.mY);
     }
 
+
+	F32 system_scale_factor = mWindow->getSystemUISize();
+	if (system_scale_factor < MIN_UI_SCALE || system_scale_factor > MAX_UI_SCALE)
+	{
+		// reset to default;
+		system_scale_factor = 1.f;
+	}
+	if (p.first_run || gSavedSettings.getF32("LastSystemUIScaleFactor") != system_scale_factor)
+	{
+		mSystemUIScaleFactorChanged = !p.first_run;
+		gSavedSettings.setF32("LastSystemUIScaleFactor", system_scale_factor);
+		gSavedSettings.setF32("UIScaleFactor", system_scale_factor);
+	}
+
+
 	// Get the real window rect the window was created with (since there are various OS-dependent reasons why
 	// the size of a window or fullscreen context may have been adjusted slightly...)
-	F32 ui_scale_factor = gSavedSettings.getF32("UIScaleFactor");
+	F32 ui_scale_factor = llclamp(gSavedSettings.getF32("UIScaleFactor"), MIN_UI_SCALE, MAX_UI_SCALE);
 	
 	mDisplayScale.setVec(llmax(1.f / mWindow->getPixelAspectRatio(), 1.f), llmax(mWindow->getPixelAspectRatio(), 1.f));
 	mDisplayScale *= ui_scale_factor;
@@ -1859,6 +1893,28 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 
 	mWorldViewRectScaled = calcScaledRect(mWorldViewRectRaw, mDisplayScale);
 }
+
+//static
+void LLViewerWindow::showSystemUIScaleFactorChanged()
+{
+	LLNotificationsUtil::add("SystemUIScaleFactorChanged", LLSD(), LLSD(), onSystemUIScaleFactorChanged);
+}
+
+//static
+bool LLViewerWindow::onSystemUIScaleFactorChanged(const LLSD& notification, const LLSD& response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	if(option == 0)
+	{
+		LLFloaterReg::toggleInstanceOrBringToFront("preferences");
+		LLFloater* pref_floater = LLFloaterReg::getInstance("preferences");
+		LLTabContainer* tab_container = pref_floater->getChild<LLTabContainer>("pref core");
+		tab_container->selectTabByName("advanced1");
+
+	}
+	return false; 
+}
+
 
 void LLViewerWindow::initGLDefaults()
 {
@@ -3890,7 +3946,7 @@ void LLViewerWindow::renderSelections( BOOL for_gl_pick, BOOL pick_parcel_walls,
 							// can't edit objects that someone is sitting on,
 							// when prevented from sit-tping
 							LLVOAvatar* avatar = gAgentAvatarp;
-							if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")
+							if (gRRenabled && (gAgent.mRRInterface.mSittpMax < EXTREMUM
 									|| (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
 							{
 								if (object->isSeat())
@@ -4185,6 +4241,12 @@ LLViewerObject* LLViewerWindow::cursorIntersect(S32 mouse_x, S32 mouse_y, F32 de
 			{
 				found = this_object;
 			}
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsInteract)
+			{
+				found = NULL;
+			}
+//mk
 		}
 	}
 	else // check ALL objects
@@ -4517,7 +4579,7 @@ void LLViewerWindow::movieSize(S32 new_width, S32 new_height)
 	}
 }
 
-BOOL LLViewerWindow::saveSnapshot( const std::string& filepath, S32 image_width, S32 image_height, BOOL show_ui, BOOL do_rebuild, ESnapshotType type)
+BOOL LLViewerWindow::saveSnapshot(const std::string& filepath, S32 image_width, S32 image_height, BOOL show_ui, BOOL do_rebuild, LLSnapshotModel::ESnapshotLayerType type)
 {
 	LL_INFOS() << "Saving snapshot to: " << filepath << LL_ENDL;
 
@@ -4556,7 +4618,7 @@ void LLViewerWindow::playSnapshotAnimAndSound()
 	send_sound_trigger(LLUUID(gSavedSettings.getString("UISndSnapshot")), 1.0f);
 }
 
-BOOL LLViewerWindow::thumbnailSnapshot(LLImageRaw *raw, S32 preview_width, S32 preview_height, BOOL show_ui, BOOL do_rebuild, ESnapshotType type)
+BOOL LLViewerWindow::thumbnailSnapshot(LLImageRaw *raw, S32 preview_width, S32 preview_height, BOOL show_ui, BOOL do_rebuild, LLSnapshotModel::ESnapshotLayerType type)
 {
 	return rawSnapshot(raw, preview_width, preview_height, FALSE, FALSE, show_ui, do_rebuild, type);
 }
@@ -4565,7 +4627,7 @@ BOOL LLViewerWindow::thumbnailSnapshot(LLImageRaw *raw, S32 preview_width, S32 p
 // Since the required size might be bigger than the available screen, this method rerenders the scene in parts (called subimages) and copy
 // the results over to the final raw image.
 BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_height, 
-								 BOOL keep_window_aspect, BOOL is_texture, BOOL show_ui, BOOL do_rebuild, ESnapshotType type, S32 max_size)
+	BOOL keep_window_aspect, BOOL is_texture, BOOL show_ui, BOOL do_rebuild, LLSnapshotModel::ESnapshotLayerType type, S32 max_size)
 {
 	if (!raw)
 	{
@@ -4806,7 +4868,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 						LLAppViewer::instance()->pingMainloopTimeout("LLViewerWindow::rawSnapshot");
 					}
 				
-					if (type == SNAPSHOT_TYPE_COLOR)
+					if (type == LLSnapshotModel::SNAPSHOT_TYPE_COLOR)
 					{
 						glReadPixels(
 									 subimage_x_offset, out_y + subimage_y_offset,
@@ -4815,7 +4877,7 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 									 raw->getData() + output_buffer_offset
 									 );
 					}
-					else // SNAPSHOT_TYPE_DEPTH
+					else // LLSnapshotModel::SNAPSHOT_TYPE_DEPTH
 					{
 						LLPointer<LLImageRaw> depth_line_buffer = new LLImageRaw(read_width, 1, sizeof(GL_FLOAT)); // need to store floating point values
 						glReadPixels(
@@ -5409,7 +5471,7 @@ F32	LLViewerWindow::getWorldViewAspectRatio() const
 
 void LLViewerWindow::calcDisplayScale()
 {
-	F32 ui_scale_factor = gSavedSettings.getF32("UIScaleFactor");
+	F32 ui_scale_factor = llclamp(gSavedSettings.getF32("UIScaleFactor"), MIN_UI_SCALE, MAX_UI_SCALE);
 	LLVector2 display_scale;
 	display_scale.setVec(llmax(1.f / mWindow->getPixelAspectRatio(), 1.f), llmax(mWindow->getPixelAspectRatio(), 1.f));
 	display_scale *= ui_scale_factor;
@@ -5422,7 +5484,7 @@ void LLViewerWindow::calcDisplayScale()
 	
 	if (display_scale != mDisplayScale)
 	{
-		LL_INFOS() << "Setting display scale to " << display_scale << LL_ENDL;
+		LL_INFOS() << "Setting display scale to " << display_scale << " for ui scale: " << ui_scale_factor << LL_ENDL;
 
 		mDisplayScale = display_scale;
 		// Init default fonts

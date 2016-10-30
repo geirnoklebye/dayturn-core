@@ -1193,7 +1193,7 @@ void LLToolDragAndDrop::dropScript(LLViewerObject* hit_obj,
 		{
 			// can't edit objects that someone is sitting on,
 			// when prevented from sit-tping
-			if (gAgent.mRRInterface.contains ("sittp") || gAgent.mRRInterface.mContainsUnsit)
+			if (gAgent.mRRInterface.mSittpMax < EXTREMUM || gAgent.mRRInterface.mContainsUnsit)
 			{
 				if (hit_obj->isSeat())
 				{
@@ -1259,7 +1259,7 @@ void LLToolDragAndDrop::dropObject(LLViewerObject* raycast_target,
 	}
 
 //MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsRez)
+	if (gRRenabled && (gAgent.mRRInterface.mContainsRez || gAgent.mRRInterface.mContainsInteract))
 	{
 		return;
 	}
@@ -1502,6 +1502,20 @@ EAcceptance LLToolDragAndDrop::willObjectAcceptInventory(LLViewerObject* obj, LL
 {
 	// check the basics
 	if (!item || !obj) return ACCEPT_NO;
+
+//MK
+	// If the origin folder is locked, do not allow to drop an item from it, into the inventory of an object.
+	// We need this because that object could later send us its contents into a #RLV/~temp_folder, potentially 
+	// bypassing the lock and allowing to wear that inventory.
+	if (gRRenabled)
+	{
+		if (gAgent.mRRInterface.isFolderLocked(gInventory.getCategory(item->getParentUUID())))
+		{
+			return ACCEPT_NO;
+		}
+	}
+//mk
+
 	// HACK: downcast
 	LLViewerInventoryItem* vitem = (LLViewerInventoryItem*)item;
 //MK
@@ -1565,7 +1579,7 @@ EAcceptance LLToolDragAndDrop::willObjectAcceptInventory(LLViewerObject* obj, LL
 	{
 		// can't edit objects that someone is sitting on,
 		// when prevented from sit-tping
-		if (gAgent.mRRInterface.contains ("sittp") || gAgent.mRRInterface.mContainsUnsit)
+		if (gAgent.mRRInterface.mSittpMax < EXTREMUM || gAgent.mRRInterface.mContainsUnsit)
 		{
 			if (obj->isSeat())
 			{
@@ -1837,6 +1851,13 @@ EAcceptance LLToolDragAndDrop::dad3dRezAttachmentFromInv(
 EAcceptance LLToolDragAndDrop::dad3dRezObjectOnLand(
 	LLViewerObject* obj, S32 face, MASK mask, BOOL drop)
 {
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsRez || gAgent.mRRInterface.mContainsInteract))
+	{
+		return ACCEPT_NO_LOCKED;
+	}
+//mk
+
 	if (mSource == SOURCE_WORLD)
 	{
 		return dad3dRezFromObjectOnLand(obj, face, mask, drop);
@@ -1899,6 +1920,13 @@ EAcceptance LLToolDragAndDrop::dad3dRezObjectOnLand(
 EAcceptance LLToolDragAndDrop::dad3dRezObjectOnObject(
 	LLViewerObject* obj, S32 face, MASK mask, BOOL drop)
 {
+//MK
+	if (gRRenabled && (gAgent.mRRInterface.mContainsRez || gAgent.mRRInterface.mContainsInteract))
+	{
+		return ACCEPT_NO_LOCKED;
+	}
+//mk
+
 	// handle objects coming from object inventory
 	if (mSource == SOURCE_WORLD)
 	{

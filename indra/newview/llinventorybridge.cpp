@@ -291,6 +291,16 @@ BOOL LLInvFVBridge::cutToClipboard()
 	return FALSE;
 }
 
+// virtual
+bool LLInvFVBridge::isCutToClipboard()
+{
+    if (LLClipboard::instance().isCutMode())
+    {
+        return LLClipboard::instance().isOnClipboard(mUUID);
+    }
+    return false;
+}
+
 // Callback for cutToClipboard if DAMA required...
 BOOL LLInvFVBridge::callback_cutToClipboard(const LLSD& notification, const LLSD& response)
 {
@@ -312,9 +322,7 @@ BOOL LLInvFVBridge::perform_cutToClipboard()
 	if (obj && isItemMovable() && isItemRemovable())
 	{
 		LLClipboard::instance().setCutMode(true);
-		BOOL added_to_clipboard = LLClipboard::instance().addToClipboard(mUUID);
-        removeObject(&gInventory, mUUID);   // Always perform the remove even if the object couldn't make it to the clipboard
-        return added_to_clipboard;
+		return LLClipboard::instance().addToClipboard(mUUID);
 	}
 	return FALSE;
 }
@@ -1397,6 +1405,12 @@ bool LLInvFVBridge::canShare() const
 	// Categories can be given.
 				can_share = (model->getCategory(mUUID) != NULL);
 			}
+
+			const LLUUID trash_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_TRASH);
+			if ((mUUID == trash_id) || gInventory.isObjectDescendentOf(mUUID, trash_id))
+			{
+				can_share = false;
+			}
 		}
 	}
 
@@ -1977,13 +1991,15 @@ BOOL LLItemBridge::removeItem()
 	}
 
 	// move it to the trash
-	LLPreview::hide(mUUID, TRUE);
 	LLInventoryModel* model = getInventoryModel();
 	if(!model) return FALSE;
 	const LLUUID& trash_id = model->findCategoryUUIDForType(LLFolderType::FT_TRASH);
 	LLViewerInventoryItem* item = getItem();
 	if (!item) return FALSE;
-
+	if (item->getType() != LLAssetType::AT_LSL_TEXT)
+	{
+		LLPreview::hide(mUUID, TRUE);
+	}
 	// Already in trash
 	if (model->isObjectDescendentOf(mUUID, trash_id)) return FALSE;
 
@@ -4515,10 +4531,13 @@ bool move_task_inventory_callback(const LLSD& notification, const LLSD& response
 // Returns true if the item can be moved to Current Outfit or any outfit folder.
 static BOOL can_move_to_outfit(LLInventoryItem* inv_item, BOOL move_is_into_current_outfit)
 {
-	if ((inv_item->getInventoryType() != LLInventoryType::IT_WEARABLE) &&
-		(inv_item->getInventoryType() != LLInventoryType::IT_GESTURE) &&
-		(inv_item->getInventoryType() != LLInventoryType::IT_ATTACHMENT) &&
-		(inv_item->getInventoryType() != LLInventoryType::IT_OBJECT))
+	LLInventoryType::EType inv_type = inv_item->getInventoryType();
+	if ((inv_type != LLInventoryType::IT_WEARABLE) &&
+		(inv_type != LLInventoryType::IT_GESTURE) &&
+		(inv_type != LLInventoryType::IT_ATTACHMENT) &&
+		(inv_type != LLInventoryType::IT_OBJECT) &&
+		(inv_type != LLInventoryType::IT_SNAPSHOT) &&
+		(inv_type != LLInventoryType::IT_TEXTURE))
 	{
 		return FALSE;
 	}
@@ -4527,6 +4546,11 @@ static BOOL can_move_to_outfit(LLInventoryItem* inv_item, BOOL move_is_into_curr
 	if(flags & LLInventoryItemFlags::II_FLAGS_OBJECT_HAS_MULTIPLE_ITEMS)
 	{
 		return FALSE;
+	}
+
+	if((inv_type == LLInventoryType::IT_TEXTURE) || (inv_type == LLInventoryType::IT_SNAPSHOT))
+	{
+		return TRUE;
 	}
 
 	if (move_is_into_current_outfit && get_is_item_worn(inv_item->getUUID()))
@@ -4579,6 +4603,14 @@ void LLFolderBridge::dropToFavorites(LLInventoryItem* inv_item)
 
 void LLFolderBridge::dropToOutfit(LLInventoryItem* inv_item, BOOL move_is_into_current_outfit)
 {
+	if((inv_item->getInventoryType() == LLInventoryType::IT_TEXTURE) || (inv_item->getInventoryType() == LLInventoryType::IT_SNAPSHOT))
+	{
+		LLAppearanceMgr::instance().removeOutfitPhoto(mUUID);
+		LLPointer<LLInventoryCallback> cb = NULL;
+		link_inventory_object(mUUID, LLConstPointer<LLInventoryObject>(inv_item), cb);
+		return;
+	}
+
 	// BAP - should skip if dup.
 	if (move_is_into_current_outfit)
 	{

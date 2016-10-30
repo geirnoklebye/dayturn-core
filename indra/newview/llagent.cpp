@@ -1457,7 +1457,11 @@ LLVector3d LLAgent::getPosGlobalFromAgent(const LLVector3 &pos_agent) const
 void LLAgent::sitDown()
 {
 //MK
-	if (gRRenabled && gAgent.mRRInterface.contains ("sit"))
+	if (gRRenabled && gAgent.mRRInterface.mContainsInteract)
+	{
+		return;
+	}
+	if (gRRenabled && gAgent.mRRInterface.contains("sit"))
 	{
 		return;
 	}
@@ -3357,6 +3361,14 @@ void LLAgent::sendAnimationRequests(const std::vector<LLUUID> &anim_ids, EAnimRe
 	{
 		sendReliableMessage();
 	}
+	else
+	{
+		// Nothing to send: we *must* clear the message (else, the next message
+		// will retain our unsent message header, resulting in a crash in
+		// LLTemplateMessageBuilder::nextBlock() at some point, due to invalid
+		// block name/data). - From Cool VL Viewer, Henri Beauchamp
+		msg->clearMessage();
+	}
 }
 
 void LLAgent::sendAnimationRequest(const LLUUID &anim_id, EAnimRequest request)
@@ -4366,11 +4378,17 @@ void LLAgent::handleTeleportFinished()
 		mIsMaturityRatingChangingDuringTeleport = false;
 	}
     
-    // Init SLM Marketplace connection so we know which UI should be used for the user as a merchant
-    // Note: Eventually, all merchant will be migrated to the new SLM system and there will be no reason to show the old UI at all.
-    // Note: Some regions will not support the SLM cap for a while so we need to do that check for each teleport.
-    // *TODO : Suppress that line from here once the whole grid migrated to SLM and move it to idle_startup() (llstartup.cpp)
-    check_merchant_status();
+    if (mRegionp)
+    {
+        if (mRegionp->capabilitiesReceived())
+        {
+            onCapabilitiesReceivedAfterTeleport();
+        }
+        else
+        {
+            mRegionp->setCapabilitiesReceivedCallback(boost::bind(&LLAgent::onCapabilitiesReceivedAfterTeleport));
+        }
+    }
 }
 
 void LLAgent::handleTeleportFailed()
@@ -4401,6 +4419,14 @@ void LLAgent::handleTeleportFailed()
 		mIsMaturityRatingChangingDuringTeleport = false;
 	}
 }
+
+/*static*/
+void LLAgent::onCapabilitiesReceivedAfterTeleport()
+{
+
+    check_merchant_status();
+}
+
 
 void LLAgent::teleportRequest(
 	const U64& region_handle,
@@ -4454,8 +4480,6 @@ void LLAgent::doTeleportViaLandmark(const LLUUID& landmark_asset_id)
 	{
 		return;
 	}
-	//// eliminate all restrictions issued from objects the avatar is not wearing
-	//gAgent.mRRInterface.garbageCollector ();
 //mk
 	LLViewerRegion *regionp = getRegion();
 	if(regionp && teleportCore())
@@ -4560,13 +4584,22 @@ void LLAgent::doTeleportViaLocation(const LLVector3d& pos_global)
 	LLVOAvatar* avatar = gAgentAvatarp;
 	if (gRRenabled && (LLStartUp::getStartupState() != STATE_STARTED || gViewerWindow->getShowProgress() 
 					  || gAgent.mRRInterface.contains ("tploc") 
-					  //|| gAgent.mRRInterface.contains ("sittp") 
 					  || (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
 	{
 		return;
 	}
-	//// eliminate all restrictions issued from objects the avatar is not wearing
-	//gAgent.mRRInterface.garbageCollector ();
+
+	// If we are teleporting to the same region, this is a local teleport => check @tplocal
+	LLVector3d pos_agent_global = getPositionGlobal();
+	if (to_region_handle(pos_global) == to_region_handle(pos_agent_global))
+	{
+		LLVector3d pos_relative = (LLVector3d)(pos_global - pos_agent_global);
+		F32 dist = pos_relative.magVec();
+		if (dist > gAgent.mRRInterface.mTplocalMax)
+		{
+			return;
+		}
+	}
 //mk
 	LLViewerRegion* regionp = getRegion();
 
@@ -4640,10 +4673,22 @@ void LLAgent::doTeleportViaLocationLookAt(const LLVector3d& pos_global)
 			// Can't double-click-TP if we can't sittp, unsit, tp to a location or when the controls are grabbed and something is locked
 			if (gAgent.mRRInterface.contains ("tploc") 
 				|| (gAgent.forwardGrabbed() && gAgent.mRRInterface.mContainsDetach)
-				|| gAgent.mRRInterface.contains ("sittp") 
+				|| gAgent.mRRInterface.mSittpMax < EXTREMUM
 				|| (gAgent.mRRInterface.mContainsUnsit && gAgentAvatarp && gAgentAvatarp->mIsSitting))
 			{
 				return;
+			}
+
+			// If we are teleporting to the same region, this is a local teleport => check @tplocal
+			LLVector3d pos_agent_global = getPositionGlobal();
+			if (to_region_handle(pos_global) == to_region_handle(pos_agent_global))
+			{
+				LLVector3d pos_relative = (LLVector3d)(pos_global - pos_agent_global);
+				F32 dist = pos_relative.magVec();
+				if (dist > gAgent.mRRInterface.mTplocalMax)
+				{
+					return;
+				}
 			}
 		}
 		else

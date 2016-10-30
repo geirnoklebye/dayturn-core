@@ -429,13 +429,15 @@ void set_merchant_SLM_menu()
 	gToolBarView->enableCommand(command->id(), true);
 }
 
-void check_merchant_status()
+void check_merchant_status(bool force)
 {
     if (!gSavedSettings.getBOOL("InventoryOutboxDisplayBoth"))
     {
-        // Reset the SLM status: we actually want to check again, that's the point of calling check_merchant_status()
-        LLMarketplaceData::instance().setSLMStatus(MarketplaceStatusCodes::MARKET_PLACE_NOT_INITIALIZED);
-        
+        if (force)
+        {
+            // Reset the SLM status: we actually want to check again, that's the point of calling check_merchant_status()
+            LLMarketplaceData::instance().setSLMStatus(MarketplaceStatusCodes::MARKET_PLACE_NOT_INITIALIZED);
+        }
         // Hide SLM related menu item
         gMenuHolder->getChild<LLView>("MarketplaceListings")->setVisible(FALSE);
         
@@ -2839,15 +2841,6 @@ bool enable_object_open()
 	{
 		return true;
 	}
-	//if (gRRenabled && gAgent.mRRInterface.mContainsFartouch)
-	//{
-	//	LLVector3 pos = LLToolPie::getInstance()->getPick().mIntersection;
-	//	pos -= gAgent.getPositionAgent ();
-	//	if (pos.magVec () >= 1.5)
-	//	{
-	//		return true;
-	//	}
-	//}
 //mk
 	LLViewerObject* root = obj->getRootEdit();
 	if (!root) return false;
@@ -3096,19 +3089,6 @@ class LLLandBuild : public view_listener_t
 		{
 			return false;
 		}
-//		if (gRRenabled && gAgent.mRRInterface.mContainsFartouch
-//			&& LLSelectMgr::getInstance()->getSelection()->getFirstObject()
-//			&& !LLSelectMgr::getInstance()->getSelection()->getFirstObject()->isHUDAttachment()
-//			)
-//		{
-////			LLVector3 pos = LLSelectMgr::getInstance()->getSelection()->getFirstObject()->getPositionRegion ();
-//			LLVector3 pos = LLToolPie::getInstance()->getPick().mIntersection;
-//			pos -= gAgent.getPositionAgent ();
-//			if (pos.magVec () >= 1.5)
-//			{
-//				return false;
-//			}
-//		}
 //mk
 		LLViewerParcelMgr::getInstance()->deselectLand();
 
@@ -4422,16 +4402,20 @@ bool is_object_sittable()
 	if (!object) {
 		return false;
 	}
+	if (gRRenabled && gAgent.mRRInterface.mContainsInteract)
+	{
+		return false;
+	}
 	if (gRRenabled && gAgent.mRRInterface.contains ("sit"))
 	{
 		return false;
 	}
-	if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")))
+	if (gRRenabled && (gAgent.mRRInterface.mSittpMax < EXTREMUM))
 	{
 		LLPickInfo pick = LLToolPie::getInstance()->getPick();
 		LLVector3 pos = object->getPositionRegion() + pick.mObjectOffset;
 		pos -= gAgent.getPositionAgent ();
-		if (pos.magVec () >= 1.5)
+		if (pos.magVec () >= gAgent.mRRInterface.mSittpMax)
 		{
 			return false;
 		}
@@ -4481,15 +4465,19 @@ void handle_object_sit_or_stand()
 	if (object && object->getPCode() == LL_PCODE_VOLUME)
 	{
 //MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsInteract)
+		{
+			return;
+		}
 		if (gRRenabled && gAgent.mRRInterface.contains ("sit"))
 		{
 			return;
 		}
-		if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")))
+		if (gRRenabled && (gAgent.mRRInterface.mSittpMax < EXTREMUM))
 		{
 			LLVector3 pos = object->getPositionRegion() + pick.mObjectOffset;
 			pos -= gAgent.getPositionAgent ();
-			if (pos.magVec () >= 1.5)
+			if (pos.magVec() >= gAgent.mRRInterface.mSittpMax)
 			{
 				return;
 			}
@@ -4540,6 +4528,10 @@ void near_sit_down_point(BOOL success, void *)
 	{
 		gAgent.setFlying(FALSE);
 //MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsInteract)
+		{
+			return;
+		}
 		if (gRRenabled && gAgent.mRRInterface.contains ("sit"))
 		{
 			return;
@@ -7116,16 +7108,20 @@ bool enable_object_sit(LLUICtrl* ctrl)
 
 		if(dest_object)
 		{
-			if (gRRenabled && gAgent.mRRInterface.contains ("sit"))
+			if (gRRenabled && gAgent.mRRInterface.mContainsInteract)
 			{
 				return false;
 			}
-			if (gRRenabled && (gAgent.mRRInterface.contains ("sittp")))
+			if (gRRenabled && gAgent.mRRInterface.contains("sit"))
+			{
+				return false;
+			}
+			if (gRRenabled && (gAgent.mRRInterface.mSittpMax < EXTREMUM))
 			{
 				LLPickInfo pick = LLToolPie::getInstance()->getPick();
 				LLVector3 pos = dest_object->getPositionRegion() + pick.mObjectOffset;
 				pos -= gAgent.getPositionAgent ();
-				if (pos.magVec () >= 1.5)
+				if (pos.magVec() >= gAgent.mRRInterface.mSittpMax)
 				{
 					return false;
 				}
@@ -9256,7 +9252,7 @@ void handle_web_browser_test(const LLSD& param)
 void handle_web_content_test(const LLSD& param)
 {
 	std::string url = param.asString();
-	LLWeb::loadURLInternal(url);
+	LLWeb::loadURLInternal(url, LLStringUtil::null, LLStringUtil::null, true);
 }
 
 void handle_show_url(const LLSD& param)

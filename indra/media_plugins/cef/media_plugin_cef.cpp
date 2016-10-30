@@ -139,10 +139,6 @@ MediaPluginBase(host_send_func, host_user_data)
 	mPopupH = 0;
 	mPopupX = 0;
 	mPopupY = 0;
-	mPopupX = 0;
-	mPopupY = 0;
-	// </FS:ND>
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -600,9 +596,9 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 
 				S32 x = message_in.getValueS32("x");
 				S32 y = message_in.getValueS32("y");
-
+#if !LL_LINUX
 				y = mHeight - y;
-
+#endif
 				// only even send left mouse button events to LLCEFLib
 				// (partially prompted by crash in OS X CEF when sending right button events)
 				// we catch the right click in viewer and display our own context menu anyway
@@ -686,8 +682,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
                 keyEvent(key_event, key, LLCEFLib::KM_MODIFIER_NONE, native_key_data);
 
 #endif
-//#elif LL_WINDOWS // <FS:ND/> Windows & Linux
-#else
+#else //Windows and Linux
 				std::string event = message_in.getValue("event");
 				S32 key = message_in.getValueS32("key");
 				std::string modifiers = message_in.getValue("modifiers");

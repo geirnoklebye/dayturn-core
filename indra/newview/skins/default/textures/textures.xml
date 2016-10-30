@@ -803,6 +803,9 @@ with the same filename but different name
   <texture name="default_land_picture.j2c" />
   <texture name="default_profile_picture.j2c" />
   <texture name="locked_image.j2c" />
+  <texture name="badge_note.j2c" />
+  <texture name="badge_warn.j2c" />
+  <texture name="badge_ok.j2c" />
   <texture name="materials_ui_x_24.png" />
 
   <texture name="Progress_1" file_name="icons/Progress_1.png" preload="true" />
@@ -835,6 +838,7 @@ with the same filename but different name
   <texture name="Camera_Drag_Dot" file_name="world/CameraDragDot.png"/>
   <texture name="NavBar Separator" file_name="navbar/separator.png"/>
 
+  <texture name="Default_Outfit_Photo" file_name="icons/Default_Outfit_Photo.png" preload="true"/>
   <texture name="Notification_Condense" file_name="icons/Icon_Notification_Condense.png" preload="true"/>
   <texture name="Notification_Expand" file_name="icons/Icon_Notification_Expand.png" preload="true"/>
   <texture name="System_Notification" file_name="icons/SL_Logo.png" preload="true"/>

@@ -126,7 +126,7 @@ void LLWindowCallbacks::handleResize(LLWindow *window, const S32 width, const S3
 
 void LLWindowCallbacks::handleFocus(LLWindow *window)
 {
-    LL_WARNS("COCOA") << "Called handleFocus proto" << LL_ENDL;
+	 LL_WARNS("COCOA") << "Called handleFocus proto" << LL_ENDL;
 }
 
 void LLWindowCallbacks::handleFocusLost(LLWindow *window)
@@ -173,6 +173,11 @@ BOOL LLWindowCallbacks::handleTimerEvent(LLWindow *window)
 BOOL LLWindowCallbacks::handleDeviceChange(LLWindow *window)
 {
 	return FALSE;
+}
+
+void LLWindowCallbacks::handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32 window_width, S32 window_height)
+{
+
 }
 
 void LLWindowCallbacks::handlePingWatchdog(LLWindow *window, const char * msg)
