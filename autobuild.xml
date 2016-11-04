@@ -2117,13 +2117,25 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e62f2fc1ee9ab791d603c5b717b46119</string>
-              <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/kdu_3p-update-kdu/rev/296932/arch/Darwin/installer/kdu-7.2.296932-darwin-296932.tar.bz2</string>
++              <string>4cf0be904cb67c162c7fcd65213ed299</string>
++              <key>url</key>
++              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/ct2/954/2178/kdu-7.8.500943-darwin-500943.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
++              <string>faba0f7070198aa7b60da51d3d506895</string>
++              <key>url</key>
++              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/ct2/955/2181/kdu-7.8.500943-darwin64-500943.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>          
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -2136,14 +2148,26 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>c97c81c730a15c98a68ebf303ed83cb1</string>
+              <key>url</key>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/ct2/953/2186/kdu-7.8.500943-linux64-500943.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>          
           <key>windows</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a0e5c050a4975c81611d9f1862ac57fb</string>
+              <string>42239e5382e62f04228581651e1b3696</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/kdu_3p-update-kdu/rev/296932/arch/CYGWIN/installer/kdu-7.2.296932-windows-296932.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/ct2/956/2189/kdu-7.8.500943-windows-500943.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2162,7 +2186,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>7.2.296932</string>
+        <string>7.8.500943</string>
       </map>
       <key>libhunspell</key>
       <map>
