@@ -41,8 +41,6 @@
 #include "llCEFLib.h"
 #include "volume_catcher.h"
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 class MediaPluginCEF :
@@ -484,7 +482,6 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 		{
 			if (message_name == "init")
 			{
-
 				// event callbacks from LLCefLib
 				mLLCEFLib->setOnPageChangedCallback(boost::bind(&MediaPluginCEF::onPageChangedCallback, this, _1, _2, _3, _4, _5, _6));
 				mLLCEFLib->setOnCustomSchemeURLCallback(boost::bind(&MediaPluginCEF::onCustomSchemeURLCallback, this, _1));
@@ -534,8 +531,6 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				message.setValueU32("format", GL_BGRA);
 				message.setValueU32("type", GL_UNSIGNED_BYTE);
 				message.setValueBoolean("coords_opengl", true);
-
-
 				sendMessage(message);
 			}
 			else if (message_name == "set_user_data_path")
@@ -605,9 +600,9 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 
 				S32 x = message_in.getValueS32("x");
 				S32 y = message_in.getValueS32("y");
-#if !LL_LINUX
+
 				y = mHeight - y;
-#endif
+
 				// only even send left mouse button events to LLCEFLib
 				// (partially prompted by crash in OS X CEF when sending right button events)
 				// we catch the right click in viewer and display our own context menu anyway
@@ -850,6 +845,7 @@ void MediaPluginCEF::deserializeKeyboardData(LLSD native_key_data, uint32_t& nat
 void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::EKeyboardModifier modifiers_x, LLSD native_key_data = LLSD::emptyMap())
 {
 #if LL_DARWIN
+
     if (!native_key_data.has("event_type") ||
             !native_key_data.has("event_modifiers") ||
             !native_key_data.has("event_keycode") ||
@@ -886,7 +882,7 @@ void MediaPluginCEF::keyEvent(LLCEFLib::EKeyEvent key_event, int key, LLCEFLib::
 	mLLCEFLib->nativeKeyboardEvent(key_event, native_scan_code, native_virtual_key, native_modifiers);
 #endif
 // </FS:ND>
-}
+};
 
 void MediaPluginCEF::unicodeInput(const std::string &utf8str, LLCEFLib::EKeyboardModifier modifiers, LLSD native_key_data = LLSD::emptyMap())
 {
