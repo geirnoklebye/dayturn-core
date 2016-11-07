@@ -8665,9 +8665,9 @@
 	<key>Persist</key>
 	<integer>1</integer>
 	<key>Type</key>
-	<string>Boolean</string>
+	<string>F32</string>
 	<key>Value</key>
-	<integer>1</integer>
+	<integer>64.0</integer>
     </map>
     <key>PrivatePointAtTarget</key>
     <map>
