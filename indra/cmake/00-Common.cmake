@@ -83,7 +83,7 @@ if (WINDOWS)
       )
 
   # Nicky: x64 implies SSE2
-  if( NOT LL_64BIT_BUILD )
+  if( ADDRESS_SIZE EQUAL 64 )
     add_definitions( /arch:SSE2 )
   endif()
      
@@ -188,9 +188,9 @@ if (LINUX)
   add_definitions(-fvisibility=hidden)
   # don't catch SIGCHLD in our base application class for the viewer - some of our 3rd party libs may need their *own* SIGCHLD handler to work.  Sigh!  The viewer doesn't need to catch SIGCHLD anyway.
   add_definitions(-DLL_IGNORE_SIGCHLD)
-    IF(${ARCH} STREQUAL "x86_64")
+  if (ADDRESS_SIZE EQUAL 32)
       add_definitions(-march=x86-64 -mfpmath=sse)
-    ELSE(${ARCH} STREQUAL "x86_64")
+  endif (ADDRESS_SIZE EQUAL 32)
        add_definitions(-march=pentium4 -mfpmath=sse)
     ENDIF(${ARCH} STREQUAL "x86_64")
   #add_definitions(-ftree-vectorize) # THIS CRASHES GCC 3.1-3.2
@@ -260,13 +260,13 @@ if (LINUX OR DARWIN)
   set(CMAKE_C_FLAGS "${GCC_WARNINGS} ${CMAKE_C_FLAGS}")
   set(CMAKE_CXX_FLAGS "${GCC_CXX_WARNINGS} ${CMAKE_CXX_FLAGS}")
 
-  if (WORD_SIZE EQUAL 32)
+  if (ADDRESS_SIZE EQUAL 32)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
-  elseif (WORD_SIZE EQUAL 64)
+  elseif (ADDRESS_SIZE EQUAL 64)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64")
-  endif (WORD_SIZE EQUAL 32)
+  endif (ADDRESS_SIZE EQUAL 32)
 endif (LINUX OR DARWIN)
 
 
