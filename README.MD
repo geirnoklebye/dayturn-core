@@ -98,7 +98,7 @@ gcc (Ubuntu 4.8.4-2ubuntu1~14.04) 4.8.4
 
 Install autobuild into python
 
-sudo pip install hg+https://bitbucket.org/lindenlab/autobuild-1.0#egg=autobuild
+sudo pip install hg+https://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
 
 Install optional tools
 
@@ -408,7 +408,7 @@ You will need these items before you begin:
 
 -   Typically cd \Python27\Scripts
 
--   Run pip install hg+http://bitbucket.org/lindenlab/autobuild-1.0#egg=autobuild
+-   Run pip install hg+http://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
 
 -   Autobuild will be installed.  Earlier versions of autobuild could be made to work by just putting the source files
 
@@ -538,11 +538,11 @@ Xcode should have created the directory ~/Library/Developer during installation.
 
 In terminal cd to the above directory and type the command:
 
-hg clone https://bitbucket.org/lindenlab/autobuild-1.0
+hg clone https://bitbucket.org/lindenlab/autobuild-1.1
 
 Pip Install auto build python dependencies by typing:
 
-sudo pip install ‘hg+https://bitbucket.org/lindenlab/autobuild-1.0#egg=autobuild'
+sudo pip install ‘hg+https://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild'
 
 If everything goes well it should be installed in /opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/autobuild
 
