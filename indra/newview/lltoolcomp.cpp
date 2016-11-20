@@ -265,20 +265,10 @@ BOOL LLToolCompTranslate::handleHover(S32 x, S32 y, MASK mask)
 
 
 BOOL LLToolCompTranslate::handleMouseDown(S32 x, S32 y, MASK mask)
-{ 
-    // if the left button is blocked, don't put up the pie menu
-    if (gAgent.leftButtonBlocked())
-    {
-        // in case of "grabbed" control flag will be set later
-        gAgent.setControlFlags(AGENT_CONTROL_ML_LBUTTON_DOWN);
-        return FALSE;
-    }
-
-	// On mousedown, start grabbing
-	gGrabTransientTool = this;
-//	LLToolMgr::getInstance()->getCurrentToolset()->selectTool( (LLTool*) mGrab );
-
-	return LLToolGrab::getInstance()->handleMouseDown(x, y, mask);
+{
+	mMouseDown = TRUE;
+	gViewerWindow->pickAsync(x, y, mask, pickCallback, /*BOOL pick_transparent*/ TRUE);
+	return TRUE;
 }
 
 void LLToolCompTranslate::pickCallback(const LLPickInfo& pick_info)
@@ -344,19 +334,16 @@ LLTool* LLToolCompTranslate::getOverrideTool(MASK mask)
 
 BOOL LLToolCompTranslate::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
-    // if the left button is blocked, don't put up the pie menu
-    if (gAgent.leftButtonBlocked())
-    {
-        // in case of "grabbed" control flag will be set later
-        gAgent.setControlFlags(AGENT_CONTROL_ML_LBUTTON_DOWN);
-        return FALSE;
-    }
-
-	// On mousedown, start grabbing
-	gGrabTransientTool = this;
-//	LLToolMgr::getInstance()->getCurrentToolset()->selectTool( (LLTool*) mGrab );
-
-	return LLToolGrab::getInstance()->handleDoubleClick(x, y, mask);
+	if (mManip->getSelection()->isEmpty() && mManip->getHighlightedPart() == LLManip::LL_NO_PART)
+	{
+		// You should already have an object selected from the mousedown.
+		// If so, show its properties
+		LLFloaterReg::showInstance("build", "Content");
+		return TRUE;
+	}
+	// Nothing selected means the first mouse click was probably
+	// bad, so try again.
+	return FALSE;
 }
 
 
