@@ -1693,7 +1693,8 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	mResDirty(false),
 	mStatesDirty(false),
 	mCurrResolutionIndex(0),
-	mProgressView(NULL)
+	mProgressView(NULL),
+    mSystemUIScaleFactorChanged(false)
 //MK
 	, mPickThroughHuds(FALSE)
 //mk
@@ -2445,8 +2446,8 @@ void LLViewerWindow::reshape(S32 width, S32 height)
 		}
 
 		calcDisplayScale();
-	
-		BOOL display_scale_changed = mDisplayScale != LLUI::sGLScaleFactor;
+//   		BOOL display_scale_changed = mDisplayScale != LLUI::getScaleFactor;
+		BOOL display_scale_changed = mDisplayScale != LLUI::sGLScaleFactor; //for opensim variable sized regions
 		LLUI::setScaleFactor(mDisplayScale);
 
 		// update our window rectangle
