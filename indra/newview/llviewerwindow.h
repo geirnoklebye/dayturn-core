@@ -417,6 +417,9 @@ public:
 	void			calcDisplayScale();
 	static LLRect 	calcScaledRect(const LLRect & rect, const LLVector2& display_scale);
 
+	bool getSystemUIScaleFactorChanged() { return mSystemUIScaleFactorChanged; }
+	static void showSystemUIScaleFactorChanged();
+
 //MK
 	BOOL			mPickThroughHuds; // if TRUE, don't pick HUD objects under the mouse cursor
 //mk

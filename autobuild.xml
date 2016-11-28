@@ -434,9 +434,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ed0d8767652aecd65a7fef3e28645bad</string>
+              <string>b89e100838eb6746ee9106e837254333</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/fmodex_3p-update-fmodex/rev/297261/arch/Darwin/installer/fmodex-4.44.31.297261-darwin-297261.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-darwin-20140326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -446,9 +446,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>dd0135d53706a4040d65974f7e804d6f</string>
+              <string>cab5c55347a2c331586cc00a20c6df80</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/fmodex_3p-update-fmodex/rev/297261/arch/Linux/installer/fmodex-4.44.31.297261-linux-297261.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-linux-20140326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -458,9 +458,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5aa7b826e7c1cf95e9cd3ef77e314f35</string>
+              <string>a378b6cb7a3bc79a2989109b3d2ff70c</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/fmodex_3p-update-fmodex/rev/297261/arch/CYGWIN/installer/fmodex-4.44.31.297261-windows-297261.tar.bz2</string>
+              <string>http://dolphinviewer.eregion.de/files/libs/fmodex-4.44.31-windows-20140326.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2844,6 +2844,14 @@
                 <key>arguments</key>
                 <array>
                   <string>..\indra</string>
+                  <string>&amp;&amp;</string>
+                  <string>..\indra\tools\vstool\VSTool.exe</string>
+                  <string>--solution</string>
+                  <string>SecondLife.sln</string>
+                  <string>--config</string>
+                  <string>RelWithDebInfo</string>
+                  <string>--startup</string>
+                  <string>secondlife-bin</string>
                 </array>
                 <key>options</key>
                 <array>
@@ -2882,6 +2890,14 @@
                 <key>arguments</key>
                 <array>
                   <string>..\indra</string>
+                  <string>&amp;&amp;</string>
+                  <string>..\indra\tools\vstool\VSTool.exe</string>
+                  <string>--solution</string>
+                  <string>SecondLife.sln</string>
+                  <string>--config</string>
+                  <string>RelWithDebInfo</string>
+                  <string>--startup</string>
+                  <string>secondlife-bin</string>
                 </array>
                 <key>options</key>
                 <array>
@@ -2917,6 +2933,14 @@
                 <key>arguments</key>
                 <array>
                   <string>..\indra</string>
+                  <string>&amp;&amp;</string>
+                  <string>..\indra\tools\vstool\VSTool.exe</string>
+                  <string>--solution</string>
+                  <string>SecondLife.sln</string>
+                  <string>--config</string>
+                  <string>Release</string>
+                  <string>--startup</string>
+                  <string>secondlife-bin</string>
                 </array>
                 <key>options</key>
                 <array>
@@ -2953,6 +2977,14 @@
                 <key>arguments</key>
                 <array>
                   <string>..\indra</string>
+                  <string>&amp;&amp;</string>
+                  <string>..\indra\tools\vstool\VSTool.exe</string>
+                  <string>--solution</string>
+                  <string>SecondLife.sln</string>
+                  <string>--config</string>
+                  <string>Release</string>
+                  <string>--startup</string>
+                  <string>secondlife-bin</string>
                 </array>
                 <key>options</key>
                 <array>
