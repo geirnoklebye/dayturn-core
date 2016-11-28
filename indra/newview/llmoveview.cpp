@@ -252,7 +252,7 @@ void LLFloaterMove::setSittingMode(BOOL bSitting)
 			LLPanelStandStopFlying::setStandStopFlyingMode(LLPanelStandStopFlying::SSFM_STOP_FLYING);
 		}
 	}
-	enableInstance(!bSitting);
+	enableInstance();
 }
 
 // protected 
@@ -478,7 +478,7 @@ void LLFloaterMove::showModeButtons(BOOL bShow)
 }
 
 //static
-void LLFloaterMove::enableInstance(BOOL bEnable)
+void LLFloaterMove::enableInstance()
 {
 	LLFloaterMove* instance = LLFloaterReg::findTypedInstance<LLFloaterMove>("moveview");
 	if (instance)
@@ -489,7 +489,7 @@ void LLFloaterMove::enableInstance(BOOL bEnable)
 		}
 		else
 		{
-			instance->showModeButtons(bEnable);
+            instance->showModeButtons(isAgentAvatarValid() && !gAgentAvatarp->isSitting());
 		}
 	}
 }
@@ -598,7 +598,7 @@ BOOL LLPanelStandStopFlying::postBuild()
 {
 	mStandButton = getChild<LLButton>("stand_btn");
 	mStandButton->setCommitCallback(boost::bind(&LLPanelStandStopFlying::onStandButtonClick, this));
-	mStandButton->setCommitCallback(boost::bind(&LLFloaterMove::enableInstance, TRUE));
+	mStandButton->setCommitCallback(boost::bind(&LLFloaterMove::enableInstance));
 	mStandButton->setVisible(FALSE);
 	LLHints::registerHintTarget("stand_btn", mStandButton->getHandle());
 	
@@ -726,7 +726,7 @@ void LLPanelStandStopFlying::onStandButtonClick()
 	LLSelectMgr::getInstance()->deselectAllForStandingUp();
 	gAgent.setControlFlags(AGENT_CONTROL_STAND_UP);
 
-	setFocus(FALSE); // EXT-482
+	setFocus(FALSE);
 	mStandButton->setVisible(FALSE); // force visibility changing to avoid seeing Stand & Move buttons at once.
 //MK
 	if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
@@ -744,7 +744,6 @@ void LLPanelStandStopFlying::onStopFlyingButtonClick()
 	gAgent.setFlying(FALSE);
 
 	setFocus(FALSE); // EXT-482
-	mStopFlyingButton->setVisible(FALSE);
 }
 
 /**

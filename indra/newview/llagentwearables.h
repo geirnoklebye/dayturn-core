@@ -190,6 +190,8 @@ public:
 	static void		userRemoveMultipleAttachments(llvo_vec_t& llvo_array);
 	static void		userAttachMultipleAttachments(LLInventoryModel::item_array_t& obj_item_array);
 
+	static llvo_vec_t getTempAttachments();
+
 //MK from HB
 	// These functions are for overriding the old initial wearables update
 	// message logic in SL, for when that message will stop being sent...

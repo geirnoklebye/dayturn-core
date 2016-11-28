@@ -65,6 +65,23 @@ const F32 OFFSET_FACTOR = 0.66f; // This factor is arbitrary and is supposed to 
 //mk
 
 ///////////////////////////////////////////////////////////////////////////////
+void set_default_permissions(LLViewerInventoryItem* item)
+{
+	llassert(item);
+	LLPermissions perm = item->getPermissions();
+	if (perm.getMaskNextOwner() != LLFloaterPerms::getNextOwnerPerms("Wearables")
+		|| perm.getMaskEveryone() != LLFloaterPerms::getEveryonePerms("Wearables")
+		|| perm.getMaskGroup() != LLFloaterPerms::getGroupPerms("Wearables"))
+	{
+		perm.setMaskNext(LLFloaterPerms::getNextOwnerPerms("Wearables"));
+		perm.setMaskEveryone(LLFloaterPerms::getEveryonePerms("Wearables"));
+		perm.setMaskGroup(LLFloaterPerms::getGroupPerms("Wearables"));
+
+		item->setPermissions(perm);
+
+		item->updateServer(FALSE);
+	}
+}
 
 // Callback to wear and start editing an item that has just been created.
 void wear_and_edit_cb(const LLUUID& inv_item)
@@ -74,13 +91,9 @@ void wear_and_edit_cb(const LLUUID& inv_item)
 		LLViewerInventoryItem* item = gInventory.getItem(inv_item);
 		if (!item) return;
 
-		LLPermissions perm = item->getPermissions();
-		perm.setMaskNext(LLFloaterPerms::getNextOwnerPerms("Wearables"));
-		perm.setMaskEveryone(LLFloaterPerms::getEveryonePerms("Wearables"));
-		perm.setMaskGroup(LLFloaterPerms::getGroupPerms("Wearables"));
-		item->setPermissions(perm);
+	set_default_permissions(item);
 
-		item->updateServer(FALSE);
+	// item was just created, update even if permissions did not changed
 		gInventory.updateItem(item);
 		gInventory.notifyObservers();
 
@@ -98,13 +111,8 @@ void wear_cb(const LLUUID& inv_item)
 		LLViewerInventoryItem* item = gInventory.getItem(inv_item);
 		if (item)
 		{
-			LLPermissions perm = item->getPermissions();
-			perm.setMaskNext(LLFloaterPerms::getNextOwnerPerms("Wearables"));
-			perm.setMaskEveryone(LLFloaterPerms::getEveryonePerms("Wearables"));
-			perm.setMaskGroup(LLFloaterPerms::getGroupPerms("Wearables"));
-			item->setPermissions(perm);
+			set_default_permissions(item);
 
-			item->updateServer(FALSE);
 			gInventory.updateItem(item);
 			gInventory.notifyObservers();
 		}
@@ -262,6 +270,7 @@ void LLAgentWearables::AddWearableToAgentInventoryCallback::fire(const LLUUID& i
 	{
 		LLAppearanceMgr::instance().addCOFItemLink(inv_item, 
 			new LLUpdateAppearanceAndEditWearableOnDestroy(inv_item), mDescription);
+		editWearable(inv_item);
 	}
 }
 
@@ -432,7 +441,7 @@ void LLAgentWearables::saveWearableAs(const LLWearableType::EType type,
 	// old_wearable may still be referred to by other inventory items. Revert
 	// unsaved changes so other inventory items aren't affected by the changes
 	// that were just saved.
-	old_wearable->revertValues();
+	old_wearable->revertValuesWithoutUpdate();
 }
 
 void LLAgentWearables::revertWearable(const LLWearableType::EType type, const U32 index)
@@ -1515,6 +1524,30 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 //mk
 }
 
+std::vector<LLViewerObject*> LLAgentWearables::getTempAttachments()
+{
+	llvo_vec_t temp_attachs;
+	if (isAgentAvatarValid())
+	{
+		for (LLVOAvatar::attachment_map_t::iterator iter = gAgentAvatarp->mAttachmentPoints.begin(); iter != gAgentAvatarp->mAttachmentPoints.end();)
+		{
+			LLVOAvatar::attachment_map_t::iterator curiter = iter++;
+			LLViewerJointAttachment* attachment = curiter->second;
+			for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
+				attachment_iter != attachment->mAttachedObjects.end();
+				++attachment_iter)
+			{
+				LLViewerObject *objectp = (*attachment_iter);
+				if (objectp && objectp->isTempAttachment())
+				{
+					temp_attachs.push_back(objectp);
+				}
+			}
+		}
+	}
+	return temp_attachs;
+}
+
 void LLAgentWearables::userRemoveMultipleAttachments(llvo_vec_t& objects_to_remove)
 {
 	if (!isAgentAvatarValid()) return;
@@ -1533,6 +1566,8 @@ void LLAgentWearables::userRemoveMultipleAttachments(llvo_vec_t& objects_to_remo
 		 ++it)
 	{
 		LLViewerObject *objectp = *it;
+		//gAgentAvatarp->resetJointPositionsOnDetach(objectp);
+
 //MK
 		if (gRRenabled && !gAgent.mRRInterface.canDetach (objectp))
 		{
