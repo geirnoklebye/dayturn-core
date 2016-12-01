@@ -96,7 +96,6 @@
 #include "llviewermenu.h"
 #include "llviewerinventory.h"
 #include "llviewerjoystick.h"
-#include "llviewernetwork.h" // <FS:AW opensim currency support>
 #include "llviewerobjectlist.h"
 #include "llviewerparcelmgr.h"
 #include "llviewerstats.h"
@@ -124,6 +123,7 @@
 #include "llnotificationmanager.h" //
 #include "tea.h"
 #include "llexperiencecache.h"
+
 #include "llexperiencecache.h"
 
 //MK
@@ -168,7 +168,6 @@ const F32 OFFER_THROTTLE_TIME=10.f; //time period in seconds
 const U8 AU_FLAGS_NONE      		= 0x00;
 const U8 AU_FLAGS_HIDETITLE      	= 0x01;
 const U8 AU_FLAGS_CLIENT_AUTOPILOT	= 0x02;
-
 
 bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
 {
@@ -2392,7 +2391,6 @@ static void god_message_name_cb(const LLAvatarName& av_name, LLChat chat, std::s
 	{
 		nearby_chat->addMessage(chat);
 	}
-
 }
 
 const std::string NOT_ONLINE_MSG("User not online - message will be stored and delivered later.");
@@ -2477,7 +2475,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 	chat.mFromID = from_id;
 	chat.mFromName = name;
 	chat.mSourceType = (from_id.isNull() || (name == std::string(SYSTEM_FROM))) ? CHAT_SOURCE_SYSTEM : CHAT_SOURCE_AGENT;
-	
+
 	if (chat.mSourceType == CHAT_SOURCE_SYSTEM)
 	{ // Translate server message if required (MAINT-6109)
 		translate_if_needed(message);
@@ -2710,29 +2708,6 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
 			gIMMgr->processIMTypingStop(im_info);
 		}
-		else if (gRRenabled && message == "@getblacklist")
-		{
-			// return the contents of  the blacklist, without a filter
-			std::string my_name;
-			LLAgentUI::buildFullname(my_name);
-			std::string response = gAgent.mRRInterface.sBlacklist;
-			pack_instant_message(
-				gMessageSystem,
-				gAgent.getID(),
-				FALSE,
-				gAgent.getSessionID(),
-				from_id,
-				my_name.c_str(),
-				response.c_str(),
-				IM_ONLINE,
-				IM_DO_NOT_DISTURB_AUTO_RESPONSE,
-				session_id);
-			gAgent.sendReliableMessage();
-
-			// remove the "XXX is typing..." label from the IM window
-			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
-			gIMMgr->processIMTypingStop(im_info);
-		}
 //mk
 		else if (from_id.isNull())
 		{
@@ -2807,6 +2782,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			}
 //mk
 
+			LL_INFOS("Messaging") << "process_improved_im: session_id( " << session_id << " ), from_id( " << from_id << " )" << LL_ENDL;
 
 			bool mute_im = is_muted;
 			if(accept_im_from_only_friend && !is_friend && !is_linden)
@@ -3559,22 +3535,6 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 				{
 					message = "(Hidden)";
 				}
-				
-				if (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", from_id.asString())
-					|| gAgent.mRRInterface.contains ("recvimfrom:"+from_id.asString())))
-				{
-					message = "(Hidden)";
-				}
-				
-				if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
-				{
-					message = "(Hidden)";
-				}
-				
-				if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
-				{
-					message = "(Hidden)";
-				}
 
 				if (gRRenabled && dialog == IM_LURE_USER && auto_accept)
 				{
@@ -4019,16 +3979,16 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	LLUUID		from_id;
 	LLUUID		owner_id;
 	LLViewerObject*	chatter;
-	//MK
+//MK
 	BOOL twirly = FALSE;
-	//mk
+//mk
 
 	msg->getString("ChatData", "FromName", from_name);
 
 	msg->getUUID("ChatData", "SourceID", from_id);
 	chat.mFromID = from_id;
 
-	//MK
+//MK
 	// We need to suppress the slurl before adding it to the chat history, so we cannot retrive it with a right-click
 	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 	{
@@ -4037,7 +3997,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			chat.mFromID = LLUUID::null;
 		}
 	}
-	//mk
+//mk
 
 	// Object owner for objects
 	msg->getUUID("ChatData", "OwnerID", owner_id);
@@ -4071,16 +4031,16 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	}
 	else
 	{
-		//MK
+//MK
 		// Let's allow empty names actually. We used to allow them and some scripts are still relying on that feature.
 		// Forbidding them now breaks such scripts. FYI this code was added in rev cca6fde77183 for MAINT-3621.
-		////		// make sure that we don't have an empty or all-whitespace name
-		////		LLStringUtil::trim(from_name);
-		////		if (from_name.empty())
-		////		{
-		////			from_name = LLTrans::getString("Unnamed");
-		////		}
-		//mk
+////		// make sure that we don't have an empty or all-whitespace name
+////		LLStringUtil::trim(from_name);
+////		if (from_name.empty())
+////		{
+////			from_name = LLTrans::getString("Unnamed");
+////		}
+//mk
 		chat.mFromName = from_name;
 	}
 
@@ -4091,7 +4051,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	is_muted = LLMuteList::getInstance()->isMuted(
 		from_id,
 		from_name,
-		LLMute::flagTextChat)
+		LLMute::flagTextChat) 
 		|| LLMuteList::getInstance()->isMuted(owner_id, LLMute::flagTextChat);
 	is_linden = chat.mSourceType != CHAT_SOURCE_OBJECT &&
 		LLMuteList::getInstance()->isLinden(from_name);
@@ -4105,7 +4065,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 	chatter = gObjectList.findObject(from_id);
 	if (chatter)
 	{
-		//MK
+//MK
 		// If this is an object but its name is equal to its owner's user name or diplay name
 		// and if the debug setting is set right, then show the chat like it were said by the owner
 		if (chat.mSourceType == CHAT_SOURCE_OBJECT)
@@ -4136,32 +4096,32 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				}
 			}
 		}
-		//mk
+//mk
 
 		chat.mPosAgent = chatter->getPositionAgent();
 
 		// Make swirly things only for talking objects. (not script debug messages, though)
-		if (chat.mSourceType == CHAT_SOURCE_OBJECT
+		if (chat.mSourceType == CHAT_SOURCE_OBJECT 
 			&& chat.mChatType != CHAT_TYPE_DEBUG_MSG
-			&& gSavedSettings.getBOOL("EffectScriptChatParticles"))
+			&& gSavedSettings.getBOOL("EffectScriptChatParticles") )
 		{
-			//MK
-			////			LLPointer<LLViewerPartSourceChat> psc = new LLViewerPartSourceChat(chatter->getPositionAgent());
-			////			psc->setSourceObject(chatter);
-			////			psc->setColor(color);
-			////			//We set the particles to be owned by the object's owner, 
-			////			//just in case they should be muted by the mute list
-			////			psc->setOwnerUUID(owner_id);
-			////			LLViewerPartSim::getInstance()->addPartSource(psc);
+//MK
+////			LLPointer<LLViewerPartSourceChat> psc = new LLViewerPartSourceChat(chatter->getPositionAgent());
+////			psc->setSourceObject(chatter);
+////			psc->setColor(color);
+////			//We set the particles to be owned by the object's owner, 
+////			//just in case they should be muted by the mute list
+////			psc->setOwnerUUID(owner_id);
+////			LLViewerPartSim::getInstance()->addPartSource(psc);
 			twirly = TRUE;
-			//mk
+//mk
 		}
 
 		// record last audible utterance
 		if (is_audible
 			&& (is_linden || (!is_muted && !is_do_not_disturb)))
 		{
-			if (chat.mChatType != CHAT_TYPE_START
+			if (chat.mChatType != CHAT_TYPE_START 
 				&& chat.mChatType != CHAT_TYPE_STOP)
 			{
 				gAgent.heardChat(chat.mFromID);
@@ -4171,15 +4131,15 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 
 	if (is_audible)
 	{
-		//MK
+//MK
 		std::string verb;
-		//mk
+//mk
 
-		color.setVec(1.f, 1.f, 1.f, 1.f);
+		color.setVec(1.f,1.f,1.f,1.f);
 		msg->getStringFast(_PREHASH_ChatData, _PREHASH_Message, mesg);
 
 		BOOL ircstyle = FALSE;
-		//MK
+//MK
 		bool is_rlv_msg = (mesg.length() > 0 && mesg.at(0) == '@');
 		if (gRRenabled 
 			&& (chat.mChatType != CHAT_TYPE_OWNER || !is_rlv_msg) // crunch llOwnerSay but leave RLV commands alone
@@ -4234,30 +4194,31 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 									|| from_name == av_name.mLegacyFirstName
 									|| from_name == av_name.mLegacyLastName
 									)
-							{
+								{
 									from_name = gAgent.mRRInterface.getDummyName(from_name, chat.mAudible);
+								}
 							}
 						}
 					}
-				}
-				// also scramble the name of the chatter (replace with a dummy name)
+					// also scramble the name of the chatter (replace with a dummy name)
 					if (chatter && chatter->isAvatar())
-				{
-					std::string uuid_str = chatter->getID().asString();
-					LLStringUtil::toLower(uuid_str);
-					if (gAgent.mRRInterface.containsWithoutException("shownames", uuid_str))
 					{
-						from_name = gAgent.mRRInterface.getDummyName(from_name, chat.mAudible);
+						std::string uuid_str = chatter->getID().asString();
+						LLStringUtil::toLower(uuid_str);
+						if (gAgent.mRRInterface.containsWithoutException("shownames", uuid_str))
+						{
+							from_name = gAgent.mRRInterface.getDummyName(from_name, chat.mAudible);
+						}
 					}
-				}
-				else
-				{
+					else
+					{
 						from_name = gAgent.mRRInterface.getCensoredMessage(from_name);
-				}
+					}
 					chat.mFromName = from_name;
+				}
 			}
 		}
-		//mk
+//mk
 		// Look for IRC-style emotes here so chatbubbles work
 		std::string prefix = mesg.substr(0, 4);
 		if (prefix == "/me " || prefix == "/me'")
@@ -4274,9 +4235,9 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			// Might not have the avatar constructed yet, eg on login.
 			if (chatter && chatter->isAvatar())
 			{
-				//MK
-				//		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
-				//mk
+//MK
+//		if (!gRRenabled || !gAgent.mRRInterface.containsSubstr ("redirchat:"))
+//mk
 				((LLVOAvatar*)chatter)->startTyping();
 			}
 			return;
@@ -4304,18 +4265,18 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		else
 		{
 			chat.mText = "";
-			switch (chat.mChatType)
+			switch(chat.mChatType)
 			{
 			case CHAT_TYPE_WHISPER:
 				chat.mText = LLTrans::getString("whisper") + " ";
 				break;
 			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_OWNER:
-				//MK
-				// This is the actual handling of the commands sent by owned objects.
+//MK
+			// This is the actual handling of the commands sent by owned objects.
 			{
 				std::string mesg_str(mesg);
-				if (gRRenabled && mesg_str.substr(0, 1) == RR_PREFIX)
+				if (gRRenabled && mesg_str.substr (0, 1) == RR_PREFIX)
 				{
 					std::string command = mesg_str.substr(1, mesg_str.length());
 					LLStringUtil::toLower(command);
@@ -4325,7 +4286,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 					//{
 					//	obj_id = object->getRootEdit()->getID();
 					//}
-					if (gAgent.mRRInterface.handleCommand(obj_id, command))
+					if (gAgent.mRRInterface.handleCommand (obj_id, command))
 					{
 						if (!gSavedSettings.getBOOL("RestrainedLoveDebug"))
 						{
@@ -4338,33 +4299,33 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 						verb = " fails command: ";
 					}
 				}
-				//				else if (gRRenabled && mesg_str.length() >= 2 && mesg_str.substr (0, 2) == "\t") // this is a remark, only visible to non-RLV users
-				//				{
-				//					return;
-				//				}
+//				else if (gRRenabled && mesg_str.length() >= 2 && mesg_str.substr (0, 2) == "\t") // this is a remark, only visible to non-RLV users
+//				{
+//					return;
+//				}
 				else
 				{
 					if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 					{
 						// hide every occurrence of the Parcel name if the location restriction is active
-						mesg = gAgent.mRRInterface.stringReplace(mesg,
-							gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
+						mesg = gAgent.mRRInterface.stringReplace (mesg, 
+								gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 						// hide every occurrence of the Region name if the location restriction is active
-						if (gAgent.getRegion()) mesg = gAgent.mRRInterface.stringReplace(mesg, gAgent.getRegion()->getName(), "(Region hidden)");
+						if (gAgent.getRegion()) mesg = gAgent.mRRInterface.stringReplace (mesg, gAgent.getRegion()->getName(), "(Region hidden)");
 					}
-
+					
 					if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 					{
-						mesg = gAgent.mRRInterface.getCensoredMessage(mesg);
-						from_name = gAgent.mRRInterface.getCensoredMessage(from_name);
-						chat.mFromName = from_name;
+						mesg = gAgent.mRRInterface.getCensoredMessage (mesg);
+						from_name = gAgent.mRRInterface.getCensoredMessage (from_name);
+						chat.mFromName = from_name;				
 					}
 
 					verb = ": ";
 				}
 				break;
 			}
-			//mk
+//mk
 			case CHAT_TYPE_NORMAL:
 			case CHAT_TYPE_DIRECT:
 				break;
@@ -4381,7 +4342,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			}
 
 
-			//MK
+//MK
 			if (gRRenabled)
 			{
 				// censor object chat but not avatar chat
@@ -4389,30 +4350,30 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				{
 					if (gAgent.mRRInterface.mContainsShowloc)
 					{
-						//						if (chat.mChatType == CHAT_TYPE_NORMAL || chat.mChatType == CHAT_TYPE_SHOUT
-						//							|| chat.mChatType == CHAT_TYPE_WHISPER)
+//						if (chat.mChatType == CHAT_TYPE_NORMAL || chat.mChatType == CHAT_TYPE_SHOUT
+//							|| chat.mChatType == CHAT_TYPE_WHISPER)
 						{
 							// hide every occurrence of the Parcel name if the location restriction is active
-							mesg = gAgent.mRRInterface.stringReplace(mesg,
-								gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
+							mesg = gAgent.mRRInterface.stringReplace (mesg, 
+									gAgent.mRRInterface.mParcelName, "(Parcel hidden)");
 							// hide every occurrence of the Region name if the location restriction is active
-							if (gAgent.getRegion()) mesg = gAgent.mRRInterface.stringReplace(mesg, gAgent.getRegion()->getName(), "(Region hidden)");
+							if (gAgent.getRegion()) mesg = gAgent.mRRInterface.stringReplace (mesg, gAgent.getRegion()->getName(), "(Region hidden)");
 						}
 					}
 
 					if (gAgent.mRRInterface.mContainsShownames)
 					{
-						mesg = gAgent.mRRInterface.getCensoredMessage(mesg);
+						mesg = gAgent.mRRInterface.getCensoredMessage (mesg);
 					}
 				}
 			}
-			////			chat.mText = "";
-			//mk
+////			chat.mText = "";
+//mk
 			chat.mText += verb;
 			chat.mText += mesg;
 		}
-
-		//MK
+		
+//MK
 		if (twirly)
 		{
 			LLPointer<LLViewerPartSourceChat> psc = new LLViewerPartSourceChat(chatter->getPositionAgent());
@@ -4423,14 +4384,14 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			psc->setOwnerUUID(owner_id);
 			LLViewerPartSim::getInstance()->addPartSource(psc);
 		}
-		//mk		
+//mk		
 
 		// We have a real utterance now, so can stop showing "..." and proceed.
 		if (chatter && chatter->isAvatar())
 		{
 			LLLocalSpeakerMgr::getInstance()->setSpeakerTyping(from_id, FALSE);
 			((LLVOAvatar*)chatter)->stopTyping();
-
+			
 			if (!is_muted && !is_do_not_disturb)
 			{
 				//visible_in_chat_bubble = gSavedSettings.getBOOL("UseChatBubbles");
@@ -4441,7 +4402,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				((LLVOAvatar*)chatter)->addChat(chat_bubble);
 			}
 		}
-
+		
 		if (chatter)
 		{
 			chat.mPosAgent = chatter->getPositionAgent();
@@ -4475,9 +4436,9 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			const std::string from_lang = ""; // leave empty to trigger autodetect
 			const std::string to_lang = LLTranslate::getTranslateLanguage();
 
-			LLTranslate::translateMessage(from_lang, to_lang, mesg,
-				boost::bind(&translateSuccess, chat, args, mesg, from_lang, _1, _2),
-				boost::bind(&translateFailure, chat, args, _1, _2));
+            LLTranslate::translateMessage(from_lang, to_lang, mesg,
+                boost::bind(&translateSuccess, chat, args, mesg, from_lang, _1, _2),
+                boost::bind(&translateFailure, chat, args, _1, _2));
 
 		}
 		else
@@ -4496,14 +4457,16 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 
 		if (mesg != "")
 		{
-			LLSD msg_notify = LLSD(LLSD::emptyMap());
-			msg_notify["session_id"] = LLUUID();
-			msg_notify["from_id"] = chat.mFromID;
-			msg_notify["source_type"] = chat.mSourceType;
-			on_new_message(msg_notify);
-		}
+		LLSD msg_notify = LLSD(LLSD::emptyMap());
+		msg_notify["session_id"] = LLUUID();
+        msg_notify["from_id"] = chat.mFromID;
+		msg_notify["source_type"] = chat.mSourceType;
+        on_new_message(msg_notify);
+	}
+
 	}
 }
+
 
 // Simulator we're on is informing the viewer that the agent
 // is starting to teleport (perhaps to another sim, perhaps to the 
@@ -7872,15 +7835,6 @@ void process_teleport_local(LLMessageSystem *msg,void**)
 	////	gAgentCamera.resetView(TRUE, TRUE);
 	////}
 //mk
-	if ( !gRRenabled )
-	{
-		if ( !(gAgent.getTeleportKeepsLookAt() && LLViewerJoystick::getInstance()->getOverrideCamera()) )
-		{
-			gAgentCamera.resetView(TRUE, TRUE);
-		}
-	}
-
-
 	// send camera update to new region
 	gAgentCamera.updateCamera();
 
