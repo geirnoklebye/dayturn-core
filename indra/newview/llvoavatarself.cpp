@@ -497,6 +497,10 @@ BOOL LLVOAvatarSelf::buildMenus()
 	pieParams.label(LLTrans::getString("BodyPartsRightLeg"));
 	pieParams.name(pieParams.label);
 	gPieDetachBodyPartMenus[7] = LLUICtrlFactory::create<PieMenu> (pieParams);
+
+    pieParams.label(LLTrans::getString("BodyPartsEnhancedSkeleton"));
+    pieParams.name(pieParams.label);
+    gPieDetachBodyPartMenus[8] = LLUICtrlFactory::create<PieMenu>(pieParams);
 // ## Zi: Pie menu
 
 	for (S32 i = 0; i < 9; i++)
@@ -770,7 +774,7 @@ BOOL LLVOAvatarSelf::buildMenus()
 				item_params.on_enable.parameter = attach_index;
 				item = LLUICtrlFactory::create<LLMenuItemCallGL>(item_params);
 				gDetachBodyPartPieMenus[group]->addChild(item);
-
+#if 0
 				// ## Zi: Pie menu
 				PieSlice::Params slice_params;
 				slice_params.name = attachment->getName();
@@ -781,7 +785,8 @@ BOOL LLVOAvatarSelf::buildMenus()
 				slice_params.on_enable.parameter = attach_index;
 
 				PieSlice* slice = LLUICtrlFactory::create<PieSlice>(slice_params);
-				gPieAttachBodyPartMenus[group]->addChild(slice);
+
+                gPieAttachBodyPartMenus[group]->addChild(slice);
 
 				slice_params.on_click.function_name = "Attachment.DetachFromPoint";
 				slice_params.on_click.parameter = attach_index;
@@ -790,6 +795,7 @@ BOOL LLVOAvatarSelf::buildMenus()
 				slice = LLUICtrlFactory::create<PieSlice>(slice_params);
 				gPieDetachBodyPartMenus[group]->addChild(slice);
 				// ## Zi: Pie menu
+#endif
 			}
 		}
 	}
