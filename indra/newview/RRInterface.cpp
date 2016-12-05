@@ -1644,6 +1644,7 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 			option = option.substr(0, ind); // keep the coordinates only
 		}
 		BOOL allowed_to_tploc = TRUE;
+		BOOL allowed_to_tplocal = TRUE;
 		BOOL allowed_to_unsit=TRUE;
 		BOOL allowed_to_sittp=TRUE;
 		BOOL res;
@@ -1651,7 +1652,11 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 			allowed_to_tploc=FALSE;
 			remove (object_uuid, "tploc", "");
 		}
-		if (!isAllowed (object_uuid, "unsit")) {
+		if (!isAllowed(object_uuid, "tplocal")) {
+			allowed_to_tplocal = FALSE;
+			remove(object_uuid, "tplocal", "");
+		}
+		if (!isAllowed(object_uuid, "unsit")) {
 			allowed_to_unsit=FALSE;
 			remove (object_uuid, "unsit", "");
 		}
@@ -1660,7 +1665,8 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 			remove (object_uuid, "sittp", "");
 		}
 		res = forceTeleport(option, vecLookAt);
-		if (!allowed_to_tploc) add (object_uuid, "tploc", "");
+		if (!allowed_to_tploc) add(object_uuid, "tploc", "");
+		if (!allowed_to_tplocal) add(object_uuid, "tplocal", "");
 		if (!allowed_to_unsit) add (object_uuid, "unsit", "");
 		if (!allowed_to_sittp) add (object_uuid, "sittp", "");
 		return res;
