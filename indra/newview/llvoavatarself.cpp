@@ -774,7 +774,6 @@ BOOL LLVOAvatarSelf::buildMenus()
 				item_params.on_enable.parameter = attach_index;
 				item = LLUICtrlFactory::create<LLMenuItemCallGL>(item_params);
 				gDetachBodyPartPieMenus[group]->addChild(item);
-#if 0
 				// ## Zi: Pie menu
 				PieSlice::Params slice_params;
 				slice_params.name = attachment->getName();
@@ -795,7 +794,7 @@ BOOL LLVOAvatarSelf::buildMenus()
 				slice = LLUICtrlFactory::create<PieSlice>(slice_params);
 				gPieDetachBodyPartMenus[group]->addChild(slice);
 				// ## Zi: Pie menu
-#endif
+
 			}
 		}
 	}
