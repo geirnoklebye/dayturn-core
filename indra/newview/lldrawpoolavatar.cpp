@@ -497,6 +497,8 @@ void LLDrawPoolAvatar::renderShadow(S32 pass)
 	{
 		avatarp->renderSkinned();
 	}
+//Nicky Bento
+#if 0
 //MK from CY
 	else if (RestrainedLoveAvatarShadows == 1)
 	{
@@ -509,6 +511,7 @@ void LLDrawPoolAvatar::renderShadow(S32 pass)
 		renderRiggedShadows (avatarp);
 	}
 //mk from cy
+#endif
 	else
 	{
 		for (U32 i = 0; i < NUM_RIGGED_PASSES; ++i)
@@ -1955,6 +1958,8 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 	}
 }
 
+//Nicky Bento
+#if 0
 // MK from CY - Faster Avatar Shadows
 void LLDrawPoolAvatar::renderRiggedShadows(LLVOAvatar* avatar)
 {
@@ -2117,6 +2122,7 @@ void LLDrawPoolAvatar::renderRiggedShadows(LLVOAvatar* avatar)
 	}
 }
 //mk from cy
+#endif
 
 void LLDrawPoolAvatar::renderDeferredRiggedSimple(LLVOAvatar* avatar)
 {
