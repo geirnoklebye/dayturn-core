@@ -4151,6 +4151,9 @@ This feature is currently in Beta. Please add your name to this [http://goo.gl/f
 //MK
     <string name="Root">Root</string>
 //mk
+    <string name="Left Ring Finger">Left Ring Finger</string>
+    <string name="Right Ring Finger">Right Ring Finger</string>
+    <string name="Tail Base">Tail Base</string>
     <string name="Tail Tip">Tail Tip</string>
     <string name="Left Wing">Left Wing</string>
     <string name="Right Wing">Right Wing</string>
