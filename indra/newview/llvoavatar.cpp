@@ -8299,6 +8299,7 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 
 	LLPointer<LLAppearanceMessageContents> contents(new LLAppearanceMessageContents);
 	parseAppearanceMessage(mesgsys, *contents);
+    static LLCachedControl<bool> enable_verbose_dumps(gSavedSettings, "DebugAvatarAppearanceMessage", false);
 	if (enable_verbose_dumps)
 	{
 		dumpAppearanceMsgParams(dump_prefix + "appearance_msg", *contents);
@@ -8363,6 +8364,9 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 	// RequestAgentUpdateAppearanceResponder::onRequestRequested()
 	// assumes that cof version is only updated with server-bake
 	// appearance messages.
+    LL_INFOS("Avatar") << "Processing appearance message version " << thisAppearanceVersion << LL_ENDL;
+    if (appearance_version > 0)
+    {
     // Note:
     // locally the COF is maintained via LLInventoryModel::accountForUpdate
     // which is called from various places.  This should match the simhost's 
