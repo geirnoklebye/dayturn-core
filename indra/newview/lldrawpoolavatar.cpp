@@ -2011,9 +2011,9 @@ void LLDrawPoolAvatar::renderRiggedShadows(LLVOAvatar* avatar)
 		{
 			if (sShaderLevel > 0)
 			{ //upload matrix palette to shader
-				LLMatrix4 mat[JOINT_COUNT];
+				LLMatrix4 mat[LL_MAX_JOINTS_PER_MESH_OBJECT];
 
-				U32 count = llmin((U32)skin->mJointNames.size(), (U32)JOINT_COUNT);
+				U32 count = llmin((U32)skin->mJointNames.size(), (U32)LL_MAX_JOINTS_PER_MESH_OBJECT);
 
 				for (U32 i = 0; i < count; ++i)
 				{
@@ -2027,9 +2027,9 @@ void LLDrawPoolAvatar::renderRiggedShadows(LLVOAvatar* avatar)
 
 				stop_glerror();
 
-				F32 mp[JOINT_COUNT * 9];
+				F32 mp[LL_MAX_JOINTS_PER_MESH_OBJECT * 9];
 
-				F32 transp[JOINT_COUNT * 3];
+				F32 transp[LL_MAX_JOINTS_PER_MESH_OBJECT * 3];
 
 				for (U32 i = 0; i < count; ++i)
 				{
