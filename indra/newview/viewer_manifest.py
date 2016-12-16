@@ -41,7 +41,10 @@ viewer_dir = os.path.dirname(__file__)
 # indra.util.llmanifest under their system Python!
 sys.path.insert(0, os.path.join(viewer_dir, os.pardir, "lib", "python"))
 from indra.util.llmanifest import LLManifest, main, path_ancestors, CHANNEL_VENDOR_BASE, RELEASE_CHANNEL, ManifestError
-from llbase import llsd
+try:
+    from llbase import llsd
+except ImportError:
+    from indra.base import llsd
 
 class ViewerManifest(LLManifest):
     def is_packaging_viewer(self):
