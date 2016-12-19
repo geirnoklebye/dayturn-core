@@ -51,16 +51,19 @@ if(WINDOWS)
         )
 
     if(USE_TCMALLOC)
-
       set(debug_files ${debug_files} libtcmalloc_minimal-debug.dll)
       set(release_files ${release_files} libtcmalloc_minimal.dll)
     endif(USE_TCMALLOC)
 
-    if (FMODEX)
-      set(debug_files ${debug_files} fmodexL.dll)
-      set(release_files ${release_files} fmodex.dll)
-    endif (FMODEX)
-
+    if(FMODEX)
+        if( ADDRESS_SIZE EQUAL 32 )
+          set(release_files ${release_files} fmodex.dll)
+          set(debug_files ${debug_files} fmodexL.dll)
+        else( ADDRESS_SIZE EQUAL 32 )
+          set(release_files ${release_files} fmodex64.dll)
+          set(debug_files ${debug_files} fmodexL64.dll)
+        endif(ADDRESS_SIZE EQUAL 32)
+    endif(FMODEX)
     #*******************************
     # Copy MS C runtime dlls, required for packaging.
     # *TODO - Adapt this to support VC9
