@@ -2332,9 +2332,7 @@ void LLAgentCamera::changeCameraToThirdPerson(BOOL animate)
 
 	// unpause avatar animation
 	gAgent.unpauseAnimation();
-//MK
-////	if (mCameraMode != CAMERA_MODE_THIRD_PERSON)
-//mk
+	if (mCameraMode != CAMERA_MODE_THIRD_PERSON)
 	{
 		if (gBasicToolset)
 		{
