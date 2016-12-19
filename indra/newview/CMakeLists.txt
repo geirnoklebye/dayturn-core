@@ -1750,11 +1750,19 @@ if (WINDOWS)
       )
 
     if (FMODEX)
-      list(APPEND COPY_INPUT_DEPENDENCIES
-           ${SHARED_LIB_STAGING_DIR}/Release/fmodex.dll
-           ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex.dll
-           ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL.dll
-          )
+        if ( ADDRESS_SIZE EQUAL 32 )
+                list(APPEND COPY_INPUT_DEPENDENCIES
+                   ${SHARED_LIB_STAGING_DIR}/Release/fmodex.dll
+                   ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex.dll
+                   ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL.dll
+                  )
+        elseif( ADDRESS_SIZE EQUAL 64 )
+                list(APPEND COPY_INPUT_DEPENDENCIES
+                   ${SHARED_LIB_STAGING_DIR}/Release/fmodex64.dll
+                   ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex64.dll
+                   ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL64.dll
+                  )
+        endif ( ADDRESS_SIZE EQUAL 32 )
     endif (FMODEX)
     
     add_custom_command(
