@@ -41,10 +41,7 @@ viewer_dir = os.path.dirname(__file__)
 # indra.util.llmanifest under their system Python!
 sys.path.insert(0, os.path.join(viewer_dir, os.pardir, "lib", "python"))
 from indra.util.llmanifest import LLManifest, main, path_ancestors, CHANNEL_VENDOR_BASE, RELEASE_CHANNEL, ManifestError
-try:
-    from llbase import llsd
-except ImportError:
-    from indra.base import llsd
+from llbase import llsd
 
 class ViewerManifest(LLManifest):
     def is_packaging_viewer(self):
@@ -281,7 +278,8 @@ class ViewerManifest(LLManifest):
         random.shuffle(names)
         return ', '.join(names)
 
-class Windows_i686_Manifest(ViewerManifest):
+
+class WindowsManifest(ViewerManifest):
     def final_exe(self):
         return self.app_name_oneword()+".exe"
 #    def final_exe(self):
@@ -340,7 +338,7 @@ class Windows_i686_Manifest(ViewerManifest):
             print "Doesn't exist:", src
         
     def construct(self):
-        super(Windows_i686_Manifest, self).construct()
+        super(WindowsManifest, self).construct()
 
         pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
         relpkgdir = os.path.join(pkgdir, "lib", "release")
@@ -380,18 +378,15 @@ class Windows_i686_Manifest(ViewerManifest):
 
             # Get fmodex dll, continue if missing
             try:
-                if self.args['configuration'].lower() == 'debug':
-                    self.path("fmodexL.dll")
+                if(self.args['arch'].lower() == 'x86_64'):
+                    self.path("fmodex64.dll")
                 else:
                     self.path("fmodex.dll")
             except:
                 print "Skipping fmodex audio library(assuming other audio engine)"
 
             # For textures
-            if self.args['configuration'].lower() == 'debug':
-                self.path("openjpegd.dll")
-            else:
-                self.path("openjpeg.dll")
+            self.path("openjpeg.dll")
 
             # These need to be installed as a SxS assembly, currently a 'private' assembly.
             # See http://msdn.microsoft.com/en-us/library/ms235291(VS.80).aspx
@@ -463,11 +458,6 @@ class Windows_i686_Manifest(ViewerManifest):
                 print "Skipping media_plugin_gstreamer010.dll" 
             self.end_prefix()
 
-        # Media plugins - QuickTime
-        if self.prefix(src='../media_plugins/quicktime/%s' % self.args['configuration'], dst="llplugin"):
-           self.path("media_plugin_quicktime.dll")
-           self.end_prefix()
-
         # Media plugins - CEF
         if self.prefix(src='../media_plugins/cef/%s' % self.args['configuration'], dst="llplugin"):
             self.path("media_plugin_cef.dll")
@@ -476,11 +466,6 @@ class Windows_i686_Manifest(ViewerManifest):
         # Media plugins - LibVLC
         if self.prefix(src='../media_plugins/libvlc/%s' % self.args['configuration'], dst="llplugin"):
             self.path("media_plugin_libvlc.dll")
-            self.end_prefix()
-
-        # winmm.dll shim
-        if self.prefix(src='../media_plugins/winmmshim/%s' % self.args['configuration'], dst=""):
-            self.path("winmm.dll")
             self.end_prefix()
 
         # CEF runtime files - debug
@@ -700,7 +685,7 @@ class Windows_i686_Manifest(ViewerManifest):
         while (not installer_created) and (nsis_attempts > 0):
             try:
                 nsis_attempts-=1;
-                self.run_command('"' + NSIS_path + '" ' + self.dst_path_of(tempfile))
+                self.run_command('"' + NSIS_path + '" /V2 ' + self.dst_path_of(tempfile))
                 installer_created=True # if no exception was raised, the codesign worked
             except ManifestError, err:
                 if nsis_attempts:
@@ -728,7 +713,17 @@ class Windows_i686_Manifest(ViewerManifest):
         self.package_file = installer_file
 
 
-class Darwin_i386_Manifest(ViewerManifest):
+class Windows_i686_Manifest(WindowsManifest):
+    # specialize when we must
+    pass
+
+
+class Windows_x86_64_Manifest(WindowsManifest):
+    # specialize when we must
+    pass
+
+
+class DarwinManifest(ViewerManifest):
     def is_packaging_viewer(self):
         # darwin requires full app bundle packaging even for debugging.
         return True
@@ -761,7 +756,7 @@ class Darwin_i386_Manifest(ViewerManifest):
 
             # most everything goes in the Resources directory
             if self.prefix(src="", dst="Resources"):
-                super(Darwin_i386_Manifest, self).construct()
+                super(DarwinManifest, self).construct()
 
                 if self.prefix("cursors_mac"):
                     self.path("*.tif")
@@ -1108,6 +1103,20 @@ class Darwin_i386_Manifest(ViewerManifest):
         # get rid of the temp file
         self.package_file = finalname
         self.remove(sparsename)
+
+
+class Darwin_i386_Manifest(DarwinManifest):
+    pass
+
+
+class Darwin_i686_Manifest(DarwinManifest):
+    """alias in case arch is passed as i686 instead of i386"""
+    pass
+
+
+class Darwin_x86_64_Manifest(DarwinManifest):
+    pass
+
 
 class LinuxManifest(ViewerManifest):
     def construct(self):

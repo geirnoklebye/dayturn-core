@@ -2,16 +2,28 @@
 #
 # Compilation options shared by all Kokua components.
 
+#*****************************************************************************
+#   It's important to realize that CMake implicitly concatenates
+#   CMAKE_CXX_FLAGS with (e.g.) CMAKE_CXX_FLAGS_RELEASE for Release builds. So
+#   set switches in CMAKE_CXX_FLAGS that should affect all builds, but in
+#   CMAKE_CXX_FLAGS_RELEASE or CMAKE_CXX_FLAGS_RELWITHDEBINFO for switches
+#   that should affect only that build variant.
+#
+#   Also realize that CMAKE_CXX_FLAGS may already be partially populated on
+#   entry to this file.
+#*****************************************************************************
+
 if(NOT DEFINED ${CMAKE_CURRENT_LIST_FILE}_INCLUDED)
 set(${CMAKE_CURRENT_LIST_FILE}_INCLUDED "YES")
 
 include(Variables)
 
 # Portable compilation flags.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DADDRESS_SIZE=${ADDRESS_SIZE}")
+
 set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DLL_DEBUG=1")
 set(CMAKE_CXX_FLAGS_RELEASE
     "-DLL_RELEASE=1 -DLL_RELEASE_FOR_DOWNLOAD=1 -DNDEBUG") 
-
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 
     "-DLL_RELEASE=1 -DNDEBUG -DLL_RELEASE_WITH_DEBUG_INFO=1")
 
@@ -59,7 +71,7 @@ if (WINDOWS)
       "${CMAKE_CXX_FLAGS_RELEASE} ${LL_CXX_FLAGS} /Ox /Zi /Zo /MD /MP /Ob2 -D_SECURE_STL=0 -D_HAS_ITERATOR_DEBUGGING=0"
       CACHE STRING "C++ compiler release options" FORCE)
   # zlib has assembly-language object files incompatible with SAFESEH
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LARGEADDRESSAWARE /SAFESEH:NO /NODEFAULTLIB:LIBCMT")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LARGEADDRESSAWARE /SAFESEH:NO /NODEFAULTLIB:LIBCMT /IGNORE:4099")
 
   set(CMAKE_CXX_STANDARD_LIBRARIES "")
   set(CMAKE_C_STANDARD_LIBRARIES "")
@@ -78,9 +90,14 @@ if (WINDOWS)
       /nologo
       /Oy-
       /Zc:wchar_t-
-      /arch:SSE2
+#      /arch:SSE2
       /fp:fast
       )
+
+  # Nicky: x64 implies SSE2
+  if( ADDRESS_SIZE EQUAL 32 )
+    add_definitions( /arch:SSE2 )
+  endif()
      
   # Are we using the crummy Visual Studio KDU build workaround?
   if (NOT VS_DISABLE_FATAL_WARNINGS)
@@ -137,13 +154,6 @@ if (LINUX)
   # Let's actually get a numerical version of gxx's version
   STRING(REGEX REPLACE ".* ([0-9])\\.([0-9])\\.([0-9]).*" "\\1\\2\\3" CXX_VERSION_NUMBER ${CXX_VERSION})
 
-  # Hacks to work around gcc 4.1 TC build pool machines which can't process pragma warning disables
-  # This is pure rubbish; I wish there was another way.
-  #
-  if(${CXX_VERSION_NUMBER} LESS 420)
-    set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-uninitialized -Wno-unused-variable -Wno-unused-function ${CMAKE_CXX_FLAGS}")
-  endif (${CXX_VERSION_NUMBER} LESS 420)
-
   if(${CXX_VERSION_NUMBER} GREATER 459)
     set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-unused-but-set-variable -Wno-unused-variable ${CMAKE_CXX_FLAGS}")
   endif (${CXX_VERSION_NUMBER} GREATER 459)
@@ -183,11 +193,12 @@ if (LINUX)
   add_definitions(-fvisibility=hidden)
   # don't catch SIGCHLD in our base application class for the viewer - some of our 3rd party libs may need their *own* SIGCHLD handler to work.  Sigh!  The viewer doesn't need to catch SIGCHLD anyway.
   add_definitions(-DLL_IGNORE_SIGCHLD)
-    IF(${ARCH} STREQUAL "x86_64")
-      add_definitions(-march=x86-64 -mfpmath=sse)
-    ELSE(${ARCH} STREQUAL "x86_64")
+  if (ADDRESS_SIZE EQUAL 32)
+    add_definitions(-march=pentium4)
+  endif (ADDRESS_SIZE EQUAL 32)
        add_definitions(-march=pentium4 -mfpmath=sse)
     ENDIF(${ARCH} STREQUAL "x86_64")
+  add_definitions(-mfpmath=sse)
   #add_definitions(-ftree-vectorize) # THIS CRASHES GCC 3.1-3.2
   if (NOT USESYSTEMLIBS)
     # this stops us requiring a really recent glibc at runtime
@@ -212,7 +223,7 @@ endif (LINUX)
 
 if (DARWIN)
   add_definitions(-DLL_DARWIN=1)
-  set(CMAKE_CXX_LINK_FLAGS "-Wl,-no_compact_unwind -Wl,-headerpad_max_install_names,-search_paths_first")
+  set(CMAKE_CXX_LINK_FLAGS "-Wl,-headerpad_max_install_names,-search_paths_first")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_CXX_LINK_FLAGS}")
   set(DARWIN_extra_cstar_flags "-g -Wno-unused-local-typedef -Wno-deprecated-declarations")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DARWIN_extra_cstar_flags}")
@@ -223,8 +234,7 @@ if (DARWIN)
   set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O3 ${CMAKE_C_FLAGS_RELWITHDEBINFO}")
   set(CMAKE_CXX_FLAGS_RELEASE "-O3 ${CMAKE_CXX_FLAGS_RELEASE}")
   set(CMAKE_C_FLAGS_RELEASE "-O3 ${CMAKE_C_FLAGS_RELEASE}")  
-  set(ENABLE_SIGNING TRUE)
-  set(SIGNING_IDENTITY "Developer ID Application: Linden Research, Inc.")
+##set(SIGNING_IDENTITY "Developer ID Application: Linden Research, Inc.")
 endif (DARWIN)
 
 
@@ -255,22 +265,17 @@ if (LINUX OR DARWIN)
   set(CMAKE_C_FLAGS "${GCC_WARNINGS} ${CMAKE_C_FLAGS}")
   set(CMAKE_CXX_FLAGS "${GCC_CXX_WARNINGS} ${CMAKE_CXX_FLAGS}")
 
-  if (WORD_SIZE EQUAL 32)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
-  elseif (WORD_SIZE EQUAL 64)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64")
-  endif (WORD_SIZE EQUAL 32)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m${ADDRESS_SIZE}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m${ADDRESS_SIZE}")
 endif (LINUX OR DARWIN)
 
 
 if (USESYSTEMLIBS)
   add_definitions(-DLL_USESYSTEMLIBS=1)
 
-  if (LINUX AND ${ARCH} STREQUAL "i686")
+  if (LINUX AND ADDRESS_SIZE EQUAL 32)
     add_definitions(-march=pentiumpro)
-  endif (LINUX AND ${ARCH} STREQUAL "i686")
+  endif (LINUX AND ADDRESS_SIZE EQUAL 32)
 
 else (USESYSTEMLIBS)
 if (LINUX AND ${ARCH} STREQUAL "i686")

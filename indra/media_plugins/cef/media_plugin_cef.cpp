@@ -503,7 +503,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				settings.initial_height = 1024;
 #if !LL_LINUX
 //need to rebuild linux libraies
-				settings.page_zoom_factor = message_in.getValueReal("factor");
+				// member. Set below.
 #endif
 				settings.plugins_enabled = mPluginsEnabled;
 				settings.media_stream_enabled = false; // MAINT-6060 - WebRTC media removed until we can add granualrity/query UI
@@ -520,6 +520,9 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				{
 					// if this fails, the media system in viewer will put up a message
 				}
+
+				// now we can set page zoom factor
+				mLLCEFLib->setPageZoom(message_in.getValueReal("factor"));
 
 				// Plugin gets to decide the texture parameters to use.
 				mDepth = 4;

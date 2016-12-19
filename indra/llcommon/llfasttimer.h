@@ -90,33 +90,15 @@ public:
 #if LL_FASTTIMER_USE_RDTSC
 	static U32 getCPUClockCount32()
 	{
-		U32 ret_val;
-		__asm
-		{
-			_emit   0x0f
-				_emit   0x31
-				shr eax,8
-				shl edx,24
-				or eax, edx
-				mov dword ptr [ret_val], eax
-		}
-		return ret_val;
+		unsigned __int64 val = __rdtsc();
+		val = val >> 8;
+		return static_cast<U32>(val);
 	}
 
 	// return full timer value, *not* shifted by 8 bits
 	static U64 getCPUClockCount64()
 	{
-		U64 ret_val;
-		__asm
-		{
-			_emit   0x0f
-				_emit   0x31
-				mov eax,eax
-				mov edx,edx
-				mov dword ptr [ret_val+4], edx
-				mov dword ptr [ret_val], eax
-		}
-		return ret_val;
+		return static_cast<U64>( __rdtsc() );
 	}
 
 #else
@@ -179,9 +161,9 @@ public:
 	// Mac+Linux+Solaris FAST x86 implementation of CPU clock
 	static U32 getCPUClockCount32()
 	{
-		// <FS:ND> Proper RDTSC timings for Linux/Mac
-
-		// U64 x;
+		U32 low(0),high(0);
+		__asm__ volatile (".byte 0x0f, 0x31": "=a"(low), "=d"(high) );
+		return (low>>8) | (high<<24);
 		// __asm__ volatile (".byte 0x0f, 0x31": "=A"(x));
 		// return (U32)(x >> 8);
 
@@ -194,9 +176,9 @@ public:
 
 	static U64 getCPUClockCount64()
 	{
-		// <FS:ND> Proper RDTSC timings for Linux/Mac
-
-		// U64 x;
+		U32 low(0),high(0);
+		__asm__ volatile (".byte 0x0f, 0x31": "=a"(low), "=d"(high) );
+		return (U64)low | ( ((U64)high) << 32);
 		// __asm__ volatile (".byte 0x0f, 0x31": "=A"(x));
 		// return x;
 
