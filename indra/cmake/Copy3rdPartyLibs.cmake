@@ -30,6 +30,8 @@ if(WINDOWS)
     #*******************************
     # Misc shared libs 
 
+    set(debug_src_dir "${ARCH_PREBUILT_DIRS_DEBUG}")
+    set(debug_files
  #       alut.dll
  #       openal32.dll
         openjpegd.dll
@@ -42,6 +44,9 @@ if(WINDOWS)
         libhunspell.dll
         # gstreamer dlls - not plugins
         # Place holder
+
+
+        )
 
 
 

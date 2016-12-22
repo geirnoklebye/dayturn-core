@@ -591,7 +591,7 @@ char* LLPrivateMemoryPool::LLMemoryBlock::allocate()
 void  LLPrivateMemoryPool::LLMemoryBlock::freeMem(void* addr) 
 {
 	//bit index
-	uintptr_t idx = ((uintptr_t)addr - (uintptr_t)mBuffer - mDummySize) / mSlotSize ;
+	//	U32 idx = ((U32)addr - (U32)mBuffer - mDummySize) / mSlotSize ;
 	//<ND> 64 bit fix
 	unsigned char *p1 = reinterpret_cast<unsigned char*>(addr);
 	unsigned char *p2 = reinterpret_cast<unsigned char*>(mBuffer);
@@ -779,7 +779,7 @@ char* LLPrivateMemoryPool::LLMemoryChunk::allocate(U32 size)
 void LLPrivateMemoryPool::LLMemoryChunk::freeMem(void* addr)
 {	
 #if (LL_LINUX) && defined(__amd64__)
-		U32 blk_idx = getPageIndex((uintptr_t)addr) ;
+		U32 blk_idx = getPageIndex(/*<ND/> 64 bit fix (U32)*/addr) ;
 #else
 		U32 blk_idx = getPageIndex((U32)addr) ;
 #endif
@@ -816,6 +816,7 @@ bool LLPrivateMemoryPool::LLMemoryChunk::containsAddress(const char* addr) const
 	return pBuffer <= pAddr && pBuffer + mBufferSize > pAddr ;
 	//</ND>
 #else
+	return (U32)mBuffer <= (U32)addr && (U32)mBuffer + mBufferSize > (U32)addr ;
 #endif
 }
 
@@ -849,7 +850,7 @@ void LLPrivateMemoryPool::LLMemoryChunk::dump()
 	for(U32 i = 1 ; i < blk_list.size(); i++)
 	{
 		total_size += blk_list[i]->getBufferSize() ;
-		if((uintptr_t)blk_list[i]->getBuffer() < (uintptr_t)blk_list[i-1]->getBuffer() + blk_list[i-1]->getBufferSize())
+		if((U32)blk_list[i]->getBuffer() < (U32)blk_list[i-1]->getBuffer() + blk_list[i-1]->getBufferSize())
 		{
 			LL_ERRS() << "buffer corrupted." << LL_ENDL ;
 		}
@@ -1177,6 +1178,7 @@ void LLPrivateMemoryPool::LLMemoryChunk::addToAvailBlockList(LLMemoryBlock* blk)
 //U32 LLPrivateMemoryPool::LLMemoryChunk::getPageIndex(U32 addr)
 U32 LLPrivateMemoryPool::LLMemoryChunk::getPageIndex(void * addr) // <ND/> 64 bit fix
 #else
+U32 LLPrivateMemoryPool::LLMemoryChunk::getPageIndex(U32 addr)
 #endif
 {
 #if (LL_LINUX) && defined(__amd64__)

@@ -3,30 +3,6 @@
 <map>
     <key>installables</key>
     <map>
-      <key>32bitcompatibilitylibs</key>
-      <map>
-        <key>license</key>
-        <string>lgpl</string>
-        <key>license_file</key>
-        <string>LICENSES/*.txt</string>
-        <key>name</key>
-        <string>32bitcompatibilitylibs</string>
-        <key>platforms</key>
-        <map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>83aeef2ca7481f2a34302d9680a2c14a</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-32bitcompatibilitylibs/downloads/32bit_compatibility_libs-0.0.3-linux64-20130809.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-      </map>
       <key>SDL</key>
       <map>
         <key>copyright</key>
@@ -46,9 +22,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fe724581a16ff7bf3f2e261b8c4ee80e</string>
+              <string>459cdc8d7c19a8025f98f61db95622ff</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/sdl_3p-update-sdl/rev/301425/arch/Linux/installer/SDL-1.2.15-linux-301425.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/sdl_3p-update-sdl/rev/297546/arch/Linux/installer/SDL-1.2.15-linux-297546.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -58,7 +34,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
+              <string>7ea2df03bfc35c06acf23dd9e734adac</string>
               <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1103/2554/SDL-1.2.15-linux64-501092.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -122,7 +100,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
+              <string>bc8855c8253b8293c7e61af7b1ed0f05</string>
               <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/744/1545/apr_suite-1.4.5.500735-linux64-500735.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -154,116 +134,6 @@
         </map>
         <key>version</key>
         <string>1.4.5.500735</string>
-      </map>
-      <key>ares</key>
-      <map>
-        <key>copyright</key>
-        <string>Copyright 1998 by the Massachusetts Institute of Technology.</string>
-        <key>description</key>
-        <string>C-ares, an asynchronous resolver library.</string>
-        <key>license</key>
-        <string>c-ares</string>
-        <key>license_file</key>
-        <string>LICENSES/c-ares.txt</string>
-        <key>name</key>
-        <string>ares</string>
-        <key>platforms</key>
-        <map>
-          <key>darwin</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>637b4996f703f3e5bf835d847fc4cb81</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/ares_3p-update-ares/rev/295506/arch/Darwin/installer/ares-1.10.0.295506-darwin-295506.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>darwin</string>
-          </map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>7771d3653a0daf22d35bf96055d02d9a</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/ares_3p-update-ares/rev/295506/arch/Linux/installer/ares-1.10.0.295506-linux-295506.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>6078b2a47f4231ed9822738c07d6bb39</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-ares/downloads/ares-1.10.0.201505130838-linux64-201505130838.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-          <key>windows</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>f044de05e704d3f3fb6934adf42447c2</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/ares_3p-update-ares/rev/295506/arch/CYGWIN/installer/ares-1.10.0.295506-windows-295506.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>windows</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>1.10.0.295506</string>
-      </map>
-      <key>atk</key>
-      <map>
-        <key>copyright</key>
-        <string>Copyright 2001, 2002, 2003, 2006, 2007 Sun Microsystems Inc. See source code for additional copyright holders.</string>
-        <key>description</key>
-        <string>ATK provides the set of accessibility interfaces that are implemented by other toolkits and applications. Using the ATK interfaces, accessibility tools have full access to view and control running applications.</string>
-        <key>license</key>
-        <string>GNOME LPGL(2)</string>
-        <key>license_file</key>
-        <string>LICENSES/atk.txt</string>
-        <key>name</key>
-        <string>atk</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>ad9889e60710414d6242219d505af199</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-atk/downloads/atk-2.16.0-linux-201507162046.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>498557fac76f02fab5af14382ca4df8b</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-atk/downloads/atk-2.16.0-linux64-201506010908.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>2.16.0</string>
       </map>
       <key>boost</key>
       <map>
@@ -308,11 +178,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>fb1537f7ad0b490fcb4f096c15dce9cd</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>f1fdb548fd6c09a083c86f3a23d7f041</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/boost_3p-update-boost/rev/297445/arch/Linux/installer/boost-1.57-linux-297445.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/317807/arch/Linux/installer/boost-1.57-linux-317807.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -322,6 +190,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
+              <string>8e7ee97c3083f44385b09420655ebd04</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/892/1989/boost-1.57-linux64-500883.tar.bz2</string>
+            </map>
+            <key>name</key>
             <string>linux64</string>
           </map>
           <key>windows</key>
@@ -352,50 +225,6 @@
         <key>version</key>
         <string>1.57</string>
       </map>
-      <key>cairo</key>
-      <map>
-        <key>copyright</key>
-        <string>Copyright © 2002 University of Southern California Copyright © 2005 Red Hat, In</string>
-        <key>description</key>
-        <string>Cairo is a 2D graphics library with support for multiple output devices.</string>
-        <key>license</key>
-        <string>LGPL(2.1)</string>
-        <key>license_file</key>
-        <string>LICENSES/cairo.txt</string>
-        <key>name</key>
-        <string>cairo</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>17b59cc991c8d7a50ec55a99c1c21e8b</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-cairo/downloads/cairo-1.14.2-linux-201507192252.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>d9e8ebccffc6434b8e0eafca8b4d5c93</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-cairo/downloads/cairo-1.14.2-linux64-201506040945.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>1.14.2</string>
-      </map>
       <key>colladadom</key>
       <map>
         <key>copyright</key>
@@ -413,9 +242,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>40bd4dd220749a7f0fc8e4d62e61b4a2</string>
+              <string>66849777a83cb69cec3c06b07da7cd3d</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/colladadom_3p-update-colladadom/rev/301371/arch/Darwin/installer/colladadom-2.3.301371-darwin-301371.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/colladadom_3p-update-colladadom/rev/297450/arch/Darwin/installer/colladadom-2.3.297450-darwin-297450.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -437,9 +266,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d627c2a679f3afb8d3e090d42f53cd2e</string>
+              <string>78b9a6506fb7d53da166f7a65f2278f4</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/colladadom_3p-update-colladadom/rev/297450/arch/Linux/installer/colladadom-2.3.297450-linux-297450.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/317826/arch/Linux/installer/colladadom-2.3.317826-linux-317826.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -449,7 +278,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
+              <string>868127582794d6fd32fa69c9be4e83e4</string>
               <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/912/2031/colladadom-2.3.500902-linux64-500902.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -459,9 +290,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>24e1fac1fd6feef7915c958687fd7c56</string>
+              <string>5bd7875e16e7f88e21f4c44fe7c6433f</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/colladadom_3p-update-colladadom/rev/301371/arch/CYGWIN/installer/colladadom-2.3.301371-windows-301371.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/915/2035/colladadom-2.3.500902-windows-500902.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -480,7 +311,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.3.201507031700</string>
+        <string>2.3.500902</string>
       </map>
       <key>curl</key>
       <map>
@@ -537,11 +368,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d260709ee0c1f402efb0dba24c60df82</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>e5d1b0439235f5f3829662a45e566743</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-curl/downloads/curl-7.47.0.201604111501-linux64-201604111501.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1075/2484/curl-7.47.0.501064-linux64-501064.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -574,7 +403,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>7.47.0.201604111501</string>
+        <string>7.47.0.501064</string>
       </map>
       <key>db</key>
       <map>
@@ -601,18 +430,6 @@
             </map>
             <key>name</key>
             <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>56e138c9de910c68bef28b37abc3630a</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-update-db/downloads/db-5.1.25-linux64-201505111210.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
           </map>
         </map>
         <key>version</key>
@@ -649,11 +466,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4068ae75858d5eaf44d9ac19d2cf27c9</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>7ee7b9aed3c0c8c09e7bf26bba7af8e1</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-dbus-glib/downloads/dbus_glib-0.76-linux64-201505171442.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-dbus-glib/rev/314266/arch/Linux/installer/dbus_glib-0.76-linux64-314266.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -688,22 +503,9 @@
             <key>name</key>
             <string>common</string>
           </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>6909a15bdf7beddecbaae71c45cba05e</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-dictionaries/downloads/dictionaries-1.201506061533-linux64-201506061533.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
         </map>
         <key>version</key>
-        <string>1.297347</string>
-        <string>1.201506061533</string>
+        <string>1.500564</string>
       </map>
       <key>elfio</key>
       <map>
@@ -784,9 +586,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7eee24f7309849b14283a4c529b384b2</string>
+              <string>5e1f025d1cebd12db542080aa755257f</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-expat/downloads/expat-2.0.1.201505112037-linux64-201505112037.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/380/943/expat-2.1.1.500375-linux64-500375.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -838,11 +640,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>69eb4c2a793f077c30f82af7ea38112e</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>ed0d8767652aecd65a7fef3e28645bad</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-darwin-201612111122.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/fmodex_3p-update-fmodex/rev/297261/arch/Darwin/installer/fmodex-4.44.31.297261-darwin-297261.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -884,7 +684,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-linux64-201612101748.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-linux64-201612101748.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -898,7 +698,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-windows-201612090445.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-windows-201612090445.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -948,17 +748,6 @@
             <string>linux</string>
           </map>
           <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>926b3873f51f18ead54bef5b88c5fb9f</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-fontconfig/downloads/fontconfig-2.11.0-linux64-201505182117.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
           <map>
             <key>archive</key>
             <map>
@@ -1029,9 +818,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5e529c5fd598cf16972e2d096630a791</string>
+              <string>94cf61dfdbc86aae5bbaf0b5cb8a366c</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.4.4.201505162052-linux64-201505162052.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/874/1914/freetype-2.4.4.500865-linux64-500865.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1064,50 +853,6 @@
         <key>version</key>
         <string>2.4.4.500865</string>
       </map>
-      <key>gdk-pixbuf</key>
-      <map>
-        <key>copyright</key>
-        <string>Original Authors:Peter Mattis, Spencer Kimball, Josh MacDonald. See top of code file for others.</string>
-        <key>description</key>
-        <string>GdkPixbuf is a toolkit for image loading and pixel buffer manipulation. In GTK+ version 2.22 from 2010-09-23 GdkPixbuf was split off from GDK into a separate package in preparation for the transition to GTK+ 3.</string>
-        <key>license</key>
-        <string>LGPL(2)</string>
-        <key>license_file</key>
-        <string>LICENSES/gdk-pixbuf.txt</string>
-        <key>name</key>
-        <string>gdk-pixbuf</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>87358dc3e3bcfd220e77b08de50272e3</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gdk-pixbuf/downloads/gdk_pixbuf-2.30.8-linux-201507210933.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>04ca7ec5d4ff232c2012132b95955f7e</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gdk-pixbuf/downloads/gdk_pixbuf-2.30.8-linux64-201506041921.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>2.30.8</string>
-      </map>
       <key>glext</key>
       <map>
         <key>copyright</key>
@@ -1139,9 +884,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b26cf6cb678d63b28600bdf3fc354033</string>
+              <string>5f3c9d61b620f949b199ebd8885218ed</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-glext/downloads/glext-68-linux64-201505150822.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-glext/rev/314200/arch/Linux/installer/glext-68-linux64-314200.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1193,9 +938,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6799c2ec7da5eba3542f74761e88a143</string>
+              <string>fa41756977ad8b9fd2d1465dadd4f956</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-glh-linear/downloads/glh_linear-0.0.0-common-201507131759.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/529/1139/glh_linear-0.0.0-common-500522.tar.bz2</string>
             </map>
             <key>name</key>
             <string>common</string>
@@ -1203,65 +948,6 @@
         </map>
         <key>version</key>
         <string>0.0.0</string>
-      </map>
-      <key>glib</key>
-      <map>
-        <key>copyright</key>
-        <string>Unknown. Sources maintained by GNOME Library.</string>
-        <key>description</key>
-        <string>GLib provides the core application building blocks for libraries and applications written in C. It provides the core object system used in GNOME, the main loop implementation, and a large set of utility functions for strings and common data structures.</string>
-        <key>license</key>
-        <string>GLib is released under the GNU Library General Public License (GNU LGPL).</string>
-        <key>license-url</key>
-        <string>http://www.gnu.org/licenses/gpl.html</string>
-        <key>license_file</key>
-        <string>LICENSES/glib.txt</string>
-        <key>name</key>
-        <string>glib</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>0891aac3dd4be134d72d08b2d0a4165c</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-glib/downloads/glib-2.44.1-linux-201507131131.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
-              <key>hash</key>
-              <string>c133c727dd787a811d8dec925a64fa5a</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-glib/downloads/glib-2.45.1-linux64-201505312131.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>2.44.1</string>
       </map>
       <key>glod</key>
       <map>
@@ -1301,20 +987,7 @@
             <key>name</key>
             <string>darwin64</string>
           </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>1217cefeeb77db7cdb338f7bc48f9f21</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4.201506061259-linux64-201506061259.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
+          <key>linux</key>
           <map>
             <key>archive</key>
             <map>
@@ -1329,7 +1002,6 @@
             <string>linux</string>
           </map>
           <key>linux64</key>
-        <string>1.0pre4.201506061259</string>
           <map>
             <key>archive</key>
             <map>
@@ -1414,9 +1086,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e294e6ca721e271b4bae8046cfbc3c9b</string>
+              <string>352e673897e8f36f8470150b8ace6ce9</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/google-breakpad_3p-update-google-breakpad/rev/298127/arch/Linux/installer/google_breakpad-1413.298127-linux-298127.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-google-breakpad/rev/314225/arch/Linux/installer/google_breakpad-1413.314225-linux-314225.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1426,9 +1098,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c493451c04f5527c76d92c863454f76f</string>
+              <string>438d220b9572ec037edfc157f5f5424b</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-google-breakpad/downloads/google_breakpad-1413.201506071040-linux64-201506071040.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1486/3327/google_breakpad-1413.501475-linux64-501475.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1459,7 +1131,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1413.201506071040</string>
+        <string>1413.501475</string>
       </map>
       <key>googlemock</key>
       <map>
@@ -1493,8 +1165,6 @@
             <map>
               <key>hash</key>
               <string>1a8081953bdf1bbbc9b8a8e6e062c02d</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/919/2048/googlemock-1.7.0.500908-darwin64-500908.tar.bz2</string>
             </map>
@@ -1502,33 +1172,6 @@
             <string>darwin64</string>
           </map>
           <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>0103b3fa182d23e404361fce0529eeb8</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201601261942-linux-201601261942.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>6144f0d870aa8dc0bd38ad2703f37a45</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201601261238-linux64-201601261238.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
           <map>
             <key>archive</key>
             <map>
@@ -1541,7 +1184,6 @@
             <string>linux</string>
           </map>
           <key>linux64</key>
-        <string>1.7.0.201507031820</string>
           <map>
             <key>archive</key>
             <map>
@@ -1584,11 +1226,9 @@
       <key>gstreamer</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (C) 1991 Free Software Foundation, Inc.</string>
-        <key>description</key>
-        <string>GStreamer is a streaming media framework that enables applications to share a common set of plugins for things like video decoding and encoding, audio encoding and decoding, audio and video filters, audio visualisation, Web streaming and anything else that streams in real-time or otherwise. It is modelled after research software worked on at the Oregon Graduate Institute. After installing GStreamer, you'll likely need to install one or more of the gst-plugins-bad-0.10.23, gst-plugins-good-0.10.31, gst-plugins-ugly-0.10.19 and gst-ffmpeg-0.10.13 packages. </string>
+        <string>Copyright (C) 2007 Free Software Foundation, Inc. &lt;http://fsf.org/&gt;</string>
         <key>license</key>
-        <string>LGPL(2)</string>
+        <string>LGPL</string>
         <key>license_file</key>
         <string>LICENSES/gstreamer.txt</string>
         <key>name</key>
@@ -1600,11 +1240,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>c0725ea0bbf2a59b45f920cb837a83ef</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>5017b3e95d2c6f47bb111c3f9c075522</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201602051851-linux-201602051851.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-gstreamer/rev/314267/arch/Linux/installer/gstreamer-0.10.6.314267-linux-314267.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1613,134 +1251,28 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>c1f48f8256c756ed9a5b57e4ccae4bb4</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>7c9d7cc88add7831a6afeedc20cad2fe</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201602041656-linux64-201602041656.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-gstreamer/rev/314267/arch/Linux/installer/gstreamer-0.10.6.314267-linux64-314267.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
           </map>
-          <key>windows</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>40cbe362790348f1a465697a7ef8c914</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-glib-iconv-plugins-autobuild-windows-20140919.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>windows</string>
-          </map>
         </map>
         <key>version</key>
-        <string>0.10.36.201602051851</string>
+        <string>0.10.6.314267</string>
       </map>
-      <key>gtk</key>
+      <key>gtk-atk-pango-glib</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (C) 2001 CodeFactory AB, Copyright (C) 2001, 2002 Anders Carlsson, Copyright (C) 2003, 2004 Matthias Clasen</string>
-        <key>description</key>
-        <string>GTK+, or the GIMP Toolkit, is a multi-platform toolkit for creating graphical user interfaces. Offering a complete set of widgets, GTK+ is suitable for projects ranging from small one-off tools to complete application suites.</string>
-        <key>license</key>
-        <string>LGPL(2)</string>
-        <key>license_file</key>
-        <string>LICENSES/gtk.txt</string>
-        <key>name</key>
-        <string>gtk</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>db3c9a733395f2b1b45acf4afae6e77d</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gtk/downloads/gtk-2.24.28-linux-201507211717.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>742d44a6609a29ca4bf101370f8300fb</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-gtk/downloads/gtk-2.24.28-linux64-201506051634.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>2.24.28</string>
-      </map>
-      <key>gtk-etc</key>
-      <map>
+        <string>Copyright (various, see sources)</string>
         <key>license</key>
         <string>lgpl</string>
-        <key>license-file</key>
-        <string>LICENSES/gtk-etc.txt</string>
-        <key>name</key>
-        <string>gtk-etc</string>
-        <key>platforms</key>
-        <map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
-              <key>hash</key>
-              <string>e8cb3f28379b7730004da44f04263936</string>
-              <key>url</key>
-              <string>http://imprudenceviewer.org/download/libs/gtk-etc-linux64-20091231.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-      </map>
-      <key>harfbuzz</key>
-      <map>
-        <key>copyright</key>
-        <string>Copyright © 2010,2011,2012  Google, Inc., Copyright © 2012  Mozilla Foundation, Copyright © 2011  Codethink Limited, Copyright © 2008,2010  Nokia Corporation and/or its subsidiary(-ies), Copyright © 2009  Keith Stribley, Copyright © 2009  Martin Hosken and SIL International, Copyright © 2007  Chris Wilson, Copyright © 2006  Behdad Esfahbod, Copyright © 2005  David Turner, Copyright © 2004,2007,2008,2009,2010  Red Hat, Inc., Copyright © 1998-2004  David Turner and Werner Lemberg; For full copyright notices consult the individual files in the package.</string>
-        <key>description</key>
-        <string>HarfBuzz is an OpenType text shaping engine.</string>
-        <key>license</key>
-        <string>HarfBuzz is licensed under the so-called "Old MIT" license.</string>
         <key>license_file</key>
-        <string>LICENSES/harfbuzz.txt</string>
+        <string>LICENSES/gtk-atk-pango-glib.txt</string>
         <key>name</key>
-        <string>harfbuzz</string>
+        <string>gtk-atk-pango-glib</string>
         <key>platforms</key>
         <map>
           <key>linux</key>
@@ -1748,9 +1280,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>622c10c4361a9b8de46c9a885d270402</string>
+              <string>a6431df705526501684d9050e04bfa5b</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-harfbuzz/downloads/harfbuzz-0.9.40-linux-201507201105.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-gtk-atk-pango-glib/rev/314220/arch/Linux/installer/gtk_atk_pango_glib-0.1-linux-314220.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1760,18 +1292,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b927e0337a72d146718a393730ecde0d</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>de7bba8fd2275a11b077b124413065d0</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-harfbuzz/downloads/harfbuzz-0.9.40-linux64-201506041046.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-gtk-atk-pango-glib/rev/314220/arch/Linux/installer/gtk_atk_pango_glib-0.1-linux64-314220.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
           </map>
         </map>
         <key>version</key>
-        <string>0.9.40</string>
+        <string>0.1</string>
       </map>
       <key>havok-source</key>
       <map>
@@ -1792,9 +1322,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>0d586709c1a2e4cf433390bbdd2498ed</string>
+              <string>5c5b4820999ae9e398801d6a46f45897</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/havok-source_3p-update-havok-source/rev/301432/arch/Darwin/installer/havok_source-2012.1-darwin-301432.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/havok-source_3p-update-havok-source/rev/297312/arch/Darwin/installer/havok_source-2012.1-darwin-297312.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -1816,9 +1346,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>02c85c2c63c8d002b31382f866ca143b</string>
+              <string>03c1c5f7c3e93e905f635ca22b607494</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/havok-source_3p-update-havok-source/rev/301432/arch/Linux/installer/havok_source-2012.1-linux-301432.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/p64_3p-havok-source/rev/314226/arch/Linux/installer/havok_source-2012.1-2-linux-314226.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1918,9 +1448,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>56f8925102d9e17498fbe7b0f0119b68</string>
+              <string>7d699142394f54a334b4fd203b4c9eea</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-jpeglib/downloads/jpeglib-8c.201505141845-linux64-201505141845.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/457/970/jpeglib-8c.500387-linux64-500387.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2041,7 +1571,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.5.0.201506061927</string>
+        <string>0.5.0.501464</string>
       </map>
       <key>kdu</key>
       <map>
@@ -2188,9 +1718,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6a60d6a82b8be6ed3a97c125905b1339</string>
+              <string>ffbdd109356d66ddfefd8a5d57f63f1f</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-hunspell/downloads/libhunspell-1.3.2.201506061803-linux64-201506061803.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/533/1144/libhunspell-1.3.2.500526-linux64-500526.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2221,7 +1751,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.3.2.201506061803</string>
+        <string>1.3.2.500526</string>
       </map>
       <key>libndofdev</key>
       <map>
@@ -2308,9 +1838,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>0d134c36fcd87d00d91c99291906dde9</string>
+              <string>14cb5c8686a472e9e60179e46cd196f7</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/libpng_3p-update-libpng/rev/301387/arch/Darwin/installer/libpng-1.6.8.301387-darwin-301387.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/libpng_3p-update-libpng/rev/297708/arch/Darwin/installer/libpng-1.6.8.297708-darwin-297708.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2332,9 +1862,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>744e22c5fcaaf3483a60e29f217daa9c</string>
+              <string>0758f3cb4c02ebab61854b811b0894e9</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/libpng_3p-update-libpng/rev/301387/arch/Linux/installer/libpng-1.6.8.301387-linux-301387.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-libpng/rev/314214/arch/Linux/installer/libpng-1.6.8.314214-linux-314214.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2344,9 +1874,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>05efb58926b4bf4d00491380fb77647f</string>
+              <string>13de93ea11544051b69f238eeb644fd3</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-libpng/downloads/libpng-1.6.8.201505162036-linux64-201505162036.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/882/1946/libpng-1.6.8.500873-linux64-500873.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2409,21 +1939,10 @@
           <map>
             <key>archive</key>
             <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
               <key>hash</key>
-              <string>4f5ca7f26ffa697a72f6217c820ae5de</string>
+              <string>fb89f1281dd54d8b99b339fc5b712b27</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-libuuid/downloads/libuuid-1.6.2-linux64-201505172012.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-libuuid/rev/314269/arch/Linux/installer/libuuid-1.6.2-linux64-314269.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2487,9 +2006,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b8b0c54cedcf1b77b9dfdfdcd6221cfb</string>
+              <string>740fc93f195c77b3a0c0800b31878ecb</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-libxml/downloads/libxml2-2.9.1.201505161544-linux64-201505161544.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/890/1968/libxml2-2.9.4.500877-linux64-500877.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2555,13 +2074,13 @@
       <key>llceflib</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (c) 2008-2014 Marshall A. Greenblatt. Portions Copyright (c) 2006-2009 Google Inc. All rights reserved</string>
+        <string>Copyright (c) 2014, Linden Research, Inc.</string>
         <key>description</key>
-        <string>CEF plugin for Second Life</string>
+        <string>LLCefLib implements a headless web browser, rendering modern web content to a memory buffer and providing an API for injecting mouse and keyboard events. It uses the Chromium Embedded Framework (https://bitbucket.org/chromiumembedded/cef)</string>
         <key>license</key>
-        <string>BSD</string>
+        <string>LGPL</string>
         <key>license_file</key>
-        <string>LICENSES/CEF_BSD.txt</string>
+        <string>LICENSES/LICENSE-source.txt</string>
         <key>name</key>
         <string>llceflib</string>
         <key>platforms</key>
@@ -2591,34 +2110,6 @@
             </map>
             <key>name</key>
             <string>darwin64</string>
-          </map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>4691ed0d746c27a9f5fb2345dab3d2bc</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201611052240-kokua-linux-201611052240.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>73b26f574b4531c0a831b1c149ec8e56</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201611051707-kokua-linux64-201611051707.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -2667,11 +2158,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>468e88a527e610804c3eecf07f4ed70b</string>
+              <string>01a7cc9d0e56238a9abedd7a41ccd0a3</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llphysicsextensions-source_llphysicsextensions-update/rev/298369/arch/Darwin/installer/llphysicsextensions_source-1.0.298369-darwin-298369.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llphysicsextensions/rev/313564/arch/Darwin/installer/llphysicsextensions_source-1.0.313564-darwin-313564.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2693,9 +2184,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>793964e49c935b414c4bdbb8a0d14ad1</string>
+              <string>18ebea18be4cf0d3da4a6bb73787395c</string>
               <key>url</key>
-              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/llphysicsextensions-source_llphysicsextensions-update/rev/298369/arch/Linux/installer/llphysicsextensions_source-1.0.298369-linux-298369.tar.bz2</string>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/p64_llphysicsextensions/rev/314244/arch/Linux/installer/llphysicsextensions_source-1.0.314244-linux-314244.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2757,11 +2248,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>1175977a191ffc936fd0ccca433c8278</string>
+              <string>c8c6e5867d1ead7ad452a3359b22cf44</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/llphysicsextensions-stub_llphysicsextensions-update/rev/298370/arch/Darwin/installer/llphysicsextensions_stub-1.0.298370-darwin-298370.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/llphysicsextensions/rev/313563/arch/Darwin/installer/llphysicsextensions_stub-1.0.313563-darwin-313563.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2783,9 +2274,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>d13d7927692eab2d6a63e36166b72a8a</string>
+              <string>f7dc825d13dec920a36641823f87dd94</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/llphysicsextensions-stub_llphysicsextensions-update/rev/298370/arch/Linux/installer/llphysicsextensions_stub-1.0.298370-linux-298370.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_llphysicsextensions/rev/314246/arch/Linux/installer/llphysicsextensions_stub-1.0.314246-linux-314246.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2852,30 +2343,9 @@
             <key>name</key>
             <string>linux</string>
           </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>dir_structure</key>
-              <map>
-                <key>LICENSES</key>
-                <string>LICENSES</string>
-                <key>libraries/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/include</key>
-                <string>include</string>
-                <key>libraries/x86_64-linux/lib_release_client</key>
-                <string>lib/release</string>
-              </map>
-              <key>hash</key>
-              <string>56630977f9261bd82039b0da08a0685c</string>
-              <key>url</key>
-              <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/mesa-6.2.1-linux64-20081016.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
         </map>
+        <key>version</key>
+        <string>7.11.1.297294</string>
       </map>
       <key>ndPhysicsStub</key>
       <map>
@@ -2935,6 +2405,8 @@
             <map>
               <key>hash</key>
               <string>a73088e519d2b340e01538ae205e09e4</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.0-windows-201504262316.tar.bz2</string>
             </map>
@@ -3042,9 +2514,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a9a603958c5e9fb6511abe229da012c3</string>
+              <string>45ebd074053dc9cae8c5c74b52085d4b</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-ogvorbis/downloads/ogg_vorbis-1.2.2-1.3.2.201505102205-linux64-201505102205.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/465/990/ogg_vorbis-1.2.2-1.3.2.500397-linux64-500397.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3096,24 +2568,12 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>65f58cc0b17ebd29fe2b8bccc6bcbf64</string>
+              <string>b1245d467d5914a266efa16afeb55406</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/libndofdev_3p-update-libndofdev/rev/301464/arch/Linux/installer/open_libndofdev-0.3-linux-301464.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/libndofdev_3p-update-libndofdev/rev/297553/arch/Linux/installer/open_libndofdev-0.3-linux-297553.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>b09df0298a9659962e3e10a25718dd03</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-libndofdev-linux/downloads/open_libndofdev-0.3-linux64-201505171912.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
           </map>
         </map>
         <key>version</key>
@@ -3133,28 +2593,16 @@
         <string>openal</string>
         <key>platforms</key>
         <map>
-          <key>darwin</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>7b28b9e82315043f9e1bad6a839a841c</string>
-              <key>url</key>
-              <string>http://inworldz.com/imprudence/libs/openal_soft-darwin-20130207.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>darwin</string>
-          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4fa14f9746b34e109af68af7759969bb</string>
+              <string>24b91eda3831a51c7774644016c4cb09</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201506211217-linux-201506211217.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-openal/rev/314223/arch/Linux/installer/openal-1.12.854-1.1.0.314223-linux-314223.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -3164,11 +2612,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>43fd028ba47dd35cbb6e8dd853ef1cfb</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>7530fab3979312da75a903d87b73e3a9</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201506132204-linux64-201506132204.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-openal/rev/314223/arch/Linux/installer/openal-1.12.854-1.1.0.314223-linux64-314223.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3201,7 +2647,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.15.1-1.1.0.201506211217</string>
+        <string>1.12.854-1.1.0.314223</string>
       </map>
       <key>openjpeg</key>
       <map>
@@ -3246,9 +2692,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>71fd0075e56a4833f6a395302d1a9369</string>
+              <string>e82317482647559d46a818ba48e9423a</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-update-openjpeg/downloads/openjpeg-1.4.201503062230-linux-201503062230.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-openjpeg/rev/314205/arch/Linux/installer/openjpeg-2.0.0.314205-linux-314205.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -3355,8 +2801,6 @@
             <key>name</key>
             <string>linux64</string>
           </map>
-            <string>linux64</string>
-          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -3384,52 +2828,6 @@
         </map>
         <key>version</key>
         <string>1.0.1u.501051</string>
-      </map>
-      <key>pango</key>
-      <map>
-        <key>copyright</key>
-        <string>on internationalization.Copyright (C) 1999 Red Hat Software</string>
-        <key>description</key>
-        <string>Pango is a library for layout and rendering of text, with an emphasis</string>
-        <key>license</key>
-        <string>GNU LGPL(2)</string>
-        <key>license_file</key>
-        <string>LICENSES/pango.txt</string>
-        <key>name</key>
-        <string>pango</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>6dca707cb897d3c360f5dd0ffcb2cd2c</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-pango/downloads/pango-1.36.8-linux-201507201400.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>5dc224dc6d4e0288f9503b1627fad3a1</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-pango/downloads/pango-1.36.8-linux64-201506041413.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>1.36.8</string>
       </map>
       <key>pcre</key>
       <map>
@@ -3474,35 +2872,12 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b82817bcc2f63094d9c915d018d0b036</string>
-              <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/pcre_3p-update-pcre/rev/297155/arch/Linux/installer/pcre-8.35.-linux-297155.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>4707e7dcee810c401eb65c79d93bd8ee</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-pcre/downloads/pcre-8.35.-linux64-201505161257.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
               <string>24a119b18e63017ad932ad54df8161bc</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-pcre/rev/314136/arch/Linux/installer/pcre-8.35.314136-linux-314136.tar.bz2</string>
             </map>
             <key>name</key>
-            <string>windows</string>
+            <string>linux</string>
           </map>
           <key>linux64</key>
           <map>
@@ -3516,52 +2891,7 @@
             <key>name</key>
             <string>linux64</string>
           </map>
-      <key>pixman</key>
-      <map>
-        <key>copyright</key>
-        <string>Copyright © 2000 Keith Packard, member of The XFree86 Project, Inc.  2005 Lars Knoll Zack Rusin, Trolltech 2008 Aaron Plattner, NVIDIA Corporation. See code headers</string>
-        <key>description</key>
-        <string>Pixman is a low-level software library for pixel manipulation, providing features such as image compositing and trapezoid rasterization.</string>
-        <key>license</key>
-        <string>MIT License</string>
-        <key>license_file</key>
-        <string>LICENSES/pixman.txt</string>
-        <key>name</key>
-        <string>pixman</string>
-        <key>platforms</key>
-        <map>
-          <key>linux</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>c99e94652ddf7d72691d16eb0bc61efa</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux-201507192238.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>504c19255873cea1273e2d5e3214a61d</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux64-201506011032.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
-          </map>
-        </map>
-        <key>version</key>
-        <string>0.32.6</string>
-      </map>
+          <key>windows</key>
           <map>
             <key>archive</key>
             <map>
@@ -3633,8 +2963,6 @@
             <map>
               <key>hash</key>
               <string>e5832a68562c3409a56a3583d101864b</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-slvoice/rev/314209/arch/Linux/installer/slvoice-3.2.0002.10426.314209-linux-314209.tar.bz2</string>
             </map>
@@ -3646,11 +2974,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>86d3150b2505ee11da14fdcc956b80fd</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>92b0ae08832bd0e99c34ef8f3e6346ad</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-3.2.0002.10426.298329.201607192012-linux64-201607192012.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/613/1289/slvoice-3.2.0002.10426.500605-linux64-500605.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3660,9 +2986,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>399afab7047e6fa62e7b2fb1768059ea</string>
+              <string>3ce62e3696f26a1e09e0c769280e5608</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/slvoice_3p-update-slvoice/rev/298329/arch/CYGWIN/installer/slvoice-4.6.0017.21209.298329-windows-298329.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/616/1300/slvoice-4.6.0017.21209.500605-windows-500605.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -3681,7 +3007,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.5.0009.17865.201506081519</string>
+        <string>4.6.0017.21209.500605</string>
       </map>
       <key>tut</key>
       <map>
@@ -3768,11 +3094,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>baa5a4f37d4e222ee1e46a900015e623</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>087375378f104cdac0cb0fe0ca43dd4d</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-uriparser/downloads/uriparser-0.8.0.1-linux64-201506060849.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/346/880/uriparser-0.8.0.1-linux64-500342.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3822,28 +3146,12 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>34e580c2c80d497ae9e555137f953652</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>2f410640df3f9812d1abff02a414cfa8</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-vlc-linux/downloads/vlc_bin-2.2.4-linux-201608171315.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-vlc-bin/rev/315283/arch/Linux/vlc_bin-2.2.3-linux-201606011750-r10.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
-          </map>
-          <key>linux64</key>
-          <map>
-            <key>archive</key>
-            <map>
-              <key>hash</key>
-              <string>9673ebf6b274e8852232a5f437190c4b</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
-              <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-vlc-linux/downloads/vlc_bin-2.2.4-linux64-201608170713.tar.bz2</string>
-            </map>
-            <key>name</key>
-            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -3871,7 +3179,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.2.4</string>
+        <string>2.2.4.501207</string>
       </map>
       <key>xmlrpc-epi</key>
       <map>
@@ -3928,9 +3236,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b438780c670b00b53d01d3efe622ac82</string>
+              <string>35df17c3eb673030dea4bde9191aa506</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-xmlrpc-epi/downloads/xmlrpc_epi-0.54.1.201505141438-linux64-201505141438.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/727/1489/xmlrpc_epi-0.54.1.500719-linux64-500719.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -4020,9 +3328,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>3a7334ad1e1aa55439a7e73720cae770</string>
+              <string>dab6be8b0596c1e3354f2b6d41335131</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-zlib/downloads/zlib-1.2.8.201505161535-linux64-201505161535.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/866/1898/zlib-1.2.8.500857-linux64-500857.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -4074,39 +3382,19 @@
         <map>
           <key>configurations</key>
           <map>
-            <key>Doxygen</key>
+            <key>RelWithDebInfo</key>
             <map>
               <key>build</key>
               <map>
-                <key>arguments</key>
-                <array>
-                  <string>doxygen/Doxyfile</string>
-                </array>
-                <key>command</key>
-                <string>doxygen</string>
               </map>
               <key>configure</key>
               <map>
-                <key>command</key>
-                <string>cmake</string>
-              </map>
-              <key>name</key>
-              <string>Doxygen</string>
-            </map>
-            <key>RelWithDebInfo</key>
-            <map>
-              <key>configure</key>
-              <map>
-                <key>arguments</key>
-                <array>
-                  <string>../indra</string>
-                </array>
                 <key>command</key>
                 <string>cmake</string>
                 <key>options</key>
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
-                  <string>-DADDRESS_SIZE:STRING=$AUTOBUILD_ADDRSIZE</string>
+                  <string>-DADDRESS_SIZE:STRING=32</string>
                   <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>
                 </array>
@@ -4127,7 +3415,7 @@
                 <key>options</key>
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
-                  <string>-DADDRESS_SIZE:STRING=$AUTOBUILD_ADDRSIZE</string>
+                  <string>-DADDRESS_SIZE:STRING=32</string>
                   <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
@@ -4137,18 +3425,17 @@
             </map>
             <key>Release</key>
             <map>
+              <key>build</key>
+              <map>
+              </map>
               <key>configure</key>
               <map>
-                <key>arguments</key>
-                <array>
-                  <string>../indra</string>
-                </array>
                 <key>command</key>
                 <string>cmake</string>
                 <key>options</key>
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=Release</string>
-                  <string>-DADDRESS_SIZE:STRING=$AUTOBUILD_ADDRSIZE</string>
+                  <string>-DADDRESS_SIZE:STRING=32</string>
                   <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>
                 </array>
@@ -4169,7 +3456,7 @@
                 <key>options</key>
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=Release</string>
-                  <string>-DADDRESS_SIZE:STRING=$AUTOBUILD_ADDRSIZE</string>
+                  <string>-DADDRESS_SIZE:STRING=32</string>
                   <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
@@ -4187,28 +3474,6 @@
           <string>build-darwin-x86_64</string>
           <key>configurations</key>
           <map>
-            <key>Doxygen</key>
-            <map>
-              <key>build</key>
-              <map>
-              </map>
-              <key>configure</key>
-              <map>
-                <key>arguments</key>
-                <array>
-                  <string>../indra</string>
-                </array>
-                <key>options</key>
-                <array>
-                  <string>-DCMAKE_BUILD_TYPE:STRING=Release</string>
-                  <string>-DWORD_SIZE:STRING=32</string>
-                  <string>-DROOT_PROJECT_NAME:STRING=SecondLife</string>
-                  <string>-DINSTALL_PROPRIETARY=TRUE</string>
-                </array>
-              </map>
-              <key>name</key>
-              <string>Doxygen</string>
-            </map>
             <key>RelWithDebInfo</key>
             <map>
               <key>build</key>
@@ -4222,13 +3487,17 @@
                 <key>options</key>
                 <array>
                   <string>-configuration</string>
-                  <string>-project Kokua.xcodeproj</string>
+                  <string>RelWithDebInfo</string>
                   <string>-project</string>
-                  <string>SecondLife.xcodeproj</string>
+                  <string>Kokua.xcodeproj</string>
                 </array>
               </map>
               <key>configure</key>
               <map>
+                <key>arguments</key>
+                <array>
+                  <string>../indra</string>
+                </array>
                 <key>options</key>
                 <array>
                   <string>-G</string>
@@ -4249,9 +3518,9 @@
                 <key>options</key>
                 <array>
                   <string>-configuration</string>
-                  <string>-project Kokua.xcodeproj</string>
+                  <string>RelWithDebInfo</string>
                   <string>-project</string>
-                  <string>SecondLife.xcodeproj</string>
+                  <string>Kokua.xcodeproj</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4278,15 +3547,19 @@
                 <key>options</key>
                 <array>
                   <string>-configuration</string>
-                  <string>-project Kokua.xcodeproj</string>
+                  <string>Release</string>
                   <string>-project</string>
-                  <string>SecondLife.xcodeproj</string>
+                  <string>Kokua.xcodeproj</string>
                   <string>-DENABLE_SIGNING:BOOL=YES</string>
                   <string>-DSIGNING_IDENTITY:STRING=Developer ID Application: Linden Research, Inc.</string>
                 </array>
               </map>
               <key>configure</key>
               <map>
+                <key>arguments</key>
+                <array>
+                  <string>../indra</string>
+                </array>
                 <key>options</key>
                 <array>
                   <string>-G</string>
@@ -4331,10 +3604,17 @@
           <string>build-linux-i686</string>
           <key>configurations</key>
           <map>
-            <key>Doxygen</key>
+            <key>RelWithDebInfo</key>
             <map>
               <key>build</key>
               <map>
+                <key>command</key>
+                <string>make</string>
+                <key>options</key>
+                <array>
+                  <string>-j</string>
+                  <string>12</string>
+                </array>
               </map>
               <key>configure</key>
               <map>
@@ -4345,29 +3625,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
-                </array>
-              </map>
-              <key>name</key>
-              <string>Doxygen</string>
-            </map>
-            <key>RelWithDebInfo</key>
-            <map>
-              <key>build</key>
-              <map>
-                <key>command</key>
-                <string>make</string>
-                <key>options</key>
-                <array>
-                  <string>-j 12</string>
-                </array>
-              </map>
-              <key>configure</key>
-              <map>
-                <key>options</key>
-                <array>
-                  <string>-G</string>
-                  <string>'Unix Makefiles'</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>default</key>
@@ -4383,7 +3641,8 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 7</string>
+                  <string>-j</string>
+                  <string>7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4391,7 +3650,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
@@ -4405,15 +3664,20 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 12</string>
+                  <string>-j</string>
+                  <string>12</string>
                 </array>
               </map>
               <key>configure</key>
               <map>
+                <key>arguments</key>
+                <array>
+                  <string>../indra</string>
+                </array>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
@@ -4427,7 +3691,8 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 7</string>
+                  <string>-j</string>
+                  <string>7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4435,7 +3700,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
@@ -4453,185 +3718,10 @@
           <key>name</key>
           <string>linux</string>
         </map>
-        <key>linux64</key>
-        <map>
-          <key>build_directory</key>
-          <string>build-linux-x86_64</string>
-          <key>configurations</key>
-          <map>
-            <key>Debug</key>
-            <map>
-              <key>build</key>
-              <map>
-                <key>command</key>
-                <string>make</string>
-                <key>options</key>
-                <array>
-                  <string>-j 12</string>
-                </array>
-              </map>
-              <key>configure</key>
-              <map>
-                <key>arguments</key>
-                <array>
-                  <string>../indra</string>
-                </array>
-                <key>options</key>
-                <array>
-                  <string>-G</string>
-                  <string>'Unix Makefiles'</string>
-                  <string>-DWORD_SIZE:STRING=64</string>
-                </array>
-              </map>
-              <key>name</key>
-              <string>Debug</string>
-            </map>
-            <key>DebugOS</key>
-            <map>
-              <key>build</key>
-              <map>
-                <key>command</key>
-                <string>make</string>
-                <key>options</key>
-                <array>
-                  <string>-j 2</string>
-                </array>
-              </map>
-              <key>configure</key>
-              <map>
-                <key>options</key>
-                <array>
-                  <string>-G</string>
-                  <string>'Unix Makefiles'</string>
-                  <string>-DWORD_SIZE:STRING=64</string>
-                </array>
-              </map>
-              <key>name</key>
-              <string>DebugOS</string>
-            </map>
-            <key>RelWithDebInfo</key>
-            <map>
-              <key>build</key>
-              <map>
-                <key>command</key>
-                <string>make</string>
-                <key>options</key>
-                <array>
-                  <string>-j</string>
-                  <string>12</string>
-                </array>
-              </map>
-              <key>configure</key>
-              <map>
-                <key>arguments</key>
-                <array>
-                  <string>../indra</string>
-                </array>
-                <key>options</key>
-                <array>
-                  <string>-G</string>
-                  <string>Unix Makefiles</string>
-                  <string>-DWORD_SIZE:STRING=64</string>
-                </array>
-              </map>
-              <key>default</key>
-              <string>True</string>
-              <key>name</key>
-              <string>RelWithDebInfo</string>
-            </map>
-            <key>RelWithDebInfoOS</key>
-            <map>
-              <key>build</key>
-              <map>
-                <key>command</key>
-                <string>make</string>
-                <key>options</key>
-                <array>
-                  <string>-j 2</string>
-                  <string>7</string>
-                </array>
-              </map>
-              <key>configure</key>
-              <map>
-                <key>options</key>
-                <array>
-                  <string>-G</string>
-                  <string>Unix Makefiles</string>
-                  <string>--</string>
-                  <string>-DWORD_SIZE:INTEGER=64</string>
-                </array>
-              </map>
-              <key>name</key>
-              <string>RelWithDebInfoOS</string>
-            </map>
-            <key>Release</key>
-            <map>
-              <key>build</key>
-              <map>
-                <key>command</key>
-                <string>make</string>
-                <key>options</key>
-                <array>
-                  <string>-j</string>
-                  <string>12</string>
-                </array>
-              </map>
-              <key>configure</key>
-              <map>
-                <key>arguments</key>
-                <array>
-                  <string>../indra</string>
-                </array>
-                <key>options</key>
-                <array>
-                  <string>-G</string>
-                  <string>Unix Makefiles</string>
-                  <string>-DWORD_SIZE:STRING=64</string>
-                </array>
-              </map>
-              <key>name</key>
-              <string>Release</string>
-            </map>
-            <key>ReleaseOS</key>
-            <map>
-              <key>build</key>
-              <map>
-                <key>command</key>
-                <string>make</string>
-                <key>options</key>
-                <array>
-                  <string>-j 2</string>
-                  <string>7</string>
-                </array>
-              </map>
-              <key>configure</key>
-              <map>
-                <key>options</key>
-                <array>
-                  <string>-G</string>
-                  <string>Unix Makefiles</string>
-                  <string>-DWORD_SIZE:STRING=64</string>
-                </array>
-              </map>
-              <key>name</key>
-              <string>ReleaseOS</string>
-            </map>
-            <key>default</key>
-            <map>
-              <key>build</key>
-              <map>
-              </map>
-              <key>name</key>
-              <string>default</string>
-            </map>
-          </map>
-          <key>name</key>
-          <string>linux64</string>
-        </map>
         <key>windows</key>
         <map>
           <key>build_directory</key>
-          <string>build-vc120-$AUTOBUILD_ADDRSIZE</string>
+          <string>build-vc120-32</string>
           <key>configurations</key>
           <map>
             <key>RelWithDebInfo</key>
@@ -4647,7 +3737,7 @@
                 <key>options</key>
                 <array>
                   <string>/build</string>
-                  <string>RelWithDebInfo|${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
+                  <string>RelWithDebInfo|Win32</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4655,19 +3745,11 @@
                 <key>arguments</key>
                 <array>
                   <string>..\indra</string>
-                  <string>&amp;&amp;</string>
-                  <string>..\indra\tools\vstool\VSTool.exe</string>
-                  <string>--solution</string>
-                  <string>Kokua.sln</string>
-                  <string>--config</string>
-                  <string>RelWithDebInfo</string>
-                  <string>--startup</string>
-                  <string>kokua-bin</string>
                 </array>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
+                  <string>Visual Studio 12</string>
                 </array>
               </map>
               <key>default</key>
@@ -4684,11 +3766,16 @@
                   <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
-                <string>devenv</string>
+                <string>msbuild.exe</string>
                 <key>options</key>
                 <array>
-                  <string>/build</string>
-                  <string>"RelWithDebInfo|${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
+                  <string>/p:Configuration=RelWithDebInfo</string>
+                  <string>/p:Platform=Win32</string>
+                  <string>/t:Build</string>
+                  <string>/p:useenv=true</string>
+                  <string>/verbosity:minimal</string>
+                  <string>/toolsversion:12.0</string>
+                  <string>/p:VCBuildAdditionalOptions= /incremental</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4696,20 +3783,12 @@
                 <key>arguments</key>
                 <array>
                   <string>..\indra</string>
-                  <string>&amp;&amp;</string>
-                  <string>..\indra\tools\vstool\VSTool.exe</string>
-                  <string>--solution</string>
-                  <string>Kokua.sln</string>
-                  <string>--config</string>
-                  <string>RelWithDebInfo</string>
-                  <string>--startup</string>
-                  <string>kokua-bin</string>
                 </array>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
-                  <string>-DUNATTENDED:BOOL=OFF</string>
+                  <string>Visual Studio 12</string>
+                  <string>-DUNATTENDED:BOOL=ON</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                   <string>-DUSE_KDU=FALSE</string>
                 </array>
@@ -4730,7 +3809,7 @@
                 <key>options</key>
                 <array>
                   <string>/build</string>
-                  <string>Release|${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
+                  <string>Release|Win32</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4738,19 +3817,11 @@
                 <key>arguments</key>
                 <array>
                   <string>..\indra</string>
-                  <string>&amp;&amp;</string>
-                  <string>..\indra\tools\vstool\VSTool.exe</string>
-                  <string>--solution</string>
-                  <string>Kokua.sln</string>
-                  <string>--config</string>
-                  <string>Release</string>
-                  <string>--startup</string>
-                  <string>kokua-bin</string>
                 </array>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
+                  <string>Visual Studio 12</string>
                 </array>
               </map>
               <key>name</key>
@@ -4765,11 +3836,16 @@
                   <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
-                <string>devenv.com</string>
+                <string>msbuild.exe</string>
                 <key>options</key>
                 <array>
-                  <string>/build</string>
-                  <string>"RelWithDebInfo|${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
+                  <string>/p:Configuration=Release</string>
+                  <string>/p:Platform=Win32</string>
+                  <string>/t:Build</string>
+                  <string>/p:useenv=true</string>
+                  <string>/verbosity:minimal</string>
+                  <string>/toolsversion:12.0</string>
+                  <string>/p:VCBuildAdditionalOptions= /incremental</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4777,20 +3853,12 @@
                 <key>arguments</key>
                 <array>
                   <string>..\indra</string>
-                  <string>&amp;&amp;</string>
-                  <string>..\indra\tools\vstool\VSTool.exe</string>
-                  <string>--solution</string>
-                  <string>Kokua.sln</string>
-                  <string>--config</string>
-                  <string>Release</string>
-                  <string>--startup</string>
-                  <string>kokua-bin</string>
                 </array>
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
-                  <string>-DUNATTENDED:BOOL=OFF</string>
+                  <string>Visual Studio 12</string>
+                  <string>-DUNATTENDED:BOOL=ON</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                   <string>-DUSE_KDU=FALSE</string>
                 </array>
