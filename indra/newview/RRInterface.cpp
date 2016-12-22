@@ -1884,11 +1884,22 @@ BOOL RRInterface::answerOnChat (std::string channel, std::string msg)
 //		LL_WARNS() << "Too large an answer: maximum is " << (chan > 0 ? "1023 characters" : "255 characters for a negative channel") << ". Aborted command." << LL_ENDL;
 //		return FALSE;
 //	}
-	//if (chan > 0) {
-	//	std::ostringstream temp;
-	//	temp << "/" << chan << " " << msg;
-	//	LLFloaterIMNearbyChat::sendChatFromViewer(temp.str(), CHAT_TYPE_SHOUT, FALSE);
-	//} else {
+	if (chan > 0) {
+		//std::ostringstream temp;
+		//temp << "/" << chan << " " << msg;
+		//LLFloaterIMNearbyChat::sendChatFromViewer(temp.str(), CHAT_TYPE_SHOUT, FALSE);
+		gMessageSystem->newMessageFast(_PREHASH_ChatFromViewer);
+		gMessageSystem->nextBlockFast(_PREHASH_AgentData);
+		gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+		gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+		gMessageSystem->nextBlockFast(_PREHASH_ChatData);
+		gMessageSystem->addStringFast(_PREHASH_Message, msg);
+		gMessageSystem->addU8Fast(_PREHASH_Type, CHAT_TYPE_SHOUT);
+		gMessageSystem->addS32("Channel", chan);
+
+		gAgent.sendReliableMessage();
+	}
+	else {
 		gMessageSystem->newMessage("ScriptDialogReply");
 		gMessageSystem->nextBlock("AgentData");
 		gMessageSystem->addUUID("AgentID", gAgent.getID());
@@ -1899,7 +1910,7 @@ BOOL RRInterface::answerOnChat (std::string channel, std::string msg)
 		gMessageSystem->addS32("ButtonIndex", 1);
 		gMessageSystem->addString("ButtonLabel", msg);
 		gAgent.sendReliableMessage();
-	//}
+	}
 	if (sRestrainedLoveDebug) {
 		LL_INFOS() << "/" << chan << " " << msg << LL_ENDL;
 	}
