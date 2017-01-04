@@ -23,17 +23,23 @@ that are assigned to bookmarks. If the bookmarks where not there two (2) default
 
 to each default branch mercurial hash. 
 
-Using mercurial command hg clone place you forked kokua-dev repository on your local file system. Example: 
+Using mercurial command hg clone place you forked kokua repository on your local file system. Example: 
 
-hg clone https://bitucket.org/nickyp/kokua-dev
+For OpenSim version:
+
+hg clone https://bitucket.org/kokua/kokua-os
+
+Or SecondLife version:
+
+hg clone https://bitucket.org/kokua/kokua-sl 
 
 An important step is to pull and update Bookmarks from your respository. This allows the bookmarks to advance to the tip with each commit.
 
-A bookmark pull is hg pull -B KokuaNT https://bitucket.org/nickyp/kokua-dev --Notice that it is a capital B. Now repeat with Kokua-MKRLV bookmark.
+A bookmark pull is hg pull -B KokuaNT https://bitucket.org/kokua/kokua-os --Notice that it is a capital B. Now repeat with Kokua-MKRLV bookmark.
 
 If your bitbucket repository's bookmarks have fallen behind or do not show up then push the bookmark name. For example:
 
-hg push -B KokuaNT https://bitucket.org/nickyp/kokua-dev notice the capital B again. Capital B is for bookmark exchange only. No changes are made to
+hg push -B KokuaNT https://bitucket.org/xxxxx/kokua-os notice the capital B again. Capital B is for bookmark exchange only. No changes are made to
 
 the working tree.
 
@@ -97,7 +103,13 @@ gcc (Ubuntu 4.8.4-2ubuntu1~14.04) 4.8.4
 
 Install autobuild into python
 
-sudo pip install hg+https://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
+-   If building lindenlab viewer64 code base use autobuild-1.1
+
+-       sudo pip install hg+http://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
+
+-   Otherwise use autobuild-1.0
+
+-       sudo pip install hg+http://bitbucket.org/lindenlab/autobuild-1.0#egg=autobuild
 
 Install optional tools
 
@@ -224,7 +236,7 @@ Skip the export for 32 bit builds.
 export AUTOBUILD_PLATFORM_OVERRIDE='linux64'
 
 
--  hg clone https://bitbucket.org/kokua/kokua-dev
+-  hg clone https://bitbucket.org/kokua/kokua-os
 
   KokuaNT can be built with opensource or properity audio engine. The opensource solution uses openal for sounds and gstreamer for streaming music and audio visual files like mp4's. Use of the properity FMOD Ex library for sounds and streaming audio is supported but, the FMOD Ex library must be provided separately.
 
@@ -407,7 +419,13 @@ You will need these items before you begin:
 
 -   Typically cd \Python27\Scripts
 
--   Run pip install hg+http://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
+-   If building lindenlab viewer64 code base use autobuild-1.1
+
+-       Run pip install hg+http://bitbucket.org/lindenlab/autobuild-1.1#egg=autobuild
+
+-   Otherwise use autobuild-1.0
+
+-       Run pip install hg+http://bitbucket.org/lindenlab/autobuild-1.0#egg=autobuild
 
 -   Autobuild will be installed.  Earlier versions of autobuild could be made to work by just putting the source files
 
@@ -455,9 +473,9 @@ Verify that these version request.
 
 -  Development source code repositories
 
--   OpenSim https://bitbucket.org/nickyp/kokua-os
+-   OpenSim https://bitbucket.org/kokua/kokua-os
 
--   SecondLife https://bitbucket.org/nickyp/kokua-sl
+-   SecondLife https://bitbucket.org/kokua/kokua-sl
 
 -   Use mercurial to clone one of the above respostories to your local machine. For example: 
 
@@ -569,7 +587,13 @@ The root cause of this is that it tries to run autobuild by spawning a shell fro
 
 To build Kokua first download the Kokua source code with the following command in terminal:
 
-hg clone https://NickyP@bitbucket.org/NickyP/kokuant 
+For the OpenSim version:
+
+hg clone https://bitbucket.org/kokua/kokua-os
+
+For the SecondLife version:
+
+hg clone https://bitbucket.org/kokua/kokua-sl 
 
 You can configure the build with:
 
