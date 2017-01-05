@@ -18,21 +18,14 @@ set(${CMAKE_CURRENT_LIST_FILE}_INCLUDED "YES")
 
 include(Variables)
 
-# We go to some trouble to set LL_BUILD to the set of relevant compiler flags.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} $ENV{LL_BUILD}")
-# Given that, all the flags you see added below are flags NOT present in
-# https://bitbucket.org/lindenlab/viewer-build-variables/src/tip/variables.
-# Before adding new ones here, it's important to ask: can this flag really be
-# applied to the viewer only, or should/must it be applied to all 3p libraries
-# as well?
-
 # Portable compilation flags.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DADDRESS_SIZE=${ADDRESS_SIZE}")
 
-
+set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DLL_DEBUG=1")
+set(CMAKE_CXX_FLAGS_RELEASE
+    "-DLL_RELEASE=1 -DLL_RELEASE_FOR_DOWNLOAD=1 -DNDEBUG") 
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 
     "-DLL_RELEASE=1 -DNDEBUG -DLL_RELEASE_WITH_DEBUG_INFO=1")
-
 
 # Configure crash reporting
 set(RELEASE_CRASH_REPORTING OFF CACHE BOOL "Enable use of crash reporting in release builds")
@@ -65,10 +58,10 @@ if (WINDOWS)
   # http://www.cmake.org/pipermail/cmake/2009-September/032143.html
   string(REPLACE "/Zm1000" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od /Zi /MDd /MP -D_SCL_SECURE_NO_WARNINGS=1"
+      CACHE STRING "C++ compiler debug options" FORCE)
   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 
-      "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Zo"
+      "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Od /Zi /Zo /MD /MP /Ob0 -D_SECURE_STL=0"
       CACHE STRING "C++ compiler release-with-debug options" FORCE)
   set(CMAKE_CXX_FLAGS_RELEASE
       "${CMAKE_CXX_FLAGS_RELEASE} ${LL_CXX_FLAGS} /Ox /Zi /Zo /MD /MP /Ob2 -D_SECURE_STL=0 -D_HAS_ITERATOR_DEBUGGING=0"
@@ -80,10 +73,11 @@ if (WINDOWS)
   set(CMAKE_C_STANDARD_LIBRARIES "")
 
   add_definitions(
+      /DLL_WINDOWS=1
       /DNOMINMAX
 #      /DDOM_DYNAMIC            # For shared library colladadom
-      )
-  add_compile_options(
+      /DUNICODE
+      /D_UNICODE 
       /GS
       /TP
       /W3
@@ -91,6 +85,7 @@ if (WINDOWS)
       /Zc:forScope
       /nologo
       /Oy-
+      /Zc:wchar_t-
 #      /arch:SSE2
       /fp:fast
       )
@@ -104,40 +99,85 @@ if (WINDOWS)
   if (NOT VS_DISABLE_FATAL_WARNINGS)
     add_definitions(/WX)
   endif (NOT VS_DISABLE_FATAL_WARNINGS)
+
+  # configure Win32 API for Windows Vista+ compatibility
+  set(WINVER "0x0600" CACHE STRING "Win32 API Target version (see http://msdn.microsoft.com/en-us/library/aa383745%28v=VS.85%29.aspx)")
+  add_definitions("/DWINVER=${WINVER}" "/D_WIN32_WINNT=${WINVER}")
 endif (WINDOWS)
 
 
 if (LINUX)
   set(CMAKE_SKIP_RPATH TRUE)
 
-  add_definitions(-D_FORTIFY_SOURCE=2)
+  # Here's a giant hack for Fedora 8, where we can't use
+  # _FORTIFY_SOURCE if we're using a compiler older than gcc 4.1.
 
-  # Hacks to work around gcc 4.1 TC build pool machines which can't process pragma warning disables
+  find_program(GXX g++)
+  mark_as_advanced(GXX)
+
+  if (GXX)
+    execute_process(
+        COMMAND ${GXX} --version
+        COMMAND sed "s/^[gc+ ]*//"
+        COMMAND head -1
+        OUTPUT_VARIABLE GXX_VERSION
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+  else (GXX)
+    set(GXX_VERSION x)
+  endif (GXX)
+
+  # The quoting hack here is necessary in case we're using distcc or
+  # ccache as our compiler.  CMake doesn't pass the command line
+  # through the shell by default, so we end up trying to run "distcc"
+  # " g++" - notice the leading space.  Ugh.
+
+  execute_process(
+      COMMAND sh -c "${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1} --version"
+      COMMAND sed "s/^[gc+ ]*//"
+      COMMAND head -1
+      OUTPUT_VARIABLE CXX_VERSION
+      OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+  if (${GXX_VERSION} STREQUAL ${CXX_VERSION})
+    add_definitions(-D_FORTIFY_SOURCE=2)
+  else (${GXX_VERSION} STREQUAL ${CXX_VERSION})
+    if (NOT ${GXX_VERSION} MATCHES " 4.1.*Red Hat")
+      add_definitions(-D_FORTIFY_SOURCE=2)
+    endif (NOT ${GXX_VERSION} MATCHES " 4.1.*Red Hat")
+  endif (${GXX_VERSION} STREQUAL ${CXX_VERSION})
+
+  # Let's actually get a numerical version of gxx's version
+  STRING(REGEX REPLACE ".* ([0-9])\\.([0-9])\\.([0-9]).*" "\\1\\2\\3" CXX_VERSION_NUMBER ${CXX_VERSION})
+
+  if(${CXX_VERSION_NUMBER} GREATER 459)
   # This is pure rubbish; I wish there was another way.
   #
   if(${CXX_VERSION_NUMBER} LESS 420)
     set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-uninitialized -Wno-unused-variable -Wno-unused-function ${CMAKE_CXX_FLAGS}")
   endif (${CXX_VERSION_NUMBER} LESS 420)
 
-  set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-unused-but-set-variable -Wno-unused-variable ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-unused-but-set-variable -Wno-unused-variable ${CMAKE_CXX_FLAGS}")
+  endif (${CXX_VERSION_NUMBER} GREATER 459)
 
   # gcc 4.3 and above don't like the LL boost and also
   # cause warnings due to our use of deprecated headers
-  add_definitions(-Wno-parentheses)
+  if(${CXX_VERSION_NUMBER} GREATER 429)
+    add_definitions(-Wno-parentheses)
   # gcc 4.8 and above added a new spammy warning!
   if (${CXX_VERSION_NUMBER} GREATER 479)
     set(CMAKE_CXX_FLAGS "-Wno-unused-local-typedefs -Wno-deprecated-declarations ${CMAKE_CXX_FLAGS}")
   endif (${CXX_VERSION_NUMBER} GREATER 479)
 
   add_definitions(
+      -DLL_LINUX=1
       -D_REENTRANT
-      )
-  add_compile_options(
       -fexceptions
       -fno-math-errno
       -fno-strict-aliasing
       -fsigned-char
       -mmmx
+      -g
       -msse
       -msse2
       -mfpmath=sse
@@ -148,10 +188,8 @@ if (LINUX)
   # force this platform to accept TOS via external browser #DKO  will break use internal browser
   #add_definitions(-DEXTERNAL_TOS)
 
-  add_compile_options(-fvisibility=hidden)
-  # don't catch SIGCHLD in our base application class for the viewer - some of
-  # our 3rd party libs may need their *own* SIGCHLD handler to work. Sigh! The
-  # viewer doesn't need to catch SIGCHLD anyway.
+  add_definitions(-fvisibility=hidden)
+  # don't catch SIGCHLD in our base application class for the viewer - some of our 3rd party libs may need their *own* SIGCHLD handler to work.  Sigh!  The viewer doesn't need to catch SIGCHLD anyway.
   add_definitions(-DLL_IGNORE_SIGCHLD)
     IF(${ARCH} STREQUAL "x86_64")
       add_definitions(-march=x86-64 -mfpmath=sse)
@@ -161,7 +199,7 @@ if (LINUX)
   #add_definitions(-ftree-vectorize) # THIS CRASHES GCC 3.1-3.2
   if (NOT USESYSTEMLIBS)
     # this stops us requiring a really recent glibc at runtime
-    add_compile_options(-fno-stack-protector)
+    add_definitions(-fno-stack-protector)
     # linking can be very memory-hungry, especially the final viewer link
     set(CMAKE_CXX_LINK_FLAGS "-Wl,--no-keep-memory")
   endif (NOT USESYSTEMLIBS)
@@ -181,9 +219,10 @@ endif (LINUX)
 
 
 if (DARWIN)
+  add_definitions(-DLL_DARWIN=1)
   set(CMAKE_CXX_LINK_FLAGS "-Wl,-no_compact_unwind -Wl,-headerpad_max_install_names,-search_paths_first")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_CXX_LINK_FLAGS}")
-  set(DARWIN_extra_cstar_flags "-Wno-unused-local-typedef -Wno-deprecated-declarations")
+  set(DARWIN_extra_cstar_flags "-g -Wno-unused-local-typedef -Wno-deprecated-declarations")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DARWIN_extra_cstar_flags}")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  ${DARWIN_extra_cstar_flags}")
   # NOTE: it's critical that the optimization flag is put in front.
