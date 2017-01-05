@@ -3426,7 +3426,6 @@
                 <array>
                   <string>-G</string>
                   <string>Xcode</string>
-                  <string>-DHAVOK:BOOL=FALSE</string>
                 </array>
               </map>
               <key>default</key>
@@ -3475,8 +3474,6 @@
                   <string>Release</string>
                   <string>-project</string>
                   <string>Kokua.xcodeproj</string>
-                  <string>-DENABLE_SIGNING:BOOL=YES</string>
-                  <string>-DSIGNING_IDENTITY:STRING=Developer ID Application: Linden Research, Inc.</string>
                 </array>
               </map>
               <key>configure</key>
@@ -3489,7 +3486,6 @@
                 <array>
                   <string>-G</string>
                   <string>Xcode</string>
-                  <string>-DHAVOK:BOOL=FALSE</string>
                 </array>
               </map>
               <key>name</key>
@@ -3503,10 +3499,8 @@
                 <string>xcodebuild</string>
                 <key>options</key>
                 <array>
-                  <string>-configuration Release</string>
+                  <string>-configuration</string><string>Release</string>
                   <string>-project Kokua.xcodeproj</string>
-                  <string>-DENABLE_SIGNING:BOOL=YES</string>
-                  <string>-DSIGNING_IDENTITY:STRING=Developer ID Application: Linden Research, Inc.</string>
                 </array>
               </map>
               <key>configure</key>
