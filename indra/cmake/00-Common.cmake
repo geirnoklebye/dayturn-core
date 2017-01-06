@@ -150,13 +150,14 @@ if (LINUX)
   # Let's actually get a numerical version of gxx's version
   STRING(REGEX REPLACE ".* ([0-9])\\.([0-9])\\.([0-9]).*" "\\1\\2\\3" CXX_VERSION_NUMBER ${CXX_VERSION})
 
-  if(${CXX_VERSION_NUMBER} GREATER 459)
+  # Hacks to work around gcc 4.1 TC build pool machines which can't process pragma warning disables
   # This is pure rubbish; I wish there was another way.
   #
   if(${CXX_VERSION_NUMBER} LESS 420)
     set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-uninitialized -Wno-unused-variable -Wno-unused-function ${CMAKE_CXX_FLAGS}")
   endif (${CXX_VERSION_NUMBER} LESS 420)
 
+  if(${CXX_VERSION_NUMBER} GREATER 459)
     set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-unused-but-set-variable -Wno-unused-variable ${CMAKE_CXX_FLAGS}")
   endif (${CXX_VERSION_NUMBER} GREATER 459)
 
@@ -164,10 +165,14 @@ if (LINUX)
   # cause warnings due to our use of deprecated headers
   if(${CXX_VERSION_NUMBER} GREATER 429)
     add_definitions(-Wno-parentheses)
+    set(CMAKE_CXX_FLAGS "-Wno-deprecated ${CMAKE_CXX_FLAGS}")
+  endif (${CXX_VERSION_NUMBER} GREATER 429)
+
   # gcc 4.8 and above added a new spammy warning!
   if (${CXX_VERSION_NUMBER} GREATER 479)
     set(CMAKE_CXX_FLAGS "-Wno-unused-local-typedefs -Wno-deprecated-declarations ${CMAKE_CXX_FLAGS}")
   endif (${CXX_VERSION_NUMBER} GREATER 479)
+  # End of hacks.
 
   add_definitions(
       -DLL_LINUX=1
@@ -176,8 +181,8 @@ if (LINUX)
       -fno-math-errno
       -fno-strict-aliasing
       -fsigned-char
-      -mmmx
       -g
+      -mmmx
       -msse
       -msse2
       -mfpmath=sse
@@ -231,7 +236,8 @@ if (DARWIN)
   set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O3 ${CMAKE_C_FLAGS_RELWITHDEBINFO}")
   set(CMAKE_CXX_FLAGS_RELEASE "-O3 ${CMAKE_CXX_FLAGS_RELEASE}")
   set(CMAKE_C_FLAGS_RELEASE "-O3 ${CMAKE_C_FLAGS_RELEASE}")  
-##set(SIGNING_IDENTITY "Developer ID Application: Linden Research, Inc.")
+  set(ENABLE_SIGNING TRUE)
+  set(SIGNING_IDENTITY "Developer ID Application: Linden Research, Inc.")
 endif (DARWIN)
 
 

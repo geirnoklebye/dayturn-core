@@ -125,6 +125,8 @@
             <map>
               <key>hash</key>
               <string>8820c4df1079a9af53f52485f50ff179</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/746/1537/apr_suite-1.4.5.500735-windows64-500735.tar.bz2</string>
             </map>
@@ -215,6 +217,8 @@
             <map>
               <key>hash</key>
               <string>3d6a6373ed0daa490cdb4f92db45de52</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/895/1979/boost-1.57-windows64-500883.tar.bz2</string>
             </map>
@@ -303,6 +307,8 @@
             <map>
               <key>hash</key>
               <string>8a647129a0a0a31594557785ea85f840</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/914/2034/colladadom-2.3.500902-windows64-500902.tar.bz2</string>
             </map>
@@ -395,6 +401,8 @@
             <map>
               <key>hash</key>
               <string>f7fa42c7157cd5007283ae7a5d97393d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1079/2490/curl-7.47.0.501064-windows64-501064.tar.bz2</string>
             </map>
@@ -611,6 +619,8 @@
             <map>
               <key>hash</key>
               <string>5c82a3482799fe22b3c8fcb317f87bbb</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/382/946/expat-2.1.1.500375-windows64-500375.tar.bz2</string>
             </map>
@@ -909,6 +919,8 @@
             <map>
               <key>hash</key>
               <string>9635e7e6fded468dfc0874a2ead54123</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-glext/rev/314200/arch/CYGWIN/installer/glext-68-windows64-314200.tar.bz2</string>
             </map>
@@ -1033,6 +1045,8 @@
             <map>
               <key>hash</key>
               <string>f8362e1a2f4d03d99c6231101d3d472e</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1628/3638/glod-1.0pre3.501614-windows64-501614.tar.bz2</string>
             </map>
@@ -1123,6 +1137,8 @@
             <map>
               <key>hash</key>
               <string>bd6d5227b776e0a323098d3c157fd03a</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1488/3319/google_breakpad-1413.501475-windows64-501475.tar.bz2</string>
             </map>
@@ -1213,6 +1229,8 @@
             <map>
               <key>hash</key>
               <string>e508a2ac7900853cc551666d0cf06541</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/921/2059/googlemock-1.7.0.500908-windows64-500908.tar.bz2</string>
             </map>
@@ -1473,6 +1491,8 @@
             <map>
               <key>hash</key>
               <string>dbc2baf28f83d1646d7e2f66ead2a1a4</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/494/1049/jpeglib-8c.500387-windows64-500387.tar.bz2</string>
             </map>
@@ -3499,7 +3519,8 @@
                 <string>xcodebuild</string>
                 <key>options</key>
                 <array>
-                  <string>-configuration</string><string>Release</string>
+                  <string>-configuration</string>
+                  <string>Release</string>
                   <string>-project Kokua.xcodeproj</string>
                 </array>
               </map>
