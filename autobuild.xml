@@ -853,6 +853,8 @@
             <map>
               <key>hash</key>
               <string>ff72a895012ed603935083496b0a7bc9</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/877/1925/freetype-2.4.4.500865-windows64-500865.tar.bz2</string>
             </map>
@@ -1763,6 +1765,8 @@
             <map>
               <key>hash</key>
               <string>233d86906ef88fa331263162a53e29f2</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/536/1155/libhunspell-1.3.2.500526-windows64-500526.tar.bz2</string>
             </map>
@@ -1829,6 +1833,8 @@
             <map>
               <key>hash</key>
               <string>15cef2cec6c8d1980011e26249bd4e90</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/707/1423/libndofdev-0.1.500695-windows64-500695.tar.bz2</string>
             </map>
@@ -1919,6 +1925,8 @@
             <map>
               <key>hash</key>
               <string>18fe233471e91d5d3ac6d08a296b79ba</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/884/1954/libpng-1.6.8.500873-windows64-500873.tar.bz2</string>
             </map>
@@ -2051,6 +2059,8 @@
             <map>
               <key>hash</key>
               <string>8ec25000f5d72e26c2e7555c73898fbb</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/889/1963/libxml2-2.9.4.500877-windows64-500877.tar.bz2</string>
             </map>
@@ -2151,6 +2161,8 @@
             <map>
               <key>hash</key>
               <string>da1835b11be4442f22fef36820ad46ac</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1517/3434/llceflib-1.6.0.501501-windows64-501501.tar.bz2</string>
             </map>
@@ -2159,7 +2171,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.6.0.501600</string>
+        <string>1.6.0.501501</string>
       </map>
       <key>llphysicsextensions_source</key>
       <map>
@@ -2294,13 +2306,13 @@
       <key>ndPhysicsStub</key>
       <map>
         <key>copyright</key>
-        <string>Khaled Mamou (HACD) / Nicky Dasmijn (integration into for SL viewer)</string>
+        <string>Copyright (c)2011-2013 Nicky Dasmijn</string>
         <key>description</key>
-        <string>Mesh dcomposition using HACD and physics sub implementation.</string>
+        <string>ndPhysicsStub</string>
         <key>license</key>
-        <string>HACD/LGPL</string>
+        <string>LGPL</string>
         <key>license_file</key>
-        <string>LICENSES/ndPhysicsStub.txt</string>
+        <string>LICENSES/ndphysicsstub.txt</string>
         <key>name</key>
         <string>ndPhysicsStub</string>
         <key>platforms</key>
@@ -2357,9 +2369,23 @@
             <key>name</key>
             <string>windows</string>
           </map>
+          <key>windows64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>b5f498e3b005a29af8c11d1a3f86ac6d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-0.5.1-windows64-201701061926.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows64</string>
+          </map>
         </map>
         <key>version</key>
-        <string>1.0</string>
+        <string>0.5.1</string>
       </map>
       <key>nvapi</key>
       <map>
@@ -2393,6 +2419,8 @@
             <map>
               <key>hash</key>
               <string>90e32843a0e21037001dc88240008e1f</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-nvapi/rev/314405/arch/CYGWIN/installer/nvapi-352.314405-windows64-314405.tar.bz2</string>
             </map>
@@ -2483,6 +2511,8 @@
             <map>
               <key>hash</key>
               <string>497ec6ac26c2e136ee65acbed86cb2ef</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/511/1105/ogg_vorbis-1.2.2-1.3.2.500397-windows64-500397.tar.bz2</string>
             </map>
@@ -2583,6 +2613,8 @@
             <map>
               <key>hash</key>
               <string>e0fdd9394a8cd8c6360b922f6f237e57</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-openal/rev/314223/arch/CYGWIN/installer/openal-1.12.854-1.1.0.314223-windows64-314223.tar.bz2</string>
             </map>
@@ -2673,6 +2705,8 @@
             <map>
               <key>hash</key>
               <string>398544058036bc27097fcff208934d11</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1115/2581/openjpeg-1.5.1.501102-windows64-501102.tar.bz2</string>
             </map>
@@ -2763,6 +2797,8 @@
             <map>
               <key>hash</key>
               <string>c3e404a9cc51d64c71ec13dbd44b8409</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1065/2468/openssl-1.0.1u.501051-windows64-501051.tar.bz2</string>
             </map>
@@ -2853,6 +2889,8 @@
             <map>
               <key>hash</key>
               <string>eaebfb4a96a6306ee8e0b18434d125f9</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/910/2018/pcre-8.35.500898-windows64-500898.tar.bz2</string>
             </map>
@@ -2943,6 +2981,8 @@
             <map>
               <key>hash</key>
               <string>61c41dd565e2caa38bd0056970094749</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/615/1297/slvoice-4.6.0017.21209.500605-windows64-500605.tar.bz2</string>
             </map>
@@ -3063,6 +3103,8 @@
             <map>
               <key>hash</key>
               <string>587db55a2a3ce57628374b5e27b3272e</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/349/875/uriparser-0.8.0.1-windows64-500342.tar.bz2</string>
             </map>
@@ -3115,6 +3157,8 @@
             <map>
               <key>hash</key>
               <string>148ee599afeba9794de14ca433389504</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1218/2829/vlc_bin-2.2.4.501207-windows64-501207.tar.bz2</string>
             </map>
@@ -3205,6 +3249,8 @@
             <map>
               <key>hash</key>
               <string>a9dda7caa8835c52b3735711cfee4eb9</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/730/1500/xmlrpc_epi-0.54.1.500719-windows64-500719.tar.bz2</string>
             </map>
@@ -3297,6 +3343,8 @@
             <map>
               <key>hash</key>
               <string>70a56767f6a109af412838875d0b5f1b</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/869/1909/zlib-1.2.8.500857-windows64-500857.tar.bz2</string>
             </map>
@@ -3338,7 +3386,7 @@
                 <key>options</key>
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
-                  <string>-DADDRESS_SIZE:STRING=32</string>
+                  <string>-DADDRESS_SIZE:STRING=$AUTOBUILD_ADDRSIZE</string>
                   <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>
                 </array>
@@ -3359,7 +3407,7 @@
                 <key>options</key>
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo</string>
-                  <string>-DADDRESS_SIZE:STRING=32</string>
+                  <string>-DADDRESS_SIZE:STRING=$AUTOBUILD_ADDRSIZE</string>
                   <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
@@ -3379,7 +3427,7 @@
                 <key>options</key>
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=Release</string>
-                  <string>-DADDRESS_SIZE:STRING=32</string>
+                  <string>-DADDRESS_SIZE:STRING=$AUTOBUILD_ADDRSIZE</string>
                   <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=TRUE</string>
                 </array>
@@ -3400,7 +3448,7 @@
                 <key>options</key>
                 <array>
                   <string>-DCMAKE_BUILD_TYPE:STRING=Release</string>
-                  <string>-DADDRESS_SIZE:STRING=32</string>
+                  <string>-DADDRESS_SIZE:STRING=$AUTOBUILD_ADDRSIZE</string>
                   <string>-DROOT_PROJECT_NAME:STRING=Kokua</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                 </array>
@@ -3662,7 +3710,7 @@
         <key>windows</key>
         <map>
           <key>build_directory</key>
-          <string>build-vc120-32</string>
+          <string>build-vc120-$AUTOBUILD_ADDRSIZE</string>
           <key>configurations</key>
           <map>
             <key>RelWithDebInfo</key>
@@ -3678,7 +3726,7 @@
                 <key>options</key>
                 <array>
                   <string>/build</string>
-                  <string>RelWithDebInfo|Win32</string>
+                  <string>RelWithDebInfo|${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
                 </array>
               </map>
               <key>configure</key>
@@ -3690,7 +3738,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>Visual Studio 12</string>
+                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                 </array>
               </map>
               <key>default</key>
@@ -3711,7 +3759,7 @@
                 <key>options</key>
                 <array>
                   <string>/p:Configuration=RelWithDebInfo</string>
-                  <string>/p:Platform=Win32</string>
+                  <string>/p:Platform=${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
                   <string>/t:Build</string>
                   <string>/p:useenv=true</string>
                   <string>/verbosity:minimal</string>
@@ -3728,7 +3776,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>Visual Studio 12</string>
+                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                   <string>-DUNATTENDED:BOOL=ON</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                   <string>-DUSE_KDU=FALSE</string>
@@ -3750,7 +3798,7 @@
                 <key>options</key>
                 <array>
                   <string>/build</string>
-                  <string>Release|Win32</string>
+                  <string>Release|${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
                 </array>
               </map>
               <key>configure</key>
@@ -3762,7 +3810,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>Visual Studio 12</string>
+                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                 </array>
               </map>
               <key>name</key>
@@ -3781,7 +3829,7 @@
                 <key>options</key>
                 <array>
                   <string>/p:Configuration=Release</string>
-                  <string>/p:Platform=Win32</string>
+                  <string>/p:Platform=${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
                   <string>/t:Build</string>
                   <string>/p:useenv=true</string>
                   <string>/verbosity:minimal</string>
@@ -3798,7 +3846,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>Visual Studio 12</string>
+                  <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                   <string>-DUNATTENDED:BOOL=ON</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                   <string>-DUSE_KDU=FALSE</string>
