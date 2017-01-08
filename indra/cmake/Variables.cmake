@@ -9,7 +9,37 @@
 #   LINUX   - Linux
 #   WINDOWS - Windows
 
-
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  if (CMAKE_BUILD_TYPE MATCHES "Debug")
+      set (ENV{LL_BUILD} $ENV{LL_BUILD_WINDOWS_DEBUG})
+  elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo")
+      set (ENV{LL_BUILD} $ENV{LL_BUILD_WINDOWS_RELWITHDEBINFO})
+  elseif (CMAKE_BUILD_TYPE MATCHES "Release")
+      set (ENV{LL_BUILD} $ENV{LL_BUILD_WINDOWS_RELEASE})
+  endif(CMAKE_BUILD_TYPE MATCHES "Debug")
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  if (CMAKE_BUILD_TYPE MATCHES "Debug")
+      set (ENV{LL_BUILD} $ENV{LL_BUILD_DARWIN_DEBUG})
+  elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo")
+      set (ENV{LL_BUILD} $ENV{LL_BUILD_DARWIN_RELWITHDEBINFO})
+  elseif (CMAKE_BUILD_TYPE MATCHES "Release")
+      set (ENV{LL_BUILD} $ENV{LL_BUILD_DARWIN_RELEASE})
+  endif(CMAKE_BUILD_TYPE MATCHES "Debug")
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+  if (CMAKE_BUILD_TYPE MATCHES "Debug")
+      set (ENV{LL_BUILD} $ENV{LL_BUILD_LINUX_DEBUG})
+  elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo")
+      set (ENV{LL_BUILD} $ENV{LL_BUILD_LINUX_RELWITHDEBINFO})
+  elseif (CMAKE_BUILD_TYPE MATCHES "Release")
+      set (ENV{LL_BUILD} $ENV{LL_BUILD_LINUX_RELEASE})
+  endif(CMAKE_BUILD_TYPE MATCHES "Debug")      
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")  
+if ("$ENV{LL_BUILD}" STREQUAL "")
+  message(FATAL_ERROR "Environment variable LL_BUILD must be set")
+endif ()
+#message(STATUS "LL_BUILD = '$ENV{LL_BUILD}'")
 # Relative and absolute paths to subtrees.
 
 if(NOT DEFINED ${CMAKE_CURRENT_LIST_FILE}_INCLUDED)
