@@ -856,7 +856,7 @@ void LLPrivateMemoryPool::LLMemoryChunk::dump()
 		}
 	}
 
-	llassert_always(total_size + mMinBlockSize >= mBufferSize - ((U32)mDataBuffer - (U32)mBuffer)) ;
+	llassert_always(total_size + mMinBlockSize >= mBufferSize - ((uintptr_t)mDataBuffer - (uintptr_t)mBuffer)) ;
 
 	U32 blk_num = (mBufferSize - (mDataBuffer - mBuffer)) / mMinBlockSize ;
 	for(U32 i = 0 ; i < blk_num ; )
@@ -879,7 +879,7 @@ void LLPrivateMemoryPool::LLMemoryChunk::dump()
 #endif
 #if 0
 	LL_INFOS() << "---------------------------" << LL_ENDL ;
-	LL_INFOS() << "Chunk buffer: " << (U32)getBuffer() << " size: " << getBufferSize() << LL_ENDL ;
+	LL_INFOS() << "Chunk buffer: " << (uintptr_t)getBuffer() << " size: " << getBufferSize() << LL_ENDL ;
 
 	LL_INFOS() << "available blocks ... " << LL_ENDL ;
 	for(S32 i = 0 ; i < mBlockLevels ; i++)
@@ -887,7 +887,7 @@ void LLPrivateMemoryPool::LLMemoryChunk::dump()
 		LLMemoryBlock* blk = mAvailBlockList[i] ;
 		while(blk)
 		{
-			LL_INFOS() << "blk buffer " << (U32)blk->getBuffer() << " size: " << blk->getBufferSize() << LL_ENDL ;
+			LL_INFOS() << "blk buffer " << (uintptr_t)blk->getBuffer() << " size: " << blk->getBufferSize() << LL_ENDL ;
 			blk = blk->mNext ;
 		}
 	}
@@ -898,7 +898,7 @@ void LLPrivateMemoryPool::LLMemoryChunk::dump()
 		LLMemoryBlock* blk = mFreeSpaceList[i] ;
 		while(blk)
 		{
-			LL_INFOS() << "blk buffer " << (U32)blk->getBuffer() << " size: " << blk->getBufferSize() << LL_ENDL ;
+			LL_INFOS() << "blk buffer " << (uintptr_t)blk->getBuffer() << " size: " << blk->getBufferSize() << LL_ENDL ;
 			blk = blk->mNext ;
 		}
 	}
@@ -1764,7 +1764,7 @@ LLPrivateMemoryPoolManager::~LLPrivateMemoryPoolManager()
 		S32 k = 0 ;
 		for(mem_allocation_info_t::iterator iter = sMemAllocationTracker.begin() ; iter != sMemAllocationTracker.end() ; ++iter)
 		{
-			LL_INFOS() << k++ << ", " << (U32)iter->first << " : " << iter->second << LL_ENDL ;
+			LL_INFOS() << k++ << ", " << (uintptr_t)iter->first << " : " << iter->second << LL_ENDL ;
 		}
 		sMemAllocationTracker.clear() ;
 	}

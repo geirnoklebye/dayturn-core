@@ -835,8 +835,8 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
 		min = face.mExtents[0];
 		max = face.mExtents[1];
 		
-		// llassert(less_than_max_mag(min));
-		// llassert(less_than_max_mag(max));
+		llassert(less_than_max_mag(min));
+		llassert(less_than_max_mag(max));
 
 		//min, max are in volume space, convert to drawable render space
 
@@ -2166,11 +2166,10 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 			LLVector4a src;
 
-			U32 glow32 = glow |
-						 (glow << 8) |
-						 (glow << 16) |
-						 (glow << 24);
 
+			LLColor4U glow4u = LLColor4U(0,0,0,glow);
+
+			U32 glow32 = glow4u.asRGBA();
 
 			U32 vec[4];
 			vec[0] = vec[1] = vec[2] = vec[3] = glow32;
