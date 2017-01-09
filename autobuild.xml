@@ -3755,16 +3755,11 @@
                   <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
-                <string>msbuild.exe</string>
+                <string>devenv</string>
                 <key>options</key>
                 <array>
-                  <string>/p:Configuration=RelWithDebInfo</string>
-                  <string>/p:Platform=${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
-                  <string>/t:Build</string>
-                  <string>/p:useenv=true</string>
-                  <string>/verbosity:minimal</string>
-                  <string>/toolsversion:12.0</string>
-                  <string>/p:VCBuildAdditionalOptions= /incremental</string>
+                  <string>/build</string>
+                  <string>RelWithDebInfo|${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
                 </array>
               </map>
               <key>configure</key>
@@ -3779,7 +3774,7 @@
                   <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                   <string>-DUNATTENDED:BOOL=ON</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DUSE_KDU=FALSE</string>
+                  <string>-DUSE_KDU=FALSE</string>                 
                 </array>
               </map>
               <key>name</key>
@@ -3811,6 +3806,9 @@
                 <array>
                   <string>-G</string>
                   <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
+                  <string>-DUNATTENDED:BOOL=ON</string>
+                  <string>-DINSTALL_PROPRIETARY=FALSE</string>
+                  <string>-DUSE_KDU=FALSE</string>                  
                 </array>
               </map>
               <key>name</key>
@@ -3825,16 +3823,11 @@
                   <string>Kokua.sln</string>
                 </array>
                 <key>command</key>
-                <string>msbuild.exe</string>
+                <string>devenv</string>
                 <key>options</key>
                 <array>
-                  <string>/p:Configuration=Release</string>
-                  <string>/p:Platform=${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
-                  <string>/t:Build</string>
-                  <string>/p:useenv=true</string>
-                  <string>/verbosity:minimal</string>
-                  <string>/toolsversion:12.0</string>
-                  <string>/p:VCBuildAdditionalOptions= /incremental</string>
+                  <string>/build</string>
+                  <string>Release|${AUTOBUILD_WIN_VSPLATFORM|NOTWIN}</string>
                 </array>
               </map>
               <key>configure</key>
