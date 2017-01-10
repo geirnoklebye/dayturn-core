@@ -13,7 +13,6 @@ include(DragDrop)
 include(EXPAT)
 include(FMODEX)
 include(GLOD)
-include(GooglePerfTools)
 include(Hunspell)
 include(JsonCpp)
 include(LLAppearance)
@@ -1519,8 +1518,7 @@ if (WINDOWS)
         set(VIEWER_MACOSX_PHASE "a")
 
     endif()
-
-    message("Copying icons for ${ICON_PATH}")
+    message(STATUS "Copying icons for ${ICON_PATH}")
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.ico"
@@ -1774,7 +1772,7 @@ if (WINDOWS)
     set_target_properties(${VIEWER_BINARY_NAME}
         PROPERTIES
         # *TODO -reenable this once we get server usage sorted out
-        LINK_FLAGS "/debug /NODEFAULTLIB:LIBCMT /SUBSYSTEM:WINDOWS ${TCMALLOC_LINK_FLAGS} /LARGEADDRESSAWARE"
+        LINK_FLAGS "/debug /NODEFAULTLIB:LIBCMT /SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE"
         LINK_FLAGS_DEBUG "/NODEFAULTLIB:\"LIBCMT;LIBCMTD;MSVCRT\" /INCREMENTAL:NO /LARGEADDRESSAWARE"
         LINK_FLAGS_RELWITHDEBINFO "/NODEFAULTLIB:\"LIBCMT;LIBCMTD;MSVCRT\" /INCREMENTAL:NO /LTCG /LARGEADDRESSAWARE"
         LINK_FLAGS_RELEASE "/FORCE:MULTIPLE /MAP\"secondlife-bin.MAP\" /OPT:REF /INCREMENTAL:NO /LTCG /LARGEADDRESSAWARE"
@@ -1795,20 +1793,8 @@ if (WINDOWS)
     # In the meantime, if you have any ideas on how to easily maintain one list, either here or in viewer_manifest.py
     # and have the build deps get tracked *please* tell me about it.
 
-    if(USE_TCMALLOC)
-      # Configure a var for tcmalloc location, if used.
-      # Note the need to specify multiple names explicitly.
-      set(GOOGLE_PERF_TOOLS_SOURCE
-        ${SHARED_LIB_STAGING_DIR}/Release/libtcmalloc_minimal.dll
-        ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/libtcmalloc_minimal.dll
-        ${SHARED_LIB_STAGING_DIR}/Debug/libtcmalloc_minimal-debug.dll
-        )
-     endif(USE_TCMALLOC)
-
-
     set(COPY_INPUT_DEPENDENCIES
       # The following commented dependencies are determined at variably at build time. Can't do this here.
-      #${SHARED_LIB_STAGING_DIR}/${CMAKE_CFG_INTDIR}/libtcmalloc_minimal.dll => None ... Skipping libtcmalloc_minimal.dll
       ${CMAKE_SOURCE_DIR}/../etc/message.xml
       ${CMAKE_SOURCE_DIR}/../scripts/messages/message_template.msg
       ${SHARED_LIB_STAGING_DIR}/${CMAKE_CFG_INTDIR}/llcommon.dll
@@ -1856,11 +1842,19 @@ if (WINDOWS)
       )
 
     if (FMODEX)
-      list(APPEND COPY_INPUT_DEPENDENCIES
-           ${SHARED_LIB_STAGING_DIR}/Release/fmodex.dll
-           ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex.dll
-           ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL.dll
-          )
+        if ( ADDRESS_SIZE EQUAL 32 )
+                list(APPEND COPY_INPUT_DEPENDENCIES
+                   ${SHARED_LIB_STAGING_DIR}/Release/fmodex.dll
+                   ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex.dll
+                   ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL.dll
+                  )
+        elseif( ADDRESS_SIZE EQUAL 64 )
+                list(APPEND COPY_INPUT_DEPENDENCIES
+                   ${SHARED_LIB_STAGING_DIR}/Release/fmodex64.dll
+                   ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex64.dll
+                   ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL64.dll
+                  )
+        endif ( ADDRESS_SIZE EQUAL 32 )
     endif (FMODEX)
     
     add_custom_command(
@@ -1876,7 +1870,7 @@ if (WINDOWS)
         --configuration=${CMAKE_CFG_INTDIR}
         --dest=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}
         --grid=${GRID}
-        --channel=${VIEWER_CHANNEL}
+        "--channel=${VIEWER_CHANNEL}"
         --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
         --source=${CMAKE_CURRENT_SOURCE_DIR}
         --touch=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/copy_touched.bat
@@ -1939,7 +1933,7 @@ if (WINDOWS)
           --artwork=${ARTWORK_DIR}
           --build=${CMAKE_CURRENT_BINARY_DIR}
           --buildtype=${CMAKE_BUILD_TYPE}
-          --channel=${VIEWER_CHANNEL}
+          "--channel=${VIEWER_CHANNEL}"
           --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
           --configuration=${CMAKE_CFG_INTDIR}
           --dest=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}
@@ -2051,7 +2045,6 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLLOGIN_LIBRARIES}
     ${LLPHYSICS_LIBRARIES}
     ${LLPHYSICSEXTENSIONS_LIBRARIES}
-    ${TCMALLOC_LIBRARIES}
     ${LLAPPEARANCE_LIBRARIES}
      )
 
@@ -2082,7 +2075,7 @@ if (LINUX)
         --artwork=${ARTWORK_DIR}
         --build=${CMAKE_CURRENT_BINARY_DIR}
         --buildtype=${CMAKE_BUILD_TYPE}
-        --channel=${VIEWER_CHANNEL}
+        "--channel=${VIEWER_CHANNEL}"
         --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
         --configuration=${CMAKE_CFG_INTDIR}
         --dest=${CMAKE_CURRENT_BINARY_DIR}/packaged
@@ -2109,7 +2102,7 @@ if (LINUX)
       --configuration=${CMAKE_CFG_INTDIR}
       --dest=${CMAKE_CURRENT_BINARY_DIR}/packaged
       --grid=${GRID}
-      --channel=${VIEWER_CHANNEL}
+      "--channel=${VIEWER_CHANNEL}"
       --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
       --source=${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDS
@@ -2168,7 +2161,7 @@ if (DARWIN)
       --configuration=${CMAKE_CFG_INTDIR}
       --dest=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${product}.app
       --grid=${GRID}
-      --channel=${VIEWER_CHANNEL}
+      "--channel=${VIEWER_CHANNEL}"
       --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
       --source=${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDS
@@ -2196,11 +2189,10 @@ if (DARWIN)
           --artwork=${ARTWORK_DIR}
           --build=${CMAKE_CURRENT_BINARY_DIR}
           --buildtype=${CMAKE_BUILD_TYPE}
-          --channel=${VIEWER_CHANNEL}
           --configuration=${CMAKE_CFG_INTDIR}
           --dest=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${product}.app
           --grid=${GRID}
-          --channel=${VIEWER_CHANNEL}
+          "--channel=${VIEWER_CHANNEL}"
           --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
           --source=${CMAKE_CURRENT_SOURCE_DIR}
           --touch=${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.touched
@@ -2217,9 +2209,10 @@ endif (INSTALL)
 
 if (PACKAGE)
   set(SYMBOL_SEARCH_DIRS "")
+  # Note that the path to VIEWER_SYMBOL_FILE must match that in ../../build.sh
   if (WINDOWS)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}")
-    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-windows.tar.bz2")
+    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-windows-$ENV{AUTOBUILD_ADDRSIZE}.tar.bz2")
     # slplugin.exe failing symbols dump - need to debug, might have to do with updated version of google breakpad
     # set(VIEWER_EXE_GLOBS "${VIEWER_BINARY_NAME}${CMAKE_EXECUTABLE_SUFFIX} slplugin.exe")
     set(VIEWER_EXE_GLOBS "${VIEWER_BINARY_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
@@ -2233,13 +2226,13 @@ if (PACKAGE)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/mac_crash_logger/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
-    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-darwin.tar.bz2")
+    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-darwin-$ENV{AUTOBUILD_ADDRSIZE}.tar.bz2")
     set(VIEWER_EXE_GLOBS "'Kokua' SLPlugin mac-crash-logger")
     set(VIEWER_LIB_GLOB "*.dylib")
   endif (DARWIN)
   if (LINUX)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_CURRENT_BINARY_DIR}/packaged")
-    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-linux.tar.bz2")
+    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-linux-$ENV{AUTOBUILD_ADDRSIZE}.tar.bz2")
     set(VIEWER_EXE_GLOBS "do-not-directly-run-kokua-bin SLPlugin")
     set(VIEWER_EXE_GLOBS "do-not-directly-run-kokua-bin")
     set(VIEWER_LIB_GLOB "*${CMAKE_SHARED_MODULE_SUFFIX}*")

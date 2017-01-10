@@ -10,7 +10,6 @@ include(Boost)
 include(LLSharedLibs)
 include(JsonCpp)
 include(GoogleBreakpad)
-include(GooglePerfTools)
 include(Copy3rdPartyLibs)
 include(ZLIB)
 include(URIPARSER)
@@ -268,13 +267,13 @@ set_source_files_properties(${llcommon_HEADER_FILES}
 
 list(APPEND llcommon_SOURCE_FILES ${llcommon_HEADER_FILES})
 
-if(NOT WORD_SIZE EQUAL 32)
+  if(NOT ADDRESS_SIZE EQUAL 32)
   if(WINDOWS)
-    add_definitions(/FIXED:NO)
+      ##add_definitions(/FIXED:NO)
   else(WINDOWS) # not windows therefore gcc LINUX and DARWIN
     add_definitions(-fPIC)
   endif(WINDOWS)
-endif(NOT WORD_SIZE EQUAL 32)
+  endif(NOT ADDRESS_SIZE EQUAL 32)
  
 if(LLCOMMON_LINK_SHARED)
   add_library (llcommon SHARED ${llcommon_SOURCE_FILES})
@@ -371,8 +370,4 @@ if (LL_TESTS)
 ## throwing and catching exceptions.
 ##LL_ADD_INTEGRATION_TEST(llexception "" "${test_libs}")
 
-  # *TODO - reenable these once tcmalloc libs no longer break the build.
-  #ADD_BUILD_TEST(llallocator llcommon)
-  #ADD_BUILD_TEST(llallocator_heap_profile llcommon)
-  #ADD_BUILD_TEST(llmemtype llcommon)
 endif (LL_TESTS)
