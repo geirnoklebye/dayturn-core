@@ -30,22 +30,6 @@ if(WINDOWS)
     #*******************************
     # Misc shared libs 
 
-    set(debug_src_dir "${ARCH_PREBUILT_DIRS_DEBUG}")
-    set(debug_files
- #       alut.dll
- #       openal32.dll
-        openjpegd.dll
-        libapr-1.dll
-        libaprutil-1.dll
-        libapriconv-1.dll
-        ssleay32.dll
-        libeay32.dll
-        glod.dll
-        libhunspell.dll
-        # gstreamer dlls - not plugins
-        # Place holder
-
-
 
     set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(release_files
@@ -66,15 +50,15 @@ if(WINDOWS)
 
         )
 
+    if(USE_TCMALLOC)
+
+      set(debug_files ${debug_files} libtcmalloc_minimal-debug.dll)
+      set(release_files ${release_files} libtcmalloc_minimal.dll)
+    endif(USE_TCMALLOC)
 
     if (FMODEX)
-      if( ADDRESS_SIZE EQUAL 32 )
-        set(release_files ${release_files} fmodex.dll)
-        set(debug_files ${debug_files} fmodexL.dll)
-      else( ADDRESS_SIZE EQUAL 32 )
-        set(release_files ${release_files} fmodex64.dll)
-        set(debug_files ${debug_files} fmodexL64.dll)
-      endif(ADDRESS_SIZE EQUAL 32)
+      set(debug_files ${debug_files} fmodexL.dll)
+      set(release_files ${release_files} fmodex.dll)
     endif (FMODEX)
 
     #*******************************
@@ -190,9 +174,11 @@ elseif(DARWIN)
         libaprutil-1.0.dylib
         libaprutil-1.dylib
         libexception_handler.dylib
-        ${EXPAT_COPY}
+        libexpat.1.5.2.dylib
+        libexpat.dylib
         libGLOD.dylib
 #        libopenal.1.dylib
+        libhunspell-1.3.0.dylib
         libndofdev.dylib
        )
 
@@ -278,7 +264,8 @@ elseif(LINUX)
         libaprutil-1.so.0
         libatk-1.0.so
         libdb-5.1.so
-        ${EXPAT_COPY}
+        libexpat.so
+        libexpat.so.1
         libfreetype.so.6.6.2
         libGLOD.so
         libgmodule-2.0.so
@@ -300,6 +287,10 @@ elseif(LINUX)
     endif(${ARCH} STREQUAL "x86_64")
 
     
+    if (USE_TCMALLOC)
+      set(release_files ${release_files} "libtcmalloc_minimal.so")
+    endif (USE_TCMALLOC)
+
 
 else(WINDOWS)
     message(STATUS "WARNING: unrecognized platform for staging 3rd party libs, skipping...")
@@ -351,13 +342,13 @@ set(third_party_targets ${third_party_targets} ${out_targets})
 
 
 
-#copy_if_different(
-#    ${debug_src_dir}
-#    "${SHARED_LIB_STAGING_DIR_DEBUG}"
-#    out_targets
-#    ${debug_files}
-#    )
-#set(third_party_targets ${third_party_targets} ${out_targets})
+copy_if_different(
+    ${debug_src_dir}
+    "${SHARED_LIB_STAGING_DIR_DEBUG}"
+    out_targets
+    ${debug_files}
+    )
+set(third_party_targets ${third_party_targets} ${out_targets})
 
 copy_if_different(
     ${release_src_dir}

@@ -1,6 +1,6 @@
 # -*- cmake -*-
 #
-# Definitions of variables used throughout the Kokua build
+# Definitions of variables used throughout the Second Life build
 # process.
 #
 # Platform variables:
@@ -135,12 +135,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(LINUX ON BOOl FORCE)
 
   if (ADDRESS_SIZE EQUAL 32)
-  set(PEPPERTARGET_ARCH ia32)
-  elseif (WORD_SIZE EQUAL 64)
-  set(PEPPERTARGET_ARCH x64)
-  endif (WORD_SIZE EQUAL 32)
-
-  if (WORD_SIZE EQUAL 32)
     set(DEB_ARCHITECTURE i386)
     set(FIND_LIBRARY_USE_LIB64_PATHS OFF)
     set(CMAKE_SYSTEM_LIBRARY_PATH /usr/lib32 ${CMAKE_SYSTEM_LIBRARY_PATH})
@@ -204,8 +198,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   message(STATUS "CMAKE_OSX_SYSROOT = '${CMAKE_OSX_SYSROOT}'")
 
   set(XCODE_VERSION 7.0)
-  set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
-  set(CMAKE_OSX_SYSROOT macosx10.11)
 
   set(CMAKE_XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0")
   set(CMAKE_XCODE_ATTRIBUTE_GCC_STRICT_ALIASING NO)
@@ -223,12 +215,7 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 # Default deploy grid
 set(GRID agni CACHE STRING "Target Grid")
 
-set(VIEWER ON CACHE BOOL "Build Kokua viewer.")
-# set(VIEWER_CHANNEL "Kokua Viewer" CACHE STRING "Viewer Channel Name")
-# Set the default channel always to "Kokua Release". Any other words set here will be included in the Windows installer.
-# For example, "Kokua Experimental" will create an installer string of Kokua_Experimental_[VERSION]_Setup.exe
-# and "Kokua Experimental [VERSION]: Installation Folder" -- MC
-set(VIEWER_CHANNEL "Kokua Test" CACHE STRING "Viewer Channel Name")
+set(VIEWER_CHANNEL "Second Life Test" CACHE STRING "Viewer Channel Name")
 
 set(ENABLE_SIGNING OFF CACHE BOOL "Enable signing the viewer")
 set(SIGNING_IDENTITY "" CACHE STRING "Specifies the signing identity to use, if necessary.")
