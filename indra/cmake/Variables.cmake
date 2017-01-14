@@ -9,12 +9,12 @@
 #   LINUX   - Linux
 #   WINDOWS - Windows
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  if (CMAKE_BUILD_TYPE MATCHES "Debug")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_WINDOWS_DEBUG})
-  elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_WINDOWS_RELWITHDEBINFO})
-  elseif (CMAKE_BUILD_TYPE MATCHES "Release")
+# Switches set here and in 00-Common.cmake must agree with
+# https://bitbucket.org/lindenlab/viewer-build-variables/src/tip/variables
+# Reading $LL_BUILD is an attempt to directly use those switches.
+if ("$ENV{LL_BUILD}" STREQUAL "")
+  message(FATAL_ERROR "Environment variable LL_BUILD must be set")
+endif ()
       set (ENV{LL_BUILD} $ENV{LL_BUILD_WINDOWS_RELEASE})
   endif(CMAKE_BUILD_TYPE MATCHES "Debug")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -174,13 +174,6 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(DARWIN 1)
-
-  # The following must agree with
-  # https://bitbucket.org/lindenlab/viewer-build-variables/src/tip/variables
-  # Reading $LL_BUILD is an attempt to directly use those switches.
-  if ("$ENV{LL_BUILD}" STREQUAL "")
-    message(FATAL_ERROR "Environment variable LL_BUILD must be set")
-  endif ()
 
   string(REGEX MATCH "-mmacosx-version-min=([^ ]+)" scratch "$ENV{LL_BUILD}")
   set(CMAKE_OSX_DEPLOYMENT_TARGET "${CMAKE_MATCH_1}")
