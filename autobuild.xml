@@ -2692,9 +2692,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>8a7f0be5647e07235d205ac00805fb78</string>
+              <string>6e5cb7c02869eaaa74f3861d72a9b0af</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1116/2586/openjpeg-1.5.1.501102-windows-501102.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/p64_3p-openjpeg/downloads/openjpeg-1.5.0.201701151945-windows-201701151945.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -2704,18 +2706,18 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>398544058036bc27097fcff208934d11</string>
+              <string>167bd707abe76a01b0cfea8da58c82eb</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1115/2581/openjpeg-1.5.1.501102-windows64-501102.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/p64_3p-openjpeg/downloads/openjpeg-1.5.0.201701152240-windows64-201701152240.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.5.1.501102</string>
+        <string>1.5.0.201701152240</string>
       </map>
       <key>openssl</key>
       <map>
@@ -3774,7 +3776,7 @@
                   <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                   <string>-DUNATTENDED:BOOL=ON</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DUSE_KDU=FALSE</string>                 
+                  <string>-DUSE_KDU=FALSE</string>
                 </array>
               </map>
               <key>name</key>
@@ -3808,7 +3810,7 @@
                   <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
                   <string>-DUNATTENDED:BOOL=ON</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
-                  <string>-DUSE_KDU=FALSE</string>                  
+                  <string>-DUSE_KDU=FALSE</string>
                 </array>
               </map>
               <key>name</key>
