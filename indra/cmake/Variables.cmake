@@ -1,6 +1,6 @@
 # -*- cmake -*-
 #
-# Definitions of variables used throughout the Second Life build
+# Definitions of variables used throughout the Kokua build
 # process.
 #
 # Platform variables:
@@ -12,33 +12,6 @@
 # Switches set here and in 00-Common.cmake must agree with
 # https://bitbucket.org/lindenlab/viewer-build-variables/src/tip/variables
 # Reading $LL_BUILD is an attempt to directly use those switches.
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  if (CMAKE_BUILD_TYPE MATCHES "Debug")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_WINDOWS_DEBUG})
-  elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_WINDOWS_RELWITHDEBINFO})
-  elseif (CMAKE_BUILD_TYPE MATCHES "Release")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_WINDOWS_RELEASE})
-  endif(CMAKE_BUILD_TYPE MATCHES "Debug")
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  if (CMAKE_BUILD_TYPE MATCHES "Debug")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_DARWIN_DEBUG})
-  elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_DARWIN_RELWITHDEBINFO})
-  elseif (CMAKE_BUILD_TYPE MATCHES "Release")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_DARWIN_RELEASE})
-  endif(CMAKE_BUILD_TYPE MATCHES "Debug")
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  if (CMAKE_BUILD_TYPE MATCHES "Debug")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_LINUX_DEBUG})
-  elseif (CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_LINUX_RELWITHDEBINFO})
-  elseif (CMAKE_BUILD_TYPE MATCHES "Release")
-      set (ENV{LL_BUILD} $ENV{LL_BUILD_LINUX_RELEASE})
-  endif(CMAKE_BUILD_TYPE MATCHES "Debug")      
-endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")  
 if ("$ENV{LL_BUILD}" STREQUAL "")
   message(FATAL_ERROR "Environment variable LL_BUILD must be set")
 endif ()
@@ -135,6 +108,12 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(LINUX ON BOOl FORCE)
 
   if (ADDRESS_SIZE EQUAL 32)
+  set(PEPPERTARGET_ARCH ia32)
+  elseif (WORD_SIZE EQUAL 64)
+  set(PEPPERTARGET_ARCH x64)
+  endif (WORD_SIZE EQUAL 32)
+
+  if (WORD_SIZE EQUAL 32)
     set(DEB_ARCHITECTURE i386)
     set(FIND_LIBRARY_USE_LIB64_PATHS OFF)
     set(CMAKE_SYSTEM_LIBRARY_PATH /usr/lib32 ${CMAKE_SYSTEM_LIBRARY_PATH})
@@ -215,7 +194,12 @@ endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 # Default deploy grid
 set(GRID agni CACHE STRING "Target Grid")
 
-set(VIEWER_CHANNEL "Second Life Test" CACHE STRING "Viewer Channel Name")
+set(VIEWER ON CACHE BOOL "Build Kokua viewer.")
+# set(VIEWER_CHANNEL "Kokua Viewer" CACHE STRING "Viewer Channel Name")
+# Set the default channel always to "Kokua Release". Any other words set here will be included in the Windows installer.
+# For example, "Kokua Experimental" will create an installer string of Kokua_Experimental_[VERSION]_Setup.exe
+# and "Kokua Experimental [VERSION]: Installation Folder" -- MC
+set(VIEWER_CHANNEL "Kokua Test" CACHE STRING "Viewer Channel Name")
 
 set(ENABLE_SIGNING OFF CACHE BOOL "Enable signing the viewer")
 set(SIGNING_IDENTITY "" CACHE STRING "Specifies the signing identity to use, if necessary.")
