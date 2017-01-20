@@ -180,9 +180,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f1fdb548fd6c09a083c86f3a23d7f041</string>
+              <string>137b180149defda6b671a2f7121d6b43</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/317807/arch/Linux/installer/boost-1.57-linux-317807.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux-201601261128.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -192,9 +194,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>8e7ee97c3083f44385b09420655ebd04</string>
+              <string>a8befbc4bf31a07f3d4e8e2fc09a0a4b</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/892/1989/boost-1.57-linux64-500883.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-boost-bm/downloads/boost-1.57-linux64-201601261153.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -270,9 +274,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>78b9a6506fb7d53da166f7a65f2278f4</string>
+              <string>cefa37661a7d8fb5016b425d20cd07a3</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/317826/arch/Linux/installer/colladadom-2.3.317826-linux-317826.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201601261914-linux-201601261914.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -282,9 +288,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>868127582794d6fd32fa69c9be4e83e4</string>
+              <string>bdc7c0ba484f97828b8ccc1b44c04be9</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/912/2031/colladadom-2.3.500902-linux64-500902.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/colladadom-ll/downloads/colladadom-2.3.201601261224-linux64-201601261224.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -317,7 +325,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.3.500902</string>
+        <string>2.3.201601261224</string>
       </map>
       <key>curl</key>
       <map>
@@ -828,9 +836,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>94cf61dfdbc86aae5bbaf0b5cb8a366c</string>
+              <string>5e529c5fd598cf16972e2d096630a791</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/874/1914/freetype-2.4.4.500865-linux64-500865.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-freetype/downloads/freetype-2.4.4.201505162052-linux64-201505162052.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -863,7 +873,51 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.4.4.500865</string>
+        <string>2.4.4.201505162052</string>
+      </map>
+      <key>gdk-pixbuf</key>
+      <map>
+        <key>copyright</key>
+        <string>Original Authors:Peter Mattis, Spencer Kimball, Josh MacDonald. See top of code file for others.</string>
+        <key>description</key>
+        <string>GdkPixbuf is a toolkit for image loading and pixel buffer manipulation. In GTK+ version 2.22 from 2010-09-23 GdkPixbuf was split off from GDK into a separate package in preparation for the transition to GTK+ 3.</string>
+        <key>license</key>
+        <string>LGPL(2)</string>
+        <key>license_file</key>
+        <string>LICENSES/gdk-pixbuf.txt</string>
+        <key>name</key>
+        <string>gdk-pixbuf</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>87358dc3e3bcfd220e77b08de50272e3</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-gdk-pixbuf/downloads/gdk_pixbuf-2.30.8-linux-201507210933.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>04ca7ec5d4ff232c2012132b95955f7e</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-gdk-pixbuf/downloads/gdk_pixbuf-2.30.8-linux64-201506041921.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>2.30.8</string>
       </map>
       <key>glext</key>
       <map>
@@ -896,9 +950,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5f3c9d61b620f949b199ebd8885218ed</string>
+              <string>b26cf6cb678d63b28600bdf3fc354033</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-glext/rev/314200/arch/Linux/installer/glext-68-linux64-314200.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-glext/downloads/glext-68-linux64-201505150822.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -963,6 +1019,65 @@
         <key>version</key>
         <string>0.0.0</string>
       </map>
+      <key>glib</key>
+      <map>
+        <key>copyright</key>
+        <string>Unknown. Sources maintained by GNOME Library.</string>
+        <key>description</key>
+        <string>GLib provides the core application building blocks for libraries and applications written in C. It provides the core object system used in GNOME, the main loop implementation, and a large set of utility functions for strings and common data structures.</string>
+        <key>license</key>
+        <string>GLib is released under the GNU Library General Public License (GNU LGPL).</string>
+        <key>license-url</key>
+        <string>http://www.gnu.org/licenses/gpl.html</string>
+        <key>license_file</key>
+        <string>LICENSES/glib.txt</string>
+        <key>name</key>
+        <string>glib</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>0891aac3dd4be134d72d08b2d0a4165c</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-glib/downloads/glib-2.44.1-linux-201507131131.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>c133c727dd787a811d8dec925a64fa5a</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-glib/downloads/glib-2.45.1-linux64-201505312131.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>2.44.1</string>
+      </map>
       <key>glod</key>
       <map>
         <key>copyright</key>
@@ -1020,9 +1135,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>9aef5cd576ace19568da01d9bc3db29c</string>
+              <string>1217cefeeb77db7cdb338f7bc48f9f21</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1625/3628/glod-1.0pre3.501614-linux64-501614.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-glod/downloads/glod-1.0pre4.201506061259-linux64-201506061259.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1057,7 +1174,61 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.0pre3.501614</string>
+        <string>1.0pre4.201506061259</string>
+      </map>
+      <key>glui</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright 2006 Paul Rademacher</string>
+        <key>description</key>
+        <string>GLUI is a GLUT-based C++ user interface library which provides controls such as buttons, checkboxes, radio buttons, and spinners to OpenGL applications.</string>
+        <key>license</key>
+        <string>ZLIB</string>
+        <key>license_file</key>
+        <string>LICENSES/glui.txt</string>
+        <key>name</key>
+        <string>glui</string>
+        <key>platforms</key>
+        <map>
+          <key>darwin</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>9b7e2ab9b208b3001803294f83d2b610</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/glui_3p-update-glui/rev/297273/arch/Darwin/installer/glui-2.36.297273-darwin-297273.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>f330b3acd03526d827030eefeeb06240</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/glui_3p-update-glui/rev/297273/arch/Linux/installer/glui-2.36.297273-linux-297273.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>75b16a5a606c78aaeb2f8e6046310a58</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/glui_3p-update-glui/rev/297273/arch/CYGWIN/installer/glui-2.36.297273-windows-297273.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>2.36.297273</string>
       </map>
       <key>google_breakpad</key>
       <map>
@@ -1246,9 +1417,11 @@
       <key>gstreamer</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (C) 2007 Free Software Foundation, Inc. &lt;http://fsf.org/&gt;</string>
+        <string>Copyright (C) 1991 Free Software Foundation, Inc.</string>
+        <key>description</key>
+        <string>GStreamer is a streaming media framework that enables applications to share a common set of plugins for things like video decoding and encoding, audio encoding and decoding, audio and video filters, audio visualisation, Web streaming and anything else that streams in real-time or otherwise. It is modelled after research software worked on at the Oregon Graduate Institute. After installing GStreamer, you'll likely need to install one or more of the gst-plugins-bad-0.10.23, gst-plugins-good-0.10.31, gst-plugins-ugly-0.10.19 and gst-ffmpeg-0.10.13 packages. </string>
         <key>license</key>
-        <string>LGPL</string>
+        <string>LGPL(2)</string>
         <key>license_file</key>
         <string>LICENSES/gstreamer.txt</string>
         <key>name</key>
@@ -1260,9 +1433,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5017b3e95d2c6f47bb111c3f9c075522</string>
+              <string>c0725ea0bbf2a59b45f920cb837a83ef</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-gstreamer/rev/314267/arch/Linux/installer/gstreamer-0.10.6.314267-linux-314267.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201602051851-linux-201602051851.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1271,28 +1446,55 @@
           <map>
             <key>archive</key>
             <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
               <key>hash</key>
-              <string>7c9d7cc88add7831a6afeedc20cad2fe</string>
+              <string>c1f48f8256c756ed9a5b57e4ccae4bb4</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-gstreamer/rev/314267/arch/Linux/installer/gstreamer-0.10.6.314267-linux64-314267.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-0.10.36.201602041656-linux64-201602041656.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
           </map>
+          <key>windows</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>40cbe362790348f1a465697a7ef8c914</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-gstreamer/downloads/gstreamer-glib-iconv-plugins-autobuild-windows-20140919.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>windows</string>
+          </map>
         </map>
         <key>version</key>
-        <string>0.10.6.314267</string>
+        <string>0.10.36.201602051851</string>
       </map>
-      <key>gtk-atk-pango-glib</key>
+      <key>gtk</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (various, see sources)</string>
+        <string>Copyright (C) 2001 CodeFactory AB, Copyright (C) 2001, 2002 Anders Carlsson, Copyright (C) 2003, 2004 Matthias Clasen</string>
+        <key>description</key>
+        <string>GTK+, or the GIMP Toolkit, is a multi-platform toolkit for creating graphical user interfaces. Offering a complete set of widgets, GTK+ is suitable for projects ranging from small one-off tools to complete application suites.</string>
         <key>license</key>
-        <string>lgpl</string>
+        <string>LGPL(2)</string>
         <key>license_file</key>
-        <string>LICENSES/gtk-atk-pango-glib.txt</string>
+        <string>LICENSES/gtk.txt</string>
         <key>name</key>
-        <string>gtk-atk-pango-glib</string>
+        <string>gtk</string>
         <key>platforms</key>
         <map>
           <key>linux</key>
@@ -1300,9 +1502,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a6431df705526501684d9050e04bfa5b</string>
+              <string>db3c9a733395f2b1b45acf4afae6e77d</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-gtk-atk-pango-glib/rev/314220/arch/Linux/installer/gtk_atk_pango_glib-0.1-linux-314220.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gtk/downloads/gtk-2.24.28-linux-201507211717.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -1312,16 +1514,97 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>de7bba8fd2275a11b077b124413065d0</string>
+              <string>742d44a6609a29ca4bf101370f8300fb</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-gtk-atk-pango-glib/rev/314220/arch/Linux/installer/gtk_atk_pango_glib-0.1-linux64-314220.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-gtk/downloads/gtk-2.24.28-linux64-201506051634.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
           </map>
         </map>
         <key>version</key>
-        <string>0.1</string>
+        <string>2.24.28</string>
+      </map>
+      <key>gtk-etc</key>
+      <map>
+        <key>license</key>
+        <string>lgpl</string>
+        <key>license-file</key>
+        <string>LICENSES/gtk-etc.txt</string>
+        <key>name</key>
+        <string>gtk-etc</string>
+        <key>platforms</key>
+        <map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>dir_structure</key>
+              <map>
+                <key>LICENSES</key>
+                <string>LICENSES</string>
+                <key>libraries/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/include</key>
+                <string>include</string>
+                <key>libraries/x86_64-linux/lib_release_client</key>
+                <string>lib/release</string>
+              </map>
+              <key>hash</key>
+              <string>e8cb3f28379b7730004da44f04263936</string>
+              <key>url</key>
+              <string>http://imprudenceviewer.org/download/libs/gtk-etc-linux64-20091231.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+      </map>
+      <key>harfbuzz</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright © 2010,2011,2012  Google, Inc., Copyright © 2012  Mozilla Foundation, Copyright © 2011  Codethink Limited, Copyright © 2008,2010  Nokia Corporation and/or its subsidiary(-ies), Copyright © 2009  Keith Stribley, Copyright © 2009  Martin Hosken and SIL International, Copyright © 2007  Chris Wilson, Copyright © 2006  Behdad Esfahbod, Copyright © 2005  David Turner, Copyright © 2004,2007,2008,2009,2010  Red Hat, Inc., Copyright © 1998-2004  David Turner and Werner Lemberg; For full copyright notices consult the individual files in the package.</string>
+        <key>description</key>
+        <string>HarfBuzz is an OpenType text shaping engine.</string>
+        <key>license</key>
+        <string>HarfBuzz is licensed under the so-called "Old MIT" license.</string>
+        <key>license_file</key>
+        <string>LICENSES/harfbuzz.txt</string>
+        <key>name</key>
+        <string>harfbuzz</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>622c10c4361a9b8de46c9a885d270402</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-harfbuzz/downloads/harfbuzz-0.9.40-linux-201507201105.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>b927e0337a72d146718a393730ecde0d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-harfbuzz/downloads/harfbuzz-0.9.40-linux64-201506041046.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>0.9.40</string>
       </map>
       <key>havok-source</key>
       <map>
@@ -2104,13 +2387,13 @@
       <key>llceflib</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (c) 2014, Linden Research, Inc.</string>
+        <string>Copyright (c) 2008-2014 Marshall A. Greenblatt. Portions Copyright (c) 2006-2009 Google Inc. All rights reserved</string>
         <key>description</key>
-        <string>LLCefLib implements a headless web browser, rendering modern web content to a memory buffer and providing an API for injecting mouse and keyboard events. It uses the Chromium Embedded Framework (https://bitbucket.org/chromiumembedded/cef)</string>
+        <string>CEF plugin for Second Life</string>
         <key>license</key>
-        <string>LGPL</string>
+        <string>BSD</string>
         <key>license_file</key>
-        <string>LICENSES/LICENSE-source.txt</string>
+        <string>LICENSES/CEF_BSD.txt</string>
         <key>name</key>
         <string>llceflib</string>
         <key>platforms</key>
@@ -2140,6 +2423,34 @@
             </map>
             <key>name</key>
             <string>darwin64</string>
+          </map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>4691ed0d746c27a9f5fb2345dab3d2bc</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201611052240-kokua-linux-201611052240.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>73b26f574b4531c0a831b1c149ec8e56</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-llceflib-dko/downloads/llceflib-1.5.3.201611051707-kokua-linux64-201611051707.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -2171,7 +2482,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.6.0.501501</string>
+        <string>1.5.3.201611051707-kokua</string>
       </map>
       <key>llphysicsextensions_source</key>
       <map>
@@ -2283,6 +2594,29 @@
         <string>mesa</string>
         <key>license_file</key>
         <string>LICENSES/mesa.txt</string>
+        <key>linux64</key>
+        <map>
+          <key>archive</key>
+          <map>
+            <key>dir_structure</key>
+            <map>
+              <key>LICENSES</key>
+              <string>LICENSES</string>
+              <key>libraries/include</key>
+              <string>include</string>
+              <key>libraries/x86_64-linux/include</key>
+              <string>include</string>
+              <key>libraries/x86_64-linux/lib_release_client</key>
+              <string>lib/release</string>
+            </map>
+            <key>hash</key>
+            <string>56630977f9261bd82039b0da08a0685c</string>
+            <key>url</key>
+            <string>http://s3.amazonaws.com/viewer-source-downloads/install_pkgs/mesa-6.2.1-linux64-20081016.tar.bz2</string>
+          </map>
+          <key>name</key>
+          <string>linux64</string>
+        </map>
         <key>name</key>
         <string>mesa</string>
         <key>platforms</key>
@@ -2326,7 +2660,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.0-darwin-201507191036.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.0-darwin-201507191036.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -2378,7 +2712,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-0.5.1-windows64-201701061926.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-0.5.1-windows64-201701061926.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
@@ -2549,6 +2883,20 @@
             <key>name</key>
             <string>linux</string>
           </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>b09df0298a9659962e3e10a25718dd03</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-libndofdev-linux/downloads/open_libndofdev-0.3-linux64-201505171912.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
         </map>
         <key>version</key>
         <string>0.3</string>
@@ -2572,11 +2920,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>24b91eda3831a51c7774644016c4cb09</string>
+              <string>4fa14f9746b34e109af68af7759969bb</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-openal/rev/314223/arch/Linux/installer/openal-1.12.854-1.1.0.314223-linux-314223.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201506211217-linux-201506211217.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2586,9 +2934,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7530fab3979312da75a903d87b73e3a9</string>
+              <string>43fd028ba47dd35cbb6e8dd853ef1cfb</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-openal/rev/314223/arch/Linux/installer/openal-1.12.854-1.1.0.314223-linux64-314223.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-openal/downloads/openal-1.15.1-1.1.0.201506132204-linux64-201506132204.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2623,7 +2973,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.12.854-1.1.0.314223</string>
+        <string>1.15.1-1.1.0.201506132204</string>
       </map>
       <key>openjpeg</key>
       <map>
@@ -2811,6 +3161,52 @@
         <key>version</key>
         <string>1.0.1u.501051</string>
       </map>
+      <key>pango</key>
+      <map>
+        <key>copyright</key>
+        <string>on internationalization.Copyright (C) 1999 Red Hat Software</string>
+        <key>description</key>
+        <string>Pango is a library for layout and rendering of text, with an emphasis</string>
+        <key>license</key>
+        <string>GNU LGPL(2)</string>
+        <key>license_file</key>
+        <string>LICENSES/pango.txt</string>
+        <key>name</key>
+        <string>pango</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>6dca707cb897d3c360f5dd0ffcb2cd2c</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-pango/downloads/pango-1.36.8-linux-201507201400.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>5dc224dc6d4e0288f9503b1627fad3a1</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-pango/downloads/pango-1.36.8-linux64-201506041413.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>1.36.8</string>
+      </map>
       <key>pcre</key>
       <map>
         <key>copyright</key>
@@ -2866,9 +3262,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>0f058ca2176e7d02d51e54c66a96f336</string>
+              <string>4707e7dcee810c401eb65c79d93bd8ee</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/908/2010/pcre-8.35.500898-linux64-500898.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-pcre/downloads/pcre-8.35.-linux64-201505161257.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2901,7 +3299,53 @@
           </map>
         </map>
         <key>version</key>
-        <string>8.35.500898</string>
+        <string>8.35.</string>
+      </map>
+      <key>pixman</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright © 2000 Keith Packard, member of The XFree86 Project, Inc.  2005 Lars Knoll Zack Rusin, Trolltech 2008 Aaron Plattner, NVIDIA Corporation. See code headers</string>
+        <key>description</key>
+        <string>Pixman is a low-level software library for pixel manipulation, providing features such as image compositing and trapezoid rasterization.</string>
+        <key>license</key>
+        <string>MIT License</string>
+        <key>license_file</key>
+        <string>LICENSES/pixman.txt</string>
+        <key>name</key>
+        <string>pixman</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>c99e94652ddf7d72691d16eb0bc61efa</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux-201507192238.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>504c19255873cea1273e2d5e3214a61d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-pixman/downloads/pixman-0.32.6-linux64-201506011032.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>0.32.6</string>
       </map>
       <key>slvoice</key>
       <map>
@@ -2946,9 +3390,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e5832a68562c3409a56a3583d101864b</string>
+              <string>bb48383ba0d0f26be1ba0fa943c5c9aa</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-slvoice/rev/314209/arch/Linux/installer/slvoice-3.2.0002.10426.314209-linux-314209.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-3.2.0002.10426.298329.201607192017-linux-201607192017.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -2958,9 +3404,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>92b0ae08832bd0e99c34ef8f3e6346ad</string>
+              <string>86d3150b2505ee11da14fdcc956b80fd</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/613/1289/slvoice-3.2.0002.10426.500605-linux64-500605.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-3.2.0002.10426.298329.201607192012-linux64-201607192012.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2993,7 +3441,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>4.6.0017.21209.500605</string>
+        <string>3.2.0002.10426.298329.201607192012</string>
       </map>
       <key>tut</key>
       <map>
@@ -3134,12 +3582,28 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>2f410640df3f9812d1abff02a414cfa8</string>
+              <string>34e580c2c80d497ae9e555137f953652</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-vlc-bin/rev/315283/arch/Linux/vlc_bin-2.2.3-linux-201606011750-r10.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-vlc-linux/downloads/vlc_bin-2.2.4-linux-201608171315.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>9673ebf6b274e8852232a5f437190c4b</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/3p-vlc-linux/downloads/vlc_bin-2.2.4-linux64-201608170713.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
           </map>
           <key>windows</key>
           <map>
@@ -3169,7 +3633,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.2.4.501207</string>
+        <string>2.2.4</string>
       </map>
       <key>xmlrpc-epi</key>
       <map>
@@ -3226,9 +3690,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>35df17c3eb673030dea4bde9191aa506</string>
+              <string>b438780c670b00b53d01d3efe622ac82</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/727/1489/xmlrpc_epi-0.54.1.500719-linux64-500719.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-xmlrpc-epi/downloads/xmlrpc_epi-0.54.1.201505141438-linux64-201505141438.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3261,7 +3727,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.54.1.500719</string>
+        <string>0.54.1.201505141438</string>
       </map>
       <key>zlib</key>
       <map>
@@ -3320,9 +3786,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>dab6be8b0596c1e3354f2b6d41335131</string>
+              <string>3a7334ad1e1aa55439a7e73720cae770</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/866/1898/zlib-1.2.8.500857-linux64-500857.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-zlib/downloads/zlib-1.2.8.201505161535-linux64-201505161535.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3355,7 +3823,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.2.8.500857</string>
+        <string>1.2.8.201505161535</string>
       </map>
     </map>
     <key>package_description</key>
@@ -3572,6 +4040,7 @@
                   <string>-configuration</string>
                   <string>Release</string>
                   <string>-project Kokua.xcodeproj</string>
+                  <string>SecondLife.xcodeproj</string>
                 </array>
               </map>
               <key>configure</key>
