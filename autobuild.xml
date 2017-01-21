@@ -1606,6 +1606,46 @@
         <key>version</key>
         <string>0.9.40</string>
       </map>
+       <key>gtk-atk-pango-glib</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright (various, see sources)</string>
+        <key>license</key>
+        <string>lgpl</string>
+        <key>license_file</key>
+        <string>LICENSES/gtk-atk-pango-glib.txt</string>
+        <key>name</key>
+        <string>gtk-atk-pango-glib</string>
+        <key>platforms</key>
+        <map>
+          <key>linux</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>a6431df705526501684d9050e04bfa5b</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-gtk-atk-pango-glib/rev/314220/arch/Linux/installer/gtk_atk_pango_glib-0.1-linux-314220.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux</string>
+          </map>
+          <key>linux64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>de7bba8fd2275a11b077b124413065d0</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-gtk-atk-pango-glib/rev/314220/arch/Linux/installer/gtk_atk_pango_glib-0.1-linux64-314220.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>linux64</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>0.1</string>
+      </map>     
       <key>havok-source</key>
       <map>
         <key>copyright</key>
