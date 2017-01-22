@@ -48,7 +48,6 @@ set(cmake_SOURCE_FILES
 ##  GStreamer010Plugin.cmake
     GetPrerequisites_2_8.cmake
 ##  Glui.cmake
-    Glut.cmake
     GoogleBreakpad.cmake
     GoogleMock.cmake
     GooglePerfTools.cmake
@@ -145,7 +144,7 @@ set(cmake_SOURCE_FILES
     GLH.cmake
     GLOD.cmake
     GetPrerequisites_2_8.cmake
-    Glut.cmake
+#    Glut.cmake
     GoogleBreakpad.cmake
     GoogleMock.cmake
     GooglePerfTools.cmake
