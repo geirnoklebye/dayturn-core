@@ -4710,11 +4710,8 @@ S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMateri
 		return 0;
 	}
 
-	setTENormalMap(te, (pMaterialParams) ? pMaterialParams->getNormalID() : LLUUID::null);
-	setTESpecularMap(te, (pMaterialParams) ? pMaterialParams->getSpecularID() : LLUUID::null);
-
 	retval = LLPrimitive::setTEMaterialParams(te, pMaterialParams);
-	LL_DEBUGS("Material") << "Changing material params for te " << (S32)te
+	LL_WARNS("Material") << "Changing material params for te " << (S32)te
 							<< ", object " << mID
 			               << " (" << retval << ")"
 							<< LL_ENDL;
