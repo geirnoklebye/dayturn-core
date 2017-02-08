@@ -27,6 +27,7 @@
 #include "llviewerprecompiledheaders.h"
 
 #include "message.h"
+
 #include "lliconctrl.h"
 #include "llappviewer.h"
 #include "llchatentry.h"
@@ -964,6 +965,8 @@ LLWString LLFloaterIMNearbyChat::stripChannelNumber(const LLWString &mesg, S32* 
 
 void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32 channel)
 {
+	LLMessageSystem* msg = gMessageSystem;
+
 //MK
 	if (gRRenabled && channel >= 2147483647 && gAgent.mRRInterface.contains ("sendchat"))
 	{
@@ -1009,22 +1012,18 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 					{
 						if (ch > 0 && ch < 2147483647)
 						{
-                            LLMessageSystem* msg = gMessageSystem;
-                            if (channel >= 0)
-                            {
-                                msg->newMessageFast(_PREHASH_ChatFromViewer);
-                                msg->nextBlockFast(_PREHASH_AgentData);
-                                msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
-                                msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-                                msg->nextBlockFast(_PREHASH_ChatData);
-                                msg->addStringFast(_PREHASH_Message, utf8_out_text);
-                                msg->addU8Fast(_PREHASH_Type, type);
-                                msg->addS32("Channel", ch);
-                                gAgent.sendReliableMessage();
-                            }
-                            
-                        }
-                    }
+							msg->newMessageFast(_PREHASH_ChatFromViewer);
+							msg->nextBlockFast(_PREHASH_AgentData);
+							msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+							msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+							msg->nextBlockFast(_PREHASH_ChatData);
+							msg->addStringFast(_PREHASH_Message, utf8_out_text);
+							msg->addU8Fast(_PREHASH_Type, type);
+							msg->addS32("Channel", ch);
+
+							gAgent.sendReliableMessage();
+						}
+					}
 				}
 				it++;
 			}
@@ -1046,22 +1045,39 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 		crunchedText = gAgent.mRRInterface.crunchEmote(crunchedText);
 	}
 //mk
-	LLMessageSystem* msg = gMessageSystem;
-	msg->newMessageFast(_PREHASH_ChatFromViewer);
-	msg->nextBlockFast(_PREHASH_AgentData);
-	msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
-	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-	msg->nextBlockFast(_PREHASH_ChatData);
-////	msg->addStringFast(_PREHASH_Message, utf8_out_text);
+
+    if (channel >= 0)
+    {
+        msg->newMessageFast(_PREHASH_ChatFromViewer);
+        msg->nextBlockFast(_PREHASH_AgentData);
+        msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+        msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+        msg->nextBlockFast(_PREHASH_ChatData);
 //MK	
-	msg->addStringFast(_PREHASH_Message, crunchedText);
+////	msg->addStringFast(_PREHASH_Message, utf8_out_text);
+		msg->addStringFast(_PREHASH_Message, crunchedText);
 //mk
-	msg->addU8Fast(_PREHASH_Type, type);
+        msg->addU8Fast(_PREHASH_Type, type);
         msg->addS32("Channel", channel);
+
+    }
+    else
+    {
+        // Hack: ChatFromViewer doesn't allow negative channels
+        msg->newMessage("ScriptDialogReply");
+        msg->nextBlock("AgentData");
+        msg->addUUID("AgentID", gAgentID);
+        msg->addUUID("SessionID", gAgentSessionID);
+        msg->nextBlock("Data");
+        msg->addUUID("ObjectID", gAgentID);
+        msg->addS32("ChatChannel", channel);
+        msg->addS32("ButtonIndex", 0);
+        msg->addString("ButtonLabel", utf8_out_text);
+    }
 
 	gAgent.sendReliableMessage();
 
-    add(LLStatViewer::CHAT_COUNT, 1);
+	add(LLStatViewer::CHAT_COUNT, 1);
 }
 
 class LLChatCommandHandler : public LLCommandHandler
