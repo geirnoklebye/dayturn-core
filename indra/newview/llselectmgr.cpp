@@ -5303,7 +5303,7 @@ void LLSelectMgr::processObjectProperties(LLMessageSystem* msg, void** user_data
 		{
 			FSAreaSearch *area_search_floater = LLFloaterReg::getTypedInstance<FSAreaSearch>("area_search");
 
-			if (!area_search_floater || !area_search_floater->isSearchActive()) {
+			if (!area_search_floater || !area_search_floater->isActive()) {
 				LL_WARNS() << "Couldn't find object " << id << " selected." << LL_ENDL;
 			}
 		}

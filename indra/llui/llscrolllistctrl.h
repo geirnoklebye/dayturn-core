@@ -390,8 +390,11 @@ public:
 		if (!mSortCallback) mSortCallback = new sort_signal_t();
 		return mSortCallback->connect(cb);
 	}
+	// <FS:Ansariel> For manually setting line height; we might need it at some time
+	void setLineHeight(S32 height) { mLineHeight = height; }
 
-
+	// <FS:Ansariel> Get list of the column init params so we can re-add them
+	std::vector<LLScrollListColumn::Params> getColumnInitParams() const { return mColumnInitParams; }
 protected:
 	// "Full" interface: use this when you're creating a list that has one or more of the following:
 	// * contains icons
@@ -494,7 +497,8 @@ private:
 	S32				mNumDynamicWidthColumns;
 	S32				mTotalStaticColumnWidth;
 	S32				mTotalColumnPadding;
-
+    
+	std::vector<LLScrollListColumn::Params> mColumnInitParams;
 	mutable bool	mSorted;
 	
 	typedef std::map<std::string, LLScrollListColumn*> column_map_t;

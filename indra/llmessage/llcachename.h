@@ -101,7 +101,9 @@ public:
 	// DB_GROUP_NAME_BUF_SIZE characters. If not available, this
 	// method copies the string "waiting". Returns TRUE iff available.
 	BOOL getGroupName(const LLUUID& id, std::string& group);
-
+	// NaCl - Sound explorer
+	BOOL getIfThere(const LLUUID& id, std::string& fullname, BOOL& is_group);
+	// NaCl end
 	// Call the callback with the group or avatar name.
 	// If the data is currently available, may call the callback immediatly
 	// otherwise, will request the data, and will call the callback when

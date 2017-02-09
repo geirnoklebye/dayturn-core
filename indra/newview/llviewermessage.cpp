@@ -4767,7 +4767,7 @@ void process_object_properties(LLMessageSystem *msg, void **user_data)
 	
 	FSAreaSearch *area_search_floater = dynamic_cast<FSAreaSearch*>(LLFloaterReg::getInstance("area_search"));
 
-	if (area_search_floater && area_search_floater->isSearchActive()) {
+	if (area_search_floater && area_search_floater->isActive()) {
 		area_search_floater->processObjectProperties(msg);
 	}
 }

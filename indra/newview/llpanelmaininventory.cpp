@@ -215,7 +215,7 @@ BOOL LLPanelMainInventory::postBuild()
 //	// *TODO:Get the cost info from the server
 //	const std::string upload_cost("10");
 	// \0/ Copypasta! See llviewermessage, llviewermenu and llpanelmaininventory
-	S32 cost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
+	S32 cost = LLGlobalEconomy::getInstance()->getPriceUpload();
 	std::string upload_cost;
 #ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
 	bool in_opensim = LLGridManager::getInstance()->isInOpenSim();

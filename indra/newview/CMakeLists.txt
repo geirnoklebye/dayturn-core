@@ -109,8 +109,12 @@ include_directories(SYSTEM
     )
 
 set(viewer_SOURCE_FILES
-    fsareasearch.cpp
+    ao.cpp
+    aoengine.cpp
+    aoset.cpp
     fscommon.cpp
+    fsareasearch.cpp
+    fsareasearchmenu.cpp    
     fsexport.cpp
     fsfloaterimport.cpp
     fsfloaterprofile.cpp
@@ -118,10 +122,8 @@ set(viewer_SOURCE_FILES
     fsfloatersearchlegacy.cpp
     fspanelclassified.cpp
     fspanelprofile.cpp
-    ao.cpp
-    aoengine.cpp
-    aoset.cpp
     fspanelprofileclassifieds.cpp
+    fsscrolllistctrl.cpp
     fslightshare.cpp
     groupchatlistener.cpp
     chatbar_as_cmdline.cpp	
@@ -739,6 +741,7 @@ set(viewer_SOURCE_FILES
     pieseparator.cpp
     pieslice.cpp
     pipeline.cpp
+    utilitybar.cpp
     viewerinfo.cpp
     streamtitledisplay.cpp
     astraopenregionsettings.cpp
@@ -755,6 +758,7 @@ set(viewer_HEADER_FILES
     aoset.h
     floaterhop.h
 	fsareasearch.h
+    fsareasearchmenu.h
     fscommon.h
     fsexport.h
     fsfloaterimport.h
@@ -764,6 +768,7 @@ set(viewer_HEADER_FILES
     fspanelclassified.h
     fspanelprofile.h
     fspanelprofileclassifieds.h
+    fsscrolllistctrl.h
     fslightshare.h
     groupchatlistener.h
     chatbar_as_cmdline.h
@@ -1379,6 +1384,7 @@ set(viewer_HEADER_FILES
     pipeline.h
     streamtitledisplay.h
     roles_constants.h
+    utilitybar.h
     VertexCache.h
     viewerinfo.h
     VorbisFramework.h

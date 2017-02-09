@@ -532,12 +532,18 @@ LLPanelStandStopFlying* LLPanelStandStopFlying::getInstance()
 void LLPanelStandStopFlying::setStandStopFlyingMode(EStandStopFlyingMode mode)
 {
 	LLPanelStandStopFlying* panel = getInstance();
-
-	if (mode == SSFM_STAND)
+	if (mode == SSFM_FLYCAM)
 	{
-		LLFirstUse::sit();
-		LLFirstUse::notMoving(false);
+		panel->mFlycamButton->setVisible(TRUE);
 	}
+	else
+	{
+        if (mode == SSFM_STAND)
+        {
+            LLFirstUse::sit();
+            LLFirstUse::notMoving(false);
+        }
+    }
 	panel->mStandButton->setVisible(SSFM_STAND == mode);
 	panel->mStopFlyingButton->setVisible(SSFM_STOP_FLYING == mode);
 
@@ -555,6 +561,10 @@ void LLPanelStandStopFlying::clearStandStopFlyingMode(EStandStopFlyingMode mode)
 		break;
 	case SSFM_STOP_FLYING:
 		panel->mStopFlyingButton->setVisible(FALSE);
+		break;
+	case SSFM_FLYCAM:
+		panel->mFlycamButton->setVisible(FALSE);
+		panel->setFocus(FALSE);
 		break;
 	default:
 		LL_ERRS() << "Unexpected EStandStopFlyingMode is passed: " << mode << LL_ENDL;

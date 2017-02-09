@@ -19,12 +19,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * $/LicenseInfo$
  */
 
 #ifndef AOSET_H
 #define AOSET_H
 
-#include "llcommon.h"
 #include "lleventtimer.h"
 
 class AOSet
@@ -37,8 +37,8 @@ class AOSet
 		// keep number and order in sync with list of names in the constructor
 		enum
 		{
-			Start=0,		// convenience, so we don't have to know the name of the first state
-			Standing=0,
+			Start = 0,		// convenience, so we don't have to know the name of the first state
+			Standing = 0,
 			Walking,
 			Running,
 			Sitting,
