@@ -99,7 +99,8 @@ class LLFileEnableUploadModel : public view_listener_t
 			return false;
 		}
 
-	}
+        return true;
+    }
 };
 
 class LLMeshEnabled : public view_listener_t

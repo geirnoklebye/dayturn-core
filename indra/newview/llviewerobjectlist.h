@@ -244,9 +244,15 @@ private:
 
     static void reportPhysicsFlagFailure(LLSD &obejectList);
     void fetchPhisicsFlagsCoro(std::string url);
+// <FS:ND> Remember objects we did derender. We might get object updates for them that create new instances. In those cases we kill them again.
+	std::map< LLUUID, bool > mDerendered;
+public:
+//	void resetDerenderList(bool force = false);
+	void addDerenderedItem( LLUUID const &, bool );
+	void removeDerenderedItem( LLUUID const & );
+// </FS:ND>
 
 };
-
 
 class LLDebugBeacon
 {

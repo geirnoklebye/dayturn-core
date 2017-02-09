@@ -210,7 +210,7 @@
 #include "llviewerwindowlistener.h"
 #include "llpaneltopinfobar.h"
 #include "llcleanup.h"
-
+#include "utilitybar.h"
 #if LL_WINDOWS
 #include <tchar.h> // For Unicode conversion methods
 #endif
