@@ -10172,7 +10172,7 @@ class FSObjectExport : public view_listener_t
 {
 	bool handleEvent( const LLSD& userdata)
 	{
-		FSExport::exportSelection();
+//		FSExport::exportSelection();
 		return true;
 	}
 };

@@ -206,7 +206,7 @@ void FSExport::exportSelection()
 	{
 		return;
 	}
-	mFileName = file_picker.getFirstFile();
+    mFileName = file_picker.getFirstFile();
 	mFilePath = gDirUtilp->getDirName(mFileName);
 	
 	mFile.clear();
