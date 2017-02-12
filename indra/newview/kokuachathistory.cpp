@@ -88,7 +88,13 @@ public:
 
 	bool handle(const LLSD& params, const LLSD& query_map, LLMediaCtrl* web)
 	{
-		if (params.size() < 1)
+//MK
+    if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+    {
+        return true;
+    }
+//mk
+    if (params.size() < 1)
 		{
 			return false;
 		}
@@ -156,7 +162,12 @@ public:
 	void onObjectIconContextMenuItemClicked(const LLSD& userdata)
 	{
 		std::string level = userdata.asString();
-
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			return;
+		}
+//mk
 		if (level == "profile")
 		{
 			LLFloaterReg::showInstance("inspect_remote_object", mObjectData);
@@ -557,6 +568,12 @@ public:
 
 	void showInspector()
 	{
+ //MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			return;
+		}
+//mk       
 		if (mAvatarID.isNull() && CHAT_SOURCE_SYSTEM != mSourceType) return;
 		
 		if (mSourceType == CHAT_SOURCE_OBJECT)
@@ -1320,7 +1337,16 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				link_params.readonly_color = link_color;
 				link_params.is_link = true;
 				link_params.link_href = url;
-
+//MK
+				// FIX : Don't add the name of the chatter in case of an emote
+				// because it is already there
+				// Don't add any delimiter after name in irc styled messages
+				//if (chat.mChatStyle == CHAT_STYLE_IRC)
+				//{
+				//	mEditor->appendText("", false, link_params);
+				//}
+				//else
+//mk
 				mEditor->appendText(chat.mFromName + delimiter, prependNewLineState, link_params);
 				prependNewLineState = false;
 			}
@@ -1420,7 +1446,13 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 		{
 			LLIMToastNotifyPanel* notify_box = new LLIMToastNotifyPanel(
 					notification, chat.mSessionID, LLRect::null, !use_plain_text_chat_history, mEditor);
-
+//MK
+			// Move the control panel down a bit
+			S32 bonus = 15;
+			LLRect control_panel_rect = notify_box->getControlPanel()->getRect();
+			control_panel_rect.mBottom -= bonus;
+			notify_box->getControlPanel()->setRect(control_panel_rect);
+//mk
 			//Prepare the rect for the view
 			LLRect target_rect = mEditor->getDocumentView()->getRect();
 			// squeeze down the widget by subtracting padding off left and right
@@ -1433,6 +1465,9 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 			params.view = notify_box;
 			params.left_pad = mLeftWidgetPad;
 			params.right_pad = mRightWidgetPad;
+//MK
+			params.bottom_pad = bonus;
+//mk            
 			mEditor->appendWidget(params, "\n", false);
 		}
 	}
