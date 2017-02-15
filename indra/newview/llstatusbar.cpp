@@ -757,7 +757,7 @@ void LLStatusBar::onClickMediaToggle(void* data)
 	LLStatusBar *status_bar = (LLStatusBar*)data;
 	// "Selected" means it was showing the "play" icon (so media was playing), and now it shows "pause", so turn off media
 	bool enable = !status_bar->mMediaToggle->getValue();
-	LLViewerMedia::setAllMediaEnabled(enable);
+	LLViewerMedia::setAllMediaPaused(pause);
 }
 
 // ## Zi: Media/Stream separation

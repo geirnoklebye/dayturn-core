@@ -33,7 +33,6 @@
 #include "lldndbutton.h"
 #include "lleconomy.h"
 #include "llfilepicker.h"
-#include "llfloaterinventory.h"
 #include "llinventorybridge.h"
 #include "llinventoryfunctions.h"
 #include "llinventorymodelbackgroundfetch.h"
@@ -121,7 +120,6 @@ LLPanelMainInventory::LLPanelMainInventory(const LLPanel::Params& p)
 	mCommitCallbackRegistrar.add("Inventory.EmptyTrash", boost::bind(&LLInventoryModel::emptyFolderType, &gInventory, "ConfirmEmptyTrash", LLFolderType::FT_TRASH));
 	mCommitCallbackRegistrar.add("Inventory.EmptyLostAndFound", boost::bind(&LLInventoryModel::emptyFolderType, &gInventory, "ConfirmEmptyLostAndFound", LLFolderType::FT_LOST_AND_FOUND));
 	mCommitCallbackRegistrar.add("Inventory.DoCreate", boost::bind(&LLPanelMainInventory::doCreate, this, _2));
- 	//mCommitCallbackRegistrar.add("Inventory.NewWindow", boost::bind(&LLPanelMainInventory::newWindow, this));
 	mCommitCallbackRegistrar.add("Inventory.ShowFilters", boost::bind(&LLPanelMainInventory::toggleFindOptions, this));
 	mCommitCallbackRegistrar.add("Inventory.ResetFilters", boost::bind(&LLPanelMainInventory::resetFilters, this));
 	mCommitCallbackRegistrar.add("Inventory.SetSortBy", boost::bind(&LLPanelMainInventory::setSortBy, this, _2));
@@ -1259,6 +1257,20 @@ bool LLPanelMainInventory::isSaveTextureEnabled(const LLSD& userdata)
 BOOL LLPanelMainInventory::isActionEnabled(const LLSD& userdata)
 {
 	const std::string command_name = userdata.asString();
+	if (command_name == "not_empty")
+	{
+		BOOL status = FALSE;
+		LLFolderViewItem* current_item = getActivePanel()->getRootFolder()->getCurSelectedItem();
+		if (current_item)
+		{
+			const LLUUID& item_id = static_cast<LLFolderViewModelItemInventory*>(current_item->getViewModelItem())->getUUID();
+			LLInventoryModel::cat_array_t* cat_array;
+			LLInventoryModel::item_array_t* item_array;
+			gInventory.getDirectDescendentsOf(item_id, cat_array, item_array);
+			status = (0 == cat_array->size() && 0 == item_array->size());
+		}
+		return status;
+	}
 	if (command_name == "delete")
 	{
 		return getActivePanel()->isSelectionRemovable();
@@ -1326,6 +1338,18 @@ BOOL LLPanelMainInventory::isActionEnabled(const LLSD& userdata)
 		if (!current_item) return FALSE;
 		LLSidepanelInventory* parent = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
 		return parent ? parent->canShare() : FALSE;
+	}
+	if (command_name == "empty_trash")
+	{
+		const LLUUID &trash_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_TRASH);
+		LLInventoryModel::EHasChildren children = gInventory.categoryHasChildren(trash_id);
+		return children != LLInventoryModel::CHILDREN_NO;
+	}
+	if (command_name == "empty_lostnfound")
+	{
+		const LLUUID &trash_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_LOST_AND_FOUND);
+		LLInventoryModel::EHasChildren children = gInventory.categoryHasChildren(trash_id);
+		return children != LLInventoryModel::CHILDREN_NO;
 	}
 
 	return TRUE;
@@ -1470,45 +1494,24 @@ void LLPanelMainInventory::setUploadCostIfNeeded()
 		LLMenuItemBranchGL* upload_menu = menu->findChild<LLMenuItemBranchGL>("upload");
 		if(upload_menu)
 		{
-// <FS:AW opensim currency support>
-//			S32 upload_cost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
-//			std::string cost_str;
-//
-//			// getPriceUpload() returns -1 if no data available yet.
-//			if(upload_cost >= 0)
-//			{
-//				mNeedUploadCost = false;
-//				cost_str = llformat("%d", upload_cost);
-//			}
-//			else
-//			{
-//				cost_str = llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
-//			}
-//			upload_menu->getChild<LLView>("Upload Image")->setLabelArg("[COST]", cost_str);
-//			upload_menu->getChild<LLView>("Upload Sound")->setLabelArg("[COST]", cost_str);
-//			upload_menu->getChild<LLView>("Upload Animation")->setLabelArg("[COST]", cost_str);
-//			upload_menu->getChild<LLView>("Bulk Upload")->setLabelArg("[COST]", cost_str);
+			S32 upload_cost = LLGlobalEconomy::getInstance()->getPriceUpload();
+			std::string cost_str;
 
-			// \0/ Copypasta! See llviewermessage, llviewermenu and llpanelmaininventory
-			S32 cost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
-			std::string upload_cost;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-			bool in_opensim = LLGridManager::getInstance()->isInOpenSim();
-			if(in_opensim)
+			// getPriceUpload() returns -1 if no data available yet.
+			if(upload_cost >= 0)
 			{
-				upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : LLTrans::getString("free");
+				mNeedUploadCost = false;
+				cost_str = llformat("%d", upload_cost);
 			}
 			else
-#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
 			{
-				upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
+				cost_str = llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
 			}
 
-			upload_menu->getChild<LLView>("Upload Image")->setLabelArg("[COST]", upload_cost);
-			upload_menu->getChild<LLView>("Upload Sound")->setLabelArg("[COST]", upload_cost);
-			upload_menu->getChild<LLView>("Upload Animation")->setLabelArg("[COST]", upload_cost);
-			upload_menu->getChild<LLView>("Bulk Upload")->setLabelArg("[COST]", upload_cost);
-// </FS:AW opensim currency support>
+			upload_menu->getChild<LLView>("Upload Image")->setLabelArg("[COST]", cost_str);
+			upload_menu->getChild<LLView>("Upload Sound")->setLabelArg("[COST]", cost_str);
+			upload_menu->getChild<LLView>("Upload Animation")->setLabelArg("[COST]", cost_str);
+			upload_menu->getChild<LLView>("Bulk Upload")->setLabelArg("[COST]", cost_str);
 		}
 	}
 }

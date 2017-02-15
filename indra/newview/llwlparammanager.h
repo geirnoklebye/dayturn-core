@@ -213,6 +213,8 @@ public:
 /// WindLight parameter manager class - what controls all the wind light shaders
 class LLWLParamManager : public LLSingleton<LLWLParamManager>
 {
+	LLSINGLETON(LLWLParamManager);
+	~LLWLParamManager();
 	LOG_CLASS(LLWLParamManager);
 
 public:
@@ -378,11 +380,7 @@ public:
 	static std::string getSysDir();
 	static std::string getUserDir();
 
-	friend class LLSingleton<LLWLParamManager>;
 	/*virtual*/ void initSingleton();
-	LLWLParamManager();
-	~LLWLParamManager();
-
 	// list of all the parameters, listed by name
 	std::map<LLWLParamKey, LLWLParamSet> mParamList;
 

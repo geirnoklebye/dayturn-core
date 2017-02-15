@@ -62,7 +62,6 @@
 #include "llfloaterbuycontents.h"
 #include "llbuycurrencyhtml.h"
 #include "llfloatergodtools.h"
-#include "llfloaterinventory.h"
 #include "llfloaterimcontainer.h"
 #include "llfloaterland.h"
 #include "llfloaterimnearbychat.h"
@@ -82,6 +81,7 @@
 #include "lllandmarkactions.h"
 #include "llgroupmgr.h"
 #include "lltooltip.h"
+#include "lltoolface.h"
 #include "llhints.h"
 #include "llhudeffecttrail.h"
 #include "llhudmanager.h"
@@ -92,6 +92,7 @@
 #include "lllogininstance.h" // <FS:AW  opensim destinations and avatar picker>
 #include "llpanellogin.h"
 #include "llpanelblockedlist.h"
+#include "llpanelmaininventory.h"
 #include "llmarketplacefunctions.h"
 #include "llmenuoptionpathfindingrebakenavmesh.h"
 #include "piemenu.h"		// ## Zi: Pie menu
@@ -148,6 +149,7 @@
 #include "llstartup.h"
 #include "boost/unordered_map.hpp"
 #include "llvowlsky.h"
+#include "llcleanup.h"
 #include "fsexport.h"
 #include "daeexport.h"
 
@@ -1301,8 +1303,6 @@ class LLAdvancedToggleWireframe : public view_listener_t
 			gInitialDeferredModeForWireframe = LLPipeline::sRenderDeferred;
 		}
 
-		gWindowResized = TRUE;
-		LLPipeline::updateRenderDeferred();
 		gPipeline.resetVertexBuffers();
 
 		if (!gUseWireframe && !gInitialDeferredModeForWireframe && LLPipeline::sRenderDeferred != gInitialDeferredModeForWireframe && gPipeline.isInit())
@@ -5830,30 +5830,91 @@ class LLToolsEnableSelectNextPart : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = (gSavedSettings.getBOOL("EditLinkedParts") &&
-				 !LLSelectMgr::getInstance()->getSelection()->isEmpty());
+        bool new_value = (!LLSelectMgr::getInstance()->getSelection()->isEmpty()
+                          && (gSavedSettings.getBOOL("EditLinkedParts")
+                              || LLToolFace::getInstance() == LLToolMgr::getInstance()->getCurrentTool()));
 		return new_value;
 	}
 };
 
-// Cycle selection through linked children in selected object.
+// Cycle selection through linked children or/and faces in selected object.
 // FIXME: Order of children list is not always the same as sim's idea of link order. This may confuse
 // resis. Need link position added to sim messages to address this.
-class LLToolsSelectNextPart : public view_listener_t
+class LLToolsSelectNextPartFace : public view_listener_t
 {
-	bool handleEvent(const LLSD& userdata)
-	{
+    bool handleEvent(const LLSD& userdata)
+    {
+        bool cycle_faces = LLToolFace::getInstance() == LLToolMgr::getInstance()->getCurrentTool();
+        bool cycle_linked = gSavedSettings.getBOOL("EditLinkedParts");
+
+        if (!cycle_faces && !cycle_linked)
+        {
+            // Nothing to do
+            return true;
+        }
+
+        bool fwd = (userdata.asString() == "next");
+        bool prev = (userdata.asString() == "previous");
+        bool ifwd = (userdata.asString() == "includenext");
+        bool iprev = (userdata.asString() == "includeprevious");
+
+        LLViewerObject* to_select = NULL;
+        bool restart_face_on_part = !cycle_faces;
+        S32 new_te = 0;
+
+        if (cycle_faces)
+        {
+            // Cycle through faces of current selection, if end is reached, swithc to next part (if present)
+            LLSelectNode* nodep = LLSelectMgr::getInstance()->getSelection()->getFirstNode();
+            if (!nodep) return false;
+            to_select = nodep->getObject();
+            if (!to_select) return false;
+
+            S32 te_count = to_select->getNumTEs();
+            S32 selected_te = nodep->getLastOperatedTE();
+
+            if (fwd || ifwd)
+            {
+                if (selected_te < 0)
+                {
+                    new_te = 0;
+                }
+                else if (selected_te + 1 < te_count)
+                {
+                    // select next face
+                    new_te = selected_te + 1;
+                }
+                else
+                {
+                    // restart from first face on next part
+                    restart_face_on_part = true;
+                }
+            }
+            else if (prev || iprev)
+            {
+                if (selected_te > te_count)
+                {
+                    new_te = te_count - 1;
+                }
+                else if (selected_te - 1 >= 0)
+                {
+                    // select previous face
+                    new_te = selected_te - 1;
+                }
+                else
+                {
+                    // restart from last face on next part
+                    restart_face_on_part = true;
+                }
+            }
+        }
+
 		S32 object_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
-		if (gSavedSettings.getBOOL("EditLinkedParts") && object_count)
+		if (cycle_linked && object_count && restart_face_on_part)
 		{
 			LLViewerObject* selected = LLSelectMgr::getInstance()->getSelection()->getFirstObject();
 			if (selected && selected->getRootEdit())
 			{
-				bool fwd = (userdata.asString() == "next");
-				bool prev = (userdata.asString() == "previous");
-				bool ifwd = (userdata.asString() == "includenext");
-				bool iprev = (userdata.asString() == "includeprevious");
-				LLViewerObject* to_select = NULL;
 				LLViewerObject::child_list_t children = selected->getRootEdit()->getChildren();
 				children.push_front(selected->getRootEdit());	// need root in the list too
 
@@ -5895,22 +5956,40 @@ class LLToolsSelectNextPart : public view_listener_t
 						}
 					}
 				}
-
-				if (to_select)
-				{
-					if (gFocusMgr.childHasKeyboardFocus(gFloaterTools))
-					{
-						gFocusMgr.setKeyboardFocus(NULL);	// force edit toolbox to commit any changes
-					}
-					if (fwd || prev)
-					{
-						LLSelectMgr::getInstance()->deselectAll();
-					}
-					LLSelectMgr::getInstance()->selectObjectOnly(to_select);
-					return true;
-				}
 			}
 		}
+
+        if (to_select)
+        {
+            if (gFocusMgr.childHasKeyboardFocus(gFloaterTools))
+            {
+                gFocusMgr.setKeyboardFocus(NULL);	// force edit toolbox to commit any changes
+            }
+            if (fwd || prev)
+            {
+                LLSelectMgr::getInstance()->deselectAll();
+            }
+            if (cycle_faces)
+            {
+                if (restart_face_on_part)
+                {
+                    if (fwd || ifwd)
+                    {
+                        new_te = 0;
+                    }
+                    else
+                    {
+                        new_te = to_select->getNumTEs() - 1;
+                    }
+                }
+                LLSelectMgr::getInstance()->addAsIndividual(to_select, new_te, FALSE);
+            }
+            else
+            {
+                LLSelectMgr::getInstance()->selectObjectOnly(to_select);
+            }
+            return true;
+        }
 		return true;
 	}
 };
@@ -9976,7 +10055,7 @@ class LLWorldPostProcess : public view_listener_t
 
 void handle_flush_name_caches()
 {
-	LLAvatarNameCache::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLAvatarNameCache);
 	if (gCacheName) gCacheName->clear();
 }
 
@@ -10024,36 +10103,17 @@ class LLToggleUIHints : public view_listener_t
 
 void LLUploadCostCalculator::calculateCost()
 {
-// <FS:AW opensim currency support>
-// 	S32 upload_cost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
-// 
-// 	// getPriceUpload() returns -1 if no data available yet.
-// 	if(upload_cost >= 0)
-// 	{
-// 		mCostStr = llformat("%d", upload_cost);
-// 	}
-// 	else
-// 	{
-// 		mCostStr = llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
-// 	}
+	S32 upload_cost = LLGlobalEconomy::getInstance()->getPriceUpload();
 
-	// \0/ Copypasta! See llviewermessage, llviewermenu and llpanelmaininventory
-	S32 cost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
-	std::string upload_cost;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	bool in_opensim = LLGridManager::getInstance()->isInOpenSim();
-	if(in_opensim)
+	// getPriceUpload() returns -1 if no data available yet.
+	if(upload_cost >= 0)
 	{
-		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : LLTrans::getString("free");
+		mCostStr = llformat("%d", upload_cost);
 	}
 	else
-#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
 	{
-		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
+		mCostStr = llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
 	}
-
-	mCostStr = upload_cost;
-// </FS:AW opensim currency support>
 }
 
 void show_navbar_context_menu(LLView* ctrl, S32 x, S32 y)
@@ -10303,7 +10363,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLToolsEditLinkedParts(), "Tools.EditLinkedParts");
 	view_listener_t::addMenu(new LLToolsSnapObjectXY(), "Tools.SnapObjectXY");
 	view_listener_t::addMenu(new LLToolsUseSelectionForGrid(), "Tools.UseSelectionForGrid");
-	view_listener_t::addMenu(new LLToolsSelectNextPart(), "Tools.SelectNextPart");
+	view_listener_t::addMenu(new LLToolsSelectNextPartFace(), "Tools.SelectNextPart");
 	commit.add("Tools.Link", boost::bind(&LLSelectMgr::linkObjects, LLSelectMgr::getInstance()));
 	commit.add("Tools.Unlink", boost::bind(&LLSelectMgr::unlinkObjects, LLSelectMgr::getInstance()));
 	view_listener_t::addMenu(new LLToolsStopAllAnimations(), "Tools.StopAllAnimations");
@@ -10664,7 +10724,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLGoToObject(), "GoToObject");
 	commit.add("PayObject", boost::bind(&handle_give_money_dialog));
 
-	commit.add("Inventory.NewWindow", boost::bind(&LLFloaterInventory::showAgentInventory));
+	commit.add("Inventory.NewWindow", boost::bind(&LLPanelMainInventory::newWindow));
 
 	enable.add("EnablePayObject", boost::bind(&enable_pay_object));
 	enable.add("EnablePayAvatar", boost::bind(&enable_pay_avatar));

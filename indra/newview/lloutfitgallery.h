@@ -275,7 +275,6 @@ private:
     LLTextBox* mOutfitNameText;
     LLTextBox* mOutfitWornText;
     LLPanel* mTextBgPanel;
-    LLPanel* mFotoBgPanel;
     bool     mSelected;
     bool     mWorn;
     bool     mDefaultImage;
