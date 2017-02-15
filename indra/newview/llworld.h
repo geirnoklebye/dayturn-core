@@ -64,8 +64,8 @@ class LLVOAvatar;
 
 class LLWorld : public LLSingleton<LLWorld>
 {
+	LLSINGLETON(LLWorld);
 public:
-	LLWorld();
 
 	void destroyClass();
 

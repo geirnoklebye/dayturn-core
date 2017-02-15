@@ -85,8 +85,7 @@
      layout="topleft"
      left_delta="-12"
      name="unknown"
-     top_pad="4"
-     width="">
+     top_pad="4">
 Size: [DIMENSIONS]
 ([ALPHA])
     </text>
@@ -230,7 +229,6 @@ Size: [DIMENSIONS]
      height="260"
      follows="left|top|right|bottom"
      column_padding="0"
-     can_resize="false"
      draw_heading="true"
      multi_select="true"
      search_column="1"

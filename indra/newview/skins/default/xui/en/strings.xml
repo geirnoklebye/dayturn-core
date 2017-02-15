@@ -46,9 +46,20 @@ Graphics Card Vendor: [GRAPHICS_CARD_VENDOR]
 Graphics Card: [GRAPHICS_CARD]
 	</string>
 	<string name="AboutDriver">Windows Graphics Driver Version: [GRAPHICS_DRIVER_VERSION]</string>
+	<string name="AboutOGL">OpenGL Version: [OPENGL_VERSION]</string>
+	<string name="AboutSettings">
+Window size: [WINDOW_WIDTH]x[WINDOW_HEIGHT]
+Font Size Adjustment: [FONT_SIZE_ADJUSTMENT]pt
+UI Scaling: [UI_SCALE]
+Draw distance: [DRAW_DISTANCE]m
+Bandwidth: [NET_BANDWITH]kbit/s
+LOD factor: [LOD_FACTOR]
+Render quality: [RENDER_QUALITY] / 7
+Advanced Lighting Model: [GPU_SHADERS]
+Texture memory: [TEXTURE_MEMORY]MB
+VFS (cache) creation time: [VFS_TIME]
+	</string>
 	<string name="AboutLibs">
-OpenGL Version: [OPENGL_VERSION]
-
 <!--RestrainedLove API: [RLV_VERSION]-->
 J2C Decoder Version: [J2C_VERSION]
 Audio Driver Version: [AUDIO_DRIVER_VERSION]
@@ -5420,12 +5431,15 @@ If you continue to receive this message, contact the [SUPPORT_SITE].
 
   <!-- Financial operations strings -->
   <string name="paid_you_ldollars">[NAME] paid you L$[AMOUNT] [REASON].</string>
+  <string name="paid_you_ldollars_gift">[NAME] paid you L$[AMOUNT]: [REASON]</string>
   <string name="paid_you_ldollars_no_reason">[NAME] paid you L$[AMOUNT].</string>
   <string name="you_paid_ldollars">You paid [NAME] L$[AMOUNT] [REASON].</string>
+  <string name="you_paid_ldollars_gift">You paid [NAME] L$[AMOUNT]: [REASON]</string>
   <string name="you_paid_ldollars_no_info">You paid L$[AMOUNT].</string>
   <string name="you_paid_ldollars_no_reason">You paid [NAME] L$[AMOUNT].</string>
   <string name="you_paid_ldollars_no_name">You paid L$[AMOUNT] [REASON].</string>
   <string name="you_paid_failure_ldollars">You failed to pay [NAME] L$[AMOUNT] [REASON].</string>
+  <string name="you_paid_failure_ldollars_gift">You failed to pay [NAME] L$[AMOUNT]: [REASON]</string>
   <string name="you_paid_failure_ldollars_no_info">You failed to pay L$[AMOUNT].</string>
   <string name="you_paid_failure_ldollars_no_reason">You failed to pay [NAME] L$[AMOUNT].</string>
   <string name="you_paid_failure_ldollars_no_name">You failed to pay L$[AMOUNT] [REASON].</string>
@@ -5888,6 +5902,9 @@ Try enclosing path to the editor with double quotes.
   <string name="loading_chat_logs">
     Loading...
   </string>
+
+  <!-- Statistics -->
+  <string name="na">n/a</string>
 
   <!-- Presets graphic/camera -->
   <string name="preset_combo_label">-Empty list-</string>
