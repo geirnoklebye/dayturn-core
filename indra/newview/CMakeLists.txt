@@ -110,6 +110,8 @@ include_directories(SYSTEM
     )
 
 set(viewer_SOURCE_FILES
+    RRInterface.cpp
+    ao.cpp
     aoengine.cpp
     aoset.cpp
     fscommon.cpp
