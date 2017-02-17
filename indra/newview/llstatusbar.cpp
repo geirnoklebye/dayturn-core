@@ -65,6 +65,7 @@
 #include "llresmgr.h"
 #include "llworld.h"
 #include "llstatgraph.h"
+#include "llvieweraudio.h"
 #include "llviewermedia.h"
 #include "llviewermenu.h"	// for gMenuBarView
 #include "llviewerparcelmgr.h"
@@ -478,7 +479,7 @@ void LLStatusBar::refresh()
 						  );
 	mMediaToggle->setEnabled(button_enabled);
 	// Note the "sense" of the toggle is opposite whether media is playing or not
-	bool any_media_playing = (LLViewerMedia::isAnyMediaShowing() ||
+	bool any_media_playing = (LLViewerMedia::isAnyMediaPlaying() ||
 							  LLViewerMedia::isParcelMediaPlaying());
 	mMediaToggle->setValue(!any_media_playing);
 
@@ -756,8 +757,39 @@ void LLStatusBar::onClickMediaToggle(void* data)
 {
 	LLStatusBar *status_bar = (LLStatusBar*)data;
 	// "Selected" means it was showing the "play" icon (so media was playing), and now it shows "pause", so turn off media
-	bool enable = !status_bar->mMediaToggle->getValue();
+	bool pause = !status_bar->mMediaToggle->getValue();
+	LLViewerMedia::setAllMediaPaused(pause);
+}
+void LLStatusBar::toggleMedia(bool enable)
+{
+// </FS:Zi>
 	LLViewerMedia::setAllMediaEnabled(enable);
+}
+void LLStatusBar::toggleStream(bool enable)
+{
+	if (!gAudiop)
+	{
+		return;
+	}
+
+	if(enable)
+	{
+		if (LLAudioEngine::AUDIO_PAUSED == gAudiop->isInternetStreamPlaying())
+		{
+			// 'false' means unpause
+			LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getParcelAudioURL());
+		}
+		else
+		{
+			LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getParcelAudioURL());
+		}
+	}
+	else
+	{
+		LLViewerAudio::getInstance()->stopInternetStreamWithAutoFade();
+	}
+
+	mAudioStreamEnabled = enable;
 }
 
 // ## Zi: Media/Stream separation

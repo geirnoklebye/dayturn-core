@@ -269,18 +269,19 @@ bool LLToolMgr::buildEnabledOrActive()
 {
 	return LLFloaterReg::instanceVisible("build") || canEdit();
 }
-
 void LLToolMgr::toggleBuildMode(const LLSD& sdname)
 {
 	const std::string& param = sdname.asString();
 
-	LLFloaterReg::toggleInstanceOrBringToFront("build");
+
 //MK
 	if (gRRenabled && (gAgent.mRRInterface.mContainsEdit || gAgent.mRRInterface.mContainsRez || gAgent.mRRInterface.containsSubstr ("editobj:")))
 	{
 		return;
 	}
 //mk
+
+	LLFloaterReg::toggleInstanceOrBringToFront("build");
 
 	if (param == "build" && !canEdit())
 	{

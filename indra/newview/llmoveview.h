@@ -122,7 +122,8 @@ public:
 	typedef enum stand_stop_flying_mode_t
 	{
 		SSFM_STAND,
-		SSFM_STOP_FLYING
+		SSFM_STOP_FLYING,
+		SSFM_FLYCAM
 	} EStandStopFlyingMode;
 
 	/**
@@ -169,6 +170,7 @@ private:
 //mk
 	LLButton* mStandButton;
 	LLButton* mStopFlyingButton;
+	LLButton* mFlycamButton;
 
 	/**
 	 * The original parent of the panel.

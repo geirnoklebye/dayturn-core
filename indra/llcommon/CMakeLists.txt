@@ -45,8 +45,10 @@ set(llcommon_SOURCE_FILES
     llbitpack.cpp
     llcallbacklist.cpp
     llcallstack.cpp
+    llcleanup.cpp
     llcommon.cpp
     llcommonutils.cpp
+    llcoro_get_id.cpp
     llcoros.cpp
     llcrc.cpp
     llcriticaldamp.cpp
@@ -71,7 +73,9 @@ set(llcommon_SOURCE_FILES
     llformat.cpp
     llframetimer.cpp
     llheartbeat.cpp
+    llheteromap.cpp
     llinitparam.cpp
+    llinitdestroyclass.cpp
     llinstancetracker.cpp
     llleap.cpp
     llleaplistener.cpp
@@ -142,8 +146,10 @@ set(llcommon_HEADER_FILES
     llboost.h
     llcallbacklist.h
     llcallstack.h
+    llcleanup.h
     llcommon.h
     llcommonutils.h
+    llcoro_get_id.h
     llcoros.h
     llcrc.h
     llcriticaldamp.h
@@ -175,7 +181,9 @@ set(llcommon_HEADER_FILES
     llhandle.h
     llhash.h
     llheartbeat.h
+    llheteromap.h
     llindexedvector.h
+    llinitdestroyclass.h
     llinitparam.h
     llinstancetracker.h
     llkeythrottle.h
@@ -192,6 +200,7 @@ set(llcommon_HEADER_FILES
     llmortician.h
     llnametable.h
     llpointer.h
+    llpounceable.h
     llpredicate.h
     llpreprocessor.h
     llpriqueuemap.h
@@ -275,8 +284,6 @@ list(APPEND llcommon_SOURCE_FILES ${llcommon_HEADER_FILES})
   endif(WINDOWS)
   endif(NOT ADDRESS_SIZE EQUAL 32)
  
-if(LLCOMMON_LINK_SHARED)
-  add_library (llcommon SHARED ${llcommon_SOURCE_FILES})
   if(WINDOWS)
     # always generate llcommon.pdb, even for "Release" builds
     set_target_properties(llcommon PROPERTIES LINK_FLAGS "/DEBUG")
@@ -284,9 +291,23 @@ if(LLCOMMON_LINK_SHARED)
   ll_stage_sharedlib(llcommon)
 else(LLCOMMON_LINK_SHARED)
     add_library (llcommon ${llcommon_SOURCE_FILES})
+if(NOT WORD_SIZE EQUAL 32)
+  if(WINDOWS)
+      ##add_definitions(/FIXED:NO)
+  else(WINDOWS) # not windows therefore gcc LINUX and DARWIN
+    add_definitions(-fPIC)
+  endif(WINDOWS)
+endif(NOT WORD_SIZE EQUAL 32)
+ 
+if(LLCOMMON_LINK_SHARED)
+  add_library (llcommon SHARED ${llcommon_SOURCE_FILES})
+  if(WINDOWS)
+    # always generate llcommon.pdb, even for "Release" builds
+    set_target_properties(llcommon PROPERTIES LINK_FLAGS "/DEBUG")
+  endif(WINDOWS)
   if(NOT WORD_SIZE EQUAL 32)
     if(WINDOWS)
-      ##add_definitions(/FIXED:NO)
+      add_definitions(/FIXED:NO)
     else(WINDOWS) # not windows therefore gcc LINUX and DARWIN
       add_definitions(-fPIC)
     endif(WINDOWS)
@@ -364,6 +385,8 @@ if (LL_TESTS)
   LL_ADD_INTEGRATION_TEST(llprocess "" "${test_libs}")
   LL_ADD_INTEGRATION_TEST(llleap "" "${test_libs}")
   LL_ADD_INTEGRATION_TEST(llstreamqueue "" "${test_libs}")
+  LL_ADD_INTEGRATION_TEST(llpounceable "" "${test_libs}")
+  LL_ADD_INTEGRATION_TEST(llheteromap "" "${test_libs}")
 
 ## llexception_test.cpp isn't a regression test, and doesn't need to be run
 ## every build. It's to help a developer make implementation choices about

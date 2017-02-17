@@ -2345,3 +2345,13 @@ LLDebugBeacon::~LLDebugBeacon()
 		mHUDObject->markDead();
 	}
 }
+// <FS:ND> Helper function to add items from global blacklist after teleport.
+void LLViewerObjectList::addDerenderedItem( LLUUID const &aId, bool aPermanent )
+{
+	mDerendered[ aId ] = aPermanent;
+}
+void LLViewerObjectList::removeDerenderedItem( LLUUID const &aId )
+{
+	mDerendered.erase( aId );
+}
+// </FS:ND>

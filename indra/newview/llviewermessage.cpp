@@ -2714,6 +2714,120 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
 			gIMMgr->processIMTypingStop(im_info);
 		}
+		else if (gRRenabled && message == "@getblacklist")
+		{
+			// return the contents of  the blacklist, without a filter
+			std::string my_name;
+			LLAgentUI::buildFullname(my_name);
+			std::string response = gAgent.mRRInterface.sBlacklist;
+			pack_instant_message(
+				gMessageSystem,
+				gAgent.getID(),
+				FALSE,
+				gAgent.getSessionID(),
+				from_id,
+				my_name.c_str(),
+				response.c_str(),
+				IM_ONLINE,
+				IM_DO_NOT_DISTURB_AUTO_RESPONSE,
+				session_id);
+			gAgent.sendReliableMessage();
+
+			// remove the "XXX is typing..." label from the IM window
+			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
+			gIMMgr->processIMTypingStop(im_info);
+		}
+		else if (gRRenabled && message == "@list")
+		{
+			// return the list of restrictions
+			std::string my_name;
+			LLAgentUI::buildFullname(my_name);
+			std::string response = gAgent.mRRInterface.getRlvRestrictions();
+
+			// The message may be very long, so we might need to chop in chunks of 1023 characters 
+			// and send several IMs in a row or else it will be truncated by the server.
+			while (response.length() > 1023)
+			{
+				std::string chunk = response.substr(0, 1023);
+				response = response.substr(1023);
+				pack_instant_message(
+					gMessageSystem,
+					gAgent.getID(),
+					FALSE,
+					gAgent.getSessionID(),
+					from_id,
+					my_name.c_str(),
+					chunk.c_str(),
+					IM_ONLINE,
+					IM_DO_NOT_DISTURB_AUTO_RESPONSE,
+					session_id);
+				gAgent.sendReliableMessage();
+			}
+
+			pack_instant_message(
+				gMessageSystem,
+				gAgent.getID(),
+				FALSE,
+				gAgent.getSessionID(),
+				from_id,
+				my_name.c_str(),
+				response.c_str(),
+				IM_ONLINE,
+				IM_DO_NOT_DISTURB_AUTO_RESPONSE,
+				session_id);
+			gAgent.sendReliableMessage();
+
+			// remove the "XXX is typing..." label from the IM window
+			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
+			gIMMgr->processIMTypingStop(im_info);
+		}
+//mk
+		else if (gRRenabled && message == "@stopim")
+		{
+			// close this IM session if we are under @startim (globally or for this person)
+			bool close_session = false;
+			std::string response = "*** The other party is not under a @startim restriction.";
+
+			if (gAgent.mRRInterface.containsWithoutException("startim", from_id.asString())
+				|| gAgent.mRRInterface.contains("startimto:" + from_id.asString()))
+			{
+				close_session = true;
+				response = "*** Session has been ended for the other party.";
+			}
+
+			// We need to send feedback to the other party
+			std::string my_name;
+			LLAgentUI::buildFullname(my_name);
+			pack_instant_message(
+				gMessageSystem,
+				gAgent.getID(),
+				FALSE,
+				gAgent.getSessionID(),
+				from_id,
+				my_name.c_str(),
+				response.c_str(),
+				IM_ONLINE,
+				IM_DO_NOT_DISTURB_AUTO_RESPONSE,
+				session_id);
+			gAgent.sendReliableMessage();
+
+
+			if (close_session)
+			{
+				//gIMMgr->leaveSession(session_id);
+
+				LLFloaterIMSession* floater = LLFloaterIMSession::findInstance(session_id);
+				if (floater)
+				{
+					gAgent.mRRInterface.printOnChat("*** IM session with " + name + " has been ended remotely.");
+					floater->closeFloater(false);
+				}
+			}
+
+			// remove the "XXX is typing..." label from the IM window
+			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
+			gIMMgr->processIMTypingStop(im_info);
+		}
 //mk
 		else if (from_id.isNull())
 		{
@@ -3561,6 +3675,31 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 
 					LLSD dummy_response;
 					dummy_response["message"] = "Automatic teleport offer";
+				
+				if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
+				{
+					message = "(Hidden)";
+				}
+
+				if (gRRenabled && dialog == IM_LURE_USER && auto_accept)
+				{
+					// accepttp => the viewer acts like it was teleported by a god
+					gAgent.mRRInterface.setAllowCancelTp (FALSE);
+					LLSD payload;
+					payload["from_id"] = from_id;
+					payload["lure_id"] = session_id;
+					payload["godlike"] = TRUE;
+					// do not show a message box, because you're about to be teleported.
+					LLNotifications::instance().forceResponse(LLNotification::Params("TeleportOffered").payload(payload), 0);
+				}
+				else if (gRRenabled && dialog == IM_TELEPORT_REQUEST && auto_accept)
+				{
+					// accepttprequest => the viewer automaticallys ends the TP (code copied from teleport_request_callback())
+					LLSD dummy_notification;
+					dummy_notification["payload"]["ids"][0] = from_id;
+
+					LLSD dummy_response;
+					dummy_response["message"] = "Automatic teleport offer";
 
 					send_lures(dummy_notification, dummy_response);
 				}
@@ -4207,6 +4346,24 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 						}
 					}
 					// also scramble the name of the chatter (replace with a dummy name)
+					if (chatter && chatter->isAvatar())
+					{
+						std::string uuid_str = chatter->getID().asString();
+						LLStringUtil::toLower(uuid_str);
+						if (gAgent.mRRInterface.containsWithoutException("shownames", uuid_str))
+						{
+							from_name = gAgent.mRRInterface.getDummyName(from_name, chat.mAudible);
+						}
+					}
+					else
+					{
+						from_name = gAgent.mRRInterface.getCensoredMessage(from_name);
+					}
+					chat.mFromName = from_name;
+				}
+			}
+		}
+//mk
 					if (chatter && chatter->isAvatar())
 					{
 						std::string uuid_str = chatter->getID().asString();
@@ -5482,7 +5639,7 @@ void process_object_properties(LLMessageSystem *msg, void **user_data)
 	
 	FSAreaSearch *area_search_floater = dynamic_cast<FSAreaSearch*>(LLFloaterReg::getInstance("area_search"));
 
-	if (area_search_floater && area_search_floater->isSearchActive()) {
+	if (area_search_floater && area_search_floater->isActive()) {
 		area_search_floater->processObjectProperties(msg);
 	}
 }
@@ -5725,6 +5882,16 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 			{
 				LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
 			}
+			else
+			if (stat_id == 16 || stat_id == 36 || stat_id == 37) //cut log spam on opensim
+			{
+				LL_WARNS_ONCE() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
+			}
+			else
+			{
+				LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
+			}
+		}
 		}
 	}
 
@@ -6293,9 +6460,12 @@ static std::string reason_from_transaction_type(S32 transaction_type,
 		case TRANS_CLASSIFIED_CHARGE:
 			return LLTrans::getString("to publish a classified ad");
 			
+		case TRANS_GIFT:
+			// Simulator returns "Payment" if no custom description has been entered
+			return (item_desc == "Payment" ? std::string() : item_desc);
+
 		// These have no reason to display, but are expected and should not
 		// generate warnings
-		case TRANS_GIFT:
 		case TRANS_PAY_OBJECT:
 		case TRANS_OBJECT_PAYS:
 			return std::string();
@@ -6405,6 +6575,7 @@ static void process_money_balance_reply_extended(LLMessageSystem* msg)
 	LLSD payload;
 	
 	bool you_paid_someone = (source_id == gAgentID);
+	std::string gift_suffix = (transaction_type == TRANS_GIFT ? "_gift" : "");
 	if (you_paid_someone)
 	{
 		if(!gSavedSettings.getBOOL("NotifyMoneySpend"))
@@ -6418,8 +6589,8 @@ static void process_money_balance_reply_extended(LLMessageSystem* msg)
 		{
 			if (dest_id.notNull())
 			{
-				message = success ? LLTrans::getString("you_paid_ldollars", args) :
-									LLTrans::getString("you_paid_failure_ldollars", args);
+				message = success ? LLTrans::getString("you_paid_ldollars" + gift_suffix, args) :
+									LLTrans::getString("you_paid_failure_ldollars" + gift_suffix, args);
 			}
 			else
 			{
@@ -6446,7 +6617,8 @@ static void process_money_balance_reply_extended(LLMessageSystem* msg)
 		payload["dest_id"] = dest_id;
 		notification = success ? "PaymentSent" : "PaymentFailure";
 	}
-	else {
+	else
+	{
 		// ...someone paid you
 		if(!gSavedSettings.getBOOL("NotifyMoneyReceived"))
 		{
@@ -6457,9 +6629,10 @@ static void process_money_balance_reply_extended(LLMessageSystem* msg)
 		name_id = source_id;
 		if (!reason.empty())
 		{
-			message = LLTrans::getString("paid_you_ldollars", args);
+			message = LLTrans::getString("paid_you_ldollars" + gift_suffix, args);
 		}
-		else {
+		else
+		{
 			message = LLTrans::getString("paid_you_ldollars_no_reason", args);
 		}
 		final_args["MESSAGE"] = message;
@@ -7112,29 +7285,16 @@ void process_frozen_message(LLMessageSystem *msgsystem, void **user_data)
 // do some extra stuff once we get our economy data
 void process_economy_data(LLMessageSystem *msg, void** /*user_data*/)
 {
-	LLGlobalEconomy::processEconomyData(msg, LLGlobalEconomy::Singleton::getInstance());
+	LLGlobalEconomy::processEconomyData(msg, LLGlobalEconomy::getInstance());
 
-	S32 cost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
-	std::string upload_cost;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	bool in_opensim = LLGridManager::getInstance()->isInOpenSim();
-	if(in_opensim)
-	{
-		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : LLTrans::getString("free");
-	}
-	else
-#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	{
-		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
-	}
+	S32 upload_cost = LLGlobalEconomy::getInstance()->getPriceUpload();
 
-	LL_INFOS_ONCE("Messaging") << Tea::wrapCurrency("EconomyData message arrived; upload cost is L$") << upload_cost << LL_ENDL;
+	LL_INFOS_ONCE("Messaging") << "EconomyData message arrived; upload cost is L$" << upload_cost << LL_ENDL;
 
-	gMenuHolder->getChild<LLUICtrl>("Upload Image")->setLabelArg("[COST]",  upload_cost);
-	gMenuHolder->getChild<LLUICtrl>("Upload Sound")->setLabelArg("[COST]",  upload_cost);
-	gMenuHolder->getChild<LLUICtrl>("Upload Animation")->setLabelArg("[COST]", upload_cost);
-	gMenuHolder->getChild<LLUICtrl>("Bulk Upload")->setLabelArg("[COST]", upload_cost);
- // <FS:AW opensim currency support>
+	gMenuHolder->getChild<LLUICtrl>("Upload Image")->setLabelArg("[COST]", llformat("%d", upload_cost));
+	gMenuHolder->getChild<LLUICtrl>("Upload Sound")->setLabelArg("[COST]", llformat("%d", upload_cost));
+	gMenuHolder->getChild<LLUICtrl>("Upload Animation")->setLabelArg("[COST]", llformat("%d", upload_cost));
+	gMenuHolder->getChild<LLUICtrl>("Bulk Upload")->setLabelArg("[COST]", llformat("%d", upload_cost));
 }
 
 void notify_cautioned_script_question(const LLSD& notification, const LLSD& response, S32 orig_questions, BOOL granted)
@@ -7247,6 +7407,16 @@ bool unknown_script_question_cb(const LLSD& notification, const LLSD& response)
 	return false;
 }
 
+void experiencePermissionBlock(LLUUID experience, LLSD result)
+{
+    LLSD permission;
+    LLSD data;
+    permission["permission"] = "Block";
+    data[experience.asString()] = permission;
+    data["experience"] = experience;
+    LLEventPumps::instance().obtain("experience_permission").post(data);
+}
+
 bool script_question_cb(const LLSD& notification, const LLSD& response)
 {
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
@@ -7323,14 +7493,8 @@ bool script_question_cb(const LLSD& notification, const LLSD& response)
 			if (!region)
 			    return false;
 
-            LLExperienceCache::instance().setExperiencePermission(experience, std::string("Block"), LLExperienceCache::ExperienceGetFn_t());
+            LLExperienceCache::instance().setExperiencePermission(experience, std::string("Block"), boost::bind(&experiencePermissionBlock, experience, _1));
 
-            LLSD permission;
-            LLSD data;
-            permission["permission"] = "Block";
-            data[experience.asString()] = permission;
-            data["experience"] = experience;
-            LLEventPumps::instance().obtain("experience_permission").post(data);
 		}
 }
 	return false;

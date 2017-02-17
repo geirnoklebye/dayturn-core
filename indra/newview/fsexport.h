@@ -43,9 +43,10 @@ struct FSAssetResourceData
 
 class FSExport : public LLSingleton<FSExport>, public LLVOInventoryListener
 {
-	LOG_CLASS(FSExport);
+    LLSINGLETON(FSExport);
+    LOG_CLASS(FSExport);
 public:
-	void exportSelection();
+	static void exportSelection();
 	static void onImageLoaded(BOOL success,
 				  LLViewerFetchedTexture *src_vi,
 				  LLImageRaw* src, 
@@ -64,7 +65,7 @@ public:
 				    LLAssetType::EType type,
 				    void* user_data, S32 status, LLExtStat ext_status);
 
-private:
+
 	typedef enum
 	{
 	  IDLE,

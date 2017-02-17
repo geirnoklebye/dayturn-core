@@ -114,6 +114,7 @@
 #include "llpathfindingpathtool.h"
 #include "llscenemonitor.h"
 #include "llprogressview.h"
+#include "llcleanup.h"
 
 #ifdef _DEBUG
 // Debug indices is disabled for now for debug performance - djs 4/24/02
@@ -6883,6 +6884,7 @@ bool LLPipeline::toggleRenderTypeControlNegated(S32 type)
 //static
 void LLPipeline::toggleRenderDebug(U32 bit)
 {
+	U32 bit = (U32)(intptr_t)data;
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
 	{
@@ -7431,7 +7433,7 @@ void LLPipeline::doResetVertexBuffers(bool forced)
 	}
 	LLVOPartGroup::destroyGL();
 
-		LLVertexBuffer::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLVertexBuffer);
 
 	//delete all name pool caches
 	LLGLNamePool::cleanupPools();
@@ -11423,9 +11425,9 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	
 	S32 occlusion = sUseOcclusion;
 	sUseOcclusion = 0;
-	sReflectionRender = ! sRenderDeferred;
-	sShadowRender = true;
-	sImpostorRender = true;
+	sReflectionRender = sRenderDeferred ? FALSE : TRUE;
+	sShadowRender = TRUE;
+	sImpostorRender = TRUE;
 
 	LLViewerCamera* viewer_camera = LLViewerCamera::getInstance();
 

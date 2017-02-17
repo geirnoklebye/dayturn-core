@@ -43,7 +43,7 @@ class FSFloaterImport : public LLFloater
 {
 	LOG_CLASS(FSFloaterImport);
 public:
-	FSFloaterImport(const LLSD &filename);
+    FSFloaterImport(const LLSD &filename);
 	virtual ~FSFloaterImport();
 	virtual BOOL postBuild();
 	

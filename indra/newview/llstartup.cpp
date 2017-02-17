@@ -200,6 +200,7 @@
 #include "llstartuplistener.h"
 #include "lltoolbarview.h"
 #include "llexperiencelog.h"
+#include "llcleanup.h"
 
 #include "llstacktrace.h"
 #include "tea.h"
@@ -3143,7 +3144,7 @@ void LLStartUp::initExperiences()
 
 void LLStartUp::cleanupNameCache()
 {
-	LLAvatarNameCache::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLAvatarNameCache);
 
 	delete gCacheName;
 	gCacheName = NULL;
@@ -3367,7 +3368,7 @@ bool LLStartUp::startLLProxy()
 		}
 		else
 		{
-			LL_WARNS("Proxy") << "Invalid other HTTP proxy configuration."<< LL_ENDL;
+			LL_WARNS("Proxy") << "Invalid other HTTP proxy configuration: " << httpProxyType << LL_ENDL;
 
 			// Set the missing or wrong configuration back to something valid.
 			gSavedSettings.setString("HttpProxyType", "None");

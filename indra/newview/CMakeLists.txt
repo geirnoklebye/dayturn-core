@@ -111,19 +111,21 @@ include_directories(SYSTEM
 
 set(viewer_SOURCE_FILES
     RRInterface.cpp
-    fsareasearch.cpp
+    ao.cpp
+    aoengine.cpp
+    aoset.cpp
     fscommon.cpp
-    fsexport.cpp
+    fsareasearch.cpp
+    fsareasearchmenu.cpp    
+#    fsexport.cpp
     fsfloaterimport.cpp
     fsfloaterprofile.cpp
     fsfloatersearch.cpp
     fsfloatersearchlegacy.cpp
     fspanelclassified.cpp
     fspanelprofile.cpp
-    ao.cpp
-    aoengine.cpp
-    aoset.cpp
     fspanelprofileclassifieds.cpp
+    fsscrolllistctrl.cpp
     fslightshare.cpp
     groupchatlistener.cpp
     chatbar_as_cmdline.cpp	
@@ -280,7 +282,6 @@ set(viewer_SOURCE_FILES
     llfloaterimsession.cpp
     llfloaterimcontainer.cpp
     llfloaterinspect.cpp
-    llfloaterinventory.cpp
     llfloaterjoystick.cpp
     llfloaterlagmeter.cpp
     llfloaterland.cpp
@@ -294,7 +295,8 @@ set(viewer_SOURCE_FILES
     llfloatermodeluploadbase.cpp
     llfloaternamedesc.cpp
     llfloaternotificationsconsole.cpp
-    llfloaternotificationstabbed.cpp 
+    llfloaternotificationstabbed.cpp
+    llfloateroutfitphotopreview.cpp 
     llfloateroutfitsnapshot.cpp
     llfloaterobjectweights.cpp
     llfloateropenobject.cpp
@@ -741,6 +743,7 @@ set(viewer_SOURCE_FILES
     pieseparator.cpp
     pieslice.cpp
     pipeline.cpp
+    utilitybar.cpp
     viewerinfo.cpp
     streamtitledisplay.cpp
     astraopenregionsettings.cpp
@@ -758,8 +761,9 @@ set(viewer_HEADER_FILES
     aoset.h
     floaterhop.h
 	fsareasearch.h
+    fsareasearchmenu.h
     fscommon.h
-    fsexport.h
+#    fsexport.h
     fsfloaterimport.h
     fsfloaterprofile.h
     fsfloatersearch.h
@@ -767,6 +771,7 @@ set(viewer_HEADER_FILES
     fspanelclassified.h
     fspanelprofile.h
     fspanelprofileclassifieds.h
+    fsscrolllistctrl.h
     fslightshare.h
     groupchatlistener.h
     chatbar_as_cmdline.h
@@ -928,7 +933,6 @@ set(viewer_HEADER_FILES
     llfloaterimsession.h
     llfloaterimcontainer.h
     llfloaterinspect.h
-    llfloaterinventory.h
     llfloaterjoystick.h
     llfloaterlagmeter.h
     llfloaterland.h
@@ -942,7 +946,8 @@ set(viewer_HEADER_FILES
     llfloatermodeluploadbase.h
     llfloaternamedesc.h
     llfloaternotificationsconsole.h
-    llfloaternotificationstabbed.h 
+    llfloaternotificationstabbed.h
+    llfloateroutfitphotopreview.h
     llfloateroutfitsnapshot.h
     llfloaterobjectweights.h
     llfloateropenobject.h
@@ -1383,6 +1388,7 @@ set(viewer_HEADER_FILES
     streamtitledisplay.h
     roles_constants.h
     qtoolalign.h
+    utilitybar.h
     VertexCache.h
     viewerinfo.h
     VorbisFramework.h
