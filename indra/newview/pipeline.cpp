@@ -6884,7 +6884,6 @@ bool LLPipeline::toggleRenderTypeControlNegated(S32 type)
 //static
 void LLPipeline::toggleRenderDebug(U32 bit)
 {
-	U32 bit = (U32)(intptr_t)data;
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
 	{
@@ -11425,9 +11424,9 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	
 	S32 occlusion = sUseOcclusion;
 	sUseOcclusion = 0;
-	sReflectionRender = sRenderDeferred ? FALSE : TRUE;
-	sShadowRender = TRUE;
-	sImpostorRender = TRUE;
+	sReflectionRender = ! sRenderDeferred;
+	sShadowRender = true;
+	sImpostorRender = true;
 
 	LLViewerCamera* viewer_camera = LLViewerCamera::getInstance();
 

@@ -305,13 +305,12 @@ if(LLCOMMON_LINK_SHARED)
     # always generate llcommon.pdb, even for "Release" builds
     set_target_properties(llcommon PROPERTIES LINK_FLAGS "/DEBUG")
   endif(WINDOWS)
-  if(NOT WORD_SIZE EQUAL 32)
     if(WINDOWS)
-      add_definitions(/FIXED:NO)
+      ##add_definitions(/FIXED:NO)
     else(WINDOWS) # not windows therefore gcc LINUX and DARWIN
       add_definitions(-fPIC)
     endif(WINDOWS)
-  endif(NOT WORD_SIZE EQUAL 32)
+  endif(NOT ADDRESS_SIZE EQUAL 32)
   if(WINDOWS)
     # always generate llcommon.pdb, even for "Release" builds
     set_target_properties(llcommon PROPERTIES LINK_FLAGS "/DEBUG")

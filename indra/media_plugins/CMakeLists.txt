@@ -8,6 +8,7 @@ endif (LINUX)
 
 if (DARWIN)
     add_subdirectory(cef)
+    add_subdirectory(libvlc)
 endif (DARWIN)
 
 if( LINUX )
