@@ -39,7 +39,7 @@
 #include "boost/function.hpp"
 #include "boost/bind.hpp"
 #include "llCEFLib.h"
-#include "volume_catcher.h"
+//#include "volume_catcher.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -98,8 +98,6 @@ private:
 	std::string mCookiePath;
 	std::string mPickedFile;
 	LLCEFLib* mLLCEFLib;
-
-    VolumeCatcher mVolumeCatcher;
 
 	U8 *mPopupBuffer;
 	U32 mPopupW;
@@ -432,7 +430,6 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 			{
 				mLLCEFLib->update();
 
-                mVolumeCatcher.pump();
 				// this seems bad but unless the state changes (it won't until we figure out
 				// how to get CEF to tell us if copy/cut/paste is available) then this function
 				// will return immediately
@@ -501,10 +498,10 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				LLCEFLib::LLCEFLibSettings settings;
 				settings.initial_width = 1024;
 				settings.initial_height = 1024;
-#if !LL_LINUX
-//need to rebuild linux libraies
+				// The LLCEFLibSettings struct in the Windows 32-bit
+				// llceflib's build 500907 does not have a page_zoom_factor
 				// member. Set below.
-#endif
+				//settings.page_zoom_factor = message_in.getValueReal("factor");
 				settings.plugins_enabled = mPluginsEnabled;
 				settings.media_stream_enabled = false; // MAINT-6060 - WebRTC media removed until we can add granualrity/query UI
 				settings.javascript_enabled = mJavascriptEnabled;
@@ -958,7 +955,6 @@ void MediaPluginCEF::checkEditState()
 
 void MediaPluginCEF::setVolume(F32 vol)
 {
-    mVolumeCatcher.setVolume(vol);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

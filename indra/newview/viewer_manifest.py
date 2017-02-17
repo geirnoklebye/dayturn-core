@@ -456,8 +456,6 @@ class WindowsManifest(ViewerManifest):
                 self.path("media_plugin_gstreamer010.dll")
             except:
                 print "Skipping media_plugin_gstreamer010.dll" 
-            self.end_prefix()
-
         # Media plugins - CEF
         if self.prefix(src='../media_plugins/cef/%s' % self.args['configuration'], dst="llplugin"):
             self.path("media_plugin_cef.dll")
@@ -913,10 +911,24 @@ class DarwinManifest(ViewerManifest):
 
                 # SLPlugin plugins
                 if self.prefix(src="", dst="llplugin"):
-                    self.path2basename("../media_plugins/quicktime/" + self.args['configuration'],
-                                       "media_plugin_quicktime.dylib")
                     self.path2basename("../media_plugins/cef/" + self.args['configuration'],
                                        "media_plugin_cef.dylib")
+
+                    # copy LibVLC plugin itself
+                    self.path2basename("../media_plugins/libvlc/" + self.args['configuration'],
+                                       "media_plugin_libvlc.dylib")
+
+                    # copy LibVLC dynamic libraries
+                    if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release' ), dst="lib"):
+                        self.path( "libvlc*.dylib*" )
+                        self.end_prefix()
+
+                    # copy LibVLC plugins folder
+                    if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release', 'plugins' ), dst="plugins"):
+                        self.path( "lib*_plugin.dylib" )
+                        self.path( "plugins.dat" )
+                        self.end_prefix()
+
                     self.end_prefix("llplugin")
 
                 self.end_prefix("Resources")
@@ -1133,6 +1145,20 @@ class DarwinManifest(ViewerManifest):
         # get rid of the temp file
         self.package_file = finalname
         self.remove(sparsename)
+
+
+class Darwin_i386_Manifest(DarwinManifest):
+    pass
+
+
+class Darwin_i686_Manifest(DarwinManifest):
+    """alias in case arch is passed as i686 instead of i386"""
+    pass
+
+
+class Darwin_x86_64_Manifest(DarwinManifest):
+    pass
+
 
 
 class Darwin_i386_Manifest(DarwinManifest):
