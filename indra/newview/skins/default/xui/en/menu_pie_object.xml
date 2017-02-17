@@ -306,6 +306,7 @@
             <pie_slice.on_enable
                 function="Object.EnableReportAbuse" />
         </pie_slice>
+<!--
         <pie_slice
          enabled="false"
          label="OXP Format Backup"
@@ -324,7 +325,7 @@
          <pie_slice.on_enable
             function="Object.EnableExport" />
         </pie_slice>
-
+-->
 <!-- Phoenix has "Disable" here, which we haven't implemented yet.
      Might get interesting when we finally do ... -->
 <!-- <pie_separator name="disable_placeholder" /> -->

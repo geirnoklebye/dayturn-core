@@ -5303,7 +5303,7 @@ void LLSelectMgr::processObjectProperties(LLMessageSystem* msg, void** user_data
 		{
 			FSAreaSearch *area_search_floater = LLFloaterReg::getTypedInstance<FSAreaSearch>("area_search");
 
-			if (!area_search_floater || !area_search_floater->isSearchActive()) {
+			if (!area_search_floater || !area_search_floater->isActive()) {
 				LL_WARNS() << "Couldn't find object " << id << " selected." << LL_ENDL;
 			}
 		}
@@ -6048,6 +6048,11 @@ S32 LLSelectNode::getLastSelectedTE()
 	return mLastTESelected;
 }
 
+S32 LLSelectNode::getLastOperatedTE()
+{
+	return mLastTESelected;
+}
+
 LLViewerObject* LLSelectNode::getObject()
 {
 	if (!mObject)
@@ -6286,6 +6291,9 @@ void pushWireframe(LLDrawable* drawable)
 
 void LLSelectNode::renderOneWireframe(const LLColor4& color)
 {
+	//Need to because crash on ATI 3800 (and similar cards) MAINT-5018 
+	LLGLDisable multisample(LLPipeline::RenderFSAASamples > 0 ? GL_MULTISAMPLE_ARB : 0);
+
 	LLViewerObject* objectp = getObject();
 	if (!objectp)
 	{
@@ -7238,7 +7246,9 @@ U32 LLObjectSelection::getSelectedObjectTriangleCount(S32* vcount)
 		
 		if (object)
 		{
-			count += object->getTriangleCount(vcount);
+			S32 vt = 0;
+			count += object->getTriangleCount(&vt);
+			*vcount += vt;
 		}
 	}
 

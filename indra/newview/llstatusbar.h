@@ -90,6 +90,11 @@ public:
 
 	LLPanelNearByMedia* getNearbyMediaPanel() { return mPanelNearByMedia; }
     BOOL getAudioStreamEnabled() const;
+   	// <FS:Zi> External toggles for media and streams
+	void toggleMedia(bool enable);
+	void toggleStream(bool enable);
+	// </FS:Zi>
+    
 private:
 	
 	void onClickBuyCurrency();

@@ -53,12 +53,13 @@ class FloaterAO
 	public:
 		/*virtual*/ BOOL postBuild();
 		virtual void onOpen(const LLSD& key);
+		virtual void onClose(bool app_quitting);
 		void updateList();
 		void updateSetParameters();
 		void updateAnimationList();
 
-		BOOL handleDragAndDrop(S32 x,S32 y,MASK mask,BOOL drop,EDragAndDropType cargo_type,void* cargo_data,
-								  EAcceptance* accept,std::string& tooltip_msg);
+		BOOL handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop, EDragAndDropType cargo_type, void* cargo_data,
+								  EAcceptance* accept, std::string& tooltip_msg);
 
 	protected:
 		LLScrollListItem* addAnimation(const std::string& name);
@@ -99,8 +100,8 @@ class FloaterAO
 		void enableSetControls(BOOL yes);
 		void enableStateControls(BOOL yes);
 
-		BOOL newSetCallback(const LLSD& notification,const LLSD& response);
-		BOOL removeSetCallback(const LLSD& notification,const LLSD& response);
+		BOOL newSetCallback(const LLSD& notification, const LLSD& response);
+		BOOL removeSetCallback(const LLSD& notification, const LLSD& response);
 
 		virtual BOOL tick();
 
