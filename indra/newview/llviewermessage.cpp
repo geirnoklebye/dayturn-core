@@ -2607,7 +2607,7 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 
 			// The group notice packet does not have an AgentID.  Obtain one from the name cache.
 			// If last name is "Resident" strip it out so the cache name lookup works.
-			std::string::size_type index = original_name.find(" Resident");
+			U32 index = original_name.find(" Resident");
 			if (index != std::string::npos)
 			{
 				original_name = original_name.substr(0, index);
@@ -4257,7 +4257,7 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 		LLVector3 beacon_dir(agent_pos.mV[VX] - (F32)fmod(beacon_pos.mdV[VX], 256.0), agent_pos.mV[VY] - (F32)fmod(beacon_pos.mdV[VY], 256.0), 0);
 		if (beacon_dir.magVecSquared() < 25.f)
 		{
-			LLTracker::stopTracking(false);
+			LLTracker::stopTracking(NULL);
 		}
 		else if ( is_teleport && !gAgent.getTeleportKeepsLookAt() && look_at.isExactlyZero())
 		{
@@ -6395,11 +6395,10 @@ void process_economy_data(LLMessageSystem *msg, void** /*user_data*/)
 
 	LL_INFOS_ONCE("Messaging") << "EconomyData message arrived; upload cost is L$" << upload_cost << LL_ENDL;
 
-	gMenuHolder->getChild<LLUICtrl>("Upload Image")->setLabelArg("[COST]",  upload_cost);
-	gMenuHolder->getChild<LLUICtrl>("Upload Sound")->setLabelArg("[COST]",  upload_cost);
-	gMenuHolder->getChild<LLUICtrl>("Upload Animation")->setLabelArg("[COST]", upload_cost);
-	gMenuHolder->getChild<LLUICtrl>("Bulk Upload")->setLabelArg("[COST]", upload_cost);
- // <FS:AW opensim currency support>
+	gMenuHolder->getChild<LLUICtrl>("Upload Image")->setLabelArg("[COST]", llformat("%d", upload_cost));
+	gMenuHolder->getChild<LLUICtrl>("Upload Sound")->setLabelArg("[COST]", llformat("%d", upload_cost));
+	gMenuHolder->getChild<LLUICtrl>("Upload Animation")->setLabelArg("[COST]", llformat("%d", upload_cost));
+	gMenuHolder->getChild<LLUICtrl>("Bulk Upload")->setLabelArg("[COST]", llformat("%d", upload_cost));
 }
 
 void notify_cautioned_script_question(const LLSD& notification, const LLSD& response, S32 orig_questions, BOOL granted)

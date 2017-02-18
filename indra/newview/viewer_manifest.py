@@ -192,6 +192,7 @@ class ViewerManifest(LLManifest):
             if not self.path2basename(os.pardir, "summary.json"):
                 print "No summary.json file"
 
+
     def grid(self):
         return self.args['grid']
 
@@ -421,16 +422,17 @@ class WindowsManifest(ViewerManifest):
             except:
                 print "Skipping openal"
                 
-                # For google-perftools tcmalloc allocator.
-                try:
-                    if self.args['configuration'].lower() == 'debug':
-                        self.path('libtcmalloc_minimal-debug.dll')
-                    else:
-                        self.path('libtcmalloc_minimal.dll')
-                except:
-                    print "Skipping libtcmalloc_minimal.dll"
+            # For google-perftools tcmalloc allocator.
+            try:
+                if self.args['configuration'].lower() == 'debug':
+                    self.path('libtcmalloc_minimal-debug.dll')
+                else:
+                    self.path('libtcmalloc_minimal.dll')
+            except:
+                print "Skipping libtcmalloc_minimal.dll"
 
- 
+            self.end_prefix()
+
         self.path(src="licenses-win32.txt", dst="licenses.txt")
         self.path("featuretable.txt")
         self.path("featuretable_xp.txt")
