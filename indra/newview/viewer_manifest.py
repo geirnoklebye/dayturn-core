@@ -5,7 +5,7 @@
 @brief Description of all installer viewer files, and methods for packaging
        them into installers for all supported platforms.
 
-$LicenseInfo: firstyear=2006&license=viewerlgpl$
+$LicenseInfo:firstyear=2006&license=viewerlgpl$
 Second Life Viewer Source Code
 Copyright (C) 2006-2014, Linden Research, Inc.
 
@@ -142,7 +142,6 @@ class ViewerManifest(LLManifest):
 
             # skins
             if self.prefix(src="skins"):
-                    self.path("paths.xml")
                     # include the entire textures directory recursively
                     if self.prefix(src="*/textures"):
                             self.path("*/*.tga")
@@ -160,7 +159,13 @@ class ViewerManifest(LLManifest):
                     self.path("*/*.xml")
 
                     # Local HTML files (e.g. loading screen)
-                    if self.prefix(src="*/html"):
+                    # The claim is that we never use local html files any
+                    # longer. But rather than commenting out this block, let's
+                    # rename every html subdirectory as html.old. That way, if
+                    # we're wrong, a user actually does have the relevant
+                    # files; s/he just needs to rename every html.old
+                    # directory back to html to recover them.
+                    if self.prefix(src="*/html", dst="*/html.old"):
                             self.path("*.png")
                             self.path("*/*/*.html")
                             self.path("*/*/*.gif")
@@ -249,6 +254,7 @@ class ViewerManifest(LLManifest):
         else:
             app_suffix=self.channel_variant()
         return CHANNEL_VENDOR_BASE + ' ' + app_suffix
+
     def app_name_oneword(self):
         return ''.join(self.app_name().split())
     
@@ -282,14 +288,6 @@ class ViewerManifest(LLManifest):
 class WindowsManifest(ViewerManifest):
     def final_exe(self):
         return self.app_name_oneword()+".exe"
-#    def final_exe(self):
-#        if self.default_channel():
-#            if self.default_grid():
-#                return "Kokua.exe"
-#            else:
-#                return "Kokua.exe"
-#        else:
-#            return ''.join(self.channel().split()) + '.exe'
 
     def test_msvcrt_and_copy_action(self, src, dst):
         # This is used to test a dll manifest.
@@ -353,7 +351,7 @@ class WindowsManifest(ViewerManifest):
                                         'llplugin', 'slplugin', self.args['configuration']),
                            "slplugin.exe")
         
-        self.path(src="../viewer_components/updater/scripts/windows/update_install.bat", dst="update_install.bat")
+        self.path2basename("../viewer_components/updater/scripts/windows", "update_install.bat")
         # Get shared libs from the shared libs staging directory
         if self.prefix(src=os.path.join(os.pardir, 'sharedlibs', self.args['configuration']),
                        dst=""):
@@ -402,60 +400,41 @@ class WindowsManifest(ViewerManifest):
                  self.path("msvcp100.dll")
 
             # Vivox runtimes
-#            self.path("wrap_oal.dll") no longer in archive
             self.path("SLVoice.exe")
             self.path("vivoxsdk.dll")
             self.path("ortp.dll")
-#           added from archive
             self.path("libsndfile-1.dll")
             self.path("vivoxoal.dll")
             self.path("ca-bundle.crt")
-            self.path("vivoxplatform.dll")
-            try:
-                self.path("zlib1.dll")
-            except:
-                print "Skipping zlib1.dll"
-
-				# Security
+            
+            # Security
             self.path("ssleay32.dll")
-            self.path("libeay32.dll")				
+            self.path("libeay32.dll")
 
             # Hunspell
             self.path("libhunspell.dll")
 
-        #OpenAL
-        try:
-            self.path("openal32.dll")
-            self.path("alut.dll")
-        except:
-            print "Skipping openal"
-			
-		# For google-perftools tcmalloc allocator.
-	try:
-		if self.args['configuration'].lower() == 'debug':
-			self.path('libtcmalloc_minimal-debug.dll')
-		else:
-			self.path('libtcmalloc_minimal.dll')
-	except:
-			print "Skipping libtcmalloc_minimal.dll"
-			
-			self.path(src="licenses-win32.txt", dst="licenses.txt")
-			self.path("featuretable.txt")
-			self.path("featuretable_xp.txt")
-
-        self.end_prefix()
-
-	self.path(src="licenses-win32.txt", dst="licenses.txt")
-	self.path("featuretable.txt")
-	self.path("featuretable_xp.txt")
-	self.path("VivoxAUP.txt")
-    
-        # On first build tries to copy before it is built.
-        if self.prefix(src='../media_plugins/gstreamer010/%s' % self.args['configuration'], dst="llplugin"):
+            #OpenAL
             try:
-                self.path("media_plugin_gstreamer010.dll")
+                self.path("openal32.dll")
+                self.path("alut.dll")
             except:
-                print "Skipping media_plugin_gstreamer010.dll" 
+                print "Skipping openal"
+                
+                # For google-perftools tcmalloc allocator.
+                try:
+                    if self.args['configuration'].lower() == 'debug':
+                        self.path('libtcmalloc_minimal-debug.dll')
+                    else:
+                        self.path('libtcmalloc_minimal.dll')
+                except:
+                    print "Skipping libtcmalloc_minimal.dll"
+
+ 
+        self.path(src="licenses-win32.txt", dst="licenses.txt")
+        self.path("featuretable.txt")
+        self.path("featuretable_xp.txt")
+
         # Media plugins - CEF
         if self.prefix(src='../media_plugins/cef/%s' % self.args['configuration'], dst="llplugin"):
             self.path("media_plugin_cef.dll")
@@ -728,7 +707,7 @@ class DarwinManifest(ViewerManifest):
 
     def construct(self):
         # copy over the build result (this is a no-op if run within the xcode script)
-        self.path(self.args['configuration'] + "/Kokua.app", dst="")
+        self.path(self.args['configuration'] + "/Second Life.app", dst="")
 
         pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
         relpkgdir = os.path.join(pkgdir, "lib", "release")
@@ -740,13 +719,6 @@ class DarwinManifest(ViewerManifest):
             # copy additional libs in <bundle>/Contents/MacOS/
             self.path(os.path.join(relpkgdir, "libndofdev.dylib"), dst="Resources/libndofdev.dylib")
             self.path(os.path.join(relpkgdir, "libhunspell-1.3.0.dylib"), dst="Resources/libhunspell-1.3.0.dylib")
-
-            # copy additional libs in <bundle>/Contents/MacOS/
-            if self.prefix(src="../packages/lib/release", dst="MacOS"):
-                self.path("libalut.0.dylib")
-                self.path("libopenal.1.dylib")
-                self.end_prefix("MacOS")
-            
 
             if self.prefix(dst="MacOS"):
                 self.path2basename("../viewer_components/updater/scripts/darwin", "*.py")
@@ -995,6 +967,7 @@ class DarwinManifest(ViewerManifest):
             self.run_command('strip -S %(viewer_binary)r' %
                              { 'viewer_binary' : self.dst_path_of('Contents/MacOS/Kokua')})
 
+
     def copy_finish(self):
         # Force executable permissions to be set for scripts
         # see CHOP-223 and http://mercurial.selenic.com/bts/issue1802
@@ -1160,25 +1133,15 @@ class Darwin_x86_64_Manifest(DarwinManifest):
     pass
 
 
-
-class Darwin_i386_Manifest(DarwinManifest):
-    pass
-
-
-class Darwin_i686_Manifest(DarwinManifest):
-    """alias in case arch is passed as i686 instead of i386"""
-    pass
-
-
-class Darwin_x86_64_Manifest(DarwinManifest):
-    pass
-
-
 class LinuxManifest(ViewerManifest):
     def construct(self):
         super(LinuxManifest, self).construct()
+
+        pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
+        relpkgdir = os.path.join(pkgdir, "lib", "release")
+        debpkgdir = os.path.join(pkgdir, "lib", "debug")
+
         self.path("licenses-linux.txt","licenses.txt")
-        self.path("VivoxAUP.txt")
         if self.prefix("linux_tools", dst=""):
             self.path("client-readme.txt","README-linux.txt")
             self.path("client-readme-voice.txt","README-linux-voice.txt")
@@ -1231,6 +1194,7 @@ class LinuxManifest(ViewerManifest):
         if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib' ), dst="lib"):
             self.path( "libvlc*.so*" )
             self.end_prefix()
+
 
         if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="bin"):
             self.path( "chrome-sandbox" )
@@ -1369,21 +1333,22 @@ class Linux_i686_Manifest(LinuxManifest):
         relpkgdir = os.path.join(pkgdir, "lib", "release")
         debpkgdir = os.path.join(pkgdir, "lib", "debug")
 
+        if self.prefix(relpkgdir, dst="lib"):
 
-        # install either the libllkdu we just built, or a prebuilt one, in
-        # decreasing order of preference.  for linux package, this goes to bin/
-        try:
-            self.path(self.find_existing_file('../llkdu/libllkdu.so',
-                '../../libraries/i686-linux/lib_release_client/libllkdu.so'),
-                  dst='bin/libllkdu.so')
-        except:
-            print "Skipping libllkdu.so - not found"
+            # install either the libllkdu we just built, or a prebuilt one, in
+            # decreasing order of preference.  for linux package, this goes to bin/
+            try:
+                self.path(self.find_existing_file('../llkdu/libllkdu.so',
+                    '../../libraries/i686-linux/lib_release_client/libllkdu.so'),
+                      dst='bin/libllkdu.so')
+            except:
+                print "Skipping libllkdu.so - not found"
 
-            self.path("libopenjpeg.so.1.3.0", "libopenjpeg.so.1.3")
-        try:
-            self.path("../llcommon/libllcommon.so", "lib/libllcommon.so")
-        except:
-            print "Skipping llcommon.so (assuming llcommon was linked statically)"
+                self.path("libopenjpeg.so.1.3.0", "libopenjpeg.so.1.3")
+            try:
+                self.path("../llcommon/libllcommon.so", "lib/libllcommon.so")
+            except:
+                print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
         # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
         if self.prefix("/lib/i386-linux-gnu", dst="lib"):

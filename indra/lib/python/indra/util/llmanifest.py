@@ -475,9 +475,8 @@ class LLManifest(object):
           a) verify that you really have created it
           b) schedule it for cleanup"""
         if not os.path.exists(path):
-            print "No installer package created at path " + path + "\nTerminating package process"
-        else:
-            self.created_paths.append(path)
+            raise ManifestError, "Should be something at path " + path
+        self.created_paths.append(path)
 
     def put_in_file(self, contents, dst, src=None):
         # write contents as dst
