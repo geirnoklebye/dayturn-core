@@ -17,14 +17,6 @@ include(OpenGL)
 
 include(CEFPlugin)
 
-if (!DARWIN)
-# We don't want PulseAudio on DARWIN. Geir Nøklebye
-# <FS:ND> Linux volume catcher
-include(PulseAudio)
-include_directories( ${PULSEAUDIO_INCLUDE_DIRS} )
-# </FS:ND>
-endif (!DARWIN)
-
 include_directories(
     ${LLPLUGIN_INCLUDE_DIRS}
     ${MEDIA_PLUGIN_BASE_INCLUDE_DIRS}
@@ -59,21 +51,9 @@ set (media_plugin_cef_LINK_LIBRARIES
   ${MEDIA_PLUGIN_BASE_LIBRARIES}
   ${CEF_PLUGIN_LIBRARIES}
   ${LLCOMMON_LIBRARIES}
-  ${PLUGIN_API_WINDOWS_LIBRARIES}
-  )
+  ${PLUGIN_API_WINDOWS_LIBRARIES})
 
 
-  #message(FATAL_ERROR "CEF plugin has been enabled for a Linux compile.\n"
-  #  "  Please create a volume_catcher implementation for this platform.")
-  if (PULSEAUDIO_FOUND)
-    list(APPEND media_plugin_cef_SOURCE_FILES linux_volume_catcher.cpp)
-  else (PULSEAUDIO_FOUND)
-    list(APPEND media_plugin_cef_SOURCE_FILES dummy_volume_catcher.cpp)
-  endif (PULSEAUDIO_FOUND)
-  list(APPEND media_plugin_cef_LINK_LIBRARIES
-       ${UI_LIBRARIES}     # for glib/GTK
-       Xext #<FS:ND/> force pulling libXext in, otherwise we get undefined symbols.
-       )
 
 set_source_files_properties(${media_plugin_cef_HEADER_FILES}
                             PROPERTIES HEADER_FILE_ONLY TRUE)
@@ -110,8 +90,7 @@ if (DARWIN)
     PREFIX ""
     BUILD_WITH_INSTALL_RPATH 1
     INSTALL_NAME_DIR "@executable_path"
-    CXX_FLAGS "-std=c++11 -stdlib=libc++"
-    LINK_FLAGS "-stdlib=libc++ -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/../base/media_plugin_base.exp"
+    LINK_FLAGS "-exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/../base/media_plugin_base.exp"
   )
 
   add_custom_command(TARGET media_plugin_cef
