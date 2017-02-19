@@ -10116,23 +10116,15 @@ void LLUploadCostCalculator::calculateCost()
 // 		mCostStr = llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
 // 	}
 
-	// \0/ Copypasta! See llviewermessage, llviewermenu and llpanelmaininventory
-	S32 cost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
-	std::string upload_cost;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	bool in_opensim = LLGridManager::getInstance()->isInOpenSim();
-	if(in_opensim)
+	// getPriceUpload() returns -1 if no data available yet.
+	if(upload_cost >= 0)
 	{
-		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : LLTrans::getString("free");
+		mCostStr = llformat("%d", upload_cost);
 	}
 	else
-#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
 	{
-		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
+		mCostStr = llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
 	}
-
-	mCostStr = upload_cost;
-// </FS:AW opensim currency support>
 }
 
 void show_navbar_context_menu(LLView* ctrl, S32 x, S32 y)

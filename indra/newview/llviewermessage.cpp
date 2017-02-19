@@ -2225,7 +2225,7 @@ static bool parse_lure_bucket(const std::string& bucket,
 							  LLVector3& pos,
 							  LLVector3& look_at,
 							  U8& region_access)
-{    
+{
 	if (!gIsInSecondLife)
 	{
 	    return false;  // TODO make sure the bucket contains data when coming from OS. Empty bucket leads to a viewer crash on OS X. 
@@ -2668,120 +2668,6 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
 			gIMMgr->processIMTypingStop(im_info);
 		}
-		else if (gRRenabled && message == "@stopim")
-		{
-			// close this IM session if we are under @startim (globally or for this person)
-			bool close_session = false;
-			std::string response = "*** The other party is not under a @startim restriction.";
-
-			if (gAgent.mRRInterface.containsWithoutException("startim", from_id.asString())
-				|| gAgent.mRRInterface.contains("startimto:" + from_id.asString()))
-			{
-				close_session = true;
-				response = "*** Session has been ended for the other party.";
-			}
-
-			// We need to send feedback to the other party
-			std::string my_name;
-			LLAgentUI::buildFullname(my_name);
-			pack_instant_message(
-				gMessageSystem,
-				gAgent.getID(),
-				FALSE,
-				gAgent.getSessionID(),
-				from_id,
-				my_name.c_str(),
-				response.c_str(),
-				IM_ONLINE,
-				IM_DO_NOT_DISTURB_AUTO_RESPONSE,
-				session_id);
-			gAgent.sendReliableMessage();
-
-
-			if (close_session)
-			{
-				//gIMMgr->leaveSession(session_id);
-
-				LLFloaterIMSession* floater = LLFloaterIMSession::findInstance(session_id);
-				if (floater)
-				{
-					gAgent.mRRInterface.printOnChat("*** IM session with " + name + " has been ended remotely.");
-					floater->closeFloater(false);
-				}
-			}
-
-			// remove the "XXX is typing..." label from the IM window
-			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
-			gIMMgr->processIMTypingStop(im_info);
-		}
-		else if (gRRenabled && message == "@getblacklist")
-		{
-			// return the contents of  the blacklist, without a filter
-			std::string my_name;
-			LLAgentUI::buildFullname(my_name);
-			std::string response = gAgent.mRRInterface.sBlacklist;
-			pack_instant_message(
-				gMessageSystem,
-				gAgent.getID(),
-				FALSE,
-				gAgent.getSessionID(),
-				from_id,
-				my_name.c_str(),
-				response.c_str(),
-				IM_ONLINE,
-				IM_DO_NOT_DISTURB_AUTO_RESPONSE,
-				session_id);
-			gAgent.sendReliableMessage();
-
-			// remove the "XXX is typing..." label from the IM window
-			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
-			gIMMgr->processIMTypingStop(im_info);
-		}
-		else if (gRRenabled && message == "@list")
-		{
-			// return the list of restrictions
-			std::string my_name;
-			LLAgentUI::buildFullname(my_name);
-			std::string response = gAgent.mRRInterface.getRlvRestrictions();
-
-			// The message may be very long, so we might need to chop in chunks of 1023 characters 
-			// and send several IMs in a row or else it will be truncated by the server.
-			while (response.length() > 1023)
-			{
-				std::string chunk = response.substr(0, 1023);
-				response = response.substr(1023);
-				pack_instant_message(
-					gMessageSystem,
-					gAgent.getID(),
-					FALSE,
-					gAgent.getSessionID(),
-					from_id,
-					my_name.c_str(),
-					chunk.c_str(),
-					IM_ONLINE,
-					IM_DO_NOT_DISTURB_AUTO_RESPONSE,
-					session_id);
-				gAgent.sendReliableMessage();
-			}
-
-			pack_instant_message(
-				gMessageSystem,
-				gAgent.getID(),
-				FALSE,
-				gAgent.getSessionID(),
-				from_id,
-				my_name.c_str(),
-				response.c_str(),
-				IM_ONLINE,
-				IM_DO_NOT_DISTURB_AUTO_RESPONSE,
-				session_id);
-			gAgent.sendReliableMessage();
-
-			// remove the "XXX is typing..." label from the IM window
-			LLPointer<LLIMInfo> im_info = new LLIMInfo(gMessageSystem);
-			gIMMgr->processIMTypingStop(im_info);
-		}
-//mk
 		else if (gRRenabled && message == "@stopim")
 		{
 			// close this IM session if we are under @startim (globally or for this person)
@@ -3675,31 +3561,6 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 
 					LLSD dummy_response;
 					dummy_response["message"] = "Automatic teleport offer";
-				
-				if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
-				{
-					message = "(Hidden)";
-				}
-
-				if (gRRenabled && dialog == IM_LURE_USER && auto_accept)
-				{
-					// accepttp => the viewer acts like it was teleported by a god
-					gAgent.mRRInterface.setAllowCancelTp (FALSE);
-					LLSD payload;
-					payload["from_id"] = from_id;
-					payload["lure_id"] = session_id;
-					payload["godlike"] = TRUE;
-					// do not show a message box, because you're about to be teleported.
-					LLNotifications::instance().forceResponse(LLNotification::Params("TeleportOffered").payload(payload), 0);
-				}
-				else if (gRRenabled && dialog == IM_TELEPORT_REQUEST && auto_accept)
-				{
-					// accepttprequest => the viewer automaticallys ends the TP (code copied from teleport_request_callback())
-					LLSD dummy_notification;
-					dummy_notification["payload"]["ids"][0] = from_id;
-
-					LLSD dummy_response;
-					dummy_response["message"] = "Automatic teleport offer";
 
 					send_lures(dummy_notification, dummy_response);
 				}
@@ -4155,15 +4016,15 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 
 	msg->getU8Fast(_PREHASH_ChatData, _PREHASH_Audible, audible_temp);
 	chat.mAudible = (EChatAudible)audible_temp;
-
+	
 	chat.mTime = LLFrameTimer::getElapsedSeconds();
-
+	
 	// IDEVO Correct for new-style "Resident" names
 	if (chat.mSourceType == CHAT_SOURCE_AGENT)
 	{
 		// I don't know if it's OK to change this here, if 
 		// anything downstream does lookups by name, for instance
-
+		
 		LLAvatarName av_name;
 		if (LLAvatarNameCache::get(from_id, &av_name))
 		{
@@ -4346,24 +4207,6 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 						}
 					}
 					// also scramble the name of the chatter (replace with a dummy name)
-					if (chatter && chatter->isAvatar())
-					{
-						std::string uuid_str = chatter->getID().asString();
-						LLStringUtil::toLower(uuid_str);
-						if (gAgent.mRRInterface.containsWithoutException("shownames", uuid_str))
-						{
-							from_name = gAgent.mRRInterface.getDummyName(from_name, chat.mAudible);
-						}
-					}
-					else
-					{
-						from_name = gAgent.mRRInterface.getCensoredMessage(from_name);
-					}
-					chat.mFromName = from_name;
-				}
-			}
-		}
-//mk
 					if (chatter && chatter->isAvatar())
 					{
 						std::string uuid_str = chatter->getID().asString();
@@ -5092,10 +4935,6 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 		gAgentCamera.updateCamera();
 
 		gAgent.setTeleportState( LLAgent::TELEPORT_START_ARRIVAL );
-
-		// set the appearance on teleport since the new sim does not
-		// know what you look like.
-		gAgent.sendAgentSetAppearance();
 
 		if (isAgentAvatarValid())
 		{
@@ -5882,16 +5721,6 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 			{
 				LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
 			}
-			else
-			if (stat_id == 16 || stat_id == 36 || stat_id == 37) //cut log spam on opensim
-			{
-				LL_WARNS_ONCE() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
-			}
-			else
-			{
-				LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
-			}
-		}
 		}
 	}
 
@@ -6373,7 +6202,7 @@ void process_money_balance_reply( LLMessageSystem* msg, void** )
 	msg->getS32("MoneyData", "SquareMetersCredit", credit);
 	msg->getS32("MoneyData", "SquareMetersCommitted", committed);
 	msg->getStringFast(_PREHASH_MoneyData, _PREHASH_Description, desc);
-	LL_INFOS("Messaging") << Tea::wrapCurrency("L$, credit, committed: ") << balance << " " << credit << " "
+	LL_INFOS("Messaging") << "L$, credit, committed: " << balance << " " << credit << " "
 			<< committed << LL_ENDL;
     
 	if (gStatusBar)
@@ -7495,6 +7324,12 @@ bool script_question_cb(const LLSD& notification, const LLSD& response)
 
             LLExperienceCache::instance().setExperiencePermission(experience, std::string("Block"), boost::bind(&experiencePermissionBlock, experience, _1));
 
+            LLSD permission;
+            LLSD data;
+            permission["permission"] = "Block";
+            data[experience.asString()] = permission;
+            data["experience"] = experience;
+            LLEventPumps::instance().obtain("experience_permission").post(data);
 		}
 }
 	return false;
