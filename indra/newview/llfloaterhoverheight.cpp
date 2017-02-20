@@ -35,10 +35,6 @@
 #include "llviewerregion.h"
 #include "llvoavatarself.h"
 
-#ifdef OPENSIM
-#include "llviewernetwork.h"
-#endif
-
 LLFloaterHoverHeight::LLFloaterHoverHeight(const LLSD& key) : LLFloater(key)
 {
 }
@@ -51,7 +47,13 @@ void LLFloaterHoverHeight::syncFromPreferenceSetting(void *user_data)
 	LLSliderCtrl* sldrCtrl = self->getChild<LLSliderCtrl>("HoverHeightSlider");
 	sldrCtrl->setValue(value,FALSE);
 
-
+	if (isAgentAvatarValid())
+	{
+		LLVector3 offset(0.0, 0.0, llclamp(value,MIN_HOVER_Z,MAX_HOVER_Z));
+		LL_INFOS("Avatar") << "setting hover from preference setting " << offset[2] << LL_ENDL;
+		gAgentAvatarp->setHoverOffset(offset);
+		//gAgentAvatarp->sendHoverHeight();
+	}
 }
 
 BOOL LLFloaterHoverHeight::postBuild()
@@ -102,14 +104,7 @@ void LLFloaterHoverHeight::onSliderMoved(LLUICtrl* ctrl, void* userData)
 	F32 value = sldrCtrl->getValueF32();
 	LLVector3 offset(0.0, 0.0, llclamp(value,MIN_HOVER_Z,MAX_HOVER_Z));
 	LL_INFOS("Avatar") << "setting hover from slider moved" << offset[2] << LL_ENDL;
-	if (gAgent.getRegion() && gAgent.getRegion()->avatarHoverHeightEnabled())
-	{
-		gAgentAvatarp->setHoverOffset(offset, false);
-	}
-	else if (!gAgentAvatarp->isUsingServerBakes())
-	{
-		gSavedPerAccountSettings.setF32("AvatarHoverOffsetZ", value);
-	}
+	gAgentAvatarp->setHoverOffset(offset, false);
 }
 
 // Do send-to-the-server work when slider drag completes, or new
@@ -118,9 +113,9 @@ void LLFloaterHoverHeight::onFinalCommit()
 {
 	LLSliderCtrl* sldrCtrl = getChild<LLSliderCtrl>("HoverHeightSlider");
 	F32 value = sldrCtrl->getValueF32();
-	LLVector3 offset(0.0, 0.0, llclamp(value,MIN_HOVER_Z,MAX_HOVER_Z));
 	gSavedPerAccountSettings.setF32("AvatarHoverOffsetZ",value);
 
+	LLVector3 offset(0.0, 0.0, llclamp(value,MIN_HOVER_Z,MAX_HOVER_Z));
 	LL_INFOS("Avatar") << "setting hover from slider final commit " << offset[2] << LL_ENDL;
 	gAgentAvatarp->setHoverOffset(offset, true); // will send update this time.
 }
@@ -150,10 +145,6 @@ void LLFloaterHoverHeight::onSimulatorFeaturesReceived(const LLUUID &region_id)
 void LLFloaterHoverHeight::updateEditEnabled()
 {
 	bool enabled = gAgent.getRegion() && gAgent.getRegion()->avatarHoverHeightEnabled();
-	if (!enabled && isAgentAvatarValid() && !gAgentAvatarp->isUsingServerBakes())
-	{
-		enabled = true;
-	}
 	LLSliderCtrl* sldrCtrl = getChild<LLSliderCtrl>("HoverHeightSlider");
 	sldrCtrl->setEnabled(enabled);
 	if (enabled)
