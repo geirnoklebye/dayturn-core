@@ -29,6 +29,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} $ENV{LL_BUILD}")
 # Portable compilation flags.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DADDRESS_SIZE=${ADDRESS_SIZE}")
 
+
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 
+    "-DLL_RELEASE=1 -DNDEBUG -DLL_RELEASE_WITH_DEBUG_INFO=1")
+
 # Configure crash reporting
 set(RELEASE_CRASH_REPORTING OFF CACHE BOOL "Enable use of crash reporting in release builds")
 set(NON_RELEASE_CRASH_REPORTING OFF CACHE BOOL "Enable use of crash reporting in developer builds")
@@ -66,7 +70,7 @@ if (WINDOWS)
       "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /Zo"
       CACHE STRING "C++ compiler release-with-debug options" FORCE)
   set(CMAKE_CXX_FLAGS_RELEASE
-      "${CMAKE_CXX_FLAGS_RELEASE} ${LL_CXX_FLAGS} /Zo"
+      "${CMAKE_CXX_FLAGS_RELEASE} ${LL_CXX_FLAGS} /Ox /Zi /Zo /MD /MP /Ob2 -D_SECURE_STL=0 -D_HAS_ITERATOR_DEBUGGING=0"
       CACHE STRING "C++ compiler release options" FORCE)
   # zlib has assembly-language object files incompatible with SAFESEH
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LARGEADDRESSAWARE /SAFESEH:NO /NODEFAULTLIB:LIBCMT /IGNORE:4099")
@@ -93,7 +97,7 @@ if (WINDOWS)
   # Nicky: x64 implies SSE2
   if( ADDRESS_SIZE EQUAL 32 )
     add_definitions( /arch:SSE2 )
-  endif( ADDRESS_SIZE EQUAL 32 )
+  endif()
      
   # Are we using the crummy Visual Studio KDU build workaround?
   if (NOT VS_DISABLE_FATAL_WARNINGS)
@@ -107,28 +111,15 @@ if (LINUX)
 
   add_definitions(-D_FORTIFY_SOURCE=2)
 
-  # Hacks to work around gcc 4.1 TC build pool machines which can't process pragma warning disables
-  # Hacks to work around gcc 4.1 TC build pool machines which can't process pragma warning disables
-  # This is pure rubbish; I wish there was another way.
-  #
-  if(${CXX_VERSION_NUMBER} LESS 420)
-    set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-uninitialized -Wno-unused-variable -Wno-unused-function ${CMAKE_CXX_FLAGS}")
-  endif (${CXX_VERSION_NUMBER} LESS 420)
-
-  if(${CXX_VERSION_NUMBER} GREATER 459)
   set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-unused-but-set-variable -Wno-unused-variable ${CMAKE_CXX_FLAGS}")
 
   # gcc 4.3 and above don't like the LL boost and also
   # cause warnings due to our use of deprecated headers
   add_definitions(-Wno-parentheses)
-    set(CMAKE_CXX_FLAGS "-Wno-deprecated ${CMAKE_CXX_FLAGS}")
-  endif (${CXX_VERSION_NUMBER} GREATER 429)
-
   # gcc 4.8 and above added a new spammy warning!
   if (${CXX_VERSION_NUMBER} GREATER 479)
     set(CMAKE_CXX_FLAGS "-Wno-unused-local-typedefs -Wno-deprecated-declarations ${CMAKE_CXX_FLAGS}")
   endif (${CXX_VERSION_NUMBER} GREATER 479)
-  # End of hacks.
 
   add_definitions(
       -D_REENTRANT
@@ -138,26 +129,27 @@ if (LINUX)
       -fno-math-errno
       -fno-strict-aliasing
       -fsigned-char
+      -mmmx
+      -msse
       -msse2
       -mfpmath=sse
       -pthread
       )
+    add_definitions(-std=gnu++11)
+    add_definitions(-DAPPID=kokua)
+  # force this platform to accept TOS via external browser #DKO  will break use internal browser
+  #add_definitions(-DEXTERNAL_TOS)
 
-  # force this platform to accept TOS via external browser
-  add_definitions(-DEXTERNAL_TOS)
-
-  add_definitions(-DAPPID=secondlife)
   add_compile_options(-fvisibility=hidden)
   # don't catch SIGCHLD in our base application class for the viewer - some of
   # our 3rd party libs may need their *own* SIGCHLD handler to work. Sigh! The
   # viewer doesn't need to catch SIGCHLD anyway.
   add_definitions(-DLL_IGNORE_SIGCHLD)
-    IF( ADDRESS_SIZE EQUAL 64 )
+    IF(${ARCH} STREQUAL "x86_64")
       add_definitions(-march=x86-64 -mfpmath=sse)
-    ELSE( ADDRESS_SIZE EQUAL 64 )
+    ELSE(${ARCH} STREQUAL "x86_64")
        add_definitions(-march=pentium4 -mfpmath=sse)
-    ENDIF( ADDRESS_SIZE EQUAL 64 )
-  #add_definitions(-ftree-vectorize) # THIS CRASHES GCC 3.1-3.2
+    ENDIF(${ARCH} STREQUAL "x86_64")
   if (NOT USESYSTEMLIBS)
     # this stops us requiring a really recent glibc at runtime
     add_compile_options(-fno-stack-protector)
@@ -166,30 +158,31 @@ if (LINUX)
   endif (NOT USESYSTEMLIBS)
   set(CMAKE_CXX_FLAGS_DEBUG "-fno-inline ${CMAKE_CXX_FLAGS_DEBUG}")
 
-  if ( ADDRESS_SIZE EQUAL 64 )
+  if (${ARCH} STREQUAL "x86_64")
      add_definitions(-DLINUX64=1 -pipe)
      set(CMAKE_CXX_FLAGS_RELEASE "-O3 ${CMAKE_CXX_FLAGS_RELEASE}")
      set(CMAKE_C_FLAGS_RELEASE "-O3 ${CMAKE_C_FLAGS_RELEASE}")
      set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
      set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 ${CMAKE_C_FLAGS_RELWITHDEBINFO}")  
-  else( ADDRESS_SIZE EQUAL 64 )
+  else(${ARCH} STREQUAL "x86_64")
       set(CMAKE_CXX_FLAGS_RELEASE "-O3 ${CMAKE_CXX_FLAGS_RELEASE}")
       set(CMAKE_C_FLAGS_RELEASE "-O3 ${CMAKE_C_FLAGS_RELEASE}")
-  endif ( ADDRESS_SIZE EQUAL 64 )
+  endif (${ARCH} STREQUAL "x86_64")
 endif (LINUX)
 
 
 if (DARWIN)
-  set(CMAKE_CXX_LINK_FLAGS "-Wl,-no_compact_unwind -Wl,-headerpad_max_install_names,-search_paths_first")
+  set(CMAKE_CXX_LINK_FLAGS "-Wl,-headerpad_max_install_names,-search_paths_first")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_CXX_LINK_FLAGS}")
   set(DARWIN_extra_cstar_flags "-Wno-unused-local-typedef -Wno-deprecated-declarations")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DARWIN_extra_cstar_flags}")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  ${DARWIN_extra_cstar_flags}")
   # NOTE: it's critical that the optimization flag is put in front.
   # NOTE: it's critical to have both CXX_FLAGS and C_FLAGS covered.
-## Really?? On developer machines too?
-##set(ENABLE_SIGNING TRUE)
-##set(SIGNING_IDENTITY "Developer ID Application: Linden Research, Inc.")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+  set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O3 ${CMAKE_C_FLAGS_RELWITHDEBINFO}")
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 ${CMAKE_CXX_FLAGS_RELEASE}")
+  set(CMAKE_C_FLAGS_RELEASE "-O3 ${CMAKE_C_FLAGS_RELEASE}")  
 endif (DARWIN)
 
 
@@ -204,11 +197,18 @@ if (LINUX OR DARWIN)
     set(GCC_WARNINGS "-Wall -Wno-sign-compare -Wno-trigraphs")
   endif()
 
-  if (NOT GCC_DISABLE_FATAL_WARNINGS)
-    set(GCC_WARNINGS "${GCC_WARNINGS} -Werror")
-  endif (NOT GCC_DISABLE_FATAL_WARNINGS)
+   if (NOT GCC_DISABLE_FATAL_WARNINGS)
+     set(GCC_WARNINGS "${GCC_WARNINGS} -Werror")
+   endif (NOT GCC_DISABLE_FATAL_WARNINGS)
 
-  set(GCC_CXX_WARNINGS "${GCC_WARNINGS} -Wno-reorder -Wno-non-virtual-dtor")
+  if (XCODE_VERSION GREATER 4.9)
+    set(GCC_CXX_WARNINGS "$[GCC_WARNINGS] -Wno-reorder -Wno-non-virtual-dtor -Wno-format-extra-args -Wunused-function -Wunused-variable")
+	set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY libstdc++)
+	set(CMAKE_CXX_FLAGS "-stdlib=libstdc++ ${CMAKE_CXX_FLAGS}")
+  else (XCODE_VERSION GREATER 4.9)
+    set(GCC_CXX_WARNINGS "${GCC_WARNINGS} -Wno-reorder -Wno-non-virtual-dtor")
+  endif (XCODE_VERSION GREATER 4.9)
+
 
   set(CMAKE_C_FLAGS "${GCC_WARNINGS} ${CMAKE_C_FLAGS}")
   set(CMAKE_CXX_FLAGS "${GCC_CXX_WARNINGS} ${CMAKE_CXX_FLAGS}")
@@ -226,7 +226,7 @@ if (USESYSTEMLIBS)
   endif (LINUX AND ADDRESS_SIZE EQUAL 32)
 
 else (USESYSTEMLIBS)
-if (LINUX AND ADDRESS_SIZE EQUAL 32)
+if (LINUX AND ${ARCH} STREQUAL "i686")
   set(${ARCH}_linux_INCLUDES
       ELFIO
       atk
@@ -240,9 +240,9 @@ if (LINUX AND ADDRESS_SIZE EQUAL 32)
       gtk
       pango
       )
-endif (LINUX AND ADDRESS_SIZE EQUAL 32)
+endif (LINUX AND ${ARCH} STREQUAL "i686")
 
-if (LINUX AND ADDRESS_SIZE EQUAL 64)
+if (LINUX AND ${ARCH} STREQUAL "x86_64")
   set(${ARCH}_linux_INCLUDES
       ELFIO
       atk
@@ -256,7 +256,7 @@ if (LINUX AND ADDRESS_SIZE EQUAL 64)
       gtk
       pango
       )
-endif (LINUX AND ADDRESS_SIZE EQUAL 64)
+endif (LINUX AND ${ARCH} STREQUAL "x86_64")
 endif (USESYSTEMLIBS)
 
 endif(NOT DEFINED ${CMAKE_CURRENT_LIST_FILE}_INCLUDED)
