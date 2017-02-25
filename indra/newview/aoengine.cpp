@@ -35,14 +35,13 @@
 #include "llanimationstates.h"
 #include "llassetstorage.h"
 #include "llfilesystem.h"
-#include "llinventoryfunctions.h"		// for ROOT_FIRESTORM_FOLDER
-#include "llinventorymodel.h"
+#include "llinventoryfunctions.h"		// for ROOT_VIEWERSUPPORT_FOLDER
 #include "llnotificationsutil.h"
 #include "llstring.h"
 #include "llviewercontrol.h"
 #include "llviewerinventory.h"
 
-//#define ROOT_FIRESTORM_FOLDER 	"#Firestorm" //moved to llinventoryfunctions.h
+//#define ROOT_VIEWERSUPPORT_FOLDER 	"#ViewerSupport" ///moved to llinventoryfunctions.h
 #define ROOT_AO_FOLDER			"#AO"
 #include <boost/graph/graph_concepts.hpp>
 
@@ -1889,12 +1888,12 @@ void AOEngine::tick()
 	}
 	// </FS:ND>
 
-	const LLUUID categoryID = gInventory.findCategoryByName(ROOT_FIRESTORM_FOLDER);
+	const LLUUID categoryID = gInventory.findCategoryByName(ROOT_VIEWERSUPPORT_FOLDER);
 
 	if (categoryID.isNull())
 	{
-		LL_WARNS("AOEngine") << "no " << ROOT_FIRESTORM_FOLDER << " folder yet. Creating ..." << LL_ENDL;
-		gInventory.createNewCategory(gInventory.getRootFolderID(), LLFolderType::FT_NONE, ROOT_FIRESTORM_FOLDER);
+		LL_WARNS("AOEngine") << "no " << ROOT_VIEWERSUPPORT_FOLDER << " folder yet. Creating ..." << LL_ENDL;
+		gInventory.createNewCategory(gInventory.getRootFolderID(), LLFolderType::FT_NONE, ROOT_VIEWERSUPPORT_FOLDER);
 		mAOFolder.setNull();
 	}
 	else
