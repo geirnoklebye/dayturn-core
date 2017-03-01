@@ -167,11 +167,6 @@ public:
 		// __asm__ volatile (".byte 0x0f, 0x31": "=A"(x));
 		// return (U32)(x >> 8);
 
-		U32 low(0),high(0);
-		__asm__ volatile (".byte 0x0f, 0x31": "=a"(low), "=d"(high) );
-		return (low>>8) | (high<<24);
-
-		// </FS:ND>
 	}
 
 	static U64 getCPUClockCount64()
@@ -182,11 +177,6 @@ public:
 		// __asm__ volatile (".byte 0x0f, 0x31": "=A"(x));
 		// return x;
 
-		U32 low(0),high(0);
-		__asm__ volatile (".byte 0x0f, 0x31": "=a"(low), "=d"(high) );
-		return (U64)low | ( ((U64)high) << 32);
-
-		// </FS:ND>
 	}
 
 #endif
