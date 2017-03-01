@@ -113,14 +113,6 @@ if (LINUX)
 
   set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-unused-but-set-variable -Wno-unused-variable ${CMAKE_CXX_FLAGS}")
 
-  # gcc 4.3 and above don't like the LL boost and also
-  # cause warnings due to our use of deprecated headers
-  add_definitions(-Wno-parentheses)
-  # gcc 4.8 and above added a new spammy warning!
-  if (${CXX_VERSION_NUMBER} GREATER 479)
-    set(CMAKE_CXX_FLAGS "-Wno-unused-local-typedefs -Wno-deprecated-declarations ${CMAKE_CXX_FLAGS}")
-  endif (${CXX_VERSION_NUMBER} GREATER 479)
-
   add_definitions(
       -D_REENTRANT
       )
