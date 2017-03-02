@@ -36,9 +36,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>7ea2df03bfc35c06acf23dd9e734adac</string>
+              <string>44e213cc79d66cc4f332d828e49e05dc</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1103/2554/SDL-1.2.15-linux64-501092.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-sdl/downloads/SDL-1.2.15-linux64-201505170936.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -104,9 +106,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>bc8855c8253b8293c7e61af7b1ed0f05</string>
+              <string>f609bdacb3fa461890889bc4e659bac5</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/744/1545/apr_suite-1.4.5.500735-linux64-500735.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-apr/downloads/apr_suite-1.4.5.201505112108-linux64-201505112108.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -560,9 +564,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e5d1b0439235f5f3829662a45e566743</string>
+              <string>d260709ee0c1f402efb0dba24c60df82</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1075/2484/curl-7.47.0.501064-linux64-501064.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-curl/downloads/curl-7.47.0.201604111501-linux64-201604111501.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -782,9 +788,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>5e1f025d1cebd12db542080aa755257f</string>
+              <string>7eee24f7309849b14283a4c529b384b2</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/380/943/expat-2.1.1.500375-linux64-500375.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-expat/downloads/expat-2.0.1.201505112037-linux64-201505112037.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -952,9 +960,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e2419d56960c160670051fbb055fb729</string>
+              <string>926b3873f51f18ead54bef5b88c5fb9f</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-fontconfig/rev/314281/arch/Linux/installer/fontconfig-2.11.0-linux64-314281.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-fontconfig/downloads/fontconfig-2.11.0-linux64-201505182117.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1563,9 +1573,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>0f606bf01f933f00edeb9bf9a2530930</string>
+              <string>6144f0d870aa8dc0bd38ad2703f37a45</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/918/2056/googlemock-1.7.0.500908-linux64-500908.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-google-mock/downloads/googlemock-1.7.0.201601261238-linux64-201601261238.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -1598,7 +1610,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.7.0.201601261942</string>
+        <string>1.7.0.201601261238</string>
       </map>
       <key>gstreamer</key>
       <map>
@@ -2411,9 +2423,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>13de93ea11544051b69f238eeb644fd3</string>
+              <string>05efb58926b4bf4d00491380fb77647f</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/882/1946/libpng-1.6.8.500873-linux64-500873.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libpng/downloads/libpng-1.6.8.201505162036-linux64-201505162036.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2547,9 +2561,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>740fc93f195c77b3a0c0800b31878ecb</string>
+              <string>b8b0c54cedcf1b77b9dfdfdcd6221cfb</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/890/1968/libxml2-2.9.4.500877-linux64-500877.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-libxml/downloads/libxml2-2.9.1.201505161544-linux64-201505161544.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -2582,7 +2598,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.9.1.297050</string>
+        <string>2.9.1.201505161544</string>
       </map>
       <key>llappearance_utility</key>
       <map>
@@ -3264,9 +3280,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ac66f3197010b1549a5e4467aebbc27d</string>
+              <string>109696609aeec4e31b10f982422426f7</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1113/2571/openjpeg-1.5.1.501102-linux64-501102.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-openjpeg/downloads/openjpeg-1.4.201505151441-linux64-201505151441.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3301,7 +3319,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.4.201503062230</string>
+        <string>1.4.201505151441</string>
       </map>
       <key>openssl</key>
       <map>
@@ -3360,9 +3378,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>50bb9aca605a599cb1a46da3c45f78ac</string>
+              <string>328c247a063e35657c224973e27eaa19</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1062/2473/openssl-1.0.1u.501051-linux64-501051.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-openssl-ll/downloads/openssl-1.0.1h-linux64-20140815.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
