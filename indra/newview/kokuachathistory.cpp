@@ -202,7 +202,12 @@ public:
 	void onAvatarIconContextMenuItemClicked(const LLSD& userdata)
 	{
 		std::string level = userdata.asString();
-
+//MK
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+		{
+			return;
+		}
+//mk
 		if (level == "profile")
 		{
 			LLAvatarActions::showProfile(getAvatarId());
