@@ -74,10 +74,13 @@ if(WINDOWS)
       set(release_files ${release_files} libtcmalloc_minimal.dll)
     endif(USE_TCMALLOC)
 
-    if (FMODEX)
+    if (OPENAL)
+      set(debug_files ${debug_files} alut.dll OpenAL32.dll)
+      set(release_files ${release_files} alut.dll OpenAL32.dll)
+    elseif (FMODEX)
       set(debug_files ${debug_files} fmodexL.dll)
       set(release_files ${release_files} fmodex.dll)
-    endif (FMODEX)
+    endif (OPENAL)
 
     #*******************************
     # Copy MS C runtime dlls, required for packaging.
