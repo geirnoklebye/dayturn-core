@@ -428,12 +428,12 @@ class Windows_i686_Manifest(ViewerManifest):
             # Hunspell
             self.path("libhunspell.dll")
 
-        #OpenAL
-        try:
-            self.path("openal32.dll")
-            self.path("alut.dll")
-        except:
-            print "Skipping openal"
+            #OpenAL
+            try:
+                self.path("openal32.dll")
+                self.path("alut.dll")
+            except:
+                print "Skipping openal"
 			
 		# For google-perftools tcmalloc allocator.
 	try:
