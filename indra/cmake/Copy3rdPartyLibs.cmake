@@ -32,8 +32,8 @@ if(WINDOWS)
 
     set(debug_src_dir "${ARCH_PREBUILT_DIRS_DEBUG}")
     set(debug_files
-        alut.dll
-        OpenAL32.dll
+ #       alut.dll
+ #       openal32.dll
         openjpegd.dll
         libapr-1.dll
         libaprutil-1.dll
@@ -51,8 +51,8 @@ if(WINDOWS)
 
     set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(release_files
-        alut.dll
-        OpenAL32.dll
+ #       alut.dll
+ #       openal32.dll
         openjpeg.dll
         libapr-1.dll
         libaprutil-1.dll
