@@ -68,6 +68,7 @@
 #include "llcoproceduremanager.h"
 #include "llsdutil.h"
 
+
 struct FSResourceData
 {
 	LLUUID uuid;
@@ -224,7 +225,8 @@ void FSFloaterImport::loadFile()
 {
 	mFilePath = gDirUtilp->getDirName(mFilename);
 	mFilename = gDirUtilp->getBaseFileName(mFileFullName);
-
+    LL_INFOS("import") << " Path " << mFilePath << LL_ENDL;
+    LL_INFOS("import") << " File Name " << mFilename << LL_ENDL;
 	mManifest.clear();
 	mTextureQueue.clear();
 	mAnimQueue.clear();
@@ -659,7 +661,7 @@ void FSFloaterImport::createPrim()
 	gMessageSystem->nextBlockFast(_PREHASH_AgentData);
 	gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgentID);
 	gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgentSessionID);
-	gMessageSystem->addUUIDFast(_PREHASH_GroupID, gAgent.getGroupID());
+	gMessageSystem->addUUIDFast(_PREHASH_GroupID, FSCommon::getGroupForRezzing());
 
 	gMessageSystem->nextBlockFast(_PREHASH_ObjectData);
 	gMessageSystem->addU8Fast(_PREHASH_Material, (U8)prim["material"].asInteger());

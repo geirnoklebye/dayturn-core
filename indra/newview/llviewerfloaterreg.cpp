@@ -32,6 +32,7 @@
 
 #include "llcommandhandler.h"
 #include "ao.h"				// ## Zi: Animation Overrider
+#include "daeexport.h"
 #include "floaterhop.h"
 #include "fsareasearch.h"
 #include "fsfloaterexport.h"
@@ -203,6 +204,7 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("block_timers", "floater_fast_timers.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFastTimerView>);
 	LLFloaterReg::add("about_land", "floater_about_land.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterLand>);
 	LLFloaterReg::add("area_search", "floater_fs_area_search.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSAreaSearch>);
+	LLFloaterReg::add("export_collada", "floater_export_collada.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<ColladaExportFloater>);
 	LLFloaterReg::add("appearance", "floater_my_appearance.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterSidePanelContainer>);
 	LLFloaterReg::add("associate_listing", "floater_associate_listing.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAssociateListing>);
 	LLFloaterReg::add("auction", "floater_auction.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterAuction>);
@@ -388,8 +390,9 @@ void LLViewerFloaterReg::registerFloaters()
 
 	// *NOTE: Please keep these alphabetized for easier merges
 	LLFloaterReg::add("animation_overrider", "floater_ao.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FloaterAO>);	// ## Zi: Animation Overrider	
+    LLFloaterReg::add("fs_export", "floater_fs_export.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterObjectExport>);
 	LLFloaterReg::add("fs_import", "floater_fs_import.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterImport>);
-	// <FS:CR> FIRE-6310: Include Legacy Search
+    	// <FS:CR> FIRE-6310: Include Legacy Search
 	LLFloaterReg::add("search_legacy", "floater_fs_search_legacy.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterSearchLegacy>);
 	LLFloaterReg::add("publish_classified_fs", "floater_publish_classified.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSPublishClassifiedFloater>);
 	LLFloaterReg::registerControlVariables(); // Make sure visibility and rect controls get preserved when saving
