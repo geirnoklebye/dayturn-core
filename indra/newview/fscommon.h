@@ -44,7 +44,7 @@ struct FSUUIDEntryHasher : public std::unary_function<LLUUID, size_t>
 };
 
 
-void reportToNearbyChat(const std::string& message);
+void report_to_nearby_chat(const std::string& message);
 std::string applyAutoCloseOoc(const std::string& message);
 std::string applyMuPose(const std::string& message);
 LLPanelPeople* getPeoplePanel();
@@ -79,6 +79,8 @@ namespace FSCommon
 	 * keep track of ObjectAdd messages sent to the similular.
 	 */
 	extern S32 sObjectAddMsg;
+
+    bool isDefaultTexture(const LLUUID& asset_id);
 };
 
 #endif // FS_COMMON_H
