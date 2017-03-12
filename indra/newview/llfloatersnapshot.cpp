@@ -1341,17 +1341,30 @@ void LLFloaterSnapshot::saveTexture()
 	previewp->saveTexture();
 }
 
-BOOL LLFloaterSnapshot::saveLocal()
+// <FS:Ansariel> Threaded filepickers
+//BOOL LLFloaterSnapshot::saveLocal()
+void LLFloaterSnapshot::saveLocal(boost::function<void(bool)> callback)
+// </FS:Ansariel>
 {
-	LL_DEBUGS() << "saveLocal" << LL_ENDL;
-	LLSnapshotLivePreview* previewp = getPreviewView();
-	if (!previewp)
-	{
-		llassert(previewp != NULL);
-		return FALSE;
-	}
+    LL_DEBUGS() << "saveLocal" << LL_ENDL;
+    LLSnapshotLivePreview* previewp = getPreviewView();
+    if (!previewp)
+    {
+        llassert(previewp != NULL);
+        // <FS:Ansariel> Threaded filepickers
+        //return FALSE;
+        if (callback)
+        {
+            callback(false);
+        }
+        return;
+        // </FS:Ansariel>
+    }
 
-	return previewp->saveLocal();
+    // <FS:Ansariel> Threaded filepickers
+    //return previewp->saveLocal();
+    previewp->saveLocal(callback);
+    // </FS:Ansariel>
 }
 
 void LLFloaterSnapshotBase::postSave()

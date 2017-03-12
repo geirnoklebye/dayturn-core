@@ -157,7 +157,10 @@ public:
 	static LLFloaterSnapshot* getInstance();
 	static LLFloaterSnapshot* findInstance();
 	/*virtual*/ void saveTexture();
-	BOOL saveLocal();
+    // <FS:Ansariel> Threaded filepickers
+    //BOOL saveLocal();
+    void saveLocal(boost::function<void(bool)> callback);
+    // </FS:Ansariel>
 	static void setAgentEmail(const std::string& email);
 
 	class Impl;
