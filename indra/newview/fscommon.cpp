@@ -35,9 +35,11 @@
 #include "llfloaterperms.h"
 #include "llinventorymodel.h"
 #include "llpanel.h"
+#include "llparcel.h"
 #include "lltooldraganddrop.h"
 #include "llviewerinventory.h"
 #include "llviewernetwork.h"
+#include "llviewerparcelmgr.h"
 #include "llviewerregion.h"
 
 #include <boost/date_time/gregorian/gregorian.hpp>
@@ -269,5 +271,24 @@ bool FSCommon::isDefaultTexture(const LLUUID& asset_id)
         return true;
     }
     return false;
+}
+LLUUID FSCommon::getGroupForRezzing()
+{
+	LLUUID group_id = gAgent.getGroupID();
+	LLParcel* parcel = LLViewerParcelMgr::getInstance()->getAgentParcel();
+
+	if (parcel && gSavedSettings.getBOOL("RezUnderLandGroup"))
+	{
+		// In both cases, group-owned or not, the group ID is the same;
+		// No need to query the parcel owner ID as it will be either
+		// the group ID if the parcel is group-owned or the ID of an
+		// avatar.
+		if (parcel->getGroupID().notNull() && gAgent.isInGroup(parcel->getGroupID()))
+		{
+			group_id = parcel->getGroupID();
+		}
+	}
+
+	return group_id;
 }
 

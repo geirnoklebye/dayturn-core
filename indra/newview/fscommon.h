@@ -31,6 +31,7 @@
 #include "llchat.h"
 #include "llpanelpeople.h"
 #include "llviewerobject.h"
+class LLViewerParcelMgr;
 
 const F32 AVATAR_UNKNOWN_Z_OFFSET = -1.f; // Const value for avatars at unknown height
 const F32 AVATAR_UNKNOWN_RANGE = -1.f;
@@ -81,6 +82,8 @@ namespace FSCommon
 	extern S32 sObjectAddMsg;
 
     bool isDefaultTexture(const LLUUID& asset_id);
+
+    LLUUID getGroupForRezzing();
 };
 
 #endif // FS_COMMON_H

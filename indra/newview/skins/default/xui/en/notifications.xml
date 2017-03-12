@@ -11638,27 +11638,37 @@ Creating animation link for animation "[NAME]" failed!
      name="okbutton"
      yestext="OK"/>
   </notification>
+    <notification
+     icon="alertmodal.tga"
+     name="ExportFinished"
+     type="notify">
+      <tag>Export</tag>
+Export finished and saved to [FILENAME].
+    </notification>
+    
+    <notification
+     icon="alertmodal.tga"
+     name="ExportFailed"
+     type="notify">
+      <tag>Export</tag>
+Export failed unexpectedly. Please see the log for details.
+    </notification>
+    
+    <notification
+     icon="alertmodal.tga"
+     name="ExportColladaSuccess"
+     type="notify">
+      <tag>Export</tag>
+		Successfully saved [OBJECT] to [FILENAME].
+    </notification>
 
-  <notification
-    icon="notify.tga"
-    name="DAEExportComplete"
-    type="notify">
-	Collada DAE export complete.  [TOTAL] object(s) exported.
-  </notification>
-
-  <notification
-    icon="alert.tga"
-    name="DAEExportPartial"
-    type="notify">
-	Collada DAE export complete.  [FAILED] failure(s) out of [TOTAL] selected object(s) due to insufficient permissions.
-  </notification>
-
-  <notification
-    icon="alert.tga"
-    name="DAEExportFailed"
-    type="notify">
-	Collada DAE export failed.  No exportable objects selected.
-  </notification>
+    <notification
+     icon="alertmodal.tga"
+     name="ExportColladaFailure"
+     type="notify">
+      <tag>Export</tag>
+		Export of [OBJECT] to [FILENAME] failed.
+    </notification>
 
   <notification
    icon="notifytip.tga"
