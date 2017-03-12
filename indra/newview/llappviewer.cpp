@@ -1522,11 +1522,9 @@ bool LLAppViewer::frame()
 				ms_sleep(500);
 			}
 
-			const F64Milliseconds max_idle_time = llmin(.005f*10.f*(F32Milliseconds)gFrameTimeSeconds, F32Milliseconds(5)); // 5 ms a second
 			idleTimer.reset();
 			S32 total_work_pending = 0;
 			S32 total_io_pending = 0;	
-			while(1)
 			{
 				S32 work_pending = 0;
 				S32 io_pending = 0;
@@ -1550,11 +1548,7 @@ bool LLAppViewer::frame()
 
 				total_work_pending += work_pending ;
 				total_io_pending += io_pending ;
-				
-				if (!work_pending || idleTimer.getElapsedTimeF64() >= max_idle_time)
-				{
-					break;
-				}
+
 			}
 			gMeshRepo.update() ;
 			
@@ -5975,8 +5969,6 @@ void LLAppViewer::setViewerWindowTitle()
 	}
 
 	gViewerWindow->setTitle(title + gWindowTitle);
-}
-
 //virtual
 void LLAppViewer::setMasterSystemAudioMute(bool mute)
 {

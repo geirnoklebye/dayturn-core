@@ -2039,7 +2039,6 @@ void LLPanelLandOptions::refresh()
 	else
 	{
 		// something selected, hooray!
-		LLViewerRegion* regionp = LLViewerParcelMgr::getInstance()->getSelectionRegion();
 
 		// Display options
 		BOOL can_change_options = LLViewerParcelMgr::isParcelModifiableByAgent(parcel, GP_LAND_OPTIONS);
@@ -2055,9 +2054,8 @@ void LLPanelLandOptions::refresh()
 		mCheckGroupObjectEntry	->set( parcel->getAllowGroupObjectEntry() ||  parcel->getAllowAllObjectEntry());
 		mCheckGroupObjectEntry	->setEnabled( can_change_options && !parcel->getAllowAllObjectEntry() );
 		
-		BOOL region_damage = regionp ? regionp->getAllowDamage() : FALSE;
 		mCheckSafe			->set( !parcel->getAllowDamage() );
-		mCheckSafe			->setEnabled( can_change_options && region_damage );
+		mCheckSafe			->setEnabled( can_change_options );
 
 		mCheckFly			->set( parcel->getAllowFly() );
 		mCheckFly			->setEnabled( can_change_options );
@@ -2137,6 +2135,7 @@ void LLPanelLandOptions::refresh()
 			
 			// they can see the checkbox, but its disposition depends on the 
 			// state of the region
+			LLViewerRegion* regionp = LLViewerParcelMgr::getInstance()->getSelectionRegion();
 			if (regionp)
 			{
 				if (regionp->getSimAccess() == SIM_ACCESS_PG)
@@ -2488,6 +2487,7 @@ void LLPanelLandAccess::refresh()
 			mListAccess->deleteAllItems();
 			S32 count = parcel->mAccessList.size();
 			getChild<LLUICtrl>("AllowedText")->setTextArg("[COUNT]", llformat("%d",count));
+			getChild<LLUICtrl>("AllowedText")->setTextArg("[MAX]", llformat("%d",PARCEL_MAX_ACCESS_LIST));
 
 			getChild<LLUICtrl>("AccessList")->setToolTipArg(LLStringExplicit("[LISTED]"), llformat("%d",count));
 			getChild<LLUICtrl>("AccessList")->setToolTipArg(LLStringExplicit("[MAX]"), llformat("%d",PARCEL_MAX_ACCESS_LIST));
@@ -2535,6 +2535,7 @@ void LLPanelLandAccess::refresh()
 			mListBanned->deleteAllItems();
 			S32 count = parcel->mBanList.size();
 			getChild<LLUICtrl>("BanCheck")->setTextArg("[COUNT]", llformat("%d",count));
+			getChild<LLUICtrl>("BanCheck")->setTextArg("[MAX]", llformat("%d",PARCEL_MAX_ACCESS_LIST));
 
 			getChild<LLUICtrl>("BannedList")->setToolTipArg(LLStringExplicit("[LISTED]"), llformat("%d",count));
 			getChild<LLUICtrl>("BannedList")->setToolTipArg(LLStringExplicit("[MAX]"), llformat("%d",PARCEL_MAX_ACCESS_LIST));
