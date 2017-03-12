@@ -2,7 +2,7 @@
 	<map>
 		<!-- default-level can be ALL, DEBUG, INFO, WARN, ERROR, or NONE -->
 		<key>default-level</key>    <string>INFO</string>
-		<key>print-location</key>   <boolean>true</boolean>
+		<key>print-location</key>   <boolean>false</boolean>
 		<key>settings</key>
 			<array>
 				<!-- Suppress anything but ERROR for some very verbose components -->
@@ -50,10 +50,10 @@
 						</array>
 					<key>tags</key>
 						<array>
-                            <string>import</string>
-                            <string>export</string>
 						<!-- sample entry for debugging specific items
-							<string>FmodEX</string>
+                             <string>import</string>
+                             <string>export</string>
+							 <string>FmodEX</string>
 						     <string>Avatar</string>
 						     <string>Inventory</string>
 						     <string>SceneLoadTiming</string>
