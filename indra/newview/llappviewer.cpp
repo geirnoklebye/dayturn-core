@@ -5969,6 +5969,7 @@ void LLAppViewer::setViewerWindowTitle()
 	}
 
 	gViewerWindow->setTitle(title + gWindowTitle);
+}
 //virtual
 void LLAppViewer::setMasterSystemAudioMute(bool mute)
 {
