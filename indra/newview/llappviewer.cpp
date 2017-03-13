@@ -6105,7 +6105,7 @@ void LLAppViewer::setViewerWindowTitle()
 
 	if (gSavedSettings.getBOOL("WindowTitleGridName")) {
 		title += LLGridManager::getInstance()->getGridLabel() + " - ";
-
+    }
 	gViewerWindow->setTitle(title + gWindowTitle);
 }
 
