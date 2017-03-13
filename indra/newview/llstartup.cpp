@@ -348,20 +348,20 @@ void downloadGridstatusComplete( LLSD const &aData )
 	{
 		if (status.getType() == HTTP_INTERNAL_ERROR)
 		{
-			reportToNearbyChat(LLTrans::getString("SLGridStatusTimedOut"));
+			report_to_nearby_chat(LLTrans::getString("SLGridStatusTimedOut"));
 		}
 		else
 		{
 			LLStringUtil::format_map_t args;
 			args["STATUS"] = llformat("%d", status.getType());
-			reportToNearbyChat(LLTrans::getString("SLGridStatusOtherError", args));
+			report_to_nearby_chat(LLTrans::getString("SLGridStatusOtherError", args));
 		}
 		LL_WARNS("SLGridStatusResponder") << "Error - status " << status.getType() << LL_ENDL;
 		return;
 	}
 	if (rawData.size() == 0)
 	{
-		reportToNearbyChat(LLTrans::getString("SLGridStatusInvalidMsg"));
+		report_to_nearby_chat(LLTrans::getString("SLGridStatusInvalidMsg"));
 		LL_WARNS("SLGridStatusResponder") << "Error - empty output" << LL_ENDL;
 		return;
 	}
@@ -429,17 +429,17 @@ void downloadGridstatusComplete( LLSD const &aData )
 			LLStringUtil::trim(newsTitle);
 			LLStringUtil::trim(newsDesc);
 			LLStringUtil::trim(newsLink);
-			reportToNearbyChat("[ " + newsTitle + " ] " + newsDesc + " [ " + newsLink + " ]");
+			report_to_nearby_chat("[ " + newsTitle + " ] " + newsDesc + " [ " + newsLink + " ]");
 		}
 		else
 		{
-			reportToNearbyChat(LLTrans::getString("SLGridStatusInvalidMsg"));
+			report_to_nearby_chat(LLTrans::getString("SLGridStatusInvalidMsg"));
 			LL_WARNS("SLGridStatusResponder") << "Error - inner tag(s) missing" << LL_ENDL;
 		}
 	}
 	else
 	{
-		reportToNearbyChat(LLTrans::getString("SLGridStatusInvalidMsg"));
+		report_to_nearby_chat(LLTrans::getString("SLGridStatusInvalidMsg"));
 		LL_WARNS("SLGridStatusResponder") << "Error - output without </item>" << LL_ENDL;
 	}
 }
@@ -894,9 +894,16 @@ bool idle_startup()
 		}
 		else if (gSavedSettings.getBOOL("AutoLogin"))  
 		{
+			// Log into last account
 			gRememberPassword = TRUE;
 			gSavedSettings.setBOOL("RememberPassword", TRUE);                                                      
 			show_connect_box = false;    			
+		}
+		else if (gSavedSettings.getLLSD("UserLoginInfo").size() == 3)
+		{
+			// Console provided login&password
+			gRememberPassword = gSavedSettings.getBOOL("RememberPassword");
+			show_connect_box = false;
 		}
 		else 
 		{
@@ -921,7 +928,7 @@ bool idle_startup()
 		set_startup_status(0.03f, msg.c_str(), gAgent.mMOTD.c_str());
 		display_startup();
 		// LLViewerMedia::initBrowser();
-        show_release_notes_if_required();
+		show_release_notes_if_required();
 		LLStartUp::setStartupState( STATE_LOGIN_SHOW );
 		return FALSE;
 	}
@@ -2578,8 +2585,6 @@ bool first_run_dialog_callback(const LLSD& notification, const LLSD& response)
 	LLPanelLogin::giveFocus();
 	return false;
 }
-
-
 
 void set_startup_status(const F32 frac, const std::string& string, const std::string& msg)
 {

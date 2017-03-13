@@ -527,6 +527,14 @@ This listing could not be updated.
         name="okignore"
         yestext="OK"/>
     </notification>
+	
+    <notification
+     icon="alertmodal.tga"
+     name="ImportSuccess"
+     type="notify">
+        <tag>Export</tag>
+        Successfully imported [COUNT] [OBJECT].
+    </notification>
     
     <notification
         icon="alertmodal.tga"
@@ -4040,7 +4048,7 @@ An update was downloaded. It will be installed during restart.
  icon="alertmodal.tga"
  name="UpdateCheckError"
  type="alertmodal">
-An error occured while checking for update.
+An error occurred while checking for update.
 Please try again later.
     <tag>confirm</tag>
     <usetemplate
@@ -10090,29 +10098,29 @@ Eject failed because you don't have admin permission for that parcel.
 
   <notification
    icon="alertmodal.tga"
-   name="CantMoveObjectParcelFull"
+   name="CMOParcelFull"
    type="notify">
    <tag>fail</tag>
-Can't move object '[OBJECT_NAME]' to
-[OBJ_POSITION] in region [REGION_NAME] because the parcel is full.
+Can't move object '[O]' to
+[P] in region [R] because the parcel is full.
   </notification>
 
   <notification
    icon="alertmodal.tga"
-   name="CantMoveObjectParcelPerms"
+   name="CMOParcelPerms"
    type="notify">
    <tag>fail</tag>
-Can't move object '[OBJECT_NAME]' to
-[OBJ_POSITION] in region [REGION_NAME] because your objects are not allowed on this parcel.
+Can't move object '[O]' to
+[P] in region [R] because your objects are not allowed on this parcel.
   </notification>
 
   <notification
    icon="alertmodal.tga"
-   name="CantMoveObjectParcelResources"
+   name="CMOParcelResources"
    type="notify">
    <tag>fail</tag>
-Can't move object '[OBJECT_NAME]' to
-[OBJ_POSITION] in region [REGION_NAME] because there are not enough resources for this object on this parcel.
+Can't move object '[O]' to
+[P] in region [R] because there are not enough resources for this object on this parcel.
   </notification>
 
   <notification
@@ -10125,29 +10133,29 @@ Copy failed because you lack access to that parcel.
 
   <notification
    icon="alertmodal.tga"
-   name="CantMoveObjectRegionVersion"
+   name="CMORegionVersion"
    type="notify">
-   <tag>fail</tag>
-Can't move object '[OBJECT_NAME]' to
-[OBJ_POSITION] in region [REGION_NAME] because the other region is running an older version which does not support receiving this object via region crossing.
+    <tag>fail</tag>
+    Can't move object '[O]' to
+    [P] in region [R] because the other region is running an older version which does not support receiving this object via region crossing.
   </notification>
 
   <notification
    icon="alertmodal.tga"
-   name="CantMoveObjectNavMesh"
+   name="CMONavMesh"
    type="notify">
    <tag>fail</tag>
-Can't move object '[OBJECT_NAME]' to
-[OBJ_POSITION] in region [REGION_NAME] because you cannot modify the navmesh across region boundaries.
+Can't move object '[O]' to
+[P] in region [R] because you cannot modify the navmesh across region boundaries.
   </notification>
 
   <notification
    icon="alertmodal.tga"
-   name="CantMoveObjectWTF"
+   name="CMOWTF"
    type="notify">
    <tag>fail</tag>
-Can't move object '[OBJECT_NAME]' to
-[OBJ_POSITION] in region [REGION_NAME] because of an unknown reason. ([FAILURE_TYPE])
+Can't move object '[O]' to
+[P] in region [R] because of an unknown reason. ([F])
   </notification>
 
   <notification
@@ -11630,27 +11638,37 @@ Creating animation link for animation "[NAME]" failed!
      name="okbutton"
      yestext="OK"/>
   </notification>
+    <notification
+     icon="alertmodal.tga"
+     name="ExportFinished"
+     type="notify">
+      <tag>Export</tag>
+Export finished and saved to [FILENAME].
+    </notification>
+    
+    <notification
+     icon="alertmodal.tga"
+     name="ExportFailed"
+     type="notify">
+      <tag>Export</tag>
+Export failed unexpectedly. Please see the log for details.
+    </notification>
+    
+    <notification
+     icon="alertmodal.tga"
+     name="ExportColladaSuccess"
+     type="notify">
+      <tag>Export</tag>
+		Successfully saved [OBJECT] to [FILENAME].
+    </notification>
 
-  <notification
-    icon="notify.tga"
-    name="DAEExportComplete"
-    type="notify">
-	Collada DAE export complete.  [TOTAL] object(s) exported.
-  </notification>
-
-  <notification
-    icon="alert.tga"
-    name="DAEExportPartial"
-    type="notify">
-	Collada DAE export complete.  [FAILED] failure(s) out of [TOTAL] selected object(s) due to insufficient permissions.
-  </notification>
-
-  <notification
-    icon="alert.tga"
-    name="DAEExportFailed"
-    type="notify">
-	Collada DAE export failed.  No exportable objects selected.
-  </notification>
+    <notification
+     icon="alertmodal.tga"
+     name="ExportColladaFailure"
+     type="notify">
+      <tag>Export</tag>
+		Export of [OBJECT] to [FILENAME] failed.
+    </notification>
 
   <notification
    icon="notifytip.tga"

@@ -116,8 +116,9 @@ set(viewer_SOURCE_FILES
     fscommon.cpp
     fsareasearch.cpp
     fsareasearchmenu.cpp    
-#    fsexport.cpp
+    fsexportperms.cpp
     fsfloaterimport.cpp
+    fsfloaterexport.cpp
     fsfloaterprofile.cpp
     fsfloatersearch.cpp
     fsfloatersearchlegacy.cpp
@@ -762,7 +763,8 @@ set(viewer_HEADER_FILES
 	fsareasearch.h
     fsareasearchmenu.h
     fscommon.h
-#    fsexport.h
+    fsexportperms.h
+    fsfloaterexport.h    
     fsfloaterimport.h
     fsfloaterprofile.h
     fsfloatersearch.h
