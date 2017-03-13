@@ -77,6 +77,20 @@ set_source_files_properties(${llaudio_HEADER_FILES}
 list(APPEND llaudio_SOURCE_FILES ${llaudio_HEADER_FILES})
 
 add_library (llaudio ${llaudio_SOURCE_FILES})
+if (OPENAL)
+target_link_libraries(
+    llaudio
+    ${LLCOMMON_LIBRARIES}
+    ${LLMATH_LIBRARIES}
+    ${LLMESSAGE_LIBRARIES}
+    ${LLVFS_LIBRARIES}
+    ${VORBISENC_LIBRARIES}
+    ${VORBISFILE_LIBRARIES}
+    ${VORBIS_LIBRARIES}
+    ${OGG_LIBRARIES}
+    ${OPENAL_LIBRARIES}
+    )
+else (OPENAL)
 target_link_libraries(
     llaudio
     ${LLCOMMON_LIBRARIES}
@@ -88,3 +102,4 @@ target_link_libraries(
     ${VORBIS_LIBRARIES}
     ${OGG_LIBRARIES}
     )
+endif(OPENAL)

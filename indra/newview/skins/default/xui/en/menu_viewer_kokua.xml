@@ -89,14 +89,12 @@
 				 parameter="perms_default" />
 			</menu_item_call>
             <menu_item_call
-             label="Import Linkset"
+             label="Import Linkset..."
              visibility_control="FSEnableObjectExports"
              name="import linkset">
                 <menu_item_call.on_click
-                 function="Floater.Toggle"
-                 parameter="fs_import" />
-               <menu_item_call.on_enable
-                 function="File.EnableUpload" />
+                 function="File.ImportLinkset"
+                 parameter="" />
             </menu_item_call>			
         </menu>
         <menu_item_separator/>
@@ -823,6 +821,13 @@
        function="Floater.Toggle"
        parameter="mini_map" />
     </menu_item_check>
+    <menu_item_call
+        label="Events"
+        name="Events">
+        <menu_item_call.on_click
+        function="Advanced.ShowURL"
+        parameter="http://events.secondlife.com"/>
+    </menu_item_call>
         <menu_item_check
         label="Search"
         name="Search"
@@ -1391,6 +1396,16 @@
        label="Scripts"
        name="Scripts"
        tear_off="true">
+      <menu_item_check
+         label="Script warnings/errors..."
+         name="Script debug">
+        <menu_item_check.on_check
+         function="Floater.IsOpen"
+         parameter="script_debug" />
+        <menu_item_check.on_click
+         function="Floater.ToggleOrBringToFront"
+         parameter="script_debug" />
+      </menu_item_check>       
       <menu_item_call
          label="Recompile Scripts (Mono)"
          name="Mono">
@@ -1711,14 +1726,12 @@
          parameter="perms_default" />
       </menu_item_call>
 	  <menu_item_call
-         label="Import Linkset"
-         visibility_control="FSEnableObjectExports"
-         name="import linkset">
-          <menu_item_call.on_click
-           function="Floater.Toggle"
-           parameter="fs_import" />
-          <menu_item_call.on_enable
-            function="File.EnableUpload" />
+             label="Import Linkset..."
+             visibility_control="FSEnableObjectExports"
+             name="import linkset">
+                <menu_item_call.on_click
+                 function="File.ImportLinkset"
+                 parameter="" />
     </menu_item_call> 
     </menu>
     <menu_item_separator/>
