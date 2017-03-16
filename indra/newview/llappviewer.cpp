@@ -126,10 +126,8 @@
 #include "stringize.h"
 #include "llcoros.h"
 #include "llexception.h"
-#include "cef/llceflib.h"
-#if LL_WINDOWS
+#include "cef/dullahan.h"
 #include "vlc/libvlc_version.h"
-#endif // LL_WINDOWS
 
 // Third party library includes
 #include <boost/bind.hpp>
@@ -341,10 +339,10 @@ BOOL				gDisconnected = FALSE;
 // used to restore texture state after a mode switch
 LLFrameTimer	gRestoreGLTimer;
 BOOL			gRestoreGL = FALSE;
-BOOL			gUseWireframe = FALSE;
+bool			gUseWireframe = FALSE;
 
 //use for remember deferred mode in wireframe switch
-BOOL			gInitialDeferredModeForWireframe = FALSE;
+bool			gInitialDeferredModeForWireframe = FALSE;
 
 // VFS globals - see llappviewer.h
 LLVFS* gStaticVFS = NULL;
@@ -754,10 +752,7 @@ LLAppViewer::LLAppViewer()
 LLAppViewer::~LLAppViewer()
 {
 	delete mSettingsLocationList;
-	LLViewerEventRecorder::deleteSingleton();
 
-	LLLoginInstance::instance().setUpdaterService(0);
-	
 	destroyMainloopTimeout();
     
 	// If we got to this destructor somehow, the app didn't hang.
@@ -2261,6 +2256,10 @@ bool LLAppViewer::cleanup()
 	// realtime, or might throw an exception.
 	LLSingletonBase::cleanupAll();
 
+	// The logging subsystem depends on an LLSingleton. Any logging after
+	// LLSingletonBase::deleteAll() won't be recorded.
+	LL_INFOS() << "Goodbye!" << LL_ENDL;
+
 	// This calls every remaining LLSingleton's deleteSingleton() method.
 	// No class destructor should perform any cleanup that might take
 	// significant realtime, or throw an exception.
@@ -2272,8 +2271,6 @@ bool LLAppViewer::cleanup()
 	// their respective cleanup methods in computed dependency order, it's
 	// probably useful to be able to log that order.
 	LLSingletonBase::deleteAll();
-
-	LL_INFOS() << "Goodbye!" << LL_ENDL;
 
 	removeDumpDir();
 
@@ -3585,27 +3582,33 @@ LLSD LLAppViewer::getViewerInfo() const
 	}
 
 #if LL_LINUX
-	info["LLCEFLIB_VERSION"] = LLCEFLIB_VERSION;
-#elif LL_DARWIN
-        info["LLCEFLIB_VERSION"] = LLCEFLIB_VERSION;
-#elif LL_WINDOWS
-	info["LLCEFLIB_VERSION"] = LLCEFLIB_VERSION;
-#else
-	info["LLCEFLIB_VERSION"] = "Undefined";
+	std::ostringstream cef_ver_codec;
+	cef_ver_codec << "Dullahan: ";
+	cef_ver_codec << DULLAHAN_VERSION_MAJOR;
+	cef_ver_codec << ".";
+	cef_ver_codec << DULLAHAN_VERSION_MINOR;
+	cef_ver_codec << ".";
+	cef_ver_codec << DULLAHAN_VERSION_BUILD;
 
+	cef_ver_codec << " / CEF: ";
+	cef_ver_codec << CEF_VERSION;
+
+	cef_ver_codec << " / Chrome: ";
+	cef_ver_codec << CHROME_VERSION_MAJOR;
+
+	info["LIBCEF_VERSION"] = cef_ver_codec.str();
+#else
+	info["LIBCEF_VERSION"] = "Undefined";
 #endif
 
-
-#if LL_DARWIN
-	info["LIBVLC_VERSION"] = "Unsupported";
-#else
-	std::ostringstream ver_codec;
-	ver_codec << LIBVLC_VERSION_MAJOR;
-	ver_codec << ".";
-	ver_codec << LIBVLC_VERSION_MINOR;
-	ver_codec << ".";
-	ver_codec << LIBVLC_VERSION_REVISION;
-	info["LIBVLC_VERSION"] = ver_codec.str();
+#if !LL_LINUX
+	std::ostringstream vlc_ver_codec;
+	vlc_ver_codec << LIBVLC_VERSION_MAJOR;
+	vlc_ver_codec << ".";
+	vlc_ver_codec << LIBVLC_VERSION_MINOR;
+	vlc_ver_codec << ".";
+	vlc_ver_codec << LIBVLC_VERSION_REVISION;
+	info["LIBVLC_VERSION"] = vlc_ver_codec.str();
 #endif
 
 	S32 packets_in = LLViewerStats::instance().getRecording().getSum(LLStatViewer::PACKETS_IN);
