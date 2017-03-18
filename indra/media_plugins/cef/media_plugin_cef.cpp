@@ -39,7 +39,6 @@
 #include <functional>
 
 #include "dullahan.h"
-//#include "volume_catcher.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -496,10 +495,6 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				dullahan::dullahan_settings settings;
 				settings.accept_language_list = mHostLanguage;
 				settings.background_color = 0xffffff;
-				// The LLCEFLibSettings struct in the Windows 32-bit
-				// llceflib's build 500907 does not have a page_zoom_factor
-				// member. Set below.
-				//settings.page_zoom_factor = message_in.getValueReal("factor");
 				settings.cache_enabled = true;
 				settings.cache_path = mCachePath;
 				settings.cookie_store_path = mCookiePath;
@@ -527,7 +522,7 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				}
 
 				// now we can set page zoom factor
-				mLLCEFLib->setPageZoom(message_in.getValueReal("factor"));
+				mCEFLib->setPageZoom(message_in.getValueReal("factor"));
 
 				// Plugin gets to decide the texture parameters to use.
 				mDepth = 4;
