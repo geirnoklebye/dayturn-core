@@ -970,20 +970,21 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 				line.append(LLTrans::getString("RetrievingData"));
 			}
 		}
-		else if(gCacheName->getFullName(owner, name))
-		{
+        else
+        {
 //MK
 			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 			{
 				name = gAgent.mRRInterface.getDummyName (name);
 			}
 //mk
-			line.append(name);
-		}
-		else
-		{
-			line.append(LLTrans::getString("RetrievingData"));
-		}
+                line.append(name);
+            }
+            else
+            {
+                line.append(LLTrans::getString("RetrievingData"));
+            }
+        }
 	}
 	else
 	{
