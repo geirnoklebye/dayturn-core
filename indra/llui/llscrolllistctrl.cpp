@@ -1821,6 +1821,7 @@ BOOL LLScrollListCtrl::handleRightMouseDown(S32 x, S32 y, MASK mask)
 			registrar.add("Url.ShowProfile", boost::bind(&LLScrollListCtrl::showProfile, uuid, is_group));
 			registrar.add("Url.SendIM", boost::bind(&LLScrollListCtrl::sendIM, uuid));
 			registrar.add("Url.AddFriend", boost::bind(&LLScrollListCtrl::addFriend, uuid));
+			registrar.add("Url.RemoveFriend", boost::bind(&LLScrollListCtrl::removeFriend, id));
 			registrar.add("Url.Execute", boost::bind(&LLScrollListCtrl::showNameDetails, uuid, is_group));
 			registrar.add("Url.CopyLabel", boost::bind(&LLScrollListCtrl::copyNameToClipboard, uuid, is_group));
 			registrar.add("Url.CopyUrl", boost::bind(&LLScrollListCtrl::copySLURLToClipboard, uuid, is_group));
@@ -1863,6 +1864,12 @@ void LLScrollListCtrl::addFriend(LLUUID &id)
 	// add resident to friends list
 	const std::string slurl = LLSLURL("agent", id, "about").getSLURLString();
 	LLUrlAction::addFriend(slurl);
+}
+
+void LLScrollListCtrl::removeFriend(std::string id)
+{
+	std::string slurl = "secondlife:///app/agent/" + id + "/about";
+	LLUrlAction::removeFriend(slurl);
 }
 
 void LLScrollListCtrl::showNameDetails(LLUUID &id, bool is_group)
