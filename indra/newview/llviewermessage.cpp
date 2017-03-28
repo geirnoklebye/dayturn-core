@@ -3455,6 +3455,9 @@ void process_improved_im(LLMessageSystem *msg, void **user_data)
 			// even in busy mode
 			if (is_do_not_disturb && !auto_accept) 
 //mk
+            {
+                send_do_not_disturb_message(msg, from_id);
+            }
 			else if (gSavedSettings.getBOOL("VoiceCallsFriendsOnly") && (LLAvatarTracker::instance().getBuddyInfo(from_id) == NULL))
 			{
 				return;

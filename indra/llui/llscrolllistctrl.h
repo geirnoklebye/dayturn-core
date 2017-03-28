@@ -432,13 +432,12 @@ private:
 	BOOL			setSort(S32 column, BOOL ascending);
 	S32				getLinesPerPage();
 
-	static void		showProfile(LLUUID &id, bool is_group);
-	static void		sendIM(LLUUID &id);
-	static void		addFriend(LLUUID &id);
-	static void		removeFriend(std::string id);
-	static void		showNameDetails(LLUUID &id, bool is_group);
-	static void		copyNameToClipboard(LLUUID &id, bool is_group);
-	static void		copySLURLToClipboard(LLUUID &id, bool is_group);
+	static void		showProfile(std::string id, bool is_group);
+	static void		sendIM(std::string id);
+	static void		addFriend(std::string id);
+	static void		showNameDetails(std::string id, bool is_group);
+	static void		copyNameToClipboard(std::string id, bool is_group);
+	static void		copySLURLToClipboard(std::string id, bool is_group);
 
 	S32				mLineHeight;	// the max height of a single line
 	S32				mScrollLines;	// how many lines we've scrolled down
@@ -498,7 +497,7 @@ private:
 	S32				mNumDynamicWidthColumns;
 	S32				mTotalStaticColumnWidth;
 	S32				mTotalColumnPadding;
-    
+
 	std::vector<LLScrollListColumn::Params> mColumnInitParams;
 	mutable bool	mSorted;
 	
