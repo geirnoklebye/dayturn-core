@@ -840,11 +840,6 @@ bool	LLFilePicker::doNavSaveDialog(ESaveFilter filter, const std::string& filena
 			creator = "\?\?\?\?";
 			extension = "xml";
 			break;
-		case FFSAVE_DAE:
-			type = "DAE ";
-			creator = "\?\?\?\?";
-			extension = "dae";
-			break;
 		case FFSAVE_ALL:
 		default:
 			type = "\?\?\?\?";
