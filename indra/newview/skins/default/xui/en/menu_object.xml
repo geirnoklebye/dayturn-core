@@ -186,7 +186,7 @@
           label="Collada DAE"
           name="Collada DAE">
           <menu_item_call.on_click
-              function="Object.ExportDAE" />
+              function="Object.ExportCollada" />
           <menu_item_call.on_enable
               function="Object.EnableExport" />
       </menu_item_call>

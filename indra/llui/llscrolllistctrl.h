@@ -435,9 +435,10 @@ private:
 	static void		showProfile(LLUUID &id, bool is_group);
 	static void		sendIM(LLUUID &id);
 	static void		addFriend(LLUUID &id);
-	static void		showNameDetails(LLUUID &id, bool is_group);
-	static void		copyNameToClipboard(LLUUID &id, bool is_group);
-	static void		copySLURLToClipboard(LLUUID &id, bool is_group);
+	static void		removeFriend(std::string id);
+	static void		showNameDetails(std::string id, bool is_group);
+	static void		copyNameToClipboard(std::string id, bool is_group);
+	static void		copySLURLToClipboard(std::string id, bool is_group);
 
 	S32				mLineHeight;	// the max height of a single line
 	S32				mScrollLines;	// how many lines we've scrolled down

@@ -41,7 +41,6 @@
 #include "llviewerfoldertype.h"
 #include "llradiogroup.h"
 #include "llstartup.h"
-
 // linden library includes
 #include "llclipboard.h"
 #include "lltrans.h"
@@ -91,6 +90,7 @@ LLInventoryFilter::LLInventoryFilter(const Params& p)
 	// copy mFilterOps into mDefaultFilterOps
 	markDefault();
 }
+static bool InventoryFetchDeCloudDebug;
 // ## Zi: Extended Inventory Search
 void LLInventoryFilter::setFilterSubStringTarget(const std::string& targetName)
 {
@@ -244,13 +244,26 @@ bool LLInventoryFilter::checkFolder(const LLUUID& folder_id) const
 
 	// when applying a filter, matching folders get their contents downloaded first
 	// but make sure we are not interfering with pre-download
-	if (isNotDefault()
-		&& !gInventory.isCategoryComplete(folder_id)
-		&& LLStartUp::getStartupState() > STATE_WEARABLES_WAIT)
-	{
-		LLInventoryModelBackgroundFetch::instance().start(folder_id);
-	}
+    static LLCachedControl<bool> InventoryFetchDeCloudDebug(gSavedSettings, "InventoryFetchDeCloudDebug");
 
+    if ( InventoryFetchDeCloudDebug )
+    {
+        LL_DEBUGS_ONCE("Inventory") << "Waiting on Wearables " << InventoryFetchDeCloudDebug << LL_ENDL;
+        if (isNotDefault()
+            && !gInventory.isCategoryComplete(folder_id)
+            && LLStartUp::getStartupState() > STATE_WEARABLES_WAIT)
+        {
+            LLInventoryModelBackgroundFetch::instance().start(folder_id);
+        }
+    }
+    else
+    {
+        LL_DEBUGS_ONCE("Inventory") << "Not Waiting on Wearables " << InventoryFetchDeCloudDebug << LL_ENDL;
+        if (isNotDefault()
+            && !gInventory.isCategoryComplete(folder_id))
+        {
+            LLInventoryModelBackgroundFetch::instance().start(folder_id);
+        }}
 	// when applying a filter, matching folders get their contents downloaded first
 	if (mFilterSubString.size()
 		&& !gInventory.isCategoryComplete(folder_id))
@@ -441,10 +454,17 @@ bool LLInventoryFilter::checkAgainstFilterType(const LLFolderViewModelItemInvent
 			{
 				// Force the fetching of those folders so they are hidden if they really are empty...
 				// But don't interfere with startup download
-				if (LLStartUp::getStartupState() > STATE_WEARABLES_WAIT)
-				{
-					gInventory.fetchDescendentsOf(object_id);
-				}
+                if ( InventoryFetchDeCloudDebug )
+                {
+                    if (LLStartUp::getStartupState() > STATE_WEARABLES_WAIT )
+                    {
+                        gInventory.fetchDescendentsOf(object_id);
+                    }
+                }
+                else
+                {
+                    gInventory.fetchDescendentsOf(object_id);
+                }
 
 				LLInventoryModel::cat_array_t* cat_array = NULL;
 				LLInventoryModel::item_array_t* item_array = NULL;
