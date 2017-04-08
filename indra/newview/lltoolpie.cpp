@@ -945,49 +945,45 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 	line.clear();
 	line.append(LLTrans::getString("TooltipOwner") + " ");
 	
-	if ( hover_parcel )
-	{
-		std::string name;
-		if (LLUUID::null == owner)
-		{
-			line.append(LLTrans::getString("TooltipPublic"));
-		}
-		else if (hover_parcel->getIsGroupOwned())
-		{
-			if (gCacheName->getGroupName(owner, name))
-			{
-//MK
-				if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
-				{
-					name = gAgent.mRRInterface.getDummyName (name);
-				}
-//mk
-				line.append(name);
-				line.append(LLTrans::getString("TooltipIsGroup"));
-			}
-			else
-			{
-				line.append(LLTrans::getString("RetrievingData"));
-			}
-		}
-		else if(gCacheName->getFullName(owner, name))
-		{
-//MK
-			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
-			{
-				name = gAgent.mRRInterface.getDummyName (name);
-			}
-//mk
-			line.append(name);
-		}
-		else
-		{
-			line.append(LLTrans::getString("RetrievingData"));
-		}
-	}
-	else
-	{
-		line.append(LLTrans::getString("RetrievingData"));
+    if (hover_parcel)
+    {
+        std::string name;
+        if (LLUUID::null == owner)
+        {
+            line.append(LLTrans::getString("TooltipPublic"));
+        }
+        else if (hover_parcel->getIsGroupOwned())
+        {
+            if (gCacheName->getGroupName(owner, name))
+            {
+                //MK
+                if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+                {
+                    name = gAgent.mRRInterface.getDummyName(name);
+                }
+                //mk
+                line.append(name);
+                line.append(LLTrans::getString("TooltipIsGroup"));
+            }
+            else
+            {
+                line.append(LLTrans::getString("RetrievingData"));
+            }
+        }
+        else if (gCacheName->getFullName(owner, name))
+        {
+            //MK
+            if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+            {
+                name = gAgent.mRRInterface.getDummyName(name);
+            }
+            //mk
+            line.append(name);
+        }
+        else
+        {
+            line.append(LLTrans::getString("RetrievingData"));
+        }
 	}
 	tooltip_msg.append(line);
 	tooltip_msg.push_back('\n');
