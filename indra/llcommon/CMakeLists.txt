@@ -10,6 +10,7 @@ include(Boost)
 include(LLSharedLibs)
 include(JsonCpp)
 include(GoogleBreakpad)
+include(GooglePerfTools)
 include(Copy3rdPartyLibs)
 include(ZLIB)
 include(URIPARSER)
@@ -22,6 +23,11 @@ include_directories(
     ${BREAKPAD_INCLUDE_DIRECTORIES}
     ${URIPARSER_INCLUDE_DIRS}
     )
+    
+include_directories(
+    SYSTEM
+    ${LLCOMMON_SYSTEM_INCLUDE_DIRS}
+    )    
 
 # add_executable(lltreeiterators lltreeiterators.cpp)
 # 
@@ -251,6 +257,21 @@ set(llcommon_HEADER_FILES
     StackWalker.h
     )
 
+# <FS:CR> Add OSSL constants for OpenSim builds
+if (HAS_OPENSIM_SUPPORT)
+    LIST(APPEND llcommon_HEADER_FILES
+    osslconstants.h
+    )
+endif (HAS_OPENSIM_SUPPORT)
+# </FS:CR>
+
+# <AV:CR>
+if (DARWIN)
+  list(APPEND llcommon_HEADER_FILES llsys_objc.h)
+  list(APPEND llcommon_SOURCE_FILES llsys_objc.mm)
+endif (DARWIN)
+# </AV:CR>
+
 set_source_files_properties(${llcommon_HEADER_FILES}
                             PROPERTIES HEADER_FILE_ONLY TRUE)
 
@@ -261,9 +282,9 @@ if(LLCOMMON_LINK_SHARED)
 if(NOT ADDRESS_SIZE EQUAL 32)
     if(WINDOWS)
       ##add_definitions(/FIXED:NO)
-    else(WINDOWS) # not windows therefore gcc LINUX and DARWIN
-      add_definitions(-fPIC)
-    endif(WINDOWS)
+  else(WINDOWS) # not windows therefore gcc LINUX and DARWIN
+    add_definitions(-fPIC)
+  endif(WINDOWS)
 endif(NOT ADDRESS_SIZE EQUAL 32)
   if(WINDOWS)
     # always generate llcommon.pdb, even for "Release" builds
@@ -272,6 +293,17 @@ endif(NOT ADDRESS_SIZE EQUAL 32)
   ll_stage_sharedlib(llcommon)
 else(LLCOMMON_LINK_SHARED)
     add_library (llcommon ${llcommon_SOURCE_FILES})
+  if(NOT ADDRESS_SIZE EQUAL 32)
+    if(WINDOWS)
+      ##add_definitions(/FIXED:NO)
+    else(WINDOWS) # not windows therefore gcc LINUX and DARWIN
+      add_definitions(-fPIC)
+    endif(WINDOWS)
+  endif(NOT ADDRESS_SIZE EQUAL 32)
+  if(WINDOWS)
+    # always generate llcommon.pdb, even for "Release" builds
+    set_target_properties(llcommon PROPERTIES LINK_FLAGS "/DEBUG")
+  endif(WINDOWS)
 endif(LLCOMMON_LINK_SHARED)
 
 target_link_libraries(
@@ -349,4 +381,8 @@ if (LL_TESTS)
 ## throwing and catching exceptions.
 ##LL_ADD_INTEGRATION_TEST(llexception "" "${test_libs}")
 
+  # *TODO - reenable these once tcmalloc libs no longer break the build.
+  #ADD_BUILD_TEST(llallocator llcommon)
+  #ADD_BUILD_TEST(llallocator_heap_profile llcommon)
+  #ADD_BUILD_TEST(llmemtype llcommon)
 endif (LL_TESTS)
