@@ -4732,12 +4732,7 @@ class LLViewToggleUI : public view_listener_t
 		}
 	}
 };
-//MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsRez)
-		{
-			new_value = false;
-		}
-//mk		
+
 void handle_duplicate_in_place(void*)
 {
 //MK
@@ -4745,7 +4740,7 @@ void handle_duplicate_in_place(void*)
 		{
 			return;
 		}
-//mk		
+//mk
 
 	LLVector3 offset(0.f, 0.f, 0.f);
 	LLSelectMgr::getInstance()->selectDuplicate(offset, TRUE);
