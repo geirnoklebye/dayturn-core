@@ -31,7 +31,7 @@
    follows="left|top"
    height="23"
    increment="64"
-   initial_value="1024"
+   initial_value="5096"
    label="Cache size (64 - 9984MB)"
    label_width="150"
    layout="topleft"
