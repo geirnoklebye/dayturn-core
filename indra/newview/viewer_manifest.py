@@ -1376,6 +1376,7 @@ class Linux_i686_Manifest(LinuxManifest):
             self.path("libharfbuzz.so*")
             self.path("libpangocairo-1.0.so*")
             self.path("libpangoxft-1.0.so*")
+            self.path("libpangoft2-1.0.so*")
             self.path("libpixman-1.so*")
 
             # Include libfreetype.so. but have it work as libfontconfig does.
@@ -1494,6 +1495,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libharfbuzz.so*")
             self.path("libpangocairo-1.0.so*")
             self.path("libpangoxft-1.0.so*")
+            self.path("libpangoft2-1.0.so*")
             self.path("libpixman-1.so*")
  
            #cef plugin
