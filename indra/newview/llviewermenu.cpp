@@ -4734,7 +4734,6 @@ class LLViewToggleUI : public view_listener_t
 };
 
 void handle_duplicate_in_place(void*)
-{
 //MK
 		if (gRRenabled && gAgent.mRRInterface.mContainsRez)
 		{

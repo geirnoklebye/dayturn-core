@@ -7995,8 +7995,8 @@ void send_lures(const LLSD& notification, const LLSD& response)
 
 			// Record the offer.
 			{
-				LLAvatarName av_name;
-				LLAvatarNameCache::get(target_id, &av_name);  // for im log filenames
+			LLAvatarName av_name;
+			LLAvatarNameCache::get(target_id, &av_name);  // for im log filenames
 				LLSD args;
 			args["TO_NAME"] = LLSLURL("agent", target_id, "completename").getSLURLString();;
 	
