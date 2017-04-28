@@ -28,6 +28,7 @@
 #define LLVIEWERASSETSTORAGE_H
 
 #include "llassetstorage.h"
+#include "llcorehttputil.h"
 
 class LLVFile;
 
@@ -82,7 +83,9 @@ protected:
 
     void capsRecvForRegion(const LLUUID& region_id, std::string pumpname);
     
-    void assetRequestCoro(LLViewerAssetRequest *req,
+    void assetRequestCoro(
+                          LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &defaultHttpAdapter,
+                          LLViewerAssetRequest *req,
                           const LLUUID& uuid,
                           LLAssetType::EType atype,
                           void (*callback) (LLVFS *vfs, const LLUUID&, LLAssetType::EType, void *, S32, LLExtStat),
@@ -90,7 +93,15 @@ protected:
 
     std::string getAssetURL(const std::string& cap_url, const LLUUID& uuid, LLAssetType::EType atype);
 
+    void logAssetStorageInfo();
+    
     std::string mViewerAssetUrl;
+    S32 mAssetCoroCount;
+    S32 mCountRequests;
+    S32 mCountStarted;
+    S32 mCountCompleted;
+    S32 mCountSucceeded;
+    S64 mTotalBytesFetched;
 };
 
 #endif
