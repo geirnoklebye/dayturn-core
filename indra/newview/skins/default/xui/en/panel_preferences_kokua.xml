@@ -77,6 +77,7 @@
 		control_name="RezUnderLandGroup"
 		tool_tip="Attempts to rez objects under the land group, if you're in the land group, regardless of which group tag you're currently wearing." />
 	    <check_box
+        enabled="false"
 		font="SansSerifSmall"
 		height="20"
 		initial_value="false"
