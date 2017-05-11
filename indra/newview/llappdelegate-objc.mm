@@ -99,7 +99,7 @@
 	callWindowUnhide();
 }
 
-- (NSApplicationDelegateReply) applicationShouldTerminate:(NSApplication *)sender
+- (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *)sender
 {
 	// run one frame to assess state
 	if (!pumpMainLoop())
