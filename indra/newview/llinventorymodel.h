@@ -420,6 +420,7 @@ public:
 	/// removeItem() or removeCategory(), whichever is appropriate
 	void removeObject(const LLUUID& object_id);
 
+	// "TrashIsFull" when trash exceeds maximum capacity
 	void checkTrashOverflow();
 
 	// Delete a particular inventory object by ID, and delete it from
