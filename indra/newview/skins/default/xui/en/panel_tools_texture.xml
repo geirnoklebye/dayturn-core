@@ -543,7 +543,7 @@
              left="10"
              name="tex gen"
              text_readonly_color="LabelDisabledColor"
-             top_pad="44"
+             top_pad="28"
              width="140">
                 Mapping
             </text>
@@ -614,7 +614,7 @@
 			 label_width="195"
              left="10"
              max_val="100"
-             min_val="-100"
+             min_val="0"
              name="rptctrl"
              width="255" />
            <spinner
