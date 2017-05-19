@@ -385,7 +385,7 @@ void LLPanelPermissions::refresh()
 	getChildView("Creator:")->setEnabled(TRUE);
 	std::string creator_app_link;
 	LLSelectMgr::getInstance()->selectGetCreator(mCreatorID, creator_app_link);
-
+    std::string owner_name;
 	// Style for creator and owner links (both group and agent)
 	LLStyle::Params style_params;
 	LLColor4 link_color = LLUIColorTable::instance().getColor("HTMLLinkColor");
@@ -470,6 +470,7 @@ void LLPanelPermissions::refresh()
 		owner_name = gAgent.mRRInterface.getDummyName (owner_name);
 	}
 //mk
+    getChild<LLUICtrl>("Owner Name")->setValue(owner_name);
 	getChildView("Owner Name")->setEnabled(TRUE);
 
 	// update group text field
