@@ -4259,34 +4259,34 @@ void LLAppViewer::processMarkerFiles()
 
 void LLAppViewer::removeMarkerFiles()
 {
-	if (!mSecondInstance)
-	{		
-	if (mMarkerFile.getFileHandle())
-	{
-		mMarkerFile.close() ;
-		LLAPRFile::remove( mMarkerFileName );
-			LL_DEBUGS("MarkerFile") << "removed exec marker '"<<mMarkerFileName<<"'"<< LL_ENDL;
-	}
-	else
-	{
-			LL_WARNS("MarkerFile") << "marker '"<<mMarkerFileName<<"' not open"<< LL_ENDL;
- 		}
+    if (!mSecondInstance)
+    {
+        if (mMarkerFile.getFileHandle())
+        {
+            mMarkerFile.close();
+            LLAPRFile::remove(mMarkerFileName);
+            LL_DEBUGS("MarkerFile") << "removed exec marker '" << mMarkerFileName << "'" << LL_ENDL;
+        }
+        else
+        {
+            LL_WARNS("MarkerFile") << "marker '" << mMarkerFileName << "' not open" << LL_ENDL;
+        }
 
-		if (mLogoutMarkerFile.getFileHandle())
-		{
-			mLogoutMarkerFile.close();
-			LLAPRFile::remove( mLogoutMarkerFileName );
-			LL_DEBUGS("MarkerFile") << "removed logout marker '"<<mLogoutMarkerFileName<<"'"<< LL_ENDL;
-		}
-		else
-		{
-			LL_WARNS("MarkerFile") << "logout marker '"<<mLogoutMarkerFileName<<"' not open"<< LL_ENDL;
-		}
-	}
-	else
-	{
-		LL_WARNS("MarkerFile") << "leaving markers because this is a second instance" << LL_ENDL;
-	}
+        if (mLogoutMarkerFile.getFileHandle())
+        {
+            mLogoutMarkerFile.close();
+            LLAPRFile::remove(mLogoutMarkerFileName);
+            LL_DEBUGS("MarkerFile") << "removed logout marker '" << mLogoutMarkerFileName << "'" << LL_ENDL;
+        }
+        else
+        {
+            LL_WARNS("MarkerFile") << "logout marker '" << mLogoutMarkerFileName << "' not open" << LL_ENDL;
+        }
+    }
+    else
+    {
+        LL_WARNS("MarkerFile") << "leaving markers because this is a second instance" << LL_ENDL;
+    }
 }
 
 void LLAppViewer::removeDumpDir()
