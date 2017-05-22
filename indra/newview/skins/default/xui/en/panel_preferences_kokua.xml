@@ -11,7 +11,7 @@
     width="517">
 
     <tab_container
-	top="-6" 
+	top="-6"
 	height="408"
 	left="0"
 	mouse_opaque="false"
@@ -21,582 +21,689 @@
 	width="517"
 	bg_opaque_color="0,0,0,0.0">
 
-	<!--General-->
-	<panel
-	    border="true"
-	    layout="topleft"
-	    follows="all"
-	    height="408"
-	    label="General"
-	    left="1"
-	    mouse_opaque="true"
-	    name="kokua_general"
-	    width="517">
-    <check_box
-		top_pad="15"
-		layout="topleft"
-		follows="left|top"
-		enabled="true"
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		control_name="ShowRlvMenu"
-		label="Enable RLV"
-		left="15"
-		name="ShowRlvMenu"
-		tool_tip="Enable the Restrained Life Viewer functionality"
-		width="270"/>
-    <check_box
-		top_pad="5"
-		layout="topleft"
-		follows="left|top"
-		enabled="true"
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		control_name="DisableFly"
-		label="Do not let me Fly"
-		left="15"
-		name="automatic_fly"
-		tool_tip="Prevents your avatar from flying even when the region allows avatars to fly."
-		width="270"/>
-    <check_box
-		top_pad="5"
-		layout="topleft"
-		follows="left|top"
-		enabled="true"
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		control_name="DisableJump"
-		label="Do not jump with page up keys."
-		left="15"
-		name="automatic_fly"
-		tool_tip="Prevents your avatar from jumping with 'PgUp' 'PAGE UP' and 'E' keys."
-		width="270"/>
-    <check_box
-		top_pad="5"
-		layout="topleft"
-		follows="left|top"
-		enabled="true"
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		label="Rez objects under the land group if possible"
-		left="15"
-		mouse_opaque="true"
-		name="grouplandrez"
-		radio_style="false"
-		width="270"
-		control_name="RezUnderLandGroup"
-		tool_tip="Attempts to rez objects under the land group, if you're in the land group, regardless of which group tag you're currently wearing." />
-	    <check_box
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		label="Save scripts in inventory as Mono instead of LSL2"
-		layout="topleft"
-		left="15"
-		name="SaveInventoryScriptsAsMono"
-		width="350"
-		control_name="SaveInventoryScriptsAsMono"
-		tool_tip="If true then scripts saved in inventory will be saved as Mono.  Otherwise they will be saved as LSL2.  This applies when compiling scripts and not when simply copying them." />
-        <check_box
-            enabled="true"
-			name="WindowTitleAvatarName"
-            control_name="WindowTitleAvatarName"
-		    label="Show your Avatar's name in the Viewer Title Bar"
-            tool_tip="Show/Hide your Avatar's name in the Viewer Title Bar.\nDisabled when not logged in."
+        <!--General-->
+        <panel
+            border="true"
             layout="topleft"
-            follows="left|top"
-            left="15"
-            height="20"
-            width="400" />
-        <check_box
-		    enabled="true"
-            name="WindowTitleGridName"
-            control_name="WindowTitleGridName"
-            label="Show the grid's name in the viewer window's title bar"
-            tool_tip="Show the grid's name in the viewer window's title bar.\nDisabled when not logged in."
-            layout="topleft"
-            follows="left|top"
-            left="15"
-            height="20"
-            width="400" />
-	    <check_box
-		control_name="MiniMapChatRing"
-		name="MiniMapChatRing"
-		label="Show chat and shout range rings on the minimap"
-		layout="topleft"
-		left="15"
-		height="20"
-		width="400"
-		tool_tip="Show chat and shout range rings on the minimap."/>
-	    <color_swatch
-		can_apply_immediately="true"
-		color="MapChatRingColor"
-		follows="left|top"
-		height="24"
-		label_height="0"
-		layout="topleft"
-		left="60"
-		name="netmap_chatring_color_swatch"
-		tool_tip="Click to open Color Picker"
-		width="44">
-		<color_swatch.init_callback
-		    function="Pref.getUIColor"
-		    parameter="MapChatRingColor" />
-		<color_swatch.commit_callback
-		    function="Pref.applyUIColor"
-		    parameter="MapChatRingColor" />
-		<color_swatch.caption_text
-		    height="0" />
-	    </color_swatch>
-	    <text
-		type="string"
-		length="1"
-		follows="left|top"
-		height="10"
-		layout="topleft"
-		left_pad="5"
-		mouse_opaque="false"
-		name="netmap_chatring_color_label"
-		text_readonly_color="LabelDisabledColor"
-		top_delta="5"
-		width="95">
-		Chat range
-	    </text>
-	    <color_swatch
-		can_apply_immediately="true"
-		color="MapShoutRingColor"
-		follows="left|top"
-		height="24"
-		label_height="0"
-		layout="topleft"
-		left_delta="100"
-		top_pad="-15"
-		name="netmap_shoutring_color_swatch"
-		tool_tip="Click to open Color Picker"
-		width="44">
-		<color_swatch.init_callback
-		    function="Pref.getUIColor"
-		    parameter="MapShoutRingColor" />
-		<color_swatch.commit_callback
-		    function="Pref.applyUIColor"
-		    parameter="MapShoutRingColor" />
-		<color_swatch.caption_text
-		    height="0" />
-	    </color_swatch>
-	    <text
-		type="string"
-		length="1"
-		follows="left|top"
-		height="10"
-		layout="topleft"
-		left_pad="5"
-		mouse_opaque="false"
-		name="netmap_shoutring_color_label"
-		text_readonly_color="LabelDisabledColor"
-		top_delta="5"
-		width="95">
-		Shout range
-	    </text>
-	    <check_box
-		control_name="NameTagShowAge"
-		name="NameTagShowAge"
-		label="Show each avatar's age in their name tag"
-		layout="topleft"
-		top_pad="20"
-		left="15"
-		height="20"
-		width="400"
-		tool_tip="Show each avatar's age in their name tag." />
-	    <text
-		name="nametag_show_age_limit_label"
-		type="string"
-		length="1"
-		follows="left|top"
-		top_pad="7"
-		left="17"
-		height="10"
-		layout="topleft"
-		mouse_opaque="false"
-		text_readonly_color="LabelDisabledColor"
-		width="500">
-		Don't show the avatar's age in their name tag if they are older than this many days:
-	    </text>
-	    <spinner
-		control_name="NameTagShowAgeLimit"
-		name="NameTagShowAgeLimit"
-		decimal_digits="0"
-		enabled="true"
-		layout="topleft"
-		follows="left|top"
-		height="20"
-		top_pad="10"
-		left="60"
-		increment="1" 
-		initial_val="14" 
-		max_val="2147483647"
-		min_val="0"
-		mouse_opaque="true"
-		width="90"
-		tool_tip="Don't show the avatar's age in their name tag if they are older than this many days."/>
-	    <text
-		name="nametag_show_age_limit_note"
-		type="string"
-		length="1"
-		follows="left|top"
-		height="10"
-		layout="topleft"
-		left_pad="10"
-		mouse_opaque="false"
-		text_readonly_color="LabelDisabledColor"
-		top_delta="5"
-		width="300">
-		(0 = Always show each avatar's age when enabled)
-	    </text>
-	    <text
-		name="web_browser_home_page_label"
-		type="string"
-		length="1"
-		follows="left|top"
-		top_pad="20"
-		left="17"
-		height="10"
-		layout="topleft"
-		mouse_opaque="false"
-		width="140">
-		    Web browser home page:
-	    </text>
-	    <line_editor
-		control_name="WebBrowserHomePage"
-		border_style="line"
-		border_thickness="1"
-		font="SansSerif"
-		height="23"
-		layout="topleft"
-		follows="top|left|right"
-		top_delta="-5"
-		right="-10"
-		max_length="4096"
-		name="web_browser_home_page"
-		width="345">
-	    </line_editor>
-	</panel>
-
-	<!--Chat-->
-	<panel
-	    border="true"
-	    follows="all"
-	    layout="topleft"
-	    height="408"
-	    label="Chat"
-	    left="1"
-	    mouse_opaque="true"
-	    name="wabbit_chat"
-	    width="517">
-	    <check_box
-		top_pad="15"
-		control_name="FSCmdLine"
-		name="FSCmdLine"
-		label="Enable chatbar commands (tph and tp2cam etc.)"
-		layout="topleft"
-		left="15"
-		height="20"
-		width="400"
-		tool_tip="Commands typed into the chatbar will be acted upon."/>
-        <check_box
-			name="ColourCodedChat"
-			control_name="ColourCodedChat"
-			label="Color code the chat entry boxes according to the session type"
-			layout="topleft"
-			left="15"
-			height="20"
-			width="400"
-			tool_tip="Gives the chat floater's text entry widget a slight tint that differs with the chat type (nearby, group, conference or IM)" />
-		<text
-                name="show_stream_metadata_text"
+            follows="all"
+            height="408"
+            label="General"
+            left="1"
+            mouse_opaque="true"
+            name="kokua_general"
+            width="517">
+            <check_box
+                top_pad="15"
                 layout="topleft"
-			follows="left|top"
-                top_pad="10"
+                follows="left|top"
+                enabled="true"
+                font="SansSerifSmall"
+                height="20"
+                initial_value="false"
+                control_name="ShowRlvMenu"
+                label="Enable RLV"
                 left="15"
-			height="20"
-                width="200"
-                type="string"
-                length="1">
-		    Stream artist/title announcements:
-        </text>
-		<radio_group
-                name="ShowStreamMetadata"
-			control_name="ShowStreamMetadata"
+                name="ShowRlvMenu"
+                tool_tip="Enable the Restrained Life Viewer functionality"
+                width="270"/>
+            <check_box
+                top_pad="5"
                 layout="topleft"
-			height="20"
-			width="300"
-                left_pad="0">
-            <radio_item
-				name="radio_off"
-                    layout="topleft"
-                    label="None"
-				top="0"
-                    left="0"
-				height="16"
-                    width="70"
-                    value="0" />
-            <radio_item
-                    name="radio_toasts"
-                    layout="topleft"
-				label="Toasts"
-                    top_delta="0"
-				left_pad="1"
-				height="16"
-                    width="70"
-                    value="1" />
-            <radio_item
-                    name="radio_chat"
-                    layout="topleft"
-                    label="Nearby chat"
-                    top_delta="0"
-				left_pad="1"
-				height="16"
-                    width="70"
-                    value="2" />
-        </radio_group>
+                follows="left|top"
+                enabled="true"
+                font="SansSerifSmall"
+                height="20"
+                initial_value="false"
+                control_name="DisableFly"
+                label="Do not let me Fly"
+                left="15"
+                name="automatic_fly"
+                tool_tip="Prevents your avatar from flying even when the region allows avatars to fly."
+                width="270"/>
+            <check_box
+                top_pad="5"
+                layout="topleft"
+                follows="left|top"
+                enabled="true"
+                font="SansSerifSmall"
+                height="20"
+                initial_value="false"
+                control_name="DisableJump"
+                label="Do not jump with page up keys."
+                left="15"
+                name="automatic_fly"
+                tool_tip="Prevents your avatar from jumping with 'PgUp' 'PAGE UP' and 'E' keys."
+                width="270"/>
+            <check_box
+                top_pad="5"
+                layout="topleft"
+                follows="left|top"
+                enabled="true"
+                font="SansSerifSmall"
+                height="20"
+                initial_value="false"
+                label="Rez objects under the land group if possible"
+                left="15"
+                mouse_opaque="true"
+                name="grouplandrez"
+                radio_style="false"
+                width="270"
+                control_name="RezUnderLandGroup"
+                tool_tip="Attempts to rez objects under the land group, if you're in the land group, regardless of which group tag you're currently wearing." />
+            <check_box
+            font="SansSerifSmall"
+            height="20"
+            initial_value="false"
+            label="Save scripts in inventory as Mono instead of LSL2"
+            layout="topleft"
+            left="15"
+            name="SaveInventoryScriptsAsMono"
+            width="350"
+            control_name="SaveInventoryScriptsAsMono"
+            tool_tip="If true then scripts saved in inventory will be saved as Mono.  Otherwise they will be saved as LSL2.  This applies when compiling scripts and not when simply copying them." />
+            <check_box
+                enabled="true"
+                name="WindowTitleAvatarName"
+                control_name="WindowTitleAvatarName"
+                label="Show your Avatar's name in the Viewer Title Bar"
+                tool_tip="Show/Hide your Avatar's name in the Viewer Title Bar.\nDisabled when not logged in."
+                layout="topleft"
+                follows="left|top"
+                left="15"
+                height="20"
+                width="400" />
+            <check_box
+                enabled="true"
+                name="WindowTitleGridName"
+                control_name="WindowTitleGridName"
+                label="Show the grid's name in the viewer window's title bar"
+                tool_tip="Show the grid's name in the viewer window's title bar.\nDisabled when not logged in."
+                layout="topleft"
+                follows="left|top"
+                left="15"
+                height="20"
+                width="400" />
+            <check_box
+            control_name="MiniMapChatRing"
+            name="MiniMapChatRing"
+            label="Show chat and shout range rings on the minimap"
+            layout="topleft"
+            left="15"
+            height="20"
+            width="400"
+            tool_tip="Show chat and shout range rings on the minimap."/>
+            <color_swatch
+            can_apply_immediately="true"
+            color="MapChatRingColor"
+            follows="left|top"
+            height="24"
+            label_height="0"
+            layout="topleft"
+            left="60"
+            name="netmap_chatring_color_swatch"
+            tool_tip="Click to open Color Picker"
+            width="44">
+                <color_swatch.init_callback
+                    function="Pref.getUIColor"
+                    parameter="MapChatRingColor" />
+                <color_swatch.commit_callback
+                    function="Pref.applyUIColor"
+                    parameter="MapChatRingColor" />
+                <color_swatch.caption_text
+                    height="0" />
+            </color_swatch>
+            <text
+            type="string"
+            length="1"
+            follows="left|top"
+            height="10"
+            layout="topleft"
+            left_pad="5"
+            mouse_opaque="false"
+            name="netmap_chatring_color_label"
+            text_readonly_color="LabelDisabledColor"
+            top_delta="5"
+            width="95">
+                Chat range
+            </text>
+            <color_swatch
+            can_apply_immediately="true"
+            color="MapShoutRingColor"
+            follows="left|top"
+            height="24"
+            label_height="0"
+            layout="topleft"
+            left_delta="100"
+            top_pad="-15"
+            name="netmap_shoutring_color_swatch"
+            tool_tip="Click to open Color Picker"
+            width="44">
+                <color_swatch.init_callback
+                    function="Pref.getUIColor"
+                    parameter="MapShoutRingColor" />
+                <color_swatch.commit_callback
+                    function="Pref.applyUIColor"
+                    parameter="MapShoutRingColor" />
+                <color_swatch.caption_text
+                    height="0" />
+            </color_swatch>
+            <text
+            type="string"
+            length="1"
+            follows="left|top"
+            height="10"
+            layout="topleft"
+            left_pad="5"
+            mouse_opaque="false"
+            name="netmap_shoutring_color_label"
+            text_readonly_color="LabelDisabledColor"
+            top_delta="5"
+            width="95">
+                Shout range
+            </text>
+            <check_box
+            control_name="NameTagShowAge"
+            name="NameTagShowAge"
+            label="Show each avatar's age in their name tag"
+            layout="topleft"
+            top_pad="20"
+            left="15"
+            height="20"
+            width="400"
+            tool_tip="Show each avatar's age in their name tag." />
+            <text
+            name="nametag_show_age_limit_label"
+            type="string"
+            length="1"
+            follows="left|top"
+            top_pad="7"
+            left="17"
+            height="10"
+            layout="topleft"
+            mouse_opaque="false"
+            text_readonly_color="LabelDisabledColor"
+            width="500">
+                Don't show the avatar's age in their name tag if they are older than this many days:
+            </text>
+            <spinner
+            control_name="NameTagShowAgeLimit"
+            name="NameTagShowAgeLimit"
+            decimal_digits="0"
+            enabled="true"
+            layout="topleft"
+            follows="left|top"
+            height="20"
+            top_pad="10"
+            left="60"
+            increment="1"
+            initial_val="14"
+            max_val="2147483647"
+            min_val="0"
+            mouse_opaque="true"
+            width="90"
+            tool_tip="Don't show the avatar's age in their name tag if they are older than this many days."/>
+            <text
+            name="nametag_show_age_limit_note"
+            type="string"
+            length="1"
+            follows="left|top"
+            height="10"
+            layout="topleft"
+            left_pad="10"
+            mouse_opaque="false"
+            text_readonly_color="LabelDisabledColor"
+            top_delta="5"
+            width="300">
+                (0 = Always show each avatar's age when enabled)
+            </text>
+            <text
+            name="web_browser_home_page_label"
+            type="string"
+            length="1"
+            follows="left|top"
+            top_pad="20"
+            left="17"
+            height="10"
+            layout="topleft"
+            mouse_opaque="false"
+            width="140">
+                Web browser home page:
+            </text>
+            <line_editor
+            control_name="WebBrowserHomePage"
+            border_style="line"
+            border_thickness="1"
+            font="SansSerif"
+            height="23"
+            layout="topleft"
+            follows="top|left|right"
+            top_delta="-5"
+            right="-10"
+            max_length="4096"
+            name="web_browser_home_page"
+            width="345">
+            </line_editor>
+        </panel>
 
-	    <check_box
-		control_name="StreamMetadataAnnounceToChat"
-		name="StreamMetadataAnnounceToChat"
-		label="Announce stream title to chat channel:"
-		layout="topleft"
-		top_pad="5"
-		left="15"
-		height="20"
-		width="400"
-		tool_tip="Send the artist/title of each track played on the stream to the specified chat channel.  This data could be used by an inworld object."/>
-	    <spinner
-		control_name="StreamMetadataAnnounceChannel"
-		decimal_digits="0"
-		enabled="true"
-		layout="topleft"
-		follows="left|top"
-		height="20"
-		left="60"
-		increment="1" 
-		initial_val="362394" 
-		max_val="2147483647"
-		min_val="1"
-		mouse_opaque="true"
-		name="StreamMetadataAnnounceChannel"
-		width="90"
-		tool_tip="The channel number to use for stream title announcements"/>
-	    <text
-		left="17"
-		type="string"
-		length="1"
-		follows="left|top"
-		top_pad="15"
-		height="10"
-		layout="topleft"
-		mouse_opaque="false"
-		name="clip_names_label"
-		width="500">
-		Number of names to list in the ad-hoc conference text input area:
-	    </text>
-	    <spinner
-		control_name="ConferenceClipNames"
-		decimal_digits="0"
-		enabled="true"
-		layout="topleft"
-		follows="left|top"
-		top_pad="10"
-		height="20"
-		left="60"
-		increment="1" 
-		initial_val="3" 
-		max_val="9999"
-		min_val="0"
-		mouse_opaque="true"
-		name="ConferenceClipNames"
-		width="90"
-		tool_tip="Number of names to list in the ad-hoc conference text input area (0 = Show all names)."/>
-	    <text
-		type="string"
-		length="1"
-		follows="left|top"
-		height="10"
-		layout="topleft"
-		left_pad="10"
-		mouse_opaque="false"
-		name="clip_names_note"
-		top_delta="5"
-		width="200">
-		(0 = Show all names)
-	    </text>
-	</panel>
-	<!--Privacy-->
-	<panel
-	    border="true"
-	    follows="all"
-	    height="408"
-	    label="Privacy"
-	    left="1"
-	    mouse_opaque="true"
-	    name="wabbit_view"
-	    width="517">
-	    <check_box
-		top_pad="15"
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		label="Do not reveal to others where I am looking"
-		layout="topleft"
-		left="15"
-		name="PrivateLookAtTarget"
-		width="350"
-		control_name="PrivateLookAtTarget"
-		tool_tip="If true then the viewer will show simulated look-at behavior to others." />
-	    <check_box
-		top_pad="15"
-		label="Do not turn to face selected objects"
-		layout="topleft"
-		left="15"
-		name="PreventAvatarTurnToSelected"
-		width="350"
-		control_name="PreventAvatarTurnToSelected"
-		tool_tip="When enabled, your avatar will not turn to face the objects you select." />
-		<check_box
-		top_pad="15"
-		initial_value="true"
-		label="Do not show money balance on snapshots"
-		layout="topleft"
-		left="15"
-		name="HideBalanceInSnapshots"
-		width="350"
-		control_name="HideBalanceInSnapshots"
-		tool_tip="When enabled, your avatar will not turn to face the objects you select." />
-	    <check_box
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		label="Do not reveal to others where I point (click)"
-		layout="topleft"
-		left="15"
-		name="PrivatePointAtTarget"
-		width="350"
-		control_name="PrivatePointAtTarget"
-		tool_tip="If true then the viewer will not reveal where you are pointing (clicking) to others." />
-	    <check_box
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		label="Show where others are looking"
-		layout="topleft"
-		left="15"
-		name="ShowLookAt"
-		width="350"
-		control_name="ShowLookAt"
-		tool_tip="Show crosshairs indicating where others are looking." />
-	    <check_box
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		label="Show names"
-		layout="topleft"
-		left="60"
-		name="ShowLookAtNames"
-		width="350"
-		control_name="ShowLookAtNames"
-		tool_tip="Show avatar name on each look-at crosshair." />
-	    <check_box
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		label="Only show crosshairs for active avatars"
-		layout="topleft"
-		left_delta="150"
-		top_pad="-20"
-		name="ShowLookAtLimited"
-		width="350"
-		control_name="ShowLookAtLimited"
-		tool_tip="Only show look-at crosshairs for avatars in control of their camera (reduces screen clutter)." />
-	    <check_box
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		label="Show where others are pointing (clicking)"
-		layout="topleft"
-		left="15"
-		name="ShowPointAt"
-		width="350"
-		control_name="ShowPointAt"
-		tool_tip="Show crosshairs indicating where others are pointing (clicking)." />
-	    <check_box
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		label="Show names"
-		layout="topleft"
-		left="60"
-		name="ShowPointAtNames"
-		width="350"
-		control_name="ShowPointAtNames"
-		tool_tip="Show avatar name on each point-at crosshair." />
-	    <check_box
-		font="SansSerifSmall"
-		height="20"
-		initial_value="false"
-		label="Don't show my own crosshair to myself"
-		layout="topleft"
-		left_delta="150"
-		top_pad="-20"
-		name="ShowPointAtLimited"
-		width="350"
-		control_name="ShowPointAtLimited"
-		tool_tip="Don't show my own point-at crosshair to myself (reduces screen clutter)." />
-	</panel>
-	<!--Inventory-->
-	<panel
-	    border="true"
-	    follows="all"
-	    height="408"
-	    label="Inventory"
-	    left="1"
-	    mouse_opaque="true"
-	    name="kokua_inv"
-	    width="517">
-        <check_box
-         top_pad="15"
-         layout="topleft"
-         height="16"
-         label="Hide empty system folders from inventory"
-         left="15"
-         name="DebugHideEmptySystemFolders"
-         width="270"
-         control_name="DebugHideEmptySystemFolders"
-         tool_tip="If enabled, the inventory windows will hide all empty system folders like Favorites, Landmarks etc.">
-		</check_box>
-         <check_box
-         top_pad="5"
+        <!--Chat-->
+        <panel
+            border="true"
+            follows="all"
+            layout="topleft"
+            height="408"
+            label="Chat"
+            left="1"
+            mouse_opaque="true"
+            name="wabbit_chat"
+            width="517">
+            <check_box
+            top_pad="15"
+            control_name="FSCmdLine"
+            name="FSCmdLine"
+            label="Enable chatbar commands (tph and tp2cam etc.)"
+            layout="topleft"
+            left="15"
+            height="20"
+            width="400"
+            tool_tip="Commands typed into the chatbar will be acted upon."/>
+            <check_box
+                name="ColourCodedChat"
+                control_name="ColourCodedChat"
+                label="Color code the chat entry boxes according to the session type"
+                layout="topleft"
+                left="15"
+                height="20"
+                width="400"
+                tool_tip="Gives the chat floater's text entry widget a slight tint that differs with the chat type (nearby, group, conference or IM)" />
+            <text
+                    name="show_stream_metadata_text"
+                    layout="topleft"
+                follows="left|top"
+                    top_pad="10"
+                    left="15"
+                height="20"
+                    width="200"
+                    type="string"
+                    length="1">
+                Stream artist/title announcements:
+            </text>
+            <radio_group
+                    name="ShowStreamMetadata"
+                control_name="ShowStreamMetadata"
+                    layout="topleft"
+                height="20"
+                width="300"
+                    left_pad="0">
+                <radio_item
+                    name="radio_off"
+                        layout="topleft"
+                        label="None"
+                    top="0"
+                        left="0"
+                    height="16"
+                        width="70"
+                        value="0" />
+                <radio_item
+                        name="radio_toasts"
+                        layout="topleft"
+                    label="Toasts"
+                        top_delta="0"
+                    left_pad="1"
+                    height="16"
+                        width="70"
+                        value="1" />
+                <radio_item
+                        name="radio_chat"
+                        layout="topleft"
+                        label="Nearby chat"
+                        top_delta="0"
+                    left_pad="1"
+                    height="16"
+                        width="70"
+                        value="2" />
+            </radio_group>
+
+            <check_box
+            control_name="StreamMetadataAnnounceToChat"
+            name="StreamMetadataAnnounceToChat"
+            label="Announce stream title to chat channel:"
+            layout="topleft"
+            top_pad="5"
+            left="15"
+            height="20"
+            width="400"
+            tool_tip="Send the artist/title of each track played on the stream to the specified chat channel.  This data could be used by an inworld object."/>
+            <spinner
+            control_name="StreamMetadataAnnounceChannel"
+            decimal_digits="0"
+            enabled="true"
+            layout="topleft"
+            follows="left|top"
+            height="20"
+            left="60"
+            increment="1"
+            initial_val="362394"
+            max_val="2147483647"
+            min_val="1"
+            mouse_opaque="true"
+            name="StreamMetadataAnnounceChannel"
+            width="90"
+            tool_tip="The channel number to use for stream title announcements"/>
+            <text
+            left="17"
+            type="string"
+            length="1"
+            follows="left|top"
+            top_pad="15"
+            height="10"
+            layout="topleft"
+            mouse_opaque="false"
+            name="clip_names_label"
+            width="500">
+                Number of names to list in the ad-hoc conference text input area:
+            </text>
+            <spinner
+            control_name="ConferenceClipNames"
+            decimal_digits="0"
+            enabled="true"
+            layout="topleft"
+            follows="left|top"
+            top_pad="10"
+            height="20"
+            left="60"
+            increment="1"
+            initial_val="3"
+            max_val="9999"
+            min_val="0"
+            mouse_opaque="true"
+            name="ConferenceClipNames"
+            width="90"
+            tool_tip="Number of names to list in the ad-hoc conference text input area (0 = Show all names)."/>
+            <text
+            type="string"
+            length="1"
+            follows="left|top"
+            height="10"
+            layout="topleft"
+            left_pad="10"
+            mouse_opaque="false"
+            name="clip_names_note"
+            top_delta="5"
+            width="200">
+                (0 = Show all names)
+            </text>
+        </panel>
+        <!--Privacy-->
+        <panel
+            border="true"
+            follows="all"
+            height="408"
+            label="Privacy"
+            left="1"
+            mouse_opaque="true"
+            name="wabbit_view"
+            width="517">
+            <check_box
+            top_pad="15"
+            font="SansSerifSmall"
+            height="20"
+            initial_value="false"
+            label="Do not reveal to others where I am looking"
+            layout="topleft"
+            left="15"
+            name="PrivateLookAtTarget"
+            width="350"
+            control_name="PrivateLookAtTarget"
+            tool_tip="If true then the viewer will show simulated look-at behavior to others." />
+            <check_box
+            top_pad="15"
+            label="Do not turn to face selected objects"
+            layout="topleft"
+            left="15"
+            name="PreventAvatarTurnToSelected"
+            width="350"
+            control_name="PreventAvatarTurnToSelected"
+            tool_tip="When enabled, your avatar will not turn to face the objects you select." />
+            <check_box
+            top_pad="15"
+            initial_value="true"
+            label="Do not show money balance on snapshots"
+            layout="topleft"
+            left="15"
+            name="HideBalanceInSnapshots"
+            width="350"
+            control_name="HideBalanceInSnapshots"
+            tool_tip="When enabled, your avatar will not turn to face the objects you select." />
+            <check_box
+            font="SansSerifSmall"
+            height="20"
+            initial_value="false"
+            label="Do not reveal to others where I point (click)"
+            layout="topleft"
+            left="15"
+            name="PrivatePointAtTarget"
+            width="350"
+            control_name="PrivatePointAtTarget"
+            tool_tip="If true then the viewer will not reveal where you are pointing (clicking) to others." />
+            <check_box
+            font="SansSerifSmall"
+            height="20"
+            initial_value="false"
+            label="Show where others are looking"
+            layout="topleft"
+            left="15"
+            name="ShowLookAt"
+            width="350"
+            control_name="ShowLookAt"
+            tool_tip="Show crosshairs indicating where others are looking." />
+            <check_box
+            font="SansSerifSmall"
+            height="20"
+            initial_value="false"
+            label="Show names"
+            layout="topleft"
+            left="60"
+            name="ShowLookAtNames"
+            width="350"
+            control_name="ShowLookAtNames"
+            tool_tip="Show avatar name on each look-at crosshair." />
+            <check_box
+            font="SansSerifSmall"
+            height="20"
+            initial_value="false"
+            label="Only show crosshairs for active avatars"
+            layout="topleft"
+            left_delta="150"
+            top_pad="-20"
+            name="ShowLookAtLimited"
+            width="350"
+            control_name="ShowLookAtLimited"
+            tool_tip="Only show look-at crosshairs for avatars in control of their camera (reduces screen clutter)." />
+            <check_box
+            font="SansSerifSmall"
+            height="20"
+            initial_value="false"
+            label="Show where others are pointing (clicking)"
+            layout="topleft"
+            left="15"
+            name="ShowPointAt"
+            width="350"
+            control_name="ShowPointAt"
+            tool_tip="Show crosshairs indicating where others are pointing (clicking)." />
+            <check_box
+            font="SansSerifSmall"
+            height="20"
+            initial_value="false"
+            label="Show names"
+            layout="topleft"
+            left="60"
+            name="ShowPointAtNames"
+            width="350"
+            control_name="ShowPointAtNames"
+            tool_tip="Show avatar name on each point-at crosshair." />
+            <check_box
+            font="SansSerifSmall"
+            height="20"
+            initial_value="false"
+            label="Don't show my own crosshair to myself"
+            layout="topleft"
+            left_delta="150"
+            top_pad="-20"
+            name="ShowPointAtLimited"
+            width="350"
+            control_name="ShowPointAtLimited"
+            tool_tip="Don't show my own point-at crosshair to myself (reduces screen clutter)." />
+        </panel>
+        <!--Inventory-->
+        <panel
+            border="true"
+            follows="all"
+            height="408"
+            label="Inventory"
+            left="1"
+            mouse_opaque="true"
+            name="kokua_inv"
+            width="517">
+            <check_box
+             top_pad="15"
+             layout="topleft"
+             height="16"
+             label="Hide empty system folders from inventory"
+             left="15"
+             name="DebugHideEmptySystemFolders"
+             width="270"
+             control_name="DebugHideEmptySystemFolders"
+             tool_tip="If enabled, the inventory windows will hide all empty system folders like Favorites, Landmarks etc.">
+            </check_box>
+            <check_box
+            top_pad="5"
+            follows="left|top"
+            height="16"
+            label="Show the Received Items folder in normal inventory"
+            left="15"
+            name="FSShowInboxFolder"
+            width="270"
+            control_name="FSShowInboxFolder"
+            tool_tip="If enabled, the inventory windows will also show the Received Items folder">
+            </check_box>
+            <check_box
+             top_pad="5"
+             layout="topleft"
+             height="16"
+             label="Use LindenLab de-cloud modification. Unset to by-pass "
+             left="15"
+             name="InventoryFetchDeCloudDebug"
+             width="270"
+             control_name="InventoryFetchDeCloudDebug"
+             tool_tip="If enabled, the inventory processing will wait until wearable items are present to fetech inventory, the LindenLab default, If disabled, the wait in ignored.">
+            </check_box>
+        </panel>
+        <!--Scpipting-->
+        <panel
+            border="true"
+            follows="all"
+            height="408"
+            label="Scripting"
+            left="1"
+            mouse_opaque="true"
+            name="kokua_scripting"
+            width="517">
+  <text
+         type="string"
+         length="1"
          follows="left|top"
-         height="16"
-         label="Show the Received Items folder in normal inventory"
-         left="15"
-         name="FSShowInboxFolder"
-         width="270"
-         control_name="FSShowInboxFolder"
-         tool_tip="If enabled, the inventory windows will also show the Received Items folder">
-        </check_box>
-        <check_box
-         top_pad="5"
+         height="10"
          layout="topleft"
-         height="16"
-         label="Use LindenLab de-cloud modification. Unset to by-pass "
-         left="15"
-         name="InventoryFetchDeCloudDebug"
-         width="270"
-         control_name="InventoryFetchDeCloudDebug"
-         tool_tip="If enabled, the inventory processing will wait until wearable items are present to fetech inventory, the LindenLab default, If disabled, the wait in ignored.">
-		</check_box>        
-	</panel>
+         left="10"
+         name="Web:"
+         top_pad="5"
+         width="2">
+      
+    ""
+  </text>
+            <spinner
+               left="30" 
+               control_name="ScriptDialogLimitations"
+               decimal_digits="0"
+               follows="left|top"
+               height="23"
+               increment="1"
+               initial_value="0"
+               label="Script Dialog Limitations:"
+               label_width="125"
+               layout="topleft"
+               left_delta="0"
+               max_val="4"
+               min_val="0"
+               name="script_dialog_limitations"
+               tool_tip="Limits amount of dialogs per script \n0 - per object \n1 - per channel \n2 - per channel for attachments  \n3 - per channel for HUDs \n4 - unconstrained for HUDs"
+               top_delta="23"
+               width="170" >
+
+
+                <!--
+           <radio_group
+             control_name="ScriptDialogLimitations"
+             follows="left|top"
+             height="60"
+             layout="topleft"
+             left_delta="50"
+             name="script_dialog_limitations"
+             top_pad="0"
+             width="480">
+                <radio_item
+                  height="20"
+                  label="Limits amount of dialogs per script, (0 - per object)."
+                  layout="topleft"
+                  left="0"
+                  name="per_object"
+                  value="0"
+                  tool_tip="Limits amount of dialogs per script, (0 - per object)."
+                  top="0"
+                  width="480" />
+                <radio_item
+                  height="20"
+                  label="Limits amount of dialogs per script, (1 - per channel)."
+                  layout="topleft"
+                  left_delta="0"
+                  name="per_channel"
+                  value="1"
+                  tool_tip="Limits amount of dialogs per script, (1 - per channel)."
+                  top_delta="20"
+                  width="480" />
+                <radio_item
+                  height="20"
+                  label="Limits amount of dialogs per script, (2 - per channel for attachments)."
+                  layout="topleft"
+                  left="0"
+                  name="channel_attachments"
+                  value="2"
+                  tool_tip="Limits amount of dialogs per script, (2 - per channel for attachments)."
+                  top_delta="20"
+                  width="480" />
+                <radio_item
+                  height="20"
+                  label="Limits amount of dialogs per script, (3 - per channel for HUDs)."
+                  layout="topleft"
+                  left="0"
+                  name="channel_huds"
+                  value="3"
+                  tool_tip="Limits amount of dialogs per script, (3 - per channel for HUDs)."
+                  top_delta="20"
+                  width="480" />
+                <radio_item
+                  height="20"
+                  label="Limits amount of dialogs per script, (4 -unconstrained for HUDs)"
+                  layout="topleft"
+                  left="0"
+                  name="unconstrained"
+                  value="4"
+                  tool_tip="Limits amount of dialogs per script, (4 -unconstrained for HUDs)"
+                  top_delta="20"
+                  width="480" />
+            </radio_group>
+            -->
+            </spinner>       
+        </panel>
     </tab_container>
 </panel>
