@@ -1691,13 +1691,17 @@ void LLPreviewLSL::saveIfNeeded(bool sync /*= true*/)
     {
         getWindow()->incBusyCount();
         mPendingUploads++;
+        bool isRunning = getChild<LLCheckBoxCtrl>("running")->get();
         if (!url.empty())
         {
             std::string buffer(mScriptEd->mEditor->getText());
+            bool mono_checked = gSavedSettings.getBOOL("SaveInventoryScriptsAsMono");
             LLBufferedAssetUploadInfo::invnUploadFinish_f proc = boost::bind(&LLPreviewLSL::finishedLSLUpload, _1, _4);
-
-            LLResourceUploadInfo::ptr_t uploadInfo(new LLScriptAssetUpload(mItemUUID, buffer, proc));
-
+            LLResourceUploadInfo::ptr_t uploadInfo(new LLScriptAssetUpload(mObjectUUID, mItemUUID,
+                 mono_checked ? LLScriptAssetUpload::MONO : LLScriptAssetUpload::LSL2,
+                isRunning, mScriptEd->getAssociatedExperience(), buffer, proc));
+            // Keep track of our last choice
+            gSavedSettings.setBOOL("SaveInventoryScriptsAsMono", mono_checked);
             LLViewerAssetUpload::EnqueueInventoryUpload(url, uploadInfo);
         }
     }
