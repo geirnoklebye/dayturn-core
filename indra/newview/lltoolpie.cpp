@@ -375,8 +375,7 @@ BOOL LLToolPie::handleLeftClickPick()
 
 	// If left-click never selects or spawns a menu
 	// Eat the event.
-	if (!gSavedSettings.getBOOL("LeftClickShowMenu"))
-	{
+
 		// mouse already released
 		if (!mMouseButtonDown)
 		{
@@ -412,20 +411,6 @@ BOOL LLToolPie::handleLeftClickPick()
 		// Eat the event
 		return LLTool::handleMouseDown(x, y, mask);
 	}
-
-	if (gAgent.leftButtonGrabbed())
-	{
-		// if the left button is grabbed, don't put up the pie menu
-		return LLTool::handleMouseDown(x, y, mask);
-	}
-
-	// Can't ignore children here.
-	LLToolSelect::handleObjectSelection(mPick, FALSE, TRUE);
-
-	// Spawn pie menu
-	LLTool::handleRightMouseDown(x, y, mask);
-	return TRUE;
-}
 
 BOOL LLToolPie::useClickAction(MASK mask, 
 							   LLViewerObject* object, 
@@ -974,19 +959,24 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 				line.append(LLTrans::getString("RetrievingData"));
 			}
 		}
-		else if(gCacheName->getFullName(owner, name))
+        else
 		{
-//MK
-			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+            LLAvatarName av_name;
+            if (LLAvatarNameCache::get(owner, &av_name))
 			{
-				name = gAgent.mRRInterface.getDummyName (name);
-			}
+                name = av_name.getUserName();
+//MK
+				if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+				{
+					name = gAgent.mRRInterface.getDummyName (name);
+				}
 //mk
-			line.append(name);
-		}
-		else
-		{
-			line.append(LLTrans::getString("RetrievingData"));
+				line.append(name);
+			}
+			else
+			{
+				line.append(LLTrans::getString("RetrievingData"));
+			}
 		}
 	}
 	else
@@ -1953,16 +1943,6 @@ BOOL LLToolPie::handleRightClickPick()
 				name = node->mName;
 			}
 			
-			std::string mute_msg;
-			if (LLMuteList::getInstance()->isMuted(object->getID(), name))
-			{
-				mute_msg = LLTrans::getString("UnmuteObject");
-			}
-			else
-			{
-				mute_msg = LLTrans::getString("MuteObject2");
-			}
-
 //MK
 			if (gRRenabled)
 			{
@@ -1991,7 +1971,6 @@ BOOL LLToolPie::handleRightClickPick()
 				}
 			}
 //mk
-			gMenuHolder->getChild<LLUICtrl>("Object Mute")->setValue(mute_msg);
 			gMenuObject->show(x, y);
 
 			showVisualContextMenuEffect();

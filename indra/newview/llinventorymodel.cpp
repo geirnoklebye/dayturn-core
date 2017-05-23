@@ -33,12 +33,14 @@
 #include "llagent.h"
 #include "llagentwearables.h"
 #include "llappearancemgr.h"
+#include "llavatarnamecache.h"
 #include "llclipboard.h"
 #include "llinventorypanel.h"
 #include "llinventorybridge.h"
 #include "llinventoryfunctions.h"
 #include "llinventoryobserver.h"
 #include "llinventorypanel.h"
+#include "llfloaterpreviewtrash.h"
 #include "llnotificationsutil.h"
 #include "llmarketplacefunctions.h"
 #include "llwindow.h"
@@ -516,6 +518,42 @@ const LLUUID LLInventoryModel::findCategoryUUIDForTypeInRoot(
 const LLUUID LLInventoryModel::findCategoryUUIDForType(LLFolderType::EType preferred_type, bool create_folder)
 {
 	return findCategoryUUIDForTypeInRoot(preferred_type, create_folder, gInventory.getRootFolderID());
+}
+
+const LLUUID LLInventoryModel::findUserDefinedCategoryUUIDForType(LLFolderType::EType preferred_type)
+{
+    LLUUID cat_id;
+    switch (preferred_type)
+    {
+    case LLFolderType::FT_OBJECT:
+    {
+        cat_id = LLUUID(gSavedPerAccountSettings.getString("ModelUploadFolder"));
+        break;
+    }
+    case LLFolderType::FT_TEXTURE:
+    {
+        cat_id = LLUUID(gSavedPerAccountSettings.getString("TextureUploadFolder"));
+        break;
+    }
+    case LLFolderType::FT_SOUND:
+    {
+        cat_id = LLUUID(gSavedPerAccountSettings.getString("SoundUploadFolder"));
+        break;
+    }
+    case LLFolderType::FT_ANIMATION:
+    {
+        cat_id = LLUUID(gSavedPerAccountSettings.getString("AnimationUploadFolder"));
+        break;
+    }
+    default:
+        break;
+    }
+    
+    if (cat_id.isNull() || !getCategory(cat_id))
+    {
+        cat_id = findCategoryUUIDForTypeInRoot(preferred_type, true, getRootFolderID());
+    }
+    return cat_id;
 }
 
 const LLUUID LLInventoryModel::findLibraryCategoryUUIDForType(LLFolderType::EType preferred_type, bool create_folder)
@@ -1042,19 +1080,19 @@ U32 LLInventoryModel::updateItem(const LLViewerInventoryItem* item, U32 mask)
 		{
 			// Valid UUID; set the item UUID and rename it
 			new_item->setCreator(id);
-			std::string avatar_name;
+			LLAvatarName av_name;
 
-			if (gCacheName->getFullName(id, avatar_name))
+			if (LLAvatarNameCache::get(id, &av_name))
 			{
-				new_item->rename(avatar_name);
+				new_item->rename(av_name.getUserName());
 				mask |= LLInventoryObserver::LABEL;
 			}
 			else
 			{
 				// Fetch the current name
-				gCacheName->get(id, FALSE,
+				LLAvatarNameCache::get(id,
 					boost::bind(&LLViewerInventoryItem::onCallingCardNameLookup, new_item.get(),
-					_1, _2, _3));
+					_1, _2));
 			}
 
 		}
@@ -3385,9 +3423,7 @@ void LLInventoryModel::processMoveInventoryItem(LLMessageSystem* msg, void**)
 }
 
 //----------------------------------------------------------------------------
-
 // Trash: LLFolderType::FT_TRASH, "ConfirmEmptyTrash"
-// Trash: LLFolderType::FT_TRASH, "TrashIsFull" when trash exceeds maximum capacity
 // Lost&Found: LLFolderType::FT_LOST_AND_FOUND, "ConfirmEmptyLostAndFound"
 
 bool LLInventoryModel::callbackEmptyFolderType(const LLSD& notification, const LLSD& response, LLFolderType::EType preferred_type)
@@ -3405,7 +3441,14 @@ void LLInventoryModel::emptyFolderType(const std::string notification, LLFolderT
 {
 	if (!notification.empty())
 	{
-		LLNotificationsUtil::add(notification, LLSD(), LLSD(),
+		LLSD args;
+		if(LLFolderType::FT_TRASH == preferred_type)
+		{
+			static const U32 trash_max_capacity = gSavedSettings.getU32("InventoryTrashMaxCapacity");
+			const LLUUID trash_id = findCategoryUUIDForType(preferred_type);
+			args["COUNT"] = (S32)getDescendentsCountRecursive(trash_id, trash_max_capacity);
+		}
+		LLNotificationsUtil::add(notification, args, LLSD(),
 										boost::bind(&LLInventoryModel::callbackEmptyFolderType, this, _1, _2, preferred_type));
 	}
 	else
@@ -3501,13 +3544,32 @@ void LLInventoryModel::removeObject(const LLUUID& object_id)
 	}
 }
 
+bool callback_preview_trash_folder(const LLSD& notification, const LLSD& response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	if (option == 0) // YES
+	{
+		LLFloaterPreviewTrash::show();
+	}
+	return false;
+}
+
 void  LLInventoryModel::checkTrashOverflow()
 {
 	static const U32 trash_max_capacity = gSavedSettings.getU32("InventoryTrashMaxCapacity");
 	const LLUUID trash_id = findCategoryUUIDForType(LLFolderType::FT_TRASH);
 	if (getDescendentsCountRecursive(trash_id, trash_max_capacity) >= trash_max_capacity)
 	{
-		gInventory.emptyFolderType("TrashIsFull", LLFolderType::FT_TRASH);
+		if (LLFloaterPreviewTrash::isVisible())
+		{
+			// bring to front
+			LLFloaterPreviewTrash::show();
+		}
+		else
+		{
+			LLNotificationsUtil::add("TrashIsFull", LLSD(), LLSD(),
+				boost::bind(callback_preview_trash_folder, _1, _2));
+		}
 	}
 }
 

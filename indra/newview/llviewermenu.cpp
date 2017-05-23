@@ -62,7 +62,6 @@
 #include "llfloaterbuycontents.h"
 #include "llbuycurrencyhtml.h"
 #include "llfloatergodtools.h"
-#include "llfloaterinventory.h"
 #include "llfloaterimcontainer.h"
 #include "llfloaterland.h"
 #include "llfloaterimnearbychat.h"
@@ -80,6 +79,7 @@
 #include "lllandmarkactions.h"
 #include "llgroupmgr.h"
 #include "lltooltip.h"
+#include "lltoolface.h"
 #include "llhints.h"
 #include "llhudeffecttrail.h"
 #include "llhudmanager.h"
@@ -89,6 +89,7 @@
 #include "llinventoryfunctions.h"
 #include "llpanellogin.h"
 #include "llpanelblockedlist.h"
+#include "llpanelmaininventory.h"
 #include "llmarketplacefunctions.h"
 #include "llmenuoptionpathfindingrebakenavmesh.h"
 #include "llmoveview.h"
@@ -133,6 +134,7 @@
 #include "llpathfindingmanager.h"
 #include "llstartup.h"
 #include "boost/unordered_map.hpp"
+#include "llcleanup.h"
 
 using namespace LLAvatarAppearanceDefines;
 
@@ -1210,6 +1212,7 @@ class LLAdvancedToggleWireframe : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		gUseWireframe = !(gUseWireframe);
+		gWindowResized = TRUE;
 //MK
 		// If we are supposed to be blindfolded (i.e. there is at least one locked HUD or the vision restrictions are in effect)
 		// then force wireframe to FALSE, as it could help cheating through.
@@ -1221,14 +1224,13 @@ class LLAdvancedToggleWireframe : public view_listener_t
 			}
 		}
 //mk
+		LLPipeline::updateRenderDeferred();
 
 		if (gUseWireframe)
 		{
 			gInitialDeferredModeForWireframe = LLPipeline::sRenderDeferred;
 		}
 
-		gWindowResized = TRUE;
-		LLPipeline::updateRenderDeferred();
 		gPipeline.resetVertexBuffers();
 
 		if (!gUseWireframe && !gInitialDeferredModeForWireframe && LLPipeline::sRenderDeferred != gInitialDeferredModeForWireframe && gPipeline.isInit())
@@ -5553,30 +5555,91 @@ class LLToolsEnableSelectNextPart : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		bool new_value = (gSavedSettings.getBOOL("EditLinkedParts") &&
-				 !LLSelectMgr::getInstance()->getSelection()->isEmpty());
+        bool new_value = (!LLSelectMgr::getInstance()->getSelection()->isEmpty()
+                          && (gSavedSettings.getBOOL("EditLinkedParts")
+                              || LLToolFace::getInstance() == LLToolMgr::getInstance()->getCurrentTool()));
 		return new_value;
 	}
 };
 
-// Cycle selection through linked children in selected object.
+// Cycle selection through linked children or/and faces in selected object.
 // FIXME: Order of children list is not always the same as sim's idea of link order. This may confuse
 // resis. Need link position added to sim messages to address this.
-class LLToolsSelectNextPart : public view_listener_t
+class LLToolsSelectNextPartFace : public view_listener_t
 {
-	bool handleEvent(const LLSD& userdata)
-	{
+    bool handleEvent(const LLSD& userdata)
+    {
+        bool cycle_faces = LLToolFace::getInstance() == LLToolMgr::getInstance()->getCurrentTool();
+        bool cycle_linked = gSavedSettings.getBOOL("EditLinkedParts");
+
+        if (!cycle_faces && !cycle_linked)
+        {
+            // Nothing to do
+            return true;
+        }
+
+        bool fwd = (userdata.asString() == "next");
+        bool prev = (userdata.asString() == "previous");
+        bool ifwd = (userdata.asString() == "includenext");
+        bool iprev = (userdata.asString() == "includeprevious");
+
+        LLViewerObject* to_select = NULL;
+        bool restart_face_on_part = !cycle_faces;
+        S32 new_te = 0;
+
+        if (cycle_faces)
+        {
+            // Cycle through faces of current selection, if end is reached, swithc to next part (if present)
+            LLSelectNode* nodep = LLSelectMgr::getInstance()->getSelection()->getFirstNode();
+            if (!nodep) return false;
+            to_select = nodep->getObject();
+            if (!to_select) return false;
+
+            S32 te_count = to_select->getNumTEs();
+            S32 selected_te = nodep->getLastOperatedTE();
+
+            if (fwd || ifwd)
+            {
+                if (selected_te < 0)
+                {
+                    new_te = 0;
+                }
+                else if (selected_te + 1 < te_count)
+                {
+                    // select next face
+                    new_te = selected_te + 1;
+                }
+                else
+                {
+                    // restart from first face on next part
+                    restart_face_on_part = true;
+                }
+            }
+            else if (prev || iprev)
+            {
+                if (selected_te > te_count)
+                {
+                    new_te = te_count - 1;
+                }
+                else if (selected_te - 1 >= 0)
+                {
+                    // select previous face
+                    new_te = selected_te - 1;
+                }
+                else
+                {
+                    // restart from last face on next part
+                    restart_face_on_part = true;
+                }
+            }
+        }
+
 		S32 object_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
-		if (gSavedSettings.getBOOL("EditLinkedParts") && object_count)
+		if (cycle_linked && object_count && restart_face_on_part)
 		{
 			LLViewerObject* selected = LLSelectMgr::getInstance()->getSelection()->getFirstObject();
 			if (selected && selected->getRootEdit())
 			{
-				bool fwd = (userdata.asString() == "next");
-				bool prev = (userdata.asString() == "previous");
-				bool ifwd = (userdata.asString() == "includenext");
-				bool iprev = (userdata.asString() == "includeprevious");
-				LLViewerObject* to_select = NULL;
 				LLViewerObject::child_list_t children = selected->getRootEdit()->getChildren();
 				children.push_front(selected->getRootEdit());	// need root in the list too
 
@@ -5618,22 +5681,40 @@ class LLToolsSelectNextPart : public view_listener_t
 						}
 					}
 				}
-
-				if (to_select)
-				{
-					if (gFocusMgr.childHasKeyboardFocus(gFloaterTools))
-					{
-						gFocusMgr.setKeyboardFocus(NULL);	// force edit toolbox to commit any changes
-					}
-					if (fwd || prev)
-					{
-						LLSelectMgr::getInstance()->deselectAll();
-					}
-					LLSelectMgr::getInstance()->selectObjectOnly(to_select);
-					return true;
-				}
 			}
 		}
+
+        if (to_select)
+        {
+            if (gFocusMgr.childHasKeyboardFocus(gFloaterTools))
+            {
+                gFocusMgr.setKeyboardFocus(NULL);	// force edit toolbox to commit any changes
+            }
+            if (fwd || prev)
+            {
+                LLSelectMgr::getInstance()->deselectAll();
+            }
+            if (cycle_faces)
+            {
+                if (restart_face_on_part)
+                {
+                    if (fwd || ifwd)
+                    {
+                        new_te = 0;
+                    }
+                    else
+                    {
+                        new_te = to_select->getNumTEs() - 1;
+                    }
+                }
+                LLSelectMgr::getInstance()->addAsIndividual(to_select, new_te, FALSE);
+            }
+            else
+            {
+                LLSelectMgr::getInstance()->selectObjectOnly(to_select);
+            }
+            return true;
+        }
 		return true;
 	}
 };
@@ -7095,10 +7176,10 @@ class LLMuteParticle : public view_listener_t
 		
 		if (id.notNull())
 		{
-			std::string name;
-			gCacheName->getFullName(id, name);
+			LLAvatarName av_name;
+			LLAvatarNameCache::get(id, &av_name);
 
-			LLMute mute(id, name, LLMute::AGENT);
+			LLMute mute(id, av_name.getUserName(), LLMute::AGENT);
 			if (LLMuteList::getInstance()->isMuted(mute.mID))
 			{
 				LLMuteList::getInstance()->remove(mute);
@@ -9181,6 +9262,15 @@ class LLToolsSelectTool : public view_listener_t
 		{
 			LLToolMgr::getInstance()->getCurrentToolset()->selectToolByIndex(5);
 		}
+
+		// Note: if floater is not visible LLViewerWindow::updateLayout() will
+		// attempt to open it, but it won't bring it to front or de-minimize.
+		if (gFloaterTools && (gFloaterTools->isMinimized() || !gFloaterTools->isShown() || !gFloaterTools->isFrontmost()))
+		{
+			gFloaterTools->setMinimized(FALSE);
+			gFloaterTools->openFloater();
+			gFloaterTools->setVisibleAndFrontmost(TRUE);
+		}
 		return true;
 	}
 };
@@ -9393,7 +9483,7 @@ class LLWorldPostProcess : public view_listener_t
 
 void handle_flush_name_caches()
 {
-	LLAvatarNameCache::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLAvatarNameCache);
 	if (gCacheName) gCacheName->clear();
 }
 
@@ -9420,7 +9510,12 @@ public:
 
 void handle_voice_morphing_subscribe()
 {
-	LLWeb::loadURLExternal(LLTrans::getString("voice_morphing_url"));
+	LLWeb::loadURL(LLTrans::getString("voice_morphing_url"));
+}
+
+void handle_premium_voice_morphing_subscribe()
+{
+	LLWeb::loadURL(LLTrans::getString("premium_voice_morphing_url"));
 }
 
 class LLToggleUIHints : public view_listener_t
@@ -9437,7 +9532,7 @@ class LLToggleUIHints : public view_listener_t
 
 void LLUploadCostCalculator::calculateCost()
 {
-	S32 upload_cost = LLGlobalEconomy::Singleton::getInstance()->getPriceUpload();
+	S32 upload_cost = LLGlobalEconomy::getInstance()->getPriceUpload();
 
 	// getPriceUpload() returns -1 if no data available yet.
 	if(upload_cost >= 0)
@@ -9498,7 +9593,6 @@ void initialize_edit_menu()
 	view_listener_t::addMenu(new LLEditDelete(), "Edit.Delete");
 	view_listener_t::addMenu(new LLEditSelectAll(), "Edit.SelectAll");
 	view_listener_t::addMenu(new LLEditDeselect(), "Edit.Deselect");
-	view_listener_t::addMenu(new LLEditDuplicate(), "Edit.Duplicate");
 	view_listener_t::addMenu(new LLEditTakeOff(), "Edit.TakeOff");
 	view_listener_t::addMenu(new LLEditEnableUndo(), "Edit.EnableUndo");
 	view_listener_t::addMenu(new LLEditEnableRedo(), "Edit.EnableRedo");
@@ -9508,8 +9602,6 @@ void initialize_edit_menu()
 	view_listener_t::addMenu(new LLEditEnableDelete(), "Edit.EnableDelete");
 	view_listener_t::addMenu(new LLEditEnableSelectAll(), "Edit.EnableSelectAll");
 	view_listener_t::addMenu(new LLEditEnableDeselect(), "Edit.EnableDeselect");
-	view_listener_t::addMenu(new LLEditEnableDuplicate(), "Edit.EnableDuplicate");
-
 }
 
 //MK
@@ -9627,6 +9719,8 @@ void initialize_menus()
 
 	// Communicate > Voice morphing > Subscribe...
 	commit.add("Communicate.VoiceMorphing.Subscribe", boost::bind(&handle_voice_morphing_subscribe));
+	// Communicate > Voice morphing > Premium perk...
+	commit.add("Communicate.VoiceMorphing.PremiumPerk", boost::bind(&handle_premium_voice_morphing_subscribe));
 	LLVivoxVoiceClient * voice_clientp = LLVivoxVoiceClient::getInstance();
 	enable.add("Communicate.VoiceMorphing.NoVoiceMorphing.Check"
 		, boost::bind(&LLVivoxVoiceClient::onCheckVoiceEffect, voice_clientp, "NoVoiceMorphing"));
@@ -9665,7 +9759,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLToolsEditLinkedParts(), "Tools.EditLinkedParts");
 	view_listener_t::addMenu(new LLToolsSnapObjectXY(), "Tools.SnapObjectXY");
 	view_listener_t::addMenu(new LLToolsUseSelectionForGrid(), "Tools.UseSelectionForGrid");
-	view_listener_t::addMenu(new LLToolsSelectNextPart(), "Tools.SelectNextPart");
+	view_listener_t::addMenu(new LLToolsSelectNextPartFace(), "Tools.SelectNextPart");
 	commit.add("Tools.Link", boost::bind(&LLSelectMgr::linkObjects, LLSelectMgr::getInstance()));
 	commit.add("Tools.Unlink", boost::bind(&LLSelectMgr::unlinkObjects, LLSelectMgr::getInstance()));
 	view_listener_t::addMenu(new LLToolsStopAllAnimations(), "Tools.StopAllAnimations");
@@ -9941,6 +10035,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLObjectAttachToAvatar(true), "Object.AttachToAvatar");
 	view_listener_t::addMenu(new LLObjectAttachToAvatar(false), "Object.AttachAddToAvatar");
 	view_listener_t::addMenu(new LLObjectReturn(), "Object.Return");
+	commit.add("Object.Duplicate", boost::bind(&LLSelectMgr::duplicate, LLSelectMgr::getInstance()));
 	view_listener_t::addMenu(new LLObjectReportAbuse(), "Object.ReportAbuse");
 	view_listener_t::addMenu(new LLObjectMute(), "Object.Mute");
 
@@ -9962,6 +10057,7 @@ void initialize_menus()
 	enable.add("Object.EnableSit", boost::bind(&enable_object_sit, _1));
 
 	view_listener_t::addMenu(new LLObjectEnableReturn(), "Object.EnableReturn");
+	enable.add("Object.EnableDuplicate", boost::bind(&LLSelectMgr::canDuplicate, LLSelectMgr::getInstance()));
 	view_listener_t::addMenu(new LLObjectEnableReportAbuse(), "Object.EnableReportAbuse");
 
 	enable.add("Avatar.EnableMute", boost::bind(&enable_object_mute));
@@ -10005,7 +10101,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLGoToObject(), "GoToObject");
 	commit.add("PayObject", boost::bind(&handle_give_money_dialog));
 
-	commit.add("Inventory.NewWindow", boost::bind(&LLFloaterInventory::showAgentInventory));
+	commit.add("Inventory.NewWindow", boost::bind(&LLPanelMainInventory::newWindow));
 
 	enable.add("EnablePayObject", boost::bind(&enable_pay_object));
 	enable.add("EnablePayAvatar", boost::bind(&enable_pay_avatar));

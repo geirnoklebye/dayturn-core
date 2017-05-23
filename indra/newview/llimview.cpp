@@ -272,8 +272,11 @@ void notify_of_message(const LLSD& msg, bool is_dnd_msg)
     {
     	if(!gAgent.isDoNotDisturb())
         {
+			if(!LLAppViewer::instance()->quitRequested() && !LLFloater::isVisible(im_box))
+			{
 			// Open conversations floater
 			LLFloaterReg::showInstance("im_container");
+			}
 			im_box->collapseMessagesPane(false);
 			if (session_floater)
 			{
@@ -648,6 +651,7 @@ void LLIMModel::LLIMSession::onVoiceChannelStateChanged(const LLVoiceChannel::ES
 	std::string you_joined_call = LLTrans::getString("you_joined_call");
 	std::string you_started_call = LLTrans::getString("you_started_call");
 	std::string other_avatar_name = "";
+	LLAvatarName av_name;
 
 	std::string message;
 
@@ -657,7 +661,8 @@ void LLIMModel::LLIMSession::onVoiceChannelStateChanged(const LLVoiceChannel::ES
 		// no text notifications
 		break;
 	case P2P_SESSION:
-		gCacheName->getFullName(mOtherParticipantID, other_avatar_name); // voice
+		LLAvatarNameCache::get(mOtherParticipantID, &av_name);
+		other_avatar_name = av_name.getUserName();
 
 		if(direction == LLVoiceChannel::INCOMING_CALL)
 		{
@@ -808,7 +813,7 @@ void LLIMModel::LLIMSession::addMessagesFromHistory(const std::list<LLSD>& histo
 		{
 			// convert it to a legacy name if we have a complete name
 			std::string legacy_name = gCacheName->buildLegacyName(from);
- 			gCacheName->getUUID(legacy_name, from_id);
+			from_id = LLAvatarNameCache::findIdByName(legacy_name);
 		}
 
 		std::string timestamp = msg[LL_IM_TIME];
@@ -2358,7 +2363,13 @@ void LLIncomingCallDialog::onAvatarNameCache(const LLUUID& agent_id,
 void LLIncomingCallDialog::onOpen(const LLSD& key)
 {
 	LLCallDialog::onOpen(key);
+
+	if (gSavedSettings.getBOOL("PlaySoundIncomingVoiceCall"))
+	{
+		// play a sound for incoming voice call if respective property is set
 	make_ui_sound("UISndStartIM");
+	}
+
 	LLStringUtil::format_map_t args;
 	LLGroupData data;
 	// if it's a group call, retrieve group name to use it in question
@@ -2620,9 +2631,6 @@ LLIMMgr::LLIMMgr()
 	mPendingAgentListUpdates = LLSD::emptyMap();
 
 	LLIMModel::getInstance()->addNewMsgCallback(boost::bind(&LLFloaterIMSession::sRemoveTypingIndicator, _1));
-//MK
-	mIgnoreStartIm = FALSE;
-//mk
 }
 
 // Add a message to a session. 
@@ -2675,6 +2683,8 @@ void LLIMMgr::addMessage(
 		LLIMModel::getInstance()->newSession(new_session_id, fixed_session_name, dialog, other_participant_id, false, is_offline_msg);
 
 		LLIMModel::LLIMSession* session = LLIMModel::instance().findIMSession(new_session_id);
+		if (session)
+		{
 		skip_message &= !session->isGroupSessionType();			// Do not skip group chats...
 		if(skip_message)
 		{
@@ -2703,7 +2713,7 @@ void LLIMMgr::addMessage(
 
 		// Logically it would make more sense to reject the session sooner, in another area of the
 		// code, but the session has to be established inside the server before it can be left.
-		if (LLMuteList::getInstance()->isMuted(other_participant_id) && !from_linden)
+			if (LLMuteList::getInstance()->isMuted(other_participant_id, LLMute::flagTextChat) && !from_linden)
 		{
 			LL_WARNS() << "Leaving IM session from initiating muted resident " << from << LL_ENDL;
 			if(!gIMMgr->leaveSession(new_session_id))
@@ -2718,6 +2728,12 @@ void LLIMMgr::addMessage(
         {
 		make_ui_sound("UISndNewIncomingIMSession");
 	}
+	}
+		else
+		{
+			// Failed to create a session, most likely due to empty name (name cache failed?)
+			LL_WARNS() << "Failed to create IM session " << fixed_session_name << LL_ENDL;
+		}
 	}
 
 	if (!LLMuteList::getInstance()->isMuted(other_participant_id, LLMute::flagTextChat) && !skip_message)
@@ -2765,10 +2781,10 @@ void LLIMMgr::addSystemMessage(const LLUUID& session_id, const std::string& mess
 		// log message to file
 		else
 		{
-			std::string session_name;
+			LLAvatarName av_name;
 			// since we select user to share item with - his name is already in cache
-			gCacheName->getFullName(args["user_id"], session_name);
-			session_name = LLCacheName::buildUsername(session_name);
+			LLAvatarNameCache::get(args["user_id"], &av_name);
+			std::string session_name = LLCacheName::buildUsername(av_name.getUserName());
 			LLIMModel::instance().logToFile(session_name, SYSTEM_FROM, LLUUID::null, message.getString());
 		}
 	}
@@ -3018,14 +3034,20 @@ void LLIMMgr::inviteToSession(
 	payload["question_type"] = question_type;
 
 	//ignore invites from muted residents
-	if (LLMuteList::getInstance()->isMuted(caller_id) && !is_linden)
+	if (!is_linden)
 	{
-		if (voice_invite && "VoiceInviteQuestionDefault" == question_type)
+		if (LLMuteList::getInstance()->isMuted(caller_id, LLMute::flagVoiceChat)
+			&& voice_invite && "VoiceInviteQuestionDefault" == question_type)
 		{
 			LL_INFOS() << "Rejecting voice call from initiating muted resident " << caller_name << LL_ENDL;
 			LLIncomingCallDialog::processCallResponse(1, payload);
+			return;
 		}
+		else if (LLMuteList::getInstance()->isMuted(caller_id, LLMute::flagAll & ~LLMute::flagVoiceChat) && !voice_invite)
+		{
+			LL_INFOS() << "Rejecting session invite from initiating muted resident " << caller_name << LL_ENDL;
 		return;
+	}
 	}
 
 	LLVoiceChannel* channelp = LLVoiceChannel::getChannelByID(session_id);
@@ -3076,8 +3098,8 @@ void LLIMMgr::inviteToSession(
 	{
 		if (caller_name.empty())
 		{
-			gCacheName->get(caller_id, false,  // voice
-				boost::bind(&LLIMMgr::onInviteNameLookup, payload, _1, _2, _3));
+			LLAvatarNameCache::get(caller_id, 
+				boost::bind(&LLIMMgr::onInviteNameLookup, payload, _1, _2));
 		}
 		else
 		{
@@ -3096,9 +3118,9 @@ void LLIMMgr::inviteToSession(
 	}
 }
 
-void LLIMMgr::onInviteNameLookup(LLSD payload, const LLUUID& id, const std::string& name, bool is_group)
+void LLIMMgr::onInviteNameLookup(LLSD payload, const LLUUID& id, const LLAvatarName& av_name)
 {
-	payload["caller_name"] = name;
+	payload["caller_name"] = av_name.getUserName();
 	payload["session_name"] = payload["caller_name"].asString();
 
 	std::string notify_box_type = payload["notify_box_type"].asString();

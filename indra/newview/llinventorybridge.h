@@ -148,6 +148,8 @@ protected:
 	virtual void addMarketplaceContextMenuOptions(U32 flags,
 											 menuentry_vec_t &items,
 											 menuentry_vec_t &disabled_items);
+	virtual void addLinkReplaceMenuOption(menuentry_vec_t& items,
+										  menuentry_vec_t& disabled_items);
 //MK
 ////protected:
 public:
@@ -348,6 +350,7 @@ protected:
 	BOOL checkFolderForContentsOfType(LLInventoryModel* model, LLInventoryCollectFunctor& typeToCheck);
 
 	void modifyOutfit(BOOL append);
+	void copyOutfitToClipboard();
 	void determineFolderType();
 
 	void dropToFavorites(LLInventoryItem* inv_item);

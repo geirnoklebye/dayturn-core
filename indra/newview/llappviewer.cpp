@@ -209,7 +209,7 @@
 #include "llfloaterreg.h"
 #include "llfloateroutfitsnapshot.h"
 #include "llfloatersnapshot.h"
-#include "llfloaterinventory.h"
+#include "llsidepanelinventory.h"
 
 // includes for idle() idleShutdown()
 #include "llviewercontrol.h"
@@ -234,6 +234,7 @@
 #include "llsecapi.h"
 #include "llmachineid.h"
 #include "llmainlooprepeater.h"
+#include "llcleanup.h"
 
 #include "llcoproceduremanager.h"
 #include "llviewereventrecorder.h"
@@ -402,6 +403,7 @@ const F32 OUTFIT_CLEANUP_DELAY = 1.f;	// in seconds
  */
 class LLDeferredTaskList: public LLSingleton<LLDeferredTaskList>
 {
+	LLSINGLETON_EMPTY_CTOR(LLDeferredTaskList);
 	LOG_CLASS(LLDeferredTaskList);
 
 	friend class LLAppViewer;
@@ -752,7 +754,7 @@ LLAppViewer::LLAppViewer()
 LLAppViewer::~LLAppViewer()
 {
 	delete mSettingsLocationList;
-	LLViewerEventRecorder::instance().~LLViewerEventRecorder();
+	LLViewerEventRecorder::deleteSingleton();
 
 	LLLoginInstance::instance().setUpdaterService(0);
 	
@@ -1244,7 +1246,8 @@ bool LLAppViewer::init()
         boost::bind(&LLControlGroup::getU32, boost::ref(gSavedSettings), _1),
         boost::bind(&LLControlGroup::declareU32, boost::ref(gSavedSettings), _1, _2, _3, LLControlVariable::PERSIST_ALWAYS));
 
-	showReleaseNotesIfRequired();
+	// TODO: consider moving proxy initialization here or LLCopocedureManager after proxy initialization, may be implement
+	// some other protection to make sure we don't use network before initializng proxy
 
 	/*----------------------------------------------------------------------*/
 	// nat 2016-06-29 moved the following here from the former mainLoop().
@@ -1584,11 +1587,9 @@ bool LLAppViewer::frame()
 					ms_sleep(500);
 				}
 
-				const F64Milliseconds max_idle_time = llmin(.005f*10.f*(F32Milliseconds)gFrameTimeSeconds, F32Milliseconds(5)); // 5 ms a second
 				idleTimer.reset();
 				S32 total_work_pending = 0;
 				S32 total_io_pending = 0;	
-				while(1)
 				{
 					S32 work_pending = 0;
 					S32 io_pending = 0;
@@ -1613,10 +1614,6 @@ bool LLAppViewer::frame()
 					total_work_pending += work_pending ;
 					total_io_pending += io_pending ;
 					
-					if (!work_pending || idleTimer.getElapsedTimeF64() >= max_idle_time)
-					{
-						break;
-					}
 				}
 				gMeshRepo.update() ;
 				
@@ -1844,7 +1841,7 @@ bool LLAppViewer::cleanup()
 	gTransferManager.cleanup();
 #endif
 
-	LLLocalBitmapMgr::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLLocalBitmapMgr);
 
 	// Note: this is where gWorldMap used to be deleted.
 
@@ -1954,11 +1951,11 @@ bool LLAppViewer::cleanup()
 	
 	LLViewerObject::cleanupVOClasses();
 
-	LLAvatarAppearance::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLAvatarAppearance);
 	
-	LLAvatarAppearance::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLAvatarAppearance);
 	
-	LLPostProcess::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLPostProcess);
 
 	LLTracker::cleanupInstance();
 	
@@ -1984,12 +1981,12 @@ bool LLAppViewer::cleanup()
 
  	//end_messaging_system();
 
-	LLFollowCamMgr::cleanupClass();
-	//LLVolumeMgr::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLFollowCamMgr);
+	//SUBSYSTEM_CLEANUP(LLVolumeMgr);
 	LLPrimitive::cleanupVolumeManager();
-	LLWorldMapView::cleanupClass();
-	LLFolderViewItem::cleanupClass();
-	LLUI::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLWorldMapView);
+	SUBSYSTEM_CLEANUP(LLFolderViewItem);
+	SUBSYSTEM_CLEANUP(LLUI);
 	
 	//
 	// Shut down the VFS's AFTER the decode manager cleans up (since it cleans up vfiles).
@@ -1998,7 +1995,7 @@ bool LLAppViewer::cleanup()
 
 	//
 	LL_INFOS() << "Cleaning up VFS" << LL_ENDL;
-	LLVFile::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLVFile);
 
 	LL_INFOS() << "Saving Data" << LL_ENDL;
 	
@@ -2101,9 +2098,9 @@ bool LLAppViewer::cleanup()
 	// Non-LLCurl libcurl library
 	mAppCoreHttp.cleanup();
 
-	LLFilePickerThread::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLFilePickerThread);
 
-	//MUST happen AFTER LLCurl::cleanupClass
+	//MUST happen AFTER SUBSYSTEM_CLEANUP(LLCurl)
 	delete sTextureCache;
     sTextureCache = NULL;
 	delete sTextureFetch;
@@ -2127,22 +2124,22 @@ bool LLAppViewer::cleanup()
 			gDirUtilp->getExpandedFilename(LL_PATH_LOGS, report_name));
 	}	
 
-	LLMetricPerformanceTesterBasic::cleanClass() ;
+	SUBSYSTEM_CLEANUP(LLMetricPerformanceTesterBasic) ;
 
 	LL_INFOS() << "Cleaning up Media and Textures" << LL_ENDL;
 
 	//Note:
-	//LLViewerMedia::cleanupClass() has to be put before gTextureList.shutdown()
+	//SUBSYSTEM_CLEANUP(LLViewerMedia) has to be put before gTextureList.shutdown()
 	//because some new image might be generated during cleaning up media. --bao
-	LLViewerMedia::cleanupClass();
-	LLViewerParcelMedia::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLViewerMedia);
+	SUBSYSTEM_CLEANUP(LLViewerParcelMedia);
 	gTextureList.shutdown(); // shutdown again in case a callback added something
 	LLUIImageList::getInstance()->cleanUp();
 	
 	// This should eventually be done in LLAppViewer
-	LLImage::cleanupClass();
-	LLVFSThread::cleanupClass();
-	LLLFSThread::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLImage);
+	SUBSYSTEM_CLEANUP(LLVFSThread);
+	SUBSYSTEM_CLEANUP(LLLFSThread);
 
 #ifndef LL_RELEASE_FOR_DOWNLOAD
 	LL_INFOS() << "Auditing VFS" << LL_ENDL;
@@ -2185,10 +2182,10 @@ bool LLAppViewer::cleanup()
 		LL_INFOS() << "File launched." << LL_ENDL;
 	}
 	LL_INFOS() << "Cleaning up LLProxy." << LL_ENDL;
-	LLProxy::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLProxy);
     LLCore::LLHttp::cleanup();
 
-	LLWearableType::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLWearableType);
 
 	LLMainLoopRepeater::instance().stop();
 
@@ -2201,6 +2198,30 @@ bool LLAppViewer::cleanup()
 
 	removeMarkerFiles();
 	
+	// It's not at first obvious where, in this long sequence, generic cleanup
+	// calls OUGHT to go. So let's say this: as we migrate cleanup from
+	// explicit hand-placed calls into the generic mechanism, eventually
+	// all cleanup will get subsumed into the generic calls. So the calls you
+	// still see above are calls that MUST happen before the generic cleanup
+	// kicks in.
+    
+	// This calls every remaining LLSingleton's cleanupSingleton() method.
+	// This method should perform any cleanup that might take significant
+	// realtime, or might throw an exception.
+	LLSingletonBase::cleanupAll();
+
+	// This calls every remaining LLSingleton's deleteSingleton() method.
+	// No class destructor should perform any cleanup that might take
+	// significant realtime, or throw an exception.
+	// LLSingleton machinery includes a last-gasp implicit deleteAll() call,
+	// so this explicit call shouldn't strictly be necessary. However, by the
+	// time the runtime engages that implicit call, it may already have
+	// destroyed things like std::cerr -- so the implicit deleteAll() refrains
+	// from logging anything. Since both cleanupAll() and deleteAll() call
+	// their respective cleanup methods in computed dependency order, it's
+	// probably useful to be able to log that order.
+	LLSingletonBase::deleteAll();
+
     LL_INFOS() << "Goodbye!" << LL_ENDL;
 
     removeDumpDir();
@@ -3403,7 +3424,12 @@ LLSD LLAppViewer::getViewerInfo() const
 	std::string url = LLTrans::getString("RELEASE_NOTES_BASE_URL");
 	if (! LLStringUtil::endsWith(url, "/"))
 		url += "/";
-	url += LLURI::escape(LLVersionInfo::getChannel()) + "/";
+	std::string channel = LLVersionInfo::getChannel();
+	if (LLStringUtil::endsWith(boost::to_lower_copy(channel), " edu")) // Release Notes url shouldn't include the EDU parameter
+	{
+		boost::erase_tail(channel, 4);
+	}
+	url += LLURI::escape(channel) + "/";
 	url += LLURI::escape(LLVersionInfo::getVersion());
 
 	info["VIEWER_RELEASE_NOTES_URL"] = url;
@@ -3441,6 +3467,26 @@ LLSD LLAppViewer::getViewerInfo() const
 #endif
 
 	info["OPENGL_VERSION"] = (const char*)(glGetString(GL_VERSION));
+
+    // Settings
+
+    LLRect window_rect = gViewerWindow->getWindowRectRaw();
+    info["WINDOW_WIDTH"] = window_rect.getWidth();
+    info["WINDOW_HEIGHT"] = window_rect.getHeight();
+    info["FONT_SIZE_ADJUSTMENT"] = gSavedSettings.getF32("FontScreenDPI");
+    info["UI_SCALE"] = gSavedSettings.getF32("UIScaleFactor");
+    info["DRAW_DISTANCE"] = gSavedSettings.getF32("RenderFarClip");
+    info["NET_BANDWITH"] = gSavedSettings.getF32("ThrottleBandwidthKBPS");
+    info["LOD_FACTOR"] = gSavedSettings.getF32("RenderVolumeLODFactor");
+    info["RENDER_QUALITY"] = (F32)gSavedSettings.getU32("RenderQualityPerformance");
+    info["GPU_SHADERS"] = gSavedSettings.getBOOL("RenderDeferred") ? "Enabled" : "Disabled";
+    info["TEXTURE_MEMORY"] = gSavedSettings.getS32("TextureMemory");
+
+    LLSD substitution;
+    substitution["datetime"] = (S32)(gVFS ? gVFS->creationTime() : 0);
+    info["VFS_TIME"] = LLTrans::getString("AboutTime", substitution);
+
+	// Libraries
 
 	info["J2C_VERSION"] = LLImageJ2C::getEngineInfo();
 	bool want_fullname = true;
@@ -3576,7 +3622,9 @@ std::string LLAppViewer::getViewerInfoString() const
 	{
 		support << "\n" << LLTrans::getString("AboutDriver", args);
 	}
-	support << "\n" << LLTrans::getString("AboutLibs", args);
+	support << "\n" << LLTrans::getString("AboutOGL", args);
+	support << "\n\n" << LLTrans::getString("AboutSettings", args);
+	support << "\n\n" << LLTrans::getString("AboutLibs", args);
 	if (info.has("COMPILER"))
 	{
 		support << "\n" << LLTrans::getString("AboutCompiler", args);
@@ -5627,12 +5675,15 @@ void LLAppViewer::disconnectViewer()
 	}
 
 	saveNameCache();
-    LLExperienceCache *expCache = LLExperienceCache::getIfExists();
-    if (expCache)
-        expCache->cleanup();
+	if (LLExperienceCache::instanceExists())
+	{
+		// TODO: LLExperienceCache::cleanup() logic should be moved to
+		// cleanupSingleton().
+		LLExperienceCache::instance().cleanup();
+	}
 
 	// close inventory interface, close all windows
-	LLFloaterInventory::cleanup();
+	LLSidepanelInventory::cleanup();
 
 	gAgentWearables.cleanup();
 	gAgentCamera.cleanup();
@@ -5668,6 +5719,8 @@ void LLAppViewer::forceErrorBreakpoint()
    	LL_WARNS() << "Forcing a deliberate breakpoint" << LL_ENDL;
 #ifdef LL_WINDOWS
     DebugBreak();
+#else
+    asm ("int $3");
 #endif
     return;
 }
@@ -5945,21 +5998,6 @@ void LLAppViewer::launchUpdater()
 
 	// *REMOVE:Mani - Saving for reference...
 	// LLAppViewer::instance()->forceQuit();
-}
-
-/**
-* Check if user is running a new version of the viewer.
-* Display the Release Notes if it's not overriden by the "UpdaterShowReleaseNotes" setting.
-*/
-void LLAppViewer::showReleaseNotesIfRequired()
-{
-	if (LLVersionInfo::getChannelAndVersion() != gLastRunVersion
-		&& gSavedSettings.getBOOL("UpdaterShowReleaseNotes")
-		&& !gSavedSettings.getBOOL("FirstLoginThisInstall"))
-	{
-		LLSD info(getViewerInfo());
-		LLWeb::loadURLInternal(info["VIEWER_RELEASE_NOTES_URL"]);
-	}
 }
 
 //virtual

@@ -305,6 +305,8 @@ LLModel::EModelStatus load_face_from_dom_triangles(std::vector<LLVolumeFace>& fa
 			}
 
 			face = LLVolumeFace();
+			face.mExtents[0].set(v[0], v[1], v[2]);
+			face.mExtents[1].set(v[0], v[1], v[2]);
 			point_map.clear();
 		}
 	}
@@ -549,6 +551,8 @@ LLModel::EModelStatus load_face_from_dom_polylist(std::vector<LLVolumeFace>& fac
 				}
 
 				face = LLVolumeFace();
+				face.mExtents[0].set(v[0], v[1], v[2]);
+				face.mExtents[1].set(v[0], v[1], v[2]);
 				verts.clear();
 				indices.clear();
 				point_map.clear();
@@ -855,6 +859,8 @@ struct ModelSort
 
 bool LLDAELoader::OpenFile(const std::string& filename)
 {
+	setLoadState( READING_FILE );
+
 	//no suitable slm exists, load from the .dae file
 	DAE dae;
 	domCOLLADA* dom;

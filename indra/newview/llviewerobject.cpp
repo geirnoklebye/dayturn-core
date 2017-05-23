@@ -102,6 +102,7 @@
 #include "llmediaentry.h"
 #include "llfloaterperms.h"
 #include "llvocache.h"
+#include "llcleanup.h"
 
 //#define DEBUG_UPDATE_TYPE
 
@@ -530,11 +531,11 @@ void LLViewerObject::initVOClasses()
 
 void LLViewerObject::cleanupVOClasses()
 {
-	LLVOGrass::cleanupClass();
-	LLVOWater::cleanupClass();
-	LLVOTree::cleanupClass();
-	LLVOAvatar::cleanupClass();
-	LLVOVolume::cleanupClass();
+	SUBSYSTEM_CLEANUP(LLVOGrass);
+	SUBSYSTEM_CLEANUP(LLVOWater);
+	SUBSYSTEM_CLEANUP(LLVOTree);
+	SUBSYSTEM_CLEANUP(LLVOAvatar);
+	SUBSYSTEM_CLEANUP(LLVOVolume);
 
 	sObjectDataMap.clear();
 }
@@ -6276,6 +6277,24 @@ void LLViewerObject::resetChildrenPosition(const LLVector3& offset, BOOL simplif
 BOOL	LLViewerObject::isTempAttachment() const
 {
 	return (mID.notNull() && (mID == mAttachmentItemID));
+}
+
+BOOL LLViewerObject::isHiglightedOrBeacon() const
+{
+	if (LLFloaterReg::instanceVisible("beacons") && (gPipeline.getRenderBeacons(NULL) || gPipeline.getRenderHighlights(NULL)))
+	{
+		BOOL has_media = (getMediaType() == LLViewerObject::MEDIA_SET);
+		BOOL is_scripted = !isAvatar() && !getParent() && flagScripted();
+		BOOL is_physical = !isAvatar() && flagUsePhysics();
+
+		return (isParticleSource() && gPipeline.getRenderParticleBeacons(NULL))
+				|| (isAudioSource() && gPipeline.getRenderSoundBeacons(NULL))
+				|| (has_media && gPipeline.getRenderMOAPBeacons(NULL))
+				|| (is_scripted && gPipeline.getRenderScriptedBeacons(NULL))
+				|| (is_scripted && flagHandleTouch() && gPipeline.getRenderScriptedTouchBeacons(NULL))
+				|| (is_physical && gPipeline.getRenderPhysicalBeacons(NULL));
+	}
+	return FALSE;
 }
 
 
