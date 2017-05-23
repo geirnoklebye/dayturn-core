@@ -4294,6 +4294,10 @@ Se il messaggio persiste, contatta [SUPPORT_SITE].
 	<string name="inventory_folder_offered-im">
 		Offerta cartella di inventario &quot;[ITEM_NAME]&quot;
 	</string>
+	</string>
+	<string name="inventory_folder_offered-im">
+		Offerta cartella di inventario &quot;[ITEM_NAME]&quot;
+	</string>
 	<string name="no_session_message">
 		(La sessione IM non esiste)
 	</string>
