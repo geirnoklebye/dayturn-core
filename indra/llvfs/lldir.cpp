@@ -374,7 +374,10 @@ std::string LLDir::buildSLOSCacheDir() const
 	}
 	else
 	{
-		res = add(getOSCacheDir(), "SecondLife");
+//MK
+////		res = add(getOSCacheDir(), "SecondLife");
+		res = add(getOSCacheDir(), "RLV");
+//mk
 	}
 	return res;
 }
