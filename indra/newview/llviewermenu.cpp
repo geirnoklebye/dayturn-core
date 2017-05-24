@@ -4455,32 +4455,6 @@ class LLViewToggleUI : public view_listener_t
 		}
 	}
 };
-class LLEditDuplicate : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		if(LLEditMenuHandler::gEditMenuHandler)
-		{
-			LLEditMenuHandler::gEditMenuHandler->duplicate();
-		}
-		return true;
-	}
-};
-
-class LLEditEnableDuplicate : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		bool new_value = LLEditMenuHandler::gEditMenuHandler && LLEditMenuHandler::gEditMenuHandler->canDuplicate();
-//MK
-		if (gRRenabled && gAgent.mRRInterface.mContainsRez)
-		{
-			new_value = false;
-		}
-//mk		
-		return new_value;
-	}
-};
 
 void handle_duplicate_in_place(void*)
 {
