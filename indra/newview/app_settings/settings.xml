@@ -10653,7 +10653,7 @@
   <key>MaxAttachmentComplexity</key>
   <map>
     <key>Comment</key>
-    <string>Attachment's render weight limit</string>
+    <string>Attachment's render weight limit</string>
     <key>Persist</key>
     <integer>1</integer>
     <key>Type</key>
