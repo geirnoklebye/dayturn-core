@@ -446,17 +446,33 @@ void LLPanelPermissions::refresh()
 		}
 		if (LLAvatarNameCache::get(owner_id, &av_name))
 		{
+//MK
+			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+			{
+				av_name.mUsername = gAgent.mRRInterface.getDummyName(av_name.getUserName());
+				av_name.mDisplayName = gAgent.mRRInterface.getDummyName(av_name.getDisplayName());
+				owner_app_link = "";
+			}
+//mk
 			// If name isn't present, this will 'request' it and trigger refresh() again
 			LLTextBox* text_box = getChild<LLTextBox>("Owner Name");
 			style_params.link_href = owner_app_link;
 			text_box->setText(av_name.getCompleteName(), style_params);
-	}
+		}
 		getChild<LLAvatarIconCtrl>("Owner Icon")->setValue(owner_id);
 		getChild<LLAvatarIconCtrl>("Owner Icon")->setVisible(TRUE);
 		getChild<LLUICtrl>("Owner Group Icon")->setVisible(FALSE);
 	}
 	getChildView("Owner Name")->setEnabled(TRUE);
 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
+	{
+		getChild<LLAvatarIconCtrl>("Owner Icon")->setValue(LLUUID::null);
+		getChild<LLAvatarIconCtrl>("Owner Icon")->setVisible(FALSE);
+		getChildView("Owner Name")->setEnabled(FALSE);
+	}
+//mk
 	// update group text field
 	getChildView("Group:")->setEnabled(TRUE);
 	getChild<LLUICtrl>("Group Name")->setValue(LLStringUtil::null);
