@@ -2243,14 +2243,14 @@
                  function="ReportAbuse" />
             </menu_item_call>
         <menu_item_call
-             label="Report Bug SL)"
+             label="Report Bug SL"
              name="Report Bug SL">
                 <menu_item_call.on_click
                  function="ShowHelp"
                  parameter="report_bug" />
         </menu_item_call>
         <menu_item_call
-             label="Report Bug Kokua)"
+             label="Report Bug Kokua"
              name="Report Bug Kokua">
                 <menu_item_call.on_click
                  function="Advanced.ShowURL"
