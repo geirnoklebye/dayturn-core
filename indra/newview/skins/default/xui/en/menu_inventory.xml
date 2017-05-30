@@ -80,14 +80,6 @@
     layout="topleft"
     name="Marketplace Listings Separator" />
     <menu_item_call
-     label="Share"
-     layout="topleft"
-     name="Share"
-     visible="true">
-        <menu_item_call.on_click
-         function="Inventory.Share" />
-    </menu_item_call>
-    <menu_item_call
      label="Buy"
      layout="topleft"
      name="Task Buy">
@@ -611,6 +603,14 @@
       <menu_item_call.on_click
          function="Inventory.DoToSelected"
          parameter="replace_links" />
+    </menu_item_call>
+    <menu_item_call
+     label="Share"
+     layout="topleft"
+     name="Share"
+     visible="true">
+        <menu_item_call.on_click
+         function="Inventory.Share" />
     </menu_item_call>
     <menu_item_separator
      layout="topleft" 
