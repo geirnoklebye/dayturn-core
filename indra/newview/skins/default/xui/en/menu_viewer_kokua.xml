@@ -842,8 +842,7 @@
 		</menu_item_check>
        <menu_item_call
          label="Area Search"
-         name="area_search"
-         shortcut="alt|A">
+         name="area_search">
             <menu_item_call.on_click
              function="Floater.Toggle"
              parameter="area_search" />
