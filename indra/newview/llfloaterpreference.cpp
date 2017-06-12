@@ -474,11 +474,6 @@ bool LLFloaterPreference::postBuild()
 	getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
 	getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
 	
-// ## Zi: Pie menu
-	gSavedSettings.getControl("OverridePieColors")->getSignal()->connect(boost::bind(&LLFloaterPreference::onPieColorsOverrideChanged, this));
-	// make sure pie color controls are enabled or greyed out properly
-	onPieColorsOverrideChanged();
-// ## Zi: Pie menu
 
 	// <FS:Ansariel> Properly disable avatar tag setting
 	gSavedSettings.getControl("NameTagShowUsernames")->getCommitSignal()->connect(boost::bind(&LLFloaterPreference::onAvatarTagSettingsChanged, this));
@@ -557,17 +552,6 @@ bool LLFloaterPreference::postBuild()
 	return postBuildAdvanced();
 }
 
-// ## Zi: Pie menu
-void LLFloaterPreference::onPieColorsOverrideChanged()
-{
-	BOOL enable=gSavedSettings.getBOOL("OverridePieColors");
-
-	getChild<LLColorSwatchCtrl>("pie_bg_color_override")->setEnabled(enable);
-	getChild<LLColorSwatchCtrl>("pie_selected_color_override")->setEnabled(enable);
-	getChild<LLSliderCtrl>("pie_menu_opacity")->setEnabled(enable);
-	getChild<LLSliderCtrl>("pie_menu_fade_out")->setEnabled(enable);
-}
-// ## Zi: Pie menu
 
 void LLFloaterPreference::onStreamMetadataAnnounceChanged()
 {

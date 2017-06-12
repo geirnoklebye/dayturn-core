@@ -159,8 +159,6 @@ void PieMenu::show(S32 x, S32 y, LLView* spawning_view)
 
 	mCurrentSegment = -1;
 
-	// play a sound
-	make_ui_sound("UISndPieMenuAppear");
 
 	LL_DEBUGS("Pie") << "PieMenu::show(): " << x << " " << y << LL_ENDL;
 
@@ -231,8 +229,6 @@ void PieMenu::hide()
 		return;
 	}
 
-	// make a sound when hiding
-	make_ui_sound("UISndPieMenuHide");
 
 	LL_DEBUGS("Pie") << "Clearing selections" << LL_ENDL;
 
@@ -278,19 +274,6 @@ void PieMenu::draw()
 	LLColor4 textColor = LLUIColorTable::instance().getColor("PieMenuTextColor");
 	LLColor4 bgColor = LLUIColorTable::instance().getColor("PieMenuBgColor");
 	LLColor4 borderColor = bgColor % 0.3f;
-
-	// if the user wants their own colors, apply them here
-	static LLCachedControl<bool> sOverridePieColors(gSavedSettings, "OverridePieColors", false);
-	if (sOverridePieColors)
-	{
-		static LLCachedControl<F32> sPieMenuOpacity(gSavedSettings, "PieMenuOpacity");
-		static LLCachedControl<F32> sPieMenuFade(gSavedSettings, "PieMenuFade");
-		bgColor = LLUIColorTable::instance().getColor("PieMenuBgColorOverride") % sPieMenuOpacity;
-		borderColor = bgColor % (1.f - sPieMenuFade);
-		selectedColor = LLUIColorTable::instance().getColor("PieMenuSelectedColorOverride");
-	}
-	static LLCachedControl<bool> sPieMenuPopupFontEffect(gSavedSettings, "PieMenuPopupFontEffect");
-	static LLCachedControl<bool> sPieMenuOuterRingShade(gSavedSettings, "PieMenuOuterRingShade");
 
 	// on first click, make the menu fade out to indicate "borderless" operation
 	if (mFirstClick)
@@ -555,8 +538,7 @@ BOOL PieMenu::handleMouseButtonUp(S32 x, S32 y, MASK mask)
 				mPopupTimer.reset();
 				mPopupTimer.start();
 #endif
-				// make a sound
-				make_ui_sound("UISndPieMenuAppear");
+
 			}
 		}
 		// show or hide the menu, as needed
