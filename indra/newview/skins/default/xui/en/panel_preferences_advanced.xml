@@ -309,17 +309,6 @@
      function="Pref.RememberedUsernames" />
   </button>
     <check_box
-     control_name="UsePieMenu"
-     follows="top|left"
-     height="15"
-     initial_value="false"
-     label="Use Pie Menus"
-     layout="topleft"
-     left="30"
-     name="UsePieMenu"
-     top_pad="5"
-     width="256" />
-    <check_box
      top_pad="5"
      follows="left|top"
      height="15"
