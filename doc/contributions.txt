@@ -1060,7 +1060,7 @@ Nicky Dasmijn
     STORM-2010
 	STORM-2082
 	MAINT-6665
-Nicky Perian
+Nicky Perian 
 	OPEN-1
 	STORM-1087
 	STORM-1090
