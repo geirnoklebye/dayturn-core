@@ -852,8 +852,7 @@
 		</menu_item_check>
        <menu_item_call
          label="Area Search"
-         name="area_search"
-         shortcut="alt|A">
+         name="area_search">
             <menu_item_call.on_click
              function="Floater.Toggle"
              parameter="area_search" />
@@ -2243,12 +2242,19 @@
                  function="ReportAbuse" />
             </menu_item_call>
         <menu_item_call
-             label="Report Bug"
-             name="Report Bug">
+             label="Report Bug SL"
+             name="Report Bug SL">
                 <menu_item_call.on_click
                  function="ShowHelp"
                  parameter="report_bug" />
         </menu_item_call>
+        <menu_item_call
+             label="Report Bug Kokua"
+             name="Report Bug Kokua">
+                <menu_item_call.on_click
+                 function="Advanced.ShowURL"
+                 parameter="http://sourceforge.net/p/team-purple/kokua/tickets/?source=navbar"/>
+        </menu_item_call>        
 
         <menu_item_separator/>
 
