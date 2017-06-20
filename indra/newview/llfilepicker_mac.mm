@@ -116,14 +116,14 @@ std::string* doSaveDialog(const std::string* file,
     NSString *fileName = [NSString stringWithCString:file->c_str() encoding:[NSString defaultCStringEncoding]];
     
     std::string *outfile = NULL;
-    NSURL* url = [NSURL fileURLWithPath:fileName];
+    NSURL *url = [NSURL fileURLWithPath:fileName];
     [panel setNameFieldStringValue: fileName];
     [panel setDirectoryURL: url];
     if([panel runModal] == 
        NSFileHandlingPanelOKButton) 
     {
-        NSURL* url = [panel URL];
-        NSString* p = [url path];
+        NSURL *url = [panel URL];
+        NSString *p = [url path];
         outfile = new std::string( [p UTF8String] );
         // write the file 
     } 
