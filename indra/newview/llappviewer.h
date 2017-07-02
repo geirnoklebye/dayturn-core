@@ -312,7 +312,7 @@ private:
 
         bool mIsFirstRun;
 
-
+public:
 	static void setViewerWindowTitle();
 
 };
