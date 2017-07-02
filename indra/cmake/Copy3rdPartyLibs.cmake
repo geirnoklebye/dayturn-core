@@ -33,7 +33,7 @@ if(WINDOWS)
     set(debug_files
  #       alut.dll
  #       openal32.dll
-        openjpegd.dll
+#        openjpegd.dll
         libapr-1.dll
         libaprutil-1.dll
         libapriconv-1.dll
