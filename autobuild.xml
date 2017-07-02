@@ -3350,8 +3350,6 @@
             <map>
               <key>hash</key>
               <string>6e5cb7c02869eaaa74f3861d72a9b0af</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://bitbucket.org/kokua/p64_3p-openjpeg/downloads/openjpeg-1.5.0.201701151945-windows-201701151945.tar.bz2</string>
             </map>
