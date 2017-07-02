@@ -714,6 +714,7 @@ FunctionEnd
 # Call CheckWindowsServPack		# Warn if not on the latest SP before asking to launch.
 # 	Push $R0					# Option value, unused# 
 # 	StrCmp $SKIP_AUTORUN "true" +2;
+
 # Assumes SetOutPath $INSTDIR
 # 	Exec '"$WINDIR\explorer.exe" "$INSTDIR\autorun.bat"'
 # 	Pop $R0
