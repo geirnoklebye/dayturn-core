@@ -1720,11 +1720,11 @@ void LLPreviewLSL::uploadAssetViaCaps(const std::string& url,
 	LL_INFOS() << "Update Agent Inventory via capability" << LL_ENDL;
 	LLSD body;
 	body["item_id"] = item_id;
-	body["target"] = gSavedSettings.getBOOL("SaveInventoryScriptsAsMono") ? "mono" : "lsl2";
+    body["target"] = gSavedSettings.getBOOL("SaveInventoryScriptsAsMono") ? "mono" : "lsl2";
     std::string buffer(mScriptEd->mEditor->getText());
     LLBufferedAssetUploadInfo::invnUploadFinish_f proc = boost::bind(&LLPreviewLSL::finishedLSLUpload, _1, _4);
 
-    LLResourceUploadInfo::ptr_t uploadInfo(new LLScriptAssetUpload(mItemUUID, buffer, proc));
+    LLResourceUploadInfo::ptr_t uploadInfo(new LLScriptAssetUpload(mItemUUID, gSavedSettings.getBOOL("SaveInventoryScriptsAsMono") ? LLScriptAssetUpload::MONO : LLScriptAssetUpload::LSL2, buffer, proc));
 
     LLViewerAssetUpload::EnqueueInventoryUpload(url, uploadInfo);
     //	LLHTTPClient::post(url, body, new LLUpdateAgentInventoryResponder(body, filename, LLAssetType::AT_LSL_TEXT));
