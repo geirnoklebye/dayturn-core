@@ -1920,7 +1920,7 @@
       <key>Type</key>
       <string>U32</string>
       <key>Value</key>
-      <integer>5096</integer>
+      <integer>2048</integer>
     </map>
     <key>CacheValidateCounter</key>
     <map>
