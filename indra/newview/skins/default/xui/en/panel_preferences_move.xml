@@ -35,7 +35,7 @@
    max_val="2.97"
    min_val="0.17"
    name="camera_fov"
-   show_text="false"
+   show_text="true"
    width="240" />
   <slider
    can_edit_text="true"
@@ -52,7 +52,7 @@
    max_val="3"
    min_val="0.5"
    name="camera_offset_scale"
-   show_text="false"
+   show_text="true"
    width="240"
    top_pad="5"/>
   <text
