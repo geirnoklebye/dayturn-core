@@ -150,138 +150,132 @@ LLOSInfo::LLOSInfo() :
 {
 
 #if LL_WINDOWS
+    if (IsWindowsVersionOrGreater(10, 0, 0))
+    {
+        mMajorVer = 10;
+        mMinorVer = 0;
+        mOSStringSimple = "Microsoft Windows 10 ";
+    }
+    else if (IsWindows8Point1OrGreater())
+    {
+        mMajorVer = 6;
+        mMinorVer = 3;
+        if (IsWindowsServer())
+        {
+            mOSStringSimple = "Windows Server 2012 R2 ";
+        }
+        else
+        {
+            mOSStringSimple = "Microsoft Windows 8.1 ";
+        }
+    }
+    else if (IsWindows8OrGreater())
+    {
+        mMajorVer = 6;
+        mMinorVer = 2;
+        if (IsWindowsServer())
+        {
+            mOSStringSimple = "Windows Server 2012 ";
+        }
+        else
+        {
+            mOSStringSimple = "Microsoft Windows 8 ";
+        }
+    }
+    else if (IsWindows7SP1OrGreater())
+    {
+        mMajorVer = 6;
+        mMinorVer = 1;
+        if (IsWindowsServer())
+        {
+            mOSStringSimple = "Windows Server 2008 R2 SP1 ";
+        }
+        else
+        {
+            mOSStringSimple = "Microsoft Windows 7 SP1 ";
+        }
+    }
+    else if (IsWindows7OrGreater())
+    {
+        mMajorVer = 6;
+        mMinorVer = 1;
+        if (IsWindowsServer())
+        {
+            mOSStringSimple = "Windows Server 2008 R2 ";
+        }
+        else
+        {
+            mOSStringSimple = "Microsoft Windows 7 ";
+        }
+    }
+    else if (IsWindowsVistaSP2OrGreater())
+    {
+        mMajorVer = 6;
+        mMinorVer = 0;
+        if (IsWindowsServer())
+        {
+            mOSStringSimple = "Windows Server 2008 SP2 ";
+        }
+        else
+        {
+            mOSStringSimple = "Microsoft Windows Vista SP2 ";
+        }
+    }
+    else
+    {
+        mOSStringSimple = "Unsupported Windows version ";
+    }
 
-	if (IsWindowsVersionOrGreater(10, 0, 0))
-	{
-		mMajorVer = 10;
-		mMinorVer = 0;
-		mOSStringSimple = "Microsoft Windows 10 ";
-	}
-	else if (IsWindows8Point1OrGreater())
-	{
-		mMajorVer = 6;
-		mMinorVer = 3;
-		if (IsWindowsServer())
-		{
-			mOSStringSimple = "Windows Server 2012 R2 ";
-		}
-		else
-		{
-			mOSStringSimple = "Microsoft Windows 8.1 ";
-		}
-	}
-	else if (IsWindows8OrGreater())
-	{
-		mMajorVer = 6;
-		mMinorVer = 2;
-		if (IsWindowsServer())
-		{
-			mOSStringSimple = "Windows Server 2012 ";
-		}
-		else
-		{
-			mOSStringSimple = "Microsoft Windows 8 ";
-		}
-	}
-	else if (IsWindows7SP1OrGreater())
-	{
-		mMajorVer = 6;
-		mMinorVer = 1;
-		if (IsWindowsServer())
-		{
-			mOSStringSimple = "Windows Server 2008 R2 SP1 ";
-		}
-		else
-		{
-			mOSStringSimple = "Microsoft Windows 7 SP1 ";
-		}
-	}
-	else if (IsWindows7OrGreater())
-	{
-		mMajorVer = 6;
-		mMinorVer = 1;
-		if (IsWindowsServer())
-		{
-			mOSStringSimple = "Windows Server 2008 R2 ";
-		}
-		else
-		{
-			mOSStringSimple = "Microsoft Windows 7 ";
-		}
-	}
-	else if (IsWindowsVistaSP2OrGreater())
-	{
-		mMajorVer = 6;
-		mMinorVer = 0;
-		if (IsWindowsServer())
-		{
-			mOSStringSimple = "Windows Server 2008 SP2 ";
-		}
-		else
-		{
-			mOSStringSimple = "Microsoft Windows Vista SP2 ";
-		}
-	}
-	else
-	{
-		mOSStringSimple = "Unsupported Windows version ";
-	}
-				else if(osvi.dwMinorVersion == 3)
-				{
-					if(osvi.wProductType == VER_NT_WORKSTATION)
-						mOSStringSimple = "Microsoft Windows 8.1 ";
-				}
+    ///get native system info if available..
+    typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO); ///function pointer for loading GetNativeSystemInfo
+    SYSTEM_INFO si; //System Info object file contains architecture info
+    PGNSI pGNSI; //pointer object
+    ZeroMemory(&si, sizeof(SYSTEM_INFO)); //zero out the memory in information
+    pGNSI = (PGNSI)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo"); //load kernel32 get function
+    if (NULL != pGNSI) //check if it has failed
+        pGNSI(&si); //success
+    else
+        GetSystemInfo(&si); //if it fails get regular system info 
+    //(Warning: If GetSystemInfo it may result in incorrect information in a WOW64 machine, if the kernel fails to load)
 
-	///get native system info if available..
-	typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO); ///function pointer for loading GetNativeSystemInfo
-	SYSTEM_INFO si; //System Info object file contains architecture info
-	PGNSI pGNSI; //pointer object
-	ZeroMemory(&si, sizeof(SYSTEM_INFO)); //zero out the memory in information
-	pGNSI = (PGNSI)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo"); //load kernel32 get function
-	if (NULL != pGNSI) //check if it has failed
-		pGNSI(&si); //success
-	else
-		GetSystemInfo(&si); //if it fails get regular system info 
-	//(Warning: If GetSystemInfo it may result in incorrect information in a WOW64 machine, if the kernel fails to load)
+    //msdn microsoft finds 32 bit and 64 bit flavors this way..
+    //http://msdn.microsoft.com/en-us/library/ms724429(VS.85).aspx (example code that contains quite a few more flavors
+    //of windows than this code does (in case it is needed for the future)
+    if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64) //check for 64 bit
+    {
+        mOSStringSimple += "64-bit ";
+    }
+    else if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL)
+    {
+        mOSStringSimple += "32-bit ";
+    }
 
-	//msdn microsoft finds 32 bit and 64 bit flavors this way..
-	//http://msdn.microsoft.com/en-us/library/ms724429(VS.85).aspx (example code that contains quite a few more flavors
-	//of windows than this code does (in case it is needed for the future)
-	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64) //check for 64 bit
-	{
-		mOSStringSimple += "64-bit ";
-	}
-	else if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL)
-	{
-		mOSStringSimple += "32-bit ";
-	}
+    // Try calling GetVersionEx using the OSVERSIONINFOEX structure.
+    OSVERSIONINFOEX osvi;
+    ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+    if (GetVersionEx((OSVERSIONINFO *)&osvi))
+    {
+        mBuild = osvi.dwBuildNumber & 0xffff;
+    }
+    else
+    {
+        // If OSVERSIONINFOEX doesn't work, try OSVERSIONINFO.
+        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+        if (GetVersionEx((OSVERSIONINFO *)&osvi))
+        {
+            mBuild = osvi.dwBuildNumber & 0xffff;
+        }
+    }
 
-	// Try calling GetVersionEx using the OSVERSIONINFOEX structure.
-	OSVERSIONINFOEX osvi;
-	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-	if (GetVersionEx((OSVERSIONINFO *)&osvi))
-	{
-		mBuild = osvi.dwBuildNumber & 0xffff;
-	}
-	else
-	{
-		// If OSVERSIONINFOEX doesn't work, try OSVERSIONINFO.
-		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-		if (GetVersionEx((OSVERSIONINFO *)&osvi))
-		{
-			mBuild = osvi.dwBuildNumber & 0xffff;
-		}
-	}
+    mOSString = mOSStringSimple;
+    if (mBuild > 0)
+    {
+        mOSString += llformat("(Build %d)", mBuild);
+    }
 
-	mOSString = mOSStringSimple;
-	if (mBuild > 0)
-	{
-		mOSString += llformat("(Build %d)", mBuild);
-	}
-
-	LLStringUtil::trim(mOSStringSimple);
-	LLStringUtil::trim(mOSString);
+    LLStringUtil::trim(mOSStringSimple);
+    LLStringUtil::trim(mOSString);
 
 #elif LL_DARWIN
 	
