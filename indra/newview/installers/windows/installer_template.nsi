@@ -404,6 +404,8 @@ DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Linden Research, Inc.\$INSTPROG"
 DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$INSTPROG"
 # BUG-2707 Remove entry that disabled SEHOP
 DeleteRegKey HKEY_LOCAL_MACHINE "Software\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$INSTEXE"
+DeleteRegKey HKEY_CLASSES_ROOT "Applications\$INSTEXE"
+DeleteRegKey HKEY_CLASSES_ROOT "Applications\${VIEWER_EXE}"
 
 # Clean up shortcuts
 Delete "$SMPROGRAMS\$INSTSHORTCUT\*.*"
@@ -710,16 +712,16 @@ FunctionEnd
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; After install completes, launch app
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-# Function .onInstSuccess
-# Call CheckWindowsServPack		# Warn if not on the latest SP before asking to launch.
-# 	Push $R0					# Option value, unused# 
-# 	StrCmp $SKIP_AUTORUN "true" +2;
+Function .onInstSuccess
+Call CheckWindowsServPack		# Warn if not on the latest SP before asking to launch.
+        Push $R0					# Option value, unused# 
+        StrCmp $SKIP_AUTORUN "true" +2;
 
 # Assumes SetOutPath $INSTDIR
-# 	Exec '"$WINDIR\explorer.exe" "$INSTDIR\autorun.bat"'
-# 	Pop $R0
+        Exec '"$WINDIR\explorer.exe" "$INSTDIR\autorun.bat"'
+        Pop $R0
 # 
-# FunctionEnd
+FunctionEnd
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Recommend Upgrading to Service Pack 1 for Windows 7, if not present
