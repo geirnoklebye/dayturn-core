@@ -279,7 +279,10 @@ LLAgentCamera::~LLAgentCamera()
 //-----------------------------------------------------------------------------
 // resetView()
 //-----------------------------------------------------------------------------
-void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
+// <FS:CR> FIRE-8798: Option to prevent camera reset on movement
+//void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
+void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera, BOOL movement)
+// </FS:CR>
 {
 	if (gAgent.getAutoPilot())
 	{
@@ -303,6 +306,12 @@ void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
 		// Hide all popup menus
 		gMenuHolder->hideMenus();
 	}
+	
+	// <FS:CR> FIRE-8798: Option to prevent camera reset on movement
+	static LLCachedControl<bool> sResetCameraOnMovement(gSavedSettings, "ResetCameraOnMovement");
+	if (sResetCameraOnMovement || movement == FALSE)
+	{
+	// </FS:CR>
 
 	if (change_camera && !gSavedSettings.getBOOL("FreezeTime"))
 	{
@@ -349,6 +358,9 @@ void LLAgentCamera::resetView(BOOL reset_camera, BOOL change_camera)
 	}
 
 	mHUDTargetZoom = 1.f;
+// <FS:CR> FIRE-8798: Option to prevent camera reset on movement
+	}
+// </FS:CR>
 }
 
 // Allow camera to be moved somewhere other than behind avatar.
@@ -890,8 +902,10 @@ void LLAgentCamera::cameraZoomIn(const F32 fraction)
 	}
 
 
-	LLVector3d	camera_offset_unit(mCameraFocusOffsetTarget);
+	// <FS:CR> Unused variable as of 2012-1-7 - Commenting out
+	// LLVector3d	camera_offset(mCameraFocusOffsetTarget);
 	F32 min_zoom = LAND_MIN_ZOOM;
+    LLVector3d	camera_offset_unit(mCameraFocusOffsetTarget);
 	F32 current_distance = (F32)camera_offset_unit.normalize();
 	F32 new_distance = current_distance * fraction;
 	// Freeing the camera movement some more -KC
@@ -967,6 +981,8 @@ void LLAgentCamera::cameraOrbitIn(const F32 meters)
 	else
 	{
 		LLVector3d	camera_offset_unit(mCameraFocusOffsetTarget);
+        // <FS:CR> Unused variable as of 2012-1-7 - Commenting out
+        // LLVector3d	camera_offset(mCameraFocusOffsetTarget);
 		F32 current_distance = (F32)camera_offset_unit.normalize();
 		F32 new_distance = current_distance - meters;
 		// Freeing the camera movement some more -KC

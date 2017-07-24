@@ -1920,7 +1920,7 @@
       <key>Type</key>
       <string>U32</string>
       <key>Value</key>
-      <integer>5096</integer>
+      <integer>2048</integer>
     </map>
     <key>CacheValidateCounter</key>
     <map>
@@ -18039,6 +18039,17 @@
     <map>
       <key>Comment</key>
       <string>Toggles inventory fetch to wait on wearables fetch completion before continuing inventory processing. Select True for LL viewer behavior. May need a restart of the viewer.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <key>ResetCameraOnMovement</key>
+    <map>
+      <key>Comment</key>
+      <string>If true, Viewer will reset camera on avatar movement.</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
