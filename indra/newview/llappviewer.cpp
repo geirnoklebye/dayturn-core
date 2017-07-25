@@ -5720,11 +5720,6 @@ void LLAppViewer::handleLoginComplete()
 	mSavePerAccountSettings=true;
 }
 
-//MK
-	if ( !gRRenabled && LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION )
-//mk
-}
-
 // static
 void LLAppViewer::setViewerWindowTitle()
 {
@@ -5742,6 +5737,7 @@ void LLAppViewer::setViewerWindowTitle()
 		title += LLGridManager::getInstance()->getGridLabel() + " - ";
     }
 	gViewerWindow->setTitle(title + gWindowTitle);
+}
 //virtual
 void LLAppViewer::setMasterSystemAudioMute(bool mute)
 {
