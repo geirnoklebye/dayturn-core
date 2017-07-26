@@ -337,6 +337,13 @@
                  function="View.ResetView" />
             </menu_item_call>
             <menu_item_call
+             label="Reset Camera Angles"
+             name="Reset Camera Angles"
+             shortcut="shift|Esc">
+                <menu_item_call.on_click
+                 function="View.ResetCameraAngles" />
+            </menu_item_call>
+            <menu_item_call
              label="Look at Last Chatter"
              name="Look at Last Chatter"
              shortcut="control|\">
@@ -2080,6 +2087,13 @@
              shortcut="Esc">
                 <menu_item_call.on_click
                  function="View.ResetView" />
+            </menu_item_call>
+            <menu_item_call
+             label="Reset Camera Angles"
+             name="Reset Camera Angles"
+             shortcut="shift|Esc">
+                <menu_item_call.on_click
+                 function="View.ResetCameraAngles" />
             </menu_item_call>
             <menu_item_call
              label="Look at Last Chatter"
