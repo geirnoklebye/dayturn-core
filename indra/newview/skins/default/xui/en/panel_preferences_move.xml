@@ -23,7 +23,7 @@
   <slider
    can_edit_text="true"
    control_name="CameraAngle"
-   decimal_digits="2"
+   decimal_digits="3"
    follows="left|top"
    height="16"
    increment="0.025"
@@ -40,7 +40,7 @@
   <slider
    can_edit_text="true"
    control_name="CameraOffsetScale"
-   decimal_digits="2"
+   decimal_digits="3"
    follows="left|top"
    height="16"
    increment="0.025"
