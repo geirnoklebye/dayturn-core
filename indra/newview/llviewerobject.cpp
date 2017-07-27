@@ -4712,7 +4712,7 @@ S32 LLViewerObject::setTEMaterialParams(const U8 te, const LLMaterialPtr pMateri
 	}
 
 	retval = LLPrimitive::setTEMaterialParams(te, pMaterialParams);
-	LL_WARNS("Material") << "Changing material params for te " << (S32)te
+	LL_DEBUGS("Material") << "Changing material params for te " << (S32)te
 							<< ", object " << mID
 			               << " (" << retval << ")"
 							<< LL_ENDL;
