@@ -423,7 +423,7 @@ public:
 				//<ND/> 64 bit fix
 				return reinterpret_cast<unsigned char*>(lhs->getBuffer()) < reinterpret_cast<unsigned char*>(rhs->getBuffer());
 #else
-				return (U32)lhs->getBuffer() < (U32)rhs->getBuffer();
+				return (uintptr_t)lhs->getBuffer() < (uintptr_t)rhs->getBuffer();
 #endif
 			}
 		};
