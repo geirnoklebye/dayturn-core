@@ -410,7 +410,13 @@ public:
 		{
 			bool operator()(const LLMemoryBlock* const& lhs, const LLMemoryBlock* const& rhs)
 			{
+#if (LL_LINUX) && defined(__amd64__)
+				//return (U32)lhs->getBuffer() < (U32)rhs->getBuffer();
+				//<ND/> 64 bit fix
+				return reinterpret_cast<unsigned char*>(lhs->getBuffer()) < reinterpret_cast<unsigned char*>(rhs->getBuffer());
+#else
 				return (uintptr_t)lhs->getBuffer() < (uintptr_t)rhs->getBuffer();
+#endif
 			}
 		};
 	};
