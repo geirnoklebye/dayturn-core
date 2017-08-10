@@ -776,7 +776,7 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                                 {
                                     report_to_nearby_chat("UUID entered is of an invalid length! (Hint: use the \"copy key\" button in the build menu.)");
                                 }
-                                else if (gObjectList.findObject(LLUUID(loldest)) == false) 
+                                else if (gObjectList.findObject(LLUUID(loldest)) == FALSE) 
                                 {
                                     report_to_nearby_chat("Unable to locate object.  Please verify the object is rezzed and in view, and that the UUID is correct.");
                                 }
@@ -936,7 +936,7 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                     {
                         report_to_nearby_chat("UUID entered is of an invalid length! (Hint: use the \"copy key\" button in the build menu.)");
                     }
-                    else if (gObjectList.findObject(LLUUID(loldest)) == false) 
+                    else if (gObjectList.findObject(LLUUID(loldest)) == FALSE) 
                     {
                         report_to_nearby_chat("Unable to locate object.  Please verify the object is rezzed, in view, and that the UUID is correct.");
                     }
