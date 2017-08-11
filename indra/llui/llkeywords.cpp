@@ -34,7 +34,7 @@
 #include "lltexteditor.h"
 #include "llstl.h"
 //const U32 KEYWORD_FILE_CURRENT_VERSION = 2;
-const U32 KEYWORD_FILE_CURRENT_VERSION = 3;
+//const U32 KEYWORD_FILE_CURRENT_VERSION = 3; //clang reports unused and it appears its correct
 // </FS:CR>
 
 inline bool LLKeywordToken::isHead(const llwchar* s) const

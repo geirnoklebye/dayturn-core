@@ -437,7 +437,7 @@ public:
 	LLCheckBoxCtrl* mCheckboxClickBuy;
 
 private:
-	FSAreaSearch* mFSAreaSearch;
+	FSAreaSearch* mFSAreaSearch; //clang reports unused
 };
 
 #endif // FS_AREASEARCH_H
