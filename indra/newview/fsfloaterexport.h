@@ -126,7 +126,7 @@ private:
 	S32 mLastRequest;
 	bool mExported;
 	bool mAborted;
-	bool mExportError;
+	//bool mExportError;//clang warns unused
 	bool mDirty;
 	
 	typedef std::vector<LLUUID> id_list_t;
