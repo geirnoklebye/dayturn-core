@@ -3322,9 +3322,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>f7013e1f0b6a877090622fd73ec72cbc</string>
+              <string>6cf02447db3154f0926c3a2acbf229a8</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1114/2576/openjpeg-1.5.1.501102-darwin64-501102.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/p64_3p-openjpeg/downloads/openjpeg-1.5.0.172232100-darwin64-172232100.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -3387,7 +3389,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.4.201505151441</string>
+        <string>1.5.0.172232100</string>
       </map>
       <key>openssl</key>
       <map>

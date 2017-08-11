@@ -1103,8 +1103,8 @@ class DarwinManifest(ViewerManifest):
             self.end_prefix("Contents")
 
         # fix up media_plugin.dylib so it knows where to look for CEF files it needs
-        self.run_command('install_name_tool -change "@executable_path/Chromium Embedded Framework" "@executable_path/../Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" "%(config)s/Kokua.app/Contents/Resources/llplugin/media_plugin_cef.dylib"' %
-                        { 'config' : self.args['configuration'] })
+#        self.run_command('install_name_tool -change "@executable_path/Chromium Embedded Framework" "@executable_path/../Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" "%(config)s/Kokua.app/Contents/Resources/llplugin/media_plugin_cef.dylib"' %
+#                        { 'config' : self.args['configuration'] })
 
         # NOTE: the -S argument to strip causes it to keep enough info for
         # annotated backtraces (i.e. function names in the crash log).  'strip' with no
@@ -1118,7 +1118,7 @@ class DarwinManifest(ViewerManifest):
 
     def package_finish(self):
         global CHANNEL_VENDOR_BASE
-        imagename="Kokua_" + '_'.join(self.args['version'])
+#        imagename="Kokua_" + '_'.join(self.args['version'])
         # MBW -- If the mounted volume name changes, it breaks the .DS_Store's background image and icon positioning.
         #  If we really need differently named volumes, we'll need to create multiple DS_Store file images, or use some other trick.
 
@@ -1271,20 +1271,6 @@ class Darwin_i686_Manifest(DarwinManifest):
 
 class Darwin_x86_64_Manifest(DarwinManifest):
     address_size = 64
-
-
-
-class Darwin_i386_Manifest(DarwinManifest):
-    pass
-
-
-class Darwin_i686_Manifest(DarwinManifest):
-    """alias in case arch is passed as i686 instead of i386"""
-    pass
-
-
-class Darwin_x86_64_Manifest(DarwinManifest):
-    pass
 
 
 class LinuxManifest(ViewerManifest):
