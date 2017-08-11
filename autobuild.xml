@@ -443,7 +443,6 @@
         <key>version</key>
         <string>3.0.4</string>
       </map>
-
       <key>colladadom</key>
       <map>
         <key>copyright</key>
@@ -2941,13 +2940,13 @@
       <key>ndPhysicsStub</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (c)2011-2013 Nicky Dasmijn</string>
+        <string>Khaled Mamou (HACD) / Nicky Dasmijn (integration into for SL viewer)</string>
         <key>description</key>
-        <string>ndPhysicsStub</string>
+        <string>Mesh dcomposition using HACD and physics sub implementation.</string>
         <key>license</key>
-        <string>LGPL</string>
+        <string>HACD/LGPL</string>
         <key>license_file</key>
-        <string>LICENSES/ndphysicsstub.txt</string>
+        <string>LICENSES/ndPhysicsStub.txt</string>
         <key>name</key>
         <string>ndPhysicsStub</string>
         <key>platforms</key>
@@ -2965,6 +2964,20 @@
             </map>
             <key>name</key>
             <string>darwin</string>
+          </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>961d03c531fcf2a0d5984b5036728006</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-ndphysicsstub/downloads/ndPhysicsStub-1.0-darwin64-172222322.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
           </map>
           <key>linux</key>
           <map>
@@ -3020,7 +3033,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.5.1</string>
+        <string>1.0</string>
       </map>
       <key>nvapi</key>
       <map>
