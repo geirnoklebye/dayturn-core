@@ -4517,8 +4517,8 @@
                 <array>
                   <string>-configuration</string>
                   <string>Release</string>
-                  <string>-project Kokua.xcodeproj</string>
-                  <string>SecondLife.xcodeproj</string>
+                  <string>-project</string>
+                  <string>Kokua.xcodeproj</string>
                 </array>
               </map>
               <key>configure</key>

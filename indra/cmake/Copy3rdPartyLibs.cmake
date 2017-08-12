@@ -189,11 +189,11 @@ elseif(DARWIN)
         libaprutil-1.0.dylib
         libaprutil-1.dylib
         libexception_handler.dylib
-        libexpat.1.5.2.dylib
+        ${EXPAT_COPY}
+#        libexpat.1*.dylib
         libexpat.dylib
         libGLOD.dylib
 #        libopenal.1.dylib
-        libhunspell-1.3.0.dylib
         libndofdev.dylib
        )
 
