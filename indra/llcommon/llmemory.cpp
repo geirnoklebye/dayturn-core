@@ -1105,7 +1105,7 @@ void LLPrivateMemoryPool::LLMemoryChunk::addToAvailBlockList(LLMemoryBlock* blk)
 //U32 LLPrivateMemoryPool::LLMemoryChunk::getPageIndex(U32 addr)
 U32 LLPrivateMemoryPool::LLMemoryChunk::getPageIndex(void * addr) // <ND/> 64 bit fix
 #else
-U32 LLPrivateMemoryPool::LLMemoryChunk::getPageIndex(U32 addr)
+U32 LLPrivateMemoryPool::LLMemoryChunk::getPageIndex(uintptr_t addr)
 #endif
 {
 #if (LL_LINUX) && defined(__amd64__)
