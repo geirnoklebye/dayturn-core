@@ -518,13 +518,14 @@ char* LLPrivateMemoryPool::LLMemoryBlock::allocate()
 void  LLPrivateMemoryPool::LLMemoryBlock::freeMem(void* addr) 
 {
 	//bit index
+	//	U32 idx = ((U32)addr - (U32)mBuffer - mDummySize) / mSlotSize ;
+	//<ND> 64 bit fix
+	unsigned char *p1 = reinterpret_cast<unsigned char*>(addr);
+	unsigned char *p2 = reinterpret_cast<unsigned char*>(mBuffer);
     uintptr_t idx = ((uintptr_t)addr - (uintptr_t)mBuffer - mDummySize) / mSlotSize;
+	//</ND>
 
-    U32* bits = &mUsageBits;
-    if (idx >= 32)
-    {
-        bits = (U32*)mBuffer + (idx - 32) / 32;
-    }
+	U32* bits = &mUsageBits ;
 	if(idx >= 32)
 	{
 		bits = (U32*)mBuffer + (idx - 32) / 32 ;
