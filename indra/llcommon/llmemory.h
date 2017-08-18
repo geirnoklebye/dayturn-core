@@ -459,7 +459,7 @@ public:
 //		U32 getPageIndex(U32 addr) ;
 		U32 getPageIndex(void* addr) ; // <ND/> 64 bit fix
 #else
-		U32 getPageIndex(U32 addr) ;
+		U32 getPageIndex(uintptr_t addr) ;
 #endif
 		U32 getBlockLevel(U32 size) ;
 		U16 getPageLevel(U32 size) ;
