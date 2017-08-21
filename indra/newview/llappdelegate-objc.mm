@@ -25,17 +25,9 @@
  */
 
 #import "llappdelegate-objc.h"
-#if defined(LL_BUGSPLAT)
-#include <boost/filesystem.hpp>
-#include <vector>
-@import BugsplatMac;
-// derived from BugsplatMac's BugsplatTester/AppDelegate.m
-@interface LLAppDelegate () <BugsplatStartupManagerDelegate>
-@end
-#endif
 #include "llwindowmacosx-objc.h"
 #include "llappviewermacosx-for-objc.h"
-#include <Carbon/Carbon.h> // Used for Text Input Services ("Safe" API - it's supported)
+#import <InputMethodKit/IMKCandidates.h>
 
 @implementation LLAppDelegate
 
@@ -44,6 +36,25 @@
 @synthesize inputView;
 @synthesize currentInputLanguage;
 
+#if defined(LL_BUGSPLAT)
+#include <boost/filesystem.hpp>
+#include <vector>
+@import BugsplatMac;
+// derived from BugsplatMac's BugsplatTester/AppDelegate.m
+@interface LLAppDelegate () <BugsplatStartupManagerDelegate>
+@end
+#endif
+
+
+- (void)awakeFromNib
+{
+    NSLog(@"calling awakeFromNib...");
+    
+    if (NSAppKitVersionNumber > 1500)
+    {
+        [self.window setValue:@2 forKey:@"tabbingMode"];
+    }
+}
 
 - (void) applicationWillFinishLaunching:(NSNotification *)notification
 {
@@ -52,14 +63,25 @@
 
 - (void) applicationDidFinishLaunching:(NSNotification *)notification
 {
-	// Call constructViewer() first so our logging subsystem is in place. This
-	// risks missing crashes in the LLAppViewerMacOSX constructor, but for
-	// present purposes it's more important to get the startup sequence
-	// properly logged.
-	// Someday I would like to modify the logging system so that calls before
-	// it's initialized are cached in a std::ostringstream and then, once it's
-	// initialized, "played back" into whatever handlers have been set up.
 	constructViewer();
+
+	[self languageUpdated];
+
+	if (initViewer())
+	{
+		// Set up recurring calls to oneFrame (repeating timer with timeout 0)
+		// until applicationShouldTerminate.
+		frameTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self
+							  selector:@selector(oneFrame) userInfo:nil repeats:YES];
+	} 
+	else 
+	{
+		exit(0);
+	}
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languageUpdated) name:@"NSTextInputContextKeyboardSelectionDidChangeNotification" object:nil];
+
+ //   [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 
 #if defined(LL_BUGSPLAT)
     infos("bugsplat setup");
@@ -71,26 +93,8 @@
 	[BugsplatStartupManager sharedManager].delegate = self;
 	[[BugsplatStartupManager sharedManager] start];
 #endif
-
+	
     infos("post-bugsplat setup");
-
-	frameTimer = nil;
-
-	[self languageUpdated];
-
-	if (initViewer())
-	{
-		// Set up recurring calls to oneFrame (repeating timer with timeout 0)
-		// until applicationShouldTerminate.
-		frameTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self
-							  selector:@selector(oneFrame) userInfo:nil repeats:YES];
-	} else {
-		exit(0);
-	}
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(languageUpdated) name:@"NSTextInputContextKeyboardSelectionDidChangeNotification" object:nil];
-
- //   [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 }
 
 - (void) handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
