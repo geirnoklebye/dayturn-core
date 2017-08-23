@@ -879,7 +879,7 @@ class LLFileTakeSnapshotToDisk : public view_listener_t
 			sFormattedSnapshotImage->enableOverSize() ;
 			sFormattedSnapshotImage->encode(raw, 0);
 			sFormattedSnapshotImage->disableOverSize() ;
-			gViewerWindow->saveImageNumbered(sFormattedSnapshotImage, false, boost::bind(&take_snapshot_to_disk_callback, _1));
+			LLSnapshotLivePreview::saveLocal(sformatted);
 			// </FS:Ansariel>
 		}
 		return true;

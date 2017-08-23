@@ -190,9 +190,11 @@ void LLPanelSnapshotLocal::saveLocalCallback(bool success)
     }
     else
     {
-        LLNotificationsUtil::add("CannotSaveSnapshot");
+		cancel();
         floater->notify(LLSD().with("set-ready", true));
     }
+		floater->notify(LLSD().with("set-finished", LLSD().with("ok", false).with("msg", "local")));
+	}
 }
 
 LLSnapshotModel::ESnapshotType LLPanelSnapshotLocal::getSnapshotType()
