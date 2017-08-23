@@ -4574,6 +4574,7 @@ void LLViewerWindow::saveImageCallback(const std::string& filename, LLImageForma
 void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picker, boost::function<void(bool)> callback)
 // </FS:Ansariel>
 {
+//	insufficient_memory = FALSE;
     if (!image)
     {
         LL_WARNS() << "No image to save" << LL_ENDL;
@@ -4630,6 +4631,7 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
     //S32 i = 1;
     //S32 err = 0;
 // Check if there is enough free space to save snapshot
+/*
 #ifdef LL_WINDOWS
 	boost::filesystem::space_info b_space = boost::filesystem::space(utf8str_to_utf16str(sSnapshotDir));
 #else
@@ -4640,7 +4642,7 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
 		insufficient_memory = TRUE;
 		return FALSE;
 	}
-
+*/
     //do
     //{
     //	filepath = sSnapshotDir;

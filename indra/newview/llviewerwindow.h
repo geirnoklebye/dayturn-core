@@ -352,11 +352,11 @@ public:
 	BOOL			thumbnailSnapshot(LLImageRaw *raw, S32 preview_width, S32 preview_height, BOOL show_ui, BOOL do_rebuild, LLSnapshotModel::ESnapshotLayerType type);
 	BOOL			isSnapshotLocSet() const { return ! sSnapshotDir.empty(); }
 	void			resetSnapshotLoc() const { sSnapshotDir.clear(); }
-    // <FS:Ansariel> Threaded filepickers
-    //BOOL		    saveImageNumbered(LLImageFormatted *image, bool force_picker = false);
-    void			saveImageNumbered(LLImageFormatted *image, bool force_picker = false, boost::function<void(bool)> callback = NULL);
-    void			saveImageCallback(const std::string& filename, LLImageFormatted* image, const std::string& extension, boost::function<void(bool)> callback);
-    // </FS:Ansariel>
+	// <FS:Ansariel> Threaded filepickers
+	BOOL			saveImageNumbered(LLImageFormatted *image, BOOL force_picker, BOOL& insufficient_memory);
+	void			saveImageNumbered(LLImageFormatted *image, bool force_picker = false, boost::function<void(bool)> callback = NULL);
+	void			saveImageCallback(const std::string& filename, LLImageFormatted* image, const std::string& extension, boost::function<void(bool)> callback);
+	// </FS:Ansariel>
 
 	// Reset the directory where snapshots are saved.
 	// Client will open directory picker on next snapshot save.
@@ -430,7 +430,6 @@ public:
 
 	bool getSystemUIScaleFactorChanged() { return mSystemUIScaleFactorChanged; }
 	static void showSystemUIScaleFactorChanged();
-	static std::string getLastSnapshotDir() { return sSnapshotDir; }
 
 private:
 	bool                    shouldShowToolTipFor(LLMouseHandler *mh);
