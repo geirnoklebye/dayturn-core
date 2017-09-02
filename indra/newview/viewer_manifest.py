@@ -670,7 +670,7 @@ class WindowsManifest(ViewerManifest):
         substitution_strings['installer_file'] = installer_file
         
         version_vars = """
-        !define INSTEXE  "%(final_exe)s"
+        !define INSTEXE "SL_Launcher.exe"
         !define VERSION "%(version_short)s"
         !define VERSION_LONG "%(version)s"
         !define VERSION_DASHES "%(version_dashes)s"
