@@ -1116,7 +1116,7 @@ void LLSnapshotLivePreview::saveLocal(boost::function<void(bool)> callback)
     getFormattedImage();
 
     // Save the formatted image
-	BOOL success = saveLocal(mFormattedImage);
+    gViewerWindow->saveImageNumbered(mFormattedImage, false, boost::bind(&LLSnapshotLivePreview::saveLocalCallback, this, _1, callback));
 }
 
 void LLSnapshotLivePreview::saveLocalCallback(bool success, boost::function<void(bool)> callback)
@@ -1126,6 +1126,13 @@ void LLSnapshotLivePreview::saveLocalCallback(bool success, boost::function<void
         gViewerWindow->playSnapshotAnimAndSound();
     }
 
+    if (callback)
+    {
+        callback(success);
+    }
+}
+/*
+// </FS:Ansariel>
 //Check if failed due to insufficient memory
 BOOL LLSnapshotLivePreview::saveLocal(LLPointer<LLImageFormatted> mFormattedImage)
 {
@@ -1161,3 +1168,4 @@ BOOL LLSnapshotLivePreview::saveLocal(LLPointer<LLImageFormatted> mFormattedImag
 	}
 	return success;
 }
+*/
