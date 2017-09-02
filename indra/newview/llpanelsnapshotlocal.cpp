@@ -163,36 +163,21 @@ void LLPanelSnapshotLocal::onSaveFlyoutCommit(LLUICtrl* ctrl)
 	{
 		gViewerWindow->resetSnapshotLoc();
 	}
-    LLFloaterSnapshot* floater = LLFloaterSnapshot::getInstance();
-    // <FS:Ansariel> Threaded filepickers
-    //BOOL saved = floater->saveLocal();
-    //if (saved)
-    //{
-    //	LLFloaterSnapshot::postSave();
-    //	floater->notify(LLSD().with("set-finished", LLSD().with("ok", true).with("msg", "local")));
-    //}
-    //else
-    //{
-    //	cancel();
-    //}
-    floater->saveLocal(boost::bind(&LLPanelSnapshotLocal::saveLocalCallback, this, _1));
-    // </FS:Ansariel>
-}
-// <FS:Ansariel> Threaded filepickers
-void LLPanelSnapshotLocal::saveLocalCallback(bool success)
-{
-    LLFloaterSnapshot* floater = LLFloaterSnapshot::getInstance();
 
-    if (success)
-    {
-        mSnapshotFloater->postSave();
-        floater->notify(LLSD().with("set-finished", LLSD().with("ok", true).with("msg", "local")));
-    }
-    else
-    {
-        LLNotificationsUtil::add("CannotSaveSnapshot");
-        floater->notify(LLSD().with("set-ready", true));
-    }
+	LLFloaterSnapshot* floater = LLFloaterSnapshot::getInstance();
+
+	floater->notify(LLSD().with("set-working", true));
+	BOOL saved = floater->saveLocal();
+	if (saved)
+	{
+		mSnapshotFloater->postSave();
+		floater->notify(LLSD().with("set-finished", LLSD().with("ok", true).with("msg", "local")));
+	}
+	else
+	{
+		cancel();
+		floater->notify(LLSD().with("set-finished", LLSD().with("ok", false).with("msg", "local")));
+	}
 }
 
 LLSnapshotModel::ESnapshotType LLPanelSnapshotLocal::getSnapshotType()

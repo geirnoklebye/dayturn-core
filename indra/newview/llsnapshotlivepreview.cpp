@@ -45,6 +45,7 @@
 #include "llimagepng.h"
 #include "lllandmarkactions.h"
 #include "lllocalcliprect.h"
+#include "llresmgr.h"
 #include "llnotificationsutil.h"
 #include "llslurl.h"
 #include "llsnapshotlivepreview.h"
@@ -56,6 +57,7 @@
 #include "llvfs.h"
 #include "llwindow.h"
 #include "llworld.h"
+#include <boost/filesystem.hpp>
 
 const F32 AUTO_SNAPSHOT_TIME_DELAY = 1.f;
 

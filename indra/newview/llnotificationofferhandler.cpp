@@ -138,6 +138,7 @@ bool LLOfferHandler::processNotification(const LLNotificationPtr& notification)
 
 		}
 
+			p.can_fade = notification->canFadeToast();
 		if (notification->canLogToIM())
 		{
 			// log only to file if notif panel can be embedded to IM and IM is opened
