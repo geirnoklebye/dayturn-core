@@ -1131,4 +1131,10 @@ void LLSnapshotLivePreview::saveLocalCallback(bool success, boost::function<void
         callback(success);
     }
 }
+/*
+// </FS:Ansariel>
+    {
+        callback(success);
+    }
+}
 // </FS:Ansariel>

@@ -1065,7 +1065,9 @@ bool LLAppViewer::init()
 	}
 
 	// alert the user if they are using unsupported hardware
-	if(!gSavedSettings.getBOOL("AlertedUnsupportedHardware"))
+
+    
+    if(!gSavedSettings.getBOOL("AlertedUnsupportedHardware"))
 	{
 		bool unsupported = false;
 		LLSD args;
