@@ -4583,7 +4583,7 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
     //	i++;
     //}
     //while( -1 != err );  // search until the file is not found (i.e., stat() gives an error).
-
+/*
 // Check if there is enough free space to save snapshot
 #ifdef LL_WINDOWS
 	boost::filesystem::space_info b_space = boost::filesystem::space(utf8str_to_utf16str(sSnapshotDir));
@@ -4595,7 +4595,7 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
 		insufficient_memory = TRUE;
 		return FALSE;
 	}
-
+*/
     // Get a base file location if needed.
     if (force_picker || !isSnapshotLocSet())
     {
