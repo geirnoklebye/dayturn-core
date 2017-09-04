@@ -1110,7 +1110,8 @@ bool LLAppViewer::init()
 
 		}
 	}
-
+//Comment out for NOW since kokua is unable to use LL's update scheme 
+/*
 	char* PARENT = getenv("PARENT");
 	if (! (PARENT && std::string(PARENT) == "SL_Launcher"))
 	{
@@ -1123,7 +1124,7 @@ bool LLAppViewer::init()
 		// him/herself in the foot.
 		LLNotificationsUtil::add("RunLauncher");
 	}
-
+*/
 #if LL_WINDOWS
 	if (gGLManager.mGLVersion < LLFeatureManager::getInstance()->getExpectedGLVersion())
 	{
