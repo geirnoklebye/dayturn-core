@@ -485,6 +485,16 @@
       media_plugin_libvlc
     </impl>
   </mimetype>
+	<mimetype name="video/x-m4v">
+		<label name="video/m4v_label">
+			Movie (M4V)
+		</label>
+		<widgettype>
+			movie
+		</widgettype>
+		<impl>
+    </impl>
+  </mimetype>
   <mimetype menu="1" name="video/quicktime">
 		<label name="video/quicktime_label">
 			Movie (QuickTime)
