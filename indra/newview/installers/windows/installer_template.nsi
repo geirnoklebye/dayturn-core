@@ -147,7 +147,7 @@ Function .onInit
 
 # read the current location of the install for this version
 # if $0 is empty, this is the first time for this viewer name
-ReadRegStr $0 HKEY_LOCAL_MACHINE "SOFTWARE\\Linden Research, Inc.\\${INSTNAME}" ""
+ReadRegStr $0 HKEY_LOCAL_MACHINE "SOFTWARE\\Kokua and Imprudence\\${INSTNAME}" ""
 
 # viewer with this name not installed before
 ${If} $0 == ""
