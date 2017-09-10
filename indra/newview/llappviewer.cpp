@@ -5624,21 +5624,6 @@ void LLAppViewer::setViewerWindowTitle()
 
 	gViewerWindow->setTitle(title + gWindowTitle);
 }
-// static
-void LLAppViewer::setViewerWindowTitle()
-{
-	std::string title = "";
-
-	if (gSavedSettings.getBOOL("WindowTitleAvatarName")) {
-		title += gAgentAvatarp->getFullname() + " - ";
-	}
-
-	if (gSavedSettings.getBOOL("WindowTitleGridName")) {
-		title += LLGridManager::getInstance()->getGridLabel() + " - ";
-	}
-
-	gViewerWindow->setTitle(title + gWindowTitle);
-}
 //virtual
 void LLAppViewer::setMasterSystemAudioMute(bool mute)
 {
