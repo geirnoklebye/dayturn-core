@@ -202,14 +202,38 @@
     <menu_item_call
      label="Freeze / Unfreeze"
      layout="topleft"
-     name="Mute Text">
-       <on_click function="AvatarIcon.Action" parameter="mute_unmute" />
-       <on_check function="AvatarIcon.Check" parameter="is_muted" />   
-    </menu_item_check>
+     name="ToggleFreeze">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="togglefreeze" />
+    </menu_item_call>
+    <menu_item_call
+     label="Eject / Ban"
     <menu_item_separator layout="topleft" name="Moderator Options Separator"/>
     <context_menu
      label="Moderator Options"
      layout="topleft"
+     name="Eject">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="eject" />
+    </menu_item_call>
+    <menu_item_call
+     label="Teleport Home"
+     layout="topleft"
+     name="Teleport Home">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="teleporthome" />
+    </menu_item_call>
+    <menu_item_call
+     label="Estate Ban"
+     layout="topleft"
+     name="Estate Ban">
+        <menu_item_call.on_click
+         function="AvatarIcon.Action"
+         parameter="estateban" />
+    </menu_item_call>
      name="Moderator Options">
       <menu_item_check
        label="Allow text chat"
