@@ -4591,7 +4591,7 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
 	boost::filesystem::space_info b_space = boost::filesystem::space(sSnapshotDir);
 #endif
 	if (b_space.free < image->getDataSize())
-    {
+	{
 		insufficient_memory = TRUE;
 		return FALSE;
 	}
