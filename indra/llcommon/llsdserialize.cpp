@@ -1500,7 +1500,6 @@ S32 LLSDBinaryFormatter::format(const LLSD& data, std::ostream& ostr, U32 option
 		ostr.write((const char*)(&(temp.mData)), UUID_BYTES);
 		break;
 	}
-
 	case LLSD::TypeString:
 		ostr.put('s');
 		formatString(data.asStringRef(), ostr);

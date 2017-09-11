@@ -430,7 +430,6 @@ public:
 
 	bool getSystemUIScaleFactorChanged() { return mSystemUIScaleFactorChanged; }
 	static void showSystemUIScaleFactorChanged();
-	static std::string getLastSnapshotDir() { return sSnapshotDir; }
 
 private:
 	bool                    shouldShowToolTipFor(LLMouseHandler *mh);
