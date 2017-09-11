@@ -3365,7 +3365,7 @@ LLSD LLAppViewer::getViewerInfo() const
 		info["VOICE_VERSION"] = LLTrans::getString("NotConnected");
 	}
 
-#if LL_LINUX
+#if !LL_LINUX
 	std::ostringstream cef_ver_codec;
 	cef_ver_codec << "Dullahan: ";
 	cef_ver_codec << DULLAHAN_VERSION_MAJOR;
@@ -3381,6 +3381,7 @@ LLSD LLAppViewer::getViewerInfo() const
 	cef_ver_codec << CHROME_VERSION_MAJOR;
 
 	info["LIBCEF_VERSION"] = cef_ver_codec.str();
+#else
 	info["LIBCEF_VERSION"] = "Undefined";
 #endif
 
@@ -5743,27 +5744,6 @@ void LLAppViewer::handleLoginComplete()
 	// we logged in successfully, so save settings on logout
 	LL_INFOS() << "Login successful, per account settings will be saved on log out." << LL_ENDL;
 	mSavePerAccountSettings=true;
-}
-
-// static
-void LLAppViewer::setViewerWindowTitle()
-	if ( !gRRenabled && LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION )
-//mk
-{
-	std::string title = "";
-
-	if (gSavedSettings.getBOOL("WindowTitleAvatarName")) {
-		title += gAgentAvatarp->getFullname() + " - ";
-	}
-
-	if (gSavedSettings.getBOOL("WindowTitleGridName")) {
-		title += LLGridManager::getInstance()->getGridLabel() + " - ";
-	}
-
-	if (gSavedSettings.getBOOL("WindowTitleGridName")) {
-		title += LLGridManager::getInstance()->getGridLabel() + " - ";
-    }
-	gViewerWindow->setTitle(title + gWindowTitle);
 }
 
 // static
