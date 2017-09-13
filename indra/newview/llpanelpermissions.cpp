@@ -385,7 +385,7 @@ void LLPanelPermissions::refresh()
 	getChildView("Creator:")->setEnabled(TRUE);
 	std::string creator_app_link;
 	LLSelectMgr::getInstance()->selectGetCreator(mCreatorID, creator_app_link);
-    std::string owner_name;
+    //std::string owner_name;
 	// Style for creator and owner links (both group and agent)
 	LLStyle::Params style_params;
 	LLColor4 link_color = LLUIColorTable::instance().getColor("HTMLLinkColor");
@@ -453,6 +453,7 @@ void LLPanelPermissions::refresh()
 			}
 			owner_id = mLastOwnerID;
 		}
+
 		if (LLAvatarNameCache::get(owner_id, &av_name))
 		{
 //MK
@@ -472,13 +473,6 @@ void LLPanelPermissions::refresh()
 		getChild<LLAvatarIconCtrl>("Owner Icon")->setVisible(TRUE);
 		getChild<LLUICtrl>("Owner Group Icon")->setVisible(FALSE);
 	}
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
-	{
-		owner_name = gAgent.mRRInterface.getDummyName (owner_name);
-	}
-//mk
-    getChild<LLUICtrl>("Owner Name")->setValue(owner_name);
 	getChildView("Owner Name")->setEnabled(TRUE);
 
 //MK
@@ -488,8 +482,7 @@ void LLPanelPermissions::refresh()
 		getChild<LLAvatarIconCtrl>("Owner Icon")->setVisible(FALSE);
 		getChildView("Owner Name")->setEnabled(FALSE);
 	}
-//mk
-	// update group text field
+//mk	// update group text field
 	getChildView("Group:")->setEnabled(TRUE);
 	getChild<LLUICtrl>("Group Name")->setValue(LLStringUtil::null);
 	LLUUID group_id;
