@@ -783,6 +783,10 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 	{
 		mRadioGroupEdit->setValue("radio select face");
 	}
+	else if ( tool == QToolAlign::getInstance() )
+	{
+		mRadioGroupEdit->setValue("radio align");
+	}
 	if (mComboGridMode) 
 	{
 		mComboGridMode->setVisible( edit_visible );
