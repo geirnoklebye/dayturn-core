@@ -722,13 +722,24 @@ Call CheckWindowsServPack		# Warn if not on the latest SP before asking to launc
         FileWrite $9 "NSIS done$\n"
         FileClose $9
         Push $R0					# Option value, unused# 
-        StrCmp $SKIP_AUTORUN "true" +2;
-#    StrCmp $SKIP_DIALOGS "true" label_launch 
+		StrCmp $SKIP_DIALOGS "true" label_launch 
 
-# Assumes SetOutPath $INSTDIR
-        Exec '"$WINDIR\explorer.exe" "$INSTDIR\autorun.bat"'
-        Pop $R0
-# 
+		${GetOptions} $COMMANDLINE "/AUTOSTART" $R0
+		# If parameter was there (no error) just launch
+		# Otherwise ask
+		IfErrors label_ask_launch label_launch
+    
+label_ask_launch:
+		# Don't launch by default when silent
+		IfSilent label_no_launch
+		MessageBox MB_YESNO $(InstSuccesssQuestion) \
+			IDYES label_launch IDNO label_no_launch
+        
+label_launch:
+		# Assumes SetOutPath $INSTDIR
+		Exec '"$INSTDIR\$INSTEXE" $SHORTCUT_LANG_PARAM'
+label_no_launch:
+		Pop $R0
 FunctionEnd
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
