@@ -481,10 +481,8 @@ void LLViewerAssetStorage::assetRequestCoro(
     }
     std::string url = getAssetURL(mViewerAssetUrl, uuid,atype);
     LL_DEBUGS("ViewerAsset") << "request url: " << url << LL_ENDL;
-	// <FS:Beq> Avoid stall in texture fetch due to asset fetching.[Drake]
-	//    LLCore::HttpRequest::policy_t httpPolicy(LLAppCoreHttp::AP_TEXTURE);
-	LLCore::HttpRequest::policy_t httpPolicy(LLAppCoreHttp::AP_ASSET);
-	// </FS:Beq>
+
+    LLCore::HttpRequest::policy_t httpPolicy(LLAppCoreHttp::AP_TEXTURE);
     LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t
         httpAdapter(new LLCoreHttpUtil::HttpCoroutineAdapter("assetRequestCoro", httpPolicy));
     LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest);
