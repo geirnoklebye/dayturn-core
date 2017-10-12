@@ -3135,7 +3135,7 @@ bool LLVOAvatarSelf::sendAppearanceMessage(LLMessageSystem *mesgsys) const
 //------------------------------------------------------------------------
 void LLVOAvatarSelf::sendHoverHeight() const
 {
-	std::string url = gAgent.getRegion()->getCapability("AgentPreferences");
+	std::string url = gAgent.getRegionCapability("AgentPreferences");
 
 	if (!url.empty())
 	{
