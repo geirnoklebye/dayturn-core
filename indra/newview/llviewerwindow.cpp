@@ -4626,10 +4626,11 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
     //	LLViewerWindow::sSnapshotDir = gDirUtilp->getDirName(filepath);
     //}
 
-    //// Look for an unused file name
-    //std::string filepath;
-    //S32 i = 1;
-    //S32 err = 0;
+	if(LLViewerWindow::sSnapshotDir.empty())
+	{
+		return FALSE;
+	}
+
 // Check if there is enough free space to save snapshot
 /*
 #ifdef LL_WINDOWS
