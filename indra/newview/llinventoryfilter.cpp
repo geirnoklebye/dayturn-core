@@ -120,88 +120,89 @@ LLInventoryFilter::EFilterSubstringTarget LLInventoryFilter::getFilterSubStringT
 
 // ## Zi: Extended Inventory Search
 
-bool LLInventoryFilter::check(const LLFolderViewModelItem* item) 
+
+bool LLInventoryFilter::check(const LLFolderViewModelItem* item)
 {
-	const LLFolderViewModelItemInventory* listener = dynamic_cast<const LLFolderViewModelItemInventory*>(item);
-	// Clipboard cut items are *always* filtered so we need this value upfront
-	// <FS:Ansariel> FIRE-6714: Don't move objects to trash during cut&paste
-	// Don't hide cut items in inventory
-	//const BOOL passed_clipboard = (listener ? checkAgainstClipboard(listener->getUUID()) : TRUE);
-	const BOOL passed_clipboard = TRUE;
-	// </FS:Ansariel> FIRE-6714: Don't move objects to trash during cut&paste
+    const LLFolderViewModelItemInventory* listener = dynamic_cast<const LLFolderViewModelItemInventory*>(item);
+    // Clipboard cut items are *always* filtered so we need this value upfront
+    // <FS:Ansariel> FIRE-6714: Don't move objects to trash during cut&paste
+    // Don't hide cut items in inventory
+    //const BOOL passed_clipboard = (listener ? checkAgainstClipboard(listener->getUUID()) : TRUE);
+    const BOOL passed_clipboard = TRUE;
+    // </FS:Ansariel> FIRE-6714: Don't move objects to trash during cut&paste
 
-	// If it's a folder and we're showing all folders, return automatically.
-	const BOOL is_folder = listener->getInventoryType() == LLInventoryType::IT_CATEGORY;
-	if (is_folder && (mFilterOps.mShowFolderState == LLInventoryFilter::SHOW_ALL_FOLDERS))
-	{
-		return passed_clipboard;
-	}
+    // If it's a folder and we're showing all folders, return automatically.
+    const BOOL is_folder = listener->getInventoryType() == LLInventoryType::IT_CATEGORY;
+    if (is_folder && (mFilterOps.mShowFolderState == LLInventoryFilter::SHOW_ALL_FOLDERS))
+    {
+        return passed_clipboard;
+    }
 
-	std::string desc = listener->getSearchableCreatorName();
-	switch(mSearchType)
-	{
-		case SEARCHTYPE_CREATOR:
-			desc = listener->getSearchableCreatorName();
-			break;
-		case SEARCHTYPE_DESCRIPTION:
-			desc = listener->getSearchableDescription();
-			break;
-		case SEARCHTYPE_UUID:
-			desc = listener->getSearchableUUIDString();
-			break;
-		case SEARCHTYPE_NAME:
-		default:
-			desc = listener->getSearchableName();
-			break;
-	}
+    //bool passed = (mFilterSubString.size() ? listener->getSearchableName().find(mFilterSubString) != std::string::npos : true); <FS:TM> 3.6.4 check this, ll repoaced the line in CHUI (2 down) with this
+    //mSubStringMatchOffset = mFilterSubString.size() ? item->getSearchableLabel().find(mFilterSubString) : std::string::npos; <FS:TM> CHUI Merge LL origonal removed in FS, replaced with enhanced search
+    //std::string::size_type string_offset = mFilterSubString.size() ? listener->getSearchableName().find(mFilterSubString) : std::string::npos; <FS:TM> CHUI Merge LL new line 
+    //	Begin Multi-substring inventory search
+    std::string::size_type string_offset = std::string::npos;
+    if (mFilterSubStrings.size())
+    {
+        //const std::string& searchLabel=getSearchableTarget(item);		// ## Zi: Extended Inventory Search
+        std::string searchLabel;
+        switch (mFilterSubStringTarget)
+        {
+        case SUBST_TARGET_NAME:
+            searchLabel = listener->getSearchableName();
+            break;
+        case SUBST_TARGET_CREATOR:
+            searchLabel = listener->getSearchableCreator();
+            break;
+        case SUBST_TARGET_DESCRIPTION:
+            searchLabel = listener->getSearchableDescription();
+            break;
+        case SUBST_TARGET_UUID:
+            searchLabel = listener->getSearchableUUID();
+            break;
+        case SUBST_TARGET_ALL:
+            searchLabel = listener->getSearchableAll();
+            break;
+        default:
+            LL_WARNS() << "Unknown search substring target: " << mFilterSubStringTarget << LL_ENDL;
+            searchLabel = listener->getSearchableName();
+            break;
+        }
 
-	bool passed = (mFilterSubString.size() ? desc.find(mFilterSubString) != std::string::npos : true);
-				break;
-			case SUBST_TARGET_UUID:
-				searchLabel = listener->getSearchableUUID();
-				break;
-			case SUBST_TARGET_ALL:
-				searchLabel = listener->getSearchableAll();
-				break;
-			default:
-				LL_WARNS() << "Unknown search substring target: " << mFilterSubStringTarget << LL_ENDL;
-				searchLabel = listener->getSearchableName();
-				break;
-		}
+        U32 index = 0;
+        for (std::vector<std::string>::iterator it = mFilterSubStrings.begin();
+            it<mFilterSubStrings.end(); it++, index++)
+        {
+            std::string::size_type sub_string_offset = searchLabel.find(*it);
 
-		U32 index = 0;
-		for (std::vector<std::string>::iterator it=mFilterSubStrings.begin();
-			it<mFilterSubStrings.end(); it++, index++)
-		{
-			std::string::size_type sub_string_offset = searchLabel.find(*it);
+            mSubStringMatchOffsets[index] = sub_string_offset;
 
-			mSubStringMatchOffsets[index] = sub_string_offset;
+            if (sub_string_offset == std::string::npos)
+            {
+                string_offset = std::string::npos;
+                for (std::vector<std::string::size_type>::iterator it = mSubStringMatchOffsets.begin();
+                    it<mSubStringMatchOffsets.end(); it++)
+                {
+                    *it = std::string::npos;
+                }
+                break;
+            }
+            else if (string_offset == std::string::npos)
+            {
+                string_offset = sub_string_offset;
+            }
+        }
+    }
+    //	End Multi-substring inventory search
 
-			if (sub_string_offset == std::string::npos)
-			{
-				string_offset = std::string::npos;
-				for (std::vector<std::string::size_type>::iterator it=mSubStringMatchOffsets.begin();
-					it<mSubStringMatchOffsets.end(); it++)
-				{
-					*it = std::string::npos;
-				}
-				break;
-			}
-			else if (string_offset == std::string::npos)
-			{
-				string_offset = sub_string_offset;
-			}
-		}
-	}
-	//	End Multi-substring inventory search
+    BOOL passed = (mFilterSubString.size() == 0 || string_offset != std::string::npos);
+    passed = passed && checkAgainstFilterType(listener);
+    passed = passed && checkAgainstPermissions(listener);
+    passed = passed && checkAgainstFilterLinks(listener);
+    // passed = passed && passed_clipboard;
 
-	BOOL passed = (mFilterSubString.size() == 0 || string_offset != std::string::npos);
-	passed = passed && checkAgainstFilterType(listener);
-	passed = passed && checkAgainstPermissions(listener);
-	passed = passed && checkAgainstFilterLinks(listener);
-	passed = passed && checkAgainstCreator(listener);
-
-	return passed;
+    return passed;
 }
 
 bool LLInventoryFilter::check(const LLInventoryItem* item)

@@ -1336,7 +1336,7 @@ bool LLAppViewer::frame()
 {
 	LLEventPump& mainloop(LLEventPumps::instance().obtain("mainloop"));
 	LLSD newFrame;
-
+    LLTimer frameTimer, idleTimer, periodicRenderingTimer;
 	BOOL restore_rendering_masks = FALSE;
 
 	//LLPrivateMemoryPoolTester::getInstance()->run(false) ;

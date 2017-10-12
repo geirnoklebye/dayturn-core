@@ -4556,7 +4556,7 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
 
 	if(LLViewerWindow::sSnapshotDir.empty())
 	{
-		return FALSE;
+		return;
 	}
 
 // Check if there is enough free space to save snapshot
