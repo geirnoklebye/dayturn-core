@@ -1343,7 +1343,7 @@ LLTrace::BlockTimerStatHandle FTM_FRAME("Frame");
 bool LLAppViewer::frame()
 {
 //MK
-	int garbage_collector_cnt=-100; // give the garbage collector a moment before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
+	S32 garbage_collector_cnt = -100; // give the garbage collector a moment before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
 //mk
 	LLEventPump& mainloop(LLEventPumps::instance().obtain("mainloop"));
 	LLSD newFrame;
@@ -1457,7 +1457,8 @@ bool LLAppViewer::frame()
 						gAgent.mRRInterface.fireCommands ();
 						
 						// fire the garbage collector for orphaned restrictions
-						if (++garbage_collector_cnt >= 100) {
+						if (++garbage_collector_cnt >= 0) 
+                        {
 							gAgent.mRRInterface.garbageCollector (FALSE);
 							garbage_collector_cnt = 0;
 						}
