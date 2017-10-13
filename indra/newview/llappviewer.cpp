@@ -1577,26 +1577,6 @@ bool LLAppViewer::frame()
 				}
 			}
 
-
-				// Limit FPS
-				static LLCachedControl<F32> max_fps(gSavedSettings, "MaxFPS", -1.0f);
-				// Only limit FPS when we are actually rendering something.  Otherwise
-				// logins, logouts and teleports take much longer to complete.
-				if (max_fps > F_APPROXIMATELY_ZERO &&
-					LLStartUp::getStartupState() == STATE_STARTED &&
-					!gTeleportDisplay &&
-					!logoutRequestSent())
-				{
-					// Sleep a while to limit frame rate.
-					F32 min_frame_time = 1.f / max_fps;
-					S32 milliseconds_to_sleep = llclamp((S32)((min_frame_time - frameTimer.getElapsedTimeF64()) * 1000.f), 0, 1000);
-					if (milliseconds_to_sleep > 0)
-					{
-						LLFastTimer t(FTM_YIELD);
-						ms_sleep(milliseconds_to_sleep);
-					}
-				}
-
 			resumeMainloopTimeout();
 
 			pingMainloopTimeout("Main:End");
