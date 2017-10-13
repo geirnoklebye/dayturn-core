@@ -95,7 +95,7 @@ public:
 	virtual const std::string& getDisplayName() const;
 	const std::string& getSearchableName() const { return mSearchableName; }
 
-	std::string getSearchableDescription() const;
+
 	std::string getSearchableCreatorName() const;
 	std::string getSearchableUUIDString() const;
 

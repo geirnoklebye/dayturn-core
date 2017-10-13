@@ -209,22 +209,6 @@ const std::string& LLInvFVBridge::getDisplayName() const
 	return mDisplayName;
 }
 
-std::string LLInvFVBridge::getSearchableDescription() const
-{
-	const LLInventoryModel* model = getInventoryModel();
-	if (model)
-	{
-		const LLInventoryItem *item = model->getItem(mUUID);
-		if(item)
-		{
-			std::string desc = item->getDescription();
-			LLStringUtil::toUpper(desc);
-			return desc;
-		}
-	}
-	return LLStringUtil::null;
-}
-
 std::string LLInvFVBridge::getSearchableCreatorName() const
 {
 	const LLInventoryModel* model = getInventoryModel();
