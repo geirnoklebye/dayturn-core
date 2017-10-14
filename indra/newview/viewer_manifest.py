@@ -1556,20 +1556,20 @@ class Linux_i686_Manifest(LinuxManifest):
         # Vivox runtimes
         with self.prefix(src=relpkgdir, dst="bin"):
             self.path("SLVoice")
-                self.path("win32")
+            self.path("win32")
             self.path("libortp.so")
             self.path("libsndfile.so.1")
-                self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
+            self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
             self.path("libvivoxsdk.so")
             self.path("libvivoxplatform.so")
 
         self.strip_binaries()
 
-            #cef plugin
-            if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
-                self.path( "libcef.so" )
-                self.path( "libllceflib.so" )
-                self.end_prefix()
+        #cef plugin
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
+            self.path( "libcef.so" )
+            self.path( "libllceflib.so" )
+            self.end_prefix()
 
 class Linux_x86_64_Manifest(LinuxManifest):
     address_size = 64
