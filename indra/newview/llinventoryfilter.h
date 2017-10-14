@@ -63,7 +63,7 @@ public:
         FILTERTYPE_MARKETPLACE_LISTING_FOLDER = 0x1 << 9,	// pass iff folder is a listing folder
         FILTERTYPE_NO_MARKETPLACE_ITEMS = 0x1 << 10,         // pass iff folder is not under the marketplace
         FILTERTYPE_WORN = 0x1 << 11,     // pass if item is worn
-	FILTERTYPE_TRANSFERRABLE = 0x1 << 12, //search by transferrable property
+	    FILTERTYPE_TRANSFERRABLE = 0x1 << 12, //search by transferrable property
 	};
 
 	enum EFilterDateDirection

@@ -1566,11 +1566,11 @@ class Linux_i686_Manifest(LinuxManifest):
 
         self.strip_binaries()
 
-            #cef plugin
-            if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
-                self.path( "libcef.so" )
-                self.path( "libllceflib.so" )
-                self.end_prefix()
+        #cef plugin
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
+            self.path( "libcef.so" )
+            self.path( "libllceflib.so" )
+            self.end_prefix()
 
 class Linux_x86_64_Manifest(LinuxManifest):
     address_size = 64
