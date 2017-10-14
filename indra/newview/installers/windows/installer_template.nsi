@@ -324,11 +324,6 @@ CreateShortCut "$INSTDIR\$INSTSHORTCUT.lnk" \
 CreateShortCut "$INSTDIR\Uninstall $INSTSHORTCUT.lnk" \
 				'"$INSTDIR\uninst.exe"' ''
 
-# Create *.bat file to specify lang params on first run from installer - see MAINT-5259S
-FileOpen $9 "$INSTDIR\autorun.bat" w
-FileWrite $9 'start "$INSTDIR\$INSTEXE" /d "$INSTDIR" "$INSTDIR\$INSTEXE" $SHORTCUT_LANG_PARAM$\r$\n'
-FileClose $9
-
 # Write registry
 WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Kokua and Imprudence\$INSTPROG" "" "$INSTDIR"
 WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\Kokua and Imprudence\$INSTPROG" "Version" "${VERSION_LONG}"
@@ -737,7 +732,7 @@ label_ask_launch:
         
 label_launch:
 		# Assumes SetOutPath $INSTDIR
-		Exec '"$INSTDIR\$INSTEXE" $SHORTCUT_LANG_PARAM'
+	Exec '"$WINDIR\explorer.exe" "$INSTDIR\$INSTSHORTCUT.lnk"'
 label_no_launch:
 		Pop $R0
 FunctionEnd

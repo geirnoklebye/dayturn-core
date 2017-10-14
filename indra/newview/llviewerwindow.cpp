@@ -4557,6 +4557,11 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
     //	LLViewerWindow::sSnapshotDir = gDirUtilp->getDirName(filepath);
     //}
 
+	if(LLViewerWindow::sSnapshotDir.empty())
+	{
+		return FALSE;
+	}
+
 // Check if there is enough free space to save snapshot
 /*
 #ifdef LL_WINDOWS
