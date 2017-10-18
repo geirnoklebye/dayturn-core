@@ -47,7 +47,7 @@
    max_length_chars="300"
    name="inventory search editor"
    top_pad="5"
-   width="310" />
+   width="208" />
   <combo_box
    height="23"
    layout="topleft"
