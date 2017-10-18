@@ -282,7 +282,7 @@
      width="260"/>
     <check_box
      height="16"
-     top="352"
+     top="380"
      label="Since Logoff"
      layout="topleft"
      left_delta="0"
@@ -298,7 +298,7 @@
      layout="topleft"
      left_delta="0"
      name="- OR -"
-     top="382"
+     top="396"
      width="144">
         - OR -
     </text>
@@ -306,7 +306,7 @@
      height="16"
      layout="topleft"
      name="date_search_direction"
-     top="400"
+     top="412"
      left="8"
      width="270">
      <radio_item
@@ -375,7 +375,7 @@
      label_selected="Close"
      layout="topleft"
      name="Close"
-     right="-6"
-     top="486"
+     right="-8"
+     top="460"
      width="76" />
 </floater>
