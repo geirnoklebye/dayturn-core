@@ -1457,7 +1457,7 @@ bool LLAppViewer::frame()
 						gAgent.mRRInterface.fireCommands ();
 						
 						// fire the garbage collector for orphaned restrictions
-						if (++garbage_collector_cnt >= 0) 
+						if (++garbage_collector_cnt >= 100)  
                         {
 							gAgent.mRRInterface.garbageCollector (FALSE);
 							garbage_collector_cnt = 0;
