@@ -33,7 +33,7 @@
 		     name="ItemcountText"
 		     font="SansSerifMedium"
 		     text_color="EmphasisColor"
-		     top="5"
+		     top_pad="0"
 		     width="300">
     Items:
   </text>
@@ -46,7 +46,7 @@
    left="10"
    max_length_chars="300"
    name="inventory search editor"
-   top_pad="5"
+   top="18"
    width="208" />
   <combo_box
    height="23"
@@ -75,14 +75,14 @@
   <tab_container
      follows="all"
      halign="center"
-     height="338"
+     height="339"
      layout="topleft"
-     left="8"
+     left="7"
      name="inventory filter tabs"
-     tab_height="15"
+     tab_height="30"
      tab_position="top"
-     tab_min_width="50"
-     top_pad="7"
+     tab_min_width="100"
+     top_pad="10"
      width="312">
     <inventory_panel
      bg_opaque_color="DkGray2"
@@ -100,7 +100,7 @@
      sort_order_setting="InventorySortOrder"
      show_item_link_overlays="true"
      top="16"
-     width="312" />
+     width="288" />
     <recent_inventory_panel
      bg_opaque_color="DkGray2"
      bg_alpha_color="DkGray2"
@@ -115,7 +115,7 @@
      left_delta="0"
      name="Recent Items"
      show_item_link_overlays="true"
-     width="312" />
+     width="290" />
        <inventory_panel
       name="Worn Items"
       label="WORN"
@@ -141,7 +141,7 @@
    top_pad="0"
    left="10"
    name="bottom_panel"
-   width="310">
+   width="307">
       <layout_panel
        auto_resize="false"
        height="25"
@@ -187,7 +187,7 @@
        height="25"
        layout="topleft"
        name="dummy_panel"
-       width="214">
+       width="212">
           <icon
            follows="bottom|left|right"
            height="25"
@@ -196,14 +196,14 @@
            left="0"
            top="0"
            name="dummy_icon"
-           width="213" />
+           width="211" />
       </layout_panel>
       <layout_panel
        auto_resize="false"
        height="25"
        layout="topleft"
        name="trash_btn_panel"
-       width="32">
+       width="31">
           <dnd_button
            follows="bottom|left"
            height="25"
