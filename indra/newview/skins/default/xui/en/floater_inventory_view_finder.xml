@@ -2,7 +2,7 @@
 <floater
  legacy_header_height="18"
  can_minimize="false"
- height="520"
+ height="468"
  layout="topleft"
  name="Inventory Finder"
  help_topic="inventory_finder"
@@ -282,7 +282,7 @@
      width="260"/>
     <check_box
      height="16"
-     top="380"
+     top="352"
      label="Since Logoff"
      layout="topleft"
      left_delta="0"
@@ -298,7 +298,7 @@
      layout="topleft"
      left_delta="0"
      name="- OR -"
-     top="396"
+     top="370"
      width="144">
         - OR -
     </text>
@@ -306,7 +306,7 @@
      height="16"
      layout="topleft"
      name="date_search_direction"
-     top="412"
+     top="388"
      left="8"
      width="270">
      <radio_item
@@ -375,7 +375,7 @@
      label_selected="Close"
      layout="topleft"
      name="Close"
-     right="-8"
-     top="460"
+     right="-6"
+     top="434"
      width="76" />
 </floater>
