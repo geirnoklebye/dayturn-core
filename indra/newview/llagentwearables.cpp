@@ -1461,6 +1461,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 			new_wearable->setItemID(new_item->getUUID());
 
 //MK
+
 			// We did not remove the items that are already worn in order to avoid unnecessary updates,
 			// hence we do not want to wear the new ones either or they will stack.
 			bool wear_this = true;
@@ -1781,6 +1782,7 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 													LLInventoryModel::item_array_t& items_to_add)
 
 {
+
 //MK
 	// When calling this function, one of two purposes are expected :
 	// - If this is the first time (i.e. immediately after logging on), look at all the links in the COF, request to wear the items that are not worn
@@ -1791,40 +1793,43 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 	// instead of automatically wearing them.
 	// To distinguish between these two cases is the purpose of the boolean gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall
 	// Attention : we need to call the regular part of the function if we did a "Add to Current Outfit" or "Replace Current Outfit" in the inventory
-	if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall && !gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
-	{
-		LLInventoryModel::cat_array_t cat_array;
-		LLInventoryModel::item_array_t item_array;
-		gInventory.collectDescendents(LLAppearanceMgr::instance().getCOF(),cat_array,item_array,LLInventoryModel::EXCLUDE_TRASH);
-		for (S32 i=0; i<item_array.size(); i++)
-		{
-			const LLViewerInventoryItem* inv_item = item_array.at(i).get();
-			if (inv_item)
-			{
-				if (LLAssetType::AT_LINK == inv_item->getActualType())
-				{
-					const LLViewerInventoryItem* linked_item = inv_item->getLinkedItem();
-					if (NULL == linked_item)
-					{
-						// Broken link => remove
-					}
-					else
-					{
-						if (LLAssetType::AT_OBJECT == linked_item->getType())
-						{
-							std::string attachment_point_name;
-							if (!gAgentAvatarp->getAttachedPointName(linked_item->getUUID(), attachment_point_name))
-							{
-								LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
-							}
-						}
-					}
-				}
-			}
-			LLUUID item_id(inv_item->getUUID());
-		}
-		return;
-	}
+    if (gRRenabled)
+    {
+        if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall && !gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
+        {
+            LLInventoryModel::cat_array_t cat_array;
+            LLInventoryModel::item_array_t item_array;
+            gInventory.collectDescendents(LLAppearanceMgr::instance().getCOF(), cat_array, item_array, LLInventoryModel::EXCLUDE_TRASH);
+            for (S32 i = 0; i < item_array.size(); i++)
+            {
+                const LLViewerInventoryItem* inv_item = item_array.at(i).get();
+                if (inv_item)
+                {
+                    if (LLAssetType::AT_LINK == inv_item->getActualType())
+                    {
+                        const LLViewerInventoryItem* linked_item = inv_item->getLinkedItem();
+                        if (NULL == linked_item)
+                        {
+                            // Broken link => remove
+                        }
+                        else
+                        {
+                            if (LLAssetType::AT_OBJECT == linked_item->getType())
+                            {
+                                std::string attachment_point_name;
+                                if (!gAgentAvatarp->getAttachedPointName(linked_item->getUUID(), attachment_point_name))
+                                {
+                                    LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
+                                }
+                            }
+                        }
+                    }
+                }
+                LLUUID item_id(inv_item->getUUID());
+            }
+            return;
+        }
+    }
 //mk
 
 	// Possible cases:
@@ -1903,9 +1908,12 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 	// LL_INFOS() << "remove " << remove_count << " add " << add_count << LL_ENDL;
 
 //MK
-	gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
-	gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall = FALSE;
-	gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = FALSE;
+    if (gRRenabled)
+    {
+        gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
+        gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall = FALSE;
+        gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = FALSE;
+    }
 //mk
 }
 
