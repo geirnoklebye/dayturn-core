@@ -126,7 +126,14 @@ void LLPreviewTexture::populateRatioList()
 // virtual
 BOOL LLPreviewTexture::postBuild()
 {
-	if (mCopyToInv) 
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains("viewtexture"))
+	{
+		closeFloater();
+		return TRUE;
+	}
+//mk
+	if (mCopyToInv)
 	{
 		getChild<LLButton>("Keep")->setLabel(getString("Copy"));
 		childSetAction("Keep",LLPreview::onBtnCopyToInv,this);
