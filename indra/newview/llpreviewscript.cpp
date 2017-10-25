@@ -381,7 +381,8 @@ LLScriptEdCore::LLScriptEdCore(
 	mLive(live),
 	mContainer(container),
 	mHasScriptData(FALSE),
-	mScriptRemoved(FALSE)
+	mScriptRemoved(FALSE),
+	mSaveDialogShown(FALSE)
 {
 	setFollowsAll();
 	setBorderVisible(FALSE);
@@ -586,6 +587,14 @@ void LLScriptEdCore::setScriptText(const std::string& text, BOOL is_valid)
 	{
 		mEditor->setText(text);
 		mHasScriptData = is_valid;
+	}
+}
+
+void LLScriptEdCore::makeEditorPristine()
+{
+	if (mEditor)
+	{
+		mEditor->makePristine();
 	}
 }
 
@@ -852,8 +861,12 @@ BOOL LLScriptEdCore::canClose()
 	}
 	else
 	{
-		// Bring up view-modal dialog: Save changes? Yes, No, Cancel
-		LLNotificationsUtil::add("SaveChanges", LLSD(), LLSD(), boost::bind(&LLScriptEdCore::handleSaveChangesDialog, this, _1, _2));
+		if(!mSaveDialogShown)
+		{
+			mSaveDialogShown = TRUE;
+			// Bring up view-modal dialog: Save changes? Yes, No, Cancel
+			LLNotificationsUtil::add("SaveChanges", LLSD(), LLSD(), boost::bind(&LLScriptEdCore::handleSaveChangesDialog, this, _1, _2));
+		}
 		return FALSE;
 	}
 }
@@ -866,6 +879,7 @@ void LLScriptEdCore::setEnableEditing(bool enable)
 
 bool LLScriptEdCore::handleSaveChangesDialog(const LLSD& notification, const LLSD& response )
 {
+	mSaveDialogShown = FALSE;
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
 	switch( option )
 	{
@@ -1205,7 +1219,7 @@ void LLScriptEdCore::onBtnLoadFromFile( void* data )
 
 	std::string filename = file_picker.getFirstFile();
 
-	std::ifstream fin(filename.c_str());
+	llifstream fin(filename.c_str());
 
 	std::string line;
 	std::string text;
@@ -1243,7 +1257,7 @@ void LLScriptEdCore::onBtnSaveToFile( void* userdata )
 		{
 			std::string filename = file_picker.getFirstFile();
 			std::string scriptText=self->mEditor->getText();
-			std::ofstream fout(filename.c_str());
+			llofstream fout(filename.c_str());
 			fout<<(scriptText);
 			fout.close();
 			self->mSaveCallback( self->mUserdata, FALSE );
@@ -2033,7 +2047,7 @@ void LLLiveLSLEditor::loadScriptText(LLVFS *vfs, const LLUUID &uuid, LLAssetType
 	buffer[file_length] = '\0';
 
 	mScriptEd->setScriptText(LLStringExplicit(&buffer[0]), TRUE);
-	mScriptEd->mEditor->makePristine();
+	mScriptEd->makeEditorPristine();
 	mScriptEd->setScriptName(getItem()->getName());
 }
 
