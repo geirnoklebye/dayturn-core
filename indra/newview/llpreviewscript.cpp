@@ -461,6 +461,14 @@ void LLLiveLSLEditor::onToggleExperience( LLUICtrl *ui, void* userdata )
 
 BOOL LLScriptEdCore::postBuild()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains("viewnote"))
+	{
+		mForceClose = TRUE;
+		((LLFloater*)getParent())->closeFloater();
+		return TRUE;
+	}
+//mk
 	mErrorList = getChild<LLScrollListCtrl>("lsl errors");
 
 	mFunctions = getChild<LLComboBox>( "Insert...");
@@ -1517,6 +1525,14 @@ LLPreviewLSL::LLPreviewLSL(const LLSD& key )
 // virtual
 BOOL LLPreviewLSL::postBuild()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains("viewnote"))
+	{
+		mForceClose = TRUE;
+		closeFloater();
+		return TRUE;
+	}
+//mk
 	const LLInventoryItem* item = getItem();
 
 	llassert(item);
@@ -1928,6 +1944,14 @@ LLLiveLSLEditor::LLLiveLSLEditor(const LLSD& key) :
 
 BOOL LLLiveLSLEditor::postBuild()
 {
+//MK
+	if (gRRenabled && gAgent.mRRInterface.contains("viewnote"))
+	{
+		mForceClose = TRUE;
+		closeFloater();
+		return TRUE;
+	}
+//mk
 	childSetCommitCallback("running", LLLiveLSLEditor::onRunningCheckboxClicked, this);
 	getChildView("running")->setEnabled(FALSE);
 
