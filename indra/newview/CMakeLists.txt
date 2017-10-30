@@ -2321,6 +2321,7 @@ if (LL_TESTS)
     ${LLCOMMON_LIBRARIES}
     ${JSONCPP_LIBRARIES}
     ${CURL_LIBRARIES}
+    ${NGHTTP2_LIBRARIES}
     )
 
   set_source_files_properties(

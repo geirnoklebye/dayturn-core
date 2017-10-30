@@ -59,6 +59,7 @@ if(WINDOWS)
         libapriconv-1.dll
         ssleay32.dll
         libeay32.dll
+        nghttp2.dll
         glod.dll
         libhunspell.dll
 
@@ -208,6 +209,9 @@ elseif(DARWIN)
         libGLOD.dylib
 #        libopenal.1.dylib
         libndofdev.dylib
+        libnghttp2.dylib
+        libnghttp2.14.dylib
+        libnghttp2.14.14.0.dylib
        )
 
     if (FMODEX)

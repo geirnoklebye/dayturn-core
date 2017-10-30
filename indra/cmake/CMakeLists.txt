@@ -145,7 +145,6 @@ set(cmake_SOURCE_FILES
     GLEXT.cmake
     GLH.cmake
     GLOD.cmake
-    GetPrerequisites_2_8.cmake
     GoogleBreakpad.cmake
     GoogleMock.cmake
     Havok.cmake
