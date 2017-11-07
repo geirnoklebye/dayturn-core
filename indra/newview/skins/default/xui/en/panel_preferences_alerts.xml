@@ -45,7 +45,16 @@
      left_delta="-150"
      top_pad="4"	
      name="notify_money_received_checkbox"     
-     width="300" />   
+     width="300" /> 
+     <check_box
+     control_name="FSLogSnapshotsToLocal"
+     height="16"
+     label="Log filename of saved snapshots in to chat history"
+     layout="topleft"
+     left_delta="0"
+     name="FSLogSnapshotsToLocal"
+     top_pad="3" 
+     width="300" /> 
     <text
      type="string"
      length="1"

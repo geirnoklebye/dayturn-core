@@ -18035,6 +18035,17 @@
         <real>2.0</real>
       </array>
     </map>
+    <key>FSLogSnapshotsToLocal</key>
+    <map>
+      <key>Comment</key>
+      <string>Log filename of saved snapshots in to chat history</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>    
     <key>InventoryFetchDeCloudDebug</key>
     <map>
       <key>Comment</key>
