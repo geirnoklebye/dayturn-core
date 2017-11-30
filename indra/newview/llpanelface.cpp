@@ -1743,6 +1743,15 @@ void LLPanelFace::updateShinyControls(bool is_setting_texture, bool mess_with_sh
 			}
 		}
 	}
+	else
+	{
+		if (shiny_texture_ID.isNull() && comboShiny && comboShiny->itemExists(USE_TEXTURE))
+		{
+			comboShiny->remove(SHINY_TEXTURE);
+			comboShiny->selectFirstItem();
+		}
+	}
+
 
 	LLComboBox* combo_matmedia = getChild<LLComboBox>("combobox matmedia");
 	LLRadioGroup* radio_mat_type = getChild<LLRadioGroup>("radio_material_type");
@@ -2576,8 +2585,8 @@ void LLPanelFace::onClickPaste(void* userdata)
 void LLPanelFace::onTextureSelectionChanged(LLInventoryItem* itemp)
 {
 	LL_DEBUGS("Materials") << "item asset " << itemp->getAssetUUID() << LL_ENDL;
-	LLRadioGroup* radio_mat_type = getChild<LLRadioGroup>("radio_material_type");
-	if(radio_mat_type)
+	LLRadioGroup* radio_mat_type = findChild<LLRadioGroup>("radio_material_type");
+	if(!radio_mat_type)
 	{
 	    return;
 	}

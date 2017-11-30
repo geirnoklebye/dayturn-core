@@ -1488,8 +1488,8 @@ bool LLAppViewer::frame()
 			LL_RECORD_BLOCK_TIME(FTM_SLEEP);
 			
 			// yield some time to the os based on command line option
-				LLCachedControl<S32> mYield_Time(gSavedSettings, "YieldTime", -1);
-				if(mYield_Time >= 0)
+			static	LLCachedControl<S32> mYield_Time(gSavedSettings, "YieldTime", -1);
+			if(mYield_Time >= 0)
 			{
 				LL_RECORD_BLOCK_TIME(FTM_YIELD);
 				ms_sleep(mYield_Time);

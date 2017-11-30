@@ -4008,7 +4008,8 @@ https://sourceforge.net/projects/kokua.team-purple.p/files/ .
   <notification
    icon="alertmodal.tga"
    name="UpdaterServiceNotRunning"
-   type="alertmodal">
+   type="alertmodal"
+   force_urls_external="true">
 There is a required update for your Kokua Installation.
 
 You may download this update from https://sourceforge.net/projects/kokua.team-purple.p/files/ .
