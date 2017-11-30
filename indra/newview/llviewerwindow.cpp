@@ -4594,11 +4594,6 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
     {
         std::string proposed_name(sSnapshotBaseName);
 
-		if (is_snapshot_name_loc_set)
-		{
-		}		
-
-
         LLGenericSaveFilePicker::open(pick_type, proposed_name, boost::bind(&LLViewerWindow::saveImageCallback, this, _1, image, extension, callback));
         return;
     }

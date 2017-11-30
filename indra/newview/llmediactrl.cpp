@@ -849,7 +849,6 @@ void LLMediaCtrl::draw()
 
 			S32 x_offset, y_offset, width, height;
 			calcOffsetsAndSize(&x_offset, &y_offset, &width, &height);
-			y_offset = (r.getHeight() - height) / 2;	
 
 #if 0
 			// <FS:ND> Flip Y-Axis of media texture
