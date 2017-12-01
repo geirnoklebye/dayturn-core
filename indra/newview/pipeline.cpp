@@ -6891,6 +6891,8 @@ bool LLPipeline::toggleRenderTypeControlNegated(S32 type)
 //static
 void LLPipeline::toggleRenderDebug(U32 bit)
 {
+	U32 bit = (U32)(intptr_t)data;
+//MK
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
 	{
@@ -7149,7 +7151,7 @@ LLVOPartGroup* LLPipeline::lineSegmentIntersectParticle(const LLVector4a& start,
 }
 
 LLViewerObject* LLPipeline::lineSegmentIntersectInWorld(const LLVector4a& start, const LLVector4a& end,
-														bool pick_transparent,
+														BOOL pick_transparent,												
 														bool pick_rigged,
 														S32* face_hit,
 														LLVector4a* intersection,         // return the intersection point
@@ -11430,8 +11432,6 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	S32 occlusion = sUseOcclusion;
 	sUseOcclusion = 0;
 	sReflectionRender = ! sRenderDeferred;
-	sReflectionRender = ! sRenderDeferred;
-	sImpostorRender = true;
 	sShadowRender = true;
 	sImpostorRender = true;
 

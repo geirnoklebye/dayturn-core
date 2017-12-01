@@ -2252,7 +2252,7 @@ static bool parse_lure_bucket(const std::string& bucket,
 							  LLVector3& pos,
 							  LLVector3& look_at,
 							  U8& region_access)
-{
+{    
 	if (!gIsInSecondLife)
 	{
 	    return false;  // TODO make sure the bucket contains data when coming from OS. Empty bucket leads to a viewer crash on OS X. 
@@ -4199,6 +4199,24 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 						chat.mText = "";
 					}
 					mesg = chat.mText;
+				}
+
+				if (gAgent.mRRInterface.containsWithoutException("recvemote", from_id.asString())
+					|| gAgent.mRRInterface.contains("recvemotefrom:" + from_id.asString())
+					|| gAgent.mRRInterface.contains("recvemotefrom:" + owner_id.asString())
+					)
+				{
+					int	ind = mesg.find("/me");
+					std::string clear_part = "";
+					if (ind != -1) {
+						clear_part = mesg.substr(0, ind);
+						chat.mFromName = from_name;
+						chat.mText = clear_part + "/me ...";
+						if (!gSavedSettings.getBOOL("RestrainedLoveShowEllipsis")) {
+							chat.mText = clear_part;
+						}
+						mesg = chat.mText;
+					}
 				}
 
 				if (gAgent.mRRInterface.containsWithoutException("recvemote", from_id.asString())
@@ -6240,7 +6258,7 @@ void process_money_balance_reply( LLMessageSystem* msg, void** )
 	msg->getS32("MoneyData", "SquareMetersCredit", credit);
 	msg->getS32("MoneyData", "SquareMetersCommitted", committed);
 	msg->getStringFast(_PREHASH_MoneyData, _PREHASH_Description, desc);
-	LL_INFOS("Messaging") << "L$, credit, committed: " << balance << " " << credit << " "
+	LL_INFOS("Messaging") << Tea::wrapCurrency("L$, credit, committed: ") << balance << " " << credit << " "
 			<< committed << LL_ENDL;
     
 	if (gStatusBar)
@@ -8019,8 +8037,8 @@ void send_lures(const LLSD& notification, const LLSD& response)
 
 			// Record the offer.
 			{
-			LLAvatarName av_name;
-			LLAvatarNameCache::get(target_id, &av_name);  // for im log filenames
+				LLAvatarName av_name;
+				LLAvatarNameCache::get(target_id, &av_name);  // for im log filenames
 				LLSD args;
 			args["TO_NAME"] = LLSLURL("agent", target_id, "completename").getSLURLString();;
 	

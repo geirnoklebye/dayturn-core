@@ -4571,6 +4571,57 @@ void LLViewerWindow::saveImageCallback(const std::string& filename, LLImageForma
 
 // </FS:Ansariel>
 
+    do
+// <FS:Ansariel> Threaded filepickers
+//BOOL LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picker)
+void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picker, boost::function<void(bool)> callback)
+// </FS:Ansariel>
+    {
+//	insufficient_memory = FALSE;
+        filepath += gDirUtilp->getDirDelimiter();
+        filepath += base_name;
+        filepath += llformat("_%.3d", i);
+        filepath += extension;
+
+        llstat stat_info;
+        err = LLFile::stat(filepath, &stat_info);
+        i++;
+    } while (-1 != err);  // search until the file is not found (i.e., stat() gives an error).
+
+    LL_INFOS() << "Saving snapshot to " << filepath << LL_ENDL;
+
+    if (gSavedSettings.getBOOL("FSLogSnapshotsToLocal"))
+    {
+        LLStringUtil::format_map_t args;
+        args["FILENAME"] = filepath;
+        report_to_nearby_chat(LLTrans::getString("SnapshotSavedToDisk", args));
+    }
+
+    bool success = image->save(filepath);
+    if (callback)
+    {
+        callback(success);
+    }
+}
+void LLViewerWindow::saveImageCallback(const std::string& filename, LLImageFormatted* image, const std::string& extension, boost::function<void(bool)> callback)
+{
+    if (!filename.empty())
+    {
+        LLViewerWindow::sSnapshotBaseName = gDirUtilp->getBaseFileName(filename, true);
+        LLViewerWindow::sSnapshotDir = gDirUtilp->getDirName(filename);
+
+        do_save_image(image, LLViewerWindow::sSnapshotDir, LLViewerWindow::sSnapshotBaseName, extension, callback);
+        return;
+    }
+
+    if (callback)
+    {
+        callback(false);
+    }
+}
+
+// </FS:Ansariel>
+
 // Saves an image to the harddrive as "SnapshotX" where X >= 1.
 // <FS:Ansariel> Threaded filepickers
 //BOOL LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picker)
@@ -4578,7 +4629,6 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
 // </FS:Ansariel>
 {
 //	insufficient_memory = FALSE;
-
     if (!image)
     {
         LL_WARNS() << "No image to save" << LL_ENDL;
@@ -4614,6 +4664,13 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
     //	std::string proposed_name( sSnapshotBaseName );
 
     //	// getSaveFile will append an appropriate extension to the proposed name, based on the ESaveFilter constant passed in.
+    //	// pick a directory in which to save
+    //	LLFilePicker& picker = LLFilePicker::instance();
+    //	if (!picker.getSaveFile(pick_type, proposed_name))
+    //	{
+    //		// Clicked cancel
+    //		return FALSE;
+    //	}
 
     //	// pick a directory in which to save
     //	LLFilePicker& picker = LLFilePicker::instance();
@@ -4625,16 +4682,37 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
 
     //	// Copy the directory + file name
     //	std::string filepath = picker.getFirstFile();
+    //}
 
     //	LLViewerWindow::sSnapshotBaseName = gDirUtilp->getBaseFileName(filepath, true);
     //	LLViewerWindow::sSnapshotDir = gDirUtilp->getDirName(filepath);
     //}
+//	}
 
 //	if(LLViewerWindow::sSnapshotDir.empty())
 //	{
 //		return;
 //	}
+#else
+	boost::filesystem::space_info b_space = boost::filesystem::space(sSnapshotDir);
+#endif
+	if (b_space.free < image->getDataSize())
+		insufficient_memory = TRUE;
+*/
+    //do
+    //{
+    //	filepath = sSnapshotDir;
+    //	filepath += gDirUtilp->getDirDelimiter();
+    //	filepath += sSnapshotBaseName;
+    //	filepath += llformat("_%.3d",i);
+    //	filepath += extension;
 
+    //	llstat stat_info;
+    //	err = LLFile::stat( filepath, &stat_info );
+    //	i++;
+    //}
+    //while( -1 != err );  // search until the file is not found (i.e., stat() gives an error).
+/*
 // Check if there is enough free space to save snapshot
 /*
 #ifdef LL_WINDOWS
@@ -4655,25 +4733,13 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
     //	filepath += sSnapshotBaseName;
     //	filepath += llformat("_%.3d",i);
     //	filepath += extension;
-
     //	llstat stat_info;
     //	err = LLFile::stat( filepath, &stat_info );
     //	i++;
     //}
     //while( -1 != err );  // search until the file is not found (i.e., stat() gives an error).
-/*
-// Check if there is enough free space to save snapshot
-#ifdef LL_WINDOWS
-	boost::filesystem::space_info b_space = boost::filesystem::space(utf8str_to_utf16str(sSnapshotDir));
-#else
-	boost::filesystem::space_info b_space = boost::filesystem::space(sSnapshotDir);
-#endif
-	if (b_space.free < image->getDataSize())
-	{
-		insufficient_memory = TRUE;
-		return FALSE;
-	}
-*/
+    //LL_INFOS() << "Saving snapshot to " << filepath << LL_ENDL;
+    //return image->save(filepath);
     // Get a base file location if needed.
     if (force_picker || !isSnapshotLocSet())
     {

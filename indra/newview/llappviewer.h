@@ -316,6 +316,9 @@ private:
 public:
 	static void setViewerWindowTitle();
 
+
+	static void setViewerWindowTitle();
+
 };
 
 // consts from viewer.h

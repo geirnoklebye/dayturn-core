@@ -209,7 +209,6 @@ const std::string& LLInvFVBridge::getDisplayName() const
 	return mDisplayName;
 }
 
-
 std::string LLInvFVBridge::getSearchableCreatorName() const
 {
 	const LLInventoryModel* model = getInventoryModel();
@@ -6514,6 +6513,16 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 		else
 		{
 			LLAppearanceMgr::instance().removeItemFromAvatar(mUUID);
+	//MK
+				}
+				gAgent.mRRInterface.mHandleNoStrip = TRUE;
+			}
+		}
+		else
+		{
+			LLAppearanceMgr::instance().removeItemFromAvatar(mUUID);
+		}
+//mk
 		}
 //mk
 	}
