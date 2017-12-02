@@ -3859,11 +3859,9 @@ Finished download of raw terrain file to:
    type="alertmodal">
 Version [VERSION] is required for login.
 This should have been updated for you but apparently was not.
-Please download from https://secondlife.com/support/downloads/
+Please download from https://sourceforge.net/projects/kokua.team-purple.p/files/ .
     <tag>confirm</tag>
     <usetemplate
-https://sourceforge.net/projects/kokua.team-purple.p/files/ .
-There is a required update for your Kokua Installation.
      name="okbutton"
      yestext="OK"/>
   </notification>

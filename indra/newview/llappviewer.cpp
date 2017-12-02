@@ -1346,9 +1346,6 @@ bool LLAppViewer::frame()
 	LLTimer periodicRenderingTimer;
 	BOOL restore_rendering_masks = FALSE;
 
-	LLTimer periodicRenderingTimer;
-	BOOL restore_rendering_masks = FALSE;
-
 	//LLPrivateMemoryPoolTester::getInstance()->run(false) ;
 	//LLPrivateMemoryPoolTester::getInstance()->run(true) ;
 	//LLPrivateMemoryPoolTester::destroy() ;
@@ -5805,23 +5802,6 @@ void LLAppViewer::handleLoginComplete()
 	mSavePerAccountSettings=true;
 }
 
-// static
-void LLAppViewer::setViewerWindowTitle()
-//MK
-	if ( !gRRenabled && LLStartUp::getStartSLURL().getType() == LLSLURL::LOCATION )
-//mk
-{
-	std::string title = "";
-
-	if (gSavedSettings.getBOOL("WindowTitleAvatarName")) {
-		title += gAgentAvatarp->getFullname() + " - ";
-	}
-
-	if (gSavedSettings.getBOOL("WindowTitleGridName")) {
-		title += LLGridManager::getInstance()->getGridLabel() + " - ";
-    }
-	gViewerWindow->setTitle(title + gWindowTitle);
-}
 
 // static
 void LLAppViewer::setViewerWindowTitle()

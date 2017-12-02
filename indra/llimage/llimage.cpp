@@ -1220,7 +1220,7 @@ void LLImageRaw::copyUnscaledAlphaMask( LLImageRaw* src, const LLColor4U& fill)
 	U8* dst_data = dst->getData();
 	for ( S32 i = 0; i < pixels; i++ )
 	{
-		dst_data[0] = fill.mV[0];
+	dst_data[0] = fill.mV[0];
 		dst_data[1] = fill.mV[1];
 		dst_data[2] = fill.mV[2];
 		dst_data[3] = src_data[0];
@@ -1240,27 +1240,27 @@ void LLImageRaw::fill( const LLColor4U& color )
 	}
 
 	S32 pixels = getWidth() * getHeight();
-	if( 4 == getComponents() )
+	if (4 == getComponents())
 	{
-		U32* data = (U32*) getData();
+		U32* data = (U32*)getData();
 		U32 rgbaColor = color.asRGBA();
-
-		for( S32 i = 0; i < pixels; i++ )
-			data[i] = mColor;
-			data[ i ] = rgbaColor;
-	}
-	else
-	if( 3 == getComponents() )
-	{
-		U8* data = getData();
-		for( S32 i = 0; i < pixels; i++ )
+		for (S32 i = 0; i < pixels; i++)
 		{
-			data[0] = color.mV[0];
-			data[1] = color.mV[1];
-			data[2] = color.mV[2];
-			data += 3;
+			data[i] = rgbaColor;
 		}
 	}
+	else
+		if (3 == getComponents())
+		{
+			U8* data = getData();
+			for (S32 i = 0; i < pixels; i++)
+			{
+				data[0] = color.mV[0];
+				data[1] = color.mV[1];
+				data[2] = color.mV[2];
+				data += 3;
+			}
+		}
 }
 
 LLPointer<LLImageRaw> LLImageRaw::duplicate()

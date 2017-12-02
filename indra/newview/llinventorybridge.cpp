@@ -6402,51 +6402,51 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 			LLUUID object_id = mUUID;
 			LLViewerInventoryItem* item;
 			item = (LLViewerInventoryItem*)gInventory.getItem(object_id);
-			if(item && gInventory.isObjectDescendentOf(object_id, gInventory.getRootFolderID()))
+			if (item && gInventory.isObjectDescendentOf(object_id, gInventory.getRootFolderID()))
 			{
 				rez_attachment(item, NULL, true); // Replace if "Wear"ing.
 			}
 		}
 		else
 		{
-//MK
-		bool replace = true;
-		if (gSavedSettings.controlExists("RestrainedLoveDoubleClickWear") && !gSavedSettings.getBOOL("RestrainedLoveDoubleClickWear"))
-		{
-			replace = false;
-		}
-//mk
+			//MK
+			bool replace = true;
+			if (gSavedSettings.controlExists("RestrainedLoveDoubleClickWear") && !gSavedSettings.getBOOL("RestrainedLoveDoubleClickWear"))
+			{
+				replace = false;
+			}
+			//mk
 			LLUUID object_id = mUUID;
 			LLViewerInventoryItem* item;
 			item = (LLViewerInventoryItem*)gInventory.getItem(object_id);
-			if(item && gInventory.isObjectDescendentOf(object_id, gInventory.getRootFolderID()))
+			if (item && gInventory.isObjectDescendentOf(object_id, gInventory.getRootFolderID()))
 			{
-//MK
+				//MK
 				if (gRRenabled && gAgent.mRRInterface.mContainsDetach)
 				{
-				// We have at least one locked object on the body => err on the safe side, don't allow to replace
-				replace = false;
+					// We have at least one locked object on the body => err on the safe side, don't allow to replace
+					replace = false;
 
-				LLViewerJointAttachment* attachmentp = NULL;
-				// if it's a no-mod item, the containing folder has priority to decide where to wear it
-				if (!item->getPermissions().allowModifyBy(gAgent.getID()))
-				{
-					attachmentp = gAgent.mRRInterface.findAttachmentPointFromParentName (item);
-					if (attachmentp) rez_attachment(item, attachmentp, replace);
+					LLViewerJointAttachment* attachmentp = NULL;
+					// if it's a no-mod item, the containing folder has priority to decide where to wear it
+					if (!item->getPermissions().allowModifyBy(gAgent.getID()))
+					{
+						attachmentp = gAgent.mRRInterface.findAttachmentPointFromParentName(item);
+						if (attachmentp) rez_attachment(item, attachmentp, replace);
+						else
+						{
+							// but the name itself could also have the information => check
+							attachmentp = gAgent.mRRInterface.findAttachmentPointFromName(item->getName());
+							if (attachmentp) rez_attachment(item, attachmentp, replace);
+							else if (!gAgent.mRRInterface.mContainsDefaultwear && gSavedSettings.getBOOL("RestrainedLoveAllowWear")) rez_attachment(item, NULL, replace);
+						}
+					}
 					else
 					{
-						// but the name itself could also have the information => check
-						attachmentp = gAgent.mRRInterface.findAttachmentPointFromName (item->getName());
+						// this is a mod item, wear it according to its name
+						attachmentp = gAgent.mRRInterface.findAttachmentPointFromName(item->getName());
 						if (attachmentp) rez_attachment(item, attachmentp, replace);
 						else if (!gAgent.mRRInterface.mContainsDefaultwear && gSavedSettings.getBOOL("RestrainedLoveAllowWear")) rez_attachment(item, NULL, replace);
-					}
-				}
-				else
-				{
-					// this is a mod item, wear it according to its name
-					attachmentp = gAgent.mRRInterface.findAttachmentPointFromName (item->getName());
-					if (attachmentp) rez_attachment(item, attachmentp, replace);
- 					else if (!gAgent.mRRInterface.mContainsDefaultwear && gSavedSettings.getBOOL("RestrainedLoveAllowWear")) rez_attachment(item, NULL, replace);
 
 					}
 				}
@@ -6455,20 +6455,20 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 					////			rez_attachment(item, NULL, true); // Replace if "Wear"ing.
 					rez_attachment(item, NULL, replace);
 				}
-//mk
-		}
-		else if(item && item->isFinished())
-		{
-			// must be in library. copy it to our inventory and put it on.
-			LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(rez_attachment_cb, _1, (LLViewerJointAttachment*)0));
-			copy_inventory_item(
-				gAgent.getID(),
-				item->getPermissions().getOwner(),
-				item->getUUID(),
-				LLUUID::null,
-				std::string(),
-				cb);
-		}
+				//mk
+			}
+			else if (item && item->isFinished())
+			{
+				// must be in library. copy it to our inventory and put it on.
+				LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(rez_attachment_cb, _1, (LLViewerJointAttachment*)0));
+				copy_inventory_item(
+					gAgent.getID(),
+					item->getPermissions().getOwner(),
+					item->getUUID(),
+					LLUUID::null,
+					std::string(),
+					cb);
+			}
 			gFocusMgr.setKeyboardFocus(NULL);
 		}
 	}
@@ -6486,7 +6486,7 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 		LLAppearanceMgr::instance().wearItemOnAvatar(mUUID, true, false); // Don't replace if adding.
 	}
 	// <FS:Ansariel> Touch worn objects
-// [/SL:KB]
+	// [/SL:KB]
 	else if ("touch" == action)
 	{
 		handle_attachment_touch(mUUID);
@@ -6494,26 +6494,18 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 	// </FS:Ansariel>
 	else if (isRemoveAction(action))
 	{
-//MK
+		//MK
 		if (gRRenabled)
 		{
 			LLInventoryItem* item = gInventory.getItem(mUUID);
-			if(item)
+			if (item)
 			{
 				gAgent.mRRInterface.mHandleNoStrip = FALSE;
-				if (!gRRenabled || gAgent.mRRInterface.canDetach (item))
+				if (!gRRenabled || gAgent.mRRInterface.canDetach(item))
 				{
-	//mk
+					//mk
 					LLAppearanceMgr::instance().removeItemFromAvatar(mUUID);
-	//MK
-				}
-				gAgent.mRRInterface.mHandleNoStrip = TRUE;
-			}
-		}
-		else
-		{
-			LLAppearanceMgr::instance().removeItemFromAvatar(mUUID);
-	//MK
+					//MK
 				}
 				gAgent.mRRInterface.mHandleNoStrip = TRUE;
 			}
@@ -6522,11 +6514,10 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 		{
 			LLAppearanceMgr::instance().removeItemFromAvatar(mUUID);
 		}
-//mk
-		}
-//mk
+		//mk
 	}
 	else LLItemBridge::performAction(model, action);
+
 }
 
 void LLObjectBridge::openItem()
