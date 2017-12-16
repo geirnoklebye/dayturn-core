@@ -852,7 +852,7 @@ bool idle_startup()
 			if (NULL == getenv("LL_BAD_FMODSTUDIO_DRIVER"))
 #endif // !LL_WINDOWS
 			{
-				gAudiop = (LLAudioEngine *) new LLAudioEngine_FMODSTUDIO(gSavedSettings.getBOOL("FMODExProfilerEnable"), gSavedSettings.getU32("FMODResampleMethod"));
+				gAudiop = (LLAudioEngine *) new LLAudioEngine_FMODSTUDIO(gSavedSettings.getBOOL("FMODProfilerEnable"), gSavedSettings.getU32("FMODResampleMethod"));
 			}
 #endif
 
@@ -861,7 +861,7 @@ bool idle_startup()
 			if (NULL == getenv("LL_BAD_FMODEX_DRIVER"))
 #endif // !LL_WINDOWS
 			{
-				gAudiop = (LLAudioEngine *) new LLAudioEngine_FMODEX(gSavedSettings.getBOOL("FMODExProfilerEnable"));
+				gAudiop = (LLAudioEngine *) new LLAudioEngine_FMODEX(gSavedSettings.getBOOL("FMODProfilerEnable"));
 			}
 #endif
 
