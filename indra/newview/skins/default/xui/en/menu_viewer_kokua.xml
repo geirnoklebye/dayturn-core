@@ -2332,7 +2332,8 @@
 
         <menu_item_check
         label="Disable Build Constraints"
-        name="Disable Max Build Constraints">
+        name="Disable Max Build Constraints"
+        visible="false">
           <on_click 
           function="Advanced.ToggleMaxBuildConstraints"
           userdata="" />
