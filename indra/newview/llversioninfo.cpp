@@ -101,11 +101,17 @@ const std::string &LLVersionInfo::getShortVersion()
 
 namespace
 {
+	// LL_VIEWER_CHANNEL is a macro defined on the compiler command line. The
+	// macro expands to the string name of the channel, but without quotes. We
+	// need to turn it into a quoted string. This macro trick does that.
+#define stringize_inner(x) #x
+#define stringize_outer(x) stringize_inner(x)
+
 	/// Storage of the channel name the viewer is using.
 	//  The channel name is set by hardcoded constant, 
 	//  or by calling LLVersionInfo::resetChannel()
 //MK
-////	std::string sWorkingChannelName(LL_CHANNEL);
+////	std::string sWorkingChannelName(stringize_outer(LL_VIEWER_CHANNEL));
 	std::string sWorkingChannelName("Restrained Love Release");
 //mk
 	// Storage for the "version and channel" string.
