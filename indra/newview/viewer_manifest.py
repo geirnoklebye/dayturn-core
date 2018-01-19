@@ -34,6 +34,7 @@ import errno
 import json
 import re
 import tarfile
+import stat
 import time
 import random
 import subprocess
@@ -1038,6 +1039,13 @@ class DarwinManifest(ViewerManifest):
                                  '"@rpath/Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" '
                                  '"@executable_path/../Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" "%s"' % dylibexecutablepath)
 
+                            # This code constructs a relative symlink from the
+                            # target framework folder back to the real CEF framework.
+                            # It needs to be relative so that the symlink still works when
+                            # (as is normal) the user moves the app bundle out of the DMG
+                            # and into the /Applications folder. Note we pass catch=False,
+                            # letting the uncaught exception terminate the process, since
+                            # without this symlink, Second Life web media can't possibly work.
 
                 # CEF framework goes inside Kokua.app/Contents/Frameworks
             with self.prefix(src="", dst="Frameworks"):
@@ -1210,6 +1218,7 @@ class DarwinManifest(ViewerManifest):
                     home_path = os.environ['HOME']
                     keychain_pwd_path = os.path.join(build_secrets_checkout,'code-signing-osx','password.txt')
                     keychain_pwd = open(keychain_pwd_path).read().rstrip()
+
                     # Note: As of macOS Sierra, keychains are created with names postfixed with '-db' so for example, the
                     #       SL Viewer keychain would by default be found in ~/Library/Keychains/viewer.keychain-db instead of
                     #       just ~/Library/Keychains/viewer.keychain in earlier versions.
@@ -1247,7 +1256,8 @@ class DarwinManifest(ViewerManifest):
                                 raise
                     self.run_command('spctl -a -texec -vv %(bundle)r' % { 'bundle': app_in_dmg })
 
-            imagename="SecondLife_" + '_'.join(self.args['version'])
+            imagename="Kokua_" + '_'.join(self.args['version'])
+
 
         finally:
             # Unmount the image even if exceptions from any of the above 
@@ -1322,7 +1332,7 @@ class LinuxManifest(ViewerManifest):
         print "DEBUG: icon_path '%s'" % icon_path
         with self.prefix(src=icon_path, dst="") :
             self.path("kokua_icon.png","kokua_icon.png" )
-            if self.prefix(src="", dst="res-sdl") :
+            with self.prefix(src="",dst="res-sdl") :
                 self.path("kokua_icon.bmp","kokua_icon.BMP")
 
         # plugins
@@ -1337,7 +1347,6 @@ class LinuxManifest(ViewerManifest):
 
         with self.prefix(src=os.path.join(os.pardir, 'packages', 'lib' ), dst="lib"):
             self.path( "libvlc*.so*" )
-
 
 
         if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="bin"):
@@ -1453,16 +1462,17 @@ class LinuxManifest(ViewerManifest):
                 print "Skipping %s.tar.txz for non-Release build (%s)" % \
                       (installer_name, self.args['buildtype'])
         finally:
-            self.run_command("mv %(inst)s %(dst)s" % {
-                'dst': self.get_dst_prefix(),
-                'inst': self.build_path_of(installer_name)})
+            self.run_command(["mv", tempname, realname])
 
     def strip_binaries(self):
         if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
             print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
             # makes some small assumptions about our packaged dir structure
-            self.run_command(r"find %(d)r/bin %(d)r/lib -type f \! -name \*.py \! -name SL_Launcher \! -name update_install | xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) 
-
+            self.run_command(
+                ["find"] +
+                [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib')] +
+                ['-type', 'f', '!', '-name', '*.py', '!', '-name', 'SL_Launcher',
+                 '!', '-name', 'update_install', '-exec', 'strip', '-S', '{}', ';'])
 
 class Linux_i686_Manifest(LinuxManifest):
     address_size = 32
@@ -1573,6 +1583,7 @@ class Linux_i686_Manifest(LinuxManifest):
         with self.prefix(src=relpkgdir, dst="bin"):
             self.path("SLVoice")
             self.path("win32")
+        with self.prefix(src=relpkgdir, dst="lib"):
             self.path("libortp.so")
             self.path("libsndfile.so.1")
             self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
