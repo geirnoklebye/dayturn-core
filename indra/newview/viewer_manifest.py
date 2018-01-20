@@ -32,12 +32,13 @@ import os.path
 import shutil
 import errno
 import json
-import re
-import tarfile
-import stat
-import time
+import plistlib
 import random
+import re
+import stat
 import subprocess
+import tarfile
+import time
 
 viewer_dir = os.path.dirname(__file__)
 # Add indra/lib/python to our path so we don't have to muck with PYTHONPATH.
@@ -199,7 +200,6 @@ class ViewerManifest(LLManifest):
     def finish_build_data_dict(self, build_data_dict):
         return build_data_dict
 
-
     def grid(self):
         return self.args['grid']
 
@@ -292,6 +292,129 @@ class ViewerManifest(LLManifest):
         random.shuffle(names)
         return ', '.join(names)
 
+    def relsymlinkf(self, src, dst=None, catch=True):
+        """
+        relsymlinkf() is just like symlinkf(), but instead of requiring the
+        caller to pass 'src' as a relative pathname, this method expects 'src'
+        to be absolute, and creates a symlink whose target is the relative
+        path from 'src' to dirname(dst).
+        """
+        dstdir, dst = self._symlinkf_prep_dst(src, dst)
+
+        # Determine the relative path starting from the directory containing
+        # dst to the intended src.
+        src = self.relpath(src, dstdir)
+
+        self._symlinkf(src, dst, catch)
+        return dst
+
+    def symlinkf(self, src, dst=None, catch=True):
+        """
+        Like ln -sf, but uses os.symlink() instead of running ln. This creates
+        a symlink at 'dst' that points to 'src' -- see:
+        https://docs.python.org/2/library/os.html#os.symlink
+
+        If you omit 'dst', this creates a symlink with basename(src) at
+        get_dst_prefix() -- in other words: put a symlink to this pathname
+        here at the current dst prefix.
+
+        'src' must specifically be a *relative* symlink. It makes no sense to
+        create an absolute symlink pointing to some path on the build machine!
+
+        Also:
+        - We prepend 'dst' with the current get_dst_prefix(), so it has similar
+          meaning to associated self.path() calls.
+        - We ensure that the containing directory os.path.dirname(dst) exists
+          before attempting the symlink.
+
+        If you pass catch=False, exceptions will be propagated instead of
+        caught.
+        """
+        dstdir, dst = self._symlinkf_prep_dst(src, dst)
+        self._symlinkf(src, dst, catch)
+        return dst
+
+    def _symlinkf_prep_dst(self, src, dst):
+        # helper for relsymlinkf() and symlinkf()
+        if dst is None:
+            dst = os.path.basename(src)
+        dst = os.path.join(self.get_dst_prefix(), dst)
+        # Seems silly to prepend get_dst_prefix() to dst only to call
+        # os.path.dirname() on it again, but this works even when the passed
+        # 'dst' is itself a pathname.
+        dstdir = os.path.dirname(dst)
+        self.cmakedirs(dstdir)
+        return (dstdir, dst)
+
+    def _symlinkf(self, src, dst, catch):
+        # helper for relsymlinkf() and symlinkf()
+        # the passed src must be relative
+        if os.path.isabs(src):
+            raise ManifestError("Do not symlinkf(absolute %r, asis=True)" % src)
+
+        # The outer catch is the one that reports failure even after attempted
+        # recovery.
+        try:
+            # At the inner layer, recovery may be possible.
+            try:
+                os.symlink(src, dst)
+            except OSError as err:
+                if err.errno != errno.EEXIST:
+                    raise
+                # We could just blithely attempt to remove and recreate the target
+                # file, but that strategy doesn't work so well if we don't have
+                # permissions to remove it. Check to see if it's already the
+                # symlink we want, which is the usual reason for EEXIST.
+                elif os.path.islink(dst):
+                    if os.readlink(dst) == src:
+                        # the requested link already exists
+                        pass
+                    else:
+                        # dst is the wrong symlink; attempt to remove and recreate it
+                        os.remove(dst)
+                        os.symlink(src, dst)
+                elif os.path.isdir(dst):
+                    print "Requested symlink (%s) exists but is a directory; replacing" % dst
+                    shutil.rmtree(dst)
+                    os.symlink(src, dst)
+                elif os.path.exists(dst):
+                    print "Requested symlink (%s) exists but is a file; replacing" % dst
+                    os.remove(dst)
+                    os.symlink(src, dst)
+                else:
+                    # out of ideas
+                    raise
+        except Exception as err:
+            # report
+            print "Can't symlink %r -> %r: %s: %s" % \
+                  (dst, src, err.__class__.__name__, err)
+            # if caller asked us not to catch, re-raise this exception
+            if not catch:
+                raise
+
+    def relpath(self, path, base=None, symlink=False):
+        """
+        Return the relative path from 'base' to the passed 'path'. If base is
+        omitted, self.get_dst_prefix() is assumed. In other words: make a
+        same-name symlink to this path right here in the current dest prefix.
+
+        Normally we resolve symlinks. To retain symlinks, pass symlink=True.
+        """
+        if base is None:
+            base = self.get_dst_prefix()
+
+        # Since we use os.path.relpath() for this, which is purely textual, we
+        # must ensure that both pathnames are absolute.
+        if symlink:
+            # symlink=True means: we know path is (or indirects through) a
+            # symlink, don't resolve, we want to use the symlink.
+            abspath = os.path.abspath
+        else:
+            # symlink=False means to resolve any symlinks we may find
+            abspath = os.path.realpath
+
+        return os.path.relpath(abspath(path), abspath(base))
+
 
 class WindowsManifest(ViewerManifest):
     # We want the platform, per se, for every Windows build to be 'win'. The
@@ -310,6 +433,8 @@ class WindowsManifest(ViewerManifest):
         # This is used to test a dll manifest.
         # It is used as a temporary override during the construct method
         from test_win32_manifest import test_assembly_binding
+        # TODO: This is redundant with LLManifest.copy_action(). Why aren't we
+        # calling copy_action() in conjunction with test_assembly_binding()?
         if src and (os.path.exists(src) or os.path.islink(src)):
             # ensure that destination path exists
             self.cmakedirs(os.path.dirname(dst))
@@ -330,6 +455,8 @@ class WindowsManifest(ViewerManifest):
         # It is used as a temporary override during the construct method
         from test_win32_manifest import test_assembly_binding
         from test_win32_manifest import NoManifestException, NoMatchingAssemblyException
+        # TODO: This is redundant with LLManifest.copy_action(). Why aren't we
+        # calling copy_action() in conjunction with test_assembly_binding()?
         if src and (os.path.exists(src) or os.path.islink(src)):
             # ensure that destination path exists
             self.cmakedirs(os.path.dirname(dst))
@@ -358,18 +485,16 @@ class WindowsManifest(ViewerManifest):
         pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
         relpkgdir = os.path.join(pkgdir, "lib", "release")
         debpkgdir = os.path.join(pkgdir, "lib", "debug")
-        vmpdir = os.path.join(pkgdir, "VMP")
-        llbasedir = os.path.join(pkgdir, "lib", "python", "llbase")
 
         if self.is_packaging_viewer():
             # Find kokua-bin.exe in the 'configuration' dir, then rename it to the result of final_exe.
             self.path(src='%s/kokua-bin.exe' % self.args['configuration'], dst=self.final_exe())
 
-            # include the compiled launcher scripts so that it gets included in the file_list
-            self.path(src='%s/SL_Launcher.exe' % vmpdir, dst="SL_Launcher.exe")
-
-            #IUM is not normally executed directly, just imported.  No exe needed.
-            self.path2basename(vmpdir,"InstallerUserMessage.py")
+            with self.prefix(src=os.path.join(pkgdir, "VMP"), dst=""):
+                # include the compiled launcher scripts so that it gets included in the file_list
+                self.path('SL_Launcher.exe')
+                #IUM is not normally executed directly, just imported.  No exe needed.
+                self.path("InstallerUserMessage.py")
 
             with self.prefix(src=self.icon_path(), dst="vmp_icons"):
                 self.path("secondlife.ico")
@@ -380,19 +505,15 @@ class WindowsManifest(ViewerManifest):
                 self.path("*.gif")
 
             #before, we only needed llbase at build time.  With VMP, we need it at run time.
-            llbase_path = os.path.join(self.get_dst_prefix(),'llbase')
-            if not os.path.exists(llbase_path):
-                os.makedirs(llbase_path)
-            with self.prefix(dst="llbase"):
-                self.path2basename(llbasedir,"*.py")
-                self.path2basename(llbasedir,"_cllsd.so")
+            with self.prefix(src=os.path.join(pkgdir, "lib", "python", "llbase"), dst="llbase"):
+                self.path("*.py")
+                self.path("_cllsd.so")
 
         # Plugin host application
         self.path2basename(os.path.join(os.pardir,
                                         'llplugin', 'slplugin', self.args['configuration']),
                            "slplugin.exe")
         
-
         # Get shared libs from the shared libs staging directory
         with self.prefix(src=os.path.join(os.pardir, 'sharedlibs', self.args['configuration']),
                        dst=""):
@@ -492,31 +613,19 @@ class WindowsManifest(ViewerManifest):
                 self.path("media_plugin_example.dll")
 
         # CEF runtime files - debug
-        if self.args['configuration'].lower() == 'debug':
-            with self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'debug'), dst="llplugin"):
-                self.path("chrome_elf.dll")
-                self.path("d3dcompiler_43.dll")
-                self.path("d3dcompiler_47.dll")
-                self.path("libcef.dll")
-                self.path("libEGL.dll")
-                self.path("libGLESv2.dll")
-                self.path("dullahan_host.exe")
-                self.path("natives_blob.bin")
-                self.path("snapshot_blob.bin")
-                self.path("widevinecdmadapter.dll")
-        else:
         # CEF runtime files - not debug (release, relwithdebinfo etc.)
-            with self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="llplugin"):
-                self.path("chrome_elf.dll")
-                self.path("d3dcompiler_43.dll")
-                self.path("d3dcompiler_47.dll")
-                self.path("libcef.dll")
-                self.path("libEGL.dll")
-                self.path("libGLESv2.dll")
-                self.path("dullahan_host.exe")
-                self.path("natives_blob.bin")
-                self.path("snapshot_blob.bin")
-                self.path("widevinecdmadapter.dll")
+        config = 'debug' if self.args['configuration'].lower() == 'debug' else 'release'
+        with self.prefix(src=os.path.join(pkgdir, 'bin', config), dst="llplugin"):
+            self.path("chrome_elf.dll")
+            self.path("d3dcompiler_43.dll")
+            self.path("d3dcompiler_47.dll")
+            self.path("libcef.dll")
+            self.path("libEGL.dll")
+            self.path("libGLESv2.dll")
+            self.path("dullahan_host.exe")
+            self.path("natives_blob.bin")
+            self.path("snapshot_blob.bin")
+            self.path("widevinecdmadapter.dll")
 
         # MSVC DLLs needed for CEF and have to be in same directory as plugin
         with self.prefix(src=os.path.join(os.pardir, 'sharedlibs', 'Release'), dst="llplugin"):
@@ -524,7 +633,7 @@ class WindowsManifest(ViewerManifest):
             self.path("msvcr120.dll")
 
         # CEF files common to all configurations
-        with self.prefix(src=os.path.join(os.pardir, 'packages', 'resources'), dst="llplugin"):
+        with self.prefix(src=os.path.join(pkgdir, 'resources'), dst="llplugin"):
             self.path("cef.pak")
             self.path("cef_100_percent.pak")
             self.path("cef_200_percent.pak")
@@ -532,7 +641,7 @@ class WindowsManifest(ViewerManifest):
             self.path("devtools_resources.pak")
             self.path("icudtl.dat")
 
-        with self.prefix(src=os.path.join(os.pardir, 'packages', 'resources', 'locales'), dst=os.path.join('llplugin', 'locales')):
+        with self.prefix(src=os.path.join(pkgdir, 'resources', 'locales'), dst=os.path.join('llplugin', 'locales')):
             self.path("am.pak")
             self.path("ar.pak")
             self.path("bg.pak")
@@ -587,10 +696,10 @@ class WindowsManifest(ViewerManifest):
             self.path("zh-CN.pak")
             self.path("zh-TW.pak")
 
-            with self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="llplugin"):
-                self.path("libvlc.dll")
-                self.path("libvlccore.dll")
-                self.path("plugins/")
+        with self.prefix(src=os.path.join(pkgdir, 'bin', 'release'), dst="llplugin"):
+            self.path("libvlc.dll")
+            self.path("libvlccore.dll")
+            self.path("plugins/")
 
         # pull in the crash logger and updater from other projects
         # tag:"crash-logger" here as a cue to the exporter
@@ -662,7 +771,7 @@ class WindowsManifest(ViewerManifest):
         substitution_strings['installer_file'] = installer_file
         
         version_vars = """
-        !define INSTEXE  "%(final_exe)s"
+        !define INSTEXE "SL_Launcher.exe"
         !define VERSION "%(version_short)s"
         !define VERSION_LONG "%(version)s"
         !define VERSION_DASHES "%(version_dashes)s"
@@ -723,7 +832,7 @@ class WindowsManifest(ViewerManifest):
         nsis_retry_wait=15
         for attempt in xrange(nsis_attempts):
             try:
-                self.run_command('"' + NSIS_path + '" /V2 ' + self.dst_path_of(tempfile))
+                self.run_command([NSIS_path, '/V2', self.dst_path_of(tempfile)])
             except ManifestError as err:
                 if attempt+1 < nsis_attempts:
                     print >> sys.stderr, "nsis failed, waiting %d seconds before retrying" % nsis_retry_wait
@@ -746,8 +855,7 @@ class WindowsManifest(ViewerManifest):
         if os.path.exists(sign_py):
             dst_path = self.dst_path_of(exe)
             print "about to run signing of: ", dst_path
-            self.run_command(' '.join((python, self.escape_slashes(sign_py),
-                                       self.escape_slashes(dst_path))))
+            self.run_command([python, sign_py, dst_path])
         else:
             print "Skipping code signing of %s: %s not found" % (exe, sign_py)
 
@@ -775,269 +883,299 @@ class DarwinManifest(ViewerManifest):
         return True
 
     def construct(self):
+        # These are the names of the top-level application and the embedded
+        # applications for the VMP and for the actual viewer, respectively.
+        # These names, without the .app suffix, determine the flyover text for
+        # their corresponding Dock icons.
+        toplevel_app, toplevel_icon = "Kokua.app",                "kokua_icon.icns"
+        launcher_app, launcher_icon = "Second Life Launcher.app", "secondlife.icns"
+        viewer_app,   viewer_icon   = "Kokua Viewer.app",         "kokua_icon.icns"
+
         # copy over the build result (this is a no-op if run within the xcode script)
-        self.path(self.args['configuration'] + "/Kokua.app", dst="")
+        self.path(os.path.join(self.args['configuration'], toplevel_app), dst="")
 
         pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
         relpkgdir = os.path.join(pkgdir, "lib", "release")
         debpkgdir = os.path.join(pkgdir, "lib", "debug")
-        vmpdir = os.path.join(pkgdir, "VMP")
-        llbasedir = os.path.join(pkgdir, "lib", "python", "llbase")
-        requestsdir = os.path.join(pkgdir, "lib", "python", "requests")
-        urllib3dir = os.path.join(pkgdir, "lib", "python", "urllib3")
-        chardetdir = os.path.join(pkgdir, "lib", "python", "chardet")
-        idnadir = os.path.join(pkgdir, "lib", "python", "idna")
 
+        # -------------------- top-level Second Life.app ---------------------
+        # top-level Second Life application is only a container
         with self.prefix(src="", dst="Contents"):  # everything goes in Contents
-            self.path("Info.plist", dst="Info.plist")
+            # top-level Info.plist is as generated by CMake
+            Info_plist = "Info.plist"
+            ## This self.path() call reports 0 files... skip?
+            self.path(Info_plist)
+            Info_plist = self.dst_path_of(Info_plist)
 
-            # copy additional libs in <bundle>/Contents/MacOS/
-            self.path(os.path.join(relpkgdir, "libndofdev.dylib"), dst="Resources/libndofdev.dylib")
-            self.path(os.path.join(relpkgdir, "libhunspell-1.3.0.dylib"), dst="Resources/libhunspell-1.3.0.dylib")   
+            # the one file in top-level MacOS directory is the trampoline to
+            # our nested launcher_app
+            with self.prefix(dst="MacOS"):
+                toplevel_MacOS = self.get_dst_prefix()
+                trampoline = self.put_in_file("""\
+#!/bin/bash
+open "%s" --args "$@"
+""" %
+                    # up one directory from MacOS to its sibling Resources directory
+                    os.path.join('$(dirname "$0")', os.pardir, 'Resources', launcher_app),
+                    "SL_Launcher",      # write this file
+                    "trampoline")       # flag to add to list of copied files
+                # Script must be executable
+                self.run_command(["chmod", "+x", trampoline])
 
-            with self.prefix(dst="MacOS"):              
-                #this copies over the python wrapper script, associated utilities and required libraries, see SL-321, SL-322, SL-323
-                self.path2basename(vmpdir,"SL_Launcher")
-                self.path2basename(vmpdir,"*.py")
-                # certifi will be imported by requests; this is our custom version to get our ca-bundle.crt 
-                certifi_path = os.path.join(self.get_dst_prefix(),'certifi')
-                if not os.path.exists(certifi_path):
-                    os.makedirs(certifi_path)
-                with self.prefix(dst="certifi"):
-                    self.path2basename(os.path.join(vmpdir,"certifi"),"*")
-                # llbase provides our llrest service layer and llsd decoding
-                llbase_path = os.path.join(self.get_dst_prefix(),'llbase')
-                if not os.path.exists(llbase_path):
-                    os.makedirs(llbase_path)
-                with self.prefix(dst="llbase"):
-                    self.path2basename(llbasedir,"*.py")
-                    self.path2basename(llbasedir,"_cllsd.so")
-                #requests module needed by llbase/llrest.py
-                #this is only needed on POSIX, because in Windows we compile it into the EXE
-                requests_path = os.path.join(self.get_dst_prefix(),'requests')
-                if not os.path.exists(requests_path):
-                    os.makedirs(requests_path)
-                with self.prefix(dst="requests"):
-                    self.path2basename(requestsdir,"*")
-                urllib3_path = os.path.join(self.get_dst_prefix(),'urllib3')
-                if not os.path.exists(urllib3_path):
-                    os.makedirs(urllib3_path)
-                with self.prefix(dst="urllib3"):
-                    self.path2basename(urllib3dir,"*")
-                chardet_path = os.path.join(self.get_dst_prefix(),'chardet')
-                if not os.path.exists(chardet_path):
-                    os.makedirs(chardet_path)
-                with self.prefix(dst="chardet"):
-                    self.path2basename(chardetdir,"*")
-                idna_path = os.path.join(self.get_dst_prefix(),'idna')
-                if not os.path.exists(idna_path):
-                    os.makedirs(idna_path)
-                with self.prefix(dst="idna"):
-                    self.path2basename(idnadir,"*")
+            # Make a symlink to a nested app Frameworks directory that doesn't
+            # yet exist. We shouldn't need this; the only things that need
+            # Frameworks are nested apps under viewer_app, and they should
+            # simply find its Contents/Frameworks by relative pathnames. But
+            # empirically, we do: if we omit this symlink, CEF doesn't work --
+            # the login splash screen doesn't even display. SIIIIGH.
+            # We're passing a path that's already relative, hence symlinkf()
+            # rather than relsymlinkf().
+            self.symlinkf(os.path.join("Resources", viewer_app, "Contents", "Frameworks"))
 
-            # most everything goes in the Resources directory
             with self.prefix(src="", dst="Resources"):
-                super(DarwinManifest, self).construct()
+                # top-level Resources directory should be pretty sparse
+                # need .icns file referenced by top-level Info.plist
+                with self.prefix(src=self.icon_path(), dst="") :
+                    self.path(toplevel_icon)
 
-                with self.prefix("cursors_mac"):
-                    self.path("*.tif")
+                # ------------------- nested launcher_app --------------------
+                with self.prefix(dst=os.path.join(launcher_app, "Contents")):
+                    # Info.plist is just like top-level one...
+                    Info = plistlib.readPlist(Info_plist)
+                    # except for these replacements:
+                    Info["CFBundleExecutable"] = "SL_Launcher"
+                    Info["CFBundleIconFile"] = launcher_icon
+                    self.put_in_file(
+                        plistlib.writePlistToString(Info),
+                        os.path.basename(Info_plist),
+                        "Info.plist")
 
-                self.path("licenses-mac.txt", dst="licenses.txt")
-                self.path("featuretable_mac.txt")
-                self.path("Kokua.nib")
-                self.path("ca-bundle.crt")
+                    # copy VMP libs to MacOS
+                    with self.prefix(dst="MacOS"):
+                        #this copies over the python wrapper script,
+                        #associated utilities and required libraries, see
+                        #SL-321, SL-322, SL-323
+                        with self.prefix(src=os.path.join(pkgdir, "VMP"), dst=""):
+                            self.path("SL_Launcher")
+                            self.path("*.py")
+                            # certifi will be imported by requests; this is
+                            # our custom version to get our ca-bundle.crt
+                            self.path("certifi")
+                        with self.prefix(src=os.path.join(pkgdir, "lib", "python"), dst=""):
+                            # llbase provides our llrest service layer and llsd decoding
+                            with self.prefix("llbase"):
+                                # (Why is llbase treated specially here? What
+                                # DON'T we want to copy out of lib/python/llbase?)
+                                self.path("*.py")
+                                self.path("_cllsd.so")
+                            #requests module needed by llbase/llrest.py
+                            #this is only needed on POSIX, because in Windows
+                            #we compile it into the EXE
+                            for pypkg in "chardet", "idna", "requests", "urllib3":
+                                self.path(pypkg)
 
-                icon_path = self.icon_path()
-                with self.prefix(src=icon_path, dst="") :
-                    self.path("kokua_icon.icns")
+                    # launcher_app/Contents/Resources
+                    with self.prefix(dst="Resources"):
+                        with self.prefix(src=self.icon_path(), dst="") :
+                            self.path(launcher_icon)
+                            with self.prefix(dst="vmp_icons"):
+                                self.path("secondlife.ico")
+                        #VMP Tkinter icons
+                        with self.prefix("vmp_icons"):
+                            self.path("*.png")
+                            self.path("*.gif")
 
-                with self.prefix(src=icon_path, dst="vmp_icons"):
-                    self.path("secondlife.ico")
+                # -------------------- nested viewer_app ---------------------
+                with self.prefix(dst=os.path.join(viewer_app, "Contents")):
+                    # Info.plist is just like top-level one...
+                    Info = plistlib.readPlist(Info_plist)
+                    # except for these replacements:
+                    # (CFBundleExecutable may be moot: SL_Launcher directly
+                    # runs the executable, instead of launching the app)
+                    Info["CFBundleExecutable"] = "Kokua"
+                    Info["CFBundleIconFile"] = viewer_icon
+                    self.put_in_file(
+                        plistlib.writePlistToString(Info),
+                        os.path.basename(Info_plist),
+                        "Info.plist")
 
-                self.path("Kokua.nib")
-                #VMP Tkinter icons
-                with self.prefix("vmp_icons"):
-                    self.path("*.png")
-                    self.path("*.gif")
+                    # CEF framework goes inside viewer_app/Contents/Frameworks.
+                    # Remember where we parked this car.
+                    with self.prefix(src="", dst="Frameworks"):
+                        CEF_framework = "Chromium Embedded Framework.framework"
+                        self.path2basename(relpkgdir, CEF_framework)
+                        CEF_framework = self.dst_path_of(CEF_framework)
 
-                
-                # Translations
-                self.path("English.lproj/language.txt")
-                self.replace_in(src="English.lproj/InfoPlist.strings",
-                                dst="English.lproj/InfoPlist.strings",
-                                searchdict={'%%VERSION%%':'.'.join(self.args['version'])}
-                                )
-                self.path("German.lproj")
-                self.path("Japanese.lproj")
-                self.path("Korean.lproj")
-                self.path("da.lproj")
-                self.path("es.lproj")
-                self.path("fr.lproj")
-                self.path("hu.lproj")
-                self.path("it.lproj")
-                self.path("nl.lproj")
-                self.path("pl.lproj")
-                self.path("pt.lproj")
-                self.path("ru.lproj")
-                self.path("tr.lproj")
-                self.path("uk.lproj")
-                self.path("zh-Hans.lproj")
+                    with self.prefix(dst="MacOS"):
+                        # CMake constructs the Second Life executable in the
+                        # MacOS directory belonging to the top-level Second
+                        # Life.app. Move it here.
+                        here = self.get_dst_prefix()
+                        relbase = os.path.realpath(os.path.dirname(Info_plist))
+                        self.cmakedirs(here)
+                        for f in os.listdir(toplevel_MacOS):
+                            if f == os.path.basename(trampoline):
+                                # don't move the trampoline script we just made!
+                                continue
+                            fromwhere = os.path.join(toplevel_MacOS, f)
+                            towhere   = os.path.join(here, f)
+                            print "Moving %s => %s" % \
+                                  (self.relpath(fromwhere, relbase),
+                                   self.relpath(towhere, relbase))
+                            # now do it, only without relativizing paths
+                            os.rename(fromwhere, towhere)
 
-                def path_optional(src, dst):
-                    """
-                    For a number of our self.path() calls, not only do we want
-                    to deal with the absence of src, we also want to remember
-                    which were present. Return either an empty list (absent)
-                    or a list containing dst (present). Concatenate these
-                    return values to get a list of all libs that are present.
-                    """
-                    # This was simple before we started needing to pass
-                    # wildcards. Fortunately, self.path() ends up appending a
-                    # (source, dest) pair to self.file_list for every expanded
-                    # file processed. Remember its size before the call.
-                    oldlen = len(self.file_list)
-                    self.path(src, dst)
-                    # The dest appended to self.file_list has been prepended
-                    # with self.get_dst_prefix(). Strip it off again.
-                    added = [os.path.relpath(d, self.get_dst_prefix())
-                             for s, d in self.file_list[oldlen:]]
-                    if not added:
-                        print "Skipping %s" % dst
-                    return added
+                        # NOTE: the -S argument to strip causes it to keep
+                        # enough info for annotated backtraces (i.e. function
+                        # names in the crash log). 'strip' with no arguments
+                        # yields a slightly smaller binary but makes crash
+                        # logs mostly useless. This may be desirable for the
+                        # final release. Or not.
+                        if ("package" in self.args['actions'] or 
+                            "unpacked" in self.args['actions']):
+                            self.run_command(
+                                ['strip', '-S', self.dst_path_of('Kokua')])
 
-                # dylibs is a list of all the .dylib files we expect to need
-                # in our bundled sub-apps. For each of these we'll create a
-                # symlink from sub-app/Contents/Resources to the real .dylib.
-                # Need to get the llcommon dll from any of the build directories as well.
-                libfile = "libllcommon.dylib"
-                dylibs = path_optional(self.find_existing_file(os.path.join(os.pardir,
-                                                               "llcommon",
-                                                               self.args['configuration'],
-                                                               libfile),
-                                                               os.path.join(relpkgdir, libfile)),
-                                       dst=libfile)
+                    with self.prefix(dst="Resources"):
+                        # defer cross-platform file copies until we're in the right
+                        # nested Resources directory
+                        super(DarwinManifest, self).construct()
 
-                for libfile in (
-                                "libapr-1.0.dylib",
-                                "libaprutil-1.0.dylib",
-                                "libcollada14dom.dylib",
-                                "libexpat.1.dylib",
-                                "libexception_handler.dylib",
-                                "libGLOD.dylib",
-                                # libnghttp2.dylib is a symlink to
-                                # libnghttp2.major.dylib, which is a symlink
-                                # to libnghttp2.version.dylib. Get all of them.
-                                "libnghttp2.*dylib",
-                                ):
-                    dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
+                        with self.prefix(src=self.icon_path(), dst="") :
+                            self.path(viewer_icon)
 
-                # SLVoice and vivox lols, no symlinks needed
-                for libfile in (
-                                'libalut.dylib',
-                                'libopenal.1.dylib',
-                                'libortp.dylib',
-                                'libsndfile.dylib',
-                                'libvivoxoal.dylib',
-                                'libvivoxsdk.dylib',
-                                'libvivoxplatform.dylib',
-                                'SLVoice',
-                                ):
-                    self.path2basename(relpkgdir, libfile)
+                        with self.prefix(src=relpkgdir, dst=""):
+                            self.path("libndofdev.dylib")
+                            self.path("libhunspell-1.3.0.dylib")   
 
-                # dylibs that vary based on configuration
-                if self.args['configuration'].lower() == 'debug':
-                    for libfile in (
-                                "libfmodexL.dylib",
-                                ):
-                        dylibs += path_optional(os.path.join(debpkgdir, libfile), libfile)
-                else:
-                    for libfile in (
-                                "libfmodex.dylib",
-                                ):
-                        dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
+                        with self.prefix("cursors_mac"):
+                            self.path("*.tif")
 
-                # dylibs that vary based on configuration
-                if self.args['configuration'].lower() == 'debug':
-                    for libfile in (
-                                "libfmodexL.dylib",
-                                ):
-                        dylibs += path_optional(os.path.join("../packages/lib/debug",
-                                                             libfile), libfile)
-                else:
-                    for libfile in (
-                                "libfmodex.dylib",
-                                ):
-                        dylibs += path_optional(os.path.join("../packages/lib/release",
-                                                             libfile), libfile)
-                
-                # our apps
-                for app_bld_dir, app in (("mac_crash_logger", "mac-crash-logger.app"),
-                                         # plugin launcher
-                                         (os.path.join("llplugin", "slplugin"), "SLPlugin.app"),
-                                         ):
-                    self.path2basename(os.path.join(os.pardir,
-                                                    app_bld_dir, self.args['configuration']),
-                                       app)
+                        self.path("licenses-mac.txt", dst="licenses.txt")
+                        self.path("featuretable_mac.txt")
+                        self.path("Kokua.nib")
+                        self.path("ca-bundle.crt")
 
-                    # our apps dependencies on shared libs
-                    # for each app, for each dylib we collected in dylibs,
-                    # create a symlink to the real copy of the dylib.
-                    resource_path = self.dst_path_of(os.path.join(app, "Contents", "Resources"))
-                    for libfile in dylibs:
-                        src = os.path.join(os.pardir, os.pardir, os.pardir, libfile)
-                        dst = os.path.join(resource_path, libfile)
-                        try:
-                            symlinkf(src, dst)
-                        except OSError as err:
-                            print "Can't symlink %s -> %s: %s" % (src, dst, err)
+                        self.path("Kokua.nib")
 
-                # Dullahan helper apps go inside SLPlugin.app
-                with self.prefix(src="", dst="SLPlugin.app/Contents/Frameworks"):
-                    helperappfile = 'DullahanHelper.app'
-                    self.path2basename(relpkgdir, helperappfile)
+                        # Translations
+                        self.path("English.lproj/language.txt")
+                        self.replace_in(src="English.lproj/InfoPlist.strings",
+                                        dst="English.lproj/InfoPlist.strings",
+                                        searchdict={'%%VERSION%%':'.'.join(self.args['version'])}
+                                        )
+                        self.path("German.lproj")
+                        self.path("Japanese.lproj")
+                        self.path("Korean.lproj")
+                        self.path("da.lproj")
+                        self.path("es.lproj")
+                        self.path("fr.lproj")
+                        self.path("hu.lproj")
+                        self.path("it.lproj")
+                        self.path("nl.lproj")
+                        self.path("pl.lproj")
+                        self.path("pt.lproj")
+                        self.path("ru.lproj")
+                        self.path("tr.lproj")
+                        self.path("uk.lproj")
+                        self.path("zh-Hans.lproj")
 
-                    pluginframeworkpath = self.dst_path_of('Chromium Embedded Framework.framework');
-                    # Putting a Frameworks directory under Contents/MacOS
-                    # isn't canonical, but the path baked into Dullahan
-                    # Helper.app/Contents/MacOS/DullahanHelper is:
-                    # @executable_path/Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework
-                    # (notice, not @executable_path/../Frameworks/etc.)
-                    # So we'll create a symlink (below) from there back to the
-                    # Frameworks directory nested under SLPlugin.app.
-                    helperframeworkpath = \
-                        self.dst_path_of('DullahanHelper.app/Contents/MacOS/'
-                                         'Frameworks/Chromium Embedded Framework.framework')
+                        def path_optional(src, dst):
+                            """
+                            For a number of our self.path() calls, not only do we want
+                            to deal with the absence of src, we also want to remember
+                            which were present. Return either an empty list (absent)
+                            or a list containing dst (present). Concatenate these
+                            return values to get a list of all libs that are present.
+                            """
+                            # This was simple before we started needing to pass
+                            # wildcards. Fortunately, self.path() ends up appending a
+                            # (source, dest) pair to self.file_list for every expanded
+                            # file processed. Remember its size before the call.
+                            oldlen = len(self.file_list)
+                            self.path(src, dst)
+                            # The dest appended to self.file_list has been prepended
+                            # with self.get_dst_prefix(). Strip it off again.
+                            added = [os.path.relpath(d, self.get_dst_prefix())
+                                     for s, d in self.file_list[oldlen:]]
+                            if not added:
+                                print "Skipping %s" % dst
+                            return added
 
+                        # dylibs is a list of all the .dylib files we expect to need
+                        # in our bundled sub-apps. For each of these we'll create a
+                        # symlink from sub-app/Contents/Resources to the real .dylib.
+                        # Need to get the llcommon dll from any of the build directories as well.
+                        libfile_parent = self.get_dst_prefix()
+                        libfile = "libllcommon.dylib"
+                        dylibs = path_optional(self.find_existing_file(os.path.join(os.pardir,
+                                                                       "llcommon",
+                                                                       self.args['configuration'],
+                                                                       libfile),
+                                                                       os.path.join(relpkgdir, libfile)),
+                                               dst=libfile)
 
-                helperexecutablepath = self.dst_path_of('SLPlugin.app/Contents/Frameworks/DullahanHelper.app/Contents/MacOS/DullahanHelper')
-                self.run_command('install_name_tool -change '
-                                 '"@rpath/Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" '
-                                 '"@executable_path/Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" "%s"' % helperexecutablepath)
+                        for libfile in (
+                                        "libapr-1.0.dylib",
+                                        "libaprutil-1.0.dylib",
+                                        "libcollada14dom.dylib",
+                                        "libexpat.1.dylib",
+                                        "libexception_handler.dylib",
+                                        "libGLOD.dylib",
+                                        # libnghttp2.dylib is a symlink to
+                                        # libnghttp2.major.dylib, which is a symlink to
+                                        # libnghttp2.version.dylib. Get all of them.
+                                        "libnghttp2.*dylib",
+                                        ):
+                            dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
 
-                # SLPlugin plugins
-                with self.prefix(src="", dst="llplugin"):
-                    self.path2basename("../media_plugins/cef/" + self.args['configuration'],
-                                       "media_plugin_cef.dylib")
+                        # SLVoice and vivox lols, no symlinks needed
+                        for libfile in (
+                                        'libortp.dylib',
+                                        'libsndfile.dylib',
+                                        'libvivoxoal.dylib',
+                                        'libvivoxsdk.dylib',
+                                        'libvivoxplatform.dylib',
+                                        'SLVoice',
+                                        ):
+                            self.path2basename(relpkgdir, libfile)
 
-                    # copy LibVLC plugin itself
-                    self.path2basename("../media_plugins/libvlc/" + self.args['configuration'],
-                                       "media_plugin_libvlc.dylib")
+                        # dylibs that vary based on configuration
+                        if self.args['configuration'].lower() == 'debug':
+                            for libfile in (
+                                        "libfmodexL.dylib",
+                                        ):
+                                dylibs += path_optional(os.path.join(debpkgdir, libfile), libfile)
+                        else:
+                            for libfile in (
+                                        "libfmodex.dylib",
+                                        ):
+                                dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
 
-                    # copy LibVLC dynamic libraries
-                    with self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release' ), dst="lib"):
-                        self.path( "libvlc*.dylib*" )
+                        # our apps
+                        executable_path = {}
+                        for app_bld_dir, app in (("mac_crash_logger", "mac-crash-logger.app"),
+                                                 # plugin launcher
+                                                 (os.path.join("llplugin", "slplugin"), "SLPlugin.app"),
+                                                 ):
+                            self.path2basename(os.path.join(os.pardir,
+                                                            app_bld_dir, self.args['configuration']),
+                                               app)
+                            executable_path[app] = \
+                                self.dst_path_of(os.path.join(app, "Contents", "MacOS"))
 
-                    # copy LibVLC plugins folder
-                    with self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release', 'plugins' ), dst="lib"):
-                        self.path( "*.dylib" )
-                        self.path( "plugins.dat" )
+                            # our apps dependencies on shared libs
+                            # for each app, for each dylib we collected in dylibs,
+                            # create a symlink to the real copy of the dylib.
+                            with self.prefix(dst=os.path.join(app, "Contents", "Resources")):
+                                for libfile in dylibs:
+                                    self.relsymlinkf(os.path.join(libfile_parent, libfile))
 
+                        # Dullahan helper apps go inside SLPlugin.app
+                        with self.prefix(dst=os.path.join(
+                            "SLPlugin.app", "Contents", "Frameworks")):
 
-                # do this install_name_tool *after* media plugin is copied over
-                dylibexecutablepath = self.dst_path_of('llplugin/media_plugin_cef.dylib')
-                self.run_command('install_name_tool -change '
-                                 '"@rpath/Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" '
-                                 '"@executable_path/../Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" "%s"' % dylibexecutablepath)
+                            frameworkname = 'Chromium Embedded Framework'
 
                             # This code constructs a relative symlink from the
                             # target framework folder back to the real CEF framework.
@@ -1047,70 +1185,93 @@ class DarwinManifest(ViewerManifest):
                             # letting the uncaught exception terminate the process, since
                             # without this symlink, Second Life web media can't possibly work.
 
-                # CEF framework goes inside Kokua.app/Contents/Frameworks
-            with self.prefix(src="", dst="Frameworks"):
-                frameworkfile="Chromium Embedded Framework.framework"
-                self.path2basename(relpkgdir, frameworkfile)
+                            # It might seem simpler just to symlink Frameworks back to
+                            # the parent of Chromimum Embedded Framework.framework. But
+                            # that would create a symlink cycle, which breaks our
+                            # packaging step. So make a symlink from Chromium Embedded
+                            # Framework.framework to the directory of the same name, which
+                            # is NOT an ancestor of the symlink.
 
-            # This code constructs a relative path from the
-            # target framework folder back to the location of the symlink.
-            # It needs to be relative so that the symlink still works when
-            # (as is normal) the user moves the app bundle out of the DMG
-            # and into the /Applications folder. Note we also call 'raise'
-            # to terminate the process if we get an error since without
-            # this symlink, Second Life web media can't possibly work.
-            # Real Framework folder:
-                #   Kokua.app/Contents/Frameworks/Chromium Embedded Framework.framework/
-            # Location of symlink and why it's relative 
-                #   Kokua.app/Contents/Resources/SLPlugin.app/Contents/Frameworks/Chromium Embedded Framework.framework/
-            # Real Frameworks folder, with the symlink inside the bundled SLPlugin.app (and why it's relative)
-            #   <top level>.app/Contents/Frameworks/Chromium Embedded Framework.framework/
-            #   <top level>.app/Contents/Resources/SLPlugin.app/Contents/Frameworks/Chromium Embedded Framework.framework ->
-            # It might seem simpler just to create a symlink Frameworks to
-            # the parent of Chromimum Embedded Framework.framework. But
-            # that would create a symlink cycle, which breaks our
-            # packaging step. So make a symlink from Chromium Embedded
-            # Framework.framework to the directory of the same name, which
-            # is NOT an ancestor of the symlink.
-            frameworkpath = os.path.join(os.pardir, os.pardir, os.pardir,
-                                         os.pardir, "Frameworks",
-                                         "Chromium Embedded Framework.framework")
-            try:
-                # from SLPlugin.app/Contents/Frameworks/Chromium Embedded
-                # Framework.framework back to Second
-                # Life.app/Contents/Frameworks/Chromium Embedded Framework.framework
-                origin, target = pluginframeworkpath, frameworkpath
-                symlinkf(target, origin)
-                # from SLPlugin.app/Contents/Frameworks/Dullahan
-                # Helper.app/Contents/MacOS/Frameworks/Chromium Embedded
-                # Framework.framework back to
-                # SLPlugin.app/Contents/Frameworks/Chromium Embedded Framework.framework
-                self.cmakedirs(os.path.dirname(helperframeworkpath))
-                origin = helperframeworkpath
-                target = os.path.join(os.pardir, frameworkpath)
-                symlinkf(target, origin)
-            except OSError as err:
-                print "Can't symlink %s -> %s: %s" % (origin, target, err)
-                raise
+                            # from SLPlugin.app/Contents/Frameworks/Chromium Embedded
+                            # Framework.framework back to
+                            # $viewer_app/Contents/Frameworks/Chromium Embedded Framework.framework
+                            SLPlugin_framework = self.relsymlinkf(CEF_framework, catch=False)
 
+                            # copy DullahanHelper.app
+                            self.path2basename(relpkgdir, 'DullahanHelper.app')
 
-        # fix up media_plugin.dylib so it knows where to look for CEF files it needs
-#        self.run_command('install_name_tool -change "@executable_path/Chromium Embedded Framework" "@executable_path/../Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework" "%(config)s/Kokua.app/Contents/Resources/llplugin/media_plugin_cef.dylib"' %
-#                        { 'config' : self.args['configuration'] })
+                            # and fix that up with a Frameworks/CEF symlink too
+                            with self.prefix(dst=os.path.join(
+                                'DullahanHelper.app', 'Contents', 'Frameworks')):
+                                # from Dullahan Helper.app/Contents/Frameworks/Chromium Embedded
+                                # Framework.framework back to
+                                # SLPlugin.app/Contents/Frameworks/Chromium Embedded Framework.framework
+                                # Since SLPlugin_framework is itself a
+                                # symlink, don't let relsymlinkf() resolve --
+                                # explicitly call relpath(symlink=True) and
+                                # create that symlink here.
+                                DullahanHelper_framework = \
+                                    self.symlinkf(self.relpath(SLPlugin_framework, symlink=True),
+                                                  catch=False)
 
-        # NOTE: the -S argument to strip causes it to keep enough info for
-        # annotated backtraces (i.e. function names in the crash log).  'strip' with no
-        # arguments yields a slightly smaller binary but makes crash logs mostly useless.
-        # This may be desirable for the final release.  Or not.
-        if ("package" in self.args['actions'] or 
-            "unpacked" in self.args['actions']):
-            self.run_command('strip -S %(viewer_binary)r' %
-                             { 'viewer_binary' : self.dst_path_of('Contents/MacOS/Kokua')})
+                            # change_command includes install_name_tool, the
+                            # -change subcommand and the old framework rpath
+                            # stamped into the executable. To use it with
+                            # run_command(), we must still append the new
+                            # framework path and the pathname of the
+                            # executable to change.
+                            change_command = [
+                                'install_name_tool', '-change',
+                                '@rpath/Frameworks/Chromium Embedded Framework.framework/Chromium Embedded Framework']
 
+                            with self.prefix(dst=os.path.join(
+                                'DullahanHelper.app', 'Contents', 'MacOS')):
+                                # Now self.get_dst_prefix() is, at runtime,
+                                # @executable_path. Locate the helper app
+                                # framework (which is a symlink) from here.
+                                newpath = os.path.join(
+                                    '@executable_path',
+                                    self.relpath(DullahanHelper_framework, symlink=True),
+                                    frameworkname)
+                                # and restamp the DullahanHelper executable
+                                self.run_command(
+                                    change_command +
+                                    [newpath, self.dst_path_of('DullahanHelper')])
+
+                        # SLPlugin plugins
+                        with self.prefix(dst="llplugin"):
+                            dylibexecutable = 'media_plugin_cef.dylib'
+                            self.path2basename("../media_plugins/cef/" + self.args['configuration'],
+                                               dylibexecutable)
+
+                            # Do this install_name_tool *after* media plugin is copied over.
+                            # Locate the framework lib executable -- relative to
+                            # SLPlugin.app/Contents/MacOS, which will be our
+                            # @executable_path at runtime!
+                            newpath = os.path.join(
+                                '@executable_path',
+                                self.relpath(SLPlugin_framework, executable_path["SLPlugin.app"],
+                                             symlink=True),
+                                frameworkname)
+                            # restamp media_plugin_cef.dylib
+                            self.run_command(
+                                change_command +
+                                [newpath, self.dst_path_of(dylibexecutable)])
+
+                            # copy LibVLC plugin itself
+                            self.path2basename("../media_plugins/libvlc/" + self.args['configuration'],
+                                               "media_plugin_libvlc.dylib")
+
+                            # copy LibVLC dynamic libraries
+                            with self.prefix(src=relpkgdir, dst="lib"):
+                                self.path( "libvlc*.dylib*" )
+                                # copy LibVLC plugins folder
+                                with self.prefix(src='plugins', dst=""):
+                                    self.path( "*.dylib" )
+                                    self.path( "plugins.dat" )
 
     def package_finish(self):
         global CHANNEL_VENDOR_BASE
-#        imagename="Kokua_" + '_'.join(self.args['version'])
         # MBW -- If the mounted volume name changes, it breaks the .DS_Store's background image and icon positioning.
         #  If we really need differently named volumes, we'll need to create multiple DS_Store file images, or use some other trick.
 
@@ -1123,9 +1284,10 @@ class DarwinManifest(ViewerManifest):
         # make sure we don't have stale files laying about
         self.remove(sparsename, finalname)
 
-        self.run_command('hdiutil create %(sparse)r -volname %(vol)r -fs HFS+ -type SPARSE -megabytes 1300 -layout SPUD' % {
-                'sparse':sparsename,
-                'vol':volname})
+        self.run_command(['hdiutil', 'create', sparsename,
+                          '-volname', volname, '-fs', 'HFS+',
+                          '-type', 'SPARSE', '-megabytes', '1300',
+                          '-layout', 'SPUD'])
 
         # mount the image and get the name of the mount point and device node
         try:
@@ -1184,18 +1346,18 @@ class DarwinManifest(ViewerManifest):
                 # well, possibly we've mistaken the nature of the problem. In any
                 # case, don't hang up the whole build looping indefinitely, let
                 # the original problem manifest by executing the desired command.
-                self.run_command('SetFile -a V %r' % pathname)
+                self.run_command(['SetFile', '-a', 'V', pathname])
 
             # Create the alias file (which is a resource file) from the .r
-            self.run_command('Rez %r -o %r' %
-                             (self.src_path_of("installers/darwin/release-dmg/Applications-alias.r"),
-                              os.path.join(volpath, "Applications")))
+            self.run_command(
+                ['Rez', self.src_path_of("installers/darwin/release-dmg/Applications-alias.r"),
+                 '-o', os.path.join(volpath, "Applications")])
 
             # Set the alias file's alias and custom icon bits
-            self.run_command('SetFile -a AC %r' % os.path.join(volpath, "Applications"))
+            self.run_command(['SetFile', '-a', 'AC', os.path.join(volpath, "Applications")])
 
             # Set the disk image root's custom icon bit
-            self.run_command('SetFile -a C %r' % volpath)
+            self.run_command(['SetFile', '-a', 'C', volpath])
 
             # Sign the app if requested; 
             # do this in the copy that's in the .dmg so that the extended attributes used by 
@@ -1231,7 +1393,10 @@ class DarwinManifest(ViewerManifest):
                     #       and that it contains the correct cert/key. If a build host is set up with a clean version of macOS Sierra (or later)
                     #       then you will need to change this line (and the one for 'codesign' command below) to point to right place or else
                     #       pull in the cert/key into the default viewer keychain 'viewer.keychain-db' and export it to 'viewer.keychain'
-                    self.run_command('security unlock-keychain -p "%s" "%s/Library/Keychains/viewer.keychain"' % ( keychain_pwd, home_path ) )
+                    viewer_keychain = os.path.join(home_path, 'Library',
+                                                   'Keychains', 'viewer.keychain')
+                    self.run_command(['security', 'unlock-keychain',
+                                      '-p', keychain_pwd, viewer_keychain])
                     signed=False
                     sign_attempts=3
                     sign_retry_wait=15
@@ -1240,11 +1405,9 @@ class DarwinManifest(ViewerManifest):
                             sign_attempts-=1;
                             self.run_command(
                                 # Note: See blurb above about names of keychains
-                               'codesign --verbose --deep --force --keychain "%(home_path)s/Library/Keychains/viewer.keychain" --sign %(identity)r %(bundle)r' % {
-                                   'home_path' : home_path,
-                                   'identity': identity,
-                                   'bundle': app_in_dmg
-                                   })
+                               ['codesign', '--verbose', '--deep', '--force',
+                                '--keychain', viewer_keychain, '--sign', identity,
+                                app_in_dmg])
                             signed=True # if no exception was raised, the codesign worked
                         except ManifestError as err:
                             if sign_attempts:
@@ -1254,18 +1417,19 @@ class DarwinManifest(ViewerManifest):
                             else:
                                 print >> sys.stderr, "Maximum codesign attempts exceeded; giving up"
                                 raise
-                    self.run_command('spctl -a -texec -vv %(bundle)r' % { 'bundle': app_in_dmg })
+                    self.run_command(['spctl', '-a', '-texec', '-vv', app_in_dmg])
 
             imagename="Kokua_" + '_'.join(self.args['version'])
 
 
         finally:
             # Unmount the image even if exceptions from any of the above 
-            self.run_command('hdiutil detach -force %r' % devfile)
+            self.run_command(['hdiutil', 'detach', '-force', devfile])
 
         print "Converting temp disk image to final disk image"
-        self.run_command('hdiutil convert %(sparse)r -format UDZO -imagekey zlib-level=9 -o %(final)r' % {'sparse':sparsename, 'final':finalname})
-        self.run_command('hdiutil internet-enable -yes %(final)r' % {'final':finalname})
+        self.run_command(['hdiutil', 'convert', sparsename, '-format', 'UDZO',
+                          '-imagekey', 'zlib-level=9', '-o', finalname])
+        self.run_command(['hdiutil', 'internet-enable', '-yes', finalname])
         # get rid of the temp file
         self.package_file = finalname
         self.remove(sparsename)
@@ -1299,14 +1463,12 @@ class LinuxManifest(ViewerManifest):
             self.path("client-readme.txt","README-linux.txt")
             self.path("client-readme-voice.txt","README-linux-voice.txt")
             self.path("client-readme-joystick.txt","README-linux-joystick.txt")
-            self.path("client-readme-streamingmedia.txt","README-linux-streamingmedia.txt")
-            self.path("client-readme-install-setup.txt","README-linux-install-setup.txt")
-            self.path("wrapper.sh","kokua")
-            self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
-            self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
-            self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
-            self.path("refresh_desktop_app_entry.sh", "etc/refresh_desktop_app_entry.sh")
-            self.path("launch_url.sh","etc/launch_url.sh")
+            self.path("wrapper.sh","secondlife")
+            with self.prefix(src="", dst="etc"):
+                self.path("handle_secondlifeprotocol.sh")
+                self.path("register_secondlifeprotocol.sh")
+                self.path("refresh_desktop_app_entry.sh")
+                self.path("launch_url.sh")
             self.path("install.sh")
 
         with self.prefix(src="", dst="bin"):
@@ -1314,18 +1476,15 @@ class LinuxManifest(ViewerManifest):
             self.path("../linux_crash_logger/linux-crash-logger","linux-crash-logger.bin")
             self.path2basename("../llplugin/slplugin", "SLPlugin") 
             #this copies over the python wrapper script, associated utilities and required libraries, see SL-321, SL-322 and SL-323
-            self.path2basename("../viewer_components/manager","SL_Launcher")
-            self.path2basename("../viewer_components/manager","*.py")
-            llbase_path = os.path.join(self.get_dst_prefix(),'llbase')
-            if not os.path.exists(llbase_path):
-                os.makedirs(llbase_path)
-            with self.prefix(dst="llbase"):
-                self.path2basename("../packages/lib/python/llbase","*.py")
-                self.path2basename("../packages/lib/python/llbase","_cllsd.so")         
+            with self.prefix(src="../viewer_components/manager", dst=""):
+                self.path("SL_Launcher")
+                self.path("*.py")
+            with self.prefix(src=os.path.join("lib", "python", "llbase"), dst="llbase"):
+                self.path("*.py")
+                self.path("_cllsd.so")         
 
-        with self.prefix("res-sdl"):
-            self.path("*")
-            # recurse
+        # recurses, packaged again
+        self.path("res-sdl")
 
         # Get the icons based on the channel type
         icon_path = self.icon_path()
@@ -1336,90 +1495,17 @@ class LinuxManifest(ViewerManifest):
                 self.path("kokua_icon.bmp","kokua_icon.BMP")
 
         # plugins
-        with self.prefix(src="", dst="bin/llplugin"):
-            self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
-            self.path("../media_plugins/libvlc/libmedia_plugin_libvlc.so", "libmedia_plugin_libvlc.so")
-            self.path( "../media_plugins/cef/libmedia_plugin_cef.so", "libmedia_plugin_cef.so" )
+        with self.prefix(src="../media_plugins", dst="bin/llplugin"):
+            self.path("gstreamer010/libmedia_plugin_gstreamer010.so",
+                      "libmedia_plugin_gstreamer.so")
+            self.path2basename("libvlc", "libmedia_plugin_libvlc.so")
 
-        with self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'vlc', 'plugins'), dst="bin/llplugin/vlc/plugins"):
+        with self.prefix(src=os.path.join(pkgdir, 'lib', 'vlc', 'plugins'), dst="bin/llplugin/vlc/plugins"):
             self.path( "plugins.dat" )
             self.path( "*/*.so" )
 
-        with self.prefix(src=os.path.join(os.pardir, 'packages', 'lib' ), dst="lib"):
+        with self.prefix(src=os.path.join(pkgdir, 'lib' ), dst="lib"):
             self.path( "libvlc*.so*" )
-
-
-        if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="bin"):
-            self.path( "chrome-sandbox" )
-            self.path( "llceflib_host" )
-            self.path( "natives_blob.bin" )
-            self.path( "snapshot_blob.bin" )
-            self.end_prefix()
-
-        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources'), dst="bin"):
-            self.path( "cef.pak" )
-            self.path( "cef_100_percent.pak" )
-            self.path( "cef_200_percent.pak" )
-            self.path( "cef_extensions.pak" )
-            self.path( "devtools_resources.pak" )
-            self.path( "icudtl.dat" )
-            self.end_prefix()
-
-        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources', 'locales'), dst=os.path.join('bin', 'locales')):
-            self.path("am.pak")
-            self.path("ar.pak")
-            self.path("bg.pak")
-            self.path("bn.pak")
-            self.path("ca.pak")
-            self.path("cs.pak")
-            self.path("da.pak")
-            self.path("de.pak")
-            self.path("el.pak")
-            self.path("en-GB.pak")
-            self.path("en-US.pak")
-            self.path("es-419.pak")
-            self.path("es.pak")
-            self.path("et.pak")
-            self.path("fa.pak")
-            self.path("fi.pak")
-            self.path("fil.pak")
-            self.path("fr.pak")
-            self.path("gu.pak")
-            self.path("he.pak")
-            self.path("hi.pak")
-            self.path("hr.pak")
-            self.path("hu.pak")
-            self.path("id.pak")
-            self.path("it.pak")
-            self.path("ja.pak")
-            self.path("kn.pak")
-            self.path("ko.pak")
-            self.path("lt.pak")
-            self.path("lv.pak")
-            self.path("ml.pak")
-            self.path("mr.pak")
-            self.path("ms.pak")
-            self.path("nb.pak")
-            self.path("nl.pak")
-            self.path("pl.pak")
-            self.path("pt-BR.pak")
-            self.path("pt-PT.pak")
-            self.path("ro.pak")
-            self.path("ru.pak")
-            self.path("sk.pak")
-            self.path("sl.pak")
-            self.path("sr.pak")
-            self.path("sv.pak")
-            self.path("sw.pak")
-            self.path("ta.pak")
-            self.path("te.pak")
-            self.path("th.pak")
-            self.path("tr.pak")
-            self.path("uk.pak")
-            self.path("vi.pak")
-            self.path("zh-CN.pak")
-            self.path("zh-TW.pak")
-            self.end_prefix()
 
         # llcommon
         if not self.path("../llcommon/libllcommon.so", "lib/libllcommon.so"):
@@ -1434,30 +1520,27 @@ class LinuxManifest(ViewerManifest):
         self.strip_binaries()
 
         # Fix access permissions
-        self.run_command("""
-                find %(dst)s -type d | xargs --no-run-if-empty chmod 755;
-                find %(dst)s -type f -perm 0700 | xargs --no-run-if-empty chmod 0755;
-                find %(dst)s -type f -perm 0500 | xargs --no-run-if-empty chmod 0555;
-                find %(dst)s -type f -perm 0600 | xargs --no-run-if-empty chmod 0644;
-                find %(dst)s -type f -perm 0400 | xargs --no-run-if-empty chmod 0444;
-                true""" %  {'dst':self.get_dst_prefix() })
-        self.package_file = installer_name + '.tar.xz'
+        self.run_command(['find', self.get_dst_prefix(),
+                          '-type', 'd', '-exec', 'chmod', '755', '{}', ';'])
+        for old, new in ('0700', '0755'), ('0500', '0555'), ('0600', '0644'), ('0400', '0444'):
+            self.run_command(['find', self.get_dst_prefix(),
+                              '-type', 'f', '-perm', old,
+                              '-exec', 'chmod', new, '{}', ';'])
+        self.package_file = installer_name + '.tar.bz2'
 
         # temporarily move directory tree so that it has the right
         # name in the tarfile
-        self.run_command("mv %(dst)s %(inst)s" % {
-            'dst': self.get_dst_prefix(),
-            'inst': self.build_path_of(installer_name)})
+        realname = self.get_dst_prefix()
+        tempname = self.build_path_of(installer_name)
+        self.run_command(["mv", realname, tempname])
         try:
             # only create tarball if it's a release build.
             if self.args['buildtype'].lower() == 'release':
                 # --numeric-owner hides the username of the builder for
                 # security etc.
-                self.run_command('tar -C %(dir)s --numeric-owner -cJf '
-                                 '%(inst_path)s.tar.txz %(inst_name)s' % {
-                        'dir': self.get_build_prefix(),
-                        'inst_name': installer_name,
-                        'inst_path':self.build_path_of(installer_name)})
+                self.run_command(['tar', '-C', self.get_build_prefix(),
+                                  '--numeric-owner', '-cjf',
+                                 tempname + '.tar.bz2', installer_name])
             else:
                 print "Skipping %s.tar.txz for non-Release build (%s)" % \
                       (installer_name, self.args['buildtype'])
