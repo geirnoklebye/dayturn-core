@@ -2145,7 +2145,7 @@ endif (LINUX)
 if (DARWIN)
   # These all get set with PROPERTIES
   set(product "Kokua")
-  # set(MACOSX_WRAPPER_EXECUTABLE_NAME "SL_Launcher")
+  set(MACOSX_WRAPPER_EXECUTABLE_NAME "SL_Launcher")
   set(MACOSX_BUNDLE_INFO_STRING "Kokua Viewer")
   set(MACOSX_BUNDLE_ICON_FILE "kokua_icon.icns")
   set(MACOSX_BUNDLE_GUI_IDENTIFIER "Kokua")
