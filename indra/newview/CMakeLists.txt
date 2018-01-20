@@ -47,8 +47,8 @@ include(TemplateCheck)
 include(UI)
 include(UnixInstall)
 include(ViewerMiscLibs)
-include(ViewerManager)
 include(ColladaDom)
+include(ViewerManager)
 # include(VisualLeakDetector)
 include(ZLIB)
 include(URIPARSER)
@@ -65,7 +65,6 @@ endif (NOT HAVOK_TPV)
 # <FS:ND>
 endif( LLPHYSICSEXTENSIONS_SRC_DIR )
 # </FS:ND>
-
 if(FMODEX)
   include_directories(${FMODEX_INCLUDE_DIR})
 endif(FMODEX)
@@ -1834,6 +1833,7 @@ if (WINDOWS)
       ${SHARED_LIB_STAGING_DIR}/Debug/libcollada14dom22-d.dll
       ${SHARED_LIB_STAGING_DIR}/Release/openjpeg.dll
       ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/openjpeg.dll
+      ${SHARED_LIB_STAGING_DIR}/Debug/openjpegd.dll
       ${SHARED_LIB_STAGING_DIR}/Release/msvcr100.dll
       ${SHARED_LIB_STAGING_DIR}/Release/msvcp100.dll
       ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/msvcr100.dll
@@ -2075,7 +2075,6 @@ target_link_libraries(${VIEWER_BINARY_NAME}
 set(ARTWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH
     "Path to artwork files.")
 
-
 if (LINUX)
   set(product kokua-${ARCH}-${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION})
 
@@ -2113,6 +2112,7 @@ if (LINUX)
 
   if (PACKAGE)
   endif (PACKAGE)
+
   add_custom_command(
     OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/.${product}.copy_touched
     COMMAND ${PYTHON_EXECUTABLE}
@@ -2148,8 +2148,7 @@ endif (LINUX)
 if (DARWIN)
   # These all get set with PROPERTIES
   set(product "Kokua")
-  # this is the setting for the Python wrapper, see SL-322 and WRAPPER line in Info-SecondLife.plist
-  # set(MACOSX_WRAPPER_EXECUTABLE_NAME "SL_Launcher")
+  set(MACOSX_WRAPPER_EXECUTABLE_NAME "SL_Launcher")
   set(MACOSX_BUNDLE_INFO_STRING "Kokua Viewer")
   set(MACOSX_BUNDLE_ICON_FILE "kokua_icon.icns")
   set(MACOSX_BUNDLE_GUI_IDENTIFIER "Kokua")
@@ -2252,7 +2251,7 @@ if (PACKAGE)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/llplugin/slplugin/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/mac_crash_logger/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
-    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/secondlife-symbols-darwin-$ENV{AUTOBUILD_ADDRSIZE}.tar.bz2")
+    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-darwin-$ENV{AUTOBUILD_ADDRSIZE}.tar.bz2")
     set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-darwin-$ENV{AUTOBUILD_ADDRSIZE}.tar.bz2")
     set(VIEWER_EXE_GLOBS "'Kokua' SLPlugin mac-crash-logger")
     set(VIEWER_LIB_GLOB "*.dylib")
@@ -2311,6 +2310,7 @@ if (LL_TESTS)
     llworldmap.cpp
     llworldmipmap.cpp
   )
+
   set_source_files_properties(
     llworldmap.cpp
     llworldmipmap.cpp
