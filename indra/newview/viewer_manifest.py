@@ -39,8 +39,6 @@ import stat
 import subprocess
 import tarfile
 import time
-import random
-import subprocess
 
 viewer_dir = os.path.dirname(__file__)
 # Add indra/lib/python to our path so we don't have to muck with PYTHONPATH.
