@@ -315,7 +315,6 @@ private:
 	F32 mWhisperDistance;
 	F32 mSayDistance;
 	F32 mShoutDistance;
-    F32 mRegionWidth;
 
 	F32 mDrawDistance;
 	F32 mTerrainDetailScale;
