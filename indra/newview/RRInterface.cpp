@@ -774,7 +774,7 @@ BOOL RRInterface::containsWithoutException (std::string action, std::string exce
 	RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
 	while (it != mSpecialObjectBehaviours.end()) {
 		if (it->second == action_sec 
-		|| it->second == action && mContainsPermissive) {
+		|| (it->second == action && mContainsPermissive)) {
 			uuid.set (it->first);
 			if (isAllowed (uuid, action+":"+except, FALSE) && isAllowed (uuid, action_sec+":"+except, FALSE)) { // we use isAllowed because we need to check the object, but it really means "does not contain"
 				return TRUE;
@@ -1257,7 +1257,7 @@ void RRInterface::notify (LLUUID object_uuid, std::string action, std::string su
 			rule = rule.substr(length); // keep right part only (here "2222;tp")
 			tokens = parse (rule, ";");
 			size = tokens.size();
-			if (size == 1 || size > 1 && action.find(tokens[1]) != -1) {
+			if (size == 1 || (size > 1 && action.find(tokens[1]) != -1)) {
 				answerOnChat(tokens[0], "/" + action + suffix); // suffix can be "=n", "=y" or whatever else we want, "/" is needed to avoid some clever griefing
 			}
 		}
@@ -2377,7 +2377,7 @@ std::string RRInterface::getWornItems (LLInventoryCategory* cat)
 					) {
 						nbItems++;
 					}
-					if( avatar && avatar->isWearingAttachment( item->getLinkedUUID() ) 
+					if (( avatar && avatar->isWearingAttachment( item->getLinkedUUID()) )
 						|| gAgentWearables.isWearingItem (item->getLinkedUUID())) nbWorn++;
 
 					// special case : this item is no-mod, hence we need to check its parent folder
@@ -4232,7 +4232,7 @@ bool RRInterface::canAttachCategoryAux(LLInventoryCategory* folder, bool in_pare
 	FolderLock folder_lock = FolderLock_unlocked;
 	if (folder) {
 		// check @attachthis:folder in all restrictions
-		RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
+		//RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
 		//LLInventoryCategory* restricted_cat;
 		std::string path_to_check;
 		std::string restriction = "attachthis";
@@ -4345,7 +4345,7 @@ bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_pare
 			if (name.find ("nostrip") != -1 && (!mUserUpdateAttachmentsUpdatesAll || mUserUpdateAttachmentsCalledFromScript)) return false;
 		}
 		// check @detachthis:folder in all restrictions
-		RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
+		//RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
 		//LLInventoryCategory* restricted_cat;
 		std::string path_to_check;
 		std::string restriction = "detachthis";
