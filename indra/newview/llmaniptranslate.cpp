@@ -1,4 +1,4 @@
-﻿/** 
+/** 
  * @file llmaniptranslate.cpp
  * @brief LLManipTranslate class implementation
  *
@@ -731,9 +731,10 @@ BOOL LLManipTranslate::handleHover(S32 x, S32 y, MASK mask)
 // 				{
 // 					new_position_global.mdV[VZ] = MAX_OBJECT_Z;
 // 				}
-				if (new_position_global.mdV[VZ] > LLWorld::getInstance()->getRegionMaxHeight())
+				if (new_position_global.mdV[VZ] > SL_MAX_OBJECT_Z)
 				{
-					new_position_global.mdV[VZ] = LLWorld::getInstance()->getRegionMaxHeight();
+					LL_WARNS() << " Attempt to drag object position above maximum allowed" << new_position_global.mdV[VZ] << LL_ENDL;
+                    new_position_global.mdV[VZ] = SL_MAX_OBJECT_Z;
 				}
 // </AW: opensim-limits>
 				// Grass is always drawn on the ground, so clamp its position to the ground
