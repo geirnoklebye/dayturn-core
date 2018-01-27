@@ -52,7 +52,7 @@ LLFloaterAdvancedBuildOptions::~LLFloaterAdvancedBuildOptions()
 BOOL LLFloaterAdvancedBuildOptions::postBuild()
 {
 	// <NP: disable build constraints>
-		gFloaterTools->updateToolsSizeLimits();
+//		gFloaterTools->updateToolsSizeLimits();
 	// </NP: disable build constraints>
 	return TRUE;
 }

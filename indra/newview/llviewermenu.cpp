@@ -2304,6 +2304,8 @@ class LLAdvancedEnableRenderDeferredOptions: public view_listener_t
 	}
 };
 
+
+/*
 ///////////////////////////////////
 // DISABLE MAX BUILD CONSTRAINTS //
 ///////////////////////////////////
@@ -2318,7 +2320,7 @@ class LLAdvancedToggleMaxBuildConstraints : public view_listener_t
 		return true;
 	}
 };
-/*
+
 class LLAdvancedCheckMaxBuildConstraints : public view_listener_t
 {
 	bool handleEvent( const LLSD& userdata)
@@ -10480,7 +10482,7 @@ void initialize_menus()
 	//// Advanced > Render > Features
 	view_listener_t::addMenu(new LLAdvancedToggleFeature(), "Advanced.ToggleFeature");
 	view_listener_t::addMenu(new LLAdvancedCheckFeature(), "Advanced.CheckFeature");
-	view_listener_t::addMenu(new LLAdvancedToggleMaxBuildConstraints(), "Advanced.ToggleMaxBuildConstraints");
+//	view_listener_t::addMenu(new LLAdvancedToggleMaxBuildConstraints(), "Advanced.ToggleMaxBuildConstraints");
 //	view_listener_t::addMenu(new LLAdvancedCheckMaxBuildConstraints(), "Advanced.CheckMaxBuildConstraints");
 
 	view_listener_t::addMenu(new LLAdvancedCheckDisplayTextureDensity(), "Advanced.CheckDisplayTextureDensity");

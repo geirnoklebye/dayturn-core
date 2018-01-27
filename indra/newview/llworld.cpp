@@ -551,10 +551,10 @@ void LLWorld::updateLimits()
 	getRegionMinHoleSize
 	getAllowPhysicalPrims
 	mRegionMaxPrimScaleNoMesh // not implemented
-	*/
+
 	gFloaterTools->updateToolsSizeLimits();
 
-	/*
+
 	mAllowMinimap
 	*/
 
