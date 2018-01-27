@@ -155,7 +155,6 @@ void*	LLFloaterTools::createPanelObject(void* data)
 {
 	LLFloaterTools* floater = (LLFloaterTools*)data;
 	floater->mPanelObject = new LLPanelObject();
-	LLWorld::getInstance()->refreshLimits();
 	return floater->mPanelObject;
 }
 
@@ -224,63 +223,6 @@ LLPCode toolData[]={
 	LL_PCODE_LEGACY_TREE,
 	LL_PCODE_LEGACY_GRASS};
 
-void LLFloaterTools::updateToolsSizeLimits()
-{
-	LLWorld::getInstance()->refreshLimits();
-	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
-	{
-		getChild<LLSpinCtrl>("Scale X")->setMaxValue(F32_MAX);
-		getChild<LLSpinCtrl>("Scale Y")->setMaxValue(F32_MAX);
-		getChild<LLSpinCtrl>("Scale Z")->setMaxValue(F32_MAX);
-		
-
-	}
-	else
-	{
-		getChild<LLSpinCtrl>("Scale X")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
-		getChild<LLSpinCtrl>("Scale Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
-		getChild<LLSpinCtrl>("Scale Z")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
-	}
-		//these switch between OS and SL in each method
-		getChild<LLSpinCtrl>("Scale X")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
-		getChild<LLSpinCtrl>("Scale Y")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
-		getChild<LLSpinCtrl>("Scale Z")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimScale());
-		
-		getChild<LLSpinCtrl>("Scale X")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
-		getChild<LLSpinCtrl>("Scale Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());
-		getChild<LLSpinCtrl>("Scale Z")->setMinValue(LLWorld::getInstance()->getRegionMinPrimScale());		
-
-		getChild<LLSpinCtrl>("Pos X")->setMinValue(LLWorld::getInstance()->getRegionMinPrimXPos());
-		getChild<LLSpinCtrl>("Pos Y")->setMinValue(LLWorld::getInstance()->getRegionMinPrimYPos());
-		getChild<LLSpinCtrl>("Pos Z")->setMinValue(LLWorld::getInstance()->getRegionMinPrimZPos());
-
-		getChild<LLSpinCtrl>("Pos X")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimXPos());
-		getChild<LLSpinCtrl>("Pos Y")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimYPos());
-		getChild<LLSpinCtrl>("Pos Z")->setMaxValue(LLWorld::getInstance()->getRegionMaxPrimZPos());
-}
-
-void LLFloaterTools::updateToolsPrecision()
-{
-	U32 decimals = gSavedSettings.getU32("DecimalsForTools");
-	if (decimals != mPrecision)
-	{
-		if (decimals > 5)
-		{
-			decimals = 5;
-		}
-		getChild<LLSpinCtrl>("Pos X")->setPrecision(decimals);
-		getChild<LLSpinCtrl>("Pos Y")->setPrecision(decimals);
-		getChild<LLSpinCtrl>("Pos Z")->setPrecision(decimals);
-		getChild<LLSpinCtrl>("Scale X")->setPrecision(decimals);
-		getChild<LLSpinCtrl>("Scale Y")->setPrecision(decimals);
-		getChild<LLSpinCtrl>("Scale Z")->setPrecision(decimals);
-		getChild<LLSpinCtrl>("Rot X")->setPrecision(decimals);
-		getChild<LLSpinCtrl>("Rot Y")->setPrecision(decimals);
-		getChild<LLSpinCtrl>("Rot Z")->setPrecision(decimals);
-		mPrecision = decimals;
-	}
-}
-
 BOOL	LLFloaterTools::postBuild()
 {	
 	// Hide until tool selected
@@ -317,9 +259,6 @@ BOOL	LLFloaterTools::postBuild()
 	getChild<LLUICtrl>("checkbox stretch textures")->setValue((BOOL)gSavedSettings.getBOOL("ScaleStretchTextures"));
 	mComboGridMode			= getChild<LLComboBox>("combobox grid mode");
 	mCheckStretchUniformLabel = getChild<LLTextBox>("checkbox uniform label");
-
-	updateToolsSizeLimits();
-	updateToolsPrecision();
 
 	//
 	// Create Buttons
@@ -436,7 +375,6 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 	mLandImpactsObserver(NULL),
 
 	mDirty(TRUE),
-	mPrecision(3),
 	mHasSelection(TRUE),
 	mNeedMediaTitle(TRUE)
 {
@@ -549,7 +487,7 @@ void LLFloaterTools::refresh()
 #endif
 	{
 		F32 link_cost  = LLSelectMgr::getInstance()->getSelection()->getSelectedLinksetCost();
-		S32 prim_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
+        S32 prim_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
 		S32 link_count = LLSelectMgr::getInstance()->getSelection()->getRootObjectCount();
 
 		LLCrossParcelFunctor func;
@@ -593,11 +531,8 @@ void LLFloaterTools::refresh()
 		childSetVisible("selection_count",  have_selection);
 		childSetVisible("remaining_capacity", have_selection);
 		childSetVisible("selection_empty", !have_selection);
-
 	}
 
-	updateToolsSizeLimits();
-	updateToolsPrecision();
 
 	// Refresh child tabs
 	mPanelPermissions->refresh();
