@@ -2274,8 +2274,8 @@ void LLAgentWearables::setShapeAvatarOffset(bool send_update)
 	}
 	else
 	{
-		if (mHasModifiableShape && mLastWornShape &&
-			mLastWornShape->getVisualParamWeight(AVATAR_HOVER) != 0.f, true)
+		if ((mHasModifiableShape && mLastWornShape &&
+			mLastWornShape->getVisualParamWeight(AVATAR_HOVER) != 0.f), true)
 		{
 			mLastWornShape->setVisualParamWeight(AVATAR_HOVER, 0.f, false);
 			saveWearable(LLWearableType::WT_SHAPE, 0);
