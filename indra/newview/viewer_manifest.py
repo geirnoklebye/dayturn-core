@@ -888,7 +888,7 @@ class DarwinManifest(ViewerManifest):
         # These names, without the .app suffix, determine the flyover text for
         # their corresponding Dock icons.
         toplevel_app, toplevel_icon = "Kokua.app",                "kokua_icon.icns"
-        launcher_app, launcher_icon = "Second Life Launcher.app", "secondlife.icns"
+        launcher_app, launcher_icon = "Second Life Launcher.app", "kokua_icon.icns"
         viewer_app,   viewer_icon   = "Kokua Viewer.app",         "kokua_icon.icns"
 
         # copy over the build result (this is a no-op if run within the xcode script)
