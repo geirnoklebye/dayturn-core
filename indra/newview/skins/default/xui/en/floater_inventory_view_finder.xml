@@ -283,7 +283,7 @@
      width="260"/>
     <check_box
      height="16"
-     top="352"
+     top="366"
      label="Since Logoff"
      layout="topleft"
      left_delta="0"
@@ -299,7 +299,7 @@
      layout="topleft"
      left_delta="0"
      name="- OR -"
-     top="370"
+     top="378"
      width="144">
         - OR -
     </text>
