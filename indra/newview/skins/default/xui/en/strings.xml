@@ -63,7 +63,7 @@ VFS (cache) creation time: [VFS_TIME]
 RestrainedLove API: [RLV_VERSION]
 J2C Decoder Version: [J2C_VERSION]
 Audio Driver Version: [AUDIO_DRIVER_VERSION]
-[LIBCEF_VERSION]
+CEF-Version: [LIBCEF_VERSION]
 LibVLC Version: [LIBVLC_VERSION]
 Voice Server Version: [VOICE_VERSION]
 	</string>
