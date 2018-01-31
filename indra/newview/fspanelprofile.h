@@ -271,7 +271,7 @@ private:
     LLMediaCtrl*        mWebBrowser;
     LLFrameTimer        mPerformanceTimer;
     bool                mFirstNavigate;
-    bool                mCompleted;
+    //bool                mCompleted; //CLANG UNUSED
 };
 
 /**
