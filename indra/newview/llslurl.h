@@ -6,7 +6,6 @@
  * $LicenseInfo:firstyear=2010&license=viewerlgpl$
  * Second Life Viewer Source Code
  * Copyright (C) 2010, Linden Research, Inc.
- * With modifications Copyright (C) 2012, arminweatherwax@lavabit.com
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,7 +35,6 @@
 class LLSLURL
 {
 public:
-	static const char* HOP_SCHEME; // <AW: hop:// protocol>
 	static const char* SLURL_HTTPS_SCHEME;
 	static const char* SLURL_HTTP_SCHEME;
 	static const char* SLURL_SL_SCHEME;
@@ -51,8 +49,9 @@ public:
 	static const char* SIM_LOCATION_HOME;
 	static const char* SIM_LOCATION_LAST;
 	static const char* SLURL_APP_PATH;
-	static const char* SLURL_REGION_PATH; 
- 
+	static const char* SLURL_REGION_PATH;	
+	
+	// if you modify this enumeration, update typeName as well
 	enum SLURL_TYPE { 
 		INVALID, 
 		LOCATION,
@@ -62,18 +61,9 @@ public:
 		HELP,
 		NUM_SLURL_TYPES // must be last
 	};
-#ifdef HAS_OPENSIM_SUPPORT
+		
+	
 	LLSLURL(): mType(INVALID)  { }
-	LLSLURL(const std::string& slurl);
-	LLSLURL(const std::string& grid, const std::string& region, bool hyper = false);
-	LLSLURL(const std::string& region, const LLVector3& position, bool hyper = false);
-	LLSLURL(const std::string& grid, const std::string& region, const LLVector3& position, bool hyper = false);
-	LLSLURL(const std::string& grid, const std::string& region, const LLVector3d& global_position, bool hyper = false);
-	LLSLURL(const std::string& region, const LLVector3d& global_position, bool hyper = false);
-	LLSLURL(const std::string& command, const LLUUID&id, const std::string& verb);
-	LLSLURL(const LLSD& path_array, bool from_app);
-#else
-	LLSLURL() : mType(INVALID)  { }
 	LLSLURL(const std::string& slurl);
 	LLSLURL(const std::string& grid, const std::string& region);
 	LLSLURL(const std::string& region, const LLVector3& position);
@@ -81,8 +71,7 @@ public:
 	LLSLURL(const std::string& grid, const std::string& region, const LLVector3d& global_position);
 	LLSLURL(const std::string& region, const LLVector3d& global_position);
 	LLSLURL(const std::string& command, const LLUUID&id, const std::string& verb);
-#endif
-
+	
 	SLURL_TYPE getType() const { return mType; }
 //<AW: opensim>
 	std::string getTypeHumanReadable() { return getTypeHumanReadable(mType); }
