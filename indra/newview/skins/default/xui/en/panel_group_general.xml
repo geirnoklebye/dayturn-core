@@ -108,7 +108,8 @@ Hover your mouse over the options for more help.
      name="charter"
      top="105"
      right="-4"
-     parse_urls="true"
+     bg_readonly_color="DkGray2"
+    text_readonly_color="White"
      word_wrap="true">
      Group Charter
     </text_editor>   

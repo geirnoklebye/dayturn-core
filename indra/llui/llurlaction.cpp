@@ -161,7 +161,7 @@ void LLUrlAction::showProfile(std::string url)
 		if (LLUUID::validate(id_str))
 		{
 			std::string cmd_str = path_array.get(1).asString();
-			executeSLURL("hop:///app/" + cmd_str + "/" + id_str + "/about");
+			executeSLURL("secondlife:///app/" + cmd_str + "/" + id_str + "/about");
 		}
 	}
 }
