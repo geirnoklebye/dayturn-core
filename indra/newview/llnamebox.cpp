@@ -112,9 +112,9 @@ void LLNameBox::setName(const std::string& name, BOOL is_group)
 		std::string url;
 
 		if (is_group)
-			url = "[hop:///app/group/" + mNameID.asString() + "/about " + name + "]";
+			url = "[secondlife:///app/group/" + mNameID.asString() + "/about " + name + "]";
 		else
-			url = "[hop:///app/agent/" + mNameID.asString() + "/about " + name + "]";
+			url = "[secondlife:///app/agent/" + mNameID.asString() + "/about " + name + "]";
 
 		setText(url);
 	}

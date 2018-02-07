@@ -126,7 +126,7 @@ void LLInspectRemoteObject::onOpen(const LLSD& data)
 
 void LLInspectRemoteObject::onClickMap()
 {
-	std::string url = "hop://" + mSLurl;
+	std::string url = "secondlife://" + mSLurl;
 	LLUrlAction::showLocationOnMap(url);
 	closeFloater();
 }
@@ -173,7 +173,7 @@ void LLInspectRemoteObject::update()
 	std::string url;
 	if (! mSLurl.empty())
 	{
-		url = "hop:///app/teleport/" + mSLurl;
+		url = "secondlife:///app/teleport/" + mSLurl;
 	}
 	getChild<LLUICtrl>("object_slurl")->setValue(url);
 
