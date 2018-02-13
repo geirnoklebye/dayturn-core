@@ -566,7 +566,7 @@ bool LLCrashLogger::init()
 	// We assume that all the logs we're looking for reside on the current drive
 	gDirUtilp->initAppDirs("Kokua");
 
-	// Default to the product name "Kokua" (this is overridden by the -name argument)
+	LLError::initForApplication(gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, ""));
 
 	mProductName = "Kokua";
 

@@ -20,11 +20,18 @@ if(WINDOWS)
     set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(vivox_files
         SLVoice.exe
-        libsndfile-1.dll
+        )
+    if (ADDRESS_SIZE EQUAL 64)
+        list(APPEND vivox_files
+            vivoxsdk_x64.dll
+            ortp_x64.dll
+            )
+    else (ADDRESS_SIZE EQUAL 64)
+        list(APPEND vivox_files
         vivoxsdk.dll
         ortp.dll
-        vivoxoal.dll
         )
+    endif (ADDRESS_SIZE EQUAL 64)
 
     #*******************************
     # Misc shared libs 
@@ -64,10 +71,10 @@ if(WINDOWS)
 
     if (FMODEX)
         if( ADDRESS_SIZE EQUAL 32 )
-          set(release_files ${release_files} fmodex.dll)
+            set(release_files ${release_files} fmodex.dll)
           set(debug_files ${debug_files} fmodexL.dll)
         else( ADDRESS_SIZE EQUAL 32 )
-          set(release_files ${release_files} fmodex64.dll)
+            set(release_files ${release_files} fmodex64.dll)
           set(debug_files ${debug_files} fmodexL64.dll)
         endif(ADDRESS_SIZE EQUAL 32)
     endif(FMODEX)
@@ -172,8 +179,6 @@ elseif(DARWIN)
     set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(vivox_files
         SLVoice
-        libsndfile.dylib
-        libvivoxoal.dylib
         libortp.dylib
         libvivoxplatform.dylib
         libvivoxsdk.dylib
@@ -213,8 +218,16 @@ elseif(LINUX)
     set(SHARED_LIB_STAGING_DIR_RELWITHDEBINFO   "${SHARED_LIB_STAGING_DIR}")
     set(SHARED_LIB_STAGING_DIR_RELEASE          "${SHARED_LIB_STAGING_DIR}")
 
-
+    set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
+    set(vivox_files
+        libsndfile.so.1
+        libortp.so
+        libvivoxoal.so.1
+        libvivoxplatform.so
+        libvivoxsdk.so
+        SLVoice
         # ca-bundle.crt   #No cert for linux.  It is actually still 3.2SDK.
+       )
     # *TODO - update this to use LIBS_PREBUILT_DIR and LL_ARCH_DIR variables
     # or ARCH_PREBUILT_DIRS
 

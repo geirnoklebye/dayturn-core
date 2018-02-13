@@ -1970,7 +1970,7 @@ LLPluginClassMedia* LLViewerMediaImpl::newSourceFromMediaType(std::string media_
 						media_source->showConsole();
 				}
 				#endif
-                return media_source;
+				return media_source;
 			}
 			else
 			{
@@ -2044,7 +2044,7 @@ bool LLViewerMediaImpl::initializePlugin(const std::string& media_type)
 		}
 
 		// the correct way to deal with certs it to load ours from CA.pem and append them to the ones
-		// media plugin for web loads from your system location.
+		// Qt/WebKit loads from your system location.
 		// Note: This needs the new CA.pem file with the Equifax Secure Certificate Authority
 		// cert at the bottom: (MIIDIDCCAomgAwIBAgIENd70zzANBg)
 		std::string ca_path = gDirUtilp->getExpandedFilename( LL_PATH_APP_SETTINGS, "CA.pem" );
