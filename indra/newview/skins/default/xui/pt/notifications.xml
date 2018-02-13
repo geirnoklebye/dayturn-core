@@ -300,6 +300,22 @@ Qualquer membro numa função com esta habilidade, pode atribuir a sí mesmo -- 
 Adicionar esta habilidade a &apos;[ROLE_NAME]&apos;?
 		<usetemplate name="okcancelbuttons" notext="Não" yestext="Sim"/>
 	</notification>
+	<notification name="AssignBanAbilityWarning">
+		Você está prestes a adicionar a função &apos;[ACTION_NAME]&apos; ao cargo &apos;[ROLE_NAME]&apos;.
+
+ *AVISO*
+Qualquer membro em um cargo com essa função também terá as funções &apos;[ACTION_NAME_2]&apos; e &apos;[ACTION_NAME_3]&apos;
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
+	<notification name="RemoveBanAbilityWarning">
+		Você está removendo a função &apos;[ACTION_NAME]&apos; do cargo &apos;[ROLE_NAME]&apos;.
+
+ *AVISO*
+Remover essa função NÃO removerá as funções &apos;[ACTION_NAME_2]&apos; e &apos;[ACTION_NAME_3]&apos;.
+ 
+Se você não quiser que essas funções sejam concedidas a esse cargo, desative-as imediatamente.
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="EjectGroupMemberWarning">
 		Você está prestes a expulsar [AVATAR_NAME] do grupo.
 		<usetemplate ignoretext="Confirmar expulsão de um participante do grupo" name="okcancelignore" notext="Cancelar" yestext="Expulsar"/>
@@ -1500,13 +1516,13 @@ Isso é realmente útil apenas para depuração.
 		Não foi possível definir texturas da região:
 Textura do Terreno [TEXTURE_NUM] tem uma profundidade de bits inválidos [TEXTURE_BIT_DEPTH].
 
-Substitua textura [TEXTURE_NUM], com uma imagem de 24-bit 1024 x 1024 ou menor e em seguida, clique em &apos;Aplicar&apos; novamente.
+Substitua textura [TEXTURE_NUM], com uma imagem de 24-bit 512x512 ou menor e em seguida, clique em &apos;Aplicar&apos; novamente.
 	</notification>
 	<notification name="InvalidTerrainSize">
 		Não foi possível definir texturas da região:
 Textura do Terreno [TEXTURE_NUM] é muito grande em [TEXTURE_SIZE_X] x [TEXTURE_SIZE_Y].
 
-Substituir textura [TEXTURE_NUM], com uma imagem de 24-bit 1024 x 1024 ou menor e em seguida, clique em &apos;Aplicar&apos; novamente.
+Substituir textura [TEXTURE_NUM], com uma imagem de 24-bit 512x512 ou menor e em seguida, clique em &apos;Aplicar&apos; novamente.
 	</notification>
 	<notification name="RawUploadStarted">
 		Upload iniciado. Pode levar uns 2 minutos, dependendo da sua velocidade de conexão.
@@ -2734,6 +2750,12 @@ Selecione só um objeto.
 	<notification name="SystemMessage">
 		[MESSAGE]
 	</notification>
+	<notification name="FlickrConnect">
+		[MESSAGE]
+	</notification>
+	<notification name="TwitterConnect">
+		[MESSAGE]
+	</notification>
 	<notification name="PaymentReceived">
 		[MESSAGE]
 	</notification>
@@ -3269,9 +3291,6 @@ Clique em Aceitar para atender ou em Recusar para recusar este convite.  Clique 
 	</notification>
 	<notification name="VoiceChannelJoinFailed">
 		Falha de conexão com [VOICE_CHANNEL_NAME]. Tente novamente mais tarde.   Agora você será reconectado ao bate-papo local.
-	</notification>
-	<notification name="VoiceLoginRetry">
-		Estamos criando uma canal de voz para você. Isto pode levar até um minuto.
 	</notification>
 	<notification name="VoiceEffectsExpired">
 		Um ou mais serviços de distorção de voz que você assinou veceu.
@@ -4414,8 +4433,9 @@ Tente selecionar uma quantidade menor de terreno.
 		Não foi possível mover arquivos. Caminho anterior restaurado.
 		<usetemplate ignoretext="Não foi possível mover arquivos. Caminho anterior restaurado." name="okignore" yestext="OK"/>
 	</notification>
+	<notification name="DefaultObjectPermissions">
 		Ocorreu um problema ao salvar as permissões padrão do objeto: [REASON].  Tente definir as permissões padrão mais tarde.
-	<notification name="ChatHistoryIsBusyAlert">
+		<notification name="ChatHistoryIsBusyAlert">
 		O arquivo de histórico de bate-papo está ocupado com uma operação anterior. Tente novamente em alguns minutos ou selecione outra pessoa para bater papo.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>

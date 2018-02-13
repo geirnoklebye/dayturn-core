@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 
 	// Set up llerror logging
 	{
-		LLError::initForApplication(".");
+		LLError::initForApplication(".",".");
 		LLError::setDefaultLevel(LLError::LEVEL_INFO);
 //		LLError::setTagLevel("Plugin", LLError::LEVEL_DEBUG);
 //		LLError::logToFile("slplugin.log");
@@ -206,11 +206,16 @@ int main(int argc, char **argv)
 
     LLCocoaPlugin cocoa_interface;
 	cocoa_interface.setupCocoa();
+	cocoa_interface.createAutoReleasePool();
 #endif //LL_DARWIN
 
 	LLPluginProcessChild *plugin = new LLPluginProcessChild();
 
 	plugin->init(port);
+
+#if LL_DARWIN
+    cocoa_interface.deleteAutoReleasePool();
+#endif
 
 	LLTimer timer;
 	timer.start();
@@ -227,7 +232,9 @@ int main(int argc, char **argv)
 #endif
 	while(!plugin->isDone())
 	{
-
+#if LL_DARWIN
+		cocoa_interface.createAutoReleasePool();
+#endif
 		timer.reset();
 		plugin->idle();
 #if LL_DARWIN
@@ -267,6 +274,9 @@ int main(int argc, char **argv)
 	//checkExceptionHandler();
 #endif
 
+#if LL_DARWIN
+		cocoa_interface.deleteAutoReleasePool();
+#endif
 	}
 	delete plugin;
 

@@ -1539,13 +1539,13 @@ Wählen Sie ein einzelnes Objekt aus und versuchen Sie es erneut.
 		Die Regionstexturen konnten nicht festgelegt werden:
 Die Terraintextur [TEXTURE_NUM] hat eine ungültige Bit-Tiefe [TEXTURE_BIT_DEPTH].
 
-Ersetzen Sie die Textur [TEXTURE_NUM] mit einer Bilddatei von maximal 1024 x 1024 und 24 Bit und klicken Sie dann erneut auf „Übernehmen“.
+Ersetzen Sie die Textur [TEXTURE_NUM] mit einer Bilddatei von maximal 512x512 und 24 Bit und klicken Sie dann erneut auf „Übernehmen“.
 	</notification>
 	<notification name="InvalidTerrainSize">
 		Die Regionstexturen konnten nicht festgelegt werden:
 Die Terraintextur [TEXTURE_NUM] ist mit [TEXTURE_SIZE_X]x[TEXTURE_SIZE_Y] zu groß.
 
-Ersetzen Sie die Textur [TEXTURE_NUM] mit einer Bilddatei von maximal 1024 x 1024 und 24 Bit und klicken Sie dann erneut auf „Übernehmen“.
+Ersetzen Sie die Textur [TEXTURE_NUM] mit einer Bilddatei von maximal 512x512 und 24 Bit und klicken Sie dann erneut auf „Übernehmen“.
 	</notification>
 	<notification name="RawUploadStarted">
 		Hochladen gestartet. Je nach Verbindungsgeschwindigkeit kann der Vorgang bis zu 2 Minuten dauern.
@@ -3317,9 +3317,6 @@ Klicken Sie auf  &apos;Akzeptieren &apos;, um dem Chat beizutreten, oder auf  &a
 	<notification name="VoiceChannelJoinFailed">
 		Verbindung zu [VOICE_CHANNEL_NAME] nicht möglich. Bitte versuchen Sie es später.  Sie werden nun wieder mit dem Chat in Ihrer Nähe verbunden.
 	</notification>
-	<notification name="VoiceLoginRetry">
-		Wir erstellen einen Voice-Kanal für Sie. Bitte warten Sie einen Moment.
-	</notification>
 	<notification name="VoiceEffectsExpired">
 		Ein oder mehrere Ihrer Voice-Morph-Abos ist/sind abgelaufen.
 [[URL] Hier klicken], um Ihr Abo zu erneuern.
@@ -4463,121 +4460,14 @@ Wählen Sie eine kleinere Landfläche aus.
 	</notification>
 	<notification name="DefaultObjectPermissions">
 		Problem beim Speichern der standardmäßigen Objektberechtigungen: [REASON].  Versuchen Sie später, die Standardberechtigungen einzustellen.
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="ChatHistoryIsBusyAlert">
 		Chatverlaufsdatei ist noch mit vorheriger Operation beschäftigt. Versuchen Sie es in ein paar Minuten noch einmal oder chatten Sie mit einer anderen Person.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="OutfitPhotoLoadError">
 		[REASON]
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<!-- ## Zi: Animation Overrider -->
-  <notification name="NewAOSet">
-Bitte einen Namen für das neue Animationsset eingeben:
-(Der Name darf kein ":" oder "|" enthalten)
-    <form name="form">
-      <input name="message">
-Neues Animationsset
-      </input>
-      <button
-       name="OK"
-       text="OK"/>
-      <button
-       name="Cancel"
-       text="Abbrechen"/>
-    </form>
+     <usetemplate name="okbutton" yestext="OK"/>
   </notification>
-
-  <notification name="NewAOCantContainColon">
-Ein neues Animationsset mit Namen "[AO_SET_NAME]" konnte nicht angelegt werden.
-Der Name darf kein ":" oder "|" enhalten.
-    <usetemplate
-     name="okbutton"
-     yestext="OK"/>
-  </notification>
-
-  <notification name="RenameAOCantContainColon">
-Das Animationsset konnte nicht zu "[AO_SET_NAME]" umbenannt werden.
-Der Name darf kein ":" oder "|" enhalten.
-    <usetemplate
-     name="okbutton"
-     yestext="OK"/>
-  </notification>
-
-<notification name="RemoveAOSet">
-Animationsset "[AO_SET_NAME]" aus Liste löschen?
-    <usetemplate
-     name="okcancelbuttons"
-     notext="Abbrechen"
-     yestext="Löschen"/>
-  </notification>
-
-  <notification name="AOForeignItemsFound">
-Es wurden Objekte im Animation Overrider gefunden, die nicht zur Konfiguration gehören. Bitte prüfe den &quot;Fundbüro&quot;-Ordner nach Objekten, die aus der Konfiguration des Animation Overrider entfernt wurden.
-  </notification>
-
-  <notification name="AOImportSetAlreadyExists">
-Ein Animationsset mit diesem Namen existiert bereits.
-  </notification>
-
-  <notification name="AOImportPermissionDenied">
-Keine Berechtigung zum Lesen der Notizkarte.
-  </notification>
-
-  <notification name="AOImportCreateSetFailed">
-Fehler beim Erstellen des Importsets.
-  </notification>
-
-  <notification name="AOImportDownloadFailed">
-Notizkarte konnte nicht geladen werden.
-  </notification>
-
-  <notification name="AOImportNoText">
-Notizkarte ist leer or nicht lesbar.
-  </notification>
-
-  <notification name="AOImportNoFolder">
-Ordner zum Laden der Animationen konnte nicht gefunden werden.
-  </notification>
-
-  <notification name="AOImportNoStatePrefix">
-Zeile [LINE] der Notizkarte besitzt keinen gültigen "["-Status-Präfix.
-  </notification>
-
-  <notification name="AOImportNoValidDelimiter">
-Zeile [LINE] der Notizkarte besitzt keinen gültigen "["-Status-Suffix.
-  </notification>
-
-  <notification name="AOImportStateNameNotFound">
-Status [NAME] existiert nicht.
-  </notification>
-
-  <notification name="AOImportAnimationNotFound">
-Animation [NAME] konnte nicht gefunden werden. Bitte sicherstellen, dass sie sich im selben Ordner wie die Notizkarte befindet.
-  </notification>
-
-  <notification name="AOImportInvalid">
-Notizkarte enthält keine verwendbaren Daten. Import wird abgebrochen.
-  </notification>
-
-  <notification name="AOImportRetryCreateSet">
-Import-Ordner für Animationsset [NAME] konnte nicht erstellt werden. Wiederhole...
-  </notification>
-
-  <notification name="AOImportAbortCreateSet">
-Import-Ordner für Animationsset [NAME] konnte nicht erstellt werden. Import wird abgebrochen.
-  </notification>
-
-  <notification name="AOImportLinkFailed">
-Erstellung der Verknüpfung zur Animation [NAME] ist fehlgeschlagen!
-  </notification>
-  <notification name="TestversionExpired">
-    Diese Testversion von [APP_NAME] is abgelaufen und kann nicht weiter verwendet werden.
-    <usetemplate
-     name="okbutton"
-     yestext="OK"/>
-  </notification>
-
-<!-- ## Zi: Animation Overrider -->
-
 </notifications>

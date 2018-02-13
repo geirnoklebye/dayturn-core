@@ -300,6 +300,22 @@ Ajouter ce pouvoir à « [ROLE_NAME] » ?
 Ajouter ce pouvoir à « [ROLE_NAME] » ?
 		<usetemplate name="okcancelbuttons" notext="Non" yestext="Oui"/>
 	</notification>
+	<notification name="AssignBanAbilityWarning">
+		Vous êtes sur le point d&apos;ajouter le pouvoir « [ACTION_NAME] » au rôle « [ROLE_NAME] ».
+
+ *AVERTISSEMENT*
+Tout membre ayant un rôle doté de ce pouvoir disposera aussi des pouvoirs « [ACTION_NAME_2] » et « [ACTION_NAME_3] ».
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
+	<notification name="RemoveBanAbilityWarning">
+		Vous êtes sur le point de supprimer le pouvoir « [ACTION_NAME] » du rôle « [ROLE_NAME] ».
+
+ *AVERTISSEMENT*
+En supprimant ce pouvoir, vous ne supprimez PAS les pouvoirs « [ACTION_NAME_2] » et « [ACTION_NAME_3] ».
+ 
+Si vous ne voulez plus que ce rôle dispose de ces pouvoirs, désactivez-les immédiatement.
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="EjectGroupMemberWarning">
 		Vous allez expulser [AVATAR_NAME] du groupe.
 		<usetemplate ignoretext="Confirmer l&apos;expulsion d&apos;un membre du groupe" name="okcancelignore" notext="Annuler" yestext="Expulser"/>
@@ -1511,7 +1527,7 @@ Remplacer la texture [TEXTURE_NUM] avec une image de 24 bits, 1024 x 1024, ou pl
 		Impossible de definir les textures de la région :
 La texture du terrain [TEXTURE_NUM] est trop volumineuse ([TEXTURE_SIZE_X] X [TEXTURE_SIZE_Y]).
 
-Remplacer la texture [TEXTURE_NUM] avec une image de 24 bits, 1024 x 1024, ou plus petite, puis cliquez à nouveau sur Appliquer.
+Remplacer la texture [TEXTURE_NUM] avec une image de 24 bits, 512 X 512, ou plus petite, puis cliquez à nouveau sur Appliquer.
 	</notification>
 	<notification name="RawUploadStarted">
 		Le chargement a commencé. Cela va prendre une à deux minutes,
@@ -2744,6 +2760,12 @@ Veuillez sélectionner un terrain plus petit.
 	<notification name="SystemMessage">
 		[MESSAGE]
 	</notification>
+	<notification name="FlickrConnect">
+		[MESSAGE]
+	</notification>
+	<notification name="TwitterConnect">
+		[MESSAGE]
+	</notification>
 	<notification name="PaymentReceived">
 		[MESSAGE]
 	</notification>
@@ -3281,9 +3303,6 @@ Pour y participer, cliquez sur Accepter. Sinon, cliquez sur Refuser. Pour ignore
 	</notification>
 	<notification name="VoiceChannelJoinFailed">
 		Échec de la connexion avec [VOICE_CHANNEL_NAME], veuillez réessayer ultérieurement.  Vous allez maintenant être reconnecté(e) au chat vocal près de vous.
-	</notification>
-	<notification name="VoiceLoginRetry">
-		Nous sommes en train de créer un canal vocal pour vous. Veuillez patienter quelques instants.
 	</notification>
 	<notification name="VoiceEffectsExpired">
 		Au moins l&apos;un des effets de voix auxquels vous êtes abonné a expiré.
@@ -4427,7 +4446,10 @@ Veuillez sélectionner un terrain plus petit.
 		Impossible de déplacer les fichiers. Chemin précédent rétabli.
 		<usetemplate ignoretext="Impossible de déplacer les fichiers. Chemin précédent rétabli." name="okignore" yestext="OK"/>
 	</notification>
+	<notification name="DefaultObjectPermissions">
 		Problème lors de l&apos;enregistrement des droits d&apos;objet par défaut : [REASON].  Réessayez de définir les droits par défaut ultérieurement.
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="ChatHistoryIsBusyAlert">
 		Le fichier d&apos;historique des chats est occupé à traiter l&apos;opération précédente. Réessayez dans quelques minutes ou choisissez une autre personne pour le chat.
 		<usetemplate name="okbutton" yestext="OK"/>

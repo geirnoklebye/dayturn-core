@@ -308,6 +308,22 @@
 この能力を [ROLE_NAME] に割り当てますか？
 		<usetemplate name="okcancelbuttons" notext="いいえ" yestext="はい"/>
 	</notification>
+	<notification name="AssignBanAbilityWarning">
+		役割 &apos;[ROLE_NAME]&apos; に能力 &apos;[ACTION_NAME]&apos; を追加しようとしています。
+
+*警告*
+この能力を持つ役割のメンバーにも能力 &apos;[ACTION_NAME_2]&apos; と &apos;[ACTION_NAME_3]&apos; が許可されます
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
+	<notification name="RemoveBanAbilityWarning">
+		役割 &apos;[ROLE_NAME]&apos; から能力 &apos;[ACTION_NAME]&apos; を削除しようとしています。
+
+*警告*
+この能力を削除しても能力 &apos;[ACTION_NAME_2]&apos; と &apos;[ACTION_NAME_3]&apos; は削除されません。
+ 
+これらの能力をこの役割に許可しない場合は、すぐに削除してください!
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="EjectGroupMemberWarning">
 		[AVATAR_NAME] をグループから追放しようとしています。
 		<usetemplate ignoretext="グループからの参加者の追放を確認します" name="okcancelignore" notext="取り消し" yestext="追放"/>
@@ -1537,13 +1553,13 @@ SHA1 フィンガープリント： [MD5_DIGEST]
 		地域テクスチャを設定できませんでした：
 地形テクスチャ[TEXTURE_NUM]は、無効のビット深度[TEXTURE_BIT_DEPTH]です。
 
-テクスチャ[TEXTURE_NUM]を24ビット1024 x 1024かそれ以下のイメージと交換し、「適用」を再度クリックしてください。
+テクスチャ[TEXTURE_NUM]を24ビット512x512かそれ以下のイメージと交換し、「適用」を再度クリックしてください。
 	</notification>
 	<notification name="InvalidTerrainSize">
 		地域テクスチャを設定できませんでした：
 地形テクスチャ「 [TEXTURE_NUM] 」は、[TEXTURE_SIZE_X]x[TEXTURE_SIZE_Y] では大きすぎます。
 
-「 [TEXTURE_NUM] 」を 24 ビット 1024 x 1024 かそれ以下のイメージと交換し、「適用」を再度クリックしてください。
+「 [TEXTURE_NUM] 」を 24 ビット 512x512 かそれ以下のイメージと交換し、「適用」を再度クリックしてください。
 	</notification>
 	<notification name="RawUploadStarted">
 		アップロードを開始しました。 接続速度によっては、最大 2 分間かかります。
@@ -2784,6 +2800,12 @@ Web ページにリンクすると、他人がこの場所に簡単にアクセ�
 	<notification name="SystemMessage">
 		[MESSAGE]
 	</notification>
+	<notification name="FlickrConnect">
+		[MESSAGE]
+	</notification>
+	<notification name="TwitterConnect">
+		[MESSAGE]
+	</notification>
 	<notification name="PaymentReceived">
 		[MESSAGE]
 	</notification>
@@ -3322,9 +3344,6 @@ M キーを押して変更します。
 	</notification>
 	<notification name="VoiceChannelJoinFailed">
 		[VOICE_CHANNEL_NAME] への接続に失敗しました。あとで再度お試しください。  「近くのボイスチャット」に再接続されます。
-	</notification>
-	<notification name="VoiceLoginRetry">
-		ボイスチャンネルを作成しています。1 分ほどかかります。
 	</notification>
 	<notification name="VoiceEffectsExpired">
 		ボイスモーフィング効果の1つまたは複数の有効期限が終了しました。期限を延長・更新するには[[URL]こちらをクリック]してください。
@@ -4459,7 +4478,10 @@ M キーを押して変更します。
 		ファイルを移動できません。以前のパスがリストアされました。
 		<usetemplate ignoretext="ファイルを移動できません。以前のパスがリストアされました。" name="okignore" yestext="OK"/>
 	</notification>
+	<notification name="DefaultObjectPermissions">
 		デフォルトのオブジェクト権限を保存するときに問題が発生しました: [REASON]。後でデフォルトの権限を設定してください。
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="ChatHistoryIsBusyAlert">
 		チャット履歴ファイルが前の操作でビジーです。2、3 分経ってからもう一度試すか、別の人とのチャットを選択してください。
 		<usetemplate name="okbutton" yestext="OK"/>

@@ -531,10 +531,10 @@ This listing could not be updated.
         name="okignore"
         yestext="OK"/>
     </notification>
-	
+    
     <notification
-     icon="alertmodal.tga"
-     name="ImportSuccess"
+        icon="alertmodal.tga"
+        name="ImportSuccess"
      type="notify">
         <tag>Export</tag>
         Successfully imported [COUNT] [OBJECT].
@@ -4581,8 +4581,8 @@ It will change thousands of regions and make the spaceserver hiccup.
   </notification>
 
   <notification
-    icon="alert.tga"
-    label="Confirm Teleport Home"
+   icon="alert.tga"
+   label="Confirm Teleport Home"
     name="TeleportAvatarHome"
     type="alert">
 Teleport [USERNAME] home?
@@ -8263,17 +8263,6 @@ Failed to connect to [VOICE_CHANNEL_NAME], please try again later.  You will now
   </notification>
 
   <notification
-   duration="10"
-   icon="notifytip.tga"
-   name="VoiceLoginRetry"
-   type="notifytip">
-    <unique/>    
-We are creating a voice channel for you. This may take up to one minute.
-  <tag>status</tag>
-  <tag>voice</tag>
-  </notification>
-
-  <notification
    icon="notify.tga"
    name="VoiceEffectsExpired"
    sound="UISndAlert"
@@ -8728,16 +8717,22 @@ Please check your network and firewall setup.
    icon="alertmodal.tga"
    name="NoVoiceConnect"
    type="alertmodal">
-We're having trouble connecting to your voice server:
+We are unable to connect to the voice server:
 
 [HOSTID]
 
-Voice communications will not be available.
+Ports that must be allowed for voice are:
+:TCP: 80, 443
+:UDP: 3478, 3479, 5060, 5062, 6250, 12000-32000
+
 Please check your network and firewall setup.
+Disable any SIP ALG feature in your router.
+
+Voice communications will not be available.
     <tag>voice</tag>
   <tag>fail</tag>
     <usetemplate
-     ignoretext="Warn me when the viewer can't connect to the voice server"
+     name="okbutton"
      name="okignore"
      yestext="OK" />
   </notification>
@@ -9469,10 +9464,10 @@ Could not add [GRID] to the grid list.
 <!-- AW: opensim -->
 
   <notification
-     icon="alertmodal.tga"
-     name="LocalBitmapsUpdateFailedFinal"
-     persist="true"
-     type="notify">
+   icon="alertmodal.tga"
+   name="LocalBitmapsUpdateFailedFinal"
+   persist="true"
+   type="notify">
     [FNAME] could not be opened or decoded for [NRETRIES] attempts, and is now considered broken.
     Disabling future updates for this file.
   </notification>

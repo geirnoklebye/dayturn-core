@@ -1058,7 +1058,7 @@ bool LLAppViewer::init()
 	// alert the user if they are using unsupported hardware
 
     
-    if(!gSavedSettings.getBOOL("AlertedUnsupportedHardware"))
+	if(!gSavedSettings.getBOOL("AlertedUnsupportedHardware"))
 	{
 		bool unsupported = false;
 		LLSD args;
@@ -2221,8 +2221,9 @@ void LLAppViewer::initLoggingAndGetLastDuration()
 	//
 	// Set up logging defaults for the viewer
 	//
-	LLError::initForApplication(
-				gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, ""));
+	LLError::initForApplication( gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "")
+                                ,gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS, "")
+                                );
 	LLError::setFatalFunction(errorCallback);
 	//LLError::setTimeFunction(getRuntime);
 
@@ -2641,7 +2642,7 @@ bool LLAppViewer::initConfiguration()
 
 	std::string CmdLineChannel(gSavedSettings.getString("CmdLineChannel"));
 	if(! CmdLineChannel.empty())
-	{
+    {
 		LLVersionInfo::resetChannel(CmdLineChannel);
 	}
 
@@ -2656,7 +2657,7 @@ bool LLAppViewer::initConfiguration()
 
 	std::string test_name(gSavedSettings.getString("LogMetrics"));
 	if (! test_name.empty())
-	{
+ 	{
 		LLTrace::BlockTimer::sMetricLog = TRUE;
 		// '--logmetrics' is specified with a named test metric argument so the data gathering is done only on that test
 		// In the absence of argument, every metric would be gathered (makes for a rather slow run and hard to decipher report...)
@@ -2671,14 +2672,14 @@ bool LLAppViewer::initConfiguration()
 		// that value for validity.
 		U32 graphicslevel = gSavedSettings.getU32("RenderQualityPerformance");
 		if (LLFeatureManager::instance().isValidGraphicsLevel(graphicslevel))
-		{
+        {
 			// graphicslevel is valid: save it and engage it later. Capture
 			// the requested value separately from the settings variable
 			// because, if this is the first run, LLViewerWindow's constructor
 			// will call LLFeatureManager::applyRecommendedSettings(), which
 			// overwrites this settings variable!
 			mForceGraphicsLevel = graphicslevel;
-		}
+        }
 	}
 
 	LLFastTimerView::sAnalyzePerformance = gSavedSettings.getBOOL("AnalyzePerformance");
@@ -2732,7 +2733,7 @@ bool LLAppViewer::initConfiguration()
 	// parsing the slurls, actually done when the grids are fetched 
 	// (currently at the top of startup STATE_AUDIO_INIT,
 	// but rather it belongs into the gridmanager)
-	{
+    {
 		start_slurl = starting_location;
 		LLStartUp::setStartSLURL(start_slurl);
 		if(start_slurl.getType() == LLSLURL::LOCATION) 
@@ -2754,7 +2755,7 @@ bool LLAppViewer::initConfiguration()
 			// successfully handed off URL to existing instance, exit
 			return false;
 		}
-	}
+    }
 
 	const LLControlVariable* skinfolder = gSavedSettings.getControl("SkinCurrent");
 	if(skinfolder && LLStringUtil::null != skinfolder->getValue().asString())
@@ -3697,9 +3698,9 @@ void LLAppViewer::handleViewerCrash()
 	if (gDirUtilp)
 	{
 		std::string crash_marker_file_name = gDirUtilp->getExpandedFilename(LL_PATH_LOGS,
-																	 gLLErrorActivated
-																	 ? LLERROR_MARKER_FILE_NAME
-																	 : ERROR_MARKER_FILE_NAME);
+																			gLLErrorActivated
+																			? LLERROR_MARKER_FILE_NAME
+																			: ERROR_MARKER_FILE_NAME);
 		LLAPRFile crash_marker_file ;
 		crash_marker_file.open(crash_marker_file_name, LL_APR_WB);
 		if (crash_marker_file.getFileHandle())
@@ -3854,7 +3855,7 @@ void LLAppViewer::processMarkerFiles()
 		}
 
 		if (mSecondInstance)
-	{
+		{
 			LL_INFOS("MarkerFile") << "Exec marker '"<< mMarkerFileName << "' owned by another instance" << LL_ENDL;
 		}
 		else if (marker_is_same_version)
@@ -3922,12 +3923,12 @@ void LLAppViewer::processMarkerFiles()
 			{
 				gLastExecEvent = LAST_EXEC_LOGOUT_CRASH;
 				LL_INFOS("MarkerFile") << "LLError marker '"<< llerror_marker_file << "' crashed, setting LastExecEvent to LOGOUT_CRASH" << LL_ENDL;
-		}
-		else
-		{
+			}
+			else
+			{
 				gLastExecEvent = LAST_EXEC_LLERROR_CRASH;
 				LL_INFOS("MarkerFile") << "LLError marker '"<< llerror_marker_file << "' crashed, setting LastExecEvent to LLERROR_CRASH" << LL_ENDL;
-		}
+			}
 		}
 		else
 		{
@@ -3940,20 +3941,20 @@ void LLAppViewer::processMarkerFiles()
 	if(LLAPRFile::isExist(error_marker_file, NULL, LL_APR_RB))
 	{
 		if (markerIsSameVersion(error_marker_file))
-	{
-			if (gLastExecEvent == LAST_EXEC_LOGOUT_FROZE)
 		{
+			if (gLastExecEvent == LAST_EXEC_LOGOUT_FROZE)
+			{
 				gLastExecEvent = LAST_EXEC_LOGOUT_CRASH;
 				LL_INFOS("MarkerFile") << "Error marker '"<< error_marker_file << "' crashed, setting LastExecEvent to LOGOUT_CRASH" << LL_ENDL;
+			}
+			else
+			{
+				gLastExecEvent = LAST_EXEC_OTHER_CRASH;
+				LL_INFOS("MarkerFile") << "Error marker '"<< error_marker_file << "' crashed, setting LastExecEvent to " << gLastExecEvent << LL_ENDL;
+			}
 		}
 		else
 		{
-				gLastExecEvent = LAST_EXEC_OTHER_CRASH;
-				LL_INFOS("MarkerFile") << "Error marker '"<< error_marker_file << "' crashed, setting LastExecEvent to " << gLastExecEvent << LL_ENDL;
-		}
-	}
-	else
-	{
 			LL_INFOS("MarkerFile") << "Error marker '"<< error_marker_file << "' marker found, but versions did not match" << LL_ENDL;
 		}
 		LLAPRFile::remove(error_marker_file);
@@ -3962,34 +3963,34 @@ void LLAppViewer::processMarkerFiles()
 
 void LLAppViewer::removeMarkerFiles()
 {
-    if (!mSecondInstance)
+	if (!mSecondInstance)
     {
-        if (mMarkerFile.getFileHandle())
-        {
+		if (mMarkerFile.getFileHandle())
+		{
             mMarkerFile.close();
             LLAPRFile::remove(mMarkerFileName);
             LL_DEBUGS("MarkerFile") << "removed exec marker '" << mMarkerFileName << "'" << LL_ENDL;
-        }
-        else
-        {
+		}
+		else
+		{
             LL_WARNS("MarkerFile") << "marker '" << mMarkerFileName << "' not open" << LL_ENDL;
-        }
+ 		}
 
-        if (mLogoutMarkerFile.getFileHandle())
-        {
-            mLogoutMarkerFile.close();
+		if (mLogoutMarkerFile.getFileHandle())
+		{
+			mLogoutMarkerFile.close();
             LLAPRFile::remove(mLogoutMarkerFileName);
             LL_DEBUGS("MarkerFile") << "removed logout marker '" << mLogoutMarkerFileName << "'" << LL_ENDL;
-        }
-        else
-        {
+		}
+		else
+		{
             LL_WARNS("MarkerFile") << "logout marker '" << mLogoutMarkerFileName << "' not open" << LL_ENDL;
-        }
-    }
-    else
-    {
-        LL_WARNS("MarkerFile") << "leaving markers because this is a second instance" << LL_ENDL;
-    }
+		}
+	}
+	else
+	{
+		LL_WARNS("MarkerFile") << "leaving markers because this is a second instance" << LL_ENDL;
+	}
 }
 
 void LLAppViewer::removeDumpDir()

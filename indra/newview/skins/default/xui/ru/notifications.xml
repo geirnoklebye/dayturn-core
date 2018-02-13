@@ -301,6 +301,22 @@
 Добавить эту способность к роли «[ROLE_NAME]»?
 		<usetemplate name="okcancelbuttons" notext="Нет" yestext="Да"/>
 	</notification>
+	<notification name="AssignBanAbilityWarning">
+		Вы собираетесь добавить способность «[ACTION_NAME]» к роли «[ROLE_NAME]».
+
+ *ПРЕДУПРЕЖДЕНИЕ*
+Любой участник в роли с этой способностью также получает способности «[ACTION_NAME_2]» и «[ACTION_NAME_3]»
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
+	<notification name="RemoveBanAbilityWarning">
+		Вы удаляете способность «[ACTION_NAME]» для роли «[ROLE_NAME]».
+
+ *ПРЕДУПРЕЖДЕНИЕ*
+При удалении этой способности НЕ БУДУТ удалены способности «[ACTION_NAME_2]» и «[ACTION_NAME_3]».
+ 
+Если вам больше не нужны эти способности для данной роли, немедленно отключите их!
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="EjectGroupMemberWarning">
 		Вы собираетесь исключить [AVATAR_NAME] из группы.
 		<usetemplate ignoretext="Подтвердите исключение участника из группы" name="okcancelignore" notext="Отмена" yestext="Выкинуть"/>
@@ -1508,13 +1524,13 @@
 		Не удалось задать текстуры региона:
 у текстуры [TEXTURE_NUM] неправильная битовая глубина [TEXTURE_BIT_DEPTH].
 
-Замените текстуру [TEXTURE_NUM] на 24-битное изображение размером 1024 x 1024 или меньше и снова нажмите кнопку «Применить».
+Замените текстуру [TEXTURE_NUM] на 24-битное изображение размером 512x512 или меньше и снова нажмите кнопку «Применить».
 	</notification>
 	<notification name="InvalidTerrainSize">
 		Не удалось задать текстуры региона:
 у текстуры [TEXTURE_NUM] слишком большой размер [TEXTURE_SIZE_X]x[TEXTURE_SIZE_Y].
 
-Замените текстуру [TEXTURE_NUM] на 24-битное изображение размером 1024 x 1024 или меньше и снова нажмите кнопку «Применить».
+Замените текстуру [TEXTURE_NUM] на 24-битное изображение размером 512x512 или меньше и снова нажмите кнопку «Применить».
 	</notification>
 	<notification name="RawUploadStarted">
 		Началась передача. Она может занять до двух минут, в зависимости от скорости соединения.
@@ -2743,6 +2759,12 @@ http://secondlife.com/download.
 	<notification name="SystemMessage">
 		[MESSAGE]
 	</notification>
+	<notification name="FlickrConnect">
+		[MESSAGE]
+	</notification>
+	<notification name="TwitterConnect">
+		[MESSAGE]
+	</notification>
 	<notification name="PaymentReceived">
 		[MESSAGE]
 	</notification>
@@ -3280,9 +3302,6 @@ http://secondlife.com/download.
 	</notification>
 	<notification name="VoiceChannelJoinFailed">
 		Не удалось подключиться к [VOICE_CHANNEL_NAME], повторите попытку позже.  Будет установлено подключение к локальному голосовому чату.
-	</notification>
-	<notification name="VoiceLoginRetry">
-		Создается голосовой канал для вас. Создание займет не больше минуты.
 	</notification>
 	<notification name="VoiceEffectsExpired">
 		Истек срок действия одного или нескольких типов изменения голоса, на которые вы подписаны.
@@ -4427,7 +4446,10 @@ http://secondlife.com/download.
 		Невозможно переместить файлы. Восстановлен прежний путь.
 		<usetemplate ignoretext="Невозможно переместить файлы. Восстановлен прежний путь." name="okignore" yestext="OK"/>
 	</notification>
+	<notification name="DefaultObjectPermissions">
 		Ошибка при сохранении стандартных разрешений на объект: [REASON].  Попробуйте задать стандартные разрешения через некоторое время.
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="ChatHistoryIsBusyAlert">
 		Файл журнала чата занят предыдущей операцией. Повторите попытку через несколько минут или выберите чат с другим лицом.
 		<usetemplate name="okbutton" yestext="OK"/>

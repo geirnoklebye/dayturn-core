@@ -301,6 +301,22 @@ Bu Yetenek &apos;[ROLE_NAME]&apos; rolüne eklensin mi?
 Bu Yetenek &apos;[ROLE_NAME]&apos; rolüne eklensin mi?
 		<usetemplate name="okcancelbuttons" notext="Hayır" yestext="Evet"/>
 	</notification>
+	<notification name="AssignBanAbilityWarning">
+		&quot;[ROLE_NAME]&quot; rolüne &quot;[ACTION_NAME]&quot; yeteneğini eklemek üzeresiniz.
+
+ *UYARI*
+Bu Yeteneğe sahip bir Roldeki Üyeler &quot;[ACTION_NAME_2]&quot; ve &quot;[ACTION_NAME_3]&quot; yeteneklerine de sahip olacak.
+		<usetemplate name="okbutton" yestext="Tamam"/>
+	</notification>
+	<notification name="RemoveBanAbilityWarning">
+		&quot;[ROLE_NAME]&quot; rolünden &quot;[ACTION_NAME]&quot; yeteneğini kaldırıyorsunuz.
+
+ *UYARI*
+Bu yeteneğin kaldırılması &quot;[ACTION_NAME_2]&quot; ve &quot;[ACTION_NAME_3]&quot; yeteneklerini kaldırmaz.
+ 
+Bu yeteneklerin artık bu rolde bulunmasını istemiyorsanız, onları hemen devre dışı bırakın!
+		<usetemplate name="okbutton" yestext="Tamam"/>
+	</notification>
 	<notification name="EjectGroupMemberWarning">
 		Gruptan [AVATAR_NAME] adlı üyeyi çıkarmak üzeresiniz.
 		<usetemplate ignoretext="Gruptan bir katılımcının çıkarılmasını doğrulayın" name="okcancelignore" notext="İptal" yestext="Çıkar"/>
@@ -1509,13 +1525,13 @@ Lütfen sadece bir nesne seçin ve tekrar deneyin.
 		Bölge dokuları ayarlanamadı:
 [TEXTURE_NUM] numaralı yüzey dokusu geçersiz bir bit derinliğine ([TEXTURE_BIT_DEPTH]) sahip.
 
-[TEXTURE_NUM] numaralı dokuyu 24 bit 1024 x 1024 veya daha küçük bir resimle değiştirin ve &quot;Uygula&quot; seçeneğini yeniden tıklatın.
+[TEXTURE_NUM] numaralı dokuyu 24 bit 512x512 veya daha küçük bir resimle değiştirin ve &quot;Uygula&quot; seçeneğini yeniden tıklatın.
 	</notification>
 	<notification name="InvalidTerrainSize">
 		Bölge dokuları ayarlanamadı:
 [TEXTURE_NUM] numaralı yüzey dokusu çok büyük ([TEXTURE_SIZE_X]x[TEXTURE_SIZE_Y]).
 
-[TEXTURE_NUM] numaralı dokuyu 24 bit 1024 x 1024 veya daha küçük bir resimle değiştirin ve &quot;Uygula&quot; seçeneğini yeniden tıklatın.
+[TEXTURE_NUM] numaralı dokuyu 24 bit 512x512 veya daha küçük bir resimle değiştirin ve &quot;Uygula&quot; seçeneğini yeniden tıklatın.
 	</notification>
 	<notification name="RawUploadStarted">
 		Karşıya yükleme başlatıldı. Bağlantı hızına bağlı olarak iki dakika kadar sürebilir.
@@ -2743,6 +2759,12 @@ Daha küçük bir arazi parçası seçmeyi deneyin.
 	<notification name="SystemMessage">
 		[MESSAGE]
 	</notification>
+	<notification name="FlickrConnect">
+		[MESSAGE]
+	</notification>
+	<notification name="TwitterConnect">
+		[MESSAGE]
+	</notification>
 	<notification name="PaymentReceived">
 		[MESSAGE]
 	</notification>
@@ -3280,9 +3302,6 @@ Sohbete katılmak için Kabul Et&apos;i, daveti geri çevirmek için ise Reddet&
 	</notification>
 	<notification name="VoiceChannelJoinFailed">
 		[VOICE_CHANNEL_NAME] ile bağlantı kurulamadı, lütfen daha sonra tekrar deneyin. Şimdi Yakındaki bir Sesli Sohbete yeniden bağlanılacaksınız.
-	</notification>
-	<notification name="VoiceLoginRetry">
-		Sizin için bir ses kanalı oluşturuyoruz. Bu işlem bir dakika kadar sürebilir.
 	</notification>
 	<notification name="VoiceEffectsExpired">
 		Abone olduğunuz Ses Şekillerinden birinin ya da daha fazlasının süresi dolmuş.
@@ -4420,7 +4439,10 @@ Daha küçük bir arazi parçası seçmeyi deneyin.
 		Dosyalar taşınamıyor. Önceki yol geri yüklendi.
 		<usetemplate ignoretext="Dosyalar taşınamıyor. Önceki yol geri yüklendi." name="okignore" yestext="Tamam"/>
 	</notification>
+	<notification name="DefaultObjectPermissions">
 		Varsayılan nesne izinleri kaydedilirken bir sorun oluştu: [REASON].  Varsayılan izinleri kaydetmeyi lütfen daha sonra tekrar deneyin.
+		<usetemplate name="okbutton" yestext="Tamam"/>
+	</notification>
 	<notification name="ChatHistoryIsBusyAlert">
 		Sohbet geçmişi dosyası önceki işlemi gerçekleştirmekle meşgul. Lütfen bir kaç dakika sonra tekrar deneyin veya başka bir kişiyle sohbet etmeyi deneyin.
 		<usetemplate name="okbutton" yestext="Tamam"/>
