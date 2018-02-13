@@ -2173,18 +2173,9 @@ Wrong chunk size in WAV file:
 
   <notification
    icon="alertmodal.tga"
-   name="LLSoundFileInvalidTooLong"
+   name="SoundFileInvalidTooLong"
    type="alertmodal">
-Audio file is too long (10 seconds maximum):
-[FILE]
-  <tag>fail</tag>
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="OSSoundFileInvalidTooLong"
-   type="alertmodal">
-Audio file is too long (60 seconds maximum):
+Audio file is too long (10 second maximum):
 [FILE]
   <tag>fail</tag>
   </notification>
@@ -8733,26 +8724,7 @@ Voice communications will not be available.
   <tag>fail</tag>
     <usetemplate
      name="okbutton"
-     name="okignore"
-     yestext="OK" />
-  </notification>
-
-  <notification
-   icon="alertmodal.tga"
-   name="NoVoiceConnect-GIAB"
-   type="alertmodal">
-We're having trouble connecting to your voice server:
-
-[HOSTID]
-
-Voice communications will not be available.
-Please check your network and firewall setup.
-    <tag>voice</tag>
-  <tag>fail</tag>
-    <usetemplate
-     ignoretext="Warn me when the viewer can't connect to the voice server"
-     name="okignore"
-     yestext="OK" />
+     yestext="OK"/>
   </notification>
 
   <notification
