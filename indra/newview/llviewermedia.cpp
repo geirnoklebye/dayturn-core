@@ -27,7 +27,7 @@
 #include "llviewerprecompiledheaders.h"
 
 #include "llviewermedia.h"
-#include "llpluginclassmedia.h"
+
 #include "llagent.h"
 #include "llagentcamera.h"
 #include "llappviewer.h"
@@ -76,7 +76,6 @@
 
 #include <boost/bind.hpp>	// for SkinFolder listener
 #include <boost/signals2.hpp>
-
 
 /*static*/ const char* LLViewerMedia::AUTO_PLAY_MEDIA_SETTING = "ParcelMediaAutoPlayEnable";
 /*static*/ const char* LLViewerMedia::SHOW_MEDIA_ON_OTHERS_SETTING = "MediaShowOnOthers";
@@ -2045,9 +2044,7 @@ bool LLViewerMediaImpl::initializePlugin(const std::string& media_type)
 
 		// the correct way to deal with certs it to load ours from CA.pem and append them to the ones
 		// Qt/WebKit loads from your system location.
-		// Note: This needs the new CA.pem file with the Equifax Secure Certificate Authority
-		// cert at the bottom: (MIIDIDCCAomgAwIBAgIENd70zzANBg)
-		std::string ca_path = gDirUtilp->getExpandedFilename( LL_PATH_APP_SETTINGS, "CA.pem" );
+		std::string ca_path = gDirUtilp->getExpandedFilename( LL_PATH_EXECUTABLE, "app_settings", "ca-bundle.crt" );
 		media_source->addCertificateFilePath( ca_path );
 
 		media_source->proxy_setup(gSavedSettings.getBOOL("BrowserProxyEnabled"), gSavedSettings.getString("BrowserProxyAddress"), gSavedSettings.getS32("BrowserProxyPort"));
