@@ -1033,8 +1033,11 @@ LLModel::weight_list& LLModel::getJointInfluences(const LLVector3& pos)
 	{  //no exact match found, get closest point
 		const F32 epsilon = 1e-5f;
 		weight_map::iterator iter_up = mSkinWeights.lower_bound(pos);
-		weight_map::iterator iter_down = ++iter_up;
-
+		weight_map::iterator iter_down = iter_up;
+		if (iter_up != mSkinWeights.end())
+		{
+			iter_down = ++iter_up;
+		}
 		weight_map::iterator best = iter_up;
 
 		F32 min_dist = (iter->first - pos).magVec();
@@ -1353,7 +1356,7 @@ bool LLModel::loadSkinInfo(LLSD& header, std::istream &is)
 
 		LLSD skin_data;
 
-		if (unzip_llsd(skin_data, is, size))
+		if (LLUZipHelper::unzip_llsd(skin_data, is, size) == LLUZipHelper::ZR_OK)
 		{
 			mSkinInfo.fromLLSD(skin_data);
 			return true;
@@ -1374,7 +1377,7 @@ bool LLModel::loadDecomposition(LLSD& header, std::istream& is)
 
 		LLSD data;
 
-		if (unzip_llsd(data, is, size))
+		if (LLUZipHelper::unzip_llsd(data, is, size) == LLUZipHelper::ZR_OK)
 		{
 			mPhysics.fromLLSD(data);
 			updateHullCenters();

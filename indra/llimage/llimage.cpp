@@ -764,8 +764,12 @@ U8* LLImageBase::allocateData(S32 size)
 	{
 		size = 0;
 		mWidth = mHeight = 0;
+		if (mData)
+		{
+			deleteData(); // virtual
 		mData = NULL;
 			addAllocationError();
+	}
 	}
 	mDataSize = size;
 	claimMem(mDataSize);
@@ -792,6 +796,7 @@ U8* LLImageBase::reallocateData(S32 size)
 	disclaimMem(mDataSize);
 	mDataSize = size;
 	claimMem(mDataSize);
+	mBadBufferAllocation = false;
 	return mData;
 }
 
@@ -1220,7 +1225,7 @@ void LLImageRaw::copyUnscaledAlphaMask( LLImageRaw* src, const LLColor4U& fill)
 	U8* dst_data = dst->getData();
 	for ( S32 i = 0; i < pixels; i++ )
 	{
-	dst_data[0] = fill.mV[0];
+		dst_data[0] = fill.mV[0];
 		dst_data[1] = fill.mV[1];
 		dst_data[2] = fill.mV[2];
 		dst_data[3] = src_data[0];
@@ -1251,16 +1256,16 @@ void LLImageRaw::fill( const LLColor4U& color )
 	}
 	else
 		if (3 == getComponents())
-		{
-			U8* data = getData();
+	{
+		U8* data = getData();
 			for (S32 i = 0; i < pixels; i++)
-			{
-				data[0] = color.mV[0];
-				data[1] = color.mV[1];
-				data[2] = color.mV[2];
-				data += 3;
-			}
+		{
+			data[0] = color.mV[0];
+			data[1] = color.mV[1];
+			data[2] = color.mV[2];
+			data += 3;
 		}
+	}
 }
 
 LLPointer<LLImageRaw> LLImageRaw::duplicate()

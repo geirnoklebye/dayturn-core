@@ -327,8 +327,8 @@ BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter, bool blocking)
 // <FS:CR Threaded Filepickers>
 	if (blocking)
 	{
-		// Modal, so pause agent
-		send_agent_pause();
+	// Modal, so pause agent
+	send_agent_pause();
 	}
 // </FS:CR Threaded Filepickers>
 	// NOTA BENE: hitting the file dialog triggers a window focus event, destroying the selection manager!!
@@ -359,20 +359,16 @@ BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter, bool blocking)
 					dirname = filename + "\\";
 				else
 					mFiles.push_back(dirname + filename);
-				
-				// </FS:ND> Do not add the length of the utf8 string, but use the length of the utf16 string
-				// tptrw += filename.size();
-				tptrw += wcslen( tptrw );
-				// </FS:ND>
+				tptrw += wcslen(tptrw);
 			}
 		}
 	}
 // <FS:CR Threaded Filepickers>
 	if (blocking)
 	{
-		send_agent_resume();
-		// Account for the fact that the app has been stalled.
-		LLFrameTimer::updateFrameTime();
+	send_agent_resume();
+	// Account for the fact that the app has been stalled.
+	LLFrameTimer::updateFrameTime();
 	}
 // </FS:CR Threaded Filepickers>
 	return success;
@@ -603,8 +599,8 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, 
 // <FS:CR Threaded Filepickers>
 	if (blocking)
 	{
-		// Modal, so pause agent
-		send_agent_pause();
+	// Modal, so pause agent
+	send_agent_pause();
 	}
 // </FS:CR Threaded Filepickers>
 	{
@@ -627,9 +623,9 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, 
 // <FS:CR Threaded Filepickers>
 	if (blocking)
 	{
-		send_agent_resume();
-		// Account for the fact that the app has been stalled.
-		LLFrameTimer::updateFrameTime();
+	send_agent_resume();
+	// Account for the fact that the app has been stalled.
+	LLFrameTimer::updateFrameTime();
 	}
 // </FS:CR Threaded Filepickers>
 	return success;
@@ -964,8 +960,8 @@ BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter, bool blocking)
 	// <FS:CR> Threaded Filepickers
 	if (blocking)
 	{
-		// Modal, so pause agent
-		send_agent_pause();
+	// Modal, so pause agent
+	send_agent_pause();
 	}
 	// </FS:CR>
     
@@ -984,8 +980,8 @@ BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter, bool blocking)
 	{
 		send_agent_resume();
 		
-		// Account for the fact that the app has been stalled.
-		LLFrameTimer::updateFrameTime();
+	// Account for the fact that the app has been stalled.
+	LLFrameTimer::updateFrameTime();
 	}
 	// </FS:CR>
 	return success;
@@ -1014,8 +1010,8 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, 
 	// <FS:CR> Threaded filepickers
 	if (blocking)
 	{
-		// Modal, so pause agent
-		send_agent_pause();
+	// Modal, so pause agent
+	send_agent_pause();
 	}
 	// </FS:CR>
 
@@ -1030,9 +1026,9 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, 
 	// <FS:CR> Threaded filepickers
 	if (blocking)
 	{
-		send_agent_resume();
-		// Account for the fact that the app has been stalled.
-		LLFrameTimer::updateFrameTime();
+	send_agent_resume();
+	// Account for the fact that the app has been stalled.
+	LLFrameTimer::updateFrameTime();
 	}
 	// </FS:CR>
 	
