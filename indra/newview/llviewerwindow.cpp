@@ -4614,11 +4614,11 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
         LLGenericSaveFilePicker::open(pick_type, proposed_name, boost::bind(&LLViewerWindow::saveImageCallback, this, _1, image, extension, callback));
         return;
 	}
-	while( -1 != err );  // search until the file is not found (i.e., stat() gives an error).
 
     do_save_image(image, LLViewerWindow::sSnapshotDir, LLViewerWindow::sSnapshotBaseName, extension, callback);
     // </FS:Ansariel>
 }
+
 
 void LLViewerWindow::resetSnapshotLoc()
 {
