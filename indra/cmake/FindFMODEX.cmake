@@ -11,7 +11,14 @@
 
 FIND_PATH(FMODEX_INCLUDE_DIR fmod.h PATH_SUFFIXES fmod)
 
-SET(FMODEX_NAMES ${FMODEX_NAMES} fmodex fmodvc fmodexL_vc)
+if( ADDRESS_SIZE EQUAL 32 )
+    SET(FMODEX_NAMES ${FMODEX_NAMES} fmodex fmodvc fmodexL_vc)
+else
+      if( ADDRESS_SIZE EQUAL 64 )
+    SET(FMODEX_NAMES ${FMODEX_NAMES} fmodex64 fmodvc64 fmodexL_vc64)      
+      endif( ADDRESS_SIZE EQUAL 64 )
+endif( ADDRESS_SIZE EQUAL 32 )
+
 FIND_LIBRARY(FMODEX_LIBRARY
   NAMES ${FMODEX_NAMES}
   PATH_SUFFIXES fmodex
@@ -23,7 +30,7 @@ IF (FMODEX_SDK_DIR OR WINDOWS)
         STRING(REGEX REPLACE "\\\\" "/" FMODEX_SDK_DIR ${FMODEX_SDK_DIR}) 
     endif(WINDOWS)
     find_library(FMODEX_LIBRARY
-             fmodex_vc fmodexL_vc 
+             fmodex_vc fmodexL_vc fmodvc64 fmodexL_vc64
              PATHS
              ${FMODEX_SDK_DIR}/api/lib
              ${FMODEX_SDK_DIR}/api

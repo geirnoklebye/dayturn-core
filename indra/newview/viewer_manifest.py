@@ -46,7 +46,7 @@ viewer_dir = os.path.dirname(__file__)
 # indra.util.llmanifest under their system Python!
 sys.path.insert(0, os.path.join(viewer_dir, os.pardir, "lib", "python"))
 from indra.util.llmanifest import LLManifest, main, path_ancestors, CHANNEL_VENDOR_BASE, RELEASE_CHANNEL, ManifestError
-    from llbase import llsd
+from llbase import llsd
 
 class ViewerManifest(LLManifest):
     def is_packaging_viewer(self):
@@ -610,15 +610,15 @@ class WindowsManifest(ViewerManifest):
         config = 'debug' if self.args['configuration'].lower() == 'debug' else 'release'
         with self.prefix(src=os.path.join(pkgdir, 'bin', config), dst="llplugin"):
             self.path("chrome_elf.dll")
-                self.path("d3dcompiler_43.dll")
-                self.path("d3dcompiler_47.dll")
-                self.path("libcef.dll")
-                self.path("libEGL.dll")
-                self.path("libGLESv2.dll")
+            self.path("d3dcompiler_43.dll")
+            self.path("d3dcompiler_47.dll")
+            self.path("libcef.dll")
+            self.path("libEGL.dll")
+            self.path("libGLESv2.dll")
             self.path("dullahan_host.exe")
-                self.path("natives_blob.bin")
-                self.path("snapshot_blob.bin")
-                self.path("widevinecdmadapter.dll")
+            self.path("natives_blob.bin")
+            self.path("snapshot_blob.bin")
+            self.path("widevinecdmadapter.dll")
 
         # MSVC DLLs needed for CEF and have to be in same directory as plugin
         with self.prefix(src=os.path.join(os.pardir, 'sharedlibs', 'Release'), dst="llplugin"):
@@ -690,9 +690,9 @@ class WindowsManifest(ViewerManifest):
             self.path("zh-TW.pak")
 
         with self.prefix(src=os.path.join(pkgdir, 'bin', 'release'), dst="llplugin"):
-                self.path("libvlc.dll")
-                self.path("libvlccore.dll")
-                self.path("plugins/")
+            self.path("libvlc.dll")
+            self.path("libvlccore.dll")
+            self.path("plugins/")
 
         # pull in the crash logger and updater from other projects
         # tag:"crash-logger" here as a cue to the exporter
@@ -812,31 +812,31 @@ class WindowsManifest(ViewerManifest):
             ):
             self.sign(exe)
             
-        # We use the Unicode version of NSIS, available from
-        # http://www.scratchpaper.com/
-        # Check two paths, one for Program Files, and one for Program Files (x86).
-        # Yay 64bit windows.
-        for ProgramFiles in 'ProgramFiles', 'ProgramFiles(x86)':
-            NSIS_path = os.path.expandvars(r'${%s}\NSIS\Unicode\makensis.exe' % ProgramFiles)
-            if os.path.exists(NSIS_path):
-                break
-        installer_created=False
-        nsis_attempts=3
-        nsis_retry_wait=15
-        for attempt in xrange(nsis_attempts):
-            try:
-                self.run_command([NSIS_path, '/V2', self.dst_path_of(tempfile)])
-            except ManifestError as err:
-                if attempt+1 < nsis_attempts:
-                    print >> sys.stderr, "nsis failed, waiting %d seconds before retrying" % nsis_retry_wait
-                    time.sleep(nsis_retry_wait)
-                    nsis_retry_wait*=2
-                else:
-                # NSIS worked! Done!
-                break
-        else:
-                    print >> sys.stderr, "Maximum nsis attempts exceeded; giving up"
-                    raise
+        #~ # We use the Unicode version of NSIS, available from
+        #~ # http://www.scratchpaper.com/
+        #~ # Check two paths, one for Program Files, and one for Program Files (x86).
+        #~ # Yay 64bit windows.
+        #~ for ProgramFiles in 'ProgramFiles', 'ProgramFiles(x86)':
+            #~ NSIS_path = os.path.expandvars(r'${%s}\NSIS\Unicode\makensis.exe' % ProgramFiles)
+            #~ if os.path.exists(NSIS_path):
+                #~ break
+        #~ installer_created=False
+        #~ nsis_attempts=3
+        #~ nsis_retry_wait=15
+        #~ for attempt in xrange(nsis_attempts):
+            #~ try:
+                #~ self.run_command([NSIS_path, '/V2', self.dst_path_of(tempfile)])
+            #~ except ManifestError as err:
+                #~ if attempt+1 < nsis_attempts:
+                    #~ print >> sys.stderr, "nsis failed, waiting %d seconds before retrying" % nsis_retry_wait
+                    #~ time.sleep(nsis_retry_wait)
+                    #~ nsis_retry_wait*=2
+                #~ else:
+                #~ # NSIS worked! Done!
+                  #~ break
+            #~ else:
+                  #~ print >> sys.stderr, "Maximum nsis attempts exceeded; giving up"
+                  #~ raise
 
         self.sign(installer_file)
         self.created_path(self.dst_path_of(installer_file))
@@ -1042,12 +1042,12 @@ open "%s" --args "$@"
                             self.path("libhunspell-1.3.0.dylib")   
 
                         with self.prefix("cursors_mac"):
-                    self.path("*.tif")
+                          self.path("*.tif")
 
                 self.path("licenses-mac.txt", dst="licenses.txt")
                 self.path("featuretable_mac.txt")
                 self.path("SecondLife.nib")
-                        self.path("ca-bundle.crt")
+                self.path("ca-bundle.crt")
 
                 self.path("SecondLife.nib")
                 
@@ -1081,19 +1081,19 @@ open "%s" --args "$@"
                     or a list containing dst (present). Concatenate these
                     return values to get a list of all libs that are present.
                     """
-                            # This was simple before we started needing to pass
-                            # wildcards. Fortunately, self.path() ends up appending a
-                            # (source, dest) pair to self.file_list for every expanded
-                            # file processed. Remember its size before the call.
-                            oldlen = len(self.file_list)
-                            self.path(src, dst)
-                            # The dest appended to self.file_list has been prepended
-                            # with self.get_dst_prefix(). Strip it off again.
-                            added = [os.path.relpath(d, self.get_dst_prefix())
-                                     for s, d in self.file_list[oldlen:]]
-                            if not added:
-                    print "Skipping %s" % dst
-                            return added
+                    # This was simple before we started needing to pass
+                    # wildcards. Fortunately, self.path() ends up appending a
+                    # (source, dest) pair to self.file_list for every expanded
+                    # file processed. Remember its size before the call.
+                    oldlen = len(self.file_list)
+                    self.path(src, dst)
+                    # The dest appended to self.file_list has been prepended
+                    # with self.get_dst_prefix(). Strip it off again.
+                    added = [os.path.relpath(d, self.get_dst_prefix())
+                             for s, d in self.file_list[oldlen:]]
+                    if not added:
+                        print "Skipping %s" % dst
+                        return added
 
                 # dylibs is a list of all the .dylib files we expect to need
                 # in our bundled sub-apps. For each of these we'll create a
@@ -1154,15 +1154,15 @@ open "%s" --args "$@"
                     self.path2basename(os.path.join(os.pardir,
                                                     app_bld_dir, self.args['configuration']),
                                        app)
-                            executable_path[app] = \
+                    executable_path[app] = \
                                 self.dst_path_of(os.path.join(app, "Contents", "MacOS"))
 
                     # our apps dependencies on shared libs
                     # for each app, for each dylib we collected in dylibs,
                     # create a symlink to the real copy of the dylib.
-                            with self.prefix(dst=os.path.join(app, "Contents", "Resources")):
-                    for libfile in dylibs:
-                                    self.relsymlinkf(os.path.join(libfile_parent, libfile))
+                    with self.prefix(dst=os.path.join(app, "Contents", "Resources")):
+                        for libfile in dylibs:
+                            self.relsymlinkf(os.path.join(libfile_parent, libfile))
 
                         # Dullahan helper apps go inside SLPlugin.app
                         with self.prefix(dst=os.path.join(
@@ -1231,11 +1231,11 @@ open "%s" --args "$@"
                                     change_command +
                                     [newpath, self.dst_path_of('DullahanHelper')])
 
-                # SLPlugin plugins
-                        with self.prefix(dst="llplugin"):
-                            dylibexecutable = 'media_plugin_cef.dylib'
-                    self.path2basename("../media_plugins/cef/" + self.args['configuration'],
-                                               dylibexecutable)
+                            # SLPlugin plugins
+                            with self.prefix(dst="llplugin"):
+                                dylibexecutable = 'media_plugin_cef.dylib'
+                                self.path2basename("../media_plugins/cef/" + self.args['configuration'],
+                                                   dylibexecutable)
 
                             # Do this install_name_tool *after* media plugin is copied over.
                             # Locate the framework lib executable -- relative to
@@ -1630,7 +1630,7 @@ class Linux_i686_Manifest(LinuxManifest):
                 self.path("libvivoxsdk.so")
                 self.path("libvivoxplatform.so")
 
-            self.strip_binaries()
+                self.strip_binaries()
 
 
 class Linux_x86_64_Manifest(LinuxManifest):

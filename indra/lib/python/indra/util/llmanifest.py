@@ -232,10 +232,10 @@ def main():
         print "Option:", opt, "=", args[opt]
 
     # pass in sourceid as an argument now instead of an environment variable
-    try:
-        args['sourceid'] = os.environ["sourceid"]
-    except KeyError:
-        args['sourceid'] = ""
+    #~ try:
+        #~ args['sourceid'] = os.environ["sourceid"]
+    #~ except KeyError:
+    args['sourceid'] = ""
 
     # Build base package.
     touch = args.get('touch')

@@ -6877,7 +6877,6 @@ bool LLPipeline::toggleRenderTypeControlNegated(S32 type)
 //static
 void LLPipeline::toggleRenderDebug(U32 bit)
 {
-	U32 bit = (U32)(intptr_t)data;
 //MK
 	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
 	{

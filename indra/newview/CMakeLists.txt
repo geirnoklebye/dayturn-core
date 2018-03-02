@@ -53,10 +53,18 @@ include(VisualLeakDetector)
 include(ZLIB)
 include(URIPARSER)
 
+# <FS:ND> if using ndPhysicsstub this variable will be unset, we don't need to build any stub code viewer side in that case
+if( LLPHYSICSEXTENSIONS_SRC_DIR )
+# </FS:ND>
+
 if (NOT HAVOK_TPV)
    # When using HAVOK_TPV, the library is precompiled, so no need for this
    add_subdirectory(${LLPHYSICSEXTENSIONS_SRC_DIR} llphysicsextensions)
 endif (NOT HAVOK_TPV)
+
+# <FS:ND>
+endif( LLPHYSICSEXTENSIONS_SRC_DIR )
+# </FS:ND>
 
 if(FMODEX)
   include_directories(${FMODEX_INCLUDE_DIR})
@@ -99,6 +107,7 @@ include_directories(SYSTEM
     )
 
 set(viewer_SOURCE_FILES
+    RRInterface.cpp
     groupchatlistener.cpp
     llaccountingcostmanager.cpp
     llaisapi.cpp
@@ -468,6 +477,7 @@ set(viewer_SOURCE_FILES
     llpanelpresetspulldown.cpp
     llpanelprimmediacontrols.cpp
     llpanelprofile.cpp
+	llpanelprofileview.cpp
     llpanelsnapshot.cpp
     llpanelsnapshotinventory.cpp
     llpanelsnapshotlocal.cpp
@@ -709,6 +719,7 @@ set(viewer_SOURCE_FILES
     llxmlrpctransaction.cpp
     noise.cpp
     pipeline.cpp
+	qtoolalign.cpp
     )
 
 set(VIEWER_BINARY_NAME "secondlife-bin" CACHE STRING
@@ -717,6 +728,7 @@ set(VIEWER_BINARY_NAME "secondlife-bin" CACHE STRING
 set(viewer_HEADER_FILES
     CMakeLists.txt
     ViewerInstall.cmake
+    RRInterface.h
     groupchatlistener.h
     llaccountingcost.h
     llaccountingcostmanager.h
@@ -1082,6 +1094,7 @@ set(viewer_HEADER_FILES
     llpanelpresetspulldown.h
     llpanelprimmediacontrols.h
     llpanelprofile.h
+	llpanelprofileview.h
     llpanelsnapshot.h
     llpanelteleporthistory.h
     llpaneltiptoast.h
@@ -1325,6 +1338,7 @@ set(viewer_HEADER_FILES
     noise.h
     pipeline.h
     roles_constants.h
+    qtoolalign.h
     VertexCache.h
     VorbisFramework.h
     )
@@ -1770,11 +1784,19 @@ if (WINDOWS)
       )
 
     if (FMODEX)
-      list(APPEND COPY_INPUT_DEPENDENCIES
-           ${SHARED_LIB_STAGING_DIR}/Release/fmodex.dll
-           ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex.dll
-           ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL.dll
-          )
+        if ( ADDRESS_SIZE EQUAL 32 )
+                list(APPEND COPY_INPUT_DEPENDENCIES
+                   ${SHARED_LIB_STAGING_DIR}/Release/fmodex.dll
+                   ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex.dll
+                   ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL.dll
+                  )
+        elseif( ADDRESS_SIZE EQUAL 64 )
+                list(APPEND COPY_INPUT_DEPENDENCIES
+                   ${SHARED_LIB_STAGING_DIR}/Release/fmodex64.dll
+                   ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex64.dll
+                   ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL64.dll
+                  )
+        endif ( ADDRESS_SIZE EQUAL 32 )
     endif (FMODEX)
     
     add_custom_command(

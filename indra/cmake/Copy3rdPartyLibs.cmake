@@ -44,10 +44,12 @@ if(WINDOWS)
 
     if (FMODEX)
 
-        if(ADDRESS_SIZE EQUAL 32)
-            set(release_files ${release_files} fmodex.dll)
-        else(ADDRESS_SIZE EQUAL 32)
-            set(release_files ${release_files} fmodex64.dll)
+        if( ADDRESS_SIZE EQUAL 32 )
+          set(release_files ${release_files} fmodex.dll)
+          set(debug_files ${debug_files} fmodexL.dll)
+        else( ADDRESS_SIZE EQUAL 32 )
+          set(release_files ${release_files} fmodex64.dll)
+          set(debug_files ${debug_files} fmodexL64.dll)
         endif(ADDRESS_SIZE EQUAL 32)
     endif (FMODEX)
 
