@@ -121,7 +121,6 @@ protected:
 	std::map<U16, ExtraParameter*> mExtraParameterList;
 
 public:
-
 	typedef std::list<LLPointer<LLViewerObject> > child_list_t;
 	typedef std::list<LLPointer<LLViewerObject> > vobj_list_t;
 
@@ -422,6 +421,8 @@ public:
 	void updatePositionCaches() const; // Update the global and region position caches from the object (and parent's) xform.
 	void updateText(); // update text label position
 	virtual void updateDrawable(BOOL force_damped); // force updates on static objects
+
+	bool isOwnerInMuteList(LLUUID item_id = LLUUID());
 
 	void setDrawableState(U32 state, BOOL recursive = TRUE);
 	void clearDrawableState(U32 state, BOOL recursive = TRUE);
@@ -833,6 +834,9 @@ private:
 
 	static BOOL sVelocityInterpolate;
 	static BOOL sPingInterpolate;
+
+	bool mCachedOwnerInMuteList;
+	F64 mCachedMuteListUpdateTime;
 
 	//--------------------------------------------------------------------
 	// For objects that are attachments

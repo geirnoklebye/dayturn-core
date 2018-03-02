@@ -768,7 +768,7 @@ public:
 				ypos += y_inc;
 			}
 
-     		if (LLPipeline::toggleRenderTypeControlNegated(LLPipeline::RENDER_TYPE_PARTICLES))
+			if (LLPipeline::toggleRenderTypeControlNegated(LLPipeline::RENDER_TYPE_PARTICLES))
 			{
 				addText(xpos, ypos, particle_hiding);
 				ypos += y_inc;
@@ -1064,7 +1064,7 @@ BOOL LLViewerWindow::handleMouseDown(LLWindow *window,  LLCoordGL pos, MASK mask
         mMouseDownTimer.reset();
     }    
     BOOL down = TRUE;
-    return handleAnyMouseClick(window,pos,mask,LLMouseHandler::CLICK_LEFT,down);
+	return handleAnyMouseClick(window,pos,mask,LLMouseHandler::CLICK_LEFT,down);
 }
 
 BOOL LLViewerWindow::handleDoubleClick(LLWindow *window,  LLCoordGL pos, MASK mask)
@@ -1415,7 +1415,7 @@ BOOL LLViewerWindow::handleTranslatedKeyDown(KEY key,  MASK mask, BOOL repeated)
 {
 	// Let the voice chat code check for its PTT key.  Note that this never affects event processing.
 	LLVoiceClient::getInstance()->keyDown(key, mask);
-	
+
 	if (gAwayTimer.getElapsedTimeF32() > LLAgent::MIN_AFK_TIME)
 	{
 		gAgent.clearAFK();
@@ -1968,7 +1968,11 @@ void LLViewerWindow::initBase()
 	// (But wait to add it as a child of the root view so that it will be in front of the 
 	// other views.)
 	MainPanel* main_view = new MainPanel();
-	main_view->buildFromFile("main_view.xml");
+	if (!main_view->buildFromFile("main_view.xml"))
+	{
+		LL_ERRS() << "Failed to initialize viewer: Viewer couldn't process file main_view.xml, "
+				<< "if this problem happens again, please validate your installation." << LL_ENDL;
+	}
 	main_view->setShape(full_window);
 	getRootView()->addChild(main_view);
 
@@ -2149,22 +2153,22 @@ void LLViewerWindow::initWorldUI()
 	}
 	if (!(LLGridManager::getInstance()->isInOpenSim()))
 	{
-		LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
-		if (destinations)
-		{
-			destinations->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-			std::string url = gSavedSettings.getString("DestinationGuideURL");
-			url = LLWeb::expandURLSubstitutions(url, LLSD());
-	    	destinations->navigateTo(url, HTTP_CONTENT_TEXT_HTML);
-		}
-		LLMediaCtrl* avatar_picker = LLFloaterReg::getInstance("avatar")->findChild<LLMediaCtrl>("avatar_picker_contents");
-		if (avatar_picker)
-		{
-			avatar_picker->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-			std::string url = gSavedSettings.getString("AvatarPickerURL");
-			url = LLWeb::expandURLSubstitutions(url, LLSD());
-    		avatar_picker->navigateTo(url, HTTP_CONTENT_TEXT_HTML);
-		}
+	LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
+	if (destinations)
+	{
+		destinations->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
+		std::string url = gSavedSettings.getString("DestinationGuideURL");
+		url = LLWeb::expandURLSubstitutions(url, LLSD());
+		destinations->navigateTo(url, HTTP_CONTENT_TEXT_HTML);
+	}
+	LLMediaCtrl* avatar_picker = LLFloaterReg::getInstance("avatar")->findChild<LLMediaCtrl>("avatar_picker_contents");
+	if (avatar_picker)
+	{
+		avatar_picker->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
+		std::string url = gSavedSettings.getString("AvatarPickerURL");
+		url = LLWeb::expandURLSubstitutions(url, LLSD());
+		avatar_picker->navigateTo(url, HTTP_CONTENT_TEXT_HTML);
+	}
 	}
 // <FS:AW  opensim destinations and avatar picker>
 // 	LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
@@ -2348,6 +2352,7 @@ void LLViewerWindow::shutdownGL()
 LLViewerWindow::~LLViewerWindow()
 {
 	LL_INFOS() << "Destroying Window" << LL_ENDL;
+	gDebugWindowProc = TRUE; // event catching, at this point it shouldn't output at all
 	destroyWindow();
 
 	delete mDebugText;
@@ -4506,9 +4511,9 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
 {
 //	insufficient_memory = FALSE;
 
-    if (!image)
-    {
-        LL_WARNS() << "No image to save" << LL_ENDL;
+	if (!image)
+	{
+		LL_WARNS() << "No image to save" << LL_ENDL;
         // <FS:Ansariel> Threaded filepickers
         //return FALSE;
         if (callback)
@@ -4517,7 +4522,7 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
             return;
         }
         // </FS:Ansariel>
-    }
+	}
 
 	LLFilePicker::ESaveFilter pick_type;
 	std::string extension("." + image->getExtension());
@@ -4603,12 +4608,13 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
 */
     // Get a base file location if needed.
     if (force_picker || !isSnapshotLocSet())
-    {
+	{
         std::string proposed_name(sSnapshotBaseName);
 
         LLGenericSaveFilePicker::open(pick_type, proposed_name, boost::bind(&LLViewerWindow::saveImageCallback, this, _1, image, extension, callback));
         return;
-    }
+	}
+	while( -1 != err );  // search until the file is not found (i.e., stat() gives an error).
 
     do_save_image(image, LLViewerWindow::sSnapshotDir, LLViewerWindow::sSnapshotBaseName, extension, callback);
     // </FS:Ansariel>

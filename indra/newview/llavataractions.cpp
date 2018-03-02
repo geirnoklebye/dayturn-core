@@ -971,7 +971,7 @@ void LLAvatarActions::buildResidentsString(std::vector<LLAvatarName> avatar_name
 //	llassert(s > 0);
 	
 	if (len != 1) {
-	    std::sort(avatar_names.begin(), avatar_names.end());
+	std::sort(avatar_names.begin(), avatar_names.end());
 	}
 
 	std::string trailer = "";
@@ -1177,7 +1177,7 @@ void LLAvatarActions::toggleMute(const LLUUID& id, U32 flags)
 	LLAvatarNameCache::get(id, &av_name);
 
 	LLMuteList* mute_list = LLMuteList::getInstance();
-	bool is_muted = mute_list->isMuted(id, LLMute::flagVoiceChat);
+	bool is_muted = mute_list->isMuted(id, flags);
 
 	LLMute mute(id, av_name.getUserName(), LLMute::AGENT);
 	if (!is_muted)

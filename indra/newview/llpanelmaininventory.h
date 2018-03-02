@@ -145,6 +145,8 @@ private:
 	std::string					mFilterSubString;
 	S32							mItemCount;
 	std::string 				mItemCountString;
+	S32							mCategoryCount;
+	std::string					mCategoryCountString;
 	LLComboBox*					mSearchTypeCombo;
 	LLFrameTimer				mUpdateWornTimer;
 

@@ -628,7 +628,7 @@ void LLVOVolume::updateTextures()
 		if (mDrawable.notNull() && !isVisible() && !mDrawable->isActive())
 		{ //delete vertex buffer to free up some VRAM
 			LLSpatialGroup* group  = mDrawable->getSpatialGroup();
-			if (group)
+			if (group && (group->mVertexBuffer.notNull() || !group->mBufferMap.empty() || !group->mDrawMap.empty()))
 			{
 				group->destroyGL(true);
 
@@ -2368,7 +2368,7 @@ LLVector3 LLVOVolume::getApproximateFaceNormal(U8 face_id)
 			result.add(face.mNormals[i]);
 		}
 
-		ret = LLVector3(result.getF32ptr());
+		LLVector3 ret(result.getF32ptr());
 		ret = volumeDirectionToAgent(ret);
 		ret.normVec();
 	}

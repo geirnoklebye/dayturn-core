@@ -904,11 +904,11 @@ bool idle_startup()
 	
 	if (STATE_BROWSER_INIT == LLStartUp::getStartupState())
 	{
-//		LL_DEBUGS("AppInit") << "STATE_BROWSER_INIT" << LL_ENDL;
-//		std::string msg = LLTrans::getString("LoginInitializingBrowser");
-//		set_startup_status(0.03f, msg.c_str(), gAgent.mMOTD.c_str());
-//		display_startup();
-//		// LLViewerMedia::initBrowser();
+		LL_DEBUGS("AppInit") << "STATE_BROWSER_INIT" << LL_ENDL;
+		std::string msg = LLTrans::getString("LoginInitializingBrowser");
+		set_startup_status(0.03f, msg.c_str(), gAgent.mMOTD.c_str());
+		display_startup();
+		// LLViewerMedia::initBrowser();
 		show_release_notes_if_required();
 		LLStartUp::setStartupState( STATE_LOGIN_SHOW );
 //		return FALSE;
@@ -940,6 +940,7 @@ bool idle_startup()
 			initialize_spellcheck_menu();
 			init_menus();
 		}
+		show_release_notes_if_required();
 
 		if (show_connect_box)
 		{
@@ -3147,7 +3148,7 @@ void LLStartUp::setStartSLURL(const LLSLURL& slurl)
 			LLGridManager::getInstance()->setGridChoice(slurl.getGrid());
 			gSavedSettings.setString("NextLoginLocation", slurl.getSLURLString());
 			break;
-  }
+	}
 }
 
 // static
@@ -3884,7 +3885,7 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 		LL_DEBUGS("OS_SETTINGS") << "no search url in login response" << LL_ENDL;
 	}
 
-	
+		
 	bool success = false;
 	// JC: gesture loading done below, when we have an asset system
 	// in place.  Don't delete/clear gUserCredentials until then.

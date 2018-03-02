@@ -40,7 +40,7 @@
 #include "message.h"
 #include "llexperiencecache.h"
 
-#define APP_HEADER_REGEX "(((hop|x-grid-location-info)://[-\\w\\.\\:\\@]+/app)|((hop|secondlife):///app))"
+#define APP_HEADER_REGEX "((x-grid-location-info://[-\\w\\.]+/app)|(secondlife:///app))"
 
 // Utility functions
 std::string localize_slapp_label(const std::string& url, const std::string& full_name);
@@ -190,31 +190,32 @@ bool LLUrlEntryBase::isWikiLinkCorrect(std::string url)
 
 std::string LLUrlEntryBase::urlToLabelWithGreyQuery(const std::string &url) const
 {
-	LLUriParser up(unescapeUrl(url));
+	LLUriParser up(escapeUrl(url));
 	up.normalize();
 
 	std::string label;
 	up.extractParts();
 	up.glueFirst(label);
 
-	return label;
+	return unescapeUrl(label);
 }
 
 std::string LLUrlEntryBase::urlToGreyQuery(const std::string &url) const
 {
-	LLUriParser up(unescapeUrl(url));
+	std::string escaped_url = escapeUrl(url);
+	LLUriParser up(escaped_url);
 
 	std::string label;
 	up.extractParts();
 	up.glueFirst(label, false);
 
-	size_t pos = url.find(label);
+	size_t pos = escaped_url.find(label);
 	if (pos == std::string::npos)
 	{
 		return "";
 	}
 	pos += label.size();
-	return url.substr(pos);
+	return unescapeUrl(escaped_url.substr(pos));
 }
 
 

@@ -877,7 +877,7 @@ private:
 	 */
 	bool isSelectionChanged()
 	{	
-		LLInventoryPanel* active_panel = dynamic_cast<LLInventoryPanel*>(mActivePanel.get());
+		LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel();
 
 		if (NULL == active_panel)
 		{
@@ -887,7 +887,7 @@ private:
 		// get selected items (without destination folder)
 		selected_items_t selected_items;
  		
- 		std::set<LLFolderViewItem*> selection =    LLInventoryPanel::getActiveInventoryPanel()->getRootFolder()->getSelectionList();
+		std::set<LLFolderViewItem*> selection = active_panel->getRootFolder()->getSelectionList();
 		for (std::set<LLFolderViewItem*>::iterator it = selection.begin(),    end_it = selection.end();
 			it != end_it;
 			++it)
@@ -2049,7 +2049,7 @@ void inventory_offer_handler(LLOfferInfo* info)
 		if( !bAutoAccept ) // if we auto accept, do not pester the user
 		{
 			// Inform user that there is a script floater via toast system
-		    payload["give_inventory_notification"] = TRUE;
+			payload["give_inventory_notification"] = TRUE;
 			p.payload = payload;
 			LLPostponedNotification::add<LLPostponedOfferNotification>(p, info->mFromID, false);
 		}
@@ -2192,7 +2192,7 @@ static bool parse_lure_bucket(const std::string& bucket,
 	    return false;  // TODO make sure the bucket contains data when coming from OS. Empty bucket leads to a viewer crash on OS X. 
 	}
     
-    // tokenize the bucket
+	// tokenize the bucket
 	typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
 	boost::char_separator<char> sep("|", "", boost::keep_empty_tokens);
 	tokenizer tokens(bucket, sep);
@@ -5029,8 +5029,8 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 		{
 			if ( gIsInSecondLife )
 			{
-				LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
-			}
+			LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
+		}
 			else
 			if (stat_id == 16 || stat_id == 36 || stat_id == 37) //cut log spam on opensim
 			{
