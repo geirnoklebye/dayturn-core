@@ -633,7 +633,7 @@ void LLVOVolume::updateTextures()
 		if (mDrawable.notNull() && !isVisible() && !mDrawable->isActive())
 		{ //delete vertex buffer to free up some VRAM
 			LLSpatialGroup* group  = mDrawable->getSpatialGroup();
-			if (group)
+			if (group && (group->mVertexBuffer.notNull() || !group->mBufferMap.empty() || !group->mDrawMap.empty()))
 			{
 				group->destroyGL(true);
 
@@ -1129,7 +1129,7 @@ void LLVOVolume::sculpt()
 		S32 max_discard = mSculptTexture->getMaxDiscardLevel();
 		if (discard_level > max_discard)
 		{
-			discard_level = max_discard;    // clamp to the best we can do
+			discard_level = max_discard;    // clamp to the best we can do			
 		}
 		if(discard_level > MAX_DISCARD_LEVEL)
 		{
@@ -1730,7 +1730,7 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 		return TRUE; // No update to complete
 	}
 
-	if (mVolumeChanged || mFaceMappingChanged )
+	if (mVolumeChanged || mFaceMappingChanged)
 	{
 		dirtySpatialGroup(drawable->isState(LLDrawable::IN_REBUILD_Q1));
 
@@ -1745,16 +1745,17 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 		{
 			compiled = TRUE;
 			was_regen_faces = lodOrSculptChanged(drawable, compiled);
-			}
+		}
 
 		if (!was_regen_faces) {
-				LL_RECORD_BLOCK_TIME(FTM_GEN_TRIANGLES);
-					regenFaces();
-				}
-				genBBoxes(FALSE);
+			LL_RECORD_BLOCK_TIME(FTM_GEN_TRIANGLES);
+			regenFaces();
+		}
+
+		genBBoxes(FALSE);
 	}
 	else if (mLODChanged || mSculptChanged)
-					{
+	{
 		dirtySpatialGroup(drawable->isState(LLDrawable::IN_REBUILD_Q1));
 		compiled = TRUE;
 		lodOrSculptChanged(drawable, compiled);
@@ -3632,7 +3633,7 @@ F32 LLVOVolume::getStreamingCost(S32* bytes, S32* visible_bytes, F32* unscaled_v
 	F32 radius = getScale().length()*0.5f;
 
 	if (isMesh())
-	{	
+	{
 		return gMeshRepo.getStreamingCost(getVolume()->getParams().getSculptID(), radius, bytes, visible_bytes, mLOD, unscaled_value);
 	}
 	else
@@ -4096,7 +4097,7 @@ BOOL LLVOVolume::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 bool LLVOVolume::treatAsRigged()
 {
 	return isSelected() &&
-			isAttachment() && 
+			isAttachment() &&
 			mDrawable.notNull() &&
 			mDrawable->isState(LLDrawable::RIGGED);
 }
@@ -4814,8 +4815,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 			drawablep->clearState(LLDrawable::HAS_ALPHA);
 
 			bool rigged = vobj->isAttachment() && 
-						vobj->isMesh() && 
-						gMeshRepo.getSkinInfo(vobj->getVolume()->getParams().getSculptID(), vobj);
+                          vobj->isMesh() && 
+						  gMeshRepo.getSkinInfo(vobj->getVolume()->getParams().getSculptID(), vobj);
 
 			bool bake_sunlight = LLPipeline::sBakeSunlight && drawablep->isStatic();
 
@@ -4858,8 +4859,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 					is_rigged = true;
 				
 					//get drawpool of avatar with rigged face
-					LLDrawPoolAvatar* pool = get_avatar_drawpool(vobj);
-				
+					LLDrawPoolAvatar* pool = get_avatar_drawpool(vobj);				
+					
 					if (pool)
 					{
 						const LLTextureEntry* te = facep->getTextureEntry();
@@ -5155,8 +5156,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 									if (simple_count < MAX_FACE_COUNT)
 									{
 										sSimpleFaces[simple_count++] = facep;
-									}									
-								}
+									}
+								}									
 							}
 							else if (te->getBumpmap())
 							{ //needs normal + tangent
@@ -5219,7 +5220,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 			{
 				if (!drawablep->isState(LLDrawable::RIGGED))
 				{
-				drawablep->setState(LLDrawable::RIGGED);
+					drawablep->setState(LLDrawable::RIGGED);
 
 					//first time this is drawable is being marked as rigged,
 					// do another LoD update to use avatar bounding box
@@ -5265,7 +5266,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 		alpha_mask = alpha_mask | LLVertexBuffer::MAP_TEXTURE_INDEX | LLVertexBuffer::MAP_TANGENT | LLVertexBuffer::MAP_TEXCOORD1 | LLVertexBuffer::MAP_TEXCOORD2;
 		fullbright_mask = fullbright_mask | LLVertexBuffer::MAP_TEXTURE_INDEX;
 	}
-	
+
 	genDrawInfo(group, simple_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, sSimpleFaces, simple_count, FALSE, batch_textures, FALSE);
 	genDrawInfo(group, fullbright_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, sFullbrightFaces, fullbright_count, FALSE, batch_textures);
 	genDrawInfo(group, alpha_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, sAlphaFaces, alpha_count, TRUE, batch_textures);
@@ -5301,7 +5302,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 	if (pAvatarVO)
 	{
         pAvatarVO->addAttachmentArea( group->mSurfaceArea );
-}
+	}
 }
 
 static LLTrace::BlockTimerStatHandle FTM_REBUILD_MESH_FLUSH("Flush Mesh");
@@ -5647,7 +5648,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 							if (texture_count < MAX_TEXTURE_COUNT)
 							{
 								texture_list[texture_count++] = tex;
-						}
+							}
 						}
 
 						if (geom_count + facep->getGeomCount() > max_vertices)
@@ -5724,10 +5725,8 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 
 		if (buffer)
 		{
-		group->mGeometryBytes += buffer->getSize() + buffer->getIndicesSize();
-
-
-		buffer_map[mask][*face_iter].push_back(buffer);
+			group->mGeometryBytes += buffer->getSize() + buffer->getIndicesSize();
+			buffer_map[mask][*face_iter].push_back(buffer);
 		}
 
 		//add face geometry
@@ -5790,7 +5789,6 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 
 			index_offset += facep->getGeomCount();
 			indices_index += facep->getIndicesCount();
-
 
 			//append face to appropriate render batch
 
@@ -6101,7 +6099,6 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						else
 						{
 						registerFace(group, facep, LLRenderPass::PASS_SIMPLE);
-						}
 					}
 				}
 				
@@ -6137,8 +6134,8 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 
 		if (buffer)
 		{
-		buffer->flush();
-	}
+			buffer->flush();
+		}
 	}
 
 	group->mBufferMap[mask].clear();
@@ -6212,5 +6209,4 @@ void LLHUDPartition::shift(const LLVector4a &offset)
 {
 	//HUD objects don't shift with region crossing.  That would be silly.
 }
-
 

@@ -106,8 +106,6 @@ public:
 	void onClickBtnAddMedia();
 	void onClickBtnEditMedia();
 	void clearMediaSettings();
-	void updateMediaTitle();
-	void navigateToTitleMedia( const std::string url );
 	bool selectedMediaEditable();
 	void updateLandImpacts();
 
@@ -120,6 +118,8 @@ private:
 	void refreshMedia();
 	void getMediaState();
 	void updateMediaSettings();
+	void navigateToTitleMedia( const std::string url ); // navigate if changed
+	void updateMediaTitle();
 	static bool deleteMediaConfirm(const LLSD& notification, const LLSD& response);
 	static bool multipleFacesSelectedConfirm(const LLSD& notification, const LLSD& response);
 	static void setObjectType( LLPCode pcode );

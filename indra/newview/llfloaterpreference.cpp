@@ -335,7 +335,7 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mClickActionDirty(false)
 {
 	LLConversationLog::instance().addObserver(this);
-	
+
 	//Build Floater is now Called from 	LLFloaterReg::add("preferences", "floater_preferences.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<LLFloaterPreference>);
 	
 	static bool registered_dialog = false;
@@ -381,7 +381,7 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 
 	sSkin = gSavedSettings.getString("SkinCurrent");
 
-	mCommitCallbackRegistrar.add("Pref.ClickActionChange",				boost::bind(&LLFloaterPreference::onClickActionChange, this));
+	mCommitCallbackRegistrar.add("Pref.ClickActionChange",		boost::bind(&LLFloaterPreference::onClickActionChange, this));
 
 	gSavedSettings.getControl("NameTagShowUsernames")->getCommitSignal()->connect(boost::bind(&handleNameTagOptionChanged,  _2));	
 	gSavedSettings.getControl("NameTagShowFriends")->getCommitSignal()->connect(boost::bind(&handleNameTagOptionChanged,  _2));	
@@ -526,7 +526,7 @@ void LLFloaterPreference::onDoNotDisturbResponseChanged()
 					!= getChild<LLUICtrl>("do_not_disturb_response")->getValue().asString();
 
 	gSavedPerAccountSettings.setBOOL("DoNotDisturbResponseChanged", response_changed_flag );
-	}
+}
 
 LLFloaterPreference::~LLFloaterPreference()
 {
@@ -660,7 +660,7 @@ void LLFloaterPreference::cancel()
 	
 	// hide spellchecker settings folder
 	LLFloaterReg::hideInstance("prefs_spellchecker");
-	
+
 	// hide advancede floater
 	LLFloaterReg::hideInstance("prefs_graphics_advanced");
 	
@@ -695,7 +695,7 @@ void LLFloaterPreference::cancel()
 
 void LLFloaterPreference::onOpen(const LLSD& key)
 {
-	
+
 	// this variable and if that follows it are used to properly handle do not disturb mode response message
 	static bool initialized = FALSE;
 	// if user is logged in and we haven't initialized do not disturb mode response yet, do it
@@ -869,8 +869,8 @@ void LLFloaterPreference::setHardwareDefaults()
 		if (panel)
 		{
 			panel->setHardwareDefaults();
+		}
 	}
-}
 }
 
 void LLFloaterPreference::getControlNames(std::vector<std::string>& names)
@@ -946,7 +946,7 @@ void LLFloaterPreference::onBtnOK(const LLSD& userdata)
 		}
 		else
 		{
-		closeFloater(false);
+			closeFloater(false);
 		}
 
 		//Conversation transcript and log path changed so reload conversations based on new location
@@ -1008,11 +1008,11 @@ void LLFloaterPreference::onBtnCancel(const LLSD& userdata)
 	if (userdata.asString() == "closeadvanced")
 	{
 		LLFloaterReg::hideInstance("prefs_graphics_advanced");
-}
+	}
 	else
-{
+	{
 		closeFloater();
-		}
+	}
 }
 
 // static 
@@ -1024,7 +1024,6 @@ void LLFloaterPreference::updateUserInfo(const std::string& visibility, bool im_
         instance->setPersonalInfo(visibility, im_via_email, is_verified_email);
 	}
 }
-
 
 void LLFloaterPreference::refreshEnabledGraphics()
 {
@@ -1220,7 +1219,7 @@ void LLFloaterPreference::buildPopupLists()
 }
 
 void LLFloaterPreference::refreshEnabledState()
-{	
+{
 	LLCheckBoxCtrl* ctrl_wind_light = getChild<LLCheckBoxCtrl>("WindLightUseAtmosShaders");
 	LLCheckBoxCtrl* ctrl_deferred = getChild<LLCheckBoxCtrl>("UseLightShaders");
 
@@ -1256,7 +1255,7 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 {
 	LLComboBox* ctrl_reflections = getChild<LLComboBox>("Reflections");
 	LLTextBox* reflections_text = getChild<LLTextBox>("ReflectionsText");
-	
+
 	// Reflections
 	BOOL reflections = gSavedSettings.getBOOL("VertexShaderEnable") 
 		&& gGLManager.mHasCubeMap
@@ -1299,13 +1298,12 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 	LLCheckBoxCtrl* ctrl_shader_enable   = getChild<LLCheckBoxCtrl>("BasicShaders");
 	LLSliderCtrl* terrain_detail = getChild<LLSliderCtrl>("TerrainDetail");   // can be linked with control var
 	LLTextBox* terrain_text = getChild<LLTextBox>("TerrainDetailText");
-	
+
 	ctrl_shader_enable->setEnabled(LLFeatureManager::getInstance()->isFeatureAvailable("VertexShaderEnable"));
 	
 	BOOL shaders = ctrl_shader_enable->get();
 	if (shaders)
 	{
-		terrain_detail->setValue(1);
 		terrain_detail->setEnabled(FALSE);
 		terrain_text->setEnabled(FALSE);
 	}
@@ -1319,25 +1317,24 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 	LLCheckBoxCtrl* ctrl_wind_light = getChild<LLCheckBoxCtrl>("WindLightUseAtmosShaders");
 	LLSliderCtrl* sky = getChild<LLSliderCtrl>("SkyMeshDetail");
 	LLTextBox* sky_text = getChild<LLTextBox>("SkyMeshDetailText");
-	
 
 	// *HACK just checks to see if we can use shaders... 
 	// maybe some cards that use shaders, but don't support windlight
 	ctrl_wind_light->setEnabled(ctrl_shader_enable->getEnabled() && shaders);
-	
+
 	sky->setEnabled(ctrl_wind_light->get() && shaders);
 	sky_text->setEnabled(ctrl_wind_light->get() && shaders);
-	
+
 	//Deferred/SSAO/Shadows
 	LLCheckBoxCtrl* ctrl_deferred = getChild<LLCheckBoxCtrl>("UseLightShaders");
-		
+	
 	BOOL enabled = LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") &&
 						((bumpshiny_ctrl && bumpshiny_ctrl->get()) ? TRUE : FALSE) &&
 						shaders && 
 						gGLManager.mHasFramebufferObject &&
 						gSavedSettings.getBOOL("RenderAvatarVP") &&
 						(ctrl_wind_light->get()) ? TRUE : FALSE;
-	
+
 	ctrl_deferred->setEnabled(enabled);
 
 //MK
@@ -1373,7 +1370,7 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 
 	ctrl_shadow->setEnabled(enabled);
 	shadow_text->setEnabled(enabled);
-	
+
 	// Hardware settings
 	F32 mem_multiplier = gSavedSettings.getF32("RenderTextureMemoryMultiple");
 	S32Megabytes min_tex_mem = LLViewerTextureList::getMinVideoRamSetting();
@@ -1472,7 +1469,7 @@ void LLFloaterPreferenceGraphicsAdvanced::disableUnavailableSettings()
 		
 		ctrl_wind_light->setEnabled(FALSE);
 		ctrl_wind_light->setValue(FALSE);
-		
+
 		sky->setEnabled(FALSE);
 		sky_text->setEnabled(FALSE);
 
@@ -1906,7 +1903,7 @@ void LLFloaterPreferenceGraphicsAdvanced::updateSliderText(LLSliderCtrl* ctrl, L
 {
 	if (text_box == NULL || ctrl== NULL)
 		return;
-	
+
 	// get range and points when text should change
 	F32 value = (F32)ctrl->getValue().asReal();
 	F32 min = ctrl->getMinValue();
@@ -1915,7 +1912,7 @@ void LLFloaterPreferenceGraphicsAdvanced::updateSliderText(LLSliderCtrl* ctrl, L
 	llassert(range > 0);
 	F32 midPoint = min + range / 3.0f;
 	F32 highPoint = min + (2.0f * range / 3.0f);
-	
+
 	// choose the right text
 	if (value < midPoint)
 	{
@@ -2610,12 +2607,13 @@ BOOL LLPanelPreferenceGraphics::postBuild()
     
 	return LLPanelPreference::postBuild();
 }
+
 void LLPanelPreferenceGraphics::draw()
 {
 	setPresetText();
 	LLPanelPreference::draw();
 }
-	
+
 void LLPanelPreferenceGraphics::onPresetsListChange()
 {
 	resetDirtyChilds();
@@ -2633,7 +2631,7 @@ void LLPanelPreferenceGraphics::setPresetText()
 	LLTextBox* preset_text = getChild<LLTextBox>("preset_text");
 
 	std::string preset_graphic_active = gSavedSettings.getString("PresetGraphicActive");
-	
+
 	if (!preset_graphic_active.empty() && preset_graphic_active != preset_text->getText())
 	{
 		LLFloaterPreference* instance = LLFloaterReg::findTypedInstance<LLFloaterPreference>("preferences");
@@ -2657,7 +2655,7 @@ void LLPanelPreferenceGraphics::setPresetText()
 		if (preset_graphic_active == PRESETS_DEFAULT)
 		{
 			preset_graphic_active = LLTrans::getString(PRESETS_DEFAULT);
-	}
+		}
 		preset_text->setText(preset_graphic_active);
 	}
 	else
@@ -2667,6 +2665,7 @@ void LLPanelPreferenceGraphics::setPresetText()
 
 	preset_text->resetDirty();
 }
+
 bool LLPanelPreferenceGraphics::hasDirtyChilds()
 {
 	LLFloater* advanced = LLFloaterReg::findTypedInstance<LLFloater>("prefs_graphics_advanced");
@@ -2693,8 +2692,8 @@ bool LLPanelPreferenceGraphics::hasDirtyChilds()
 					std::string control_name = control->getName();
 					if (!control_name.empty())
 					{
-				return true;
-		}
+						return true;
+					}
 				}
 			}
 		}
@@ -2704,7 +2703,8 @@ bool LLPanelPreferenceGraphics::hasDirtyChilds()
 		{
 			view_stack.push_back(*iter);
 		}
-	}	
+	}
+
 	return false;
 }
 

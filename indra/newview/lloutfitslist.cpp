@@ -278,7 +278,7 @@ void LLOutfitsList::onListSelectionChange(LLUICtrl* ctrl)
 }
 
 void LLOutfitListBase::performAction(std::string action)
-	{
+{
 	if (mSelectedOutfitUUID.isNull()) return;
 
 	LLViewerInventoryCategory* cat = gInventory.getCategory(mSelectedOutfitUUID);
@@ -324,15 +324,15 @@ void LLOutfitsList::onSetSelectedOutfitByUUID(const LLUUID& outfit_uuid)
 			tab->changeOpenClose(false);
 		}
 	}
-	}
+}
 
 // virtual
 void LLOutfitsList::setFilterSubString(const std::string& string)
-	{
+{
 	applyFilter(string);
 
 	sFilterSubString = string;
-	}
+}
 
 // virtual
 bool LLOutfitListBase::isActionEnabled(const LLSD& userdata)
@@ -360,10 +360,10 @@ bool LLOutfitListBase::isActionEnabled(const LLSD& userdata)
 		if (gAgentWearables.isCOFChangeInProgress())
 		{
 			return false;
-	}
+		}
 
 		if (hasItemSelected())
-	{
+		{
 			return canWearSelected();
 		}
 
@@ -379,29 +379,29 @@ bool LLOutfitListBase::isActionEnabled(const LLSD& userdata)
 	}
 
 	if (command_name == "wear_add")
-		{
+	{
 		// *TODO: do we ever get here?
 		return LLAppearanceMgr::getCanAddToCOF(mSelectedOutfitUUID);
-		}
-
-	return false;
 	}
 
+	return false;
+}
+
 void LLOutfitsList::getSelectedItemsUUIDs(uuid_vec_t& selected_uuids) const
-	{
+{
 	// Collect selected items from all selected lists.
 	for (wearables_lists_map_t::const_iterator iter = mSelectedListsMap.begin();
 			iter != mSelectedListsMap.end();
 			++iter)
-		{
+	{
 		uuid_vec_t uuids;
 		(*iter).second->getSelectedUUIDs(uuids);
 
 		S32 prev_size = selected_uuids.size();
 		selected_uuids.resize(prev_size + uuids.size());
 		std::copy(uuids.begin(), uuids.end(), selected_uuids.begin() + prev_size);
-		}
 	}
+}
 
 void LLOutfitsList::onCollapseAllFolders()
 {
@@ -411,7 +411,7 @@ void LLOutfitsList::onCollapseAllFolders()
 	{
 		LLAccordionCtrlTab*	tab = iter->second;
 		if(tab && tab->isExpanded())
-	{
+		{
 			tab->changeOpenClose(true);
 		}
 	}
@@ -429,12 +429,12 @@ void LLOutfitsList::onExpandAllFolders()
 			tab->changeOpenClose(false);
 		}
 	}
-		}
+}
 
 bool LLOutfitsList::hasItemSelected()
 {
 	return mItemSelected;
-	}
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Private methods
@@ -448,15 +448,15 @@ void LLOutfitsList::updateChangedCategoryName(LLViewerInventoryCategory *cat, st
 		// Update tab name with the new category name.
 		LLAccordionCtrlTab* tab = outfits_iter->second;
 		if (tab)
-			{
+		{
 			tab->setName(name);
 			tab->setTitle(name);
 		}
-			}
-		}
+	}
+}
 
 void LLOutfitsList::resetItemSelection(LLWearableItemsList* list, const LLUUID& category_id)
-	{
+{
 	list->resetSelection();
 	mItemSelected = false;
 	signalSelectionOutfitUUID(category_id);
@@ -476,22 +476,22 @@ void LLOutfitsList::onChangeOutfitSelection(LLWearableItemsList* list, const LLU
 		{
 			LLWearableItemsList* selected_list = (*iter).second;
 			if (selected_list != list)
-		{
+			{
 				selected_list->resetSelection();
 			}
 		}
 
 		// Clear current selection.
 		mSelectedListsMap.clear();
-		}
+	}
 
 	mItemSelected = list && (list->getSelectedItem() != NULL);
 
 	mSelectedListsMap.insert(wearables_lists_map_value_t(category_id, list));
-	}
+}
 
 void LLOutfitsList::deselectOutfit(const LLUUID& category_id)
-	{
+{
 	// Remove selected lists map entry.
 	mSelectedListsMap.erase(category_id);
     
@@ -508,9 +508,9 @@ void LLOutfitsList::restoreOutfitSelection(LLAccordionCtrlTab* tab, const LLUUID
 }
 
 void LLOutfitsList::onFilteredWearableItemsListRefresh(LLUICtrl* ctrl)
-		{
+{
 	if (!ctrl || sFilterSubString.empty())
-			return;
+		return;
 
 	for (outfits_map_t::iterator
 			 iter = mOutfitsMap.begin(),
@@ -525,7 +525,7 @@ void LLOutfitsList::onFilteredWearableItemsListRefresh(LLUICtrl* ctrl)
 
 		applyFilterToTab(iter->first, tab, sFilterSubString);
 	}
-		}
+}
 
 void LLOutfitsList::applyFilter(const std::string& new_filter_substring)
 {
@@ -578,7 +578,7 @@ void LLOutfitsList::applyFilter(const std::string& new_filter_substring)
 	}
 
 	mAccordion->arrange();
-	}
+}
 
 void LLOutfitsList::applyFilterToTab(
 	const LLUUID&		category_id,
@@ -611,10 +611,10 @@ void LLOutfitsList::applyFilterToTab(
 		deselectOutfit(category_id);
 	}
 	else
-		{
+	{
 		// Try restoring the tab selection.
 		restoreOutfitSelection(tab, category_id);
-		}
+	}
 
 	if (tab->getVisible())
 	{
@@ -627,7 +627,7 @@ void LLOutfitsList::applyFilterToTab(
 		// when some changes occur in it.
 		list->setForceRefresh(true);
 	}
-	}
+}
 
 bool LLOutfitsList::canWearSelected()
 {
@@ -655,12 +655,12 @@ void LLOutfitsList::wearSelectedItems()
 	getSelectedItemsUUIDs(selected_uuids);
 
 	if(selected_uuids.empty())
-		{
+	{
 		return;
-		}
+	}
 
 	wear_multiple(selected_uuids, false);
-	}
+}
 
 void LLOutfitsList::onWearableItemsListRightClick(LLUICtrl* ctrl, S32 x, S32 y)
 {
@@ -675,7 +675,7 @@ void LLOutfitsList::onWearableItemsListRightClick(LLUICtrl* ctrl, S32 x, S32 y)
 }
 
 void LLOutfitsList::onCOFChanged()
-	{
+{
 	LLInventoryModel::cat_array_t cat_array;
 	LLInventoryModel::item_array_t item_array;
 
@@ -725,47 +725,47 @@ void LLOutfitsList::onCOFChanged()
 		// the links that point to these items.
 		list->updateChangedItems(vadded);
 	}
-		}
+}
 
 void LLOutfitsList::getCurrentCategories(uuid_vec_t& vcur)
-		{
+{
     // Creating a vector of currently displayed sub-categories UUIDs.
     for (outfits_map_t::const_iterator iter = mOutfitsMap.begin();
         iter != mOutfitsMap.end();
         iter++)
-		{
+    {
         vcur.push_back((*iter).first);
-		}
-		}
+    }
+}
 
 
 void LLOutfitsList::sortOutfits()
-	{
+{
     mAccordion->sort();
 }
 
 void LLOutfitsList::onOutfitRightClick(LLUICtrl* ctrl, S32 x, S32 y, const LLUUID& cat_id)
-		{
+{
     LLAccordionCtrlTab* tab = dynamic_cast<LLAccordionCtrlTab*>(ctrl);
     if (mOutfitMenu && is_tab_header_clicked(tab, y) && cat_id.notNull())
-		{
+    {
         // Focus tab header to trigger tab selection change.
         LLUICtrl* header = tab->findChild<LLUICtrl>("dd_header");
         if (header)
-		{
+        {
             header->setFocus(TRUE);
-		}
+        }
 
         uuid_vec_t selected_uuids;
         selected_uuids.push_back(cat_id);
         mOutfitMenu->show(ctrl, selected_uuids, x, y);
-	}
-	}
+    }
+}
 
 LLOutfitListGearMenuBase* LLOutfitsList::createGearMenu()
-	{
+{
     return new LLOutfitListGearMenu(this);
-	}
+}
 
 
 bool is_tab_header_clicked(LLAccordionCtrlTab* tab, S32 y)
@@ -777,111 +777,110 @@ bool is_tab_header_clicked(LLAccordionCtrlTab* tab, S32 y)
 }
 
 LLOutfitListBase::LLOutfitListBase()
-	:	LLPanelAppearanceTab()
-	,	mIsInitialized(false)
+    :   LLPanelAppearanceTab()
+    ,   mIsInitialized(false)
 {
-	mCategoriesObserver = new LLInventoryCategoriesObserver();
-	mOutfitMenu = new LLOutfitContextMenu(this);
+    mCategoriesObserver = new LLInventoryCategoriesObserver();
+    mOutfitMenu = new LLOutfitContextMenu(this);
     //mGearMenu = createGearMenu();
 }
 
 LLOutfitListBase::~LLOutfitListBase()
 {
     delete mOutfitMenu;
-	delete mGearMenu;
+    delete mGearMenu;
 
-	if (gInventory.containsObserver(mCategoriesObserver))
-	{
-		gInventory.removeObserver(mCategoriesObserver);
-	}
-	delete mCategoriesObserver;
+    if (gInventory.containsObserver(mCategoriesObserver))
+    {
+        gInventory.removeObserver(mCategoriesObserver);
+    }
+    delete mCategoriesObserver;
 }
 
 void LLOutfitListBase::onOpen(const LLSD& info)
-
 {
-	if (!mIsInitialized)
-	{
-		// *TODO: I'm not sure is this check necessary but it never match while developing.
-		if (!gInventory.isInventoryUsable())
-			return;
+    if (!mIsInitialized)
+    {
+        // *TODO: I'm not sure is this check necessary but it never match while developing.
+        if (!gInventory.isInventoryUsable())
+            return;
 
-		const LLUUID outfits = gInventory.findCategoryUUIDForType(LLFolderType::FT_MY_OUTFITS);
+        const LLUUID outfits = gInventory.findCategoryUUIDForType(LLFolderType::FT_MY_OUTFITS);
 
-		// *TODO: I'm not sure is this check necessary but it never match while developing.
-		LLViewerInventoryCategory* category = gInventory.getCategory(outfits);
-		if (!category)
-			return;
+        // *TODO: I'm not sure is this check necessary but it never match while developing.
+        LLViewerInventoryCategory* category = gInventory.getCategory(outfits);
+        if (!category)
+            return;
 
-		gInventory.addObserver(mCategoriesObserver);
+        gInventory.addObserver(mCategoriesObserver);
 
-		// Start observing changes in "My Outfits" category.
-		mCategoriesObserver->addCategory(outfits,
+        // Start observing changes in "My Outfits" category.
+        mCategoriesObserver->addCategory(outfits,
             boost::bind(&LLOutfitListBase::refreshList, this, outfits));
 
-		const LLUUID cof = gInventory.findCategoryUUIDForType(LLFolderType::FT_CURRENT_OUTFIT);
+        const LLUUID cof = gInventory.findCategoryUUIDForType(LLFolderType::FT_CURRENT_OUTFIT);
 
-		// Start observing changes in Current Outfit category.
+        // Start observing changes in Current Outfit category.
         //mCategoriesObserver->addCategory(cof, boost::bind(&LLOutfitsList::onCOFChanged, this));
 
         LLOutfitObserver::instance().addBOFChangedCallback(boost::bind(&LLOutfitListBase::highlightBaseOutfit, this));
         LLOutfitObserver::instance().addBOFReplacedCallback(boost::bind(&LLOutfitListBase::highlightBaseOutfit, this));
 
-		// Fetch "My Outfits" contents and refresh the list to display
-		// initially fetched items. If not all items are fetched now
-		// the observer will refresh the list as soon as the new items
-		// arrive.
-		category->fetch();
-		refreshList(outfits);
-		highlightBaseOutfit();
+        // Fetch "My Outfits" contents and refresh the list to display
+        // initially fetched items. If not all items are fetched now
+        // the observer will refresh the list as soon as the new items
+        // arrive.
+        category->fetch();
+        refreshList(outfits);
+        highlightBaseOutfit();
 
-		mIsInitialized = true;
-	}
+        mIsInitialized = true;
+    }
 }
 
 void LLOutfitListBase::refreshList(const LLUUID& category_id)
 {
-	LLInventoryModel::cat_array_t cat_array;
-	LLInventoryModel::item_array_t item_array;
+    LLInventoryModel::cat_array_t cat_array;
+    LLInventoryModel::item_array_t item_array;
 
-	// Collect all sub-categories of a given category.
-	LLIsType is_category(LLAssetType::AT_CATEGORY);
-	gInventory.collectDescendentsIf(
-		category_id,
-		cat_array,
-		item_array,
-		LLInventoryModel::EXCLUDE_TRASH,
-		is_category);
+    // Collect all sub-categories of a given category.
+    LLIsType is_category(LLAssetType::AT_CATEGORY);
+    gInventory.collectDescendentsIf(
+        category_id,
+        cat_array,
+        item_array,
+        LLInventoryModel::EXCLUDE_TRASH,
+        is_category);
 
-	uuid_vec_t vadded;
-	uuid_vec_t vremoved;
+    uuid_vec_t vadded;
+    uuid_vec_t vremoved;
 
-	// Create added and removed items vectors.
-	computeDifference(cat_array, vadded, vremoved);
+    // Create added and removed items vectors.
+    computeDifference(cat_array, vadded, vremoved);
 
-	// Handle added tabs.
-	for (uuid_vec_t::const_iterator iter = vadded.begin();
-		 iter != vadded.end();
-		 ++iter)
-	{
-		const LLUUID cat_id = (*iter);
+    // Handle added tabs.
+    for (uuid_vec_t::const_iterator iter = vadded.begin();
+        iter != vadded.end();
+        ++iter)
+    {
+        const LLUUID cat_id = (*iter);
         updateAddedCategory(cat_id);
-	}
+    }
 
-	// Handle removed tabs.
-	for (uuid_vec_t::const_iterator iter=vremoved.begin(); iter != vremoved.end(); ++iter)
-	{
+    // Handle removed tabs.
+    for (uuid_vec_t::const_iterator iter = vremoved.begin(); iter != vremoved.end(); ++iter)
+    {
         const LLUUID cat_id = (*iter);
         updateRemovedCategory(cat_id);
-	}
+    }
 
-	// Get changed items from inventory model and update outfit tabs
-	// which might have been renamed.
-	const LLInventoryModel::changed_items_t& changed_items = gInventory.getChangedIDs();
-	for (LLInventoryModel::changed_items_t::const_iterator items_iter = changed_items.begin();
-		 items_iter != changed_items.end();
-		 ++items_iter)
-	{
+    // Get changed items from inventory model and update outfit tabs
+    // which might have been renamed.
+    const LLInventoryModel::changed_items_t& changed_items = gInventory.getChangedIDs();
+    for (LLInventoryModel::changed_items_t::const_iterator items_iter = changed_items.begin();
+        items_iter != changed_items.end();
+        ++items_iter)
+    {
         LLViewerInventoryCategory *cat = gInventory.getCategory(*items_iter);
         if (!cat)
         {
@@ -895,7 +894,7 @@ void LLOutfitListBase::refreshList(const LLUUID& category_id)
         std::string name = cat->getName();
 
         updateChangedCategoryName(cat, name);
-	}
+    }
 
     sortOutfits();
 }
@@ -910,9 +909,9 @@ void LLOutfitListBase::computeDifference(
     for (LLInventoryModel::cat_array_t::const_iterator iter = vcats.begin();
         iter != vcats.end();
         iter++)
-	{
+    {
         vnew.push_back((*iter)->getUUID());
-		}
+    }
 
     uuid_vec_t vcur;
     getCurrentCategories(vcur);
@@ -929,11 +928,12 @@ void LLOutfitListBase::highlightBaseOutfit()
     // id of base outfit
     LLUUID base_id = LLAppearanceMgr::getInstance()->getBaseOutfitUUID();
     if (base_id != mHighlightedOutfitUUID)
-	{
+    {
         LLUUID prev_id = mHighlightedOutfitUUID;
         mHighlightedOutfitUUID = base_id;
         onHighlightBaseOutfit(base_id, prev_id);
-	}
+    }
+
 }
 
 void LLOutfitListBase::removeSelected()
@@ -943,17 +943,17 @@ void LLOutfitListBase::removeSelected()
 
 void LLOutfitListBase::onOutfitsRemovalConfirmation(const LLSD& notification, const LLSD& response)
 {
-	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
-	if (option != 0) return; // canceled
+    S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+    if (option != 0) return; // canceled
 
-	if (mSelectedOutfitUUID.notNull())
-	{
-		gInventory.removeCategory(mSelectedOutfitUUID);
-	}
+    if (mSelectedOutfitUUID.notNull())
+    {
+        gInventory.removeCategory(mSelectedOutfitUUID);
+    }
 }
 
 void LLOutfitListBase::setSelectedOutfitByUUID(const LLUUID& outfit_uuid)
-		{
+{
     onSetSelectedOutfitByUUID(outfit_uuid);
 }
 
@@ -968,19 +968,19 @@ void LLOutfitListBase::signalSelectionOutfitUUID(const LLUUID& category_id)
 }
 
 void LLOutfitListBase::outfitRightClickCallBack(LLUICtrl* ctrl, S32 x, S32 y, const LLUUID& cat_id)
-	{
+{
     onOutfitRightClick(ctrl, x, y, cat_id);
-		}
+}
 
 void LLOutfitListBase::ChangeOutfitSelection(LLWearableItemsList* list, const LLUUID& category_id)
-		{
+{
     onChangeOutfitSelection(list, category_id);
     mSelectedOutfitUUID = category_id;
     signalSelectionOutfitUUID(category_id);
-		}
+}
 
 BOOL LLOutfitListBase::postBuild()
-	{
+{
     mGearMenu = createGearMenu();
 
     LLMenuButton* menu_gear_btn = getChild<LLMenuButton>("options_gear_btn");
@@ -991,7 +991,7 @@ BOOL LLOutfitListBase::postBuild()
 }
 
 void LLOutfitListBase::collapseAllFolders()
-	{
+{
     onCollapseAllFolders();
 }
 
@@ -1004,9 +1004,10 @@ void LLOutfitListBase::deselectOutfit(const LLUUID& category_id)
 {
     // Reset selection if the outfit is selected.
     if (category_id == mSelectedOutfitUUID)
-		{
-        signalSelectionOutfitUUID(LLUUID::null);
-	}
+    {
+        mSelectedOutfitUUID = LLUUID::null;
+        signalSelectionOutfitUUID(mSelectedOutfitUUID);
+    }
 }
 
 LLContextMenu* LLOutfitContextMenu::createMenu()
@@ -1037,24 +1038,24 @@ bool LLOutfitContextMenu::onEnable(LLSD::String param)
     LLUUID outfit_cat_id = mUUIDs.back();
 
     if ("rename" == param)
-		{
+    {
         return get_is_category_renameable(&gInventory, outfit_cat_id);
-		}
+    }
     else if ("wear_replace" == param)
     {
         return LLAppearanceMgr::instance().getCanReplaceCOF(outfit_cat_id);
-	}
+    }
     else if ("wear_add" == param)
-{
+    {
         return LLAppearanceMgr::getCanAddToCOF(outfit_cat_id);
-}
+    }
     else if ("take_off" == param)
-{
+    {
         return LLAppearanceMgr::getCanRemoveFromCOF(outfit_cat_id);
-		}
+    }
 
     return true;
-	}
+}
 
 bool LLOutfitContextMenu::onVisible(LLSD::String param)
 {
@@ -1064,15 +1065,15 @@ bool LLOutfitContextMenu::onVisible(LLSD::String param)
     if ("edit" == param)
     {
         return is_worn;
-}
+    }
     else if ("wear_replace" == param)
-{
+    {
         return !is_worn;
-}
+    }
     else if ("delete" == param)
-	{
+    {
         return LLAppearanceMgr::instance().getCanRemoveOutfit(outfit_cat_id);
-	}
+    }
 
     return true;
 }
@@ -1084,7 +1085,7 @@ void LLOutfitContextMenu::editOutfit()
 }
 
 void LLOutfitContextMenu::renameOutfit(const LLUUID& outfit_cat_id)
-	{
+{
     LLAppearanceMgr::instance().renameOutfit(outfit_cat_id);
 }
 
@@ -1130,7 +1131,7 @@ void LLOutfitListGearMenuBase::updateItemsVisibility()
 }
 
 void LLOutfitListGearMenuBase::onUpdateItemsVisibility()
-	{
+{
     if (!mMenu) return;
 
     bool have_selection = getSelectedOutfitID().notNull();
@@ -1144,72 +1145,72 @@ LLToggleableMenu* LLOutfitListGearMenuBase::getMenu()
     return mMenu;
 }
 const LLUUID& LLOutfitListGearMenuBase::getSelectedOutfitID()
-		{
+{
     return mOutfitList->getSelectedOutfitUUID();
-		}
+}
 
 LLViewerInventoryCategory* LLOutfitListGearMenuBase::getSelectedOutfit()
 {
     const LLUUID& selected_outfit_id = getSelectedOutfitID();
     if (selected_outfit_id.isNull())
-		{
+    {
         return NULL;
-		}
+    }
 
     LLViewerInventoryCategory* cat = gInventory.getCategory(selected_outfit_id);
     return cat;
-		}
+}
 
 void LLOutfitListGearMenuBase::onWear()
-		{
+{
     LLViewerInventoryCategory* selected_outfit = getSelectedOutfit();
     if (selected_outfit)
-		{
+	{
 //MK
 			gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
 //mk
         LLAppearanceMgr::instance().wearInventoryCategory(
             selected_outfit, /*copy=*/ FALSE, /*append=*/ FALSE);
-		}
-	}
+    }
+}
 
 void LLOutfitListGearMenuBase::onAdd()
 {
     const LLUUID& selected_id = getSelectedOutfitID();
 
     if (selected_id.notNull())
-	{
+    {
         LLAppearanceMgr::getInstance()->addCategoryToCurrentOutfit(selected_id);
-	}
-	}
+    }
+}
 
 void LLOutfitListGearMenuBase::onTakeOff()
-	{
+{
     // Take off selected outfit.
     const LLUUID& selected_outfit_id = getSelectedOutfitID();
     if (selected_outfit_id.notNull())
-	{
+    {
         LLAppearanceMgr::instance().takeOffOutfit(selected_outfit_id);
-	}
+    }
 }
 
 void LLOutfitListGearMenuBase::onRename()
 {
     const LLUUID& selected_outfit_id = getSelectedOutfitID();
     if (selected_outfit_id.notNull())
-{
+    {
         LLAppearanceMgr::instance().renameOutfit(selected_outfit_id);
     }
 }
 
 void LLOutfitListGearMenuBase::onCreate(const LLSD& data)
-	{
+{
     LLWearableType::EType type = LLWearableType::typeNameToType(data.asString());
     if (type == LLWearableType::WT_NONE)
-		{
+    {
         LL_WARNS() << "Invalid wearable type" << LL_ENDL;
         return;
-	}
+    }
 
     LLAgentWearables::createWearable(type, true);
 }
@@ -1221,12 +1222,12 @@ bool LLOutfitListGearMenuBase::onEnable(LLSD::String param)
     // to wear selected outfit OR selected items, while we're only
     // interested in the outfit (STORM-183).
     if ("wear" == param)
-	{
+    {
         return LLAppearanceMgr::instance().getCanReplaceCOF(mOutfitList->getSelectedOutfitUUID());
-		}
+    }
 
     return mOutfitList->isActionEnabled(param);
-	}
+}
 
 bool LLOutfitListGearMenuBase::onVisible(LLSD::String param)
 {
@@ -1234,16 +1235,16 @@ bool LLOutfitListGearMenuBase::onVisible(LLSD::String param)
     if (selected_outfit_id.isNull()) // no selection or invalid outfit selected
     {
         return false;
-}
+    }
 
     // *TODO This condition leads to menu item behavior inconsistent with
     // "Wear" button behavior and should be modified or removed.
     bool is_worn = LLAppearanceMgr::instance().getBaseOutfitUUID() == selected_outfit_id;
 
     if ("wear" == param)
-	{
+    {
         return !is_worn;
-	}
+    }
 
     return true;
 }
@@ -1266,10 +1267,10 @@ void LLOutfitListGearMenuBase::onTakeSnapshot()
 void LLOutfitListGearMenuBase::onRemovePhoto()
 {
 
-	}
+}
 
 void LLOutfitListGearMenuBase::onChangeSortOrder()
-	{
+{
 
 }
 
