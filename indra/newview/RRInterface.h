@@ -32,7 +32,7 @@
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
 #define RR_VERSION_NUM "2092201"
 #define RR_VERSION "2.09.22.1"
-#define RR_SLV_VERSION "5.0.9.38226"
+#define RR_SLV_VERSION "5.1.0.39225"
 
 #define RR_PREFIX "@"
 #define RR_SHARED_FOLDER "#RLV"
@@ -81,10 +81,8 @@
 #include "llviewermenu.h"
 #include "llviewerjointattachment.h"
 #include "llviewertexture.h"
-//CA early inclusion of this header file now requires a hint where to find it
-#include "../llappearance/llwearable.h"
-#include "../llappearance/llwearabletype.h"
-//ca
+#include "llwearable.h"
+#include "llwearabletype.h"
 
 extern BOOL gRRenabled;
 
