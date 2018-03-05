@@ -6098,7 +6098,8 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						}
 						else
 						{
-						registerFace(group, facep, LLRenderPass::PASS_SIMPLE);
+							registerFace(group, facep, LLRenderPass::PASS_SIMPLE);
+						}
 					}
 				}
 				
