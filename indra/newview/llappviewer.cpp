@@ -1337,11 +1337,15 @@ static LLTrace::BlockTimerStatHandle FTM_AGENT_UPDATE("Update");
 // externally visible timers
 LLTrace::BlockTimerStatHandle FTM_FRAME("Frame");
 
+//CA this variable init/declaration should be outside of LLAppViewer::frame() otherwise garbage collection never fires
+//MK
+S32 garbage_collector_cnt = -100; // give the garbage collector a moment before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
+//mk
+//ca
+
 bool LLAppViewer::frame()
 {
-//MK
-	S32 garbage_collector_cnt = -100; // give the garbage collector a moment before even kicking in the first time, in case we are logging in a very laggy place, taking time to rez
-//mk
+
 	LLEventPump& mainloop(LLEventPumps::instance().obtain("mainloop"));
 	LLSD newFrame;
 	LLTimer periodicRenderingTimer;
