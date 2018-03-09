@@ -1,4 +1,4 @@
-project(viewer)
+﻿project(viewer)
 
 include(00-Common)
 include(Boost)
@@ -166,7 +166,7 @@ set(viewer_SOURCE_FILES
     llcallingcard.cpp
     llchannelmanager.cpp
     llchatbar.cpp
-    kokuachathistory.cpp
+    llchathistory.cpp
     llchatitemscontainerctrl.cpp
     llchatmsgbox.cpp
     llchiclet.cpp
@@ -818,7 +818,7 @@ set(viewer_HEADER_FILES
     llcapabilityprovider.h
     llchannelmanager.h
     llchatbar.h
-    kokuachathistory.h
+    llchathistory.h
     llchatitemscontainerctrl.h
     llchatmsgbox.h
     llchiclet.h
