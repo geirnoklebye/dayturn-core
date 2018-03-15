@@ -22,7 +22,11 @@ if (NOT DEFINED VIEWER_SHORT_VERSION) # will be true in indra/, false in indra/n
         else (DEFINED ENV{revision})
           find_program(MERCURIAL
                        NAMES hg
-                       PATHS [HKEY_LOCAL_MACHINE\\Software\\TortoiseHG]
+                       PATHS HKEY_LOCAL_MACHINE\\Software\\TortoiseHG
+                       NO_DEFAULT_PATH
+                       PATH_SUFFIXES Mercurial)
+          find_program(MERCURIAL
+                       NAMES hg
                        PATH_SUFFIXES Mercurial)
           mark_as_advanced(MERCURIAL)
           if (MERCURIAL)
