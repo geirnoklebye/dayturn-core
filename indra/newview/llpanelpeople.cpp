@@ -75,6 +75,11 @@
 #include "llagentui.h"
 #include "llslurl.h"
 
+//MK
+#include "llfloaterimnearbychat.h"
+#include "llviewerregion.h"
+//mk
+
 #define FRIEND_LIST_UPDATE_TIMEOUT	0.5
 #define NEARBY_LIST_UPDATE_INTERVAL 1
 
@@ -88,7 +93,9 @@ static const std::string COLLAPSED_BY_USER  = "collapsed_by_user";
 const S32 BASE_MAX_AGENT_GROUPS = 42;
 const S32 PREMIUM_MAX_AGENT_GROUPS = 60;
 
+//MK
 extern S32 gMaxAgentGroups;
+//mk
 
 /** Comparator for comparing avatar items by last interaction date */
 class LLAvatarItemRecentComparator : public LLAvatarItemComparator
@@ -166,7 +173,10 @@ public:
 			mAvatarsPositions[*id_it] = *pos_it;
 		}
 	};
-
+//MK
+	// Used for Range Display, originally from KB/Catznip
+	const id_to_pos_map_t& getAvatarsPositions() { return mAvatarsPositions; }
+//mk
 protected:
 	virtual bool doCompare(const LLAvatarListItem* item1, const LLAvatarListItem* item2) const
 	{
@@ -621,7 +631,9 @@ BOOL LLPanelPeople::postBuild()
 	mAllFriendList->setShowCompleteName(!gSavedSettings.getBOOL("FriendsListHideUsernames"));
 
 	LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
-	nearby_tab->setVisibleCallback(boost::bind(&Updater::setActive, mNearbyListUpdater, _2));
+//CA switching to always active	(commenting this line was missed when the other always active change was merged in
+//	nearby_tab->setVisibleCallback(boost::bind(&Updater::setActive, mNearbyListUpdater, _2));
+//ca		
 	mNearbyList = nearby_tab->getChild<LLAvatarList>("avatar_list");
 	mNearbyList->setNoItemsCommentText(getString("no_one_near"));
 	mNearbyList->setNoItemsMsg(getString("no_one_near"));
@@ -631,7 +643,20 @@ BOOL LLPanelPeople::postBuild()
 	mMiniMap = (LLNetMap*)getChildView("Net Map",true);
 	mMiniMap->setToolTipMsg(gSavedSettings.getBOOL("DoubleClickTeleport") ? 
 		getString("AltMiniMapToolTipMsg") :	getString("MiniMapToolTipMsg"));
-
+//MK
+	mNearbyList->showRange(true); 
+	mNearbyList->showFirstSeen(true);
+	mNearbyList->showAvatarAge(true);
+	mNearbyList->showStatusFlags(true);
+	mNearbyList->showUsername(false);
+	mNearbyList->showPaymentStatus(true);
+	mNearbyList->showPermissions(false);
+	// [Ansariel: Colorful radar]
+	mNearbyList->setUseRangeColors(true);
+	// [/Ansariel: Colorful radar]
+	//nearby_tab->setVisibleCallback(boost::bind(&Updater::setActive, mNearbyListUpdater, _2));
+	mNearbyListUpdater->setActive(true); // AO: always keep radar active, for chat and channel integration
+//mk
 	mRecentList = getChild<LLPanel>(RECENT_TAB_NAME)->getChild<LLAvatarList>("avatar_list");
 	mRecentList->setNoItemsCommentText(getString("no_recent_people"));
 	mRecentList->setNoItemsMsg(getString("no_recent_people"));
@@ -830,14 +855,197 @@ void LLPanelPeople::updateNearbyList()
 {
 	if (!mNearbyList)
 		return;
+//MK
+	std::vector<LLPanel*> items;
+	F32 drawRadius = gSavedSettings.getF32("RenderFarClip");
+	mNearbyList->getItems(items);	
 
+	// Fetch new list of surrounding Avs
+//mk
 	std::vector<LLVector3d> positions;
+//CA get our region to help with region alerts
+	LLViewerRegion* reg = gAgent.getRegion();
+	LLUUID regionSelf;
+	if (reg)
+	{
+		regionSelf = reg->getRegionID();
+	}
+	LLWorld* world = LLWorld::getInstance();		
+//ca
+//MK
+  LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
+	mNearbyList->setDirty(true,true); // AO: These optional arguements force updating even when we're not a visible window.
+	DISTANCE_COMPARATOR.updateAvatarsPositions(positions, mNearbyList->getIDs());
 
-	LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
-	mNearbyList->setDirty();
+	//Compare new list with last radar cache, updating fields and processing changes
+	items.clear();
+	mNearbyList->getItems(items);
+//CA get the distances fixed so that first-time alerts will work with distance messages
+	updateNearbyRange();
+//ca
+	for (std::vector<LLPanel*>::const_iterator itItem = items.begin(); itItem != items.end(); ++itItem)
+	{
+		LLAvatarListItem* av = static_cast<LLAvatarListItem*>(*itItem);
+		LLUUID avId = av->getAvatarId();
+		F32 r = av->getRange();
+		
+		if (lastRadarSweep.count(avId) > 0)
+		{
+			av->setFirstSeen(lastRadarSweep[avId].firstSeen);
+
+			// Hide some of the fields if the window is too small
+			int width = getRect().getWidth();
+			int nb = 5;
+			if (width < 330) nb = 4;
+			if (width < 280) nb = 3;
+			if (width < 230) nb = 2;
+			if (width < 160) nb = 1;
+			av->updateFirstSeen(nb);
+
+			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+			{
+				if (gSavedSettings.getBOOL("RadarReportChatRange"))
+				{
+					if ((r <= CHAT_NORMAL_RADIUS) && (lastRadarSweep[avId].lastDistance > CHAT_NORMAL_RADIUS))
+					{
+						reportToNearbyChat(av->getAvatarName() + " entered chat range.");
+					}
+					else if ((r > CHAT_NORMAL_RADIUS) && (lastRadarSweep[avId].lastDistance <= CHAT_NORMAL_RADIUS))
+					{
+						reportToNearbyChat(av->getAvatarName() + " left chat range.");
+					}
+				}
+				if (gSavedSettings.getBOOL("RadarReportDrawRange"))
+				{
+					if ((r <= drawRadius) && (lastRadarSweep[avId].lastDistance > drawRadius))
+					{
+						reportToNearbyChat(av->getAvatarName() + " entered draw distance.");
+					}
+					else if ((r > drawRadius) && (lastRadarSweep[avId].lastDistance <= drawRadius))
+					{
+						reportToNearbyChat(av->getAvatarName() + " left draw distance.");
+					}			
+				}
+//CA add sim range
+				if (gSavedSettings.getBOOL("RadarReportSimRange"))
+				{
+					LLVector3d avPos = av->getPosition();
+					LLUUID avRegion;
+					LLViewerRegion *reg = world->getRegionFromPosGlobal(avPos);
+					if (reg)
+					{
+						avRegion = reg->getRegionID();						
+						if ((avRegion == regionSelf) && (avRegion != lastRadarSweep[avId].lastRegion))
+						{
+							reportToNearbyChat(av->getAvatarName() + " entered the region.");
+						}
+						else if ((lastRadarSweep[avId].lastRegion == regionSelf) && (avRegion != regionSelf))
+						{
+							reportToNearbyChat(av->getAvatarName() + " left the region.");
+						}
+					}
+				}
+//ca
+			}		
+			lastRadarSweep.erase(avId);
+		}
+		// Handle new entries
+		else 
+		{
+			av->setFirstSeen(time(NULL));
+			
+			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+			{
+				if (gSavedSettings.getBOOL("RadarReportChatRange") && (r <= CHAT_NORMAL_RADIUS))
+				{			
+					reportToNearbyChat(av->getAvatarName()+llformat(" entered chat range (%3.2f m)\n",r));
+				}
+				if (gSavedSettings.getBOOL("RadarReportDrawRange") && (r <= drawRadius))
+				{
+					reportToNearbyChat(av->getAvatarName()+llformat(" entered draw distance (%3.2f m)\n",r));
+				}
+//CA add sim range				
+				if (gSavedSettings.getBOOL("RadarReportSimRange"))
+				{
+					LLVector3d avPos = av->getPosition();
+					LLUUID avRegion;
+					LLViewerRegion *reg = world->getRegionFromPosGlobal(avPos);
+					if (reg)
+					{
+						avRegion = reg->getRegionID();
+						if (avRegion == regionSelf)
+						{
+							// don't include the distance on this one because it's probably wrong 
+							reportToNearbyChat(av->getAvatarName() + " entered the region.");
+						}
+					}
+				}
+//ca					
+			}
+		}
+	}
+	// At this point, anything left in the lastRadarSweep map is an avatar that disappeared from scans.
+	for (std::map <LLUUID, radarFields>::const_iterator i = lastRadarSweep.begin(); i != lastRadarSweep.end(); ++i)
+	{
+		radarFields rf = i->second;
+		
+		if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+		{
+			if (gSavedSettings.getBOOL("RadarReportChatRange") && (rf.lastDistance <= CHAT_NORMAL_RADIUS))
+			{
+				reportToNearbyChat(rf.avName + " left chat range.");
+			}
+			if (gSavedSettings.getBOOL("RadarReportDrawRange") && (rf.lastDistance <= drawRadius))
+			{
+				reportToNearbyChat(rf.avName + " left draw distance.");
+			}
+// CA add region alerts
+			if (gSavedSettings.getBOOL("RadarReportSimRange"))
+			{
+				reportToNearbyChat(rf.avName + " left the region.");
+			}
+//ca
+		}
+	}
+
+	lastRadarSweep.clear();
+	for (std::vector<LLPanel*>::const_iterator itItem = items.begin(); itItem != items.end(); ++itItem)
+	{
+		LLAvatarListItem* av = static_cast<LLAvatarListItem*>(*itItem);
+		radarFields rf;
+		rf.avName = av->getAvatarName();
+		rf.lastDistance = av->getRange();
+		av->setShowPermissions (false);
+		if (av->getPosition() != LLVector3d(0.0f,0.0f,0.0f))
+		{
+			LLViewerRegion* r = LLWorld::getInstance()->getRegionFromPosGlobal(av->getPosition());
+			if (r)
+			{
+				rf.lastRegion = r->getRegionID();
+			}
+		}
+		else 
+		{
+			rf.lastRegion = LLUUID(0);
+		}
+		
+		rf.firstSeen = av->getFirstSeen();
+		rf.lastStatus = av->getAvStatus();
+		rf.lastGlobalPos = av->getPosition();
+		
+		lastRadarSweep[av->getAvatarId()] = rf;
+	}
 
 	DISTANCE_COMPARATOR.updateAvatarsPositions(positions, mNearbyList->getIDs());
 	LLActiveSpeakerMgr::instance().update(TRUE);
+//mk
+//CA merge error - these are duplicated above where they're used for the radar messages
+//	LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
+//	mNearbyList->setDirty();
+//
+//	DISTANCE_COMPARATOR.updateAvatarsPositions(positions, mNearbyList->getIDs());
+//	LLActiveSpeakerMgr::instance().update(TRUE);
+//ca
 }
 
 void LLPanelPeople::updateRecentList()
@@ -847,7 +1055,56 @@ void LLPanelPeople::updateRecentList()
 
 	LLRecentPeople::instance().get(mRecentList->getIDs());
 	mRecentList->setDirty();
+
+//MK
+{
+		LLPanel* nearby_tab = getChild<LLPanel>(NEARBY_TAB_NAME);
+		if (nearby_tab && nearby_tab->getVisible())
+		{
+//			nearby_tab->setVisible(FALSE);
+			nearby_tab->childSetVisible("avatar_list", FALSE);
+		}
+		return;
+	}
+//mk
 }
+
+//MK
+void LLPanelPeople::updateNearbyRange()
+// Iterates through nearbyList elements, updating the range field.
+// Thanks to Kitty Barnett for this logic.
+{
+	
+	// Make sure we're using the same data as the distance comparator
+	const LLAvatarItemDistanceComparator::id_to_pos_map_t& posAvatars = DISTANCE_COMPARATOR.getAvatarsPositions();
+	const LLVector3d& posSelf = gAgent.getPositionGlobal();
+	std::vector<LLPanel*> items;
+	mNearbyList->getItems(items);
+	for (std::vector<LLPanel*>::const_iterator itItem = items.begin(); itItem != items.end(); ++itItem)
+	{
+		LLAvatarListItem* pItem = static_cast<LLAvatarListItem*>(*itItem);
+		const LLVector3d& posOtherAvatar = posAvatars.find(pItem->getAvatarId())->second;
+		pItem->setPosition(posOtherAvatar);
+		pItem->setRange(dist_vec(posOtherAvatar, posSelf));
+	}
+}
+void LLPanelPeople::reportToNearbyChat(std::string message)
+// small utility method for radar alerts.
+{
+	
+	LLChat chat;
+    chat.mText = message;
+	chat.mSourceType = CHAT_SOURCE_SYSTEM;
+	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
+	if(nearby_chat)
+	{
+		nearby_chat->addMessage(chat);
+	}
+//	LLSD args;
+//	args["type"] = LLNotificationsUi::NT_NEARBYCHAT;
+//	LLNotificationsUi::LLNotificationManager::instance().onChat(chat, args);
+}
+//mk
 
 bool LLPanelPeople::onConnectedToFacebook(const LLSD& data)
 {
@@ -921,6 +1178,9 @@ void LLPanelPeople::updateButtons()
 		U32 groups_ramaining = gMaxAgentGroups > groups_count ? gMaxAgentGroups - groups_count : 0;
 		groups_panel->getChild<LLUICtrl>("groupcount")->setTextArg("[COUNT]", llformat("%d", groups_count));
 		groups_panel->getChild<LLUICtrl>("groupcount")->setTextArg("[REMAINING]", llformat("%d", groups_ramaining));
+//MK
+		groups_panel->getChild<LLUICtrl>("groupcount")->setTextArg("[MAX]", llformat("%d", gMaxAgentGroups));
+//mk
 	}
 	else
 	{
@@ -939,7 +1199,6 @@ void LLPanelPeople::updateButtons()
 		{
 			if (cur_panel->hasChild("add_friend_btn", TRUE))
 				cur_panel->getChildView("add_friend_btn")->setEnabled(item_selected && !is_friend && !is_self);
-
 			if (friends_tab_active)
 			{
 				cur_panel->getChildView("friends_del_btn")->setEnabled(multiple_selected);
@@ -1102,9 +1361,9 @@ void LLPanelPeople::onFilterEdit(const std::string& search_string)
 	{
 		// store accordion tabs opened/closed state before any manipulation with accordion tabs
 		if (!saved_filter.empty())
-        {
-            notifyChildren(LLSD().with("action","store_state"));
-        }
+	{
+		notifyChildren(LLSD().with("action","store_state"));
+	}
 
 		mOnlineFriendList->setNameFilter(filter);
 		mAllFriendList->setNameFilter(filter);
@@ -1458,7 +1717,6 @@ void LLPanelPeople::onRecentViewSortMenuItemClicked(const LLSD& userdata)
 bool LLPanelPeople::onFriendsViewSortMenuItemCheck(const LLSD& userdata) 
 {
 	std::string item = userdata.asString();
-
 	static LLCachedControl<U32> sort_order(gSavedSettings, "FriendsSortOrder", E_SORT_BY_NAME);
 
 	if (item == "sort_name") {
@@ -1650,6 +1908,5 @@ bool LLPanelPeople::isAccordionCollapsedByUser(const std::string& name)
 {
 	return isAccordionCollapsedByUser(getChild<LLUICtrl>(name));
 }
-
 
 // EOF
