@@ -87,6 +87,9 @@ private:
     void				    removePicker();
 
 	// methods indirectly called by the updaters
+//CA
+	void					giveMessage(const LLUUID& agent_id, const LLAvatarName& av_name, const std::string& postMsg);
+//ca
 	void					updateFriendListHelpText();
 	void					updateFriendList();
 	bool					updateSuggestedFriendList();
