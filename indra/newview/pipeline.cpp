@@ -11398,10 +11398,10 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	pushRenderTypeMask();
 	if (visually_muted || too_complex)
 	{
-		andRenderTypeMask(LLPipeline::RENDER_TYPE_AVATAR, END_RENDER_TYPES);
-	}
-	else
-	{
+//MK
+		////andRenderTypeMask(LLPipeline::RENDER_TYPE_AVATAR, END_RENDER_TYPES);
+
+		// Render everything on silhouettes
 		andRenderTypeMask(LLPipeline::RENDER_TYPE_ALPHA,
 			LLPipeline::RENDER_TYPE_FULLBRIGHT,
 			LLPipeline::RENDER_TYPE_VOLUME,
@@ -11418,14 +11418,104 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 			LLPipeline::RENDER_TYPE_PASS_GLOW,
 			LLPipeline::RENDER_TYPE_PASS_GRASS,
 			LLPipeline::RENDER_TYPE_PASS_SHINY,
-			LLPipeline::RENDER_TYPE_PASS_INVISIBLE,
-			LLPipeline::RENDER_TYPE_PASS_INVISI_SHINY,
+			//LLPipeline::RENDER_TYPE_PASS_INVISIBLE,
+			//LLPipeline::RENDER_TYPE_PASS_INVISI_SHINY,
+			LLPipeline::RENDER_TYPE_PASS_MATERIAL,
+			LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA,
+			LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA_MASK,
+			LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA_EMISSIVE,
+			LLPipeline::RENDER_TYPE_PASS_SPECMAP,
+			LLPipeline::RENDER_TYPE_PASS_SPECMAP_BLEND,
+			LLPipeline::RENDER_TYPE_PASS_SPECMAP_MASK,
+			LLPipeline::RENDER_TYPE_PASS_SPECMAP_EMISSIVE,
+			LLPipeline::RENDER_TYPE_PASS_NORMMAP,
+			LLPipeline::RENDER_TYPE_PASS_NORMMAP_BLEND,
+			LLPipeline::RENDER_TYPE_PASS_NORMMAP_MASK,
+			LLPipeline::RENDER_TYPE_PASS_NORMMAP_EMISSIVE,
+			LLPipeline::RENDER_TYPE_PASS_NORMSPEC,
+			LLPipeline::RENDER_TYPE_PASS_NORMSPEC_BLEND,
+			LLPipeline::RENDER_TYPE_PASS_NORMSPEC_MASK,
+			LLPipeline::RENDER_TYPE_PASS_NORMSPEC_EMISSIVE,
 			LLPipeline::RENDER_TYPE_AVATAR,
 			LLPipeline::RENDER_TYPE_ALPHA_MASK,
 			LLPipeline::RENDER_TYPE_FULLBRIGHT_ALPHA_MASK,
-			LLPipeline::RENDER_TYPE_INVISIBLE,
+			//LLPipeline::RENDER_TYPE_INVISIBLE,
 			LLPipeline::RENDER_TYPE_SIMPLE,
+			LLPipeline::RENDER_TYPE_MATERIALS,
 		END_RENDER_TYPES);
+//mk
+	}
+	else
+	{
+//MK
+		// Render everything on impostors
+		andRenderTypeMask(LLPipeline::RENDER_TYPE_ALPHA,
+			LLPipeline::RENDER_TYPE_FULLBRIGHT,
+			LLPipeline::RENDER_TYPE_VOLUME,
+			LLPipeline::RENDER_TYPE_GLOW,
+			LLPipeline::RENDER_TYPE_BUMP,
+			LLPipeline::RENDER_TYPE_PASS_SIMPLE,
+			LLPipeline::RENDER_TYPE_PASS_ALPHA,
+			LLPipeline::RENDER_TYPE_PASS_ALPHA_MASK,
+			LLPipeline::RENDER_TYPE_PASS_BUMP,
+			LLPipeline::RENDER_TYPE_PASS_POST_BUMP,
+			LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT,
+			LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_ALPHA_MASK,
+			LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_SHINY,
+			LLPipeline::RENDER_TYPE_PASS_GLOW,
+			LLPipeline::RENDER_TYPE_PASS_GRASS,
+			LLPipeline::RENDER_TYPE_PASS_SHINY,
+			//LLPipeline::RENDER_TYPE_PASS_INVISIBLE,
+			//LLPipeline::RENDER_TYPE_PASS_INVISI_SHINY,
+			LLPipeline::RENDER_TYPE_PASS_MATERIAL,
+			LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA,
+			LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA_MASK,
+			LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA_EMISSIVE,
+			LLPipeline::RENDER_TYPE_PASS_SPECMAP,
+			LLPipeline::RENDER_TYPE_PASS_SPECMAP_BLEND,
+			LLPipeline::RENDER_TYPE_PASS_SPECMAP_MASK,
+			LLPipeline::RENDER_TYPE_PASS_SPECMAP_EMISSIVE,
+			LLPipeline::RENDER_TYPE_PASS_NORMMAP,
+			LLPipeline::RENDER_TYPE_PASS_NORMMAP_BLEND,
+			LLPipeline::RENDER_TYPE_PASS_NORMMAP_MASK,
+			LLPipeline::RENDER_TYPE_PASS_NORMMAP_EMISSIVE,
+			LLPipeline::RENDER_TYPE_PASS_NORMSPEC,
+			LLPipeline::RENDER_TYPE_PASS_NORMSPEC_BLEND,
+			LLPipeline::RENDER_TYPE_PASS_NORMSPEC_MASK,
+			LLPipeline::RENDER_TYPE_PASS_NORMSPEC_EMISSIVE,
+			LLPipeline::RENDER_TYPE_AVATAR,
+			LLPipeline::RENDER_TYPE_ALPHA_MASK,
+			LLPipeline::RENDER_TYPE_FULLBRIGHT_ALPHA_MASK,
+			//LLPipeline::RENDER_TYPE_INVISIBLE,
+			LLPipeline::RENDER_TYPE_SIMPLE,
+			LLPipeline::RENDER_TYPE_MATERIALS,
+		END_RENDER_TYPES);
+
+		////andRenderTypeMask(LLPipeline::RENDER_TYPE_ALPHA,
+		////	LLPipeline::RENDER_TYPE_FULLBRIGHT,
+		////	LLPipeline::RENDER_TYPE_VOLUME,
+		////	LLPipeline::RENDER_TYPE_GLOW,
+		////	LLPipeline::RENDER_TYPE_BUMP,
+		////	LLPipeline::RENDER_TYPE_PASS_SIMPLE,
+		////	LLPipeline::RENDER_TYPE_PASS_ALPHA,
+		////	LLPipeline::RENDER_TYPE_PASS_ALPHA_MASK,
+		////	LLPipeline::RENDER_TYPE_PASS_BUMP,
+		////	LLPipeline::RENDER_TYPE_PASS_POST_BUMP,
+		////	LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT,
+		////	LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_ALPHA_MASK,
+		////	LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_SHINY,
+		////	LLPipeline::RENDER_TYPE_PASS_GLOW,
+		////	LLPipeline::RENDER_TYPE_PASS_GRASS,
+		////	LLPipeline::RENDER_TYPE_PASS_SHINY,
+		////	LLPipeline::RENDER_TYPE_PASS_INVISIBLE,
+		////	LLPipeline::RENDER_TYPE_PASS_INVISI_SHINY,
+		////	LLPipeline::RENDER_TYPE_AVATAR,
+		////	LLPipeline::RENDER_TYPE_ALPHA_MASK,
+		////	LLPipeline::RENDER_TYPE_FULLBRIGHT_ALPHA_MASK,
+		////	LLPipeline::RENDER_TYPE_INVISIBLE,
+		////	LLPipeline::RENDER_TYPE_SIMPLE,
+		////END_RENDER_TYPES);
+//mk
 	}
 	
 	S32 occlusion = sUseOcclusion;
@@ -11565,10 +11655,6 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	////}
 //mk
 
-	if (visually_muted || too_complex)
-	{ //disable alpha masking for muted avatars (get whole skin silhouette)
-		LLDrawPoolAvatar::sMinimumAlpha = 0.f;
-	}
 //MK
 	// Choose the non-deferred rendering when rendering silhouettes
 	if (LLPipeline::sRenderDeferred)
