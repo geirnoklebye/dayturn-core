@@ -919,7 +919,7 @@ void LLPanelPeople::updateNearbyList()
 
 			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 			{
-//CA it doesn't look getting all three messages if someone pops up within chat range, so add logic to only give the
+//CA it doesn't look pretty getting all three messages if someone pops up within chat range, so add logic to only give the
 //   closest active message
 				BOOL messaged = FALSE;
 				if (gSavedSettings.getBOOL("RadarReportChatRange"))
@@ -1017,21 +1017,29 @@ void LLPanelPeople::updateNearbyList()
 		if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			BOOL messaged = FALSE;
-			if (gSavedSettings.getBOOL("RadarReportChatRange") && (rf.lastDistance <= CHAT_NORMAL_RADIUS))
+//CA in the case of departures it makes more sense to prioritise these the other may around so if someone leaves
+//   the region you don't get chat and drawdistance too, or just chat as was the case before this change
+//CA add region alerts
+//CA add check that they were in the region (rather than disappearing from a neighbouring one)
+			if (gSavedSettings.getBOOL("RadarReportSimRange"))
 			{
-				LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left char range"));
-				messaged = TRUE;
+				if (rf.lastRegion == regionSelf)
+				{
+					LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left the region"));
+					messaged = TRUE;
+				}
 			}
 			if (!messaged && gSavedSettings.getBOOL("RadarReportDrawRange") && (rf.lastDistance <= drawRadius))
 			{
 				LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left draw distance"));
 				messaged = TRUE;
 			}
-// CA add region alerts
-			if (!messaged && gSavedSettings.getBOOL("RadarReportSimRange"))
+			if (!messaged && gSavedSettings.getBOOL("RadarReportChatRange") && (rf.lastDistance <= CHAT_NORMAL_RADIUS))
 			{
-				LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left the region"));
+				LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left chat range"));
 			}
+//ca
+//ca
 //ca
 		}
 	}
