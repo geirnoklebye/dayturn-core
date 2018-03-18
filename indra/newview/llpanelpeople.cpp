@@ -80,6 +80,11 @@
 #include "llviewerregion.h"
 //mk
 
+//CA
+#include "llnotificationhandler.h"
+#include "llnotificationmanager.h"
+//ca
+
 #define FRIEND_LIST_UPDATE_TIMEOUT	0.5
 #define NEARBY_LIST_UPDATE_INTERVAL 1
 
@@ -854,7 +859,16 @@ bool LLPanelPeople::updateSuggestedFriendList()
 
 void LLPanelPeople::giveMessage(const LLUUID& agent_id, const LLAvatarName& av_name, const std::string& postMsg)
 {
-	LLPanelPeople::reportToNearbyChat(av_name.getCompleteName(TRUE, FALSE) + postMsg);
+	//LLPanelPeople::reportToNearbyChat(av_name.getCompleteName(TRUE, FALSE) + postMsg);
+	LLChat chat;
+	chat.mText = postMsg;
+	chat.mSourceType = CHAT_SOURCE_SYSTEM;
+	chat.mFromName = av_name.getCompleteName(TRUE, FALSE);
+	chat.mFromID = agent_id;
+	chat.mChatType = CHAT_TYPE_RADAR;
+	// FS:LO FIRE-1439 - Clickable avatar names on local chat radar crossing reports
+	LLSD args;
+	LLNotificationsUI::LLNotificationManager::instance().onChat(chat, args);
 }
 
 
@@ -926,12 +940,12 @@ void LLPanelPeople::updateNearbyList()
 				{
 					if ((r <= CHAT_NORMAL_RADIUS) && (lastRadarSweep[avId].lastDistance > CHAT_NORMAL_RADIUS))
 					{
-						LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " entered chat range"));
+						LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, "entered chat range"));
 						messaged = TRUE;
 					}
 					else if ((r > CHAT_NORMAL_RADIUS) && (lastRadarSweep[avId].lastDistance <= CHAT_NORMAL_RADIUS))
 					{
-						LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left chat range"));
+						LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, "left chat range"));
 						messaged = TRUE;
 					}
 				}
@@ -939,12 +953,12 @@ void LLPanelPeople::updateNearbyList()
 				{
 					if ((r <= drawRadius) && (lastRadarSweep[avId].lastDistance > drawRadius))
 					{
-						LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " entered draw distance"));
+						LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, "entered draw distance"));
 						messaged = TRUE;
 					}
 					else if ((r > drawRadius) && (lastRadarSweep[avId].lastDistance <= drawRadius))
 					{
-						LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left draw distance"));
+						LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, "left draw distance"));
 						messaged = TRUE;
 					}			
 				}
@@ -959,11 +973,11 @@ void LLPanelPeople::updateNearbyList()
 						avRegion = reg->getRegionID();						
 						if ((avRegion == regionSelf) && (avRegion != lastRadarSweep[avId].lastRegion))
 						{
-							LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " entered the region"));
+							LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, "entered the region"));
 						}
 						else if ((lastRadarSweep[avId].lastRegion == regionSelf) && (avRegion != regionSelf))
 						{
-							LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left the region"));
+							LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, "left the region"));
 						}
 					}
 				}
@@ -981,12 +995,12 @@ void LLPanelPeople::updateNearbyList()
 				BOOL messaged = FALSE;
 				if (gSavedSettings.getBOOL("RadarReportChatRange") && (r <= CHAT_NORMAL_RADIUS))
 				{			
-					LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, llformat(" entered chat range (%3.2f m)",r)));
+					LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, llformat("entered chat range (%3.2f m)",r)));
 					messaged = TRUE;
 				}
 				if (!messaged && gSavedSettings.getBOOL("RadarReportDrawRange") && (r <= drawRadius))
 				{
-					LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, llformat(" entered draw distance (%3.2f m)",r)));
+					LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, llformat("entered draw distance (%3.2f m)",r)));
 					messaged = TRUE;
 				}
 //CA add sim range				
@@ -1001,7 +1015,7 @@ void LLPanelPeople::updateNearbyList()
 						if (avRegion == regionSelf)
 						{
 							// don't give a distance because it's probably capped at ~1020m (FS gets around this with the bridge script)
-							LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " entered the region"));
+							LLAvatarNameCache::get(avId, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, "entered the region"));
 						}
 					}
 				}
@@ -1025,18 +1039,18 @@ void LLPanelPeople::updateNearbyList()
 			{
 				if (rf.lastRegion == regionSelf)
 				{
-					LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left the region"));
+					LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, "left the region"));
 					messaged = TRUE;
 				}
 			}
 			if (!messaged && gSavedSettings.getBOOL("RadarReportDrawRange") && (rf.lastDistance <= drawRadius))
 			{
-				LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left draw distance"));
+				LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, "left draw distance"));
 				messaged = TRUE;
 			}
 			if (!messaged && gSavedSettings.getBOOL("RadarReportChatRange") && (rf.lastDistance <= CHAT_NORMAL_RADIUS))
 			{
-				LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, " left chat range"));
+				LLAvatarNameCache::get(i->first, boost::bind(&LLPanelPeople::giveMessage, this, _1, _2, "left chat range"));
 			}
 //ca
 //ca
@@ -1124,22 +1138,25 @@ void LLPanelPeople::updateNearbyRange()
 		pItem->setRange(dist_vec(posOtherAvatar, posSelf));
 	}
 }
-void LLPanelPeople::reportToNearbyChat(std::string message)
-// small utility method for radar alerts.
-{
-	
-	LLChat chat;
-    chat.mText = message;
-	chat.mSourceType = CHAT_SOURCE_SYSTEM;
-	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
-	if(nearby_chat)
-	{
-		nearby_chat->addMessage(chat);
-	}
-//	LLSD args;
-//	args["type"] = LLNotificationsUi::NT_NEARBYCHAT;
-//	LLNotificationsUi::LLNotificationManager::instance().onChat(chat, args);
-}
+
+//CA No longer needed now that we call Notification Manager direct from giveMessage
+//void LLPanelPeople::reportToNearbyChat(std::string message)
+//// small utility method for radar alerts.
+//{
+//	
+//	LLChat chat;
+//    chat.mText = message;
+//	chat.mSourceType = CHAT_SOURCE_SYSTEM;
+//	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
+//	if(nearby_chat)
+//	{
+//		nearby_chat->addMessage(chat);
+//	}
+////	LLSD args;
+////	args["type"] = LLNotificationsUi::NT_NEARBYCHAT;
+////	LLNotificationsUi::LLNotificationManager::instance().onChat(chat, args);
+//}
+//ca
 //mk
 
 bool LLPanelPeople::onConnectedToFacebook(const LLSD& data)
