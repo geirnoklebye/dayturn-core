@@ -908,7 +908,9 @@ public:
 			|| (mSourceType == CHAT_SOURCE_SYSTEM && mType != CHAT_TYPE_RADAR)
 			|| mAvatarID.isNull())
 		{
-			if (mSourceType == CHAT_SOURCE_UNKNOWN)
+			// CA: This bugfix plays badly with RLV's version of shownames, so force the code in
+			// the desired direction
+			if (mSourceType == CHAT_SOURCE_UNKNOWN || (gRRenabled && gAgent.mRRInterface.mContainsShownames))
 			{
 				// Avatar names may come up as CHAT_SOURCE_UNKNOWN - don't append the grid name in that case
 				mFrom = chat.mFromName;
