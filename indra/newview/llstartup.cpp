@@ -1767,7 +1767,7 @@ bool idle_startup()
 	//---------------------------------------------------------------------
 	if(STATE_WORLD_WAIT == LLStartUp::getStartupState())
 	{
-/*
+//CA enable this piece of code but add a debug switch to allow old behaviour too
 //MK
 		// We are beginning a session that may or may not have the avatar wear stuff
 		// that restricts from seeing the location, names or even to look around.
@@ -1775,12 +1775,12 @@ bool idle_startup()
 		// be flushed out by the garbage collector later, after the actual restrictions
 		// have been received.
 		// For this, we simulate the reception of those commands from a non-existent object.
-		if (gRRenabled)
+		if (gRRenabled && !gSavedSettings.getBOOL("KokuaRLVNoBlindStartup"))
 		{
 			gAgent.mRRInterface.handleCommand (LLUUID::generateNewID(), "camavdist:0=n,shownames=n,showloc=n,showworldmap=n,showminimap=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
 		}
 //mk
-*/
+//ca
 		LL_DEBUGS("AppInit") << "Waiting for simulator ack...." << LL_ENDL;
 		set_startup_status(0.59f, LLTrans::getString("LoginWaitingForRegionHandshake"), gAgent.mMOTD);
 		if(gGotUseCircuitCodeAck)
