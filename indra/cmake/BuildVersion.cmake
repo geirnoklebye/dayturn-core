@@ -20,9 +20,15 @@ if (NOT DEFINED VIEWER_SHORT_VERSION) # will be true in indra/, false in indra/n
         #   message(STATUS "Revision (from autobuild environment): ${VIEWER_VERSION_REVISION}")
 
         else (DEFINED ENV{revision})
+          # make absolutely sure we're going to execute the find_program rather than
+          # using a pre-existing (probably wrong) location
+          unset (MERCURIAL)
+          unset (MERCURIAL CACHE)        
+          # make sure we look in the Windows registry first to avoid getting hijacked
+          # by a non-executable python hg within cygwin/bin
           find_program(MERCURIAL
                        NAMES hg
-                       PATHS HKEY_LOCAL_MACHINE\\Software\\TortoiseHG
+                       PATHS [HKEY_LOCAL_MACHINE\\Software\\TortoiseHG]
                        NO_DEFAULT_PATH
                        PATH_SUFFIXES Mercurial)
           find_program(MERCURIAL
@@ -30,6 +36,8 @@ if (NOT DEFINED VIEWER_SHORT_VERSION) # will be true in indra/, false in indra/n
                        PATH_SUFFIXES Mercurial)
           mark_as_advanced(MERCURIAL)
           if (MERCURIAL)
+            # this probably isn't the last of problems with finding Mercurial so report which one we're using
+            message("-- Using Mercurial from " ${MERCURIAL})
             execute_process(COMMAND ${MERCURIAL} identify --num
                             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                             RESULT_VARIABLE hg_id_result
