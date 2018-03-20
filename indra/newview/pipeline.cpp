@@ -11733,7 +11733,7 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 			glDrawBuffersARB(1, &buff);
 		}
 
-//		LLGLDisable blend(GL_BLEND);
+		LLGLDisable blend(GL_BLEND);
 
 //MK
 		////if (visually_muted || too_complex)
