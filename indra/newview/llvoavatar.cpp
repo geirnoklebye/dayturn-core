@@ -3372,13 +3372,6 @@ bool LLVOAvatar::isVisuallyMuted()
 	// * check against the render cost and attachment limits
 	if (!isSelf())
 	{
-//MK
-		if (isSilhouette ())
-		{
-			muted = true;
-		}
-		else
-//mk
 		if (mVisuallyMuteSetting == AV_ALWAYS_RENDER)
 		{
 			muted = false;
@@ -3621,7 +3614,11 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 	//--------------------------------------------------------------------
 
 	bool visually_muted = isVisuallyMuted();
-	if (visible && (!isSelf() || visually_muted) && !mIsDummy && sUseImpostors && !mNeedsAnimUpdate && !sFreezeCounter)
+//MK
+////	if (visible && (!isSelf() || visually_muted) && !mIsDummy && sUseImpostors && !mNeedsAnimUpdate && !sFreezeCounter)
+	bool silhouette = isSilhouette();
+	if (visible && (!isSelf() || visually_muted || silhouette) && !mIsDummy && sUseImpostors && !mNeedsAnimUpdate && !sFreezeCounter)
+//mk
 	{
 		const LLVector4a* ext = mDrawable->getSpatialExtents();
 		LLVector4a size;
@@ -3660,7 +3657,7 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		}
 //MK
 		// Update silhouettes often
-		if (isSilhouette ())
+		if (silhouette)
 		{
 			mUpdatePeriod = 1;
 		}
