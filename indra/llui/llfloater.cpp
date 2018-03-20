@@ -1644,8 +1644,6 @@ BOOL LLFloater::handleDoubleClick(S32 x, S32 y, MASK mask)
 
 void LLFloater::bringToFront( S32 x, S32 y )
 {
-	if (getName() != "toolbox floater") LL_INFOS() << "bringToFront floater " << getName() << LL_ENDL;
-
 	if (getVisible() && pointInView(x, y))
 	{
 		LLMultiFloater* hostp = getHost();
