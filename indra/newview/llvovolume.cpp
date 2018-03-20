@@ -5908,6 +5908,13 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						if (mat->getEnvironmentIntensity() > 0 ||
 							te->getShiny() > 0)
 						{
+//MK
+							if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
+							{
+								registerFace(group, facep, LLRenderPass::PASS_FULLBRIGHT);
+							}
+							else
+//mk
 							material_pass = true;
 						}
 						else
