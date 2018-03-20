@@ -60,6 +60,10 @@
 #include "llsdutil.h"
 #include <boost/foreach.hpp>
 
+//CA
+#include "../newview/RRInterface.h"
+#include "../newview/llagent.h"
+//ca
 
 // use this to control "jumping" behavior when Ctrl-Tabbing
 const S32 TABBED_FLOATER_OFFSET = 0;
@@ -584,6 +588,16 @@ LLControlGroup*	LLFloater::getControlGroup()
 
 void LLFloater::setVisible( BOOL visible )
 {
+//CA new RLV intercept primarily for area search, but more effective than current method for some other floaters too
+//   so they are included here (existing intercepts have been left in place for easier merging)
+	if (gRRenabled)
+	{
+		if ((getName() == "area_search" || getName()=="floaterland") && gAgent.mRRInterface.mContainsShowloc) visible = FALSE;
+		else if (getName() == "map" && gAgent.mRRInterface.mContainsShowminimap) visible = FALSE;
+		else if (getName() == "worldmap" && gAgent.mRRInterface.mContainsShowworldmap) visible = FALSE;
+		else if (getName() == "Destinations" && gAgent.mRRInterface.mContainsTp) visible = FALSE;
+	}
+//ca
 	LLPanel::setVisible(visible); // calls onVisibilityChange()
 	if( visible && mFirstLook )
 	{
@@ -1630,6 +1644,8 @@ BOOL LLFloater::handleDoubleClick(S32 x, S32 y, MASK mask)
 
 void LLFloater::bringToFront( S32 x, S32 y )
 {
+	if (getName() != "toolbox floater") LL_INFOS() << "bringToFront floater " << getName() << LL_ENDL;
+
 	if (getVisible() && pointInView(x, y))
 	{
 		LLMultiFloater* hostp = getHost();

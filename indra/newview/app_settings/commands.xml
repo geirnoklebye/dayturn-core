@@ -31,6 +31,8 @@
            execute_parameters="area_search"
            is_running_function="Floater.IsOpen"
            is_running_parameters="area_search"
+           is_enabled_function="Agent.IsActionAllowed"
+           is_enabled_parameters="areasearch"
            />
   <command name="avatar"
            available_in_toybox="true"

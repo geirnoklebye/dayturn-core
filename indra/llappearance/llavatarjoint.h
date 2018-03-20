@@ -30,8 +30,11 @@
 //-----------------------------------------------------------------------------
 // Header Files
 //-----------------------------------------------------------------------------
-#include "lljoint.h"
-#include "lljointpickname.h"
+//CA we're now using this header earlier in the compilation before its had a chance
+//to get this onto the compilation header path, so explicit reference needed
+#include "../llcharacter/lljoint.h"
+#include "../llappearance/lljointpickname.h"
+//ca
 
 class LLFace;
 class LLAvatarJointMesh;

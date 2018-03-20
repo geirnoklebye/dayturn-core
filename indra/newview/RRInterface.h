@@ -81,8 +81,10 @@
 #include "llviewermenu.h"
 #include "llviewerjointattachment.h"
 #include "llviewertexture.h"
-#include "llwearable.h"
-#include "llwearabletype.h"
+//CA early inclusion of this header file now requires a hint where to find it
+#include "../llappearance/llwearable.h"
+#include "../llappearance/llwearabletype.h"
+//ca
 
 extern BOOL gRRenabled;
 

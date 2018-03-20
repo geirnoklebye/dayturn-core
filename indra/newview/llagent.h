@@ -30,9 +30,11 @@
 #include "indra_constants.h"
 #include "llevent.h" 				// LLObservable base class
 #include "llagentdata.h" 			// gAgentID, gAgentSessionID
-#include "llcharacter.h"
+//CA this header is now getting used earlier, so a hint to where to find this is needed
+#include "../llcharacter/llcharacter.h"
 #include "llcoordframe.h"			// for mFrameAgent
-#include "llavatarappearancedefines.h"
+#include "../llappearance/llavatarappearancedefines.h"
+//ca
 #include "llpermissionsflags.h"
 #include "llviewerinventory.h"			// for LLViewerInventoryItem
 #include "llevents.h"

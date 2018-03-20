@@ -331,6 +331,10 @@ void refreshCachedVariable (std::string var)
 			LLFloaterWorldMap::getInstance()->setVisible (false);
 			setVisibleAll("panel_places", FALSE);
 			gSavedSettings.setBOOL ("ShowMiniLocationPanel", FALSE);
+//CA
+			//also close area search
+			LLFloaterReg::hideInstance("area_search", LLSD());
+//ca
 		}
 		else {
 			LLPanelTopInfoBar::getInstance()->update();
