@@ -30,12 +30,8 @@
 //-----------------------------------------------------------------------------
 // Header Files
 //-----------------------------------------------------------------------------
-//CA
-// This now needs its path since including RRInterface.h leads to pulling this
-// in ahead of newview's main compilation when the path is discovered
-#include "../llappearance/llavatarjoint.h"
-#include "../llappearance/lljointpickname.h"
-//ca
+#include "llavatarjoint.h"
+#include "lljointpickname.h"
 
 class LLFace;
 class LLViewerJointMesh;

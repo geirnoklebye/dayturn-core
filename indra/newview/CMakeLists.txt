@@ -760,6 +760,7 @@ set(viewer_HEADER_FILES
     CMakeLists.txt
     ViewerInstall.cmake
     RRInterface.h
+    RRInterfaceHelper.h
     ao.h
     aoengine.h
     aoset.h

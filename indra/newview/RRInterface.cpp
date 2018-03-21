@@ -88,6 +88,9 @@
 #include <cstdlib>
 
 #include "RRInterface.h"
+//CA
+#include "RRInterfaceHelper.h"
+//ca
 
 // Global and static variables initialization.
 BOOL gRRenabled = TRUE;
@@ -106,6 +109,30 @@ BOOL RRInterface::sRenderLimitRenderedThisFrame = FALSE;
 #if !defined(max)
 #define max(a, b)	((a) > (b) ? (a) : (b))
 #endif
+
+//CA Helper function to be called from static libraries so we need to hide as much as possible
+//   to avoid going down a rabbit warren of using newview headers in the static libraries (llui)
+RRHelper::RRHelper()
+{
+}
+
+RRHelper::~RRHelper()
+{
+}
+
+BOOL RRHelper::preventFloater(std::string floaterName)
+{
+	if (!gRRenabled) return FALSE;
+
+	if ((floaterName == "area_search" || floaterName == "floaterland") && gAgent.mRRInterface.mContainsShowloc) return TRUE;
+	else if (floaterName == "map" && gAgent.mRRInterface.mContainsShowminimap) return TRUE;
+	else if (floaterName == "worldmap" && gAgent.mRRInterface.mContainsShowworldmap) return TRUE;
+	else if (floaterName == "Destinations" && gAgent.mRRInterface.mContainsTp) return TRUE;
+	else if (floaterName == "floater_my_inventory" && gAgent.mRRInterface.mContainsShowinv) return TRUE;
+
+	return FALSE;
+}
+//ca
 
 // --
 // Local functions

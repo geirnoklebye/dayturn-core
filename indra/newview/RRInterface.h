@@ -74,9 +74,7 @@
 #include "lluuid.h"
 #include "llframetimer.h"
 
-//CA early inclusion of this header file now requires a hint where to find it
-#include "../llui/llchat.h"
-//ca
+#include "llchat.h"
 #include "llchatbar.h"
 #include "llparcel.h"
 #include "llinventorymodel.h"

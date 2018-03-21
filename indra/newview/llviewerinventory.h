@@ -29,10 +29,7 @@
 
 #include "llinventory.h"
 #include "llframetimer.h"
-//CA seems the path has been found normally, but now that we need to reference RRinterface from
-//   llui, and that pulls in this header, it needs the path
-//ca
-#include "../llappearance/llwearable.h"
+#include "llwearable.h"
 #include "llinitdestroyclass.h" //for LLDestroyClass
 
 #include <boost/signals2.hpp>	// boost::signals2::trackable

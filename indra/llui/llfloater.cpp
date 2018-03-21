@@ -61,8 +61,8 @@
 #include <boost/foreach.hpp>
 
 //CA
-#include "../newview/RRInterface.h"
-#include "../newview/llagent.h"
+#include "../newview/RRInterfaceHelper.h"
+extern BOOL gRRenabled;
 //ca
 
 // use this to control "jumping" behavior when Ctrl-Tabbing
@@ -589,15 +589,9 @@ LLControlGroup*	LLFloater::getControlGroup()
 void LLFloater::setVisible( BOOL visible )
 {
 //CA new RLV intercept primarily for area search, but more effective than current method for some other floaters too
-//   so they are included here (existing intercepts have been left in place for easier merging)
-	if (gRRenabled)
-	{
-		if ((getName() == "area_search" || getName()=="floaterland") && gAgent.mRRInterface.mContainsShowloc) visible = FALSE;
-		else if (getName() == "map" && gAgent.mRRInterface.mContainsShowminimap) visible = FALSE;
-		else if (getName() == "worldmap" && gAgent.mRRInterface.mContainsShowworldmap) visible = FALSE;
-		else if (getName() == "Destinations" && gAgent.mRRInterface.mContainsTp) visible = FALSE;
-		else if (getName() == "floater_my_inventory" && gAgent.mRRInterface.mContainsShowinv) visible = FALSE;
-	}
+//  so they are included here (existing intercepts have been left in place for easier merging). After having problems
+//	with header inclusion this is now a simple function call with all the intelligence inside the function
+	if (gRRenabled && RRHelper::preventFloater(getName())) visible = FALSE;
 //ca
 	LLPanel::setVisible(visible); // calls onVisibilityChange()
 	if( visible && mFirstLook )
