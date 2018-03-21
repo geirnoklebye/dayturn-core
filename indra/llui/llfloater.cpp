@@ -596,6 +596,7 @@ void LLFloater::setVisible( BOOL visible )
 		else if (getName() == "map" && gAgent.mRRInterface.mContainsShowminimap) visible = FALSE;
 		else if (getName() == "worldmap" && gAgent.mRRInterface.mContainsShowworldmap) visible = FALSE;
 		else if (getName() == "Destinations" && gAgent.mRRInterface.mContainsTp) visible = FALSE;
+		else if (getName() == "floater_my_inventory" && gAgent.mRRInterface.mContainsShowinv) visible = FALSE;
 	}
 //ca
 	LLPanel::setVisible(visible); // calls onVisibilityChange()
