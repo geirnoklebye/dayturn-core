@@ -27,9 +27,9 @@
 #ifndef LL_LLCHATBAR_H
 #define LL_LLCHATBAR_H
 
-#include "llpanel.h"
+#include "../llui/llpanel.h" //moving some RLV functionally into llui
 #include "llframetimer.h"
-#include "llchat.h"
+#include "../llui/llchat.h" //moving some RLV functionally into llui
 
 class LLLineEditor;
 class LLMessageSystem;
