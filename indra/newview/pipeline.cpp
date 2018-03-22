@@ -11376,33 +11376,33 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	static LLCullResult result;
 	result.clear();
 	grabReferences(result);
-	
+
 	if (!avatar || !avatar->mDrawable)
 	{
-        LL_WARNS_ONCE("AvatarRenderPipeline") << "Avatar is " << (avatar ? "not drawable" : "null") << LL_ENDL;
+		LL_WARNS_ONCE("AvatarRenderPipeline") << "Avatar is " << (avatar ? "not drawable" : "null") << LL_ENDL;
 		return;
 	}
-    LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " is drawable" << LL_ENDL;
+	LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " is drawable" << LL_ENDL;
 
 	assertInitialized();
 
-	bool visually_muted = avatar->isVisuallyMuted();		
-    LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID()
-                              << " is " << ( visually_muted ? "" : "not ") << "visually muted"
-                              << LL_ENDL;
-	bool too_complex = avatar->isTooComplex();		
-    LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID()
-                              << " is " << ( too_complex ? "" : "not ") << "too complex"
-                              << LL_ENDL;
+	bool visually_muted = avatar->isVisuallyMuted();
+	LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID()
+		<< " is " << (visually_muted ? "" : "not ") << "visually muted"
+		<< LL_ENDL;
+	bool too_complex = avatar->isTooComplex();
+	LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID()
+		<< " is " << (too_complex ? "" : "not ") << "too complex"
+		<< LL_ENDL;
 //MK
 	bool silhouette = avatar->isSilhouette();
 	LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID()
-								<< " is " << (silhouette? "" : "not ") << "a silhouette"
-								<< LL_ENDL;
+		<< " is " << (silhouette ? "" : "not ") << "a silhouette"
+		<< LL_ENDL;
 //mk
 
 	pushRenderTypeMask();
-	
+
 //MK
 	if (silhouette)
 	{
@@ -11451,86 +11451,88 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	else
 //mk
 
-	if (visually_muted || too_complex)
-	{
-		andRenderTypeMask(LLPipeline::RENDER_TYPE_AVATAR, END_RENDER_TYPES);
+		if (visually_muted || too_complex)
+		{
+			andRenderTypeMask(LLPipeline::RENDER_TYPE_AVATAR, END_RENDER_TYPES);
 
-	}
-	else
-	{
+		}
+		else
+		{
 //MK
-		// Render everything on impostors
-		andRenderTypeMask(LLPipeline::RENDER_TYPE_ALPHA,
-			LLPipeline::RENDER_TYPE_FULLBRIGHT,
-			LLPipeline::RENDER_TYPE_VOLUME,
-			LLPipeline::RENDER_TYPE_GLOW,
-			LLPipeline::RENDER_TYPE_BUMP,
-			LLPipeline::RENDER_TYPE_PASS_SIMPLE,
-			LLPipeline::RENDER_TYPE_PASS_ALPHA,
-			LLPipeline::RENDER_TYPE_PASS_ALPHA_MASK,
-			LLPipeline::RENDER_TYPE_PASS_BUMP,
-			LLPipeline::RENDER_TYPE_PASS_POST_BUMP,
-			LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT,
-			LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_ALPHA_MASK,
-			LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_SHINY,
-			LLPipeline::RENDER_TYPE_PASS_GLOW,
-			LLPipeline::RENDER_TYPE_PASS_SHINY,
-			LLPipeline::RENDER_TYPE_PASS_INVISIBLE,
-			LLPipeline::RENDER_TYPE_PASS_INVISI_SHINY,
-			LLPipeline::RENDER_TYPE_PASS_MATERIAL,
-			LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA,
-			LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA_MASK,
-			LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA_EMISSIVE,
-			LLPipeline::RENDER_TYPE_PASS_SPECMAP,
-			LLPipeline::RENDER_TYPE_PASS_SPECMAP_BLEND,
-			LLPipeline::RENDER_TYPE_PASS_SPECMAP_MASK,
-			LLPipeline::RENDER_TYPE_PASS_SPECMAP_EMISSIVE,
-			LLPipeline::RENDER_TYPE_PASS_NORMMAP,
-			LLPipeline::RENDER_TYPE_PASS_NORMMAP_BLEND,
-			LLPipeline::RENDER_TYPE_PASS_NORMMAP_MASK,
-			LLPipeline::RENDER_TYPE_PASS_NORMMAP_EMISSIVE,
-			LLPipeline::RENDER_TYPE_PASS_NORMSPEC,
-			LLPipeline::RENDER_TYPE_PASS_NORMSPEC_BLEND,
-			LLPipeline::RENDER_TYPE_PASS_NORMSPEC_MASK,
-			LLPipeline::RENDER_TYPE_PASS_NORMSPEC_EMISSIVE,
-			LLPipeline::RENDER_TYPE_AVATAR,
-			LLPipeline::RENDER_TYPE_ALPHA_MASK,
-			LLPipeline::RENDER_TYPE_FULLBRIGHT_ALPHA_MASK,
-			LLPipeline::RENDER_TYPE_INVISIBLE,
-			LLPipeline::RENDER_TYPE_SIMPLE,
-			LLPipeline::RENDER_TYPE_MATERIALS,
-		END_RENDER_TYPES);
+			// Render everything on impostors
+			andRenderTypeMask(LLPipeline::RENDER_TYPE_ALPHA,
+				LLPipeline::RENDER_TYPE_FULLBRIGHT,
+				LLPipeline::RENDER_TYPE_VOLUME,
+				LLPipeline::RENDER_TYPE_GLOW,
+				LLPipeline::RENDER_TYPE_BUMP,
+				LLPipeline::RENDER_TYPE_PASS_SIMPLE,
+				LLPipeline::RENDER_TYPE_PASS_ALPHA,
+				LLPipeline::RENDER_TYPE_PASS_ALPHA_MASK,
+				LLPipeline::RENDER_TYPE_PASS_BUMP,
+				LLPipeline::RENDER_TYPE_PASS_POST_BUMP,
+				LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT,
+				LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_ALPHA_MASK,
+				LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_SHINY,
+				LLPipeline::RENDER_TYPE_PASS_GLOW,
+				LLPipeline::RENDER_TYPE_PASS_SHINY,
+				LLPipeline::RENDER_TYPE_PASS_INVISIBLE,
+				LLPipeline::RENDER_TYPE_PASS_INVISI_SHINY,
+				LLPipeline::RENDER_TYPE_PASS_MATERIAL,
+				LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA,
+				LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA_MASK,
+				LLPipeline::RENDER_TYPE_PASS_MATERIAL_ALPHA_EMISSIVE,
+				LLPipeline::RENDER_TYPE_PASS_SPECMAP,
+				LLPipeline::RENDER_TYPE_PASS_SPECMAP_BLEND,
+				LLPipeline::RENDER_TYPE_PASS_SPECMAP_MASK,
+				LLPipeline::RENDER_TYPE_PASS_SPECMAP_EMISSIVE,
+				LLPipeline::RENDER_TYPE_PASS_NORMMAP,
+				LLPipeline::RENDER_TYPE_PASS_NORMMAP_BLEND,
+				LLPipeline::RENDER_TYPE_PASS_NORMMAP_MASK,
+				LLPipeline::RENDER_TYPE_PASS_NORMMAP_EMISSIVE,
+				LLPipeline::RENDER_TYPE_PASS_NORMSPEC,
+				LLPipeline::RENDER_TYPE_PASS_NORMSPEC_BLEND,
+				LLPipeline::RENDER_TYPE_PASS_NORMSPEC_MASK,
+				LLPipeline::RENDER_TYPE_PASS_NORMSPEC_EMISSIVE,
+				LLPipeline::RENDER_TYPE_AVATAR,
+				LLPipeline::RENDER_TYPE_ALPHA_MASK,
+				LLPipeline::RENDER_TYPE_FULLBRIGHT_ALPHA_MASK,
+				LLPipeline::RENDER_TYPE_INVISIBLE,
+				LLPipeline::RENDER_TYPE_SIMPLE,
+				LLPipeline::RENDER_TYPE_MATERIALS,
+				END_RENDER_TYPES);
 
-		////andRenderTypeMask(LLPipeline::RENDER_TYPE_ALPHA,
-		////	LLPipeline::RENDER_TYPE_FULLBRIGHT,
-		////	LLPipeline::RENDER_TYPE_VOLUME,
-		////	LLPipeline::RENDER_TYPE_GLOW,
-		////	LLPipeline::RENDER_TYPE_BUMP,
-		////	LLPipeline::RENDER_TYPE_PASS_SIMPLE,
-		////	LLPipeline::RENDER_TYPE_PASS_ALPHA,
-		////	LLPipeline::RENDER_TYPE_PASS_ALPHA_MASK,
-		////	LLPipeline::RENDER_TYPE_PASS_BUMP,
-		////	LLPipeline::RENDER_TYPE_PASS_POST_BUMP,
-		////	LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT,
-		////	LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_ALPHA_MASK,
-		////	LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_SHINY,
-		////	LLPipeline::RENDER_TYPE_PASS_GLOW,
-		////	LLPipeline::RENDER_TYPE_PASS_GRASS,
-		////	LLPipeline::RENDER_TYPE_PASS_SHINY,
-		////	LLPipeline::RENDER_TYPE_PASS_INVISIBLE,
-		////	LLPipeline::RENDER_TYPE_PASS_INVISI_SHINY,
-		////	LLPipeline::RENDER_TYPE_AVATAR,
-		////	LLPipeline::RENDER_TYPE_ALPHA_MASK,
-		////	LLPipeline::RENDER_TYPE_FULLBRIGHT_ALPHA_MASK,
-		////	LLPipeline::RENDER_TYPE_INVISIBLE,
-		////	LLPipeline::RENDER_TYPE_SIMPLE,
-		////END_RENDER_TYPES);
+			////andRenderTypeMask(LLPipeline::RENDER_TYPE_ALPHA,
+			////	LLPipeline::RENDER_TYPE_FULLBRIGHT,
+			////	LLPipeline::RENDER_TYPE_VOLUME,
+			////	LLPipeline::RENDER_TYPE_GLOW,
+			////	LLPipeline::RENDER_TYPE_BUMP,
+			////	LLPipeline::RENDER_TYPE_PASS_SIMPLE,
+			////	LLPipeline::RENDER_TYPE_PASS_ALPHA,
+			////	LLPipeline::RENDER_TYPE_PASS_ALPHA_MASK,
+			////	LLPipeline::RENDER_TYPE_PASS_BUMP,
+			////	LLPipeline::RENDER_TYPE_PASS_POST_BUMP,
+			////	LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT,
+			////	LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_ALPHA_MASK,
+			////	LLPipeline::RENDER_TYPE_PASS_FULLBRIGHT_SHINY,
+			////	LLPipeline::RENDER_TYPE_PASS_GLOW,
+			////	LLPipeline::RENDER_TYPE_PASS_GRASS,
+			////	LLPipeline::RENDER_TYPE_PASS_SHINY,
+			////	LLPipeline::RENDER_TYPE_PASS_INVISIBLE,
+			////	LLPipeline::RENDER_TYPE_PASS_INVISI_SHINY,
+			////	LLPipeline::RENDER_TYPE_AVATAR,
+			////	LLPipeline::RENDER_TYPE_ALPHA_MASK,
+			////	LLPipeline::RENDER_TYPE_FULLBRIGHT_ALPHA_MASK,
+			////	LLPipeline::RENDER_TYPE_INVISIBLE,
+			////	LLPipeline::RENDER_TYPE_SIMPLE,
+			////END_RENDER_TYPES);
 //mk
-	}
-	
+		}
+
 	S32 occlusion = sUseOcclusion;
 	sUseOcclusion = 0;
-	sReflectionRender = ! sRenderDeferred;
+
+	sReflectionRender = !sRenderDeferred;
+
 	sShadowRender = true;
 	sImpostorRender = true;
 
@@ -11538,29 +11540,29 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 
 	{
 		LL_RECORD_BLOCK_TIME(FTM_IMPOSTOR_MARK_VISIBLE);
-	markVisible(avatar->mDrawable, *viewer_camera);
+		markVisible(avatar->mDrawable, *viewer_camera);
 		LLVOAvatar::sUseImpostors = false; // @TODO ???
 
-	LLVOAvatar::attachment_map_t::iterator iter;
-	for (iter = avatar->mAttachmentPoints.begin();
-		iter != avatar->mAttachmentPoints.end();
-		++iter)
-	{
-		LLViewerJointAttachment *attachment = iter->second;
-		for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
-			 attachment_iter != attachment->mAttachedObjects.end();
-			 ++attachment_iter)
+		LLVOAvatar::attachment_map_t::iterator iter;
+		for (iter = avatar->mAttachmentPoints.begin();
+			iter != avatar->mAttachmentPoints.end();
+			++iter)
 		{
-			if (LLViewerObject* attached_object = (*attachment_iter))
+			LLViewerJointAttachment *attachment = iter->second;
+			for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
+				attachment_iter != attachment->mAttachedObjects.end();
+				++attachment_iter)
 			{
-				markVisible(attached_object->mDrawable->getSpatialBridge(), *viewer_camera);
+				if (LLViewerObject* attached_object = (*attachment_iter))
+				{
+					markVisible(attached_object->mDrawable->getSpatialBridge(), *viewer_camera);
+				}
 			}
 		}
 	}
-	}
 
 	stateSort(*LLViewerCamera::getInstance(), result);
-	
+
 	LLCamera camera = *viewer_camera;
 	LLVector2 tdim;
 	U32 resY = 0;
@@ -11568,92 +11570,92 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 
 	{
 		LL_RECORD_BLOCK_TIME(FTM_IMPOSTOR_SETUP);
-	const LLVector4a* ext = avatar->mDrawable->getSpatialExtents();
-	LLVector3 pos(avatar->getRenderPosition()+avatar->getImpostorOffset());
+		const LLVector4a* ext = avatar->mDrawable->getSpatialExtents();
+		LLVector3 pos(avatar->getRenderPosition() + avatar->getImpostorOffset());
 
-	camera.lookAt(viewer_camera->getOrigin(), pos, viewer_camera->getUpAxis());
-	
-	LLVector4a half_height;
-	half_height.setSub(ext[1], ext[0]);
-	half_height.mul(0.5f);
+		camera.lookAt(viewer_camera->getOrigin(), pos, viewer_camera->getUpAxis());
 
-	LLVector4a left;
-	left.load3(camera.getLeftAxis().mV);
-	left.mul(left);
+		LLVector4a half_height;
+		half_height.setSub(ext[1], ext[0]);
+		half_height.mul(0.5f);
+
+		LLVector4a left;
+		left.load3(camera.getLeftAxis().mV);
+		left.mul(left);
 		llassert(left.dot3(left).getF32() > F_APPROXIMATELY_ZERO);
-	left.normalize3fast();
+		left.normalize3fast();
 
-	LLVector4a up;
-	up.load3(camera.getUpAxis().mV);
-	up.mul(up);
+		LLVector4a up;
+		up.load3(camera.getUpAxis().mV);
+		up.mul(up);
 		llassert(up.dot3(up).getF32() > F_APPROXIMATELY_ZERO);
-	up.normalize3fast();
+		up.normalize3fast();
 
-	tdim.mV[0] = fabsf(half_height.dot3(left).getF32());
-	tdim.mV[1] = fabsf(half_height.dot3(up).getF32());
+		tdim.mV[0] = fabsf(half_height.dot3(left).getF32());
+		tdim.mV[1] = fabsf(half_height.dot3(up).getF32());
 
-	gGL.matrixMode(LLRender::MM_PROJECTION);
-	gGL.pushMatrix();
-	
-	F32 distance = (pos-camera.getOrigin()).length();
-	F32 fov = atanf(tdim.mV[1]/distance)*2.f*RAD_TO_DEG;
-	F32 aspect = tdim.mV[0]/tdim.mV[1];
+		gGL.matrixMode(LLRender::MM_PROJECTION);
+		gGL.pushMatrix();
+
+		F32 distance = (pos - camera.getOrigin()).length();
+		F32 fov = atanf(tdim.mV[1] / distance)*2.f*RAD_TO_DEG;
+		F32 aspect = tdim.mV[0] / tdim.mV[1];
 //MK
-	// Make the near clip plane closer for impostors
-////	glh::matrix4f persp = gl_perspective(fov, aspect, 1.f, 256.f);
-	glh::matrix4f persp = gl_perspective(fov, aspect, 0.001f, 256.f);
+		// Make the near clip plane closer for impostors
+		////	glh::matrix4f persp = gl_perspective(fov, aspect, 1.f, 256.f);
+		glh::matrix4f persp = gl_perspective(fov, aspect, 0.001f, 256.f);
 //mk
-	glh_set_current_projection(persp);
-	gGL.loadMatrix(persp.m);
+		glh_set_current_projection(persp);
+		gGL.loadMatrix(persp.m);
 
-	gGL.matrixMode(LLRender::MM_MODELVIEW);
-	gGL.pushMatrix();
-	glh::matrix4f mat;
-	camera.getOpenGLTransform(mat.m);
+		gGL.matrixMode(LLRender::MM_MODELVIEW);
+		gGL.pushMatrix();
+		glh::matrix4f mat;
+		camera.getOpenGLTransform(mat.m);
 
-	mat = glh::matrix4f((GLfloat*) OGL_TO_CFR_ROTATION) * mat;
+		mat = glh::matrix4f((GLfloat*)OGL_TO_CFR_ROTATION) * mat;
 
-	gGL.loadMatrix(mat.m);
-	glh_set_current_modelview(mat);
+		gGL.loadMatrix(mat.m);
+		glh_set_current_modelview(mat);
 
-	glClearColor(0.0f,0.0f,0.0f,0.0f);
-	gGL.setColorMask(true, true);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		gGL.setColorMask(true, true);
 
-	// get the number of pixels per angle
-	F32 pa = gViewerWindow->getWindowHeightRaw() / (RAD_TO_DEG * viewer_camera->getView());
+		// get the number of pixels per angle
+		F32 pa = gViewerWindow->getWindowHeightRaw() / (RAD_TO_DEG * viewer_camera->getView());
 
-	//get resolution based on angle width and height of impostor (double desired resolution to prevent aliasing)
-		resY = llmin(nhpo2((U32) (fov*pa)), (U32) 512);
-		resX = llmin(nhpo2((U32) (atanf(tdim.mV[0]/distance)*2.f*RAD_TO_DEG*pa)), (U32) 512);
+		//get resolution based on angle width and height of impostor (double desired resolution to prevent aliasing)
+		resY = llmin(nhpo2((U32)(fov*pa)), (U32)512);
+		resX = llmin(nhpo2((U32)(atanf(tdim.mV[0] / distance)*2.f*RAD_TO_DEG*pa)), (U32)512);
 
 		if (!avatar->mImpostor.isComplete())
-	{
-			LL_RECORD_BLOCK_TIME(FTM_IMPOSTOR_ALLOCATE);
-			
-		
-		if (LLPipeline::sRenderDeferred)
 		{
-				avatar->mImpostor.allocate(resX,resY,GL_SRGB8_ALPHA8,TRUE,FALSE);
-			addDeferredAttachments(avatar->mImpostor);
-		}
+			LL_RECORD_BLOCK_TIME(FTM_IMPOSTOR_ALLOCATE);
+
+
+			if (LLPipeline::sRenderDeferred)
+			{
+				avatar->mImpostor.allocate(resX, resY, GL_SRGB8_ALPHA8, TRUE, FALSE);
+				addDeferredAttachments(avatar->mImpostor);
+			}
 			else
 			{
-				avatar->mImpostor.allocate(resX,resY,GL_RGBA,TRUE,FALSE);
+				avatar->mImpostor.allocate(resX, resY, GL_RGBA, TRUE, FALSE);
 			}
-		
-		gGL.getTexUnit(0)->bind(&avatar->mImpostor);
-		gGL.getTexUnit(0)->setTextureFilteringOption(LLTexUnit::TFO_POINT);
-		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
-	}
-		else if(resX != avatar->mImpostor.getWidth() || resY != avatar->mImpostor.getHeight())
+
+			gGL.getTexUnit(0)->bind(&avatar->mImpostor);
+			gGL.getTexUnit(0)->setTextureFilteringOption(LLTexUnit::TFO_POINT);
+			gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+		}
+		else if (resX != avatar->mImpostor.getWidth() || resY != avatar->mImpostor.getHeight())
 		{
 			LL_RECORD_BLOCK_TIME(FTM_IMPOSTOR_RESIZE);
-			avatar->mImpostor.resize(resX,resY);
+			avatar->mImpostor.resize(resX, resY);
 		}
 
 		avatar->mImpostor.bindTarget();
 	}
-	
+
 	F32 old_alpha = LLDrawPoolAvatar::sMinimumAlpha;
 	if (visually_muted)
 	{ //disable alpha masking for muted avatars (get whole skin silhouette)
@@ -11679,7 +11681,7 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		avatar->mImpostor.clear();
 		renderGeomDeferred(camera);
 
-		renderGeomPostDeferred(camera);		
+		renderGeomPostDeferred(camera);
 
 		// Shameless hack time: render it all again,
 		// this time writing the depth
@@ -11690,7 +11692,7 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		sImpostorRenderAlphaDepthPass = true;
 		// depth-only here...
 		//
-		gGL.setColorMask(false,false);
+		gGL.setColorMask(false, false);
 		renderGeomPostDeferred(camera);
 
 		sImpostorRenderAlphaDepthPass = false;
@@ -11713,15 +11715,15 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 
 		// depth-only here...
 		//
-		gGL.setColorMask(false,false);
+		gGL.setColorMask(false, false);
 		renderGeom(camera);
 
 		sImpostorRenderAlphaDepthPass = false;
 	}
-	
+
 	LLDrawPoolAvatar::sMinimumAlpha = old_alpha;
 
-	 //create alpha mask based on depth buffer (grey out if muted)
+	{ //create alpha mask based on depth buffer (grey out if muted)
 		LL_RECORD_BLOCK_TIME(FTM_IMPOSTOR_BACKGROUND);
 //MK
 		// Choose the non-deferred rendering when rendering silhouettes
@@ -11736,7 +11738,7 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		LLGLDisable blend(GL_BLEND);
 
 //MK
-		////if (visually_muted || too_complex)
+////if (visually_muted || too_complex)
 		if (visually_muted || too_complex || silhouette)
 //mk
 		{
@@ -11746,7 +11748,7 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		{
 			gGL.setColorMask(false, true);
 		}
-		
+
 		gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 
 		LLGLDepthTest depth(GL_TRUE, GL_FALSE, GL_GREATER);
@@ -11767,51 +11769,52 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 		}
 
 //MK
-////		if (visually_muted)
+		////		if (visually_muted)
 		if (visually_muted || silhouette)
-//mk
+			//mk
 		{	// Visually muted avatar
-            LLColor4 muted_color(avatar->getMutedAVColor());
-            LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " MUTED set solid color " << muted_color << LL_ENDL;
-			gGL.diffuseColor4fv( muted_color.mV );
+			LLColor4 muted_color(avatar->getMutedAVColor());
+			LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " MUTED set solid color " << muted_color << LL_ENDL;
+			gGL.diffuseColor4fv(muted_color.mV);
 //MK
 //			if (gRRenabled && gAgent.mRRInterface.mShowavsDistMax < EXTREMUM)
 			if (silhouette)
 			{
-				gGL.diffuseColor4ub (32, 32, 32, 255); // pitch black
+				gGL.diffuseColor4ub(32, 32, 32, 255); // pitch black
 			}
+//mk		
 		}
-			else
-//mk
+		else
 		{ //grey muted avatar
-            LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " MUTED set grey" << LL_ENDL;
-                gGL.diffuseColor4fv(LLColor4::pink.mV );
-            }
+			LL_DEBUGS_ONCE("AvatarRenderPipeline") << "Avatar " << avatar->getID() << " MUTED set grey" << LL_ENDL;
+			gGL.diffuseColor4fv(LLColor4::pink.mV);
+		}
+
 		{
-		gGL.begin(LLRender::QUADS);
-		gGL.vertex3f(-1, -1, clip_plane);
-		gGL.vertex3f(1, -1, clip_plane);
-		gGL.vertex3f(1, 1, clip_plane);
-		gGL.vertex3f(-1, 1, clip_plane);
-		gGL.end();
-		gGL.flush();
+			gGL.begin(LLRender::QUADS);
+			gGL.vertex3f(-1, -1, clip_plane);
+			gGL.vertex3f(1, -1, clip_plane);
+			gGL.vertex3f(1, 1, clip_plane);
+			gGL.vertex3f(-1, 1, clip_plane);
+			gGL.end();
+			gGL.flush();
 		}
 
 		if (LLGLSLShader::sNoFixedFunction)
 		{
 			gDebugProgram.unbind();
-        }
+		}
 
 		gGL.popMatrix();
 		gGL.matrixMode(LLRender::MM_MODELVIEW);
 		gGL.popMatrix();
-	
+	}
 
 	avatar->mImpostor.flush();
 
 	avatar->setImpostorDim(tdim);
 
-	LLVOAvatar::sUseImpostors = (0 != LLVOAvatar::sMaxNonImpostors);
+	LLVOAvatar::sUseImpostors = true; // @TODO ???
 	sUseOcclusion = occlusion;
 	sReflectionRender = false;
 	sImpostorRender = false;
@@ -11831,7 +11834,6 @@ void LLPipeline::generateImpostor(LLVOAvatar* avatar)
 	LLGLState::checkTextureChannels();
 	LLGLState::checkClientArrays();
 }
-
 bool LLPipeline::hasRenderBatches(const U32 type) const
 {
 	return sCull->getRenderMapSize(type) > 0;
