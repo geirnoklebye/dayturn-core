@@ -637,6 +637,7 @@ const LLUUID LLVOAvatar::sStepSounds[LL_MCODE_END] =
 	SND_RUBBER_RUBBER
 };
 
+S32 LLVOAvatar::sRenderName = RENDER_NAME_ALWAYS;
 BOOL LLVOAvatar::sRenderGroupTitles = TRUE;
 S32 LLVOAvatar::sNumVisibleChatBubbles = 0;
 BOOL LLVOAvatar::sDebugInvisible = FALSE;
@@ -2296,6 +2297,7 @@ LLViewerFetchedTexture *LLVOAvatar::getBakedTextureImage(const U8 te, const LLUU
 	{
 				result->setIsMissingAsset(false);
 	}
+}
 		else
 		{
 			LL_DEBUGS("Avatar") << avString() << "get old-bake image from host " << uuid << LL_ENDL;
