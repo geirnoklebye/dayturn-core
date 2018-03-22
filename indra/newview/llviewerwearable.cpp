@@ -462,7 +462,12 @@ void LLViewerWearable::setItemID(const LLUUID& item_id)
 void LLViewerWearable::revertValues()
 {
 	LLWearable::revertValues();
-
+//MK
+	// This is a temporary workaround for a nasty crash that occurs after clearing the cache in the 64-bit viewer.
+	// I don't know why the line after "return" fails and crashes, but it doesn't seem to be a problem if we don't execute it
+	// so for now it is skipped.
+	return;
+//mk
 
 	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(LLFloaterSidePanelContainer::getPanel("appearance"));
 	if( panel )
