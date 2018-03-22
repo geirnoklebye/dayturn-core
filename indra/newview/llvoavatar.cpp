@@ -637,7 +637,6 @@ const LLUUID LLVOAvatar::sStepSounds[LL_MCODE_END] =
 	SND_RUBBER_RUBBER
 };
 
-S32 LLVOAvatar::sRenderName = RENDER_NAME_ALWAYS;
 BOOL LLVOAvatar::sRenderGroupTitles = TRUE;
 S32 LLVOAvatar::sNumVisibleChatBubbles = 0;
 BOOL LLVOAvatar::sDebugInvisible = FALSE;
@@ -696,7 +695,6 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mNameAlpha(0.f),
 	mAvatarBirthdateRequest(NULL),
 	mAvatarBirthdate(0.0f),
-	mRenderGroupTitles(sRenderGroupTitles),
 	mNameCloud(false),
 	mFirstTEMessageReceived( FALSE ),
 	mFirstAppearanceMessageReceived( FALSE ),
@@ -2287,9 +2285,6 @@ LLViewerFetchedTexture *LLVOAvatar::getBakedTextureImage(const U8 te, const LLUU
 
 		if (!url.empty())
 	{
-			LL_WARNS() << "unable to determine URL for te " << te << " uuid " << uuid << LL_ENDL;
-			return NULL;
-		}
 			LL_DEBUGS("Avatar") << avString() << "get server-bake image from URL " << url << LL_ENDL;
 			result = LLViewerTextureManager::getFetchedTextureFromUrl(
 				url, FTT_SERVER_BAKE, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE, 0, 0, uuid);
@@ -3540,6 +3535,13 @@ bool LLVOAvatar::isVisuallyMuted()
 {
 	bool muted = false;
 
+//MK
+		if (isSilhouette ())
+		{
+			muted = true;
+		}
+		else
+//mk
 	// Priority order (highest priority first)
 	// * own avatar is never visually muted
 	// * if on the "always draw normally" list, draw them normally
@@ -3790,11 +3792,7 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 	//--------------------------------------------------------------------
 
 	bool visually_muted = isVisuallyMuted();
-//MK
-////	if (visible && (!isSelf() || visually_muted) && !mIsDummy && sUseImpostors && !mNeedsAnimUpdate && !sFreezeCounter)
-	bool silhouette = isSilhouette();
-	if (visible && (!isSelf() || visually_muted || silhouette) && !mIsDummy && sUseImpostors && !mNeedsAnimUpdate && !sFreezeCounter)
-//mk
+	if (visible && (!isSelf() || visually_muted) && !mIsDummy && sUseImpostors && !mNeedsAnimUpdate && !sFreezeCounter)
 	{
 		const LLVector4a* ext = mDrawable->getSpatialExtents();
 		LLVector4a size;
@@ -3833,7 +3831,7 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 		}
 //MK
 		// Update silhouettes often
-		if (silhouette)
+		if (isSilhouette ())
 		{
 			mUpdatePeriod = 1;
 		}
