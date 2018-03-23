@@ -261,4 +261,4 @@
     <on_click function="AvatarIcon.Action" parameter="ban_member" />
     <on_enable function="AvatarIcon.Enable" parameter="can_ban_member" />
   </menu_item_call>
-</menu>
+</toggleable_menu>
