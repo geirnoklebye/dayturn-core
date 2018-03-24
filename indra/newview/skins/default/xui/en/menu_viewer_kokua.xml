@@ -131,8 +131,8 @@
          use_mac_ctrl="true">
             <menu_item_call.on_click
              function="File.TakeSnapshotToDisk" />
-        <menu_item_separator/>
         </menu_item_call>
+        <menu_item_separator/>
 	        <menu_item_call
          label="Request Admin Status"
          name="Request Admin Options"
@@ -1756,7 +1756,7 @@
     </menu_item_call>
   </menu>
   <menu
-  create_jum_keys="true"
+  create_jump_keys="true"
   label="Commands"
   name="Commands"
   tear_off="true">
