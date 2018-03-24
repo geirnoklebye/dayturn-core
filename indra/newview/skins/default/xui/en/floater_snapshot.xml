@@ -444,6 +444,7 @@
     width="50">
        [SIZE] KB
    </text>
+        <check_box		
          control_name="HideBalanceInSnapshots"
          label="Hide L$ balance"
          layout="topleft"
@@ -451,5 +452,4 @@
          left="30"
          width="180"
          name="hide_balance_check" />
-        <check_box		
 </floater>
