@@ -270,6 +270,28 @@
          function="Advanced.WebContentTest"
          parameter="https://callum-linden.s3.amazonaws.com/ceftests.html"/>
       </menu_item_call>
+            <menu_item_check
+             label="Debug Console"
+             name="Debug Console"
+             shortcut="control|shift|4"
+             use_mac_ctrl="true">
+                <menu_item_check.on_check
+                 function="CheckControl"
+                 parameter="ShowDebugConsole" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="ShowDebugConsole" />
+            </menu_item_check>
+        <menu_item_check
+         label="Console Window on next Run"
+         name="Console Window">
+            <menu_item_check.on_check
+             function="CheckControl"
+             parameter="ShowConsoleWindow" />
+            <menu_item_check.on_click
+             function="ToggleControl"
+             parameter="ShowConsoleWindow" />
+        </menu_item_check>
       <menu
        create_jump_keys="true"
        label="Set Logging Level"
