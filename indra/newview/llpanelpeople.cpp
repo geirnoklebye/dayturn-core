@@ -931,7 +931,8 @@ void LLPanelPeople::updateNearbyList()
 //   so all messages now go through an avatar name cache callback to ensure they've been loaded
 //ca
 
-			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+        
+			if ( 1 )
 			{
 //CA it doesn't look pretty getting all three messages if someone pops up within chat range, so add logic to only give the
 //   closest active message
@@ -990,7 +991,7 @@ void LLPanelPeople::updateNearbyList()
 		{
 			av->setFirstSeen(time(NULL));
 
-			if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+			if ( 1 )
 			{
 				BOOL messaged = FALSE;
 				if (gSavedSettings.getBOOL("RadarReportChatRange") && (r <= CHAT_NORMAL_RADIUS))
@@ -1028,7 +1029,7 @@ void LLPanelPeople::updateNearbyList()
 	{
 		radarFields rf = i->second;
 		
-		if (!gRRenabled || !(gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+		if ( 1 )
 		{
 			BOOL messaged = FALSE;
 //CA in the case of departures it makes more sense to prioritise these the other may around so if someone leaves
@@ -1086,16 +1087,19 @@ void LLPanelPeople::updateNearbyList()
 		lastRadarSweep[av->getAvatarId()] = rf;
 	}
 
-	DISTANCE_COMPARATOR.updateAvatarsPositions(positions, mNearbyList->getIDs());
-	LLActiveSpeakerMgr::instance().update(TRUE);
-//mk
-//CA merge error - these are duplicated above where they're used for the radar messages
-//	LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
-//	mNearbyList->setDirty();
-//
-//	DISTANCE_COMPARATOR.updateAvatarsPositions(positions, mNearbyList->getIDs());
-//	LLActiveSpeakerMgr::instance().update(TRUE);
-//ca
+    // Update various display fields
+    //CA now done earlier because we need it for the arrival tests
+    //    updateNearbyRange();
+    //
+    LLActiveSpeakerMgr::instance().update(TRUE);
+    //mk
+    //CA merge error - these are duplicated above where they're used for the radar messages
+    //    LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
+    //    mNearbyList->setDirty();
+    //
+    //    DISTANCE_COMPARATOR.updateAvatarsPositions(positions, mNearbyList->getIDs());
+    //    LLActiveSpeakerMgr::instance().update(TRUE);
+    //ca
 }
 
 void LLPanelPeople::updateRecentList()

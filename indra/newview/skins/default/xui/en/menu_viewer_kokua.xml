@@ -2236,7 +2236,8 @@
             function="ToggleControl"
             parameter="RadarReportSimRange" />
           </menu_item_check>
-          <menu_item_separator/>
+      
+      <menu_item_separator/>
         
     </menu>
 <!-- End Radar menu -->

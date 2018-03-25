@@ -2,6 +2,39 @@
 <llsd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="llsd.xsd">
 <map>
+    <key>RadarReportChatRange</key>
+    <map>
+        <key>Comment</key>
+        <string>Display a chat message when avatar leaves/enters chat distance</string>
+        <key>Persist</key>
+        <integer>1</integer>
+        <key>Type</key>
+        <string>Boolean</string>
+        <key>Value</key>
+        <integer>0</integer>
+    </map>
+    <key>RadarReportDrawRange</key>
+    <map>
+        <key>Comment</key>
+        <string>Display a chat message when avatar leaves/enters draw distance</string>
+        <key>Persist</key>
+        <integer>1</integer>
+        <key>Type</key>
+        <string>Boolean</string>
+        <key>Value</key>
+        <integer>0</integer>
+    </map>
+    <key>RadarReportSimRange</key>
+    <map>
+        <key>Comment</key>
+        <string>Display a chat message when avatar leaves/enters this region</string>
+        <key>Persist</key>
+        <integer>1</integer>
+        <key>Type</key>
+        <string>Boolean</string>
+        <key>Value</key>
+        <integer>0</integer>
+    </map>
   <key>UIImgInvisibleUUID</key>
 	<map>
 	  <key>Comment</key>
@@ -7465,7 +7498,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <integer>130</integer>
+      <integer>130.0</integer>
     </map>
     <key>NewObjectCreationThrottle</key>
     <map>
@@ -8781,7 +8814,7 @@
     <key>PrimTextMaxDrawDistance</key>
     <map>
       <key>Comment</key>
-      <string>Show simulated look-at behavior to others</string>
+      <string>Maximum draw distance beyond which PRIM_TEXT won't be rendered</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -17908,6 +17941,28 @@
       <string>U32</string>
       <key>Value</key>
       <integer>0</integer>
+    </map>
+    <key>InventoryFilterTransfer</key>
+    <map>
+      <key>Comment</key>
+      <string>Inventory transfer permission filter</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>VoiceMultiInstance</key>
+    <map>
+      <key>Comment</key>
+      <string>Enables using voice in multiple simultaneous viewer instances</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
     </map>
     <key>FSFlipCEFY</key>
     <map>
