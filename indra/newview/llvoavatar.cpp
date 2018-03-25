@@ -713,7 +713,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mLastRezzedStatus(-1),
 	mIsEditingAppearance(FALSE),
 	mUseLocalAppearance(FALSE),
-	mUseServerBakes(FALSE), // FIXME DRANO consider using boost::optional, defaulting to unknown.
+	mUseServerBakes(TRUE),
 	mLastUpdateRequestCOFVersion(-1),
 	mLastUpdateReceivedCOFVersion(-1),
 	mCachedMuteListUpdateTime(0),
@@ -1268,7 +1268,11 @@ const LLVector3 LLVOAvatar::getRenderPosition() const
 	{
 		return getPositionAgent();
 	}
-	else if (isRoot())
+//MK
+	// Fix for a strange crash here
+////	else if (isRoot())
+	else if (isRoot() || !mDrawable->getParent())
+//mk
 	{
 		F32 fixup;
 		if ( hasPelvisFixup( fixup) )
@@ -2277,12 +2281,15 @@ LLViewerFetchedTexture *LLVOAvatar::getBakedTextureImage(const U8 te, const LLUU
 	{
 		const std::string url = getImageURL(te,uuid);
 
-		if (!url.empty())
-		{
-			LL_DEBUGS("Avatar") << avString() << "get server-bake image from URL " << url << LL_ENDL;
+		if (url.empty())
+	{
+			LL_WARNS() << "unable to determine URL for te " << te << " uuid " << uuid << LL_ENDL;
+			return NULL;
+		}
+		LL_DEBUGS("Avatar") << avString() << "get server-bake image from URL " << url << LL_ENDL;
 			result = LLViewerTextureManager::getFetchedTextureFromUrl(
 				url, FTT_SERVER_BAKE, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE, 0, 0, uuid);
-			if (result->isMissingAsset())
+		if (result->isMissingAsset())
 			{
 				result->setIsMissingAsset(false);
 			}
@@ -2294,7 +2301,6 @@ LLViewerFetchedTexture *LLVOAvatar::getBakedTextureImage(const U8 te, const LLUU
 			result = LLViewerTextureManager::getFetchedTexture(
 				uuid, FTT_HOST_BAKE, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE, 0, 0, host);
 		}
-	}
 	return result;
 }
 
@@ -3527,7 +3533,7 @@ void LLVOAvatar::updateDebugText()
 										  isSelf() ? (all_local_downloaded ? "L" : "l") : "-",
 										  all_baked_downloaded ? "B" : "b",
 										  mUseLocalAppearance, mIsEditingAppearance,
-										  mUseServerBakes, central_bake_version);
+										  1, central_bake_version);
 		std::string origin_string = bakedTextureOriginInfo();
 		debug_line += " [" + origin_string + "]";
 		S32 curr_cof_version = LLAppearanceMgr::instance().getCOFVersion();
@@ -5208,16 +5214,11 @@ const std::string LLVOAvatar::getImageURL(const U8 te, const LLUUID &uuid)
 {
 	llassert(isIndexBakedTexture(ETextureIndex(te)));
 	std::string url = "";
-	if (isUsingServerBakes())
-	{
 		const std::string& appearance_service_url = LLAppearanceMgr::instance().getAppearanceServiceURL();
 		if (appearance_service_url.empty())
 		{
 			// Probably a server-side issue if we get here:
-     		if (gAgent.getRegion()->getCentralBakeVersion() ) //Doubly check for Server Bakes
-	    	{
-	    		LL_WARNS() << "AgentAppearanceServiceURL not set - Baked texture requests will fail" << LL_ENDL;
-		    }
+			LL_WARNS() << "AgentAppearanceServiceURL not set - Baked texture requests will fail" << LL_ENDL;
 			return url;
 		}
 	
@@ -5225,9 +5226,8 @@ const std::string LLVOAvatar::getImageURL(const U8 te, const LLUUID &uuid)
 		if (texture_entry != NULL)
 		{
 			url = appearance_service_url + "texture/" + getID().asString() + "/" + texture_entry->mDefaultImageName + "/" + uuid.asString();
-			//llinfos << "baked texture url: " << url << llendl;
+			//LL_INFOS() << "baked texture url: " << url << LL_ENDL;
 		}
-   }
 	return url;
 }
 
@@ -8213,20 +8213,12 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
         // stale versions.
 
         S32 aisCOFVersion(LLAppearanceMgr::instance().getCOFVersion());
-		if (getRegion() && (getRegion()->getCentralBakeVersion()==0))
-		{
-			LL_WARNS() << avString() << "Received AvatarAppearance message for self in non-server-bake region" << LL_ENDL;
-		}
-		if( mFirstTEMessageReceived && (appearance_version == 0))
-		{
-			return;
-		}
+
         LL_DEBUGS("Avatar") << "handling self appearance message #" << thisAppearanceVersion <<
             " (highest seen #" << mLastUpdateReceivedCOFVersion <<
             ") (AISCOF=#" << aisCOFVersion << ")" << LL_ENDL;
 
-        if (mLastUpdateReceivedCOFVersion >= thisAppearanceVersion
-						&& (appearance_version>0))
+        if (mLastUpdateReceivedCOFVersion >= thisAppearanceVersion)
         {
             LL_WARNS("Avatar") << "Stale appearance received #" << thisAppearanceVersion <<
                 " attempt to roll back from #" << mLastUpdateReceivedCOFVersion <<
@@ -8258,18 +8250,14 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 	// assumes that cof version is only updated with server-bake
 	// appearance messages.
     LL_INFOS("Avatar") << "Processing appearance message version " << thisAppearanceVersion << LL_ENDL;
-	if (appearance_version > 0)
-	{
-    // Note:
-    // locally the COF is maintained via LLInventoryModel::accountForUpdate
-    // which is called from various places.  This should match the simhost's 
-    // idea of what the COF version is.  AIS however maintains its own version
-    // of the COF that should be considered canonical. 
-    mLastUpdateReceivedCOFVersion = thisAppearanceVersion;
-	}
-		
-	setIsUsingServerBakes(appearance_version > 0);
 
+	// Note:
+        // locally the COF is maintained via LLInventoryModel::accountForUpdate
+        // which is called from various places.  This should match the simhost's 
+        // idea of what the COF version is.  AIS however maintains its own version
+        // of the COF that should be considered canonical. 
+        mLastUpdateReceivedCOFVersion = thisAppearanceVersion;
+		
     mLastProcessedAppearance = contents;
 
     bool slam_params = false;
@@ -8286,7 +8274,6 @@ void LLVOAvatar::applyParsedAppearanceMessage(LLAppearanceMessageContents& conte
         updateVisualComplexity();
     }
 
-	// prevent the overwriting of valid baked textures with invalid baked textures
 	// prevent the overwriting of valid baked textures with invalid baked textures
 	for (U8 baked_index = 0; baked_index < mBakedTextureDatas.size(); baked_index++)
 	{
@@ -8906,6 +8893,7 @@ void LLVOAvatar::dumpArchetypeXML(const std::string& prefix, bool group_by_weara
 	{
 		LLNotificationsUtil::add("AppearanceToXMLFailed");
 	}
+	// File will close when handle goes out of scope
 }
 
 
