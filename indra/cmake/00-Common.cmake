@@ -111,7 +111,7 @@ if (LINUX)
 
   add_definitions(-D_FORTIFY_SOURCE=2)
 
-  set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-unused-but-set-variable -Wno-unused-variable ${CMAKE_CXX_FLAGS}")
+  set(CMAKE_CXX_FLAGS "-Wno-deprecated -Wno-unused-but-set-variable -Wno-unused-variable -Wno-placement-new ${CMAKE_CXX_FLAGS}")
 
   add_definitions(
       -D_REENTRANT
