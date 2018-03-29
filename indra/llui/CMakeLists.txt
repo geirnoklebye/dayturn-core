@@ -15,7 +15,6 @@ include(LLWindow)
 include(LLCoreHttp)
 include(LLVFS)
 include(LLXML)
-include(Teapot)
 
 include_directories(
     ${LLCOMMON_INCLUDE_DIRS}

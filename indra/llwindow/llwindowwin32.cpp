@@ -1103,7 +1103,7 @@ BOOL LLWindowWin32::switchContext(BOOL fullscreen, const LLCoordScreen &size, BO
 
 	if (mWindowHandle)
 	{
-	LL_INFOS("Window") << "window is created." << LL_ENDL ;
+		LL_INFOS("Window") << "window is created." << LL_ENDL ;
 	}
 	else
 	{
@@ -1426,7 +1426,7 @@ BOOL LLWindowWin32::switchContext(BOOL fullscreen, const LLCoordScreen &size, BO
 
 		if (mWindowHandle)
 		{
-		LL_INFOS("Window") << "recreate window done." << LL_ENDL ;
+			LL_INFOS("Window") << "recreate window done." << LL_ENDL ;
 		}
 		else
 		{
@@ -3199,6 +3199,7 @@ void LLSplashScreenWin32::showImpl()
 		(DLGPROC) LLSplashScreenWin32::windowProc); 
 	ShowWindow(mWindow, SW_SHOW);
 }
+
 
 void LLSplashScreenWin32::updateImpl(const std::string& mesg)
 {

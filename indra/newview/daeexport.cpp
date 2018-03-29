@@ -544,15 +544,12 @@ void DAESaver::updateTextureInfo()
 			LLViewerFetchedTexture* imagep = LLViewerTextureManager::getFetchedTexture(id);
 			std::string name;
 			std::string description;
-			if (LLGridManager::getInstance()->isInSecondLife())
+			if (imagep->mComment.find("a") != imagep->mComment.end())
 			{
-				if (imagep->mComment.find("a") != imagep->mComment.end())
+				if (LLUUID(imagep->mComment["a"]) == gAgentID)
 				{
-					if (LLUUID(imagep->mComment["a"]) == gAgentID)
-					{
-						exportable = true;
-						LL_DEBUGS("export") << id <<  " passed texture export comment check." << LL_ENDL;
-					}
+					exportable = true;
+					LL_DEBUGS("export") << id <<  " passed texture export comment check." << LL_ENDL;
 				}
 			}
 			if (exportable)

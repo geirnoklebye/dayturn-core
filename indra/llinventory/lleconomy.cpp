@@ -93,7 +93,7 @@ void LLBaseEconomy::processEconomyData(LLMessageSystem *msg, LLBaseEconomy* econ
 	econ_data->setPricePublicObjectDelete(i);
 	msg->getS32Fast(_PREHASH_Info, _PREHASH_PriceUpload, i);
 	econ_data->setPriceUpload(i);
-#if 0 //LL_LINUX  o.O What is this? Anyway NOT supported in Teapot >_>
+#if LL_LINUX
 	// We can optionally fake the received upload price for testing.
 	// Note that the server is within its rights to not obey our fake
 	// price. :)

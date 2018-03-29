@@ -56,7 +56,7 @@ S32Bytes LLImageGL::sBoundTextureMemory(0);
 S32Bytes LLImageGL::sCurBoundTextureMemory(0);
 S32 LLImageGL::sCount					= 0;
 
-F32 LLImageGL::sGlobalAnisotropicSamples = 0.f;
+BOOL LLImageGL::sGlobalUseAnisotropic	= FALSE;
 F32 LLImageGL::sLastFrameTime			= 0.f;
 BOOL LLImageGL::sAllowReadBackRaw       = FALSE ;
 LLImageGL* LLImageGL::sDefaultGLTexture = NULL ;
@@ -804,12 +804,12 @@ BOOL LLImageGL::setImage(const U8* data_in, BOOL data_hasmips)
 						{
 
 #ifdef SHOW_ASSERT
-						llassert(prev_mip_data);
+							llassert(prev_mip_data);
 							llassert(cur_mip_size == bytes * 4);
 #endif
 
-						LLImageBase::generateMip(prev_mip_data, new_data, w, h, mComponents);
-						cur_mip_data = new_data;
+							LLImageBase::generateMip(prev_mip_data, new_data, w, h, mComponents);
+							cur_mip_data = new_data;
 #ifdef SHOW_ASSERT
 							cur_mip_size = bytes;
 #endif

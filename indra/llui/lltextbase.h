@@ -371,7 +371,6 @@ public:
 	virtual void	onFocusReceived();
 	virtual void	onFocusLost();
 
-
 	// LLSpellCheckMenuHandler overrides
 	/*virtual*/ bool		getSpellCheck() const;
 

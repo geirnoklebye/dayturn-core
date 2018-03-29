@@ -76,10 +76,10 @@
 #include "llviewerdisplay.h"
 #include "llviewerwindow.h"
 #include "llprogressview.h"
-#include "llviewernetwork.h" //SecondLife or Opensim -- Server or client bake
 #include "llcoros.h"
 #include "lleventcoro.h"
 #include "llcorehttputil.h"
+
 #ifdef LL_WINDOWS
 	#pragma warning(disable:4355)
 #endif
@@ -516,7 +516,7 @@ LLViewerRegion::LLViewerRegion(const U64 &handle,
 	mSimAccess( SIM_ACCESS_MIN ),
 	mBillableFactor(1.0),
 	mMaxTasks(DEFAULT_MAX_REGION_WIDE_PRIM_COUNT),
-	mCentralBakeVersion(0),
+	mCentralBakeVersion(1),
 	mClassID(0),
 	mCPURatio(0),
 	mColoName("unknown"),
@@ -527,7 +527,6 @@ LLViewerRegion::LLViewerRegion(const U64 &handle,
 	mCacheDirty(FALSE),
 	mReleaseNotesRequested(FALSE),
 	mCapabilitiesReceived(false),
-	mWidth(region_width_meters),
 	mSimulatorFeaturesReceived(false),
 	mBitsReceived(0.f),
 	mPacketsReceived(0.f),
@@ -538,6 +537,7 @@ LLViewerRegion::LLViewerRegion(const U64 &handle,
 	mRegionCacheHitCount(0),
 	mRegionCacheMissCount(0)
 {
+	mWidth = region_width_meters;
 	mImpl->mOriginGlobal = from_region_handle(handle); 
 	updateRenderMatrix();
 
@@ -547,7 +547,7 @@ LLViewerRegion::LLViewerRegion(const U64 &handle,
 	mImpl->mCompositionp =
 		new LLVLComposition(mImpl->mLandp,
 							grids_per_region_edge,
-							mWidth / grids_per_region_edge);
+							region_width_meters / grids_per_region_edge);
 	mImpl->mCompositionp->setSurface(mImpl->mLandp);
 
 	// Create the surfaces
@@ -557,18 +557,13 @@ LLViewerRegion::LLViewerRegion(const U64 &handle,
 					mImpl->mOriginGlobal,
 					mWidth);
 
-	mParcelOverlay = new LLViewerParcelOverlay(this, mWidth);
-	LLViewerParcelMgr::getInstance()->init(mWidth);
+	mParcelOverlay = new LLViewerParcelOverlay(this, region_width_meters);
 
 	setOriginGlobal(from_region_handle(handle));
 	calculateCenterGlobal();
 
 	// Create the object lists
 	initStats();
-	initPartitions();
-}
-void LLViewerRegion::initPartitions()
-{
 
 	//create object partitions
 	//MUST MATCH declaration of eObjectPartitions
@@ -587,16 +582,8 @@ void LLViewerRegion::initPartitions()
 	mImpl->mVOCachePartition = getVOCachePartition();
 
 	setCapabilitiesReceivedCallback(boost::bind(&LLAvatarRenderInfoAccountant::scanNewRegion, _1));
+}
 
-	mRenderInfoRequestTimer.resetWithExpiry(0.f);		// Set timer to be expired
-	setCapabilitiesReceivedCallback(boost::bind(&LLAvatarRenderInfoAccountant::expireRenderInfoReportTimer, _1));
-}
-void LLViewerRegion::reInitPartitions()
-{
-	std::for_each(mImpl->mObjectPartition.begin(), mImpl->mObjectPartition.end(), DeletePointer());
-	mImpl->mObjectPartition.clear();
-	initPartitions();
-}
 
 void LLViewerRegion::initStats()
 {
@@ -727,10 +714,6 @@ void LLViewerRegion::setWaterHeight(F32 water_level)
 	mImpl->mLandp->setWaterHeight(water_level);
 }
 
-void LLViewerRegion::rebuildWater()
-{
-	mImpl->mLandp->rebuildWater();
-}
 F32 LLViewerRegion::getWaterHeight() const
 {
 	return mImpl->mLandp->getWaterHeight();
@@ -1748,11 +1731,11 @@ LLVLComposition * LLViewerRegion::getComposition() const
 
 F32 LLViewerRegion::getCompositionXY(const S32 x, const S32 y) const
 {
-	if (x >= mWidth)
+	if (x >= 256)
 	{
-		if (y >= mWidth)
+		if (y >= 256)
 		{
-			LLVector3d center = getCenterGlobal() + LLVector3d(mWidth, mWidth, 0.f);
+			LLVector3d center = getCenterGlobal() + LLVector3d(256.f, 256.f, 0.f);
 			LLViewerRegion *regionp = LLWorld::getInstance()->getRegionFromPosGlobal(center);
 			if (regionp)
 			{
@@ -1761,8 +1744,8 @@ F32 LLViewerRegion::getCompositionXY(const S32 x, const S32 y) const
 				// If we're attempting to blend, then we want to make the fractional part of
 				// this region match the fractional of the adjacent.  For now, just minimize
 				// the delta.
-				F32 our_comp = getComposition()->getValueScaled(mWidth-1.f, mWidth-1.f);
-				F32 adj_comp = regionp->getComposition()->getValueScaled(x - regionp->getWidth(), y - regionp->getWidth());
+				F32 our_comp = getComposition()->getValueScaled(255, 255);
+				F32 adj_comp = regionp->getComposition()->getValueScaled(x - 256.f, y - 256.f);
 				while (llabs(our_comp - adj_comp) >= 1.f)
 				{
 					if (our_comp > adj_comp)
@@ -1779,7 +1762,7 @@ F32 LLViewerRegion::getCompositionXY(const S32 x, const S32 y) const
 		}
 		else
 		{
-			LLVector3d center = getCenterGlobal() + LLVector3d(mWidth, 0.f, 0.f);
+			LLVector3d center = getCenterGlobal() + LLVector3d(256.f, 0, 0.f);
 			LLViewerRegion *regionp = LLWorld::getInstance()->getRegionFromPosGlobal(center);
 			if (regionp)
 			{
@@ -1788,8 +1771,8 @@ F32 LLViewerRegion::getCompositionXY(const S32 x, const S32 y) const
 				// If we're attempting to blend, then we want to make the fractional part of
 				// this region match the fractional of the adjacent.  For now, just minimize
 				// the delta.
-				F32 our_comp = getComposition()->getValueScaled(mWidth-1.f, (F32)y);
-				F32 adj_comp = regionp->getComposition()->getValueScaled(x - regionp->getWidth(), (F32)y);
+				F32 our_comp = getComposition()->getValueScaled(255.f, (F32)y);
+				F32 adj_comp = regionp->getComposition()->getValueScaled(x - 256.f, (F32)y);
 				while (llabs(our_comp - adj_comp) >= 1.f)
 				{
 					if (our_comp > adj_comp)
@@ -1805,9 +1788,9 @@ F32 LLViewerRegion::getCompositionXY(const S32 x, const S32 y) const
 			}
 		}
 	}
-	else if (y >= mWidth)
+	else if (y >= 256)
 	{
-		LLVector3d center = getCenterGlobal() + LLVector3d(0.f, mWidth, 0.f);
+		LLVector3d center = getCenterGlobal() + LLVector3d(0.f, 256.f, 0.f);
 		LLViewerRegion *regionp = LLWorld::getInstance()->getRegionFromPosGlobal(center);
 		if (regionp)
 		{
@@ -1816,8 +1799,8 @@ F32 LLViewerRegion::getCompositionXY(const S32 x, const S32 y) const
 			// If we're attempting to blend, then we want to make the fractional part of
 			// this region match the fractional of the adjacent.  For now, just minimize
 			// the delta.
-			F32 our_comp = getComposition()->getValueScaled((F32)x, mWidth-1.f);
-			F32 adj_comp = regionp->getComposition()->getValueScaled((F32)x, y - regionp->getWidth());
+			F32 our_comp = getComposition()->getValueScaled((F32)x, 255.f);
+			F32 adj_comp = regionp->getComposition()->getValueScaled((F32)x, y - 256.f);
 			while (llabs(our_comp - adj_comp) >= 1.f)
 			{
 				if (our_comp > adj_comp)
@@ -2744,14 +2727,9 @@ void LLViewerRegion::unpackRegionHandshake()
 		mProductSKU = productSKU;
 		mProductName = productName;
 	}
-	if (LLGridManager::getInstance()->isInSecondLife())
-	{
-		mCentralBakeVersion = region_protocols & 1; // was (S32)gSavedSettings.getBOOL("UseServerTextureBaking");
-	}
-	else
-	{
-		mCentralBakeVersion = region_protocols & 0; // was (S32)gSavedSettings.getBOOL("UseServerTextureBaking");
-	}
+
+
+	mCentralBakeVersion = region_protocols & 1; // was (S32)gSavedSettings.getBOOL("UseServerTextureBaking");
 	LLVLComposition *compp = getComposition();
 	if (compp)
 	{
@@ -2873,8 +2851,6 @@ void LLViewerRegionImpl::buildCapabilityNames(LLSD& capabilityNames)
 	capabilityNames.append("DispatchRegionInfo");
 	capabilityNames.append("DirectDelivery");
 	capabilityNames.append("EnvironmentSettings");
-	capabilityNames.append("DispatchOpenRegionSettings");
-	//capabilityNames.append("DispatchWindLightSettings"); // now using EnvironmentSettings for windlight settings
 	capabilityNames.append("EstateChangeInfo");
 	capabilityNames.append("EventQueueGet");
 	capabilityNames.append("FacebookConnect");

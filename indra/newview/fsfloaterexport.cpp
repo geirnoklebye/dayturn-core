@@ -626,15 +626,12 @@ bool FSFloaterObjectExport::exportTexture(const LLUUID& texture_id)
 	std::string name;
 	std::string description;
 	
-	if (LLGridManager::getInstance()->isInSecondLife())
+	if (imagep->mComment.find("a") != imagep->mComment.end())
 	{
-		if (imagep->mComment.find("a") != imagep->mComment.end())
+		if (LLUUID(imagep->mComment["a"]) == gAgentID)
 		{
-			if (LLUUID(imagep->mComment["a"]) == gAgentID)
-			{
-				texture_export = true;
-				LL_DEBUGS("export") << texture_id <<  " pass texture export comment check." << LL_ENDL;
-			}
+			texture_export = true;
+			LL_DEBUGS("export") << texture_id <<  " pass texture export comment check." << LL_ENDL;
 		}
 	}
 
@@ -728,27 +725,8 @@ void FSFloaterObjectExport::inventoryChanged(LLViewerObject* object, LLInventory
 
 		bool exportable = false;
 		LLPermissions perms = item->getPermissions();
-#ifdef OPENSIM
-		if (LLGridManager::getInstance()->isInOpenSim())
-		{
-			switch (LFSimFeatureHandler::instance().exportPolicy())
-			{
-				case EXPORT_ALLOWED:
-					exportable = (perms.getMaskOwner() & PERM_EXPORT) == PERM_EXPORT;
-					break;
-					/// TODO: Once enough grids adopt a version supporting exports, get consensus
-					/// on whether we should allow full perm exports anymore.
-				case EXPORT_UNDEFINED:
-					exportable = (perms.getMaskBase() & PERM_ITEM_UNRESTRICTED) == PERM_ITEM_UNRESTRICTED;
-					break;
-				case EXPORT_DENIED:
-				default:
-					exportable = perms.getCreator() == gAgentID;
-					break;
-			}
-		}
-#endif
-		if (LLGridManager::getInstance()->isInSecondLife() && (perms.getCreator() == gAgentID))
+
+		if (perms.getCreator() == gAgentID)
 		{
 			exportable = true;
 		}
@@ -1005,15 +983,12 @@ void FSFloaterObjectExport::updateTextureInfo()
 			LLViewerFetchedTexture* imagep = LLViewerTextureManager::getFetchedTexture(id);
 			std::string name;
 			std::string description;
-			if (LLGridManager::getInstance()->isInSecondLife())
+			if (imagep->mComment.find("a") != imagep->mComment.end())
 			{
-				if (imagep->mComment.find("a") != imagep->mComment.end())
+				if (LLUUID(imagep->mComment["a"]) == gAgentID)
 				{
-					if (LLUUID(imagep->mComment["a"]) == gAgentID)
-					{
-						exportable = true;
-						LL_DEBUGS("export") << id <<  " passed texture export comment check." << LL_ENDL;
-					}
+					exportable = true;
+					LL_DEBUGS("export") << id <<  " passed texture export comment check." << LL_ENDL;
 				}
 			}
 			if (exportable)

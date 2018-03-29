@@ -204,7 +204,6 @@
 #include "llcleanup.h"
 
 #include "llstacktrace.h"
-#include "tea.h"
 
 #if LL_WINDOWS
 #include "lldxhardware.h"
@@ -240,7 +239,6 @@ static bool gUseCircuitCallbackCalled = false;
 
 EStartupState LLStartUp::gStartupState = STATE_FIRST;
 LLSLURL LLStartUp::sStartSLURL;
-std::string LLStartUp::sStartSLURLString;
 
 static LLPointer<LLCredential> gUserCredential;
 static std::string gDisplayName;
@@ -283,7 +281,7 @@ LLSD transform_cert_args(LLPointer<LLCertificate> cert);
 void general_cert_done(const LLSD& notification, const LLSD& response);
 void trust_cert_done(const LLSD& notification, const LLSD& response);
 void apply_udp_blacklist(const std::string& csv);
-bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y);
+bool process_login_success_response();
 void transition_back_to_login_panel(const std::string& emsg);
 
 void callback_cache_name(const LLUUID& id, const std::string& full_name, bool is_group)
@@ -304,143 +302,6 @@ void callback_cache_name(const LLUUID& id, const std::string& full_name, bool is
 // local classes
 //
 
-// <AW: opensim>
-static bool sGridListRequestReady = false;
-void downloadGridlistComplete( LLSD const &aData )
-{
-	LL_DEBUGS() << aData << LL_ENDL;
-	
-	LLSD header = aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ][ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_HEADERS];
-
-	LLDate lastModified;
-	if (header.has("last-modified"))
-	{
-		lastModified.secondsSinceEpoch( FSCommon::secondsSinceEpochFromString( "%a, %d %b %Y %H:%M:%S %ZP", header["last-modified"].asString() ) );
- 	}
-	LLSD data = aData;
-	data.erase( LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS );
-	
-	std::string filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "grids.remote.xml");
-
-	llofstream out_file;
-	out_file.open(filename.c_str());
-	LLSDSerialize::toPrettyXML( aData, out_file);
-	out_file.close();
-	LL_INFOS() << "GridListRequest: got new list." << LL_ENDL;
-	sGridListRequestReady = true;
-}
-void downloadGridlistError( LLSD const &aData, std::string const &aURL )
-{
-	LL_WARNS() << "Failed to download grid list from " << aURL << LL_ENDL;
-}
-
-void downloadGridstatusComplete( LLSD const &aData )
-{
-	LLSD header = aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ][ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_HEADERS];
-    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD( aData[ LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS ] );
-
-    const LLSD::Binary &rawData = aData[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_RAW].asBinary();
-
-	if( status.getType())
-	{
-		if (status.getType() == HTTP_INTERNAL_ERROR)
-		{
-			report_to_nearby_chat(LLTrans::getString("SLGridStatusTimedOut"));
-		}
-		else
-		{
-			LLStringUtil::format_map_t args;
-			args["STATUS"] = llformat("%d", status.getType());
-			report_to_nearby_chat(LLTrans::getString("SLGridStatusOtherError", args));
-		}
-		LL_WARNS("SLGridStatusResponder") << "Error - status " << status.getType() << LL_ENDL;
-		return;
-	}
-	if (rawData.size() == 0)
-	{
-		report_to_nearby_chat(LLTrans::getString("SLGridStatusInvalidMsg"));
-		LL_WARNS("SLGridStatusResponder") << "Error - empty output" << LL_ENDL;
-		return;
-	}
-	std::string fetchedNews;
-	fetchedNews.assign( rawData.begin(), rawData.end() );
-	size_t itemStart = fetchedNews.find("<item>");
-	size_t itemEnd = fetchedNews.find("</item>");
-	if (itemEnd != std::string::npos && itemStart != std::string::npos)
-	{
-		// Isolate latest news data
-		itemStart += 6;
-		std::string theNews = fetchedNews.substr(itemStart, itemEnd - itemStart);
-		// Check for and remove CDATA characters if they're present
-		size_t titleStart = theNews.find("<title><![CDATA[");
-		if (titleStart != std::string::npos)
-		{
-			theNews.replace(titleStart, 16, "<title>");
-		}
-		size_t titleEnd = theNews.find("]]></title>");
-		if (titleEnd != std::string::npos)
-		{
-			theNews.replace(titleEnd, 11, "</title>");
-		}
-		size_t descStart = theNews.find("<description><![CDATA[");
-		if (descStart != std::string::npos)
-		{
-			theNews.replace(descStart, 22, "<description>");
-		}
-		size_t descEnd = theNews.find("]]></description>");
-		if (descEnd != std::string::npos)
-		{
-			theNews.replace(descEnd, 17, "</description>");
-		}
-		size_t linkStart = theNews.find("<link><![CDATA[");
-		if (linkStart != std::string::npos)
-		{
-			theNews.replace(linkStart, 15, "<link>");
-		}
-		size_t linkEnd = theNews.find("]]></link>");
-		if (linkEnd != std::string::npos)
-		{
-			theNews.replace(linkEnd, 10, "</link>");
-		}
-		// Get indexes
-		titleStart = theNews.find("<title>");
-		descStart = theNews.find("<description>");
-		linkStart = theNews.find("<link>");
-		titleEnd = theNews.find("</title>");
-		descEnd = theNews.find("</description>");
-		linkEnd = theNews.find("</link>");
-
-		if (titleStart != std::string::npos &&
-			descStart != std::string::npos &&
-			linkStart != std::string::npos &&
-			titleEnd != std::string::npos &&
-			descEnd != std::string::npos &&
-			linkEnd != std::string::npos)
-		{
-			titleStart = 7;
-			descStart = 13;
-			linkStart = 6;
-			std::string newsTitle = theNews.substr(titleStart, titleEnd - titleStart);
-			std::string newsDesc = theNews.substr(descStart, descEnd - descStart);
-			std::string newsLink = theNews.substr(linkStart, linkEnd - linkStart);
-			LLStringUtil::trim(newsTitle);
-			LLStringUtil::trim(newsDesc);
-			LLStringUtil::trim(newsLink);
-			report_to_nearby_chat("[ " + newsTitle + " ] " + newsDesc + " [ " + newsLink + " ]");
-		}
-		else
-		{
-			report_to_nearby_chat(LLTrans::getString("SLGridStatusInvalidMsg"));
-			LL_WARNS("SLGridStatusResponder") << "Error - inner tag(s) missing" << LL_ENDL;
-		}
-	}
-	else
-	{
-		report_to_nearby_chat(LLTrans::getString("SLGridStatusInvalidMsg"));
-		LL_WARNS("SLGridStatusResponder") << "Error - output without </item>" << LL_ENDL;
-	}
-}
-// </AW: opensim>
 // <FS:Ansariel> Check for test build expiration
 bool is_testbuild_expired()
 {
@@ -515,8 +376,6 @@ bool idle_startup()
 	static std::string auth_desc;
 	static std::string auth_message;
 
-	static U32 first_sim_size_x = 256;
-	static U32 first_sim_size_y = 256;
 	static LLVector3 initial_sun_direction(1.f, 0.f, 0.f);
 	static LLVector3 agent_start_position_region(10.f, 10.f, 10.f);		// default for when no space server
 
@@ -793,6 +652,7 @@ bool idle_startup()
 		}
 
 		LL_INFOS("AppInit") << "Message System Initialized." << LL_ENDL;
+
 		//-------------------------------------------------
 		// Init audio, which may be needed for prefs dialog
 		// or audio cues in connection UI.
@@ -911,7 +771,7 @@ bool idle_startup()
 		// LLViewerMedia::initBrowser();
 		show_release_notes_if_required();
 		LLStartUp::setStartupState( STATE_LOGIN_SHOW );
-//		return FALSE;
+		return FALSE;
 	}
 
 
@@ -1219,7 +1079,7 @@ bool idle_startup()
 
 	if(STATE_LOGIN_AUTH_INIT == LLStartUp::getStartupState())
 	{
-		gDebugInfo["GridName"] = LLGridManager::getInstance()->getGridLabel();
+		gDebugInfo["GridName"] = LLGridManager::getInstance()->getGridId();
 
 		// Update progress status and the display loop.
 		auth_desc = LLTrans::getString("LoginInProgress");
@@ -1238,6 +1098,7 @@ bool idle_startup()
 		// This call to LLLoginInstance::connect() starts the 
 		// authentication process.
 		login->connect(gUserCredential);
+
 		LLStartUp::setStartupState( STATE_LOGIN_CURL_UNSTUCK );
 		return FALSE;
 	}
@@ -1373,7 +1234,7 @@ bool idle_startup()
 		}
 		else if(LLLoginInstance::getInstance()->authSuccess())
 		{
-			if(process_login_success_response(first_sim_size_x,first_sim_size_y))
+			if(process_login_success_response())
 			{
 				// Pass the user information to the voice chat server interface.
 				LLVoiceClient::getInstance()->userAuthorized(gUserCredential->userID(), gAgentID);
@@ -1471,7 +1332,7 @@ bool idle_startup()
 		gAgent.initOriginGlobal(from_region_handle(gFirstSimHandle));
 		display_startup();
 
-		LLWorld::getInstance()->addRegion(gFirstSimHandle, gFirstSim, first_sim_size_x, first_sim_size_y);
+		LLWorld::getInstance()->addRegion(gFirstSimHandle, gFirstSim);
 		display_startup();
 
 		LLViewerRegion *regionp = LLWorld::getInstance()->getRegionFromHandle(gFirstSimHandle);
@@ -2239,7 +2100,7 @@ bool idle_startup()
 	{
 		display_startup();
 		F32 timeout_frac = timeout.getElapsedTimeF32()/PRECACHING_DELAY;
-
+		
 		// We now have an inventory skeleton, so if this is a user's first
 		// login, we can start setting up their clothing and avatar 
 		// appearance.  This helps to avoid the generic "Ruth" avatar in
@@ -2262,7 +2123,6 @@ bool idle_startup()
 			gAgentWearables.sendDummyAgentWearablesUpdate();
 			callAfterCategoryFetch(LLAppearanceMgr::instance().getCOF(), set_flags_and_update_appearance);
 		}
-
 
 		display_startup();
 
@@ -2304,9 +2164,9 @@ bool idle_startup()
 
 		if (!gAgent.isOutfitChosen() && isAgentAvatarValid())
 		{
-			// No point in waiting for clothing, we don't even
-			// know what gender we are.  Pop a dialog to ask and
-			// proceed to draw the world. JC
+			// No point in waiting for clothing, we don't even know
+			// what outfit we want.  Pop up a gender chooser dialog to
+			// ask and proceed to draw the world. JC
 			//
 			// *NOTE: We might hit this case even if we have an
 			// initial outfit, but if the load hasn't started
@@ -2445,7 +2305,6 @@ void login_show()
 {
 	LL_INFOS("AppInit") << "Initializing Login Screen" << LL_ENDL;
 
-
 	// Hide the toolbars: may happen to come back here if login fails after login agent but before login in region
 	if (gToolBarView)
 	{
@@ -2453,7 +2312,6 @@ void login_show()
 	}
 	
 	LLPanelLogin::show(	gViewerWindow->getWindowRectScaled(), login_callback, NULL );
-
 }
 
 // Callback for when login screen is closed.  Option 0 = connect, option 1 = quit.
@@ -2616,8 +2474,6 @@ void register_viewer_callbacks(LLMessageSystem* msg)
 	msg->setHandlerFuncFast(_PREHASH_RemoveNameValuePair,	process_remove_name_value);
 	msg->setHandlerFuncFast(_PREHASH_AvatarAnimation,		process_avatar_animation);
 	msg->setHandlerFuncFast(_PREHASH_AvatarAppearance,		process_avatar_appearance);
-	msg->setHandlerFunc("AgentCachedTextureResponse",	LLAgent::processAgentCachedTextureResponse);
-	msg->setHandlerFunc("RebakeAvatarTextures", LLVOAvatarSelf::processRebakeAvatarTextures);
 	msg->setHandlerFuncFast(_PREHASH_CameraConstraint,		process_camera_constraint);
 	msg->setHandlerFuncFast(_PREHASH_AvatarSitResponse,		process_avatar_sit_response);
 	msg->setHandlerFunc("SetFollowCamProperties",			process_set_follow_cam_properties);
@@ -2625,7 +2481,7 @@ void register_viewer_callbacks(LLMessageSystem* msg)
 
 	msg->setHandlerFuncFast(_PREHASH_ImprovedInstantMessage,	process_improved_im);
 	msg->setHandlerFuncFast(_PREHASH_ScriptQuestion,			process_script_question);
-	msg->setHandlerFuncFast(_PREHASH_ObjectProperties,		process_object_properties, NULL);
+	msg->setHandlerFuncFast(_PREHASH_ObjectProperties,			LLSelectMgr::processObjectProperties, NULL);
 	msg->setHandlerFuncFast(_PREHASH_ObjectPropertiesFamily,	LLSelectMgr::processObjectPropertiesFamily, NULL);
 	msg->setHandlerFunc("ForceObjectSelect", LLSelectMgr::processForceObjectSelect);
 
@@ -2690,9 +2546,6 @@ void register_viewer_callbacks(LLMessageSystem* msg)
 	// ratings deprecated
 	// msg->setHandlerFuncFast(_PREHASH_ReputationIndividualReply,
 	//					LLFloaterRate::processReputationIndividualReply);
-
-	msg->setHandlerFuncFast(_PREHASH_AgentWearablesUpdate,
-						LLAgentWearables::processAgentInitialWearablesUpdate );
 
 	msg->setHandlerFunc("ScriptControlChange",
 						LLAgent::processScriptControlChange );
@@ -2858,7 +2711,7 @@ void LLStartUp::loadInitialOutfit( const std::string& outfit_folder_name,
 		LL_DEBUGS() << "initial outfit category id: " << cat_id << LL_ENDL;
 	}
 
-//	gAgent.setOutfitChosen(TRUE);
+	gAgent.setOutfitChosen(TRUE);
 	gAgentWearables.sendDummyAgentWearablesUpdate();
 }
 
@@ -2961,7 +2814,6 @@ std::string LLStartUp::startupStateToString(EStartupState state)
 #define RTNENUM(E) case E: return #E
 	switch(state){
 		RTNENUM( STATE_FIRST );
-		RTNENUM( STATE_FETCH_GRID_INFO);
 		RTNENUM( STATE_AUDIO_INIT);
 		RTNENUM( STATE_BROWSER_INIT );
 		RTNENUM( STATE_LOGIN_SHOW );
@@ -3131,23 +2983,24 @@ bool LLStartUp::dispatchURL()
 
 void LLStartUp::setStartSLURL(const LLSLURL& slurl) 
 {
-  sStartSLURL = slurl;
-  switch(slurl.getType())
-  {
-    case LLSLURL::HOME_LOCATION:
+	LL_DEBUGS("AppInit")<<slurl.asString()<<LL_ENDL;
+
+	if ( slurl.isSpatial() )
 	{
-		  gSavedSettings.setString("LoginLocation", LLSLURL::SIM_LOCATION_HOME);
-	break;
+		std::string new_start = slurl.getSLURLString();
+		LL_DEBUGS("AppInit")<<new_start<<LL_ENDL;
+		sStartSLURL = slurl;
+		LLPanelLogin::onUpdateStartSLURL(slurl); // updates grid if needed
+
+		// remember that this is where we wanted to log in...if the login fails,
+		// the next attempt will default to the same place.
+		gSavedSettings.setString("NextLoginLocation", new_start);
+		// following a successful login, this is cleared
+		// and the default reverts to LoginLocation
 	}
-    case LLSLURL::LAST_LOCATION:
+	else
 	{
-	gSavedSettings.setString("LoginLocation", LLSLURL::SIM_LOCATION_LAST);
-	break;
-	}
-    default:
-			LLGridManager::getInstance()->setGridChoice(slurl.getGrid());
-			gSavedSettings.setString("NextLoginLocation", slurl.getSLURLString());
-			break;
+		LL_WARNS("AppInit")<<"Invalid start SLURL (ignored): "<<slurl.asString()<<LL_ENDL;
 	}
 }
 
@@ -3439,7 +3292,7 @@ void apply_udp_blacklist(const std::string& csv)
 	
 }
 
-bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y)
+bool process_login_success_response()
 {
 	LLSD response = LLLoginInstance::getInstance()->getResponse();
 
@@ -3565,9 +3418,7 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 	if(!sim_ip_str.empty() && !sim_port_str.empty())
 	{
 		U32 sim_port = strtoul(sim_port_str.c_str(), NULL, 10);
-		//gFirstSim.set(sim_ip_str, sim_port);
-		gFirstSim.setHostByName(sim_ip_str);
-		gFirstSim.setPort(sim_port);
+		gFirstSim.set(sim_ip_str, sim_port);
 		if (gFirstSim.isOk())
 		{
 			gMessageSystem->enableCircuit(gFirstSim, TRUE);
@@ -3582,15 +3433,6 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 		gFirstSimHandle = to_region_handle(region_x, region_y);
 	}
 	
-	text = response["region_size_x"].asString();
-	if(!text.empty()) {
-		first_sim_size_x = strtoul(text.c_str(), NULL, 10);
-		LLViewerParcelMgr::getInstance()->init(first_sim_size_x);
-	}
-
-	//region Y size is currently unused, major refactoring required. - Patrick Sapinski (2/10/2011)
-	text = response["region_size_y"].asString();
-	if(!text.empty()) first_sim_size_y = strtoul(text.c_str(), NULL, 10);
 	const std::string look_at_str = response["look_at"];
 	if (!look_at_str.empty())
 	{
@@ -3674,7 +3516,11 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 		flag = login_flags["gendered"].asString();
 		if(flag == "Y")
 		{
-			gAgent.setOutfitChosen(TRUE);
+			// We don't care about this flag anymore; now base whether
+			// outfit is chosen on COF contents, initial outfit
+			// requested and available, etc.
+
+			//gAgent.setGenderChosen(TRUE);
 		}
 		
 		bool pacific_daylight_time = false;
@@ -3698,7 +3544,7 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 
 	// Request the map server url
 	// Non-agni grids have a different default location.
-	if (LLGridManager::getInstance()->isInSLBeta())
+	if (!LLGridManager::getInstance()->isInProductionGrid())
 	{
 		gSavedSettings.setString("MapServerURL", "http://test.map.secondlife.com.s3.amazonaws.com/");
 	}
@@ -3732,31 +3578,7 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 		LL_INFOS("LLStartup") << "web_profile_url : no web_profile_url answer, we use the default setting for the web : " << web_profile_url << LL_ENDL;
 	}
 
-#ifdef OPENSIM	
-// <FS:CR> FIRE-10567 - Set classified fee, if it's available.
 
-	if (response.has("classified_fee"))
-	{
-		S32 classified_fee = response["classified_fee"];
-		LL_INFOS("LLStartup") << "Classified fee from server " << classified_fee << LL_ENDL;
-		LLGridManager::getInstance()->setClassifiedFee(classified_fee);
-	}
-	else
-	{
-		LLGridManager::getInstance()->setClassifiedFee(0);	// Free is a sensible default
-	}
-// <FS:CR> Set a parcel listing fee, if it's available
-	if (response.has("directory_fee"))
-	{
-		S32 directory_fee = response["directory_fee"];
-		LL_INFOS("LLStartup") << "Directory fee from server " << directory_fee << LL_ENDL;
-		LLGridManager::getInstance()->setDirectoryFee(directory_fee);
-	}
-	else
-	{
-		LLGridManager::getInstance()->setDirectoryFee(0);
-	}
-#endif // OPENSIM
 	// Default male and female avatars allowing the user to choose their avatar on first login.
 	// These may be passed up by SLE to allow choice of enterprise avatars instead of the standard
 	// "new ruth."  Not to be confused with 'initial-outfit' below 
@@ -3852,39 +3674,6 @@ bool process_login_success_response(U32 &first_sim_size_x, U32 &first_sim_size_y
 		LL_INFOS("LLStartup") << "Missing max-agent-groups, using default value for gMaxAgentGroups: "
 							  << gMaxAgentGroups << LL_ENDL;
 	}
-
-	std::string currency = "L$";
-	if(response.has("currency"))
-	{
-		currency = response["currency"].asString();
-		LL_DEBUGS("OS_SETTINGS") << "currency " << currency << LL_ENDL;
-	}
-	else if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		currency = "T$";
-		LL_DEBUGS("OS_SETTINGS") << "no currency in login response" << LL_ENDL;
-	}
-	Tea::setCurrency(currency);
-
-
-	if(response.has("profile-server-url"))
-	{
-		LL_DEBUGS("OS_SETTINGS") << "profile-server-url " << response["profile-server-url"] << LL_ENDL;
-	}
-	else if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		LL_DEBUGS("OS_SETTINGS") << "no profile-server-url in login response" << LL_ENDL;	
-	}
-
-	if(response.has("search"))
-	{
-		LL_DEBUGS("OS_SETTINGS") << "search " << response["search"] << LL_ENDL;
-	}
-	else if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		LL_DEBUGS("OS_SETTINGS") << "no search url in login response" << LL_ENDL;
-	}
-
 		
 	bool success = false;
 	// JC: gesture loading done below, when we have an asset system

@@ -251,15 +251,15 @@ void LLFloaterIMNearbyChatToastPanel::init(LLSD& notification)
 	{
 		if (*it == '\n')
 			++lines;
-			else
+		else
 			++chars;
 
 		if (chars >= chars_in_line)
-			{
+		{
 			chars = 0;
 			++lines;
-			}
 		}
+	}
 
 	if (it < messageText.end())
 	{

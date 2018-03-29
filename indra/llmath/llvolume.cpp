@@ -59,10 +59,7 @@
 const F32 MIN_CUT_DELTA = 0.02f;
 
 const F32 HOLLOW_MIN = 0.f;
-// <AW: opensim-limits>
-//const F32 HOLLOW_MAX = 0.95f;
-const F32 HOLLOW_MAX = 0.99f;
-// <AW: opensim-limits>
+const F32 HOLLOW_MAX = 0.95f;
 const F32 HOLLOW_MAX_SQUARE	= 0.7f;
 
 const F32 TWIST_MIN = -1.f;
@@ -70,16 +67,11 @@ const F32 TWIST_MAX =  1.f;
 
 const F32 RATIO_MIN = 0.f;
 const F32 RATIO_MAX = 2.f; // Tom Y: Inverted sense here: 0 = top taper, 2 = bottom taper
-// <AW: opensim-limits>
-//const F32 HOLE_X_MIN= 0.05f;
-const F32 HOLE_X_MIN= 0.01f;
-// <AW: opensim-limits>
+
+const F32 HOLE_X_MIN= 0.05f;
 const F32 HOLE_X_MAX= 1.0f;
 
-// <AW: opensim-limits>
-//const F32 HOLE_Y_MIN= 0.05f;
-const F32 HOLE_Y_MIN= 0.01f;
-// <AW: opensim-limits>
+const F32 HOLE_Y_MIN= 0.05f;
 const F32 HOLE_Y_MAX= 0.5f;
 
 const F32 SHEAR_MIN = -0.5f;
@@ -5215,7 +5207,7 @@ bool LLVolumeFace::cacheOptimize()
 	try
 	{
 		triangle_data.resize(mNumIndices / 3);
-	vertex_data.resize(mNumVertices);
+		vertex_data.resize(mNumVertices);
 	}
 	catch (std::bad_alloc)
 	{
@@ -5369,7 +5361,7 @@ bool LLVolumeFace::cacheOptimize()
 
 	try
 	{
-	new_idx.resize(mNumVertices, -1);
+		new_idx.resize(mNumVertices, -1);
 	}
 	catch (std::bad_alloc)
 	{

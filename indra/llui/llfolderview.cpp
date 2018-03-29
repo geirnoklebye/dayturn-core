@@ -1626,7 +1626,7 @@ void LLFolderView::update()
     {
         return;
     }
-    
+
 	LLFolderViewFilter& filter_object = getFolderViewModel()->getFilter();
 
 	if (filter_object.isModified() && filter_object.isNotDefault() && mParentPanel.get()->getVisible())

@@ -27,6 +27,7 @@
 #include "llviewerprecompiledheaders.h"
 
 #include "message.h"
+
 #include "lliconctrl.h"
 #include "llappviewer.h"
 #include "llchatentry.h"

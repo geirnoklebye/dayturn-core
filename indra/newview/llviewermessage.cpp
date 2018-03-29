@@ -50,7 +50,6 @@
 #include "llvfs.h"
 #include "llxfermanager.h"
 #include "mean_collision_data.h"
-#include "llviewernetwork.h"
 
 #include "llagent.h"
 #include "llagentcamera.h"
@@ -96,7 +95,6 @@
 #include "llviewermenu.h"
 #include "llviewerinventory.h"
 #include "llviewerjoystick.h"
-#include "llviewernetwork.h" // <FS:AW opensim currency support>
 #include "llviewerobjectlist.h"
 #include "llviewerparcelmgr.h"
 #include "llviewerstats.h"
@@ -122,7 +120,6 @@
 #include <boost/foreach.hpp>
 
 #include "llnotificationmanager.h" //
-#include "tea.h"
 #include "llexperiencecache.h"
 #include "llexperiencecache.h"
 
@@ -131,7 +128,6 @@
 #pragma warning (disable:4702)
 #endif
 
-#include "fslightshare.h" // <FS:CR> FIRE-5118 - Lightshare support
 #include "fsareasearch.h"
 
 extern void on_new_message(const LLSD& msg);
@@ -164,7 +160,6 @@ const F32 OFFER_THROTTLE_TIME=10.f; //time period in seconds
 const U8 AU_FLAGS_NONE      		= 0x00;
 const U8 AU_FLAGS_HIDETITLE      	= 0x01;
 const U8 AU_FLAGS_CLIENT_AUTOPILOT	= 0x02;
-
 
 bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
 {
@@ -2186,12 +2181,7 @@ static bool parse_lure_bucket(const std::string& bucket,
 							  LLVector3& pos,
 							  LLVector3& look_at,
 							  U8& region_access)
-{    
-	if (!gIsInSecondLife)
-	{
-	    return false;  // TODO make sure the bucket contains data when coming from OS. Empty bucket leads to a viewer crash on OS X. 
-	}
-    
+{
 	// tokenize the bucket
 	typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
 	boost::char_separator<char> sep("|", "", boost::keep_empty_tokens);
@@ -4029,19 +4019,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	msg->getU64Fast(_PREHASH_Info, _PREHASH_RegionHandle, region_handle);
 	U32 teleport_flags;
 	msg->getU32Fast(_PREHASH_Info, _PREHASH_TeleportFlags, teleport_flags);
-
-	U32 region_size_x = 256;
-	msg->getU32Fast(_PREHASH_Info, _PREHASH_RegionSizeX, region_size_x);
-
-	U32 region_size_y = 256;
-	msg->getU32Fast(_PREHASH_Info, _PREHASH_RegionSizeY, region_size_y);
-
-	//and a little hack for Second Life compatibility
-	if (region_size_y == 0 || region_size_x == 0)
-	{
-		region_size_x = 256;
-		region_size_y = 256;
-	}
+	
 	
 	std::string seedCap;
 	msg->getStringFast(_PREHASH_Info, _PREHASH_SeedCapability, seedCap);
@@ -4061,7 +4039,7 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 
 	// Viewer trusts the simulator.
 	gMessageSystem->enableCircuit(sim_host, TRUE);
-	LLViewerRegion* regionp =  LLWorld::getInstance()->addRegion(region_handle, sim_host, region_size_x, region_size_y);
+	LLViewerRegion* regionp =  LLWorld::getInstance()->addRegion(region_handle, sim_host);
 
 /*
 	// send camera update to new region
@@ -4116,14 +4094,6 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	effectp->setColor(LLColor4U(gAgent.getEffectColor()));
 	LLHUDManager::getInstance()->sendEffects();
 
-	// <FS:CR> FIRE-5118 - Lightshare support
-	if(gSimulatorType != "SecondLife")
-	{
-		FSLightshare::getInstance()->processLightshareRefresh();
-	}
-	// </FS:CR>
-
-
 //	gTeleportDisplay = TRUE;
 //	gTeleportDisplayTimer.reset();
 //	gViewerWindow->setShowProgress(TRUE);
@@ -4165,21 +4135,10 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 	msg->getVector3Fast(_PREHASH_Data, _PREHASH_LookAt, look_at);
 	U64 region_handle;
 	msg->getU64Fast(_PREHASH_Data, _PREHASH_RegionHandle, region_handle);
+	
 	std::string version_channel;
 	msg->getString("SimData", "ChannelVersion", version_channel);
-	//! gSimulatorType is set first in Grid Manager
-	//! if not a second life grid we extract first word of the Channel Version 
-	if (!(gSimulatorType == "SecondLife"))
-	{
-		const std::string delims (" ");
-		int begIdx, endIdx;
-		std::string simString =  version_channel;
-		begIdx = simString.find_first_not_of (delims);
-		endIdx = simString.find_first_of (delims, begIdx);
-		gSimulatorType = simString.substr (begIdx, endIdx - begIdx);
-	}
-	gIsInSecondLife = LLGridManager::getInstance()->isInSecondLife();
-	LL_INFOS("GridManager") << "Simulator Type : " << gSimulatorType << " Global isInSecondLife is: " << gIsInSecondLife << LL_ENDL;
+
 	if (!isAgentAvatarValid())
 	{
 		// Could happen if you were immediately god-teleported away on login,
@@ -4214,21 +4173,6 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 		gAgent.getRegion()->getOriginGlobal());
 	gAgent.setRegion(regionp);
 	gObjectList.shiftObjects(shift_vector);
-  // Is this a really long jump?
-  if (shift_vector.length() > 2048.f * 256.f)
-  {
-    regionp->reInitPartitions();
-    gAgent.setRegion(regionp);
-    // Kill objects in the regions we left behind
-    for (LLWorld::region_list_t::const_iterator r = LLWorld::getInstance()->getRegionList().begin();
-      r != LLWorld::getInstance()->getRegionList().end(); ++r)
-    {
-      if (*r != regionp)
-      {
-        gObjectList.killObjects(*r);
-      }
-    }
-  }
 	gAssetStorage->setUpstream(msg->getSender());
 	gCacheName->setUpstream(msg->getSender());
 	gViewerThrottle.sendToSim();
@@ -4250,10 +4194,6 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 		gAgentCamera.updateCamera();
 
 		gAgent.setTeleportState( LLAgent::TELEPORT_START_ARRIVAL );
-
-		// set the appearance on teleport since the new sim does not
-		// know what you look like.
-		gAgent.sendAgentSetAppearance();
 
 		if (isAgentAvatarValid())
 		{
@@ -4287,7 +4227,7 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 		LLVector3 beacon_dir(agent_pos.mV[VX] - (F32)fmod(beacon_pos.mdV[VX], 256.0), agent_pos.mV[VY] - (F32)fmod(beacon_pos.mdV[VY], 256.0), 0);
 		if (beacon_dir.magVecSquared() < 25.f)
 		{
-			LLTracker::stopTracking(NULL);
+			LLTracker::stopTracking(false);
 		}
 		else if ( is_teleport && !gAgent.getTeleportKeepsLookAt() && look_at.isExactlyZero())
 		{
@@ -4374,26 +4314,10 @@ void process_crossed_region(LLMessageSystem* msg, void**)
 	
 	std::string seedCap;
 	msg->getStringFast(_PREHASH_RegionData, _PREHASH_SeedCapability, seedCap);
-	U32 region_size_x = 256;
-	U32 region_size_y = 256;
-
-#ifdef OPENSIM
-	if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		msg->getU32(_PREHASH_RegionData, _PREHASH_RegionSizeX, region_size_x);
-		msg->getU32(_PREHASH_RegionData, _PREHASH_RegionSizeY, region_size_y);
-		//and a little hack for Second Life compatibility	
-		if (region_size_y == 0 || region_size_x == 0)
-		{
-			region_size_x = 256;
-			region_size_y = 256;
-		}
-	}
-#endif
 
 	send_complete_agent_movement(sim_host);
 
-	LLViewerRegion* regionp = LLWorld::getInstance()->addRegion(region_handle, sim_host, region_size_x, region_size_y);
+	LLViewerRegion* regionp = LLWorld::getInstance()->addRegion(region_handle, sim_host);
 
 	LL_DEBUGS("CrossingCaps") << "Calling setSeedCapability from process_crossed_region(). Seed cap == "
 			<< seedCap << LL_ENDL;
@@ -5027,20 +4951,7 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 		}
 		else
 		{
-			if ( gIsInSecondLife )
-			{
 			LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
-		}
-			else
-			if (stat_id == 16 || stat_id == 36 || stat_id == 37) //cut log spam on opensim
-			{
-				LL_WARNS_ONCE() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
-			}
-			else
-			{
-				LL_WARNS() << "Unknown sim stat identifier: " << stat_id << LL_ENDL;
-			}
-			
 		}
 	}
 
@@ -5515,7 +5426,7 @@ void process_money_balance_reply( LLMessageSystem* msg, void** )
 	msg->getS32("MoneyData", "SquareMetersCredit", credit);
 	msg->getS32("MoneyData", "SquareMetersCommitted", committed);
 	msg->getStringFast(_PREHASH_MoneyData, _PREHASH_Description, desc);
-	LL_INFOS("Messaging") << Tea::wrapCurrency("L$, credit, committed: ") << balance << " " << credit << " "
+	LL_INFOS("Messaging") << "L$, credit, committed: " << balance << " " << credit << " "
 			<< committed << LL_ENDL;
     
 	if (gStatusBar)

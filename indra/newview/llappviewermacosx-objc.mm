@@ -36,6 +36,7 @@
 void launchApplication(const std::string* app_name, const std::vector<std::string>* args)
 {
 
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
 	if (app_name->empty()) return;
 
@@ -67,5 +68,6 @@ void launchApplication(const std::string* app_name, const std::vector<std::strin
 //	[workspace launchApplicationAtURL:url options:0 configuration:[NSDictionary dictionaryWithObject:args_ns forKey:NSWorkspaceLaunchConfigurationArguments] error:&error];
 	//TODO Handle error
     
+    [pool release];
 	return;
 }

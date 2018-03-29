@@ -102,7 +102,6 @@
 #include "llmediaentry.h"
 #include "llfloaterperms.h"
 #include "llvocache.h"
-#include "llinventorymodel.h"
 #include "llcleanup.h"
 
 //#define DEBUG_UPDATE_TYPE
@@ -156,6 +155,7 @@ LLViewerObject *LLViewerObject::createObject(const LLUUID &id, const LLPCode pco
 			{
 				gAgentAvatarp = new LLVOAvatarSelf(id, pcode, regionp);
 				gAgentAvatarp->initInstance();
+				gAgentWearables.setAvatarObject(gAgentAvatarp);
 			}
 			else 
 			{
@@ -3400,17 +3400,8 @@ void LLViewerObject::setScale(const LLVector3 &scale, BOOL damped)
 
 	if( (LL_PCODE_VOLUME == getPCode()) && !isDead() )
 	{
-		static LLCachedControl<bool> minimap_physical(gSavedSettings, "MiniMapPhysical", false);
-		static LLCachedControl<bool> minimap_scripted(gSavedSettings, "MiniMapScripted", false);
-		static LLCachedControl<bool> minimap_temp_on_rez(gSavedSettings, "MiniMapTempOnRez", false);
-
-		if (
-			permYouOwner() ||
-			scale.magVecSquared() > (7.5f * 7.5f) ||
-			(minimap_physical && flagUsePhysics()) ||
-			(minimap_scripted && flagScripted()) ||
-			(minimap_temp_on_rez && flagTemporaryOnRez())
-		) {
+		if (permYouOwner() || (scale.magVecSquared() > (7.5f * 7.5f)) )
+		{
 			if (!mOnMap)
 			{
 				llassert_always(LLWorld::getInstance()->getRegionFromHandle(getRegion()->getHandle()));
@@ -3566,9 +3557,7 @@ F32 LLViewerObject::getBinRadius()
 
 F32 LLViewerObject::getMaxScale() const
 {
-	F32 max_xy = llmax(getScale().mV[VX], getScale().mV[VY]);
-	LLWorld::getInstance()->setInferredServerScale(max_xy, getScale().mV[VZ]);
-	return llmax(max_xy, getScale().mV[VZ]);
+	return llmax(getScale().mV[VX],getScale().mV[VY], getScale().mV[VZ]);
 }
 
 F32 LLViewerObject::getMinScale() const
@@ -5723,7 +5712,7 @@ BOOL LLViewerObject::permYouOwner() const
 		return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (LLGridManager::getInstance()->isInSLBeta()
+		if (!LLGridManager::getInstance()->isInProductionGrid()
             && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
 		{
 			return TRUE;
@@ -5760,7 +5749,7 @@ BOOL LLViewerObject::permOwnerModify() const
 		return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (LLGridManager::getInstance()->isInSLBeta()
+		if (!LLGridManager::getInstance()->isInProductionGrid()
             && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
 	{
 			return TRUE;
@@ -5784,7 +5773,7 @@ BOOL LLViewerObject::permModify() const
 		return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (LLGridManager::getInstance()->isInSLBeta()
+		if (!LLGridManager::getInstance()->isInProductionGrid()
             && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
 	{
 			return TRUE;
@@ -5808,7 +5797,7 @@ BOOL LLViewerObject::permCopy() const
 		return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (LLGridManager::getInstance()->isInSLBeta()
+		if (!LLGridManager::getInstance()->isInProductionGrid()
             && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
 		{
 			return TRUE;
@@ -5832,7 +5821,7 @@ BOOL LLViewerObject::permMove() const
 		return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (LLGridManager::getInstance()->isInSLBeta()
+		if (!LLGridManager::getInstance()->isInProductionGrid()
             && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
 		{
 			return TRUE;
@@ -5856,13 +5845,13 @@ BOOL LLViewerObject::permTransfer() const
 		return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (LLGridManager::getInstance()->isInSLBeta()
+		if (!LLGridManager::getInstance()->isInProductionGrid()
             && (gAgent.getGodLevel() >= GOD_MAINTENANCE))
 		{
 			return TRUE;
 		}
 # endif
-		return flagObjectTransfer();
+		return flagObjectTransfer(); 
 #endif
 	}
 	else

@@ -122,16 +122,7 @@ void LLFloaterSearch::onOpen(const LLSD& key)
 {
 	Params p(key);
 	p.trusted_content = true;
-// <FS:AW  opensim search support>
-//	p.allow_address_entry = false;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	bool debug = gSavedSettings.getBOOL("DebugSearch");
-	p.allow_address_entry = debug;
-// <FS:AW optional opensim support>
-#else // HAS_OPENSIM_SUPPORT
 	p.allow_address_entry = false;
-#endif // HAS_OPENSIM_SUPPORT 
-// </FS:AW optional opensim support>
 
 	LLFloaterWebContent::onOpen(p);
 	search(p.search);
@@ -212,29 +203,7 @@ void LLFloaterSearch::search(const SearchQuery &p)
 
 	// get the search URL and expand all of the substitutions
 	// (also adds things like [LANGUAGE], [VERSION], [OS], etc.)
-// <FS:AW  opensim search support>
-//	std::string url = gSavedSettings.getString("SearchURL");
-	std::string url;
-
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	std::string debug_url = gSavedSettings.getString("SearchURLDebug");
-	if (gSavedSettings.getBOOL("DebugSearch") && !debug_url.empty())
-	{
-		url = debug_url;
-	}
-	else if(LLGridManager::getInstance()->isInOpenSim())
-	{
-		url = LLLoginInstance::getInstance()->hasResponse("search")
-			? LLLoginInstance::getInstance()->getResponse("search").asString()
-			: gSavedSettings.getString("SearchURLOpenSim");
-	}
-	else // we are in SL or SL beta
-#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	{
-		url = gSavedSettings.getString("SearchURL");
-	}
-// </FS:AW  opensim search support>
-
+	std::string url = gSavedSettings.getString("SearchURL");
 	url = LLWeb::expandURLSubstitutions(url, subs);
 
 	// and load the URL in the web view

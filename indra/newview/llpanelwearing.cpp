@@ -131,7 +131,6 @@ private:
 	void onTakeOff()
 	{
 		uuid_vec_t selected_uuids;
-
 		mPanelWearing->getSelectedItemsUUIDs(selected_uuids);
 		LLAppearanceMgr::instance().removeItemsFromAvatar(selected_uuids);
 	}

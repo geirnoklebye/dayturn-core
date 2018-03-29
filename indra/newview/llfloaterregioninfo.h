@@ -57,7 +57,6 @@ class LLTextBox;
 class LLVFS;
 
 class LLPanelRegionGeneralInfo;
-class LLPanelRegionOpenSettingsInfo;
 class LLPanelRegionDebugInfo;
 class LLPanelRegionTerrainInfo;
 class LLPanelEstateInfo;
@@ -95,7 +94,6 @@ public:
 	static LLPanelEstateInfo* getPanelEstate();
 	static LLPanelEstateCovenant* getPanelCovenant();
 	static LLPanelRegionTerrainInfo* getPanelRegionTerrain();
-	static LLPanelRegionOpenSettingsInfo* getPanelOpenSettings();
 	static LLPanelRegionExperiences* getPanelExperiences();
 	static LLPanelRegionGeneralInfo* getPanelGeneral();
 
@@ -171,24 +169,6 @@ protected:
 
 /////////////////////////////////////////////////////////////////////////////
 // Actual panels start here
-/////////////////////////////////////////////////////////////////////////////
-
-class LLPanelRegionOpenSettingsInfo : public LLPanelRegionInfo
-{
-public:
-	LLPanelRegionOpenSettingsInfo()
-		:	LLPanelRegionInfo()	{}
-	~LLPanelRegionOpenSettingsInfo() {}
-
-	virtual bool refreshFromRegion(LLViewerRegion* region);
-
-	// LLPanel
-	virtual BOOL postBuild();
-
-protected:
-	static void onClickOrs(void* userdata);
-	static void onClickHelp(void* data);
-};
 /////////////////////////////////////////////////////////////////////////////
 
 class LLPanelRegionGeneralInfo : public LLPanelRegionInfo

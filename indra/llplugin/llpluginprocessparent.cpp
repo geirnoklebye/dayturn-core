@@ -483,8 +483,6 @@ void LLPluginProcessParent::idle(void)
 				
 				    // Only argument to the launcher is the port number we're listening on
 				    mProcessParams.args.add(stringize(mBoundPort));
-
-					
 				    if (! (mProcess = LLProcess::create(mProcessParams)))
 				    {
 					    errorState();

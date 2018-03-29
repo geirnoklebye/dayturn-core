@@ -83,7 +83,8 @@ LLPanelGroupGeneral::LLPanelGroupGeneral()
 	mBtnGroupUUIDCopy(NULL)
 
 {
-};
+
+}
 
 LLPanelGroupGeneral::~LLPanelGroupGeneral()
 {
@@ -206,6 +207,7 @@ void LLPanelGroupGeneral::setupCtrls(LLPanel* panel_group)
 		mInsignia->setCommitCallback(onCommitAny, this);
 	}
 	mFounderName = getChild<LLTextBox>("founder_name");
+
 
 	mGroupNameEditor = panel_group->getChild<LLLineEditor>("group_name_editor");
 	mGroupNameEditor->setPrevalidate( LLTextValidate::validateASCIINoLeadingSpace );
@@ -680,8 +682,10 @@ void LLPanelGroupGeneral::updateChanged()
 void LLPanelGroupGeneral::reset()
 {
 	mFounderName->setVisible(false);
+
 	
 	mCtrlReceiveNotices->set(false);
+	
 	
 	mCtrlListGroup->set(true);
 	
@@ -718,7 +722,7 @@ void LLPanelGroupGeneral::reset()
 		mEditCharter->setText(empty_str);
 		mGroupNameEditor->setText(empty_str);
 	}
-
+	
 	{
 		mComboMature->setEnabled(true);
 		mComboMature->setVisible( !gAgent.isTeen() );

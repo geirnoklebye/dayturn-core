@@ -202,7 +202,6 @@ public:
 	void childSetValue(const std::string& id, LLSD value);
 	LLSD childGetValue(const std::string& id) const;
 
-
 	// For setting text / label replacement params, e.g. "Hello [NAME]"
 	// Not implemented for all types, defaults to noop, returns FALSE if not applicaple
 	BOOL childSetTextArg(const std::string& id, const std::string& key, const LLStringExplicit& text);

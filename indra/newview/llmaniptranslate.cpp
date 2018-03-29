@@ -525,7 +525,7 @@ BOOL LLManipTranslate::handleHover(S32 x, S32 y, MASK mask)
 	// You can't move more than some distance from your original mousedown point.
 	if (gSavedSettings.getBOOL("LimitDragDistance"))
 	{
-		F32 max_drag_distance = LLWorld::getInstance()->getMaxDragDistance();
+		F32 max_drag_distance = gSavedSettings.getF32("MaxDragDistance");
 
 		if (relative_move.magVecSquared() > max_drag_distance * max_drag_distance)
 		{
@@ -721,17 +721,11 @@ BOOL LLManipTranslate::handleHover(S32 x, S32 y, MASK mask)
 				}
 
 				// For safety, cap heights where objects can be dragged
-// <AW: opensim-limits>
-// 				if (new_position_global.mdV[VZ] > MAX_OBJECT_Z)
-// 				{
-// 					new_position_global.mdV[VZ] = MAX_OBJECT_Z;
-// 				}
-				if (new_position_global.mdV[VZ] > SL_MAX_OBJECT_Z)
+				if (new_position_global.mdV[VZ] > MAX_OBJECT_Z)
 				{
-					LL_WARNS() << " Attempt to drag object position above maximum allowed" << new_position_global.mdV[VZ] << LL_ENDL;
-                    new_position_global.mdV[VZ] = SL_MAX_OBJECT_Z;
+					new_position_global.mdV[VZ] = MAX_OBJECT_Z;
 				}
-// </AW: opensim-limits>
+
 				// Grass is always drawn on the ground, so clamp its position to the ground
 				if (object->getPCode() == LL_PCODE_LEGACY_GRASS)
 				{

@@ -92,8 +92,6 @@
 #include "llagentui.h"
 #include "llmeshrepository.h"
 #include "llfloaterregionrestarting.h"
-#include "llworld.h"
-#include "llstartup.h"
 #include "llpanelexperiencelisteditor.h"
 #include <boost/function.hpp>
 #include "llpanelexperiencepicker.h"
@@ -220,15 +218,6 @@ BOOL LLFloaterRegionInfo::postBuild()
 	panel->buildFromFile("panel_region_general.xml");
 	mTab->addTabPanel(panel);
 
-	// We only use this panel on Aurora-based sims
-	std::string url = gAgent.getRegion()->getCapability("DispatchOpenRegionSettings");
-	if (!url.empty())
-	{
-		panel = new LLPanelRegionOpenSettingsInfo;
-		mInfoPanels.push_back(panel);
-		panel->buildFromFile("panel_region_open_region_settings.xml");
-		mTab->addTabPanel(panel);
-	}
 	panel = new LLPanelRegionTerrainInfo;
 	mInfoPanels.push_back(panel);
 	panel->buildFromFile("panel_region_terrain.xml");
@@ -511,15 +500,6 @@ LLPanelRegionTerrainInfo* LLFloaterRegionInfo::getPanelRegionTerrain()
 	return panel;
 }
 
-// static
-LLPanelRegionOpenSettingsInfo* LLFloaterRegionInfo::getPanelOpenSettings()
-{
-	LLFloaterRegionInfo* floater = LLFloaterReg::getTypedInstance<LLFloaterRegionInfo>("region_info");
-	if (!floater) return NULL;
-	LLTabContainer* tab = floater->getChild<LLTabContainer>("region_panels");
-	LLPanelRegionOpenSettingsInfo* panel = (LLPanelRegionOpenSettingsInfo*)tab->getChild<LLPanel>("RegionSettings");
-	return panel;
-}
 LLPanelRegionExperiences* LLFloaterRegionInfo::getPanelExperiences()
 {
 	LLFloaterRegionInfo* floater = LLFloaterReg::getTypedInstance<LLFloaterRegionInfo>("region_info");
@@ -994,126 +974,6 @@ BOOL LLPanelRegionGeneralInfo::sendUpdate()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// LLPanelRegionOpenSettingsInfo
-/////////////////////////////////////////////////////////////////////////////
-bool LLPanelRegionOpenSettingsInfo::refreshFromRegion(LLViewerRegion* region)
-
-{
-	// Data gets filled in by hippo manager
-	BOOL allow_modify = gAgent.isGodlike() || (region && region->canManageEstate());
-
-	LLWorld *regionlimits = LLWorld::getInstance();
-
-	childSetValue("draw_distance", LLSD(regionlimits->getDrawDistance()));
-	childSetValue("force_draw_distance", LLSD(regionlimits->getLockedDrawDistance()));
-	childSetValue("allow_minimap", LLSD(regionlimits->getAllowMinimap()));
-	childSetValue("allow_physical_prims", LLSD(regionlimits->getAllowPhysicalPrims()));
-	childSetValue("max_drag_distance", LLSD(regionlimits->getMaxDragDistance()));
-	childSetValue("min_hole_size", LLSD(regionlimits->getRegionMinHoleSize()));
-	childSetValue("max_hollow_size", LLSD(regionlimits->getRegionMaxHollowSize()));
-	childSetValue("max_inventory_items_transfer", LLSD(regionlimits->getMaxInventoryItemsTransfer()));
-	childSetValue("max_link_count", LLSD((LLSD::Integer)regionlimits->getMaxLinkedPrims()));
-	childSetValue("max_link_count_phys", LLSD(regionlimits->getMaxPhysLinkedPrims()));
-	childSetValue("max_phys_prim_scale", LLSD(regionlimits->getMaxPhysPrimScale()));
-	childSetValue("max_prim_scale", LLSD(regionlimits->getRegionMaxPrimScale()));
-	childSetValue("min_prim_scale", LLSD(regionlimits->getRegionMinPrimScale()));
-	childSetValue("render_water", LLSD(regionlimits->getAllowRenderWater()));
-	childSetValue("show_tags", LLSD(regionlimits->getAllowRenderName()));
-	childSetValue("max_groups", LLSD(gMaxAgentGroups));
-	childSetValue("allow_parcel_windlight", LLSD(regionlimits->getAllowParcelWindLight()));
-	childSetValue("enable_teen_mode", LLSD(regionlimits->getEnableTeenMode()));
-	childSetValue("enforce_max_build", LLSD(regionlimits->getEnforceMaxBuild()));
-	childSetValue("terrain_detail_scale", LLSD(regionlimits->getTerrainDetailScale()));
-
-	setCtrlsEnabled(allow_modify);
-
-	return LLPanelRegionInfo::refreshFromRegion(region);
-}
-
-BOOL LLPanelRegionOpenSettingsInfo::postBuild()
-{
-	// Enable the "Apply" button if something is changed. JC
-	initCtrl("draw_distance");
-	initCtrl("force_draw_distance");
-	initCtrl("max_drag_distance");
-	initCtrl("max_prim_scale");
-	initCtrl("min_prim_scale");
-	initCtrl("max_phys_prim_scale");
-	initCtrl("max_hollow_size");
-	initCtrl("min_hole_size");
-	initCtrl("max_link_count");
-	initCtrl("max_link_count_phys");
-	initCtrl("max_inventory_items_transfer");
-	initCtrl("max_groups");
-	initCtrl("render_water");
-	initCtrl("allow_minimap");
-	initCtrl("allow_physical_prims");
-	initCtrl("enable_teen_mode");
-	initCtrl("show_tags");
-	initCtrl("allow_parcel_windlight");
-	initCtrl("terrain_detail_scale");
-
-	childSetAction("force_draw_distance_help", onClickHelp, new std::string("HelpForceDrawDistance"));
-	childSetAction("max_inventory_items_transfer_help", onClickHelp, new std::string("HelpMaxInventoryItemsTransfer"));
-	childSetAction("max_groups_help", onClickHelp, new std::string("HelpMaxGroups"));
-	childSetAction("render_water_help", onClickHelp, new std::string("HelpRenderWater"));
-	childSetAction("allow_minimap_help", onClickHelp, new std::string("HelpAllowMinimap"));
-	childSetAction("allow_physical_prims_help", onClickHelp, new std::string("HelpAllowPhysicalPrims"));
-	childSetAction("enable_teen_mode_help", onClickHelp, new std::string("HelpEnableTeenMode"));
-	childSetAction("show_tags_help", onClickHelp, new std::string("HelpShowTags"));
-	childSetAction("allow_parcel_windlight_help", onClickHelp, new std::string("HelpAllowParcelWindLight"));
-
-	childSetAction("apply_ors_btn", onClickOrs, this);
-
-	refreshFromRegion(gAgent.getRegion());
-
-	return LLPanelRegionInfo::postBuild();
-}
-
-void LLPanelRegionOpenSettingsInfo::onClickHelp(void* data)
-{
-	std::string* xml_alert = (std::string*)data;
-	LLNotifications::instance().add(*xml_alert);
-}
-
-void LLPanelRegionOpenSettingsInfo::onClickOrs(void* userdata)
-{
-	LLPanelRegionOpenSettingsInfo* self;
-	self = (LLPanelRegionOpenSettingsInfo*)userdata;
-
-	LL_INFOS() << "LLPanelRegionOpenSettingsInfo::onClickOrs()" << LL_ENDL;
-
-	LLSD body;
-	std::string url = gAgent.getRegion()->getCapability("DispatchOpenRegionSettings");
-	if (!url.empty())
-	{
-		body["draw_distance"] = (LLSD::Integer)self->childGetValue("draw_distance");
-		body["force_draw_distance"] = (LLSD::Boolean)self->childGetValue("force_draw_distance");
-		body["allow_minimap"] = (LLSD::Boolean)self->childGetValue("allow_minimap");
-		body["allow_physical_prims"] = (LLSD::Boolean)self->childGetValue("allow_physical_prims");
-		body["max_drag_distance"] = (LLSD::Real)self->childGetValue("max_drag_distance");
-		body["min_hole_size"] = (LLSD::Real)self->childGetValue("min_hole_size");
-		body["max_hollow_size"] = (LLSD::Real)self->childGetValue("max_hollow_size");
-		body["max_inventory_items_transfer"] = (LLSD::Integer)self->childGetValue("max_inventory_items_transfer");
-		body["max_link_count"] = (LLSD::Real)self->childGetValue("max_link_count");
-		body["max_link_count_phys"] = (LLSD::Real)self->childGetValue("max_link_count_phys");
-		body["max_phys_prim_scale"] = (LLSD::Real)self->childGetValue("max_phys_prim_scale");
-		body["max_prim_scale"] = (LLSD::Real)self->childGetValue("max_prim_scale");
-		body["min_prim_scale"] = (LLSD::Real)self->childGetValue("min_prim_scale");
-		body["render_water"] = (LLSD::Boolean)self->childGetValue("render_water");
-		body["terrain_detail_scale"] = (LLSD::Real)self->childGetValue("terrain_detail_scale");
-		body["show_tags"] = (LLSD::Real)self->childGetValue("show_tags");
-		body["max_groups"] = (LLSD::Real)self->childGetValue("max_groups");
-		body["allow_parcel_windlight"] = (LLSD::Boolean)self->childGetValue("allow_parcel_windlight");
-		body["enable_teen_mode"] = (LLSD::Boolean)self->childGetValue("enable_teen_mode");
-		body["enforce_max_build"] = (LLSD::Boolean)self->childGetValue("enforce_max_build");
-
-        LLCoreHttpUtil::HttpCoroutineAdapter::messageHttpPost(url, body, "Posted onClickOrs", "Error posting onClickOrs");
-		//LL_INFOS() << "data: " << LLSDXMLStreamer(body) << LL_ENDL;
-	}
-}
-
-/////////////////////////////////////////////////////////////////////////////
 // LLPanelRegionDebugInfo
 /////////////////////////////////////////////////////////////////////////////
 BOOL LLPanelRegionDebugInfo::postBuild()
@@ -1152,10 +1012,6 @@ bool LLPanelRegionDebugInfo::refreshFromRegion(LLViewerRegion* region)
 	getChildView("restart_btn")->setEnabled(allow_modify);
 	getChildView("cancel_restart_btn")->setEnabled(allow_modify);
 	getChildView("region_debug_console_btn")->setEnabled(allow_modify);
-
-	getChildView("region_restart_delay")->setEnabled(allow_modify);
-	getChildView("region_restart_delay_label")->setEnabled(allow_modify);
-	getChildView("region_restart_delay_note")->setEnabled(allow_modify);
 
 	return LLPanelRegionInfo::refreshFromRegion(region);
 }
@@ -1302,35 +1158,7 @@ void LLPanelRegionDebugInfo::onClickTopScripts(void* data)
 // static
 void LLPanelRegionDebugInfo::onClickRestart(void* data)
 {
-	const S32 delay = gSavedSettings.getS32("RestartDelaySeconds");
-	const S32 minutes = delay / 60;
-	const S32 seconds = delay % 60;
-
-	const std::string lang = LLUI::getLanguage();
-
-	std::string format;
-	LLSD format_args;
-
-	if (minutes) {
-		format_args["[MINUTES]"] = LLTrans::getCountString(lang, "TimeMinutes", minutes);
-
-		if (seconds) {
-			format = "TimeMinutesSeconds";
-			format_args["[SECONDS]"] = LLTrans::getCountString(lang, "TimeSeconds", seconds);
-		}
-		else {
-			format = "TimeMinutes";
-		}
-	}
-	else {
-		format = "TimeSeconds";
-		format_args["[SECONDS]"] = LLTrans::getCountString(lang, "TimeSeconds", seconds);
-	}
-
-	LLSD args;
-	args["[DELAY]"] = LLTrans::getString(format, format_args);
-
-	LLNotificationsUtil::add("ConfirmRestart", args, LLSD(), 
+	LLNotificationsUtil::add("ConfirmRestart", LLSD(), LLSD(), 
 		boost::bind(&LLPanelRegionDebugInfo::callbackRestart, (LLPanelRegionDebugInfo*)data, _1, _2));
 }
 
@@ -1340,8 +1168,7 @@ bool LLPanelRegionDebugInfo::callbackRestart(const LLSD& notification, const LLS
 	if (option != 0) return false;
 
 	strings_t strings;
-	strings.push_back(llformat("%d", gSavedSettings.getS32("RestartDelaySeconds")));
-
+	strings.push_back("120");
 	LLUUID invoice(LLFloaterRegionInfo::getLastInvoice());
 	sendEstateOwnerMessage(gMessageSystem, "restart", invoice, strings);
 	return false;
@@ -1365,7 +1192,6 @@ void LLPanelRegionDebugInfo::onClickDebugConsole(void* data)
 
 BOOL LLPanelRegionTerrainInfo::validateTextureSizes()
 {
-	int maxSize = 1024;
 	for(S32 i = 0; i < TERRAIN_TEXTURE_COUNT; ++i)
 	{
 		std::string buffer;
@@ -1391,13 +1217,9 @@ BOOL LLPanelRegionTerrainInfo::validateTextureSizes()
 			return FALSE;
 		}
 
-		if(gIsInSecondLife)
+		if (width > 512 || height > 512)
 		{
-			maxSize = 512;
-		}
 
-		if (width > maxSize || height > maxSize)
-		{
 			LLSD args;
 			args["TEXTURE_NUM"] = i+1;
 			args["TEXTURE_SIZE_X"] = width;
@@ -1539,11 +1361,10 @@ BOOL LLPanelRegionTerrainInfo::sendUpdate()
 	// Assemble and send texturedetail message
 
 	// Make sure user hasn't chosen wacky textures.
-	// allow wacky textures on aurora-sim
-	//if (!validateTextureSizes())
-	//{
-	//	return FALSE;
-	//}
+	if (!validateTextureSizes())
+	{
+		return FALSE;
+	}
 
 	// Check if terrain Elevation Ranges are correct
 	if (gSavedSettings.getBOOL("RegionCheckTextureHeights") && !validateTextureHeights())

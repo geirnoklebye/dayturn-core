@@ -511,6 +511,7 @@ void LLFloaterTools::refresh()
 				LL_WARNS() << "Failed to get selected object" << LL_ENDL;
 			}
 		}
+
 		LLStringUtil::format_map_t selection_args;
 		selection_args["OBJ_COUNT"] = llformat("%.1d", link_count);
 		if (((S32)link_cost) == 0)
@@ -1505,7 +1506,7 @@ void LLFloaterTools::navigateToTitleMedia( const std::string url )
 		// check if url changed or if we need a new media source
 		if (mTitleMedia->getCurrentNavUrl() != url || media_plugin == NULL)
 		{
-		mTitleMedia->navigateTo( url );
+			mTitleMedia->navigateTo( url );
 		}
 
 		// flag that we need to update the title (even if no request were made)

@@ -29,7 +29,6 @@
 
 #include "llagent.h"
 #include "llagentcamera.h"
-#include "llagentwearables.h"
 #include "llavataractions.h"
 #include "llcheckboxctrl.h"
 #include "llcombobox.h"
@@ -59,11 +58,6 @@
 #include "llsidepanelinventory.h"
 #include "llfolderview.h"
 #include "llradiogroup.h"
-
-// <FS:AW opensim currency support>
-#include "lltrans.h"
-#include "llviewernetwork.h"
-// </FS:AW opensim currency support>
 
 const std::string FILTERS_FILENAME("filters.xml");
 
@@ -200,8 +194,6 @@ BOOL LLPanelMainInventory::postBuild()
 		worn_filter.setFilterCategoryTypes(worn_filter.getFilterCategoryTypes() | (1ULL << LLFolderType::FT_INBOX));
 		worn_filter.markDefault();
 		mWornItemsPanel->setSelectCallback(boost::bind(&LLPanelMainInventory::onSelectionChange, this, mWornItemsPanel, _1, _2));
-
-		gAgentWearables.addLoadedCallback(boost::bind(&LLPanelMainInventory::updateWornItemsPanel, this));
 	}
 	mSearchTypeCombo  = getChild<LLComboBox>("search_type");
 	if(mSearchTypeCombo)
@@ -245,25 +237,9 @@ BOOL LLPanelMainInventory::postBuild()
 	mGearMenuButton = getChild<LLMenuButton>("options_gear_btn");
 
 	initListCommandsHandlers();
-// <FS:AW opensim currency support>
-//	// *TODO:Get the cost info from the server
-//	const std::string upload_cost("10");
-	// \0/ Copypasta! See llviewermessage, llviewermenu and llpanelmaininventory
-	S32 cost = LLGlobalEconomy::getInstance()->getPriceUpload();
-	std::string upload_cost;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	bool in_opensim = LLGridManager::getInstance()->isInOpenSim();
-	if(in_opensim)
-	{
-		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : LLTrans::getString("free");
-	}
-	else
-#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	{
-		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
-	}
-// </FS:AW opensim currency support>
 
+	// *TODO:Get the cost info from the server
+	const std::string upload_cost("10");
 
 	LLMenuGL* menu = (LLMenuGL*)mMenuAddHandle.get();
 	if (menu)
@@ -373,18 +349,6 @@ BOOL LLPanelMainInventory::handleKeyHere(KEY key, MASK mask)
 
 	return LLPanel::handleKeyHere(key, mask);
 
-}
-
-void LLPanelMainInventory::updateWornItemsPanel()
-{
-	if (!mUpdateWornTimer.getStarted())
-	{
-		mUpdateWornTimer.start();
-	}
-	else
-	{
-		mUpdateWornTimer.reset();
-	}
 }
 
 //----------------------------------------------------------------------------
@@ -1171,6 +1135,7 @@ void LLFloaterInventoryFinder::onCloseBtn(void* user_data)
 	LLFloaterInventoryFinder* finderp = (LLFloaterInventoryFinder*)user_data;
 	finderp->closeFloater();
 }
+
 // static
 void LLFloaterInventoryFinder::selectAllTypes(void* user_data)
 {

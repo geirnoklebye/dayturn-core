@@ -2151,8 +2151,7 @@ void LLViewerWindow::initWorldUI()
 		gToolBarView->loadToolbars();
 		gToolBarView->setVisible(TRUE);
 	}
-	if (!(LLGridManager::getInstance()->isInOpenSim()))
-	{
+
 	LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
 	if (destinations)
 	{
@@ -2169,77 +2168,6 @@ void LLViewerWindow::initWorldUI()
 		url = LLWeb::expandURLSubstitutions(url, LLSD());
 		avatar_picker->navigateTo(url, HTTP_CONTENT_TEXT_HTML);
 	}
-	}
-// <FS:AW  opensim destinations and avatar picker>
-// 	LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
-// 	if (destinations)
-// 	{
-// 		destinations->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-// 		std::string url = gSavedSettings.getString("DestinationGuideURL");
-// 		url = LLWeb::expandURLSubstitutions(url, LLSD());
-// 		destinations->navigateTo(url, "text/html");
-// 	}
-// 	LLMediaCtrl* avatar_picker = LLFloaterReg::getInstance("avatar")->findChild<LLMediaCtrl>("avatar_picker_contents");
-// 	if (avatar_picker)
-// 	{
-// 		avatar_picker->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-// 		std::string url = gSavedSettings.getString("AvatarPickerURL");
-// 		url = LLWeb::expandURLSubstitutions(url, LLSD());
-// 		avatar_picker->navigateTo(url, "text/html");
-// 	}
-	std::string destination_guide_url;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		if (LLLoginInstance::getInstance()->hasResponse("destination_guide_url"))
-		{
-		destination_guide_url = LLLoginInstance::getInstance()->getResponse("destination_guide_url").asString();
-		}
-	}
-	else
-#endif // HAS_OPENSIM_SUPPORT  // <FS:AW optional opensim support>
-	{
-		destination_guide_url = gSavedSettings.getString("DestinationGuideURL");
-	}
-	if(!destination_guide_url.empty())
-	{	
-		LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
-		if (destinations)
-		{
-			destinations->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-			destination_guide_url = LLWeb::expandURLSubstitutions(destination_guide_url, LLSD());
-			LL_WARNS("WebApi") << "3 DestinationGuideURL \"" << destination_guide_url << "\"" << LL_ENDL;
-			destinations->navigateTo(destination_guide_url, "text/html");
-		}
-	}
-
-	std::string avatar_picker_url;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		if (LLLoginInstance::getInstance()->hasResponse("avatar_picker_url"))
-		{
-			avatar_picker_url = LLLoginInstance::getInstance()->getResponse("avatar_picker_url").asString();
-		}
-	}
-	else
-#endif // HAS_OPENSIM_SUPPORT  // <FS:AW optional opensim support>
-	{
-		avatar_picker_url = gSavedSettings.getString("AvatarPickerURL");
-	}
-
-	if(!avatar_picker_url.empty())
-	{	
-		LLMediaCtrl* avatar_picker = LLFloaterReg::getInstance("avatar")->findChild<LLMediaCtrl>("avatar_picker_contents");
-		if (avatar_picker)
-		{
-			avatar_picker->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-			avatar_picker_url = LLWeb::expandURLSubstitutions(avatar_picker_url, LLSD());
-			LL_DEBUGS("WebApi") << "AvatarPickerURL \"" << avatar_picker_url << "\"" << LL_ENDL;
-			avatar_picker->navigateTo(avatar_picker_url, "text/html");
-		}
- 	}
-// </FS:AW  opensim destinations and avatar picker>
 }
 
 // Destroy the UI
@@ -2430,7 +2358,7 @@ void LLViewerWindow::reshape(S32 width, S32 height)
 
 		calcDisplayScale();
 	
-		BOOL display_scale_changed = mDisplayScale != LLUI::sGLScaleFactor;
+		BOOL display_scale_changed = mDisplayScale != LLUI::getScaleFactor();
 		LLUI::setScaleFactor(mDisplayScale);
 
 		// update our window rectangle
@@ -2497,7 +2425,7 @@ void LLViewerWindow::setNormalControlsVisible( BOOL visible )
 
 		// ...and set the menu color appropriately.
 		setMenuBackgroundColor(gAgent.getGodLevel() > GOD_NOT, 
-			!LLGridManager::getInstance()->isInSLBeta());
+			LLGridManager::getInstance()->isInProductionGrid());
 	}
         
 	if ( gStatusBar )
@@ -2521,14 +2449,13 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
     LLColor4 new_bg_color;
 
 	// god more important than project, proj more important than grid
-    if(god_mode && !LLGridManager::getInstance()->isInSLBeta())
+    if ( god_mode ) 
     {
-		if ( LLGridManager::getInstance()->isInSLMain() )
+		if ( LLGridManager::getInstance()->isInProductionGrid() )
 		{
 			new_bg_color = LLUIColorTable::instance().getColor( "MenuBarGodBgColor" );
 		}
-	
-		else if(god_mode && LLGridManager::getInstance()->isInSLBeta())
+		else
 		{
 			new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionGodBgColor" );
 		}
@@ -2550,7 +2477,7 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
             break;
             
         case LLVersionInfo::RELEASE_VIEWER:
-            if(!LLGridManager::getInstance()->isInSLBeta())
+            if(!LLGridManager::getInstance()->isInProductionGrid())
             {
                 new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionBgColor" );
             }
@@ -2562,7 +2489,6 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
         }
     }
     
-
     if(gMenuBarView)
     {
         gMenuBarView->setBackgroundColor( new_bg_color );
@@ -4618,7 +4544,6 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
     do_save_image(image, LLViewerWindow::sSnapshotDir, LLViewerWindow::sSnapshotBaseName, extension, callback);
     // </FS:Ansariel>
 }
-
 
 void LLViewerWindow::resetSnapshotLoc()
 {

@@ -2202,7 +2202,6 @@ LLUZipHelper::EZipRresult LLUZipHelper::unzip_llsd(LLSD& data, std::istream& is,
 
 	if (ret != Z_STREAM_END)
 	{
-		LL_WARNS() << "Unzip error: !Z_STREAM_END" << LL_ENDL;
 		free(result);
 		return ZR_DATA_ERROR;
 	}
@@ -2216,13 +2215,13 @@ LLUZipHelper::EZipRresult LLUZipHelper::unzip_llsd(LLSD& data, std::istream& is,
 		{
 			std::string res_str((char*)result, cur_size);
 
-		std::string deprecated_header("<? LLSD/Binary ?>");
+			std::string deprecated_header("<? LLSD/Binary ?>");
 
-		if (res_str.substr(0, deprecated_header.size()) == deprecated_header)
-		{
+			if (res_str.substr(0, deprecated_header.size()) == deprecated_header)
+			{
 				res_str = res_str.substr(deprecated_header.size() + 1, cur_size);
-		}
-		cur_size = res_str.size();
+			}
+			cur_size = res_str.size();
 
 			istr.str(res_str);
 		}

@@ -324,8 +324,8 @@ namespace
 
 	LogControlFile& LogControlFile::fromDirectory(const std::string& user_dir, const std::string& app_dir)
 	{
-			// NB: We have no abstraction in llcommon  for the "proper"
-			// delimiter but it turns out that "/" works on all three platforms
+        // NB: We have no abstraction in llcommon  for the "proper"
+        // delimiter but it turns out that "/" works on all three platforms
 			
 		std::string file = user_dir + "/logcontrol-dev.xml";
 		

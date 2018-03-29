@@ -199,7 +199,7 @@ LLButton::LLButton(const LLButton::Params& p)
 		mFlashingTimer = new LLFlashTimer ((LLFlashTimer::callback_t)NULL, flash_count, flash_rate);
 	}
 	else
-    {
+	{
 		mButtonFlashCount = p.button_flash_count;
 		mButtonFlashRate = p.button_flash_rate;
 	}

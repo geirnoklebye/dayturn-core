@@ -58,7 +58,7 @@ namespace {
     {
         std::string domain = "secondlife.com";
 
-	if (!LLGridManager::getInstance()->isInSLMain())
+        if (!LLGridManager::getInstance()->isInProductionGrid())
         {
 		const std::string& grid_id = LLGridManager::getInstance()->getGridId();
 		const std::string& grid_id_lower = utf8str_tolower(grid_id);
@@ -108,11 +108,8 @@ namespace {
     // SLM Reporters
     void log_SLM_warning(const std::string& request, U32 status, const std::string& reason, const std::string& code, const LLSD& result)
     {
-		if (!LLGridManager::getInstance()->isInSecondLife()) 
-		{ 
-			return;
-		}
-		LL_WARNS("SLM") << "SLM API : Responder to " << request << ". status : " << status << ", reason : " << reason << ", code : " << code << ", description : " << ll_pretty_print_sd(result) << LL_ENDL;
+
+        LL_WARNS("SLM") << "SLM API : Responder to " << request << ". status : " << status << ", reason : " << reason << ", code : " << code << ", description : " << ll_pretty_print_sd(result) << LL_ENDL;
         if ((status == 422) && (result.has(LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_CONTENT) && 
             result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_CONTENT].isArray() &&
             result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_CONTENT].size() > 4))

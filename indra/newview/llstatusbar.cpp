@@ -55,7 +55,6 @@
 #include "lltextbox.h"
 #include "llui.h"
 #include "llviewerparcelmedia.h"
-#include "llviewernetwork.h"	// for LLGridManager
 #include "llviewerparceloverlay.h"
 #include "llviewerregion.h"
 #include "llviewerstats.h"
@@ -186,16 +185,10 @@ BOOL LLStatusBar::postBuild()
 	mTextTime = getChild<LLTextBox>("TimeText" );
 	mPurchasePanel = getChild<LLLayoutPanel>("purchase_panel");
 	
-	//
-	//	only show the Buy and Shop buttons in Second Life
-	//
-	if (LLGridManager::getInstance()->isInSecondLife()) {
-		getChild<LLUICtrl>("buyL")->setCommitCallback(boost::bind(&LLStatusBar::onClickBuyCurrency, this));
-		getChild<LLUICtrl>("goShop")->setCommitCallback(boost::bind(&LLWeb::loadURL, gSavedSettings.getString("MarketplaceURL"), LLStringUtil::null, LLStringUtil::null));
-	}
-	else {
-		mPurchasePanel->setVisible(FALSE);
-	}
+	getChild<LLUICtrl>("buyL")->setCommitCallback(
+		boost::bind(&LLStatusBar::onClickBuyCurrency, this));
+
+    getChild<LLUICtrl>("goShop")->setCommitCallback(boost::bind(&LLWeb::loadURL, gSavedSettings.getString("MarketplaceURL"), LLStringUtil::null, LLStringUtil::null));
 
 	mBoxBalance = getChild<LLTextBox>("balance");
 	mBoxBalance->setClickedCallback( &LLStatusBar::onClickBalance, this );
@@ -384,7 +377,7 @@ void LLStatusBar::setVisibleForMouselook(bool visible)
 
 	mTextTime->setVisible(visible);
 	mBoxBalance->setVisible(visible);
-	mPurchasePanel->setVisible(visible && LLGridManager::getInstance()->isInSecondLife());
+	mPurchasePanel->setVisible(visible);
 	mBtnVolume->setVisible(visible);
 	mStreamToggle->setVisible(visible);		// ## Zi: Media/Stream separation
 	mMediaToggle->setVisible(visible);

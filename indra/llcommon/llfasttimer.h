@@ -164,9 +164,6 @@ public:
 		U32 low(0),high(0);
 		__asm__ volatile (".byte 0x0f, 0x31": "=a"(low), "=d"(high) );
 		return (low>>8) | (high<<24);
-		// __asm__ volatile (".byte 0x0f, 0x31": "=A"(x));
-		// return (U32)(x >> 8);
-
 	}
 
 	static U64 getCPUClockCount64()
@@ -174,9 +171,6 @@ public:
 		U32 low(0),high(0);
 		__asm__ volatile (".byte 0x0f, 0x31": "=a"(low), "=d"(high) );
 		return (U64)low | ( ((U64)high) << 32);
-		// __asm__ volatile (".byte 0x0f, 0x31": "=A"(x));
-		// return x;
-
 	}
 
 #endif
@@ -203,7 +197,7 @@ public:
 	// call nextFrame() to reset timers
 	static void dumpCurTimes();
 
-public:
+private:
 	friend class BlockTimerStatHandle;
 	// FIXME: this friendship exists so that each thread can instantiate a root timer, 
 	// which could be a derived class with a public constructor instead, possibly
@@ -215,6 +209,7 @@ public:
 	// Visual Studio 2010 has a bug where capturing an object returned by value
 	// into a local reference requires access to the copy constructor at the call site.
 	// This appears to be fixed in 2012.
+public:
 #endif
 	// no-copy
 	BlockTimer(const BlockTimer& other) {};
@@ -288,7 +283,6 @@ block_timer_tree_bf_iterator_t end_block_timer_tree_bf();
 LL_FORCE_INLINE BlockTimer::BlockTimer(BlockTimerStatHandle& timer)
 {
 #if LL_FAST_TIMER_ON
-	mStartTime = getCPUClockCount64();
 	BlockTimerStackRecord* cur_timer_data = LLThreadLocalSingletonPointer<BlockTimerStackRecord>::getInstance();
 	if (!cur_timer_data)
 	{
@@ -312,6 +306,7 @@ LL_FORCE_INLINE BlockTimer::BlockTimer(BlockTimerStatHandle& timer)
 	cur_timer_data->mTimeBlock = &timer;
 	cur_timer_data->mChildTime = 0;
 
+	mStartTime = getCPUClockCount64();
 #endif
 }
 

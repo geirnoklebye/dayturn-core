@@ -460,20 +460,13 @@ void FSPanelProfile::onAvatarNameCache(const LLUUID& agent_id, const LLAvatarNam
 
     //[ADD: FIRE-2266: SJ] Adding link to webprofiles on profile which opens Web Profiles in browser
     std::string url;
-    if (LLGridManager::getInstance()->isInSLMain())
+    if (LLGridManager::getInstance()->isInProductionGrid())
     {
         url = gSavedSettings.getString("WebProfileURL");
     }
-    else if (LLGridManager::getInstance()->isInSLBeta())
-    {
-        url = gSavedSettings.getString("WebProfileNonProductionURL");
-    }
     else
     {
-        //OpenSimFIXME: get from grid - but how?
-        // possibilities:     * grid_info  (profiles accessible outside the grid)
-        //             * login message (profiles only within the grid)
-        //            * capability (better for decentaliced environment)
+        url = gSavedSettings.getString("WebProfileNonProductionURL");
     }
     LLSD subs;
     subs["AGENT_NAME"] = username;
@@ -802,7 +795,7 @@ BOOL FSPanelProfileWeb::postBuild()
     getChild<LLUICtrl>("load")->setCommitCallback(boost::bind(&FSPanelProfileWeb::onCommitLoad, this, _1));
 
     getChild<LLUICtrl>("web_profile")->setCommitCallback(boost::bind(&FSPanelProfileWeb::onCommitWebProfile, this, _1));
-    childSetVisible("web_profile", LLGridManager::getInstance()->isInSLMain() || LLGridManager::getInstance()->isInSLBeta());
+    childSetVisible("web_profile",TRUE);
 
     mWebBrowser = getChild<LLMediaCtrl>("profile_html");
     mWebBrowser->addObserver(this);
@@ -841,23 +834,14 @@ void FSPanelProfileWeb::onAvatarNameCache(const LLUUID& agent_id, const LLAvatar
         username = LLCacheName::buildUsername(av_name.mDisplayName);
     }
 
-    //[ADD: FIRE-2266: SJ] Adding link to webprofiles on profile which opens Web Profiles in browser
     std::string url;
-    if (LLGridManager::getInstance()->isInSLMain())
+    if (LLGridManager::getInstance()->isInProductionGrid())
     {
         url = gSavedSettings.getString("WebProfileURL");
     }
-    else if (LLGridManager::getInstance()->isInSLBeta())
-    {
-        url = gSavedSettings.getString("WebProfileNonProductionURL");
-    }
     else
     {
-        //OpenSimFIXME: get from grid - but how?
-        // possibilities:     * grid_info  (profiles accessible outside the grid)
-        //             * login message (profiles only within the grid)
-        //            * capability (better for decentaliced environment)
-        return;
+        url = gSavedSettings.getString("WebProfileNonProductionURL");
     }
     LLSD subs;
     subs["AGENT_NAME"] = username;

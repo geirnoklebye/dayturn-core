@@ -66,6 +66,7 @@ class LLDataPackerBinaryBuffer;
 class LLHost;
 class LLBBox;
 class LLViewerTexture;
+class LLSpatialGroup;
 class LLDrawable;
 class LLViewerRegionImpl;
 class LLViewerOctreeGroup;
@@ -140,7 +141,6 @@ public:
 
 	void setWaterHeight(F32 water_level);
 	F32 getWaterHeight() const;
-	void rebuildWater();
 
 	BOOL isVoiceEnabled() const;
 
@@ -414,12 +414,10 @@ public:
 	};
 
 	void showReleaseNotes();
-	void reInitPartitions();
 
 protected:
 	void disconnectAllNeighbors();
 	void initStats();
-	void initPartitions();
 
 public:
 	LLWind  mWind;

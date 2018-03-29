@@ -1708,7 +1708,7 @@ std::string LLInventoryModel::getInvCacheAddres(const LLUUID& owner_id)
     std::string owner_id_str;
     owner_id.toString(owner_id_str);
     std::string path(gDirUtilp->getExpandedFilename(LL_PATH_CACHE, owner_id_str));
-    if (LLGridManager::getInstance()->isInSLMain())
+    if (LLGridManager::getInstance()->isInProductionGrid())
     {
         inventory_addr = llformat(PRODUCTION_CACHE_FORMAT_STRING, path.c_str());
     }
@@ -2323,17 +2323,11 @@ void LLInventoryModel::buildParentChildMap()
 	{
 		LLViewerInventoryCategory* cat = cats.at(i);
 		catsp = getUnlockedCatArray(cat->getParentUUID());
-#ifdef OPENSIM
-		if(catsp &&
-		   (!gIsInSecondLife || (cat->getParentUUID().notNull() || 
-			cat->getPreferredType() == LLFolderType::FT_ROOT_INVENTORY )))
-#else
 		if(catsp &&
 		   // Only the two root folders should be children of null.
 		   // Others should go to lost & found.
 		   (cat->getParentUUID().notNull() || 
 			cat->getPreferredType() == LLFolderType::FT_ROOT_INVENTORY ))
-#endif
 		{
 			catsp->push_back(cat);
 		}
@@ -2527,6 +2521,7 @@ void LLInventoryModel::buildParentChildMap()
 	 	LL_WARNS(LOG_INV) << "model failed validity check!" << LL_ENDL;
 	}
 }
+
 // Would normally do this at construction but that's too early
 // in the process for gInventory.  Have the first requestPost()
 // call set things up.

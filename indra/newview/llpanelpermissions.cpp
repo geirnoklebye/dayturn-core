@@ -40,7 +40,6 @@
 #include "llstring.h"
 
 // project includes
-#include "llappviewer.h" //For global gIsInSecondLife visibility used for export permissions left in case LL adds functionally. 
 #include "llviewerwindow.h"
 #include "llresmgr.h"
 #include "lltextbox.h"
@@ -230,7 +229,6 @@ void LLPanelPermissions::disableAll()
 	getChildView("checkbox allow everyone copy")->setEnabled(FALSE);
 	
 	// <FS:CR> OpenSim export permissions //left in case LL adds functionally
-    getChild<LLUICtrl>("checkbox allow export")->setVisible(!gIsInSecondLife);
 	getChild<LLUICtrl>("checkbox allow export")->setValue(FALSE);
 	getChildView("checkbox allow export")->setEnabled(FALSE);
 	// </FS:CR>

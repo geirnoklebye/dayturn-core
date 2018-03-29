@@ -79,8 +79,6 @@
 // system libraries
 #include <boost/tokenizer.hpp>
 
-#include "llviewernetwork.h"
-
 class LLFileEnableUpload : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -101,8 +99,8 @@ class LLFileEnableUploadModel : public view_listener_t
 			return false;
 		}
 
-        return true;
-    }
+		return true;
+	}
 };
 
 class LLMeshEnabled : public view_listener_t

@@ -318,7 +318,7 @@ BOOL LLUUID::set(const std::string& in_string, BOOL emit)
 	return TRUE;
 }
 
-bool LLUUID::validate(const std::string& in_string)
+BOOL LLUUID::validate(const std::string& in_string)
 {
 	BOOL broken_format = FALSE;
 	if (in_string.length() != (UUID_STR_LENGTH - 1))		/* Flawfinder: ignore */

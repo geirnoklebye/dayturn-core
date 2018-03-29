@@ -29,14 +29,12 @@
 #include "llappviewer.h"
 
 // Viewer includes
-#include "llversioninfo.h" //needed for get channel and reset channel
-#include "viewerinfo.h"
+#include "llversioninfo.h"
 #include "llfeaturemanager.h"
 #include "lluictrlfactory.h"
 #include "lltexteditor.h"
 #include "llerrorcontrol.h"
 #include "lleventtimer.h"
-#include "llviewernetwork.h"
 #include "llviewertexturelist.h"
 #include "llgroupmgr.h"
 #include "llagent.h"
@@ -125,8 +123,10 @@
 #include "stringize.h"
 #include "llcoros.h"
 #include "llexception.h"
+#if !LL_LINUX
 #include "cef/dullahan.h"
 #include "vlc/libvlc_version.h"
+#endif // LL_LINUX
 
 // Third party library includes
 #include <boost/bind.hpp>
@@ -250,10 +250,6 @@
 // define a self-registering event API object
 #include "llappviewerlistener.h"
 
-#if LL_LINUX
-#include "vlc/libvlc_version.h"
-#endif
-
 #if (LL_LINUX || LL_SOLARIS) && LL_GTK
 #include "glib.h"
 #endif // (LL_LINUX || LL_SOLARIS) && LL_GTK
@@ -343,9 +339,6 @@ LLMemoryInfo gSysMemory;
 U64Bytes gMemoryAllocated(0); // updated in display_stats() in llviewerdisplay.cpp
 
 std::string gLastVersionChannel;
-std::string gSimulatorType;
-BOOL gIsInSecondLife; 
-
 
 LLVector3			gWindVec(3.0, 3.0, 0.0);
 LLVector3			gRelativeWindVec(0.0, 0.0, 0.0);
@@ -373,7 +366,7 @@ const std::string LOGOUT_MARKER_FILE_NAME("Kokua.logout_marker");
 static BOOL gDoDisconnect = FALSE;
 static std::string gLaunchFileOnQuit;
 
-// Used on Win32 for other apps to identify our window (eg, win_setup and SLURL handling)
+// Used on Win32 for other apps to identify our window (eg, win_setup)
 const char* const VIEWER_WINDOW_CLASSNAME = "Second Life";
 
 //-- LLDeferredTaskList ------------------------------------------------------
@@ -590,7 +583,7 @@ static void settings_to_globals()
 	
 	LLRender::sGLCoreProfile = gSavedSettings.getBOOL("RenderGLCoreProfile");
 	LLVertexBuffer::sUseVAO = gSavedSettings.getBOOL("RenderUseVAO");
-	LLImageGL::sGlobalAnisotropicSamples= gSavedSettings.getF32("RenderAnisotropicSamples");
+	LLImageGL::sGlobalUseAnisotropic	= gSavedSettings.getBOOL("RenderAnisotropic");
 	LLImageGL::sCompressTextures		= gSavedSettings.getBOOL("RenderCompressTextures");
 	LLVOVolume::sLODFactor				= gSavedSettings.getF32("RenderVolumeLODFactor");
 	LLVOVolume::sDistanceFactor			= 1.f-LLVOVolume::sLODFactor * 0.1f;
@@ -1332,9 +1325,6 @@ bool LLAppViewer::frame()
 	LLEventPump& mainloop(LLEventPumps::instance().obtain("mainloop"));
 	LLSD newFrame;
 
-	LLTimer idleTimer,periodicRenderingTimer;
-	BOOL restore_rendering_masks = FALSE;
-
 	//LLPrivateMemoryPoolTester::getInstance()->run(false) ;
 	//LLPrivateMemoryPoolTester::getInstance()->run(true) ;
 	//LLPrivateMemoryPoolTester::destroy() ;
@@ -1354,28 +1344,6 @@ bool LLAppViewer::frame()
 
 	try
 	{
-			// Check if we need to restore rendering masks.
-			if (restore_rendering_masks)
-			{
-				gPipeline.popRenderDebugFeatureMask();
-				gPipeline.popRenderTypeMask();
-			}
-			// Check if we need to temporarily enable rendering.
-			static LLCachedControl<F32> periodic_rendering(gSavedSettings, "ForcePeriodicRenderingTime", -1.0f);
-			if (periodic_rendering > F_APPROXIMATELY_ZERO && periodicRenderingTimer.getElapsedTimeF64() > periodic_rendering)
-			{
-				periodicRenderingTimer.reset();
-				restore_rendering_masks = TRUE;
-				gPipeline.pushRenderTypeMask();
-				gPipeline.pushRenderDebugFeatureMask();
-				gPipeline.setAllRenderTypes();
-				gPipeline.setAllRenderDebugFeatures();
-			}
-			else
-			{
-				restore_rendering_masks = FALSE;
-			}
-
 		pingMainloopTimeout("Main:MiscNativeWindowEvents");
 
 		if (gViewerWindow)
@@ -2652,7 +2620,7 @@ bool LLAppViewer::initConfiguration()
 		LLTrace::BlockTimer::sLog = true;
 		LLTrace::BlockTimer::sLogName = std::string("performance");		
 	}
-
+	
 	std::string test_name(gSavedSettings.getString("LogMetrics"));
 	if (! test_name.empty())
  	{
@@ -2735,7 +2703,7 @@ bool LLAppViewer::initConfiguration()
 		start_slurl = starting_location;
 		LLStartUp::setStartSLURL(start_slurl);
 		if(start_slurl.getType() == LLSLURL::LOCATION) 
-	{
+		{  
 			LLGridManager::getInstance()->setGridChoice(start_slurl.getGrid());
 		}
 	}
@@ -2862,10 +2830,11 @@ bool LLAppViewer::initConfiguration()
 		}
 	}
 
-   	// need to do this here - need to have initialized global settings first
+   	// NextLoginLocation is set from the command line option
 	std::string nextLoginLocation = gSavedSettings.getString( "NextLoginLocation" );
 	if ( !nextLoginLocation.empty() )
 	{
+		LL_DEBUGS("AppInit")<<"set start from NextLoginLocation: "<<nextLoginLocation<<LL_ENDL;
 		LLStartUp::setStartSLURL(LLSLURL(nextLoginLocation));
 	}
 	else if (   (   clp.hasOption("login") || clp.hasOption("autologin"))
@@ -3032,7 +3001,7 @@ bool LLAppViewer::initWindow()
 		LLFeatureManager::getInstance()->setGraphicsLevel(*mForceGraphicsLevel, false);
 		gSavedSettings.setU32("RenderQualityPerformance", *mForceGraphicsLevel);
 	}
-
+			
 	// Set this flag in case we crash while initializing GL
 	gSavedSettings.setBOOL("RenderInitError", TRUE);
 	gSavedSettings.saveToFile( gSavedSettings.getString("ClientSettingsFile"), TRUE );
@@ -3192,6 +3161,7 @@ LLSD LLAppViewer::getViewerInfo() const
 		}
 	}
 #endif
+
 	info["OPENGL_VERSION"] = (const char*)(glGetString(GL_VERSION));
 
     // Settings
@@ -3257,6 +3227,8 @@ LLSD LLAppViewer::getViewerInfo() const
 	vlc_ver_codec << ".";
 	vlc_ver_codec << LIBVLC_VERSION_REVISION;
 	info["LIBVLC_VERSION"] = vlc_ver_codec.str();
+#else
+	info["LIBVLC_VERSION"] = "Undefined";
 #endif
 
 	S32 packets_in = LLViewerStats::instance().getRecording().getSum(LLStatViewer::PACKETS_IN);
@@ -3336,16 +3308,6 @@ std::string LLAppViewer::getViewerInfoString() const
 	}
 	if (info.has("REGION"))
 	{
-		std::string grid = LLGridManager::getInstance()->getGridLabel();
-		LLStringUtil::replaceChar(grid, ' ', '_');
-
-		std::string group = gSavedSettings.getString("SupportGroupSLURL_" + grid);
-
-		if (!group.empty()) {
-			args["SUPPORT_GROUP_SLURL"] = group;
-			args["GRID_NAME"] = LLGridManager::getInstance()->getGridLabel();
-			support << "\n\n" << LLTrans::getString("SupportGroup", args);
-		}
 		support << "\n\n" << LLTrans::getString("AboutPosition", args);
 	}
 	support << "\n\n" << LLTrans::getString("AboutSystem", args);
@@ -3709,7 +3671,7 @@ void LLAppViewer::handleViewerCrash()
 		else
 		{
 			LL_WARNS("MarkerFile") << "Cannot create error marker file " << crash_marker_file_name << LL_ENDL;
-		}		
+		}
 	}
 	else
 	{
@@ -3867,7 +3829,7 @@ void LLAppViewer::processMarkerFiles()
 		{
 			LL_INFOS("MarkerFile") << "Exec marker '"<< mMarkerFileName << "' found, but versions did not match" << LL_ENDL;
 		}
-	}    
+	}
 	else // marker did not exist... last exec (if any) did not freeze
 	{
 		// Create the marker file for this execution & lock it; it will be deleted on a clean exit
@@ -3962,27 +3924,27 @@ void LLAppViewer::processMarkerFiles()
 void LLAppViewer::removeMarkerFiles()
 {
 	if (!mSecondInstance)
-    {
+	{		
 		if (mMarkerFile.getFileHandle())
 		{
-            mMarkerFile.close();
-            LLAPRFile::remove(mMarkerFileName);
-            LL_DEBUGS("MarkerFile") << "removed exec marker '" << mMarkerFileName << "'" << LL_ENDL;
+			mMarkerFile.close() ;
+			LLAPRFile::remove( mMarkerFileName );
+			LL_DEBUGS("MarkerFile") << "removed exec marker '"<<mMarkerFileName<<"'"<< LL_ENDL;
 		}
 		else
 		{
-            LL_WARNS("MarkerFile") << "marker '" << mMarkerFileName << "' not open" << LL_ENDL;
+			LL_WARNS("MarkerFile") << "marker '"<<mMarkerFileName<<"' not open"<< LL_ENDL;
  		}
 
 		if (mLogoutMarkerFile.getFileHandle())
 		{
 			mLogoutMarkerFile.close();
-            LLAPRFile::remove(mLogoutMarkerFileName);
-            LL_DEBUGS("MarkerFile") << "removed logout marker '" << mLogoutMarkerFileName << "'" << LL_ENDL;
+			LLAPRFile::remove( mLogoutMarkerFileName );
+			LL_DEBUGS("MarkerFile") << "removed logout marker '"<<mLogoutMarkerFileName<<"'"<< LL_ENDL;
 		}
 		else
 		{
-            LL_WARNS("MarkerFile") << "logout marker '" << mLogoutMarkerFileName << "' not open" << LL_ENDL;
+			LL_WARNS("MarkerFile") << "logout marker '"<<mLogoutMarkerFileName<<"' not open"<< LL_ENDL;
 		}
 	}
 	else

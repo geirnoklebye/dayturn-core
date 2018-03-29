@@ -85,9 +85,6 @@
 #include "llanimationstates.h"
 #include "llviewernetwork.h"
 #include "llviewershadermgr.h"
-// <AW: opensim-limits>
-#include "llworld.h"
-// </AW: opensim-limits>
 
 #include "glod/glod.h"
 #include <boost/algorithm/string.hpp>
@@ -371,47 +368,22 @@ BOOL LLFloaterModelPreview::postBuild()
 			text->setMouseDownCallback(boost::bind(&LLFloaterModelPreview::setPreviewLOD, this, i));
 		}
 	}
-
-	// <Ansariel> Changed grid detection and validation URL generation
-	//            because of grid manager. This will need adjustments
-	//            when OpenSims become mesh-capable!
-	//std::string current_grid = LLGridManager::getInstance()->getGridId();
-	//std::transform(current_grid.begin(),current_grid.end(),current_grid.begin(),::tolower);
-	//std::string validate_url;
-	//if (current_grid == "agni")
-	//{
-	//	validate_url = "http://secondlife.com/my/account/mesh.php";
-	//}
-	//else if (current_grid == "damballah")
-	//{
-	//	// Staging grid has its own naming scheme.
-	//	validate_url = "http://secondlife-staging.com/my/account/mesh.php";
-	//}
-	//else
-	//{
-	//	validate_url = llformat("http://secondlife.%s.lindenlab.com/my/account/mesh.php",current_grid.c_str());
-	//}
-
 	std::string current_grid = LLGridManager::getInstance()->getGridId();
 	std::transform(current_grid.begin(),current_grid.end(),current_grid.begin(),::tolower);
 	std::string validate_url;
-	if (LLGridManager::getInstance()->isInSLMain())
+	if (current_grid == "agni")
 	{
 		validate_url = "http://secondlife.com/my/account/mesh.php";
 	}
-	else if (LLGridManager::getInstance()->isInSLBeta())
+	else if (current_grid == "damballah")
 	{
-		validate_url = llformat("http://secondlife.%s.lindenlab.com/my/account/mesh.php", current_grid.c_str());
+		// Staging grid has its own naming scheme.
+		validate_url = "http://secondlife-staging.com/my/account/mesh.php";
 	}
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
 	else
 	{
-		// TODO: Opensim: Set it to something reasonable
-		validate_url = LLGridManager::getInstance()->getLoginPage();
+		validate_url = llformat("http://secondlife.%s.lindenlab.com/my/account/mesh.php",current_grid.c_str());
 	}
-	// </Ansariel>
-#endif // <FS:AW optional opensim support>
-
 	getChild<LLTextBox>("warning_message")->setTextArg("[VURL]", validate_url);
 
 	mUploadBtn = getChild<LLButton>("ok_btn");
@@ -521,14 +493,6 @@ void LLFloaterModelPreview::loadModel(S32 lod, const std::string& file_name, boo
 
 void LLFloaterModelPreview::onClickCalculateBtn()
 {
-
-	if(!gSavedSettings.getBOOL("FSMeshUploadPossible")){
-		LLSD args;
-		args["MESSAGE"] = llformat("Mesh upload and calculation is not supported yet." );
-		LLNotificationsUtil::add("GenericAlert", args);
-		return;
-	}
-
 	mModelPreview->rebuildUploadData();
 
 	bool upload_skinweights = childGetValue("upload_skin").asBoolean();
@@ -1232,7 +1196,7 @@ void LLFloaterModelPreview::onMouseCaptureLostModelPreview(LLMouseHandler* handl
 	gViewerWindow->showCursor();
 }
 
-
+//-----------------------------------------------------------------------------
 // LLModelPreview
 //-----------------------------------------------------------------------------
 
@@ -1471,8 +1435,9 @@ void LLModelPreview::rebuildUploadData()
 		F32 x_length = x_transformed.normalize();
 		F32 y_length = y_transformed.normalize();
 		F32 z_length = z_transformed.normalize();
+
 		max_scale = llmax(llmax(llmax(max_scale, x_length), y_length), z_length);
-		
+
 		mat *= scale_mat;
 
 		for (LLModelLoader::model_instance_list::iterator model_iter = iter->second.begin(); model_iter != iter->second.end();)
@@ -1685,32 +1650,14 @@ void LLModelPreview::rebuildUploadData()
 		}
 	}
 
+	F32 max_import_scale = (DEFAULT_MAX_PRIM_SCALE-0.1f)/max_scale;
 
 	F32 max_axis = llmax(mPreviewScale.mV[0], mPreviewScale.mV[1]);
 	max_axis = llmax(max_axis, mPreviewScale.mV[2]);
 	max_axis *= 2.f;
 
-// <AW: opensim-limits>
-	//F32 max_import_scale = DEFAULT_MAX_PRIM_SCALE/max_scale;
-	F32 region_max_prim_scale = LLWorld::getInstance()->getRegionMaxPrimScale();
-	F32 max_import_scale = region_max_prim_scale/max_scale;
-// </AW: opensim-limits>
-
-	if (!(gIsInSecondLife))
-	// Some other simulator like OpenSim, Aurora or a self named version.
-    {
-    LL_INFOS() << "Type: Float , Region Max Prim: " << region_max_prim_scale << LL_ENDL;
-    LL_INFOS() << "Type: Float , Max Import Scale: " << max_import_scale << LL_ENDL;
-    LL_INFOS() << "Type: Float , Max Scale: " << max_scale << LL_ENDL;
-    //clamp scale so that total imported model bounding box is smaller than 256m on a side
-		max_import_scale = llmin(max_import_scale, 256.f/max_axis);
-   	}
-	else
-	// Seoondlife simulatot
-	{
-		//clamp scale so that total imported model bounding box is smaller than 240m on a side
-		max_import_scale = llmin(max_import_scale, 240.f/max_axis);
-	}
+	//clamp scale so that total imported model bounding box is smaller than 240m on a side
+	max_import_scale = llmin(max_import_scale, 240.f/max_axis);
 
 	scale_spinner->setMaxValue(max_import_scale);
 
@@ -3416,7 +3363,8 @@ void LLModelPreview::genBuffers(S32 lod, bool include_skin_weights)
 			if (vf.mTexCoords)
 			{
 				vb->getTexCoord0Strider(tc_strider);
-				LLVector4a::memcpyNonAliased16((F32*) tc_strider.get(), (F32*) vf.mTexCoords, num_vertices*2*sizeof(F32));
+				S32 tex_size = (num_vertices*2*sizeof(F32)+0xF) & ~0xF;
+				LLVector4a::memcpyNonAliased16((F32*) tc_strider.get(), (F32*) vf.mTexCoords, tex_size);
 			}
 			
 			if (vf.mNormals)
@@ -4338,14 +4286,6 @@ void LLFloaterModelPreview::onReset(void* user_data)
 //static
 void LLFloaterModelPreview::onUpload(void* user_data)
 {
-	if(!gSavedSettings.getBOOL("FSMeshUploadPossible")){
-		LLSD args;
-		args["MESSAGE"] = llformat("Mesh upload and calculation is not supported yet." );
-		LLNotificationsUtil::add("GenericAlert", args);
-		return;
-	}
-
-
 	assert_main_thread();
 
 	LLFloaterModelPreview* mp = (LLFloaterModelPreview*) user_data;

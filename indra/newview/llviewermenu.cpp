@@ -544,7 +544,7 @@ void init_menus()
 	gPopupMenuView->setBackgroundColor( color );
 
 	// If we are not in production, use a different color to make it apparent.
-	if (!LLGridManager::getInstance()->isInSLBeta())
+	if (LLGridManager::getInstance()->isInProductionGrid())
 	{
 		color = LLUIColorTable::instance().getColor( "MenuBarBgColor" );
 	}
@@ -563,26 +563,11 @@ void init_menus()
 	menu_bar_holder->addChild(gMenuBarView);
   
     gViewerWindow->setMenuBackgroundColor(false, 
-        !LLGridManager::getInstance()->isInSLBeta());
-// <FS:AW opensim currency support>
-//	// Assume L$10 for now, the server will tell us the real cost at login
-//	// *TODO:Also fix cost in llfolderview.cpp for Inventory menus
-//	const std::string upload_cost("10");
-	// \0/ Copypasta! See llviewermessage, llviewermenu and llpanelmaininventory
-	S32 cost = LLGlobalEconomy::getInstance()->getPriceUpload();
-	std::string upload_cost;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	bool in_opensim = LLGridManager::getInstance()->isInOpenSim();
-	if(in_opensim)
-	{
-		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : LLTrans::getString("free");
-	}
-	else
-#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	{
-		upload_cost = cost > 0 ? llformat("%s%d", "L$", cost) : llformat("%d", gSavedSettings.getU32("DefaultUploadCost"));
-	}
-// </FS:AW opensim currency support>
+        LLGridManager::getInstance()->isInProductionGrid());
+
+	// Assume L$10 for now, the server will tell us the real cost at login
+	// *TODO:Also fix cost in llfolderview.cpp for Inventory menus
+	const std::string upload_cost("10");
 	gMenuHolder->childSetLabelArg("Upload Image", "[COST]", upload_cost);
 	gMenuHolder->childSetLabelArg("Upload Sound", "[COST]", upload_cost);
 	gMenuHolder->childSetLabelArg("Upload Animation", "[COST]", upload_cost);
@@ -3989,7 +3974,7 @@ void set_god_level(U8 god_level)
         if(gViewerWindow)
         {
             gViewerWindow->setMenuBackgroundColor(god_level > GOD_NOT,
-            !LLGridManager::getInstance()->isInSLBeta());
+            LLGridManager::getInstance()->isInProductionGrid());
         }
     
         LLSD args;
@@ -4029,7 +4014,7 @@ BOOL check_toggle_hacked_godmode(void*)
 
 bool enable_toggle_hacked_godmode(void*)
 {
-  return LLGridManager::getInstance()->isInSLBeta();
+  return !LLGridManager::getInstance()->isInProductionGrid();
 }
 #endif
 
@@ -4174,7 +4159,7 @@ class LLEnableHoverHeight : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		return (gAgent.getRegion() && gAgent.getRegion()->avatarHoverHeightEnabled()) || (isAgentAvatarValid() && !gAgentAvatarp->isUsingServerBakes());
+		return gAgent.getRegion() && gAgent.getRegion()->avatarHoverHeightEnabled();
 	}
 };
 
@@ -5095,7 +5080,7 @@ BOOL enable_take()
 		return TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (LLGridManager::getInstance()->isInSLBeta() 
+		if (!LLGridManager::getInstance()->isInProductionGrid() 
             && gAgent.isGodlike())
 		{
 			return TRUE;
@@ -5813,7 +5798,7 @@ bool enable_object_delete()
 	TRUE;
 #else
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-	(LLGridManager::getInstance()->isInSLBeta()
+	(!LLGridManager::getInstance()->isInProductionGrid()
      && gAgent.isGodlike()) ||
 # endif
 	LLSelectMgr::getInstance()->canDoDelete();
@@ -6701,74 +6686,6 @@ class LLShowHelp : public view_listener_t
 		return true;
 	}
 };
-
-// <AW: OpenSim>
-bool update_grid_help()
-{
-	LLSD grid_info;
-	LLGridManager::getInstance()->getGrid(grid_info);
-	std::string grid_label = LLGridManager::getInstance()->getGridLabel();
-
-	bool needs_seperator = false;
-
-
-	if (LLGridManager::getInstance()->isInSecondLife() ||
-		(LLGridManager::getInstance()->isInOpenSim() && grid_info.has("help")))
-	{
-		needs_seperator = true;
-		gMenuHolder->childSetVisible("current_grid_help",true);
-		gMenuHolder->childSetLabelArg("current_grid_help", "[CURRENT_GRID]", grid_label);
-		gMenuHolder->childSetVisible("current_grid_help_login",true);
-		gMenuHolder->childSetLabelArg("current_grid_help_login", "[CURRENT_GRID]", grid_label);
-	}
-	else
-	{
-		gMenuHolder->childSetVisible("current_grid_help",false);
-		gMenuHolder->childSetVisible("current_grid_help_login",false);
-	}
-	if (LLGridManager::getInstance()->isInSecondLife() ||
-		(LLGridManager::getInstance()->isInOpenSim() && grid_info.has("about")))
-	{
-		needs_seperator = true;
-		gMenuHolder->childSetVisible("current_grid_about",true);
-		gMenuHolder->childSetLabelArg("current_grid_about", "[CURRENT_GRID]", grid_label);
-		gMenuHolder->childSetVisible("current_grid_about_login",true);
-		gMenuHolder->childSetLabelArg("current_grid_about_login", "[CURRENT_GRID]", grid_label);
-	}
-	else
-	{
-		gMenuHolder->childSetVisible("current_grid_about",false);
-		gMenuHolder->childSetVisible("current_grid_about_login",false);
-	}
-	//FIXME: this does nothing
-	gMenuHolder->childSetVisible("grid_help_seperator",needs_seperator);
-	gMenuHolder->childSetVisible("grid_help_seperator_login",needs_seperator);
-
-// <FS:AW  opensim destinations and avatar picker>
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		if (!LLLoginInstance::getInstance()->hasResponse("destination_guide_url") 
-		||LLLoginInstance::getInstance()->getResponse("destination_guide_url").asString().empty())
-		{
-			LL_WARNS() << "Destinations Guide Off" << LL_ENDL;
-			gMenuHolder->childSetVisible("Destinations", false);
-		}
-	
-		if (!LLLoginInstance::getInstance()->hasResponse("avatar_picker_url") 
-		||LLLoginInstance::getInstance()->getResponse("avatar_picker_url").asString().empty())
-			LL_WARNS() << "Avatar Picker Off" << LL_ENDL;
-			gMenuHolder->childSetVisible("Avatar Picker", false);
-		{
-
-		}
-	}
-#endif // HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-// </FS:AW  opensim destinations and avatar picker>
-
-	return true;
-}
-// </AW: OpenSim>
 
 class LLToggleHelp : public view_listener_t
 {
@@ -8029,7 +7946,7 @@ bool enable_object_take_copy()
 		all_valid = true;
 #ifndef HACKED_GODLIKE_VIEWER
 # ifdef TOGGLE_HACKED_GODLIKE_VIEWER
-		if (!LLGridManager::getInstance()->isInSLBeta()
+		if (LLGridManager::getInstance()->isInProductionGrid()
             || !gAgent.isGodlike())
 # endif
 		{
@@ -8548,29 +8465,6 @@ void handle_show_url(const LLSD& param)
 		LLWeb::loadURLInternal(url);
 	}
 
-}
-void handle_show_grid_status()
-{
-	std::string grid = LLGridManager::getInstance()->getGridLabel();
-	LLStringUtil::replaceChar(grid, ' ', '_');
-
-	std::string status_link = gSavedSettings.getString("GridStatusLink_" + grid);
-	if (!status_link.empty()) {
-		handle_show_url(LLSD(status_link));
-	}
-}
-void handle_show_group()
-{
-	std::string grid = LLGridManager::getInstance()->getGridLabel();
-	LLStringUtil::replaceChar(grid, ' ', '_');
-
-	const std::string group = gSavedSettings.getString("SupportGroupSLURL_" + grid);
-
-	if (!group.empty()) {
-		LLUrlEntryGroup ueg;
-
-		LLGroupActions::show(LLUUID(ueg.getID(group).asString().c_str()));
-	}
 }
 
 void handle_report_bug(const LLSD& param)
@@ -9159,8 +9053,6 @@ class LLUploadCostCalculator : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		std::string menu_name = userdata.asString();
-		// AW:this fights the update in llviewermessage
-		calculateCost();// <FS:AW opensim currency support>
 		gMenuHolder->childSetLabelArg(menu_name, "[COST]", mCostStr);
 
 		return true;
@@ -9171,9 +9063,7 @@ class LLUploadCostCalculator : public view_listener_t
 public:
 	LLUploadCostCalculator()
 	{
-// <FS:AW opensim currency support> we don't know the costs yet
-//		calculateCost();
-// </FS:AW opensim currency support>
+		calculateCost();
 	}
 };
 
@@ -9574,8 +9464,6 @@ void initialize_menus()
 	// Advanced > UI
 	commit.add("Advanced.WebBrowserTest", boost::bind(&handle_web_browser_test,	_2));	// sigh! this one opens the MEDIA browser
 	commit.add("Advanced.WebContentTest", boost::bind(&handle_web_content_test, _2));	// this one opens the Web Content floater
-	commit.add("Advanced.ShowGroup", boost::bind(&handle_show_group));
-	commit.add("Advanced.ShowGridStatus", boost::bind(&handle_show_grid_status));
 	commit.add("Advanced.ShowURL", boost::bind(&handle_show_url, _2));
 	commit.add("Advanced.ReportBug", boost::bind(&handle_report_bug, _2));
 	view_listener_t::addMenu(new LLAdvancedBuyCurrencyTest(), "Advanced.BuyCurrencyTest");
@@ -9588,7 +9476,6 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedToggleDebugClicks(), "Advanced.ToggleDebugClicks");
 	view_listener_t::addMenu(new LLAdvancedCheckDebugClicks(), "Advanced.CheckDebugClicks");
 	view_listener_t::addMenu(new LLAdvancedCheckDebugViews(), "Advanced.CheckDebugViews");
-	view_listener_t::addMenu(new LLAdvancedViewerSupportGroupExists(), "Advanced.ViewerSupportGroupExists");
 	view_listener_t::addMenu(new LLAdvancedToggleDebugViews(), "Advanced.ToggleDebugViews");
 	view_listener_t::addMenu(new LLAdvancedToggleXUINameTooltips(), "Advanced.ToggleXUINameTooltips");
 	view_listener_t::addMenu(new LLAdvancedCheckXUINameTooltips(), "Advanced.CheckXUINameTooltips");

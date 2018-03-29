@@ -19,15 +19,6 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
       "Build type.  One of: Debug Release RelWithDebInfo" FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
-#<FS:AW optional opensim support>
-set(HAS_OPENSIM_SUPPORT OFF)
-if (HAS_OPENSIM_SUPPORT)
-#hack for firestorm renaming HAS_OPENSIM_SUPPORT to OPENSIM
-  option(OPENSIM "OpenSim support" ON)
-  add_definitions(-DOPENSIM=1)
-  add_definitions(-DHAS_OPENSIM_SUPPORT=1)
-  message("compiling with OpenSim support")
-endif (HAS_OPENSIM_SUPPORT)
 #<FS:Ansariel> Support for test builds
 option(TESTBUILD "Generating test build" OFF)
 if(TESTBUILD AND TESTBUILDPERIOD)
@@ -68,8 +59,6 @@ add_subdirectory(${LIBS_OPEN_PREFIX}viewer_components)
 
 # Legacy C++ tests. Build always, run if LL_TESTS is true.
 add_subdirectory(${VIEWER_PREFIX}test)
-# teapot
-add_subdirectory(${LIBS_OPEN_PREFIX}teapot)
 
 if (ENABLE_MEDIA_PLUGINS)
 # viewer media plugins

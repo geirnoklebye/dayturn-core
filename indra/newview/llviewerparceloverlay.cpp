@@ -57,7 +57,6 @@ LLViewerParcelOverlay::update_signal_t* LLViewerParcelOverlay::sUpdateSignal = N
 LLViewerParcelOverlay::LLViewerParcelOverlay(LLViewerRegion* region, F32 region_width_meters)
 :	mRegion( region ),
 	mParcelGridsPerEdge( S32( region_width_meters / PARCEL_GRID_STEP_METERS ) ),
-	mRegionSize(S32(region_width_meters)),
 	mDirty( FALSE ),
 	mTimeSinceLastUpdate(),
 	mOverlayTextureIdx(-1),
@@ -411,8 +410,7 @@ void LLViewerParcelOverlay::uncompressLandOverlay(S32 chunk, U8 *packed_overlay)
 {
 	// Unpack the message data into the ownership array
 	S32	size	= mParcelGridsPerEdge * mParcelGridsPerEdge;
-	S32 mParcelOverLayChunks = mRegionSize * mRegionSize / (128 * 128);
-	S32 chunk_size = size / mParcelOverLayChunks; 
+	S32 chunk_size = size / PARCEL_OVERLAY_CHUNKS;
 
 	memcpy(mOwnership + chunk*chunk_size, packed_overlay, chunk_size);		/*Flawfinder: ignore*/
 

@@ -1,4 +1,5 @@
 /** 
+
  * @file indra_constants.h
  * @brief some useful short term constants for Indra
  *
@@ -35,20 +36,13 @@ static const F32 REGION_WIDTH_METERS = 256.f;
 static const S32 REGION_WIDTH_UNITS = 256;
 static const U32 REGION_WIDTH_U32 = 256;
 
-//Kokua:Removed. Use instead: LLWorld::getInstance()->getRegionMaxHeight()
-#ifndef HAS_OPENSIM_SUPPORT
-const F32 REGION_HEIGHT_METERS = 4096.f;
-#endif
 const F32 MAX_ATTACHMENT_DIST = 3.5f; // meters? Compatiability add back after interesting merge
+
+const F32 REGION_HEIGHT_METERS = 4096.f;
 
 const 	F32 	DEFAULT_AGENT_DEPTH 	= 0.45f;
 const 	F32 	DEFAULT_AGENT_WIDTH 	= 0.60f;
 const 	F32 	DEFAULT_AGENT_HEIGHT	= 1.9f;
-// Extended land layer for Aurora Sim
-const	char	AURORA_LAND_LAYER_CODE			= 'M';
-const	char	AURORA_WATER_LAYER_CODE			= 'X';
-const	char	AURORA_WIND_LAYER_CODE			= '9';
-const	char	AURORA_CLOUD_LAYER_CODE			= ':';
 
 enum ETerrainBrushType
 {
@@ -62,7 +56,6 @@ enum ETerrainBrushType
 	E_LANDBRUSH_REVERT 	= 5,
 	E_LANDBRUSH_INVALID = 6
 };
-
 
 // keys
 // Bit masks for various keyboard modifier keys.
@@ -335,9 +328,7 @@ const U32 AGENT_CONTROL_MBUTTON_UP			= 0x3 << CONTROL_LBUTTON_UP_INDEX;		// 0x20
 // (for now)
 const U32 AGENT_ATTACH_OFFSET				= 4;
 const U32 AGENT_ATTACH_MASK					= 0xf << AGENT_ATTACH_OFFSET;
-// For linked sets
-const S32 MAX_CHILDREN_PER_TASK = 255;
-const S32 MAX_CHILDREN_PER_PHYSICAL_TASK = 32;
+
 // RN: this method swaps the upper and lower nibbles to maintain backward 
 // compatibility with old objects that only used the upper nibble
 #define ATTACHMENT_ID_FROM_STATE(state) ((S32)((((U8)state & AGENT_ATTACH_MASK) >> 4) | (((U8)state & ~AGENT_ATTACH_MASK) << 4)))

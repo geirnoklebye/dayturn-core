@@ -59,7 +59,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	if (! app.init())
 	{
 		LL_WARNS() << "Unable to initialize application." << LL_ENDL;
-		return 1;
+		return -1;
 	}
 
 	app.processingLoop();

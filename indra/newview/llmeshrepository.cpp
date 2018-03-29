@@ -371,11 +371,6 @@ const long UPLOAD_RETRY_LIMIT = 0L;
 // See wiki at https://wiki.secondlife.com/wiki/Mesh/Mesh_Asset_Format
 const S32 MAX_MESH_VERSION = 999;
 
-//<FS:TS> FIRE-11451: Cap concurrent mesh requests at a sane value 
-//const U32 MESH_CONCURRENT_REQUEST_LIMIT = 64;  // upper limit CLANG UNUSED
-//const U32 MESH2_CONCURRENT_REQUEST_LIMIT = 32;  // upper limit CLANG UNUSED
-//</FS:TS> FIRE-11451 
-
 U32 LLMeshRepository::sBytesReceived = 0;
 U32 LLMeshRepository::sMeshRequestCount = 0;
 U32 LLMeshRepository::sHTTPRequestCount = 0;
@@ -2954,9 +2949,9 @@ void LLMeshHandlerBase::onCompleted(LLCore::HttpHandle handle, LLCore::HttpRespo
 			data = new(std::nothrow) U8[data_size - body_offset];
 			if (data)
 			{
-			body->read(body_offset, (char *) data, data_size - body_offset);
-			LLMeshRepository::sBytesReceived += data_size;
-		}
+				body->read(body_offset, (char *) data, data_size - body_offset);
+				LLMeshRepository::sBytesReceived += data_size;
+			}
 		}
 
 		processData(body, body_offset, data, data_size - body_offset);

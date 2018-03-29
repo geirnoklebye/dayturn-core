@@ -78,11 +78,12 @@ const S32 WORLD_PATCH_SIZE = 16;
 
 extern LLColor4U MAX_WATER_COLOR;
 
-U32 LLWorld::mWidth = 256;
+const U32 LLWorld::mWidth = 256;
 
 // meters/point, therefore mWidth * mScale = meters per edge
 const F32 LLWorld::mScale = 1.f;
-F32 LLWorld::mWidthInMeters = mWidth * mScale;
+
+const F32 LLWorld::mWidthInMeters = mWidth * mScale;
 
 //
 // Functions
@@ -94,12 +95,8 @@ LLWorld::LLWorld() :
 	mLastPacketsIn(0),
 	mLastPacketsOut(0),
 	mLastPacketsLost(0),
-	mSpaceTimeUSec(0),
-	mInferredServerScaleXY(OS_DEFAULT_MAX_PRIM_SCALE),
-	mInferredServerScaleZ(OS_DEFAULT_MAX_PRIM_SCALE),
-	mLimitsNeedRefresh(true)// <AW: opensim-limits>
+	mSpaceTimeUSec(0)
 {
-
 	for (S32 i = 0; i < 8; i++)
 	{
 		mEdgeWaterObjects[i] = NULL;
@@ -115,6 +112,7 @@ LLWorld::LLWorld() :
 	mDefaultWaterTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), FALSE);
 	gGL.getTexUnit(0)->bind(mDefaultWaterTexturep);
 	mDefaultWaterTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
+
 	LLViewerRegion::sVOCacheCullingEnabled = gSavedSettings.getBOOL("RequestFullRegionCache") && gSavedSettings.getBOOL("ObjectCacheEnabled");
 }
 
@@ -142,497 +140,11 @@ void LLWorld::destroyClass()
 
 	LLSceneMonitor::deleteSingleton();
 }
-// <NP: disable build constraints> //see /indra/llcommon/stdtypes.h for defined values F32_MIN = FLT_MIN = 0 NOT -INF 
-F32 LLWorld::getRegionMinPrimScale() const
+
+
+LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host)
 {
-	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
-	{
-		return ( mRegionMinPrimScale ); //set to give no change sl server set back to 0.01 so no need to go lower
-	}
-	else
-	{
-		return mRegionMinPrimScale;
-	}
-}
-
-F32 LLWorld::getRegionMaxPrimXPos() const
-{
-	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
-	{
-		return F32_MAX;
-	}
-	else
-	{
-		return mRegionMaxPrimXPos;
-	}
-}
-
-F32 LLWorld::getRegionMaxPrimYPos() const
-{
-	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
-	{
-		return F32_MAX;
-	}
-	else
-	{
-		return mRegionMaxPrimYPos;
-	}
-}
-
-F32 LLWorld::getRegionMaxPrimZPos() const
-{
-	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
-	{
-		return F32_MAX;
-	}
-	else
-	{
-		return mRegionMaxPrimZPos;
-	}
-}
-
-F32 LLWorld::getRegionMinPrimXPos() const
-{
-	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
-	{
-		return ( mRegionMinPrimXPos * 0.1f );
-	}
-	else
-	{
-		return mRegionMinPrimXPos;
-	}
-}
-
-F32 LLWorld::getRegionMinPrimYPos() const
-{
-	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
-	{
-		return ( mRegionMinPrimYPos * 0.1f );
-	}
-	else
-	{
-		return mRegionMinPrimYPos;
-	}
-}
-
-F32 LLWorld::getRegionMinPrimZPos() const
-{
-	if (gSavedSettings.getBOOL("DisableMaxBuildConstraints"))
-	{
-		return ( mRegionMinPrimZPos * 0.1F );
-	}
-	else
-	{
-		return mRegionMinPrimZPos;
-	}
-}
-
-// </NP: disable build constraints>
-
-void LLWorld::refreshLimits()
-{
-
-	mLimitsNeedRefresh = false;
-
-	if(!(LLGridManager::getInstance()->isInSecondLife()))
-	{
-		//llmath/xform.h
-		mRegionMaxHeight = OS_MAX_OBJECT_Z; //llmath/xform.h
-		mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
-
-		mRegionMinPrimXPos = 0.0f;
-		mRegionMinPrimYPos = 0.0f;
-		mRegionMinPrimZPos = 0.0f;
-
-		// <NP: disable build constraints>
-		if (gSavedSettings.getBOOL("DisableMaxBuildConstraints")) // adjusts max and min constrains
-		{
-				mRegionMaxPrimScale = F32_MAX;
-				mRegionMinPrimScale = 0.000001f;
-				mRegionMaxPrimXPos = F32_MAX;
-				mRegionMaxPrimYPos = F32_MAX;
-				mRegionMaxPrimZPos = F32_MAX;
-
-			}
-		else
-			{
-				mRegionMaxPrimScale = OS_DEFAULT_MAX_PRIM_SCALE;
-				mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
-				//scale constants form xform.h should and be easier to modify if future need arrises
-				mRegionMaxPrimXPos = OS_DEFAULT_MAX_PRIM_SCALE; //256
-				mRegionMaxPrimYPos = OS_DEFAULT_MAX_PRIM_SCALE;
-				mRegionMaxPrimZPos = OS_MAX_PRIM_SCALE; //65536
-			}
-		// </NP: disable build constraints>
-		mRegionMaxPrimScaleNoMesh = OS_DEFAULT_MAX_PRIM_SCALE;// no restrictions here
-		mRegionMaxHollowSize = OS_OBJECT_MAX_HOLLOW_SIZE;
-		mRegionMinHoleSize = OS_OBJECT_MIN_HOLE_SIZE;
-		mMaxPhysPrimScale = OS_DEFAULT_MAX_PRIM_SCALE;
-		mMaxLinkedPrims = 10000;
-		mMaxPhysLinkedPrims = 10000;
-		mMaxInventoryItemsTransfer = 42;
-		mAllowRenderName = gSavedSettings.getS32("AvatarNameTagMode");
-		mAllowMinimap = TRUE;
-		mAllowPhysicalPrims = TRUE;
-		mAllowRenderWater = TRUE;
-
-		mMaxPrimXPos = F32_MAX;
-		mMaxPrimYPos = F32_MAX;
-		mMaxPrimZPos = F32_MAX;
-		mMinPrimXPos = 0;
-		mMinPrimYPos = 0;
-		mMinPrimZPos = 0;
-		mMaxDragDistance = gSavedSettings.getF32("MaxDragDistance");
-		mClassicCloudsEnabled = FALSE;
-		mAllowParcelWindLight = TRUE;
-		mEnableTeenMode = FALSE; //get saved settings?
-		mEnforceMaxBuild = FALSE;
-		mLockedDrawDistance = FALSE;
-
-		mWhisperDistance = CHAT_WHISPER_RADIUS;
-		mSayDistance = CHAT_NORMAL_RADIUS;
-		mShoutDistance = CHAT_SHOUT_RADIUS;
-
-		mDrawDistance = -1.f;
-		mTerrainDetailScale = -1.f;
-	}
-	else
-	{
-		//llmath/xform.h
-		mRegionMaxHeight = SL_MAX_OBJECT_Z;
-		mRegionMinPrimScale = SL_MIN_PRIM_SCALE;
-		mRegionMaxPrimScale = SL_DEFAULT_MAX_PRIM_SCALE;
-		mRegionMaxPrimScaleNoMesh = SL_DEFAULT_MAX_PRIM_SCALE_NO_MESH;
-		//llprimitive/llprimitive.*
-		mRegionMaxHollowSize = SL_OBJECT_MAX_HOLLOW_SIZE;
-		mRegionMinHoleSize = SL_OBJECT_MIN_HOLE_SIZE;
-		mRegionMaxPrimXPos = SL_MAX_OBJECT_XY;
-		mRegionMaxPrimYPos = SL_MAX_OBJECT_XY;
-		mRegionMaxPrimZPos = SL_MAX_OBJECT_Z;
-		mMaxPhysPrimScale = SL_DEFAULT_MAX_PRIM_SCALE;
-		mMaxLinkedPrims = MAX_CHILDREN_PER_TASK;
-		mMaxPhysLinkedPrims = MAX_CHILDREN_PER_PHYSICAL_TASK;
-		mMaxInventoryItemsTransfer = 42;
-		mAllowRenderName = gSavedSettings.getS32("AvatarNameTagMode");
-		mAllowMinimap = TRUE;
-		mAllowPhysicalPrims = TRUE;
-		mAllowRenderWater = TRUE;
-
-		mMaxPrimXPos = 256;
-		mMaxPrimYPos = 256;
-		mMaxPrimZPos = 4096;
-		mMinPrimXPos = 0;
-		mMinPrimYPos = 0;
-		mMinPrimZPos = 0;
-		mMaxDragDistance = gSavedSettings.getF32("MaxDragDistance");
-		mClassicCloudsEnabled = FALSE;
-		mAllowParcelWindLight = FALSE;
-		mEnableTeenMode = FALSE; //get saved settings?
-		mEnforceMaxBuild = FALSE;
-		mLockedDrawDistance = FALSE;
-
-		mWhisperDistance = CHAT_WHISPER_RADIUS;
-		mSayDistance = CHAT_NORMAL_RADIUS;
-		mShoutDistance = CHAT_SHOUT_RADIUS;
-
-		mDrawDistance = -1.f;
-		mTerrainDetailScale = -1.f;
-	}
-	LL_DEBUGS("OS_SETTINGS") << "RegionMaxHeight    " << mRegionMaxHeight << LL_ENDL;
-	LL_DEBUGS("OS_SETTINGS") << "RegionMinPrimScale " << mRegionMinPrimScale << LL_ENDL;
-	LL_DEBUGS("OS_SETTINGS") << "RegionMaxPrimScale " << mRegionMaxPrimScale << LL_ENDL;
-	LL_DEBUGS("OS_SETTINGS") << "RegionMaxHollowSize    " << mRegionMaxHollowSize << LL_ENDL;
-	LL_DEBUGS("OS_SETTINGS") << "RegionMinHoleSize  " << mRegionMinHoleSize << LL_ENDL;
-}
-// </AW: opensim-limits>
-void LLWorld::setRegionMaxHeight(F32 val)
-{ 
-	if(val <= 0.0f)
-		mRegionMaxHeight = OS_MAX_OBJECT_Z;
-	else
-		mRegionMaxHeight = val; 
-}
-
-void LLWorld::setRegionMinPrimScale(F32 val)
-{
-	if(val <= 0.0f)
-		mRegionMinPrimScale = OS_MIN_PRIM_SCALE;
-	else
-		mRegionMinPrimScale = val;
-}
-
-void LLWorld::setRegionMaxPrimScale(F32 val)
-{
-	if(val <= 0.0f)
-		mRegionMaxPrimScale = OS_DEFAULT_MAX_PRIM_SCALE;
-	else
-		mRegionMaxPrimScale = val;
-}
-
-void LLWorld::setRegionMaxPrimScaleNoMesh(F32 val)
-{
-	if(val <= 0.0f)
-		mRegionMaxPrimScaleNoMesh = OS_DEFAULT_MAX_PRIM_SCALE;
-	else
-		mRegionMaxPrimScaleNoMesh = val;
-}
-
-void LLWorld::setRegionMaxHollowSize(F32 val)
-{
-	if(val <= 0.0f)
-		mRegionMaxHollowSize = OS_OBJECT_MAX_HOLLOW_SIZE;
-	else
-		mRegionMaxHollowSize = val;
-}
-
-void LLWorld::setRegionMinHoleSize(F32 val)
-{
-	if(val <= 0.0f)
-		mRegionMinHoleSize = OS_OBJECT_MIN_HOLE_SIZE;
-	else
-		mRegionMinHoleSize = val;
-}
-
-void LLWorld::setMaxPhysPrimScale(F32 val)
-{
-	if(val <= 0.0f)
-		mMaxPhysPrimScale = mRegionMaxPrimScale;
-	else
-		mMaxPhysPrimScale = val;
-}
-
-void LLWorld::setMaxDragDistance(F32 val)
-{
-	if(val <= 0.0f)
-		mMaxDragDistance = gSavedSettings.getF32("MaxDragDistance");
-	else
-		mMaxDragDistance = val;
-}
-
-void LLWorld::setMaxLinkedPrims(S32 val)
-{
-	if(val < 0)
-		mMaxLinkedPrims = 10000;
-	else
-		mMaxLinkedPrims = val;
-}
-
-void LLWorld::setMaxPhysLinkedPrims(S32 val)
-{
-	if(val < 0)
-		mMaxPhysLinkedPrims = 10000;
-	else
-		mMaxPhysLinkedPrims = val;
-}
-
-void LLWorld::setMaxInventoryItemsTransfer(S32 val)
-{
-	if(val < 0)
-		mMaxInventoryItemsTransfer = 42;
-	else
-		mMaxInventoryItemsTransfer = val;
-}
-
-void LLWorld::setMaxPrimXPos(F32 val)
-{
-	if(val <= 0.0f)
-		mMaxPrimXPos = F32_MAX;
-	else
-		mMaxPrimXPos = val;
-}
-
-void LLWorld::setMaxPrimYPos(F32 val)
-{
-	if(val <= 0.0f)
-		mMaxPrimYPos = F32_MAX;
-	else
-		mMaxPrimYPos = val;
-}
-
-void LLWorld::setMaxPrimZPos(F32 val)
-{
-	if(val <= 0.0f)
-		mMaxPrimZPos = F32_MAX;
-	else
-		mMaxPrimZPos = val;
-}
-
-void LLWorld::setMinPrimXPos(F32 val)
-{
-	if(val < 0.0f)
-		mMinPrimXPos = 0.0f;
-	else
-		mMinPrimXPos = val;
-}
-
-void LLWorld::setMinPrimYPos(F32 val)
-{
-	if(val < 0.0f)
-		mMinPrimYPos = 0.0f;
-	else
-		mMinPrimYPos = val;
-}
-
-void LLWorld::setMinPrimZPos(F32 val)
-{
-	if(val < 0.0f)
-		mMinPrimZPos = 0.0f;
-	else
-		mMinPrimZPos = val;
-}
-
-void LLWorld::setWhisperDistance(F32 val)
-{
-	if(val <= 0.0f)
-		mWhisperDistance = CHAT_WHISPER_RADIUS;
-	else
-		mWhisperDistance = val;
-}
-
-void LLWorld::setSayDistance(F32 val)
-{
-	if(val <= 0.0f)
-		mSayDistance = CHAT_NORMAL_RADIUS;
-	else
-		mSayDistance = val;
-}
-
-void LLWorld::setShoutDistance(F32 val)
-{
-	if(val < 0.0f)
-		mShoutDistance = CHAT_SHOUT_RADIUS;
-	else
-		mShoutDistance = val;
-}
-
-void LLWorld::setDrawDistance(F32 val)
-{
-	if(val < 0.0f)
-		mDrawDistance = -1.f;
-	else
-		mDrawDistance = val;
-}
-
-void LLWorld::setTerrainDetailScale(F32 val)
-{
-	if(val < 0.0f)
-		mTerrainDetailScale = -1.f;
-	else
-		mTerrainDetailScale = val;
-}
-
-void LLWorld::setAllowMinimap(BOOL val)			{ mAllowMinimap = val; }
-void LLWorld::setAllowPhysicalPrims(BOOL val)	{ mAllowPhysicalPrims = val; }
-void LLWorld::setAllowRenderWater(BOOL val)		{ mAllowRenderWater = val; }
-void LLWorld::setSkyUseClassicClouds(BOOL val)	{ mClassicCloudsEnabled = val; }
-void LLWorld::setAllowParcelWindLight(BOOL val) { mAllowParcelWindLight = val; }
-void LLWorld::setEnableTeenMode(BOOL val)		{ mEnableTeenMode = val; }
-void LLWorld::setEnforceMaxBuild(BOOL val)		{ mEnforceMaxBuild = val; }
-void LLWorld::setLockedDrawDistance(BOOL val)	{ mLockedDrawDistance = val; }
-void LLWorld::setAllowRenderName(S32 val)		{ mAllowRenderName = val; }
-
-void LLWorld::updateLimits()
-{
-	if(!LLGridManager::getInstance())
-	{
-		return;
-	}
-	/*
-	mRegionMaxHeight
-	getRegionMinPrimScale
-	getRegionMaxPrimScale
-	getMinPrimXPos
-	getMinPrimYPos
-	getMinPrimZPos
-	getMaxPrimXPos
-	getMaxPrimYPos
-	getMaxPrimZPos
-	getRegionMaxHollowSize
-	getRegionMinHoleSize
-	getAllowPhysicalPrims
-	mRegionMaxPrimScaleNoMesh // not implemented
-
-	gFloaterTools->updateToolsSizeLimits();
-
-
-	mAllowMinimap
-	*/
-
-	if(mAllowMinimap && LLFloaterReg::instanceVisible("mini_map")) LLFloaterReg::showInstance("mini_map");
-	else LLFloaterReg::hideInstance("mini_map");
-
-	/*
-	mMaxLinkedPrims;
-	mMaxPhysLinkedPrims; // not implemented
-	*/
-	//done in llselectmgr.cpp
-	/*
-	mMaxDragDistance;
-	*/
-	//done in llmaniptranslate.cpp
-	/*
-	mAllowRenderWater
-	*/
-	gAgent.getRegion()->rebuildWater();
-
-	/*
-	mMaxInventoryItemsTransfer
-	*/
-
-	//done in llgiveinventory.cpp
-	/*
-	drawdistance // set in kowopenregionssettings.cpp
-	mLockedDrawDistance
-	mAllowRenderName;
-	*/
-
-	//done in llviewerdisplay.cpp
-	/*
-	skyUseClassicClouds
-	*/
-
-	//can't implement, classic clouds are removed from v3 viewers
-	/*
-	mEnableTeenMode
-	*/
-	//this is enabletoggle, not set, done in llviewermenu.cpp
-
-	/*
-	mMaxPhysPrimScale
-	*/
-
-	//todo
-	/*
-	mEnforceMaxBuild
-	*/
-
-	// not used as long as there is no gSavedSettings.getBOOL("DisableMaxBuildConstraints") to overwrite default settings
-	/*
-	mAllowParcelWindLight
-	*/
-
-	// not implemented setting
-	/*
-
-	//Update the floater if its around
-	LLPanelRegionOpenSettingsInfo* floater = LLFloaterRegionInfo::getPanelOpenSettings();
-	if (floater != NULL)
-	{
-		floater->refreshFromRegion(gAgent.getRegion());
-	}
-	*/
-}
-
-// </opensim-limits>
-LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host, const U32 &region_size_x, const U32 &region_size_y)
-{
-	// <AW: opensim-limits>
-	if(mLimitsNeedRefresh)
-	{
-		refreshLimits();
-	}
-// </AW: opensim-limits>
-
+	LL_INFOS() << "Add region with handle: " << region_handle << " on host " << host << LL_ENDL;
 	LLViewerRegion *regionp = getRegionFromHandle(region_handle);
 	std::string seedUrl;
 	if (regionp)
@@ -671,11 +183,9 @@ LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host,
 
 	U32 iindex = 0;
 	U32 jindex = 0;
-	mWidth = region_size_x;  //MegaRegion
-	mWidthInMeters = mWidth * mScale; //MegaRegion
 	from_region_handle(region_handle, &iindex, &jindex);
-	S32 x = (S32)(iindex/256); //MegaRegion
-	S32 y = (S32)(jindex/256); //MegaRegion
+	S32 x = (S32)(iindex/mWidth);
+	S32 y = (S32)(jindex/mWidth);
 	LL_INFOS() << "Adding new region (" << x << ":" << y << ")" 
 		<< " on host: " << host << LL_ENDL;
 
@@ -715,50 +225,26 @@ LLViewerRegion* LLWorld::addRegion(const U64 &region_handle, const LLHost &host,
 	F32 width = getRegionWidthInMeters();
 
 	LLViewerRegion *neighborp;
-	LLViewerRegion *last_neighborp;
 	from_region_handle(region_handle, &region_x, &region_y);
 
 	// Iterate through all directions, and connect neighbors if there.
 	S32 dir;
 	for (dir = 0; dir < 8; dir++)
 	{
-		last_neighborp = NULL;
 		adj_x = region_x + width * gDirAxes[dir][0];
 		adj_y = region_y + width * gDirAxes[dir][1];
+		to_region_handle(adj_x, adj_y, &adj_handle);
 
-		if(gDirAxes[dir][0] < 0) adj_x = region_x - WORLD_PATCH_SIZE;
-		if(gDirAxes[dir][1] < 0) adj_y = region_y - WORLD_PATCH_SIZE;
-
-
-		for(S32 offset = 0; offset < width; offset += WORLD_PATCH_SIZE)
+		neighborp = getRegionFromHandle(adj_handle);
+		if (neighborp)
 		{
-			to_region_handle(adj_x, adj_y, &adj_handle);
-			neighborp = getRegionFromHandle(adj_handle);
-
-			if (neighborp && last_neighborp != neighborp)
-			{
 			//LL_INFOS() << "Connecting " << region_x << ":" << region_y << " -> " << adj_x << ":" << adj_y << LL_ENDL;
-				regionp->connectNeighbor(neighborp, dir);
-				last_neighborp = neighborp;
-			}
-
-			if(dir == NORTHEAST ||
-			   dir == NORTHWEST ||
-			   dir == SOUTHWEST ||
-			   dir == SOUTHEAST)
-			{
-				break;
-			}
-
-			if(dir == NORTH || dir == SOUTH) adj_x += WORLD_PATCH_SIZE;
-			if(dir == EAST || dir == WEST) adj_y += WORLD_PATCH_SIZE;
+			regionp->connectNeighbor(neighborp, dir);
 		}
 	}
 
 	updateWaterObjects();
 
-// <AW: opensim-limits>
-// </AW: opensim-limits>
 	return regionp;
 }
 
@@ -926,19 +412,11 @@ LLVector3d	LLWorld::clipToVisibleRegions(const LLVector3d &start_pos, const LLVe
 
 LLViewerRegion* LLWorld::getRegionFromHandle(const U64 &handle)
 {
-	U32 x, y;
-	from_region_handle(handle, &x, &y);
-
 	for (region_list_t::iterator iter = mRegionList.begin();
 		 iter != mRegionList.end(); ++iter)
 	{
 		LLViewerRegion* regionp = *iter;
-		U32 checkRegionX, checkRegionY;
-		F32 checkRegionWidth = regionp->getWidth();
-		from_region_handle(regionp->getHandle(), &checkRegionX, &checkRegionY);
-
-		if (x >= checkRegionX && x < (checkRegionX + checkRegionWidth) &&
-			y >= checkRegionY && y < (checkRegionY + checkRegionWidth))
+		if (regionp->getHandle() == handle)
 		{
 			return regionp;
 		}
@@ -1372,7 +850,7 @@ F32 LLWorld::getLandFarClip() const
 
 void LLWorld::setLandFarClip(const F32 far_clip)
 {
-	static S32 const rwidth = (S32)getRegionWidthInMeters();
+	static S32 const rwidth = (S32)REGION_WIDTH_U32;
 	S32 const n1 = (llceil(mLandFarClip) - 1) / rwidth;
 	S32 const n2 = (llceil(far_clip) - 1) / rwidth;
 	bool need_water_objects_update = n1 != n2;
@@ -1418,17 +896,18 @@ void LLWorld::updateWaterObjects()
 	S32 max_y = 0;
 	U32 region_x, region_y;
 
+	S32 rwidth = 256;
+
 	// We only want to fill in water for stuff that's near us, say, within 256 or 512m
 	S32 range = LLViewerCamera::getInstance()->getFar() > 256.f ? 512 : 256;
 
 	LLViewerRegion* regionp = gAgent.getRegion();
 	from_region_handle(regionp->getHandle(), &region_x, &region_y);
-	S32 rwidth = (S32)regionp->getWidth();
 
 	min_x = (S32)region_x - range;
 	min_y = (S32)region_y - range;
-	max_x = (S32)region_x + (rwidth-256) + range;
-	max_y = (S32)region_y + (rwidth-256) + range;
+	max_x = (S32)region_x + range;
+	max_y = (S32)region_y + range;
 
 	for (region_list_t::iterator iter = mRegionList.begin();
 		 iter != mRegionList.end(); ++iter)
@@ -1454,20 +933,19 @@ void LLWorld::updateWaterObjects()
 
 	// Now, get a list of the holes
 	S32 x, y;
-	S32 step = 256;
-	for (x = min_x; x <= max_x; x += step)
+	for (x = min_x; x <= max_x; x += rwidth)
 	{
-		for (y = min_y; y <= max_y; y += step)
+		for (y = min_y; y <= max_y; y += rwidth)
 		{
 			U64 region_handle = to_region_handle(x, y);
 			if (!getRegionFromHandle(region_handle))
 			{	// No region at that area, so make water
 				LLVOWater* waterp = (LLVOWater *)gObjectList.createObjectViewer(LLViewerObject::LL_VO_WATER, gAgent.getRegion());
 				waterp->setUseTexture(FALSE);
-				waterp->setPositionGlobal(LLVector3d(x + step/2,
-													 y + step/2,
+				waterp->setPositionGlobal(LLVector3d(x + rwidth/2,
+													 y + rwidth/2,
 													 256.f + water_height));
-				waterp->setScale(LLVector3((F32)step, (F32)step, 512.f));
+				waterp->setScale(LLVector3((F32)rwidth, (F32)rwidth, 512.f));
 				gPipeline.createObject(waterp);
 				mHoleWaterObjects.push_back(waterp);
 			}
@@ -1477,8 +955,8 @@ void LLWorld::updateWaterObjects()
 	// Update edge water objects
 	S32 wx, wy;
 	S32 center_x, center_y;
-	wx = (max_x - min_x) + step;
-	wy = (max_y - min_y) + step;
+	wx = (max_x - min_x) + rwidth;
+	wy = (max_y - min_y) + rwidth;
 	center_x = min_x + (wx >> 1);
 	center_y = min_y + (wy >> 1);
 
@@ -1631,25 +1109,9 @@ void process_enable_simulator(LLMessageSystem *msg, void **user_data)
 	// which simulator should we modify?
 	LLHost sim(ip_u32, port);
 
-	U32 region_size_x = 256;
-
-	U32 region_size_y = 256;
-
-#ifdef OPENSIM
-	if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		msg->getU32Fast(_PREHASH_SimulatorInfo, _PREHASH_RegionSizeX, region_size_x);
-		msg->getU32Fast(_PREHASH_SimulatorInfo, _PREHASH_RegionSizeY, region_size_y);
-		if (region_size_y == 0 || region_size_x == 0)
-		{
-			region_size_x = 256;
-			region_size_y = 256;
-		}
- 	}
-#endif
- 	// Viewer trusts the simulator.
+	// Viewer trusts the simulator.
 	msg->enableCircuit(sim, TRUE);
-	LLWorld::getInstance()->addRegion(handle, sim, region_size_x, region_size_y);
+	LLWorld::getInstance()->addRegion(handle, sim);
 
 	// give the simulator a message it can use to get ip and port
 	LL_INFOS() << "simulator_enable() Enabling " << sim << " with code " << msg->getOurCircuitCode() << LL_ENDL;
