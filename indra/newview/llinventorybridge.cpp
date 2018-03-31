@@ -3937,6 +3937,17 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
 	const LLUUID &favorites = model->findCategoryUUIDForType(LLFolderType::FT_FAVORITE);
 	const LLUUID &marketplace_listings_id = model->findCategoryUUIDForType(LLFolderType::FT_MARKETPLACE_LISTINGS, false);
 
+//MK
+	// Not only this is needed for RLV, but this also fixes
+	// a regular viewer bug.
+	// We need to clear the context menu, or some menu items would not refresh
+	// when objects are locked/unlocked (RestrainedLove), or worn/unworn or
+	// attached/detached (regular viewers) and the context menu is pulled down
+	// in-between.
+	items.clear();
+	disabled_items.clear();
+//mk
+
 	if (lost_and_found_id == mUUID)
 	{
 		// This is the lost+found folder.
