@@ -8820,7 +8820,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <integer>64.0</integer>
+      <real>64.0</real>
     </map>
     <key>PrivatePointAtTarget</key>
     <map>
