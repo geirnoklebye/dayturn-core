@@ -1875,10 +1875,13 @@ bool LLAppearanceMgr::getCanRemoveOutfit(const LLUUID& outfit_cat_id)
 // static
 bool LLAppearanceMgr::getCanRemoveFromCOF(const LLUUID& outfit_cat_id)
 {
-	if (gAgentWearables.isCOFChangeInProgress())
-	{
-		return false;
-	}
+//MK
+	// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
+	////if (gAgentWearables.isCOFChangeInProgress())
+	////{
+	////	return false;
+	////}
+//mk
 	LLInventoryModel::cat_array_t cats;
 	LLInventoryModel::item_array_t items;
 	LLFindWearablesEx is_worn(/*is_worn=*/ true, /*include_body_parts=*/ false);
@@ -1893,10 +1896,13 @@ bool LLAppearanceMgr::getCanRemoveFromCOF(const LLUUID& outfit_cat_id)
 // static
 bool LLAppearanceMgr::getCanAddToCOF(const LLUUID& outfit_cat_id)
 {
-	if (gAgentWearables.isCOFChangeInProgress())
-	{
-		return false;
-	}
+//MK
+	// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
+	////if (gAgentWearables.isCOFChangeInProgress())
+	////{
+	////	return false;
+	////}
+//mk
 
 	LLInventoryModel::cat_array_t cats;
 	LLInventoryModel::item_array_t items;
@@ -1912,11 +1918,14 @@ bool LLAppearanceMgr::getCanAddToCOF(const LLUUID& outfit_cat_id)
 
 bool LLAppearanceMgr::getCanReplaceCOF(const LLUUID& outfit_cat_id)
 {
-	// Don't allow wearing anything while we're changing appearance.
-	if (gAgentWearables.isCOFChangeInProgress())
-	{
-		return false;
-	}
+//MK
+	// Sometimes we just don't get LLAgentWearables::notifyLoadingFinished() and the outfit is indefinitely loading
+	////// Don't allow wearing anything while we're changing appearance.
+	////if (gAgentWearables.isCOFChangeInProgress())
+	////{
+	////	return false;
+	////}
+//mk
 
 	// Check whether it's the base outfit.
 	if (outfit_cat_id.isNull() || outfit_cat_id == getBaseOutfitUUID())
