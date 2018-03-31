@@ -61,7 +61,6 @@ VFS (cache) creation time: [VFS_TIME]
 	</string>
 	<string name="AboutLibs">
 <!--RestrainedLove API: [RLV_VERSION]-->
-<!--RestrainedLove API: [RLV_VERSION]-->
 J2C Decoder Version: [J2C_VERSION]
 Audio Driver Version: [AUDIO_DRIVER_VERSION]
 CEF-Version: [LIBCEF_VERSION]
@@ -405,6 +404,9 @@ http://secondlife.com/support for help fixing this problem.
 	<string name="AvatarEditingAppearance">(Editing Appearance)</string>
 	<string name="AvatarAway">Away</string>
 	<string name="AvatarDoNotDisturb">Do Not Disturb</string>
+//MK
+    <string name="AvatarTyping">Typing</string>
+//mk	
 	<string name="AvatarMuted">Blocked</string>
 
 	<!-- animations -->
@@ -4168,6 +4170,9 @@ If you continue to receive this message, please contact Second Life support for 
 	<string name="Right Pec">Right Pec</string>
     <string name="Neck">Neck</string>
     <string name="Avatar Center">Avatar Center</string>
+//MK
+    <string name="Root">Root</string>
+//mk
     <string name="Left Ring Finger">Left Ring Finger</string>
     <string name="Right Ring Finger">Right Ring Finger</string>
     <string name="Tail Base">Tail Base</string>
@@ -4489,6 +4494,7 @@ If you continue to receive this message, please contact Second Life support for 
 	<string name="GroupMoneyCredits">Credits</string>
 	<string name="GroupMoneyDebits">Debits</string>
 	<string name="GroupMoneyDate">[weekday,datetime,utc] [mth,datetime,utc] [day,datetime,utc], [year,datetime,utc]</string>
+
 
 	<!-- Viewer menu -->
 	<string name="AcquiredItems">Acquired Items</string>
