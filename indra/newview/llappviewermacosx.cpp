@@ -48,7 +48,7 @@
 #include <vector>
 #include <exception>
 
-#include "llsys_objc.h"
+
 #include "lldir.h"
 #include <signal.h>
 #include <CoreAudio/CoreAudio.h>	// for systemwide mute
@@ -200,23 +200,40 @@ std::pair<std::string, std::string> parse_psn(const std::string& s)
 
 bool LLAppViewerMacOSX::initParseCommandLine(LLCommandLineParser& clp)
 {
-	// The next two lines add the support for parsing the mac -psn_XXX arg.
-	clp.addOptionDesc("psn", NULL, 1, "MacOSX process serial number");
-	clp.setCustomParser(parse_psn);
-
-	// parse the user's command line
-	if(clp.parseCommandLine(gArgC, gArgV) == false)
-	{
-		return false;
-	}
-
-	std::string lang(LLSysDarwin::getPreferredLanguage());
-	LLControlVariable* c = gSavedSettings.getControl("SystemLanguage");
-	if(c)
-	{
-		c->setValue(lang, false);
-	}
-		
+    // The next two lines add the support for parsing the mac -psn_XXX arg.
+    clp.addOptionDesc("psn", NULL, 1, "MacOSX process serial number");
+    clp.setCustomParser(parse_psn);
+    
+    // parse the user's command line
+    if(clp.parseCommandLine(gArgC, gArgV) == false)
+    {
+        return false;
+    }
+    
+    // Get the user's preferred language string based on the Mac OS localization mechanism.
+    // To add a new localization:
+    // go to the "Resources" section of the project
+    // get info on "language.txt"
+    // in the "General" tab, click the "Add Localization" button
+    // create a new localization for the language you're adding
+    // set the contents of the new localization of the file to the string corresponding to our localization
+    //   (i.e. "en", "ja", etc.  Use the existing ones as a guide.)
+    CFURLRef url = CFBundleCopyResourceURL(CFBundleGetMainBundle(), CFSTR("language"), CFSTR("txt"), NULL);
+    char path[MAX_PATH];
+    if(CFURLGetFileSystemRepresentation(url, false, (UInt8 *)path, sizeof(path)))
+    {
+        std::string lang;
+        if(_read_file_into_string(lang, path))          /* Flawfinder: ignore*/
+        {
+            LLControlVariable* c = gSavedSettings.getControl("SystemLanguage");
+            if(c)
+            {
+                c->setValue(lang, false);
+            }
+        }
+    }
+    CFRelease(url);
+    
     return true;
 }
 
