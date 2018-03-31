@@ -385,6 +385,14 @@
               <menu_item_call.on_click
                  function="BuyCurrency" />
           </menu_item_call>
+          <menu_item_call
+          label="Merchant Outbox..."
+          name="MerchantOutbox"
+          only_in_sl="true">
+              <menu_item_call.on_click
+                  function="Floater.ToggleOrBringToFront"
+                  parameter="outbox" />
+          </menu_item_call>
          <menu_item_call
             label="Marketplace Listings..."
             name="MarketplaceListings"
@@ -1094,8 +1102,8 @@
       <menu_item_separator/>
 
       <menu
-       label="Water Presets"
-       name="Water Presets">
+       name="Water Presets"
+       label="Water Presets">
         <menu_item_call
          label="New preset..."
          name="new_water_preset">
@@ -1123,8 +1131,8 @@
       </menu>
 
       <menu
-       label="Sky Presets"
-       name="Sky Presets">
+       name="Sky Presets"
+       label="Sky Presets">
         <menu_item_call
          label="New preset..."
          name="new_sky_preset">
@@ -1152,8 +1160,8 @@
       </menu>
 
       <menu
-       label="Day Presets"
-       name="Day Presets">
+       name="Day Presets"
+       label="Day Presets">
         <menu_item_call
          label="New preset..."
          name="new_day_preset">
@@ -1779,10 +1787,10 @@
   
 <!-- START OF COMMANDS MENU -->  
   <menu
-    create_jum_keys="true"
-    label="Commands"
-    name="Commands"
-    tear_off="true">
+  create_jump_keys="true"
+  label="Commands"
+  name="Commands"
+  tear_off="true">
        <menu_item_call
          label="Rebake Textures"
          name="Rebake Texture"
@@ -2198,6 +2206,11 @@
 		
   </menu>
 <!-- END OF COMMANDS MENU -->
+<!-- MK -->
+<!-- RLV menu here -->
+<!-- but not in NORLV version! -->
+<!-- mk -->
+  
 <!-- NP -->
 <!-- Radar menu here -->
     <menu
@@ -2236,8 +2249,7 @@
             function="ToggleControl"
             parameter="RadarReportSimRange" />
           </menu_item_check>
-      
-      <menu_item_separator/>
+
         
     </menu>
 <!-- End Radar menu -->
@@ -2474,6 +2486,14 @@
                  function="Floater.Toggle"
                  parameter="stats" />
             </menu_item_check>
+            <menu_item_call
+             label="Scene Load Statistics"
+             name="Scene Load Statistics"
+             shortcut="control|shift|2">
+                <on_click
+                 function="Floater.Show"
+                 parameter="scene_load_stats" />
+            </menu_item_call>
       <menu_item_check
         label="Show Avatar Rendering Cost"
         name="Avatar Rendering Cost">
@@ -3176,6 +3196,28 @@
                  parameter="region_debug_console" />
             </menu_item_check>
             <menu_item_check
+               label="Texture Size Console"
+               name="Texture Size"
+               shortcut="control|shift|6">
+              <menu_item_check.on_check
+               function="Advanced.CheckConsole"
+               parameter="texture size" />
+              <menu_item_check.on_click
+               function="Advanced.ToggleConsole"
+               parameter="texture size" />
+            </menu_item_check>
+            <menu_item_check
+               label="Texture Category Console"
+               name="Texture Category"
+               shortcut="control|shift|7">
+              <menu_item_check.on_check
+               function="Advanced.CheckConsole"
+               parameter="texture category" />
+              <menu_item_check.on_click
+               function="Advanced.ToggleConsole"
+               parameter="texture category" />
+            </menu_item_check>
+            <menu_item_check
              label="Fast Timers"
              name="Fast Timers"
              shortcut="control|shift|9"
@@ -3849,6 +3891,19 @@
                 <menu_item_check.on_enable
                  function="Advanced.EnableObjectObjectOcclusion" />
             </menu_item_check>
+          <menu_item_check
+             label="Framebuffer Objects"
+             name="Framebuffer Objects">
+            <menu_item_check.on_check
+             function="CheckControl"
+             parameter="RenderUseFBO" />
+            <menu_item_check.on_click
+             function="ToggleControl"
+             parameter="RenderUseFBO" />
+            <menu_item_check.on_enable
+                 function="Advanced.EnableRenderFBO" />
+           </menu_item_check>
+
           <menu_item_separator />
 
           <menu_item_check
@@ -3887,6 +3942,19 @@
             <menu_item_check.on_enable
                  function="Advanced.EnableRenderDeferredOptions" />
           </menu_item_check>
+          <menu_item_check
+                   label="   Global Illumination (experimental)"
+                   name="Global Illumination">
+            <menu_item_check.on_check
+             function="CheckControl"
+             parameter="RenderDeferredGI" />
+            <menu_item_check.on_click
+             function="ToggleControl"
+             parameter="RenderDeferredGI" />
+            <menu_item_check.on_enable
+                 function="Advanced.EnableRenderDeferredOptions" />
+          </menu_item_check>
+
           <menu_item_separator />
 
           <menu_item_check
@@ -3960,6 +4028,26 @@
                  parameter="TextureLoadFullRes" />
             </menu_item_check>
             <menu_item_check
+               label="Audit Textures"
+               name="Audit Textures">
+              <menu_item_check.on_check
+               function="CheckControl"
+               parameter="AuditTexture" />
+              <menu_item_check.on_click
+               function="ToggleControl"
+               parameter="AuditTexture" />
+            </menu_item_check>
+            <menu_item_check
+             label="Texture Atlas (experimental)"
+             name="Texture Atlas">
+              <menu_item_check.on_check
+               function="CheckControl"
+               parameter="EnableTextureAtlas" />
+              <menu_item_check.on_click
+               function="ToggleControl"
+               parameter="EnableTextureAtlas" />
+            </menu_item_check>
+              <menu_item_check
              label="Render Attached Lights"
              name="Render Attached Lights">
                 <menu_item_check.on_check
@@ -4070,7 +4158,15 @@
          name="Dump Scripted Camera">
             <menu_item_call.on_click
              function="Advanced.DumpScriptedCamera" />
-        </menu_item_call>      
+        </menu_item_call>
+        <menu_item_call
+             label="Bumps, Pushes &amp; Hits"
+             name="Bumps, Pushes &amp;amp; Hits">
+                <menu_item_call.on_click
+                 function="Floater.Show"
+                 parameter="bumps" />
+            </menu_item_call>
+
         <menu
          create_jump_keys="true"
          label="Recorder"
@@ -4157,6 +4253,16 @@
                 <menu_item_check.on_click
                  function="ToggleControl"
                  parameter="SkyOverrideSimSunPosition" />
+            </menu_item_check>
+            <menu_item_check
+             label="Cheesy Beacon"
+             name="Cheesy Beacon">
+                <menu_item_check.on_check
+                 function="CheckControl"
+                 parameter="CheesyBeacon" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="CheesyBeacon" />
             </menu_item_check>
             <menu_item_check
              label="Fixed Weather"
@@ -4250,6 +4356,34 @@
                 <menu_item_call.on_click
                  function="Advanced.PrintAgentInfo" />
             </menu_item_call>
+            <menu_item_call
+             label="Memory Stats"
+             name="Memory Stats"
+             shortcut="control|alt|shift|M">
+                <menu_item_call.on_click
+                 function="Advanced.PrintTextureMemoryStats" />
+            </menu_item_call>
+            <menu_item_check
+             label="Double-Click Auto-Pilot"
+             name="Double-Click Auto-Pilot">
+                <menu_item_check.on_check
+                 function="CheckControl"
+                 parameter="DoubleClickAutoPilot" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="DoubleClickAutoPilot" />
+            </menu_item_check>
+            <menu_item_check
+             label="Double-Click Teleport"
+             name="DoubleClick Teleport">
+                <menu_item_check.on_check
+                 function="CheckControl"
+                 parameter="DoubleClickTeleport" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="DoubleClickTeleport" />
+            </menu_item_check>
+
             <menu_item_separator />
 
             <menu_item_check
@@ -4335,6 +4469,18 @@
                 <menu_item_call.on_click
                  function="Floater.Show"
                  parameter="font_test" />
+            </menu_item_call>
+            <menu_item_call
+             label="Load from XML"
+             name="Load from XML">
+                <menu_item_call.on_click
+                 function="Advanced.LoadUIFromXML" />
+            </menu_item_call>
+            <menu_item_call
+             label="Save to XML"
+             name="Save to XML">
+                <menu_item_call.on_click
+                 function="Advanced.SaveUIToXML" />
             </menu_item_call>
             <menu_item_check
              label="Show XUI Names"
@@ -4450,6 +4596,12 @@
                     <menu_item_call.on_click
                      function="Advanced.TestFemale" />
                 </menu_item_call>
+                <menu_item_call
+                 label="Toggle PG"
+                 name="Toggle PG">
+                    <menu_item_call.on_click
+                     function="Advanced.TogglePG" />
+                </menu_item_call>
                 <menu_item_check
                  label="Allow Select Avatar"
                  name="Allow Select Avatar">
@@ -4512,23 +4664,64 @@
                  parameter="" />
             </menu_item_check>
             <menu_item_check
-             label="Show Look At"
-             name="Show Look At">
+             label="Slow Motion Animations"
+             name="Slow Motion Animations">
                 <menu_item_check.on_check
-                 function="Advanced.CheckShowLookAt"
-                 parameter="ShowLookAt" />
+                 function="CheckControl"
+                 parameter="SlowMotionAnimation" />
                 <menu_item_check.on_click
-                 function="Advanced.ToggleShowLookAt" />
+                 function="ToggleControl"
+                 parameter="SlowMotionAnimation" />
             </menu_item_check>
             <menu_item_check
-             label="Show Point At"
-             name="Show Point At">
-                <menu_item_check.on_check
-                 function="Advanced.CheckShowPointAt"
-                 parameter="ShowPointAt" />
-                <menu_item_check.on_click
-                 function="Advanced.ToggleShowPointAt" />
+		label="Show Look-At">
+		name="Show Look-At"
+		<menu_item_check.on_check
+		    function="CheckControl"
+		    parameter="ShowLookAt" />
+		<menu_item_check.on_click
+		    function="ToggleControl"
+		    parameter="ShowLookAt" />
             </menu_item_check>
+	    <menu_item_check
+		label="Show Point-At">
+		name="Show Point-At"
+		<menu_item_check.on_check
+		    function="CheckControl"
+		    parameter="ShowPointAt" />
+		<menu_item_check.on_click
+		    function="ToggleControl"
+		    parameter="ShowPointAt" />
+            </menu_item_check>
+            <menu_item_check
+	     label="Private Look At"
+	     name="Private Look At">
+                <menu_item_check.on_check
+                 function="CheckControl"
+                 parameter="PrivateLookAtTarget" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="PrivateLookAtTarget" />
+            </menu_item_check>
+            <menu_item_check
+	     label="Private Point At"
+	     name="Private Point At">
+                <menu_item_check.on_check
+                 function="CheckControl"
+                 parameter="PrivatePointAtTarget" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="PrivatePointAtTarget" />
+            </menu_item_check>
+			<menu_item_check name="Cat Mode"
+			label="Cat Mode (head follows mouse)">
+			<menu_item_check.on_check
+			function="CheckControl"
+			parameter="CatMode" />
+			<menu_item_check.on_click
+			function="ToggleControl"
+			parameter="CatMode" />
+			</menu_item_check>
             <menu_item_check
              label="Debug Joint Updates"
              name="Debug Joint Updates">
@@ -4576,7 +4769,7 @@
                  function="Advanced.ToggleInfoDisplay"
                  parameter="agent target" />
             </menu_item_check>
-            <!-- Appears not to exist anymore
+<!-- Appears not to exist anymore
             <menu_item_check
              label="Debug Rotation"
              name="Debug Rotation">
@@ -4587,6 +4780,7 @@
                  function="ToggleControl"
                  parameter="DebugAvatarRotation" />
             </menu_item_check> -->
+-->
             <menu_item_call
              label="Dump Attachments"
              name="Dump Attachments">
@@ -4613,7 +4807,8 @@
 
         <menu_item_check
          label="HTTP Textures"
-         name="HTTP Textures">
+         name="HTTP Textures"
+         enabled="true">
             <menu_item_check.on_check
              function="CheckControl"
              parameter="ImagePipelineUseHTTP" />
