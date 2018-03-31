@@ -15,9 +15,9 @@ Kokua repositories use mercurial bookmarks instead of branches. Reference mercur
 
 Work Flow:
 
-On bitbucket fork kokua-dev to your Bitbucket account. The repository name will default to kokua-dev, but can be named as desired.
+On bitbucket fork kokua-sl to your Bitbucket account. The repository name will default to kokua-sl, but can be named as desired.
 
-Open the repository and notice bookmark icons that are named Kokua_MKRLV and KokuaNT; these represent our current working default branches
+Open the repository and notice bookmark icons that are named Kokua-MKRLV and KokuaSL-NORLV; these represent our current working default branches
 
 that are assigned to bookmarks. If the bookmarks where not there two (2) default branches would be present. The bookmarks tie the bookmark names
 
@@ -43,9 +43,9 @@ hg push -B KokuaNT https://bitucket.org/xxxxx/kokua-os notice the capital B agai
 
 the working tree.
 
-Next use hg update to activate the bookmarks. "hg update KokuaNT" and then "hg update Kokua-MKRLV". Your working tree is now at Kokua-MKRLV.
+Next use hg update to activate the bookmarks. "hg update KokuaSL-NORLV" and then "hg update Kokua-MKRLV". Your working tree is now at Kokua-MKRLV.
 
-If you want to work on KokuaNT just "hg update KokuaNT". In a terminal enter "hg bookmarks" and terminal response will be a list of all bookmarks
+If you want to work on KokuaSL-NORLV just "hg update KokuaSL-NORLV". In a terminal enter "hg bookmarks" and terminal response will be a list of all bookmarks
 
 with an * next to the active bookmark.
  
@@ -238,17 +238,17 @@ export AUTOBUILD_PLATFORM_OVERRIDE='linux64'
 
 -  hg clone https://bitbucket.org/kokua/kokua-os
 
-  KokuaNT can be built with opensource or properity audio engine. The opensource solution uses openal for sounds and gstreamer for streaming music and audio visual files like mp4's. Use of the properity FMOD Ex library for sounds and streaming audio is supported but, the FMOD Ex library must be provided separately.
+  KokuaSL-NORLV can be built with opensource or properity audio engine. The opensource solution uses openal for sounds and gstreamer for streaming music and audio visual files like mp4's. Use of the properity FMOD Ex library for sounds and streaming audio is supported but, the FMOD Ex library must be provided separately.
 
 -  Configure for an openal and gstreamer build:
 
 Following assumes a clean build tree.
 
-cd kokuant
+cd Kokua-SL
 
-Update the source tree to KokuaNT. This is a build without RLV or if you want RLV it would be hg update Kokua-MKRLV
+Update the source tree to KokuaSL-NORLV. This is a build without RLV or if you want RLV it would be hg update Kokua-MKRLV
 
-hg update KokuaNT
+hg update KokuaSL-NORLV
 
 
 autobuild configure -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DOPENAL:BOOL=ON -DPACKAGE:BOOL=ON 2>&1 |tee configure.log
