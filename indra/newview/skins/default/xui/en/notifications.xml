@@ -2173,9 +2173,18 @@ Wrong chunk size in WAV file:
 
   <notification
    icon="alertmodal.tga"
-   name="SoundFileInvalidTooLong"
+   name="LLSoundFileInvalidTooLong"
    type="alertmodal">
-Audio file is too long (10 second maximum):
+Audio file is too long (10 seconds maximum):
+[FILE]
+  <tag>fail</tag>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="OSSoundFileInvalidTooLong"
+   type="alertmodal">
+Audio file is too long (60 seconds maximum):
 [FILE]
   <tag>fail</tag>
   </notification>
@@ -3850,7 +3859,7 @@ Finished download of raw terrain file to:
    type="alertmodal">
 Version [VERSION] is required for login.
 This should have been updated for you but apparently was not.
-Please download from https://secondlife.com/support/downloads/
+Please download from https://sourceforge.net/projects/kokua.team-purple.p/files/ .
     <tag>confirm</tag>
     <usetemplate
      name="okbutton"
@@ -8723,8 +8732,27 @@ Voice communications will not be available.
     <tag>voice</tag>
   <tag>fail</tag>
     <usetemplate
-     name="okbutton"
-     yestext="OK"/>
+     ignoretext="Warn me when the viewer can't connect to the voice server"
+     name="okignore"
+     yestext="OK" />
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="NoVoiceConnect-GIAB"
+   type="alertmodal">
+We're having trouble connecting to your voice server:
+
+[HOSTID]
+
+Voice communications will not be available.
+Please check your network and firewall setup.
+    <tag>voice</tag>
+  <tag>fail</tag>
+    <usetemplate
+     ignoretext="Warn me when the viewer can't connect to the voice server"
+     name="okignore"
+     yestext="OK" />
   </notification>
 
   <notification
@@ -11500,6 +11528,52 @@ Creating animation link for animation "[NAME]" failed!
       <tag>Export</tag>
 Export finished and saved to [FILENAME].
     </notification>
+    
+    <notification
+     icon="alertmodal.tga"
+     name="ExportFailed"
+     type="notify">
+      <tag>Export</tag>
+Export failed unexpectedly. Please see the log for details.
+    </notification>
+    
+    <notification
+     icon="alertmodal.tga"
+     name="ExportColladaSuccess"
+     type="notify">
+      <tag>Export</tag>
+		Successfully saved [OBJECT] to [FILENAME].
+    </notification>
+
+    <notification
+     icon="alertmodal.tga"
+     name="ExportColladaFailure"
+     type="notify">
+      <tag>Export</tag>
+		Export of [OBJECT] to [FILENAME] failed.
+    </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="ShapeImportGenericFail"
+   type="notifytip">
+    <tag>fail</tag>
+There was a problem importing [FILENAME]. Please see the log for more details.
+  </notification>
+  <notification
+   icon="notifytip.tga"
+   name="ShapeImportVersionFail"
+   type="notifytip">
+    <tag>fail</tag>
+Shape import failed. Are you sure [FILENAME] is an avatar file?
+  </notification>
+
+  <notification
+    icon="notifytip.tga"
+    name="NewPermissionsPending"
+    type="notifytip">
+	Your permission change request for [NAME] has been sent to [GRID_NAME] for processing.  This may take a few seconds to complete.
+   </notification>
     
     <notification
      icon="alertmodal.tga"
