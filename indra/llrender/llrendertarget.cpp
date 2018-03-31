@@ -487,7 +487,10 @@ U32 LLRenderTarget::getTexture(U32 attachment) const
 {
 	if (attachment > mTex.size()-1)
 	{
-		LL_ERRS() << "Invalid attachment index." << LL_ENDL;
+//MK
+		////LL_ERRS() << "Invalid attachment index." << LL_ENDL;
+		return 0;
+//mk
 	}
 	if (mTex.empty())
 	{
