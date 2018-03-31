@@ -4039,8 +4039,11 @@ void LLAgent::teleportRequest(
 	bool is_local = (region_handle == regionp->getHandle());
 	if(regionp && teleportCore(is_local))
 	{
-		LL_INFOS("") << "TeleportLocationRequest: '" << region_handle << "':"
-					 << pos_local << LL_ENDL;
+//MK
+		// This crashes when we are logging off
+		////LL_INFOS("") << "TeleportLocationRequest: '" << region_handle << "':"
+		////			 << pos_local << LL_ENDL;
+//mk
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessage("TeleportLocationRequest");
 		msg->nextBlockFast(_PREHASH_AgentData);
