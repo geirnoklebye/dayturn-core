@@ -84,7 +84,7 @@ LLContextMenu* PeopleContextMenu::createMenu()
 		registrar.add("Avatar.Calllog",			boost::bind(&LLAvatarActions::viewChatHistory,			id));
 		registrar.add("Avatar.Freeze",			boost::bind(&LLAvatarActions::freezeAvatar,					id));
 		registrar.add("Avatar.Eject",			boost::bind(&PeopleContextMenu::eject,					this));
-
+		registrar.add("Avatar.TeleportHome",	boost::bind(&LLAvatarActions::teleportHome,				id));
 		registrar.add("Avatar.EstateBan",		boost::bind(&LLAvatarActions::estateBan,				id));
 		registrar.add("Avatar.CopyName",		boost::bind(&LLAvatarActions::copyName,					id));
 		registrar.add("Avatar.CopyUUID",		boost::bind(&LLAvatarActions::copyUUID,					id));
