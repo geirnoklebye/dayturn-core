@@ -80,7 +80,9 @@ namespace tut
 		{
 			// copied from strings.xml
 			gString["YearsMonthsOld"] = "[AGEYEARS] [AGEMONTHS] old";
-			gString["YearsOld"] = "[AGEYEARS] old";
+			gString["MonthsWeeksOld"] = "[AGEMONTHS] [AGEWEEKS] old";
+			gString["WeeksDaysOld"] = "[AGEWEEKS] [AGEDAYS] old";
+  			gString["YearsOld"] = "[AGEYEARS] old";
 			gString["MonthsOld"] = "[AGEMONTHS] old";
 			gString["WeeksOld"] = "[AGEWEEKS] old";
 			gString["DaysOld"] = "[AGEDAYS] old";
@@ -150,7 +152,7 @@ namespace tut
 		set_test_name("Weeks");
 		ensure_equals("4 weeks",
 			LLDateUtil::ageFromDate("12/1/2009", mNow),
-			"4 weeks old" );
+			"4 weeks 2 days old" );
 		ensure_equals("weeks",
 			LLDateUtil::ageFromDate("12/17/2009", mNow),
 			"2 weeks old" );
@@ -181,7 +183,7 @@ namespace tut
 		LLDate now(std::string("2010-01-04T12:00:00Z"));
 		ensure_equals("days",
 			LLDateUtil::ageFromDate("12/13/2009", now),
-			"3 weeks old" );
+			"3 weeks 1 day old" );
 	}
 
 	//template<> template<>
