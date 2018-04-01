@@ -107,12 +107,6 @@ public:
 };
 TestImageProvider gTestImageProvider;
 
-static std::string get_xui_dir()
-{
-	std::string delim = gDirUtilp->getDirDelimiter();
-	return gDirUtilp->getSkinBaseDir() + delim + "default" + delim + "xui" + delim;
-}
-
 void init_llui()
 {
 	// Font lookup needs directory support
