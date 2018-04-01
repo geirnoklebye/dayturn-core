@@ -167,16 +167,7 @@ void LLGridManager::setGridChoice(const std::string& grid_name)
 {
 }
 
-bool LLGridManager::isInSLMain()
-{
-	return false;
-}
-bool LLGridManager::isInSLBeta()
-{
-	return false;
-}
-
-bool LLGridManager::isInOpenSim()
+bool LLGridManager::isInProductionGrid()
 {
 	return false;
 }
