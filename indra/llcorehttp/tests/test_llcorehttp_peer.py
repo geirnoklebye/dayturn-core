@@ -53,16 +53,16 @@ class TestHTTPRequestHandler(BaseHTTPRequestHandler):
     """This subclass of BaseHTTPRequestHandler is to receive and echo
     LLSD-flavored messages sent by the C++ LLHTTPClient.
 
-    [Merge with viewer-cat later]
-    - '/503/'           Generate 503 responses with various kinds
-                        of 'retry-after' headers
-    -- '/503/0/'            "Retry-After: 2"   
-    -- '/503/1/'            "Retry-After: Thu, 31 Dec 2043 23:59:59 GMT"
-    -- '/503/2/'            "Retry-After: Fri, 31 Dec 1999 23:59:59 GMT"
-    -- '/503/3/'            "Retry-After: "
-    -- '/503/4/'            "Retry-After: (*#*(@*(@(")"
-    -- '/503/5/'            "Retry-After: aklsjflajfaklsfaklfasfklasdfklasdgahsdhgasdiogaioshdgo"
-    -- '/503/6/'            "Retry-After: 1 2 3 4 5 6 7 8 9 10"
+    Target URLs are fairly free-form and are assembled by 
+    concatinating fragments.  Currently defined fragments
+    are:
+    - '/reflect/'       Request headers are bounced back to caller
+                        after prefixing with 'X-Reflect-'
+    - '/fail/'          Body of request can contain LLSD with 
+                        'reason' string and 'status' integer
+                        which will become response header.
+    - '/bug2295/'       206 response, no data in body:
+    -- '/bug2295/0/'       "Content-Range: bytes 0-75/2983"
     -- '/bug2295/1/'       "Content-Range: bytes 0-75/*"
     -- '/bug2295/2/'       "Content-Range: bytes 0-75/2983",
                            "Content-Length: 0"
@@ -181,13 +181,6 @@ class TestHTTPRequestHandler(BaseHTTPRequestHandler):
                 # Unknown request
                 self.send_response(400)
                 body = "Unknown /503/ path in server"
-            if "/reflect/" in self.path:
-                self.reflect_headers()
-            self.send_header("Content-type", "text/plain")
-            self.end_headers()
-            if body:
-                self.wfile.write(body)
-        elif "fail" not in self.path:
             if "/reflect/" in self.path:
                 self.reflect_headers()
             self.send_header("Content-type", "text/plain")
