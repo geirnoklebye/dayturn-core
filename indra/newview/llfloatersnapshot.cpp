@@ -728,16 +728,8 @@ void LLFloaterSnapshot::Impl::updateResolution(LLUICtrl* ctrl, void* data, BOOL 
 				// Limit custom size for inventory snapshots to 512x512 px.
 				if (getActiveSnapshotType(view) == LLSnapshotModel::SNAPSHOT_TEXTURE)
 				{
-					if (gIsInSecondLife)
-					{
-						new_width = llmin(new_width, MAX_TEXTURE_SIZE);
-						new_height = llmin(new_height, MAX_TEXTURE_SIZE);
-					}
-					else
-					{
-						new_width = llmin(new_width, (MAX_TEXTURE_SIZE * 2));
-						new_height = llmin(new_height, (MAX_TEXTURE_SIZE * 2));
-					}
+					new_width = llmin(new_width, MAX_TEXTURE_SIZE);
+					new_height = llmin(new_height, MAX_TEXTURE_SIZE);
 				}
 			}
 			else

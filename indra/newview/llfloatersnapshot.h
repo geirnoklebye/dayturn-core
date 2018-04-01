@@ -29,7 +29,6 @@
 
 #include "llagent.h"
 #include "llfloater.h"
-extern BOOL gIsInSecondLife;
 #include "llpanelsnapshot.h"
 #include "llsnapshotmodel.h"
 

@@ -499,8 +499,8 @@ void LLSpeakerMgr::updateSpeakerList()
 	// Are we bound to the currently active voice channel?
 	if ((!mVoiceChannel && LLVoiceClient::getInstance()->inProximalChannel()) || (mVoiceChannel && mVoiceChannel->isActive()))
 	{
-	        std::set<LLUUID> participants;
-	        LLVoiceClient::getInstance()->getParticipantList(participants);
+		std::set<LLUUID> participants;
+		LLVoiceClient::getInstance()->getParticipantList(participants);
 		// If we are, add all voice client participants to our list of known speakers
 		for (std::set<LLUUID>::iterator participant_it = participants.begin(); participant_it != participants.end(); ++participant_it)
 		{
@@ -508,8 +508,6 @@ void LLSpeakerMgr::updateSpeakerList()
 						   LLVoiceClient::getInstance()->getDisplayName(*participant_it),
 						   LLSpeaker::STATUS_VOICE_ACTIVE, 
 						   (LLVoiceClient::getInstance()->isParticipantAvatar(*participant_it)?LLSpeaker::SPEAKER_AGENT:LLSpeaker::SPEAKER_EXTERNAL));
-
-
 		}
 	}
 	else 
@@ -1054,7 +1052,7 @@ void LLLocalSpeakerMgr::updateSpeakerList()
 	// pick up non-voice speakers in chat range
 	uuid_vec_t avatar_ids;
 	std::vector<LLVector3d> positions;
-	LLWorld::getInstance()->getAvatars(&avatar_ids, &positions, gAgent.getPositionGlobal(), LLWorld::getInstance()->getSayDistance());
+	LLWorld::getInstance()->getAvatars(&avatar_ids, &positions, gAgent.getPositionGlobal(), CHAT_NORMAL_RADIUS);
 	for(U32 i=0; i<avatar_ids.size(); i++)
 	{
 		setSpeaker(avatar_ids[i]);
@@ -1068,8 +1066,7 @@ void LLLocalSpeakerMgr::updateSpeakerList()
 		if (speakerp.notNull() && speakerp->mStatus == LLSpeaker::STATUS_TEXT_ONLY)
 		{
 			LLVOAvatar* avatarp = (LLVOAvatar*)gObjectList.findObject(speaker_id);
-			F32 say_distance_squared = (LLWorld::getInstance()->getSayDistance() * LLWorld::getInstance()->getSayDistance());
-			if (!avatarp || dist_vec_squared(avatarp->getPositionAgent(), gAgent.getPositionAgent()) > say_distance_squared)
+			if (!avatarp || dist_vec_squared(avatarp->getPositionAgent(), gAgent.getPositionAgent()) > CHAT_NORMAL_RADIUS * CHAT_NORMAL_RADIUS)
 			{
 				setSpeakerNotInChannel(speakerp);
 			}

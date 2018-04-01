@@ -303,15 +303,6 @@ BOOL LLFloaterLand::postBuild()
 		tab->selectTab(sLastTab);
 	}
 
-// <FS:Ansariel> FIRE-17280: Requesting Experience access allow and block list interferes with OpenSim landflags
-
-if (!LLGridManager::instance().isInSecondLife())
-{
-    mTabLand->removeTabPanel(mTabLand->getPanelByName("land_experiences_panel"));
-}
-
-// <FS:Ansariel>
-
 	return TRUE;
 }
 
@@ -2173,41 +2164,9 @@ void LLPanelLandOptions::refresh()
 //MK
 		gAgent.mRRInterface.mParcelLandingType = parcel->getLandingType();
 //mk
-		S32 fee = getDirectoryFee();
-		if (fee == 0)
-		{
-			mCheckShowDirectory->setLabel(getString("DirectoryFree"));
-		}
-		else
-		{
-			LLStringUtil::format_map_t map;
-			map["DIRECTORY_FEE"] = llformat("%d", fee);
-			mCheckShowDirectory->setLabel(getString("DirectoryFee", map));
-		}
-//MK
-		gAgent.mRRInterface.mParcelLandingType = parcel->getLandingType();
-//mk
 	}
 }
-S32 LLPanelLandOptions::getDirectoryFee()
-{
-	S32 fee = PARCEL_DIRECTORY_FEE;
-#ifdef OPENSIM
-	if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		fee = LLGridManager::getInstance()->getDirectoryFee();
-	}
-/*
-	if (LLGridManager::getInstance()->isInAuroraSim())
-	{
-		LLSD grid_info;
-		LLGridManager::getInstance()->getGridData(grid_info);
-		fee = grid_info[GRID_DIRECTORY_FEE].asInteger();
-	}
-*/
-#endif // OPENSIM
-	return fee;
-}
+
 
 // virtual
 void LLPanelLandOptions::draw()
@@ -3270,6 +3229,3 @@ void LLPanelLandExperiences::refresh()
 	refreshPanel(mAllowed, EXPERIENCE_KEY_TYPE_ALLOWED);
 	refreshPanel(mBlocked, EXPERIENCE_KEY_TYPE_BLOCKED);
 }
-
-
-

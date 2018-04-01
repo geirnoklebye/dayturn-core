@@ -40,7 +40,7 @@
 #include "message.h"
 #include "llexperiencecache.h"
 
-#define APP_HEADER_REGEX "(((hop|x-grid-location-info)://[-\\w\\.\\:\\@]+/app)|((hop|secondlife):///app))"
+#define APP_HEADER_REGEX "((x-grid-location-info://[-\\w\\.]+/app)|(secondlife:///app))"
 
 // Utility functions
 std::string localize_slapp_label(const std::string& url, const std::string& full_name);
@@ -448,9 +448,9 @@ std::string LLUrlEntrySLURL::getLocation(const std::string &url) const
 		return "";
 	}
 
-		pos += search_string.size() + 1;
+	pos += search_string.size() + 1;
 	return url.substr(pos, url.size() - pos);
-	}
+}
 
 //
 // LLUrlEntrySeconlifeURL Describes *secondlife.com/ and *lindenlab.com/ urls to substitute icon 'hand.png' before link
@@ -461,7 +461,7 @@ LLUrlEntrySecondlifeURL::LLUrlEntrySecondlifeURL()
 							"|"
 							"(https://([-\\w\\.]*\\.)?(secondlife|lindenlab)\\.com(:\\d{1,5})?))"
 							"\\/\\S*",
-	boost::regex::perl|boost::regex::icase);
+		boost::regex::perl|boost::regex::icase);
 	
 	mIcon = "Hand";
 	mMenuName = "menu_url_http.xml";
@@ -918,7 +918,7 @@ std::string LLUrlEntryInventory::getLabel(const std::string &url, const LLUrlLab
 //
 LLUrlEntryObjectIM::LLUrlEntryObjectIM()
 {
-	mPattern = boost::regex("(hop|secondlife):///app/objectim/[\\da-f-]+\?.*",
+	mPattern = boost::regex("secondlife:///app/objectim/[\\da-f-]+\?\\S*\\w",
 							boost::regex::perl|boost::regex::icase);
 	mMenuName = "menu_url_objectim.xml";
 }
@@ -931,6 +931,7 @@ std::string LLUrlEntryObjectIM::getLabel(const std::string &url, const LLUrlLabe
 		return query_map["name"];
 	return unescapeUrl(url);
 }
+
 std::string LLUrlEntryObjectIM::getLocation(const std::string &url) const
 {
 	LLURI uri(url);
@@ -1227,7 +1228,7 @@ std::string LLUrlEntryTeleport::getLocation(const std::string &url) const
 //
 LLUrlEntrySL::LLUrlEntrySL()
 {
-	mPattern = boost::regex("(hop|secondlife)://(\\w+)?(:\\d+)?/\\S+",
+	mPattern = boost::regex("secondlife://(\\w+)?(:\\d+)?/\\S+",
 							boost::regex::perl|boost::regex::icase);
 	mMenuName = "menu_url_slapp.xml";
 	mTooltip = LLTrans::getString("TooltipSLAPP");
@@ -1244,7 +1245,7 @@ std::string LLUrlEntrySL::getLabel(const std::string &url, const LLUrlLabelCallb
 //
 LLUrlEntrySLLabel::LLUrlEntrySLLabel()
 {
-	mPattern = boost::regex("\\[(hop|secondlife)://\\S+[ \t]+[^\\]]+\\]",
+	mPattern = boost::regex("\\[secondlife://\\S+[ \t]+[^\\]]+\\]",
 							boost::regex::perl|boost::regex::icase);
 	mMenuName = "menu_url_slapp.xml";
 	mTooltip = LLTrans::getString("TooltipSLAPP");

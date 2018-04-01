@@ -8724,11 +8724,6 @@ version 2.0
 		{	SizeX		U16				}
 		{	SizeY		U16				}
 	}
-	{
-		Size			Variable
-		{	SizeX		U16				}
-		{	SizeY		U16				}
-	}
 }
 
 // viewer -> sim

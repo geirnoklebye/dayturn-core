@@ -106,9 +106,9 @@ public:
 
 					// connect to flickr
 					if (query_map.has("oauth_token"))
-				{
+					{
 						LLFlickrConnect::instance().connectToFlickr(query_map["oauth_token"], query_map.get("oauth_verifier"));
-				}
+					}
 					return true;
 				}
 				else if (tokens.size() >= 2 && tokens[1].asString() == "twitter")
@@ -128,14 +128,14 @@ public:
 					// this command probably came from the fbc_web browser, so close it
 					LLFloaterReg::hideInstance("fbc_web");
 
-				// connect to facebook
-				if (query_map.has("code"))
-				{
-                    LLFacebookConnect::instance().connectToFacebook(query_map["code"], query_map.get("state"));
+					// connect to facebook
+					if (query_map.has("code"))
+					{
+						LLFacebookConnect::instance().connectToFacebook(query_map["code"], query_map.get("state"));
+					}
+					return true;
 				}
-				return true;
 			}
-		}
 		}
 		return false;
 	}
@@ -528,7 +528,7 @@ std::string LLFacebookConnect::getFacebookConnectURL(const std::string& route, b
     if (regionp)
     {
 		//url = "http://pdp15.lindenlab.com/fbc/agent/" + gAgentID.asString(); // TEMPORARY FOR TESTING - CHO
-        url = regionp->getCapability("FacebookConnect");
+		url = regionp->getCapability("FacebookConnect");
         url += route;
     
         if (include_read_from_master && mReadFromMaster)
@@ -704,6 +704,7 @@ void LLFacebookConnect::setConnectionState(LLFacebookConnect::EConnectionState c
 	{
 		// set the connection state before notifying watchers
 		mConnectionState = connection_state;
+
 		LLSD state_info;
 		state_info["enum"] = connection_state;
 		sStateWatcher->post(state_info);

@@ -40,7 +40,7 @@
 
 static LLDefaultChildRegistry::Register<LLPlacesInventoryPanel> r("places_inventory_panel");
 
-static LLPlacesInventoryBridgeBuilder PLACES_INVENTORY_BUILDER;
+static const LLPlacesInventoryBridgeBuilder PLACES_INVENTORY_BUILDER;
 
 LLPlacesInventoryPanel::LLPlacesInventoryPanel(const Params& p) : 
 	LLInventoryPanel(p),

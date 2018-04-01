@@ -183,7 +183,7 @@ public:
 									 const LLUUID& new_parent,
 									 BOOL restamp);
 	void removeBatchNoCheck(std::vector<LLFolderViewModelItem*>& batch);
-
+    
     BOOL callback_cutToClipboard(const LLSD& notification, const LLSD& response);
     BOOL perform_cutToClipboard();
 
@@ -745,6 +745,7 @@ BOOL move_inv_category_world_to_agent(const LLUUID& object_id,
 void hide_context_entries(LLMenuGL& menu, 
 						  const menuentry_vec_t &entries_to_show, 
 						  const menuentry_vec_t &disabled_entries);
+
 // Helper functions to classify actions.
 bool isAddAction(const std::string& action);
 bool isRemoveAction(const std::string& action);
@@ -757,6 +758,5 @@ public:
     LLFolderViewGroupedItemBridge();
     virtual void groupFilterContextMenu(folder_view_item_deque& selected_items, LLMenuGL& menu);
 };
-
 
 #endif // LL_LLINVENTORYBRIDGE_H

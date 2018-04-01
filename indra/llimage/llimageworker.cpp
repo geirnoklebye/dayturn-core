@@ -121,7 +121,6 @@ bool LLImageDecodeThread::ImageRequest::processRequest()
 {
 	const F32 decode_time_slice = .1f;
 	bool done = true;
-
 	if (!mDecodedRaw && mFormattedImage.notNull())
 	{
 		// Decode primary channels

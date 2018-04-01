@@ -140,7 +140,7 @@ void display_startup()
 	{
 	LLTexUnit::sWhiteTexture = LLViewerFetchedTexture::sWhiteImagep->getTexName();
 	}
-	
+
 	LLGLSDefault gls_default;
 
 	// Required for HTML update in login screen
@@ -177,6 +177,7 @@ void display_startup()
 
 	if (gViewerWindow && gViewerWindow->getWindow())
 	gViewerWindow->getWindow()->swapBuffers();
+
 	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
@@ -195,15 +196,6 @@ void display_update_camera()
 	{
 		final_far *= 0.5f;
 	}
-	if(LLWorld::getInstance()->getLockedDrawDistance())
-	{
-		//Reset the draw distance and do not update with the new val
-		final_far = LLViewerCamera::getInstance()->getFar();
-	}
-	//		final_far = gAgent.mRRInterface.mCamDistDrawMin;
-	//	}
-	//}
-//mk
 	LLViewerCamera::getInstance()->setFar(final_far);
 	gViewerWindow->setup3DRender();
 	
@@ -218,9 +210,7 @@ void display_update_camera()
 // Write some stats to LL_INFOS()
 void display_stats()
 {
-	static LLCachedControl<F32> fps_log_freq(gSavedSettings, "FPSLogFrequency", 10.f);
-	static LLCachedControl<F32> mem_log_freq(gSavedSettings, "MemoryLogFrequency", 600.f);
-
+	F32 fps_log_freq = gSavedSettings.getF32("FPSLogFrequency");
 	if (fps_log_freq > 0.f && gRecentFPSTime.getElapsedTimeF32() >= fps_log_freq)
 	{
 		F32 fps = gRecentFrameCount / fps_log_freq;
@@ -228,7 +218,7 @@ void display_stats()
 		gRecentFrameCount = 0;
 		gRecentFPSTime.reset();
 	}
-
+	F32 mem_log_freq = gSavedSettings.getF32("MemoryLogFrequency");
 	if (mem_log_freq > 0.f && gRecentMemoryTime.getElapsedTimeF32() >= mem_log_freq)
 	{
 		gMemoryAllocated = U64Bytes(LLMemory::getCurrentRSS());
@@ -391,7 +381,10 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 	stop_glerror();
 
 	LLImageGL::updateStats(gFrameTimeSeconds);
-
+	
+	LLVOAvatar::sRenderName = gSavedSettings.getS32("AvatarNameTagMode");
+	LLVOAvatar::sRenderGroupTitles = (gSavedSettings.getBOOL("NameTagShowGroupTitles") && gSavedSettings.getS32("AvatarNameTagMode"));
+	
 	gPipeline.mBackfaceCull = TRUE;
 	gFrameCount++;
 	gRecentFrameCount++;
@@ -598,7 +591,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 	stop_glerror();
 	gGL.setAmbientLightColor(LLColor4::white);
 	stop_glerror();
-		
+			
 	/////////////////////////////////////
 	//
 	// Render
@@ -692,7 +685,6 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 
 		LLSpatialGroup::sNoDelete = TRUE;
 		LLTexUnit::sWhiteTexture = LLViewerFetchedTexture::sWhiteImagep->getTexName();
-
 
 		S32 occlusion = LLPipeline::sUseOcclusion;
 		if (gDepthDirty)
@@ -808,24 +800,24 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 											LLTrace::get_frame_recording().getPeriodMeanPerSec(*angular_velocity_stat));
 			}
 
-
+			
 			{
 				LL_RECORD_BLOCK_TIME(FTM_IMAGE_UPDATE_BUMP);
-			gBumpImageList.updateImages();  // must be called before gTextureList version so that it's textures are thrown out first.
+				gBumpImageList.updateImages();  // must be called before gTextureList version so that it's textures are thrown out first.
 			}
 
 			{
 				LL_RECORD_BLOCK_TIME(FTM_IMAGE_UPDATE_LIST);
 				F32 max_image_decode_time = 0.050f*gFrameIntervalSeconds.value(); // 50 ms/second decode time
-			max_image_decode_time = llclamp(max_image_decode_time, 0.002f, 0.005f ); // min 2ms/frame, max 5ms/frame)
-			gTextureList.updateImages(max_image_decode_time);
+				max_image_decode_time = llclamp(max_image_decode_time, 0.002f, 0.005f ); // min 2ms/frame, max 5ms/frame)
+				gTextureList.updateImages(max_image_decode_time);
 			}
 
 			/*{
 				LL_RECORD_BLOCK_TIME(FTM_IMAGE_UPDATE_DELETE);
-			//remove dead textures from GL
-			LLImageGL::deleteDeadTextures();
-			stop_glerror();
+				//remove dead textures from GL
+				LLImageGL::deleteDeadTextures();
+				stop_glerror();
 			}*/
 			}
 
@@ -870,7 +862,6 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			LL_RECORD_BLOCK_TIME(FTM_UPDATE_SKY);	
 			gSky.updateSky();
 		}
-
 
 		if(gUseWireframe)
 		{
@@ -919,10 +910,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 		//}
 
 		LLPipeline::sUnderWaterRender = LLViewerCamera::getInstance()->cameraUnderWater() ? TRUE : FALSE;
-		
-		//Check for RenderWater
-		if (!gSavedSettings.getBOOL("RenderWater") || !LLWorld::getInstance()->getAllowRenderWater())
-			LLPipeline::sUnderWaterRender = FALSE;
+
 		LLGLState::checkStates();
 		LLGLState::checkClientArrays();
 
@@ -959,8 +947,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 		{
 			LLViewerCamera::sCurCameraID = LLViewerCamera::CAMERA_WORLD;
 
-			static LLCachedControl<bool> render_depth_pre_pass(gSavedSettings, "RenderDepthPrePass", false);
-			if (render_depth_pre_pass && LLGLSLShader::sNoFixedFunction)
+			if (gSavedSettings.getBOOL("RenderDepthPrePass") && LLGLSLShader::sNoFixedFunction)
 			{
 				gGL.setColorMask(false, false);
 
@@ -979,6 +966,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 
 				gOcclusionProgram.unbind();
 			}
+
 
 			gGL.setColorMask(true, false);
 			if (LLPipeline::sRenderDeferred)
@@ -1016,13 +1004,6 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 
 		LLAppViewer::instance()->pingMainloopTimeout("Display:RenderFlush");		
 		
-////MK
-//		// Draw a big black sphere around our avatar if the camera render is limited by RLV
-//		if (gRRenabled)
-//		{
-//			gAgent.mRRInterface.drawRenderLimit();
-//		}
-////mk
 		if (to_texture)
 		{
 			if (LLPipeline::sRenderDeferred)
@@ -1071,6 +1052,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			swap();
 		}
 
+		
 		LLSpatialGroup::sNoDelete = FALSE;
 		gPipeline.clearReferences();
 
@@ -1097,7 +1079,7 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 	{
 		gShaderProfileFrame = FALSE;
 		LLGLSLShader::finishProfile();
-}
+	}
 }
 
 void render_hud_attachments()
@@ -1130,9 +1112,7 @@ void render_hud_attachments()
 		hud_cam.setAxes(LLVector3(1,0,0), LLVector3(0,1,0), LLVector3(0,0,1));
 		LLViewerCamera::updateFrustumPlanes(hud_cam, TRUE);
 
-		static LLCachedControl<bool> render_hud_particles(gSavedSettings, "RenderHUDParticles", false);
-
-		bool render_particles = gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_PARTICLES) && render_hud_particles;
+		bool render_particles = gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_PARTICLES) && gSavedSettings.getBOOL("RenderHUDParticles");
 		
 		//only render hud objects
 		gPipeline.pushRenderTypeMask();
@@ -1494,14 +1474,12 @@ void render_ui_3d()
 	}
 
 	// Coordinate axes
-	static LLCachedControl<bool> show_axes(gSavedSettings, "ShowAxes", false);
-
-	if (show_axes) {
+	if (gSavedSettings.getBOOL("ShowAxes"))
+	{
 		draw_axes();
 	}
 
 	gViewerWindow->renderSelections(FALSE, FALSE, TRUE); // Non HUD call in render_hud_elements
-
 	stop_glerror();
 }
 
@@ -1552,9 +1530,7 @@ void render_ui_2d()
 	}
 	
 
-	static LLCachedControl<bool> render_ui_buffer(gSavedSettings, "RenderUIBuffer", false);
-
-	if (render_ui_buffer)
+	if (gSavedSettings.getBOOL("RenderUIBuffer"))
 	{
 		if (LLUI::sDirty)
 		{
@@ -1704,6 +1680,7 @@ void render_disconnected_background()
 	{
 		gUIProgram.unbind();
 	}
+
 }
 
 void display_cleanup()

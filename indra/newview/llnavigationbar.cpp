@@ -355,14 +355,6 @@ void LLNavigationBar::setVisible(BOOL visible)
 
 void LLNavigationBar::draw()
 {
-//MK
-//	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
-//	{
-//		toggle_show_navigation_panel(LLSD(false));
-//		gSavedSettings.setBOOL ("ShowNavbarNavigationPanel", FALSE);
-//	}
-//mk
-
 	if (isBackgroundVisible())
 	{
 		static LLUICachedControl<S32> drop_shadow_floater ("DropShadowFloater", 0);

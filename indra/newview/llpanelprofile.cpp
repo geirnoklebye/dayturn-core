@@ -36,7 +36,6 @@
 #include "lltabcontainer.h"
 #include "llviewercontrol.h"
 #include "llviewernetwork.h"
-#include "lllogininstance.h"
 #include "llmutelist.h"
 #include "llpanelblockedlist.h"
 #include "llweb.h"
@@ -53,6 +52,7 @@ std::string getProfileURL(const std::string& agent_name)
 	LLStringUtil::toLower(url);
 	return url;
 }
+
 class LLProfileHandler : public LLCommandHandler
 {
 public:

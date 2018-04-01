@@ -206,26 +206,12 @@ void LLPanelSnapshot::onCustomResolutionCommit()
 	if (getName() == "panel_snapshot_inventory")
 	{
 		S32 width = widthSpinner->getValue().asInteger();
-		if (gIsInSecondLife)
-		{
-			width = power_of_two(width, MAX_TEXTURE_SIZE);
-		}
-		else
-		{
-			width = power_of_two(width, (MAX_TEXTURE_SIZE * 2));
-		}		
+		width = power_of_two(width, MAX_TEXTURE_SIZE);
 		info["w"] = width;
 		widthSpinner->setIncrement(width >> 1);
 		widthSpinner->forceSetValue(width);
 		S32 height =  heightSpinner->getValue().asInteger();
-		if (gIsInSecondLife)
-		{
-			height = power_of_two(height, MAX_TEXTURE_SIZE);
-		}
-		else
-		{
-			height = power_of_two(height, (MAX_TEXTURE_SIZE * 2));
-		}		
+		height = power_of_two(height, MAX_TEXTURE_SIZE);
 		heightSpinner->setIncrement(height >> 1);
 		heightSpinner->forceSetValue(height);
 		info["h"] = height;

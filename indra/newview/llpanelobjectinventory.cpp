@@ -66,7 +66,6 @@
 #include "llviewerregion.h"
 #include "llviewerobjectlist.h"
 #include "llviewermessage.h"
-#include "tea.h"
 
 const LLColor4U DEFAULT_WHITE(255, 255, 255);
 
@@ -700,7 +699,7 @@ void LLTaskInvFVBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 		else
 		{
 			std::ostringstream info;
-			info << Tea::wrapCurrency(LLTrans::getString("BuyforL$")) << price;
+			info << LLTrans::getString("BuyforL$") << price;
 			label.assign(info.str());
 		}
 
@@ -1022,7 +1021,7 @@ void LLTaskSoundBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 		else
 		{
 			std::ostringstream info;
-			info <<  Tea::wrapCurrency(LLTrans::getString("BuyforL$")) << price;
+			info <<  LLTrans::getString("BuyforL$") << price;
 			label.assign(info.str());
 		}
 
@@ -1415,7 +1414,7 @@ void LLTaskMeshBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 		else
 		{
 			std::ostringstream info;
-			info <<  Tea::wrapCurrency(LLTrans::getString("BuyforL$")) << price;
+			info <<  LLTrans::getString("BuyforL$") << price;
 			label.assign(info.str());
 		}
 

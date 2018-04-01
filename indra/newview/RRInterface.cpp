@@ -1577,7 +1577,7 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 //			gAgentWearables.removeWearable (WT_UNDERPANTS, false, 0);
 //			gAgentWearables.removeWearable (WT_UNDERSHIRT, false, 0);
 
-			for (int i = LLAgentWearables::MAX_CLOTHING_PER_TYPE - 1; i >= 0; --i) {
+			for (int i = MAX_CLOTHING_PER_TYPE - 1; i >= 0; --i) {
 				removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (LLWearableType::WT_GLOVES, i)));
 				removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (LLWearableType::WT_JACKET, i)));
 				removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (LLWearableType::WT_PANTS, i)));
@@ -1603,7 +1603,7 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 				 // clothes only, not skin, eyes, hair or shape
 				if (LLWearableType::getAssetType(type) == LLAssetType::AT_CLOTHING) {
 //					gAgentWearables.removeWearable (type, false, 0); // remove by layer
-					for (int i = LLAgentWearables::MAX_CLOTHING_PER_TYPE - 1; i >= 0; --i) {
+					for (int i = MAX_CLOTHING_PER_TYPE - 1; i >= 0; --i) {
 						removeItemFromAvatar (gInventory.getItem(gAgentWearables.getWearableItemID (type, i)));
 					}
 				}
@@ -4116,7 +4116,7 @@ std::string RRInterface::getFullPath (LLInventoryItem* item, std::string option,
 		}
 		else if ((wearable_type = gAgent.mRRInterface.getOutfitLayerAsType(option)) != LLWearableType::WT_INVALID) { // this is a clothing layer => replace item with the piece clothing
 			std::deque<std::string> res;
-			for (unsigned int i = 0; i < LLAgentWearables::MAX_CLOTHING_PER_TYPE; ++i) {
+			for (unsigned int i = 0; i < MAX_CLOTHING_PER_TYPE; ++i) {
 				LLUUID id = gAgentWearables.getWearableItemID (wearable_type, i);
 				if (id.notNull()) {
 					item = gInventory.getItem(id);

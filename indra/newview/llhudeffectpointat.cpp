@@ -330,7 +330,6 @@ void LLHUDEffectPointAt::render()
 	static LLUICachedControl<bool> pointat_names("ShowPointAtNames", false);
 	static LLUICachedControl<bool> pointat_limited("ShowPointAtLimited", false);
 
-
 	update();
 
 	if (show_pointat && mTargetType != POINTAT_TARGET_NONE && (

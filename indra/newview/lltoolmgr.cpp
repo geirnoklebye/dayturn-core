@@ -269,6 +269,7 @@ bool LLToolMgr::buildEnabledOrActive()
 {
 	return LLFloaterReg::instanceVisible("build") || canEdit();
 }
+
 void LLToolMgr::toggleBuildMode(const LLSD& sdname)
 {
 	const std::string& param = sdname.asString();
@@ -282,7 +283,6 @@ void LLToolMgr::toggleBuildMode(const LLSD& sdname)
 //mk
 
 	LLFloaterReg::toggleInstanceOrBringToFront("build");
-
 	if (param == "build" && !canEdit())
 	{
 		return;

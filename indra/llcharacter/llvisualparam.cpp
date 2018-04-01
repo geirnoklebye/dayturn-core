@@ -236,7 +236,7 @@ BOOL LLVisualParam::parseData(LLXmlTreeNode *node)
 //-----------------------------------------------------------------------------
 // setWeight()
 //-----------------------------------------------------------------------------
-void LLVisualParam::setWeight(F32 weight, BOOL upload_bake)
+void LLVisualParam::setWeight(F32 weight)
 {
 	if (mIsAnimating)
 	{
@@ -254,19 +254,19 @@ void LLVisualParam::setWeight(F32 weight, BOOL upload_bake)
 	
 	if (mNext)
 	{
-		mNext->setWeight(weight, upload_bake);
+		mNext->setWeight(weight);
 	}
 }
 
 //-----------------------------------------------------------------------------
 // setAnimationTarget()
 //-----------------------------------------------------------------------------
-void LLVisualParam::setAnimationTarget(F32 target_value, BOOL upload_bake)
+void LLVisualParam::setAnimationTarget(F32 target_value)
 {
 	// don't animate dummy parameters
 	if (mIsDummy)
 	{
-		setWeight(target_value, upload_bake);
+		setWeight(target_value);
 		mTargetWeight = mCurWeight;
 		return;
 	}
@@ -286,7 +286,7 @@ void LLVisualParam::setAnimationTarget(F32 target_value, BOOL upload_bake)
 
 	if (mNext)
 	{
-		mNext->setAnimationTarget(target_value, upload_bake);
+		mNext->setAnimationTarget(target_value);
 	}
 }
 
@@ -311,24 +311,24 @@ void LLVisualParam::clearNextParam()
 //-----------------------------------------------------------------------------
 // animate()
 //-----------------------------------------------------------------------------
-void LLVisualParam::animate( F32 delta, BOOL upload_bake )
+void LLVisualParam::animate( F32 delta)
 {
 	if (mIsAnimating)
 	{
 		F32 new_weight = ((mTargetWeight - mCurWeight) * delta) + mCurWeight;
-		setWeight(new_weight, upload_bake);
+		setWeight(new_weight);
 	}
 }
 
 //-----------------------------------------------------------------------------
 // stopAnimating()
 //-----------------------------------------------------------------------------
-void LLVisualParam::stopAnimating(BOOL upload_bake)
+void LLVisualParam::stopAnimating()
 { 
 	if (mIsAnimating && isTweakable())
 	{
 		mIsAnimating = FALSE; 
-		setWeight(mTargetWeight, upload_bake);
+		setWeight(mTargetWeight);
 	}
 }
 

@@ -54,8 +54,6 @@
                              <string>import</string>
                              <string>export</string>
 							 <string>FmodEX</string>
-  							<string>Message</string> 
-   							<string>AppInit</string>          
 						     <string>Avatar</string>
 						     <string>Inventory</string>
 						     <string>SceneLoadTiming</string>

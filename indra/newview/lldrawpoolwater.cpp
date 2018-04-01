@@ -385,7 +385,6 @@ void LLDrawPoolWater::renderOpaqueLegacyWater()
 //mk
 	gGL.getTexUnit(0)->bind(mOpaqueWaterImagep);
 
-
 	// Automatically generate texture coords for water texture
 	if (!shader)
 	{

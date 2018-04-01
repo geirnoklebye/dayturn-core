@@ -63,7 +63,6 @@ using namespace llsd;
 #   include <psapi.h>               // GetPerformanceInfo() et al.
 #	include <VersionHelpers.h>
 #elif LL_DARWIN
-#   include "llsys_objc.h"  // <AV:CR>
 #	include <errno.h>
 #	include <sys/sysctl.h>
 #	include <sys/utsname.h>
@@ -150,143 +149,147 @@ LLOSInfo::LLOSInfo() :
 {
 
 #if LL_WINDOWS
-    if (IsWindowsVersionOrGreater(10, 0, 0))
-    {
-        mMajorVer = 10;
-        mMinorVer = 0;
-        mOSStringSimple = "Microsoft Windows 10 ";
-    }
-    else if (IsWindows8Point1OrGreater())
-    {
-        mMajorVer = 6;
-        mMinorVer = 3;
-        if (IsWindowsServer())
-        {
-            mOSStringSimple = "Windows Server 2012 R2 ";
-        }
-        else
-        {
-            mOSStringSimple = "Microsoft Windows 8.1 ";
-        }
-    }
-    else if (IsWindows8OrGreater())
-    {
-        mMajorVer = 6;
-        mMinorVer = 2;
-        if (IsWindowsServer())
-        {
-            mOSStringSimple = "Windows Server 2012 ";
-        }
-        else
-        {
-            mOSStringSimple = "Microsoft Windows 8 ";
-        }
-    }
-    else if (IsWindows7SP1OrGreater())
-    {
-        mMajorVer = 6;
-        mMinorVer = 1;
-        if (IsWindowsServer())
-        {
-            mOSStringSimple = "Windows Server 2008 R2 SP1 ";
-        }
-        else
-        {
-            mOSStringSimple = "Microsoft Windows 7 SP1 ";
-        }
-    }
-    else if (IsWindows7OrGreater())
-    {
-        mMajorVer = 6;
-        mMinorVer = 1;
-        if (IsWindowsServer())
-        {
-            mOSStringSimple = "Windows Server 2008 R2 ";
-        }
-        else
-        {
-            mOSStringSimple = "Microsoft Windows 7 ";
-        }
-    }
-    else if (IsWindowsVistaSP2OrGreater())
-    {
-        mMajorVer = 6;
-        mMinorVer = 0;
-        if (IsWindowsServer())
-        {
-            mOSStringSimple = "Windows Server 2008 SP2 ";
-        }
-        else
-        {
-            mOSStringSimple = "Microsoft Windows Vista SP2 ";
-        }
-    }
-    else
-    {
-        mOSStringSimple = "Unsupported Windows version ";
-    }
 
-    ///get native system info if available..
-    typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO); ///function pointer for loading GetNativeSystemInfo
-    SYSTEM_INFO si; //System Info object file contains architecture info
-    PGNSI pGNSI; //pointer object
-    ZeroMemory(&si, sizeof(SYSTEM_INFO)); //zero out the memory in information
-    pGNSI = (PGNSI)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo"); //load kernel32 get function
-    if (NULL != pGNSI) //check if it has failed
-        pGNSI(&si); //success
-    else
-        GetSystemInfo(&si); //if it fails get regular system info 
-    //(Warning: If GetSystemInfo it may result in incorrect information in a WOW64 machine, if the kernel fails to load)
+	if (IsWindowsVersionOrGreater(10, 0, 0))
+	{
+		mMajorVer = 10;
+		mMinorVer = 0;
+		mOSStringSimple = "Microsoft Windows 10 ";
+	}
+	else if (IsWindows8Point1OrGreater())
+	{
+		mMajorVer = 6;
+		mMinorVer = 3;
+		if (IsWindowsServer())
+		{
+			mOSStringSimple = "Windows Server 2012 R2 ";
+		}
+		else
+		{
+			mOSStringSimple = "Microsoft Windows 8.1 ";
+		}
+	}
+	else if (IsWindows8OrGreater())
+	{
+		mMajorVer = 6;
+		mMinorVer = 2;
+		if (IsWindowsServer())
+		{
+			mOSStringSimple = "Windows Server 2012 ";
+		}
+		else
+		{
+			mOSStringSimple = "Microsoft Windows 8 ";
+		}
+	}
+	else if (IsWindows7SP1OrGreater())
+	{
+		mMajorVer = 6;
+		mMinorVer = 1;
+		if (IsWindowsServer())
+		{
+			mOSStringSimple = "Windows Server 2008 R2 SP1 ";
+		}
+		else
+		{
+			mOSStringSimple = "Microsoft Windows 7 SP1 ";
+		}
+	}
+	else if (IsWindows7OrGreater())
+	{
+		mMajorVer = 6;
+		mMinorVer = 1;
+		if (IsWindowsServer())
+		{
+			mOSStringSimple = "Windows Server 2008 R2 ";
+		}
+		else
+		{
+			mOSStringSimple = "Microsoft Windows 7 ";
+		}
+	}
+	else if (IsWindowsVistaSP2OrGreater())
+	{
+		mMajorVer = 6;
+		mMinorVer = 0;
+		if (IsWindowsServer())
+		{
+			mOSStringSimple = "Windows Server 2008 SP2 ";
+		}
+		else
+		{
+			mOSStringSimple = "Microsoft Windows Vista SP2 ";
+		}
+	}
+	else
+	{
+		mOSStringSimple = "Unsupported Windows version ";
+	}
 
-    //msdn microsoft finds 32 bit and 64 bit flavors this way..
-    //http://msdn.microsoft.com/en-us/library/ms724429(VS.85).aspx (example code that contains quite a few more flavors
-    //of windows than this code does (in case it is needed for the future)
-    if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64) //check for 64 bit
-    {
-        mOSStringSimple += "64-bit ";
-    }
-    else if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL)
-    {
-        mOSStringSimple += "32-bit ";
-    }
+	///get native system info if available..
+	typedef void (WINAPI *PGNSI)(LPSYSTEM_INFO); ///function pointer for loading GetNativeSystemInfo
+	SYSTEM_INFO si; //System Info object file contains architecture info
+	PGNSI pGNSI; //pointer object
+	ZeroMemory(&si, sizeof(SYSTEM_INFO)); //zero out the memory in information
+	pGNSI = (PGNSI)GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo"); //load kernel32 get function
+	if (NULL != pGNSI) //check if it has failed
+		pGNSI(&si); //success
+	else
+		GetSystemInfo(&si); //if it fails get regular system info 
+	//(Warning: If GetSystemInfo it may result in incorrect information in a WOW64 machine, if the kernel fails to load)
 
-    // Try calling GetVersionEx using the OSVERSIONINFOEX structure.
-    OSVERSIONINFOEX osvi;
-    ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-    if (GetVersionEx((OSVERSIONINFO *)&osvi))
-    {
-        mBuild = osvi.dwBuildNumber & 0xffff;
-    }
-    else
-    {
-        // If OSVERSIONINFOEX doesn't work, try OSVERSIONINFO.
-        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-        if (GetVersionEx((OSVERSIONINFO *)&osvi))
-        {
-            mBuild = osvi.dwBuildNumber & 0xffff;
-        }
-    }
+	//msdn microsoft finds 32 bit and 64 bit flavors this way..
+	//http://msdn.microsoft.com/en-us/library/ms724429(VS.85).aspx (example code that contains quite a few more flavors
+	//of windows than this code does (in case it is needed for the future)
+	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64) //check for 64 bit
+	{
+		mOSStringSimple += "64-bit ";
+	}
+	else if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL)
+	{
+		mOSStringSimple += "32-bit ";
+	}
 
-    mOSString = mOSStringSimple;
-    if (mBuild > 0)
-    {
-        mOSString += llformat("(Build %d)", mBuild);
-    }
+	// Try calling GetVersionEx using the OSVERSIONINFOEX structure.
+	OSVERSIONINFOEX osvi;
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	if (GetVersionEx((OSVERSIONINFO *)&osvi))
+	{
+		mBuild = osvi.dwBuildNumber & 0xffff;
+	}
+	else
+	{
+		// If OSVERSIONINFOEX doesn't work, try OSVERSIONINFO.
+		osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+		if (GetVersionEx((OSVERSIONINFO *)&osvi))
+		{
+			mBuild = osvi.dwBuildNumber & 0xffff;
+		}
+	}
 
-    LLStringUtil::trim(mOSStringSimple);
-    LLStringUtil::trim(mOSString);
+	mOSString = mOSStringSimple;
+	if (mBuild > 0)
+	{
+		mOSString += llformat("(Build %d)", mBuild);
+	}
+
+	LLStringUtil::trim(mOSStringSimple);
+	LLStringUtil::trim(mOSString);
 
 #elif LL_DARWIN
 	
 	// Initialize mOSStringSimple to something like:
 	// "Mac OS X 10.6.7"
 	{
- // <AV:CR>
 		const char * DARWIN_PRODUCT_NAME = "Mac OS X";
 		
-        S32 major_version, minor_version, bugfix_version = 0;
-		if (LLSysDarwin::getOperatingSystemInfo(major_version, minor_version, bugfix_version))
+		SInt32 major_version, minor_version, bugfix_version;
+		OSErr r1 = Gestalt(gestaltSystemVersionMajor, &major_version);
+		OSErr r2 = Gestalt(gestaltSystemVersionMinor, &minor_version);
+		OSErr r3 = Gestalt(gestaltSystemVersionBugFix, &bugfix_version);
+
+		if((r1 == noErr) && (r2 == noErr) && (r3 == noErr))
 		{
 			mMajorVer = major_version;
 			mMinorVer = minor_version;
@@ -302,7 +305,6 @@ LLOSInfo::LLOSInfo() :
 		{
 			mOSStringSimple.append("Unable to collect OS info");
 		}
-		// </AV:CR>
 	}
 	
 	// Initialize mOSString to something like:

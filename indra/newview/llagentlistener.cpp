@@ -54,15 +54,15 @@ LLAgentListener::LLAgentListener(LLAgent &agent)
                "LLAgent listener to (e.g.) teleport, sit, stand, etc."),
     mAgent(agent)
 {
-	add("requestTeleport",
+    add("requestTeleport",
         "Teleport: [\"regionname\"], [\"x\"], [\"y\"], [\"z\"]\n"
         "If [\"skip_confirmation\"] is true, use LLURLDispatcher rather than LLCommandDispatcher.",
         &LLAgentListener::requestTeleport);
-	add("requestSit",
+    add("requestSit",
 		"[\"obj_uuid\"]: id of object to sit on, use this or [\"position\"] to indicate the sit target"
 		"[\"position\"]: region position {x, y, z} where to find closest object to sit on",
         &LLAgentListener::requestSit);
-	add("requestStand",
+    add("requestStand",
         "Ask to stand up",
         &LLAgentListener::requestStand);
     add("requestTouch",
@@ -146,32 +146,32 @@ LLAgentListener::LLAgentListener(LLAgent &agent)
 
 void LLAgentListener::requestTeleport(LLSD const & event_data) const
 {
-	if(event_data["skip_confirmation"].asBoolean())
-	{
-		LLSD params(LLSD::emptyArray());
-		params.append(event_data["regionname"]);
-		params.append(event_data["x"]);
-		params.append(event_data["y"]);
-		params.append(event_data["z"]);
-		LLCommandDispatcher::dispatch("teleport", params, LLSD(), NULL, "clicked", true);
-		// *TODO - lookup other LLCommandHandlers for "agent", "classified", "event", "group", "floater", "parcel", "login", login_refresh", "balance", "chat"
-		// should we just compose LLCommandHandler and LLDispatchListener?
-	}
-	else
-	{
-		std::string url = LLSLURL(event_data["regionname"], 
-								  LLVector3(event_data["x"].asReal(), 
-											event_data["y"].asReal(), 
-											event_data["z"].asReal())).getSLURLString();
-		LLURLDispatcher::dispatch(url, "clicked", NULL, false);
-	}
+    if(event_data["skip_confirmation"].asBoolean())
+    {
+        LLSD params(LLSD::emptyArray());
+        params.append(event_data["regionname"]);
+        params.append(event_data["x"]);
+        params.append(event_data["y"]);
+        params.append(event_data["z"]);
+        LLCommandDispatcher::dispatch("teleport", params, LLSD(), NULL, "clicked", true);
+        // *TODO - lookup other LLCommandHandlers for "agent", "classified", "event", "group", "floater", "parcel", "login", login_refresh", "balance", "chat"
+        // should we just compose LLCommandHandler and LLDispatchListener?
+    }
+    else
+    {
+        std::string url = LLSLURL(event_data["regionname"], 
+                                  LLVector3(event_data["x"].asReal(), 
+                                            event_data["y"].asReal(), 
+                                            event_data["z"].asReal())).getSLURLString();
+        LLURLDispatcher::dispatch(url, "clicked", NULL, false);
+    }
 }
 
 void LLAgentListener::requestSit(LLSD const & event_data) const
 {
-	//mAgent.getAvatarObject()->sitOnObject();
-	// shamelessly ripped from llviewermenu.cpp:handle_sit_or_stand()
-	// *TODO - find a permanent place to share this code properly.
+    //mAgent.getAvatarObject()->sitOnObject();
+    // shamelessly ripped from llviewermenu.cpp:handle_sit_or_stand()
+    // *TODO - find a permanent place to share this code properly.
 
 	LLViewerObject *object = NULL;
 	if (event_data.has("obj_uuid"))

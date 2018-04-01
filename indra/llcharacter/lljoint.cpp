@@ -403,6 +403,7 @@ void showJointScaleOverrides( const LLJoint& joint, const std::string& note, con
         joint.m_attachmentScaleOverrides.showJointVector3Overrides(os);
         LL_DEBUGS("Avatar") << av_info << " joint " << joint.getName() << " " << note << " " << os.str() << LL_ENDL;
 }
+
 bool LLJoint::aboveJointPosThreshold(const LLVector3& pos) const
 {
     LLVector3 diff = pos - getDefaultPosition();

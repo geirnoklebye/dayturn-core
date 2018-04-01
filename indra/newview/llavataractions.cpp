@@ -754,7 +754,6 @@ void LLAvatarActions::rightsConfirmationCallback(const LLSD &notification, const
 
 namespace action_give_inventory
 {
-
 	/**
 	 * Returns a pointer to 'Add More' inventory panel of Edit Outfit SP.
 	 */
@@ -785,6 +784,7 @@ namespace action_give_inventory
 	/**
 	 * Checks My Inventory visibility.
 	 */
+
 	static bool is_give_inventory_acceptable()
 	{
 		// check selection in the panel
@@ -994,7 +994,7 @@ void LLAvatarActions::buildResidentsString(std::vector<LLAvatarName> avatar_name
 //	llassert(s > 0);
 	
 	if (len != 1) {
-	    std::sort(avatar_names.begin(), avatar_names.end());
+	std::sort(avatar_names.begin(), avatar_names.end());
 	}
 
 	std::string trailer = "";
@@ -1056,7 +1056,7 @@ void LLAvatarActions::buildResidentsString(const uuid_vec_t& avatar_uuids, std::
 			avatar_names.push_back(av_name);
 		}
 	}
-
+	
 	// We should check whether the vector is not empty to pass the assertion
 	// that avatar_names.size() > 0 in LLAvatarActions::buildResidentsString.
 	if (!avatar_names.empty())

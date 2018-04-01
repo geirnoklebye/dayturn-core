@@ -70,9 +70,6 @@
 #include "llviewerregion.h"
 #include "llcorehttputil.h"
 
-#ifdef OPENSIM
-#include "llviewernetwork.h"
-#endif // OPENSIM
 
 const static std::string ADHOC_NAME_SUFFIX(" Conference");
 
@@ -160,7 +157,7 @@ static void on_avatar_name_cache_toast(const LLUUID& agent_id,
 }
 
 void notify_of_message(const LLSD& msg, bool is_dnd_msg)
-	{
+{
     std::string user_preferences;
 	LLUUID participant_id = msg[is_dnd_msg ? "FROM_ID" : "from_id"].asUUID();
 	LLUUID session_id = msg[is_dnd_msg ? "SESSION_ID" : "session_id"].asUUID();
@@ -168,13 +165,12 @@ void notify_of_message(const LLSD& msg, bool is_dnd_msg)
 
     // do not show notification which goes from agent
     if (gAgent.getID() == participant_id)
-	{
-		return;
-	}
+    {
+        return;
+    }
 
     // determine state of conversations floater
     enum {CLOSED, NOT_ON_TOP, ON_TOP, ON_TOP_AND_ITEM_IS_SELECTED} conversations_floater_status;
-
 
 
     LLFloaterIMContainer* im_box = LLFloaterReg::getTypedInstance<LLFloaterIMContainer>("im_container");
@@ -217,9 +213,9 @@ void notify_of_message(const LLSD& msg, bool is_dnd_msg)
 			if (!gAgent.isDoNotDisturb() && (gSavedSettings.getBOOL("PlaySoundNearbyChatIM") == TRUE))
 			{
 				make_ui_sound("UISndNewIncomingIMSession");
-			}
-		}
     }
+		}
+	}
     else if(session->isP2PSessionType())
     {
         if (LLAvatarTracker::instance().isBuddy(participant_id))
@@ -236,17 +232,17 @@ void notify_of_message(const LLSD& msg, bool is_dnd_msg)
 			if (!gAgent.isDoNotDisturb() && (gSavedSettings.getBOOL("PlaySoundNonFriendIM") == TRUE))
 			{
 				make_ui_sound("UISndNewIncomingIMSession");
-			}
         }
     }
+	}
     else if(session->isAdHocSessionType())
     {
     	user_preferences = gSavedSettings.getString("NotificationConferenceIMOptions");
 		if (!gAgent.isDoNotDisturb() && (gSavedSettings.getBOOL("PlaySoundConferenceIM") == TRUE))
 		{
 			make_ui_sound("UISndNewIncomingIMSession");
-		}
     }
+	}
     else if(session->isGroupSessionType())
     {
     	user_preferences = gSavedSettings.getString("NotificationGroupChatOptions");
@@ -254,7 +250,7 @@ void notify_of_message(const LLSD& msg, bool is_dnd_msg)
 		{
 			make_ui_sound("UISndNewIncomingIMSession");
 		}
-}
+    }
 
     // actions:
 
@@ -300,7 +296,8 @@ void notify_of_message(const LLSD& msg, bool is_dnd_msg)
         else
         {
 			store_dnd_message = true;
-        }
+	        }
+
     }
 
     // 2. Flash line item
@@ -350,8 +347,8 @@ void notify_of_message(const LLSD& msg, bool is_dnd_msg)
 			{
 				store_dnd_message = true;
 			}
-		}
     }
+	}
 
     // 4. Toast
     if ((("toast" == user_preferences) &&
@@ -372,10 +369,10 @@ void notify_of_message(const LLSD& msg, bool is_dnd_msg)
 				}
 				else
 				{
-					LLAvatarNameCache::get(participant_id, boost::bind(&on_avatar_name_cache_toast, _1, _2, msg));
-				}
-			}
-		}
+            LLAvatarNameCache::get(participant_id, boost::bind(&on_avatar_name_cache_toast, _1, _2, msg));
+        }
+    }
+}
 	}
 	if (store_dnd_message)
 	{
@@ -385,9 +382,9 @@ void notify_of_message(const LLSD& msg, bool is_dnd_msg)
 			&& participant_id.notNull()
 			&& !session_floater->isShown())
 		{
-            LLAvatarNameCache::get(participant_id, boost::bind(&on_avatar_name_cache_toast, _1, _2, msg));
-        }
-    }
+			LLAvatarNameCache::get(participant_id, boost::bind(&on_avatar_name_cache_toast, _1, _2, msg));
+		}
+	}
 }
 
 void on_new_message(const LLSD& msg)
@@ -970,9 +967,9 @@ void LLIMModel::LLIMSession::buildHistoryFileName()
 		if (LLAvatarNameCache::get(mOtherParticipantID, &av_name))
 		{
 			mHistoryFileName = LLCacheName::buildUsername(av_name.getUserName());
-			}
-			else
-			{
+		}
+		else
+		{
 			// Incoming P2P sessions include a name that we can use to build a history file name
 			mHistoryFileName = LLCacheName::buildUsername(mName);
 		}
@@ -1008,7 +1005,6 @@ void LLIMModel::processSessionInitializedReply(const LLUUID& old_session_id, con
 		{
 			mId2SessionMap.erase(old_session_id);
 			mId2SessionMap[new_session_id] = session;
-
 		}
 
 		LLFloaterIMSession* im_floater = LLFloaterIMSession::findInstance(old_session_id);
@@ -1169,6 +1165,7 @@ bool LLIMModel::logToFile(const std::string& file_name, const std::string& from,
 	if (gSavedPerAccountSettings.getS32("KeepConversationLogTranscripts") > 1)
 	{	
 		std::string from_name = from;
+
 		LLAvatarName av_name;
 
 		if (from_id == AUDIO_STREAM_FROM) {
@@ -1271,7 +1268,7 @@ const std::string LLIMModel::getName(const LLUUID& session_id) const
 {
 	LLIMSession* session = findIMSession(session_id);
 
-	if (!session) 
+	if (!session)
 	{
 		LL_WARNS() << "session " << session_id << "does not exist " << LL_ENDL;
 		return LLTrans::getString("no_session_message");
@@ -2349,7 +2346,6 @@ BOOL LLIncomingCallDialog::postBuild()
 	getChildView("Start IM")->setVisible( is_avatar && notify_box_type != "VoiceInviteAdHoc" && notify_box_type != "VoiceInviteGroup");
 
 	setCanDrag(FALSE);
-
 	return TRUE;
 }
 
@@ -2663,6 +2659,7 @@ void LLIMMgr::addMessage(
 	bool link_name) // If this is true, then we insert the name and link it to a profile
 {
 	LLUUID other_participant_id = target_id;
+
 	LLUUID new_session_id = session_id;
 	if (new_session_id.isNull())
 	{
@@ -2777,10 +2774,9 @@ void LLIMMgr::addSystemMessage(const LLUUID& session_id, const std::string& mess
 
 		LLChat chat(message);
 		chat.mSourceType = CHAT_SOURCE_SYSTEM;
-		
-		LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
 
-		if(nearby_chat)
+		LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
+		if (nearby_chat)
 		{
 			nearby_chat->addMessage(chat);
 		}
@@ -2794,6 +2790,7 @@ void LLIMMgr::addSystemMessage(const LLUUID& session_id, const std::string& mess
 			gIMMgr->addMessage(session_id, LLUUID::null, SYSTEM_FROM, message.getString());
 		}
 		// log message to file
+
 		else
 		{
 			LLAvatarName av_name;
@@ -3679,14 +3676,7 @@ public:
 			}
 			std::string buffer = saved + message;
 
-// <FS:CR> FIRE-9762 - Don't bail here on OpenSim, we'll need to echo local posts
-#ifdef OPENSIM
-			bool is_opensim = LLGridManager::getInstance()->isInOpenSim();
-			if (!is_opensim && from_id == gAgentID)
-#else // OPENSIM
 			if(from_id == gAgentID)
-#endif // OPENSIM
-// </FS:CR>
 			{
 				return;
 			}
@@ -3702,14 +3692,7 @@ public:
 				message_params["region_id"].asUUID(),
 				ll_vector3_from_sd(message_params["position"]),
 				true);
-// <FS:CR> FIRE-9762 - OK, return here if we must!
-#ifdef OPENSIM
-			if (is_opensim && from_id == gAgentID)
-			{
-				return;
-			}
-#endif // OPENSIM
-// </FS:CR>
+
 			if (LLMuteList::getInstance()->isMuted(from_id, name, LLMute::flagTextChat))
 			{
 				return;

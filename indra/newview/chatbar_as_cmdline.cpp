@@ -445,7 +445,6 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
     static LLCachedControl<std::string> sFSCmdLineClearChat(gSavedSettings,  "FSCmdLineClearChat", "clrchat");
     static LLCachedControl<std::string> sFSCmdLineMedia(gSavedSettings,  "FSCmdLineMedia", "");
     static LLCachedControl<std::string> sFSCmdLineMusic(gSavedSettings,  "FSCmdLineMusic", "");
-    //<FS:HG> FIRE-6340, FIRE-6567 - Setting Bandwidth issues
     static LLCachedControl<std::string> sFSCmdLineBandwidth(gSavedSettings,  "FSCmdLineBandWidth", "bw");
     
     if (sFSCmdLine)
@@ -626,7 +625,6 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                         msg->addUUIDFast(_PREHASH_TargetID, targetKey);
                         msg->addVector3Fast(_PREHASH_Offset, LLVector3::zero);
                         gAgent.getRegion()->sendReliableMessage();
-
                         snprintf(buffer,sizeof(buffer),"Sat on object with key %s",targetKey.asString().c_str());
                         report_to_nearby_chat(std::string(buffer));
                     }
@@ -727,14 +725,12 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                     S32 agent_z = llround( (F32)agentPos.mdV[VZ] );
                     std::string region_name = LLWeb::escapeURL(revised_text.substr(command.length()+1));
                     std::string url;
-
                     if(!sFSCmdLineMapToKeepPos)
                     {
                         agent_x = 128;
                         agent_y = 128;
                         agent_z = 0;
                     }
-
                     url = llformat("secondlife:///app/teleport/%s/%d/%d/%d",region_name.c_str(),agent_x,agent_y,agent_z);
                     LLURLDispatcher::dispatch(url, "clicked", NULL, true);
                 }

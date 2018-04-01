@@ -73,29 +73,25 @@ public:
 	LLSLURL(const std::string& command, const LLUUID&id, const std::string& verb);
 	
 	SLURL_TYPE getType() const { return mType; }
-//<AW: opensim>
-	std::string getTypeHumanReadable() { return getTypeHumanReadable(mType); }
-	static std::string getTypeHumanReadable(SLURL_TYPE type);
-//</AW: opensim>
+	
 	std::string getSLURLString() const;
 	std::string getLoginString() const;
 	std::string getLocationString() const; 
 	std::string getGrid() const { return mGrid; }
 	std::string getRegion() const { return mRegion; }
 	LLVector3   getPosition() const { return mPosition; }
-	bool        getHypergrid() const { return mHypergrid; }//<AW: opensim>
 	std::string getAppCmd() const { return mAppCmd; }
 	std::string getAppQuery() const { return mAppQuery; }
 	LLSD        getAppQueryMap() const { return mAppQueryMap; }
 	LLSD        getAppPath() const { return mAppPath; }
-
+	
 	bool        isValid() const { return mType != INVALID; }
 	bool        isSpatial() const { return (mType == LAST_LOCATION) || (mType == HOME_LOCATION) || (mType == LOCATION); }
-
+	
 	bool operator==(const LLSLURL& rhs);
 	bool operator!=(const LLSLURL&rhs);
 
-	std::string asString() const ;
+    std::string asString() const ;
 
 protected:
 	static const std::string typeName[NUM_SLURL_TYPES];
@@ -103,17 +99,16 @@ protected:
 	static std::string getTypeString(SLURL_TYPE type);	
 	
 	SLURL_TYPE mType;
-
+	
 	// used for Apps and Help
 	std::string mAppCmd;
 	LLSD        mAppPath;
 	LLSD        mAppQueryMap;
 	std::string mAppQuery;
-
+	
 	std::string mGrid;  // reference to grid manager grid
 	std::string mRegion;
 	LLVector3  mPosition;
-	bool mHypergrid;//<AW: opensim>
 };
 
 #endif // LLSLURL_H

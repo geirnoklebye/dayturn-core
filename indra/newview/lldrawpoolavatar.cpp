@@ -284,7 +284,6 @@ void LLDrawPoolAvatar::beginPostDeferredAlpha()
 	sSkipOpaque = TRUE;
 	sShaderLevel = mVertexShaderLevel;
 	sVertexProgram = &gDeferredAvatarAlphaProgram;
-
 	sRenderingSkinned = TRUE;
 
 	gPipeline.bindDeferredShader(*sVertexProgram);
@@ -371,7 +370,7 @@ void LLDrawPoolAvatar::endPostDeferredAlpha()
 	// if we're in software-blending, remember to set the fence _after_ we draw so we wait till this rendering is done
 	sRenderingSkinned = FALSE;
 	sSkipOpaque = FALSE;
-	
+		
 	gPipeline.unbindDeferredShader(*sVertexProgram);
 	sDiffuseChannel = 0;
 	sShaderLevel = mVertexShaderLevel;
@@ -1179,7 +1178,6 @@ void LLDrawPoolAvatar::beginDeferredSkinned()
 {
 	sShaderLevel = mVertexShaderLevel;
 	sVertexProgram = &gDeferredAvatarProgram;
-
 	sRenderingSkinned = TRUE;
 
 	sVertexProgram->bind();
@@ -2261,13 +2259,6 @@ void LLDrawPoolAvatar::renderRiggedFullbrightShiny(LLVOAvatar* avatar)
 
 void LLDrawPoolAvatar::renderRiggedAlpha(LLVOAvatar* avatar)
 {
-////MK
-//	// If the vision is restricted, rendering alpha rigged attachments may poke a hole through the vision spheres.
-//	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-//	{
-//		return;
-//	}
-////mk
 	if (!mRiggedFace[RIGGED_ALPHA].empty())
 	{
 		LLGLEnable blend(GL_BLEND);
@@ -2285,13 +2276,6 @@ void LLDrawPoolAvatar::renderRiggedAlpha(LLVOAvatar* avatar)
 
 void LLDrawPoolAvatar::renderRiggedFullbrightAlpha(LLVOAvatar* avatar)
 {
-////MK
-//	// If the vision is restricted, rendering alpha rigged attachments may poke a hole through the vision spheres.
-//	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-//	{
-//		return;
-//	}
-////mk
 	if (!mRiggedFace[RIGGED_FULLBRIGHT_ALPHA].empty())
 	{
 		LLGLEnable blend(GL_BLEND);
@@ -2309,13 +2293,6 @@ void LLDrawPoolAvatar::renderRiggedFullbrightAlpha(LLVOAvatar* avatar)
 
 void LLDrawPoolAvatar::renderRiggedGlow(LLVOAvatar* avatar)
 {
-////MK
-//	// If the vision is restricted, rendering glowing rigged attachments may help see through the vision spheres.
-//	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM)
-//	{
-//		return;
-//	}
-////mk
 	if (!mRiggedFace[RIGGED_GLOW].empty())
 	{
 		LLGLEnable blend(GL_BLEND);

@@ -330,7 +330,6 @@ private:
 	static void onClickClear(void* userdata);
 
 private:
-	S32 getDirectoryFee();
 	LLCheckBoxCtrl*	mCheckEditObjects;
 	LLCheckBoxCtrl*	mCheckEditGroupObjects;
 	LLCheckBoxCtrl*	mCheckAllObjectEntry;

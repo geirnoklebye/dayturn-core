@@ -190,7 +190,9 @@ void LLPanelSnapshotLocal::saveLocalCallback(bool success)
     }
     else
     {
-	floater->notify(LLSD().with("set-finished", LLSD().with("ok", false).with("msg", "local")));
+		cancel();
+		floater->notify(LLSD().with("set-finished", LLSD().with("ok", false).with("msg", "local")));
+        floater->notify(LLSD().with("set-ready", true));
     }
 }
 

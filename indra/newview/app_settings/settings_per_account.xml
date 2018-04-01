@@ -61,20 +61,6 @@
       <key>Value</key>
         <real>0.0</real>
     </map>
-   
-<!--Kokua settings-->
-
-    <key>UIImgCrosshairsUUID</key>
-    <map>
-      <key>Comment</key>
-      <string>Image to use for crosshair display (UUID texture reference)</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>String</string>
-      <key>Value</key>
-      <string></string>
-    </map>
     <key>UIImgCrosshairsUUID</key>
     <map>
       <key>Comment</key>

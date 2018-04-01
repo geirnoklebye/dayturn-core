@@ -175,6 +175,7 @@ void LLHUDEffectSpiral::triggerLocal()
 	mKillTime = mTimer.getElapsedTimeF32() + mDuration;
 
 	BOOL show_beam = gSavedSettings.getBOOL("ShowSelectionBeam");
+
 	LLColor4 color;
 	color.setVec(mColor);
 

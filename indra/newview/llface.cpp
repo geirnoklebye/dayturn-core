@@ -2177,6 +2177,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 			LLVector4a src;
 
+		
 			LLColor4U glow4u = LLColor4U(0,0,0,glow);
 
 			U32 glow32 = glow4u.asRGBA();
@@ -2534,12 +2535,6 @@ void LLFace::setViewerObject(LLViewerObject* objp)
 
 const LLColor4& LLFace::getRenderColor() const
 {
-////MK
-//	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures && !(getViewerObject()->isAttachment()))
-//	{
-//		return LLColor4::white;
-//	}
-////mk
 	if (isState(USE_FACE_COLOR))
 	{
 		  return mFaceColor; // Face Color

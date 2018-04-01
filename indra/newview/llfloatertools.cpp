@@ -90,7 +90,6 @@
 #include "llvovolume.h"
 #include "lluictrlfactory.h"
 #include "qtoolalign.h"
-
 #include "llmeshrepository.h"
 #include "llworld.h"
 
@@ -462,28 +461,27 @@ void LLFloaterTools::refresh()
 #if 0
 	if (!gMeshRepo.meshRezEnabled())
 	{		
-	std::string obj_count_string;
-	LLResMgr::getInstance()->getIntegerString(obj_count_string, LLSelectMgr::getInstance()->getSelection()->getRootObjectCount());
+		std::string obj_count_string;
+		LLResMgr::getInstance()->getIntegerString(obj_count_string, LLSelectMgr::getInstance()->getSelection()->getRootObjectCount());
 		getChild<LLUICtrl>("selection_count")->setTextArg("[OBJ_COUNT]", obj_count_string);
-	std::string prim_count_string;
-	LLResMgr::getInstance()->getIntegerString(prim_count_string, LLSelectMgr::getInstance()->getSelection()->getObjectCount());
+		std::string prim_count_string;
+		LLResMgr::getInstance()->getIntegerString(prim_count_string, LLSelectMgr::getInstance()->getSelection()->getObjectCount());
 		getChild<LLUICtrl>("selection_count")->setTextArg("[PRIM_COUNT]", prim_count_string);
 
-	// calculate selection rendering cost
-	if (sShowObjectCost)
-	{
-		std::string prim_cost_string;
+		// calculate selection rendering cost
+		if (sShowObjectCost)
+		{
+			std::string prim_cost_string;
 			S32 render_cost = LLSelectMgr::getInstance()->getSelection()->getSelectedObjectRenderCost();
 			LLResMgr::getInstance()->getIntegerString(prim_cost_string, render_cost);
-		getChild<LLUICtrl>("RenderingCost")->setTextArg("[COUNT]", prim_cost_string);
-	}
-
-
-	// disable the object and prim counts if nothing selected
-	bool have_selection = ! LLSelectMgr::getInstance()->getSelection()->isEmpty();
-	getChildView("obj_count")->setEnabled(have_selection);
-	getChildView("prim_count")->setEnabled(have_selection);
-	getChildView("RenderingCost")->setEnabled(have_selection && sShowObjectCost);
+			getChild<LLUICtrl>("RenderingCost")->setTextArg("[COUNT]", prim_cost_string);
+		}
+		
+		// disable the object and prim counts if nothing selected
+		bool have_selection = ! LLSelectMgr::getInstance()->getSelection()->isEmpty();
+		getChildView("obj_count")->setEnabled(have_selection);
+		getChildView("prim_count")->setEnabled(have_selection);
+		getChildView("RenderingCost")->setEnabled(have_selection && sShowObjectCost);
 	}
 	else
 #endif
@@ -504,15 +502,16 @@ void LLFloaterTools::refresh()
 		{
 			LLViewerObject* selected_object = mObjectSelection->getFirstObject();
 			if (selected_object)
-		{
+			{
 				// Select a parcel at the currently selected object's position.
 				LLViewerParcelMgr::getInstance()->selectParcelAt(selected_object->getPositionGlobal());
-		}
-		else
-		{
+			}
+			else
+			{
 				LL_WARNS() << "Failed to get selected object" << LL_ENDL;
+			}
 		}
-		}
+
 		LLStringUtil::format_map_t selection_args;
 		selection_args["OBJ_COUNT"] = llformat("%.1d", link_count);
 		if (((S32)link_cost) == 0)
@@ -521,7 +520,7 @@ void LLFloaterTools::refresh()
 		}
 		else
 		{
-			selection_args["LAND_IMPACT"] = llformat("%.1d", (S32)link_cost);
+		selection_args["LAND_IMPACT"] = llformat("%.1d", (S32)link_cost);
 		}
 		std::ostringstream selection_info;
 
@@ -529,7 +528,7 @@ void LLFloaterTools::refresh()
 
 		getChild<LLTextBox>("selection_count")->setText(selection_info.str());
 
-		bool have_selection = ! LLSelectMgr::getInstance()->getSelection()->isEmpty();
+		bool have_selection = !LLSelectMgr::getInstance()->getSelection()->isEmpty();
 		childSetVisible("selection_count",  have_selection);
 		childSetVisible("remaining_capacity", have_selection);
 		childSetVisible("selection_empty", !have_selection);
@@ -682,6 +681,7 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 						tool == LLToolCompScale::getInstance() ||
 						tool == LLToolFace::getInstance() ||
 						tool == LLToolIndividual::getInstance() ||
+						tool == QToolAlign::getInstance() ||
 						tool == LLToolPipette::getInstance();
 
 	mBtnEdit	->setToggleState( edit_visible );
@@ -730,20 +730,20 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 
 		switch (mObjectSelection->getSelectType())
 		{
-		case SELECT_TYPE_HUD:
-		  mComboGridMode->add(getString("grid_screen_text"));
-		  mComboGridMode->add(getString("grid_local_text"));
-		  break;
-		case SELECT_TYPE_WORLD:
-		  mComboGridMode->add(getString("grid_world_text"));
-		  mComboGridMode->add(getString("grid_local_text"));
-		  mComboGridMode->add(getString("grid_reference_text"));
-		  break;
-		case SELECT_TYPE_ATTACHMENT:
-		  mComboGridMode->add(getString("grid_attachment_text"));
-		  mComboGridMode->add(getString("grid_local_text"));
-		  mComboGridMode->add(getString("grid_reference_text"));
-		  break;
+			case SELECT_TYPE_HUD:
+				mComboGridMode->add(getString("grid_screen_text"));
+				mComboGridMode->add(getString("grid_local_text"));
+				break;
+			case SELECT_TYPE_WORLD:
+				mComboGridMode->add(getString("grid_world_text"));
+				mComboGridMode->add(getString("grid_local_text"));
+				mComboGridMode->add(getString("grid_reference_text"));
+				break;
+			case SELECT_TYPE_ATTACHMENT:
+				mComboGridMode->add(getString("grid_attachment_text"));
+				mComboGridMode->add(getString("grid_local_text"));
+				mComboGridMode->add(getString("grid_reference_text"));
+				break;
 		}
 
 		mComboGridMode->setCurrentByIndex(index);
@@ -895,7 +895,7 @@ void LLFloaterTools::onClose(bool app_quitting)
 	if( mTitleMedia )
 		mTitleMedia->unloadMediaSource();
 
-	// Different from handle_reset_view in that it doesn't actually 
+    // Different from handle_reset_view in that it doesn't actually 
 	//   move the camera if EditCameraMovement is not set.
 	gAgentCamera.resetView(gSavedSettings.getBOOL("EditCameraMovement"));
 	
@@ -1027,12 +1027,11 @@ void commit_radio_group_edit(LLUICtrl *ctrl)
 	{
 		LLFloaterTools::setEditTool( LLToolFace::getInstance() );
 	}
-//MK
-	else if (selected == "radio align")
+		else if (selected == "radio align")
 	{
 		LLFloaterTools::setEditTool( QToolAlign::getInstance() );
 	}
-//mk
+
 	gSavedSettings.setBOOL("ShowParcelOwners", show_owners);
 }
 

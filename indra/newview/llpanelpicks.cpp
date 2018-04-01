@@ -43,7 +43,6 @@
 #include "llviewergenericmessage.h"	// send_generic_message
 #include "llmenugl.h"
 #include "llviewermenu.h"
-#include "llviewernetwork.h"
 #include "llregistry.h"
 
 #include "llaccordionctrl.h"
@@ -551,7 +550,7 @@ BOOL LLPanelPicks::postBuild()
 	plus_registar.add("Picks.Plus.Action", boost::bind(&LLPanelPicks::onPlusMenuItemClicked, this, _2));
 	mEnableCallbackRegistrar.add("Picks.Plus.Enable", boost::bind(&LLPanelPicks::isActionEnabled, this, _2));
 	mPlusMenu = LLUICtrlFactory::getInstance()->createFromFile<LLToggleableMenu>("menu_picks_plus.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
-
+	
 	return TRUE;
 }
 

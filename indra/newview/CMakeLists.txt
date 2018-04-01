@@ -39,7 +39,6 @@ include(Linking)
 include(NDOF)
 include(NVAPI)
 include(OPENAL)
-include(Teapot)
 include(OpenGL)
 include(OpenSSL)
 include(PNG)
@@ -69,6 +68,7 @@ endif( LLPHYSICSEXTENSIONS_SRC_DIR )
 if(FMODEX)
   include_directories(${FMODEX_INCLUDE_DIR})
 endif(FMODEX)
+
 include_directories(
     ${DBUSGLIB_INCLUDE_DIRS}
     ${JSONCPP_INCLUDE_DIR}
@@ -92,7 +92,6 @@ include_directories(
     ${LLWINDOW_INCLUDE_DIRS}
     ${LLXML_INCLUDE_DIRS}
     ${LLLOGIN_INCLUDE_DIRS}
-    ${TEAPOT_INCLUDE_DIRS}
     ${COLLADA_INCLUDE_DIRS}
     ${LIBS_PREBUILT_DIR}/include/collada
     ${LIBS_PREBUILD_DIR}/include/hunspell
@@ -142,7 +141,6 @@ set(viewer_SOURCE_FILES
     llagentpilot.cpp
     llagentui.cpp
     llagentwearables.cpp
-    llagentwearablesfetch.cpp
     llanimstatelabels.cpp
     llappcorehttp.cpp
     llappearancemgr.cpp
@@ -750,7 +748,6 @@ set(viewer_SOURCE_FILES
     utilitybar.cpp
     viewerinfo.cpp
     streamtitledisplay.cpp
-    astraopenregionsettings.cpp
     )
 
 set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
@@ -795,7 +792,6 @@ set(viewer_HEADER_FILES
     llagentpilot.h
     llagentui.h
     llagentwearables.h
-    llagentwearablesfetch.h
     llanimstatelabels.h
     llappcorehttp.h
     llappearance.h
@@ -1545,7 +1541,7 @@ if (WINDOWS)
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.BMP"
         "${CMAKE_CURRENT_SOURCE_DIR}/res/ll_icon.BMP"
-	  )
+      )
     execute_process(
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/icons/${ICON_PATH}/kokua_icon.BMP"
@@ -1709,7 +1705,6 @@ set(viewer_APPSETTINGS_FILES
     app_settings/logcontrol.xml
     app_settings/low_graphics.xml
     app_settings/mid_graphics.xml
-    app_settings/grids.fallback.xml
     app_settings/settings.xml
     app_settings/settings_crash_behavior.xml
     app_settings/settings_files.xml
@@ -1881,11 +1876,11 @@ if (WINDOWS)
 
     if (FMODEX)
         if ( ADDRESS_SIZE EQUAL 32 )
-                list(APPEND COPY_INPUT_DEPENDENCIES
-                   ${SHARED_LIB_STAGING_DIR}/Release/fmodex.dll
-                   ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex.dll
-                   ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL.dll
-                  )
+      list(APPEND COPY_INPUT_DEPENDENCIES
+           ${SHARED_LIB_STAGING_DIR}/Release/fmodex.dll
+           ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodex.dll
+           ${SHARED_LIB_STAGING_DIR}/Debug/fmodexL.dll
+          )
         elseif( ADDRESS_SIZE EQUAL 64 )
                 list(APPEND COPY_INPUT_DEPENDENCIES
                    ${SHARED_LIB_STAGING_DIR}/Release/fmodex64.dll
@@ -2083,7 +2078,7 @@ target_link_libraries(${VIEWER_BINARY_NAME}
     ${LLPHYSICS_LIBRARIES}
     ${LLPHYSICSEXTENSIONS_LIBRARIES}
     ${LLAPPEARANCE_LIBRARIES}
-     )
+    )
 
 set(ARTWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH
     "Path to artwork files.")
@@ -2111,7 +2106,7 @@ if (LINUX)
         --artwork=${ARTWORK_DIR}
         --build=${CMAKE_CURRENT_BINARY_DIR}
         --buildtype=${CMAKE_BUILD_TYPE}
-        --channel=${VIEWER_CHANNEL}
+        "--channel=${VIEWER_CHANNEL}"
         --versionfile=${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt
         --configuration=${CMAKE_CFG_INTDIR}
         --dest=${CMAKE_CURRENT_BINARY_DIR}/packaged
@@ -2210,6 +2205,7 @@ if (DARWIN)
 
   add_dependencies(${VIEWER_BINARY_NAME} SLPlugin media_plugin_libvlc media_plugin_cef mac-crash-logger)
   add_dependencies(${VIEWER_BINARY_NAME} mac-crash-logger)
+
   if (ENABLE_SIGNING)
       set(SIGNING_SETTING "--signature=${SIGNING_IDENTITY}")
   else (ENABLE_SIGNING)
@@ -2264,7 +2260,7 @@ if (PACKAGE)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/llplugin/slplugin/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/mac_crash_logger/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
-    set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-darwin-$ENV{AUTOBUILD_ADDRSIZE}.tar.bz2")
+    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
     set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-darwin-$ENV{AUTOBUILD_ADDRSIZE}.tar.bz2")
     set(VIEWER_EXE_GLOBS "'Kokua' SLPlugin mac-crash-logger")
     set(VIEWER_LIB_GLOB "*.dylib")

@@ -2265,14 +2265,14 @@ void LLViewerFetchedTexture::clearFetchedResults()
 	{
 		return ;
 	}
-	if (mNeedsCreateTexture)//return if in the process of generating a new texture.
-	{
-		return;
-	}
-
-	//LL_DEBUGS("Avatar") << mID << LL_ENDL;
+	
+	cleanup();
 	destroyGLTexture();
-	mFullyLoaded = FALSE;
+
+	if(getDiscardLevel() >= 0) //sculpty texture, force to invalidate
+	{
+		mGLTexturep->forceToInvalidateGLTexture();
+	}
 }
 
 void LLViewerFetchedTexture::forceToDeleteRequest()

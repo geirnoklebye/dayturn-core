@@ -199,7 +199,7 @@ LLButton::LLButton(const LLButton::Params& p)
 		mFlashingTimer = new LLFlashTimer ((LLFlashTimer::callback_t)NULL, flash_count, flash_rate);
 	}
 	else
-    {
+	{
 		mButtonFlashCount = p.button_flash_count;
 		mButtonFlashRate = p.button_flash_rate;
 	}
@@ -979,15 +979,6 @@ void LLButton::draw()
 			S32_MAX, text_width,
 			NULL, mUseEllipses);
 	}
-
-	// <FS:Zi> Add checkbox control toggle
-	if(mCheckboxControlPanel)
-	{
-		mCheckboxControlPanel->setOrigin(0,0);
-		mCheckboxControlPanel->reshape(getRect().getWidth(),getRect().getHeight());
-		mCheckboxControlPanel->draw();
-	}
-	// <FS:Zi>
 
 	// <FS:Zi> Add checkbox control toggle
 	if(mCheckboxControlPanel)

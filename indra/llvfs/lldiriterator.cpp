@@ -33,7 +33,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
 
-
 namespace fs = boost::filesystem;
 
 static std::string glob_to_regex(const std::string& glob);
@@ -144,7 +143,6 @@ bool LLDirIterator::Impl::next(std::string &fname)
 			++mIter;
 		}
 	}
-
 	catch (const fs::filesystem_error& e)
 	{
 		LL_WARNS() << e.what() << LL_ENDL;

@@ -345,13 +345,6 @@ void LLTracker::trackLocation(const LLVector3d& pos_global, const std::string& f
 {
 	instance()->stopTrackingAvatar();
 	instance()->stopTrackingLandmark();
-////MK
-//	if (gRRenabled && (gAgent.mRRInterface.mContainsShowminimap || gAgent.mRRInterface.mContainsShowworldmap))
-//	{
-//		instance()->stopTrackingLocation(true);
-//		return;
-//	}
-////mk
 
 	instance()->mTrackedPositionGlobal = pos_global;
 	instance()->mTrackedLocationName = full_name;
@@ -700,26 +693,6 @@ void LLTracker::clearFocus()
 
 void LLTracker::drawMarker(const LLVector3d& pos_global, const LLColor4& color)
 {
-//MK
-	/*
-	bool must_stop_tracking = false;
-	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
-	{
-		stopTrackingAvatar(true);
-		must_stop_tracking = true;
-	}
-	if (gRRenabled && (gAgent.mRRInterface.mContainsShowloc || gAgent.mRRInterface.mContainsShowworldmap))
-	{
-		stopTrackingLocation(true);
-		stopTrackingLandmark(true);
-		must_stop_tracking = true;
-	}
-	if (must_stop_tracking)
-	{
-		return;
-	}
-	*/
-//mk
 	// get position
 	LLVector3 pos_local = gAgent.getPosAgentFromGlobal(pos_global);
 

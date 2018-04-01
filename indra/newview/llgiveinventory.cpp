@@ -47,12 +47,11 @@
 #include "llrecentpeople.h"
 #include "llviewerobjectlist.h"
 #include "llvoavatarself.h"
-#include "llworld.h"
 
 // MAX ITEMS is based on (sizeof(uuid)+2) * count must be < MTUBYTES
 // or 18 * count < 1200 => count < 1200/18 => 66. I've cut it down a
 // bit from there to give some pad.
-//const S32 MAX_ITEMS = 42;
+const S32 MAX_ITEMS = 42;
 
 class LLGiveable : public LLInventoryCollectFunctor
 {
@@ -268,7 +267,7 @@ bool LLGiveInventory::doGiveInventoryCategory(const LLUUID& to_agent,
 		give_successful = false;
 	}
 	count = items.size() + cats.size();
-	if (count > LLWorld::getInstance()->getMaxInventoryItemsTransfer())
+	if (count > MAX_ITEMS)
 	{
 		LLNotificationsUtil::add("TooManyItems");
 		give_successful = false;
@@ -530,7 +529,7 @@ bool LLGiveInventory::commitGiveInventoryCategory(const LLUUID& to_agent,
 	// MTUBYTES or 18 * count < 1200 => count < 1200/18 =>
 	// 66. I've cut it down a bit from there to give some pad.
 	S32 count = items.size() + cats.size();
-	if (count > LLWorld::getInstance()->getMaxInventoryItemsTransfer())
+	if (count > MAX_ITEMS)
 	{
 		LLNotificationsUtil::add("TooManyItems");
 		give_successful = false;

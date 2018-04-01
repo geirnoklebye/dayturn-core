@@ -94,7 +94,6 @@ LLLoginInstance::LLLoginInstance() :
 	mDispatcher.add("connect",    "", boost::bind(&LLLoginInstance::handleLoginSuccess, this, _1));
 	mDispatcher.add("disconnect", "", boost::bind(&LLLoginInstance::handleDisconnect, this, _1));
 	mDispatcher.add("indeterminate", "", boost::bind(&LLLoginInstance::handleIndeterminate, this, _1));
-
 }
 
 void LLLoginInstance::setPlatformInfo(const std::string platform,
@@ -194,16 +193,6 @@ void LLLoginInstance::constructAuthParams(LLPointer<LLCredential> user_credentia
 	}
 
 	LLSD request_params;
-	//TODO: make this more flexible
-	if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		requested_options.append("currency");
-		requested_options.append("max_groups");
-		requested_options.append("profile-server-url");
-		requested_options.append("search");
-		requested_options.append("web-profile-url");
-	}
-
 
     unsigned char hashed_unique_id_string[MD5HEX_STR_SIZE];
     if ( ! llHashedUniqueID(hashed_unique_id_string) )

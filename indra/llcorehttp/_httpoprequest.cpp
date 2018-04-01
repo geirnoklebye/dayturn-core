@@ -1317,6 +1317,7 @@ char * os_strltrim(char * lstr)
 	return lstr;
 }
 
+
 void check_curl_easy_code(CURLcode code, int curl_setopt_option)
 {
 	if (CURLE_OK != code)

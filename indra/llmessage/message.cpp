@@ -2997,9 +2997,6 @@ BOOL LLMessageSystem::callExceptionFunc(EMessageException exception)
 	(ex_cb)(this, ex.second, exception);
 
 	return TRUE;
-
-
-
 }
 
 void LLMessageSystem::setTimingFunc(msg_timing_callback func, void* data)

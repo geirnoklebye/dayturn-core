@@ -625,9 +625,9 @@ void LLVertexBuffer::drawArrays(U32 mode, const std::vector<LLVector3>& pos, con
 	gGL.syncMatrices();
 
 	U32 count = pos.size();
-	llassert_always(norm.size() >= pos.size());
-	llassert_always(count > 0);
 	
+	llassert(norm.size() >= pos.size());
+	llassert(count > 0);
 
 	if( count == 0 )
 	{
@@ -2076,7 +2076,7 @@ void LLVertexBuffer::unmapBuffer()
 					S32 length = sizeof(U16)*region.mCount;
 					if (mIndicesSize >= length + offset)
 					{
-						glBufferSubDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, offset, length, (U8*) mMappedIndexData+offset);
+					glBufferSubDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, offset, length, (U8*) mMappedIndexData+offset);
 					}
 					else
 					{

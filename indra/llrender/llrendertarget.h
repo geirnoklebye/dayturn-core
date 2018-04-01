@@ -56,7 +56,6 @@
 
 */
 
-
 class LLRenderTarget
 {
 public:
@@ -155,9 +154,9 @@ protected:
 	U32 mPreviousResY;
 
 	U32 mDepth;
-	BOOL mStencil;
-	BOOL mUseDepth;
-	BOOL mRenderDepth;
+	bool mStencil;
+	bool mUseDepth;
+	bool mRenderDepth;
 	LLTexUnit::eTextureType mUsage;
 	
 	static LLRenderTarget* sBoundTarget;

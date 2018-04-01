@@ -108,7 +108,6 @@ public:
 public:
 	virtual bool 	isSelf() const { return false; } // True if this avatar is for this viewer's agent
 	virtual BOOL	isValid() const;
-	virtual BOOL	isUsingServerBakes() const = 0;
 	virtual BOOL	isUsingLocalAppearance() const = 0;
 	virtual BOOL	isEditingAppearance() const = 0;
 
@@ -159,8 +158,6 @@ protected:
 	static BOOL			parseSkeletonFile(const std::string& filename);
 	virtual void		buildCharacter();
 	virtual BOOL		loadAvatar();
-	virtual F32 getAvatarOffset();
-	virtual void		bodySizeChanged() = 0;
 
 	BOOL				setupBone(const LLAvatarBoneInfo* info, LLJoint* parent, S32 &current_volume_num, S32 &current_joint_num);
 	BOOL				allocateCharacterJoints(U32 num);
@@ -247,7 +244,9 @@ public:
 	// Composites
 	//--------------------------------------------------------------------
 public:
-	virtual void	invalidateComposite(LLTexLayerSet* layerset, BOOL upload_result) = 0;/********************************************************************************
+	virtual void	invalidateComposite(LLTexLayerSet* layerset) = 0;
+
+/********************************************************************************
  **                                                                            **
  **                    MESHES
  **/
@@ -276,7 +275,7 @@ protected:
 	// Clothing colors (convenience functions to access visual parameters)
 	//--------------------------------------------------------------------
 public:
-	void			setClothesColor(LLAvatarAppearanceDefines::ETextureIndex te, const LLColor4& new_color, BOOL upload_bake);
+	void			setClothesColor(LLAvatarAppearanceDefines::ETextureIndex te, const LLColor4& new_color);
 	LLColor4		getClothesColor(LLAvatarAppearanceDefines::ETextureIndex te);
 	static BOOL		teToColorParams(LLAvatarAppearanceDefines::ETextureIndex te, U32 *param_name);
 
@@ -285,7 +284,7 @@ public:
 	//--------------------------------------------------------------------
 public:
 	LLColor4		getGlobalColor(const std::string& color_name ) const;
-	virtual void	onGlobalColorChanged(const LLTexGlobalColor* global_color, BOOL upload_bake) = 0; 
+	virtual void	onGlobalColorChanged(const LLTexGlobalColor* global_color) = 0;
 protected:
 	LLTexGlobalColor* mTexSkinColor;
 	LLTexGlobalColor* mTexHairColor;

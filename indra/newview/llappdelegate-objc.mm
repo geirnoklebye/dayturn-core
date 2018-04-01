@@ -44,7 +44,6 @@
 - (void) applicationWillFinishLaunching:(NSNotification *)notification
 {
     [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:) forEventClass:kInternetEventClass andEventID:kAEGetURL];
-	
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *)notification

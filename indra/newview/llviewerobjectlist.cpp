@@ -306,13 +306,13 @@ void LLViewerObjectList::processUpdateCore(LLViewerObject* objectp,
 				FSCommon::applyDefaultBuildPreferences(objectp);
 			}
 
-			if ( LLToolMgr::getInstance()->getCurrentTool() != LLToolPie::getInstance() )
-			{
+		if ( LLToolMgr::getInstance()->getCurrentTool() != LLToolPie::getInstance() )
+		{
 			// LL_INFOS() << "DEBUG selecting " << objectp->mID << " " 
 			// << objectp->mLocalID << LL_ENDL;
-				LLSelectMgr::getInstance()->selectObjectAndFamily(objectp);
-				dialog_refresh_all();
-			}
+			LLSelectMgr::getInstance()->selectObjectAndFamily(objectp);
+			dialog_refresh_all();
+		}
 		}
 		// <FS:Techwolf Lupindo>
 		objectp->mCreateSelected = false;
@@ -511,9 +511,9 @@ void LLViewerObjectList::processObjectUpdate(LLMessageSystem *mesgsys,
 				U32 flags = 0;
 				mesgsys->getU32Fast(_PREHASH_ObjectData, _PREHASH_UpdateFlags, flags, i);
 
-				compressed_dp.unpackUUID(fullid, "ID");
-				compressed_dp.unpackU32(local_id, "LocalID");
-				compressed_dp.unpackU8(pcode, "PCode");
+                    compressed_dp.unpackUUID(fullid, "ID");
+                    compressed_dp.unpackU32(local_id, "LocalID");
+                    compressed_dp.unpackU8(pcode, "PCode");
 				
 				if (pcode == 0)
 				{
@@ -525,7 +525,7 @@ void LLViewerObjectList::processObjectUpdate(LLMessageSystem *mesgsys,
 						<< " Region id: " << regionp->getRegionID() << LL_ENDL;
 					recorder.objectUpdateFailure(local_id, update_type, msg_size);
 					continue;
-				}
+                }
 				else if ((flags & FLAGS_TEMPORARY_ON_REZ) == 0)
 				{
 					//send to object cache
@@ -839,7 +839,7 @@ void LLViewerObjectList::updateApparentAngles(LLAgent &agent)
 	}
 	else
 	{
-		mCurBin = (mCurBin + 1) % NUM_BINS;
+	mCurBin = (mCurBin + 1) % NUM_BINS;
 	}
 
 	LLVOAvatar::cullAvatarsByPixelArea();

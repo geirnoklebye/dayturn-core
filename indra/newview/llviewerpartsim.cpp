@@ -766,7 +766,6 @@ void LLViewerPartSim::updateSimulation()
 			}
 		}
 
-
 		if (mViewerPartSources[i]->isDead())
 		{
 			mViewerPartSources.erase(mViewerPartSources.begin() + i);

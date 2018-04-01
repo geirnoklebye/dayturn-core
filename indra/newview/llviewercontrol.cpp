@@ -42,6 +42,7 @@
 #include "llflexibleobject.h"
 #include "llfeaturemanager.h"
 #include "llviewershadermgr.h"
+
 #include "llsky.h"
 #include "llvieweraudio.h"
 #include "llviewermenu.h"
@@ -247,9 +248,9 @@ static bool handleLUTBufferChanged(const LLSD& newvalue)
 	return true;
 }
 
-static bool handleAnisotropicChanged(const LLSD &newvalue)
+static bool handleAnisotropicChanged(const LLSD& newvalue)
 {
-	LLImageGL::sGlobalAnisotropicSamples = (F32)newvalue.asReal();
+	LLImageGL::sGlobalUseAnisotropic = newvalue.asBoolean();
 	LLImageGL::dirtyTexOptions();
 	return true;
 }
@@ -651,24 +652,6 @@ bool toggle_show_mini_location_panel(const LLSD& newvalue)
 	return true;
 }
 
-bool handleAvatarZOffsetChanged(const LLSD& sdValue)
-{
- 	if ( isAgentAvatarValid() )
-  	{
- 		if (gAgent.getRegion()->avatarHoverHeightEnabled())
- 		{
- 			LLVector3 avOffset(0.0f, 0.0f, llclamp<F32>(sdValue.asReal(), MIN_HOVER_Z, MAX_HOVER_Z));
- 			gAgentAvatarp->setHoverOffset(avOffset, true);
- 		}
- 		else if (!gAgentAvatarp->isUsingServerBakes())
- 		{
- 			gAgentAvatarp->computeBodySize();
- 		}
-  	}
-  	return true;
-}
-
-
 bool toggle_show_object_render_cost(const LLSD& newvalue)
 {
 	LLFloaterTools::sShowObjectCost = newvalue.asBoolean();
@@ -706,7 +689,7 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("RenderSpecularResX")->getSignal()->connect(boost::bind(&handleLUTBufferChanged, _2));
 	gSavedSettings.getControl("RenderSpecularResY")->getSignal()->connect(boost::bind(&handleLUTBufferChanged, _2));
 	gSavedSettings.getControl("RenderSpecularExponent")->getSignal()->connect(boost::bind(&handleLUTBufferChanged, _2));
-	gSavedSettings.getControl("RenderAnisotropicSamples")->getSignal()->connect(boost::bind(&handleAnisotropicChanged, _2));
+	gSavedSettings.getControl("RenderAnisotropic")->getSignal()->connect(boost::bind(&handleAnisotropicChanged, _2));
 	gSavedSettings.getControl("RenderShadowResolutionScale")->getSignal()->connect(boost::bind(&handleReleaseGLBufferChanged, _2));
 	gSavedSettings.getControl("RenderGlow")->getSignal()->connect(boost::bind(&handleReleaseGLBufferChanged, _2));
 	gSavedSettings.getControl("RenderGlow")->getSignal()->connect(boost::bind(&handleSetShaderChanged, _2));

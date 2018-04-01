@@ -2180,8 +2180,7 @@ void LLViewerWindow::initWorldUI()
 		gToolBarView->loadToolbars();
 		gToolBarView->setVisible(TRUE);
 	}
-	if (!(LLGridManager::getInstance()->isInOpenSim()))
-	{
+
 	LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
 	if (destinations)
 	{
@@ -2198,77 +2197,6 @@ void LLViewerWindow::initWorldUI()
 		url = LLWeb::expandURLSubstitutions(url, LLSD());
 		avatar_picker->navigateTo(url, HTTP_CONTENT_TEXT_HTML);
 	}
-	}
-// <FS:AW  opensim destinations and avatar picker>
-// 	LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
-// 	if (destinations)
-// 	{
-// 		destinations->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-// 		std::string url = gSavedSettings.getString("DestinationGuideURL");
-// 		url = LLWeb::expandURLSubstitutions(url, LLSD());
-// 		destinations->navigateTo(url, "text/html");
-// 	}
-// 	LLMediaCtrl* avatar_picker = LLFloaterReg::getInstance("avatar")->findChild<LLMediaCtrl>("avatar_picker_contents");
-// 	if (avatar_picker)
-// 	{
-// 		avatar_picker->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-// 		std::string url = gSavedSettings.getString("AvatarPickerURL");
-// 		url = LLWeb::expandURLSubstitutions(url, LLSD());
-// 		avatar_picker->navigateTo(url, "text/html");
-// 	}
-	std::string destination_guide_url;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		if (LLLoginInstance::getInstance()->hasResponse("destination_guide_url"))
-		{
-		destination_guide_url = LLLoginInstance::getInstance()->getResponse("destination_guide_url").asString();
-		}
-	}
-	else
-#endif // HAS_OPENSIM_SUPPORT  // <FS:AW optional opensim support>
-	{
-		destination_guide_url = gSavedSettings.getString("DestinationGuideURL");
-	}
-	if(!destination_guide_url.empty())
-	{	
-		LLMediaCtrl* destinations = LLFloaterReg::getInstance("destinations")->getChild<LLMediaCtrl>("destination_guide_contents");
-		if (destinations)
-		{
-			destinations->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-			destination_guide_url = LLWeb::expandURLSubstitutions(destination_guide_url, LLSD());
-			LL_WARNS("WebApi") << "3 DestinationGuideURL \"" << destination_guide_url << "\"" << LL_ENDL;
-			destinations->navigateTo(destination_guide_url, "text/html");
-		}
-	}
-
-	std::string avatar_picker_url;
-#ifdef HAS_OPENSIM_SUPPORT // <FS:AW optional opensim support>
-	if (LLGridManager::getInstance()->isInOpenSim())
-	{
-		if (LLLoginInstance::getInstance()->hasResponse("avatar_picker_url"))
-		{
-			avatar_picker_url = LLLoginInstance::getInstance()->getResponse("avatar_picker_url").asString();
-		}
-	}
-	else
-#endif // HAS_OPENSIM_SUPPORT  // <FS:AW optional opensim support>
-	{
-		avatar_picker_url = gSavedSettings.getString("AvatarPickerURL");
-	}
-
-	if(!avatar_picker_url.empty())
-	{	
-		LLMediaCtrl* avatar_picker = LLFloaterReg::getInstance("avatar")->findChild<LLMediaCtrl>("avatar_picker_contents");
-		if (avatar_picker)
-		{
-			avatar_picker->setErrorPageURL(gSavedSettings.getString("GenericErrorPageURL"));
-			avatar_picker_url = LLWeb::expandURLSubstitutions(avatar_picker_url, LLSD());
-			LL_DEBUGS("WebApi") << "AvatarPickerURL \"" << avatar_picker_url << "\"" << LL_ENDL;
-			avatar_picker->navigateTo(avatar_picker_url, "text/html");
-		}
- 	}
-// </FS:AW  opensim destinations and avatar picker>
 }
 
 // Destroy the UI
@@ -2458,8 +2386,8 @@ void LLViewerWindow::reshape(S32 width, S32 height)
 		}
 
 		calcDisplayScale();
-//   		BOOL display_scale_changed = mDisplayScale != LLUI::getScaleFactor;
-		BOOL display_scale_changed = mDisplayScale != LLUI::sGLScaleFactor; //for opensim variable sized regions
+	
+		BOOL display_scale_changed = mDisplayScale != LLUI::getScaleFactor();
 		LLUI::setScaleFactor(mDisplayScale);
 
 		// update our window rectangle
@@ -2526,7 +2454,7 @@ void LLViewerWindow::setNormalControlsVisible( BOOL visible )
 
 		// ...and set the menu color appropriately.
 		setMenuBackgroundColor(gAgent.getGodLevel() > GOD_NOT, 
-			!LLGridManager::getInstance()->isInSLBeta());
+			LLGridManager::getInstance()->isInProductionGrid());
 	}
         
 	if ( gStatusBar )
@@ -2550,14 +2478,13 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
     LLColor4 new_bg_color;
 
 	// god more important than project, proj more important than grid
-    if(god_mode && !LLGridManager::getInstance()->isInSLBeta())
+    if ( god_mode ) 
     {
-		if ( LLGridManager::getInstance()->isInSLMain() )
+		if ( LLGridManager::getInstance()->isInProductionGrid() )
 		{
 			new_bg_color = LLUIColorTable::instance().getColor( "MenuBarGodBgColor" );
 		}
-	
-		else if(god_mode && LLGridManager::getInstance()->isInSLBeta())
+		else
 		{
 			new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionGodBgColor" );
 		}
@@ -2579,7 +2506,7 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
             break;
             
         case LLVersionInfo::RELEASE_VIEWER:
-            if(!LLGridManager::getInstance()->isInSLBeta())
+            if(!LLGridManager::getInstance()->isInProductionGrid())
             {
                 new_bg_color = LLUIColorTable::instance().getColor( "MenuNonProductionBgColor" );
             }
@@ -2590,9 +2517,7 @@ void LLViewerWindow::setMenuBackgroundColor(bool god_mode, bool dev_grid)
             break;
         }
     }
-
-
-
+    
     if(gMenuBarView)
     {
         gMenuBarView->setBackgroundColor( new_bg_color );
@@ -3846,12 +3771,6 @@ void LLViewerWindow::renderSelections( BOOL for_gl_pick, BOOL pick_parcel_walls,
 		LLSelectMgr::getInstance()->updateSilhouettes();
 	}
 	
-////MK
-//	if (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM && !for_hud)
-//	{
-//		return;
-//	}
-////mk
 	// Draw fence around land selections
 	if (for_gl_pick)
 	{
@@ -4147,7 +4066,7 @@ LLPickInfo LLViewerWindow::pickImmediate(S32 x, S32 y_from_bot, BOOL pick_transp
 		// "Show Debug Alpha" means no object actually transparent
 		pick_transparent = TRUE;
 	}
-
+	
 	// shortcut queueing in mPicks and just update mLastPick in place
 	MASK	key_mask = gKeyboard->currentMask(TRUE);
 	mLastPick = LLPickInfo(LLCoordGL(x, y_from_bot), key_mask, pick_transparent, pick_rigged, pick_particle, TRUE, FALSE, NULL);
@@ -4178,7 +4097,7 @@ LLHUDIcon* LLViewerWindow::cursorIntersectIcon(S32 mouse_x, S32 mouse_y, F32 dep
 	LLVector4a start, end;
 	start.load3(mouse_world_start.mV);
 	end.load3(mouse_world_end.mV);
-
+	
 	return LLHUDIcon::lineSegmentIntersectAll(start, end, intersection);
 }
 
@@ -4583,6 +4502,7 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
 // </FS:Ansariel>
 {
 //	insufficient_memory = FALSE;
+
 	if (!image)
 	{
 		LL_WARNS() << "No image to save" << LL_ENDL;
@@ -4618,13 +4538,6 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
     //	std::string proposed_name( sSnapshotBaseName );
 
     //	// getSaveFile will append an appropriate extension to the proposed name, based on the ESaveFilter constant passed in.
-    //	// pick a directory in which to save
-    //	LLFilePicker& picker = LLFilePicker::instance();
-    //	if (!picker.getSaveFile(pick_type, proposed_name))
-    //	{
-    //		// Clicked cancel
-    //		return FALSE;
-    //	}
 
     //	// pick a directory in which to save
     //	LLFilePicker& picker = LLFilePicker::instance();
@@ -4636,46 +4549,18 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
 
     //	// Copy the directory + file name
     //	std::string filepath = picker.getFirstFile();
-    //}
 
     //	LLViewerWindow::sSnapshotBaseName = gDirUtilp->getBaseFileName(filepath, true);
     //	LLViewerWindow::sSnapshotDir = gDirUtilp->getDirName(filepath);
     //}
-//	}
 
 //	if(LLViewerWindow::sSnapshotDir.empty())
 //	{
 //		return;
 //	}
-	// Check if there is enough free space to save snapshot
-	/*
-	#ifdef LL_WINDOWS
-	boost::filesystem::space_info b_space = boost::filesystem::space(utf8str_to_utf16str(sSnapshotDir));
-	#else
-	boost::filesystem::space_info b_space = boost::filesystem::space(sSnapshotDir);
-	#endif
-	if (b_space.free < image->getDataSize())
-	{
-	insufficient_memory = TRUE;
-		return FALSE;
-	}
-	*/
-    //do
-    //{
-    //	filepath = sSnapshotDir;
-    //	filepath += gDirUtilp->getDirDelimiter();
-    //	filepath += sSnapshotBaseName;
-    //	filepath += llformat("_%.3d",i);
-    //	filepath += extension;
 
-    //	llstat stat_info;
-    //	err = LLFile::stat( filepath, &stat_info );
-    //	i++;
-    //}
-    //while( -1 != err );  // search until the file is not found (i.e., stat() gives an error).
-/*
 // Check if there is enough free space to save snapshot
-
+/*
 #ifdef LL_WINDOWS
 	boost::filesystem::space_info b_space = boost::filesystem::space(utf8str_to_utf16str(sSnapshotDir));
 #else
@@ -4694,13 +4579,25 @@ void LLViewerWindow::saveImageNumbered(LLImageFormatted *image, bool force_picke
     //	filepath += sSnapshotBaseName;
     //	filepath += llformat("_%.3d",i);
     //	filepath += extension;
+
     //	llstat stat_info;
     //	err = LLFile::stat( filepath, &stat_info );
     //	i++;
     //}
     //while( -1 != err );  // search until the file is not found (i.e., stat() gives an error).
-    //LL_INFOS() << "Saving snapshot to " << filepath << LL_ENDL;
-    //return image->save(filepath);
+/*
+// Check if there is enough free space to save snapshot
+#ifdef LL_WINDOWS
+	boost::filesystem::space_info b_space = boost::filesystem::space(utf8str_to_utf16str(sSnapshotDir));
+#else
+	boost::filesystem::space_info b_space = boost::filesystem::space(sSnapshotDir);
+#endif
+	if (b_space.free < image->getDataSize())
+	{
+		insufficient_memory = TRUE;
+		return FALSE;
+	}
+*/
     // Get a base file location if needed.
     if (force_picker || !isSnapshotLocSet())
 	{
@@ -5124,18 +5021,6 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 		send_agent_resume();
 	}
 	gStatusBar->hideBalance(false);	
-////MK
-//	// Restore the original UI state
-//	if (force_hide_ui)
-//	{
-//		gViewerWindow->setUIVisibility(ui_was_showing);
-//		// These two don't need to be set back to their original values, but let's be tidy anyway, we never know
-//		// some code could be added after this spot.
-//		force_hide_ui = FALSE;
-//		show_ui = FALSE;
-//	}
-////mk
-
 	return ret;
 }
 
@@ -5803,6 +5688,7 @@ void LLPickInfo::fetchResults()
 		delta.setSub(intersection, origin);
 		icon_dist = delta.getLength3().getF32();
 	}
+
 	LLViewerObject* hit_object = gViewerWindow->cursorIntersect(mMousePt.mX, mMousePt.mY, 512.f,
 									NULL, -1, mPickTransparent, mPickRigged, &face_hit,
 									&intersection, &uv, &normal, &tangent, &start, &end);
@@ -5822,7 +5708,7 @@ void LLPickInfo::fetchResults()
 			particle_end = end;
 		}
 	}
-	
+
 	LLViewerObject* objectp = hit_object;
 
 
@@ -5837,6 +5723,7 @@ void LLPickInfo::fetchResults()
 		mHUDIcon = hit_icon;
 		mPickType = PICK_ICON;
 		mPosGlobal = mHUDIcon->getPositionGlobal();
+
 	}
 	else if (objectp)
 	{

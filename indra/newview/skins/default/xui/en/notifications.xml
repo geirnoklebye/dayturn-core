@@ -531,10 +531,10 @@ This listing could not be updated.
         name="okignore"
         yestext="OK"/>
     </notification>
-	
+    
     <notification
-     icon="alertmodal.tga"
-     name="ImportSuccess"
+        icon="alertmodal.tga"
+        name="ImportSuccess"
      type="notify">
         <tag>Export</tag>
         Successfully imported [COUNT] [OBJECT].
@@ -4581,8 +4581,8 @@ It will change thousands of regions and make the spaceserver hiccup.
   </notification>
 
   <notification
-    icon="alert.tga"
-    label="Confirm Teleport Home"
+   icon="alert.tga"
+   label="Confirm Teleport Home"
     name="TeleportAvatarHome"
     type="alert">
 Teleport [USERNAME] home?
@@ -8766,7 +8766,8 @@ Please check your network and firewall setup.
     <tag>voice</tag>
   <tag>fail</tag>
     <usetemplate
-     yestext="OK" />
+     name="okbutton"
+     yestext="OK"/>
   </notification>
 
   <notification
@@ -9463,10 +9464,10 @@ Could not add [GRID] to the grid list.
 <!-- AW: opensim -->
 
   <notification
-     icon="alertmodal.tga"
-     name="LocalBitmapsUpdateFailedFinal"
-     persist="true"
-     type="notify">
+   icon="alertmodal.tga"
+   name="LocalBitmapsUpdateFailedFinal"
+   persist="true"
+   type="notify">
     [FNAME] could not be opened or decoded for [NRETRIES] attempts, and is now considered broken.
     Disabling future updates for this file.
   </notification>

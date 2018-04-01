@@ -56,7 +56,7 @@ static LLDefaultChildRegistry::Register<LLInventoryPanel> r("inventory_panel");
 const std::string LLInventoryPanel::DEFAULT_SORT_ORDER = std::string("InventorySortOrder");
 const std::string LLInventoryPanel::RECENTITEMS_SORT_ORDER = std::string("RecentItemsSortOrder");
 const std::string LLInventoryPanel::INHERIT_SORT_ORDER = std::string("");
-static LLInventoryFolderViewModelBuilder INVENTORY_BRIDGE_BUILDER;
+static const LLInventoryFolderViewModelBuilder INVENTORY_BRIDGE_BUILDER;
 
 // statics 
 bool LLInventoryPanel::sColorSetInitialized = false;
@@ -294,13 +294,16 @@ void LLInventoryPanel::initFromParams(const LLInventoryPanel::Params& params)
 	{
 		getFilter().setFilterCategoryTypes(getFilter().getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_INBOX));
 	}
+	if (!gSavedSettings.getBOOL("InventoryOutboxMakeVisible"))
+	{
+		getFilter().setFilterCategoryTypes(getFilter().getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_INBOX));
+		getFilter().setFilterCategoryTypes(getFilter().getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_OUTBOX));
+	}
     // hide marketplace listing box, unless we are a marketplace panel
 	if (!gSavedSettings.getBOOL("InventoryOutboxMakeVisible") && !mParams.use_marketplace_folders)
 	{
 		getFilter().setFilterCategoryTypes(getFilter().getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_MARKETPLACE_LISTINGS));
-    	}
-	gSavedSettings.getControl("FSShowInboxFolder")->getSignal()->connect(boost::bind(&LLInventoryPanel::updateShowInboxFolder, this, _2));
-	// </FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+    }
     
 	// set the filter for the empty folder if the debug setting is on
 	if (gSavedSettings.getBOOL("DebugHideEmptySystemFolders"))
@@ -1280,7 +1283,6 @@ bool LLInventoryPanel::beginIMSession()
 						if(at.isBuddyOnline(id))
 						{
 							members.push_back(id);
-							members.push_back(id);
 						}
 					}
 				}
@@ -1300,7 +1302,6 @@ bool LLInventoryPanel::beginIMSession()
 
 						if(at.isBuddyOnline(id))
 						{
-							//members.put(id);
 							members.push_back(id);
 						}
 					}
@@ -1545,8 +1546,8 @@ void LLInventoryPanel::openInventoryPanelAndSetSelection(BOOL auto_open, const L
 		{
 			LLSidepanelInventory * sidepanel_inventory =	LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
 			LLInventoryPanel * inventory_panel = NULL;
-			sidepanel_inventory->openInbox();
-			inventory_panel = sidepanel_inventory->getInboxPanel();
+				sidepanel_inventory->openInbox();
+				inventory_panel = sidepanel_inventory->getInboxPanel();
 
 			if (inventory_panel)
 			{

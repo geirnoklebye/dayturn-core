@@ -518,8 +518,12 @@ char* LLPrivateMemoryPool::LLMemoryBlock::allocate()
 void  LLPrivateMemoryPool::LLMemoryBlock::freeMem(void* addr) 
 {
 	//bit index
-
-    uintptr_t idx = ((uintptr_t)addr - (uintptr_t)mBuffer - mDummySize) / mSlotSize;
+	//	U32 idx = ((U32)addr - (U32)mBuffer - mDummySize) / mSlotSize ;
+	//<ND> 64 bit fix
+	unsigned char *p1 = reinterpret_cast<unsigned char*>(addr);
+	unsigned char *p2 = reinterpret_cast<unsigned char*>(mBuffer);
+	U32 idx = ( p1 - p2 - mDummySize) / mSlotSize ;
+	//</ND>
 
 	U32* bits = &mUsageBits ;
 	if(idx >= 32)
@@ -773,7 +777,7 @@ void LLPrivateMemoryPool::LLMemoryChunk::dump()
 	for(U32 i = 1 ; i < blk_list.size(); i++)
 	{
 		total_size += blk_list[i]->getBufferSize() ;
-		if((uintptr_t)blk_list[i]->getBuffer() < (uintptr_t)blk_list[i-1]->getBuffer() + blk_list[i-1]->getBufferSize())
+		if((U32)blk_list[i]->getBuffer() < (U32)blk_list[i-1]->getBuffer() + blk_list[i-1]->getBufferSize())
 		{
 			LL_ERRS() << "buffer corrupted." << LL_ENDL ;
 		}

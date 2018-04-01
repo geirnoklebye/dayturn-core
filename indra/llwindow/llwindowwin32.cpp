@@ -3200,6 +3200,7 @@ void LLSplashScreenWin32::showImpl()
 	ShowWindow(mWindow, SW_SHOW);
 }
 
+
 void LLSplashScreenWin32::updateImpl(const std::string& mesg)
 {
 	if (!mWindow) return;

@@ -54,7 +54,6 @@
 #include "llstatusbar.h"
 #include "llfloaterworldmap.h"
 #include "llviewermessage.h"
-#include "tea.h"
 
 static LLPanelInjector<LLPanelGroupLandMoney> t_panel_group_money("panel_group_land_money");
 
@@ -845,7 +844,7 @@ void LLPanelGroupLandMoney::processPlacesReply(LLMessageSystem* msg, void**)
 	group_id_map_t::iterator found_it = sGroupIDs.find(group_id);
 	if(found_it == sGroupIDs.end())
 	{
-		LL_INFOS() << Tea::wrapCurrency("Group Panel Land L$ ") << group_id << " no longer in existence."
+		LL_INFOS() << "Group Panel Land L$ " << group_id << " no longer in existence."
 				<< LL_ENDL;
 		return;
 	}
@@ -1137,7 +1136,7 @@ void LLPanelGroupLandMoney::processGroupAccountDetailsReply(LLMessageSystem* msg
 	msg->getUUIDFast(_PREHASH_AgentData, _PREHASH_AgentID, agent_id );
 	if (gAgent.getID() != agent_id)
 	{
-		LL_WARNS() << Tea::wrapCurrency("Got group L$ history reply for another agent!") << LL_ENDL;
+		LL_WARNS() << "Got group L$ history reply for another agent!" << LL_ENDL;
 		return;
 	}
 
@@ -1314,7 +1313,7 @@ void LLPanelGroupLandMoney::processGroupAccountTransactionsReply(LLMessageSystem
 	msg->getUUIDFast(_PREHASH_AgentData, _PREHASH_AgentID, agent_id );
 	if (gAgent.getID() != agent_id)
 	{
-		LL_WARNS() << Tea::wrapCurrency("Got group L$ history reply for another agent!")  << LL_ENDL;
+		LL_WARNS() << "Got group L$ history reply for another agent!" << LL_ENDL;
 		return;
 	}
 
@@ -1326,7 +1325,7 @@ void LLPanelGroupLandMoney::processGroupAccountTransactionsReply(LLMessageSystem
 	self = get_ptr_in_map(LLGroupMoneyTabEventHandler::sInstanceIDs, request_id);
 	if (!self)
 	{
-		LL_WARNS() << Tea::wrapCurrency("GroupAccountSummary recieved for non-existent group L$ planning tab.") << LL_ENDL;
+		LL_WARNS() << "GroupAccountTransactions recieved for non-existent group panel." << LL_ENDL;
 		return;
 	}
 

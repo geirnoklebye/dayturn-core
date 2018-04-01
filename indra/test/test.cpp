@@ -53,16 +53,12 @@
 #ifdef CTYPE_WORKAROUND
 #	include "ctype_workaround.h"
 #endif
-// <FS:ND> Google Mock/Test is not used an either Windows/Mac/Linux
-#if 0
 
 #ifndef LL_WINDOWS
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #endif
 
-#endif
-// </FS:ND>
 #if LL_MSVC
 #pragma warning (push)
 #pragma warning (disable : 4702) // warning C4702: unreachable code
@@ -514,7 +510,7 @@ void stream_groups(std::ostream& s, const char* app)
 
 void wouldHaveCrashed(const std::string& message)
 {
-	tut::fail("LL_ERRS() message: " + message);
+	tut::fail("llerrs message: " + message);
 }
 
 static LLTrace::ThreadRecorder* sMasterThreadRecorder = NULL;
@@ -523,17 +519,9 @@ int main(int argc, char **argv)
 {
 	// The following line must be executed to initialize Google Mock
 	// (and Google Test) before running the tests.
-
-// <FS:ND> Google Mock/Test is not used an either Windows/Mac/Linux
-#if 0
-
 #ifndef LL_WINDOWS
 	::testing::InitGoogleMock(&argc, argv);
 #endif
-
-#endif
-// </FS:ND>
-
 	// LOGTEST overrides default, but can be overridden by --debug or LOGFAIL.
 	const char* LOGTEST = getenv("LOGTEST");
 	if (LOGTEST)

@@ -35,8 +35,6 @@ int main(int argc, char **argv)
 	LLCrashLoggerLinux app;
 	app.parseCommandOptions(argc, argv);
 
-
-
     LLSD options = LLApp::instance()->getOptionData(
                         LLApp::PRIORITY_COMMAND_LINE);
                         //LLApp::PRIORITY_RUNTIME_OVERRIDE);

@@ -500,7 +500,7 @@ private:
 	S32				mNumDynamicWidthColumns;
 	S32				mTotalStaticColumnWidth;
 	S32				mTotalColumnPadding;
-
+    
 	std::vector<LLScrollListColumn::Params> mColumnInitParams;
 	mutable bool	mSorted;
 	

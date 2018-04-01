@@ -58,7 +58,6 @@
 #include "llsdutil_math.h"
 #include "lltrans.h"
 #include "llcorehttputil.h"
-#include "tea.h"
 
 ///----------------------------------------------------------------------------
 /// Local function declarations, constants, enums, and typedefs
@@ -361,7 +360,7 @@ void LLFloaterAuction::doResetParcel()
 		body["user_look_at"] = ll_sd_from_vector3( LLVector3::zero );
 		body["landing_type"] = (U8) LLParcel::L_DIRECT;
 
-		LL_INFOS() << Tea::wrapCurrency("Sending parcel update to sell to anyone for L$1 via capability to: ")
+		LL_INFOS() << "Sending parcel update to reset for auction via capability to: "
 			<< mParcelUpdateCapUrl << LL_ENDL;
 
         LLCoreHttpUtil::HttpCoroutineAdapter::messageHttpPost(mParcelUpdateCapUrl, body,

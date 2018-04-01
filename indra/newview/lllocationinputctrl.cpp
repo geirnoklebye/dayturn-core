@@ -824,13 +824,6 @@ void LLLocationInputCtrl::refreshLocation()
 	{
 		location_name = "???";
 	}
-//MK
-//	if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
-//	{
-//		location_name = gAgent.mRRInterface.stringReplace (location_name, gAgent.mRRInterface.mParcelName, "(Hidden)");
-//		if (gAgent.getRegion()) location_name = gAgent.mRRInterface.stringReplace (location_name, gAgent.getRegion()->getName(), "(Hidden)");
-//	}
-//mk
 	// store human-readable location to compare it in changeLocationPresentation()
 	mHumanReadableLocation = location_name;
 	setText(location_name);
@@ -1209,6 +1202,7 @@ void LLLocationInputCtrl::onLocationContextMenuItemClicked(const LLSD& userdata)
 		else
 		{
 			LLFloaterSidePanelContainer::showPanel("places", LLSD().with("type", "landmark").with("id",landmark->getUUID()));
+
 		}
 	}
 	else if (item == "cut")

@@ -97,14 +97,11 @@ BOOL FSFloaterProfile::postBuild()
     childSetAction("ok_btn", boost::bind(&FSFloaterProfile::onOKBtn, this));
     childSetAction("cancel_btn", boost::bind(&FSFloaterProfile::onCancelBtn, this));
 
-    if(LLGridManager::getInstance()->isInOpenSim())
+    LLTabContainer* tab_container = getChild<LLTabContainer>("tabs");
+    if (tab_container)
     {
-        LLTabContainer* tab_container = getChild<LLTabContainer>("tabs");
-        if (tab_container)
-        {
-            std::string nick = LLGridManager::getInstance()->getGridId();
-            tab_container->setCurrentTabName(nick);
-        }
+        std::string nick = LLGridManager::getInstance()->getGridId();
+        tab_container->setCurrentTabName(nick);
     }
 
     return TRUE;

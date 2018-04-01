@@ -40,7 +40,6 @@
 #include "llstring.h"
 
 // project includes
-#include "llappviewer.h" //For global gIsInSecondLife visibility used for export permissions left in case LL adds functionally. 
 #include "llviewerwindow.h"
 #include "llresmgr.h"
 #include "lltextbox.h"
@@ -230,7 +229,6 @@ void LLPanelPermissions::disableAll()
 	getChildView("checkbox allow everyone copy")->setEnabled(FALSE);
 	
 	// <FS:CR> OpenSim export permissions //left in case LL adds functionally
-    getChild<LLUICtrl>("checkbox allow export")->setVisible(!gIsInSecondLife);
 	getChild<LLUICtrl>("checkbox allow export")->setValue(FALSE);
 	getChildView("checkbox allow export")->setEnabled(FALSE);
 	// </FS:CR>
@@ -385,7 +383,7 @@ void LLPanelPermissions::refresh()
 	getChildView("Creator:")->setEnabled(TRUE);
 	std::string creator_app_link;
 	LLSelectMgr::getInstance()->selectGetCreator(mCreatorID, creator_app_link);
-    //std::string owner_name;
+
 	// Style for creator and owner links (both group and agent)
 	LLStyle::Params style_params;
 	LLColor4 link_color = LLUIColorTable::instance().getColor("HTMLLinkColor");
@@ -453,7 +451,6 @@ void LLPanelPermissions::refresh()
 			}
 			owner_id = mLastOwnerID;
 		}
-
 		if (LLAvatarNameCache::get(owner_id, &av_name))
 		{
 //MK

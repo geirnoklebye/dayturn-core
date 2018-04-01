@@ -403,6 +403,8 @@ protected:
 	LLFolderViewItem*		mFolderViewItem;
 };
 
+
+
 class LLFolderViewModelCommon : public LLFolderViewModelInterface
 {
 public:
@@ -433,8 +435,6 @@ template <typename SORT_TYPE, typename ITEM_TYPE, typename FOLDER_TYPE, typename
 class LLFolderViewModel : public LLFolderViewModelCommon
 {
 public:
-
-
 	typedef SORT_TYPE		SortType;
 	typedef ITEM_TYPE		ItemType;
 	typedef FOLDER_TYPE		FolderType;

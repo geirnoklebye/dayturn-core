@@ -121,7 +121,6 @@ public:
 
 		Optional<bool>				enabled,
 									visible,
-									only_in_sl,
 									mouse_opaque,
 									use_bounding_rect,
 									from_xui,
@@ -289,14 +288,9 @@ public:
 	void 	setAllChildrenEnabled(BOOL b);
 
 	virtual void	setVisible(BOOL visible);
-	const BOOL	getVisible() const		{ return isAvailableOnThisGrid() && mVisible; }
+	const BOOL&		getVisible() const			{ return mVisible; }
 	virtual void	setEnabled(BOOL enabled);
-	const BOOL	getEnabled() const		{ return isAvailableOnThisGrid() && mEnabled; }
-
-	const BOOL	getOnlyInSL() const	{ return mOnlyInSL; }
-
-	const bool	isAvailableOnThisGrid() const;
-
+	BOOL			getEnabled() const			{ return mEnabled; }
 	/// 'available' in this context means 'visible and enabled': in other
 	/// words, can a user actually interact with this?
 	virtual bool	isAvailable() const;
@@ -590,7 +584,6 @@ private:
 
 	// location in pixels, relative to surrounding structure, bottom,left=0,0
 	BOOL		mVisible;
-	BOOL		mOnlyInSL;
 	LLRect		mRect;
 	LLRect		mBoundingRect;
 	

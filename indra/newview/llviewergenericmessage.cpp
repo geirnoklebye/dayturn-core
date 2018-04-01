@@ -34,8 +34,6 @@
 #include "message.h"
 
 #include "llagent.h"
-#include "fslightshare.h"   // <FS:CR> FIRE-5118 - Lightshare support
-#include "llappviewer.h"
 
 
 LLDispatcher gGenericDispatcher;
@@ -76,17 +74,6 @@ void send_generic_message(const std::string& method,
 
 void process_generic_message(LLMessageSystem* msg, void**)
 {
-// <FS:CR> FIRE-5118 - Lightshare support
-	if(!(gIsInSecondLife)) {
-		std::string method;
-		msg->getStringFast(_PREHASH_MethodData, _PREHASH_Method, method);
-		if (method == "Windlight")
-			FSLightshare::getInstance()->processLightshareMessage(msg);
-		else if (method == "WindlightRefresh")
-			FSLightshare::getInstance()->processLightshareRefresh();
-	}
-// </FS:CR> Lightshare support
-
 	LLUUID agent_id;
 	msg->getUUID("AgentData", "AgentID", agent_id);
 	if (agent_id != gAgent.getID())

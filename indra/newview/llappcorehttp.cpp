@@ -161,8 +161,8 @@ void LLAppCoreHttp::init()
     if ( LLFile::isfile(ca_file) )
     {
         LL_DEBUGS("Init") << "Setting CA File to " << ca_file << LL_ENDL;
-        status = LLCore::HttpRequest::setStaticPolicyOption(LLCore::HttpRequest::PO_CA_FILE,
-                                                            LLCore::HttpRequest::GLOBAL_POLICY_ID,
+	status = LLCore::HttpRequest::setStaticPolicyOption(LLCore::HttpRequest::PO_CA_FILE,
+														LLCore::HttpRequest::GLOBAL_POLICY_ID,
                                                             ca_file, NULL);
     }
     else

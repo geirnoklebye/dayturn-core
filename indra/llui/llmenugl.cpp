@@ -805,7 +805,7 @@ void LLMenuItemCallGL::onCommit( void )
 
 void LLMenuItemCallGL::updateEnabled( void )
 {
-	if (isAvailableOnThisGrid() && mEnableSignal.num_slots() > 0)
+	if (mEnableSignal.num_slots() > 0)
 	{
 		bool enabled = mEnableSignal(this, LLSD());
 		if (mEnabledControlVariable)
@@ -825,7 +825,7 @@ void LLMenuItemCallGL::updateEnabled( void )
 
 void LLMenuItemCallGL::updateVisible( void )
 {
-	if (isAvailableOnThisGrid() && mVisibleSignal.num_slots() > 0)
+	if (mVisibleSignal.num_slots() > 0)
 	{
 		bool visible = mVisibleSignal(this, LLSD());
 		setVisible(visible);
@@ -2636,7 +2636,6 @@ BOOL LLMenuGL::appendMenu( LLMenuGL* menu )
 	p.label = menu->getLabel();
 	p.branch = menu;
 	p.jump_key = menu->getJumpKey();
-	p.only_in_sl = menu->getOnlyInSL();
 	p.enabled_color=LLUIColorTable::instance().getColor("MenuItemEnabledColor");
 	p.disabled_color=LLUIColorTable::instance().getColor("MenuItemDisabledColor");
 	p.highlight_bg_color=LLUIColorTable::instance().getColor("MenuItemHighlightBgColor");
@@ -3976,8 +3975,6 @@ void LLContextMenuBranch::buildDrawLabel( void )
 		U32 sub_count = mBranch.get()->getItemCount();
 		U32 i;
 		BOOL any_enabled = FALSE;
-		BOOL any_visible = FALSE;
-
 		for (i = 0; i < sub_count; i++)
 		{
 			LLMenuItemGL* item = mBranch.get()->getItem(i);
@@ -3985,19 +3982,11 @@ void LLContextMenuBranch::buildDrawLabel( void )
 			if (item->getEnabled() && !item->getDrawTextDisabled() )
 			{
 				any_enabled = TRUE;
-			}
-
-			if (item->getVisible()) {
-				any_visible = TRUE;
-			}
-
-			if (any_enabled && any_visible) {
 				break;
 			}
 		}
 		setDrawTextDisabled(!any_enabled);
-		setEnabled(any_enabled);
-		setVisible(any_visible);
+		setEnabled(TRUE);
 	}
 
 	mDrawAccelLabel.clear();

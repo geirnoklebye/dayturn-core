@@ -593,7 +593,7 @@
         function="Inventory.DoToSelected"
         parameter="show_in_main_panel" />
     </menu_item_call>
-    <menu_item_separator
+        <menu_item_separator
      layout="topleft" 
      name="Copy Separator" />
     <menu_item_call
@@ -799,6 +799,17 @@
          function="Inventory.DoToSelected"
          parameter="detach" />
     </menu_item_call>
+	<!-- COMMENTED OUT for DEV-32347 -->
+	<!--
+    <menu_item_call
+     label="Restore to Last Position"
+     layout="topleft"
+     name="Restore to Last Position">
+        <menu_item_call.on_click
+         function="Inventory.DoToSelected"
+         parameter="restoreToWorld" />
+    </menu_item_call>
+	-->
     <menu_item_call
      label="Wear"
      layout="topleft"
@@ -847,12 +858,8 @@
          function="Inventory.DoToSelected"
          parameter="take_off" />
     </menu_item_call>
-	<menu_item_separator
-	 layout="topleft"
-	 name="Marketplace Separator" />
 	<menu_item_call
         label="Copy to Marketplace Listings"
-        layout="topleft"
         name="Marketplace Copy">
 		<menu_item_call.on_click
         function="Inventory.DoToSelected"

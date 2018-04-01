@@ -25,6 +25,9 @@
  * $/LicenseInfo$
  */
 
+// RRinterface needs this, but it's no longer provided by llwearabledata.h
+#define MAX_CLOTHING_PER_TYPE 10 
+
 class RRHelper
 {
 public:

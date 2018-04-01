@@ -457,6 +457,7 @@ void LLCrashLoggerWindows::gatherPlatformSpecificFiles()
 bool LLCrashLoggerWindows::frame()
 {	
 	LL_INFOS() << "CrashSubmitBehavior is " << mCrashBehavior << LL_ENDL;
+
 	// Note: parent hwnd is 0 (the desktop).  No dlg proc.  See Petzold (5th ed) HexCalc example, Chapter 11, p529
 	// win_crash_logger.rc has been edited by hand.
 	// Dialogs defined with CLASS "WIN_CRASH_LOGGER" (must be same as szWindowClass)

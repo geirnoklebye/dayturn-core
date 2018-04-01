@@ -471,7 +471,7 @@ BOOL LLScriptEdCore::postBuild()
 //mk
 	mErrorList = getChild<LLScrollListCtrl>("lsl errors");
 
-	mFunctions = getChild<LLComboBox>( "Insert...");
+	mFunctions = getChild<LLComboBox>("Insert...");
 
 	childSetCommitCallback("Insert...", &LLScriptEdCore::onBtnInsertFunction, this);
 
@@ -484,9 +484,11 @@ BOOL LLScriptEdCore::postBuild()
 	initMenu();
 
 	mSyntaxIDConnection = LLSyntaxIdLSL::getInstance()->addSyntaxIDCallback(boost::bind(&LLScriptEdCore::processKeywords, this));
+
 	// Intialise keyword highlighting for the current simulator's version of LSL
 	LLSyntaxIdLSL::getInstance()->initialize();
 	processKeywords();
+
 	return TRUE;
 }
 
@@ -514,12 +516,12 @@ void LLScriptEdCore::processKeywords()
 		}
 	}
 	for (string_vec_t::const_iterator iter = primary_keywords.begin();
-			iter!= primary_keywords.end(); ++iter)
+		 iter!= primary_keywords.end(); ++iter)
 	{
 		mFunctions->add(*iter);
 	}
 	for (string_vec_t::const_iterator iter = secondary_keywords.begin();
-			iter!= secondary_keywords.end(); ++iter)
+		 iter!= secondary_keywords.end(); ++iter)
 	{
 		mFunctions->add(*iter);
 	}
@@ -1510,7 +1512,6 @@ void* LLPreviewLSL::createScriptEdPanel(void* userdata)
 								   self,
 								   false,
 								   0);
-
 	return self->mScriptEd;
 }
 
@@ -1579,7 +1580,7 @@ void LLPreviewLSL::callbackLSLCompileFailed(const LLSD& compile_errors)
 		std::string error_message = line->asString();
 		LLStringUtil::stripNonprintable(error_message);
 		row["columns"][0]["value"] = error_message;
-		row["columns"][0]["font"] = "MONOSPACE";
+		row["columns"][0]["font"] = "OCRA";
 		mScriptEd->mErrorList->addElement(row);
 	}
 	mScriptEd->selectFirstError();
@@ -1675,7 +1676,6 @@ void LLPreviewLSL::onLoad(void* userdata)
 void LLPreviewLSL::onSave(void* userdata, BOOL close_after_save)
 {
 	LLPreviewLSL* self = (LLPreviewLSL*)userdata;
-
 	self->mCloseAfterSave = close_after_save;
 	self->saveIfNeeded();
 }
@@ -1759,7 +1759,6 @@ void LLPreviewLSL::saveIfNeeded(bool sync /*= true*/)
     {
         getWindow()->incBusyCount();
         mPendingUploads++;
-     
         if (!url.empty())
         {
 			uploadAssetViaCaps(url, filename, mItemUUID);
@@ -2028,7 +2027,7 @@ void LLLiveLSLEditor::callbackLSLCompileFailed(const LLSD& compile_errors)
 		LLStringUtil::stripNonprintable(error_message);
 		row["columns"][0]["value"] = error_message;
 		// *TODO: change to "MONOSPACE" and change llfontgl.cpp?
-		row["columns"][0]["font"] = "MONOSPACE";
+		row["columns"][0]["font"] = "OCRA";
 		mScriptEd->mErrorList->addElement(row);
 	}
 	mScriptEd->selectFirstError();
@@ -2376,6 +2375,7 @@ void LLLiveLSLEditor::finishLSLUpload(LLUUID itemId, LLUUID taskId, LLUUID newAs
             preview->callbackLSLCompileFailed(response["errors"]);
         }
     }
+
 }
 
 

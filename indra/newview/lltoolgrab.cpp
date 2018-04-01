@@ -675,19 +675,11 @@ void LLToolGrabBase::handleHoverActive(S32 x, S32 y, MASK mask)
 			}
 
 			// For safety, cap heights where objects can be dragged
-// <AW: opensim-limits>
-// 			if (grab_point_global.mdV[VZ] > MAX_OBJECT_Z)
-//  			{
-// 				grab_point_global.mdV[VZ] = MAX_OBJECT_Z;
-//  			}
-            //Troubleshooting use constants rather thant methods. Thinking on a busy server
-            //the methods may not return a reliable values.
-            if (grab_point_global.mdV[VZ]  > SL_MAX_OBJECT_Z )
-                {
-                    LL_WARNS() << " Attempt to grab / drag object position above maximum allowed" << grab_point_global.mdV[VZ] << LL_ENDL;
-                    grab_point_global.mdV[VZ] = SL_MAX_OBJECT_Z;
-                }
-// </AW: opensim-limits>
+			if (grab_point_global.mdV[VZ] > MAX_OBJECT_Z)
+			{
+				grab_point_global.mdV[VZ] = MAX_OBJECT_Z;
+			}
+
 			grab_point_global = LLWorld::getInstance()->clipToVisibleRegions(mDragStartPointGlobal, grab_point_global);
 			// propagate constrained grab point back to grab offset
 			mGrabHiddenOffsetFromCamera = grab_point_global - gAgentCamera.getCameraPositionGlobal();

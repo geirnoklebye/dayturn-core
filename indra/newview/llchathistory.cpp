@@ -398,7 +398,7 @@ public:
 		{
 			LLAvatarActions::startIM(getAvatarId());
 		}
-		else if (level == "offer_teleport")
+		else if (level == "offer_teleport" || level == "teleport")
 		{
 			LLAvatarActions::offerTeleport(getAvatarId());
 		}
@@ -425,6 +425,10 @@ public:
 		else if (level == "invite_to_group")
 		{
 			LLAvatarActions::inviteToGroup(getAvatarId());
+		}
+		else if (level == "zoom_in")
+		{
+			handle_zoom_to_object(getAvatarId());
 		}
 		else if (level == "map")
 		{
@@ -516,10 +520,6 @@ public:
 		{
 			LLAvatarActions::copyProfileSLURL(getAvatarId());
 		}
-		else if (level == "zoom_in")
-		{
-			handle_zoom_to_object(getAvatarId());
-		}
 	}
 
 	bool onAvatarIconContextMenuItemChecked(const LLSD& userdata)
@@ -585,8 +585,6 @@ public:
 		}
 		return false;
 	}
-
-
 
 	bool onAvatarIconContextMenuItemVisible(const LLSD& userdata)
 	{
@@ -1186,13 +1184,12 @@ protected:
 				menu->setItemEnabled("Request Teleport", false);
 				menu->setItemEnabled("Voice Call", false);
 				menu->setItemEnabled("Chat History", false);
+				menu->setItemEnabled("Invite Group", false);
 				menu->setItemEnabled("Zoom In", false);
-				menu->setItemEnabled("Invite To Group", false);
 				menu->setItemEnabled("Report Abuse", false);
 				menu->setItemEnabled("Share", false);
 				menu->setItemEnabled("Pay", false);
 				menu->setItemEnabled("Block", false);
-
 				menu->setItemEnabled("Remove Friend", false);
 				menu->setItemEnabled("Block Unblock", false);
 				menu->setItemEnabled("Mute Text", false);
@@ -1393,7 +1390,6 @@ private:
 	boost::signals2::connection mAvatarNameCacheConnection;
 };
 
-
 LLChatHistory::LLChatHistory(const LLChatHistory::Params& p)
 	: LLUICtrl(p),
 	mMessageHeaderFilename(p.message_header),
@@ -1486,17 +1482,17 @@ void LLChatHistory::initFromParams(const LLChatHistory::Params& p)
 
 /*void LLChatHistory::updateTextRect()
 {
-static LLUICachedControl<S32> texteditor_border ("UITextEditorBorder", 0);
+	static LLUICachedControl<S32> texteditor_border ("UITextEditorBorder", 0);
 
-LLRect old_text_rect = mVisibleTextRect;
-mVisibleTextRect = mScroller->getContentWindowRect();
-mVisibleTextRect.stretch(-texteditor_border);
-mVisibleTextRect.mLeft += mLeftTextPad;
-mVisibleTextRect.mRight -= mRightTextPad;
-if (mVisibleTextRect != old_text_rect)
-{
-needsReflow();
-}
+	LLRect old_text_rect = mVisibleTextRect;
+	mVisibleTextRect = mScroller->getContentWindowRect();
+	mVisibleTextRect.stretch(-texteditor_border);
+	mVisibleTextRect.mLeft += mLeftTextPad;
+	mVisibleTextRect.mRight -= mRightTextPad;
+	if (mVisibleTextRect != old_text_rect)
+	{
+		needsReflow();
+	}
 }*/
 
 LLView* LLChatHistory::getSeparator()
@@ -1686,16 +1682,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 				link_params.readonly_color = link_color;
 				link_params.is_link = true;
 				link_params.link_href = url;
-				//MK
-				// FIX : Don't add the name of the chatter in case of an emote
-				// because it is already there
-				// Don't add any delimiter after name in irc styled messages
-				//if (chat.mChatStyle == CHAT_STYLE_IRC)
-				//{
-				//	mEditor->appendText("", false, link_params);
-				//}
-				//else
-				//mk
+
 				mEditor->appendText(chat.mFromName + delimiter, prependNewLineState, link_params);
 				prependNewLineState = false;
 			}
@@ -1746,7 +1733,7 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 			else
 				p.top_pad = mTopHeaderPad;
 			p.bottom_pad = mBottomHeaderPad;
-
+			
 		}
 		p.view = view;
 

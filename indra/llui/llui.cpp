@@ -76,9 +76,8 @@
 std::map<std::string, std::string> gTranslation;
 std::list<std::string> gUntranslated;
 /*static*/ LLUI::settings_map_t LLUI::sSettingGroups;
-/*static*/ LLVector2		LLUI::sGLScaleFactor(1.f, 1.f);
-/*static*/ LLUIAudioCallback LLUI::sDeferredAudioCallback = NULL;
 /*static*/ LLUIAudioCallback LLUI::sAudioCallback = NULL;
+/*static*/ LLUIAudioCallback LLUI::sDeferredAudioCallback = NULL;
 /*static*/ LLWindow*		LLUI::sWindow = NULL;
 /*static*/ LLView*			LLUI::sRootView = NULL;
 /*static*/ BOOL                         LLUI::sDirty = FALSE;
@@ -758,3 +757,4 @@ namespace LLInitParam
 		declare("soft", LLFontGL::DROP_SHADOW_SOFT);
 	}
 }
+

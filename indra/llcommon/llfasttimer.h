@@ -197,7 +197,7 @@ public:
 	// call nextFrame() to reset timers
 	static void dumpCurTimes();
 
-public:
+private:
 	friend class BlockTimerStatHandle;
 	// FIXME: this friendship exists so that each thread can instantiate a root timer, 
 	// which could be a derived class with a public constructor instead, possibly
@@ -209,6 +209,7 @@ public:
 	// Visual Studio 2010 has a bug where capturing an object returned by value
 	// into a local reference requires access to the copy constructor at the call site.
 	// This appears to be fixed in 2012.
+public:
 #endif
 	// no-copy
 	BlockTimer(const BlockTimer& other) {};
@@ -282,7 +283,6 @@ block_timer_tree_bf_iterator_t end_block_timer_tree_bf();
 LL_FORCE_INLINE BlockTimer::BlockTimer(BlockTimerStatHandle& timer)
 {
 #if LL_FAST_TIMER_ON
-	mStartTime = getCPUClockCount64();
 	BlockTimerStackRecord* cur_timer_data = LLThreadLocalSingletonPointer<BlockTimerStackRecord>::getInstance();
 	if (!cur_timer_data)
 	{
@@ -306,6 +306,7 @@ LL_FORCE_INLINE BlockTimer::BlockTimer(BlockTimerStatHandle& timer)
 	cur_timer_data->mTimeBlock = &timer;
 	cur_timer_data->mChildTime = 0;
 
+	mStartTime = getCPUClockCount64();
 #endif
 }
 

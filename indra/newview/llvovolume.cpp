@@ -1129,7 +1129,7 @@ void LLVOVolume::sculpt()
 		S32 max_discard = mSculptTexture->getMaxDiscardLevel();
 		if (discard_level > max_discard)
 		{
-			discard_level = max_discard;    // clamp to the best we can do
+			discard_level = max_discard;    // clamp to the best we can do			
 		}
 		if(discard_level > MAX_DISCARD_LEVEL)
 		{
@@ -1730,7 +1730,7 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 		return TRUE; // No update to complete
 	}
 
-	if (mVolumeChanged || mFaceMappingChanged )
+	if (mVolumeChanged || mFaceMappingChanged)
 	{
 		dirtySpatialGroup(drawable->isState(LLDrawable::IN_REBUILD_Q1));
 
@@ -1745,16 +1745,17 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 		{
 			compiled = TRUE;
 			was_regen_faces = lodOrSculptChanged(drawable, compiled);
-			}
+		}
 
 		if (!was_regen_faces) {
-				LL_RECORD_BLOCK_TIME(FTM_GEN_TRIANGLES);
-					regenFaces();
-				}
-				genBBoxes(FALSE);
+			LL_RECORD_BLOCK_TIME(FTM_GEN_TRIANGLES);
+			regenFaces();
+		}
+
+		genBBoxes(FALSE);
 	}
 	else if (mLODChanged || mSculptChanged)
-					{
+	{
 		dirtySpatialGroup(drawable->isState(LLDrawable::IN_REBUILD_Q1));
 		compiled = TRUE;
 		lodOrSculptChanged(drawable, compiled);
@@ -2372,7 +2373,7 @@ LLVector3 LLVOVolume::getApproximateFaceNormal(U8 face_id)
 			result.add(face.mNormals[i]);
 		}
 
-		ret = LLVector3(result.getF32ptr());
+		LLVector3 ret(result.getF32ptr());
 		ret = volumeDirectionToAgent(ret);
 		ret.normVec();
 	}
@@ -4108,7 +4109,7 @@ BOOL LLVOVolume::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 bool LLVOVolume::treatAsRigged()
 {
 	return isSelected() &&
-			isAttachment() && 
+			isAttachment() &&
 			mDrawable.notNull() &&
 			mDrawable->isState(LLDrawable::RIGGED);
 }
@@ -4229,7 +4230,6 @@ void LLRiggedVolume::update(const LLMeshSkinInfo* skin, LLVOAvatar* avatar, cons
 					LLMatrix4a final_mat;
                     LLSkinningUtil::getPerVertexSkinMatrix(weight[j].getF32ptr(), mat, false, final_mat, max_joints);
 				
-
 					LLVector4a& v = vol_face.mPositions[j];
 					LLVector4a t;
 					LLVector4a dst;
@@ -4761,15 +4761,6 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 
 	bool emissive = false;
 
-////MK
-//	// Calculate the position of the avatar here so we don't have to do it for each face
-//	if (!gAgentAvatarp)
-//	{
-//		return;
-//	}
-//	LLVector3 joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
-////mk
-
 	//Determine if we've received skininfo that contains an
 	//alternate bind matrix - if it does then apply the translational component
 	//to the joints of the avatar.
@@ -4819,11 +4810,6 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 			vobj->updateTextureVirtualSize(true);
 			vobj->preRebuild();
 
-////MK
-//			// Calculate the distance between this object and our avatar
-//			LLVector3 offset = vobj->getPositionRegion() - joint_pos;
-//			F32 distance_to_avatar = (F32)offset.magVec();
-////mk
 			drawablep->clearState(LLDrawable::HAS_ALPHA);
 
 			bool rigged = vobj->isAttachment() && 
@@ -4871,8 +4857,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 					is_rigged = true;
 				
 					//get drawpool of avatar with rigged face
-					LLDrawPoolAvatar* pool = get_avatar_drawpool(vobj);
-				
+					LLDrawPoolAvatar* pool = get_avatar_drawpool(vobj);				
+					
 					if (pool)
 					{
 						const LLTextureEntry* te = facep->getTextureEntry();
@@ -4906,13 +4892,6 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 
 							if (is_alpha)
 							{ //this face needs alpha blending, override alpha mode
-////MK
-//								if (gRRenabled && distance_to_avatar > gAgent.mRRInterface.mCamDistDrawMax)
-//								{
-//									alpha_mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
-//								}
-//								else
-////mk
 								alpha_mode = LLMaterial::DIFFUSE_ALPHA_MODE_BLEND;
 							}
 
@@ -4930,15 +4909,6 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 							bool can_be_shiny = mode == LLMaterial::DIFFUSE_ALPHA_MODE_NONE ||
 												mode == LLMaterial::DIFFUSE_ALPHA_MODE_EMISSIVE;
 							
-////MK
-//							if (mode == LLMaterial::DIFFUSE_ALPHA_MODE_BLEND)
-//							{ //this face needs alpha blending, override alpha mode
-//								if (gRRenabled && distance_to_avatar > gAgent.mRRInterface.mCamDistDrawMax)
-//								{
-//									mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
-//								}
-//							}
-////mk
 							if (mode == LLMaterial::DIFFUSE_ALPHA_MODE_MASK && te->getColor().mV[3] >= 0.999f)
 							{
 								pool->addRiggedFace(facep, fullbright ? LLDrawPoolAvatar::RIGGED_FULLBRIGHT : LLDrawPoolAvatar::RIGGED_SIMPLE);
@@ -5168,8 +5138,8 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 									if (simple_count < MAX_FACE_COUNT)
 									{
 										sSimpleFaces[simple_count++] = facep;
-									}									
-								}
+									}
+								}									
 							}
 							else if (te->getBumpmap())
 							{ //needs normal + tangent
@@ -5232,7 +5202,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 			{
 				if (!drawablep->isState(LLDrawable::RIGGED))
 				{
-				drawablep->setState(LLDrawable::RIGGED);
+					drawablep->setState(LLDrawable::RIGGED);
 
 					//first time this is drawable is being marked as rigged,
 					// do another LoD update to use avatar bounding box
@@ -5278,7 +5248,7 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 		alpha_mask = alpha_mask | LLVertexBuffer::MAP_TEXTURE_INDEX | LLVertexBuffer::MAP_TANGENT | LLVertexBuffer::MAP_TEXCOORD1 | LLVertexBuffer::MAP_TEXCOORD2;
 		fullbright_mask = fullbright_mask | LLVertexBuffer::MAP_TEXTURE_INDEX;
 	}
-	
+
 	genDrawInfo(group, simple_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, sSimpleFaces, simple_count, FALSE, batch_textures, FALSE);
 	genDrawInfo(group, fullbright_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, sFullbrightFaces, fullbright_count, FALSE, batch_textures);
 	genDrawInfo(group, alpha_mask | LLVertexBuffer::MAP_TEXTURE_INDEX, sAlphaFaces, alpha_count, TRUE, batch_textures);
@@ -5683,7 +5653,7 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 							if (texture_count < MAX_TEXTURE_COUNT)
 							{
 								texture_list[texture_count++] = tex;
-						}
+							}
 						}
 
 						if (geom_count + facep->getGeomCount() > max_vertices)
@@ -5824,7 +5794,6 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 
 			index_offset += facep->getGeomCount();
 			indices_index += facep->getIndicesCount();
-
 
 			//append face to appropriate render batch
 
@@ -6008,13 +5977,6 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 				U8 mode = mat->getDiffuseAlphaMode();
 				if (te->getColor().mV[3] < 0.999f)
 				{
-////MK
-//					if (vision_restricted)
-//					{
-//						mode = LLMaterial::DIFFUSE_ALPHA_MODE_MASK;
-//					}
-//					else
-////mk
 					mode = LLMaterial::DIFFUSE_ALPHA_MODE_BLEND;
 				}
 
@@ -6136,9 +6098,9 @@ void LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFac
 						}
 						else
 						{
-							registerFace(group, facep, LLRenderPass::PASS_SIMPLE);
-						}
+						registerFace(group, facep, LLRenderPass::PASS_SIMPLE);
 					}
+				}
 				}
 				
 				
@@ -6255,5 +6217,4 @@ void LLHUDPartition::shift(const LLVector4a &offset)
 {
 	//HUD objects don't shift with region crossing.  That would be silly.
 }
-
 

@@ -97,9 +97,8 @@ public:
 	// when the next update is allowed
 	// Unix time-from-epoch seconds
 	F64 mNextUpdate;
-//MK	
+	
 //private: //Kokua can't find when private 
-//mk
 	// "bobsmith123" or "james.linden", US-ASCII only
 	std::string mUsername;
 

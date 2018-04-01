@@ -292,7 +292,6 @@ protected:
 	void onTextureSelected();
 
 private:
-	S32 getClassifiedFee();	// <FS:CR> FIRE-9814 - Don't hardcode a classified listing fee
 	bool mIsNew;
 	bool mIsNewWithErrors;
 	bool mCanClose;

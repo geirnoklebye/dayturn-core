@@ -703,16 +703,6 @@ void LLAvatarList::computeDifference(
 // Refresh shown time of our last interaction with all listed avatars.
 void LLAvatarList::updateLastInteractionTimes()
 {
-//MK
-//	if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
-//	{
-//		if (LLSideTray::getInstance()->childIsVisible("recent_panel") == true)
-//		{
-//			LLSideTray::getInstance()->childSetVisible("recent_panel", false);
-//		}
-//		return;
-//	}
-//mk
 	S32 now = (S32) LLDate::now().secondsSinceEpoch();
 	std::vector<LLPanel*> items;
 	getItems(items);

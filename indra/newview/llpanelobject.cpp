@@ -208,7 +208,7 @@ BOOL	LLPanelObject::postBuild()
 	mLabelSkew = getChild<LLTextBox>("text skew");
 	mSpinHollow = getChild<LLSpinCtrl>("Scale 1");
 	childSetCommitCallback("Scale 1",onCommitParametric,this);
-// 	mSpinHollow->setValidateBeforeCommit( &precommitValidate );
+	mSpinHollow->setValidateBeforeCommit( &precommitValidate );
 	mSpinSkew = getChild<LLSpinCtrl>("Skew");
 	childSetCommitCallback("Skew",onCommitParametric,this);
 	mSpinSkew->setValidateBeforeCommit( &precommitValidate );
@@ -325,7 +325,6 @@ LLPanelObject::LLPanelObject()
 	mSculptTextureRevert(LLUUID::null),
 	mSculptTypeRevert(0),
 	mSizeChanged(FALSE),
-	mLimitsNeedUpdate(true),
 	mHasPosClipboard(FALSE),
 	mHasSizeClipboard(FALSE),
 	mHasRotClipboard(FALSE),
@@ -340,31 +339,6 @@ LLPanelObject::LLPanelObject()
 LLPanelObject::~LLPanelObject()
 {
 	// Children all cleaned up by default view destructor.
-}
-
-void LLPanelObject::updateLimits()
-{
-	mLimitsNeedUpdate = false;
-
-	mRegionMaxHeight = LLWorld::getInstance()->getRegionMaxHeight();
-	mCtrlPosZ->setMaxValue(mRegionMaxHeight);
-
-
-	mMinScale = LLWorld::getInstance()->getRegionMinPrimScale();
-	mMaxScale = LLWorld::getInstance()->getRegionMaxPrimScale();
-	mCtrlScaleX->setMinValue(mMinScale);
-	mCtrlScaleX->setMaxValue(mMaxScale);
-	mCtrlScaleY->setMinValue(mMinScale);
-	mCtrlScaleY->setMaxValue(mMaxScale);
-	mCtrlScaleZ->setMinValue(mMinScale);
-	mCtrlScaleZ->setMaxValue(mMaxScale);
-
-	mMaxHollowSize = LLWorld::getInstance()->getRegionMaxHollowSize();
-	mSpinHollow->setMaxValue(mMaxHollowSize);
-
-	mMinHoleSize = LLWorld::getInstance()->getRegionMinHoleSize();
-	mSpinScaleX->setMinValue(mMinHoleSize);
-	mSpinScaleY->setMinValue(mMinHoleSize);
 }
 
 void LLPanelObject::getState( )
@@ -413,7 +387,7 @@ void LLPanelObject::getState( )
 	}
 
 	// can move or rotate only linked group with move permissions, or sub-object with move and modify perms
-	BOOL enable_move	= objectp->permMove() && (objectp->permModify() || !gSavedSettings.getBOOL("EditLinkedParts"));
+	BOOL enable_move	= objectp->permMove() && !objectp->isPermanentEnforced() && ((root_objectp == NULL) || !root_objectp->isPermanentEnforced()) && !objectp->isAttachment() && (objectp->permModify() || !gSavedSettings.getBOOL("EditLinkedParts"));
 	BOOL enable_scale	= objectp->permMove() && !objectp->isPermanentEnforced() && ((root_objectp == NULL) || !root_objectp->isPermanentEnforced()) && objectp->permModify();
 	BOOL enable_rotate	= objectp->permMove() && !objectp->isPermanentEnforced() && ((root_objectp == NULL) || !root_objectp->isPermanentEnforced()) && ( (objectp->permModify() && !objectp->isAttachment()) || !gSavedSettings.getBOOL("EditLinkedParts"));
 
@@ -1009,11 +983,11 @@ void LLPanelObject::getState( )
 	case MI_RING:
 		mSpinScaleX->set( scale_x );
 		mSpinScaleY->set( scale_y );
-		mSpinScaleX->setMinValue(mMinHoleSize);
 		calcp->setVar(LLCalc::X_HOLE, scale_x);
 		calcp->setVar(LLCalc::Y_HOLE, scale_y);
+		mSpinScaleX->setMinValue(OBJECT_MIN_HOLE_SIZE);
 		mSpinScaleX->setMaxValue(OBJECT_MAX_HOLE_SIZE_X);
-		mSpinScaleY->setMinValue(mMinHoleSize);
+		mSpinScaleY->setMinValue(OBJECT_MIN_HOLE_SIZE);
 		mSpinScaleY->setMaxValue(OBJECT_MAX_HOLE_SIZE_Y);
 		break;
 	default:
@@ -1049,7 +1023,7 @@ void LLPanelObject::getState( )
 	else 
 	{
 		mSpinHollow->setMinValue(0.f);
-		mSpinHollow->setMaxValue(mMaxHollowSize);
+		mSpinHollow->setMaxValue(95.f);
 	}
 
 	// Update field enablement
@@ -1580,11 +1554,11 @@ void LLPanelObject::getVolumeParams(LLVolumeParams& volume_params)
 	{
 		scale_x = llclamp(
 			scale_x,
-			mMinHoleSize,
+			OBJECT_MIN_HOLE_SIZE,
 			OBJECT_MAX_HOLE_SIZE_X);
 		scale_y = llclamp(
 			scale_y,
-			mMinHoleSize,
+			OBJECT_MIN_HOLE_SIZE,
 			OBJECT_MAX_HOLE_SIZE_Y);
 
 		// Limit radius offset, based on taper and hole size y.
@@ -1724,21 +1698,13 @@ void LLPanelObject::sendScale(BOOL btn_down)
 	if (mObject.isNull()) return;
 
 	LLVector3 newscale(mCtrlScaleX->get(), mCtrlScaleY->get(), mCtrlScaleZ->get());
-// <AW: opensim-limits>
-//	LLVector3 newscale(llclamp(mCtrlScaleX->get(), MIN_PRIM_SCALE, llpanelobject_max_prim_scale()),
-//					   llclamp(mCtrlScaleY->get(), MIN_PRIM_SCALE, llpanelobject_max_prim_scale()),
-//					   llclamp(mCtrlScaleZ->get(), MIN_PRIM_SCALE, llpanelobject_max_prim_scale()));
-//	LLVector3 newscale(llclamp(mCtrlScaleX->get(), mMinScale, llpanelobject_max_prim_scale()),
-//					   llclamp(mCtrlScaleY->get(), mMinScale, llpanelobject_max_prim_scale()),
-//					   llclamp(mCtrlScaleZ->get(), mMinScale, llpanelobject_max_prim_scale()));
-// </AW: opensim-limits>
 
 	LLVector3 delta = newscale - mObject->getScale();
-		mSizeChanged = btn_down;
-	
-	if (delta.magVec() >= 0.00005f)
+	if (delta.magVec() >= 0.0005f || (mSizeChanged && !btn_down))
 	{
-		// scale changed by more than 1/20 millimeter
+		// scale changed by more than 1/2 millimeter
+		mSizeChanged = btn_down;
+
 		// check to see if we aren't scaling the textures
 		// (in which case the tex coord's need to be recomputed)
 		BOOL dont_stretch_textures = !LLManipScale::getStretchTextures();
@@ -1921,11 +1887,6 @@ void LLPanelObject::sendSculpt()
 
 void LLPanelObject::refresh()
 {
-	if(mLimitsNeedUpdate)
-	{
-		updateLimits();
-	}
-
 	getState();
 	if (mObject.notNull() && mObject->isDead())
 	{

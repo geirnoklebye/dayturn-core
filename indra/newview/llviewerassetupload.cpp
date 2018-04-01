@@ -783,9 +783,9 @@ void LLViewerAssetUpload::AssetInventoryUploadCoproc(LLCoreHttpUtil::HttpCorouti
                 LLInventoryPanel::openInventoryPanelAndSetSelection(TRUE, serverInventoryItem, TRUE, TAKE_FOCUS_NO, TRUE);
             }
 
-            // restore keyboard focus
-            gFocusMgr.setKeyboardFocus(focus);
-        }
+                // restore keyboard focus
+                gFocusMgr.setKeyboardFocus(focus);
+            }
         else
         {
             LL_WARNS() << "Can't find a folder to put it in" << LL_ENDL;

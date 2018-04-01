@@ -86,8 +86,7 @@ LLNetMap::LLNetMap (const Params & p)
 :	LLUICtrl (p),
 	mBackgroundColor (p.bg_color()),
 	mScale( MAP_SCALE_MID ),
-	//mPixelsPerMeter( MAP_SCALE_MID / REGION_WIDTH_METERS ),
-	mPixelsPerMeter( MAP_SCALE_MID / LLWorld::getInstance()->getRegionWidthInMeters()),
+	mPixelsPerMeter( MAP_SCALE_MID / REGION_WIDTH_METERS ),
 	mObjectMapTPM(0.f),
 	mObjectMapPixels(0.f),
 	mTargetPan(0.f, 0.f),
@@ -150,7 +149,7 @@ void LLNetMap::setScale( F32 scale )
 		mObjectMapPixels = diameter;
 	}
 
-	mPixelsPerMeter = mScale / LLWorld::getInstance()->getRegionWidthInMeters();
+	mPixelsPerMeter = mScale / REGION_WIDTH_METERS;
 	mDotRadius = llmax(DOT_SCALE * mPixelsPerMeter, MIN_DOT_RADIUS);
 
 	gSavedSettings.setF32("MiniMapScale", mScale);
@@ -1274,7 +1273,7 @@ void LLNetMap::handleStopTracking (const LLSD& userdata)
 {
 	if (mPopupMenu)
 	{
-		mPopupMenu->setItemEnabled ("Stop Tracking", false);
+		mPopupMenu->setItemVisible("Stop Tracking", false);
 		LLTracker::stopTracking (LLTracker::isTracking(NULL));
 	}
 }

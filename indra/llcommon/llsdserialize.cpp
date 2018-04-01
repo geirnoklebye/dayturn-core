@@ -2159,7 +2159,6 @@ LLUZipHelper::EZipRresult LLUZipHelper::unzip_llsd(LLSD& data, std::istream& is,
 		ret = inflate(&strm, Z_NO_FLUSH);
 		if (ret == Z_STREAM_ERROR)
 		{
-			LL_WARNS() << "Unzip error: Z_STREAM_ERROR" << LL_ENDL;
 			inflateEnd(&strm);
 			free(result);
 			delete [] in;
@@ -2172,7 +2171,6 @@ LLUZipHelper::EZipRresult LLUZipHelper::unzip_llsd(LLSD& data, std::istream& is,
 			ret = Z_DATA_ERROR;
 		case Z_DATA_ERROR:
 		case Z_MEM_ERROR:
-			LL_WARNS() << "Unzip error: " << ret << LL_ENDL;
 			inflateEnd(&strm);
 			free(result);
 			delete [] in;
@@ -2204,7 +2202,6 @@ LLUZipHelper::EZipRresult LLUZipHelper::unzip_llsd(LLSD& data, std::istream& is,
 
 	if (ret != Z_STREAM_END)
 	{
-		LL_WARNS() << "Unzip error: !Z_STREAM_END" << LL_ENDL;
 		free(result);
 		return ZR_DATA_ERROR;
 	}

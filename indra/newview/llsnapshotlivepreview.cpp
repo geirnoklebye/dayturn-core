@@ -835,14 +835,7 @@ S32 LLSnapshotLivePreview::getEncodedImageWidth() const
     S32 width = getWidth();
     if (getSnapshotType() == LLSnapshotModel::SNAPSHOT_TEXTURE)
     {
-		if (gIsInSecondLife)
-		{
-			width = LLImageRaw::biasedDimToPowerOfTwo(width, MAX_TEXTURE_SIZE);
-		}
-		else
-		{
-			width = LLImageRaw::biasedDimToPowerOfTwo(width, (MAX_TEXTURE_SIZE * 2));
-		}
+        width = LLImageRaw::biasedDimToPowerOfTwo(width,MAX_TEXTURE_SIZE);
     }
     return width;
 }
@@ -851,15 +844,7 @@ S32 LLSnapshotLivePreview::getEncodedImageHeight() const
     S32 height = getHeight();
     if (getSnapshotType() == LLSnapshotModel::SNAPSHOT_TEXTURE)
     {
-		if (gIsInSecondLife)
-		{
-			height = LLImageRaw::biasedDimToPowerOfTwo(height, MAX_TEXTURE_SIZE);
-		}
-		else
-		{
-			height = LLImageRaw::biasedDimToPowerOfTwo(height, (MAX_TEXTURE_SIZE * 2));
-		}
-        
+        height = LLImageRaw::biasedDimToPowerOfTwo(height,MAX_TEXTURE_SIZE);
     }
     return height;
 }
@@ -887,14 +872,7 @@ LLPointer<LLImageRaw> LLSnapshotLivePreview::getEncodedImage()
                                                           mPreviewImage->getHeight(),
                                                           mPreviewImage->getComponents());
             // Scale it as required by J2C
-			if (gIsInSecondLife)
-			{
-				scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
-			}
-			else
-			{
-				scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE * 2);
-			}
+			scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
 			setImageScaled(TRUE);
             // Compress to J2C
 			if (formatted->encode(scaled, 0.f))
@@ -1050,14 +1028,7 @@ void LLSnapshotLivePreview::saveTexture(BOOL outfit_snapshot, std::string name)
 		}
 	}
 
-	if (gIsInSecondLife)
-	{
-		scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
-	}
-	else
-	{
-		scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE * 2);
-	}
+	scaled->biasedScaleToPowerOfTwo(MAX_TEXTURE_SIZE);
 	LL_DEBUGS() << "scaled texture to " << scaled->getWidth() << "x" << scaled->getHeight() << LL_ENDL;
 
 	if (formatted->encode(scaled, 0.0f))

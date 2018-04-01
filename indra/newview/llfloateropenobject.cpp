@@ -281,4 +281,3 @@ void LLFloaterOpenObject::onClickCancel()
 {
 	closeFloater();
 }
-

@@ -80,15 +80,7 @@ extern const F32 OBJECT_TWIST_LINEAR_MIN;
 extern const F32 OBJECT_TWIST_LINEAR_MAX;
 extern const F32 OBJECT_TWIST_LINEAR_INC;
 
-// <AW: opensim-limits>
-//extern const F32 OBJECT_MIN_HOLE_SIZE;
-extern const F32 SL_OBJECT_MAX_HOLLOW_SIZE;
-extern const F32 OS_OBJECT_MAX_HOLLOW_SIZE;
-
-extern const F32 SL_OBJECT_MIN_HOLE_SIZE;
-extern const F32 OS_OBJECT_MIN_HOLE_SIZE;
-// </AW: opensim-limits>
-
+extern const F32 OBJECT_MIN_HOLE_SIZE;
 extern const F32 OBJECT_MAX_HOLE_SIZE_X;
 extern const F32 OBJECT_MAX_HOLE_SIZE_Y;
 
@@ -397,7 +389,6 @@ public:
 	virtual void setTESelected(const U8 te, bool sel);
 
 	LLMaterialPtr getTEMaterialParams(const U8 index);
-
 
 	void copyTEs(const LLPrimitive *primitive);
 	S32 packTEField(U8 *cur_ptr, U8 *data_ptr, U8 data_size, U8 last_face_index, EMsgVariableType type) const;

@@ -340,7 +340,7 @@ void LLPanelGroup::update(LLGroupChange gc)
 		LLGroupData agent_gdatap;
 		bool is_member = gAgent.getGroupData(mID,agent_gdatap) || gAgent.isGodlikeWithoutAdminMenuFakery();
 		bool join_btn_visible = !is_member && gdatap->mOpenEnrollment;
-
+		
 		mButtonJoin->setVisible(join_btn_visible);
 		mJoinText->setVisible(join_btn_visible);
 

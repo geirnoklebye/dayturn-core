@@ -36,7 +36,6 @@
 #include <queue>
 #include "v4color.h"
 
-
 class LLPluginClassMedia : public LLPluginProcessParentOwner
 {
 	LOG_CLASS(LLPluginClassMedia);

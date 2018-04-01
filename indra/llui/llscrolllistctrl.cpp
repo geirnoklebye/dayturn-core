@@ -59,8 +59,6 @@
 #include "llurlaction.h"
 #include "lltooltip.h"
 
-#include "../newview/llslurl.h"
-
 #include <boost/bind.hpp>
 
 static LLDefaultChildRegistry::Register<LLScrollListCtrl> r("scroll_list");
@@ -1861,24 +1859,24 @@ BOOL LLScrollListCtrl::handleRightMouseDown(S32 x, S32 y, MASK mask)
 
 void LLScrollListCtrl::showProfile(std::string id, bool is_group)
 {
-    // show the resident's profile or the group profile
-    std::string sltype = is_group ? "group" : "agent";
-    std::string slurl = "secondlife:///app/" + sltype + "/" + id + "/about";
-    LLUrlAction::showProfile(slurl);
+	// show the resident's profile or the group profile
+	std::string sltype = is_group ? "group" : "agent";
+	std::string slurl = "secondlife:///app/" + sltype + "/" + id + "/about";
+	LLUrlAction::showProfile(slurl);
 }
 
 void LLScrollListCtrl::sendIM(std::string id)
 {
-    // send im to the resident
-    std::string slurl = "secondlife:///app/agent/" + id + "/about";
-    LLUrlAction::sendIM(slurl);
+	// send im to the resident
+	std::string slurl = "secondlife:///app/agent/" + id + "/about";
+	LLUrlAction::sendIM(slurl);
 }
 
 void LLScrollListCtrl::addFriend(std::string id)
 {
-    // add resident to friends list
-    std::string slurl = "secondlife:///app/agent/" + id + "/about";
-    LLUrlAction::addFriend(slurl);
+	// add resident to friends list
+	std::string slurl = "secondlife:///app/agent/" + id + "/about";
+	LLUrlAction::addFriend(slurl);
 }
 
 void LLScrollListCtrl::removeFriend(std::string id)
@@ -1889,35 +1887,35 @@ void LLScrollListCtrl::removeFriend(std::string id)
 
 void LLScrollListCtrl::showNameDetails(std::string id, bool is_group)
 {
-    // open the resident's details or the group details
-    std::string sltype = is_group ? "group" : "agent";
-    std::string slurl = "secondlife:///app/" + sltype + "/" + id + "/about";
-    LLUrlAction::clickAction(slurl, true);
+	// open the resident's details or the group details
+	std::string sltype = is_group ? "group" : "agent";
+	std::string slurl = "secondlife:///app/" + sltype + "/" + id + "/about";
+	LLUrlAction::clickAction(slurl, true);
 }
 
 void LLScrollListCtrl::copyNameToClipboard(std::string id, bool is_group)
 {
-    // copy the name of the avatar or group to the clipboard
-    std::string name;
-    if (is_group)
-    {
-        gCacheName->getGroupName(LLUUID(id), name);
-    }
-    else
-    {
-        LLAvatarName av_name;
-        LLAvatarNameCache::get(LLUUID(id), &av_name);
-        name = av_name.getAccountName();
-    }
-    LLUrlAction::copyURLToClipboard(name);
+	// copy the name of the avatar or group to the clipboard
+	std::string name;
+	if (is_group)
+	{
+		gCacheName->getGroupName(LLUUID(id), name);
+	}
+	else
+	{
+		LLAvatarName av_name;
+		LLAvatarNameCache::get(LLUUID(id), &av_name);
+		name = av_name.getAccountName();
+	}
+	LLUrlAction::copyURLToClipboard(name);
 }
 
 void LLScrollListCtrl::copySLURLToClipboard(std::string id, bool is_group)
 {
-    // copy a SLURL for the avatar or group to the clipboard
-    std::string sltype = is_group ? "group" : "agent";
-    std::string slurl = "secondlife:///app/" + sltype + "/" + id + "/about";
-    LLUrlAction::copyURLToClipboard(slurl);
+	// copy a SLURL for the avatar or group to the clipboard
+	std::string sltype = is_group ? "group" : "agent";
+	std::string slurl = "secondlife:///app/" + sltype + "/" + id + "/about";
+	LLUrlAction::copyURLToClipboard(slurl);
 }
 
 BOOL LLScrollListCtrl::handleDoubleClick(S32 x, S32 y, MASK mask)

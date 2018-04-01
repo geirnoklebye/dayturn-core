@@ -48,7 +48,7 @@ namespace {
 			U32 render_type = render_type_from_string( iter->asString() );
 			if ( render_type != 0 )
 			{
-				LLPipeline::toggleRenderTypeControl( render_type );
+				LLPipeline::toggleRenderTypeControl(  render_type );
 			}
 		}
 	}
@@ -87,7 +87,7 @@ namespace {
 			U32 render_feature = feature_from_string( iter->asString() );
 			if ( render_feature != 0 )
 			{
-				LLPipeline::toggleRenderDebugControl( render_feature );
+				LLPipeline::toggleRenderDebugControl(  render_feature );
 			}
 		}
 	}

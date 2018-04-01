@@ -154,30 +154,8 @@ bool LLURLDispatcherImpl::dispatchApp(const LLSLURL& slurl,
 {
 	LL_INFOS() << "cmd: " << slurl.getAppCmd() << " path: " << slurl.getAppPath() << " query: " << slurl.getAppQuery() << LL_ENDL;
 	const LLSD& query_map = LLURI::queryMap(slurl.getAppQuery());
-
-// <FS:AW handle hop app teleports properly>
-// 	bool handled = LLCommandDispatcher::dispatch(
-// 			slurl.getAppCmd(), slurl.getAppPath(), query_map, web, nav_type, trusted_browser);
-	LLSD path;
-#ifdef OPENSIM // <FS:AW optional opensim support>
-	if ("teleport" == slurl.getAppCmd())
-	{
-		path = LLSD::emptyArray();
-		path.append(slurl.getGrid());
-		for(int i=0; slurl.getAppPath().size() > i; i++)
-		{
-			path.append(slurl.getAppPath()[i].asString());
-		}
-	}
-	else
-#endif // OPENSIM // <FS:AW optional opensim support>
-	{
-		path = slurl.getAppPath();
-	}
-
 	bool handled = LLCommandDispatcher::dispatch(
-			slurl.getAppCmd(), path, query_map, web, nav_type, trusted_browser);
-// </FS:AW handle hop app teleports properly>
+			slurl.getAppCmd(), slurl.getAppPath(), query_map, web, nav_type, trusted_browser);
 
 	// alert if we didn't handle this secondlife:///app/ SLURL
 	// (but still return true because it is a valid app SLURL)
@@ -205,59 +183,12 @@ bool LLURLDispatcherImpl::dispatchRegion(const LLSLURL& slurl, const std::string
 		LLPanelLogin::setLocation(slurl);
 		return true;
 	}
-// <FS:AW hypergrid support >
-// 	LLWorldMapMessage::getInstance()->sendNamedRegionRequest(slurl.getRegion(),
-// 
-// 									  LLURLDispatcherImpl::regionNameCallback,
-// 									  slurl.getSLURLString(),
-	LLSLURL hyper = slurl;
-	std::string region = hyper.getRegion();
-	std::string dest = hyper.getSLURLString();
-#ifdef OPENSIM // <FS:AW optional opensim support>
-	std::string grid = slurl.getGrid();
-	std::string current_grid = LLGridManager::getInstance()->getGrid();
 
-	std::string gatekeeper = LLGridManager::getInstance()->getGatekeeper(grid);
-
-	std::string current = LLGridManager::getInstance()->getGrid();
-	if((grid != current ) && (!LLGridManager::getInstance()->isInOpenSim() || (!slurl.getHypergrid() && gatekeeper.empty())))
-	{
-		if (!dest.empty())
-		{
-			LLSD args;
-			args["SLURL"] = dest;
-			args["GRID"] = slurl.getGrid();
-			args["CURRENT_GRID"] = current_grid;
-			LLNotificationsUtil::add("CantTeleportToGrid", args);
-			return true;
-		}
-	}
-	else if(!gatekeeper.empty())
-	{
-		hyper = LLSLURL(gatekeeper + ":" + slurl.getRegion(), slurl.getPosition(), true);
-	}
-	
-	// Trim the grid uri if we're talking a local region here. <FS:CR>
-	if (grid == current)
-	{
-		std::size_t pos;
-		pos = region.find(current);
-		if (pos != std::string::npos)
-		{
-			region.erase(pos, pos + current.length() + 1);
-		}
-		
-		pos = dest.find(current);
-		if (pos != std::string::npos)
-		{
-			dest.erase(pos, pos + current.length() + 1);
-		}
-	}
-
-#endif //OPENSIM
-// Request a region handle by name
-	LLWorldMapMessage::getInstance()->sendNamedRegionRequest(region, LLURLDispatcherImpl::regionNameCallback, dest, LLUI::sSettingGroups["config"]->getBOOL("SLURLTeleportDirectly"));	// don't teleport
-// </FS:AW optional opensim support>
+	// Request a region handle by name
+	LLWorldMapMessage::getInstance()->sendNamedRegionRequest(slurl.getRegion(),
+									  LLURLDispatcherImpl::regionNameCallback,
+									  slurl.getSLURLString(),
+									  LLUI::sSettingGroups["config"]->getBOOL("SLURLTeleportDirectly"));	// don't teleport
 	return true;
 }
 
@@ -274,36 +205,32 @@ void LLURLDispatcherImpl::regionNameCallback(U64 region_handle, const LLSLURL& s
 /* static */
 void LLURLDispatcherImpl::regionHandleCallback(U64 region_handle, const LLSLURL& slurl, const LLUUID& snapshot_id, bool teleport)
 {
- // <FS:AW optional opensim support>
-#ifndef OPENSIM
-	// we can't teleport cross grid at this point
-	if (LLGridManager::getInstance()->getGrid(slurl.getGrid())
-		!= LLGridManager::getInstance()->getGrid())
+
+  // we can't teleport cross grid at this point
+	if(   LLGridManager::getInstance()->getGrid(slurl.getGrid())
+	   != LLGridManager::getInstance()->getGrid())
 	{
 		LLSD args;
 		args["SLURL"] = slurl.getLocationString();
 		args["CURRENT_GRID"] = LLGridManager::getInstance()->getGridLabel();
-		std::string grid_label =
-			LLGridManager::getInstance()->getGrid(slurl.getGrid());
-
-		if (!grid_label.empty())
+		std::string grid_label = 
+			LLGridManager::getInstance()->getGridLabel(slurl.getGrid());
+		
+		if(!grid_label.empty())
 		{
 			args["GRID"] = grid_label;
 		}
-		else
+		else 
 		{
 			args["GRID"] = slurl.getGrid();
 		}
 		LLNotificationsUtil::add("CantTeleportToGrid", args);
 		return;
 	}
-
-#endif // OPENSIM
-// </FS:AW optional opensim support>
-
+	
 	LLVector3d global_pos = from_region_handle(region_handle);
 	global_pos += LLVector3d(slurl.getPosition());
-
+	
 	if (teleport)
 	{	
 		gAgent.teleportViaLocation(global_pos);
@@ -347,73 +274,66 @@ public:
 	// cause a constant teleport loop.  JC
 	LLTeleportHandler() : LLCommandHandler("teleport", UNTRUSTED_THROTTLE) { }
 
+
 	bool handle(const LLSD& tokens, const LLSD& query_map,
 				LLMediaCtrl* web)
 	{
 		// construct a "normal" SLURL, resolve the region to
 		// a global position, and teleport to it
 		if (tokens.size() < 1) return false;
- // <FS:AW optional opensim support>
-#ifdef OPENSIM
-			LLSLURL slurl(tokens, true);
 
-			std::string grid = slurl.getGrid();
-			std::string gatekeeper = LLGridManager::getInstance()->getGatekeeper(grid);
-			std::string region_name = slurl.getRegion();
-			std::string dest;
-			std::string current = LLGridManager::getInstance()->getGrid();
-			if((grid != current) && (!LLGridManager::getInstance()->isInOpenSim() || (!slurl.getHypergrid() && gatekeeper.empty())))
-			{
-				dest = slurl.getSLURLString();
-				if (!dest.empty())
-				{
-					LLSD args;
-					args["SLURL"] = dest;
-					args["GRID"] = grid;
-					args["CURRENT_GRID"] = current;
-					LLNotificationsUtil::add("CantTeleportToGrid", args);
-					return true;
-				}
-			}
-			else if(!gatekeeper.empty() && gatekeeper != LLGridManager::getInstance()->getGatekeeper())
-			{
-				region_name = gatekeeper + ":" + region_name;
-			}
+		LLVector3 coords(128, 128, 0);
+		if (tokens.size() <= 4)
+		{
+			coords = LLVector3(tokens[1].asReal(), 
+							   tokens[2].asReal(), 
+							   tokens[3].asReal());
+		}
 
-			dest = "hop://" + current + "/" + region_name;
+		// Region names may be %20 escaped.
+		std::string region_name = LLURI::unescape(tokens[0]);
 
-			for(int i=2; tokens.size() > i; i++)
-			{
-				dest.append("/" + tokens[i].asString());
-			}
+		LLSD args;
+		args["LOCATION"] = region_name;
 
-			LLWorldMapMessage::getInstance()->sendNamedRegionRequest(region_name,
-				LLURLDispatcherImpl::regionHandleCallback,
-				LLSLURL(dest).getSLURLString(),
-				true);	// teleport
-#else // OPENSIM
-			LLVector3 coords(128, 128, 0);
-			if (tokens.size() <= 4)
-			{
-				coords = LLVector3(tokens[1].asReal(), 
-								   tokens[2].asReal(), 
-								   tokens[3].asReal());
-			}
+		LLSD payload;
+		payload["region_name"] = region_name;
+		payload["callback_url"] = LLSLURL(region_name, coords).getSLURLString();
 
-			// Region names may be %20 escaped.
-			std::string region_name = LLURI::unescape(tokens[0]);
-			
-			LLWorldMapMessage::getInstance()->sendNamedRegionRequest(region_name, LLURLDispatcherImpl::regionHandleCallback, LLSLURL(region_name, coords).getSLURLString(), true);// teleport
-#endif // OPENSIM
-// </FS:AW optional opensim support>
-
-
-
+		LLNotificationsUtil::add("TeleportViaSLAPP", args, payload);
 		return true;
+	}
+
+	static void teleport_via_slapp(std::string region_name, std::string callback_url)
+	{
+
+		LLWorldMapMessage::getInstance()->sendNamedRegionRequest(region_name,
+			LLURLDispatcherImpl::regionHandleCallback,
+			callback_url,
+			true);	// teleport
+	}
+
+	static bool teleport_via_slapp_callback(const LLSD& notification, const LLSD& response)
+	{
+		S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+
+		std::string region_name = notification["payload"]["region_name"].asString();
+		std::string callback_url = notification["payload"]["callback_url"].asString();
+
+		if (option == 0)
+		{
+			teleport_via_slapp(region_name, callback_url);
+			return true;
+		}
+
+		return false;
 	}
 
 };
 LLTeleportHandler gTeleportHandler;
+static LLNotificationFunctorRegistration open_landmark_callback_reg("TeleportViaSLAPP", LLTeleportHandler::teleport_via_slapp_callback);
+
+
 
 //---------------------------------------------------------------------------
 

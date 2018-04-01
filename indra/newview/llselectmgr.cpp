@@ -96,7 +96,6 @@
 #include "pipeline.h"
 #include "llviewershadermgr.h"
 #include "llpanelface.h"
-#include "llviewernetwork.h"
 #include "llworld.h"
 #include "llglheaders.h"
 
@@ -110,9 +109,8 @@ LLViewerObject* getSelectedParentObject(LLViewerObject *object) ;
 const F32 SILHOUETTE_UPDATE_THRESHOLD_SQUARED = 0.02f;
 const S32 MAX_SILS_PER_FRAME = 50;
 const S32 MAX_OBJECTS_PER_PACKET = 254;
-// For linked sets  in indra_constants.h
-//const S32 MAX_CHILDREN_PER_TASK = 255;
-//const S32 MAX_CHILDREN_PER_PHYSICAL_TASK = 32;
+// For linked sets
+const S32 MAX_CHILDREN_PER_TASK = 255;
 
 //
 // Globals
@@ -565,13 +563,11 @@ bool LLSelectMgr::linkObjects()
 	}
 
 	S32 object_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
-	S32 object_max = LLWorld::getInstance()->getMaxLinkedPrims();
-
-	if (object_count > object_max + 1)
+	if (object_count > MAX_CHILDREN_PER_TASK + 1)
 	{
 		LLSD args;
 		args["COUNT"] = llformat("%d", object_count);
-		int max = object_max+1;
+		int max = MAX_CHILDREN_PER_TASK+1;
 		args["MAX"] = llformat("%d", max);
 		LLNotificationsUtil::add("UnableToLinkObjects", args);
 		return true;
@@ -636,6 +632,7 @@ bool LLSelectMgr::unlinkObjects()
 		LLNotificationsUtil::add("ConfirmUnlink", LLSD(), LLSD(), boost::bind(&LLSelectMgr::confirmUnlinkObjects, this, _1, _2));
 		return true;
 	}
+
 	LLSelectMgr::getInstance()->sendDelink();
 	return true;
 }
@@ -7010,6 +7007,7 @@ BOOL LLSelectMgr::canSelectObject(LLViewerObject* object, BOOL ignore_select_own
 	{
 		return TRUE;
 	}
+
 	if(!ignore_select_owned)
 	{
 	if ((gSavedSettings.getBOOL("SelectOwnedOnly") && !object->permYouOwner()) ||

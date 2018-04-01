@@ -1245,20 +1245,21 @@ void LLImageRaw::fill( const LLColor4U& color )
 	}
 
 	S32 pixels = getWidth() * getHeight();
-	if (4 == getComponents())
+	if( 4 == getComponents() )
 	{
-		U32* data = (U32*)getData();
+		U32* data = (U32*) getData();
 		U32 rgbaColor = color.asRGBA();
-		for (S32 i = 0; i < pixels; i++)
+
+		for( S32 i = 0; i < pixels; i++ )
 		{
-			data[i] = rgbaColor;
+			data[ i ] = rgbaColor;
 		}
 	}
 	else
-		if (3 == getComponents())
+	if( 3 == getComponents() )
 	{
 		U8* data = getData();
-			for (S32 i = 0; i < pixels; i++)
+		for( S32 i = 0; i < pixels; i++ )
 		{
 			data[0] = color.mV[0];
 			data[1] = color.mV[1];

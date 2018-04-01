@@ -1116,6 +1116,7 @@ void LLPanelPeople::updateRecentList()
 {
 	if (!mRecentList)
 		return;
+
 	LLRecentPeople::instance().get(mRecentList->getIDs());
 	mRecentList->setDirty();
 
@@ -1436,17 +1437,17 @@ void LLPanelPeople::onFilterEdit(const std::string& search_string)
 		mAllFriendList->setNameFilter(filter);
 		mSuggestedFriends->setNameFilter(filter);
 
-	setAccordionCollapsedByUser("tab_online", false);
-	setAccordionCollapsedByUser("tab_all", false);
+        setAccordionCollapsedByUser("tab_online", false);
+        setAccordionCollapsedByUser("tab_all", false);
 		setAccordionCollapsedByUser("tab_suggested_friends", false);
-	showFriendsAccordionsIfNeeded();
+        showFriendsAccordionsIfNeeded();
 
 		// restore accordion tabs state _after_ all manipulations
 		if(saved_filter.empty())
-	{
-		notifyChildren(LLSD().with("action","restore_state"));
-	}
-}
+        {
+            notifyChildren(LLSD().with("action","restore_state"));
+        }
+    }
 	else if (cur_tab == GROUP_TAB_NAME)
 	{
 		mGroupList->setNameFilter(filter);
@@ -1739,16 +1740,16 @@ bool LLPanelPeople::onNearbyViewSortMenuItemCheck(const LLSD& userdata)
 	std::string item = userdata.asString();
 	static LLCachedControl<U32> sort_order(gSavedSettings, "NearbyPeopleSortOrder", E_SORT_BY_RECENT_SPEAKERS);
 
-	if (item == "sort_by_recent_speakers")
+	if (item == "sort_by_recent_speakers") {
 		return sort_order == E_SORT_BY_RECENT_SPEAKERS;
-	if (item == "sort_name")
+	}
+	else if (item == "sort_name") {
 		return sort_order == E_SORT_BY_NAME;
-	if (item == "sort_distance")
-	{
+	}
+	else if (item == "sort_distance") {
 		return sort_order == E_SORT_BY_DISTANCE;
 	}
-	else if (item == "view_login_names") 
-	{
+	else if (item == "view_login_names") {
 		return gSavedSettings.getBOOL("UseCompleteNameInLists");
 	}
 
@@ -1975,5 +1976,6 @@ bool LLPanelPeople::isAccordionCollapsedByUser(const std::string& name)
 {
 	return isAccordionCollapsedByUser(getChild<LLUICtrl>(name));
 }
+
 
 // EOF

@@ -30,7 +30,7 @@
     <attachment_point
      id="3"
      group="3"
-     pie_slice="0"
+     pie_slice="3"
      name="Left Shoulder"
      joint="mCollarLeft"
      location="ATTACH_LSHOULDER"
@@ -6975,33 +6975,33 @@
      value_max="1.4"
      camera_elevation=".3"
      camera_distance="1.2">
-       <param_morph>
-         <volume_morph
-           name="L_CLAVICLE"
-           scale="0.02 0.0 0.005"
-           pos="0.0 0 0.005"/>
-         <volume_morph
-           name="L_UPPER_ARM"
-           scale="0.015 0.0 0.005"
-           pos="0.015 0 0"/>
-         <volume_morph
-           name="L_LOWER_ARM"
-           scale="0.005 0.0 0.005"
-           pos="0.005 0 0"/>
-         <volume_morph
-           name="R_CLAVICLE"
-           scale="0.02 0.0 0.005"
-           pos="0.0 0 0.005"/>
-         <volume_morph
-           name="R_UPPER_ARM"
-           scale="0.015 0.0 0.005"
-           pos="0.015 0 0"/>
-         <volume_morph
-           name="R_LOWER_ARM"
-           scale="0.005 0.0 0.005"
-           pos="0.005 0 0"/>
-       </param_morph>
-     </param>
+      <param_morph>
+        <volume_morph
+          name="L_CLAVICLE"
+          scale="0.02 0.0 0.005"
+          pos="0.0 0 0.005"/>
+        <volume_morph
+          name="L_UPPER_ARM"
+          scale="0.015 0.0 0.005"
+          pos="0.015 0 0"/>
+        <volume_morph
+          name="L_LOWER_ARM"
+          scale="0.005 0.0 0.005"
+          pos="0.005 0 0"/>
+        <volume_morph
+          name="R_CLAVICLE"
+          scale="0.02 0.0 0.005"
+          pos="0.0 0 0.005"/>
+        <volume_morph
+          name="R_UPPER_ARM"
+          scale="0.015 0.0 0.005"
+          pos="0.015 0 0"/>
+        <volume_morph
+          name="R_LOWER_ARM"
+          scale="0.005 0.0 0.005"
+          pos="0.005 0 0"/>
+      </param_morph>
+    </param>
 
     <param
      id="648"

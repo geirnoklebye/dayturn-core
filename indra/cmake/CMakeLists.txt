@@ -90,7 +90,6 @@ set(cmake_SOURCE_FILES
     PulseAudio.cmake
     Python.cmake
     TemplateCheck.cmake
-    Teapot.cmake
     Tut.cmake
     UI.cmake
     UnixInstall.cmake
@@ -188,7 +187,6 @@ set(cmake_SOURCE_FILES
     PulseAudio.cmake
     Python.cmake
     TemplateCheck.cmake
-    Teapot.cmake
     Tut.cmake
     UI.cmake
     UnixInstall.cmake
