@@ -8542,7 +8542,7 @@ void handle_selected_material_info()
 		{
 			if (!node->isTESelected(i)) continue;
 	
-			const LLMaterialID& material_id = node->getObject()->getTE(i)->getMaterialID();
+			const LLMaterialID& material_id = node->getObject()->getTEref(i).getMaterialID();
 			faces_per_material[material_id].push_back(i);
 		}
 		// Per-material, dump which faces are using it.
@@ -10495,9 +10495,6 @@ void initialize_menus()
 	//// Advanced > Render > Features
 	view_listener_t::addMenu(new LLAdvancedToggleFeature(), "Advanced.ToggleFeature");
 	view_listener_t::addMenu(new LLAdvancedCheckFeature(), "Advanced.CheckFeature");
-//	view_listener_t::addMenu(new LLAdvancedToggleMaxBuildConstraints(), "Advanced.ToggleMaxBuildConstraints");
-//	view_listener_t::addMenu(new LLAdvancedCheckMaxBuildConstraints(), "Advanced.CheckMaxBuildConstraints");
-
 	view_listener_t::addMenu(new LLAdvancedCheckDisplayTextureDensity(), "Advanced.CheckDisplayTextureDensity");
 	view_listener_t::addMenu(new LLAdvancedSetDisplayTextureDensity(), "Advanced.SetDisplayTextureDensity");
 
@@ -10690,7 +10687,6 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAvatarAddFriend(), "Avatar.AddFriend");
 	view_listener_t::addMenu(new LLAvatarRemoveFriend(), "Avatar.RemoveFriend");
 	view_listener_t::addMenu(new LLAvatarAddContact(), "Avatar.AddContact");
-	commit.add("Avatar.Freeze", boost::bind(&handle_avatar_freeze, LLSD()));
 	view_listener_t::addMenu(new LLAvatarDebug(), "Avatar.Debug");
 	view_listener_t::addMenu(new LLAvatarVisibleDebug(), "Avatar.VisibleDebug");
 	view_listener_t::addMenu(new LLAvatarInviteToGroup(), "Avatar.InviteToGroup");
@@ -10720,7 +10716,6 @@ void initialize_menus()
 	
 	view_listener_t::addMenu(new LLAvatarEnableAddFriend(), "Avatar.EnableAddFriend");
 	view_listener_t::addMenu(new LLAvatarEnableRemoveFriend(), "Avatar.EnableRemoveFriend");
-	enable.add("Avatar.EnableFreezeEject", boost::bind(&enable_freeze_eject, _2));
 
 	// Object pie menu
 	view_listener_t::addMenu(new LLObjectBuild(), "Object.Build");
