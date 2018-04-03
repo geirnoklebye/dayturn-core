@@ -293,7 +293,7 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
     // init font variables
     if (!sFont)
     {
-        sFont = LLFontGL::getFontSansSerif();
+        sFont = LLFontGL::getFontSansSerifSmall();
         sFontSmall = LLFontGL::getFontSansSerifSmall();
     }
     // initialize
