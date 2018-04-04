@@ -4306,7 +4306,7 @@ bool RRInterface::canAttachCategoryAux(LLInventoryCategory* folder, bool in_pare
 	FolderLock folder_lock = FolderLock_unlocked;
 	if (folder) {
 		// check @attachthis:folder in all restrictions
-		RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
+		//RRMAP::iterator it = mSpecialObjectBehaviours.begin (); //unused variable clang
 		//LLInventoryCategory* restricted_cat;
 		std::string path_to_check;
 		std::string restriction = "attachthis";
@@ -4419,7 +4419,7 @@ bool RRInterface::canDetachCategoryAux(LLInventoryCategory* folder, bool in_pare
 			if (name.find ("nostrip") != -1 && (!mUserUpdateAttachmentsUpdatesAll || mUserUpdateAttachmentsCalledFromScript)) return false;
 		}
 		// check @detachthis:folder in all restrictions
-		RRMAP::iterator it = mSpecialObjectBehaviours.begin ();
+		//RRMAP::iterator it = mSpecialObjectBehaviours.begin (); //unused variable in clang
 		//LLInventoryCategory* restricted_cat;
 		std::string path_to_check;
 		std::string restriction = "detachthis";
