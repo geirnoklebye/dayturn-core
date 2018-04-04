@@ -545,7 +545,50 @@ void LLAvatarTracker::notifyParticularFriendObservers(const LLUUID& buddy_id)
     observer_set_t& obs = obs_it->second;
     for (observer_set_t::iterator ob_it = obs.begin(); ob_it != obs.end(); ob_it++)
     {
+		if (*ob_it)
         (*ob_it)->changed(mModifyMask);
+		else
+			LL_WARNS() << "Invalid observer" << LL_ENDL;
+    }
+}
+
+
+void LLAvatarTracker::addFriendPermissionObserver(const LLUUID& buddy_id, LLFriendObserver* observer)
+{
+	if (buddy_id.notNull() && observer)
+	{
+		mFriendPermissionObserverMap[buddy_id].insert(observer);
+	}
+}
+
+void LLAvatarTracker::removeFriendPermissionObserver(const LLUUID& buddy_id, LLFriendObserver* observer)
+{
+	if (buddy_id.isNull() || !observer)
+		return;
+	
+    observer_map_t::iterator obs_it = mFriendPermissionObserverMap.find(buddy_id);
+    if(obs_it == mFriendPermissionObserverMap.end())
+        return;
+	
+    obs_it->second.erase(observer);
+	
+    // purge empty sets from the map
+    if (obs_it->second.size() == 0)
+    	mFriendPermissionObserverMap.erase(obs_it);
+}
+
+void LLAvatarTracker::notifyFriendPermissionObservers(const LLUUID& buddy_id)
+{
+    observer_map_t::iterator obs_it = mFriendPermissionObserverMap.find(buddy_id);
+    if(obs_it == mFriendPermissionObserverMap.end())
+	{
+		return;
+	}
+    // Notify observers interested in buddy_id.
+    observer_set_t& obs = obs_it->second;
+    for (observer_set_t::iterator ob_it = obs.begin(); ob_it != obs.end(); ob_it++)
+    {
+		(*ob_it)->changed(LLFriendObserver::PERMS);
     }
 }
 
@@ -668,6 +711,7 @@ void LLAvatarTracker::processChange(LLMessageSystem* msg)
 
 	addChangedMask(LLFriendObserver::POWERS, agent_id);
 	notifyObservers();
+	notifyFriendPermissionObservers(agent_related);
 }
 
 void LLAvatarTracker::processChangeUserRights(LLMessageSystem* msg, void**)
