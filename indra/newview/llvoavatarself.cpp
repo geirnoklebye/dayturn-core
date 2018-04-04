@@ -3202,3 +3202,8 @@ void LLVOAvatarSelf::dumpWearableInfo(LLAPRFile& outfile)
 	}
 	apr_file_printf( file, "\n</wearable_info>\n" );
 }
+F32 LLVOAvatarSelf::getAvatarOffset() /*const*/
+{
+
+	return LLAvatarAppearance::getAvatarOffset();
+}

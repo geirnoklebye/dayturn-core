@@ -570,7 +570,10 @@ void LLAvatarAppearance::computeBodySize()
         compareJointStateMaps(mLastBodySizeState, mCurrBodySizeState);
 	}
 }
-
+F32 LLAvatarAppearance::getAvatarOffset()
+{
+	return getVisualParamWeight(AVATAR_HOVER);
+}
 //-----------------------------------------------------------------------------
 // parseSkeletonFile()
 //-----------------------------------------------------------------------------
