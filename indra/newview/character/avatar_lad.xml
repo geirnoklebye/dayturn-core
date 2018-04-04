@@ -30,7 +30,7 @@
     <attachment_point
      id="3"
      group="3"
-     pie_slice="3"
+     pie_slice="0"
      name="Left Shoulder"
      joint="mCollarLeft"
      location="ATTACH_LSHOULDER"
