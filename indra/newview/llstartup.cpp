@@ -2479,9 +2479,12 @@ void register_viewer_callbacks(LLMessageSystem* msg)
 	msg->setHandlerFunc("SetFollowCamProperties",			process_set_follow_cam_properties);
 	msg->setHandlerFunc("ClearFollowCamProperties",			process_clear_follow_cam_properties);
 
-	msg->setHandlerFuncFast(_PREHASH_ImprovedInstantMessage,	process_improved_im);
-	msg->setHandlerFuncFast(_PREHASH_ScriptQuestion,			process_script_question);
-	msg->setHandlerFuncFast(_PREHASH_ObjectProperties,			LLSelectMgr::processObjectProperties, NULL);
+	msg->setHandlerFuncFast(_PREHASH_ImprovedInstantMessage, process_improved_im);
+	msg->setHandlerFuncFast(_PREHASH_ScriptQuestion, process_script_question);
+	// LL changed this to call directly to SelectMgr. we need it to continue going to llviewermessage first
+	// for FS's area search
+	//msg->setHandlerFuncFast(_PREHASH_ObjectProperties,			LLSelectMgr::processObjectProperties, NULL);
+	msg->setHandlerFuncFast(_PREHASH_ObjectProperties, process_object_properties, NULL);
 	msg->setHandlerFuncFast(_PREHASH_ObjectPropertiesFamily,	LLSelectMgr::processObjectPropertiesFamily, NULL);
 	msg->setHandlerFunc("ForceObjectSelect", LLSelectMgr::processForceObjectSelect);
 
