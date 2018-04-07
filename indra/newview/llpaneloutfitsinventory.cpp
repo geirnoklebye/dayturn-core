@@ -89,8 +89,6 @@ BOOL LLPanelOutfitsInventory::postBuild()
 	{
 		LLInventoryModelBackgroundFetch::instance().start(outfits_cat);
 	}
-	
-	mSaveComboBtn.reset(new LLSaveOutfitComboBtn(this, true));
 
 	return TRUE;
 }
@@ -281,7 +279,7 @@ void LLPanelOutfitsInventory::updateListCommands()
 	mOutfitGalleryPanel->childSetEnabled("trash_btn", trash_enabled);
 	wear_btn->setEnabled(wear_enabled);
 	wear_btn->setVisible(wear_visible);
-	mSaveComboBtn->setMenuItemEnabled("save_outfit", make_outfit_enabled);
+
 	wear_btn->setToolTip(getString((!isOutfitsGalleryPanelActive() && mMyOutfitsPanel->hasItemSelected()) ? "wear_items_tooltip" : "wear_outfit_tooltip"));
 }
 
