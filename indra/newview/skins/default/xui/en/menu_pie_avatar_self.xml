@@ -440,8 +440,7 @@
 		</pie_slice>
 		<pie_slice
 		 label="Hover Height"
-		 name="Hover Height"
-		 only_in_sl="true">
+		 name="Hover Height">
 			<pie_slice.on_click
 			 function="HoverHeight" />
 			<pie_slice.on_enable

@@ -375,8 +375,7 @@
 			<pie_slice
 				enabled="false"
 				label="Compile (Mono)"
-				name="CompileMono"
-				only_in_sl="true">
+				name="CompileMono">
 				<pie_slice.on_click
 					function="Tools.SelectedScriptAction"
 					parameter="compile mono" />
@@ -387,8 +386,7 @@
 			<pie_slice
 				enabled="false"
 				label="Compile (LSL)"
-				name="CompileLSL"
-				only_in_sl="true">
+				name="CompileLSL">
 				<pie_slice.on_click
 					function="Tools.SelectedScriptAction"
 					parameter="compile lsl" />

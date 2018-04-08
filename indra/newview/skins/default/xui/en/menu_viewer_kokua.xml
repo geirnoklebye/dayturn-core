@@ -180,8 +180,7 @@
          <menu_item_separator/>
          <menu_item_call
            label="Account dashboard..."
-           name="Manage My Account"
-           only_in_sl="true">
+           name="Manage My Account">
                 <menu_item_call.on_click
                  function="PromptShowURL"
                  name="ManageMyAccount_url"
@@ -375,28 +374,24 @@
              <menu_item_check.on_click
                  function="View.ShowHUDAttachments" />
           </menu_item_check>
-      <menu_item_separator
-        only_in_sl="true"/>
+      <menu_item_separator>
 
           <menu_item_call
           label="Buy L$..."
-          name="Buy and Sell L$"
-          only_in_sl="true">
+          name="Buy and Sell L$">
               <menu_item_call.on_click
                  function="BuyCurrency" />
           </menu_item_call>
           <menu_item_call
           label="Merchant Outbox..."
-          name="MerchantOutbox"
-          only_in_sl="true">
+          name="MerchantOutbox">
               <menu_item_call.on_click
                   function="Floater.ToggleOrBringToFront"
                   parameter="outbox" />
           </menu_item_call>
          <menu_item_call
             label="Marketplace Listings..."
-            name="MarketplaceListings"
-            only_in_sl="true">
+            name="MarketplaceListings">
             <menu_item_call.on_click
             function="Floater.ToggleOrBringToFront"
             parameter="marketplace_listings" />
@@ -505,8 +500,7 @@
       </menu_item_call>
       <menu_item_call
         label="Experiences..."
-        name="Experiences"
-        only_in_sl="true">
+        name="Experiences">
         <menu_item_call.on_click
           function="Floater.ToggleOrBringToFront"
           parameter="experiences"/>
@@ -2271,8 +2265,7 @@
         </menu_item_call>
         <menu_item_call
              label="Second Life Grid Status"
-             name="Second Life Grid Status"
-             only_in_sl="true">
+             name="Second Life Grid Status">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
                  parameter="http://status.secondlifegrid.net/" />
