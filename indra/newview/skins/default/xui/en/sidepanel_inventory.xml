@@ -51,7 +51,6 @@
                       width="330" />
              </layout_panel>
 			    <layout_panel
-                 only_in_sl="true"
                  width="330"
                  layout="topleft"
                  auto_resize="false"
@@ -200,7 +199,6 @@ Purchases from the marketplace will be delivered here.
                      auto_resize="true"
                      width="100">
                     <button
-                         only_in_sl="true"
                          enabled="true"
                          follows="bottom|left|right"
                          height="23"

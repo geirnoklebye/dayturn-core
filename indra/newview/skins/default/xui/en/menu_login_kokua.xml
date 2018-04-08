@@ -132,8 +132,7 @@
         <menu_item_separator/>
         <menu_item_call
              label="Second Life Grid Status"
-             name="Second Life Grid Status"
-             only_in_sl="true">
+             name="Second Life Grid Status">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
                  parameter="http://status.secondlifegrid.net/" />
