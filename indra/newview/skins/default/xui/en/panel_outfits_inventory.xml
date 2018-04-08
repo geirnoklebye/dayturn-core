@@ -78,7 +78,6 @@
        top_pad="0"
        visible="true"
        name="bottom_panel"
-       auto_resize="true"
        width="310">
            <layout_stack
                follows="bottom|left|right"
