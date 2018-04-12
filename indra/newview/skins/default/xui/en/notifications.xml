@@ -11640,4 +11640,12 @@ Shape import failed. Are you sure [FILENAME] is an avatar file?
       name="okbutton"
       yestext="OK"/>
    </notification>   
+
+  <notification
+   icon="notifytip.tga" 
+   name="CA_Performance_Compound"
+   type="notifytip">
+[MESSAGE]
+  </notification>
+
 </notifications>
