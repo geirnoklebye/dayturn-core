@@ -754,11 +754,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>bbdea742f2a89bcd6360e61e01d6be93</string>
+              <string>118987b1a5b56214cfdbd0c763e180da</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/8207/32592/dullahan-1.1.820_3.3071.1637.gcb6cf75-darwin64-508196.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/15127/97748/dullahan-1.1.1080_3.3325.1750.gaabe4c4-darwin64-513449.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -789,7 +789,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.1.820_3.3071.1634.g9cc59c8</string>
+        <string>1.1.1080_3.3325.1750.gaabe4c4</string>
       </map>
       <key>elfio</key>
       <map>
@@ -3311,7 +3311,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>name</key>
             <string>linux</string>
           </map>
-        <key>linux64</key>
+          <key>linux64</key>
           <map>
             <key>archive</key>
             <map>
@@ -4871,7 +4871,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>${AUTOBUILD_WIN_CMAKE_GEN|NOTWIN}</string>
-                <string>-DUNATTENDED:BOOL=ON</string>
+                  <string>-DUNATTENDED:BOOL=ON</string>
                   <string>-DINSTALL_PROPRIETARY=FALSE</string>
                   <string>-DUSE_KDU=FALSE</string>
                 </array>
