@@ -71,6 +71,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>7a9be060abf41a4c53640949d31cf9f0</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-apr/rev/314241/arch/Darwin/installer/apr_suite-1.4.5.314241-darwin64-314241.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -109,7 +123,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.4.5.297252</string>
+        <string>1.4.5.314241</string>
       </map>
       <key>ares</key>
       <map>
@@ -247,6 +261,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>0e627ccbf2ca903814f42cd871a3233d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-boost/rev/314242/arch/Darwin/installer/boost-1.57-darwin64-314242.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -359,6 +387,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>8a34d81fd73ce8950dc973a805789341</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-colladadom/rev/314257/arch/Darwin/installer/colladadom-2.3.314257-darwin64-314257.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -397,7 +439,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.3.201507031700</string>
+        <string>2.3.314257</string>
       </map>
       <key>curl</key>
       <map>
@@ -424,6 +466,20 @@
             </map>
             <key>name</key>
             <string>darwin</string>
+          </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>d4d2677031fa79dd10b3a5471e1424b3</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-curl/rev/314230/arch/Darwin/installer/curl-7.47.0.314230-darwin64-314230.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
           </map>
           <key>linux</key>
           <map>
@@ -467,7 +523,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>7.47.0.201604111501</string>
+        <string>7.47.0.314230</string>
       </map>
       <key>db</key>
       <map>
@@ -647,6 +703,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>f074c469811550e470e16ec1c3bc0cfe</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-expat/rev/314211/arch/Darwin/installer/expat-2.1.1.314211-darwin64-314211.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -685,7 +755,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.0.1.297014</string>
+        <string>2.1.1.314211</string>
       </map>
       <key>fmodex</key>
       <map>
@@ -714,6 +784,20 @@
             </map>
             <key>name</key>
             <string>darwin</string>
+          </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>39448e5d6cc0b1ba85b4aa9f0a68b880</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>https://bitbucket.org/kokua/3p-fmodex/downloads/fmodex-4.44.64-darwin64-201612150046.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
           </map>
           <key>linux</key>
           <map>
@@ -859,6 +943,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>9cd90409e0efb207cbfb20a07e126a4d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-freetype/rev/314215/arch/Darwin/installer/freetype-2.4.4.314215-darwin64-314215.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -897,7 +995,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.4.4.297053</string>
+        <string>2.4.4.314215</string>
       </map>
       <key>gdk-pixbuf</key>
       <map>
@@ -1112,6 +1210,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>900835705fb01fb214125cb07fc67836</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-glod/rev/314201/arch/Darwin/installer/glod-1.0pre4.314201-darwin64-314201.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -1156,7 +1268,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.0pre4.201506061259</string>
+        <string>1.0pre4.314201</string>
       </map>
       <key>glui</key>
       <map>
@@ -1238,6 +1350,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>5ad4d472680ffb142096cdbbfe052507</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-google-breakpad/rev/314225/arch/Darwin/installer/google_breakpad-1413.314225-darwin64-314225.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -1276,7 +1402,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1413.201506071040</string>
+        <string>1413.314225</string>
       </map>
       <key>googlemock</key>
       <map>
@@ -1303,6 +1429,20 @@
             </map>
             <key>name</key>
             <string>darwin</string>
+          </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>e0e78e0d009de3e9bd8b6bd272cbdada</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-googlemock/rev/314259/arch/Darwin/installer/googlemock-1.7.0.314259-darwin64-314259.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
           </map>
           <key>linux</key>
           <map>
@@ -1346,7 +1486,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.7.0.201507031820</string>
+        <string>1.7.0.314259</string>
       </map>
       <key>gperftools</key>
       <map>
@@ -1620,6 +1760,18 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>73855bd59a9bae93e280fbee7bb50b63</string>
+              <key>url</key>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/p64_3p-havok-source/rev/314226/arch/Darwin/installer/havok_source-2012.1-2-darwin64-314226.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -1674,6 +1826,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>24e3721b2b3db52ace2deb3ac2509614</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-jpeglib/rev/314202/arch/Darwin/installer/jpeglib-8c.314202-darwin64-314202.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -1712,7 +1878,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>8c.296854</string>
+        <string>8c.314202</string>
       </map>
       <key>jsoncpp</key>
       <map>
@@ -1739,6 +1905,20 @@
             </map>
             <key>name</key>
             <string>darwin</string>
+          </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>c5732cdf3dcecf43437aec46aaef15ad</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-jsoncpp/rev/314229/arch/Darwin/installer/jsoncpp-0.5.0.314229-darwin64-314229.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
           </map>
           <key>linux</key>
           <map>
@@ -1778,7 +1958,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.5.0.201506061927</string>
+        <string>0.5.0.314229</string>
       </map>
       <key>kdu</key>
       <map>
@@ -1860,6 +2040,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>4544eaa5d7394511b9051f708ad2d03d</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-hunspell/rev/314217/arch/Darwin/installer/libhunspell-1.3.2.314217-darwin64-314217.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -1898,7 +2092,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.3.2.201506061803</string>
+        <string>1.3.2.314217</string>
       </map>
       <key>libndofdev</key>
       <map>
@@ -1926,6 +2120,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>d1c936e3d2e51c4efe8ab855df7e2781</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-libndofdev/rev/314232/arch/Darwin/installer/libndofdev-0.1.314232-darwin64-314232.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>windows</key>
           <map>
             <key>archive</key>
@@ -1940,7 +2148,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.1.297264</string>
+        <string>0.1.314232</string>
       </map>
       <key>libpng</key>
       <map>
@@ -1967,6 +2175,20 @@
             </map>
             <key>name</key>
             <string>darwin</string>
+          </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>8b84e3eb371a9047859483bb18a177f0</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-libpng/rev/314214/arch/Darwin/installer/libpng-1.6.8.314214-darwin64-314214.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
           </map>
           <key>linux</key>
           <map>
@@ -2006,7 +2228,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.6.8.301387</string>
+        <string>1.6.8.314214</string>
       </map>
       <key>libuuid</key>
       <map>
@@ -2087,6 +2309,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>de97bc36679d2bac64adc8171db1da77</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-libxml/rev/314197/arch/Darwin/installer/libxml2-2.9.1.314197-darwin64-314197.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -2125,7 +2361,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>2.9.1.297050</string>
+        <string>2.9.1.314197</string>
       </map>
       <key>llappearance_utility</key>
       <map>
@@ -2257,6 +2493,16 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>url</key>
+              <string>http://s3-proxy.lindenlab.com/private-builds-secondlife-com/hg/repo/p64_llphysicsextensions/rev/314244/arch/Darwin/installer/llphysicsextensions_source-1.0.314244-darwin64-314244.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -2311,6 +2557,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>7b479c311495d83c3e8eb3d75ccb6b03</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_llphysicsextensions/rev/314246/arch/Darwin/installer/llphysicsextensions_stub-1.0.314246-darwin64-314246.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -2349,7 +2609,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.0.298370</string>
+        <string>1.0.314246</string>
       </map>
       <key>mesa</key>
       <map>
@@ -2522,6 +2782,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>a90972375d1171920aa31d993115ac82</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-oggvorbis/rev/314224/arch/Darwin/installer/ogg_vorbis-1.2.2-1.3.2.314224-darwin64-314224.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -2560,7 +2834,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.2.2-1.3.2.296878</string>
+        <string>1.2.2-1.3.2.314224</string>
       </map>
       <key>open-libndofdev</key>
       <map>
@@ -2679,7 +2953,7 @@
       <key>openjpeg</key>
       <map>
         <key>copyright</key>
-        <string>Copyright (c) 2002-2007, Communications and Remote Sensing Laboratory, Universite catholique de Louvain (UCL), Belgium, Copyright (c) 2002-2007, Professor Benoit Macq, Copyright (c) 2001-2003, David Janssens, Copyright (c) 2002-2003, Yannick Verschueren, Copyright (c) 2003-2007, Francois-Olivier Devaux and Antonin Descampe, Copyright (c) 2005, Herve Drolon, FreeImage Team</string>
+        <string>Copyright (c) 2002-2007, Communications and Remote Sensing Laboratory, Universite catholique de Louvain (UCL), Belgium; Copyright (c) 2002-2007, Professor Benoit Macq; Copyright (c) 2001-2003, David Janssens; Copyright (c) 2002-2003, Yannick Verschueren; Copyright (c) 2003-2007, Francois-Olivier Devaux and Antonin Descampe; Copyright (c) 2005, Herve Drolon, FreeImage Team; Copyright (c) 2006-2007, Parvatha Elangovan; Copyright (c) 2008, Jerome Fimes, Communications &amp; Systemes &lt;jerome.fimes@c-s.fr&gt;; Copyright (c) 2010-2011, Kaori Hagihara; Copyright (c) 2011-2012, Centre National d'Etudes Spatiales (CNES), France; Copyright (c) 2012, CS Systemes d'Information, France;</string>
         <key>description</key>
         <string>The OpenJPEG library is an open-source JPEG 2000 codec written in C language.</string>
         <key>license</key>
@@ -2701,6 +2975,20 @@
             </map>
             <key>name</key>
             <string>darwin</string>
+          </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>6cf02447db3154f0926c3a2acbf229a8</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://bitbucket.org/kokua/p64_3p-openjpeg/downloads/openjpeg-1.5.0.172232100-darwin64-172232100.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
           </map>
           <key>linux</key>
           <map>
@@ -2740,7 +3028,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.4.297018</string>
+        <string>1.5.0.172232100</string>
       </map>
       <key>openssl</key>
       <map>
@@ -2767,6 +3055,20 @@
             </map>
             <key>name</key>
             <string>darwin</string>
+          </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>26931be0f03a046b144456782fd83c18</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-openssl/rev/314227/arch/Darwin/installer/openssl-1.0.1h.314227-darwin64-314227.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
           </map>
           <key>linux</key>
           <map>
@@ -2808,7 +3110,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.0.1h.20140815</string>
+        <string>1.0.1h.314227</string>
       </map>
       <key>pango</key>
       <map>
@@ -2882,6 +3184,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>13ec0233ee1fc4441f26d1cb6ade0287</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-pcre/rev/314136/arch/Darwin/installer/pcre-8.35.314136-darwin64-314136.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -2920,7 +3236,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>8.35.</string>
+        <string>8.35.314136</string>
       </map>
       <key>pixman</key>
       <map>
@@ -3248,6 +3564,20 @@
             <key>name</key>
             <string>darwin</string>
           </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>41ba031deac92c64bee99936e2556bdf</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-xmlrpc-epi/rev/314240/arch/Darwin/installer/xmlrpc_epi-0.54.1.314240-darwin64-314240.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
+          </map>
           <key>linux</key>
           <map>
             <key>archive</key>
@@ -3286,7 +3616,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>0.54.1.297075</string>
+        <string>0.54.1.314240</string>
       </map>
       <key>zlib</key>
       <map>
@@ -3313,6 +3643,20 @@
             </map>
             <key>name</key>
             <string>darwin</string>
+          </map>
+          <key>darwin64</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>84eebbb870886716fbf7176d0b473fd7</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-zlib/rev/314131/arch/Darwin/installer/zlib-1.2.8.314131-darwin64-314131.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>darwin64</string>
           </map>
           <key>linux</key>
           <map>
@@ -3354,7 +3698,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.2.8.296881</string>
+        <string>1.2.8.314131</string>
       </map>
     </map>
     <key>package_description</key>
