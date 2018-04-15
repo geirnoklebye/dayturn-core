@@ -24,7 +24,6 @@ set(cmake_SOURCE_FILES
     DirectX.cmake
     DragDrop.cmake
     EXPAT.cmake
-    ExamplePlugin.cmake
     FindAPR.cmake
     FindAutobuild.cmake
     FindBerkeleyDB.cmake
