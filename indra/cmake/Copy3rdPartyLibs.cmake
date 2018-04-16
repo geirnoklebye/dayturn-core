@@ -30,30 +30,27 @@ if(WINDOWS)
     #*******************************
     # Misc shared libs 
 
-    set(debug_src_dir "${ARCH_PREBUILT_DIRS_DEBUG}")
-    set(debug_files
+#    set(debug_src_dir "${ARCH_PREBUILT_DIRS_DEBUG}")
+#    set(debug_files
  #       alut.dll
  #       openal32.dll
-        openjpegd.dll
-        libapr-1.dll
-        libaprutil-1.dll
-        libapriconv-1.dll
-        ssleay32.dll
-        libeay32.dll
-        glod.dll
-        libhunspell.dll
+#        libapriconv-1.dll
+#        ssleay32.dll
+#        libeay32.dll
+#        glod.dll    
+#        libhunspell.dll
+#        )
+
         # gstreamer dlls - not plugins
         # Place holder
 
 
-        )
 
 
     set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(release_files
  #       alut.dll
  #       openal32.dll
-        openjpeg.dll
         libapr-1.dll
         libaprutil-1.dll
         libapriconv-1.dll
@@ -68,17 +65,11 @@ if(WINDOWS)
 
         )
 
-    if(USE_TCMALLOC)
-
-      set(debug_files ${debug_files} libtcmalloc_minimal-debug.dll)
-      set(release_files ${release_files} libtcmalloc_minimal.dll)
-    endif(USE_TCMALLOC)
 
     if (OPENAL)
       set(debug_files ${debug_files} alut.dll OpenAL32.dll)
       set(release_files ${release_files} alut.dll OpenAL32.dll)
     elseif (FMODEX)
-      set(debug_files ${debug_files} fmodexL.dll)
       set(release_files ${release_files} fmodex.dll)
     endif (OPENAL)
 
@@ -308,10 +299,6 @@ elseif(LINUX)
     endif(${ARCH} STREQUAL "x86_64")
 
     
-    if (USE_TCMALLOC)
-      set(release_files ${release_files} "libtcmalloc_minimal.so")
-    endif (USE_TCMALLOC)
-
 
 else(WINDOWS)
     message(STATUS "WARNING: unrecognized platform for staging 3rd party libs, skipping...")
@@ -363,13 +350,13 @@ set(third_party_targets ${third_party_targets} ${out_targets})
 
 
 
-copy_if_different(
-    ${debug_src_dir}
-    "${SHARED_LIB_STAGING_DIR_DEBUG}"
-    out_targets
-    ${debug_files}
-    )
-set(third_party_targets ${third_party_targets} ${out_targets})
+#copy_if_different(
+#    ${debug_src_dir}
+#    "${SHARED_LIB_STAGING_DIR_DEBUG}"
+#    out_targets
+#    ${debug_files}
+#    )
+#set(third_party_targets ${third_party_targets} ${out_targets})
 
 copy_if_different(
     ${release_src_dir}
