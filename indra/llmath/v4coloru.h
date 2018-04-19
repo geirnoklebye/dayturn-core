@@ -76,9 +76,6 @@ public:
 		return ret;
 	}
 
-	U32 asRGBA() const;
-	void fromRGBA( U32 aVal );
-
 	const LLColor4U&	setToBlack();						// zero LLColor4U to (0, 0, 0, 1)
 	const LLColor4U&	setToWhite();						// zero LLColor4U to (0, 0, 0, 1)
 
@@ -123,7 +120,7 @@ public:
 	static BOOL parseColor4U(const std::string& buf, LLColor4U* value);
 
 	// conversion
-	operator const LLColor4() const
+	operator LLColor4() const
 	{
 		return LLColor4(*this);
 	}
@@ -586,4 +583,5 @@ inline void LLColor4U::fromRGBA( U32 aVal )
 
 
 #endif
+
 
