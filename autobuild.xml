@@ -4376,7 +4376,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
@@ -4390,7 +4390,7 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 12</string>
+                  <string>-j4</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4398,7 +4398,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>default</key>
@@ -4414,7 +4414,7 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 7</string>
+                  <string>-j4</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4422,7 +4422,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
@@ -4436,7 +4436,7 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 12</string>
+                  <string>-j4</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4444,7 +4444,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
@@ -4458,7 +4458,7 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 7</string>
+                  <string>-j4</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4466,7 +4466,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
@@ -4498,7 +4498,7 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 12</string>
+                  <string>-j4</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4510,8 +4510,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
-                  <string>-DWORD_SIZE:STRING=64</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
@@ -4525,7 +4524,7 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 2</string>
+                  <string>-j4</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4533,8 +4532,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
-                  <string>-DWORD_SIZE:STRING=64</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
@@ -4548,7 +4546,7 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j</string><string>12</string>
+                  <string>-j4</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4560,8 +4558,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
-                  <string>-DWORD_SIZE:STRING=64</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>default</key>
@@ -4577,7 +4574,7 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j</string><string>4</string>
+                  <string>-j4</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4585,9 +4582,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
-                  <string>--</string>
-                  <string>-DWORD_SIZE:INTEGER=64</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
@@ -4601,7 +4596,7 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j</string><string>12</string>
+                  <string>-j4</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4613,9 +4608,8 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
-                  <string>-DWORD_SIZE:STRING=64</string>
-                </array>
+                  <string>Unix Makefiles</string>
+               </array>
               </map>
               <key>name</key>
               <string>Release</string>
@@ -4628,7 +4622,7 @@
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 2</string>
+                  <string>-j4</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4636,8 +4630,7 @@
                 <key>options</key>
                 <array>
                   <string>-G</string>
-                  <string>'Unix Makefiles'</string>
-                  <string>-DWORD_SIZE:STRING=64</string>
+                  <string>Unix Makefiles</string>
                 </array>
               </map>
               <key>name</key>
