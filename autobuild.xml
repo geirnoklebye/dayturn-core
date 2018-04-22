@@ -1031,6 +1031,8 @@
             <map>
               <key>hash</key>
               <string>6799c2ec7da5eba3542f74761e88a143</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>https://bitbucket.org/kokua/3p-glh-linear/downloads/glh_linear-0.0.0-common-201507131759.tar.bz2</string>
             </map>
@@ -3887,7 +3889,7 @@
                 <array>
                   <string>-G</string>
                   <string>Unix Makefiles</string>
-               </array>
+                </array>
               </map>
               <key>name</key>
               <string>Release</string>
