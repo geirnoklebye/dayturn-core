@@ -6,6 +6,7 @@
 ## prior to 3.4, the Windows manifest handling was missing
 cmake_minimum_required(VERSION 3.4.0 FATAL_ERROR)
 CMAKE_POLICY(SET CMP0038 OLD)
+CMAKE_POLICY(SET CMP0046 OLD)
 
 set(ROOT_PROJECT_NAME "Kokua" CACHE STRING
     "The root project/makefile/solution name. Defaults to Kokua.")
@@ -73,7 +74,7 @@ if (LINUX)
       include(LLAppearanceUtility)
       add_subdirectory(${LLAPPEARANCEUTILITY_SRC_DIR} ${LLAPPEARANCEUTILITY_BIN_DIR})
   endif (INSTALL_PROPRIETARY)
-  add_dependencies(viewer linux-crash-logger-strip-target)
+#  add_dependencies(viewer linux-crash-logger-strip-target)
 elseif (DARWIN)
   add_subdirectory(${VIEWER_PREFIX}mac_crash_logger)
   add_dependencies(viewer mac-crash-logger)
