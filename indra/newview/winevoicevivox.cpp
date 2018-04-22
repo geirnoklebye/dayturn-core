@@ -619,7 +619,7 @@ void LLVivoxVoiceClient::setLoginInfo(
 		// we have an empty account server name
 		// so we fall back to hardcoded defaults
 
-		if(!LLGridManager::getInstance()->isInSLBeta())
+		if(!LLGridManager::getInstance()->isInProductionGrid())
 		{
 			// Use the release account server
 			mVoiceSIPURIHostName = "bhr.vivox.com";
