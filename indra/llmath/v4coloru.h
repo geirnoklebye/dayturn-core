@@ -584,3 +584,4 @@ inline void LLColor4U::fromRGBA( U32 aVal )
 
 #endif
 
+
