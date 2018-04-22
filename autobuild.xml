@@ -1034,7 +1034,7 @@
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/3p-glh-linear/downloads/glh_linear-0.0.0-common-201507131759.tar.bz2</string>
+              <string>http://bitbucket.org/kokua/3p-glh-linear/downloads/glh_linear-0.0.0-common-201507131759.tar.bz2</string>
             </map>
             <key>name</key>
             <string>common</string>
@@ -2202,6 +2202,37 @@
         </map>
         <key>version</key>
         <string>0.9.3.506286</string>
+      </map>
+      <key>llca</key>
+      <map>
+        <key>copyright</key>
+        <string>Copyright (c) 2016, Linden Research, Inc.; data provided by the Mozilla NSS Project.
+      </string>
+        <key>license</key>
+        <string>mit</string>
+        <key>license_file</key>
+        <string>LICENSES/ca-license.txt</string>
+        <key>name</key>
+        <string>llca</string>
+        <key>platforms</key>
+        <map>
+          <key>common</key>
+          <map>
+            <key>archive</key>
+            <map>
+              <key>hash</key>
+              <string>dd008981cac7ede93efa6cefe4ee61a0</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
+              <key>url</key>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/12484/73813/llca-201801172118.511910-common-511910.tar.bz2</string>
+            </map>
+            <key>name</key>
+            <string>common</string>
+          </map>
+        </map>
+        <key>version</key>
+        <string>201801172118.511910</string>
       </map>
       <key>llceflib</key>
       <map>
