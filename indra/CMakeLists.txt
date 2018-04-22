@@ -5,6 +5,7 @@
 # with the version specified
 ## prior to 3.4, the Windows manifest handling was missing
 cmake_minimum_required(VERSION 3.4.0 FATAL_ERROR)
+CMAKE_POLICY(SET CMP0038 OLD)
 
 set(ROOT_PROJECT_NAME "Kokua" CACHE STRING
     "The root project/makefile/solution name. Defaults to Kokua.")
