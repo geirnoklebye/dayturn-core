@@ -14,9 +14,8 @@ include(Linking)
 include(PluginAPI)
 include(MediaPluginBase)
 include(OpenGL)
-if(NOT LINUX)
-    include(CEFPlugin)
-endif(NOT LINUX)
+include(CEFPlugin)
+
 
 include_directories(
     ${LLPLUGIN_INCLUDE_DIRS}

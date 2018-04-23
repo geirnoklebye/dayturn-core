@@ -1775,9 +1775,9 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libpixman-1.so*")
  
            #cef plugin
-            self.path( "libcef.so" )
-            self.path( "libllceflib.so" )
-            self.end_prefix("lib64")
+#            self.path( "libcef.so" )
+#            self.path( "libllceflib.so" )
+#            self.end_prefix("lib64")
 
 
             # Vivox runtimes
