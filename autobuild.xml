@@ -2246,11 +2246,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>e6c99459d4ff0c432f231e2a123183fb</string>
+              <string>84f5808ed9772da32c3866cee84e8ceb</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/llbase/downloads/llbase-0.9.3.506286-linux64-506286.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/6297/21970/llbase-0.9.3.506286-linux64-506286.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -3357,7 +3357,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/viewer-manager/downloads/viewer_manager-1.0.181001941-linux64-181001941.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/viewer-manager/downloads/viewer_manager-1.0.181001941-linux64-181001941.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
