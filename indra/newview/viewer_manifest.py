@@ -378,7 +378,7 @@ class ViewerManifest(LLManifest):
                     os.symlink(src, dst)
                 elif os.path.exists(dst):
                     print "Requested symlink (%s) exists but is a file; replacing" % dst
-                    os.remove(dst)
+
                     os.symlink(src, dst)
                 else:
                     # out of ideas
@@ -1459,72 +1459,141 @@ class Darwin_x86_64_Manifest(DarwinManifest):
 
 class LinuxManifest(ViewerManifest):
     build_data_json_platform = 'lnx'
-
     def construct(self):
         super(LinuxManifest, self).construct()
-
-        pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
-        relpkgdir = os.path.join(pkgdir, "lib", "release")
-        debpkgdir = os.path.join(pkgdir, "lib", "debug")
-
         self.path("licenses-linux.txt","licenses.txt")
-        with self.prefix("linux_tools", dst=""):
+        self.path("VivoxAUP.txt")
+        if self.prefix("linux_tools", dst=""):
             self.path("client-readme.txt","README-linux.txt")
             self.path("client-readme-voice.txt","README-linux-voice.txt")
             self.path("client-readme-joystick.txt","README-linux-joystick.txt")
-            self.path("wrapper.sh","secondlife")
-            with self.prefix(src="", dst="etc"):
-                self.path("handle_secondlifeprotocol.sh")
-                self.path("register_secondlifeprotocol.sh")
-                self.path("refresh_desktop_app_entry.sh")
-                self.path("launch_url.sh")
+            self.path("client-readme-streamingmedia.txt","README-linux-streamingmedia.txt")
+            self.path("client-readme-install-setup.txt","README-linux-install-setup.txt")
+            self.path("wrapper.sh","kokua")
+            self.path("handle_secondlifeprotocol.sh", "etc/handle_secondlifeprotocol.sh")
+            self.path("register_secondlifeprotocol.sh", "etc/register_secondlifeprotocol.sh")
+            self.path("register_hopprotocol.sh", "etc/register_hopprotocol.sh")
+            self.path("refresh_desktop_app_entry.sh", "etc/refresh_desktop_app_entry.sh")
+            self.path("launch_url.sh","etc/launch_url.sh")
             self.path("install.sh")
+            self.end_prefix("linux_tools")
 
-        with self.prefix(src="", dst="bin"):
+        if self.prefix(src="", dst="bin"):
             self.path("kokua-bin","do-not-directly-run-kokua-bin")
             self.path("../linux_crash_logger/linux-crash-logger","linux-crash-logger.bin")
-            self.path2basename("../llplugin/slplugin", "SLPlugin") 
-            #this copies over the python wrapper script, associated utilities and required libraries, see SL-321, SL-322 and SL-323
-            with self.prefix(src="../viewer_components/manager", dst=""):
-                self.path("SL_Launcher")
-                self.path("*.py")
-            with self.prefix(src=os.path.join("lib", "python", "llbase"), dst="llbase"):
-                self.path("*.py")
-                self.path("_cllsd.so")         
+            self.path2basename("../llplugin/slplugin", "SLPlugin")
+            self.path2basename("../viewer_components/updater/scripts/linux", "update_install")
+            self.end_prefix("bin")
 
-        # recurses, packaged again
-        self.path("res-sdl")
+        if self.prefix("res-sdl"):
+            self.path("*")
+            # recurse
+            self.end_prefix("res-sdl")
 
         # Get the icons based on the channel type
         icon_path = self.icon_path()
         print "DEBUG: icon_path '%s'" % icon_path
-        with self.prefix(src=icon_path, dst="") :
+        if self.prefix(src=icon_path, dst="") :
             self.path("kokua_icon.png","kokua_icon.png" )
-            with self.prefix(src="",dst="res-sdl") :
+            if self.prefix(src="", dst="res-sdl") :
                 self.path("kokua_icon.bmp","kokua_icon.BMP")
+                self.end_prefix("res-sdl")
+            self.end_prefix(icon_path)
 
         # plugins
-        with self.prefix(src="../media_plugins", dst="bin/llplugin"):
-            self.path("gstreamer010/libmedia_plugin_gstreamer010.so",
-                      "libmedia_plugin_gstreamer.so")
-            self.path2basename("libvlc", "libmedia_plugin_libvlc.so")
+        if self.prefix(src="", dst="bin/llplugin"):
+            self.path("../media_plugins/gstreamer010/libmedia_plugin_gstreamer010.so", "libmedia_plugin_gstreamer.so")
+            self.path("../media_plugins/libvlc/libmedia_plugin_libvlc.so", "libmedia_plugin_libvlc.so")
+            self.path( "../media_plugins/cef/libmedia_plugin_cef.so", "libmedia_plugin_cef.so" )
+            self.end_prefix("bin/llplugin")
 
-        with self.prefix(src=os.path.join(pkgdir, 'lib', 'vlc', 'plugins'), dst="bin/llplugin/vlc/plugins"):
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'vlc', 'plugins'), dst="bin/llplugin/vlc/plugins"):
             self.path( "plugins.dat" )
             self.path( "*/*.so" )
+            self.end_prefix()
 
-        with self.prefix(src=os.path.join(pkgdir, 'lib' ), dst="lib"):
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib' ), dst="lib"):
             self.path( "libvlc*.so*" )
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'bin', 'release'), dst="bin"):
+            self.path( "chrome-sandbox" )
+            self.path( "llceflib_host" )
+            self.path( "natives_blob.bin" )
+            self.path( "snapshot_blob.bin" )
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources'), dst="bin"):
+            self.path( "cef.pak" )
+            self.path( "cef_100_percent.pak" )
+            self.path( "cef_200_percent.pak" )
+            self.path( "cef_extensions.pak" )
+            self.path( "devtools_resources.pak" )
+            self.path( "icudtl.dat" )
+            self.end_prefix()
+
+        if self.prefix(src=os.path.join(os.pardir, 'packages', 'resources', 'locales'), dst=os.path.join('bin', 'locales')):
+            self.path("am.pak")
+            self.path("ar.pak")
+            self.path("bg.pak")
+            self.path("bn.pak")
+            self.path("ca.pak")
+            self.path("cs.pak")
+            self.path("da.pak")
+            self.path("de.pak")
+            self.path("el.pak")
+            self.path("en-GB.pak")
+            self.path("en-US.pak")
+            self.path("es-419.pak")
+            self.path("es.pak")
+            self.path("et.pak")
+            self.path("fa.pak")
+            self.path("fi.pak")
+            self.path("fil.pak")
+            self.path("fr.pak")
+            self.path("gu.pak")
+            self.path("he.pak")
+            self.path("hi.pak")
+            self.path("hr.pak")
+            self.path("hu.pak")
+            self.path("id.pak")
+            self.path("it.pak")
+            self.path("ja.pak")
+            self.path("kn.pak")
+            self.path("ko.pak")
+            self.path("lt.pak")
+            self.path("lv.pak")
+            self.path("ml.pak")
+            self.path("mr.pak")
+            self.path("ms.pak")
+            self.path("nb.pak")
+            self.path("nl.pak")
+            self.path("pl.pak")
+            self.path("pt-BR.pak")
+            self.path("pt-PT.pak")
+            self.path("ro.pak")
+            self.path("ru.pak")
+            self.path("sk.pak")
+            self.path("sl.pak")
+            self.path("sr.pak")
+            self.path("sv.pak")
+            self.path("sw.pak")
+            self.path("ta.pak")
+            self.path("te.pak")
+            self.path("th.pak")
+            self.path("tr.pak")
+            self.path("uk.pak")
+            self.path("vi.pak")
+            self.path("zh-CN.pak")
+            self.path("zh-TW.pak")
+            self.end_prefix()
 
         # llcommon
         if not self.path("../llcommon/libllcommon.so", "lib/libllcommon.so"):
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
         self.path("featuretable_linux.txt")
-        self.path("ca-bundle.crt")
 
-        with self.prefix(src=pkgdir,dst="app_settings"):
-            self.path("ca-bundle.crt")
 
     def package_finish(self):
         installer_name = self.installer_base_name()
@@ -1532,42 +1601,44 @@ class LinuxManifest(ViewerManifest):
         self.strip_binaries()
 
         # Fix access permissions
-        self.run_command(['find', self.get_dst_prefix(),
-                          '-type', 'd', '-exec', 'chmod', '755', '{}', ';'])
-        for old, new in ('0700', '0755'), ('0500', '0555'), ('0600', '0644'), ('0400', '0444'):
-            self.run_command(['find', self.get_dst_prefix(),
-                              '-type', 'f', '-perm', old,
-                              '-exec', 'chmod', new, '{}', ';'])
-        self.package_file = installer_name + '.tar.bz2'
+        self.run_command("""
+                find %(dst)s -type d | xargs --no-run-if-empty chmod 755;
+                find %(dst)s -type f -perm 0700 | xargs --no-run-if-empty chmod 0755;
+                find %(dst)s -type f -perm 0500 | xargs --no-run-if-empty chmod 0555;
+                find %(dst)s -type f -perm 0600 | xargs --no-run-if-empty chmod 0644;
+                find %(dst)s -type f -perm 0400 | xargs --no-run-if-empty chmod 0444;
+                true""" %  {'dst':self.get_dst_prefix() })
+        self.package_file = installer_name + '.tar.xz'
 
         # temporarily move directory tree so that it has the right
         # name in the tarfile
-        realname = self.get_dst_prefix()
-        tempname = self.build_path_of(installer_name)
-        self.run_command(["mv", realname, tempname])
+        self.run_command("mv %(dst)s %(inst)s" % {
+            'dst': self.get_dst_prefix(),
+            'inst': self.build_path_of(installer_name)})
         try:
             # only create tarball if it's a release build.
             if self.args['buildtype'].lower() == 'release':
                 # --numeric-owner hides the username of the builder for
                 # security etc.
-                self.run_command(['tar', '-C', self.get_build_prefix(),
-                                  '--numeric-owner', '-cjf',
-                                 tempname + '.tar.bz2', installer_name])
+                self.run_command('tar -C %(dir)s --numeric-owner -cJf '
+                                 '%(inst_path)s.tar.txz %(inst_name)s' % {
+                        'dir': self.get_build_prefix(),
+                        'inst_name': installer_name,
+                        'inst_path':self.build_path_of(installer_name)})
             else:
                 print "Skipping %s.tar.txz for non-Release build (%s)" % \
                       (installer_name, self.args['buildtype'])
         finally:
-            self.run_command(["mv", tempname, realname])
+            self.run_command("mv %(inst)s %(dst)s" % {
+                'dst': self.get_dst_prefix(),
+                'inst': self.build_path_of(installer_name)})
 
     def strip_binaries(self):
         if self.args['buildtype'].lower() == 'release' and self.is_packaging_viewer():
             print "* Going strip-crazy on the packaged binaries, since this is a RELEASE build"
-            # makes some small assumptions about our packaged dir structure
-            self.run_command(
-                ["find"] +
-                [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib')] +
-                ['-type', 'f', '!', '-name', '*.py', '!', '-name', 'SL_Launcher',
-                 '!', '-name', 'update_install', '-exec', 'strip', '-S', '{}', ';'])
+            self.run_command(r"find %(d)r/bin %(d)r/lib %(d)r/lib32 %(d)r/lib64 -type f \! -name update_install \! -name *.pak \! -name *.dat \! -name *.bin \! -path '*win32*'| xargs --no-run-if-empty strip -S" % {'d': self.get_dst_prefix()} ) # makes some small assumptions about our packaged dir structure
+
+
 
 class Linux_i686_Manifest(LinuxManifest):
     address_size = 32
