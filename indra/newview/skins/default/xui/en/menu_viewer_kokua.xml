@@ -16,7 +16,8 @@
          name="Upload"
          tear_off="true">
             <menu_item_call
-             label="Image ([COST])..."
+             
+label="Image (L$[COST])..."
              layout="topleft"
              name="Upload Image"
              shortcut="control|U">
@@ -30,7 +31,8 @@
                  parameter="Upload Image" />
             </menu_item_call>
             <menu_item_call
-             label="Sound ([COST])..."
+             
+label="Sound (L$[COST])..."
              layout="topleft"
              name="Upload Sound">
                 <menu_item_call.on_click
@@ -43,7 +45,8 @@
                  parameter="Upload Sound" />
             </menu_item_call>
             <menu_item_call
-             label="Animation ([COST])..."
+             
+label="Animation (L$[COST])..."
              layout="topleft"
              name="Upload Animation">
                 <menu_item_call.on_click
@@ -69,7 +72,8 @@
             function="File.VisibleUploadModel"/>
             </menu_item_call>
             <menu_item_call
-             label="Bulk ([COST] per file)..."
+             
+label="Bulk (L$[COST] per file)..."
              layout="topleft"
              name="Bulk Upload">
                 <menu_item_call.on_click
@@ -1673,7 +1677,8 @@
      name="Upload"
      tear_off="true">
       <menu_item_call
-       label="Image ([COST])..."
+       
+label="Image (L$[COST])..."
        layout="topleft"
        name="Upload Image"
        shortcut="control|U">
@@ -1687,7 +1692,8 @@
          parameter="Upload Image" />
       </menu_item_call>
       <menu_item_call
-       label="Sound ([COST])..."
+       
+label="Sound (L$[COST])..."
        layout="topleft"
        name="Upload Sound">
         <menu_item_call.on_click
@@ -1700,7 +1706,8 @@
          parameter="Upload Sound" />
       </menu_item_call>
       <menu_item_call
-       label="Animation ([COST])..."
+       
+label="Animation (L$[COST])..."
        layout="topleft"
        name="Upload Animation">
         <menu_item_call.on_click
@@ -1726,7 +1733,8 @@
         function="File.VisibleUploadModel"/>
       </menu_item_call>
       <menu_item_call
-              label="Bulk ([COST] per file)..."
+              
+label="Bulk (L$[COST] per file)..."
               layout="topleft"
               name="Bulk Upload">
         <menu_item_call.on_click
@@ -2885,7 +2893,8 @@
          tear_off="true"
          visible="false">
           <menu_item_call
-             label="Image ([COST])..."
+             
+label="Image (L$[COST])..."
              name="Upload Image"
              shortcut="control|U">
             <menu_item_call.on_click
