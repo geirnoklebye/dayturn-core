@@ -45,8 +45,10 @@ set(cmake_SOURCE_FILES
     GLEXT.cmake
     GLH.cmake
     GLOD.cmake
-##  GStreamer010Plugin.cmake
-##  Glui.cmake
+    GStreamer010Plugin.cmake
+    GetPrerequisites_2_8.cmake
+    Glui.cmake
+    Glut.cmake
     GoogleBreakpad.cmake
     GoogleMock.cmake
     GooglePerfTools.cmake
@@ -127,7 +129,6 @@ set(cmake_SOURCE_FILES
     FindFMODEX.cmake
     FindGLH.cmake
     FindGoogleBreakpad.cmake
-    FindGooglePerfTools.cmake
     FindHUNSPELL.cmake
     FindJsonCpp.cmake
     FindNDOF.cmake

@@ -59,7 +59,7 @@ set (media_plugin_cef_LINK_LIBRARIES
 
 # Select which VolumeCatcher implementation to use
 if (LINUX)
-  message(FATAL_ERROR "CEF plugin has been enabled for a Linux compile.\n"
+  message("CEF plugin has been enabled for a Linux compile.\n"
     "  Please create a volume_catcher implementation for this platform.")
 elseif (DARWIN)
   list(APPEND media_plugin_cef_SOURCE_FILES mac_volume_catcher_null.cpp)

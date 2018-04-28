@@ -1529,7 +1529,7 @@ void LLVertexBuffer::setupVertexArray()
 
 			if (attrib_integer[i])
 			{
-#if !LL_DARWIN
+#if !(LL_DARWIN || LL_LINUX)
 				//glVertexattribIPointer requires GLSL 1.30 or later
 				if (gGLManager.mGLSLVersionMajor > 1 || gGLManager.mGLSLVersionMinor >= 30)
 				{

@@ -105,10 +105,10 @@ else
     homedir_install
 fi
 
-CEFSANDBOX="/opt/kokua-install/bin/chrome-sandbox"
-if [ "$UID" == "0" ]; then
-chown root:root $CEFSANDBOX
-chmod 4755 $CEFSANDBOX
-else
-echo -e "\e[1;33m YOU MUST!!!! command as root or sudo cd $HOME/.kokua-install/bin/ && chown root:root chrome-sandbox &&  chmod 4755 chrome-sandbox \e[0m"
-fi
+#CEFSANDBOX="/opt/kokua-install/bin/chrome-sandbox"
+#if [ "$UID" == "0" ]; then
+#chown root:root $CEFSANDBOX
+#chmod 4755 $CEFSANDBOX
+#else
+#echo -e "\e[1;33m YOU MUST!!!! command as root or sudo cd $HOME/.kokua-install/bin/ && chown root:root chrome-sandbox &&  chmod 4755 chrome-sandbox \e[0m"
+#fi
