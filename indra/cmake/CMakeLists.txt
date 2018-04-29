@@ -142,11 +142,8 @@ set(cmake_SOURCE_FILES
     GLEXT.cmake
     GLH.cmake
     GLOD.cmake
-#    GetPrerequisites_2_8.cmake
-#    Glut.cmake
     GoogleBreakpad.cmake
     GoogleMock.cmake
-    GooglePerfTools.cmake
     Havok.cmake
     Hunspell.cmake
     JPEG.cmake
@@ -195,6 +192,7 @@ set(cmake_SOURCE_FILES
     Variables.cmake
     ViewerMiscLibs.cmake
     VisualLeakDetector.cmake
+    LibVLCPlugin.cmake
     XmlRpcEpi.cmake
     ZLIB.cmake
     )
