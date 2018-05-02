@@ -125,9 +125,8 @@
 #include "llexception.h"
 #if !LL_LINUX
 #include "cef/dullahan.h"
-#include "vlc/libvlc_version.h"
 #endif // LL_LINUX
-
+#include "vlc/libvlc_version.h"
 // Third party library includes
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
@@ -3346,7 +3345,6 @@ LLSD LLAppViewer::getViewerInfo() const
 	info["LIBCEF_VERSION"] = "Undefined";
 #endif
 
-#if !LL_LINUX
 	std::ostringstream vlc_ver_codec;
 	vlc_ver_codec << LIBVLC_VERSION_MAJOR;
 	vlc_ver_codec << ".";
@@ -3354,9 +3352,7 @@ LLSD LLAppViewer::getViewerInfo() const
 	vlc_ver_codec << ".";
 	vlc_ver_codec << LIBVLC_VERSION_REVISION;
 	info["LIBVLC_VERSION"] = vlc_ver_codec.str();
-#else
-	info["LIBVLC_VERSION"] = "Undefined";
-#endif
+
 
 	S32 packets_in = LLViewerStats::instance().getRecording().getSum(LLStatViewer::PACKETS_IN);
 	if (packets_in > 0)
