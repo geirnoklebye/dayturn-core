@@ -104,6 +104,10 @@ F32 RRInterface::sLastAvatarZOffsetCommit = 1.f;
 F32 RRInterface::sLastOutfitChange = -1000.f;
 U32 RRInterface::mCamDistNbGradients = 40;
 BOOL RRInterface::sRenderLimitRenderedThisFrame = FALSE;
+// Chorazin: Instead of using KokuaRLVNoBlindStartup to decide whether to blind on login
+// we now decide dynamically based on whether any RLV commands get queued during login.
+// This boolean is used to only apply blinding once per session.
+BOOL RRInterface::mAlreadySetBlindLogin = FALSE;
 
 
 #if !defined(max)
@@ -1344,6 +1348,16 @@ BOOL RRInterface::handleCommand (LLUUID uuid, std::string command)
 			LL_INFOS() << "Retaining command : " << command << LL_ENDL;
 		}
 		mRetainedCommands.push_back (cmd);
+
+		// Chorazin: If something's issuing RLV commands at startup then it's reasonable to assume
+		// the blind login behaviour is appropriate too. This automated behaviour replaces the
+		// KokuaRLVNoBlindStartup debug variable and the blanket application of the restrictions
+		// below within llstartup
+		if (!mAlreadySetBlindLogin)
+		{
+			mAlreadySetBlindLogin = TRUE;
+			handleCommand(LLUUID::generateNewID(), "camavdist:0=n,shownames=n,showloc=n,showworldmap=n,showminimap=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
+		}
 		return TRUE;
 	}
 	

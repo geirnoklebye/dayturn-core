@@ -3236,9 +3236,6 @@ LLSD LLAppViewer::getViewerInfo() const
 	{
 		LLVector3d pos = gAgent.getPositionGlobal();
 		info["POSITION"] = ll_sd_from_vector3d(pos);
-		const LLVector3d& coords(region->getOriginGlobal());
-		std::string region_text = llformat("In region %s at (%.0f, %.0f) ", region->getName().c_str(), coords.mdV[VX]/REGION_WIDTH_METERS, coords.mdV[VY]/REGION_WIDTH_METERS);		
-		info["POSITION_DECIMAL"] = region_text;
 		info["POSITION_LOCAL"] = ll_sd_from_vector3(gAgent.getPosAgentFromGlobal(pos));
 		info["REGION"] = gAgent.getRegion()->getName();
 		info["HOSTNAME"] = gAgent.getRegion()->getHost().getHostName();

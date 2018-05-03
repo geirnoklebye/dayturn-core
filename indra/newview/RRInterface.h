@@ -332,6 +332,9 @@ public:
 	static F32 sLastOutfitChange; // timestamp of the last change in the outfit (including Hover on the shape)
 	static U32 mCamDistNbGradients; // number of spheres to draw when restricting the camera view
 	static BOOL sRenderLimitRenderedThisFrame; // true when already rendered the vision spheres during this rendering frame
+	// Chorazin: this is used so that we only perform the setting of KokuaRLVNoBlindStartup to FALSE when a
+	// camera restriction is used once per session
+	static BOOL mAlreadySetBlindLogin;
 
 	// Allowed debug settings (initialized in the ctor)
 	std::deque<std::string> mAllowedGetDebug;
