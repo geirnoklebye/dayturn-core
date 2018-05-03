@@ -621,7 +621,7 @@
     <key>KokuaRLVNoBlindStartup</key>
     <map>
       <key>Comment</key>
-      <string>Set TRUE to restore the original Kokua behaviour of not applying vision restrictions at signin</string>
+      <string>This option is now obsolete and has no effect. The viewer will automatically decide whether to apply blind login depending whether any RLV commands are queued during login</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
