@@ -621,7 +621,7 @@
     <key>KokuaRLVNoBlindStartup</key>
     <map>
       <key>Comment</key>
-      <string>This option is now obsolete and has no effect. The viewer will automatically decide whether to apply blind login depending whether any RLV commands are queued during login</string>
+      <string>This option is now obsolete and has no effect. See KokuaRLVEnableBlindStartup.</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -632,7 +632,18 @@
   <key>KokuaRLVAlwaysBlindStartup</key>
   <map>
     <key>Comment</key>
-    <string>This option overrides the automatic decision based on whether any RLV commands are queued at login and always applies blind login</string>
+    <string>This option is now obsolete and has no effect. See KokuaRLVEnableBlindStartup.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
+  <key>KokuaRLVEnableBlindStartup</key>
+  <map>
+    <key>Comment</key>
+    <string>This option enables the blind-at-login feature of RLV which has historically not been present in Kokua</string>
     <key>Persist</key>
     <integer>1</integer>
     <key>Type</key>

@@ -55,12 +55,12 @@
               font="SansSerifSmall"
               height="20"
               initial_value="false"
-              control_name="KokuaRLVAlwaysBlindStartup"
+              control_name="KokuaRLVEnableBlindStartup"
               enabled_control="RestrainedLove"
-              label="Always apply blinding effect upon login (automatic if deselected)"
+              label="Apply blinding effect upon login"
               left="25"
-              name="automatic_fly"
-              tool_tip="In automatic mode the blinding effect is only applied if some RLV commands are queued during login. Turning this option forces blinding effect every time"
+              name="RlvBlinding"
+              tool_tip="Turning this option on enables RLV's blind-at-login functionality which has historically not been included in Kokua"
               width="270"/>
           <check_box
                 top_pad="5"

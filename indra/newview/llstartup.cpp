@@ -1626,15 +1626,9 @@ bool idle_startup()
 	//---------------------------------------------------------------------
 	if(STATE_WORLD_WAIT == LLStartUp::getStartupState())
 	{
-//Chorazin: Although the new behaviour works sweetly most of the time, just sometimes
-//a slow login with late arriving attachments will mean restrictions that should have
-//have got applied at login don't. For those who don't want this loophole the code
-//below is reinstated with a new debug switch that can be used to always apply it, so
-//overriding the automatic application
-//Chorazin: Disable this again in favour of new automatic behaviour that will 
-//engage the blind login effect IFF there are queued restrictions during login
-//
-//CA enable this piece of code but add a debug switch to allow old behaviour too
+//Chorazin: Cleaned up previous comments since the history was starting to get confusing
+//The current situation is debug switch KokuaRLVEnableBlindStartup determines whether we
+//apply this (will be set False on first install)
 //MK
 		// We are beginning a session that may or may not have the avatar wear stuff
 		// that restricts from seeing the location, names or even to look around.
@@ -1642,7 +1636,7 @@ bool idle_startup()
 		// be flushed out by the garbage collector later, after the actual restrictions
 		// have been received.
 		// For this, we simulate the reception of those commands from a non-existent object.
-		if (gRRenabled && gSavedSettings.getBOOL("KokuaRLVAlwaysBlindStartup"))
+		if (gRRenabled && gSavedSettings.getBOOL("KokuaRLVEnableBlindStartup"))
 		{
 			gAgent.mRRInterface.handleCommand (LLUUID::generateNewID(), "camavdist:0=n,shownames=n,showloc=n,showworldmap=n,showminimap=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
 		}
