@@ -2807,6 +2807,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				break;
 			}
 			//mk
+			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_NORMAL:
 			case CHAT_TYPE_DIRECT:
 				break;
