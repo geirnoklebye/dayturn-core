@@ -98,7 +98,7 @@ public:
 		registrar.add("Gear.EditOutfit", boost::bind(&edit_outfit));
 		registrar.add("Gear.EditItem", boost::bind(&LLWearingGearMenu::onEditItem, this));
 		registrar.add("Gear.TouchAttach", boost::bind(&LLWearingGearMenu::onTouchAttach, this));
-		registrar.add("Gear.TakeOff", boost::bind(&LLWearingGearMenu::onTakeOff, this));
+		registrar.add("Gear.TakeOff", boost::bind(&LLPanelWearing::onRemoveItem, mPanelWearing));
 		registrar.add("Gear.Copy", boost::bind(&LLPanelWearing::copyToClipboard, mPanelWearing));
 
 		enable_registrar.add("Gear.OnEnable", boost::bind(&LLPanelWearing::isActionEnabled, mPanelWearing, _2));
@@ -126,13 +126,6 @@ private:
 
 		mPanelWearing->getSelectedItemsUUIDs(selected_uuids);
 		edit_item(selected_uuids.front());
-	}
-
-	void onTakeOff()
-	{
-		uuid_vec_t selected_uuids;
-		mPanelWearing->getSelectedItemsUUIDs(selected_uuids);
-		LLAppearanceMgr::instance().removeItemsFromAvatar(selected_uuids);
 	}
 
 	LLToggleableMenu*		mMenu;
@@ -413,23 +406,23 @@ bool LLPanelWearing::isActionEnabled(const LLSD& userdata)
 		return !outfit_locked && outfit_dirty;
 	}
 	else if (command_name == "take_off") {
-		return hasItemSelected() && canTakeOffSelected();
+		if (mWearablesTab->isExpanded())
+		{
+			return hasItemSelected() && canTakeOffSelected();
 	}
 	else if (command_name == "touch_attach") {
 		uuid_vec_t selected;
-
+		else
 		getSelectedItemsUUIDs(selected);
 
 		if (selected.size() != 1) {
 			return false;
-		}
-
+			LLScrollListItem* item = mTempItemsList->getFirstSelected();
 		LLViewerInventoryItem *item = gInventory.getItem(selected.front());
-
+			if (item && item->getUUID().notNull())
 		if (!item) {
 			LL_WARNS("PanelWearing") << "Invalid item" << LL_ENDL;
 			return false;
-		}
 
 		LLAssetType::EType type = item->getType();
 
@@ -443,7 +436,6 @@ bool LLPanelWearing::isActionEnabled(const LLSD& userdata)
 		getSelectedItemsUUIDs(selected);
 
 		if (selected.size() != 1) {
-			return false;
 		}
 
 		LLViewerInventoryItem *item = gInventory.getItem(selected.front());
@@ -641,13 +633,28 @@ void LLPanelWearing::onEditAttachment()
 void LLPanelWearing::onRemoveAttachment()
 {
 	LLScrollListItem* item = mTempItemsList->getFirstSelected();
-	if (item)
+	if (item && item->getUUID().notNull())
 	{
 		LLSelectMgr::getInstance()->deselectAll();
 		LLSelectMgr::getInstance()->selectObjectAndFamily(mAttachmentsMap[item->getUUID()]);
 		LLSelectMgr::getInstance()->sendDropAttachment();
 	}
 }
+
+void LLPanelWearing::onRemoveItem()
+{
+	if (mWearablesTab->isExpanded())
+	{
+		uuid_vec_t selected_uuids;
+		getSelectedItemsUUIDs(selected_uuids);
+		LLAppearanceMgr::instance().removeItemsFromAvatar(selected_uuids);
+	}
+	else
+	{
+		onRemoveAttachment();
+	}
+}
+
 
 void LLPanelWearing::copyToClipboard()
 {

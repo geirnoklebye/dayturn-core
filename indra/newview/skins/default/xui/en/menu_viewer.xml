@@ -68,8 +68,7 @@
       </menu_item_call>
       <menu_item_call
         label="Experiences..."
-        name="Experiences"
-        only_in_sl="true">
+        name="Experiences">
         <menu_item_call.on_click
           function="Floater.ToggleOrBringToFront"
           parameter="experiences"/>
@@ -162,30 +161,27 @@
 
       <menu_item_call
          label="Buy L$..."
-         name="Buy and Sell L$"
-         only_in_sl="true">
+         name="Buy and Sell L$">
         <menu_item_call.on_click
          function="BuyCurrency" />
       </menu_item_call>
         <menu_item_call
             label="Marketplace listings..."
             name="MarketplaceListings">
-         only_in_sl="true">
             <menu_item_call.on_click
             function="Floater.ToggleOrBringToFront"
             parameter="marketplace_listings" />
         </menu_item_call>
       <menu_item_call
            label="Account dashboard..."
-           name="Manage My Account"
-           only_in_sl="true">
+           name="Manage My Account">
         <menu_item_call.on_click
          function="PromptShowURL"
          name="ManageMyAccount_url"
          parameter="WebLaunchJoinNow,http://secondlife.com/account/" />
       </menu_item_call>
 
-      <menu_item_separator only_in_sl="true" />
+      <menu_item_separator/>
 
       <menu_item_call
          label="Preferences..."
@@ -202,16 +198,8 @@
              function="Floater.Toggle"
              parameter="toybox" />
         </menu_item_call>
-            <menu_item_call
-             label="Import Linkset"
-             visibility_control="FSEnableObjectExports"
-             name="import linkset">
-                <menu_item_call.on_click
-                 function="File.ImportLinkset"
-                 parameter="" />
-            </menu_item_call>
          <menu_item_call
-         label="Hide All Controls"
+         label="Hide all controls"
          name="Hide UI"
          shortcut="control|shift|U">
            <menu_item_call.on_click
@@ -977,8 +965,7 @@
         </menu>
         <menu_item_call
             label="Region Objects"
-            name="pathfinding_linkset_menu_item"
-            only_in_sl="true">
+            name="pathfinding_linkset_menu_item">
           <menu_item_call.on_click
               function="Floater.ToggleOrBringToFront"
               parameter="pathfinding_linksets" />
@@ -1136,7 +1123,6 @@
          create_jump_keys="true"
          label="Pathfinding"
          name="Pathfinding"
-         only_in_sl="true"
          tear_off="true">
         <menu_item_call
             label="Region Objects"
@@ -1519,43 +1505,36 @@
         </menu_item_call>
 <!--        <menu_item_call
          label="Tutorial"
-         name="Tutorial"
-         only_in_sl="true">
+         name="Tutorial">
             <menu_item_call.on_click
              function="Floater.Show"
              parameter="hud" />
         </menu_item_call>-->
-
-      <menu_item_separator only_in_sl="true" />
-
+		<menu_item_separator/>
         <menu_item_call
              label="Knowledge Base"
-             name="Knowledge Base"
-             only_in_sl="true">
+             name="Knowledge Base">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
             parameter="http://community.secondlife.com/t5/English-Knowledge-Base/Second-Life-User-s-Guide/ta-p/1244857"/>
         </menu_item_call>
         <menu_item_call
              label="Wiki"
-             name="Wiki"
-             only_in_sl="true">
+             name="Wiki">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
                  parameter="http://wiki.secondlife.com"/>
         </menu_item_call>
         <menu_item_call
              label="Community Forums"
-             name="Community Forums"
-             only_in_sl="true">
+             name="Community Forums">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
                  parameter="http://community.secondlife.com/t5/Forums/ct-p/Forums"/>
         </menu_item_call>         
         <menu_item_call
-             label="Support Portal"
-             name="Support portal"
-             only_in_sl="true">
+             label="Support portal"
+             name="Support portal">
              <menu_item_call.on_click
                  function="Advanced.ShowURL"
                  parameter="https://support.secondlife.com/"/>         
@@ -2501,16 +2480,6 @@
               <menu_item_check.on_click
                function="ToggleControl"
                parameter="DebugShowMemory" />
-            </menu_item_check>
-	     <menu_item_check
-               label="Show Private Mem Info"
-               name="Show Private Mem Info">
-              <menu_item_check.on_check
-               function="CheckControl"
-               parameter="DebugShowPrivateMem" />
-              <menu_item_check.on_click
-               function="ToggleControl"
-               parameter="DebugShowPrivateMem" />
             </menu_item_check>
 
             <menu_item_separator/>

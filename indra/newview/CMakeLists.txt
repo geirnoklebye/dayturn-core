@@ -376,6 +376,7 @@ set(viewer_SOURCE_FILES
     llhudview.cpp
     llimagefiltersmanager.cpp
     llimhandler.cpp
+    llimprocessing.cpp
     llimview.cpp
     llinspect.cpp
     llinspectavatar.cpp
@@ -1027,6 +1028,7 @@ set(viewer_HEADER_FILES
     llhudtext.h
     llhudview.h
     llimagefiltersmanager.h
+    llimprocessing.h
     llimview.h
     llinspect.h
     llinspectavatar.h
@@ -1714,7 +1716,6 @@ set(viewer_APPSETTINGS_FILES
     app_settings/viewerart.xml
     ${CMAKE_SOURCE_DIR}/../etc/message.xml
     ${CMAKE_SOURCE_DIR}/../scripts/messages/message_template.msg
-    ${AUTOBUILD_INSTALL_DIR}/ca-bundle.crt
     packages-info.txt
     )
 
@@ -1794,8 +1795,7 @@ if (WINDOWS)
         # *TODO -reenable this once we get server usage sorted out
         LINK_FLAGS "/debug /NODEFAULTLIB:LIBCMT /SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE"
         LINK_FLAGS_DEBUG "/NODEFAULTLIB:\"LIBCMT;LIBCMTD;MSVCRT\" /INCREMENTAL:NO /LARGEADDRESSAWARE"
-        LINK_FLAGS_RELWITHDEBINFO "/NODEFAULTLIB:\"LIBCMT;LIBCMTD;MSVCRT\" /INCREMENTAL:NO /LTCG /LARGEADDRESSAWARE"
-        LINK_FLAGS_RELEASE "/FORCE:MULTIPLE /MAP\"secondlife-bin.MAP\" /OPT:REF /INCREMENTAL:NO /LTCG /LARGEADDRESSAWARE"
+        LINK_FLAGS_RELEASE "/FORCE:MULTIPLE /MAP\"kokua-bin.MAP\" /OPT:REF /LARGEADDRESSAWARE"
         )
 
     if(USE_PRECOMPILED_HEADERS)
