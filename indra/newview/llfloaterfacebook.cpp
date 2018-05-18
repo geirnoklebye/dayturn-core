@@ -41,7 +41,6 @@
 #include "llresmgr.h"		// LLLocale
 #include "llsdserialize.h"
 #include "llloadingindicator.h"
-#include "llplugincookiestore.h"
 #include "llslurl.h"
 #include "lltrans.h"
 #include "llsnapshotlivepreview.h"
@@ -296,16 +295,11 @@ void LLFacebookStatusPanel::showConnectedLayout()
 void LLFacebookStatusPanel::onConnect()
 {
 	LLFacebookConnect::instance().checkConnectionToFacebook(true);
-
-	//Clear only the facebook browser cookies so that the facebook login screen appears
-	LLViewerMedia::getCookieStore()->removeCookiesByDomain(".facebook.com"); 
 }
 
 void LLFacebookStatusPanel::onDisconnect()
 {
 	LLFacebookConnect::instance().disconnectFromFacebook();
-
-	LLViewerMedia::getCookieStore()->removeCookiesByDomain(".facebook.com"); 
 }
 
 void LLFacebookStatusPanel::clearAndClose()

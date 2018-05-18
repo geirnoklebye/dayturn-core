@@ -1088,7 +1088,7 @@ void LLAgent::setRegion(LLViewerRegion *regionp)
 		if (!gRRenabled || !gAgent.mRRInterface.mContainsShowloc)
 		{
 //mk
-			LL_INFOS() << "Moving agent into region: " << regionp->getName()
+		LL_INFOS("AgentLocation") << "Moving agent into region: " << regionp->getName()
 				<< " located at " << ip << LL_ENDL;
 //MK
 		}

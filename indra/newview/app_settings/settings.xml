@@ -349,6 +349,119 @@
         <real>0.1</real>
       </array>
     </map>
+    <key>FocusOffsetLeftView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial focus point offset relative to avatar for the camera preset Left View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3D</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>0.0</real>
+        <real>0.0</real>
+      </array>
+    </map>
+    <key>FocusOffsetRightView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial focus point offset relative to avatar for the camera preset Right View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3D</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>0.0</real>
+        <real>0.0</real>
+      </array>
+    </map>
+    <key>FocusOffsetTopView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial focus point offset relative to avatar for the camera preset Top View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3D</string>
+      <key>Value</key>
+      <array>
+        <real>0.5</real>
+        <real>0.0</real>
+        <real>0.0</real>
+      </array>
+    </map>
+    <key>CrashHostUrl</key>
+    <map>
+      <key>Comment</key>
+      <string>A URL pointing to a crash report handler; overrides cluster negotiation to locate crash handler.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string />
+    </map>
+	<map>
+    <key>CameraOffsetLeftView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial camera offset from avatar in Left View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>2.0</real>
+        <real>-1.0</real>
+      </array>
+    </map>
+    <key>CameraOffsetRightView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial camera offset from avatar in Right View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>-2.0</real>
+        <real>-1.0</real>
+      </array>
+    </map>
+    <key>CameraOffsetTopView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial camera offset from avatar in Top View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3</string>
+      <key>Value</key>
+      <array>
+        <real>-0.1</real>
+        <real>0.0</real>
+        <real>4.0</real>
+      </array>
+    </map>
+    <key>AllowMUpose</key>
+    <map>
+      <key>Comment</key>
+      <string>Allow emoting with ":" at the beginning of the sentence.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
   <key>ImporterDebug</key>
   <map>
     <key>Comment</key>
@@ -381,7 +494,7 @@
     <string>U32</string>
     <key>Value</key>
     <integer>768</integer>
-  </map>    
+  </map>
   <key>ImporterPreprocessDAE</key>
   <map>
     <key>Comment</key>
@@ -393,7 +506,7 @@
     <key>Value</key>
     <integer>1</integer>
   </map>
-	<key>IMShowTime</key>
+    <key>IMShowTime</key>
     <map>
       <key>Comment</key>
       <string>Enable(disable) timestamp showing in the chat.</string>
@@ -415,7 +528,7 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
-    <key>CrashHostUrl</key>
+	<key>CrashHostUrl</key>
     <map>
       <key>Comment</key>
       <string>A URL pointing to a crash report handler; overrides cluster negotiation to locate crash handler.</string>
@@ -528,17 +641,7 @@
       <key>Value</key>
       <integer>1</integer>
     </map>
-    <key>AllowMUpose</key>
-    <map>
-      <key>Comment</key>
-      <string>Allow emoting with ":" at the beginning of the sentence.</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Boolean</string>
-      <key>Value</key>
-      <integer>1</integer>
-    </map>
+
     <key>AllowTapTapHoldRun</key>
     <map>
       <key>Comment</key>
@@ -1857,51 +1960,7 @@
         <real>0.5</real>
       </array>
     </map>
-    <key>CameraOffsetLeftView</key>
-    <map>
-      <key>Comment</key>
-      <string>Initial camera offset from avatar in Left View</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Vector3</string>
-      <key>Value</key>
-      <array>
-        <real>0.0</real>
-        <real>2.0</real>
-        <real>-1.0</real>
-      </array>
-    </map>
-    <key>CameraOffsetRightView</key>
-    <map>
-      <key>Comment</key>
-      <string>Initial camera offset from avatar in Right View</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Vector3</string>
-      <key>Value</key>
-      <array>
-        <real>0.0</real>
-        <real>-2.0</real>
-        <real>-1.0</real>
-      </array>
-    </map>
-    <key>CameraOffsetTopView</key>
-    <map>
-      <key>Comment</key>
-      <string>Initial camera offset from avatar in Top View</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Vector3</string>
-      <key>Value</key>
-      <array>
-        <real>-0.1</real>
-        <real>0.0</real>
-        <real>4.0</real>
-      </array>
-    </map>
+
     <key>CameraOffsetScale</key>
     <map>
       <key>Comment</key>
@@ -2458,11 +2517,11 @@
       <key>Comment</key>
       <string>Size (in bytes) for each coroutine stack</string>
       <key>Persist</key>
-      <integer>0</integer>
+      <integer>1</integer>
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
-      <integer>262144</integer>
+      <integer>524288</integer>
     </map>
     <key>CrashOnStartup</key>
     <map>
@@ -2772,7 +2831,7 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-    <key>DebugShowPrivateMem</key>
+    <key>DEPRECATED: DebugShowPrivateMem</key>  <!-- deprecated (see MAINT-8091) -->
     <map>
       <key>Comment</key>
       <string>Show Private Mem Info</string>
@@ -4671,51 +4730,7 @@
         <real>1.0</real>
       </array>
     </map>
-    <key>FocusOffsetLeftView</key>
-    <map>
-      <key>Comment</key>
-      <string>Initial focus point offset relative to avatar for the camera preset Left View</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Vector3D</string>
-      <key>Value</key>
-      <array>
-        <real>0.0</real>
-        <real>0.0</real>
-        <real>0.0</real>
-      </array>
-    </map>
-    <key>FocusOffsetRightView</key>
-    <map>
-      <key>Comment</key>
-      <string>Initial focus point offset relative to avatar for the camera preset Right View</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Vector3D</string>
-      <key>Value</key>
-      <array>
-        <real>0.0</real>
-        <real>0.0</real>
-        <real>0.0</real>
-      </array>
-    </map>
-    <key>FocusOffsetTopView</key>
-    <map>
-      <key>Comment</key>
-      <string>Initial focus point offset relative to avatar for the camera preset Top View</string>
-      <key>Persist</key>
-      <integer>1</integer>
-      <key>Type</key>
-      <string>Vector3D</string>
-      <key>Value</key>
-      <array>
-        <real>0.5</real>
-        <real>0.0</real>
-        <real>0.0</real>
-      </array>
-    </map>
+
     <key>FocusPosOnLogout</key>
     <map>
       <key>Comment</key>
@@ -6856,10 +6871,10 @@
       <key>Value</key>
       <real>600.0</real>
     </map>
-    <key>MemoryPrivatePoolEnabled</key>
+    <key>MemoryPrivatePoolEnabled</key>  <!-- deprecated (see MAINT-8091) -->
     <map>
       <key>Comment</key>
-      <string>Enable the private memory pool management</string>
+      <string>DEPRECATED: Enable the private memory pool management</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -6867,10 +6882,10 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-    <key>MemoryPrivatePoolSize</key>
+    <key>MemoryPrivatePoolSize</key>  <!-- deprecated (see MAINT-8091) -->
     <map>
       <key>Comment</key>
-      <string>Size of the private memory pool in MB (min. value is 256)</string>
+      <string>DEPRECATED: Size of the private memory pool in MB (min. value is 256)</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -9079,7 +9094,19 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-
+  <key>RenderNsightDebugSupport</key>
+  <map>
+    <key>Comment</key>
+    <string>
+      Disable features which prevent nVidia nSight from being usable with SL. Requires restart.
+    </string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>0</integer>
+  </map>
     <key>RenderLocalLights</key>
     <map>
       <key>Comment</key>
@@ -16599,6 +16626,17 @@
       (default to class 1)</string>
       <key>Persist</key>
       <integer>0</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>CefVerboseLog</key>
+    <map>
+      <key>Comment</key>
+      <string>Enable/disable CEF verbose loggingk</string>
+      <key>Persist</key>
+      <integer>1</integer>
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>

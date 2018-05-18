@@ -87,7 +87,6 @@ class ViewerManifest(LLManifest):
                 pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
                 with self.prefix(src=pkgdir,dst=""):
                     self.path("dictionaries")
-                    self.path("ca-bundle.crt")
 
                 # include the extracted packages information (see BuildPackagesInfo.cmake)
                 self.path(src=os.path.join(self.args['build'],"packages-info.txt"), dst="packages-info.txt")
@@ -593,6 +592,8 @@ class WindowsManifest(ViewerManifest):
 
         self.path(src="licenses-win32.txt", dst="licenses.txt")
         self.path("featuretable.txt")
+
+        with self.prefix(src=pkgdir,dst=""):
         self.path("ca-bundle.crt")
 
         # Media plugins - CEF
@@ -815,31 +816,31 @@ class WindowsManifest(ViewerManifest):
             ):
             self.sign(exe)
             
-        #~ # We use the Unicode version of NSIS, available from
-        #~ # http://www.scratchpaper.com/
-        #~ # Check two paths, one for Program Files, and one for Program Files (x86).
-        #~ # Yay 64bit windows.
-        #~ for ProgramFiles in 'ProgramFiles', 'ProgramFiles(x86)':
-            #~ NSIS_path = os.path.expandvars(r'${%s}\NSIS\Unicode\makensis.exe' % ProgramFiles)
-            #~ if os.path.exists(NSIS_path):
-                #~ break
-        #~ installer_created=False
-        #~ nsis_attempts=3
-        #~ nsis_retry_wait=15
-        #~ for attempt in xrange(nsis_attempts):
-            #~ try:
-                #~ self.run_command([NSIS_path, '/V2', self.dst_path_of(tempfile)])
-            #~ except ManifestError as err:
-                #~ if attempt+1 < nsis_attempts:
-                    #~ print >> sys.stderr, "nsis failed, waiting %d seconds before retrying" % nsis_retry_wait
-                    #~ time.sleep(nsis_retry_wait)
-                    #~ nsis_retry_wait*=2
-                #~ else:
-                #~ # NSIS worked! Done!
-                  #~ break
-            #~ else:
-                  #~ print >> sys.stderr, "Maximum nsis attempts exceeded; giving up"
-                  #~ raise
+        # We use the Unicode version of NSIS, available from
+        # http://www.scratchpaper.com/
+        # Check two paths, one for Program Files, and one for Program Files (x86).
+        # Yay 64bit windows.
+        for ProgramFiles in 'ProgramFiles', 'ProgramFiles(x86)':
+            NSIS_path = os.path.expandvars(r'${%s}\NSIS\Unicode\makensis.exe' % ProgramFiles)
+            if os.path.exists(NSIS_path):
+                break
+        installer_created=False
+        nsis_attempts=3
+        nsis_retry_wait=15
+        for attempt in xrange(nsis_attempts):
+            try:
+                self.run_command([NSIS_path, '/V2', self.dst_path_of(tempfile)])
+            except ManifestError as err:
+                if attempt+1 < nsis_attempts:
+                    print >> sys.stderr, "nsis failed, waiting %d seconds before retrying" % nsis_retry_wait
+                    time.sleep(nsis_retry_wait)
+                    nsis_retry_wait*=2
+            else:
+                # NSIS worked! Done!
+                break
+        else:
+            print >> sys.stderr, "Maximum nsis attempts exceeded; giving up"
+            raise
 
         self.sign(installer_file)
         self.created_path(self.dst_path_of(installer_file))
@@ -1050,7 +1051,9 @@ open "%s" --args "$@"
                 self.path("licenses-mac.txt", dst="licenses.txt")
                 self.path("featuretable_mac.txt")
                 self.path("SecondLife.nib")
-                self.path("ca-bundle.crt")
+
+                with self.prefix(src=pkgdir,dst=""):
+	                self.path("ca-bundle.crt")
 
                 self.path("SecondLife.nib")
                 
@@ -1507,7 +1510,9 @@ class LinuxManifest(ViewerManifest):
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
         self.path("featuretable_linux.txt")
-        self.path("ca-bundle.crt")
+
+        with self.prefix(src=pkgdir,dst=""):
+	        self.path("ca-bundle.crt")
 
     def package_finish(self):
         installer_name = self.installer_base_name()
