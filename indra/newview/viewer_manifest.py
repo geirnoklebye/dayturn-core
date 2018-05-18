@@ -87,7 +87,6 @@ class ViewerManifest(LLManifest):
                 pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
                 with self.prefix(src=pkgdir,dst=""):
                     self.path("dictionaries")
-                    self.path("ca-bundle.crt")
 
                 # include the extracted packages information (see BuildPackagesInfo.cmake)
                 self.path(src=os.path.join(self.args['build'],"packages-info.txt"), dst="packages-info.txt")
@@ -600,7 +599,9 @@ class WindowsManifest(ViewerManifest):
 
         self.path(src="licenses-win32.txt", dst="licenses.txt")
         self.path("featuretable.txt")
-        self.path("ca-bundle.crt")
+
+        with self.prefix(src=pkgdir,dst=""):
+            self.path("ca-bundle.crt")
 
         with self.prefix(src=pkgdir,dst="app_settings"):
             self.path("ca-bundle.crt")
@@ -1060,7 +1061,9 @@ open "%s" --args "$@"
                         self.path("licenses-mac.txt", dst="licenses.txt")
                         self.path("featuretable_mac.txt")
                         self.path("Kokua.nib")
-                        self.path("ca-bundle.crt")
+
+                        with self.prefix(src=pkgdir,dst=""):
+                            self.path("ca-bundle.crt")
                         
                         with self.prefix(src=pkgdir,dst="app_settings"):
                             self.path("ca-bundle.crt")
@@ -1528,7 +1531,9 @@ class LinuxManifest(ViewerManifest):
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
         self.path("featuretable_linux.txt")
-        self.path("ca-bundle.crt")
+
+        with self.prefix(src=pkgdir,dst=""):
+            self.path("ca-bundle.crt")
 
         with self.prefix(src=pkgdir,dst="app_settings"):
             self.path("ca-bundle.crt")

@@ -4266,17 +4266,14 @@ void LLAgent::teleportRequest(
 	bool look_at_from_camera)
 {
 	LLViewerRegion* regionp = getRegion();
-//MK
-////	bool is_local = (region_handle == regionp->getHandle());
-	bool is_local = (regionp && (region_handle == regionp->getHandle()));
-//mk
-	if(regionp && teleportCore(is_local))
+	if (regionp && teleportCore(region_handle == regionp->getHandle()))
 	{
 //MK
 		// This crashes when we are logging off
 		////LL_INFOS("") << "TeleportLocationRequest: '" << region_handle << "':"
 		////			 << pos_local << LL_ENDL;
 //mk
+
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessage("TeleportLocationRequest");
 		msg->nextBlockFast(_PREHASH_AgentData);
