@@ -594,7 +594,7 @@ class WindowsManifest(ViewerManifest):
         self.path("featuretable.txt")
 
         with self.prefix(src=pkgdir,dst=""):
-        self.path("ca-bundle.crt")
+          self.path("ca-bundle.crt")
 
         # Media plugins - CEF
         with self.prefix(src='../media_plugins/cef/%s' % self.args['configuration'], dst="llplugin"):
