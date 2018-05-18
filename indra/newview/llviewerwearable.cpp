@@ -464,13 +464,17 @@ void LLViewerWearable::revertValues()
 	LLWearable::revertValues();
 //MK
 	// This is a temporary workaround for a nasty crash that occurs after clearing the cache in the 64-bit viewer.
-	// I don't know why the line after "return" fails and crashes, but it doesn't seem to be a problem if we don't execute it
-	// so for now it is skipped.
-	return;
+	// It seems like it calls this method on startup while the panel is still not built, and crashes. We need to test
+	// the validity of the pointer.
+	LLPanel* tmp = LLFloaterSidePanelContainer::getPanel("appearance");
+	if (tmp == NULL)
+	{
+		return;
+	}
+////	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(LLFloaterSidePanelContainer::getPanel("appearance"));
+	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(tmp);
 //mk
-
-	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(LLFloaterSidePanelContainer::getPanel("appearance"));
-	if( panel )
+	if (panel)
 	{
 		panel->updateScrollingPanelList();
 	}
