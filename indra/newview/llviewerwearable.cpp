@@ -463,9 +463,16 @@ void LLViewerWearable::revertValues()
 {
 	LLWearable::revertValues();
 
-
-	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(LLFloaterSidePanelContainer::getPanel("appearance"));
-	if( panel )
+	// I don't know why the line after "return" fails and crashes, but it doesn't seem to be a problem if we don't execute it
+	// so for now it is skipped.
+	LLPanel* tmp = LLFloaterSidePanelContainer::getPanel("appearance");
+	if (tmp == NULL)
+	{
+		return;
+	}
+////	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(LLFloaterSidePanelContainer::getPanel("appearance"));
+	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(tmp);
+	if (panel)
 	{
 		panel->updateScrollingPanelList();
 	}
