@@ -405,24 +405,37 @@ bool LLPanelWearing::isActionEnabled(const LLSD& userdata)
 		// allow save only if outfit isn't locked and is dirty
 		return !outfit_locked && outfit_dirty;
 	}
-	else if (command_name == "take_off") {
+
+	else if (command_name == "take_off")
+	{
 		if (mWearablesTab->isExpanded())
 		{
 			return hasItemSelected() && canTakeOffSelected();
+		}
+		else
+		{
+			LLScrollListItem* item = mTempItemsList->getFirstSelected();
+			if (item && item->getUUID().notNull())
+			{
+				return true;
+			}
+		}
 	}
 	else if (command_name == "touch_attach") {
 		uuid_vec_t selected;
-		else
+
 		getSelectedItemsUUIDs(selected);
 
 		if (selected.size() != 1) {
 			return false;
-			LLScrollListItem* item = mTempItemsList->getFirstSelected();
+		}
+
 		LLViewerInventoryItem *item = gInventory.getItem(selected.front());
-			if (item && item->getUUID().notNull())
+
 		if (!item) {
 			LL_WARNS("PanelWearing") << "Invalid item" << LL_ENDL;
 			return false;
+		}
 
 		LLAssetType::EType type = item->getType();
 
@@ -436,6 +449,7 @@ bool LLPanelWearing::isActionEnabled(const LLSD& userdata)
 		getSelectedItemsUUIDs(selected);
 
 		if (selected.size() != 1) {
+			return false;
 		}
 
 		LLViewerInventoryItem *item = gInventory.getItem(selected.front());

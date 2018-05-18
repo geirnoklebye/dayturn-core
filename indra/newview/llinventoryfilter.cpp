@@ -234,6 +234,13 @@ bool LLInventoryFilter::checkFolder(const LLFolderViewModelItem* item) const
 
 bool LLInventoryFilter::checkFolder(const LLUUID& folder_id) const
 {
+	// Always check against the clipboard
+	// <FS:Ansariel> FIRE-6714: Don't move objects to trash during cut&paste
+	// Don't hide cut items in inventory
+	//const BOOL passed_clipboard = checkAgainstClipboard(folder_id);
+	const BOOL passed_clipboard = TRUE;
+	// </FS:Ansariel> FIRE-6714: Don't move objects to trash during cut&paste
+	
 	// we're showing all folders, overriding filter
 	if (mFilterOps.mShowFolderState == LLInventoryFilter::SHOW_ALL_FOLDERS)
 	{
