@@ -54,14 +54,13 @@
 #include "llviewerregion.h"
 #include "llvoavatarself.h"
 
-#include <boost/regex.hpp>
-#include "boost/lexical_cast.hpp"
-
 //MK
-#include "llfloaterimsession.h"
 #include "llagentui.h"
+#include "llfloaterimsession.h"
 //mk
 
+#include <boost/regex.hpp>
+#include "boost/lexical_cast.hpp"
 #if LL_MSVC
 // disable boost::lexical_cast warning
 #pragma warning (disable:4702)
@@ -71,346 +70,346 @@
 // (rather than a script)
 static std::string clean_name_from_im(const std::string& name, EInstantMessage type)
 {
-	switch (type)
-	{
-	case IM_NOTHING_SPECIAL:
-	case IM_MESSAGEBOX:
-	case IM_GROUP_INVITATION:
-	case IM_INVENTORY_OFFERED:
-	case IM_INVENTORY_ACCEPTED:
-	case IM_INVENTORY_DECLINED:
-	case IM_GROUP_VOTE:
-	case IM_GROUP_MESSAGE_DEPRECATED:
-		//IM_TASK_INVENTORY_OFFERED
-		//IM_TASK_INVENTORY_ACCEPTED
-		//IM_TASK_INVENTORY_DECLINED
-	case IM_NEW_USER_DEFAULT:
-	case IM_SESSION_INVITE:
-	case IM_SESSION_P2P_INVITE:
-	case IM_SESSION_GROUP_START:
-	case IM_SESSION_CONFERENCE_START:
-	case IM_SESSION_SEND:
-	case IM_SESSION_LEAVE:
-		//IM_FROM_TASK
-	case IM_DO_NOT_DISTURB_AUTO_RESPONSE:
-	case IM_CONSOLE_AND_CHAT_HISTORY:
-	case IM_LURE_USER:
-	case IM_LURE_ACCEPTED:
-	case IM_LURE_DECLINED:
-	case IM_GODLIKE_LURE_USER:
-	case IM_TELEPORT_REQUEST:
-	case IM_GROUP_ELECTION_DEPRECATED:
-		//IM_GOTO_URL
-		//IM_FROM_TASK_AS_ALERT
-	case IM_GROUP_NOTICE:
-	case IM_GROUP_NOTICE_INVENTORY_ACCEPTED:
-	case IM_GROUP_NOTICE_INVENTORY_DECLINED:
-	case IM_GROUP_INVITATION_ACCEPT:
-	case IM_GROUP_INVITATION_DECLINE:
-	case IM_GROUP_NOTICE_REQUESTED:
-	case IM_FRIENDSHIP_OFFERED:
-	case IM_FRIENDSHIP_ACCEPTED:
-	case IM_FRIENDSHIP_DECLINED_DEPRECATED:
-		//IM_TYPING_START
-		//IM_TYPING_STOP
-		return LLCacheName::cleanFullName(name);
-	default:
-		return name;
-	}
+    switch (type)
+    {
+        case IM_NOTHING_SPECIAL:
+        case IM_MESSAGEBOX:
+        case IM_GROUP_INVITATION:
+        case IM_INVENTORY_OFFERED:
+        case IM_INVENTORY_ACCEPTED:
+        case IM_INVENTORY_DECLINED:
+        case IM_GROUP_VOTE:
+        case IM_GROUP_MESSAGE_DEPRECATED:
+            //IM_TASK_INVENTORY_OFFERED
+            //IM_TASK_INVENTORY_ACCEPTED
+            //IM_TASK_INVENTORY_DECLINED
+        case IM_NEW_USER_DEFAULT:
+        case IM_SESSION_INVITE:
+        case IM_SESSION_P2P_INVITE:
+        case IM_SESSION_GROUP_START:
+        case IM_SESSION_CONFERENCE_START:
+        case IM_SESSION_SEND:
+        case IM_SESSION_LEAVE:
+            //IM_FROM_TASK
+        case IM_DO_NOT_DISTURB_AUTO_RESPONSE:
+        case IM_CONSOLE_AND_CHAT_HISTORY:
+        case IM_LURE_USER:
+        case IM_LURE_ACCEPTED:
+        case IM_LURE_DECLINED:
+        case IM_GODLIKE_LURE_USER:
+        case IM_TELEPORT_REQUEST:
+        case IM_GROUP_ELECTION_DEPRECATED:
+            //IM_GOTO_URL
+            //IM_FROM_TASK_AS_ALERT
+        case IM_GROUP_NOTICE:
+        case IM_GROUP_NOTICE_INVENTORY_ACCEPTED:
+        case IM_GROUP_NOTICE_INVENTORY_DECLINED:
+        case IM_GROUP_INVITATION_ACCEPT:
+        case IM_GROUP_INVITATION_DECLINE:
+        case IM_GROUP_NOTICE_REQUESTED:
+        case IM_FRIENDSHIP_OFFERED:
+        case IM_FRIENDSHIP_ACCEPTED:
+        case IM_FRIENDSHIP_DECLINED_DEPRECATED:
+            //IM_TYPING_START
+            //IM_TYPING_STOP
+            return LLCacheName::cleanFullName(name);
+        default:
+            return name;
+    }
 }
 
 static std::string clean_name_from_task_im(const std::string& msg,
-	BOOL from_group)
+    BOOL from_group)
 {
-	boost::smatch match;
-	static const boost::regex returned_exp(
-		"(.*been returned to your inventory lost and found folder by )(.+)( (from|near).*)");
-	if (boost::regex_match(msg, match, returned_exp))
-	{
-		// match objects are 1-based for groups
-		std::string final = match[1].str();
-		std::string name = match[2].str();
-		// Don't try to clean up group names
-		if (!from_group)
-		{
-			final += LLCacheName::buildUsername(name);
-		}
-		final += match[3].str();
-		return final;
-	}
-	return msg;
+    boost::smatch match;
+    static const boost::regex returned_exp(
+        "(.*been returned to your inventory lost and found folder by )(.+)( (from|near).*)");
+    if (boost::regex_match(msg, match, returned_exp))
+    {
+        // match objects are 1-based for groups
+        std::string final = match[1].str();
+        std::string name = match[2].str();
+        // Don't try to clean up group names
+        if (!from_group)
+        {
+            final += LLCacheName::buildUsername(name);
+        }
+        final += match[3].str();
+        return final;
+    }
+    return msg;
 }
 
 const std::string NOT_ONLINE_MSG("User not online - message will be stored and delivered later.");
 const std::string NOT_ONLINE_INVENTORY("User not online - inventory has been saved.");
 void translate_if_needed(std::string& message)
 {
-	if (message == NOT_ONLINE_MSG)
-	{
-		message = LLTrans::getString("not_online_msg");
-	}
-	else if (message == NOT_ONLINE_INVENTORY)
-	{
-		message = LLTrans::getString("not_online_inventory");
-	}
+    if (message == NOT_ONLINE_MSG)
+    {
+        message = LLTrans::getString("not_online_msg");
+    }
+    else if (message == NOT_ONLINE_INVENTORY)
+    {
+        message = LLTrans::getString("not_online_inventory");
+    }
 }
 
 class LLPostponedIMSystemTipNotification : public LLPostponedNotification
 {
 protected:
-	/* virtual */
-	void modifyNotificationParams()
-	{
-		LLSD payload = mParams.payload;
-		payload["SESSION_NAME"] = mName;
-		mParams.payload = payload;
-	}
+    /* virtual */
+    void modifyNotificationParams()
+    {
+        LLSD payload = mParams.payload;
+        payload["SESSION_NAME"] = mName;
+        mParams.payload = payload;
+    }
 };
 
 class LLPostponedOfferNotification : public LLPostponedNotification
 {
 protected:
-	/* virtual */
-	void modifyNotificationParams()
-	{
-		LLSD substitutions = mParams.substitutions;
-		substitutions["NAME"] = mName;
-		mParams.substitutions = substitutions;
-	}
+    /* virtual */
+    void modifyNotificationParams()
+    {
+        LLSD substitutions = mParams.substitutions;
+        substitutions["NAME"] = mName;
+        mParams.substitutions = substitutions;
+    }
 };
 
 void inventory_offer_handler(LLOfferInfo* info)
 {
-	// If muted, don't even go through the messaging stuff.  Just curtail the offer here.
-	// Passing in a null UUID handles the case of where you have muted one of your own objects by_name.
-	// The solution for STORM-1297 seems to handle the cases where the object is owned by someone else.
-	if (LLMuteList::getInstance()->isMuted(info->mFromID, info->mFromName) ||
-		LLMuteList::getInstance()->isMuted(LLUUID::null, info->mFromName))
-	{
-		info->forceResponse(IOR_MUTE);
-		return;
-	}
+    // If muted, don't even go through the messaging stuff.  Just curtail the offer here.
+    // Passing in a null UUID handles the case of where you have muted one of your own objects by_name.
+    // The solution for STORM-1297 seems to handle the cases where the object is owned by someone else.
+    if (LLMuteList::getInstance()->isMuted(info->mFromID, info->mFromName) ||
+        LLMuteList::getInstance()->isMuted(LLUUID::null, info->mFromName))
+    {
+        info->forceResponse(IOR_MUTE);
+        return;
+    }
 
-	bool bAutoAccept(false);
-	// Avoid the Accept/Discard dialog if the user so desires. JC
-	if (gSavedSettings.getBOOL("AutoAcceptNewInventory")
-		&& (info->mType == LLAssetType::AT_NOTECARD
-		|| info->mType == LLAssetType::AT_LANDMARK
-		|| info->mType == LLAssetType::AT_TEXTURE))
-	{
-		// For certain types, just accept the items into the inventory,
-		// and possibly open them on receipt depending upon "ShowNewInventory".
-		bAutoAccept = true;
-	}
+    bool bAutoAccept(false);
+    // Avoid the Accept/Discard dialog if the user so desires. JC
+    if (gSavedSettings.getBOOL("AutoAcceptNewInventory")
+        && (info->mType == LLAssetType::AT_NOTECARD
+        || info->mType == LLAssetType::AT_LANDMARK
+        || info->mType == LLAssetType::AT_TEXTURE))
+    {
+        // For certain types, just accept the items into the inventory,
+        // and possibly open them on receipt depending upon "ShowNewInventory".
+        bAutoAccept = true;
+    }
 
-	// Strip any SLURL from the message display. (DEV-2754)
-	std::string msg = info->mDesc;
-	int indx = msg.find(" ( http://slurl.com/secondlife/");
-	if (indx == std::string::npos)
-	{
-		// try to find new slurl host
-		indx = msg.find(" ( http://maps.secondlife.com/secondlife/");
-	}
-	if (indx >= 0)
-	{
-		LLStringUtil::truncate(msg, indx);
-	}
+    // Strip any SLURL from the message display. (DEV-2754)
+    std::string msg = info->mDesc;
+    int indx = msg.find(" ( http://slurl.com/secondlife/");
+    if (indx == std::string::npos)
+    {
+        // try to find new slurl host
+        indx = msg.find(" ( http://maps.secondlife.com/secondlife/");
+    }
+    if (indx >= 0)
+    {
+        LLStringUtil::truncate(msg, indx);
+    }
 
-	LLSD args;
-	args["[OBJECTNAME]"] = msg;
+    LLSD args;
+    args["[OBJECTNAME]"] = msg;
 
-	LLSD payload;
+    LLSD payload;
 
-	// must protect against a NULL return from lookupHumanReadable()
-	std::string typestr = ll_safe_string(LLAssetType::lookupHumanReadable(info->mType));
-	if (!typestr.empty())
-	{
-		// human readable matches string name from strings.xml
-		// lets get asset type localized name
-		args["OBJECTTYPE"] = LLTrans::getString(typestr);
-	}
-	else
-	{
-		LL_WARNS("Messaging") << "LLAssetType::lookupHumanReadable() returned NULL - probably bad asset type: " << info->mType << LL_ENDL;
-		args["OBJECTTYPE"] = "";
+    // must protect against a NULL return from lookupHumanReadable()
+    std::string typestr = ll_safe_string(LLAssetType::lookupHumanReadable(info->mType));
+    if (!typestr.empty())
+    {
+        // human readable matches string name from strings.xml
+        // lets get asset type localized name
+        args["OBJECTTYPE"] = LLTrans::getString(typestr);
+    }
+    else
+    {
+        LL_WARNS("Messaging") << "LLAssetType::lookupHumanReadable() returned NULL - probably bad asset type: " << info->mType << LL_ENDL;
+        args["OBJECTTYPE"] = "";
 
-		// This seems safest, rather than propagating bogosity
-		LL_WARNS("Messaging") << "Forcing an inventory-decline for probably-bad asset type." << LL_ENDL;
-		info->forceResponse(IOR_DECLINE);
-		return;
-	}
+        // This seems safest, rather than propagating bogosity
+        LL_WARNS("Messaging") << "Forcing an inventory-decline for probably-bad asset type." << LL_ENDL;
+        info->forceResponse(IOR_DECLINE);
+        return;
+    }
 
-	// If mObjectID is null then generate the object_id based on msg to prevent
-	// multiple creation of chiclets for same object.
-	LLUUID object_id = info->mObjectID;
-	if (object_id.isNull())
-		object_id.generate(msg);
+    // If mObjectID is null then generate the object_id based on msg to prevent
+    // multiple creation of chiclets for same object.
+    LLUUID object_id = info->mObjectID;
+    if (object_id.isNull())
+        object_id.generate(msg);
 
-	payload["from_id"] = info->mFromID;
-	// Needed by LLScriptFloaterManager to bind original notification with 
-	// faked for toast one.
-	payload["object_id"] = object_id;
-	// Flag indicating that this notification is faked for toast.
-	payload["give_inventory_notification"] = FALSE;
-	args["OBJECTFROMNAME"] = info->mFromName;
-	args["NAME"] = info->mFromName;
-	if (info->mFromGroup)
-	{
-		args["NAME_SLURL"] = LLSLURL("group", info->mFromID, "about").getSLURLString();
-	}
-	else
-	{
-		args["NAME_SLURL"] = LLSLURL("agent", info->mFromID, "about").getSLURLString();
-	}
-	std::string verb = "select?name=" + LLURI::escape(msg);
-	args["ITEM_SLURL"] = LLSLURL("inventory", info->mObjectID, verb.c_str()).getSLURLString();
+    payload["from_id"] = info->mFromID;
+    // Needed by LLScriptFloaterManager to bind original notification with 
+    // faked for toast one.
+    payload["object_id"] = object_id;
+    // Flag indicating that this notification is faked for toast.
+    payload["give_inventory_notification"] = FALSE;
+    args["OBJECTFROMNAME"] = info->mFromName;
+    args["NAME"] = info->mFromName;
+    if (info->mFromGroup)
+    {
+        args["NAME_SLURL"] = LLSLURL("group", info->mFromID, "about").getSLURLString();
+    }
+    else
+    {
+        args["NAME_SLURL"] = LLSLURL("agent", info->mFromID, "about").getSLURLString();
+    }
+    std::string verb = "select?name=" + LLURI::escape(msg);
+    args["ITEM_SLURL"] = LLSLURL("inventory", info->mObjectID, verb.c_str()).getSLURLString();
 
-	LLNotification::Params p;
+    LLNotification::Params p;
 
-	// Object -> Agent Inventory Offer
-	if (info->mFromObject && !bAutoAccept)
-	{
-		// Inventory Slurls don't currently work for non agent transfers, so only display the object name.
-		args["ITEM_SLURL"] = msg;
-		// Note: sets inventory_task_offer_callback as the callback
-		p.substitutions(args).payload(payload).functor.responder(LLNotificationResponderPtr(info));
-		info->mPersist = true;
+    // Object -> Agent Inventory Offer
+    if (info->mFromObject && !bAutoAccept)
+    {
+        // Inventory Slurls don't currently work for non agent transfers, so only display the object name.
+        args["ITEM_SLURL"] = msg;
+        // Note: sets inventory_task_offer_callback as the callback
+        p.substitutions(args).payload(payload).functor.responder(LLNotificationResponderPtr(info));
+        info->mPersist = true;
 
-		// Offers from your own objects need a special notification template.
-		p.name = info->mFromID == gAgentID ? "OwnObjectGiveItem" : "ObjectGiveItem";
+        // Offers from your own objects need a special notification template.
+        p.name = info->mFromID == gAgentID ? "OwnObjectGiveItem" : "ObjectGiveItem";
 
-		// Pop up inv offer chiclet and let the user accept (keep), or reject (and silently delete) the inventory.
-		LLPostponedNotification::add<LLPostponedOfferNotification>(p, info->mFromID, info->mFromGroup == TRUE);
-	}
-	else // Agent -> Agent Inventory Offer
-	{
-		p.responder = info;
-		// Note: sets inventory_offer_callback as the callback
-		// *TODO fix memory leak
-		// inventory_offer_callback() is not invoked if user received notification and 
-		// closes viewer(without responding the notification)
-		p.substitutions(args).payload(payload).functor.responder(LLNotificationResponderPtr(info));
-		info->mPersist = true;
-		p.name = "UserGiveItem";
-		p.offer_from_agent = true;
+        // Pop up inv offer chiclet and let the user accept (keep), or reject (and silently delete) the inventory.
+        LLPostponedNotification::add<LLPostponedOfferNotification>(p, info->mFromID, info->mFromGroup == TRUE);
+    }
+    else // Agent -> Agent Inventory Offer
+    {
+        p.responder = info;
+        // Note: sets inventory_offer_callback as the callback
+        // *TODO fix memory leak
+        // inventory_offer_callback() is not invoked if user received notification and 
+        // closes viewer(without responding the notification)
+        p.substitutions(args).payload(payload).functor.responder(LLNotificationResponderPtr(info));
+        info->mPersist = true;
+        p.name = "UserGiveItem";
+        p.offer_from_agent = true;
 
-		// Prefetch the item into your local inventory.
-		LLInventoryFetchItemsObserver* fetch_item = new LLInventoryFetchItemsObserver(info->mObjectID);
-		fetch_item->startFetch();
-		if (fetch_item->isFinished())
-		{
-			fetch_item->done();
-		}
-		else
-		{
-			gInventory.addObserver(fetch_item);
-		}
+        // Prefetch the item into your local inventory.
+        LLInventoryFetchItemsObserver* fetch_item = new LLInventoryFetchItemsObserver(info->mObjectID);
+        fetch_item->startFetch();
+        if (fetch_item->isFinished())
+        {
+            fetch_item->done();
+        }
+        else
+        {
+            gInventory.addObserver(fetch_item);
+        }
 
-		// In viewer 2 we're now auto receiving inventory offers and messaging as such (not sending reject messages).
-		info->send_auto_receive_response();
+        // In viewer 2 we're now auto receiving inventory offers and messaging as such (not sending reject messages).
+        info->send_auto_receive_response();
 
-		if (gAgent.isDoNotDisturb())
-		{
-			send_do_not_disturb_message(gMessageSystem, info->mFromID);
-		}
+        if (gAgent.isDoNotDisturb())
+        {
+            send_do_not_disturb_message(gMessageSystem, info->mFromID);
+        }
 
-		if (!bAutoAccept) // if we auto accept, do not pester the user
-		{
-			// Inform user that there is a script floater via toast system
-			payload["give_inventory_notification"] = TRUE;
-			p.payload = payload;
-			LLPostponedNotification::add<LLPostponedOfferNotification>(p, info->mFromID, false);
-		}
-	}
+        if (!bAutoAccept) // if we auto accept, do not pester the user
+        {
+            // Inform user that there is a script floater via toast system
+            payload["give_inventory_notification"] = TRUE;
+            p.payload = payload;
+            LLPostponedNotification::add<LLPostponedOfferNotification>(p, info->mFromID, false);
+        }
+    }
 
-	LLFirstUse::newInventory();
+    LLFirstUse::newInventory();
 }
 
 // Callback for name resolution of a god/estate message
 static void god_message_name_cb(const LLAvatarName& av_name, LLChat chat, std::string message)
 {
-	LLSD args;
-	args["NAME"] = av_name.getCompleteName();
-	args["MESSAGE"] = message;
-	LLNotificationsUtil::add("GodMessage", args);
+    LLSD args;
+    args["NAME"] = av_name.getCompleteName();
+    args["MESSAGE"] = message;
+    LLNotificationsUtil::add("GodMessage", args);
 
-	// Treat like a system message and put in chat history.
-	chat.mSourceType = CHAT_SOURCE_SYSTEM;
-	chat.mText = message;
+    // Treat like a system message and put in chat history.
+    chat.mSourceType = CHAT_SOURCE_SYSTEM;
+    chat.mText = message;
 
-	LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
-	if (nearby_chat)
-	{
-		nearby_chat->addMessage(chat);
-	}
+    LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
+    if (nearby_chat)
+    {
+        nearby_chat->addMessage(chat);
+    }
 }
 
 static bool parse_lure_bucket(const std::string& bucket,
-	U64& region_handle,
-	LLVector3& pos,
-	LLVector3& look_at,
-	U8& region_access)
+    U64& region_handle,
+    LLVector3& pos,
+    LLVector3& look_at,
+    U8& region_access)
 {
-	// tokenize the bucket
-	typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-	boost::char_separator<char> sep("|", "", boost::keep_empty_tokens);
-	tokenizer tokens(bucket, sep);
-	tokenizer::iterator iter = tokens.begin();
+    // tokenize the bucket
+    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
+    boost::char_separator<char> sep("|", "", boost::keep_empty_tokens);
+    tokenizer tokens(bucket, sep);
+    tokenizer::iterator iter = tokens.begin();
 
-	S32 gx, gy, rx, ry, rz, lx, ly, lz;
-	try
-	{
-		gx = boost::lexical_cast<S32>((*(iter)).c_str());
-		gy = boost::lexical_cast<S32>((*(++iter)).c_str());
-		rx = boost::lexical_cast<S32>((*(++iter)).c_str());
-		ry = boost::lexical_cast<S32>((*(++iter)).c_str());
-		rz = boost::lexical_cast<S32>((*(++iter)).c_str());
-		lx = boost::lexical_cast<S32>((*(++iter)).c_str());
-		ly = boost::lexical_cast<S32>((*(++iter)).c_str());
-		lz = boost::lexical_cast<S32>((*(++iter)).c_str());
-	}
-	catch (boost::bad_lexical_cast&)
-	{
-		LL_WARNS("parse_lure_bucket")
-			<< "Couldn't parse lure bucket."
-			<< LL_ENDL;
-		return false;
-	}
-	// Grab region access
-	region_access = SIM_ACCESS_MIN;
-	if (++iter != tokens.end())
-	{
-		std::string access_str((*iter).c_str());
-		LLStringUtil::trim(access_str);
-		if (access_str == "A")
-		{
-			region_access = SIM_ACCESS_ADULT;
-		}
-		else if (access_str == "M")
-		{
-			region_access = SIM_ACCESS_MATURE;
-		}
-		else if (access_str == "PG")
-		{
-			region_access = SIM_ACCESS_PG;
-		}
-	}
+    S32 gx, gy, rx, ry, rz, lx, ly, lz;
+    try
+    {
+        gx = boost::lexical_cast<S32>((*(iter)).c_str());
+        gy = boost::lexical_cast<S32>((*(++iter)).c_str());
+        rx = boost::lexical_cast<S32>((*(++iter)).c_str());
+        ry = boost::lexical_cast<S32>((*(++iter)).c_str());
+        rz = boost::lexical_cast<S32>((*(++iter)).c_str());
+        lx = boost::lexical_cast<S32>((*(++iter)).c_str());
+        ly = boost::lexical_cast<S32>((*(++iter)).c_str());
+        lz = boost::lexical_cast<S32>((*(++iter)).c_str());
+    }
+    catch (boost::bad_lexical_cast&)
+    {
+        LL_WARNS("parse_lure_bucket")
+            << "Couldn't parse lure bucket."
+            << LL_ENDL;
+        return false;
+    }
+    // Grab region access
+    region_access = SIM_ACCESS_MIN;
+    if (++iter != tokens.end())
+    {
+        std::string access_str((*iter).c_str());
+        LLStringUtil::trim(access_str);
+        if (access_str == "A")
+        {
+            region_access = SIM_ACCESS_ADULT;
+        }
+        else if (access_str == "M")
+        {
+            region_access = SIM_ACCESS_MATURE;
+        }
+        else if (access_str == "PG")
+        {
+            region_access = SIM_ACCESS_PG;
+        }
+    }
 
-	pos.setVec((F32)rx, (F32)ry, (F32)rz);
-	look_at.setVec((F32)lx, (F32)ly, (F32)lz);
+    pos.setVec((F32)rx, (F32)ry, (F32)rz);
+    look_at.setVec((F32)lx, (F32)ly, (F32)lz);
 
-	region_handle = to_region_handle(gx, gy);
-	return true;
+    region_handle = to_region_handle(gx, gy);
+    return true;
 }
 
 static void notification_display_name_callback(const LLUUID& id,
-	const LLAvatarName& av_name,
-	const std::string& name,
-	LLSD& substitutions,
-	const LLSD& payload)
+    const LLAvatarName& av_name,
+    const std::string& name,
+    LLSD& substitutions,
+    const LLSD& payload)
 {
-	substitutions["NAME"] = av_name.getDisplayName();
-	LLNotificationsUtil::add(name, substitutions, payload);
+    substitutions["NAME"] = av_name.getDisplayName();
+    LLNotificationsUtil::add(name, substitutions, payload);
 }
 
 //MK
@@ -558,7 +557,6 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 				send_do_not_disturb_message(gMessageSystem, from_id, session_id);
 				gIMMgr->setDNDMessageSent(session_id, true);
 			}
-
 		}
 //MK
 		else if (gRRenabled && message == "@version")
@@ -1235,6 +1233,7 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 //mk
 	case IM_FROM_TASK:
 	{
+
 //MK
 		// There are cases when the user is Busy and still wants to receive IMs from tasks that do not belong to them.
 		// Busy mode should have only one purpose : to notify other users that you are unavailable by sending an
@@ -1248,6 +1247,7 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 		////				return;
 		////			}
 //mk
+
 		// Build a link to open the object IM info window.
 		std::string location = ll_safe_string((char*)binary_bucket, binary_bucket_size - 1);
 
@@ -1669,10 +1669,10 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 					params.payload = payload;
 					LLPostponedNotification::add<LLPostponedOfferNotification>(params, from_id, false);
 				}
-			}
 //MK
-		}
+			}
 //mk
+		}
 	}
 	break;
 
@@ -1886,143 +1886,144 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 
 void LLIMProcessing::requestOfflineMessages()
 {
-	static BOOL requested = FALSE;
-	if (!requested
-		&& gMessageSystem
-		&& LLMuteList::getInstance()->isLoaded()
-		&& isAgentAvatarValid()
-		&& gAgent.getRegion()
-		&& gAgent.getRegion()->capabilitiesReceived())
-	{
-		std::string cap_url = gAgent.getRegionCapability("ReadOfflineMsgs");
+    static BOOL requested = FALSE;
+    if (!requested
+        && gMessageSystem
+        && LLMuteList::getInstance()->isLoaded()
+        && isAgentAvatarValid()
+        && gAgent.getRegion()
+        && gAgent.getRegion()->capabilitiesReceived())
+    {
+        std::string cap_url = gAgent.getRegionCapability("ReadOfflineMsgs");
 
-		// Auto-accepted inventory items may require the avatar object
-		// to build a correct name.  Likewise, inventory offers from
-		// muted avatars require the mute list to properly mute.
-		if (cap_url.empty())
-		{
-			requestOfflineMessagesLegacy();
-		}
-		else
-		{
-			LLCoros::instance().launch("LLIMProcessing::requestOfflineMessagesCoro",
-				boost::bind(&LLIMProcessing::requestOfflineMessagesCoro, cap_url));
-		}
-		requested = TRUE;
-	}
+        // Auto-accepted inventory items may require the avatar object
+        // to build a correct name.  Likewise, inventory offers from
+        // muted avatars require the mute list to properly mute.
+        if (cap_url.empty())
+        {
+            requestOfflineMessagesLegacy();
+        }
+        else
+        {
+            LLCoros::instance().launch("LLIMProcessing::requestOfflineMessagesCoro",
+                boost::bind(&LLIMProcessing::requestOfflineMessagesCoro, cap_url));
+        }
+        requested = TRUE;
+    }
 }
 
 void LLIMProcessing::requestOfflineMessagesCoro(std::string url)
 {
-	LLCore::HttpRequest::policy_t httpPolicy(LLCore::HttpRequest::DEFAULT_POLICY_ID);
-	LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t
-		httpAdapter(new LLCoreHttpUtil::HttpCoroutineAdapter("requestOfflineMessagesCoro", httpPolicy));
-	LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest);
+    LLCore::HttpRequest::policy_t httpPolicy(LLCore::HttpRequest::DEFAULT_POLICY_ID);
+    LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t
+        httpAdapter(new LLCoreHttpUtil::HttpCoroutineAdapter("requestOfflineMessagesCoro", httpPolicy));
+    LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest);
 
-	LLSD result = httpAdapter->getAndSuspend(httpRequest, url);
+    LLSD result = httpAdapter->getAndSuspend(httpRequest, url);
 
-	LLSD httpResults = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS];
-	LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD(httpResults);
+    LLSD httpResults = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS];
+    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD(httpResults);
 
-	if (!status) // success = httpResults["success"].asBoolean();
-	{
-		LL_WARNS("Messaging") << "Error requesting offline messages via capability " << url << ", Status: " << status.toString() << "\nFalling back to legacy method." << LL_ENDL;
+    if (!status) // success = httpResults["success"].asBoolean();
+    {
+        LL_WARNS("Messaging") << "Error requesting offline messages via capability " << url << ", Status: " << status.toString() << "\nFalling back to legacy method." << LL_ENDL;
 
-		requestOfflineMessagesLegacy();
-		return;
-	}
+        requestOfflineMessagesLegacy();
+        return;
+    }
 
-	LLSD contents = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_CONTENT];
+    LLSD contents = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS_CONTENT];
 
-	if (!contents.size())
-	{
-		LL_WARNS("Messaging") << "No contents received for offline messages via capability " << url << LL_ENDL;
-		return;
-	}
+    if (!contents.size())
+    {
+        LL_WARNS("Messaging") << "No contents received for offline messages via capability " << url << LL_ENDL;
+        return;
+    }
 
-	// Todo: once dirtsim-369 releases, remove one of the map/array options
-	LLSD messages;
-	if (contents.isArray())
-	{
-		messages = *contents.beginArray();
-	}
-	else if (contents.has("messages"))
-	{
-		messages = contents["messages"];
-	}
-	else
-	{
-		LL_WARNS("Messaging") << "Invalid offline message content received via capability " << url << LL_ENDL;
-		return;
-	}
+    // Todo: once dirtsim-369 releases, remove one of the map/array options
+    LLSD messages;
+    if (contents.isArray())
+    {
+        messages = *contents.beginArray();
+    }
+    else if (contents.has("messages"))
+    {
+        messages = contents["messages"];
+    }
+    else
+    {
+        LL_WARNS("Messaging") << "Invalid offline message content received via capability " << url << LL_ENDL;
+        return;
+    }
 
-	if (!messages.isArray())
-	{
-		LL_WARNS("Messaging") << "Invalid offline message content received via capability " << url << LL_ENDL;
-		return;
-	}
+    if (!messages.isArray())
+    {
+        LL_WARNS("Messaging") << "Invalid offline message content received via capability " << url << LL_ENDL;
+        return;
+    }
 
-	if (messages.emptyArray())
-	{
-		// Nothing to process
-		return;
-	}
+    if (messages.emptyArray())
+    {
+        // Nothing to process
+        return;
+    }
 
-	LL_INFOS("Messaging") << "Processing offline messages." << LL_ENDL;
+    LL_INFOS("Messaging") << "Processing offline messages." << LL_ENDL;
 
-	std::vector<U8> data;
-	S32 binary_bucket_size = 0;
-	LLHost sender = gAgent.getRegion()->getHost();
+    std::vector<U8> data;
+    S32 binary_bucket_size = 0;
+    LLHost sender = gAgent.getRegion()->getHost();
 
-	LLSD::array_iterator i = messages.beginArray();
-	LLSD::array_iterator iEnd = messages.endArray();
-	for (; i != iEnd; ++i)
-	{
-		const LLSD &message_data(*i);
+    LLSD::array_iterator i = messages.beginArray();
+    LLSD::array_iterator iEnd = messages.endArray();
+    for (; i != iEnd; ++i)
+    {
+        const LLSD &message_data(*i);
 
-		LLVector3 position(message_data["local_x"].asReal(), message_data["local_y"].asReal(), message_data["local_z"].asReal());
-		data = message_data["binary_bucket"].asBinary();
-		binary_bucket_size = data.size(); // message_data["count"] always 0
-		U32 parent_estate_id = message_data.has("parent_estate_id") ? message_data["parent_estate_id"].asInteger() : 1; // 1 - IMMainland
+        LLVector3 position(message_data["local_x"].asReal(), message_data["local_y"].asReal(), message_data["local_z"].asReal());
+        data = message_data["binary_bucket"].asBinary();
+        binary_bucket_size = data.size(); // message_data["count"] always 0
+        U32 parent_estate_id = message_data.has("parent_estate_id") ? message_data["parent_estate_id"].asInteger() : 1; // 1 - IMMainland
 
-		// Todo: once dirtsim-369 releases, remove one of the int/str options
-		BOOL from_group;
-		if (message_data["from_group"].isInteger())
-		{
-			from_group = message_data["from_group"].asInteger();
-		}
-		else
-		{
-			from_group = message_data["from_group"].asString() == "Y";
-		}
+        // Todo: once dirtsim-369 releases, remove one of the int/str options
+        BOOL from_group;
+        if (message_data["from_group"].isInteger())
+        {
+            from_group = message_data["from_group"].asInteger();
+        }
+        else
+        {
+            from_group = message_data["from_group"].asString() == "Y";
+        }
 
-		LLIMProcessing::processNewMessage(message_data["from_agent_id"].asUUID(),
-			from_group,
-			message_data["to_agent_id"].asUUID(),
-			IM_OFFLINE,
-			(EInstantMessage)message_data["dialog"].asInteger(),
-			LLUUID::null, // session id, fix this for friendship offers to work
-			message_data["timestamp"].asInteger(),
-			message_data["from_agent_name"].asString(),
-			message_data["message"].asString(),
-			parent_estate_id,
-			message_data["region_id"].asUUID(),
-			position,
-			&data[0],
-			binary_bucket_size,
-			sender,
-			message_data["asset_id"].asUUID()); // not necessarily an asset
-	}
+        LLIMProcessing::processNewMessage(message_data["from_agent_id"].asUUID(),
+            from_group,
+            message_data["to_agent_id"].asUUID(),
+            IM_OFFLINE,
+            (EInstantMessage)message_data["dialog"].asInteger(),
+            LLUUID::null, // session id, fix this for friendship offers to work
+            message_data["timestamp"].asInteger(),
+            message_data["from_agent_name"].asString(),
+            message_data["message"].asString(),
+            parent_estate_id,
+            message_data["region_id"].asUUID(),
+            position,
+            &data[0],
+            binary_bucket_size,
+            sender,
+            message_data["asset_id"].asUUID()); // not necessarily an asset
+    }
 }
 
 void LLIMProcessing::requestOfflineMessagesLegacy()
 {
-	LL_INFOS("Messaging") << "Requesting offline messages (Legacy)." << LL_ENDL;
+    LL_INFOS("Messaging") << "Requesting offline messages (Legacy)." << LL_ENDL;
 
-	LLMessageSystem* msg = gMessageSystem;
-	msg->newMessageFast(_PREHASH_RetrieveInstantMessages);
-	msg->nextBlockFast(_PREHASH_AgentData);
-	msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
-	msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-	gAgent.sendReliableMessage();
+    LLMessageSystem* msg = gMessageSystem;
+    msg->newMessageFast(_PREHASH_RetrieveInstantMessages);
+    msg->nextBlockFast(_PREHASH_AgentData);
+    msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+    msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+    gAgent.sendReliableMessage();
 }
+
