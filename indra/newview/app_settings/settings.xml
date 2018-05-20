@@ -2,6 +2,96 @@
 <llsd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="llsd.xsd">
 <map>
+    <key>CameraOffsetLeftView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial camera offset from avatar in Left View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>2.0</real>
+        <real>-1.0</real>
+      </array>
+    </map>
+    <key>CameraOffsetRightView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial camera offset from avatar in Right View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>-2.0</real>
+        <real>-1.0</real>
+      </array>
+    </map>
+    <key>CameraOffsetTopView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial camera offset from avatar in Top View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3</string>
+      <key>Value</key>
+      <array>
+        <real>-0.1</real>
+        <real>0.0</real>
+        <real>4.0</real>
+      </array>
+    </map>
+    <key>FocusOffsetLeftView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial focus point offset relative to avatar for the camera preset Left View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3D</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>0.0</real>
+        <real>0.0</real>
+      </array>
+    </map>
+    <key>FocusOffsetRightView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial focus point offset relative to avatar for the camera preset Right View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3D</string>
+      <key>Value</key>
+      <array>
+        <real>0.0</real>
+        <real>0.0</real>
+        <real>0.0</real>
+      </array>
+    </map>
+    <key>FocusOffsetTopView</key>
+    <map>
+      <key>Comment</key>
+      <string>Initial focus point offset relative to avatar for the camera preset Top View</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Vector3D</string>
+      <key>Value</key>
+      <array>
+        <real>0.5</real>
+        <real>0.0</real>
+        <real>0.0</real>
+      </array>
+    </map>
     <key>KokuaPerformanceRegionEnable</key>
     <map>
       <key>Comment</key>
