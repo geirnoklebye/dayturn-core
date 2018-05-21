@@ -126,8 +126,8 @@
 #include "llexception.h"
 #if !LL_LINUX
 #include "cef/dullahan.h"
-#include "vlc/libvlc_version.h"
 #endif // LL_LINUX
+#include "vlc/libvlc_version.h"
 
 // Third party library includes
 #include <boost/bind.hpp>
