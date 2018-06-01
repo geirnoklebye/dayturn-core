@@ -1436,8 +1436,6 @@ U32 LLViewerObject::processUpdateMessage(LLMessageSystem *mesgsys,
 					mText->mLastMessageText = temp_string;
 //mk
 
-					mHudText = temp_string;
-					mHudTextColor = LLColor4(coloru);
 
 					mHudText = temp_string;
 					mHudTextColor = LLColor4(coloru);
@@ -5903,6 +5901,14 @@ void LLViewerObject::markForUpdate(BOOL priority)
 	{
 		gPipeline.markTextured(mDrawable);
 		gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_GEOMETRY, priority);
+	}
+}
+
+void LLViewerObject::markForUnload(BOOL priority)
+{
+	if (mDrawable.notNull())
+	{
+		gPipeline.markRebuild(mDrawable, LLDrawable::FOR_UNLOAD, priority);
 	}
 }
 

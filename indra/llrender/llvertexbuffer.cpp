@@ -384,7 +384,7 @@ void LLVBOPool::cleanup()
 
 
 //NOTE: each component must be AT LEAST 4 bytes in size to avoid a performance penalty on AMD hardware
-S32 LLVertexBuffer::sTypeSize[LLVertexBuffer::TYPE_MAX] =
+const S32 LLVertexBuffer::sTypeSize[LLVertexBuffer::TYPE_MAX] =
 {
 	sizeof(LLVector4), // TYPE_VERTEX,
 	sizeof(LLVector4), // TYPE_NORMAL,
@@ -404,7 +404,7 @@ S32 LLVertexBuffer::sTypeSize[LLVertexBuffer::TYPE_MAX] =
 //mk
 };
 
-static std::string vb_type_name[] =
+static const std::string vb_type_name[] =
 {
 	"TYPE_VERTEX",
 	"TYPE_NORMAL",
@@ -423,7 +423,7 @@ static std::string vb_type_name[] =
 	"TYPE_INDEX",	
 };
 
-U32 LLVertexBuffer::sGLMode[LLRender::NUM_MODES] = 
+const U32 LLVertexBuffer::sGLMode[LLRender::NUM_MODES] =
 {
 	GL_TRIANGLES,
 	GL_TRIANGLE_STRIP,
@@ -572,7 +572,7 @@ void LLVertexBuffer::setupClientArrays(U32 data_mask)
 				}
 			}
 		
-			U32 map_tc[] = 
+			static const U32 map_tc[] = 
 			{
 				MAP_TEXCOORD1,
 				MAP_TEXCOORD2,
@@ -1442,7 +1442,7 @@ void LLVertexBuffer::setupVertexArray()
 #endif
 	sGLRenderArray = mGLArray;
 
-	U32 attrib_size[] = 
+	static const U32 attrib_size[] = 
 	{
 		3, //TYPE_VERTEX,
 		3, //TYPE_NORMAL,
@@ -1459,7 +1459,7 @@ void LLVertexBuffer::setupVertexArray()
 		1, //TYPE_TEXTURE_INDEX
 	};
 
-	U32 attrib_type[] =
+	static const U32 attrib_type[] =
 	{
 		GL_FLOAT, //TYPE_VERTEX,
 		GL_FLOAT, //TYPE_NORMAL,
@@ -1476,7 +1476,7 @@ void LLVertexBuffer::setupVertexArray()
 		GL_UNSIGNED_INT, //TYPE_TEXTURE_INDEX
 	};
 
-	bool attrib_integer[] = 
+	static const bool attrib_integer[] =
 	{
 		false, //TYPE_VERTEX,
 		false, //TYPE_NORMAL,
@@ -1493,7 +1493,7 @@ void LLVertexBuffer::setupVertexArray()
 		true, //TYPE_TEXTURE_INDEX
 	};
 
-	U32 attrib_normalized[] =
+	static const U32 attrib_normalized[] =
 	{
 		GL_FALSE, //TYPE_VERTEX,
 		GL_FALSE, //TYPE_NORMAL,
