@@ -63,6 +63,36 @@
               tool_tip="Turning this option on enables RLV's blind-at-login functionality which has historically not been included in Kokua"
               width="270"/>
           <check_box
+              top_pad="5"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="RestrainedLoveCanOoc"
+              enabled_control="RestrainedLove"
+              label="Allow OOC chat using (( )) (Needs restart)"
+              left="25"
+              name="RlvCanOoc"
+              tool_tip="Turning this option on disables the ability to use (( )) for OOC chat"
+              width="270"/>
+          <check_box
+              top_pad="5"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="KokuaRLVDisableBlacklist"
+              enabled_control="RestrainedLove"
+              label="Disable RLV restriction blacklist (Needs restart)"
+              left="25"
+              name="RlvNoBlacklist"
+              tool_tip="Disables the RLV restriction blacklist by always reading an empty string"
+              width="270"/>
+          <check_box
                 top_pad="5"
                 layout="topleft"
                 follows="left|top"
