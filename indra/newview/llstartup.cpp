@@ -404,7 +404,12 @@ bool idle_startup()
 	RRInterface::sCanOoc = gSavedSettings.getBOOL("RestrainedLoveCanOoc");
 	RRInterface::sRecvimMessage = gSavedSettings.getString("RestrainedLoveRecvimMessage");
 	RRInterface::sSendimMessage = gSavedSettings.getString("RestrainedLoveSendimMessage");
+
+	// MK: Deactivated for now so we can't use the blacklist to remove capabilities.
+	// CA: Instead we use a new debug setting to manage this
 	RRInterface::sBlacklist = gSavedSettings.getString("RestrainedLoveBlacklist");
+	if (gSavedSettings.getBOOL("KokuaRLVDisableBlacklist")) RRInterface::sBlacklist = "";
+	
 	// Let's keep it constant for now, because there are ways to make the vision restriction less tight by playing with this setting.
 	//RRInterface::mCamDistNbGradients = gSavedSettings.getU32("RestrainedLoveCamDistNbGradients");
 	if (RRInterface::mCamDistNbGradients == 0)
