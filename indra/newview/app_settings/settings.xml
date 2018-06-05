@@ -170,7 +170,7 @@
     <key>RestrainedLoveBlacklist</key>
     <map>
       <key>Comment</key>
-      <string>Comma-separated list of RLV commands that you want your viewer to ignore. Add a "%f" suffix after a command to indicate it is a "=force" command rather than a "=n" one. Needs a restart of the viewer.</string>
+      <string>Comma-separated list of RLV commands that you want your viewer to ignore. Add a "%f" suffix after a command to indicate it is a "=force" command rather than a "=n" one. Needs a restart of the viewer. Note : Deactivated for now, this debug setting is not taken into account at the moment.</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
