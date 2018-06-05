@@ -1310,7 +1310,15 @@ BOOL RRInterface::handleCommand (LLUUID uuid, std::string command)
 		cmd.uuid=uuid;
 		cmd.command=command;
 		if (sRestrainedLoveDebug) {
-			LL_INFOS() << "Retaining command : " << command << LL_ENDL;
+			LLInventoryItem* item = getItem(uuid);
+			if (item != NULL)
+			{
+				LL_INFOS() << "Retaining command from item " << item->getName () << " : " << command << LL_ENDL;
+			}
+			else
+			{
+				LL_INFOS() << "Retaining command from uuid " << uuid.asString () << " : " << command << LL_ENDL;
+			}
 		}
 		mRetainedCommands.push_back (cmd);
 		return TRUE;
