@@ -841,7 +841,8 @@ void LLPanelLogin::onClickConnect(void *)
 	{
 //MK
 		// If the RLV is active, force logging at the last location, always.
-		if (gSavedSettings.getBOOL("RestrainedLove"))
+		// Deactivated for now so we can't run this viewer without its RLV capabilities and restrictions.
+		//if (gSavedSettings.getBOOL("RestrainedLove"))
 		{
 			std::string location = LLSLURL::SIM_LOCATION_LAST;
 			LLStartUp::setStartSLURL(location);

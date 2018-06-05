@@ -347,7 +347,8 @@ bool idle_startup()
 	//static bool stipend_since_login = false;
 
 //MK
-	gRRenabled = gSavedSettings.getBOOL("RestrainedLove");
+	// Deactivated for now so we can't run this viewer without its RLV capabilities and restrictions.
+	gRRenabled = TRUE; // gSavedSettings.getBOOL("RestrainedLove");
 	RRInterface::sRRNoSetEnv = gSavedSettings.getBOOL("RestrainedLoveNoSetEnv");
 	RRInterface::sRestrainedLoveDebug = gSavedSettings.getBOOL("RestrainedLoveDebug");
 

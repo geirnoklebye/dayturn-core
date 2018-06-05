@@ -2775,7 +2775,9 @@ bool LLAppViewer::initConfiguration()
 	if (! starting_location.empty())
     {
 //MK
-        if (!gSavedSettings.getBOOL("RestrainedLove"))
+		// Deactivated for now so we can't run this viewer without its RLV capabilities and restrictions.
+        //if (!gSavedSettings.getBOOL("RestrainedLove"))
+		if (false)
         {
 //mk
 			start_slurl = starting_location;
@@ -2797,8 +2799,10 @@ bool LLAppViewer::initConfiguration()
 		(gSavedSettings.getBOOL("SLURLPassToOtherInstance")))
     {
 //MK
-        if (!gSavedSettings.getBOOL("RestrainedLove"))
-        {
+		// Deactivated for now so we can't run this viewer without its RLV capabilities and restrictions.
+		//if (!gSavedSettings.getBOOL("RestrainedLove"))
+		if (false)
+		{
 //mk
 		if (sendURLToOtherInstance(start_slurl.getSLURLString()))
 		{  
