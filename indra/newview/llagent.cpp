@@ -3466,12 +3466,7 @@ BOOL LLAgent::leftButtonGrabbed() const
 		|| (!camera_mouse_look && mControlsTakenPassedOnCount[CONTROL_LBUTTON_DOWN_INDEX] > 0)
 		|| (camera_mouse_look && mControlsTakenPassedOnCount[CONTROL_ML_LBUTTON_DOWN_INDEX] > 0);
 }
-BOOL LLAgent::leftButtonBlocked() const
-{
-    const BOOL camera_mouse_look = gAgentCamera.cameraMouselook();
-    return (!camera_mouse_look && mControlsTakenCount[CONTROL_LBUTTON_DOWN_INDEX] > 0)
-        || (camera_mouse_look && mControlsTakenCount[CONTROL_ML_LBUTTON_DOWN_INDEX] > 0);
-}
+
 BOOL LLAgent::rotateGrabbed() const		
 { 
 	return (mControlsTakenCount[CONTROL_YAW_POS_INDEX] > 0)

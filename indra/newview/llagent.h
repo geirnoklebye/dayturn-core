@@ -463,7 +463,6 @@ private:
 	//--------------------------------------------------------------------
 public:
 	BOOL 			leftButtonGrabbed() const;
-    BOOL 			leftButtonBlocked() const;    
 	BOOL 			rotateGrabbed() const;
 	BOOL 			forwardGrabbed() const;
 	BOOL 			backwardGrabbed() const;

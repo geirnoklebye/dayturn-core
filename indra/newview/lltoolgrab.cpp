@@ -418,7 +418,7 @@ void LLToolGrabBase::startGrab()
 	{
 		return;
 	}
-
+//mk
 	// Where the grab starts, relative to the center of the root object of the set.
 	// JC - This code looks wonky, but I believe it does the right thing.
 	// Otherwise, when you grab a linked object set, it "pops" on the start
