@@ -145,8 +145,13 @@ void LLVoiceChannel::handleStatusChange(EStatusType type)
 	switch(type)
 	{
 	case STATUS_LOGIN_RETRY:
+#if LL_LINUX
+		//mLoginNotificationHandle = LLNotifyBox::showXml("VoiceLoginRetry")->getHandle();
+		LLNotificationsUtil::add("VoiceLoginRetry");
+#else
         // no user notice
-		break;
+#endif
+	break;
 	case STATUS_LOGGED_IN:
 		break;
 	case STATUS_LEFT_CHANNEL:
