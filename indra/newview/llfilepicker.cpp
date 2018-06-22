@@ -293,10 +293,7 @@ BOOL LLFilePicker::getOpenFile(ELoadFilter filter, bool blocking)
 	return success;
 }
 
-// <FS:CR Threaded Filepickers>
-//BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter)
 BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter, bool blocking)
-// </FS:CR Threaded Filepickers>
 {
 	if( mLocked )
 	{
@@ -324,13 +321,12 @@ BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter, bool blocking)
 
 	reset();
 	
-// <FS:CR Threaded Filepickers>
 	if (blocking)
 	{
 	// Modal, so pause agent
 	send_agent_pause();
 	}
-// </FS:CR Threaded Filepickers>
+
 	// NOTA BENE: hitting the file dialog triggers a window focus event, destroying the selection manager!!
 	success = GetOpenFileName(&mOFN); // pauses until ok or cancel.
 	if( success )
@@ -363,21 +359,18 @@ BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter, bool blocking)
 			}
 		}
 	}
-// <FS:CR Threaded Filepickers>
+
 	if (blocking)
 	{
 	send_agent_resume();
+	}
+
 	// Account for the fact that the app has been stalled.
 	LLFrameTimer::updateFrameTime();
-	}
-// </FS:CR Threaded Filepickers>
 	return success;
 }
 
-// <FS:CR Threaded Filepickers>
-//BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename)
 BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, bool blocking)
-// </FS:CR Threaded Filepickers>
 {
 	if( mLocked )
 	{
@@ -521,11 +514,11 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, 
 	case FFSAVE_COLLADA:
 		if (filename.empty())
 		{
-			wcsncpy( mFilesW,L"untitled.dae", FILENAME_BUFFER_SIZE);	/*Flawfinder: ignore*/
+			wcsncpy( mFilesW,L"untitled.collada", FILENAME_BUFFER_SIZE);	/*Flawfinder: ignore*/
 		}
-		mOFN.lpstrDefExt = L"dae";
+		mOFN.lpstrDefExt = L"collada";
 		mOFN.lpstrFilter =
-			L"COLLADA File (*.dae)\0*.dae\0" \
+			L"COLLADA File (*.collada)\0*.collada\0" \
 			L"\0";
 		break;
 	case FFSAVE_RAW:
@@ -596,13 +589,12 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, 
 
 	reset();
 
-// <FS:CR Threaded Filepickers>
 	if (blocking)
 	{
 	// Modal, so pause agent
 	send_agent_pause();
 	}
-// </FS:CR Threaded Filepickers>
+
 	{
 		// NOTA BENE: hitting the file dialog triggers a window focus event, destroying the selection manager!!
 		try
@@ -620,14 +612,14 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, 
 		}
 		gKeyboard->resetKeys();
 	}
-// <FS:CR Threaded Filepickers>
+
 	if (blocking)
 	{
 	send_agent_resume();
+	}
+
 	// Account for the fact that the app has been stalled.
 	LLFrameTimer::updateFrameTime();
-	}
-// </FS:CR Threaded Filepickers>
 	return success;
 }
 
@@ -794,13 +786,12 @@ bool	LLFilePicker::doNavSaveDialog(ESaveFilter filter, const std::string& filena
 			extension = "slg";
 			break;
 #endif	
-		// <FS:TS> Compile fix
-		// case FFSAVE_XML:
-		//	type = "\?\?\?\?";
-		//	creator = "\?\?\?\?";
-		//	extension = "xml";
-		//	break;
-		// </FS:TS> Compile fix
+			
+		case FFSAVE_XML:
+			type = "\?\?\?\?";
+			creator = "\?\?\?\?";
+			extension = "xml";
+			break;
 			
 		case FFSAVE_RAW:
 			type = "\?\?\?\?";
@@ -910,7 +901,7 @@ BOOL LLFilePicker::getOpenFile(ELoadFilter filter, bool blocking)
         mPickOptions |= F_NAV_SUPPORT;
 	}
 	
-	if (blocking)
+	if (blocking) // always true for linux/mac
 	{
 		// Modal, so pause agent
 		send_agent_pause();
@@ -935,10 +926,7 @@ BOOL LLFilePicker::getOpenFile(ELoadFilter filter, bool blocking)
 	return success;
 }
 
-// <FS:CR Threaded Filepickers>
-//BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter)
 BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter, bool blocking)
-// </FS:CR Threaded Filepickers>
 {
 	if( mLocked )
 		return FALSE;
@@ -957,16 +945,19 @@ BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter, bool blocking)
 
     mPickOptions |= F_MULTIPLE;
 	
-	// <FS:CR> Threaded Filepickers
-	if (blocking)
+	if (blocking) // always true for linux/mac
 	{
 	// Modal, so pause agent
 	send_agent_pause();
 	}
-	// </FS:CR>
     
 	success = doNavChooseDialog(filter);
     
+	if (blocking)
+	{
+		send_agent_resume();
+	}
+
 	if (success)
 	{
 		if (!getFileCount())
@@ -975,22 +966,12 @@ BOOL LLFilePicker::getMultipleOpenFiles(ELoadFilter filter, bool blocking)
 			mLocked = true;
 	}
 
-	// <FS:CR> Threaded Filepickers
-	if (blocking)
-	{
-		send_agent_resume();
-		
 	// Account for the fact that the app has been stalled.
 	LLFrameTimer::updateFrameTime();
-	}
-	// </FS:CR>
 	return success;
 }
 
-// <FS:CR Threaded Filepickers>
-//BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename)
 BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, bool blocking)
-// </FS:CR Threaded Filepickers>
 {
 
 	if( mLocked )
@@ -1007,13 +988,11 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, 
 	
     mPickOptions &= ~F_MULTIPLE;
 
-	// <FS:CR> Threaded filepickers
 	if (blocking)
 	{
 	// Modal, so pause agent
 	send_agent_pause();
 	}
-	// </FS:CR>
 
     success = doNavSaveDialog(filter, filename);
 
@@ -1023,15 +1002,13 @@ BOOL LLFilePicker::getSaveFile(ESaveFilter filter, const std::string& filename, 
 			success = false;
 	}
 
-	// <FS:CR> Threaded filepickers
 	if (blocking)
 	{
 	send_agent_resume();
+	}
+
 	// Account for the fact that the app has been stalled.
 	LLFrameTimer::updateFrameTime();
-	}
-	// </FS:CR>
-	
 	return success;
 }
 //END LL_DARWIN
@@ -1316,7 +1293,7 @@ static std::string add_save_texture_filter_to_gtkchooser(GtkWindow *picker)
 	return caption;
 }
 
-BOOL LLFilePicker::getSaveFile( ESaveFilter filter, const std::string& filename, bool blocking )
+BOOL LLFilePicker::getSaveFile( ESaveFilter filter, const std::string& filename )
 {
 	BOOL rtn = FALSE;
 
@@ -1514,10 +1491,7 @@ BOOL LLFilePicker::getOpenFile( ELoadFilter filter, bool blocking )
 	return rtn;
 }
 
-// <FS:CR Threaded Filepickers>
-//BOOL LLFilePicker::getMultipleOpenFiles( ELoadFilter filter )
 BOOL LLFilePicker::getMultipleOpenFiles( ELoadFilter filter, bool blocking )
-// </FS:CR Threaded Filepickers>
 {
 	BOOL rtn = FALSE;
 
@@ -1601,10 +1575,7 @@ BOOL LLFilePicker::getOpenFile( ELoadFilter filter, bool blocking )
 	return TRUE;
 }
 
-// <FS:CR Threaded Filepickers>
-BOOL LLFilePicker::getMultipleOpenFiles( ELoadFilter filter )
 BOOL LLFilePicker::getMultipleOpenFiles( ELoadFilter filter, bool blocking )
-// </FS:CR Threaded Filepickers>
 {
 	// if local file browsing is turned off, return without opening dialog
 	// (Even though this is a stub, I think we still should not return anything at all)
@@ -1627,19 +1598,13 @@ BOOL LLFilePicker::getSaveFile( ESaveFilter filter, const std::string& filename 
 	return FALSE;
 }
 
-// <FS:CR Threaded Filepickers>
-//BOOL LLFilePicker::getOpenFile( ELoadFilter filter )
-BOOL LLFilePicker::getOpenFile( ELoadFilter filter, bool blocking )
-// </FS:CR Threaded Filepickers>
+BOOL LLFilePicker::getOpenFile( ELoadFilter filter )
 {
 	reset();
 	return FALSE;
 }
 
-// <FS:CR Threaded Filepickers>
-//BOOL LLFilePicker::getMultipleOpenFiles( ELoadFilter filter )
 BOOL LLFilePicker::getMultipleOpenFiles( ELoadFilter filter, bool blocking )
-// </FS:CR Threaded Filepickers>
 {
 	reset();
 	return FALSE;

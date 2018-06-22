@@ -222,7 +222,7 @@ class LLMeshFilePicker : public LLLoadFilePickerThread
 {
 public:
 	LLMeshFilePicker(LLModelPreview* mp, S32 lod);
-	virtual void notify(const std::string& filename);
+	virtual void notify(const std::vector<std::string>& filenames);
 
 private:
 	LLModelPreview* mMP;

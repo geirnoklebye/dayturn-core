@@ -211,7 +211,6 @@ S32 LLTaskInvFVBridge::getPrice()
 	}
 }
 
-// static
 const std::string& LLTaskInvFVBridge::getName() const
 {
 	return mName;
@@ -829,9 +828,13 @@ void LLTaskSoundBridge::performAction(LLInventoryModel* model, std::string actio
 void LLTaskSoundBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 {
 	LLInventoryItem* item = findItem();
-	if(!item) return;
 	std::vector<std::string> items;
 	std::vector<std::string> disabled_items;
+	if (!item)
+	{
+		hide_context_entries(menu, items, disabled_items);
+		return;
+		}
 
 	if (canOpenItem())
 	{
@@ -1172,15 +1175,20 @@ void LLTaskMeshBridge::performAction(LLInventoryModel* model, std::string action
 void LLTaskMeshBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 {
 	LLInventoryItem* item = findItem();
-	if(!item) return;
 	std::vector<std::string> items;
 	std::vector<std::string> disabled_items;
-
-	items.push_back(std::string("Task Open")); 
-	if (!isItemCopyable())
+	if(!item)
 	{
-		disabled_items.push_back(std::string("Task Open"));
-	}
+		hide_context_entries(menu, items, disabled_items);
+		return;
+		}
+
+		items.push_back(std::string("Task Open")); 
+		if (!isItemCopyable())
+		{
+			disabled_items.push_back(std::string("Task Open"));
+		}
+
 	items.push_back(std::string("Task Properties"));
 	if ((flags & FIRST_SELECTED_ITEM) == 0)
 	{

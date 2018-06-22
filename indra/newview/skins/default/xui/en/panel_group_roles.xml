@@ -605,44 +605,39 @@ clicking on their names.
       <scroll_list.columns
        label=""
        name="action"
-       width="270" />
+/>
     </scroll_list>
-        <text
-           type="string"
-           name="role_uuid_label"
-           height="16"
+        </panel>
+  <panel
+           height="90"
+           background_visible="false"
+           bg_alpha_color="FloaterUnfocusBorderColor"
            layout="topleft"
-           follows="left|top"
-           left="3"
-           text_color="EmphasisColor"
-           top_pad="10"
-           width="300">
-               Role UUID:
-        </text>
-        <line_editor
+           follows="top|left|right"
+           left="0"
+           right="-1"
+           width="313"
+           mouse_opaque="false"
+        name="roles_header"
+        top_pad="3"
+            visible="false">
+            <text_editor
+            bg_readonly_color="Transparent"
+            text_readonly_color="EmphasisColor"
+            font="SansSerifSmall"
             type="string"
-            name="role_uuid"
+            enabled="false"        halign="left"
             layout="topleft"
-            follows="left|top|right"
-            height="20"
             top_pad="0"
-            left="3"
-            width="180"
-            background_image_disabled="TextField_Plain"
-            enabled="false">
-        </line_editor>
-        <button
-            name="role_uuid_copy"
-            layout="topleft"
-            follows="right|top"
-            label="Copy Role UUID"
-            height="22"
-            width="110"
-            top_delta="-1"
-            right="-4"
-            mouse_opaque="true"
-            enabled="false"
-            tool_tip="Copy role UUID to the clipboard" />
+            follows="left|top|right"
+            left="0"
+            right="-1"
+            height="90"
+            max_length="512"
+            name="role_action_description"
+            word_wrap="true">
+      This Ability is &apos;Eject Members from this Group&apos;. Only an Owner can eject another Owner.
+            </text_editor>
   </panel>
   <panel
     height="424"
@@ -682,8 +677,7 @@ clicking on their names.
      layout="topleft"
      follows="left|top"
      left="5"
-         text_color="EmphasisColor"
-     name="static2"
+         name="static2"
      top_pad="1"
      width="300">
       Roles with this ability
@@ -703,8 +697,7 @@ clicking on their names.
      layout="topleft"
      follows="left|top"
      left="5"
-         text_color="EmphasisColor"
-     name="static3"
+         name="static3"
      top_pad="5"
      width="300">
       Members with this ability
