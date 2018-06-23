@@ -42,6 +42,7 @@
 #include "llcompilequeue.h"
 #include "llfasttimerview.h"
 #include "llfloaterabout.h"
+#include "llfloateradvancedbuildoptions.h"
 #include "llfloaterautoreplacesettings.h"
 #include "llfloateravatar.h"
 #include "llfloateravatarpicker.h"

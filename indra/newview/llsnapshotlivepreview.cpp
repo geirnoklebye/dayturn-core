@@ -1065,45 +1065,21 @@ void LLSnapshotLivePreview::saveTexture(BOOL outfit_snapshot, std::string name)
 	mDataSize = 0;
 }
 
-// <FS:Ansariel> Threaded filepickers
-//BOOL LLSnapshotLivePreview::saveLocal()
-//{
-//    // Update mFormattedImage if necessary
-//    getFormattedImage();
-//    
-//    // Save the formatted image
-//	BOOL success = gViewerWindow->saveImageNumbered(mFormattedImage);
-//
-//	if(success)
-//	{
-//		gViewerWindow->playSnapshotAnimAndSound();
-//	}
-//	return success;
-//}
-
-void LLSnapshotLivePreview::saveLocal(boost::function<void(bool)> callback)
+BOOL LLSnapshotLivePreview::saveLocal()
 {
     // Update mFormattedImage if necessary
     getFormattedImage();
 
     // Save the formatted image
-    gViewerWindow->saveImageNumbered(mFormattedImage, false, boost::bind(&LLSnapshotLivePreview::saveLocalCallback, this, _1, callback));
-}
+	BOOL success = saveLocal(mFormattedImage);
 
-void LLSnapshotLivePreview::saveLocalCallback(bool success, boost::function<void(bool)> callback)
-{
     if (success)
     {
         gViewerWindow->playSnapshotAnimAndSound();
     }
-
-    if (callback)
-    {
-        callback(success);
-    }
+	return success;
 }
-/*
-// </FS:Ansariel>
+
 //Check if failed due to insufficient memory
 BOOL LLSnapshotLivePreview::saveLocal(LLPointer<LLImageFormatted> mFormattedImage)
 {
@@ -1139,4 +1115,3 @@ BOOL LLSnapshotLivePreview::saveLocal(LLPointer<LLImageFormatted> mFormattedImag
 	}
 	return success;
 }
-*/

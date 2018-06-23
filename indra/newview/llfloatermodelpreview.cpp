@@ -212,10 +212,7 @@ std::string stripSuffix(std::string name)
 }
 
 LLMeshFilePicker::LLMeshFilePicker(LLModelPreview* mp, S32 lod)
-// <FS:CR> Threaded Filepickers
-//: LLFilePickerThread(LLFilePicker::FFLOAD_COLLADA)
-: LLLoadFilePickerThread(LLFilePicker::FFLOAD_COLLADA)
-// </FS:CR>
+: LLFilePickerThread(LLFilePicker::FFLOAD_COLLADA)
 	{
 		mMP = mp;
 		mLOD = lod;

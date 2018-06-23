@@ -904,7 +904,8 @@ void init_menu_file()
 	view_listener_t::addEnable(new LLFileEnableUploadModel(), "File.EnableUploadModel");
 	view_listener_t::addMenu(new LLMeshEnabled(), "File.MeshEnabled");
 	view_listener_t::addMenu(new LLMeshUploadVisible(), "File.VisibleUploadModel");
-	view_listener_t::addCommit(new FSFileImportLinkset(), "File.ImportLinkset");	// <FS:CR> Import linkset item
+    // WIP May need to reimplement
+	//view_listener_t::addCommit(new FSFileImportLinkset(), "File.ImportLinkset");	// <FS:CR> Import linkset item
 
 	// "File.SaveTexture" moved to llpanelmaininventory so that it can be properly handled.
 }
