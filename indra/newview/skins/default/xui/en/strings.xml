@@ -3608,6 +3608,8 @@ If you continue to receive this message, contact the [SUPPORT_SITE].
 	<string name="IM_muted_text_label">Your text chat has been disabled by a Group Moderator.</string>
 	<string name="IM_default_text_label">Click here to instant message.</string>
 	<string name="IM_to_label">To</string>
+	<string name="IM_group_label">Group chat with</string>
+	<string name="IM_and_more_names">and [NUMBER] more</string>
 	<string name="IM_moderator_label">(Moderator)</string>
 	<string name="Saved_message">(Saved [LONG_TIMESTAMP])</string>
 	<string name="IM_unblock_only_groups_friends">To see this message, you must uncheck &apos;Only friends and groups can call or IM me&apos; in Preferences/Privacy.</string>
