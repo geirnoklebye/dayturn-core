@@ -25,7 +25,9 @@
 [CHANNEL] [VIEWER_VERSION_0].[VIEWER_VERSION_1].[VIEWER_VERSION_2].[VIEWER_VERSION_3] ([ADDRESS_SIZE]bit)
 [[VIEWER_RELEASE_NOTES_URL] [ReleaseNotes]]
 	</string>
-    <string name="BuildConfig">Build Configuration [BUILD_CONFIG]</string>
+        <string name="BuildConfig">Build Configuration [BUILD_CONFIG]</string>
+        <string name = "SupportGroup">[APP_NAME] support group on [GRID_NAME]: [SUPPORT_GROUP_SLURL]</string>
+	<string name="AboutCompiler">Built with [COMPILER] version [COMPILER_VERSION]</string>
 
 	<string name="AboutPosition">
 You are at [POSITION_LOCAL_0,number,1], [POSITION_LOCAL_1,number,1], [POSITION_LOCAL_2,number,1] in [REGION] located at &lt;nolink&gt;[HOSTNAME]&lt;/nolink&gt; ([HOSTIP])
@@ -4138,6 +4140,13 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Twitter_Tooltip">Twitter</string>
   <string name="Command_View_Tooltip">Changing camera angle</string>
   <string name="Command_Voice_Tooltip">Volume controls for calls and people near you in world</string>
+
+<!-- Firestorm commands -->
+  <string name="Command_AO_Label">Animation overrider</string>
+  <string name="Command_AO_Tooltip">Animation overrider</string>
+  <string name="Command_Legacy_Search_Label">Search</string>
+  <string name="Command_Legacy_Search_Tooltip">Find places, groups and people</string>
+<!-- /Firestorm commands -->
 
   <string name="Toolbar_Bottom_Tooltip">currently in your bottom toolbar</string>
   <string name="Toolbar_Left_Tooltip"  >currently in your left toolbar</string>
