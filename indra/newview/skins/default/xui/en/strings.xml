@@ -27,9 +27,8 @@
 	</string>
         <string name="BuildConfig">Build Configuration [BUILD_CONFIG]</string>
         <string name = "SupportGroup">[APP_NAME] support group on [GRID_NAME]: [SUPPORT_GROUP_SLURL]</string>
-	<string name="AboutCompiler">Built with [COMPILER] version [COMPILER_VERSION]</string>
-
-	<string name="AboutPosition">
+	    <string name="AboutCompiler">Built with [COMPILER] version [COMPILER_VERSION]</string>
+    	<string name="AboutPosition">
 You are at [POSITION_LOCAL_0,number,1], [POSITION_LOCAL_1,number,1], [POSITION_LOCAL_2,number,1] in [REGION] located at &lt;nolink&gt;[HOSTNAME]&lt;/nolink&gt; ([HOSTIP])
 SLURL: &lt;nolink&gt;[SLURL]&lt;/nolink&gt;
 (global coordinates [POSITION_0,number,1], [POSITION_1,number,1], [POSITION_2,number,1])
@@ -63,7 +62,7 @@ VFS (cache) creation time: [VFS_TIME]
 	<string name="AboutLibs">
 J2C Decoder Version: [J2C_VERSION]
 Audio Driver Version: [AUDIO_DRIVER_VERSION]
-[LIBCEF_VERSION]
+CEF-Version: [LIBCEF_VERSION]
 LibVLC Version: [LIBVLC_VERSION]
 Voice Server Version: [VOICE_VERSION]
 	</string>
@@ -326,14 +325,14 @@ Please try logging in again in a minute.</string>
 
 	<string name="ReleaseNotes">Release Notes</string>
 	<!-- Always mark translate="false" for strings that are nothing but URLs, as they don't need translation. -->
-	<string name="RELEASE_NOTES_BASE_URL" translate="false">http://wiki.secondlife.com/wiki/Release_Notes/</string>
+	<string name="RELEASE_NOTES_BASE_URL" translate="false">http://wiki.kokuaviewer.org/wiki/Kokua:Release_Notes/</string>
 
 	<!-- Indicates something is being loaded. Maybe should be merged with RetrievingData -->
 	<string name="LoadingData">Loading...</string>
-        <!-- Indicates a protected Inventory folder. ## Zi: Animation Overrider -->
+        	<!-- Indicates a protected Inventory folder. ## Zi: Animation Overrider -->
         <string name="ProtectedFolder">protected</string>
     
-	<!-- namecache -->
+<!-- namecache -->
 	<!-- Avatar name: text shown for LLUUID::null -->
 	<string name="AvatarNameNobody">(nobody)</string>
 
@@ -403,6 +402,9 @@ http://secondlife.com/support for help fixing this problem.
 	<string name="AvatarEditingAppearance">(Editing Appearance)</string>
 	<string name="AvatarAway">Away</string>
 	<string name="AvatarDoNotDisturb">Do Not Disturb</string>
+//MK
+    <string name="AvatarTyping">Typing</string>
+//mk	
 	<string name="AvatarMuted">Blocked</string>
 
 	<!-- animations -->
@@ -523,6 +525,8 @@ http://secondlife.com/support for help fixing this problem.
 	<string name="ChangeYourDefaultAnimations">Change your default animations</string>
 	<string name="ForceSitAvatar">Force your avatar to sit</string>
 	
+<string name="SnapshotSavedToDisk">Snapshot saved: [FILENAME]</string>    
+	
 	<string name="NotConnected">Not Connected</string>
 	<string name="AgentNameSubst">(You)</string> <!-- Substitution for agent name -->
 	<string name="JoinAnExperience"/><!-- intentionally blank -->
@@ -557,7 +561,9 @@ http://secondlife.com/support for help fixing this problem.
 	<string name="targa_image_files">Targa Images</string>
 	<string name="bitmap_image_files">Bitmap Images</string>
 	<string name="png_image_files">PNG Images</string>
-	<string name="save_texture_image_files">Targa or PNG Images</string>
+	<string name="jpg_image_files">JPEG Images</string>
+	<string name="j2c_image_files">Jpeg2000 Images</string>
+	<string name="save_texture_image_files">Targa, PNG, JPEG, Jpeg2000, or Bitmap Images</string>
 	<string name="avi_movie_file">AVI Movie File</string>
 	<string name="xaf_animation_file">XAF Anim File</string>
 	<string name="xml_file">XML File</string>
@@ -567,6 +573,8 @@ http://secondlife.com/support for help fixing this problem.
 	<string name="choose_the_directory">Choose Directory</string>
 	<string name="script_files">Scripts</string>
 	<string name="dictionary_files">Dictionaries</string>
+
+<string name="backup_files">Object Backups</string>
 
   <!-- LSL Usage Hover Tips -->
   <!-- NOTE: For now these are set as translate="false", until DEV-40761 is implemented (to internationalize the rest of tooltips in the same window).
@@ -2286,6 +2294,8 @@ For AI Character: Get the closest navigable point to the point provided.
 	<string name="GraphicsQualityMid">Mid</string>
 	<string name="GraphicsQualityHigh">High</string>
 
+<string name="GraphicsQualityUltra">Ultra</string>
+
 	<!-- mouselook -->
 	<string name="LeaveMouselook">Press ESC to return to World View</string>
 
@@ -2411,6 +2421,8 @@ If you continue to receive this message, please contact Second Life support for 
 	<string name="No Filters"    value="No " />
 	<string name="Since Logoff"  value=" - Since Logoff" />
 
+<string name="Transferable Items Only"  value=" - Transferable " />
+
 	<!-- inventory folder -->
 	<string name="InvFolder My Inventory">My Inventory</string>
 	<string name="InvFolder Library">Library</string>
@@ -2419,8 +2431,10 @@ If you continue to receive this message, please contact Second Life support for 
 	<string name="InvFolder Calling Cards">Calling Cards</string>
 	<string name="InvFolder Landmarks">Landmarks</string>
 	<string name="InvFolder Scripts">Scripts</string>
+	<string name="InvFolder Texture Library">Texture Library</string>
 	<string name="InvFolder Clothing">Clothing</string>
 	<string name="InvFolder Objects">Objects</string>
+	<string name="InvFolder Objects Library">Objects Library</string>
 	<string name="InvFolder Notecards">Notecards</string>
 	<string name="InvFolder New Folder">New Folder</string>
 	<string name="InvFolder Inventory">Inventory</string>
@@ -2505,6 +2519,9 @@ If you continue to receive this message, please contact Second Life support for 
 	<string name="Right Pec">Right Pec</string>
     <string name="Neck">Neck</string>
     <string name="Avatar Center">Avatar Center</string>
+//MK
+    <string name="Root">Root</string>
+//mk
     <string name="Left Ring Finger">Left Ring Finger</string>
     <string name="Right Ring Finger">Right Ring Finger</string>
     <string name="Tail Base">Tail Base</string>
@@ -2527,13 +2544,20 @@ If you continue to receive this message, please contact Second Life support for 
 
   <!-- Avatar age computation, see LLDateUtil::ageFromDate -->
   <string name="YearsMonthsOld">[AGEYEARS] [AGEMONTHS] old</string>
+  <string name="MonthsWeeksOld">[AGEMONTHS] [AGEWEEKS] old</string>
+  <string name="WeeksDaysOld">[AGEWEEKS] [AGEDAYS] old</string>
   <string name="YearsOld">[AGEYEARS] old</string>
   <string name="MonthsOld">[AGEMONTHS] old</string>
   <string name="WeeksOld">[AGEWEEKS] old</string>
   <string name="DaysOld">[AGEDAYS] old</string>
   <string name="TodayOld">Joined today</string>
 
-  <!-- Avatar complexity rendering messages, see llavatarrendernotifier. -->
+  <string name="TimeMinutes">[MINUTES]</string>
+  <string name="TimeMinutesSeconds">[MINUTES] and [SECONDS]</string>
+  <string name="TimeSeconds">[SECONDS]</string>
+
+  <!-- Avatar complexity rendering messages, see
+       llavatarrendernotifier -->
   <string name="av_render_everyone_now">Everyone can see you now.</string>
   <string name="av_render_not_everyone">You may not be rendered by everyone around you.</string>
   <string name="av_render_over_half">You may not be rendered by over half of those around you.</string>
@@ -2781,6 +2805,12 @@ If you continue to receive this message, please contact Second Life support for 
   <string name="NoAvatarPicksClassifiedsText">User has no picks or classifieds</string>
   <string name="PicksClassifiedsLoadingText">Loading...</string>
 
+<!-- FS:KC legacy profiles -->
+  <string name="NoPicksText">You haven't created any Picks.</string>
+  <string name="NoAvatarPicksText">User has no picks</string>
+  <string name="NoClassifiedsText">You haven't created any Classifieds.</string>
+  <string name="NoAvatarClassifiedsText">User has no classifieds</string>
+
 	<!-- Multi Preview Floater -->
 	<string name="MultiPreviewTitle">Preview</string>
 	<string name="MultiPropertiesTitle">Properties</string>
@@ -2979,6 +3009,7 @@ If you continue to receive this message, contact the [SUPPORT_SITE].
 <string name="5 O'Clock Shadow">5 O'Clock Shadow</string>
 
 <string name="All White">All White</string>
+<string name="Alpha">Alpha</string>
 <string name="Anime Eyes">Anime Eyes</string>
 <string name="Arced">Arced</string>
 <string name="Arm Length">Arm Length</string>
@@ -4081,6 +4112,7 @@ Try enclosing path to the editor with double quotes.
 
   <string name="Command_AboutLand_Label">About land</string>
   <string name="Command_Appearance_Label">Appearance</string>
+  <string name="Command_Area_Search_Label">Area search</string>
   <string name="Command_Avatar_Label">Avatar</string>
   <string name="Command_Build_Label">Build</string>
   <string name="Command_Chat_Label">Chat</string>
@@ -4112,8 +4144,11 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_View_Label">Camera controls</string>
   <string name="Command_Voice_Label">Voice settings</string>
 
+<string name="Command_Web_Browser_Label">Web browser</string>
+
   <string name="Command_AboutLand_Tooltip">Information about the land you're visiting</string>
   <string name="Command_Appearance_Tooltip">Change your avatar</string>
+  <string name="Command_Area_Search_Tooltip">Search the local area for objects</string>
   <string name="Command_Avatar_Tooltip">Choose a complete avatar</string>
   <string name="Command_Build_Tooltip">Building objects and reshaping terrain</string>
   <string name="Command_Chat_Tooltip">Chat with people nearby using text</string>
@@ -4145,6 +4180,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_View_Tooltip">Changing camera angle</string>
   <string name="Command_Voice_Tooltip">Volume controls for calls and people near you in world</string>
 
+<string name="Command_Web_Browser_Tooltip">Open an in-viewer web browser</string>
 <!-- Firestorm commands -->
   <string name="Command_AO_Label">Animation overrider</string>
   <string name="Command_AO_Tooltip">Animation overrider</string>
@@ -4185,6 +4221,9 @@ Try enclosing path to the editor with double quotes.
   <!-- Spell check settings floater -->
   <string name="UserDictionary">[User]</string>
   
+<!--Draw distance set from command line dd x response chat-->
+  <string name="FSCmdLineDrawDistanceSet">Draw Distance set to [DISTANCE]m.</string>  
+  
   <!-- Experience Tools strings -->
   <string name="experience_tools_experience">Experience</string>
   <string name="ExperienceNameNull">(no experience)</string>
@@ -4213,7 +4252,9 @@ Try enclosing path to the editor with double quotes.
   <string name="ExperiencePermissionShort10">Control Camera</string>
   <string name="ExperiencePermissionShort11">Teleport</string>
   <string name="ExperiencePermissionShort12">Permission</string>
-    <!-- Conversation log messages -->
+    <string name="ExperiencePermissionShortUnknown">Unknown: [Permission]</string>
+  
+<!-- Conversation log messages -->
   <string name="logging_calls_disabled_log_empty">
     Conversations are not being logged. To begin keeping a log, choose "Save: Log only" or "Save: Log and transcripts" under Preferences > Chat.
   </string>
@@ -4245,7 +4286,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Mav_Details_MAV_UNKNOWN_VERSION">
       The physics shape does not have correct version. Set the correct version for the physics model.
   </string>
-  <!-- CA Kokua region/script/performance notifications -->
+    <!-- CA Kokua region/script/performance notifications -->
   <string name="CA_Region_Prefix">Entered new region</string>
   <string name="CA_Region_RepeatPrefix">Region information</string>
   <string name="CA_Region_Channel">.
