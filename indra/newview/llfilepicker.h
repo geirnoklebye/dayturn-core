@@ -87,11 +87,8 @@ public:
 		FFLOAD_COLLADA = 10,
 		FFLOAD_SCRIPT = 11,
 		FFLOAD_DICTIONARY = 12,
-		FFLOAD_DIRECTORY = 13,   //To call from lldirpicker.
-		FFLOAD_EXE = 14,         // Note: EXE will be treated as ALL on Windows and Linux but not on Darwin
-		
-		// Firestorm additions
-		FFLOAD_IMPORT = 50
+        FFLOAD_DIRECTORY = 13,   // To call from lldirpicker.
+        FFLOAD_EXE = 14          // Note: EXE will be treated as ALL on Windows and Linux but not on Darwin
 	};
 
 	enum ESaveFilter
@@ -112,22 +109,13 @@ public:
 		FFSAVE_PNG = 13,
 		FFSAVE_JPEG = 14,
 		FFSAVE_SCRIPT = 15,
-		FFSAVE_TGAPNG = 16,
-		
-		// Firestorm additions
-		FFSAVE_BEAM = 50,
-		FFSAVE_EXPORT = 51,
-		FFSAVE_CSV = 52
+		FFSAVE_TGAPNG = 16
 	};
 
 	// open the dialog. This is a modal operation
-// <FS:CR Threaded Filepickers>
-	//BOOL getSaveFile( ESaveFilter filter = FFSAVE_ALL, const std::string& filename = LLStringUtil::null );
-	BOOL getSaveFile( ESaveFilter filter = FFSAVE_ALL, const std::string& filename = LLStringUtil::null, bool blocking = true );
+	BOOL getSaveFile( ESaveFilter filter = FFSAVE_ALL, const std::string& filename = LLStringUtil::null, bool blocking = true);
 	BOOL getOpenFile( ELoadFilter filter = FFLOAD_ALL, bool blocking = true  );
-	//BOOL getMultipleOpenFiles( ELoadFilter filter = FFLOAD_ALL );
 	BOOL getMultipleOpenFiles( ELoadFilter filter = FFLOAD_ALL, bool blocking = true );
-// </FS:CR Threaded Filepickers>
 
 	// Get the filename(s) found. getFirstFile() sets the pointer to
 	// the start of the structure and allows the start of iteration.

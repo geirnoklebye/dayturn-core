@@ -301,6 +301,22 @@
 Добавить эту способность к роли «[ROLE_NAME]»?
 		<usetemplate name="okcancelbuttons" notext="Нет" yestext="Да"/>
 	</notification>
+	<notification name="AssignBanAbilityWarning">
+		Вы собираетесь добавить способность «[ACTION_NAME]» к роли «[ROLE_NAME]».
+
+ *ПРЕДУПРЕЖДЕНИЕ*
+Любой участник в роли с этой способностью также получает способности «[ACTION_NAME_2]» и «[ACTION_NAME_3]»
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
+	<notification name="RemoveBanAbilityWarning">
+		Вы удаляете способность «[ACTION_NAME]» для роли «[ROLE_NAME]».
+
+ *ПРЕДУПРЕЖДЕНИЕ*
+При удалении этой способности НЕ БУДУТ удалены способности «[ACTION_NAME_2]» и «[ACTION_NAME_3]».
+ 
+Если вам больше не нужны эти способности для данной роли, немедленно отключите их!
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="EjectGroupMemberWarning">
 		Вы собираетесь исключить [AVATAR_NAME] из группы.
 		<usetemplate ignoretext="Подтвердите исключение участника из группы" name="okcancelignore" notext="Отмена" yestext="Выкинуть"/>
@@ -667,6 +683,9 @@
 			http://www.secondlife.com/corporate/sysreqs.php
 		</url>
 		<usetemplate ignoretext="Оборудование моего компьютера не поддерживается" name="okcancelignore" notext="Нет" yestext="Да"/>
+	</notification>
+	<notification name="RunLauncher">
+		Пожалуйста, не запускайте напрямую исполняемый файл просмотра. Обновите все имеющиеся ярлыки, чтобы вместо этого запускать SL_Launcher.
 	</notification>
 	<notification name="OldGPUDriver">
 		Возможно, для вашей видеокарты имеется более новый драйвер.  Обновление драйвера может существенно повысить быстродействие.
@@ -1508,13 +1527,13 @@
 		Не удалось задать текстуры региона:
 у текстуры [TEXTURE_NUM] неправильная битовая глубина [TEXTURE_BIT_DEPTH].
 
-Замените текстуру [TEXTURE_NUM] на 24-битное изображение размером 1024 x 1024 или меньше и снова нажмите кнопку «Применить».
+Замените текстуру [TEXTURE_NUM] на 24-битное изображение размером 512x512 или меньше и снова нажмите кнопку «Применить».
 	</notification>
 	<notification name="InvalidTerrainSize">
 		Не удалось задать текстуры региона:
 у текстуры [TEXTURE_NUM] слишком большой размер [TEXTURE_SIZE_X]x[TEXTURE_SIZE_Y].
 
-Замените текстуру [TEXTURE_NUM] на 24-битное изображение размером 1024 x 1024 или меньше и снова нажмите кнопку «Применить».
+Замените текстуру [TEXTURE_NUM] на 24-битное изображение размером 512x512 или меньше и снова нажмите кнопку «Применить».
 	</notification>
 	<notification name="RawUploadStarted">
 		Началась передача. Она может занять до двух минут, в зависимости от скорости соединения.

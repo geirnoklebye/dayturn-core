@@ -308,6 +308,22 @@
 この能力を [ROLE_NAME] に割り当てますか？
 		<usetemplate name="okcancelbuttons" notext="いいえ" yestext="はい"/>
 	</notification>
+	<notification name="AssignBanAbilityWarning">
+		役割 &apos;[ROLE_NAME]&apos; に能力 &apos;[ACTION_NAME]&apos; を追加しようとしています。
+
+*警告*
+この能力を持つ役割のメンバーにも能力 &apos;[ACTION_NAME_2]&apos; と &apos;[ACTION_NAME_3]&apos; が許可されます
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
+	<notification name="RemoveBanAbilityWarning">
+		役割 &apos;[ROLE_NAME]&apos; から能力 &apos;[ACTION_NAME]&apos; を削除しようとしています。
+
+*警告*
+この能力を削除しても能力 &apos;[ACTION_NAME_2]&apos; と &apos;[ACTION_NAME_3]&apos; は削除されません。
+ 
+これらの能力をこの役割に許可しない場合は、すぐに削除してください!
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="EjectGroupMemberWarning">
 		[AVATAR_NAME] をグループから追放しようとしています。
 		<usetemplate ignoretext="グループからの参加者の追放を確認します" name="okcancelignore" notext="取り消し" yestext="追放"/>
@@ -685,6 +701,9 @@ L$ が不足しているのでこのグループに参加することができ�
 			http://secondlife.com/support/sysreqs.php?lang=ja
 		</url>
 		<usetemplate ignoretext="使用中のコンピューターのハードウェアがサポートされていないとき" name="okcancelignore" notext="いいえ" yestext="はい"/>
+	</notification>
+	<notification name="RunLauncher">
+		ビューワ実行ファイルを直接実行しないでください。代わりに、既存のショートカットの内のどれかをアップデートし、SL_Launcher を実行してください。
 	</notification>
 	<notification name="OldGPUDriver">
 		グラフィックスチップに最新のドライバがある可能性があります。グラフィックドライバを更新することにより、大幅にパフォーマンスが向上します。
@@ -1537,13 +1556,13 @@ SHA1 フィンガープリント： [MD5_DIGEST]
 		地域テクスチャを設定できませんでした：
 地形テクスチャ[TEXTURE_NUM]は、無効のビット深度[TEXTURE_BIT_DEPTH]です。
 
-テクスチャ[TEXTURE_NUM]を24ビット1024 x 1024かそれ以下のイメージと交換し、「適用」を再度クリックしてください。
+テクスチャ[TEXTURE_NUM]を24ビット512x512かそれ以下のイメージと交換し、「適用」を再度クリックしてください。
 	</notification>
 	<notification name="InvalidTerrainSize">
 		地域テクスチャを設定できませんでした：
 地形テクスチャ「 [TEXTURE_NUM] 」は、[TEXTURE_SIZE_X]x[TEXTURE_SIZE_Y] では大きすぎます。
 
-「 [TEXTURE_NUM] 」を 24 ビット 1024 x 1024 かそれ以下のイメージと交換し、「適用」を再度クリックしてください。
+「 [TEXTURE_NUM] 」を 24 ビット 512x512 かそれ以下のイメージと交換し、「適用」を再度クリックしてください。
 	</notification>
 	<notification name="RawUploadStarted">
 		アップロードを開始しました。 接続速度によっては、最大 2 分間かかります。
@@ -1594,153 +1613,13 @@ SHA1 フィンガープリント： [MD5_DIGEST]
 		未加工の地形ファイルをダウンロードしました：
 [DOWNLOAD_PATH]
 	</notification>
-	<notification name="DownloadWindowsMandatory">
-		[APP_NAME] の最新バージョンがご利用可能です。
-[MESSAGE]
-[APP_NAME] をご利用になるにはこのアップデートは必須です。
-		<usetemplate name="okcancelbuttons" notext="終了" yestext="ダウンロード"/>
-	</notification>
-	<notification name="DownloadWindows">
-		[APP_NAME] のアップデートバージョンがご利用可能です。
-[MESSAGE]
-このアップデートは必須ではありませんが、パフォーマンス向上のためにインストールをおすすめします。
-		<usetemplate name="okcancelbuttons" notext="続行" yestext="ダウンロード"/>
-	</notification>
-	<notification name="DownloadWindowsReleaseForDownload">
-		[APP_NAME] のアップデートバージョンがご利用可能です。
-[MESSAGE]
-このアップデートは必須ではありませんが、パフォーマンス向上のためにインストールをおすすめします。
-		<usetemplate name="okcancelbuttons" notext="続行" yestext="ダウンロード"/>
-	</notification>
-	<notification name="DownloadLinuxMandatory">
-		[APP_NAME] の最新バージョンがご利用可能です。
-[MESSAGE]
-[APP_NAME] をご利用になるにはこのアップデートは必須です。
-		<usetemplate name="okcancelbuttons" notext="終了" yestext="ダウンロード"/>
-	</notification>
-	<notification name="DownloadLinux">
-		[APP_NAME] のアップデートバージョンがご利用可能です。
-[MESSAGE]
-このアップデートは必須ではありませんが、パフォーマンス向上のためにインストールをおすすめします。
-		<usetemplate name="okcancelbuttons" notext="続ける" yestext="ダウンロード"/>
-	</notification>
-	<notification name="DownloadLinuxReleaseForDownload">
-		[APP_NAME] のアップデートバージョンがご利用可能です。
-[MESSAGE]
-このアップデートは必須ではありませんが、パフォーマンス向上のためにインストールをおすすめします。
-		<usetemplate name="okcancelbuttons" notext="続ける" yestext="ダウンロード"/>
-	</notification>
-	<notification name="DownloadMacMandatory">
-		[APP_NAME] の最新バージョンがご利用可能です。
-[MESSAGE]
-[APP_NAME] をご利用になるにはこのアップデートは必須です。
-
-あなたのアプリケーションフォルダにダウンロードしますか？
-		<usetemplate name="okcancelbuttons" notext="終了" yestext="ダウンロード"/>
-	</notification>
-	<notification name="DownloadMac">
-		[APP_NAME] のアップデートバージョンがご利用可能です。
-[MESSAGE]
-このアップデートは必須ではありませんが、パフォーマンス向上のためにインストールをおすすめします。
-
-あなたのアプリケーションフォルダにダウンロードしますか？
-		<usetemplate name="okcancelbuttons" notext="続行" yestext="ダウンロード"/>
-	</notification>
-	<notification name="DownloadMacReleaseForDownload">
-		[APP_NAME] のアップデートバージョンがご利用可能です。
-[MESSAGE]
-このアップデートは必須ではありませんが、パフォーマンス向上のためにインストールをおすすめします。
-
-あなたのアプリケーションフォルダにダウンロードしますか？
-		<usetemplate name="okcancelbuttons" notext="続行" yestext="ダウンロード"/>
-	</notification>
-	<notification name="FailedUpdateInstall">
-		ビューワのアップデートをインストール中にエラーが発生しました。
-http://secondlife.com/download から最新バージョンをダウンロードしてインストールしてください。
+	<notification name="RequiredUpdate">
+		ログインするには、バージョン [VERSION] が必要です。このアップデートは自動的に行われるものですが、まだ実行されてないようです。https://secondlife.com/support/downloads/ からダウンロードしてください。
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
-	<notification name="FailedRequiredUpdateInstall">
-		必要なアップデートをインストールできませんでした。 
-[APP_NAME] がアップデートされるまでログインできません。
-
-http://secondlife.com/download から最新バージョンをダウンロードしてインストールしてください。
+	<notification name="LoginFailedUnknown">
+		申し訳ありませんが、不明な理由によってログインに失敗しました。このメッセージが何度も出る場合は、[SUPPORT_SITE] をご確認ください。
 		<usetemplate name="okbutton" yestext="終了"/>
-	</notification>
-	<notification name="UpdaterServiceNotRunning">
-		お使いの Second Life に必要なアップデートがインストールされていません。
-
-このアップデートは、http://www.secondlife.com/downloads からダウンロードして、今すぐインストールできます。
-		<usetemplate name="okcancelbuttons" notext="終了" yestext="今すぐダウンロードしてインストール"/>
-	</notification>
-	<notification name="DownloadBackgroundTip">
-		お使いの [APP_NAME] に必要なアップデートをダウンロードしました。
-バージョン [VERSION] [[RELEASE_NOTES_FULL_URL] このアップデートに関する情報]
-		<usetemplate name="okcancelbuttons" notext="後で実行" yestext="今すぐインストールして [APP_NAME] を再起動"/>
-	</notification>
-	<notification name="DownloadBackgroundDialog">
-		お使いの [APP_NAME] に必要なアップデートをダウンロードしました。
-バージョン [VERSION] [[RELEASE_NOTES_FULL_URL] このアップデートに関する情報]
-		<usetemplate name="okcancelbuttons" notext="後で実行" yestext="今すぐインストールして [APP_NAME] を再起動"/>
-	</notification>
-	<notification name="RequiredUpdateDownloadedVerboseDialog">
-		必要なソフトウェアのアップデートをダウンロードしました。
-バージョン [VERSION] [[INFO_URL] このアップデートに関する情報]
-
-アップデートをインストールするには [APP_NAME] を再起動する必要があります。
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="RequiredUpdateDownloadedDialog">
-		アップデートをインストールするには [APP_NAME] を再起動する必要があります。
-[[INFO_URL] このアップデートに関する情報]
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="OtherChannelDownloadBackgroundTip">
-		お使いの [APP_NAME] に必要なアップデートをダウンロードしました。
-バージョン [VERSION] 
-この試験的なビューアが [NEW_CHANNEL] ビューアに置き換えられています;
-このアップデートの詳細については、[[INFO_URL] を参照してください]
-		<usetemplate name="okcancelbuttons" notext="後で実行" yestext="今すぐインストールして [APP_NAME] を再起動"/>
-	</notification>
-	<notification name="OtherChannelDownloadBackgroundDialog">
-		お使いの [APP_NAME] に必要なアップデートをダウンロードしました。
-バージョン [VERSION]
-この試験的なビューアが [NEW_CHANNEL] ビューアに置き換えられています;
-[[INFO_URL] このアップデートに関する情報] を参照
-		<usetemplate name="okcancelbuttons" notext="後で実行" yestext="今すぐインストールして [APP_NAME] を再起動"/>
-	</notification>
-	<notification name="OtherChannelRequiredUpdateDownloadedVerboseDialog">
-		必要なソフトウェアのアップデートをダウンロードしました。
-バージョン [VERSION]
-この試験的なビューアが [NEW_CHANNEL] ビューアに置き換えられています;
-[[INFO_URL] このアップデートに関する情報] を参照
-
-アップデートをインストールするには [APP_NAME] を再起動する必要があります。
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="OtherChannelRequiredUpdateDownloadedDialog">
-		アップデートをインストールするには [APP_NAME] を再起動する必要があります。
-この試験的なビューアが [NEW_CHANNEL] ビューアに置き換えられています;
-[[INFO_URL] このアップデートに関する情報] を参照
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="UpdateDownloadInProgress">
-		アップデートを利用できます。
-バックグラウンドでアップデートをダウンロードしています。準備ができ次第、インストールを完了するために、ビューワを再起動するように求めるメッセージが表示されます。
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="UpdateDownloadComplete">
-		アップデートがダウンロードされました。再起動中にインストールされます。
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="UpdateCheckError">
-		アップデートの確認中にエラーが発生しました。
-あとでもう一度お試しください。
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="UpdateViewerUpToDate">
-		ご利用のビューワは最新です!
-最新の機能と修正を今すぐ試したい場合は、代替ビューワページ (http://wiki.secondlife.com/wiki/Linden_Lab_Official:Alternate_Viewers) をチェックしてください。
-		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="DeedObjectToGroup">
 		このオブジェクトを譲渡するとグループは以下のことが可能です：
@@ -2784,6 +2663,12 @@ Web ページにリンクすると、他人がこの場所に簡単にアクセ�
 	<notification name="SystemMessage">
 		[MESSAGE]
 	</notification>
+	<notification name="FlickrConnect">
+		[MESSAGE]
+	</notification>
+	<notification name="TwitterConnect">
+		[MESSAGE]
+	</notification>
 	<notification name="PaymentReceived">
 		[MESSAGE]
 	</notification>
@@ -3526,6 +3411,10 @@ M キーを押して変更します。
 お使いのルーターの SIP ALG 機能をすべて無効にしてください。
 
 ボイスチャットによるコミュニケーションが利用できません。
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
+	<notification name="NoVoiceConnect-GIAB">
+		ボイスサーバーに接続できません。ボイスチャットによるコミュニケーションが利用できません。お使いのネットワークやファイアウォールの設定を確認してください。
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="AvatarRezLeftNotification">
@@ -4462,7 +4351,10 @@ M キーを押して変更します。
 		ファイルを移動できません。以前のパスがリストアされました。
 		<usetemplate ignoretext="ファイルを移動できません。以前のパスがリストアされました。" name="okignore" yestext="OK"/>
 	</notification>
+	<notification name="DefaultObjectPermissions">
 		デフォルトのオブジェクト権限を保存するときに問題が発生しました: [REASON]。後でデフォルトの権限を設定してください。
+	<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="ChatHistoryIsBusyAlert">
 		チャット履歴ファイルが前の操作でビジーです。2、3 分経ってからもう一度試すか、別の人とのチャットを選択してください。
 		<usetemplate name="okbutton" yestext="OK"/>

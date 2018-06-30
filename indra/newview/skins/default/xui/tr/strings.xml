@@ -4,14 +4,14 @@
      For example, the strings used in avatar chat bubbles, and strings
      that are returned from one component and may appear in many places-->
 <strings>
-    <string name="SECOND_LIFE">
-		[CURRENT_GRID]
+	<string name="SECOND_LIFE">
+		Second Life
 	</string>
 	<string name="APP_NAME">
-		Kokua
+		Second Life
 	</string>
 	<string name="CAPITALIZED_APP_NAME">
-		KOKUA
+		SECOND LIFE
 	</string>
 	<string name="SECOND_LIFE_GRID">
 		Second Life Ağı
@@ -357,6 +357,75 @@ Lütfen bir dakika içerisinde tekrar oturum açmayı deneyin.
 	</string>
 	<string name="TestingDisconnect">
 		Görüntüleyici bağlantısının kesilmesi test ediliyor
+	</string>
+	<string name="SocialFlickrConnecting">
+		Flickr bağlantısı kuruluyor...
+	</string>
+	<string name="SocialFlickrPosting">
+		Yayınlanıyor...
+	</string>
+	<string name="SocialFlickrDisconnecting">
+		Flickr bağlantısı kesiliyor...
+	</string>
+	<string name="SocialFlickrErrorConnecting">
+		Flickr bağlantısı kurulurken sorun çıktı
+	</string>
+	<string name="SocialFlickrErrorPosting">
+		Flickr&apos;da yayınlarken sorun çıktı
+	</string>
+	<string name="SocialFlickrErrorDisconnecting">
+		Flickr bağlantısı kesilirken sorun çıktı
+	</string>
+	<string name="SocialTwitterConnecting">
+		Twitter bağlantısı kuruluyor...
+	</string>
+	<string name="SocialTwitterPosting">
+		Yayınlanıyor...
+	</string>
+	<string name="SocialTwitterDisconnecting">
+		Twitter bağlantısı kesiliyor...
+	</string>
+	<string name="SocialTwitterErrorConnecting">
+		Twitter bağlantısı kurulurken sorun çıktı
+	</string>
+	<string name="SocialTwitterErrorPosting">
+		Twitter&apos;da yayınlarken sorun çıktı
+	</string>
+	<string name="SocialTwitterErrorDisconnecting">
+		Twitter bağlantısı kesilirken sorun çıktı
+	</string>
+	<string name="BlackAndWhite">
+		Siyah Beyaz
+	</string>
+	<string name="Colors1970">
+		70&apos;lerin Renkleri
+	</string>
+	<string name="Intense">
+		Yoğun
+	</string>
+	<string name="Newspaper">
+		Gazete Baskısı
+	</string>
+	<string name="Sepia">
+		Sepya
+	</string>
+	<string name="Spotlight">
+		Spot Işıkları
+	</string>
+	<string name="Video">
+		Video
+	</string>
+	<string name="Autocontrast">
+		Otomatik Kontrast
+	</string>
+	<string name="LensFlare">
+		Mercek Parlaması
+	</string>
+	<string name="Miniature">
+		Minyatür
+	</string>
+	<string name="Toycamera">
+		Eğlence Kamerası
 	</string>
 	<string name="TooltipPerson">
 		Kişi
@@ -946,6 +1015,12 @@ http://secondlife.com/support adresini ziyaret edin.
 	<string name="use_texture">
 		Dokuyu kullan
 	</string>
+	<string name="manip_hint1">
+		Fare imlecini cetvelin üzerine getirerek
+	</string>
+	<string name="manip_hint2">
+		ağa uydur
+	</string>
 	<string name="texture_loading">
 		Yükleniyor...
 	</string>
@@ -1367,6 +1442,9 @@ http://secondlife.com/support adresini ziyaret edin.
 	<string name="InventoryNoMatchingItems">
 		Aradığınızı bulamadınız mı? [secondlife:///app/search/all/[SEARCH_TERM] Arama] ile bulmayı deneyin.
 	</string>
+	<string name="InventoryNoMatchingRecentItems">
+		Aradığınızı bulamadınız mı? [secondlife:///app/inventory/filters Show filters] seçeneğini deneyin.
+	</string>
 	<string name="PlacesNoMatchingItems">
 		Aradığınızı bulamadınız mı? [secondlife:///app/search/places/[SEARCH_TERM] Arama] ile bulmayı deneyin.
 	</string>
@@ -1383,13 +1461,13 @@ http://secondlife.com/support adresini ziyaret edin.
 		Pazaryerinda satın aldıklarınız burada görünecektir. Bunları kullanmak için envanterinize sürükleyebilirsiniz.
 	</string>
 	<string name="MarketplaceURL">
-		http://marketplace.[MARKETPLACE_DOMAIN_NAME]
+		https://marketplace.[MARKETPLACE_DOMAIN_NAME]/
 	</string>
 	<string name="MarketplaceURL_CreateStore">
-		http://marketplace.[MARKETPLACE_DOMAIN_NAME]/create_store
+		http://community.secondlife.com/t5/English-Knowledge-Base/Selling-in-the-Marketplace/ta-p/700193#Section_.3
 	</string>
 	<string name="MarketplaceURL_Dashboard">
-		http://marketplace.[MARKETPLACE_DOMAIN_NAME]/learn_more
+		https://marketplace.[MARKETPLACE_DOMAIN_NAME]/merchants/store/dashboard
 	</string>
 	<string name="MarketplaceURL_Imports">
 		https://marketplace.[MARKETPLACE_DOMAIN_NAME]/merchants/store/imports
@@ -4398,6 +4476,12 @@ Bu iletiyi almaya devam ederseniz, lütfen [SUPPORT_SITE] bölümüne başvurun.
 	<string name="share_alert">
 		Envanterinizden buraya öğeler sürükleyin
 	</string>
+	<string name="flickr_post_success">
+		Flickr&apos;da yayınladınız.
+	</string>
+	<string name="twitter_post_success">
+		Twitter&apos;da yayınladınız.
+	</string>
 	<string name="no_session_message">
 		(Aİ Oturumu Mevcut Değil)
 	</string>
@@ -4873,6 +4957,9 @@ Hizmetle ilişkili bilinen bir sorun olup olmadığını görmek için lütfen h
 	<string name="LocalEstimateUSD">
 		US$ [AMOUNT]
 	</string>
+	<string name="Group Ban">
+		Gruptan Yasakla
+	</string>
 	<string name="Membership">
 		Üyelik
 	</string>
@@ -5307,6 +5394,12 @@ Düzenleyici yolunu çift tırnakla çevrelemeyi deneyin.
 	<string name="Command_Destinations_Label">
 		Hedef Konum
 	</string>
+	<string name="Command_Facebook_Label">
+		Facebook
+	</string>
+	<string name="Command_Flickr_Label">
+		Flickr
+	</string>
 	<string name="Command_Gestures_Label">
 		Mimikler
 	</string>
@@ -5364,6 +5457,9 @@ Düzenleyici yolunu çift tırnakla çevrelemeyi deneyin.
 	<string name="Command_Speak_Label">
 		Konuş
 	</string>
+	<string name="Command_Twitter_Label">
+		Twitter
+	</string>
 	<string name="Command_View_Label">
 		Kamera denetimleri
 	</string>
@@ -5393,6 +5489,12 @@ Düzenleyici yolunu çift tırnakla çevrelemeyi deneyin.
 	</string>
 	<string name="Command_Destinations_Tooltip">
 		İlgilendiğiniz hedef konumlar
+	</string>
+	<string name="Command_Facebook_Tooltip">
+		Facebook&apos;ta Yayınla
+	</string>
+	<string name="Command_Flickr_Tooltip">
+		Flickr&apos;a yükle
 	</string>
 	<string name="Command_Gestures_Tooltip">
 		Avatarınız için mimikler
@@ -5450,6 +5552,9 @@ Düzenleyici yolunu çift tırnakla çevrelemeyi deneyin.
 	</string>
 	<string name="Command_Speak_Tooltip">
 		Mikrofonunuzu kullanarak yakındaki kişilerle konuşun
+	</string>
+	<string name="Command_Twitter_Tooltip">
+		Twitter
 	</string>
 	<string name="Command_View_Tooltip">
 		Kamera açısını değiştirmek

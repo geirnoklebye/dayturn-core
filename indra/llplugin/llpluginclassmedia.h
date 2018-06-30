@@ -327,6 +327,8 @@ public:
 	// "init_history" message 
 	void initializeUrlHistory(const LLSD& url_history);
 
+	boost::shared_ptr<LLPluginClassMedia> getSharedPrt() { return boost::dynamic_pointer_cast<LLPluginClassMedia>(shared_from_this()); } // due to enable_shared_from_this
+
 protected:
 
 	LLPluginClassMediaOwner *mOwner;
@@ -456,31 +458,6 @@ protected:
 	F64				mDuration;
 	F64				mCurrentRate;
 	F64				mLoadedDuration;
-
-public:
-	// <ND> Enable gstreamer plugin to report title/artist of current stream
-	std::string const& getArtist() const
-	{ return mArtist; }
-
-	std::string const& getTitle() const
-	{ return mTitle; }
-
-	std::string const &getStreamName() const
-	{ return mStreamName; }
-
-	std::string const &getStreamLocation() const
-	{ return mStreamLocation; }
-
-private:
-	std::string mArtist;
-	std::string mTitle;
-	std::string mStreamName;
-	std::string mStreamLocation;
-
-	//<FS:ND> Special settings for CEF
-public:
-	void setFlipY( bool );
-	// </FS:ND>
 
 //--------------------------------------
 	//debug use only

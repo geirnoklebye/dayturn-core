@@ -179,9 +179,6 @@ BOOL LLSidepanelInventory::postBuild()
 		mTeleportBtn = mInventoryPanel->getChild<LLButton>("teleport_btn");
 		mTeleportBtn->setClickedCallback(boost::bind(&LLSidepanelInventory::onTeleportButtonClicked, this));
 		
-		mOverflowBtn = mInventoryPanel->getChild<LLButton>("overflow_btn");
-		mOverflowBtn->setClickedCallback(boost::bind(&LLSidepanelInventory::onOverflowButtonClicked, this));
-		
 		mPanelMainInventory = mInventoryPanel->getChild<LLPanelMainInventory>("panel_main_inventory");
 		mPanelMainInventory->setSelectCallback(boost::bind(&LLSidepanelInventory::onSelectionChange, this, _1, _2));
 		LLTabContainer* tabs = mPanelMainInventory->getChild<LLTabContainer>("inventory filter tabs");
@@ -415,13 +412,7 @@ void LLSidepanelInventory::onOpen(const LLSD& key)
 #endif
 
 	if(key.size() == 0)
-	{
-		// set focus on filter editor when side tray inventory shows up
-		LLFilterEditor* filter_editor = mPanelMainInventory->getChild<LLFilterEditor>("inventory search editor");
-		filter_editor->setFocus(TRUE);
 		return;
-	}
-
 
 	mItemPanel->reset();
 
@@ -521,10 +512,6 @@ void LLSidepanelInventory::onPlayButtonClicked()
 void LLSidepanelInventory::onTeleportButtonClicked()
 {
 	performActionOnSelection("teleport");
-}
-
-void LLSidepanelInventory::onOverflowButtonClicked()
-{
 }
 
 void LLSidepanelInventory::onBackButtonClicked()

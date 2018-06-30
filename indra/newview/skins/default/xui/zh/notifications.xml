@@ -301,6 +301,22 @@
 你仍要新增這項能力給「[ROLE_NAME]」？
 		<usetemplate name="okcancelbuttons" notext="否" yestext="是"/>
 	</notification>
+	<notification name="AssignBanAbilityWarning">
+		你即將把「[ACTION_NAME]」能力增加給「[ROLE_NAME]」角色。
+
+ *警告*
+任何擔任帶有此能力的角色的成員，將連帶得到「[ACTION_NAME_2]」和「[ACTION_NAME_3]」能力。
+		<usetemplate name="okbutton" yestext="確定"/>
+	</notification>
+	<notification name="RemoveBanAbilityWarning">
+		你即將剝除「[ROLE_NAME]」角色的「[ACTION_NAME]」能力。
+
+ *警告*
+剝除這個能力，將不連帶剝除「[ACTION_NAME_2]」和「[ACTION_NAME_3]」能力。
+ 
+如果你不希望讓這個角色繼續擁有這些能力，請立即取消它們！
+		<usetemplate name="okbutton" yestext="確定"/>
+	</notification>
 	<notification name="EjectGroupMemberWarning">
 		你即將把 [AVATAR_NAME] 踢出群組。
 		<usetemplate ignoretext="確定將某人踢出群組" name="okcancelignore" notext="取消" yestext="踢出"/>
@@ -668,6 +684,9 @@
 			http://www.secondlife.com/corporate/sysreqs.php
 		</url>
 		<usetemplate ignoretext="我的電腦硬體並不支援" name="okcancelignore" notext="否" yestext="是"/>
+	</notification>
+	<notification name="RunLauncher">
+		請勿直接執行該瀏覽器可執行程式。 如果有SL_Launcher（SL啓動器）的捷徑，請更新，以便正常使用。
 	</notification>
 	<notification name="OldGPUDriver">
 		你的顯示卡很可能有新版的驅動程式。  更新顯示驅動程式會大幅改善性能。
@@ -1502,13 +1521,13 @@ SHA1 指紋：[MD5_DIGEST]
 		無法設定地區材質：
 地形材質 [TEXTURE_NUM] 的位元深度 [TEXTURE_BIT_DEPTH] 無效。
 
-Replace texture [TEXTURE_NUM] with a 24-bit 1024 x 1024 or smaller image then click &quot;Apply&quot; again.
+請將材質 [TEXTURE_NUM] 替換成 24 位元 512x512 或更小圖像，然後點按「套用」。
 	</notification>
 	<notification name="InvalidTerrainSize">
 		無法設定地區材質：
 地形材質 [TEXTURE_NUM] 的尺寸 [TEXTURE_SIZE_X]x[TEXTURE_SIZE_Y] 太大。
 
-Replace texture [TEXTURE_NUM] with a 24-bit 1024 x 1024 or smaller image then click &quot;Apply&quot; again.
+請將材質 [TEXTURE_NUM] 替換成 24 位元 512x512 或更小圖像，然後點按「套用」。
 	</notification>
 	<notification name="RawUploadStarted">
 		上傳開始。 視你的連線速度而定，這最多需時兩分鐘。
@@ -1558,153 +1577,16 @@ Replace texture [TEXTURE_NUM] with a 24-bit 1024 x 1024 or smaller image then cl
 		原始地形檔案下載完成：
 [DOWNLOAD_PATH]。
 	</notification>
-	<notification name="DownloadWindowsMandatory">
-		有個新版本的 [APP_NAME] 可供使用。
-[MESSAGE]
-你必須下載這個更新才可使用 [APP_NAME]。
-		<usetemplate name="okcancelbuttons" notext="結束退出" yestext="下載"/>
-	</notification>
-	<notification name="DownloadWindows">
-		一個 [APP_NAME] 更新過的版本已經可用。
-[MESSAGE]
-這個更新並非強制更新，但我們建議你安裝以增強效能及穩定性。
-		<usetemplate name="okcancelbuttons" notext="繼續" yestext="下載"/>
-	</notification>
-	<notification name="DownloadWindowsReleaseForDownload">
-		一個 [APP_NAME] 更新過的版本已經可用。
-[MESSAGE]
-這個更新並非強制更新，但我們建議你安裝以增強效能及穩定性。
-		<usetemplate name="okcancelbuttons" notext="繼續" yestext="下載"/>
-	</notification>
-	<notification name="DownloadLinuxMandatory">
-		有個新版本的 [APP_NAME] 可供使用。
-[MESSAGE]
-你必須下載這個更新才可使用 [APP_NAME]。
-		<usetemplate name="okcancelbuttons" notext="結束退出" yestext="下載"/>
-	</notification>
-	<notification name="DownloadLinux">
-		一個 [APP_NAME] 更新過的版本已經可用。
-[MESSAGE]
-這個更新並非強制更新，但我們建議你安裝以增強效能及穩定性。
-		<usetemplate name="okcancelbuttons" notext="繼續" yestext="下載"/>
-	</notification>
-	<notification name="DownloadLinuxReleaseForDownload">
-		一個 [APP_NAME] 更新過的版本已經可用。
-[MESSAGE]
-這個更新並非強制更新，但我們建議你安裝以增強效能及穩定性。
-		<usetemplate name="okcancelbuttons" notext="繼續" yestext="下載"/>
-	</notification>
-	<notification name="DownloadMacMandatory">
-		有個新版本的 [APP_NAME] 可供使用。
-[MESSAGE]
-你必須下載這個更新才可使用 [APP_NAME]。
-
-下載到 Applications 資料夾？
-		<usetemplate name="okcancelbuttons" notext="結束退出" yestext="下載"/>
-	</notification>
-	<notification name="DownloadMac">
-		一個 [APP_NAME] 更新過的版本已經可用。
-[MESSAGE]
-這個更新並非強制更新，但我們建議你安裝以增強效能及穩定性。
-
-下載到 Applications 資料夾？
-		<usetemplate name="okcancelbuttons" notext="繼續" yestext="下載"/>
-	</notification>
-	<notification name="DownloadMacReleaseForDownload">
-		一個 [APP_NAME] 更新過的版本已經可用。
-[MESSAGE]
-這個更新並非強制更新，但我們建議你安裝以增強效能及穩定性。
-
-下載到 Applications 資料夾？
-		<usetemplate name="okcancelbuttons" notext="繼續" yestext="下載"/>
-	</notification>
-	<notification name="FailedUpdateInstall">
-		安裝更新版 Viewer 時出錯。
-請到 http://secondlife.com/download 下載並安裝最新版 Viewer。
+	<notification name="RequiredUpdate">
+		必須用[VERSION]版本登入。
+本來應該已經完成更新，但看來你的尚未更新。
+請到 http://secondlife.com/support/ 下載更新版
 		<usetemplate name="okbutton" yestext="確定"/>
 	</notification>
-	<notification name="FailedRequiredUpdateInstall">
-		無法安裝必要的更新。 
-除非 [APP_NAME] 更新，你將無法登入。
-
-請到 http://secondlife.com/download 下載並安裝最新版 Viewer。
-		<usetemplate name="okbutton" yestext="結束退出"/>
-	</notification>
-	<notification name="UpdaterServiceNotRunning">
-		你已安裝的第二人生軟體現有一個必要的更新。
-
-你可以到 http://www.secondlife.com/downloads 下載此更新，或者現在立即安裝。
-		<usetemplate name="okcancelbuttons" notext="結束退出第二人生" yestext="立即下載及安裝"/>
-	</notification>
-	<notification name="DownloadBackgroundTip">
-		我們已為你的 [APP_NAME] 軟體下載了更新。
-[VERSION] 版本 [[RELEASE_NOTES_FULL_URL] 關於此更新的資訊]
-		<usetemplate name="okcancelbuttons" notext="稍候..." yestext="立即安裝及重新啟動 [APP_NAME]"/>
-	</notification>
-	<notification name="DownloadBackgroundDialog">
-		我們已為你的 [APP_NAME] 軟體下載了更新。
-[VERSION] 版本 [[RELEASE_NOTES_FULL_URL] 關於此更新的資訊]
-		<usetemplate name="okcancelbuttons" notext="稍候..." yestext="立即安裝及重新啟動 [APP_NAME]"/>
-	</notification>
-	<notification name="RequiredUpdateDownloadedVerboseDialog">
-		我們已下載了一個必要的軟體更新。
-[VERSION] 版本 [[INFO_URL] 關於此更新的資訊]
-
-我門必須重新啟動 [APP_NAME] 以安裝更新。
-		<usetemplate name="okbutton" yestext="確定"/>
-	</notification>
-	<notification name="RequiredUpdateDownloadedDialog">
-		我門必須重新啟動 [APP_NAME] 以安裝更新。
-[[INFO_URL] 關於此更新的資訊]
-		<usetemplate name="okbutton" yestext="確定"/>
-	</notification>
-	<notification name="OtherChannelDownloadBackgroundTip">
-		我們已為你的 [APP_NAME] 軟體下載了更新。
-版本：[VERSION] 
-原本試驗性質的瀏覽器已被 [NEW_CHANNEL] 瀏覽器取代，
-參見[[INFO_URL] 此更新版的詳情]
-		<usetemplate name="okcancelbuttons" notext="稍候..." yestext="立即安裝並重新啟動 [APP_NAME]"/>
-	</notification>
-	<notification name="OtherChannelDownloadBackgroundDialog">
-		我們已為你的 [APP_NAME] 軟體下載了更新。
-版本：[VERSION]
-原本試驗性質的瀏覽器已被 [NEW_CHANNEL] 瀏覽器取代，
-參見[[INFO_URL] 介紹此更新版的資訊]
-		<usetemplate name="okcancelbuttons" notext="稍候…" yestext="立即安裝並重新啟動 [APP_NAME]"/>
-	</notification>
-	<notification name="OtherChannelRequiredUpdateDownloadedVerboseDialog">
-		我們已下載了一個必要的軟體更新。
-版本：[VERSION]
-原本試驗性質的瀏覽器已被 [NEW_CHANNEL] 瀏覽器取代，
-參見[[INFO_URL] 介紹此更新版的資訊]
-
-我們必須重新啟動 [APP_NAME] 以便安裝更新。
-		<usetemplate name="okbutton" yestext="確定"/>
-	</notification>
-	<notification name="OtherChannelRequiredUpdateDownloadedDialog">
-		我們必須重新啟動 [APP_NAME] 以便安裝更新。
-原本試驗性質的瀏覽器已被 [NEW_CHANNEL] 瀏覽器取代，
-參見[[INFO_URL] 介紹此更新版的資訊]
-		<usetemplate name="okbutton" yestext="確定"/>
-	</notification>
-	<notification name="UpdateDownloadInProgress">
-		有更新版本！
-正在背景下載中，一完成下載我們會通知你重啟瀏覽器以便安裝。
-		<usetemplate name="okbutton" yestext="確定"/>
-	</notification>
-	<notification name="UpdateDownloadComplete">
-		一個更新版本已經下載完畢。 重啟時將會安裝。
-		<usetemplate name="okbutton" yestext="確定"/>
-	</notification>
-	<notification name="UpdateCheckError">
-		查詢是否有更新時出錯。
-請稍候再試一次。
-		<usetemplate name="okbutton" yestext="確定"/>
-	</notification>
-	<notification name="UpdateViewerUpToDate">
-		你的瀏覽器已是最新版！
-如果你急欲試用最新的功能和修補，請光臨「替代瀏覽器」網頁：http://wiki.secondlife.com/wiki/Linden_Lab_Official:Alternate_Viewers。
-		<usetemplate name="okbutton" yestext="確定"/>
+	<notification name="LoginFailedUnknown">
+		抱歉，登入失敗，原因不明。
+如果你一直看到此訊息，請查閱 [SUPPORT_SITE]。
+		<usetemplate name="okbutton" yestext="退出"/>
 	</notification>
 	<notification name="DeedObjectToGroup">
 		讓渡此物件將可讓這個群組：
@@ -2733,6 +2615,12 @@ Replace texture [TEXTURE_NUM] with a 24-bit 1024 x 1024 or smaller image then cl
 	<notification name="SystemMessage">
 		[MESSAGE]
 	</notification>
+	<notification name="FlickrConnect">
+		[MESSAGE]
+	</notification>
+	<notification name="TwitterConnect">
+		[MESSAGE]
+	</notification>
 	<notification name="PaymentReceived">
 		[MESSAGE]
 	</notification>
@@ -3477,6 +3365,13 @@ Replace texture [TEXTURE_NUM] with a 24-bit 1024 x 1024 or smaller image then cl
 關閉路由器中的SIP ALG(應用層閘道)功能。
 
 將無法用語音溝通。
+		<usetemplate name="okbutton" yestext="確定"/>
+	</notification>
+	<notification name="NoVoiceConnect-GIAB">
+		試圖連接語音伺服器時出了問題。
+
+將無法用語音溝通。
+請檢查你的網路和防火牆設定。
 		<usetemplate name="okbutton" yestext="確定"/>
 	</notification>
 	<notification name="AvatarRezLeftNotification">
@@ -4414,7 +4309,10 @@ Replace texture [TEXTURE_NUM] with a 24-bit 1024 x 1024 or smaller image then cl
 		無法移動檔案。 已恢復前一個路徑。
 		<usetemplate ignoretext="無法移動檔案。 已恢復前一個路徑。" name="okignore" yestext="確定"/>
 	</notification>
+	<notification name="DefaultObjectPermissions">
 		儲存預設物件權限時出問題，原因：[REASON]。  請稍後再嘗試儲存預設權限。
+		<usetemplate name="okbutton" yestext="確定"/>
+	</notification>
 	<notification name="ChatHistoryIsBusyAlert">
 		聊天紀錄檔案還在處理前一個動作。 請稍候再試，或請換一個聊天對象。
 		<usetemplate name="okbutton" yestext="確定"/>

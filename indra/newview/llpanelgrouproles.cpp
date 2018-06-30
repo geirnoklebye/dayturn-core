@@ -51,7 +51,6 @@
 #include "lltrans.h"
 #include "llviewertexturelist.h"
 #include "llviewerwindow.h"
-#include "llwindow.h" 
 #include "llfocusmgr.h"
 #include "llviewercontrol.h"
 
@@ -356,7 +355,6 @@ void LLPanelGroupRoles::activate()
 	// Start requesting member and role data if needed.
 	LLGroupMgrGroupData* gdatap = LLGroupMgr::getInstance()->getGroupData(mGroupID);
 
-		// Check role data.
 	if (!gdatap || !gdatap->isRoleDataComplete() )
 	{
 		// Mildly hackish - clear all pending changes
@@ -467,12 +465,12 @@ BOOL LLPanelGroupSubTab::postBuild()
 {
 	// Hook up the search widgets.
 	bool recurse = true;
-	mSearchEditor = getChild<LLFilterEditor>("filter_input", recurse);
 
-	if (!mSearchEditor) 
-		return FALSE;
-
+	mSearchEditor = findChild<LLFilterEditor>("filter_input", recurse);
+	if (mSearchEditor) // SubTab doesn't implement this, only some of derived classes
+	{
 	mSearchEditor->setCommitCallback(boost::bind(&LLPanelGroupSubTab::setSearchFilter, this, _2));
+	}
 
 	return LLPanelGroupTab::postBuild();
 }
@@ -817,14 +815,18 @@ BOOL LLPanelGroupMembersSubTab::postBuildSubTab(LLView* root)
 
 	// Look recursively from the parent to find all our widgets.
 	bool recurse = true;
-	mHeader = parent->getChild<LLPanel>("members_header", recurse);
-	mFooter = parent->getChild<LLPanel>("members_footer", recurse);
+	mHeader = parent->findChild<LLPanel>("members_header", recurse);
+	mFooter = parent->findChild<LLPanel>("members_footer", recurse);
 
 	mMembersList 		= parent->getChild<LLNameListCtrl>("member_list", recurse);
 	mAssignedRolesList	= parent->getChild<LLScrollListCtrl>("member_assigned_roles", recurse);
 	mAllowedActionsList	= parent->getChild<LLScrollListCtrl>("member_allowed_actions", recurse);
+	mActionDescription = parent->getChild<LLTextEditor>("member_action_description", recurse);
 
-	if (!mMembersList || !mAssignedRolesList || !mAllowedActionsList) return FALSE;
+	if (!mMembersList || !mAssignedRolesList || !mAllowedActionsList || !mActionDescription) return FALSE;
+
+	mAllowedActionsList->setCommitOnSelectionChange(TRUE);
+	mAllowedActionsList->setCommitCallback(boost::bind(&LLPanelGroupMembersSubTab::updateActionDescription, this));
 
 	// We want to be notified whenever a member is selected.
 	mMembersList->setCommitOnSelectionChange(TRUE);
@@ -891,6 +893,7 @@ void LLPanelGroupMembersSubTab::handleMemberSelect()
 
 	mAssignedRolesList->deleteAllItems();
 	mAllowedActionsList->deleteAllItems();
+	mActionDescription->clear();
 	
 	LLGroupMgrGroupData* gdatap = LLGroupMgr::getInstance()->getGroupData(mGroupID);
 	if (!gdatap) 
@@ -1388,6 +1391,7 @@ void LLPanelGroupMembersSubTab::activate()
 			update(GC_MEMBER_DATA);
 		}
 	}
+	mActionDescription->clear();
 }
 
 void LLPanelGroupMembersSubTab::deactivate()
@@ -1896,6 +1900,23 @@ bool LLPanelGroupMembersSubTab::handleBanCallback(const LLSD& notification, cons
 	return false;
 }
 
+void LLPanelGroupMembersSubTab::updateActionDescription()
+{
+	mActionDescription->setText(std::string());
+	LLScrollListItem* action_item = mAllowedActionsList->getFirstSelected();
+	if (!action_item || !mAllowedActionsList->getCanSelect())
+	{
+		return;
+	}
+
+	LLRoleAction* rap = (LLRoleAction*)action_item->getUserdata();
+	if (rap)
+	{
+		std::string desc = rap->mLongDescription.empty() ? rap->mDescription : rap->mLongDescription;
+		mActionDescription->setText(desc);
+	}
+}
+
 void LLPanelGroupMembersSubTab::handleBanMember()
 {
 	LLGroupMgrGroupData* gdatap	= LLGroupMgr::getInstance()->getGroupData(mGroupID);
@@ -1938,8 +1959,6 @@ LLPanelGroupRolesSubTab::LLPanelGroupRolesSubTab()
 	mRoleName(NULL),
 	mRoleTitle(NULL),
 	mRoleDescription(NULL),
-	mRoleUUID(NULL),
-	mBtnRoleUUIDCopy(NULL),
 	mMemberVisibleCheck(NULL),
 	mDeleteRoleButton(NULL),
 	mCreateRoleButton(NULL),
@@ -1961,28 +1980,23 @@ BOOL LLPanelGroupRolesSubTab::postBuildSubTab(LLView* root)
 
 	// Look recursively from the parent to find all our widgets.
 	bool recurse = true;
-	mHeader = parent->getChild<LLPanel>("roles_header", recurse);
-	mFooter = parent->getChild<LLPanel>("roles_footer", recurse);
+	mHeader = parent->findChild<LLPanel>("roles_header", recurse);
+	mFooter = parent->findChild<LLPanel>("roles_footer", recurse);
 
 
 	mRolesList 		= parent->getChild<LLScrollListCtrl>("role_list", recurse);
 	mAssignedMembersList	= parent->getChild<LLNameListCtrl>("role_assigned_members", recurse);
 	mAllowedActionsList	= parent->getChild<LLScrollListCtrl>("role_allowed_actions", recurse);
+	mActionDescription	= parent->getChild<LLTextEditor>("role_action_description", recurse);
 
 	mRoleName = parent->getChild<LLLineEditor>("role_name", recurse);
 	mRoleTitle = parent->getChild<LLLineEditor>("role_title", recurse);
 	mRoleDescription = parent->getChild<LLTextEditor>("role_description", recurse);
-	mRoleUUID = parent->getChild<LLLineEditor>("role_uuid", recurse);
-	mBtnRoleUUIDCopy = parent->getChild<LLButton>("role_uuid_copy", recurse);
-	if (mBtnRoleUUIDCopy) {
-		mBtnRoleUUIDCopy->setEnabled(FALSE);
-		mBtnRoleUUIDCopy->setClickedCallback(onCopyRoleUUID, this);
-	}
 
 	mMemberVisibleCheck = parent->getChild<LLCheckBoxCtrl>("role_visible_in_list", recurse);
 
-	if (!mRolesList || !mAssignedMembersList || !mAllowedActionsList
-		|| !mRoleName || !mRoleTitle || !mRoleDescription || !mRoleUUID || !mBtnRoleUUIDCopy || !mMemberVisibleCheck)
+	if (!mRolesList || !mAssignedMembersList || !mAllowedActionsList || !mActionDescription
+		|| !mRoleName || !mRoleTitle || !mRoleDescription || !mMemberVisibleCheck)
 	{
 		LL_WARNS() << "ARG! element not found." << LL_ENDL;
 		return FALSE;
@@ -2014,6 +2028,7 @@ BOOL LLPanelGroupRolesSubTab::postBuildSubTab(LLView* root)
 	mMemberVisibleCheck->setCommitCallback(onMemberVisibilityChange, this);
 
 	mAllowedActionsList->setCommitOnSelectionChange(TRUE);
+	mAllowedActionsList->setCommitCallback(boost::bind(&LLPanelGroupRolesSubTab::updateActionDescription, this));
 
 	mRoleName->setCommitOnFocusLost(TRUE);
 	mRoleName->setKeystrokeCallback(onPropertiesKey, this);
@@ -2033,14 +2048,13 @@ void LLPanelGroupRolesSubTab::activate()
 {
 	LLPanelGroupSubTab::activate();
 
+	mActionDescription->clear();
 	mRolesList->deselectAllItems();
 	mAssignedMembersList->deleteAllItems();
 	mAllowedActionsList->deleteAllItems();
 	mRoleName->clear();
 	mRoleDescription->clear();
 	mRoleTitle->clear();
-	mRoleUUID->clear();
-	mBtnRoleUUIDCopy->setEnabled(FALSE);
 
 	setFooterEnabled(FALSE);
 
@@ -2209,9 +2223,7 @@ void LLPanelGroupRolesSubTab::update(LLGroupChange gc)
 			mRoleName->clear();
 			mRoleDescription->clear();
 			mRoleTitle->clear();
-			mRoleUUID->clear();
 			setFooterEnabled(FALSE);
-			mBtnRoleUUIDCopy->setEnabled(FALSE);
 			mDeleteRoleButton->setEnabled(FALSE);
 		}
 	}
@@ -2270,9 +2282,6 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 		mRoleName->setText(rd.mRoleName);
 		mRoleTitle->setText(rd.mRoleTitle);
 		mRoleDescription->setText(rd.mRoleDescription);
-		mRoleUUID->setText(item->getUUID().asString());
-		mRoleUUID->setEnabled(FALSE);
-		mBtnRoleUUIDCopy->setEnabled(TRUE);
 
 		mAllowedActionsList->setEnabled(gAgent.hasPowerInGroup(mGroupID,
 									   GP_ROLE_CHANGE_ACTIONS));
@@ -2319,8 +2328,6 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 		mRoleName->clear();
 		mRoleDescription->clear();
 		mRoleTitle->clear();
-		mRoleUUID->clear();
-		mBtnRoleUUIDCopy->setEnabled(FALSE);
 		setFooterEnabled(FALSE);
 
 		can_delete = FALSE;
@@ -2642,12 +2649,6 @@ void LLPanelGroupRolesSubTab::handleCreateRole()
 	mRolesList->addElement(row, ADD_BOTTOM, this);
 	mRolesList->selectByID(new_role_id);
 
-	if (mRoleUUID) {
-		mRoleUUID->setText(new_role_id.asString());
-		mRoleUUID->setEnabled(FALSE);
-		mBtnRoleUUIDCopy->setEnabled(TRUE);
-	}
-
 	// put focus on name field and select its contents
 	if(mRoleName)
 	{
@@ -2695,14 +2696,6 @@ void LLPanelGroupRolesSubTab::handleDeleteRole()
 	notifyObservers();
 }
 
-// static
-void LLPanelGroupRolesSubTab::onCopyRoleUUID(void *data)
-{
-	LLPanelGroupRolesSubTab *self = static_cast<LLPanelGroupRolesSubTab *>(data);
-
-	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(self->mRoleUUID->getText()));
-}
-
 void LLPanelGroupRolesSubTab::saveRoleChanges(bool select_saved_role)
 {
 	LLGroupMgrGroupData* gdatap = LLGroupMgr::getInstance()->getGroupData(mGroupID);
@@ -2739,9 +2732,23 @@ void LLPanelGroupRolesSubTab::saveRoleChanges(bool select_saved_role)
 		mHasRoleChange = FALSE;
 	}
 }
-////////////////////////////
-// LLPanelGroupActionsSubTab
-////////////////////////////
+
+void LLPanelGroupRolesSubTab::updateActionDescription()
+{
+	mActionDescription->setText(std::string());
+	LLScrollListItem* action_item = mAllowedActionsList->getFirstSelected();
+	if (!action_item || !mAllowedActionsList->getCanSelect())
+	{
+		return;
+	}
+
+	LLRoleAction* rap = (LLRoleAction*)action_item->getUserdata();
+	if (rap)
+	{
+		std::string desc = rap->mLongDescription.empty() ? rap->mDescription : rap->mLongDescription;
+		mActionDescription->setText(desc);
+	}
+}
 
 void LLPanelGroupRolesSubTab::setGroupID(const LLUUID& id)
 {
@@ -2782,8 +2789,8 @@ BOOL LLPanelGroupActionsSubTab::postBuildSubTab(LLView* root)
 
 	// Look recursively from the parent to find all our widgets.
 	bool recurse = true;
-	mHeader = parent->getChild<LLPanel>("actions_header", recurse);
-	mFooter = parent->getChild<LLPanel>("actions_footer", recurse);
+	mHeader = parent->findChild<LLPanel>("actions_header", recurse);
+	mFooter = parent->findChild<LLPanel>("actions_footer", recurse);
 
 	mActionDescription = parent->getChild<LLTextEditor>("action_description", recurse);
 
@@ -2990,8 +2997,8 @@ BOOL LLPanelGroupBanListSubTab::postBuildSubTab(LLView* root)
 	// Look recursively from the parent to find all our widgets.
 	bool recurse = true;
 	
-	mHeader	= parent->getChild<LLPanel>("banlist_header", recurse);
-	mFooter	= parent->getChild<LLPanel>("banlist_footer", recurse);
+	mHeader = parent->findChild<LLPanel>("banlist_header", recurse);
+	mFooter = parent->findChild<LLPanel>("banlist_footer", recurse);
 	
 	mBanList = parent->getChild<LLNameListCtrl>("ban_list", recurse);
 	

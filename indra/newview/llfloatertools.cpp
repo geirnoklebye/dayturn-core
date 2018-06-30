@@ -258,7 +258,6 @@ BOOL	LLFloaterTools::postBuild()
 	mCheckStretchTexture	= getChild<LLCheckBoxCtrl>("checkbox stretch textures");
 	getChild<LLUICtrl>("checkbox stretch textures")->setValue((BOOL)gSavedSettings.getBOOL("ScaleStretchTextures"));
 	mComboGridMode			= getChild<LLComboBox>("combobox grid mode");
-	mCheckStretchUniformLabel = getChild<LLTextBox>("checkbox uniform label");
 
 	//
 	// Create Buttons
@@ -406,7 +405,7 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 
 	mCommitCallbackRegistrar.add("BuildTool.LinkObjects",		boost::bind(&LLSelectMgr::linkObjects, LLSelectMgr::getInstance()));
 	mCommitCallbackRegistrar.add("BuildTool.UnlinkObjects",		boost::bind(&LLSelectMgr::unlinkObjects, LLSelectMgr::getInstance()));
-	mCommitCallbackRegistrar.add("BuildTool.CopyKeys",			boost::bind(&LLFloaterTools::onClickBtnCopyKeys,this));
+
 	mLandImpactsObserver = new LLLandImpactsObserver();
 	LLViewerParcelMgr::getInstance()->addObserver(mLandImpactsObserver);
 }
@@ -487,7 +486,6 @@ void LLFloaterTools::refresh()
 #endif
 	{
 		F32 link_cost  = LLSelectMgr::getInstance()->getSelection()->getSelectedLinksetCost();
-        S32 prim_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
 		S32 link_count = LLSelectMgr::getInstance()->getSelection()->getRootObjectCount();
 
 		LLCrossParcelFunctor func;
@@ -514,14 +512,8 @@ void LLFloaterTools::refresh()
 
 		LLStringUtil::format_map_t selection_args;
 		selection_args["OBJ_COUNT"] = llformat("%.1d", link_count);
-		if (((S32)link_cost) == 0)
-		{
-			selection_args["LAND_IMPACT"] = llformat("%.1d", (S32)prim_count);
-		}
-		else
-		{
 		selection_args["LAND_IMPACT"] = llformat("%.1d", (S32)link_cost);
-		}
+
 		std::ostringstream selection_info;
 
 		selection_info << getString("status_selectcount", selection_args);
@@ -1248,7 +1240,7 @@ void LLFloaterTools::getMediaState()
 		  &&first_object->permModify() 
 	      ))
 	{
-		getChildView("Add_Media")->setEnabled(FALSE);
+		getChildView("add_media")->setEnabled(FALSE);
 		media_info->clear();
 		clearMediaSettings();
 		return;
@@ -1259,7 +1251,7 @@ void LLFloaterTools::getMediaState()
 	
 	if(!has_media_capability)
 	{
-		getChildView("Add_Media")->setEnabled(FALSE);
+		getChildView("add_media")->setEnabled(FALSE);
 		LL_WARNS("LLFloaterTools: media") << "Media not enabled (no capability) in this region!" << LL_ENDL;
 		clearMediaSettings();
 		return;
@@ -1354,7 +1346,7 @@ void LLFloaterTools::getMediaState()
 	// update UI depending on whether "object" (prim or face) has media
 	// and whether or not you are allowed to edit it.
 	
-	getChildView("Add_Media")->setEnabled(editable);
+	getChildView("add_media")->setEnabled(editable);
 	// IF all the faces have media (or all dont have media)
 	if ( LLFloaterMediaSettings::getInstance()->mIdenticalHasMediaInfo )
 	{

@@ -1823,6 +1823,8 @@ void LLAgent::setAutoPilotTargetGlobal(const LLVector3d &target_global)
 		LLViewerObject *obj;
 
 		LLWorld::getInstance()->resolveStepHeightGlobal(NULL, target_global, traceEndPt, targetOnGround, groundNorm, &obj);
+		// Note: this might malfunction for sitting agent, since pelvis stays same, but agent's position becomes lower
+		// But for autopilot to work we assume that agent is standing and ready to go.
 		F64 target_height = llmax((F64)gAgentAvatarp->getPelvisToFoot(), target_global.mdV[VZ] - targetOnGround.mdV[VZ]);
 
 		// clamp z value of target to minimum height above ground
@@ -3283,14 +3285,6 @@ void LLAgent::sendAnimationRequests(const std::vector<LLUUID> &anim_ids, EAnimRe
 	if (num_valid_anims)
 	{
 		sendReliableMessage();
-	}
-	else
-	{
-		// Nothing to send: we *must* clear the message (else, the next message
-		// will retain our unsent message header, resulting in a crash in
-		// LLTemplateMessageBuilder::nextBlock() at some point, due to invalid
-		// block name/data). - From Cool VL Viewer, Henri Beauchamp
-		msg->clearMessage();
 	}
 }
 

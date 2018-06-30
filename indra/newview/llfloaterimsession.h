@@ -122,7 +122,7 @@ public:
 			const LLVoiceChannel::EState& old_state,
 			const LLVoiceChannel::EState& new_state);
 
-	void processIMTyping(const LLIMInfo* im_info, BOOL typing);
+	void processIMTyping(const LLUUID& from_id, BOOL typing);
 	void processAgentListUpdates(const LLSD& body);
 	void processSessionUpdate(const LLSD& session_update);
 
@@ -143,13 +143,6 @@ private:
     /*virtual*/ void onTearOffClicked();
 	/*virtual*/ void onClickCloseBtn(bool app_qutting);
 
-//MK
-	void onViewProfileButtonClicked();
-	void onAddFriendButtonClicked();
-	void onShareButtonClicked();
-	void onTeleportButtonClicked();
-	void onPayButtonClicked();
-//mk
 	// Update the window title and input field help text
 	/*virtual*/ void updateSessionName(const std::string& name);
 

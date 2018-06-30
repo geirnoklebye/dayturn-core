@@ -1528,14 +1528,16 @@ LLInventoryPanel* LLInventoryPanel::getActiveInventoryPanel(BOOL auto_open)
 //static
 void LLInventoryPanel::openInventoryPanelAndSetSelection(BOOL auto_open, const LLUUID& obj_id, BOOL main_panel, BOOL take_keyboard_focus, BOOL reset_filter)
 {
-	LLInventoryPanel *active_panel;
+	LLSidepanelInventory* sidepanel_inventory = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
+	sidepanel_inventory->showInventoryPanel();
+
 	bool in_inbox = (gInventory.isObjectDescendentOf(obj_id, gInventory.findCategoryUUIDForType(LLFolderType::FT_INBOX)));
 
 	if (main_panel && !in_inbox)
 	{
-		LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory")->selectAllItemsPanel();
+		sidepanel_inventory->selectAllItemsPanel();
 	}
-	active_panel = LLInventoryPanel::getActiveInventoryPanel(auto_open);
+	LLInventoryPanel *active_panel = LLInventoryPanel::getActiveInventoryPanel(auto_open);
 
 	if (active_panel)
 	{
@@ -1548,7 +1550,7 @@ void LLInventoryPanel::openInventoryPanelAndSetSelection(BOOL auto_open, const L
 
 		if (in_inbox)
 		{
-			LLSidepanelInventory * sidepanel_inventory =	LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
+			
 			LLInventoryPanel * inventory_panel = NULL;
 				sidepanel_inventory->openInbox();
 				inventory_panel = sidepanel_inventory->getInboxPanel();
@@ -1745,7 +1747,7 @@ bool LLInventoryPanel::isSelectionRemovable()
 class LLInventoryRecentItemsPanel;
 static LLDefaultChildRegistry::Register<LLInventoryRecentItemsPanel> t_recent_inventory_panel("recent_inventory_panel");
 
-static LLRecentInventoryBridgeBuilder RECENT_ITEMS_BUILDER;
+static const LLRecentInventoryBridgeBuilder RECENT_ITEMS_BUILDER;
 class LLInventoryRecentItemsPanel : public LLInventoryPanel
 {
 public:
@@ -1805,6 +1807,5 @@ namespace LLInitParam
 		declare(LLFolderType::lookup(LLFolderType::FT_MARKETPLACE_LISTINGS)   , LLFolderType::FT_MARKETPLACE_LISTINGS);
 		declare(LLFolderType::lookup(LLFolderType::FT_MARKETPLACE_STOCK), LLFolderType::FT_MARKETPLACE_STOCK);
 		declare(LLFolderType::lookup(LLFolderType::FT_MARKETPLACE_VERSION), LLFolderType::FT_MARKETPLACE_VERSION);
-		declare(LLFolderType::lookup(LLFolderType::FT_SUITCASE), LLFolderType::FT_SUITCASE);
 	}
 }

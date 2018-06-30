@@ -604,7 +604,6 @@ BOOL LLPanelPeople::postBuild()
 	getChild<LLFilterEditor>("friends_filter_input")->setCommitCallback(boost::bind(&LLPanelPeople::onFilterEdit, this, _2));
 	getChild<LLFilterEditor>("groups_filter_input")->setCommitCallback(boost::bind(&LLPanelPeople::onFilterEdit, this, _2));
 	getChild<LLFilterEditor>("recent_filter_input")->setCommitCallback(boost::bind(&LLPanelPeople::onFilterEdit, this, _2));
-	getChild<LLFilterEditor>("fbc_filter_input")->setCommitCallback(boost::bind(&LLPanelPeople::onFilterEdit, this, _2));
 
 	if(gMaxAgentGroups <= BASE_MAX_AGENT_GROUPS)
 	{
@@ -1267,6 +1266,7 @@ void LLPanelPeople::updateButtons()
 		{
 			if (cur_panel->hasChild("add_friend_btn", TRUE))
 				cur_panel->getChildView("add_friend_btn")->setEnabled(item_selected && !is_friend && !is_self);
+
 			if (friends_tab_active)
 			{
 				cur_panel->getChildView("friends_del_btn")->setEnabled(multiple_selected);

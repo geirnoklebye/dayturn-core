@@ -106,6 +106,7 @@ BOOL LLFloaterWebContent::postBuild()
 
 	// these buttons are always enabled
 	mBtnReload->setEnabled( true );
+	mBtnReload->setVisible( false );
 	getChildView("popexternal")->setEnabled( true );
 
 	// cache image for secure browsing
@@ -278,10 +279,6 @@ void LLFloaterWebContent::onOpen(const LLSD& key)
 	{
 		closeFloater();
 		return;
-	}
-
-	if (params.url().empty()) {
-		params.url = gSavedSettings.getString("WebBrowserHomePage");
 	}
 
 	mWebBrowser->setTrustedContent(params.trusted_content);
@@ -469,11 +466,6 @@ void LLFloaterWebContent::onClickBack()
 	mWebBrowser->navigateBack();
 }
 
-void LLFloaterWebContent::onClickHome()
-{
-	mWebBrowser->navigateTo(gSavedSettings.getString("WebBrowserHomePage"));
-}
-
 void LLFloaterWebContent::onClickReload()
 {
 
@@ -494,7 +486,7 @@ void LLFloaterWebContent::onClickStop()
 		mWebBrowser->getMediaPlugin()->browse_stop();
 
 	// still should happen when we catch the navigate complete event
-	// but sometimes (don't know why) that event isn't sent from media plugin
+	// but sometimes (don't know why) that event isn't sent from Qt
 	// and we ghetto a point where the stop button stays active.
 	mBtnReload->setVisible( true );
 	mBtnStop->setVisible( false );

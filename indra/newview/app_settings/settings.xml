@@ -8878,7 +8878,7 @@
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>none</string>
+      <string>toast</string>
     </map>
     <key>NotificationNearbyChatOptions</key>
     <map>
@@ -8892,7 +8892,7 @@
       <key>Type</key>
       <string>String</string>
       <key>Value</key>
-      <string>none</string>
+      <string>toast</string>
     </map>
     <key>NotificationNonFriendIMOptions</key>
     <map>
@@ -11486,7 +11486,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <real>128.0</real>
+      <real>256.0</real>
     </map>
     <key>RenderAutoMaskAlphaNonDeferred</key>
     <map>
@@ -12336,7 +12336,7 @@
     <key>Type</key>
     <string>F32</string>
     <key>Value</key>
-    <real>10.0E6</real>
+    <real>1000.0</real>
   </map>
   <key>RenderAutoMuteLogging</key>
   <map>
@@ -13864,7 +13864,7 @@
     <key>ShowFPSStats</key>
     <map>
       <key>Comment</key>
-      <string>Show the FPS Indicator in the status overlay</string>
+      <string>Show the Status Indicators for the Viewer and Network Usage in the Status Overlay</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -14516,7 +14516,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <real>500.0</real>
+      <real>3000.0</real>
     </map>
     <key>UpdaterMaximumBandwidth</key>
     <map>
@@ -19341,6 +19341,6 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
-  </map>
+</map>
 </llsd>
 

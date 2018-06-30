@@ -9267,6 +9267,23 @@ void handle_web_browser_test(const LLSD& param)
 	LLWeb::loadURLInternal(url);
 }
 
+bool callback_clear_cache_immediately(const LLSD& notification, const LLSD& response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	if ( option == 0 ) // YES
+	{
+		//clear cache
+		LLAppViewer::instance()->purgeCacheImmediate();
+	}
+
+	return false;
+}
+
+void handle_cache_clear_immediately()
+{
+	LLNotificationsUtil::add("ConfirmClearCache", LLSD(), LLSD(), callback_clear_cache_immediately);
+}
+
 void handle_web_content_test(const LLSD& param)
 {
 	std::string url = param.asString();
@@ -10461,6 +10478,10 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedReloadVertexShader(), "Advanced.ReloadVertexShader");
 	view_listener_t::addMenu(new LLAdvancedToggleAnimationInfo(), "Advanced.ToggleAnimationInfo");
 	view_listener_t::addMenu(new LLAdvancedCheckAnimationInfo(), "Advanced.CheckAnimationInfo");
+	view_listener_t::addMenu(new LLAdvancedToggleShowLookAt(), "Advanced.ToggleShowLookAt");
+	view_listener_t::addMenu(new LLAdvancedCheckShowLookAt(), "Advanced.CheckShowLookAt");
+	view_listener_t::addMenu(new LLAdvancedToggleShowPointAt(), "Advanced.ToggleShowPointAt");
+	view_listener_t::addMenu(new LLAdvancedCheckShowPointAt(), "Advanced.CheckShowPointAt");
 	view_listener_t::addMenu(new LLAdvancedToggleDebugJointUpdates(), "Advanced.ToggleDebugJointUpdates");
 	view_listener_t::addMenu(new LLAdvancedCheckDebugJointUpdates(), "Advanced.CheckDebugJointUpdates");
 	view_listener_t::addMenu(new LLAdvancedToggleDisableLOD(), "Advanced.ToggleDisableLOD");
@@ -10511,6 +10532,8 @@ void initialize_menus()
 	
 	//Develop (Texture Fetch Debug Console)
 	view_listener_t::addMenu(new LLDevelopTextureFetchDebugger(), "Develop.SetTexFetchDebugger");
+	//Develop (clear cache immediately)
+	commit.add("Develop.ClearCache", boost::bind(&handle_cache_clear_immediately) );
 
 	// Admin >Object
 	view_listener_t::addMenu(new LLAdminForceTakeCopy(), "Admin.ForceTakeCopy");
@@ -10534,9 +10557,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLSelfStandUp(), "Self.StandUp");
 	enable.add("Self.EnableStandUp", boost::bind(&enable_standup_self));
 	view_listener_t::addMenu(new LLSelfSitDown(), "Self.SitDown");
-	view_listener_t::addMenu(new LLSelfToggleSitStand(), "Self.ToggleSitStand");
 	enable.add("Self.EnableSitDown", boost::bind(&enable_sitdown_self));
-	enable.add("Self.EnableSitStand", boost::bind(&enable_sitstand_self));
 	view_listener_t::addMenu(new LLSelfRemoveAllAttachments(), "Self.RemoveAllAttachments");
 
 	view_listener_t::addMenu(new LLSelfEnableRemoveAllAttachments(), "Self.EnableRemoveAllAttachments");
@@ -10554,6 +10575,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAvatarAddFriend(), "Avatar.AddFriend");
 	view_listener_t::addMenu(new LLAvatarRemoveFriend(), "Avatar.RemoveFriend");
 	view_listener_t::addMenu(new LLAvatarAddContact(), "Avatar.AddContact");
+	commit.add("Avatar.Freeze", boost::bind(&handle_avatar_freeze, LLSD()));
 	view_listener_t::addMenu(new LLAvatarDebug(), "Avatar.Debug");
 	view_listener_t::addMenu(new LLAvatarVisibleDebug(), "Avatar.VisibleDebug");
 	view_listener_t::addMenu(new LLAvatarInviteToGroup(), "Avatar.InviteToGroup");
@@ -10582,6 +10604,7 @@ void initialize_menus()
 	
 	view_listener_t::addMenu(new LLAvatarEnableAddFriend(), "Avatar.EnableAddFriend");
 	view_listener_t::addMenu(new LLAvatarEnableRemoveFriend(), "Avatar.EnableRemoveFriend");
+	enable.add("Avatar.EnableFreezeEject", boost::bind(&enable_freeze_eject, _2));
 
 	// Object pie menu
 	view_listener_t::addMenu(new LLObjectBuild(), "Object.Build");
@@ -10677,8 +10700,8 @@ void initialize_menus()
 	enable.add("EnableSelectInPathfindingCharacters", boost::bind(&enable_object_select_in_pathfinding_characters));
 
 	view_listener_t::addMenu(new LLFloaterVisible(), "FloaterVisible");
-//NP	view_listener_t::addMenu(new LLShowSidetrayPanel(), "ShowSidetrayPanel");
-//NP	view_listener_t::addMenu(new LLSidetrayPanelVisible(), "SidetrayPanelVisible");
+	view_listener_t::addMenu(new LLShowSidetrayPanel(), "ShowSidetrayPanel");
+	view_listener_t::addMenu(new LLSidetrayPanelVisible(), "SidetrayPanelVisible");
 	view_listener_t::addMenu(new LLSomethingSelected(), "SomethingSelected");
 	view_listener_t::addMenu(new LLSomethingSelectedNoHUD(), "SomethingSelectedNoHUD");
 	view_listener_t::addMenu(new LLEditableSelected(), "EditableSelected");

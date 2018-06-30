@@ -282,7 +282,6 @@ StrCpy $INSTSHORTCUT "${SHORTCUT}"
 
 Call CheckIfAdministrator		# Make sure the user can install/uninstall
 Call CloseSecondLife			# Make sure Second Life not currently running
-Call CheckNetworkConnection		# Ping secondlife.com
 Call CheckWillUninstallV2		# Check if Second Life is already installed
 
 StrCmp $DO_UNINSTALL_V2 "" PRESERVE_DONE
@@ -347,20 +346,21 @@ WriteRegDWORD HKEY_LOCAL_MACHINE "Software\Microsoft\Windows NT\CurrentVersion\I
 # Write URL registry info
 WriteRegStr HKEY_CLASSES_ROOT "${URLNAME}" "(default)" "URL:Second Life"
 WriteRegStr HKEY_CLASSES_ROOT "${URLNAME}" "URL Protocol" ""
-WriteRegStr HKEY_CLASSES_ROOT "${URLNAME}\DefaultIcon" "" '"$INSTDIR\$INSTEXE"'
+WriteRegStr HKEY_CLASSES_ROOT "${URLNAME}\DefaultIcon" "" '"$INSTDIR\$VIEWER_EXE"'
 
 # URL param must be last item passed to viewer, it ignores subsequent params to avoid parameter injection attacks.
-WriteRegExpandStr HKEY_CLASSES_ROOT "${URLNAME}\shell\open\command" "" '"$INSTDIR\$INSTEXE" -url "%1"'
-WriteRegStr HKEY_CLASSES_ROOT "x-grid-location-info"(default)" "URL:Second Life"
+# MAINT-8305: On SLURL click, directly invoke the viewer, not the launcher.
+WriteRegExpandStr HKEY_CLASSES_ROOT "${URLNAME}\shell\open\command" "" '"$INSTDIR\$VIEWER_EXE" -url "%1"'
+WriteRegStr HKEY_CLASSES_ROOT "x-grid-location-info" "(default)" "URL:Second Life"
 WriteRegStr HKEY_CLASSES_ROOT "x-grid-location-info" "URL Protocol" ""
-WriteRegStr HKEY_CLASSES_ROOT "x-grid-location-info\DefaultIcon" "" '"$INSTDIR\$INSTEXE"'
+WriteRegStr HKEY_CLASSES_ROOT "x-grid-location-info\DefaultIcon" "" '"$INSTDIR\$VIEWER_EXE"'
 
 # URL param must be last item passed to viewer, it ignores subsequent params to avoid parameter injection attacks.
-WriteRegExpandStr HKEY_CLASSES_ROOT "x-grid-location-info\shell\open\command" "" '"$INSTDIR\$INSTEXE" -url "%1"'
+WriteRegExpandStr HKEY_CLASSES_ROOT "x-grid-location-info\shell\open\command" "" '"$INSTDIR\$VIEWER_EXE" -url "%1"'
 
 # Only allow Launcher to be the icon
-#WriteRegStr HKEY_CLASSES_ROOT "Applications\$INSTEXE" "IsHostApp" ""
-#WriteRegStr HKEY_CLASSES_ROOT "Applications\${VIEWER_EXE}" "NoStartPage" ""
+WriteRegStr HKEY_CLASSES_ROOT "Applications\$INSTEXE" "IsHostApp" ""
+WriteRegStr HKEY_CLASSES_ROOT "Applications\${VIEWER_EXE}" "NoStartPage" ""
 
 # Write out uninstaller
 WriteUninstaller "$INSTDIR\uninst.exe"

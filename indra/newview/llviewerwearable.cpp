@@ -301,7 +301,7 @@ void LLViewerWearable::setTexturesToDefaults()
 LLUUID LLViewerWearable::getDefaultTextureImageID(ETextureIndex index) const
 {
 	const LLAvatarAppearanceDictionary::TextureEntry *texture_dict = LLAvatarAppearanceDictionary::getInstance()->getTexture(index);
-	const std::string &default_image_name = texture_dict->mDefaultImageName;
+	const std::string &default_image_name = texture_dict ? texture_dict->mDefaultImageName : "";
 	if (default_image_name == "")
 	{
 		return IMG_DEFAULT_AVATAR;
@@ -463,16 +463,9 @@ void LLViewerWearable::revertValues()
 {
 	LLWearable::revertValues();
 
-	// I don't know why the line after "return" fails and crashes, but it doesn't seem to be a problem if we don't execute it
-	// so for now it is skipped.
-	LLPanel* tmp = LLFloaterSidePanelContainer::getPanel("appearance");
-	if (tmp == NULL)
-	{
-		return;
-	}
-////	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(LLFloaterSidePanelContainer::getPanel("appearance"));
-	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(tmp);
-	if (panel)
+
+	LLSidepanelAppearance *panel = dynamic_cast<LLSidepanelAppearance*>(LLFloaterSidePanelContainer::getPanel("appearance"));
+	if( panel )
 	{
 		panel->updateScrollingPanelList();
 	}

@@ -504,18 +504,6 @@ void LLPanelObject::getState( )
 	mCtrlRotY->setEnabled( enable_rotate );
 	mCtrlRotZ->setEnabled( enable_rotate );
 	
-	mBtnCopyPos->setEnabled(enable_move);
-	mBtnPastePos->setEnabled(enable_move);
-	mBtnPastePosClip->setEnabled(enable_move);
-	mBtnCopySize->setEnabled( enable_scale );
-	mBtnPasteSize->setEnabled( enable_scale );
-	mBtnPasteSizeClip->setEnabled( enable_scale );
-	mBtnCopyRot->setEnabled( enable_rotate );
-	mBtnPasteRot->setEnabled( enable_rotate );
-	mBtnPasteRotClip->setEnabled( enable_rotate );
-	mBtnCopyParams->setEnabled( single_volume && objectp->permModify() );
-	mBtnPasteParams->setEnabled( single_volume && objectp->permModify() );
-
 	LLUUID owner_id;
 	std::string owner_name;
 	LLSelectMgr::getInstance()->selectGetOwner(owner_id, owner_name);
@@ -523,20 +511,6 @@ void LLPanelObject::getState( )
 	// BUG? Check for all objects being editable?
 	S32 roots_selected = LLSelectMgr::getInstance()->getSelection()->getRootObjectCount();
 	BOOL editable = root_objectp->permModify();
-
-	// Select Single Message
-	getChildView("select_single")->setVisible( FALSE);
-	getChildView("edit_object")->setVisible( FALSE);
-	if (!editable || single_volume || selected_count <= 1)
-	{
-		getChildView("edit_object")->setVisible( TRUE);
-		getChildView("edit_object")->setEnabled(TRUE);
-	}
-	else
-	{
-		getChildView("select_single")->setVisible( TRUE);
-		getChildView("select_single")->setEnabled(TRUE);
-	}
 
 	BOOL is_flexible = volobjp && volobjp->isFlexible();
 	BOOL is_permanent = root_objectp->flagObjectPermanent();
@@ -1651,7 +1625,7 @@ void LLPanelObject::sendRotation(BOOL btn_down)
 	// Note: must compare before conversion to radians
 	LLVector3 delta = new_rot - mCurEulerDegrees;
 
-	if (delta.magVec() >= 0.0001f)
+	if (delta.magVec() >= 0.0005f)
 	{
 		mCurEulerDegrees = new_rot;
 		new_rot *= DEG_TO_RAD;
@@ -1661,9 +1635,6 @@ void LLPanelObject::sendRotation(BOOL btn_down)
 
 		if (mRootObject != mObject)
 		{
-			if(mObject->isAttachment())
-				rotation = rotation * ~mRootObject->getRotation();
-			else
 				rotation = rotation * ~mRootObject->getRotationRegion();
 		}
 
@@ -1726,10 +1697,11 @@ void LLPanelObject::sendScale(BOOL btn_down)
 		}
 
 		LLSelectMgr::getInstance()->adjustTexturesByScale(TRUE, !dont_stretch_textures);
+//		LL_INFOS() << "scale sent" << LL_ENDL;
 	}
 	else
 	{
-
+//		LL_INFOS() << "scale not changed" << LL_ENDL;
 	}
 }
 
@@ -1740,20 +1712,12 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 
 	LLVector3 newpos(mCtrlPosX->get(), mCtrlPosY->get(), mCtrlPosZ->get());
 	LLViewerRegion* regionp = mObject->getRegion();
-	// Make sure new position is in a valid region, so the object
-	// won't get dumped by the simulator.
-	LLVector3d new_pos_global = regionp->getPosGlobalFromRegion(newpos);
 
-	if (mObject->isAttachment())
-	{
-		newpos.clamp(LLVector3(-MAX_ATTACHMENT_DIST,-MAX_ATTACHMENT_DIST,-MAX_ATTACHMENT_DIST),LLVector3(MAX_ATTACHMENT_DIST,MAX_ATTACHMENT_DIST,MAX_ATTACHMENT_DIST));
-	}
-	else
-	{
 		// Clamp the Z height
 		const F32 height = newpos.mV[VZ];
 		const F32 min_height = LLWorld::getInstance()->getMinAllowedZ(mObject, mObject->getPositionGlobal());
 		const F32 max_height = LLWorld::getInstance()->getRegionMaxHeight();
+
 		if (!mObject->isAttachment())
 		{
 			if ( height < min_height)
@@ -1773,47 +1737,18 @@ void LLPanelObject::sendPosition(BOOL btn_down)
 				mCtrlPosZ->set(LLWorld::getInstance()->resolveLandHeightAgent(newpos) + 1.f);
 			}
 		}
-	}
 
+	// Make sure new position is in a valid region, so the object
+	// won't get dumped by the simulator.
+	LLVector3d new_pos_global = regionp->getPosGlobalFromRegion(newpos);
 
-	// partly copied from llmaniptranslate.cpp to get the positioning right
-	if (mObject->isAttachment())
-	{
-		LLVector3 old_position_local=mObject->getPosition();
-
-		if(mRootObject!=mObject)
-		{
-			newpos=newpos-mRootObject->getPosition();
-			newpos=newpos*~mRootObject->getRotation();
-			mObject->setPositionParent(newpos);
-		}
-		else
-			mObject->setPosition(newpos);
-		LLManip::rebuild(mObject) ;
-
-		LLVector3 new_position_local = mObject->getPosition();
-
-		// for individually selected roots, we need to counter-translate all unselected children
-		if (mObject->isRootEdit())
-		{
-			// counter-translate child objects if we are moving the root as an individual
-			mObject->resetChildrenPosition(old_position_local-new_position_local,TRUE);
-		}
-
-		if(!btn_down)
-		{
-			LLSelectMgr::getInstance()->sendMultipleUpdate(UPD_POSITION);
-		}
-
-		LLSelectMgr::getInstance()->updateSelectionCenter();
-	}
-	else if (LLWorld::getInstance()->positionRegionValidGlobal(new_pos_global) )
+	if ( LLWorld::getInstance()->positionRegionValidGlobal(new_pos_global) )
 	{
 		// send only if the position is changed, that is, the delta vector is not zero
 		LLVector3d old_pos_global = mObject->getPositionGlobal();
 		LLVector3d delta = new_pos_global - old_pos_global;
-		// moved more than 1/20 millimeter
-		if (delta.magVec() >= 0.00005f)
+		// moved more than 1/2 millimeter
+		if (delta.magVec() >= 0.0005f)
 		{			
 			if (mRootObject != mObject)
 			{
@@ -2009,10 +1944,6 @@ void LLPanelObject::clearCtrls()
 	mLabelRadiusOffset->setEnabled( FALSE );
 	mLabelRevolutions->setEnabled( FALSE );
 
-	getChildView("select_single")->setVisible( FALSE);
-	getChildView("edit_object")->setVisible( TRUE);	
-	getChildView("edit_object")->setEnabled(FALSE);
-	
 	getChildView("scale_hole")->setEnabled(FALSE);
 	getChildView("scale_taper")->setEnabled(FALSE);
 	getChildView("advanced_cut")->setEnabled(FALSE);
@@ -2137,324 +2068,4 @@ void LLPanelObject::onCommitSculptType(LLUICtrl *ctrl, void* userdata)
 	LLPanelObject* self = (LLPanelObject*) userdata;
 
 	self->sendSculpt();
-}
-
-void copy_vector_to_clipboard(const LLVector3& vec)
-{
-	std::string stringVec = llformat("<%g, %g, %g>", vec.mV[VX], vec.mV[VY], vec.mV[VZ]);
-	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(stringVec));
-}
-
-void LLPanelObject::onCopyPos(const LLSD& data)
-{
-	mClipboardPos = LLVector3(mCtrlPosX->get(), mCtrlPosY->get(), mCtrlPosZ->get());
-	copy_vector_to_clipboard(mClipboardPos);
-	mBtnPastePos->setToolTip(llformat("Paste Position\n<%g, %g, %g>", mClipboardPos.mV[VX], mClipboardPos.mV[VY], mClipboardPos.mV[VZ]));
-	mHasPosClipboard = TRUE;
-}
-
-void LLPanelObject::onCopySize(const LLSD& data)
-{
-	mClipboardSize = LLVector3(mCtrlScaleX->get(), mCtrlScaleY->get(), mCtrlScaleZ->get());
-	copy_vector_to_clipboard(mClipboardSize);
-	mBtnPasteSize->setToolTip(llformat("Paste Size\n<%g, %g, %g>", mClipboardSize.mV[VX], mClipboardSize.mV[VY], mClipboardSize.mV[VZ]));
-	mHasSizeClipboard = TRUE;
-}
-
-void LLPanelObject::onCopyRot(const LLSD& data)
-{
-	mClipboardRot = LLVector3(mCtrlRotX->get(), mCtrlRotY->get(), mCtrlRotZ->get());
-	copy_vector_to_clipboard(mClipboardRot);
-	mBtnPasteRot->setToolTip(llformat("Paste Rotation\n<%g, %g, %g>", mClipboardRot.mV[VX], mClipboardRot.mV[VY], mClipboardRot.mV[VZ]));
-	mHasRotClipboard = TRUE;
-}
-
-
-void LLPanelObject::onPastePos(const LLSD& data)
-{
-	if(!mHasPosClipboard) return;
-
-	//clamp pos on non-attachments, just keep the prims on the sim
-	if (!mObject->isAttachment())
-	{
-		mClipboardPos.mV[VX] = llclamp( mClipboardPos.mV[VX], 0.f, 256.f);
-		mClipboardPos.mV[VY] = llclamp( mClipboardPos.mV[VY], 0.f, 256.f);
-		//height will get properly clammed by sendPosition
-	}
-
-	mCtrlPosX->set( mClipboardPos.mV[VX] );
-	mCtrlPosY->set( mClipboardPos.mV[VY] );
-	mCtrlPosZ->set( mClipboardPos.mV[VZ] );
-
-	LLCalc* calcp = LLCalc::getInstance();
-	calcp->setVar(LLCalc::X_POS, mClipboardPos.mV[VX]);
-	calcp->setVar(LLCalc::Y_POS, mClipboardPos.mV[VY]);
-	calcp->setVar(LLCalc::Z_POS, mClipboardPos.mV[VZ]);
-
-	sendPosition(FALSE);
-}
-
-void LLPanelObject::onPasteSize(const LLSD& data)
-{
-	if(!mHasSizeClipboard) return;
-
-	mCtrlScaleX->set( mClipboardSize.mV[VX] );
-	mCtrlScaleY->set( mClipboardSize.mV[VY] );
-	mCtrlScaleZ->set( mClipboardSize.mV[VZ] );
-
-	LLCalc* calcp = LLCalc::getInstance();
-	calcp->setVar(LLCalc::X_SCALE, mClipboardSize.mV[VX]);
-	calcp->setVar(LLCalc::Y_SCALE, mClipboardSize.mV[VY]);
-	calcp->setVar(LLCalc::Z_SCALE, mClipboardSize.mV[VZ]);
-
-	sendScale(FALSE);
-}
-
-void LLPanelObject::onPasteRot(const LLSD& data)
-{
-	if(!mHasRotClipboard) return;
-	
-	mCtrlRotX->set( mClipboardRot.mV[VX] );
-	mCtrlRotY->set( mClipboardRot.mV[VY] );
-	mCtrlRotZ->set( mClipboardRot.mV[VZ] );
-
-	LLCalc* calcp = LLCalc::getInstance();
-	calcp->setVar(LLCalc::X_ROT, mClipboardRot.mV[VX]);
-	calcp->setVar(LLCalc::Y_ROT, mClipboardRot.mV[VY]);
-	calcp->setVar(LLCalc::Z_ROT, mClipboardRot.mV[VZ]);
-
-	sendRotation(FALSE);
-}
-
-//Paste from clip board
-BOOL get_vector_from_clipboard(LLVector3* value)
-{
-	LLWString temp_string;
-	LLView::getWindow()->pasteTextFromClipboard(temp_string);
-	const std::string stringVec = wstring_to_utf8str(temp_string);
-
-	if(stringVec.empty() || value == NULL) return FALSE;
-
-	LLVector3 vec;
-	S32 count = sscanf( stringVec.c_str(), "<%f, %f, %f>", vec.mV + 0, vec.mV + 1, vec.mV + 2 );
-	if( 3 == count )
-	{
-		value->setVec( vec );
-		return TRUE;
-	}
-
-	return FALSE;
-}
-void LLPanelObject::onPastePosClip(const LLSD& data)
-{
-	if(get_vector_from_clipboard(&mClipboardPos))
-	{
-		mHasPosClipboard = TRUE;
-		onPastePos(data);
-	}
-	else
-	{
-		LL_INFOS() << "Couldn't get position vector from clipboard" << LL_ENDL;
-	}
-}
-void LLPanelObject::onPasteSizeClip(const LLSD& data)
-{
-	if(get_vector_from_clipboard(&mClipboardSize))
-	{
-		mHasSizeClipboard = TRUE;
-		onPasteSize(data);
-	}
-	else
-	{
-		LL_INFOS() << "Couldn't get size vector from clipboard" << LL_ENDL;
-	}
-}
-void LLPanelObject::onPasteRotClip(const LLSD& data)
-{
-	if(get_vector_from_clipboard(&mClipboardRot))
-	{
-		mHasRotClipboard = TRUE;
-		onPasteRot(data);
-	}
-	else
-	{
-		LL_INFOS() << "Couldn't get rotation vector from clipboard" << LL_ENDL;
-	}
-}
-
-
-void LLPanelObject::onCopyParams(const LLSD& data)
-{
-	getVolumeParams(mClipboardVolumeParams);
-	mHasParamClipboard = TRUE;
-	
-	LLViewerObject* objectp = mObject;
-	if (!objectp)
-		return;
-
-	LLVOVolume *volobjp = NULL;
-	if ( objectp && (objectp->getPCode() == LL_PCODE_VOLUME))
-		volobjp = (LLVOVolume *)objectp;
-	
-	mHasFlexiParam = FALSE;
-	if(volobjp && volobjp->isFlexible())
-	{
-		LLFlexibleObjectData *attributes = (LLFlexibleObjectData *)objectp->getParameterEntry(LLNetworkData::PARAMS_FLEXIBLE);
-		if (attributes)
-		{
-			mPramsClipboard["lod"] = attributes->getSimulateLOD();
-			mPramsClipboard["gav"] = attributes->getGravity();
-			mPramsClipboard["ten"] = attributes->getTension();
-			mPramsClipboard["fri"] = attributes->getAirFriction();
-			mPramsClipboard["sen"] = attributes->getWindSensitivity();
-			LLVector3 force = attributes->getUserForce();
-			mPramsClipboard["forx"] = force.mV[0];
-			mPramsClipboard["fory"] = force.mV[1];
-			mPramsClipboard["forz"] = force.mV[2];
-			mHasFlexiParam = TRUE;
-		}
-	}
-
-	if (objectp->getParameterEntryInUse(LLNetworkData::PARAMS_SCULPT))
-	{
-		LLSculptParams *sculpt_params = (LLSculptParams *)objectp->getParameterEntry(LLNetworkData::PARAMS_SCULPT);
-
-		LLUUID image_id = sculpt_params->getSculptTexture();
-		BOOL allow_texture = FALSE;
-		if (gInventory.isObjectDescendentOf(image_id, gInventory.getLibraryRootFolderID())
-			|| image_id == LLUUID(gSavedSettings.getString( "DefaultObjectTexture" ))
-			|| image_id == LLUUID(gSavedSettings.getString( "UIImgWhiteUUID" ))
-			|| image_id == LLUUID(gSavedSettings.getString( "UIImgInvisibleUUID" ))
-			|| image_id == LLUUID(SCULPT_DEFAULT_TEXTURE)
-		)
-			allow_texture = TRUE;
-		else
-		{
-			LLUUID inventory_item_id;
-			LLViewerInventoryCategory::cat_array_t cats;
-			LLViewerInventoryItem::item_array_t items;
-			LLAssetIDMatches asset_id_matches(image_id);
-			gInventory.collectDescendentsIf(LLUUID::null,
-									cats,
-									items,
-									LLInventoryModel::INCLUDE_TRASH,
-									asset_id_matches);
-
-			if (items.size())
-			{
-				// search for copyable version first
-				for (S32 i = 0; i < items.size(); i++)
-				{
-					LLInventoryItem* itemp = items[i];
-					LLPermissions item_permissions = itemp->getPermissions();
-					if (item_permissions.allowCopyBy(gAgent.getID(), gAgent.getGroupID()))
-					{
-						inventory_item_id = itemp->getUUID();
-						break;
-					}
-				}
-			}
-			if (inventory_item_id.notNull())
-			{
-				LLInventoryItem* itemp = gInventory.getItem(inventory_item_id);
-				if (itemp)
-				{
-					LLPermissions perm = itemp->getPermissions();
-					if ( (perm.getMaskBase() & PERM_ITEM_UNRESTRICTED) == PERM_ITEM_UNRESTRICTED )
-						allow_texture = TRUE;
-				}
-			}
-		}
-		if (allow_texture)
-			mPramsClipboard["sculptid"] = image_id;
-		else
-			mPramsClipboard["sculptid"] = LLUUID(SCULPT_DEFAULT_TEXTURE);
-
-		mPramsClipboard["sculpt_type"] = sculpt_params->getSculptType();
-		mHasSculptParam = TRUE;
-	}
-	else
-	{
-		mHasSculptParam = FALSE;
-	}
-
-	if (volobjp && volobjp->getIsLight())
-	{
-		mPramsClipboard["Light Intensity"] = volobjp->getLightIntensity();
-		mPramsClipboard["Light Radius"] = volobjp->getLightRadius();
-		mPramsClipboard["Light Falloff"] = volobjp->getLightFalloff();
-		LLColor3 color = volobjp->getLightColor();
-		mPramsClipboard["r"] = color.mV[0];
-		mPramsClipboard["g"] = color.mV[1];
-		mPramsClipboard["b"] = color.mV[2];
-		mHasLightParam = TRUE;
-	}
-	else
-	{
-		mHasLightParam = FALSE;
-	}
-
-}
-
-void LLPanelObject::onPasteParams(const LLSD& data)
-{
-	LLViewerObject* objectp = mObject;
-	if (!objectp)
-		return;
-
-	if (mHasFlexiParam && (objectp->getPCode() == LL_PCODE_VOLUME))
-	{
-		LLFlexibleObjectData *attributes = (LLFlexibleObjectData *)objectp->getParameterEntry(LLNetworkData::PARAMS_FLEXIBLE);
-		if (attributes)
-		{
-			LLFlexibleObjectData new_attributes;
-			new_attributes = *attributes;
-
-			new_attributes.setSimulateLOD(mPramsClipboard["lod"].asInteger());
-			new_attributes.setGravity(mPramsClipboard["gav"].asReal());
-			new_attributes.setTension(mPramsClipboard["ten"].asReal());
-			new_attributes.setAirFriction(mPramsClipboard["fri"].asReal());
-			new_attributes.setWindSensitivity(mPramsClipboard["sen"].asReal());
-			F32 fx = (F32)mPramsClipboard["forx"].asReal();
-			F32 fy = (F32)mPramsClipboard["fory"].asReal();
-			F32 fz = (F32)mPramsClipboard["forz"].asReal();
-			LLVector3 force(fx,fy,fz);
-			new_attributes.setUserForce(force);
-			objectp->setParameterEntry(LLNetworkData::PARAMS_FLEXIBLE, new_attributes, true);
-		}
-	}
-
-	if (mHasSculptParam)
-	{
-		LLSculptParams sculpt_params;
-
-		if (mPramsClipboard.has("sculptid"))
-			sculpt_params.setSculptTexture(mPramsClipboard["sculptid"].asUUID(), (U8)mPramsClipboard["sculpt_type"].asInteger());
-		objectp->setParameterEntry(LLNetworkData::PARAMS_SCULPT, sculpt_params, TRUE);
-	}
-	else
-	{
-		LLSculptParams *sculpt_params = (LLSculptParams *)objectp->getParameterEntry(LLNetworkData::PARAMS_SCULPT);
-		if (sculpt_params)
-			objectp->setParameterEntryInUse(LLNetworkData::PARAMS_SCULPT, FALSE, TRUE);
-	}
-	
-	LLVOVolume *volobjp = NULL;
-	if ( objectp && (objectp->getPCode() == LL_PCODE_VOLUME))
-		volobjp = (LLVOVolume *)objectp;
-
-	if (volobjp && mHasLightParam)
-	{
-		volobjp->setIsLight(TRUE);
-		volobjp->setLightIntensity((F32)mPramsClipboard["Light Intensity"].asReal());
-		volobjp->setLightRadius((F32)mPramsClipboard["Light Radius"].asReal());
-		volobjp->setLightFalloff((F32)mPramsClipboard["Light Falloff"].asReal());
-		F32 r = (F32)mPramsClipboard["r"].asReal();
-		F32 g = (F32)mPramsClipboard["g"].asReal();
-		F32 b = (F32)mPramsClipboard["b"].asReal();
-		volobjp->setLightColor(LLColor3(r,g,b));
-	}
-	
-	if(mHasParamClipboard)
-		objectp->updateVolume(mClipboardVolumeParams);
 }

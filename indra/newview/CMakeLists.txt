@@ -232,7 +232,6 @@ set(viewer_SOURCE_FILES
     llfloaterabout.cpp
 	llfloateradvancedbuildoptions.cpp
     llfloaterbvhpreview.cpp
-    llfloaterauction.cpp
     llfloaterautoreplacesettings.cpp
     llfloateravatar.cpp
     llfloateravatarpicker.cpp
@@ -714,6 +713,7 @@ set(viewer_SOURCE_FILES
     llvoicechannel.cpp
     llvoiceclient.cpp
     llvoicevisualizer.cpp
+    llvoicevivox.cpp
     llvoinventorylistener.cpp
     llvopartgroup.cpp
     llvosky.cpp
@@ -886,7 +886,6 @@ set(viewer_HEADER_FILES
     llfloaterabout.h
 	llfloateradvancedbuildoptions.h
     llfloaterbvhpreview.h
-    llfloaterauction.h
     llfloaterautoreplacesettings.h
     llfloateravatar.h
     llfloateravatarpicker.h
@@ -1362,6 +1361,7 @@ set(viewer_HEADER_FILES
     llvoicechannel.h
     llvoiceclient.h
     llvoicevisualizer.h
+    llvoicevivox.h
     llvoinventorylistener.h
     llvopartgroup.h
     llvosky.h
@@ -1391,6 +1391,7 @@ set(viewer_HEADER_FILES
     llworldmapview.h
     llxmlrpclistener.h
     llxmlrpctransaction.h
+    macmain.h
     noise.h
     qtoolalign.h
     piemenu.h
@@ -1422,11 +1423,9 @@ set_source_files_properties(
 if (DARWIN)
   LIST(APPEND viewer_SOURCE_FILES llappviewermacosx.cpp)
   LIST(APPEND viewer_SOURCE_FILES llappviewermacosx-objc.mm)
-  LIST(APPEND viewer_HEADER_FILES llappviewermacosx-objc.h)
+  LIST(APPEND viewer_SOURCE_FILES llappviewermacosx-objc.h)
   LIST(APPEND viewer_SOURCE_FILES llfilepicker_mac.mm)
   LIST(APPEND viewer_HEADER_FILES llfilepicker_mac.h)
-  LIST(APPEND viewer_SOURCE_FILES llvoicevivox.cpp)
-  LIST(APPEND viewer_HEADER_FILES llvoicevivox.h)
   
   # This should be compiled with the viewer.
   LIST(APPEND viewer_SOURCE_FILES llappdelegate-objc.mm)
@@ -1446,7 +1445,8 @@ if (DARWIN)
 
   # Add resource files to the project.
   set(viewer_RESOURCE_FILES
-    kokua_icon.icns
+    kokua.icns
+    macview.r
     Info-SecondLife.plist
     Kokua.xib/
     # CMake doesn't seem to support Xcode language variants well just yet
@@ -1497,13 +1497,11 @@ endif (LINUX)
 
 if (WINDOWS)
     list(APPEND viewer_SOURCE_FILES
-         llvoicevivox.cpp
          llappviewerwin32.cpp
          llwindebug.cpp
          )
 
     list(APPEND viewer_HEADER_FILES
-         llvoicevivox.h
          llappviewerwin32.h
          llwindebug.h
          )
@@ -1536,7 +1534,6 @@ if (WINDOWS)
     elseif(channel_lower MATCHES "^kokua project")
         set(ICON_PATH "project")
         set(VIEWER_MACOSX_PHASE "a")
-
     endif()
     message(STATUS "Copying icons for ${ICON_PATH}")
     execute_process(
@@ -2265,7 +2262,6 @@ if (PACKAGE)
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/llplugin/slplugin/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/mac_crash_logger/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
-    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
     set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-darwin-$ENV{AUTOBUILD_ADDRSIZE}.tar.bz2")
     set(VIEWER_EXE_GLOBS "'Kokua' SLPlugin mac-crash-logger")
     set(VIEWER_LIB_GLOB "*.dylib")

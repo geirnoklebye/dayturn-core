@@ -1094,6 +1094,11 @@ bool LLAppViewer::init()
 //Comment out again based on user comments.
 /*
 	char* PARENT = getenv("PARENT");
+
+	// MAINT-8305: If we're processing a SLURL, skip the launcher check.
+	if (gSavedSettings.getString("CmdLineLoginLocation").empty())
+	{
+		const char* PARENT = getenv("PARENT");
 	if (! (PARENT && std::string(PARENT) == "SL_Launcher"))
 	{
 		// Don't directly run this executable. Please run the launcher, which

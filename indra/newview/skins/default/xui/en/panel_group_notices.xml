@@ -187,6 +187,13 @@ Maximum 200 per group daily
          name="create_inventory_name"
          top_pad="2"
          width="285" />
+        <icon
+         height="16"
+         layout="topleft"
+         left_delta="5"
+         name="create_inv_icon"
+         top_delta="2"
+         width="16" />
         <text
         text_color="EmphasisColor"
          follows="left|top"
@@ -339,7 +346,6 @@ Maximum 200 per group daily
          spellcheck="true"
          top_delta="-40"
          width="313"
-         parse_urls="true"
          word_wrap="true" />
         <line_editor
          enabled="false"
@@ -351,6 +357,13 @@ Maximum 200 per group daily
          name="view_inventory_name"
          top_pad="8"
          width="250"/>
+        <icon
+         height="16"
+         layout="topleft"
+         left_delta="5"
+         name="view_inv_icon"
+         top_delta="2"
+         width="16" />
         <button
          follows="left|top"
          height="23"

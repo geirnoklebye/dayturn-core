@@ -4309,11 +4309,9 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>4aefe12a3825d1b4b8370986d84792a2</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>86f6708f393c162cd4f92426b0a3cde7</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/15295/98583/viewer_manager-1.0.513540-darwin64-513540.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/15341/99062/viewer_manager-1.0.513570-darwin64-513570.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -4337,11 +4335,9 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>db96bc8a83e6577d31657586100bfc35</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>c4dec51062ad78c09b11f7432aff4d1d</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/15298/98589/viewer_manager-1.0.513540-windows-513540.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/17857/121832/viewer_manager-1.0.515286-windows-515286.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -4352,7 +4348,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
         <key>source_type</key>
         <string>hg</string>
         <key>version</key>
-        <string>1.0.513540</string>
+        <string>1.0.515286</string>
       </map>
       <key>vlc-bin</key>
       <map>
@@ -4372,8 +4368,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <map>
               <key>hash</key>
               <string>e5635e173c75dc0675b48ab5f5e4868b</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/12143/71451/vlc_bin-2.2.8.511703-darwin64-511703.tar.bz2</string>
             </map>
@@ -4414,8 +4408,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <map>
               <key>hash</key>
               <string>add560654a53cb1c554044a4fac3c718</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/12144/71458/vlc_bin-2.2.8.511703-windows-511703.tar.bz2</string>
             </map>
@@ -4427,11 +4419,9 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>148ee599afeba9794de14ca433389504</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
+              <string>94bf04b49acc1e1bf2c06e2232f8a083</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/1218/2829/vlc_bin-2.2.4.501207-windows64-501207.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/12145/71463/vlc_bin-2.2.8.511703-windows64-511703.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
@@ -4472,8 +4462,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <map>
               <key>hash</key>
               <string>b2d31df56a10c634657eed856c8d7895</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/728/1494/xmlrpc_epi-0.54.1.500719-darwin64-500719.tar.bz2</string>
             </map>
@@ -4485,9 +4473,9 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>30bb26d6cc78c16047fc85a63f48fcdb</string>
+              <string>b63f828e798287d475991134cdcfbca3</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/xmlrpc-emi_3p-update-xmlrpc-epi/rev/297075/arch/Linux/installer/xmlrpc_epi-0.54.1.297075-linux-297075.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/p64_3p-xmlrpc-epi/rev/314240/arch/Linux/installer/xmlrpc_epi-0.54.1.314240-linux-314240.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -4510,8 +4498,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <map>
               <key>hash</key>
               <string>6c16f020bf01155e6746487af0b26173</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/729/1497/xmlrpc_epi-0.54.1.500719-windows-500719.tar.bz2</string>
             </map>
@@ -4524,8 +4510,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <map>
               <key>hash</key>
               <string>a9dda7caa8835c52b3735711cfee4eb9</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/730/1500/xmlrpc_epi-0.54.1.500719-windows64-500719.tar.bz2</string>
             </map>
@@ -4568,8 +4552,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <map>
               <key>hash</key>
               <string>e204dee29902549f50af1af2bb098df5</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/867/1903/zlib-1.2.8.500857-darwin64-500857.tar.bz2</string>
             </map>
@@ -4608,8 +4590,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <map>
               <key>hash</key>
               <string>f92cbb0ab5e5d20789bf6102f9a27aa6</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/868/1906/zlib-1.2.8.500857-windows-500857.tar.bz2</string>
             </map>
@@ -4622,8 +4602,6 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <map>
               <key>hash</key>
               <string>70a56767f6a109af412838875d0b5f1b</string>
-              <key>hash_algorithm</key>
-              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/ct2/869/1909/zlib-1.2.8.500857-windows64-500857.tar.bz2</string>
             </map>

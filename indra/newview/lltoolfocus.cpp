@@ -246,8 +246,10 @@ void LLToolCamera::pickCallback(const LLPickInfo& pick_info)
 			gAgentCamera.setFocusGlobal(pick_info);
 		}
 
+		BOOL zoom_tool = gCameraBtnZoom && (LLToolMgr::getInstance()->getBaseTool() == LLToolCamera::getInstance());
 		if (!(pick_info.mKeyMask & MASK_ALT) &&
 			!LLFloaterCamera::inFreeCameraMode() &&
+			!zoom_tool &&
 			gAgentCamera.cameraThirdPerson() &&
 			gViewerWindow->getLeftMouseDown() && 
 			!gSavedSettings.getBOOL("FreezeTime") &&
@@ -388,7 +390,7 @@ BOOL LLToolCamera::handleHover(S32 x, S32 y, MASK mask)
 			// Orbit tool
 			if (hasMouseCapture())
 			{
-				const F32 RADIANS_PER_PIXEL = (360.f * DEG_TO_RAD / gViewerWindow->getWorldViewWidthScaled()) * camera_mouse_speed_multiplier;
+				const F32 RADIANS_PER_PIXEL = 360.f * DEG_TO_RAD / gViewerWindow->getWorldViewWidthScaled();
 
 				if (dx != 0)
 				{
@@ -416,7 +418,7 @@ BOOL LLToolCamera::handleHover(S32 x, S32 y, MASK mask)
 				F32 dist = (F32) camera_to_focus.normVec();
 
 				// Fudge factor for pan
-				F32 meters_per_pixel = (3.f * dist / gViewerWindow->getWorldViewWidthScaled()) * camera_mouse_speed_multiplier;
+				F32 meters_per_pixel = 3.f * dist / gViewerWindow->getWorldViewWidthScaled();
 
 				if (dx != 0)
 				{
@@ -438,7 +440,7 @@ BOOL LLToolCamera::handleHover(S32 x, S32 y, MASK mask)
 			if (hasMouseCapture())
 			{
 
-				const F32 RADIANS_PER_PIXEL = (360.f * DEG_TO_RAD / gViewerWindow->getWorldViewWidthScaled() * camera_mouse_speed_multiplier);
+				const F32 RADIANS_PER_PIXEL = 360.f * DEG_TO_RAD / gViewerWindow->getWorldViewWidthScaled();
 
 				if (dx != 0)
 				{
@@ -455,7 +457,7 @@ BOOL LLToolCamera::handleHover(S32 x, S32 y, MASK mask)
 					}
 					else
 					{
-						gAgentCamera.cameraZoomIn( pow( IN_FACTOR, dy * camera_mouse_speed_multiplier));
+						gAgentCamera.cameraZoomIn( pow( IN_FACTOR, dy ) );
 					}
 				}
 

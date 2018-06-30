@@ -828,7 +828,6 @@ bool idle_startup()
 		if (gLoginMenuBarView == NULL)
 		{
 			LL_DEBUGS("AppInit") << "initializing menu bar" << LL_ENDL;
-			initialize_edit_menu();
 			initialize_spellcheck_menu();
 			init_menus();
 		}
@@ -990,7 +989,6 @@ bool idle_startup()
 		LLDoNotDisturbNotificationStorage::getInstance()->initialize();
 
 		// Set PerAccountSettingsFile to the default value.
-		std::string per_account_settings_file = LLAppViewer::instance()->getSettingsFilename("Default", "PerAccount");
 		gSavedSettings.setString("PerAccountSettingsFile",
 			gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, 
 				LLAppViewer::instance()->getSettingsFilename("Default", "PerAccount")));
@@ -2018,19 +2016,6 @@ bool idle_startup()
 
 		display_startup();
 
-		// based on the comments, we've successfully logged in so we can delete the 'forced'
-		// URL that the updater set in settings.ini (in a mostly paranoid fashion)
-		std::string nextLoginLocation = gSavedSettings.getString( "NextLoginLocation" );
-		if ( nextLoginLocation.length() )
-		{
-			// clear it
-			gSavedSettings.setString( "NextLoginLocation", "" );
-
-			// and make sure it's saved
-			gSavedSettings.saveToFile( gSavedSettings.getString("ClientSettingsFile") , TRUE );
-			LLUIColorTable::instance().saveUserSettings();
-		};
-
 		display_startup();
 		// JC: Initializing audio requests many sounds for download.
 		init_audio();
@@ -2272,7 +2257,6 @@ bool idle_startup()
 			}
 		}
 		//fall through this frame to STATE_CLEANUP
-		return TRUE; //do like fall throughs just adding another cycle seems safer
 	}
 
 	if (STATE_CLEANUP == LLStartUp::getStartupState())

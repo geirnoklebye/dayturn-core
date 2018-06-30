@@ -38,10 +38,6 @@ class LLPanelGroupActionsSubTab;
 class LLScrollListCtrl;
 class LLScrollListItem;
 class LLTextEditor;
-class LLButton;
-
-// Forward declare for friend usage.
-//virtual BOOL LLPanelGroupSubTab::postBuildSubTab(LLView*);
 
 typedef std::map<std::string,std::string> icon_map_t;
 
@@ -136,7 +132,7 @@ protected:
 									BOOL is_owner_role);
 
 protected:
-	LLPanel* mHeader;
+	LLPanel* mHeader; // Might not be present in xui of derived class (NULL)
 	LLPanel* mFooter;
 
 	LLFilterEditor*	mSearchEditor;
@@ -186,6 +182,7 @@ public:
 	bool handleBanCallback(const LLSD& notification, const LLSD& response);
 	void confirmBanMembers();
 
+	void updateActionDescription();
 
 	void applyMemberChanges();
 	bool addOwnerCB(const LLSD& notification, const LLSD& response);
@@ -225,6 +222,8 @@ protected:
 	BOOL mChanged;
 	BOOL mPendingMemberUpdate;
 	BOOL mHasMatch;
+
+	LLTextEditor*	mActionDescription;
 
 	member_role_changes_map_t mMemberRoleChangeData;
 	U32 mNumOwnerAdditions;
@@ -273,7 +272,7 @@ public:
 	static void onDeleteRole(void*);
 	void handleDeleteRole();
 
-	static void onCopyRoleUUID(void *data);
+	void updateActionDescription();
 
 	void saveRoleChanges(bool select_saved_role);
 
@@ -288,11 +287,10 @@ protected:
 	LLScrollListCtrl* mRolesList;
 	LLNameListCtrl* mAssignedMembersList;
 	LLScrollListCtrl* mAllowedActionsList;
+	LLTextEditor* mActionDescription;
 
 	LLLineEditor* mRoleName;
 	LLLineEditor* mRoleTitle;
-	LLLineEditor* mRoleUUID;
-	LLButton *mBtnRoleUUIDCopy;
 	LLTextEditor* mRoleDescription;
 
 	LLCheckBoxCtrl* mMemberVisibleCheck;

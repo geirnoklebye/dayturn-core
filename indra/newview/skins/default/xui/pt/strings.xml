@@ -76,8 +76,8 @@ Tempo de criação de VFS (cache): [VFS_TIME]
 	<string name="AboutLibs">
 		Versão do J2C Decoder: [J2C_VERSION]
 Versão do driver de áudio: [AUDIO_DRIVER_VERSION]
-Versão de CEF: [LIBCEF_VERSION]
-Versão da LibVLC: [LIBVLC_VERSION]
+[LIBCEF_VERSION] 
+Versão do LibVLC: [LIBVLC_VERSION] 
 Versão do servidor de voz: [VOICE_VERSION]
 	</string>
 	<string name="AboutTraffic">
@@ -319,6 +319,75 @@ Aguarde um minuto antes que tentar logar-se novamente.
 	</string>
 	<string name="TestingDisconnect">
 		Teste de desconexão
+	</string>
+	<string name="SocialFlickrConnecting">
+		Conectando ao Flickr...
+	</string>
+	<string name="SocialFlickrPosting">
+		Publicando...
+	</string>
+	<string name="SocialFlickrDisconnecting">
+		Desconectando do Flickr...
+	</string>
+	<string name="SocialFlickrErrorConnecting">
+		Problema ao conectar ao Flickr
+	</string>
+	<string name="SocialFlickrErrorPosting">
+		Problema ao publicar no Flickr
+	</string>
+	<string name="SocialFlickrErrorDisconnecting">
+		Problema ao desconectar do Flickr
+	</string>
+	<string name="SocialTwitterConnecting">
+		Conectando ao Twitter...
+	</string>
+	<string name="SocialTwitterPosting">
+		Publicando...
+	</string>
+	<string name="SocialTwitterDisconnecting">
+		Desconectando do Twitter...
+	</string>
+	<string name="SocialTwitterErrorConnecting">
+		Problema ao conectar ao Twitter
+	</string>
+	<string name="SocialTwitterErrorPosting">
+		Problema ao publicar no Twitter
+	</string>
+	<string name="SocialTwitterErrorDisconnecting">
+		Problema ao desconectar do Twitter
+	</string>
+	<string name="BlackAndWhite">
+		Preto e branco
+	</string>
+	<string name="Colors1970">
+		Cores dos anos 1970
+	</string>
+	<string name="Intense">
+		Intenso
+	</string>
+	<string name="Newspaper">
+		Retícula
+	</string>
+	<string name="Sepia">
+		Sépia
+	</string>
+	<string name="Spotlight">
+		Destaque
+	</string>
+	<string name="Video">
+		Vídeo
+	</string>
+	<string name="Autocontrast">
+		Autocontraste
+	</string>
+	<string name="LensFlare">
+		Reflexo de flash
+	</string>
+	<string name="Miniature">
+		Miniatura
+	</string>
+	<string name="Toycamera">
+		Câmera de brinquedo
 	</string>
 	<string name="TooltipPerson">
 		Pessoa
@@ -908,6 +977,12 @@ http://secondlife.com/support para ajuda ao resolver este problema.
 	<string name="use_texture">
 		Usar textura
 	</string>
+	<string name="manip_hint1">
+		Mova o cursor do mouse sobre a regra
+	</string>
+	<string name="manip_hint2">
+		para ajustar à grade
+	</string>
 	<string name="texture_loading">
 		Carregando...
 	</string>
@@ -1326,6 +1401,9 @@ http://secondlife.com/support para ajuda ao resolver este problema.
 	<string name="InventoryNoMatchingItems">
 		Não encontrou o que procura? Tente buscar no [secondlife:///app/search/people/[SEARCH_TERM] Search].
 	</string>
+	<string name="InventoryNoMatchingRecentItems">
+		Não encontrou o que procura? Tente [secondlife:///app/inventory/filters Show filters].
+	</string>
 	<string name="PlacesNoMatchingItems">
 		Não encontrou o que procura? Tente buscar no [secondlife:///app/search/groups/[SEARCH_TERM] Search].
 	</string>
@@ -1342,13 +1420,13 @@ http://secondlife.com/support para ajuda ao resolver este problema.
 		Suas compras do Marketplace aparecerão aqui. Depois, você poderá arrastá-las para seu inventário para usá-las.
 	</string>
 	<string name="MarketplaceURL">
-		http://marketplace.[MARKETPLACE_DOMAIN_NAME]
+		https://marketplace.[MARKETPLACE_DOMAIN_NAME]/
 	</string>
 	<string name="MarketplaceURL_CreateStore">
-		http://marketplace.[MARKETPLACE_DOMAIN_NAME]/create_store
+		http://community.secondlife.com/t5/English-Knowledge-Base/Selling-in-the-Marketplace/ta-p/700193#Section_.3
 	</string>
 	<string name="MarketplaceURL_Dashboard">
-		http://marketplace.[MARKETPLACE_DOMAIN_NAME]/learn_more
+		https://marketplace.[MARKETPLACE_DOMAIN_NAME]/merchants/store/dashboard
 	</string>
 	<string name="MarketplaceURL_Imports">
 		https://marketplace.[MARKETPLACE_DOMAIN_NAME]/merchants/store/imports
@@ -4281,8 +4359,12 @@ If you continue to receive this message, contact the [SUPPORT_SITE].
 	<string name="inventory_folder_offered-im">
 		Pasta do inventário &apos;[ITEM_NAME]&apos; oferecida
 	</string>
-	<string name="inventory_folder_offered-im">
-		Pasta do inventário &apos;[ITEM_NAME]&apos; oferecida
+	<string name="flickr_post_success">
+		Você publicou no Flickr.
+	</string>
+	<string name="twitter_post_success">
+		Você publicou no Twitter.
+	</string>
 	<string name="no_session_message">
 		(Sessão de MI inexistente)
 	</string>
@@ -4760,6 +4842,9 @@ Visite http://status.secondlifegrid.net para saber se foi detectado um problema 
 	<string name="LocalEstimateUSD">
 		US$ [AMOUNT]
 	</string>
+	<string name="Group Ban">
+		Banimento do grupo
+	</string>
 	<string name="Membership">
 		Plano
 	</string>
@@ -5182,6 +5267,12 @@ Tente colocar o caminho do editor entre aspas.
 	<string name="Command_Destinations_Label">
 		Destinos
 	</string>
+	<string name="Command_Facebook_Label">
+		Facebook
+	</string>
+	<string name="Command_Flickr_Label">
+		Flickr
+	</string>
 	<string name="Command_Gestures_Label">
 		Gestos
 	</string>
@@ -5239,6 +5330,9 @@ Tente colocar o caminho do editor entre aspas.
 	<string name="Command_Speak_Label">
 		Falar
 	</string>
+	<string name="Command_Twitter_Label">
+		Twitter
+	</string>
 	<string name="Command_View_Label">
 		Controles da câmera
 	</string>
@@ -5268,6 +5362,12 @@ Tente colocar o caminho do editor entre aspas.
 	</string>
 	<string name="Command_Destinations_Tooltip">
 		Destinos de interesse
+	</string>
+	<string name="Command_Facebook_Tooltip">
+		Publicar no Facebook
+	</string>
+	<string name="Command_Flickr_Tooltip">
+		Carregar no Flickr
 	</string>
 	<string name="Command_Gestures_Tooltip">
 		Gestos para seu avatar
@@ -5325,6 +5425,9 @@ Tente colocar o caminho do editor entre aspas.
 	</string>
 	<string name="Command_Speak_Tooltip">
 		Fale com pessoas próximas usando seu microfone
+	</string>
+	<string name="Command_Twitter_Tooltip">
+		Twitter
 	</string>
 	<string name="Command_View_Tooltip">
 		Alterar o ângulo da câmera

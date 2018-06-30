@@ -767,11 +767,18 @@ void LLInvFVBridge::getClipboardEntries(bool show_asset_id,
 
 	if (obj)
 	{
+		
+		items.push_back(std::string("Copy Separator"));
+		items.push_back(std::string("Copy"));
+		if (!isItemCopyable())
+		{
+			disabled_items.push_back(std::string("Copy"));
+		}
+
 		if (obj->getIsLinkType())
 		{
 			items.push_back(std::string("Find Original"));
-
-			if (isLinkedObjectMissing() || !(flags & FIRST_SELECTED_ITEM))
+			if (isLinkedObjectMissing())
 			{
 				disabled_items.push_back(std::string("Find Original"));
 			}
@@ -809,13 +816,6 @@ void LLInvFVBridge::getClipboardEntries(bool show_asset_id,
 				{
 					disabled_items.push_back(std::string("Copy Asset UUID"));
 				}
-			}
-			items.push_back(std::string("Copy Separator"));
-			
-			items.push_back(std::string("Copy"));
-			if (!isItemCopyable())
-			{
-				disabled_items.push_back(std::string("Copy"));
 			}
 
 			items.push_back(std::string("Cut"));
@@ -885,7 +885,7 @@ void LLInvFVBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	menuentry_vec_t disabled_items;
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(flags, items, disabled_items);
+		addTrashContextMenuOptions(items, disabled_items);
 	}	
 	else
 	{
@@ -928,16 +928,15 @@ bool get_selection_item_uuids(LLFolderView::selected_items_t& selected_items, uu
 	}
 	return false;
 }
-void LLInvFVBridge::addTrashContextMenuOptions(
-	U32 flags,
-	menuentry_vec_t &items,
+
+void LLInvFVBridge::addTrashContextMenuOptions(menuentry_vec_t &items,
 											   menuentry_vec_t &disabled_items)
 {
 	const LLInventoryObject *obj = getInventoryObject();
 	if (obj && obj->getIsLinkType())
 	{
 		items.push_back(std::string("Find Original"));
-		if (isLinkedObjectMissing() || !(flags & FIRST_SELECTED_ITEM))
+		if (isLinkedObjectMissing())
 		{
 			disabled_items.push_back(std::string("Find Original"));
 		}
@@ -2133,12 +2132,6 @@ BOOL LLItemBridge::isItemCopyable() const
 	{
 		// Can't copy worn objects. DEV-15183
 		if(get_is_item_worn(mUUID))
-		{
-			return FALSE;
-		}
-
-		// You can never copy a link.
-		if (item->getIsLinkType())
 		{
 			return FALSE;
 		}
@@ -3903,6 +3896,11 @@ void LLFolderBridge::perform_pasteFromClipboard()
                                     break;
                                 }
                             }
+                            else if (item->getIsLinkType())
+                            {
+                                link_inventory_object(parent_id, item_id,
+                                    LLPointer<LLInventoryCallback>(NULL));
+                            }
                             else
                             {
                                 copy_inventory_item(
@@ -4100,7 +4098,7 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
 	{
 		// This is a folder in the trash.
 		items.clear(); // clear any items that used to exist
-		addTrashContextMenuOptions(flags, items, disabled_items);
+		addTrashContextMenuOptions(items, disabled_items);
 	}
 	else if(isAgentInventory()) // do not allow creating in library
 	{
@@ -4549,7 +4547,7 @@ EInventorySortGroup LLFolderBridge::getSortGroup() const
 		return SG_TRASH_FOLDER;
 	}
 
-	if (preferred_type == LLFolderType::FT_INBOX || LLFolderType::lookupIsProtectedType(preferred_type))
+	if(LLFolderType::lookupIsProtectedType(preferred_type))
 	{
 		return SG_SYSTEM_FOLDER;
 	}
@@ -5437,7 +5435,7 @@ void LLTextureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	menuentry_vec_t disabled_items;
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(flags, items, disabled_items);
+		addTrashContextMenuOptions(items, disabled_items);
 	}	
     else if (isMarketplaceListingsFolder())
     {
@@ -5458,6 +5456,7 @@ void LLTextureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 
 		getClipboardEntries(true, items, disabled_items, flags);
 
+		items.push_back(std::string("Texture Separator"));
 		items.push_back(std::string("Save As"));
 		if (!canSaveTexture())
 		{
@@ -5518,7 +5517,7 @@ void LLSoundBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	{
 		if (isItemInTrash())
 		{
-			addTrashContextMenuOptions(flags, items, disabled_items);
+			addTrashContextMenuOptions(items, disabled_items);
 		}	
 		else
 		{
@@ -5596,7 +5595,7 @@ void LLLandmarkBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	{
 		if(isItemInTrash())
 		{
-			addTrashContextMenuOptions(flags, items, disabled_items);
+			addTrashContextMenuOptions(items, disabled_items);
 		}	
 		else
 		{
@@ -5879,7 +5878,7 @@ void LLCallingCardBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(flags, items, disabled_items);
+		addTrashContextMenuOptions(items, disabled_items);
 	}	
     else if (isMarketplaceListingsFolder())
     {
@@ -6180,7 +6179,7 @@ void LLGestureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	menuentry_vec_t disabled_items;
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(flags, items, disabled_items);
+		addTrashContextMenuOptions(items, disabled_items);
 	}
     else if (isMarketplaceListingsFolder())
     {
@@ -6249,7 +6248,7 @@ void LLAnimationBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	{
 		if(isItemInTrash())
 		{
-			addTrashContextMenuOptions(flags, items, disabled_items);
+			addTrashContextMenuOptions(items, disabled_items);
 		}	
 		else
 		{
@@ -6539,7 +6538,6 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 		//mk
 	}
 	else LLItemBridge::performAction(model, action);
-
 }
 
 void LLObjectBridge::openItem()
@@ -6673,7 +6671,7 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	menuentry_vec_t disabled_items;
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(flags, items, disabled_items);
+		addTrashContextMenuOptions(items, disabled_items);
 	}	
     else if (isMarketplaceListingsFolder())
     {
@@ -6814,7 +6812,6 @@ BOOL LLObjectBridge::renameItem(const std::string& new_name)
 		new_item->rename(new_name);
 		new_item->updateServer(FALSE);
 		model->updateItem(new_item);
-
 		model->notifyObservers();
 		buildDisplayName();
 
@@ -6951,7 +6948,7 @@ void LLWearableBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	menuentry_vec_t disabled_items;
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(flags, items, disabled_items);
+		addTrashContextMenuOptions(items, disabled_items);
 	}
     else if (isMarketplaceListingsFolder())
     {
@@ -7232,7 +7229,7 @@ void LLLinkItemBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(flags, items, disabled_items);
+		addTrashContextMenuOptions(items, disabled_items);
 	}
 	else
 	{
@@ -7330,7 +7327,7 @@ void LLLinkFolderBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 
 	if (isItemInTrash())
 	{
-		addTrashContextMenuOptions(flags, items, disabled_items);
+		addTrashContextMenuOptions(items, disabled_items);
 	}
 	else
 	{

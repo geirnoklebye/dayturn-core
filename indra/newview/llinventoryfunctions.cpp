@@ -403,7 +403,12 @@ void copy_inventory_category(LLInventoryModel* model,
                              bool move_no_copy_items )
 {
 	// Create the initial folder
-	LLUUID new_cat_uuid = gInventory.createNewCategory(parent_id, LLFolderType::FT_NONE, cat->getName());
+	inventory_func_type func = boost::bind(&copy_inventory_category_content, _1, model, cat, root_copy_id, move_no_copy_items);
+	gInventory.createNewCategory(parent_id, LLFolderType::FT_NONE, cat->getName(), func);
+}
+
+void copy_inventory_category_content(const LLUUID& new_cat_uuid, LLInventoryModel* model, LLViewerInventoryCategory* cat, const LLUUID& root_copy_id, bool move_no_copy_items)
+{
 	model->notifyObservers();
 	
 	// We need to exclude the initial root of the copy to avoid recursively copying the copy, etc...
@@ -427,7 +432,11 @@ void copy_inventory_category(LLInventoryModel* model,
 		LLInventoryItem* item = *iter;
         LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(update_folder_cb, new_cat_uuid));
 
-        if (!item->getPermissions().allowOperationBy(PERM_COPY, gAgent.getID(), gAgent.getGroupID()))
+		if (item->getIsLinkType())
+		{
+			link_inventory_object(new_cat_uuid, item->getLinkedUUID(), cb);
+		}
+		else if (!item->getPermissions().allowOperationBy(PERM_COPY, gAgent.getID(), gAgent.getGroupID()))
         {
             // If the item is nocopy, we do nothing or, optionally, move it
             if (move_no_copy_items)

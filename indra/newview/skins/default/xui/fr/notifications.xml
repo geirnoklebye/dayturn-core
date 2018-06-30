@@ -668,6 +668,9 @@ Consulter [_URL] pour en savoir plus ?
 		</url>
 		<usetemplate ignoretext="Mon matériel n&apos;est pas pris en charge" name="okcancelignore" notext="Non" yestext="Oui"/>
 	</notification>
+	<notification name="RunLauncher">
+		Veuillez ne pas exécuter la visionneuse directement. Actualiser tout raccourci existant pour lancer SL_Launcher
+	</notification>
 	<notification name="OldGPUDriver">
 		Il existe probablement un pilote plus récent pour votre puce graphique.  La mise à jour des pilotes graphiques est susceptible d’améliorer considérablement les performances.
 
@@ -1505,13 +1508,13 @@ Veuillez ne sélectionner qu&apos;un seul objet.
 		Impossible de definir les textures de la région :
 La texture du terrain [TEXTURE_NUM] a une profondeur invalide ([TEXTURE_BIT_DEPTH]).
 
-Remplacer la texture [TEXTURE_NUM] avec une image de 24 bits, 1024 x 1024, ou plus petite, puis cliquez à nouveau sur Appliquer.
+Remplacer la texture [TEXTURE_NUM] avec une image de 24 bits, 512 X 512, ou plus petite, puis cliquez à nouveau sur Appliquer.
 	</notification>
 	<notification name="InvalidTerrainSize">
 		Impossible de definir les textures de la région :
 La texture du terrain [TEXTURE_NUM] est trop volumineuse ([TEXTURE_SIZE_X] X [TEXTURE_SIZE_Y]).
 
-Remplacer la texture [TEXTURE_NUM] avec une image de 24 bits, 1024 x 1024, ou plus petite, puis cliquez à nouveau sur Appliquer.
+Remplacer la texture [TEXTURE_NUM] avec une image de 24 bits, 512 X 512, ou plus petite, puis cliquez à nouveau sur Appliquer.
 	</notification>
 	<notification name="RawUploadStarted">
 		Le chargement a commencé. Cela va prendre une à deux minutes,
@@ -1623,95 +1626,12 @@ Télécharger vers le dossier Applications ?
 		<usetemplate name="okcancelbuttons" notext="Continuer" yestext="Télécharger"/>
 	</notification>
 	<notification name="FailedUpdateInstall">
-		Une erreur est survenue lors de l&apos;installation de la mise à jour du client.
-Veuillez télécharger et installer la dernière version du client à la page Web
-http://secondlife.com/download.
+		La version [VERSION] est nécessaire pour vous connecter. Cette version aurait dû être mise à jour, mais visiblement, elle ne l&apos;a pas été. Veuillez télécharger la dernière version sur https://secondlife.com/support/downloads/
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
-	<notification name="FailedRequiredUpdateInstall">
-		Impossible d&apos;installer une mise à jour requise. 
-Vous ne pourrez pas vous connecter tant que [APP_NAME] ne sera pas mis à jour.
-
-Veuillez télécharger et installer la dernière version du client à la page Web
-http://secondlife.com/download.
+	<notification name="LoginFailedUnknown">
+		Désolé, la connexion a échoué pour un raison non reconnue. Si ce message persiste, veuillez consulter la page [SUPPORT_SITE].
 		<usetemplate name="okbutton" yestext="Quitter"/>
-	</notification>
-	<notification name="UpdaterServiceNotRunning">
-		Une mise à jour requise pour votre installation Second Life existe.
-
-Pour la télécharger, accédez à http://www.secondlife.com/downloads.
-Vous pouvez également l&apos;installer dès maintenant.
-		<usetemplate name="okcancelbuttons" notext="Quitter Second Life" yestext="Télécharger et installer maintenant"/>
-	</notification>
-	<notification name="DownloadBackgroundTip">
-		Nous avons téléchargé une mise à jour de votre installation [APP_NAME].
-Version [VERSION] [[RELEASE_NOTES_FULL_URL] Informations relatives à cette mise à jour]
-		<usetemplate name="okcancelbuttons" notext="Ultérieurement..." yestext="Installer maintenant et redémarrer [APP_NAME]"/>
-	</notification>
-	<notification name="DownloadBackgroundDialog">
-		Nous avons téléchargé une mise à jour de votre installation [APP_NAME].
-Version [VERSION] [[RELEASE_NOTES_FULL_URL] Informations relatives à cette mise à jour]
-		<usetemplate name="okcancelbuttons" notext="Ultérieurement..." yestext="Installer maintenant et redémarrer [APP_NAME]"/>
-	</notification>
-	<notification name="RequiredUpdateDownloadedVerboseDialog">
-		Nous avons téléchargé une mise à jour logicielle requise.
-Version [VERSION] [Informations au sujet de cette mise à jour [INFO_URL]]
-
-[APP_NAME] doit être redémarré pour que la mise à jour soit installée.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="RequiredUpdateDownloadedDialog">
-		[APP_NAME] doit être redémarré pour que la mise à jour soit installée.
-[Informations au sujet de cette mise à jour [INFO_URL]]
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="OtherChannelDownloadBackgroundTip">
-		Nous avons téléchargé une mise à jour de votre installation [APP_NAME].
-Version [VERSION] 
-Le client expérimental a été remplacé par un nouveau client [NEW_CHANNEL] ;
-consultez [[INFO_URL] pour en savoir plus sur cette mise à jour]
-		<usetemplate name="okcancelbuttons" notext="Ultérieurement..." yestext="Installer maintenant et redémarrer [APP_NAME]"/>
-	</notification>
-	<notification name="OtherChannelDownloadBackgroundDialog">
-		Nous avons téléchargé une mise à jour de votre installation [APP_NAME].
-Version [VERSION]
-Le client expérimental a été remplacé par un nouveau client [NEW_CHANNEL] ;
-consultez [Informations au sujet de cette mise à jour [INFO_URL]]
-		<usetemplate name="okcancelbuttons" notext="Ultérieurement..." yestext="Installer maintenant et redémarrer [APP_NAME]"/>
-	</notification>
-	<notification name="OtherChannelRequiredUpdateDownloadedVerboseDialog">
-		Nous avons téléchargé une mise à jour logicielle requise.
-Version [VERSION]
-Le client expérimental a été remplacé par un nouveau client [NEW_CHANNEL] ;
-consultez [Informations au sujet de cette mise à jour [INFO_URL]]
-
-[APP_NAME] doit être redémarré pour que la mise à jour soit installée.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="OtherChannelRequiredUpdateDownloadedDialog">
-		[APP_NAME] doit être redémarré pour que la mise à jour soit installée.
-Le client expérimental a été remplacé par un nouveau client [NEW_CHANNEL] ;
-consultez [Informations au sujet de cette mise à jour [INFO_URL]]
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="UpdateDownloadInProgress">
-		Une mise à jour est disponible.
-Elle est en cours de téléchargement en arrière-plan et nous vous inviterons à redémarrer votre client pour terminer son installation dès qu’elle est prête.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="UpdateDownloadComplete">
-		Une mise à jour a été téléchargée. Elle sera installée au redémarrage.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="UpdateCheckError">
-		Une erreur est survenue lors de la recherche de mises à jour.
-Veuillez réessayer ultérieurement.
-		<usetemplate name="okbutton" yestext="OK"/>
-	</notification>
-	<notification name="UpdateViewerUpToDate">
-		Votre client est à jour.
-Si vous êtes impatients de découvrir les dernières fonctionnalités et corrections, consultez la page Autres clients. http://wiki.secondlife.com/wiki/Linden_Lab_Official:Alternate_Viewers.
-		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="DeedObjectToGroup">
 		Si vous cédez cet objet, le groupe :
@@ -2744,6 +2664,12 @@ Veuillez sélectionner un terrain plus petit.
 	<notification name="SystemMessage">
 		[MESSAGE]
 	</notification>
+	<notification name="FlickrConnect">
+		[MESSAGE]
+	</notification>
+	<notification name="TwitterConnect">
+		[MESSAGE]
+	</notification>
 	<notification name="PaymentReceived">
 		[MESSAGE]
 	</notification>
@@ -3488,6 +3414,10 @@ Veuillez vérifier la configuration de votre réseau et de votre pare-feu.
 Veuillez désactiver toute  fonctionnalité SIP ALG dans votre routeur. 
 
 Aucune communication vocale n&apos;est disponible.
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
+	<notification name="NoVoiceConnect-GIAB">
+		Nous rencontrons des difficultés pour vous connecter à votre serveur vocal. Aucune communication vocale n&apos;est disponible. Veuillez vérifier la configuration de votre réseau et de votre pare-feu.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="AvatarRezLeftNotification">
@@ -4430,7 +4360,10 @@ Veuillez sélectionner un terrain plus petit.
 		Impossible de déplacer les fichiers. Chemin précédent rétabli.
 		<usetemplate ignoretext="Impossible de déplacer les fichiers. Chemin précédent rétabli." name="okignore" yestext="OK"/>
 	</notification>
+	<notification name="DefaultObjectPermissions">
 		Problème lors de l&apos;enregistrement des droits d&apos;objet par défaut : [REASON].  Réessayez de définir les droits par défaut ultérieurement.
+	<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="ChatHistoryIsBusyAlert">
 		Le fichier d&apos;historique des chats est occupé à traiter l&apos;opération précédente. Réessayez dans quelques minutes ou choisissez une autre personne pour le chat.
 		<usetemplate name="okbutton" yestext="OK"/>

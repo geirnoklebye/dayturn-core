@@ -512,9 +512,6 @@ void LLVivoxVoiceClient::connectorCreate()
 		<< "<AccountManagementServer>" << mVoiceAccountServerURI << "</AccountManagementServer>"
 		<< "<Mode>Normal</Mode>"
         << "<ConnectorHandle>" << LLVivoxSecurity::getInstance()->connectorHandle() << "</ConnectorHandle>"
-		// <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
-		<< (gSavedSettings.getBOOL("VoiceMultiInstance") ? "<MinimumPort>30000</MinimumPort><MaximumPort>50000</MaximumPort>" : "")
-		// </FS:Ansariel>
 		<< "<Logging>"
 		<< "<Folder>" << logdir << "</Folder>"
 		<< "<FileNamePrefix>Connector</FileNamePrefix>"
@@ -659,9 +656,9 @@ void LLVivoxVoiceClient::voiceControlCoro()
         if (startAndConnectSession())
         {
             if (mTuningMode)
-        {
-            performMicTuning();
-        }
+            {
+                performMicTuning();
+            }
 
             waitForChannel(); // this doesn't normally return unless relog is needed or shutting down
     
@@ -784,12 +781,6 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
                 log_folder = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "");
             }
 
-			// <FS:Ansariel> Strip trailing directory delimiter
-			if (LLStringUtil::endsWith(log_folder, gDirUtilp->getDirDelimiter()))
-			{
-				log_folder = log_folder.substr(0, log_folder.size() - gDirUtilp->getDirDelimiter().size());
-			}
-			// </FS:Ansariel>
             params.args.add("-lf");
             params.args.add(log_folder);
 
@@ -799,19 +790,6 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
                 params.args.add("-st");
                 params.args.add(shutdown_timeout);
             }
-						// <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
-						if (gSavedSettings.getBOOL("VoiceMultiInstance"))
-						{
-							S32 port_nr = 30000 + ll_rand(20000);
-							LLControlVariable* voice_port = gSavedSettings.getControl("VivoxVoicePort");
-							if (voice_port)
-							{
-								voice_port->setValue(LLSD(port_nr), false);
-								params.args.add("-i");
-								params.args.add(llformat("127.0.0.1:%u",  gSavedSettings.getU32("VivoxVoicePort")));
-							}
-						}
-						// </FS:Ansariel>
             params.cwd = gDirUtilp->getAppRODataDir();
 
 #           ifdef VIVOX_HANDLE_ARGS
@@ -4019,13 +3997,13 @@ void LLVivoxVoiceClient::sessionNotificationEvent(std::string &sessionHandle, st
 			{
 				// Other end started typing
 				// TODO: The proper way to add a typing notification seems to be LLIMMgr::processIMTypingStart().
-				// It requires an LLIMInfo for the message, which we don't have here.
+				// It requires some info for the message, which we don't have here.
 			}
 			else if (!stricmp(notificationType.c_str(), "NotTyping"))
 			{
 				// Other end stopped typing
 				// TODO: The proper way to remove a typing notification seems to be LLIMMgr::processIMTypingStop().
-				// It requires an LLIMInfo for the message, which we don't have here.
+				// It requires some info for the message, which we don't have here.
 			}
 			else
 			{

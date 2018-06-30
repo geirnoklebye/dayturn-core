@@ -85,8 +85,7 @@ LLFloaterIMSession::LLFloaterIMSession(const LLUUID& session_id)
 	mPositioned(false),
 	mSessionInitialized(false),
 	mMeTypingTimer(),
-	mOtherTypingTimer(),
-	mImInfo()
+	mOtherTypingTimer()
 {
 	mIsNearbyChat = false;
 
@@ -128,7 +127,7 @@ void LLFloaterIMSession::refresh()
 	if (mOtherTyping && mOtherTypingTimer.getElapsedTimeF32() > OTHER_TYPING_TIMEOUT)
 	{
 		LL_DEBUGS("TypingMsgs") << "Received: is typing cleared due to timeout" << LL_ENDL;
-		removeTypingIndicator(mImInfo);
+		removeTypingIndicator(mImFromId);
 		mOtherTyping = false;
 	}
 

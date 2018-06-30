@@ -662,6 +662,9 @@ Consultar [_URL] para mais informações?
 		</url>
 		<usetemplate ignoretext="O hardware do meu computador não é suportado" name="okcancelignore" notext="Não" yestext="Sim"/>
 	</notification>
+	<notification name="RunLauncher">
+		Não executar diretamente o visualizador executável. Atualizar quaisquer atalhos existentes para executar o SL_Launcher.
+	</notification>
 	<notification name="OldGPUDriver">
 		Provavelmente, há um driver mais recente para o seu chip gráfico.  A atualização dos drivers gráficos pode melhorar significativamente o desempenho.
 
@@ -2734,6 +2737,12 @@ Selecione só um objeto.
 	<notification name="SystemMessage">
 		[MESSAGE]
 	</notification>
+	<notification name="FlickrConnect">
+		[MESSAGE]
+	</notification>
+	<notification name="TwitterConnect">
+		[MESSAGE]
+	</notification>
 	<notification name="PaymentReceived">
 		[MESSAGE]
 	</notification>
@@ -3476,6 +3485,10 @@ Verifique a configuração da sua rede e firewall.
 Desativar qualquer configuração SIP ALG em seu router. 
 
 Talvez não seja possível se comunicar via voz.
+		<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
+	<notification name="NoVoiceConnect-GIAB">
+		Estamos tendo problemas de conexão com o seu servidor de voz: Talvez não seja possível se comunicar via voz. Verifique a configuração da sua rede e firewall.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="AvatarRezLeftNotification">
@@ -4417,7 +4430,10 @@ Tente selecionar uma quantidade menor de terreno.
 		Não foi possível mover arquivos. Caminho anterior restaurado.
 		<usetemplate ignoretext="Não foi possível mover arquivos. Caminho anterior restaurado." name="okignore" yestext="OK"/>
 	</notification>
+	<notification name="DefaultObjectPermissions">
 		Ocorreu um problema ao salvar as permissões padrão do objeto: [REASON].  Tente definir as permissões padrão mais tarde.
+	<usetemplate name="okbutton" yestext="OK"/>
+	</notification>
 	<notification name="ChatHistoryIsBusyAlert">
 		O arquivo de histórico de bate-papo está ocupado com uma operação anterior. Tente novamente em alguns minutos ou selecione outra pessoa para bater papo.
 		<usetemplate name="okbutton" yestext="OK"/>

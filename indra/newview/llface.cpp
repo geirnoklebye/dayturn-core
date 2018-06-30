@@ -55,10 +55,6 @@
 #include "llvoavatar.h"
 #include "llsculptidsize.h"
 
-//MK
-#include "llagent.h"
-//mk
-
 #if LL_LINUX
 // Work-around spurious used before init warning on Vector4a
 //
@@ -840,8 +836,8 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
 		min = face.mExtents[0];
 		max = face.mExtents[1];
 		
-		// llassert(less_than_max_mag(min));
-		// llassert(less_than_max_mag(max));
+		llassert(less_than_max_mag(min));
+		llassert(less_than_max_mag(max));
 
 		//min, max are in volume space, convert to drawable render space
 
@@ -1222,6 +1218,12 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 {
 	LL_RECORD_BLOCK_TIME(FTM_FACE_GET_GEOM);
 	llassert(verify());
+
+	if (volume.getNumVolumeFaces() <= f) {
+        LL_WARNS() << "Attempt get volume face out of range! Total Faces: " << volume.getNumVolumeFaces() << " Attempt get access to: " << f << LL_ENDL;
+		return FALSE;
+	}
+
 	const LLVolumeFace &vf = volume.getVolumeFace(f);
 	S32 num_vertices = (S32)vf.mNumVertices;
 	S32 num_indices = (S32) vf.mNumIndices;
@@ -1311,13 +1313,6 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 	}
 
 	LLColor4U color = tep->getColor();
-
-//MK
-	if (gRRenabled && gAgent.mRRInterface.mContainsCamTextures && !(getViewerObject()->isAttachment()))
-	{
-		color = LLColor4::white;
-	}
-//mk
 
 	if (rebuild_color)
 	{ //decide if shiny goes in alpha channel of color

@@ -193,7 +193,7 @@ BOOL LLPanelGroupGeneral::postBuild()
 		mCtrlOpenEnrollment->setEnabled(TRUE);
 		mCtrlEnrollmentFee->setEnabled(TRUE);
 		mSpinEnrollmentFee->setEnabled(TRUE);
-		mGroupUUIDText->clear();
+
 	}
 
 	return LLPanelGroupTab::postBuild();
@@ -205,6 +205,7 @@ void LLPanelGroupGeneral::setupCtrls(LLPanel* panel_group)
 	if (mInsignia)
 	{
 		mInsignia->setCommitCallback(onCommitAny, this);
+		mInsignia->setAllowLocalTexture(FALSE);
 	}
 	mFounderName = getChild<LLTextBox>("founder_name");
 
