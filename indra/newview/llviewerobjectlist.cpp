@@ -1364,7 +1364,7 @@ void LLViewerObjectList::removeDrawable(LLDrawable* drawablep)
 	}
 }
 
-BOOL LLViewerObjectList::killObject(LLViewerObject *objectp)
+BOOL LLViewerObjectList::killObject(LLViewerObject *objectp, bool derendered)
 {
 	// Don't ever kill gAgentAvatarp, just force it to the agent's region
 	// unless region is NULL which is assumed to mean you are logging out.
@@ -1379,6 +1379,10 @@ BOOL LLViewerObjectList::killObject(LLViewerObject *objectp)
 
 	if (objectp)
 	{
+		if(derendered)
+		{
+			mDerenderList.insert(objectp->getID());
+		}
 		objectp->markDead(); // does the right thing if object already dead
 		return TRUE;
 	}

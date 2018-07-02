@@ -1250,6 +1250,16 @@ void LLPanelFace::updateUI(bool force_set_values /*false*/)
 			getChild<LLUICtrl>("combobox texgen")->setTentative(!identical);
 			getChildView("tex gen")->setEnabled(editable);
 
+			if (selected_texgen == LLTextureEntry::TEX_GEN_PLANAR)
+			{
+				// EXP-1507 (change label based on the mapping mode)
+				getChild<LLUICtrl>("rpt")->setValue(getString("string repeats per meter"));
+			}
+			else
+			if (selected_texgen == LLTextureEntry::TEX_GEN_DEFAULT)
+			{
+				getChild<LLUICtrl>("rpt")->setValue(getString("string repeats per face"));
+			}
 			}
 
 		{
@@ -1386,9 +1396,23 @@ void LLPanelFace::updateUI(bool force_set_values /*false*/)
 						repeat_y *= 2.0f;
 			}
 
+					BOOL flip_x = FALSE;
+					BOOL flip_y = FALSE;
+
+					if (repeat_x < 0) {
+						repeat_x = -repeat_x;
+						flip_x = TRUE;
+					}
+					if (repeat_y < 0) {
+						repeat_y = -repeat_y;
+						flip_y = TRUE;
+					}
+
 					rot = material->getSpecularRotation();
 					getChild<LLUICtrl>("shinyScaleU")->setValue(repeat_x);
 					getChild<LLUICtrl>("shinyScaleV")->setValue(repeat_y);
+					getChild<LLUICtrl>("shinyScaleFlipU")->setValue(flip_x);
+					getChild<LLUICtrl>("shinyScaleFlipV")->setValue(flip_y);
 					getChild<LLUICtrl>("shinyRot")->setValue(rot*RAD_TO_DEG);
 					getChild<LLUICtrl>("shinyOffsetU")->setValue(offset_x);
 					getChild<LLUICtrl>("shinyOffsetV")->setValue(offset_y);
@@ -1422,9 +1446,23 @@ void LLPanelFace::updateUI(bool force_set_values /*false*/)
 						repeat_y *= 2.0f;
 					}
 			
+					BOOL flip_x = FALSE;
+					BOOL flip_y = FALSE;
+
+					if (repeat_x < 0) {
+						repeat_x = -repeat_x;
+						flip_x = TRUE;
+					}
+					if (repeat_y < 0) {
+						repeat_y = -repeat_y;
+						flip_y = TRUE;
+					}
+
 					rot = material->getNormalRotation();
 					getChild<LLUICtrl>("bumpyScaleU")->setValue(repeat_x);
 					getChild<LLUICtrl>("bumpyScaleV")->setValue(repeat_y);
+					getChild<LLUICtrl>("bumpyScaleFlipU")->setValue(flip_x);
+					getChild<LLUICtrl>("bumpyScaleFlipV")->setValue(flip_y);
 					getChild<LLUICtrl>("bumpyRot")->setValue(rot*RAD_TO_DEG);
 					getChild<LLUICtrl>("bumpyOffsetU")->setValue(offset_x);
 					getChild<LLUICtrl>("bumpyOffsetV")->setValue(offset_y);
@@ -1465,7 +1503,8 @@ void LLPanelFace::updateUI(bool force_set_values /*false*/)
 			mColorSwatch->setValid(FALSE);
 		}
 		getChildView("color trans")->setEnabled(FALSE);
-		getChildView("rptctrl")->setEnabled(FALSE);
+		getChildView("rpt")->setEnabled(FALSE);
+		getChildView("tex offset")->setEnabled(FALSE);
 		getChildView("tex gen")->setEnabled(FALSE);
 		getChildView("label shininess")->setEnabled(FALSE);
 		getChildView("label bumpiness")->setEnabled(FALSE);
@@ -1592,9 +1631,12 @@ void LLPanelFace::updateVisibility()
 	}
 	getChildView("TexScaleU")->setVisible(show_texture);
 	getChildView("TexScaleV")->setVisible(show_texture);
+	getChildView("TexScaleFlipU")->setVisible(show_texture);
+	getChildView("TexScaleFlipV")->setVisible(show_texture);
 	getChildView("TexRot")->setVisible(show_texture);
 	getChildView("TexOffsetU")->setVisible(show_texture);
 	getChildView("TexOffsetV")->setVisible(show_texture);
+	getChildView("TexDuplicate")->setVisible(show_texture);
 
 	// Specular map controls
 	getChildView("shinytexture control")->setVisible(show_shininess);
@@ -1612,9 +1654,12 @@ void LLPanelFace::updateVisibility()
 	}
 	getChildView("shinyScaleU")->setVisible(show_shininess);
 	getChildView("shinyScaleV")->setVisible(show_shininess);
+	getChildView("shinyScaleFlipU")->setVisible(show_shininess);
+	getChildView("shinyScaleFlipV")->setVisible(show_shininess);
 	getChildView("shinyRot")->setVisible(show_shininess);
 	getChildView("shinyOffsetU")->setVisible(show_shininess);
 	getChildView("shinyOffsetV")->setVisible(show_shininess);
+	getChildView("shinyDuplicate")->setVisible(show_shininess);
 
 	// Normal map controls
 	if (show_bumpiness)
@@ -1626,11 +1671,12 @@ void LLPanelFace::updateVisibility()
 	getChildView("label bumpiness")->setVisible(show_bumpiness);
 	getChildView("bumpyScaleU")->setVisible(show_bumpiness);
 	getChildView("bumpyScaleV")->setVisible(show_bumpiness);
+	getChildView("bumpyScaleFlipU")->setVisible(show_bumpiness);
+	getChildView("bumpyScaleFlipV")->setVisible(show_bumpiness);
 	getChildView("bumpyRot")->setVisible(show_bumpiness);
 	getChildView("bumpyOffsetU")->setVisible(show_bumpiness);
 	getChildView("bumpyOffsetV")->setVisible(show_bumpiness);
-
-
+	getChildView("bumpyDuplicate")->setVisible(show_bumpiness);
 }
 
 // static
@@ -2412,7 +2458,7 @@ struct LLPanelFaceSetMediaFunctor : public LLSelectedTEFunctor
 
 				// set scale and adjust offset
 				object->setTEScaleS( te, scale_s );
-				object->setTEScaleT( te, scale_t );	// don't need to flip Y anymore since QT does this for us now.
+				object->setTEScaleT( te, scale_t );	// don't need to flip Y anymore since web plugin does this for us now.
 				object->setTEOffsetS( te, -( 1.0f - scale_s ) / 2.0f );
 				object->setTEOffsetT( te, -( 1.0f - scale_t ) / 2.0f );
 			}
@@ -2447,6 +2493,94 @@ void LLPanelFace::onCommitPlanarAlign(LLUICtrl* ctrl, void* userdata)
 	self->getState();
 	self->sendTextureInfo();
 }
+
+static LLSD texture_clipboard;
+
+void LLPanelFace::onClickCopy(void* userdata)
+{
+	LLViewerObject* objectp = LLSelectMgr::getInstance()->getSelection()->getFirstRootObject();
+	LLSelectNode* node = LLSelectMgr::getInstance()->getSelection()->getFirstRootNode();
+	if(!objectp || !node)
+	{
+		objectp = LLSelectMgr::getInstance()->getSelection()->getFirstObject();
+		node = LLSelectMgr::getInstance()->getSelection()->getFirstNode();
+		if (!objectp || !node)
+			return;
+	}
+
+	texture_clipboard.clear();
+
+	const BOOL is_fullperm = (gAgent.getID() == node->mPermissions->getOwner()) && (gAgent.getID() == node->mPermissions->getCreator());
+
+	const S32 te_count = objectp->getNumFaces();
+	for (S32 i = 0; i < te_count; i++)
+	{
+		LLSD face = objectp->getTE(i)->asLLSD();
+		if (!is_fullperm)
+			face.erase("imageid");
+
+		//KC: remove media, it does not be applied right on the viewer after pasting
+		//TODO: fix updating media viewer side after pasting
+		face["media_flags"] = 0;
+		face.erase("media_data");
+
+		texture_clipboard.append(face);
+	}
+
+	//debug
+	// std::ostringstream texXML;
+	// LLPointer<LLSDFormatter> formatter = new LLSDXMLFormatter();
+	// formatter->format(texture_clipboard, texXML, LLSDFormatter::OPTIONS_PRETTY);
+	// LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(texXML.str()));
+}
+
+struct LLPanelFacePasteTexFunctor : public LLSelectedTEFunctor
+{
+	virtual bool apply(LLViewerObject* object, S32 te)
+	{
+		if(texture_clipboard[te])
+		{
+			LLSD face(texture_clipboard[te]);
+
+			//KC: LLTextureEntry::fromLLSD will bail on missing fields
+			//replace the missing imageid with the current face's texture
+			if (!face.has("imageid"))
+				face["imageid"] = object->getTE(te)->getID();
+
+			LLTextureEntry tex;
+			if(tex.fromLLSD(face))
+			{
+				//KC: if setTETexture is not called before setTE
+				//the new texture does not show to the viewer till the selection changes
+				object->setTETexture(U8(te), tex.getID());
+				object->setTE(te, tex);
+				
+				//TODO: This didn't work, but it might be close to a fix for pasting media
+				// LLTextureEntry *tep = object->getTE(te);
+				// if (face.has("media_flags") && face.has(LLTextureEntry::TEXTURE_MEDIA_DATA_KEY))
+				// {
+					// tep->setMediaTexGen(face["media_flags"].asInteger());
+					// tep->updateMediaData(face[LLTextureEntry::TEXTURE_MEDIA_DATA_KEY]);
+				// }
+			}
+			else
+			{
+				LL_WARNS() << "LLPanelFace::onClickPaste : LLPanelFacePasteTexFunctor: Failed to read clipboard for face: " << te << LL_ENDL;
+			}
+		}
+		return true;
+	};
+};
+
+void LLPanelFace::onClickPaste(void* userdata)
+{
+	LLPanelFacePasteTexFunctor setfunc;
+	LLSelectMgr::getInstance()->getSelection()->applyToTEs(&setfunc);
+
+	LLPanelFaceSendFunctor sendfunc;
+	LLSelectMgr::getInstance()->getSelection()->applyToObjects(&sendfunc);
+}
+
 
 void LLPanelFace::onTextureSelectionChanged(LLInventoryItem* itemp)
 {
@@ -2500,6 +2634,246 @@ void LLPanelFace::onTextureSelectionChanged(LLInventoryItem* itemp)
 	}
 }
 
+// static
+void LLPanelFace::onClickDuplicateDiffuse(void *data)
+{
+	LLPanelFace *self = (LLPanelFace *)data;
+	llassert_always(self);
+
+	const BOOL have_normal_map = self->getCurrentNormalMap().notNull();
+	const BOOL have_specular_map = self->getCurrentSpecularMap().notNull();
+
+	//
+	//	duplicate diffuse map scale (U)
+	//
+	F32 value = self->getChild<LLSpinCtrl>("TexScaleU")->getValue().asReal();
+	BOOL flip = self->getChild<LLCheckBoxCtrl>("TexScaleFlipU")->getValue().asBoolean();
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyScaleU", value);
+		self->childSetValue("bumpyScaleFlipU", flip);
+		LLSelectedTEMaterial::setNormalRepeatX(self, flip ? -value : value);
+	}
+	if (have_specular_map) {
+		self->childSetValue("shinyScaleU", value);
+		self->childSetValue("shinyScaleFlipU", flip);
+		LLSelectedTEMaterial::setSpecularRepeatX(self, flip ? -value : value);
+	}
+
+	//
+	//	duplicate diffuse map scale (V)
+	//
+	value = self->getChild<LLSpinCtrl>("TexScaleV")->getValue().asReal();
+	flip = self->getChild<LLCheckBoxCtrl>("TexScaleFlipV")->getValue().asBoolean();
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyScaleV", value);
+		self->childSetValue("bumpyScaleFlipV", flip);
+		LLSelectedTEMaterial::setNormalRepeatY(self, flip ? -value : value);
+	}
+	if (have_specular_map) {
+		self->childSetValue("shinyScaleV", value);
+		self->childSetValue("shinyScaleFlipV", flip);
+		LLSelectedTEMaterial::setSpecularRepeatY(self, flip ? -value : value);
+	}
+
+	//
+	//	duplicate diffuse map rotation
+	//
+	value = self->getChild<LLSpinCtrl>("TexRot")->getValue().asReal();
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyRot", value);
+		LLSelectedTEMaterial::setNormalRotation(self, value * DEG_TO_RAD);
+	}
+	if (have_specular_map) {
+		self->childSetValue("shinyRot", value);
+		LLSelectedTEMaterial::setSpecularRotation(self, value * DEG_TO_RAD);
+	}
+
+	//
+	//	duplicate diffuse map offset (U)
+	//
+	value = self->getChild<LLSpinCtrl>("TexOffsetU")->getValue().asReal();
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyOffsetU", value);
+		LLSelectedTEMaterial::setNormalOffsetX(self, value);
+	}
+	if (have_specular_map) {
+		self->childSetValue("shinyOffsetU", value);
+		LLSelectedTEMaterial::setSpecularOffsetX(self, value);
+	}
+
+	//
+	//	duplicate diffuse map offset (V)
+	//
+	value = self->getChild<LLSpinCtrl>("TexOffsetV")->getValue().asReal();
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyOffsetV", value);
+		LLSelectedTEMaterial::setNormalOffsetY(self, value);
+	}
+	if (have_specular_map) {
+		self->childSetValue("shinyOffsetV", value);
+		LLSelectedTEMaterial::setSpecularOffsetY(self, value);
+	}
+}
+
+// static
+void LLPanelFace::onClickDuplicateNormal(void *data)
+{
+	LLPanelFace *self = (LLPanelFace *)data;
+	llassert_always(self);
+
+	const BOOL have_specular_map = self->getCurrentSpecularMap().notNull();
+
+	//
+	//	duplicate normal map scale (U)
+	//
+	F32 value = self->getChild<LLSpinCtrl>("bumpyScaleU")->getValue().asReal();
+	BOOL flip = self->getChild<LLCheckBoxCtrl>("bumpyScaleFlipU")->getValue().asBoolean();
+
+	self->childSetValue("TexScaleU", value);
+	self->childSetValue("TexScaleFlipU", flip);
+
+	if (have_specular_map) {
+		self->childSetValue("shinyScaleU", value);
+		self->childSetValue("shinyScaleFlipU", flip);
+		LLSelectedTEMaterial::setSpecularRepeatX(self, flip ? -value : value);
+	}
+
+	//
+	//	duplicate normal map scale (V)
+	//
+	value = self->getChild<LLSpinCtrl>("bumpyScaleV")->getValue().asReal();
+	flip = self->getChild<LLCheckBoxCtrl>("bumpyScaleFlipV")->getValue().asBoolean();
+
+	self->childSetValue("TexScaleV", value);
+	self->childSetValue("TexScaleFlipV", flip);
+
+	if (have_specular_map) {
+		self->childSetValue("shinyScaleV", value);
+		self->childSetValue("shinyScaleFlipV", flip);
+		LLSelectedTEMaterial::setSpecularRepeatY(self, flip ? -value : value);
+	}
+
+	//
+	//	duplicate normal map rotation
+	//
+	value = self->getChild<LLSpinCtrl>("bumpyRot")->getValue().asReal();
+	self->childSetValue("TexRot", value);
+
+	if (have_specular_map) {
+		self->childSetValue("shinyRot", value);
+		LLSelectedTEMaterial::setSpecularRotation(self, value * DEG_TO_RAD);
+	}
+
+	//
+	//	duplicate normal map offset (U)
+	//
+	value = self->getChild<LLSpinCtrl>("bumpyOffsetU")->getValue().asReal();
+	self->childSetValue("TexOffsetU", value);
+
+	if (have_specular_map) {
+		self->childSetValue("shinyOffsetU", value);
+		LLSelectedTEMaterial::setSpecularOffsetX(self, value);
+	}
+
+	//
+	//	duplicate normal map offset (V)
+	//
+	value = self->getChild<LLSpinCtrl>("bumpyOffsetV")->getValue().asReal();
+	self->childSetValue("TexOffsetV", value);
+
+	if (have_specular_map) {
+		self->childSetValue("shinyOffsetV", value);
+		LLSelectedTEMaterial::setSpecularOffsetY(self, value);
+	}
+
+	//
+	//	send diffuse map info
+	//
+	self->sendTextureInfo();
+}
+
+// static
+void LLPanelFace::onClickDuplicateSpecular(void *data)
+{
+	LLPanelFace *self = (LLPanelFace *)data;
+	llassert_always(self);
+
+	const BOOL have_normal_map = self->getCurrentNormalMap().notNull();
+
+	//
+	//	duplicate specular map scale (U)
+	//
+	F32 value = self->getChild<LLSpinCtrl>("shinyScaleU")->getValue().asReal();
+	F32 flip = self->getChild<LLCheckBoxCtrl>("shinyScaleFlipU")->getValue().asBoolean();
+
+	self->childSetValue("TexScaleU", value);
+	self->childSetValue("TexScaleFlipU", flip);
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyScaleU", value);
+		self->childSetValue("bumpyScaleFlipU", flip);
+		LLSelectedTEMaterial::setNormalRepeatX(self, flip ? -value : value);
+	}
+
+	//
+	//	duplicate specular map scale (V)
+	//
+	value = self->getChild<LLSpinCtrl>("shinyScaleV")->getValue().asReal();
+	flip = self->getChild<LLCheckBoxCtrl>("shinyScaleFlipV")->getValue().asBoolean();
+
+	self->childSetValue("TexScaleV", value);
+	self->childSetValue("TexScaleFlipV", flip);
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyScaleV", value);
+		self->childSetValue("bumpyScaleFlipV", flip);
+		LLSelectedTEMaterial::setNormalRepeatY(self, flip ? -value : value);
+	}
+
+	//
+	//	duplicate specular map rotation
+	//
+	value = self->getChild<LLSpinCtrl>("shinyRot")->getValue().asReal();
+	self->childSetValue("TexRot", value);
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyRot", value);
+		LLSelectedTEMaterial::setNormalRotation(self, value * DEG_TO_RAD);
+	}
+
+	//
+	//	duplicate specular map offset (U)
+	//
+	value = self->getChild<LLSpinCtrl>("shinyOffsetU")->getValue().asReal();
+	self->childSetValue("TexOffsetU", value);
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyOffsetU", value);
+		LLSelectedTEMaterial::setNormalOffsetX(self, value);
+	}
+
+	//
+	//	duplicate specular map offset (V)
+	//
+	value = self->getChild<LLSpinCtrl>("shinyOffsetV")->getValue().asReal();
+	self->childSetValue("TexOffsetV", value);
+
+	if (have_normal_map) {
+		self->childSetValue("bumpyOffsetV", value);
+		LLSelectedTEMaterial::setNormalOffsetY(self, value);
+	}
+
+	//
+	//	send diffuse map info
+	//
+	self->sendTextureInfo();
+}
+
 bool LLPanelFace::isIdenticalPlanarTexgen()
 {
 	LLTextureEntry::e_texgen selected_texgen = LLTextureEntry::TEX_GEN_DEFAULT;
@@ -2522,7 +2896,7 @@ void LLPanelFace::LLSelectedTE::getFace(LLFace*& face_to_return, bool& identical
 
 void LLPanelFace::LLSelectedTE::getImageFormat(LLGLenum& image_format_to_return, bool& identical_face)
 {
-	LLGLenum image_format;
+	LLGLenum image_format = 0;
 	struct LLSelectedTEGetImageFormat : public LLSelectedTEGetFunctor<LLGLenum>
 	{
 		LLGLenum get(LLViewerObject* object, S32 te_index)

@@ -1789,9 +1789,6 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 
 		if (create_toast)
 		{
-			LLNotificationPtr notification = LLNotificationsUtil::find(chat.mNotifId);
-			if (notification != NULL)
-			{
 				LLIMToastNotifyPanel* notify_box = new LLIMToastNotifyPanel(
 					notification, chat.mSessionID, LLRect::null, !use_plain_text_chat_history, mEditor);
 				//MK

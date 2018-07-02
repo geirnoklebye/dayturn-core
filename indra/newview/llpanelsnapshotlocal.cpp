@@ -36,8 +36,6 @@
 #include "llsnapshotlivepreview.h"
 #include "llviewercontrol.h" // gSavedSettings
 #include "llviewerwindow.h"
-#include "llnotificationsutil.h"
-
 
 /**
  * The panel provides UI for saving snapshot to a local folder.
@@ -61,8 +59,7 @@ private:
 	/*virtual*/ LLSnapshotModel::ESnapshotFormat getImageFormat() const;
 	/*virtual*/ LLSnapshotModel::ESnapshotType getSnapshotType();
 	/*virtual*/ void updateControls(const LLSD& info);
-    // <FS:Ansariel> Threaded filepickers
-    void saveLocalCallback(bool success);
+
 	S32 mLocalFormat;
 
 	void onFormatComboCommit(LLUICtrl* ctrl);
@@ -163,27 +160,12 @@ void LLPanelSnapshotLocal::onSaveFlyoutCommit(LLUICtrl* ctrl)
 	{
 		gViewerWindow->resetSnapshotLoc();
 	}
-    LLFloaterSnapshot* floater = LLFloaterSnapshot::getInstance();
-    // <FS:Ansariel> Threaded filepickers
-    //BOOL saved = floater->saveLocal();
-    //if (saved)
-    //{
-    //	LLFloaterSnapshot::postSave();
-    //	floater->notify(LLSD().with("set-finished", LLSD().with("ok", true).with("msg", "local")));
-    //}
-    //else
-    //{
-    //	cancel();
-    //}
-    floater->saveLocal(boost::bind(&LLPanelSnapshotLocal::saveLocalCallback, this, _1));
-    // </FS:Ansariel>
-}
-// <FS:Ansariel> Threaded filepickers
-void LLPanelSnapshotLocal::saveLocalCallback(bool success)
-{
+
     LLFloaterSnapshot* floater = LLFloaterSnapshot::getInstance();
 
-    if (success)
+	floater->notify(LLSD().with("set-working", true));
+	BOOL saved = floater->saveLocal();
+	if (saved)
     {
         mSnapshotFloater->postSave();
         floater->notify(LLSD().with("set-finished", LLSD().with("ok", true).with("msg", "local")));
@@ -192,7 +174,6 @@ void LLPanelSnapshotLocal::saveLocalCallback(bool success)
     {
 		cancel();
 		floater->notify(LLSD().with("set-finished", LLSD().with("ok", false).with("msg", "local")));
-        floater->notify(LLSD().with("set-ready", true));
     }
 }
 

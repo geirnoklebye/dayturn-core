@@ -778,7 +778,8 @@ void LLInvFVBridge::getClipboardEntries(bool show_asset_id,
 		if (obj->getIsLinkType())
 		{
 			items.push_back(std::string("Find Original"));
-			if (isLinkedObjectMissing())
+
+			if (isLinkedObjectMissing() || !(flags & FIRST_SELECTED_ITEM))
 			{
 				disabled_items.push_back(std::string("Find Original"));
 			}
@@ -885,7 +886,7 @@ void LLInvFVBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	menuentry_vec_t disabled_items;
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(items, disabled_items);
+		addTrashContextMenuOptions(flags, items, disabled_items);
 	}	
 	else
 	{
@@ -928,15 +929,16 @@ bool get_selection_item_uuids(LLFolderView::selected_items_t& selected_items, uu
 	}
 	return false;
 }
-
-void LLInvFVBridge::addTrashContextMenuOptions(menuentry_vec_t &items,
+void LLInvFVBridge::addTrashContextMenuOptions(
+	U32 flags,
+	menuentry_vec_t &items,
 											   menuentry_vec_t &disabled_items)
 {
 	const LLInventoryObject *obj = getInventoryObject();
 	if (obj && obj->getIsLinkType())
 	{
 		items.push_back(std::string("Find Original"));
-		if (isLinkedObjectMissing())
+		if (isLinkedObjectMissing() || !(flags & FIRST_SELECTED_ITEM))
 		{
 			disabled_items.push_back(std::string("Find Original"));
 		}
@@ -4098,7 +4100,7 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
 	{
 		// This is a folder in the trash.
 		items.clear(); // clear any items that used to exist
-		addTrashContextMenuOptions(items, disabled_items);
+		addTrashContextMenuOptions(flags, items, disabled_items);
 	}
 	else if(isAgentInventory()) // do not allow creating in library
 	{
@@ -4547,7 +4549,7 @@ EInventorySortGroup LLFolderBridge::getSortGroup() const
 		return SG_TRASH_FOLDER;
 	}
 
-	if(LLFolderType::lookupIsProtectedType(preferred_type))
+	if (preferred_type == LLFolderType::FT_INBOX || LLFolderType::lookupIsProtectedType(preferred_type))
 	{
 		return SG_SYSTEM_FOLDER;
 	}
@@ -5435,7 +5437,7 @@ void LLTextureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	menuentry_vec_t disabled_items;
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(items, disabled_items);
+		addTrashContextMenuOptions(flags, items, disabled_items);
 	}	
     else if (isMarketplaceListingsFolder())
     {
@@ -5517,7 +5519,7 @@ void LLSoundBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	{
 		if (isItemInTrash())
 		{
-			addTrashContextMenuOptions(items, disabled_items);
+			addTrashContextMenuOptions(flags, items, disabled_items);
 		}	
 		else
 		{
@@ -5595,7 +5597,7 @@ void LLLandmarkBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	{
 		if(isItemInTrash())
 		{
-			addTrashContextMenuOptions(items, disabled_items);
+			addTrashContextMenuOptions(flags, items, disabled_items);
 		}	
 		else
 		{
@@ -5878,7 +5880,7 @@ void LLCallingCardBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(items, disabled_items);
+		addTrashContextMenuOptions(flags, items, disabled_items);
 	}	
     else if (isMarketplaceListingsFolder())
     {
@@ -6179,7 +6181,7 @@ void LLGestureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	menuentry_vec_t disabled_items;
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(items, disabled_items);
+		addTrashContextMenuOptions(flags, items, disabled_items);
 	}
     else if (isMarketplaceListingsFolder())
     {
@@ -6248,7 +6250,7 @@ void LLAnimationBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	{
 		if(isItemInTrash())
 		{
-			addTrashContextMenuOptions(items, disabled_items);
+			addTrashContextMenuOptions(flags, items, disabled_items);
 		}	
 		else
 		{
@@ -6371,9 +6373,9 @@ void handle_attachment_touch(const LLUUID& idItem)
 	LLViewerObject* pAttachObj = gAgentAvatarp->getWornAttachment(pItem->getLinkedUUID());
 	if (!pAttachObj)
 		return;
-	LLPickInfo pick = LLToolPie::getInstance()->getPick();
-
-	if (gRRenabled && !gAgent.mRRInterface.canTouch (pAttachObj, pick.mIntersection))
+    LLPickInfo pick = LLToolPie::getInstance()->getPick();
+    
+    if (gRRenabled && !gAgent.mRRInterface.canTouch (pAttachObj, pick.mIntersection))
 	{
 		LLNotificationsUtil::add("RLVTouchRestricted");
 		return;
@@ -6671,7 +6673,7 @@ void LLObjectBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	menuentry_vec_t disabled_items;
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(items, disabled_items);
+		addTrashContextMenuOptions(flags, items, disabled_items);
 	}	
     else if (isMarketplaceListingsFolder())
     {
@@ -6948,7 +6950,7 @@ void LLWearableBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	menuentry_vec_t disabled_items;
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(items, disabled_items);
+		addTrashContextMenuOptions(flags, items, disabled_items);
 	}
     else if (isMarketplaceListingsFolder())
     {
@@ -7229,7 +7231,7 @@ void LLLinkItemBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 	
 	if(isItemInTrash())
 	{
-		addTrashContextMenuOptions(items, disabled_items);
+		addTrashContextMenuOptions(flags, items, disabled_items);
 	}
 	else
 	{
@@ -7327,7 +7329,7 @@ void LLLinkFolderBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 
 	if (isItemInTrash())
 	{
-		addTrashContextMenuOptions(items, disabled_items);
+		addTrashContextMenuOptions(flags, items, disabled_items);
 	}
 	else
 	{

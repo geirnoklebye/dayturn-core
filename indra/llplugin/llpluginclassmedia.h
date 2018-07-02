@@ -459,6 +459,31 @@ protected:
 	F64				mCurrentRate;
 	F64				mLoadedDuration;
 
+public:
+	// <ND> Enable gstreamer plugin to report title/artist of current stream
+	std::string const& getArtist() const
+	{ return mArtist; }
+
+	std::string const& getTitle() const
+	{ return mTitle; }
+
+	std::string const &getStreamName() const
+	{ return mStreamName; }
+
+	std::string const &getStreamLocation() const
+	{ return mStreamLocation; }
+
+private:
+	std::string mArtist;
+	std::string mTitle;
+	std::string mStreamName;
+	std::string mStreamLocation;
+
+	//<FS:ND> Special settings for CEF
+public:
+	void setFlipY( bool );
+	// </FS:ND>
+
 //--------------------------------------
 	//debug use only
 	//

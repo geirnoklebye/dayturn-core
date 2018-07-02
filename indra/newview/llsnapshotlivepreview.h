@@ -101,11 +101,7 @@ public:
     std::string  getFilter() const { return mFilterName; }
 	void updateSnapshot(BOOL new_snapshot, BOOL new_thumbnail = FALSE, F32 delay = 0.f);
     void saveTexture(BOOL outfit_snapshot = FALSE, std::string name = "");
-    // <FS:Ansariel> Threaded filepickers
-    //BOOL saveLocal();
-    void saveLocal(boost::function<void(bool)> callback);
-    void saveLocalCallback(bool success, boost::function<void(bool)> callback);
-    // </FS:Ansariel>
+	BOOL saveLocal();
 
 	LLPointer<LLImageFormatted>	getFormattedImage();
 	LLPointer<LLImageRaw>		getEncodedImage();

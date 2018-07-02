@@ -786,13 +786,12 @@ bool	LLFilePicker::doNavSaveDialog(ESaveFilter filter, const std::string& filena
 			extension = "slg";
 			break;
 #endif	
-		// <FS:TS> Compile fix
-		// case FFSAVE_XML:
-		//	type = "\?\?\?\?";
-		//	creator = "\?\?\?\?";
-		//	extension = "xml";
-		//	break;
-		// </FS:TS> Compile fix
+			
+		case FFSAVE_XML:
+			type = "\?\?\?\?";
+			creator = "\?\?\?\?";
+			extension = "xml";
+			break;
 			
 		case FFSAVE_RAW:
 			type = "\?\?\?\?";
@@ -830,11 +829,7 @@ bool	LLFilePicker::doNavSaveDialog(ESaveFilter filter, const std::string& filena
 			break;
 		// </FS:CR>
 		case FFSAVE_BEAM:
-		case FFSAVE_XML:
-			type = "XML ";
-			creator = "\?\?\?\?";
-			extension = "xml";
-			break;
+
 		case FFSAVE_ALL:
 		default:
 			type = "\?\?\?\?";

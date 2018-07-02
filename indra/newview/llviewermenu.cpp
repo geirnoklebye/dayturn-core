@@ -1273,6 +1273,9 @@ class LLAdvancedToggleWireframe : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		gUseWireframe = !(gUseWireframe);
+		gWindowResized = TRUE;
+
+		LLPipeline::updateRenderDeferred();
 //MK
 		// If we are supposed to be blindfolded (i.e. there is at least one locked HUD or the vision restrictions are in effect)
 		// then force wireframe to FALSE, as it could help cheating through.
@@ -4278,6 +4281,8 @@ BOOL is_agent_mappable(const LLUUID& agent_id)
 		);
 }
 
+
+// Enable a menu item when you don't have someone's card.
 class LLAvatarEnableAddFriend : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -4737,6 +4742,7 @@ void handle_duplicate_in_place(void*)
 			return;
 		}
 //mk
+	LL_INFOS() << "handle_duplicate_in_place" << LL_ENDL;
 
 	LLVector3 offset(0.f, 0.f, 0.f);
 	LLSelectMgr::getInstance()->selectDuplicate(offset, TRUE);
@@ -5438,6 +5444,7 @@ BOOL enable_take()
 		return FALSE;
 	}
 //mk
+
 	for (LLObjectSelection::valid_root_iterator iter = LLSelectMgr::getInstance()->getSelection()->valid_root_begin();
 		 iter != LLSelectMgr::getInstance()->getSelection()->valid_root_end(); iter++)
 	{
@@ -8788,9 +8795,7 @@ class LLToggleHowTo : public view_listener_t
 	{
 		LLFloaterWebContent::Params p;
 		std::string url = gSavedSettings.getString("HowToHelpURL");
-		std::string url_expanded = LLWeb::expandURLSubstitutions(url, LLSD());
-		LL_DEBUGS("WebApi") << "HowToHelpURL \"" << url_expanded << "\"" << LL_ENDL;
-		p.url = url_expanded;
+		p.url = LLWeb::expandURLSubstitutions(url, LLSD());
 		p.show_chrome = false;
 		p.target = "__help_how_to";
 		p.show_page_title = false;
@@ -10478,10 +10483,6 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedReloadVertexShader(), "Advanced.ReloadVertexShader");
 	view_listener_t::addMenu(new LLAdvancedToggleAnimationInfo(), "Advanced.ToggleAnimationInfo");
 	view_listener_t::addMenu(new LLAdvancedCheckAnimationInfo(), "Advanced.CheckAnimationInfo");
-	view_listener_t::addMenu(new LLAdvancedToggleShowLookAt(), "Advanced.ToggleShowLookAt");
-	view_listener_t::addMenu(new LLAdvancedCheckShowLookAt(), "Advanced.CheckShowLookAt");
-	view_listener_t::addMenu(new LLAdvancedToggleShowPointAt(), "Advanced.ToggleShowPointAt");
-	view_listener_t::addMenu(new LLAdvancedCheckShowPointAt(), "Advanced.CheckShowPointAt");
 	view_listener_t::addMenu(new LLAdvancedToggleDebugJointUpdates(), "Advanced.ToggleDebugJointUpdates");
 	view_listener_t::addMenu(new LLAdvancedCheckDebugJointUpdates(), "Advanced.CheckDebugJointUpdates");
 	view_listener_t::addMenu(new LLAdvancedToggleDisableLOD(), "Advanced.ToggleDisableLOD");
@@ -10557,7 +10558,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLSelfStandUp(), "Self.StandUp");
 	enable.add("Self.EnableStandUp", boost::bind(&enable_standup_self));
 	view_listener_t::addMenu(new LLSelfSitDown(), "Self.SitDown");
+	view_listener_t::addMenu(new LLSelfToggleSitStand(), "Self.ToggleSitStand");
 	enable.add("Self.EnableSitDown", boost::bind(&enable_sitdown_self));
+	enable.add("Self.EnableSitStand", boost::bind(&enable_sitstand_self));
 	view_listener_t::addMenu(new LLSelfRemoveAllAttachments(), "Self.RemoveAllAttachments");
 
 	view_listener_t::addMenu(new LLSelfEnableRemoveAllAttachments(), "Self.EnableRemoveAllAttachments");
@@ -10700,8 +10703,8 @@ void initialize_menus()
 	enable.add("EnableSelectInPathfindingCharacters", boost::bind(&enable_object_select_in_pathfinding_characters));
 
 	view_listener_t::addMenu(new LLFloaterVisible(), "FloaterVisible");
-	view_listener_t::addMenu(new LLShowSidetrayPanel(), "ShowSidetrayPanel");
-	view_listener_t::addMenu(new LLSidetrayPanelVisible(), "SidetrayPanelVisible");
+//NP	view_listener_t::addMenu(new LLShowSidetrayPanel(), "ShowSidetrayPanel");
+//NP	view_listener_t::addMenu(new LLSidetrayPanelVisible(), "SidetrayPanelVisible");
 	view_listener_t::addMenu(new LLSomethingSelected(), "SomethingSelected");
 	view_listener_t::addMenu(new LLSomethingSelectedNoHUD(), "SomethingSelectedNoHUD");
 	view_listener_t::addMenu(new LLEditableSelected(), "EditableSelected");

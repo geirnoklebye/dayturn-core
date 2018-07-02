@@ -11521,4 +11521,140 @@ Creating animation link for animation "[NAME]" failed!
      name="okbutton"
      yestext="OK"/>
   </notification>
-    </notifications>
+    <notification
+     icon="alertmodal.tga"
+     name="ExportFinished"
+     type="notify">
+      <tag>Export</tag>
+Export finished and saved to [FILENAME].
+    </notification>
+    
+    <notification
+     icon="alertmodal.tga"
+     name="ExportFailed"
+     type="notify">
+      <tag>Export</tag>
+Export failed unexpectedly. Please see the log for details.
+    </notification>
+    
+    <notification
+     icon="alertmodal.tga"
+     name="ExportColladaSuccess"
+     type="notify">
+      <tag>Export</tag>
+		Successfully saved [OBJECT] to [FILENAME].
+    </notification>
+
+    <notification
+     icon="alertmodal.tga"
+     name="ExportColladaFailure"
+     type="notify">
+      <tag>Export</tag>
+		Export of [OBJECT] to [FILENAME] failed.
+    </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="ShapeImportGenericFail"
+   type="notifytip">
+    <tag>fail</tag>
+There was a problem importing [FILENAME]. Please see the log for more details.
+  </notification>
+  <notification
+   icon="notifytip.tga"
+   name="ShapeImportVersionFail"
+   type="notifytip">
+    <tag>fail</tag>
+Shape import failed. Are you sure [FILENAME] is an avatar file?
+  </notification>
+
+  <notification
+    icon="notifytip.tga"
+    name="NewPermissionsPending"
+    type="notifytip">
+	Your permission change request for [NAME] has been sent to [GRID_NAME] for processing.  This may take a few seconds to complete.
+   </notification>
+    
+    <notification
+     icon="alertmodal.tga"
+     name="ExportFailed"
+     type="notify">
+      <tag>Export</tag>
+Export failed unexpectedly. Please see the log for details.
+    </notification>
+    
+    <notification
+     icon="alertmodal.tga"
+     name="ExportColladaSuccess"
+     type="notify">
+      <tag>Export</tag>
+		Successfully saved [OBJECT] to [FILENAME].
+    </notification>
+
+    <notification
+     icon="alertmodal.tga"
+     name="ExportColladaFailure"
+     type="notify">
+      <tag>Export</tag>
+		Export of [OBJECT] to [FILENAME] failed.
+    </notification>
+
+  <notification
+   icon="notifytip.tga"
+   name="ShapeImportGenericFail"
+   type="notifytip">
+    <tag>fail</tag>
+There was a problem importing [FILENAME]. Please see the log for more details.
+  </notification>
+  <notification
+   icon="notifytip.tga"
+   name="ShapeImportVersionFail"
+   type="notifytip">
+    <tag>fail</tag>
+Shape import failed. Are you sure [FILENAME] is an avatar file?
+  </notification>
+
+  <notification
+    icon="notifytip.tga"
+    name="NewPermissionsPending"
+    type="notifytip">
+	Your permission change request for [NAME] has been sent to [GRID_NAME] for processing.  This may take a few seconds to complete.
+   </notification>
+
+   <notification
+     type="notifytip"
+     icon="Sound_Icon"
+     name="StreamMetadata"
+     log_to_chat="false">
+	<tag>StreamMetadata</tag>
+[STREAM_NAME]
+
+[ARTIST_TITLE]
+    </notification>
+	
+  <notification
+   icon="alertmodal.tga"
+   name="RLVTouchRestricted"
+   type="notify">
+   <tag>fail</tag>
+RLV Touch is resricted. 
+  </notification>
+
+    <notification
+    icon="alertmodal.tga"
+    name="TestversionExpired"
+    type="alertmodal">
+     This test version of [APP_NAME] has expired and cannot be used any further. Please go [https://sourceforge.net/projects/kokua.team-purple.p/files/  to download the newer version] of Kokua
+     <usetemplate
+      name="okbutton"
+      yestext="OK"/>
+   </notification>   
+
+  <notification
+   icon="notifytip.tga" 
+   name="CA_Performance_Compound"
+   type="notifytip">
+[MESSAGE]
+  </notification>
+
+</notifications>

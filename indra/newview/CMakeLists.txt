@@ -1445,7 +1445,7 @@ if (DARWIN)
 
   # Add resource files to the project.
   set(viewer_RESOURCE_FILES
-    kokua.icns
+    kokua_icon.icns
     macview.r
     Info-SecondLife.plist
     Kokua.xib/

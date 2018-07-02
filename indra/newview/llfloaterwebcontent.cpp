@@ -281,6 +281,10 @@ void LLFloaterWebContent::onOpen(const LLSD& key)
 		return;
 	}
 
+	if (params.url().empty()) {
+		params.url = gSavedSettings.getString("WebBrowserHomePage");
+	}
+
 	mWebBrowser->setTrustedContent(params.trusted_content);
 
 	// tell the browser instance to load the specified URL
@@ -466,6 +470,11 @@ void LLFloaterWebContent::onClickBack()
 	mWebBrowser->navigateBack();
 }
 
+void LLFloaterWebContent::onClickHome()
+{
+	mWebBrowser->navigateTo(gSavedSettings.getString("WebBrowserHomePage"));
+}
+
 void LLFloaterWebContent::onClickReload()
 {
 
@@ -486,7 +495,7 @@ void LLFloaterWebContent::onClickStop()
 		mWebBrowser->getMediaPlugin()->browse_stop();
 
 	// still should happen when we catch the navigate complete event
-	// but sometimes (don't know why) that event isn't sent from Qt
+	// but sometimes (don't know why) that event isn't sent from media plugin
 	// and we ghetto a point where the stop button stays active.
 	mBtnReload->setVisible( true );
 	mBtnStop->setVisible( false );

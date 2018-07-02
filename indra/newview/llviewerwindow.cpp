@@ -1104,7 +1104,7 @@ BOOL LLViewerWindow::handleRightMouseDown(LLWindow *window,  LLCoordGL pos, MASK
 //MK
 ////	if (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && LLToolMgr::getInstance()->getCurrentTool() != LLToolPie::getInstance())
 	// We need to handle right clicks even in mouselook
-	if (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && !(mask & MASK_SHIFT))
+	if (CAMERA_MODE_CUSTOMIZE_AVATAR != gAgentCamera.getCameraMode() && LLToolMgr::getInstance()->getCurrentTool() != LLToolPie::getInstance() && gAgent.isInitialized())
 //mk
 	{
 		// If the current tool didn't process the click, we should show
@@ -2901,7 +2901,7 @@ BOOL LLViewerWindow::handleKey(KEY key, MASK mask)
 	// the two camera modes should be treated any differently.
 ////	if ( gSavedSettings.getS32("LetterKeysFocusChatBar") && !gAgentCamera.cameraMouselook() && 
 ////		!keyboard_focus && key < 0x80 && (mask == MASK_NONE || mask == MASK_SHIFT) )
-	if ( gSavedSettings.getS32("LetterKeysFocusChatBar") &&  
+	if ( gSavedSettings.getS32("LetterKeysFocusChatBar") &&  !gAgentCamera.cameraMouselook() && 
 		!keyboard_focus && key < 0x80 && (mask == MASK_NONE || mask == MASK_SHIFT) )
 //mk
 	{
@@ -4441,60 +4441,6 @@ BOOL LLViewerWindow::mousePointOnLandGlobal(const S32 x, const S32 y, LLVector3d
 
 	return FALSE;
 }
-// <FS:Ansariel> Threaded filepickers
-void do_save_image(LLImageFormatted* image, const std::string& snapshot_dir, const std::string& base_name, const std::string& extension, boost::function<void(bool)> callback)
-{
-    // Look for an unused file name
-    std::string filepath;
-    S32 i = 1;
-    S32 err = 0;
-
-    do
-    {
-        filepath = snapshot_dir;
-        filepath += gDirUtilp->getDirDelimiter();
-        filepath += base_name;
-        filepath += llformat("_%.3d", i);
-        filepath += extension;
-
-        llstat stat_info;
-        err = LLFile::stat(filepath, &stat_info);
-        i++;
-    } while (-1 != err);  // search until the file is not found (i.e., stat() gives an error).
-
-    LL_INFOS() << "Saving snapshot to " << filepath << LL_ENDL;
-
-    if (gSavedSettings.getBOOL("FSLogSnapshotsToLocal"))
-    {
-        LLStringUtil::format_map_t args;
-        args["FILENAME"] = filepath;
-        report_to_nearby_chat(LLTrans::getString("SnapshotSavedToDisk", args));
-    }
-
-    bool success = image->save(filepath);
-    if (callback)
-    {
-        callback(success);
-    }
-}
-void LLViewerWindow::saveImageCallback(const std::string& filename, LLImageFormatted* image, const std::string& extension, boost::function<void(bool)> callback)
-{
-    if (!filename.empty())
-    {
-        LLViewerWindow::sSnapshotBaseName = gDirUtilp->getBaseFileName(filename, true);
-        LLViewerWindow::sSnapshotDir = gDirUtilp->getDirName(filename);
-
-        do_save_image(image, LLViewerWindow::sSnapshotDir, LLViewerWindow::sSnapshotBaseName, extension, callback);
-        return;
-    }
-
-    if (callback)
-    {
-        callback(false);
-    }
-}
-
-// </FS:Ansariel>
 
 // Saves an image to the harddrive as "SnapshotX" where X >= 1.
 BOOL LLViewerWindow::saveImageNumbered(LLImageFormatted *image, BOOL force_picker, BOOL& insufficient_memory)

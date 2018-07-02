@@ -88,7 +88,10 @@ public:
 		FFLOAD_SCRIPT = 11,
 		FFLOAD_DICTIONARY = 12,
         FFLOAD_DIRECTORY = 13,   // To call from lldirpicker.
-        FFLOAD_EXE = 14          // Note: EXE will be treated as ALL on Windows and Linux but not on Darwin
+		FFLOAD_EXE = 14,         // Note: EXE will be treated as ALL on Windows and Linux but not on Darwin
+		
+		// Firestorm additions
+		FFLOAD_IMPORT = 50
 	};
 
 	enum ESaveFilter
@@ -109,7 +112,12 @@ public:
 		FFSAVE_PNG = 13,
 		FFSAVE_JPEG = 14,
 		FFSAVE_SCRIPT = 15,
-		FFSAVE_TGAPNG = 16
+		FFSAVE_TGAPNG = 16,
+		
+		// Firestorm additions
+		FFSAVE_BEAM = 50,
+		FFSAVE_EXPORT = 51,
+		FFSAVE_CSV = 52
 	};
 
 	// open the dialog. This is a modal operation
@@ -197,7 +205,5 @@ public:
 	LLFilePicker();
 	~LLFilePicker();
 };
-
-const std::string upload_pick(void* data);
 
 #endif
