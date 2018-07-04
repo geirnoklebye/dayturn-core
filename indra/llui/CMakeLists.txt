@@ -27,7 +27,6 @@ include_directories(
     ${LLWINDOW_INCLUDE_DIRS}
     ${LLVFS_INCLUDE_DIRS}
     ${LLXML_INCLUDE_DIRS}
-    ${TEAPOT_INCLUDE_DIRS}
     ${LIBS_PREBUILD_DIR}/include/hunspell
     )
 include_directories(SYSTEM
@@ -283,7 +282,6 @@ target_link_libraries(llui
     ${LLXUIXML_LIBRARIES}
     ${LLXML_LIBRARIES}
     ${LLMATH_LIBRARIES}
-    ${TEAPOT_LIBRARIES}
     ${HUNSPELL_LIBRARY}
     ${LLMESSAGE_LIBRARIES}
     ${LLCOMMON_LIBRARIES} # must be after llimage, llwindow, llrender
