@@ -385,6 +385,10 @@ const void upload_single_file(const std::vector<std::string>& filenames, LLFileP
 			LLFloaterReg::showInstance("upload_anim_bvh", LLSD(filename));
 		}
 	}
+	if (type == LLFilePicker::FFLOAD_IMPORT)
+	{
+	   LLFloaterReg::showInstance("fs_import", LLSD(filename)); 
+	}
 }
 	return;
 }
@@ -489,6 +493,15 @@ class LLFileUploadBulk : public view_listener_t
 			gAgentCamera.changeCameraToDefault();
 		}
 		(new LLFilePickerReplyThread(boost::bind(&upload_bulk, _1, _2), LLFilePicker::FFLOAD_ALL, true))->getFile();
+		return true;
+	}
+};
+
+class FSFileImportLinkset : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		(new LLFilePickerReplyThread(boost::bind(&upload_single_file, _1, _2), LLFilePicker::FFLOAD_IMPORT, true))->getFile();
 		return true;
 	}
 };
@@ -904,6 +917,7 @@ void init_menu_file()
 	view_listener_t::addEnable(new LLFileEnableUploadModel(), "File.EnableUploadModel");
 	view_listener_t::addMenu(new LLMeshEnabled(), "File.MeshEnabled");
 	view_listener_t::addMenu(new LLMeshUploadVisible(), "File.VisibleUploadModel");
+    view_listener_t::addCommit(new FSFileImportLinkset(), "File.ImportLinkset");	// <FS:CR> Import linkset item
 
 	// "File.SaveTexture" moved to llpanelmaininventory so that it can be properly handled.
 }
