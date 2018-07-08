@@ -86,7 +86,13 @@ void LLViewerAudio::startInternetStreamWithAutoFade(std::string streamURI)
 	// Old and new stream are identical
 	if (mNextStreamURI == streamURI)
 	{
-		return;
+		/// <FS:CR> FIRE-8419 - Don't return here. It can keep the user from toggling audio streams off/on.
+		/// We handle identical stream URIs with FIRE-7093 anyways.
+		// Kokua: this optimisation also seems to enable bug 519, possibly because things are still sorting
+		// themselves out at login
+		//return;
+		LL_DEBUGS() << "Identical URI's: " << mNextStreamURI << " and " << streamURI << LL_ENDL;
+		// </FS:CR>
 	}
 
 	// Record the URI we are going to be switching to	
