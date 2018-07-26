@@ -89,7 +89,7 @@ void ll_cleanup_apr()
 //
 //LLAPRPool
 //
-LLAPRPool::LLAPRPool(apr_pool_t *parent, apr_size_t size, BOOL releasePoolFlag) 	
+LLAPRPool::LLAPRPool(apr_pool_t *parent, apr_size_t size, bool releasePoolFlag)
 	: mParent(parent),
 	mReleasePoolFlag(releasePoolFlag),
 	mMaxSize(size),
@@ -143,7 +143,7 @@ apr_pool_t* LLAPRPool::getAPRPool()
 	return mPool ; 
 }
 
-LLVolatileAPRPool::LLVolatileAPRPool(BOOL is_local, apr_pool_t *parent, apr_size_t size, BOOL releasePoolFlag) 
+LLVolatileAPRPool::LLVolatileAPRPool(bool is_local, apr_pool_t *parent, apr_size_t size, bool releasePoolFlag)
 				  : LLAPRPool(parent, size, releasePoolFlag),
 				  mNumActiveRef(0),
 				  mNumTotalRef(0)
@@ -227,7 +227,7 @@ void LLVolatileAPRPool::clearVolatileAPRPool()
 	llassert(mNumTotalRef <= (FULL_VOLATILE_APR_POOL << 2)) ;
 }
 
-BOOL LLVolatileAPRPool::isFull()
+bool LLVolatileAPRPool::isFull()
 {
 	return mNumTotalRef > FULL_VOLATILE_APR_POOL ;
 }
@@ -393,7 +393,7 @@ apr_status_t LLAPRFile::open(const std::string& filename, apr_int32_t flags, LLV
 }
 
 //use gAPRPoolp.
-apr_status_t LLAPRFile::open(const std::string& filename, apr_int32_t flags, BOOL use_global_pool)
+apr_status_t LLAPRFile::open(const std::string& filename, apr_int32_t flags, bool use_global_pool)
 {
 	apr_status_t s;
 
