@@ -30,6 +30,9 @@
 #include "llavatarpropertiesprocessor.h"
 #include "stdtypes.h"
 #include "llagent.h"
+
+#include "llbool.h"
+
 class LLFloater;
 
 class LLFetchAvatarPaymentInfo : public LLAvatarPropertiesObserver
