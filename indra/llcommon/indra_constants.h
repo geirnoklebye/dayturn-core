@@ -29,6 +29,7 @@
 #define LL_INDRA_CONSTANTS_H
 
 #include "stdtypes.h"
+#include "llbool.h"
 
 class LLUUID;
 const std::string APP_NAME = "Kokua"; 

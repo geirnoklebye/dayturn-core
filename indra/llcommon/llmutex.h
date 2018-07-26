@@ -34,6 +34,8 @@
 #include "mutex.h"
 #include <condition_variable>
 
+#include "llbool.h"
+
 //============================================================================
 
 #define MUTEX_DEBUG (LL_DEBUG || LL_RELEASE_WITH_DEBUG_INFO)
