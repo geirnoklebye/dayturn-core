@@ -336,7 +336,7 @@ public:
 		mEventTimer.stop();
 	}
 
-	virtual BOOL tick() // from LLEventTimer
+	virtual bool tick() // from LLEventTimer
 	{
 		return FALSE;
 	}
@@ -387,7 +387,7 @@ public:
 	}
 
 
-	/*virtual*/ BOOL tick()
+	/*virtual*/ bool tick()
 	{
 		if (!mIsActive) return FALSE;
 
@@ -528,7 +528,7 @@ public:
 		}
 	}
 
-	/*virtual*/ BOOL tick()
+	/*virtual*/ bool tick()
 	{
 		update();
 		return FALSE;

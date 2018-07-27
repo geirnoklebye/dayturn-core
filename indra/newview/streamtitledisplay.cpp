@@ -76,10 +76,10 @@ static bool stream_is_playing = true; // true so a transition to false can trigg
 
 StreamTitleDisplay::StreamTitleDisplay() : LLEventTimer(2.f) { }
 
-BOOL StreamTitleDisplay::tick()
+bool StreamTitleDisplay::tick()
 {
 	checkMetadata();
-	return FALSE;
+	return false;
 }
 
 void StreamTitleDisplay::checkMetadata()

@@ -2462,7 +2462,7 @@ public:
 
 protected:
 
-	BOOL tick()
+	bool tick()
 	{
 		mCallback(mNewValue);
 		mEventTimer.stop();

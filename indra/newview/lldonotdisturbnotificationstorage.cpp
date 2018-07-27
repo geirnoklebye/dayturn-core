@@ -55,7 +55,7 @@ LLDoNotDisturbNotificationStorageTimer::~LLDoNotDisturbNotificationStorageTimer(
 
 }
 
-BOOL LLDoNotDisturbNotificationStorageTimer::tick()
+bool LLDoNotDisturbNotificationStorageTimer::tick()
 {
     LLDoNotDisturbNotificationStorage * doNotDisturbNotificationStorage =  LLDoNotDisturbNotificationStorage::getInstance();
 
