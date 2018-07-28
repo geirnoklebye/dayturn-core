@@ -3341,7 +3341,7 @@ LLSD LLAppViewer::getViewerInfo() const
 		info["VOICE_VERSION"] = LLTrans::getString("NotConnected");
 	}
 
-#if !LL_LINUX
+
 	std::ostringstream cef_ver_codec;
 	cef_ver_codec << "Dullahan: ";
 	cef_ver_codec << DULLAHAN_VERSION_MAJOR;

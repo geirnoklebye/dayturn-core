@@ -38,10 +38,10 @@ elseif (DARWIN)
 
 elseif (LINUX)
     set(CEF_PLUGIN_LIBRARIES
-        libcef.so
-        libcef_dll_wrapper.a
-        libllceflib.so
-    )
+	dullahan
+        cef
+        cef_dll_wrapper
+       )
 endif (WINDOWS)
 if (LINUX)
       add_definitions(-std=gnu++11)
