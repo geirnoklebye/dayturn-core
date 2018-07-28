@@ -2,7 +2,7 @@
 
 project(media_plugin_cef)
 
-include(Boost)
+#include(Boost)
 include(00-Common)
 include(LLCommon)
 include(LLImage)
@@ -10,12 +10,21 @@ include(LLPlugin)
 include(LLMath)
 include(LLRender)
 include(LLWindow)
+include(UI)
 include(Linking)
 include(PluginAPI)
 include(MediaPluginBase)
 include(OpenGL)
 
 include(CEFPlugin)
+
+if (!DARWIN)
+# We don't want PulseAudio on DARWIN. Geir Nøklebye
+# <FS:ND> Linux volume catcher
+include(PulseAudio)
+include_directories( ${PULSEAUDIO_INCLUDE_DIRS} )
+# </FS:ND>
+endif (!DARWIN)
 
 include_directories(
     ${LLPLUGIN_INCLUDE_DIRS}
@@ -90,7 +99,16 @@ add_library(media_plugin_cef
 target_link_libraries(media_plugin_cef
   ${media_plugin_cef_LINK_LIBRARIES}
 )
-
+if (LINUX)
+  # Do not prepend 'lib' to the executable name
+#  set_target_properties(media_plugin_cef
+#    PROPERTIES
+#    PREFIX ""
+#  )
+  add_definitions(-DLL_USE_DULLAHAN=1)
+  # We use a custom Linux version with extended settings and methods
+  add_definitions(-DHB_CEF_EXTENDED=1)
+endif (LINUX)
 if (WINDOWS)
   set_target_properties(
     media_plugin_cef
@@ -108,7 +126,8 @@ if (DARWIN)
     PREFIX ""
     BUILD_WITH_INSTALL_RPATH 1
     INSTALL_NAME_DIR "@executable_path"
-    LINK_FLAGS "-exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/../base/media_plugin_base.exp"
+    CXX_FLAGS "-std=c++11 -stdlib=libc++"
+    LINK_FLAGS "-stdlib=libc++ -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/../base/media_plugin_base.exp"
   )
 
   ## turns on C++11 using Cmake
