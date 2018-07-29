@@ -222,12 +222,12 @@ bool compare_llsd_with_template(
 		template_llsd.isDefined() )
 	{
 		resultant_llsd = template_llsd;
-		return TRUE;
+		return true;
 	}
 	else if ( llsd_to_test.type() != template_llsd.type() )
 	{
 		resultant_llsd = LLSD();
-		return FALSE;
+		return false;
 	}
 
 	if ( llsd_to_test.isArray() )
@@ -256,7 +256,7 @@ bool compare_llsd_with_template(
 					 data) )
 			{
 				resultant_llsd = LLSD();
-				return FALSE;
+				return false;
 			}
 			else
 			{
@@ -299,7 +299,7 @@ bool compare_llsd_with_template(
 						 value) )
 				{
 					resultant_llsd = LLSD();
-					return FALSE;
+					return false;
 				}
 				else
 				{
@@ -322,7 +322,7 @@ bool compare_llsd_with_template(
 	}
 
 
-	return TRUE;
+	return true;
 }
 
 // filter_llsd_with_template() is a direct clone (copy-n-paste) of 

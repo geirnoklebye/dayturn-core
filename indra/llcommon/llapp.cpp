@@ -60,7 +60,7 @@
 #include "windows.h"
 
 LONG WINAPI default_windows_exception_handler(struct _EXCEPTION_POINTERS *exception_infop);
-BOOL ConsoleCtrlHandler(DWORD fdwCtrlType);
+bool ConsoleCtrlHandler(DWORD fdwCtrlType);
 #else
 # include <signal.h>
 # include <unistd.h> // for fork()
@@ -541,13 +541,13 @@ bool LLApp::isExiting()
 
 void LLApp::disableCrashlogger()
 {
-	sDisableCrashlogger = TRUE;
+	sDisableCrashlogger = true;
 }
 
 // static
 bool LLApp::isCrashloggerDisabled()
 {
-	return (sDisableCrashlogger == TRUE); 
+	return (sDisableCrashlogger == true); 
 }
 
 // static
@@ -602,7 +602,7 @@ LONG WINAPI default_windows_exception_handler(struct _EXCEPTION_POINTERS *except
 }
 
 // Win32 doesn't support signals. This is used instead.
-BOOL ConsoleCtrlHandler(DWORD fdwCtrlType) 
+bool ConsoleCtrlHandler(DWORD fdwCtrlType) 
 { 
 	switch (fdwCtrlType) 
 	{ 
@@ -619,13 +619,13 @@ BOOL ConsoleCtrlHandler(DWORD fdwCtrlType)
 				{
 					LL_INFOS() << "Signal handler - Already trying to quit, ignoring signal!" << LL_ENDL;
 				}
-				return TRUE;
+				return true;
 			}
 			LLApp::setQuitting();
-			return TRUE; 
+			return true; 
 	
 		default: 
-			return FALSE; 
+			return false; 
 	} 
 } 
 
