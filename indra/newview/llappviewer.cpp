@@ -288,7 +288,7 @@ extern void init_apple_menu(const char* product);
 
 extern BOOL gRandomizeFramerate;
 extern BOOL gPeriodicSlowFrame;
-extern BOOL gDebugGL;
+extern bool gDebugGL;
 
 #if LL_DARWIN
 extern bool gRetinaSupport;
@@ -2972,10 +2972,10 @@ bool LLAppViewer::initConfiguration()
 	LLFastTimerView::sAnalyzePerformance = gSavedSettings.getBOOL("AnalyzePerformance");
 	gAgentPilot.setReplaySession(gSavedSettings.getBOOL("ReplaySession"));
 
-	if (gSavedSettings.getBOOL("DebugSession"))
+	if (gSavedSettings.getbool("DebugSession"))
 	{
-		gDebugSession = TRUE;
-		gDebugGL = TRUE;
+		gDebugSession = true;
+		gDebugGL = true;
 
 		ll_init_fail_log(gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "test_failures.log"));
 	}

@@ -227,7 +227,7 @@ const U32 DEFERRED_VB_MASK = LLVertexBuffer::MAP_VERTEX | LLVertexBuffer::MAP_TE
 extern S32 gBoxFrame;
 //extern BOOL gHideSelectedObjects;
 extern BOOL gDisplaySwapBuffers;
-extern BOOL gDebugGL;
+extern bool gDebugGL;
 
 bool	gAvatarBacklight = false;
 

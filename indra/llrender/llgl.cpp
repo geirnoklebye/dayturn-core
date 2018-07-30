@@ -59,12 +59,12 @@
 #endif
 
 
-BOOL gDebugSession = FALSE;
-BOOL gDebugGLSession = FALSE;
-BOOL gClothRipple = FALSE;
-BOOL gHeadlessClient = FALSE;
-BOOL gNonInteractive = FALSE;
-BOOL gGLActive = FALSE;
+bool gDebugSession = false;
+bool gDebugGLSession = false;
+bool gClothRipple = false;
+bool gHeadlessClient = false;
+bool gNonInteractive = false;
+bool gGLActive = false;
 
 static const std::string HEADLESS_VENDOR_STRING("Linden Lab");
 static const std::string HEADLESS_RENDERER_STRING("Headless");
@@ -404,53 +404,53 @@ PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements = NULL;
 LLGLManager gGLManager;
 
 LLGLManager::LLGLManager() :
-	mInited(FALSE),
-	mIsDisabled(FALSE),
+	mInited(false),
+	mIsDisabled(false),
 
-	mHasMultitexture(FALSE),
-	mHasATIMemInfo(FALSE),
-	mHasAMDAssociations(FALSE),
-	mHasNVXMemInfo(FALSE),
+	mHasMultitexture(false),
+	mHasATIMemInfo(false),
+	mHasAMDAssociations(false),
+	mHasNVXMemInfo(false),
 	mNumTextureUnits(1),
-	mHasMipMapGeneration(FALSE),
-	mHasCompressedTextures(FALSE),
-	mHasFramebufferObject(FALSE),
+	mHasMipMapGeneration(false),
+	mHasCompressedTextures(false),
+	mHasFramebufferObject(false),
 	mMaxSamples(0),
 	mHasBlendFuncSeparate(FALSE),
 	mHasSync(FALSE),
-	mHasVertexBufferObject(FALSE),
-	mHasVertexArrayObject(FALSE),
+	mHasVertexBufferObject(false),
+	mHasVertexArrayObject(false),
 	mHasMapBufferRange(FALSE),
 	mHasFlushBufferRange(FALSE),
 	mHasPBuffer(FALSE),
 	mNumTextureImageUnits(0),
-	mHasOcclusionQuery(FALSE),
-	mHasTimerQuery(FALSE),
-	mHasOcclusionQuery2(FALSE),
-	mHasPointParameters(FALSE),
-	mHasDrawBuffers(FALSE),
-	mHasTextureRectangle(FALSE),
-	mHasTextureMultisample(FALSE),
-	mHasTransformFeedback(FALSE),
+	mHasOcclusionQuery(false),
+	mHasTimerQuery(false),
+	mHasOcclusionQuery2(false),
+	mHasPointParameters(false),
+	mHasDrawBuffers(false),
+	mHasTextureRectangle(false),
+	mHasTextureMultisample(false),
+	mHasTransformFeedback(false),
 	mMaxSampleMaskWords(0),
 	mMaxColorTextureSamples(0),
 	mMaxDepthTextureSamples(0),
 	mMaxIntegerSamples(0),
 
-	mHasAnisotropic(FALSE),
-	mHasARBEnvCombine(FALSE),
-	mHasCubeMap(FALSE),
-	mHasDebugOutput(FALSE),
+	mHasAnisotropic(false),
+	mHasARBEnvCombine(false),
+	mHasCubeMap(false),
+	mHasDebugOutput(false),
 
-	mIsAMD(FALSE),
-	mIsNVIDIA(FALSE),
-	mIsIntel(FALSE),
+	mIsAMD(false),
+	mIsNVIDIA(false),
+	mIsIntel(false),
 #if LL_DARWIN
-	mIsMobileGF(FALSE),
+	mIsMobileGF(false),
 #endif
-	mHasRequirements(TRUE),
+	mHasRequirements(true),
 
-	mHasSeparateSpecularColor(FALSE),
+	mHasSeparateSpecularColor(false),
 
 	mDriverVersionMajor(1),
 	mDriverVersionMinor(0),
@@ -469,7 +469,7 @@ LLGLManager::LLGLManager() :
 //---------------------------------------------------------------------
 void LLGLManager::initWGL()
 {
-	mHasPBuffer = FALSE;
+	mHasPBuffer = false;
 #if LL_WINDOWS && !LL_MESA_HEADLESS
 	if (!glh_init_extensions("WGL_ARB_pixel_format"))
 	{
@@ -624,7 +624,7 @@ bool LLGLManager::initGL()
 		 )
 	{
 		mGLVendorShort = "INTEL";
-		mIsIntel = TRUE;
+		mIsIntel = true;
 	}
 	else
 	{
@@ -744,7 +744,7 @@ bool LLGLManager::initGL()
     }
 	else
 	{
-		mHasRequirements = FALSE;
+		mHasRequirements = false;
 
 		// We don't support cards that don't support the GL_ARB_multitexture extension
 		LL_WARNS("RenderInit") << "GL Drivers do not support GL_ARB_multitexture" << LL_ENDL;
@@ -764,11 +764,11 @@ bool LLGLManager::initGL()
 	stop_glerror();
 
 	//HACK always disable texture multisample, use FXAA instead
-	mHasTextureMultisample = FALSE;
+	mHasTextureMultisample = false;
 #if LL_WINDOWS
 	if (mIsIntel && mGLVersion <= 3.f)
 	{ //never try to use framebuffer objects on older intel drivers (crashy)
-		mHasFramebufferObject = FALSE;
+		mHasFramebufferObject = false;
 	}
 #endif
 
@@ -949,60 +949,60 @@ void LLGLManager::shutdownGL()
 	{
 		glFinish();
 		stop_glerror();
-		mInited = FALSE;
+		mInited = false;
 	}
 }
 
 // these are used to turn software blending on. They appear in the Debug/Avatar menu
-// presence of vertex skinning/blending or vertex programs will set these to FALSE by default.
+// presence of vertex skinning/blending or vertex programs will set these to false by default.
 
 void LLGLManager::initExtensions()
 {
 #if LL_MESA_HEADLESS
 # ifdef GL_ARB_multitexture
-	mHasMultitexture = TRUE;
+	mHasMultitexture = true;
 # else
-	mHasMultitexture = FALSE;
+	mHasMultitexture = false;
 # endif // GL_ARB_multitexture
 # ifdef GL_ARB_texture_env_combine
-	mHasARBEnvCombine = TRUE;	
+	mHasARBEnvCombine = true;	
 # else
-	mHasARBEnvCombine = FALSE;
+	mHasARBEnvCombine = false;
 # endif // GL_ARB_texture_env_combine
 # ifdef GL_ARB_texture_compression
-	mHasCompressedTextures = TRUE;
+	mHasCompressedTextures = true;
 # else
-	mHasCompressedTextures = FALSE;
+	mHasCompressedTextures = false;
 # endif // GL_ARB_texture_compression
 # ifdef GL_ARB_vertex_buffer_object
-	mHasVertexBufferObject = TRUE;
+	mHasVertexBufferObject = true;
 # else
-	mHasVertexBufferObject = FALSE;
+	mHasVertexBufferObject = false;
 # endif // GL_ARB_vertex_buffer_object
 # ifdef GL_EXT_framebuffer_object
-	mHasFramebufferObject = TRUE;
+	mHasFramebufferObject = true;
 # else
-	mHasFramebufferObject = FALSE;
+	mHasFramebufferObject = false;
 # endif // GL_EXT_framebuffer_object
 # ifdef GL_ARB_draw_buffers
-	mHasDrawBuffers = TRUE;
+	mHasDrawBuffers = true;
 #else
-	mHasDrawBuffers = FALSE;
+	mHasDrawBuffers = false;
 # endif // GL_ARB_draw_buffers
 # if defined(GL_NV_depth_clamp) || defined(GL_ARB_depth_clamp)
-	mHasDepthClamp = TRUE;
+	mHasDepthClamp = true;
 #else
-	mHasDepthClamp = FALSE;
+	mHasDepthClamp = false;
 #endif // defined(GL_NV_depth_clamp) || defined(GL_ARB_depth_clamp)
 # if GL_EXT_blend_func_separate
-	mHasBlendFuncSeparate = TRUE;
+	mHasBlendFuncSeparate = true;
 #else
-	mHasBlendFuncSeparate = FALSE;
+	mHasBlendFuncSeparate = false;
 # endif // GL_EXT_blend_func_separate
-	mHasMipMapGeneration = FALSE;
+	mHasMipMapGeneration = false;
 	mHasSeparateSpecularColor = FALSE;
-	mHasAnisotropic = FALSE;
-	mHasCubeMap = FALSE;
+	mHasAnisotropic = false;
+	mHasCubeMap = false;
 	mHasOcclusionQuery = FALSE;
 	mHasPointParameters = FALSE;
 	mHasTextureRectangle = FALSE;
@@ -1026,7 +1026,7 @@ void LLGLManager::initExtensions()
 	mHasFlushBufferRange = ExtensionExists("GL_APPLE_flush_buffer_range", gGLHExts.mSysExts);
     // NOTE: Using extensions breaks reflections when Shadows are set to projector.  See: SL-16727
     //mHasDepthClamp = ExtensionExists("GL_ARB_depth_clamp", gGLHExts.mSysExts) || ExtensionExists("GL_NV_depth_clamp", gGLHExts.mSysExts);
-    mHasDepthClamp = FALSE;
+    mHasDepthClamp = false;
 	// mask out FBO support when packed_depth_stencil isn't there 'cause we need it for LLRenderTarget -Brad
 #ifdef GL_ARB_framebuffer_object
 	mHasFramebufferObject = ExtensionExists("GL_ARB_framebuffer_object", gGLHExts.mSysExts);
@@ -1059,7 +1059,7 @@ void LLGLManager::initExtensions()
 	mHasTextureRectangle = ExtensionExists("GL_ARB_texture_rectangle", gGLHExts.mSysExts);
 	mHasTextureMultisample = ExtensionExists("GL_ARB_texture_multisample", gGLHExts.mSysExts);
 	mHasDebugOutput = ExtensionExists("GL_ARB_debug_output", gGLHExts.mSysExts);
-	mHasTransformFeedback = mGLVersion >= 4.f ? TRUE : FALSE;
+	mHasTransformFeedback = mGLVersion >= 4.f ? true : false;
 #if !LL_DARWIN
 	mHasPointParameters = ExtensionExists("GL_ARB_point_parameters", gGLHExts.mSysExts);
 #endif
@@ -1072,17 +1072,17 @@ void LLGLManager::initExtensions()
 	if (getenv("LL_GL_NOEXT"))
 	{
 		//mHasMultitexture = FALSE; // NEEDED!
-		mHasDepthClamp = FALSE;
-		mHasARBEnvCombine = FALSE;
-		mHasCompressedTextures = FALSE;
-		mHasVertexBufferObject = FALSE;
+		mHasDepthClamp = false;
+		mHasARBEnvCombine = false;
+		mHasCompressedTextures = false;
+		mHasVertexBufferObject = false;
 		mHasFramebufferObject = FALSE;
 		mHasDrawBuffers = FALSE;
 		mHasBlendFuncSeparate = FALSE;
-		mHasMipMapGeneration = FALSE;
+		mHasMipMapGeneration = false;
 		mHasSeparateSpecularColor = FALSE;
-		mHasAnisotropic = FALSE;
-		mHasCubeMap = FALSE;
+		mHasAnisotropic = false;
+		mHasCubeMap = false;
 		mHasOcclusionQuery = FALSE;
 		mHasPointParameters = FALSE;
 		LL_WARNS("RenderInit") << "GL extension support DISABLED via LL_GL_NOEXT" << LL_ENDL;
@@ -1093,9 +1093,9 @@ void LLGLManager::initExtensions()
 		// extensions which I believe correspond to fatal driver
 		// bug reports.  This should be the default until we get a
 		// proper blacklist/whitelist on Linux.
-		mHasMipMapGeneration = FALSE;
-		mHasAnisotropic = FALSE;
-		//mHasCubeMap = FALSE; // apparently fatal on Intel 915 & similar
+		mHasMipMapGeneration = false;
+		mHasAnisotropic = false;
+		//mHasCubeMap = false; // apparently fatal on Intel 915 & similar
 		//mHasOcclusionQuery = FALSE; // source of many ATI system hangs
 		mHasBlendFuncSeparate = FALSE;
 		LL_WARNS("RenderInit") << "GL extension support forced to SIMPLE level via LL_GL_BASICEXT" << LL_ENDL;
@@ -1108,14 +1108,14 @@ void LLGLManager::initExtensions()
 		const char *const blacklist = getenv("LL_GL_BLACKLIST");	/* Flawfinder: ignore */
 		LL_WARNS("RenderInit") << "GL extension support partially disabled via LL_GL_BLACKLIST: " << blacklist << LL_ENDL;
 		if (strchr(blacklist,'a')) mHasARBEnvCombine = FALSE;
-		if (strchr(blacklist,'b')) mHasCompressedTextures = FALSE;
-		if (strchr(blacklist,'c')) mHasVertexBufferObject = FALSE;
-		if (strchr(blacklist,'d')) mHasMipMapGeneration = FALSE;//S
+		if (strchr(blacklist,'b')) mHasCompressedTextures = false;
+		if (strchr(blacklist,'c')) mHasVertexBufferObject = false;
+		if (strchr(blacklist,'d')) mHasMipMapGeneration = false;//S
 // 		if (strchr(blacklist,'f')) mHasNVVertexArrayRange = FALSE;//S
 // 		if (strchr(blacklist,'g')) mHasNVFence = FALSE;//S
 		if (strchr(blacklist,'h')) mHasSeparateSpecularColor = FALSE;
-		if (strchr(blacklist,'i')) mHasAnisotropic = FALSE;//S
-		if (strchr(blacklist,'j')) mHasCubeMap = FALSE;//S
+		if (strchr(blacklist,'i')) mHasAnisotropic = false;//S
+		if (strchr(blacklist,'j')) mHasCubeMap = false;//S
 // 		if (strchr(blacklist,'k')) mHasATIVAO = FALSE;//S
 		if (strchr(blacklist,'l')) mHasOcclusionQuery = FALSE;
 		if (strchr(blacklist,'p')) mHasPointParameters = FALSE;//S
@@ -1123,7 +1123,7 @@ void LLGLManager::initExtensions()
 		if (strchr(blacklist,'r')) mHasDrawBuffers = FALSE;//S
 		if (strchr(blacklist,'s')) mHasTextureRectangle = FALSE;
 		if (strchr(blacklist,'t')) mHasBlendFuncSeparate = FALSE;//S
-		if (strchr(blacklist,'u')) mHasDepthClamp = FALSE;
+		if (strchr(blacklist,'u')) mHasDepthClamp = false;
 		
 	}
 #endif // LL_LINUX
@@ -1177,7 +1177,7 @@ void LLGLManager::initExtensions()
 	if (mIsIntel && mHasMipMapGeneration)
 	{
 		LL_INFOS("RenderInit") << "Disabling mip-map generation for Intel GPUs" << LL_ENDL;
-		mHasMipMapGeneration = FALSE;
+		mHasMipMapGeneration = false;
 	}
 
 	// Misc
@@ -1205,7 +1205,7 @@ void LLGLManager::initExtensions()
 		}
 		else
 		{
-			mHasVertexBufferObject = FALSE;
+			mHasVertexBufferObject = false;
 		}
 	}
 	if (mHasVertexArrayObject)
@@ -1496,10 +1496,10 @@ void do_assert_glerror()
 	//  Create or update texture to be used with this data 
 	GLenum error;
 	error = glGetError();
-	BOOL quit = FALSE;
+	bool quit = false;
 	while (LL_UNLIKELY(error))
 	{
-		quit = TRUE;
+		quit = true;
 		GLubyte const * gl_error_msg = gluErrorString(error);
 		if (NULL != gl_error_msg)
 		{
@@ -1620,7 +1620,7 @@ void LLGLState::dumpStates()
 	for (boost::unordered_map<LLGLenum, LLGLboolean>::iterator iter = sStateMap.begin();
 		 iter != sStateMap.end(); ++iter)
 	{
-		LL_INFOS("RenderState") << llformat(" 0x%04x : %s",(S32)iter->first,iter->second?"TRUE":"FALSE") << LL_ENDL;
+		LL_INFOS("RenderState") << llformat(" 0x%04x : %s",(S32)iter->first,iter->second?"true":"false") << LL_ENDL;
 	}
 }
 
@@ -1640,14 +1640,14 @@ void LLGLState::checkStates(const std::string& msg)
 	
 	stop_glerror();
 
-	BOOL error = FALSE;
+	bool error = false;
 
 	if (src != GL_SRC_ALPHA || dst != GL_ONE_MINUS_SRC_ALPHA)
 	{
 		if (gDebugSession)
 		{
 			gFailLog << "Blend function corrupted: " << std::hex << src << " " << std::hex << dst << "  " << msg << std::dec << std::endl;
-			error = TRUE;
+			error = true;
 		}
 		else
 		{
@@ -1669,7 +1669,7 @@ void LLGLState::checkStates(const std::string& msg)
 			if (gDebugSession)
 			{
 				gFailLog << llformat("LLGLState error. State: 0x%04x",state) << std::endl;
-				error = TRUE;
+				error = true;
 			}
 			else
 			{
@@ -1698,7 +1698,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 	glGetIntegerv(GL_ACTIVE_TEXTURE_ARB, &activeTexture);
 	stop_glerror();
 
-	BOOL error = FALSE;
+	bool error = false;
 
 	if (activeTexture == GL_TEXTURE0_ARB)
 	{
@@ -1709,7 +1709,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 
 		if (tex_env_mode != GL_MODULATE)
 		{
-			error = TRUE;
+			error = true;
 			LL_WARNS("RenderState") << "GL_TEXTURE_ENV_MODE invalid: " << std::hex << tex_env_mode << std::dec << LL_ENDL;
 			if (gDebugSession)
 			{
@@ -1765,7 +1765,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 
 			if (stackDepth != 1)
 			{
-				error = TRUE;
+				error = true;
 				LL_WARNS("RenderState") << "Texture matrix stack corrupted." << LL_ENDL;
 
 				if (gDebugSession)
@@ -1779,7 +1779,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 
 			if (mat != identity)
 			{
-				error = TRUE;
+				error = true;
 				LL_WARNS("RenderState") << "Texture matrix in channel " << i << " corrupt." << LL_ENDL;
 				if (gDebugSession)
 				{
@@ -1798,7 +1798,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 				
 				if (glIsEnabled(value[j]))
 				{
-					error = TRUE;
+					error = true;
 					LL_WARNS("RenderState") << "Texture channel " << i << " still has " << label[j] << " enabled." << LL_ENDL;
 					if (gDebugSession)
 					{
@@ -1813,7 +1813,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 
 			if (mat != identity)
 			{
-				error = TRUE;
+				error = true;
 				LL_WARNS("RenderState") << "Texture matrix " << i << " is not identity." << LL_ENDL;
 				if (gDebugSession)
 				{
@@ -1830,7 +1830,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 
 			if (tex != 0)
 			{
-				error = TRUE;
+				error = true;
 				LL_WARNS("RenderState") << "Texture channel " << i << " still has texture " << tex << " bound." << LL_ENDL;
 
 				if (gDebugSession)
@@ -1863,7 +1863,7 @@ void LLGLState::checkTextureChannels(const std::string& msg)
 ///////////////////////////////////////////////////////////////////////
 
 LLGLState::LLGLState(LLGLenum state, S32 enabled) :
-	mState(state), mWasEnabled(FALSE), mIsEnabled(FALSE)
+	mState(state), mWasEnabled(false), mIsEnabled(false)
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_PIPELINE;
 	switch (state)
@@ -1903,15 +1903,15 @@ void LLGLState::setEnabled(S32 enabled)
 	}
 	if (enabled == CURRENT_STATE)
 	{
-		enabled = sStateMap[mState] == GL_TRUE ? TRUE : FALSE;
+		enabled = sStateMap[mState] == GL_TRUE ? true : false;
 	}
-	else if (enabled == TRUE && sStateMap[mState] != GL_TRUE)
+	else if (enabled == true && sStateMap[mState] != GL_TRUE)
 	{
 		gGL.flush();
 		glEnable(mState);
 		sStateMap[mState] = GL_TRUE;
 	}
-	else if (enabled == FALSE && sStateMap[mState] != GL_FALSE)
+	else if (enabled == false && sStateMap[mState] != GL_FALSE)
 	{
 		gGL.flush();
 		glDisable(mState);
@@ -2167,7 +2167,7 @@ LLGLDepthTest::LLGLDepthTest(GLboolean depth_enabled, GLboolean write_enabled, G
 	{ // always disable depth writes if depth testing is disabled
 	  // GL spec defines this as a requirement, but some implementations allow depth writes with testing disabled
 	  // The proper way to write to depth buffer with testing disabled is to enable testing and use a depth_func of GL_ALWAYS
-		write_enabled = FALSE;
+		write_enabled = false;
 	}
 
 	if (depth_enabled != sDepthEnabled)
@@ -2220,7 +2220,7 @@ void LLGLDepthTest::checkState()
 	if (gDebugGL)
 	{
 		GLint func = 0;
-		GLboolean mask = FALSE;
+		GLboolean mask = false;
 
 		glGetIntegerv(GL_DEPTH_FUNC, &func);
 		glGetBooleanv(GL_DEPTH_WRITEMASK, &mask);

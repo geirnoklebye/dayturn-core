@@ -73,7 +73,7 @@ LLImageGL *LLFontBitmapCache::getImageGL(U32 bitmap_num) const
 }
 
 
-BOOL LLFontBitmapCache::nextOpenPos(S32 width, S32 &pos_x, S32 &pos_y, S32& bitmap_num)
+bool LLFontBitmapCache::nextOpenPos(S32 width, S32 &pos_x, S32 &pos_y, S32& bitmap_num)
 {
 	if ((mBitmapNum<0) || (mCurrentOffsetX + width + 1) > mBitmapWidth)
 	{
@@ -87,7 +87,7 @@ BOOL LLFontBitmapCache::nextOpenPos(S32 width, S32 &pos_x, S32 &pos_y, S32& bitm
 			LLImageRaw *image_raw = getImageRaw(mBitmapNum);
 
 			// Make corresponding GL image.
-			mImageGLVec.push_back(new LLImageGL(FALSE));
+			mImageGLVec.push_back(new LLImageGL(false));
 			LLImageGL *image_gl = getImageGL(mBitmapNum);
 			
 			S32 image_width = mMaxCharWidth * 20;
@@ -138,7 +138,7 @@ BOOL LLFontBitmapCache::nextOpenPos(S32 width, S32 &pos_x, S32 &pos_y, S32& bitm
 
 	mCurrentOffsetX += width + 1;
 
-	return TRUE;
+	return true;
 }
 
 void LLFontBitmapCache::destroyGL()

@@ -61,7 +61,7 @@ U32 LLGLSLShader::sTotalDrawCalls = 0;
 LLGLSLShader    gUIProgram;
 LLGLSLShader    gSolidColorProgram;
 
-BOOL shouldChange(const LLVector4& v1, const LLVector4& v2)
+bool shouldChange(const LLVector4& v1, const LLVector4& v2)
 {
     return v1 != v2;
 }
@@ -324,7 +324,7 @@ LLGLSLShader::LLGLSLShader()
       mActiveTextureChannels(0), 
       mShaderLevel(0), 
       mShaderGroup(SG_DEFAULT), 
-      mUniformsDirty(FALSE),
+      mUniformsDirty(false),
       mTimerQuery(0),
       mSamplesQuery(0)
 
@@ -388,7 +388,7 @@ void LLGLSLShader::unloadInternal()
     stop_glerror();
 }
 
-BOOL LLGLSLShader::createShader(std::vector<LLStaticHashedString> * attributes,
+bool LLGLSLShader::createShader(std::vector<LLStaticHashedString> * attributes,
                                 std::vector<LLStaticHashedString> * uniforms,
                                 U32 varying_count,
                                 const char** varyings)
@@ -415,10 +415,10 @@ BOOL LLGLSLShader::createShader(std::vector<LLStaticHashedString> * attributes,
         // Shouldn't happen if shader related extensions, like ARB_vertex_shader, exist.
         LL_SHADER_LOADING_WARNS() << "Failed to create handle for shader: " << mName << LL_ENDL;
         unloadInternal();
-        return FALSE;
+        return false;
     }
 
-    BOOL success = TRUE;
+    bool success = true;
     
 #if LL_DARWIN
     // work-around missing mix(vec3,vec3,bvec3)
@@ -441,7 +441,7 @@ BOOL LLGLSLShader::createShader(std::vector<LLStaticHashedString> * attributes,
         }
         else
         {
-            success = FALSE;
+            success = false;
             LL_WARNS() << "Shader loading failed for SHADER FILE: " << (*fileIter).first << " mShaderLevel=" << mShaderLevel << LL_ENDL;
         }
     }
@@ -449,7 +449,7 @@ BOOL LLGLSLShader::createShader(std::vector<LLStaticHashedString> * attributes,
     // Attach existing objects
     if (!LLShaderMgr::instance()->attachShaderFeatures(this))
     {
-        return FALSE;
+        return false;
     }
 
     if (gGLManager.mGLSLVersionMajor < 2 && gGLManager.mGLSLVersionMinor < 3)
@@ -536,7 +536,7 @@ void dumpAttachObject( const char *func_name, GLhandleARB program_object, const 
 }
 #endif // DEBUG_SHADER_INCLUDES
 
-BOOL LLGLSLShader::attachVertexObject(std::string object_path)
+bool LLGLSLShader::attachVertexObject(std::string object_path)
 {
     if (LLShaderMgr::instance()->mVertexShaderObjects.count(object_path) > 0)
     {
@@ -546,16 +546,16 @@ BOOL LLGLSLShader::attachVertexObject(std::string object_path)
         dumpAttachObject("attachVertexObject", mProgramObject, object_path);
 #endif // DEBUG_SHADER_INCLUDES
         stop_glerror();
-        return TRUE;
+        return true;
     }
     else
     {
         LL_SHADER_LOADING_WARNS() << "Attempting to attach shader object: '" << object_path << "' that hasn't been compiled." << LL_ENDL;
-        return FALSE;
+        return false;
     }
 }
 
-BOOL LLGLSLShader::attachFragmentObject(std::string object_path)
+bool LLGLSLShader::attachFragmentObject(std::string object_path)
 {
     if (LLShaderMgr::instance()->mFragmentShaderObjects.count(object_path) > 0)
     {
@@ -565,12 +565,12 @@ BOOL LLGLSLShader::attachFragmentObject(std::string object_path)
         dumpAttachObject("attachFragmentObject", mProgramObject, object_path);
 #endif // DEBUG_SHADER_INCLUDES
         stop_glerror();
-        return TRUE;
+        return true;
     }
     else
     {
         LL_SHADER_LOADING_WARNS() << "Attempting to attach shader object: '" << object_path << "' that hasn't been compiled." << LL_ENDL;
-        return FALSE;
+        return false;
     }
 }
 
@@ -600,7 +600,7 @@ void LLGLSLShader::attachObjects(GLhandleARB* objects, S32 count)
     }
 }
 
-BOOL LLGLSLShader::mapAttributes(const std::vector<LLStaticHashedString> * attributes)
+bool LLGLSLShader::mapAttributes(const std::vector<LLStaticHashedString> * attributes)
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_SHADER;
 
@@ -612,7 +612,7 @@ BOOL LLGLSLShader::mapAttributes(const std::vector<LLStaticHashedString> * attri
     }
     
     //link the program
-    BOOL res = link();
+    bool res = link();
 
     mAttribute.clear();
     U32 numAttributes = (attributes == NULL) ? 0 : attributes->size();
@@ -657,10 +657,10 @@ BOOL LLGLSLShader::mapAttributes(const std::vector<LLStaticHashedString> * attri
             }
         }
 
-        return TRUE;
+        return true;
     }
     
-    return FALSE;
+    return false;
 }
 
 void LLGLSLShader::mapUniform(GLint index, const vector<LLStaticHashedString> * uniforms)
@@ -800,7 +800,7 @@ GLint LLGLSLShader::mapUniformTextureChannel(GLint location, GLenum type)
     return -1;
 }
 
-BOOL LLGLSLShader::mapUniforms(const vector<LLStaticHashedString> * uniforms)
+bool LLGLSLShader::mapUniforms(const vector<LLStaticHashedString> * uniforms)
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_SHADER;
 
@@ -945,11 +945,11 @@ BOOL LLGLSLShader::mapUniforms(const vector<LLStaticHashedString> * uniforms)
 }
 
 
-BOOL LLGLSLShader::link(BOOL suppress_errors)
+bool LLGLSLShader::link(bool suppress_errors)
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_SHADER;
 
-    BOOL success = LLShaderMgr::instance()->linkProgramObject(mProgramObject, suppress_errors);
+    bool success = LLShaderMgr::instance()->linkProgramObject(mProgramObject, suppress_errors);
 
     if (!success && !suppress_errors)
     {

@@ -906,7 +906,7 @@ void LLRender::init()
 	llassert_always(mBuffer.isNull()) ;
 	stop_glerror();
 	mBuffer = new LLVertexBuffer(immediate_mask, 0);
-	mBuffer->allocateBuffer(4096, 0, TRUE);
+	mBuffer->allocateBuffer(4096, 0, true);
 	mBuffer->getVertexStrider(mVerticesp);
 	mBuffer->getTexCoord0Strider(mTexcoordsp);
 	mBuffer->getColorStrider(mColorsp);
@@ -1103,7 +1103,7 @@ void LLRender::syncMatrices()
             //if (shader->getUniformLocation(LLShaderMgr::INVERSE_PROJECTION_MATRIX))
             //{
 	        //    glh::matrix4f inv_proj = mat.inverse();
-	        //    shader->uniformMatrix4fv(LLShaderMgr::INVERSE_PROJECTION_MATRIX, 1, FALSE, inv_proj.m);
+	        //    shader->uniformMatrix4fv(LLShaderMgr::INVERSE_PROJECTION_MATRIX, 1, false, inv_proj.m);
             //}
 
 			shader->uniformMatrix4fv(name[MM_PROJECTION], 1, GL_FALSE, mat.m);

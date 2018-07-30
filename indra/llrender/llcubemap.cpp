@@ -77,7 +77,7 @@ void LLCubeMap::initGL()
 			
 			for (int i = 0; i < 6; i++)
 			{
-				mImages[i] = new LLImageGL(RESOLUTION, RESOLUTION, 4, FALSE);
+				mImages[i] = new LLImageGL(RESOLUTION, RESOLUTION, 4, false);
             #if USE_SRGB_DECODE
                 if (mIssRGB) {
                     mImages[i]->setExplicitFormat(GL_SRGB8_ALPHA8, GL_RGBA);
@@ -310,7 +310,7 @@ LLVector3 LLCubeMap::map(U8 side, U16 v_val, U16 h_val) const
 }
 
 
-BOOL LLCubeMap::project(F32& v_val, F32& h_val, BOOL& outside,
+bool LLCubeMap::project(F32& v_val, F32& h_val, bool& outside,
 						U8 side, const LLVector3& dir) const
 {
 	const U8 curr_coef = side >> 1; // 0/1 = X axis, 2/3 = Y, 4/5 = Z
@@ -318,9 +318,9 @@ BOOL LLCubeMap::project(F32& v_val, F32& h_val, BOOL& outside,
 	const U8 i_coef = (curr_coef + 1) % 3;
 	const U8 j_coef = (i_coef + 1) % 3;
 
-	outside = TRUE;
+	outside = true;
 	if (side_dir * dir.mV[curr_coef] < 0)
-		return FALSE;
+		return false;
 
 	LLVector3 ray;
 
@@ -371,23 +371,23 @@ BOOL LLCubeMap::project(F32& v_val, F32& h_val, BOOL& outside,
 	outside =  ((v_val < 0) || (v_val > RESOLUTION) ||
 		(h_val < 0) || (h_val > RESOLUTION));
 
-	return TRUE;
+	return true;
 }
 
-BOOL LLCubeMap::project(F32& v_min, F32& v_max, F32& h_min, F32& h_max, 
+bool LLCubeMap::project(F32& v_min, F32& v_max, F32& h_min, F32& h_max,
 						U8 side, LLVector3 dir[4]) const
 {
 	v_min = h_min = RESOLUTION;
 	v_max = h_max = 0;
 
-	BOOL fully_outside = TRUE;
+	bool fully_outside = true;
 	for (U8 vtx = 0; vtx < 4; ++vtx)
 	{
 		F32 v_val, h_val;
-		BOOL outside;
-		BOOL consider = project(v_val, h_val, outside, side, dir[vtx]);
+		bool outside;
+		bool consider = project(v_val, h_val, outside, side, dir[vtx]);
 		if (!outside)
-			fully_outside = FALSE;
+			fully_outside = false;
 		if (consider)
 		{
 			if (v_val < v_min) v_min = v_val;
