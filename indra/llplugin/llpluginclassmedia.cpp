@@ -938,7 +938,7 @@ void LLPluginClassMedia::setUserDataPath(const std::string &user_data_path_cache
     message.setValue("username", username); // cef shares cache between users but creates user-based contexts
 	message.setValue("cef_log_file", user_data_path_cef_log);
 
-	bool cef_verbose_log = gSavedSettings.getBOOL("CefVerboseLog");
+	bool cef_verbose_log = gSavedSettings.getbool("CefVerboseLog");
 	message.setValueBoolean("cef_verbose_log", cef_verbose_log);
 	sendMessage(message);
 }

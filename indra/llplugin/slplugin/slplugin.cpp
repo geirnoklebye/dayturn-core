@@ -98,10 +98,10 @@ LPTOP_LEVEL_EXCEPTION_FILTER WINAPI MyDummySetUnhandledExceptionFilter(
 	return NULL;
 }
 
-BOOL PreventSetUnhandledExceptionFilter()
+bool PreventSetUnhandledExceptionFilter()
 {
 	// remove the scary stuff that also isn't supported on 64 bit Windows
-	return TRUE;
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -131,7 +131,7 @@ bool checkExceptionHandler()
 
 	if (prev_filter == NULL)
 	{
-		ok = FALSE;
+		ok = false;
 		if (NULL == myWin32ExceptionHandler)
 		{
 			LL_WARNS("AppInit") << "Exception handler uninitialized." << LL_ENDL;
