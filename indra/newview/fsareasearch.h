@@ -65,7 +65,7 @@ struct FSObjectProperties
 	LLUUID owner_id;
 	LLUUID group_id;
 	LLUUID ownership_id;
-	BOOL group_owned;  // used in LL function that uses BOOL instead of bool
+	bool group_owned;  // used in LL function that uses BOOL instead of bool
 	U64 creation_date;
 	U32 base_mask, owner_mask, group_mask, everyone_mask, next_owner_mask;
 	LLSaleInfo sale_info;
@@ -168,7 +168,7 @@ public:
 private:
 	void requestObjectProperties(const std::vector< U32 >& request_list, bool select, LLViewerRegion* regionp);
 	void matchObject(FSObjectProperties& details, LLViewerObject* objectp);
-	void getNameFromUUID(LLUUID& id, std::string& name, BOOL group, bool& name_requested);
+	void getNameFromUUID(LLUUID& id, std::string& name, bool group, bool& name_requested);
 
 	void updateCounterText();
 	bool regexTest(std::string text);

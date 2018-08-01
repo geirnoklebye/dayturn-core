@@ -963,8 +963,8 @@ void AOEngine::updateSortOrder(AOSet::AOState* state)
 			LLPointer<LLViewerInventoryItem> newItem = new LLViewerInventoryItem(item);
 
 			newItem->setDescription(numStr.str());
-			newItem->setComplete(TRUE);
-			newItem->updateServer(FALSE);
+			newItem->setComplete(true);
+			newItem->updateServer(false);
 
 			gInventory.updateItem(newItem);
 		}
@@ -1422,7 +1422,7 @@ void AOEngine::update(bool aFromTimer)
 
 			LLInventoryModel::cat_array_t* stateCategories;
 			gInventory.getDirectDescendentsOf(currentCategory->getUUID(), stateCategories, items);
-			newSet->setComplete(TRUE);
+			newSet->setComplete(true);
 
 			for (S32 state_index = 0; state_index < stateCategories->size(); ++state_index)
 			{
@@ -1633,7 +1633,7 @@ void AOEngine::saveSet(const AOSet* set)
 	LLViewerInventoryCategory* cat=gInventory.getCategory(set->getInventoryUUID());
 	LL_WARNS("AOEngine") << cat << LL_ENDL;
 	cat->rename(setParams);
-	cat->updateServer(FALSE);
+	cat->updateServer(false);
 	gInventory.addChangedMask(LLInventoryObserver::LABEL, cat->getUUID());
 	gInventory.notifyObservers();
 */

@@ -312,7 +312,7 @@ LLViewerInventoryItem::LLViewerInventoryItem(const LLUUID& uuid,
 											 time_t creation_date_utc) :
 	LLInventoryItem(uuid, parent_uuid, perm, asset_uuid, type, inv_type,
 					name, desc, sale_info, flags, creation_date_utc),
-	mIsComplete(TRUE)
+	mIsComplete(true)
 {
 }
 
@@ -321,7 +321,7 @@ LLViewerInventoryItem::LLViewerInventoryItem(const LLUUID& item_id,
 											 const std::string& name,
 											 LLInventoryType::EType inv_type) :
 	LLInventoryItem(),
-	mIsComplete(FALSE)
+	mIsComplete(false)
 {
 	mUUID = item_id;
 	mParentUUID = parent_id;
@@ -331,7 +331,7 @@ LLViewerInventoryItem::LLViewerInventoryItem(const LLUUID& item_id,
 
 LLViewerInventoryItem::LLViewerInventoryItem() :
 	LLInventoryItem(),
-	mIsComplete(FALSE)
+	mIsComplete(false)
 {
 }
 
@@ -348,7 +348,7 @@ LLViewerInventoryItem::LLViewerInventoryItem(const LLViewerInventoryItem* other)
 
 LLViewerInventoryItem::LLViewerInventoryItem(const LLInventoryItem *other) :
 	LLInventoryItem(other),
-	mIsComplete(TRUE)
+	mIsComplete(true)
 {
 }
 
@@ -383,7 +383,7 @@ void LLViewerInventoryItem::cloneViewerItem(LLPointer<LLViewerInventoryItem>& ne
 	}
 }
 
-void LLViewerInventoryItem::updateServer(BOOL is_new) const
+void LLViewerInventoryItem::updateServer(bool is_new) const
 {
 	if(!mIsComplete)
 	{
@@ -476,24 +476,24 @@ void LLViewerInventoryItem::fetchFromServer(void) const
 }
 
 // virtual
-BOOL LLViewerInventoryItem::unpackMessage(const LLSD& item)
+bool LLViewerInventoryItem::unpackMessage(const LLSD& item)
 {
-	BOOL rv = LLInventoryItem::fromLLSD(item);
+	bool rv = LLInventoryItem::fromLLSD(item);
 
 	LLLocalizedInventoryItemsDictionary::getInstance()->localizeInventoryObjectName(mName);
 
-	mIsComplete = TRUE;
+	mIsComplete = true;
 	return rv;
 }
 
 // virtual
-BOOL LLViewerInventoryItem::unpackMessage(LLMessageSystem* msg, const char* block, S32 block_num)
+bool LLViewerInventoryItem::unpackMessage(LLMessageSystem* msg, const char* block, S32 block_num)
 {
-	BOOL rv = LLInventoryItem::unpackMessage(msg, block, block_num);
+	bool rv = LLInventoryItem::unpackMessage(msg, block, block_num);
 
 	LLLocalizedInventoryItemsDictionary::getInstance()->localizeInventoryObjectName(mName);
 
-	mIsComplete = TRUE;
+	mIsComplete = true;
 	return rv;
 }
 
@@ -529,7 +529,7 @@ bool LLViewerInventoryItem::importLegacyStream(std::istream& input_stream)
 	return rv;
 }
 
-void LLViewerInventoryItem::updateParentOnServer(BOOL restamp) const
+void LLViewerInventoryItem::updateParentOnServer(bool restamp) const
 {
 	LLMessageSystem* msg = gMessageSystem;
 	msg->newMessageFast(_PREHASH_MoveInventoryItem);
@@ -607,7 +607,7 @@ void LLViewerInventoryCategory::packMessage(LLMessageSystem* msg) const
 	msg->addStringFast(_PREHASH_Name, mName);
 }
 
-void LLViewerInventoryCategory::updateParentOnServer(BOOL restamp) const
+void LLViewerInventoryCategory::updateParentOnServer(bool restamp) const
 {
 	LLMessageSystem* msg = gMessageSystem;
 	msg->newMessageFast(_PREHASH_MoveInventoryFolder);
@@ -622,7 +622,7 @@ void LLViewerInventoryCategory::updateParentOnServer(BOOL restamp) const
 	gAgent.sendReliableMessage();
 }
 
-void LLViewerInventoryCategory::updateServer(BOOL is_new) const
+void LLViewerInventoryCategory::updateServer(bool is_new) const
 {
 	// communicate that change with the server.
 
@@ -2206,11 +2206,11 @@ LLUUID find_possible_item_for_regeneration(const LLViewerInventoryItem *target_i
 
 // This currently dosen't work, because the sim does not allow us 
 // to change an item's assetID.
-BOOL LLViewerInventoryItem::regenerateLink()
+bool LLViewerInventoryItem::regenerateLink()
 {
 	const LLUUID target_item_id = find_possible_item_for_regeneration(this);
 	if (target_item_id.isNull())
-		return FALSE;
+		return false;
 	LLViewerInventoryCategory::cat_array_t cats;
 	LLViewerInventoryItem::item_array_t items;
 	LLAssetIDMatches asset_id_matches(getAssetUUID());
@@ -2229,5 +2229,5 @@ BOOL LLViewerInventoryItem::regenerateLink()
 		gInventory.addChangedMask(LLInventoryObserver::REBUILD, item->getUUID());
 	}
 	gInventory.notifyObservers();
-	return TRUE;
+	return true;
 }

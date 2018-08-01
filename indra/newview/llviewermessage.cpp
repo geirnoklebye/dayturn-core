@@ -6028,7 +6028,7 @@ void container_inventory_arrived(LLViewerObject* object,
 												LLSaleInfo::DEFAULT,
 												item->getFlags(),
 												creation_date_utc);
-				new_item->updateServer(TRUE);
+				new_item->updateServer(true);
 				gInventory.updateItem(new_item);
 			}
 		}
@@ -6066,7 +6066,7 @@ void container_inventory_arrived(LLViewerObject* object,
 										LLSaleInfo::DEFAULT,
 										item->getFlags(),
 										creation_date_utc);
-		new_item->updateServer(TRUE);
+		new_item->updateServer(true);
 		gInventory.updateItem(new_item);
 		gInventory.notifyObservers();
 		if(active_panel)

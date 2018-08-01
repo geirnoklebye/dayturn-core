@@ -95,12 +95,11 @@ public:
 	//   Implemented here so that a minimal information set can be transmitted
 	//   between simulator and viewer.
 	//--------------------------------------------------------------------
-
 	virtual bool importLegacyStream(std::istream& input_stream);
 	virtual bool exportLegacyStream(std::ostream& output_stream, bool include_asset_key = true) const;
 
-	virtual void updateParentOnServer(BOOL) const;
-	virtual void updateServer(BOOL) const;
+	virtual void updateParentOnServer(bool) const;
+	virtual void updateServer(bool) const;
 
 	//--------------------------------------------------------------------
 	// Member Variables
@@ -187,10 +186,10 @@ public:
 	// Assumes you have already called nextBlock().
 	virtual void packMessage(LLMessageSystem* msg) const;
 
-	// Returns TRUE if the inventory item came through the network correctly.
+	// Returns true if the inventory item came through the network correctly.
 	// Uses a simple crc check which is defeatable, but we want to detect 
 	// network mangling somehow.
-	virtual BOOL unpackMessage(LLMessageSystem* msg, const char* block, S32 block_num = 0);
+	virtual bool unpackMessage(LLMessageSystem* msg, const char* block, S32 block_num = 0);
 
 	//--------------------------------------------------------------------
 	// File Support

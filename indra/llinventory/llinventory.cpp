@@ -235,13 +235,13 @@ bool LLInventoryObject::exportLegacyStream(std::ostream& output_stream, bool) co
 	return true;
 }
 
-void LLInventoryObject::updateParentOnServer(BOOL) const
+void LLInventoryObject::updateParentOnServer(bool) const
 {
 	// don't do nothin'
 	LL_WARNS() << "LLInventoryObject::updateParentOnServer() called.  Doesn't do anything." << LL_ENDL;
 }
 
-void LLInventoryObject::updateServer(BOOL) const
+void LLInventoryObject::updateServer(bool) const
 {
 	// don't do nothin'
 	LL_WARNS() << "LLInventoryObject::updateServer() called.  Doesn't do anything." << LL_ENDL;
@@ -526,7 +526,7 @@ void LLInventoryItem::packMessage(LLMessageSystem* msg) const
 }
 
 // virtual
-BOOL LLInventoryItem::unpackMessage(LLMessageSystem* msg, const char* block, S32 block_num)
+bool LLInventoryItem::unpackMessage(LLMessageSystem* msg, const char* block, S32 block_num)
 {
 	msg->getUUIDFast(block, _PREHASH_ItemID, mUUID, block_num);
 	msg->getUUIDFast(block, _PREHASH_FolderID, mParentUUID, block_num);
@@ -562,13 +562,13 @@ BOOL LLInventoryItem::unpackMessage(LLMessageSystem* msg, const char* block, S32
 	if(local_crc == remote_crc)
 	{
 		LL_DEBUGS() << "crc matches" << LL_ENDL;
-		return TRUE;
+		return true;
 	}
 	else
 	{
 		LL_WARNS() << "inventory crc mismatch: local=" << std::hex << local_crc
 				<< " remote=" << remote_crc << std::dec << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 #else
 	return (local_crc == remote_crc);

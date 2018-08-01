@@ -884,7 +884,7 @@ void LLSidepanelItemInfo::updatePermissions()
 	LLViewerInventoryItem* item = findItem();
 	if(!item) return;
 
-	BOOL is_group_owned;
+	bool is_group_owned;
 	LLUUID owner_id;
 	LLUUID group_id;
 	LLPermissions perm(item->getPermissions());
@@ -1064,7 +1064,7 @@ void LLSidepanelItemInfo::onCommitChanges(LLPointer<LLViewerInventoryItem> item)
         mUpdatePendingId++;
         LLPointer<LLInventoryCallback> callback = new PropertiesChangedCallback(getHandle(), mItemID, mUpdatePendingId);
         update_inventory_item(item.get(), callback);
-        //item->updateServer(FALSE);
+        //item->updateServer(false);
         gInventory.updateItem(item);
         gInventory.notifyObservers();
     }

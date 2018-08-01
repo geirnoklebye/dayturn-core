@@ -74,7 +74,7 @@ public:
 	LLSaleInfo(EForSale sale_type, S32 sale_price);
 
 	// accessors
-	BOOL isForSale() const;
+	bool isForSale() const;
 	EForSale getSaleType() const { return mSaleType; }
 	S32 getSalePrice() const { return mSalePrice; }
 	U32 getCRC32() const;

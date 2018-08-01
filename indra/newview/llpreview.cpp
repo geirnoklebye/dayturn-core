@@ -150,7 +150,7 @@ void LLPreview::onCommit()
 		if (!item->isFinished())
 		{
 			// We are attempting to save an item that was never loaded
-			LL_WARNS() << "LLPreview::onCommit() called with mIsComplete == FALSE"
+			LL_WARNS() << "LLPreview::onCommit() called with mIsComplete == false"
 					<< " Type: " << item->getType()
 					<< " ID: " << item->getUUID()
 					<< LL_ENDL;
@@ -180,7 +180,7 @@ void LLPreview::onCommit()
 		}
 		else if(item->getPermissions().getOwner() == gAgent.getID())
 		{
-			new_item->updateServer(FALSE);
+			new_item->updateServer(false);
 			gInventory.updateItem(new_item);
 			gInventory.notifyObservers();
 

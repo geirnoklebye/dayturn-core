@@ -66,7 +66,7 @@ LLSaleInfo::LLSaleInfo(EForSale sale_type, S32 sale_price) :
 	mSalePrice = llclamp(mSalePrice, 0, S32_MAX);
 }
 
-BOOL LLSaleInfo::isForSale() const
+bool LLSaleInfo::isForSale() const
 {
 	return (FS_NOT != mSaleType);
 }

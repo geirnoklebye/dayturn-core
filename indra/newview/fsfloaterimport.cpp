@@ -1645,7 +1645,7 @@ void FSFloaterImport::onAssetUploadComplete(const LLUUID& uuid, void* userdata, 
 				new_item->setDescription(data->mAssetInfo.getDescription());
 				new_item->setTransactionID(data->mAssetInfo.mTransactionID);
 				new_item->setAssetUUID(asset_id);
-				new_item->updateServer(FALSE);
+				new_item->updateServer(false);
 				gInventory.updateItem(new_item);
 				gInventory.notifyObservers();
 				LL_DEBUGS("import") << "Asset " << asset_id << " saved into "  << "inventory item " << item->getName() << LL_ENDL;

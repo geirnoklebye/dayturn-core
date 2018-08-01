@@ -3662,7 +3662,7 @@ LLUIImagePtr LLFolderBridge::getFolderIcon(BOOL is_open) const
 // static : use by LLLinkFolderBridge to get the closed type icons
 LLUIImagePtr LLFolderBridge::getIcon(LLFolderType::EType preferred_type)
 {
-	return LLUI::getUIImage(LLViewerFolderType::lookupIconName(preferred_type, FALSE));
+	return LLUI::getUIImage(LLViewerFolderType::lookupIconName(preferred_type, false));
 }
 
 LLUIImagePtr LLFolderBridge::getIconOverlay() const
@@ -6932,7 +6932,7 @@ BOOL LLObjectBridge::renameItem(const std::string& new_name)
 	{
 		LLPointer<LLViewerInventoryItem> new_item = new LLViewerInventoryItem(item);
 		new_item->rename(new_name);
-		new_item->updateServer(FALSE);
+		new_item->updateServer(false);
 		model->updateItem(new_item);
 		model->notifyObservers();
 		buildDisplayName();

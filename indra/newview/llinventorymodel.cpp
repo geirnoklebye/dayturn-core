@@ -2657,7 +2657,7 @@ void LLInventoryModel::buildParentChildMap()
 		// FIXME note that updateServer() fails with protected
 		// types, so this will not work as intended in that case.
 		// UpdateServer uses AIS, AIS cat move is not implemented yet
-		// cat->updateServer(TRUE);
+		// cat->updateServer(true);
 
 		// MoveInventoryFolder message, intentionally per item
 		cat->updateParentOnServer(FALSE);

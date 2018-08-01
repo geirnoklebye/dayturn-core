@@ -97,6 +97,7 @@ public:
 
         FT_SETTINGS = 56,
 
+		FT_SUITCASE = 100,
 		FT_COUNT,
 
 		FT_NONE = -1

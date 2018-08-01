@@ -577,7 +577,7 @@ void LLFloaterProperties::onCommitName()
 		new_item->rename(labelItemName->getText());
 		if(mObjectID.isNull())
 		{
-			new_item->updateServer(FALSE);
+			new_item->updateServer(false);
 			gInventory.updateItem(new_item);
 			gInventory.notifyObservers();
 		}
@@ -614,7 +614,7 @@ void LLFloaterProperties::onCommitDescription()
 		new_item->setDescription(labelItemDesc->getText());
 		if(mObjectID.isNull())
 		{
-			new_item->updateServer(FALSE);
+			new_item->updateServer(false);
 			gInventory.updateItem(new_item);
 			gInventory.notifyObservers();
 		}
@@ -706,7 +706,7 @@ void LLFloaterProperties::onCommitPermissions()
 		new_item->setFlags(flags);
 		if(mObjectID.isNull())
 		{
-			new_item->updateServer(FALSE);
+			new_item->updateServer(false);
 			gInventory.updateItem(new_item);
 			gInventory.notifyObservers();
 		}
@@ -807,7 +807,7 @@ void LLFloaterProperties::updateSaleInfo()
 		if(mObjectID.isNull())
 		{
 			// This is in the agent's inventory.
-			new_item->updateServer(FALSE);
+			new_item->updateServer(false);
 			gInventory.updateItem(new_item);
 			gInventory.notifyObservers();
 		}

@@ -1086,9 +1086,9 @@ void FSAreaSearch::updateObjectCosts(const LLUUID& object_id, F32 object_cost, F
 	
 }
 
-void FSAreaSearch::getNameFromUUID(LLUUID& id, std::string& name, BOOL group, bool& name_requested)
+void FSAreaSearch::getNameFromUUID(LLUUID& id, std::string& name, bool group, bool& name_requested)
 {
-	BOOL is_group;
+	bool is_group;
 	
 	if(!gCacheName->getIfThere(id, name, is_group))
 	{
