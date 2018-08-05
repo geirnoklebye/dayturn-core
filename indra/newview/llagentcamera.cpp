@@ -921,11 +921,9 @@ void LLAgentCamera::cameraZoomIn(const F32 fraction)
 		}
 	new_distance = llmax(new_distance, min_zoom);
 	}
-	// Don't zoom too far back
-	const F32 DIST_FUDGE = 16.f; // meters
 	// Freeing the camera movement some more... ok, a lot -KC
 	static LLCachedControl<bool> disable_constraints(gSavedSettings,"DisableCameraConstraints",true);
-	F32 max_distance = disable_constraints ? INT_MAX : getCameraMaxZoomDistance() );
+	F32 max_distance = (disable_constraints ? INT_MAX : getCameraMaxZoomDistance() );
 
 
 
@@ -999,11 +997,9 @@ void LLAgentCamera::cameraOrbitIn(const F32 meters)
 			}
 		new_distance = llmax(new_distance, min_zoom);
 		}
-		// Don't zoom too far back
-		const F32 DIST_FUDGE = 16.f; // meters
 		// Freeing the camera movement some more... ok, a lot -KC
 		static LLCachedControl<bool> disable_constraints(gSavedSettings,"DisableCameraConstraints",true);
-		F32 max_distance = disable_constraints ? INT_MAX : getCameraMaxZoomDistance() );
+		F32 max_distance = (disable_constraints ? INT_MAX : getCameraMaxZoomDistance() );
 
 
 		if (new_distance > max_distance)
