@@ -74,6 +74,11 @@ incluyendo el de Todos y el de Propietarios.
 			<scroll_list.columns label="" name="action"/>
 		</scroll_list>
 	</panel>
+	<panel name="members_header">
+		<text_editor name="member_action_description">
+			Esta habilidad es &apos;Expulsar miembros de este grupo&apos;. Sólo un propietario puede expulsar a otro propietario.
+		</text_editor>
+	</panel>
 	<panel name="roles_footer">
 		<text name="static">
 			Nombre del rol
@@ -99,6 +104,11 @@ incluyendo el de Todos y el de Propietarios.
 			<scroll_list.columns label="" name="checkbox"/>
 			<scroll_list.columns label="" name="action"/>
 		</scroll_list>
+	</panel>
+	<panel name="roles_header">
+		<text_editor name="role_action_description">
+			Esta habilidad es &apos;Expulsar miembros de este grupo&apos;. Sólo un propietario puede expulsar a otro propietario.
+		</text_editor>
 	</panel>
 	<panel name="actions_footer">
 		<text_editor name="action_description">

@@ -3846,9 +3846,15 @@ bool enable_sitstand_self()
     return isAgentAvatarValid() && !gAgent.getFlying();
 }
 
+
+bool show_sitdown_self()
+{
+	return isAgentAvatarValid() && !gAgentAvatarp->isSitting();
+}
+
 bool enable_sitdown_self()
 {
-    return isAgentAvatarValid() && !gAgentAvatarp->isSitting() && !gAgentAvatarp->isEditingAppearance() && !gAgent.getFlying();
+	return show_sitdown_self() && !gAgentAvatarp->isEditingAppearance() && !gAgent.getFlying();
 }
 
 class LLCheckPanelPeopleTab : public view_listener_t
@@ -9610,6 +9616,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLSelfToggleSitStand(), "Self.ToggleSitStand");
 	enable.add("Self.EnableSitDown", boost::bind(&enable_sitdown_self));
 	enable.add("Self.EnableSitStand", boost::bind(&enable_sitstand_self));
+	enable.add("Self.ShowSitDown", boost::bind(&show_sitdown_self));
 	view_listener_t::addMenu(new LLSelfRemoveAllAttachments(), "Self.RemoveAllAttachments");
 
 	view_listener_t::addMenu(new LLSelfEnableRemoveAllAttachments(), "Self.EnableRemoveAllAttachments");

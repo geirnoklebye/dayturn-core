@@ -231,6 +231,7 @@ set(viewer_SOURCE_FILES
     llfloaterabout.cpp
 	llfloateradvancedbuildoptions.cpp
     llfloaterbvhpreview.cpp
+    llfloaterauction.cpp
     llfloaterautoreplacesettings.cpp
     llfloateravatar.cpp
     llfloateravatarpicker.cpp
@@ -882,6 +883,7 @@ set(viewer_HEADER_FILES
     llfloaterabout.h
 	llfloateradvancedbuildoptions.h
     llfloaterbvhpreview.h
+    llfloaterauction.h
     llfloaterautoreplacesettings.h
     llfloateravatar.h
     llfloateravatarpicker.h
@@ -2155,7 +2157,12 @@ endif (LINUX)
 if (DARWIN)
   # These all get set with PROPERTIES
   set(product "Kokua")
-  set(MACOSX_WRAPPER_EXECUTABLE_NAME "SL_Launcher")
+  if (PACKAGE)
+      set(MACOSX_WRAPPER_EXECUTABLE_NAME "SL_Launcher")
+  else (PACKAGE)
+      # force the name of the actual executable to allow running it within Xcode for debugging
+      set(MACOSX_WRAPPER_EXECUTABLE_NAME "../Resources/Kokua Viewer.app/Contents/MacOS/Kokua")
+  endif (PACKAGE)
   set(MACOSX_BUNDLE_INFO_STRING "Kokua Viewer")
   set(MACOSX_BUNDLE_ICON_FILE "kokua_icon.icns")
   set(MACOSX_BUNDLE_GUI_IDENTIFIER "Kokua")
