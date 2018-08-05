@@ -42,6 +42,7 @@
 #include "llagentlanguage.h"
 #include "llagentui.h"
 #include "llagentwearables.h"
+#include "lldirpicker.h"
 #include "llfloaterimcontainer.h"
 #include "llimprocessing.h"
 #include "llwindow.h"
@@ -1095,6 +1096,8 @@ bool LLAppViewer::init()
 /*
 	char* PARENT = getenv("PARENT");
 
+// don't nag developers who need to run the executable directly
+#if LL_RELEASE_FOR_DOWNLOAD
 	// MAINT-8305: If we're processing a SLURL, skip the launcher check.
 	if (gSavedSettings.getString("CmdLineLoginLocation").empty())
 	{
@@ -1112,6 +1115,7 @@ bool LLAppViewer::init()
         }
     }
  */
+#endif
 
 #if LL_WINDOWS
 	if (gGLManager.mGLVersion < LLFeatureManager::getInstance()->getExpectedGLVersion())
@@ -1684,6 +1688,11 @@ bool LLAppViewer::doFrame()
 			saveFinalSnapshot();
 		}
 
+		if (LLVoiceClient::instanceExists())
+		{
+			LLVoiceClient::getInstance()->terminate();
+		}
+
 		delete gServicePump;
 
 		destroyMainloopTimeout();
@@ -1782,11 +1791,6 @@ bool LLAppViewer::cleanup()
 
     // Give any remaining SLPlugin instances a chance to exit cleanly.
     LLPluginProcessParent::shutdown();
-
-	if (LLVoiceClient::instanceExists())
-	{
-		LLVoiceClient::getInstance()->terminate();
-	}
 
 	disconnectViewer();
 
@@ -1900,6 +1904,8 @@ bool LLAppViewer::cleanup()
 	// Cleanup Inventory after the UI since it will delete any remaining observers
 	// (Deleted observers should have already removed themselves)
 	gInventory.cleanupInventory();
+
+	LLCoros::getInstance()->printActiveCoroutines();
 
 	LL_INFOS() << "Cleaning up Selections" << LL_ENDL;
 	
@@ -2087,6 +2093,7 @@ bool LLAppViewer::cleanup()
 	mAppCoreHttp.cleanup();
 
 	SUBSYSTEM_CLEANUP(LLFilePickerThread);
+	SUBSYSTEM_CLEANUP(LLDirPickerThread);
 
 	//MUST happen AFTER SUBSYSTEM_CLEANUP(LLCurl)
 	delete sTextureCache;
@@ -2257,6 +2264,7 @@ bool LLAppViewer::initThreads()
 	gMeshRepo.init();
 
 	LLFilePickerThread::initClass();
+	LLDirPickerThread::initClass();
 
 	// *FIX: no error handling here!
 	return true;
@@ -4751,7 +4759,7 @@ void LLAppViewer::idle()
 	LLSmoothInterpolation::updateInterpolants();
 	LLMortician::updateClass();
 	LLFilePickerThread::clearDead();  //calls LLFilePickerThread::notify()
-
+	LLDirPickerThread::clearDead();
 	F32 dt_raw = idle_timer.getElapsedTimeAndResetF32();
 
 	// Cap out-of-control frame times
