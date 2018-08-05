@@ -1114,8 +1114,8 @@ bool LLAppViewer::init()
             LLNotificationsUtil::add("RunLauncher");
         }
     }
- */
 #endif
+ */
 
 #if LL_WINDOWS
 	if (gGLManager.mGLVersion < LLFeatureManager::getInstance()->getExpectedGLVersion())
