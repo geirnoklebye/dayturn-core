@@ -119,10 +119,10 @@ BOOL LLWearableType::getDisableCameraSwitch(LLWearableType::EType type)
 	return entry->mDisableCameraSwitch;
 }
 
-BOOL LLWearableType::getAllowMultiwear(LLWearableType::EType type)
+bool LLWearableType::getAllowMultiwear(LLWearableType::EType type)
 {
 	const WearableEntry *entry = mDictionary.lookup(type);
-	if (!entry) return FALSE;
+	if (!entry) return false;
 	return entry->mAllowMultiwear;
 }
 

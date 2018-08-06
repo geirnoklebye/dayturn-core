@@ -60,11 +60,11 @@ public:
 	const LLWearable*	getBottomWearable(const LLWearableType::EType type) const;
 	U32				getWearableCount(const LLWearableType::EType type) const;
 	U32				getWearableCount(const U32 tex_index) const;
-	BOOL			getWearableIndex(const LLWearable *wearable, U32& index) const;
+	bool			getWearableIndex(const LLWearable *wearable, U32& index) const;
 	U32				getClothingLayerCount() const;
-	BOOL			canAddWearable(const LLWearableType::EType type) const;
+	bool			canAddWearable(const LLWearableType::EType type) const;
 
-	BOOL			isOnTop(LLWearable* wearable) const;
+	bool			isOnTop(LLWearable* wearable) const;
 	
 	static const U32 MAX_CLOTHING_LAYERS = 60;
 
@@ -90,7 +90,7 @@ private:
 	//--------------------------------------------------------------------
 public:
 	LLUUID			computeBakedTextureHash(LLAvatarAppearanceDefines::EBakedTextureIndex baked_index,
-											BOOL generate_valid_hash = TRUE);
+											bool generate_valid_hash = true);
 protected:
 	virtual void	invalidateBakedTextureHash(LLMD5& hash) const {}
 

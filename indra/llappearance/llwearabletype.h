@@ -73,7 +73,7 @@ public:
 	EType 								typeNameToType(const std::string& type_name);
 	LLInventoryType::EIconName 			getIconName(EType type);
 	BOOL 								getDisableCameraSwitch(EType type);
-	BOOL 								getAllowMultiwear(EType type);
+	bool 								getAllowMultiwear(EType type);
 
 	static EType						inventoryFlagsToWearableType(U32 flags);
 
@@ -102,7 +102,7 @@ private:
         const std::string mDefaultNewName;
         LLInventoryType::EIconName mIconName;
         BOOL mDisableCameraSwitch;
-        BOOL mAllowMultiwear;
+        bool mAllowMultiwear;
     };
 
     class LLWearableDictionary : public LLDictionary<LLWearableType::EType, WearableEntry>
