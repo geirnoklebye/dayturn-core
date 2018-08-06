@@ -4516,6 +4516,11 @@ void LLAgent::doTeleportViaLocationLookAt(const LLVector3d& pos_global)
 			// We are snapping back to the last standing location => set it back to zero now
 			gAgent.mRRInterface.mLastStandingLocation.clear();
 			gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
+			// CA: A defeat switch for standtp since it usually does what it's supposed to but not what people expect, for example
+			//     1) sit on storage pod, 2) pod moves to storage location, 3) avatar logs out, 4) avatar logs in,
+			//     5) avatar is re-sat on object, 6) avatar is released from object, stands, and @standtp sends them back to location 2
+			//     although location 1 is what you'd expect to happen
+			if (gSavedSettings.getBOOL("KokuaRLVDefeatStandTP")) return;
 		}
 	}
 //mk
