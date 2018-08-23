@@ -110,7 +110,7 @@ LLWorld::LLWorld() :
 	*(default_texture++) = MAX_WATER_COLOR.mV[2];
 	*(default_texture++) = MAX_WATER_COLOR.mV[3];
 	
-	mDefaultWaterTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), FALSE);
+	mDefaultWaterTexturep = LLViewerTextureManager::getLocalTexture(raw.get(), false);
 	gGL.getTexUnit(0)->bind(mDefaultWaterTexturep);
 	mDefaultWaterTexturep->setAddressMode(LLTexUnit::TAM_CLAMP);
 
@@ -470,7 +470,7 @@ void LLWorld::updateAgentOffset(const LLVector3d &offset_global)
 }
 
 
-BOOL LLWorld::positionRegionValidGlobal(const LLVector3d &pos_global)
+bool LLWorld::positionRegionValidGlobal(const LLVector3d &pos_global)
 {
 	for (region_list_t::iterator iter = mRegionList.begin();
 		 iter != mRegionList.end(); ++iter)
@@ -478,10 +478,10 @@ BOOL LLWorld::positionRegionValidGlobal(const LLVector3d &pos_global)
 		LLViewerRegion* regionp = *iter;
 		if (regionp->pointInRegionGlobal(pos_global))
 		{
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 
@@ -1021,7 +1021,7 @@ void LLWorld::updateWaterObjects()
 			if (!getRegionFromHandle(region_handle))
 			{	// No region at that area, so make water
 				LLVOWater* waterp = (LLVOWater *)gObjectList.createObjectViewer(LLViewerObject::LL_VO_WATER, gAgent.getRegion());
-				waterp->setUseTexture(FALSE);
+				waterp->setUseTexture(false);
 				waterp->setPositionGlobal(LLVector3d(x + rwidth/2,
 													 y + rwidth/2,
 													 256.f + water_height));
@@ -1075,8 +1075,8 @@ void LLWorld::updateWaterObjects()
 			mEdgeWaterObjects[dir] = (LLVOWater *)gObjectList.createObjectViewer(LLViewerObject::LL_VO_VOID_WATER,
 																				 gAgent.getRegion());
 			waterp = mEdgeWaterObjects[dir];
-			waterp->setUseTexture(FALSE);
-			waterp->setIsEdgePatch(TRUE);
+			waterp->setUseTexture(false);
+			waterp->setIsEdgePatch(true);
 			gPipeline.createObject(waterp);
 		}
 

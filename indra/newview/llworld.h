@@ -82,7 +82,7 @@ public:
 	LLViewerRegion*			getRegionFromPosAgent(const LLVector3 &pos);
 	LLViewerRegion*			getRegionFromHandle(const U64 &handle);
 	LLViewerRegion*			getRegionFromID(const LLUUID& region_id);
-	BOOL					positionRegionValidGlobal(const LLVector3d& pos);			// true if position is in valid region
+	bool					positionRegionValidGlobal(const LLVector3d& pos);			// true if position is in valid region
 	LLVector3d				clipToVisibleRegions(const LLVector3d &start_pos, const LLVector3d &end_pos);
 
 	void					updateAgentOffset(const LLVector3d &offset);
@@ -190,10 +190,9 @@ private:
 
 	// meters/point, therefore mWidth * mScale = meters per edge
 	static const F32 mScale;
-
 	static const F32 mWidthInMeters;
 
-	F32 mLandFarClip;					// Far clip distance for land.
+    F32 mLandFarClip;					// Far clip distance for land.
 	LLPatchVertexArray		mLandPatch;
 	S32 mLastPacketsIn;
 	S32 mLastPacketsOut;
@@ -201,7 +200,7 @@ private:
 	U32 mNumOfActiveCachedObjects;
 	U64MicrosecondsImplicit mSpaceTimeUSec;
 
-	BOOL mClassicCloudsEnabled;
+	bool mClassicCloudsEnabled;
 
 	////////////////////////////
 	//
