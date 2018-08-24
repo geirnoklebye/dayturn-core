@@ -3089,7 +3089,7 @@ void	LLScrollListCtrl::copy()
 }
 
 // virtual
-BOOL	LLScrollListCtrl::canCopy() const
+bool	LLScrollListCtrl::canCopy() const
 {
 	return (getFirstSelected() != NULL);
 }
@@ -3102,7 +3102,7 @@ void	LLScrollListCtrl::cut()
 }
 
 // virtual
-BOOL	LLScrollListCtrl::canCut() const
+bool	LLScrollListCtrl::canCut() const
 {
 	return canCopy() && canDoDelete();
 }
@@ -3128,7 +3128,7 @@ void	LLScrollListCtrl::selectAll()
 }
 
 // virtual
-BOOL	LLScrollListCtrl::canSelectAll() const
+bool	LLScrollListCtrl::canSelectAll() const
 {
 	return getCanSelect() && mAllowMultipleSelection && !(mMaxSelectable > 0 && mItemList.size() > mMaxSelectable);
 }
@@ -3140,7 +3140,7 @@ void	LLScrollListCtrl::deselect()
 }
 
 // virtual
-BOOL	LLScrollListCtrl::canDeselect() const
+bool	LLScrollListCtrl::canDeselect() const
 {
 	return getCanSelect();
 }

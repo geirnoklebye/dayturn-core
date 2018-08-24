@@ -411,7 +411,7 @@ LLVOSky::LLVOSky(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp)
 	/// WL PARAMS
 
 	mInitialized = FALSE;
-	mbCanSelect = FALSE;
+	mbCanSelect = false;
 	mUpdateTimer.reset();
 
     mForceUpdateThrottle.setTimerExpirySec(UPDATE_EXPRY);

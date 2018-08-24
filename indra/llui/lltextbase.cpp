@@ -1445,7 +1445,7 @@ void LLTextBase::setValue(const LLSD& value )
 }
 
 //virtual
-BOOL LLTextBase::canDeselect() const 
+bool LLTextBase::canDeselect() const 
 { 
 	return hasSelection(); 
 }

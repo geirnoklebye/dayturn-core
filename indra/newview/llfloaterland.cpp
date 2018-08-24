@@ -1734,7 +1734,7 @@ void LLPanelLandObjects::onCommitList(LLUICtrl* ctrl, void* data)
 {
 	LLPanelLandObjects* self = (LLPanelLandObjects*)data;
 
-	if (FALSE == self->mOwnerList->getCanSelect())
+	if (false == self->mOwnerList->getCanSelect())
 	{
 		return;
 	}

@@ -7080,7 +7080,7 @@ void LLSelectMgr::redo()
 //-----------------------------------------------------------------------------
 // canDoDelete()
 //-----------------------------------------------------------------------------
-BOOL LLSelectMgr::canDoDelete() const
+bool LLSelectMgr::canDoDelete() const
 {
 	bool can_delete = false;
 	// This function is "logically const" - it does not change state in
@@ -7111,7 +7111,7 @@ void LLSelectMgr::doDelete()
 //-----------------------------------------------------------------------------
 // canDeselect()
 //-----------------------------------------------------------------------------
-BOOL LLSelectMgr::canDeselect() const
+bool LLSelectMgr::canDeselect() const
 {
 	return !mSelectedObjects->isEmpty();
 }
