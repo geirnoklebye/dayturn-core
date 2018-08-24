@@ -6590,6 +6590,7 @@ BOOL LLSelectNode::allowOperationOnNode(PermissionBit op, U64 group_proxy_power)
 	return (mPermissions->allowOperationBy(op, proxy_agent_id, group_id));
 }
 
+
 //-----------------------------------------------------------------------------
 // renderOneSilhouette()
 //-----------------------------------------------------------------------------
@@ -7043,7 +7044,7 @@ LLBBox LLSelectMgr::getBBoxOfSelection() const
 //-----------------------------------------------------------------------------
 // canUndo()
 //-----------------------------------------------------------------------------
-BOOL LLSelectMgr::canUndo() const
+bool LLSelectMgr::canUndo() const
 {
 	// Can edit or can move
 	return const_cast<LLSelectMgr*>(this)->mSelectedObjects->getFirstUndoEnabledObject() != NULL; // HACK: casting away constness - MG;
@@ -7062,7 +7063,7 @@ void LLSelectMgr::undo()
 //-----------------------------------------------------------------------------
 // canRedo()
 //-----------------------------------------------------------------------------
-BOOL LLSelectMgr::canRedo() const
+bool LLSelectMgr::canRedo() const
 {
 	return const_cast<LLSelectMgr*>(this)->mSelectedObjects->getFirstEditableObject() != NULL; // HACK: casting away constness - MG
 }
@@ -7126,7 +7127,7 @@ void LLSelectMgr::deselect()
 //-----------------------------------------------------------------------------
 // canDuplicate()
 //-----------------------------------------------------------------------------
-BOOL LLSelectMgr::canDuplicate() const
+bool LLSelectMgr::canDuplicate() const
 {
 	return const_cast<LLSelectMgr*>(this)->mSelectedObjects->getFirstCopyableObject() != NULL; // HACK: casting away constness - MG
 }
