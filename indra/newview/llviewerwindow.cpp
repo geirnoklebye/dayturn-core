@@ -4569,6 +4569,14 @@ void LLViewerWindow::saveImageLocal(LLImageFormatted *image, const snapshot_save
 			&& is_snapshot_name_loc_set); // Or stop if we are rewriting.
 
 	LL_INFOS() << "Saving snapshot to " << filepath << LL_ENDL;
+
+    if (gSavedSettings.getBOOL("FSLogSnapshotsToLocal"))
+    {
+        LLStringUtil::format_map_t args;
+        args["FILENAME"] = filepath;
+        report_to_nearby_chat(LLTrans::getString("SnapshotSavedToDisk", args));
+    }
+    
 	if (image->save(filepath))
 	{
 		playSnapshotAnimAndSound();
