@@ -2702,11 +2702,11 @@ BOOL LLScrollListCtrl::handleKeyHere(KEY key,MASK mask )
 	return handled;
 }
 
-BOOL LLScrollListCtrl::handleUnicodeCharHere(llwchar uni_char)
+bool LLScrollListCtrl::handleUnicodeCharHere(llwchar uni_char)
 {
 	if ((uni_char < 0x20) || (uni_char == 0x7F)) // Control character or DEL
 	{
-		return FALSE;
+		return false;
 	}
 
 	// perform incremental search based on keyboard input
@@ -2790,7 +2790,7 @@ BOOL LLScrollListCtrl::handleUnicodeCharHere(llwchar uni_char)
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 

@@ -386,7 +386,7 @@ public:
 	// inherited from LLFocusableElement
 	/* virtual */ BOOL	handleKey(KEY key, MASK mask, BOOL called_from_parent);
 	/* virtual */ BOOL	handleKeyUp(KEY key, MASK mask, BOOL called_from_parent);
-	/* virtual */ BOOL	handleUnicodeChar(llwchar uni_char, BOOL called_from_parent);
+	/* virtual */ bool	handleUnicodeChar(llwchar uni_char, bool called_from_parent);
 
 	virtual BOOL	handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 									  EDragAndDropType cargo_type,
@@ -519,7 +519,7 @@ public:
 	//virtual BOOL	addChildFromParam(const LLInitParam::BaseBlock& params) { return TRUE; }
 	virtual BOOL	handleKeyHere(KEY key, MASK mask);
 	virtual BOOL	handleKeyUpHere(KEY key, MASK mask);
-	virtual BOOL	handleUnicodeCharHere(llwchar uni_char);
+	virtual bool	handleUnicodeCharHere(llwchar uni_char);
 
 	virtual void	handleReshape(const LLRect& rect, bool by_user);
 	virtual void	dirtyRect();
@@ -583,7 +583,7 @@ private:
 
 	// adapter to blur distinction between handleKey() and handleUnicodeChar()
 	// for childrenHandleCharEvent()
-	BOOL	handleUnicodeCharWithDummyMask(llwchar uni_char, MASK /* dummy */, BOOL from_parent)
+	bool	handleUnicodeCharWithDummyMask(llwchar uni_char, MASK /* dummy */, bool from_parent)
 	{
 		return handleUnicodeChar(uni_char, from_parent);
 	}
