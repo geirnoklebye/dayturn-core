@@ -563,7 +563,7 @@ BOOL LLMenuItemGL::setLabelArg( const std::string& key, const LLStringExplicit& 
 	return TRUE;
 }
 
-void LLMenuItemGL::onVisibilityChange(BOOL new_visibility)
+void LLMenuItemGL::onVisibilityChange(bool new_visibility)
 {
 	if (getMenu())
 	{
@@ -1179,9 +1179,9 @@ void LLMenuItemBranchGL::updateBranchParent(LLView* parentp)
 	}
 }
 
-void LLMenuItemBranchGL::onVisibilityChange( BOOL new_visibility )
+void LLMenuItemBranchGL::onVisibilityChange( bool new_visibility )
 {
-	if (new_visibility == FALSE && getBranch() && !getBranch()->getTornOff())
+	if (new_visibility == false && getBranch() && !getBranch()->getTornOff())
 	{
 		getBranch()->setVisible(false);
 	}

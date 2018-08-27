@@ -51,7 +51,7 @@ public:
     virtual void                onOpen(const LLSD& key) override;
 
     virtual BOOL                isDirty() const override            { return getIsDirty(); }
-    virtual void                onVisibilityChange(BOOL new_visibility) override;
+    virtual void                onVisibilityChange(bool new_visibility) override;
 
     virtual void                refresh() override;
 

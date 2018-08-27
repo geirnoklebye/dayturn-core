@@ -311,7 +311,7 @@ public:
 
 	virtual BOOL	setLabelArg( const std::string& key, const LLStringExplicit& text );
 
-	virtual void	onVisibilityChange ( BOOL new_visibility );
+	virtual void	onVisibilityChange ( bool new_visibility );
 	virtual void	onUpdateScrollToChild(const LLUICtrl * cntrl);
 
 	void			pushVisible(bool visible)	{ mLastVisible = mVisible; setVisible(visible); }

@@ -159,7 +159,7 @@ public:
 	LLFolderViewModelInventory& getRootViewModel() { return mInventoryViewModel; }
 
 	// LLView methods
-	/*virtual*/ void onVisibilityChange(BOOL new_visibility);
+	/*virtual*/ void onVisibilityChange(bool new_visibility);
 	void draw();
 	/*virtual*/ bool handleKeyHere( KEY key, MASK mask );
 	bool handleHover(S32 x, S32 y, MASK mask);

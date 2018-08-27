@@ -311,7 +311,7 @@ public:
 	virtual bool	canClose() { return true; }
 
 	/*virtual*/ void setVisible(bool visible); // do not override
-	/*virtual*/ void onVisibilityChange ( BOOL new_visibility ); // do not override
+	/*virtual*/ void onVisibilityChange ( bool new_visibility ); // do not override
 	
 	void			setFrontmost(bool take_focus = true, bool restore = true);
     virtual void	setVisibleAndFrontmost(bool take_focus=true, const LLSD& key = LLSD());

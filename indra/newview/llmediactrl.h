@@ -156,7 +156,7 @@ public:
         void setAllowFileDownload(bool allow) { mAllowFileDownload = allow; }
 
 		// over-rides
-		virtual void onVisibilityChange ( BOOL new_visibility );
+		virtual void onVisibilityChange ( bool new_visibility );
 		virtual bool handleKeyHere( KEY key, MASK mask);
 		virtual bool handleKeyUpHere(KEY key, MASK mask);
 		virtual bool handleUnicodeCharHere(llwchar uni_char);

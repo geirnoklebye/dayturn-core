@@ -44,7 +44,7 @@ public:
     /*virtual*/ bool handleDoubleClick(S32 x, S32 y, MASK mask);
     /*virtual*/ bool handleScrollWheel(S32 x, S32 y, S32 clicks);
     /*virtual*/ void onTopLost();
-    /*virtual*/ void onVisibilityChange(BOOL new_visibility);
+    /*virtual*/ void onVisibilityChange(bool new_visibility);
 
     /*virtual*/ void draw();
 

@@ -372,7 +372,7 @@ LLInventoryPanel::~LLInventoryPanel()
 }
 
 /*virtual*/
-void LLInventoryPanel::onVisibilityChange(BOOL new_visibility)
+void LLInventoryPanel::onVisibilityChange(bool new_visibility)
 {
     if (new_visibility && mViewsInitialized == VIEWS_UNINITIALIZED)
     {

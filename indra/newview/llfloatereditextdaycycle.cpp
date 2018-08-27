@@ -423,7 +423,7 @@ void LLFloaterEditExtDayCycle::onClose(bool app_quitting)
 }
 
 
-void LLFloaterEditExtDayCycle::onVisibilityChange(BOOL new_visibility)
+void LLFloaterEditExtDayCycle::onVisibilityChange(bool new_visibility)
 {
 }
 

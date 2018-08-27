@@ -84,7 +84,7 @@ public:
     virtual void                onClose(bool app_quitting) override;
     //virtual void                onFocusReceived() override;
     //virtual void                onFocusLost() override;
-    virtual void                onVisibilityChange(BOOL new_visibility) override;
+    virtual void                onVisibilityChange(bool new_visibility) override;
 
     connection_t                setEditCommitSignal(edit_commit_signal_t::slot_type cb);
 
