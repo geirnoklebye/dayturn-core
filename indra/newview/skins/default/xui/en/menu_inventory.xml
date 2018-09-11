@@ -80,14 +80,6 @@
     layout="topleft"
     name="Marketplace Listings Separator" />
     <menu_item_call
-     label="Share"
-     layout="topleft"
-     name="Share"
-     visible="true">
-        <menu_item_call.on_click
-         function="Inventory.Share" />
-    </menu_item_call>
-    <menu_item_call
      label="Open"
      layout="topleft"
      name="Task Open">
@@ -612,7 +604,15 @@
          function="Inventory.DoToSelected"
          parameter="replace_links" />
     </menu_item_call>
-    <menu_item_separator
+  <menu_item_call
+   label="Share"
+   layout="topleft"
+   name="Share"
+   visible="true">
+    <menu_item_call.on_click
+    function="Inventory.Share" />
+  </menu_item_call>
+  <menu_item_separator
      layout="topleft" 
      name="Paste Separator" />
     <menu_item_call
@@ -623,7 +623,10 @@
          function="Inventory.DoToSelected"
          parameter="delete" />
     </menu_item_call>
-    <menu_item_call
+  <menu_item_separator
+     layout="topleft"
+     name="Paste Separator" />
+  <menu_item_call
      label="Delete System Folder"
      layout="topleft"
      name="Delete System Folder">
