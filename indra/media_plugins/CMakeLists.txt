@@ -14,7 +14,7 @@ if (DARWIN)
 endif (DARWIN)
 
 if( LINUX )
-#    add_subdirectory(cef)
+    add_subdirectory(cef)
 endif( LINUX )
 
 if (WINDOWS)

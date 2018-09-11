@@ -6,7 +6,11 @@ if (USESYSTEMLIBS)
     set(CEFPLUGIN OFF CACHE BOOL
         "CEFPLUGIN support for the llplugin/llmedia test apps.")
 else (USESYSTEMLIBS)
-    use_prebuilt_binary(dullahan)
+    if (NOT LINUX)
+        use_prebuilt_binary(dullahan)
+    else (NOT LINUX)
+        use_prebuilt_binary(llceflib)
+    endif (NOT LINUX)
     set(CEFPLUGIN ON CACHE BOOL
         "CEFPLUGIN support for the llplugin/llmedia test apps.")
         set(CEF_INCLUDE_DIR ${LIBS_PREBUILT_DIR}/include/cef)

@@ -1517,6 +1517,7 @@ class LinuxManifest(ViewerManifest):
         with self.prefix(src="../media_plugins", dst="bin/llplugin"):
             self.path("gstreamer010/libmedia_plugin_gstreamer010.so",
                       "libmedia_plugin_gstreamer.so")
+            self.path2basename("cef", "libmedia_plugin_cef.so")
             self.path2basename("libvlc", "libmedia_plugin_libvlc.so")
 
         with self.prefix(src=os.path.join(pkgdir, 'lib', 'vlc', 'plugins'), dst="bin/llplugin/vlc/plugins"):
@@ -1577,9 +1578,9 @@ class LinuxManifest(ViewerManifest):
             # makes some small assumptions about our packaged dir structure
             self.run_command(
                 ["find"] +
-                [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib')] +
-                ['-type', 'f', '!', '-name', '*.py', '!', '-name', 'SL_Launcher',
-                 '!', '-name', 'update_install', '-exec', 'strip', '-S', '{}', ';'])
+                [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib', 'lib32', 'lib64' )] +
+                ['-type', 'f', '!', '-name', '*.py', '!', '-name', 'SL_Launcher', '!', '-name', '*.crt','!', '-name', '*.log', '!', '-path', '*win32*',
+                 '!', '-name', 'update_install', '!', '-name', '*.pak', '!', '-name', '*.dat', '!', '-name', '*.bin', '-exec', 'strip', '-S', '{}', ';'])
 
 class Linux_i686_Manifest(LinuxManifest):
     address_size = 32
