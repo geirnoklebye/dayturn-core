@@ -1096,14 +1096,13 @@ void LLFloaterPreference::onClickSetCache()
 	
 	std::string proposed_name(cur_name);
 
-	LLDirPicker& picker = LLDirPicker::instance();
-	if (! picker.getDir(&proposed_name ) )
-	{
-		return; //Canceled!
+	(new LLDirPickerThread(boost::bind(&LLFloaterPreference::changeCachePath, this, _1, _2), proposed_name))->getFile();
 	}
 
-	std::string dir_name = picker.getDirName();
-	if (!dir_name.empty() && dir_name != cur_name)
+void LLFloaterPreference::changeCachePath(const std::vector<std::string>& filenames, std::string proposed_name)
+{
+	std::string dir_name = filenames[0];
+	if (!dir_name.empty() && dir_name != proposed_name)
 	{
 		std::string new_top_folder(gDirUtilp->getBaseFileName(dir_name));	
 		LLNotificationsUtil::add("CacheWillBeMoved");
@@ -1249,6 +1248,8 @@ void LLFloaterPreference::refreshEnabledState()
 
 	// Cannot have floater active until caps have been received
 	getChild<LLButton>("default_creation_permissions")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
+
+	getChildView("block_list")->setEnabled(LLLoginInstance::getInstance()->authSuccess());
 }
 
 void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
@@ -1399,8 +1400,6 @@ void LLFloaterPreferenceGraphicsAdvanced::refreshEnabledState()
 
 	// now turn off any features that are unavailable
 	disableUnavailableSettings();
-
-	getChildView("block_list")->setEnabled(LLLoginInstance::getInstance()->authSuccess());
 }
 
 // static
@@ -1760,20 +1759,16 @@ void LLFloaterPreference::onClickLogPath()
 	std::string proposed_name(gSavedPerAccountSettings.getString("InstantMessageLogPath"));	 
 	mPriorInstantMessageLogPath.clear();
 	
-	LLDirPicker& picker = LLDirPicker::instance();
-	//Launches a directory picker and waits for feedback
-	if (!picker.getDir(&proposed_name ) )
-	{
-		return; //Canceled!
+
+	(new LLDirPickerThread(boost::bind(&LLFloaterPreference::changeLogPath, this, _1, _2), proposed_name))->getFile();
 	}
 
-	//Gets the path from the directory picker
-	std::string dir_name = picker.getDirName();
-
+void LLFloaterPreference::changeLogPath(const std::vector<std::string>& filenames, std::string proposed_name)
+{
 	//Path changed
-	if(proposed_name != dir_name)
+	if (proposed_name != filenames[0])
 	{
-	gSavedPerAccountSettings.setString("InstantMessageLogPath", dir_name);
+		gSavedPerAccountSettings.setString("InstantMessageLogPath", filenames[0]);
 		mPriorInstantMessageLogPath = proposed_name;
 	
 	// enable/disable 'Delete transcripts button
@@ -2586,18 +2581,6 @@ BOOL LLPanelPreferenceGraphics::postBuild()
 	LLFloaterReg::showInstance("prefs_graphics_advanced");
 	LLFloaterReg::hideInstance("prefs_graphics_advanced");
 
-// Don't do this on Mac as their braindead GL versioning
-// sets this when 8x and 16x are indeed available
-//
-#if !LL_DARWIN
-	if (gGLManager.mIsIntel || gGLManager.mGLVersion < 3.f)
-	{ //remove FSAA settings above "4x"
-		LLComboBox* combo = getChild<LLComboBox>("fsaa");
-		combo->remove("8x");
-		combo->remove("16x");
-	}
-#endif
-
 	resetDirtyChilds();
 	setPresetText();
 
@@ -2770,6 +2753,23 @@ LLFloaterPreferenceProxy::LLFloaterPreferenceProxy(const LLSD& key)
 	mCommitCallbackRegistrar.add("Proxy.OK",                boost::bind(&LLFloaterPreferenceProxy::onBtnOk, this));
 	mCommitCallbackRegistrar.add("Proxy.Cancel",            boost::bind(&LLFloaterPreferenceProxy::onBtnCancel, this));
 	mCommitCallbackRegistrar.add("Proxy.Change",            boost::bind(&LLFloaterPreferenceProxy::onChangeSocksSettings, this));
+}
+
+BOOL LLFloaterPreferenceGraphicsAdvanced::postBuild()
+{
+    // Don't do this on Mac as their braindead GL versioning
+    // sets this when 8x and 16x are indeed available
+    //
+#if !LL_DARWIN
+    if (gGLManager.mIsIntel || gGLManager.mGLVersion < 3.f)
+    { //remove FSAA settings above "4x"
+        LLComboBox* combo = getChild<LLComboBox>("fsaa");
+        combo->remove("8x");
+        combo->remove("16x");
+    }
+#endif
+
+    return TRUE;
 }
 
 void LLFloaterPreferenceGraphicsAdvanced::onOpen(const LLSD& key)

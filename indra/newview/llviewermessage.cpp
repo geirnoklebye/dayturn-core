@@ -26,7 +26,6 @@
 
 #include "llviewerprecompiledheaders.h"
 #include "llviewermessage.h"
-#include "boost/lexical_cast.hpp"
 
 // Linden libraries
 #include "llanimationstates.h"
@@ -158,6 +157,98 @@ const U8 AU_FLAGS_NONE      		= 0x00;
 const U8 AU_FLAGS_HIDETITLE      	= 0x01;
 const U8 AU_FLAGS_CLIENT_AUTOPILOT	= 0x02;
 
+void accept_friendship_coro(std::string url, LLSD notification)
+{
+    LLCore::HttpRequest::policy_t httpPolicy(LLCore::HttpRequest::DEFAULT_POLICY_ID);
+    LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t
+        httpAdapter(new LLCoreHttpUtil::HttpCoroutineAdapter("friendshipResponceErrorProcessing", httpPolicy));
+    LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest);
+    if (url.empty())
+    {
+        LL_WARNS("Friendship") << "Empty capability!" << LL_ENDL;
+        return;
+    }
+
+    LLSD payload = notification["payload"];
+    url += "?from=" + payload["from_id"].asString();
+    url += "&agent_name=\"" + LLURI::escape(gAgentAvatarp->getFullname()) + "\"";
+
+    LLSD result = httpAdapter->getAndSuspend(httpRequest, url);
+
+    LLSD httpResults = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS];
+    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD(httpResults);
+
+    if (!status)
+    {
+        LL_WARNS("Friendship") << "HTTP status, " << status.toTerseString() <<
+            ". friendship offer accept failed." << LL_ENDL;
+    }
+    else
+    {
+        if (!result.has("success") || result["success"].asBoolean() == false)
+        {
+            LL_WARNS("Friendship") << "Server failed to process accepted friendship. " << httpResults << LL_ENDL;
+        }
+        else
+        {
+            LL_DEBUGS("Friendship") << "Adding friend to list" << httpResults << LL_ENDL;
+            // add friend to recent people list
+            LLRecentPeople::instance().add(payload["from_id"]);
+
+            LLNotificationsUtil::add("FriendshipAcceptedByMe",
+                notification["substitutions"], payload);
+        }
+    }
+}
+
+void decline_friendship_coro(std::string url, LLSD notification, S32 option)
+{
+    LLCore::HttpRequest::policy_t httpPolicy(LLCore::HttpRequest::DEFAULT_POLICY_ID);
+    LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t
+        httpAdapter(new LLCoreHttpUtil::HttpCoroutineAdapter("friendshipResponceErrorProcessing", httpPolicy));
+    LLCore::HttpRequest::ptr_t httpRequest(new LLCore::HttpRequest);
+    if (url.empty())
+    {
+        LL_WARNS("Friendship") << "Empty capability!" << LL_ENDL;
+        return;
+    }
+
+    LLSD payload = notification["payload"];
+    url += "?from=" + payload["from_id"].asString();
+
+    LLSD result = httpAdapter->getAndSuspend(httpRequest, url);
+
+    LLSD httpResults = result[LLCoreHttpUtil::HttpCoroutineAdapter::HTTP_RESULTS];
+    LLCore::HttpStatus status = LLCoreHttpUtil::HttpCoroutineAdapter::getStatusFromLLSD(httpResults);
+
+    if (!status)
+    {
+        LL_WARNS("Friendship") << "HTTP status, " << status.toTerseString() <<
+            ". friendship offer decline failed." << LL_ENDL;
+    }
+    else
+    {
+        if (!result.has("success") || result["success"].asBoolean() == false)
+        {
+            LL_WARNS("Friendship") << "Server failed to process declined friendship. " << httpResults << LL_ENDL;
+        }
+        else
+        {
+            LL_DEBUGS("Friendship") << "Friendship declined" << httpResults << LL_ENDL;
+            if (option == 1)
+            {
+                LLNotificationsUtil::add("FriendshipDeclinedByMe",
+                    notification["substitutions"], payload);
+            }
+            else if (option == 2)
+            {
+                // start IM session
+                LLAvatarActions::startIM(payload["from_id"].asUUID());
+            }
+        }
+    }
+}
+
 bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
 {
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
@@ -168,8 +259,6 @@ bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
     // this will be skipped if the user offering friendship is blocked
     if (notification_ptr)
     {
-	    // add friend to recent people list
-	    LLRecentPeople::instance().add(payload["from_id"]);
 
 	    switch(option)
 	    {
@@ -181,6 +270,17 @@ bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
 		    const LLUUID fid = gInventory.findCategoryUUIDForType(LLFolderType::FT_CALLINGCARD);
 
 		    // This will also trigger an onlinenotification if the user is online
+            std::string url = gAgent.getRegionCapability("AcceptFriendship");
+            LL_DEBUGS("Friendship") << "Cap string: " << url << LL_ENDL;
+            if (!url.empty() && payload.has("online") && payload["online"].asBoolean() == false)
+            {
+                LL_DEBUGS("Friendship") << "Accepting friendship via capability" << LL_ENDL;
+                LLCoros::instance().launch("LLMessageSystem::acceptFriendshipOffer",
+                    boost::bind(accept_friendship_coro, url, notification));
+            }
+            else if (payload.has("session_id") && payload["session_id"].asUUID().notNull())
+            {
+                LL_DEBUGS("Friendship") << "Accepting friendship via viewer message" << LL_ENDL;
 		    msg->newMessageFast(_PREHASH_AcceptFriendship);
 		    msg->nextBlockFast(_PREHASH_AgentData);
 		    msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
@@ -191,23 +291,35 @@ bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
 		    msg->addUUIDFast(_PREHASH_FolderID, fid);
 		    msg->sendReliable(LLHost(payload["sender"].asString()));
 
-		    LLSD payload = notification["payload"];
+                // add friend to recent people list
+                LLRecentPeople::instance().add(payload["from_id"]);
 		    LLNotificationsUtil::add("FriendshipAcceptedByMe",
 				    notification["substitutions"], payload);
+            }
+            else
+            {
+                LL_WARNS("Friendship") << "Failed to accept friendship offer, neither capability nor transaction id are accessible" << LL_ENDL;
+            }
 		    break;
 	    }
 	    case 1: // Decline
-	    {
-		    LLSD payload = notification["payload"];
-		    LLNotificationsUtil::add("FriendshipDeclinedByMe",
-				    notification["substitutions"], payload);
-	    }
 	    // fall-through
 	    case 2: // Send IM - decline and start IM session
 		    {
 			    // decline
 			    // We no longer notify other viewers, but we DO still send
 			    // the rejection to the simulator to delete the pending userop.
+                std::string url = gAgent.getRegionCapability("DeclineFriendship");
+                LL_DEBUGS("Friendship") << "Cap string: " << url << LL_ENDL;
+                if (!url.empty() && payload.has("online") && payload["online"].asBoolean() == false)
+                {
+                    LL_DEBUGS("Friendship") << "Declining friendship via capability" << LL_ENDL;
+                    LLCoros::instance().launch("LLMessageSystem::declineFriendshipOffer",
+                        boost::bind(decline_friendship_coro, url, notification, option));
+                }
+                else if (payload.has("session_id") && payload["session_id"].asUUID().notNull())
+                {
+                    LL_DEBUGS("Friendship") << "Declining friendship via viewer message" << LL_ENDL;
 			    msg->newMessageFast(_PREHASH_DeclineFriendship);
 			    msg->nextBlockFast(_PREHASH_AgentData);
 			    msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
@@ -216,10 +328,20 @@ bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
 			    msg->addUUIDFast(_PREHASH_TransactionID, payload["session_id"]);
 			    msg->sendReliable(LLHost(payload["sender"].asString()));
 
+                    if (option == 1) // due to fall-through
+                    {
+                        LLNotificationsUtil::add("FriendshipDeclinedByMe",
+                            notification["substitutions"], payload);
+                    }
+                    else if (option == 2)
+                    {
 			    // start IM session
-			    if(2 == option)
+                        LLAvatarActions::startIM(payload["from_id"].asUUID());
+                    }
+                }
+                else
 			    {
-				    LLAvatarActions::startIM(payload["from_id"].asUUID());
+                    LL_WARNS("Friendship") << "Failed to decline friendship offer, neither capability nor transaction id are accessible" << LL_ENDL;
 			    }
 	    }
 	    default:
@@ -2584,6 +2706,11 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			case CHAT_TYPE_WHISPER:
 				chat.mText = LLTrans::getString("whisper") + " ";
 				break;
+//MK
+				// We should not treat debug and owner chat messages the same way in the RLV
+				// or we open a security loophole.
+////			case CHAT_TYPE_DEBUG_MSG:
+//mk
 			case CHAT_TYPE_OWNER:
 //MK
 			// This is the actual handling of the commands sent by owned objects.
@@ -2638,8 +2765,8 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				}
 				break;
 			}
-//mk
 			case CHAT_TYPE_DEBUG_MSG:
+//mk
 			case CHAT_TYPE_NORMAL:
 			case CHAT_TYPE_DIRECT:
 				break;
@@ -3584,6 +3711,110 @@ void send_agent_update(BOOL force_send, BOOL send_reliable)
 }
 
 
+// sounds can arrive before objects, store them for a short time
+// Note: this is a workaround for MAINT-4743, real fix would be to make
+// server send sound along with object update that creates (rezes) the object
+class PostponedSoundData
+{
+public:
+    PostponedSoundData() :
+        mExpirationTime(0)
+    {}
+    PostponedSoundData(const LLUUID &object_id, const LLUUID &sound_id, const LLUUID& owner_id, const F32 gain, const U8 flags);
+    bool hasExpired() { return LLFrameTimer::getTotalSeconds() > mExpirationTime; }
+
+    LLUUID mObjectId;
+    LLUUID mSoundId;
+    LLUUID mOwnerId;
+    F32 mGain;
+    U8 mFlags;
+    static const F64 MAXIMUM_PLAY_DELAY;
+
+private:
+    F64 mExpirationTime; //seconds since epoch
+};
+const F64 PostponedSoundData::MAXIMUM_PLAY_DELAY = 15.0;
+static F64 postponed_sounds_update_expiration = 0.0;
+static std::map<LLUUID, PostponedSoundData> postponed_sounds;
+
+void set_attached_sound(LLViewerObject *objectp, const LLUUID &object_id, const LLUUID &sound_id, const LLUUID& owner_id, const F32 gain, const U8 flags)
+{
+    if (LLMuteList::getInstance()->isMuted(object_id)) return;
+
+    if (LLMuteList::getInstance()->isMuted(owner_id, LLMute::flagObjectSounds)) return;
+
+    // Don't play sounds from a region with maturity above current agent maturity
+    LLVector3d pos = objectp->getPositionGlobal();
+    if (!gAgent.canAccessMaturityAtGlobal(pos))
+    {
+        return;
+    }
+
+    objectp->setAttachedSound(sound_id, owner_id, gain, flags);
+}
+
+PostponedSoundData::PostponedSoundData(const LLUUID &object_id, const LLUUID &sound_id, const LLUUID& owner_id, const F32 gain, const U8 flags)
+    :
+    mObjectId(object_id),
+    mSoundId(sound_id),
+    mOwnerId(owner_id),
+    mGain(gain),
+    mFlags(flags),
+    mExpirationTime(LLFrameTimer::getTotalSeconds() + MAXIMUM_PLAY_DELAY)
+{
+}
+
+// static
+void update_attached_sounds()
+{
+    if (postponed_sounds.empty())
+    {
+        return;
+    }
+
+    std::map<LLUUID, PostponedSoundData>::iterator iter = postponed_sounds.begin();
+    std::map<LLUUID, PostponedSoundData>::iterator end = postponed_sounds.end();
+    while (iter != end)
+    {
+        std::map<LLUUID, PostponedSoundData>::iterator cur_iter = iter++;
+        PostponedSoundData* data = &cur_iter->second;
+        if (data->hasExpired())
+        {
+            postponed_sounds.erase(cur_iter);
+        }
+        else
+        {
+            LLViewerObject *objectp = gObjectList.findObject(data->mObjectId);
+            if (objectp)
+            {
+                set_attached_sound(objectp, data->mObjectId, data->mSoundId, data->mOwnerId, data->mGain, data->mFlags);
+                postponed_sounds.erase(cur_iter);
+            }
+        }
+    }
+    postponed_sounds_update_expiration = LLFrameTimer::getTotalSeconds() + 2 * PostponedSoundData::MAXIMUM_PLAY_DELAY;
+}
+
+//static
+void clear_expired_postponed_sounds()
+{
+    if (postponed_sounds_update_expiration > LLFrameTimer::getTotalSeconds())
+    {
+        return;
+    }
+    std::map<LLUUID, PostponedSoundData>::iterator iter = postponed_sounds.begin();
+    std::map<LLUUID, PostponedSoundData>::iterator end = postponed_sounds.end();
+    while (iter != end)
+    {
+        std::map<LLUUID, PostponedSoundData>::iterator cur_iter = iter++;
+        PostponedSoundData* data = &cur_iter->second;
+        if (data->hasExpired())
+        {
+            postponed_sounds.erase(cur_iter);
+        }
+    }
+    postponed_sounds_update_expiration = LLFrameTimer::getTotalSeconds() + 2 * PostponedSoundData::MAXIMUM_PLAY_DELAY;
+}
 
 // *TODO: Remove this dependency, or figure out a better way to handle
 // this hack.
@@ -3602,7 +3833,12 @@ void process_object_update(LLMessageSystem *mesgsys, void **user_data)
 	}
 
 	// Update the object...
+	S32 old_num_objects = gObjectList.mNumNewObjects;
 	gObjectList.processObjectUpdate(mesgsys, user_data, OUT_FULL);
+	if (old_num_objects != gObjectList.mNumNewObjects)
+	{
+		update_attached_sounds();
+	}
 }
 
 void process_compressed_object_update(LLMessageSystem *mesgsys, void **user_data)
@@ -3618,7 +3854,12 @@ void process_compressed_object_update(LLMessageSystem *mesgsys, void **user_data
 	}
 
 	// Update the object...
+	S32 old_num_objects = gObjectList.mNumNewObjects;
 	gObjectList.processCompressedObjectUpdate(mesgsys, user_data, OUT_FULL_COMPRESSED);
+	if (old_num_objects != gObjectList.mNumNewObjects)
+	{
+		update_attached_sounds();
+	}
 }
 
 void process_cached_object_update(LLMessageSystem *mesgsys, void **user_data)
@@ -3649,7 +3890,12 @@ void process_terse_object_update_improved(LLMessageSystem *mesgsys, void **user_
 		gObjectData += (U32Bytes)mesgsys->getReceiveSize();
 	}
 
+	S32 old_num_objects = gObjectList.mNumNewObjects;
 	gObjectList.processCompressedObjectUpdate(mesgsys, user_data, OUT_TERSE_IMPROVED);
+	if (old_num_objects != gObjectList.mNumNewObjects)
+	{
+		update_attached_sounds();
+	}
 }
 
 static LLTrace::BlockTimerStatHandle FTM_PROCESS_OBJECTS("Process Kill Objects");
@@ -3871,25 +4117,26 @@ void process_attached_sound(LLMessageSystem *msg, void **user_data)
 	msg->getU8Fast(_PREHASH_DataBlock, _PREHASH_Flags, flags);
 
 	LLViewerObject *objectp = gObjectList.findObject(object_id);
-	if (!objectp)
+	if (objectp)
 	{
-		// we don't know about this object, just bail
-		return;
+		set_attached_sound(objectp, object_id, sound_id, owner_id, gain, flags);
 	}
-	
-	if (LLMuteList::getInstance()->isMuted(object_id)) return;
-	
-	if (LLMuteList::getInstance()->isMuted(owner_id, LLMute::flagObjectSounds)) return;
+	else if (sound_id.notNull())
+	{
+		// we don't know about this object yet, probably it has yet to arrive
+		// std::map for dupplicate prevention.
+		postponed_sounds[object_id] = (PostponedSoundData(object_id, sound_id, owner_id, gain, flags));
+		clear_expired_postponed_sounds();
+	}
+	else
+	{
+		std::map<LLUUID, PostponedSoundData>::iterator iter = postponed_sounds.find(object_id);
+		if (iter != postponed_sounds.end())
+		{
+			postponed_sounds.erase(iter);
 
-	
-	// Don't play sounds from a region with maturity above current agent maturity
-	LLVector3d pos = objectp->getPositionGlobal();
-	if( !gAgent.canAccessMaturityAtGlobal(pos) )
-	{
-		return;
 	}
-	
-	objectp->setAttachedSound(sound_id, owner_id, gain, flags);
+	}
 }
 
 

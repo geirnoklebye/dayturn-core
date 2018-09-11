@@ -53,6 +53,7 @@
 #include "llstylemap.h"
 #include "llslurl.h"
 #include "lllayoutstack.h"
+#include "llnotifications.h"
 #include "llnotificationsutil.h"
 #include "lltoastnotifypanel.h"
 #include "lltooltip.h"
@@ -540,10 +541,24 @@ public:
 		registrar_enable.add("ObjectIcon.Visible", boost::bind(&LLChatHistoryHeader::onObjectIconContextMenuItemVisible, this, _2));
 
 		LLMenuGL* menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_avatar_icon.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
+		if (menu)
+		{
 		mPopupMenuHandleAvatar = menu->getHandle();
+		}
+		else
+		{
+			LL_WARNS() << " Failed to create menu_avatar_icon.xml" << LL_ENDL;
+		}
 
 		menu = LLUICtrlFactory::getInstance()->createFromFile<LLMenuGL>("menu_object_icon.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
+		if (menu)
+		{
 		mPopupMenuHandleObject = menu->getHandle();
+		}
+		else
+		{
+			LL_WARNS() << " Failed to create menu_object_icon.xml" << LL_ENDL;
+		}
 
 		setDoubleClickCallback(boost::bind(&LLChatHistoryHeader::showInspector, this));
 
@@ -637,7 +652,12 @@ public:
 		}  
 
 		mUserNameFont = style_params.font();
-		LLTextBox* user_name = getChild<LLTextBox>("user_name");
+		if (!mUserNameTextBox)
+		{
+			mUserNameTextBox = getChild<LLTextBox>("user_name");
+			mTimeBoxTextBox = getChild<LLTextBox>("time_box");
+		}
+		LLTextBox* user_name = mUserNameTextBox;
 		user_name->setReadOnlyColor(style_params.readonly_color());
 		user_name->setColor(style_params.color());
 
@@ -1344,24 +1364,32 @@ void LLChatHistory::appendMessage(const LLChat& chat, const LLSD &args, const LL
 	// notify processing
 	if (chat.mNotifId.notNull())
 	{
+		LLNotificationPtr notification = LLNotificationsUtil::find(chat.mNotifId);
+		if (notification != NULL)
+		{
 		bool create_toast = true;
+			if (notification->getName() == "OfferFriendship")
+			{
+				// We don't want multiple friendship offers to appear, this code checks if there are previous offers
+				// by iterating though all panels.
+				// Note: it might be better to simply add a "pending offer" flag somewhere
 		for (LLToastNotifyPanel::instance_iter ti(LLToastNotifyPanel::beginInstances())
 			, tend(LLToastNotifyPanel::endInstances()); ti != tend; ++ti)
 		{
 			LLToastNotifyPanel& panel = *ti;
 			LLIMToastNotifyPanel * imtoastp = dynamic_cast<LLIMToastNotifyPanel *>(&panel);
 			const std::string& notification_name = panel.getNotificationName();
-			if (notification_name == "OfferFriendship" && panel.isControlPanelEnabled() && imtoastp)
+					if (notification_name == "OfferFriendship"
+						&& panel.isControlPanelEnabled()
+						&& imtoastp)
 			{
 				create_toast = false;
 				break;
 			}
 		}
+			}
 
 		if (create_toast)
-		{
-		LLNotificationPtr notification = LLNotificationsUtil::find(chat.mNotifId);
-		if (notification != NULL)
 		{
 			LLIMToastNotifyPanel* notify_box = new LLIMToastNotifyPanel(
 					notification, chat.mSessionID, LLRect::null, !use_plain_text_chat_history, mEditor);

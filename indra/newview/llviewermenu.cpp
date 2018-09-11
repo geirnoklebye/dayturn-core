@@ -3833,9 +3833,16 @@ class LLSelfSitDown : public view_listener_t
         }
     };
 
+
+
+bool show_sitdown_self()
+{
+	return isAgentAvatarValid() && !gAgentAvatarp->isSitting();
+}
+
 bool enable_sitdown_self()
 {
-    return isAgentAvatarValid() && !gAgentAvatarp->isSitting() && !gAgentAvatarp->isEditingAppearance() && !gAgent.getFlying();
+	return show_sitdown_self() && !gAgentAvatarp->isEditingAppearance() && !gAgent.getFlying();
 }
 
 class LLCheckPanelPeopleTab : public view_listener_t
@@ -8771,6 +8778,23 @@ void handle_web_browser_test(const LLSD& param)
 	LLWeb::loadURLInternal(url);
 }
 
+bool callback_clear_cache_immediately(const LLSD& notification, const LLSD& response)
+{
+	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
+	if ( option == 0 ) // YES
+	{
+		//clear cache
+		LLAppViewer::instance()->purgeCacheImmediate();
+	}
+
+	return false;
+}
+
+void handle_cache_clear_immediately()
+{
+	LLNotificationsUtil::add("ConfirmClearCache", LLSD(), LLSD(), callback_clear_cache_immediately);
+}
+
 void handle_web_content_test(const LLSD& param)
 {
 	std::string url = param.asString();
@@ -9945,6 +9969,8 @@ void initialize_menus()
 	
 	//Develop (Texture Fetch Debug Console)
 	view_listener_t::addMenu(new LLDevelopTextureFetchDebugger(), "Develop.SetTexFetchDebugger");
+	//Develop (clear cache immediately)
+	commit.add("Develop.ClearCache", boost::bind(&handle_cache_clear_immediately) );
 
 	// Admin >Object
 	view_listener_t::addMenu(new LLAdminForceTakeCopy(), "Admin.ForceTakeCopy");
@@ -9968,7 +9994,8 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLSelfStandUp(), "Self.StandUp");
 	enable.add("Self.EnableStandUp", boost::bind(&enable_standup_self));
 	view_listener_t::addMenu(new LLSelfSitDown(), "Self.SitDown");
-	enable.add("Self.EnableSitDown", boost::bind(&enable_sitdown_self));
+	enable.add("Self.EnableSitDown", boost::bind(&enable_sitdown_self)); 
+	enable.add("Self.ShowSitDown", boost::bind(&show_sitdown_self));
 	view_listener_t::addMenu(new LLSelfRemoveAllAttachments(), "Self.RemoveAllAttachments");
 
 	view_listener_t::addMenu(new LLSelfEnableRemoveAllAttachments(), "Self.EnableRemoveAllAttachments");

@@ -540,6 +540,7 @@ set(viewer_SOURCE_FILES
     llscriptfloater.cpp
     llscrollingpanelparam.cpp
     llscrollingpanelparambase.cpp
+    llsculptidsize.cpp
     llsearchcombobox.cpp
     llsearchhistory.cpp
     llsecapi.cpp
@@ -1156,6 +1157,7 @@ set(viewer_HEADER_FILES
     llscriptruntimeperms.h
     llscrollingpanelparam.h
     llscrollingpanelparambase.h
+    llsculptidsize.h
     llsearchcombobox.h
     llsearchhistory.h
     llsecapi.h
@@ -2077,7 +2079,12 @@ if (DARWIN)
   # These all get set with PROPERTIES
   set(product "Restrained Love")
   # this is the setting for the Python wrapper, see SL-322 and WRAPPER line in Info-SecondLife.plist
-  set(MACOSX_WRAPPER_EXECUTABLE_NAME "SL_Launcher")
+  if (PACKAGE)
+      set(MACOSX_WRAPPER_EXECUTABLE_NAME "SL_Launcher")
+  else (PACKAGE)
+      # force the name of the actual executable to allow running it within Xcode for debugging
+      set(MACOSX_WRAPPER_EXECUTABLE_NAME "../Resources/Second Life Viewer.app/Contents/MacOS/Second Life")
+  endif (PACKAGE)
   set(MACOSX_BUNDLE_INFO_STRING "Second Life Viewer")
   set(MACOSX_BUNDLE_ICON_FILE "secondlife.icns")
   set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.secondlife.indra.viewer")
