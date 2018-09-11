@@ -101,6 +101,7 @@ openjpeg.dll
 *.dll
 .metadata
 build-vc*
+openjpeg.dll__
 syntax: regexp
 fmodapi375win/*
 glob:*.diff
