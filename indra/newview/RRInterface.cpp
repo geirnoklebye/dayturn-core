@@ -4375,8 +4375,12 @@ bool RRInterface::canDetachCategory(LLInventoryCategory* folder, bool with_excep
 	LLInventoryCategory* rlvShare = getRlvShare();
 	bool shared = isUnderRlvShare(folder);
 	if (!rlvShare || !shared) {
-		if (contains ("unsharedunwear")) return false;
-		else return true;
+		if (contains("unsharedunwear")) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	else {
 		if (contains("sharedunwear")) return false;
@@ -4580,7 +4584,13 @@ bool RRInterface::canWear(LLWearableType::EType type, bool from_server /*= false
 bool RRInterface::canDetach(LLInventoryItem* item)
 {
 //	if (!scriptsEnabled() && !getScriptsEnabledOnce()) return false;
-	if (item == NULL) return true;
+	if (item == NULL) {
+		return true;
+	}
+	LLInventoryItem* linked_item = gInventory.getLinkedItem(item->getUUID());
+	if (!linked_item) {
+		return true;
+	}
 	LLVOAvatarSelf* avatarp = gAgentAvatarp;
 	if (!avatarp) return true;
 	
@@ -4592,12 +4602,12 @@ bool RRInterface::canDetach(LLInventoryItem* item)
 
 	if (item->getType() == LLAssetType::AT_OBJECT) {
 		// we'll check canDetachCategory() inside this function
-		return canDetach (avatarp->getWornAttachment(item->getLinkedUUID()));
+		return canDetach (avatarp->getWornAttachment(linked_item->getUUID()));
 	}
 	else if (item->getType() == LLAssetType::AT_CLOTHING) {
-		LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
+		LLInventoryCategory* cat_parent = gInventory.getCategory (linked_item->getParentUUID());
 		if (cat_parent && !canDetachCategory(cat_parent, true)) return false;
-		const LLWearable* wearable = gAgentWearables.getWearableFromItemID (item->getLinkedUUID());
+		const LLWearable* wearable = gAgentWearables.getWearableFromItemID(linked_item->getUUID ());
 		if (wearable) return canUnwear (wearable->getType());
 		return true;
 	}
