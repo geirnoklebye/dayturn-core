@@ -303,8 +303,6 @@ BOOL LLStatusBar::postBuild()
 	mPanelNearByMedia->setFollows(FOLLOWS_TOP | FOLLOWS_RIGHT);
 	mPanelNearByMedia->setVisible(FALSE);
 
-	mScriptOut = getChildView("scriptout");
-
 //MK
 	mParcelInfoPanel = getChild<LLPanel>("parcel_info_panel");
 	mParcelInfoText = getChild<LLTextBox>("parcel_info_text");
