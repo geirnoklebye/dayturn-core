@@ -6831,6 +6831,11 @@ void handle_look_at_selection(const LLSD& param)
 
 void handle_zoom_to_object(LLUUID object_id)
 {
+	if (gRRenabled && gAgent.mRRInterface.contains("camunlock"))
+	{
+		return;
+	}
+
 	const F32 PADDING_FACTOR = 2.f;
 
 	LLViewerObject* object = gObjectList.findObject(object_id);
