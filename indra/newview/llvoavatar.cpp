@@ -6898,7 +6898,7 @@ void LLVOAvatar::sitDown(BOOL bSitting)
 		// standing location if under @standtp
 		if (was_sitting && !gAgent.mRRInterface.mSnappingBackToLastStandingLocation)
 		{
-			if (gAgent.mRRInterface.contains ("standtp") && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
+			if (gAgent.mRRInterface.mContainsStandtp && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
 			//if (!gAgent.mRRInterface.mLastStandingLocation.isExactlyZero() && gAgent.mRRInterface.mParcelLandingType == LLParcel::L_DIRECT)
 			{
 				gAgent.mRRInterface.mSnappingBackToLastStandingLocation = TRUE;
