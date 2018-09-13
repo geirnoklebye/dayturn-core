@@ -3891,7 +3891,8 @@ void LLViewerWindow::renderSelections( BOOL for_gl_pick, BOOL pick_parcel_walls,
 							// when prevented from sit-tping
 							LLVOAvatar* avatar = gAgentAvatarp;
 							if (gRRenabled && (gAgent.mRRInterface.mSittpMax < EXTREMUM
-									|| (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
+								|| (avatar && avatar->mIsSitting && 
+								    (gAgent.mRRInterface.mContainsUnsit || gAgent.mRRInterface.mContainsStandtp))))
 							{
 								if (gAgentAvatarp->isSitting() && gAgentAvatarp->getRoot() == object->getRoot())
 								{

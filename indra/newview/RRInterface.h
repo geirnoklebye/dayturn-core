@@ -270,6 +270,7 @@ public:
 	BOOL mContainsDetach;
 	BOOL mContainsShowinv;
 	BOOL mContainsUnsit;
+	BOOL mContainsStandtp;
 	BOOL mContainsInteract;
 	BOOL mContainsShowworldmap;
 	BOOL mContainsShowminimap;
