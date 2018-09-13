@@ -409,7 +409,7 @@ void LLPanelObject::getState( )
 	{
 		// don't allow modification if someone is sitting on this object and avatar
 		// is prevented from sit-tping
-		if (gAgentAvatarp && gAgentAvatarp->mIsSitting)
+		if (gAgentAvatarp->isSitting() && gAgentAvatarp->getRoot() == objectp->getRoot())
 		{
 			if (objectp->getRootEdit()->isSeat ())
 			{

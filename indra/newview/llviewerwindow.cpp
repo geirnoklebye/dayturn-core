@@ -3899,7 +3899,7 @@ void LLViewerWindow::renderSelections( BOOL for_gl_pick, BOOL pick_parcel_walls,
 							if (gRRenabled && (gAgent.mRRInterface.mSittpMax < EXTREMUM
 									|| (gAgent.mRRInterface.mContainsUnsit && avatar && avatar->mIsSitting)))
 							{
-								if (object->isSeat())
+								if (gAgentAvatarp->isSitting() && gAgentAvatarp->getRoot() == object->getRoot())
 								{
 									moveable_object_selected = FALSE;
 									this_object_movable = FALSE;
