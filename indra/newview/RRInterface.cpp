@@ -237,6 +237,7 @@ void refreshCachedVariable (std::string var)
 	}
 	else if (var == "showinv")				gAgent.mRRInterface.mContainsShowinv = contained;
 	else if (var == "unsit")				gAgent.mRRInterface.mContainsUnsit = contained;
+	else if (var == "standtp") 			gAgent.mRRInterface.mContainsStandtp = contained;
 	else if (var == "interact")				gAgent.mRRInterface.mContainsInteract = contained;
 	else if (var == "showworldmap")			gAgent.mRRInterface.mContainsShowworldmap = contained;
 	else if (var == "showminimap")			gAgent.mRRInterface.mContainsShowminimap = contained;
