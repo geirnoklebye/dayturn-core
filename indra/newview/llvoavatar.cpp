@@ -8394,6 +8394,11 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 
     bool slam_params = false;
     applyParsedAppearanceMessage(*contents, slam_params);
+//MK
+	// We need to reset the skeleton of this avatar because Bento-animated attachments 
+	// still in place may look funny after an object has been detached
+	resetSkeleton(false);
+//mk
 }
 
 void LLVOAvatar::applyParsedAppearanceMessage(LLAppearanceMessageContents& contents, bool slam_params)
