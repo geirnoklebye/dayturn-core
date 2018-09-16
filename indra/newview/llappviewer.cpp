@@ -127,7 +127,9 @@
 #include "llexception.h"
 #if !LL_LINUX
 #include "cef/dullahan.h"
-#endif // LL_LINUX
+#else // !LL_LINUX
+#include "cef/llceflib.h"
+#endif // !!LL_LINUX
 #include "vlc/libvlc_version.h"
 
 // Third party library includes
@@ -3340,7 +3342,7 @@ LLSD LLAppViewer::getViewerInfo() const
 
 	info["LIBCEF_VERSION"] = cef_ver_codec.str();
 #else
-	info["LIBCEF_VERSION"] = "Undefined";
+	info["LIBCEF_VERSION"] = LLCEFLIB_VERSION;;
 #endif
 
 	std::ostringstream vlc_ver_codec;
