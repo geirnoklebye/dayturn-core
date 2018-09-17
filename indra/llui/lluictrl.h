@@ -159,10 +159,10 @@ protected:
 public:
 	// LLView interface
 	/*virtual*/ bool	setLabelArg( const std::string& key, const LLStringExplicit& text );
-	/*virtual*/ BOOL	isCtrl() const;
+	/*virtual*/ bool	isCtrl() const;
 	/*virtual*/ void	onMouseEnter(S32 x, S32 y, MASK mask);
 	/*virtual*/ void	onMouseLeave(S32 x, S32 y, MASK mask);
-	/*virtual*/ BOOL	canFocusChildren() const;
+	/*virtual*/ bool	canFocusChildren() const;
 	/*virtual*/ BOOL 	handleMouseDown(S32 x, S32 y, MASK mask);
 	/*virtual*/ BOOL 	handleMouseUp(S32 x, S32 y, MASK mask);
 	/*virtual*/ BOOL	handleRightMouseDown(S32 x, S32 y, MASK mask);

@@ -123,7 +123,7 @@ void LLDebugView::init()
 	tvp.visible(false);
 	gTextureView = LLUICtrlFactory::create<LLTextureView>(tvp);
 	addChild(gTextureView);
-	//gTextureView->reshape(r.getWidth(), r.getHeight(), TRUE);
+	//gTextureView->reshape(r.getWidth(), r.getHeight(), true);
 }
 
 void LLDebugView::draw()

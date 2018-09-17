@@ -978,7 +978,7 @@ void LLTextureView::draw()
 		addChild(mAvatarTexBar);
 		sendChildToFront(mAvatarTexBar);
 
-		reshape(getRect().getWidth(), getRect().getHeight(), TRUE);
+		reshape(getRect().getWidth(), getRect().getHeight(), true);
 
 		LLUI::popMatrix();
 		LLUI::pushMatrix();

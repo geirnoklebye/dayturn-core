@@ -289,9 +289,9 @@ LLFolderView::~LLFolderView( void )
 	mViewModel = NULL;
 }
 
-BOOL LLFolderView::canFocusChildren() const
+bool LLFolderView::canFocusChildren() const
 {
-	return FALSE;
+	return false;
 }
 
 void LLFolderView::addFolder( LLFolderViewFolder* folder)
@@ -352,7 +352,7 @@ void LLFolderView::filter( LLFolderViewFilter& filter )
 	getViewModelItem()->filter(filter);
 }
 
-void LLFolderView::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLFolderView::reshape(S32 width, S32 height, bool called_from_parent)
 {
 	LLRect scroll_rect;
 	if (mScrollContainer)
@@ -1705,7 +1705,7 @@ void LLFolderView::update()
 		mNeedsAutoSelect = false;
 	}
 
-  BOOL is_visible = isInVisibleChain();
+  bool is_visible = isInVisibleChain();
 
   //Puts folders/items in proper positions
   // arrange() takes the model filter flag into account and call sort() if necessary (CHUI-849)
@@ -1833,7 +1833,7 @@ void LLFolderView::updateRenamerPosition()
 
 		S32 width = llmax(llmin(mRenameItem->getRect().getWidth() - x, scroller_rect.getWidth() - x - getRect().mLeft), MINIMUM_RENAMER_WIDTH);
 		S32 height = mRenameItem->getItemHeight() - RENAME_HEIGHT_PAD;
-		mRenamer->reshape( width, height, TRUE );
+		mRenamer->reshape( width, height, true );
 	}
 }
 

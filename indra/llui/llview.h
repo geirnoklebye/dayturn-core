@@ -214,15 +214,15 @@ public:
 	// Some UI widgets need to be added as controls.  Others need to
 	// be added as regular view children.  isCtrl should return TRUE
 	// if a widget needs to be added as a ctrl
-	virtual BOOL isCtrl() const;
+	virtual bool isCtrl() const;
 
 	virtual bool isPanel() const;
 	
 	//
 	// MANIPULATORS
 	//
-	void		setMouseOpaque( BOOL b )		{ mMouseOpaque = b; }
-	BOOL		getMouseOpaque() const			{ return mMouseOpaque; }
+	void		setMouseOpaque( bool b )		{ mMouseOpaque = b; }
+	bool		getMouseOpaque() const			{ return mMouseOpaque; }
 	void		setToolTip( const LLStringExplicit& msg );
 	BOOL		setToolTipArg( const LLStringExplicit& key, const LLStringExplicit& text );
 	void		setToolTipArgs( const LLStringUtil::format_map_t& args );
@@ -272,12 +272,12 @@ public:
 	S32 getDefaultTabGroup() const				{ return mDefaultTabGroup; }
 	S32 getLastTabGroup()						{ return mLastTabGroup; }
 
-	BOOL		isInVisibleChain() const;
-	BOOL		isInEnabledChain() const;
+	bool		isInVisibleChain() const;
+	bool		isInEnabledChain() const;
 
 	void		setFocusRoot(BOOL b)			{ mIsFocusRoot = b; }
 	BOOL		isFocusRoot() const				{ return mIsFocusRoot; }
-	virtual BOOL canFocusChildren() const;
+	virtual bool canFocusChildren() const;
 
 	BOOL focusNextRoot();
 	BOOL focusPrevRoot();
@@ -375,7 +375,7 @@ public:
 	//
 
 	// Default behavior is to use reshape flags to resize child views
-	virtual void	reshape(S32 width, S32 height, BOOL called_from_parent = TRUE);
+	virtual void	reshape(S32 width, S32 height, bool called_from_parent = true);
 	virtual void	translate( S32 x, S32 y );
 	void			setOrigin( S32 x, S32 y )	{ mRect.translate( x - mRect.mLeft, y - mRect.mBottom ); }
 	BOOL			translateIntoRect( const LLRect& constraint, S32 min_overlap_pixels = S32_MAX);
@@ -613,7 +613,7 @@ private:
 
 	bool		mEnabled;		// Enabled means "accepts input that has an effect on the state of the application."
 								// A disabled view, for example, may still have a scrollbar that responds to mouse events.
-	BOOL		mMouseOpaque;	// Opaque views handle all mouse events that are over their rect.
+	bool		mMouseOpaque;	// Opaque views handle all mouse events that are over their rect.
 								// isNull() is true if none.
 	 
 	// <FS:ND> LLUIString comes with a tax of 92 byte (Numbers apply to Win32).

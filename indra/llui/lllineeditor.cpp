@@ -349,7 +349,7 @@ void LLLineEditor::updateHistory()
 	}
 }
 
-void LLLineEditor::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLLineEditor::reshape(S32 width, S32 height, bool called_from_parent)
 {
 	LLUICtrl::reshape(width, height, called_from_parent);
 	updateTextPadding(); // For clamping side-effect.

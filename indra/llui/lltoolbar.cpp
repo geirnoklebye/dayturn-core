@@ -942,7 +942,7 @@ void LLToolBar::updateLayoutAsNeeded()
 	if (!mButtons.empty())
 	{
 		mButtonPanel->setVisible(true);
-		mButtonPanel->setMouseOpaque(TRUE);
+		mButtonPanel->setMouseOpaque(true);
 	}
 
 	// don't clear flag until after we've resized ourselves, to avoid laying out every frame
@@ -955,12 +955,12 @@ void LLToolBar::draw()
 	if (mButtons.empty())
 	{
 		mButtonPanel->setVisible(false);
-		mButtonPanel->setMouseOpaque(FALSE);
+		mButtonPanel->setMouseOpaque(false);
 	}
 	else
 	{
 		mButtonPanel->setVisible(true);
-		mButtonPanel->setMouseOpaque(TRUE);
+		mButtonPanel->setMouseOpaque(true);
 	}
 
 	// Update enable/disable state and highlight state for editable toolbars
@@ -1024,7 +1024,7 @@ void LLToolBar::draw()
 	mDragAndDropTarget = false;
 }
 
-void LLToolBar::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLToolBar::reshape(S32 width, S32 height, bool called_from_parent)
 {
 	LLUICtrl::reshape(width, height, called_from_parent);
 	mNeedsLayout = true;
@@ -1389,7 +1389,7 @@ void LLToolBarButton::onCommit()
 	}
 }
 
-void LLToolBarButton::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLToolBarButton::reshape(S32 width, S32 height, bool called_from_parent)
 {
 	LLButton::reshape(mWidthRange.clamp(width), height, called_from_parent);
 	// <FS:Zi> Remember first width this button was set to, so we can calculate the equalized layout

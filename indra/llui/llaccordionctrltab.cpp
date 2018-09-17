@@ -64,7 +64,7 @@ public:
 
 	virtual void draw();
 
-	virtual void reshape(S32 width, S32 height, BOOL called_from_parent = TRUE);
+	virtual void reshape(S32 width, S32 height, bool called_from_parent = true);
 
 	virtual bool postBuild();
 
@@ -249,7 +249,7 @@ void LLAccordionCtrlTab::LLAccordionCtrlTabHeader::draw()
 	LLUICtrl::draw();
 }
 
-void LLAccordionCtrlTab::LLAccordionCtrlTabHeader::reshape(S32 width, S32 height, BOOL called_from_parent /* = TRUE */)
+void LLAccordionCtrlTab::LLAccordionCtrlTabHeader::reshape(S32 width, S32 height, bool called_from_parent /* = true */)
 {
 	S32 header_height = mHeaderTextbox->getTextPixelHeight();
 
@@ -380,7 +380,7 @@ LLAccordionCtrlTab::LLAccordionCtrlTab(const LLAccordionCtrlTab::Params&p)
 		LLFocusableElement::setFocusLostCallback(boost::bind(&LLAccordionCtrlTab::deselectOnFocusLost, this));
 	}
 
-	reshape(100, 200,FALSE);
+	reshape(100, 200, false);
 }
 
 LLAccordionCtrlTab::~LLAccordionCtrlTab()
@@ -412,7 +412,7 @@ void LLAccordionCtrlTab::setDisplayChildren(bool display)
 
 }
 
-void LLAccordionCtrlTab::reshape(S32 width, S32 height, BOOL called_from_parent /* = TRUE */)
+void LLAccordionCtrlTab::reshape(S32 width, S32 height, bool called_from_parent /* = true */)
 {
 	LLRect headerRect;
 
@@ -441,7 +441,7 @@ void LLAccordionCtrlTab::changeOpenClose(bool is_open)
 		mExpandedHeight = getRect().getHeight();
 
 	setDisplayChildren(!is_open);
-	reshape(getRect().getWidth(), getRect().getHeight(), FALSE);
+	reshape(getRect().getWidth(), getRect().getHeight(), false);
 	if (mCommitSignal)
 	{
 		(*mCommitSignal)(this, getDisplayChildren());
@@ -644,7 +644,7 @@ void LLAccordionCtrlTab::setHeaderVisible(bool value)
 	mHeaderVisible = value;
 	if(mHeader)
 		mHeader->setVisible(value);
-	reshape(getRect().getWidth(), getRect().getHeight(), FALSE);
+	reshape(getRect().getWidth(), getRect().getHeight(), false);
 };
 
 //virtual

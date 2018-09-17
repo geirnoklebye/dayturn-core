@@ -494,7 +494,7 @@ void LLComboBox::setButtonVisible(bool visible)
 			text_entry_rect.mRight -= llmax(8,arrow_width) + 2 * drop_shadow_button;
 		}
 		//mTextEntry->setRect(text_entry_rect);
-		mTextEntry->reshape(text_entry_rect.getWidth(), text_entry_rect.getHeight(), TRUE);
+		mTextEntry->reshape(text_entry_rect.getWidth(), text_entry_rect.getHeight(), true);
 	}
 }
 

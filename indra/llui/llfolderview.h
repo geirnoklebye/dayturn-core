@@ -109,7 +109,7 @@ public:
 	LLFolderView(const Params&);
 	virtual ~LLFolderView( void );
 
-	virtual BOOL canFocusChildren() const;
+	virtual bool canFocusChildren() const;
 
 	virtual const LLFolderView*	getRoot() const { return this; }
 	virtual LLFolderView*	getRoot() { return this; }
@@ -205,8 +205,8 @@ public:
 								   void* cargo_data,
 								   EAcceptance* accept,
 								   std::string& tooltip_msg);
-	/*virtual*/ void reshape(S32 width, S32 height, BOOL called_from_parent = TRUE);
-	/*virtual*/ void onMouseLeave(S32 x, S32 y, MASK mask) { setShowSelectionContext(false); }
+	/*virtual*/ void reshape(S32 width, S32 height, bool called_from_parent = true);
+	/*virtual*/ void onMouseLeave(S32 x, S32 y, MASK mask) { setShowSelectionContext(FALSE); }
 	virtual void draw();
 	virtual void deleteAllChildren();
 

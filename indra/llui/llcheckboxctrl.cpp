@@ -195,7 +195,7 @@ void LLCheckBoxCtrl::clear()
 	setValue( false );
 }
 
-void LLCheckBoxCtrl::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLCheckBoxCtrl::reshape(S32 width, S32 height, bool called_from_parent)
 {
     LLRect rect = getRect();
     S32 delta_width = width - rect.getWidth();
@@ -273,7 +273,7 @@ bool LLCheckBoxCtrl::getTentative() const
 void LLCheckBoxCtrl::setLabel( const LLStringExplicit& label )
 {
 	mLabel->setText( label );
-	reshape(getRect().getWidth(), getRect().getHeight(), FALSE);
+	reshape(getRect().getWidth(), getRect().getHeight(), false);
 }
 
 std::string LLCheckBoxCtrl::getLabel() const
@@ -284,7 +284,7 @@ std::string LLCheckBoxCtrl::getLabel() const
 bool LLCheckBoxCtrl::setLabelArg( const std::string& key, const LLStringExplicit& text )
 {
 	bool res = mLabel->setTextArg(key, text);
-	reshape(getRect().getWidth(), getRect().getHeight(), FALSE);
+	reshape(getRect().getWidth(), getRect().getHeight(), false);
 	return res;
 }
 

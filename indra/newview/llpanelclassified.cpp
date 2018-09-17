@@ -127,7 +127,7 @@ bool LLPanelClassifiedInfo::postBuild()
 	return true;
 }
 
-void LLPanelClassifiedInfo::reshape(S32 width, S32 height, BOOL called_from_parent /* = TRUE */)
+void LLPanelClassifiedInfo::reshape(S32 width, S32 height, bool called_from_parent /* = true */)
 {
 	LLPanel::reshape(width, height, called_from_parent);
 

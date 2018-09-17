@@ -93,7 +93,7 @@ public:
 
 	virtual void		setEnabled( bool b );
 
-	virtual void		reshape(S32 width, S32 height, BOOL called_from_parent = TRUE);
+	virtual void		reshape(S32 width, S32 height, bool called_from_parent = true);
 
 	// LLUICtrl interface
 	virtual void		setValue(const LLSD& value );

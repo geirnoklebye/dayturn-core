@@ -174,7 +174,7 @@ public:
 
 	// view overrides
 	virtual void	draw();
-	virtual void	reshape(S32 width,S32 height,BOOL called_from_parent=TRUE);
+	virtual void	reshape(S32 width,S32 height,bool called_from_parent=true);
 	virtual void	onFocusReceived();
 	virtual void	onFocusLost();
 	virtual void	setEnabled(bool enabled);

@@ -1282,7 +1282,7 @@ bool LLTextBase::handleToolTip(S32 x, S32 y, MASK mask)
 }
 
 
-void LLTextBase::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLTextBase::reshape(S32 width, S32 height, bool called_from_parent)
 {
 	if (width != getRect().getWidth() || height != getRect().getHeight() || LLView::sForceReshape)
 	{

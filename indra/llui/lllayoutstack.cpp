@@ -164,7 +164,7 @@ void LLLayoutPanel::setVisible(bool visible)
 	LLPanel::setVisible(visible);
 }
 
-void LLLayoutPanel::reshape( S32 width, S32 height, BOOL called_from_parent /*= TRUE*/ )
+void LLLayoutPanel::reshape( S32 width, S32 height, bool called_from_parent /*= true*/ )
 {
 	if (width == getRect().getWidth() && height == getRect().getHeight() && !LLView::sForceReshape) return;
 
@@ -1035,7 +1035,7 @@ void LLLayoutStack::updatePanelRect( LLLayoutPanel* resized_panel, const LLRect&
 	//normalizeFractionalSizes();
 }
 
-void LLLayoutStack::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLLayoutStack::reshape(S32 width, S32 height, bool called_from_parent)
 {
 	mNeedsLayout = true;
 	LLView::reshape(width, height, called_from_parent);

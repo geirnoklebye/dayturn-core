@@ -422,7 +422,7 @@ bool LLUICtrl::handleDoubleClick(S32 x, S32 y, MASK mask)
 }
 
 // can't tab to children of a non-tab-stop widget
-BOOL LLUICtrl::canFocusChildren() const
+bool LLUICtrl::canFocusChildren() const
 {
 	return hasTabStop();
 }
@@ -447,9 +447,9 @@ void LLUICtrl::onCommit()
 }
 
 //virtual
-BOOL LLUICtrl::isCtrl() const
+bool LLUICtrl::isCtrl() const
 {
-	return TRUE;
+	return true;
 }
 
 //virtual 

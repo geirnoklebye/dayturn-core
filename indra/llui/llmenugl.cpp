@@ -1677,7 +1677,7 @@ protected:
 
 public:
 	/*virtual*/ void draw();
-	/*virtual*/ void reshape(S32 width, S32 height, BOOL called_from_parent);
+	/*virtual*/ void reshape(S32 width, S32 height, bool called_from_parent);
 	/*virtual*/ void setEnabled(bool enabled);
 	virtual void onCommit( void );
 
@@ -1728,7 +1728,7 @@ void LLMenuScrollItem::draw()
 }
 
 /*virtual*/
-void LLMenuScrollItem::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLMenuScrollItem::reshape(S32 width, S32 height, bool called_from_parent)
 {
 	mArrowBtn->reshape(width, height, called_from_parent);
 	LLView::reshape(width, height, called_from_parent);
@@ -3848,7 +3848,7 @@ bool LLMenuHolderGL::handleKey(KEY key, MASK mask, bool called_from_parent)
 	
 }
 
-void LLMenuHolderGL::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLMenuHolderGL::reshape(S32 width, S32 height, bool called_from_parent)
 {
 	if (width != getRect().getWidth() || height != getRect().getHeight())
 	{

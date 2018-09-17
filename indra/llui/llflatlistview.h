@@ -113,7 +113,7 @@ public:
 	};
 	
 	// disable traversal when finding widget to hand focus off to
-	/*virtual*/ BOOL canFocusChildren() const { return FALSE; }
+	/*virtual*/ bool canFocusChildren() const { return false; }
 
 	/**
 	 * Connects callback to signal called when Return key is pressed.
@@ -126,7 +126,7 @@ public:
 	boost::signals2::connection setDoubleClickCallback( const mouse_signal_t::slot_type& cb ) { return mItemsPanel->setDoubleClickCallback(cb); }
 
 	/** Overridden LLPanel's reshape, height is ignored, the list sets its height to accommodate all items */
-	virtual void reshape(S32 width, S32 height, BOOL called_from_parent  = TRUE);
+	virtual void reshape(S32 width, S32 height, bool called_from_parent  = true);
 
 	/** Returns full rect of child panel */
 	const LLRect& getItemsRect() const;

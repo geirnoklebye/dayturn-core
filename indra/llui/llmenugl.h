@@ -825,7 +825,7 @@ public:
 	virtual ~LLMenuHolderGL() {}
 
 	virtual BOOL hideMenus();
-	void reshape(S32 width, S32 height, BOOL called_from_parent = TRUE);
+	void reshape(S32 width, S32 height, bool called_from_parent = true);
 	void setCanHide(BOOL can_hide) { mCanHide = can_hide; }
 
 	// LLView functionality

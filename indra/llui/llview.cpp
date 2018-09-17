@@ -215,9 +215,9 @@ LLView::~LLView()
 }
 
 // virtual
-BOOL LLView::isCtrl() const
+bool LLView::isCtrl() const
 {
-	return FALSE;
+	return false;
 }
 
 // virtual
@@ -402,16 +402,16 @@ void LLView::removeChild(LLView* child)
 	updateBoundingRect();
 }
 
-BOOL LLView::isInVisibleChain() const
+bool LLView::isInVisibleChain() const
 {
-	BOOL visible = TRUE;
+	bool visible = true;
 
 	const LLView* viewp = this;
 	while(viewp)
 	{
 		if (!viewp->getVisible())
 		{
-			visible = FALSE;
+			visible = false;
 			break;
 		}
 		viewp = viewp->getParent();
@@ -420,16 +420,16 @@ BOOL LLView::isInVisibleChain() const
 	return visible;
 }
 
-BOOL LLView::isInEnabledChain() const
+bool LLView::isInEnabledChain() const
 {
-	BOOL enabled = TRUE;
+	bool enabled = true;
 
 	const LLView* viewp = this;
 	while(viewp)
 	{
 		if (!viewp->getEnabled())
 		{
-			enabled = FALSE;
+			enabled = false;
 			break;
 		}
 		viewp = viewp->getParent();
@@ -502,9 +502,9 @@ const bool LLView::isAvailableOnThisGrid() const
 }
 
 // virtual
-BOOL LLView::canFocusChildren() const
+bool LLView::canFocusChildren() const
 {
-	return TRUE;
+	return true;
 }
 
 //virtual
@@ -1423,7 +1423,7 @@ void LLView::drawChild(LLView* childp, S32 x_offset, S32 y_offset, BOOL force_dr
 }
 
 
-void LLView::reshape(S32 width, S32 height, BOOL called_from_parent)
+void LLView::reshape(S32 width, S32 height, bool called_from_parent)
 {
 	// compute how much things changed and apply reshape logic to children
 	S32 delta_width = width - getRect().getWidth();

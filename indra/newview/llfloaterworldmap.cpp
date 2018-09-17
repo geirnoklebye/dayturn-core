@@ -488,7 +488,7 @@ bool LLFloaterWorldMap::handleScrollWheel(S32 x, S32 y, S32 clicks)
 
 
 // virtual
-void LLFloaterWorldMap::reshape( S32 width, S32 height, BOOL called_from_parent )
+void LLFloaterWorldMap::reshape( S32 width, S32 height, bool called_from_parent )
 {
 	LLFloater::reshape( width, height, called_from_parent );
 }
@@ -602,14 +602,14 @@ void LLFloaterWorldMap::draw()
 //	//	getChildView("Clear")->setEnabled((BOOL)tracking_status);
 //	getChildView("Show Destination")->setEnabled((BOOL)tracking_status || LLWorldMap::getInstance()->isTracking());
 //	getChildView("copy_slurl")->setEnabled((mSLURL.isValid()) );
-	teleport_btn->setEnabled((BOOL)tracking_status);
+	teleport_btn->setEnabled(tracking_status);
 	//clear_btn->setEnabled((BOOL)tracking_status);
-	show_destination_btn->setEnabled((BOOL)tracking_status || LLWorldMap::getInstance()->isTracking());
+	show_destination_btn->setEnabled(tracking_status || LLWorldMap::getInstance()->isTracking());
 	copy_slurl_btn->setEnabled((mSLURL.isValid()) );
 	// </FS:Ansariel> Performance improvement
 
-	setMouseOpaque(TRUE);
-	getDragHandle()->setMouseOpaque(TRUE);
+	setMouseOpaque(true);
+	getDragHandle()->setMouseOpaque(true);
 	
 	//RN: snaps to zoom value because interpolation caused jitter in the text rendering
 	// <FS:Ansariel> Performance improvement
@@ -694,7 +694,7 @@ void LLFloaterWorldMap::processParcelInfo(const LLParcelData& parcel_data, const
 
 	// KKA-676 if the parcel is on sale and displaying for sale info is enabled add sale info to the tracker text
 	// so that you don't have to exactly click on the for sale tag to get the price information
-	if (gSavedSettings.getBOOL("MapShowLandForSale"))
+	if (gSavedSettings.getbool("MapShowLandForSale"))
 	{
 		// a non_zero parcel_data.sale_price doesn't indicate for sale reliably, instead try to locate the id
 		// in the sim_info - based on code in llworldmapview, which gives the bonus we can get the formatted
