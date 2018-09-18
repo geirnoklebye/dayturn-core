@@ -402,25 +402,32 @@ void LLPanelObject::getState( )
 		enable_rotate = FALSE;
 	}
 	
-	//MK
+//MK
 	LLVOAvatarSelf* avatar = gAgentAvatarp;
-	if (gRRenabled && 
-		(gAgent.mRRInterface.mSittpMax < EXTREMUM
-		|| avatar && avatar->mIsSitting && 
-		  ((gAgent.mRRInterface.mContainsUnsit || gAgent.mRRInterface.mContainsStandtp))))
-	{
-		// don't allow modification if someone is sitting on this object and avatar
-		// is prevented from sit-tping
-		if (gAgentAvatarp->isSitting() && gAgentAvatarp->getRoot() == objectp->getRoot())
+//NP
+	if (gRRenabled)
+        { 
+		if (gAgent.mRRInterface.mSittpMax < EXTREMUM
+			|| (avatar && avatar->mIsSitting && 
+			  ((gAgent.mRRInterface.mContainsUnsit || gAgent.mRRInterface.mContainsStandtp))))
+//np
 		{
-			if (objectp->getRootEdit()->isSeat ())
+			// don't allow modification if someone is sitting on this object and avatar
+			// is prevented from sit-tping
+			if (gAgentAvatarp->isSitting() && gAgentAvatarp->getRoot() == objectp->getRoot())
 			{
-				enable_move = FALSE;
-				enable_scale = FALSE;
-				enable_rotate = FALSE;
+				if (objectp->getRootEdit()->isSeat ())
+				{
+					enable_move = FALSE;
+					enable_scale = FALSE;
+					enable_rotate = FALSE;
+				}
 			}
 		}
-	}
+//NP
+        }
+
+//np
 //mk
 
 	LLVector3 vec;
