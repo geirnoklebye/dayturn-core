@@ -3589,7 +3589,7 @@ bool handle_go_to()
 
 	LLViewerParcelMgr::getInstance()->deselectLand();
 
-	if (isAgentAvatarValid() && !gSavedSettings.getBOOL("AutoPilotLocksCamera"))
+	if (isAgentAvatarValid() && !gSavedSettings.getbool("AutoPilotLocksCamera"))
 	{
 		gAgentCamera.setFocusGlobal(gAgentCamera.getFocusTargetGlobal(), gAgentAvatarp->getID());
 	}

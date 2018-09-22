@@ -79,7 +79,7 @@
 
 LLPointer<LLVOAvatarSelf> gAgentAvatarp = NULL;
 
-BOOL isAgentAvatarValid()
+bool isAgentAvatarValid()
 {
 	return (gAgentAvatarp.notNull() && gAgentAvatarp->isValid());
 }
@@ -1483,7 +1483,7 @@ BOOL LLVOAvatarSelf::isLocalTextureDataFinal(const LLViewerTexLayerSet* layerset
 }
 
 
-BOOL LLVOAvatarSelf::isAllLocalTextureDataFinal() const
+bool LLVOAvatarSelf::isAllLocalTextureDataFinal() const
 {
 	// <FS:Ansariel> Replace frequently called gSavedSettings
 	//const U32 desired_tex_discard_level = gSavedSettings.getU32("TextureDiscardLevel"); 
@@ -1508,12 +1508,12 @@ BOOL LLVOAvatarSelf::isAllLocalTextureDataFinal() const
 				if ((local_discard_level > (S32)(desired_tex_discard_level)) ||
 					(local_discard_level < 0 ))
 				{
-					return FALSE;
+					return false;
 				}
 			}
 		}
 	}
-	return TRUE;
+	return true;
 }
 
 bool LLVOAvatarSelf::isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex type, U32 index) const

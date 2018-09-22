@@ -902,11 +902,11 @@ void LLParticlePartition::getGeometry(LLSpatialGroup* group)
 
 		object->getGeometry(facep->getTEOffset(), cur_vert, cur_norm, cur_tc, cur_col, cur_glow, cur_idx);
 		
-		BOOL has_glow = FALSE;
+		bool has_glow = false;
 
 		if (cur_glow.get() != start_glow)
 		{
-			has_glow = TRUE;
+			has_glow = true;
 		}
 
 		llassert(facep->getGeomCount() == 4);

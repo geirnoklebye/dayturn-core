@@ -892,11 +892,9 @@ bool less_than_max_mag(const LLVector4a& vec)
 	return lt == 0x7;
 }
 
-BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
-                             const LLMatrix4& mat_vert_in, BOOL global_volume)
+bool LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
+                             const LLMatrix4& mat_vert_in, bool global_volume)
 {
-	LL_PROFILE_ZONE_SCOPED_CATEGORY_FACE
-
 	//get bounding box
 	if (mDrawablep->isState(LLDrawable::REBUILD_VOLUME | LLDrawable::REBUILD_POSITION | LLDrawable::REBUILD_RIGGED))
 	{
@@ -918,7 +916,7 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
         {
             LL_DEBUGS("RiggedBox") << "skipping face " << f << ", bad num vertices " 
                                    << face.mNumVertices << " " << face.mNumIndices << " " << face.mWeights << LL_ENDL;
-            return FALSE;
+            return false;
         }
         
 		//VECTORIZE THIS
@@ -958,7 +956,7 @@ BOOL LLFace::genVolumeBBoxes(const LLVolume &volume, S32 f,
 		updateCenterAgent();
 	}
 
-	return TRUE;
+	return true;
 }
 
 

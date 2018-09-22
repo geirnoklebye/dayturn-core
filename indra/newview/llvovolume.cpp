@@ -1886,9 +1886,9 @@ BOOL LLVOVolume::genBBoxes(BOOL force_global, BOOL should_update_octree_bounds)
             continue;
         }
 
-        BOOL face_res = face->genVolumeBBoxes(*volume, i,
-            mRelativeXform,
-            (mVolumeImpl && mVolumeImpl->isVolumeGlobal()) || force_global);
+        bool face_res = face->genVolumeBBoxes(*volume, i,
+                                              mRelativeXform, 
+                                              (mVolumeImpl && mVolumeImpl->isVolumeGlobal()) || force_global);
         res &= face_res; // note that this result is never used
 
         // MAINT-8264 - ignore bboxes of ill-formed faces.

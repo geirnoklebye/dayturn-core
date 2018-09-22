@@ -381,7 +381,7 @@ public:
 	void 					debugBakedTextureUpload(LLAvatarAppearanceDefines::EBakedTextureIndex index, BOOL finished);
 	static void				debugOnTimingLocalTexLoaded(BOOL success, LLViewerFetchedTexture *src_vi, LLImageRaw* src, LLImageRaw* aux_src, S32 discard_level, BOOL final, void* userdata);
 
-	BOOL					isAllLocalTextureDataFinal() const;
+	bool					isAllLocalTextureDataFinal() const;
 
 	const LLViewerTexLayerSet*	debugGetLayerSet(LLAvatarAppearanceDefines::EBakedTextureIndex index) const { return (LLViewerTexLayerSet*)(mBakedTextureDatas[index].mTexLayerSet); }
 	const std::string		verboseDebugDumpLocalTextureDataInfo(const LLViewerTexLayerSet* layerset) const; // Lists out state of this particular baked texture layer
@@ -408,7 +408,7 @@ private:
 
 extern LLPointer<LLVOAvatarSelf> gAgentAvatarp;
 
-BOOL isAgentAvatarValid();
+bool isAgentAvatarValid();
 
 void selfStartPhase(const std::string& phase_name);
 void selfStopPhase(const std::string& phase_name, bool err_check = true);
