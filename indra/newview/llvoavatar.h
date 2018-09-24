@@ -132,12 +132,12 @@ public:
 													 U32 block_num,
 													 const EObjectUpdateType update_type,
 													 LLDataPacker *dp);
-	virtual void   	 	 	idleUpdate(LLAgent &agent, const F64 &time);
+	virtual void   	 	 	    idleUpdate(LLAgent &agent, const F64 &time);
 	/*virtual*/ bool   	 	 	updateLOD();
 	bool  	 	 	 	 	updateJointLODs();
 	void					updateLODRiggedAttachments( void );
 	/*virtual*/ bool   	 	 	isActive() const; // Whether this object needs to do an idleUpdate.
-	S32Bytes				totalTextureMemForUUIDS(std::set<LLUUID>& ids);
+	S32Bytes				    totalTextureMemForUUIDS(std::set<LLUUID>& ids);
 	bool 						allTexturesCompletelyDownloaded(std::set<LLUUID>& ids) const;
 	bool 						allLocalTexturesCompletelyDownloaded() const;
 	bool 						allBakedTexturesCompletelyDownloaded() const;
@@ -154,7 +154,7 @@ public:
 	/*virtual*/ void   	 	 	onShift(const LLVector4a& shift_vector);
 	/*virtual*/ U32    	 	 	getPartitionType() const;
 	/*virtual*/ const  	 	 	LLVector3 getRenderPosition() const;
-	/*virtual*/ void   	 	 	updateDrawable(BOOL force_damped);
+	/*virtual*/ void   	 	 	updateDrawable(bool force_damped);
 	/*virtual*/ LLDrawable* 	createDrawable(LLPipeline *pipeline);
 	/*virtual*/ BOOL   	 	 	updateGeometry(LLDrawable *drawable);
 	/*virtual*/ void   	 	 	setPixelAreaAndAngle(LLAgent &agent);
@@ -191,8 +191,8 @@ public:
 	/*virtual*/ LLVector3    	getCharacterAngularVelocity();
 
 	/*virtual*/ LLUUID			remapMotionID(const LLUUID& id);
-	/*virtual*/ BOOL			startMotion(const LLUUID& id, F32 time_offset = 0.f);
-	/*virtual*/ BOOL			stopMotion(const LLUUID& id, BOOL stop_immediate = FALSE);
+	/*virtual*/ bool			startMotion(const LLUUID& id, F32 time_offset = 0.f);
+	/*virtual*/ bool			stopMotion(const LLUUID& id, bool stop_immediate = false);
 	virtual bool			hasMotionFromSource(const LLUUID& source_id);
 	virtual void			stopMotionFromSource(const LLUUID& source_id);
 	virtual void			requestStopMotion(LLMotion* motion);

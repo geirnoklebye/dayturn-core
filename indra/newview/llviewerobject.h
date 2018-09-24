@@ -439,7 +439,7 @@ public:
 
 	void updatePositionCaches() const; // Update the global and region position caches from the object (and parent's) xform.
 	void updateText(); // update text label position
-	virtual void updateDrawable(BOOL force_damped); // force updates on static objects
+	virtual void updateDrawable(bool force_damped); // force updates on static objects
 
 	bool isOwnerInMuteList(LLUUID item_id = LLUUID());
 
@@ -973,7 +973,7 @@ public:
 		: LLViewerObject(id,pcode,regionp, is_global)
 	{ }
 
-	virtual void updateDrawable(BOOL force_damped);
+	virtual void updateDrawable(bool force_damped);
 };
 
 
