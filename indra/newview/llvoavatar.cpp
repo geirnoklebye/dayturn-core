@@ -696,7 +696,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mIsSitting(FALSE),
 	mTimeVisible(),
 	mTyping(FALSE),
-	mMeshValid(FALSE),
+	mMeshValid(false),
 	mVisible(false),
 	mLastImpostorUpdateFrameTime(0.f),
 	mLastImpostorUpdateReason(0),
@@ -720,11 +720,11 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mAvatarBirthdate(0.0f),
 	mRenderGroupTitles(sRenderGroupTitles),
 	mNameCloud(false),
-	mFirstTEMessageReceived( FALSE ),
-	mFirstAppearanceMessageReceived( FALSE ),
+	mFirstTEMessageReceived(false),
+	mFirstAppearanceMessageReceived(false),
 	mCulled( FALSE ),
 	mVisibilityRank(0),
-	mNeedsSkin(FALSE),
+	mNeedsSkin(false),
 	mLastSkinTime(0.f),
 	mUpdatePeriod(1),
 	mOverallAppearance(AOA_INVISIBLE),
@@ -737,7 +737,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mPreviousFullyLoaded(FALSE),
 	mFullyLoadedInitialized(FALSE),
 	mVisualComplexity(VISUAL_COMPLEXITY_UNKNOWN),
-	mLoadedCallbacksPaused(FALSE),
+	mLoadedCallbacksPaused(false),
 	mLoadedCallbackTextures(0),
 	mRenderUnloadedAvatar(LLCachedControl<bool>(gSavedSettings, "RenderUnloadedAvatar", false)),
 	mLastRezzedStatus(-1),
@@ -764,7 +764,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 	mPelvisp = NULL;
 
 	mDirtyMesh = 2;	// Dirty geometry, need to regenerate.
-	mMeshTexturesDirty = FALSE;
+	mMeshTexturesDirty = false;
 	mHeadp = NULL;
 
 	mRenderGroupTitles = (gSavedSettings.getS32("AvatarNameTagMode") && gSavedSettings.getbool("NameTagShowGroupTitles"));
@@ -938,7 +938,7 @@ BOOL LLVOAvatar::isFullyBaked()
 	return TRUE;
 }
 
-BOOL LLVOAvatar::isFullyTextured() const
+bool LLVOAvatar::isFullyTextured() const
 {
 	for (S32 i = 0; i < mMeshLOD.size(); i++)
 	{
@@ -968,13 +968,13 @@ BOOL LLVOAvatar::isFullyTextured() const
 				continue; // Mesh exists and has a composite texture.
 			}
 			// Fail
-			return FALSE;
+			return false;
 		}
 	}
-	return TRUE;
+	return true;
 }
 
-BOOL LLVOAvatar::hasGray() const
+bool LLVOAvatar::hasGray() const
 {
 	return !getIsCloud() && !isFullyTextured();
 }
@@ -2067,7 +2067,7 @@ void LLVOAvatar::buildCharacter()
 	LLAvatarAppearance::buildCharacter();
 
 	// Not done building yet; more to do.
-	mIsBuilt = FALSE;
+	mIsBuilt = false;
 
 	//-------------------------------------------------------------------------
 	// set head offset from pelvis
@@ -2105,10 +2105,10 @@ void LLVOAvatar::buildCharacter()
 	//-------------------------------------------------------------------------
 	processAnimationStateChanges();
 
-	mIsBuilt = TRUE;
+	mIsBuilt = true;
 	stop_glerror();
 
-	mMeshValid = TRUE;
+	mMeshValid = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -2347,7 +2347,7 @@ void LLVOAvatar::releaseMeshData()
 			attachment->setAttachmentVisibility(FALSE);
 		}
 	}
-	mMeshValid = FALSE;
+	mMeshValid = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -2363,7 +2363,7 @@ void LLVOAvatar::restoreMeshData()
     }
 	
 	//LL_INFOS() << "Restoring" << LL_ENDL;
-	mMeshValid = TRUE;
+	mMeshValid = true;
 	updateJointLODs();
 
 	for (attachment_map_t::iterator iter = mAttachmentPoints.begin(); 
@@ -2730,7 +2730,7 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 	// animate the character
 	// store off last frame's root position to be consistent with camera position
 	mLastRootPos = mRoot->getWorldPosition();
-	BOOL detailed_update = updateCharacter(agent);
+	bool detailed_update = updateCharacter(agent);
 
 	static LLUICachedControl<bool> visualizers_in_calls("ShowVoiceVisualizersInCalls", false);
 	bool voice_enabled = (visualizers_in_calls || LLVoiceClient::getInstance()->inProximalChannel()) &&
@@ -3360,17 +3360,16 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		return;
 	}
 
-	bool new_name = FALSE;
+	bool new_name = false;
 	if (visible_chat != mVisibleChat)
 	{
 		mVisibleChat = visible_chat;
-		new_name = TRUE;
+		new_name = true;
 	}
-
 	if (sRenderGroupTitles != mRenderGroupTitles)
 	{
 		mRenderGroupTitles = sRenderGroupTitles;
-		new_name = TRUE;
+		new_name = true;
 	}
 
 	// First Calculate Alpha
@@ -3417,7 +3416,7 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 		mNameText->setMaxLines(11);
 		mNameText->setFadeDistance(CHAT_NORMAL_RADIUS, 5.f);
 		sNumVisibleChatBubbles++;
-		new_name = TRUE;
+		new_name = true;
     }
 				
 	idleUpdateNameTagPosition(root_pos_last);
@@ -4773,10 +4772,10 @@ bool LLVOAvatar::updateCharacter(LLAgent &agent)
 	
 	if (!mIsBuilt)
 	{
-		return FALSE;
+		return false;
 	}
 
-	BOOL visible = isVisible();
+	bool visible = isVisible();
     bool is_control_avatar = isControlAvatar(); // capture state to simplify tracing
 	bool is_attachment = false;
 
@@ -4813,7 +4812,7 @@ bool LLVOAvatar::updateCharacter(LLAgent &agent)
 	if (!needs_update && !isSelf())
 	{
 		updateMotions(LLCharacter::HIDDEN_UPDATE);
-		return FALSE;
+		return false;
 	}
 
 	//--------------------------------------------------------------------
@@ -4911,7 +4910,7 @@ bool LLVOAvatar::updateCharacter(LLAgent &agent)
     if (visible)
     {
 		// System avatar mesh vertices need to be reskinned.
-		mNeedsSkin = TRUE;
+		mNeedsSkin = true;
     }
 
 	return visible;
@@ -5201,7 +5200,7 @@ U32 LLVOAvatar::renderSkinned()
 		{
 			updateMeshData();
 			mDirtyMesh = 0;
-			mNeedsSkin = TRUE;
+			mNeedsSkin = true;
 			mDrawable->clearState(LLDrawable::REBUILD_GEOMETRY);
 		}
 	}
@@ -5250,7 +5249,7 @@ U32 LLVOAvatar::renderSkinned()
 					hair_mesh->updateJointGeometry();
 				}
 			}
-			mNeedsSkin = FALSE;
+			mNeedsSkin = false;
 			mLastSkinTime = gFrameTimeSeconds;
 
 			LLFace * face = mDrawable->getFace(0);
@@ -5266,7 +5265,7 @@ U32 LLVOAvatar::renderSkinned()
 	}
 	else
 	{
-		mNeedsSkin = FALSE;
+		mNeedsSkin = false;
 	}
 
 	if (sDebugInvisible)
@@ -5398,6 +5397,7 @@ U32 LLVOAvatar::renderTransparent(bool first_pass)
 			}
 			first_pass = false;
 		}
+
 		if (isTextureVisible(TEX_HAIR_BAKED) && (getOverallAppearance() != AOA_JELLYDOLL))
 		{
 			LLViewerJoint* hair_mesh = getViewerJoint(MESH_ID_HAIR);
@@ -5816,7 +5816,7 @@ void LLVOAvatar::checkTextureLoading()
 {
 	static const F32 MAX_INVISIBLE_WAITING_TIME = 15.f ; //seconds
 
-	BOOL pause = !isVisible() ;
+	bool pause = !isVisible() ;
 	if(!pause)
 	{
 		mInvisibleTimer.reset() ;
@@ -7433,7 +7433,7 @@ void LLVOAvatar::updateGL()
 	{
 		LL_PROFILE_ZONE_SCOPED_CATEGORY_AVATAR
 		updateMeshTextures();
-		mMeshTexturesDirty = FALSE;
+		mMeshTexturesDirty = false;
 	}
 }
 
@@ -8228,7 +8228,7 @@ bool LLVOAvatar::shouldRenderRigged() const
 // related to whether the actual avatar mesh is shown, and isVisible()
 // to whether anything about the avatar is displayed in the scene.
 // Maybe better naming could make this clearer?
-BOOL LLVOAvatar::isVisible() const
+bool LLVOAvatar::isVisible() const
 {
 	return mDrawable.notNull()
 		&& (!mOrphaned || isSelf())
@@ -8425,7 +8425,7 @@ void LLVOAvatar::logMetricsTimerRecord(const std::string& phase_name, F32 elapse
 
 // call periodically to keep isFullyLoaded up to date.
 // returns true if the value has changed.
-BOOL LLVOAvatar::updateIsFullyLoaded()
+bool LLVOAvatar::updateIsFullyLoaded()
 {
 	S32 rez_status = getRezzedStatus();
 	bool loading = getIsCloud();
@@ -8475,7 +8475,7 @@ void LLVOAvatar::updateRuthTimer(bool loading)
 	}
 }
 
-BOOL LLVOAvatar::processFullyLoadedChange(bool loading)
+bool LLVOAvatar::processFullyLoadedChange(bool loading)
 {
 	// We wait a little bit before giving the 'all clear', to let things to
 	// settle down (models to snap into place, textures to get first packets).
@@ -8522,14 +8522,14 @@ BOOL LLVOAvatar::processFullyLoadedChange(bool loading)
 	// FIXME runway - why are we updating every 30 calls even if nothing has changed?
 	// This causes updateLOD() to run every 30 frames, among other things.
 	const S32 UPDATE_RATE = 30;
-	BOOL changed =
+	bool changed =
 		((mFullyLoaded != mPreviousFullyLoaded) ||         // if the value is different from the previous call
 		 (!mFullyLoadedInitialized) ||                     // if we've never been called before
 		 (mFullyLoadedFrameCounter % UPDATE_RATE == 0));   // every now and then issue a change
 	BOOL fully_loaded_changed = (mFullyLoaded != mPreviousFullyLoaded);
 
 	mPreviousFullyLoaded = mFullyLoaded;
-	mFullyLoadedInitialized = TRUE;
+	mFullyLoadedInitialized = true;
 	mFullyLoadedFrameCounter++;
 
     if (changed && isSelf())
@@ -8547,7 +8547,7 @@ BOOL LLVOAvatar::processFullyLoadedChange(bool loading)
 	return changed;
 }
 
-BOOL LLVOAvatar::isFullyLoaded() const
+bool LLVOAvatar::isFullyLoaded() const
 {
 	return (mRenderUnloadedAvatar || mFullyLoaded);
 }
@@ -8741,9 +8741,9 @@ void LLVOAvatar::updateMeshTextures()
 		}
 	}
 
-	const BOOL other_culled = !isSelf() && mCulled;
+	const bool other_culled = !isSelf() && mCulled;
 	LLLoadedCallbackEntry::source_callback_list_t* src_callback_list = NULL ;
-	BOOL paused = FALSE;
+	bool paused = false;
 	if(!isSelf())
 	{
 		src_callback_list = &mCallbackTextureList ;
@@ -8927,7 +8927,7 @@ void LLVOAvatar::updateMeshTextures()
 			 ++local_tex_iter)
 		{
 			const ETextureIndex texture_index = *local_tex_iter;
-			const BOOL is_baked_ready = (is_layer_baked[baked_index] && mBakedTextureDatas[baked_index].mIsLoaded) || other_culled;
+			const bool is_baked_ready = (is_layer_baked[baked_index] && mBakedTextureDatas[baked_index].mIsLoaded) || other_culled;
 			if (isSelf())
 			{
 				setBakedReady(texture_index, is_baked_ready);
@@ -9234,10 +9234,10 @@ void LLVOAvatar::onFirstTEMessageReceived()
 	LL_DEBUGS("Avatar") << avString() << LL_ENDL;
 	if( !mFirstTEMessageReceived )
 	{
-		mFirstTEMessageReceived = TRUE;
+		mFirstTEMessageReceived = true;
 
 		LLLoadedCallbackEntry::source_callback_list_t* src_callback_list = NULL ;
-		BOOL paused = FALSE ;
+		bool paused = false ;
 		if(!isSelf())
 		{
 			src_callback_list = &mCallbackTextureList ;
@@ -9246,7 +9246,7 @@ void LLVOAvatar::onFirstTEMessageReceived()
 
 		for (U32 i = 0; i < mBakedTextureDatas.size(); i++)
 		{
-			const BOOL layer_baked = isTextureDefined(mBakedTextureDatas[i].mTextureIndex);
+			const bool layer_baked = isTextureDefined(mBakedTextureDatas[i].mTextureIndex);
 
 			// Use any baked textures that we have even if they haven't downloaded yet.
 			// (That is, don't do a transition from unbaked to baked.)
@@ -9272,7 +9272,7 @@ void LLVOAvatar::onFirstTEMessageReceived()
 			}
 		}
 
-        mMeshTexturesDirty = TRUE;
+        mMeshTexturesDirty = true;
 		gPipeline.markGLRebuild(this);
 
         mFirstAppearanceMessageTimer.reset();
@@ -9656,8 +9656,8 @@ void LLVOAvatar::applyParsedAppearanceMessage(LLAppearanceMessageContents& conte
 	// runway - was
 	// if (!is_first_appearance_message )
 	// which means it would be called on second appearance message - probably wrong.
-	BOOL is_first_appearance_message = !mFirstAppearanceMessageReceived;
-	mFirstAppearanceMessageReceived = TRUE;
+	bool is_first_appearance_message = !mFirstAppearanceMessageReceived;
+	mFirstAppearanceMessageReceived = true;
 
 	//LL_DEBUGS("Avatar") << avString() << "processAvatarAppearance start " << mID
     //                    << " first? " << is_first_appearance_message << " self? " << isSelf() << LL_ENDL;
@@ -10576,7 +10576,7 @@ bool LLVOAvatar::updateLOD()
 	{	//LOD changed or new mesh created, allocate new vertex buffer if needed
 		updateMeshData();
 		mDirtyMesh = 0;
-		mNeedsSkin = TRUE;
+		mNeedsSkin = true;
 		mDrawable->clearState(LLDrawable::REBUILD_GEOMETRY);
 	}
 	updateVisibility();

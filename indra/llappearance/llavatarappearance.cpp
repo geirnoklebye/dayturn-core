@@ -189,7 +189,7 @@ LLAvatarAppearance::LLAvatarAppearance(LLWearableData* wearable_data) :
     mNumBones(0),
     mNumCollisionVolumes(0),
     mCollisionVolumes(NULL),
-    mIsBuilt(FALSE),
+    mIsBuilt(false),
     mInitFlags(0)
 {
 	llassert_always(mWearableData);
@@ -728,7 +728,7 @@ bool LLAvatarAppearance::buildSkeleton(const LLAvatarSkeletonInfo *info)
 	if (!allocateCharacterJoints(info->mNumBones))
 	{
 		LL_ERRS() << "Can't allocate " << info->mNumBones << " joints" << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 	
 	// allocate volumes
@@ -819,7 +819,7 @@ void LLAvatarAppearance::buildCharacter()
 	//-------------------------------------------------------------------------
 	mRoot->removeAllChildren();
 	mJointMap.clear();
-	mIsBuilt = FALSE;
+	mIsBuilt = false;
 
 	//-------------------------------------------------------------------------
 	// clear mesh data
@@ -914,7 +914,7 @@ void LLAvatarAppearance::buildCharacter()
 	// SL-315
 	mPelvisp->setPosition( LLVector3(0.0f, 0.0f, 0.0f) );
 
-	mIsBuilt = TRUE;
+	mIsBuilt = true;
 	stop_glerror();
 
 }
@@ -1152,7 +1152,7 @@ bool LLAvatarAppearance::loadMeshNodes()
 			if (type.compare(mesh_dict->mName) == 0)
 			{
 				mesh_id = mesh_index;
-				found_mesh_id = TRUE;
+				found_mesh_id = true;
 				break;
 			}
 		}

@@ -350,12 +350,12 @@ public:
 	// Loading state
 	//--------------------------------------------------------------------
 public:
-	BOOL			isFullyLoaded() const;
+	bool			isFullyLoaded() const;
 	bool 			isTooComplex() const;
 	bool 			visualParamWeightsAreDefault();
 	virtual bool	getIsCloud() const;
-	BOOL			isFullyTextured() const;
-	BOOL			hasGray() const; 
+	bool			isFullyTextured() const;
+	bool			hasGray() const; 
 	S32				getRezzedStatus() const; // 0 = cloud, 1 = gray, 2 = textured, 3 = textured and fully downloaded.
 	void			updateRezzedStatusTimers(S32 status);
 
@@ -373,19 +373,19 @@ public:
 
 protected:
 	LLViewerStats::PhaseMap& getPhases() { return mPhases; }
-	BOOL			updateIsFullyLoaded();
-	BOOL			processFullyLoadedChange(bool loading);
+	bool			updateIsFullyLoaded();
+	bool			processFullyLoadedChange(bool loading);
 	void			updateRuthTimer(bool loading);
 	F32 			calcMorphAmount();
 
 private:
-	BOOL			mFirstFullyVisible;
+	bool			mFirstFullyVisible;
 	F32				mFirstUseDelaySeconds;
 	LLFrameTimer	mFirstAppearanceMessageTimer;
 
-	BOOL			mFullyLoaded;
-	BOOL			mPreviousFullyLoaded;
-	BOOL			mFullyLoadedInitialized;
+	bool			mFullyLoaded;
+	bool			mPreviousFullyLoaded;
+	bool			mFullyLoadedInitialized;
 	S32				mFullyLoadedFrameCounter;
 	LLColor4		mMutedAVColor;
 	LLFrameTimer	mFullyLoadedTimer;
@@ -501,7 +501,7 @@ private:
     F32			mAttachmentEstTriangleCount;
 	bool		shouldAlphaMask();
 
-	BOOL 		mNeedsSkin; // avatar has been animated and verts have not been updated
+	bool 		mNeedsSkin; // avatar has been animated and verts have not been updated
 	F32			mLastSkinTime; //value of gFrameTimeSeconds at last skin update
 
 	S32	 		mUpdatePeriod;
@@ -674,7 +674,7 @@ protected:
 
 
 	LLLoadedCallbackEntry::source_callback_list_t mCallbackTextureList ; 
-	BOOL mLoadedCallbacksPaused;
+	bool mLoadedCallbacksPaused;
 	S32 mLoadedCallbackTextures; // count of 'loaded' baked textures, filled from mCallbackTextureList
 	LLFrameTimer mLastTexCallbackAddedTime;
 	std::set<LLUUID>	mTextureIDs;
@@ -729,8 +729,8 @@ public:
 public:
 	void 			onFirstTEMessageReceived();
 private:
-	BOOL			mFirstTEMessageReceived;
-	BOOL			mFirstAppearanceMessageReceived;
+	bool			mFirstTEMessageReceived;
+	bool			mFirstAppearanceMessageReceived;
 	
 /**                    Textures
  **                                                                            **
@@ -785,13 +785,13 @@ private:
 	virtual void	dirtyMesh(S32 priority); // Dirty the avatar mesh, with priority
 	LLViewerJoint*	getViewerJoint(S32 idx);
 	S32 			mDirtyMesh; // 0 -- not dirty, 1 -- morphed, 2 -- LOD
-	BOOL			mMeshTexturesDirty;
+	bool			mMeshTexturesDirty;
 
 	//--------------------------------------------------------------------
 	// Destroy invisible mesh
 	//--------------------------------------------------------------------
 protected:
-	BOOL			mMeshValid;
+	bool			mMeshValid;
 	LLFrameTimer	mMeshInvisibleTime;
 
 /**                    Meshes
@@ -841,7 +841,7 @@ private:
 	// Visibility
 	//--------------------------------------------------------------------
 public:
-	BOOL			isVisible() const;
+	bool			isVisible() const;
     virtual bool    shouldRenderRigged() const;
 	void			setVisibilityRank(U32 rank);
     U32				getVisibilityRank() const { return mVisibilityRank; }

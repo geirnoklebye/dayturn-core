@@ -1038,7 +1038,7 @@ void LLVOAvatarSelf::idleUpdateTractorBeam()
 void LLVOAvatarSelf::restoreMeshData()
 {
 	//LL_INFOS() << "Restoring" << LL_ENDL;
-	mMeshValid = TRUE;
+	mMeshValid = true;
 	updateJointLODs();
 	updateAttachmentVisibility(gAgentCamera.getCameraMode());
 
