@@ -675,7 +675,6 @@ void LLImageBase::sanityCheck()
 		)
 	{
 		LL_ERRS() << "Failed LLImageBase::sanityCheck "
-		       << "Failed LLImageBase::sanityCheck "
 			   << "width " << mWidth
 			   << "height " << mHeight
 			   << "datasize " << mDataSize
@@ -906,7 +905,7 @@ void LLImageRaw::setDataAndSize(U8 *data, S32 width, S32 height, S8 components)
 
 bool LLImageRaw::resize(U16 width, U16 height, S8 components)
 {
-	if ((getWidth() == width) && (getHeight() == height) && (getComponents() == components))
+	if ((getWidth() == width) && (getHeight() == height) && (getComponents() == components) && !isBufferInvalid())
 	{
 		return true;
 	}
@@ -915,7 +914,7 @@ bool LLImageRaw::resize(U16 width, U16 height, S8 components)
 
 	allocateDataSize(width,height,components);
 
-	return true;
+	return !isBufferInvalid();
 }
 
 bool LLImageRaw::setSubImage(U32 x_pos, U32 y_pos, U32 width, U32 height,
@@ -2124,7 +2123,6 @@ void LLImageFormatted::sanityCheck()
 	if (mCodec >= IMG_CODEC_EOF)
 	{
 		LL_ERRS() << "Failed LLImageFormatted::sanityCheck "
-		      << "Failed LLImageFormatted::sanityCheck "
 			   << "decoding " << S32(mDecoding)
 			   << "decoded " << S32(mDecoded)
 			   << "codec " << S32(mCodec)
@@ -2312,7 +2310,6 @@ void LLImageBase::generateMip(const U8* indata, U8* mipdata, S32 width, S32 heig
 				break;
 			  default:
 				LL_ERRS() << "generateMmip called with bad num channels" << LL_ENDL;
-				return;
 			}
 			indata += nchannels*2;
 			data += nchannels;
