@@ -1849,7 +1849,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libopenal.so.1")
             self.path("libalut.so.0.0.0")
             self.path("libopenal.so.1.15.1")
-            self.path("libfontconfig.so*")
             self.path("libfreetype.so.*.*")
             self.path("libpng16.so.16") 
             self.path("libpng16.so.16.8.0")
@@ -1869,10 +1868,8 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libgobject-2.0.so*")
             self.path("libgthread-2.0.so*")
             self.path("libgtk-x11-2.0.so*")
-            self.path("libharfbuzz.so*")
             self.path("libpangocairo-1.0.so*")
             self.path("libpangoxft-1.0.so*")
-            self.path("libpangoft2-1.0.so*")
             self.path("libpixman-1.so*")
  
            #cef plugin
