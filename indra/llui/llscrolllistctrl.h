@@ -90,6 +90,7 @@ public:
 
 	
 	typedef boost::signals2::signal<S32 (S32,const LLScrollListItem*,const LLScrollListItem*),maximum<S32> > sort_signal_t;
+	typedef boost::signals2::signal<bool(const LLUUID& user_id)> is_friend_signal_t;
 	
 	struct Params : public LLInitParam::Block<Params, LLUICtrl::Params>
 	{
@@ -393,6 +394,7 @@ public:
 		return mSortCallback->connect(cb);
 	}
 	// <FS:Ansariel> For manually setting line height; we might need it at some time
+	boost::signals2::connection setIsFriendCallback(const is_friend_signal_t::slot_type& cb);
 	void setLineHeight(S32 height) { mLineHeight = height; }
 
 	// <FS:Ansariel> Get list of the column init params so we can re-add them
@@ -519,6 +521,8 @@ private:
 	std::vector<sort_column_t>	mSortColumns;
 
 	sort_signal_t*	mSortCallback;
+
+	is_friend_signal_t*	mIsFriendSignal;
 }; // end class LLScrollListCtrl
 
 #endif  // LL_SCROLLLISTCTRL_H
