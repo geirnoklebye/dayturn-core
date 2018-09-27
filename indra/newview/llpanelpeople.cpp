@@ -1776,7 +1776,6 @@ bool LLPanelPeople::onNearbyViewSortMenuItemCheck(const LLSD& userdata)
 	else if (item == "sort_distance") {
 		return sort_order == E_SORT_BY_DISTANCE;
 	}
-	}
 
 	return false;
 }
