@@ -7512,10 +7512,10 @@ std::string LLInvFVBridge::getSearchableUUID( void ) const
 		{
 			strUUID = pItem->getAssetUUID().asString();
 			LLStringUtil::toUpper( strUUID );
-
 		}
 
 	}
+	return strUUID;
 
 }
 
@@ -7538,5 +7538,6 @@ bool LLFolderViewGroupedItemBridge::canWearSelected(uuid_vec_t item_ids)
 			return false;
 		}
 	}
+	return true;
 }
 // EOF
