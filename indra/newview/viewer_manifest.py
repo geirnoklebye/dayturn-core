@@ -1853,24 +1853,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libpng16.so.16") 
             self.path("libpng16.so.16.8.0")
 
-            # Use prebuilt gtk and friends for DISTRO compatibility
-            self.path("libatk-1.0.so*")
-            self.path("libcairo-gobject.so*")
-            self.path("libcairo-script-interpreter.so*")
-            self.path("libcairo.so*")
-            self.path("libgdk_pixbuf-2.0.so*")
-            self.path("libgdk_pixbuf_xlib-2.0.so*")
-            self.path("libgdk-x11-2.0.so*")
-            self.path("libgtk-x11-2.0.so*")
-            self.path("libgio-2.0.so*")
-            self.path("libglib-2.0.so*")
-            self.path("libgmodule-2.0.so*")
-            self.path("libgobject-2.0.so*")
-            self.path("libgthread-2.0.so*")
-            self.path("libgtk-x11-2.0.so*")
-            self.path("libpangocairo-1.0.so*")
-            self.path("libpangoxft-1.0.so*")
-            self.path("libpixman-1.so*")
  
            #cef plugin
             self.path( "libcef.so" )
