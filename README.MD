@@ -1,4 +1,4 @@
-New Tools Update
+﻿Updated 1 October 2018
 
 ================
 Contributing Code to Kokua
@@ -17,31 +17,40 @@ Work Flow:
 
 On bitbucket fork kokua-sl to your Bitbucket account. The repository name will default to kokua-sl, but can be named as desired.
 
-Open the repository and notice bookmark icons that are named Kokua-MKRLV and KokuaSL-NORLV; these represent our current working default branches
+Open the repository and notice bookmark icons that are named Kokua-MKRLV and KokuaSL-NORLV; these represent our current working default branches that are assigned to bookmarks. If the bookmarks where not there two (2) default branches would be present. The bookmarks tie the bookmark names to each default branch mercurial hash. 
 
-that are assigned to bookmarks. If the bookmarks where not there two (2) default branches would be present. The bookmarks tie the bookmark names
+When LindenLab updated to autobuild 1.1 most custom build variables were moved a repository. The kokua repository should be cloned as follows:
 
-to each default branch mercurial hash. 
+hg clone https://bitbucket.org/kokua/viewer-build-variables
+
+The variables file in this repository contains custom build variables for windows macOS and linux.
+
+An environment variable must be set in order for autobuild to see custom build variables throughout configure and build phases.
+
+Follow each operating systems procedure for persistent set of environment variables. 
+
+For linux it is:
+
+export AUTOBUILD_VARIABLES_FILE=/home/<user>/viewer-build-variables/variables
 
 Using mercurial command hg clone place you forked kokua repository on your local file system. Example: 
 
+ 
 For OpenSim version:
 
-hg clone https://bitucket.org/kokua/kokua-os
+hg clone https://bitbucket.org/kokua/kokua-os
 
 Or SecondLife version:
 
-hg clone https://bitucket.org/kokua/kokua-sl 
+hg clone https://bitbucket.org/kokua/kokua-sl 
 
-An important step is to pull and update Bookmarks from your respository. This allows the bookmarks to advance to the tip with each commit.
+An important step is to pull and update Bookmarks from your repository. This allows the bookmarks to advance to the tip with each commit.
 
-A bookmark pull is hg pull -B KokuaNT https://bitucket.org/kokua/kokua-os --Notice that it is a capital B. Now repeat with Kokua-MKRLV bookmark.
+A bookmark pull command is hg pull -B KokuaNT https://bitbucket.org/kokua/kokua-os --Notice that it is a capital B. Now repeat with Kokua-MKRLV bookmark.
 
 If your bitbucket repository's bookmarks have fallen behind or do not show up then push the bookmark name. For example:
 
-hg push -B KokuaNT https://bitucket.org/xxxxx/kokua-os notice the capital B again. Capital B is for bookmark exchange only. No changes are made to
-
-the working tree.
+hg push -B KokuaNT https://bitbucket.org/xxxxx/kokua-os notice the capital B again. Capital B is for bookmark exchange only. No changes are made to the working tree.
 
 Next use hg update to activate the bookmarks. "hg update KokuaSL-NORLV" and then "hg update Kokua-MKRLV". Your working tree is now at Kokua-MKRLV.
 
@@ -53,13 +62,13 @@ Use of the tortoisehg program will allow a graphical view of bookmarks and provi
 
 and select Bookmarks... a popup will show bookmark management options. 
 
-Any collorative repository system will be frought with frusations and what seems as lost time resolving merge conflicts if the users
+Any collaborative repository system will be fraught with frustrations and what seems as lost time resolving merge conflicts if the users
 
 of the system do not check for incoming upstream changes before beginning work. Any upstream incoming changes should be pulled and
 
 merged before beginning work. Use of mercurial queues MQ can be helpful by working in a patch queue and by uninstalling patches and pulling
 
-and merging upstream and then reinstall from the patch queue. This insures that your changes are allways on top of the upstream repository.
+and merging upstream and then reinstall from the patch queue. This insures that your changes are always on top of the upstream repository.
 
 Once sure that no upstream incoming are pending and you ready for merge into upstream push to your bitbucket repo and submit a pull request.
 
@@ -77,12 +86,12 @@ Development system:
 
 
 
-Development system: Ubuntu 14.04.3 
+Development system: Ubuntu 16.04.1 
 
-3.19.0-47-generic #53~14.04.1-Ubuntu SMP Mon Jan 18 16:09:14 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+4.15.0-34-generic #37~16.04.1-Ubuntu SMP Tue Aug 28 10:44:06 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 
 
-Preprations to build:
+Preparations to build:
 
 --------------
 
@@ -94,12 +103,11 @@ sudo apt-get install --install-recommends bison bzip2 cmake curl flex g++-4.8 m4
 
 sudo apt-get install --install-recommends pulseaudio
 
-sudo apt-get install --install-recommends libgl1-mesa-dev libglu1-mesa-dev libstdc++6 \
-libX11-dev libxinerama-dev libxml2-dev libxrender-dev libpulse-dev libalut-dev 
+sudo apt-get install --install-recommends libgl1-mesa-dev libglu1-mesa-dev libstdc++6 libxinerama-dev libxml2-dev libxrender-dev libpulse-dev libalut-dev 
 
 Verify
 gcc --version
-gcc (Ubuntu 4.8.4-2ubuntu1~14.04) 4.8.4
+gcc (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
 
 Install autobuild into python
 
@@ -133,7 +141,7 @@ cd ~/
 
 sudo chmod 700 .ssh
 
-Voice libraries are already installed on 32 bit systems so, the steps can be skipped.
+Voice libraries are already installed on 32 bit systems so, steps below can be skipped.
 
 Voice 32 bit libraries are not needed to build the viewer but, are needed to test voice in the viewer.
 
@@ -147,7 +155,7 @@ sudo apt-get install --install-recommends libasound2:i386 libasound2-plugins:i38
 Following applies to building 32 bit kokua by using a 32 bit virtual machine(vm). If building on 32 bit hardware -- follow 64 bit instructions from above.
 
 Install a 32 bit vm from iso -- as of January 20, 2016 
-ubuntu-14.04.3-desktop-i386.iso
+ubuntu-16.04.1-desktop-i386.iso
 
 Open your vm and follow instructions for 64 bit from above. 
 
@@ -249,13 +257,12 @@ cd Kokua-SL
 Update the source tree to KokuaSL-NORLV. This is a build without RLV or if you want RLV it would be hg update Kokua-MKRLV
 
 hg update KokuaSL-NORLV
-
-
-autobuild configure -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DOPENAL:BOOL=ON -DPACKAGE:BOOL=ON 2>&1 |tee configure.log
+
+autobuild configure -A 64 -c ReleaseOS -- -DLL_TESTS:BOOL=OFF -DFMODEX:BOOL=OFF -DOPENAL:BOOL=ON -DPACKAGE:BOOL=ON 2>&1 |tee configure.log
 
 - Build the viewer
 
--autobuild build -c ReleaseOS 2>&1 |tee build.log
+-autobuild build -A 64 -c ReleaseOS 2>&1 |tee build.log
 
 - Configuration and building takes about 1.5 hours on a 2 core machine.
 
@@ -269,7 +276,7 @@ sudo ./install.sh follow the defaults
 
 This places the viewer in /opt/kokua-install and places a Kokua menu entry under Applications->Internet
 
-sudo is the perferred method as the chrome-sandbox a part of Chrome Embedded Framework requies root permissions.
+sudo is the preferred method as the chrome-sandbox a part of Chrome Embedded Framework requires root permissions.
 
 
 Windows
@@ -529,7 +536,7 @@ The current development environment is XCode 7.3 running on OS X 10.11.4 where t
 
 Still building for i386 as there are dependencies in the LL code to old Carbon framework that prevents successfull 64-bit build. A 32-bit build is not such a big issue on OS X as the application can use the full 32-bit address space of 4 GB which should be sufficient unless you run in an OpenSim grid with very large VAR regions.
 
-You can both build from the command line in terminal or build the XCode project that is generatedduing configuration.
+You can both build from the command line in terminal or build the XCode project that is generated duing configuration.
 
 NOTE: On Upgrading XCode to a new version you probably should delete the Derived Data folder that is found in Development/XCode as it may contain links to old system library locations preventing your build from linking.
 	
@@ -597,11 +604,11 @@ hg clone https://bitbucket.org/kokua/kokua-sl
 
 You can configure the build with:
 
-autobuild configure -c RelWithDebInfoOS — -DKDU:BOOL=FALSE -DFMODEX:BOOL=TRUE -DLL_TESTS:BOOL=FALSE -DOPENAL:BOOL=FALSE
+autobuild configure -A 64 -c RelWithDebInfoOS — -DKDU:BOOL=FALSE -DFMODEX:BOOL=TRUE -DLL_TESTS:BOOL=FALSE -DOPENAL:BOOL=FALSE
 
 or 
 
-autobuild configure -c ReleaseOS — -DKDU:BOOL=FALSE -DFMODEX:BOOL=TRUE -DLL_TESTS:BOOL=FALSE -DOPENAL:BOOL=FALSE
+autobuild configure -c -A 64 ReleaseOS — -DKDU:BOOL=FALSE -DFMODEX:BOOL=TRUE -DLL_TESTS:BOOL=FALSE -DOPENAL:BOOL=FALSE
 
 When you have made sure your configuration is working (and compiles in Xcode) you can also compile on the command line by substituting configure with build in the two commands above. 
 
