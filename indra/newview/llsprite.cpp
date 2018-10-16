@@ -191,7 +191,7 @@ void LLSprite::updateFace(LLFace &face)
 		LLVertexBuffer* buff = new LLVertexBuffer(LLVertexBuffer::MAP_VERTEX | 
 												LLVertexBuffer::MAP_TEXCOORD0,
 												GL_STREAM_DRAW_ARB);
-		buff->allocateBuffer(4, 12, TRUE);
+		buff->allocateBuffer(4, 12, true);
 		face.setGeomIndex(0);
 		face.setIndicesIndex(0);
 		face.setVertexBuffer(buff);

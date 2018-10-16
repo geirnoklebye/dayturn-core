@@ -959,7 +959,7 @@ void LLSelectMgr::addAsIndividual(LLViewerObject *objectp, S32 face, bool undoab
 	}
 
 	// Make sure the object is tagged as selected
-	objectp->setSelected( TRUE );
+	objectp->setSelected(true);
 
 	// And make sure we don't consider it as part of a family
 	nodep->mIndividualSelection = true;
@@ -1200,7 +1200,7 @@ LLObjectSelectionHandle LLSelectMgr::selectHighlightedObjects()
 		mSelectedObjects->addNode(new_nodep);
 
 		// flag this object as selected
-		objectp->setSelected(TRUE);
+		objectp->setSelected(true);
 		objectp->setAllTESelected(true);
 
 		mSelectedObjects->mSelectType = getSelectTypeForObject(objectp);
@@ -1398,7 +1398,7 @@ void LLSelectMgr::remove(std::vector<LLViewerObject*>& objects)
 		LLSelectNode* nodep = mSelectedObjects->findNode(objectp);
 		if (nodep)
 		{
-			objectp->setSelected(FALSE);
+			objectp->setSelected(false);
 			mSelectedObjects->removeNode(nodep);
 			nodep = NULL;
 		}
@@ -1426,7 +1426,7 @@ void LLSelectMgr::remove(LLViewerObject *objectp, S32 te, bool undoable)
 		// Remove all faces (or the object doesn't have faces) so remove the node
 		mSelectedObjects->removeNode(nodep);
 		nodep = NULL;
-		objectp->setSelected( FALSE );
+		objectp->setSelected(false);
 	}
 	else if (0 <= te && te < SELECT_MAX_TES)
 	{
@@ -1454,7 +1454,7 @@ void LLSelectMgr::remove(LLViewerObject *objectp, S32 te, bool undoable)
 		{
 			mSelectedObjects->removeNode(nodep);
 			nodep = NULL;
-			objectp->setSelected( FALSE );
+			objectp->setSelected(false);
 			// *FIXME: Doesn't update simulator that object is no longer selected
 		}
 	}
@@ -1478,7 +1478,7 @@ void LLSelectMgr::removeAll()
 		 iter != mSelectedObjects->end(); iter++ )
 	{
 		LLViewerObject *objectp = (*iter)->getObject();
-		objectp->setSelected( FALSE );
+		objectp->setSelected(false);
 	}
 
 	mSelectedObjects->deleteAllNodes();

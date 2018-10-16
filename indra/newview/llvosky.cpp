@@ -831,7 +831,7 @@ void LLVOSky::updateTextures()
 LLDrawable *LLVOSky::createDrawable(LLPipeline *pipeline)
 {
 	pipeline->allocDrawable(this);
-	mDrawable->setLit(FALSE);
+	mDrawable->setLit(false);
 
 	LLDrawPoolSky *poolp = (LLDrawPoolSky*) gPipeline.getPool(LLDrawPool::POOL_SKY);
 	poolp->setSkyTex(mSkyTex);
@@ -1140,7 +1140,7 @@ bool LLVOSky::updateHeavenlyBodyGeometry(LLDrawable *drawable, F32 scale, const 
 	{
 		facep->setSize(4, 6);
 		LLVertexBuffer* buff = new LLVertexBuffer(LLDrawPoolSky::VERTEX_DATA_MASK, GL_STREAM_DRAW_ARB);
-		if (!buff->allocateBuffer(facep->getGeomCount(), facep->getIndicesCount(), TRUE))
+		if (!buff->allocateBuffer(facep->getGeomCount(), facep->getIndicesCount(), true))
 		{
 			LL_WARNS() << "Failed to allocate Vertex Buffer for vosky to "
 				<< facep->getGeomCount() << " vertices and "
@@ -1380,7 +1380,7 @@ void LLVOSky::updateReflectionGeometry(LLDrawable *drawable, F32 H,
 	{
 		face->setSize(quads * 4, quads * 6);
 		LLVertexBuffer* buff = new LLVertexBuffer(LLDrawPoolWater::VERTEX_DATA_MASK, GL_STREAM_DRAW_ARB);
-		if (!buff->allocateBuffer(face->getGeomCount(), face->getIndicesCount(), TRUE))
+		if (!buff->allocateBuffer(face->getGeomCount(), face->getIndicesCount(), true))
 		{
 			LL_WARNS() << "Failed to allocate Vertex Buffer for vosky to "
 				<< face->getGeomCount() << " vertices and "

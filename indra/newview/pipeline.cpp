@@ -6981,7 +6981,7 @@ LLVOPartGroup* LLPipeline::lineSegmentIntersectParticle(const LLVector4a& start,
 		LLSpatialPartition* part = region->getSpatialPartition(LLViewerRegion::PARTITION_PARTICLE);
 		if (part && hasRenderType(part->mDrawableType))
 		{
-			LLDrawable* hit = part->lineSegmentIntersect(start, local_end, TRUE, FALSE, face_hit, &position, NULL, NULL, NULL);
+			LLDrawable* hit = part->lineSegmentIntersect(start, local_end, true, false, face_hit, &position, NULL, NULL, NULL);
 			if (hit)
 			{
 				drawable = hit;
@@ -7980,7 +7980,7 @@ void LLPipeline::renderFinalize()
     {
         U32 mask = LLVertexBuffer::MAP_VERTEX | LLVertexBuffer::MAP_TEXCOORD0 | LLVertexBuffer::MAP_TEXCOORD1;
         LLPointer<LLVertexBuffer> buff = new LLVertexBuffer(mask, 0);
-        buff->allocateBuffer(3, 0, TRUE);
+        buff->allocateBuffer(3, 0, true);
 
         LLStrider<LLVector3> v;
         LLStrider<LLVector2> uv1;

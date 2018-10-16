@@ -882,12 +882,12 @@ bool LLViewerObject::crossesParcelBounds()
 	return mRegionp && mRegionp->objectsCrossParcel(boxes);
 }
 
-BOOL LLViewerObject::setParent(LLViewerObject* parent)
+bool LLViewerObject::setParent(LLViewerObject* parent)
 {
 	if(mParent != parent)
 	{
 		LLViewerObject* old_parent = (LLViewerObject*)mParent ;		
-		BOOL ret = LLPrimitive::setParent(parent);
+		bool ret = LLPrimitive::setParent(parent);
 		if(ret && old_parent && parent)
 		{
 			old_parent->removeChild(this) ;
@@ -895,7 +895,7 @@ BOOL LLViewerObject::setParent(LLViewerObject* parent)
 		return ret ;
 	}
 
-	return FALSE ;
+	return false ;
 }
 
 void LLViewerObject::addChild(LLViewerObject *childp)
@@ -1019,17 +1019,17 @@ BOOL LLViewerObject::isSeat() const
 	return mSeatCount > 0;
 }
 
-BOOL LLViewerObject::setDrawableParent(LLDrawable* parentp)
+bool LLViewerObject::setDrawableParent(LLDrawable* parentp)
 {
 	if (mDrawable.isNull())
 	{
-		return FALSE;
+		return false;
 	}
 
-	BOOL ret = mDrawable->mXform.setParent(parentp ? &parentp->mXform : NULL);
+	bool ret = mDrawable->mXform.setParent(parentp ? &parentp->mXform : NULL);
 	if(!ret)
 	{
-		return FALSE ;
+		return false ;
 	}
 	LLDrawable* old_parent = mDrawable->mParent;
 	mDrawable->mParent = parentp; 
@@ -3709,7 +3709,7 @@ LLDrawable* LLViewerObject::createDrawable(LLPipeline *pipeline)
 	return NULL;
 }
 
-void LLViewerObject::setScale(const LLVector3 &scale, BOOL damped)
+void LLViewerObject::setScale(const LLVector3 &scale, bool damped)
 {
 	LLPrimitive::setScale(scale);
 	if (mDrawable.notNull())
@@ -4569,10 +4569,10 @@ LLViewerObject* LLViewerObject::getRootEdit() const
 }
 
 
-BOOL LLViewerObject::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
+bool LLViewerObject::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
 										  S32 face,
-										  BOOL pick_transparent,
-										  BOOL pick_rigged,
+										  bool pick_transparent,
+										  bool pick_rigged,
 										  S32* face_hit,
 										  LLVector4a* intersection,
 										  LLVector2* tex_coord,
@@ -6419,7 +6419,7 @@ void LLViewerObject::updateVolume(const LLVolumeParams& volume_params)
 	{
 		// Transmit the update to the simulator
 		sendShapeUpdate();
-		markForUpdate(TRUE);
+		markForUpdate(true);
 	}
 }
 
@@ -6434,7 +6434,7 @@ void LLViewerObject::recursiveMarkForUpdate(BOOL priority)
     markForUpdate(priority);
 }
 
-void LLViewerObject::markForUpdate(BOOL priority)
+void LLViewerObject::markForUpdate(bool priority)
 {
 	if (mDrawable.notNull())
 	{
@@ -6443,7 +6443,7 @@ void LLViewerObject::markForUpdate(BOOL priority)
 	}
 }
 
-void LLViewerObject::markForUnload(BOOL priority)
+void LLViewerObject::markForUnload(bool priority)
 {
 	if (mDrawable.notNull())
 	{

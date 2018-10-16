@@ -119,7 +119,7 @@ LLQuaternion LLVolumeImplFlexible::getFrameRotation() const
 	return mVO->getRenderRotation();
 }
 
-void LLVolumeImplFlexible::onParameterChanged(U16 param_type, LLNetworkData *data, BOOL in_use, bool local_origin)
+void LLVolumeImplFlexible::onParameterChanged(U16 param_type, LLNetworkData *data, bool in_use, bool local_origin)
 {
 	if (param_type == LLNetworkData::PARAMS_FLEXIBLE)
 	{
@@ -667,7 +667,7 @@ void LLVolumeImplFlexible::doFlexibleUpdate()
 	S32 num_render_sections = 1<<mRenderRes;
 	if (path->getPathLength() != num_render_sections+1)
 	{
-		((LLVOVolume*) mVO)->mVolumeChanged = TRUE;
+		((LLVOVolume*) mVO)->mVolumeChanged = true;
 		volume->resizePath(num_render_sections+1);
 	}
 
@@ -745,12 +745,12 @@ void LLVolumeImplFlexible::doFlexibleRebuild(bool rebuild_volume)
 
 //------------------------------------------------------------------
 
-void LLVolumeImplFlexible::onSetScale(const LLVector3& scale, BOOL damped)
+void LLVolumeImplFlexible::onSetScale(const LLVector3& scale, bool damped)
 {
 	setAttributesOfAllSections((LLVector3*) &scale);
 }
 
-BOOL LLVolumeImplFlexible::doUpdateGeometry(LLDrawable *drawable)
+bool LLVolumeImplFlexible::doUpdateGeometry(LLDrawable *drawable)
 {
     LL_PROFILE_ZONE_SCOPED;
 	LLVOVolume *volume = (LLVOVolume*)mVO;
@@ -769,14 +769,14 @@ BOOL LLVolumeImplFlexible::doUpdateGeometry(LLDrawable *drawable)
 			LLVOAvatar* avatar = (LLVOAvatar*) parent;
 			if (avatar->isImpostor() && !avatar->needsImpostorUpdate())
 			{
-				return TRUE;
+				return true;
 			}
 		}
 	}
 
 	if (volume->mDrawable.isNull())
 	{
-		return TRUE; // No update to complete
+		return true; // No update to complete
 	}
 
 	if (volume->mLODChanged)
@@ -791,12 +791,12 @@ BOOL LLVolumeImplFlexible::doUpdateGeometry(LLDrawable *drawable)
 	doFlexibleUpdate();
 	
 	// Object may have been rotated, which means it needs a rebuild.  See SL-47220
-	BOOL	rotated = FALSE;
+	bool	rotated = false;
 	LLQuaternion cur_rotation = getFrameRotation();
 	if ( cur_rotation != mLastFrameRotation )
 	{
 		mLastFrameRotation = cur_rotation;
-		rotated = TRUE;
+		rotated = true;
 	}
 
 	if (volume->mLODChanged || volume->mFaceMappingChanged ||
@@ -821,14 +821,14 @@ BOOL LLVolumeImplFlexible::doUpdateGeometry(LLDrawable *drawable)
 		volume->genBBoxes(isVolumeGlobal());
 	}
 			
-	volume->mVolumeChanged = FALSE;
+	volume->mVolumeChanged = false;
 	volume->mLODChanged = false;
 	volume->mFaceMappingChanged = false;
 
 	// clear UV flag
 	drawable->clearState(LLDrawable::UV);
 	
-	return TRUE;
+	return true;
 }
 
 //----------------------------------------------------------------------------------

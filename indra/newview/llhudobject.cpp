@@ -73,7 +73,7 @@ LLHUDObject::~LLHUDObject()
 void LLHUDObject::markDead()
 {
 	mVisible = false;
-	mDead = TRUE;
+	mDead = true;
 	mSourceObject = NULL;
 	mTargetObject = NULL;
 }

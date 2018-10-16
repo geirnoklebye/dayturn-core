@@ -206,7 +206,7 @@ public:
 	virtual void		updateGL();
 	virtual void		updateFaceSize(S32 idx);
 	virtual bool		updateLOD();
-	virtual BOOL		setDrawableParent(LLDrawable* parentp);
+	virtual bool		setDrawableParent(LLDrawable* parentp);
 	F32					getRotTime() { return mRotTime; }
 private:
 	void				resetRotTime();
@@ -233,11 +233,11 @@ public:
 	S32 getListIndex() const						{ return mListIndex; }
 	void setListIndex(S32 idx)						{ mListIndex = idx; }
 
-	virtual BOOL isFlexible() const					{ return FALSE; }
-	virtual BOOL isSculpted() const 				{ return FALSE; }
-	virtual BOOL isMesh() const						{ return FALSE; }
-	virtual BOOL isRiggedMesh() const				{ return FALSE; }
-	virtual BOOL hasLightTexture() const			{ return FALSE; }
+	virtual bool isFlexible() const					{ return false; }
+	virtual bool isSculpted() const 				{ return false; }
+	virtual bool isMesh() const						{ return false; }
+	virtual bool isRiggedMesh() const				{ return false; }
+	virtual bool hasLightTexture() const			{ return false; }
 
 	// This method returns true if the object is over land owned by
 	// the agent, one of its groups, or it encroaches and 
@@ -260,7 +260,7 @@ public:
 	BOOL isProbablyModifiable() const;
 	*/
 
-	virtual BOOL setParent(LLViewerObject* parent);
+	virtual bool setParent(LLViewerObject* parent);
     virtual void onReparent(LLViewerObject *old_parent, LLViewerObject *new_parent);
     virtual void afterReparent();
 	virtual void addChild(LLViewerObject *childp);
@@ -275,10 +275,10 @@ public:
 
 	//detect if given line segment (in agent space) intersects with this viewer object.
 	//returns TRUE if intersection detected and returns information about intersection
-	virtual BOOL lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
+	virtual bool lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
 									  S32 face = -1,                          // which face to check, -1 = ALL_SIDES
-									  BOOL pick_transparent = FALSE,
-									  BOOL pick_rigged = FALSE,
+									  bool pick_transparent = false,
+									  bool pick_rigged = false,
 									  S32* face_hit = NULL,                   // which face was hit
 									  LLVector4a* intersection = NULL,         // return the intersection point
 									  LLVector2* tex_coord = NULL,            // return the texture coordinates of the intersection point
@@ -362,7 +362,7 @@ public:
 	void fitFaceTexture(const U8 face);
 	void sendTEUpdate() const;			// Sends packed representation of all texture entry information
 	
-	virtual void setScale(const LLVector3 &scale, BOOL damped = FALSE);
+	virtual void setScale(const LLVector3 &scale, bool damped = false);
 
     S32 getAnimatedObjectMaxTris() const;
     F32 recursiveGetEstTrianglesMax() const;
@@ -429,8 +429,8 @@ public:
 	void clearIcon();
 
     void recursiveMarkForUpdate(BOOL priority);
-	virtual void markForUpdate(BOOL priority);
-	void markForUnload(BOOL priority);
+	virtual void markForUpdate(bool priority);
+	void markForUnload(bool priority);
 	void updateVolume(const LLVolumeParams& volume_params);
 	virtual	void updateSpatialExtents(LLVector4a& min, LLVector4a& max);
 	virtual F32 getBinRadius();

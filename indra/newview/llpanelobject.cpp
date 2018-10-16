@@ -1642,7 +1642,7 @@ void LLPanelObject::sendScale(BOOL btn_down)
 			LLSelectMgr::getInstance()->saveSelectedObjectTransform(SELECT_ACTION_TYPE_SCALE);
 		}
 
-		mObject->setScale(newscale, TRUE);
+		mObject->setScale(newscale, true);
 
 		if(!btn_down)
 		{

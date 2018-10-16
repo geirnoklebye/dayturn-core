@@ -316,7 +316,7 @@ void LLPanelPermissions::refresh()
 		root_selected = false;
 	}
 
-	//BOOL attachment_selected = LLSelectMgr::getInstance()->getSelection()->isAttachment();
+	//bool attachment_selected = LLSelectMgr::getInstance()->getSelection()->isAttachment();
 	//attachment_selected = false;
 	LLViewerObject* objectp = NULL;
 	if(nodep) objectp = nodep->getObject();

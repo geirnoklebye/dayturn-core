@@ -77,11 +77,11 @@ public:
 	virtual ~LLVolumeInterface() { }
 	virtual LLVolumeInterfaceType getInterfaceType() const = 0;
 	virtual void doIdleUpdate() = 0;
-	virtual BOOL doUpdateGeometry(LLDrawable *drawable) = 0;
+	virtual bool doUpdateGeometry(LLDrawable *drawable) = 0;
 	virtual LLVector3 getPivotPosition() const = 0;
 	virtual void onSetVolume(const LLVolumeParams &volume_params, const S32 detail) = 0;
-	virtual void onSetScale(const LLVector3 &scale, BOOL damped) = 0;
-	virtual void onParameterChanged(U16 param_type, LLNetworkData *data, BOOL in_use, bool local_origin) = 0;
+	virtual void onSetScale(const LLVector3 &scale, bool damped) = 0;
+	virtual void onParameterChanged(U16 param_type, LLNetworkData *data, bool in_use, bool local_origin) = 0;
 	virtual void onShift(const LLVector4a &shift_vector) = 0;
 	virtual bool isVolumeUnique() const = 0; // Do we need a unique LLVolume instance?
 	virtual bool isVolumeGlobal() const = 0; // Are we in global space?
@@ -123,14 +123,14 @@ public:
 
 				void	animateTextures();
 	
-	            BOOL    isVisible() const ;
+	            bool    isVisible() const ;
 	/*virtual*/ bool	isActive() const;
 	/*virtual*/ bool	isAttachment() const;
 	/*virtual*/ bool	isRootEdit() const; // overridden for sake of attachments treating themselves as a root object
 	/*virtual*/ bool	isHUDAttachment() const;
 
 				void	generateSilhouette(LLSelectNode* nodep, const LLVector3& view_point);
-	/*virtual*/	BOOL	setParent(LLViewerObject* parent);
+	/*virtual*/	bool	setParent(LLViewerObject* parent);
 				S32		getLOD() const						{ return mLOD; }
 				void	setNoLOD()							{ mLOD = NO_LOD; mLODChanged = true; }
 				bool	isNoLOD() const						{ return NO_LOD == mLOD; }
@@ -150,10 +150,10 @@ public:
 	//<FS:Beq> Mesh Info in object panel
 	/*virtual*/ U32		getLODTriangleCount(S32 lod);
 	//</FS:Beq>
-	/*virtual*/ BOOL lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end, 
+	/*virtual*/ bool lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end, 
 										  S32 face = -1,                        // which face to check, -1 = ALL_SIDES
-										  BOOL pick_transparent = FALSE,
-										  BOOL pick_rigged = FALSE,
+										  bool pick_transparent = false,
+										  bool pick_rigged = false,
 										  S32* face_hit = NULL,                 // which face was hit
 										  LLVector4a* intersection = NULL,       // return the intersection point
 										  LLVector2* tex_coord = NULL,          // return the texture coordinates of the intersection point
@@ -167,12 +167,12 @@ public:
 				LLVector3 volumeDirectionToAgent(const LLVector3& dir) const;
 
 				
-				BOOL	getVolumeChanged() const				{ return mVolumeChanged; }
+				bool	getVolumeChanged() const				{ return mVolumeChanged; }
 				
 	/*virtual*/ F32  	getRadius() const						{ return mVObjRadius; };
 				const LLMatrix4& getWorldMatrix(LLXformMatrix* xform) const;
 
-				void	markForUpdate(BOOL priority);
+				void	markForUpdate(bool priority);
 				void	markForUnload()							{ LLViewerObject::markForUnload(TRUE); mVolumeChanged = TRUE; }
 				void    faceMappingChanged()                    { mFaceMappingChanged=true; };
 
@@ -187,9 +187,9 @@ public:
 											LLDataPacker *dp);
 
 	/*virtual*/ void	setSelected(bool sel);
-	/*virtual*/ BOOL	setDrawableParent(LLDrawable* parentp);
+	/*virtual*/ bool	setDrawableParent(LLDrawable* parentp);
 
-	/*virtual*/ void	setScale(const LLVector3 &scale, BOOL damped);
+	/*virtual*/ void	setScale(const LLVector3 &scale, bool damped);
 
 	/*virtual*/ void    changeTEImage(S32 index, LLViewerTexture* new_image)  ;
 	/*virtual*/ void	setNumTEs(const U8 num_tes);
@@ -243,7 +243,7 @@ public:
 	virtual U32 getPartitionType() const;
 
 	// For Lights
-	void setIsLight(BOOL is_light);
+	void setIsLight(bool is_light);
     //set the gamma-corrected (sRGB) color of this light
 	void setLightSRGBColor(const LLColor3& color);
     //set the linear color of this light
@@ -256,7 +256,7 @@ public:
 	void setLightTextureID(LLUUID id);
 	void setSpotLightParams(LLVector3 params);
 
-	BOOL getIsLight() const;
+	bool getIsLight() const;
 
 
     // Get the light color in sRGB color space NOT scaled by intensity.
@@ -286,16 +286,16 @@ public:
 	
 	// Flexible Objects
 	U32 getVolumeInterfaceID() const;
-	virtual BOOL isFlexible() const;
-	virtual BOOL isSculpted() const;
-	virtual BOOL isMesh() const;
-	virtual BOOL isRiggedMesh() const;
-	virtual BOOL hasLightTexture() const;
+	virtual bool isFlexible() const;
+	virtual bool isSculpted() const;
+	virtual bool isMesh() const;
+	virtual bool isRiggedMesh() const;
+	virtual bool hasLightTexture() const;
 
     
-	BOOL isVolumeGlobal() const;
-	BOOL canBeFlexible() const;
-	BOOL setIsFlexible(BOOL is_flexible);
+	bool isVolumeGlobal() const;
+	bool canBeFlexible() const;
+	bool setIsFlexible(bool is_flexible);
 
     const LLMeshSkinInfo* getSkinInfo() const;
 
@@ -381,7 +381,7 @@ public:
 
 protected:
 	S32	computeLODDetail(F32 distance, F32 radius, F32 lod_factor);
-	BOOL calcLOD();
+	bool calcLOD();
 	LLFace* addFace(S32 face_index);
 	void updateTEData();
 
@@ -396,7 +396,7 @@ protected:
 	void removeMediaImpl(S32 texture_index) ;
 
 private:
-    bool lodOrSculptChanged(LLDrawable *drawable, BOOL &compiled, BOOL &shouldUpdateOctreeBounds);
+    bool lodOrSculptChanged(LLDrawable *drawable, S32 &compiled, S32 &shouldUpdateOctreeBounds);
 
 public:
 
@@ -419,12 +419,12 @@ private:
 	LLFrameTimer mTextureUpdateTimer;
 	S32			mLOD;
 	bool		mLODChanged;
-	BOOL		mSculptChanged;
-    BOOL		mColorChanged;
+	bool		mSculptChanged;
+    bool		mColorChanged;
 	F32			mSpotLightPriority;
 	LLMatrix4	mRelativeXform;
 	LLMatrix3	mRelativeXformInvTrans;
-	BOOL		mVolumeChanged;
+	bool		mVolumeChanged;
 	F32			mVObjRadius;
 	LLVolumeInterface *mVolumeImpl;
 	LLPointer<LLViewerFetchedTexture> mSculptTexture;

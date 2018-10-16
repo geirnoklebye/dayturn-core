@@ -38,7 +38,7 @@
 //---------------------------------------------------------------------------
 
 LLScrollListItem::LLScrollListItem( const Params& p )
-:	mSelected(FALSE),
+:	mSelected(false),
 	mHighlighted(FALSE),
 	mHoverIndex(-1),
 	mSelectedIndex(-1),
@@ -56,7 +56,7 @@ LLScrollListItem::~LLScrollListItem()
 	mColumns.clear();
 }
 
-void LLScrollListItem::setSelected(BOOL b)
+void LLScrollListItem::setSelected(bool b)
 {
     mSelected = b;
     mSelectedIndex = -1;

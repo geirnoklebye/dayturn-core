@@ -153,7 +153,7 @@ BOOL LLVOWLSky::updateGeometry(LLDrawable * drawable)
     {
         mFsSkyVerts = new LLVertexBuffer(LLDrawPoolWLSky::ADV_ATMO_SKY_VERTEX_DATA_MASK, GL_STATIC_DRAW_ARB);
 
-        if (!mFsSkyVerts->allocateBuffer(4, 6, TRUE))
+        if (!mFsSkyVerts->allocateBuffer(4, 6, true))
 		{
 			LL_WARNS() << "Failed to allocate Vertex Buffer on full screen sky update" << LL_ENDL;
 		}
@@ -237,7 +237,7 @@ BOOL LLVOWLSky::updateGeometry(LLDrawable * drawable)
 			const U32 num_indices_this_seg = 1+num_stacks_this_seg*(2+2*verts_per_stack);
 			llassert(num_indices_this_seg * sizeof(U16) <= max_buffer_bytes);
 
-			bool allocated = segment->allocateBuffer(num_verts_this_seg, num_indices_this_seg, TRUE);
+			bool allocated = segment->allocateBuffer(num_verts_this_seg, num_indices_this_seg, true);
 #if RELEASE_SHOW_WARNS
 			if( !allocated )
 			{
@@ -521,7 +521,7 @@ bool LLVOWLSky::updateStarGeometry(LLDrawable *drawable)
 	if (mStarsVerts.isNull() || !mStarsVerts->isWriteable())
 	{
 		mStarsVerts = new LLVertexBuffer(LLDrawPoolWLSky::STAR_VERTEX_DATA_MASK, GL_DYNAMIC_DRAW);
-		if (!mStarsVerts->allocateBuffer(getStarsNumVerts()*6, 0, TRUE))
+		if (!mStarsVerts->allocateBuffer(getStarsNumVerts()*6, 0, true))
 		{
 			LL_WARNS() << "Failed to allocate Vertex Buffer for Sky to " << getStarsNumVerts() * 6 << " vertices" << LL_ENDL;
 		}

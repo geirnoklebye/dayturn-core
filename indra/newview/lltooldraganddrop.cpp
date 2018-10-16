@@ -1537,7 +1537,7 @@ EAcceptance LLToolDragAndDrop::willObjectAcceptInventory(LLViewerObject* obj, LL
 		transfer = TRUE;
 	}
 	BOOL volume = (LL_PCODE_VOLUME == obj->getPCode());
-	BOOL attached = obj->isAttachment();
+	bool attached = obj->isAttachment();
 	BOOL unrestricted = ((perm.getMaskBase() & PERM_ITEM_UNRESTRICTED) == PERM_ITEM_UNRESTRICTED) ? TRUE : FALSE;
 	if(attached && !unrestricted)
 	{

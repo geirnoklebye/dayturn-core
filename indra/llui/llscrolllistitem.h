@@ -87,8 +87,8 @@ public:
 
 	virtual ~LLScrollListItem();
 
-	void	setSelected( BOOL b );
-	BOOL	getSelected() const				{ return mSelected; }
+	void	setSelected( bool b );
+	bool	getSelected() const				{ return mSelected; }
 
 	void	setEnabled( bool b )			{ mEnabled = b; }
 	bool	getEnabled() const 				{ return mEnabled; }
@@ -135,7 +135,7 @@ protected:
 	LLScrollListItem( const Params& );
 
 private:
-	BOOL	mSelected;
+	bool	mSelected;
     BOOL	mHighlighted;
     S32		mHoverIndex;
 	S32		mSelectedIndex;

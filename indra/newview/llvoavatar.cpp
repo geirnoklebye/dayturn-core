@@ -1689,7 +1689,7 @@ void LLVOAvatar::renderCollisionVolumes()
 	{
 		LLVector4a unused;
 	
-		mNameText->lineSegmentIntersect(unused, unused, unused, TRUE);
+		mNameText->lineSegmentIntersect(unused, unused, unused, true);
 	}
 }
 
@@ -1858,10 +1858,10 @@ void LLVOAvatar::renderJoints()
 	addDebugText(nullstr.str());
 }
 
-BOOL LLVOAvatar::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
+bool LLVOAvatar::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
 									  S32 face,
-									  BOOL pick_transparent,
-									  BOOL pick_rigged,
+									  bool pick_transparent,
+									  bool pick_rigged,
 									  S32* face_hit,
 									  LLVector4a* intersection,
 									  LLVector2* tex_coord,
@@ -1964,17 +1964,17 @@ BOOL LLVOAvatar::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 			*intersection = position;
 		}
 
-		return TRUE;
+		return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
 // virtual
 LLViewerObject* LLVOAvatar::lineSegmentIntersectRiggedAttachments(const LLVector4a& start, const LLVector4a& end,
 									  S32 face,
-									  BOOL pick_transparent,
-									  BOOL pick_rigged,
+									  bool pick_transparent,
+									  bool pick_rigged,
 									  S32* face_hit,
 									  LLVector4a* intersection,
 									  LLVector2* tex_coord,
@@ -2452,7 +2452,7 @@ void LLVOAvatar::updateMeshData()
 			if(!facep->getVertexBuffer())
 			{
 				buff = new LLVertexBufferAvatar();
-				if (!buff->allocateBuffer(num_vertices, num_indices, TRUE))
+				if (!buff->allocateBuffer(num_vertices, num_indices, true))
 				{
 					LL_WARNS() << "Failed to allocate Vertex Buffer for Mesh to "
 						<< num_vertices << " vertices and "
@@ -7410,7 +7410,7 @@ bool LLVOAvatar::updateJointLODs()
 LLDrawable *LLVOAvatar::createDrawable(LLPipeline *pipeline)
 {
 	pipeline->allocDrawable(this);
-	mDrawable->setLit(FALSE);
+	mDrawable->setLit(false);
 
 	LLDrawPoolAvatar *poolp = (LLDrawPoolAvatar*)gPipeline.getPool(mIsControlAvatar ? LLDrawPool::POOL_CONTROL_AV : LLDrawPool::POOL_AVATAR);
 
@@ -7507,9 +7507,9 @@ void LLVOAvatar::hideSkirt()
 	mMeshLOD[MESH_ID_SKIRT]->setVisible(false, true);
 }
 
-BOOL LLVOAvatar::setParent(LLViewerObject* parent)
+bool LLVOAvatar::setParent(LLViewerObject* parent)
 {
-	BOOL ret ;
+	bool ret ;
 	if (parent == NULL)
 	{
 		getOffObject();

@@ -62,7 +62,7 @@ void LLVOGround::updateTextures()
 LLDrawable *LLVOGround::createDrawable(LLPipeline *pipeline)
 {
 	pipeline->allocDrawable(this);
-	mDrawable->setLit(FALSE);
+	mDrawable->setLit(false);
 
 	mDrawable->setRenderType(LLPipeline::RENDER_TYPE_GROUND);
 	LLDrawPoolGround *poolp = (LLDrawPoolGround*) gPipeline.getPool(LLDrawPool::POOL_GROUND);
@@ -94,7 +94,7 @@ BOOL LLVOGround::updateGeometry(LLDrawable *drawable)
 	{
 		face->setSize(5, 12);
 		LLVertexBuffer* buff = new LLVertexBuffer(LLDrawPoolGround::VERTEX_DATA_MASK, GL_STREAM_DRAW_ARB);
-		if (!buff->allocateBuffer(face->getGeomCount(), face->getIndicesCount(), TRUE))
+		if (!buff->allocateBuffer(face->getGeomCount(), face->getIndicesCount(), true))
 		{
 			LL_WARNS() << "Failed to allocate Vertex Buffer for VOGround to "
 				<< face->getGeomCount() << " vertices and "

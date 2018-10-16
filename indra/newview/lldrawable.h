@@ -91,9 +91,9 @@ public:
 	LLDrawable(LLViewerObject *vobj, bool new_entry = false);
 	
 	void markDead();			// Mark this drawable as dead
-	BOOL isDead() const			{ return isState(DEAD); }
-	BOOL isNew() const			{ return !isState(BUILT); }
-	BOOL isUnload() const		{ return isState(FOR_UNLOAD); }
+	bool isDead() const			{ return isState(DEAD); }
+	bool isNew() const			{ return !isState(BUILT); }
+	bool isUnload() const		{ return isState(FOR_UNLOAD); }
 
 	BOOL isLight() const;
 
@@ -123,7 +123,7 @@ public:
 	LLXformMatrix*		getXform() { return &mXform; }
 
 	U32					getState()           const { return mState; }
-	BOOL				isState   (U32 bits) const { return ((mState & bits) != 0); }
+	bool				isState   (U32 bits) const { return ((mState & bits) != 0); }
 	void                setState  (U32 bits)       { mState |= bits; }
 	void                clearState(U32 bits)       { mState &= ~bits; }
 
@@ -181,8 +181,8 @@ public:
 
 	S32 getGeneration() const					{ return mGeneration; }
 
-	BOOL getLit() const							{ return isState(UNLIT) ? FALSE : TRUE; }
-	void setLit(BOOL lit)						{ lit ? clearState(UNLIT) : setState(UNLIT); }
+	bool getLit() const							{ return isState(UNLIT) ? false : true; }
+	void setLit(bool lit)						{ lit ? clearState(UNLIT) : setState(UNLIT); }
 
 	bool isVisible() const;
 	bool isRecentlyVisible() const;

@@ -243,7 +243,7 @@ void LLVOPartGroup::updateTextures()
 LLDrawable* LLVOPartGroup::createDrawable(LLPipeline *pipeline)
 {
 	pipeline->allocDrawable(this);
-	mDrawable->setLit(FALSE);
+	mDrawable->setLit(false);
 	mDrawable->setRenderType(LLPipeline::RENDER_TYPE_PARTICLES);
 	return mDrawable;
 }
@@ -481,10 +481,10 @@ BOOL LLVOPartGroup::updateGeometry(LLDrawable *drawable)
 }
 
 
-BOOL LLVOPartGroup::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
+bool LLVOPartGroup::lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
 										  S32 face,
-										  BOOL pick_transparent,
-										  BOOL pick_rigged,
+										  bool pick_transparent,
+										  bool pick_rigged,
 										  S32* face_hit,
 										  LLVector4a* intersection,
 										  LLVector2* tex_coord,
@@ -998,7 +998,7 @@ U32 LLVOHUDPartGroup::getPartitionType() const
 LLDrawable* LLVOHUDPartGroup::createDrawable(LLPipeline *pipeline)
 {
 	pipeline->allocDrawable(this);
-	mDrawable->setLit(FALSE);
+	mDrawable->setLit(false);
 	mDrawable->setRenderType(LLPipeline::RENDER_TYPE_HUD_PARTICLES);
 	return mDrawable;
 }

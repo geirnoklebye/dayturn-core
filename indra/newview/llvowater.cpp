@@ -97,7 +97,7 @@ void  LLVOWater::idleUpdate(LLAgent &agent, const F64 &time)
 LLDrawable *LLVOWater::createDrawable(LLPipeline *pipeline)
 {
 	pipeline->allocDrawable(this);
-	mDrawable->setLit(FALSE);
+	mDrawable->setLit(false);
 	mDrawable->setRenderType(mRenderType);
 
 	LLDrawPoolWater *pool = (LLDrawPoolWater*) gPipeline.getPool(LLDrawPool::POOL_WATER);
@@ -153,7 +153,7 @@ BOOL LLVOWater::updateGeometry(LLDrawable *drawable)
 	if (!buff || !buff->isWriteable())
 	{
 		buff = new LLVertexBuffer(LLDrawPoolWater::VERTEX_DATA_MASK, GL_DYNAMIC_DRAW_ARB);
-		if (!buff->allocateBuffer(face->getGeomCount(), face->getIndicesCount(), TRUE))
+		if (!buff->allocateBuffer(face->getGeomCount(), face->getIndicesCount(), true))
 		{
 			LL_WARNS() << "Failed to allocate Vertex Buffer on water update to "
 				<< face->getGeomCount() << " vertices and "

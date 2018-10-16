@@ -1344,7 +1344,7 @@ BOOL LLFace::getGeometryVolume(const LLVolume& volume,
 
 	BOOL full_rebuild = force_rebuild || mDrawablep->isState(LLDrawable::REBUILD_VOLUME);
 	
-	BOOL global_volume = mDrawablep->getVOVolume()->isVolumeGlobal();
+	bool global_volume = mDrawablep->getVOVolume()->isVolumeGlobal();
 	LLVector3 scale;
 	if (global_volume)
 	{

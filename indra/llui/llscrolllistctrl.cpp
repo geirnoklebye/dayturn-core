@@ -2902,7 +2902,7 @@ void LLScrollListCtrl::selectItem(LLScrollListItem* itemp, S32 cell, bool select
 		{
 			deselectAllItems(true);
 		}
-		itemp->setSelected(TRUE);
+		itemp->setSelected(true);
         switch (mSelectionType)
         {
         case CELL:
@@ -2931,7 +2931,7 @@ void LLScrollListCtrl::deselectItem(LLScrollListItem* itemp)
 			mLastSelected = NULL;
 		}
 
-		itemp->setSelected(FALSE);
+		itemp->setSelected(false);
 		LLScrollListCell* cellp = itemp->getColumn(getSearchColumn());
 		if (cellp)
 		{

@@ -2806,7 +2806,7 @@ void LLModelPreview::genBuffers(S32 lod, bool include_skin_weights)
 
             vb = new LLVertexBuffer(mask, 0);
 
-            if (!vb->allocateBuffer(num_vertices, num_indices, TRUE))
+            if (!vb->allocateBuffer(num_vertices, num_indices, true))
             {
                 // We are likely to crash due this failure, if this happens, find a way to gracefully stop preview
                 std::ostringstream out;

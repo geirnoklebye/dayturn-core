@@ -1019,7 +1019,7 @@ void LLManipScale::dragCorner( S32 x, S32 y )
 			!cur->isAvatar() && !cur->isRootEdit() )
 		{
 			const LLVector3& scale = selectNode->mSavedScale;
-			cur->setScale( scale_factor * scale, FALSE );
+			cur->setScale( scale_factor * scale, false );
 
 			if (!selectNode->mIndividualSelection)
 			{
@@ -1246,7 +1246,7 @@ void LLManipScale::stretchFace( const LLVector3& drag_start_agent, const LLVecto
 
 			LLVector3 scale			= cur->getScale();
 			scale.mV[axis_index]	= desired_scale;
-			cur->setScale(scale, FALSE);
+			cur->setScale(scale, false);
 			rebuild(cur);
 			LLVector3 delta_pos;
 			if( !getUniform() )

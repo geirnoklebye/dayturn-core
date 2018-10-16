@@ -798,7 +798,7 @@ void LLImagePreviewSculpted::setPreviewTarget(LLImageRaw* imagep, F32 distance)
 	U32 num_vertices = vf.mNumVertices;
 
 	mVertexBuffer = new LLVertexBuffer(LLVertexBuffer::MAP_VERTEX | LLVertexBuffer::MAP_NORMAL | LLVertexBuffer::MAP_TEXCOORD0, 0);
-	if (!mVertexBuffer->allocateBuffer(num_vertices, num_indices, TRUE))
+	if (!mVertexBuffer->allocateBuffer(num_vertices, num_indices, true))
 	{
 		LL_WARNS() << "Failed to allocate Vertex Buffer for image preview to"
 			<< num_vertices << " vertices and "

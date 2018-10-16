@@ -380,8 +380,8 @@ public:
 	BOOL remove(LLDrawable *drawablep, LLSpatialGroup *curp);
 	
 	LLDrawable* lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end,
-									 BOOL pick_transparent, 
-									 BOOL pick_rigged,
+									 bool pick_transparent,
+									 bool pick_rigged,
 									 S32* face_hit,                          // return the face hit
 									 LLVector4a* intersection = NULL,         // return the intersection point
 									 LLVector2* tex_coord = NULL,            // return the texture coordinates of the intersection point
@@ -652,7 +652,7 @@ class LLVolumeGeometryManager: public LLGeometryManager
 	virtual void rebuildMesh(LLSpatialGroup* group);
 	virtual void getGeometry(LLSpatialGroup* group);
     virtual void addGeometryCount(LLSpatialGroup* group, U32& vertex_count, U32& index_count);
-	U32 genDrawInfo(LLSpatialGroup* group, U32 mask, LLFace** faces, U32 face_count, BOOL distance_sort = FALSE, BOOL batch_textures = FALSE, BOOL rigged = FALSE);
+	U32 genDrawInfo(LLSpatialGroup* group, U32 mask, LLFace** faces, U32 face_count, bool distance_sort = false, bool batch_textures = false, bool rigged = false);
 	void registerFace(LLSpatialGroup* group, LLFace* facep, U32 type);
 
 private:
