@@ -10,7 +10,7 @@
 #include "llviewerwindow.h"
 #include "llviewerobjectlist.h"
 #include "llviewerregion.h"
-#include "fswsassetblacklist.h"
+//#include "fswsassetblacklist.h"
 
 static const size_t num_collision_sounds = 28;
 const LLUUID collision_sounds[num_collision_sounds] =
@@ -371,8 +371,8 @@ void NACLFloaterExploreSounds::blacklistSound(void* user_data)
 		  sound_data["entry_name"] = llformat("Sound played by %s",agent.c_str());
 		sound_data["entry_type"] = (LLAssetType::EType)item.mType;
 		sound_data["entry_agent"] = gAgent.getID();
-		//NACLFloaterBlacklist::addEntry(item.mAssetID,sound_data); //for origonal asset blacklist
-		FSWSAssetBlacklist::getInstance()->addNewItemToBlacklist(item.mAssetID,"Sometext",LLAssetType::AT_SOUND,true);
+		NACLFloaterBlacklist::addEntry(item.mAssetID,sound_data); //for origonal asset blacklist
+//		FSWSAssetBlacklist::getInstance()->addNewItemToBlacklist(item.mAssetID,"Sometext",LLAssetType::AT_SOUND,true);
 	}
 }
 
