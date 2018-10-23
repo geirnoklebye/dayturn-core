@@ -863,7 +863,7 @@
         <menu_item_check
 			label="Legacy Search"
 			name="Legacy Search"
-      shortcut="control|alt|F">
+            shortcut="control|alt|F">
             <menu_item_check.on_check
 			function="Floater.Visible"
 			parameter="search_legacy" />
@@ -871,13 +871,24 @@
 			function="Floater.Toggle"
 			parameter="search_legacy" />
 		</menu_item_check>
-       <menu_item_call
+        <menu_item_call
          label="Area Search"
          name="area_search">
             <menu_item_call.on_click
              function="Floater.Toggle"
              parameter="area_search" />
         </menu_item_call>
+        <menu_item_check
+         label="Sound Explorer"
+         name="Sound Explorer">
+        <menu_item_check.on_check
+          function="Floater.Visible"
+          parameter="sound_explorer" />
+        <menu_item_check.on_click
+          function="Floater.Toggle"
+          parameter="sound_explorer" />
+       </menu_item_check>		
+		
     <menu_item_separator/>
     <menu_item_call
      label="Teleport Home"
