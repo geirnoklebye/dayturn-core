@@ -3799,10 +3799,10 @@ public:
 	LLVector4a *mNormal;
 	LLVector4a *mTangent;
 	LLDrawable* mHit;
-	BOOL mPickTransparent;
-	BOOL mPickRigged;
+	bool mPickTransparent;
+	bool mPickRigged;
 
-	LLOctreeIntersect(const LLVector4a& start, const LLVector4a& end, BOOL pick_transparent, BOOL pick_rigged,
+	LLOctreeIntersect(const LLVector4a& start, const LLVector4a& end, bool pick_transparent, bool pick_rigged,
 					  S32* face_hit, LLVector4a* intersection, LLVector2* tex_coord, LLVector4a* normal, LLVector4a* tangent)
 		: mStart(start),
 		  mEnd(end),
