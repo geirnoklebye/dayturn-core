@@ -4280,6 +4280,11 @@ Try enclosing path to the editor with double quotes.
 
   <!-- Statistics -->
   <string name="na">n/a</string>
+  
+  <!-- Animation Explorer -->
+  <string name="animation_explorer_seconds_ago">[SECONDS] seconds ago</string>
+  <string name="animation_explorer_still_playing">Still playing</string>
+  <string name="animation_explorer_unknown_priority">unknown</string>  
 
   <!-- Presets graphic/camera -->
   <string name="preset_combo_label">-Empty list-</string>
@@ -4341,13 +4346,7 @@ Previous simulator: [OLDVERSION]</string>
 [AGENT] ms Agent
 [IMAGES] ms Images
 [SCRIPT] ms Script
-[SPARE] ms Spare
-
-<!-- Animation Explorer -->
-  <string name="animation_explorer_seconds_ago">[SECONDS] seconds ago</string>
-  <string name="animation_explorer_still_playing">Still playing</string>
-
-</string>
+[SPARE] ms Spare</string>
 
 
 </strings>

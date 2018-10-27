@@ -898,6 +898,7 @@ public:
 	BOOL			isSitting(){return mIsSitting;}
 	void 			sitOnObject(LLViewerObject *sit_object);
 	void 			getOffObject();
+	void 			revokePermissionsOnObject(LLViewerObject *sit_object);	
 //MK
 ////private:
 //mk

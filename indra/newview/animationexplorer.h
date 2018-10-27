@@ -28,11 +28,8 @@
 #ifndef ANIMATIONEXPLORER_H
 #define ANIMATIONEXPLORER_H
 
-#include <deque>
-
 #include "llfloater.h"
 #include "llfloaterbvhpreview.h"	// for LLPreviewAnimation
-#include "llscrolllistitem.h"
 #include "llsingleton.h"
 
 // --------------------------------------------------------------------------
@@ -46,13 +43,10 @@ class AnimationExplorer;
 class RecentAnimationList
 :	public LLSingleton<RecentAnimationList>
 {
-	friend class LLSingleton<RecentAnimationList>;
-
-	private:
-		RecentAnimationList();
+	LLSINGLETON(RecentAnimationList);
 		~RecentAnimationList();
 
-	public:
+public:
 		struct AnimationEntry
 		{
 			LLUUID animationID;		// asset ID of the animation
@@ -62,7 +56,7 @@ class RecentAnimationList
 
 		std::deque<AnimationEntry> mAnimationList;
 
-		void addAnimation(const LLUUID& id,const LLUUID& playedBy);		// called in llviewermessage.cpp
+	void addAnimation(const LLUUID& id, const LLUUID& playedBy);		// called in llviewermessage.cpp
 		void requestList(AnimationExplorer* explorer);					// request animation list
 };
 
@@ -88,7 +82,7 @@ class AnimationExplorer
 
 	public:
 		/*virtual*/ BOOL postBuild();
-		void addAnimation(const LLUUID& id,const LLUUID& playedBy,F64 time);	// called from RecentAnimationList
+		void addAnimation(const LLUUID& id, const LLUUID& playedBy, F64 time);	// called from RecentAnimationList
 
 		// copied from llfloaterbvhpreview.h
 		BOOL handleMouseDown(S32 x, S32 y, MASK mask);
@@ -116,7 +110,7 @@ class AnimationExplorer
 		LLUUID mCurrentObject;			// object ID that played the currently selected animation
 
 		std::vector<LLUUID> mRequestedIDs;			// list of object IDs we requested named for
-		std::map<LLUUID,std::string> mKnownIDs;		// known list of names for object IDs
+		std::map<LLUUID, std::string> mKnownIDs;		// known list of names for object IDs
 
 		void draw();
 		void update();								// request list update from RecentAnimationList

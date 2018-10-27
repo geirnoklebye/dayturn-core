@@ -9860,3 +9860,20 @@ void LLVOAvatar::process_avatar_birthdate(const LLDate birthdate)
 	delete mAvatarBirthdateRequest;
 	mAvatarBirthdateRequest = NULL;
 }
+//-----------------------------------------------------------------------------
+// revokePermissionsOnObject()
+//-----------------------------------------------------------------------------
+void LLVOAvatar::revokePermissionsOnObject(LLViewerObject *sit_object)
+{
+	if (sit_object)
+	{
+		gMessageSystem->newMessageFast(_PREHASH_RevokePermissions);
+		gMessageSystem->nextBlockFast(_PREHASH_AgentData);
+		gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+		gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+		gMessageSystem->nextBlockFast(_PREHASH_Data);
+		gMessageSystem->addUUIDFast(_PREHASH_ObjectID, sit_object->getID());
+		gMessageSystem->addU32Fast(_PREHASH_ObjectPermissions, 0xFFFFFFFF);
+		gAgent.sendReliableMessage();
+	}
+}
