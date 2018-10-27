@@ -3925,6 +3925,12 @@ void process_object_properties(LLMessageSystem *msg, void **user_data)
 	if (area_search_floater && area_search_floater->isActive()) {
 		area_search_floater->processObjectProperties(msg);
 	}
+
+	AnimationExplorer* explorer=LLFloaterReg::findTypedInstance<AnimationExplorer>("animation_explorer");
+	if(explorer)
+	{
+		explorer->requestNameCallback(msg);
+	}
 }
 
 void process_time_synch(LLMessageSystem *mesgsys, void **user_data)
@@ -5428,12 +5434,6 @@ static void process_special_alert_messages(const std::string & message)
 		snap_filename += gDirUtilp->getDirDelimiter();
 		snap_filename += SCREEN_HOME_FILENAME;
 		gViewerWindow->saveSnapshot(snap_filename, gViewerWindow->getWindowWidthRaw(), gViewerWindow->getWindowHeightRaw(), FALSE, FALSE);
-	}
-
-	AnimationExplorer* explorer=LLFloaterReg::findTypedInstance<AnimationExplorer>("animation_explorer");
-	if(explorer)
-	{
-		explorer->requestNameCallback(msg);
 	}
 }
 
