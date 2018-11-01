@@ -2467,7 +2467,7 @@ protected:
 		mCallback(mNewValue);
 		mEventTimer.stop();
 
-		return FALSE;
+		return false;
 	}
 
 private:

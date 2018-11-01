@@ -1157,7 +1157,7 @@ bool LLVOSky::updateHeavenlyBodyGeometry(LLDrawable *drawable, F32 scale, const 
 
 	if (-1 == index_offset)
 	{
-		return TRUE;
+		return true;
 	}
 
 	for (S32 vtx = 0; vtx < 4; ++vtx)
@@ -1181,7 +1181,7 @@ bool LLVOSky::updateHeavenlyBodyGeometry(LLDrawable *drawable, F32 scale, const 
 
 	facep->getVertexBuffer()->flush();
 
-	return TRUE;
+	return true;
 }
 
 F32 dtReflection(const LLVector3& p, F32 cos_dir_from_top, F32 sin_dir_from_top, F32 diff_angl_dir)

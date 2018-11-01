@@ -470,7 +470,7 @@ bool LLMediaDataClient::RetryTimer::tick()
     mRequest.reset();
 
 	// Don't fire again
-	return TRUE;
+	return true;
 }
 
 

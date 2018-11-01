@@ -64,7 +64,7 @@ bool LLDoNotDisturbNotificationStorageTimer::tick()
     {
         doNotDisturbNotificationStorage->saveNotifications();
     }
-    return FALSE;
+    return false;
 }
 
 LLDoNotDisturbNotificationStorage::LLDoNotDisturbNotificationStorage()

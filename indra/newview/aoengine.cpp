@@ -2316,8 +2316,7 @@ bool AOSitCancelTimer::tick()
 	if (mTickCount == 10)
 	{
 		mEventTimer.stop();
-	}
-	return FALSE;
+	return false;
 }
 
 // ----------------------------------------------------
@@ -2359,8 +2358,8 @@ bool AOTimerCollection::tick()
 		AOEngine::instance().processImport(true);
 	}
 
-	// always return FALSE or the LLEventTimer will be deleted -> crash
-	return FALSE;
+// always return FALSE or the LLEventTimer will be deleted -> crash
+	return false;
 }
 
 void AOTimerCollection::enableInventoryTimer(BOOL yes)
