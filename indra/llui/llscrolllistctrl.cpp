@@ -3629,9 +3629,9 @@ void LLScrollListCtrl::setFocus(BOOL b)
 
 
 // virtual 
-BOOL	LLScrollListCtrl::isDirty() const		
+bool	LLScrollListCtrl::isDirty() const
 {
-	BOOL grubby = mDirty;
+	bool grubby = mDirty;
 	if ( !mAllowMultipleSelection )
 	{
 		grubby = (mOriginalSelection != getFirstSelectedIndex());
@@ -3642,7 +3642,7 @@ BOOL	LLScrollListCtrl::isDirty() const
 // Clear dirty state
 void LLScrollListCtrl::resetDirty()
 {
-	mDirty = FALSE;
+	mDirty = false;
 	mOriginalSelection = getFirstSelectedIndex();
 }
 

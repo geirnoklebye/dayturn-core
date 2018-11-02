@@ -1702,7 +1702,7 @@ void AOEngine::saveSettings()
 			{
 				saveState(state);
 				LL_INFOS("AOEngine") << "dirty state saved " << state->mName << LL_ENDL;
-				state->mDirty = FALSE;
+				state->mDirty = false;
 			}
 		}
 	}
@@ -1864,19 +1864,19 @@ void AOEngine::setDisableStands(AOSet* set, bool yes)
 void AOEngine::setCycle(AOSet::AOState* state, bool yes)
 {
 	state->mCycle = yes;
-	state->mDirty = TRUE;
+	state->mDirty = true;
 }
 
 void AOEngine::setRandomize(AOSet::AOState* state, bool yes)
 {
 	state->mRandom = yes;
-	state->mDirty = TRUE;
+	state->mDirty = true;
 }
 
 void AOEngine::setCycleTime(AOSet::AOState* state, F32 time)
 {
 	state->mCycleTime = time;
-	state->mDirty = TRUE;
+	state->mDirty = true;
 }
 
 void AOEngine::tick()

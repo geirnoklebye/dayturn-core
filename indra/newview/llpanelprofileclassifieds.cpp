@@ -1213,14 +1213,14 @@ void LLPanelProfileClassified::onTeleportClick()
     }
 }
 
-BOOL LLPanelProfileClassified::isDirty() const
+bool LLPanelProfileClassified::isDirty() const
 {
     if(mIsNew)
     {
-        return TRUE;
+        return true;
     }
 
-    BOOL dirty = false;
+    bool dirty = false;
     dirty |= mSnapshotCtrl->isDirty();
     dirty |= mClassifiedNameEdit->isDirty();
     dirty |= mClassifiedDescEdit->isDirty();

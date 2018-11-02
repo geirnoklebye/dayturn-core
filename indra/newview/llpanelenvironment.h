@@ -50,7 +50,7 @@ public:
     virtual bool                postBuild() override;
     virtual void                onOpen(const LLSD& key) override;
 
-    virtual BOOL                isDirty() const override            { return getIsDirty(); }
+    virtual bool                isDirty() const override            { return getIsDirty(); }
     virtual void                onVisibilityChange(bool new_visibility) override;
 
     virtual void                refresh() override;

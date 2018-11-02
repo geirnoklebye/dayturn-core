@@ -708,7 +708,7 @@ void LLPanelProfilePick::resetDirty()
     mLocationChanged = false;
 }
 
-BOOL LLPanelProfilePick::isDirty() const
+bool LLPanelProfilePick::isDirty() const
 {
     if (mNewPick
         || LLPanel::isDirty()
@@ -717,9 +717,9 @@ BOOL LLPanelProfilePick::isDirty() const
         || mPickName->isDirty()
         || mPickDescription->isDirty())
     {
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 void LLPanelProfilePick::onClickSetLocation()

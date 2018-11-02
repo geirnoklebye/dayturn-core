@@ -171,7 +171,7 @@ public:
 
     void setInfoLoaded(bool loaded) { mInfoLoaded = loaded; }
 
-    BOOL isDirty() const override;
+    bool isDirty() const override;
 
     void resetDirty() override;
 

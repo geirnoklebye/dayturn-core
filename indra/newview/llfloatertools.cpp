@@ -715,14 +715,14 @@ void LLFloaterTools::draw()
     bool has_selection = !LLSelectMgr::getInstance()->getSelection()->isEmpty();
     if(!has_selection && (mHasSelection != has_selection))
     {
-        mDirty = TRUE;
+        mDirty = true;
     }
     mHasSelection = has_selection;
 
     if (mDirty)
 	{
 		refresh();
-		mDirty = FALSE;
+		mDirty = false;
 	}
 
 	// grab media name/title and update the UI widget
@@ -734,7 +734,7 @@ void LLFloaterTools::draw()
 
 void LLFloaterTools::dirty()
 {
-	mDirty = TRUE; 
+	mDirty = true;
 	LLFloaterOpenObject* instance = LLFloaterReg::findTypedInstance<LLFloaterOpenObject>("openobject");
 	if (instance) instance->dirty();
 }

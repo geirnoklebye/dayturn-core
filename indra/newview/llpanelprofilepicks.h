@@ -126,7 +126,7 @@ public:
     /**
      * Returns true if any of Pick properties was changed by user.
      */
-    BOOL isDirty() const override;
+    bool isDirty() const override;
 
     /**
      * Saves changes.

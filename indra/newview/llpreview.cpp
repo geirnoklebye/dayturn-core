@@ -207,7 +207,7 @@ void LLPreview::onCommit()
 
 void LLPreview::changed(U32 mask)
 {
-	mDirty = TRUE;
+	mDirty = true;
 }
 
 void LLPreview::setNotecardInfo(const LLUUID& notecard_inv_id, 
@@ -222,7 +222,7 @@ void LLPreview::draw()
 	LLFloater::draw();
 	if (mDirty)
 	{
-		mDirty = FALSE;
+		mDirty = false;
 		refreshFromItem();
 	}
 }
@@ -310,7 +310,7 @@ void LLPreview::dirty(const LLUUID& item_uuid)
 	LLPreview* preview = dynamic_cast<LLPreview*>(floater);
 	if(preview)
 	{
-		preview->mDirty = TRUE;
+		preview->mDirty = true;
 	}
 }
 

@@ -1458,7 +1458,7 @@ void FSPanelPick::resetDirty()
 	mLocationChanged = false;
 }
 
-BOOL FSPanelPick::isDirty() const
+bool FSPanelPick::isDirty() const
 {
 	if (mNewPick
 		|| LLPanel::isDirty()
@@ -1467,9 +1467,9 @@ BOOL FSPanelPick::isDirty() const
 		|| mPickName->isDirty()
 		|| mPickDescription->isDirty())
 	{
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 void FSPanelPick::onClickSetLocation()

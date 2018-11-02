@@ -63,7 +63,7 @@ public:
 	LLScrollListCtrl* mObjectList;
 protected:
 	// protected members
-	void setDirty() { mDirty = TRUE; }
+	void setDirty() { mDirty = true; }
 	bool mDirty;
 	void onScrollListRightClicked(LLUICtrl* ctrl, S32 x, S32 y);
 	LLContextMenu	*mPopupMenu;
