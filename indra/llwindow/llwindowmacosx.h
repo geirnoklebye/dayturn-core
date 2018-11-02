@@ -153,7 +153,7 @@ protected:
 		~LLWindowMacOSX();
 
 	void	initCursors();
-	BOOL	isValid() override;
+	bool	isValid() override;
 	void	moveWindow(const LLCoordScreen& position,const LLCoordScreen& size);
 
 

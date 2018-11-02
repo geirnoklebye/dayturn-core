@@ -785,11 +785,11 @@ void LLWindowMacOSX::close()
 	destroyContext();
 }
 
-BOOL LLWindowMacOSX::isValid()
+bool LLWindowMacOSX::isValid()
 {
 	if(mFullscreen)
 	{
-		return(TRUE);
+		return(true);
 	}
 
 	return (mWindow != NULL);

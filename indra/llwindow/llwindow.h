@@ -201,7 +201,7 @@ protected:
 	LLWindow(LLWindowCallbacks* callbacks, BOOL fullscreen, U32 flags);
 	virtual ~LLWindow();
 	// Defaults to true
-	virtual BOOL isValid();
+	virtual bool isValid();
 	// Defaults to true
 	virtual BOOL canDelete();
 

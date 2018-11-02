@@ -4857,7 +4857,7 @@ void LLSelectMgr::saveSelectedObjectTextures()
 	{
 		virtual bool apply(LLSelectNode* node)
 		{
-			node->mValid = FALSE;
+			node->mValid = false;
 			return true;
 		}
 	} func;
@@ -5584,7 +5584,7 @@ void LLSelectMgr::processObjectProperties(LLMessageSystem* msg, void** user_data
 				}
 			}
 
-			node->mValid = TRUE;
+			node->mValid = true;
 			node->mPermissions->init(creator_id, owner_id,
 									 last_owner_id, group_id);
 			node->mPermissions->initMasks(base_mask, owner_mask, everyone_mask, group_mask, next_owner_mask);
@@ -5678,7 +5678,7 @@ void LLSelectMgr::processObjectPropertiesFamily(LLMessageSystem* msg, void** use
 
 	if (node)
 	{
-		node->mValid = TRUE;
+		node->mValid = true;
 		node->mPermissions->init(LLUUID::null, owner_id,
 								 last_owner_id, group_id);
 		node->mPermissions->initMasks(base_mask, owner_mask, everyone_mask, group_mask, next_owner_mask);
@@ -6266,7 +6266,7 @@ LLSelectNode::LLSelectNode(LLViewerObject* object, bool glow)
 :	mObject(object),
 	mIndividualSelection(false),
 	mTransient(false),
-	mValid(FALSE),
+	mValid(false),
 	mPermissions(new LLPermissions()),
 	mInventorySerial(0),
 	mSilhouetteExists(false),

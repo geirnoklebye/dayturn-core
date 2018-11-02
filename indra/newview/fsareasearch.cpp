@@ -1819,7 +1819,7 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 					FSObjectProperties& details = mFSAreaSearch->mObjectDetails[object_id];
 					if (c == 'r')
 					{
-						node->mValid = TRUE;
+						node->mValid = true;
 						node->mPermissions->init(details.creator_id, details.owner_id, details.last_owner_id, details.group_id);
 						node->mPermissions->initMasks(details.base_mask, details.owner_mask, details.everyone_mask, details.group_mask, details.next_owner_mask);
 						node->mAggregatePerm = details.ag_perms;
@@ -1927,7 +1927,7 @@ void FSPanelAreaSearchList::buyObject(FSObjectProperties& details, LLViewerObjec
 	
 	if (node)
 	{
-		node->mValid = TRUE;
+		node->mValid = true;
 		node->mPermissions->init(details.creator_id, details.owner_id, details.last_owner_id, details.group_id);
 		node->mPermissions->initMasks(details.base_mask, details.owner_mask, details.everyone_mask, details.group_mask, details.next_owner_mask);
 		node->mSaleInfo = details.sale_info;

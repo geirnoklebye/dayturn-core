@@ -486,7 +486,7 @@ std::string get_string(IDxDiagContainer *containerp, WCHAR *wszPropName)
 
 LLVersion::LLVersion()
 {
-	mValid = FALSE;
+	mValid = false;
 	S32 i;
 	for (i = 0; i < 4; i++)
 	{
@@ -521,11 +521,11 @@ BOOL LLVersion::set(const std::string &version_string)
 		{
 			mFields[i] = 0;
 		}
-		mValid = FALSE;
+		mValid = false;
 	}
 	else
 	{
-		mValid = TRUE;
+		mValid = true;
 	}
 	return mValid;
 }

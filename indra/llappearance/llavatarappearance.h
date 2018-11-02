@@ -108,7 +108,7 @@ public:
  **/
 public:
 	virtual bool 	isSelf() const { return false; } // True if this avatar is for this viewer's agent
-	virtual BOOL	isValid() const;
+	virtual bool	isValid() const;
 	virtual BOOL	isUsingLocalAppearance() const = 0;
 	virtual BOOL	isEditingAppearance() const = 0;
 

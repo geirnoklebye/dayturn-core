@@ -180,7 +180,7 @@ private:
 	std::vector<LLGestureManagerObserver*> mObservers;
 	callback_map_t mCallbackMap;
 	std::vector<LLMultiGesture*> mPlaying;	
-	BOOL mValid;
+	bool mValid;
 
 	std::set<LLUUID> mLoadingAssets;
 

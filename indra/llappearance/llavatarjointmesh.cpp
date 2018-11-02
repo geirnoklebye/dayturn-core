@@ -161,7 +161,7 @@ LLAvatarJointMesh::LLAvatarJointMesh()
 	mMeshID = 0;
 	mUpdateXform = FALSE;
 
-	mValid = FALSE;
+	mValid = false;
 
 	mIsTransparent = FALSE;
 }

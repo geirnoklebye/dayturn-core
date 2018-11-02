@@ -121,7 +121,7 @@ public:
 
 	LLTransferSource *findTransferSource(const LLUUID &transfer_id);
 
-	BOOL						isValid() const			{ return mValid; }
+	bool		isValid() const			{ return mValid; }
 
 	static void processTransferRequest(LLMessageSystem *mesgsys, void **);
 	static void processTransferInfo(LLMessageSystem *mesgsys, void **);
@@ -144,7 +144,7 @@ protected:
 	// Convenient typedefs
 	typedef std::map<LLHost, LLTransferConnection *> host_tc_map;
 
-	BOOL	mValid;
+	bool	mValid;
 	LLHost	mHost;
 
 	S32		mTransferBitsIn[LLTTT_NUM_TYPES];

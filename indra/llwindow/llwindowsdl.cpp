@@ -834,7 +834,7 @@ void LLWindowSDL::close()
 	destroyContext();
 }
 
-BOOL LLWindowSDL::isValid()
+bool LLWindowSDL::isValid()
 {
 	return (mWindow != NULL);
 }

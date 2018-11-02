@@ -148,7 +148,7 @@ protected:
 	void	initCursors();
 	void	initInputDevices();
 	HCURSOR loadColorCursor(LPCTSTR name);
-	BOOL	isValid();
+	bool	isValid();
 	void	moveWindow(const LLCoordScreen& position,const LLCoordScreen& size);
 	virtual LLSD	getNativeKeyData();
 

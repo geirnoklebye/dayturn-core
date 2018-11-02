@@ -49,7 +49,7 @@ LLTransferSource::stype_scfunc_map LLTransferSource::sSourceCreateMap;
 //
 
 LLTransferManager::LLTransferManager() :
-	mValid(FALSE)
+	mValid(false)
 {
 	S32 i;
 	for (i = 0; i < LLTTT_NUM_TYPES; i++)
@@ -78,7 +78,7 @@ void LLTransferManager::init()
 	{
 		LL_ERRS() << "Double initializing LLTransferManager!" << LL_ENDL;
 	}
-	mValid = TRUE;
+	mValid = true;
 
 	// Register message system handlers
 	gMessageSystem->setHandlerFunc("TransferRequest", processTransferRequest, NULL);
@@ -90,7 +90,7 @@ void LLTransferManager::init()
 
 void LLTransferManager::cleanup()
 {
-	mValid = FALSE;
+	mValid = false;
 
 	host_tc_map::iterator iter;
 	for (iter = mTransferConnections.begin(); iter != mTransferConnections.end(); iter++)

@@ -62,7 +62,7 @@ const F32 MAX_WAIT_ANIM_SECS = 30.f;
 // Lightweight constructor.
 // init() does the heavy lifting.
 LLGestureMgr::LLGestureMgr()
-:	mValid(FALSE),
+:	mValid(false),
 	mPlaying(),
 	mActive(),
 	mLoadingCount(0)

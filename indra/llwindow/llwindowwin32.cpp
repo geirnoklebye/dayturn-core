@@ -918,7 +918,7 @@ void LLWindowWin32::close()
     mWindowThread->close();
 }
 
-BOOL LLWindowWin32::isValid()
+bool LLWindowWin32::isValid()
 {
 	return (mWindowHandle != NULL);
 }

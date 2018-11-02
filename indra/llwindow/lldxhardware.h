@@ -42,7 +42,7 @@ public:
 protected:
 	std::string mVersionString;
 	S32 mFields[4];
-	BOOL mValid;
+	bool mValid;
 };
 
 class LLDXDriverFile

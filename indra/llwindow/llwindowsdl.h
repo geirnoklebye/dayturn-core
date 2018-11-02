@@ -155,7 +155,7 @@ protected:
 		BOOL ignore_pixel_depth, U32 fsaa_samples);
 	~LLWindowSDL();
 
-	/*virtual*/ BOOL	isValid();
+	/*virtual*/ bool	isValid();
 	/*virtual*/ LLSD    getNativeKeyData();
 
 	void	initCursors();

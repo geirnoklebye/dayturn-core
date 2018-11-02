@@ -135,9 +135,9 @@ LLWindow::~LLWindow()
 }
 
 //virtual
-BOOL LLWindow::isValid()
+bool LLWindow::isValid()
 {
-	return TRUE;
+	return true;
 }
 
 //virtual
