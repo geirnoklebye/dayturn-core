@@ -482,7 +482,7 @@ void LLAssetStorage::getAssetData(const LLUUID uuid,
                                   LLAssetType::EType type, 
                                   LLAssetStorage::LLGetAssetCallback callback,
                                   void *user_data, 
-                                  BOOL is_priority)
+                                  bool is_priority)
 {
     LL_DEBUGS("AssetStorage") << "LLAssetStorage::getAssetData() - " << uuid << "," << LLAssetType::lookup(type) << LL_ENDL;
 
@@ -1348,7 +1348,8 @@ void LLAssetStorage::getAssetData(const LLUUID uuid,
                                                    S32, 
                                                    LLExtStat), 
                                   void *user_data, 
-                                  BOOL is_priority)
+                                  bool is_priority)
+
 {
     // check for duplicates here, since we're about to fool the normal duplicate checker
     for (request_list_t::iterator iter = mPendingDownloads.begin();

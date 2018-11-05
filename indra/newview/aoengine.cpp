@@ -51,10 +51,10 @@ AOEngine::AOEngine() :
 	LLSingleton<AOEngine>(),
 	mCurrentSet(NULL),
 	mDefaultSet(NULL),
-	mEnabled(FALSE),
-	mEnabledStands(FALSE),
-	mInMouselook(FALSE),
-	mUnderWater(FALSE),
+	mEnabled(false),
+	mEnabledStands(false),
+	mInMouselook(false),
+	mUnderWater(false),
 	mImportSet(NULL),
 	mImportCategory(LLUUID::null),
 	mAOFolder(LLUUID::null),
@@ -79,20 +79,20 @@ AOEngine::~AOEngine()
 
 void AOEngine::init()
 {
-	BOOL do_enable = gSavedPerAccountSettings.getBOOL("UseAO");
-	BOOL do_enable_stands = gSavedPerAccountSettings.getBOOL("UseAOStands");
+	bool do_enable = gSavedPerAccountSettings.getbool("UseAO");
+	bool do_enable_stands = gSavedPerAccountSettings.getbool("UseAOStands");
 	if (do_enable)
 	{
 		// enable_stands() calls enable(), but we need to set the
 		// mEnabled variable properly
-		mEnabled = TRUE;
+		mEnabled = true;
 		// Enabling the AO always enables stands to start with
-		enable_stands(TRUE);
+		enable_stands(true);
 	}
 	else
 	{
 		enable_stands(do_enable_stands);
-		enable(FALSE);
+		enable(false);
 	}
 }
 
@@ -104,17 +104,17 @@ void AOEngine::onLoginComplete()
 
 void AOEngine::onToggleAOControl()
 {
-	enable(gSavedPerAccountSettings.getBOOL("UseAO"));
+	enable(gSavedPerAccountSettings.getbool("UseAO"));
 	if (mEnabled)
 	{
 		// Enabling the AO always enables stands to start with
-		gSavedPerAccountSettings.setBOOL("UseAOStands", TRUE);
+		gSavedPerAccountSettings.setbool("UseAOStands", true);
 	}
 }
 
 void AOEngine::onToggleAOStandsControl()
 {
-	enable_stands(gSavedPerAccountSettings.getBOOL("UseAOStands"));
+	enable_stands(gSavedPerAccountSettings.getbool("UseAOStands"));
 }
 
 void AOEngine::clear(bool aFromTimer)
@@ -188,12 +188,12 @@ void AOEngine::setLastOverriddenMotion(const LLUUID& motion)
 	}
 }
 
-BOOL AOEngine::foreignAnimations()
+bool AOEngine::foreignAnimations()
 {
 	// checking foreign animations only makes sense when smart sit is enabled
 	if (!mCurrentSet->getSmart())
 	{
-		return FALSE;
+		return false;
 	}
 
 	// get the seat the avatar is sitting on
@@ -201,14 +201,14 @@ BOOL AOEngine::foreignAnimations()
 	if (!agentRoot)
 	{
 		// this should not happen, ever
-		return FALSE;
+		return false;
 	}
 
 	LLUUID seat = agentRoot->getID();
 	if (seat == gAgentID)
 	{
 		LL_DEBUGS("AOEngine") << "Not checking for foreign animation when not sitting." << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	LL_DEBUGS("AOEngine") << "Checking for foreign animation on seat " << seat << LL_ENDL;
@@ -234,12 +234,12 @@ BOOL AOEngine::foreignAnimations()
 				if (sourceRoot && sourceRoot->getID() == seat)
 				{
 					LL_DEBUGS("AOEngine") << "foreign animation " << sourceIterator->second << " found on seat." << LL_ENDL;
-					return TRUE;
+					return true;
 				}
 			}
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 // map motion to underwater state, return nullptr if not applicable
@@ -273,7 +273,7 @@ AOSet::AOState* AOEngine::mapSwimming(const LLUUID& motion) const
 }
 
 // switch between swimming and flying on transition in and out of Linden region water
-void AOEngine::checkBelowWater(BOOL yes)
+void AOEngine::checkBelowWater(bool yes)
 {
 	// there was no transition, do nothing
 	if (mUnderWater == yes)
@@ -352,7 +352,7 @@ AOSet::AOState* AOEngine::getStateForMotion(const LLUUID& motion) const
 	return mapped;
 }
 
-void AOEngine::enable_stands(BOOL yes)
+void AOEngine::enable_stands(bool yes)
 {
 	mEnabledStands = yes;
 	// let the main enable routine decide if we need to change animations
@@ -360,7 +360,7 @@ void AOEngine::enable_stands(BOOL yes)
 	enable(mEnabled);
 }
 
-void AOEngine::enable(BOOL yes)
+void AOEngine::enable(bool yes)
 {
 	LL_DEBUGS("AOEngine") << "using " << mLastMotion << " enable " << yes << LL_ENDL;
 	mEnabled = yes;
@@ -486,7 +486,7 @@ void AOEngine::setStateCycleTimer(const AOSet::AOState* state)
 	}
 }
 
-const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
+const LLUUID AOEngine::override(const LLUUID& pMotion, bool start)
 {
 	LL_DEBUGS("AOEngine") << "override(" << pMotion << "," << start << ")" << LL_ENDL;
 
@@ -971,7 +971,7 @@ void AOEngine::updateSortOrder(AOSet::AOState* state)
 	}
 }
 
-LLUUID AOEngine::addSet(const std::string& name, BOOL reload)
+LLUUID AOEngine::addSet(const std::string& name, bool reload)
 {
 	if (mAOFolder.isNull())
 	{
@@ -980,20 +980,20 @@ LLUUID AOEngine::addSet(const std::string& name, BOOL reload)
 		return LLUUID::null;
 	}
 
-	BOOL wasProtected = gSavedPerAccountSettings.getBOOL("ProtectAOFolders");
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", FALSE);
+	bool wasProtected = gSavedPerAccountSettings.getbool("ProtectAOFolders");
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", false);
 	LL_DEBUGS("AOEngine") << "adding set folder " << name << LL_ENDL;
 	LLUUID newUUID = gInventory.createNewCategory(mAOFolder, LLFolderType::FT_NONE, name);
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", wasProtected);
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", wasProtected);
 
 	if (reload)
 	{
-		mTimerCollection.enableReloadTimer(TRUE);
+		mTimerCollection.enableReloadTimer(true);
 	}
 	return newUUID;
 }
 
-BOOL AOEngine::createAnimationLink(const AOSet* set, AOSet::AOState* state, const LLInventoryItem* item)
+bool AOEngine::createAnimationLink(const AOSet* set, AOSet::AOState* state, const LLInventoryItem* item)
 {
 	LL_DEBUGS("AOEngine") << "Asset ID " << item->getAssetUUID() << " inventory id " << item->getUUID() << " category id " << state->mInventoryUUID << LL_ENDL;
 	if (state->mInventoryUUID.isNull())
@@ -1026,7 +1026,7 @@ BOOL AOEngine::createAnimationLink(const AOSet* set, AOSet::AOState* state, cons
 	if (state->mInventoryUUID.isNull())
 	{
 		LL_DEBUGS("AOEngine") << "state inventory UUID not found, failing." << LL_ENDL;
-		return FALSE;
+		return false;
 	}
 
 	LLInventoryObject::const_object_list_t obj_array;
@@ -1035,10 +1035,10 @@ BOOL AOEngine::createAnimationLink(const AOSet* set, AOSet::AOState* state, cons
 							obj_array,
 							LLPointer<LLInventoryCallback>(NULL));
 
-	return TRUE;
+	return true;
 }
 
-BOOL AOEngine::addAnimation(const AOSet* set, AOSet::AOState* state, const LLInventoryItem* item, BOOL reload)
+bool AOEngine::addAnimation(const AOSet* set, AOSet::AOState* state, const LLInventoryItem* item, bool reload)
 {
 	AOSet::AOAnimation anim;
 	anim.mAssetUUID = item->getAssetUUID();
@@ -1047,21 +1047,21 @@ BOOL AOEngine::addAnimation(const AOSet* set, AOSet::AOState* state, const LLInv
 	anim.mSortOrder = state->mAnimations.size() + 1;
 	state->mAnimations.push_back(anim);
 
-	BOOL wasProtected = gSavedPerAccountSettings.getBOOL("ProtectAOFolders");
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", FALSE);
+	bool wasProtected = gSavedPerAccountSettings.getbool("ProtectAOFolders");
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", false);
 	createAnimationLink(set, state, item);
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", wasProtected);
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", wasProtected);
 
 	if (reload)
 	{
-		mTimerCollection.enableReloadTimer(TRUE);
+		mTimerCollection.enableReloadTimer(true);
 	}
-	return TRUE;
+	return true;
 }
 
-BOOL AOEngine::findForeignItems(const LLUUID& uuid) const
+bool AOEngine::findForeignItems(const LLUUID& uuid) const
 {
-	BOOL moved = FALSE;
+	bool moved = false;
 
 	LLInventoryModel::item_array_t* items;
 	LLInventoryModel::cat_array_t* cats;
@@ -1079,16 +1079,16 @@ BOOL AOEngine::findForeignItems(const LLUUID& uuid) const
 		// recurse into subfolders
 		if (findForeignItems(cats->at(index)->getUUID()))
 		{
-			moved = TRUE;
+			moved = true;
 		}
 	}
 
 	// count backwards in case we have to remove items
-	BOOL wasProtected = gSavedPerAccountSettings.getBOOL("ProtectAOFolders");
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", FALSE);
+	bool wasProtected = gSavedPerAccountSettings.getbool("ProtectAOFolders");
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", false);
 	for (S32 index = items->size() - 1; index >= 0; --index)
 	{
-		BOOL move = FALSE;
+		bool move = false;
 
 		LLPointer<LLViewerInventoryItem> item = items->at(index);
 		if (item->getIsLinkType())
@@ -1096,7 +1096,7 @@ BOOL AOEngine::findForeignItems(const LLUUID& uuid) const
 			if (item->getInventoryType() != LLInventoryType::IT_ANIMATION)
 			{
 				LL_DEBUGS("AOEngine") << item->getName() << " is a link but does not point to an animation." << LL_ENDL;
-				move = TRUE;
+				move = true;
 			}
 			else
 			{
@@ -1106,18 +1106,18 @@ BOOL AOEngine::findForeignItems(const LLUUID& uuid) const
 		else
 		{
 			LL_DEBUGS("AOEngine") << item->getName() << " is not a link!" << LL_ENDL;
-			move = TRUE;
+			move = true;
 		}
 
 		if (move)
 		{
-			moved = TRUE;
+			moved = true;
 			LLInventoryModel* model = &gInventory;
 			model->changeItemParent(item, gInventory.findCategoryUUIDForType(LLFolderType::FT_LOST_AND_FOUND), FALSE);
 			LL_DEBUGS("AOEngine") << item->getName() << " moved to lost and found!" << LL_ENDL;
 		}
 	}
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", wasProtected);
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", wasProtected);
 
 	return moved;
 }
@@ -1126,8 +1126,8 @@ BOOL AOEngine::findForeignItems(const LLUUID& uuid) const
 void AOEngine::purgeFolder(const LLUUID& uuid) const
 {
 	// unprotect it
-	BOOL wasProtected = gSavedPerAccountSettings.getBOOL("ProtectAOFolders");
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", FALSE);
+	bool wasProtected = gSavedPerAccountSettings.getbool("ProtectAOFolders");
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", false);
 
 	// move everything that's not an animation link to "lost and found"
 	if (findForeignItems(uuid))
@@ -1147,40 +1147,40 @@ void AOEngine::purgeFolder(const LLUUID& uuid) const
 	gInventory.notifyObservers();
 
 	// protect it
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", wasProtected);
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", wasProtected);
 }
 
-BOOL AOEngine::removeSet(AOSet* set)
+bool AOEngine::removeSet(AOSet* set)
 {
 	purgeFolder(set->getInventoryUUID());
 
-	mTimerCollection.enableReloadTimer(TRUE);
-	return TRUE;
+	mTimerCollection.enableReloadTimer(true);
+	return true;
 }
 
-BOOL AOEngine::removeAnimation(const AOSet* set, AOSet::AOState* state, S32 index)
+bool AOEngine::removeAnimation(const AOSet* set, AOSet::AOState* state, S32 index)
 {
 	if (index < 0)
 	{
-		return FALSE;
+		return false;
 	}
 
 	S32 numOfAnimations = state->mAnimations.size();
 	if (numOfAnimations == 0)
 	{
-		return FALSE;
+		return false;
 	}
 
 	LLViewerInventoryItem* item = gInventory.getItem(state->mAnimations[index].mInventoryUUID);
 
 	// check if this item is actually an animation link
-	BOOL move = TRUE;
+	bool move = true;
 	if (item->getIsLinkType())
 	{
 		if (item->getInventoryType() == LLInventoryType::IT_ANIMATION)
 		{
 			// it is an animation link, so mark it to be purged
-			move = FALSE;
+			move = false;
 		}
 	}
 
@@ -1191,7 +1191,7 @@ BOOL AOEngine::removeAnimation(const AOSet* set, AOSet::AOState* state, S32 inde
 		model->changeItemParent(item, gInventory.findCategoryUUIDForType(LLFolderType::FT_LOST_AND_FOUND), FALSE);
 		LLNotificationsUtil::add("AOForeignItemsFound", LLSD());
 		update(false);
-		return FALSE;
+		return false;
 	}
 
 	// purge the item from inventory
@@ -1232,16 +1232,16 @@ BOOL AOEngine::removeAnimation(const AOSet* set, AOSet::AOState* state, S32 inde
 	}
 
 	// we need the UI to resync since we deleted something
-	mTimerCollection.enableReloadTimer(TRUE);
-	return TRUE;
+	mTimerCollection.enableReloadTimer(true);
+	return true;
 }
 
-BOOL AOEngine::swapWithPrevious(AOSet::AOState* state, S32 index)
+bool AOEngine::swapWithPrevious(AOSet::AOState* state, S32 index)
 {
 	S32 numOfAnimations = state->mAnimations.size();
 	if (numOfAnimations < 2 || index == 0)
 	{
-		return FALSE;
+		return false;
 	}
 
 	AOSet::AOAnimation tmpAnim = state->mAnimations[index];
@@ -1250,15 +1250,15 @@ BOOL AOEngine::swapWithPrevious(AOSet::AOState* state, S32 index)
 
 	updateSortOrder(state);
 
-	return TRUE;
+	return true;
 }
 
-BOOL AOEngine::swapWithNext(AOSet::AOState* state, S32 index)
+bool AOEngine::swapWithNext(AOSet::AOState* state, S32 index)
 {
 	S32 numOfAnimations = state->mAnimations.size();
 	if (numOfAnimations < 2 || index == (numOfAnimations - 1))
 	{
-		return FALSE;
+		return false;
 	}
 
 	AOSet::AOAnimation tmpAnim = state->mAnimations[index];
@@ -1267,7 +1267,7 @@ BOOL AOEngine::swapWithNext(AOSet::AOState* state, S32 index)
 
 	updateSortOrder(state);
 
-	return TRUE;
+	return true;
 }
 
 void AOEngine::reloadStateAnimations(AOSet::AOState* state)
@@ -1311,14 +1311,14 @@ void AOEngine::reloadStateAnimations(AOSet::AOState* state)
 		}
 		else
 		{
-			BOOL inserted = FALSE;
+			bool inserted = false;
 			for (U32 index = 0; index < state->mAnimations.size(); ++index)
 			{
 				if (state->mAnimations[index].mSortOrder > sortOrder)
 				{
 					LL_DEBUGS("AOEngine") << "inserting at index " << index << LL_ENDL;
 					state->mAnimations.insert(state->mAnimations.begin() + index, anim);
-					inserted = TRUE;
+					inserted = true;
 					break;
 				}
 			}
@@ -1350,8 +1350,8 @@ void AOEngine::update(bool aFromTimer)
 	LLInventoryModel::cat_array_t* categories;
 	LLInventoryModel::item_array_t* items;
 
-	BOOL allComplete = TRUE;
-	mTimerCollection.enableSettingsTimer(FALSE);
+	bool allComplete = true;
+	mTimerCollection.enableSettingsTimer(false);
 
 	gInventory.getDirectDescendentsOf(mAOFolder, categories, items);
 	for (S32 index = 0; index < categories->size(); ++index)
@@ -1385,7 +1385,7 @@ void AOEngine::update(bool aFromTimer)
 			}
 			LL_DEBUGS("AOEngine") << "Updating set " << setFolderName << " in AO." << LL_ENDL;
 		}
-		allComplete = FALSE;
+		allComplete = false;
 
 		for (U32 num = 1; num < params.size(); ++num)
 		{
@@ -1395,15 +1395,15 @@ void AOEngine::update(bool aFromTimer)
 			}
 			else if (params[num] == "SO")
 			{
-				newSet->setSitOverride(TRUE);
+				newSet->setSitOverride(true);
 			}
 			else if (params[num] == "SM")
 			{
-				newSet->setSmart(TRUE);
+				newSet->setSmart(true);
 			}
 			else if (params[num] == "DM")
 			{
-				newSet->setMouselookDisable(TRUE);
+				newSet->setMouselookDisable(true);
 			}
 			else if (params[num] == "**")
 			{
@@ -1443,12 +1443,12 @@ void AOEngine::update(bool aFromTimer)
 				{
 					if (state_params[num] == "CY")
 					{
-						state->mCycle = TRUE;
+						state->mCycle = true;
 						LL_DEBUGS("AOEngine") << "Cycle on" << LL_ENDL;
 					}
 					else if (state_params[num] == "RN")
 					{
-						state->mRandom = TRUE;
+						state->mRandom = true;
 						LL_DEBUGS("AOEngine") << "Random on" << LL_ENDL;
 					}
 					else if (state_params[num].substr(0, 2) == "CT")
@@ -1466,8 +1466,8 @@ void AOEngine::update(bool aFromTimer)
 				{
 					LL_DEBUGS("AOEngine") << "State category " << stateName << " is incomplete, fetching descendents" << LL_ENDL;
 					gInventory.fetchDescendentsOf(state->mInventoryUUID);
-					allComplete = FALSE;
-					newSet->setComplete(FALSE);
+					allComplete = false;
+					newSet->setComplete(false);
 					continue;
 				}
 				reloadStateAnimations(state);
@@ -1482,7 +1482,7 @@ void AOEngine::update(bool aFromTimer)
 
 	if (allComplete)
 	{
-		mEnabled = gSavedPerAccountSettings.getBOOL("UseAO");
+		mEnabled = gSavedPerAccountSettings.getbool("UseAO");
 
 		if (!mCurrentSet && !mSets.empty())
 		{
@@ -1490,8 +1490,8 @@ void AOEngine::update(bool aFromTimer)
 			selectSet(mSets[0]);
 		}
 
-		mTimerCollection.enableInventoryTimer(FALSE);
-		mTimerCollection.enableSettingsTimer(TRUE);
+		mTimerCollection.enableInventoryTimer(false);
+		mTimerCollection.enableSettingsTimer(true);
 
 		LL_INFOS("AOEngine") << "sending update signal" << LL_ENDL;
 		mUpdatedSignal();
@@ -1501,13 +1501,13 @@ void AOEngine::update(bool aFromTimer)
 
 void AOEngine::reload(bool aFromTimer)
 {
-	BOOL wasEnabled = mEnabled;
+	bool wasEnabled = mEnabled;
 
-	mTimerCollection.enableReloadTimer(FALSE);
+	mTimerCollection.enableReloadTimer(false);
 
 	if (wasEnabled)
 	{
-		enable(FALSE);
+		enable(false);
 	}
 
 	gAgent.stopCurrentAnimations();
@@ -1515,12 +1515,12 @@ void AOEngine::reload(bool aFromTimer)
 
 	clear(aFromTimer);
 	mAOFolder.setNull();
-	mTimerCollection.enableInventoryTimer(TRUE);
+	mTimerCollection.enableInventoryTimer(true);
 	tick();
 
 	if (wasEnabled)
 	{
-		enable(TRUE);
+		enable(true);
 	}
 }
 
@@ -1637,25 +1637,25 @@ void AOEngine::saveSet(const AOSet* set)
 	gInventory.addChangedMask(LLInventoryObserver::LABEL, cat->getUUID());
 	gInventory.notifyObservers();
 */
-	BOOL wasProtected = gSavedPerAccountSettings.getBOOL("ProtectAOFolders");
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", FALSE);
+	bool wasProtected = gSavedPerAccountSettings.getbool("ProtectAOFolders");
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", false);
 	rename_category(&gInventory, set->getInventoryUUID(), setParams);
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", wasProtected);
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", wasProtected);
 
 	LL_INFOS("AOEngine") << "sending update signal" << LL_ENDL;
 	mUpdatedSignal();
 }
 
-BOOL AOEngine::renameSet(AOSet* set, const std::string& name)
+bool AOEngine::renameSet(AOSet* set, const std::string& name)
 {
 	if (name.empty() || name.find(":") != std::string::npos)
 	{
-		return FALSE;
+		return false;
 	}
 	set->setName(name);
-	set->setDirty(TRUE);
+	set->setDirty(true);
 
-	return TRUE;
+	return true;
 }
 
 void AOEngine::saveState(const AOSet::AOState* state)
@@ -1677,10 +1677,10 @@ void AOEngine::saveState(const AOSet::AOState* state)
 		stateParams += ":RN";
 	}
 
-	BOOL wasProtected = gSavedPerAccountSettings.getBOOL("ProtectAOFolders");
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", FALSE);
+	bool wasProtected = gSavedPerAccountSettings.getbool("ProtectAOFolders");
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", false);
 	rename_category(&gInventory, state->mInventoryUUID, stateParams);
-	gSavedPerAccountSettings.setBOOL("ProtectAOFolders", wasProtected);
+	gSavedPerAccountSettings.setbool("ProtectAOFolders", wasProtected);
 }
 
 void AOEngine::saveSettings()
@@ -1692,7 +1692,7 @@ void AOEngine::saveSettings()
 		{
 			saveSet(set);
 			LL_INFOS("AOEngine") << "dirty set saved " << set->getName() << LL_ENDL;
-			set->setDirty(FALSE);
+			set->setDirty(false);
 		}
 
 		for (S32 stateIndex = 0; stateIndex < AOSet::AOSTATES_MAX; ++stateIndex)
@@ -1708,7 +1708,7 @@ void AOEngine::saveSettings()
 	}
 }
 
-void AOEngine::inMouselook(BOOL yes)
+void AOEngine::inMouselook(bool yes)
 {
 	if (mInMouselook == yes)
 	{
@@ -1767,14 +1767,14 @@ void AOEngine::setDefaultSet(AOSet* set)
 	mDefaultSet = set;
 	for (U32 index = 0; index < mSets.size(); ++index)
 	{
-		mSets[index]->setDirty(TRUE);
+		mSets[index]->setDirty(true);
 	}
 }
 
-void AOEngine::setOverrideSits(AOSet* set, BOOL yes)
+void AOEngine::setOverrideSits(AOSet* set, bool yes)
 {
 	set->setSitOverride(yes);
-	set->setDirty(TRUE);
+	set->setDirty(true);
 
 	if (mCurrentSet != set)
 	{
@@ -1819,10 +1819,10 @@ void AOEngine::setOverrideSits(AOSet* set, BOOL yes)
 	}
 }
 
-void AOEngine::setSmart(AOSet* set, BOOL yes)
+void AOEngine::setSmart(AOSet* set, bool yes)
 {
 	set->setSmart(yes);
-	set->setDirty(TRUE);
+	set->setDirty(true);
 
 	if (!mEnabled)
 	{
@@ -1841,10 +1841,10 @@ void AOEngine::setSmart(AOSet* set, BOOL yes)
 	}
 }
 
-void AOEngine::setDisableStands(AOSet* set, BOOL yes)
+void AOEngine::setDisableStands(AOSet* set, bool yes)
 {
 	set->setMouselookDisable(yes);
-	set->setDirty(TRUE);
+	set->setDirty(true);
 
 	if (mCurrentSet != set)
 	{
@@ -1861,13 +1861,13 @@ void AOEngine::setDisableStands(AOSet* set, BOOL yes)
 	inMouselook(!mInMouselook);
 }
 
-void AOEngine::setCycle(AOSet::AOState* state, BOOL yes)
+void AOEngine::setCycle(AOSet::AOState* state, bool yes)
 {
 	state->mCycle = yes;
 	state->mDirty = TRUE;
 }
 
-void AOEngine::setRandomize(AOSet::AOState* state, BOOL yes)
+void AOEngine::setRandomize(AOSet::AOState* state, bool yes)
 {
 	state->mRandom = yes;
 	state->mDirty = TRUE;
@@ -1926,7 +1926,7 @@ void AOEngine::tick()
 	}
 }
 
-BOOL AOEngine::importNotecard(const LLInventoryItem* item)
+bool AOEngine::importNotecard(const LLInventoryItem* item)
 {
 	if (item)
 	{
@@ -1934,13 +1934,13 @@ BOOL AOEngine::importNotecard(const LLInventoryItem* item)
 		if (getSetByName(item->getName()))
 		{
 			LLNotificationsUtil::add("AOImportSetAlreadyExists", LLSD());
-			return FALSE;
+			return false;
 		}
 
 		if (!gAgent.allowOperation(PERM_COPY, item->getPermissions(), GP_OBJECT_MANIPULATE) && !gAgent.isGodlike())
 		{
 			LLNotificationsUtil::add("AOImportPermissionDenied", LLSD());
-			return FALSE;
+			return false;
 		}
 
 		if (item->getAssetUUID().notNull())
@@ -1949,7 +1949,7 @@ BOOL AOEngine::importNotecard(const LLInventoryItem* item)
 			if (!mImportSet)
 			{
 				LLNotificationsUtil::add("AOImportCreateSetFailed", LLSD());
-				return FALSE;
+				return false;
 			}
 			mImportSet->setName(item->getName());
 
@@ -1967,13 +1967,13 @@ BOOL AOEngine::importNotecard(const LLInventoryItem* item)
 				item->getType(),
 				&onNotecardLoadComplete,
 				(void*) newUUID,
-				TRUE
+				true
 			);
 
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 // static
@@ -2154,7 +2154,7 @@ void AOEngine::parseNotecard(const char* buffer)
 		return;
 	}
 
-	mTimerCollection.enableImportTimer(TRUE);
+	mTimerCollection.enableImportTimer(true);
 	mImportRetryCount = 0;
 	processImport(false);
 }
@@ -2163,14 +2163,14 @@ void AOEngine::processImport(bool aFromTimer)
 {
 	if (mImportCategory.isNull())
 	{
-		mImportCategory = addSet(mImportSet->getName(), FALSE);
+		mImportCategory = addSet(mImportSet->getName(), false);
 		if (mImportCategory.isNull())
 		{
 			mImportRetryCount++;
 			if (mImportRetryCount == 5)
 			{
 				// NOTE: cleanup is the same as at the end of this function. Needs streamlining.
-				mTimerCollection.enableImportTimer(FALSE);
+				mTimerCollection.enableImportTimer(false);
 				delete mImportSet;
 				mImportSet = NULL;
 				mImportCategory.setNull();
@@ -2221,7 +2221,7 @@ void AOEngine::processImport(bool aFromTimer)
 
 	if (allComplete)
 	{
-		mTimerCollection.enableImportTimer(FALSE);
+		mTimerCollection.enableImportTimer(false);
 		mOldImportSets.push_back(mImportSet); //<ND/> FIRE-3801; Cannot delete here, or LLInstanceTracker gets upset. Just remember and delete mOldImportSets once we can. 
 		mImportSet = NULL;
 		mImportCategory.setNull();
@@ -2323,10 +2323,10 @@ bool AOSitCancelTimer::tick()
 
 AOTimerCollection::AOTimerCollection()
 :	LLEventTimer(INVENTORY_POLLING_INTERVAL),
-	mInventoryTimer(TRUE),
-	mSettingsTimer(FALSE),
-	mReloadTimer(FALSE),
-	mImportTimer(FALSE)
+	mInventoryTimer(true),
+	mSettingsTimer(false),
+	mReloadTimer(false),
+	mImportTimer(false)
 {
 	updateTimers();
 }
@@ -2362,25 +2362,25 @@ bool AOTimerCollection::tick()
 	return false;
 }
 
-void AOTimerCollection::enableInventoryTimer(BOOL yes)
+void AOTimerCollection::enableInventoryTimer(bool yes)
 {
 	mInventoryTimer = yes;
 	updateTimers();
 }
 
-void AOTimerCollection::enableSettingsTimer(BOOL yes)
+void AOTimerCollection::enableSettingsTimer(bool yes)
 {
 	mSettingsTimer = yes;
 	updateTimers();
 }
 
-void AOTimerCollection::enableReloadTimer(BOOL yes)
+void AOTimerCollection::enableReloadTimer(bool yes)
 {
 	mReloadTimer = yes;
 	updateTimers();
 }
 
-void AOTimerCollection::enableImportTimer(BOOL yes)
+void AOTimerCollection::enableImportTimer(bool yes)
 {
 	mImportTimer = yes;
 	updateTimers();

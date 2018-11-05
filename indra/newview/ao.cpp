@@ -49,13 +49,13 @@ FloaterAO::FloaterAO(const LLSD& key)
 	mSetList(0),
 	mSelectedSet(0),
 	mSelectedState(0),
-	mCanDragAndDrop(FALSE),
-	mImportRunning(FALSE),
+	mCanDragAndDrop(false),
+	mImportRunning(false),
 	mCurrentBoldItemID(LLUUID::null),
 	mLastState(""),
 	mLastName(""),
 	mLastUUID(LLUUID::null),
-	mMore(TRUE)
+	mMore(true)
 {
 	mEventTimer.stop();
 }
@@ -64,7 +64,7 @@ FloaterAO::~FloaterAO()
 {
 }
 
-void FloaterAO::reloading(BOOL yes)
+void FloaterAO::reloading(bool yes)
 {
 	if (yes)
 	{
@@ -94,7 +94,7 @@ void FloaterAO::updateSetParameters()
 	mOverrideSitsCheckBoxSmall->setValue(mSelectedSet->getSitOverride());
 	mSmartCheckBox->setValue(mSelectedSet->getSmart());
 	mDisableMouselookCheckBox->setValue(mSelectedSet->getMouselookDisable());
-	BOOL isDefault = (mSelectedSet == AOEngine::instance().getDefaultSet());
+	bool isDefault = (mSelectedSet == AOEngine::instance().getDefaultSet());
 	mDefaultCheckBox->setValue(isDefault);
 	mDefaultCheckBox->setEnabled(!isDefault);
 	updateSmart();
@@ -121,7 +121,7 @@ void FloaterAO::updateAnimationList()
 		mStateSelector->add(stateName, state, ADD_BOTTOM, TRUE);
 	}
 
-	enableStateControls(TRUE);
+	enableStateControls(true);
 
 	if (currentStateSelected == -1)
 	{
@@ -138,7 +138,7 @@ void FloaterAO::updateAnimationList()
 void FloaterAO::updateList()
 {
 	mReloadButton->setEnabled(true);
-	mImportRunning = FALSE;
+	mImportRunning = false;
 
 	// Lambda provides simple Alpha sorting, note this is case sensitive.
 	auto sortRuleLambda = [](const AOSet* s1, const AOSet* s2) -> bool
@@ -159,7 +159,7 @@ void FloaterAO::updateList()
 
 	mAnimationList->deleteAllItems();
 	mCurrentBoldItemID = LLUUID::null;
-	reloading(FALSE);
+	reloading(false);
 
 	if (mSetList.empty())
 	{
@@ -168,7 +168,7 @@ void FloaterAO::updateList()
 		mSetSelectorSmall->add(getString("ao_no_sets_loaded"));
 		mSetSelector->selectNthItem(0);
 		mSetSelectorSmall->selectNthItem(0);
-		enableSetControls(FALSE);
+		enableSetControls(false);
 		return;
 	}
 
@@ -201,7 +201,7 @@ void FloaterAO::updateList()
 			updateAnimationList();
 		}
 	}
-	enableSetControls(TRUE);
+	enableSetControls(true);
 	// not only does this addition causes crashes due to onClickReload not expecting to be called from a timer
 	// it also can lead to a recursive crash since onClickReload calls this routine again so it's a matter of
 	// pure luck how quickly things load and the chance of recursion goes away. It's time to do the login refresh
@@ -295,7 +295,7 @@ bool FloaterAO::postBuild()
 	onChangeAnimationSelection();
 	mMainInterfacePanel->setVisible(true);
 	mSmallInterfacePanel->setVisible(false);
-	reloading(TRUE);
+	reloading(true);
 	updateList();
 
 	if (gSavedPerAccountSettings.getBOOL("UseFullAOInterface"))
@@ -311,7 +311,7 @@ bool FloaterAO::postBuild()
 	return LLDockableFloater::postBuild();
 }
 
-void FloaterAO::enableSetControls(BOOL yes)
+void FloaterAO::enableSetControls(bool yes)
 {
 	mSetSelector->setEnabled(yes);
 	mSetSelectorSmall->setEnabled(yes);
@@ -329,7 +329,7 @@ void FloaterAO::enableSetControls(BOOL yes)
 	}
 }
 
-void FloaterAO::enableStateControls(BOOL yes)
+void FloaterAO::enableStateControls(bool yes)
 {
 	mStateSelector->setEnabled(yes);
 	mAnimationList->setEnabled(yes);
@@ -423,7 +423,7 @@ void FloaterAO::onRenameSet()
 		{
 			if (AOEngine::instance().renameSet(mSelectedSet, name))
 			{
-				reloading(TRUE);
+				reloading(true);
 				return;
 			}
 		}
@@ -508,7 +508,7 @@ void FloaterAO::onSelectState()
 
 void FloaterAO::onClickReload()
 {
-	reloading(TRUE);
+	reloading(true);
 
 	mSelectedSet = 0;
 	mSelectedState = 0;
@@ -522,7 +522,7 @@ void FloaterAO::onClickAdd()
 	LLNotificationsUtil::add("NewAOSet", LLSD(), LLSD(), boost::bind(&FloaterAO::newSetCallback, this, _1, _2));
 }
 
-BOOL FloaterAO::newSetCallback(const LLSD& notification, const LLSD& response)
+bool FloaterAO::newSetCallback(const LLSD& notification, const LLSD& response)
 {
 	std::string newSetName = response["message"].asString();
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
@@ -533,7 +533,7 @@ BOOL FloaterAO::newSetCallback(const LLSD& notification, const LLSD& response)
 
 	if (newSetName.empty())
 	{
-		return FALSE;
+		return false;
 	}
 	else if (
 		!LLTextValidate::validateASCIIPrintableNoPipe(new_set_name.getWString()) ||		// only allow ASCII
@@ -549,11 +549,11 @@ BOOL FloaterAO::newSetCallback(const LLSD& notification, const LLSD& response)
 	{
 		if (AOEngine::instance().addSet(newSetName).notNull())
 		{
-			reloading(TRUE);
-			return TRUE;
+			reloading(true);
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 void FloaterAO::onClickRemove()
@@ -568,7 +568,7 @@ void FloaterAO::onClickRemove()
 	LLNotificationsUtil::add("RemoveAOSet", args, LLSD(), boost::bind(&FloaterAO::removeSetCallback, this, _1, _2));
 }
 
-BOOL FloaterAO::removeSetCallback(const LLSD& notification, const LLSD& response)
+bool FloaterAO::removeSetCallback(const LLSD& notification, const LLSD& response)
 {
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
 
@@ -576,7 +576,7 @@ BOOL FloaterAO::removeSetCallback(const LLSD& notification, const LLSD& response
 	{
 		if (AOEngine::instance().removeSet(mSelectedSet))
 		{
-			reloading(TRUE);
+			reloading(true);
 			// to prevent snapping back to deleted set
 			mSetSelector->removeall();
 			mSetSelectorSmall->removeall();
@@ -585,10 +585,10 @@ BOOL FloaterAO::removeSetCallback(const LLSD& notification, const LLSD& response
 			mSetSelectorSmall->clear();
 			mAnimationList->deleteAllItems();
 			mCurrentBoldItemID = LLUUID::null;
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 void FloaterAO::onCheckDefault()
@@ -648,8 +648,8 @@ void FloaterAO::onChangeAnimationSelection()
 	std::vector<LLScrollListItem*> list = mAnimationList->getAllSelected();
 	LL_DEBUGS("AOEngine") << "Selection count: " << list.size() << LL_ENDL;
 
-	BOOL resortEnable = FALSE;
-	BOOL trashEnable = FALSE;
+	bool resortEnable = false;
+	bool trashEnable = false;
 
 	// Linden Lab bug: scroll lists still select the first item when you click on them, even when they are disabled.
 	// The control does not memorize it's enabled/disabled state, so mAnimationList->mEnabled() doesn't seem to work.
@@ -663,9 +663,9 @@ void FloaterAO::onChangeAnimationSelection()
 	{
 		if (list.size() == 1)
 		{
-			resortEnable = TRUE;
+			resortEnable = true;
 		}
-		trashEnable = TRUE;
+		trashEnable = true;
 	}
 
 	mMoveDownButton->setEnabled(resortEnable);
@@ -747,7 +747,7 @@ void FloaterAO::onClickTrash()
 
 void FloaterAO::updateCycleParameters()
 {
-	BOOL yes = mCycleCheckBox->getValue().asBoolean();
+	bool yes = mCycleCheckBox->getValue().asBoolean();
 	mRandomizeCheckBox->setEnabled(yes);
 	mCycleTimeTextLabel->setEnabled(yes);
 	mCycleTimeSpinner->setEnabled(yes);
@@ -757,7 +757,7 @@ void FloaterAO::onCheckCycle()
 {
 	if (mSelectedState)
 	{
-		BOOL yes = mCycleCheckBox->getValue().asBoolean();
+		bool yes = mCycleCheckBox->getValue().asBoolean();
 		AOEngine::instance().setCycle(mSelectedState, yes);
 		updateCycleParameters();
 	}
@@ -808,11 +808,11 @@ void FloaterAO::onClickMore()
 		fullSize.setOriginAndSize(fullSize.mLeft, fullSize.mBottom, getRect().getWidth(), fullSize.getHeight());
 	}
 
-	mMore = TRUE;
+	mMore = true;
 
 	mSmallInterfacePanel->setVisible(false);
 	mMainInterfacePanel->setVisible(true);
-	setCanResize(TRUE);
+	setCanResize(true);
 
 	gSavedPerAccountSettings.setBOOL("UseFullAOInterface", TRUE);
 
@@ -827,11 +827,11 @@ void FloaterAO::onClickLess()
 
 	gSavedPerAccountSettings.setRect("floater_rect_animation_overrider_full", fullSize);
 
-	mMore = FALSE;
+	mMore = false;
 
 	mSmallInterfacePanel->setVisible(true);
 	mMainInterfacePanel->setVisible(false);
-	setCanResize(FALSE);
+	setCanResize(false);
 
 	gSavedPerAccountSettings.setBOOL("UseFullAOInterface", FALSE);
 
@@ -930,9 +930,9 @@ BOOL FloaterAO::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop, EDragAndDr
 		{
 			if (AOEngine::instance().importNotecard(item))
 			{
-				reloading(TRUE);
+				reloading(true);
 				mReloadButton->setEnabled(false);
-				mImportRunning = TRUE;
+				mImportRunning = true;
 			}
 		}
 	}
@@ -952,7 +952,7 @@ BOOL FloaterAO::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop, EDragAndDr
 
 				// TODO: this would be the right thing to do, but it blocks multi drop
 				// before final release this must be resolved
-				reloading(TRUE);
+				reloading(true);
 			}
 		}
 	}

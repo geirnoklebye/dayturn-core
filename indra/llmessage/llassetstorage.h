@@ -236,7 +236,7 @@ public:
 
 	// public interface methods
 	// note that your callback may get called BEFORE the function returns
-	void getAssetData(const LLUUID uuid, LLAssetType::EType atype, LLGetAssetCallback cb, void *user_data, BOOL is_priority = FALSE);
+	void getAssetData(const LLUUID uuid, LLAssetType::EType atype, LLGetAssetCallback cb, void *user_data, bool is_priority = false);
 
 	/*
 	 * TransactionID version
@@ -352,7 +352,7 @@ public:
 
 	// deprecated file-based methods
     // Not overriden
-	void getAssetData(const LLUUID uuid, LLAssetType::EType type, void (*callback)(const char*, const LLUUID&, void *, S32, LLExtStat), void *user_data, BOOL is_priority = FALSE);
+	void getAssetData(const LLUUID uuid, LLAssetType::EType type, void (*callback)(const char*, const LLUUID&, void *, S32, LLExtStat), void *user_data, bool is_priority = false);
 
 	/*
 	 * TransactionID version

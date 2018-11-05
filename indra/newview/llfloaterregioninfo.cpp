@@ -2255,7 +2255,7 @@ bool LLPanelEstateCovenant::confirmResetCovenantCallback(const LLSD& notificatio
 
 void LLPanelEstateCovenant::loadInvItem(LLInventoryItem *itemp)
 {
-	const BOOL high_priority = TRUE;	
+	const bool high_priority = true;	
 	if (itemp)
 	{
 		gAssetStorage->getInvItemAsset(gAgent.getRegionHost(),

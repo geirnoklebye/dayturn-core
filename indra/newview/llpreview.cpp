@@ -503,7 +503,7 @@ LLMultiPreview::LLMultiPreview()
 	}
 	setTitle(LLTrans::getString("MultiPreviewTitle"));
 	buildTabContainer();
-	setCanResize(TRUE);
+	setCanResize(true);
 }
 
 void LLMultiPreview::onOpen(const LLSD& key)

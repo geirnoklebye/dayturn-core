@@ -1664,7 +1664,7 @@ void LLPreviewLSL::loadAsset()
 										item->getType(),
 										&LLPreviewLSL::onLoadComplete,
 										(void*)new_uuid,
-										TRUE);
+										true);
 			mAssetStatus = PREVIEW_ASSET_LOADING;
 		}
 		else
@@ -2133,7 +2133,7 @@ void LLLiveLSLEditor::loadAsset()
 						item->getType(),
 						&LLLiveLSLEditor::onLoadComplete,
 						(void*)user_data,
-						TRUE);
+						true);
 					LLMessageSystem* msg = gMessageSystem;
 					msg->newMessageFast(_PREHASH_GetScriptRunning);
 					msg->nextBlockFast(_PREHASH_Script);

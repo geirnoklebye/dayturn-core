@@ -317,7 +317,7 @@ void LLPreviewNotecard::loadAsset()
 												item->getType(),
 												&onLoadComplete,
 												(void*)user_data,
-												TRUE);
+												true);
 				mAssetStatus = PREVIEW_ASSET_LOADING;
 			}
 		}
