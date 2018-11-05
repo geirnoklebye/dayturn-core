@@ -421,8 +421,8 @@ LLAgent::LLAgent() :
 	mIsDoNotDisturb(false),
 
 	mControlFlags(0x00000000),
-	mbFlagsDirty(FALSE),
-	mbFlagsNeedReset(FALSE),
+	mbFlagsDirty(false),
+	mbFlagsNeedReset(false),
 
 	mAutoPilot(FALSE),
 	mAutoPilotFlyOnStop(FALSE),
@@ -441,7 +441,7 @@ LLAgent::LLAgent() :
 
 	mEffectColor(new LLUIColor(LLColor4(0.f, 1.f, 1.f, 1.f))),
 
-	mHaveHomePosition(FALSE),
+	mHaveHomePosition(false),
 	mHomeRegionHandle( 0 ),
 	mNearChatRadius(CHAT_NORMAL_RADIUS / 2.f),
 
@@ -852,7 +852,7 @@ void LLAgent::setFlying(BOOL fly, BOOL fail_sound)
 	LLFloaterMove::setFlyingMode(fly);
 	LLFloaterMove::sUpdateFlyingStatus();
 
-	mbFlagsDirty = TRUE;
+	mbFlagsDirty = true;
 }
 
 
@@ -1515,7 +1515,7 @@ U32 LLAgent::getControlFlags()
 void LLAgent::setControlFlags(U32 mask)
 {
 	mControlFlags |= mask;
-	mbFlagsDirty = TRUE;
+	mbFlagsDirty = true;
 }
 
 
@@ -1528,14 +1528,14 @@ void LLAgent::clearControlFlags(U32 mask)
 	mControlFlags &= ~mask;
 	if (old_flags != mControlFlags)
 	{
-		mbFlagsDirty = TRUE;
+		mbFlagsDirty = true;
 	}
 }
 
 //-----------------------------------------------------------------------------
 // controlFlagsDirty()
 //-----------------------------------------------------------------------------
-BOOL LLAgent::controlFlagsDirty() const
+bool LLAgent::controlFlagsDirty() const
 {
 	return mbFlagsDirty;
 }
@@ -1545,7 +1545,7 @@ BOOL LLAgent::controlFlagsDirty() const
 //-----------------------------------------------------------------------------
 void LLAgent::enableControlFlagReset()
 {
-	mbFlagsNeedReset = TRUE;
+	mbFlagsNeedReset = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -1555,8 +1555,8 @@ void LLAgent::resetControlFlags()
 {
 	if (mbFlagsNeedReset)
 	{
-		mbFlagsNeedReset = FALSE;
-		mbFlagsDirty = FALSE;
+		mbFlagsNeedReset = false;
+		mbFlagsDirty = false;
 		// reset all of the ephemeral flags
 		// some flags are managed elsewhere
 		mControlFlags &= AGENT_CONTROL_AWAY | AGENT_CONTROL_FLY | AGENT_CONTROL_MOUSELOOK;
@@ -3452,7 +3452,7 @@ void LLAgent::initOriginGlobal(const LLVector3d &origin_global)
 	mAgentOriginGlobal = origin_global;
 }
 
-BOOL LLAgent::leftButtonGrabbed() const	
+bool LLAgent::leftButtonGrabbed() const
 { 
 	const BOOL camera_mouse_look = gAgentCamera.cameraMouselook();
 	return (!camera_mouse_look && mControlsTakenCount[CONTROL_LBUTTON_DOWN_INDEX] > 0) 
@@ -3461,28 +3461,28 @@ BOOL LLAgent::leftButtonGrabbed() const
 		|| (camera_mouse_look && mControlsTakenPassedOnCount[CONTROL_ML_LBUTTON_DOWN_INDEX] > 0);
 }
 
-BOOL LLAgent::rotateGrabbed() const		
+bool LLAgent::rotateGrabbed() const
 { 
 	return (mControlsTakenCount[CONTROL_YAW_POS_INDEX] > 0)
 		|| (mControlsTakenCount[CONTROL_YAW_NEG_INDEX] > 0); 
 }
 
-BOOL LLAgent::forwardGrabbed() const
+bool LLAgent::forwardGrabbed() const
 { 
 	return (mControlsTakenCount[CONTROL_AT_POS_INDEX] > 0); 
 }
 
-BOOL LLAgent::backwardGrabbed() const
+bool LLAgent::backwardGrabbed() const
 { 
 	return (mControlsTakenCount[CONTROL_AT_NEG_INDEX] > 0); 
 }
 
-BOOL LLAgent::upGrabbed() const		
+bool LLAgent::upGrabbed() const
 { 
 	return (mControlsTakenCount[CONTROL_UP_POS_INDEX] > 0); 
 }
 
-BOOL LLAgent::downGrabbed() const	
+bool LLAgent::downGrabbed() const	
 { 
 	return (mControlsTakenCount[CONTROL_UP_NEG_INDEX] > 0); 
 }
@@ -3963,19 +3963,19 @@ void LLAgent::processControlRelease(LLMessageSystem *msg, void **)
 }
 */
 
-BOOL LLAgent::anyControlGrabbed() const
+bool LLAgent::anyControlGrabbed() const
 {
 	for (U32 i = 0; i < TOTAL_CONTROLS; i++)
 	{
 		if (gAgent.mControlsTakenCount[i] > 0)
-			return TRUE;
+			return true;
 		if (gAgent.mControlsTakenPassedOnCount[i] > 0)
-			return TRUE;
+			return true;
 	}
-	return FALSE;
+	return false;
 }
 
-BOOL LLAgent::isControlGrabbed(S32 control_index) const
+bool LLAgent::isControlGrabbed(S32 control_index) const
 {
 	return mControlsTakenCount[control_index] > 0;
 }
@@ -3991,22 +3991,22 @@ void LLAgent::forceReleaseControls()
 
 void LLAgent::setHomePosRegion( const U64& region_handle, const LLVector3& pos_region)
 {
-	mHaveHomePosition = TRUE;
+	mHaveHomePosition = true;
 	mHomeRegionHandle = region_handle;
 	mHomePosRegion = pos_region;
 }
 
-BOOL LLAgent::getHomePosGlobal( LLVector3d* pos_global )
+bool LLAgent::getHomePosGlobal( LLVector3d* pos_global )
 {
 	if(!mHaveHomePosition)
 	{
-		return FALSE;
+		return false;
 	}
 	F32 x = 0;
 	F32 y = 0;
 	from_region_handle( mHomeRegionHandle, &x, &y);
 	pos_global->setVec( x + mHomePosRegion.mV[VX], y + mHomePosRegion.mV[VY], mHomePosRegion.mV[VZ] );
-	return TRUE;
+	return true;
 }
 
 bool LLAgent::isInHomeRegion()
