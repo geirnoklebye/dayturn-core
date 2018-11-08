@@ -136,6 +136,8 @@ protected:
 	void updateClickActionSettings();
 	// updates click/double-click action controls depending on values from settings.xml
 	void updateClickActionControls();
+	// <FS:Ansariel> Properly disable avatar tag setting
+	void onAvatarTagSettingsChanged();
 
 public:
 	// This function squirrels away the current values of the controls so that

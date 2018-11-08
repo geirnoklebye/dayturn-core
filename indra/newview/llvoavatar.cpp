@@ -3223,15 +3223,23 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 				mAvatarBirthdateRequest = new FetchAvatarBirthdate(getID(), this);
 			}
 		}
-				// <FS:Ansariel> Show Arc in nametag (for Jelly Dolls)
-+				// <FS:TS> ...or everyone, if selected
-				static const std::string complexity_label = LLTrans::getString("Nametag_Complexity_Label");
-				if (!isSelf() && (show_arc_always_tag || (show_too_complex_arc_tag && isTooComplex())))
-				{
-					LLStringUtil::format_map_t label_args;
-					label_args["COMPLEXITY"] = llformat("%d", complexity);
-					addNameTagLine(format_string(complexity_label, label_args), complexity_color, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
-				}
+        		// <FS:Ansariel> Show ARW in nametag options (for Jelly Dolls)
+        		static const std::string complexity_label = LLTrans::getString("Nametag_Complexity_Label");
+        		if (show_arw_tag &&
+        		   ((isSelf() && show_own_arw_tag) ||
+        		   (!isSelf() && (!show_too_complex_only_arw_tag || isTooComplex()))))
+        		{
+        			std::string complexity_string;
+        			LLLocale locale("");
+        			LLResMgr::getInstance()->getIntegerString(complexity_string, complexity);
+
+        			LLStringUtil::format_map_t label_args;
+        			label_args["COMPLEXITY"] = complexity_string;
+
+        			static LLCachedControl<F32> max_attachment_area(gSavedSettings, "RenderAutoMuteSurfaceAreaLimit", 1000.0f);
+        			bool surface_limit_exceeded = max_attachment_area > 0.f && mAttachmentSurfaceArea > max_attachment_area;
+        			addNameTagLine(format_string(complexity_label, label_args) + (surface_limit_exceeded ? " \xE2\x96\xA0" : ""), complexity_color, LLFontGL::NORMAL, LLFontGL::getFontSansSerifSmall());
+        		}
 				// </FS:Ansariel>
 		mNameAway = is_away;
 		mNameDoNotDisturb = is_do_not_disturb;

@@ -119,7 +119,7 @@
      height="15"
      layout="topleft"
      left="10"
-     top_pad="8"
+     top_pad="5"
      name="maturity_desired_prompt"
      width="200">
         I want to access content rated:
@@ -180,7 +180,7 @@
      layout="topleft"
      left="10"
      name="start_location_textbox"
-     top_pad="8"
+     top_pad="5"
      width="394">
         Start location:
     </text>
@@ -219,7 +219,7 @@
     layout="topleft"
     left="10"
     name="name_tags_textbox"
-    top_pad="10"
+    top_pad="5"
     width="400">
        Name tags:
    </text>
@@ -268,7 +268,7 @@
         follows="top|left"
         height="16"
         width="100"
-        top_pad="5"
+        top_pad="0"
         left="30" />
         tool_tip="Show my own name tag (others will see it regardless of this setting)" />
     <check_box
@@ -336,7 +336,7 @@
 	     label="Show avatar complexity"
 	     layout="topleft"
 	     left="30"
-	     width="140"
+	     width="100"
 	     top_pad="3"
   	   name="FSTagShowARW"
 	     tool_tip="If enabled, the nametag will show the current avatar complexity."/>
@@ -346,7 +346,7 @@
 	     label="Only if too complex"
 	     layout="topleft"
 	     left="40"
-	     width="140"
+	     width="100"
 	     top_pad="3"
 	     name="FSTagShowTooComplexOnlyARW"
 	     tool_tip="If enabled, the nametag will show the current avatar complexity only if the avatar is too complex and shown as a jelly doll."/>
@@ -355,9 +355,9 @@
 	     height="16"
 	     label="Show own complexity"
 	     layout="topleft"
-	     left="40"
-	     width="140"
-	     top_pad="3"
+	     left_pad="40"
+	     width="100"
+	     top_delta="0"
 	     name="FSTagShowOwnARW"
 	     tool_tip="If enabled, your own nametag will show your current avatar complexity."/>
 	<text
@@ -368,7 +368,7 @@
 	 layout="topleft"
 	 left="10"
 	 name="inworld_typing_rg_label"
-	 top_pad="10"
+	 top_pad="5"
 	 width="400">
        Pressing letter keys:
    </text>
@@ -448,7 +448,7 @@
      left="10"
      mouse_opaque="false"
      name="text_box3"
-     top_pad="10"
+     top_pad="5"
      width="240">
        Do Not Disturb response:
     </text>
