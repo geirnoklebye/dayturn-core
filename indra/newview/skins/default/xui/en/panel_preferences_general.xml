@@ -329,6 +329,37 @@
         top_delta="0"
         left_pad="60"
         tool_tip="Hide your active group title from yourself and others." />
+   <check_box
+	     control_name="FSTagShowARW"
+	     enabled_control="AvatarNameTagMode"
+	     height="16"
+	     label="Show avatar complexity"
+	     layout="topleft"
+	     left="30"
+	     width="140"
+	     top_pad="3"
+  	   name="FSTagShowARW"
+	     tool_tip="If enabled, the nametag will show the current avatar complexity."/>
+   <check_box
+     	 control_name="FSTagShowTooComplexOnlyARW"
+	     height="16"
+	     label="Only if too complex"
+	     layout="topleft"
+	     left="40"
+	     width="140"
+	     top_pad="3"
+	     name="FSTagShowTooComplexOnlyARW"
+	     tool_tip="If enabled, the nametag will show the current avatar complexity only if the avatar is too complex and shown as a jelly doll."/>
+   <check_box
+	     control_name="FSTagShowOwnARW"
+	     height="16"
+	     label="Show own complexity"
+	     layout="topleft"
+	     left="40"
+	     width="140"
+	     top_pad="3"
+	     name="FSTagShowOwnARW"
+	     tool_tip="If enabled, your own nametag will show your current avatar complexity."/>
 	<text
 	 type="string"
 	 length="1"
