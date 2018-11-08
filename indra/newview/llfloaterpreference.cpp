@@ -531,6 +531,13 @@ BOOL LLFloaterPreference::postBuild()
 	onPieColorsOverrideChanged();
 // ## Zi: Pie menu
 
+	// <FS:Ansariel> Properly disable avatar tag setting
+	gSavedSettings.getControl("NameTagShowUsernames")->getCommitSignal()->connect(boost::bind(&LLFloaterPreference::onAvatarTagSettingsChanged, this));
+	gSavedSettings.getControl("AvatarNameTagMode")->getCommitSignal()->connect(boost::bind(&LLFloaterPreference::onAvatarTagSettingsChanged, this));
+	gSavedSettings.getControl("FSTagShowARW")->getCommitSignal()->connect(boost::bind(&LLFloaterPreference::onAvatarTagSettingsChanged, this));
+	onAvatarTagSettingsChanged();
+	// </FS:Ansariel>
+	
 	gSavedSettings.getControl("StreamMetadataAnnounceToChat")->getSignal()->connect(boost::bind(&LLFloaterPreference::onStreamMetadataAnnounceChanged, this));
 	gSavedSettings.getControl("MiniMapChatRing")->getSignal()->connect(boost::bind(&LLFloaterPreference::onMiniMapChatRingChanged, this));
 	gSavedSettings.getControl("ShowLookAt")->getSignal()->connect(boost::bind(&LLFloaterPreference::onShowLookAtChanged, this));
@@ -2362,6 +2369,15 @@ void LLFloaterPreference::saveGraphicsPreset(std::string& preset)
 {
 	mSavedGraphicsPreset = preset;
 }
+
+// <FS:Ansariel> Properly disable avatar tag setting
+void LLFloaterPreference::onAvatarTagSettingsChanged()
+{
+	bool arw_options_enabled = gSavedSettings.getBOOL("FSTagShowARW") && gSavedSettings.getS32("AvatarNameTagMode") > 0;
+	childSetEnabled("FSTagShowTooComplexOnlyARW", arw_options_enabled);
+	childSetEnabled("FSTagShowOwnARW", arw_options_enabled);
+}
+// </FS:Ansariel>
 
 //------------------------------Updater---------------------------------------
 
