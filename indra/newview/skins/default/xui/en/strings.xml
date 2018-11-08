@@ -4337,4 +4337,7 @@ Try enclosing path to the editor with double quotes.
       [SCRIPT] ms Script
       [SPARE] ms Spare</string>
   <string name="Nametag_Complexity_Label">Complexity: [COMPLEXITY]</string>
+  <string name="SLGridStatusInvalidMsg">SL Grid Status error: Invalid message format. Try again later.</string>
+  <string name="SLGridStatusTimedOut">SL Grid Status error: Request timed out.</string>
+  <string name="SLGridStatusOtherError">SL Grid Status error: [STATUS] ( https://en.wikipedia.org/wiki/List_of_HTTP_status_codes ).</string>
 </strings>

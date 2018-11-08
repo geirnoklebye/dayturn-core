@@ -51,10 +51,18 @@
      height="16"
      label="Log filename of saved snapshots in to chat history"
      layout="topleft"
-     left_delta="0"
+     left_delta="-50"
      name="FSLogSnapshotsToLocal"
      top_pad="3" 
      width="300" /> 
+    <check_box
+     control_name="AutoQueryGridStatus"
+     height="16"
+     label="Query status.secondlifegrid.net for latest news at login"
+     layout="topleft"
+     name="AutoQueryGridStatus"
+     top_pad="3"
+     width="450"/>
     <text
      type="string"
      length="1"
