@@ -134,6 +134,8 @@
 #pragma warning (disable:4702)
 #endif
 
+#include "llfloaterreg.h"
+#include "fsmoneytracker.h"
 #include "fsareasearch.h"
 
 #include "animationexplorer.h"		// <FS:Zi> Animation Explorer
@@ -5411,6 +5413,14 @@ static void process_money_balance_reply_extended(LLMessageSystem* msg)
 		payload["from_id"] = source_id;
 		notification = "PaymentReceived";
 	}
+
+	// <FS:Ansariel> TipTracker Support
+	FSMoneyTracker* tipTracker = LLFloaterReg::getTypedInstance<FSMoneyTracker>("money_tracker");
+	if (success && ((tipTracker->isShown() || tipTracker->isMinimized()) || gSavedSettings.getBOOL("FSAlwaysTrackPayments")))
+	{
+		tipTracker->addPayment(name_id, is_name_group, amount, !you_paid_someone);
+	}
+	// </FS:Ansariel>>
 
 	// Despite using SLURLs, wait until the name is available before
 	// showing the notification, otherwise the UI layout is strange and

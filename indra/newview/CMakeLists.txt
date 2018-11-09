@@ -124,6 +124,7 @@ set(viewer_SOURCE_FILES
     fsfloaterprofile.cpp
     fsfloatersearch.cpp
     fsfloatersearchlegacy.cpp
+    fsmoneytracker.cpp
     fspanelclassified.cpp
     fspanelprofile.cpp
     fspanelprofileclassifieds.cpp
@@ -778,6 +779,7 @@ set(viewer_HEADER_FILES
     fsfloaterprofile.h
     fsfloatersearch.h
     fsfloatersearchlegacy.h
+    fsmoneytracker.h
     fspanelclassified.h
     fspanelprofile.h
     fspanelprofileclassifieds.h
