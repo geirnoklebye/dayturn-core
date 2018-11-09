@@ -1042,4 +1042,10 @@
   <color
     name="OutfitGalleryItemUnselected"
     value="0.4 0.4 0.4 1" />
+  <color
+      name="MoneyTrackerIncrease"
+      reference="Green" />
+  <color
+      name="MoneyTrackerDecrease"
+      reference="Red" />
 </colors>
