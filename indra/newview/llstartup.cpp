@@ -265,6 +265,10 @@ const F32 STATE_AGENT_WAIT_TIMEOUT = 240; //seconds
 boost::scoped_ptr<LLEventPump> LLStartUp::sStateWatcher(new LLEventStream("StartupState"));
 boost::scoped_ptr<LLStartupListener> LLStartUp::sListener(new LLStartupListener());
 boost::scoped_ptr<LLViewerStats::PhaseMap> LLStartUp::sPhases(new LLViewerStats::PhaseMap);
+	
+// this is hacky, but I don't want to change Marine's original code that nukes the real MOTD storage too
+// much to avoid creating merge issues for the future
+static std::string ssavedMOTD;
 
 //
 // local function declaration
@@ -2495,6 +2499,11 @@ bool idle_startup()
 
 		gAgentAvatarp->sendHoverHeight();
 
+		if (gRRenabled)
+		{
+			report_to_nearby_chat(ssavedMOTD);
+		}
+		
 		// <FS:PP>
 		if (gSavedSettings.getBOOL("AutoQueryGridStatus"))
 		{
@@ -3705,6 +3714,7 @@ bool process_login_success_response()
 //MK
 	if (gRRenabled)
 	{
+		ssavedMOTD = response["message"];
 		gAgent.mMOTD.assign("");
 	}
 //mk
