@@ -3714,7 +3714,7 @@ bool process_login_success_response()
 //MK
 	if (gRRenabled)
 	{
-		ssavedMOTD = response["message"];
+		ssavedMOTD = (std::string)response["message"];
 		gAgent.mMOTD.assign("");
 	}
 //mk
