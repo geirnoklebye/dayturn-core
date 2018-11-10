@@ -1179,16 +1179,7 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 						LLAvatarName av_name;
 						if (LLAvatarNameCache::get(owner, &av_name))
 						{
-//MK (adapted to replace RLVa version)
-							if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
-							{
-								full_name = gAgent.mRRInterface.getDummyName (av_name.getUserName());
-							}
-							else
-							{
 								full_name = av_name.getCompleteName();
-							}
-//mk (copied)
 						}
 						else
 						{
@@ -1283,14 +1274,6 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 				if (region)
 				{
 					LLVector3 relPositionObject = region->getPosRegionFromGlobal(hover_object->getPositionGlobal());
-//MK - adapted to replace RLVa code
-					if (!(gRRenabled && (gAgent.mRRInterface.mContainsShowloc)))
-					{
-						args.clear();
-						args["POSITION"] = llformat("<%.02f, %.02f, %.02f>", relPositionObject.mV[VX], relPositionObject.mV[VY], relPositionObject.mV[VZ]);
-						tooltip_msg.append("\n" + LLTrans::getString("TooltipPosition", args));
-					}
-//mk
 					// Get distance
 					F32 distance = (relPositionObject - region->getPosRegionFromGlobal(gAgent.getPositionGlobal())).magVec();
 					args.clear();
@@ -1391,13 +1374,6 @@ BOOL LLToolPie::handleToolTip(S32 local_x, S32 local_y, MASK mask)
 {
 	if (!LLUI::sSettingGroups["config"]->getBOOL("ShowHoverTips")) return TRUE;
 	if (!mHoverPick.isValid()) return TRUE;
-//MK (CA: add this to match RLVa behaviour here)
-	// Don't show a tooltip for an object we can't reach or see
-	if (gRRenabled && gAgent.mRRInterface.mContainsInteract)
-	{
-		return TRUE;
-	}
-//mk
 
 	LLViewerObject* hover_object = mHoverPick.getObject();
 	
