@@ -47,6 +47,7 @@
 #include "llkeyboard.h"
 #include "llmediaentry.h"
 #include "llmenugl.h"
+#include "llmeshrepository.h"
 #include "llmutelist.h"
 #include "piemenu.h"	// ## Zi: Pie menu
 #include "llresmgr.h"  // getMonetaryString
@@ -1089,6 +1090,18 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 
 BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string line, std::string tooltip_msg)
 {
+	// <FS:Ansariel> FIRE-9522: Crashfix
+	if (!hover_object)
+	{
+		return TRUE;
+	}
+	// </FS:Ansariel>
+
+	// <FS:Ansariel> Advanced object tooltips
+	const char* const DEFAULT_DESC = "(No Description)";
+	static LLCachedControl<bool> advancedToolTip(gSavedSettings, "FSAdvancedTooltips");
+	// </FS:Ansariel> Advanced object tooltips
+
 	if ( hover_object->isHUDAttachment() )
 	{
 		// no hover tips for HUD elements, since they can obscure
@@ -1124,10 +1137,28 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 		{
 			// Try to get display name + username
 			std::string final_name;
+
+			// <FS:Zi> Build group prefix
+			std::string group_title;
+			if (gSavedSettings.getBOOL("FSShowGroupTitleInTooltip"))
+			{
+				LLNameValue* group = hover_object->getNVPair("Title");
+				if (group)
+				{
+					group_title = group->getString();
+					if (!group_title.empty())
+					{
+						group_title += "\n";
+					}
+				}
+			}
+			// </FS:Zi>
+
 			LLAvatarName av_name;
 			if (LLAvatarNameCache::get(hover_object->getID(), &av_name))
 			{
 				final_name = av_name.getCompleteName();
+				final_name = group_title + final_name;
 			}
 			else
 			{
@@ -1145,7 +1176,13 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 			LLInspector::Params p;
 			p.fillFrom(LLUICtrlFactory::instance().getDefaultParams<LLInspector>());
 			p.message(final_name);
-			p.image.name("Inspector_I");
+			// <FS:Ansariel> Get rid of the "i"-button on advanced hovertips
+			//p.image.name("Inspector_I");
+			if (!advancedToolTip)
+			{
+				p.image.name("Inspector_I");
+			}
+			// </FS:Ansariel>
 			p.click_callback(boost::bind(showAvatarInspector, hover_object->getID()));
 			p.visible_time_near(6.f);
 			p.visible_time_far(3.f);
@@ -1194,6 +1231,147 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 			{
 				tooltip_msg.append( nodep->mName );
 			}
+
+			// <FS:Ansariel> Advanced object tooltips
+			if (advancedToolTip)
+			{
+				// Set description
+				if (!nodep->mDescription.empty() && nodep->mDescription != DEFAULT_DESC)
+				{
+					tooltip_msg.append("\n" + nodep->mDescription);
+				}
+
+				// Set owner name
+				std::string full_name;
+			
+				if (nodep->mValid)
+				{
+					LLUUID owner = nodep->mPermissions->getOwner();
+					if (owner.notNull())
+					{
+						LLAvatarName av_name;
+						if (LLAvatarNameCache::get(owner, &av_name))
+						{
+//MK (adapted to replace RLVa version)
+							if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+							{
+								full_name = gAgent.mRRInterface.getDummyName (av_name.getUserName());
+							}
+							else
+							{
+								full_name = av_name.getCompleteName();
+							}
+//mk (copied)
+						}
+						else
+						{
+							full_name = LLTrans::getString("LoadingData");
+
+							// If we don't have the avatar name already, let the
+							// avatar name cache retrieve it and simply invoke
+							// us again after it received the name.
+							std::string l;
+							std::string m;
+							LLUUID id( hover_object->getID() );
+							mNamecacheConnections.push_back( LLAvatarNameCache::get(owner, boost::bind(&LLToolPie::handleTooltipObjectById, this, id, l, m)) );
+						}
+
+						// Owner name
+						tooltip_msg.append("\n" + LLTrans::getString("TooltipOwner") + " " + full_name);
+					}
+				}
+
+				// Permission flags
+				LLViewerObject* parentobject = (LLViewerObject*)hover_object->getParent();
+				std::string permissionsline;
+				if (hover_object->flagScripted())
+				{
+					permissionsline += LLTrans::getString("TooltipFlagScript") + " ";
+				}
+				if (hover_object->flagUsePhysics())
+				{
+					permissionsline += LLTrans::getString("TooltipFlagPhysics") + " ";
+				}
+				if (hover_object->flagHandleTouch() || (parentobject && parentobject->flagHandleTouch()))
+				{
+					permissionsline += LLTrans::getString("TooltipFlagTouch") + " ";
+				}
+				if (hover_object->flagTakesMoney() || (parentobject && parentobject->flagTakesMoney()))
+				{
+					permissionsline += LLTrans::getString("TooltipFlagL$") + " ";
+				}
+				if (hover_object->flagAllowInventoryAdd())
+				{
+					permissionsline += LLTrans::getString("TooltipFlagDropInventory") + " ";
+				}
+				if (hover_object->flagPhantom())
+				{
+					permissionsline += LLTrans::getString("TooltipFlagPhantom") + " ";
+				}
+				if (hover_object->flagTemporaryOnRez())
+				{
+					permissionsline += LLTrans::getString("TooltipFlagTemporary") + " ";
+				}
+				if (!permissionsline.empty())
+				{
+					permissionsline = "\n" + permissionsline.substr(0, permissionsline.length() - 1);
+				}
+				tooltip_msg += permissionsline + "\n";
+
+				LLStringUtil::format_map_t args;
+
+				// Get prim count
+				S32 prim_count = LLSelectMgr::getInstance()->getHoverObjects()->getObjectCount();				
+				args["COUNT"] = llformat("%d", prim_count);
+				tooltip_msg.append("\n" + LLTrans::getString("TooltipPrimCount", args));
+
+				// Display the PE weight for an object if mesh is enabled
+				if (gMeshRepo.meshRezEnabled())
+				{
+					// Ansariel: What a bummer! PE is only available for
+					//           objects in the same region as you!
+					if (hover_object->getRegion() && gAgent.getRegion() &&
+						hover_object->getRegion()->getRegionID() == gAgent.getRegion()->getRegionID())
+					{
+						S32 link_cost = LLSelectMgr::getInstance()->getHoverObjects()->getSelectedLinksetCost();
+						if (link_cost > 0)
+						{
+							args.clear();
+							args["PEWEIGHT"] = llformat("%d", link_cost);
+							tooltip_msg.append(LLTrans::getString("TooltipPrimEquivalent", args));
+						}
+						else
+						{
+							tooltip_msg.append(LLTrans::getString("TooltipPrimEquivalentLoading"));
+						}
+					}
+					else
+					{
+						tooltip_msg.append(LLTrans::getString("TooltipPrimEquivalentUnavailable"));
+					}
+				}
+
+				// Get position
+				LLViewerRegion* region = gAgent.getRegion();
+				if (region)
+				{
+					LLVector3 relPositionObject = region->getPosRegionFromGlobal(hover_object->getPositionGlobal());
+//MK - adapted to replace RLVa code
+					if (!(gRRenabled && (gAgent.mRRInterface.mContainsShowloc)))
+					{
+						args.clear();
+						args["POSITION"] = llformat("<%.02f, %.02f, %.02f>", relPositionObject.mV[VX], relPositionObject.mV[VY], relPositionObject.mV[VZ]);
+						tooltip_msg.append("\n" + LLTrans::getString("TooltipPosition", args));
+					}
+//mk
+					// Get distance
+					F32 distance = (relPositionObject - region->getPosRegionFromGlobal(gAgent.getPositionGlobal())).magVec();
+					args.clear();
+					args["DISTANCE"] = llformat("%.02f", distance);
+					tooltip_msg.append("\n" + LLTrans::getString("TooltipDistance", args));
+				}
+			}
+			// </FS:Ansariel> Advanced object tooltips
 			
 			bool has_media = false;
 			bool is_time_based_media = false;
@@ -1258,7 +1436,11 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 				LLInspector::Params p;
 				p.fillFrom(LLUICtrlFactory::instance().getDefaultParams<LLInspector>());
 				p.message(tooltip_msg);
-				p.image.name("Inspector_I");
+				// Ansariel: Get rid of the useless button!
+				if (!advancedToolTip)
+				{
+					p.image.name("Inspector_I");
+				}
 				p.click_callback(boost::bind(showObjectInspector, hover_object->getID(), mHoverPick.mObjectFace));
 				p.time_based_media(is_time_based_media);
 				p.web_based_media(is_web_based_media);
@@ -1282,6 +1464,13 @@ BOOL LLToolPie::handleToolTip(S32 local_x, S32 local_y, MASK mask)
 {
 	if (!LLUI::sSettingGroups["config"]->getBOOL("ShowHoverTips")) return TRUE;
 	if (!mHoverPick.isValid()) return TRUE;
+//MK (CA: add this to match RLVa behaviour here)
+	// Don't show a tooltip for an object we can't reach or see
+	if (gRRenabled && gAgent.mRRInterface.mContainsInteract)
+	{
+		return TRUE;
+	}
+//mk
 
 	LLViewerObject* hover_object = mHoverPick.getObject();
 	
@@ -2232,3 +2421,32 @@ void LLToolPie::steerCameraWithMouse(S32 x, S32 y)
 	mMouseSteerX = x;
 	mMouseSteerY = y;
 }
+
+// <FS:ND> Keep track of name resolutions we made and delete them if needed to avoid crashing if this instance dies.
+LLToolPie::~LLToolPie()
+{
+	std::vector< tNamecacheConnection >::iterator itr = mNamecacheConnections.begin();
+	std::vector< tNamecacheConnection >::iterator itrEnd = mNamecacheConnections.end();
+
+	while( itr != itrEnd )
+	{
+		itr->disconnect();
+		++itr;
+	}
+}
+// </FS:ND>
+
+// <FS:ND> FIRE-10276; handleTooltipObject can be called during name resolution (LLAvatarNameCache), then hover_object can lon gbe destroyed and the pointer invalid.
+// To circumvent this just pass the id and try to fetch the object from gObjectList.
+
+BOOL LLToolPie::handleTooltipObjectById( LLUUID hoverObjectId, std::string line, std::string tooltip_msg)
+{
+	LLViewerObject* pObject = gObjectList.findObject( hoverObjectId );
+
+	if( !pObject )
+		return TRUE;
+
+	return handleTooltipObject( pObject, line, tooltip_msg );
+}
+
+// </FS:ND>

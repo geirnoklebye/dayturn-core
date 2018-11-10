@@ -19429,6 +19429,17 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+  <key>FSAdvancedTooltips</key>
+	  <map>
+	    <key>Comment</key>
+	    <string>Show extended information in hovertips about objects (Firestorm/classic Phoenix style)</string>
+	    <key>Persist</key>
+	    <integer>1</integer>
+	    <key>Type</key>
+	    <string>Boolean</string>
+	    <key>Value</key>
+	    <integer>1</integer>
+	  </map>    
 </map>
 </llsd>
 
