@@ -151,9 +151,9 @@ BOOL LLToolPie::handleRightMouseDown(S32 x, S32 y, MASK mask)
                                          /*BOOL pick_transparent*/ FALSE,
                                          /*BOOL pick_rigged*/ TRUE,
                                          /*BOOL pick_particle*/ TRUE);
-/MK
+//MK
 	gViewerWindow->mPickThroughHuds = FALSE;
-/mk
+//mk
 	mPick.mKeyMask = mask;
 
 //MK
