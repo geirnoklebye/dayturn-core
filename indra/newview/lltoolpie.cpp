@@ -1081,6 +1081,16 @@ BOOL LLToolPie::handleTooltipLand(std::string line, std::string tooltip_msg)
 		LLStringUtil::format_map_t args;
 		S32 price = hover_parcel->getSalePrice();
 		args["[AMOUNT]"] = LLResMgr::getInstance()->getMonetaryString(price);
+		S32 area = hover_parcel->getArea();
+		if (area==0) // check in case it's not been initialised yet
+		{
+				args["[LDPSQM]"] = "--";
+		}
+		else
+		{
+				F32 ldpsqm = (F32) price / (F32) area;
+				args["[LDPSQM]"] = llformat("%.1f",ldpsqm);
+		}	
 		line = LLTrans::getString("TooltipForSaleL$", args);
 		tooltip_msg.append(line);
 		tooltip_msg.push_back('\n');
