@@ -239,7 +239,7 @@ Please try logging in again in a minute.</string>
 	<string name="TooltipOwner">Owner:</string> <!-- Owner name follows -->
 	<string name="TooltipPublic">Public</string> <!-- Public permissions on an object -->
 	<string name="TooltipIsGroup">(Group)</string> <!-- The name before this text is that of a group -->
-	<string name="TooltipForSaleL$">For Sale: L$[AMOUNT]</string> <!-- L$ version -->
+	<string name="TooltipForSaleL$">For Sale: L$[AMOUNT] (L$[LDPSQM]/m²)</string> <!-- L$ version -->
 	<string name="TooltipFlagGroupBuild">Group Build</string>
 	<string name="TooltipFlagNoBuild">No Build</string>
 	<string name="TooltipFlagNoEdit">No Edit</string>
