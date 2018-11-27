@@ -177,6 +177,7 @@
 // *NOTE: Please add files in alphabetical order to keep merges easy.
 #include "fspanelclassified.h"
 #include "fsfloaterimport.h"
+#include "kokuarlvfloaters.h"
 // NaCl - Sound explorer
 #include "NACLfloaterexploresounds.h"
 // NaCl End
@@ -410,6 +411,11 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("animation_overrider", "floater_ao.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FloaterAO>);	// ## Zi: Animation Overrider	
     LLFloaterReg::add("fs_export", "floater_fs_export.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterObjectExport>);
 	LLFloaterReg::add("fs_import", "floater_fs_import.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterImport>);
+	LLFloaterReg::add("rlv_debug", "floater_rlv_debug.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterRLVDebug>);
+	LLFloaterReg::add("rlv_debug_output", "floater_rlv_debug_panel.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterRLVDebugOutput>);
+	LLFloaterReg::add("rlv_console", "floater_rlv_console.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterRLVConsole>);
+	LLFloaterReg::add("rlv_status", "floater_rlv_status.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterRLVStatus>);
+	LLFloaterReg::add("rlv_worn", "floater_rlv_worn.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterRLVWorn>);
     	// <FS:CR> FIRE-6310: Include Legacy Search
 	LLFloaterReg::add("search_legacy", "floater_fs_search_legacy.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterSearchLegacy>);
 	LLFloaterReg::add("publish_classified_fs", "floater_publish_classified.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSPublishClassifiedFloater>);

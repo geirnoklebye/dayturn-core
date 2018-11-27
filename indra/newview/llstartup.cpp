@@ -216,6 +216,7 @@
 //MK
 #include "lldrawpoolbump.h"
 //mk
+#include "kokuarlvfloaters.h"
 
 //
 // exported globals
@@ -1783,7 +1784,10 @@ bool idle_startup()
 		{
 			if (gAgent.mRRInterface.mRetainedCommands.empty()) // we test mRetainedCommands and not mSpecialObjectBehaviours because these commands below will be retained for a bit, they won't be executed right away.
 			{
-				gAgent.mRRInterface.handleCommand(LLUUID::generateNewID(), "camavdist:0=n,shownames=n,showloc=n,showworldmap=n,showminimap=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
+				LLUUID id = LLUUID::generateNewID();
+				std::string name = "Viewer Startup";
+				KokuaRLVFloaterSupport::addNameToLocalCache(id, name);
+				gAgent.mRRInterface.handleCommand(id, "camavdist:0=n,shownames=n,showloc=n,showworldmap=n,showminimap=n,tploc=n,camdrawmin:1=n,camdrawmax:1.1=n,camdrawalphamin:0=n,camdrawalphamax:1=n,camtextures=n");
 			}
 		}
 //mk

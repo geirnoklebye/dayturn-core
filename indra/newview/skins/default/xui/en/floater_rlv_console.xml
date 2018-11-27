@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater
+  can_resize="true"
+  height="430"
+  layout="topleft"
+  min_height="300"
+  min_width="450"
+  name="rlv_console"
+  save_rect="true"
+  title="RLV CONSOLE"
+  width="600"
+  >
+  <text
+   type="string"
+   follows="left|top"
+   height="10"
+   layout="topleft"
+   left_delta="15"
+   name="rlvconsole1"
+   top_pad="5"
+   width="430">
+   Enter RLV commands as @behaviour=param or @behaviour:option=param
+  </text>
+  <text
+   type="string"
+   follows="left|top"
+   height="10"
+   layout="topleft"
+   left_delta="0"
+   name="rlvconsole2"
+   top_pad="5"
+   width="430">
+   Closing the window releases all console restrictions
+  </text>
+  <text
+   type="string"
+   follows="left|top"
+   height="10"
+   layout="topleft"
+   left_delta="0"
+   name="rlvconsole3"
+   top_pad="5"
+   width="430">
+   Use channel 0 for replies to =channel style commands
+  </text> 
+  <text
+   type="string"
+   follows="left|top"
+   height="10"
+   layout="topleft"
+   left_delta="0"
+   name="rlvconsole4"
+   top_pad="5"
+   width="430">
+   The console is disabled by @viewscript=n from any other source
+  </text> 
+    <text_editor
+     follows="all"
+     left="10"
+     length="1"
+     top_pad="10"
+     height="330"
+     ignore_tab="false"
+     layout="topleft"
+     max_length="65536"
+     name="rlv_console_output"
+     read_only="true"
+     track_end="true"
+     type="string"
+     width="576"
+     word_wrap="true"
+     >
+    </text_editor>
+    <line_editor
+     top_pad="5"
+     border_style="line"
+     border_thickness="1"
+     bottom_delta="20"
+     follows="left|right|bottom"
+     height="19"
+     layout="topleft"
+     max_length_chars="255"
+     name="rlv_console_input"
+     top_delta="0"
+     width="576"
+     >
+    </line_editor>
+</floater>

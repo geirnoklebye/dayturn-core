@@ -2306,6 +2306,83 @@
     <menu_item_separator/>
     <menu
      create_jump_keys="true"
+     label="RLV Debug Display"
+     name="RLV Debug Display"
+     tear_off="true">
+      <menu_item_check
+         label="Show window"
+         name="Show window">
+        <menu_item_check.on_check
+         function="Floater.IsOpen"
+         parameter="rlv_debug" />
+        <menu_item_check.on_click
+         function="Floater.ToggleOrBringToFront"
+         parameter="rlv_debug" />
+      </menu_item_check> 
+    <menu_item_check
+     label="Opens automatically"
+     name="Opens automatically">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="KokuaRLVDebugFloaterAutoOpen" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="KokuaRLVDebugFloaterAutoOpen" />
+    </menu_item_check>
+    <menu_item_check
+     label="Ignores =channel"
+     name="Ignores =channel">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="KokuaRLVDebugFloaterIgnoreQueries" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="KokuaRLVDebugFloaterIgnoreQueries" />
+    </menu_item_check>
+    <menu_item_check
+     label="Shows most recent"
+     name="Shows most recent">
+      <menu_item_check.on_check
+       function="CheckControl"
+       parameter="KokuaRLVDebugFloaterFocusOnLatest" />
+      <menu_item_check.on_click
+       function="ToggleControl"
+       parameter="KokuaRLVDebugFloaterFocusOnLatest" />
+    </menu_item_check>
+    </menu>
+      <menu_item_check
+         label="RLV Console..."
+         name="RLV Console">
+        <menu_item_check.on_check
+         function="Floater.IsOpen"
+         parameter="rlv_console" />
+        <menu_item_check.on_click
+         function="Floater.ToggleOrBringToFront"
+         parameter="rlv_console" />
+      </menu_item_check> 
+       <menu_item_check
+         label="RLV Status..."
+         name="RLV Status">
+        <menu_item_check.on_check
+         function="Floater.IsOpen"
+         parameter="rlv_status" />
+        <menu_item_check.on_click
+         function="Floater.ToggleOrBringToFront"
+         parameter="rlv_status" />
+      </menu_item_check> 
+        <menu_item_check
+         label="RLV Worn Status..."
+         name="RLV Worn Status">
+        <menu_item_check.on_check
+         function="Floater.IsOpen"
+         parameter="rlv_worn" />
+        <menu_item_check.on_click
+         function="Floater.ToggleOrBringToFront"
+         parameter="rlv_worn" />
+      </menu_item_check> 
+    <menu_item_separator/>
+    <menu
+     create_jump_keys="true"
      label="Focus"
      name="Focus"
      tear_off="true">

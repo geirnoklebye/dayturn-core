@@ -141,6 +141,7 @@
 #include "fsareasearch.h"
 
 #include "animationexplorer.h"		// <FS:Zi> Animation Explorer
+#include "kokuarlvfloaters.h"
 
 extern void on_new_message(const LLSD& msg);
 
@@ -3006,6 +3007,8 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 					//{
 					//	obj_id = object->getRootEdit()->getID();
 					//}
+
+					KokuaRLVFloaterSupport::addNameToLocalCache(obj_id, from_name); // CA: Since it's known here we can run with that name until we find it's an attachment we can interrogate
 					if (gAgent.mRRInterface.handleCommand(obj_id, command))
 					{
 						if (!gSavedSettings.getBOOL("RestrainedLoveDebug"))
