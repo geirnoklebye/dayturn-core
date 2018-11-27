@@ -57,8 +57,8 @@
 #include "llviewertexteditor.h"
 #include "llvoavatarself.h"
 
-#include "rrinterface.h"
-#include "rrinterfacehelper.h" //for MAX_CLOTHING_PER_TYPE
+#include "RRInterface.h"
+#include "RRInterfaceHelper.h" //for MAX_CLOTHING_PER_TYPE
 
 // Marine doesn't export it so we need it here too
 #define EXTREMUM 1000000.f
@@ -215,7 +215,7 @@ std::string KokuaRLVFloaterSupport::getNameFromUUID(const LLUUID& idObj, bool fI
 		schild = ", child";
 	}
 
-	return llformat("%s (%s%s)", strItemName.c_str(), strAttachPtName.c_str(), schild);
+	return llformat("%s (%s%s)", strItemName, strAttachPtName, schild);
 }
 
 void KokuaRLVFloaterSupport::checkForRefreshNeeded(LLUUID& object_uuid, std::string& command, bool* refresh_status, bool* refresh_worn)
