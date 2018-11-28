@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<multi_floater
+ can_resize="true"
+ height="232"
+ layout="topleft"
+ name="RLV debug floater"
+ help_topic="rlv_debug_floater"
+ save_rect="true"
+ title="RLV COMMANDS"
+ reuse_instance="true"
+ width="600">
+    <tab_container
+     follows="left|top|right|bottom"
+     height="230"
+     layout="topleft"
+     left="1"
+     name="Preview Tabs"
+     tab_position="bottom"
+     top="0"
+     width="598" />
+</multi_floater>

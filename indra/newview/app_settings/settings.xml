@@ -19528,6 +19528,39 @@
 	    <key>Value</key>
 	    <integer>1</integer>
 	  </map>    
+  <key>KokuaRLVDebugFloaterAutoOpen</key>
+	  <map>
+	    <key>Comment</key>
+	    <string>When enabled the RLV Debug floater opens with any RLV activity</string>
+	    <key>Persist</key>
+	    <integer>1</integer>
+	    <key>Type</key>
+	    <string>Boolean</string>
+	    <key>Value</key>
+	    <integer>0</integer>
+	  </map>   
+  <key>KokuaRLVDebugFloaterIgnoreQueries</key>
+	  <map>
+	    <key>Comment</key>
+	    <string>When enabled all RLV commands of the form @command=channel (eg @getstatus) are ignored</string>
+	    <key>Persist</key>
+	    <integer>1</integer>
+	    <key>Type</key>
+	    <string>Boolean</string>
+	    <key>Value</key>
+	    <integer>1</integer>
+	  </map>   
+  <key>KokuaRLVDebugFloaterFocusOnLatest</key>
+	  <map>
+	    <key>Comment</key>
+	    <string>When enabled the active tab of the floater will be the source of the most recent RLV activity</string>
+	    <key>Persist</key>
+	    <integer>1</integer>
+	    <key>Type</key>
+	    <string>Boolean</string>
+	    <key>Value</key>
+	    <integer>1</integer>
+	  </map>   
 </map>
 </llsd>
 

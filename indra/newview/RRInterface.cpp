@@ -91,6 +91,9 @@
 #include "RRInterface.h"
 //CA
 #include "RRInterfaceHelper.h"
+#include "kokuarlvfloaters.h"
+#include "lluicolor.h"
+#include "lluicolortable.h"
 //ca
 
 // Global and static variables initialization.
@@ -130,9 +133,12 @@ BOOL RRHelper::preventFloater(std::string floaterName)
 	else if (floaterName == "worldmap" && gAgent.mRRInterface.mContainsShowworldmap) return TRUE;
 	else if (floaterName == "Destinations" && gAgent.mRRInterface.mContainsTp) return TRUE;
 	else if (floaterName == "floater_my_inventory" && gAgent.mRRInterface.mContainsShowinv) return TRUE;
+	else if (floaterName == "rlv_console" && gAgent.mRRInterface.mContainsViewScript) return TRUE;
 
 	return FALSE;
 }
+
+static LLUUID current_handlecommand_caller;
 //ca
 
 // --
@@ -256,6 +262,9 @@ void refreshCachedVariable (std::string var)
 	else if (var == "permissive")			gAgent.mRRInterface.mContainsPermissive = contained;
 	else if (var == "temprun")					gAgent.mRRInterface.mContainsRun = contained;
 	else if (var == "alwaysrun")				gAgent.mRRInterface.mContainsAlwaysRun = contained;
+	//CA add viewscript since the console needs to check for it
+	else if (var == "viewscript")				gAgent.mRRInterface.mContainsViewScript = contained;
+		
 	//else if (var == "moveup")					gAgent.mRRInterface.mContainsMoveUp = contained;
 	//else if (var == "movedown")				gAgent.mRRInterface.mContainsMoveDown = contained;
 	//else if (var == "moveleft")			gAgent.mRRInterface.mContainsMoveStrafeLeft = contained;
@@ -355,7 +364,14 @@ void refreshCachedVariable (std::string var)
 			}
 		}
 	}
-
+	
+	//CA viewscript prevents the RLV console, unless being done from inside it
+	else if (var == "viewscript") {
+		if (gAgent.mRRInterface.mContainsViewScript && gAgent.getID() != current_handlecommand_caller) {
+			if (KokuaFloaterRLVConsole::getBase()) KokuaFloaterRLVConsole::getBase()->closeFloater(false);
+		}
+	}
+	
 	else if (var == "showloc") {
 		LLNavigationBar::getInstance()->refresh();
 		if (gAgent.mRRInterface.mContainsShowloc) {
@@ -1234,7 +1250,12 @@ BOOL RRInterface::garbageCollector (BOOL all) {
 				if (sRestrainedLoveDebug) {
 					LL_INFOS() << it->first << " not found => cleaning... " << LL_ENDL;
 				}
-				clear (uuid);
+				clear(uuid);
+				{
+					LLColor4 color = LLUIColorTable::instance().getColor("ScriptErrorColor");
+					std::string released = "Restrictions released by garbage collector";
+					KokuaFloaterRLVDebug::addRLVLine(released, color, uuid);
+				}
 				res=TRUE;
 				it=mSpecialObjectBehaviours.begin ();
 			} else {
@@ -1288,7 +1309,7 @@ void RRInterface::notify (LLUUID object_uuid, std::string action, std::string su
 	LLUUID uuid;
 	std::string rule;
 	it = mSpecialObjectBehaviours.begin ();
-	
+
 	while (it != mSpecialObjectBehaviours.end()) {
 		uuid.set (it->first);
 		rule = it->second; // we are looking for rules like "notify:2222;tp", if action contains "tp" then notify the scripts on channel 2222
@@ -1302,6 +1323,13 @@ void RRInterface::notify (LLUUID object_uuid, std::string action, std::string su
 			}
 		}
 		it++;
+	}
+	// CA: also use this to trigger an update of the Worn Status floater for situations where an outfit/attach change wasn't
+	// caused by a RLV command. All the messages of interest contain 'legally'. However, this is not fully reliable,
+	// eg in the case of a clothing layer being detached the notification is called *before* the detach occurs
+	if (suffix == "" && action.find("legally") != -1 && KokuaFloaterRLVWorn::getBase())
+	{
+		KokuaFloaterRLVWorn::getBase()->refreshWornStatus();
 	}
 }
 
@@ -1325,14 +1353,54 @@ BOOL RRInterface::parseCommand (std::string command, std::string& behaviour, std
 	return FALSE;
 }
 
+// CA: In order to have a single point of execution for commands with a clean result returned I am converting
+// the real handleCommand into a private and creating a wrapper which then gives me a clean way to
+// add debugging functions. The existing debug output function is in llviewermessage.cpp thus only applies
+// to the calls to handleCommand that it makes, so any commands from other sources such as the blind login
+// would not be recorded. The original handleCommand has multiple exits so veneering it is the easiest way.
+
 BOOL RRInterface::handleCommand (LLUUID uuid, std::string command)
+{
+	// yes - this is messy ... the alternative is changing the prototype of answerOnChat everywhere
+	// it occurs which is worse
+	current_handlecommand_caller = uuid;
+	
+	BOOL res = reallyHandleCommand(uuid, command);
+	LLColor4 color;
+
+	// if all that reallyHandleCommand did was to queue it then
+	// we don't want to pipe it through to debugging yet either - we'll catch
+	// when it comes past again from fireCommands
+
+	if (LLStartUp::getStartupState() < STATE_CLEANUP) return res;
+
+	if (res)
+	{
+		color = LLUIColorTable::instance().getColor("SystemChatColor");
+		KokuaFloaterRLVDebug::addRLVLine("Executes: "+command,color,uuid);
+			
+		//and feed it into the RLV status/worn floaters
+		KokuaRLVFloaterSupport::commandNotify(uuid, command);
+	}
+	else
+	{
+		// the colours get overridden because the text window used is set as readonly but this is
+		// left in just in case a different display method is used in future
+		color = LLUIColorTable::instance().getColor("ScriptErrorColor");
+		KokuaFloaterRLVDebug::addRLVLine("Fails: " + command, color, uuid);
+	}
+	
+	return res;
+}
+
+BOOL RRInterface::reallyHandleCommand (LLUUID uuid, std::string command)
 {
 	// 1. check the command is actually a single one or a list of commands separated by ","
 	if (command.find (",")!=-1) {
 		BOOL res=TRUE;
 		std::deque<std::string> list_of_commands=parse (command, ",");
 		for (unsigned int i=0; i<list_of_commands.size (); ++i) {
-			if (!handleCommand (uuid, list_of_commands.at(i))) res=FALSE;
+			if (!reallyHandleCommand (uuid, list_of_commands.at(i))) res=FALSE;
 		}
 		return res;
 	}
@@ -1921,10 +1989,13 @@ void RRInterface::removeItemFromAvatar(LLViewerInventoryItem* item)
 	//LLWearableBridge::removeItemFromAvatar (item);
 }
 
+// CA: if the command is from the avatar's own uuid and the channel is zero then it
+// gets sent back to the console window
+
 BOOL RRInterface::answerOnChat (std::string channel, std::string msg)
 {
 	S32 chan = (S32)atoi(channel.c_str());
-	if (chan == 0) {
+	if (chan == 0 && gAgent.getID() != current_handlecommand_caller) {
 		// protection against abusive "@getstatus=0" commands, or against a non-numerical channel
 		return FALSE;
 	}
@@ -1946,6 +2017,11 @@ BOOL RRInterface::answerOnChat (std::string channel, std::string msg)
 		gMessageSystem->addS32("Channel", chan);
 
 		gAgent.sendReliableMessage();
+	}
+	else if (chan==0)
+	{
+		// it's a reply for the console - all other uses of 0 got tested for earlier
+		KokuaFloaterRLVConsole::getBase()->addCommandReply(msg);
 	}
 	else {
 		gMessageSystem->newMessage("ScriptDialogReply");
@@ -4558,9 +4634,7 @@ bool RRInterface::canUnwear(LLWearableType::EType type)
 bool RRInterface::canWear(LLInventoryItem* item)
 {
 	// CA: Apply the same defensive measures here as canWear(LLWearableType)
-	if (!gAgentAvatarp) {
-		return true;
-	}
+	if (!gAgentAvatarp) return true;
 
 	// If we are still a cloud, allow to wear whatever the restrictions (we are probably logging on)
 	if (gAgentAvatarp && gAgentAvatarp->getIsCloud())
@@ -4604,12 +4678,15 @@ bool RRInterface::canWear(LLInventoryItem* item)
 
 bool RRInterface::canWear(LLWearableType::EType type, bool from_server /*= false*/)
 {
-	// CA: Defensive code
-	if (!gAgentAvatarp) {
-		return true;
-	}
 
 	// If we are still a cloud, allow to wear whatever the restrictions (we are probably logging on)
+	
+	// CA: I have a strong suspicion that coming through here before gAgentAvatarp is valid is the cause
+	// of various cloud rezzing without a skin/shape etc issues. Even if that proves to be wrong, it's 
+	// a good defensive measure since the cloud test won't have the intended effect if gAgentAvatarp
+	// isn't valid yet
+	if (!gAgentAvatarp) return true;
+		
 	if (gAgentAvatarp && gAgentAvatarp->getIsCloud())
 	{
 		return true;
@@ -4673,10 +4750,18 @@ bool RRInterface::canDetach(LLInventoryItem* item)
 
 bool RRInterface::canDetach(LLViewerObject* attached_object)
 {
+	std::string res=canDetachWithExplanation(attached_object);
+	if (res=="removable") return true;
+	return false;
+}
+	
+	
+std::string RRInterface::canDetachWithExplanation(LLViewerObject* attached_object)
+{
 //	if (!scriptsEnabled() && !getScriptsEnabledOnce()) return false;
-	if (attached_object == NULL) return true;
+	if (attached_object == NULL) return "removable";
 	LLViewerObject* root = attached_object->getRootEdit();
-	if (root == NULL) return true;
+	if (root == NULL) return "removable";
 
 	// Check all the current restrictions, if "detach" is issued from a child prim of the root prim of
 	// attached_object, then the whole object is undetachable
@@ -4684,17 +4769,19 @@ bool RRInterface::canDetach(LLViewerObject* attached_object)
 	while (it != mSpecialObjectBehaviours.end()) {
 		if (it->second == "detach") {
 			LLViewerObject* this_prim = gObjectList.findObject(LLUUID(it->first));
+			//CA: root can be returned as self, so check before returning
 			if (this_prim && (this_prim->getRootEdit() == root)) {
-				return false;
+				if (this_prim == root) return "@detach";
+				return "@detach (non-root)";
 			}
 		}
 		it++;
 	}
 
 //	if (!isAllowed (attached_object->getRootEdit()->getID(), "detach", FALSE)) return false;
-	if (!isAllowed (attached_object->getID(), "detach", FALSE)) return false;
-	if (!isAllowed (attached_object->getID(), "detachthis", FALSE)) return false;
-	if (!isAllowed (attached_object->getID(), "detachallthis", FALSE)) return false;
+	if (!isAllowed (attached_object->getID(), "detach", FALSE)) return "@detach";
+	if (!isAllowed (attached_object->getID(), "detachthis", FALSE)) return "@detachthis";
+	if (!isAllowed (attached_object->getID(), "detachallthis", FALSE)) return "@detachallthis";
 
 	LLInventoryItem* item = getItem (attached_object->getRootEdit()->getID());
 
@@ -4706,14 +4793,14 @@ bool RRInterface::canDetach(LLViewerObject* attached_object)
 		}
 
 		// If the item has just been received, let the user detach it (we know it has not issued a @detach restriction already)
-		if (isInventoryItemNew(item) && cat_parent_name.length() > 0 && cat_parent_name.at(0) != '~') return true; // we must check for temp RLV folders here too, not only in canDetachCategory(), because we can't know which one we will check first
+		if (isInventoryItemNew(item) && cat_parent_name.length() > 0 && cat_parent_name.at(0) != '~') return "removable"; // we must check for temp RLV folders here too, not only in canDetachCategory(), because we can't know which one we will check first
 
-		if (cat_parent && !canDetachCategory(cat_parent, true)) return false;
+		if (cat_parent && !canDetachCategory(cat_parent, true)) return "folder locked";
 
 		if (mHandleNoStrip) {
 			std::string name = item->getName();
 			LLStringUtil::toLower(name);
-			if (name.find ("nostrip") != -1) return false;
+			if (name.find ("nostrip") != -1) return "nostrip in name";
 		}
 
 		LLVOAvatarSelf* avatarp = gAgentAvatarp;
@@ -4721,49 +4808,63 @@ bool RRInterface::canDetach(LLViewerObject* attached_object)
 			std::string attachpt;
 			if (avatarp->getAttachedPointName(item->getLinkedUUID(), attachpt))
 			{
-				if (contains("detach:"+attachpt)) return false;
-				if (contains("remattach")) return false;
-				if (contains("remattach:"+attachpt)) return false;
+				if (contains("detach:"+attachpt)) return "@detach:"+attachpt;
+				if (contains("remattach")) return "@remattach";
+				if (contains("remattach:"+attachpt)) return "@remattach:"+attachpt;
 			}
 	//				if (!canDetach(attachpt)) return false;
 		}
 	}
-	return true;
+	return "removable";
 }
 
 bool RRInterface::canDetach(std::string attachpt)
 {
+	std::string res=canDetachWithExplanation(attachpt);
+	if (res=="unlocked") return true;
+	return false;
+}
+
+std::string RRInterface::canDetachWithExplanation(std::string attachpt)
+{
 //	if (!scriptsEnabled() && !getScriptsEnabledOnce()) return false;
 	LLStringUtil::toLower(attachpt);
-	if (contains("detach:"+attachpt)) return false;
-	if (contains("remattach")) return false;
-	if (contains("remattach:"+attachpt)) return false;
+	if (contains("detach:"+attachpt)) return "@detach:"+attachpt;
+	if (contains("remattach")) return "@remattach";
+	if (contains("remattach:"+attachpt)) return "@remattach:"+attachpt;
 	LLViewerJointAttachment* attachment = findAttachmentPointFromName (attachpt, TRUE);
-	if (!canDetachAllObjectsFromAttachment (attachment)) return false;
-	return true;
+	if (!canDetachAllObjectsFromAttachment (attachment)) return "some items locked";
+	return "unlocked";
 }
 
 bool RRInterface::canAttach(LLViewerObject* object_to_attach, std::string attachpt, bool from_server /* = false */)
 {
+		std::string res=canAttachWithExplanation(object_to_attach, attachpt, from_server);
+		if (res=="unlocked") return TRUE;
+		return FALSE;
+}
+
+std::string RRInterface::canAttachWithExplanation(LLViewerObject* object_to_attach, std::string attachpt, bool from_server /* = false */)
+{
 	// If from_server == true, the check is done while receiving an order from the server => always allow
-	if (from_server) return true;
+	if (from_server) return "unlocked";
 
 	// Attention : this function does not check if we are replacing and there is a locked object already present on the attachment point
 	LLStringUtil::toLower(attachpt);
-	if (contains("addattach")) return false;
-	if (contains("addattach:"+attachpt)) return false;
+	if (contains("addattach")) return "@addattach";
+	if (contains("addattach:"+attachpt)) return "@addattach:"+attachpt;
 	if (object_to_attach) {
 		LLInventoryItem* item = getItem(object_to_attach->getRootEdit()->getID());
 		if (item) {
 			// If the item has just been received, let the user attach it
-			if (isInventoryItemNew(item)) return true;
+			if (isInventoryItemNew(item)) return "unlocked";
 
 			LLInventoryCategory* cat_parent = gInventory.getCategory (item->getParentUUID());
-			if (cat_parent && !canAttachCategory(cat_parent)) return false;
+			if (cat_parent && !canAttachCategory(cat_parent)) return "folder lock";
 		}
 	}
 	
-	return true;
+	return "unlocked";
 }
 
 bool RRInterface::canAttach(LLInventoryItem* item, bool from_server /* = false */)
@@ -4931,9 +5032,12 @@ std::string RRInterface::getRlvRestrictions(std::string substr /*= ""*/)
 	while (it != mSpecialObjectBehaviours.end())
 	{
 		old_object_name = object_name;
-		LLInventoryItem* item = getItem(LLUUID(it->first));
-		if (item) object_name = item->getName();
-		else object_name = "???";
+		//The floater name lookup routine covers more cases, so use that instead
+		//
+		//LLInventoryItem* item = getItem(LLUUID(it->first));
+		//if (item) object_name = item->getName();
+		//else object_name = "???";
+		object_name = KokuaRLVFloaterSupport::getNameFromUUID(LLUUID(it->first),true);
 
 		if (substr == "" || object_name.find(substr) != -1) {
 			// print the name of the object

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater
+  positioning="cascading"
+  can_close="true"
+  can_minimize="true"
+  can_resize="true"
+  height="300"
+  min_height="300"
+  min_width="600"
+  name="rlv_worn"
+  save_rect="true"
+  save_visibility="false"
+  single_instance="true"
+  title="RLV ATTACHED/WORN"
+  width="600">
+  <tab_container
+    follows="all"
+    layout="topleft"
+    left="8"
+    name="attached_tab"
+    height="266"
+    right="-8"
+    tab_height="23"
+    tab_min_width="120"
+    tab_position="top"
+    top="0" >
+    <panel
+      follows="all"  height="265"
+      label="Attached Items"
+      layout="topleft"
+      name="attached_panel"
+      top="0">
+      <scroll_list
+	     draw_border="false"
+	     draw_heading="true"
+	     draw_stripes="true"
+	     follows="all"
+	     height="266"
+	     layout="topleft"
+	     multi_select="false"
+	     name="attached_list"
+		 sort_column="0"
+	     tool_tip="List of currently worn attachments (locked or otherwise)"
+	     top_pad="0" >
+        <scroll_list.columns label="Item" name="item" width="150" />
+        <scroll_list.columns label="Worn On" name="wearpt" width="150" />
+        <scroll_list.columns label="Can detach?" name="lock" />
+      </scroll_list>
+    </panel>
+    <panel
+      follows="all"  height="265"
+      label="Attachment Points"
+      layout="topleft"
+      name="attachpt_panel"
+      top="0"> 
+      <scroll_list
+	     draw_border="false"
+	     draw_heading="true"
+	     draw_stripes="true"
+	     follows="all"
+	     height="266"
+	     layout="topleft"
+	     multi_select="false"
+	     name="attachpt_list"
+		 sort_column="0"
+	     tool_tip="All attachment points and their current status"
+	     top_pad="0" >
+        <scroll_list.columns label="Attach Point" name="attachpt" width="100" />
+        <scroll_list.columns label="Items" name="items" width="50" />
+        <scroll_list.columns label="Can add?" name="canadd" width="100" />
+        <scroll_list.columns label="Can remove?" name="candetach" />
+      </scroll_list>
+    </panel>
+    <panel
+      follows="all"  height="265"
+      label="Folders"
+      layout="topleft"
+      name="folder_panel"
+      top="0">
+      <scroll_list
+	     draw_border="false"
+	     draw_heading="true"
+	     draw_stripes="true"
+	     follows="all"
+	     height="266"
+	     layout="topleft"
+	     multi_select="false"
+	     name="folder_list"
+		 sort_column="0"
+	     tool_tip="List of current folders affected by RLV"
+	     top_pad="0" >
+        <scroll_list.columns label="Behaviour" name="behaviour" width="100" />
+        <scroll_list.columns label="Option" name="option" width="150" />
+        <scroll_list.columns label="Source" name="source" />
+      </scroll_list>
+    </panel>
+    <panel
+      follows="all"  height="265"
+      label="Clothing Layers"
+      layout="topleft"
+      name="clothing_panel"
+      top="0">
+      <scroll_list
+       draw_border="false"
+       draw_heading="true"
+       draw_stripes="true"
+       follows="all"
+       height="266"
+       layout="topleft"
+       multi_select="false"
+       name="clothing_list"
+       sort_column="0"
+       tool_tip="List of clothing locations and current usage"
+       top_pad="0" >
+        <scroll_list.columns label="Wear Location" name="wearpoint" width="150" />
+        <scroll_list.columns label="Item" name="item" width="150" />
+        <scroll_list.columns label="Can add?" name="addblock" width="150" />
+        <scroll_list.columns label="Can remove?" name="remblock" />
+      </scroll_list>
+    </panel>
+  </tab_container>
+  <panel
+   background_visible="false"
+   follows="left|right|bottom"
+   height="25"
+   label="bottom_panel"
+   layout="topleft"
+   name="bottom_panel"
+   top_pad="0">
+    <button
+     image_hover_unselected="Toolbar_Left_Over"
+     image_overlay="Copy"
+     image_overlay_alignment="left"
+     image_selected="Toolbar_Left_Selected"
+     image_unselected="Toolbar_Left_Off"
+     label="Refresh"
+     left="0"
+     name="refresh_btn"
+     top="1"
+     width="150" />
+    <icon
+     follows="left|right"
+     image_name="Toolbar_Right_Off"
+     left_pad="1"
+     name="dummy_icon"
+     top="1"
+     right="-1" />
+  </panel>
+</floater>

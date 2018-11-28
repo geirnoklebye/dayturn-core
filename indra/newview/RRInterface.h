@@ -238,9 +238,12 @@ public:
 	bool canWear(LLInventoryItem* item);
 	bool canWear(LLWearableType::EType type, bool from_server = false);
 	bool canDetach(LLInventoryItem* item);
-	bool canDetach(LLViewerObject* attached_object);
-	bool canDetach(std::string attachpt);
-	bool canAttach(LLViewerObject* object_to_attach, std::string attachpt, bool from_server = false);
+	bool canDetach(LLViewerObject* attached_object); // CA: Now a veneer around canDetachWithExplanation
+	std::string canDetachWithExplanation(LLViewerObject* attached_object); //CA: This is the original function with expanded return information. Original function name now a veneer
+	bool canDetach(std::string attachpt); // CA: Now a veneer around canDetachWithExplanation
+	std::string canDetachWithExplanation(std::string attachpt); //CA: This is the original function with expanded return information. Original function name now a veneer
+	bool canAttach(LLViewerObject* object_to_attach, std::string attachpt, bool from_server = false); //CA: Now a veneer around canAttachWithExplanation
+	std::string canAttachWithExplanation(LLViewerObject* object_to_attach, std::string attachpt, bool from_server = false); // CA: This is the original function with expanded return information
 	bool canAttach(LLInventoryItem* item, bool from_server = false);
 	bool canEdit(LLViewerObject* object);
 	bool canTouch(LLViewerObject* object, LLVector3 pick_intersection = LLVector3::zero); // set pick_intersection to force the check on this position
@@ -291,6 +294,8 @@ public:
 	BOOL mContainsTp;
 	BOOL mContainsCamTextures;
 	BOOL mContainsShownametags;
+	// CA
+	BOOL mContainsViewScript;
 
 	BOOL mHandleNoStrip;
 	//BOOL mContainsMoveUp;
@@ -333,9 +338,6 @@ public:
 	static F32 sLastOutfitChange; // timestamp of the last change in the outfit (including Hover on the shape)
 	static U32 mCamDistNbGradients; // number of spheres to draw when restricting the camera view
 	static BOOL sRenderLimitRenderedThisFrame; // true when already rendered the vision spheres during this rendering frame
-	// Chorazin: this is used so that we only perform the setting of KokuaRLVNoBlindStartup to FALSE when a
-	// camera restriction is used once per session
-	static BOOL mAlreadySetBlindLogin;
 
 	// Allowed debug settings (initialized in the ctor)
 	std::deque<std::string> mAllowedGetDebug;
@@ -372,7 +374,7 @@ private:
 	LLUUID mSitTargetId;
 	std::string mLastLoadedPreset; // contains the name of the latest loaded Windlight preset
 	int mLaunchTimestamp; // timestamp of the beginning of this session
-	
+	BOOL reallyHandleCommand (LLUUID uuid, std::string command);	// CA: the public handleCommand is now a veneer so that we can do debug output cleanly for all callers, not just chat handling
 };
 
 
