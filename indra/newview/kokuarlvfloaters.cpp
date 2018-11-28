@@ -215,7 +215,7 @@ std::string KokuaRLVFloaterSupport::getNameFromUUID(const LLUUID& idObj, bool fI
 		schild = ", child";
 	}
 
-	return llformat("%s (%s%s)", strItemName, strAttachPtName, schild);
+	return llformat("%s (%s%s)", strItemName.c_str(), strAttachPtName.c_str(), schild.c_str());
 }
 
 void KokuaRLVFloaterSupport::checkForRefreshNeeded(LLUUID& object_uuid, std::string& command, bool* refresh_status, bool* refresh_worn)
