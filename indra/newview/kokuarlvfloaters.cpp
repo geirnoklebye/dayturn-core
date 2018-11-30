@@ -288,7 +288,12 @@ void KokuaRLVFloaterSupport::checkForRefreshNeeded(LLUUID& object_uuid, std::str
 
 void KokuaRLVFloaterSupport::commandNotify(LLUUID& object_uuid, std::string& command)
 {
-	// called when handleCommand returns success
+	// called when handleCommand returns success - not any more...
+	// since add / remove / clear and replace are public, they could get called internally
+	// by anything (the garbage collector being one example) we now get called from
+	// these routines instead. This means that the routine below to deal with combination
+	// commands actually isn't going to ever get fed combinations, just singles, however
+	// we leave the capability in place for possible future use
 
 	// to avoid too much redrawing and processing, we filter down on what triggers an update
 

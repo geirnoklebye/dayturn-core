@@ -1109,6 +1109,9 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 			gAgent.mRRInterface.mLastStandingLocation = LLVector3d(gAgent.getPositionGlobal ());
 			gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 		}
+		
+		//and feed it into the RLV status/worn floaters
+		KokuaRLVFloaterSupport::commandNotify(object_uuid, action+"=n");
 
 		return TRUE;
 	}
@@ -1166,6 +1169,8 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 				gAgent.mRRInterface.mLastStandingLocation.clear();
 				gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 			}
+			//and feed it into the RLV status/worn floaters
+			KokuaRLVFloaterSupport::commandNotify(object_uuid, action+"=y");
 
 			return TRUE;
 		}
@@ -1211,6 +1216,8 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 		gAgent.mRRInterface.mLastStandingLocation.clear();
 		gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 	}
+	//and feed it into the RLV status/worn floaters
+	KokuaRLVFloaterSupport::commandNotify(object_uuid,"clear" + (command!=""? ":"+command : ""));
 
 	return TRUE;
 }
@@ -1225,6 +1232,8 @@ void RRInterface::replace (LLUUID what, LLUUID by)
 		if (uuid == what) {
 			// found the UUID to replace => add a copy of the command with the new UUID
 			mSpecialObjectBehaviours.insert(std::pair<std::string, std::string>(by.asString(), it->second));
+			//and feed it into the RLV status/worn floaters
+			KokuaRLVFloaterSupport::commandNotify(by,it->second+"=n");				
 		}
 		it++;
 	}
@@ -1378,9 +1387,13 @@ BOOL RRInterface::handleCommand (LLUUID uuid, std::string command)
 	{
 		color = LLUIColorTable::instance().getColor("SystemChatColor");
 		KokuaFloaterRLVDebug::addRLVLine("Executes: "+command,color,uuid);
-			
+		
+		// we no longer do this here. since add/remove/clear/replace are public and could get
+		// called from anywhere the notifications have to be down in those routines rather 
+		// than up here
+		//	
 		//and feed it into the RLV status/worn floaters
-		KokuaRLVFloaterSupport::commandNotify(uuid, command);
+		//KokuaRLVFloaterSupport::commandNotify(uuid, command);
 	}
 	else
 	{
