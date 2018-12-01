@@ -40,6 +40,7 @@
 #include "llagent.h"
 #include "llagentwearables.h"
 #include "llavatarnamecache.h"
+#include "llcallbacklist.h"
 #include "llclipboard.h"
 #include "llerror.h"
 #include "llfloaterreg.h"
@@ -62,6 +63,9 @@
 
 // Marine doesn't export it so we need it here too
 #define EXTREMUM 1000000.f
+
+static bool awaiting_idle_for_worn = false;
+static bool awaiting_idle_for_status = false;
 
 // ---- inventory observer
 
@@ -304,15 +308,19 @@ void KokuaRLVFloaterSupport::commandNotify(LLUUID& object_uuid, std::string& com
 	// recursive call to break down the command stack and returns as early as
 	// possible once it decides both floaters need to refresh
 	checkForRefreshNeeded(object_uuid, command, &refresh_status, &refresh_worn);
+	
+	// since we can no longer get the benefit of processing a whole command line and only
+	// doing one update, we change update strategy instead and defer it until the viewer
+	// does an idle callback
 
-	if (refresh_status && KokuaFloaterRLVStatus::getBase())
+	if (refresh_status && KokuaFloaterRLVStatus::getBase() && !awaiting_idle_for_status)
 	{
-		KokuaFloaterRLVStatus::getBase()->refreshRLVStatus();
+		doOnIdleOneTime(&KokuaFloaterRLVStatus::callRefreshRLVStatus);
 	}
 
-	if (refresh_worn && KokuaFloaterRLVWorn::getBase())
+	if (refresh_worn && KokuaFloaterRLVWorn::getBase() && !awaiting_idle_for_worn)
 	{
-		KokuaFloaterRLVWorn::getBase()->refreshWornStatus();
+		doOnIdleOneTime(&KokuaFloaterRLVWorn::callRefreshWornStatus);
 	}
 }
 
@@ -648,8 +656,17 @@ void KokuaFloaterRLVStatus::onBtnCopyToClipboard()
 	LLClipboard::instance().copyToClipboard(res, 0, res.length());
 }
 
+void KokuaFloaterRLVStatus::callRefreshRLVStatus()
+{
+	if (KokuaFloaterRLVStatus::getBase())
+	{
+		KokuaFloaterRLVStatus::getBase()->refreshRLVStatus();
+	}
+}
+
 void KokuaFloaterRLVStatus::refreshRLVStatus()
 {
+	awaiting_idle_for_status = false;
 	LLCtrlListInterface* pBhvrList = childGetListInterface("behaviour_list");
 	LLCtrlListInterface* pExceptList = childGetListInterface("exception_list");
 	LLCtrlListInterface* pModifierList = childGetListInterface("modifier_list");
@@ -902,8 +919,17 @@ void KokuaFloaterRLVWorn::onBtnRefresh()
 	refreshWornStatus();
 }
 
+void KokuaFloaterRLVWorn::callRefreshWornStatus()
+{
+	if (KokuaFloaterRLVWorn::getBase())
+	{
+		KokuaFloaterRLVWorn::getBase()->refreshWornStatus();
+	}
+}
+
 void KokuaFloaterRLVWorn::refreshWornStatus()
 {
+	awaiting_idle_for_worn = false;
 	LLCtrlListInterface* pAttachedList = childGetListInterface("attached_list");
 	LLCtrlListInterface* pAttachPtList = childGetListInterface("attachpt_list");
 	LLCtrlListInterface* pFolderList = childGetListInterface("folder_list");

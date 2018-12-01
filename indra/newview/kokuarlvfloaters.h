@@ -139,6 +139,7 @@ public:
 	BOOL postBuild();
 	static KokuaFloaterRLVStatus* getBase();
 	void refreshRLVStatus();
+	static void callRefreshRLVStatus();
 
 protected:
 	void onBtnCopyToClipboard();
@@ -161,6 +162,7 @@ public:
 	BOOL postBuild();
 	static KokuaFloaterRLVWorn* getBase();
 	void refreshWornStatus();
+	static void callRefreshWornStatus();
 
 protected:
 	void onBtnRefresh();
