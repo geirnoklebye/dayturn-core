@@ -44,6 +44,9 @@
 #include "llviewerwindow.h"
 #include "llavatarnamecache.h"
 
+//CA for @shownames
+#include "RRInterface.h"
+
 // packet layout
 const S32 SOURCE_AVATAR = 0;
 const S32 TARGET_OBJECT = 16;
@@ -337,8 +340,10 @@ void LLHUDEffectPointAt::render()
 	)) {
 	    LLGLDisable gls_stencil(GL_STENCIL_TEST);
 		LLVector3 target = mTargetPos + mSourceObject->getRenderPosition();
-
-		if (pointat_names) {
+		
+		//CA: squash pointat_names if @shownames is in effect
+		
+		if (pointat_names && (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.mContainsShownames))) {
 			//
 			//	render name above crosshairs
 			//
