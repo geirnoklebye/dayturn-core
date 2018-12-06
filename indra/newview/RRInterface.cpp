@@ -1236,7 +1236,7 @@ void RRInterface::replace (LLUUID what, LLUUID by)
 			// found the UUID to replace => add a copy of the command with the new UUID
 			mSpecialObjectBehaviours.insert(std::pair<std::string, std::string>(by.asString(), it->second));
 			//and feed it into the RLV status/worn floaters
-			std:;string notify = it->second + "=n";
+			std::string notify = it->second + "=n";
 			KokuaRLVFloaterSupport::commandNotify(by,notify);				
 		}
 		it++;
