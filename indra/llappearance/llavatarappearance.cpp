@@ -921,14 +921,15 @@ void LLAvatarAppearance::buildCharacter()
 
 BOOL LLAvatarAppearance::loadAvatar()
 {
-// 	LL_RECORD_BLOCK_TIME(FTM_LOAD_AVATAR);
-	
 	// avatar_skeleton.xml
 	if( !buildSkeleton(sAvatarSkeletonInfo) )
 	{
 		LL_ERRS() << "avatar file: buildSkeleton() failed" << LL_ENDL;
 		return FALSE;
 	}
+
+	// initialize mJointAliasMap
+	getJointAliases();
 
 	// avatar_lad.xml : <skeleton>
 	if( !loadSkeletonNode() )
@@ -1020,7 +1021,6 @@ BOOL LLAvatarAppearance::loadAvatar()
 				addMaskedMorph(baked, morph_param, invert, info->mLayer);
 			}
 		}
-
 	}
 
 	loadLayersets();
@@ -1051,7 +1051,6 @@ BOOL LLAvatarAppearance::loadAvatar()
 		}
 	}
 
-	
 	return TRUE;
 }
 
