@@ -1111,7 +1111,8 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 		}
 		
 		//and feed it into the RLV status/worn floaters
-		KokuaRLVFloaterSupport::commandNotify(object_uuid, action+"=n");
+		std::string notify = action + "=n";
+		KokuaRLVFloaterSupport::commandNotify(object_uuid, notify);
 
 		return TRUE;
 	}
@@ -1170,7 +1171,8 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 				gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 			}
 			//and feed it into the RLV status/worn floaters
-			KokuaRLVFloaterSupport::commandNotify(object_uuid, action+"=y");
+			std::string notify = action + "=y";
+			KokuaRLVFloaterSupport::commandNotify(object_uuid, notify);
 
 			return TRUE;
 		}
@@ -1217,7 +1219,8 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 		gSavedPerAccountSettings.setVector3d("RestrainedLoveLastStandingLocation", gAgent.mRRInterface.mLastStandingLocation);
 	}
 	//and feed it into the RLV status/worn floaters
-	KokuaRLVFloaterSupport::commandNotify(object_uuid,"clear" + (command!=""? ":"+command : ""));
+	std::string notify = "clear" + (command!=""? ":"+command : "");
+	KokuaRLVFloaterSupport::commandNotify(object_uuid,notify);
 
 	return TRUE;
 }
@@ -1233,7 +1236,8 @@ void RRInterface::replace (LLUUID what, LLUUID by)
 			// found the UUID to replace => add a copy of the command with the new UUID
 			mSpecialObjectBehaviours.insert(std::pair<std::string, std::string>(by.asString(), it->second));
 			//and feed it into the RLV status/worn floaters
-			KokuaRLVFloaterSupport::commandNotify(by,it->second+"=n");				
+			std:;string notify = it->second + "=n";
+			KokuaRLVFloaterSupport::commandNotify(by,notify);				
 		}
 		it++;
 	}
