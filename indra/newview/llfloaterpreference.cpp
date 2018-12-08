@@ -112,12 +112,17 @@
 #include "llviewernetwork.h"
 #include "lllogininstance.h"        // to check if logged in yet
 #include "llsdserialize.h"
+#include "llpresetsmanager.h"
+#include "llviewercontrol.h"
+#include "llpresetsmanager.h"
+#include "llfeaturemanager.h"
+#include "llviewertexturelist.h"
+
+// additional Kokua includes
 #include "llaudioengine.h"
 #include "llvieweraudio.h"
 #include "llviewermedia.h"
 #include "llviewermedia_streamingaudio.h"
-#include "llviewertexturelist.h"
-#include "llpresetsmanager.h"
 
 const F32 BANDWIDTH_UPDATER_TIMEOUT = 0.5f;
 char const* const VISIBILITY_DEFAULT = "default";
@@ -647,13 +652,6 @@ void LLFloaterPreference::onDoNotDisturbResponseChanged()
 
 LLFloaterPreference::~LLFloaterPreference()
 {
-	// clean up user data
-	LLComboBox* ctrl_window_size = getChild<LLComboBox>("windowsize combo");
-	for (S32 i = 0; i < ctrl_window_size->getItemCount(); i++)
-	{
-		ctrl_window_size->setCurrentByIndex(i);
-	}
-
 	LLConversationLog::instance().removeObserver(this);
 }
 
@@ -2491,11 +2489,20 @@ BOOL LLPanelPreference::postBuild()
 	{
 		getChild<LLCheckBoxCtrl>("voice_call_friends_only_check")->setCommitCallback(boost::bind(&showFriendsOnlyWarning, _1, _2));
 	}
+	if (hasChild("allow_multiple_viewer_check", TRUE))
+	{
+		getChild<LLCheckBoxCtrl>("allow_multiple_viewer_check")->setCommitCallback(boost::bind(&showMultipleViewersWarning, _1, _2));
+	}
 	if (hasChild("favorites_on_login_check", TRUE))
 	{
 		getChild<LLCheckBoxCtrl>("favorites_on_login_check")->setCommitCallback(boost::bind(&handleFavoritesOnLoginChanged, _1, _2));
 		bool show_favorites_at_login = LLPanelLogin::getShowFavorites();
 		getChild<LLCheckBoxCtrl>("favorites_on_login_check")->setValue(show_favorites_at_login);
+	}
+	if (hasChild("mute_chb_label", TRUE))
+	{
+		getChild<LLTextBox>("mute_chb_label")->setShowCursorHand(false);
+		getChild<LLTextBox>("mute_chb_label")->setClickedCallback(boost::bind(&toggleMuteWhenMinimized));
 	}
 
 	//////////////////////PanelAdvanced ///////////////////
@@ -2586,6 +2593,14 @@ void LLPanelPreference::saveSettings()
 	}	
 }
 
+void LLPanelPreference::showMultipleViewersWarning(LLUICtrl* checkbox, const LLSD& value)
+{
+    if (checkbox && checkbox->getValue())
+    {
+        LLNotificationsUtil::add("AllowMultipleViewers");
+    }
+}
+
 void LLPanelPreference::showFriendsOnlyWarning(LLUICtrl* checkbox, const LLSD& value)
 {
 	if (checkbox && checkbox->getValue())
@@ -2604,6 +2619,12 @@ void LLPanelPreference::handleFavoritesOnLoginChanged(LLUICtrl* checkbox, const 
 			LLNotificationsUtil::add("FavoritesOnLogin");
 		}
 	}
+}
+
+void LLPanelPreference::toggleMuteWhenMinimized()
+{
+	std::string mute("MuteWhenMinimized");
+	gSavedSettings.setBOOL(mute, !gSavedSettings.getBOOL(mute));
 }
 
 void LLPanelPreference::cancel()
