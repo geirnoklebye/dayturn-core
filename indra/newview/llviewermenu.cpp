@@ -553,7 +553,10 @@ void init_menus()
 	{
 		color = LLUIColorTable::instance().getColor( "MenuNonProductionBgColor" );
 	}
-	gMenuBarView = LLUICtrlFactory::getInstance()->createFromFile<LLMenuBarGL>("menu_viewer_kokua.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
+	std::string menutree = "menu_viewer_kokua.xml";
+	if (gSavedSettings.getBOOL("KokuaClassicMainMenu")) menutree="menu_viewer_kokua_original.xml";
+	
+	gMenuBarView = LLUICtrlFactory::getInstance()->createFromFile<LLMenuBarGL>(menutree, gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
 //kokua we could add a legacy menu here
 
 	LLView* menu_bar_holder = gViewerWindow->getRootView()->getChildView("menu_bar_holder");
@@ -6053,6 +6056,16 @@ void print_agent_nvpairs(void*)
 	}
 
 	LL_INFOS() << "Camera at " << gAgentCamera.getCameraPositionGlobal() << LL_ENDL;
+}
+
+void kokua_menus()
+{
+    BOOL kokuaclassic = gSavedSettings.getBOOL("KokuaClassicMainMenu");
+		gMenuBarView->setItemEnabled("Kokua Classic Menus", kokuaclassic);	
+			LLSD args;
+			args["MESSAGE"] = 
+			llformat("Restart the viewer to apply the new main menu layout" );
+			LLNotificationsUtil::add("GenericAlert", args);	
 }
 
 void show_debug_menus()
