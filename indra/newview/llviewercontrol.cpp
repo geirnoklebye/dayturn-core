@@ -821,7 +821,8 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("VelocityInterpolate")->getSignal()->connect(boost::bind(&handleVelocityInterpolate, _2));
 	gSavedSettings.getControl("QAMode")->getSignal()->connect(boost::bind(&show_debug_menus));
 	gSavedSettings.getControl("UseDebugMenus")->getSignal()->connect(boost::bind(&show_debug_menus));
-    gSavedSettings.getControl("ShowRlvMenu")->getSignal()->connect(boost::bind(&show_debug_menus));
+  gSavedSettings.getControl("ShowRlvMenu")->getSignal()->connect(boost::bind(&show_debug_menus));
+  gSavedSettings.getControl("KokuaClassicMainMenu")->getSignal()->connect(boost::bind(&kokua_menus));
 	gSavedSettings.getControl("AgentPause")->getSignal()->connect(boost::bind(&toggle_agent_pause, _2));
 	gSavedSettings.getControl("ShowNavbarNavigationPanel")->getSignal()->connect(boost::bind(&toggle_show_navigation_panel, _2));
 	gSavedSettings.getControl("ShowMiniLocationPanel")->getSignal()->connect(boost::bind(&toggle_show_mini_location_panel, _2));
