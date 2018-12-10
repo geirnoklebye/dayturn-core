@@ -553,10 +553,15 @@ void init_menus()
 	{
 		color = LLUIColorTable::instance().getColor( "MenuNonProductionBgColor" );
 	}
-	std::string menutree = "menu_viewer_kokua.xml";
-	if (gSavedSettings.getBOOL("KokuaClassicMainMenu")) menutree="menu_viewer_kokua_original.xml";
+	std::string kokuamainmenu = "menu_viewer_kokua.xml";
+	std::string kokualoginmenu = "menu_login_kokua.xml";
+	if (gSavedSettings.getBOOL("KokuaClassicMainMenu"))
+	{
+	    kokuamainmenu="menu_viewer_kokua_original.xml";
+	    kokualoginmenu="menu_login_kokua_original.xml";
+	}
 	
-	gMenuBarView = LLUICtrlFactory::getInstance()->createFromFile<LLMenuBarGL>(menutree, gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
+	gMenuBarView = LLUICtrlFactory::getInstance()->createFromFile<LLMenuBarGL>(kokuamainmenu, gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
 //kokua we could add a legacy menu here
 
 	LLView* menu_bar_holder = gViewerWindow->getRootView()->getChildView("menu_bar_holder");
@@ -592,7 +597,7 @@ void init_menus()
 	// Let land based option enable when parcel changes
 	gMenuParcelObserver = new LLMenuParcelObserver();
 
-	gLoginMenuBarView = LLUICtrlFactory::getInstance()->createFromFile<LLMenuBarGL>("menu_login_kokua.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
+	gLoginMenuBarView = LLUICtrlFactory::getInstance()->createFromFile<LLMenuBarGL>(kokualoginmenu, gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
 //kokua we could add a legacy menu here
 
 	gLoginMenuBarView->arrangeAndClear();
