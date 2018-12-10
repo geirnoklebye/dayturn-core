@@ -1016,7 +1016,7 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 					restriction = "rediremote:";
 				}
 			}
-			else if (utf8_out_text.find("((") != 0 || utf8_out_text.find("))") != utf8_out_text.length() - 2)
+			else
 			{
 				if (gAgent.mRRInterface.containsSubstr("redirchat:"))
 				{

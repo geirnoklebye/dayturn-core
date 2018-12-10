@@ -532,3 +532,28 @@ void LLAttachmentsMgr::spamStatusInfo()
     }
 #endif
 }
+
+//MK from KB
+void LLAttachmentsMgr::refreshAttachments()
+{
+	if (!isAgentAvatarValid())
+		return;
+
+	for (const auto& kvpAttachPt : gAgentAvatarp->mAttachmentPoints)
+	{
+		for (const LLViewerObject* pAttachObj : kvpAttachPt.second->mAttachedObjects)
+		{
+			const LLUUID& idItem = pAttachObj->getAttachmentItemID();
+			if ( (mAttachmentRequests.wasRequestedRecently(idItem)) || (pAttachObj->isTempAttachment()) )
+				continue;
+
+			AttachmentsInfo attachment;
+			attachment.mItemID = idItem;
+			attachment.mAttachmentPt = kvpAttachPt.first;
+			attachment.mAdd = true;
+			mPendingAttachments.push_back(attachment);
+			mAttachmentRequests.addTime(idItem);
+		}
+	}
+}
+//mk from kb

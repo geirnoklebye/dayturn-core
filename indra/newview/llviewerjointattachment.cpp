@@ -28,6 +28,9 @@
 
 #include "llviewerjointattachment.h"
 
+//MK from KB
+#include "llagent.h"
+//mk from kb
 #include "llviewercontrol.h"
 #include "lldrawable.h"
 #include "llgl.h"
@@ -194,15 +197,32 @@ BOOL LLViewerJointAttachment::addObject(LLViewerObject* object)
 
 	// Two instances of the same inventory item attached --
 	// Request detach, and kill the object in the meantime.
-	if (getAttachedObject(object->getAttachmentItemID()))
+//MK from KB
+	if (LLViewerObject* pAttachObj = getAttachedObject(object->getAttachmentItemID()))
 	{
 		LL_INFOS() << "(same object re-attached)" << LL_ENDL;
-		object->markDead();
-
-		// If this happens to be attached to self, then detach.
-		LLVOAvatarSelf::detachAttachmentIntoInventory(object->getAttachmentItemID());
-		return FALSE;
-	}
+		pAttachObj->markDead();
+		if (pAttachObj->permYouOwner())
+		{
+			gMessageSystem->newMessage("ObjectDetach");
+			gMessageSystem->nextBlockFast(_PREHASH_AgentData);
+			gMessageSystem->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+			gMessageSystem->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+			gMessageSystem->nextBlockFast(_PREHASH_ObjectData);
+			gMessageSystem->addU32Fast(_PREHASH_ObjectLocalID, pAttachObj->getLocalID());
+			gMessageSystem->sendReliable(gAgent.getRegionHost());
+		}
+ 	}
+//mk from kb
+//	if (getAttachedObject(object->getAttachmentItemID()))
+//	{
+//		LL_INFOS() << "(same object re-attached)" << LL_ENDL;
+//		object->markDead();
+//
+//		// If this happens to be attached to self, then detach.
+//		LLVOAvatarSelf::detachAttachmentIntoInventory(object->getAttachmentItemID());
+//		return FALSE;
+//	}
 
 	mAttachedObjects.push_back(object);
 	setupDrawable(object);
@@ -641,7 +661,10 @@ const LLViewerObject *LLViewerJointAttachment::getAttachedObject(const LLUUID &o
 		 ++iter)
 	{
 		const LLViewerObject* attached_object = (*iter);
-		if (attached_object->getAttachmentItemID() == object_id)
+//		if (attached_object->getAttachmentItemID() == object_id)
+//MK from KB
+		if ( (attached_object->getAttachmentItemID() == object_id) && (!attached_object->isDead()) )
+//mk from kb
 		{
 			return attached_object;
 		}
