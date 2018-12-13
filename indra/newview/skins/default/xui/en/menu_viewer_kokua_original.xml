@@ -2578,6 +2578,14 @@
             <menu_item_call.on_click
              function="Advanced.RebakeTextures" />
         </menu_item_call>
+<!-- MK from KB -->
+     <menu_item_call
+         label="Refresh Attachments"
+         name="Refresh Attachments">
+            <menu_item_call.on_click
+             function="Advanced.RefreshAttachments" />
+        </menu_item_call>
+<!-- mk from kb -->
         <menu_item_call
          label="Refresh Scene"
          name="Refresh Scene"
