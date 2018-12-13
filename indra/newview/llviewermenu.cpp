@@ -49,6 +49,9 @@
 #include "llagentui.h"
 #include "llagentwearables.h"
 #include "llagentpilot.h"
+//MK from KB
+#include "llattachmentsmgr.h"
+//mk from kb
 #include "llcompilequeue.h"
 #include "llconsole.h"
 #include "lldaycyclemanager.h"
@@ -2020,6 +2023,13 @@ class LLAdvancedRefreshScene : public view_listener_t
 	}
 };
 		
+//MK from KB
+void handle_refresh_attachments()
+{
+	LLAttachmentsMgr::instance().refreshAttachments();
+}
+//mk from kb
+
 #if 1 //ndef LL_RELEASE_FOR_DOWNLOAD
 ///////////////////////////
 // DEBUG AVATAR TEXTURES //
@@ -9901,15 +9911,6 @@ class LLWorldEnvSettings : public view_listener_t
 		{
 			LLEnvManagerNew::instance().setUseSkyPreset("Midnight");
 		}
-//MK
-		else if (tod == "region")
-		{
-			LLWLParamManager::getInstance()->mAnimator.mIsRunning = true;
-			LLWLParamManager::getInstance()->mAnimator.setTimeType(LLWLAnimator::TIME_LINDEN);
-			LLEnvManagerNew::instance().useRegionSettings();
-			LLWLParamManager::getInstance()->propagateParameters();
-		}
-//mk
 		else
 		{
 			LLEnvManagerNew &envmgr = LLEnvManagerNew::instance();
@@ -9920,8 +9921,13 @@ class LLWorldEnvSettings : public view_listener_t
 					    envmgr.getSkyPresetName(),
 					    envmgr.getDayCycleName(),
 					    use_fixed_sky, use_region_settings);
+//MK
+			LLWLParamManager::getInstance()->mAnimator.mIsRunning = true;
+			LLWLParamManager::getInstance()->mAnimator.setTimeType(LLWLAnimator::TIME_LINDEN);
+			envmgr.useRegionSettings();
+			LLWLParamManager::getInstance()->propagateParameters();
+//mk
 		}
-
 		return true;
 	}
 };
@@ -10584,6 +10590,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLAdvancedDumpAttachments(), "Advanced.DumpAttachments");
 	view_listener_t::addMenu(new LLAdvancedRebakeTextures(), "Advanced.RebakeTextures");
 	view_listener_t::addMenu(new LLAdvancedRefreshScene(), "Advanced.RefreshScene");
+//MK from KB
+	commit.add("Advanced.RefreshAttachments", boost::bind(&handle_refresh_attachments));
+//mk from kb
 	view_listener_t::addMenu(new LLAdvancedDebugAvatarTextures(), "Advanced.DebugAvatarTextures");
 	view_listener_t::addMenu(new LLAdvancedDumpAvatarLocalTextures(), "Advanced.DumpAvatarLocalTextures");
 	// Advanced > Network
