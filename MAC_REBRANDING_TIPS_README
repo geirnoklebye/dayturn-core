@@ -1,4 +1,4 @@
-Macintosh viewer re-branding tips:
+﻿Macintosh viewer re-branding tips:
 
 To convert ico file to icns go to http://iconverticons.com/online/
 I had to be on a mac to convert from a windows ico to a icns Mac icon set file.
@@ -23,6 +23,14 @@ ibtool --errors --warnings --notices --output-format human-readable-text --compi
 It should be:
 ibtool --errors --warnings --notices --output-format human-readable-text --compile output.nib your.xib 
 
-With "human-readable-txt" the nob file is not a bnary file but, seems to work correctly in the viewer.
+With "human-readable-txt" the nnib file is not a binary file but, seems to work correctly in the viewer.
 
-The title bar is branded by editing indra/newview/English.lproj/InfoPlist.strings 
+The title bar is branded by editing indra/newview/English.lproj/InfoPlist.strings
+
+After branding as above it’s likely to result in a faulty Installer or underlying *.app. The * app’s are a build up from a unix executable file. This file can be run from the command line terminal with for example “./Kokua”. What this provides is visibility within the terminal of errors that may be hidden when running the *.app.
+
+For example:
+ /Users/bill/kokua-sl-np-fork/build-darwin-x86_64/newview/Release/Kokua.app/Contents/Resources/Kokua\ Viewer.app/contents/MacOS/Kokua  
+
+In this context the .app files are directories.
+    
