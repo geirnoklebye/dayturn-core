@@ -288,6 +288,9 @@ std::string LLCoros::launch(const std::string& prefix, const callable_t& callabl
     return name;
 }
 
+namespace
+{
+
 #if LL_WINDOWS
 
 static const U32 STATUS_MSC_EXCEPTION = 0xE06D7363; // compiler specific
@@ -319,7 +322,7 @@ U32 cpp_exception_filter(U32 code, struct _EXCEPTION_POINTERS *exception_infop, 
     }
 }
 
-void LLCoros::winlevel(const std::string& name, const callable_t& callable)
+void sehandle(const LLCoros::callable_t& callable)
 {
     __try
     {
@@ -339,7 +342,16 @@ void LLCoros::winlevel(const std::string& name, const callable_t& callable)
     }
 }
 
-#endif
+#else  // ! LL_WINDOWS
+
+inline void sehandle(const LLCoros::callable_t& callable)
+{
+    callable();
+}
+
+#endif // ! LL_WINDOWS
+
+} // anonymous namespace
 
 void LLCoros::toplevelTryWrapper(const std::string& name, const callable_t& callable)
 {
@@ -351,7 +363,7 @@ void LLCoros::toplevelTryWrapper(const std::string& name, const callable_t& call
     // run the code the caller actually wants in the coroutine
     try
     {
-        callable();
+        sehandle(callable);
     }
     catch (const Stop& exc)
     {
