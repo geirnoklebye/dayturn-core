@@ -1011,11 +1011,16 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 			// fall through and get processed as normal chat. From RLV 2.9.24.1 the that exception is removed and
 			// OOC chat should get redirected like anything else.
 			//
-			// Kokua is going to use the following logic to satisfy all possible use cases
-			// if this is a valid OOC (begins with (( and ends with )) )
-			// - if !CanOOC && sendchat is restricted discard it
-			// - if KokuaRLVOOCChatIsRedirected (defaults True) - let it go to redirchat only
-			// - if KokuaRLVOOCChatIsRedirected - don't redirect it, let it fall through to normal chat
+			// Kokua is going to use the following logic instead
+			// if (is an OOC comment && OOC is allowed && new switch KokuaRLVOOCChatIsRedirected) we let it go
+			//   to the redirection handlers
+			// In all other cases it falls through to normal chat where it will get squashed if RestrainedLoveCanOoc is false
+			//
+			// This keeps the behaviour prior to 2.9.24.1 where OOC chat goes to local but gets squashed to ... when 
+			// RestrainedLoveCanOoc is false. Alternatively the new KokuaRLVOOCChatIsRedirected switch allows OOC chat
+			// to be routed via chat redirection. However, unlike RLV 2.9.24.1 we require that RestrainedLoveCanOoc
+			// be true to do this - it's done that way so that the RestrainedLoveCanOoc switch still has overall control
+			// over whether OOC is permitted (which is not the case in RLV 2.9.24.1 in its original form)
 			
 			bool is_ooc = ((utf8_out_text.find("((") == 0) && (utf8_out_text.find("))") == (utf8_out_text.length() - 2)));
 
