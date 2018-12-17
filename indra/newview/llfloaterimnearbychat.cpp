@@ -1060,7 +1060,11 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 				//LLViewerStats::getInstance()->incStat(LLViewerStats::ST_CHAT_COUNT);
 
 				// We have redirected the chat message, don't send it on the original channel
-				return;
+				//return; // commented by CA - see comment below
+				
+				// CA: RLV 2.9.24.1 changed things so that (( )) ooc comments come through here too (required for RR 1.31, according to Marine's blog)
+				// so we need to keep that behaviour, but we also need to avoid the early return so that we can deliver it as an ooc message if permitted
+			  if (!(RRInterface::sCanOoc) || ((RRInterface::sCanOoc) && (utf8_out_text.find("((") != 0 || utf8_out_text.find("))") != utf8_out_text.length() - 2))) return;
 			}
 		}
 	}
