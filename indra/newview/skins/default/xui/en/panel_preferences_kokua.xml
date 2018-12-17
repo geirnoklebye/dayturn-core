@@ -75,7 +75,22 @@
               label="Allow OOC chat using (( )) (Needs restart)"
               left="25"
               name="RlvCanOoc"
-              tool_tip="Turning this option on disables the ability to use (( )) for OOC chat"
+              tool_tip="Turning this option off disables the ability to use (( )) for OOC chat"
+              width="270"/>
+           <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="KokuaRLVOOCChatIsRedirected"
+              enabled_control="RestrainedLove"
+              label="Send OOC chat to redirected chat rather than local chat"
+              left="35"
+              name="KokuaRLVOOCChatIsRedirected"
+              tool_tip="Turning this option on sends OOC chat to redirected chat receivers (as in RLV 2.9.24.1+) rather than local chat. OOC chat must be enabled otherwise it will appear as ... in local chat."
               width="270"/>
           <check_box
               top_pad="0"

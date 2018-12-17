@@ -1006,6 +1006,18 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 		if (gRRenabled && channel == 0)
 		{
 			std::string restriction;
+			    
+			// CA: Originally OOC chat was exempted from the else just below here with the result that it would
+			// fall through and get processed as normal chat. From RLV 2.9.24.1 the that exception is removed and
+			// OOC chat should get redirected like anything else.
+			//
+			// Kokua is going to use the following logic to satisfy all possible use cases
+			// if this is a valid OOC (begins with (( and ends with )) )
+			// - if !CanOOC && sendchat is restricted discard it
+			// - if KokuaRLVOOCChatIsRedirected (defaults True) - let it go to redirchat only
+			// - if KokuaRLVOOCChatIsRedirected - don't redirect it, let it fall through to normal chat
+			
+			bool is_ooc = ((utf8_out_text.find("((") == 0) && (utf8_out_text.find("))") == (utf8_out_text.length() - 2)));
 
 			// We might want to redirect this chat or emote (and exit this function early on)
 			if (utf8_out_text.find("/me ") == 0 // emote
@@ -1016,13 +1028,15 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 					restriction = "rediremote:";
 				}
 			}
-			else
+			else if (!is_ooc || (RRInterface::sCanOoc && is_ooc && gSavedSettings.getBOOL("KokuaRLVOOCChatIsRedirected")))
 			{
 				if (gAgent.mRRInterface.containsSubstr("redirchat:"))
 				{
 					restriction = "redirchat:";
 				}
 			}
+			// implicit else: it's OOC that needs routing to chat - use the original mechanism of skipping
+			// the next clause because restriction.empty is true
 
 			if (!restriction.empty())
 			{
@@ -1060,11 +1074,7 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 				//LLViewerStats::getInstance()->incStat(LLViewerStats::ST_CHAT_COUNT);
 
 				// We have redirected the chat message, don't send it on the original channel
-				//return; // commented by CA - see comment below
-				
-				// CA: RLV 2.9.24.1 changed things so that (( )) ooc comments come through here too (required for RR 1.31, according to Marine's blog)
-				// so we need to keep that behaviour, but we also need to avoid the early return so that we can deliver it as an ooc message if permitted
-			  if (!(RRInterface::sCanOoc) || ((RRInterface::sCanOoc) && (utf8_out_text.find("((") != 0 || utf8_out_text.find("))") != utf8_out_text.length() - 2))) return;
+				return;
 			}
 		}
 	}
