@@ -2991,6 +2991,12 @@
                  function="Advanced.ForceErrorBadMemoryAccess" />
             </menu_item_call>
             <menu_item_call
+             label="Force Bad Memory Access in Coroutine"
+             name="Force Bad Memory Access in Coroutine">
+                <menu_item_call.on_click
+                 function="Advanced.ForceErrorBadMemoryAccessCoro" />
+            </menu_item_call>
+            <menu_item_call
              label="Force Infinite Loop"
              name="Force Infinite Loop">
                 <menu_item_call.on_click
@@ -3007,6 +3013,18 @@
              name="Force Software Exception">
                 <menu_item_call.on_click
                  function="Advanced.ForceErrorSoftwareException" />
+            </menu_item_call>
+            <menu_item_call
+             label="Force Software Exception in Coroutine"
+             name="Force Software Exception in Coroutine">
+                <menu_item_call.on_click
+                 function="Advanced.ForceErrorSoftwareExceptionCoro" />
+            </menu_item_call>
+            <menu_item_call
+             label="Force a Crash in a Thread"
+             name="Force a Crash in a Thread">
+                <menu_item_call.on_click
+                 function="Advanced.ForceErrorThreadCrash" />
             </menu_item_call>
             <menu_item_call
              label="Force Disconnect Viewer"

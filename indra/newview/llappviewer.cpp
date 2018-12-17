@@ -1568,6 +1568,7 @@ bool LLAppViewer::doFrame()
 		llcoro::suspend();
 		// if one of our coroutines threw an uncaught exception, rethrow it now
 		LLCoros::instance().rethrow();
+		}
 
 		if (!LLApp::isExiting())
 		{
@@ -1604,7 +1605,7 @@ bool LLAppViewer::doFrame()
 					LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df pauseMainloopTimeout" )
 					pauseMainloopTimeout(); // *TODO: Remove. Messages shouldn't be stalling for 20+ seconds!
 				}
-				
+
 				{
 					LL_PROFILE_ZONE_NAMED_CATEGORY_APP("df idle"); //LL_RECORD_BLOCK_TIME(FTM_IDLE);
 					idle();
@@ -1636,17 +1637,19 @@ bool LLAppViewer::doFrame()
 			{
 				LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df Display" )
 				pingMainloopTimeout("Main:Display");
-				gGLActive = true;
+				gGLActive = TRUE;
 
 				display();
 
-				pingMainloopTimeout("Main:Snapshot");
-				LLFloaterSnapshot::update(); // take snapshots
+				{
+					LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df Snapshot" )
+					pingMainloopTimeout("Main:Snapshot");
+					LLFloaterSnapshot::update(); // take snapshots
 					LLFloaterOutfitSnapshot::update();
-				gGLActive = false;
+					gGLActive = FALSE;
+				}
 			}
 		}
-
 
 		{
 			LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df pauseMainloopTimeout" )
@@ -1659,7 +1662,7 @@ bool LLAppViewer::doFrame()
 		{
 			//LL_RECORD_BLOCK_TIME(SLEEP2);
 			LL_PROFILE_ZONE_WARN( "Sleep2" )
-			
+
 			// yield some time to the os based on command line option
 			static LLCachedControl<S32> yield_time(gSavedSettings, "YieldTime", -1);
 			if(yield_time >= 0)
@@ -1696,7 +1699,7 @@ bool LLAppViewer::doFrame()
 					LLAppViewer::getImageDecodeThread()->pause();
 				}
 			}
-			
+
 			if (mRandomizeFramerate)
 			{
 				ms_sleep(rand() % 200);
@@ -1710,7 +1713,7 @@ bool LLAppViewer::doFrame()
 			}
 
 			S32 total_work_pending = 0;
-			S32 total_io_pending = 0;	
+			S32 total_io_pending = 0;
 			{
 				S32 work_pending = 0;
 				S32 io_pending = 0;
@@ -1737,19 +1740,19 @@ bool LLAppViewer::doFrame()
 				LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df gMeshRepo" )
 			gMeshRepo.update() ;
 			}
-			
+
 			if(!total_work_pending) //pause texture fetching threads if nothing to process.
 			{
 				LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df getTextureCache" )
 				LLAppViewer::getTextureCache()->pause();
 				LLAppViewer::getImageDecodeThread()->pause();
-				LLAppViewer::getTextureFetch()->pause(); 
+				LLAppViewer::getTextureFetch()->pause();
 			}
 			if(!total_io_pending) //pause file threads if nothing to process.
 			{
 				LL_PROFILE_ZONE_NAMED_CATEGORY_APP( "df LLVFSThread" )
-				LLLFSThread::sLocal->pause(); 
-			}									
+				LLLFSThread::sLocal->pause();
+			}
 
 			//texture fetching debugger
 			if(LLTextureFetchDebugger::isEnabled())
@@ -1759,7 +1762,7 @@ bool LLAppViewer::doFrame()
 					LLFloaterReg::findTypedInstance<LLFloaterTextureFetchDebugger>("tex_fetch_debugger");
 				if(tex_fetch_debugger_instance)
 				{
-					tex_fetch_debugger_instance->idle() ;				
+					tex_fetch_debugger_instance->idle() ;
 				}
 			}
 
@@ -1770,31 +1773,6 @@ bool LLAppViewer::doFrame()
 			pingMainloopTimeout("Main:End");
 		}
 	}
-
-	if (LLApp::isExiting())
-	{
-		// Save snapshot for next time, if we made it through initialization
-		if (STATE_STARTED == LLStartUp::getStartupState())
-		{
-			saveFinalSnapshot();
-		}
-
-		if (LLVoiceClient::instanceExists())
-		{
-			LLVoiceClient::getInstance()->terminate();
-		}
-
-		delete gServicePump;
-		gServicePump = NULL;
-
-		destroyMainloopTimeout();
-
-		LL_INFOS() << "Exiting main_loop" << LL_ENDL;
-	}
-
-    LL_PROFILER_FRAME_END
-
-	return ! LLApp::isRunning();
 }
 
 S32 LLAppViewer::updateTextureThreads(F32 max_time)
@@ -5807,12 +5785,6 @@ void LLAppViewer::forceErrorDriverCrash()
 {
    	LL_WARNS() << "Forcing a deliberate driver crash" << LL_ENDL;
 	glDeleteTextures(1, NULL);
-}
-
-void LLAppViewer::forceErrorCoroutineCrash()
-{
-    LL_WARNS() << "Forcing a crash in LLCoros" << LL_ENDL;
-    LLCoros::instance().launch("LLAppViewer::crashyCoro", [] {throw LLException("A deliberate crash from LLCoros"); });
 }
 
 void LLAppViewer::forceErrorThreadCrash()
