@@ -18970,7 +18970,18 @@
 	    <string>Boolean</string>
 	    <key>Value</key>
 	    <integer>1</integer>
-	  </map>    
-  </map>
+	  </map>
+  <key>FSShowGroupTitleInTooltip</key>
+  <map>
+    <key>Comment</key>
+    <string>Shows the group title of an avatar in the tooltip.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>1</integer>
+  </map>    
+</map>
 </llsd>
 
