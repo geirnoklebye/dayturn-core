@@ -790,6 +790,17 @@
                 <menu_item_check.on_enable
                  function="View.CheckShowHoverTips" />
             </menu_item_check>
+           <menu_item_check
+             label="Show Avatar Group"
+             name="Show avatar group in hovertips">
+                <menu_item_check.on_check
+                 control="FSShowGroupTitleInTooltip" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="FSShowGroupTitleInTooltip" />
+                <menu_item_check.on_enable
+                 function="View.CheckShowHoverTips" />
+            </menu_item_check>
         </menu>
 
         </menu>
