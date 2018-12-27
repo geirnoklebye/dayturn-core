@@ -801,6 +801,23 @@ static void on_avatar_name_cache_notify(const LLUUID& agent_id,
 	LLUUID session_id = LLIMMgr::computeSessionID(IM_NOTHING_SPECIAL, agent_id);
 	std::string notify_msg = notification->getMessage();
 	LLIMModel::instance().proccessOnlineOfflineNotification(session_id, notify_msg);
+
+	// If desired, also send it to nearby chat, this allows friends'
+	// online/offline times to be referenced in chat & logged.
+	if (gSavedSettings.getBOOL("OnlineOfflinetoNearbyChat")) {
+		LLChat chat;
+		chat.mText = notify_msg;
+//MK
+		// Avoid surrounding with brackets
+////		chat.mSourceType = CHAT_SOURCE_SYSTEM;
+		chat.mSourceType = CHAT_SOURCE_UNKNOWN;
+//mk
+		LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
+		if(nearby_chat)
+		{
+			nearby_chat->addMessage(chat);
+		}
+	}
 }
 
 void LLAvatarTracker::formFriendship(const LLUUID& id)
