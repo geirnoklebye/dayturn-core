@@ -54,6 +54,11 @@
 #include "llvoavatar.h"
 #include "llavataractions.h"
 
+//MK
+#include "llfloaterimnearbychat.h"
+#include "llfloaterreg.h"
+//mk
+
 ///----------------------------------------------------------------------------
 /// Local function declarations, constants, enums, and typedefs
 ///----------------------------------------------------------------------------
