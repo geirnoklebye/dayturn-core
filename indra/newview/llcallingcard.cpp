@@ -810,8 +810,17 @@ static void on_avatar_name_cache_notify(const LLUUID& agent_id,
 //MK
 		// Avoid surrounding with brackets
 ////		chat.mSourceType = CHAT_SOURCE_SYSTEM;
-		chat.mSourceType = CHAT_SOURCE_UNKNOWN;
+		//chat.mSourceType = CHAT_SOURCE_UNKNOWN;
 //mk
+//CA change the message formatting to match the radar style with the avatar as the message source
+		int ind;
+		ind = notify_msg.find("is ");
+		if (ind > 0) chat.mText = notify_msg.substr(ind); // cut off the name to match radar/range notifications 
+	  chat.mSourceType = CHAT_SOURCE_SYSTEM;
+	  chat.mFromName = av_name.getCompleteName(TRUE, FALSE);
+	  chat.mFromID = agent_id;
+	  chat.mChatType = CHAT_TYPE_RADAR;
+//ca
 		LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
 		if(nearby_chat)
 		{
