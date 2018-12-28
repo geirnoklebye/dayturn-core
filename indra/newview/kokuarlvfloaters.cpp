@@ -810,6 +810,12 @@ void KokuaFloaterRLVStatus::refreshRLVStatus()
 	// list - maybe something for a future enhancement, however I don't want to do too much processing in here since
 	// we get called on every RLV Command
 	
+	//camavdist
+	sdModifierColumns[0]["value"] = "camavdist";
+	sdModifierColumns[1]["value"] = "";
+	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mShowavsDistMax,EXTREMUM);
+	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+
 	//camdist
 	sdModifierColumns[0]["value"] = "camdistmin/max";
 	sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistMin,EXTREMUM);
@@ -817,31 +823,25 @@ void KokuaFloaterRLVStatus::refreshRLVStatus()
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistMax,750000.0); 
 	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
 
-	//camavdist
-	sdModifierColumns[0]["value"] = "camavdist";
-	sdModifierColumns[1]["value"] = "";
-	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mShowavsDistMax,EXTREMUM);
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
-
-	//camdraw
-	sdModifierColumns[0]["value"] = "camddrawmin/max";
-	sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistDrawMin,EXTREMUM);
-	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistDrawMax,EXTREMUM);
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
-	
-	//camddrawcolor
-	LLSD getcolor = gAgent.mRRInterface.mCamDistDrawColor.getValue();
-	sdModifierColumns[0]["value"] = "camdrawcolor";
-	sdModifierColumns[1]["value"] = "";
-	sdModifierColumns[2]["value"] = llformat("<%.1f, %.1f, %.1f>",getcolor[0].asReal(),getcolor[1].asReal(),getcolor[2].asReal());
-	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
-	
 	//camdrawalpha
 	sdModifierColumns[0]["value"] = "camdrawalpha";
 	sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistDrawAlphaMin,0.0);
 	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistDrawAlphaMax,1.0);
 	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
 
+	//camdrawcolor
+	LLSD getcolor = gAgent.mRRInterface.mCamDistDrawColor.getValue();
+	sdModifierColumns[0]["value"] = "camdrawcolor";
+	sdModifierColumns[1]["value"] = "";
+	sdModifierColumns[2]["value"] = llformat("<%.1f, %.1f, %.1f>",getcolor[0].asReal(),getcolor[1].asReal(),getcolor[2].asReal());
+	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	
+	//camdraw
+	sdModifierColumns[0]["value"] = "camdrawmin/max";
+	sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistDrawMin,EXTREMUM);
+	sdModifierColumns[2]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamDistDrawMax,EXTREMUM);
+	pModifierList->addElement(sdModifierRow, ADD_BOTTOM);
+	
 	// camzoom
 	sdModifierColumns[0]["value"] = "camzoommin/max";
 	sdModifierColumns[1]["value"] = KokuaRLVFloaterSupport::getModifierText(gAgent.mRRInterface.mCamZoomMin,EXTREMUM);
