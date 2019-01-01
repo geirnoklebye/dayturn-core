@@ -4743,7 +4743,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
         <key>darwin64</key>
         <map>
           <key>build_directory</key>
-          <string>build-darwin-x86_64-norlv</string>
+          <string>build-darwin-x86_64-kokua-norlv</string>
           <key>configurations</key>
           <map>
             <key>RelWithDebInfo</key>
@@ -4863,7 +4863,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
         <key>linux</key>
         <map>
           <key>build_directory</key>
-          <string>build-linux-i686-norlv</string>
+          <string>build-linux-i686-kokua-norlv</string>
           <key>configurations</key>
           <map>
             <key>Doxygen</key>
@@ -4991,7 +4991,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
         <key>linux64</key>
         <map>
           <key>build_directory</key>
-          <string>build-linux-x86_64-norlv</string>
+          <string>build-linux-x86_64-kokua-norlv</string>
           <key>configurations</key>
           <map>
             <key>Debug</key>
@@ -5155,7 +5155,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
         <key>windows</key>
         <map>
           <key>build_directory</key>
-          <string>build-vc120-$AUTOBUILD_ADDRSIZE-norlv</string>
+          <string>build-vc120-$AUTOBUILD_ADDRSIZE-kokua-norlv</string>
           <key>configurations</key>
           <map>
             <key>RelWithDebInfo</key>
