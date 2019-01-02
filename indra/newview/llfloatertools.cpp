@@ -405,7 +405,7 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 
 	mCommitCallbackRegistrar.add("BuildTool.LinkObjects",		boost::bind(&LLSelectMgr::linkObjects, LLSelectMgr::getInstance()));
 	mCommitCallbackRegistrar.add("BuildTool.UnlinkObjects",		boost::bind(&LLSelectMgr::unlinkObjects, LLSelectMgr::getInstance()));
-
+	mCommitCallbackRegistrar.add("BuildTool.CopyKeys",			boost::bind(&LLFloaterTools::onClickBtnCopyKeys,this));
 	mLandImpactsObserver = new LLLandImpactsObserver();
 	LLViewerParcelMgr::getInstance()->addObserver(mLandImpactsObserver);
 }
@@ -486,6 +486,7 @@ void LLFloaterTools::refresh()
 #endif
 	{
 		F32 link_cost  = LLSelectMgr::getInstance()->getSelection()->getSelectedLinksetCost();
+        S32 prim_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
 		S32 link_count = LLSelectMgr::getInstance()->getSelection()->getRootObjectCount();
 
 		LLCrossParcelFunctor func;
@@ -512,8 +513,14 @@ void LLFloaterTools::refresh()
 
 		LLStringUtil::format_map_t selection_args;
 		selection_args["OBJ_COUNT"] = llformat("%.1d", link_count);
+		if (((S32)link_cost) == 0)
+		{
+			selection_args["LAND_IMPACT"] = llformat("%.1d", (S32)prim_count);
+		}
+		else
+		{
 		selection_args["LAND_IMPACT"] = llformat("%.1d", (S32)link_cost);
-
+		}
 		std::ostringstream selection_info;
 
 		selection_info << getString("status_selectcount", selection_args);
