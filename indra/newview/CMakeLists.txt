@@ -1546,7 +1546,7 @@ if (DARWIN)
 
   # Add resource files to the project.
   set(viewer_RESOURCE_FILES
-    kokua_icon.icns
+    dayturn_icon.icns
     Info-SecondLife.plist
     Kokua.xib/
     # CMake doesn't seem to support Xcode language variants well just yet
@@ -2313,7 +2313,7 @@ if (DARWIN)
   set(product "${VIEWER_CHANNEL}")
   set(MACOSX_EXECUTABLE_NAME "${VIEWER_CHANNEL}")
   set(MACOSX_BUNDLE_INFO_STRING "${VIEWER_CHANNEL}")
-  set(MACOSX_BUNDLE_ICON_FILE "kokua_icon.icns")
+  set(MACOSX_BUNDLE_ICON_FILE "dayturn_icon.icns")
   set(MACOSX_BUNDLE_GUI_IDENTIFIER "Kokua")
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "${VIEWER_CHANNEL} ${VIEWER_SHORT_VERSION}.${VIEWER_VERSION_REVISION}")
   set(MACOSX_BUNDLE_BUNDLE_NAME "Kokua")

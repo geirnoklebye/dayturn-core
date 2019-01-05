@@ -933,7 +933,7 @@ class DarwinManifest(ViewerManifest):
 
                 # need .icns file referenced by Info.plist
                 with self.prefix(src=self.icon_path(), dst="") :
-                    self.path("kokua_icon.icns")
+                    self.path("dayturn_icon.icns")
 
                 with self.prefix(src=relpkgdir, dst=""):
                     self.path("libndofdev.dylib")
