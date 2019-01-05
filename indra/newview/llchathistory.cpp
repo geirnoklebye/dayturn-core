@@ -1033,7 +1033,7 @@ public:
 			}
 			else
 			{
-				icon->setValue(LLSD("Kokua_Logo"));
+				icon->setValue(LLSD("Dayturn_Logo"));
 			}
 			// FS:LO FIRE-1439 - Clickable avatar names on local chat radar crossing reports
 //ca
