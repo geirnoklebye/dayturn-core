@@ -24,8 +24,8 @@
 <!--			<pie_slice label="Skript-Info" name="ScriptInfo"/>
 -->			<pie_slice label="Anrufen" name="Call"/>
 			<pie_slice label="Hineinzoomen" name="Zoom In"/>
-			<pie_slice label="Tex Refresh" name="Texture Refresh"/>
-			<pie_menu label="Zurücksetz. &gt;" name="ResetMenu">
+<!--			<pie_slice label="Tex Refresh" name="Texture Refresh"/>
+-->			<pie_menu label="Zurücksetz. &gt;" name="ResetMenu">
 				<pie_slice label="Skel. &amp; Anim." name="Reset Skeleton And Animations"/>
 				<pie_slice label="Skelett" name="Reset Skeleton"/>
 			</pie_menu>

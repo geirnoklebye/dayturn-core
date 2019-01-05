@@ -3,8 +3,8 @@
 	<pie_slice label="Profil..." name="Profile..."/>
 	<pie_slice label="Fallen lassen" name="Drop"/>
 	<pie_menu name="Attachment Pie More" label="Mehr &gt;">
-		<pie_slice label="Tex Refresh" name="Texture Refresh"/>
-<!--		<pie_slice label="Skript-Info" name="ScriptInfo"/>
+<!--    <pie_slice label="Tex Refresh" name="Texture Refresh"/>
+		<pie_slice label="Skript-Info" name="ScriptInfo"/>
 -->		<pie_slice label="Berühren" name="Attachment Object Touch"/>
 		<pie_menu name="DerenderMenu" label="N. anzeigen &gt;">
 			<pie_slice label="Temporär" name="Derender"/>
