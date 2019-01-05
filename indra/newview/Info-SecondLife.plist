@@ -30,7 +30,9 @@
 	<true/>
 	<key>LSRequiresCarbon</key>
 	<true/>
-	<key>NSHumanReadableCopyright</key>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone access is needed to allow connection to voice.</string>
+    	<key>NSHumanReadableCopyright</key>
 	<string>${MACOSX_BUNDLE_COPYRIGHT}</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
@@ -40,7 +42,7 @@
 				<string>slurl</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>seconlife</string>
+			<string>secondlife</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>application/x-grid-location-info</string>
