@@ -54,8 +54,8 @@
 			<pie_slice label="Skel. &amp; Anim." name="Reset Skeleton And Animations"/>
 			<pie_slice label="Skelett" name="Reset Skeleton"/>
 		</pie_menu>
-		<pie_slice label="Tex Refresh" name="Texture Refresh"/>
-		<pie_slice label="Outfit bearb." name="Edit My Outfit"/>
+<!--		<pie_slice label="Tex Refresh" name="Texture Refresh"/>
+-->		<pie_slice label="Outfit bearb." name="Edit My Outfit"/>
 		<pie_slice label="XML ausg." name="Dump XML"/>
 		<pie_slice label="Schwebehöhe" name="Hover Height"/>
 	</pie_menu>
