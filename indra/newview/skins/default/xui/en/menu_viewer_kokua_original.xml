@@ -534,6 +534,7 @@
            parameter="moveview" />
       </menu_item_call>
       <!-- MK -->
+      <!--
       <menu_item_call
        label="Restart All Animations"
        name="Restart All Animations"
@@ -541,6 +542,7 @@
         <menu_item_call.on_click
          function="Tools.RestartAllAnimations" />
       </menu_item_call>
+       -->
       <!-- mk -->	  
       <menu
        create_jump_keys="true"
