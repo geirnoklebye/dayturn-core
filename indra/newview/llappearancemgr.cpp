@@ -1602,6 +1602,18 @@ void LLAppearanceMgr::replaceCurrentOutfit(const LLUUID& new_outfit)
 	wearInventoryCategory(cat, false, false);
 }
 
+//CA a manual defence against logging in clouded and other situations where the whole outfit
+//fails to get worn correctly - it is effectively the same as using Add To Current Outfit
+//with the current outfit as the source and target (which is usually disabled because it would
+//be a silly thing to do in a world where outfit wearing is 100% reliable)
+
+void LLAppearanceMgr::reloadCurrentOutfit()
+{
+	LLUUID this_outfit = getBaseOutfitUUID();
+	if (this_outfit != LLUUID::null) addCategoryToCurrentOutfit(this_outfit);	
+}
+//ca
+
 // Remove existing photo link from outfit folder.
 void LLAppearanceMgr::removeOutfitPhoto(const LLUUID& outfit_id)
 {

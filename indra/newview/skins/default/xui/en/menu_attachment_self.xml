@@ -91,6 +91,14 @@ name="Edit Outfit">
     <menu_item_call.on_enable
      function="Edit.EnableCustomizeAvatar" />
   </menu_item_call>
+  <menu_item_call label="Reload My Outfit"
+		layout="topleft"
+		name="Reload Outfit">
+    <menu_item_call.on_click
+     function="ReloadOutfit" />
+    <menu_item_call.on_enable
+     function="Edit.ReloadOutfit" />
+  </menu_item_call>
   <menu_item_call label="Edit My Shape"
     layout="topleft"
     name="Edit My Shape">

@@ -7380,6 +7380,11 @@ void handle_edit_outfit()
 	LLFloaterSidePanelContainer::showPanel("appearance", LLSD().with("type", "edit_outfit"));
 }
 
+void handle_reload_outfit()
+{
+	LLAppearanceMgr::instance().reloadCurrentOutfit();
+}
+
 void handle_edit_shape()
 {
 	LLFloaterSidePanelContainer::showPanel("appearance", LLSD().with("type", "edit_shape"));
@@ -10358,6 +10363,7 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLEnableEditPhysics(), "Edit.EnableEditPhysics");
 	commit.add("CustomizeAvatar", boost::bind(&handle_customize_avatar));
 	commit.add("EditOutfit", boost::bind(&handle_edit_outfit));
+	commit.add("ReloadOutfit", boost::bind(&handle_reload_outfit));
 	commit.add("EditShape", boost::bind(&handle_edit_shape));
 	commit.add("HoverHeight", boost::bind(&handle_hover_height));
 	commit.add("EditPhysics", boost::bind(&handle_edit_physics));
