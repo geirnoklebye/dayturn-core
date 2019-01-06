@@ -61,6 +61,7 @@ public:
 	void wearOutfitByName(const std::string& name);
 	void changeOutfit(bool proceed, const LLUUID& category, bool append);
 	void replaceCurrentOutfit(const LLUUID& new_outfit);
+	void reloadCurrentOutfit();
 	void renameOutfit(const LLUUID& outfit_id);
 	void removeOutfitPhoto(const LLUUID& outfit_id);
 	void takeOffOutfit(const LLUUID& cat_id);

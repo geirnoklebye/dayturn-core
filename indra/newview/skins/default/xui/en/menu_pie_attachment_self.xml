@@ -127,6 +127,14 @@
 		</pie_menu>
         <pie_separator />
         <pie_separator />
+			  <pie_slice label="Reload My Outfit"
+					layout="topleft"
+					name="Reload Outfit">
+			    <pie_slice.on_click
+			     function="ReloadOutfit" />
+			    <pie_slice.on_enable
+			     function="Edit.ReloadOutfit" />
+			  </pie_slice>
         <pie_separator />
 
         <pie_slice label="Edit Outfit"
