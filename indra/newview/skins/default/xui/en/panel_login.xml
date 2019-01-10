@@ -110,7 +110,7 @@
     follows="left|top"
     image_unselected="PushButton_On"
     image_selected="PushButton_On_Selected"    
-    image_hover="PushButton_On_Over"
+    image_hover_unselected="PushButton_On_Over"
     label="Log In"
     label_color="White"
     font="SansSerifMedium"
