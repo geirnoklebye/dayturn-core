@@ -4894,7 +4894,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j 12</string>
+                  <string>-j7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4918,7 +4918,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j4</string>
+                  <string>-j7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4940,7 +4940,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j4</string>
+                  <string>-j7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -4962,7 +4962,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j4</string>
+                  <string>-j7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -5002,7 +5002,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j4</string>
+                  <string>-j7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -5028,7 +5028,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j4</string>
+                  <string>-j7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -5050,7 +5050,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j4</string>
+                  <string>-j7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -5078,7 +5078,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j4</string>
+                  <string>-j7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -5100,7 +5100,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j4</string>
+                  <string>-j7</string>
                 </array>
               </map>
               <key>configure</key>
@@ -5126,7 +5126,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <string>make</string>
                 <key>options</key>
                 <array>
-                  <string>-j4</string>
+                  <string>-j7</string>
                 </array>
               </map>
               <key>configure</key>
