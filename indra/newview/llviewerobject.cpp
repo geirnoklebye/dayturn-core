@@ -4698,10 +4698,10 @@ void LLViewerObject::setTE(const U8 te, const LLTextureEntry &texture_entry)
 	if (getTEref(te).getMaterialParams().notNull())
 	{
 		const LLUUID& norm_id = getTEref(te).getMaterialParams()->getNormalID();
- 		mTENormalMaps[te] = LLViewerTextureManager::getFetchedTexture(norm_id, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_ALM, LLViewerTexture::LOD_TEXTURE);
+		mTENormalMaps[te] = LLViewerTextureManager::getFetchedTexture(norm_id, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_ALM, LLViewerTexture::LOD_TEXTURE);
 		
-		const LLUUID& norm_id = getTEref(te).getMaterialParams()->getNormalID();
- 		mTESpecularMaps[te] = LLViewerTextureManager::getFetchedTexture(spec_id, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_ALM, LLViewerTexture::LOD_TEXTURE);
+		const LLUUID& spec_id = getTEref(te).getMaterialParams()->getSpecularID();
+		mTESpecularMaps[te] = LLViewerTextureManager::getFetchedTexture(spec_id, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_ALM, LLViewerTexture::LOD_TEXTURE);
 	}
 }
 
