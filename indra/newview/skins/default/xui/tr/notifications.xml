@@ -245,7 +245,7 @@ Lütfen sadece bir nesne seçin ve tekrar deneyin.
 		<usetemplate name="okbutton" yestext="Tamam"/>
 	</notification>
 	<notification name="AllowMultipleViewers">
-		Birden çok Second Life görüntüleyiciyi çalıştırma özelliği desteklenmiyor. Bu durum doku önbelleği çakışmalarına, görsellerin bozulmasına ve performansın düşmesine yol açabilir.
+		Birden çok Dayturn görüntüleyiciyi çalıştırma özelliği desteklenmiyor. Bu durum doku önbelleği çakışmalarına, görsellerin bozulmasına ve performansın düşmesine yol açabilir.
 		<usetemplate name="okbutton" yestext="Tamam"/>
 	</notification>
 	<notification name="GrantModifyRights">

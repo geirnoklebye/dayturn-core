@@ -244,7 +244,7 @@ Por favor, selecione apenas um objeto e tente novamente.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="AllowMultipleViewers">
-		Não é possível executar múltiplos visualizadores Second Life. Pode levar a uma falha, um corrompimento, visuais alterados e falha no desempenho no cache de textura.
+		Não é possível executar múltiplos visualizadores Dayturn. Pode levar a uma falha, um corrompimento, visuais alterados e falha no desempenho no cache de textura.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="GrantModifyRights">

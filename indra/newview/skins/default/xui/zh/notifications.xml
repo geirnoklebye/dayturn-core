@@ -245,7 +245,7 @@
 		<usetemplate name="okbutton" yestext="確定"/>
 	</notification>
 	<notification name="AllowMultipleViewers">
-		不支援同時執行多個Second Life瀏覽器。 這麼做可能導致材質快取相互碰撞、毀損，並降低視覺效果及性能。
+		不支援同時執行多個Dayturn瀏覽器。 這麼做可能導致材質快取相互碰撞、毀損，並降低視覺效果及性能。
 		<usetemplate name="okbutton" yestext="確定"/>
 	</notification>
 	<notification name="GrantModifyRights">

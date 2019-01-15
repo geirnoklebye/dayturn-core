@@ -245,7 +245,7 @@ Veuillez ne sélectionner qu&apos;un seul objet.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="AllowMultipleViewers">
-		L&apos;exécution de plusieurs visualiseurs Second Life n&apos;est pas prise en charge. Cela peut entraîner des collisions de cache de texture, une corruption et une dégradation des visuels et des performances.
+		L&apos;exécution de plusieurs visualiseurs Dayturn n&apos;est pas prise en charge. Cela peut entraîner des collisions de cache de texture, une corruption et une dégradation des visuels et des performances.
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="GrantModifyRights">

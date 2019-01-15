@@ -245,7 +245,7 @@
 		<usetemplate name="okbutton" yestext="OK"/>
 	</notification>
 	<notification name="AllowMultipleViewers">
-		Запуск нескольких приложений Second Life Viewer не поддерживается. Это может привести к конфликтам кэша текстур, повреждению и снижению производительности и визуального отображения.
+		Запуск нескольких приложений Dayturn Viewer не поддерживается. Это может привести к конфликтам кэша текстур, повреждению и снижению производительности и визуального отображения.
 		<usetemplate name="okbutton" yestext="ОК"/>
 	</notification>
 	<notification name="GrantModifyRights">
