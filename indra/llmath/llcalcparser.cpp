@@ -25,8 +25,8 @@
  */
 
 #include "linden_common.h"
-
 #include "llcalcparser.h"
+
 using namespace boost::spirit::classic;
 
 F32 LLCalcParser::lookup(const std::string::iterator& start, const std::string::iterator& end) const
@@ -61,3 +61,4 @@ F32 LLCalcParser::lookup(const std::string::iterator& start, const std::string::
 	throw_(end, std::string("Unknown symbol " + name));
 	return 0.f;
 }
+

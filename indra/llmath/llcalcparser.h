@@ -26,7 +26,8 @@
 
 #ifndef LL_CALCPARSER_H
 #define LL_CALCPARSER_H
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #include <boost/spirit/include/classic_attribute.hpp>
 #include <boost/spirit/include/classic_core.hpp>
 #include <boost/spirit/include/classic_error_handling.hpp>
@@ -184,5 +185,5 @@ private:
 	
 	F32&		mResult;
 };
-
+#pragma GCC diagnostic pop
 #endif // LL_CALCPARSER_H
