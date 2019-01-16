@@ -26,8 +26,10 @@
 
 #ifndef LL_CALCPARSER_H
 #define LL_CALCPARSER_H
+#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 70000
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 #include <boost/spirit/include/classic_attribute.hpp>
 #include <boost/spirit/include/classic_core.hpp>
 #include <boost/spirit/include/classic_error_handling.hpp>
@@ -185,5 +187,7 @@ private:
 	
 	F32&		mResult;
 };
+#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 70000
 #pragma GCC diagnostic pop
+#endif
 #endif // LL_CALCPARSER_H
