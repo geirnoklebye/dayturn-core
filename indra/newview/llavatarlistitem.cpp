@@ -93,7 +93,6 @@ LLAvatarListItem::LLAvatarListItem(bool not_from_ui_factory/* = true*/)
 	mAvPosition(LLVector3d(0.0f,0.0f,0.0f)),
 	mShowFirstSeen(false),
 	mShowStatusFlags(false),
-	mShowAvatarAge(false),
 	mShowPaymentStatus(false),
 	mPaymentStatus(NULL),
 	mAvatarAge(0),

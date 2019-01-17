@@ -263,7 +263,7 @@ private:
 	/// indicates whether to show icons representing permissions granted
 	bool mShowPermissions;
 	bool mShowStatusFlags;
-	bool mShowAvatarAge; //clang shows unused
+//	bool mShowAvatarAge; //clang shows unused
 	bool mShowPaymentStatus;
 
 	/// true when the mouse pointer is hovering over this item
