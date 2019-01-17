@@ -305,16 +305,18 @@ void LLVivoxVoiceClient::terminate()
     // needs to be done manually here since we will not get another pass in 
     // coroutines... that mechanism is long since gone.
     if (mIsLoggedIn)
+    {
         logoutOfVivox(false);
 	if(mConnected)
 	{
-        breakVoiceConnection(false);
+        	breakVoiceConnection(false);
 		mConnected = false;
 	}
 	else
 	{
 		killGateway();
 	}
+    }
 }
 
 //---------------------------------------------------
