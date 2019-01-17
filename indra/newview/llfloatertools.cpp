@@ -1329,7 +1329,7 @@ void LLFloaterTools::getMediaState()
 	const LLMediaEntry default_media_data;
 	
 	struct functor_getter_media_data : public LLSelectedTEGetFunctor< LLMediaEntry>
-    {
+    	{
 		functor_getter_media_data(const LLMediaEntry& entry): mMediaEntry(entry) {}	
 
         LLMediaEntry get( LLViewerObject* object, S32 face )
@@ -1338,12 +1338,12 @@ void LLFloaterTools::getMediaState()
                 if ( object->getTE(face) )
                     if ( object->getTE(face)->getMediaData() )
                         return *(object->getTE(face)->getMediaData());
-			return mMediaEntry;
+		return mMediaEntry;
         };
 		
 		const LLMediaEntry& mMediaEntry;
 		
-    } func_media_data(default_media_data);
+    	} func_media_data(default_media_data);
 
 	LLMediaEntry media_data_get;
     LLFloaterMediaSettings::getInstance()->mMultipleMedia = !(selected_objects->getSelectedTEValue( &func_media_data, media_data_get ));
