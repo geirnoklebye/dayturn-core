@@ -5402,9 +5402,10 @@ LLVivoxVoiceClient::sessionState::~sessionState()
 {
     LL_INFOS("Voice") << "Destroying session handle=" << mHandle << " SIP=" << mSIPURI << LL_ENDL;
     if (mMyIterator != mSession.end())
+    {
         mSession.erase(mMyIterator);
-
-	removeAllParticipants();
+        removeAllParticipants();
+    }
 }
 
 bool LLVivoxVoiceClient::sessionState::isCallBackPossible()
