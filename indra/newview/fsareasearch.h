@@ -437,7 +437,15 @@ public:
 	LLCheckBoxCtrl* mCheckboxClickBuy;
 
 private:
+#if LL_DARWIN
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-private-field"
+#endif
 	FSAreaSearch* mFSAreaSearch; //clang reports unused
+#if LL_DARWIN
+#pragma clang diagnostic pop
+#endif
+    
 };
 
 #endif // FS_AREASEARCH_H
