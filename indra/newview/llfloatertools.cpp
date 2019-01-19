@@ -1335,10 +1335,17 @@ void LLFloaterTools::getMediaState()
         LLMediaEntry get( LLViewerObject* object, S32 face )
         {
             if ( object )
+#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 70000
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmisleading-indentation"
+#endif
                 if ( object->getTE(face) )
                     if ( object->getTE(face)->getMediaData() )
                         return *(object->getTE(face)->getMediaData());
-		return mMediaEntry;
+		        return mMediaEntry;
+#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 70000
+#pragma GCC diagnostic pop
+#endif
         };
 		
 		const LLMediaEntry& mMediaEntry;
