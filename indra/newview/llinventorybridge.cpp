@@ -3274,6 +3274,18 @@ void LLFolderBridge::performAction(LLInventoryModel* model, std::string action)
 		modifyOutfit(TRUE);
 		return;
 	}
+// <FS:TT> Patch: ReplaceWornItemsOnly
+	else if ("replaceitems" == action)
+	{
+		LLInventoryModel* model = getInventoryModel();
+		if(!model) return;
+		LLViewerInventoryCategory* cat = getCategory();
+		if(!cat) return;
+
+		gInventory.wearItemsOnAvatar(cat);
+		return;
+	}
+// </FS:TT>
 	else if ("show_in_main_panel" == action)
 	{
 		LLInventoryPanel::openInventoryPanelAndSetSelection(TRUE, mUUID, TRUE);
@@ -4346,10 +4358,17 @@ void LLFolderBridge::buildContextMenuFolderOptions(U32 flags,   menuentry_vec_t&
 		// Only enable add/replace outfit for non-system folders.
 		if (!is_system_folder)
 		{
+			// <FS:Ansariel> FIRE-3302: "Add to Current Outfit" missing for inventory outfit folder
+			items.push_back(std::string("Add To Outfit"));
+
 			// Adding an outfit onto another (versus replacing) doesn't make sense.
 			if (type != LLFolderType::FT_OUTFIT)
 			{
-				items.push_back(std::string("Add To Outfit"));
+				// <FS:Ansariel> FIRE-3302: "Add to Current Outfit" missing for inventory outfit folder
+				//items.push_back(std::string("Add To Outfit"));
+				// <FS:TT> Patch: ReplaceWornItemsOnly
+				items.push_back(std::string("Wear Items"));
+				// </FS:TT>
 			}
 
 			items.push_back(std::string("Replace Outfit"));

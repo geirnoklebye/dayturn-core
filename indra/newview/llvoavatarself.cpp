@@ -1521,6 +1521,9 @@ const LLViewerJointAttachment *LLVOAvatarSelf::attachObject(LLViewerObject *view
 	{
 		const LLUUID& attachment_id = viewer_object->getAttachmentItemID();
 		LLAppearanceMgr::instance().registerAttachment(attachment_id);
+		// <FS:TT> ReplaceWornItemsOnly
+		gInventory.wearAttachmentsOnAvatarCheckRemove(viewer_object, attachment);
+		// </FS:TT>
 		updateLODRiggedAttachments();		
 	}
 
