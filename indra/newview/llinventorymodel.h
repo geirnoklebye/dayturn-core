@@ -47,6 +47,10 @@
 #include "httphandler.h"
 #include "lleventcoro.h"
 #include "llcoros.h"
+// <FS:TT> ReplaceWornItemsOnly
+#include "llviewerobjectlist.h"
+#include "llvoavatarself.h"
+// </FS:TT>
 
 class LLInventoryObserver;
 class LLInventoryObject;
@@ -154,6 +158,12 @@ private:
 	LLUUID mRootFolderID;
 	LLUUID mLibraryRootFolderID;
 	LLUUID mLibraryOwnerID;	
+
+// <FS:TT> ReplaceWornItemsOnly
+	item_array_t mItemArray;
+	item_array_t mObjArray;
+	std::vector<std::string> mAttPoints;
+// </FS:TT>
 	
 	//--------------------------------------------------------------------
 	// Structure
@@ -317,6 +327,15 @@ public:
     // Note : This method has been designed for FT_OUTBOX (aka Merchant Outbox) but can be used for other categories
     void consolidateForType(const LLUUID& id, LLFolderType::EType type);
     
+// <FS:TT> ReplaceWornItemsOnly
+	void wearItemsOnAvatar(LLInventoryCategory* category);
+	void wearAttachmentsOnAvatarCheckRemove(LLViewerObject *object, const LLViewerJointAttachment *attachment);
+
+private:
+	void wearWearablesOnAvatar(const LLUUID& category_id);
+	void wearAttachmentsOnAvatar(const LLUUID& category_id);
+	void wearGesturesOnAvatar(const LLUUID& category_id);
+// </FS:TT>
 private:
 	mutable LLPointer<LLViewerInventoryItem> mLastItem; // cache recent lookups	
 
