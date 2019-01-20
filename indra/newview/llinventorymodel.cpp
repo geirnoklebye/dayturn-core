@@ -163,9 +163,12 @@ LLInventoryModel::LLInventoryModel()
 	mHttpHeaders(),
 	mHttpPolicyClass(LLCore::HttpRequest::DEFAULT_POLICY_ID),
 	mHttpPriorityFG(0),
-	mHttpPriorityBG(0),
+//	mHttpPriorityBG(0),
+	mHttpPriorityBG(0)
+#ifdef LL_DEBUG
 	mCategoryLock(),
 	mItemLock()
+#endif
 {}
 
 
@@ -401,6 +404,8 @@ void LLInventoryModel::lockDirectDescendentArrays(const LLUUID& cat_id,
 												  item_array_t*& items)
 {
 	getDirectDescendentsOf(cat_id, categories, items);
+
+#ifdef LL_DEBUG
 	if (categories)
 	{
 		mCategoryLock[cat_id] = true;
@@ -409,12 +414,15 @@ void LLInventoryModel::lockDirectDescendentArrays(const LLUUID& cat_id,
 	{
 		mItemLock[cat_id] = true;
 	}
+#endif
 }
 
 void LLInventoryModel::unlockDirectDescendentArrays(const LLUUID& cat_id)
 {
+#ifdef LL_DEBUG
 	mCategoryLock[cat_id] = false;
 	mItemLock[cat_id] = false;
+#endif
 }
 
 void LLInventoryModel::consolidateForType(const LLUUID& main_id, LLFolderType::EType type)
@@ -575,9 +583,9 @@ LLUUID LLInventoryModel::findCategoryByName(std::string name)
 			S32 count = cats->size();
 			for(S32 i = 0; i < count; ++i)
 			{
-				if(cats->operator[](i)->getName() == name)
+				if(cats->at(i)->getName() == name)
 				{
-					return cats->operator[](i)->getUUID();
+					return cats->at(i)->getUUID();
 				}
 			}
 		}
@@ -1092,20 +1100,25 @@ U32 LLInventoryModel::updateItem(const LLViewerInventoryItem* item, U32 mask)
 LLInventoryModel::cat_array_t* LLInventoryModel::getUnlockedCatArray(const LLUUID& id)
 {
 	cat_array_t* cat_array = get_ptr_in_map(mParentChildCategoryTree, id);
+#ifdef LL_DEBUG
 	if (cat_array)
 	{
 		llassert_always(mCategoryLock[id] == false);
 	}
+#endif
+
 	return cat_array;
 }
 
 LLInventoryModel::item_array_t* LLInventoryModel::getUnlockedItemArray(const LLUUID& id)
 {
 	item_array_t* item_array = get_ptr_in_map(mParentChildItemTree, id);
+#ifdef LL_DEBUG
 	if (item_array)
 	{
 		llassert_always(mItemLock[id] == false);
 	}
+#endif
 	return item_array;
 }
 
@@ -1176,8 +1189,10 @@ void LLInventoryModel::updateCategory(const LLViewerInventoryCategory* cat, U32 
 		}
 
 		// make space in the tree for this category's children.
+#ifdef LL_DEBUG
 		llassert_always(mCategoryLock[new_cat->getUUID()] == false);
 		llassert_always(mItemLock[new_cat->getUUID()] == false);
+#endif
 		cat_array_t* catsp = new cat_array_t;
 		item_array_t* itemsp = new item_array_t;
 		mParentChildCategoryTree[new_cat->getUUID()] = catsp;
@@ -2329,13 +2344,17 @@ void LLInventoryModel::buildParentChildMap()
 		cats.push_back(cat);
 		if (mParentChildCategoryTree.count(cat->getUUID()) == 0)
 		{
+#ifdef LL_DEBUG
 			llassert_always(mCategoryLock[cat->getUUID()] == false);
+#endif
 			catsp = new cat_array_t;
 			mParentChildCategoryTree[cat->getUUID()] = catsp;
 		}
 		if (mParentChildItemTree.count(cat->getUUID()) == 0)
 		{
+#ifdef LL_DEBUG
 			llassert_always(mItemLock[cat->getUUID()] == false);
+#endif
 			itemsp = new item_array_t;
 			mParentChildItemTree[cat->getUUID()] = itemsp;
 		}
@@ -2559,10 +2578,12 @@ void LLInventoryModel::buildParentChildMap()
 		}
 	}
 
+#ifdef LL_DEBUG
 	if (!gInventory.validate())
 	{
 	 	LL_WARNS(LOG_INV) << "model failed validity check!" << LL_ENDL;
 	}
+#endif
 }
 
 // Would normally do this at construction but that's too early
@@ -3887,6 +3908,7 @@ void LLInventoryModel::dumpInventory() const
 	LL_INFOS() << "\n**********************\nEnd Inventory Dump" << LL_ENDL;
 }
 
+#ifdef LL_DEBUG
 // Do various integrity checks on model, logging issues found and
 // returning an overall good/bad flag.
 bool LLInventoryModel::validate() const
@@ -4185,6 +4207,7 @@ bool LLInventoryModel::validate() const
 
 	return valid;
 }
+#endif
 
 ///----------------------------------------------------------------------------
 /// Local function definitions
