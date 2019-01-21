@@ -94,7 +94,10 @@ void LLDrawable::incrementVisible()
 LLDrawable::LLDrawable(LLViewerObject *vobj, bool new_entry)
 :	LLViewerOctreeEntryData(LLViewerOctreeEntry::LLDRAWABLE),
 	LLTrace::MemTrackable<LLDrawable, 16>("LLDrawable"),
-	mVObjp(vobj)
+	mVObjp(vobj),
+	mSkinningMatCache(nullptr),
+	mLastSkinningMatCacheFrame(0),
+	mCacheSize(0)
 {
 	init(new_entry); 
 }
@@ -199,8 +202,14 @@ void LLDrawable::destroy()
 
 	std::for_each(mFaces.begin(), mFaces.end(), DeletePointer());
 	mFaces.clear();
-		
-	
+
+	// <FS:Beq> close up potential memory leak
+	if (mSkinningMatCache)
+	{
+		ll_aligned_free_16(mSkinningMatCache);
+	}
+	// </FS:Beq>
+
 	/*if (!(sNumZombieDrawables % 10))
 	{
 		LL_INFOS() << "- Zombie drawables: " << sNumZombieDrawables << LL_ENDL;
@@ -1454,7 +1463,10 @@ void LLSpatialBridge::setVisible(LLCamera& camera_in, std::vector<LLDrawable*>* 
 				LLVOAvatar* avatarp = (LLVOAvatar*) objparent;
 				if (avatarp->isVisible())
 				{
-					impostor = objparent->isAvatar() && ((LLVOAvatar*) objparent)->isImpostor();
+					// <FS:Ansariel> Fix LL impostor hacking
+					//impostor = objparent->isAvatar() && ((LLVOAvatar*) objparent)->isImpostor();
+					impostor = objparent->isAvatar() && avatarp->isImpostor() && !avatarp->needsImpostorUpdate();
+					// </FS:Ansariel>
 					loaded   = objparent->isAvatar() && ((LLVOAvatar*) objparent)->isFullyLoaded();
 				}
 				else
@@ -1544,7 +1556,10 @@ void LLSpatialBridge::updateDistance(LLCamera& camera_in, bool force_update)
 			if (parent && parent->getVObj())
 			{
 				LLVOAvatar* av = parent->getVObj()->asAvatar();
-				if (av && av->isImpostor())
+				// <FS:Ansariel> Fix LL impostor hacking
+				//if (av && av->isImpostor())
+				if (av && av->isImpostor() && !av->needsImpostorUpdate())
+				// </FS:Ansariel>
 				{
 					return;
 				}
@@ -1628,7 +1643,13 @@ void LLSpatialBridge::cleanupReferences()
 				}
 			}
 
-		LLDrawable* drawablep = mDrawable;
+		// <FS:ND> setting the pointer to 0 can delete the drawable, referencing it with setSpatialBridge after that is illegal.
+
+		// LLDrawable* drawablep = mDrawable;
+		LLPointer< LLDrawable > drawablep = mDrawable;
+
+		// </FS:ND>
+
 		mDrawable = NULL;
 		drawablep->setSpatialBridge(NULL);
 	}

@@ -399,6 +399,7 @@ bool    LLPipeline::sMemAllocationThrottled = false;
 S32		LLPipeline::sVisibleLightCount = 0;
 F32		LLPipeline::sMinRenderSize = 0.f;
 bool	LLPipeline::sRenderingHUDs;
+F32	LLPipeline::sVolumeSAFrame = 0.f; // ZK LBG
 
 // EventHost API LLPipeline listener.
 static LLPipelineListener sPipelineListener;
@@ -2010,6 +2011,8 @@ void LLPipeline::updateMoveNormalAsync(LLDrawable* drawablep)
 
 void LLPipeline::updateMovedList(LLDrawable::drawable_vector_t& moved_list)
 {
+	LLDrawable::drawable_vector_t newList; // <FS:ND> removing elements in the middle of a vector is a really bad idea. I'll just create a new one and swap it at the end.
+
 	for (LLDrawable::drawable_vector_t::iterator iter = moved_list.begin();
 		 iter != moved_list.end(); )
 	{
@@ -2038,9 +2041,15 @@ void LLPipeline::updateMovedList(LLDrawable::drawable_vector_t& moved_list)
 					drawablep->getVObj()->dirtySpatialGroup(TRUE);
 				}
 			}
-			iter = moved_list.erase(curiter);
+		// <FS:ND> removing elements in the middle of a vector is a really bad idea. I'll just create a new one and swap it at the end.
+			// iter = moved_list.erase(curiter); // <FS:ND> removing elements in the middle of a vector is a really bad idea. I'll just create a new one and swap it at the end.
 		}
+		else
+			newList.push_back( drawablep );
+		// </FS:ND>
 	}
+
+	moved_list.swap( newList ); // <FS:ND> removing elements in the middle of a vector is a really bad idea. I'll just create a new one and swap it at the end.
 }
 
 static LLTrace::BlockTimerStatHandle FTM_OCTREE_BALANCE("Balance Octree");
@@ -3133,9 +3142,12 @@ void LLPipeline::markVisible(LLDrawable *drawablep, LLCamera& camera)
 					if (vobj) // this test may not be needed, see above
 					{
 						LLVOAvatar* av = vobj->asAvatar();
-						if (av && (av->isImpostor() 
-							|| av->isInMuteList() 
-							|| (LLVOAvatar::AV_DO_NOT_RENDER == av->getVisualMuteSettings() && !av->needsImpostorUpdate()) ))
+						// <FS:Ansariel> Fix LL impostor hacking; Don't render impostored avatars unless it needs an update
+						//if (av && (av->isImpostor() 
+						//	|| av->isInMuteList()
+						//	|| (LLVOAvatar::AV_DO_NOT_RENDER == av->getVisualMuteSettings() && !av->needsImpostorUpdate()) ))
+						if (av && av->isImpostor() && !av->needsImpostorUpdate())
+						// </FS:Ansariel>
 						{
 							return;
 						}
@@ -3307,7 +3319,11 @@ static LLTrace::BlockTimerStatHandle FTM_PROCESS_PARTITIONQ("PartitionQ");
 void LLPipeline::processPartitionQ()
 {
 	LL_RECORD_BLOCK_TIME(FTM_PROCESS_PARTITIONQ);
-	for (LLDrawable::drawable_list_t::iterator iter = mPartitionQ.begin(); iter != mPartitionQ.end(); ++iter)
+
+	// <FS:ND> A vector is much better suited for the use case of mPartitionQ
+	// for (LLDrawable::drawable_list_t::iterator iter = mPartitionQ.begin(); iter != mPartitionQ.end(); ++iter)
+	for (LLDrawable::drawable_vector_t::iterator iter = mPartitionQ.begin(); iter != mPartitionQ.end(); ++iter)
+	// </FS:ND>
 	{
 		LLDrawable* drawable = *iter;
 		if (!drawable->isDead())
@@ -3842,6 +3858,7 @@ void LLPipeline::postSort(LLCamera& camera)
 	LL_RECORD_BLOCK_TIME(FTM_STATESORT_POSTSORT);
 
 	assertInitialized();
+	sVolumeSAFrame = 0.f; //ZK LBG
 
 	LL_PUSH_CALLSTACKS();
 	//rebuild drawable geometry
@@ -11746,6 +11763,7 @@ bool LLPipeline::hasAnyRenderType(U32 type, ...) const
 	{
 		if (mRenderTypeEnabled[type])
 		{
+			va_end(args); // <FS:ND/> Need to end varargs being returning.
 			return true;
 		}
 		type = va_arg(args, U32);

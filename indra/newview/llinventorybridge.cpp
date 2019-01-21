@@ -110,13 +110,17 @@ bool confirm_attachment_rez(const LLSD& notification, const LLSD& response);
 void teleport_via_landmark(const LLUUID& asset_id);
 static BOOL can_move_to_outfit(LLInventoryItem* inv_item, BOOL move_is_into_current_outfit);
 static BOOL can_move_to_landmarks(LLInventoryItem* inv_item);
-static bool check_category(LLInventoryModel* model,
-						   const LLUUID& cat_id,
-						   LLInventoryPanel* active_panel,
-						   LLInventoryFilter* filter);
-static bool check_item(const LLUUID& item_id,
-					   LLInventoryPanel* active_panel,
-					   LLInventoryFilter* filter);
+// <FS:CR> Function left unused from FIRE-7219
+//static bool check_category(LLInventoryModel* model,
+//						   const LLUUID& cat_id,
+//						   LLInventoryPanel* active_panel,
+//						   LLInventoryFilter* filter);
+
+// <FS:ND> Unused function
+// static bool check_item(const LLUUID& item_id,
+// 					   LLInventoryPanel* active_panel,
+// 					   LLInventoryFilter* filter);
+// </FS:ND>
 
 // Helper functions
 
@@ -2677,7 +2681,8 @@ BOOL LLFolderBridge::dragCategoryIntoFolder(LLInventoryCategory* inv_cat,
 				{
 					// Check whether the folder being dragged from active inventory panel
 					// passes the filter of the destination panel.
-					is_movable = check_category(model, cat_id, active_panel, filter);
+					// <FS:Ansariel> FIRE-7219: Allow DnD operation on filtered folder views
+					//is_movable = check_category(model, cat_id, active_panel, filter);
 				}
 			}
 		}
@@ -4231,6 +4236,9 @@ void LLFolderBridge::buildContextMenuFolderOptions(U32 flags,   menuentry_vec_t&
 	const bool is_system_folder = LLFolderType::lookupIsProtectedType(type);
 	// BAP change once we're no longer treating regular categories as ensembles.
 	const bool is_agent_inventory = isAgentInventory();
+// [SL:KB] - Patch: Appearance-Misc | Checked: 2010-11-24 (Catznip-2.4)
+	const bool is_outfit = (type == LLFolderType::FT_OUTFIT);
+// [/SL:KB]
 
 	// Only enable calling-card related options for non-system folders.
 	if (!is_system_folder && is_agent_inventory)
@@ -4289,7 +4297,11 @@ void LLFolderBridge::buildContextMenuFolderOptions(U32 flags,   menuentry_vec_t&
 					disabled_items.push_back(std::string("Remove From Outfit"));
 			}
 		}
-		if (!LLAppearanceMgr::instance().getCanReplaceCOF(mUUID))
+		//if (!LLAppearanceMgr::instance().getCanReplaceCOF(mUUID))
+// [SL:KB] - Patch: Appearance-Misc | Checked: 2010-11-24 (Catznip-2.4)
+		if ( ((is_outfit) && (!LLAppearanceMgr::instance().getCanReplaceCOF(mUUID))) || 
+			 ((!is_outfit) && (gAgentWearables.isCOFChangeInProgress())) )
+// [/SL:KB]
 		{
 			disabled_items.push_back(std::string("Replace Outfit"));
 		}
@@ -4706,6 +4718,11 @@ bool move_task_inventory_callback(const LLSD& notification, const LLSD& response
 // Returns true if the item can be moved to Current Outfit or any outfit folder.
 static BOOL can_move_to_outfit(LLInventoryItem* inv_item, BOOL move_is_into_current_outfit)
 {
+	// <FS:ND> FIRE-8434/BUG-988 Viewer crashes when copying and pasting an empty outfit folder
+	if( !inv_item )
+		return FALSE;
+	// </FS:ND>
+
 	LLInventoryType::EType inv_type = inv_item->getInventoryType();
 	if ((inv_type != LLInventoryType::IT_WEARABLE) &&
 		(inv_type != LLInventoryType::IT_GESTURE) &&
@@ -5240,6 +5257,8 @@ BOOL LLFolderBridge::dragItemIntoFolder(LLInventoryItem* inv_item,
 	return accept;
 }
 
+// <FS:CR> Left unused from FIRE-7219
+#if 0
 // static
 bool check_category(LLInventoryModel* model,
 					const LLUUID& cat_id,
@@ -5302,6 +5321,8 @@ bool check_item(const LLUUID& item_id,
 
 	return filter->check(fv_item->getViewModelItem());
 }
+#endif // 0
+// <FS:CR> Unused 2013.10.12
 
 // +=================================================+
 // |        LLTextureBridge                          |
@@ -6105,6 +6126,15 @@ void LLGestureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 		getClipboardEntries(true, items, disabled_items, flags);
 
 		items.push_back(std::string("Gesture Separator"));
+		// <FS:Ansariel> FIRE-5913: Selecting a mix of active and inactive gestures disables both "Activate" / "Deactivate" menu options
+		if (flags & ITEM_IN_MULTI_SELECTION)
+		{
+			items.push_back(std::string("Deactivate"));
+			items.push_back(std::string("Activate"));
+		}
+		else
+		{
+		// </FS:Ansariel>
 		if (LLGestureMgr::instance().isGestureActive(getUUID()))
 		{
 			items.push_back(std::string("Deactivate"));
@@ -6113,6 +6143,9 @@ void LLGestureBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 		{
 			items.push_back(std::string("Activate"));
 		}
+		// <FS:Ansariel> FIRE-5913: Selecting a mix of active and inactive gestures disables both "Activate" / "Deactivate" menu options
+		}
+		// </FS:Ansariel>
 	}
 	addLinkReplaceMenuOption(items, disabled_items);
 	hide_context_entries(menu, items, disabled_items);
@@ -6326,7 +6359,11 @@ void LLObjectBridge::performAction(LLInventoryModel* model, std::string action)
 		else if(item && item->isFinished())
 		{
 			// must be in library. copy it to our inventory and put it on.
-			LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(rez_attachment_cb, _1, (LLViewerJointAttachment*)0));
+//			LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(rez_attachment_cb, _1, (LLViewerJointAttachment*)0));
+// [SL:KB] - Patch: Appearance-DnDWear | Checked: 2013-02-04 (Catznip-3.4)
+			// "Wear" from inventory replaces, so library items should too
+			LLPointer<LLInventoryCallback> cb = new LLBoostFuncInventoryCallback(boost::bind(rez_attachment_cb, _1, (LLViewerJointAttachment*)0, true));
+// [/SL;KB]
 			copy_inventory_item(
 				gAgent.getID(),
 				item->getPermissions().getOwner(),
@@ -6795,7 +6832,10 @@ void LLWearableBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
 					if (LLWearableType::getAllowMultiwear(mWearableType))
 					{
 						items.push_back(std::string("Wearable Add"));
-						if (!gAgentWearables.canAddWearable(mWearableType))
+//						if (!gAgentWearables.canAddWearable(mWearableType))
+// [SL:KB] - Patch: Appearance-WearableDuplicateAssets | Checked: 2011-07-24 (Catznip-2.6.0e) | Added: Catznip-2.6.0e
+						if ( (!gAgentWearables.canAddWearable(mWearableType)) || (gAgentWearables.getWearableFromAssetID(item->getAssetUUID())) )
+// [/SL:KB]
 						{
 							disabled_items.push_back(std::string("Wearable Add"));
 						}
@@ -6856,56 +6896,56 @@ void LLWearableBridge::wearAddOnAvatar()
 }
 
 // static
-void LLWearableBridge::onWearOnAvatarArrived( LLViewerWearable* wearable, void* userdata )
-{
-	LLUUID* item_id = (LLUUID*) userdata;
-	if(wearable)
-	{
-		LLViewerInventoryItem* item = NULL;
-		item = (LLViewerInventoryItem*)gInventory.getItem(*item_id);
-		if(item)
-		{
-			if(item->getAssetUUID() == wearable->getAssetID())
-			{
-				gAgentWearables.setWearableItem(item, wearable);
-				gInventory.notifyObservers();
-				//self->getFolderItem()->refreshFromRoot();
-			}
-			else
-			{
+//void LLWearableBridge::onWearOnAvatarArrived( LLViewerWearable* wearable, void* userdata )
+//{
+//	LLUUID* item_id = (LLUUID*) userdata;
+//	if(wearable)
+//	{
+//		LLViewerInventoryItem* item = NULL;
+//		item = (LLViewerInventoryItem*)gInventory.getItem(*item_id);
+//		if(item)
+//		{
+//			if(item->getAssetUUID() == wearable->getAssetID())
+//			{
+//				gAgentWearables.setWearableItem(item, wearable);
+//				gInventory.notifyObservers();
+//				//self->getFolderItem()->refreshFromRoot();
+//			}
+//			else
+//			{
 //				LL_INFOS() << "By the time wearable asset arrived, its inv item already pointed to a different asset." << LL_ENDL;
-			}
-		}
-	}
-	delete item_id;
-}
+//			}
+//		}
+//	}
+//	delete item_id;
+//}
 
 // static
 // BAP remove the "add" code path once everything is fully COF-ified.
-void LLWearableBridge::onWearAddOnAvatarArrived( LLViewerWearable* wearable, void* userdata )
-{
-	LLUUID* item_id = (LLUUID*) userdata;
-	if(wearable)
-	{
-		LLViewerInventoryItem* item = NULL;
-		item = (LLViewerInventoryItem*)gInventory.getItem(*item_id);
-		if(item)
-		{
-			if(item->getAssetUUID() == wearable->getAssetID())
-			{
-				bool do_append = true;
-				gAgentWearables.setWearableItem(item, wearable, do_append);
-				gInventory.notifyObservers();
-				//self->getFolderItem()->refreshFromRoot();
-			}
-			else
-			{
+//void LLWearableBridge::onWearAddOnAvatarArrived( LLViewerWearable* wearable, void* userdata )
+//{
+//	LLUUID* item_id = (LLUUID*) userdata;
+//	if(wearable)
+//	{
+//		LLViewerInventoryItem* item = NULL;
+//		item = (LLViewerInventoryItem*)gInventory.getItem(*item_id);
+//		if(item)
+//		{
+//			if(item->getAssetUUID() == wearable->getAssetID())
+//			{
+//				bool do_append = true;
+//				gAgentWearables.setWearableItem(item, wearable, do_append);
+//				gInventory.notifyObservers();
+//				//self->getFolderItem()->refreshFromRoot();
+//			}
+//			else
+//			{
 //				LL_INFOS() << "By the time wearable asset arrived, its inv item already pointed to a different asset." << LL_ENDL;
-			}
-		}
-	}
-	delete item_id;
-}
+//			}
+//		}
+//	}
+//	delete item_id;
+//}
 
 // static
 BOOL LLWearableBridge::canEditOnAvatar(void* user_data)
