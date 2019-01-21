@@ -853,8 +853,13 @@ LLVOAvatar::~LLVOAvatar()
 		debugAvatarRezTime("AvatarRezLeftNotification","left sometime after declouding");
 	}
 
-	logPendingPhases();
+	// <FS:ND> only call logPendingPhases if we're still alive. Otherwise this can lead to shutdown crashes 
+
+	// logPendingPhases();
+	if (isAgentAvatarValid())
+		logPendingPhases();
 	
+	// </FS:ND>
 	LL_DEBUGS("Avatar") << "LLVOAvatar Destructor (0x" << this << ") id:" << mID << LL_ENDL;
 
 	//
@@ -1444,7 +1449,10 @@ void LLVOAvatar::calculateSpatialExtents(LLVector4a& newMin, LLVector4a& newMax)
         {
             LLViewerJointAttachment* attachment = iter->second;
 
-            if (attachment->getValid())
+            // <FS:Ansariel> Possible crash fix
+            //if (attachment->getValid())
+            if (attachment && attachment->getValid())
+            // </FS:Ansariel>
             {
                 for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
                      attachment_iter != attachment->mAttachedObjects.end();
@@ -1870,6 +1878,13 @@ BOOL LLVOAvatar::lineSegmentIntersect(const LLVector4a& start, const LLVector4a&
 			{
 				LLViewerJointAttachment* attachment = iter->second;
 
+				// <FS:Ansariel> Possible crash fix
+				if (!attachment)
+				{
+					continue;
+				}
+				// </FS:Ansariel>
+
 				for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
 					 attachment_iter != attachment->mAttachedObjects.end();
 					 ++attachment_iter)
@@ -1933,6 +1948,13 @@ LLViewerObject* LLVOAvatar::lineSegmentIntersectRiggedAttachments(const LLVector
 			++iter)
 		{
 			LLViewerJointAttachment* attachment = iter->second;
+
+			// <FS:Ansariel> Possible crash fix
+			if (!attachment)
+			{
+				continue;
+			}
+			// </FS:Ansariel>
 
 			for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
 					attachment_iter != attachment->mAttachedObjects.end();
@@ -2165,6 +2187,12 @@ void LLVOAvatar::resetSkeleton(bool reset_animations)
             // Local viewer-side reset for non-self avatars.
             resetAnimations();
         }
+
+        // <FS:Ansariel> FIRE-22135: Try to re-register LLPhysicsMotionController to see if that unfreezes stuck physics
+        removeMotion(ANIM_AGENT_PHYSICS_MOTION);
+        registerMotion(ANIM_AGENT_PHYSICS_MOTION, LLPhysicsMotionController::create);
+        startMotion(ANIM_AGENT_PHYSICS_MOTION);
+        // </FS:Ansariel>
     }
     
     LL_DEBUGS("Avatar") << avString() << " reset ends" << LL_ENDL;
@@ -2212,7 +2240,10 @@ void LLVOAvatar::releaseMeshData()
 		 ++iter)
 	{
 		LLViewerJointAttachment* attachment = iter->second;
-		if (!attachment->getIsHUDAttachment())
+		// <FS:Ansariel> Possible crash fix
+		//if (!attachment->getIsHUDAttachment())
+		if (attachment && !attachment->getIsHUDAttachment())
+		// </FS:Ansariel>
 		{
 			attachment->setAttachmentVisibility(FALSE);
 		}
@@ -2522,8 +2553,12 @@ void LLVOAvatar::idleUpdate(LLAgent &agent, const F64 &time)
 		return;
 	}	
 
+	// <FS:CR> Use LLCachedControl
+	static LLCachedControl<bool> disable_all_render_types(gSavedSettings, "DisableAllRenderTypes");
 	if (!(gPipeline.hasRenderType(LLPipeline::RENDER_TYPE_AVATAR))
-		&& !(gSavedSettings.getBOOL("DisableAllRenderTypes")) && !isSelf())
+		//&& !(gSavedSettings.getBOOL("DisableAllRenderTypes")) && !isSelf())
+		&& !(disable_all_render_types) && !isSelf())
+	// </FS:CR>
 	{
 		return;
 	}
@@ -2631,7 +2666,11 @@ void LLVOAvatar::idleUpdateVoiceVisualizer(bool voice_enabled)
 	// Don't render the user's own voice visualizer when in mouselook, or when opening the mic is disabled.
 	if(isSelf())
 	{
-		if(gAgentCamera.cameraMouselook() || gSavedSettings.getBOOL("VoiceDisableMic"))
+		// <FS:Ansariel> Faster debug settings
+		//if(gAgentCamera.cameraMouselook() || gSavedSettings.getBOOL("VoiceDisableMic"))
+		static LLCachedControl<bool> voiceDisableMic(gSavedSettings, "VoiceDisableMic");
+		if (gAgentCamera.cameraMouselook() || voiceDisableMic)
+		// </FS:Ansariel>
 		{
 			render_visualizer = false;
 		}
@@ -2760,6 +2799,13 @@ void LLVOAvatar::idleUpdateMisc(bool detailed_update)
 			 ++iter)
 		{
 			LLViewerJointAttachment* attachment = iter->second;
+
+			// <FS:Ansariel> Possible crash fix
+			if (!attachment)
+			{
+				continue;
+			}
+			// </FS:Ansariel>
 
 			for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
 				 attachment_iter != attachment->mAttachedObjects.end();
@@ -3980,12 +4026,20 @@ void LLVOAvatar::updateDebugText()
 {
     // Leave mDebugText uncleared here, in case a derived class has added some state first
 
-	if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+	// <FS:Ansariel> Use cached controls
+	//if (gSavedSettings.getBOOL("DebugAvatarAppearanceMessage"))
+	static LLCachedControl<bool> debug_avatar_appearance_message(gSavedSettings, "DebugAvatarAppearanceMessage");
+	if (debug_avatar_appearance_message)
+	// </FS:Ansariel>
 	{
         updateAppearanceMessageDebugText();
 	}
 
-	if (gSavedSettings.getBOOL("DebugAvatarCompositeBaked"))
+	// <FS:Ansariel> Use cached controls
+	//if (gSavedSettings.getBOOL("DebugAvatarCompositeBaked"))
+	static LLCachedControl<bool> debug_avatar_composite_baked(gSavedSettings, "DebugAvatarCompositeBaked");
+	if (debug_avatar_composite_baked)
+	// </FS:Ansariel>
 	{
 		if (!mBakedTextureDebugText.empty())
 			addDebugText(mBakedTextureDebugText);
@@ -4834,6 +4888,13 @@ void LLVOAvatar::updateVisibility()
 				 ++iter)
 			{
 				LLViewerJointAttachment* attachment = iter->second;
+
+				// <FS:Ansariel> Possible crash fix
+				if (!attachment)
+				{
+					continue;
+				}
+				// </FS:Ansariel>
 
 				for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
 					 attachment_iter != attachment->mAttachedObjects.end();
@@ -6130,21 +6191,40 @@ const LLUUID& LLVOAvatar::getID() const
 // getJoint()
 //-----------------------------------------------------------------------------
 // RN: avatar joints are multi-rooted to include screen-based attachments
-LLJoint *LLVOAvatar::getJoint( const std::string &name )
+//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
+//LLJoint *LLVOAvatar::getJoint( const std::string &name )
+LLJoint *LLVOAvatar::getJoint( const JointKey &name )
+// </FS:ND>
 {
-	joint_map_t::iterator iter = mJointMap.find(name);
+//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
+	//joint_map_t::iterator iter = mJointMap.find( name );
+
+	//LLJoint* jointp = NULL;
+
+	//if( iter == mJointMap.end() || iter->second == NULL )
+	//{ //search for joint and cache found joint in lookup table
+	//	jointp = mRoot->findJoint( name );
+	//	mJointMap[ name ] = jointp;
+	//}
+	//else
+	//{ //return cached pointer
+	//	jointp = iter->second;
+	//}
+
+	joint_map_t::iterator iter = mJointMap.find( name.mKey );
 
 	LLJoint* jointp = NULL;
 
-	if (iter == mJointMap.end() || iter->second == NULL)
+	if( iter == mJointMap.end() || iter->second == NULL )
 	{   //search for joint and cache found joint in lookup table
-		jointp = mRoot->findJoint(name);
-		mJointMap[name] = jointp;
+		jointp = mRoot->findJoint( name.mName );
+		mJointMap[ name.mKey ] = jointp;
 	}
 	else
 	{   //return cached pointer
 		jointp = iter->second;
 	}
+// </FS:ND>
 
 #ifndef LL_RELEASE_FOR_DOWNLOAD
     if (jointp && jointp->getName()!="mScreen" && jointp->getName()!="mRoot")
@@ -6504,7 +6584,11 @@ void LLVOAvatar::addAttachmentOverridesForObject(LLViewerObject *vo, std::set<LL
 			{								
 				for ( int i=0; i<jointCnt; ++i )
 				{
-					std::string lookingForJoint = pSkinData->mJointNames[i].c_str();
+//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
+//					std::string lookingForJoint = pSkinData->mJointNames[ i ].c_str();
+					JointKey lookingForJoint  = pSkinData->mJointNames[ i ];
+// </FS:ND>
+
 					LLJoint* pJoint = getJoint( lookingForJoint );
 					if (pJoint)
 					{   									
@@ -6517,7 +6601,10 @@ void LLVOAvatar::addAttachmentOverridesForObject(LLViewerObject *vo, std::set<LL
                             if (override_changed)
                             {
                                 //If joint is a pelvis then handle old/new pelvis to foot values
-                                if ( lookingForJoint == "mPelvis" )
+//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
+//                              if( lookingForJoint == "mPelvis" )
+                                if( lookingForJoint.mName == "mPelvis" )
+// </FS:ND>
                                 {	
                                     pelvisGotSet = true;											
                                 }										
@@ -6707,7 +6794,11 @@ void LLVOAvatar::removeAttachmentOverridesForObject(LLViewerObject *vo)
 //-----------------------------------------------------------------------------
 void LLVOAvatar::removeAttachmentOverridesForObject(const LLUUID& mesh_id)
 {	
-	LLJoint* pJointPelvis = getJoint("mPelvis");
+//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
+//	LLJoint* pJointPelvis = getJoint( "mPelvis" );
+	LLJoint* pJointPelvis = getJoint( JointKey::construct( "mPelvis" ) );
+// </FS:ND>
+
     const std::string av_string = avString();
     for (S32 joint_num = 0; joint_num < LL_CHARACTER_MAX_ANIMATED_JOINTS; joint_num++)
     {
@@ -6899,7 +6990,12 @@ void LLVOAvatar::initAttachmentPoints(bool ignore_hud_joints)
         }
 
         attachment->setName(info->mName);
-        LLJoint *parent_joint = getJoint(info->mJointName);
+
+//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
+//		LLJoint *parent_joint = getJoint(info->mJointName);
+		LLJoint *parent_joint = getJoint( JointKey::construct( info->mJointName ) );
+// </FS:ND>
+
         if (!parent_joint)
         {
             // If the intended parent for attachment point is unavailable, avatar_lad.xml is corrupt.
@@ -7341,6 +7437,12 @@ U32 LLVOAvatar::getNumAttachments() const
 		 ++iter)
 	{
 		const LLViewerJointAttachment *attachment_pt = (*iter).second;
+		// <FS:Ansariel> Possible crash fix
+		if (!attachment_pt)
+		{
+			continue;
+		}
+		// </FS:Ansariel>
 		num_attachments += attachment_pt->getNumObjects();
 	}
 	return num_attachments;
@@ -7452,7 +7554,10 @@ void LLVOAvatar::resetHUDAttachments()
 		 ++iter)
 	{
 		LLViewerJointAttachment* attachment = iter->second;
-		if (attachment->getIsHUDAttachment())
+		// <FS:Ansariel> Fix possible crash
+		//if (attachment->getIsHUDAttachment())
+		if (attachment && attachment->getIsHUDAttachment())
+		// </FS:Ansariel>
 		{
 			for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
 				 attachment_iter != attachment->mAttachedObjects.end();
@@ -7473,6 +7578,14 @@ void LLVOAvatar::rebuildRiggedAttachments( void )
 	for ( attachment_map_t::iterator iter = mAttachmentPoints.begin(); iter != mAttachmentPoints.end(); ++iter )
 	{
 		LLViewerJointAttachment* pAttachment = iter->second;
+
+		// <FS:Ansariel> Possible crash fix
+		if (!pAttachment)
+		{
+			continue;
+		}
+		// </FS:Ansariel>
+
 		LLViewerJointAttachment::attachedobjs_vec_t::iterator attachmentIterEnd = pAttachment->mAttachedObjects.end();
 		
 		for ( LLViewerJointAttachment::attachedobjs_vec_t::iterator attachmentIter = pAttachment->mAttachedObjects.begin();
@@ -7516,7 +7629,10 @@ BOOL LLVOAvatar::detachObject(LLViewerObject *viewer_object)
 	{
 		LLViewerJointAttachment* attachment = iter->second;
 		
-		if (attachment->isObjectAttached(viewer_object))
+		// <FS:Ansariel> Possible crash fix
+		//if (attachment->isObjectAttached(viewer_object))
+		if (attachment && attachment->isObjectAttached(viewer_object))
+		// </FS:Ansariel>
 		{
             updateVisualComplexity();
             bool is_animated_object = viewer_object->isAnimatedObject();
@@ -7801,8 +7917,16 @@ BOOL LLVOAvatar::isWearingWearableType(LLWearableType::EType type) const
 			break; // Do nothing
 	}
 
+
+	// <FS:ND> Gets called quite a lot from processObjectUpdates. Remove the frequent getInstance calls.
+
+	// for (LLAvatarAppearanceDictionary::Textures::const_iterator tex_iter = LLAvatarAppearanceDictionary::getInstance()->getTextures().begin();
+	// 	 tex_iter != LLAvatarAppearanceDictionary::getInstance()->getTextures().end();
+	// 	 ++tex_iter)
+
+	LLAvatarAppearanceDictionary::Textures::const_iterator itrEnd = LLAvatarAppearanceDictionary::getInstance()->getTextures().end();
 	for (LLAvatarAppearanceDictionary::Textures::const_iterator tex_iter = LLAvatarAppearanceDictionary::getInstance()->getTextures().begin();
-		 tex_iter != LLAvatarAppearanceDictionary::getInstance()->getTextures().end();
+		 tex_iter != itrEnd;
 		 ++tex_iter)
 	{
 		const LLAvatarAppearanceDictionary::TextureEntry *texture_dict = tex_iter->second;
@@ -7830,6 +7954,14 @@ LLViewerObject *	LLVOAvatar::findAttachmentByID( const LLUUID & target_id ) cons
 		++attachment_points_iter)
 	{
 		LLViewerJointAttachment* attachment = attachment_points_iter->second;
+
+		// <FS:Ansariel> Possible crash fix
+		if (!attachment)
+		{
+			continue;
+		}
+		// </FS:Ansariel>
+
 		for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
 			 attachment_iter != attachment->mAttachedObjects.end();
 			 ++attachment_iter)
@@ -8179,13 +8311,21 @@ BOOL LLVOAvatar::processFullyLoadedChange(bool loading)
 
 BOOL LLVOAvatar::isFullyLoaded() const
 {
-	return (mRenderUnloadedAvatar || mFullyLoaded);
+// [SL:KB] - Patch: Appearance-SyncAttach | Checked: Catznip-2.2
+	// Changes to LLAppearanceMgr::updateAppearanceFromCOF() expect this function to actually return mFullyLoaded for gAgentAvatarp
+	return (mRenderUnloadedAvatar && !isSelf()) ||(mFullyLoaded);
+// [/SL:KB]
+//	return (mRenderUnloadedAvatar || mFullyLoaded);
 }
 
 bool LLVOAvatar::isTooComplex() const
 {
 	bool too_complex;
-	bool render_friend =  (LLAvatarTracker::instance().isBuddy(getID()) && gSavedSettings.getBOOL("AlwaysRenderFriends"));
+	// <FS:Ansariel> Performance improvement
+	//bool render_friend =  (LLAvatarTracker::instance().isBuddy(getID()) && gSavedSettings.getBOOL("AlwaysRenderFriends"));
+	static LLCachedControl<bool> alwaysRenderFriends(gSavedSettings, "AlwaysRenderFriends");
+	bool render_friend =  (LLAvatarTracker::instance().isBuddy(getID()) && alwaysRenderFriends);
+	// </FS:Ansariel>
 
 	if (isSelf() || render_friend || mVisuallyMuteSetting == AV_ALWAYS_RENDER)
 	{
@@ -8647,6 +8787,14 @@ BOOL LLVOAvatar::hasHUDAttachment() const
 		 ++iter)
 	{
 		LLViewerJointAttachment* attachment = iter->second;
+
+		// <FS:Ansariel> Possible crash fix
+		if (!attachment)
+		{
+			continue;
+		}
+		// </FS:Ansariel>
+
 		if (attachment->getIsHUDAttachment() && attachment->getNumObjects() > 0)
 		{
 			return TRUE;
@@ -8663,7 +8811,10 @@ LLBBox LLVOAvatar::getHUDBBox() const
 		 ++iter)
 	{
 		LLViewerJointAttachment* attachment = iter->second;
-		if (attachment->getIsHUDAttachment())
+		// <FS:Ansariel> Possible crash fix
+		//if (attachment->getIsHUDAttachment())
+		if (attachment && attachment->getIsHUDAttachment())
+		// </FS:Ansariel>
 		{
 			for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
 				 attachment_iter != attachment->mAttachedObjects.end();
@@ -9283,7 +9434,10 @@ void LLVOAvatar::onBakedTextureMasksLoaded( BOOL success, LLViewerFetchedTexture
 		{
 			if (!aux_src->getData())
 			{
-				LL_ERRS() << "No auxiliary source (morph mask) data for image id " << id << LL_ENDL;
+				// <FS:Ansariel> FIRE-16122: Don't crash if we didn't receive any data
+				//LL_ERRS() << "No auxiliary source (morph mask) data for image id " << id << LL_ENDL;
+				LL_WARNS() << "No auxiliary source (morph mask) data for image id " << id << LL_ENDL;
+				// </FS:Ansariel>
 				return;
 			}
 
@@ -10077,7 +10231,11 @@ void LLVOAvatar::updateRiggingInfo()
 	{
 		LL_RECORD_BLOCK_TIME(FTM_AVATAR_RIGGING_KEY_UPDATE);
 		// Get current rigging info key
-		for (std::vector<LLVOVolume*>::iterator it = volumes.begin(); it != volumes.end(); ++it)
+		// <FS:Ansariel> Performance tweak
+		//for (std::vector<LLVOVolume*>::iterator it = volumes.begin(); it != volumes.end(); ++it)
+		std::vector<LLVOVolume*>::iterator vol_end = volumes.end();
+		for (std::vector<LLVOVolume*>::iterator it = volumes.begin(); it != vol_end; ++it)
+		// </FS:Ansariel>
 		{
 			LLVOVolume *vol = *it;
 			if (vol->isMesh() && vol->getVolume())
@@ -10096,9 +10254,16 @@ void LLVOAvatar::updateRiggingInfo()
 	}
 
 	// Something changed. Update.
-	mLastRiggingInfoKey = curr_rigging_info_key;
+	// <FS:Ansariel> Performance tweak
+	//mLastRiggingInfoKey = curr_rigging_info_key;
+	mLastRiggingInfoKey.swap(curr_rigging_info_key);
+	// </FS:Ansariel>
     mJointRiggingInfoTab.clear();
-    for (std::vector<LLVOVolume*>::iterator it = volumes.begin(); it != volumes.end(); ++it)
+    // <FS:Ansariel> Performance tweak
+    //for (std::vector<LLVOVolume*>::iterator it = volumes.begin(); it != volumes.end(); ++it)
+    std::vector<LLVOVolume*>::iterator vol_end = volumes.end();
+    for (std::vector<LLVOVolume*>::iterator it = volumes.begin(); it != vol_end; ++it)
+    // </FS:Ansariel>
     {
         LLVOVolume *vol = *it;
         vol->updateRiggingInfo();
@@ -10106,10 +10271,12 @@ void LLVOAvatar::updateRiggingInfo()
     }
 
     //LL_INFOS() << "done update rig count is " << countRigInfoTab(mJointRiggingInfoTab) << LL_ENDL;
-    LL_DEBUGS("RigSpammish") << getFullname() << " after update rig tab:" << LL_ENDL;
-    S32 joint_count, box_count;
-    showRigInfoTabExtents(this, mJointRiggingInfoTab, joint_count, box_count);
-    LL_DEBUGS("RigSpammish") << "uses " << joint_count << " joints " << " nonzero boxes: " << box_count << LL_ENDL;
+    //LL_DEBUGS("RigSpammish") << getFullname() << " after update rig tab:" << LL_ENDL; // <FS:Ansariel> Performance tweak
+	//<FS:Beq> remove debug only stuff on hot path
+    //S32 joint_count, box_count;
+    //showRigInfoTabExtents(this, mJointRiggingInfoTab, joint_count, box_count);
+	//</FS:Beq>
+    //LL_DEBUGS("RigSpammish") << "uses " << joint_count << " joints " << " nonzero boxes: " << box_count << LL_ENDL; // <FS:Ansariel> Performance tweak
 }
 
 // virtual
@@ -10529,6 +10696,14 @@ void LLVOAvatar::calculateUpdateRenderComplexity()
 			 ++attachment_point)
 		{
 			LLViewerJointAttachment* attachment = attachment_point->second;
+
+			// <FS:Ansariel> Possible crash fix
+			if (!attachment)
+			{
+				continue;
+			}
+			// </FS:Ansariel>
+
 			for (LLViewerJointAttachment::attachedobjs_vec_t::iterator attachment_iter = attachment->mAttachedObjects.begin();
 				 attachment_iter != attachment->mAttachedObjects.end();
 				 ++attachment_iter)
@@ -10542,57 +10717,95 @@ void LLVOAvatar::calculateUpdateRenderComplexity()
 		// Diagnostic output to identify all avatar-related textures.
 		// Does not affect rendering cost calculation.
 		// Could be wrapped in a debug option if output becomes problematic.
-		if (isSelf())
-		{
-			// print any attachment textures we didn't already know about.
-			for (LLVOVolume::texture_cost_t::iterator it = textures.begin(); it != textures.end(); ++it)
-			{
-				LLUUID image_id = it->first;
-				if( ! (image_id.isNull() || image_id == IMG_DEFAULT || image_id == IMG_DEFAULT_AVATAR)
-				   && (all_textures.find(image_id) == all_textures.end()))
-				{
-					// attachment texture not previously seen.
-					LL_DEBUGS("ARCdetail") << "attachment_texture: " << image_id.asString() << LL_ENDL;
-					all_textures.insert(image_id);
-				}
-			}
+		// <FS:Ansariel> Disable useless diagnostics
+		//if (isSelf())
+		//{
+		//	// print any attachment textures we didn't already know about.
+		//	for (LLVOVolume::texture_cost_t::iterator it = textures.begin(); it != textures.end(); ++it)
+		//	{
+		//		LLUUID image_id = it->first;
+		//		if( ! (image_id.isNull() || image_id == IMG_DEFAULT || image_id == IMG_DEFAULT_AVATAR)
+		//		   && (all_textures.find(image_id) == all_textures.end()))
+		//		{
+		//			// attachment texture not previously seen.
+		//			LL_DEBUGS("ARCdetail") << "attachment_texture: " << image_id.asString() << LL_ENDL;
+		//			all_textures.insert(image_id);
+		//		}
+		//	}
 
-			// print any avatar textures we didn't already know about
-		    for (LLAvatarAppearanceDictionary::Textures::const_iterator iter = LLAvatarAppearanceDictionary::getInstance()->getTextures().begin();
-			 iter != LLAvatarAppearanceDictionary::getInstance()->getTextures().end();
-				 ++iter)
+		//	// print any avatar textures we didn't already know about
+		//    for (LLAvatarAppearanceDictionary::Textures::const_iterator iter = LLAvatarAppearanceDictionary::getInstance()->getTextures().begin();
+		//	 iter != LLAvatarAppearanceDictionary::getInstance()->getTextures().end();
+		//		 ++iter)
+		//	{
+		//	    const LLAvatarAppearanceDictionary::TextureEntry *texture_dict = iter->second;
+		//		// TODO: MULTI-WEARABLE: handle multiple textures for self
+		//		const LLViewerTexture* te_image = getImage(iter->first,0);
+		//		if (!te_image)
+		//			continue;
+		//		LLUUID image_id = te_image->getID();
+		//		if( image_id.isNull() || image_id == IMG_DEFAULT || image_id == IMG_DEFAULT_AVATAR)
+		//			continue;
+		//		if (all_textures.find(image_id) == all_textures.end())
+		//		{
+		//			LL_DEBUGS("ARCdetail") << "local_texture: " << texture_dict->mName << ": " << image_id << LL_ENDL;
+		//			all_textures.insert(image_id);
+		//		}
+		//	}
+		//}
+		// </FS:Ansariel>
+
+		bool cost_changed = false;
+		if ( mVisualComplexity == VISUAL_COMPLEXITY_UNKNOWN)
+		{
+			LL_DEBUGS("AvatarRender") << "Avatar "<< getID()
+									  << " complexity initialized to " << cost
+									  << " reported " << mReportedVisualComplexity
+									  << LL_ENDL;
+			cost_changed = true;
+		}
+		else
+		{
+			if ( cost != mVisualComplexity )
 			{
-			    const LLAvatarAppearanceDictionary::TextureEntry *texture_dict = iter->second;
-				// TODO: MULTI-WEARABLE: handle multiple textures for self
-				const LLViewerTexture* te_image = getImage(iter->first,0);
-				if (!te_image)
-					continue;
-				LLUUID image_id = te_image->getID();
-				if( image_id.isNull() || image_id == IMG_DEFAULT || image_id == IMG_DEFAULT_AVATAR)
-					continue;
-				if (all_textures.find(image_id) == all_textures.end())
-				{
-					LL_DEBUGS("ARCdetail") << "local_texture: " << texture_dict->mName << ": " << image_id << LL_ENDL;
-					all_textures.insert(image_id);
-				}
+				// <FS:Beq> remove the threshold calcs
+				// F32 top_val = (1.0f+VISUAL_COMPLEXITY_FRAC_CHANGE_THRESH)*mVisualComplexity;
+				// F32 bottom_val = (1.0f/(1.0f+VISUAL_COMPLEXITY_FRAC_CHANGE_THRESH))*mVisualComplexity;
+				// top_val = llmax(top_val, mVisualComplexity + VISUAL_COMPLEXITY_ABS_CHANGE_THRESH);
+				// bottom_val = llmax(0.f, llmin(bottom_val, mVisualComplexity - VISUAL_COMPLEXITY_ABS_CHANGE_THRESH));
+
+				//	if (isSelf() && cost > bottom_val && cost < top_val)
+				//	{
+				//		LL_DEBUGS("AvatarRender") << "Avatar "<< getID()
+				//								  << " self complexity change from " << mVisualComplexity << " to " << cost
+				//								  << " is within range "
+				//								  << "(" << bottom_val << "," << top_val << ")" 
+				//								  << ", not updated."
+				//								  << " reported " << mReportedVisualComplexity
+				//								  << LL_ENDL;
+				//	}
+				//	else
+				//	{
+				//		LL_DEBUGS("AvatarRender") << "Avatar "<< getID()
+				//								  << " complexity updated was " << mVisualComplexity << " now " << cost
+				//								  << " reported " << mReportedVisualComplexity
+				//								  << LL_ENDL;
+				//		cost_changed = true;
+				//	}
+				//}
+				//else
+				//{
+				//	LL_DEBUGS("AvatarRender") << "Avatar "<< getID()
+				//							  << " complexity updated no change " << mVisualComplexity
+				//							  << " reported " << mReportedVisualComplexity
+				//							  << LL_ENDL;
+				cost_changed = true;
 			}
 		}
-
-        if ( cost != mVisualComplexity )
-        {
-            LL_DEBUGS("AvatarRender") << "Avatar "<< getID()
-                                      << " complexity updated was " << mVisualComplexity << " now " << cost
-                                      << " reported " << mReportedVisualComplexity
-                                      << LL_ENDL;
-        }
-        else
-        {
-            LL_DEBUGS("AvatarRender") << "Avatar "<< getID()
-                                      << " complexity updated no change " << mVisualComplexity
-                                      << " reported " << mReportedVisualComplexity
-                                      << LL_ENDL;
-        }
-		mVisualComplexity = cost;
+		if (cost_changed)
+		{
+			mVisualComplexity = cost;
+		}
 		mVisualComplexityStale = false;
 
         static LLCachedControl<U32> show_my_complexity_changes(gSavedSettings, "ShowMyComplexityChanges", 20);

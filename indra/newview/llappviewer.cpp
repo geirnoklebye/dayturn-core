@@ -94,6 +94,10 @@
 #include "llprogressview.h"
 #include "llvocache.h"
 #include "llvopartgroup.h"
+// [SL:KB] - Patch: Appearance-Misc | Checked: 2013-02-12 (Catznip-3.4)
+#include "llappearancemgr.h"
+// [/SL:KB]
+
 #include "llweb.h"
 #include "llfloatertexturefetchdebugger.h"
 #include "llspellcheck.h"
@@ -494,8 +498,17 @@ void idle_afk_check()
 {
 	// check idle timers
 	F32 current_idle = gAwayTriggerTimer.getElapsedTimeF32();
-	F32 afk_timeout  = gSavedSettings.getS32("AFKTimeout");
-	if (afk_timeout && (current_idle > afk_timeout) && ! gAgent.getAFK())
+	// <FS:CR> Cache frequently hit location
+	static LLCachedControl<S32> sAFKTimeout(gSavedSettings, "AFKTimeout");
+// [RLVa:KB] - Checked: 2010-05-03 (RLVa-1.2.0g) | Modified: RLVa-1.2.0g
+	// Enforce an idle time of 30 minutes if @allowidle=n restricted
+	//S32 afk_timeout = (!gRlvHandler.hasBehaviour(RLV_BHVR_ALLOWIDLE)) ? sAFKTimeout : 60 * 30;
+	S32 afk_timeout = sAFKTimeout;
+// [/RLVa:KB]
+//	F32 afk_timeout  = gSavedSettings.getS32("AFKTimeout");
+	// <FS:CR> Explicit conversions just cos.
+	//if (afk_timeout && (current_idle > afk_timeout) && ! gAgent.getAFK())
+	if (static_cast<S32>(afk_timeout) && (current_idle > static_cast<F32>(afk_timeout)) && ! gAgent.getAFK())
 	{
 		LL_INFOS("IdleAway") << "Idle more than " << afk_timeout << " seconds: automatically changing to Away status" << LL_ENDL;
 		gAgent.setAFK();
@@ -813,7 +826,8 @@ bool LLAppViewer::init()
 		LLError::setFatalFunction(boost::bind(fast_exit, rc));
 	}
 
-    mAlloc.setProfilingEnabled(gSavedSettings.getBOOL("MemProfiling"));
+	// <FS:Ansariel> Get rid of unused LLAllocator
+    //mAlloc.setProfilingEnabled(gSavedSettings.getBOOL("MemProfiling"));
 
 	// Initialize the non-LLCurl libcurl library.  Should be called
 	// before consumers (LLTextureFetch).
@@ -1944,9 +1958,10 @@ bool LLAppViewer::cleanup()
 	LLViewerObject::cleanupVOClasses();
 
 	SUBSYSTEM_CLEANUP(LLAvatarAppearance);
-	
-	SUBSYSTEM_CLEANUP(LLAvatarAppearance);
-	
+
+	// <FS:Ansariel> Comment out duplicate clean up
+	//SUBSYSTEM_CLEANUP(LLAvatarAppearance);
+
 	SUBSYSTEM_CLEANUP(LLPostProcess);
 
 	LLTracker::cleanupInstance();
@@ -5501,6 +5516,11 @@ void LLAppViewer::disconnectViewer()
 
 	// close inventory interface, close all windows
 	LLSidepanelInventory::cleanup();
+
+// [SL:KB] - Patch: Appearance-Misc | Checked: 2013-02-12 (Catznip-3.4)
+	// Destroying all objects below will trigger attachment detaching code and attempt to remove the COF links for them
+	LLAppearanceMgr::instance().setAttachmentInvLinkEnable(false);
+// [/SL:KB]
 
 	gAgentWearables.cleanup();
 	gAgentCamera.cleanup();

@@ -90,7 +90,10 @@ public:
 	/*virtual*/ bool 		hasMotionFromSource(const LLUUID& source_id);
 	/*virtual*/ void 		stopMotionFromSource(const LLUUID& source_id);
 	/*virtual*/ void 		requestStopMotion(LLMotion* motion);
-	/*virtual*/ LLJoint*	getJoint(const std::string &name);
+//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
+//	/*virtual*/ LLJoint*	getJoint( const std::string &name );
+	/*virtual*/ LLJoint*	getJoint( const JointKey &name );
+// </FS:ND>
 	
 	/*virtual*/ BOOL setVisualParamWeight(const LLVisualParam *which_param, F32 weight);
 	/*virtual*/ BOOL setVisualParamWeight(const char* param_name, F32 weight);
@@ -130,11 +133,18 @@ public:
 	// Region state
 	//--------------------------------------------------------------------
 	void			resetRegionCrossingTimer()	{ mRegionCrossingTimer.reset();	}
+	// <FS:Ansariel> FIRE-12004: Attachments getting lost on TP
+	void			setIsCrossingRegion(bool is_crossing) { mIsCrossingRegion = is_crossing; }
+	bool			isCrossingRegion() const { return mIsCrossingRegion; }
+	// </FS:Ansariel>
 
 private:
 	U64				mLastRegionHandle;
 	LLFrameTimer	mRegionCrossingTimer;
 	S32				mRegionCrossingCount;
+
+	// <FS:Ansariel> FIRE-12004: Attachments getting lost on TP
+	bool			mIsCrossingRegion;
 	
 /**                    State
  **                                                                            **

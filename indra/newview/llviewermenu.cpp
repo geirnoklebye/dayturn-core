@@ -156,6 +156,9 @@
 #include "daeexport.h"
 #include <boost/regex.hpp>
 #include "llcleanup.h"
+// Firestorm includes
+#include "fscommon.h"
+#include "llmodel.h"
 
 using namespace LLAvatarAppearanceDefines;
 
@@ -365,6 +368,8 @@ BOOL enable_save_into_task_inventory(void*);
 BOOL enable_detach(const LLSD& = LLSD());
 void menu_toggle_attached_lights(void* user_data);
 void menu_toggle_attached_particles(void* user_data);
+
+void avatar_tex_refresh(LLVOAvatar* avatar);	// <FS:CR> FIRE-11800
 
 class LLMenuParcelObserver : public LLParcelObserver
 {
@@ -2016,6 +2021,13 @@ class LLAdvancedRebakeTextures : public view_listener_t
 	}
 };
 
+// [SL:KB] - Patch: Appearance-PhantomAttach | Checked: Catznip-5.0
+void handle_refresh_attachments()
+{
+	LLAttachmentsMgr::instance().refreshAttachments();
+}
+// [/SL:KB]
+
 ///////////////////////////
 // REFRESH SCENE SHADERS //
 ///////////////////////////
@@ -2694,6 +2706,119 @@ class LLObjectDerender : public view_listener_t
         return true;
     }
 };
+
+// <FS:Zi> Texture Refresh
+void destroy_texture(const LLUUID& id)		// will be used by the texture refresh functions below
+{
+	if (id.isNull() || id == IMG_DEFAULT || FSCommon::isDefaultTexture(id))
+	{
+		return;
+	}
+
+	LLViewerFetchedTexture* tx = LLViewerTextureManager::getFetchedTexture(id);
+	if (tx)
+	{
+		tx->clearFetchedResults();
+	}
+	LLAppViewer::getTextureCache()->removeFromCache(id);
+}
+
+class LLObjectTexRefresh : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		// partly copied from the texture info code in handle_selected_texture_info()
+		for (LLObjectSelection::valid_iterator iter = LLSelectMgr::getInstance()->getSelection()->valid_begin();
+			iter != LLSelectMgr::getInstance()->getSelection()->valid_end(); iter++)
+		{
+			LLSelectNode* node = *iter;
+
+			U8 te_count = node->getObject()->getNumTEs();
+			// map from texture ID to list of faces using it
+			typedef std::map< LLUUID, std::vector<U8> > map_t;
+			map_t faces_per_texture;
+			for (U8 i = 0; i < te_count; ++i)
+			{
+				if (!node->isTESelected(i)) continue;
+
+				LLViewerTexture* img = node->getObject()->getTEImage(i);
+				faces_per_texture[img->getID()].push_back(i);
+
+				if (node->getObject()->getTE(i)->getMaterialParams().notNull())
+				{
+					LLViewerTexture* norm_img = node->getObject()->getTENormalMap(i);
+					faces_per_texture[norm_img->getID()].push_back(i);
+
+					LLViewerTexture* spec_img = node->getObject()->getTESpecularMap(i);
+					faces_per_texture[spec_img->getID()].push_back(i);
+				}
+			}
+
+			map_t::iterator it;
+			for (it = faces_per_texture.begin(); it != faces_per_texture.end(); ++it)
+			{
+				destroy_texture(it->first);
+			}
+
+			// Refresh sculpt texture
+			if (node->getObject()->isSculpted())
+			{
+				LLSculptParams *sculpt_params = (LLSculptParams *)node->getObject()->getParameterEntry(LLNetworkData::PARAMS_SCULPT);
+				if (sculpt_params)
+				{
+					LLUUID sculpt_uuid = sculpt_params->getSculptTexture();
+
+					LLViewerFetchedTexture* tx = LLViewerTextureManager::getFetchedTexture(sculpt_uuid);
+					if (tx)
+					{
+						S32 num_volumes = tx->getNumVolumes(LLRender::SCULPT_TEX);
+						const LLViewerTexture::ll_volume_list_t* pVolumeList = tx->getVolumeList(LLRender::SCULPT_TEX);
+
+						destroy_texture(sculpt_uuid);
+
+						for (S32 idxVolume = 0; idxVolume < num_volumes; ++idxVolume)
+						{
+							LLVOVolume* pVolume = pVolumeList->at(idxVolume);
+							if (pVolume)
+							{
+								pVolume->notifyMeshLoaded();
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+};
+
+void avatar_tex_refresh(LLVOAvatar* avatar)
+{
+	// I bet this can be done more elegantly, but this is just straightforward
+	destroy_texture(avatar->getTE(TEX_HEAD_BAKED)->getID());
+	destroy_texture(avatar->getTE(TEX_UPPER_BAKED)->getID());
+	destroy_texture(avatar->getTE(TEX_LOWER_BAKED)->getID());
+	destroy_texture(avatar->getTE(TEX_EYES_BAKED)->getID());
+	destroy_texture(avatar->getTE(TEX_SKIRT_BAKED)->getID());
+	destroy_texture(avatar->getTE(TEX_HAIR_BAKED)->getID());
+	LLAvatarPropertiesProcessor::getInstance()->sendAvatarTexturesRequest(avatar->getID());
+}
+
+class LLAvatarTexRefresh : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		LLVOAvatar* avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+		if (avatar)
+		{
+			avatar_tex_refresh(avatar);
+		}
+
+		return true;
+	}
+};
+// </FS:Zi> Texture Refresh
 
 class LLObjectReportAbuse : public view_listener_t
 {
@@ -8654,6 +8779,62 @@ class LLCheckControl : public view_listener_t
 		return new_value;
 	}
 };
+// <FS:Ansariel> Reset Mesh LOD; Forcing highest LOD on each mesh briefly should fix
+//               broken meshes bursted into triangles
+static void reset_mesh_lod(LLVOAvatar* avatar)
+{
+	for (LLVOAvatar::attachment_map_t::iterator it = avatar->mAttachmentPoints.begin(); it != avatar->mAttachmentPoints.end(); it++)
+	{
+		LLViewerJointAttachment::attachedobjs_vec_t& att_objects = (*it).second->mAttachedObjects;
+
+		for (LLViewerJointAttachment::attachedobjs_vec_t::iterator at_it = att_objects.begin(); at_it != att_objects.end(); at_it++)
+		{
+			LLViewerObject* objectp = *at_it;
+			if (objectp)
+			{
+				if (objectp->getPCode() == LL_PCODE_VOLUME)
+				{
+					LLVOVolume* vol = (LLVOVolume*)objectp;
+					if (vol && vol->isMesh())
+					{
+						vol->forceLOD(LLModel::LOD_HIGH);
+					}
+				}
+
+				LLViewerObject::const_child_list_t& children = objectp->getChildren();
+				for (LLViewerObject::const_child_list_t::const_iterator cit = children.begin(); cit != children.end(); cit++)
+				{
+					LLViewerObject* child_objectp = *cit;
+					if (!child_objectp || (child_objectp->getPCode() != LL_PCODE_VOLUME))
+					{
+						continue;
+					}
+
+					LLVOVolume* child_vol = (LLVOVolume*)child_objectp;
+					if (child_vol && child_vol->isMesh())
+					{
+						child_vol->forceLOD(LLModel::LOD_HIGH);
+					}
+				}
+			}
+		}
+	}
+}
+
+class FSResetMeshLOD : public view_listener_t
+{
+	bool handleEvent( const LLSD& userdata)
+	{
+		LLVOAvatar* avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+		if (avatar)
+		{
+			reset_mesh_lod(avatar);
+		}
+
+		return true;
+	}
+};
+// </FS:Ansariel>
 
 // not so generic
 
@@ -9465,14 +9646,23 @@ void handle_rebake_textures(void*)
 	gAgentAvatarp->forceBakeAllTextures(slam_for_debug);
 	if (gAgent.getRegion() && gAgent.getRegion()->getCentralBakeVersion())
 	{
-//MK from HB
-		gAgentWearables.checkModifiableShape();
-		LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
-		LLAppearanceMgr::instance().enforceCOFItemRestrictions (cb);
-//mk from HB
-		LLAppearanceMgr::instance().requestServerAppearanceUpdate();
+// [SL:KB] - Patch: Appearance-Misc | Checked: 2015-06-27 (Catznip-3.7)
+		if (!gAgent.getRegionCapability("IncrementCOFVersion").empty())
+		{
+			LLAppearanceMgr::instance().syncCofVersionAndRefresh();
+		}
+		else
+		{
+			LLAppearanceMgr::instance().requestServerAppearanceUpdate();
+		}
+// [/SL:KB]
+//		LLAppearanceMgr::instance().requestServerAppearanceUpdate();
+		avatar_tex_refresh(gAgentAvatarp); // <FS:CR> FIRE-11800 - Refresh the textures too
 	}
+	reset_mesh_lod(gAgentAvatarp); // <FS:Ansariel> Reset Mesh LOD
+	gAgentAvatarp->setIsCrossingRegion(false); // <FS:Ansariel> FIRE-12004: Attachments getting lost on TP
 }
+
 void handle_refresh_scene(void*)
 {
 	if (!isAgentAvatarValid()) return;

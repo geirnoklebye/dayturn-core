@@ -145,6 +145,9 @@ public:
 
 	/*virtual*/ U32		getTriangleCount(S32* vcount = NULL) const;
 	/*virtual*/ U32		getHighLODTriangleCount();
+	//<FS:Beq> Mesh Info in object panel
+	/*virtual*/ U32		getLODTriangleCount(S32 lod);
+	//</FS:Beq>
 	/*virtual*/ BOOL lineSegmentIntersect(const LLVector4a& start, const LLVector4a& end, 
 										  S32 face = -1,                        // which face to check, -1 = ALL_SIDES
 										  BOOL pick_transparent = FALSE,
@@ -377,12 +380,17 @@ public:
 
 	static S32 getRenderComplexityMax() {return mRenderComplexity_last;}
 	static void updateRenderComplexity();
-
+	//<FS:Beq> FIRE-21445
+	void forceLOD(S32 lod);
+	//</FS:Beq>
 	LLViewerTextureAnim *mTextureAnimp;
 	U8 mTexAnimMode;
     F32 mLODDistance;
     F32 mLODAdjustedDistance;
     F32 mLODRadius;
+
+	F32 mVolumeSurfaceArea; // ZK LBG
+
 private:
 	friend class LLDrawable;
 	friend class LLFace;
