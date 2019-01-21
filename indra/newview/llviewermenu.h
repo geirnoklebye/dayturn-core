@@ -106,6 +106,7 @@ void handle_object_open();
 
 //MK
 void handle_object_edit();
+void handle_rebake_textures(void*);
 //mk
 
 bool visible_take_object();
