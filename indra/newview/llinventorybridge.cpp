@@ -4352,15 +4352,18 @@ void LLFolderBridge::buildContextMenuFolderOptions(U32 flags,   menuentry_vec_t&
 	LLIsType is_object( LLAssetType::AT_OBJECT );
 	LLIsType is_gesture( LLAssetType::AT_GESTURE );
 
+//CA After discussion with Marine, it appears this change is no longer needed and can be dropped
+//since it's now getting in the way of ReplaceWornItemsOnly
+
 //MK
-////	if (mWearables ||
+	if (mWearables ||
+			checkFolderForContentsOfType(model, is_wearable)  ||
+			checkFolderForContentsOfType(model, is_object) ||
+			checkFolderForContentsOfType(model, is_gesture) )
+////	if (!gRRenabled && (mWearables ||
 ////		checkFolderForContentsOfType(model, is_wearable)  ||
 ////		checkFolderForContentsOfType(model, is_object) ||
-////		checkFolderForContentsOfType(model, is_gesture) )
-	if (!gRRenabled && (mWearables ||
-		checkFolderForContentsOfType(model, is_wearable)  ||
-		checkFolderForContentsOfType(model, is_object) ||
-		checkFolderForContentsOfType(model, is_gesture)) )
+////		checkFolderForContentsOfType(model, is_gesture)) )
 //mk
 	{
 		// Only enable add/replace outfit for non-system folders.
