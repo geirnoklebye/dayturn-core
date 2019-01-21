@@ -2149,9 +2149,13 @@ void LLDrawPoolAvatar::renderRiggedShadows(LLVOAvatar* avatar)
 				if (sShaderLevel > 0)
 				{
 					// upload matrix palette to shader
-					LLMatrix4a mat[LL_MAX_JOINTS_PER_MESH_OBJECT];
-					U32 count = LLSkinningUtil::getMeshJointCount(skin);
-					LLSkinningUtil::initSkinningMatrixPalette((LLMatrix4*)mat, count, skin, avatar);
+				//<FS:Beq> per frame cache of skinning matrices
+				//LLMatrix4a mat[LL_MAX_JOINTS_PER_MESH_OBJECT];
+				//U32 count = LLSkinningUtil::getMeshJointCount(skin);
+				//LLSkinningUtil::initSkinningMatrixPalette(mat, count, skin, avatar);
+				U32 count = LLSkinningUtil::getMeshJointCount(skin);
+				auto mat = getCacheSkinningMats(drawable, skin, count, avatar);
+				//</FS:Beq>
 
 				stop_glerror();
 

@@ -2188,7 +2188,7 @@ void LLAppearanceMgr::updateCOF(LLInventoryModel::item_array_t& body_items_new,
 								bool append /*=false*/, const LLUUID& idOutfit /*=LLUUID::null*/, LLPointer<LLInventoryCallback> link_waiter /*= NULL*/)
 // [/RLVa:KB]
 {
-//	LLViewerInventoryCategory *pcat = gInventory.getCategory(category);
+//	LLViewerInventoryCategory *pcat = gInventory.getCategory(idOutfit);
 //	if (!pcat)
 //	{
 //		LL_WARNS() << "no category found for id " << category << LL_ENDL;
@@ -2238,10 +2238,10 @@ void LLAppearanceMgr::updateCOF(LLInventoryModel::item_array_t& body_items_new,
 	// - Wearables: include COF contents only if appending.
 	LLInventoryModel::item_array_t wear_items;
 	if (append)
-		getDescendentsOfAssetType(cof, wear_items, LLAssetType::AT_CLOTHING);
 //MK
+////	getDescendentsOfAssetType(cof, wear_items, LLAssetType::AT_CLOTHING);
 ////	getDescendentsOfAssetType(category, wear_items, LLAssetType::AT_CLOTHING);
-	getAttachableDescendentsOfAssetType(category, wear_items, LLAssetType::AT_CLOTHING);
+	getAttachableDescendentsOfAssetType(cof, wear_items, LLAssetType::AT_CLOTHING);
 //mk
 
 	// Reduce wearables to max of one per type.
@@ -2254,10 +2254,10 @@ void LLAppearanceMgr::updateCOF(LLInventoryModel::item_array_t& body_items_new,
 	// - Attachments: include COF contents only if appending.
 	LLInventoryModel::item_array_t obj_items;
 	if (append)
-		getDescendentsOfAssetType(cof, obj_items, LLAssetType::AT_OBJECT);
 //MK
+////	getDescendentsOfAssetType(cof, obj_items, LLAssetType::AT_OBJECT);
 ////	getDescendentsOfAssetType(category, obj_items, LLAssetType::AT_OBJECT);
-	getAttachableDescendentsOfAssetType(category, obj_items, LLAssetType::AT_OBJECT);
+	getAttachableDescendentsOfAssetType(cof, obj_items, LLAssetType::AT_OBJECT);
 //mk
 
 
@@ -3332,7 +3332,7 @@ void LLAppearanceMgr::removeCOFItemLinks(const LLUUID& item_id, LLPointer<LLInve
 		{
 //MK
 			// If we can't detach this item, don't do anything with it, leave it there.
-			LLInventoryItem* item_non_const = const_cast<LLInventoryItem*>(item);
+			LLViewerInventoryItem* item_non_const = const_cast<LLViewerInventoryItem*>(item);
 			if (gRRenabled && !gAgent.mRRInterface.canDetach (item_non_const))
 			{
 				continue;

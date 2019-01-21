@@ -88,9 +88,6 @@ public:
     void onDetachCompleted(const LLUUID& inv_item_id);
 
     bool isAttachmentStateComplete() const;
-//MK from KB
-	void refreshAttachments();
-//mk from kb
 
 // [SL:KB] - Patch: Appearance-SyncAttach | Checked: Catznip-2.1
 public:

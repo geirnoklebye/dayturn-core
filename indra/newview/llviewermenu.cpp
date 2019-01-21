@@ -2041,13 +2041,6 @@ class LLAdvancedRefreshScene : public view_listener_t
 		return true;
 	}
 };
-		
-//MK from KB
-void handle_refresh_attachments()
-{
-	LLAttachmentsMgr::instance().refreshAttachments();
-}
-//mk from kb
 
 #if 1 //ndef LL_RELEASE_FOR_DOWNLOAD
 ///////////////////////////
