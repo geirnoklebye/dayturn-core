@@ -2243,6 +2243,7 @@ void LLAppearanceMgr::updateCOF(LLInventoryModel::item_array_t& body_items_new,
 ////	getDescendentsOfAssetType(category, wear_items, LLAssetType::AT_CLOTHING);
 	getAttachableDescendentsOfAssetType(cof, wear_items, LLAssetType::AT_CLOTHING);
 //mk
+	wear_items.insert(wear_items.end(), wear_items_new.begin(), wear_items_new.end());
 
 	// Reduce wearables to max of one per type.
 	removeDuplicateItems(wear_items);
@@ -2259,7 +2260,7 @@ void LLAppearanceMgr::updateCOF(LLInventoryModel::item_array_t& body_items_new,
 ////	getDescendentsOfAssetType(category, obj_items, LLAssetType::AT_OBJECT);
 	getAttachableDescendentsOfAssetType(cof, obj_items, LLAssetType::AT_OBJECT);
 //mk
-
+	obj_items.insert(obj_items.end(), obj_items_new.begin(), obj_items_new.end());
 
 	removeDuplicateItems(obj_items);
 
@@ -2286,7 +2287,7 @@ void LLAppearanceMgr::updateCOF(LLInventoryModel::item_array_t& body_items_new,
 	{
 		LLInventoryModel::cat_array_t* cats; // unused here
 		LLInventoryModel::item_array_t* items;
-		gInventory.getDirectDescendentsOf (cof, cats, items);
+		gInventory.getDirectDescendentsOf (idOutfit, cats, items);
 		S32 count = items->size();
 		LLViewerInventoryItem* item = NULL;
 		for (S32 i = 0; i < count; ++i) {
@@ -3125,30 +3126,11 @@ void LLAppearanceMgr::addCOFItemLink(const LLInventoryItem *item,
 									 const std::string description)
 {
 	const LLViewerInventoryItem *vitem = dynamic_cast<const LLViewerInventoryItem*>(item);
-//MK
-	//LLInventoryItem* item_non_const = const_cast<LLInventoryItem*>(item);;
-//mk
 	if (!vitem)
 	{
 		LL_WARNS() << "not an llviewerinventoryitem, failed" << LL_ENDL;
 		return;
 	}
-//MK
-	if (gRRenabled)
-	{
-		// Apparently this piece of code is dead now => move to LLAgentWearables::setWearableOutfit()
-		//if (vitem->isWearableType())
-		//{
-		//	if (!gAgent.mRRInterface.canWear(item_non_const))
-		//	{
-		//		return;
-		//	}
-
-		//	// Notify that this layer has been worn
-		//	gAgent.mRRInterface.notify (LLUUID::null, "worn legally " + gAgent.mRRInterface.getOutfitLayerAsString(vitem->getWearableType()), "");
-		//}
-	}
-//mk
 
 	gInventory.addChangedMask(LLInventoryObserver::LABEL, vitem->getLinkedUUID());
 

@@ -1109,40 +1109,7 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 	{
 		if (LLWearableType::getAssetType((LLWearableType::EType)j) == LLAssetType::AT_CLOTHING)
 		{
-//MK
-				// Actually we do not need to remove all clothes when updating the outfit, or else the avatar finds itself nude
-				// for a second, and the shoe base disappears as well. This can become very annoying after a while.
-				// The "wearables" array contains all the wearables (bodyparts included) that must be worn and no other.
-				// => Only remove clothes that we know have changed in the array of new wearables.
-
-				for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE; ++index)
-				{
-					bool remove_this = true;
-					// cur_wearable is the piece of clothing we are wearing on index "index" on the layer "j" (ex : WT_SHIRT, WT_PANTS...)
-					LLViewerWearable* cur_wearable = getViewerWearable ((LLWearableType::EType)j, index);
-
-					S32 count = wearables.size();
-					llassert(items.size() == count);
-					S32 i;
-					for (i = 0; i < count; i++)
-					{
-						// new_wearable represents each of the wearables we are supposed to update, every cur_wearable that is not
-						// part of the "wearables" array must be removed
-						LLViewerWearable* new_wearable = wearables[i];
-						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
-						{
-							remove_this = false;
-							LL_INFOS() << "not removing old wearable " << cur_wearable->getName() << LL_ENDL;
-						}
-					}
-
-					if (remove_this)
-					{
-////			removeWearable((LLWearableType::EType)j, true, 0);
-						removeWearable((LLWearableType::EType)j, false, index);
-					}
-				}
-//mk
+			removeWearable((LLWearableType::EType)j, true, 0);
 		}
 	}
 
@@ -1160,56 +1127,24 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 			new_wearable->setName(new_item->getName());
 			new_wearable->setItemID(new_item->getUUID());
 
-//MK
-
-			// We did not remove the items that are already worn in order to avoid unnecessary updates,
-			// hence we do not want to wear the new ones either or they will stack.
-			bool wear_this = true;
-
-			for (S32 type = 0; type < (S32)LLWearableType::WT_COUNT && wear_this; type++)
+			if (LLWearableType::getAssetType(type) == LLAssetType::AT_BODYPART)
 			{
-				if (LLWearableType::getAssetType((LLWearableType::EType)type) == LLAssetType::AT_CLOTHING)
+				// exactly one wearable per body part
+				setWearable(type,0,new_wearable);
+				if (old_wearable_id.notNull())
 				{
-					for (unsigned int index = 0; index < MAX_CLOTHING_PER_TYPE && wear_this; ++index)
-					{
-						LLViewerWearable* cur_wearable = getViewerWearable ((LLWearableType::EType)type, index);
-						if (cur_wearable && cur_wearable->getItemID() == new_wearable->getItemID())
-						{
-							wear_this = false;
-							LL_INFOS() << "not wearing new wearable " << new_wearable->getName() << LL_ENDL;
-						}
-					}
+					// we changed id before setting wearable, update old item manually
+					// to complete the swap.
+					gInventory.addChangedMask(LLInventoryObserver::LABEL, old_wearable_id);
 				}
 			}
-
-			if (wear_this)
+			else
 			{
-//mk
-				if (LLWearableType::getAssetType(type) == LLAssetType::AT_BODYPART)
-				{
-					// exactly one wearable per body part
-					setWearable(type,0,new_wearable);
-					if (old_wearable_id.notNull())
-					{
-						// we changed id before setting wearable, update old item manually
-						// to complete the swap.
-						gInventory.addChangedMask(LLInventoryObserver::LABEL, old_wearable_id);
-					}
-				}
-				else
-				{
-					pushWearable(type,new_wearable);
-//MK
-					// Notify that this layer has been worn
-					gAgent.mRRInterface.notify (LLUUID::null, "worn legally " + gAgent.mRRInterface.getOutfitLayerAsString(type), "");
-//mk
-				}
-
-				const BOOL removed = FALSE;
-				wearableUpdated(new_wearable, removed);
-//MK
+				pushWearable(type,new_wearable);
 			}
-//mk
+
+			const BOOL removed = FALSE;
+			wearableUpdated(new_wearable, removed);
 		}
 	}
 
@@ -1407,56 +1342,6 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 													LLInventoryModel::item_array_t& items_to_add)
 
 {
-
-//MK
-	// When calling this function, one of two purposes are expected :
-	// - If this is the first time (i.e. immediately after logging on), look at all the links in the COF, request to wear the items that are not worn
-	// (since normally an item which has a link in the COF must necessarily be worn, this is a good way to make things straight)
-	// - If this is not the first time (i.e. immediately after wearing and unwearing items and outfits), then there might be a problem : links are created slowly
-	// and the user may unwear those items before all the links are done being created, which makes those belated links be worn again. In practice, you wear a folder
-	// then unwear it before all the links appear, and the belated items are automatically worn again. We don't want that, so we need to DELETE those links
-	// instead of automatically wearing them.
-	// To distinguish between these two cases is the purpose of the boolean gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall
-	// Attention : we need to call the regular part of the function if we did a "Add to Current Outfit" or "Replace Current Outfit" in the inventory
-    if (gRRenabled)
-    {
-        if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall && !gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
-        {
-            LLInventoryModel::cat_array_t cat_array;
-            LLInventoryModel::item_array_t item_array;
-            gInventory.collectDescendents(LLAppearanceMgr::instance().getCOF(), cat_array, item_array, LLInventoryModel::EXCLUDE_TRASH);
-            for (S32 i = 0; i < item_array.size(); i++)
-            {
-                const LLViewerInventoryItem* inv_item = item_array.at(i).get();
-                if (inv_item)
-                {
-                    if (LLAssetType::AT_LINK == inv_item->getActualType())
-                    {
-                        const LLViewerInventoryItem* linked_item = inv_item->getLinkedItem();
-                        if (NULL == linked_item)
-                        {
-                            // Broken link => remove
-                        }
-                        else
-                        {
-                            if (LLAssetType::AT_OBJECT == linked_item->getType())
-                            {
-                                std::string attachment_point_name;
-                                if (!gAgentAvatarp->getAttachedPointName(linked_item->getUUID(), attachment_point_name))
-                                {
-                                    LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
-                                }
-                            }
-                        }
-                    }
-                }
-                LLUUID item_id(inv_item->getUUID());
-            }
-            return;
-        }
-    }
-//mk
-
 	// Possible cases:
 	// already wearing but not in request set -> take off.
 	// already wearing and in request set -> leave alone.
