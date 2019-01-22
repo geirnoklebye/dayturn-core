@@ -1346,6 +1346,60 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 													LLInventoryModel::item_array_t& items_to_add)
 
 {
+
+//CA I don't think we need this any more after the wholesale import of Firestorm COF handling improvements.
+// However, for ease of future merging (and in case I'm proved wrong) we'll leave the code here but disabled
+//
+//MK
+	// When calling this function, one of two purposes are expected :
+	// - If this is the first time (i.e. immediately after logging on), look at all the links in the COF, request to wear the items that are not worn
+	// (since normally an item which has a link in the COF must necessarily be worn, this is a good way to make things straight)
+	// - If this is not the first time (i.e. immediately after wearing and unwearing items and outfits), then there might be a problem : links are created slowly
+	// and the user may unwear those items before all the links are done being created, which makes those belated links be worn again. In practice, you wear a folder
+	// then unwear it before all the links appear, and the belated items are automatically worn again. We don't want that, so we need to DELETE those links
+	// instead of automatically wearing them.
+	// To distinguish between these two cases is the purpose of the boolean gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall
+	// Attention : we need to call the regular part of the function if we did a "Add to Current Outfit" or "Replace Current Outfit" in the inventory
+	// CA disable this - see comment above
+    if (gRRenabled && false)
+    {
+        if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall && !gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
+        {
+            LLInventoryModel::cat_array_t cat_array;
+            LLInventoryModel::item_array_t item_array;
+            gInventory.collectDescendents(LLAppearanceMgr::instance().getCOF(), cat_array, item_array, LLInventoryModel::EXCLUDE_TRASH);
+            for (S32 i = 0; i < item_array.size(); i++)
+            {
+                const LLViewerInventoryItem* inv_item = item_array.at(i).get();
+                if (inv_item)
+                {
+                    if (LLAssetType::AT_LINK == inv_item->getActualType())
+                    {
+                        const LLViewerInventoryItem* linked_item = inv_item->getLinkedItem();
+                        if (NULL == linked_item)
+                        {
+                            // Broken link => remove
+                        }
+                        else
+                        {
+                            if (LLAssetType::AT_OBJECT == linked_item->getType())
+                            {
+                                std::string attachment_point_name;
+                                if (!gAgentAvatarp->getAttachedPointName(linked_item->getUUID(), attachment_point_name))
+                                {
+                                    LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
+                                }
+                            }
+                        }
+                    }
+                }
+                LLUUID item_id(inv_item->getUUID());
+            }
+            return;
+        }
+    }
+//mk
+
 	// Possible cases:
 	// already wearing but not in request set -> take off.
 	// already wearing and in request set -> leave alone.
