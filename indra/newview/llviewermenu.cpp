@@ -9646,6 +9646,11 @@ void handle_rebake_textures(void*)
 		}
 		else
 		{
+//MK from HB
+			gAgentWearables.checkModifiableShape();
+			LLPointer<LLInventoryCallback> cb = new LLUpdateAppearanceOnDestroy;
+			LLAppearanceMgr::instance().enforceCOFItemRestrictions (cb);
+//mk from HB
 			LLAppearanceMgr::instance().requestServerAppearanceUpdate();
 		}
 // [/SL:KB]

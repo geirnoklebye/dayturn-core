@@ -1141,6 +1141,10 @@ void LLAgentWearables::setWearableOutfit(const LLInventoryItem::item_array_t& it
 			else
 			{
 				pushWearable(type,new_wearable);
+//MK
+					// Notify that this layer has been worn
+					gAgent.mRRInterface.notify (LLUUID::null, "worn legally " + gAgent.mRRInterface.getOutfitLayerAsString(type), "");
+//mk
 			}
 
 			const BOOL removed = FALSE;
