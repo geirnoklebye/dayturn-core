@@ -54,6 +54,7 @@
 #include "llviewertexturelist.h"
 
 //MK
+#include "llagentcamera.h" // for gAgentCamera
 #include "llvoavatarself.h"
 //mk
 
@@ -1791,7 +1792,12 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 	}
 //mk
 
-	for (U32 i = 0; i < mRiggedFace[type].size(); ++i)
+//MK
+	// A little optimization, nothing much but why calculate size() of an array at every step along that very array?
+	////for (U32 i = 0; i < mRiggedFace[type].size(); ++i)
+	U32 size = mRiggedFace[type].size();
+	for (U32 i = 0; i < size; ++i)
+//mk
 	{
 		LLFace* face = mRiggedFace[type][i];
 		LLDrawable* drawable = face->getDrawable();
@@ -2044,7 +2050,9 @@ void LLDrawPoolAvatar::renderRiggedShadows(LLVOAvatar* avatar)
 
 	U32 rigTypes[18] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,21 };
 	for (U32 j = 0; j < 18; ++j)
-	for (U32 i = 0; i < mRiggedFace[rigTypes[j]].size(); ++i)
+	{
+		U32 size = mRiggedFace[rigTypes[j]].size();
+		for (U32 i = 0; i < size; ++i)
 	{
 		LLFace* face = mRiggedFace[rigTypes[j]][i];
 		LLDrawable* drawable = face->getDrawable();
@@ -2175,6 +2183,7 @@ void LLDrawPoolAvatar::renderRiggedShadows(LLVOAvatar* avatar)
 			gPipeline.addTrianglesDrawn(count, LLRender::TRIANGLES);
 		}
 	}
+	}
 }
 //mk from cy
 
@@ -2202,7 +2211,12 @@ void LLDrawPoolAvatar::updateRiggedVertexBuffers(LLVOAvatar* avatar)
 	//update rigged vertex buffers
 	for (U32 type = 0; type < NUM_RIGGED_PASSES; ++type)
 	{
-		for (U32 i = 0; i < mRiggedFace[type].size(); ++i)
+//MK
+		// A little optimization, nothing much but why calculate size() of an array at every step along that very array?
+		U32 size = mRiggedFace[type].size();
+		////for (U32 i = 0; i < mRiggedFace[type].size(); ++i)
+		for (U32 i = 0; i < size; ++i)
+//mk
 		{
 			LLFace* face = mRiggedFace[type][i];
 			LLDrawable* drawable = face->getDrawable();
