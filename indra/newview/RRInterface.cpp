@@ -5232,6 +5232,14 @@ BOOL RRInterface::updateCameraLimits ()
 		}
 	}
 
+	// Recalculate mCamDistNbGradients according to the distance between mCamDistDrawMin and mCamDistDrawMax
+	// Let's say 4 gradients for every 0.1 m of difference, max 40.
+	mCamDistNbGradients = ((U32)((mCamDistDrawMax - mCamDistDrawMin) * 40.f));
+	if (mCamDistNbGradients > 40)
+	{
+		mCamDistNbGradients = 40;
+	}
+
 	// And check the camera is still within the limits
 	return checkCameraLimits (TRUE);
 }
@@ -5273,6 +5281,8 @@ F32 calculateDesiredAlphaPerStep (F32 desired_alpha, int nb_layers)
 //   complain.
 void RRInterface::drawRenderLimit ()
 {
+	//if (true) return;
+
 	//if (sRenderLimitRenderedThisFrame) { // already rendered the vision spheres during this rendering frame ? => bail
 	//	return;
 	//}
@@ -5289,6 +5299,7 @@ void RRInterface::drawRenderLimit ()
 	//gGL.flush();
 	//glClearColor(0,0,0,1);
 	//glClearColor(0,0,0,0);
+
 	gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
 	LLGLEnable gls_blend(GL_BLEND);
 	LLGLEnable gls_cull(GL_CULL_FACE);
@@ -5298,12 +5309,13 @@ void RRInterface::drawRenderLimit ()
 
 	//gGL.setSceneBlendType(LLRender::BT_ADD_WITH_ALPHA);
 	//gGL.setColorMask(true, true);
-	gGL.setSceneBlendType(LLRender::BT_ALPHA);
-	gPipeline.disableLights();
-	gGL.blendFunc(LLRender::BF_SOURCE_ALPHA,
-					LLRender::BF_ONE_MINUS_SOURCE_ALPHA,
-					LLRender::BF_ZERO,
-					LLRender::BF_ONE_MINUS_SOURCE_ALPHA);
+
+	//gGL.setSceneBlendType(LLRender::BT_ALPHA);
+	//gPipeline.disableLights();
+	//gGL.blendFunc(LLRender::BF_SOURCE_ALPHA,
+	//				LLRender::BF_ONE_MINUS_SOURCE_ALPHA,
+	//				LLRender::BF_ZERO,
+	//				LLRender::BF_ONE_MINUS_SOURCE_ALPHA);
 
 	//gGL.flush();
 	//glClearColor(0,0,0,1);
@@ -5311,26 +5323,24 @@ void RRInterface::drawRenderLimit ()
 	//glClearColor(0,0,0,0);
 
 	gGL.setColorMask(true, false);
+
+	// Calculate the center of the spheres
 	LLVector3 center = isAgentAvatarValid() 
 		? getCamDistDrawFromJoint()->getWorldPosition()
 		: gAgent.getPositionAgent();
 
-	//LLVector3 center = gAgentAvatarp->mHeadp->getWorldPosition();
-
-	//LLVector3 center = gAgentAvatarp && gAgentAvatarp->mHeadp 
-	//	? gAgentAvatarp->mHeadp->getWorldPosition()
-	//	: gAgent.getPositionAgent();
-
 	// Render the inner sphere first
 	if (mCamDistDrawMin < mCamDistDrawMax) {
-		drawSphere (center, mCamDistDrawMin, mCamDistDrawColor, mCamDistDrawAlphaMin);
+		if (mCamDistDrawAlphaMin >= UPPER_ALPHA_LIMIT) {
+			LLGLDisable no_blend(GL_BLEND);
+			LLGLDisable no_cull(GL_CULL_FACE);
+			LLGLDisable no_alpha(GL_ALPHA_TEST);
+		}
+		drawSphere(center, mCamDistDrawMin, mCamDistDrawColor, mCamDistDrawAlphaMin);
 	}
 
 	do { // do this block only once, using break statements like glorified GOTOs
 		// If the inner sphere is opaque, no need to go any further
-		if (mCamDistDrawAlphaMin >= 1.f) {
-			break;
-		}
 
 		// Now render every sphere from the inner one (excluded) to the outer one (included) with
 		// an alpha that depends on the number of spheres, so that the apparent alpha of all the
@@ -5338,12 +5348,14 @@ void RRInterface::drawRenderLimit ()
 		F32 alpha_step = calculateDesiredAlphaPerStep (mCamDistDrawAlphaMax, mCamDistNbGradients);
 		for (int i = 1; i <= mCamDistNbGradients; i++) {
 			if (mCamDistDrawAlphaMax > UPPER_ALPHA_LIMIT && i == mCamDistNbGradients) {
-				// Outer sphere and we aim an alpha of 1 => make it opaque
+				// If this is the outer sphere and the desired alpha is 1, make sure to draw it opaque
+				// (because of rounding errors and of the upper limit in calculateDesiredAlphaPerStep(), 
+				// drawing white or grey spheres would not give a complete opacity otherwise).
 				alpha_step = 1.f;
+				LLGLDisable no_blend(GL_BLEND);
+				LLGLDisable no_cull(GL_CULL_FACE);
+				LLGLDisable no_alpha(GL_ALPHA_TEST);
 			}
-			// If this is the outer sphere and the desired alpha is 1, make sure to draw it opaque
-			// (because of rounding errors and of the upper limit in calculateDesiredAlphaPerStep(), 
-			// drawing white or grey spheres would not give a complete opacity otherwise).
 			drawSphere (center
 				, lerp (mCamDistDrawMin, mCamDistDrawMax, (F32)i / (F32)mCamDistNbGradients)
 				, mCamDistDrawColor
@@ -5355,15 +5367,20 @@ void RRInterface::drawRenderLimit ()
 
 	gGL.flush();
 
-	if (LLGLSLShader::sNoFixedFunction) {
-		gUIProgram.unbind();
-	}
+	//if (LLGLSLShader::sNoFixedFunction) {
+	//	gUIProgram.unbind();
+	//}
 
 	sRenderLimitRenderedThisFrame = TRUE;
 }
 
 void RRInterface::drawSphere (LLVector3 center, F32 scale, LLColor3 color, F32 alpha)
 {
+	// Don't bother if the sphere is invisible
+	if (alpha < 0.0001f)
+	{
+		return;
+	}
 	//gGL.pushMatrix();
 	{
 		gGL.pushMatrix();
