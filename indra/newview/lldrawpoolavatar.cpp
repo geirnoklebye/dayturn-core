@@ -1782,6 +1782,8 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 	}
 	bool vision_restricted = (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM);
 	bool in_mouselook = gAgentCamera.cameraMouselook();
+	bool is_self = (avatar == gAgentAvatarp);
+
 	// Optimization : Rather than compare the distances for every face (which involves square roots, which are costly), we compare squared distances.
 	LLVector3 joint_pos = LLVector3::zero;
 	F32 cam_dist_draw_max_squared = EXTREMUM;
@@ -1979,7 +1981,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 					if (vision_restricted)
 					{
 						// Other avatars only
-						if (avatar != gAgentAvatarp)
+						if (!is_self)
 						{
 							// This rigged mesh is diffuse alpha blend with materials
 							if (mat->getDiffuseAlphaMode() == LLMaterial::DIFFUSE_ALPHA_MODE_BLEND)
@@ -2011,7 +2013,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 				if (vision_restricted)
 				{
 					// Other avatars only
-					if (avatar != gAgentAvatarp)
+					if (!is_self)
 					{
 						// This rigged mesh is diffuse alpha blend without materials
 						if (gPipeline.getPoolTypeFromTE(te, face->getTexture()) == LLDrawPool::POOL_ALPHA)
