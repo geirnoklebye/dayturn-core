@@ -3539,7 +3539,10 @@ LLJoint* LLModelPreview::lookupJointByName(const std::string& str, void* opaque)
 	LLModelPreview* pPreview = static_cast< LLModelPreview* >(opaque);
 	if (pPreview)
 	{
-		return pPreview->getPreviewAvatar()->getJoint(str);
+//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
+//		return pPreview->getPreviewAvatar()->getJoint( str );
+		return pPreview->getPreviewAvatar()->getJoint( JointKey::construct( str ) );
+// <FS:ND>
 	}
 	return NULL;
 }
@@ -4128,12 +4131,16 @@ BOOL LLModelPreview::render()
 							//quick 'n dirty software vertex skinning
 
 							//build matrix palette
-
+							//<FS:Beq> use Mat4a part of the caching changes, no point in using the cache itself in the preview though.
+							//LLMatrix4 mat[LL_MAX_JOINTS_PER_MESH_OBJECT];
 							LLMatrix4a mat[LL_MAX_JOINTS_PER_MESH_OBJECT];
                             const LLMeshSkinInfo *skin = &model->mSkinInfo;
 							U32 count = LLSkinningUtil::getMeshJointCount(skin);
-                            LLSkinningUtil::initSkinningMatrixPalette((LLMatrix4*)mat, count,
-                                                                        skin, getPreviewAvatar());
+							//LLSkinningUtil::initSkinningMatrixPalette((LLMatrix4*)mat, count,
+							//											skin, getPreviewAvatar());
+                            LLSkinningUtil::initSkinningMatrixPalette(mat, count,
+                                                                      skin, getPreviewAvatar());
+							//</FS:Beq>
                             LLMatrix4a bind_shape_matrix;
                             bind_shape_matrix.loadu(skin->mBindShapeMatrix);
                             U32 max_joints = LLSkinningUtil::getMaxJointCount();

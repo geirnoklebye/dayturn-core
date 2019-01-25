@@ -183,13 +183,13 @@ static BOOL ca_alarm_raised = FALSE;
 static std::string ca_region_channel;
 static F32 ca_performance_status_previous[CA_SIM_STAT_MAXIMUM] = {};
 static F32 ca_performance_status_now[CA_SIM_STAT_MAXIMUM] = {};
-static BOOL ca_notify_on_restore = FALSE;
-static BOOL ca_use_notifications = TRUE;
 
 static void ca_give_message_trans(std::string msg, LLStringUtil::format_map_t args)
 {
 	// we can deliver via chat & chat toast or as chat & notification
 
+	static LLCachedControl<bool> ca_use_notifications(gSavedSettings, "KokuaPerformanceUseNotifications");
+	
 	if (ca_use_notifications)
 	{
 		// all notifications have to be pre-declared, which is a problem for the
@@ -225,7 +225,8 @@ static void ca_copy_performance_status_to_old()
 
 static void ca_performance_test_threshold(std::string area, std::string testname, U32 stat, const char *value_format, const char *threshold_format, BOOL greater)
 {
-	if (!gSavedSettings.getBOOL("KokuaPerformance" + area + testname)) return;
+	LLCachedControl<bool> test_active(gSavedSettings, "KokuaPerformance" + area + testname);
+	if (!test_active) return;
 
 	LLCachedControl<F32> threshold(gSavedSettings, "KokuaPerformance" + area + testname + "Threshold");
 	F32 value_now = ca_performance_status_now[stat];
@@ -252,13 +253,16 @@ static void ca_performance_test_threshold(std::string area, std::string testname
 		args["THRESHOLD"] = llformat(threshold_format, (F32)threshold);
 		if (greater) args["ACTION"] = msgfail;
 		else args["ACTION"] = msgrestore;
+			
+		static LLCachedControl<bool> all_with_frame(gSavedSettings, "KokuaPerformanceTimingAllWithFrame");
+		static LLCachedControl<bool> all_with_individual(gSavedSettings, "KokuaPerformanceTimingAllWithIndividual");
 
 		ca_give_message_trans(msgname, args);
 
 		if (area == "Timing")
 		{
-			if ((testname == "FrameExceeds" && gSavedSettings.getBOOL("KokuaPerformanceTimingAllWithFrame"))
-				|| (testname != "FrameExceeds" && gSavedSettings.getBOOL("KokuaPerformanceTimingAllWithIndividual")))
+			if ((testname == "FrameExceeds" && all_with_frame)
+				|| (testname != "FrameExceeds" && all_with_individual))
 			{
 				LLStringUtil::format_map_t frame_args;
 				frame_args["FRAME"] = llformat(value_format, ca_performance_status_now[LL_SIM_STAT_FRAMEMS]);
@@ -274,6 +278,7 @@ static void ca_performance_test_threshold(std::string area, std::string testname
 		}
 	}
 
+	static LLCachedControl<bool> ca_notify_on_restore(gSavedSettings, "KokuaPerformanceNotifyRestore");
 	if (ca_notify_on_restore)
 	{
 		// only give restoration notifications where we do have a previous value and a step change onto the right
@@ -295,14 +300,13 @@ static void ca_performance_test_threshold(std::string area, std::string testname
 
 static void ca_performance_test_delta(std::string area, std::string testname, U32 stat, const char* previous_format, const char* now_format, const char* delta_format)
 {
-	if (!gSavedSettings.getBOOL("KokuaPerformance" + area + testname)) return;
+	if (!LLCachedControl<bool> (gSavedSettings, "KokuaPerformance" + area + testname)) return;
 
-	LLCachedControl<F32> threshold(gSavedSettings, "KokuaPerformance" + area + testname + "Threshold");
 	F32 value_now = ca_performance_status_now[stat];
 	F32 value_previous = ca_performance_status_previous[stat];
 	F32 value_delta = value_now - value_previous;
 
-	if (llabs(value_delta) >= threshold)
+	if (llabs(value_delta) >= LLCachedControl<F32> (gSavedSettings, "KokuaPerformance" + area + testname + "Threshold"))
 	{
 		ca_alarm_raised = TRUE;
 		LLStringUtil::format_map_t args;
@@ -2780,13 +2784,17 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		//MK
 	// If this is an object but its name is equal to its owner's user name or diplay name
 	// and if the debug setting is set right, then show the chat like it were said by the owner
+	
+	static LLCachedControl<bool> rlv_imitate_avatar_speech(gSavedSettings, "RestrainedLoveImitateAvatarSpeech");				
+	static LLCachedControl<bool> rlv_show_ellipsis(gSavedSettings, "RestrainedLoveShowEllipsis");	
+	
 	if (chat.mSourceType == CHAT_SOURCE_OBJECT)
 	{
 		// This object has to be an attachment, or in case of a HUD, not detected at all.
 		// It can NOT be an object in-world.
 		if ((chatter && chatter->isAttachment()) || !chatter)
 		{
-			if (gSavedSettings.getBOOL("RestrainedLoveImitateAvatarSpeech"))
+			if (rlv_imitate_avatar_speech)
 			{
 				LLAvatarName av_name;
 				if (LLAvatarNameCache::get(owner_id, &av_name))
@@ -2868,7 +2876,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				{
 					chat.mFromName = from_name;
 					chat.mText = gAgent.mRRInterface.crunchEmote(mesg, 20); // + '\0';
-					if (!gSavedSettings.getBOOL("RestrainedLoveShowEllipsis") && chat.mText == "...") {
+					if (!rlv_show_ellipsis && chat.mText == "...") {
 						chat.mText = "";
 					}
 					mesg = chat.mText;
@@ -2885,7 +2893,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 						clear_part = mesg.substr(0, ind);
 						chat.mFromName = from_name;
 						chat.mText = clear_part + "/me ...";
-						if (!gSavedSettings.getBOOL("RestrainedLoveShowEllipsis")) {
+						if (!rlv_show_ellipsis) {
 							chat.mText = clear_part;
 						}
 						mesg = chat.mText;
@@ -2903,7 +2911,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 						clear_part = mesg.substr(0, ind);
 						chat.mFromName = from_name;
 						chat.mText = clear_part + "/me ...";
-						if (!gSavedSettings.getBOOL("RestrainedLoveShowEllipsis")) {
+						if (!rlv_show_ellipsis) {
 							chat.mText = clear_part;
 						}
 						mesg = chat.mText;
@@ -3030,7 +3038,9 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 					KokuaRLVFloaterSupport::addNameToLocalCache(obj_id, from_name); // CA: Since it's known here we can run with that name until we find it's an attachment we can interrogate
 					if (gAgent.mRRInterface.handleCommand(obj_id, command))
 					{
-						if (!gSavedSettings.getBOOL("RestrainedLoveDebug"))
+						static LLCachedControl<bool> restrained_love_debug(gSavedSettings, "RestrainedLoveDebug");
+
+						if (!restrained_love_debug)
 						{
 							return;
 						}
@@ -3747,7 +3757,9 @@ void process_agent_movement_complete(LLMessageSystem* msg, void**)
 
 	// CA: Bring this in and adapt for Kokua
 	// <FS:Ansariel> Bring back simulator version changed messages after TP
-	if (!gLastVersionChannel.empty() && gSavedSettings.getBOOL("KokuaPerformanceRegionVersionChangeNotice"))
+	static LLCachedControl<bool> region_version_change_notice(gSavedSettings, "KokuaPerformanceRegionVersionChangeNotice");
+
+	if (!gLastVersionChannel.empty() && region_version_change_notice)
 	{
 		LLStringUtil::format_map_t args;
 		args["OLDVERSION"] = gLastVersionChannel;
@@ -4543,9 +4555,9 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 	// need to do comparisons
 	ca_copy_performance_status_to_old();
 	ca_alarm_raised = FALSE;
-	ca_notify_on_restore = gSavedSettings.getBOOL("KokuaPerformanceNotifyRestore");
-	ca_use_notifications = gSavedSettings.getBOOL("KokuaPerformanceUseNotifications");
-
+	static LLCachedControl<bool> ca_notify_on_restore(gSavedSettings, "KokuaPerformanceNotifyRestore");
+	static LLCachedControl<bool> ca_use_notifications(gSavedSettings, "KokuaPerformanceUseNotifications");
+	
 	// CA: Since some of the possible reports need to reference more than one statistic we first
 	// build a full set of statistics and then get into doing the reporting. Not all statistics defined
 	// are sent, but all statistics in use are sent each time, so going through this for/next loop captures
@@ -4587,7 +4599,12 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 	if (ca_previous_stats_valid)
 	{
 		// now the various performance alarm groups
-		if (gSavedSettings.getBOOL("KokuaPerformanceScriptEnable"))
+		static LLCachedControl<bool> kokua_performance_script_enable(gSavedSettings, "KokuaPerformanceScriptEnable");				
+		static LLCachedControl<bool> kokua_performance_agent_enable(gSavedSettings, "KokuaPerformanceAgentEnable");				
+		static LLCachedControl<bool> kokua_performance_timing_enable(gSavedSettings, "KokuaPerformanceTimingEnable");				
+		static LLCachedControl<bool> kokua_performance_basics_enable(gSavedSettings, "KokuaPerformanceBasicsEnable");		
+
+		if (kokua_performance_script_enable)
 		{
 			ca_performance_test_threshold("Script", "ActiveObjectsExceeds", LL_SIM_STAT_NUMTASKSACTIVE, "%.0f", "%.0f", TRUE);
 			ca_performance_test_threshold("Script", "ObjectsExceeds", LL_SIM_STAT_NUMTASKS, "%.0f", "%.0f", TRUE);
@@ -4597,7 +4614,7 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 			ca_performance_test_delta("Script", "Change", LL_SIM_STAT_NUMSCRIPTSACTIVE, "%.0f", "%.0f", "%+.0f");
 		}
 
-		if (gSavedSettings.getBOOL("KokuaPerformanceAgentEnable"))
+		if (kokua_performance_agent_enable)
 		{
 			ca_performance_test_threshold("Agent", "RegionExceeds", LL_SIM_STAT_NUMAGENTMAIN, "%.0f", "%.0f", TRUE);
 			ca_performance_test_threshold("Agent", "NearbyExceeds", LL_SIM_STAT_NUMAGENTCHILD, "%.0f", "%.0f", TRUE);
@@ -4605,7 +4622,7 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 			ca_performance_test_delta("Agent", "NearbyChange", LL_SIM_STAT_NUMAGENTCHILD, "%.0f", "%.0f", "%+.0f");
 		}
 
-		if (gSavedSettings.getBOOL("KokuaPerformanceTimingEnable"))
+		if (kokua_performance_timing_enable)
 		{
 			ca_performance_test_threshold("Timing", "FrameExceeds", LL_SIM_STAT_FRAMEMS, "%.3f", "%.0f", TRUE);
 			ca_performance_test_threshold("Timing", "NetExceeds", LL_SIM_STAT_NETMS, "%.3f", "%.0f", TRUE);
@@ -4617,30 +4634,37 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 			ca_performance_test_threshold("Timing", "SpareUnder", LL_SIM_STAT_SIMSPARETIME, "%.3f", "%.0f", FALSE);
 		}
 
-		if (gSavedSettings.getBOOL("KokuaPerformanceBasicsEnable"))
+		if (kokua_performance_basics_enable)
 		{
 			ca_performance_test_threshold("Basics", "FPSBelow", LL_SIM_STAT_FPS, "%.1f", "%.0f", FALSE);
 			ca_performance_test_threshold("Basics", "TDBelow", LL_SIM_STAT_TIME_DILATION, "%.2f", "%.1f", FALSE);
 		}
+		
+		static LLCachedControl<bool> kokua_performance_region_repeat(gSavedSettings, "KokuaPerformanceRegionRepeat");				
+		static LLCachedControl<bool> kokua_performance_region_enable(gSavedSettings, "KokuaPerformanceRegionEnable");			
 
-		if ((ca_region_changed || (ca_alarm_raised && gSavedSettings.getBOOL("KokuaPerformanceRegionRepeat"))) && gSavedSettings.getBOOL("KokuaPerformanceRegionEnable"))
+		if ((ca_region_changed || (ca_alarm_raised && kokua_performance_region_repeat)) && kokua_performance_region_enable)
 		{
 			// unlike the performance notifications where every one is a separate message, here we build up a single
 			// message to reduce the spam effect
 
 			std::string msg;
 			LLStringUtil::format_map_t nargs;
+			static LLCachedControl<bool> kokua_performance_region_channel(gSavedSettings, "KokuaPerformanceRegionChannel");				
+			static LLCachedControl<bool> kokua_performance_region_script(gSavedSettings, "KokuaPerformanceRegionScript");				
+			static LLCachedControl<bool> kokua_performance_region_timing(gSavedSettings, "KokuaPerformanceRegionTiming");				
+			static LLCachedControl<bool> kokua_performance_region_basics(gSavedSettings, "KokuaPerformanceRegionBasics");							
 
 			if (ca_region_changed) msg = LLTrans::getString("CA_Region_Prefix");
 			else msg = LLTrans::getString("CA_Region_RepeatPrefix");
 
-			if (gSavedSettings.getBOOL("KokuaPerformanceRegionChannel"))
+			if (kokua_performance_region_channel)
 			{
 				LLStringUtil::format_map_t args;
 				args["CA_REGION_CHANNEL"] = ca_region_channel;
 				msg += LLTrans::getString("CA_Region_Channel", args);
 			}
-			if (gSavedSettings.getBOOL("KokuaPerformanceRegionScript"))
+			if (kokua_performance_region_script)
 			{
 				LLStringUtil::format_map_t args;
 				args["CA_REGION_SCRIPTS_OBJECTS"] = llformat("%.0f", ca_performance_status_now[LL_SIM_STAT_NUMTASKSACTIVE]);
@@ -4651,7 +4675,7 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 				args["CA_REGION_SCRIPTS_AGENTS"] = llformat("%.0f", ca_performance_status_now[LL_SIM_STAT_NUMAGENTMAIN]);
 				msg += LLTrans::getString("CA_Region_Script", args);
 			}
-			if (gSavedSettings.getBOOL("KokuaPerformanceRegionTiming"))
+			if (kokua_performance_region_timing)
 			{
 				LLStringUtil::format_map_t args;
 				args["CA_REGION_TIMING_FRAME"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_FRAMEMS]);
@@ -4660,7 +4684,7 @@ void process_sim_stats(LLMessageSystem *msg, void **user_data)
 				args["CA_REGION_TIMING_SPARE"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_SIMSPARETIME]);
 				msg += LLTrans::getString("CA_Region_Timing", args);
 			}
-			if (gSavedSettings.getBOOL("KokuaPerformanceRegionBasics"))
+			if (kokua_performance_region_basics)
 			{
 				LLStringUtil::format_map_t args;
 				args["CA_REGION_BASICS_FPS"] = llformat("%.1f", ca_performance_status_now[LL_SIM_STAT_FPS]);

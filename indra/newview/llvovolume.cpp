@@ -113,6 +113,14 @@ static LLTrace::BlockTimerStatHandle FTM_VOLUME_TEXTURES("Volume Textures");
 
 extern BOOL gGLDebugLoggingEnabled;
 
+// NaCl - Graphics crasher protection
+static bool enableVolumeSAPProtection()
+{
+	static LLCachedControl<bool> protect(gSavedSettings, "RenderVolumeSAProtection");
+	return protect;
+}
+// NaCl End
+
 // Implementation class of LLMediaDataClientObject.  See llmediadataclient.h
 class LLMediaDataClientObjectImpl : public LLMediaDataClientObject
 {
@@ -216,7 +224,10 @@ private:
 
 LLVOVolume::LLVOVolume(const LLUUID &id, const LLPCode pcode, LLViewerRegion *regionp)
 	: LLViewerObject(id, pcode, regionp),
-	  mVolumeImpl(NULL)
+	// NaCl - Graphics crasher protection
+	  mVolumeImpl(NULL),
+	  mVolumeSurfaceArea(-1.f)
+	// NaCl End
 {
 	mTexAnimMode = 0;
 	mRelativeXform.setIdentity();
@@ -1035,6 +1046,9 @@ BOOL LLVOVolume::setVolume(const LLVolumeParams &params_in, const S32 detail, bo
 		}
 	
 		updateSculptTexture();
+		// NaCl - Graphics crasher protection
+		getVolume()->calcSurfaceArea();
+		// NaCl End
 
 		if (isSculpted())
 		{
@@ -1461,6 +1475,15 @@ BOOL LLVOVolume::calcLOD()
 	return FALSE;
 }
 
+//<FS:Beq> FIRE-21445
+void LLVOVolume::forceLOD(S32 lod)
+{
+	mLOD = lod;
+	gPipeline.markRebuild(mDrawable, LLDrawable::REBUILD_VOLUME, FALSE);
+	mLODChanged = true;
+}
+//</FS:Beq>
+
 BOOL LLVOVolume::updateLOD()
 {
 	if (mDrawable.isNull())
@@ -1481,7 +1504,11 @@ BOOL LLVOVolume::updateLOD()
 
 	if (lod_changed)
 	{
-        if (debugLoggingEnabled("AnimatedObjectsLinkset"))
+		//<FS:Beq> avoid unfortunate sleep during trylock by static check
+		//if(debugLoggingEnabled("AnimatedObjectsLinkset"))
+		static auto debug_logging_on = debugLoggingEnabled("AnimatedObjectsLinkset");
+        if (debug_logging_on)
+		//</FS:Beq>
         {
             if (isAnimatedObject() && isRiggedMesh())
             {
@@ -1540,6 +1567,11 @@ void LLVOVolume::updateFaceFlags()
 	// There's no guarantee that getVolume()->getNumFaces() == mDrawable->getNumFaces()
 	for (S32 i = 0; i < getVolume()->getNumFaces() && i < mDrawable->getNumFaces(); i++)
 	{
+		// <FS:ND> There's no guarantee that getVolume()->getNumFaces() == mDrawable->getNumFaces()
+		if( mDrawable->getNumFaces() <= i || getNumTEs() <= i )
+			return;
+		// </FS:ND>
+
 		LLFace *face = mDrawable->getFace(i);
 		if (face)
 		{
@@ -1666,6 +1698,11 @@ BOOL LLVOVolume::genBBoxes(BOOL force_global)
 		 i < getVolume()->getNumVolumeFaces() && i < mDrawable->getNumFaces() && i < getNumTEs();
 		 i++)
 	{
+		// <FS:ND> There's no guarantee that getVolume()->getNumFaces() == mDrawable->getNumFaces()
+		if( mDrawable->getNumFaces() <= i )
+			break;
+		// </FS:ND>
+
 		LLFace *face = mDrawable->getFace(i);
 		if (!face)
 		{
@@ -1930,6 +1967,12 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 			LL_RECORD_BLOCK_TIME(FTM_GEN_FLEX);
 			res = mVolumeImpl->doUpdateGeometry(drawable);
 		}
+		// NaCl - Graphics crasher protection
+		if (enableVolumeSAPProtection())
+		{
+			mVolumeSurfaceArea = getVolume()->getSurfaceArea();
+		}
+		// NaCl End
 		updateFaceFlags();
 		return res;
 	}
@@ -1993,6 +2036,13 @@ BOOL LLVOVolume::updateGeometry(LLDrawable *drawable)
 		LL_RECORD_BLOCK_TIME(FTM_GEN_TRIANGLES);
 		genBBoxes(FALSE);
 	}
+
+	// NaCl - Graphics crasher protection
+	if (enableVolumeSAPProtection())
+	{
+		mVolumeSurfaceArea = getVolume()->getSurfaceArea();
+	}
+	// NaCl End
 
 	// Update face flags
 	updateFaceFlags();
@@ -4151,7 +4201,11 @@ bool LLVOVolume::getCostData(LLMeshCostData& costs) const
     {
 		LLVolume* volume = getVolume();
 		S32 counts[4];
-		LLVolume::getLoDTriangleCounts(volume->getParams(), counts);
+
+		// <FS:ND> try to cache calcuated triangles instead of calculating them over and over again
+		//		LLVolume::getLoDTriangleCounts(volume->getParams(), counts);
+		LLVolume::getLoDTriangleCounts(volume->getParams(), counts, volume);
+		// </FS:ND>
 
 		LLSD header;
 		header["lowest_lod"]["size"] = counts[0] * 10;
@@ -4181,8 +4235,42 @@ U32 LLVOVolume::getTriangleCount(S32* vcount) const
 
 	return count;
 }
-
+// <FS:Beq> Generalise TriangleCount
+//U32 LLVOVolume::getHighLODTriangleCount()
+//{
+//	U32 ret = 0;
+//
+//	LLVolume* volume = getVolume();
+//
+//	if (!isSculpted())
+//	{
+//		LLVolume* ref = LLPrimitive::getVolumeManager()->refVolume(volume->getParams(), 3);
+//		ret = ref->getNumTriangles();
+//		LLPrimitive::getVolumeManager()->unrefVolume(ref);
+//	}
+//	else if (isMesh())
+//	{
+//		LLVolume* ref = LLPrimitive::getVolumeManager()->refVolume(volume->getParams(), 3);
+//		if (!ref->isMeshAssetLoaded() || ref->getNumVolumeFaces() == 0)
+//		{
+//			gMeshRepo.loadMesh(this, volume->getParams(), LLModel::LOD_HIGH);
+//		}
+//		ret = ref->getNumTriangles();
+//		LLPrimitive::getVolumeManager()->unrefVolume(ref);
+//	}
+//	else
+//	{ //default sculpts have a constant number of triangles
+//		ret = 31*2*31;  //31 rows of 31 columns of quads for a 32x32 vertex patch
+//	}
+//
+//	return ret;
+//}
 U32 LLVOVolume::getHighLODTriangleCount()
+{
+	return (getLODTriangleCount(LLModel::LOD_HIGH));
+}
+
+U32 LLVOVolume::getLODTriangleCount(S32 lod)
 {
 	U32 ret = 0;
 
@@ -4190,27 +4278,29 @@ U32 LLVOVolume::getHighLODTriangleCount()
 
 	if (!isSculpted())
 	{
-		LLVolume* ref = LLPrimitive::getVolumeManager()->refVolume(volume->getParams(), 3);
+		LLVolume* ref = LLPrimitive::getVolumeManager()->refVolume(volume->getParams(), lod);
 		ret = ref->getNumTriangles();
 		LLPrimitive::getVolumeManager()->unrefVolume(ref);
 	}
 	else if (isMesh())
 	{
-		LLVolume* ref = LLPrimitive::getVolumeManager()->refVolume(volume->getParams(), 3);
+		LLVolume* ref = LLPrimitive::getVolumeManager()->refVolume(volume->getParams(), lod);
 		if (!ref->isMeshAssetLoaded() || ref->getNumVolumeFaces() == 0)
 		{
-			gMeshRepo.loadMesh(this, volume->getParams(), LLModel::LOD_HIGH);
+			gMeshRepo.loadMesh(this, volume->getParams(), lod);
 		}
 		ret = ref->getNumTriangles();
 		LLPrimitive::getVolumeManager()->unrefVolume(ref);
 	}
 	else
 	{ //default sculpts have a constant number of triangles
-		ret = 31*2*31;  //31 rows of 31 columns of quads for a 32x32 vertex patch
+		ret = (31 * 2 * 31)>>3*(3-lod);  //31 rows of 31 columns of quads for a 32x32 vertex patch (Beq: left shift by 2 for each lower LOD)
 	}
 
 	return ret;
 }
+//</FS:Beq>
+
 
 //static
 void LLVOVolume::preUpdateGeom()
@@ -4392,8 +4482,12 @@ const LLMatrix4& LLVOVolume::getWorldMatrix(LLXformMatrix* xform) const
 
 void LLVOVolume::markForUpdate(BOOL priority)
 { 
-    if (debugLoggingEnabled("AnimatedObjectsLinkset"))
-    {
+	//<FS:Beq> avoid unfortunate sleep during trylock by static check
+	//if(debugLoggingEnabled("AnimatedObjectsLinkset"))
+	static auto debug_logging_on = debugLoggingEnabled("AnimatedObjectsLinkset");
+	if (debug_logging_on)
+	//</FS:Beq>
+	{
         if (isAnimatedObject() && isRiggedMesh())
         {
             std::string vobj_name = llformat("Vol%p", this);
@@ -4760,7 +4854,10 @@ void LLRiggedVolume::update(const LLMeshSkinInfo* skin, LLVOAvatar* avatar, cons
 
 	LLMatrix4a mat[kMaxJoints];
 	U32 maxJoints = LLSkinningUtil::getMeshJointCount(skin);
-    LLSkinningUtil::initSkinningMatrixPalette((LLMatrix4*)mat, maxJoints, skin, avatar);
+	//<FS:Beq> Skinning Matrix caching
+	//LLSkinningUtil::initSkinningMatrixPalette((LLMatrix4)mat, maxJoints, skin, avatar);
+	LLSkinningUtil::initSkinningMatrixPalette(mat, maxJoints, skin, avatar);
+	//</FS:Beq>
 
     S32 rigged_vert_count = 0;
     S32 rigged_face_count = 0;
@@ -4791,8 +4888,12 @@ void LLRiggedVolume::update(const LLMeshSkinInfo* skin, LLVOAvatar* avatar, cons
 				for (U32 j = 0; j < dst_face.mNumVertices; ++j)
 				{
 					LLMatrix4a final_mat;
-                    LLSkinningUtil::getPerVertexSkinMatrix(weight[j].getF32ptr(), mat, false, final_mat, max_joints);
-				
+					
+                    // <FS:ND> Use the SSE2 version
+                    // LLSkinningUtil::getPerVertexSkinMatrix(weight[j].getF32ptr(), mat, false, final_mat, max_joints);
+                    FSSkinningUtil::getPerVertexSkinMatrixSSE(weight[j], mat, false, final_mat, max_joints);
+                    // </FS:ND>
+
 					LLVector4a& v = vol_face.mPositions[j];
 					LLVector4a t;
 					LLVector4a dst;
@@ -4827,6 +4928,10 @@ void LLRiggedVolume::update(const LLMeshSkinInfo* skin, LLVOAvatar* avatar, cons
 				dst_face.mCenter->mul(0.5f);
 
 			}
+
+		// <FS:ND> Crashfix if mExtents is 0
+		if( dst_face.mExtents )
+		// </FS:ND>
 
 			{
 				LL_RECORD_BLOCK_TIME(FTM_RIGGED_OCTREE);
@@ -5395,8 +5500,18 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 
 	U32 useage = group->getSpatialPartition()->mBufferUsage;
 
-	U32 max_vertices = (gSavedSettings.getS32("RenderMaxVBOSize")*1024)/LLVertexBuffer::calcVertexSize(group->getSpatialPartition()->mVertexDataMask);
-	U32 max_total = (gSavedSettings.getS32("RenderMaxNodeSize")*1024)/LLVertexBuffer::calcVertexSize(group->getSpatialPartition()->mVertexDataMask);
+	// <FS:ND> replace frequent calls to saved settings with LLCachedControl
+	//U32 max_vertices = (gSavedSettings.getS32("RenderMaxVBOSize")*1024)/LLVertexBuffer::calcVertexSize(group->getSpatialPartition()->mVertexDataMask);
+	//U32 max_total = (gSavedSettings.getS32("RenderMaxNodeSize")*1024)/LLVertexBuffer::calcVertexSize(group->getSpatialPartition()->mVertexDataMask);
+
+	static LLCachedControl< S32 > RenderMaxVBOSize( gSavedSettings, "RenderMaxVBOSize");
+	static LLCachedControl< S32 > RenderMaxNodeSize( gSavedSettings, "RenderMaxNodeSize");
+
+	U32 max_vertices = (RenderMaxVBOSize*1024)/LLVertexBuffer::calcVertexSize(group->getSpatialPartition()->mVertexDataMask);
+	U32 max_total = (RenderMaxNodeSize*1024)/LLVertexBuffer::calcVertexSize(group->getSpatialPartition()->mVertexDataMask);
+
+	// </FS:ND>
+
 	max_vertices = llmin(max_vertices, (U32) 65535);
 
 	U32 cur_total = 0;
@@ -5436,7 +5551,10 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 				continue;
 			}
 
-            std::string vobj_name = llformat("Vol%p", vobj);
+//<FS:Beq> Stop doing stupid stuff we don;t need to.
+// Moving this inside a debug enabled check
+//			std::string vobj_name = llformat("Vol%p", vobj);
+//</FS:Beq>
 
 			if (vobj->isMesh() &&
 				((vobj->getVolume() && !vobj->getVolume()->isMeshAssetLoaded()) || !gMeshRepo.meshRezEnabled()))
@@ -5450,26 +5568,57 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 				const LLVector3& scale = vobj->getScale();
 				group->mSurfaceArea += volume->getSurfaceArea() * llmax(llmax(scale.mV[0], scale.mV[1]), scale.mV[2]);
 			}
-
-            bool is_mesh = vobj->isMesh();
-            F32 est_tris = vobj->getEstTrianglesMax();
+//<FS:Beq> Stop doing stupid stuff we don;t need on the critical path
+            //bool is_mesh = vobj->isMesh();
+            //F32 est_tris = vobj->getEstTrianglesMax();
 
             vobj->updateControlAvatar();
-            
-            LL_DEBUGS("AnimatedObjectsLinkset") << vobj_name << " rebuilding, isAttachment: " << (U32) vobj->isAttachment()
-                                                << " is_mesh " << is_mesh
-                                                << " est_tris " << est_tris
-                                                << " is_animated " << vobj->isAnimatedObject()
-                                                << " can_animate " << vobj->canBeAnimatedObject() 
-                                                << " cav " << vobj->getControlAvatar() 
-                                                << " lod " << vobj->getLOD()
-                                                << " drawable rigged " << (drawablep->isState(LLDrawable::RIGGED))
-                                                << " drawable state " << drawablep->getState()
-                                                << " playing " << (U32) (vobj->getControlAvatar() ? vobj->getControlAvatar()->mPlaying : false)
-                                                << " frame " << LLFrameTimer::getFrameCount()
-                                                << LL_ENDL;
+			// Also avoid unfortunate sleep during trylock by static check
+			//if(debugLoggingEnabled("AnimatedObjectsLinkset"))
+			static auto debug_logging_on = debugLoggingEnabled("AnimatedObjectsLinkset");
+			if (debug_logging_on)
+			//</FS:Beq>
+			{
+				std::string vobj_name = llformat("Vol%p", vobj);
+				bool is_mesh = vobj->isMesh();
+				F32 est_tris = vobj->getEstTrianglesMax();
 
-			llassert_always(vobj);
+	            LL_DEBUGS("AnimatedObjectsLinkset") << vobj_name << " rebuilding, isAttachment: " << (U32) vobj->isAttachment()
+	                                                << " is_mesh " << is_mesh
+	                                                << " est_tris " << est_tris
+	                                                << " is_animated " << vobj->isAnimatedObject()
+	                                                << " can_animate " << vobj->canBeAnimatedObject() 
+	                                                << " cav " << vobj->getControlAvatar() 
+	                                                << " lod " << vobj->getLOD()
+	                                                << " drawable rigged " << (drawablep->isState(LLDrawable::RIGGED))
+	                                                << " drawable state " << drawablep->getState()
+	                                                << " playing " << (U32) (vobj->getControlAvatar() ? vobj->getControlAvatar()->mPlaying : false)
+	                                                << " frame " << LLFrameTimer::getFrameCount()
+	                                                << LL_ENDL;
+			}
+			//<FS:Beq> Pointless. We already checked this and have used it.
+			//llassert_always(vobj);
+
+
+			// <FS:AO> Z's protection auto-derender code
+			if (enableVolumeSAPProtection())
+			{
+				static LLCachedControl<F32> volume_sa_thresh(gSavedSettings, "RenderVolumeSAThreshold");
+				static LLCachedControl<F32> sculpt_sa_thresh(gSavedSettings, "RenderSculptSAThreshold");
+				static LLCachedControl<F32> volume_sa_max_frame(gSavedSettings, "RenderVolumeSAFrameMax");
+				F32 max_for_this_vol = (vobj->isSculpted()) ? sculpt_sa_thresh : volume_sa_thresh;
+
+				if (vobj->mVolumeSurfaceArea > max_for_this_vol)
+				{
+					LLPipeline::sVolumeSAFrame += vobj->mVolumeSurfaceArea;
+					if (LLPipeline::sVolumeSAFrame > volume_sa_max_frame)
+					{
+						continue;
+					}
+				}
+			}
+			// </FS:AO>
+
 			vobj->updateTextureVirtualSize(true);
 			vobj->preRebuild();
 
@@ -5521,7 +5670,10 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 					//get drawpool of avatar with rigged face
 					LLDrawPoolAvatar* pool = get_avatar_drawpool(vobj);				
 					
-					if (pool)
+					// <FS:ND> need an texture entry, or we crash
+					// if (pool)
+					if (pool && facep->getTextureEntry())
+					// </FS:ND>
 					{
 						const LLTextureEntry* te = facep->getTextureEntry();
 
@@ -5687,7 +5839,10 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 					const LLTextureEntry* te = facep->getTextureEntry();
 					LLViewerTexture* tex = facep->getTexture();
 
-					if (te->getGlow() >= 1.f/255.f)
+					// <FS:ND> More crash avoding ...
+					// if (te->getGlow() >= 1.f/255.f)
+					if (te && te->getGlow() >= 1.f/255.f)
+					// </FS:ND>
 					{
 						emissive = true;
 					}
@@ -5748,7 +5903,10 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 						}
 						else
 						{
-							if (te->getColor().mV[3] > 0.f)
+							// <FS:ND> Even more crash avoidance ...
+							// if (te->getColor().mV[3] > 0.f)
+							if (te && te->getColor().mV[3] > 0.f)
+							// </FS:ND>
 							{ //only treat as alpha in the pipeline if < 100% transparent
 								drawablep->setState(LLDrawable::HAS_ALPHA);
 							}
@@ -5768,7 +5926,10 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 						if (gPipeline.canUseWindLightShadersOnObjects()
 							&& LLPipeline::sRenderBump)
 						{
-							if (LLPipeline::sRenderDeferred && te->getMaterialParams().notNull()  && !te->getMaterialID().isNull())
+							// <FS:ND> We just skip all of this is there is no te entry. This might get some funny results (which would be a face without te anyway).
+							// if (LLPipeline::sRenderDeferred && te->getMaterialParams().notNull()  && !te->getMaterialID().isNull())
+							if (LLPipeline::sRenderDeferred && te && te->getMaterialParams().notNull()  && !te->getMaterialID().isNull())
+							// </FS:ND>
 							{
 								LLMaterial* mat = te->getMaterialParams().get();
 								if (mat->getNormalID().notNull())
@@ -5977,8 +6138,12 @@ void LLVolumeGeometryManager::rebuildMesh(LLSpatialGroup* group)
 			if (drawablep && !drawablep->isDead() && drawablep->isState(LLDrawable::REBUILD_ALL) && !drawablep->isState(LLDrawable::RIGGED) )
 			{
 				LLVOVolume* vobj = drawablep->getVOVolume();
-                if (debugLoggingEnabled("AnimatedObjectsLinkset"))
-                {
+				//<FS:Beq> avoid unfortunate sleep during trylock by static check
+				//if(debugLoggingEnabled("AnimatedObjectsLinkset"))
+				static auto debug_logging_on = debugLoggingEnabled("AnimatedObjectsLinkset");
+				if (debug_logging_on)
+				//</FS:Beq>
+				{
                     if (vobj->isAnimatedObject() && vobj->isRiggedMesh())
                     {
                         std::string vobj_name = llformat("Vol%p", vobj);
@@ -6148,8 +6313,15 @@ U32 LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFace
 	}
 #endif
 	
-	//calculate maximum number of vertices to store in a single buffer
-	U32 max_vertices = (gSavedSettings.getS32("RenderMaxVBOSize")*1024)/LLVertexBuffer::calcVertexSize(group->getSpatialPartition()->mVertexDataMask);
+
+	// <FS:ND> replace frequent calls to saved settings with LLCachedControl
+	//U32 max_vertices = (gSavedSettings.getS32("RenderMaxVBOSize")*1024)/LLVertexBuffer::calcVertexSize(group->getSpatialPartition()->mVertexDataMask);
+
+	static LLCachedControl< S32 > RenderMaxVBOSize( gSavedSettings, "RenderMaxVBOSize");
+	U32 max_vertices = (RenderMaxVBOSize*1024)/LLVertexBuffer::calcVertexSize(group->getSpatialPartition()->mVertexDataMask);
+
+	// </FS:ND>
+
 	max_vertices = llmin(max_vertices, (U32) 65535);
 
 	{
@@ -6192,7 +6364,13 @@ U32 LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFace
 		texture_index_channels = gDeferredAlphaProgram.mFeatures.mIndexedTextureChannels;
 	}
 
-	texture_index_channels = llmin(texture_index_channels, (S32) gSavedSettings.getU32("RenderMaxTextureIndex"));
+	// <FS:ND> replace frequent calls to saved settings with LLCachedControl
+	// texture_index_channels = llmin(texture_index_channels, (S32) gSavedSettings.getU32("RenderMaxTextureIndex"));
+
+	static LLCachedControl< U32 > RenderMaxTextureIndex( gSavedSettings, "RenderMaxTextureIndex");
+	texture_index_channels = llmin(texture_index_channels, (S32) RenderMaxTextureIndex);
+
+	// </FS:ND>
 	
 	//NEVER use more than 16 texture index channels (workaround for prevalent driver bug)
 	texture_index_channels = llmin(texture_index_channels, 16);

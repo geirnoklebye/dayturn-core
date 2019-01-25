@@ -1644,6 +1644,17 @@
             <string>F32</string>
             <key>Value</key>
             <real>0.85</real>
+  </map>
+  <key>RenderVolumeSAProtection</key>
+    <map>
+      <key>Comment</key>
+      <string>Enables automatic derendering of prims with high surface area (can protect against some video card crashers)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
     </map>
     <key>PieMenuFade</key>
     <map>
@@ -6310,6 +6321,17 @@
     <map>
       <key>Comment</key>
       <string />
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>FSDisableRiggedMeshMatrixCaching</key>
+    <map>
+      <key>Comment</key>
+      <string>Disable the caching of Rigged mesh matrix pallettes.Non-persistant.</string>
       <key>Persist</key>
       <integer>0</integer>
       <key>Type</key>

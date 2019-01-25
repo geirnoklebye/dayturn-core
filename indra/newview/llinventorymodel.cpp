@@ -61,6 +61,11 @@
 #include "bufferarray.h"
 #include "bufferstream.h"
 #include "llcorehttputil.h"
+// <FS:TT> Patch: ReplaceWornItemsOnly
+#include "llviewerobjectlist.h"
+#include "llviewerobject.h"
+#include "llgesturemgr.h"
+// </FS:TT>
 
 //#define DIFF_INVENTORY_FILES
 #ifdef DIFF_INVENTORY_FILES
@@ -162,9 +167,12 @@ LLInventoryModel::LLInventoryModel()
 	mHttpHeaders(),
 	mHttpPolicyClass(LLCore::HttpRequest::DEFAULT_POLICY_ID),
 	mHttpPriorityFG(0),
-	mHttpPriorityBG(0),
+//	mHttpPriorityBG(0),
+	mHttpPriorityBG(0)
+#ifdef LL_DEBUG
 	mCategoryLock(),
 	mItemLock()
+#endif
 {}
 
 
@@ -400,6 +408,8 @@ void LLInventoryModel::lockDirectDescendentArrays(const LLUUID& cat_id,
 												  item_array_t*& items)
 {
 	getDirectDescendentsOf(cat_id, categories, items);
+
+#ifdef LL_DEBUG
 	if (categories)
 	{
 		mCategoryLock[cat_id] = true;
@@ -408,12 +418,15 @@ void LLInventoryModel::lockDirectDescendentArrays(const LLUUID& cat_id,
 	{
 		mItemLock[cat_id] = true;
 	}
+#endif
 }
 
 void LLInventoryModel::unlockDirectDescendentArrays(const LLUUID& cat_id)
 {
+#ifdef LL_DEBUG
 	mCategoryLock[cat_id] = false;
 	mItemLock[cat_id] = false;
+#endif
 }
 
 void LLInventoryModel::consolidateForType(const LLUUID& main_id, LLFolderType::EType type)
@@ -574,9 +587,9 @@ LLUUID LLInventoryModel::findCategoryByName(std::string name)
 			S32 count = cats->size();
 			for(S32 i = 0; i < count; ++i)
 			{
-				if(cats->operator[](i)->getName() == name)
+				if(cats->at(i)->getName() == name)
 				{
-					return cats->operator[](i)->getUUID();
+					return cats->at(i)->getUUID();
 				}
 			}
 		}
@@ -1144,20 +1157,25 @@ U32 LLInventoryModel::updateItem(const LLViewerInventoryItem* item, U32 mask)
 LLInventoryModel::cat_array_t* LLInventoryModel::getUnlockedCatArray(const LLUUID& id)
 {
 	cat_array_t* cat_array = get_ptr_in_map(mParentChildCategoryTree, id);
+#ifdef LL_DEBUG
 	if (cat_array)
 	{
 		llassert_always(mCategoryLock[id] == false);
 	}
+#endif
+
 	return cat_array;
 }
 
 LLInventoryModel::item_array_t* LLInventoryModel::getUnlockedItemArray(const LLUUID& id)
 {
 	item_array_t* item_array = get_ptr_in_map(mParentChildItemTree, id);
+#ifdef LL_DEBUG
 	if (item_array)
 	{
 		llassert_always(mItemLock[id] == false);
 	}
+#endif
 	return item_array;
 }
 
@@ -1228,8 +1246,10 @@ void LLInventoryModel::updateCategory(const LLViewerInventoryCategory* cat, U32 
 		}
 
 		// make space in the tree for this category's children.
+#ifdef LL_DEBUG
 		llassert_always(mCategoryLock[new_cat->getUUID()] == false);
 		llassert_always(mItemLock[new_cat->getUUID()] == false);
+#endif
 		cat_array_t* catsp = new cat_array_t;
 		item_array_t* itemsp = new item_array_t;
 		mParentChildCategoryTree[new_cat->getUUID()] = catsp;
@@ -2419,13 +2439,17 @@ void LLInventoryModel::buildParentChildMap()
 		cats.push_back(cat);
 		if (mParentChildCategoryTree.count(cat->getUUID()) == 0)
 		{
+#ifdef LL_DEBUG
 			llassert_always(mCategoryLock[cat->getUUID()] == false);
+#endif
 			catsp = new cat_array_t;
 			mParentChildCategoryTree[cat->getUUID()] = catsp;
 		}
 		if (mParentChildItemTree.count(cat->getUUID()) == 0)
 		{
+#ifdef LL_DEBUG
 			llassert_always(mItemLock[cat->getUUID()] == false);
+#endif
 			itemsp = new item_array_t;
 			mParentChildItemTree[cat->getUUID()] = itemsp;
 		}
@@ -2649,10 +2673,12 @@ void LLInventoryModel::buildParentChildMap()
 		}
 	}
 
+#ifdef LL_DEBUG
 	if (!gInventory.validate())
 	{
 	 	LL_WARNS(LOG_INV) << "model failed validity check!" << LL_ENDL;
 	}
+#endif
 }
 
 // Would normally do this at construction but that's too early
@@ -3755,6 +3781,210 @@ void LLInventoryModel::updateItemsOrder(LLInventoryModel::item_array_t& items, c
 }
 
 // See also LLInventorySort where landmarks in the Favorites folder are sorted.
+
+// <FS:TT> ReplaceWornItemsOnly
+// Collect all wearables, objects and gestures in the subtree, then wear them, 
+// replacing only relevant layers and attachment points
+void LLInventoryModel::wearWearablesOnAvatar(const LLUUID& category_id)
+{
+	LLInventoryModel::cat_array_t cat_array;
+
+	mItemArray.clear();
+	LLFindWearables is_wearable;
+	gInventory.collectDescendentsIf(category_id,
+									cat_array,
+									mItemArray,
+									LLInventoryModel::EXCLUDE_TRASH,
+									is_wearable);
+
+	//LL_INFOS() << "ReplaceWornItemsOnly wearable_count" << wearable_count << LL_ENDL;
+	S32 aTypes[LLWearableType::WT_COUNT] = {0};
+
+	for (item_array_t::iterator it = mItemArray.begin(); it != mItemArray.end(); ++it)
+	{
+		LLViewerInventoryItem* item = *it;
+		S32 iType = (S32)item->getWearableType();
+
+		if (item->isWearableType() 
+			&& iType != LLWearableType::WT_INVALID 
+			&& iType != LLWearableType::WT_NONE 
+			&& !get_is_item_worn(item->getUUID())
+			)
+		{
+			aTypes[iType]++;
+			if (aTypes[iType] == 1) //first occurence of type, remove first
+			{
+				U32 count = gAgentWearables.getWearableCount((LLWearableType::EType)iType);
+				//LL_INFOS() << "Type: " << iType << " count " << count << LL_ENDL;
+
+				for (U32 j = 0; j < count; ++j) //remove all
+				{
+					//take the first one from the list, since the list is diminishing.
+					LLViewerWearable* wearable = gAgentWearables.getViewerWearable((LLWearableType::EType)iType,0);
+					//if the item is from our folder - don't remove it
+					if ( mItemArray.end() == std::find( mItemArray.begin(), mItemArray.end(), (LLViewerInventoryItem*)wearable ) )
+					{
+						LLAppearanceMgr::instance().removeItemFromAvatar(wearable->getItemID());
+					}
+					//LL_INFOS() << "Removing wearable name: " << wearable->getName() << LL_ENDL;
+				}
+
+				//now add the first item (replace just in case)
+				LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, true);
+				//LL_INFOS() << " Wearing item: " << item->getName() << " with replace=true" << LL_ENDL;
+			}
+			else // just add - unless it's body
+			{
+				if (iType != LLWearableType::WT_SHAPE &&
+					iType != LLWearableType::WT_SKIN &&
+					iType != LLWearableType::WT_HAIR &&
+					iType != LLWearableType::WT_EYES)
+				{
+					LLAppearanceMgr::instance().wearItemOnAvatar(item->getUUID(), true, false);
+				}
+			}
+		}
+	}
+}
+
+void LLInventoryModel::wearAttachmentsOnAvatar(const LLUUID& category_id)
+{
+	// Find all the wearables that are in the category's subtree.
+	LL_INFOS() << "ReplaceWornItemsOnly find all attachments" << LL_ENDL;
+
+	cat_array_t obj_cat_array;
+	mObjArray.clear();
+	mAttPoints.clear();
+
+	LLIsType is_object( LLAssetType::AT_OBJECT );
+	gInventory.collectDescendentsIf(category_id,
+									obj_cat_array,
+									mObjArray,
+									LLInventoryModel::EXCLUDE_TRASH,
+									is_object);
+
+	for (item_array_t::iterator it = mObjArray.begin(); it != mObjArray.end(); ++it)
+	{
+		LLViewerInventoryItem* obj_item = *it;
+
+		if (!get_is_item_worn(obj_item->getUUID()))
+		{
+			// first add all items without removing old ones
+			LLViewerInventoryItem* item_to_wear = gInventory.getItem(obj_item->getUUID());
+			rez_attachment(item_to_wear, NULL, false);
+		}
+	}
+}
+
+void LLInventoryModel::wearGesturesOnAvatar(const LLUUID& category_id)
+{
+	// Find all gestures in this folder
+	cat_array_t gest_cat_array;
+	item_array_t gest_item_array;
+	LLIsType is_gesture( LLAssetType::AT_GESTURE );
+	gInventory.collectDescendentsIf(category_id,
+									gest_cat_array,
+									gest_item_array,
+									LLInventoryModel::EXCLUDE_TRASH,
+									is_gesture);
+
+	for (item_array_t::iterator it = gest_item_array.begin(); it != gest_item_array.end(); ++it)
+	{
+		LLViewerInventoryItem* gest_item = *it;
+
+		if (!get_is_item_worn(gest_item->getUUID()))
+		{
+			LLGestureMgr::instance().activateGesture( gest_item->getLinkedUUID() );
+			gInventory.updateItem( gest_item );
+			gInventory.notifyObservers();
+		}
+	}
+}
+
+void LLInventoryModel::wearAttachmentsOnAvatarCheckRemove(LLViewerObject *object, const LLViewerJointAttachment *attachment)
+{
+	//check if the object is in the current list.
+	LLUUID objID = object->getAttachmentItemID();
+	bool isObjectInList = false;
+
+	for (item_array_t::iterator it = mObjArray.begin(); it != mObjArray.end(); ++it)
+	{
+		if (objID == (*it)->getUUID())
+		{
+			isObjectInList = true;
+			break;
+		}
+	}
+
+	//all attachment points
+	if (isObjectInList && attachment != NULL)
+	{
+		std::string attName = attachment->getName();
+		std::vector<std::string>::iterator itrFound = std::find( mAttPoints.begin(), mAttPoints.end(), attName );
+
+		// we have not encountered this attach point yet
+		if (mAttPoints.end() == itrFound)
+		{
+			mAttPoints.insert(mAttPoints.end(), attName);
+			S32 numCnt = attachment->getNumObjects();
+
+			//check if there are other things on same point already
+			if (numCnt > 1)
+			{
+				uuid_vec_t items_to_detach;
+
+				for (LLViewerJointAttachment::attachedobjs_vec_t::const_iterator iter = attachment->mAttachedObjects.begin();
+					 iter != attachment->mAttachedObjects.end();
+					 ++iter)
+				{
+					LLViewerObject* attached_object = (*iter);
+					LLUUID att_id = attached_object->getAttachmentItemID();
+
+					//if any of those things aren't in our list - remove them
+					bool isFound = false;
+					for (item_array_t::iterator it = mObjArray.begin(); it != mObjArray.end(); ++it)
+					{
+						LLViewerInventoryItem* fold_item = *it;
+						if (att_id == fold_item->getUUID())
+						{
+							isFound = true;
+							break;
+						}
+					}
+
+					//if (!isFound && att_id != FSLSLBridge::instance().getAttachedID())
+					if (!isFound) // remove FS bridge reference for Kokua
+					{
+						items_to_detach.push_back(att_id);
+					}
+				}
+
+				if (!items_to_detach.empty())
+				{
+					LLAppearanceMgr::instance().removeItemsFromAvatar(items_to_detach);
+				}
+			}
+		}
+	}
+}
+
+void LLInventoryModel::wearItemsOnAvatar(LLInventoryCategory* category)
+{
+	if (!category)
+	{
+		return;
+	}
+
+	LL_INFOS() << "ReplaceWornItemsOnly wear_inventory_category_on_avatar( " << category->getName() << " )" << LL_ENDL;
+
+	LLUUID category_id = category->getUUID();
+
+	wearAttachmentsOnAvatar(category_id);
+	wearWearablesOnAvatar(category_id);
+	wearGesturesOnAvatar(category_id);
+}
+// </FS:TT>
+
 class LLViewerInventoryItemSort
 {
 public:
@@ -3802,6 +4032,7 @@ void LLInventoryModel::dumpInventory() const
 	LL_INFOS() << "\n**********************\nEnd Inventory Dump" << LL_ENDL;
 }
 
+#ifdef LL_DEBUG
 // Do various integrity checks on model, logging issues found and
 // returning an overall good/bad flag.
 bool LLInventoryModel::validate() const
@@ -4100,6 +4331,7 @@ bool LLInventoryModel::validate() const
 
 	return valid;
 }
+#endif
 
 ///----------------------------------------------------------------------------
 /// Local function definitions

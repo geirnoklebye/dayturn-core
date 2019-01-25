@@ -111,6 +111,14 @@ LLJoint *LLCharacter::getJoint( const std::string &name )
 	return joint;
 }
 
+//<FS:ND> Query by JointKey rather than just a string, the key can be a U32 index for faster lookup
+// Default fallback is string.
+LLJoint *LLCharacter::getJoint( const JointKey &name )
+{
+	return getJoint( name.mName );
+}
+// </FS:ND>
+
 //-----------------------------------------------------------------------------
 // registerMotion()
 //-----------------------------------------------------------------------------
@@ -408,6 +416,12 @@ LLVisualParam*	LLCharacter::getVisualParam(const char *param_name)
 	std::string tname(param_name);
 	LLStringUtil::toLower(tname);
 	char *tableptr = sVisualParamNames.checkString(tname);
+
+	// <FS:ND> Protect against crashes later on
+	if( !tableptr )
+		return 0;
+	// </FS:ND>
+
 	visual_param_name_map_t::iterator name_iter = mVisualParamNameMap.find(tableptr);
 	if (name_iter != mVisualParamNameMap.end())
 	{
