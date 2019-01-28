@@ -330,7 +330,8 @@ public:
 
 	static BOOL sRRNoSetEnv;
 	static BOOL sRestrainedLoveDebug;
-	static BOOL sRestrainedLoveHeadMouselookRenderRigged;
+//CA Changed to using a cached control setting since this approach can go wrong at initial login if the control setting is TRUE
+//	static BOOL sRestrainedLoveHeadMouselookRenderRigged;
 	static BOOL sCanOoc; // when TRUE, the user can bypass a sendchat restriction by surrounding with (( and ))
 	static std::string sRecvimMessage; // message to replace an incoming IM, when under recvim
 	static std::string sSendimMessage; // message to replace an outgoing IM, when under sendim
