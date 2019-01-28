@@ -123,6 +123,21 @@
               tool_tip="Defeat @standtp (intended for situations where the remembered location is unsuitable - eg where the avatar sat and was moved prior to logoff)"
               width="270"/>
           <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="RestrainedLoveHeadMouselookRenderRigged"
+              enabled_control="RestrainedLove"
+              label="Render head-attached rigged mesh while in mouselook"
+              left="25"
+              name="RestrainedLoveHeadMouselookRenderRigged"
+              tool_tip="From RLV 2.9.25 rigged mesh attached to the head will not render in mouselook; enable this setting to restore original behaviour"
+              width="270"/>
+          <check_box
                 top_pad="5"
                 layout="topleft"
                 follows="left|top"
