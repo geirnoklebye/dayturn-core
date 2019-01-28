@@ -30,8 +30,8 @@
 
 #define RR_VIEWER_NAME "RestrainedLife"
 #define RR_VIEWER_NAME_NEW "RestrainedLove"
-#define RR_VERSION_NUM "2092501"
-#define RR_VERSION "2.09.25.01"
+#define RR_VERSION_NUM "2092502"
+#define RR_VERSION "2.09.25.02"
 #define RR_SLV_VERSION "6.0.1.522263"
 
 #define RR_PREFIX "@"
@@ -330,6 +330,7 @@ public:
 
 	static BOOL sRRNoSetEnv;
 	static BOOL sRestrainedLoveDebug;
+	static BOOL sRestrainedLoveHeadMouselookRenderRigged;
 	static BOOL sCanOoc; // when TRUE, the user can bypass a sendchat restriction by surrounding with (( and ))
 	static std::string sRecvimMessage; // message to replace an incoming IM, when under recvim
 	static std::string sSendimMessage; // message to replace an outgoing IM, when under sendim
