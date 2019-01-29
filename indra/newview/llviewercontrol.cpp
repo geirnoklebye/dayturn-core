@@ -145,12 +145,11 @@ static bool handleRestrainedLoveCamDistNbGradientsChanged(const LLSD& newvalue)
 	return true;
 }
 
-//CA Changed to using a cached control setting since this approach can go wrong at initial login if the control setting is TRUE
-//static bool handleRestrainedLoveHeadMouselookRenderRigged(const LLSD& newvalue)
-//{
-//	RRInterface::sRestrainedLoveHeadMouselookRenderRigged = newvalue.asBoolean();
-//	return true;
-//}
+static bool handleRestrainedLoveHeadMouselookRenderRigged(const LLSD& newvalue)
+{
+	RRInterface::sRestrainedLoveHeadMouselookRenderRigged = newvalue.asBoolean();
+	return true;
+}
 //mk
 
 static bool handleRenderAvatarMouselookChanged(const LLSD& newvalue)
@@ -688,8 +687,7 @@ void settings_setup_listeners()
 	gSavedPerAccountSettings.getControl("RestrainedLoveLastStandingLocation")->getSignal()->connect(boost::bind(&handleRestrainedLoveLastStandingLocationChanged, _2));
 	gSavedSettings.getControl("RenderDeferredShowInvisiprims")->getSignal()->connect(boost::bind(&handleRenderDeferredShowInvisiprimsChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveCamDistNbGradients")->getSignal()->connect(boost::bind(&handleRestrainedLoveCamDistNbGradientsChanged, _2));
-//CA Changed to using a cached control setting since this approach can go wrong at initial login if the control setting is TRUE
-//	gSavedSettings.getControl("RestrainedLoveHeadMouselookRenderRigged")->getSignal()->connect(boost::bind(&handleRestrainedLoveHeadMouselookRenderRigged, _2));
+	gSavedSettings.getControl("RestrainedLoveHeadMouselookRenderRigged")->getSignal()->connect(boost::bind(&handleRestrainedLoveHeadMouselookRenderRigged, _2));
 //mk
 	gSavedSettings.getControl("FirstPersonAvatarVisible")->getSignal()->connect(boost::bind(&handleRenderAvatarMouselookChanged, _2));
 	gSavedSettings.getControl("RenderFarClip")->getSignal()->connect(boost::bind(&handleRenderFarClipChanged, _2));

@@ -1876,9 +1876,6 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 			continue;
 		}
 
-//CA Changed to using a cached control setting since Marine's approach can go wrong at initial login if the control setting is TRUE
-static LLCachedControl<bool> RLVHeadMouselookRender(gSavedSettings, "RestrainedLoveHeadMouselookRenderRigged"); 
-
 //MK
 		// Our own rigged objects worn on our head attach points should not be rendered when we are in mouselook.
 		// Those objects are already marked as "don't render" but without these lines here, they would render anyway.
@@ -1886,8 +1883,7 @@ static LLCachedControl<bool> RLVHeadMouselookRender(gSavedSettings, "RestrainedL
 		if (in_mouselook)
 		{
 			LLSpatialBridge* bridge = drawable->isRoot() ? drawable->getSpatialBridge() : drawable->getParent()->getSpatialBridge();
-//			if (bridge && bridge->mDrawableType == 0 && !RRInterface::sRestrainedLoveHeadMouselookRenderRigged)
-			if (bridge && bridge->mDrawableType == 0 && !RLVHeadMouselookRender)
+			if (bridge && bridge->mDrawableType == 0 && !RRInterface::sRestrainedLoveHeadMouselookRenderRigged)
 			{
 				continue;
 			}
