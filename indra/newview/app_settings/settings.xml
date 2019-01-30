@@ -16794,6 +16794,17 @@
       <key>Value</key>
       <string>name</string>
     </map>
+  <key>WorldmapFilterDuplicateLandmarks</key>
+  <map>
+    <key>Comment</key>
+    <string>Filter duplicate Landmarks in the Landmark list on the world map.</string>
+    <key>Persist</key>
+    <integer>1</integer>
+    <key>Type</key>
+    <string>Boolean</string>
+    <key>Value</key>
+    <integer>1</integer>
+  </map>
     <key>SessionSettingsFile</key>
     <map>
       <key>Comment</key>
