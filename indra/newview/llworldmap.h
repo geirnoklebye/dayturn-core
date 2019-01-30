@@ -157,6 +157,7 @@ public:
 	const LLSimInfo::item_info_list_t& getLandForSaleAdult() const { return mLandForSaleAdult; }
 	const LLSimInfo::item_info_list_t& getAgentLocation() const { return mAgentLocations; }
 
+	const U64 		&getHandle() const 			{ return mHandle; }
 private:
 	U64 mHandle;				// This is a hash of the X and Y world coordinates of the SW corner of the sim
 	std::string mName;			// Region name

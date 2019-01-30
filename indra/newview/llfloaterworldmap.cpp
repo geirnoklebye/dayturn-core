@@ -608,7 +608,8 @@ void LLFloaterWorldMap::draw()
 	//clear_btn->setEnabled((BOOL)tracking_status);
 	show_destination_btn->setEnabled((BOOL)tracking_status || LLWorldMap::getInstance()->isTracking());
 	copy_slurl_btn->setEnabled((mSLURL.isValid()) );
-	go_home_btn->setEnabled((!rlv_handler_t::isEnabled()) || !(gRlvHandler.hasBehaviour(RLV_BHVR_TPLM) && gRlvHandler.hasBehaviour(RLV_BHVR_TPLOC)));
+	//CA Convert RLVa code to RLV
+	go_home_btn->setEnabled(!gRRenabled || !gAgent.mRRInterface.mContainsTp);
 	// </FS:Ansariel> Performance improvement
 
 	setMouseOpaque(TRUE);
@@ -878,7 +879,8 @@ void LLFloaterWorldMap::trackLocation(const LLVector3d& pos_global)
 	LLWorldMap::getInstance()->cancelTracking();		// The floater is taking over the tracking
 	LLTracker::trackLocation(pos_global, full_name, tooltip);
 	// <FS:Ansariel> Parcel details on map
-	if (!gRlvHandler.hasBehaviour(RLV_BHVR_SHOWLOC))
+	// CA Convert RLVa restriction to RLV
+	if (!gRRenabled || !gAgent.mRRInterface.mContainsShowloc)
 	{
 		mShowParcelInfo = true;
 		requestParcelInfo(pos_global);

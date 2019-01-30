@@ -214,7 +214,13 @@ void LLSimInfo::insertAgentLocation(const LLItemInfo& item)
 	}
 
 	// Now append the new location
-	mAgentLocations.push_back(item); 
+	// <FS:Ansariel> Map fails to clear agent from a map position if it's the last one
+	//mAgentLocations.push_back(item); 
+	if (item.getCount() > 0)
+	{
+		mAgentLocations.push_back(item);
+	}
+	// </FS:Ansariel>
 }
 
 //---------------------------------------------------------------------------
