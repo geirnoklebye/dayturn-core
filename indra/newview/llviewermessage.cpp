@@ -170,6 +170,9 @@ static std::string ca_region_channel;
 static F32 ca_performance_status_previous[CA_SIM_STAT_MAXIMUM] = {};
 static F32 ca_performance_status_now[CA_SIM_STAT_MAXIMUM] = {};
 
+// CA this is the once-per-session flag for RLV command notification
+static bool given_rlv_warning = false;
+
 static void ca_give_message_trans(std::string msg, LLStringUtil::format_map_t args)
 {
 	// we can deliver via chat & chat toast or as chat & notification
@@ -2742,13 +2745,41 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		else
 		{
 			chat.mText = "";
+			
+			// CA set this up before we get into the case statement
+			static LLCachedControl<bool> kokua_give_single_rlv_message(gSavedSettings, "KokuaGiveSingleRLVMessage");
+
 			switch(chat.mChatType)
 			{
 			case CHAT_TYPE_WHISPER:
 				chat.mText = LLTrans::getString("whisper") + " ";
 				break;
-			case CHAT_TYPE_DEBUG_MSG:
+//			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_OWNER:
+				// CA Friendly handling of probable RLV commands in non-RLV Kokua
+				// This Case is moved above DEBUG_MSG so that fallthrough doesn't occur
+				if (kokua_give_single_rlv_message && mesg.substr(0, 1) == "@")
+				{
+					// two level if so that we get old behaviour of everything appearing in chat if the control setting is false
+					if (!given_rlv_warning)
+					{
+						given_rlv_warning = true;
+						chat.mText = "/me issued a RLV command which was ignored. No further notifications will be given";
+						mesg = "";
+					}
+					else
+					{
+						//silently junk it
+						return;
+					}
+				}
+				else
+				{
+					// reset our one-time flag so that turning the control setting on and off will cause a new one-time notification
+					given_rlv_warning = false;
+				}
+				break;
+			case CHAT_TYPE_DEBUG_MSG:
 			case CHAT_TYPE_NORMAL:
 			case CHAT_TYPE_DIRECT:
 				break;
