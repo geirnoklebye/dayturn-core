@@ -53,6 +53,7 @@
 
 #include "llagent.h"
 #include "llagentcamera.h"
+#include "llappearancemgr.h" // CA: For Henri's IgnoreOuterRegionAttachKill fix
 #include "llcallingcard.h"
 #include "llbuycurrencyhtml.h"
 #include "llcontrolavatar.h"
@@ -4257,6 +4258,13 @@ void process_terse_object_update_improved(LLMessageSystem *mesgsys, void **user_
 
 static LLTrace::BlockTimerStatHandle FTM_PROCESS_OBJECTS("Process Kill Objects");
 
+//CA Largely replaced this routine with a version from Henri Beauchamp (used with permission)
+//   which includes a fix for a current server bug that tends to kill attachments on arrival
+//   in a region, although they will reappear on the next region entry and are still attached
+//   from the server's point of view the whole time (eg script count remains correct, items
+//   can be accessed via chat channels etc). Merged Ansariel's FIRE-12004 fix in there too
+//   to keep that included for more general region entry issues.
+
 void process_kill_object(LLMessageSystem *mesgsys, void **user_data)
 {
 	LL_RECORD_BLOCK_TIME(FTM_PROCESS_OBJECTS);
@@ -4265,11 +4273,13 @@ void process_kill_object(LLMessageSystem *mesgsys, void **user_data)
 
 	U32 ip = mesgsys->getSenderIP();
 	U32 port = mesgsys->getSenderPort();
-	LLViewerRegion* regionp = NULL;
-	{
-		LLHost host(ip, port);
-		regionp = LLWorld::getInstance()->getRegion(host);
-	}
+	LLHost host(ip, port);
+	LLViewerRegion* regionp = LLWorld::getInstance()->getRegion(host);
+	if (!regionp) return;
+
+	LLViewerRegion* agent_region = gAgent.getRegion();
+	bool non_agent_region = agent_region && regionp != agent_region;
+	bool need_cof_resync = false;
 
 	bool delete_object = LLViewerRegion::sVOCacheCullingEnabled;
 	S32	num_objects = mesgsys->getNumberOfBlocksFast(_PREHASH_ObjectData);
@@ -4295,63 +4305,100 @@ void process_kill_object(LLMessageSystem *mesgsys, void **user_data)
 			continue;
 		}
 
-			LLViewerObject *objectp = gObjectList.findObject(id);
-			if (objectp)
+		if (id == gAgentID)	// Never kill our own avatar !
+ 		{
+			LL_DEBUGS("Messaging") << "Received kill-object message from "
+								   << (non_agent_region ? "non-agent"
+														: "agent")
+								   << " region for our agent Id. Ignoring."
+								   << LL_ENDL;
+			continue;
+		}
+ 
+		LLViewerObject* objectp = gObjectList.findObject(id);
+		if (!objectp)
+		{
+			continue;
+		}
+ 
+		static LLCachedControl<bool> filter_kill(gSavedSettings,
+												"IgnoreOuterRegionAttachKill");
+		if (objectp->isAttachment() &&
+			LLVOAvatar::findAvatarFromAttachment(objectp) == gAgentAvatarp)
+		{
+			if (filter_kill && non_agent_region)
+ 			{
+				LL_DEBUGS("Attachment") << "Received kill-object message from non-agent region for agent attachment: "
+										<< objectp->getID() << ". Ignoring."
+									    << LL_ENDL;
+				need_cof_resync = true;
+				continue;
+ 			}
+
+			// <FS:Ansariel> FIRE-12004: Attachments getting lost on TP
+			static LLCachedControl<bool> fsExperimentalLostAttachmentsFix(gSavedSettings, "FSExperimentalLostAttachmentsFix");
+			static LLCachedControl<F32> fsExperimentalLostAttachmentsFixKillDelay(gSavedSettings, "FSExperimentalLostAttachmentsFixKillDelay");
+			if (fsExperimentalLostAttachmentsFix &&
+				isAgentAvatarValid() &&
+				(gAgent.getTeleportState() != LLAgent::TELEPORT_NONE || gPostTeleportFinishKillObjectDelayTimer.getElapsedTimeF32() <= fsExperimentalLostAttachmentsFixKillDelay || gAgentAvatarp->isCrossingRegion()) && 
+				(objectp->isAttachment() || objectp->isTempAttachment()) &&
+				objectp->permYouOwner())
 			{
-				// <FS:Ansariel> FIRE-12004: Attachments getting lost on TP
-				static LLCachedControl<bool> fsExperimentalLostAttachmentsFix(gSavedSettings, "FSExperimentalLostAttachmentsFix");
-				static LLCachedControl<F32> fsExperimentalLostAttachmentsFixKillDelay(gSavedSettings, "FSExperimentalLostAttachmentsFixKillDelay");
-				if (fsExperimentalLostAttachmentsFix &&
-					isAgentAvatarValid() &&
-					(gAgent.getTeleportState() != LLAgent::TELEPORT_NONE || gPostTeleportFinishKillObjectDelayTimer.getElapsedTimeF32() <= fsExperimentalLostAttachmentsFixKillDelay || gAgentAvatarp->isCrossingRegion()) && 
-					(objectp->isAttachment() || objectp->isTempAttachment()) &&
-					objectp->permYouOwner())
+				// Simply ignore the request and don't kill the object - this should work...
+				if (gSavedSettings.getBOOL("FSExperimentalLostAttachmentsFixReport"))
 				{
-					// Simply ignore the request and don't kill the object - this should work...
-					if (gSavedSettings.getBOOL("FSExperimentalLostAttachmentsFixReport"))
+					std::string reason;
+					if (gAgent.getTeleportState() != LLAgent::TELEPORT_NONE)
 					{
-						std::string reason;
-						if (gAgent.getTeleportState() != LLAgent::TELEPORT_NONE)
-						{
-							reason = "tp";
-						}
-						else if (gAgentAvatarp->isCrossingRegion())
-						{
-							reason = "crossing";
-						}
-						else
-						{
-							reason = "timer";
-						}
-
-						LL_INFOS() << "Sim tried to kill attachment: " << objectp->getAttachmentItemName() << " (" << reason << ")" << LL_ENDL;
+						reason = "tp";
 					}
-					continue;
-				}
-				// </FS:Ansariel>
+					else if (gAgentAvatarp->isCrossingRegion())
+					{
+						reason = "crossing";
+					}
+					else
+					{
+						reason = "timer";
+					}
 
-				// Display green bubble on kill
-				if ( gShowObjectUpdates )
-				{
-					LLColor4 color(0.f,1.f,0.f,1.f);
-					gPipeline.addDebugBlip(objectp->getPositionAgent(), color);
+					LL_INFOS() << "Sim tried to kill attachment: " << objectp->getAttachmentItemName() << " (" << reason << ")" << LL_ENDL;
 				}
+				continue;
+			}
+			// </FS:Ansariel>
 
-			// Do the kill
-			gObjectList.killObject(objectp);
+			// CA: Skip bringing this function over from HB
+			// LLViewerObjectList::registerKilledAttachment(id);
+			LL_DEBUGS("Attachment") << "Received kill object order for agent attachment: "
+									<< objectp->getID()
+									<< " - Delete object from cache = "
+									<< (delete_object ? "true" : "false")
+									<< LL_ENDL;
 		}
 
+		// Display green bubble on kill
+		if (gShowObjectUpdates)
+		{
+			gPipeline.addDebugBlip(objectp->getPositionAgent(),
+								   LLColor4::green);
+		}
+
+		// Do the kill
+		LLSelectMgr::getInstance()->removeObjectFromSelections(id);
+		gObjectList.killObject(objectp);
 		if (delete_object)
 		{
 			regionp->killCacheEntry(local_id);
-		}
+ 		}
+ 	}
 
-		// We should remove the object from selection after it is marked dead by gObjectList to make LLToolGrab,
-		// which is using the object, release the mouse capture correctly when the object dies.
-		// See LLToolGrab::handleHoverActive() and LLToolGrab::handleHoverNonPhysical().
-		LLSelectMgr::getInstance()->removeObjectFromSelections(id);
+	if (need_cof_resync)
+	{
+		//CA: Use Kitty's version of this since we have it already rather than Henri's additions for the same purpose
+		LLAppearanceMgr::instance().syncCofVersionAndRefresh();
 	}
 }
+//CA Imported code from Henri Beachamp ends above this comment
 
 void process_object_properties(LLMessageSystem *msg, void **user_data)
 {
