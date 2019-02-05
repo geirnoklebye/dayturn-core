@@ -9708,6 +9708,7 @@ void initialize_menus()
 	commit.add("Tools.TakeCopy", boost::bind(&handle_take_copy));
 	view_listener_t::addMenu(new LLToolsSaveToObjectInventory(), "Tools.SaveToObjectInventory");
 	view_listener_t::addMenu(new LLToolsSelectedScriptAction(), "Tools.SelectedScriptAction");
+	view_listener_t::addMenu(new FSToolsUndeform(), "Tools.Undeform");	// <FS:CR> FIRE-4345: Undeform
 
 	view_listener_t::addMenu(new LLToolsEnableToolNotPie(), "Tools.EnableToolNotPie");
 	view_listener_t::addMenu(new LLToolsEnableSelectNextPart(), "Tools.EnableSelectNextPart");
