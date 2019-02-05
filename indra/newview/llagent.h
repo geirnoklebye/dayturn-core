@@ -497,7 +497,10 @@ private:
 	// Animations
 	//--------------------------------------------------------------------
 public:
-	void            stopCurrentAnimations();
+	// <FS:Ansariel> FIRE-12148: Pose stand breaks XPOSE animations
+	//void            stopCurrentAnimations();
+	void            stopCurrentAnimations(bool force_keep_script_perms = false);
+	// </FS:Ansariel>
 	void			requestStopMotion(LLMotion* motion);
 	void			onAnimStop(const LLUUID& id);
 	void			sendAnimationRequests(const std::vector<LLUUID> &anim_ids, EAnimRequest request);
