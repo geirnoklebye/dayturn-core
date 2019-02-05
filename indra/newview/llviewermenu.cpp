@@ -5754,7 +5754,18 @@ class LLToolsStopAllAnimations : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		gAgent.stopCurrentAnimations();
+		// <FS:Ansariel> Allow legacy stop animations without revoking script permissions
+		//gAgent.stopCurrentAnimations();
+		std::string param = userdata.asString();
+		if (param.empty() || param == "stoprevoke")
+		{
+			gAgent.stopCurrentAnimations();
+		}
+		else if (param == "stop")
+		{
+			gAgent.stopCurrentAnimations(true);
+		}
+		// </FS:Ansariel>
 		return true;
 	}
 };

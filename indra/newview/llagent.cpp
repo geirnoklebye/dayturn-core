@@ -4296,8 +4296,10 @@ void LLAgent::setTeleportState(ETeleportState state)
 	}
 }
 
-
-void LLAgent::stopCurrentAnimations()
+// <FS:Ansariel> FIRE-12148: Pose stand breaks XPOSE animations
+//void LLAgent::stopCurrentAnimations()
+void LLAgent::stopCurrentAnimations(bool force_keep_script_perms /*= false*/)
+// </FS:Ansariel>
 {
     LL_DEBUGS("Avatar") << "Stopping current animations" << LL_ENDL;
 
@@ -4336,6 +4338,9 @@ void LLAgent::stopCurrentAnimations()
 
 		// Revoke all animation permissions
 		if (mRegionp &&
+			// <FS:Ansariel> FIRE-12148: Pose stand breaks XPOSE animations
+			!force_keep_script_perms &&
+			// </FS:Ansariel>
 			gSavedSettings.getBOOL("RevokePermsOnStopAnimation"))
 		{
 			U32 permissions = SCRIPT_PERMISSIONS[SCRIPT_PERMISSION_TRIGGER_ANIMATION].permbit | SCRIPT_PERMISSIONS[SCRIPT_PERMISSION_OVERRIDE_ANIMATIONS].permbit;
