@@ -412,14 +412,14 @@
 					function="Avatar.ResetSkeleton" />
 			</pie_slice>
 		</pie_menu>
-<!--    <pie_slice
+        <pie_slice
             enabled="true"
             label="Tex Refresh"
             name="Texture Refresh">
             <pie_slice.on_click
                 function="Avatar.TexRefresh" />
         </pie_slice>
--->
+   
 			  <pie_slice label="Reload My Outfit"
 					layout="topleft"
 					name="Reload Outfit">
