@@ -128,6 +128,7 @@ set(viewer_SOURCE_FILES
     fspanelclassified.cpp
     fspanelprofile.cpp
     fspanelprofileclassifieds.cpp
+    fspose.cpp
     fsscrolllistctrl.cpp
     fslightshare.cpp
     groupchatlistener.cpp
@@ -786,6 +787,7 @@ set(viewer_HEADER_FILES
     fspanelclassified.h
     fspanelprofile.h
     fspanelprofileclassifieds.h
+    fspose.h
     fsscrolllistctrl.h
     fslightshare.h
     groupchatlistener.h

@@ -158,6 +158,7 @@
 #include "llcleanup.h"
 // Firestorm includes
 #include "fscommon.h"
+#include "fspose.h"
 #include "llmodel.h"
 
 using namespace LLAvatarAppearanceDefines;
@@ -9169,6 +9170,23 @@ BOOL check_show_xui_names(void *)
 {
 	return gSavedSettings.getBOOL("DebugShowXUINames");
 }
+// <FS:CR> FIRE-4345: Undeform
+class FSToolsUndeform : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		if (isAgentAvatarValid())
+		{
+			gAgentAvatarp->resetSkeleton(true);
+
+			FSPose::getInstance()->setPose(gSavedSettings.getString("FSUndeformUUID"), false);
+			gAgentAvatarp->updateVisualParams();
+		}
+
+		return true;
+	}
+};
+// </FS:CR> FIRE-4345: Undeform
 
 class LLToolsSelectOnlyMyObjects : public view_listener_t
 {
