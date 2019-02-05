@@ -174,7 +174,10 @@ BOOL LLToolPie::handleRightMouseDown(S32 x, S32 y, MASK mask)
 //mk
 
 	// claim not handled so UI focus stays same
-	if(gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+	// <FS:Ansariel> Enable context/pie menu in mouselook
+	//if(gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+	if(gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK || gSavedSettings.getBOOL("FSEnableRightclickMenuInMouselook"))
+	// </FS:Ansariel>
 	{
 		handleRightClickPick();
 	}

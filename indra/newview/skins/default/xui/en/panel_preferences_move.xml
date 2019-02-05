@@ -192,6 +192,17 @@
    name="first_person_avatar_visible"
    top_pad="5"
    width="256" />
+        <check_box
+         control_name="FSEnableRightclickMenuInMouselook"
+         follows="left|top"
+         enabled_control="EnableMouselook"
+         height="16"
+         label="Enable context menus in Mouselook"
+         layout="topleft"
+         name="FSEnableRightclickMenuInMouselook"
+         tool_tip="Opens pie/context menu in mouselook mode upon ALT + right mouse button"
+         top_pad="0"
+         width="256" />
   <text
    type="string"
    length="1"
@@ -200,7 +211,7 @@
    layout="topleft"
    left_delta="3"
    name=" Mouse Sensitivity"
-   top_pad="10"
+   top_pad="0"
    width="160"
    wrap="true">
     Mouselook mouse sensitivity

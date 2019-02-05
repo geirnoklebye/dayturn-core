@@ -792,7 +792,10 @@ BOOL LLToolCompGun::handleRightMouseDown(S32 x, S32 y, MASK mask)
 	*/
 
 	// Returning true will suppress the context menu
-	return TRUE;
+	// <FS:Ansariel> Enable context/pie menu in mouselook
+	//return TRUE;
+	return (!gSavedSettings.getBOOL("FSEnableRightclickMenuInMouselook"));
+	// </FS:Ansariel>
 }
 
 
