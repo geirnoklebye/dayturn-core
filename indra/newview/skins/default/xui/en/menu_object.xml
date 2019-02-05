@@ -151,6 +151,13 @@
         <menu_item_call.on_visible
           function="Object.EnableUnmute" />
     </menu_item_call>
+   	<menu_item_call
+	   enabled="true"
+	   label="Texture Refresh"
+	   name="Texture Refresh">
+	<menu_item_call.on_click
+	  function="Object.TexRefresh" />
+   </menu_item_call>
     <menu_item_call
         enabled="true"
         label="Derender"
