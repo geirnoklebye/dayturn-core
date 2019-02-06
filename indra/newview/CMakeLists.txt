@@ -115,6 +115,7 @@ set(viewer_SOURCE_FILES
     ao.cpp
     aoengine.cpp
     aoset.cpp
+    exogroupmutelist.cpp
     fscommon.cpp
     fsareasearch.cpp
     fsareasearchmenu.cpp    
@@ -773,6 +774,7 @@ set(viewer_HEADER_FILES
     ao.h
     aoengine.h
     aoset.h
+    exogroupmutelist.h
     floaterhop.h
 	fsareasearch.h
     fsareasearchmenu.h

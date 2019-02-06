@@ -325,6 +325,14 @@
                 height="20"
                 width="400"
                 tool_tip="Gives the chat floater's text entry widget a slight tint that differs with the chat type (nearby, group, conference or IM)" />
+		<check_box
+		 layout="topleft"
+		 left="15"
+		 width="400"
+		 height="20"
+		 name="FSReportMutedGroupChat"
+		 control_name="FSReportMutedGroupChat"
+		 label="Report muted group chat in nearby chat"/>
             <text
                     name="show_stream_metadata_text"
                     layout="topleft"

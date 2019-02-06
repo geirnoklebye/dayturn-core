@@ -52,6 +52,7 @@
 #include "lltexturectrl.h"
 #include "lltrans.h"
 #include "llviewerwindow.h"
+#include "exogroupmutelist.h"
 #include "llwindow.h" 
 
 static LLPanelInjector<LLPanelGroupGeneral> t_panel_group_general("panel_group_general");
@@ -80,8 +81,8 @@ LLPanelGroupGeneral::LLPanelGroupGeneral()
 	mActiveTitleLabel(NULL),
 	mComboActiveTitle(NULL),
 	mGroupUUIDText(NULL),
-	mBtnGroupUUIDCopy(NULL)
-
+	mBtnGroupUUIDCopy(NULL),
+	mCtrlReceiveGroupChat(NULL) // <exodus/>
 {
 
 }
@@ -156,6 +157,18 @@ BOOL LLPanelGroupGeneral::postBuild()
 		mCtrlReceiveNotices->set(accept_notices);
 		mCtrlReceiveNotices->setEnabled(data.mID.notNull());
 	}
+	// <exodus>
+	mCtrlReceiveGroupChat = getChild<LLCheckBoxCtrl>("receive_chat", recurse);
+	if(mCtrlReceiveGroupChat)
+	{
+		mCtrlReceiveGroupChat->setCommitCallback(onCommitUserOnly, this);
+		mCtrlReceiveGroupChat->setEnabled(data.mID.notNull());
+		if(data.mID.notNull())
+		{
+			mCtrlReceiveGroupChat->set(!exoGroupMuteList::instance().isMuted(data.mID));
+		}
+	}
+	// </exodus>
 	
 	mCtrlListGroup = getChild<LLCheckBoxCtrl>("list_groups_in_profile", recurse);
 	if (mCtrlListGroup)
@@ -420,6 +433,19 @@ bool LLPanelGroupGeneral::apply(std::string& mesg)
 		list_in_profile = mCtrlListGroup->get();
 
 	gAgent.setUserGroupFlags(mGroupID, receive_notices, list_in_profile);
+	// <exodus>
+	if(mCtrlReceiveGroupChat)
+	{
+		if(mCtrlReceiveGroupChat->get())
+		{
+			exoGroupMuteList::instance().remove(mGroupID);
+		}
+		else
+		{
+			exoGroupMuteList::instance().add(mGroupID);
+		}
+	}
+	// </exodus>
 
 	resetDirty();
 
@@ -617,6 +643,16 @@ void LLPanelGroupGeneral::update(LLGroupChange gc)
 		}
 	}
 
+	// <exodus>
+	if (mCtrlReceiveGroupChat)
+	{
+		mCtrlReceiveGroupChat->setVisible(is_member);
+		if (is_member)
+		{
+			mCtrlReceiveGroupChat->setEnabled(mAllowEdit);
+		}
+	}
+	// </exodus>
 
 	if (mInsignia) mInsignia->setEnabled(mAllowEdit && can_change_ident);
 	if (mEditCharter) mEditCharter->setEnabled(mAllowEdit && can_change_ident);
@@ -665,7 +701,8 @@ void LLPanelGroupGeneral::updateChanged()
 		mCtrlReceiveNotices,
 		mCtrlListGroup,
 		mActiveTitleLabel,
-		mComboActiveTitle
+		mComboActiveTitle,
+		mCtrlReceiveGroupChat // <exodus/>
 	};
 
 	mChanged = FALSE;
@@ -718,6 +755,12 @@ void LLPanelGroupGeneral::reset()
 
 	mInsignia->setImageAssetName(mInsignia->getDefaultImageName());
 
+	// <exodus>
+	mCtrlReceiveGroupChat->set(false);
+	mCtrlReceiveGroupChat->setEnabled(false);
+	mCtrlReceiveGroupChat->setVisible(true);
+	// </exodus>
+
 	{
 		std::string empty_str = "";
 		mEditCharter->setText(empty_str);
@@ -753,7 +796,8 @@ void	LLPanelGroupGeneral::resetDirty()
 		mCtrlReceiveNotices,
 		mCtrlListGroup,
 		mActiveTitleLabel,
-		mComboActiveTitle
+		mComboActiveTitle,
+		mCtrlReceiveGroupChat // <exodus/>
 	};
 
 	for( size_t i=0; i<LL_ARRAY_SIZE(check_list); i++ )
@@ -796,6 +840,18 @@ void LLPanelGroupGeneral::setGroupID(const LLUUID& id)
 		mCtrlListGroup->set(list_in_profile);
 		mCtrlListGroup->setEnabled(data.mID.notNull());
 	}
+
+	// <exodus>
+	mCtrlReceiveGroupChat = getChild<LLCheckBoxCtrl>("receive_chat");
+	if (mCtrlReceiveGroupChat)
+	{
+		if(data.mID.notNull())
+		{
+			mCtrlReceiveGroupChat->set(!exoGroupMuteList::instance().isMuted(data.mID));
+		}
+		mCtrlReceiveGroupChat->setEnabled(data.mID.notNull());
+	}
+	// </exodus>
 
 	mCtrlShowInGroupList->setEnabled(data.mID.notNull());
 
