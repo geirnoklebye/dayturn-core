@@ -70,6 +70,10 @@
 #include "llviewerregion.h"
 #include "llcorehttputil.h"
 
+#include "exogroupmutelist.h"
+#include "fscommon.h"
+
+#include "llslurl.h"
 
 const static std::string ADHOC_NAME_SUFFIX(" Conference");
 
@@ -2689,6 +2693,25 @@ void LLIMMgr::addMessage(
 		{
 			fixed_session_name = av_name.getDisplayName();
 		}
+		// <FS:Ansariel> Clear muted group chat early to prevent contacts floater
+		//               (re-)gaining focus; the server already knows the correct
+		//               session id, so we can leave it!
+		if (exoGroupMuteList::instance().isMuted(new_session_id))
+		{
+			LL_INFOS() << "Muting group chat from " << new_session_id.asString() << ": " << fixed_session_name << LL_ENDL;
+
+			if (gSavedSettings.getBOOL("FSReportMutedGroupChat"))
+			{
+				LLStringUtil::format_map_t args;
+				args["NAME"] = LLSLURL("group", new_session_id, "about").getSLURLString();
+				report_to_nearby_chat(LLTrans::getString("GroupChatMuteNotice", args));
+			}
+			clearPendingInvitation(new_session_id);
+			clearPendingAgentListUpdates(new_session_id);
+			LLIMModel::getInstance()->sendLeaveSession(new_session_id, other_participant_id);
+			return;
+		}
+		// </FS:Ansariel>
 		LLIMModel::getInstance()->newSession(new_session_id, fixed_session_name, dialog, other_participant_id, false, is_offline_msg);
 
 		LLIMModel::LLIMSession* session = LLIMModel::instance().findIMSession(new_session_id);

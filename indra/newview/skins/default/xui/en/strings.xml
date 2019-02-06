@@ -4304,6 +4304,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Mav_Details_MAV_UNKNOWN_VERSION">
       The physics shape does not have correct version. Set the correct version for the physics model.
   </string>
+  <string name="GroupChatMuteNotice">Muting group chat from [NAME].</string>
     <!-- CA Kokua region/script/performance notifications -->
   <string name="CA_Region_Prefix">Entered new region</string>
   <string name="CA_Region_RepeatPrefix">Region information</string>

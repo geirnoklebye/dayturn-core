@@ -19026,6 +19026,17 @@
       <key>Value</key>
       <string>44e98907-3764-119f-1c13-cba9945d2ff4</string>
     </map>
+    <key>FSReportMutedGroupChat</key>
+    <map>
+      <key>Comment</key>
+      <string>Reports to nearby chat if a group chat has been muted.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
   <key>FSAdvancedTooltips</key>
 	  <map>
 	    <key>Comment</key>
