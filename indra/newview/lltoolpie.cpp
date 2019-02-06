@@ -160,9 +160,9 @@ BOOL LLToolPie::handleRightMouseDown(S32 x, S32 y, MASK mask)
 	// HACK : if alt-right-clicking and not in mouselook, HUDs are passed through and we risk
 	// right-clicking in-world
 	// => sit on this object instead of selecting it (this may be convenient if the whole screen is obstructed by a HUD prim
-	// CA: change this so that when in mouselook we'll fall through to code below - sit is one of the menu choices
-	//     so we don't lose the ability to sit on an object
-	if (gRRenabled && (mask & MASK_ALT) && gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+	// CA: Despite the comment above, this code was actually changed to allow Alt-right to sit in both mouselook and
+	//     normal view. However, if the new right click mouselook feature is on, we want that to handle it)
+	if (gRRenabled && (mask & MASK_ALT) && ((gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK) || (gAgentCamera.getCameraMode() == CAMERA_MODE_MOUSELOOK && !gSavedSettings.getBOOL("FSEnableRightclickMenuInMouselook"))))
 	//if (gRRenabled && (mask & MASK_ALT)) // && gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
 	{
 		if (isAgentAvatarValid())
