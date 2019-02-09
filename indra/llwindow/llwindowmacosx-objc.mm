@@ -460,3 +460,11 @@ unsigned int getModifiers()
 {
 	return [NSEvent modifierFlags];
 }
+
+// <FS:CR> Set Window Title - sigh.
+void setTitleCocoa(NSWindowRef window, const std::string &title)
+{
+	NSString *str = [NSString stringWithCString:title.c_str() encoding:[NSString defaultCStringEncoding]];
+	[(LLNSWindow*)window setTitle:str];
+}
+// </FS:CR>

@@ -1657,7 +1657,10 @@ void LLWindowMacOSX::hideCursorUntilMouseMove()
 	}
 }
 
-
+void LLWindowMacOSX::setTitle(const std::string &title)
+{
+	setTitleCocoa(mWindow, title);
+}
 
 //
 // LLSplashScreenMacOSX
