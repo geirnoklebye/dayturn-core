@@ -4,7 +4,7 @@
          follows="left|top|right|bottom"
          bottom="-500"
          width="295"
-         height="480"
+         height="510"
          label="Texture"
          layout="topleft"
          left="1"
@@ -122,7 +122,7 @@
             height="50"
             layout="topleft"
             left_pad="20"
-            top_delta="-10"
+            top_delta="-5"
             width="150"
             visible = "false"
             name="radio_material_type">
@@ -543,7 +543,7 @@
              left="10"
              name="tex gen"
              text_readonly_color="LabelDisabledColor"
-             top_pad="28"
+             top_pad="50"
              width="140">
                 Mapping
             </text>
