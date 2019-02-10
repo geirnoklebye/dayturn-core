@@ -1515,8 +1515,6 @@ class LinuxManifest(ViewerManifest):
 
         # plugins
         with self.prefix(src="../media_plugins", dst="bin/llplugin"):
-            self.path("gstreamer010/libmedia_plugin_gstreamer010.so",
-                      "libmedia_plugin_gstreamer.so")
             self.path2basename("cef", "libmedia_plugin_cef.so")
             self.path2basename("libvlc", "libmedia_plugin_libvlc.so")
 

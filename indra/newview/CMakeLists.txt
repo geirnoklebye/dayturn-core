@@ -2107,7 +2107,6 @@ if (LINUX)
     linux-crash-logger
     SLPlugin
     media_plugin_cef
-    media_plugin_gstreamer010
     media_plugin_libvlc
     llcommon
     )
@@ -2279,7 +2278,6 @@ if (PACKAGE)
     # *TODO: Generate these search dirs in the cmake files related to each binary.
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/llplugin/slplugin/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/mac_crash_logger/${CMAKE_CFG_INTDIR}")
-    list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/gstreamer010/${CMAKE_CFG_INTDIR}")
     list(APPEND SYMBOL_SEARCH_DIRS "${CMAKE_BINARY_DIR}/media_plugins/quicktime/${CMAKE_CFG_INTDIR}")
     set(VIEWER_SYMBOL_FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/kokua-symbols-darwin-$ENV{AUTOBUILD_ADDRSIZE}.tar.bz2")
     set(VIEWER_EXE_GLOBS "'Kokua' SLPlugin mac-crash-logger")

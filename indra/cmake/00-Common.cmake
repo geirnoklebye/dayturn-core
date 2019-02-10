@@ -238,7 +238,6 @@ if (LINUX AND ${ARCH} STREQUAL "i686")
       gdk-pixbuf-xlib
       glib
       gmodule
-      gstreamer-0.10
       gtk
       pango
       )
@@ -254,7 +253,6 @@ if (LINUX AND ${ARCH} STREQUAL "x86_64")
       gdk-pixbuf-xlib
       glib
       gmodule
-      gstreamer-0.10
       gtk
       pango
       )
