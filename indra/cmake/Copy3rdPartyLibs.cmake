@@ -48,7 +48,6 @@ if(WINDOWS)
         libeay32.dll
         glod.dll
         libhunspell.dll
-        # gstreamer dlls - not plugins
         # Place holder
 
 
@@ -69,9 +68,7 @@ if(WINDOWS)
         nghttp2.dll
         glod.dll
         libhunspell.dll
-
-        # gstreamer dlls - not plugins
-		# place holder
+	# place holder
 
 
         )
