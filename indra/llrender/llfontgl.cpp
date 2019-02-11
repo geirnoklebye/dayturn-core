@@ -831,6 +831,7 @@ bool LLFontGL::loadDefaultFonts()
 	succ &= (NULL != getFontSansSerifBold());
 	succ &= (NULL != getFontMonospace());
 	succ &= (NULL != getFontExtChar());
+	succ &= (NULL != getFontScripting());
 	return succ;
 }
 
@@ -1014,6 +1015,13 @@ LLFontGL* LLFontGL::getFontSansSerifBold()
 	static LLFontGL* fontp = getFont(LLFontDescriptor("SansSerif","Medium",BOLD));
 	return fontp;
 }
+// <FS:CR> Advanced Script Editor
+//static
+LLFontGL* LLFontGL::getFontScripting()
+{
+	static LLFontGL* fontp = getFont(LLFontDescriptor("Scripting","Scripting",0));
+	return fontp;
+}
 
 //static
 LLFontGL* LLFontGL::getFontExtChar()
@@ -1047,6 +1055,14 @@ LLFontGL* LLFontGL::getFontByName(const std::string& name)
 	{
 		// *BUG: Should this be "MONOSPACE"?  Do we use "OCRA" anymore?
 		// Does "SMALL" mean "SERIF"?
+		return getFontMonospace();
+	}
+	else if (name == "Scripting")
+	{
+		return getFontScripting();
+	}
+	else if (name == "Monospace")
+	{
 		return getFontMonospace();
 	}
 	else

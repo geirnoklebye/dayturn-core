@@ -35,6 +35,7 @@
 #include "llframetimer.h"
 #include "llfloatergotoline.h"
 #include "llsyntaxid.h"
+#include <boost/signals2.hpp>
 
 class LLLiveLSLFile;
 class LLMessageSystem;
@@ -137,6 +138,11 @@ private:
 	virtual BOOL handleKeyHere(KEY key, MASK mask);
 	
 	void enableSave(BOOL b) {mEnableSave = b;}
+	// <FS:Ansariel> FIRE-20818: User-selectable font and size for script editor
+	boost::signals2::connection mFontNameChangedCallbackConnection;
+	boost::signals2::connection mFontSizeChangedCallbackConnection;
+	void	onFontChanged();
+	// </FS:Ansariel>
 
 protected:
 	void deleteBridges();
