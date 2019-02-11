@@ -80,7 +80,22 @@
                 function="RLV.EnableIfNot"
                 parameter="shownames" />
         </pie_slice>
-        <pie_separator />
+        <pie_menu
+            name="ResetMenu"
+            label="Reset &gt;">
+            <pie_slice
+                label="Skel. &amp; Anim."
+                name="Reset Skeleton And Animations">
+                <pie_slice.on_click
+                    function="Avatar.ResetSkeletonAndAnimations" />
+            </pie_slice>
+            <pie_slice
+                label="Skeleton"
+                name="Reset Skeleton">
+                <pie_slice.on_click
+                    function="Avatar.ResetSkeleton" />
+            </pie_slice>
+        </pie_menu>    
         <pie_slice
             label="Eject..."
             name="Eject...">
@@ -89,15 +104,20 @@
             <pie_slice.on_enable
                 function="Avatar.EnableFreezeEject"/>
         </pie_slice>
-
+        <pie_slice
+            label="Inspect"
+            name="Avatar Inspect">
+            <pie_slice.on_click
+                function="Object.Inspect" />
+            <pie_slice.on_enable
+                function="Avatar.EnableCall" />
+        </pie_slice>
         <pie_menu
             name="Avatar Pie More 2"
             label="More >">
-
             <!-- ## Zi: Is this the right thing to use for avatar textures? -->
             <pie_slice
                 name="Debug...">
-                label="Textures"
                 <pie_slice.on_click
                     function="Avatar.Debug" />
             </pie_slice>
@@ -138,24 +158,6 @@
                   function="Avatar.SetImpostorMode"
                   parameter="2" />
             </pie_slice>
-
-        </pie_menu>
-
-        <pie_slice
-            label="Inspect"
-            name="Avatar Inspect">
-            <pie_slice.on_click
-                function="Object.Inspect" />
-            <pie_slice.on_enable
-                function="Avatar.EnableCall" />
-        </pie_slice>
-        <pie_slice
-            enabled="true"
-            label="Derender"
-            name="Derender">
-            <pie_slice.on_click
-                function="Object.Derender" />
-        </pie_slice>
             <pie_slice
                 enabled="true"
                 label="Tex Refresh"
@@ -164,24 +166,14 @@
                     function="Avatar.TexRefresh" />
             </pie_slice>
         </pie_menu>
-        <pie_menu
-            name="ResetMenu"
-            label="Reset &gt;">
-            <pie_slice
-                label="Skel. &amp; Anim."
-                name="Reset Skeleton And Animations">
-                <pie_slice.on_click
-                    function="Avatar.ResetSkeletonAndAnimations" />
-            </pie_slice>
-            <pie_slice
-                label="Skeleton"
-                name="Reset Skeleton">
-                <pie_slice.on_click
-                    function="Avatar.ResetSkeleton" />
-            </pie_slice>
-        </pie_menu>    
-
-
+        <pie_slice
+            enabled="true"
+            label="Derender"
+            name="Derender">
+            <pie_slice.on_click
+                function="Object.Derender" />
+        </pie_slice>
+    </pie_menu>
     <pie_slice
         label="IM"
         name="Send IM...">
@@ -191,5 +183,4 @@
             function="RLV.EnableIfNot"
             parameter="shownames" />
     </pie_slice>
-
 </pie_menu>

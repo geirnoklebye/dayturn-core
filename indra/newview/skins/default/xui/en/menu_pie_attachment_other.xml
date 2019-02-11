@@ -56,7 +56,6 @@
     <pie_menu
         name="Avatar Pie More 1"
         label="More >">
-
         <pie_slice
             label="Freeze"
             name="Freeze...">
@@ -89,11 +88,18 @@
             <pie_slice.on_enable
                 function="Avatar.EnableFreezeEject"/>
         </pie_slice>
-
+        <pie_slice
+            label="Inspect"
+            name="Avatar Inspect">
+            <pie_slice.on_click
+                function="Floater.Show"
+                parameter="inspect" />
+            <pie_slice.on_enable
+                function="Object.EnableInspect" />
+        </pie_slice>
         <pie_menu
             name="Avatar Pie More 2"
             label="More >">
-
             <!-- ## Zi: Is this the right thing to use for avatar textures? -->
             <pie_slice
                 label="Textures"
@@ -140,48 +146,41 @@
                         function="Avatar.ResetSkeleton" />
                 </pie_slice>
             </pie_menu>
-	        <pie_slice
-              enabled="false"
-              label="Export"
-              name="Export">
-             <pie_slice.on_click
-               function="Object.Export" />
-             <pie_slice.on_enable
-               function="Object.EnableExport" />
-            </pie_slice>
-            <pie_slice
-                name="RenderNormally"
-                label=" Render Normal">
+	          <pie_slice
+                enabled="false"
+                label="Export"
+                name="Export">
                 <pie_slice.on_click
-                  function="Avatar.SetImpostorMode"
-                  parameter="0" />>
-            </pie_slice> 
-            <pie_slice
-                name="DoNotRender"
-                label="Do Not Render">
-                <pie_slice.on_click
-                  function="Avatar.SetImpostorMode"
-                  parameter="1" />
+                    function="Object.Export" />
+                <pie_slice.on_enable
+                    function="Object.EnableExport" />
             </pie_slice>
-            <pie_slice
-                name="AlwaysRenderFully"
-                label="Render Fully">
-                <pie_slice.on_click
-                  function="Avatar.SetImpostorMode"
-                  parameter="2" />
-            </pie_slice>
-
+					  <pie_menu
+						    name="RenderMenu"
+						    label="Render &gt;">
+                <pie_slice
+                    name="RenderNormally"
+                    label=" Render Normal">
+                    <pie_slice.on_click
+                        function="Avatar.SetImpostorMode"
+                        parameter="0" />>
+                </pie_slice> 
+                <pie_slice
+                    name="DoNotRender"
+                    label="Do Not Render">
+                    <pie_slice.on_click
+                        function="Avatar.SetImpostorMode"
+                        parameter="1" />
+                </pie_slice>
+                <pie_slice
+                    name="AlwaysRenderFully"
+                    label="Render Fully">
+                    <pie_slice.on_click
+                        function="Avatar.SetImpostorMode"
+                        parameter="2" />
+                </pie_slice>
+						</pie_menu>
         </pie_menu>
-
-        <pie_slice
-            label="Inspect"
-            name="Avatar Inspect">
-            <pie_slice.on_click
-                function="Floater.Show"
-                parameter="inspect" />
-            <pie_slice.on_enable
-                function="Object.EnableInspect" />
-        </pie_slice>
         <pie_slice
             enabled="true"
             label="Derender"
@@ -189,9 +188,7 @@
             <pie_slice.on_click
                 function="Object.Derender" />
         </pie_slice>
-
     </pie_menu>
-
     <pie_slice
         label="IM"
         name="Send IM...">
@@ -201,5 +198,4 @@
             function="RLV.EnableIfNot"
             parameter="shownames" />
     </pie_slice>
-
 </pie_menu>
