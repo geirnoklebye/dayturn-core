@@ -18,55 +18,6 @@
         <pie_slice.on_enable
             function="Attachment.EnableDrop" />
     </pie_slice>
-    <pie_menu
-        name="Attachment Pie More"
-        label="More &gt;">
-
-        <pie_slice
-            enabled="true"
-            label="Tex Refresh"
-            name="Texture Refresh">
-            <pie_slice.on_click
-                function="Object.TexRefresh" />
-        </pie_slice>
-        <pie_separator />
-        <pie_separator name="script_count_placeholder" />
-        <pie_slice
-            enabled="false"
-            label="Touch"
-            name="Attachment Object Touch">
-            <pie_slice.on_click
-                function="Object.Touch" />
-            <pie_slice.on_enable
-                function="Object.EnableTouch"
-                name="EnableTouch"/>
-        </pie_slice>
-        <pie_slice
-            enabled="true"
-            label="Derender"
-            name="Derender">
-            <pie_slice.on_click
-                function="Object.Derender" />
-        </pie_slice>
-	<pie_slice
-         enabled="false"
-         label="Export"
-         name="Export">
-         <pie_slice.on_click
-            function="Object.Export" />
-         <pie_slice.on_enable
-            function="Object.EnableExport" />
-        </pie_slice>
-        <pie_separator name="inspect_placeholder" />
-        <pie_separator/>
-            <pie_slice
-                label="Textures"
-                name="Debug...">
-                <pie_slice.on_click
-                    function="Avatar.Debug" />
-            </pie_slice>
-
-    </pie_menu>
     <pie_slice
         label="Sit Here"
         start_autohide="true"
@@ -102,7 +53,6 @@
             function="Floater.Toggle"
             parameter="gestures" />
     </pie_slice>
-
     <pie_menu
         label="Appearance &gt;"
         layout="topleft"
@@ -162,7 +112,55 @@
 			 function="Edit.EnableHoverHeight" />
 		</pie_slice>		
     </pie_menu>
+    <pie_menu
+        name="Attachment Pie More"
+        label="More &gt;">
 
+        <pie_slice
+            enabled="true"
+            label="Tex Refresh"
+            name="Texture Refresh">
+            <pie_slice.on_click
+                function="Object.TexRefresh" />
+        </pie_slice>
+        <pie_separator />
+        <pie_separator name="script_count_placeholder" />
+        <pie_slice
+            enabled="false"
+            label="Touch"
+            name="Attachment Object Touch">
+            <pie_slice.on_click
+                function="Object.Touch" />
+            <pie_slice.on_enable
+                function="Object.EnableTouch"
+                name="EnableTouch"/>
+        </pie_slice>
+        <pie_slice
+            enabled="true"
+            label="Derender"
+            name="Derender">
+            <pie_slice.on_click
+                function="Object.Derender" />
+        </pie_slice>
+	<pie_slice
+         enabled="false"
+         label="Export"
+         name="Export">
+         <pie_slice.on_click
+            function="Object.Export" />
+         <pie_slice.on_enable
+            function="Object.EnableExport" />
+        </pie_slice>
+        <pie_separator name="inspect_placeholder" />
+        <pie_separator/>
+            <pie_slice
+                label="Textures"
+                name="Debug...">
+                <pie_slice.on_click
+                    function="Avatar.Debug" />
+            </pie_slice>
+
+    </pie_menu>
     <pie_slice
         enabled="false"
         label="Edit"
