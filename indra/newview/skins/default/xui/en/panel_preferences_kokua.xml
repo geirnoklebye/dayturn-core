@@ -289,7 +289,7 @@
             follows="top|left|right"
             top_delta="-5"
             right="-10"
-            max_length="4096"
+            max_chars="4096"
             name="web_browser_home_page"
             width="345">
             </line_editor>
@@ -750,7 +750,7 @@
     ""
   </text>
             <spinner
-               left="30" 
+               left="40" 
                control_name="ScriptDialogLimitations"
                decimal_digits="0"
                follows="left|top"
@@ -768,7 +768,7 @@
                top_delta="23"
                width="170" >
             <check_box
-                top_delta="50"
+                top_pad="20"
                 font="SansSerifSmall"
                 height="20"
                 initial_value="false"
@@ -779,7 +779,45 @@
                 width="350"
                 control_name="SaveInventoryScriptsAsMono"
                 tool_tip="If true then scripts saved in inventory will be saved as Mono.  Otherwise they will be saved as LSL2.  This applies when compiling scripts and not when simply copying them." />
-
+        <text
+         top_pad="20"
+         left="0"
+         follows="left|top"
+         name="text_box_scripting_font"
+         width="100">
+          Script Editor Font Size:
+        </text>
+        <combo_box
+         allow_text_entry="false"
+         top_delta="-5"
+         left_pad="5"
+         follows="left|top"
+         max_chars="20"
+         mouse_opaque="true"
+         name="FSScriptingFontName"
+         width="100"
+         control_name="FSScriptingFontName"
+         tool_tip="Name of the font used in the LSL script editor">
+             <combo_item name="Monospace" value="Monospace" label="Monospace"/>
+             <combo_item name="Scripting" value="Scripting" label="Scripting"/>
+        </combo_box>
+        <combo_box
+         allow_text_entry="false"
+         top_delta="0"
+         left_pad="5"
+         follows="left|top"
+         max_chars="20"
+         mouse_opaque="true"
+         name="FSScriptingFontSize"
+         width="100"
+         control_name="FSScriptingFontSize"
+         tool_tip="Size of the font used in the LSL script editor">
+             <combo_item name="Monospace" value="Monospace" label="Monospace"/>
+             <combo_item name="Scripting" value="Scripting" label="Scripting"/>
+             <combo_item name="Small" value="Small" label="Small"/>
+             <combo_item name="Medium" value="Medium" label="Medium"/>
+             <combo_item name="Large" value="Large" label="Large"/>
+        </combo_box>
 
                 <!--
            <radio_group

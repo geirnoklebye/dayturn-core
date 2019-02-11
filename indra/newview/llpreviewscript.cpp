@@ -381,6 +381,10 @@ LLScriptEdCore::LLScriptEdCore(
 	mLiveFile(NULL),
 	mLive(live),
 	mContainer(container),
+	// <FS:Ansariel> FIRE-20818: User-selectable font and size for script editor
+	mFontNameChangedCallbackConnection(),
+	mFontSizeChangedCallbackConnection(),
+	// </FS:Ansariel>
 	mHasScriptData(FALSE),
 	mScriptRemoved(FALSE),
 	mSaveDialogShown(FALSE)
@@ -409,6 +413,16 @@ LLScriptEdCore::~LLScriptEdCore()
 	{
 		mSyntaxIDConnection.disconnect();
 	}
+	// <FS:Ansariel> FIRE-20818: User-selectable font and size for script editor
+	if (mFontNameChangedCallbackConnection.connected())
+	{
+		mFontNameChangedCallbackConnection.disconnect();
+	}
+	if (mFontSizeChangedCallbackConnection.connected())
+	{
+		mFontSizeChangedCallbackConnection.disconnect();
+	}
+	// </FS:Ansariel>
 }
 
 void LLLiveLSLEditor::experienceChanged()
@@ -478,6 +492,11 @@ BOOL LLScriptEdCore::postBuild()
 
 	mEditor = getChild<LLScriptEditor>("Script Editor");
 
+	// <FS:Ansariel> FIRE-20818: User-selectable font and size for script editor
+	mFontNameChangedCallbackConnection = gSavedSettings.getControl("FSScriptingFontName")->getSignal()->connect(boost::bind(&LLScriptEdCore::onFontChanged, this));
+	mFontSizeChangedCallbackConnection = gSavedSettings.getControl("FSScriptingFontSize")->getSignal()->connect(boost::bind(&LLScriptEdCore::onFontChanged, this));
+	onFontChanged();
+	// </FS:Ansariel>
 	childSetCommitCallback("lsl errors", &LLScriptEdCore::onErrorList, this);
 	childSetAction("Save_btn", boost::bind(&LLScriptEdCore::doSave,this,FALSE));
 	childSetAction("Edit_btn", boost::bind(&LLScriptEdCore::openInExternalEditor, this));
@@ -1300,6 +1319,23 @@ LLUUID LLScriptEdCore::getAssociatedExperience()const
 {
 	return mAssociatedExperience;
 }
+
+// <FS:Ansariel> FIRE-20818: User-selectable font and size for script editor
+void LLScriptEdCore::onFontChanged()
+{
+	LLFontGL* font = LLFontGL::getFont(LLFontDescriptor(gSavedSettings.getString("FSScriptingFontName"), gSavedSettings.getString("FSScriptingFontSize"), LLFontGL::NORMAL));
+	if (font)
+	{
+		mEditor->setFont(font);
+		mEditor->needsReflow();
+		//if (mPostEditor)
+		//{
+		//	mPostEditor->setFont(font);
+		//	mPostEditor->needsReflow();
+		//}
+	}
+}
+// </FS:Ansariel>
 
 void LLLiveLSLEditor::setExperienceIds( const LLSD& experience_ids )
 {

@@ -135,13 +135,21 @@
       <file>Helvetica.dfont</file>
       </os>
   </font>
-
+  <font name="Scripting"
+	comment="Name of an optional font used for the script editor">
+    <file>SourceCodePro-Regular.ttf</file>
+  </font>
+  
   <font name="OverrideTest"
 	comment="Name of font to test overriding">
     <file>times.ttf</file>
     <file>DejaVuSans.ttf</file>
   </font>
 
+  <font_size name="Scripting"
+	     comment="Size of script editor font (points, or 1/72 of an inch)"
+	     size="8.6"
+	     />
   <font_size name="Monospace"
 	     comment="Size for monospaced font (points, or 1/72 of an inch)"
 	     size="8.0"

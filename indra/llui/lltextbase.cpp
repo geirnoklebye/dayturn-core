@@ -234,7 +234,9 @@ LLTextBase::LLTextBase(const LLTextBase::Params &p)
 		scroll_params.mouse_opaque = false;
 		scroll_params.min_auto_scroll_rate = 200;
 		scroll_params.max_auto_scroll_rate = 800;
-		scroll_params.border_visible = p.border_visible;
+		// <FS:Zi> Commented out to prevent contents from scrolling away while typing
+		// scroll_params.border_visible = p.border_visible;
+		// </FS:Zi>
 		mScroller = LLUICtrlFactory::create<LLScrollContainer>(scroll_params);
 		addChild(mScroller);
 	}
@@ -2600,7 +2602,9 @@ LLRect LLTextBase::getLocalRectFromDocIndex(S32 pos) const
 	LLRect content_window_rect = mScroller ? mScroller->getContentWindowRect() : getLocalRect();
 	if (mBorderVisible)
 	{
-		content_window_rect.stretch(-1);
+		// <FS:Zi> Commented out to prevent contents from scrolling away while typing
+		// content_window_rect.stretch(-1);
+		// </FS:Zi>
 	}
 
 	LLRect local_rect;
@@ -2919,7 +2923,9 @@ void LLTextBase::updateRects()
 	//FIXME: replace border with image?
 	if (mBorderVisible)
 	{
-		mVisibleTextRect.stretch(-1);
+		// <FS:Zi> Commented out to prevent contents from scrolling away while typing
+		// mVisibleTextRect.stretch(-1);
+		// </FS:Zi>
 	}
 	if (mVisibleTextRect != old_text_rect)
 	{
