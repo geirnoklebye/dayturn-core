@@ -144,7 +144,8 @@ public:
 protected:
 	void onBtnCopyToClipboard();
 	void onAvatarNameLookup(const LLUUID& idAgent, const LLAvatarName& avName);
-
+	void onOpen(const LLSD& key);
+	
 protected:
 	uuid_vec_t 					m_PendingLookup;
 
@@ -166,7 +167,9 @@ public:
 
 protected:
 	void onBtnRefresh();
-
+  void onOpen(const LLSD& key);
+  void onClose(bool quitting);
+  	
 protected:
 	LLInventoryObserver* mInventoryObserver;
 };

@@ -303,6 +303,10 @@ void KokuaRLVFloaterSupport::commandNotify(LLUUID& object_uuid, std::string& com
 
 	bool refresh_status = false;
 	bool refresh_worn = false;
+	
+	// optimisation - if neither floater is open, they obviously don't need refreshing...
+	if (!(KokuaFloaterRLVStatus::getBase() && KokuaFloaterRLVStatus::getBase()->isShown()) &&
+		  !(KokuaFloaterRLVWorn::getBase() && KokuaFloaterRLVWorn::getBase()->isShown())) return;	
 
 	// we could get called with stacked commands, so this handles the possible
 	// recursive call to break down the command stack and returns as early as
@@ -412,10 +416,10 @@ void KokuaFloaterRLVDebug::addRLVLine(const std::string &utf8mesg, const LLColor
 
 	KokuaFloaterRLVDebug* self = KokuaFloaterRLVDebug::getBase(); //used to check if the floater gets created on this call
 	LLFloater* restoreprevious = (LLFloater*)&LLUUID::null;
-
-	option_ignore_queries = gSavedSettings.getBOOL("KokuaRLVDebugFloaterIgnoreQueries");
-	option_auto_open = gSavedSettings.getBOOL("KokuaRLVDebugFloaterAutoOpen");
-	option_focus_on_latest = gSavedSettings.getBOOL("KokuaRLVDebugFloaterFocusOnLatest");
+		
+	static LLCachedControl<bool> option_ignore_queries(gSavedSettings, "KokuaRLVDebugFloaterIgnoreQueries");
+	static LLCachedControl<bool> option_auto_open(gSavedSettings, "KokuaRLVDebugFloaterAutoOpen");
+	static LLCachedControl<bool> option_focus_on_latest(gSavedSettings, "KokuaRLVDebugFloaterFocusOnLatest");
 
 	if (!option_auto_open)
 	{
@@ -630,7 +634,7 @@ void KokuaFloaterRLVConsole::onInput(LLUICtrl* pCtrl, const LLSD& sdParam)
 //static
 KokuaFloaterRLVConsole* KokuaFloaterRLVConsole::getBase()
 {
-	return LLFloaterReg::getTypedInstance<KokuaFloaterRLVConsole>("rlv_console");
+	return LLFloaterReg::findTypedInstance<KokuaFloaterRLVConsole>("rlv_console");
 }
 
 // ---- RLV Status
@@ -646,8 +650,12 @@ KokuaFloaterRLVStatus::~KokuaFloaterRLVStatus()
 BOOL KokuaFloaterRLVStatus::postBuild()
 {
 	getChild<LLUICtrl>("copy_btn")->setCommitCallback(boost::bind(&KokuaFloaterRLVStatus::onBtnCopyToClipboard, this));
-	refreshRLVStatus();
 	return TRUE;
+}
+
+void KokuaFloaterRLVStatus::onOpen(const LLSD& key)
+{
+  refreshRLVStatus();
 }
 
 void KokuaFloaterRLVStatus::onBtnCopyToClipboard()
@@ -666,6 +674,8 @@ void KokuaFloaterRLVStatus::callRefreshRLVStatus()
 
 void KokuaFloaterRLVStatus::refreshRLVStatus()
 {
+	if (!(KokuaFloaterRLVStatus::getBase() && KokuaFloaterRLVStatus::getBase()->isShown())) return;	
+	
 	awaiting_idle_for_status = false;
 	LLCtrlListInterface* pBhvrList = childGetListInterface("behaviour_list");
 	LLCtrlListInterface* pExceptList = childGetListInterface("exception_list");
@@ -884,21 +894,13 @@ void KokuaFloaterRLVStatus::onAvatarNameLookup(const LLUUID& idAgent, const LLAv
 //static
 KokuaFloaterRLVStatus* KokuaFloaterRLVStatus::getBase()
 {
-	return LLFloaterReg::getTypedInstance<KokuaFloaterRLVStatus>("rlv_status");
+	return LLFloaterReg::findTypedInstance<KokuaFloaterRLVStatus>("rlv_status");
 }
 
 // ---- RLV Worn
 
 KokuaFloaterRLVWorn::KokuaFloaterRLVWorn(const LLSD& sdKey) : LLFloater(LLSD(sdKey))
 {
-	//Although we also get refresh notifications by looking for RLV's potential
-	//wear/object attach/detach notifications they aren't reliable. In particular,
-	//some are sent before performing the action to which they refer so we end up
-	//doing a floater status refresh before anything has changed. Therefore, we
-	//also use an Inventory Observer to be sure we independently get advised of
-	//changes to worn/unworn status
-	mInventoryObserver = new KokuaRLVInventoryObserver;
-	gInventory.addObserver(mInventoryObserver);
 }
 
 KokuaFloaterRLVWorn::~KokuaFloaterRLVWorn()
@@ -909,8 +911,26 @@ KokuaFloaterRLVWorn::~KokuaFloaterRLVWorn()
 BOOL KokuaFloaterRLVWorn::postBuild()
 {
 	getChild<LLUICtrl>("refresh_btn")->setCommitCallback(boost::bind(&KokuaFloaterRLVWorn::onBtnRefresh, this));
-	refreshWornStatus();
 	return TRUE;
+}
+
+void KokuaFloaterRLVWorn::onOpen(const LLSD& key)
+{
+	//Although we also get refresh notifications by looking for RLV's potential
+	//wear/object attach/detach notifications they aren't reliable. In particular,
+	//some are sent before performing the action to which they refer so we end up
+	//doing a floater status refresh before anything has changed. Therefore, we
+	//also use an Inventory Observer to be sure we independently get advised of
+	//changes to worn/unworn status
+	mInventoryObserver = new KokuaRLVInventoryObserver;
+	gInventory.addObserver(mInventoryObserver);
+
+  refreshWornStatus();
+}
+
+void KokuaFloaterRLVWorn::onClose(bool quitting)
+{
+	gInventory.removeObserver(mInventoryObserver);
 }
 
 void KokuaFloaterRLVWorn::onBtnRefresh()
@@ -929,6 +949,8 @@ void KokuaFloaterRLVWorn::callRefreshWornStatus()
 
 void KokuaFloaterRLVWorn::refreshWornStatus()
 {
+	if (!(KokuaFloaterRLVWorn::getBase() && KokuaFloaterRLVWorn::getBase()->isShown())) return;
+	
 	awaiting_idle_for_worn = false;
 	LLCtrlListInterface* pAttachedList = childGetListInterface("attached_list");
 	LLCtrlListInterface* pAttachPtList = childGetListInterface("attachpt_list");
@@ -1138,5 +1160,5 @@ void KokuaFloaterRLVWorn::refreshWornStatus()
 //static
 KokuaFloaterRLVWorn* KokuaFloaterRLVWorn::getBase()
 {
-	return LLFloaterReg::getTypedInstance<KokuaFloaterRLVWorn>("rlv_worn");
+	return LLFloaterReg::findTypedInstance<KokuaFloaterRLVWorn>("rlv_worn");
 }
