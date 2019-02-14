@@ -110,6 +110,12 @@ static bool handleRestrainedLoveDebugChanged(const LLSD& newvalue)
 	return true;
 }
 
+static bool handleRestrainedLoveLoggingChanged(const LLSD& newvalue)
+{
+	RRInterface::sRestrainedLoveLogging = newvalue.asBoolean();
+	return true;
+}
+
 static bool handleRestrainedLoveOffsetAvatarChanged(const LLSD& newvalue)
 {
 	if (isAgentAvatarValid())
@@ -681,6 +687,7 @@ void settings_setup_listeners()
 {
 //MK
 	gSavedSettings.getControl("RestrainedLoveDebug")->getSignal()->connect(boost::bind(&handleRestrainedLoveDebugChanged, _2));
+	gSavedSettings.getControl("RestrainedLoveLogging")->getSignal()->connect(boost::bind(&handleRestrainedLoveLoggingChanged, _2));
 	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarX")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
 	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarY")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));
 	gSavedPerAccountSettings.getControl("RestrainedLoveOffsetAvatarZ")->getSignal()->connect(boost::bind(&handleRestrainedLoveOffsetAvatarChanged, _2));

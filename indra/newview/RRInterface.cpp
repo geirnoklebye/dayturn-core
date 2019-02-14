@@ -99,7 +99,8 @@
 // Global and static variables initialization.
 BOOL gRRenabled = TRUE;
 BOOL RRInterface::sRRNoSetEnv = FALSE;
-BOOL RRInterface::sRestrainedLoveDebug = FALSE;
+BOOL RRInterface::sRestrainedLoveDebug = FALSE; // Note: not used in this file; only used in llviewermessage for 'executes/fails command'
+BOOL RRInterface::sRestrainedLoveLogging = FALSE; // Note: currently only used in this file
 BOOL RRInterface::sRestrainedLoveHeadMouselookRenderRigged = FALSE;
 BOOL RRInterface::sCanOoc = TRUE;
 std::string RRInterface::sRecvimMessage = "The Resident you messaged is prevented from reading your instant messages at the moment, please try again later.";
@@ -600,6 +601,7 @@ RRInterface::RRInterface():
 	// Calling gSavedSettings here crashes the viewer when compiled with VS2005.
 	// OK under Linux. Moved this initialization to llstartup.cpp as a consequence.
 	// sRestrainedLoveDebug = gSavedSettings.getBOOL("RestrainedLoveDebug");
+	// sRestrainedLoveLogging = gSavedSettings.getBOOL("RestrainedLoveLogging");
 }
 
 RRInterface::~RRInterface()
@@ -647,7 +649,7 @@ std::string RRInterface::getLastName (std::string fullName)
 
 BOOL RRInterface::isAllowed (LLUUID object_uuid, std::string action, BOOL log_it)
 {
-	BOOL debug = sRestrainedLoveDebug && log_it;
+	BOOL debug = sRestrainedLoveLogging && log_it;
 	if (debug) {
 		LL_INFOS() << object_uuid.asString() << "      " << action << LL_ENDL;
 	}
@@ -868,7 +870,7 @@ FolderLock RRInterface::isFolderLockedWithoutException (LLInventoryCategory* cat
 {
 	if (cat == NULL) return FolderLock_unlocked;
 
-	if (sRestrainedLoveDebug) {
+	if (sRestrainedLoveLogging) {
 		LL_INFOS() << "isFolderLockedWithoutException(" << cat->getName() << ", " << attach_or_detach << ")" << LL_ENDL;
 	}
 	// For each object that is locking this folder, check whether it also issues exceptions to this lock
@@ -886,7 +888,7 @@ FolderLock RRInterface::isFolderLockedWithoutException (LLInventoryCategory* cat
 	for (RRMAP::iterator it = mSpecialObjectBehaviours.begin (); it != mSpecialObjectBehaviours.end(); ++it) {
 		LLUUID uuid = LLUUID(it->first);
 		command = it->second;
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "command = " << command << LL_ENDL;
 		}
 		// param will always be equal to "n" in this case since we added it to command, but we don't care about this here
@@ -913,7 +915,7 @@ FolderLock RRInterface::isFolderLockedWithoutException (LLInventoryCategory* cat
 				FolderLock this_lock = isFolderLockedWithoutExceptionAux(cat, attach_or_detach, commands_list);
 				if (this_lock == FolderLock_locked_without_except) return FolderLock_locked_without_except;
 				else current_lock = this_lock;
-				if (sRestrainedLoveDebug) {
+				if (sRestrainedLoveLogging) {
 					LL_INFOS() << "this_lock=" << this_lock << LL_ENDL;
 				}
 			}
@@ -937,7 +939,7 @@ FolderLock RRInterface::isFolderLockedWithoutExceptionAux (LLInventoryCategory* 
 		return FolderLock_unlocked;
 	}
 
-	if (sRestrainedLoveDebug) {
+	if (sRestrainedLoveLogging) {
 		LL_INFOS() << "isFolderLockedWithoutExceptionAux(" << cat->getName() << ", " << attach_or_detach << ", [" << dumpList2String(list_of_restrictions, ",") << "])" << LL_ENDL;
 	}
 
@@ -955,14 +957,14 @@ FolderLock RRInterface::isFolderLockedWithoutExceptionAux (LLInventoryCategory* 
 	it = gInventory.getCategory (cat_id);
 	
 	do {
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "it=" << it->getName() << LL_ENDL;
 		}
 
 		for (unsigned int i = 0; i < list_of_restrictions.size(); ++i)
 		{
 			command = list_of_restrictions[i];
-			if (sRestrainedLoveDebug) {
+			if (sRestrainedLoveLogging) {
 				LL_INFOS() << "command2=" << command << LL_ENDL;
 			}
 
@@ -1000,7 +1002,7 @@ FolderLock RRInterface::isFolderLockedWithoutExceptionAux (LLInventoryCategory* 
 
 BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string option)
 {
-	if (sRestrainedLoveDebug) {
+	if (sRestrainedLoveLogging) {
 		LL_INFOS() << object_uuid.asString() << "       " << action << "      " << option << LL_ENDL;
 	}
 	
@@ -1122,7 +1124,7 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 
 BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string option)
 {
-	if (sRestrainedLoveDebug) {
+	if (sRestrainedLoveLogging) {
 		LL_INFOS() << object_uuid.asString() << "       " << action << "      " << option << LL_ENDL;
 	}
 
@@ -1139,12 +1141,12 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 	while (it != mSpecialObjectBehaviours.end() &&
 			it != mSpecialObjectBehaviours.upper_bound(object_uuid.asString()))
 	{
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "  checking " << it->second << LL_ENDL;
 		}
 		if (it->second == action) {
 			mSpecialObjectBehaviours.erase(it);
-			if (sRestrainedLoveDebug) {
+			if (sRestrainedLoveLogging) {
 				LL_INFOS() << "  => removed. " << LL_ENDL;
 			}
 			refreshCachedVariable(action);
@@ -1185,7 +1187,7 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 
 BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 {
-	if (sRestrainedLoveDebug) {
+	if (sRestrainedLoveLogging) {
 		LL_INFOS() << object_uuid.asString() << "   /   " << command << LL_ENDL;
 	}
 
@@ -1195,12 +1197,12 @@ BOOL RRInterface::clear (LLUUID object_uuid, std::string command)
 	RRMAP::iterator it;
 	it = mSpecialObjectBehaviours.begin ();
 	while (it != mSpecialObjectBehaviours.end()) {
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "  checking " << it->second << LL_ENDL;
 		}
 		if (it->first==object_uuid.asString() && (command=="" || it->second.find (command)!=-1)) {
 			notify (object_uuid, it->second, "=y");
-			if (sRestrainedLoveDebug) {
+			if (sRestrainedLoveLogging) {
 				LL_INFOS() << it->second << " => removed. " << LL_ENDL;
 			}
 			std::string tmp = it->second;
@@ -1256,12 +1258,12 @@ BOOL RRInterface::garbageCollector (BOOL all) {
 	while (it != mSpecialObjectBehaviours.end()) {
 		uuid.set (it->first);
 		if (all || !uuid.isNull ()) {
-//			if (sRestrainedLoveDebug) {
+//			if (sRestrainedLoveLogging) {
 //				LL_INFOS() << "testing " << it->first << LL_ENDL;
 //			}
 			objp = gObjectList.findObject(uuid);
 			if (!objp) {
-				if (sRestrainedLoveDebug) {
+				if (sRestrainedLoveLogging) {
 					LL_INFOS() << it->first << " not found => cleaning... " << LL_ENDL;
 				}
 				clear(uuid);
@@ -1276,7 +1278,7 @@ BOOL RRInterface::garbageCollector (BOOL all) {
 				it++;
 			}
 		} else {
-			if (sRestrainedLoveDebug) {
+			if (sRestrainedLoveLogging) {
 				LL_INFOS() << "ignoring " << it->second << LL_ENDL;
 			}
 			it++;
@@ -1435,7 +1437,7 @@ BOOL RRInterface::reallyHandleCommand (LLUUID uuid, std::string command)
 		Command cmd;
 		cmd.uuid=uuid;
 		cmd.command=command;
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LLInventoryItem* item = getItem(uuid);
 			if (item != NULL)
 			{
@@ -1460,7 +1462,7 @@ BOOL RRInterface::reallyHandleCommand (LLUUID uuid, std::string command)
 	LLStringUtil::toLower(command);
 	if (parseCommand (command, behav, option, param)) // detach=n, recvchat=n, recvim=n, unsit=n, recvim:<uuid>=add, clear=tplure:
 	{
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "[" << uuid.asString() << "]  [" << behav << "]  [" << option << "] [" << param << "]" << LL_ENDL;
 		}
 		if (behav=="version") return answerOnChat (param, getVersion ());
@@ -1554,7 +1556,7 @@ BOOL RRInterface::reallyHandleCommand (LLUUID uuid, std::string command)
 	}
 	else // clear
 	{
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << uuid.asString() << "       " << behav << LL_ENDL;
 		}
 		if (behav=="clear") clear (uuid);
@@ -1567,7 +1569,7 @@ BOOL RRInterface::fireCommands ()
 {
 	BOOL ok=TRUE;
 	if (mRetainedCommands.size ()) {
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "Firing commands : " << mRetainedCommands.size () << LL_ENDL;
 		}
 		Command cmd;
@@ -1627,7 +1629,7 @@ static void force_sit(LLUUID object_uuid)
 
 BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string option)
 {
-	if (sRestrainedLoveDebug) {
+	if (sRestrainedLoveLogging) {
 		LL_INFOS() << command << "     " << option << LL_ENDL;
 	}
 
@@ -1647,21 +1649,21 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
 		if (!allowed_to_sittp) add (object_uuid, "sittp", "");
 	}
 	else if (command=="unsit") { // unsit
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "trying to unsit" << LL_ENDL;
 		}
 		if (gAgentAvatarp &&
 			gAgentAvatarp->mIsSitting) {
-			if (sRestrainedLoveDebug) {
+			if (sRestrainedLoveLogging) {
 				LL_INFOS() << "found avatar object" << LL_ENDL;
 			}
 			if (gAgent.mRRInterface.mContainsUnsit) {
-				if (sRestrainedLoveDebug) {
+				if (sRestrainedLoveLogging) {
 					LL_INFOS() << "prevented from unsitting" << LL_ENDL;
 				}
 				return TRUE;
 			}
-			if (sRestrainedLoveDebug) {
+			if (sRestrainedLoveLogging) {
 				LL_INFOS() << "unsitting agent" << LL_ENDL;
 			}
 //			LLOverlayBar::onClickStandUp(NULL);
@@ -1948,7 +1950,7 @@ BOOL RRInterface::force (LLUUID object_uuid, std::string command, std::string op
             if (i != std::string::npos && i + 1 < option.length()) {
                 F32 scalar = (F32)atof(option.substr(i + 1).c_str());
                 if (scalar != 0.0f) {
-                    if (sRestrainedLoveDebug) {
+                    if (sRestrainedLoveLogging) {
                         LL_INFOS() << "Pelvis to foot = " << avatar->getPelvisToFoot() << "m" << LL_ENDL;
                     }
                     val = (atof(option.c_str()) - avatar->getPelvisToFoot()) * scalar;
@@ -2053,7 +2055,7 @@ BOOL RRInterface::answerOnChat (std::string channel, std::string msg)
 		gMessageSystem->addString("ButtonLabel", msg);
 		gAgent.sendReliableMessage();
 	}
-	if (sRestrainedLoveDebug) {
+	if (sRestrainedLoveLogging) {
 		LL_INFOS() << "/" << chan << " " << msg << LL_ENDL;
 	}
 	return TRUE;
@@ -2208,7 +2210,7 @@ std::string RRInterface::getAttachments (std::string attachpt)
 		LLViewerJointAttachment* attachment = curiter->second;
 		name=attachment->getName ();
 		LLStringUtil::toLower(name);
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "trying <" << name << ">" << LL_ENDL;
 		}
 		if (attachpt=="" || attachpt==name) {
@@ -2270,11 +2272,11 @@ BOOL RRInterface::forceDetach (std::string attachpt)
 		LLViewerJointAttachment* attachment = curiter->second;
 		name=attachment->getName ();
 		LLStringUtil::toLower(name);
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "trying <" << name << ">" << LL_ENDL;
 		}
 		if (attachpt=="" || attachpt==name) {
-			if (sRestrainedLoveDebug) {
+			if (sRestrainedLoveLogging) {
 				LL_INFOS() << "found => detaching" << LL_ENDL;
 			}
 			detachAllObjectsFromAttachment (attachment);
@@ -2359,7 +2361,7 @@ std::deque<LLInventoryItem*> RRInterface::getListOfLockedItems (LLInventoryCateg
 				if (attached_object) {
 					avatar->getAttachedPointName (item->getLinkedUUID(), attach_point_name);
 					if (!gAgent.mRRInterface.canDetach(attached_object)) {
-						if (sRestrainedLoveDebug) {
+						if (sRestrainedLoveLogging) {
 							LL_INFOS() << "found a locked object : " << item->getName() << " on " << attach_point_name << LL_ENDL;
 						}
 						res.push_back (item);
@@ -2371,7 +2373,7 @@ std::deque<LLInventoryItem*> RRInterface::getListOfLockedItems (LLInventoryCateg
 				if (gAgent.mRRInterface.contains ("remoutfit")
 					|| gAgent.mRRInterface.containsSubstr ("remoutfit:")
 					) {
-					if (sRestrainedLoveDebug) {
+					if (sRestrainedLoveLogging) {
 						LL_INFOS() << "found a locked clothing : " << item->getName() << LL_ENDL;
 					}
 					res.push_back (item);
@@ -2391,7 +2393,7 @@ std::deque<LLInventoryItem*> RRInterface::getListOfLockedItems (LLInventoryCateg
 			}
 		}
 		
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "number of locked objects under " << root->getName() << " =  " << res.size() << LL_ENDL;
 		}
 	}
@@ -2624,7 +2626,7 @@ LLInventoryCategory* RRInterface::getRlvShare ()
 			LLInventoryCategory* cat = cats->at(i);
 			std::string name = cat->getName();
 			if (name == RR_SHARED_FOLDER) {
-//				if (sRestrainedLoveDebug) {
+//				if (sRestrainedLoveLogging) {
 //					LL_INFOS() << "found " << name << LL_ENDL;
 //				}
 				return cat;
@@ -2785,7 +2787,7 @@ LLInventoryCategory* RRInterface::getCategoryUnderRlvShare (std::string catName,
 		}
 	}
 
-	if (sRestrainedLoveDebug) {
+	if (sRestrainedLoveLogging) {
 		LL_INFOS() << "category not found" << LL_ENDL;
 	}
 	return NULL;
@@ -2924,7 +2926,7 @@ LLViewerJointAttachment* RRInterface::findAttachmentPointFromName (std::string o
 		if (attachment) {
 			attachName = attachment->getName();
 			LLStringUtil::toLower(attachName);
-//			if (sRestrainedLoveDebug) {
+//			if (sRestrainedLoveLogging) {
 //				LL_INFOS() << "trying attachment " << attachName << LL_ENDL;
 //			}
 			if (exactName && objectName == attachName) return attachment;
@@ -2936,14 +2938,14 @@ LLViewerJointAttachment* RRInterface::findAttachmentPointFromName (std::string o
 				new_candidate.attachment = attachment;
 				candidates.push_back (new_candidate);
 				found_one = true;
-				if (sRestrainedLoveDebug) {
+				if (sRestrainedLoveLogging) {
 					LL_INFOS() << "new candidate '" << attachName << "' : index=" << new_candidate.index << "   length=" << new_candidate.length << LL_ENDL;
 				}
 			}
 		}
 	}
 	if (!found_one) {
-		if (sRestrainedLoveDebug) {
+		if (sRestrainedLoveLogging) {
 			LL_INFOS() << "no attachment found" << LL_ENDL;
 		}
 		return NULL;
@@ -2974,7 +2976,7 @@ LLViewerJointAttachment* RRInterface::findAttachmentPointFromName (std::string o
 	if (ind_res > -1) {
 		candidate = candidates[ind_res];
 		res = candidate.attachment;
-		if (sRestrainedLoveDebug && res) {
+		if (sRestrainedLoveLogging && res) {
 			LL_INFOS() << "returning '" << res->getName() << "'" << LL_ENDL;
 		}
 	}
@@ -3152,7 +3154,7 @@ BOOL RRInterface::forceAttach (std::string category, BOOL recursive, AttachHow h
 			for(S32 i = 0; i < count; ++i) {
 				if (!isRoot) {
 					LLViewerInventoryItem* item = (LLViewerInventoryItem*)items->at(i);
-					if (sRestrainedLoveDebug) {
+					if (sRestrainedLoveLogging) {
 						LL_INFOS() << "trying to attach " << item->getName() << LL_ENDL;
 					}
 					
@@ -3161,7 +3163,7 @@ BOOL RRInterface::forceAttach (std::string category, BOOL recursive, AttachHow h
 						LLViewerJointAttachment* attachpt = findAttachmentPointFromName (item->getName());
 						
 						if (attachpt) {
-							if (sRestrainedLoveDebug) {
+							if (sRestrainedLoveLogging) {
 								LL_INFOS() << "attaching item to " << attachpt->getName() << LL_ENDL;
 							}
 							if (replacing) {
@@ -3326,7 +3328,7 @@ BOOL RRInterface::forceDetachByName (std::string category, BOOL recursive)
 				for(S32 i = 0; i < count; ++i) {
 					if (!isRoot) {
 						LLViewerInventoryItem* item = (LLViewerInventoryItem*)items->at(i);
-						if (sRestrainedLoveDebug) {
+						if (sRestrainedLoveLogging) {
 							LL_INFOS() << "trying to detach " << item->getName() << LL_ENDL;
 						}
 					
@@ -3437,7 +3439,7 @@ BOOL RRInterface::forceTeleport(std::string location, const LLVector3& vecLookAt
 		return FALSE;
 	}
 
-	if (sRestrainedLoveDebug) {
+	if (sRestrainedLoveLogging) {
 		LL_INFOS() << tokens.at(0) << "," << tokens.at(1) << "," << tokens.at(2) << "     " << x << "," << y << "," << z << LL_ENDL;
 	}
 
@@ -4209,7 +4211,7 @@ std::string RRInterface::getFullPath (LLInventoryCategory* cat)
 
 std::string RRInterface::getFullPath (LLInventoryItem* item, std::string option, bool full_list /*= true*/)
 {
-	if (sRestrainedLoveDebug) {
+	if (sRestrainedLoveLogging) {
 		LL_INFOS() << "getFullPath(" << (item? item->getName(): "NULL") << ", " << option << ", " << full_list << ")" << LL_ENDL;
 	}
 	// Returns the path from the shared root to this object, or to the object worn at the attach point or clothing layer pointed by option if any
@@ -4227,7 +4229,7 @@ std::string RRInterface::getFullPath (LLInventoryItem* item, std::string option,
 				// We have found the inventory item => add its path to the list
 				// it appears to be a recursive call but the level of recursivity is only 2, we won't execute this instruction again in the called method since "option" will be empty
 				res.push_back(getFullPath(item, ""));
-				if (sRestrainedLoveDebug) {
+				if (sRestrainedLoveLogging) {
 					LL_INFOS() << "res=" << dumpList2String(res, ", ") << LL_ENDL;
 				}
 			}
@@ -4244,7 +4246,7 @@ std::string RRInterface::getFullPath (LLInventoryItem* item, std::string option,
 						// We have found the inventory item => add its path to the list
 						// it appears to be a recursive call but the level of recursivity is only 2, we won't execute this instruction again in the called method since "option" will be empty
 						res.push_back (getFullPath (item, ""));
-						if (sRestrainedLoveDebug) {
+						if (sRestrainedLoveLogging) {
 							LL_INFOS() << "res=" << dumpList2String(res, ", ") << LL_ENDL;
 						}
 						if (!full_list) break; // old behaviour : we only return the first folder, not a full list
@@ -4267,7 +4269,7 @@ std::string RRInterface::getFullPath (LLInventoryItem* item, std::string option,
 							// We have found the inventory item => add its path to the list
 							// it appears to be a recursive call but the level of recursivity is only 2, we won't execute this instruction again in the called method since "option" will be empty
 							res.push_back (getFullPath (item, ""));
-							if (sRestrainedLoveDebug) {
+							if (sRestrainedLoveLogging) {
 								LL_INFOS() << "res=" << dumpList2String(res, ", ") << LL_ENDL;
 							}
 							if (!full_list) break; // old behaviour : we only return the first folder, not a full list
