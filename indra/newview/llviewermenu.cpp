@@ -9688,8 +9688,11 @@ void handle_rebake_textures(void*)
 	}
 	reset_mesh_lod(gAgentAvatarp); // <FS:Ansariel> Reset Mesh LOD
 	gAgentAvatarp->setIsCrossingRegion(false); // <FS:Ansariel> FIRE-12004: Attachments getting lost on TP
+//MK
+	// Refresh the attachments for good measure.
+	LLAttachmentsMgr::instance().refreshAttachments();
+//mk
 }
-
 void handle_refresh_scene(void*)
 {
 	if (!isAgentAvatarValid()) return;
