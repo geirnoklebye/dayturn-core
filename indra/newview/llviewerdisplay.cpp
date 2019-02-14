@@ -79,6 +79,9 @@
 #include "llpostprocess.h"
 #include "llscenemonitor.h"
 
+//MK
+#include "llviewermenu.h" // for handle_rebake_textures()
+//mk
 extern LLPointer<LLViewerTexture> gStartTexture;
 extern bool gShiftFrame;
 
@@ -508,6 +511,10 @@ void display(BOOL rebuild, F32 zoom_factor, int subfield, BOOL for_snapshot)
 			// No teleport in progress
 			gViewerWindow->setShowProgress(FALSE);
 			gTeleportDisplay = FALSE;
+//MK
+			// Force a rebake textures here in case something is wrong while loading the COF
+			handle_rebake_textures(NULL);
+//mk
 			break;
 		}
 	}
