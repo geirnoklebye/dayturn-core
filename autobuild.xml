@@ -3617,11 +3617,11 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>6cf02447db3154f0926c3a2acbf229a8</string>
+              <string>12f442d4d4607b61db8387be1d783d18</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/p64_3p-openjpeg/downloads/openjpeg-1.5.0.172232100-darwin64-172232100.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/p64_3p-openjpeg/downloads/openjpeg-1.5.1.190451809-darwin64-190451809.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -3680,7 +3680,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.5.0.201701151945</string>
+        <string>1.5.1.190451809</string>
       </map>
       <key>openssl</key>
       <map>
