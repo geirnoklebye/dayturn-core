@@ -66,7 +66,10 @@
 
 // extern
 const S32Megabytes gMinVideoRam(32);
-const S32Megabytes gMaxVideoRam(512);
+// <FS:Ansariel> Texture memory management
+//const S32Megabytes gMaxVideoRam(512);
+S32Megabytes gMaxVideoRam(512);
+// </FS:Ansariel>
 
 
 // statics
@@ -88,11 +91,18 @@ S32 LLViewerTexture::sAuxCount = 0;
 LLFrameTimer LLViewerTexture::sEvaluationTimer;
 F32 LLViewerTexture::sDesiredDiscardBias = 0.f;
 F32 LLViewerTexture::sDesiredDiscardScale = 1.1f;
-S32Bytes LLViewerTexture::sBoundTextureMemory;
-S32Bytes LLViewerTexture::sTotalTextureMemory;
+// <FS:Ansariel> Texture memory management
+//S32Bytes LLViewerTexture::sBoundTextureMemory;
+//S32Bytes LLViewerTexture::sTotalTextureMemory;
+S64Bytes LLViewerTexture::sBoundTextureMemory;
+S64Bytes LLViewerTexture::sTotalTextureMemory;
+// </FS:Ansariel>
 S32Megabytes LLViewerTexture::sMaxBoundTextureMemory;
 S32Megabytes LLViewerTexture::sMaxTotalTextureMem;
-S32Bytes LLViewerTexture::sMaxDesiredTextureMem;
+// <FS:Ansariel> Texture memory management
+//S32Bytes LLViewerTexture::sMaxDesiredTextureMem;
+S64Bytes LLViewerTexture::sMaxDesiredTextureMem;
+// </FS:Ansariel>
 S8  LLViewerTexture::sCameraMovingDiscardBias = 0;
 F32 LLViewerTexture::sCameraMovingBias = 0.0f;
 S32 LLViewerTexture::sMaxSculptRez = 128; //max sculpt image size
@@ -113,9 +123,9 @@ const F32 desired_discard_bias_max = (F32)MAX_DISCARD_LEVEL; // max number of le
 const F64 log_2 = log(2.0);
 
 #if ADDRESS_SIZE == 32
-const U32 DESIRED_NORMAL_TEXTURE_SIZE = (U32)LLViewerFetchedTexture::MAX_IMAGE_SIZE_DEFAULT / 2;
+/*const*/ U32 DESIRED_NORMAL_TEXTURE_SIZE = (U32)LLViewerFetchedTexture::MAX_IMAGE_SIZE_DEFAULT / 2; // <FS:Ansariel> Max texture resolution
 #else
-const U32 DESIRED_NORMAL_TEXTURE_SIZE = (U32)LLViewerFetchedTexture::MAX_IMAGE_SIZE_DEFAULT;
+/*const*/ U32 DESIRED_NORMAL_TEXTURE_SIZE = (U32)LLViewerFetchedTexture::MAX_IMAGE_SIZE_DEFAULT; // <FS:Ansariel> Max texture resolution
 #endif
 
 //----------------------------------------------------------------------------------------------
@@ -560,28 +570,48 @@ void LLViewerTexture::updateClass(const F32 velocity, const F32 angular_velocity
 	sMaxTotalTextureMem = gTextureList.getMaxTotalTextureMem();
 	sMaxDesiredTextureMem = sMaxTotalTextureMem; //in Bytes, by default and when total used texture memory is small.
 
+	// <FS:Ansariel> Link threshold factor for lowering bias based on total texture memory to the same value
+	//               textures will be destroyed
+	static LLCachedControl<F32> fsDestroyGLTexturesThreshold(gSavedSettings, "FSDestroyGLTexturesThreshold");
+
 	if (sBoundTextureMemory >= sMaxBoundTextureMemory ||
 		sTotalTextureMemory >= sMaxTotalTextureMem)
 	{
 		//when texture memory overflows, lower down the threshold to release the textures more aggressively.
-		sMaxDesiredTextureMem = llmin(sMaxDesiredTextureMem * 0.75f, F32Bytes(gMaxVideoRam));
+		// <FS:Ansariel> Texture memory management
+		//sMaxDesiredTextureMem = llmin(sMaxDesiredTextureMem * 0.75f, F32Bytes(gMaxVideoRam));
+		sMaxDesiredTextureMem = llmin(sMaxDesiredTextureMem * 0.75, F64Bytes(gMaxVideoRam));
+		// </FS:Ansariel>
 	
 		// If we are using more texture memory than we should,
 		// scale up the desired discard level
 		if (sEvaluationTimer.getElapsedTimeF32() > discard_delta_time)
 		{
 			sDesiredDiscardBias += discard_bias_delta;
+			LL_INFOS() << "new bias " << sDesiredDiscardBias
+					<< " sBoundTextureMemory " << sBoundTextureMemory 
+					<< " sTotalTextureMemory " << sTotalTextureMemory
+					<< " sMaxBoundTextureMemory " << sMaxBoundTextureMemory
+					<< " sMaxTotalTextureMem " << sMaxTotalTextureMem
+					<< LL_ENDL;
 			sEvaluationTimer.reset();
 		}
 	}
 	else if(sEvaluationTimer.getElapsedTimeF32() > discard_delta_time && isMemoryForTextureLow())
 	{
 		sDesiredDiscardBias += discard_bias_delta;
+		LL_DEBUGS() << "new bias " << sDesiredDiscardBias
+				<< LL_ENDL;
+
 		sEvaluationTimer.reset();
 	}
 	else if (sDesiredDiscardBias > 0.0f &&
 			 sBoundTextureMemory < sMaxBoundTextureMemory * texmem_lower_bound_scale &&
-			 sTotalTextureMemory < sMaxTotalTextureMem * texmem_lower_bound_scale)
+			 // <FS:Ansariel> Link threshold factor for lowering bias based on total texture memory to the same value
+			 //               textures will be destroyed
+			 //sTotalTextureMemory < sMaxTotalTextureMem * texmem_lower_bound_scale)
+			 sTotalTextureMemory < sMaxTotalTextureMem * fsDestroyGLTexturesThreshold())
+			 // </FS:Ansariel>
 	{			 
 		// If we are using less texture memory than we should,
 		// scale down the desired discard level
@@ -1327,7 +1357,12 @@ void LLViewerFetchedTexture::dump()
 // ONLY called from LLViewerFetchedTextureList
 void LLViewerFetchedTexture::destroyTexture() 
 {
-	if(LLImageGL::sGlobalTextureMemory < sMaxDesiredTextureMem * 0.95f)//not ready to release unused memory.
+	// <FS:Ansariel> 
+	//if(LLImageGL::sGlobalTextureMemory < sMaxDesiredTextureMem * 0.95f)//not ready to release unused memory.
+	static LLCachedControl<bool> fsDestroyGLTexturesImmediately(gSavedSettings, "FSDestroyGLTexturesImmediately");
+	static LLCachedControl<F32> fsDestroyGLTexturesThreshold(gSavedSettings, "FSDestroyGLTexturesThreshold");
+	if (!fsDestroyGLTexturesImmediately && LLImageGL::sGlobalTextureMemory.value() < sMaxDesiredTextureMem.value() * fsDestroyGLTexturesThreshold)//not ready to release unused memory.
+	// </FS:Ansariel>
 	{
 		return ;
 	}
@@ -2238,7 +2273,11 @@ bool LLViewerFetchedTexture::updateFetch()
 			c = mComponents;
 		}
 
-		const U32 override_tex_discard_level = gSavedSettings.getU32("TextureDiscardLevel");
+		// <FS:Ansariel> Replace frequently called gSavedSettings
+		//const U32 override_tex_discard_level = gSavedSettings.getU32("TextureDiscardLevel");
+		static LLCachedControl<U32> sTextureDiscardLevel(gSavedSettings, "TextureDiscardLevel");
+		const U32 override_tex_discard_level = sTextureDiscardLevel();
+		// </FS:Ansariel>
 		if (override_tex_discard_level != 0)
 		{
 			desired_discard = override_tex_discard_level;
@@ -2282,6 +2321,9 @@ bool LLViewerFetchedTexture::updateFetch()
 
 void LLViewerFetchedTexture::clearFetchedResults()
 {
+	// <FS:Ansariel> For texture refresh
+	mIsMissingAsset = FALSE;
+
 	if(mNeedsCreateTexture || mIsFetching)
 	{
 		return ;

@@ -1351,7 +1351,10 @@ S32Megabytes LLViewerTextureList::getMinVideoRamSetting()
 
 //static
 // Returns max setting for TextureMemory (in MB)
-S32Megabytes LLViewerTextureList::getMaxVideoRamSetting(bool get_recommended, float mem_multiplier)
+// <FS:Ansariel> Proper texture memory calculation
+//S32Megabytes LLViewerTextureList::getMaxVideoRamSetting(bool get_recommended, float mem_multiplier)
+S32Megabytes LLViewerTextureList::getMaxVideoRamSetting(bool get_recommended, float mem_multiplier, bool clamp_upper_limit /* = true */)
+// </FS:Ansariel>
 {
 	S32Megabytes max_texmem;
 	if (gGLManager.mVRAM != 0)
@@ -1399,7 +1402,17 @@ S32Megabytes LLViewerTextureList::getMaxVideoRamSetting(bool get_recommended, fl
     // limit the texture memory to a multiple of the default if we've found some cards to behave poorly otherwise
 	max_texmem = llmin(max_texmem, (S32Megabytes) (mem_multiplier * max_texmem));
 
-	max_texmem = llclamp(max_texmem, getMinVideoRamSetting(), gMaxVideoRam); 
+	// <FS:Ansariel> Proper texture memory calculation
+	//max_texmem = llclamp(max_texmem, getMinVideoRamSetting(), gMaxVideoRam);
+	if (clamp_upper_limit)
+	{
+		max_texmem = llclamp(max_texmem, getMinVideoRamSetting(), gMaxVideoRam);
+	}
+	else
+	{
+		max_texmem = llmax(max_texmem, getMinVideoRamSetting());
+	}
+	// </FS:Ansariel>
 	
 	return max_texmem;
 }
@@ -1432,14 +1445,56 @@ void LLViewerTextureList::updateMaxResidentTexMem(S32Megabytes mem)
 	// currently max(12MB, VRAM/4) assumed...
 	
 	S32Megabytes vb_mem = mem;
+
+	// <FS:Ansariel> Proper texture memory calculation
+	S32Megabytes total_mem = getMaxVideoRamSetting(true, mem_multiplier, false);
+
+	if ((vb_mem / 3) > VIDEO_CARD_FRAMEBUFFER_MEM)
+	{
+		vb_mem = vb_mem * 4 / 3;
+	}
+	else
+	{
+		vb_mem += VIDEO_CARD_FRAMEBUFFER_MEM;
+	}
+
+	vb_mem = llmin (vb_mem, total_mem);
+	// </FS:Ansariel>
+
 	S32Megabytes fb_mem = llmax(VIDEO_CARD_FRAMEBUFFER_MEM, vb_mem/4);
-	mMaxResidentTexMemInMegaBytes = (vb_mem - fb_mem) ; //in MB
+	//<FS:TS> The memory reported by ATI cards is actually the texture
+	//	memory in use, already corrected for the framebuffer and
+	//	VBO pools. Don't back it out a second time.
+	//mMaxResidentTexMemInMegaBytes = (vb_mem - fb_mem) ; //in MB
+	mMaxResidentTexMemInMegaBytes = vb_mem; //in MB
+	if(!gGLManager.mIsATI)
+	{
+		mMaxResidentTexMemInMegaBytes -= fb_mem; //in MB
+	}
+	//</FS:TS>
 	
+// <FS:Ansariel> Texture memory management
+	//mMaxTotalTextureMemInMegaBytes = mMaxResidentTexMemInMegaBytes * 2;
+#if ADDRESS_SIZE == 32
+	// </FS:Ansariel>
 	mMaxTotalTextureMemInMegaBytes = mMaxResidentTexMemInMegaBytes * 2;
 	if (mMaxResidentTexMemInMegaBytes > (S32Megabytes)640)
 	{
 		mMaxTotalTextureMemInMegaBytes -= (mMaxResidentTexMemInMegaBytes / 4);
 	}
+// <FS:Ansariel> Texture memory management
+	mMaxTotalTextureMemInMegaBytes = llclamp(mMaxTotalTextureMemInMegaBytes, (S32Megabytes)0, (S32Megabytes)768);
+#else
+	if (mMaxResidentTexMemInMegaBytes > gMaxVideoRam / 2)
+	{
+		mMaxTotalTextureMemInMegaBytes = gMaxVideoRam + (S32Megabytes)(mMaxResidentTexMemInMegaBytes * 0.25f);
+	}
+	else
+	{
+		mMaxTotalTextureMemInMegaBytes = mMaxResidentTexMemInMegaBytes * 2;
+	}
+#endif
+// </FS:Ansariel>
 
 	//system mem
 	S32Megabytes system_ram = gSysMemory.getPhysicalMemoryKB();
@@ -1455,7 +1510,8 @@ void LLViewerTextureList::updateMaxResidentTexMem(S32Megabytes mem)
 	}
 	
 	LL_INFOS() << "Total Video Memory set to: " << vb_mem << " MB" << LL_ENDL;
-	LL_INFOS() << "Available Texture Memory set to: " << (vb_mem - fb_mem) << " MB" << LL_ENDL;
+	//LL_INFOS() << "Available Texture Memory set to: " << (vb_mem - fb_mem) << " MB" << LL_ENDL;
+	LL_INFOS() << "Available Texture Memory set to: " << mMaxResidentTexMemInMegaBytes << " MB" << LL_ENDL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

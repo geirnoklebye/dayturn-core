@@ -40,7 +40,13 @@
 #include <list>
 
 extern const S32Megabytes gMinVideoRam;
-extern const S32Megabytes gMaxVideoRam;
+// <FS:Ansariel> Texture memory management
+//extern const S32Megabytes gMaxVideoRam;
+extern S32Megabytes gMaxVideoRam;
+// </FS:Ansariel>
+
+// <FS:Ansariel> Max texture resolution
+extern U32 DESIRED_NORMAL_TEXTURE_SIZE;
 
 class LLFace;
 class LLImageGL ;
@@ -217,11 +223,18 @@ public:
 	static LLFrameTimer sEvaluationTimer;
 	static F32 sDesiredDiscardBias;
 	static F32 sDesiredDiscardScale;
-	static S32Bytes sBoundTextureMemory;
-	static S32Bytes sTotalTextureMemory;
+	// <FS:Ansariel> Texture memory management
+	//static S32Bytes sBoundTextureMemory;
+	//static S32Bytes sTotalTextureMemory;
+	static S64Bytes sBoundTextureMemory;
+	static S64Bytes sTotalTextureMemory;
+	// </FS:Ansariel>
 	static S32Megabytes sMaxBoundTextureMemory;
 	static S32Megabytes sMaxTotalTextureMem;
-	static S32Bytes sMaxDesiredTextureMem ;
+	// <FS:Ansariel> Texture memory management
+	//static S32Bytes sMaxDesiredTextureMem ;
+	static S64Bytes sMaxDesiredTextureMem ;
+	// </FS:Ansariel>
 	static S8  sCameraMovingDiscardBias;
 	static F32 sCameraMovingBias;
 	static S32 sMaxSculptRez ;
