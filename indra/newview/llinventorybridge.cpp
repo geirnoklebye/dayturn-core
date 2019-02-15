@@ -1409,8 +1409,17 @@ LLInvFVBridge* LLInvFVBridge::createBridge(LLAssetType::EType asset_type,
 			break;
 
 		default:
-			LL_INFOS() << "Unhandled asset type (llassetstorage.h): "
-					<< (S32)asset_type << " (" << LLAssetType::lookup(asset_type) << ")" << LL_ENDL;
+			// CA Don't panic for EEP-related errors since EEP isn't in the viewer yet
+			if (asset_type != 56)
+			{
+				LL_INFOS() << "Unhandled asset type (llassetstorage.h): "
+						<< (S32)asset_type << " (" << LLAssetType::lookup(asset_type) << ")" << LL_ENDL;
+			}
+			else
+			{
+				LL_INFOS_ONCE() << "Unhandled EEP asset type (llassetstorage.h): "
+						<< (S32)asset_type << " (" << LLAssetType::lookup(asset_type) << ")" << LL_ENDL;				
+			}
 			break;
 	}
 

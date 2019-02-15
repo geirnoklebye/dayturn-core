@@ -906,9 +906,19 @@ LLFolderViewItem* LLInventoryPanel::buildNewViews(const LLUUID& id)
 			
 			if (objectp->getType() >= LLAssetType::AT_COUNT)
   			{
-  				LL_WARNS() << "LLInventoryPanel::buildNewViews called with unknown objectp->mType : "
-				<< ((S32) objectp->getType()) << " name " << objectp->getName() << " UUID " << objectp->getUUID()
-				<< LL_ENDL;
+					// CA Don't panic for EEP-related errors since EEP isn't in the viewer yet
+					if (objectp->getType() != 56)
+					{
+	  				LL_WARNS() << "LLInventoryPanel::buildNewViews called with unknown objectp->mType : "
+					<< ((S32) objectp->getType()) << " name " << objectp->getName() << " UUID " << objectp->getUUID()
+					<< LL_ENDL;
+					}
+					else
+					{
+						// omit the detail so that the message is identical each time
+	  				LL_INFOS_ONCE() << "LLInventoryPanel::buildNewViews called with unsupported EEP objectp->mType : "
+					<< ((S32) objectp->getType()) << LL_ENDL;						
+					}
 
 				LLInventoryItem* item = (LLInventoryItem*)objectp;
 				if (item)
