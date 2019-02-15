@@ -2759,22 +2759,19 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			case CHAT_TYPE_OWNER:
 				// CA Friendly handling of probable RLV commands in non-RLV Kokua
 				// This Case is moved above DEBUG_MSG so that fallthrough doesn't occur
-				if (kokua_give_single_rlv_message)
+				if (kokua_give_single_rlv_message && mesg.substr(0, 1) == "@")
 				{
-					if (mesg.substr(0, 1) == "@")
+					// two level if so that we get old behaviour of everything appearing in chat if the control setting is false
+					if (!given_rlv_warning)
 					{
-						// two level if so that we get old behaviour of everything appearing in chat if the control setting is false
-						if (!given_rlv_warning)
-						{
-							given_rlv_warning = true;
-							chat.mText = "/me issued a RLV command which was ignored. No further notifications will be given";
-							mesg = "";
-						}
-						else
-						{
-							//silently junk it
-							return;
-						}
+						given_rlv_warning = true;
+						chat.mText = "/me issued a RLV command which was ignored. No further notifications will be given";
+						mesg = "";
+					}
+					else
+					{
+						//silently junk it
+						return;
 					}
 				}
 				else
