@@ -4106,7 +4106,7 @@ void LLVOAvatar::computeUpdatePeriod()
 	bool visually_muted = isVisuallyMuted();
 	if (mDrawable.notNull()
         && isVisible() 
-        && (!isSelf() || visually_muted || silhouette)
+        && (!isSelf() || visually_muted)
         && !isUIAvatar()
 	// <FS:Ansariel> Fix LL impostor hacking; Adjust update period for muted avatars if using no impostors
         //&& sUseImpostors
@@ -10132,8 +10132,7 @@ BOOL LLVOAvatar::isImpostor()
 	//return sUseImpostors && (isVisuallyMuted() || (mUpdatePeriod >= IMPOSTOR_PERIOD)) ? TRUE : FALSE;
 	if (sUseImpostors)
 	{
-		// CA: the isSilhouette() below is an MK addition
-		return (isVisuallyMuted() || isSilhouette() || (mUpdatePeriod >= IMPOSTOR_PERIOD));
+		return (isVisuallyMuted() || (mUpdatePeriod >= IMPOSTOR_PERIOD));
 	}
 	else
 	{
