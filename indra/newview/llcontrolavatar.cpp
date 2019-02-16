@@ -617,7 +617,8 @@ bool LLControlAvatar::shouldRenderRigged() const
 // virtual
 BOOL LLControlAvatar::isImpostor()
 {
-    if (mRootVolp && mRootVolp->isAttachment())
+		// CA: Seeing viewer crashes when this is called right after a TP, so add the check on markedForDeath
+    if (!mMarkedForDeath && mRootVolp && mRootVolp->isAttachment())
     {
 		// Attached animated objects should match state of their attached av.
         LLVOAvatar *attached_av = mRootVolp->getAvatarAncestor();
