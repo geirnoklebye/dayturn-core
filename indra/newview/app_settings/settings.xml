@@ -19735,7 +19735,7 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <integer>3.0</integer>
+      <real>3.0</real>
     </map>
     <key>FSExperimentalLostAttachmentsFixReport</key>
     <map>
