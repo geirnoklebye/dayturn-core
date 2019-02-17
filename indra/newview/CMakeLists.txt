@@ -2106,7 +2106,8 @@ if (LINUX)
     ${VIEWER_BINARY_NAME}
     linux-crash-logger
     SLPlugin
-    media_plugin_cef
+#    media_plugin_cef
+    media_plugin_gstreamer010
     media_plugin_libvlc
     llcommon
     )
