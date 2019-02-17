@@ -438,7 +438,7 @@
 			movie
 		</widgettype>
 		<impl>
-			media_plugin_cef
+			media_plugin_libvlc
 		</impl>
 	</mimetype>
 	<mimetype name="video/mp4">
@@ -449,7 +449,7 @@
 			movie
 		</widgettype>
 		<impl>
-			media_plugin_cef
+			media_plugin_libvlc
 		</impl>
 	</mimetype>
 	<mimetype menu="1" name="video/quicktime">
