@@ -532,12 +532,20 @@ bool idle_startup()
 	//static bool stipend_since_login = false;
 
 //MK
+#if RLV_ALWAYS_ON
+	gRRenabled = TRUE;
+#else
 	gRRenabled = gSavedSettings.getBOOL("RestrainedLove");
+#endif
 	RRInterface::sRRNoSetEnv = gSavedSettings.getBOOL("RestrainedLoveNoSetEnv");
 	RRInterface::sRestrainedLoveDebug = gSavedSettings.getBOOL("RestrainedLoveDebug");
 	RRInterface::sRestrainedLoveLogging = gSavedSettings.getBOOL("RestrainedLoveLogging");
 	RRInterface::sRestrainedLoveHeadMouselookRenderRigged = gSavedSettings.getBOOL("RestrainedLoveHeadMouselookRenderRigged");
+#if RLV_ALWAYS_ON
+	RRIinterface::sCanOoc = FALSE;
+#else
 	RRInterface::sCanOoc = gSavedSettings.getBOOL("RestrainedLoveCanOoc");
+#endif
 	RRInterface::sRecvimMessage = gSavedSettings.getString("RestrainedLoveRecvimMessage");
 	RRInterface::sSendimMessage = gSavedSettings.getString("RestrainedLoveSendimMessage");
 
@@ -545,6 +553,9 @@ bool idle_startup()
 	// CA: Instead we use a new debug setting to manage this
 	RRInterface::sBlacklist = gSavedSettings.getString("RestrainedLoveBlacklist");
 	if (gSavedSettings.getBOOL("KokuaRLVDisableBlacklist")) RRInterface::sBlacklist = "";
+#if RLV_ALWAYS_ON
+	RRInterface::sBlacklist = "";
+#endif
 	
 	// Let's keep it constant for now, because there are ways to make the vision restriction less tight by playing with this setting.
 	//RRInterface::mCamDistNbGradients = gSavedSettings.getU32("RestrainedLoveCamDistNbGradients");
@@ -1782,7 +1793,11 @@ bool idle_startup()
 		// be flushed out by the garbage collector later, after the actual restrictions
 		// have been received.
 		// For this, we simulate the reception of those commands from a non-existent object.
+#if RLV_ALWAYS_ON
+		if (true)
+#else
 		if (gRRenabled && gSavedSettings.getBOOL("KokuaRLVEnableBlindStartup"))
+#endif
 		{
 			if (gAgent.mRRInterface.mRetainedCommands.empty()) // we test mRetainedCommands and not mSpecialObjectBehaviours because these commands below will be retained for a bit, they won't be executed right away.
 			{

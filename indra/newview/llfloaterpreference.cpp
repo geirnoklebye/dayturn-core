@@ -123,6 +123,7 @@
 #include "llvieweraudio.h"
 #include "llviewermedia.h"
 #include "llviewermedia_streamingaudio.h"
+#include "RRInterfaceHelper.h"
 
 const F32 BANDWIDTH_UPDATER_TIMEOUT = 0.5f;
 char const* const VISIBILITY_DEFAULT = "default";
@@ -568,6 +569,15 @@ BOOL LLFloaterPreference::postBuild()
 	fov_slider->setMinValue(LLViewerCamera::getInstance()->getMinView());
 	fov_slider->setMaxValue(LLViewerCamera::getInstance()->getMaxView());
 
+#if RLV_ALWAYS_ON
+	getChild<LLUICtrl>("ShowRlvMenu")->setEnabled(FALSE);
+	delete getChild<LLUICtrl>("RlvBlinding");
+	delete getChild<LLUICtrl>("RlvCanOoc");
+	delete getChild<LLUICtrl>("KokuaRLVOOCChatIsRedirected");
+	delete getChild<LLUICtrl>("RlvNoBlacklist");
+	delete getChild<LLUICtrl>("RlvDefeatStandTP");
+	delete getChild<LLUICtrl>("RestrainedLoveHeadMouselookRenderRigged");
+#endif
 
 	return TRUE;
 }

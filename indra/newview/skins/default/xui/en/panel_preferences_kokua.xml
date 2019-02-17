@@ -137,6 +137,7 @@
               name="RestrainedLoveHeadMouselookRenderRigged"
               tool_tip="From RLV 2.9.25 rigged mesh attached to the head will not render in mouselook; enable this setting to restore original behaviour"
               width="270"/>
+          <!-- reminder: if more controls are added here, add them to the delete list in floaterpreferences.cpp for RLV always-on mode -->
           <check_box
                 top_pad="5"
                 layout="topleft"

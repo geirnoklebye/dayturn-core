@@ -26,7 +26,10 @@
  */
 
 // RRinterface needs this, but it's no longer provided by llwearabledata.h
-#define MAX_CLOTHING_PER_TYPE 10 
+#define MAX_CLOTHING_PER_TYPE 10
+
+// Switch for whether to operate as always-on RLV
+#define RLV_ALWAYS_ON 0 
 
 class RRHelper
 {

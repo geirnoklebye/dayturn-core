@@ -246,6 +246,7 @@
 
 //MK
 #include "llappearancemgr.h"
+#include "RRInterfaceHelper.h"
 //mk
 // *FIX: These extern globals should be cleaned up.
 // The globals either represent state/config/resource-storage of either 
@@ -2818,7 +2819,11 @@ bool LLAppViewer::initConfiguration()
 	// but rather it belongs into the gridmanager)
 	{
 //MK
+#if RLV_ALWAYS_ON
+				if (false)
+#else
         if (!gSavedSettings.getBOOL("RestrainedLove"))
+#endif
         {
 //mk
 			start_slurl = cmd_line_login_location;
@@ -2840,7 +2845,11 @@ bool LLAppViewer::initConfiguration()
 		(gSavedSettings.getBOOL("SLURLPassToOtherInstance")))
     {
 //MK
+#if RLV_ALWAYS_ON
+				if (false)
+#else
         if (!gSavedSettings.getBOOL("RestrainedLove"))
+#endif
         {
 //mk
 		if (sendURLToOtherInstance(start_slurl.getSLURLString()))

@@ -72,6 +72,7 @@
 #endif  // LL_WINDOWS
 
 #include "llsdserialize.h"
+#include "RRInterfaceHelper.h"
 
 LLPanelLogin *LLPanelLogin::sInstance = NULL;
 BOOL LLPanelLogin::sCapslockDidNotification = FALSE;
@@ -844,8 +845,12 @@ void LLPanelLogin::onClickConnect(void *)
 	{
 //MK
 		// If the RLV is active, force logging at the last location, always.
+#if RLV_ALWAYS_ON
+		{
+#else
 		if (gSavedSettings.getBOOL("RestrainedLove"))
 		{
+#endif
 			std::string location = LLSLURL::SIM_LOCATION_LAST;
 			LLStartUp::setStartSLURL(location);
 		}
