@@ -13,10 +13,6 @@ if (DARWIN)
     add_subdirectory(example)
 endif (DARWIN)
 
-if( LINUX )
-#    add_subdirectory(cef)
-endif( LINUX )
-
 if (WINDOWS)
     add_subdirectory(cef)
     add_subdirectory(libvlc)

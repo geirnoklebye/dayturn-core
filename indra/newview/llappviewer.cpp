@@ -129,9 +129,7 @@
 #include "stringize.h"
 #include "llcoros.h"
 #include "llexception.h"
-#if !LL_LINUX
 #include "cef/dullahan.h"
-#endif // LL_LINUX
 #include "vlc/libvlc_version.h"
 
 // Third party library includes
@@ -3363,9 +3361,6 @@ LLSD LLAppViewer::getViewerInfo() const
 	cef_ver_codec << CHROME_VERSION_PATCH;
 
 	info["LIBCEF_VERSION"] = cef_ver_codec.str();
-#else
-	info["LIBCEF_VERSION"] = "Undefined";
-#endif
 
 	std::ostringstream vlc_ver_codec;
 	vlc_ver_codec << LIBVLC_VERSION_MAJOR;
