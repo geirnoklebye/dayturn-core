@@ -798,11 +798,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>969553d8d88b8d58a005532d8f8b6a56</string>
+              <string>e35603d00e949a719d790df839db235a</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/kokua/p64_3p-dullahan/downloads/dullahan-1.1.1084_3.3325.1758.g9aea513-linux64-182062322.tar.bz2</string>
+              <string>file:///home/nicky/DKO-p64_3p-dullahan/dullahan-1.1.1080_3.3325.1757.gdf2fcc8-linux64-190481919.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -837,7 +837,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.1.1084_3.3325.1758.g9aea513</string>
+        <string>1.1.1080_3.3325.1757.gdf2fcc8</string>
       </map>
       <key>elfio</key>
       <map>
