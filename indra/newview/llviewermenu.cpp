@@ -51,6 +51,7 @@
 #include "llagentpilot.h"
 //MK from KB
 #include "llattachmentsmgr.h"
+#include "RRInterfaceHelper.h" // for RLV_ALWAYS_ON
 //mk from kb
 #include "llcompilequeue.h"
 #include "llconsole.h"
@@ -6737,6 +6738,9 @@ void show_debug_menus()
 	{
 		BOOL debug = gSavedSettings.getBOOL("UseDebugMenus");
 		BOOL qamode = gSavedSettings.getBOOL("QAMode");
+#if RLV_ALWAYS_ON		
+ 		gMenuBarView->setItemVisible("RLV", TRUE);
+#else
         BOOL rlvmode = gSavedSettings.getBOOL("ShowRlvMenu");
 		if (rlvmode)
 		{
@@ -6753,9 +6757,10 @@ void show_debug_menus()
 			llformat("RestrainedLove Support will be %s after you restart", (rlvmode) ? "enabled" : "disabled" );
 			LLNotificationsUtil::add("GenericAlert", args);	
 		}	
+ 		gMenuBarView->setItemVisible("RLV", rlvmode);
+#endif        
 		gMenuBarView->setItemVisible("Advanced", debug);
 // 		gMenuBarView->setItemEnabled("Advanced", debug); // Don't disable Advanced keyboard shortcuts when hidden
- 		gMenuBarView->setItemVisible("RLV", rlvmode);
 
 //		gMenuBarView->setItemEnabled("RLV", rlvmode); // Don't disable RLV when hidden
 		gMenuBarView->setItemVisible("Debug", qamode);
