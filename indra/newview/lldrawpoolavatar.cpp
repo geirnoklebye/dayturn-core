@@ -1916,7 +1916,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 			// If the vision is restricted, rendering alpha rigged attachments may allow to cheat through the vision spheres.
 			if (!is_self) // Other avatars only
 			{
-				if (face_distance_to_avatar_squared > cam_dist_draw_max_squared)
+				if (face_distance_to_avatar_squared > cam_dist_draw_max_squared + 2.5)
 				{
 					U32 type = gPipeline.getPoolTypeFromTE(face->getTextureEntry(), face->getTexture());
 					if (type == LLDrawPool::POOL_ALPHA)
