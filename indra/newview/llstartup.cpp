@@ -217,6 +217,7 @@
 #include "lldrawpoolbump.h"
 //mk
 #include "kokuarlvfloaters.h"
+#include "kokuarlvmode.h"
 
 //
 // exported globals

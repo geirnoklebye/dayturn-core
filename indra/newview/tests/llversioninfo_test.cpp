@@ -29,6 +29,10 @@
 
 #include "../llversioninfo.h"
 
+// This brings in the version information instead of the cmake mechanism
+// which rebuilds the whole of newbuild for each hg commit
+#include "kokuabuildversion.h"
+
  #include <iostream>
 
 // LL_VIEWER_CHANNEL is a macro defined on the compiler command line. The

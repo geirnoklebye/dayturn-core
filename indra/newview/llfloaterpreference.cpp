@@ -123,7 +123,7 @@
 #include "llvieweraudio.h"
 #include "llviewermedia.h"
 #include "llviewermedia_streamingaudio.h"
-#include "RRInterfaceHelper.h"
+#include "kokuarlvmode.h"
 
 const F32 BANDWIDTH_UPDATER_TIMEOUT = 0.5f;
 char const* const VISIBILITY_DEFAULT = "default";

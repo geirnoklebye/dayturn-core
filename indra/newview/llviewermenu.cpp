@@ -51,7 +51,7 @@
 #include "llagentpilot.h"
 //MK from KB
 #include "llattachmentsmgr.h"
-#include "RRInterfaceHelper.h" // for RLV_ALWAYS_ON
+#include "kokuarlvmode.h" // for RLV_ALWAYS_ON
 //mk from kb
 #include "llcompilequeue.h"
 #include "llconsole.h"
