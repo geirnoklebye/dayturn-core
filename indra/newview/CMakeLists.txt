@@ -1433,6 +1433,16 @@ configure_file(
 )
 list(APPEND viewer_HEADER_FILES ${CMAKE_CURRENT_BINARY_DIR}/kokuabuildversion.h)
 
+# Get the RLV always-on option into the compilation
+# @ONLY restricts the substitute to @variable@ constructs so any ${VAR} won't be
+# accidentally impacted
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/kokuarlvmode.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/kokuarlvmode.h
+    @ONLY
+)
+list(APPEND viewer_HEADER_FILES ${CMAKE_CURRENT_BINARY_DIR}/kokuarlvmode.h)
+
 source_group("CMake Rules" FILES ViewerInstall.cmake)
 
 #build_data.json creation moved to viewer_manifest.py MAINT-6413

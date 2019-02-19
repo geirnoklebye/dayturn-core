@@ -246,7 +246,7 @@
 
 //MK
 #include "llappearancemgr.h"
-#include "RRInterfaceHelper.h"
+#include "kokuarlvmode.h"
 //mk
 // *FIX: These extern globals should be cleaned up.
 // The globals either represent state/config/resource-storage of either 

@@ -72,7 +72,7 @@
 #endif  // LL_WINDOWS
 
 #include "llsdserialize.h"
-#include "RRInterfaceHelper.h"
+#include "kokuarlvmode.h"
 
 LLPanelLogin *LLPanelLogin::sInstance = NULL;
 BOOL LLPanelLogin::sCapslockDidNotification = FALSE;
