@@ -6381,11 +6381,9 @@ U32 LLVolumeGeometryManager::genDrawInfo(LLSpatialGroup* group, U32 mask, LLFace
 	// Calculate the position of the avatar here so we don't have to do it for each face
 	if (!gAgentAvatarp)
 	{
-//CA - now needs a return value
-		return 0;
-//ca
+		return geometryBytes;
 	}
-	bool vision_restricted = (gRRenabled && gAgent.mRRInterface.mCamDistDrawMax < EXTREMUM);
+	bool vision_restricted = (gRRenabled && gAgent.mRRInterface.mVisionRestricted);
 	// Optimization : Rather than compare the distances for every face (which involves square roots, which are costly), we compare squared distances.
 	LLVector3 joint_pos = LLVector3::zero;
 	F32 cam_dist_draw_max_squared = EXTREMUM;

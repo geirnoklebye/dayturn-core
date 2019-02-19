@@ -558,6 +558,7 @@ RRInterface::RRInterface():
 	, mUserUpdateAttachmentsCalledManually(FALSE)
 	, mCamDistDrawFromJoint(NULL)
 	, mGarbageCollectorCalledOnce(FALSE)
+	, mVisionRestricted(FALSE)
 	//, mContainsMoveUp(FALSE)
 	//, mContainsMoveDown(FALSE)
 	//, mContainsMoveForward(FALSE)
@@ -5254,6 +5255,8 @@ BOOL RRInterface::updateCameraLimits ()
 		mCamDistNbGradients = 40;
 	}
 
+	mVisionRestricted = (mCamDistDrawMin < EXTREMUM || mCamDistDrawMax >= EXTREMUM);
+
 	// And check the camera is still within the limits
 	return checkCameraLimits (TRUE);
 }
@@ -5301,7 +5304,7 @@ void RRInterface::drawRenderLimit ()
 	//	return;
 	//}
 
-	if (mCamDistDrawMin >= EXTREMUM && mCamDistDrawMax >= EXTREMUM) { // not vision restricted ? => bail
+	if (!mVisionRestricted) { // not vision restricted ? => bail
 		return;
 	}
 
