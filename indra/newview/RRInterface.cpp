@@ -5255,7 +5255,7 @@ BOOL RRInterface::updateCameraLimits ()
 		mCamDistNbGradients = 40;
 	}
 
-	mVisionRestricted = (mCamDistDrawMin < EXTREMUM || mCamDistDrawMax >= EXTREMUM);
+	mVisionRestricted = (mCamDistDrawMin < EXTREMUM || mCamDistDrawMax < EXTREMUM);
 
 	// And check the camera is still within the limits
 	return checkCameraLimits (TRUE);
