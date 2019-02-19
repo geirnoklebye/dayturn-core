@@ -1527,9 +1527,10 @@ class LinuxManifest(ViewerManifest):
  
         with self.prefix(src=os.path.join(pkgdir, 'bin', config), dst="bin"):
             self.path( "chrome-sandbox" )
-            self.path( "llceflib_host" )
+            self.path( "dullahan_host" )
             self.path( "natives_blob.bin" )
             self.path( "snapshot_blob.bin" )
+            self.path( "v8_context_snapshot.bin" )
             self.end_prefix()
 
         # CEF files common to all configurations
@@ -1540,6 +1541,9 @@ class LinuxManifest(ViewerManifest):
             self.path("cef_extensions.pak")
             self.path("devtools_resources.pak")
             self.path("icudtl.dat")
+
+        with self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release', 'swiftshader'), dst=os.path.join("bin", "swiftshader") ):
+            self.path( "*.so" )
 
         with self.prefix(src=os.path.join(pkgdir, 'resources', 'locales'), dst=os.path.join('bin', 'locales')):
             self.path("am.pak")
