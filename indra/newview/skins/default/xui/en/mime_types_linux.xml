@@ -218,7 +218,7 @@
 			audio
 		</widgettype>
 		<impl>
-			media_plugin_vlc
+			media_plugin_libvlc
 		</impl>
 	</mimetype>
 	<mimetype name="application/pdf">
