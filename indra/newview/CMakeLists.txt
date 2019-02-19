@@ -101,6 +101,7 @@ include_directories(
     ${LIBS_PREBUILT_DIR}/include/collada/1.4
     ${LLAPPEARANCE_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
     )
 
 include_directories(SYSTEM
@@ -1421,6 +1422,16 @@ set(viewer_HEADER_FILES
 	NACLfloaterexploresounds.h
 	  kokuarlvfloaters.h
     )
+    
+# Generate the build version here to avoid rebuilding all of newview each time
+# @ONLY restricts the substitute to @variable@ constructs so any ${VAR} won't be
+# accidentally impacted
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/kokuabuildversion.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/kokuabuildversion.h
+    @ONLY
+)
+list(APPEND viewer_HEADER_FILES ${CMAKE_CURRENT_BINARY_DIR}/kokuabuildversion.h)
 
 source_group("CMake Rules" FILES ViewerInstall.cmake)
 
@@ -1432,7 +1443,10 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/viewer_version.txt"
 set_source_files_properties(
    llversioninfo.cpp tests/llversioninfo_test.cpp 
    PROPERTIES
-   COMPILE_DEFINITIONS "${VIEWER_CHANNEL_VERSION_DEFINES}" # see BuildVersion.cmake
+# using this rebuilds the whole of newview on each hg revision change, instead
+# its function is performed by kokuabuildversion.h(.in)   
+#
+#  COMPILE_DEFINITIONS "${VIEWER_CHANNEL_VERSION_DEFINES}" # see BuildVersion.cmake
    )
 
 if (DARWIN)
