@@ -2,7 +2,7 @@
 
 project(media_plugin_cef)
 
-include(Boost)
+#include(Boost)
 include(00-Common)
 include(LLCommon)
 include(LLImage)
@@ -10,12 +10,21 @@ include(LLPlugin)
 include(LLMath)
 include(LLRender)
 include(LLWindow)
+include(UI)
 include(Linking)
 include(PluginAPI)
 include(MediaPluginBase)
 include(OpenGL)
 
 include(CEFPlugin)
+
+if (!DARWIN)
+# We don't want PulseAudio on DARWIN. Geir Nøklebye
+# <FS:ND> Linux volume catcher
+include(PulseAudio)
+include_directories( ${PULSEAUDIO_INCLUDE_DIRS} )
+# </FS:ND>
+endif (!DARWIN)
 
 include_directories(
     ${LLPLUGIN_INCLUDE_DIRS}
@@ -59,17 +68,10 @@ set (media_plugin_cef_LINK_LIBRARIES
 
 # Select which VolumeCatcher implementation to use
 if (LINUX)
-  #message(FATAL_ERROR "CEF plugin has been enabled for a Linux compile.\n"
-  #  "  Please create a volume_catcher implementation for this platform.")
-  if (PULSEAUDIO_FOUND)
-    list(APPEND media_plugin_cef_SOURCE_FILES linux_volume_catcher.cpp)
-  else (PULSEAUDIO_FOUND)
-    list(APPEND media_plugin_cef_SOURCE_FILES dummy_volume_catcher.cpp)
-  endif (PULSEAUDIO_FOUND)
-  list(APPEND media_plugin_cef_LINK_LIBRARIES
-       ${UI_LIBRARIES}     # for glib/GTK
-       Xext #<FS:ND/> force pulling libXext in, otherwise we get undefined symbols.
-       )
+#  message(FATAL_ERROR "CEF plugin has been enabled for a Linux compile.\n"
+#    "  Please create a volume_catcher implementation for this platform.")
+  list(APPEND media_plugin_cef_SOURCE_FILES dummy_volume_catcher.cpp)
+  set(CMAKE_SHARED_LINKER_FLAGS  "-Wl,--build-id -Wl,-rpath,'$ORIGIN:$ORIGIN/../../lib'")
 elseif (DARWIN)
   list(APPEND media_plugin_cef_SOURCE_FILES mac_volume_catcher_null.cpp)
   find_library(CORESERVICES_LIBRARY CoreServices)
@@ -92,9 +94,9 @@ add_library(media_plugin_cef
     ${media_plugin_cef_SOURCE_FILES}
 )
 
-add_dependencies(media_plugin_cef
-  ${MEDIA_PLUGIN_BASE_LIBRARIES}
-)
+#add_dependencies(media_plugin_cef
+#  ${MEDIA_PLUGIN_BASE_LIBRARIES}
+#)
 
 target_link_libraries(media_plugin_cef
   ${media_plugin_cef_LINK_LIBRARIES}
@@ -117,7 +119,8 @@ if (DARWIN)
     PREFIX ""
     BUILD_WITH_INSTALL_RPATH 1
     INSTALL_NAME_DIR "@executable_path"
-    LINK_FLAGS "-exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/../base/media_plugin_base.exp"
+    CXX_FLAGS "-std=c++11 -stdlib=libc++"
+    LINK_FLAGS "-stdlib=libc++ -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/../base/media_plugin_base.exp"
   )
 
   ## turns on C++11 using Cmake
