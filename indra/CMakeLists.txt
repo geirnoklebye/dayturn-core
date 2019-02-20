@@ -14,13 +14,12 @@ project(${ROOT_PROJECT_NAME})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-include(Variables)
-include(BuildVersion)
-
+# this could change the VIEWER_CHANNEL definition - make sure it stays as the first thing executed!
 if (DEFINED RLV_ALWAYS_ON)
 	if (RLV_ALWAYS_ON)
 		set(RLVALWAYSON 1)
-		string(REPLACE RLV RLVON VIEWER_CHANNEL ${VIEWER_CHANNEL})
+		string(REPLACE RLV HRLV NEW_CHANNEL ${VIEWER_CHANNEL})
+		set(VIEWER_CHANNEL ${NEW_CHANNEL} CACHE STRING "Viewer channel" FORCE)
 		message("-- RLV will be always on")
 	else (RLV_ALWAYS_ON)
 	  set(RLVALWAYSON 0)
@@ -30,6 +29,9 @@ else (DEFINED RLV_ALWAYS_ON)
   set(RLVALWAYSON 0)
   message("-- RLV option -DRLV_ALWAYS_ON not used, defaulting to user-switchable")
 endif (DEFINED RLV_ALWAYS_ON)
+
+include(Variables)
+include(BuildVersion)
 
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
