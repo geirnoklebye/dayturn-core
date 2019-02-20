@@ -6,11 +6,7 @@ if (USESYSTEMLIBS)
     set(CEFPLUGIN OFF CACHE BOOL
         "CEFPLUGIN support for the llplugin/llmedia test apps.")
 else (USESYSTEMLIBS)
-    if (NOT LINUX)
-        use_prebuilt_binary(dullahan)
-    else (NOT LINUX)
-        use_prebuilt_binary(llceflib)
-    endif (NOT LINUX)
+    use_prebuilt_binary(dullahan)
     set(CEFPLUGIN ON CACHE BOOL
         "CEFPLUGIN support for the llplugin/llmedia test apps.")
         set(CEF_INCLUDE_DIR ${LIBS_PREBUILT_DIR}/include/cef)
@@ -42,10 +38,10 @@ elseif (DARWIN)
 
 elseif (LINUX)
     set(CEF_PLUGIN_LIBRARIES
-        libcef.so
-        libcef_dll_wrapper.a
-        libllceflib.so
-    )
+	dullahan
+        cef
+        cef_dll_wrapper
+       )
 endif (WINDOWS)
 if (LINUX)
       add_definitions(-std=gnu++11)
