@@ -1858,7 +1858,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
  
            #cef plugin
             self.path( "libcef.so" )
-            self.path( "libceflib.so" )
             self.end_prefix("lib64")
 
 
