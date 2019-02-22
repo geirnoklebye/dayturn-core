@@ -48,6 +48,11 @@ fi
 ##   driver bug, try enabling this option and report whether it helps:
 #export LL_ATI_MOUSE_CURSOR_BUG=x
 
+## - missing fontconfig file causes massive freezes every time the viewer needs
+##   to find some fonts
+##   fix is simple: set the fontconfig_path variable properly
+[ -f /etc/fonts/fonts.conf ] && export FONTCONFIG_PATH=/etc/fonts
+
 ## Everything below this line is just for advanced troubleshooters.
 ##-------------------------------------------------------------------
 
@@ -139,7 +144,7 @@ if [ "${BINARY_TYPE}" == "ELF 32-bit LSB executable" ]; then
 
     export LD_LIBRARY_PATH="$PWD/lib:${LD_LIBRARY_PATH}"
 else
-	export LD_LIBRARY_PATH="$PWD/lib:$PWD/lib64:$PWD/lib32:${LD_LIBRARY_PATH}"
+	export LD_LIBRARY_PATH="$PWD/lib:$PWD/lib/lib32:${LD_LIBRARY_PATH}"
 fi
 
 export FS_CEF_PRELOAD=libcef.so
