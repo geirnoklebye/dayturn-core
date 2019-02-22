@@ -1531,6 +1531,7 @@ class LinuxManifest(ViewerManifest):
             self.path( "natives_blob.bin" )
             self.path( "snapshot_blob.bin" )
             self.path( "v8_context_snapshot.bin" )
+            self.path( "libffmpegsumo.so" )
             self.end_prefix()
 
         # CEF files common to all configurations
@@ -1668,7 +1669,7 @@ class LinuxManifest(ViewerManifest):
             # makes some small assumptions about our packaged dir structure
             self.run_command(
                 ["find"] +
-                [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib', 'lib32', 'lib64' )] +
+                [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib', 'lib/lib32' )] +
                 ['-type', 'f', '!', '-name', '*.py', '!', '-name', 'SL_Launcher', '!', '-name', '*.crt','!', '-name', '*.log', '!', '-path', '*win32*',
                  '!', '-name', 'update_install', '!', '-name', '*.pak', '!', '-name', '*.dat', '!', '-name', '*.bin', '-exec', 'strip', '-S', '{}', ';'])
 
@@ -1793,7 +1794,7 @@ class Linux_i686_Manifest(LinuxManifest):
         #cef plugin
         if self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release'), dst="lib"):
             self.path( "libcef.so" )
-            self.path( "libllceflib.so" )
+            self.path( "libwidevinecdmadapter.so" )
             self.end_prefix()
 
 class Linux_x86_64_Manifest(LinuxManifest):
@@ -1806,18 +1807,18 @@ class Linux_x86_64_Manifest(LinuxManifest):
         self.path("secondlife-i686.supp")
 
 	try:
-            self.path("../llcommon/libllcommon.so", "lib64/libllcommon.so")
+            self.path("../llcommon/libllcommon.so", "lib/libllcommon.so")
         except:
             print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
 
         # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
-        if self.prefix("/lib/x86_64-linux-gnu", dst="lib64"):
+        if self.prefix("/lib/x86_64-linux-gnu", dst="lib"):
             self.path("libpng12.so.0*")
-            self.end_prefix("lib64") 
+            self.end_prefix("lib") 
 
 
-        if self.prefix("../packages/lib/release", dst="lib64"):
+        if self.prefix("../packages/lib/release", dst="lib"):
             self.path("libapr-1.so*")
             self.path("libaprutil-1.so*")
             self.path("libdb*.so")
@@ -1866,26 +1867,25 @@ class Linux_x86_64_Manifest(LinuxManifest):
                     self.path("SLVoice")
                     self.path("win32")
                     self.end_prefix()
-            if self.prefix(src="../packages/lib/release", dst="lib32"):
+            if self.prefix(src="../packages/lib/release", dst="lib/lib32"):
                     self.path("libortp.so")
                     self.path("libsndfile.so.1")
                     self.path("libvivoxsdk.so")
                     self.path("libvivoxplatform.so")
                     self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
-                    self.end_prefix("lib32")
+                    self.end_prefix("lib/lib32")
 
             # 32bit libs needed for voice
-            if self.prefix("../packages/lib/release/32bit-compat", dst="lib32"):
+            if self.prefix("../packages/lib/release/32bit-compat", dst="lib/lib32"):
                     self.path("32bit-libalut.so" , "libalut.so")
                     self.path("32bit-libalut.so.0" , "libalut.so.0")
                     self.path("32bit-libopenal.so" , "libopenal.so")
                     self.path("32bit-libopenal.so.1" , "libopenal.so.1")
                     self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
                     self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
-
-                    self.end_prefix("lib32")
+                    self.end_prefix("lib/lib32")
 	if self.args['buildtype'].lower() == 'debug':
-    	 if self.prefix("../packages/lib/debug", dst="lib64"):
+    	 if self.prefix("../packages/lib/debug", dst="lib"):
              self.path("libapr-1.so*")
 
              self.path("libaprutil-1.so*")
@@ -1904,7 +1904,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
              self.path("libz.so")
              self.path("libcollada14dom-d.so*")
              self.path("libGLOD.so")
-             self.end_prefix("lib64")
+             self.end_prefix("lib")
 
 
 ################################################################
