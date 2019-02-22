@@ -144,7 +144,7 @@ if [ "${BINARY_TYPE}" == "ELF 32-bit LSB executable" ]; then
 
     export LD_LIBRARY_PATH="$PWD/lib:${LD_LIBRARY_PATH}"
 else
-	export LD_LIBRARY_PATH="$PWD/lib:$PWD/lib64:$PWD/lib32:${LD_LIBRARY_PATH}"
+	export LD_LIBRARY_PATH="$PWD/lib:$PWD/lib/lib32:${LD_LIBRARY_PATH}"
 fi
 
 export FS_CEF_PRELOAD=libcef.so
