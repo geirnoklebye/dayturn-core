@@ -33,7 +33,7 @@ else
 fi
 
 
-autobuild configure  -A $OSARCH -c ReleaseOS --  --platform linux$OSARCH  -DLL_TESTS:BOOL=FALSE -DFMODEX:BOOL=ON -DOPENAL:BOOL=OFF
+autobuild configure  -A $OSARCH -c ReleaseOS --  --platform linux$OSARCH  -DLL_TESTS:BOOL=FALSE -DFMODEX:BOOL=ON
  
 cd $CWD/build-linux-x86_64-kokua-*
 make -j$NPROC
