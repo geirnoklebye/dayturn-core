@@ -23,19 +23,17 @@ fi
 
 set -e
 
-if [ -d $CWD/viewer-build-variables ]
+if [ -d $CWD/dko-viewer-build-variables ]
 then
-export AUTOBUILD_VARIABLES_FILE=$CWD/viewer-build-variables/variables
+export AUTOBUILD_VARIABLES_FILE=$CWD/dko-viewer-build-variables/variables
 
 else
-  hg clone https://bitbucket.org/kokua/viewer-build-variables &
-  wait
-  export AUTOBUILD_VARIABLES_FILE=$CWD/viewer-build-variables/variables
+  hg clone https://Drakeo@bitbucket.org/Drakeo/dko-viewer-build-variables
+  export AUTOBUILD_VARIABLES_FILE=$CWD/dko-viewer-build-variables/variables
 fi
 
 
-autobuild configure  -A $OSARCH -c ReleaseOS --  --platform linux$OSARCH  -DLL_TESTS:BOOL=FALSE -DFMODEX:BOOL=ON -DVIEWER_CHANNEL="Kokua Test $OSARCH" &
-wait
-autobuild build -A $OSARCH --no-configure -c ReleaseOS -- -j$NPROC  &
-wait
-
+autobuild configure  -A $OSARCH -c ReleaseOS --  --platform linux$OSARCH  -DLL_TESTS:BOOL=FALSE -DFMODEX:BOOL=ON -DOPENAL:BOOL=OFF
+ 
+cd $CWD/build-linux-x86_64-kokua-*
+make -j$NPROC
