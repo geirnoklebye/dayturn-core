@@ -3150,7 +3150,7 @@ void LLPipeline::markVisible(LLDrawable *drawablep, LLCamera& camera)
 						//if (av && (av->isImpostor() 
 						//	|| av->isInMuteList()
 						//	|| (LLVOAvatar::AV_DO_NOT_RENDER == av->getVisualMuteSettings() && !av->needsImpostorUpdate()) ))
-						if (av && av->isImpostor() && !av->needsImpostorUpdate())
+						if (av && av->isImpostor() && (av->isSilhouette() || !av->needsImpostorUpdate()))
 						// </FS:Ansariel>
 						{
 							return;

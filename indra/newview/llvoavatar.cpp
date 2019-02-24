@@ -4184,16 +4184,10 @@ void LLVOAvatar::computeUpdatePeriod()
 	bool visually_muted = isVisuallyMuted();
 //MK
 
-//	if (mDrawable.notNull()
-//        && isVisible() 
-//        && (!isSelf() || visually_muted)
-//        && !isUIAvatar()
-//        && sUseImpostors
-//        && !mNeedsAnimUpdate 
-//        && !sFreezeCounter)
 	bool silhouette = isSilhouette();
 	if (mDrawable.notNull()
         && isVisible() 
+////        && (!isSelf() || visually_muted)
         && (!isSelf() || visually_muted || silhouette)
         && !isUIAvatar()
 	// <FS:Ansariel> Fix LL impostor hacking; Adjust update period for muted avatars if using no impostors
@@ -4238,6 +4232,11 @@ void LLVOAvatar::computeUpdatePeriod()
 			//nearby avatars, update the impostors more frequently.
 			mUpdatePeriod = 4;
 		}
+	}
+	else
+	{
+		mUpdatePeriod = 1;
+	}
 //MK
 		// Update silhouettes often
 		if (silhouette)
@@ -4245,11 +4244,6 @@ void LLVOAvatar::computeUpdatePeriod()
 			mUpdatePeriod = 1;
 		}
 //mk
-	}
-	else
-	{
-		mUpdatePeriod = 1;
-	}
 
 }
 
@@ -4612,18 +4606,7 @@ BOOL LLVOAvatar::updateCharacter(LLAgent &agent)
 	{
 		mTimeVisible.reset();
 	}
-//MK
-	mRenderAsSilhouette = FALSE;
-	if (gRRenabled && !isSelf() && gAgentAvatarp && getRezzedStatus() >= 2) // fully rezzed
-	{
-		LLVector3d my_head_pos (gAgent.getPosGlobalFromAgent(gAgentAvatarp->mHeadp->getWorldPosition()));
-		LLVector3d their_head_pos (gAgent.getPosGlobalFromAgent(mHeadp->getWorldPosition()));
-		LLVector3d offset (their_head_pos - my_head_pos);
-		F32 distance = (F32)offset.magVec();
 
-		mRenderAsSilhouette = (distance > gAgent.mRRInterface.mShowavsDistMax);
-	}
-//mk
 	//--------------------------------------------------------------------
 	// The rest should only be done occasionally for far away avatars.
     // Set mUpdatePeriod and visible based on distance and other criteria.
@@ -10137,7 +10120,7 @@ BOOL LLVOAvatar::updateLOD()
  
 	// <FS:Ansariel> Fix LL impostor hacking
 	//if (isImpostor() && 0 != mDrawable->getNumFaces() && mDrawable->getFace(0)->hasGeometry())
-	if (isImpostor() && !needsImpostorUpdate() && 0 != mDrawable->getNumFaces() && mDrawable->getFace(0)->hasGeometry())
+	if (isImpostor() && (isSilhouette() || !needsImpostorUpdate()) && 0 != mDrawable->getNumFaces() && mDrawable->getFace(0)->hasGeometry())
 	// </FS:Ansariel>
 	{
 		return TRUE;
@@ -10368,16 +10351,19 @@ BOOL LLVOAvatar::isImpostor()
 	//            done to determine if the particular part can really be skipped
 	//            (mNeedsImpostorUpdate = FALSE) or is currently needed to generate the
 	//            impostor (mNeedsImpostorUpdate = TRUE).
+	//
+	// CA: This optimisation doesn't play well with @camavdist, so all instances of it are updated
+	// to take isSilhouette() into account
 
 	//return sUseImpostors && (isVisuallyMuted() || (mUpdatePeriod >= IMPOSTOR_PERIOD)) ? TRUE : FALSE;
+	
 	if (sUseImpostors)
 	{
-		// CA: the isSilhouette() below is an MK addition
 		return (isVisuallyMuted() || isSilhouette() || (mUpdatePeriod >= IMPOSTOR_PERIOD));
 	}
 	else
 	{
-		return (LLVOAvatar::AV_DO_NOT_RENDER == getVisualMuteSettings() || isInMuteList());
+		return (LLVOAvatar::AV_DO_NOT_RENDER == getVisualMuteSettings() || isInMuteList() || (isSilhouette() && mUpdatePeriod >= IMPOSTOR_PERIOD));
 	}
 	// </FS:Ansariel>
 }

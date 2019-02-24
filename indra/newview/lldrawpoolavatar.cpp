@@ -1330,7 +1330,7 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 	//if (( avatarp->isInMuteList()
 	//	  || impostor 
 	//	  || (LLVOAvatar::AV_DO_NOT_RENDER == avatarp->getVisualMuteSettings() && !avatarp->needsImpostorUpdate()) ) && pass != 0)
-	if (impostor && !avatarp->needsImpostorUpdate() && pass != 0)
+	if (impostor && (avatarp->isSilhouette() || !avatarp->needsImpostorUpdate()) && pass != 0)
 	// </FS:Ansariel>
 	{ //don't draw anything but the impostor for impostored avatars
 		return;
@@ -1350,7 +1350,7 @@ void LLDrawPoolAvatar::renderAvatars(LLVOAvatar* single_avatar, S32 pass)
 
 		// <FS:Ansariel> Fix LL impostor hacking
 		//if (impostor || (LLVOAvatar::AV_DO_NOT_RENDER == avatarp->getVisualMuteSettings() && !avatarp->needsImpostorUpdate()))
-		if (impostor && !avatarp->needsImpostorUpdate())
+		if (impostor && (avatarp->isSilhouette() || !avatarp->needsImpostorUpdate()))
 		// </FS:Ansariel>
 		{
 			if (LLPipeline::sRenderDeferred && !LLPipeline::sReflectionRender && avatarp->mImpostor.isComplete()) 
