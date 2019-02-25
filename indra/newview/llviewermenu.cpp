@@ -2903,14 +2903,7 @@ bool enable_object_touch(LLUICtrl* ctrl)
 		LLViewerObject* parent = (LLViewerObject*)obj->getParent();
 		new_value = obj->flagHandleTouch() || (parent && parent->flagHandleTouch());
 	}
-//Adapted from
-// [RLVa:KB] - Checked: 2010-11-12 (RLVa-1.2.1g) | Added: RLVa-1.2.1g
-	if ( (gRRenabled) && (new_value) )
-	{
-		// RELEASE-RLVa: [RLVa-1.2.1] Make sure this stays in sync with handle_object_touch()
-		new_value = gAgent.mRRInterface.canTouch(obj, LLToolPie::getInstance()->getPick().mObjectOffset);
-	}
-// [/RLVa:KB]
+
 	std::string item_name = ctrl->getName();
 	init_default_item_label(item_name);
 
@@ -2958,7 +2951,6 @@ void handle_object_open()
 //mk
 	LLFloaterReg::showInstance("openobject");
 }
-//mk
 
 bool enable_object_open()
 {
