@@ -676,7 +676,7 @@ void LLFloaterWorldMap::processParcelInfo(const LLParcelData& parcel_data, const
 									 ll_round((F32)pos_global.mdV[VZ]));
 
 	std::string parcel_name = parcel_data.name;
-	if (parcel_name == "") parcel_name="(Unnamed parcel)";
+	if (parcel_name.empty()) parcel_name="(Unnamed parcel)";
 	LLTracker::trackLocation(pos_global, parcel_name, full_name);
 }
 
