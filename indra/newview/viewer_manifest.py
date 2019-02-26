@@ -1859,7 +1859,8 @@ class Linux_x86_64_Manifest(LinuxManifest):
  
            #cef plugin
             self.path( "libcef.so" )
-            self.end_prefix("lib64")
+            self.path( "libwidevinecdmadapter.so" )
+            self.end_prefix("lib")
 
 
             # Vivox runtimes
