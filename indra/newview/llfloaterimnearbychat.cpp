@@ -1008,7 +1008,7 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 			std::string restriction;
 			    
 			// CA: Originally OOC chat was exempted from the else just below here with the result that it would
-			// fall through and get processed as normal chat. From RLV 2.9.24.1 the that exception is removed and
+			// fall through and get processed as normal chat. From RLV 2.9.24.1 that exception is removed and
 			// OOC chat should get redirected like anything else.
 			//
 			// Kokua is going to use the following logic instead
@@ -1021,6 +1021,11 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 			// to be routed via chat redirection. However, unlike RLV 2.9.24.1 we require that RestrainedLoveCanOoc
 			// be true to do this - it's done that way so that the RestrainedLoveCanOoc switch still has overall control
 			// over whether OOC is permitted (which is not the case in RLV 2.9.24.1 in its original form)
+			//
+			// For the RLV always-on version this logic will work slightly differently. Like RLV 2.9.24.1 OOC will not
+			// be routed to local chat, however KokuaRLVOOCChatIsRedirected will need to be TRUE for it to successfully
+			// be sent to a redirection handler (default setting is TRUE). This will allow very dedicated RLV users a
+			// way to squash OOC entirely by having KokuaRLVOOCChatIsRedirected set to FALSE
 			
 			bool is_ooc = ((utf8_out_text.find("((") == 0) && (utf8_out_text.find("))") == (utf8_out_text.length() - 2)));
 
@@ -1033,7 +1038,14 @@ void send_chat_from_viewer(const std::string& utf8_out_text, EChatType type, S32
 					restriction = "rediremote:";
 				}
 			}
+#if RLV_ALWAYS_ON
+			// ignore sCanOoc, which will be false and just route according to Kokua's debug setting
+			// if routed to chat, it will get squashed to ... so via an object is the only supported
+			// method, however dedicated users can route it back to (squashed) chat to suppress it
+			else if (!is_ooc || (is_ooc && gSavedSettings.getBOOL("KokuaRLVOOCChatIsRedirected")))
+#else
 			else if (!is_ooc || (RRInterface::sCanOoc && is_ooc && gSavedSettings.getBOOL("KokuaRLVOOCChatIsRedirected")))
+#endif
 			{
 				if (gAgent.mRRInterface.containsSubstr("redirchat:"))
 				{
