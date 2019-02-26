@@ -460,7 +460,7 @@
 			movie
 		</widgettype>
 		<impl>
-			media_plugin_libvlc
+			media_plugin_cef
 		</impl>
 	</mimetype>
 	<mimetype name="video/mp4">
@@ -471,7 +471,7 @@
 			movie
 		</widgettype>
 		<impl>
-			media_plugin_libvlc
+			media_plugin_cef
 		</impl>
 	</mimetype>
   <mimetype name="application/octet-stream">
