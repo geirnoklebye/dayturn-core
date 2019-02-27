@@ -799,7 +799,7 @@
     <key>RestrainedLove</key>
     <map>
       <key>Comment</key>
-      <string>Toggles the RestrainedLove features (BDSM lockable toys support). Needs a restart of the viewer.</string>
+      <string>Toggles the RestrainedLove features (LSL control of viewer features). Needs a restart of the viewer.</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
