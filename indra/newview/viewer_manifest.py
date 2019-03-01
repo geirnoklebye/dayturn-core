@@ -165,10 +165,14 @@ class ViewerManifest(LLManifest):
                     # we're wrong, a user actually does have the relevant
                     # files; s/he just needs to rename every html.old
                     # directory back to html to recover them.
-                    with self.prefix(src="*/html", dst="*/html.old"):
-                            self.path("*.png")
-                            self.path("*/*/*.html")
-                            self.path("*/*/*.gif")
+					#
+					# CA: The gif copy command is causing a python exception for no obvious
+					# reason ('invalid group reference') with MKRLV so comment this whole section
+                    #
+					# with self.prefix(src="*/html", dst="*/html.old"):
+                    #        self.path("*.png")
+                    #        self.path("*/*/*.html")
+                    #        self.path("*/*/*.gif")
 
 
             # local_assets dir (for pre-cached textures)
