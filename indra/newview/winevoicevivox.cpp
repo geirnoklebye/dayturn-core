@@ -686,17 +686,16 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
     {
 #ifndef VIVOXDAEMON_REMOTEHOST
         // Launch the voice daemon
-        std::string exe_path = gDirUtilp->getExecutableDir();
-        exe_path += gDirUtilp->getDirDelimiter();
+        std::string exe_path = gDirUtilp->getAppRODataDir();
 #if LL_WINDOWS
-        exe_path += "SLVoice.exe";
+        gDirUtilp->append(exe_path, "SLVoice.exe");
 #elif LL_DARWIN
-        exe_path += "../Resources/SLVoice";
+        gDirUtilp->append(exe_path, "SLVoice");
 #else
         // <FS:ND> On Linux the viewer can run SLVoice.exe through wine (https://www.winehq.org/)
         // exe_path += "SLVoice";
         if( !viewerUsesWineForVoice() )
-            exe_path += "SLVoice"; // native version
+        gDirUtilp->append(exe_path, "SLVoice");
         else
             exe_path += "win32/SLVoice.exe"; // use bundled win32 version
         // </FS:ND>
