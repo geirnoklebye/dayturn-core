@@ -592,13 +592,6 @@ class WindowsManifest(ViewerManifest):
                     self.path("BugSplat.dll")
                     self.path("BugSplatRc.dll")
 
-            #OpenAL
-            try:
-                self.path("openal32.dll")
-                self.path("alut.dll")
-            except:
-                print "Skipping openal"
-
             # For google-perftools tcmalloc allocator.
             try:
                 if self.args['configuration'].lower() == 'debug':
@@ -1579,7 +1572,7 @@ class LinuxManifest(ViewerManifest):
                                   '--numeric-owner', '-cjf',
                                  tempname + '.tar.bz2', installer_name])
             else:
-                print "Skipping %s.tar.txz for non-Release build (%s)" % \
+                print "Skipping %s.tar.bz2 for non-Release build (%s)" % \
                       (installer_name, self.args['buildtype'])
         finally:
             self.run_command(["mv", tempname, realname])
@@ -1702,11 +1695,10 @@ class Linux_i686_Manifest(LinuxManifest):
         # Vivox runtimes
         with self.prefix(src=relpkgdir, dst="bin"):
             self.path("SLVoice")
-            self.path("win32")
         with self.prefix(src=relpkgdir, dst="lib"):
             self.path("libortp.so")
             self.path("libsndfile.so.1")
-            self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
+            #self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
             self.path("libvivoxsdk.so")
             self.path("libvivoxplatform.so")
 
