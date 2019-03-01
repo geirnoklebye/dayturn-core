@@ -28,9 +28,9 @@
 
 #include "llviewerjointattachment.h"
 
-//MK from KB
+// [SL:KB] - Patch: Appearance-PhantomAttach | Checked: Catznip-5.0
 #include "llagent.h"
-//mk from kb
+// [/SL:KB]
 #include "llviewercontrol.h"
 #include "lldrawable.h"
 #include "llgl.h"
@@ -667,9 +667,9 @@ const LLViewerObject *LLViewerJointAttachment::getAttachedObject(const LLUUID &o
 	{
 		const LLViewerObject* attached_object = (*iter);
 //		if (attached_object->getAttachmentItemID() == object_id)
-//MK from KB
+// [SL:KB] - Patch: Appearance-PhantomAttach | Checked: Catznip-5.0
 		if ( (attached_object->getAttachmentItemID() == object_id) && (!attached_object->isDead()) )
-//mk from kb
+// [/SL:KB]
 		{
 			return attached_object;
 		}

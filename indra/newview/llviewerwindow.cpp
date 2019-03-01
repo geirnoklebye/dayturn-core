@@ -310,6 +310,9 @@ private:
 RecordToChatConsole::RecordToChatConsole():
 	mRecorder(new RecordToChatConsoleRecorder())
 {
+    mRecorder->showTags(false);
+    mRecorder->showLocation(false);
+    mRecorder->showMultiline(true);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -4779,6 +4782,11 @@ BOOL LLViewerWindow::rawSnapshot(LLImageRaw *raw, S32 image_width, S32 image_hei
 	if (hide_hud)
 	{
 		LLPipeline::sShowHUDAttachments = FALSE;
+	}
+
+	if(show_ui && gSavedSettings.getBOOL("HideBalanceInSnapshots"))
+	{
+		gStatusBar->hideBalance(true);
 	}
 
 	if(show_ui && gSavedSettings.getBOOL("HideBalanceInSnapshots"))

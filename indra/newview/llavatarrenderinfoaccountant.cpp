@@ -62,6 +62,7 @@ static const F32 SECS_BETWEEN_REGION_SCANS   =  5.f;		// Scan the region list ev
 static const F32 SECS_BETWEEN_REGION_REQUEST = 15.0;		// Look for new avs every 15 seconds
 static const F32 SECS_BETWEEN_REGION_REPORTS = 60.0;		// Update each region every 60 seconds
 
+LLFrameTimer LLAvatarRenderInfoAccountant::sRenderInfoReportTimer;
 
 //=========================================================================
 LLAvatarRenderInfoAccountant::LLAvatarRenderInfoAccountant()
@@ -383,4 +384,33 @@ void LLAvatarRenderInfoAccountant::scanNewRegion(const LLUUID& region_id)
 	{
 		LL_WARNS("AvatarRenderInfo") << "unable to resolve region "<<region_id<<LL_ENDL;
 	}
+}
+// static
+// Make sRenderInfoReportTimer expire so the next call to idle() will scan and query a new region
+// called via LLViewerRegion::setCapabilitiesReceived() boost signals when the capabilities
+// are returned for a new LLViewerRegion, and is the earliest time to get render info
+void LLAvatarRenderInfoAccountant::expireRenderInfoReportTimer(const LLUUID& region_id)
+{
+	if (logRenderInfo())
+	{
+		LL_INFOS() << "LRI: Viewer has new region capabilities, clearing global render info timer"
+			<< " and timer for region " << region_id
+			<< LL_ENDL;
+	}
+
+	// Reset the global timer so it will scan regions immediately
+	sRenderInfoReportTimer.reset();
+
+	LLViewerRegion* regionp = LLWorld::instance().getRegionFromID(region_id);
+	if (regionp)
+	{	// Reset the region's timer so it will request data immediately
+		regionp->getRenderInfoRequestTimer().reset();
+	}
+}
+// static 
+bool LLAvatarRenderInfoAccountant::logRenderInfo()
+{
+	return true;
+	// 	static LLCachedControl<bool> render_mute_logging_enabled(gSavedSettings, "RenderAutoMuteLogging", false);
+	// 	return render_mute_logging_enabled;
 }

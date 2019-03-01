@@ -412,7 +412,13 @@ void LLSidepanelInventory::onOpen(const LLSD& key)
 #endif
 
 	if(key.size() == 0)
+	{
+		// set focus on filter editor when side tray inventory shows up
+		LLFilterEditor* filter_editor = mPanelMainInventory->getChild<LLFilterEditor>("inventory search editor");
+		filter_editor->setFocus(TRUE);
 		return;
+	}
+
 
 	mItemPanel->reset();
 

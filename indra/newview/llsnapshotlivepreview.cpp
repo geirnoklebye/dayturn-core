@@ -1078,7 +1078,7 @@ void LLSnapshotLivePreview::saveLocal(const snapshot_saved_signal_t::slot_type& 
 
 //Check if failed due to insufficient memory
 void LLSnapshotLivePreview::saveLocal(LLPointer<LLImageFormatted> image, const snapshot_saved_signal_t::slot_type& success_cb, const snapshot_saved_signal_t::slot_type& failure_cb)
-	{
+{
 	sSaveLocalImage = image;
 
 	gViewerWindow->saveImageNumbered(sSaveLocalImage, FALSE, success_cb, failure_cb);

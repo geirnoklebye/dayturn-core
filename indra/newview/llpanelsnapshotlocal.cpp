@@ -171,16 +171,16 @@ void LLPanelSnapshotLocal::onSaveFlyoutCommit(LLUICtrl* ctrl)
 }
 
 void LLPanelSnapshotLocal::onLocalSaved()
-	{
-		mSnapshotFloater->postSave();
+{
+	mSnapshotFloater->postSave();
 	LLFloaterSnapshot::getInstance()->notify(LLSD().with("set-finished", LLSD().with("ok", true).with("msg", "local")));
-	}
+}
 
 void LLPanelSnapshotLocal::onLocalCanceled()
-	{
+{
 	cancel();
 	LLFloaterSnapshot::getInstance()->notify(LLSD().with("set-finished", LLSD().with("ok", false).with("msg", "local")));
-	}
+}
 
 
 LLSnapshotModel::ESnapshotType LLPanelSnapshotLocal::getSnapshotType()

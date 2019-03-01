@@ -145,7 +145,7 @@ BOOL LLToolGrabBase::handleMouseDown(S32 x, S32 y, MASK mask)
 
 //MK
 	// We need to be able to click on stuff, even when the controls are grabbed
-	////if (!gAgent.leftButtonGrabbed())
+	if (!gAgent.leftButtonBlocked())
 	if ((mask & MASK_ALT) || (mask & MASK_SHIFT) || (mask & MASK_CONTROL))
 //mk
 	{

@@ -605,7 +605,7 @@ clicking on their names.
       <scroll_list.columns
        label=""
        name="action"
-       width="270" />
+/>
     </scroll_list>
         </panel>
   <panel

@@ -26,7 +26,6 @@
 
 #include "llviewerprecompiledheaders.h"
 #include "llviewermessage.h"
-#include "boost/lexical_cast.hpp"
 
 // Linden libraries
 #include "llanimationstates.h"
@@ -120,7 +119,6 @@
 #include "llfloaterregionrestarting.h"
 
 #include <boost/algorithm/string/split.hpp> //
-#include <boost/regex.hpp>
 #include <boost/foreach.hpp>
 
 #include "llnotificationmanager.h" //
@@ -184,6 +182,9 @@ static BOOL ca_alarm_raised = FALSE;
 static std::string ca_region_channel;
 static F32 ca_performance_status_previous[CA_SIM_STAT_MAXIMUM] = {};
 static F32 ca_performance_status_now[CA_SIM_STAT_MAXIMUM] = {};
+
+// CA this is the once-per-session flag for RLV command notification
+static bool given_rlv_warning = false;
 
 static void ca_give_message_trans(std::string msg, LLStringUtil::format_map_t args)
 {
@@ -446,23 +447,23 @@ bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
             else if (payload.has("session_id") && payload["session_id"].asUUID().notNull())
             {
                 LL_DEBUGS("Friendship") << "Accepting friendship via viewer message" << LL_ENDL;
-		    msg->newMessageFast(_PREHASH_AcceptFriendship);
-		    msg->nextBlockFast(_PREHASH_AgentData);
-		    msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
-		    msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-		    msg->nextBlockFast(_PREHASH_TransactionBlock);
-		    msg->addUUIDFast(_PREHASH_TransactionID, payload["session_id"]);
-		    msg->nextBlockFast(_PREHASH_FolderData);
-		    msg->addUUIDFast(_PREHASH_FolderID, fid);
-		    msg->sendReliable(LLHost(payload["sender"].asString()));
+                msg->newMessageFast(_PREHASH_AcceptFriendship);
+                msg->nextBlockFast(_PREHASH_AgentData);
+                msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+                msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+                msg->nextBlockFast(_PREHASH_TransactionBlock);
+                msg->addUUIDFast(_PREHASH_TransactionID, payload["session_id"]);
+                msg->nextBlockFast(_PREHASH_FolderData);
+                msg->addUUIDFast(_PREHASH_FolderID, fid);
+                msg->sendReliable(LLHost(payload["sender"].asString()));
 
                 // add friend to recent people list
                 LLRecentPeople::instance().add(payload["from_id"]);
-		    LLNotificationsUtil::add("FriendshipAcceptedByMe",
-				    notification["substitutions"], payload);
-	    }
+                LLNotificationsUtil::add("FriendshipAcceptedByMe",
+                    notification["substitutions"], payload);
+            }
             else
-	    {
+            {
                 LL_WARNS("Friendship") << "Failed to accept friendship offer, neither capability nor transaction id are accessible" << LL_ENDL;
             }
 		    break;
@@ -485,30 +486,29 @@ bool friendship_offer_callback(const LLSD& notification, const LLSD& response)
                 else if (payload.has("session_id") && payload["session_id"].asUUID().notNull())
                 {
                     LL_DEBUGS("Friendship") << "Declining friendship via viewer message" << LL_ENDL;
-			    msg->newMessageFast(_PREHASH_DeclineFriendship);
-			    msg->nextBlockFast(_PREHASH_AgentData);
-			    msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
-			    msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
-			    msg->nextBlockFast(_PREHASH_TransactionBlock);
-			    msg->addUUIDFast(_PREHASH_TransactionID, payload["session_id"]);
-			    msg->sendReliable(LLHost(payload["sender"].asString()));
+                    msg->newMessageFast(_PREHASH_DeclineFriendship);
+                    msg->nextBlockFast(_PREHASH_AgentData);
+                    msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
+                    msg->addUUIDFast(_PREHASH_SessionID, gAgent.getSessionID());
+                    msg->nextBlockFast(_PREHASH_TransactionBlock);
+                    msg->addUUIDFast(_PREHASH_TransactionID, payload["session_id"]);
+                    msg->sendReliable(LLHost(payload["sender"].asString()));
 
-			    // start IM session
                     if (option == 1) // due to fall-through
-			    {
+                    {
                         LLNotificationsUtil::add("FriendshipDeclinedByMe",
                             notification["substitutions"], payload);
                     }
                     else if (option == 2)
                     {
                         // start IM session
-				    LLAvatarActions::startIM(payload["from_id"].asUUID());
+                        LLAvatarActions::startIM(payload["from_id"].asUUID());
                     }
                 }
                 else
                 {
                     LL_WARNS("Friendship") << "Failed to decline friendship offer, neither capability nor transaction id are accessible" << LL_ENDL;
-			    }
+                }
 		}
 		default:
 			// close button probably, possibly timed out
@@ -3440,9 +3440,9 @@ void process_teleport_finish(LLMessageSystem* msg, void**)
 	{
         if (gAgent.canRestoreCanceledTeleport())
         {
-        // Server either ignored teleport cancel message or did not receive it in time.
-        // This message can't be ignored since teleport is complete at server side
-        gAgent.restoreCanceledTeleportRequest();
+            // Server either ignored teleport cancel message or did not receive it in time.
+            // This message can't be ignored since teleport is complete at server side
+            gAgent.restoreCanceledTeleportRequest();
         }
         else
         {
@@ -4599,7 +4599,6 @@ void process_attached_sound(LLMessageSystem *msg, void **user_data)
 	{
 		std::map<LLUUID, PostponedSoundData>::iterator iter = postponed_sounds.find(object_id);
 		if (iter != postponed_sounds.end())
-	
 		{
 			postponed_sounds.erase(iter);
 		}
@@ -6432,6 +6431,16 @@ void experiencePermissionBlock(LLUUID experience, LLSD result)
 	data[experience.asString()] = permission;
 	data["experience"] = experience;
 	LLEventPumps::instance().obtain("experience_permission").post(data);
+}
+
+void experiencePermissionBlock(LLUUID experience, LLSD result)
+{
+    LLSD permission;
+    LLSD data;
+    permission["permission"] = "Block";
+    data[experience.asString()] = permission;
+    data["experience"] = experience;
+    LLEventPumps::instance().obtain("experience_permission").post(data);
 }
 
 bool script_question_cb(const LLSD& notification, const LLSD& response)

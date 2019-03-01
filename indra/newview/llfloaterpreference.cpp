@@ -112,9 +112,11 @@
 #include "llviewernetwork.h"
 #include "lllogininstance.h"        // to check if logged in yet
 #include "llsdserialize.h"
+#include "llviewertexturelist.h"
 #include "llpresetsmanager.h"
+
 #include "llviewercontrol.h"
-#include "llpresetsmanager.h"
+
 #include "llfeaturemanager.h"
 #include "llviewertexturelist.h"
 

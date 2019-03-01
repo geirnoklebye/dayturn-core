@@ -536,11 +536,11 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
                 type="string"
                 length="1"
                 follows="left|top|right"
-                height="14"
+                height="16"
                 layout="topleft"
                 right="-10"
-                top_pad="4"
-                left="3"
+                top_pad="8"
+                left="7"
                 use_ellipses="true"
                 name="groupcount">
               You belong to [COUNT] groups, and can join [REMAINING] more.
@@ -548,7 +548,7 @@ Looking for people to hang out with? Try the [secondlife:///app/worldmap World M
             <group_list
              allow_select="true" 
              follows="all"
-             height="388"
+             height="382"
              layout="topleft"
              left="3"
              keep_one_selected="false"

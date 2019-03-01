@@ -110,7 +110,10 @@ public:
 	static void		onBtnInsertSample(void*);
 	static void		onBtnInsertFunction(LLUICtrl*, void*);
 	static void		onBtnLoadFromFile(void*);
-    static void		onBtnSaveToFile(void*);
+	static void		onBtnSaveToFile(void*);
+
+	static void		loadScriptFromFile(const std::vector<std::string>& filenames, void* data);
+	static void		saveScriptToFile(const std::vector<std::string>& filenames, void* data);
 
 	static void		loadScriptFromFile(const std::vector<std::string>& filenames, void* data);
 	static void		saveScriptToFile(const std::vector<std::string>& filenames, void* data);

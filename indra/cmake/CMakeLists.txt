@@ -12,6 +12,7 @@ set(cmake_SOURCE_FILES
     Audio.cmake
     BerkeleyDB.cmake
     Boost.cmake
+    bugsplat.cmake
     BuildVersion.cmake
     CEFPlugin.cmake
     CMakeCopyIfDifferent.cmake
@@ -97,7 +98,7 @@ set(cmake_SOURCE_FILES
     Variables.cmake
     ViewerMiscLibs.cmake
     VisualLeakDetector.cmake
-    LibVLCPlugin.cmake
+#    WebKitLibPlugin.cmake
     XmlRpcEpi.cmake
     ZLIB.cmake
     )

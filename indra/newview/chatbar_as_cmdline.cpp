@@ -577,9 +577,6 @@ bool cmd_line_chat(std::string revised_text, EChatType type, bool from_gesture)
                             msg->addVector3("Binormal", LLVector3::zero);
                             msg->sendMessage( myObject->getRegion()->getHost());
 
-                            // *NOTE: Hope the packets arrive safely and in order or else
-                            // there will be some problems.
-                            // *TODO: Just fix this bad assumption.
                             msg->newMessageFast(_PREHASH_ObjectDeGrab);
                             msg->nextBlockFast(_PREHASH_AgentData);
                             msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());

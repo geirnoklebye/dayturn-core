@@ -36,6 +36,11 @@
 namespace
 {
 	const std::string& PANEL_CHICLET_NAME	= "chiclet_list_panel";
+//gcc-4.9 defined but not used
+/*
+	
+}
+*/
 
 }
 

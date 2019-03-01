@@ -214,7 +214,7 @@ public:
 	mesh_header_map mMeshHeader;
 	
 	std::map<LLUUID, U32> mMeshHeaderSize;
-	
+
 	class HeaderRequest : public RequestStats
 	{ 
 	public:
@@ -251,7 +251,7 @@ public:
 			return lhs.mScore > rhs.mScore; // greatest = first
 		}
 	};
-	
+
 	class UUIDBasedRequest : public RequestStats
 	{
 	public:

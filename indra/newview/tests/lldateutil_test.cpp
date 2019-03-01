@@ -80,9 +80,9 @@ namespace tut
 		{
 			// copied from strings.xml
 			gString["YearsMonthsOld"] = "[AGEYEARS] [AGEMONTHS] old";
-			gString["YearsOld"] = "[AGEYEARS] old";
 			gString["MonthsWeeksOld"] = "[AGEMONTHS] [AGEWEEKS] old";
 			gString["WeeksDaysOld"] = "[AGEWEEKS] [AGEDAYS] old";
+  			gString["YearsOld"] = "[AGEYEARS] old";
 			gString["MonthsOld"] = "[AGEMONTHS] old";
 			gString["WeeksOld"] = "[AGEWEEKS] old";
 			gString["DaysOld"] = "[AGEDAYS] old";

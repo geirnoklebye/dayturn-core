@@ -53,7 +53,7 @@ LLPanelVolumePulldown::LLPanelVolumePulldown()
 {
 	mHoverTimer.stop();
 
-    mCommitCallbackRegistrar.add("Vol.setControlFalse", boost::bind(&LLPanelVolumePulldown::setControlFalse, this, _2));
+	mCommitCallbackRegistrar.add("Vol.setControlFalse", boost::bind(&LLPanelVolumePulldown::setControlFalse, this, _2));
 	mCommitCallbackRegistrar.add("Vol.SetSounds", boost::bind(&LLPanelVolumePulldown::onClickSetSounds, this));
 	mCommitCallbackRegistrar.add("Vol.updateMediaAutoPlayCheckbox",	boost::bind(&LLPanelVolumePulldown::updateMediaAutoPlayCheckbox, this, _1));
 	mCommitCallbackRegistrar.add("Vol.GoAudioPrefs", boost::bind(&LLPanelVolumePulldown::onAdvancedButtonClick, this, _2));
@@ -62,10 +62,6 @@ LLPanelVolumePulldown::LLPanelVolumePulldown()
 
 BOOL LLPanelVolumePulldown::postBuild()
 {
-	// set the initial volume-slider's position to reflect reality
-	LLSliderCtrl* volslider =  getChild<LLSliderCtrl>( "mastervolume" );
-	volslider->setValue(gSavedSettings.getF32("AudioLevelMaster"));
-
 	return LLPanel::postBuild();
 }
 

@@ -2493,7 +2493,7 @@ void LLTextEditor::updateLinkSegments()
 					}
 				}
 			}
-
+			
 			// if the link's label (what the user can edit) is a valid Url,
 			// then update the link's HREF to be the same as the label text.
 			// This lets users edit Urls in-place.

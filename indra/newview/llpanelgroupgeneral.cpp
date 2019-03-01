@@ -206,7 +206,7 @@ BOOL LLPanelGroupGeneral::postBuild()
 		mCtrlOpenEnrollment->setEnabled(TRUE);
 		mCtrlEnrollmentFee->setEnabled(TRUE);
 		mSpinEnrollmentFee->setEnabled(TRUE);
-
+		mGroupUUIDText->clear();
 	}
 
 	return LLPanelGroupTab::postBuild();

@@ -703,8 +703,7 @@ bool idle_startup()
 			if (!found_template)
 			{
 				message_template_path =
-					gDirUtilp->getExpandedFilename(LL_PATH_EXECUTABLE,
-												   "../Resources/app_settings",
+					gDirUtilp->getExpandedFilename(LL_PATH_APP_SETTINGS,
 												   "message_template.msg");
 				found_template = LLFile::fopen(message_template_path.c_str(), "r");		/* Flawfinder: ignore */
 			}		
@@ -1137,6 +1136,7 @@ bool idle_startup()
 		LLDoNotDisturbNotificationStorage::getInstance()->initialize();
 
 		// Set PerAccountSettingsFile to the default value.
+		std::string per_account_settings_file = LLAppViewer::instance()->getSettingsFilename("Default", "PerAccount");
 		gSavedSettings.setString("PerAccountSettingsFile",
 			gDirUtilp->getExpandedFilename(LL_PATH_PER_SL_ACCOUNT, 
 				LLAppViewer::instance()->getSettingsFilename("Default", "PerAccount")));
@@ -2178,6 +2178,19 @@ bool idle_startup()
 
 		display_startup();
 
+		// based on the comments, we've successfully logged in so we can delete the 'forced'
+		// URL that the updater set in settings.ini (in a mostly paranoid fashion)
+		std::string nextLoginLocation = gSavedSettings.getString( "NextLoginLocation" );
+		if ( nextLoginLocation.length() )
+		{
+			// clear it
+			gSavedSettings.setString( "NextLoginLocation", "" );
+
+			// and make sure it's saved
+			gSavedSettings.saveToFile( gSavedSettings.getString("ClientSettingsFile") , TRUE );
+			LLUIColorTable::instance().saveUserSettings();
+		};
+
 		display_startup();
 		// JC: Initializing audio requests many sounds for download.
 		init_audio();
@@ -2419,6 +2432,7 @@ bool idle_startup()
 			}
 		}
 		//fall through this frame to STATE_CLEANUP
+		return TRUE; //do like fall throughs just adding another cycle seems safer
 	}
 
 	if (STATE_CLEANUP == LLStartUp::getStartupState())
@@ -2724,8 +2738,8 @@ void register_viewer_callbacks(LLMessageSystem* msg)
 	msg->setHandlerFunc("SetFollowCamProperties",			process_set_follow_cam_properties);
 	msg->setHandlerFunc("ClearFollowCamProperties",			process_clear_follow_cam_properties);
 
-	msg->setHandlerFuncFast(_PREHASH_ImprovedInstantMessage,	process_improved_im);
-	msg->setHandlerFuncFast(_PREHASH_ScriptQuestion,			process_script_question);
+	msg->setHandlerFuncFast(_PREHASH_ImprovedInstantMessage, process_improved_im);
+	msg->setHandlerFuncFast(_PREHASH_ScriptQuestion, process_script_question);
 	// LL changed this to call directly to SelectMgr. we need it to continue going to llviewermessage first
 	// for FS's area search
 	//msg->setHandlerFuncFast(_PREHASH_ObjectProperties,			LLSelectMgr::processObjectProperties, NULL);

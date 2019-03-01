@@ -252,6 +252,9 @@ void FindModel(LLModelLoader::scene& scene, const std::string& name_to_match, LL
             }
         }
         base_iter++;
+// <FS:CR Threaded Filepickers>
+	//: LLLoadFilePickerThread(LLFilePicker::FFLOAD_COLLADA) //<KOKUA:NP revert>
+// </FS:CR Threaded Filepickers>
     }
 }
 

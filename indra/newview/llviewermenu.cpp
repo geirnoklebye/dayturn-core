@@ -3350,6 +3350,20 @@ bool enable_zoomowner_particle()
 	return pick.mParticleOwnerID.notNull() && gObjectList.findObject(pick.mParticleOwnerID);
 }
 
+bool enable_particle_owner_profile()
+{
+	const LLPickInfo &pick = LLToolPie::getInstance()->getPick();
+
+	return pick.mParticleOwnerID.notNull();
+}
+
+bool enable_zoomowner_particle()
+{
+	const LLPickInfo &pick = LLToolPie::getInstance()->getPick();
+
+	return pick.mParticleOwnerID.notNull() && gObjectList.findObject(pick.mParticleOwnerID);
+}
+
 bool enable_mute_particle()
 {
 	const LLPickInfo& pick = LLToolPie::getInstance()->getPick();
@@ -4437,8 +4451,6 @@ BOOL is_agent_mappable(const LLUUID& agent_id)
 		);
 }
 
-
-// Enable a menu item when you don't have someone's card.
 class LLAvatarEnableAddFriend : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -8462,6 +8474,19 @@ class LLAvatarCall : public view_listener_t
 		if(avatar)
 		{
 			LLAvatarActions::startCall(avatar->getID());
+		}
+		return true;
+	}
+};
+
+class LLAvatarShare : public view_listener_t
+{
+	bool handleEvent(const LLSD &userdata)
+	{
+		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
+
+		if(avatar) {
+			LLAvatarActions::share(avatar->getID());
 		}
 		return true;
 	}

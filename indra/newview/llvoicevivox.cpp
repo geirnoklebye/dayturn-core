@@ -770,14 +770,13 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
     {
 #ifndef VIVOXDAEMON_REMOTEHOST
         // Launch the voice daemon
-        std::string exe_path = gDirUtilp->getExecutableDir();
-        exe_path += gDirUtilp->getDirDelimiter();
+        std::string exe_path = gDirUtilp->getAppRODataDir();
 #if LL_WINDOWS
-        exe_path += "SLVoice.exe";
+        gDirUtilp->append(exe_path, "SLVoice.exe");
 #elif LL_DARWIN
-        exe_path += "../Resources/SLVoice";
+        gDirUtilp->append(exe_path, "SLVoice");
 #else
-        exe_path += "SLVoice";
+        gDirUtilp->append(exe_path, "SLVoice");
 #endif
         // See if the vivox executable exists
         llstat s;
@@ -802,6 +801,12 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
                 log_folder = gDirUtilp->getExpandedFilename(LL_PATH_LOGS, "");
             }
 
+			// <FS:Ansariel> Strip trailing directory delimiter
+			if (LLStringUtil::endsWith(log_folder, gDirUtilp->getDirDelimiter()))
+			{
+				log_folder = log_folder.substr(0, log_folder.size() - gDirUtilp->getDirDelimiter().size());
+			}
+			// </FS:Ansariel>
             params.args.add("-lf");
             params.args.add(log_folder);
 
@@ -811,6 +816,19 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
                 params.args.add("-st");
                 params.args.add(shutdown_timeout);
             }
+						// <FS:Ansariel> Voice in multiple instances; by Latif Khalifa
+						if (gSavedSettings.getBOOL("VoiceMultiInstance"))
+						{
+							S32 port_nr = 30000 + ll_rand(20000);
+							LLControlVariable* voice_port = gSavedSettings.getControl("VivoxVoicePort");
+							if (voice_port)
+							{
+								voice_port->setValue(LLSD(port_nr), false);
+								params.args.add("-i");
+								params.args.add(llformat("127.0.0.1:%u",  gSavedSettings.getU32("VivoxVoicePort")));
+							}
+						}
+						// </FS:Ansariel>
             params.cwd = gDirUtilp->getAppRODataDir();
 
 #           ifdef VIVOX_HANDLE_ARGS

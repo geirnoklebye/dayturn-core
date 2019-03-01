@@ -405,7 +405,7 @@ bool LLPanelWearing::isActionEnabled(const LLSD& userdata)
 		// allow save only if outfit isn't locked and is dirty
 		return !outfit_locked && outfit_dirty;
 	}
-	if (command_name == "take_off")
+	else if (command_name == "take_off")
 	{
 		if (mWearablesTab->isExpanded())
 		{

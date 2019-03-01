@@ -233,8 +233,6 @@ void LLPanelPermissions::disableAll()
 	getChildView("Description:")->setEnabled(FALSE);
 	getChild<LLUICtrl>("Object Description")->setValue(LLStringUtil::null);
 	getChildView("Object Description")->setEnabled(FALSE);
-
-	getChildView("Permissions:")->setEnabled(FALSE);
 		
 	getChild<LLUICtrl>("checkbox share with group")->setValue(FALSE);
 	getChildView("checkbox share with group")->setEnabled(FALSE);
@@ -393,8 +391,6 @@ void LLPanelPermissions::refresh()
 
 	getChildView("pathfinding_attributes_value")->setEnabled(TRUE);
 	getChild<LLUICtrl>("pathfinding_attributes_value")->setValue(LLTrans::getString(pfAttrName));
-
-	getChildView("Permissions:")->setEnabled(TRUE);
 	
 	// Update creator text field
 	getChildView("Creator:")->setEnabled(TRUE);
@@ -429,7 +425,7 @@ void LLPanelPermissions::refresh()
 	}
 	getChild<LLAvatarIconCtrl>("Creator Icon")->setValue(mCreatorID);
 	getChild<LLAvatarIconCtrl>("Creator Icon")->setVisible(TRUE);
-	getChildView("Creator Name")->setEnabled(TRUE);
+	mLabelCreatorName->setEnabled(TRUE);
 
 	// Update owner text field
 	getChildView("Owner:")->setEnabled(TRUE);
