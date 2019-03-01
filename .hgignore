@@ -109,7 +109,6 @@ glob:*.diff
 indra/newview/pilot.txt
 indra/newview/pilot.xml
 configure.log
-*.rej
 indra/cmake/LLSharedLibs.cmake.orig
 indra/media_plugins/cef/CMakeLists.txt.orig
 indra/newview/skins/default/xui/da/mime_types_mac.xml.orig
