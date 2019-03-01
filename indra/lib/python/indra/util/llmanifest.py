@@ -414,9 +414,6 @@ class LLManifest(object):
 
         def __init__(self, manifest):
             self.manifest = manifest
-            # stack attributes we manage in this LLManifest (sub)class
-            # instance
-            stacks = ("src_prefix", "artwork_prefix", "build_prefix", "dst_prefix")
             # If the caller wrote:
             # with self.prefix(...):
             # as intended, then bind the state of each prefix stack as it was

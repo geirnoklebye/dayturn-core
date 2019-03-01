@@ -145,7 +145,7 @@ BOOL LLToolGrabBase::handleMouseDown(S32 x, S32 y, MASK mask)
 
 //MK
 	// We need to be able to click on stuff, even when the controls are grabbed
-	if (!gAgent.leftButtonBlocked())
+	////if (!gAgent.leftButtonGrabbed())
 	if ((mask & MASK_ALT) || (mask & MASK_SHIFT) || (mask & MASK_CONTROL))
 //mk
 	{
@@ -155,6 +155,7 @@ BOOL LLToolGrabBase::handleMouseDown(S32 x, S32 y, MASK mask)
 	mClickedInMouselook = gAgentCamera.cameraMouselook();
 	return TRUE;
 }
+
 
 void LLToolGrabBase::pickCallback(const LLPickInfo& pick_info)
 {

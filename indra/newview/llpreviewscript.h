@@ -115,8 +115,6 @@ public:
 	static void		loadScriptFromFile(const std::vector<std::string>& filenames, void* data);
 	static void		saveScriptToFile(const std::vector<std::string>& filenames, void* data);
 
-	static void		loadScriptFromFile(const std::vector<std::string>& filenames, void* data);
-	static void		saveScriptToFile(const std::vector<std::string>& filenames, void* data);
 
 	static bool		enableSaveToFileMenu(void* userdata);
 	static bool		enableLoadFromFileMenu(void* userdata);

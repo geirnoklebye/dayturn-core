@@ -4693,30 +4693,10 @@ bool needTriangles( LLConvexDecomposition *aDC )
 	return false;
 }
 
-bool needTriangles( LLConvexDecomposition *aDC )
-{
-	if( !aDC )
-		return false;
 
-	LLCDParam const  *pParams(0);
-	int nParams = aDC->getParameters( &pParams );
 
-	if( nParams <= 0 )
-		return false;
 
-	for( int i = 0; i < nParams; ++i )
-	{
-		if( pParams[i].mName && strcmp( "nd_AlwaysNeedTriangles", pParams[i].mName ) == 0 )
-		{
-			if( LLCDParam::LLCD_BOOLEAN == pParams[i].mType && pParams[i].mDefault.mBool )
-				return true;
-			else
-				return false;
-		}
-	}
 
-	return false;
-}
 
 void LLPhysicsDecomp::setMeshData(LLCDMeshData& mesh, bool vertex_based)
 {

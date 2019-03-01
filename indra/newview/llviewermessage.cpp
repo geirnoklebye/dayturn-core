@@ -6421,16 +6421,7 @@ bool unknown_script_question_cb(const LLSD& notification, const LLSD& response)
 		script_question_mute(task_id, notification["payload"]["object_name"].asString());
 	}
 	return false;
-}
 
-void experiencePermissionBlock(LLUUID experience, LLSD result)
-{
-	LLSD permission;
-	LLSD data;
-	permission["permission"] = "Block";
-	data[experience.asString()] = permission;
-	data["experience"] = experience;
-	LLEventPumps::instance().obtain("experience_permission").post(data);
 }
 
 void experiencePermissionBlock(LLUUID experience, LLSD result)

@@ -2859,7 +2859,7 @@ bool LLAppViewer::initConfiguration()
 #endif
         {
 //mk
-			start_slurl = cmd_line_login_location;
+			start_slurl = starting_location;
 			LLStartUp::setStartSLURL(start_slurl);
 			if(start_slurl.getType() == LLSLURL::LOCATION) 
 	{

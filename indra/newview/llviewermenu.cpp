@@ -3334,20 +3334,10 @@ bool enable_object_edit()
 	}
 
 	return enable;
-}
 
-bool enable_particle_owner_profile()
-{
-	const LLPickInfo &pick = LLToolPie::getInstance()->getPick();
 
-	return pick.mParticleOwnerID.notNull();
-}
 
-bool enable_zoomowner_particle()
-{
-	const LLPickInfo &pick = LLToolPie::getInstance()->getPick();
 
-	return pick.mParticleOwnerID.notNull() && gObjectList.findObject(pick.mParticleOwnerID);
 }
 
 bool enable_particle_owner_profile()
@@ -8474,19 +8464,6 @@ class LLAvatarCall : public view_listener_t
 		if(avatar)
 		{
 			LLAvatarActions::startCall(avatar->getID());
-		}
-		return true;
-	}
-};
-
-class LLAvatarShare : public view_listener_t
-{
-	bool handleEvent(const LLSD &userdata)
-	{
-		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
-
-		if(avatar) {
-			LLAvatarActions::share(avatar->getID());
 		}
 		return true;
 	}

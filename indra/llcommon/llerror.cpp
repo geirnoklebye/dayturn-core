@@ -132,8 +132,6 @@ namespace {
                     mFile.sync_with_stdio(false);
                 }
             }
-			mWantsTime = true;
-            mWantsTags = true;
 		}
 		
 		~RecordToFile()
@@ -1107,7 +1105,7 @@ namespace
 			}
             message_stream << " ";
 
-            if (show_location && (r->wantsLocation() || level == LLError::LEVEL_ERROR || s->mPrintLocation))
+            if (r->wantsLocation() || level == LLError::LEVEL_ERROR)
             {
                 message_stream << site.mLocationString;
             }
@@ -1374,7 +1372,9 @@ namespace LLError
 			delete out;
 		}
 
+
 		if (site.mPrintOnce)
+		{
             std::ostringstream message_stream;
 
 			std::map<std::string, unsigned int>::iterator messageIter = s->mUniqueLogMessages.find(message);

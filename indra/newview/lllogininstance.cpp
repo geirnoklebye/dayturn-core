@@ -464,6 +464,7 @@ bool LLLoginInstance::handleTOSResponse(bool accepted, const std::string& key)
 
 	LLEventPumps::instance().obtain(TOS_REPLY_PUMP).stopListening(TOS_LISTENER_NAME);
 	return true;
+}
 
 std::string construct_start_string()
 {
