@@ -183,9 +183,6 @@ static std::string ca_region_channel;
 static F32 ca_performance_status_previous[CA_SIM_STAT_MAXIMUM] = {};
 static F32 ca_performance_status_now[CA_SIM_STAT_MAXIMUM] = {};
 
-// CA this is the once-per-session flag for RLV command notification
-static bool given_rlv_warning = false;
-
 static void ca_give_message_trans(std::string msg, LLStringUtil::format_map_t args)
 {
 	// we can deliver via chat & chat toast or as chat & notification
