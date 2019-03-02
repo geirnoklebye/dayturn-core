@@ -144,7 +144,7 @@ class ViewerManifest(LLManifest):
             # skins
             with self.prefix(src_dst="skins"):
                     # include the entire textures directory recursively
-                    with self.prefix(src_dst="*/textures"):
+                    with self.prefix(src="*/textures"):
                             self.path("*/*.tga")
                             self.path("*/*.j2c")
                             self.path("*/*.jpg")
@@ -168,8 +168,15 @@ class ViewerManifest(LLManifest):
                     with self.prefix(src="*/html", dst="*/html.old"):
                             self.path("*.png")
                             self.path("*/*/*.html")
-                            self.path("*/*/*.gif")
-
+                    # CA this causes an explosion with MKRLV when it finds nothing
+                    # in skins/html and then decides to look in build*/Release/*/
+                    # Unfortunately it finds the VMP icons in ..Release/vmp_icons/
+                    # and then explodes when it can't find html in the origin path
+                    # to replace with html_old in the destination path. Commenting
+                    # this is safe because there are no gif files in the correct
+                    # origin folders anyway (which is probably why it then looks in
+                    # the wrong place...)     
+                    #       self.path("*/*/*.gif")
 
             # local_assets dir (for pre-cached textures)
             with self.prefix(src_dst="local_assets"):
