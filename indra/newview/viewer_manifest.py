@@ -144,7 +144,7 @@ class ViewerManifest(LLManifest):
             # skins
             with self.prefix(src_dst="skins"):
                     # include the entire textures directory recursively
-                    with self.prefix(src="*/textures"):
+                    with self.prefix(src_dst="*/textures"):
                             self.path("*/*.tga")
                             self.path("*/*.j2c")
                             self.path("*/*.jpg")
@@ -1368,7 +1368,10 @@ class DarwinManifest(ViewerManifest):
                             else:
                                 print >> sys.stderr, "Maximum codesign attempts exceeded; giving up"
                                 raise
-                    self.run_command(['spctl', '-a', '-texec', '-vvvv', app_in_dmg])
+                    self.run_command(['spctl', '-a', '-texec', '-vv', app_in_dmg])
+
+            imagename="Kokua_" + '_'.join(self.args['version'])
+
 
         finally:
             # Unmount the image even if exceptions from any of the above 
