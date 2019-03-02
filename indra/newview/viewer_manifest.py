@@ -144,7 +144,7 @@ class ViewerManifest(LLManifest):
             # skins
             with self.prefix(src_dst="skins"):
                     # include the entire textures directory recursively
-                    with self.prefix(src_dst="*/textures"):
+                    with self.prefix(src="*/textures"):
                             self.path("*/*.tga")
                             self.path("*/*.j2c")
                             self.path("*/*.jpg")
@@ -165,15 +165,18 @@ class ViewerManifest(LLManifest):
                     # we're wrong, a user actually does have the relevant
                     # files; s/he just needs to rename every html.old
                     # directory back to html to recover them.
-					#
-					# CA: The gif copy command is causing a python exception for no obvious
-					# reason ('invalid group reference') with MKRLV so comment this whole section
-                    #
-					# with self.prefix(src="*/html", dst="*/html.old"):
-                    #        self.path("*.png")
-                    #        self.path("*/*/*.html")
-                    #        self.path("*/*/*.gif")
-
+                    with self.prefix(src="*/html", dst="*/html.old"):
+                            self.path("*.png")
+                            self.path("*/*/*.html")
+                    # CA this causes an explosion with MKRLV when it finds nothing
+                    # in skins/html and then decides to look in build*/Release/*/
+                    # Unfortunately it finds the VMP icons in ..Release/vmp_icons/
+                    # and then explodes when it can't find html in the origin path
+                    # to replace with html_old in the destination path. Commenting
+                    # this is safe because there are no gif files in the correct
+                    # origin folders anyway (which is probably why it then looks in
+                    # the wrong place...)     
+                    #       self.path("*/*/*.gif")
 
             # local_assets dir (for pre-cached textures)
             with self.prefix(src_dst="local_assets"):
