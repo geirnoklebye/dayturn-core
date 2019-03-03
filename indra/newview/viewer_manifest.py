@@ -1370,8 +1370,6 @@ class DarwinManifest(ViewerManifest):
                                 raise
                     self.run_command(['spctl', '-a', '-texec', '-vv', app_in_dmg])
 
-            imagename="Kokua_" + '_'.join(self.args['version'])
-
 
         finally:
             # Unmount the image even if exceptions from any of the above 
