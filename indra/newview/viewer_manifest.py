@@ -984,7 +984,7 @@ class DarwinManifest(ViewerManifest):
 
                 # need .icns file referenced by Info.plist
                 with self.prefix(src=self.icon_path(), dst="") :
-                    self.path("kokua.icns")
+                    self.path("kokua_icon.icns")
 
                 # Copy in the updater script and helper modules
                 self.path(src=os.path.join(pkgdir, 'VMP'), dst="updater")
@@ -1370,7 +1370,6 @@ class DarwinManifest(ViewerManifest):
                                 raise
                     self.run_command(['spctl', '-a', '-texec', '-vv', app_in_dmg])
 
-
         finally:
             # Unmount the image even if exceptions from any of the above 
             self.run_command(['hdiutil', 'detach', '-force', devfile])
@@ -1408,7 +1407,7 @@ class LinuxManifest(ViewerManifest):
         debpkgdir = os.path.join(pkgdir, "lib", "debug")
 
         self.path("licenses-linux.txt","licenses.txt")
-        with self.prefix("linux_tools"):
+        with self.prefix("linux_tools", dst=""):
             self.path("client-readme.txt","README-linux.txt")
             self.path("client-readme-voice.txt","README-linux-voice.txt")
             self.path("client-readme-joystick.txt","README-linux-joystick.txt")
@@ -1420,20 +1419,23 @@ class LinuxManifest(ViewerManifest):
             self.path("refresh_desktop_app_entry.sh", "etc/refresh_desktop_app_entry.sh")
             self.path("launch_url.sh","etc/launch_url.sh")
             self.path("wrapper.sh","kokua")
-            with self.prefix(dst="etc"):
+            with self.prefix(src="", dst="etc"):
                 self.path("handle_secondlifeprotocol.sh")
                 self.path("register_secondlifeprotocol.sh")
                 self.path("refresh_desktop_app_entry.sh")
                 self.path("launch_url.sh")
             self.path("install.sh")
 
-        with self.prefix(dst="bin"):
+        with self.prefix(src="", dst="bin"):
             self.path("kokua-bin","do-not-directly-run-kokua-bin")
             self.path("../linux_crash_logger/linux-crash-logger","linux-crash-logger.bin")
             self.path2basename("../llplugin/slplugin", "SLPlugin") 
             #this copies over the python wrapper script, associated utilities and required libraries, see SL-321, SL-322 and SL-323
             with self.prefix(src="../viewer_components/manager", dst=""):
                 self.path("*.py")
+            with self.prefix(src=os.path.join("lib", "python", "llbase"), dst="llbase"):
+                self.path("*.py")
+                self.path("_cllsd.so")         
 
         # recurses, packaged again
         self.path("res-sdl")
@@ -1441,9 +1443,9 @@ class LinuxManifest(ViewerManifest):
         # Get the icons based on the channel type
         icon_path = self.icon_path()
         print "DEBUG: icon_path '%s'" % icon_path
-        with self.prefix(src=icon_path) :
+        with self.prefix(src=icon_path, dst="") :
             self.path("kokua_icon.png","kokua_icon.png" )
-            with self.prefix(dst="res-sdl") :
+            with self.prefix(src="",dst="res-sdl") :
                 self.path("kokua_icon.bmp","kokua_icon.BMP")
 
         # plugins
@@ -1535,6 +1537,14 @@ class LinuxManifest(ViewerManifest):
             self.path("zh-TW.pak")
 
 
+        with self.prefix(src=os.path.join(pkgdir, 'lib', 'vlc', 'plugins'), dst="bin/llplugin/vlc/plugins"):
+            self.path( "plugins.dat" )
+            self.path( "*/*.so" )
+
+        with self.prefix(src=os.path.join(pkgdir, 'lib' ), dst="lib"):
+            self.path( "libvlc*.so*" )
+
+
 
         with self.prefix(src=os.path.join(pkgdir, 'lib', 'vlc', 'plugins'), dst="bin/llplugin/vlc/plugins"):
             self.path( "plugins.dat" )
@@ -1549,7 +1559,10 @@ class LinuxManifest(ViewerManifest):
 
         self.path("featuretable_linux.txt")
 
-        with self.prefix(src=pkgdir):
+        with self.prefix(src=pkgdir,dst="bin"):
+            self.path("ca-bundle.crt")
+
+        with self.prefix(src=pkgdir,dst="app_settings"):
             self.path("ca-bundle.crt")
 
     def package_finish(self):
@@ -1591,9 +1604,9 @@ class LinuxManifest(ViewerManifest):
             # makes some small assumptions about our packaged dir structure
             self.run_command(
                 ["find"] +
-                [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib')] +
-                ['-type', 'f', '!', '-name', '*.py',
-                 '!', '-name', 'update_install', '-exec', 'strip', '-S', '{}', ';'])
+                [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib', 'lib/lib32' )] +
+                ['-type', 'f', '!', '-name', '*.py', '!', '-name', 'SL_Launcher', '!', '-name', '*.crt','!', '-name', '*.log', '!', '-path', '*win32*',
+                 '!', '-name', 'update_install', '!', '-name', '*.pak', '!', '-name', '*.dat', '!', '-name', '*.bin', '-exec', 'strip', '-S', '{}', ';'])
 
 class Linux_i686_Manifest(LinuxManifest):
     address_size = 32
@@ -1703,10 +1716,11 @@ class Linux_i686_Manifest(LinuxManifest):
         # Vivox runtimes
         with self.prefix(src=relpkgdir, dst="bin"):
             self.path("SLVoice")
+            self.path("win32")
         with self.prefix(src=relpkgdir, dst="lib"):
             self.path("libortp.so")
             self.path("libsndfile.so.1")
-            #self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
+            self.path("libvivoxoal.so.1") # no - we'll re-use the viewer's own OpenAL lib
             self.path("libvivoxsdk.so")
             self.path("libvivoxplatform.so")
 
