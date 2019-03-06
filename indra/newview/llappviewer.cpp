@@ -1147,7 +1147,7 @@ bool LLAppViewer::init()
 	}
 
 	gGLActive = FALSE;
-
+#if !LL_LINUX
 	LLProcess::Params updater;
 	updater.desc = "updater process";
 	// Because it's the updater, it MUST persist beyond the lifespan of the
@@ -1199,7 +1199,7 @@ bool LLAppViewer::init()
 		// fails, log it, shrug and carry on.
 		LLLeap::create("", leap, false); // exception=false
 	}
-
+#endif //!LL_LINUX
 	if (gSavedSettings.getBOOL("QAMode") && gSavedSettings.getS32("QAModeEventHostPort") > 0)
 	{
 		LL_WARNS("InitInfo") << "QAModeEventHostPort DEPRECATED: "
