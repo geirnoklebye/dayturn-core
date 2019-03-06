@@ -183,8 +183,6 @@ class ViewerManifest(LLManifest):
                 self.path("*.j2c")
                 self.path("*.tga")
 
-            # File in the newview/ directory
-            self.path("gpu_table.txt")
 
             #build_data.json.  Standard with exception handling is fine.  If we can't open a new file for writing, we have worse problems
             #platform is computed above with other arg parsing
@@ -1430,13 +1428,7 @@ class LinuxManifest(ViewerManifest):
             self.path("kokua-bin","do-not-directly-run-kokua-bin")
             self.path("../linux_crash_logger/linux-crash-logger","linux-crash-logger.bin")
             self.path2basename("../llplugin/slplugin", "SLPlugin") 
-            #this copies over the python wrapper script, associated utilities and required libraries, see SL-321, SL-322 and SL-323
-            with self.prefix(src="../viewer_components/manager", dst=""):
-                self.path("*.py")
-            with self.prefix(src=os.path.join("lib", "python", "llbase"), dst="llbase"):
-                self.path("*.py")
-                self.path("_cllsd.so")         
-
+ 
         # recurses, packaged again
         self.path("res-sdl")
 
@@ -1449,12 +1441,11 @@ class LinuxManifest(ViewerManifest):
                 self.path("kokua_icon.bmp","kokua_icon.BMP")
 
         # plugins
-        with self.prefix(src="../media_plugins", dst="bin/llplugin"):
+        with self.prefix(src=os.path.join(self.args['build'], os.pardir, 'media_plugins'), dst="bin/llplugin"):
             self.path2basename("cef", "libmedia_plugin_cef.so")
             self.path2basename("libvlc", "libmedia_plugin_libvlc.so")
 
 
-       # CEF runtime files - debug
         # CEF runtime files - not debug (release, relwithdebinfo etc.)
 
         config = 'debug' if self.args['configuration'].lower() == 'debug' else 'release'
@@ -1605,9 +1596,11 @@ class LinuxManifest(ViewerManifest):
             self.run_command(
                 ["find"] +
                 [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib', 'lib/lib32' )] +
-                ['-type', 'f', '!', '-name', '*.py', '!', '-name', 'SL_Launcher', '!', '-name', '*.crt','!', '-name', '*.log', '!', '-path', '*win32*',
-                 '!', '-name', 'update_install', '!', '-name', '*.pak', '!', '-name', '*.dat', '!', '-name', '*.bin', '-exec', 'strip', '-S', '{}', ';'])
+                ['-type', 'f', '!', '-name', '*.py', '!', '-name', 'natives_blob.bin', '!', '-name', 'snapshot_blob.bin', '!', '-name', 'v8_context_snapshot.bin', '!', '-name', 'SLVersionChecker', '!', '-name', '*.crt','!', '-name', '*.log', '!', '-path', '*win32*',
+                 '!', '-name', 'update_install', '!', '-name', '*.pak', '!', '-name', '*.dat',  '-exec', 'strip', '-S', '{}', ';'])
 
+# Kokua no longer builds a 32 bit linux. Commented out. 
+"""
 class Linux_i686_Manifest(LinuxManifest):
     address_size = 32
 
@@ -1731,14 +1724,18 @@ class Linux_i686_Manifest(LinuxManifest):
             self.path( "libcef.so" )
             self.path( "libwidevinecdmadapter.so" )
             self.end_prefix()
-
+"""
 class Linux_x86_64_Manifest(LinuxManifest):
     address_size = 64
 
     def construct(self):
         super(Linux_x86_64_Manifest, self).construct()
 
-        # support file for valgrind debug tool
+        pkgdir = os.path.join(self.args['build'], os.pardir, 'packages')
+        relpkgdir = os.path.join(pkgdir, "lib", "release")
+        debpkgdir = os.path.join(pkgdir, "lib", "debug")
+ 
+       # support file for valgrind debug tool
         self.path("secondlife-i686.supp")
 
 	try:
@@ -1752,26 +1749,19 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libpng12.so.0*")
             self.end_prefix("lib") 
 
-
-        if self.prefix("../packages/lib/release", dst="lib"):
+        with self.prefix(src=relpkgdir, dst="lib"):
             self.path("libapr-1.so*")
             self.path("libaprutil-1.so*")
             self.path("libdb*.so")
-            self.path("libcrypto.so.1.0.0")
-            self.path("libssl.so")
-            self.path("libssl.so.1.0.0")
             self.path("libexpat.so.*")
             self.path("libSDL-1.2.so.*")
             self.path("libdirectfb-1.*.so.*")
             self.path("libfusion-1.*.so.*")
             self.path("libdirect-1.*.so.*")
             self.path("libopenjpeg.so*")
-            self.path("libdirectfb-1.4.so.5")
-            self.path("libfusion-1.4.so.5")
-            self.path("libdirect-1.4.so.5*")
-            self.path("libjpeg.so")
-            self.path("libjpeg.so.8")
-            self.path("libjpeg.so.8.3.0")
+            self.path("libdirectfb-1.7.so.1")
+            self.path("libfusion-1.7.so.1*")
+            self.path("libdirect-1.7.so.1*")
             self.path("libuuid.so")
             self.path("libuuid.so.16")
             self.path("libuuid.so.16.0.22")
@@ -1779,68 +1769,65 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libGLOD.so")
             self.path("libfmodex64-*.so")
             self.path("libfmodex64.so")
-           
-            # OpenAL
+            self.path("libfreetype.so.*.*")          
+
+            # OpenAL populated when -DOPENAL:BOOL=ON.  These are not present in packages when -DOPENAL:BOOL=OFF
+	    # Voice uses 32bit versions of these. 
             self.path("libalut.so")
             self.path("libalut.so.0")
             self.path("libopenal.so")
             self.path("libopenal.so.1")
             self.path("libalut.so.0.0.0")
             self.path("libopenal.so.1.15.1")
-            self.path("libfreetype.so.*.*")
             self.path("libpng16.so.16") 
             self.path("libpng16.so.16.8.0")
 
- 
-           #cef plugin
+            #cef plugin
             self.path( "libcef.so" )
             self.path( "libwidevinecdmadapter.so" )
-            self.end_prefix("lib")
-
 
             # Vivox runtimes
-            if self.prefix(src="../packages/lib/release", dst="bin"):
+            with self.prefix(src=relpkgdir, dst="bin"):
                     self.path("SLVoice")
                     self.path("win32")
-                    self.end_prefix()
-            if self.prefix(src="../packages/lib/release", dst="lib/lib32"):
+
+            with self.prefix(src=relpkgdir, dst="lib32"):
                     self.path("libortp.so")
                     self.path("libsndfile.so.1")
                     self.path("libvivoxsdk.so")
                     self.path("libvivoxplatform.so")
                     self.path("libvivoxoal.so.1") # vivox's sdk expects this soname 
-                    self.end_prefix("lib/lib32")
 
             # 32bit libs needed for voice
-            if self.prefix("../packages/lib/release/32bit-compat", dst="lib/lib32"):
+            with self.prefix(os.path.join(relpkgdir, "32bit-compat" ), dst="lib32"):
                     self.path("32bit-libalut.so" , "libalut.so")
                     self.path("32bit-libalut.so.0" , "libalut.so.0")
                     self.path("32bit-libopenal.so" , "libopenal.so")
                     self.path("32bit-libopenal.so.1" , "libopenal.so.1")
                     self.path("32bit-libalut.so.0.0.0" , "libalut.so.0.0.0")
                     self.path("32bit-libopenal.so.1.15.1" , "libopenal.so.1.15.1")
-                    self.end_prefix("lib/lib32")
-	if self.args['buildtype'].lower() == 'debug':
-    	 if self.prefix("../packages/lib/debug", dst="lib"):
-             self.path("libapr-1.so*")
 
-             self.path("libaprutil-1.so*")
-             self.path("libboost_context-mt-d.so.*")
-             self.path("libboost_program_options-mt-d.so.*")
-             self.path("libboost_regex-mt-d.so.*")
-             self.path("libboost_thread-mt-d.so.*")
-             self.path("libboost_filesystem-mt-d.so.*")
-             self.path("libboost_signals-mt-d.so.*")
-             self.path("libboost_system-mt-d.so.*")
-             self.path("libboost_wave-mt-d.so.*")
-             self.path("libboost_coroutine-mt-d.so.*")
-             self.path("libexpat.so.1")
-             self.path("libz.so.1.2.5")
-             self.path("libz.so.1")
-             self.path("libz.so")
-             self.path("libcollada14dom-d.so*")
-             self.path("libGLOD.so")
-             self.end_prefix("lib")
+
+            if self.args['buildtype'].lower() == 'debug':
+	    	 if self.prefix("../packages/lib/debug", dst="lib"):
+		     self.path("libapr-1.so*")
+		     self.path("libaprutil-1.so*")
+		     self.path("libboost_context-mt-d.so.*")
+		     self.path("libboost_program_options-mt-d.so.*")
+		     self.path("libboost_regex-mt-d.so.*")
+		     self.path("libboost_thread-mt-d.so.*")
+		     self.path("libboost_filesystem-mt-d.so.*")
+		     self.path("libboost_signals-mt-d.so.*")
+		     self.path("libboost_system-mt-d.so.*")
+		     self.path("libboost_wave-mt-d.so.*")
+		     self.path("libboost_coroutine-mt-d.so.*")
+		     self.path("libexpat.so.1")
+		     self.path("libz.so.1.2.5")
+		     self.path("libz.so.1")
+		     self.path("libz.so")
+		     self.path("libcollada14dom-d.so*")
+		     self.path("libGLOD.so")
+		     self.end_prefix("lib")
 
 
 ################################################################
