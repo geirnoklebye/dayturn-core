@@ -695,7 +695,7 @@ bool LLVivoxVoiceClient::startAndLaunchDaemon()
         // <FS:ND> On Linux the viewer can run SLVoice.exe through wine (https://www.winehq.org/)
         // exe_path += "SLVoice";
         if( !viewerUsesWineForVoice() )
-        gDirUtilp->append(exe_path, "SLVoice");
+        gDirUtilp->append(exe_path, "bin/SLVoice");
         else
             exe_path += "win32/SLVoice.exe"; // use bundled win32 version
         // </FS:ND>
