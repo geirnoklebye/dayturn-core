@@ -1469,7 +1469,7 @@ class LinuxManifest(ViewerManifest):
             self.path("devtools_resources.pak")
             self.path("icudtl.dat")
 
-        with self.prefix(src=os.path.join(os.pardir, 'packages', 'lib', 'release', 'swiftshader'), dst=os.path.join("bin", "swiftshader") ):
+        with self.prefix(src=os.path.join(relpkgdir, 'swiftshader'), dst=os.path.join('bin', 'swiftshader') ):
             self.path( "*.so" )
 
         with self.prefix(src=os.path.join(pkgdir, 'resources', 'locales'), dst=os.path.join('bin', 'locales')):
@@ -1595,7 +1595,7 @@ class LinuxManifest(ViewerManifest):
             # makes some small assumptions about our packaged dir structure
             self.run_command(
                 ["find"] +
-                [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib', 'lib/lib32' )] +
+                [os.path.join(self.get_dst_prefix(), dir) for dir in ('bin', 'lib' )] +
                 ['-type', 'f', '!', '-name', '*.py', '!', '-name', 'natives_blob.bin', '!', '-name', 'snapshot_blob.bin', '!', '-name', 'v8_context_snapshot.bin', '!', '-name', 'SLVersionChecker', '!', '-name', '*.crt','!', '-name', '*.log', '!', '-path', '*win32*',
                  '!', '-name', 'update_install', '!', '-name', '*.pak', '!', '-name', '*.dat',  '-exec', 'strip', '-S', '{}', ';'])
 
@@ -1787,7 +1787,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path( "libwidevinecdmadapter.so" )
 
             # Vivox runtimes
-            with self.prefix(src=relpkgdir, dst="bin"):
+            with self.prefix(src=relpkgdir, dst="../bin"):
                     self.path("SLVoice")
                     self.path("win32")
 
