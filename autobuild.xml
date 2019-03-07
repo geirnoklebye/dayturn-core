@@ -4731,6 +4731,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>'Unix Makefiles'</string>
+                  <string>-URLV_ALWAYS_ON</string>
                 </array>
               </map>
               <key>default</key>
@@ -4755,6 +4756,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>Unix Makefiles</string>
+                  <string>-URLV_ALWAYS_ON</string>
                 </array>
               </map>
               <key>name</key>
@@ -4777,6 +4779,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>Unix Makefiles</string>
+                  <string>-URLV_ALWAYS_ON</string>
                 </array>
               </map>
               <key>name</key>
@@ -4799,7 +4802,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>Unix Makefiles</string>
-                 </array>
+                  <string>-URLV_ALWAYS_ON</string>
+                </array>
               </map>
               <key>name</key>
               <string>ReleaseOS</string>
@@ -4843,7 +4847,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>Unix Makefiles</string>
-                 </array>
+                  <string>-URLV_ALWAYS_ON</string>
+                </array>
               </map>
               <key>name</key>
               <string>Debug</string>
@@ -4865,7 +4870,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>Unix Makefiles</string>
-                 </array>
+                  <string>-URLV_ALWAYS_ON</string>
+                </array>
               </map>
               <key>name</key>
               <string>DebugOS</string>
@@ -4891,7 +4897,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>Unix Makefiles</string>
-                 </array>
+                  <string>-URLV_ALWAYS_ON</string>
+                </array>
               </map>
               <key>default</key>
               <string>True</string>
@@ -4915,7 +4922,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>Unix Makefiles</string>
-                 </array>
+                  <string>-URLV_ALWAYS_ON</string>
+                </array>
               </map>
               <key>name</key>
               <string>RelWithDebInfoOS</string>
@@ -4941,6 +4949,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>Unix Makefiles</string>
+                  <string>-URLV_ALWAYS_ON</string>
                 </array>
               </map>
               <key>name</key>
@@ -4963,7 +4972,8 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
                 <array>
                   <string>-G</string>
                   <string>Unix Makefiles</string>
-                 </array>
+                  <string>-URLV_ALWAYS_ON</string>
+                </array>
               </map>
               <key>name</key>
               <string>ReleaseOS</string>
