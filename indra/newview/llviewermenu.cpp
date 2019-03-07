@@ -9470,7 +9470,7 @@ class LLGridModeReference : public view_listener_t
 };
 
 
-+class LLToolsTranslate : public view_listener_t
+class LLToolsTranslate : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
