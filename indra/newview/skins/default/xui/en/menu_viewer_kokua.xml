@@ -1045,12 +1045,45 @@
       <menu_item_call.on_enable
          function="Tools.EnableUnlink" />
     </menu_item_call>
-    <menu_item_check
-         label="Edit Linked Parts"
-         name="Edit Linked Parts">
-      <menu_item_check.on_check
-       control="EditLinkedParts" />
-      <menu_item_check.on_click
+<!-- MK -->
+    <menu_item_call
+         label="Move"
+         name="Move"
+          shortcut="alt|S">
+      <menu_item_call.on_click
+       function="Tools.Move"
+       parameter="Move" />
+      <menu_item_call.on_enable
+       function="Tools.EnableToolNotPie" />
+    </menu_item_call>
+    <menu_item_call
+         label="Select Face"
+         name="Select Face"
+          shortcut="alt|X">
+      <menu_item_call.on_click
+       function="Tools.SelectFace"
+       parameter="SelectFace" />
+      <menu_item_call.on_enable
+       function="Tools.EnableToolNotPie" />
+    </menu_item_call>
+    <menu_item_call
+         label="Align"
+         name="Align"
+          shortcut="alt|C">
+      <menu_item_call.on_click
+       function="Tools.Align"
+       parameter="Align" />
+      <menu_item_call.on_enable
+       function="Tools.EnableToolNotPie" />
+    </menu_item_call>
+     <menu_item_check
+          label="Edit Linked Parts"
+          name="Edit Linked Parts"
+           shortcut="alt|W">
+      <!-- mk -->
+       <menu_item_check.on_check
+        control="EditLinkedParts" />
+       <menu_item_check.on_click
        function="Tools.EditLinkedParts"
        parameter="EditLinkedParts" />
       <menu_item_check.on_enable

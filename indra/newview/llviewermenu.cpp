@@ -157,6 +157,9 @@
 #include "daeexport.h"
 #include <boost/regex.hpp>
 #include "llcleanup.h"
+//MK
+#include "qtoolalign.h"
+//mk
 // Firestorm includes
 #include "fscommon.h"
 #include "fspose.h"
@@ -9465,6 +9468,94 @@ class LLGridModeReference : public view_listener_t
 		return true;
 	}
 };
+
+
++class LLToolsTranslate : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		bool can_edit = LLToolMgr::getInstance()->canEdit();
+		can_edit &= (!gRRenabled || !gAgent.mRRInterface.mContainsEdit);
+		if (can_edit)
+		{
+			LLFloaterTools::setEditTool(LLToolCompTranslate::getInstance());
+			LLSelectMgr::getInstance()->promoteSelectionToRoot();
+		}
+		return true;
+	}
+};
+
+class LLToolsSelectFace : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		bool can_edit = LLToolMgr::getInstance()->canEdit();
+		can_edit &= (!gRRenabled || !gAgent.mRRInterface.mContainsEdit);
+		if (can_edit)
+		{
+			LLFloaterTools::setEditTool(LLToolFace::getInstance());
+		}
+		return true;
+	}
+};
+
+class LLToolsAlign : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		bool can_edit = LLToolMgr::getInstance()->canEdit();
+		can_edit &= (!gRRenabled || !gAgent.mRRInterface.mContainsEdit);
+		if (can_edit)
+		{
+			LLFloaterTools::setEditTool(QToolAlign::getInstance());
+		}
+		return true;
+	}
+};
+
+class LLToolsTranslate : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		bool can_edit = LLToolMgr::getInstance()->canEdit();
+		can_edit &= (!gRRenabled || !gAgent.mRRInterface.mContainsEdit);
+		if (can_edit)
+		{
+			LLFloaterTools::setEditTool(LLToolCompTranslate::getInstance());
+			LLSelectMgr::getInstance()->promoteSelectionToRoot();
+		}
+		return true;
+	}
+};
+
+class LLToolsSelectFace : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		bool can_edit = LLToolMgr::getInstance()->canEdit();
+		can_edit &= (!gRRenabled || !gAgent.mRRInterface.mContainsEdit);
+		if (can_edit)
+		{
+			LLFloaterTools::setEditTool(LLToolFace::getInstance());
+		}
+		return true;
+	}
+};
+
+class LLToolsAlign : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		bool can_edit = LLToolMgr::getInstance()->canEdit();
+		can_edit &= (!gRRenabled || !gAgent.mRRInterface.mContainsEdit);
+		if (can_edit)
+		{
+			LLFloaterTools::setEditTool(QToolAlign::getInstance());
+		}
+		return true;
+	}
+};
+
 //mk
 
 class LLToolsUseSelectionForGrid : public view_listener_t
@@ -10660,6 +10751,9 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLGridModeReference(), "Tools.GridModeReference");
 	view_listener_t::addMenu(new LLToolsRestartAllAnimations(), "Tools.RestartAllAnimations");
 	view_listener_t::addMenu(new LLToolsRefreshVisibility(), "Tools.RefreshVisibility");
+	view_listener_t::addMenu(new LLToolsTranslate(), "Tools.Move");
+	view_listener_t::addMenu(new LLToolsSelectFace(), "Tools.SelectFace");
+	view_listener_t::addMenu(new LLToolsAlign(), "Tools.Align");
 	view_listener_t::addMenu(new LLRlvFocusHead(), "RLV.FocusHead");
 	view_listener_t::addMenu(new LLRlvFocusPelvis(), "RLV.FocusPelvis");
 	view_listener_t::addMenu(new LLRlvFocusLeftHand(), "RLV.FocusLeftHand");
