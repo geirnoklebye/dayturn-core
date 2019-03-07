@@ -9469,22 +9469,6 @@ class LLGridModeReference : public view_listener_t
 	}
 };
 
-
-class LLToolsTranslate : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		bool can_edit = LLToolMgr::getInstance()->canEdit();
-		can_edit &= (!gRRenabled || !gAgent.mRRInterface.mContainsEdit);
-		if (can_edit)
-		{
-			LLFloaterTools::setEditTool(LLToolCompTranslate::getInstance());
-			LLSelectMgr::getInstance()->promoteSelectionToRoot();
-		}
-		return true;
-	}
-};
-
 class LLToolsSelectFace : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -9527,36 +9511,6 @@ class LLToolsTranslate : public view_listener_t
 		return true;
 	}
 };
-
-class LLToolsSelectFace : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		bool can_edit = LLToolMgr::getInstance()->canEdit();
-		can_edit &= (!gRRenabled || !gAgent.mRRInterface.mContainsEdit);
-		if (can_edit)
-		{
-			LLFloaterTools::setEditTool(LLToolFace::getInstance());
-		}
-		return true;
-	}
-};
-
-class LLToolsAlign : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		bool can_edit = LLToolMgr::getInstance()->canEdit();
-		can_edit &= (!gRRenabled || !gAgent.mRRInterface.mContainsEdit);
-		if (can_edit)
-		{
-			LLFloaterTools::setEditTool(QToolAlign::getInstance());
-		}
-		return true;
-	}
-};
-
-//mk
 
 class LLToolsUseSelectionForGrid : public view_listener_t
 {
