@@ -810,23 +810,25 @@ static void on_avatar_name_cache_notify(const LLUUID& agent_id,
 
 	// If desired, also send it to nearby chat, this allows friends'
 	// online/offline times to be referenced in chat & logged.
+	//
+	// CA Original version from MK put a system message into nearby chat.
+	// Here we use the RADAR chat type so that we get a line with the avatar
+	// as the message source and thus we only need the status change portion
+	// as the message payload
+	// RLV note: Don't put this through a @shownames check, it would become
+	// a way of knowing if that avatar is within range or not since only names
+	// currently in the avatar name cache get anonymised and by the time we get
+	// here it's too late to decide to drop the notification entirely (plus there
+	// are other ways of seeing if a friend has changed online state, eg the
+	// Friends list which is traditionally untouched by RLV commands)
+	
 	if (gSavedSettings.getBOOL("OnlineOfflinetoNearbyChat")) {
 		LLChat chat;
-		chat.mText = notify_msg;
-//MK
-		// Avoid surrounding with brackets
-////		chat.mSourceType = CHAT_SOURCE_SYSTEM;
-		//chat.mSourceType = CHAT_SOURCE_UNKNOWN;
-//mk
-//CA change the message formatting to match the radar style with the avatar as the message source
-		int ind;
-		ind = notify_msg.find("is ");
-		if (ind > 0) chat.mText = notify_msg.substr(ind); // cut off the name to match radar/range notifications 
+		chat.mText = online ? LLTrans::getString("OnlineStatusPhrase") : LLTrans::getString("OfflineStatusPhrase");
 	  chat.mSourceType = CHAT_SOURCE_SYSTEM;
 	  chat.mFromName = av_name.getCompleteName(TRUE, FALSE);
 	  chat.mFromID = agent_id;
 	  chat.mChatType = CHAT_TYPE_RADAR;
-//ca
 		LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
 		if(nearby_chat)
 		{
