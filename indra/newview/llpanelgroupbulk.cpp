@@ -181,12 +181,12 @@ void LLPanelGroupBulkImpl::handleRemove()
 	}
 
 	mBulkAgentList->deleteSelectedItems();
-	mRemoveButton->setEnabled(FALSE);
+	mRemoveButton->setEnabled(false);
 
 	if(	mOKButton && mOKButton->getEnabled() &&
 		mBulkAgentList->isEmpty())
 	{
-		mOKButton->setEnabled(FALSE);
+		mOKButton->setEnabled(false);
 	}
 }
 
@@ -194,7 +194,7 @@ void LLPanelGroupBulkImpl::handleSelection()
 {
 	std::vector<LLScrollListItem*> selection = mBulkAgentList->getAllSelected();
 	if (selection.empty())
-		mRemoveButton->setEnabled(FALSE);
+		mRemoveButton->setEnabled(false);
 	else
 		mRemoveButton->setEnabled(TRUE);
 }
@@ -273,7 +273,7 @@ void LLPanelGroupBulk::clear()
 		mImplementation->mBulkAgentList->deleteAllItems();
 	
 	if(mImplementation->mOKButton)
-		mImplementation->mOKButton->setEnabled(FALSE);
+		mImplementation->mOKButton->setEnabled(false);
 }
 
 void LLPanelGroupBulk::update()

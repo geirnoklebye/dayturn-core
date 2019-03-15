@@ -1123,17 +1123,17 @@ void LLMenuItemBranchGL::setHighlight( BOOL highlight )
 	if (!branch)
 		return;
 
-	BOOL auto_open = getEnabled() && (!branch->getVisible() || branch->getTornOff());
+	bool auto_open = getEnabled() && (!branch->getVisible() || branch->getTornOff());
 	// torn off menus don't open sub menus on hover unless they have focus
 	LLFloater * menu_parent = dynamic_cast<LLFloater *>(getMenu()->getParent());
 	if (getMenu()->getTornOff() && menu_parent && !menu_parent->hasFocus())
 	{
-		auto_open = FALSE;
+		auto_open = false;
 	}
 	// don't auto open torn off sub-menus (need to explicitly active menu item to give them focus)
 	if (branch->getTornOff())
 	{
-		auto_open = FALSE;
+		auto_open = false;
 	}
 	LLMenuItemGL::setHighlight(highlight);
 	if( highlight )
@@ -1511,8 +1511,8 @@ BOOL LLMenuItemBranchDownGL::handleMouseUp( S32 x, S32 y, MASK mask )
 
 BOOL LLMenuItemBranchDownGL::handleAcceleratorKey(KEY key, MASK mask)
 {
-	BOOL branch_visible = getBranch()->getVisible();
-	BOOL handled = getBranch()->handleAcceleratorKey(key, mask);
+	bool branch_visible = getBranch()->getVisible();
+	bool handled = getBranch()->handleAcceleratorKey(key, mask);
 	if (handled && !branch_visible && isInVisibleChain())
 	{
 		// flash this menu entry because we triggered an invisible menu item
@@ -1678,7 +1678,7 @@ protected:
 public:
 	/*virtual*/ void draw();
 	/*virtual*/ void reshape(S32 width, S32 height, BOOL called_from_parent);
-	/*virtual*/ void setEnabled(BOOL enabled);
+	/*virtual*/ void setEnabled(bool enabled);
 	virtual void onCommit( void );
 
 private:
@@ -1735,7 +1735,7 @@ void LLMenuScrollItem::reshape(S32 width, S32 height, BOOL called_from_parent)
 }
 
 /*virtual*/
-void LLMenuScrollItem::setEnabled(BOOL enabled)
+void LLMenuScrollItem::setEnabled(bool enabled)
 {
 	mArrowBtn->setEnabled(enabled);
 	LLView::setEnabled(enabled);
@@ -1910,7 +1910,7 @@ bool LLMenuGL::postBuild()
 BOOL LLMenuGL::jumpKeysActive()
 {
 	LLMenuItemGL* highlighted_item = getHighlightedItem();
-	BOOL active = getVisible() && getEnabled();
+	bool active = getVisible() && getEnabled();
 
 	if (active)
 	{

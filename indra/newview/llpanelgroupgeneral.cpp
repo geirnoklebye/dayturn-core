@@ -193,13 +193,13 @@ bool LLPanelGroupGeneral::postBuild()
 	mGroupUUIDText = getChild<LLLineEditor>("group_uuid_text", recurse);
 	mBtnGroupUUIDCopy = getChild<LLButton>("group_uuid_copy", recurse);
 	if (mBtnGroupUUIDCopy) {
-		mBtnGroupUUIDCopy->setEnabled(FALSE);
+		mBtnGroupUUIDCopy->setEnabled(false);
 		mBtnGroupUUIDCopy->setClickedCallback(onCopyGroupUUID, this);
 	}
 
 	mBtnGroupURICopy = getChild<LLButton>("group_uri_copy", recurse);
 	if (mBtnGroupURICopy) {
-		mBtnGroupURICopy->setEnabled(FALSE);
+		mBtnGroupURICopy->setEnabled(false);
 		mBtnGroupURICopy->setClickedCallback(onCopyGroupURI, this);
 	}
 
@@ -288,7 +288,7 @@ void LLPanelGroupGeneral::onCommitEnrollment(LLUICtrl* ctrl, void* data)
 	}
 	else
 	{
-		self->mSpinEnrollmentFee->setEnabled(FALSE);
+		self->mSpinEnrollmentFee->setEnabled(false);
 		self->mSpinEnrollmentFee->set(0);
 	}
 }
@@ -529,7 +529,7 @@ void LLPanelGroupGeneral::update(LLGroupChange gc)
 			if (1 == gdatap->mTitles.size())
 			{
 				// Only the everyone title.  Don't bother letting them try changing this.
-				mComboActiveTitle->setEnabled(FALSE);
+				mComboActiveTitle->setEnabled(false);
 			}
 			else
 			{
@@ -652,8 +652,8 @@ void LLPanelGroupGeneral::update(LLGroupChange gc)
 
 	if (mGroupUUIDText) {
 		mGroupUUIDText->setText(mGroupID.asString());
-		mBtnGroupUUIDCopy->setEnabled(TRUE);
-		mBtnGroupURICopy->setEnabled(TRUE);
+		mBtnGroupUUIDCopy->setEnabled(true);
+		mBtnGroupURICopy->setEnabled(true);
 	}
 
 	resetDirty();
@@ -749,8 +749,8 @@ void LLPanelGroupGeneral::reset()
 	}
 
 	mGroupUUIDText->clear();
-	mBtnGroupUUIDCopy->setEnabled(FALSE);
-	mBtnGroupURICopy->setEnabled(FALSE);
+	mBtnGroupUUIDCopy->setEnabled(false);
+	mBtnGroupURICopy->setEnabled(false);
 
 	resetDirty();
 }

@@ -296,7 +296,7 @@ public:
 
 	virtual void	setVisible(bool visible);
 	const bool		getVisible() const			{ return isAvailableOnThisGrid() && mVisible; }
-	virtual void	setEnabled(BOOL enabled);
+	virtual void	setEnabled(bool enabled);
 	bool			getEnabled() const			{ return isAvailableOnThisGrid() && mEnabled; }
 	
 	const bool	getOnlyInSL() const	{ return mOnlyInSL; }

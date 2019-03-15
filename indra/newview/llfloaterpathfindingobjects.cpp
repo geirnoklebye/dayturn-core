@@ -788,16 +788,16 @@ void LLFloaterPathfindingObjects::updateStateOnListControls()
 	case kMessagingUnknown:
 	case kMessagingGetRequestSent :
 	case kMessagingSetRequestSent :
-		mRefreshListButton->setEnabled(FALSE);
-		mSelectAllButton->setEnabled(FALSE);
-		mSelectNoneButton->setEnabled(FALSE);
+		mRefreshListButton->setEnabled(false);
+		mSelectAllButton->setEnabled(false);
+		mSelectNoneButton->setEnabled(false);
 		break;
 	case kMessagingGetError :
 	case kMessagingSetError :
 	case kMessagingNotEnabled :
 		mRefreshListButton->setEnabled(TRUE);
-		mSelectAllButton->setEnabled(FALSE);
-		mSelectNoneButton->setEnabled(FALSE);
+		mSelectAllButton->setEnabled(false);
+		mSelectNoneButton->setEnabled(false);
 		break;
 	case kMessagingComplete :
 		{

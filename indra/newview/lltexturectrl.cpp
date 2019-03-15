@@ -482,7 +482,7 @@ bool LLFloaterTexturePicker::postBuild()
 
 	if (!mCanApplyImmediately)
 	{
-		getChildView("show_folders_check")->setEnabled(FALSE);
+		getChildView("show_folders_check")->setEnabled(false);
 	}
 
 	getChild<LLUICtrl>("Pipette")->setCommitCallback( boost::bind(&LLFloaterTexturePicker::onBtnPipette, this));

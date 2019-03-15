@@ -110,7 +110,7 @@ bool LLPanelSettingsWaterMainTab::postBuild()
 }
 
 //virtual
-void LLPanelSettingsWaterMainTab::setEnabled(BOOL enabled)
+void LLPanelSettingsWaterMainTab::setEnabled(bool enabled)
 {
     LLPanelSettingsWater::setEnabled(enabled);
     getChild<LLUICtrl>(FIELD_WATER_FOG_DENSITY)->setEnabled(enabled);
@@ -133,7 +133,7 @@ void LLPanelSettingsWaterMainTab::refresh()
     if (!mWaterSettings)
     {
         setAllChildrenEnabled(FALSE);
-        setEnabled(FALSE);
+        setEnabled(false);
         return;
     }
 

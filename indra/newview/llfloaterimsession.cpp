@@ -336,7 +336,7 @@ void LLFloaterIMSession::initIMFloater()
 	// Disable input editor if session cannot accept text
 	if ( mSession && !mSession->mTextIMPossible )
 	{
-		mInputEditor->setEnabled(FALSE);
+		mInputEditor->setEnabled(false);
 		mInputEditor->setLabel(LLTrans::getString("IM_unavailable_text_label"));
 	}
 

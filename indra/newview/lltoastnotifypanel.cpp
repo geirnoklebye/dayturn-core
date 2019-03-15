@@ -253,7 +253,7 @@ void LLToastNotifyPanel::onClickButton(void* data)
 	}
 
 	// disable all buttons
-	self->mControlPanel->setEnabled(FALSE);
+	self->mControlPanel->setEnabled(false);
 
 	// this might repost notification with new form data/enabled buttons
 	self->mNotification->respond(response);

@@ -368,7 +368,7 @@ void LLFloaterSellLandUI::refreshUI()
 	}
 	else
 	{
-		getChildView("sell_btn")->setEnabled(FALSE);
+		getChildView("sell_btn")->setEnabled(false);
 	}
 }
 

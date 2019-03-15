@@ -858,14 +858,14 @@ BOOL LLPanelGroupMembersSubTab::postBuildSubTab(LLView* root)
 	if ( mEjectBtn )
 	{
 		mEjectBtn->setClickedCallback(onEjectMembers, this);
-		mEjectBtn->setEnabled(FALSE);
+		mEjectBtn->setEnabled(false);
 	}
 
 	mBanBtn = parent->getChild<LLButton>("member_ban", recurse);
 	if(mBanBtn)
 	{
 		mBanBtn->setClickedCallback(onBanMember, this);
-		mBanBtn->setEnabled(FALSE);
+		mBanBtn->setEnabled(false);
 	}
 
 	return TRUE;
@@ -1710,7 +1710,7 @@ void LLPanelGroupMembersSubTab::update(LLGroupChange gc)
 			// Still busy retreiving role/member mappings.
 			retrieved << "Retrieving role member mappings...";
 		}
-		mMembersList->setEnabled(FALSE);
+		mMembersList->setEnabled(false);
 		mMembersList->setCommentText(retrieved.str());
 	}
 }
@@ -1842,7 +1842,7 @@ void LLPanelGroupMembersSubTab::updateMembers()
 		}
 		else if (gdatap->mMembers.size()) 
 		{
-			mMembersList->setEnabled(FALSE);
+			mMembersList->setEnabled(false);
 			mMembersList->setCommentText(std::string("No match."));
 		}
 	}
@@ -1994,7 +1994,6 @@ BOOL LLPanelGroupRolesSubTab::postBuildSubTab(LLView* root)
 	mRoleName = parent->getChild<LLLineEditor>("role_name", recurse);
 	mRoleTitle = parent->getChild<LLLineEditor>("role_title", recurse);
 	mRoleDescription = parent->getChild<LLTextEditor>("role_description", recurse);
-
 	mMemberVisibleCheck = parent->getChild<LLCheckBoxCtrl>("role_visible_in_list", recurse);
 
 	if (!mRolesList || !mAssignedMembersList || !mAllowedActionsList || !mActionDescription
@@ -2011,7 +2010,7 @@ BOOL LLPanelGroupRolesSubTab::postBuildSubTab(LLView* root)
 	if ( mCreateRoleButton )
 	{
 		mCreateRoleButton->setClickedCallback(onCreateRole, this);
-		mCreateRoleButton->setEnabled(FALSE);
+		mCreateRoleButton->setEnabled(false);
 	}
 
 	mCopyRoleButton = 
@@ -2027,7 +2026,7 @@ BOOL LLPanelGroupRolesSubTab::postBuildSubTab(LLView* root)
 	if ( mDeleteRoleButton )
 	{
 		mDeleteRoleButton->setClickedCallback(onDeleteRole, this);
-		mDeleteRoleButton->setEnabled(FALSE);
+		mDeleteRoleButton->setEnabled(false);
 	}
 
 	mRolesList->setCommitOnSelectionChange(TRUE);
@@ -2219,7 +2218,7 @@ void LLPanelGroupRolesSubTab::update(LLGroupChange gc)
 		}
 		else
 		{
-			mCreateRoleButton->setEnabled(FALSE);
+			mCreateRoleButton->setEnabled(false);
 		}
 
 		if (had_selection)
@@ -2234,8 +2233,8 @@ void LLPanelGroupRolesSubTab::update(LLGroupChange gc)
 			mRoleDescription->clear();
 			mRoleTitle->clear();
 			setFooterEnabled(FALSE);
-			mDeleteRoleButton->setEnabled(FALSE);
-			mCopyRoleButton->setEnabled(FALSE);
+			mDeleteRoleButton->setEnabled(false);
+			mCopyRoleButton->setEnabled(false);
 		}
 	}
 	
@@ -2316,7 +2315,7 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 				// you can't delete the owner role
 				can_delete = FALSE;
 				// ... or hide members with this role
-				mMemberVisibleCheck->setEnabled(FALSE);
+				mMemberVisibleCheck->setEnabled(false);
 			}
 		else
 			{
@@ -2326,8 +2325,8 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 		if (item->getUUID().isNull())
 		{
 			// Everyone role, can't edit description or name or delete
-			mRoleDescription->setEnabled(FALSE);
-			mRoleName->setEnabled(FALSE);
+			mRoleDescription->setEnabled(false);
+			mRoleName->setEnabled(false);
 			can_delete = FALSE;
 		}
 	}
@@ -3077,13 +3076,13 @@ BOOL LLPanelGroupBanListSubTab::postBuildSubTab(LLView* root)
 	mBanList->setCommitCallback(onBanEntrySelect, this);
 
 	mCreateBanButton->setClickedCallback(onCreateBanEntry, this);
-	mCreateBanButton->setEnabled(FALSE);
+	mCreateBanButton->setEnabled(false);
 
 	mDeleteBanButton->setClickedCallback(onDeleteBanEntry, this);
-	mDeleteBanButton->setEnabled(FALSE);
+	mDeleteBanButton->setEnabled(false);
 	
 	mRefreshBanListButton->setClickedCallback(onRefreshBanList, this);
-	mRefreshBanListButton->setEnabled(FALSE);
+	mRefreshBanListButton->setEnabled(false);
 
 	setBanCount(0);
 
@@ -3100,7 +3099,7 @@ void LLPanelGroupBanListSubTab::activate()
 	LLPanelGroupSubTab::activate();
 
 	mBanList->deselectAllItems();
-	mDeleteBanButton->setEnabled(FALSE);
+	mDeleteBanButton->setEnabled(false);
 
 	LLGroupMgrGroupData * group_datap = LLGroupMgr::getInstance()->getGroupData(mGroupID);
 	if (group_datap)
@@ -3111,7 +3110,7 @@ void LLPanelGroupBanListSubTab::activate()
 	}
 	else
 	{
-		mCreateBanButton->setEnabled(FALSE);
+		mCreateBanButton->setEnabled(false);
 		setBanCount(0);
 	}
 
@@ -3229,7 +3228,7 @@ void LLPanelGroupBanListSubTab::handleDeleteBanEntry()
 	
 		// Removing an item removes the selection, we shouldn't be able to click
 		// the button anymore until we reselect another entry.
-		mDeleteBanButton->setEnabled(FALSE);
+		mDeleteBanButton->setEnabled(false);
 	}
 
 	// update ban-count related elements
@@ -3250,7 +3249,7 @@ void LLPanelGroupBanListSubTab::onRefreshBanList(void* user_data)
 
 void LLPanelGroupBanListSubTab::handleRefreshBanList()
 {
-	mRefreshBanListButton->setEnabled(FALSE);
+	mRefreshBanListButton->setEnabled(false);
 	LLGroupMgr::getInstance()->sendGroupBanRequest(LLGroupMgr::REQUEST_GET, mGroupID);
 }
 

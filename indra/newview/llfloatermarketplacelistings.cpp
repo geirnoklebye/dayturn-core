@@ -68,7 +68,7 @@ bool LLPanelMarketplaceListings::postBuild()
     mFilterEditor->setCommitCallback(boost::bind(&LLPanelMarketplaceListings::onFilterEdit, this, _2));
     
     mAuditBtn = getChild<LLButton>("audit_btn");
-    mAuditBtn->setEnabled(FALSE);
+    mAuditBtn->setEnabled(false);
     
     return LLPanel::postBuild();
 }
@@ -798,7 +798,7 @@ bool LLFloaterMarketplaceValidation::postBuild()
 	
     // This widget displays the validation messages
     mEditor = getChild<LLTextEditor>("validation_text");
-    mEditor->setEnabled(FALSE);
+    mEditor->setEnabled(false);
     mEditor->setFocus(TRUE);
     mEditor->setValue(LLSD());
     

@@ -228,7 +228,7 @@ void LLPanelGroups::enableButtons()
 	}
 	else
 	{
-		getChildView("Activate")->setEnabled(FALSE);
+		getChildView("Activate")->setEnabled(false);
 	}
 	if (group_id.notNull())
 	{
@@ -238,9 +238,9 @@ void LLPanelGroups::enableButtons()
 	}
 	else
 	{
-		getChildView("Info")->setEnabled(FALSE);
-		getChildView("IM")->setEnabled(FALSE);
-		getChildView("Leave")->setEnabled(FALSE);
+		getChildView("Info")->setEnabled(false);
+		getChildView("IM")->setEnabled(false);
+		getChildView("Leave")->setEnabled(false);
 	}
 	getChildView("Create")->setEnabled(gAgent.canJoinGroups());
 }

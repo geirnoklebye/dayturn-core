@@ -434,7 +434,7 @@ void LLMultiSliderCtrl::onSliderCommit(LLUICtrl* ctrl, const LLSD& userdata)
 	self->updateText();
 }
 
-void LLMultiSliderCtrl::setEnabled(BOOL b)
+void LLMultiSliderCtrl::setEnabled(bool b)
 {
 	LLF32UICtrl::setEnabled( b );
 

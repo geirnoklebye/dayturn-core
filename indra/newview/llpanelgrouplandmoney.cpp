@@ -736,7 +736,7 @@ bool LLPanelGroupLandMoney::postBuild()
 		{
 			mImplementationp->mGroupParcelsp->setCommentText(
 							mImplementationp->mCantViewParcelsText);
-			mImplementationp->mGroupParcelsp->setEnabled(FALSE);
+			mImplementationp->mGroupParcelsp->setEnabled(false);
 		}
 	}
 
@@ -1572,7 +1572,7 @@ void LLPanelGroupLandMoney::setGroupID(const LLUUID& id)
 
 	if ( !can_view && mImplementationp->mGroupParcelsp )
 	{
-		mImplementationp->mGroupParcelsp->setEnabled(FALSE);
+		mImplementationp->mGroupParcelsp->setEnabled(false);
 	}
 
 

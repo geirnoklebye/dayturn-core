@@ -2103,7 +2103,7 @@ void LLTextEditor::onCommit()
 	LLTextBase::onCommit(); 
 }
 
-void LLTextEditor::setEnabled(BOOL enabled)
+void LLTextEditor::setEnabled(bool enabled)
 {
 	// just treat enabled as read-only flag
 	bool read_only = !enabled;
@@ -2394,8 +2394,8 @@ void LLTextEditor::autoIndent()
 // Inserts new text at the cursor position
 void LLTextEditor::insertText(const std::string &new_text)
 {
-	BOOL enabled = getEnabled();
-	setEnabled( TRUE );
+	bool enabled = getEnabled();
+	setEnabled(true);
 
 	// Delete any selected characters (the insertion replaces them)
 	if( hasSelection() )
@@ -2405,13 +2405,13 @@ void LLTextEditor::insertText(const std::string &new_text)
 
 	setCursorPos(mCursorPos + insert( mCursorPos, utf8str_to_wstring(new_text), FALSE, LLTextSegmentPtr() ));
 	
-	setEnabled( enabled );
+	setEnabled(enabled);
 }
 
 void LLTextEditor::insertText(LLWString &new_text)
 {
-	BOOL enabled = getEnabled();
-	setEnabled( TRUE );
+	bool enabled = getEnabled();
+	setEnabled(true);
 
 	// Delete any selected characters (the insertion replaces them)
 	if( hasSelection() )
@@ -2421,7 +2421,7 @@ void LLTextEditor::insertText(LLWString &new_text)
 
 	setCursorPos(mCursorPos + insert( mCursorPos, new_text, FALSE, LLTextSegmentPtr() ));
 
-	setEnabled( enabled );
+	setEnabled(enabled);
 }
 
 void LLTextEditor::appendWidget(const LLInlineViewSegment::Params& params, const std::string& text, bool allow_undo)

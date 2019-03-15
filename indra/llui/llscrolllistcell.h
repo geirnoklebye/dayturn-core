@@ -132,7 +132,7 @@ public:
 	virtual void			onCommit() {};
 
 	virtual BOOL			handleClick() { return FALSE; }
-	virtual	void			setEnabled(BOOL enable) { }
+	virtual	void			setEnabled(bool enable) { }
 
 private:
 	S32 mWidth;
@@ -235,7 +235,7 @@ public:
 	/*virtual*/ void	onCommit();
 
 	/*virtual*/ BOOL	handleClick();
-	/*virtual*/ void	setEnabled(BOOL enable);
+	/*virtual*/ void	setEnabled(bool enable);
 
 	LLCheckBoxCtrl*	getCheckBox()				{ return mCheckBox; }
 

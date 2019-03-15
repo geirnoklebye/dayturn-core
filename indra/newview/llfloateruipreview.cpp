@@ -1313,8 +1313,8 @@ void LLFloaterUIPreview::onClickCloseDisplayedFloater(S32 caller_id)
 {
 	if(caller_id == PRIMARY_FLOATER)
 	{
-		mCloseOtherButton->setEnabled(FALSE);
-		mToggleOverlapButton->setEnabled(FALSE);
+		mCloseOtherButton->setEnabled(false);
+		mToggleOverlapButton->setEnabled(false);
 
 		if(mDisplayedFloater)
 		{
@@ -1341,7 +1341,7 @@ void LLFloaterUIPreview::onClickCloseDisplayedFloater(S32 caller_id)
 	}
 	else
 	{
-		mCloseOtherButton_2->setEnabled(FALSE);
+		mCloseOtherButton_2->setEnabled(false);
 		delete mDisplayedFloater_2;
 		mDisplayedFloater_2 = NULL;
 	}

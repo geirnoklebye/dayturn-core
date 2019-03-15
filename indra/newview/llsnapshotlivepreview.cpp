@@ -703,7 +703,7 @@ BOOL LLSnapshotLivePreview::onIdle( void* snapshot_preview )
         previewp->mSnapshotActive = TRUE;
 
         previewp->setVisible(false);
-        previewp->setEnabled(FALSE);
+        previewp->setEnabled(false);
 
         previewp->getWindow()->incBusyCount();
         previewp->setImageScaled(FALSE);

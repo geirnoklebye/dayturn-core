@@ -455,11 +455,11 @@ bool LLFloaterPreference::postBuild()
 	if (!tabcontainer->selectTab(gSavedSettings.getS32("LastPrefTab")))
 		tabcontainer->selectFirstTab();
 
-	getChild<LLUICtrl>("cache_location")->setEnabled(FALSE); // make it read-only but selectable (STORM-227)
+	getChild<LLUICtrl>("cache_location")->setEnabled(false); // make it read-only but selectable (STORM-227)
 	std::string cache_location = gDirUtilp->getExpandedFilename(LL_PATH_CACHE, "");
 	setCacheLocation(cache_location);
 
-	getChild<LLUICtrl>("log_path_string")->setEnabled(FALSE); // make it read-only but selectable
+	getChild<LLUICtrl>("log_path_string")->setEnabled(false); // make it read-only but selectable
 
 	getChild<LLComboBox>("language_combobox")->setCommitCallback(boost::bind(&LLFloaterPreference::onLanguageChange, this));
 
@@ -472,8 +472,7 @@ bool LLFloaterPreference::postBuild()
 
 	// if floater is opened before login set default localized do not disturb message
 	getChild<LLUICtrl>("WindowTitleAvatarName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
-	getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);
-	
+	getChild<LLUICtrl>("WindowTitleGridName")->setEnabled(LLStartUp::getStartupState() < STATE_STARTED ? false : true);	
 
 	gSavedSettings.getControl("NameTagShowUsernames")->getCommitSignal()->connect(boost::bind(&handleNameTagOptionChanged,  _2));	
 	gSavedSettings.getControl("NameTagShowFriends")->getCommitSignal()->connect(boost::bind(&handleNameTagOptionChanged,  _2));	
@@ -1427,7 +1426,7 @@ void LLFloaterPreference::refreshEnabledState()
 	// if vertex shaders off, disable all shader related products
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("WindLightUseAtmosShaders"))
 	{
-		ctrl_wind_light->setEnabled(FALSE);
+		ctrl_wind_light->setEnabled(false);
 		ctrl_wind_light->setValue(FALSE);
 	}
 	else
@@ -1559,7 +1558,7 @@ void LLFloaterPreference::refreshEnabledStateAdvanced()
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderCompressTextures") ||
 		!gGLManager.mHasVertexBufferObject)
 	{
-		getChildView("texture compression")->setEnabled(FALSE);
+		getChildView("texture compression")->setEnabled(false);
 	}
 
 	// if no windlight shaders, turn off nighttime brightness, gamma, and fog distance
@@ -1568,7 +1567,6 @@ void LLFloaterPreference::refreshEnabledStateAdvanced()
 	getChildView("(brightness, lower is brighter)")->setEnabled(!gPipeline.canUseWindLightShaders());
 	getChildView("fog")->setEnabled(!gPipeline.canUseWindLightShaders());
 	getChildView("antialiasing restart")->setVisible(!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred"));
-
 	// now turn off any features that are unavailable
 	disableUnavailableSettingsAdvanced();
 }
@@ -1632,24 +1630,24 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	// disabled windlight
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("WindLightUseAtmosShaders"))
 	{
-		ctrl_wind_light->setEnabled(FALSE);
+		ctrl_wind_light->setEnabled(false);
 		ctrl_wind_light->setValue(FALSE);
 
 		sky->setEnabled(FALSE);
 		sky_text->setEnabled(FALSE);
 
 		//deferred needs windlight, disable deferred
-		ctrl_shadows->setEnabled(FALSE);
+		ctrl_shadows->setEnabled(false);
 		ctrl_shadows->setValue(0);
 		shadows_text->setEnabled(FALSE);
 		
-		ctrl_ssao->setEnabled(FALSE);
+		ctrl_ssao->setEnabled(false);
 		ctrl_ssao->setValue(FALSE);
 
-		ctrl_dof->setEnabled(FALSE);
+		ctrl_dof->setEnabled(false);
 		ctrl_dof->setValue(FALSE);
 
-		ctrl_deferred->setEnabled(FALSE);
+		ctrl_deferred->setEnabled(false);
 		ctrl_deferred->setValue(FALSE);
 	}
 
@@ -1657,31 +1655,31 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferred") ||
 		!gGLManager.mHasFramebufferObject)
 	{
-		ctrl_shadows->setEnabled(FALSE);
+		ctrl_shadows->setEnabled(false);
 		ctrl_shadows->setValue(0);
 		shadows_text->setEnabled(FALSE);
 		
-		ctrl_ssao->setEnabled(FALSE);
+		ctrl_ssao->setEnabled(false);
 		ctrl_ssao->setValue(FALSE);
 
-		ctrl_dof->setEnabled(FALSE);
+		ctrl_dof->setEnabled(false);
 		ctrl_dof->setValue(FALSE);
 
-		ctrl_deferred->setEnabled(FALSE);
+		ctrl_deferred->setEnabled(false);
 		ctrl_deferred->setValue(FALSE);
 	}
 	
 	// disabled deferred SSAO
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderDeferredSSAO"))
 	{
-		ctrl_ssao->setEnabled(FALSE);
+		ctrl_ssao->setEnabled(false);
 		ctrl_ssao->setValue(FALSE);
 	}
 	
 	// disabled deferred shadows
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderShadowDetail"))
 	{
-		ctrl_shadows->setEnabled(FALSE);
+		ctrl_shadows->setEnabled(false);
 		ctrl_shadows->setValue(0);
 		shadows_text->setEnabled(FALSE);
 	}
@@ -1689,7 +1687,7 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	// disabled reflections
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderReflectionDetail"))
 	{
-		ctrl_reflections->setEnabled(FALSE);
+		ctrl_reflections->setEnabled(false);
 		ctrl_reflections->setValue(FALSE);
 		reflections_text->setEnabled(FALSE);
 	}
@@ -1697,7 +1695,7 @@ void LLFloaterPreference::disableUnavailableSettingsAdvanced()
 	// disabled cloth
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderAvatarCloth"))
 	{
-		ctrl_avatar_cloth->setEnabled(FALSE);
+		ctrl_avatar_cloth->setEnabled(false);
 		ctrl_avatar_cloth->setValue(FALSE);
 	}
 }
@@ -3034,7 +3032,6 @@ bool LLPanelPreferenceControls::addControlTableColumns(const std::string &filena
     {
         pControlsTable->addColumn(*col_it);
     }
-
     return true;
 }
 

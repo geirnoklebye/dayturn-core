@@ -205,7 +205,7 @@ void LLPanelLandmarkInfo::setInfoType(EInfoType type, const LLUUID &folder_id)
 
 			mLandmarkTitle->setVisible(true);
 			mLandmarkTitleEditor->setVisible(false);
-			mNotesEditor->setEnabled(FALSE);
+			mNotesEditor->setEnabled(false);
 		break;
 	}
 

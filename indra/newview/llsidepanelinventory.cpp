@@ -601,16 +601,16 @@ void LLSidepanelInventory::showInventoryPanel()
 
 void LLSidepanelInventory::updateVerbs()
 {
-	mInfoBtn->setEnabled(FALSE);
-	mShareBtn->setEnabled(FALSE);
+	mInfoBtn->setEnabled(false);
+	mShareBtn->setEnabled(false);
 
 	mWearBtn->setVisible(false);
-	mWearBtn->setEnabled(FALSE);
+	mWearBtn->setEnabled(false);
 	mPlayBtn->setVisible(false);
-	mPlayBtn->setEnabled(FALSE);
+	mPlayBtn->setEnabled(false);
 	mPlayBtn->setToolTip(std::string(""));
  	mTeleportBtn->setVisible(false);
- 	mTeleportBtn->setEnabled(FALSE);
+ 	mTeleportBtn->setEnabled(false);
  	mShopBtn->setVisible(true);
 
 	mShareBtn->setEnabled(canShare());

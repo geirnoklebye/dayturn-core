@@ -399,7 +399,7 @@ void LLSpinCtrl::setFocus(BOOL b)
 	mEditor->setFocus( b );
 }
 
-void LLSpinCtrl::setEnabled(BOOL b)
+void LLSpinCtrl::setEnabled(bool b)
 {
 	LLView::setEnabled( b );
 	mEditor->setEnabled( b );

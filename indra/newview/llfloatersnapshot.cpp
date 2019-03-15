@@ -232,7 +232,7 @@ void LLFloaterSnapshotBase::ImplBase::updateLayout(LLFloaterSnapshotBase* floate
 		if (previewp)
 		{
 			previewp->setVisible(false);
-			previewp->setEnabled(FALSE);
+			previewp->setEnabled(false);
 		}
 
 		//RN: thaw all avatars
@@ -985,7 +985,7 @@ bool LLFloaterSnapshot::postBuild()
 
 	childSetCommitCallback("layer_types", Impl::onCommitLayerTypes, this);
 	getChild<LLUICtrl>("layer_types")->setValue("colors");
-	getChildView("layer_types")->setEnabled(FALSE);
+	getChildView("layer_types")->setEnabled(false);
 
 	getChild<LLUICtrl>("freeze_frame_check")->setValue(gSavedSettings.getBOOL("UseFreezeFrame"));
 	childSetCommitCallback("freeze_frame_check", ImplBase::onCommitFreezeFrame, this);
@@ -1143,7 +1143,7 @@ void LLFloaterSnapshotBase::onClose(bool app_quitting)
 	{
 		previewp->setAllowFullScreenPreview(FALSE);
 		previewp->setVisible(false);
-		previewp->setEnabled(FALSE);
+		previewp->setEnabled(false);
 	}
 
 	gSavedSettings.setBOOL("FreezeTime", FALSE);

@@ -695,7 +695,7 @@ void disable_context_entries_if_present(LLMenuGL& menu,
 			// so that some other UI element from multi-select doesn't later set this invisible.
 			menu_item->pushVisible(TRUE);
 
-			menu_item->setEnabled(FALSE);
+			menu_item->setEnabled(false);
         }
     }
 }
@@ -750,7 +750,7 @@ void hide_context_entries(LLMenuGL& menu,
 				menu_item->setVisible(false);
 			}
 
-			menu_item->setEnabled(FALSE);
+			menu_item->setEnabled(false);
 		}
 		else
 		{
@@ -759,7 +759,7 @@ void hide_context_entries(LLMenuGL& menu,
 			// so that some other UI element from multi-select doesn't later set this invisible.
 			menu_item->pushVisible(TRUE);
 
-			bool enabled = (menu_item->getEnabled() == TRUE);
+			bool enabled = (menu_item->getEnabled() == true);
 			for (itor2 = disabled_entries.begin(); enabled && (itor2 != disabled_entries.end()); ++itor2)
 			{
 				enabled &= (*itor2 != name);

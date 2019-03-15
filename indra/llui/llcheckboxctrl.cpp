@@ -176,7 +176,7 @@ void LLCheckBoxCtrl::onCommit()
 	}
 }
 
-void LLCheckBoxCtrl::setEnabled(BOOL b)
+void LLCheckBoxCtrl::setEnabled(bool b)
 {
 	LLView::setEnabled(b);
 

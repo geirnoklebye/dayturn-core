@@ -345,7 +345,7 @@ void LLPanelGroupInvite::impl::handleRemove()
 
 	// Remove all selected invitees.
 	mInvitees->deleteSelectedItems();
-	mRemoveButton->setEnabled(FALSE);
+	mRemoveButton->setEnabled(false);
 }
 
 // static
@@ -363,7 +363,7 @@ void LLPanelGroupInvite::impl::handleSelection()
 			mInvitees->getAllSelected();
 	if (selection.empty())
 	{
-		mRemoveButton->setEnabled(FALSE);
+		mRemoveButton->setEnabled(false);
 	}
 	else
 	{
@@ -467,7 +467,7 @@ void LLPanelGroupInvite::clear()
 	mImplementation->mInvitees->deleteAllItems();
 	mImplementation->mRoleNames->clear();
 	mImplementation->mRoleNames->removeall();
-	mImplementation->mOKButton->setEnabled(FALSE);
+	mImplementation->mOKButton->setEnabled(false);
 	mImplementation->mInviteeIDs.clear();
 }
 
@@ -671,7 +671,7 @@ bool LLPanelGroupInvite::postBuild()
 	if ( mImplementation->mRemoveButton )
 	{
 		mImplementation->mRemoveButton->setClickedCallback(impl::callbackClickRemove, mImplementation);
-		mImplementation->mRemoveButton->setEnabled(FALSE);
+		mImplementation->mRemoveButton->setEnabled(false);
 	}
 
 	mImplementation->mOKButton = 
@@ -679,7 +679,7 @@ bool LLPanelGroupInvite::postBuild()
 	if ( mImplementation->mOKButton )
  	{
 		mImplementation->mOKButton->setClickedCallback(impl::callbackClickOK, mImplementation);
-		mImplementation->mOKButton->setEnabled(FALSE);
+		mImplementation->mOKButton->setEnabled(false);
  	}
 
 	button = getChild<LLButton>("cancel_button", recurse);

@@ -240,9 +240,9 @@ void FSPanelClassifieds::onOpen(const LLSD& key)
 	// Disable buttons when viewing profile for first time
 	if(getAvatarId() != id)
 	{
-		getChildView(XML_BTN_INFO)->setEnabled(FALSE);
-		getChildView(XML_BTN_TELEPORT)->setEnabled(FALSE);
-		getChildView(XML_BTN_SHOW_ON_MAP)->setEnabled(FALSE);
+		getChildView(XML_BTN_INFO)->setEnabled(false);
+		getChildView(XML_BTN_TELEPORT)->setEnabled(false);
+		getChildView(XML_BTN_SHOW_ON_MAP)->setEnabled(false);
 	}
 
 	if(getAvatarId() != id)

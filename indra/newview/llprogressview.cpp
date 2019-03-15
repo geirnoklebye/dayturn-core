@@ -549,7 +549,7 @@ void LLProgressView::onCancelButtonClicked(void*)
 	else
 	{
 		gAgent.teleportCancel();
-		sInstance->mCancelBtn->setEnabled(FALSE);
+		sInstance->mCancelBtn->setEnabled(false);
 		sInstance->setVisible(false);
 	}
 }

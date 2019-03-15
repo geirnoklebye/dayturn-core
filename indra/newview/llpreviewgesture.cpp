@@ -358,11 +358,11 @@ bool LLPreviewGesture::postBuild()
 	mTriggerEditor = edit;
 
 	text = getChild<LLTextBox>("replace_text");
-	text->setEnabled(FALSE);
+	text->setEnabled(false);
 	mReplaceText = text;
 
 	edit = getChild<LLLineEditor>("replace_editor");
-	edit->setEnabled(FALSE);
+	edit->setEnabled(false);
 	edit->setKeystrokeCallback(onKeystrokeCommit, this);
 	edit->setCommitCallback(onCommitSetDirty, this);
 	edit->setCommitOnFocusLost(TRUE);
@@ -384,22 +384,22 @@ bool LLPreviewGesture::postBuild()
 
 	btn = getChild<LLButton>( "add_btn");
 	btn->setClickedCallback(onClickAdd, this);
-	btn->setEnabled(FALSE);
+	btn->setEnabled(false);
 	mAddBtn = btn;
 
 	btn = getChild<LLButton>( "up_btn");
 	btn->setClickedCallback(onClickUp, this);
-	btn->setEnabled(FALSE);
+	btn->setEnabled(false);
 	mUpBtn = btn;
 
 	btn = getChild<LLButton>( "down_btn");
 	btn->setClickedCallback(onClickDown, this);
-	btn->setEnabled(FALSE);
+	btn->setEnabled(false);
 	mDownBtn = btn;
 
 	btn = getChild<LLButton>( "delete_btn");
 	btn->setClickedCallback(onClickDelete, this);
-	btn->setEnabled(FALSE);
+	btn->setEnabled(false);
 	mDeleteBtn = btn;
 
 	list = getChild<LLScrollListCtrl>("step_list");
@@ -444,7 +444,7 @@ bool LLPreviewGesture::postBuild()
 	mWaitTimeCheck = check;
 
 	edit = getChild<LLLineEditor>("wait_time_editor");
-	edit->setEnabled(FALSE);
+	edit->setEnabled(false);
 	edit->setVisible(false);
 	edit->setPrevalidate(LLTextValidate::validateFloat);
 //	edit->setKeystrokeCallback(onKeystrokeCommit, this);
@@ -620,29 +620,29 @@ void LLPreviewGesture::refresh()
 	if (mPreviewGesture || !is_complete)
 	{
 		
-		getChildView("desc")->setEnabled(FALSE);
-		//mDescEditor->setEnabled(FALSE);
-		mTriggerEditor->setEnabled(FALSE);
-		mReplaceText->setEnabled(FALSE);
-		mReplaceEditor->setEnabled(FALSE);
-		mModifierCombo->setEnabled(FALSE);
-		mKeyCombo->setEnabled(FALSE);
-		mLibraryList->setEnabled(FALSE);
-		mAddBtn->setEnabled(FALSE);
-		mUpBtn->setEnabled(FALSE);
-		mDownBtn->setEnabled(FALSE);
-		mDeleteBtn->setEnabled(FALSE);
-		mStepList->setEnabled(FALSE);
-		mOptionsText->setEnabled(FALSE);
-		mAnimationCombo->setEnabled(FALSE);
-		mAnimationRadio->setEnabled(FALSE);
-		mSoundCombo->setEnabled(FALSE);
-		mChatEditor->setEnabled(FALSE);
-		mWaitAnimCheck->setEnabled(FALSE);
-		mWaitTimeCheck->setEnabled(FALSE);
-		mWaitTimeEditor->setEnabled(FALSE);
-		mActiveCheck->setEnabled(FALSE);
-		mSaveBtn->setEnabled(FALSE);
+		getChildView("desc")->setEnabled(false);
+		//mDescEditor->setEnabled(false);
+		mTriggerEditor->setEnabled(false);
+		mReplaceText->setEnabled(false);
+		mReplaceEditor->setEnabled(false);
+		mModifierCombo->setEnabled(false);
+		mKeyCombo->setEnabled(false);
+		mLibraryList->setEnabled(false);
+		mAddBtn->setEnabled(false);
+		mUpBtn->setEnabled(false);
+		mDownBtn->setEnabled(false);
+		mDeleteBtn->setEnabled(false);
+		mStepList->setEnabled(false);
+		mOptionsText->setEnabled(false);
+		mAnimationCombo->setEnabled(false);
+		mAnimationRadio->setEnabled(false);
+		mSoundCombo->setEnabled(false);
+		mChatEditor->setEnabled(false);
+		mWaitAnimCheck->setEnabled(false);
+		mWaitTimeCheck->setEnabled(false);
+		mWaitTimeEditor->setEnabled(false);
+		mActiveCheck->setEnabled(false);
+		mSaveBtn->setEnabled(false);
 
 		// Make sure preview button is enabled, so we can stop it
 		mPreviewBtn->setEnabled(TRUE);

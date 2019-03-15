@@ -117,7 +117,7 @@ bool LLPreviewNotecard::saveItem()
 	return saveIfNeeded(item);
 }
 
-void LLPreviewNotecard::setEnabled( BOOL enabled )
+void LLPreviewNotecard::setEnabled( bool enabled )
 {
 
 	LLViewerTextEditor* editor = getChild<LLViewerTextEditor>("Notecard Editor");
@@ -275,7 +275,7 @@ void LLPreviewNotecard::loadAsset()
 			{
 				editor->setText(LLStringUtil::null);
 				editor->makePristine();
-				editor->setEnabled(TRUE);
+				editor->setEnabled(true);
 				mAssetStatus = PREVIEW_ASSET_LOADED;
 			}
 			else
@@ -296,7 +296,7 @@ void LLPreviewNotecard::loadAsset()
 						mAssetID.setNull();
 						editor->setText(getString("no_object"));
 						editor->makePristine();
-						editor->setEnabled(FALSE);
+						editor->setEnabled(false);
 						mAssetStatus = PREVIEW_ASSET_LOADED;
 						return;
 					}
@@ -326,20 +326,20 @@ void LLPreviewNotecard::loadAsset()
 			mAssetID.setNull();
 			editor->setText(getString("not_allowed"));
 			editor->makePristine();
-			editor->setEnabled(FALSE);
+			editor->setEnabled(false);
 			mAssetStatus = PREVIEW_ASSET_LOADED;
 		}
 
 		if(!allow_modify)
 		{
-			editor->setEnabled(FALSE);
+			editor->setEnabled(false);
 			getChildView("lock")->setVisible( TRUE);
-			getChildView("Edit")->setEnabled(FALSE);
+			getChildView("Edit")->setEnabled(false);
 		}
 
 		if((allow_modify || is_owner) && !source_library)
 		{
-			getChildView("Delete")->setEnabled(TRUE);
+			getChildView("Delete")->setEnabled(true);
 		}
 	}
     else if (mObjectUUID.notNull() && mItemUUID.notNull())
@@ -370,7 +370,7 @@ void LLPreviewNotecard::loadAsset()
 	{
 		editor->setText(LLStringUtil::null);
 		editor->makePristine();
-		editor->setEnabled(TRUE);
+		editor->setEnabled(true);
 		// Don't set asset status here; we may not have set the item id yet
 		// (e.g. when this gets called initially)
 		//mAssetStatus = PREVIEW_ASSET_LOADED;

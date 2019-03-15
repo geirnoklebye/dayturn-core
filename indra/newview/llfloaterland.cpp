@@ -581,29 +581,29 @@ LLPanelLandGeneral::~LLPanelLandGeneral()
 // public
 void LLPanelLandGeneral::refresh()
 {
-	mEditName->setEnabled(FALSE);
+	mEditName->setEnabled(false);
 	mEditName->setText(LLStringUtil::null);
 
-	mEditDesc->setEnabled(FALSE);
+	mEditDesc->setEnabled(false);
 	mEditDesc->setText(getString("no_selection_text"));
 
 	mTextSalePending->setText(LLStringUtil::null);
-	mTextSalePending->setEnabled(FALSE);
+	mTextSalePending->setEnabled(false);
 
-	mBtnDeedToGroup->setEnabled(FALSE);
-	mBtnSetGroup->setEnabled(FALSE);
-	mBtnStartAuction->setEnabled(FALSE);
+	mBtnDeedToGroup->setEnabled(false);
+	mBtnSetGroup->setEnabled(false);
+	mBtnStartAuction->setEnabled(false);
 
 	mCheckDeedToGroup	->set(FALSE);
-	mCheckDeedToGroup	->setEnabled(FALSE);
+	mCheckDeedToGroup	->setEnabled(false);
 	mCheckContributeWithDeed->set(FALSE);
-	mCheckContributeWithDeed->setEnabled(FALSE);
+	mCheckContributeWithDeed->setEnabled(false);
 
 	mTextOwner->setText(LLStringUtil::null);
 	mContentRating->setText(LLStringUtil::null);
 	mLandType->setText(LLStringUtil::null);
 	mBtnProfile->setLabel(getString("profile_text"));
-	mBtnProfile->setEnabled(FALSE);
+	mBtnProfile->setEnabled(false);
 
 	mTextClaimDate->setText(LLStringUtil::null);
 	mTextGroup->setText(LLStringUtil::null);
@@ -620,12 +620,12 @@ void LLPanelLandGeneral::refresh()
 	mTextPriceLabel->setText(LLStringUtil::null);
 	mTextDwell->setText(LLStringUtil::null);
 
-	mBtnBuyLand->setEnabled(FALSE);
-	mBtnScriptLimits->setEnabled(FALSE);
-	mBtnBuyGroupLand->setEnabled(FALSE);
-	mBtnReleaseLand->setEnabled(FALSE);
-	mBtnReclaimLand->setEnabled(FALSE);
-	mBtnBuyPass->setEnabled(FALSE);
+	mBtnBuyLand->setEnabled(false);
+	mBtnScriptLimits->setEnabled(false);
+	mBtnBuyGroupLand->setEnabled(false);
+	mBtnReleaseLand->setEnabled(false);
+	mBtnReclaimLand->setEnabled(false);
+	mBtnBuyPass->setEnabled(false);
 
 	if(gDisconnected)
 	{
@@ -682,15 +682,15 @@ void LLPanelLandGeneral::refresh()
 		if (is_public)
 		{
 			mTextSalePending->setText(LLStringUtil::null);
-			mTextSalePending->setEnabled(FALSE);
+			mTextSalePending->setEnabled(false);
 			mTextOwner->setText(getString("public_text"));
-			mTextOwner->setEnabled(FALSE);
-			mBtnProfile->setEnabled(FALSE);
+			mTextOwner->setEnabled(false);
+			mBtnProfile->setEnabled(false);
 			mTextClaimDate->setText(LLStringUtil::null);
-			mTextClaimDate->setEnabled(FALSE);
+			mTextClaimDate->setEnabled(false);
 			mTextGroup->setText(getString("none_text"));
-			mTextGroup->setEnabled(FALSE);
-			mBtnStartAuction->setEnabled(FALSE);
+			mTextGroup->setEnabled(false);
+			mBtnStartAuction->setEnabled(false);
 		}
 		else
 		{
@@ -709,7 +709,7 @@ void LLPanelLandGeneral::refresh()
 			{
 				// not the owner, or it is leased
 				mTextSalePending->setText(LLStringUtil::null);
-				mTextSalePending->setEnabled(FALSE);
+				mTextSalePending->setEnabled(false);
 			}
 			//refreshNames();
 			mTextOwner->setEnabled(TRUE);
@@ -723,7 +723,7 @@ void LLPanelLandGeneral::refresh()
 				mBtnProfile->setLabel(getString("profile_text"));
 
 				mTextGroup->setText(getString("none_text"));
-				mTextGroup->setEnabled(FALSE);
+				mTextGroup->setEnabled(false);
 			}
 			else
 			{
@@ -1292,19 +1292,19 @@ void LLPanelLandObjects::refresh()
 {
 	LLParcel *parcel = mParcel->getParcel();
 
-	mBtnShowOwnerObjects->setEnabled(FALSE);
-	mBtnShowGroupObjects->setEnabled(FALSE);
-	mBtnShowOtherObjects->setEnabled(FALSE);
-	mBtnReturnOwnerObjects->setEnabled(FALSE);
-	mBtnReturnGroupObjects->setEnabled(FALSE);
-	mBtnReturnOtherObjects->setEnabled(FALSE);
-	mCleanOtherObjectsTime->setEnabled(FALSE);
+	mBtnShowOwnerObjects->setEnabled(false);
+	mBtnShowGroupObjects->setEnabled(false);
+	mBtnShowOtherObjects->setEnabled(false);
+	mBtnReturnOwnerObjects->setEnabled(false);
+	mBtnReturnGroupObjects->setEnabled(false);
+	mBtnReturnOtherObjects->setEnabled(false);
+	mCleanOtherObjectsTime->setEnabled(false);
 	mBtnRefresh->			setEnabled(FALSE);
 	mBtnReturnOwnerList->	setEnabled(FALSE);
 
 	mSelectedOwners.clear();
 	mOwnerList->deleteAllItems();
-	mOwnerList->setEnabled(FALSE);
+	mOwnerList->setEnabled(false);
 
 	if (!parcel || gDisconnected)
 	{
@@ -1620,7 +1620,7 @@ void LLPanelLandObjects::onClickRefresh(void* userdata)
 	// ready the list for results
 	self->mOwnerList->deleteAllItems();
 	self->mOwnerList->setCommentText(LLTrans::getString("Searching"));
-	self->mOwnerList->setEnabled(FALSE);
+	self->mOwnerList->setEnabled(false);
 	self->mFirstReply = TRUE;
 
 	// send the message
@@ -1996,7 +1996,7 @@ bool LLPanelLandOptions::postBuild()
 	{
 		// Disable these buttons if they are PG (Teen) users
 		mMatureCtrl->setVisible(false);
-		mMatureCtrl->setEnabled(FALSE);
+		mMatureCtrl->setEnabled(false);
 	}
 	
 	
@@ -2046,47 +2046,47 @@ void LLPanelLandOptions::refresh()
 	if (!parcel || gDisconnected)
 	{
 		mCheckEditObjects	->set(FALSE);
-		mCheckEditObjects	->setEnabled(FALSE);
+		mCheckEditObjects	->setEnabled(false);
 
 		mCheckEditGroupObjects	->set(FALSE);
-		mCheckEditGroupObjects	->setEnabled(FALSE);
+		mCheckEditGroupObjects	->setEnabled(false);
 
 		mCheckAllObjectEntry	->set(FALSE);
-		mCheckAllObjectEntry	->setEnabled(FALSE);
+		mCheckAllObjectEntry	->setEnabled(false);
 
 		mCheckGroupObjectEntry	->set(FALSE);
-		mCheckGroupObjectEntry	->setEnabled(FALSE);
+		mCheckGroupObjectEntry	->setEnabled(false);
 
 		mCheckSafe			->set(FALSE);
-		mCheckSafe			->setEnabled(FALSE);
+		mCheckSafe			->setEnabled(false);
 
 		mCheckFly			->set(FALSE);
-		mCheckFly			->setEnabled(FALSE);
+		mCheckFly			->setEnabled(false);
 
 		mCheckGroupScripts	->set(FALSE);
-		mCheckGroupScripts	->setEnabled(FALSE);
+		mCheckGroupScripts	->setEnabled(false);
 
 		mCheckOtherScripts	->set(FALSE);
-		mCheckOtherScripts	->setEnabled(FALSE);
+		mCheckOtherScripts	->setEnabled(false);
 
 		mPushRestrictionCtrl->set(FALSE);
-		mPushRestrictionCtrl->setEnabled(FALSE);
+		mPushRestrictionCtrl->setEnabled(false);
 
 		mSeeAvatarsCtrl->set(TRUE);
-		mSeeAvatarsCtrl->setEnabled(FALSE);
-		mSeeAvatarsText->setEnabled(FALSE);
+		mSeeAvatarsCtrl->setEnabled(false);
+		mSeeAvatarsText->setEnabled(false);
 
 		mLandingTypeCombo->setCurrentByIndex(0);
-		mLandingTypeCombo->setEnabled(FALSE);
+		mLandingTypeCombo->setEnabled(false);
 
 		mSnapshotCtrl->setImageAssetID(LLUUID::null);
-		mSnapshotCtrl->setEnabled(FALSE);
+		mSnapshotCtrl->setEnabled(false);
 
 		mLocationText->setTextArg("[LANDING]", getString("landing_point_none"));
-		mSetBtn->setEnabled(FALSE);
-		mClearBtn->setEnabled(FALSE);
+		mSetBtn->setEnabled(false);
+		mClearBtn->setEnabled(false);
 
-		mMatureCtrl->setEnabled(FALSE);
+		mMatureCtrl->setEnabled(false);
 	}
 	else
 	{
@@ -2171,7 +2171,7 @@ void LLPanelLandOptions::refresh()
 		{
 			// Disable these buttons if they are PG (Teen) users
 			mMatureCtrl->setVisible(false);
-			mMatureCtrl->setEnabled(FALSE);
+			mMatureCtrl->setEnabled(false);
 		}
 		else
 		{
@@ -2193,7 +2193,7 @@ void LLPanelLandOptions::refresh()
 			{
 				if (regionp->getSimAccess() == SIM_ACCESS_PG)
 				{
-					mMatureCtrl->setEnabled(FALSE);
+					mMatureCtrl->setEnabled(false);
 					mMatureCtrl->set(FALSE);
 				}
 				else if (regionp->getSimAccess() == SIM_ACCESS_MATURE)
@@ -2203,7 +2203,7 @@ void LLPanelLandOptions::refresh()
 				}
 				else if (regionp->getSimAccess() == SIM_ACCESS_ADULT)
 				{
-					mMatureCtrl->setEnabled(FALSE);
+					mMatureCtrl->setEnabled(false);
 					mMatureCtrl->set(TRUE);
 					mMatureCtrl->setLabel(getString("mature_check_adult"));
 					mMatureCtrl->setToolTip(getString("mature_check_adult_tooltip"));
@@ -2227,11 +2227,11 @@ void LLPanelLandOptions::refreshSearch()
 	if (!parcel || gDisconnected)
 	{
 		mCheckShowDirectory->set(FALSE);
-		mCheckShowDirectory->setEnabled(FALSE);
+		mCheckShowDirectory->setEnabled(false);
 
 		const std::string& none_string = LLParcel::getCategoryString(LLParcel::C_NONE);
 		mCategoryCombo->setValue(none_string);
-		mCategoryCombo->setEnabled(FALSE);
+		mCategoryCombo->setEnabled(false);
 		return;
 	}
 
@@ -2681,20 +2681,20 @@ void LLPanelLandAccess::refresh()
 
 void LLPanelLandAccess::refresh_ui()
 {
-	getChildView("public_access")->setEnabled(FALSE);
-	getChildView("limit_payment")->setEnabled(FALSE);
-	getChildView("limit_age_verified")->setEnabled(FALSE);
-	getChildView("GroupCheck")->setEnabled(FALSE);
-	getChildView("PassCheck")->setEnabled(FALSE);
-	getChildView("pass_combo")->setEnabled(FALSE);
-	getChildView("PriceSpin")->setEnabled(FALSE);
-	getChildView("HoursSpin")->setEnabled(FALSE);
-	getChildView("AccessList")->setEnabled(FALSE);
-	getChildView("BannedList")->setEnabled(FALSE);
-	getChildView("add_allowed")->setEnabled(FALSE);
-	getChildView("remove_allowed")->setEnabled(FALSE);
-	getChildView("add_banned")->setEnabled(FALSE);
-	getChildView("remove_banned")->setEnabled(FALSE);
+	getChildView("public_access")->setEnabled(false);
+	getChildView("limit_payment")->setEnabled(false);
+	getChildView("limit_age_verified")->setEnabled(false);
+	getChildView("GroupCheck")->setEnabled(false);
+	getChildView("PassCheck")->setEnabled(false);
+	getChildView("pass_combo")->setEnabled(false);
+	getChildView("PriceSpin")->setEnabled(false);
+	getChildView("HoursSpin")->setEnabled(false);
+	getChildView("AccessList")->setEnabled(false);
+	getChildView("BannedList")->setEnabled(false);
+	getChildView("add_allowed")->setEnabled(false);
+	getChildView("remove_allowed")->setEnabled(false);
+	getChildView("add_banned")->setEnabled(false);
+	getChildView("remove_banned")->setEnabled(false);
 	
 	LLParcel *parcel = mParcel->getParcel();
 	if (parcel && !gDisconnected)
@@ -2715,7 +2715,7 @@ void LLPanelLandAccess::refresh_ui()
 			if(parcel->getRegionDenyAnonymousOverride())
 			{
 				override = true;
-				getChildView("limit_payment")->setEnabled(FALSE);
+				getChildView("limit_payment")->setEnabled(false);
 			}
 			else
 			{
@@ -2724,7 +2724,7 @@ void LLPanelLandAccess::refresh_ui()
 			if(parcel->getRegionDenyAgeUnverifiedOverride())
 			{
 				override = true;
-				getChildView("limit_age_verified")->setEnabled(FALSE);
+				getChildView("limit_age_verified")->setEnabled(false);
 			}
 			else
 			{
@@ -2738,14 +2738,14 @@ void LLPanelLandAccess::refresh_ui()
 			{
 				getChildView("Only Allow")->setToolTip(std::string());
 			}
-			getChildView("PassCheck")->setEnabled(FALSE);
-			getChildView("pass_combo")->setEnabled(FALSE);
-			getChildView("AccessList")->setEnabled(FALSE);
+			getChildView("PassCheck")->setEnabled(false);
+			getChildView("pass_combo")->setEnabled(false);
+			getChildView("AccessList")->setEnabled(false);
 		}
 		else
 		{
-			getChildView("limit_payment")->setEnabled(FALSE);
-			getChildView("limit_age_verified")->setEnabled(FALSE);
+			getChildView("limit_payment")->setEnabled(false);
+			getChildView("limit_age_verified")->setEnabled(false);
 
 
 			BOOL sell_passes = getChild<LLUICtrl>("PassCheck")->getValue().asBoolean();
@@ -3295,7 +3295,7 @@ void LLPanelLandExperiences::refreshPanel(LLPanelExperienceListEditor* panel, U3
 	if (!parcel || gDisconnected)
 	{
 		// disable the panel
-		panel->setEnabled(FALSE);
+		panel->setEnabled(false);
 		panel->setExperienceIds(LLSD::emptyArray());
 	}
 	else

@@ -443,16 +443,16 @@ void LLPanelPrimMediaControls::updateShape()
 			switch(result)
 			{
 				case LLPluginClassMediaOwner::MEDIA_PLAYING:
-					mPlayCtrl->setEnabled(FALSE);
+					mPlayCtrl->setEnabled(false);
 					mPlayCtrl->setVisible(false);
-					mPauseCtrl->setEnabled(TRUE);
+					mPauseCtrl->setEnabled(true);
 					mPauseCtrl->setVisible(has_focus);
 					
 					break;
 				case LLPluginClassMediaOwner::MEDIA_PAUSED:
 				default:
 					mPauseCtrl->setVisible(false);
-					mPlayCtrl->setEnabled(TRUE);
+					mPlayCtrl->setEnabled(true);
 					mPlayCtrl->setVisible(has_focus);
 					break;
 			}
@@ -474,11 +474,11 @@ void LLPanelPrimMediaControls::updateShape()
 			mMediaAddressCtrl->setVisible(has_focus && !mini_controls);
 			mMediaAddressCtrl->setEnabled(has_focus && !mini_controls);
 			mMediaPlaySliderPanel->setVisible(false);
-			mMediaPlaySliderPanel->setEnabled(FALSE);
+			mMediaPlaySliderPanel->setEnabled(false);
 			mSkipFwdCtrl->setVisible(false);
-			mSkipFwdCtrl->setEnabled(FALSE);
+			mSkipFwdCtrl->setEnabled(false);
 			mSkipBackCtrl->setVisible(false);
-			mSkipBackCtrl->setEnabled(FALSE);
+			mSkipBackCtrl->setEnabled(false);
 			
 			if(media_impl->getVolume() <= 0.0)
 			{
@@ -514,16 +514,16 @@ void LLPanelPrimMediaControls::updateShape()
 			
 			if(result == LLPluginClassMediaOwner::MEDIA_LOADING)
 			{
-				mReloadCtrl->setEnabled(FALSE);
+				mReloadCtrl->setEnabled(false);
 				mReloadCtrl->setVisible(false);
-				mStopCtrl->setEnabled(TRUE);
+				mStopCtrl->setEnabled(true);
 				mStopCtrl->setVisible(has_focus);
 			}
 			else
 			{
-				mReloadCtrl->setEnabled(TRUE);
+				mReloadCtrl->setEnabled(true);
 				mReloadCtrl->setVisible(has_focus);
-				mStopCtrl->setEnabled(FALSE);
+				mStopCtrl->setEnabled(false);
 				mStopCtrl->setVisible(false);
 			}
 		}

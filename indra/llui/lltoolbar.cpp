@@ -1400,7 +1400,7 @@ void LLToolBarButton::reshape(S32 width, S32 height, BOOL called_from_parent)
 	// </FS:Zi>
 }
 
-void LLToolBarButton::setEnabled(BOOL enabled)
+void LLToolBarButton::setEnabled(bool enabled)
 {
 	if (enabled)
 	{

@@ -941,9 +941,9 @@ void LLFloaterBvhPreview::refresh()
 	{
 		getChildView("bad_animation_text")->setVisible(true);
 		// play button visible but disabled
-		mPlayButton->setEnabled(FALSE);
-		mStopButton->setEnabled(FALSE);
-		getChildView("ok_btn")->setEnabled(FALSE);
+		mPlayButton->setEnabled(false);
+		mStopButton->setEnabled(false);
+		getChildView("ok_btn")->setEnabled(false);
 	}
 	else
 	{

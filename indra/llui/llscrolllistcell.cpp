@@ -455,7 +455,7 @@ void LLScrollListCheck::onCommit()
 }
 
 /*virtual*/
-void LLScrollListCheck::setEnabled(BOOL enable)
+void LLScrollListCheck::setEnabled(bool enable)
 {
 	mCheckBox->setEnabled(enable);
 }

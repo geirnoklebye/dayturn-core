@@ -73,7 +73,7 @@ bool LLNotificationListItem::postBuild()
     mTitleBox->setValue(mParams.title);
     mTitleBoxExp->setValue(mParams.title);
     mNoticeTextExp->setValue(mParams.title);
-    mNoticeTextExp->setEnabled(FALSE);
+    mNoticeTextExp->setEnabled(false);
     mNoticeTextExp->setTextExpandedCallback(boost::bind(&LLNotificationListItem::reshapeNotification, this));
 
     mTitleBox->setContentTrusted(false);
@@ -526,7 +526,7 @@ void LLGroupNoticeNotificationListItem::onClickAttachment()
         static const LLUIColor textColor = LLUIColorTable::instance().getColor(
             "GroupNotifyDimmedTextColor");
         mAttachmentTextBox->setColor(textColor);
-        mAttachmentIconExp->setEnabled(FALSE);
+        mAttachmentIconExp->setEnabled(false);
 
         //if attachment isn't openable - notify about saving
         if (!isAttachmentOpenable(mInventoryOffer->mType)) {

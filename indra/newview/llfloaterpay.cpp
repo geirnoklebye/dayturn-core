@@ -207,8 +207,7 @@ bool LLFloaterPay::postBuild()
 	childSetAction("pay btn", boost::bind(LLFloaterPay::onGive, info));
 	setDefaultBtn("pay btn");
 	getChildView("pay btn")->setVisible(false);
-	getChildView("pay btn")->setEnabled(FALSE);
-
+	getChildView("pay btn")->setEnabled(false);
 	childSetAction("cancel btn",&LLFloaterPay::onCancel,this);
 
 	return true;

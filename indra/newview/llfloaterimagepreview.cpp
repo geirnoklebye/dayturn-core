@@ -130,8 +130,8 @@ bool LLFloaterImagePreview::postBuild()
 		mAvatarPreview = NULL;
 		mSculptedPreview = NULL;
 		getChildView("bad_image_text")->setVisible(true);
-		getChildView("clothing_type_combo")->setEnabled(FALSE);
-		getChildView("ok_btn")->setEnabled(FALSE);
+		getChildView("clothing_type_combo")->setEnabled(false);
+		getChildView("ok_btn")->setEnabled(false);
 
 		if(!mImageLoadError.empty())
 		{

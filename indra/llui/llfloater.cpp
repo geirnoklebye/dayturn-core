@@ -1290,11 +1290,11 @@ void LLFloater::setMinimized(BOOL minimize)
 		{
 			if (mResizeBar[i] != NULL)
 			{
-				mResizeBar[i]->setEnabled(FALSE);
+				mResizeBar[i]->setEnabled(false);
 			}
 			if (mResizeHandle[i] != NULL)
 			{
-				mResizeHandle[i]->setEnabled(FALSE);
+				mResizeHandle[i]->setEnabled(false);
 			}
 		}
 		
@@ -2046,11 +2046,11 @@ void LLFloater::setCanDrag(BOOL can_drag)
 	// so just enable/disable it
 	if (!can_drag && mDragHandle->getEnabled())
 	{
-		mDragHandle->setEnabled(FALSE);
+		mDragHandle->setEnabled(false);
 	}
 	else if (can_drag && !mDragHandle->getEnabled())
 	{
-		mDragHandle->setEnabled(TRUE);
+		mDragHandle->setEnabled(true);
 	}
 }
 

@@ -60,7 +60,7 @@ public:
 	virtual bool hasAccelerators() const override;
 // [/SL:KB]
 	bool handleKeyHere(KEY key, MASK mask) override;
-	void setEnabled( BOOL enabled ) override;
+	void setEnabled( bool enabled ) override;
 
 	// llfloater
 	BOOL canClose() override;

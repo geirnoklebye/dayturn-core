@@ -274,7 +274,7 @@ void LLFloaterReporter::enableControls(BOOL enable)
 {
 	getChildView("category_combo")->setEnabled(enable);
 	getChildView("chat_check")->setEnabled(enable);
-	getChildView("screenshot")->setEnabled(FALSE);
+	getChildView("screenshot")->setEnabled(false);
 	getChildView("pick_btn")->setEnabled(enable);
 	getChildView("summary_edit")->setEnabled(enable);
 	getChildView("details_edit")->setEnabled(enable);
@@ -530,8 +530,8 @@ void LLFloaterReporter::onClickSend(void *userdata)
 		}
 		else
 		{
-			self->getChildView("send_btn")->setEnabled(FALSE);
-			self->getChildView("cancel_btn")->setEnabled(FALSE);
+			self->getChildView("send_btn")->setEnabled(false);
+			self->getChildView("cancel_btn")->setEnabled(false);
 			// the callback from uploading the image calls sendReportViaLegacy()
 			self->uploadImage();
 		}

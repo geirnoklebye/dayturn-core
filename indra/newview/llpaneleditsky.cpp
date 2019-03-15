@@ -156,7 +156,7 @@ bool LLPanelSettingsSkyAtmosTab::postBuild()
 }
 
 //virtual
-void LLPanelSettingsSkyAtmosTab::setEnabled(BOOL enabled)
+void LLPanelSettingsSkyAtmosTab::setEnabled(bool enabled)
 {
     LLPanelSettingsSky::setEnabled(enabled);
 
@@ -180,7 +180,7 @@ void LLPanelSettingsSkyAtmosTab::refresh()
     if (!mSkySettings)
     {
         setAllChildrenEnabled(FALSE);
-        setEnabled(FALSE);
+        setEnabled(false);
         return;
     }
 
@@ -342,7 +342,7 @@ bool LLPanelSettingsSkyCloudTab::postBuild()
 }
 
 //virtual
-void LLPanelSettingsSkyCloudTab::setEnabled(BOOL enabled)
+void LLPanelSettingsSkyCloudTab::setEnabled(bool enabled)
 {
     LLPanelSettingsSky::setEnabled(enabled);
 
@@ -366,7 +366,7 @@ void LLPanelSettingsSkyCloudTab::refresh()
     if (!mSkySettings)
     {
         setAllChildrenEnabled(FALSE);
-        setEnabled(FALSE);
+        setEnabled(false);
         return;
     }
 
@@ -500,7 +500,7 @@ bool LLPanelSettingsSkySunMoonTab::postBuild()
 }
 
 //virtual
-void LLPanelSettingsSkySunMoonTab::setEnabled(BOOL enabled)
+void LLPanelSettingsSkySunMoonTab::setEnabled(bool enabled)
 {
     LLPanelSettingsSky::setEnabled(enabled);
 
@@ -524,15 +524,15 @@ void LLPanelSettingsSkySunMoonTab::refresh()
     {
         getChildView(PANEL_SKY_SUN_LAYOUT)->setAllChildrenEnabled(FALSE);
         getChildView(PANEL_SKY_MOON_LAYOUT)->setAllChildrenEnabled(FALSE);
-        getChildView(FIELD_SKY_SUN_BEACON)->setEnabled(TRUE);
-        getChildView(FIELD_SKY_MOON_BEACON)->setEnabled(TRUE);
+        getChildView(FIELD_SKY_SUN_BEACON)->setEnabled(true);
+        getChildView(FIELD_SKY_MOON_BEACON)->setEnabled(true);
         
         if (!mSkySettings)
             return;
     }
     else
     {
-        setEnabled(TRUE);
+        setEnabled(true);
         setAllChildrenEnabled(TRUE);
     }
 
@@ -766,7 +766,7 @@ bool LLPanelSettingsSkyDensityTab::postBuild()
     return true;
 }
 
-void LLPanelSettingsSkyDensityTab::setEnabled(BOOL enabled)
+void LLPanelSettingsSkyDensityTab::setEnabled(bool enabled)
 {
     LLPanelSettingsSky::setEnabled(enabled);
 
@@ -799,7 +799,7 @@ void LLPanelSettingsSkyDensityTab::refresh()
     if (!mSkySettings)
     {
         setAllChildrenEnabled(FALSE);
-        setEnabled(FALSE);
+        setEnabled(false);
         return;
     }
 

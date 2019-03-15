@@ -168,7 +168,7 @@ LLLineEditor::LLLineEditor(const LLLineEditor::Params& p)
 {
 	llassert( mMaxLengthBytes > 0 );
 
-	LLUICtrl::setEnabled(TRUE);
+	LLUICtrl::setEnabled(true);
 	setEnabled(p.enabled);
 
 	mScrollTimer.reset();
@@ -237,7 +237,7 @@ LLLineEditor::~LLLineEditor()
 void LLLineEditor::initFromParams(const LLLineEditor::Params& params)
 {
 	LLUICtrl::initFromParams(params);
-	LLUICtrl::setEnabled(TRUE);
+	LLUICtrl::setEnabled(true);
 	setEnabled(params.enabled);
 }
 
@@ -356,7 +356,7 @@ void LLLineEditor::reshape(S32 width, S32 height, BOOL called_from_parent)
 	setCursor(mCursorPos); // For clamping side-effect.
 }
 
-void LLLineEditor::setEnabled(BOOL enabled)
+void LLLineEditor::setEnabled(bool enabled)
 {
 	mReadOnly = !enabled;
 	setTabStop(!mReadOnly);

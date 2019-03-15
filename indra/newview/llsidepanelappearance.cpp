@@ -195,8 +195,8 @@ void LLSidepanelAppearance::updateToVisibility(const LLSD &new_visibility)
 {
 	if (new_visibility["visible"].asBoolean())
 	{
-		const BOOL is_outfit_edit_visible = mOutfitEdit && mOutfitEdit->getVisible();
-		const BOOL is_wearable_edit_visible = mEditWearable && mEditWearable->getVisible();
+		const bool is_outfit_edit_visible = mOutfitEdit && mOutfitEdit->getVisible();
+		const bool is_wearable_edit_visible = mEditWearable && mEditWearable->getVisible();
 
 		if (is_outfit_edit_visible || is_wearable_edit_visible)
 		{
@@ -453,7 +453,7 @@ void LLSidepanelAppearance::refreshCurrentOutfitName(const std::string& name)
 
 		std::string string_name = gAgentWearables.isCOFChangeInProgress() ? "Changing outfits" : "No Outfit";
 		mCurrentLookName->setText(getString(string_name));
-		mOpenOutfitBtn->setEnabled(FALSE);
+		mOpenOutfitBtn->setEnabled(false);
 	}
 	else
 	{

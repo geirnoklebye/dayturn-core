@@ -353,7 +353,7 @@ void LLPanelVolume::getState( )
 		LLTextureCtrl* LightTextureCtrl = getChild<LLTextureCtrl>("light texture control");
 		if (LightTextureCtrl)
 		{
-			LightTextureCtrl->setEnabled(FALSE);
+			LightTextureCtrl->setEnabled(false);
 			LightTextureCtrl->setValid(FALSE);
 		}
 
@@ -666,10 +666,10 @@ void LLPanelVolume::clearCtrls()
 	getChildView("FlexForceY")->setEnabled(false);
 	getChildView("FlexForceZ")->setEnabled(false);
 
-	mSpinPhysicsGravity->setEnabled(FALSE);
-	mSpinPhysicsFriction->setEnabled(FALSE);
-	mSpinPhysicsDensity->setEnabled(FALSE);
-	mSpinPhysicsRestitution->setEnabled(FALSE);
+	mSpinPhysicsGravity->setEnabled(false);
+	mSpinPhysicsFriction->setEnabled(false);
+	mSpinPhysicsDensity->setEnabled(false);
+	mSpinPhysicsRestitution->setEnabled(false);
 
 	mComboMaterial->setEnabled( FALSE );
 }

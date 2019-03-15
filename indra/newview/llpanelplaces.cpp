@@ -461,7 +461,7 @@ void LLPanelPlaces::onOpen(const LLSD& key)
 
 				mLandmarkInfo->displayParcelInfo(LLUUID(), mPosGlobal);
 
-				mSaveBtn->setEnabled(FALSE);
+				mSaveBtn->setEnabled(false);
 			}
 			else if (mPlaceInfoType == LANDMARK_INFO_TYPE)
 			{

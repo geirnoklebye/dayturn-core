@@ -301,17 +301,17 @@ void FSFloaterImport::loadFile()
 	LL_DEBUGS("import") << "Linkset size is " << mLinksetSize << LL_ENDL;
 	if (mLinksetSize != 0)
 	{
-		getChild<LLButton>("import_btn")->setEnabled(TRUE);
-		getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(TRUE);
-		getChild<LLCheckBoxCtrl>("region_position")->setEnabled(TRUE);
-		getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(TRUE);
+		getChild<LLButton>("import_btn")->setEnabled(true);
+		getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(true);
+		getChild<LLCheckBoxCtrl>("region_position")->setEnabled(true);
+		getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(true);
 	}
 	else
 	{
-		getChild<LLButton>("import_btn")->setEnabled(FALSE);
-		getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(FALSE);
-		getChild<LLCheckBoxCtrl>("region_position")->setEnabled(FALSE);
-		getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(FALSE);
+		getChild<LLButton>("import_btn")->setEnabled(false);
+		getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(false);
+		getChild<LLCheckBoxCtrl>("region_position")->setEnabled(false);
+		getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(false);
 	}
 }
 
@@ -509,11 +509,11 @@ void FSFloaterImport::onClickBtnImport()
 	LL_DEBUGS("import") << "mStartPosition is " << mStartPosition << LL_ENDL;
 
 	// don't allow change during a long upload/import
-	getChild<LLButton>("import_btn")->setEnabled(FALSE);
-	getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(FALSE);
-	getChild<LLCheckBoxCtrl>("region_position")->setEnabled(FALSE);
-	getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(FALSE);
-	getChild<LLCheckBoxCtrl>("temp_asset")->setEnabled(FALSE);
+	getChild<LLButton>("import_btn")->setEnabled(false);
+	getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(false);
+	getChild<LLCheckBoxCtrl>("region_position")->setEnabled(false);
+	getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(false);
+	getChild<LLCheckBoxCtrl>("temp_asset")->setEnabled(false);
 
 	if (((mTexturesTotal + mSoundsTotal + mAnimsTotal + mAssetsTotal) != 0) && getChild<LLCheckBoxCtrl>("upload_asset")->get())
 	{
@@ -530,10 +530,10 @@ void FSFloaterImport::onClickBtnImport()
 				LLBuyCurrencyHTML::openCurrencyFloater(LLTrans::getString("UploadingCosts", args), expected_upload_cost);
 
 				// re-enable the controls
-				getChild<LLButton>("import_btn")->setEnabled(TRUE);
-				getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(TRUE);
-				getChild<LLCheckBoxCtrl>("region_position")->setEnabled(TRUE);
-				getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(TRUE);
+				getChild<LLButton>("import_btn")->setEnabled(true);
+				getChild<LLCheckBoxCtrl>("do_not_attach")->setEnabled(true);
+				getChild<LLCheckBoxCtrl>("region_position")->setEnabled(true);
+				getChild<LLCheckBoxCtrl>("upload_asset")->setEnabled(true);
 				getChild<LLCheckBoxCtrl>("temp_asset")->setEnabled(getChild<LLCheckBoxCtrl>("upload_asset")->get());
 				return;
 			}
@@ -590,15 +590,15 @@ void FSFloaterImport::onClickCheckBoxUploadAsset()
 {
 	if (getChild<LLCheckBoxCtrl>("upload_asset")->get())
 	{
-		getChild<LLCheckBoxCtrl>("temp_asset")->setEnabled(TRUE);
+		getChild<LLCheckBoxCtrl>("temp_asset")->setEnabled(true);
 		LLUIString stats = getString("upload_cost");
 		stats.setArg("[COST]", llformat("%u", ((mTexturesTotal * LLAgentBenefitsMgr::current().getTextureUploadCost()) +  (mSoundsTotal * LLAgentBenefitsMgr::current().getSoundUploadCost()) + (mAnimsTotal * LLAgentBenefitsMgr::current().getAnimationUploadCost())) ));
 		getChild<LLTextBox>("file_status_text")->setText(stats.getString());
 	}
 	else
 	{
-		getChild<LLCheckBoxCtrl>("temp_asset")->set(FALSE);
-		getChild<LLCheckBoxCtrl>("temp_asset")->setEnabled(FALSE);
+		getChild<LLCheckBoxCtrl>("temp_asset")->set(false);
+		getChild<LLCheckBoxCtrl>("temp_asset")->setEnabled(false);
 		std::string text;
 		getChild<LLTextBox>("file_status_text")->setText(text);
 	}

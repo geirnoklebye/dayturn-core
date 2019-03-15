@@ -177,7 +177,7 @@ public:
 	virtual void	reshape(S32 width,S32 height,BOOL called_from_parent=TRUE);
 	virtual void	onFocusReceived();
 	virtual void	onFocusLost();
-	virtual void	setEnabled(BOOL enabled);
+	virtual void	setEnabled(bool enabled);
 
 	// UI control overrides
 	virtual void	clear();

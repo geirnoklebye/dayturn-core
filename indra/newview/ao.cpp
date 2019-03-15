@@ -109,7 +109,7 @@ void FloaterAO::updateAnimationList()
 
 	if (!mSelectedSet)
 	{
-		mStateSelector->setEnabled(FALSE);
+		mStateSelector->setEnabled(false);
 		mStateSelector->add(getString("ao_no_animations_loaded"));
 		return;
 	}
@@ -137,7 +137,7 @@ void FloaterAO::updateAnimationList()
 
 void FloaterAO::updateList()
 {
-	mReloadButton->setEnabled(TRUE);
+	mReloadButton->setEnabled(true);
 	mImportRunning = FALSE;
 
 	// Lambda provides simple Alpha sorting, note this is case sensitive.
@@ -465,7 +465,7 @@ void FloaterAO::onSelectState()
 	mAnimationList->deleteAllItems();
 	mCurrentBoldItemID = LLUUID::null;
 	mAnimationList->setCommentText(getString("ao_no_animations_loaded"));
-	mAnimationList->setEnabled(FALSE);
+	mAnimationList->setEnabled(false);
 
 	onChangeAnimationSelection();
 
@@ -493,7 +493,7 @@ void FloaterAO::onSelectState()
 		}
 
 		mAnimationList->setCommentText("");
-		mAnimationList->setEnabled(TRUE);
+		mAnimationList->setEnabled(true);
 	}
 
 	mCycleCheckBox->setValue(mSelectedState->mCycle);
@@ -931,7 +931,7 @@ BOOL FloaterAO::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop, EDragAndDr
 			if (AOEngine::instance().importNotecard(item))
 			{
 				reloading(TRUE);
-				mReloadButton->setEnabled(FALSE);
+				mReloadButton->setEnabled(false);
 				mImportRunning = TRUE;
 			}
 		}

@@ -1511,7 +1511,7 @@ BOOL LLFolderView::addNoOptions(LLMenuGL* menu) const
 	if (nooptions_item)
 	{
 		nooptions_item->setVisible(true);
-		nooptions_item->setEnabled(FALSE);
+		nooptions_item->setEnabled(false);
 		return TRUE;
 	}
 	return FALSE;

@@ -1353,7 +1353,7 @@ void LLLiveLSLEditor::updateExperiencePanel()
 		}
 		else
 		{
-			mExperienceEnabled->setEnabled(FALSE);
+			mExperienceEnabled->setEnabled(false);
 			mExperienceEnabled->setToolTip(getString("no_experiences"));
 		}
 		getChild<LLButton>("view_profile")->setVisible(false);
@@ -1420,17 +1420,17 @@ void LLLiveLSLEditor::buildExperienceList()
 			item=mExperiences->add(getString("loading"), associated, ADD_TOP);
 			last = associated;
 		}
-		item->setEnabled(FALSE);
+		item->setEnabled(false);
 	}
 
 	if(last.notNull())
 	{
-		mExperiences->setEnabled(FALSE);
+		mExperiences->setEnabled(false);
         LLExperienceCache::instance().get(last, boost::bind(&LLLiveLSLEditor::buildExperienceList, this));
 	}
 	else
 	{
-		mExperiences->setEnabled(TRUE);
+		mExperiences->setEnabled(true);
 		mExperiences->sortByName(TRUE);
 		mExperiences->setCurrentByIndex(mExperiences->getCurrentIndex());
 		getChild<LLButton>("view_profile")->setVisible(true);
@@ -1671,7 +1671,7 @@ void LLPreviewLSL::loadAsset()
 		{
 			mScriptEd->setScriptText(mScriptEd->getString("can_not_view"), FALSE);
 			mScriptEd->mEditor->makePristine();
-			mScriptEd->mFunctions->setEnabled(FALSE);
+			mScriptEd->mFunctions->setEnabled(false);
 			mAssetStatus = PREVIEW_ASSET_LOADED;
 		}
 		getChildView("lock")->setVisible( !is_modifiable);
@@ -2025,14 +2025,14 @@ LLLiveLSLEditor::LLLiveLSLEditor(const LLSD& key) :
 bool LLLiveLSLEditor::postBuild()
 {
 	childSetCommitCallback("running", LLLiveLSLEditor::onRunningCheckboxClicked, this);
-	getChildView("running")->setEnabled(FALSE);
+	getChildView("running")->setEnabled(false);
 
 	childSetAction("Reset",&LLLiveLSLEditor::onReset,this);
 	getChildView("Reset")->setEnabled(TRUE);
 
 	mMonoCheckbox =	getChild<LLCheckBoxCtrl>("mono");
 	childSetCommitCallback("mono", &LLLiveLSLEditor::onMonoCheckboxClicked, this);
-	getChildView("mono")->setEnabled(FALSE);
+	getChildView("mono")->setEnabled(false);
 
 	mScriptEd->mEditor->makePristine();
 	mScriptEd->mEditor->setFocus(TRUE);
@@ -2334,7 +2334,7 @@ void LLLiveLSLEditor::draw()
 			else
 			{
 				runningCheckbox->setLabel(getString("public_objects_can_not_run"));
-				runningCheckbox->setEnabled(FALSE);
+				runningCheckbox->setEnabled(false);
 				// *FIX: Set it to false so that the ui is correct for
 				// a box that is released to public. It could be
 				// incorrect after a release/claim cycle, but will be
@@ -2346,7 +2346,7 @@ void LLLiveLSLEditor::draw()
 		else
 		{
 			runningCheckbox->setLabel(getString("public_objects_can_not_run"));
-			runningCheckbox->setEnabled(FALSE);
+			runningCheckbox->setEnabled(false);
 
 			// *FIX: Set it to false so that the ui is correct for
 			// a box that is released to public. It could be
@@ -2361,8 +2361,8 @@ void LLLiveLSLEditor::draw()
 		// HACK: Display this information in the title bar.
 		// Really ought to put in main window.
 		setTitle(LLTrans::getString("ObjectOutOfRange"));
-		runningCheckbox->setEnabled(FALSE);
-		mMonoCheckbox->setEnabled(FALSE);
+		runningCheckbox->setEnabled(false);
+		mMonoCheckbox->setEnabled(false);
 		// object may have fallen out of range.
 		mHaveRunningInfo = FALSE;
 	}

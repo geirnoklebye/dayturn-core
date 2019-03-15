@@ -1306,8 +1306,8 @@ void FSPanelPick::setAvatarId(const LLUUID& avatar_id)
 
 	if (getSelfProfile() && !getEmbedded())
 	{
-		mPickName->setEnabled(TRUE);
-		mPickDescription->setEnabled(TRUE);
+		mPickName->setEnabled(true);
+		mPickDescription->setEnabled(true);
 		mSetCurrentLocationButton->setVisible(true);
 	}
 }
@@ -1334,7 +1334,7 @@ bool FSPanelPick::postBuild()
 	mPickDescription->setKeystrokeCallback(boost::bind(&FSPanelPick::onPickChanged, this, _1));
 	mPickDescription->setFocusReceivedCallback(boost::bind(&FSPanelPick::onDescriptionFocusReceived, this));
 
-	getChild<LLUICtrl>("pick_location")->setEnabled(FALSE);
+	getChild<LLUICtrl>("pick_location")->setEnabled(false);
 
 	return true;
 }
@@ -1369,7 +1369,7 @@ void FSPanelPick::processProperties(void* data, EAvatarProcessorType type)
 	setSnapshotId(pick_info->snapshot_id);
 	if (!getSelfProfile() || getEmbedded())
 	{
-		mSnapshotCtrl->setEnabled(FALSE);
+		mSnapshotCtrl->setEnabled(false);
 	}
 	setPickName(pick_info->name);
 	setPickDesc(pick_info->desc);

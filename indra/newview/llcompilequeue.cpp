@@ -206,7 +206,7 @@ LLFloaterScriptQueue::~LLFloaterScriptQueue()
 bool LLFloaterScriptQueue::postBuild()
 {
 	childSetAction("close",onCloseBtn,this);
-	getChildView("close")->setEnabled(FALSE);
+	getChildView("close")->setEnabled(false);
 	getChild<LLUICtrl>("copy_btn")->setCommitCallback(boost::bind(&LLFloaterScriptQueue::onClickCopyToClipboard, this));
 	setVisible(true);
 	return true;

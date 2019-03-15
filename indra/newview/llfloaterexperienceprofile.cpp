@@ -736,7 +736,7 @@ void LLFloaterExperienceProfile::updatePermission( const LLSD& permission )
 void LLFloaterExperienceProfile::experienceAllowed()
 {
     LLButton* button=getChild<LLButton>(BTN_ALLOW);
-    button->setEnabled(FALSE);
+    button->setEnabled(false);
 
     button=getChild<LLButton>(BTN_FORGET);
     button->setEnabled(TRUE);
@@ -751,7 +751,7 @@ void LLFloaterExperienceProfile::experienceForgotten()
     button->setEnabled(TRUE);
 
     button=getChild<LLButton>(BTN_FORGET);
-    button->setEnabled(FALSE);
+    button->setEnabled(false);
 
     button=getChild<LLButton>(BTN_BLOCK);
     button->setEnabled(TRUE);
@@ -766,7 +766,7 @@ void LLFloaterExperienceProfile::experienceBlocked()
     button->setEnabled(TRUE);
 
     button=getChild<LLButton>(BTN_BLOCK);
-    button->setEnabled(FALSE);
+    button->setEnabled(false);
 }
 
 void LLFloaterExperienceProfile::onClose( bool app_quitting )

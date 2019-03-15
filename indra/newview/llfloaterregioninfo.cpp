@@ -811,7 +811,7 @@ void LLPanelRegionInfo::enableButton(const std::string& btn_name, BOOL enable)
 void LLPanelRegionInfo::disableButton(const std::string& btn_name)
 {
 	LLView* button = findChildView(btn_name);
-	if (button) button->setEnabled(FALSE);
+	if (button) button->setEnabled(false);
 }
 
 void LLPanelRegionInfo::initCtrl(const std::string& name)
@@ -832,7 +832,7 @@ bool LLPanelRegionGeneralInfo::refreshFromRegion(LLViewerRegion* region)
 {
 	BOOL allow_modify = gAgent.isGodlike() || (region && region->canManageEstate());
 	setCtrlsEnabled(allow_modify);
-	getChildView("apply_btn")->setEnabled(FALSE);
+	getChildView("apply_btn")->setEnabled(false);
 	getChildView("access_text")->setEnabled(allow_modify);
 	// getChildView("access_combo")->setEnabled(allow_modify);
 	// now set in processRegionInfo for teen grid detection
@@ -1129,8 +1129,8 @@ bool LLPanelRegionDebugInfo::refreshFromRegion(LLViewerRegion* region)
 {
 	BOOL allow_modify = gAgent.isGodlike() || (region && region->canManageEstate());
 	setCtrlsEnabled(allow_modify);
-	getChildView("apply_btn")->setEnabled(FALSE);
-	getChildView("target_avatar_name")->setEnabled(FALSE);
+	getChildView("apply_btn")->setEnabled(false);
+	getChildView("target_avatar_name")->setEnabled(false);
 	
 	getChildView("choose_avatar_btn")->setEnabled(allow_modify);
 	getChildView("return_scripts")->setEnabled(allow_modify && !mTargetAvatar.isNull());
@@ -1452,7 +1452,7 @@ bool LLPanelRegionTerrainInfo::refreshFromRegion(LLViewerRegion* region)
 						|| (region && region->isEstateManager());
 	setCtrlsEnabled(owner_or_god_or_manager);
 
-	getChildView("apply_btn")->setEnabled(FALSE);
+	getChildView("apply_btn")->setEnabled(false);
 
 	if (region)
 	{

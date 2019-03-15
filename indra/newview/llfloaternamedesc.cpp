@@ -186,7 +186,7 @@ void LLFloaterNameDesc::doCommit()
 //-----------------------------------------------------------------------------
 void LLFloaterNameDesc::onBtnOK( )
 {
-	getChildView("ok_btn")->setEnabled(FALSE); // don't allow inadvertent extra uploads
+	getChildView("ok_btn")->setEnabled(false); // don't allow inadvertent extra uploads
 	
 	LLAssetStorage::LLStoreAssetCallback callback;
 	S32 expected_upload_cost = getExpectedUploadCost();

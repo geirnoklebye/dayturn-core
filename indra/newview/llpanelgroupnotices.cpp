@@ -269,7 +269,7 @@ bool LLPanelGroupNotices::postBuild()
 //
 //	mCreateInventoryName =  getChild<LLLineEditor>("create_inventory_name",recurse);
 //	mCreateInventoryName->setTabStop(FALSE);
-//	mCreateInventoryName->setEnabled(FALSE);
+//	mCreateInventoryName->setEnabled(false);
 //
 //	mCreateInventoryIcon = getChild<LLIconCtrl>("create_inv_icon",recurse);
 //	mCreateInventoryIcon->setVisible(false);
@@ -279,7 +279,7 @@ bool LLPanelGroupNotices::postBuild()
 //
 //	mBtnRemoveAttachment = getChild<LLButton>("remove_attachment",recurse);
 //	mBtnRemoveAttachment->setClickedCallback(onClickRemoveAttachment, this);
-//	mBtnRemoveAttachment->setEnabled(FALSE);
+//	mBtnRemoveAttachment->setEnabled(false);
 
 	// View
 	mViewSubject = getChild<LLLineEditor>("view_subject",recurse);
@@ -287,7 +287,7 @@ bool LLPanelGroupNotices::postBuild()
 
 	mViewInventoryName =  getChild<LLLineEditor>("view_inventory_name",recurse);
 	mViewInventoryName->setTabStop(FALSE);
-	mViewInventoryName->setEnabled(FALSE);
+	mViewInventoryName->setEnabled(false);
 
 	mViewInventoryIcon = getChild<LLIconCtrl>("view_inv_icon",recurse);
 	mViewInventoryIcon->setVisible(false);
@@ -331,7 +331,7 @@ void LLPanelGroupNotices::activate()
 
 	// Always disabled to stop direct editing of attachment names
 //	mCreateInventoryName->setEnabled(FALSE);
-	mViewInventoryName->setEnabled(FALSE);
+	mViewInventoryName->setEnabled(false);
 
 	// If we can receive notices, grab them right away.
 	if (can_receive)
@@ -396,7 +396,7 @@ void LLPanelGroupNotices::onClickOpenAttachment(void* data)
 
 	self->mInventoryOffer->forceResponse(IOR_ACCEPT);
 	self->mInventoryOffer = NULL;
-	self->mBtnOpenAttachment->setEnabled(FALSE);
+	self->mBtnOpenAttachment->setEnabled(false);
 }
 
 //void LLPanelGroupNotices::onClickSendMessage(void* data)
@@ -556,7 +556,7 @@ void LLPanelGroupNotices::processNotices(LLMessageSystem* msg)
 		{
 			// Only one entry, the dummy entry.
 			mNoticesList->setCommentText(mNoNoticesStr);
-			mNoticesList->setEnabled(FALSE);
+			mNoticesList->setEnabled(false);
 			return;
 		}
 
@@ -645,7 +645,7 @@ void LLPanelGroupNotices::showNotice(const std::string& subject,
 //	arrangeNoticeView(VIEW_PAST_NOTICE);
 // [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-26 (Catznip-3.2)
 	mPanelViewNotice->setVisible(true);
-	mBtnOpenAttachment->setEnabled(FALSE);
+	mBtnOpenAttachment->setEnabled(false);
 // [/SL:KB]
 
 	if(mViewSubject) mViewSubject->setText(subject);
@@ -672,13 +672,13 @@ void LLPanelGroupNotices::showNotice(const std::string& subject,
 		ss << "        " << inventory_name;
 
 		mViewInventoryName->setText(ss.str());
-		mBtnOpenAttachment->setEnabled(TRUE);
+		mBtnOpenAttachment->setEnabled(true);
 	}
 	else
 	{
 		mViewInventoryName->clear();
 		mViewInventoryIcon->setVisible(false);
-		mBtnOpenAttachment->setEnabled(FALSE);
+		mBtnOpenAttachment->setEnabled(false);
 	}
 }
 

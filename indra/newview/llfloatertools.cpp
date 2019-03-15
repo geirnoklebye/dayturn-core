@@ -1424,7 +1424,7 @@ void LLFloaterTools::getMediaState()
 		  &&first_object->permModify() 
 	      ))
 	{
-		getChildView("add_media")->setEnabled(FALSE);
+		getChildView("add_media")->setEnabled(false);
 		media_info->clear();
 		clearMediaSettings();
 		return;
@@ -1435,7 +1435,7 @@ void LLFloaterTools::getMediaState()
 	
 	if(!has_media_capability)
 	{
-		getChildView("add_media")->setEnabled(FALSE);
+		getChildView("add_media")->setEnabled(false);
 		LL_WARNS("LLFloaterToolsMedia") << "Media not enabled (no capability) in this region!" << LL_ENDL;
 		clearMediaSettings();
 		return;

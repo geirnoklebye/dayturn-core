@@ -295,12 +295,12 @@ bool LLNavigationBar::postBuild()
 
 	mCmbLocation= getChild<LLLocationInputCtrl>("location_combo");
 
-	mBtnBack->setEnabled(FALSE);
+	mBtnBack->setEnabled(false);
 	mBtnBack->setClickedCallback(boost::bind(&LLNavigationBar::onBackButtonClicked, this));
 	mBtnBack->setHeldDownCallback(boost::bind(&LLNavigationBar::onBackOrForwardButtonHeldDown, this,_1, _2));
 	mBtnBack->setClickDraggingCallback(boost::bind(&LLNavigationBar::showTeleportHistoryMenu, this,_1));
 	
-	mBtnForward->setEnabled(FALSE);
+	mBtnForward->setEnabled(false);
 	mBtnForward->setClickedCallback(boost::bind(&LLNavigationBar::onForwardButtonClicked, this));
 	mBtnForward->setHeldDownCallback(boost::bind(&LLNavigationBar::onBackOrForwardButtonHeldDown, this, _1, _2));
 	mBtnForward->setClickDraggingCallback(boost::bind(&LLNavigationBar::showTeleportHistoryMenu, this,_1));
