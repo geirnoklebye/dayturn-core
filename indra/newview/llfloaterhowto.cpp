@@ -42,11 +42,11 @@ LLFloaterHowTo::LLFloaterHowTo(const Params& key) :
     mShowPageTitle = false;
 }
 
-BOOL LLFloaterHowTo::postBuild()
+bool LLFloaterHowTo::postBuild()
 {
     LLFloaterWebContent::postBuild();
 
-    return TRUE;
+    return true;
 }
 
 void LLFloaterHowTo::onOpen(const LLSD& key)

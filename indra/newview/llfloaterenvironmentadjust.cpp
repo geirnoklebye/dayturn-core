@@ -82,7 +82,7 @@ LLFloaterEnvironmentAdjust::~LLFloaterEnvironmentAdjust()
 {}
 
 //-------------------------------------------------------------------------
-BOOL LLFloaterEnvironmentAdjust::postBuild()
+bool LLFloaterEnvironmentAdjust::postBuild()
 {
     getChild<LLUICtrl>(FIELD_SKY_AMBIENT_LIGHT)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onAmbientLightChanged(); });
     getChild<LLUICtrl>(FIELD_SKY_BLUE_HORIZON)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onBlueHorizonChanged(); });
@@ -118,7 +118,7 @@ BOOL LLFloaterEnvironmentAdjust::postBuild()
     getChild<LLTextureCtrl>(FIELD_WATER_NORMAL_MAP)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onWaterMapChanged(); });
 
     refresh();
-    return TRUE;
+    return true;
 }
 
 void LLFloaterEnvironmentAdjust::onOpen(const LLSD& key)

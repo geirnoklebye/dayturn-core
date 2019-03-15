@@ -443,7 +443,7 @@ public:
 	/*virtual*/ void setVisible(BOOL visible);
 	/*virtual*/ bool addChild(LLView* view, S32 tab_group = 0);
 	/*virtual*/ void removeChild( LLView* ctrl);
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	
 	virtual bool hasAccelerator(const KEY &key, const MASK &mask) const;
 	virtual BOOL handleAcceleratorKey(KEY key, MASK mask);

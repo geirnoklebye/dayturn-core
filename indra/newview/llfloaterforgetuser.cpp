@@ -56,7 +56,7 @@ LLFloaterForgetUser::~LLFloaterForgetUser()
     }
 }
 
-BOOL LLFloaterForgetUser::postBuild()
+bool LLFloaterForgetUser::postBuild()
 {
     mScrollList = getChild<LLScrollListCtrl>("user_list");
 
@@ -125,7 +125,7 @@ BOOL LLFloaterForgetUser::postBuild()
     button->setEnabled(enable_button);
     button->setCommitCallback(boost::bind(&LLFloaterForgetUser::onForgetClicked, this));
 
-    return TRUE;
+    return true;
 }
 
 void LLFloaterForgetUser::onForgetClicked()

@@ -45,7 +45,7 @@ public:
     LLFloaterOutfitSnapshot(const LLSD& key);
     /*virtual*/ ~LLFloaterOutfitSnapshot();
 
-    /*virtual*/ BOOL postBuild();
+    /*virtual*/ bool postBuild();
     /*virtual*/ void onOpen(const LLSD& key);
 
     static void update();
@@ -57,7 +57,6 @@ public:
     /*virtual*/ void saveTexture();
 
     const LLRect& getThumbnailPlaceholderRect() { return mThumbnailPlaceholder->getRect(); }
-
     void setOutfitID(LLUUID id) { mOutfitID = id; }
     LLUUID getOutfitID() { return mOutfitID; }
     void setGallery(LLOutfitGallery* gallery) { mOutfitGallery = gallery; }

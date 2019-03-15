@@ -66,7 +66,7 @@ LLPanelGroupCreate::~LLPanelGroupCreate()
 {
 }
 
-BOOL LLPanelGroupCreate::postBuild()
+bool LLPanelGroupCreate::postBuild()
 {
     childSetCommitCallback("back", boost::bind(&LLPanelGroupCreate::onBackBtnClick, this), NULL);
 
@@ -87,7 +87,7 @@ BOOL LLPanelGroupCreate::postBuild()
     mInsignia->setAllowLocalTexture(FALSE);
     mInsignia->setCanApplyImmediately(FALSE);
 
-    return TRUE;
+    return true;
 }
 
 void LLPanelGroupCreate::onOpen(const LLSD& key)

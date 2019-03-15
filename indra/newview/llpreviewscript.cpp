@@ -157,7 +157,7 @@ public:
 	LLFloaterScriptSearch(LLScriptEdCore* editor_core);
 	~LLFloaterScriptSearch();
 
-	/*virtual*/	BOOL	postBuild();
+	/*virtual*/	bool	postBuild();
 	static void show(LLScriptEdCore* editor_core);
 	static void onBtnSearch(void* userdata);
 	void handleBtnSearch();
@@ -211,7 +211,7 @@ LLFloaterScriptSearch::LLFloaterScriptSearch(LLScriptEdCore* editor_core)
 	}
 }
 
-BOOL LLFloaterScriptSearch::postBuild()
+bool LLFloaterScriptSearch::postBuild()
 {
 	mReplaceBox = getChild<LLLineEditor>("replace_text");
 	mSearchBox = getChild<LLLineEditor>("search_text");
@@ -223,7 +223,7 @@ BOOL LLFloaterScriptSearch::postBuild()
 
 	setDefaultBtn("search_btn");
 
-	return TRUE;
+	return true;
 }
 
 //static 
@@ -460,7 +460,7 @@ void LLLiveLSLEditor::onToggleExperience( LLUICtrl *ui, void* userdata )
 	self->updateExperiencePanel();
 }
 
-BOOL LLScriptEdCore::postBuild()
+bool LLScriptEdCore::postBuild()
 {
 	mErrorList = getChild<LLScrollListCtrl>("lsl errors");
 
@@ -488,7 +488,7 @@ BOOL LLScriptEdCore::postBuild()
 	LLSyntaxIdLSL::getInstance()->initialize();
 	processKeywords();
 
-	return TRUE;
+	return true;
 }
 
 void LLScriptEdCore::processKeywords()
@@ -1576,7 +1576,7 @@ LLPreviewLSL::LLPreviewLSL(const LLSD& key )
 }
 
 // virtual
-BOOL LLPreviewLSL::postBuild()
+bool LLPreviewLSL::postBuild()
 {
 	const LLInventoryItem* item = getItem();
 
@@ -2022,7 +2022,7 @@ LLLiveLSLEditor::LLLiveLSLEditor(const LLSD& key) :
 	mFactoryMap["script ed panel"] = LLCallbackMap(LLLiveLSLEditor::createScriptEdPanel, this);
 }
 
-BOOL LLLiveLSLEditor::postBuild()
+bool LLLiveLSLEditor::postBuild()
 {
 	childSetCommitCallback("running", LLLiveLSLEditor::onRunningCheckboxClicked, this);
 	getChildView("running")->setEnabled(FALSE);

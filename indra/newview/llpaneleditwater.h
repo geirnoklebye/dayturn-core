@@ -65,7 +65,7 @@ class LLPanelSettingsWaterMainTab : public LLPanelSettingsWater
 public:
                             LLPanelSettingsWaterMainTab();
 
-    virtual BOOL	        postBuild() override;
+    virtual bool	        postBuild() override;
     virtual void	        setEnabled(BOOL enabled) override;
 
 protected:

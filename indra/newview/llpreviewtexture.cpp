@@ -129,7 +129,7 @@ void LLPreviewTexture::populateRatioList()
 }
 
 // virtual
-BOOL LLPreviewTexture::postBuild()
+bool LLPreviewTexture::postBuild()
 {
 	if (mCopyToInv) 
 	{

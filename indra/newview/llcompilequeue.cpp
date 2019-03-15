@@ -203,13 +203,13 @@ LLFloaterScriptQueue::~LLFloaterScriptQueue()
 {
 }
 
-BOOL LLFloaterScriptQueue::postBuild()
+bool LLFloaterScriptQueue::postBuild()
 {
 	childSetAction("close",onCloseBtn,this);
 	getChildView("close")->setEnabled(FALSE);
 	getChild<LLUICtrl>("copy_btn")->setCommitCallback(boost::bind(&LLFloaterScriptQueue::onClickCopyToClipboard, this));
 	setVisible(true);
-	return TRUE;
+	return true;
 }
 
 // static

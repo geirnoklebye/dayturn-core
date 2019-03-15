@@ -41,7 +41,7 @@ class LLFloaterNameDesc : public LLFloater
 public:
 	LLFloaterNameDesc(const LLSD& filename);
 	virtual ~LLFloaterNameDesc();
-	virtual BOOL postBuild();
+	virtual bool postBuild();
 	
 	void		onBtnOK();
 	void		onBtnCancel();
@@ -64,21 +64,21 @@ class LLFloaterSoundPreview : public LLFloaterNameDesc
 {
 public:
 	LLFloaterSoundPreview(const LLSD& filename );
-	virtual BOOL postBuild();
+	virtual bool postBuild();
 };
 
 class LLFloaterAnimPreview : public LLFloaterNameDesc
 {
 public:
 	LLFloaterAnimPreview(const LLSD& filename );
-	virtual BOOL postBuild();
+	virtual bool postBuild();
 };
 
 class LLFloaterScriptPreview : public LLFloaterNameDesc
 {
 public:
 	LLFloaterScriptPreview(const LLSD& filename );
-	virtual BOOL postBuild();
+	virtual bool postBuild();
 };
 
 #endif  // LL_LLFLOATERNAMEDESC_H

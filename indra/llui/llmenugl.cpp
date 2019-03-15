@@ -1899,7 +1899,7 @@ void LLMenuGL::removeChild( LLView* ctrl)
 	return LLUICtrl::removeChild(ctrl);
 }
 
-BOOL LLMenuGL::postBuild()
+bool LLMenuGL::postBuild()
 {
 	createJumpKeys();
 	return LLUICtrl::postBuild();

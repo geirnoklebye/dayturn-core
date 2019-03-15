@@ -63,7 +63,7 @@ private:
 	bool onSellToAnyoneConfirmed(const LLSD& notification, const LLSD& response);	// Sell confirmation clicked
 	static void onClickStartAuction(void* data);
 
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 
 	void doResetParcel();
 	void doSellToAnyone();

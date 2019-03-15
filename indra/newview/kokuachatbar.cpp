@@ -50,7 +50,7 @@ KokuaChatBar::~KokuaChatBar()
 	releaseFocus();
 }
 
-BOOL KokuaChatBar::postBuild()
+bool KokuaChatBar::postBuild()
 {
 	mInputEditor = getChild<LLChatEntry>("kc_chat_editor");
 	mInputEditor->setCommitOnFocusLost( FALSE );
@@ -69,7 +69,7 @@ BOOL KokuaChatBar::postBuild()
 
 	setTitle(LLTrans::getString("KokuaChatBar"));
 
-	return TRUE;
+	return true;
 }
 
 void KokuaChatBar::handleReshape(const LLRect& new_rect, bool by_user)

@@ -74,7 +74,7 @@ LLFloaterBump::~LLFloaterBump()
 {
 }
 
-BOOL LLFloaterBump::postBuild()
+bool LLFloaterBump::postBuild()
 {
 	mList = getChild<LLScrollListCtrl>("bump_list");
 	mList->setAllowMultipleSelection(false);
@@ -86,7 +86,7 @@ BOOL LLFloaterBump::postBuild()
 	mPopupMenu->setItemVisible(std::string("Never use impostor"), false);
 	mPopupMenu->setItemVisible(std::string("Impostor seperator"), false);
 
-	return TRUE;
+	return true;
 }
 // virtual
 void LLFloaterBump::onOpen(const LLSD& key)

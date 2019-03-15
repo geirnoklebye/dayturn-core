@@ -54,7 +54,7 @@ LLFloaterBuy::LLFloaterBuy(const LLSD& key)
 {
 }
 
-BOOL LLFloaterBuy::postBuild()
+bool LLFloaterBuy::postBuild()
 {
 	getChildView("object_list")->setEnabled(FALSE);
 	getChildView("item_list")->setEnabled(FALSE);
@@ -70,7 +70,7 @@ BOOL LLFloaterBuy::postBuild()
 	// mid-session and the saved rect is off-center.
 	center();
 
-	return TRUE;
+	return true;
 }
 
 LLFloaterBuy::~LLFloaterBuy()

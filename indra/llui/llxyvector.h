@@ -66,7 +66,7 @@ public:
 
 
     virtual ~LLXYVector();
-    /*virtual*/ BOOL postBuild();
+    /*virtual*/ bool postBuild();
 
     virtual BOOL	handleHover(S32 x, S32 y, MASK mask);
     virtual BOOL	handleMouseUp(S32 x, S32 y, MASK mask);

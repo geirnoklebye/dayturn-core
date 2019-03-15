@@ -40,7 +40,7 @@ class LLFloaterSaveCameraPreset : public LLModalDialog
 public:
 	LLFloaterSaveCameraPreset(const LLSD &key);
 
-	/*virtual*/	BOOL	postBuild();
+	/*virtual*/	bool	postBuild();
 	/*virtual*/ void	onOpen(const LLSD& key);
 
 	void onBtnSave();

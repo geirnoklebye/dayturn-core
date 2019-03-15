@@ -54,7 +54,7 @@ public:
     LLPublishClassifiedFloater(const LLSD& key);
     virtual ~LLPublishClassifiedFloater();
 
-    BOOL postBuild() override;
+    bool postBuild() override;
 
     void setPrice(S32 price);
     S32 getPrice();
@@ -74,7 +74,7 @@ public:
     LLPanelProfileClassifieds();
     /*virtual*/ ~LLPanelProfileClassifieds();
 
-    BOOL postBuild() override;
+    bool postBuild() override;
 
     void onOpen(const LLSD& key) override;
 
@@ -125,7 +125,7 @@ public:
 
     /*virtual*/ ~LLPanelProfileClassified();
 
-    BOOL postBuild() override;
+    bool postBuild() override;
 
     void onOpen(const LLSD& key) override;
 

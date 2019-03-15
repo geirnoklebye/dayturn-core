@@ -35,7 +35,7 @@ class LLPanelPresetsCameraPulldown : public LLPanelPulldown
 {
  public:
 	LLPanelPresetsCameraPulldown();
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	void populatePanel();
 	
  private:

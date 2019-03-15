@@ -126,7 +126,7 @@ class LLPanelLandExperiences
 {
 public:	
 	LLPanelLandExperiences(LLSafeHandle<LLParcelSelection>& parcelp);
-	virtual BOOL postBuild();
+	virtual bool postBuild();
 	void refresh();
 
 	void experienceAdded(const LLUUID& id, U32 xp_type, U32 access_type);
@@ -156,7 +156,7 @@ public:
         return ((parcelp) ? (parcelp->getArea() >= MINIMUM_PARCEL_SIZE) : false);
     }   
 
-    virtual BOOL        postBuild() override;
+    virtual bool        postBuild() override;
     virtual void        refresh() override;
 
     virtual LLParcel *  getParcel() override;
@@ -319,7 +319,7 @@ LLFloaterLand::LLFloaterLand(const LLSD& seed)
 	LLViewerParcelMgr::getInstance()->addObserver( sObserver );
 }
 
-BOOL LLFloaterLand::postBuild()
+bool LLFloaterLand::postBuild()
 {	
 	setVisibleCallback(boost::bind(&LLFloaterLand::onVisibilityChanged, this, _2));
 	
@@ -332,7 +332,7 @@ BOOL LLFloaterLand::postBuild()
 		tab->selectTab(sLastTab);
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -445,7 +445,7 @@ LLPanelLandGeneral::LLPanelLandGeneral(LLParcelSelectionHandle& parcel)
 {
 }
 
-BOOL LLPanelLandGeneral::postBuild()
+bool LLPanelLandGeneral::postBuild()
 {
 	mEditName = getChild<LLLineEditor>("Name");
 	mEditName->setCommitCallback(onCommitAny, this);	
@@ -545,7 +545,7 @@ BOOL LLPanelLandGeneral::postBuild()
 
 	if(gDisconnected)
 	{
-		return TRUE;
+		return true;
 	}
 
 	// note: on region change this will not be re checked, should not matter on Agni as
@@ -567,7 +567,7 @@ BOOL LLPanelLandGeneral::postBuild()
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -1192,7 +1192,7 @@ LLPanelLandObjects::LLPanelLandObjects(LLParcelSelectionHandle& parcel)
 
 
 
-BOOL LLPanelLandObjects::postBuild()
+bool LLPanelLandObjects::postBuild()
 {
 	
 	mFirstReply = TRUE;
@@ -1246,7 +1246,7 @@ BOOL LLPanelLandObjects::postBuild()
 	mOwnerList->setDoubleClickCallback(onDoubleClickOwner, this);
 	mOwnerList->setContextMenu(LLScrollListCtrl::MENU_AVATAR);
 
-	return TRUE;
+	return true;
 }
 
 
@@ -1935,7 +1935,7 @@ LLPanelLandOptions::LLPanelLandOptions(LLParcelSelectionHandle& parcel)
 }
 
 
-BOOL LLPanelLandOptions::postBuild()
+bool LLPanelLandOptions::postBuild()
 {
 	mCheckEditObjects = getChild<LLCheckBoxCtrl>( "edit objects check");
 	childSetCommitCallback("edit objects check", onCommitAny, this);
@@ -2026,7 +2026,7 @@ BOOL LLPanelLandOptions::postBuild()
 	mLandingTypeCombo = getChild<LLComboBox>( "landing type");
 	childSetCommitCallback("landing type", onCommitAny, this);
 
-	return TRUE;
+	return true;
 }
 
 
@@ -2443,7 +2443,7 @@ LLPanelLandAccess::LLPanelLandAccess(LLParcelSelectionHandle& parcel)
 }
 
 
-BOOL LLPanelLandAccess::postBuild()
+bool LLPanelLandAccess::postBuild()
 {
 	childSetCommitCallback("public_access", onCommitPublicAccess, this);
 	childSetCommitCallback("limit_payment", onCommitAny, this);
@@ -2474,7 +2474,7 @@ BOOL LLPanelLandAccess::postBuild()
 		mListBanned->setAlternateSort();
 	}
 
-	return TRUE;
+	return true;
 }
 
 
@@ -3053,12 +3053,12 @@ LLPanelLandCovenant::~LLPanelLandCovenant()
 {
 }
 
-BOOL LLPanelLandCovenant::postBuild()
+bool LLPanelLandCovenant::postBuild()
 {
 	mLastRegionID = LLUUID::null;
 	mNextUpdateTime = 0;
 
-	return TRUE;
+	return true;
 }
 
 // virtual
@@ -3226,7 +3226,7 @@ LLPanelLandExperiences::LLPanelLandExperiences( LLSafeHandle<LLParcelSelection>&
 }
 
 
-BOOL LLPanelLandExperiences::postBuild()
+bool LLPanelLandExperiences::postBuild()
 {
 	mAllowed = setupList("panel_allowed", EXPERIENCE_KEY_TYPE_ALLOWED, AL_ALLOW_EXPERIENCE);
 	mBlocked = setupList("panel_blocked", EXPERIENCE_KEY_TYPE_BLOCKED, AL_BLOCK_EXPERIENCE);
@@ -3328,7 +3328,7 @@ LLPanelLandEnvironment::LLPanelLandEnvironment(LLParcelSelectionHandle& parcel) 
 {
 }
 
-BOOL LLPanelLandEnvironment::postBuild()
+bool LLPanelLandEnvironment::postBuild()
 {
     if (!LLPanelEnvironmentInfo::postBuild())
         return FALSE;
@@ -3338,7 +3338,7 @@ BOOL LLPanelLandEnvironment::postBuild()
     getChild<LLUICtrl>(PNL_REGION_MSG)->setVisible(FALSE);
     getChild<LLUICtrl>(PNL_ENVIRONMENT_ALTITUDES)->setVisible(TRUE);
 
-    return TRUE;
+    return true;
 }
 
 void LLPanelLandEnvironment::refresh()

@@ -138,7 +138,7 @@ LLFloaterExperienceProfile::~LLFloaterExperienceProfile()
 
 }
 
-BOOL LLFloaterExperienceProfile::postBuild()
+bool LLFloaterExperienceProfile::postBuild()
 {
 
     if (mExperienceId.notNull())
@@ -188,7 +188,7 @@ BOOL LLFloaterExperienceProfile::postBuild()
         changeToEdit();
     }
 
-    return TRUE;
+    return true;
 }
 
 void LLFloaterExperienceProfile::experienceCallback(LLHandle<LLFloaterExperienceProfile> handle,  const LLSD& experience )

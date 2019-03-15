@@ -64,7 +64,7 @@ public:
 
 	virtual ~LLRadioGroup();
 	
-	virtual BOOL postBuild();
+	virtual bool postBuild();
 	
 	virtual BOOL handleKeyHere(KEY key, MASK mask);
 

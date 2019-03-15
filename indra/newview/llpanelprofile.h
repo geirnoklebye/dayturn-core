@@ -88,7 +88,7 @@ public:
 
 	void setAvatarId(const LLUUID& avatar_id) override;
 
-	BOOL postBuild() override;
+	bool postBuild() override;
 
 	void resetData() override;
 
@@ -234,7 +234,7 @@ public:
 
 	void onOpen(const LLSD& key) override;
 
-	BOOL postBuild() override;
+	bool postBuild() override;
 
 	void resetData() override;
 
@@ -275,7 +275,7 @@ public:
 
 	void onOpen(const LLSD& key) override;
 
-	BOOL postBuild() override;
+	bool postBuild() override;
 
     void processProperties(const LLAvatarData* avatar_data);
 
@@ -330,7 +330,7 @@ public:
 
 	void onOpen(const LLSD& key) override;
 
-	BOOL postBuild() override;
+	bool postBuild() override;
 
     void processProperties(LLAvatarNotes* avatar_notes);
 
@@ -366,7 +366,7 @@ public:
     LLPanelProfile();
     /*virtual*/ ~LLPanelProfile();
 
-    BOOL postBuild() override;
+    bool postBuild() override;
 
     void updateData() override;
     void refreshName();

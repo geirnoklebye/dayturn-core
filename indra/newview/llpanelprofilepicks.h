@@ -50,7 +50,7 @@ public:
     LLPanelProfilePicks();
     /*virtual*/ ~LLPanelProfilePicks();
 
-    BOOL postBuild() override;
+    bool postBuild() override;
 
     void onOpen(const LLSD& key) override;
 
@@ -110,7 +110,7 @@ public:
 
     /*virtual*/ ~LLPanelProfilePick();
 
-    BOOL postBuild() override;
+    bool postBuild() override;
 
     void setAvatarId(const LLUUID& avatar_id) override;
 

@@ -50,14 +50,14 @@ LLFloaterMyScripts::LLFloaterMyScripts(const LLSD& seed)
 {
 }
 
-BOOL LLFloaterMyScripts::postBuild()
+bool LLFloaterMyScripts::postBuild()
 {
 	childSetAction("refresh_list_btn", onClickRefresh, this);
 
 	std::string msg_waiting = LLTrans::getString("ScriptLimitsRequestWaiting");
 	getChild<LLUICtrl>("loading_text")->setValue(LLSD(msg_waiting));
 	mAttachmentDetailsRequested = requestAttachmentDetails();
-	return TRUE;
+	return true;
 }
 
 // virtual

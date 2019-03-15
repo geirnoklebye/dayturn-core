@@ -148,11 +148,11 @@ mAvatarTabIndex(0)
 //-----------------------------------------------------------------------------
 // postBuild()
 //-----------------------------------------------------------------------------
-BOOL LLFloaterModelPreview::postBuild()
+bool LLFloaterModelPreview::postBuild()
 {
 	if (!LLFloater::postBuild())
 	{
-		return FALSE;
+		return false;
 	}
 
 	childSetCommitCallback("cancel_btn", onCancel, this);
@@ -290,7 +290,7 @@ BOOL LLFloaterModelPreview::postBuild()
 		mCalculateBtn->setEnabled(false);
 	}
 
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------

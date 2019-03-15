@@ -79,7 +79,7 @@ public:
                                 LLFloaterEditExtDayCycle(const LLSD &key);
     virtual                     ~LLFloaterEditExtDayCycle();
 
-    virtual BOOL                postBuild() override;
+    virtual bool                postBuild() override;
     virtual void                onOpen(const LLSD& key) override;
     virtual void                onClose(bool app_quitting) override;
     //virtual void                onFocusReceived() override;

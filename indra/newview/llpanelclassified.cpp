@@ -106,7 +106,7 @@ LLPanelClassifiedInfo::~LLPanelClassifiedInfo()
 	sAllPanels.remove(this);
 }
 
-BOOL LLPanelClassifiedInfo::postBuild()
+bool LLPanelClassifiedInfo::postBuild()
 {
 	childSetAction("show_on_map_btn", boost::bind(&LLPanelClassifiedInfo::onMapClick, this));
 	childSetAction("teleport_btn", boost::bind(&LLPanelClassifiedInfo::onTeleportClick, this));
@@ -120,7 +120,7 @@ BOOL LLPanelClassifiedInfo::postBuild()
 	mSnapshotCtrl = getChild<LLTextureCtrl>("classified_snapshot");
 	mSnapshotRect = getDefaultSnapshotRect();
 
-	return TRUE;
+	return true;
 }
 
 void LLPanelClassifiedInfo::reshape(S32 width, S32 height, BOOL called_from_parent /* = TRUE */)

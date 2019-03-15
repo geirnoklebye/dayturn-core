@@ -92,7 +92,7 @@ LLSidepanelAppearance::~LLSidepanelAppearance()
 }
 
 // virtual
-BOOL LLSidepanelAppearance::postBuild()
+bool LLSidepanelAppearance::postBuild()
 {
 	mOpenOutfitBtn = getChild<LLButton>("openoutfit_btn");
 	mOpenOutfitBtn->setClickedCallback(boost::bind(&LLSidepanelAppearance::onOpenOutfitButtonClicked, this));
@@ -142,7 +142,7 @@ BOOL LLSidepanelAppearance::postBuild()
 
 	setWearablesLoading(gAgentWearables.isCOFChangeInProgress());
 
-	return TRUE;
+	return true;
 }
 
 // virtual

@@ -125,7 +125,7 @@ FSFloaterImport::~FSFloaterImport()
 	gSavedSettings.setBOOL("ShowNewInventory", mSavedSettingShowNewInventory);
 }
 
-BOOL FSFloaterImport::postBuild()
+bool FSFloaterImport::postBuild()
 {
 	if (LLAgentBenefitsMgr::current().getTextureUploadCost() == 0 
 		|| gAgent.getRegion()->getCentralBakeVersion() > 0)
@@ -137,7 +137,7 @@ BOOL FSFloaterImport::postBuild()
 	loadFile();
 	populateBackupInfo();
 	
-	return TRUE;
+	return true;
 }
 
 // static

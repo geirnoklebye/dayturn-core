@@ -60,7 +60,7 @@ public:
 
     void                    setActive(bool active);
 
-    virtual BOOL            postBuild() override;
+    virtual bool            postBuild() override;
     virtual void            onClose(bool app_quitting) override;
     virtual void            draw() override;
 

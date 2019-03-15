@@ -22,7 +22,7 @@ class FSFloaterPoseStand
 	LOG_CLASS(FSFloaterPoseStand);
 public:
 	FSFloaterPoseStand(const LLSD& key);
-	BOOL postBuild();
+	bool postBuild();
 	void setLock(bool enabled);
 	void onCommitCombo();
 private:

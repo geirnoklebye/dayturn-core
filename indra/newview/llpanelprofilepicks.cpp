@@ -201,7 +201,7 @@ void LLPanelProfilePicks::selectPick(const LLUUID& pick_id)
     }
 }
 
-BOOL LLPanelProfilePicks::postBuild()
+bool LLPanelProfilePicks::postBuild()
 {
     mTabContainer = getChild<LLTabContainer>("tab_picks");
     mNoItemsLabel = getChild<LLUICtrl>("picks_panel_text");
@@ -211,7 +211,7 @@ BOOL LLPanelProfilePicks::postBuild()
     mNewButton->setCommitCallback(boost::bind(&LLPanelProfilePicks::onClickNewBtn, this));
     mDeleteButton->setCommitCallback(boost::bind(&LLPanelProfilePicks::onClickDelete, this));
 
-    return TRUE;
+    return true;
 }
 
 void LLPanelProfilePicks::onClickNewBtn()
@@ -542,7 +542,7 @@ void LLPanelProfilePick::setAvatarId(const LLUUID& avatar_id)
     }
 }
 
-BOOL LLPanelProfilePick::postBuild()
+bool LLPanelProfilePick::postBuild()
 {
     mPickName = getChild<LLLineEditor>("pick_name");
     mPickDescription = getChild<LLTextEditor>("pick_desc");
@@ -570,7 +570,7 @@ BOOL LLPanelProfilePick::postBuild()
 
     getChild<LLUICtrl>("pick_location")->setEnabled(FALSE);
 
-    return TRUE;
+    return true;
 }
 
 void LLPanelProfilePick::onDescriptionFocusReceived()

@@ -57,7 +57,7 @@ public:
 	LLPanelPeople();
 	virtual ~LLPanelPeople();
 
-	/*virtual*/ BOOL 	postBuild();
+	/*virtual*/ bool 	postBuild();
 	/*virtual*/ void	onOpen(const LLSD& key);
 	/*virtual*/ bool	notifyChildren(const LLSD& info);
 	// Implements LLVoiceClientStatusObserver::onChange() to enable call buttons

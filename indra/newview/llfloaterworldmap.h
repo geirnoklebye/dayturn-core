@@ -75,7 +75,7 @@ public:
 	static LLFloaterWorldMap* getInstance();
 
 	static void *createWorldMapView(void* data);
-	BOOL postBuild();
+	bool postBuild();
 
 	/*virtual*/ void onOpen(const LLSD& key);
 	/*virtual*/ void onClose(bool app_quitting);
@@ -240,7 +240,7 @@ public:
 	static LLPanelHideBeacon* getInstance();
 
 	LLPanelHideBeacon();
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	/*virtual*/ void setVisible(BOOL visible);
 	/*virtual*/ void draw();
 

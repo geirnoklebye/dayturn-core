@@ -46,9 +46,9 @@ LLFloaterPerms::LLFloaterPerms(const LLSD& seed)
 {
 }
 
-BOOL LLFloaterPerms::postBuild()
+bool LLFloaterPerms::postBuild()
 {
-	return TRUE;
+	return true;
 }
 
 //static 
@@ -128,7 +128,7 @@ const std::string LLFloaterPermsDefault::sCategoryNames[CAT_LAST] =
 	"Settings"
 };
 
-BOOL LLFloaterPermsDefault::postBuild()
+bool LLFloaterPermsDefault::postBuild()
 {
 	if(!gSavedSettings.getBOOL("DefaultUploadPermissionsConverted"))
 	{

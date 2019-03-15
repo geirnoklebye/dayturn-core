@@ -49,7 +49,7 @@ public:
 
 	/*virtual*/ void onOpen(const LLSD& key);
 
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 
 	/*virtual*/ void processProperties(void* data, EAvatarProcessorType type);
 

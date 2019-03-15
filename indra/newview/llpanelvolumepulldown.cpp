@@ -55,7 +55,7 @@ LLPanelVolumePulldown::LLPanelVolumePulldown()
 	buildFromFile( "panel_volume_pulldown.xml");
 }
 
-BOOL LLPanelVolumePulldown::postBuild()
+bool LLPanelVolumePulldown::postBuild()
 {
 	return LLPanelPulldown::postBuild();
 }

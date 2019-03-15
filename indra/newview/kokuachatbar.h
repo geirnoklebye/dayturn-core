@@ -43,7 +43,7 @@ public:
 	void show();
 		
 	// virtual
-	BOOL postBuild();
+	bool postBuild();
 
 protected:
 	LLChatEntry* mInputEditor;

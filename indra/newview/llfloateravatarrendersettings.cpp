@@ -84,7 +84,7 @@
 //    LLRenderMuteList::getInstance()->removeObserver(&sAvatarRenderMuteListObserver);
 //}
 //
-//BOOL LLFloaterAvatarRenderSettings::postBuild()
+//bool LLFloaterAvatarRenderSettings::postBuild()
 //{
 //    LLFloater::postBuild();
 //    mAvatarSettingsList = getChild<LLNameListCtrl>("render_settings_list");

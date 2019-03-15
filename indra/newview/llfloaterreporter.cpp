@@ -161,7 +161,7 @@ LLFloaterReporter::LLFloaterReporter(const LLSD& key)
 }
 
 // virtual
-BOOL LLFloaterReporter::postBuild()
+bool LLFloaterReporter::postBuild()
 {
 	LLSLURL slurl;
 	LLAgentUI::buildSLURL(slurl);
@@ -228,7 +228,7 @@ BOOL LLFloaterReporter::postBuild()
 
 	center();
 
-	return TRUE;
+	return true;
 }
 
 // virtual

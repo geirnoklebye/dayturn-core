@@ -146,7 +146,7 @@ public:
 	LLFloaterSnapshot(const LLSD& key);
 	/*virtual*/ ~LLFloaterSnapshot();
     
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	/*virtual*/ void onOpen(const LLSD& key);
 	/*virtual*/ S32 notify(const LLSD& info);
 	

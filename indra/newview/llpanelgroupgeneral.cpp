@@ -93,7 +93,7 @@ LLPanelGroupGeneral::~LLPanelGroupGeneral()
 {
 }
 
-BOOL LLPanelGroupGeneral::postBuild()
+bool LLPanelGroupGeneral::postBuild()
 {
 	bool recurse = true;
 

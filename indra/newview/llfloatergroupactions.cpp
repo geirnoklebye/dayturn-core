@@ -45,7 +45,7 @@ LLFloaterGroupCreateNotice::LLFloaterGroupCreateNotice(const LLSD& sdKey)
 {
 }
 
-BOOL LLFloaterGroupCreateNotice::postBuild()
+bool LLFloaterGroupCreateNotice::postBuild()
 {
 	findChild<LLUICtrl>("send_btn")->setCommitCallback(boost::bind(&LLFloaterGroupCreateNotice::onClickSend, this));
 	findChild<LLUICtrl>("cancel_btn")->setCommitCallback(boost::bind(&LLFloaterGroupCreateNotice::onClickCancel, this));
@@ -61,7 +61,7 @@ BOOL LLFloaterGroupCreateNotice::postBuild()
 	m_pAttachClearBtn->setCommitCallback(boost::bind(&LLFloaterGroupCreateNotice::onClickClearAttach, this));
 	m_pAttachClearBtn->setVisible(false);
 
-	return TRUE;
+	return true;
 }
 
 S32 LLFloaterGroupCreateNotice::notifyParent(const LLSD& sdInfo)

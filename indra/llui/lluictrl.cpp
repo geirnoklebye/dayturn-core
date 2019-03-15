@@ -481,7 +481,7 @@ LLViewModel* LLUICtrl::getViewModel() const
 }
 
 //virtual
-BOOL LLUICtrl::postBuild()
+bool LLUICtrl::postBuild()
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
 	//

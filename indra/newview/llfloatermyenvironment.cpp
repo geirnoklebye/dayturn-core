@@ -97,7 +97,7 @@ LLFloaterMyEnvironment::~LLFloaterMyEnvironment()
 }
 
 
-BOOL LLFloaterMyEnvironment::postBuild()
+bool LLFloaterMyEnvironment::postBuild()
 {
     mInventoryList = getChild<LLInventoryPanel>(PANEL_SETTINGS);
 
@@ -123,7 +123,7 @@ BOOL LLFloaterMyEnvironment::postBuild()
 
     childSetCommitCallback(BUTTON_DELETE, [this](LLUICtrl *, void*) { onDeleteSelected(); }, nullptr);
     mSavedFolderState.setApply(FALSE);
-    return TRUE;
+    return true;
 }
 
 void LLFloaterMyEnvironment::refresh()

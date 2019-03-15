@@ -89,7 +89,7 @@ const F32 DEFAULT_GRAVITY_MULTIPLIER = 1.f;
 const F32 DEFAULT_DENSITY = 1000.f;
 
 // "Features" Tab
-BOOL	LLPanelVolume::postBuild()
+bool	LLPanelVolume::postBuild()
 {
 	// Flexible Objects Parameters
 	{
@@ -203,7 +203,7 @@ BOOL	LLPanelVolume::postBuild()
 	// Start with everyone disabled
 	clearCtrls();
 
-	return TRUE;
+	return true;
 }
 
 LLPanelVolume::LLPanelVolume()

@@ -72,7 +72,7 @@ LLPanelPlaceInfo::~LLPanelPlaceInfo()
 }
 
 //virtual
-BOOL LLPanelPlaceInfo::postBuild()
+bool LLPanelPlaceInfo::postBuild()
 {
 	mTitle = getChild<LLTextBox>("title");
 	mCurrentTitle = mTitle->getText();
@@ -92,7 +92,7 @@ BOOL LLPanelPlaceInfo::postBuild()
 	mScrollingPanelMinHeight = mScrollContainer->getScrolledViewRect().getHeight();
 	mScrollingPanelWidth = mScrollingPanel->getRect().getWidth();
 
-	return TRUE;
+	return true;
 }
 
 //virtual

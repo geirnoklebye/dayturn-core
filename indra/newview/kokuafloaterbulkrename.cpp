@@ -63,7 +63,7 @@ KokuaFloaterBulkRename::KokuaFloaterBulkRename(const LLSD& seed)
 	mCommitCallbackRegistrar.add("BulkRename.UncheckAll",	boost::bind(&KokuaFloaterBulkRename::onUncheckAll, this));
 }
 
-BOOL KokuaFloaterBulkRename::postBuild()
+bool KokuaFloaterBulkRename::postBuild()
 {
 	//with these being named BulkChange rather than BulkPermissions I'm inclined to not create my own set for renaming
 	mBulkChangeIncludeAnimations = gSavedSettings.getBOOL("BulkChangeIncludeAnimations");
@@ -77,7 +77,7 @@ BOOL KokuaFloaterBulkRename::postBuild()
 	mBulkChangeIncludeTextures = gSavedSettings.getBOOL("BulkChangeIncludeTextures");
 	mBulkChangeIncludeSettings = gSavedSettings.getBOOL("BulkChangeIncludeSettings");
 
-	return TRUE;
+	return true;
 }
 
 void KokuaFloaterBulkRename::doApply()

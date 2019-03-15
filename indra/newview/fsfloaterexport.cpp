@@ -215,7 +215,7 @@ FSFloaterObjectExport::~FSFloaterObjectExport()
 	}
 }
 
-BOOL FSFloaterObjectExport::postBuild()
+bool FSFloaterObjectExport::postBuild()
 {
 	mObjectList = getChild<LLScrollListCtrl>("selected_objects");
 	mTexturePanel = getChild<LLPanel>("textures_panel");
@@ -223,7 +223,7 @@ BOOL FSFloaterObjectExport::postBuild()
 	
 	LLSelectMgr::getInstance()->mUpdateSignal.connect(boost::bind(&FSFloaterObjectExport::updateSelection, this));
 	
-	return TRUE;
+	return true;
 }
 
 void FSFloaterObjectExport::draw()

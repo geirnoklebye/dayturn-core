@@ -275,7 +275,7 @@ void LLPanelProfileClassifieds::createClassified()
     }
 }
 
-BOOL LLPanelProfileClassifieds::postBuild()
+bool LLPanelProfileClassifieds::postBuild()
 {
     mTabContainer = getChild<LLTabContainer>("tab_classifieds");
     mNoItemsLabel = getChild<LLUICtrl>("classifieds_panel_text");
@@ -285,7 +285,7 @@ BOOL LLPanelProfileClassifieds::postBuild()
     mNewButton->setCommitCallback(boost::bind(&LLPanelProfileClassifieds::onClickNewBtn, this));
     mDeleteButton->setCommitCallback(boost::bind(&LLPanelProfileClassifieds::onClickDelete, this));
 
-    return TRUE;
+    return true;
 }
 
 void LLPanelProfileClassifieds::onClickNewBtn()
@@ -580,7 +580,7 @@ LLPanelProfileClassified* LLPanelProfileClassified::create()
     return panel;
 }
 
-BOOL LLPanelProfileClassified::postBuild()
+bool LLPanelProfileClassified::postBuild()
 {
     mScrollContainer    = getChild<LLScrollContainer>("profile_scroll");
     mInfoPanel          = getChild<LLView>("info_panel");
@@ -648,7 +648,7 @@ BOOL LLPanelProfileClassified::postBuild()
     mContentTypeCombo->setCommitCallback(boost::bind(&LLPanelProfileClassified::onChange, this));
     mAutoRenewEdit->setCommitCallback(boost::bind(&LLPanelProfileClassified::onChange, this));
 
-    return TRUE;
+    return true;
 }
 
 void LLPanelProfileClassified::onOpen(const LLSD& key)
@@ -1482,14 +1482,14 @@ LLPublishClassifiedFloater::~LLPublishClassifiedFloater()
 {
 }
 
-BOOL LLPublishClassifiedFloater::postBuild()
+bool LLPublishClassifiedFloater::postBuild()
 {
     LLFloater::postBuild();
 
     childSetAction("publish_btn", boost::bind(&LLFloater::closeFloater, this, false));
     childSetAction("cancel_btn", boost::bind(&LLFloater::closeFloater, this, false));
 
-    return TRUE;
+    return true;
 }
 
 void LLPublishClassifiedFloater::setPrice(S32 price)

@@ -92,7 +92,7 @@ public:
 	//virtual bool apply(std::string& mesg);
 	//virtual void update();
 	
-	virtual BOOL postBuild();
+	virtual bool postBuild();
 	virtual BOOL isVisibleByAgent(LLAgent* agentp);
 
 // [SL:KB] - Patch: Notification-GroupCreateNotice | Checked: 2012-02-16 (Catznip-3.2)

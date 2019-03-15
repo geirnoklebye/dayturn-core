@@ -76,7 +76,7 @@ LLPanelSettingsWaterMainTab::LLPanelSettingsWaterMainTab():
 }
 
 
-BOOL LLPanelSettingsWaterMainTab::postBuild()
+bool LLPanelSettingsWaterMainTab::postBuild()
 {
     mClrFogColor = getChild<LLColorSwatchCtrl>(FIELD_WATER_FOG_COLOR);
     mTxtNormalMap = getChild<LLTextureCtrl>(FIELD_WATER_NORMAL_MAP);
@@ -106,7 +106,7 @@ BOOL LLPanelSettingsWaterMainTab::postBuild()
 
     refresh();
 
-    return TRUE;
+    return true;
 }
 
 //virtual

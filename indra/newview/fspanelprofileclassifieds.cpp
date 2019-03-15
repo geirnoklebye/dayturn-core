@@ -179,7 +179,7 @@ FSClassifiedItem* FSPanelClassifieds::getSelectedClassifiedItem()
 	return dynamic_cast<FSClassifiedItem*>(selected_item);
 }
 
-BOOL FSPanelClassifieds::postBuild()
+bool FSPanelClassifieds::postBuild()
 {
 	mClassifiedsList = getChild<LLFlatListView>("classifieds_list");
 	mClassifiedsList->setCommitOnSelectionChange(true);
@@ -208,7 +208,8 @@ BOOL FSPanelClassifieds::postBuild()
 //	mRlvBehaviorCallbackConnection = gRlvHandler.setBehaviourCallback(boost::bind(&FSPanelClassifieds::updateRlvRestrictions, this, _1, _2));
 //	childSetEnabled(XML_BTN_NEW, !gRlvHandler.hasBehaviour(RLV_BHVR_SHOWLOC));
 
-	return TRUE;
+	
+	return true;
 }
 
 bool FSPanelClassifieds::isClassifiedPublished(FSClassifiedItem* c_item)
@@ -728,11 +729,11 @@ void set_child_visible2(LLView* parent, const std::string& child_name, bool visi
 	parent->getChildView(child_name)->setVisible(visible);
 }
 
-BOOL FSClassifiedItem::postBuild()
+bool FSClassifiedItem::postBuild()
 {
 	setMouseEnterCallback(boost::bind(&set_child_visible2, this, "hovered_icon", true));
 	setMouseLeaveCallback(boost::bind(&set_child_visible2, this, "hovered_icon", false));
-	return TRUE;
+	return true;
 }
 
 void FSClassifiedItem::setValue(const LLSD& value)

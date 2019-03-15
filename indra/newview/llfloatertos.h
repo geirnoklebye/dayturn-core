@@ -47,7 +47,7 @@ public:
 	LLFloaterTOS(const LLSD& data);
 	virtual ~LLFloaterTOS();
 
-	BOOL postBuild();
+	bool postBuild();
 	
 	virtual void draw();
 

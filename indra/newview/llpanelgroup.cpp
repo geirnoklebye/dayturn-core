@@ -81,9 +81,9 @@ BOOL LLPanelGroupTab::isVisibleByAgent(LLAgent* agentp)
 	return TRUE;
 }
 
-BOOL LLPanelGroupTab::postBuild()
+bool LLPanelGroupTab::postBuild()
 {
-	return TRUE;
+	return true;
 }
 
 LLPanelGroup::LLPanelGroup()
@@ -147,7 +147,7 @@ void LLPanelGroup::onOpen(const LLSD& key)
 // [/SL:KB]
 }
 
-BOOL LLPanelGroup::postBuild()
+bool LLPanelGroup::postBuild()
 {
 	mDefaultNeedsApplyMesg = getString("default_needs_apply_text");
 	mWantApplyMesg = getString("want_apply_text");
@@ -216,7 +216,7 @@ BOOL LLPanelGroup::postBuild()
   //KKA-839 Get the call button set right
   childSetEnabled("btn_call", LLVoiceClient::getInstance()->canCall());
 	
-	return TRUE;
+	return true;
 }
 
 void LLPanelGroup::reposButton(const std::string& name)

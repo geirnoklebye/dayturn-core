@@ -38,7 +38,7 @@ class LLFloaterSavePrefPreset : public LLFloater
 public:
 	LLFloaterSavePrefPreset(const LLSD &key);
 
-	/*virtual*/	BOOL	postBuild();
+	/*virtual*/	bool	postBuild();
 	/*virtual*/ void	onOpen(const LLSD& key);
 
 	void onBtnSave();

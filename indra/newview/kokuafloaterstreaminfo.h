@@ -35,7 +35,7 @@ class KokuaFloaterStreamInfo : public LLFloater
 	friend class LLFloaterReg;
 public:
 
-	BOOL postBuild();
+	bool postBuild();
 	static void UpdateStreamInfo(const std::string artist_title = "");
 	KokuaFloaterStreamInfo(const LLSD& seed);	
 	virtual ~KokuaFloaterStreamInfo() {}

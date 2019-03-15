@@ -92,7 +92,7 @@ LLPanelPlaceProfile::~LLPanelPlaceProfile()
 }
 
 // virtual
-BOOL LLPanelPlaceProfile::postBuild()
+bool LLPanelPlaceProfile::postBuild()
 {
 	LLPanelPlaceInfo::postBuild();
 
@@ -166,7 +166,7 @@ BOOL LLPanelPlaceProfile::postBuild()
 	mLastSelectedRegionID = LLUUID::null;
 	mNextCovenantUpdateTime = 0;
 
-	return TRUE;
+	return true;
 }
 
 // virtual

@@ -744,7 +744,7 @@ public:
 		floater->setFocus(TRUE);
 	}
 
-	BOOL postBuild()
+	bool postBuild()
 	{
 		LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registrar;
 		LLUICtrl::EnableCallbackRegistry::ScopedRegistrar registrar_enable;

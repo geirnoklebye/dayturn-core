@@ -102,7 +102,7 @@ public:
 	void			processLoaded();
 
 	virtual void	draw();
-	/*virtual*/	BOOL	postBuild();
+	/*virtual*/	bool	postBuild();
 	BOOL			canClose();
 	void			setEnableEditing(bool enable);
 	bool			canLoadOrSaveToFile( void* userdata );
@@ -232,7 +232,7 @@ public:
 	virtual void callbackLSLCompileSucceeded();
 	virtual void callbackLSLCompileFailed(const LLSD& compile_errors);
 
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 
 // [SL:KB] - Patch: UI-FloaterSearchReplace | Checked: 2010-11-05 (Catznip-2.3.0a) | Added: Catznip-2.3.0a
 	LLScriptEditor* getEditor() { return (mScriptEd) ? mScriptEd->mEditor : NULL; }
@@ -286,7 +286,7 @@ public:
 											bool is_script_running);
 	virtual void callbackLSLCompileFailed(const LLSD& compile_errors);
 
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	
     void setIsNew() { mIsNew = TRUE; }
 

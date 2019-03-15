@@ -179,7 +179,7 @@ LLFolderViewItem::~LLFolderViewItem()
 	mViewModelItem = NULL;
 }
 
-BOOL LLFolderViewItem::postBuild()
+bool LLFolderViewItem::postBuild()
 {
     LLFolderViewModelItem& vmi = *getViewModelItem();
     // getDisplayName() is expensive (due to internal getLabelSuffix() and name building)
@@ -197,7 +197,7 @@ BOOL LLFolderViewItem::postBuild()
     // while LLFolderViewItem::arrange() updates visual part
     mSuffixNeedsRefresh = true;
     mLabelWidthDirty = true;
-	return TRUE;
+	return true;
 }
 
 LLFolderView* LLFolderViewItem::getRoot()

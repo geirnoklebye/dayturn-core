@@ -46,7 +46,7 @@ public:
     LLPanelGroupCreate();
     virtual ~LLPanelGroupCreate();
 
-    virtual BOOL postBuild();
+    virtual bool postBuild();
 
     void onOpen(const LLSD& key);
 

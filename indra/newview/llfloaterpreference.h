@@ -84,7 +84,7 @@ public:
 	void apply();
 	void cancel();
 	/*virtual*/ void draw();
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	/*virtual*/ void onOpen(const LLSD& key);
 	/*virtual*/	void onClose(bool app_quitting);
 	/*virtual*/ void changed();
@@ -226,7 +226,7 @@ public:
 	void saveGraphicsPreset(std::string& preset);
 
 //These were in LLFloaterPreferenceGraphicsAdvanced, all have Advanced appended to their names
-	/*virtual*/ BOOL postBuildAdvanced();
+	/*virtual*/ bool postBuildAdvanced();
 	void disableUnavailableSettingsAdvanced();
 	void refreshEnabledGraphicsAdvanced();
 	void refreshEnabledStateAdvanced();
@@ -275,7 +275,7 @@ class LLPanelPreference : public LLPanel
 {
 public:
 	LLPanelPreference();
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	
 	virtual ~LLPanelPreference();
 
@@ -321,7 +321,7 @@ private:
 class LLPanelPreferenceGraphics : public LLPanelPreference
 {
 public:
-	BOOL postBuild();
+	bool postBuild();
 	void draw();
 	void cancel();
 	void saveSettings();
@@ -346,7 +346,7 @@ public:
 	LLPanelPreferenceControls();
 	virtual ~LLPanelPreferenceControls();
 
-	BOOL postBuild();
+	bool postBuild();
 
 	void apply();
 	void cancel();
@@ -398,7 +398,7 @@ private:
 //  public: 
 //	LLFloaterPreferenceGraphicsAdvanced(const LLSD& key);
 //	~LLFloaterPreferenceGraphicsAdvanced();
-//	/*virtual*/ BOOL postBuild();
+//	/*virtual*/ bool postBuild();
 //	void onOpen(const LLSD& key);
 //	void onClickCloseBtn(bool app_quitting);
 //	void disableUnavailableSettings();
@@ -436,7 +436,7 @@ class LLPanelPreferenceCrashReports : public LLPanelPreference
 public:
 	LLPanelPreferenceCrashReports();
 
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	/*virtual*/ void apply();
 	/*virtual*/ void cancel();
 
@@ -451,7 +451,7 @@ class FSPanelPreferenceBackup : public LLPanelPreference
 {
 public:
 	FSPanelPreferenceBackup();
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	
 protected:
 	// <FS:Zi> Backup settings
@@ -479,7 +479,7 @@ public:
 	FSPanelPreferenceSounds();
 	virtual ~FSPanelPreferenceSounds();
 
-	BOOL postBuild();
+	bool postBuild();
 
 private:
 	LLPanel*	mOutputDevicePanel;
@@ -505,7 +505,7 @@ public:
 	void cancel();
 	
 protected:
-	BOOL postBuild();
+	bool postBuild();
 	void onOpen(const LLSD& key);
 	void onClose(bool app_quitting);
 	void saveSettings();

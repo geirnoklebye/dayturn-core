@@ -40,7 +40,7 @@
 //    LLFloaterAvatarRenderSettings(const LLSD& key);
 //    virtual ~LLFloaterAvatarRenderSettings();
 //
-//    /*virtual*/ BOOL postBuild();
+//    /*virtual*/ bool postBuild();
 //    /*virtual*/ void onOpen(const LLSD& key);
 //    /*virtual*/ void draw();
 //    /*virtual*/ BOOL handleKeyHere(KEY key, MASK mask );

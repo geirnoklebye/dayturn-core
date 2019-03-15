@@ -328,7 +328,7 @@ void* LLFloaterWorldMap::createWorldMapView(void* data)
 	return new LLWorldMapView();
 }
 
-BOOL LLFloaterWorldMap::postBuild()
+bool LLFloaterWorldMap::postBuild()
 {
 	mPanel = getChild<LLPanel>("objects_mapview");
 	
@@ -362,7 +362,7 @@ BOOL LLFloaterWorldMap::postBuild()
 	
 	onChangeMaturity();
 	
-	return TRUE;
+	return true;
 }
 
 // virtual
@@ -1964,14 +1964,14 @@ LLPanelHideBeacon* LLPanelHideBeacon::getInstance()
 }
 
 
-BOOL LLPanelHideBeacon::postBuild()
+bool LLPanelHideBeacon::postBuild()
 {
 	mHideButton = getChild<LLButton>("hide_beacon_btn");
 	mHideButton->setCommitCallback(boost::bind(&LLPanelHideBeacon::onHideButtonClick, this));
 
 	gViewerWindow->setOnWorldViewRectUpdated(boost::bind(&LLPanelHideBeacon::updatePosition, this));
 
-	return TRUE;
+	return true;
 }
 
 //virtual

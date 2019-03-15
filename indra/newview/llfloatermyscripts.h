@@ -35,7 +35,7 @@ class LLFloaterMyScripts : public LLFloater
 public:
 	LLFloaterMyScripts(const LLSD& seed);
 
-	BOOL postBuild();
+	bool postBuild();
 	/*virtual*/ void onOpen(const LLSD& key);
 	void setAttachmentDetails(LLSD content);
 	void setAttachmentSummary(LLSD content);

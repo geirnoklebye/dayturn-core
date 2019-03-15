@@ -265,7 +265,7 @@ FSPanelProfileSecondLife::~FSPanelProfileSecondLife()
 //	}
 }
 
-BOOL FSPanelProfileSecondLife::postBuild()
+bool FSPanelProfileSecondLife::postBuild()
 {
 	mStatusText = getChild<LLTextBox>("status");
 	mGroupList = getChild<LLGroupList>("group_list");
@@ -350,7 +350,7 @@ BOOL FSPanelProfileSecondLife::postBuild()
 
 //	mRlvBehaviorCallbackConnection = gRlvHandler.setBehaviourCallback(boost::bind(&FSPanelProfileSecondLife::updateRlvRestrictions, this, _1));
 
-	return TRUE;
+    return true;
 }
 
 void FSPanelProfileSecondLife::onOpen(const LLSD& key)
@@ -869,7 +869,7 @@ void FSPanelProfileWeb::onOpen(const LLSD& key)
 	resetData();
 }
 
-BOOL FSPanelProfileWeb::postBuild()
+bool FSPanelProfileWeb::postBuild()
 {
 	mWebProfileButton = getChild<LLUICtrl>("web_profile");
 	mLoadButton = getChild<LLUICtrl>("load");
@@ -887,7 +887,7 @@ BOOL FSPanelProfileWeb::postBuild()
 
 	mUrlEdit->setEnabled(FALSE);
 
-	return TRUE;
+    return true;
 }
 
 void FSPanelProfileWeb::processProperties(void* data, EAvatarProcessorType type)
@@ -1080,7 +1080,7 @@ void FSPanelProfileInterests::onOpen(const LLSD& key)
 	resetData();
 }
 
-BOOL FSPanelProfileInterests::postBuild()
+bool FSPanelProfileInterests::postBuild()
 {
 	mWantToEditor = getChild<LLLineEditor>("want_to_edit");
 	mSkillsEditor = getChild<LLLineEditor>("skills_edit");
@@ -1104,7 +1104,7 @@ BOOL FSPanelProfileInterests::postBuild()
 	mSkillsEditor->setEnabled(FALSE);
 	mLanguagesEditor->setEnabled(FALSE);
 
-	return TRUE;
+    return true;
 }
 
 
@@ -1312,7 +1312,7 @@ void FSPanelPick::setAvatarId(const LLUUID& avatar_id)
 	}
 }
 
-BOOL FSPanelPick::postBuild()
+bool FSPanelPick::postBuild()
 {
 	mPickName = getChild<LLLineEditor>("pick_name");
 	mPickDescription = getChild<LLTextEditor>("pick_desc");
@@ -1336,7 +1336,7 @@ BOOL FSPanelPick::postBuild()
 
 	getChild<LLUICtrl>("pick_location")->setEnabled(FALSE);
 
-	return TRUE;
+	return true;
 }
 
 void FSPanelPick::onDescriptionFocusReceived()
@@ -1666,7 +1666,7 @@ void FSPanelProfilePicks::onOpen(const LLSD& key)
 	}
 }
 
-BOOL FSPanelProfilePicks::postBuild()
+bool FSPanelProfilePicks::postBuild()
 {
 	mTabContainer = getChild<LLTabContainer>("tab_picks");
 	mNoItemsLabel = getChild<LLUICtrl>("picks_panel_text");
@@ -1684,7 +1684,7 @@ BOOL FSPanelProfilePicks::postBuild()
 	LLTextBox* intro_txt = getChild<LLTextBox>("Tell everyone about your favorite places in Second Life.");
 	intro_txt->setTextArg("[GRID]", LLTrans::getString("SECOND_LIFE"));
 
-	return TRUE;
+    return true;
 }
 
 void FSPanelProfilePicks::onClickNewBtn()
@@ -1875,14 +1875,14 @@ FSPanelProfileFirstLife::~FSPanelProfileFirstLife()
 {
 }
 
-BOOL FSPanelProfileFirstLife::postBuild()
+bool FSPanelProfileFirstLife::postBuild()
 {
 	mDescriptionEdit = getChild<LLTextEditor>("fl_description_edit");
 	mPicture = getChild<LLTextureCtrl>("real_world_pic");
 
 	mDescriptionEdit->setFocusReceivedCallback(boost::bind(&FSPanelProfileFirstLife::onDescriptionFocusReceived, this));
 
-	return TRUE;
+	return true;
 }
 
 void FSPanelProfileFirstLife::onOpen(const LLSD& key)
@@ -1961,7 +1961,7 @@ void FSPanelAvatarNotes::updateData()
 	}
 }
 
-BOOL FSPanelAvatarNotes::postBuild()
+bool FSPanelAvatarNotes::postBuild()
 {
 	mOnlineStatus = getChild<LLCheckBoxCtrl>("status_check");
 	mMapRights = getChild<LLCheckBoxCtrl>("map_check");
@@ -1975,7 +1975,7 @@ BOOL FSPanelAvatarNotes::postBuild()
 	mNotesEditor->setCommitCallback(boost::bind(&FSPanelAvatarNotes::onCommitNotes,this));
 	mNotesEditor->setCommitOnFocusLost(TRUE);
 
-    return TRUE;
+    return true;
 }
 
 void FSPanelAvatarNotes::onOpen(const LLSD& key)
@@ -2181,9 +2181,9 @@ FSPanelProfile::~FSPanelProfile()
 	}
 }
 
-BOOL FSPanelProfile::postBuild()
+bool FSPanelProfile::postBuild()
 {
-	return TRUE;
+	return true;
 }
 
 void FSPanelProfile::processProperties(void* data, EAvatarProcessorType type)

@@ -44,7 +44,7 @@ public:
 	LLFloaterVoiceEffect(const LLSD& key);
 	virtual ~LLFloaterVoiceEffect();
 
-	virtual BOOL postBuild();
+	virtual bool postBuild();
 	virtual void onClose(bool app_quitting);
 
 private:

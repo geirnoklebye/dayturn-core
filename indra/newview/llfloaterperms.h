@@ -37,7 +37,7 @@ class LLFloaterPerms : public LLFloater
 	friend class LLFloaterReg;
 	
 public:
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 
 	// Convenience methods to get current permission preference bitfields from saved settings:
 	static U32 getEveryonePerms(std::string prefix=""); // prefix + "EveryoneCopy"
@@ -55,9 +55,9 @@ class LLFloaterPermsDefault : public LLFloater
 	friend class LLFloaterReg;
 
 public:
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	void ok();
-	void cancel();
+    void cancel();
 	void onClickOK();
 	void onClickCancel();
 	void onCommitCopy(const LLSD& user_data);

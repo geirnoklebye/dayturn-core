@@ -61,14 +61,14 @@ LLFloaterProfileTexture::~LLFloaterProfileTexture()
 }
 
 // virtual
-BOOL LLFloaterProfileTexture::postBuild()
+bool LLFloaterProfileTexture::postBuild()
 {
     mProfileIcon = getChild<LLIconCtrl>("profile_pic");
 
     mCloseButton = getChild<LLButton>("close_btn");
     mCloseButton->setCommitCallback([this](LLUICtrl*, void*) { closeFloater(); }, nullptr);
 
-	return TRUE;
+	return true;
 }
 
 // virtual

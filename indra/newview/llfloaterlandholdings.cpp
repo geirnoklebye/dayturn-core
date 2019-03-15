@@ -65,7 +65,7 @@ LLFloaterLandHoldings::LLFloaterLandHoldings(const LLSD& key)
 {
 }
 
-BOOL LLFloaterLandHoldings::postBuild()
+bool LLFloaterLandHoldings::postBuild()
 {
 	childSetAction("Teleport", onClickTeleport, this);
 	childSetAction("Show on Map", onClickMap, this);
@@ -97,7 +97,7 @@ BOOL LLFloaterLandHoldings::postBuild()
 	
 	center();
 	
-	return TRUE;
+	return true;
 }
 
 

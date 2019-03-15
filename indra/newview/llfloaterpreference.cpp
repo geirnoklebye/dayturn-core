@@ -434,7 +434,7 @@ void LLFloaterPreference::saveAvatarPropertiesCoro(const std::string cap_url, bo
     LL_DEBUGS("Preferences") << "Agent id: " << gAgentID << " Data: " << data << " Result: " << httpResults << LL_ENDL;
 }
 
-BOOL LLFloaterPreference::postBuild()
+bool LLFloaterPreference::postBuild()
 {
 	gSavedSettings.getControl("ChatFontSize")->getSignal()->connect(boost::bind(&LLFloaterIMSessionTab::processChatHistoryStyleUpdate, false));
 
@@ -2489,7 +2489,7 @@ LLPanelPreference::LLPanelPreference()
 }
 
 //virtual
-BOOL LLPanelPreference::postBuild()
+bool LLPanelPreference::postBuild()
 {
 	////////////////////// PanelGeneral ///////////////////
 	if (hasChild("display_names_check", TRUE))
@@ -2819,7 +2819,7 @@ private:
 static LLPanelInjector<LLPanelPreferenceGraphics> t_pref_graph("panel_preference_graphics");
 static LLPanelInjector<LLPanelPreferencePrivacy> t_pref_privacy("panel_preference_privacy");
 
-BOOL LLPanelPreferenceGraphics::postBuild()
+bool LLPanelPreferenceGraphics::postBuild()
 {
 
 //	LLFloaterReg::showInstance("prefs_graphics_advanced");
@@ -3019,7 +3019,7 @@ LLPanelPreferenceControls::~LLPanelPreferenceControls()
 {
 }
 
-BOOL LLPanelPreferenceControls::postBuild()
+bool LLPanelPreferenceControls::postBuild()
 {
     // populate list of controls
     pControlsTable = getChild<LLScrollListCtrl>("controls_list");
@@ -3029,7 +3029,7 @@ BOOL LLPanelPreferenceControls::postBuild()
     pKeyModeBox->setCommitCallback(boost::bind(&LLPanelPreferenceControls::onModeCommit, this));
     getChild<LLButton>("restore_defaults")->setCommitCallback(boost::bind(&LLPanelPreferenceControls::onRestoreDefaultsBtn, this));
 
-    return TRUE;
+    return true;
 }
 
 void LLPanelPreferenceControls::regenerateControls()
@@ -3624,7 +3624,7 @@ LLFloaterPreferenceProxy::LLFloaterPreferenceProxy(const LLSD& key)
 	mCommitCallbackRegistrar.add("Proxy.Change",            boost::bind(&LLFloaterPreferenceProxy::onChangeSocksSettings, this));
 }
 
-BOOL LLFloaterPreference::postBuildAdvanced()
+bool LLFloaterPreference::postBuildAdvanced()
 {
     // Don't do this on Mac as their braindead GL versioning
     // sets this when 8x and 16x are indeed available
@@ -3641,19 +3641,19 @@ BOOL LLFloaterPreference::postBuildAdvanced()
 	use_Retina->setVisible(FALSE);
 #endif
 
-    return TRUE;
+    return true;
 }
 
 LLFloaterPreferenceProxy::~LLFloaterPreferenceProxy()
 {
 }
 
-BOOL LLFloaterPreferenceProxy::postBuild()
+bool LLFloaterPreferenceProxy::postBuild()
 {
 	LLRadioGroup* socksAuth = getChild<LLRadioGroup>("socks5_auth_type");
 	if (!socksAuth)
 	{
-		return FALSE;
+		return false;
 	}
 	if (socksAuth->getSelectedValue().asString() == "None")
 	{
@@ -3668,7 +3668,7 @@ BOOL LLFloaterPreferenceProxy::postBuild()
 		getChild<LLLineEditor>("socks5_password")->setValue(socks_cred->getAuthenticator()["creds"].asString());
 	}
 
-	return TRUE;
+	return true;
 }
 
 void LLFloaterPreferenceProxy::onOpen(const LLSD& key)
@@ -3951,7 +3951,7 @@ LLPanelPreferenceCrashReports::LLPanelPreferenceCrashReports()
 {
 }
 
-BOOL LLPanelPreferenceCrashReports::postBuild()
+bool LLPanelPreferenceCrashReports::postBuild()
 {
 	S32 nCrashSubmitBehavior = gCrashSettings.getS32("CrashSubmitBehavior");
 
@@ -4063,7 +4063,7 @@ FSPanelPreferenceBackup::FSPanelPreferenceBackup() : LLPanelPreference()
 	mCommitCallbackRegistrar.add("Pref.BackupDeselectAll",		boost::bind(&FSPanelPreferenceBackup::onClickDeselectAll, this));
 }
 
-BOOL FSPanelPreferenceBackup::postBuild()
+bool FSPanelPreferenceBackup::postBuild()
 {
 	// <FS:Zi> Backup Settings
 	// Apparently, line editors don't update with their settings controls, so do that manually here
@@ -4736,7 +4736,7 @@ FSPanelPreferenceSounds::~FSPanelPreferenceSounds()
     }
 }
 
-BOOL FSPanelPreferenceSounds::postBuild()
+bool FSPanelPreferenceSounds::postBuild()
 {
     mOutputDevicePanel = findChild<LLPanel>("output_device_settings_panel");
     mOutputDeviceComboBox = findChild<LLComboBox>("sound_output_device");

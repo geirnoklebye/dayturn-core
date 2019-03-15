@@ -33,13 +33,13 @@ FSFloaterPoseStand::~FSFloaterPoseStand()
 {
 }
 
-BOOL FSFloaterPoseStand::postBuild()
+bool FSFloaterPoseStand::postBuild()
 {
 	mComboPose = getChild<LLComboBox>("pose_combo");
 	mComboPose->setCommitCallback(boost::bind(&FSFloaterPoseStand::onCommitCombo, this));
 	loadPoses();
 
-	return TRUE;
+	return true;
 }
 
 // virtual

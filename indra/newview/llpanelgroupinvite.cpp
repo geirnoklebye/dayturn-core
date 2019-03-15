@@ -642,7 +642,7 @@ void LLPanelGroupInvite::updateLists()
 	}
 }
 
-BOOL LLPanelGroupInvite::postBuild()
+bool LLPanelGroupInvite::postBuild()
 {
 	BOOL recurse = TRUE;
 

@@ -37,13 +37,13 @@ LLFloaterCameraPresets::LLFloaterCameraPresets(const LLSD& key)
 LLFloaterCameraPresets::~LLFloaterCameraPresets()
 {}
 
-BOOL LLFloaterCameraPresets::postBuild()
+bool LLFloaterCameraPresets::postBuild()
 {
     mPresetList = getChild<LLFlatListView>("preset_list");
 
     LLPresetsManager::getInstance()->setPresetListChangeCameraCallback(boost::bind(&LLFloaterCameraPresets::populateList, this));
 
-    return TRUE;
+    return true;
 }
 void LLFloaterCameraPresets::onOpen(const LLSD& key)
 {
@@ -83,7 +83,7 @@ LLCameraPresetFlatItem::~LLCameraPresetFlatItem()
 {
 }
 
-BOOL LLCameraPresetFlatItem::postBuild()
+bool LLCameraPresetFlatItem::postBuild()
 {
     mDeleteBtn = getChild<LLButton>("delete_btn");
     mDeleteBtn->setVisible(false);

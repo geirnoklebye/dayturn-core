@@ -88,7 +88,7 @@ LLSetKeyBindDialog::~LLSetKeyBindDialog()
 }
 
 //virtual
-BOOL LLSetKeyBindDialog::postBuild()
+bool LLSetKeyBindDialog::postBuild()
 {
     childSetAction("SetEmpty", onBlank, this);
     childSetAction("Default", onDefault, this);
@@ -100,7 +100,7 @@ BOOL LLSetKeyBindDialog::postBuild()
 
     gFocusMgr.setKeystrokesOnly(TRUE);
 
-    return TRUE;
+    return true;
 }
 
 //virtual

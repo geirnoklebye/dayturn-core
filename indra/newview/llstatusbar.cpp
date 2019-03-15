@@ -182,7 +182,7 @@ BOOL LLStatusBar::handleRightMouseDown(S32 x, S32 y, MASK mask)
 	return TRUE;
 }
 
-BOOL LLStatusBar::postBuild()
+bool LLStatusBar::postBuild()
 {
 	gMenuBarView->setRightMouseDownCallback(boost::bind(&show_navbar_context_menu, _1, _2, _3));
 
@@ -312,7 +312,7 @@ BOOL LLStatusBar::postBuild()
 		updateMenuSearchPosition();
 	}
 
-	return TRUE;
+	return true;
 }
 
 // Per-frame updates of visibility

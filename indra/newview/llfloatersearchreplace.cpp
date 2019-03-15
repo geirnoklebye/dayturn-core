@@ -41,7 +41,7 @@ LLFloaterSearchReplace::~LLFloaterSearchReplace()
 {
 }
 
-BOOL LLFloaterSearchReplace::postBuild()
+bool LLFloaterSearchReplace::postBuild()
 {
 	m_pSearchEditor = getChild<LLLineEditor>("search_text");
 	m_pSearchEditor->setCommitCallback(boost::bind(&LLFloaterSearchReplace::onSearchClick, this));
@@ -63,7 +63,7 @@ BOOL LLFloaterSearchReplace::postBuild()
 	LLButton* pReplaceAllBtn = getChild<LLButton>("replace_all_btn");
 	pReplaceAllBtn->setCommitCallback(boost::bind(&LLFloaterSearchReplace::onReplaceAllClick, this));
 
-	return TRUE;
+	return true;
 }
 
 void LLFloaterSearchReplace::onOpen(const LLSD& sdKey)

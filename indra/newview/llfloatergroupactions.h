@@ -40,7 +40,7 @@ public:
 	 * LLView overrides
 	 */
 public:
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	/*virtual*/ S32  notifyParent(const LLSD& sdInfo);
 	/*virtual*/ void onOpen(const LLSD& sdKey);
 

@@ -47,7 +47,7 @@ public:
                                 LLPanelEnvironmentInfo();
     virtual                     ~LLPanelEnvironmentInfo();
 
-    virtual BOOL                postBuild() override;
+    virtual bool                postBuild() override;
     virtual void                onOpen(const LLSD& key) override;
 
     virtual BOOL                isDirty() const override            { return getIsDirty(); }

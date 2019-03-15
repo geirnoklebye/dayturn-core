@@ -440,7 +440,7 @@ LLPanelOutfitEdit::~LLPanelOutfitEdit()
 	}
 }
 
-BOOL LLPanelOutfitEdit::postBuild()
+bool LLPanelOutfitEdit::postBuild()
 {
 	// gInventory.isInventoryUsable() no longer needs to be tested per Richard's fix for race conditions between inventory and panels
 	
@@ -568,7 +568,7 @@ BOOL LLPanelOutfitEdit::postBuild()
 	getChild<LLButton>(SAVE_AS_BTN)->setCommitCallback(boost::bind(&LLPanelOutfitEdit::saveOutfit, this, true));
 
 	onOutfitChanging(gAgentWearables.isCOFChangeInProgress());
-	return TRUE;
+	return true;
 }
 
 // virtual

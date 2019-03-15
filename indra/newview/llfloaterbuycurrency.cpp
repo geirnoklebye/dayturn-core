@@ -66,7 +66,7 @@ public:
 	void noTarget();
 	void target(const std::string& name, S32 price);
 	
-	virtual BOOL postBuild();
+	virtual bool postBuild();
 	
 	void updateUI();
 	void collapsePanels(bool collapse);
@@ -135,7 +135,7 @@ void LLFloaterBuyCurrencyUI::target(const std::string& name, S32 price)
 
 
 // virtual
-BOOL LLFloaterBuyCurrencyUI::postBuild()
+bool LLFloaterBuyCurrencyUI::postBuild()
 {
 	mManager.prepare();
 	
@@ -146,7 +146,7 @@ BOOL LLFloaterBuyCurrencyUI::postBuild()
 	
 	updateUI();
 	
-	return TRUE;
+	return true;
 }
 
 void LLFloaterBuyCurrencyUI::draw()

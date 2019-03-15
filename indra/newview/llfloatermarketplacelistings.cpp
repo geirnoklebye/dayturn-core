@@ -59,7 +59,7 @@ LLPanelMarketplaceListings::LLPanelMarketplaceListings()
 	mEnableCallbackRegistrar.add("Marketplace.ViewSort.CheckItem",	boost::bind(&LLPanelMarketplaceListings::onViewSortMenuItemCheck,	this, _2));
 }
 
-BOOL LLPanelMarketplaceListings::postBuild()
+bool LLPanelMarketplaceListings::postBuild()
 {
 	childSetAction("add_btn", boost::bind(&LLPanelMarketplaceListings::onAddButtonClicked, this));
 	childSetAction("audit_btn", boost::bind(&LLPanelMarketplaceListings::onAuditButtonClicked, this));
@@ -377,7 +377,7 @@ LLFloaterMarketplaceListings::~LLFloaterMarketplaceListings()
 	delete mCategoryAddedObserver;
 }
 
-BOOL LLFloaterMarketplaceListings::postBuild()
+bool LLFloaterMarketplaceListings::postBuild()
 {
 	mInventoryStatus = getChild<LLTextBox>("marketplace_status");
 	mInventoryInitializationInProgress = getChild<LLView>("initialization_progress_indicator");
@@ -396,7 +396,7 @@ BOOL LLFloaterMarketplaceListings::postBuild()
     // Fetch aggressively so we can interact with listings right onOpen()
 	fetchContents();
 
-	return TRUE;
+	return true;
 }
 
 void LLFloaterMarketplaceListings::onClose(bool app_quitting)
@@ -701,7 +701,7 @@ LLFloaterAssociateListing::~LLFloaterAssociateListing()
 	gFocusMgr.releaseFocusIfNeeded( this );
 }
 
-BOOL LLFloaterAssociateListing::postBuild()
+bool LLFloaterAssociateListing::postBuild()
 {
 	getChild<LLButton>("OK")->setCommitCallback(boost::bind(&LLFloaterAssociateListing::apply, this, TRUE));
 	getChild<LLButton>("Cancel")->setCommitCallback(boost::bind(&LLFloaterAssociateListing::cancel, this));
@@ -792,7 +792,7 @@ mEditor(NULL)
 {
 }
 
-BOOL LLFloaterMarketplaceValidation::postBuild()
+bool LLFloaterMarketplaceValidation::postBuild()
 {
 	childSetAction("OK", onOK, this);
 	
@@ -802,7 +802,7 @@ BOOL LLFloaterMarketplaceValidation::postBuild()
     mEditor->setFocus(TRUE);
     mEditor->setValue(LLSD());
     
-	return TRUE;
+	return true;
 }
 
 LLFloaterMarketplaceValidation::~LLFloaterMarketplaceValidation()
@@ -934,7 +934,7 @@ LLFloaterItemProperties::~LLFloaterItemProperties()
 {
 }
 
-BOOL LLFloaterItemProperties::postBuild()
+bool LLFloaterItemProperties::postBuild()
 {
     // On the standalone properties floater, we have no need for a back button...
     LLSidepanelItemInfo* panel = getChild<LLSidepanelItemInfo>("item_panel");

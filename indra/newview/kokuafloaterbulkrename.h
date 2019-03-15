@@ -41,7 +41,7 @@ class KokuaFloaterBulkRename : public LLFloater, public LLVOInventoryListener
 	friend class LLFloaterReg;
 public:
 
-	BOOL postBuild();
+	bool postBuild();
 
 private:
 	

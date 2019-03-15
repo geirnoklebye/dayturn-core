@@ -45,7 +45,7 @@ public:
 	LLFloaterCreateLandmark(const LLSD& key);
 	~LLFloaterCreateLandmark();
 
-	BOOL postBuild();
+	bool postBuild();
 	void onOpen(const LLSD& key);
 
 	void setItem(const uuid_set_t& items);

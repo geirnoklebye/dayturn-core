@@ -93,7 +93,7 @@ public:
 class LLPanelFace : public LLPanel
 {
 public:
-	virtual BOOL	postBuild();
+	virtual bool	postBuild();
 	LLPanelFace();
 	virtual ~LLPanelFace();
 

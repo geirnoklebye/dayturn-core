@@ -37,7 +37,7 @@ public:
     LLFloaterForgetUser(const LLSD &key);
     ~LLFloaterForgetUser();
 
-    BOOL postBuild();
+    bool postBuild();
     void onForgetClicked();
 
 private:

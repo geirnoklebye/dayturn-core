@@ -66,7 +66,7 @@ LLFloaterTextureFetchDebugger::LLFloaterTextureFetchDebugger(const LLSD& key)
 }
 //----------------------------------------------
 
-BOOL LLFloaterTextureFetchDebugger::postBuild(void) 
+bool LLFloaterTextureFetchDebugger::postBuild(void)
 {	
 	mDebugger = LLAppViewer::getTextureFetch()->getFetchDebugger();
 	mStartStatus = (S32)LLTextureFetchDebugger::IDLE;
@@ -90,7 +90,7 @@ BOOL LLFloaterTextureFetchDebugger::postBuild(void)
 
 	getChild<LLUICtrl>("texel_pixel_ratio")->setValue(gSavedSettings.getF32("TexelPixelRatio"));
 
-	return TRUE ;
+	return true ;
 }
 
 LLFloaterTextureFetchDebugger::~LLFloaterTextureFetchDebugger()

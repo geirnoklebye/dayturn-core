@@ -83,7 +83,7 @@ LLPreviewNotecard::~LLPreviewNotecard()
 	delete mLiveFile;
 }
 
-BOOL LLPreviewNotecard::postBuild()
+bool LLPreviewNotecard::postBuild()
 {
 	mEditor = getChild<LLViewerTextEditor>("Notecard Editor");
 	mEditor->setNotecardInfo(mItemUUID, mObjectID, getKey());

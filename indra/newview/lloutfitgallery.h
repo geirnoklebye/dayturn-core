@@ -81,7 +81,7 @@ public:
     LLOutfitGallery(const LLOutfitGallery::Params& params = getDefaultParams());
     virtual ~LLOutfitGallery();
 
-    /*virtual*/ BOOL postBuild();
+    /*virtual*/ bool postBuild();
     /*virtual*/ void onOpen(const LLSD& info);
     /*virtual*/ void draw();	
     
@@ -254,7 +254,7 @@ public:
     LLOutfitGalleryItem(const Params& p);
     virtual ~LLOutfitGalleryItem();
 
-    /*virtual*/ BOOL postBuild();
+    /*virtual*/ bool postBuild();
     /*virtual*/ void draw();
     /*virtual*/ BOOL handleMouseDown(S32 x, S32 y, MASK mask);
     /*virtual*/ BOOL handleRightMouseDown(S32 x, S32 y, MASK mask);

@@ -165,7 +165,7 @@ LLPanelEnvironmentInfo::~LLPanelEnvironmentInfo()
         mUpdateConnection.disconnect();
 }
 
-BOOL LLPanelEnvironmentInfo::postBuild()
+bool LLPanelEnvironmentInfo::postBuild()
 {
 
     getChild<LLUICtrl>(BTN_USEDEFAULT)->setCommitCallback([this](LLUICtrl *, const LLSD &){ onBtnDefault(); });
@@ -198,7 +198,7 @@ BOOL LLPanelEnvironmentInfo::postBuild()
     getChild<LLSettingsDropTarget>("sdt_" + alt_prefixes[3])->setPanel(this, alt_prefixes[3]);
     getChild<LLSettingsDropTarget>("sdt_" + alt_prefixes[4])->setPanel(this, alt_prefixes[4]);
 
-    return TRUE;
+    return true;
 }
 
 // virtual

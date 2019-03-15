@@ -43,7 +43,7 @@ class LLPanelSnapshot: public LLPanel
 public:
 	LLPanelSnapshot();
 
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 	/*virtual*/ void onOpen(const LLSD& key);
 
 	virtual std::string getWidthSpinnerName() const = 0;

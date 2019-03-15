@@ -171,13 +171,13 @@ void LLComboBox::initFromParams(const LLComboBox::Params& p)
 }
 
 // virtual
-BOOL LLComboBox::postBuild()
+bool LLComboBox::postBuild()
 {
 	if (mControlVariable)
 	{
 		setValue(mControlVariable->getValue()); // selects the appropriate item
 	}
-	return TRUE;
+	return true;
 }
 
 

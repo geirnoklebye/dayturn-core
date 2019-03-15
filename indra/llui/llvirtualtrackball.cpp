@@ -165,9 +165,9 @@ LLVirtualTrackball::~LLVirtualTrackball()
 {
 }
 
-BOOL LLVirtualTrackball::postBuild()
+bool LLVirtualTrackball::postBuild()
 {
-    return TRUE;
+    return true;
 }
 
 

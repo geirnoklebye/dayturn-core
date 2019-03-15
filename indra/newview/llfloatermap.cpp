@@ -75,7 +75,7 @@ LLFloaterMap::~LLFloaterMap()
 {
 }
 
-BOOL LLFloaterMap::postBuild()
+bool LLFloaterMap::postBuild()
 {
 	mMap = getChild<LLNetMap>("Net Map");
 	if (gSavedSettings.getBOOL("DoubleClickTeleport"))
@@ -105,7 +105,7 @@ BOOL LLFloaterMap::postBuild()
 	// keep onscreen
 	gFloaterView->adjustToFitScreen(this, FALSE);
 
-	return TRUE;
+	return true;
 }
 
 BOOL LLFloaterMap::handleDoubleClick(S32 x, S32 y, MASK mask)

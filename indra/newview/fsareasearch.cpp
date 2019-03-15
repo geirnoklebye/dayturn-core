@@ -163,7 +163,7 @@ FSAreaSearch::~FSAreaSearch()
 	}
 }
 
-BOOL FSAreaSearch::postBuild()
+bool FSAreaSearch::postBuild()
 {
 	mTab = getChild<LLTabContainer>("area_searchtab");
 	
@@ -1313,7 +1313,7 @@ FSPanelAreaSearchList::FSPanelAreaSearchList(FSAreaSearch* pointer)
 	mColumnBits["last_owner"] = 512;
 }
 
-BOOL FSPanelAreaSearchList::postBuild()
+bool FSPanelAreaSearchList::postBuild()
 {
 	mResultList = getChild<FSScrollListCtrl>("result_list");
 	mResultList->setDoubleClickCallback(boost::bind(&FSPanelAreaSearchList::onDoubleClick, this));
@@ -1954,7 +1954,7 @@ FSPanelAreaSearchFind::FSPanelAreaSearchFind(FSAreaSearch* pointer)
 {
 }
 
-BOOL FSPanelAreaSearchFind::postBuild()
+bool FSPanelAreaSearchFind::postBuild()
 {
 	mNameLineEditor = getChild<LLLineEditor>("name_search");
 	mNameLineEditor->setCommitCallback(boost::bind(&FSAreaSearch::onCommitLine, mFSAreaSearch));
@@ -2024,7 +2024,7 @@ FSPanelAreaSearchFilter::FSPanelAreaSearchFilter(FSAreaSearch* pointer)
 {
 }
 
-BOOL FSPanelAreaSearchFilter::postBuild()
+bool FSPanelAreaSearchFilter::postBuild()
 {
 	mCheckboxLocked = getChild<LLCheckBoxCtrl>("filter_locked");
 	mCheckboxLocked->setCommitCallback(boost::bind(&FSPanelAreaSearchFilter::onCommitCheckbox, this));
@@ -2238,7 +2238,7 @@ FSPanelAreaSearchAdvanced::FSPanelAreaSearchAdvanced(FSAreaSearch* pointer)
 {
 }
 
-BOOL FSPanelAreaSearchAdvanced::postBuild()
+bool FSPanelAreaSearchAdvanced::postBuild()
 {
 	mCheckboxClickTouch = getChild<LLCheckBoxCtrl>("double_click_touch");
 	mCheckboxClickBuy = getChild<LLCheckBoxCtrl>("double_click_buy");

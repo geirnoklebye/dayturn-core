@@ -73,7 +73,7 @@ LLFloaterNameDesc::LLFloaterNameDesc(const LLSD& filename )
 //-----------------------------------------------------------------------------
 // postBuild()
 //-----------------------------------------------------------------------------
-BOOL LLFloaterNameDesc::postBuild()
+bool LLFloaterNameDesc::postBuild()
 {
 	LLRect r;
 
@@ -135,7 +135,7 @@ BOOL LLFloaterNameDesc::postBuild()
 	
 	setDefaultBtn("ok_btn");
 	
-	return TRUE;
+	return true;
 }
 
 S32 LLFloaterNameDesc::getExpectedUploadCost() const
@@ -236,14 +236,14 @@ LLFloaterSoundPreview::LLFloaterSoundPreview(const LLSD& filename )
 	mIsAudio = TRUE;
 }
 
-BOOL LLFloaterSoundPreview::postBuild()
+bool LLFloaterSoundPreview::postBuild()
 {
 	if (!LLFloaterNameDesc::postBuild())
 	{
-		return FALSE;
+		return false;
 	}
 	getChild<LLUICtrl>("ok_btn")->setCommitCallback(boost::bind(&LLFloaterNameDesc::onBtnOK, this));
-	return TRUE;
+	return true;
 }
 
 
@@ -256,14 +256,14 @@ LLFloaterAnimPreview::LLFloaterAnimPreview(const LLSD& filename )
 {
 }
 
-BOOL LLFloaterAnimPreview::postBuild()
+bool LLFloaterAnimPreview::postBuild()
 {
 	if (!LLFloaterNameDesc::postBuild())
 	{
-		return FALSE;
+		return false;
 	}
 	getChild<LLUICtrl>("ok_btn")->setCommitCallback(boost::bind(&LLFloaterNameDesc::onBtnOK, this));
-	return TRUE;
+	return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -276,12 +276,12 @@ LLFloaterScriptPreview::LLFloaterScriptPreview(const LLSD& filename )
 	mIsText = TRUE;
 }
 
-BOOL LLFloaterScriptPreview::postBuild()
+bool LLFloaterScriptPreview::postBuild()
 {
 	if (!LLFloaterNameDesc::postBuild())
 	{
-		return FALSE;
+		return false;
 	}
 	getChild<LLUICtrl>("ok_btn")->setCommitCallback(boost::bind(&LLFloaterNameDesc::onBtnOK, this));
-	return TRUE;
+	return true;
 }

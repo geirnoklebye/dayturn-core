@@ -57,7 +57,7 @@ void KokuaFloaterStreamInfo::UpdateStreamInfo(const std::string artist_title)
 	}
 }
 
-BOOL KokuaFloaterStreamInfo::postBuild()
+bool KokuaFloaterStreamInfo::postBuild()
 {
 	LLTextBox* stream_status = getChild<LLTextBox>("stream_status");
 	if (stream_status)
@@ -69,5 +69,5 @@ BOOL KokuaFloaterStreamInfo::postBuild()
 		stream_status->setText(last_artist_title);
 	}
 	
-	return TRUE;
+	return true;
 }

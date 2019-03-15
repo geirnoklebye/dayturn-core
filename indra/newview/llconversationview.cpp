@@ -229,7 +229,7 @@ bool LLConversationViewSession::isHighlightActive()
 	return (mFlashStateOn ? (mFlashTimer->isFlashingInProgress() ? mFlashTimer->isCurrentlyHighlighted() : true) : mIsCurSelection);
 }
 
-BOOL LLConversationViewSession::postBuild()
+bool LLConversationViewSession::postBuild()
 {
 	LLFolderViewItem::postBuild();
 
@@ -301,7 +301,7 @@ BOOL LLConversationViewSession::postBuild()
         refresh(); // requires vmi
 	}
 
-	return TRUE;
+	return true;
 }
 
 void LLConversationViewSession::draw()
@@ -655,7 +655,7 @@ void LLConversationViewParticipant::initFromParams(const LLConversationViewParti
     addChild(outputMonitor);
 }
 
-BOOL LLConversationViewParticipant::postBuild()
+bool LLConversationViewParticipant::postBuild()
 {
     mAvatarIcon = getChild<LLAvatarIconCtrl>("avatar_icon");
 

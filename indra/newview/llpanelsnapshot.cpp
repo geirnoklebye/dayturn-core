@@ -59,7 +59,7 @@ LLPanelSnapshot::LLPanelSnapshot()
 {}
 
 // virtual
-BOOL LLPanelSnapshot::postBuild()
+bool LLPanelSnapshot::postBuild()
 {
 	getChild<LLUICtrl>("save_btn")->setLabelArg("[UPLOAD_COST]", std::to_string(LLAgentBenefitsMgr::current().getTextureUploadCost()));
 	getChild<LLUICtrl>(getImageSizeComboName())->setCommitCallback(boost::bind(&LLPanelSnapshot::onResolutionComboCommit, this, _1));
@@ -78,7 +78,7 @@ BOOL LLPanelSnapshot::postBuild()
 	updateControls(LLSD());
 
 	mSnapshotFloater = getParentByType<LLFloaterSnapshotBase>();
-	return TRUE;
+	return true;
 }
 
 // virtual

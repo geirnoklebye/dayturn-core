@@ -444,7 +444,7 @@ void LLMediaCtrl::onFocusLost()
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-BOOL LLMediaCtrl::postBuild ()
+bool LLMediaCtrl::postBuild ()
 {
 	LLUICtrl::CommitCallbackRegistry::ScopedRegistrar registar;
 	registar.add("Open.WebInspector", boost::bind(&LLMediaCtrl::onOpenWebInspector, this));
@@ -457,7 +457,7 @@ BOOL LLMediaCtrl::postBuild ()
 		"menu_media_ctrl.xml", menuParent, LLViewerMenuHolderGL::child_registry_t::instance());
 	setVisibleCallback(boost::bind(&LLMediaCtrl::onVisibilityChanged, this, _2));
 
-	return TRUE;
+	return true;
 }
 
 void LLMediaCtrl::onOpenWebInspector()

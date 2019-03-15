@@ -94,7 +94,7 @@ LLFloaterFixedEnvironment::~LLFloaterFixedEnvironment()
     delete mFlyoutControl;
 }
 
-BOOL LLFloaterFixedEnvironment::postBuild()
+bool LLFloaterFixedEnvironment::postBuild()
 {
     mTab = getChild<LLTabContainer>(CONTROL_TAB_AREA);
     mTxtName = getChild<LLLineEditor>(FIELD_SETTINGS_NAME);
@@ -110,7 +110,7 @@ BOOL LLFloaterFixedEnvironment::postBuild()
     mFlyoutControl->setAction([this](LLUICtrl *ctrl, const LLSD &data) { onButtonApply(ctrl, data); });
     mFlyoutControl->setMenuItemVisible(ACTION_COMMIT, false);
 
-    return TRUE;
+    return true;
 }
 
 void LLFloaterFixedEnvironment::onOpen(const LLSD& key)
@@ -402,7 +402,7 @@ LLFloaterFixedEnvironmentWater::LLFloaterFixedEnvironmentWater(const LLSD &key):
     LLFloaterFixedEnvironment(key)
 {}
 
-BOOL LLFloaterFixedEnvironmentWater::postBuild()
+bool LLFloaterFixedEnvironmentWater::postBuild()
 {
     if (!LLFloaterFixedEnvironment::postBuild())
         return FALSE;
@@ -414,7 +414,7 @@ BOOL LLFloaterFixedEnvironmentWater::postBuild()
     panel->setOnDirtyFlagChanged( [this] (LLPanel *, bool value) { onPanelDirtyFlagChanged(value); });
     mTab->addTabPanel(LLTabContainer::TabPanelParams().panel(panel).select_tab(true));
 
-    return TRUE;
+    return true;
 }
 
 void LLFloaterFixedEnvironmentWater::updateEditEnvironment(void)
@@ -469,7 +469,7 @@ LLFloaterFixedEnvironmentSky::LLFloaterFixedEnvironmentSky(const LLSD &key) :
     LLFloaterFixedEnvironment(key)
 {}
 
-BOOL LLFloaterFixedEnvironmentSky::postBuild()
+bool LLFloaterFixedEnvironmentSky::postBuild()
 {
     if (!LLFloaterFixedEnvironment::postBuild())
         return FALSE;
@@ -493,7 +493,7 @@ BOOL LLFloaterFixedEnvironmentSky::postBuild()
     panel->setOnDirtyFlagChanged([this](LLPanel *, bool value) { onPanelDirtyFlagChanged(value); });
     mTab->addTabPanel(LLTabContainer::TabPanelParams().panel(panel).select_tab(false));
 
-    return TRUE;
+    return true;
 }
 
 void LLFloaterFixedEnvironmentSky::updateEditEnvironment(void)

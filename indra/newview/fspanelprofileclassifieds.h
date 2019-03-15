@@ -55,7 +55,7 @@ public:
 	FSPanelClassifieds();
 	~FSPanelClassifieds();
 
-	/*virtual*/ BOOL postBuild(void);
+	/*virtual*/ bool postBuild(void);
 
 	/*virtual*/ void onOpen(const LLSD& key);
 
@@ -142,7 +142,7 @@ public:
 
 	/*virtual*/ void processProperties(void* data, EAvatarProcessorType type);
 
-	/*virtual*/ BOOL postBuild();
+	/*virtual*/ bool postBuild();
 
 	/*virtual*/ void setValue(const LLSD& value);
 

@@ -43,7 +43,7 @@ public:
 	LLPanelVoiceEffect();
 	virtual ~LLPanelVoiceEffect();
 
-	virtual BOOL postBuild();
+	virtual bool postBuild();
 
 private:
 	void onCommitVoiceEffect();

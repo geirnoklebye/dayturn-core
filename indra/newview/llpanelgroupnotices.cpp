@@ -248,7 +248,7 @@ BOOL LLPanelGroupNotices::isVisibleByAgent(LLAgent* agentp)
 		agentp->hasPowerInGroup(mGroupID, GP_NOTICES_SEND | GP_NOTICES_RECEIVE);
 }
 
-BOOL LLPanelGroupNotices::postBuild()
+bool LLPanelGroupNotices::postBuild()
 {
 	bool recurse = true;
 

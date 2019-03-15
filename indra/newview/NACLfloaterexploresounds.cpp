@@ -59,7 +59,7 @@ NACLFloaterExploreSounds::~NACLFloaterExploreSounds()
 {
 }
 
-BOOL NACLFloaterExploreSounds::postBuild()
+bool NACLFloaterExploreSounds::postBuild()
 {
 	getChild<LLButton>("play_locally_btn")->setClickedCallback(boost::bind(&NACLFloaterExploreSounds::handlePlayLocally, this));
 	getChild<LLButton>("look_at_btn")->setClickedCallback(boost::bind(&NACLFloaterExploreSounds::handleLookAt, this));
@@ -77,7 +77,7 @@ BOOL NACLFloaterExploreSounds::postBuild()
 	mObjectSounds = getChild<LLCheckBoxCtrl>("objects_chk");
 	mPaused = getChild<LLCheckBoxCtrl>("pause_chk");
 
-	return TRUE;
+	return true;
 }
 
 void NACLFloaterExploreSounds::handleSelection()

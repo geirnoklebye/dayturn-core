@@ -88,10 +88,10 @@ LLFloaterSettingsPicker::~LLFloaterSettingsPicker()
 }
 
 //-------------------------------------------------------------------------
-BOOL LLFloaterSettingsPicker::postBuild()
+bool LLFloaterSettingsPicker::postBuild()
 {
     if (!LLFloater::postBuild())
-        return FALSE;
+        return false;
 
     std::string prefix = getString(STR_TITLE_PREFIX);
     std::string label = getString(STR_TITLE_SETTINGS);
@@ -137,7 +137,7 @@ BOOL LLFloaterSettingsPicker::postBuild()
     // update permission filter once UI is fully initialized
     mSavedFolderState.setApply(FALSE);
 
-    return TRUE;
+    return true;
 }
 
 void LLFloaterSettingsPicker::onClose(bool app_quitting)

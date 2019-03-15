@@ -203,7 +203,7 @@ LLFloaterIMPanel::~LLFloaterIMPanel()
 	mFocusCallbackConnection.disconnect();
 }
 
-BOOL LLFloaterIMPanel::postBuild() 
+bool LLFloaterIMPanel::postBuild() 
 {
 	setVisibleCallback(boost::bind(&LLFloaterIMPanel::onVisibilityChange, this, _2));
 	
@@ -256,7 +256,7 @@ BOOL LLFloaterIMPanel::postBuild()
 	}
 
 	setDefaultBtn("send_btn");
-	return TRUE;
+	return true;
 }
 
 void* LLFloaterIMPanel::createSpeakersPanel(void* data)

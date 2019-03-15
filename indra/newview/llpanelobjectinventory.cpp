@@ -1352,7 +1352,7 @@ LLPanelObjectInventory::~LLPanelObjectInventory()
 	}
 }
 
-BOOL LLPanelObjectInventory::postBuild()
+bool LLPanelObjectInventory::postBuild()
 {
 	// clear contents and initialize menus, sets up mFolders
 	reset();
@@ -1360,7 +1360,7 @@ BOOL LLPanelObjectInventory::postBuild()
 	// Register an idle update callback
 	gIdleCallbacks.addFunction(idle, this);
 
-	return TRUE;
+	return true;
 }
 
 void LLPanelObjectInventory::doToSelected(const LLSD& userdata)

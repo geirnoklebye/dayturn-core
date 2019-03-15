@@ -136,7 +136,7 @@ LLPanelSettingsSkyAtmosTab::LLPanelSettingsSkyAtmosTab() :
 }
 
 
-BOOL LLPanelSettingsSkyAtmosTab::postBuild()
+bool LLPanelSettingsSkyAtmosTab::postBuild()
 {
     getChild<LLUICtrl>(FIELD_SKY_AMBIENT_LIGHT)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onAmbientLightChanged(); });
     getChild<LLUICtrl>(FIELD_SKY_BLUE_HORIZON)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onBlueHorizonChanged(); });
@@ -152,7 +152,7 @@ BOOL LLPanelSettingsSkyAtmosTab::postBuild()
     getChild<LLUICtrl>(FIELD_SKY_DENSITY_ICE_LEVEL)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onIceLevelChanged(); });
     refresh();
 
-    return TRUE;
+    return true;
 }
 
 //virtual
@@ -317,7 +317,7 @@ LLPanelSettingsSkyCloudTab::LLPanelSettingsSkyCloudTab() :
 {
 }
 
-BOOL LLPanelSettingsSkyCloudTab::postBuild()
+bool LLPanelSettingsSkyCloudTab::postBuild()
 {
     getChild<LLUICtrl>(FIELD_SKY_CLOUD_COLOR)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onCloudColorChanged(); });
     getChild<LLUICtrl>(FIELD_SKY_CLOUD_COVERAGE)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onCloudCoverageChanged(); });
@@ -338,7 +338,7 @@ BOOL LLPanelSettingsSkyCloudTab::postBuild()
 
     refresh();
 
-    return TRUE;
+    return true;
 }
 
 //virtual
@@ -470,7 +470,7 @@ LLPanelSettingsSkySunMoonTab::LLPanelSettingsSkySunMoonTab() :
 }
 
 
-BOOL LLPanelSettingsSkySunMoonTab::postBuild()
+bool LLPanelSettingsSkySunMoonTab::postBuild()
 {
     getChild<LLUICtrl>(FIELD_SKY_SUN_MOON_COLOR)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onSunMoonColorChanged(); });
     getChild<LLUICtrl>(FIELD_SKY_GLOW_FOCUS)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onGlowChanged(); });
@@ -496,7 +496,7 @@ BOOL LLPanelSettingsSkySunMoonTab::postBuild()
 
     refresh();
 
-    return TRUE;
+    return true;
 }
 
 //virtual
@@ -740,7 +740,7 @@ LLPanelSettingsSkyDensityTab::LLPanelSettingsSkyDensityTab()
 {    
 }
 
-BOOL LLPanelSettingsSkyDensityTab::postBuild()
+bool LLPanelSettingsSkyDensityTab::postBuild()
 {
     getChild<LLUICtrl>(FIELD_SKY_DENSITY_RAYLEIGH_EXPONENTIAL)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onRayleighExponentialChanged(); });
     getChild<LLUICtrl>(FIELD_SKY_DENSITY_RAYLEIGH_EXPONENTIAL_SCALE)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onRayleighExponentialScaleChanged(); });
@@ -763,7 +763,7 @@ BOOL LLPanelSettingsSkyDensityTab::postBuild()
     getChild<LLUICtrl>(FIELD_SKY_DENSITY_ABSORPTION_MAX_ALTITUDE)->setCommitCallback([this](LLUICtrl *, const LLSD &) { onAbsorptionMaxAltitudeChanged(); });
 
     refresh();
-    return TRUE;
+    return true;
 }
 
 void LLPanelSettingsSkyDensityTab::setEnabled(BOOL enabled)

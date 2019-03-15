@@ -56,7 +56,7 @@ LLFloaterTOS::LLFloaterTOS(const LLSD& data)
 {
 }
 
-BOOL LLFloaterTOS::postBuild()
+bool LLFloaterTOS::postBuild()
 {	
 	childSetAction("Continue", onContinue, this);
 	childSetAction("Cancel", onCancel, this);
@@ -70,7 +70,7 @@ BOOL LLFloaterTOS::postBuild()
 		tos_text->setFocus(TRUE);
 		tos_text->setValue(LLSD(mMessage));
 
-		return TRUE;
+		return true;
 	}
 
 	// disable Agree to TOS radio button until the page has fully loaded
@@ -111,7 +111,7 @@ BOOL LLFloaterTOS::postBuild()
 #endif
 	}
 
-	return TRUE;
+	return true;
 }
 
 void LLFloaterTOS::setSiteIsAlive( bool alive )

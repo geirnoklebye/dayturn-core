@@ -78,7 +78,7 @@ LLPanelLandAudio::~LLPanelLandAudio()
 }
 
 
-BOOL LLPanelLandAudio::postBuild()
+bool LLPanelLandAudio::postBuild()
 {
 	mCheckSoundLocal = getChild<LLCheckBoxCtrl>("check sound local");
 	childSetCommitCallback("check sound local", onCommitAny, this);
@@ -113,7 +113,7 @@ BOOL LLPanelLandAudio::postBuild()
 	mCheckAVSoundGroup = getChild<LLCheckBoxCtrl>("group av sound check");
 	childSetCommitCallback("group av sound check", onCommitAny, this);
 
-	return TRUE;
+	return true;
 }
 
 

@@ -189,7 +189,7 @@ LLFloaterGesture::~LLFloaterGesture()
 }
 
 // virtual
-BOOL LLFloaterGesture::postBuild()
+bool LLFloaterGesture::postBuild()
 {
 	std::string label;
 
@@ -237,7 +237,7 @@ BOOL LLFloaterGesture::postBuild()
 	// Update button labels
 	onCommitList();
 	
-	return TRUE;
+	return true;
 }
 
 // <FS:PP> FIRE-5646: Option to show only active gestures

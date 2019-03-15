@@ -73,7 +73,7 @@ LLPanelBlockList::~LLPanelBlockList()
 }
 
 // virtual
-BOOL LLPanelBlockList::postBuild()
+bool LLPanelBlockList::postBuild()
 {
 	setVisibleCallback(boost::bind(&LLPanelBlockList::removePicker, this));
 
@@ -91,7 +91,7 @@ BOOL LLPanelBlockList::postBuild()
 
 	LLMuteList::getInstance()->addObserver(this);
 
-	return TRUE;
+	return true;
 }
 
 // virtual
@@ -361,7 +361,7 @@ LLPanelDerenderList::~LLPanelDerenderList()
 	m_DerenderChangeConn.disconnect();
 }
 
-BOOL LLPanelDerenderList::postBuild()
+bool LLPanelDerenderList::postBuild()
 {
 	m_pDerenderList = findChild<LLScrollListCtrl>("derender_list");
 	m_pDerenderList->setCommitCallback(boost::bind(&LLPanelDerenderList::onSelectionChange, this));
@@ -379,7 +379,7 @@ BOOL LLPanelDerenderList::postBuild()
 	m_DerenderChangeConn = LLDerenderList::setChangeCallback(boost::bind(&LLPanelDerenderList::refresh, this));
 	findChild<LLUICtrl>("derender_trash_btn")->setCommitCallback(boost::bind(&LLPanelDerenderList::onSelectionRemove, this));
 
-	return TRUE;
+	return true;
 }
 
 void LLPanelDerenderList::onOpen(const LLSD& sdParam)
@@ -528,7 +528,7 @@ LLPanelAvatarRendering::~LLPanelAvatarRendering()
 }
 
 // virtual
-BOOL LLPanelAvatarRendering::postBuild()
+bool LLPanelAvatarRendering::postBuild()
 {
 	setVisibleCallback(boost::bind(&LLPanelAvatarRendering::removePicker, this));
 
@@ -548,7 +548,7 @@ BOOL LLPanelAvatarRendering::postBuild()
 	LLRenderMuteList::getInstance()->addObserver(this);
 	m_pContextMenu = new LLPanelAvatarRenderingContextMenu(this);
 
-	return TRUE;
+	return true;
 }
 
 // virtual
@@ -740,7 +740,7 @@ LLFloaterBlocked::~LLFloaterBlocked()
 {
 }
 
-BOOL LLFloaterBlocked::postBuild()
+bool LLFloaterBlocked::postBuild()
 {
 	m_pFilterEditor = findChild<LLFilterEditor>("blocked_filter");
 	m_pFilterEditor->setCommitCallback(boost::bind(&LLFloaterBlocked::onFilterEdit, this, _2));
@@ -748,7 +748,7 @@ BOOL LLFloaterBlocked::postBuild()
 	m_pBlockedTabs = findChild<LLTabContainer>("blocked_tabs");
 	m_pBlockedTabs->setCommitCallback(boost::bind(&LLFloaterBlocked::onTabSelect, this, _2));
 
-	return TRUE;
+	return true;
 }
 
 void LLFloaterBlocked::onOpen(const LLSD& sdParam)
