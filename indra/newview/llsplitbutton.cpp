@@ -80,7 +80,7 @@ void LLSplitButton::setFocus(BOOL b)
 	}
 }
 
-void LLSplitButton::setEnabled(BOOL enabled)
+void LLSplitButton::setEnabled(bool enabled)
 {
 	LLView::setEnabled(enabled);
 	mArrowBtn->setEnabled(enabled);

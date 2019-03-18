@@ -130,7 +130,7 @@ public:
 
 	virtual void	draw();
 	virtual void	setVisible( bool visible );
-	virtual void	setEnabled( BOOL enabled );
+	virtual void	setEnabled( bool enabled );
 
 	void			setValid(BOOL valid);
 

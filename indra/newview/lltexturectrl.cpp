@@ -1329,7 +1329,7 @@ void LLTextureCtrl::setVisible( bool visible )
 	LLUICtrl::setVisible( visible );
 }
 
-void LLTextureCtrl::setEnabled( BOOL enabled )
+void LLTextureCtrl::setEnabled( bool enabled )
 {
 	LLFloaterTexturePicker* floaterp = (LLFloaterTexturePicker*)mFloaterHandle.get();
 	if( floaterp )

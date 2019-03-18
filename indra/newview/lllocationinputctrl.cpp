@@ -453,7 +453,7 @@ LLLocationInputCtrl::~LLLocationInputCtrl()
 	mLocationHistoryConnection.disconnect();
 }
 
-void LLLocationInputCtrl::setEnabled(BOOL enabled)
+void LLLocationInputCtrl::setEnabled(bool enabled)
 {
 	LLComboBox::setEnabled(enabled);
 	mAddLandmarkBtn->setEnabled(enabled);
