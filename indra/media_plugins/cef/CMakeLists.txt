@@ -124,7 +124,7 @@ if (DARWIN)
   )
 
   ## turns on C++11 using Cmake
-  target_compile_features(media_plugin_cef PRIVATE cxx_range_for)
+  target_compile_features(media_plugin_cef PRIVATE c_std_11)
 
   add_custom_command(TARGET media_plugin_cef
     POST_BUILD COMMAND ${CMAKE_INSTALL_NAME_TOOL} -change "@executable_path/Chromium Embedded Framework"
