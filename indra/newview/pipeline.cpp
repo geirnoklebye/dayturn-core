@@ -2551,7 +2551,7 @@ void LLPipeline::updateCull(LLCamera& camera, LLCullResult& result, S32 water_cl
 		LLVOCachePartition* vo_part = region->getVOCachePartition();
 		if(vo_part)
 		{
-			bool do_occlusion_cull = can_use_occlusion && use_occlusion && !gUseWireframe/* && !gViewerWindow->getProgressView()->getVisible()*/;
+			bool do_occlusion_cull = can_use_occlusion && use_occlusion && !gUseWireframe && 0 > water_clip /* && !gViewerWindow->getProgressView()->getVisible()*/;
 			vo_part->cull(camera, do_occlusion_cull);
 		}
 	}
@@ -2680,9 +2680,12 @@ void LLPipeline::downsampleDepthBuffer(LLRenderTarget& source, LLRenderTarget& d
 
 	if (scratch_space)
 	{
+        GLint bits = 0;
+        bits |= (source.hasStencil() && dest.hasStencil()) ? GL_STENCIL_BUFFER_BIT : 0;
+        bits |= GL_DEPTH_BUFFER_BIT;
 		scratch_space->copyContents(source, 
 									0, 0, source.getWidth(), source.getHeight(), 
-									0, 0, scratch_space->getWidth(), scratch_space->getHeight(), GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+									0, 0, scratch_space->getWidth(), scratch_space->getHeight(), bits, GL_NEAREST);
 	}
 
 	dest.bindTarget();
@@ -9939,16 +9942,16 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 
 						gPipeline.grabReferences(result);
 						gPipeline.mDeferredScreen.bindTarget();
-						gGL.setColorMask(true, true);						
+						gGL.setColorMask(true, true);
 						glClearColor(0,0,0,0);
 						gPipeline.mDeferredScreen.clear();
 
-						renderGeomDeferred(camera);						
+						renderGeomDeferred(camera);
 					}
 					else
 					{
-					renderGeom(camera, TRUE);
-					}					
+						renderGeom(camera, TRUE);
+					}
 
 					gPipeline.popRenderTypeMask();
 				}
@@ -9966,6 +9969,7 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 				S32 detail = RenderReflectionDetail;
 				if (detail > 0)
 				{ //mask out selected geometry based on reflection detail
+
 					if (detail < 4)
 					{
 						clearRenderTypeMask(LLPipeline::RENDER_TYPE_PARTICLES, END_RENDER_TYPES);
@@ -9978,6 +9982,7 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 							}
 						}
 					}
+
 
 					LLGLUserClipPlane clip_plane(plane, mat, projection);
 					LLGLDisable cull(GL_CULL_FACE);
@@ -9993,15 +9998,15 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 						LLGLUserClipPlane clip_plane(plane, mat, projection);
 
 						if (LLPipeline::sRenderDeferred && materials_in_water)
-						{							
+						{
 							renderGeomDeferred(camera);
 						}
 						else
 						{
-						renderGeom(camera);
+							renderGeom(camera);
+						}
 					}
-				}	
-				}	
+				}
 
 				if (LLPipeline::sRenderDeferred && materials_in_water)
 				{
@@ -10070,14 +10075,14 @@ void LLPipeline::generateWaterReflection(LLCamera& camera_in)
 
 				
 				if (LLPipeline::sRenderDeferred && materials_in_water)
-				{										
+				{
 					mWaterDis.flush();
 					gPipeline.mDeferredScreen.bindTarget();
 					gGL.setColorMask(true, true);
 					glClearColor(0,0,0,0);
 					gPipeline.mDeferredScreen.clear();
 					gPipeline.grabReferences(result);
-					renderGeomDeferred(camera);					
+					renderGeomDeferred(camera);
 				}
 				else
 				{

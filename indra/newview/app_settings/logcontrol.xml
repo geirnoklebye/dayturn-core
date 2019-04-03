@@ -68,15 +68,11 @@
 						
 				  		<!-- sample entry for debugging specific items	
                                                      <string>AnimatedObjects</string>
-                             <string>import</string>
-                             <string>export</string>
-							 <string>FmodEX</string>
 						     <string>Avatar</string>
 						     <string>Init</string>
 						     <string>Inventory</string>
 						     <string>SceneLoadTiming</string>
 						     <string>Avatar</string>
-						     <string>GridManager</string>							 
 						     <string>Voice</string>		
 						 -->
 						</array>
