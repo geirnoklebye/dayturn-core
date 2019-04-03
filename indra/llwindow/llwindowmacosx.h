@@ -113,6 +113,7 @@ public:
 	/*virtual*/ void interruptLanguageTextInput();
 	/*virtual*/ void spawnWebBrowser(const std::string& escaped_url, bool async);
 	/*virtual*/ void setTitle(const std::string& title);
+	/*virtual*/ F32 getSystemUISize();
 
 	static std::vector<std::string> getDynamicFallbackFontList();
 

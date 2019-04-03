@@ -554,7 +554,8 @@ void LLHUDEffectLookAt::render()
 			)
 		)
 	)) {
-	    LLGLDisable gls_stencil(GL_STENCIL_TEST);
+	    gGL.getTexUnit(0)->unbind(LLTexUnit::TT_TEXTURE);
+		LLGLDisable gls_stencil(GL_STENCIL_TEST);
 		LLVector3 target = mTargetPos + ((LLVOAvatar*)(LLViewerObject*)mSourceObject)->mHeadp->getWorldPosition();
 		LLColor3 color = (*mAttentions)[mTargetType].mColor;
 
@@ -587,6 +588,7 @@ void LLHUDEffectLookAt::render()
 		gGL.scalef(0.3f, 0.3f, 0.3f);
 		gGL.begin(LLRender::LINES);
 		{
+			LLColor3 color = (*mAttentions)[mTargetType].mColor;
 			gGL.color3f(color.mV[VRED], color.mV[VGREEN], color.mV[VBLUE]);
 			gGL.vertex3f(-1.f, 0.f, 0.f);
 			gGL.vertex3f(1.f, 0.f, 0.f);
@@ -649,6 +651,11 @@ void LLHUDEffectLookAt::update()
 				((LLVOAvatar*)(LLViewerObject*)mSourceObject)->startMotion(ANIM_AGENT_HEAD_ROT);
 			}
 		}
+	}
+
+	if (sDebugLookAt)
+	{
+		((LLVOAvatar*)(LLViewerObject*)mSourceObject)->addDebugText((*mAttentions)[mTargetType].mName);
 	}
 }
 
