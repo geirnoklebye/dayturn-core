@@ -522,8 +522,9 @@ void MediaPluginCEF::receiveMessage(const char* message_string)
 				settings.webgl_enabled = true;
 				settings.log_file = mCefLogFile;
 				settings.log_verbose = mCefLogVerbose;
+#if !LL_LINUX
 				settings.autoplay_without_gesture = true;
-
+#endif
 				std::vector<std::string> custom_schemes(1, "secondlife");
 				mCEFLib->setCustomSchemes(custom_schemes);
 
