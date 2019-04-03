@@ -589,7 +589,7 @@ void LLDrawPoolAvatar::renderShadow(S32 pass)
 		avatarp->renderSkinned();
         LLDrawPoolAvatar::sSkipTransparent = false;
 	}
-
+//MK from CY
 	else if (RestrainedLoveAvatarShadows == 1)
 	{
 		// Don't render the shadow of anything that is rigged. Instead, force the shadow of the avatar shape to render instead.
@@ -1979,14 +1979,7 @@ void LLDrawPoolAvatar::renderRigged(LLVOAvatar* avatar, U32 type, bool glow)
 	for (U32 i = 0; i < size; ++i)
 //mk
 	{
-		LLFace* face = mRiggedFace[type][i];
-
-        S32 offset = face->getIndicesStart();
-		U32 count = face->getIndicesCount();
-
-        U16 start = face->getGeomStart();
-		U16 end = start + face->getGeomCount()-1;			
-
+		LLFace* face = mRiggedFace[type][i];		
 		LLDrawable* drawable = face->getDrawable();
 		if (!drawable)
 		{
