@@ -652,11 +652,6 @@ void LLHUDEffectLookAt::update()
 			}
 		}
 	}
-
-	if (sDebugLookAt)
-	{
-		((LLVOAvatar*)(LLViewerObject*)mSourceObject)->addDebugText((*mAttentions)[mTargetType].mName);
-	}
 }
 
 /**
