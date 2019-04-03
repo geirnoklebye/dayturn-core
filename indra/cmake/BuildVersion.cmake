@@ -38,7 +38,10 @@ if (NOT DEFINED VIEWER_SHORT_VERSION) # will be true in indra/, false in indra/n
           if (MERCURIAL)
             # this probably isn't the last of problems with finding Mercurial so report which one we're using
             message("-- Using Mercurial from " ${MERCURIAL})
-            execute_process(COMMAND ${MERCURIAL} identify --num
+            # the added -r . below suppresses the appending of a + to the result if there are uncommitted changes,
+            # which in turn appears to cause problems hg_id_result becoming the previous value appended to the current
+            # value, resulting in buildids like 4524745335 when the previous was 45247 and it's now 45335
+            execute_process(COMMAND ${MERCURIAL} identify --num -r .
                             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                             RESULT_VARIABLE hg_id_result
                             ERROR_VARIABLE hg_id_error
