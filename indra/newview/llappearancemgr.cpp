@@ -3934,6 +3934,10 @@ void LLAppearanceMgr::syncCofVersionAndRefreshCoro()
 	if (gAgent.getRegion() == NULL)
 	{
 		LL_WARNS("Avatar") << "Region not set, cannot request cof_version increment" << LL_ENDL;
+
+		// Integration of HB fix - assume we got here for a reason, so set up for doing
+		// this again when we do have the capability available
+		gAgent.mRebakeNeeded = true;
 		return;
 	}
 
@@ -3941,6 +3945,10 @@ void LLAppearanceMgr::syncCofVersionAndRefreshCoro()
 	if (url.empty())
 	{
 		LL_WARNS("Avatar") << "No cap for IncrementCofVersion." << LL_ENDL;
+		
+		// Integration of HB fix - assume we got here for a reason, so set up for doing
+		// this again when we do have the capability available
+		gAgent.mRebakeNeeded = true;
 		return;
 	}
 

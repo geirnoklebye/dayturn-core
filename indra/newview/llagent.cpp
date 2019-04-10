@@ -352,6 +352,8 @@ LLAgent::LLAgent() :
 	mGroupID(),
 
 	mInitialized(FALSE),
+	// from HB
+	mRebakeNeeded(false),
 	mListener(),
 
 	mDoubleTapRunTimer(),
@@ -868,6 +870,28 @@ boost::signals2::connection LLAgent::addParcelChangedCallback(parcel_changed_cal
 	return mParcelChangedSignal.connect(cb);
 }
 
+// imported from HB as part of delaying the server rebake until region capabilities
+// have definitely been received (and then majorly simplified for a SL-only SSB-only,
+// display names-enabled environment)
+
+void LLAgent::handleServerFeaturesTransition()
+{
+
+	// NOTE: the avatar is not yet fully rezzed when logging in and the
+	// capabilities are received and trigger a first call to this method...
+	if (!isAgentAvatarValid()) return;
+
+	// We needed a rebake just after the region capabilities were received, so
+	// we can do it now.
+	if (mRebakeNeeded)
+	{
+		mRebakeNeeded = false;
+		// and again use KB's version rather than adding HB's
+    LLAppearanceMgr::instance().syncCofVersionAndRefresh();
+  }
+}
+
+
 //-----------------------------------------------------------------------------
 // setRegion()
 //-----------------------------------------------------------------------------
@@ -963,6 +987,20 @@ void LLAgent::setRegion(LLViewerRegion *regionp)
 
 	LL_DEBUGS("AgentLocation") << "Calling RegionChanged callbacks" << LL_ENDL;
 	mRegionChangedSignal();
+	// imported from HB as part of delaying the server rebake until region capabilities
+	// have definitely been received
+
+	// Check for transitional features changes between regions
+	if (regionp->capabilitiesReceived())
+	{
+		handleServerFeaturesTransition();
+	}
+	else
+	{
+		// Need to handle via callback after caps arrive.
+		regionp->setCapabilitiesReceivedCallback(boost::bind(&LLAgent::handleServerFeaturesTransition,
+													   this));
+	}
 }
 
 
