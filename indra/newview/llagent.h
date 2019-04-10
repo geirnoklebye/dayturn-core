@@ -136,6 +136,8 @@ public:
 	BOOL 			isInitialized() const 	{ return mInitialized; }
 public:
 	std::string		mMOTD; 					// Message of the day
+//from HB
+  BOOL      mRebakeNeeded;
 private:
 	BOOL			mInitialized;
 	BOOL			mFirstLogin;
@@ -962,6 +964,10 @@ public:
  **                                                                            **
  **                    UTILITY
  **/
+//imported from HB
+private:
+  	void handleServerFeaturesTransition();
+
 public:
     typedef LLCoreHttpUtil::HttpCoroutineAdapter::completionCallback_t httpCallback_t;
 
