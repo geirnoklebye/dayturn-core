@@ -263,6 +263,16 @@ HttpCoroHandler::HttpCoroHandler(LLEventStream &reply) :
 
 void HttpCoroHandler::onCompleted(LLCore::HttpHandle handle, LLCore::HttpResponse * response)
 {
+    // Modified to include HB improvements, particularly around
+    // parsing the error body (needed for the HB changes in 
+    // newview/llappearancemgr
+    
+  	if (!response)
+  	{
+  		LL_WARNS("CoreHTTP") << "NULL response pointer passed !" << LL_ENDL;
+  		return;
+  	}
+  	
     LLSD result;
 
     LLCore::HttpStatus status = response->getStatus();
@@ -309,15 +319,31 @@ void HttpCoroHandler::onCompleted(LLCore::HttpHandle handle, LLCore::HttpRespons
 
     if (!status)
     {
+        // updated from HB's version that includes parsing
         LLSD &httpStatus = result[HttpCoroutineAdapter::HTTP_RESULTS];
-
-        LLCore::BufferArray *body = response->getBody();
-        LLCore::BufferArrayStream bas(body);
-        LLSD::String bodyData;
-        bodyData.reserve(response->getBodySize());
-        bas >> std::noskipws;
-        bodyData.assign(std::istream_iterator<U8>(bas), std::istream_iterator<U8>());
-        httpStatus["error_body"] = LLSD(bodyData);
+        bool parseSuccess(false);
+        LLSD error_body = parseBody(response, parseSuccess);
+        if (parseSuccess)
+        {
+          httpStatus["error_body"] = error_body;
+    			LL_DEBUGS("CoreHttp") << "Returned body (parsed):\n";
+    			std::stringstream str;
+    			LLSDSerialize::toPrettyXML(error_body, str);
+    			LL_CONT << str.str() << LL_ENDL;          
+        }
+        else
+        {
+          LLCore::BufferArray *body = response->getBody();
+          LLCore::BufferArrayStream bas(body);
+          LLSD::String bodyData;
+          bodyData.reserve(response->getBodySize());
+          bas >> std::noskipws;
+          bodyData.assign(std::istream_iterator<U8>(bas), std::istream_iterator<U8>());
+          httpStatus["error_body"] = LLSD(bodyData);
+    			LL_DEBUGS("CoreHttp") << "Returned body (unparsed):" << std::endl
+								  << httpStatus["error_body"].asString()
+								  << LL_ENDL;
+        }
         if (getBoolSetting(HTTP_LOGBODY_KEY))
         {
             // commenting out, but keeping since this can be useful for debugging
