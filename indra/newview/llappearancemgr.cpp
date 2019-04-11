@@ -3878,9 +3878,18 @@ void LLAppearanceMgr::serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAd
             // is still updating.  If that is the case re send the request with the 
             // corrected COF version.  (This may also be the case if the viewer is running 
             // on multiple machines.
-            if (result.has("expected"))
+            //
+            // Change to use HB's parsing of the error body
+            if (httpResults.has("error_body"))
             {
-                S32 expectedCofVersion = result["expected"].asInteger();
+                S32 expectedCofVersion = lastReq;
+                const LLSD& error_body = httpResults["error_body"];
+              	if (error_body.has("expected"))
+              	{
+              		expectedCofVersion = error_body["expected"].asInteger();
+              	}
+              	// which replaces LL's line below...
+                //S32 expectedCofVersion = result["expected"].asInteger();
                 LL_WARNS("Avatar") << "Server expected " << expectedCofVersion << " as COF version" << LL_ENDL;
 
                 // Force an update texture request for ourself.  The message will return
@@ -3893,8 +3902,33 @@ void LLAppearanceMgr::serverAppearanceUpdateCoro(LLCoreHttpUtil::HttpCoroutineAd
                 // Wait for a 1/2 second before trying again.  Just to keep from asking too quickly.
                 if (++retryCount > BAKE_RETRY_MAX_COUNT)
                 {
-                    LL_WARNS("Avatar") << "Bake retry count exceeded!" << LL_ENDL;
-                    break;
+                    // Instead of giving up at this point we use HB's code fragment to try and
+                    // get ourselves back to what the server expects us to have
+
+              			if (expectedCofVersion != cofVersion)
+              			{
+                      LL_WARNS("Avatar") << "Bake retry count exceeded - trying to refetch from server" << LL_ENDL;
+              				// We obviously went out of sync between viewer and server,
+              				// So try and refetch the COF with the proper version as
+              				// seen from the server...
+              				LL_INFOS("Avatar") << "Refetching the COF from the server" << LL_ENDL;
+              				gAgentAvatarp->mLastUpdateRequestCOFVersion =
+              					LLViewerInventoryCategory::VERSION_UNKNOWN;
+              				LLViewerInventoryCategory* cof =
+              					gInventory.getCategory(getCOF());
+              				cof->setVersion(LLViewerInventoryCategory::VERSION_UNKNOWN);
+              				cof->fetch();
+              				// HB's version of this routine exits by generating a new request so do it
+              				// here instead to maintain the existing routine's structure
+              				syncCofVersionAndRefresh();
+                      break;
+              			}
+              			else
+              			{
+              			  // something else went wrong so chicken out
+                      LL_WARNS("Avatar") << "Bake retry count exceeded!" << LL_ENDL;
+                      break;
+                    }
                 }
                 F32 timeout = pow(BAKE_RETRY_TIMEOUT, static_cast<float>(retryCount)) - 1.0;
 
