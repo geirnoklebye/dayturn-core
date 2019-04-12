@@ -91,7 +91,7 @@ bool LLFloaterGroupPicker::postBuild()
 
 	setDefaultBtn("OK");
 
-	getChildView("OK")->setEnabled(TRUE);
+	getChildView("OK")->setEnabled(true);
 
 	return true;
 }
@@ -224,7 +224,7 @@ void LLPanelGroups::enableButtons()
 
 	if(group_id != gAgent.getGroupID())
 	{
-		getChildView("Activate")->setEnabled(TRUE);
+		getChildView("Activate")->setEnabled(true);
 	}
 	else
 	{
@@ -232,9 +232,9 @@ void LLPanelGroups::enableButtons()
 	}
 	if (group_id.notNull())
 	{
-		getChildView("Info")->setEnabled(TRUE);
-		getChildView("IM")->setEnabled(TRUE);
-		getChildView("Leave")->setEnabled(TRUE);
+		getChildView("Info")->setEnabled(true);
+		getChildView("IM")->setEnabled(true);
+		getChildView("Leave")->setEnabled(true);
 	}
 	else
 	{

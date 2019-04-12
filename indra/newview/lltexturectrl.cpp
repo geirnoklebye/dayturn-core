@@ -1329,7 +1329,7 @@ void LLTextureCtrl::setVisible( bool visible )
 	LLUICtrl::setVisible( visible );
 }
 
-void LLTextureCtrl::setEnabled( bool enabled )
+void LLTextureCtrl::setEnabled(bool enabled)
 {
 	LLFloaterTexturePicker* floaterp = (LLFloaterTexturePicker*)mFloaterHandle.get();
 	if( floaterp )
@@ -1355,7 +1355,7 @@ void LLTextureCtrl::setEnabled( bool enabled )
 	LLView::setEnabled( enabled );
 }
 
-void LLTextureCtrl::setValid(BOOL valid )
+void LLTextureCtrl::setValid(bool valid )
 {
 	mValid = valid;
 	if (!valid)

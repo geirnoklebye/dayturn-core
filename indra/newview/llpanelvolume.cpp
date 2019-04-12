@@ -302,11 +302,11 @@ void LLPanelVolume::getState( )
 	
 	if (is_light && editable && single_volume)
 	{
-		//mLabelColor		 ->setEnabled( TRUE );
+		//mLabelColor		 ->setEnabled(true);
 		LLColorSwatchCtrl* LightColorSwatch = getChild<LLColorSwatchCtrl>("colorswatch");
 		if(LightColorSwatch)
 		{
-			LightColorSwatch->setEnabled( TRUE );
+			LightColorSwatch->setEnabled(true);
 			LightColorSwatch->setValid( TRUE );
 			LightColorSwatch->set(volobjp->getLightSRGBBaseColor());
 		}
@@ -314,8 +314,8 @@ void LLPanelVolume::getState( )
 		LLTextureCtrl* LightTextureCtrl = getChild<LLTextureCtrl>("light texture control");
 		if (LightTextureCtrl)
 		{
-			LightTextureCtrl->setEnabled(TRUE);
-			LightTextureCtrl->setValid(TRUE);
+			LightTextureCtrl->setEnabled(true);
+			LightTextureCtrl->setValid(true);
 			LightTextureCtrl->setImageAssetID(volobjp->getLightTextureID());
 		}
 
@@ -347,14 +347,14 @@ void LLPanelVolume::getState( )
 		LLColorSwatchCtrl* LightColorSwatch = getChild<LLColorSwatchCtrl>("colorswatch");
 		if(LightColorSwatch)
 		{
-			LightColorSwatch->setEnabled( FALSE );
-			LightColorSwatch->setValid( FALSE );
+			LightColorSwatch->setEnabled(false);
+			LightColorSwatch->setValid(false);
 		}
 		LLTextureCtrl* LightTextureCtrl = getChild<LLTextureCtrl>("light texture control");
 		if (LightTextureCtrl)
 		{
 			LightTextureCtrl->setEnabled(false);
-			LightTextureCtrl->setValid(FALSE);
+			LightTextureCtrl->setValid(false);
 		}
 
 		getChildView("Light Intensity")->setEnabled(false);
@@ -495,7 +495,7 @@ void LLPanelVolume::getState( )
 	std::string LEGACY_FULLBRIGHT_DESC = LLTrans::getString("Fullbright");
 	if (editable && single_volume && material_same)
 	{
-		mComboMaterial->setEnabled( TRUE );
+		mComboMaterial->setEnabled(true);
 		if (material_code == LL_MCODE_LIGHT)
 		{
 			if (mComboMaterial->getItemCount() == mComboMaterialItemCount)
@@ -516,7 +516,7 @@ void LLPanelVolume::getState( )
 	}
 	else
 	{
-		mComboMaterial->setEnabled( FALSE );
+		mComboMaterial->setEnabled(false);
 	}
 
 	// Physics properties
@@ -641,14 +641,14 @@ void LLPanelVolume::clearCtrls()
 	LLColorSwatchCtrl* LightColorSwatch = getChild<LLColorSwatchCtrl>("colorswatch");
 	if(LightColorSwatch)
 	{
-		LightColorSwatch->setEnabled( FALSE );
-		LightColorSwatch->setValid( FALSE );
+		LightColorSwatch->setEnabled(false);
+		LightColorSwatch->setValid(false);
 	}
 	LLTextureCtrl* LightTextureCtrl = getChild<LLTextureCtrl>("light texture control");
 	if(LightTextureCtrl)
 	{
-		LightTextureCtrl->setEnabled( FALSE );
-		LightTextureCtrl->setValid( FALSE );
+		LightTextureCtrl->setEnabled(false);
+		LightTextureCtrl->setValid(false);
 	}
 
 	getChildView("Light Intensity")->setEnabled(false);
@@ -671,7 +671,7 @@ void LLPanelVolume::clearCtrls()
 	mSpinPhysicsDensity->setEnabled(false);
 	mSpinPhysicsRestitution->setEnabled(false);
 
-	mComboMaterial->setEnabled( FALSE );
+	mComboMaterial->setEnabled(false);
 }
 
 //

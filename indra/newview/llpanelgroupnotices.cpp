@@ -542,7 +542,7 @@ void LLPanelGroupNotices::processNotices(LLMessageSystem* msg)
 	S32 i=0;
 	S32 count = msg->getNumberOfBlocks("Data");
 
-	mNoticesList->setEnabled(TRUE);
+	mNoticesList->setEnabled(true);
 
 	//save sort state and set unsorted state to prevent unnecessary 
 	//sorting while adding notices

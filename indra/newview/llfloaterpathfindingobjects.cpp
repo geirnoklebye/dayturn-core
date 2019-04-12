@@ -795,7 +795,7 @@ void LLFloaterPathfindingObjects::updateStateOnListControls()
 	case kMessagingGetError :
 	case kMessagingSetError :
 	case kMessagingNotEnabled :
-		mRefreshListButton->setEnabled(TRUE);
+		mRefreshListButton->setEnabled(true);
 		mSelectAllButton->setEnabled(false);
 		mSelectNoneButton->setEnabled(false);
 		break;
@@ -803,7 +803,7 @@ void LLFloaterPathfindingObjects::updateStateOnListControls()
 		{
 			int numItems = mObjectsScrollList->getItemCount();
 			int numSelectedItems = mObjectsScrollList->getNumSelected();
-			mRefreshListButton->setEnabled(TRUE);
+			mRefreshListButton->setEnabled(true);
 			mSelectAllButton->setEnabled(numSelectedItems < numItems);
 			mSelectNoneButton->setEnabled(numSelectedItems > 0);
 		}

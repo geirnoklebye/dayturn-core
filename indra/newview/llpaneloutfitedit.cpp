@@ -990,7 +990,7 @@ void LLPanelOutfitEdit::updatePlusButton()
 					current_item->getLocalRect().mBottom);
 	
 	mAddToLookBtn->setRect(btn_rect);
-	mAddToLookBtn->setEnabled(TRUE);
+	mAddToLookBtn->setEnabled(true);
 	if (!mAddToLookBtn->getVisible())
 	{
 		mAddToLookBtn->setVisible(true);

@@ -208,7 +208,7 @@ void LLFloaterBuyContents::inventoryChanged(LLViewerObject* obj,
 
 		// There will be at least one item shown in the display, so go
 		// ahead and enable the buy button.
-		buy_btn->setEnabled(TRUE);
+		buy_btn->setEnabled(true);
 
 		// Create the line in the list
 		LLSD row;
@@ -256,7 +256,7 @@ void LLFloaterBuyContents::inventoryChanged(LLViewerObject* obj,
 
 	if (wearable_count > 0)
 	{
-		getChildView("wear_check")->setEnabled(TRUE);
+		getChildView("wear_check")->setEnabled(true);
 		getChild<LLUICtrl>("wear_check")->setValue(LLSD(false) );
 	}
 }

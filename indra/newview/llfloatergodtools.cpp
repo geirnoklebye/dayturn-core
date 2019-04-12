@@ -525,21 +525,21 @@ void LLPanelRegionTools::enableAllWidgets()
 {
 	// enable all of the widgets
 	
-	getChildView("check prelude")->setEnabled(TRUE);
-	getChildView("check fixed sun")->setEnabled(TRUE);
-	getChildView("check reset home")->setEnabled(TRUE);
-	getChildView("check damage")->setEnabled(TRUE);
+	getChildView("check prelude")->setEnabled(true);
+	getChildView("check fixed sun")->setEnabled(true);
+	getChildView("check reset home")->setEnabled(true);
+	getChildView("check damage")->setEnabled(true);
 	getChildView("check visible")->setEnabled(false); // use estates to update...
-	getChildView("block terraform")->setEnabled(TRUE);
-	getChildView("block dwell")->setEnabled(TRUE);
-	getChildView("is sandbox")->setEnabled(TRUE);
+	getChildView("block terraform")->setEnabled(true);
+	getChildView("block dwell")->setEnabled(true);
+	getChildView("is sandbox")->setEnabled(true);
 	
-	getChildView("billable factor")->setEnabled(TRUE);
-	getChildView("land cost")->setEnabled(TRUE);
+	getChildView("billable factor")->setEnabled(true);
+	getChildView("land cost")->setEnabled(true);
 
 	getChildView("Apply")->setEnabled(false);	// don't enable this one
-	getChildView("Bake Terrain")->setEnabled(TRUE);
-	getChildView("Autosave now")->setEnabled(TRUE);
+	getChildView("Bake Terrain")->setEnabled(true);
+	getChildView("Autosave now")->setEnabled(true);
 }
 
 void LLPanelRegionTools::onSaveState(void* userdata)
@@ -742,7 +742,7 @@ void LLPanelRegionTools::onChangeAnything()
 {
 	if (gAgent.isGodlike())
 	{
-		getChildView("Apply")->setEnabled(TRUE);
+		getChildView("Apply")->setEnabled(true);
 	}
 }
 
@@ -765,7 +765,7 @@ void LLPanelRegionTools::onChangeSimName(LLLineEditor* caller, void* userdata )
 	if (userdata && gAgent.isGodlike())
 	{
 		LLPanelRegionTools* region_tools = (LLPanelRegionTools*) userdata;
-		region_tools->getChildView("Apply")->setEnabled(TRUE);
+		region_tools->getChildView("Apply")->setEnabled(true);
 	}
 }
 
@@ -1025,15 +1025,15 @@ void LLPanelObjectTools::clearAllWidgets()
 
 void LLPanelObjectTools::enableAllWidgets()
 {
-	getChildView("disable scripts")->setEnabled(TRUE);
+	getChildView("disable scripts")->setEnabled(true);
 
 	getChildView("Apply")->setEnabled(false);	// don't enable this one
-	getChildView("Set Target")->setEnabled(TRUE);
-	getChildView("Delete Target's Scripted Objects On Others Land")->setEnabled(TRUE);
-	getChildView("Delete Target's Scripted Objects On *Any* Land")->setEnabled(TRUE);
-	getChildView("Delete *ALL* Of Target's Objects")->setEnabled(TRUE);
-	getChildView("Get Top Colliders")->setEnabled(TRUE);
-	getChildView("Get Top Scripts")->setEnabled(TRUE);
+	getChildView("Set Target")->setEnabled(true);
+	getChildView("Delete Target's Scripted Objects On Others Land")->setEnabled(true);
+	getChildView("Delete Target's Scripted Objects On *Any* Land")->setEnabled(true);
+	getChildView("Delete *ALL* Of Target's Objects")->setEnabled(true);
+	getChildView("Get Top Colliders")->setEnabled(true);
+	getChildView("Get Top Scripts")->setEnabled(true);
 }
 
 
@@ -1195,7 +1195,7 @@ void LLPanelObjectTools::onChangeAnything()
 {
 	if (gAgent.isGodlike())
 	{
-		getChildView("Apply")->setEnabled(TRUE);
+		getChildView("Apply")->setEnabled(true);
 	}
 }
 

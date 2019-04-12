@@ -800,7 +800,7 @@ LLVOAvatar::LLVOAvatar(const LLUUID& id,
 
 	mRippleTimeLast = 0.f;
 
-	mInAir = FALSE;
+	mInAir = false;
 
 	mStepOnLand = TRUE;
 	mStepMaterial = 0;

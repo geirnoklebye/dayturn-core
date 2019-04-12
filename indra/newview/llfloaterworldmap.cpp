@@ -932,7 +932,7 @@ void LLFloaterWorldMap::trackLocation(const LLVector3d& pos_global)
 }
 
 // enable/disable teleport destination coordinates 
-void LLFloaterWorldMap::enableTeleportCoordsDisplay( bool enabled )
+void LLFloaterWorldMap::enableTeleportCoordsDisplay(bool enabled)
 {
 	childSetEnabled("teleport_coordinate_x", enabled );
 	childSetEnabled("teleport_coordinate_y", enabled );

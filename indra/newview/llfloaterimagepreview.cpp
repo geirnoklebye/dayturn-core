@@ -121,7 +121,7 @@ bool LLFloaterImagePreview::postBuild()
             // We want "lossless_check" to be unchecked when it is disabled, regardless of
             // LosslessJ2CUpload state, so only assign control when enabling checkbox
             LLCheckBoxCtrl* check_box = getChild<LLCheckBoxCtrl>("lossless_check");
-            check_box->setEnabled(TRUE);
+            check_box->setEnabled(true);
             check_box->setControlVariable(gSavedSettings.getControl("LosslessJ2CUpload"));
         }
 	}

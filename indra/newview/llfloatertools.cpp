@@ -1581,7 +1581,7 @@ void LLFloaterTools::getMediaState()
 			}
 		}
 		
-		getChildView("delete_media")->setEnabled(TRUE);
+		getChildView("delete_media")->setEnabled(true);
 	}
 
 	navigateToTitleMedia(media_title);

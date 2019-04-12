@@ -75,7 +75,7 @@ bool LLPanelExperiencePicker::postBuild()
 	getChild<LLLineEditor>(TEXT_EDIT)->setKeystrokeCallback( boost::bind(&LLPanelExperiencePicker::editKeystroke, this, _1, _2),NULL);
 
 	childSetAction(BTN_FIND, boost::bind(&LLPanelExperiencePicker::onBtnFind, this));
-	getChildView(BTN_FIND)->setEnabled(TRUE);
+	getChildView(BTN_FIND)->setEnabled(true);
 
 	LLScrollListCtrl* searchresults = getChild<LLScrollListCtrl>(LIST_RESULTS);
 	searchresults->setDoubleClickCallback( boost::bind(&LLPanelExperiencePicker::onBtnSelect, this));

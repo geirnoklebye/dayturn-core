@@ -196,7 +196,7 @@ void LLPanelGroupBulkImpl::handleSelection()
 	if (selection.empty())
 		mRemoveButton->setEnabled(false);
 	else
-		mRemoveButton->setEnabled(TRUE);
+		mRemoveButton->setEnabled(true);
 }
 
 void LLPanelGroupBulkImpl::addUsers(const std::vector<std::string>& names, const uuid_vec_t& agent_ids)
@@ -241,7 +241,7 @@ void LLPanelGroupBulkImpl::addUsers(const std::vector<std::string>& names, const
 
 		// We've successfully added someone to the list.
 		if(mOKButton && !mOKButton->getEnabled())
-			mOKButton->setEnabled(TRUE);
+			mOKButton->setEnabled(true);
 	}
 }
 

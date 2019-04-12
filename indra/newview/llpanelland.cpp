@@ -147,7 +147,7 @@ void LLPanelLandInfo::refresh()
 			
 		if (is_public && !LLViewerParcelMgr::getInstance()->getParcelSelection()->getMultipleOwners())
 		{
-			getChildView("button buy land")->setEnabled(TRUE);
+			getChildView("button buy land")->setEnabled(true);
 		}
 		else
 		{
@@ -183,7 +183,7 @@ void LLPanelLandInfo::refresh()
 			//&& LLViewerParcelMgr::getInstance()->getSelfCount() > 1
 			&& !LLViewerParcelMgr::getInstance()->getParcelSelection()->getWholeParcelSelected())
 		{
-			getChildView("button join land")->setEnabled(TRUE);
+			getChildView("button join land")->setEnabled(true);
 		}
 		else
 		{
@@ -191,7 +191,7 @@ void LLPanelLandInfo::refresh()
 			getChildView("button join land")->setEnabled(false);
 		}
 
-		getChildView("button about land")->setEnabled(TRUE);
+		getChildView("button about land")->setEnabled(true);
 
 		// show pricing information
 		S32 area;

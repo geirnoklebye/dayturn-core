@@ -40,7 +40,7 @@ public:
 	void show(const std::string& id, bool visible = true);
 	void hide(const std::string& id) { show(id, false); }
 
-	void enable(const std::string& id, bool enabled = true);
+	void enable(const std::string& id,bool enabled= true);
 	void disable(const std::string& id) { enable(id, false); };
 
 	//

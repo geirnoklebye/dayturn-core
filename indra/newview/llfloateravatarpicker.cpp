@@ -327,8 +327,8 @@ void LLFloaterAvatarPicker::populateNearMe()
 	}
 	else 
 	{
-		getChildView("NearMe")->setEnabled(TRUE);
-		getChildView("ok_btn")->setEnabled(TRUE);
+		getChildView("NearMe")->setEnabled(true);
+		getChildView("ok_btn")->setEnabled(true);
 		near_me_scroller->selectFirstItem();
 		onList();
 		near_me_scroller->setFocus(TRUE);
@@ -617,7 +617,7 @@ void LLFloaterAvatarPicker::processAvatarPickerReply(LLMessageSystem* msg, void*
 		search_results->deleteAllItems();
 	}
 
-	BOOL found_one = FALSE;
+	bool found_one = false;
 	S32 num_new_rows = msg->getNumberOfBlocks("Data");
 	for (S32 i = 0; i < num_new_rows; i++)
 	{			
@@ -639,8 +639,8 @@ void LLFloaterAvatarPicker::processAvatarPickerReply(LLMessageSystem* msg, void*
 			else
 			{
 				avatar_name = LLCacheName::buildFullName(first_name, last_name);
-				search_results->setEnabled(TRUE);
-				found_one = TRUE;
+				search_results->setEnabled(true);
+				found_one = true;
 
 				LLAvatarName av_name;
 				av_name.fromString(avatar_name);
@@ -658,7 +658,7 @@ void LLFloaterAvatarPicker::processAvatarPickerReply(LLMessageSystem* msg, void*
 
 	if (found_one)
 	{
-		floater->getChildView("ok_btn")->setEnabled(TRUE);
+		floater->getChildView("ok_btn")->setEnabled(true);
 		search_results->selectFirstItem();
 		floater->onList();
 		search_results->setFocus(TRUE);

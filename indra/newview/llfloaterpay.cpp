@@ -257,7 +257,7 @@ void LLFloaterPay::processPayPriceReply(LLMessageSystem* msg, void **userdata)
 			
 			self->getChildView("amount")->setVisible(true);
 			self->getChildView("pay btn")->setVisible(true);
-			self->getChildView("pay btn")->setEnabled(TRUE);
+			self->getChildView("pay btn")->setEnabled(true);
 			self->getChildView("amount text")->setVisible(true);
 
 			self->getChild<LLUICtrl>("amount")->setValue(llformat("%d", llabs(price)));

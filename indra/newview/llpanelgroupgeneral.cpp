@@ -208,13 +208,13 @@ bool LLPanelGroupGeneral::postBuild()
 	// If the group_id is null, then we are creating a new group
 	if (mGroupID.isNull())
 	{
-		mEditCharter->setEnabled(TRUE);
+		mEditCharter->setEnabled(true);
 
-		mCtrlShowInGroupList->setEnabled(TRUE);
-		mComboMature->setEnabled(TRUE);
-		mCtrlOpenEnrollment->setEnabled(TRUE);
-		mCtrlEnrollmentFee->setEnabled(TRUE);
-		mSpinEnrollmentFee->setEnabled(TRUE);
+		mCtrlShowInGroupList->setEnabled(true);
+		mComboMature->setEnabled(true);
+		mCtrlOpenEnrollment->setEnabled(true);
+		mCtrlEnrollmentFee->setEnabled(true);
+		mSpinEnrollmentFee->setEnabled(true);
 		mGroupUUIDText->clear();
 	}
 
@@ -284,7 +284,7 @@ void LLPanelGroupGeneral::onCommitEnrollment(LLUICtrl* ctrl, void* data)
 
 	if (self->mCtrlEnrollmentFee->get())
 	{
-		self->mSpinEnrollmentFee->setEnabled(TRUE);
+		self->mSpinEnrollmentFee->setEnabled(true);
 	}
 	else
 	{
@@ -533,7 +533,7 @@ void LLPanelGroupGeneral::update(LLGroupChange gc)
 			}
 			else
 			{
-				mComboActiveTitle->setEnabled(TRUE);
+				mComboActiveTitle->setEnabled(true);
 			}
 
 			std::vector<LLGroupTitle>::const_iterator citer = gdatap->mTitles.begin();
@@ -707,17 +707,17 @@ void LLPanelGroupGeneral::reset()
 
 	mCtrlListGroup->setEnabled(false);
 
-	mGroupNameEditor->setEnabled(TRUE);
-	mEditCharter->setEnabled(TRUE);
+	mGroupNameEditor->setEnabled(true);
+	mEditCharter->setEnabled(true);
 
 	mCtrlShowInGroupList->setEnabled(false);
-	mComboMature->setEnabled(TRUE);
+	mComboMature->setEnabled(true);
 	
-	mCtrlOpenEnrollment->setEnabled(TRUE);
+	mCtrlOpenEnrollment->setEnabled(true);
 	
-	mCtrlEnrollmentFee->setEnabled(TRUE);
+	mCtrlEnrollmentFee->setEnabled(true);
 	
-	mSpinEnrollmentFee->setEnabled(TRUE);
+	mSpinEnrollmentFee->setEnabled(true);
 	mSpinEnrollmentFee->set((F32)0);
 
 	mGroupNameEditor->setVisible(true);

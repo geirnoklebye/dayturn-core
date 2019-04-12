@@ -739,31 +739,31 @@ void LLFloaterExperienceProfile::experienceAllowed()
     button->setEnabled(false);
 
     button=getChild<LLButton>(BTN_FORGET);
-    button->setEnabled(TRUE);
+    button->setEnabled(true);
 
     button=getChild<LLButton>(BTN_BLOCK);
-    button->setEnabled(TRUE);
+    button->setEnabled(true);
 }
 
 void LLFloaterExperienceProfile::experienceForgotten()
 {
     LLButton* button=getChild<LLButton>(BTN_ALLOW);
-    button->setEnabled(TRUE);
+    button->setEnabled(true);
 
     button=getChild<LLButton>(BTN_FORGET);
     button->setEnabled(false);
 
     button=getChild<LLButton>(BTN_BLOCK);
-    button->setEnabled(TRUE);
+    button->setEnabled(true);
 }
 
 void LLFloaterExperienceProfile::experienceBlocked()
 {
     LLButton* button=getChild<LLButton>(BTN_ALLOW);
-    button->setEnabled(TRUE);
+    button->setEnabled(true);
 
     button=getChild<LLButton>(BTN_FORGET);
-    button->setEnabled(TRUE);
+    button->setEnabled(true);
 
     button=getChild<LLButton>(BTN_BLOCK);
     button->setEnabled(false);

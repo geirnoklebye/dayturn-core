@@ -203,7 +203,7 @@ void LLFloaterSnapshotBase::ImplBase::updateLayout(LLFloaterSnapshotBase* floate
 		if (previewp)
 		{
 			previewp->setVisible(true);
-			previewp->setEnabled(TRUE);
+			previewp->setEnabled(true);
 		}
 
 		//RN: freeze all avatars

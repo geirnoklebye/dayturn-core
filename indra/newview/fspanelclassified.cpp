@@ -841,7 +841,7 @@ void FSPanelClassifiedEdit::resetControls()
 	//getChild<LLUICtrl>("price_for_listing")->setValue(MINIMUM_PRICE_FOR_LISTING);
 	getChild<LLUICtrl>("price_for_listing")->setValue(getClassifiedFee());
 // </FS:CR>
-	getChildView("price_for_listing")->setEnabled(TRUE);
+	getChildView("price_for_listing")->setEnabled(true);
 }
 
 // <FS:CR> FIRE-9814 - Don't hardcode a classified listing fee

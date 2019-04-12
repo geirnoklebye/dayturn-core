@@ -110,7 +110,7 @@ LLColorSwatchCtrl::~LLColorSwatchCtrl ()
 
 BOOL LLColorSwatchCtrl::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
-	return handleMouseDown(x, y, mask);
+	return static_cast<bool>(handleMouseDown(x, y, mask));
 }
 
 bool LLColorSwatchCtrl::handleHover(S32 x, S32 y, MASK mask)
@@ -253,7 +253,7 @@ void LLColorSwatchCtrl::draw()
 	LLUICtrl::draw();
 }
 
-void LLColorSwatchCtrl::setEnabled( bool enabled )
+void LLColorSwatchCtrl::setEnabled(bool enabled)
 {
 	mCaption->setEnabled( enabled );
 	LLView::setEnabled( enabled );
@@ -325,7 +325,7 @@ void LLColorSwatchCtrl::closeFloaterColorPicker()
 	mPickerHandle.markDead();
 }
 
-void LLColorSwatchCtrl::setValid(BOOL valid )
+void LLColorSwatchCtrl::setValid(bool valid )
 {
 	mValid = valid;
 

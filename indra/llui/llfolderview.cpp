@@ -1847,7 +1847,7 @@ void LLFolderView::updateMenuOptions(LLMenuGL* menu)
 	{
 		(*menu_itor)->setVisible(false);
 		(*menu_itor)->pushVisible(true);
-		(*menu_itor)->setEnabled(TRUE);
+		(*menu_itor)->setEnabled(true);
 	}
 
 	// Successively filter out invalid options

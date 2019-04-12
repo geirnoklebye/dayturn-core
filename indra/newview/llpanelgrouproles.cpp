@@ -1076,7 +1076,7 @@ void LLPanelGroupMembersSubTab::handleMemberSelect()
 			LL_WARNS() << "No group role data for " << iter->second << LL_ENDL;
 		}
 	}
-	mAssignedRolesList->setEnabled(TRUE);
+	mAssignedRolesList->setEnabled(true);
 
 	if (gAgent.isGodlike())
 	{
@@ -1765,7 +1765,7 @@ void LLPanelGroupMembersSubTab::onNameCache(const LLUUID& update_id, LLGroupMemb
 		addMemberToList(member);
 		if(!mMembersList->getEnabled())
 		{
-			mMembersList->setEnabled(TRUE);
+			mMembersList->setEnabled(true);
 		}
 	}
 	
@@ -1838,7 +1838,7 @@ void LLPanelGroupMembersSubTab::updateMembers()
 	{
 		if (mHasMatch)
 		{
-			mMembersList->setEnabled(TRUE);
+			mMembersList->setEnabled(true);
 		}
 		else if (gdatap->mMembers.size()) 
 		{
@@ -2214,7 +2214,7 @@ void LLPanelGroupRolesSubTab::update(LLGroupChange gc)
 		if ( (gdatap->mRoles.size() < (U32)MAX_ROLES)
 			&& gAgent.hasPowerInGroup(mGroupID, GP_ROLE_CREATE) )
 		{
-			mCreateRoleButton->setEnabled(TRUE);
+			mCreateRoleButton->setEnabled(true);
 		}
 		else
 		{
@@ -2292,7 +2292,6 @@ void LLPanelGroupRolesSubTab::handleRoleSelect()
 		mRoleName->setText(rd.mRoleName);
 		mRoleTitle->setText(rd.mRoleTitle);
 		mRoleDescription->setText(rd.mRoleDescription);
-
 		mAllowedActionsList->setEnabled(gAgent.hasPowerInGroup(mGroupID,
 									   GP_ROLE_CHANGE_ACTIONS));
 		buildActionsList(mAllowedActionsList,
@@ -3152,7 +3151,7 @@ void LLPanelGroupBanListSubTab::handleBanEntrySelect()
 {
 	if (gAgent.hasPowerInGroup(mGroupID, GP_GROUP_BAN_ACCESS))
 	{
-		mDeleteBanButton->setEnabled(TRUE);
+		mDeleteBanButton->setEnabled(true);
 	}
 }
 
@@ -3232,7 +3231,7 @@ void LLPanelGroupBanListSubTab::handleDeleteBanEntry()
 	}
 
 	// update ban-count related elements
-	mCreateBanButton->setEnabled(TRUE);
+	mCreateBanButton->setEnabled(true);
 	setBanCount(gdatap->mBanList.size());
 	
 	LLGroupMgr::getInstance()->sendGroupBanRequest(LLGroupMgr::REQUEST_POST, mGroupID, LLGroupMgr::BAN_DELETE, ban_ids);
@@ -3257,7 +3256,7 @@ void LLPanelGroupBanListSubTab::onBanListCompleted(bool isComplete)
 {
 	if(isComplete)
 	{
-		mRefreshBanListButton->setEnabled(TRUE);
+		mRefreshBanListButton->setEnabled(true);
 		populateBanList();
 	}
 }
@@ -3308,7 +3307,7 @@ void LLPanelGroupBanListSubTab::populateBanList()
 		mBanList->addNameItemRow(ban_entry);
 	}
 	 
-	mRefreshBanListButton->setEnabled(TRUE);
+	mRefreshBanListButton->setEnabled(true);
 	mCreateBanButton->setEnabled(gAgent.hasPowerInGroup(mGroupID, GP_GROUP_BAN_ACCESS) &&
 								 gdatap->mBanList.size() < GB_MAX_BANNED_AGENTS);
 	setBanCount(gdatap->mBanList.size());

@@ -117,7 +117,7 @@ bool LLPreviewNotecard::saveItem()
 	return saveIfNeeded(item);
 }
 
-void LLPreviewNotecard::setEnabled( bool enabled )
+void LLPreviewNotecard::setEnabled(bool enabled)
 {
 
 	LLViewerTextEditor* editor = getChild<LLViewerTextEditor>("Notecard Editor");

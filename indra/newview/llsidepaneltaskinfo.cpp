@@ -323,7 +323,7 @@ void LLSidepanelTaskInfo::refresh()
 	{
 		++string_index;
 	}
-	getChildView("perm_modify")->setEnabled(TRUE);
+	getChildView("perm_modify")->setEnabled(true);
 	getChild<LLUICtrl>("perm_modify")->setValue(MODIFY_INFO_STRINGS[string_index]);
 
 	std::string pfAttrName;
@@ -351,11 +351,11 @@ void LLSidepanelTaskInfo::refresh()
 		pfAttrName = "Pathfinding_Object_Attr_MultiSelect";
 	}
 
-	mDAPathfindingAttributes->setEnabled(TRUE);
+	mDAPathfindingAttributes->setEnabled(true);
 	mDAPathfindingAttributes->setValue(LLTrans::getString(pfAttrName));
 	
 	// Update creator text field
-	getChildView("Creator:")->setEnabled(TRUE);
+	getChildView("Creator:")->setEnabled(true);
 
 	std::string creator_name;
 	LLUUID creator_id;
@@ -370,10 +370,10 @@ void LLSidepanelTaskInfo::refresh()
 	{
 	    mDACreatorName->setValue(creator_name);
 	}
-	mDACreatorName->setEnabled(TRUE);
+	mDACreatorName->setEnabled(true);
 
 	// Update owner text field
-	getChildView("Owner:")->setEnabled(TRUE);
+	getChildView("Owner:")->setEnabled(true);
 
 	std::string owner_name;
 	LLUUID owner_id;
@@ -410,10 +410,10 @@ void LLSidepanelTaskInfo::refresh()
 	    mDAOwnerName->setValue(owner_name);
 	}
 
-	getChildView("Owner Name")->setEnabled(TRUE);
+	getChildView("Owner Name")->setEnabled(true);
 
 	// update group text field
-	getChildView("Group:")->setEnabled(TRUE);
+	getChildView("Group:")->setEnabled(true);
 	getChild<LLUICtrl>("Group Name")->setValue(LLStringUtil::null);
 	LLUUID group_id;
 	bool groups_identical = LLSelectMgr::getInstance()->selectGetGroup(group_id);
@@ -422,7 +422,7 @@ void LLSidepanelTaskInfo::refresh()
 		if (mLabelGroupName)
 		{
 			mLabelGroupName->setNameID(group_id,TRUE);
-			mLabelGroupName->setEnabled(TRUE);
+			mLabelGroupName->setEnabled(true);
 		}
 	}
 	else
@@ -437,9 +437,9 @@ void LLSidepanelTaskInfo::refresh()
 	
 	getChildView("button set group")->setEnabled(owners_identical && (mOwnerID == gAgent.getID()) && is_nonpermanent_enforced);
 
-	getChildView("Name:")->setEnabled(TRUE);
+	getChildView("Name:")->setEnabled(true);
 	LLLineEditor* LineEditorObjectName = getChild<LLLineEditor>("Object Name");
-	getChildView("Description:")->setEnabled(TRUE);
+	getChildView("Description:")->setEnabled(true);
 	LLLineEditor* LineEditorObjectDesc = getChild<LLLineEditor>("Object Description");
 
 	if (is_one_object)
@@ -471,8 +471,8 @@ void LLSidepanelTaskInfo::refresh()
 	}
 	if (edit_name_desc)
 	{
-		getChildView("Object Name")->setEnabled(TRUE);
-		getChildView("Object Description")->setEnabled(TRUE);
+		getChildView("Object Name")->setEnabled(true);
+		getChildView("Object Description")->setEnabled(true);
 	}
 	else
 	{
@@ -665,7 +665,7 @@ void LLSidepanelTaskInfo::refresh()
 
 	if (has_change_perm_ability)
 	{
-		getChildView("checkbox share with group")->setEnabled(TRUE);
+		getChildView("checkbox share with group")->setEnabled(true);
 		getChildView("checkbox allow everyone move")->setEnabled(owner_mask_on & PERM_MOVE);
 		getChildView("checkbox allow everyone copy")->setEnabled(owner_mask_on & PERM_COPY && owner_mask_on & PERM_TRANSFER);
 	}

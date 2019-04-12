@@ -196,7 +196,7 @@ private:
 	void updateTeleportCoordsDisplay( const LLVector3d& pos );
 
 	// enable/disable teleport destination coordinates 
-	void enableTeleportCoordsDisplay( bool enabled );
+	void enableTeleportCoordsDisplay(bool enabled);
 
 	std::vector<LLUUID>	mLandmarkAssetIDList;
 	std::vector<LLUUID>	mLandmarkItemIDList;

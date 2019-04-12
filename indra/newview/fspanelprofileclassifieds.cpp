@@ -231,11 +231,11 @@ bool FSPanelClassifieds::isClassifiedPublished(FSClassifiedItem* c_item)
 void FSPanelClassifieds::onOpen(const LLSD& key)
 {
 	const LLUUID id(key.asUUID());
-	BOOL self = (gAgentID == id);
+	bool self = (gAgentID == id);
 
 	// only agent can edit her picks 
 	getChildView("edit_panel")->setEnabled(self);
-	getChildView("edit_panel")->setVisible( self);
+	getChildView("edit_panel")->setVisible(self);
 
 	// Disable buttons when viewing profile for first time
 	if(getAvatarId() != id)

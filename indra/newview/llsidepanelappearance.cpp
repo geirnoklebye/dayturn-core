@@ -459,7 +459,7 @@ void LLSidepanelAppearance::refreshCurrentOutfitName(const std::string& name)
 	{
 		mCurrentLookName->setText(name);
 		// Can't just call update verbs since the folder link may not have been created yet.
-		mOpenOutfitBtn->setEnabled(TRUE);
+		mOpenOutfitBtn->setEnabled(true);
 	}
 }
 

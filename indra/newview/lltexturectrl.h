@@ -132,7 +132,7 @@ public:
 	virtual void	setVisible( bool visible );
 	virtual void	setEnabled( bool enabled );
 
-	void			setValid(BOOL valid);
+	void			setValid(bool valid);
 
 	// LLUICtrl interface
 	virtual void	clear();

@@ -361,7 +361,7 @@ void LLPanelPermissions::refresh()
 	{
 		++string_index;
 	}
-	getChildView("perm_modify")->setEnabled(TRUE);
+	getChildView("perm_modify")->setEnabled(true);
 	getChild<LLUICtrl>("perm_modify")->setValue(MODIFY_INFO_STRINGS[string_index]);
 
 	std::string pfAttrName;
@@ -389,11 +389,11 @@ void LLPanelPermissions::refresh()
 		pfAttrName = "Pathfinding_Object_Attr_MultiSelect";
 	}
 
-	getChildView("pathfinding_attributes_value")->setEnabled(TRUE);
+	getChildView("pathfinding_attributes_value")->setEnabled(true);
 	getChild<LLUICtrl>("pathfinding_attributes_value")->setValue(LLTrans::getString(pfAttrName));
 	
 	// Update creator text field
-	getChildView("Creator:")->setEnabled(TRUE);
+	getChildView("Creator:")->setEnabled(true);
 	std::string creator_app_link;
 	LLSelectMgr::getInstance()->selectGetCreator(mCreatorID, creator_app_link);
 
@@ -425,10 +425,9 @@ void LLPanelPermissions::refresh()
 	}
 	getChild<LLAvatarIconCtrl>("Creator Icon")->setValue(mCreatorID);
 	getChild<LLAvatarIconCtrl>("Creator Icon")->setVisible(true);
-	mLabelCreatorName->setEnabled(TRUE);
-
+	mLabelCreatorName->setEnabled(true);
 	// Update owner text field
-	getChildView("Owner:")->setEnabled(TRUE);
+	getChildView("Owner:")->setEnabled(true);
 
 	std::string owner_app_link;
 	const BOOL owners_identical = LLSelectMgr::getInstance()->selectGetOwner(mOwnerID, owner_app_link);
@@ -490,10 +489,10 @@ void LLPanelPermissions::refresh()
 		getChild<LLAvatarIconCtrl>("Owner Icon")->setVisible(true);
 		getChild<LLUICtrl>("Owner Group Icon")->setVisible(false);
 	}
-	mLabelOwnerName->setEnabled(TRUE);
+	mLabelOwnerName->setEnabled(true);
 
 	// update group text field
-	getChildView("Group:")->setEnabled(TRUE);
+	getChildView("Group:")->setEnabled(true);
 	getChild<LLUICtrl>("Group Name")->setValue(LLStringUtil::null);
 	LLUUID group_id;
 	BOOL groups_identical = LLSelectMgr::getInstance()->selectGetGroup(group_id);
@@ -502,7 +501,7 @@ void LLPanelPermissions::refresh()
 		if (mLabelGroupName)
 		{
 			mLabelGroupName->setNameID(group_id,TRUE);
-			mLabelGroupName->setEnabled(TRUE);
+			mLabelGroupName->setEnabled(true);
 		}
 	}
 	else
@@ -517,9 +516,9 @@ void LLPanelPermissions::refresh()
 	
 	getChildView("button set group")->setEnabled(root_selected && owners_identical && (mOwnerID == gAgent.getID()) && is_nonpermanent_enforced);
 
-	getChildView("Name:")->setEnabled(TRUE);
+	getChildView("Name:")->setEnabled(true);
 	LLLineEditor* LineEditorObjectName = getChild<LLLineEditor>("Object Name");
-	getChildView("Description:")->setEnabled(TRUE);
+	getChildView("Description:")->setEnabled(true);
 	LLLineEditor* LineEditorObjectDesc = getChild<LLLineEditor>("Object Description");
 
 	if (is_one_object)
@@ -568,8 +567,8 @@ void LLPanelPermissions::refresh()
 	}
 	if (edit_name_desc)
 	{
-		getChildView("Object Name")->setEnabled(TRUE);
-		getChildView("Object Description")->setEnabled(TRUE);
+		getChildView("Object Name")->setEnabled(true);
+		getChildView("Object Description")->setEnabled(true);
 	}
 	else
 	{
@@ -787,7 +786,7 @@ void LLPanelPermissions::refresh()
 
 	if (has_change_perm_ability)
 	{
-		getChildView("checkbox share with group")->setEnabled(TRUE);
+		getChildView("checkbox share with group")->setEnabled(true);
 		getChildView("checkbox allow everyone move")->setEnabled(owner_mask_on & PERM_MOVE);
 		getChildView("checkbox allow everyone copy")->setEnabled(owner_mask_on & PERM_COPY && owner_mask_on & PERM_TRANSFER);
 	}
@@ -808,7 +807,7 @@ void LLPanelPermissions::refresh()
 		getChild<LLUICtrl>("checkbox for sale")->setTentative( 				is_for_sale_mixed);
 		getChildView("sale type")->setEnabled(num_for_sale && can_transfer && !is_sale_price_mixed);
 
-		getChildView("Next owner can:")->setEnabled(TRUE);
+		getChildView("Next owner can:")->setEnabled(true);
 		getChildView("checkbox next owner can modify")->setEnabled(base_mask_on & PERM_MODIFY);
 		getChildView("checkbox next owner can copy")->setEnabled(base_mask_on & PERM_COPY);
 		getChildView("checkbox next owner can transfer")->setEnabled(next_owner_mask_on & PERM_COPY);

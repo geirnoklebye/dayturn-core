@@ -180,7 +180,7 @@ void LLFloaterOutfitPhotoPreview::updateDimensions()
 
 	if ((mImage->getFullWidth() <= MAX_OUTFIT_PHOTO_WIDTH) && (mImage->getFullHeight() <= MAX_OUTFIT_PHOTO_HEIGHT))
 	{
-		getChild<LLButton>("ok_btn")->setEnabled(TRUE);
+		getChild<LLButton>("ok_btn")->setEnabled(true);
 		mExceedLimits = FALSE;
 	}
 	else

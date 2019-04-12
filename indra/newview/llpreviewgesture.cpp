@@ -645,14 +645,14 @@ void LLPreviewGesture::refresh()
 		mSaveBtn->setEnabled(false);
 
 		// Make sure preview button is enabled, so we can stop it
-		mPreviewBtn->setEnabled(TRUE);
+		mPreviewBtn->setEnabled(true);
 		return;
 	}
 
 	BOOL modifiable = item->getPermissions().allowModifyBy(gAgent.getID());
 
 	getChildView("desc")->setEnabled(modifiable);
-	mTriggerEditor->setEnabled(TRUE);
+	mTriggerEditor->setEnabled(true);
 	mLibraryList->setEnabled(modifiable);
 	mStepList->setEnabled(modifiable);
 	mOptionsText->setEnabled(modifiable);
@@ -663,7 +663,7 @@ void LLPreviewGesture::refresh()
 	mWaitAnimCheck->setEnabled(modifiable);
 	mWaitTimeCheck->setEnabled(modifiable);
 	mWaitTimeEditor->setEnabled(modifiable);
-	mActiveCheck->setEnabled(TRUE);
+	mActiveCheck->setEnabled(true);
 
 	const std::string& trigger = mTriggerEditor->getText();
 	BOOL have_trigger = !trigger.empty();
@@ -682,8 +682,8 @@ void LLPreviewGesture::refresh()
 	mReplaceText->setEnabled(have_trigger || have_replace);
 	mReplaceEditor->setEnabled(have_trigger || have_replace);
 
-	mModifierCombo->setEnabled(TRUE);
-	mKeyCombo->setEnabled(TRUE);
+	mModifierCombo->setEnabled(true);
+	mKeyCombo->setEnabled(true);
 
 	mAddBtn->setEnabled(modifiable && have_library);
 	mUpBtn->setEnabled(modifiable && have_step && step_index > 0);

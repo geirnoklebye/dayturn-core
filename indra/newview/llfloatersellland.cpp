@@ -364,7 +364,7 @@ void LLFloaterSellLandUI::refreshUI()
 
 	if (valid_sell_to && valid_price && valid_sell_objects)
 	{
-		getChildView("sell_btn")->setEnabled(TRUE);
+		getChildView("sell_btn")->setEnabled(true);
 	}
 	else
 	{

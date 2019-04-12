@@ -367,7 +367,7 @@ void LLPanelGroupInvite::impl::handleSelection()
 	}
 	else
 	{
-		mRemoveButton->setEnabled(TRUE);
+		mRemoveButton->setEnabled(true);
 	}
 }
 
@@ -637,7 +637,7 @@ void LLPanelGroupInvite::updateLists()
 		mPendingUpdate = FALSE;
 		if (mImplementation->mOKButton && mImplementation->mRoleNames->getItemCount()) 
 		{
-			mImplementation->mOKButton->setEnabled(TRUE);
+			mImplementation->mOKButton->setEnabled(true);
 		}
 	}
 }

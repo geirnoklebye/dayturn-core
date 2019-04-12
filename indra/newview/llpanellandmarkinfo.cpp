@@ -136,7 +136,7 @@ void LLPanelLandmarkInfo::setInfoType(EInfoType type, const LLUUID &folder_id)
 
 			mLandmarkTitle->setVisible(false);
 			mLandmarkTitleEditor->setVisible(true);
-			mNotesEditor->setEnabled(TRUE);
+			mNotesEditor->setEnabled(true);
 
 			LLViewerParcelMgr* parcel_mgr = LLViewerParcelMgr::getInstance();
 			LLParcel* parcel = parcel_mgr->getAgentParcel();

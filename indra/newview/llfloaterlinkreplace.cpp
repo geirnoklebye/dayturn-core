@@ -296,8 +296,8 @@ void LLFloaterLinkReplace::decreaseOpenItemCount()
 	if (mRemainingItems == 0)
 	{
 		mStatusText->setText(getString("ReplaceFinished"));
-		mStartBtn->setEnabled(TRUE);
-		mRefreshBtn->setEnabled(TRUE);
+		mStartBtn->setEnabled(true);
+		mRefreshBtn->setEnabled(true);
 		mEventTimer.stop();
 		LL_INFOS() << "Inventory link replace finished." << LL_ENDL;
 	}

@@ -634,26 +634,26 @@ void LLSidepanelInventory::updateVerbs()
 			break;
 		case LLInventoryType::IT_SOUND:
 			mPlayBtn->setVisible(true);
-			mPlayBtn->setEnabled(TRUE);
+			mPlayBtn->setEnabled(true);
 			mPlayBtn->setToolTip(LLTrans::getString("InventoryPlaySoundTooltip"));
 			mShopBtn->setVisible(false);
 			break;
 		case LLInventoryType::IT_GESTURE:
 			mPlayBtn->setVisible(true);
-			mPlayBtn->setEnabled(TRUE);
+			mPlayBtn->setEnabled(true);
 			mPlayBtn->setToolTip(LLTrans::getString("InventoryPlayGestureTooltip"));
 			mShopBtn->setVisible(false);
 			break;
 		case LLInventoryType::IT_ANIMATION:
 			mPlayBtn->setVisible(true);
-			mPlayBtn->setEnabled(TRUE);
-			mPlayBtn->setEnabled(TRUE);
+			mPlayBtn->setEnabled(true);
+			mPlayBtn->setEnabled(true);
 			mPlayBtn->setToolTip(LLTrans::getString("InventoryPlayAnimationTooltip"));
 			mShopBtn->setVisible(false);
 			break;
 		case LLInventoryType::IT_LANDMARK:
 			mTeleportBtn->setVisible(true);
-			mTeleportBtn->setEnabled(TRUE);
+			mTeleportBtn->setEnabled(true);
 		 	mShopBtn->setVisible(false);
 			break;
 		default:

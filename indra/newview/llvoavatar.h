@@ -957,7 +957,7 @@ private:
 	// Flight
 	//--------------------------------------------------------------------
 public:
-	BOOL			mInAir;
+	bool			mInAir;
 	LLFrameTimer	mTimeInAir;
 
 /**                    Actions

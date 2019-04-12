@@ -78,7 +78,7 @@ public:
 	
 	void			set(const LLColor4& color, BOOL update_picker = FALSE, BOOL from_event = FALSE);
 	void			setOriginal(const LLColor4& color);
-	void			setValid(BOOL valid);
+	void			setValid(bool valid);
 	void			setLabel(const std::string& label);
 	void			setLabelWidth(S32 label_width) {mLabelWidth =label_width;}
 	void			setCanApplyImmediately(BOOL apply) { mCanApplyImmediately = apply; }
@@ -95,7 +95,7 @@ public:
 	/*virtual*/ bool	handleHover(S32 x, S32 y, MASK mask);
 	/*virtual*/ bool	handleUnicodeCharHere(llwchar uni_char);
 	/*virtual*/ void	draw();
-	/*virtual*/ void	setEnabled( bool enabled );
+	/*virtual*/ void	setEnabled(bool enabled);
 
 	static void		onColorChanged ( void* data, EColorPickOp pick_op = COLOR_CHANGE );
 	void			closeFloaterColorPicker();

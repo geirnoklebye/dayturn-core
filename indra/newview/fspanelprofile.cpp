@@ -385,7 +385,7 @@ void FSPanelProfileSecondLife::onOpen(const LLSD& key)
 	if (own_profile && LLAvatarName::useDisplayNames() && !getEmbedded())
 	{
 		mDisplayNameButton->setVisible(true);
-		mDisplayNameButton->setEnabled(TRUE);
+		mDisplayNameButton->setEnabled(true);
 	}
 
 	mDescriptionEdit->setParseHTML(!own_profile && !getEmbedded());
@@ -491,7 +491,7 @@ void FSPanelProfileSecondLife::processProfileProperties(const LLAvatarData* avat
         // subscribe observer to get online status. Request will be sent by FSPanelProfile itself.
         // do not subscribe for friend avatar because online status can be wrong overridden
         // via LLAvatarData::flags if Preferences: "Only Friends & Groups can see when I am online" is set.
-        processOnlineStatus(avatar_data->flags & AVATAR_ONLINE);
+        processOnlineStatus(static_cast<bool>(avatar_data->flags & AVATAR_ONLINE));
     }
 
     fillCommonData(avatar_data);
@@ -761,9 +761,9 @@ void FSPanelProfileSecondLife::enableControls()
 	if (getSelfProfile() && !getEmbedded())
 	{
 		mShowInSearchCheckbox->setVisible(true);
-		mShowInSearchCheckbox->setEnabled(TRUE);
-		mDescriptionEdit->setEnabled(TRUE);
-		mSecondLifePic->setEnabled(TRUE);
+		mShowInSearchCheckbox->setEnabled(true);
+		mDescriptionEdit->setEnabled(true);
+		mSecondLifePic->setEnabled(true);
 	}
 }
 
@@ -885,7 +885,7 @@ bool FSPanelProfileWeb::postBuild()
 	mWebBrowser->addObserver(this);
 	mWebBrowser->setHomePageUrl("about:blank");
 
-	mUrlEdit->setEnabled(FALSE);
+	mUrlEdit->setEnabled(false);
 
     return true;
 }
@@ -950,7 +950,7 @@ void FSPanelProfileWeb::onAvatarNameCache(const LLUUID& agent_id, const LLAvatar
 	{
 		return;
 	}
-	mWebProfileButton->setEnabled(TRUE);
+	mWebProfileButton->setEnabled(true);
 	
 	if (getIsLoading()) //if the tab was opened before name was resolved, load the panel now
 	{
@@ -1053,7 +1053,7 @@ void FSPanelProfileWeb::enableControls()
 
 	if (getSelfProfile() && !getEmbedded())
 	{
-		mUrlEdit->setEnabled(TRUE);
+		mUrlEdit->setEnabled(true);
 	}
 }
 
@@ -1100,9 +1100,9 @@ bool FSPanelProfileInterests::postBuild()
 
 	//FS:KC - Due to a bug with LLLineEditor, it cannot be disabled from XUI
 	// It won't properly enable from code if it is.
-	mWantToEditor->setEnabled(FALSE);
-	mSkillsEditor->setEnabled(FALSE);
-	mLanguagesEditor->setEnabled(FALSE);
+	mWantToEditor->setEnabled(false);
+	mSkillsEditor->setEnabled(false);
+	mLanguagesEditor->setEnabled(false);
 
     return true;
 }
@@ -1204,18 +1204,18 @@ void FSPanelProfileInterests::enableControls()
 
 	if (getSelfProfile() && !getEmbedded())
 	{
-		mWantToEditor->setEnabled(TRUE);
-		mSkillsEditor->setEnabled(TRUE);
-		mLanguagesEditor->setEnabled(TRUE);
+		mWantToEditor->setEnabled(true);
+		mSkillsEditor->setEnabled(true);
+		mLanguagesEditor->setEnabled(true);
 
         for (S32 i=0; i < WANT_CHECKS; ++i)
         {
-            mWantChecks[i]->setEnabled( TRUE );
+            mWantChecks[i]->setEnabled( true );
         }
 
         for (S32 i=0; i < SKILL_CHECKS; ++i)
         {
-            mSkillChecks[i]->setEnabled( TRUE );
+            mSkillChecks[i]->setEnabled( true );
         }
     }
 }
@@ -1293,13 +1293,13 @@ void FSPanelPick::setAvatarId(const LLUUID& avatar_id)
         setSnapshotId(snapshot_id);
         setPickLocation(createLocationText(getLocationNotice(), pick_name, region_name, getPosGlobal()));
 
-		enableSaveButton(TRUE);
+		enableSaveButton(true);
 	}
 	else
 	{
 		LLAvatarPropertiesProcessor::getInstance()->sendPickInfoRequest(getAvatarId(), getPickId());
 
-		enableSaveButton(FALSE);
+		enableSaveButton(false);
 	}
 
     resetDirty();
@@ -1428,7 +1428,7 @@ void FSPanelPick::onClickTeleport()
     }
 }
 
-void FSPanelPick::enableSaveButton(BOOL enable)
+void FSPanelPick::enableSaveButton(bool enable)
 {
 	mSaveButton->setEnabled(enable);
 	mSaveButton->setVisible(enable);
@@ -1436,7 +1436,7 @@ void FSPanelPick::enableSaveButton(BOOL enable)
 
 void FSPanelPick::onSnapshotChanged()
 {
-	enableSaveButton(TRUE);
+	enableSaveButton(true);
 }
 
 void FSPanelPick::onPickChanged(LLUICtrl* ctrl)
@@ -1496,7 +1496,7 @@ void FSPanelPick::onClickSetLocation()
     setPickLocation(createLocationText(getLocationNotice(), parcel_name, region_name, getPosGlobal()));
 
     mLocationChanged = true;
-    enableSaveButton(TRUE);
+    enableSaveButton(true);
 }
 
 void FSPanelPick::onClickSave()
@@ -1659,10 +1659,10 @@ void FSPanelProfilePicks::onOpen(const LLSD& key)
 	if (getSelfProfile() && !getEmbedded())
 	{
 		mNewButton->setVisible(true);
-		mNewButton->setEnabled(FALSE);
+		mNewButton->setEnabled(false);
 
 		mDeleteButton->setVisible(true);
-		mDeleteButton->setEnabled(FALSE);
+		mDeleteButton->setEnabled(false);
 	}
 }
 
@@ -1935,8 +1935,8 @@ void FSPanelProfileFirstLife::enableControls()
 
 	if (getSelfProfile() && !getEmbedded())
 	{
-		mDescriptionEdit->setEnabled(TRUE);
-		mPicture->setEnabled(TRUE);
+		mDescriptionEdit->setEnabled(true);
+		mPicture->setEnabled(true);
 	}
 }
 
@@ -2110,7 +2110,7 @@ void FSPanelAvatarNotes::processProperties(void* data, EAvatarProcessorType type
 		if (avatar_notes && getAvatarId() == avatar_notes->target_id)
 		{
 			mNotesEditor->setValue(avatar_notes->notes);
-			mNotesEditor->setEnabled(TRUE);
+			mNotesEditor->setEnabled(true);
 			enableControls();
 
             LLAvatarPropertiesProcessor::getInstance()->removeObserver(getAvatarId(),this);

@@ -513,7 +513,7 @@ public:
 	BOOL			permCopy() const;	
 	BOOL			permMove() const;		
 	BOOL			permTransfer() const;
-	inline BOOL		flagUsePhysics() const			{ return ((mFlags & FLAGS_USE_PHYSICS) != 0); }
+	inline bool		flagUsePhysics() const			{ return ((mFlags & FLAGS_USE_PHYSICS) != 0); }
 	inline BOOL		flagObjectAnyOwner() const		{ return ((mFlags & FLAGS_OBJECT_ANY_OWNER) != 0); }
 	inline BOOL		flagObjectYouOwner() const		{ return ((mFlags & FLAGS_OBJECT_YOU_OWNER) != 0); }
 	inline BOOL		flagObjectGroupOwned() const	{ return ((mFlags & FLAGS_OBJECT_GROUP_OWNED) != 0); }
@@ -532,7 +532,7 @@ public:
 	inline BOOL		flagPhantom() const				{ return ((mFlags & FLAGS_PHANTOM) != 0); }
 	inline BOOL		flagInventoryEmpty() const		{ return ((mFlags & FLAGS_INVENTORY_EMPTY) != 0); }
 	inline BOOL		flagAllowInventoryAdd() const	{ return ((mFlags & FLAGS_ALLOW_INVENTORY_DROP) != 0); }
-	inline BOOL		flagTemporaryOnRez() const		{ return ((mFlags & FLAGS_TEMPORARY_ON_REZ) != 0); }
+	inline bool		flagTemporaryOnRez() const		{ return ((mFlags & FLAGS_TEMPORARY_ON_REZ) != 0); }
 	inline BOOL		flagAnimSource() const			{ return ((mFlags & FLAGS_ANIM_SOURCE) != 0); }
 	inline BOOL		flagCameraSource() const		{ return ((mFlags & FLAGS_CAMERA_SOURCE) != 0); }
 	inline BOOL		flagCameraDecoupled() const		{ return ((mFlags & FLAGS_CAMERA_DECOUPLED) != 0); }

@@ -49,7 +49,7 @@ const S32 COMPUTE_STOCK_NOT_EVALUATED = -2;
 BOOL get_is_parent_to_worn_item(const LLUUID& id);
 
 // Is this item or its baseitem is worn, attached, etc...
-BOOL get_is_item_worn(const LLUUID& id);
+bool get_is_item_worn(const LLUUID& id);
 
 // Could this item be worn (correct type + not already being worn)
 BOOL get_can_item_be_worn(const LLUUID& id);

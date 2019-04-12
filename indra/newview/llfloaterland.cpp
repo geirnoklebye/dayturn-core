@@ -697,13 +697,13 @@ void LLPanelLandGeneral::refresh()
 			if(!is_leased && (owner_id == gAgent.getID()))
 			{
 				mTextSalePending->setText(getString("need_tier_to_modify"));
-				mTextSalePending->setEnabled(TRUE);
+				mTextSalePending->setEnabled(true);
 			}
 			else if(parcel->getAuctionID())
 			{
 				mTextSalePending->setText(getString("auction_id_text"));
 				mTextSalePending->setTextArg("[ID]", llformat("%u", parcel->getAuctionID()));
-				mTextSalePending->setEnabled(TRUE);
+				mTextSalePending->setEnabled(true);
 			}
 			else
 			{
@@ -712,10 +712,10 @@ void LLPanelLandGeneral::refresh()
 				mTextSalePending->setEnabled(false);
 			}
 			//refreshNames();
-			mTextOwner->setEnabled(TRUE);
+			mTextOwner->setEnabled(true);
 
 			// We support both group and personal profiles
-			mBtnProfile->setEnabled(TRUE);
+			mBtnProfile->setEnabled(true);
 
 			if (parcel->getGroupID().isNull())
 			{
@@ -731,7 +731,7 @@ void LLPanelLandGeneral::refresh()
 				mBtnProfile->setLabel(getString("info_text"));
 
 				//mTextGroup->setText("HIPPOS!");//parcel->getGroupName());
-				mTextGroup->setEnabled(TRUE);
+				mTextGroup->setEnabled(true);
 			}
 
 			// Display claim date
@@ -1299,8 +1299,8 @@ void LLPanelLandObjects::refresh()
 	mBtnReturnGroupObjects->setEnabled(false);
 	mBtnReturnOtherObjects->setEnabled(false);
 	mCleanOtherObjectsTime->setEnabled(false);
-	mBtnRefresh->			setEnabled(FALSE);
-	mBtnReturnOwnerList->	setEnabled(FALSE);
+	mBtnRefresh->			setEnabled(false);
+	mBtnReturnOwnerList->	setEnabled(false);
 
 	mSelectedOwners.clear();
 	mOwnerList->deleteAllItems();
@@ -1380,22 +1380,22 @@ void LLPanelLandObjects::refresh()
 		{
 			if (owned && can_return_owned)
 			{
-				mBtnShowOwnerObjects->setEnabled(TRUE);
-				mBtnReturnOwnerObjects->setEnabled(TRUE);
+				mBtnShowOwnerObjects->setEnabled(true);
+				mBtnReturnOwnerObjects->setEnabled(true);
 			}
 			if (group && can_return_group_set)
 			{
-				mBtnShowGroupObjects->setEnabled(TRUE);
-				mBtnReturnGroupObjects->setEnabled(TRUE);
+				mBtnShowGroupObjects->setEnabled(true);
+				mBtnReturnGroupObjects->setEnabled(true);
 			}
 			if (other && can_return_other)
 			{
-				mBtnShowOtherObjects->setEnabled(TRUE);
-				mBtnReturnOtherObjects->setEnabled(TRUE);
+				mBtnShowOtherObjects->setEnabled(true);
+				mBtnReturnOtherObjects->setEnabled(true);
 			}
 
-			mCleanOtherObjectsTime->setEnabled(TRUE);
-			mBtnRefresh->setEnabled(TRUE);
+			mCleanOtherObjectsTime->setEnabled(true);
+			mBtnRefresh->setEnabled(true);
 		}
 	}
 }
@@ -1723,7 +1723,7 @@ void LLPanelLandObjects::processParcelObjectOwnersReply(LLMessageSystem *msg, vo
 	}
 	else
 	{
-		self->mOwnerList->setEnabled(TRUE);
+		self->mOwnerList->setEnabled(true);
 	}
 
 	self->mBtnRefresh->setEnabled(true);
@@ -1758,7 +1758,7 @@ void LLPanelLandObjects::onCommitList(LLUICtrl* ctrl, void* data)
 		// Set the selection, and enable the return button.
 		self->mSelectedOwners.clear();
 		self->mSelectedOwners.insert(item->getUUID());
-		self->mBtnReturnOwnerList->setEnabled(TRUE);
+		self->mBtnReturnOwnerList->setEnabled(true);
 
 		// Highlight this user's objects
 		clickShowCore(self, RT_LIST, &(self->mSelectedOwners));
@@ -3301,7 +3301,7 @@ void LLPanelLandExperiences::refreshPanel(LLPanelExperienceListEditor* panel, U3
 	else
 	{
 		// enable the panel
-		panel->setEnabled(TRUE);
+		panel->setEnabled(true);
 		LLAccessEntry::map entries = parcel->getExperienceKeysByType(xp_type);
 		LLAccessEntry::map::iterator it = entries.begin();
 		LLSD ids = LLSD::emptyArray();

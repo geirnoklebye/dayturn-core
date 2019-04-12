@@ -526,11 +526,11 @@ BOOL get_is_parent_to_worn_item(const LLUUID& id)
 	return FALSE;
 }
 
-BOOL get_is_item_worn(const LLUUID& id)
+bool get_is_item_worn(const LLUUID& id)
 {
 	const LLViewerInventoryItem* item = gInventory.getItem(id);
 	if (!item)
-		return FALSE;
+		return false;
 
 	// Consider the item as worn if it has links in COF.
 // [SL:KB] - The code below causes problems across the board so it really just needs to go
@@ -544,22 +544,22 @@ BOOL get_is_item_worn(const LLUUID& id)
 		case LLAssetType::AT_OBJECT:
 		{
 			if (isAgentAvatarValid() && gAgentAvatarp->isWearingAttachment(item->getLinkedUUID()))
-				return TRUE;
+				return true;
 			break;
 		}
 		case LLAssetType::AT_BODYPART:
 		case LLAssetType::AT_CLOTHING:
 			if(gAgentWearables.isWearingItem(item->getLinkedUUID()))
-				return TRUE;
+				return true;
 			break;
 		case LLAssetType::AT_GESTURE:
 			if (LLGestureMgr::instance().isGestureActive(item->getLinkedUUID()))
-				return TRUE;
+				return true;
 			break;
 		default:
 			break;
 	}
-	return FALSE;
+	return false;
 }
 
 BOOL get_can_item_be_worn(const LLUUID& id)

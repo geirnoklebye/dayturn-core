@@ -416,7 +416,7 @@ void LLLiveLSLEditor::experienceChanged()
 	if(mScriptEd->getAssociatedExperience() != mExperiences->getSelectedValue().asUUID())
 	{
 		mScriptEd->enableSave(getIsModifiable());
-		//getChildView("Save_btn")->setEnabled(TRUE);
+		//getChildView("Save_btn")->setEnabled(true);
 		mScriptEd->setAssociatedExperience(mExperiences->getSelectedValue().asUUID());
 		updateExperiencePanel();
 	}
@@ -1348,7 +1348,7 @@ void LLLiveLSLEditor::updateExperiencePanel()
 		mExperiences->setVisible(false);
 		if(mExperienceIds.size()>0)
 		{
-			mExperienceEnabled->setEnabled(TRUE);
+			mExperienceEnabled->setEnabled(true);
 			mExperienceEnabled->setToolTip(getString("add_experiences"));
 		}
 		else
@@ -2028,7 +2028,7 @@ bool LLLiveLSLEditor::postBuild()
 	getChildView("running")->setEnabled(false);
 
 	childSetAction("Reset",&LLLiveLSLEditor::onReset,this);
-	getChildView("Reset")->setEnabled(TRUE);
+	getChildView("Reset")->setEnabled(true);
 
 	mMonoCheckbox =	getChild<LLCheckBoxCtrl>("mono");
 	childSetCommitCallback("mono", &LLLiveLSLEditor::onMonoCheckboxClicked, this);

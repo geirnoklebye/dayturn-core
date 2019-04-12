@@ -293,7 +293,7 @@ void LLFloaterOutfitSnapshot::onOpen(const LLSD& key)
         preview->updateSnapshot(TRUE);
     }
     focusFirstItem(FALSE);
-    gSnapshotFloaterView->setEnabled(TRUE);
+    gSnapshotFloaterView->setEnabled(true);
     gSnapshotFloaterView->setVisible(true);
     gSnapshotFloaterView->adjustToFitScreen(this, FALSE);
 

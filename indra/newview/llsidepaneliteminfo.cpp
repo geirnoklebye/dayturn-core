@@ -381,10 +381,10 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 											   GP_OBJECT_MANIPULATE)
 		&& is_obj_modify && is_complete && not_in_trash;
 
-	getChildView("LabelItemNameTitle")->setEnabled(TRUE);
+	getChildView("LabelItemNameTitle")->setEnabled(true);
 	getChildView("LabelItemName")->setEnabled(is_modifiable && !is_calling_card); // for now, don't allow rename of calling cards
 	getChild<LLUICtrl>("LabelItemName")->setValue(item->getName());
-	getChildView("LabelItemDescTitle")->setEnabled(TRUE);
+	getChildView("LabelItemDescTitle")->setEnabled(true);
 	getChildView("LabelItemDesc")->setEnabled(is_modifiable);
 	getChildView("IconLocked")->setVisible(!is_modifiable);
 	getChild<LLUICtrl>("LabelItemDesc")->setValue(item->getDescription());
@@ -400,8 +400,8 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 		LLUUID creator_id = item->getCreatorUUID();
 		std::string name =
 			LLSLURL("agent", creator_id, "completename").getSLURLString();
-		getChildView("BtnCreator")->setEnabled(TRUE);
-		getChildView("LabelCreatorTitle")->setEnabled(TRUE);
+		getChildView("BtnCreator")->setEnabled(true);
+		getChildView("LabelCreatorTitle")->setEnabled(true);
 		getChildView("LabelCreatorName")->setEnabled(false);
 		getChild<LLUICtrl>("LabelCreatorName")->setValue(name);
 	}
@@ -428,8 +428,8 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 			LLUUID owner_id = perm.getOwner();
 			name = LLSLURL("agent", owner_id, "completename").getSLURLString();
 		}
-		getChildView("BtnOwner")->setEnabled(TRUE);
-		getChildView("LabelOwnerTitle")->setEnabled(TRUE);
+		getChildView("BtnOwner")->setEnabled(true);
+		getChildView("LabelOwnerTitle")->setEnabled(true);
 		getChildView("LabelOwnerName")->setEnabled(false);
 		getChild<LLUICtrl>("LabelOwnerName")->setValue(name);
 	}
@@ -612,7 +612,7 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 	}
 	else if (is_obj_modify && can_agent_manipulate)
 	{
-		getChildView("CheckShareWithGroup")->setEnabled(TRUE);
+		getChildView("CheckShareWithGroup")->setEnabled(true);
 		getChildView("CheckEveryoneCopy")->setEnabled((owner_mask & PERM_COPY) && (owner_mask & PERM_TRANSFER));
 	}
 	else
@@ -672,7 +672,7 @@ void LLSidepanelItemInfo::refreshFromItem(LLViewerInventoryItem* item)
 	{
 		getChildView("CheckPurchase")->setEnabled(is_complete);
 
-		getChildView("NextOwnerLabel")->setEnabled(TRUE);
+		getChildView("NextOwnerLabel")->setEnabled(true);
 		getChildView("CheckNextOwnerModify")->setEnabled((base_mask & PERM_MODIFY) && !cannot_restrict_permissions);
 		getChildView("CheckNextOwnerCopy")->setEnabled((base_mask & PERM_COPY) && !cannot_restrict_permissions && !is_settings);
 		getChildView("CheckNextOwnerTransfer")->setEnabled((next_owner_mask & PERM_COPY) && !cannot_restrict_permissions);

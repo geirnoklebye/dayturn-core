@@ -1431,7 +1431,7 @@ void LLFloaterPreference::refreshEnabledState()
 	}
 	else
 	{
-		ctrl_wind_light->setEnabled(TRUE);
+		ctrl_wind_light->setEnabled(true);
 	}
 
 	//Deferred/SSAO/Shadows
@@ -1916,31 +1916,31 @@ void LLFloaterPreference::setPersonalInfo(const std::string& visibility)
 	if (visibility == VISIBILITY_DEFAULT)
 	{
 		mOriginalHideOnlineStatus = false;
-		getChildView("online_visibility")->setEnabled(TRUE); 	 
+		getChildView("online_visibility")->setEnabled(true); 	 
 	}
 	else if (visibility == VISIBILITY_HIDDEN)
 	{
 		mOriginalHideOnlineStatus = true;
-		getChildView("online_visibility")->setEnabled(TRUE); 	 
+		getChildView("online_visibility")->setEnabled(true); 	 
 	}
 	else
 	{
 		mOriginalHideOnlineStatus = true;
 	}
 	
-	getChild<LLUICtrl>("online_searchresults")->setEnabled(TRUE);
-	getChildView("friends_online_notify_checkbox")->setEnabled(TRUE);
+	getChild<LLUICtrl>("online_searchresults")->setEnabled(true);
+	getChildView("friends_online_notify_checkbox")->setEnabled(true);
 	getChild<LLUICtrl>("online_visibility")->setValue(mOriginalHideOnlineStatus); 	 
 	getChild<LLUICtrl>("online_visibility")->setLabelArg("[DIR_VIS]", mDirectoryVisibility);
 
-	getChildView("favorites_on_login_check")->setEnabled(TRUE);
-	getChildView("log_path_button")->setEnabled(TRUE);
-	getChildView("chat_font_size")->setEnabled(TRUE);
-	getChildView("conversation_log_combo")->setEnabled(TRUE);
-	getChild<LLUICtrl>("voice_call_friends_only_check")->setEnabled(TRUE);
+	getChildView("favorites_on_login_check")->setEnabled(true);
+	getChildView("log_path_button")->setEnabled(true);
+	getChildView("chat_font_size")->setEnabled(true);
+	getChildView("conversation_log_combo")->setEnabled(true);
+	getChild<LLUICtrl>("voice_call_friends_only_check")->setEnabled(true);
 	getChild<LLUICtrl>("voice_call_friends_only_check")->setValue(gSavedPerAccountSettings.getBOOL("VoiceCallsFriendsOnly"));
     // <FS:Ansariel> FIRE-18250: Option to disable default eye movement
-    getChildView("FSStaticEyes")->setEnabled(TRUE);
+    getChildView("FSStaticEyes")->setEnabled(true);
     
 }
 
