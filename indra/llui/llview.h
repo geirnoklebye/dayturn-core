@@ -466,7 +466,7 @@ public:
 		return result;
 	}
 
-	template <class T> T* getChild(const std::string& name, BOOL recurse = TRUE) const;
+	template <class T> T* getChild(const std::string& name, bool recurse = true) const;
 
 	template <class T> T& getChildRef(const std::string& name, BOOL recurse = TRUE) const
 	{
@@ -706,7 +706,7 @@ struct TypeValues<LLView::EOrientation> : public LLInitParam::TypeValuesHelper<L
 };
 }
 
-template <class T> T* LLView::getChild(const std::string& name, BOOL recurse) const
+template <class T> T* LLView::getChild(const std::string& name, bool recurse) const
 {
 	LLView* child = findChildView(name, recurse);
 	T* result = dynamic_cast<T*>(child);
@@ -745,7 +745,7 @@ template <class T> T* LLView::getChild(const std::string& name, BOOL recurse) co
 // require explicit specialization.  See llbutton.cpp for an example.
 #ifndef LLVIEW_CPP
 extern template class LLView* LLView::getChild<class LLView>(
-	const std::string& name, BOOL recurse) const;
+	const std::string& name, bool recurse) const;
 #endif
 
 #endif //LL_LLVIEW_H

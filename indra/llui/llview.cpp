@@ -88,7 +88,7 @@ BOOL LLView::sIsDrawing = FALSE;
 
 // Compiler optimization, generate extern template
 template class LLView* LLView::getChild<class LLView>(
-	const std::string& name, BOOL recurse) const;
+	const std::string& name, bool recurse) const;
 
 static LLDefaultChildRegistry::Register<LLView> r("view");
 

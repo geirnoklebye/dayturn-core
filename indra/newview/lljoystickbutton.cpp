@@ -419,11 +419,11 @@ void LLJoystickAgentSlide::onHeldDown()
 
 LLJoystickCameraRotate::LLJoystickCameraRotate(const LLJoystickCameraRotate::Params& p)
 :	LLJoystick(p), 
-	mInLeft( FALSE ),
-	mInTop( FALSE ),
-	mInRight( FALSE ),
-	mInBottom( FALSE ),
-	mInCenter( FALSE )
+	mInLeft( false ),
+	mInTop( false ),
+	mInRight( false ),
+	mInBottom( false ),
+	mInCenter( false )
 { 
 	mCenterImageName = "Cam_Rotate_Center";
 }
@@ -461,7 +461,7 @@ BOOL LLJoystickCameraRotate::handleMouseDown(S32 x, S32 y, MASK mask)
 		mInitialOffset.mX = 0;
 		mInitialOffset.mY = 0;
 		mInitialQuadrant = JQ_ORIGIN;
-		mInCenter = TRUE;
+		mInCenter = true;
 
 		resetJoystickCamera();
 	}
@@ -500,7 +500,7 @@ BOOL LLJoystickCameraRotate::handleMouseDown(S32 x, S32 y, MASK mask)
 BOOL LLJoystickCameraRotate::handleMouseUp(S32 x, S32 y, MASK mask)
 {
 	gAgent.setMovementLocked(FALSE);
-	mInCenter = FALSE;
+	mInCenter = false;
 	return LLJoystick::handleMouseUp(x, y, mask);
 }
 
@@ -508,7 +508,7 @@ bool LLJoystickCameraRotate::handleHover(S32 x, S32 y, MASK mask)
 {
 	if (!pointInCenterDot(x, y, CENTER_DOT_RADIUS))
 	{
-		mInCenter = FALSE;
+		mInCenter = false;
 	}
 
 	return LLJoystick::handleHover(x, y, mask);
@@ -568,7 +568,7 @@ F32 LLJoystickCameraRotate::getOrbitRate()
 
 
 // Only used for drawing
-void LLJoystickCameraRotate::setToggleState( BOOL left, BOOL top, BOOL right, BOOL bottom )
+void LLJoystickCameraRotate::setToggleState( bool left, bool top, bool right, bool bottom )
 {
 	mInLeft = left;
 	mInTop = top;
