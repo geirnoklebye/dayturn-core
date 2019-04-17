@@ -1801,27 +1801,15 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	LLCoordScreen scr;
     mWindow->getSize(&scr);
 
-    if(p.fullscreen && ( scr.mX!=p.width || scr.mY!=p.height))
+    // Reset UI scale factor on first run if OS's display scaling is not 100%
+    if (gSavedSettings.getBOOL("ResetUIScaleOnFirstRun"))
     {
-		LL_WARNS() << "Fullscreen has forced us in to a different resolution now using "<<scr.mX<<" x "<<scr.mY<<LL_ENDL;
-		gSavedSettings.setS32("FullScreenWidth",scr.mX);
-		gSavedSettings.setS32("FullScreenHeight",scr.mY);
+        if (mWindow->getSystemUISize() != 1.f)
+        {
+            gSavedSettings.setF32("UIScaleFactor", 1.f);
+        }
+        gSavedSettings.setBOOL("ResetUIScaleOnFirstRun", FALSE);
     }
-
-
-	F32 system_scale_factor = mWindow->getSystemUISize();
-	if (system_scale_factor < MIN_UI_SCALE || system_scale_factor > MAX_UI_SCALE)
-	{
-		// reset to default;
-		system_scale_factor = 1.f;
-	}
-	if (p.first_run || gSavedSettings.getF32("LastSystemUIScaleFactor") != system_scale_factor)
-	{
-		mSystemUIScaleFactorChanged = !p.first_run;
-		gSavedSettings.setF32("LastSystemUIScaleFactor", system_scale_factor);
-		gSavedSettings.setF32("UIScaleFactor", system_scale_factor);
-	}
-
 
 	// Get the real window rect the window was created with (since there are various OS-dependent reasons why
 	// the size of a window or fullscreen context may have been adjusted slightly...)

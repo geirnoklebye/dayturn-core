@@ -3082,6 +3082,7 @@ void LLViewerObject::unlinkControlAvatar()
         if (mControlAvatar)
         {
             mControlAvatar->markForDeath();
+			mControlAvatar->mRootVolp = NULL;
             mControlAvatar = NULL;
         }
     }
