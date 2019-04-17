@@ -508,6 +508,9 @@ public:
 	bool getPendingUpdate() { return mPendingUpdate; }
 
 	virtual bool refreshFromRegion(LLViewerRegion* region);
+  // LL defines this as private, we need it public for llavataractions
+	// Send the actual EstateOwnerRequest "estateaccessdelta" message
+	static void sendEstateAccessDelta(U32 flags, const LLUUID& agent_id);
 
 private:
 	void onClickAddAllowedAgent();
@@ -539,9 +542,6 @@ private:
 
 	// used for both add and remove operations
 	static bool accessCoreConfirm(const LLSD& notification, const LLSD& response);
-
-	// Send the actual EstateOwnerRequest "estateaccessdelta" message
-	static void sendEstateAccessDelta(U32 flags, const LLUUID& agent_id);
 
 	static void requestEstateGetAccessCoro(std::string url);
 

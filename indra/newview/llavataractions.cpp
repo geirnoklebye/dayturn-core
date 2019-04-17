@@ -1799,5 +1799,5 @@ void LLAvatarActions::estateBanCommit(const LLSD &notification, const LLSD &resp
 	}
 
 	LLFloaterRegionInfo::nextInvoice();
-	LLPanelEstateInfo::sendEstateAccessDelta(flags, avatar->getID());
+	LLPanelEstateAccess::sendEstateAccessDelta(flags, avatar->getID());
 }
