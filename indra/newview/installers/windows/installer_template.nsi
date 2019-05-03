@@ -584,7 +584,7 @@ Function un.CloseSecondLife
     SendMessage $0 16 0 0
 
   LOOP:
-	  FindWindow $0 "Second Life" ""
+	  FindWindow $0 "Kokua" ""
 	  IntCmp $0 0 DONE
 	  Sleep 500
 	  Goto LOOP
