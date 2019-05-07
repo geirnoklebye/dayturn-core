@@ -682,8 +682,8 @@ void LLViewerMedia::updateMedia(void *dummy_arg)
 
 	std::vector<LLViewerMediaImpl*> proximity_order;
 
-	bool inworld_media_enabled = gSavedSettings.getBOOL("AudioStreamingMedia");
-	bool inworld_audio_enabled = gSavedSettings.getBOOL("AudioStreamingMusic");
+	static LLCachedControl<bool> inworld_media_enabled(gSavedSettings, "AudioStreamingMedia", true);
+	static LLCachedControl<bool> inworld_audio_enabled(gSavedSettings, "AudioStreamingMusic", true);
 	U32 max_instances = gSavedSettings.getU32("PluginInstancesTotal");
 	U32 max_normal = gSavedSettings.getU32("PluginInstancesNormal");
 	U32 max_low = gSavedSettings.getU32("PluginInstancesLow");
@@ -940,8 +940,9 @@ void LLViewerMedia::setAllMediaEnabled(bool val)
 		{
 			LLViewerParcelMedia::play(LLViewerParcelMgr::getInstance()->getAgentParcel());
 		}
-		/* ## Zi: Media/Stream separation
-		if (gSavedSettings.getBOOL("AudioStreamingMusic") &&
+
+		static LLCachedControl<bool> audio_streaming_music(gSavedSettings, "AudioStreamingMusic", true);
+		if (audio_streaming_music &&
 			!LLViewerMedia::isParcelAudioPlaying() &&
 			gAudiop &&
 			LLViewerMedia::hasParcelAudio())
@@ -956,8 +957,6 @@ void LLViewerMedia::setAllMediaEnabled(bool val)
 				LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getParcelAudioURL());
 			}
 		}
-		## Zi: Media/Stream separation
-		*/       
 	}
 	else {
 		// This actually unloads the impl, as opposed to "stop"ping the media
@@ -1015,7 +1014,8 @@ void LLViewerMedia::setAllMediaPaused(bool val)
             LLViewerParcelMedia::play(LLViewerParcelMgr::getInstance()->getAgentParcel());
         }
 
-        if (gSavedSettings.getBOOL("AudioStreamingMusic") &&
+        static LLCachedControl<bool> audio_streaming_music(gSavedSettings, "AudioStreamingMusic", true);
+        if (audio_streaming_music &&
             !LLViewerMedia::isParcelAudioPlaying() &&
             gAudiop &&
             LLViewerMedia::hasParcelAudio())
@@ -3308,8 +3308,39 @@ void LLViewerMediaImpl::handleMediaEvent(LLPluginClassMedia* plugin, LLPluginCla
 			}
 			else
 			{
-				// Don't track redirects.
-				setNavState(MEDIANAVSTATE_NONE);
+				bool internal_nav = false;
+				if (url != mCurrentMediaURL)
+				{
+					// Check if it is internal navigation
+					// Note: Not sure if we should detect internal navigations as 'address change',
+					// but they are not redirects and do not cause NAVIGATE_BEGIN (also see SL-1005)
+					size_t pos = url.find("#");
+					if (pos != std::string::npos)
+					{
+						// assume that new link always have '#', so this is either
+						// transfer from 'link#1' to 'link#2' or from link to 'link#2'
+						// filter out cases like 'redirect?link'
+						std::string base_url = url.substr(0, pos);
+						pos = mCurrentMediaURL.find(base_url);
+						if (pos == 0)
+						{
+							// base link hasn't changed
+							internal_nav = true;
+						}
+					}
+				}
+
+				if (internal_nav)
+				{
+					// Internal navigation by '#'
+					mCurrentMediaURL = url;
+					setNavState(MEDIANAVSTATE_FIRST_LOCATION_CHANGED);
+				}
+				else
+				{
+					// Don't track redirects.
+					setNavState(MEDIANAVSTATE_NONE);
+				}
 			}
 		}
 		break;
