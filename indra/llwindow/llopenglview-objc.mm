@@ -345,6 +345,10 @@ attributedStringInfo getSegments(NSAttributedString *str)
 
 - (void) mouseDown:(NSEvent *)theEvent
 {
+    NSPoint mPoint = gHiDPISupport ? [self convertPointToBacking:[theEvent locationInWindow]] : [theEvent locationInWindow];
+    mMousePos[0] = mPoint.x;
+    mMousePos[1] = mPoint.y;
+
     // Apparently people still use this?
     if ([theEvent modifierFlags] & NSCommandKeyMask &&
         !([theEvent modifierFlags] & NSControlKeyMask) &&
@@ -382,11 +386,17 @@ attributedStringInfo getSegments(NSAttributedString *str)
 
 - (void) rightMouseDown:(NSEvent *)theEvent
 {
+    NSPoint mPoint = gHiDPISupport ? [self convertPointToBacking:[theEvent locationInWindow]] : [theEvent locationInWindow];
+    mMousePos[0] = mPoint.x;
+    mMousePos[1] = mPoint.y;
 	callRightMouseDown(mMousePos, [theEvent modifierFlags]);
 }
 
 - (void) rightMouseUp:(NSEvent *)theEvent
 {
+    NSPoint mPoint = gHiDPISupport ? [self convertPointToBacking:[theEvent locationInWindow]] : [theEvent locationInWindow];
+    mMousePos[0] = mPoint.x;
+    mMousePos[1] = mPoint.y;
 	callRightMouseUp(mMousePos, [theEvent modifierFlags]);
 }
 
@@ -433,11 +443,17 @@ attributedStringInfo getSegments(NSAttributedString *str)
 
 - (void) otherMouseDown:(NSEvent *)theEvent
 {
+    NSPoint mPoint = gHiDPISupport ? [self convertPointToBacking:[theEvent locationInWindow]] : [theEvent locationInWindow];
+    mMousePos[0] = mPoint.x;
+    mMousePos[1] = mPoint.y;
 	callMiddleMouseDown(mMousePos, [theEvent modifierFlags]);
 }
 
 - (void) otherMouseUp:(NSEvent *)theEvent
 {
+    NSPoint mPoint = gHiDPISupport ? [self convertPointToBacking:[theEvent locationInWindow]] : [theEvent locationInWindow];
+    mMousePos[0] = mPoint.x;
+    mMousePos[1] = mPoint.y;
 	callMiddleMouseUp(mMousePos, [theEvent modifierFlags]);
 }
 

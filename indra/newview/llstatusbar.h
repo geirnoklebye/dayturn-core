@@ -46,7 +46,15 @@ class LLPanelPresetsPulldown;
 class LLPanelVolumePulldown;
 class LLPanelNearByMedia;
 class LLIconCtrl;
+class LLSearchEditor;
 
+namespace ll
+{
+	namespace statusbar
+	{
+		struct SearchData;
+	}
+}
 class LLStatusBar
 :	public LLPanel
 {
@@ -112,6 +120,16 @@ private:
 	// <FS:Ansariel> FIRE-19697: Add setting to disable graphics preset menu popup on mouse over
 	//NP graphics presets no longer disabled
 	void onPopupRolloverChanged(const LLSD& newvalue);
+
+	LLSearchEditor *mFilterEdit;
+	LLPanel *mSearchPanel;
+	void onUpdateFilterTerm();
+
+	std::unique_ptr< ll::statusbar::SearchData > mSearchData;
+	void collectSearchableItems();
+	void updateMenuSearchVisibility( const LLSD& data );
+	void updateMenuSearchPosition();
+
 private:
 	LLTextBox	*mTextTime;
 	LLTextBox	*mFPSText;

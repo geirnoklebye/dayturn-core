@@ -1880,17 +1880,18 @@ void LLInventoryModel::addItem(LLViewerInventoryItem* item)
 
 		if (LLAssetType::lookup(item->getType()) == LLAssetType::badLookup())
 		{
-			// CA Don't panic for EEP-related errors since EEP isn't in the viewer yet
-			if (item->getType() != 56)
+			if (item->getType() >= LLAssetType::AT_COUNT)
 			{
-				LL_WARNS(LOG_INV) << "Got unknown asset type for item [ name: " << item->getName()
+				// Not yet supported.
+				LL_DEBUGS(LOG_INV) << "Got unknown asset type for item [ name: " << item->getName()
 					<< " type: " << item->getType()
 					<< " inv-type: " << item->getInventoryType() << " ]." << LL_ENDL;
 			}
 			else
 			{
-				// omit the detail so that the message is identical each time
-				LL_INFOS_ONCE(LOG_INV) << "Got unsupported EEP asset type: " << item->getType() << LL_ENDL;				
+				LL_WARNS(LOG_INV) << "Got unknown asset type for item [ name: " << item->getName()
+					<< " type: " << item->getType()
+					<< " inv-type: " << item->getInventoryType() << " ]." << LL_ENDL;
 			}
 		}
 
