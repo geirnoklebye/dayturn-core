@@ -128,7 +128,7 @@ LLStatusBar::LLStatusBar(const LLRect& rect)
 	mIconPresets(NULL),
 	mMediaToggle(NULL),
 	mMouseEnterVolumeConnection(),
-	mMouseEnterNearbyMediaConnection()    
+	mMouseEnterNearbyMediaConnection(),    
 	mFilterEdit(NULL),			// Edit for filtering
 	mSearchPanel(NULL)			// Panel for filtering
 {
