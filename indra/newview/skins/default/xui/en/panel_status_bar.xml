@@ -28,16 +28,16 @@
         follows="top|right"
         layout="topleft"
         top="0"
-        left="-648"
-        width="638"
+        left="-700"
+        width="695"
         height="19"
         orientation="horizontal">
 			  <layout_panel
 				 height="18"
-				 left="-458"
+				 left="0"
 				 top="0"
 				 width="120"
-				 follows="right|top"
+				 follows="left|top"
 				 name="menu_search_panel"
 				 background_opaque="true"
 				 background_visible="true"
@@ -145,7 +145,7 @@
             follows="top|left"
             layout="topleft"
             height="19"
-            width="190"
+            width="110"
             auto_resize="false"
             user_resize="false"
             visible="true">
@@ -157,18 +157,18 @@
                 layout="topleft"
                 top="0"
                 left="10"
-                width="145"
+                width="80"
                 height="16"
                 v_pad="4"
-                halign="right"
+                halign="left"
                 text_readonly_color="TimeTextColor">
                 --:--
             </text>
             <icon
-             follows="right|top"
+             follows="left|top"
              height="16"
              image_name="Presets_Icon"
-             left_pad="8"
+             left_pad="0"
              top="2"
              name="presets_icon"
              width="18" />
