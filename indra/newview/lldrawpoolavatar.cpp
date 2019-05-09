@@ -589,19 +589,19 @@ void LLDrawPoolAvatar::renderShadow(S32 pass)
 		avatarp->renderSkinned();
         LLDrawPoolAvatar::sSkipTransparent = false;
 	}
-//MK from CY
-	else if (RestrainedLoveAvatarShadows == 1)
-	{
-		// Don't render the shadow of anything that is rigged. Instead, force the shadow of the avatar shape to render instead.
-		// See LLVOAvatar::isTextureVisible() and LLVOAvatarSelf::isTextureVisible()
-		return;
-	}
-	else if (RestrainedLoveAvatarShadows == 2)
-	{
-		renderRiggedShadows (avatarp);
-	}
-//mk from cy
-    else if (pass == SHADOW_PASS_AVATAR_ALPHA_BLEND)
+////MK from CY
+//	else if (RestrainedLoveAvatarShadows == 1)
+//	{
+//		// Don't render the shadow of anything that is rigged. Instead, force the shadow of the avatar shape to render instead.
+//		// See LLVOAvatar::isTextureVisible() and LLVOAvatarSelf::isTextureVisible()
+//		return;
+//	}
+//	else if (RestrainedLoveAvatarShadows == 2)
+//	{
+//		renderRiggedShadows (avatarp);
+//	}
+////mk from cy
+	else if (pass == SHADOW_PASS_AVATAR_ALPHA_BLEND)
 	{
         LLDrawPoolAvatar::sSkipOpaque = true;
 		avatarp->renderSkinned();
