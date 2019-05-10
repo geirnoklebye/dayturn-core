@@ -156,6 +156,12 @@ static bool handleRestrainedLoveHeadMouselookRenderRigged(const LLSD& newvalue)
 	RRInterface::sRestrainedLoveHeadMouselookRenderRigged = newvalue.asBoolean();
 	return true;
 }
+
+static bool handleRestrainedLoveRenderInvisibleSurfaces(const LLSD& newvalue)
+{
+	RRInterface::sRestrainedLoveRenderInvisibleSurfaces = newvalue.asBoolean();
+	return true;
+}
 //mk
 
 static bool handleRenderAvatarMouselookChanged(const LLSD& newvalue)
@@ -695,6 +701,7 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("RenderDeferredShowInvisiprims")->getSignal()->connect(boost::bind(&handleRenderDeferredShowInvisiprimsChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveCamDistNbGradients")->getSignal()->connect(boost::bind(&handleRestrainedLoveCamDistNbGradientsChanged, _2));
 	gSavedSettings.getControl("RestrainedLoveHeadMouselookRenderRigged")->getSignal()->connect(boost::bind(&handleRestrainedLoveHeadMouselookRenderRigged, _2));
+	gSavedSettings.getControl("RestrainedLoveRenderInvisibleSurfaces")->getSignal()->connect(boost::bind(&handleRestrainedLoveRenderInvisibleSurfaces, _2));
 //mk
 	gSavedSettings.getControl("FirstPersonAvatarVisible")->getSignal()->connect(boost::bind(&handleRenderAvatarMouselookChanged, _2));
 	gSavedSettings.getControl("RenderFarClip")->getSignal()->connect(boost::bind(&handleRenderFarClipChanged, _2));

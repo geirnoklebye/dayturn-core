@@ -102,6 +102,7 @@ BOOL RRInterface::sRRNoSetEnv = FALSE;
 BOOL RRInterface::sRestrainedLoveDebug = FALSE; // Note: not used in this file; only used in llviewermessage for 'executes/fails command'
 BOOL RRInterface::sRestrainedLoveLogging = FALSE; // Note: currently only used in this file
 BOOL RRInterface::sRestrainedLoveHeadMouselookRenderRigged = FALSE;
+BOOL RRInterface::sRestrainedLoveRenderInvisibleSurfaces = FALSE;
 BOOL RRInterface::sCanOoc = TRUE;
 std::string RRInterface::sRecvimMessage = "The Resident you messaged is prevented from reading your instant messages at the moment, please try again later.";
 std::string RRInterface::sSendimMessage = "*** IM blocked by sender's viewer";

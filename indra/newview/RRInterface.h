@@ -331,7 +331,8 @@ public:
 	static BOOL sRRNoSetEnv;
 	static BOOL sRestrainedLoveDebug; // was used to also control LL_INFOS() usage, now only controls the 'executes/fails command' chat feedback
 	static BOOL sRestrainedLoveLogging; // this controls the generation of LL_INFOS() output, previously controlled by RESTRAINEDLOVEDEBUG too
-	static BOOL sRestrainedLoveHeadMouselookRenderRigged;
+	static BOOL sRestrainedLoveHeadMouselookRenderRigged; // cached boolean
+	static BOOL sRestrainedLoveRenderInvisibleSurfaces; // cached boolean
 	static BOOL sCanOoc; // when TRUE, the user can bypass a sendchat restriction by surrounding with (( and ))
 	static std::string sRecvimMessage; // message to replace an incoming IM, when under recvim
 	static std::string sSendimMessage; // message to replace an outgoing IM, when under sendim

@@ -461,7 +461,7 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 						LLVOVolume* vovolume = drawable->getVOVolume();
 						if (vovolume)
 						{
-							if (!sShowDebugAlpha)
+							if (!sShowDebugAlpha && !gAgent.mRRInterface.sRestrainedLoveRenderInvisibleSurfaces)
 							{
 								const LLTextureEntry* tep = facep->getTextureEntry();
 								if (tep)
@@ -479,7 +479,7 @@ void LLDrawPoolAlpha::renderAlpha(U32 mask, S32 pass)
 							if (vision_restricted)
 							{
 								// If we are under @camtextures, do not render this alpha surface if it is phantom and it is not an attachment
-								if (gAgent.mRRInterface.mContainsCamTextures && vovolume && vovolume->flagPhantom() && !vovolume->isAttachment())
+								if (gAgent.mRRInterface.mContainsCamTextures && vovolume->flagPhantom() && !vovolume->isAttachment())
 								{
 									continue;
 								}

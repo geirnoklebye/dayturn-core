@@ -542,6 +542,7 @@ bool idle_startup()
 	RRInterface::sRestrainedLoveDebug = gSavedSettings.getBOOL("RestrainedLoveDebug");
 	RRInterface::sRestrainedLoveLogging = gSavedSettings.getBOOL("RestrainedLoveLogging");
 	RRInterface::sRestrainedLoveHeadMouselookRenderRigged = gSavedSettings.getBOOL("RestrainedLoveHeadMouselookRenderRigged");
+	RRInterface::sRestrainedLoveRenderInvisibleSurfaces = gSavedSettings.getBOOL("RestrainedLoveRenderInvisibleSurfaces");
 #if RLV_ALWAYS_ON
 	RRInterface::sCanOoc = FALSE;
 #else
