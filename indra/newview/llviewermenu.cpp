@@ -5323,30 +5323,6 @@ private:
 		{
 			return false;
 		}
-
-		// Don't let another avatar return a locked object
-		if (gRRenabled)
-		{
-			BOOL locked_but_takeable_object = FALSE;
-	
-			for (LLObjectSelection::root_iterator iter = LLSelectMgr::getInstance()->getSelection()->root_begin();
-				 iter != LLSelectMgr::getInstance()->getSelection()->root_end(); iter++)
-			{
-				LLSelectNode* node = *iter;
-				LLViewerObject* object = node->getObject();
-				if(object)
-				{
-					if(!object->permMove())
-					{
-						locked_but_takeable_object = TRUE;
-					}
-				}
-			}
-			if (locked_but_takeable_object)
-			{
-				return false;
-			}
-		}
 //mk
 		
 		mObjectSelection = LLSelectMgr::getInstance()->getEditSelection();
