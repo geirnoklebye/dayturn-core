@@ -5642,7 +5642,10 @@ void LLViewerWindow::setUIVisibility(bool visible)
 
 	if (!visible)
 	{
-		gAgentCamera.changeCameraToThirdPerson(FALSE);
+//MK
+		// Don't change to third person camera
+////		gAgentCamera.changeCameraToThirdPerson(FALSE);
+//mk
 		gFloaterView->hideAllFloaters();
 	}
 	else

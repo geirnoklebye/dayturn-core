@@ -4858,7 +4858,10 @@ class LLViewToggleUI : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
 	{
-		if(gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+//MK
+		// Let the user hide the UI in Mouselook as well
+////		if(gAgentCamera.getCameraMode() != CAMERA_MODE_MOUSELOOK)
+//mk
 		{
 			LLNotification::Params params("ConfirmHideUI");
 			params.functor.function(boost::bind(&LLViewToggleUI::confirm, this, _1, _2));
