@@ -5990,16 +5990,37 @@ void LLSelectMgr::renderSilhouettes(BOOL for_hud)
                     S32 num_tes = llmin((S32)objectp->getNumTEs(), (S32)objectp->getNumFaces()); // avatars have TEs but no faces
                     for (S32 te = 0; te < num_tes; ++te)
                     {
-                        if (!getTEMode())
+//MK
+						// Fix : After rev d24b4c0e35a6 (SL-10149 : "Selecting mesh face doesn't highlight the face in any way"),
+						// selecting an object with at least one rigged part in it would highlight the whole object yellow.
+						LLColor4 color;
+
+						if (objectp->isRootEdit())
+						{
+							color = sSilhouetteParentColor;
+						}
+						else
+						{
+							color = sSilhouetteChildColor;
+						}
+//mk
+
+						if (!getTEMode())
                         {
                             objectp->mDrawable->getFace(te)->renderOneWireframe(
-                                LLColor4(sSilhouetteParentColor[VRED], sSilhouetteParentColor[VGREEN], sSilhouetteParentColor[VBLUE], LLSelectMgr::sHighlightAlpha * 2)
+//MK
+////								LLColor4(sSilhouetteParentColor[VRED], sSilhouetteParentColor[VGREEN], sSilhouetteParentColor[VBLUE], LLSelectMgr::sHighlightAlpha * 2)
+//mk
+								LLColor4(color[VRED], color[VGREEN], color[VBLUE], LLSelectMgr::sHighlightAlpha * 2)
                                 , fogCfx, wireframe_selection, node->isTransient() ? FALSE : LLSelectMgr::sRenderHiddenSelections);
                         }
                         else if(node->isTESelected(te))
                         {
                             objectp->mDrawable->getFace(te)->renderOneWireframe(
-                                LLColor4(sSilhouetteParentColor[VRED], sSilhouetteParentColor[VGREEN], sSilhouetteParentColor[VBLUE], LLSelectMgr::sHighlightAlpha * 2)
+//MK
+////								LLColor4(sSilhouetteParentColor[VRED], sSilhouetteParentColor[VGREEN], sSilhouetteParentColor[VBLUE], LLSelectMgr::sHighlightAlpha * 2)
+//mk
+								LLColor4(color[VRED], color[VGREEN], color[VBLUE], LLSelectMgr::sHighlightAlpha * 2)
                                 , fogCfx, wireframe_selection, node->isTransient() ? FALSE : LLSelectMgr::sRenderHiddenSelections);
                         }
                     }
