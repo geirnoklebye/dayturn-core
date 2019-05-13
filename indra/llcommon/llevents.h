@@ -581,12 +581,15 @@ public:
 
     /// Generate a distinct name for a listener -- see listen()
     static std::string inventName(const std::string& pfx="listener");
-
+#if LL_LINUX
     virtual void flush() {}
+#endif
 private:
     friend class LLEventPumps;
     /// flush queued events
-//    virtual void flush() {}
+#if !LL_LINUX
+    virtual void flush() {}
+#endif
 
     virtual void reset();
 
