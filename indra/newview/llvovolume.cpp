@@ -5085,6 +5085,35 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 		LL_WARNS_ONCE("RenderMaterials") << "Oh no! No binormals for this alpha blended face!" << LL_ENDL;
 	}
 
+//MK
+	// If the vision is restricted and the outer sphere is opaque, do not render someone's attachments if they are outside the outer sphere.
+	LLViewerObject* vol_obj = facep->getViewerObject();
+	if (vol_obj && vol_obj->isAttachment())
+	{
+		if (gRRenabled && gAgent.mRRInterface.mVisionRestricted)
+		{
+			if (gAgent.mRRInterface.mCamDistDrawAlphaMax >= 0.999999f)
+			{
+				LLVOAvatar* avatar = vol_obj->getAvatar();
+				if (avatar && !avatar->isSelf())
+				{
+					LLVector3 joint_pos = LLVector3::zero;
+					F32 cam_dist_draw_max_squared = EXTREMUM;
+					joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
+					cam_dist_draw_max_squared = gAgent.mRRInterface.mCamDistDrawMax * gAgent.mRRInterface.mCamDistDrawMax;
+					LLVector3 avatar_pos = avatar->getPositionAgent();
+					LLVector3 avatar_pos_relative = avatar_pos - joint_pos;
+					F32 distance_to_self_squared = (F32)avatar_pos_relative.magVecSquared();
+					if (distance_to_self_squared > cam_dist_draw_max_squared)
+					{
+						return;
+					}
+				}
+			}
+		}
+	}
+//mk
+
 	bool selected = facep->getViewerObject()->isSelected();
 
 	//if (selected && LLSelectMgr::getInstance()->mHideSelectedObjects)
@@ -5211,7 +5240,7 @@ void LLVolumeGeometryManager::registerFace(LLSpatialGroup* group, LLFace* facep,
 		}
 	}
 
-	if (idx >= 0 && 
+	if (idx >= 0 &&
 		draw_vec[idx]->mVertexBuffer == facep->getVertexBuffer() &&
 		draw_vec[idx]->mEnd == facep->getGeomIndex()-1 &&
 		(LLPipeline::sTextureBindTest || draw_vec[idx]->mTexture == tex || batchable) &&
@@ -5508,33 +5537,33 @@ void LLVolumeGeometryManager::rebuildGeom(LLSpatialGroup* group)
 
 	bool emissive = false;
 
-//MK
-	// If the vision is restricted and the outer sphere is opaque, do not render someone's attachments if they are outside the outer sphere.
-	if (vol_obj && vol_obj->isAttachment())
-	{
-		if (gRRenabled && gAgent.mRRInterface.mVisionRestricted)
-		{
-			if (gAgent.mRRInterface.mCamDistDrawAlphaMax >= 0.999999f)
-			{
-				LLVOAvatar* avatar = vobj->getAvatar();
-				if (avatar)
-				{
-					LLVector3 joint_pos = LLVector3::zero;
-					F32 cam_dist_draw_max_squared = EXTREMUM;
-					joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
-					cam_dist_draw_max_squared = gAgent.mRRInterface.mCamDistDrawMax * gAgent.mRRInterface.mCamDistDrawMax;
-					LLVector3 avatar_pos = avatar->getPositionAgent();
-					LLVector3 avatar_pos_relative = avatar_pos - joint_pos;
-					F32 distance_to_self_squared = (F32)avatar_pos_relative.magVecSquared();
-					if (distance_to_self_squared > cam_dist_draw_max_squared)
-					{
-						return;
-					}
-				}
-			}
-		}
-	}
-//mk
+////MK
+//	// If the vision is restricted and the outer sphere is opaque, do not render someone's attachments if they are outside the outer sphere.
+//	if (vol_obj && vol_obj->isAttachment())
+//	{
+//		if (gRRenabled && gAgent.mRRInterface.mVisionRestricted)
+//		{
+//			if (gAgent.mRRInterface.mCamDistDrawAlphaMax >= 0.999999f)
+//			{
+//				LLVOAvatar* avatar = vobj->getAvatar();
+//				if (avatar)
+//				{
+//					LLVector3 joint_pos = LLVector3::zero;
+//					F32 cam_dist_draw_max_squared = EXTREMUM;
+//					joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
+//					cam_dist_draw_max_squared = gAgent.mRRInterface.mCamDistDrawMax * gAgent.mRRInterface.mCamDistDrawMax;
+//					LLVector3 avatar_pos = avatar->getPositionAgent();
+//					LLVector3 avatar_pos_relative = avatar_pos - joint_pos;
+//					F32 distance_to_self_squared = (F32)avatar_pos_relative.magVecSquared();
+//					if (distance_to_self_squared > cam_dist_draw_max_squared)
+//					{
+//						return;
+//					}
+//				}
+//			}
+//		}
+//	}
+////mk
 
 	//Determine if we've received skininfo that contains an
 	//alternate bind matrix - if it does then apply the translational component
