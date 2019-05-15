@@ -8350,6 +8350,29 @@ BOOL LLVOAvatar::isFullyLoaded() const
 
 bool LLVOAvatar::isTooComplex() const
 {
+//MK
+	// If the vision is restricted and the outer sphere is opaque (or almost), and if the avatar is far enough, optimize by pretending it is too complex
+	if (gRRenabled && gAgent.mRRInterface.mVisionRestricted)
+	{
+		if (!isSelf())
+		{
+			if (gAgent.mRRInterface.mCamDistDrawAlphaMax >= 0.99f)
+			{
+				LLVector3 avatar_pos = getPositionAgent();
+				LLVector3 joint_pos = gAgent.mRRInterface.getCamDistDrawFromJoint()->getWorldPosition();
+				LLVector3 avatar_pos_relative = avatar_pos - joint_pos;
+
+				F32 cam_dist_draw_max_squared = gAgent.mRRInterface.mCamDistDrawMax * gAgent.mRRInterface.mCamDistDrawMax;;
+				F32 distance_to_self_squared = (F32)avatar_pos_relative.magVecSquared();
+				if (distance_to_self_squared > cam_dist_draw_max_squared)
+				{
+					return true;
+				}
+			}
+		}
+	}
+//mk
+
 	bool too_complex;
 	// <FS:Ansariel> Performance improvement
 	//bool render_friend =  (LLAvatarTracker::instance().isBuddy(getID()) && gSavedSettings.getBOOL("AlwaysRenderFriends"));
