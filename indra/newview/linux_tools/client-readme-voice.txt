@@ -6,23 +6,27 @@ WHAT IS IT?
 
 Linux Voice Support is a feature in testing which allows users of the Linux
 on Kokua and other Second Life clients to participate in voice-chat with 
-other residents and groups inside Metaverse Grids, with an appropriate
+other residents and groups, with an appropriate
 headset/microphone.
 
 REQUIREMENTS
 -=-=-=-=-=-=
 
 * A headset/microphone supported by your chosen version of Linux
+
 * At this time, the PulseAudio audio system is recommended; this software
   is already part of most modern (2009+) Linux desktop systems.  Alternatively,
   the ALSA audio system may be used on systems installed from around
   2007 onwards (again this is likely already installed on your system).
-* Linux 32 bit voice should work as delivered. To determine if all libraries
-  are present: Open a terminal and:
-  cd /home/<user>/.kokua-install (or the directory where Kokua is installed)
-  LD_LIBRARY_PATH=${PWD}/lib ldd  bin/SLVoice
-  Review the listing and check for any not found shared (*.so) libraries.
-  Use your package manager to resolve the not found items.
+
+*Note: Kokua no longer provides 32 bit versions.
+   Linux 32 bit voice should work as delivered. To determine if all libraries
+   are present: Open a terminal and:
+   cd /home/<user>/.kokua-install (or the directory where Kokua is installed)
+   LD_LIBRARY_PATH=${PWD}/lib ldd  bin/SLVoice
+   Review the listing and check for any not found shared (*.so) libraries.
+   Use your package manager to resolve the not found items.
+
 * Linux 64 bit on a Multi-Arch system requires additional steps to obtain voice
   because voice as delivered by Vivox is 32 bit based.
   First, to check your system not found shared (*.so) libraries:
@@ -40,6 +44,26 @@ libwrap0:i386 libx11-6:i386 libx11-xcb1:i386 libxau6:i386 libxcb1:i386 \
 libxdmcp6:i386 libxext6:i386 libxi6:i386 libxtst6:i386 zlib1g:i386
   Repeat LD_LIBRARY_PATH=${PWD}/lib32 ldd  bin/SLVoice 
   and use the system package manager to add missing libraries.
+
+* Thanks to the developers at Firestorm we provide an additional option for voice.
+   This allows voice to work by using of the Secondlife's windows 32 bit version of
+   voice and with a 64 bit version planned. Using this option requries an added system
+   dependency of Wine. At https://wiki.winehq.org/Ubuntu are instructions to add
+   Wine to Ubuntu. For other distributions see https://wiki.winehq.org/Download .
+   At https://www.linux.com/learn/how-install-and-use-wine-run-windows-applications-linux
+   is a tutorial to add Notepad++ and use Wine to run it on linux. This is a good
+   way to test for "is Wine working?". Kokua specifics follow;
+   Kokua has a debug setting, FSLinuxEnableWin32VoiceProxy, which defaults FALSE
+   as not everyone has Wine installed. From the login page use Debug->
+   Show Debug Settings and enter  FSLinuxEnableWin32VoiceProxy then select 
+   true and restart the viewer. In world the menu selection is Advanced->
+   Show Debug Settings and enter  FSLinuxEnableWin32VoiceProxy, if changed 
+   restart the viewer. Use Help->About Kokua to determine which Vivox is in use.
+   At this writing with Wine active Voice Server Version: Vivox 4.6.0017.22050 and
+   with native linux active Voice Server Version: Vivox 3.2.0002.10426 are shown.
+ 
+   
+   
 
 TESTING YOUR SETTINGS
 -=-=-=-=-=-=-=-=-=-=-
