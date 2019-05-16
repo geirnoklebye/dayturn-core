@@ -1888,12 +1888,12 @@ void LLIMProcessing::requestOfflineMessages()
         && gAgent.getRegion()->capabilitiesReceived())
     {
         std::string cap_url = gAgent.getRegionCapability("ReadOfflineMsgs");
-//MK
-		// According to bug SL-225696 (https://jira.secondlife.com/browse/BUG-225696), the "ReadOfflineMsgs" is broken so we need
-		// to force the viewer to use the legacy procedure of retrieving offline messages and deliveries.
-		// Thanks to Kitty Barnett for the heads-up.
-		cap_url = "";
-//mk
+        // <FS:Ansariel> Optional legacy offline messages
+        if (!gSavedSettings.getBOOL("FSUseReadOfflineMsgsCap"))
+        {
+            cap_url = "";
+        }
+        // </FS:Ansariel>
 
         // Auto-accepted inventory items may require the avatar object
         // to build a correct name.  Likewise, inventory offers from
