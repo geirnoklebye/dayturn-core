@@ -510,13 +510,37 @@
    name="device_settings_btn"
    width="190">
   </button>
-    <panel
-    layout="topleft"
-    filename="panel_sound_devices.xml"
-     visiblity_control="ShowDeviceSettings"
-     name="device_settings_panel"
-    top_pad="0"
-    width="480"
-    left="18"
-    class="panel_voice_device_settings"/>
-    </panel>
+  <panel
+      background_visible="false"
+      bg_alpha_color="DkGray"
+      visiblity_control="ShowDeviceSettings"
+      border="false"
+      follows="top|left|right"
+      height="100"
+      label="Device Settings"
+      layout="topleft"
+      left="10"
+      right="-5"
+      name="device_settings_panel"
+      class="panel_voice_device_settings"
+      top_pad="5">
+      <panel.string
+          name="default_text">
+          Default
+      </panel.string>
+      <panel.string
+          name="default system device">
+          Default system device
+      </panel.string>
+      <panel.string
+          name="name_default_system_device">
+          Default system device
+      </panel.string>
+      <panel.string
+          name="no device">
+          No device
+      </panel.string>
+      <panel.string
+          name="name_no_device">
+          No device
+      </panel.string>

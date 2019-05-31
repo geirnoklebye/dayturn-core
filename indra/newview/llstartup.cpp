@@ -886,6 +886,9 @@ bool idle_startup()
 				bool init = gAudiop->init(kAUDIO_NUM_SOURCES, window_handle);
 				if(init)
 				{
+					// <FS:Ansariel> Output device selection
+					gAudiop->setDevice(LLUUID(gSavedSettings.getString("FSOutputDeviceUUID")));
+
 					gAudiop->setMuted(TRUE);
 				}
 				else
