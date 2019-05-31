@@ -593,6 +593,16 @@ bool toggle_show_object_render_cost(const LLSD& newvalue)
 }
 
 void handleRenderAutoMuteByteLimitChanged(const LLSD& new_value);
+
+// <FS:Ansariel> Output device selection
+void handleOutputDeviceChanged(const LLSD& newvalue)
+{
+   if (gAudiop)
+   {
+        gAudiop->setDevice(newvalue.asUUID());
+   }
+}
+// </FS:Ansariel>
 ////////////////////////////////////////////////////////////////////////////
 
 void settings_setup_listeners()
@@ -736,7 +746,7 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("VelocityInterpolate")->getSignal()->connect(boost::bind(&handleVelocityInterpolate, _2));
 	gSavedSettings.getControl("QAMode")->getSignal()->connect(boost::bind(&show_debug_menus));
 	gSavedSettings.getControl("UseDebugMenus")->getSignal()->connect(boost::bind(&show_debug_menus));
-  gSavedSettings.getControl("KokuaClassicMainMenu")->getSignal()->connect(boost::bind(&kokua_menus));
+    gSavedSettings.getControl("KokuaClassicMainMenu")->getSignal()->connect(boost::bind(&kokua_menus));
 	gSavedSettings.getControl("AgentPause")->getSignal()->connect(boost::bind(&toggle_agent_pause, _2));
 	gSavedSettings.getControl("ShowNavbarNavigationPanel")->getSignal()->connect(boost::bind(&toggle_show_navigation_panel, _2));
 	gSavedSettings.getControl("ShowMiniLocationPanel")->getSignal()->connect(boost::bind(&toggle_show_mini_location_panel, _2));
@@ -749,6 +759,9 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("DebugAvatarJoints")->getCommitSignal()->connect(boost::bind(&handleDebugAvatarJointsChanged, _2));
 	gSavedSettings.getControl("RenderAutoMuteByteLimit")->getSignal()->connect(boost::bind(&handleRenderAutoMuteByteLimitChanged, _2));
 	gSavedPerAccountSettings.getControl("AvatarHoverOffsetZ")->getCommitSignal()->connect(boost::bind(&handleAvatarHoverOffsetChanged, _2));
+    // <FS:Ansariel> Output device selection
+    gSavedSettings.getControl("FSOutputDeviceUUID")->getSignal()->connect(boost::bind(&handleOutputDeviceChanged, _2));
+
 }
 
 #if TEST_CACHED_CONTROL
