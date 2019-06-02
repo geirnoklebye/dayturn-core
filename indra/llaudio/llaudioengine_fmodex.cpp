@@ -44,7 +44,83 @@
 
 #include "sound_ids.h"
 
+#include "indra_constants.h"
+
 FMOD_RESULT F_CALLBACK windCallback(FMOD_DSP_STATE *dsp_state, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels);
+
+// <FS:Ansariel> Output device selection
+static inline bool Check_FMOD_Error(FMOD_RESULT result, const char *string);
+
+LLUUID FMOD_GUID_to_LLUUID(FMOD_GUID guid)
+{
+	return LLUUID(llformat("%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x", guid.Data1, guid.Data2, guid.Data3,
+					guid.Data4[0], guid.Data4[1], guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7]));
+}
+
+void set_device(FMOD::System* system, const LLUUID& device_uuid)
+{
+	LL_INFOS() << "LLAudioEngine_FMODEX::setDevice with device_uuid=" << device_uuid << LL_ENDL;
+
+	int drivercount;
+	if (!Check_FMOD_Error(system->getNumDrivers(&drivercount), "FMOD::System::getNumDrivers") && drivercount > 0)
+	{
+		if (device_uuid.isNull())
+		{
+			LL_INFOS() << "Setting driver \"Default\"" << LL_ENDL;
+			Check_FMOD_Error(system->setDriver(0), "FMOD::System::setDriver");
+		}
+		else
+		{
+			FMOD_GUID guid;
+
+			for (int i = 0; i < drivercount; ++i)
+			{
+				if (!Check_FMOD_Error(system->getDriverInfo(i, NULL, 0, &guid), "FMOD::System::getDriverInfo"))
+				{
+					LLUUID driver_guid = FMOD_GUID_to_LLUUID(guid);
+
+					if (driver_guid == device_uuid)
+					{
+						LL_INFOS() << "Setting driver " << i << ": " << driver_guid << LL_ENDL;
+						Check_FMOD_Error(system->setDriver(i), "FMOD::System::setDriver");
+						return;
+					}
+				}
+			}
+
+			LL_INFOS() << "Device not available (anymore) - falling back to default" << LL_ENDL;
+			Check_FMOD_Error(system->setDriver(0), "FMOD::System::setDriver");
+		}
+	}
+}
+
+FMOD_RESULT F_CALLBACK systemCallback(FMOD_SYSTEM *system, FMOD_SYSTEM_CALLBACKTYPE type, void *commanddata1, void *commanddata2)
+{
+	FMOD::System* sys = (FMOD::System*)system;
+	LLAudioEngine_FMODEX* audio_engine = NULL;
+	if (sys)
+	{
+		void* userdata = NULL;
+		Check_FMOD_Error(sys->getUserData(&userdata), "FMOD::System::getUserData");
+		audio_engine = (LLAudioEngine_FMODEX*)userdata;
+	}
+
+	switch (type)
+	{
+		case FMOD_SYSTEM_CALLBACKTYPE_DEVICELISTCHANGED:
+			LL_DEBUGS() << "FMOD system callback FMOD_SYSTEM_CALLBACK_DEVICELISTCHANGED" << LL_ENDL;
+			if (sys && audio_engine)
+			{
+				set_device(sys, audio_engine->getSelectedDeviceUUID());
+				audio_engine->OnOutputDeviceListChanged(audio_engine->getDevices());
+			}
+			break;
+		default:
+			break;
+	}
+	return FMOD_OK;
+}
+// </FS:Ansariel>>
 
 FMOD::ChannelGroup *LLAudioEngine_FMODEX::mChannelGroups[LLAudioEngine::AUDIO_TYPE_COUNT] = {0};
 
@@ -56,6 +132,7 @@ LLAudioEngine_FMODEX::LLAudioEngine_FMODEX(bool enable_profiler)
 	mSystem = NULL;
 	mEnableProfiler = enable_profiler;
 	mWindDSPDesc = new FMOD_DSP_DESCRIPTION();
+	mSelectedDeviceUUID == LLUUID::null; // <FS:Ansariel> Output device selection
 }
 
 
@@ -65,11 +142,22 @@ LLAudioEngine_FMODEX::~LLAudioEngine_FMODEX()
 }
 
 
+static // <FS:Ansariel> Make this file scope so it doesn't collide with the same function in llstreamingaudio_fmodex.cpp
 inline bool Check_FMOD_Error(FMOD_RESULT result, const char *string)
 {
 	if(result == FMOD_OK)
 		return false;
-	LL_DEBUGS("FmodEX") << string << " Error: " << FMOD_ErrorString(result) << LL_ENDL;
+	// </FS:Ansariel> Always print out error
+	//LL_DEBUGS() << string << " Error: " << FMOD_ErrorString(result) << LL_ENDL;
+	if (result != FMOD_ERR_INVALID_HANDLE)
+	{
+		LL_WARNS() << string << " Error: " << FMOD_ErrorString(result) << LL_ENDL;
+	}
+	else
+	{
+		LL_DEBUGS("FmodEx") << string << " Error: " << FMOD_ErrorString(result) << LL_ENDL;
+	}
+	// </FS:Ansariel>
 	return true;
 }
 
@@ -81,7 +169,7 @@ void* F_STDCALL decode_alloc(unsigned int size, FMOD_MEMORY_TYPE type, const cha
 	}
 	else if(type & FMOD_MEMORY_STREAM_FILE)
 	{
-		LL_INFOS() << "Strean buffer size: " << size << LL_ENDL;
+		LL_INFOS() << "Stream buffer size: " << size << LL_ENDL;
 	}
 	return new char[size];
 }
@@ -132,14 +220,21 @@ bool LLAudioEngine_FMODEX::init(const S32 num_channels, void* userdata)
 	result = mSystem->setSoftwareChannels(num_channels + 2);
 	Check_FMOD_Error(result,"FMOD::System::setSoftwareChannels");
 
+	// <FS:Ansariel> Output device selection
+	Check_FMOD_Error(mSystem->setCallback(systemCallback), "FMOD::System::setCallback");
+	Check_FMOD_Error(mSystem->setUserData(this), "FMOD::System::setUserData");
+	// </FS:Ansariel>
+
 	U32 fmod_flags = FMOD_INIT_NORMAL;
 	if(mEnableProfiler)
 	{
 		fmod_flags |= FMOD_INIT_ENABLE_PROFILE;
-		mSystem->createChannelGroup("None", &mChannelGroups[AUDIO_TYPE_NONE]);
-		mSystem->createChannelGroup("SFX", &mChannelGroups[AUDIO_TYPE_SFX]);
-		mSystem->createChannelGroup("UI", &mChannelGroups[AUDIO_TYPE_UI]);
-		mSystem->createChannelGroup("Ambient", &mChannelGroups[AUDIO_TYPE_AMBIENT]);
+		// <FS> FMOD fixes
+		//mSystem->createChannelGroup("None", &mChannelGroups[AUDIO_TYPE_NONE]);
+		//mSystem->createChannelGroup("SFX", &mChannelGroups[AUDIO_TYPE_SFX]);
+		//mSystem->createChannelGroup("UI", &mChannelGroups[AUDIO_TYPE_UI]);
+		//mSystem->createChannelGroup("Ambient", &mChannelGroups[AUDIO_TYPE_AMBIENT]);
+		// </FS>
 	}
 
 #if LL_LINUX
@@ -283,9 +378,45 @@ bool LLAudioEngine_FMODEX::init(const S32 num_channels, void* userdata)
 
 	LL_INFOS("FmodEX") << "LLAudioEngine_FMODEX::init(): initialization complete." << LL_ENDL;
 
+	// <FS:Ansariel> Output device selection
+	getDevices(); // Purely to print out available devices for debugging reasons
+
 	return true;
 }
 
+// <FS:Ansariel> Output device selection
+//virtual
+LLAudioEngine_FMODEX::output_device_map_t LLAudioEngine_FMODEX::getDevices()
+{
+	output_device_map_t driver_map;
+
+	int drivercount;
+	char r_name[512];
+	FMOD_GUID guid;
+
+	if (!Check_FMOD_Error(mSystem->getNumDrivers(&drivercount), "FMOD::System::getNumDrivers"))
+	{
+		for (int i = 0; i < drivercount; ++i)
+		{
+			memset(r_name, 0, 512);
+			mSystem->getDriverInfo(i, r_name, 511, &guid);
+			LLUUID driver_guid = FMOD_GUID_to_LLUUID(guid);
+			driver_map.insert(std::make_pair(driver_guid, r_name));
+
+			LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::getDevices(): r_name=\"" << r_name << "\" - guid: " << driver_guid << LL_ENDL;
+		}
+	}
+
+	return driver_map;
+}
+
+//virtual
+void LLAudioEngine_FMODEX::setDevice(const LLUUID& device_uuid)
+{
+	mSelectedDeviceUUID = device_uuid;
+	set_device(mSystem, device_uuid);
+}
+// </FS:Ansariel>
 
 std::string LLAudioEngine_FMODEX::getDriverName(bool verbose)
 {
