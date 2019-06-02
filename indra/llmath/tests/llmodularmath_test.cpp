@@ -21,15 +21,17 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * 
+ * #
  * Linden Research, Inc., 945 Battery Street, San Francisco, CA  94111  USA
  * $/LicenseInfo$
  */
  
 #include "linden_common.h"
-
+#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 49000
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 #include "../llmodularmath.h"
-
 #include "../test/lltut.h"
 
 namespace tut
@@ -74,3 +76,6 @@ namespace tut
 		ensure_equals("diff(0xABCDEF, 0xABCDEF, 24)", result, 0);
 	}	
 }
+#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 49000
+#pragma GCC diagnostic pop
+#endif
