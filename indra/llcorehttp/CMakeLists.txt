@@ -101,6 +101,7 @@ target_link_libraries(
   )
 
 # tests
+if (!LINUX)
 if (LL_TESTS)
   SET(llcorehttp_TEST_SOURCE_FILES
       tests/test_allocator.cpp
@@ -232,4 +233,4 @@ endif (DARWIN)
   target_link_libraries(http_texture_load ${example_libs})
 
 endif (LL_TESTS)
-
+endif (!LINUX)

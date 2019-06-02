@@ -75,15 +75,28 @@ namespace tut
 // overloads declared above.
 
 // turn off warnings about unused functions from clang for tut package
-#if __clang__
+// turn off warnings about unused functions from gcc for tut package
+#if LL_WINDOWS
+#include <tut/tut.hpp>
+#endif
+
+#if LL_DARWIN && __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
-#endif
 #include <tut/tut.hpp>
-#if __clang__
+#endif
+#if LL_DARWIN && __clang__
 #pragma clang diagnostic pop
 #endif
 
+#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 49000
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#include <tut/tut.hpp>
+#endif
+#if LL_LINUX && (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ ) >= 49000
+#pragma GCC diagnostic pop
+#endif
 // The functions BELOW this point actually consume tut.hpp functionality.
 namespace tut
 {
