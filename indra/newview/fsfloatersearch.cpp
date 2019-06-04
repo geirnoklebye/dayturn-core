@@ -1066,7 +1066,7 @@ void FSPanelSearchPeople::processSearchReply(LLMessageSystem* msg, void**)
 	if (found_one)
 	{
 		search_results->selectFirstItem();
-		search_results->setFocus(TRUE);
+		search_results->setFocus(true);
 		self->onSelectItem();
 	}
 }
@@ -1103,7 +1103,7 @@ void FSPanelSearchPeople::onAvatarNameCallback(const LLUUID& id, const LLAvatarN
 
 		search_results->setEnabled(true);
 		search_results->selectFirstItem();
-		search_results->setFocus(TRUE);
+		search_results->setFocus(true);
 		onSelectItem();
 	}
 	else
@@ -1418,7 +1418,7 @@ void FSPanelSearchGroups::processSearchReply(LLMessageSystem* msg, void**)
 	if (found_one)
 	{
 		search_results->selectFirstItem();
-		search_results->setFocus(TRUE);
+		search_results->setFocus(true);
 		self->onSelectItem();
 	}
 }
@@ -1771,7 +1771,7 @@ void FSPanelSearchPlaces::processSearchReply(LLMessageSystem* msg, void**)
 	if (found_one)
 	{
 		search_results->selectFirstItem();
-		search_results->setFocus(TRUE);
+		search_results->setFocus(true);
 		self->onSelectItem();
 	}
 }
@@ -2170,7 +2170,7 @@ void FSPanelSearchLand::processSearchReply(LLMessageSystem* msg, void**)
 	if (found_one)
 	{
 		search_results->selectFirstItem();
-		search_results->setFocus(TRUE);
+		search_results->setFocus(true);
 		self->onSelectItem();
 	}
 }
@@ -2485,7 +2485,7 @@ void FSPanelSearchClassifieds::processSearchReply(LLMessageSystem* msg, void**)
 	if (found_one)
 	{
 		search_results->selectFirstItem();
-		search_results->setFocus(TRUE);
+		search_results->setFocus(true);
 		self->onSelectItem();
 	}
 }
@@ -2923,7 +2923,7 @@ void FSPanelSearchEvents::processSearchReply(LLMessageSystem* msg, void**)
 	if (found_one)
 	{
 		search_results->selectFirstItem();
-		search_results->setFocus(TRUE);
+		search_results->setFocus(true);
 		self->onSelectItem();
 	}
 }
@@ -3084,7 +3084,7 @@ void FSPanelSearchWeb::loadURL(const SearchQuery &p)
 
 void FSPanelSearchWeb::focusDefaultElement()
 {
-	mWebBrowser->setFocus(TRUE);
+	mWebBrowser->setFocus(true);
 }
 
 void FSPanelSearchWeb::draw()

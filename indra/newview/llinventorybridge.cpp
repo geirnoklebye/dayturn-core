@@ -6435,7 +6435,7 @@ void LLGestureBridge::openItem()
   if (item)
   {
   LLPreviewGesture* preview = LLPreviewGesture::show(mUUID, LLUUID::null);
-  preview->setFocus(TRUE);
+  preview->setFocus(true);
   }
 */
 }
@@ -7725,7 +7725,7 @@ public:
 		if (item)
 		{
 			LLPreviewGesture* preview = LLPreviewGesture::show(mUUID, LLUUID::null);
-			preview->setFocus(TRUE);
+			preview->setFocus(true);
 		}
 		LLInvFVBridgeAction::doIt();		
 	}

@@ -759,7 +759,7 @@ bool LLFloaterIMSession::getVisible()
 	return visible;
 }
 
-void LLFloaterIMSession::setFocus(BOOL focus)
+void LLFloaterIMSession::setFocus(bool focus)
 {
 	LLFloaterIMSessionTab::setFocus(focus);
 
@@ -788,7 +788,7 @@ bool LLFloaterIMSession::toggle(const LLUUID& session_id)
 		else if(floater && ((!floater->isDocked() || floater->getVisible()) && !floater->hasFocus()))
 		{
 			floater->setVisible(true);
-			floater->setFocus(TRUE);
+			floater->setFocus(true);
 			return true;
 		}
 	}

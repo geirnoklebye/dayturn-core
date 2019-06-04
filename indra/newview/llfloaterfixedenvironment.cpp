@@ -355,7 +355,7 @@ void LLFloaterFixedEnvironment::onInventoryCreated(LLUUID asset_id, LLUUID inven
         }
     }
     clearDirtyFlag();
-    setFocus(TRUE);                 // Call back the focus...
+    setFocus(true);                 // Call back the focus...
     loadInventoryItem(inventory_id, can_trans);
 }
 
@@ -392,7 +392,7 @@ void LLFloaterFixedEnvironment::doSelectFromInventory()
 
     picker->setSettingsFilter(mSettings->getSettingsTypeValue());
     picker->openFloater();
-    picker->setFocus(TRUE);
+    picker->setFocus(true);
 }
 
 //=========================================================================

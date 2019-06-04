@@ -93,7 +93,7 @@ bool LLSetKeyBindDialog::postBuild()
     childSetAction("SetEmpty", onBlank, this);
     childSetAction("Default", onDefault, this);
     childSetAction("Cancel", onCancel, this);
-    getChild<LLUICtrl>("Cancel")->setFocus(TRUE);
+    getChild<LLUICtrl>("Cancel")->setFocus(true);
 
     pCheckBox = getChild<LLCheckBoxCtrl>("apply_all");
     pDescription = getChild<LLTextBase>("description");
@@ -295,7 +295,7 @@ BOOL LLSetKeyBindDialog::handleAnyMouseClick(S32 x, S32 y, MASK mask, EMouseClic
         if (result)
         {
             setFocus(TRUE);
-            gFocusMgr.setKeystrokesOnly(TRUE);
+            gFocusMgr.setKeystrokesOnly(true);
         }
         // ignore selection related combinations
         else if (down && (mask & (MASK_SHIFT | MASK_CONTROL)) == 0)

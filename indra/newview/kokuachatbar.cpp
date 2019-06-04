@@ -114,7 +114,7 @@ void KokuaChatBar::onChatFontChange(LLFontGL* fontp)
 
 void KokuaChatBar::onOpen(const LLSD& key)
 {
-	mInputEditor->setFocus(TRUE);
+	mInputEditor->setFocus(true);
 }
 	
 void KokuaChatBar::onChatBoxKeystroke()
@@ -136,16 +136,16 @@ void KokuaChatBar::sendChat( EChatType type )
 
 		gAgent.stopTyping();
 
-		if (gSavedSettings.getBOOL("KokuaCloseChatBarOnReturn"))
+		if (gSavedSettings.getbool("KokuaCloseChatBarOnReturn"))
 		{
-			mInputEditor->setFocus(FALSE);
+			mInputEditor->setFocus(false);
 			closeFloater();
 		}
-		else if (gSavedSettings.getBOOL("CloseChatOnReturn"))
+		else if (gSavedSettings.getbool("CloseChatOnReturn"))
 		{
 			// If the user wants to stop chatting on hitting return, lose focus
 			// and go out of chat mode.
-			mInputEditor->setFocus(FALSE);
+			mInputEditor->setFocus(false);
 		}
 	}
 }
@@ -199,7 +199,7 @@ void KokuaChatBar::startChat(const char* line)
 		}
 
 		nearby_chat->mInputEditor->endOfDoc();
-		nearby_chat->mInputEditor->setFocus(TRUE);
+		nearby_chat->mInputEditor->setFocus(true);
 	}
 }
 

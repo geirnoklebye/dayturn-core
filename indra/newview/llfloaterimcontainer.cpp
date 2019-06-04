@@ -355,7 +355,7 @@ void LLFloaterIMContainer::addFloater(LLFloater* floaterp,
 void LLFloaterIMContainer::onCloseFloater(LLUUID& id)
 {
 	mSessions.erase(id);
-	setFocus(TRUE);
+	setFocus(true);
 }
 
 void LLFloaterIMContainer::onNewMessageReceived(const LLSD& data)
@@ -1910,7 +1910,7 @@ bool LLFloaterIMContainer::removeConversationListItem(const LLUUID& uuid, bool c
 	// Don't let the focus fall IW, select and refocus on the first conversation in the list
 	if (change_focus)
 	{
-		setFocus(TRUE);
+		setFocus(true);
 		if (new_selection)
 		{
 			if (mConversationsWidgets.size() == 1)

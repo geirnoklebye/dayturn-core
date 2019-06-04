@@ -212,7 +212,7 @@ void LLPanelLandmarkInfo::setInfoType(EInfoType type, const LLUUID &folder_id)
 	populateFoldersList();
 
 	// Prevent the floater from losing focus (if the sidepanel is undocked).
-	setFocus(TRUE);
+	setFocus(true);
 
 	LLPanelPlaceInfo::setInfoType(type);
 }
@@ -368,7 +368,7 @@ void LLPanelLandmarkInfo::toggleLandmarkEditMode(BOOL enabled)
 	}
 
 	// Prevent the floater from losing focus (if the sidepanel is undocked).
-	setFocus(TRUE);
+	setFocus(true);
 }
 
 void LLPanelLandmarkInfo::setCanEdit(BOOL enabled)

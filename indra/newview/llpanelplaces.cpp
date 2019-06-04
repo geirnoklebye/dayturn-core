@@ -321,7 +321,7 @@ bool LLPanelPlaces::postBuild()
 	mPlaceMenu = LLUICtrlFactory::getInstance()->createFromFile<LLToggleableMenu>("menu_place.xml", gMenuHolder, LLViewerMenuHolderGL::child_registry_t::instance());
 	if (mPlaceMenu)
 	{
-		mPlaceMenu->setAlwaysShowMenu(TRUE);
+		mPlaceMenu->setAlwaysShowMenu(true);
 	}
 	else
 	{

@@ -286,7 +286,7 @@ BOOL LLMediaCtrl::handleMouseDown( S32 x, S32 y, MASK mask )
 
 	if (mTakeFocusOnClick)
 	{
-		setFocus( TRUE );
+		setFocus(true);
 	}
 
 	return TRUE;
@@ -323,7 +323,7 @@ BOOL LLMediaCtrl::handleMiddleMouseDown( S32 x, S32 y, MASK mask )
 
 	if (mTakeFocusOnClick)
 	{
-		setFocus( TRUE );
+		setFocus(true);
 	}
 
 	return TRUE;
@@ -370,7 +370,7 @@ BOOL LLMediaCtrl::handleRightMouseDown( S32 x, S32 y, MASK mask )
 
 	if (mTakeFocusOnClick)
 	{
-		setFocus( TRUE );
+		setFocus(true);
 	}
 
 	if (mContextMenu)
@@ -401,7 +401,7 @@ bool LLMediaCtrl::handleDoubleClick( S32 x, S32 y, MASK mask )
 
 	if (mTakeFocusOnClick)
 	{
-		setFocus( TRUE );
+		setFocus(true);
 	}
 
 	return true;

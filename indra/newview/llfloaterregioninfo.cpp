@@ -1916,7 +1916,7 @@ bool LLPanelEstateInfo::postBuild()
 
 	getChild<LLUICtrl>("parcel_access_override")->setCommitCallback(boost::bind(&LLPanelEstateInfo::onChangeAccessOverride, this));
 
-	getChild<LLUICtrl>("externally_visible_radio")->setFocus(TRUE);
+	getChild<LLUICtrl>("externally_visible_radio")->setFocus(true);
 
     getChild<LLTextBox>("estate_owner")->setIsFriendCallback(LLAvatarActions::isFriend);
 

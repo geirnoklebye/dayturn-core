@@ -48,7 +48,7 @@ public:
 				void *callback_data);
 	~LLPanelLogin();
 
-	virtual void setFocus( BOOL b );
+	virtual void setFocus(bool b);
 
 	static void show(const LLRect &rect,
 		void (*callback)(S32 option, void* user_data), 

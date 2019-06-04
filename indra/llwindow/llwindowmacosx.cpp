@@ -144,7 +144,7 @@ LLWindowMacOSX::LLWindowMacOSX(LLWindowCallbacks* callbacks,
 	mNeedsResize = FALSE;
 	mOverrideAspectRatio = 0.f;
 	mMaximized = FALSE;
-	mMinimized = FALSE;
+	mMinimized = false;
 	mLanguageTextInputAllowed = FALSE;
 	mPreeditor = NULL;
 	mFSAASamples = fsaa_samples;

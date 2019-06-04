@@ -451,7 +451,7 @@ LLPanelLogin::~LLPanelLogin()
 }
 
 // virtual
-void LLPanelLogin::setFocus(BOOL b)
+void LLPanelLogin::setFocus(bool b)
 {
 	if(b != hasFocus())
 	{
@@ -494,12 +494,12 @@ void LLPanelLogin::giveFocus()
 
 		if (edit)
 		{
-			edit->setFocus(TRUE);
+			edit->setFocus(true);
 			edit->selectAll();
 		}
 		else if (combo)
 		{
-			combo->setFocus(TRUE);
+			combo->setFocus(true);
 		}
 	}
 }
@@ -517,7 +517,7 @@ void LLPanelLogin::show(const LLRect &rect,
 	if( !gFocusMgr.getKeyboardFocus() )
 	{
 		// Grab focus and move cursor to first enabled control
-		sInstance->setFocus(TRUE);
+		sInstance->setFocus(true);
 	}
 
 	// Make sure that focus always goes here (and use the latest sInstance that was just created)
@@ -942,7 +942,7 @@ void LLPanelLogin::onClickConnect(bool commit_fields)
 		if (commit_fields)
 		{
 			// JC - Make sure the fields all get committed.
-			sInstance->setFocus(FALSE);
+			sInstance->setFocus(false);
 		}
 
 		LLComboBox* combo = sInstance->getChild<LLComboBox>("server_combo");

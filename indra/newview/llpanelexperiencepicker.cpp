@@ -91,7 +91,7 @@ bool LLPanelExperiencePicker::postBuild()
 
 	getChild<LLComboBox>(TEXT_MATURITY)->setCurrentByIndex(gSavedPerAccountSettings.getU32("ExperienceSearchMaturity"));
 	getChild<LLComboBox>(TEXT_MATURITY)->setCommitCallback(boost::bind(&LLPanelExperiencePicker::onMaturity, this));
-	getChild<LLUICtrl>(TEXT_EDIT)->setFocus(TRUE);
+	getChild<LLUICtrl>(TEXT_EDIT)->setFocus(true);
 
 	childSetAction(BTN_LEFT, boost::bind(&LLPanelExperiencePicker::onPage, this, -1));
 	childSetAction(BTN_RIGHT, boost::bind(&LLPanelExperiencePicker::onPage, this, 1));
@@ -375,7 +375,7 @@ void LLPanelExperiencePicker::filterContent()
 			search_results->selectFirstItem();
 		}			
 		onList();
-		search_results->setFocus(TRUE);
+		search_results->setFocus(true);
 	}
 }
 

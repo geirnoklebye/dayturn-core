@@ -3938,7 +3938,7 @@ void LLViewerWindow::updateKeyboardFocus()
 				{
 					if (!parent->focusFirstItem())
 					{
-						parent->setFocus(TRUE);
+						parent->setFocus(true);
 					}
 					new_focus_found = true;
 					break;
@@ -3951,7 +3951,7 @@ void LLViewerWindow::updateKeyboardFocus()
 			// are only moving focus higher in the hierarchy
 			if (!new_focus_found)
 			{
-				cur_focus->setFocus(FALSE);
+				cur_focus->setFocus(false);
 			}
 		}
 		else if (cur_focus->isFocusRoot())

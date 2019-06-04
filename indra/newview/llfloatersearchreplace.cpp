@@ -83,7 +83,7 @@ void LLFloaterSearchReplace::onOpen(const LLSD& sdKey)
 		getChild<LLButton>("replace_btn")->setEnabled( (pEditor) && (!pEditor->getReadOnly()) );
 		getChild<LLButton>("replace_all_btn")->setEnabled( (pEditor) && (!pEditor->getReadOnly()) );
 	}
-	m_pSearchEditor->setFocus(TRUE);
+	m_pSearchEditor->setFocus(true);
 }
 
 void LLFloaterSearchReplace::onClose(bool fQuiting)

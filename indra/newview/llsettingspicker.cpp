@@ -149,7 +149,7 @@ void LLFloaterSettingsPicker::onClose(bool app_quitting)
     LLView *owner = mOwnerHandle.get();
     if (owner)
     {
-        owner->setFocus(TRUE);
+        owner->setFocus(true);
     }
     mSettingItemID.setNull();
     mInventoryPanel->getRootFolder()->clearSelection();

@@ -460,7 +460,7 @@ public:
 	void setBackgroundColor( const LLUIColor& color ) { mBackgroundColor = color; }
 	const LLUIColor& getBackgroundColor() const { return mBackgroundColor; }
 	void setBackgroundVisible( bool b )	{ mBgVisible = b; }
-	void setCanTearOff(BOOL tear_off);
+	void setCanTearOff(bool tear_off);
 
 	// add a separator to this menu
 	virtual BOOL addSeparator();
@@ -489,7 +489,7 @@ public:
 
 	virtual BOOL isOpen();
 
-	void needsArrange() { mNeedsArrange = TRUE; }
+	void needsArrange() { mNeedsArrange = true; }
 	// Shape this menu to fit the current state of the children, and
 	// adjust the child rects to fit. This is called automatically
 	// when you add items. *FIX: We may need to deal with visibility
@@ -522,46 +522,46 @@ public:
 	static void showPopup(LLView* spawning_view, LLMenuGL* menu, S32 x, S32 y, S32 mouse_x = 0, S32 mouse_y = 0);
 
 	// Whether to drop shadow menu bar 
-	void setDropShadowed( const BOOL shadowed );
+	void setDropShadowed( const bool shadowed );
 
 	void setParentMenuItem( LLMenuItemGL* parent_menu_item ) { mParentMenuItem = parent_menu_item->getHandle(); }
 	LLMenuItemGL* getParentMenuItem() const { return dynamic_cast<LLMenuItemGL*>(mParentMenuItem.get()); }
 
-	void setTornOff(BOOL torn_off);
-	BOOL getTornOff() { return mTornOff; }
+	void setTornOff(bool torn_off);
+	bool getTornOff() { return mTornOff; }
 
-	BOOL getCanTearOff() { return mTearOffItem != NULL; }
+	bool getCanTearOff() { return mTearOffItem != NULL; }
 
 	KEY getJumpKey() const { return mJumpKey; }
 	void setJumpKey(KEY key) { mJumpKey = key; }
 
-	static void setKeyboardMode(BOOL mode) { sKeyboardMode = mode; }
-	static BOOL getKeyboardMode() { return sKeyboardMode; }
+	static void setKeyboardMode(bool mode) { sKeyboardMode = mode; }
+	static bool getKeyboardMode() { return sKeyboardMode; }
 
 	S32 getShortcutPad() { return mShortcutPad; }
 
 	bool scrollItems(EScrollingDirection direction);
-	BOOL isScrollable() const { return mScrollable; }
+	bool isScrollable() const { return mScrollable; }
 
 	static class LLMenuHolderGL* sMenuContainer;
 	
 	void resetScrollPositionOnShow(bool reset_scroll_pos) { mResetScrollPositionOnShow = reset_scroll_pos; }
 	bool isScrollPositionOnShowReset() { return mResetScrollPositionOnShow; }
 
-	void setAlwaysShowMenu(BOOL show) { mAlwaysShowMenu = show; }
-	BOOL getAlwaysShowMenu() { return mAlwaysShowMenu; }
+	void setAlwaysShowMenu(bool show) { mAlwaysShowMenu = show; }
+	bool getAlwaysShowMenu() { return mAlwaysShowMenu; }
 
 	// add a context menu branch
-	BOOL appendContextSubMenu(LLMenuGL *menu);
+	bool appendContextSubMenu(LLMenuGL *menu);
 
 protected:
 	void createSpilloverBranch();
 	void cleanupSpilloverBranch();
 	// Add the menu item to this menu.
-	virtual BOOL append( LLMenuItemGL* item );
+	virtual bool append( LLMenuItemGL* item );
 
 	// add a menu - this will create a cascading menu
-	virtual BOOL appendMenu( LLMenuGL* menu );
+	virtual bool appendMenu( LLMenuGL* menu );
 
 	// Used in LLContextMenu and in LLTogleableMenu
 	// to add an item of context menu branch
@@ -581,28 +581,28 @@ protected:
 	S32				mMouseVelY;
 	U32				mMaxScrollableItems;
 	U32				mPreferredWidth;
-	BOOL			mHorizontalLayout;
-	BOOL			mScrollable;
-	BOOL			mKeepFixedSize;
-	BOOL			mNeedsArrange;
+	bool			mHorizontalLayout;
+	bool			mScrollable;
+	bool			mKeepFixedSize;
+	bool			mNeedsArrange;
 
 private:
 
 
 	static LLColor4 sDefaultBackgroundColor;
-	static BOOL		sKeyboardMode;
+	static bool		sKeyboardMode;
 
-	BOOL			mAlwaysShowMenu;
+	bool			mAlwaysShowMenu;
 
 	LLUIColor		mBackgroundColor;
 	bool			mBgVisible;
 	LLHandle<LLView> mParentMenuItem;
 	LLUIString		mLabel;
-	BOOL mDropShadowed; 	//  Whether to drop shadow 
+	bool mDropShadowed; 	//  Whether to drop shadow
 	bool			mHasSelection;
 	LLFrameTimer	mFadeTimer;
 	LLTimer			mScrollItemsTimer;
-	BOOL			mTornOff;
+	bool			mTornOff;
 	class LLMenuItemTearOffGL* mTearOffItem;
 	class LLMenuItemBranchGL* mSpilloverBranch;
 	LLMenuGL*		mSpilloverMenu;
@@ -800,7 +800,7 @@ public:
 
 private:
 	// add a menu - this will create a drop down menu.
-	virtual BOOL appendMenu( LLMenuGL* menu );
+	virtual bool appendMenu( LLMenuGL* menu );
 	// rearrange the child rects so they fit the shape of the menu
 	// bar.
 	virtual void arrange( void );

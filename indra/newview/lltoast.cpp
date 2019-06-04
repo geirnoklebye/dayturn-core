@@ -222,9 +222,9 @@ void LLToast::setFocus(BOOL b)
 {
     if (b && !hasFocus() && mPanel)
     {
-        LLModalDialog::setFocus(TRUE);
+        LLModalDialog::setFocus(true);
         // mostly for buttons
-        mPanel->setFocus(TRUE);
+        mPanel->setFocus(true);
     }
     else
     {

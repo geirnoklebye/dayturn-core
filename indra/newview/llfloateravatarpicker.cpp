@@ -143,7 +143,7 @@ bool LLFloaterAvatarPicker::postBuild()
 	getChildView("ok_btn")->setEnabled(false);
 	childSetAction("cancel_btn", boost::bind(&LLFloaterAvatarPicker::onBtnClose, this));
 
-	getChild<LLUICtrl>("Edit")->setFocus(TRUE);
+	getChild<LLUICtrl>("Edit")->setFocus(true);
 
 	LLPanel* search_panel = getChild<LLPanel>("SearchPanel");
 	if (search_panel)
@@ -331,7 +331,7 @@ void LLFloaterAvatarPicker::populateNearMe()
 		getChildView("ok_btn")->setEnabled(true);
 		near_me_scroller->selectFirstItem();
 		onList();
-		near_me_scroller->setFocus(TRUE);
+		near_me_scroller->setFocus(true);
 	}
 
 	if (all_loaded)
@@ -661,7 +661,7 @@ void LLFloaterAvatarPicker::processAvatarPickerReply(LLMessageSystem* msg, void*
 		floater->getChildView("ok_btn")->setEnabled(true);
 		search_results->selectFirstItem();
 		floater->onList();
-		search_results->setFocus(TRUE);
+		search_results->setFocus(true);
 	}
 }
 
@@ -723,7 +723,7 @@ void LLFloaterAvatarPicker::processResponse(const LLUUID& query_id, const LLSD& 
 				search_results->selectFirstItem();
 			}			
 			onList();
-			search_results->setFocus(TRUE);
+			search_results->setFocus(true);
 		}
 	}
 }

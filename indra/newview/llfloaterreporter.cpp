@@ -184,13 +184,12 @@ bool LLFloaterReporter::postBuild()
 	getChild<LLUICtrl>("owner_name")->setValue(LLStringUtil::null);
 	mOwnerName = LLStringUtil::null;
 
-	getChild<LLUICtrl>("summary_edit")->setFocus(TRUE);
-
+	getChild<LLUICtrl>("summary_edit")->setFocus(true);
 	mDefaultSummary = getChild<LLUICtrl>("details_edit")->getValue().asString();
 
 	// abuser name is selected from a list
 	LLUICtrl* le = getChild<LLUICtrl>("abuser_name_edit");
-	le->setEnabled( false );
+	le->setEnabled(false);
 
 	setPosBox((LLVector3d)mPosition.getValue());
 	LLButton* pick_btn = getChild<LLButton>("pick_btn");

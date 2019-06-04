@@ -602,7 +602,7 @@ void LLFloater::setVisible(bool visible)
 	LLPanel::setVisible(visible); // calls onVisibilityChange()
 	if( visible && mFirstLook )
 	{
-		mFirstLook = FALSE;
+		mFirstLook = false;
 	}
 
 	if( !visible )
@@ -631,7 +631,7 @@ void LLFloater::setVisible(bool visible)
 }
 
 
-void LLFloater::setIsSingleInstance(BOOL is_single_instance)
+void LLFloater::setIsSingleInstance(bool is_single_instance)
 {
 	mSingleInstance = is_single_instance;
 	if (!mIsReuseInitialized)
@@ -680,7 +680,7 @@ void LLFloater::openFloater(const LLSD& key)
 
 	if (getHost() != NULL)
 	{
-		getHost()->setMinimized(FALSE);
+		getHost()->setMinimized(false);
 		getHost()->setVisibleAndFrontmost(mAutoFocus);
 		getHost()->showFloater(this);
 	}
@@ -745,7 +745,7 @@ void LLFloater::closeFloater(bool app_quitting)
 					LLFloater* dependee = mDependeeHandle.get();
 					if (dependee && !dependee->isDead())
 					{
-						dependee->setFocus(TRUE);
+						dependee->setFocus(true);
 					}
 				}
 			}
@@ -831,7 +831,7 @@ void LLFloater::releaseFocus()
 {
 	LLUI::getInstance()->removePopup(this);
 
-	setFocus(FALSE);
+	setFocus(false);
 
 	if( gFocusMgr.childHasMouseCapture( this ) )
 	{
@@ -1351,7 +1351,7 @@ void LLFloater::setMinimized(bool minimize)
 	applyTitle ();
 }
 
-void LLFloater::setFocus( BOOL b )
+void LLFloater::setFocus( bool b )
 {
 	if (b && getIsChrome())
 	{
@@ -1359,7 +1359,7 @@ void LLFloater::setFocus( BOOL b )
 	}
 	LLView* last_focus = gFocusMgr.getLastFocusForGroup(this);
 	// a descendent already has focus
-	BOOL child_had_focus = hasFocus();
+	bool child_had_focus = hasFocus();
 
 	// give focus to first valid descendent
 	LLPanel::setFocus(b);
@@ -1382,7 +1382,7 @@ void LLFloater::setFocus( BOOL b )
 			last_focus->isInVisibleChain())
 		{
 			// *FIX: should handle case where focus doesn't stick
-			last_focus->setFocus(TRUE);
+			last_focus->setFocus(true);
 		}
 	}
 	updateTransparency(b ? TT_ACTIVE : TT_INACTIVE);
@@ -1397,13 +1397,13 @@ void LLFloater::setRect(const LLRect &rect)
 }
 
 // virtual
-void LLFloater::setIsChrome(BOOL is_chrome)
+void LLFloater::setIsChrome(bool is_chrome)
 {
 	// chrome floaters don't take focus at all
 	if (is_chrome)
 	{
 		// remove focus if we're changing to chrome
-		setFocus(FALSE);
+		setFocus(false);
 		// can't Ctrl-Tab to "chrome" floaters
 		setFocusRoot(FALSE);
 		mButtons[BUTTON_CLOSE]->setToolTip(LLStringExplicit(getButtonTooltip(Params(), BUTTON_CLOSE, is_chrome)));
@@ -1608,7 +1608,7 @@ BOOL LLFloater::handleMouseDown(S32 x, S32 y, MASK mask)
 // virtual
 BOOL LLFloater::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
-	BOOL was_minimized = (BOOL)mMinimized;
+	bool was_minimized = mMinimized;
 	bringToFront( x, y );
 	return was_minimized || LLPanel::handleRightMouseDown( x, y, mask );
 }
@@ -1760,7 +1760,7 @@ void LLFloater::onClickTearOff(LLFloater* self)
 		}
 		gFloaterView->adjustToFitScreen(self, FALSE);
 		// give focus to new window to keep continuity for the user
-		self->setFocus(TRUE);
+		self->setFocus(true);
 		self->setTornOff(true);
 	}
 	else  //Attach to parent.
@@ -1947,7 +1947,7 @@ void LLFloater::draw()
 		LLFloater* old_host = mLastHostHandle.get();
 		if (!old_host)
 		{
-			setCanTearOff(FALSE);
+			setCanTearOff(false);
 		}
 	}
 }
@@ -1997,7 +1997,7 @@ void LLFloater::updateTransparency(ETypeTransparency transparency_type)
 	updateTransparency(this, transparency_type);
 }
 
-void	LLFloater::setCanMinimize(BOOL can_minimize)
+void	LLFloater::setCanMinimize(bool can_minimize)
 {
 	// if removing minimize/restore button programmatically,
 	// go ahead and unminimize floater
@@ -2013,7 +2013,7 @@ void	LLFloater::setCanMinimize(BOOL can_minimize)
 	updateTitleButtons();
 }
 
-void	LLFloater::setCanClose(BOOL can_close)
+void	LLFloater::setCanClose(bool can_close)
 {
 	mCanClose = can_close;
 	mButtonsEnabled[BUTTON_CLOSE] = can_close;
@@ -2021,7 +2021,7 @@ void	LLFloater::setCanClose(BOOL can_close)
 	updateTitleButtons();
 }
 
-void	LLFloater::setCanTearOff(BOOL can_tear_off)
+void	LLFloater::setCanTearOff(bool can_tear_off)
 {
 	mCanTearOff = can_tear_off;
 	mButtonsEnabled[BUTTON_TEAR_OFF] = mCanTearOff && !mHostHandle.isDead();
@@ -2036,7 +2036,7 @@ void LLFloater::setCanResize(bool can_resize)
 	enableResizeCtrls(can_resize);
 }
 
-void LLFloater::setCanDrag(BOOL can_drag)
+void LLFloater::setCanDrag(bool can_drag)
 {
 	// if we delete drag handle, we no longer have access to the floater's title
 	// so just enable/disable it
@@ -2488,7 +2488,7 @@ void LLFloaterView::bringToFront(LLFloater* child, BOOL give_focus, BOOL restore
 	{
 		if (give_focus && !gFocusMgr.childHasKeyboardFocus(child))
 		{
-			child->setFocus(TRUE);
+			child->setFocus(true);
 		}
 		return;
 	}
@@ -2571,7 +2571,7 @@ void LLFloaterView::bringToFront(LLFloater* child, BOOL give_focus, BOOL restore
 
 	if (give_focus && !gFocusMgr.childHasKeyboardFocus(child))
 	{
-		child->setFocus(TRUE);
+		child->setFocus(true);
 		// floater did not take focus, so relinquish focus to world
 		if (!child->hasFocus())
 		{
@@ -2655,7 +2655,7 @@ void LLFloaterView::focusFrontFloater()
 	LLFloater* floaterp = getFrontmost();
 	if (floaterp)
 	{
-		floaterp->setFocus(TRUE);
+		floaterp->setFocus(true);
 	}
 }
 
@@ -3023,7 +3023,7 @@ void LLFloaterView::syncFloaterTabOrder()
 		
 		if( !gFocusMgr.childHasKeyboardFocus( modal_dialog ) )
 		{
-			modal_dialog->setFocus(TRUE);
+			modal_dialog->setFocus(true);
 		}
 				
 		if( !gFocusMgr.childHasMouseCapture( modal_dialog ) )

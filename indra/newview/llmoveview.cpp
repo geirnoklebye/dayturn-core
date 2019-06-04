@@ -564,7 +564,7 @@ void LLPanelStandStopFlying::clearStandStopFlyingMode(EStandStopFlyingMode mode)
 		break;
 	case SSFM_FLYCAM:
 		panel->mFlycamButton->setVisible(false);
-		panel->setFocus(FALSE);
+		panel->setFocus(false);
 		break;
 	default:
 		LL_ERRS() << "Unexpected EStandStopFlyingMode is passed: " << mode << LL_ENDL;
@@ -697,14 +697,14 @@ void LLPanelStandStopFlying::onStandButtonClick()
 	LLSelectMgr::getInstance()->deselectAllForStandingUp();
 	gAgent.setControlFlags(AGENT_CONTROL_STAND_UP);
 
-	setFocus(FALSE); 
+	setFocus(false);
 }
 
 void LLPanelStandStopFlying::onStopFlyingButtonClick()
 {
 	gAgent.setFlying(false);
 
-	setFocus(FALSE); // EXT-482
+	setFocus(false); // EXT-482
 }
 
 /**

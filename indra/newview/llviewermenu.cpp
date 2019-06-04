@@ -6814,7 +6814,7 @@ class LLAvatarToggleMyProfile : public view_listener_t
 		if (LLFloater::isMinimized(instance))
 		{
 			instance->setMinimized(false);
-			instance->setFocus(TRUE);
+			instance->setFocus(true);
 		}
 		else if (!LLFloater::isShown(instance))
 		{
@@ -6822,7 +6822,7 @@ class LLAvatarToggleMyProfile : public view_listener_t
 		}
 		else if (!instance->hasFocus() && !instance->getIsChrome())
 		{
-			instance->setFocus(TRUE);
+			instance->setFocus(true);
 		}
 		else
 		{
@@ -9686,7 +9686,7 @@ class LLWorldEnvSettings : public view_listener_t
             LLFloater* env_floater = LLFloaterReg::findTypedInstance<LLFloater>(*it);
             if (env_floater)
             {
-                env_floater->setFocus(FALSE);
+                env_floater->setFocus(false);
             }
         }
     }

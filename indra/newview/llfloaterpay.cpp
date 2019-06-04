@@ -453,7 +453,7 @@ void LLFloaterPay::finishPayUI(const LLUUID& target_id, BOOL is_group)
 	// Make sure the amount field has focus
 
 	LLLineEditor* amount = getChild<LLLineEditor>("amount");
-	amount->setFocus(TRUE);
+	amount->setFocus(true);
 	amount->selectAll();
 
 	mTargetIsGroup = is_group;

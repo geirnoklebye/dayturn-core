@@ -138,7 +138,7 @@ LLLineEditor::LLLineEditor(const LLLineEditor::Params& p)
 	mLastSelectionStart(-1),
 	mLastSelectionEnd(-1),
 	mBorderThickness( 0 ),
-	mIgnoreArrowKeys( FALSE ),
+	mIgnoreArrowKeys( false ),
 	mIgnoreTab( p.ignore_tab ),
 	mDrawAsterixes( p.is_password ),
 	mSpellCheck( p.spellcheck ),
@@ -668,7 +668,7 @@ void LLLineEditor::onSpellCheckSettingsChange()
 
 bool LLLineEditor::handleDoubleClick(S32 x, S32 y, MASK mask)
 {
-	setFocus( TRUE );
+	setFocus(true);
 	mTripleClickTimer.setTimerExpirySec(TRIPLE_CLICK_INTERVAL);
 
 	if (mSelectionEnd == 0 && mSelectionStart == mText.length())
@@ -806,7 +806,7 @@ BOOL LLLineEditor::handleMouseDown(S32 x, S32 y, MASK mask)
 		gFocusMgr.setMouseCapture( this );
 	}
 
-	setFocus(TRUE);
+	setFocus(true);
 
 	// delay cursor flashing
 	mKeystrokeTimer.reset();
@@ -820,7 +820,7 @@ BOOL LLLineEditor::handleMouseDown(S32 x, S32 y, MASK mask)
 BOOL LLLineEditor::handleMiddleMouseDown(S32 x, S32 y, MASK mask)
 {
         // LL_INFOS() << "MiddleMouseDown" << LL_ENDL;
-	setFocus( TRUE );
+	setFocus(true);
 	if( canPastePrimary() )
 	{
 		setCursorAtLocalPos(x);
@@ -831,7 +831,7 @@ BOOL LLLineEditor::handleMiddleMouseDown(S32 x, S32 y, MASK mask)
 
 BOOL LLLineEditor::handleRightMouseDown(S32 x, S32 y, MASK mask)
 {
-	setFocus(TRUE);
+	setFocus(true);
 	if (!LLUICtrl::handleRightMouseDown(x, y, mask))
 	{
 		showContextMenu(x, y);
@@ -2174,9 +2174,9 @@ BOOL LLLineEditor::acceptsTextInput() const
 }
 
 // Start or stop the editor from accepting text-editing keystrokes
-void LLLineEditor::setFocus( BOOL new_state )
+void LLLineEditor::setFocus( bool new_state )
 {
-	BOOL old_state = hasFocus();
+	bool old_state = hasFocus();
 
 	if (!new_state)
 	{

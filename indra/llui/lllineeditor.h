@@ -182,7 +182,7 @@ public:
 	// UI control overrides
 	virtual void	clear();
 	virtual void	onTabInto();
-	virtual void	setFocus( BOOL b );
+	virtual void	setFocus( bool b );
 	virtual void 	setRect(const LLRect& rect);
 	virtual BOOL	acceptsTextInput() const;
 	virtual void	onCommit();
@@ -384,7 +384,7 @@ protected:
 
 	S32			mBorderThickness;
 
-	BOOL		mIgnoreArrowKeys;
+	bool		mIgnoreArrowKeys;
 	BOOL		mIgnoreTab;
 	BOOL		mDrawAsterixes;
 

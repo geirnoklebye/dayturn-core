@@ -170,8 +170,8 @@ public:
 	/*virtual*/ bool	handleDoubleClick(S32 x, S32 y, MASK mask);
 
 	// From LLFocusableElement
-	/*virtual*/ void	setFocus( BOOL b );
-	/*virtual*/ BOOL	hasFocus() const;
+	/*virtual*/ void	setFocus( bool b );
+	/*virtual*/ bool	hasFocus() const;
 	
 	// New virtuals
 
@@ -208,7 +208,7 @@ public:
     virtual void    shareViewModelFrom(const LLUICtrl& other);
 
 	virtual bool	setTextArg(  const std::string& key, const LLStringExplicit& text );
-	virtual void	setIsChrome(BOOL is_chrome);
+	virtual void	setIsChrome(bool is_chrome);
 
 	virtual BOOL	acceptsTextInput() const; // Defaults to false
 
@@ -337,7 +337,7 @@ protected:
 	
 private:
 
-	BOOL			mIsChrome;
+	bool			mIsChrome;
 	BOOL			mRequestsFront;
 	BOOL			mTabStop;
 	BOOL			mTentative;

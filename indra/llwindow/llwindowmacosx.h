@@ -220,7 +220,7 @@ protected:
 	LLCoordScreen   mNeedsResizeSize;
 	F32			mOverrideAspectRatio;
 	BOOL		mMaximized;
-	BOOL		mMinimized;
+	bool		mMinimized;
 	U32			mFSAASamples;
 	BOOL		mForceRebuild;
 	

@@ -655,7 +655,7 @@ void LLPanelOutfitEdit::showWearablesFilter()
 	}
 	else
 	{
-		mSearchFilter->setFocus(TRUE);
+		mSearchFilter->setFocus(true);
 	}
 }
 

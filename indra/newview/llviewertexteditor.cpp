@@ -795,7 +795,7 @@ BOOL LLViewerTextEditor::handleMouseDown(S32 x, S32 y, MASK mask)
 
 				if (hasTabStop())
 				{
-					setFocus( TRUE );
+					setFocus(true);
 				}
 
 				handled = TRUE;
@@ -894,7 +894,7 @@ bool LLViewerTextEditor::handleDoubleClick(S32 x, S32 y, MASK mask)
 				if( openEmbeddedItemAtPos( doc_index ))
 				{
 					deselect();
-					setFocus( FALSE );
+					setFocus(false);
 					return true;
 				}
 			}

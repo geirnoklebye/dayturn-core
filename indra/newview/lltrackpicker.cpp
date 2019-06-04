@@ -72,7 +72,7 @@ void LLFloaterTrackPicker::onClose(bool app_quitting)
     LLView *owner = mOwnerHandle.get();
     if (owner)
     {
-        owner->setFocus(TRUE);
+        owner->setFocus(true);
     }
 }
 
@@ -99,7 +99,7 @@ void LLFloaterTrackPicker::showPicker(const LLSD &args)
     }
 
     openFloater(getKey());
-    setFocus(TRUE);
+    setFocus(true);
 }
 
 void LLFloaterTrackPicker::draw()

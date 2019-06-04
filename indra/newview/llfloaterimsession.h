@@ -68,7 +68,7 @@ public:
 	/*virtual*/ void setMinimized(bool b);
 	/*virtual*/ void setVisible(bool visible);
 	/*virtual*/ bool getVisible();
-	/*virtual*/ void setFocus(BOOL focus);
+	/*virtual*/ void setFocus(bool focus);
 	// Check typing timeout timer.
 
 	/*virtual*/ void draw();

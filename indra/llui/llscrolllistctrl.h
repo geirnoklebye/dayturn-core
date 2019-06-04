@@ -378,7 +378,7 @@ public:
 	/*virtual*/ bool	handleScrollHWheel(S32 x, S32 y, S32 clicks);
 	/*virtual*/ bool	handleToolTip(S32 x, S32 y, MASK mask);
 	/*virtual*/ void	setEnabled(bool enabled);
-	/*virtual*/ void	setFocus( BOOL b );
+	/*virtual*/ void	setFocus( bool b );
 	/*virtual*/ void	onFocusReceived();
 	/*virtual*/ void	onFocusLost();
 	/*virtual*/ void	onMouseLeave(S32 x, S32 y, MASK mask);

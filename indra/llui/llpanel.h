@@ -120,7 +120,7 @@ public:
 	/*virtual*/ void 	onVisibilityChange ( bool new_visibility );
 
 	// From LLFocusableElement
-	/*virtual*/ void	setFocus( BOOL b );
+	/*virtual*/ void	setFocus( bool b );
 	
 	// New virtuals
 	virtual 	void	refresh();	// called in setFocus()

@@ -221,10 +221,10 @@ public:
 	/*virtual*/ void handleReshape(const LLRect& new_rect, bool by_user = false);
 	/*virtual*/ BOOL canSnapTo(const LLView* other_view); 
 	/*virtual*/ void setSnappedTo(const LLView* snap_view);
-	/*virtual*/ void setFocus( BOOL b );
-	/*virtual*/ void setIsChrome(BOOL is_chrome);
+	/*virtual*/ void setFocus( bool b );
+	/*virtual*/ void setIsChrome(bool is_chrome);
 	/*virtual*/ void setRect(const LLRect &rect);
-                void setIsSingleInstance(BOOL is_single_instance);
+                void setIsSingleInstance(bool is_single_instance);
 
 	void 			initFloater(const Params& p);
 
@@ -268,17 +268,17 @@ public:
 	static bool		isShown(const LLFloater* floater);
 	static bool     isVisible(const LLFloater* floater);
 	static bool     isMinimized(const LLFloater* floater);
-	BOOL			isFirstLook() { return mFirstLook; } // EXT-2653: This function is necessary to prevent overlapping for secondary showed toasts
+	bool			isFirstLook() { return mFirstLook; } // EXT-2653: This function is necessary to prevent overlapping for secondary showed toasts
 	virtual bool	isFrontmost();
-	BOOL			isDependent()					{ return !mDependeeHandle.isDead(); }
-	void			setCanMinimize(BOOL can_minimize);
-	void			setCanClose(BOOL can_close);
-	void			setCanTearOff(BOOL can_tear_off);
+	bool			isDependent()					{ return !mDependeeHandle.isDead(); }
+	void			setCanMinimize(bool can_minimize);
+	void			setCanClose(bool can_close);
+	void			setCanTearOff(bool can_tear_off);
 	virtual void	setCanResize(bool can_resize);
-	void			setCanDrag(BOOL can_drag);
+	void			setCanDrag(bool can_drag);
 	bool			getCanDrag();
 	void			setHost(LLMultiFloater* host);
-	BOOL			isResizable() const				{ return mResizable; }
+	bool			isResizable() const				{ return mResizable; }
 	void			setResizeLimits( S32 min_width, S32 min_height );
 	void			getResizeLimits( S32* min_width, S32* min_height ) { *min_width = mMinWidth; *min_height = mMinHeight; }
 
@@ -473,16 +473,16 @@ private:
 	LLUIString		mTitle;
 	LLUIString		mShortTitle;
 	
-	BOOL			mSingleInstance;	  // TRUE if there is only ever one instance of the floater
+	bool			mSingleInstance;	  // TRUE if there is only ever one instance of the floater
 	bool			mReuseInstance;		  // true if we want to hide the floater when we close it instead of destroying it
     bool            mIsReuseInitialized;  // true if mReuseInstance already set from parameters
 	std::string		mInstanceName;		  // Store the instance name so we can remove ourselves from the list
 	
-	BOOL			mCanTearOff;
-	BOOL			mCanMinimize;
-	BOOL			mCanClose;
-	BOOL			mDragOnLeft;
-	BOOL			mResizable;
+	bool			mCanTearOff;
+	bool			mCanMinimize;
+	bool			mCanClose;
+	bool			mDragOnLeft;
+	bool			mResizable;
 
 	LLFloaterEnums::EOpenPositioning	mPositioning;
 	LLCoordFloater	mPosition;
@@ -497,7 +497,7 @@ private:
 	LLHandle<LLFloater>	mDependeeHandle;
 	
 
-	BOOL			mFirstLook;			// TRUE if the _next_ time this floater is visible will be the first time in the session that it is visible.
+	bool			mFirstLook;			// true if the _next_ time this floater is visible will be the first time in the session that it is visible.
 	
 	typedef std::set<LLHandle<LLFloater> > handle_set_t;
 	typedef std::set<LLHandle<LLFloater> >::iterator handle_set_iter_t;

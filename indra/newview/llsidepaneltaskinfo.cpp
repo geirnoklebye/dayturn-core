@@ -1275,12 +1275,12 @@ void LLSidepanelTaskInfo::refreshAll()
 	if (hasFocus())
 	{
 		focus = gFocusMgr.getKeyboardFocus();
-		setFocus(FALSE);
+		setFocus(false);
 	}
 	refresh();
 	if (focus)
 	{
-		focus->setFocus(TRUE);
+		focus->setFocus(true);
 	}
 }
 

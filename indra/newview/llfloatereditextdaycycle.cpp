@@ -1695,7 +1695,7 @@ void LLFloaterEditExtDayCycle::doOpenInventoryFloater(LLSettingsType::type_e typ
         picker->setTrackMode(LLFloaterSettingsPicker::TRACK_NONE);
     }
     picker->openFloater();
-    picker->setFocus(TRUE);
+    picker->setFocus(true);
 }
 
 void LLFloaterEditExtDayCycle::onPickerCommitSetting(LLUUID item_id, S32 track)

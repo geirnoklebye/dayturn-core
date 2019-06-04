@@ -54,7 +54,7 @@ bool LLFloaterLagMeter::postBuild()
 {
 	// Don't let this window take keyboard focus -- it's confusing to
 	// lose arrow-key driving when testing lag.
-	setIsChrome(TRUE);
+	setIsChrome(true);
 	
 	// were we shrunk last time?
 	if (isShrunk())
@@ -348,7 +348,7 @@ void LLFloaterLagMeter::updateControls(bool shrink)
 		button->setLabel( getString("bigger_label", mStringArgs) );
 	}
 	// Don't put keyboard focus on the button
-	button->setFocus(FALSE);
+	button->setFocus(false);
 
 //	self->mClientText->setVisible(self->mShrunk);
 //	self->mClientCause->setVisible(self->mShrunk);
