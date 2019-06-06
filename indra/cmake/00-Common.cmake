@@ -134,12 +134,17 @@ if (LINUX)
       -mfpmath=sse
       -pthread
       )
+    
     add_definitions(-std=gnu++11)
     add_definitions(-DAPPID=kokua)
   # force this platform to accept TOS via external browser #DKO  will break use internal browser
   #add_definitions(-DEXTERNAL_TOS)
 
   add_compile_options(-fvisibility=hidden)
+  if (LL_TESTS)
+    add_compile_options(-Wno-unused-function)
+    message([WARNING] "Linux as many failed tests due to unused functions. We have suppressed those here." )
+  endif (LL_TESTS)
   # don't catch SIGCHLD in our base application class for the viewer - some of
   # our 3rd party libs may need their *own* SIGCHLD handler to work. Sigh! The
   # viewer doesn't need to catch SIGCHLD anyway.
