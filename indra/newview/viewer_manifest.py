@@ -1781,7 +1781,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
                 self.path("libfmodstusio.so*")
                 pass
             except:
-            print "Skipping libfmodex.so - not found"
+                print "Skipping libfmodex.so - not found"
                 pass
             try:
                 self.path("libfmodex64-*.so")
