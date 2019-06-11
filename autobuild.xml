@@ -1078,11 +1078,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ae866eacd6e52dac29226602b530ca1c</string>
+              <string>e428713ead475f27f9942889d2ec8107</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/NickyP/3p-fmodstudio/downloads/fmodstudio-2.00.01-darwin-191612002.tar.bz2</string>
+              <string>https://bitbucket.org/NickyP/3p-fmodstudio/downloads/fmodstudio-2.00.01-darwin-191621840.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -1092,11 +1092,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>29fb6e873b05719936bf639da9425fb9</string>
+              <string>30480287e6f08500307cb709c39f400c</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>file:///Users/bill/3p-fmodstudio/fmodstudio-2.00.01-darwin64-191612335.tar.bz2</string>
+              <string>https://bitbucket.org/NickyP/3p-fmodstudio/downloads/fmodstudio-2.00.01-darwin64-191621825.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
