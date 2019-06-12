@@ -51,7 +51,7 @@
 #include "llviewercontrol.h"
 #include "llfloaterperms.h"
 
-BOOL item_name_precedes( LLInventoryItem* a, LLInventoryItem* b )
+bool item_name_precedes( LLInventoryItem* a, LLInventoryItem* b )
 {
 	return LLStringUtil::precedesDict( a->getName(), b->getName() );
 }
