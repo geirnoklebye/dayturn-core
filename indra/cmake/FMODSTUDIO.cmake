@@ -27,15 +27,15 @@ if (FMODSTUDIO)
       include(Prebuilt)
       use_prebuilt_binary(fmodstudio)
       if (WINDOWS)
-        if (NOT ND_BUILD64BIT_ARCH)
+        if (ADDRESS_SIZE EQUAL 32)
           set(FMODSTUDIO_LIBRARY 
-              debug fmodL_vc
-              optimized fmod_vc)
-         elseif (ND_BUILD64BIT_ARCH)
+              debug fmodL
+              optimized fmod)
+         elseif (ADDRESS_SIZE EQUAL 64)
            set(FMODSTUDIO_LIBRARY 
-              debug fmodL64_vc
-              optimized fmod64_vc)
-         endif(NOT ND_BUILD64BIT_ARCH)
+              debug fmodL
+              optimized fmod)
+         endif(ADDRESS_SIZE EQUAL 32)
       elseif (DARWIN)
         set(FMODSTUDIO_LIBRARY 
             debug fmodL
