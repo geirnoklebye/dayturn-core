@@ -25,18 +25,18 @@ IF (FMODSTUDIO_SDK_DIR OR WINDOWS)
     find_library(FMODSTUDIO_LIBRARY
              fmod_vc fmodL_vc 
              PATHS
-             ${FMODSTUDIO_SDK_DIR}/api/lib
-             ${FMODSTUDIO_SDK_DIR}/api
+             ${FMODSTUDIO_SDK_DIR}/api/core/lib
+             ${FMODSTUDIO_SDK_DIR}/api/core
              ${FMODSTUDIO_SDK_DIR}
              )
     find_path(FMODSTUDIO_INCLUDE_DIR fmod.h
-        ${FMODSTUDIO_SDK_DIR}/api/inc
-        ${FMODSTUDIO_SDK_DIR}/api
+        ${FMODSTUDIO_SDK_DIR}/api/core/inc
+        ${FMODSTUDIO_SDK_DIR}/api/core
         ${FMODSTUDIO_SDK_DIR}
       )
     find_path(FMODSTUDIO_INCLUDE_DIR fmod.h
-        ${FMODSTUDIO_SDK_DIR}/api/inc
-        ${FMODSTUDIO_SDK_DIR}/api
+        ${FMODSTUDIO_SDK_DIR}/api/core/inc
+        ${FMODSTUDIO_SDK_DIR}/api/core
         ${FMODSTUDIO_SDK_DIR}
       )
     IF (FMODSTUDIO_LIBRARY AND FMODSTUDIO_INCLUDE_DIR)

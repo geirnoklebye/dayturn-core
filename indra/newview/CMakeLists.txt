@@ -1975,9 +1975,9 @@ if (WINDOWS)
 
     if (FMODSTUDIO)
       list(APPEND COPY_INPUT_DEPENDENCIES
-           ${SHARED_LIB_STAGING_DIR}/Release/fmod.dll
-           ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmod.dll
-           ${SHARED_LIB_STAGING_DIR}/Debug/fmodL.dll
+           ${SHARED_LIB_STAGING_DIR}/Release/fmodstudio.dll
+           ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodstudio.dll
+           ${SHARED_LIB_STAGING_DIR}/Debug/fmodstudioL.dll
           )
     endif (FMODSTUDIO)
 

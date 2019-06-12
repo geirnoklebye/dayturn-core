@@ -543,11 +543,9 @@ class WindowsManifest(ViewerManifest):
             # Get fmodstudio dll, continue if missing
             try:
                 if self.args['configuration'].lower() == 'debug':
-                    self.path("fmodL.dll")
-                    self.path("fmodL64.dll")
+                    self.path("fmodstudioL.dll")
                 else:
-                    self.path("fmod.dll")
-                    self.path("fmod64.dll")
+                    self.path("fmodstudio.dll")
             except:
                 print "Skipping fmodstudio audio library(assuming other audio engine)"
 
