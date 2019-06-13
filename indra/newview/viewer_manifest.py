@@ -1774,9 +1774,12 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
         with self.prefix(src=relpkgdir, dst="lib"):
             try:
-                self.path("libfmodstusio*.so")
+                self.path("libfmodstudio*.so")
                 self.path("libfmodstudio.so")
-                self.path("libfmodstusio.so*")
+                self.path("libfmodstudio.so*")
+                self.path("libfmod*.so")
+                self.path("libfmod.so")
+                self.path("libfmod.so*")
                 pass
             except:
                 print "Skipping libfmodex.so - not found"
