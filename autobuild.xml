@@ -1106,11 +1106,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>56b293808ef845037afe04862386e6ab</string>
+              <string>e93df9c5ad80afe1668f6de86c212684</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/NickyP/3p-fmodstudio/downloads/fmodstudio-2.00.01-linux64-191611421.tar.bz2</string>
+              <string>https://bitbucket.org/NickyP/3p-fmodstudio/downloads/fmodstudio-2.00.01-linux64-191641905.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
