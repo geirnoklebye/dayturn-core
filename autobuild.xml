@@ -1120,11 +1120,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>0c9dd717a083a2cffc3f8fdc25cca3cc</string>
+              <string>86fd9096acd615e354506b6496c22d89</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/NickyP/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows-191632210.tar.bz2</string>
+              <string>https://bitbucket.org/NickyP/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows-191652331.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -1134,11 +1134,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>b646b1a62b76243805a3fb0c511e5b45</string>
+              <string>e2151300ac4be4e4e7c3278c0ccb7919</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>https://bitbucket.org/NickyP/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows64-191630031.tar.bz2</string>
+              <string>https://bitbucket.org/NickyP/3p-fmodstudio/downloads/fmodstudio-2.00.01-windows64-191652341.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
