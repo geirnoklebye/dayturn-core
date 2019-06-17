@@ -14,6 +14,17 @@ project(${ROOT_PROJECT_NAME})
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
+# fmodex and fmodstudio are mutually exclusive, make sure we only have one
+# give fmodex priority if both are defined
+if (FMODEX)
+set (FMODSTUDIO OFF CACHE STRING "fmodstudio" FORCE)
+message("-- Sound system: FMODex")
+endif (FMODEX)
+if (FMODSTUDIO)
+set (FMODEX OFF CACHE STRING "fmodex" FORCE)
+message("-- Sound system: FMODstudio")
+endif (FMODSTUDIO)
+
 include(Variables)
 include(BuildVersion)
 
