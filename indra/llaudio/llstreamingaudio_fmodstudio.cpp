@@ -235,7 +235,15 @@ void LLStreamingAudio_FMODSTUDIO::update()
 							continue;
 						}
 						default:
+					    	{
+							if(name == "icy-name") {
+								name = "STREAM_NAME";
+							}
+							else if(name == "icy-url") {
+								name = "STREAM_LOCATION";
+							}
 							break;
+						}
 					}
 					switch(tag.datatype)
 					{
@@ -399,22 +407,34 @@ void LLStreamingAudio_FMODSTUDIO::setGain(F32 vol)
 }
 // <DKO> Streamtitle display
 // virtual
-bool LLStreamingAudio_FMODSTUDIO::getNewMetadata(LLSD& metadata)
+bool LLStreamingAudio_FMODSTUDIO::hasNewMetadata()
 {
-	if (mCurrentInternetStreamp)
-	{
-		if (mNewMetadata)
-		{
-			metadata = mMetadata;
+	if (mCurrentInternetStreamp && mNewMetadata) {
 			mNewMetadata = false;
 			return true;
 		}
 			
-		return mNewMetadata;
+	return false;
+}
+
+std::string LLStreamingAudio_FMODSTUDIO::getCurrentArtist()
+{
+	return mMetadata["ARTIST"].asString();
 	}
 
-	metadata = LLSD();
-	return false;
+std::string LLStreamingAudio_FMODSTUDIO::getCurrentTitle()
+{
+	return mMetadata["TITLE"].asString();
+}
+
+std::string LLStreamingAudio_FMODSTUDIO::getCurrentStreamName()
+{
+	return mMetadata["STREAM_NAME"].asString();
+}
+
+std::string LLStreamingAudio_FMODSTUDIO::getCurrentStreamLocation()
+{
+	return mMetadata["STREAM_LOCATION"].asString();
 }
 // </DKO>
 ///////////////////////////////////////////////////////
