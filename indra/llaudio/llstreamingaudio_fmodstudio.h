@@ -61,7 +61,11 @@ class LLStreamingAudio_FMODSTUDIO : public LLStreamingAudioInterface
 	/*virtual*/ bool supportsAdjustableBufferSizes(){return true;}
 	/*virtual*/ void setBufferSizes(U32 streambuffertime, U32 decodebuffertime);
 	//Streamtitle display DKO
-	virtual bool getNewMetadata(LLSD& metadata);
+	/* virtual */ bool hasNewMetadata();
+	/* virtual */ std::string getCurrentArtist();
+	/* virtual */ std::string getCurrentTitle();
+	/* virtual */ std::string getCurrentStreamName();
+	/* virtual */ std::string getCurrentStreamLocation();
 	// DKO
 private:
 	bool releaseDeadStreams();
