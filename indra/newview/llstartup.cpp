@@ -41,6 +41,10 @@
 #include "llviewermedia_streamingaudio.h"
 #include "llaudioengine.h"
 
+#ifdef LL_FMODSTUDIO
+# include "llaudioengine_fmodstudio.h"
+#endif
+
 #ifdef LL_FMODEX
 # include "llaudioengine_fmodex.h"
 #endif
@@ -843,12 +847,21 @@ bool idle_startup()
 			delete gAudiop;
 			gAudiop = NULL;
 
-#ifdef LL_FMODEX		
+#ifdef LL_FMODSTUDIO
+#if !LL_WINDOWS
+			if (NULL == getenv("LL_BAD_FMODSTUDIO_DRIVER"))
+#endif // !LL_WINDOWS
+			{
+				gAudiop = (LLAudioEngine *) new LLAudioEngine_FMODSTUDIO(gSavedSettings.getBOOL("FMODProfilerEnable"), gSavedSettings.getU32("FMODResampleMethod"));
+			}
+#endif
+
+#ifdef LL_FMODEX
 #if !LL_WINDOWS
 			if (NULL == getenv("LL_BAD_FMODEX_DRIVER"))
 #endif // !LL_WINDOWS
 			{
-				gAudiop = (LLAudioEngine *) new LLAudioEngine_FMODEX(gSavedSettings.getBOOL("FMODExProfilerEnable"));
+				gAudiop = (LLAudioEngine *) new LLAudioEngine_FMODEX(gSavedSettings.getBOOL("FMODProfilerEnable"));
 			}
 #endif
 
@@ -864,7 +877,7 @@ bool idle_startup()
 			if (gAudiop)
 			{
 #if LL_WINDOWS
-				// FMOD Ex on Windows needs the window handle to stop playing audio
+				// FMOD Studio and FMOD Ex on Windows needs the window handle to stop playing audio
 				// when window is minimized. JC
 				void* window_handle = (HWND)gViewerWindow->getPlatformWindow();
 #else

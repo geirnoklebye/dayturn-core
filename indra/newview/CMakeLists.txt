@@ -1,4 +1,4 @@
-﻿# -*- cmake -*-
+# -*- cmake -*-
 
 project(viewer)
 
@@ -18,6 +18,7 @@ include(DBusGlib)
 include(DirectX)
 include(DragDrop)
 include(EXPAT)
+include(FMODSTUDIO)
 include(FMODEX)
 include(GLOD)
 include(Hunspell)
@@ -71,6 +72,10 @@ endif (NOT HAVOK_TPV)
 # <FS:ND>
 endif( LLPHYSICSEXTENSIONS_SRC_DIR )
 # </FS:ND>
+if(FMODSTUDIO)
+  include_directories(${FMODSTUDIO_INCLUDE_DIR})
+endif(FMODSTUDIO)
+
 if(FMODEX)
   include_directories(${FMODEX_INCLUDE_DIR})
 endif(FMODEX)
@@ -1843,6 +1848,11 @@ if (OPENAL)
   set(LLSTARTUP_COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS} -DLL_OPENAL")
 endif (OPENAL)
 
+if (FMODSTUDIO)
+  set(LLSTARTUP_COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS} -DLL_FMODSTUDIO")
+  set(FMODWRAPPER_LIBRARY ${FMODSTUDIO_LIBRARY})
+endif (FMODSTUDIO)
+
 if (FMODEX)
   set(LLSTARTUP_COMPILE_FLAGS "${LLSTARTUP_COMPILE_FLAGS} -DLL_FMODEX")
   set(FMODWRAPPER_LIBRARY ${FMODEX_LIBRARY})
@@ -1962,6 +1972,14 @@ if (WINDOWS)
             ${SHARED_LIB_STAGING_DIR}/${CMAKE_CFG_INTDIR}/ortp.dll
             )
     endif (ADDRESS_SIZE EQUAL 64)
+
+    if (FMODSTUDIO)
+      list(APPEND COPY_INPUT_DEPENDENCIES
+           ${SHARED_LIB_STAGING_DIR}/Release/fmodstudio.dll
+           ${SHARED_LIB_STAGING_DIR}/RelWithDebInfo/fmodstudio.dll
+           ${SHARED_LIB_STAGING_DIR}/Debug/fmodstudioL.dll
+          )
+    endif (FMODSTUDIO)
 
     if (FMODEX)
         if ( ADDRESS_SIZE EQUAL 32 )
