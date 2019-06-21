@@ -28,6 +28,7 @@ set(cmake_SOURCE_FILES
     FindAPR.cmake
     FindAutobuild.cmake
     FindBerkeleyDB.cmake
+    FindFMODSTUDIO.cmake
     FindFMODEX.cmake
     FindGLH.cmake
     FindGLOD.cmake
