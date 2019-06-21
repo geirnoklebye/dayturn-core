@@ -540,6 +540,15 @@ class WindowsManifest(ViewerManifest):
                 print err.message
                 print "Skipping GLOD library (assumming linked statically)"
 
+            # Get fmodstudio dll, continue if missing
+            try:
+                if self.args['configuration'].lower() == 'debug':
+                    self.path("fmodL.dll")
+                else:
+                    self.path("fmod.dll")
+            except:
+                print "Skipping fmodstudio audio library(assuming other audio engine)"
+
             # Get fmodex dll, continue if missing
             try:
                 if(self.address_size == 64):
@@ -1089,6 +1098,18 @@ class DarwinManifest(ViewerManifest):
                                 'SLVoice',
                                 ):
                     self.path2basename(relpkgdir, libfile)
+
+                # dylibs that vary based on configuration
+                if self.args['configuration'].lower() == 'debug':
+                    for libfile in (
+                                "libfmodL.dylib",
+                                ):
+                        dylibs += path_optional(os.path.join(debpkgdir, libfile), libfile)
+                else:
+                    for libfile in (
+                                "libfmod.dylib",
+                                ):
+                        dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
 
                 # dylibs that vary based on configuration
                 if self.args['configuration'].lower() == 'debug':
@@ -1701,6 +1722,7 @@ class Linux_i686_Manifest(LinuxManifest):
             try:
                 self.path("libfmodex-*.so")
                 self.path("libfmodex.so")
+                self.path("libfmodex.so*")
                 pass
             except:
                 print "Skipping libfmodex.so - not found"
@@ -1751,6 +1773,27 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.end_prefix("lib") 
 
         with self.prefix(src=relpkgdir, dst="lib"):
+            try:
+                self.path("libfmodstudio*.so")
+                self.path("libfmodstudio.so")
+                self.path("libfmodstudio.so*")
+                self.path("libfmod*.so")
+                self.path("libfmod.so")
+                self.path("libfmod.so*")
+                pass
+            except:
+                print "Skipping libfmodex.so - not found"
+                pass
+            try:
+                self.path("libfmodex64-*.so")
+                self.path("libfmodex64.so")
+                self.path("libfmodex64.so*")
+                pass
+            except:
+                print "Skipping libfmodex.so - not found"
+                pass
+            
+
             self.path("libapr-1.so*")
             self.path("libaprutil-1.so*")
             self.path("libdb*.so")
@@ -1768,9 +1811,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libuuid.so.16.0.22")
             self.path("libhunspell-1.3.so*")
             self.path("libGLOD.so")
-            self.path("libfmodex64-*.so")
-            self.path("libfmodex64.so")
-            self.path("libfreetype.so.*.*")          
+            self.path("libfreetype.so.*.*")
 
             # OpenAL populated when -DOPENAL:BOOL=ON.  These are not present in packages when -DOPENAL:BOOL=OFF
 	    # Voice uses 32bit versions of these. 
