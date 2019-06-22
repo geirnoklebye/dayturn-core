@@ -280,7 +280,7 @@ public:
 	// LLView functionality
 	virtual BOOL handleRightMouseDown( S32 x, S32 y, MASK mask );
 	virtual BOOL handleMouseDown( S32 x, S32 y, MASK mask );
-	virtual BOOL handleHover( S32 x, S32 y, MASK mask );
+	virtual bool handleHover( S32 x, S32 y, MASK mask );
 	virtual BOOL handleMouseUp( S32 x, S32 y, MASK mask );
 	virtual BOOL handleDoubleClick( S32 x, S32 y, MASK mask );
 
@@ -441,7 +441,7 @@ public:
 	virtual void openItem( void );
 
 	// LLView functionality
-	virtual BOOL handleHover(S32 x, S32 y, MASK mask);
+	virtual bool handleHover(S32 x, S32 y, MASK mask);
 	virtual BOOL handleRightMouseDown( S32 x, S32 y, MASK mask );
 	virtual BOOL handleMouseDown( S32 x, S32 y, MASK mask );
 	virtual BOOL handleDoubleClick( S32 x, S32 y, MASK mask );

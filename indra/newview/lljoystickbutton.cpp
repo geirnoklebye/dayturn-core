@@ -192,7 +192,7 @@ BOOL LLJoystick::handleMouseUp(S32 x, S32 y, MASK mask)
 }
 
 
-BOOL LLJoystick::handleHover(S32 x, S32 y, MASK mask)
+bool LLJoystick::handleHover(S32 x, S32 y, MASK mask)
 {
 	if( hasMouseCapture() )
 	{
@@ -504,7 +504,7 @@ BOOL LLJoystickCameraRotate::handleMouseUp(S32 x, S32 y, MASK mask)
 	return LLJoystick::handleMouseUp(x, y, mask);
 }
 
-BOOL LLJoystickCameraRotate::handleHover(S32 x, S32 y, MASK mask)
+bool LLJoystickCameraRotate::handleHover(S32 x, S32 y, MASK mask)
 {
 	if (!pointInCenterDot(x, y, CENTER_DOT_RADIUS))
 	{

@@ -1317,9 +1317,9 @@ BOOL LLToolBarButton::handleMouseDown(S32 x, S32 y, MASK mask)
 	return LLButton::handleMouseDown(x, y, mask);
 }
 
-BOOL LLToolBarButton::handleHover(S32 x, S32 y, MASK mask)
+bool LLToolBarButton::handleHover(S32 x, S32 y, MASK mask)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 		
 	S32 mouse_distance_squared = (x - mMouseDownX) * (x - mMouseDownX) + (y - mMouseDownY) * (y - mMouseDownY);
 	static LLCachedControl<S32> drag_threshold(*LLUI::getInstance()->mSettingGroups["config"], "DragAndDropDistanceThreshold", 3);
@@ -1331,7 +1331,7 @@ BOOL LLToolBarButton::handleHover(S32 x, S32 y, MASK mask)
 		{
 			mStartDragItemCallback(x, y, this);
 			mIsDragged = true;
-			handled = TRUE;
+			handled = true;
 		}
 		else 
 		{

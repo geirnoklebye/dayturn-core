@@ -275,7 +275,7 @@ void LLXYVector::update()
     mYEntry->setValue(mValueY);
 }
 
-BOOL LLXYVector::handleHover(S32 x, S32 y, MASK mask)
+bool LLXYVector::handleHover(S32 x, S32 y, MASK mask)
 {
     if (hasMouseCapture())
     {
@@ -298,7 +298,7 @@ BOOL LLXYVector::handleHover(S32 x, S32 y, MASK mask)
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 BOOL LLXYVector::handleMouseUp(S32 x, S32 y, MASK mask)

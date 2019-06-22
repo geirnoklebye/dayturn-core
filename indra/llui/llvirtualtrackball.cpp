@@ -384,7 +384,7 @@ void LLVirtualTrackball::getAzimuthAndElevationDeg(const LLQuaternion &quat, F32
     elevation *= RAD_TO_DEG;
 }
 
-BOOL LLVirtualTrackball::handleHover(S32 x, S32 y, MASK mask)
+bool LLVirtualTrackball::handleHover(S32 x, S32 y, MASK mask)
 {
     if (hasMouseCapture())
     {
@@ -413,7 +413,7 @@ BOOL LLVirtualTrackball::handleHover(S32 x, S32 y, MASK mask)
         { // set on click mode
             if (!pointInTouchCircle(x, y))
             {
-                return TRUE; // don't drag outside the circle
+                return true; // don't drag outside the circle
             }
 
             F32 radius = mTouchArea->getRect().getWidth() / 2;
@@ -453,7 +453,7 @@ BOOL LLVirtualTrackball::handleHover(S32 x, S32 y, MASK mask)
         mPrevY = y;
         onCommit();
     }
-    return TRUE;
+    return true;
 }
 
 BOOL LLVirtualTrackball::handleMouseUp(S32 x, S32 y, MASK mask)

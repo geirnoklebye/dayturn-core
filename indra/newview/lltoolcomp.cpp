@@ -255,7 +255,7 @@ LLToolCompTranslate::~LLToolCompTranslate()
 	mSelectRect = NULL;
 }
 
-BOOL LLToolCompTranslate::handleHover(S32 x, S32 y, MASK mask)
+bool LLToolCompTranslate::handleHover(S32 x, S32 y, MASK mask)
 {
 	if( !mCur->hasMouseCapture() )
 	{
@@ -381,7 +381,7 @@ LLToolCompScale::~LLToolCompScale()
 	delete mSelectRect;
 }
 
-BOOL LLToolCompScale::handleHover(S32 x, S32 y, MASK mask)
+bool LLToolCompScale::handleHover(S32 x, S32 y, MASK mask)
 {
 	if( !mCur->hasMouseCapture() )
 	{
@@ -581,7 +581,7 @@ LLToolCompRotate::~LLToolCompRotate()
 	delete mSelectRect;
 }
 
-BOOL LLToolCompRotate::handleHover(S32 x, S32 y, MASK mask)
+bool LLToolCompRotate::handleHover(S32 x, S32 y, MASK mask)
 {
 	if( !mCur->hasMouseCapture() )
 	{
@@ -707,7 +707,7 @@ LLToolCompGun::~LLToolCompGun()
 	mNull = NULL;
 }
 
-BOOL LLToolCompGun::handleHover(S32 x, S32 y, MASK mask)
+bool LLToolCompGun::handleHover(S32 x, S32 y, MASK mask)
 {
 	// *NOTE: This hack is here to make mouselook kick in again after
 	// item selected from context menu.

@@ -1248,12 +1248,12 @@ BOOL LLTextBase::handleDoubleClick(S32 x, S32 y, MASK mask)
 	return LLUICtrl::handleDoubleClick(x, y, mask);
 }
 
-BOOL LLTextBase::handleHover(S32 x, S32 y, MASK mask)
+bool LLTextBase::handleHover(S32 x, S32 y, MASK mask)
 {
 	LLTextSegmentPtr cur_segment = getSegmentAtLocalPos(x, y);
 	if (cur_segment && cur_segment->handleHover(x, y, mask))
 	{
-		return TRUE;
+		return true;
 	}
 
 	return LLUICtrl::handleHover(x, y, mask);
@@ -3330,7 +3330,7 @@ BOOL LLTextSegment::handleMiddleMouseUp(S32 x, S32 y, MASK mask) { return FALSE;
 BOOL LLTextSegment::handleRightMouseDown(S32 x, S32 y, MASK mask) { return FALSE; }
 BOOL LLTextSegment::handleRightMouseUp(S32 x, S32 y, MASK mask) { return FALSE; }
 BOOL LLTextSegment::handleDoubleClick(S32 x, S32 y, MASK mask) { return FALSE; }
-BOOL LLTextSegment::handleHover(S32 x, S32 y, MASK mask) { return FALSE; }
+bool LLTextSegment::handleHover(S32 x, S32 y, MASK mask) { return FALSE; }
 BOOL LLTextSegment::handleScrollWheel(S32 x, S32 y, S32 clicks) { return FALSE; }
 BOOL LLTextSegment::handleScrollHWheel(S32 x, S32 y, S32 clicks) { return FALSE; }
 BOOL LLTextSegment::handleToolTip(S32 x, S32 y, MASK mask) { return FALSE; }
@@ -3459,7 +3459,7 @@ F32 LLNormalTextSegment::drawClippedSegment(S32 seg_start, S32 seg_end, S32 sele
     return right_x;
 }
 
-BOOL LLNormalTextSegment::handleHover(S32 x, S32 y, MASK mask)
+bool LLNormalTextSegment::handleHover(S32 x, S32 y, MASK mask)
 {
 	if (getStyle() && getStyle()->isLink())
 	{
@@ -3467,10 +3467,10 @@ BOOL LLNormalTextSegment::handleHover(S32 x, S32 y, MASK mask)
 		if(mEditor.getSegmentAtLocalPos(x, y, false) == this)
 		{
 			LLUI::getInstance()->getWindow()->setCursor(UI_CURSOR_HAND);
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 BOOL LLNormalTextSegment::handleRightMouseDown(S32 x, S32 y, MASK mask)
@@ -3719,7 +3719,7 @@ F32 LLOnHoverChangeableTextSegment::draw(S32 start, S32 end, S32 selection_start
 }
 
 /*virtual*/
-BOOL LLOnHoverChangeableTextSegment::handleHover(S32 x, S32 y, MASK mask)
+bool LLOnHoverChangeableTextSegment::handleHover(S32 x, S32 y, MASK mask)
 {
 	mStyle = mEditor.getSkipLinkUnderline() ? mNormalStyle : mHoveredStyle;
 	return LLNormalTextSegment::handleHover(x, y, mask);

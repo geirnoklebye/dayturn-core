@@ -209,7 +209,7 @@ LLStatBar::LLStatBar(const Params& p)
 	setStat(p.stat);
 }
 
-BOOL LLStatBar::handleHover(S32 x, S32 y, MASK mask)
+bool LLStatBar::handleHover(S32 x, S32 y, MASK mask)
 {
 	switch(mStatType)
 	{
@@ -228,7 +228,7 @@ BOOL LLStatBar::handleHover(S32 x, S32 y, MASK mask)
 	default:
 		break;
 	}
-	return TRUE;
+	return true;
 }
 
 BOOL LLStatBar::handleMouseDown(S32 x, S32 y, MASK mask)

@@ -1342,7 +1342,7 @@ void LLInventoryPanel::unSelectAll()
 }
 
 
-BOOL LLInventoryPanel::handleHover(S32 x, S32 y, MASK mask)
+bool LLInventoryPanel::handleHover(S32 x, S32 y, MASK mask)
 {
 	LLView::handleHover(x, y, mask);
 // AW: commenting out because this flickers badly
@@ -1360,7 +1360,7 @@ BOOL LLInventoryPanel::handleHover(S32 x, S32 y, MASK mask)
 // 	{
 // 		getWindow()->setCursor(UI_CURSOR_ARROW);
 // 	}
-	return TRUE;
+	return true;
 }
 
 BOOL LLInventoryPanel::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,

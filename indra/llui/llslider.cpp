@@ -157,7 +157,7 @@ void LLSlider::setValueAndCommit(F32 value)
 }
 
 
-BOOL LLSlider::handleHover(S32 x, S32 y, MASK mask)
+bool LLSlider::handleHover(S32 x, S32 y, MASK mask)
 {
 	if( hasMouseCapture() )
 	{
@@ -193,7 +193,7 @@ BOOL LLSlider::handleHover(S32 x, S32 y, MASK mask)
 		getWindow()->setCursor(UI_CURSOR_ARROW);
 		LL_DEBUGS("UserInput") << "hover handled by " << getName() << " (inactive)" << LL_ENDL;		
 	}
-	return TRUE;
+	return true;
 }
 
 BOOL LLSlider::handleMouseUp(S32 x, S32 y, MASK mask)

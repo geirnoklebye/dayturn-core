@@ -298,9 +298,9 @@ BOOL LLDragHandle::handleMouseUp(S32 x, S32 y, MASK mask)
 }
 
 
-BOOL LLDragHandle::handleHover(S32 x, S32 y, MASK mask)
+bool LLDragHandle::handleHover(S32 x, S32 y, MASK mask)
 {
-	BOOL	handled = FALSE;
+	bool handled = false;
 
 	// We only handle the click if the click both started and ended within us
 	if( hasMouseCapture() )
@@ -323,11 +323,11 @@ BOOL LLDragHandle::handleHover(S32 x, S32 y, MASK mask)
 				delta_y >= SLOP)
 			{
 				parent->setDocked(false, false);
-				return TRUE;
+				return true;
 			}
 			else
 			{
-				return FALSE;
+				return false;
 			}
 		}
 
@@ -366,13 +366,13 @@ BOOL LLDragHandle::handleHover(S32 x, S32 y, MASK mask)
 
 		getWindow()->setCursor(UI_CURSOR_ARROW);
 		LL_DEBUGS("UserInput") << "hover handled by " << getName() << " (active)" <<LL_ENDL;		
-		handled = TRUE;
+		handled = true;
 	}
 	else
 	{
 		getWindow()->setCursor(UI_CURSOR_ARROW);
 		LL_DEBUGS("UserInput") << "hover handled by " << getName() << " (inactive)" << LL_ENDL;		
-		handled = TRUE;
+		handled = true;
 	}
 
 	// Note: don't pass on to children

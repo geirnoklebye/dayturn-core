@@ -124,7 +124,7 @@ BOOL FSScrollListCtrl::handleMouseUp(S32 x, S32 y, MASK mask)
 	return LLScrollListCtrl::handleMouseUp(x, y, mask);
 }
 
-BOOL FSScrollListCtrl::handleHover(S32 x, S32 y, MASK mask)
+bool FSScrollListCtrl::handleHover(S32 x, S32 y, MASK mask)
 {
 	if (mContentType == FSScrollListCtrl::AGENTS)
 	{

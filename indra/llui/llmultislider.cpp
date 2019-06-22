@@ -498,7 +498,7 @@ void LLMultiSlider::clear()
 	LLF32UICtrl::clear();
 }
 
-BOOL LLMultiSlider::handleHover(S32 x, S32 y, MASK mask)
+bool LLMultiSlider::handleHover(S32 x, S32 y, MASK mask)
 {
 	if( gFocusMgr.getMouseCapture() == this )
 	{
@@ -531,7 +531,7 @@ BOOL LLMultiSlider::handleHover(S32 x, S32 y, MASK mask)
 		getWindow()->setCursor(UI_CURSOR_ARROW);
 		LL_DEBUGS("UserInput") << "hover handled by " << getName() << " (inactive)" << LL_ENDL;		
 	}
-	return TRUE;
+	return true;
 }
 
 BOOL LLMultiSlider::handleMouseUp(S32 x, S32 y, MASK mask)

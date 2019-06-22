@@ -498,7 +498,7 @@ BOOL AnimationExplorer::handleMouseUp(S32 x, S32 y, MASK mask)
 }
 
 // (Almost) Copied from llfloaterbvhpreview.cpp
-BOOL AnimationExplorer::handleHover(S32 x, S32 y, MASK mask)
+bool AnimationExplorer::handleHover(S32 x, S32 y, MASK mask)
 {
 	if (!mPreviewCtrl || !mAnimationPreview || !mPreviewCtrl->getRect().pointInRect(x, y))
 	{
@@ -541,7 +541,7 @@ BOOL AnimationExplorer::handleHover(S32 x, S32 y, MASK mask)
 	{
 		gViewerWindow->setCursor(UI_CURSOR_TOOLZOOMIN);
 	}
-	return TRUE;
+	return true;
 }
 
 // (Almost) Copied from llfloaterbvhpreview.cpp
