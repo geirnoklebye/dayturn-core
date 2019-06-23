@@ -210,7 +210,7 @@ void LLComboBox::onCommit()
 		// we have selected an existing item, blitz the manual text entry with
 		// the properly capitalized item
 		mTextEntry->setValue(getSimple());
-		mTextEntry->setTentative(FALSE);
+		mTextEntry->setTentative(false);
 	}
 	setControlValue(getValue());
 	LLUICtrl::onCommit();
@@ -406,7 +406,7 @@ void LLComboBox::setLabel(const LLStringExplicit& name)
 		mTextEntry->setText(name);
 		if (mList->selectItemByLabel(name, FALSE))
 		{
-			mTextEntry->setTentative(FALSE);
+			mTextEntry->setTentative(false);
 			mLastSelectedIndex = mList->getFirstSelectedIndex();
 		}
 		else
@@ -428,7 +428,7 @@ void LLComboBox::updateLabel()
 	if (mTextEntry)
 	{
 		mTextEntry->setText(getSelectedItemLabel());
-		mTextEntry->setTentative(FALSE);
+		mTextEntry->setTentative(false);
 	}
 
 	// If combo box doesn't allow text entry update
@@ -907,7 +907,7 @@ void LLComboBox::onTextEntry(LLLineEditor* line_editor)
 	{
 		if (mList->selectItemByLabel(line_editor->getText(), FALSE))
 		{
-			line_editor->setTentative(FALSE);
+			line_editor->setTentative(false);
 			mLastSelectedIndex = mList->getFirstSelectedIndex();
 		}
 		else
@@ -942,7 +942,7 @@ void LLComboBox::onTextEntry(LLLineEditor* line_editor)
 			}
 		}
 		line_editor->selectAll();
-		line_editor->setTentative(FALSE);
+		line_editor->setTentative(false);
 	}
 	else if (key == KEY_UP)
 	{
@@ -957,7 +957,7 @@ void LLComboBox::onTextEntry(LLLineEditor* line_editor)
 			}
 		}
 		line_editor->selectAll();
-		line_editor->setTentative(FALSE);
+		line_editor->setTentative(false);
 	}
 	else
 	{
@@ -988,7 +988,7 @@ void LLComboBox::updateSelection()
 
 	if (mList->selectItemByLabel(full_string, FALSE))
 	{
-		mTextEntry->setTentative(FALSE);
+		mTextEntry->setTentative(false);
 		mLastSelectedIndex = mList->getFirstSelectedIndex();
 	}
 	else if (mList->selectItemByPrefix(left_wstring, FALSE))
@@ -998,7 +998,7 @@ void LLComboBox::updateSelection()
 		mTextEntry->setText(wstring_to_utf8str(wtext));
 		mTextEntry->setSelection(left_wstring.size(), mTextEntry->getWText().size());
 		mTextEntry->endSelection();
-		mTextEntry->setTentative(FALSE);
+		mTextEntry->setTentative(false);
 		mHasAutocompletedText = TRUE;
 		mLastSelectedIndex = mList->getFirstSelectedIndex();
 	}

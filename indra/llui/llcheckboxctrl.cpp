@@ -170,7 +170,7 @@ void LLCheckBoxCtrl::onCommit()
 {
 	if( getEnabled() )
 	{
-		setTentative(FALSE);
+		setTentative(false);
 		setControlValue(getValue());
 		LLUICtrl::onCommit();
 	}
@@ -259,13 +259,13 @@ LLSD LLCheckBoxCtrl::getValue() const
 }
 
 //virtual
-void LLCheckBoxCtrl::setTentative(BOOL b)
+void LLCheckBoxCtrl::setTentative(bool b)
 {
 	mButton->setTentative(b);
 }
 
 //virtual
-BOOL LLCheckBoxCtrl::getTentative() const
+bool LLCheckBoxCtrl::getTentative() const
 {
 	return mButton->getTentative();
 }

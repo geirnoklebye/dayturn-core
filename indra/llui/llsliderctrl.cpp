@@ -410,7 +410,7 @@ void LLSliderCtrl::setEnabled(bool b)
 }
 
 
-void LLSliderCtrl::setTentative(BOOL b)
+void LLSliderCtrl::setTentative(bool b)
 {
 	if( mEditor )
 	{
@@ -422,11 +422,11 @@ void LLSliderCtrl::setTentative(BOOL b)
 
 void LLSliderCtrl::onCommit()
 {
-	setTentative(FALSE);
+	setTentative(false);
 
 	if( mEditor )
 	{
-		mEditor->setTentative(FALSE);
+		mEditor->setTentative(false);
 	}
 	
 	setControlValue(getValueF32());

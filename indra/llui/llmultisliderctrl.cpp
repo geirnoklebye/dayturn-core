@@ -457,7 +457,7 @@ void LLMultiSliderCtrl::setEnabled(bool b)
 }
 
 
-void LLMultiSliderCtrl::setTentative(BOOL b)
+void LLMultiSliderCtrl::setTentative(bool b)
 {
 	if( mEditor )
 	{
@@ -469,11 +469,11 @@ void LLMultiSliderCtrl::setTentative(BOOL b)
 
 void LLMultiSliderCtrl::onCommit()
 {
-	setTentative(FALSE);
+	setTentative(false);
 
 	if( mEditor )
 	{
-		mEditor->setTentative(FALSE);
+		mEditor->setTentative(false);
 	}
 
 	setControlValue(getValueF32());

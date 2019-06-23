@@ -199,8 +199,8 @@ public:
 
 	void setFunctionName(const std::string& function_name);
 	
-	virtual void	setTentative(BOOL b);
-	virtual BOOL	getTentative() const;
+	virtual void	setTentative(bool b);
+	virtual bool	getTentative() const;
 	virtual void	setValue(const LLSD& value);
 	virtual LLSD	getValue() const;
     /// When two widgets are displaying the same data (e.g. during a skin
