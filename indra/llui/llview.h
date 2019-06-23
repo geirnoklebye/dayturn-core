@@ -459,7 +459,7 @@ public:
 	// static method handles NULL pointer too
 	static std::string getPathname(const LLView*);
 
-	template <class T> T* findChild(const std::string& name, BOOL recurse = TRUE) const
+	template <class T> T* findChild(const std::string& name, bool recurse = true) const
 	{
 		LLView* child = findChildView(name, recurse);
 		T* result = dynamic_cast<T*>(child);
@@ -468,13 +468,13 @@ public:
 
 	template <class T> T* getChild(const std::string& name, bool recurse = true) const;
 
-	template <class T> T& getChildRef(const std::string& name, BOOL recurse = TRUE) const
+	template <class T> T& getChildRef(const std::string& name, bool recurse = true) const
 	{
 		return *getChild<T>(name, recurse);
 	}
 
-	virtual LLView* getChildView(const std::string& name, BOOL recurse = TRUE) const;
-	virtual LLView* findChildView(const std::string& name, BOOL recurse = TRUE) const;
+	virtual LLView* getChildView(const std::string& name, bool recurse = true) const;
+	virtual LLView* findChildView(const std::string& name, bool recurse = true) const;
 
 	template <class T> T* getDefaultWidget(const std::string& name) const
 	{

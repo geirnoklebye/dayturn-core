@@ -979,7 +979,7 @@ LLMenuItemBranchGL::~LLMenuItemBranchGL()
 
 
 // virtual
-LLView* LLMenuItemBranchGL::getChildView(const std::string& name, BOOL recurse) const
+LLView* LLMenuItemBranchGL::getChildView(const std::string& name, bool recurse) const
 {
 	LLMenuGL* branch = getBranch();
 	if (branch)
@@ -996,7 +996,7 @@ LLView* LLMenuItemBranchGL::getChildView(const std::string& name, BOOL recurse) 
 	return LLView::getChildView(name, recurse);
 }
 
-LLView* LLMenuItemBranchGL::findChildView(const std::string& name, BOOL recurse) const
+LLView* LLMenuItemBranchGL::findChildView(const std::string& name, bool recurse) const
 {
 	LLMenuGL* branch = getBranch();
 	if (branch)
@@ -3262,7 +3262,7 @@ void LLMenuGL::setVisible(bool visible)
 	}
 }
 
-LLMenuGL* LLMenuGL::findChildMenuByName(const std::string& name, BOOL recurse) const
+LLMenuGL* LLMenuGL::findChildMenuByName(const std::string& name, bool recurse) const
 {
 	LLView* view = findChildView(name, recurse);
 	if (view)

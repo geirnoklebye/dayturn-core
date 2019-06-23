@@ -1661,12 +1661,12 @@ BOOL LLView::hasChild(const std::string& childname, BOOL recurse) const
 //-----------------------------------------------------------------------------
 // getChildView()
 //-----------------------------------------------------------------------------
-LLView* LLView::getChildView(const std::string& name, BOOL recurse) const
+LLView* LLView::getChildView(const std::string& name, bool recurse) const
 {
 	return getChild<LLView>(name, recurse);
 }
 
-LLView* LLView::findChildView(const std::string& name, BOOL recurse) const
+LLView* LLView::findChildView(const std::string& name, bool recurse) const
 {
     LL_PROFILE_ZONE_SCOPED_CATEGORY_UI;
 	

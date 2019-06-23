@@ -1927,7 +1927,7 @@ void LLFloater::draw()
 		}
 		else
 		{
-			getDefaultButton()->setBorderEnabled(FALSE);
+			getDefaultButton()->setBorderEnabled(false);
 		}
 	}
 	if (isMinimized())

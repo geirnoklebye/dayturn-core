@@ -253,7 +253,7 @@ void LLPanel::updateDefaultBtn()
 		}
 		else
 		{
-			mDefaultBtn->setBorderEnabled(FALSE);
+			mDefaultBtn->setBorderEnabled(false);
 		}
 	}
 }
@@ -268,12 +268,12 @@ void LLPanel::setDefaultBtn(LLButton* btn)
 {
 	if (mDefaultBtn && mDefaultBtn->getEnabled())
 	{
-		mDefaultBtn->setBorderEnabled(FALSE);
+		mDefaultBtn->setBorderEnabled(false);
 	}
 	mDefaultBtn = btn; 
 	if (mDefaultBtn)
 	{
-		mDefaultBtn->setBorderEnabled(TRUE);
+		mDefaultBtn->setBorderEnabled(true);
 	}
 }
 
