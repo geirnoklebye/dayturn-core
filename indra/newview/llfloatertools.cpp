@@ -394,7 +394,7 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 {
 	gFloaterTools = this;
 
-	setAutoFocus(FALSE);
+	setAutoFocus(false);
 	mFactoryMap["General"] = LLCallbackMap(createPanelPermissions, this);//LLPanelPermissions
 	mFactoryMap["Object"] = LLCallbackMap(createPanelObject, this);//LLPanelObject
 	mFactoryMap["Features"] = LLCallbackMap(createPanelVolume, this);//LLPanelVolume
@@ -1027,7 +1027,7 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 
 
 // virtual
-BOOL LLFloaterTools::canClose()
+bool LLFloaterTools::canClose()
 {
 	// don't close when quitting, so camera will stay put
 	return !LLApp::isExiting();

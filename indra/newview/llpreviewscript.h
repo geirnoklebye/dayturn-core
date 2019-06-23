@@ -88,7 +88,7 @@ protected:
 		const std::string& sample,
 		const LLHandle<LLFloater>& floater_handle,
 		void (*load_callback)(void* userdata),
-		void (*save_callback)(void* userdata, BOOL close_after_save),
+		void (*save_callback)(void* userdata, bool close_after_save),
 		void (*search_replace_callback)(void* userdata),
 		void* userdata,
 		bool live,
@@ -103,17 +103,17 @@ public:
 
 	virtual void	draw();
 	/*virtual*/	bool	postBuild();
-	BOOL			canClose();
+	bool			canClose();
 	void			setEnableEditing(bool enable);
 	bool			canLoadOrSaveToFile( void* userdata );
 
-	void            setScriptText(const std::string& text, BOOL is_valid);
+	void            setScriptText(const std::string& text, bool is_valid);
 	void			makeEditorPristine();
 	bool			loadScriptText(const std::string& filename);
 	bool			writeToFile(const std::string& filename);
 	void			sync();
 	
-	void			doSave( BOOL close_after_save );
+	void			doSave( bool close_after_save );
 
 	bool			handleSaveChangesDialog(const LLSD& notification, const LLSD& response);
 	bool			handleReloadFromServerDialog(const LLSD& notification, const LLSD& response);
@@ -156,7 +156,7 @@ private:
 
 	virtual bool handleKeyHere(KEY key, MASK mask);
 	
-	void enableSave(BOOL b) {mEnableSave = b;}
+	void enableSave(bool b) {mEnableSave = b;}
 	// <FS:Ansariel> FIRE-20818: User-selectable font and size for script editor
 	boost::signals2::connection mFontNameChangedCallbackConnection;
 	boost::signals2::connection mFontSizeChangedCallbackConnection;
@@ -178,11 +178,11 @@ private:
 	std::string		mScriptName;
 	LLScriptEditor*	mEditor;
 	void			(*mLoadCallback)(void* userdata);
-	void			(*mSaveCallback)(void* userdata, BOOL close_after_save);
+	void			(*mSaveCallback)(void* userdata, bool close_after_save);
 	void			(*mSearchReplaceCallback) (void* userdata);
     void*			mUserdata;
     LLComboBox		*mFunctions;
-	BOOL			mForceClose;
+	bool			mForceClose;
 	LLPanel*		mCodePanel;
 	LLScrollListCtrl* mErrorList;
 	std::vector<LLEntryAndEdCore*> mBridges;
@@ -190,12 +190,12 @@ private:
 	LLKeywordToken* mLastHelpToken;
 	LLFrameTimer	mLiveHelpTimer;
 	S32				mLiveHelpHistorySize;
-	BOOL			mEnableSave;
-	BOOL			mHasScriptData;
+	bool			mEnableSave;
+	bool			mHasScriptData;
 	LLLiveLSLFile*	mLiveFile;
 	LLUUID			mAssociatedExperience;
-	BOOL			mScriptRemoved;
-	BOOL			mSaveDialogShown;
+	bool			mScriptRemoved;
+	bool			mSaveDialogShown;
     LLUUID          mAssetID;
 	LLScriptEditor*		mCurrentEditor;
 
@@ -240,7 +240,7 @@ public:
 
 protected:
 	virtual void draw();
-	virtual BOOL canClose();
+	virtual bool canClose();
 	void closeIfNeeded();
 
 	virtual void loadAsset();
@@ -251,7 +251,7 @@ protected:
 
 	static void onSearchReplace(void* userdata);
 	static void onLoad(void* userdata);
-	static void onSave(void* userdata, BOOL close_after_save);
+	static void onSave(void* userdata, bool close_after_save);
 	
 	static void onLoadComplete(const LLUUID& uuid,
 							   LLAssetType::EType type,
@@ -306,7 +306,7 @@ public:
 	void addAssociatedExperience(const LLSD& experience);
 	
 private:
-	virtual BOOL canClose();
+	virtual bool canClose();
 	void closeIfNeeded();
 	virtual void draw();
 
@@ -319,12 +319,12 @@ private:
 							const LLUUID& item_id,
 							BOOL is_running,
 							const LLUUID& experience_public_id);
-	BOOL monoChecked() const;
+	bool monoChecked() const;
 
 
 	static void onSearchReplace(void* userdata);
 	static void onLoad(void* userdata);
-	static void onSave(void* userdata, BOOL close_after_save);
+	static void onSave(void* userdata, bool close_after_save);
 
 	static void onLoadComplete(const LLUUID& asset_uuid,
 							   LLAssetType::EType type,
@@ -349,20 +349,20 @@ private:
 	bool				mIsNew;
 	//LLUUID mTransmitID;
 	LLCheckBoxCtrl*		mRunningCheckbox;
-	BOOL				mAskedForRunningInfo;
-	BOOL				mHaveRunningInfo;
+	bool				mAskedForRunningInfo;
+	bool				mHaveRunningInfo;
 	LLButton*			mResetButton;
 	LLPointer<LLViewerInventoryItem> mItem;
-	BOOL				mCloseAfterSave;
+	bool				mCloseAfterSave;
 	// need to save both text and script, so need to decide when done
 	S32					mPendingUploads;
 
-	BOOL                mIsSaving;
+	bool                mIsSaving;
 
-	BOOL getIsModifiable() const { return mIsModifiable; } // Evaluated on load assert
+	bool getIsModifiable() const { return mIsModifiable; } // Evaluated on load assert
 
 	LLCheckBoxCtrl*	mMonoCheckbox;
-	BOOL mIsModifiable;
+	bool mIsModifiable;
 
 
 	LLComboBox*		mExperiences;

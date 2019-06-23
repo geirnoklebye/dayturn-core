@@ -531,17 +531,17 @@ void LLFloaterExperienceProfile::onFieldChanged()
 }
 
 
-BOOL LLFloaterExperienceProfile::canClose()
+bool LLFloaterExperienceProfile::canClose()
 {
     if(mForceClose || !mDirty)
     {
-        return TRUE;
+        return true;
     }
     else
     {
         // Bring up view-modal dialog: Save changes? Yes, No, Cancel
         LLNotificationsUtil::add("SaveChanges", LLSD(), LLSD(), boost::bind(&LLFloaterExperienceProfile::handleSaveChangesDialog, this, _1, _2, CLOSE));
-        return FALSE;
+        return false;
     }
 }
 
@@ -558,7 +558,7 @@ bool LLFloaterExperienceProfile::handleSaveChangesDialog( const LLSD& notificati
     case 1:  // "No"
         if(action != NOTHING)
         {
-            mForceClose = TRUE;
+            mForceClose = true;
             if(action==CLOSE)
             {
                 closeFloater();

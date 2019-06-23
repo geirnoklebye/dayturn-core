@@ -64,16 +64,16 @@ LLPreview::LLPreview(const LLSD& key)
 	mItemUUID(key.has("itemid") ? key.get("itemid").asUUID() : key.asUUID()),
 	mObjectUUID(),			// set later by setObjectID()
 	mCopyToInvBtn( NULL ),
-	mForceClose(FALSE),
-	mUserResized(FALSE),
-	mCloseAfterSave(FALSE),
+	mForceClose(false),
+	mUserResized(false),
+	mCloseAfterSave(false),
 	mAssetStatus(PREVIEW_ASSET_UNLOADED),
-	mDirty(TRUE),
-	mSaveDialogShown(FALSE)
+	mDirty(true),
+	mSaveDialogShown(false)
 {
 	mAuxItem = new LLInventoryItem;
 	// don't necessarily steal focus on creation -- sometimes these guys pop up without user action
-	setAutoFocus(FALSE);
+	setAutoFocus(false);
 
 	gInventory.addObserver(this);
 	
@@ -255,7 +255,7 @@ void LLPreview::refreshFromItem()
 }
 
 // static
-BOOL LLPreview::canModify(const LLUUID taskUUID, const LLInventoryItem* item)
+bool LLPreview::canModify(const LLUUID taskUUID, const LLInventoryItem* item)
 {
 	if (taskUUID.notNull())
 	{
@@ -263,7 +263,7 @@ BOOL LLPreview::canModify(const LLUUID taskUUID, const LLInventoryItem* item)
 		if(object && !object->permModify())
 		{
 			// No permission to edit in-world inventory
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -295,7 +295,7 @@ void LLPreview::hide(const LLUUID& item_uuid, BOOL no_saving /* = FALSE */ )
 	{
 		if ( no_saving )
 		{
-			preview->mForceClose = TRUE;
+			preview->mForceClose = true;
 		}
 		preview->closeFloater();
 	}
@@ -450,7 +450,7 @@ void LLPreview::onDiscardBtn(void* data)
 	const LLInventoryItem* item = self->getItem();
 	if (!item) return;
 
-	self->mForceClose = TRUE;
+	self->mForceClose = true;
 	self->closeFloater();
 
 	// Move the item to the trash

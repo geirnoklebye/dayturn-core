@@ -724,7 +724,7 @@ void LLPanelGroupSubTab::buildActionCategory(LLScrollListCtrl* ctrl,
 
 				if (show_all)
 				{
-					check->setTentative(FALSE);
+					check->setTentative(false);
 					if (allowed_by_some & (*ra_it)->mPowerBit)
 					{
 						check->set(TRUE);
@@ -739,11 +739,11 @@ void LLPanelGroupSubTab::buildActionCategory(LLScrollListCtrl* ctrl,
 					check->set(TRUE);
 					if (show_full_strength)
 					{
-						check->setTentative(FALSE);
+						check->setTentative(false);
 					}
 					else
 					{
-						check->setTentative(TRUE);
+						check->setTentative(true);
 					}
 				}
 

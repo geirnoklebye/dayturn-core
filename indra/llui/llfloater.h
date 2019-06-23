@@ -308,7 +308,7 @@ public:
 
 	// This cannot be "const" until all derived floater canClose()
 	// methods are const as well.  JC
-	virtual BOOL	canClose() { return TRUE; }
+	virtual bool	canClose() { return true; }
 
 	/*virtual*/ void setVisible(bool visible); // do not override
 	/*virtual*/ void onVisibilityChange ( BOOL new_visibility ); // do not override
@@ -317,7 +317,7 @@ public:
     virtual void	setVisibleAndFrontmost(bool take_focus=true, const LLSD& key = LLSD());
 	
 	// Defaults to false.
-	virtual BOOL	canSaveAs() const { return FALSE; }
+	virtual bool	canSaveAs() const { return false; }
 
 	virtual void	saveAs() {}
 
@@ -390,8 +390,8 @@ protected:
 	void			setExpandedRect(const LLRect& rect) { mExpandedRect = rect; } // size when not minimized
 	const LLRect&	getExpandedRect() const { return mExpandedRect; }
 
-	void			setAutoFocus(BOOL focus) { mAutoFocus = focus; } // whether to automatically take focus when opened
-	BOOL			getAutoFocus() const { return mAutoFocus; }
+	void			setAutoFocus(bool focus) { mAutoFocus = focus; } // whether to automatically take focus when opened
+	bool			getAutoFocus() const { return mAutoFocus; }
 	LLDragHandle*	getDragHandle() const { return mDragHandle; }
 
 	void			destroy(); // Don't call this directly.  You probably want to call closeFloater()
@@ -410,7 +410,7 @@ protected:
 									F32 contex_cone_out_alpha = CONTEXT_CONE_OUT_ALPHA);
 
 private:
-	void			setForeground(BOOL b);	// called only by floaterview
+	void			setForeground(bool b);	// called only by floaterview
 	void			cleanupHandles(); // remove handles to dead floaters
 	void			createMinimizeButton();
 	void			buildButtons(const Params& p);
@@ -427,7 +427,7 @@ private:
 	 */
 	static std::string	getButtonTooltip(const Params& p, EFloaterButton e, bool is_chrome);
 
-	BOOL			offerClickToButton(S32 x, S32 y, MASK mask, EFloaterButton index);
+	bool			offerClickToButton(S32 x, S32 y, MASK mask, EFloaterButton index);
 	void			addResizeCtrls();
 	void			layoutResizeCtrls();
 	void 			addDragHandle();
@@ -492,8 +492,8 @@ private:
 	S32				mHeaderHeight;		// height in pixels of header for title, drag bar
 	S32				mLegacyHeaderHeight;// HACK see initFloaterXML()
 	
-	BOOL			mMinimized;
-	BOOL			mForeground;
+	bool			mMinimized;
+	bool			mForeground;
 	LLHandle<LLFloater>	mDependeeHandle;
 	
 
@@ -505,7 +505,7 @@ private:
 
 	bool			mButtonsEnabled[BUTTON_COUNT];
 	F32				mButtonScale;
-	BOOL			mAutoFocus;
+	bool			mAutoFocus;
 	LLHandle<LLFloater> mSnappedTo;
 	
 	LLHandle<LLFloater> mHostHandle;
@@ -516,7 +516,7 @@ private:
 	bool            mTornOff;
 
 	static LLMultiFloater* sHostp;
-	static BOOL		sQuitting;
+	static bool		sQuitting;
 	static std::string	sButtonNames[BUTTON_COUNT];
 	static std::string	sButtonToolTips[BUTTON_COUNT];
 	static std::string  sButtonToolTipsIndex[BUTTON_COUNT];
@@ -524,7 +524,7 @@ private:
 	typedef void(*click_callback)(LLFloater*);
 	static click_callback sButtonCallbacks[BUTTON_COUNT];
 
-	BOOL			mHasBeenDraggedWhileMinimized;
+	bool			mHasBeenDraggedWhileMinimized;
 	S32				mPreviousMinimizedBottom;
 	S32				mPreviousMinimizedLeft;
 

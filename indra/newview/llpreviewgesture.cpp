@@ -225,23 +225,23 @@ BOOL LLPreviewGesture::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 
 
 // virtual
-BOOL LLPreviewGesture::canClose()
+bool LLPreviewGesture::canClose()
 {
 
 	if(!mDirty || mForceClose)
 	{
-		return TRUE;
+		return true;
 	}
 	else
 	{
 		if(!mSaveDialogShown)
 		{
-			mSaveDialogShown = TRUE;
+			mSaveDialogShown = true;
 			// Bring up view-modal dialog: Save changes? Yes, No, Cancel
 			LLNotificationsUtil::add("SaveChanges", LLSD(), LLSD(),
 					boost::bind(&LLPreviewGesture::handleSaveChangesDialog, this, _1, _2) );
 		}
-		return FALSE;
+		return false;
 	}
 }
 
@@ -268,13 +268,13 @@ void LLPreviewGesture::onVisibilityChanged ( const LLSD& new_visibility )
 
 bool LLPreviewGesture::handleSaveChangesDialog(const LLSD& notification, const LLSD& response)
 {
-	mSaveDialogShown = FALSE;
+	mSaveDialogShown = false;
 	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
 	switch(option)
 	{
 	case 0:  // "Yes"
 		LLGestureMgr::instance().stopGesture(mPreviewGesture);
-		mCloseAfterSave = TRUE;
+		mCloseAfterSave = true;
 		onClickSave(this);
 		break;
 

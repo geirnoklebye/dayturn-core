@@ -57,10 +57,9 @@ LLDragHandle::LLDragHandle(const LLDragHandle::Params& p)
 	mLastMouseScreenY( 0 ),
 	mTitleBox( NULL ),
 	mMaxTitleWidth( 0 ),
-	mForeground( TRUE ),
+	mForeground(true),
 	mDragHighlightColor(p.drag_highlight_color()),
 	mDragShadowColor(p.drag_shadow_color())
-
 {
 	static LLUICachedControl<S32> snap_margin ("SnapMargin", 0);
 	sSnapMargin = snap_margin;
