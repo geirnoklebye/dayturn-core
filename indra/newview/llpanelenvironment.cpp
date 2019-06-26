@@ -1133,17 +1133,17 @@ LLSettingsDropTarget::LLSettingsDropTarget(const LLSettingsDropTarget::Params& p
     : LLView(p), mEnvironmentInfoPanel(NULL), mDndEnabled(false)
 {}
 
-BOOL LLSettingsDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool LLSettingsDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 	EDragAndDropType cargo_type,
 	void* cargo_data,
 	EAcceptance* accept,
 	std::string& tooltip_msg)
 {
-    BOOL handled = FALSE;
+    bool handled = false;
 
     if (getParent() && mDndEnabled)
     {
-        handled = TRUE;
+        handled = true;
 
         switch (cargo_type)
         {

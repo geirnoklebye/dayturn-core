@@ -166,7 +166,7 @@ bool FSScrollListCtrl::handleHover(S32 x, S32 y, MASK mask)
 
 //virtual
 
-BOOL FSScrollListCtrl::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool FSScrollListCtrl::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 											EDragAndDropType cargo_type,
 											void* cargo_data,
 											EAcceptance* accept,
@@ -177,7 +177,7 @@ BOOL FSScrollListCtrl::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 		return mHandleDaDCallback(x, y, mask, drop, cargo_type, cargo_data, accept, tooltip_msg);
 	}
 
-	return FALSE;
+	return false;
 	
 }
 

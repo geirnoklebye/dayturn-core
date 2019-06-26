@@ -136,7 +136,7 @@ LLFolderViewItem::LLFolderViewItem(const LLFolderViewItem::Params& p)
 	mIndentation(0),
 	mItemHeight(p.item_height),
 	mControlLabelRotation(0.f),
-	mDragAndDropTarget(FALSE),
+	mDragAndDropTarget(false),
 	mLabel(p.name),
 	mRoot(p.root),
 	mViewModelItem(p.listener),
@@ -685,18 +685,18 @@ void LLFolderViewItem::onMouseLeave(S32 x, S32 y, MASK mask)
 	mIsMouseOverTitle = false;
 }
 
-BOOL LLFolderViewItem::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool LLFolderViewItem::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 										 EDragAndDropType cargo_type,
 										 void* cargo_data,
 										 EAcceptance* accept,
 										 std::string& tooltip_msg)
 {
-	BOOL handled = FALSE;
-	BOOL accepted = getViewModelItem()->dragOrDrop(mask,drop,cargo_type,cargo_data, tooltip_msg);
+	bool handled = false;
+	bool accepted = getViewModelItem()->dragOrDrop(mask,drop,cargo_type,cargo_data, tooltip_msg);
 		handled = accepted;
 		if (accepted)
 		{
-			mDragAndDropTarget = TRUE;
+			mDragAndDropTarget = true;
 			*accept = ACCEPT_YES_MULTI;
 		}
 		else
@@ -867,7 +867,7 @@ void LLFolderViewItem::drawHighlight(const BOOL showContent, const BOOL hasKeybo
                 0,
                 bgColor, FALSE);
         }
-        mDragAndDropTarget = FALSE;
+        mDragAndDropTarget = false;
     }
 }
 
@@ -1831,17 +1831,17 @@ void LLFolderViewFolder::setOpenArrangeRecursively(bool openitem, ERecurseType r
 	}
 }
 
-BOOL LLFolderViewFolder::handleDragAndDropFromChild(MASK mask,
-													BOOL drop,
+bool LLFolderViewFolder::handleDragAndDropFromChild(MASK mask,
+													bool drop,
 													EDragAndDropType c_type,
 													void* cargo_data,
 													EAcceptance* accept,
 													std::string& tooltip_msg)
 {
-	BOOL accepted = mViewModelItem->dragOrDrop(mask,drop,c_type,cargo_data, tooltip_msg);
+	bool accepted = mViewModelItem->dragOrDrop(mask,drop,c_type,cargo_data, tooltip_msg);
 	if (accepted) 
 	{
-		mDragAndDropTarget = TRUE;
+		mDragAndDropTarget = true;
 		*accept = ACCEPT_YES_MULTI;
 	}
 	else 
@@ -1852,7 +1852,7 @@ BOOL LLFolderViewFolder::handleDragAndDropFromChild(MASK mask,
 	// drag and drop to child item, so clear pending auto-opens
 	getRoot()->autoOpenTest(NULL);
 
-	return TRUE;
+	return true;
 }
 
 void LLFolderViewFolder::openItem( void )
@@ -1895,14 +1895,14 @@ void LLFolderViewFolder::applyFunctorRecursively(LLFolderViewFunctor& functor)
 }
 
 // LLView functionality
-BOOL LLFolderViewFolder::handleDragAndDrop(S32 x, S32 y, MASK mask,
-										   BOOL drop,
+bool LLFolderViewFolder::handleDragAndDrop(S32 x, S32 y, MASK mask,
+										   bool drop,
 										   EDragAndDropType cargo_type,
 										   void* cargo_data,
 										   EAcceptance* accept,
 										   std::string& tooltip_msg)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	if (isOpen())
 	{
@@ -1916,11 +1916,11 @@ BOOL LLFolderViewFolder::handleDragAndDrop(S32 x, S32 y, MASK mask,
 		LL_DEBUGS("UserInput") << "dragAndDrop handled by LLFolderViewFolder" << LL_ENDL;
 	}
 
-	return TRUE;
+	return true;
 }
 
-BOOL LLFolderViewFolder::handleDragAndDropToThisFolder(MASK mask,
-													   BOOL drop,
+bool LLFolderViewFolder::handleDragAndDropToThisFolder(MASK mask,
+													   bool drop,
 													   EDragAndDropType cargo_type,
 													   void* cargo_data,
 													   EAcceptance* accept,
@@ -1930,14 +1930,14 @@ BOOL LLFolderViewFolder::handleDragAndDropToThisFolder(MASK mask,
     {
 		*accept = ACCEPT_NO;
         tooltip_msg = LLTrans::getString("TooltipOutboxCannotDropOnRoot");
-        return TRUE;
+        return true;
     }
     
-	BOOL accepted = getViewModelItem()->dragOrDrop(mask,drop,cargo_type,cargo_data, tooltip_msg);
+	bool accepted = getViewModelItem()->dragOrDrop(mask,drop,cargo_type,cargo_data, tooltip_msg);
 
 	if (accepted)
 	{
-		mDragAndDropTarget = TRUE;
+		mDragAndDropTarget = true;
 		*accept = ACCEPT_YES_MULTI;
 	}
 	else 
@@ -1950,7 +1950,7 @@ BOOL LLFolderViewFolder::handleDragAndDropToThisFolder(MASK mask,
 		getRoot()->autoOpenTest(this);
 	}
 	
-	return TRUE;
+	return true;
 }
 
 

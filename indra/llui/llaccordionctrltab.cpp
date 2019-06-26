@@ -80,7 +80,7 @@ public:
 	virtual void onMouseEnter(S32 x, S32 y, MASK mask);
 	virtual void onMouseLeave(S32 x, S32 y, MASK mask);
 	virtual bool handleKey(KEY key, MASK mask, bool called_from_parent);
-	virtual BOOL handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+	virtual bool handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 								   EDragAndDropType cargo_type,
 								   void* cargo_data,
 								   EAcceptance* accept,
@@ -272,12 +272,14 @@ void LLAccordionCtrlTab::LLAccordionCtrlTabHeader::onMouseEnter(S32 x, S32 y, MA
 	LLUICtrl::onMouseEnter(x, y, mask);
 	mNeedsHighlight = true;
 }
+
 void LLAccordionCtrlTab::LLAccordionCtrlTabHeader::onMouseLeave(S32 x, S32 y, MASK mask)
 {
 	LLUICtrl::onMouseLeave(x, y, mask);
 	mNeedsHighlight = false;
 	mAutoOpenTimer.stop();
 }
+
 bool LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleKey(KEY key, MASK mask, bool called_from_parent)
 {
 	if ( ( key == KEY_LEFT || key == KEY_RIGHT) && mask == MASK_NONE)
@@ -286,8 +288,8 @@ bool LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleKey(KEY key, MASK mask,
 	}
 	return LLUICtrl::handleKey(key, mask, called_from_parent);
 }
-BOOL LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleDragAndDrop(S32 x, S32 y, MASK mask,
-																	 BOOL drop,
+bool LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleDragAndDrop(S32 x, S32 y, MASK mask,
+																	 bool drop,
 																	 EDragAndDropType cargo_type,
 																	 void* cargo_data,
 																	 EAcceptance* accept,
@@ -303,7 +305,7 @@ BOOL LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleDragAndDrop(S32 x, S32 
 			{
 				parent->changeOpenClose(false);
 				mAutoOpenTimer.stop();
-				return TRUE;
+				return true;
 			}
 		}
 		else
@@ -313,6 +315,7 @@ BOOL LLAccordionCtrlTab::LLAccordionCtrlTabHeader::handleDragAndDrop(S32 x, S32 
 	return LLUICtrl::handleDragAndDrop(x, y, mask, drop, cargo_type,
 									   cargo_data, accept, tooltip_msg);
 }
+
 LLAccordionCtrlTab::Params::Params()
 	: title("title")
 	,display_children("expanded", true)

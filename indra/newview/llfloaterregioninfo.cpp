@@ -2175,7 +2175,7 @@ void LLPanelEstateCovenant::updateChild(LLUICtrl* child_ctrl)
 }
 
 // virtual
-BOOL LLPanelEstateCovenant::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool LLPanelEstateCovenant::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 								  EDragAndDropType cargo_type,
 								  void* cargo_data,
 								  EAcceptance* accept,
@@ -2186,7 +2186,7 @@ BOOL LLPanelEstateCovenant::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop
 	if (!gAgent.canManageEstate())
 	{
 		*accept = ACCEPT_NO;
-		return TRUE;
+		return true;
 	}
 
 	switch(cargo_type)
@@ -2206,7 +2206,7 @@ BOOL LLPanelEstateCovenant::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop
 		break;
 	}
 
-	return TRUE;
+	return true;
 } 
 
 // static 

@@ -541,7 +541,7 @@ bool LLFloaterIMPanel::handleKeyHere( KEY key, MASK mask )
 	return handled;
 }
 
-BOOL LLFloaterIMPanel::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool LLFloaterIMPanel::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 								  EDragAndDropType cargo_type,
 								  void* cargo_data,
 								  EAcceptance* accept,
@@ -574,7 +574,7 @@ BOOL LLFloaterIMPanel::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 			}
 		}
 	}
-	return TRUE;
+	return true;
 } 
 
 BOOL LLFloaterIMPanel::dropCallingCard(LLInventoryItem* item, BOOL drop)

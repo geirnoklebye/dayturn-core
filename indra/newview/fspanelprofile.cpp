@@ -119,7 +119,7 @@ public:
 
     //
     // LLView functionality
-    virtual BOOL handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+    virtual bool handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
                                    EDragAndDropType cargo_type,
                                    void* cargo_data,
                                    EAcceptance* accept,
@@ -142,7 +142,7 @@ void FSDropTarget::doDrop(EDragAndDropType cargo_type, void* cargo_data)
     LL_INFOS() << "FSDropTarget::doDrop()" << LL_ENDL;
 }
 
-BOOL FSDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool FSDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
                                      EDragAndDropType cargo_type,
                                      void* cargo_data,
                                      EAcceptance* accept,
@@ -153,10 +153,10 @@ BOOL FSDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
         LLToolDragAndDrop::handleGiveDragAndDrop(mAgentID, LLUUID::null, drop,
                                                  cargo_type, cargo_data, accept);
 
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 static LLDefaultChildRegistry::Register<FSDropTarget> r("profile_drop_target");

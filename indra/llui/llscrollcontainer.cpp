@@ -291,8 +291,8 @@ bool LLScrollContainer::handleScrollHWheel(S32 x, S32 y, S32 clicks)
 	return false;
 }
 
-BOOL LLScrollContainer::handleDragAndDrop(S32 x, S32 y, MASK mask,
-												  BOOL drop,
+bool LLScrollContainer::handleDragAndDrop(S32 x, S32 y, MASK mask,
+												  bool drop,
 												  EDragAndDropType cargo_type,
 												  void* cargo_data,
 												  EAcceptance* accept,
@@ -300,7 +300,7 @@ BOOL LLScrollContainer::handleDragAndDrop(S32 x, S32 y, MASK mask,
 {
 	// Scroll folder view if needed.  Never accepts a drag or drop.
 	*accept = ACCEPT_NO;
-	BOOL handled = autoScroll(x, y);
+	bool handled = autoScroll(x, y);
 
 	if( !handled )
 	{
@@ -308,7 +308,7 @@ BOOL LLScrollContainer::handleDragAndDrop(S32 x, S32 y, MASK mask,
 											cargo_data, accept, tooltip_msg) != NULL;
 	}
 
-	return TRUE;
+	return true;
 }
 
 bool LLScrollContainer::canAutoScroll(S32 x, S32 y)

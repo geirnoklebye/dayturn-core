@@ -418,7 +418,7 @@ bool LLScrollbar::handleScrollHWheel(S32 x, S32 y, S32 clicks)
 	return handled;
 }
 
-BOOL LLScrollbar::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool LLScrollbar::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 									EDragAndDropType cargo_type, void *cargo_data, EAcceptance *accept, std::string &tooltip_msg)
 {
 	// enable this to get drag and drop to control scrollbars
@@ -437,7 +437,7 @@ BOOL LLScrollbar::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 	//	changeLine( new_pos - mDocPos, true );
 	//}
 	//return TRUE;
-	return FALSE;
+	return false;
 }
 
 BOOL LLScrollbar::handleMouseUp(S32 x, S32 y, MASK mask)

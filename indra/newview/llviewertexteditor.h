@@ -55,8 +55,8 @@ public:
 	virtual bool	handleHover(S32 x, S32 y, MASK mask);
 	virtual bool	handleDoubleClick(S32 x, S32 y, MASK mask );
 
-	virtual BOOL	handleDragAndDrop(S32 x, S32 y, MASK mask,
-										BOOL drop, EDragAndDropType cargo_type, 
+	virtual bool	handleDragAndDrop(S32 x, S32 y, MASK mask,
+										bool drop, EDragAndDropType cargo_type, 
 										void *cargo_data, EAcceptance *accept, std::string& tooltip_msg);
 
   	const class LLInventoryItem* getDragItem() const { return mDragItem; }

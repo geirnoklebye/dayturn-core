@@ -1344,13 +1344,13 @@ bool LLInventoryPanel::handleHover(S32 x, S32 y, MASK mask)
 	return true;
 }
 
-BOOL LLInventoryPanel::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool LLInventoryPanel::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 								   EDragAndDropType cargo_type,
 								   void* cargo_data,
 								   EAcceptance* accept,
 								   std::string& tooltip_msg)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	if (mAcceptsDragAndDrop)
 	{
@@ -2140,13 +2140,13 @@ void LLAssetFilteredInventoryPanel::initFromParams(const Params& p)
     getFilter().setFilterNoMarketplaceFolder();
 }
 
-BOOL LLAssetFilteredInventoryPanel::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool LLAssetFilteredInventoryPanel::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
     EDragAndDropType cargo_type,
     void* cargo_data,
     EAcceptance* accept,
     std::string& tooltip_msg)
 {
-    BOOL result = FALSE;
+    bool result = false;
 
     if (mAcceptsDragAndDrop)
     {

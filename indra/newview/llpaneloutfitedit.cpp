@@ -1160,7 +1160,7 @@ void LLPanelOutfitEdit::update()
 	updateVerbs();
 }
 
-BOOL LLPanelOutfitEdit::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool LLPanelOutfitEdit::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 										  EDragAndDropType cargo_type,
 										  void* cargo_data,
 										  EAcceptance* accept,
@@ -1169,7 +1169,7 @@ BOOL LLPanelOutfitEdit::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 	if (cargo_data == NULL)
 	{
 		LL_WARNS() << "cargo_data is NULL" << LL_ENDL;
-		return TRUE;
+		return true;
 	}
 
 	switch (cargo_type)
@@ -1207,7 +1207,7 @@ BOOL LLPanelOutfitEdit::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 void LLPanelOutfitEdit::displayCurrentOutfit()

@@ -293,7 +293,7 @@ public:
 	void drawOpenFolderArrow(const Params& default_params, const LLUIColor& fg_color);
     void drawHighlight(const BOOL showContent, const BOOL hasKeyboardFocus, const LLUIColor &selectColor, const LLUIColor &flashColor, const LLUIColor &outlineColor, const LLUIColor &mouseOverColor);
     void drawLabel(const LLFontGL * font, const F32 x, const F32 y, const LLColor4& color, F32 &right_x);
-	virtual BOOL handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+	virtual bool handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 									EDragAndDropType cargo_type,
 									void* cargo_data,
 									EAcceptance* accept,
@@ -425,8 +425,8 @@ public:
 	virtual BOOL isOpen() const { return mIsOpen; }
 
 	// special case if an object is dropped on the child.
-	BOOL handleDragAndDropFromChild(MASK mask,
-									BOOL drop,
+	bool handleDragAndDropFromChild(MASK mask,
+									bool drop,
 									EDragAndDropType cargo_type,
 									void* cargo_data,
 									EAcceptance* accept,
@@ -445,14 +445,14 @@ public:
 	virtual BOOL handleRightMouseDown( S32 x, S32 y, MASK mask );
 	virtual BOOL handleMouseDown( S32 x, S32 y, MASK mask );
 	virtual bool handleDoubleClick( S32 x, S32 y, MASK mask );
-	virtual BOOL handleDragAndDrop(S32 x, S32 y, MASK mask, 
-									BOOL drop,
+	virtual bool handleDragAndDrop(S32 x, S32 y, MASK mask,
+									bool drop,
 									EDragAndDropType cargo_type,
 									void* cargo_data,
 									EAcceptance* accept,
 									std::string& tooltip_msg);
-	BOOL handleDragAndDropToThisFolder(MASK mask, 
-										BOOL drop,
+	bool handleDragAndDropToThisFolder(MASK mask, 
+										bool drop,
 									   EDragAndDropType cargo_type,
 									   void* cargo_data,
 									   EAcceptance* accept,

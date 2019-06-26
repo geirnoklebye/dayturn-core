@@ -96,7 +96,7 @@ static LLPanelInjector<LLPanelGroupNotices> t_panel_group_notices("panel_group_n
 //
 //	//
 //	// LLView functionality
-//	virtual BOOL handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+//	virtual bool handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 //								   EDragAndDropType cargo_type,
 //								   void* cargo_data,
 //								   EAcceptance* accept,
@@ -122,18 +122,18 @@ void LLGroupDropTarget::doDrop(EDragAndDropType cargo_type, void* cargo_data)
 	LL_INFOS() << "LLGroupDropTarget::doDrop()" << LL_ENDL;
 }
 
-BOOL LLGroupDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
+bool LLGroupDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, bool drop,
 									 EDragAndDropType cargo_type,
 									 void* cargo_data,
 									 EAcceptance* accept,
 									 std::string& tooltip_msg)
 {
-	BOOL handled = FALSE;
+	bool handled = false;
 
 	if (!gAgent.hasPowerInGroup(mGroupID,GP_NOTICES_SEND))
 	{
 		*accept = ACCEPT_NO;
-		return TRUE;
+		return true;
 	}
 
 	if(getParent())
@@ -141,7 +141,7 @@ BOOL LLGroupDropTarget::handleDragAndDrop(S32 x, S32 y, MASK mask, BOOL drop,
 		// check if inside
 		//LLRect parent_rect = mParentView->getRect();
 		//getRect().set(0, parent_rect.getHeight(), parent_rect.getWidth(), 0);
-		handled = TRUE;
+		handled = true;
 
 		// check the type
 		switch(cargo_type)
