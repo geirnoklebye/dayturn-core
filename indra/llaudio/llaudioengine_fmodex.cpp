@@ -1,4 +1,6 @@
-/** 
+
+
+./** 
  * @file audioengine_fmodex.cpp
  * @brief Implementation of LLAudioEngine class abstracting the audio 
  * support as a FMODEX implementation
@@ -398,12 +400,14 @@ LLAudioEngine_FMODEX::output_device_map_t LLAudioEngine_FMODEX::getDevices()
 	{
 		for (int i = 0; i < drivercount; ++i)
 		{
-			memset(r_name, 0, 512);
-			mSystem->getDriverInfo(i, r_name, 511, &guid);
-			LLUUID driver_guid = FMOD_GUID_to_LLUUID(guid);
-			driver_map.insert(std::make_pair(driver_guid, r_name));
+			memset(r_name, 0, sizeof(r_name));
+			if (!Check_FMOD_Error(mSystem->getDriverInfo(i, r_name, 511, &guid), "FMOD::System::getDriverInfo"))
+			{
+				LLUUID driver_guid = FMOD_GUID_to_LLUUID(guid);
+				driver_map.insert(std::make_pair(driver_guid, r_name));
 
-			LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::getDevices(): r_name=\"" << r_name << "\" - guid: " << driver_guid << LL_ENDL;
+				LL_INFOS("AppInit") << "LLAudioEngine_FMODEX::getDevices(): r_name=\"" << r_name << "\" - guid: " << driver_guid << LL_ENDL;
+			}
 		}
 	}
 
