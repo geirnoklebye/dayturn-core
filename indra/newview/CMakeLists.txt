@@ -1536,6 +1536,7 @@ if (LINUX)
 #         directory every time the Mercurial revision number changes.
 #         Instead of doing that, we use the configure tool to build
 #         fsversionstrings.h with the right numbers in it.
+#         Chorazin: For Kokua this is kokuabuildversion.h based on same principles
 #      COMPILE_DEFINITIONS "${VIEWER_CHANNEL_VERSION_DEFINES}"
       )
     LIST(APPEND viewer_SOURCE_FILES llappviewerlinux_api_dbus.cpp)
