@@ -764,7 +764,7 @@
      value="0 0 0 0.75" />
     <color
      name="PieMenuTextColor"
-     reference="SL-White" />
+     reference="White" />
     <color
      name="PieMenuLineColor"
      value="0.24 0.24 0.24 0.5" />
