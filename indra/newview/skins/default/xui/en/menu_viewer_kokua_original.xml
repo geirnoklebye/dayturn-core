@@ -678,7 +678,7 @@
         <menu_item_call
          label="Stop Animating Me"
          name="Stop Animating My Avatar"
-		 shortcut="shift|S">
+		 shortcut="control|alt|S">
         <menu_item_call.on_click
          function="Tools.StopAllAnimations"
          parameter="stoprevoke"/>
@@ -1978,7 +1978,7 @@
         <menu_item_call
          label="Stop Animating Me"
          name="Stop Animating My Avatar"
-		     shortcut="shift|S">
+		     shortcut="control|alt|S">
         <menu_item_call.on_click
          function="Tools.StopAllAnimations"
          parameter="stoprevoke"/>
