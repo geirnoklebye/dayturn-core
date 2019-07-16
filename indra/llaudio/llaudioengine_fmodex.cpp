@@ -1,6 +1,4 @@
-
-
-./** 
+/**
  * @file audioengine_fmodex.cpp
  * @brief Implementation of LLAudioEngine class abstracting the audio 
  * support as a FMODEX implementation
@@ -134,7 +132,7 @@ LLAudioEngine_FMODEX::LLAudioEngine_FMODEX(bool enable_profiler)
 	mSystem = NULL;
 	mEnableProfiler = enable_profiler;
 	mWindDSPDesc = new FMOD_DSP_DESCRIPTION();
-	mSelectedDeviceUUID == LLUUID::null; // <FS:Ansariel> Output device selection
+	mSelectedDeviceUUID = LLUUID::null; // <FS:Ansariel> Output device selection
 }
 
 
