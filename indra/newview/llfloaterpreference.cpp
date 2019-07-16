@@ -3419,10 +3419,11 @@ BOOL FSPanelPreferenceSounds::postBuild()
     mOutputDevicePanel = findChild<LLPanel>("output_device_settings_panel");
     mOutputDeviceComboBox = findChild<LLComboBox>("sound_output_device");
 
-#ifdef LL_FMODSTUDIO || LL_FMODEX
+#if LL_FMODSTUDIO || LL_FMODEX
+    
        if (gAudiop && mOutputDevicePanel && mOutputDeviceComboBox)
        {
-               gsavedSettings.getControl("FSOutputDeviceUUID")->getSignal()->connect(boost::bind(&FSPanelPreferenceSounds::onOutputDeviceChanged, this, _2));
+               gSavedSettings.getControl("FSOutputDeviceUUID")->getSignal()->connect(boost::bind(&FSPanelPreferenceSounds::onOutputDeviceChanged, this, _2));
            
                mOutputDeviceListChangedConnection = gAudiop->setOutputDeviceListChangedCallback(boost::bind(&FSPanelPreferenceSounds::onOutputDeviceListChanged, this, _1));
                onOutputDeviceListChanged(gAudiop->getDevices());
@@ -3430,6 +3431,7 @@ BOOL FSPanelPreferenceSounds::postBuild()
                mOutputDeviceComboBox->setCommitCallback(boost::bind(&FSPanelPreferenceSounds::onOutputDeviceSelectionChanged, this, _2));
         }
 #else
+    
         if (mOutputDevicePanel)
         {
             mOutputDevicePanel->setVisible(FALSE);
