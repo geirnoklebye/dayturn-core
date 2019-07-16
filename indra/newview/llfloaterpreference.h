@@ -49,6 +49,8 @@ class LLScrollListCtrl;
 class LLSliderCtrl;
 class LLSD;
 class LLTextBox;
+class LLComboBox;
+class LLLineEditor;
 
 namespace ll
 {
