@@ -107,8 +107,11 @@ public:
 	void selectChatPanel();
 	void getControlNames(std::vector<std::string>& names);
 
-protected:	
+// <FS:CR> Make onBtnOk() public for settings backup panel
+//protected:
 	void		onBtnOK(const LLSD& userdata);
+protected:
+// </FS:CR>
 	void		onBtnCancel(const LLSD& userdata);
 
 	void		onClickClearCache();			// Clear viewer texture cache, vfs, and VO cache on next startup
@@ -346,6 +349,32 @@ class LLAvatarComplexityControls
 	LOG_CLASS(LLAvatarComplexityControls);
 };
 
+// <FS:CR> Settings Backup
+class FSPanelPreferenceBackup : public LLPanelPreference
+{
+public:
+	FSPanelPreferenceBackup();
+	/*virtual*/ BOOL postBuild();
+	
+protected:
+	// <FS:Zi> Backup settings
+	void onClickSetBackupSettingsPath();
+	void changeBackupSettingsPath(const std::vector<std::string>& filenames, std::string proposed_name);
+	void onClickSelectAll();
+	void onClickDeselectAll();
+	void onClickBackupSettings();
+	void onClickRestoreSettings();
+	
+	void doSelect(BOOL all);												// calls applySelection for each list
+	void applySelection(LLScrollListCtrl* control, BOOL all);				// selects or deselects all items in a scroll list
+	void doBackupSettings(const LLSD& notification, const LLSD& response);	// callback for backup dialog
+	void doRestoreSettings(const LLSD& notification, const LLSD& response);	// callback for restore dialog
+	void onQuitConfirmed(const LLSD& notification, const LLSD& response);	// callback for finished restore dialog
+	// </FS:Zi>
+
+private:
+	LOG_CLASS(FSPanelPreferenceBackup);
+};
 // <FS:Ansariel> Output device selection
 class FSPanelPreferenceSounds : public LLPanelPreference
 {

@@ -2044,6 +2044,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>AppearanceCameraMovement</key>
     <map>
@@ -2653,6 +2655,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>60</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>AvatarBakedLocalTextureUpdateTimeout</key>
     <map>
@@ -2664,6 +2668,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>10</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>AvatarPhysics</key>
     <map>
@@ -2708,6 +2714,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>40</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>BottomPanelNew</key>
     <map>
@@ -2741,6 +2749,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>BrowserEnableJSObject</key>
     <map>
@@ -2763,6 +2773,8 @@
             <string>Boolean</string>
         <key>Value</key>
             <integer>0</integer>
+        <key>Backup</key>
+            <integer>0</integer>
         </map>
     <key>BlockSomeAvatarAppearanceVisualParams</key>
         <map>
@@ -2773,6 +2785,8 @@
         <key>Type</key>
             <string>Boolean</string>
         <key>Value</key>
+            <integer>0</integer>
+        <key>Backup</key>
             <integer>0</integer>
         </map>
     <key>BrowserProxyAddress</key>
@@ -3279,6 +3293,8 @@
       <key>Type</key>
       <string>U32</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>CameraMouseSpeedMultiplier</key>
@@ -3874,6 +3890,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>ConnectionPort</key>
     <map>
@@ -3951,6 +3969,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>BrowserJavascriptEnabled</key>
     <map>
@@ -3962,6 +3982,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>BrowserPluginsEnabled</key>
     <map>
@@ -3973,6 +3995,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>ChatBarCustomWidth</key>
     <map>
@@ -4061,6 +4085,8 @@
     <string>S32</string>
     <key>Value</key>
     <integer>256</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>CurlRequestTimeOut</key>
   <map>
@@ -4072,6 +4098,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>120.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>CurlUseMultipleThreads</key>
   <map>
@@ -4083,6 +4111,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>1</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
     <key>Cursor3D</key>
     <map>
@@ -4105,6 +4135,8 @@
       <string>String</string>
       <key>Value</key>
       <string></string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>CustomServer</key>
     <map>
@@ -4116,6 +4148,8 @@
       <string>String</string>
       <key>Value</key>
       <string />
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>DebugAnimatedObjects</key>
   <map>
@@ -4259,6 +4293,8 @@
 		<string>Boolean</string>
 		<key>Value</key>
 		<integer>0</integer>
+		<key>Backup</key>
+		<integer>0</integer>
 	</map>
   <key>DebugAvatarLocalTexLoadedTime</key>
   <map>
@@ -4270,6 +4306,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>1</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>DebugAvatarCompositeBaked</key>
   <map>
@@ -4325,6 +4363,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>FSShowInboxFolder</key>
   <map>
@@ -4357,6 +4397,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>DebugSession</key>
@@ -4391,6 +4433,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
    <key>DebugShowMemory</key>
     <map>
@@ -4401,6 +4445,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>DEPRECATED: DebugShowPrivateMem</key>  <!-- deprecated (see MAINT-8091) -->
@@ -4413,6 +4459,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>DebugShowRenderInfo</key>
     <map>
@@ -4423,6 +4471,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
   <key>DebugShowRenderMatrices</key>
@@ -4435,6 +4485,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>0</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>DebugShowTextureInfo</key>
     <map>
@@ -4446,6 +4498,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>DebugShowTime</key>
     <map>
@@ -4456,6 +4510,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
   <key>DebugShowUploadCost</key>
@@ -5095,6 +5151,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>DebugWindowProc</key>
     <map>
@@ -5105,6 +5163,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
   <key>DefaultBlankNormalTexture</key>
@@ -5194,6 +5254,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>10</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>DestinationGuideURL</key>
     <map>
@@ -5205,6 +5267,8 @@
       <string>String</string>
       <key>Value</key>
       <string>http://lecs-viewer-web-components.s3.amazonaws.com/v3.0/[GRID_LOWERCASE]/guide.html</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>DisableCameraConstraints</key>
     <map>
@@ -5260,6 +5324,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>DisableTextHyperlinkActions</key>
     <map>
@@ -5270,6 +5336,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>DisableVerticalSync</key>
@@ -5282,6 +5350,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>EnableGroupChatPopups</key>
     <map>
@@ -5314,6 +5384,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>DisplayChat</key>
@@ -5391,6 +5463,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>Disregard128DefaultDrawDistance</key>
@@ -5491,6 +5565,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>3</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>DropShadowButton</key>
     <map>
@@ -5545,6 +5621,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>DynamicCameraStrength</key>
@@ -5656,6 +5734,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>EnableUIHints</key>
     <map>
@@ -5744,6 +5824,8 @@
         <string>String</string>
         <key>Value</key>
         <string></string>
+        <key>Backup</key>
+        <integer>0</integer>
     </map>
     <key>FPSLogFrequency</key>
         <map>
@@ -5755,6 +5837,8 @@
         <string>F32</string>
         <key>Value</key>
         <real>10.0</real>
+        <key>Backup</key>
+            <integer>0</integer>
         </map>
     <key>FilterItemsMaxTimePerFrameVisible</key>
     <map>
@@ -5766,6 +5850,8 @@
         <string>S32</string>
         <key>Value</key>
         <integer>10</integer>
+        <key>Backup</key>
+        <integer>0</integer>
     </map>
     <key>FilterItemsMaxTimePerFrameUnvisible</key>
     <map>
@@ -5876,6 +5962,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>FirstLoginThisInstall</key>
   <map>
@@ -5887,6 +5975,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>FirstSelectedDisabledPopups</key>
     <map>
@@ -6256,6 +6346,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>FocusOffsetRearView</key>
     <map>
@@ -6316,6 +6408,8 @@
         <real>0.0</real>
         <real>0.0</real>
       </array>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>FolderAutoOpenDelay</key>
     <map>
@@ -6327,6 +6421,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>0.75</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>FolderLoadingMessageWaitTime</key>
     <map>
@@ -6338,6 +6434,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>0.5</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>FontScreenDPI</key>
     <map>
@@ -6371,6 +6469,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>255</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>ForceLoginURL</key>
     <map>
@@ -6403,6 +6503,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>FreezeTime</key>
@@ -6569,6 +6671,8 @@
       <string>String</string>
       <key>Value</key>
       <string>http://viewer-help.secondlife.com/[LANGUAGE]/[CHANNEL]/[VERSION]/[TOPIC][DEBUG_MODE]</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>HowToHelpURL</key>
     <map>
@@ -6580,6 +6684,8 @@
       <string>String</string>
       <key>Value</key>
       <string>http://lecs-viewer-web-components.s3.amazonaws.com/v3.0/[GRID_LOWERCASE]/howto/index.html</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>HomeSidePanelURL</key>
     <map>
@@ -6591,6 +6697,8 @@
       <string>String</string>
       <key>Value</key>
       <string>https://viewer-sidebar.secondlife.com/sidebar.html?p=[AUTH_TOKEN]&amp;lang=[LANGUAGE]&amp;channel=[CHANNEL]&amp;version=[VERSION]&amp;major=[VERSION_MAJOR]&amp;minor=[VERSION_MINOR]&amp;patch=[VERSION_PATCH]&amp;build=[VERSION_BUILD]&amp;firstlogin=[FIRST_LOGIN]</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>SearchURL</key>
     <map>
@@ -6602,6 +6710,8 @@
       <string>String</string>
       <key>Value</key>
       <string>https://search.[GRID]/viewer/[CATEGORY]/?q=[QUERY]&amp;p=[AUTH_TOKEN]&amp;r=[MATURITY]&amp;lang=[LANGUAGE]&amp;g=[GODLIKE]&amp;sid=[SESSION_ID]&amp;rid=[REGION_ID]&amp;pid=[PARCEL_ID]&amp;channel=[CHANNEL]&amp;version=[VERSION]&amp;major=[VERSION_MAJOR]&amp;minor=[VERSION_MINOR]&amp;patch=[VERSION_PATCH]&amp;build=[VERSION_BUILD]</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>HighResSnapshot</key>
     <map>
@@ -6623,6 +6733,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>HostID</key>
@@ -6646,6 +6758,8 @@
       <string>String</string>
       <key>Value</key>
       <string />
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>HttpPipelining</key>
     <map>
@@ -6723,6 +6837,16 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>SanityCheckType</key>
+      <string>Equals</string>
+      <key>SanityValue</key>
+      <array>
+        <integer>0</integer>
+      </array>
+      <key>SanityComment</key>
+      <string>This setting can lead to strange things happening in your conversations floater, personal IMs and group chats.</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>IgnorePixelDepth</key>
     <map>
@@ -6733,6 +6857,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>ImagePipelineUseHTTP</key>
@@ -6866,6 +6992,8 @@
 		<string>Boolean</string>
 		<key>Value</key>
 		<integer>1</integer>
+		<key>Backup</key>
+		<integer>0</integer>
 	</map>
     <key>InventoryOutboxDisplayBoth</key>
     <map>
@@ -6887,6 +7015,8 @@
 		<key>Type</key>
 		<string>Boolean</string>
 		<key>Value</key>
+		<integer>0</integer>
+		<key>Backup</key>
 		<integer>0</integer>
 	</map>
 	<key>InventoryOutboxMakeVisible</key>
@@ -7119,6 +7249,8 @@
       <string>String</string>
       <key>Value</key>
       <string />
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>JoystickMouselookYaw</key>
     <map>
@@ -7152,6 +7284,8 @@
         <string>Boolean</string>
       <key>Value</key>
         <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
 	  </map>
 	<key>Jpeg2000PrecinctsSize</key>
 	  <map>
@@ -7163,6 +7297,8 @@
         <string>S32</string>
       <key>Value</key>
         <integer>256</integer>
+      <key>Backup</key>
+      <integer>0</integer>
 	  </map>
 	<key>Jpeg2000BlocksSize</key>
 	  <map>
@@ -7174,6 +7310,8 @@
         <string>S32</string>
       <key>Value</key>
         <integer>64</integer>
+      <key>Backup</key>
+      <integer>0</integer>
 	  </map>
     <key>KeepAspectForSnapshot</key>
     <map>
@@ -7251,6 +7389,8 @@
       <string>String</string>
       <key>Value</key>
       <string>http://wiki.secondlife.com/wiki/[LSL_STRING]</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>GridStatusRSS</key>
     <map>
@@ -7328,6 +7468,8 @@
       <string>String</string>
       <key>Value</key>
       <string></string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>LastFeatureVersion</key>
     <map>
@@ -7338,6 +7480,8 @@
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>LastFindPanel</key>
@@ -7350,6 +7494,8 @@
       <string>String</string>
       <key>Value</key>
       <string>find_all_panel</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>LastName</key>
     <map>
@@ -7371,6 +7517,8 @@
       <key>Type</key>
       <string>S32</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>LastAppearanceTab</key>
@@ -7394,6 +7542,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>LastRunVersion</key>
     <map>
@@ -7405,6 +7555,8 @@
       <string>String</string>
       <key>Value</key>
       <string>0.0.0</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
 
     <key>LastSnapshotToProfileHeight</key>
@@ -7504,6 +7656,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>LimitDragDistance</key>
@@ -7648,6 +7802,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>LocalFileSystemBrowsingEnabled</key>
     <map>
@@ -7748,6 +7904,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>LoginLocation</key>
     <map>
@@ -7770,6 +7928,8 @@
       <string>String</string>
       <key>Value</key>
       <string/>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>LosslessJ2CUpload</key>
     <map>
@@ -7792,6 +7952,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>60.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>MapOverlayIndex</key>
     <map>
@@ -8342,6 +8504,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>1.6</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>MaxPersistentNotifications</key>
     <map>
@@ -8375,6 +8539,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>60.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>MediaPluginDebugging</key>
   <map>
@@ -8385,6 +8551,8 @@
     <key>Type</key>
     <string>Boolean</string>
     <key>Value</key>
+    <integer>0</integer>
+    <key>Backup</key>
     <integer>0</integer>
   </map>
   <key>MediaControlFadeTime</key>
@@ -8440,6 +8608,8 @@
     <key>Type</key>
     <string>Boolean</string>
     <key>Value</key>
+    <integer>0</integer>
+    <key>Backup</key>
     <integer>0</integer>
   </map>
   <key>MediaShowOnOthers</key>
@@ -8518,6 +8688,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>MemoryPrivatePoolSize</key>  <!-- deprecated (see MAINT-8091) -->
     <map>
@@ -8529,6 +8701,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>512</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>MenuAccessKeyTime</key>
     <map>
@@ -8573,6 +8747,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>MeshEnabled</key>
   <map>
@@ -8606,6 +8782,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>0</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>MeshUploadFakeErrors</key>
   <map>
@@ -8616,6 +8794,8 @@
     <key>Type</key>
     <string>S32</string>
     <key>Value</key>
+    <integer>0</integer>
+    <key>Backup</key>
     <integer>0</integer>
   </map>
   <key>MeshUploadTimeOut</key>
@@ -8628,6 +8808,8 @@
     <string>S32</string>
     <key>Value</key>
     <integer>600</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>MigrateCacheDirectory</key>
     <map>
@@ -8638,7 +8820,9 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
-      <integer>1</integer>
+      <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>MiniMapCollisionParcels</key>
     <map>
@@ -8980,6 +9164,8 @@
       <string>String</string>
       <key>Value</key>
       <string />
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>NoAudio</key>
     <map>
@@ -8991,6 +9177,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>NoHardwareProbe</key>
     <map>
@@ -9001,6 +9189,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>NoInventoryLibrary</key>
@@ -9656,6 +9846,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>5.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>PicksPerSecondMouseStationary</key>
     <map>
@@ -9667,6 +9859,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>0.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>PieMenuLineWidth</key>
     <map>
@@ -9688,6 +9882,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>PitchFromMousePosition</key>
@@ -9843,6 +10039,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>PluginInstancesCPULimit</key>
     <map>
@@ -9923,6 +10121,8 @@
      <string>String</string>
      <key>Value</key>
      <string></string>
+      <key>Backup</key>
+      <integer>0</integer>
    </map>
   <key>PostFirstLoginIntroViewed</key>
   <map>
@@ -9933,6 +10133,8 @@
     <key>Type</key>
     <string>Boolean</string>
     <key>Value</key>
+      <integer>0</integer>
+    <key>Backup</key>
       <integer>0</integer>
   </map>
     <key>PreventAvatarTurnToSelected</key>
@@ -9956,6 +10158,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>6.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>ClothingLoadingDelay</key>
     <map>
@@ -10203,6 +10407,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>1.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>PrimMediaRetryTimerDelay</key>
     <map>
@@ -10214,6 +10420,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>5.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
 	<key>PrimMediaMaxSortedQueueSize</key>
     <map>
@@ -10225,6 +10433,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>100000</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
 	<key>PrimMediaMaxRoundRobinQueueSize</key>
     <map>
@@ -10236,6 +10446,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>100000</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>PrimTextMaxDrawDistance</key>
     <map>
@@ -10280,6 +10492,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>PurgeCacheOnStartup</key>
     <map>
@@ -10290,6 +10504,16 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>SanityCheckType</key>
+      <string>Equals</string>
+      <key>SanityValue</key>
+      <array>
+        <integer>0</integer>
+      </array>
+      <key>SanityComment</key>
+      <string>Purging your cache on each login will add more traffic to the asset servers and your world will load a lot slower. Please only clear your cache when you see issues with inventory, texture or sculpties loading.</string>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>PushToTalkButton</key>
@@ -10379,6 +10603,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>0.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>QuitOnLoginActivated</key>
     <map>
@@ -10389,6 +10615,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>RadioLandBrushAction</key>
@@ -10522,6 +10750,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>QuickBuyCurrency</key>
     <map>
@@ -10577,6 +10807,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>128</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>OctreeMinimumNodeSize</key>
@@ -10601,6 +10833,8 @@
     <string>S32</string>
     <key>Value</key>
     <integer>3</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>OctreeAlphaDistanceFactor</key>
@@ -10617,6 +10851,8 @@
       <real>0.0</real>
       <real>0.0</real>
     </array>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>OctreeAttachmentSizeFactor</key>
@@ -10629,6 +10865,8 @@
     <string>S32</string>
     <key>Value</key>
     <integer>4</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>OctreeDistanceFactor</key>
@@ -10645,6 +10883,8 @@
       <real>0.0</real>
       <real>0.0</real>
     </array>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
     <key>RenderAnisotropic</key>
@@ -10793,6 +11033,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>-1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>RenderComplexityStaticMax</key>
     <map>
@@ -10804,6 +11046,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>-1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderAvatarLODFactor</key>
     <map>
@@ -10924,6 +11168,8 @@
       <real>256</real>
       <real>256</real>
     </array>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowClipPlanes</key>
   <map>
@@ -10939,6 +11185,8 @@
       <real>12.0</real>
       <real>32.0</real>
     </array>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowSplitExponent</key>
   <map>
@@ -10954,6 +11202,8 @@
       <real>3.0</real>
       <real>2.0</real>
     </array>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowOrthoClipPlanes</key>
   <map>
@@ -10969,6 +11219,8 @@
       <real>8.0</real>
       <real>24.0</real>
     </array>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowProjOffset</key>
   <map>
@@ -10980,6 +11232,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>2.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowSlopeThreshold</key>
   <map>
@@ -10991,6 +11245,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowProjExponent</key>
   <map>
@@ -11002,6 +11258,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.5</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderSSAOScale</key>
   <map>
@@ -11013,6 +11271,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>500.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderSSAOMaxScale</key>
   <map>
@@ -11024,6 +11284,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>200</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderSSAOFactor</key>
   <map>
@@ -11035,6 +11297,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.30</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderSSAOEffect</key>
   <map>
@@ -11050,6 +11314,8 @@
       <real>1.00</real>
       <real>0.00</real>
     </array>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderBumpmapMinDistanceSquared</key>
     <map>
@@ -11061,6 +11327,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>100.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>RenderNormalMapScale</key>
   <map>
@@ -11072,6 +11340,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>64.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
     <key>RenderCubeMap</key>
     <map>
@@ -11083,6 +11353,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+    <key>Backup</key>
+    <integer>0</integer>
     </map>
     <key>RenderDebugAlphaMask</key>
     <map>
@@ -11094,6 +11366,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>0.5</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderDebugGL</key>
     <map>
@@ -11104,6 +11378,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
   <key>RenderDebugNormalScale</key>
@@ -11127,6 +11403,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>RenderMaxTextureIndex</key>
   <map>
@@ -11149,6 +11427,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>RenderDelayCreation</key>
   <map>
@@ -11159,6 +11439,8 @@
     <key>Type</key>
     <string>Boolean</string>
     <key>Value</key>
+    <integer>0</integer>
+    <key>Backup</key>
     <integer>0</integer>
   </map>
 
@@ -11184,6 +11466,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>0</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderNoAlpha</key>
@@ -11195,6 +11479,8 @@
     <key>Type</key>
     <string>Boolean</string>
     <key>Value</key>
+    <integer>0</integer>
+    <key>Backup</key>
     <integer>0</integer>
   </map>
 
@@ -11208,6 +11494,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>16</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderEdgeDepthCutoff</key>
@@ -11220,6 +11508,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.01</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderEdgeNormCutoff</key>
   <map>
@@ -11231,6 +11521,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.25</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderDeferredAlphaSoften</key>
@@ -11243,6 +11535,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.75</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderDeferredNoise</key>
   <map>
@@ -11254,6 +11548,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>4.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderDeferredSpotShadowBias</key>
   <map>
@@ -11265,6 +11561,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>-64.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderDeferredSpotShadowOffset</key>
   <map>
@@ -11276,6 +11574,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.8</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderShadowBias</key>
@@ -11288,6 +11588,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>-0.008</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowOffset</key>
   <map>
@@ -11299,6 +11601,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.01</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowBiasError</key>
   <map>
@@ -11310,6 +11614,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>-0.007</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowOffsetError</key>
   <map>
@@ -11321,6 +11627,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderDepthPrePass</key>
@@ -11332,6 +11640,8 @@
     <key>Type</key>
     <string>Boolean</string>
     <key>Value</key>
+    <integer>0</integer>
+    <key>Backup</key>
     <integer>0</integer>
   </map>
 
@@ -11393,6 +11703,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>-0.001</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderSpotShadowOffset</key>
   <map>
@@ -11404,6 +11716,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.04</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderShadowResolutionScale</key>
@@ -11416,6 +11730,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>1.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderDeferredTreeShadowBias</key>
   <map>
@@ -11427,6 +11743,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>1.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderDeferredTreeShadowOffset</key>
   <map>
@@ -11438,6 +11756,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>1.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderHoverGlowEnable</key>
@@ -11449,6 +11769,8 @@
     <key>Type</key>
     <string>Boolean</string>
     <key>Value</key>
+    <integer>0</integer>
+    <key>Backup</key>
     <integer>0</integer>
   </map>
 
@@ -11527,6 +11849,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>1024</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderSpecularResY</key>
@@ -11539,6 +11863,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>256</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderSpecularExponent</key>
@@ -11551,6 +11877,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>368.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderDeferred</key>
@@ -11575,6 +11903,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>1</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderDeferredAtmospheric</key>
@@ -11587,6 +11917,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>1</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderDeferredSSAO</key>
@@ -11599,6 +11931,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>1</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderDeferredBlurLight</key>
@@ -11611,6 +11945,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>1</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderDeferredSunWash</key>
@@ -11623,6 +11959,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.5</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowNoise</key>
   <map>
@@ -11634,6 +11972,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>-0.0001</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowErrorCutoff</key>
   <map>
@@ -11645,6 +11985,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>5.0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowFOVCutoff</key>
   <map>
@@ -11656,6 +11998,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0.8</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderShadowGaussian</key>
@@ -11672,6 +12016,8 @@
       <real>2.0</real>
       <real>0.0</real>
     </array>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderShadowBlurSize</key>
@@ -11684,6 +12030,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>1.4</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowBlurSamples</key>
   <map>
@@ -11695,6 +12043,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>4</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>RenderShadowBlurDistFactor</key>
   <map>
@@ -11706,6 +12056,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>0</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
   <key>RenderDynamicLOD</key>
@@ -11718,6 +12070,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderFSAASamples</key>
     <map>
@@ -11838,6 +12192,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>RenderGlow</key>
@@ -11968,6 +12324,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>DisableAllRenderTypes</key>
     <map>
@@ -12011,6 +12369,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>RenderHighlightSelections</key>
@@ -12122,6 +12482,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderLightRadius</key>
     <map>
@@ -12155,6 +12517,8 @@
     <string>S32</string>
     <key>Value</key>
     <integer>65536</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
     <key>RenderMaxVBOSize</key>
     <map>
@@ -12166,6 +12530,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>512</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderNameFadeDuration</key>
     <map>
@@ -12266,6 +12632,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderShaderLightingMaxLevel</key>
     <map>
@@ -12288,6 +12656,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>1.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderShaderParticleThreshold</key>
     <map>
@@ -12299,6 +12669,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>0.25</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderSunDynamicRange</key>
     <map>
@@ -12310,6 +12682,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>1.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderTerrainDetail</key>
     <map>
@@ -12409,6 +12783,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderUnloadedAvatar</key>
     <map>
@@ -12431,6 +12807,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>0</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
     <key>RenderUseFarClip</key>
     <map>
@@ -12442,6 +12820,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderUseImpostors</key>
     <map>
@@ -12488,6 +12868,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>0</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>ShowMyComplexityChanges</key>
   <map>
@@ -12499,6 +12881,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>10</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>MaxAttachmentComplexity</key>
   <map>
@@ -12612,6 +12996,8 @@
     <string>F32</string>
     <key>Value</key>
     <real>10.0E6</real>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
 
     <key>RenderVBOEnable</key>
@@ -12635,6 +13021,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>RenderUseTransformFeedback</key>
   <map>
@@ -12645,6 +13033,8 @@
     <key>Type</key>
     <string>Boolean</string>
     <key>Value</key>
+    <integer>0</integer>
+    <key>Backup</key>
     <integer>0</integer>
   </map>
 
@@ -12658,6 +13048,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>RenderUseStreamVBO</key>
   <map>
@@ -12680,6 +13072,8 @@
 		<string>Boolean</string>
 		<key>Value</key>
 		<integer>0</integer>
+		<key>Backup</key>
+		<integer>0</integer>
 	</map>
 	<key>RenderVolumeLODFactor</key>
     <map>
@@ -12690,7 +13084,15 @@
       <key>Type</key>
       <string>F32</string>
       <key>Value</key>
-      <real>4.0</real>
+      <real>2.0</real>
+      <key>SanityCheckType</key>
+      <string>LessThanEquals</string>
+      <key>SanityValue</key>
+      <array>
+        <real>8.0</real>
+      </array>
+      <key>SanityComment</key>
+      <string>Values higher than 8 are meaningless and give no improvement. You should set this to no higher than 4. Setting this too high also seriously lowers your graphics performance.</string>
     </map>
     <key>RenderWater</key>
     <map>
@@ -12702,6 +13104,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderWaterMaterials</key>
     <map>
@@ -12724,6 +13128,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderWaterRefResolution</key>
     <map>
@@ -12735,6 +13141,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>512</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RenderParcelSelection</key>
     <map>
@@ -12801,6 +13209,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>RotationStep</key>
     <map>
@@ -12823,6 +13233,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>250000</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>MeshMetaDataDiscount</key>
   <map>
@@ -12834,6 +13246,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>384</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>MeshMinimumByteSize</key>
   <map>
@@ -12845,6 +13259,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>16</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>MeshBytesPerTriangle</key>
   <map>
@@ -12856,6 +13272,8 @@
     <string>U32</string>
     <key>Value</key>
     <integer>16</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>Mesh2MaxConcurrentRequests</key>
   <map>
@@ -12867,6 +13285,14 @@
     <string>U32</string>
     <key>Value</key>
     <integer>8</integer>
+    <key>SanityCheckType</key>
+    <string>LessThanEquals</string>
+    <key>SanityValue</key>
+    <array>
+      <integer>12</integer>
+    </array>
+    <key>SanityComment</key>
+    <string>Setting this value too high will make it less likely that mesh objects will load correctly and cause performace degradation for you and others in the same region.</string>
   </map>
   <key>MeshMaxConcurrentRequests</key>
   <map>
@@ -12877,7 +13303,15 @@
     <key>Type</key>
     <string>U32</string>
     <key>Value</key>
+    <integer>16</integer>
+    <key>SanityCheckType</key>
+    <string>LessThanEquals</string>
+    <key>SanityValue</key>
+    <array>
     <integer>32</integer>
+    </array>
+    <key>SanityComment</key>
+    <string>Setting this value too high will make it less likely that mesh objects will load correctly and cause performace degradation for you and others in the same region.</string>
   </map>
   <key>MeshUseHttpRetryAfter</key>
   <map>
@@ -12911,6 +13345,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>SafeMode</key>
     <map>
@@ -12921,6 +13357,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>SaveInventoryScriptsAsMono</key>
@@ -13230,6 +13668,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>ShowAllObjectHoverTip</key>
     <map>
@@ -13262,6 +13702,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>ShowBanLines</key>
@@ -13384,6 +13826,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>0</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
   <key>NavBarShowCoordinates</key>
     <map>
@@ -13438,6 +13882,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>ShowEmptyFoldersWhenSearching</key>
@@ -14080,6 +14526,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>ShowParcelOwners</key>
     <map>
@@ -14182,6 +14630,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>ShowToolBar</key>
     <map>
@@ -14203,6 +14653,8 @@
 		<key>Type</key>
 		<string>Boolean</string>
 		<key>Value</key>
+		<integer>0</integer>
+		<key>Backup</key>
 		<integer>0</integer>
 	</map>
     <key>ShowVoiceVisualizersInCalls</key>
@@ -14248,6 +14700,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>0.300000011921</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>SkyNightColorShift</key>
     <map>
@@ -14263,6 +14717,8 @@
         <real>0.67</real>
         <real>1.0</real>
       </array>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>SkyOverrideSimSunPosition</key>
     <map>
@@ -14388,6 +14844,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>StatsAutoRun</key>
     <map>
@@ -14398,6 +14856,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>StatsFile</key>
@@ -14410,6 +14870,8 @@
       <string>String</string>
       <key>Value</key>
       <string>fs.txt</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>StatsNumRuns</key>
     <map>
@@ -14421,6 +14883,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>-1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>StatsPilotFile</key>
     <map>
@@ -14432,6 +14896,8 @@
       <string>String</string>
       <key>Value</key>
       <string>pilot.txt</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>StatsPilotXMLFile</key>
     <map>
@@ -14443,6 +14909,8 @@
       <string>String</string>
       <key>Value</key>
       <string>pilot.xml</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>StatsQuitAfterRuns</key>
     <map>
@@ -14453,6 +14921,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>StatsSessionTrackFrameStats</key>
@@ -14465,6 +14935,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>StatsSummaryFile</key>
     <map>
@@ -14476,6 +14948,8 @@
       <string>String</string>
       <key>Value</key>
       <string>fss.txt</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>SystemLanguage</key>
     <map>
@@ -14531,6 +15005,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>1.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TextureCameraMotionThreshold</key>
     <map>
@@ -14542,6 +15018,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>0.2</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TextureCameraMotionBoost</key>
     <map>
@@ -14553,6 +15031,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>3</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TextureDecodeDisabled</key>
     <map>
@@ -14563,6 +15043,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>TextureDisable</key>
@@ -14575,6 +15057,16 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>SanityCheckType</key>
+      <string>Equals</string>
+      <key>SanityValue</key>
+      <array>
+        <integer>0</integer>
+      </array>
+      <key>SanityComment</key>
+      <string>This will cause textures not to load at all, sculpties will be deformed or look like spheres.</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TextureDiscardLevel</key>
     <map>
@@ -14585,6 +15077,16 @@
       <key>Type</key>
       <string>U32</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>SanityCheckType</key>
+      <string>Equals</string>
+      <key>SanityValue</key>
+      <array>
+        <integer>0</integer>
+      </array>
+      <key>SanityComment</key>
+      <string>This might cause textures to look blurry and sculpties might fail to load properly. Please see &quot;Preferences -&gt; Graphics -&gt; Rendering -&gt; Max Texture Quality Level&quot; to change.</string>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>TextureFetchConcurrency</key>
@@ -14608,6 +15110,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>TextureFetchFakeFailureRate</key>
   <map>
@@ -14630,6 +15134,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TextureFetchUpdateHighPriority</key>
     <map>
@@ -14641,6 +15147,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>32</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TextureFetchUpdateMaxMediumPriority</key>
     <map>
@@ -14652,6 +15160,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>256</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TextureFetchUpdateMinMediumPriority</key>
     <map>
@@ -14663,6 +15173,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>32</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TextureFetchUpdatePriorityThreshold</key>
     <map>
@@ -14674,6 +15186,8 @@
       <string>F32</string>
       <key>Value</key>
       <real>0.0</real>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TextureFetchUpdateSkipLowPriority</key>
     <map>
@@ -14684,6 +15198,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>TextureFetchUpdatePriorities</key>
@@ -14696,6 +15212,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>32</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TextureLoadFullRes</key>
     <map>
@@ -14707,6 +15225,14 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>SanityCheckType</key>
+      <string>Equals</string>
+      <key>SanityValue</key>
+      <array>
+        <integer>0</integer>
+      </array>
+      <key>SanityComment</key>
+      <string>This option is only used for debugging purposes and to stress test the cache system. Please do not enable for regular use, as it can lead to severely degraded performance!</string>
     </map>
     <key>TextureMemory</key>
     <map>
@@ -14729,11 +15255,13 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>TexturePickerShowFolders</key>
     <map>
       <key>Comment</key>
-      <string>Show folders with no texures in texture picker</string>
+      <string>Show folders with no textures in texture picker</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -14762,6 +15290,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>50</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>ThrottleBandwidthKBPS</key>
     <map>
@@ -15091,6 +15621,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>UIFloaterTitleVPad</key>
@@ -15983,6 +16515,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>UseAltKeyForMenus</key>
     <map>
@@ -16203,6 +16737,14 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>SanityCheckType</key>
+      <string>Equals</string>
+      <key>SanityValue</key>
+      <array>
+        <integer>1</integer>
+      </array>
+      <key>SanityComment</key>
+      <string>Disabling this option might lead to severely degraded viewer performance and increased rezzing time.</string>
     </map>
   <key>UseObjectCacheOcclusion</key>
   <map>
@@ -16225,6 +16767,8 @@
     <string>Boolean</string>
     <key>Value</key>
     <integer>1</integer>
+    <key>Backup</key>
+    <integer>0</integer>
   </map>
     <key>RenderDelayVBUpdate</key>
     <map>
@@ -16235,6 +16779,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>SocialPhotoResolution</key>
@@ -16258,6 +16804,8 @@
       <string>String</string>
       <key>Value</key>
       <string />
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>SpeakerParticipantRemoveDelay</key>
     <map>
@@ -16335,6 +16883,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>UserConnectionPort</key>
     <map>
@@ -16345,6 +16895,8 @@
       <key>Type</key>
       <string>U32</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>UserLogFile</key>
@@ -16379,6 +16931,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>VFSSalt</key>
     <map>
@@ -16390,6 +16944,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>VelocityInterpolate</key>
     <map>
@@ -16456,6 +17012,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>VivoxDebugLevel</key>
     <map>
@@ -16522,6 +17080,8 @@
       <string>String</string>
       <key>Value</key>
       <string></string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>VivoxDebugVoiceAccountServerURI</key>
     <map>
@@ -16533,6 +17093,8 @@
       <string>String</string>
       <key>Value</key>
       <string></string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>VivoxVoiceHost</key>
     <map>
@@ -16544,6 +17106,8 @@
       <string>String</string>
       <key>Value</key>
       <string>127.0.0.1</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>VivoxVoicePort</key>
     <map>
@@ -16555,6 +17119,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>44125</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>VoiceCallsFriendsOnly</key>
     <map>
@@ -16643,6 +17209,8 @@
       <string>String</string>
       <key>Value</key>
       <string>127.0.0.1</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>VoiceImageLevel0</key>
     <map>
@@ -16742,6 +17310,8 @@
       <string>String</string>
       <key>Value</key>
       <string></string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>VoiceOutputAudioDevice</key>
     <map>
@@ -16775,6 +17345,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>44125</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>WarningsAsChat</key>
     <map>
@@ -17050,6 +17622,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>-1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>ForcePeriodicRenderingTime</key>
     <map>
@@ -17237,6 +17811,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>LogTextureDownloadsToSimulator</key>
     <map>
@@ -17247,6 +17823,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>LeaveMouselook</key>
@@ -17270,6 +17848,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>1</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>PoolSizeAIS</key>
         <map>
@@ -17375,6 +17955,8 @@
 	      <string>mini_map</string>
 	      <string>beacons</string>
       </array>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>LandmarksSortedByDate</key>
     <map>
@@ -17408,6 +17990,8 @@
       <string>S32</string>
       <key>Value</key>
       <integer>180</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>HeightUnits</key>
     <map>
@@ -17727,6 +18311,8 @@
       <string>String</string>
       <key>Value</key>
       <string>http://common-flash-secondlife-com.s3.amazonaws.com/viewer/v2.6/agni/404.html</string>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>OpenIMOnVoice</key>
     <map>
@@ -17792,6 +18378,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
      <key>ShowHelpOnFirstLogin</key>
     <map>
@@ -17802,6 +18390,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>ObjectsNextOwnerCopy</key>
@@ -19403,6 +19993,8 @@
       <string>U32</string>
       <key>Value</key>
       <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>IndirectMaxNonImpostors</key>
     <map>
@@ -19425,6 +20017,8 @@
       <key>Type</key>
       <string>Boolean</string>
       <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
       <integer>0</integer>
     </map>
     <key>VoiceMultiInstance</key>
@@ -19629,6 +20223,8 @@
       <string>Boolean</string>
       <key>Value</key>
       <integer>1</integer>        
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
     <key>FSTagShowARW</key>
     <map>
@@ -19685,6 +20281,43 @@
       <key>Value</key>
       <string>https://status.secondlifegrid.net/history.rss</string>
     </map>
+    <!-- <FS:Zi> Backup Settings -->
+    <key>SettingsBackupPath</key>
+    <map>
+      <key>Comment</key>
+      <string>Path where settings were last backed up.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>String</string>
+      <key>Value</key>
+      <string />
+    </map>
+
+    <key>RestoreGlobalSettings</key>
+    <map>
+      <key>Comment</key>
+      <string>Defines if the global settings should be restored when doing a settings restore.</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+
+    <key>RestorePerAccountSettings</key>
+    <map>
+      <key>Comment</key>
+      <string>Defines if the per account settings should be restored when doing a settings restore.</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>1</integer>
+    </map>
+    <!-- <FS:Zi> -->
     <key>FSAlwaysTrackPayments</key>
     <map>
       <key>Comment</key>
@@ -19750,6 +20383,19 @@
       <string>F32</string>
       <key>Value</key>
       <real>0.9</real>
+    </map>
+    <key>FSFirstRunAfterSettingsRestore</key>
+    <map>
+      <key>Comment</key>
+      <string>Specifies that you have not run the viewer since you performed a settings restore</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+      <key>Backup</key>
+      <integer>0</integer>
     </map>
   <key>FSAdvancedTooltips</key>
 	  <map>

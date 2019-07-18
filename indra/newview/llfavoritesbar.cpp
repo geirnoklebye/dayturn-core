@@ -1493,16 +1493,22 @@ void LLFavoritesOrderStorage::getSLURL(const LLUUID& asset_id)
 }
 
 // static
+// call the new filename-only function so the name's only generated in one place
 std::string LLFavoritesOrderStorage::getStoredFavoritesFilename()
 {
 	std::string user_dir = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, "");
 
     return (user_dir.empty() ? ""
             : gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS,
-                                             "stored_favorites_"
-                                          + LLGridManager::getInstance()->getGrid()
-                                          + ".xml")
-            );
+                                             getStoredFavoritesFilenameWithoutPath())
+			);
+}
+
+// static
+// needed for settings backup to work around FS's changes to a fixed filename under a username.grid folder
+std::string LLFavoritesOrderStorage::getStoredFavoritesFilenameWithoutPath()
+{
+	return "stored_favorites_" + LLGridManager::getInstance()->getGrid() + ".xml";
 }
 
 // static

@@ -75,6 +75,10 @@ class LLDir
     U32 deleteDirAndContents(const std::string& dir_name);
     std::vector<std::string> getFilesInDir(const std::string &dirname);
 // pure virtual functions
+	virtual BOOL getNextFileInDir(const std::string& dirname, ///< directory path - must end in trailing slash!
+                                  const std::string& mask,    ///< file pattern string (use "*" for all)
+                                  std::string& fname          ///< output: found file name
+                                  ) = 0;
 	virtual std::string getCurPath() = 0;
 	virtual bool fileExists(const std::string &filename) const = 0;
 

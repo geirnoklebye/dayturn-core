@@ -171,17 +171,32 @@ public:
 	// For thread debugging. 
 	// llstartup needs to control init.
 	// llworld, send_agent_pause() also controls pause/resume.
-	void initMainloopTimeout(const std::string& state, F32 secs = -1.0f);
+
+	// <FS:ND> Change from std::string to char const*, saving a lot of object construction/destruction per frame
+
+	// void initMainloopTimeout(const std::string& state, F32 secs = -1.0f);
+	void initMainloopTimeout( char const *state, F32 secs = -1.0f);
+
+	// </FS:ND>
+
 	void destroyMainloopTimeout();
 	void pauseMainloopTimeout();
-	void resumeMainloopTimeout(const std::string& state = "", F32 secs = -1.0f);
-	void pingMainloopTimeout(const std::string& state, F32 secs = -1.0f);
+
+	// <FS:ND> Change from std::string to char const*, saving a lot of object construction/destruction per frame
+
+	// void resumeMainloopTimeout(const std::string& state = "", F32 secs = -1.0f);
+	// void pingMainloopTimeout(const std::string& state, F32 secs = -1.0f);
+	void resumeMainloopTimeout( char const *state = "", F32 secs = -1.0f);
+	void pingMainloopTimeout( char const *state, F32 secs = -1.0f);
+
+	// </FS:ND>
 
 	// Handle the 'login completed' event.
 	// *NOTE:Mani Fix this for login abstraction!!
 	void handleLoginComplete();
 
-    LLAllocator & getAllocator() { return mAlloc; }
+	// <FS:Ansariel> Get rid of unused LLAllocator
+    //LLAllocator & getAllocator() { return mAlloc; }
 
 	// On LoginCompleted callback
 	typedef boost::signals2::signal<void (void)> login_completed_signal_t;
@@ -304,7 +319,8 @@ private:
 	bool mAgentRegionLastAlive;
 	LLUUID mAgentRegionLastID;
 
-    LLAllocator mAlloc;
+	// <FS:Ansariel> Get rid of unused LLAllocator
+    //LLAllocator mAlloc;
 
 	LLFrameTimer mMemCheckTimer;
 
@@ -317,6 +333,16 @@ private:
 
 public:
 	static void setViewerWindowTitle();
+	// <FS:Zi> Backup Settings
+public:
+	void setSaveSettingsOnExit(bool state) {mSaveSettingsOnExit = state; };
+
+private:
+	bool mSaveSettingsOnExit;
+	// </FS:Zi>
+
+	// <FS:ND> For Windows, purging the cache can take an extraordinary amount of time. Rename the cache dir and purge it using another thread.
+	virtual void startCachePurge() {}
 
 };
 

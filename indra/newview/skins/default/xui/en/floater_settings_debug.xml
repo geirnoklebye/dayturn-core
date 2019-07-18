@@ -128,14 +128,32 @@
        function="CommitSettings" />
     </spinner>
     <button
-     height="22"
-     label="Reset to default"
-     layout="topleft"
-     left="15"
-     name="default_btn"
-     top="186"
-     width="150" >
-      <button.commit_callback
-       function="ClickDefault" />
-    </button>
+			follows="right|bottom"
+			height="22"
+			image_overlay="Popup_Caution"
+			image_pressed="PushButton_Press"
+			image_pressed_selected="PushButton_Selected_Press"
+			image_selected="PushButton_Selected_Press"
+			name="sanity_warning_btn"
+			right="-160"
+			tool_tip="This debug setting failed the sanity check; its value lies outside the recommended range."
+			top_pad="10"
+			visible="true"
+			width="22">
+			<button.commit_callback
+				function="ClickSanityIcon" />
+		</button>
+		<button
+			follows="right|bottom"
+			height="22"
+			label="Reset to default"
+			layout="topleft"
+			left_pad="4"
+			name="default_btn"
+			tool_tip="Reset this debug setting to its default value."
+			width="100">
+			<button.commit_callback
+				function="ClickDefault" />
+		</button>
+	</panel>
 </floater>
