@@ -41,6 +41,111 @@
                 font="SansSerifSmall"
                 height="20"
                 initial_value="false"
+                control_name="ShowRlvMenu"
+                label="Enable RLV"
+                left="15"
+                name="ShowRlvMenu"
+                tool_tip="Enable the Restrained Life Viewer functionality"
+                width="270"/>
+          <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="KokuaRLVEnableBlindStartup"
+              enabled_control="RestrainedLove"
+              label="Apply blinding effect upon login"
+              left="25"
+              name="RlvBlinding"
+              tool_tip="Turning this option on enables RLV's blind-at-login functionality which has historically not been included in Kokua"
+              width="270"/>
+          <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="RestrainedLoveCanOoc"
+              enabled_control="RestrainedLove"
+              label="Allow OOC chat using (( )) (Needs restart)"
+              left="25"
+              name="RlvCanOoc"
+              tool_tip="Turning this option off disables the ability to use (( )) for OOC chat"
+              width="270"/>
+           <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="KokuaRLVOOCChatIsRedirected"
+              enabled_control="RestrainedLove"
+              label="Send OOC chat to redirected chat rather than local chat"
+              left="35"
+              name="KokuaRLVOOCChatIsRedirected"
+              tool_tip="Turning this option on sends OOC chat to redirected chat receivers (as in RLV 2.9.24.1+) rather than local chat. OOC chat must be enabled otherwise it will appear as ... in local chat."
+              width="270"/>
+          <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="KokuaRLVDisableBlacklist"
+              enabled_control="RestrainedLove"
+              label="Disable RLV restriction blacklist (Needs restart)"
+              left="25"
+              name="RlvNoBlacklist"
+              tool_tip="Disables the RLV restriction blacklist by always reading an empty string"
+              width="270"/>
+          <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="KokuaRLVDefeatStandTP"
+              enabled_control="RestrainedLove"
+              label="Defeat @standtp (for situations where its logic is counter-intuitive)"
+              left="25"
+              name="RlvDefeatStandTP"
+              tool_tip="Defeat @standtp (intended for situations where the remembered location is unsuitable - eg where the avatar sat and was moved prior to logoff)"
+              width="270"/>
+          <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="RestrainedLoveHeadMouselookRenderRigged"
+              enabled_control="RestrainedLove"
+              label="Render head-attached rigged mesh while in mouselook"
+              left="25"
+              name="RestrainedLoveHeadMouselookRenderRigged"
+              tool_tip="From RLV 2.9.25 rigged mesh attached to the head will not render in mouselook; enable this setting to restore original behaviour"
+              width="270"/>
+          <!-- reminder: if more controls are added here, add them to the delete list in floaterpreferences.cpp for RLV always-on mode -->
+          <check_box
+                top_pad="5"
+                layout="topleft"
+                follows="left|top"
+                enabled="true"
+                font="SansSerifSmall"
+                height="20"
+                initial_value="false"
                 control_name="DisableFly"
                 label="Do not let me Fly"
                 left="15"
@@ -287,16 +392,6 @@
             height="20"
             width="400"
             tool_tip="Give a V1-style message in chat when friends come online or go offline"/>
-            <check_box
-            control_name="KokuaGiveSingleRLVMessage"
-            name="KokuaGiveSingleRLVMessage"
-            label="Warn once about RLV commands being seen and then discard silently"
-            layout="topleft"
-            top_pad="5"
-            left="15"
-            height="20"
-            width="400"
-            tool_tip="Give a message in local chat the first time a RLV (@something) command is seen and thereafter discard silently"/>
             <check_box
             control_name="StreamMetadataAnnounceToChat"
             name="StreamMetadataAnnounceToChat"
@@ -794,7 +889,7 @@
         border="true"
         follows="all"
         height="408"
-        label="Region 1"
+        label="Performance 1"
         left="1"
         mouse_opaque="true"
         name="kokua_performance_1"
@@ -1160,7 +1255,7 @@
       border="true"
       follows="all"
       height="408"
-      label="Region 2"
+      label="Performance 2"
       left="1"
       mouse_opaque="true"
       name="kokua_performance_2"
@@ -1462,450 +1557,6 @@
          name="KokuaPerformanceBasicsTDBelowThreshold"
          top_delta="20"
          width="180" />
-    </panel>
-    <!-- Sound Output Devices -->
-    <panel
-        border="true"
-        follows="all"
-        height="408"
-        label="Sounds"
-        left="1"
-        mouse_opaque="true"
-        name="Media Sounds Panel"
-        width="517">
-        <slider
-            control_name="AudioLevelMaster"
-            follows="left|top"
-            font.style="BOLD"
-            height="15"
-            increment="0.025"
-            initial_value="0.5"
-            label="Master volume"
-            label_width="120"
-            layout="topleft"
-            left="0"
-            name="System Volume"
-            show_text="false"
-            slider_label.halign="right"
-            top="10"
-            volume="true"
-            width="300">
-            <slider.commit_callback
-            function="Pref.setControlFalse"
-            parameter="MuteAudio" />
-        </slider>
-        <button
-            control_name="MuteAudio"
-            follows="top|left"
-            height="16"
-            image_selected="AudioMute_Off"
-            image_unselected="Audio_Off"
-            is_toggle="true"
-            layout="topleft"
-            left_pad="5"
-            name="mute_audio"
-            tab_stop="false"
-            width="16">
-            <button.commit_callback
-            function="Pref.SetSounds"/>
-        </button>
-        <check_box
-        control_name="MuteWhenMinimized"
-        height="15"
-        initial_value="true"
-        label="Mute when minimized"
-        layout="topleft"
-        name="mute_when_minimized"
-        top_delta="3"
-        left_pad="5"
-        width="235" />
-        <slider
-            control_name="AudioLevelUI"
-            disabled_control="MuteAudio"
-            follows="left|top"
-            height="15"
-            increment="0.025"
-            initial_value="0.5"
-            label="Buttons"
-            label_width="120"
-            layout="topleft"
-            left="0"
-            name="UI Volume"
-            show_text="false"
-            slider_label.halign="right"
-            top_pad="4"
-            volume="true"
-            width="300">
-            <slider.commit_callback
-            function="Pref.setControlFalse"
-            parameter="MuteUI" />
-        </slider>
-        <button
-        control_name="MuteUI"
-        disabled_control="MuteAudio"
-        follows="top|left"
-        height="16"
-        image_selected="AudioMute_Off"
-        image_unselected="Audio_Off"
-        is_toggle="true"
-        layout="topleft"
-        left_pad="5"
-        name="mute_audio"
-        tab_stop="false"
-        width="16" />
-        <slider
-            control_name="AudioLevelAmbient"
-            disabled_control="MuteAudio"
-            follows="left|top"
-            height="15"
-            increment="0.025"
-            initial_value="0.5"
-            label="Ambient"
-            label_width="120"
-            layout="topleft"
-            left="0"
-            name="Wind Volume"
-            show_text="false"
-            slider_label.halign="right"
-            top_pad="4"
-            volume="true"
-            width="300">
-            <slider.commit_callback
-            function="Pref.setControlFalse"
-            parameter="MuteAmbient" />
-        </slider>
-        <button
-        control_name="MuteAmbient"
-        disabled_control="MuteAudio"
-        follows="top|left"
-        height="16"
-        image_selected="AudioMute_Off"
-        image_unselected="Audio_Off"
-        is_toggle="true"
-        layout="topleft"
-        left_pad="5"
-        name="mute_audio"
-        tab_stop="false"
-        width="16" />
-        <check_box
-        name="collisions_audio_play_btn"
-        control_name="FSPlayCollisionSounds"
-        disabled_control="MuteAudio"
-        height="16"
-        layout="topleft"
-        left_pad="5"
-        tool_tip="Check this to hear default sounds from collisions"
-        label="Play sounds from collisions"
-        top_delta="2"
-        width="350"/>
-        <slider
-            control_name="AudioLevelSFX"
-            disabled_control="MuteAudio"
-            follows="left|top"
-            height="15"
-            increment="0.025"
-            initial_value="0.5"
-            label="Sound Effects"
-            label_width="120"
-            slider_label.halign="right"
-            layout="topleft"
-            left="0"
-            name="SFX Volume"
-            show_text="false"
-            top_pad="2"
-            volume="true"
-            width="300">
-            <slider.commit_callback
-            function="Pref.setControlFalse"
-            parameter="MuteSounds" />
-        </slider>
-        <button
-            control_name="MuteSounds"
-            disabled_control="MuteAudio"
-            follows="top|left"
-            height="16"
-            image_selected="AudioMute_Off"
-            image_unselected="Audio_Off"
-            is_toggle="true"
-            layout="topleft"
-            left_pad="5"
-            name="mute_audio"
-            tab_stop="false"
-            width="16">
-            <button.commit_callback
-            function="Pref.SetSounds"/>
-        </button>
-        <check_box
-        name="gesture_audio_play_btn"
-        control_name="EnableGestureSounds"
-        disabled_control="MuteAudio"
-        height="16"
-        layout="topleft"
-        left_pad="5"
-        tool_tip="Check this to hear sounds from gestures"
-        label="Play sounds from gestures"
-        top_delta="2"
-        width="350"/>
-        <slider
-            control_name="AudioLevelMusic"
-            disabled_control="MuteAudio"
-            follows="left|top"
-            height="15"
-            increment="0.025"
-            initial_value="0.5"
-            label="Streaming music"
-            label_width="120"
-            layout="topleft"
-            left="0"
-            name="Music Volume"
-            slider_label.halign="right"
-            show_text="false"
-            top_pad="2"
-            volume="true"
-            width="300">
-            <slider.commit_callback
-            function="Pref.setControlFalse"
-            parameter="MuteMusic" />
-        </slider>
-        <button
-        control_name="MuteMusic"
-        disabled_control="MuteAudio"
-        follows="top|left"
-        height="16"
-        image_selected="AudioMute_Off"
-        image_unselected="Audio_Off"
-        is_toggle="true"
-        layout="topleft"
-        left_pad="5"
-        name="mute_audio"
-        tab_stop="false"
-        width="16" />
-        <check_box
-            control_name="AudioStreamingMusic"
-            height="16"
-            label="Enabled"
-            layout="topleft"
-            left_pad="5"
-            name="enable_music"
-            top_delta="2"
-            width="350">
-            <!--
-             <check_box.commit_callback
-             function="Pref.updateMediaAutoPlayCheckbox"/>
-             -->
-        </check_box>
-        <slider
-            control_name="AudioLevelMedia"
-            disabled_control="MuteAudio"
-            follows="left|top"
-            height="16"
-            increment="0.025"
-            initial_value="0.5"
-            label="Media"
-            label_width="120"
-            layout="topleft"
-            left="0"
-            name="Media Volume"
-            show_text="false"
-            slider_label.halign="right"
-            top_pad="2"
-            volume="true"
-            width="300">
-            <slider.commit_callback
-            function="Pref.setControlFalse"
-            parameter="MuteMedia" />
-        </slider>
-        <button
-        control_name="MuteMedia"
-        disabled_control="MuteAudio"
-        follows="top|left"
-        height="16"
-        image_selected="AudioMute_Off"
-        image_unselected="Audio_Off"
-        is_toggle="true"
-        layout="topleft"
-        left_pad="5"
-        name="mute_audio"
-        tab_stop="false"
-        width="16" />
-        <check_box
-            label_text.halign="left"
-            follows="left|top"
-            height="16"
-            control_name ="AudioStreamingMedia"
-            label="Enabled"
-            layout="topleft"
-            top_delta="2"
-            left_pad="5"
-            name="enable_media"
-            width="110">
-            <!--
-             <check_box.commit_callback
-             function="Pref.updateMediaAutoPlayCheckbox"/>
-             -->
-        </check_box>
-        <slider
-            control_name="AudioLevelVoice"
-            disabled_control="MuteAudio"
-            follows="left|top"
-            height="16"
-            increment="0.025"
-            initial_value="0.5"
-            label="Voice Chat"
-            label_width="120"
-            layout="topleft"
-            left="0"
-            top_pad="2"
-            name="Voice Volume"
-            show_text="false"
-            slider_label.halign="right"
-            volume="true"
-            width="300">
-            <slider.commit_callback
-            function="Pref.setControlFalse"
-            parameter="MuteVoice" />
-        </slider>
-        <button
-        control_name="MuteVoice"
-        disabled_control="MuteAudio"
-        follows="top|left"
-        height="16"
-        image_selected="AudioMute_Off"
-        image_unselected="Audio_Off"
-        is_toggle="true"
-        layout="topleft"
-        left_pad="5"
-        name="mute_audio"
-        tab_stop="false"
-        width="16" />
-        <check_box
-        label_text.halign="left"
-        follows="left|top"
-        height="16"
-        control_name ="EnableVoiceChat"
-        disabled_control="CmdLineDisableVoice"
-        label="Enabled"
-        layout="topleft"
-        top_delta="2"
-        left_pad="5"
-        name="enable_voice_check_volume"
-        width="110"/>
-        
-        <text
-            type="string"
-            length="1"
-            follows="top|left"
-            height="15"
-            layout="topleft"
-            left="26"
-            top_pad="15"
-            name="friends_logon_sounds_label"
-            width="225">
-            Play a sound when my friends:
-        </text>
-        <check_box
-        control_name="PlayModeUISndFriendOnline"
-        name="friends_notify_online_sound"
-        label="Log in"
-        layout="topleft"
-        top_pad="5"
-        left_delta="5"
-        height="16"
-        width="85" />
-        <check_box
-        control_name="PlayModeUISndFriendOffline"
-        name="friends_notify_offline_sound"
-        label="Log out"
-        layout="topleft"
-        left_pad="0"
-        height="18"
-        width="85" />
-        
-        <text
-            type="string"
-            length="1"
-            follows="left|top"
-            height="10"
-            layout="topleft"
-            left="26"
-            name="money_change_threshold_label"
-            tool_tip="Plays a sound when money is spent or received higher then the amount set here."
-            mouse_opaque="false"
-            top_pad="10"
-            width="117">
-            L$ change threshold:
-        </text>
-        <spinner
-        control_name="UISndMoneyChangeThreshold"
-        enabled="true"
-        decimal_digits="0"
-        layout="topleft"
-        follows="left|top"
-        height="18"
-        top_pad="7"
-        left_delta="5"
-        increment="10"
-        initial_value="10"
-        max_val="10000"
-        min_val="0"
-        name="money_change_threshold"
-        width="75" />
-        
-        <panel
-            background_visible="false"
-            border="false"
-            follows="top|left|right"
-            height="100"
-            layout="topleft"
-            left="10"
-            right="-5"
-            name="output_device_settings_panel"
-            top_pad="5">
-            <panel.string
-                name="output_default_text">
-                Default
-            </panel.string>
-            <panel.string
-                name="output_no_device">
-                No device available
-            </panel.string>
-            <panel.string
-                name="output_name_no_device">
-                Unnamed device
-            </panel.string>
-            <panel.string
-                name="output_device_unavailable">
-                Unavailable device
-            </panel.string>
-            <icon
-            height="18"
-            image_name="Parcel_Voice_Light"
-            left_delta="4"
-            name="output_speaker_icon"
-            mouse_opaque="false"
-            top="7"
-            visible="true"
-            width="18" />
-            <text
-                type="string"
-                length="1"
-                follows="left|top"
-                height="16"
-                layout="topleft"
-                left_pad="3"
-                name="output_label"
-                width="90">
-                Output device:
-            </text>
-            <combo_box
-            height="23"
-            layout="topleft"
-            left_pad="0"
-            max_chars="128"
-            name="sound_output_device"
-            top_delta="-5"
-            right="-5" />
-        </panel>
     </panel>
   </tab_container>
 </panel>
