@@ -125,6 +125,7 @@
 #include "llnotifications.h"
 #include "llnotificationsutil.h"
 
+#include "sanitycheck.h"
 #include "llleap.h"
 #include "stringize.h"
 #include "llcoros.h"
@@ -698,7 +699,8 @@ LLAppViewer::LLAppViewer()
 	mFastTimerLogThread(NULL),
 	mSettingsLocationList(NULL),
 	mIsFirstRun(false),
-	mMinMicroSecPerFrame(0.f)
+	mMinMicroSecPerFrame(0.f),
+	mSaveSettingsOnExit(true)		// <FS:Zi> Backup Settings
 {
 	if(NULL != sInstance)
 	{
@@ -1254,6 +1256,8 @@ bool LLAppViewer::init()
         boost::bind(&LLControlGroup::getU32, boost::ref(gSavedSettings), _1),
         boost::bind(&LLControlGroup::declareU32, boost::ref(gSavedSettings), _1, _2, _3, LLControlVariable::PERSIST_ALWAYS));
 
+	// initializing the settings sanity checker
+	SanityCheck::instance().init();
 	// TODO: consider moving proxy initialization here or LLCopocedureManager after proxy initialization, may be implement
 	// some other protection to make sure we don't use network before initializng proxy
 
@@ -1328,7 +1332,8 @@ void LLAppViewer::checkMemory()
 	
 	if(is_low)
 	{
-		LLMemory::logMemoryInfo() ;
+		// <FS:Ansariel> Causes spammy log output
+		//LLMemory::logMemoryInfo() ;
 	}
 }
 
@@ -1741,6 +1746,39 @@ bool LLAppViewer::cleanup()
 
 	LL_INFOS() << "Cleaning Up" << LL_ENDL;
 
+	// <FS:Zi> Backup Settings
+	if(mSaveSettingsOnExit)
+	{
+	// </FS:Zi>
+	// FIRE-4871: Save per-account settings earlier -- TS
+	std::string per_account_settings_file = gSavedSettings.getString("PerAccountSettingsFile");
+	if (per_account_settings_file.empty())
+	{
+		LL_INFOS() << "Not saving per-account settings; don't know the account name yet." << LL_ENDL;
+	}
+	// Only save per account settings if the previous login succeeded, otherwise
+	// we might end up with a cleared out settings file in case a previous login
+	// failed after loading per account settings. -Zi
+	else if (!mSavePerAccountSettings)
+	{
+		LL_INFOS() << "Not saving per-account settings; last login was not successful." << LL_ENDL;
+	}
+	else
+	{
+		gSavedPerAccountSettings.saveToFile(per_account_settings_file, TRUE);
+		LL_INFOS() << "First time: Saved per-account settings to " <<
+		        per_account_settings_file << LL_ENDL;
+	}
+	gSavedSettings.saveToFile(gSavedSettings.getString("ClientSettingsFile"), TRUE);
+	// /FIRE-4871
+	// <FS:Zi> Backup Settings
+	}
+	else
+	{
+		LL_INFOS() << "Not saving settings, to prevent settings restore failure." << LL_ENDL;
+	}
+	// </FS:Zi>
+
 	// shut down mesh streamer
 	gMeshRepo.shutdown();
 
@@ -1932,10 +1970,20 @@ bool LLAppViewer::cleanup()
 
 	// Must do this after all panels have been deleted because panels that have persistent rects
 	// save their rects on delete.
-	gSavedSettings.saveToFile(gSavedSettings.getString("ClientSettingsFile"), TRUE);
-	
+	if(mSaveSettingsOnExit)		// <FS:Zi> Backup Settings
+	{
+		gSavedSettings.saveToFile(gSavedSettings.getString("ClientSettingsFile"), TRUE);
+
 	LLUIColorTable::instance().saveUserSettings();
 
+	}	// <FS:Zi> Backup Settings
+	
+	
+	// <FS:Zi> Backup Settings
+	if(mSaveSettingsOnExit)
+	{
+	std::string per_account_settings_file = gSavedSettings.getString("PerAccountSettingsFile");
+	// </FS:Zi>
 	// PerAccountSettingsFile should be empty if no user has been logged on.
 	// *FIX:Mani This should get really saved in a "logoff" mode. 
 	if (gSavedSettings.getString("PerAccountSettingsFile").empty())
@@ -1951,14 +1999,28 @@ bool LLAppViewer::cleanup()
 	}
 	else
 	{
-		gSavedPerAccountSettings.saveToFile(gSavedSettings.getString("PerAccountSettingsFile"), TRUE);
-		LL_INFOS() << "Saved settings" << LL_ENDL;
+		gSavedPerAccountSettings.saveToFile(per_account_settings_file, TRUE);
+		LL_INFOS() << "Second time: Saved per-account settings to " <<
+		        per_account_settings_file << LL_ENDL;
 	}
+	// <FS:Zi> Backup Settings
+	}
+	else
+	{
+		LL_INFOS() << "Not saving settings, to prevent settings restore failure." << LL_ENDL;
+	}
+	// </FS:Zi>
 
-	std::string warnings_settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, getSettingsFilename("Default", "Warnings"));
+	// We need to save all crash settings, even if they're defaults [see LLCrashLogger::loadCrashBehaviorSetting()]
+	gCrashSettings.saveToFile(gSavedSettings.getString("CrashSettingsFile"),FALSE);
+
+	//std::string warnings_settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, getSettingsFilename("Default", "Warnings"));
+	std::string warnings_settings_filename = gDirUtilp->getExpandedFilename(LL_PATH_USER_SETTINGS, getSettingsFilename("User", "Warnings"));
+	if(mSaveSettingsOnExit)		// <FS:Zi> Backup Settings
 	gWarningSettings.saveToFile(warnings_settings_filename, TRUE);
 
 	// Save URL history file
+	if(mSaveSettingsOnExit)		// <FS:Zi> Backup Settings
 	LLURLHistory::saveFile("url_history.xml");
 
 	// save mute list. gMuteList used to also be deleted here too.
@@ -2543,6 +2605,15 @@ bool LLAppViewer::initConfiguration()
 
 		gSavedSettings.setBOOL("FirstRunThisInstall", FALSE);
 	}
+
+	// <FS:CR> Compatibility with old backups
+	// Put gSavedSettings here, gSavedPerAccountSettings in llstartup.cpp
+	// *TODO: Should we keep these around forever or just three release cycles?
+	if (gSavedSettings.getBOOL("FSFirstRunAfterSettingsRestore"))
+	{
+		// Nothing happened...
+	}
+	// </FS:CR>
 
 	if (clp.hasOption("sessionsettings"))
 	{
@@ -3715,6 +3786,7 @@ void LLAppViewer::recordMarkerVersion(LLAPRFile& marker_file)
 
 	// record the viewer version in the marker file
 	marker_file.write(marker_version.data(), marker_version.length());
+	marker_file.flush(); // <FS:ND/> Make sure filesystem reflects what we wrote.
 }
 
 bool LLAppViewer::markerIsSameVersion(const std::string& marker_name) const
@@ -3766,7 +3838,8 @@ void LLAppViewer::processMarkerFiles()
 		// now test to see if this file is locked by a running process (try to open for write)
 		LL_DEBUGS("MarkerFile") << "Checking exec marker file for lock..." << LL_ENDL;
 		mMarkerFile.open(mMarkerFileName, LL_APR_WB);
-		apr_file_t* fMarker = mMarkerFile.getFileHandle() ; 
+		//apr_file_t* fMarker = mMarkerFile.getFileHandle() ;
+		LLAPRFile::tFiletype* fMarker = mMarkerFile.getFileHandle() ; 
 		if (!fMarker)
 		{
 			LL_INFOS("MarkerFile") << "Exec marker file open failed - assume it is locked." << LL_ENDL;
@@ -3779,6 +3852,7 @@ void LLAppViewer::processMarkerFiles()
 			{
 				LL_WARNS_ONCE("MarkerFile") << "Locking exec marker failed." << LL_ENDL;
 				mSecondInstance = true; // lost a race? be conservative
+				mMarkerFile.close(); // <FS:ND/> Cannot lock the file and take ownership. Don't keep it open
 			}
 			else
 			{
@@ -4457,6 +4531,10 @@ bool finish_disconnect(const LLSD& notification, const LLSD& response)
 
 	if (1 == option)
 	{
+		if (gFloaterView)
+		{
+			gFloaterView->closeAllChildren(true);
+		}
         LLAppViewer::instance()->forceQuit();
 	}
 	return false;
@@ -4465,6 +4543,10 @@ bool finish_disconnect(const LLSD& notification, const LLSD& response)
 // Callback from an early disconnect dialog, force an exit
 bool finish_forced_disconnect(const LLSD& notification, const LLSD& response)
 {
+	if (gFloaterView)
+	{
+		gFloaterView->closeAllChildren(true);
+	}
 	LLAppViewer::instance()->forceQuit();
 	return false;
 }
@@ -5489,7 +5571,10 @@ void LLAppViewer::forceErrorDriverCrash()
 	glDeleteTextures(1, NULL);
 }
 
-void LLAppViewer::initMainloopTimeout(const std::string& state, F32 secs)
+// <FS:ND> Change from std::string to char const*, saving a lot of object construction/destruction per frame
+//void LLAppViewer::initMainloopTimeout(const std::string& state, F32 secs)
+void LLAppViewer::initMainloopTimeout( char const* state, F32 secs)
+// </FS:ND>
 {
 	if(!mMainloopTimeout)
 	{
@@ -5507,7 +5592,10 @@ void LLAppViewer::destroyMainloopTimeout()
 	}
 }
 
-void LLAppViewer::resumeMainloopTimeout(const std::string& state, F32 secs)
+// <FS:ND> Change from std::string to char const*, saving a lot of object construction/destruction per frame
+//void LLAppViewer::resumeMainloopTimeout(const std::string& state, F32 secs)
+void LLAppViewer::resumeMainloopTimeout( char const* state, F32 secs)
+// </FS:ND>
 {
 	if(mMainloopTimeout)
 	{
@@ -5530,7 +5618,10 @@ void LLAppViewer::pauseMainloopTimeout()
 	}
 }
 
-void LLAppViewer::pingMainloopTimeout(const std::string& state, F32 secs)
+// <FS:ND> Change from std::string to char const*, saving a lot of object construction/destruction per frame
+//void LLAppViewer::pingMainloopTimeout(const std::string& state, F32 secs)
+void LLAppViewer::pingMainloopTimeout( char const* state, F32 secs)
+// </FS:ND>
 {
 //	if(!restoreErrorTrap())
 //	{
@@ -5622,7 +5713,11 @@ void LLAppViewer::setMasterSystemAudioMute(bool mute)
 //virtual
 bool LLAppViewer::getMasterSystemAudioMute()
 {
-	return gSavedSettings.getBOOL("MuteAudio");
+	// <FS:Ansariel> Replace frequently called gSavedSettings
+	//return gSavedSettings.getBOOL("MuteAudio");
+	static LLCachedControl<bool> sMuteAudio(gSavedSettings, "MuteAudio");
+	return sMuteAudio;
+	// </FS:Ansariel>
 }
 
 //----------------------------------------------------------------------------

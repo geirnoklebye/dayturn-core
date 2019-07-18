@@ -45,10 +45,17 @@ public:
 		const std::string& app_read_only_data_dir);
 
 	virtual std::string getCurPath();
+	virtual BOOL getNextFileInDir(const std::string &dirname, const std::string &mask, std::string &fname);
 	virtual bool fileExists(const std::string &filename) const;
 
 	/*virtual*/ std::string getLLPluginLauncher();
 	/*virtual*/ std::string getLLPluginFilename(std::string base_name);
+
+//<FS:TS> Used by LGG's selection beams
+private:
+	int mCurrentDirIndex;
+	int mCurrentDirCount;
+	std::string mCurrentDir;
 };
 
 #endif // LL_LLDIR_MAC_H

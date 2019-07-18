@@ -775,6 +775,7 @@ set(viewer_SOURCE_FILES
     pipeline.cpp
     utilitybar.cpp
     viewerinfo.cpp
+    sanitycheck.cpp
     streamtitledisplay.cpp
 	NACLfloaterexploresounds.cpp
     )
@@ -1429,8 +1430,9 @@ set(viewer_HEADER_FILES
     pieseparator.h
     pieslice.h
     pipeline.h
-    streamtitledisplay.h
     roles_constants.h
+    sanitycheck.h
+    streamtitledisplay.h
     utilitybar.h
     VertexCache.h
     viewerinfo.h

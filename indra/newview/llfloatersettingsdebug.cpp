@@ -33,6 +33,7 @@
 #include "llspinctrl.h"
 #include "llcolorswatch.h"
 #include "llviewercontrol.h"
+#include "sanitycheck.h"
 #include "lltexteditor.h"
 
 
@@ -42,6 +43,7 @@ LLFloaterSettingsDebug::LLFloaterSettingsDebug(const LLSD& key)
 	mCommitCallbackRegistrar.add("SettingSelect",	boost::bind(&LLFloaterSettingsDebug::onSettingSelect, this,_1));
 	mCommitCallbackRegistrar.add("CommitSettings",	boost::bind(&LLFloaterSettingsDebug::onCommitSettings, this));
 	mCommitCallbackRegistrar.add("ClickDefault",	boost::bind(&LLFloaterSettingsDebug::onClickDefault, this));
+	mCommitCallbackRegistrar.add("ClickSanityIcon",	boost::bind(&LLFloaterSettingsDebug::onClickSanityWarning, this));
 
 }
 
@@ -51,6 +53,7 @@ LLFloaterSettingsDebug::~LLFloaterSettingsDebug()
 BOOL LLFloaterSettingsDebug::postBuild()
 {
 	LLComboBox* settings_combo = getChild<LLComboBox>("settings_combo");
+	mSanityButton = getChild<LLButton>("sanity_warning_btn");
 
 	struct f : public LLControlGroup::ApplyFunctor
 	{
@@ -97,6 +100,18 @@ void LLFloaterSettingsDebug::onSettingSelect(LLUICtrl* ctrl)
 	LLControlVariable* controlp = (LLControlVariable*)combo_box->getCurrentUserdata();
 
 	updateControl(controlp);
+}
+
+void LLFloaterSettingsDebug::onSanityCheck()
+{
+	SanityCheck::instance().onSanity(mCurrentControlVariable);
+}
+
+void LLFloaterSettingsDebug::onClickSanityWarning()
+{
+	// pass "true" to tell the sanity checker to pop up the warning, even when
+	// it was shown before and would be suppressed otherwise
+	SanityCheck::instance().onSanity(mCurrentControlVariable, true);
 }
 
 void LLFloaterSettingsDebug::onCommitSettings()
@@ -168,6 +183,10 @@ void LLFloaterSettingsDebug::onCommitSettings()
 	  default:
 		break;
 	}
+	if (!mCurrentControlVariable->isSane())
+	{
+		onSanityCheck();
+	}
 }
 
 // static
@@ -207,6 +226,7 @@ void LLFloaterSettingsDebug::updateControl(LLControlVariable* controlp)
 	getChildView("val_text")->setVisible( FALSE);
 	mComment->setText(LLStringUtil::null);
 
+	mSanityButton->setVisible(FALSE);
 	if (controlp)
 	{
 		eControlType type = controlp->type();
@@ -214,6 +234,7 @@ void LLFloaterSettingsDebug::updateControl(LLControlVariable* controlp)
 		//hide combo box only for non booleans, otherwise this will result in the combo box closing every frame
 		getChildView("boolean_combo")->setVisible( type == TYPE_BOOLEAN);
 		
+		mSanityButton->setVisible(!mCurrentControlVariable->isSane());
 
 		mComment->setText(controlp->getComment());
 		spinner1->setMaxValue(F32_MAX);

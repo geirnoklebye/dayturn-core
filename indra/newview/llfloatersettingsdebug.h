@@ -45,6 +45,8 @@ public:
 	void onSettingSelect(LLUICtrl* ctrl);
 	void onCommitSettings();
 	void onClickDefault();
+	void onSanityCheck();
+	void onClickSanityWarning();
 
 private:
 	// key - selects which settings to show, one of:
@@ -53,7 +55,10 @@ private:
 	virtual ~LLFloaterSettingsDebug();
 	
 protected:
+	LLControlVariable* mCurrentControlVariable;
+	LLControlVariable* mOldControlVariable;
 	class LLTextEditor* mComment;
+	LLButton* mSanityButton;
 };
 
 #endif //LLFLOATERDEBUGSETTINGS_H

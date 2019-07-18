@@ -209,6 +209,8 @@ public:
 	 */
 	static void destroyClass();
 	static std::string getStoredFavoritesFilename();
+	// for settings backup/restore
+	static std::string getStoredFavoritesFilenameWithoutPath();
 	static std::string getSavedOrderFileName();
 
 	BOOL saveFavoritesRecord(bool pref_changed = false);
