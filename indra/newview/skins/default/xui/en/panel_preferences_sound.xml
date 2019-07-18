@@ -30,7 +30,7 @@
         layout="topleft"
         follows="all"
         height="408"
-        label="Sound (Maine)"
+        label="Sound (Main)"
         left="1"
         mouse_opaque="true"
         name="sound_main"
