@@ -4156,7 +4156,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Preferences_Label">Preferences</string>
   <string name="Command_Profile_Label">Profile</string>
   <string name="Command_Report_Abuse_Label">Report Abuse</string>
-  <string name="Command_Search_Label">Search</string>
+  <string name="Command_Search_Label">SL Search</string>
   <string name="Command_Snapshot_Label">Snapshot</string>
   <string name="Command_Speak_Label">Speak</string>
   <string name="Command_Twitter_Label">Twitter</string>
