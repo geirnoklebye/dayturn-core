@@ -14,5 +14,5 @@
   single_instance="true"
   save_rect="true"
   title="Find New Grids"
-  width="780"
+  width="1080"
   filename="floater_web_content.xml"/>
