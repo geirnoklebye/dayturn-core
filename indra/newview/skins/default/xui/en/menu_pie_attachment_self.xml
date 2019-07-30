@@ -55,12 +55,10 @@
     </pie_slice>
     <pie_menu
         label="Appearance &gt;"
-        layout="topleft"
         name="Appearance &gt;">
 
         <pie_slice label="Edit Shape"
-           layout="topleft"
-           name="Edit My Shape">
+            name="Edit My Shape">
            <pie_slice.on_click
                function="EditShape" />
            <pie_slice.on_enable
@@ -102,7 +100,7 @@
            <pie_slice.on_enable
                function="Edit.EnableCustomizeAvatar" />
         </pie_slice>
-        <pie_separator />
+
 		<pie_slice
 		 label="Hover Height"
 		 name="Hover Height">
