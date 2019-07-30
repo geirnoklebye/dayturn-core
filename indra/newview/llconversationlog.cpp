@@ -572,7 +572,7 @@ bool LLConversationLog::loadFromFile(const std::string& filename)
 		std::string conv_name = is_adhoc ? conv_name_buffer : LLURI::unescape(conv_name_buffer);
 		std::string file_name = is_adhoc ? history_file_name : LLURI::unescape(history_file_name);
 
-		ConversationParams params;
+		ConversationParams params = ConversationParams();
 		params.time(LLUnits::Seconds::fromValue(time))
 			.conversation_type((SessionType)stype)
 			.has_offline_ims(has_offline_ims)
