@@ -442,8 +442,8 @@
     top_delta="20"
     left="400"
   	top="21"
-    width="128">
-     Mesh
+    width="148">
+     Mesh Level of Detail LOD
   </text>
 
   <slider
@@ -518,6 +518,7 @@
     increment="0.125"
     initial_value="160"
     label="Objects:"
+    tool_tip="Object Level of Detail when increased improves clarity at increased distance from an object. But, the increase can affect overall performance negatively, which is commonly known as LAG."
     label_width="185"
     layout="topleft"
     left="420"
