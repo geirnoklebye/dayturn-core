@@ -408,7 +408,7 @@ void init_default_trans_args()
 	default_trans_args.insert("create_account_url");
 }
 
-struct SettingsFile : public LLInitParam::Block<SettingsFile>
+struct SettingsFile :  LLInitParam::Block<SettingsFile>
 {
 	Mandatory<std::string>	name;
 	Optional<std::string>	file_name;
@@ -425,7 +425,7 @@ struct SettingsFile : public LLInitParam::Block<SettingsFile>
 	{}
 };
 
-struct SettingsGroup : public LLInitParam::Block<SettingsGroup>
+struct SettingsGroup : LLInitParam::Block<SettingsGroup>
 {
 	Mandatory<std::string>	name;
 	Mandatory<S32>			path_index;
@@ -438,7 +438,7 @@ struct SettingsGroup : public LLInitParam::Block<SettingsGroup>
 	{}
 };
 
-struct SettingsFiles : public LLInitParam::Block<SettingsFiles>
+struct SettingsFiles : LLInitParam::Block<SettingsFiles>
 {
 	Multiple<SettingsGroup>	groups;
 
