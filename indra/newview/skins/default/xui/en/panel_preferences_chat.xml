@@ -125,19 +125,10 @@
     <text
         layout="topleft"
         height="12"
-        name="notifications"
-        left="0"
-        width="120"
-        top_pad="13">
-      Notifications
-    </text>
-    <text
-        layout="topleft"
-        height="12"
         name="friend_ims"
         width="145"
         left="0"
-        top_pad="13">
+        top_pad="20">
       Friend IMs:
     </text>
     <combo_box
