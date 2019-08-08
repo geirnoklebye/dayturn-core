@@ -35,7 +35,7 @@
     label_width="185"
     layout="topleft"
     left="30"
-    min_val="64"
+    min_val="0"
     max_val="1024"
     name="DrawDistance"
     top_delta="16"
