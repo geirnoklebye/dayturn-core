@@ -858,7 +858,7 @@
              width="260" />
 			<button
 			 left="10"
-			 top="222"
+			 top="290"
 			 height="20"
 			 label="Align"
 			 label_selected="Align current texture layers"
