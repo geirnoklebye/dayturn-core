@@ -27,7 +27,7 @@ version 33
 // NOTE: All settings are set to the MIN of applied values, including 'all'!
 //
 list all
-RenderAnisotropic			1	1
+RenderAnisotropic			1	0
 RenderAvatarCloth			1	1
 RenderAvatarLODFactor		1	1.0
 RenderAvatarPhysicsLODFactor 1	1.0
