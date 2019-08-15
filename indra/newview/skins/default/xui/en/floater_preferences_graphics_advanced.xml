@@ -330,6 +330,7 @@
     layout="topleft"
     left="30"
     name="ani"
+	tool_tip="Makes textures at angles appear sharper. Slows performance on less-powerful graphics cards"
     top_delta="16"
     width="256" />
 
