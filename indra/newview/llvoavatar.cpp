@@ -8364,7 +8364,7 @@ bool LLVOAvatar::isTooComplex() const
 
 				F32 cam_dist_draw_max_squared = gAgent.mRRInterface.mCamDistDrawMax * gAgent.mRRInterface.mCamDistDrawMax;;
 				F32 distance_to_self_squared = (F32)avatar_pos_relative.magVecSquared();
-				if (distance_to_self_squared > cam_dist_draw_max_squared)
+				if (distance_to_self_squared > cam_dist_draw_max_squared + 2.0f)
 				{
 					return true;
 				}
