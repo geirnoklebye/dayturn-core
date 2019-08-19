@@ -2298,6 +2298,14 @@
                  function="Floater.Show"
                  parameter="scene_load_stats" />
             </menu_item_call>
+            <menu_item_call
+             label="Script Statistics"
+             name="Script Statistics"
+             shortcut="control|shift|8">
+                <on_click
+                 function="Floater.Show"
+                 parameter="script_stats" />
+            </menu_item_call>
       <menu_item_check
         label="Show avatar complexity information"
         name="Avatar Draw Info">
