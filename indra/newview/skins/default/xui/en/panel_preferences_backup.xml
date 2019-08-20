@@ -403,7 +403,7 @@ Settings groups to be restored (backup will always save all):
      top_pad="5"
      follows="left|top"
      height="20"
-     label="Backup Settings"
+     label="Perform Backup"
      left="50"
      name="backup_settings"
      width="120" >
@@ -418,7 +418,7 @@ Settings groups to be restored (backup will always save all):
      top_delta="0"
      follows="right|top"
      height="20"
-     label="Restore Settings"
+     label="Perform Restore"
      name="restore_settings"
      width="120" >
         <button.commit_callback
