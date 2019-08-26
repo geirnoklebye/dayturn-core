@@ -99,6 +99,7 @@
 #include "llpanelface.h"
 #include "llworld.h"
 #include "llglheaders.h"
+#include "llinventoryobserver.h"
 
 #include "fsareasearch.h"
 
@@ -1663,6 +1664,7 @@ void LLSelectMgr::selectionSetImage(const LLUUID& imageid)
 				// * Can just apply the texture and be done with it.
 				objectp->setTEImage(te, LLViewerTextureManager::getFetchedTexture(mImageID, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE));
 			}
+
 			return true;
 		}
 	};
@@ -1862,6 +1864,7 @@ BOOL LLSelectMgr::selectionRevertTextures()
 					else
 					{
 						object->setTEImage(te, LLViewerTextureManager::getFetchedTexture(id, FTT_DEFAULT, TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE));
+
 					}
 				}
 			}
