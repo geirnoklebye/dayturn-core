@@ -204,6 +204,9 @@ public:
 	// <FS:Ansariel> Mask texture if desired
 	void setIsMasked(BOOL masked) { mIsMasked = masked; }
     
+
+	void setBakeTextureEnabled(BOOL enabled);
+
 private:
 	BOOL allowDrop(LLInventoryItem* item);
 	BOOL doDrop(LLInventoryItem* item);
@@ -245,6 +248,7 @@ private:
 
 	// <FS:Ansariel> Mask texture if desired
 	BOOL						mIsMasked;    
+	BOOL						mBakeTextureEnabled;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -335,7 +339,11 @@ public:
 	static void		onBtnUpload(void* userdata);
 	static void		onLocalScrollCommit(LLUICtrl* ctrl, void* userdata);
 
+	static void		onBakeTextureSelect(LLUICtrl* ctrl, void *userdata);
+	static void		onHideBaseMeshRegionCheck(LLUICtrl* ctrl, void *userdata);
+
 	void 			setLocalTextureEnabled(BOOL enabled);
+	void 			setBakeTextureEnabled(BOOL enabled);
 
 protected:
 	LLPointer<LLViewerTexture> mTexturep;
@@ -378,11 +386,14 @@ private:
 	bool mCanPreview;
 	bool mPreviewSettingChanged;
 
+
 	texture_selected_callback mTextureSelectedCallback;
 	floater_close_callback mOnFloaterCloseCallback;
 	floater_commit_callback mOnFloaterCommitCallback;
 	set_image_asset_id_callback mSetImageAssetIDCallback;
 	set_on_update_image_stats_callback mOnUpdateImageStatsCallback;
+
+	BOOL mBakeTextureEnabled;
 };
 
 #endif  // LL_LLTEXTURECTRL_H

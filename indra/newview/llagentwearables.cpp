@@ -1669,6 +1669,11 @@ void LLAgentWearables::createWearable(LLWearableType::EType type, bool wear, con
 		}
 	}
 //mk
+	if (type == LLWearableType::WT_UNIVERSAL && !gAgent.getRegion()->bakesOnMeshEnabled())
+	{
+		LL_WARNS("Inventory") << "Can't create WT_UNIVERSAL type " << LL_ENDL;
+		return;
+	}
 
 	LLViewerWearable* wearable = LLWearableList::instance().createNewWearable(type, gAgentAvatarp);
 	LLAssetType::EType asset_type = wearable->getAssetType();
