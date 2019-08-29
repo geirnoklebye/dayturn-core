@@ -1638,8 +1638,6 @@ BOOL LLViewerWindow::handleDPIChanged(LLWindow *window, F32 ui_scale_factor, S32
 {
     if (ui_scale_factor >= MIN_UI_SCALE && ui_scale_factor <= MAX_UI_SCALE)
     {
-        gSavedSettings.setF32("LastSystemUIScaleFactor", ui_scale_factor);
-        gSavedSettings.setF32("UIScaleFactor", ui_scale_factor);
         LLViewerWindow::reshape(window_width, window_height);
         mResDirty = true;
         return TRUE;
@@ -1721,8 +1719,6 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	mResDirty(false),
 	mStatesDirty(false),
 	mCurrResolutionIndex(0),
-	mProgressView(NULL),
-	mSystemUIScaleFactorChanged(false)
 //MK
 	, mPickThroughHuds(FALSE)
 //mk
@@ -1944,32 +1940,10 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	mWorldViewRectScaled = calcScaledRect(mWorldViewRectRaw, mDisplayScale);
 }
 
-//static
-void LLViewerWindow::showSystemUIScaleFactorChanged()
-{
-	LLNotificationsUtil::add("SystemUIScaleFactorChanged", LLSD(), LLSD(), onSystemUIScaleFactorChanged);
-}
-
 std::string LLViewerWindow::getLastSnapshotDir()
 {
     return sSnapshotDir;
 }
-
-//static
-bool LLViewerWindow::onSystemUIScaleFactorChanged(const LLSD& notification, const LLSD& response)
-{
-	S32 option = LLNotificationsUtil::getSelectedOption(notification, response);
-	if(option == 0)
-	{
-		LLFloaterReg::toggleInstanceOrBringToFront("preferences");
-		LLFloater* pref_floater = LLFloaterReg::getInstance("preferences");
-		LLTabContainer* tab_container = pref_floater->getChild<LLTabContainer>("pref core");
-		tab_container->selectTabByName("advanced1");
-
-	}
-	return false; 
-}
-
 
 void LLViewerWindow::initGLDefaults()
 {
