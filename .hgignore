@@ -1,5 +1,9 @@
 syntax: glob
 
+# Chorazin's build scripts and build logs
+ca_*.sh
+*-build-*.log
+*-config-*.log
 # WinMerge temp files
 *.bak
 # Compiled python bytecode
