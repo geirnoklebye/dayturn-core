@@ -3,6 +3,7 @@
 
 if (NOT DEFINED VIEWER_SHORT_VERSION) # will be true in indra/, false in indra/newview/
     set(VIEWER_VERSION_BASE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/newview/VIEWER_VERSION.txt")
+    set(VIEWER_GIT_REPO_PRESENCE "${CMAKE_CURRENT_SOURCE_DIR}/../.git")
 
     if ( EXISTS ${VIEWER_VERSION_BASE_FILE} )
         file(STRINGS ${VIEWER_VERSION_BASE_FILE} VIEWER_SHORT_VERSION REGEX "^[0-9]+\\.[0-9]+\\.[0-9]+")
@@ -18,6 +19,13 @@ if (NOT DEFINED VIEWER_SHORT_VERSION) # will be true in indra/, false in indra/n
         #elseif (DEFINED ENV{AUTOBUILD_BUILD_ID})
         #   set(VIEWER_VERSION_REVISION $ENV{AUTOBUILD_BUILD_ID})
         #   message(STATUS "Revision (from autobuild environment): ${VIEWER_VERSION_REVISION}")
+        
+        # until LL indicate how they'll do version numbering in git Kokua reinstates the use of AUTOBUILD_BUILD_ID
+        elseif ( EXISTS ${VIEWER_GIT_REPO_PRESENCE} )
+          if (DEFINED ENV{AUTOBUILD_BUILD_ID})
+	           set(VIEWER_VERSION_REVISION $ENV{AUTOBUILD_BUILD_ID})
+	           message(STATUS "Revision (from autobuild environment under git): ${VIEWER_VERSION_REVISION}")
+          endif (DEFINED ENV{AUTOBUILD_BUILD_ID})
 
         else (DEFINED ENV{revision})
           # make absolutely sure we're going to execute the find_program rather than
