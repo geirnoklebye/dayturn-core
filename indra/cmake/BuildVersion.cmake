@@ -20,12 +20,37 @@ if (NOT DEFINED VIEWER_SHORT_VERSION) # will be true in indra/, false in indra/n
         #   set(VIEWER_VERSION_REVISION $ENV{AUTOBUILD_BUILD_ID})
         #   message(STATUS "Revision (from autobuild environment): ${VIEWER_VERSION_REVISION}")
         
-        # until LL indicate how they'll do version numbering in git Kokua reinstates the use of AUTOBUILD_BUILD_ID
+        # if this is a git repo we count the commits to the branch tip
         elseif ( EXISTS ${VIEWER_GIT_REPO_PRESENCE} )
-          if (DEFINED ENV{AUTOBUILD_BUILD_ID})
-	           set(VIEWER_VERSION_REVISION $ENV{AUTOBUILD_BUILD_ID})
-	           message(STATUS "Revision (from autobuild environment under git): ${VIEWER_VERSION_REVISION}")
-          endif (DEFINED ENV{AUTOBUILD_BUILD_ID})
+          find_program(GIT git)
+          if (GIT)
+            execute_process(COMMAND ${GIT} branch --show current
+                            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                            RESULT_VARIABLE git_cb_result
+                            ERROR_VARIABLE git_cb_error
+                            OUTPUT_VARIABLE GIT_CURRENT_BRANCH
+                            OUTPUT_STRIP_TRAILING_WHITESPACE)
+            if (NOT ${git_cb_result} EQUAL 0)
+              message(SEND_ERROR "Reading git branch failed with output:\n${git_cb_error}")
+            else (NOT ${git_cb_result} EQUAL 0)
+              execute_process(COMMAND ${GIT} rev-list --count ${GIT_CURRENT_BRANCH}
+                            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                            RESULT_VARIABLE git_rc_result
+                            ERROR_VARIABLE git_rc_error
+                            OUTPUT_VARIABLE VIEWER_VERSION_REVISION
+                            OUTPUT_STRIP_TRAILING_WHITESPACE)
+              if (NOT ${git_rc_result} EQUAL 0)
+                message(SEND_ERROR "Getting revision count failed with output:\n${git_rc_error}")
+              else (NOT ${git_rc_result} EQUAL 0)
+                message(STATUS "Revision (from git) ${VIEWER_VERSION_REVISION} on branch ${GIT_CURRENT_BRANCH}")
+              endif (NOT ${git_rc_result} EQUAL 0)            
+            endif (NOT ${git_cb_result} EQUAL 0)
+          else (GIT)
+            if (DEFINED ENV{AUTOBUILD_BUILD_ID})
+	             set(VIEWER_VERSION_REVISION $ENV{AUTOBUILD_BUILD_ID})
+	             message(STATUS "Revision (from autobuild environment under git (git executable not found)): ${VIEWER_VERSION_REVISION}")
+            endif (DEFINED ENV{AUTOBUILD_BUILD_ID})
+         endif (GIT)
 
         else (DEFINED ENV{revision})
           # make absolutely sure we're going to execute the find_program rather than
