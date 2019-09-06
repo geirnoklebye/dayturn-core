@@ -24,14 +24,14 @@ if (NOT DEFINED VIEWER_SHORT_VERSION) # will be true in indra/, false in indra/n
         elseif ( EXISTS ${VIEWER_GIT_REPO_PRESENCE} )
           find_program(GIT git)
           if (GIT)
-            execute_process(COMMAND ${GIT} branch --show-current
+            execute_process(COMMAND ${GIT} symbolic-ref -q --short HEAD
                             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                             RESULT_VARIABLE git_cb_result
                             ERROR_VARIABLE git_cb_error
                             OUTPUT_VARIABLE GIT_CURRENT_BRANCH
                             OUTPUT_STRIP_TRAILING_WHITESPACE)
             if (NOT ${git_cb_result} EQUAL 0)
-              message(SEND_ERROR "Reading git branch failed with output (is git 2.22 or better?):\n${git_cb_error}")
+              message(SEND_ERROR "Reading git branch failed with output:\n${git_cb_error}")
             else (NOT ${git_cb_result} EQUAL 0)
               execute_process(COMMAND ${GIT} rev-list --count ${GIT_CURRENT_BRANCH}
                             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
