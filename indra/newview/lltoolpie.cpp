@@ -170,6 +170,7 @@ BOOL LLToolPie::handleMouseDown(S32 x, S32 y, MASK mask)
 		}
 	}
 	LL_INFOS() << "pick_rigged is " << (S32) pick_rigged << " pick time elapsed " << pick_timer.getElapsedTimeF32() << LL_ENDL;
+
 	mPick.mKeyMask = mask;
 
 	mMouseButtonDown = true;
