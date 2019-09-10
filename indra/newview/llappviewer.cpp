@@ -2984,6 +2984,7 @@ bool LLAppViewer::initConfiguration()
 //MK
 		}
 //mk
+	}
 	// NextLoginLocation is set as a side effect of LLStartUp::setStartSLURL()
 	std::string nextLoginLocation = gSavedSettings.getString( "NextLoginLocation" );
 	if ( !nextLoginLocation.empty() )
