@@ -870,7 +870,8 @@ void LLPanelLogin::onClickConnect(void *)
 		{
 #endif
 			std::string location = LLSLURL::SIM_LOCATION_LAST;
-			LLStartUp::setStartSLURL(location);
+			//CA Prior to 6.3.1 this used to be validly initialised in a clean install situation, now it isn't so we need some protection
+			if (! location.empty()) LLStartUp::setStartSLURL(location);
 		}
 //mk
 		// JC - Make sure the fields all get committed.

@@ -1118,30 +1118,6 @@ bool LLAppViewer::init()
 
 		}
 	}
-//Comment out again based on user comments.
-/*
-	char* PARENT = getenv("PARENT");
-
-// don't nag developers who need to run the executable directly
-#if LL_RELEASE_FOR_DOWNLOAD
-	// MAINT-8305: If we're processing a SLURL, skip the launcher check.
-	if (gSavedSettings.getString("CmdLineLoginLocation").empty() && !beingDebugged())
-	{
-		const char* PARENT = getenv("PARENT");
-		if (! (PARENT && std::string(PARENT) == "SL_Launcher"))
-		{
-			// Don't directly run this executable. Please run the launcher, which
-			// will run the viewer itself.
-			// Naturally we do not consider this bulletproof. The point is to
-			// gently remind a user who *inadvertently* finds him/herself in this
-			// situation to do things the Right Way. Anyone who intentionally
-			// bypasses this mechanism needs no reminder that s/he's shooting
-			// him/herself in the foot.
-			LLNotificationsUtil::add("RunLauncher");
-		}
-	}
-#endif
- */
 
 #if LL_WINDOWS
 	if (gGLManager.mGLVersion < LLFeatureManager::getInstance()->getExpectedGLVersion())
@@ -2969,7 +2945,7 @@ bool LLAppViewer::initConfiguration()
 	{
 //MK
 #if RLV_ALWAYS_ON
-				if (false)
+		if (false)
 #else
         if (!gSavedSettings.getBOOL("RestrainedLove"))
 #endif
@@ -2978,13 +2954,14 @@ bool LLAppViewer::initConfiguration()
 			start_slurl = starting_location;
 			LLStartUp::setStartSLURL(start_slurl);
 			if(start_slurl.getType() == LLSLURL::LOCATION) 
-	{
+			{
 				LLGridManager::getInstance()->setGridChoice(start_slurl.getGrid());
 			}
 //MK
 		}
 //mk
 	}
+
 	// NextLoginLocation is set as a side effect of LLStartUp::setStartSLURL()
 	std::string nextLoginLocation = gSavedSettings.getString( "NextLoginLocation" );
 	if ( !nextLoginLocation.empty() )
@@ -3016,7 +2993,7 @@ bool LLAppViewer::initConfiguration()
     {
 //MK
 #if RLV_ALWAYS_ON
-				if (false)
+		if (false)
 #else
         if (!gSavedSettings.getBOOL("RestrainedLove"))
 #endif
@@ -3128,7 +3105,7 @@ void LLAppViewer::initStrings()
 	if (strings_path_full.empty() || !LLFile::isfile(strings_path_full))
 	{
 		// initial check to make sure files are there failed
-		LL_ERRS() << "Viewer failed to find localization and UI files. Please reinstall viewer from  https://secondlife.com/support/downloads/ and contact https://support.secondlife.com if issue persists after reinstall." << LL_ENDL;
+		LL_ERRS() << "Viewer failed to find localization and UI files. Please reinstall Kokua and contact Support if problems persist." << LL_ENDL;
 	}
 	LLTransUtil::parseStrings(strings_file, default_trans_args);
 	LLTransUtil::parseLanguageStrings("language_settings.xml");
