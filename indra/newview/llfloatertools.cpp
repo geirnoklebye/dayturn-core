@@ -248,6 +248,11 @@ BOOL	LLFloaterTools::postBuild()
 	mTitleMedia			= getChild<LLMediaCtrl>("title_media");
 	mBtnLink			= getChild<LLButton>("link_btn");
 	mBtnUnlink			= getChild<LLButton>("unlink_btn");
+
+	// <FS:PP> FIRE-14493: Buttons to cycle through linkset
+	mBtnPrevPart		= getChild<LLButton>("prev_part_btn");
+	mBtnNextPart		= getChild<LLButton>("next_part_btn");
+	// </FS:PP>
 	
 	mCheckSelectIndividual	= getChild<LLCheckBoxCtrl>("checkbox edit linked parts");	
 	getChild<LLUICtrl>("checkbox edit linked parts")->setValue((BOOL)gSavedSettings.getBOOL("EditLinkedParts"));
@@ -347,6 +352,11 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 	mBtnLink(NULL),
 	mBtnUnlink(NULL),
 
+	// <FS:PP> FIRE-14493: Buttons to cycle through linkset
+	mBtnPrevPart(NULL),
+	mBtnNextPart(NULL),
+	// </FS:PP>
+
 	mBtnDelete(NULL),
 	mBtnDuplicate(NULL),
 	mBtnDuplicateInPlace(NULL),
@@ -421,6 +431,11 @@ LLFloaterTools::~LLFloaterTools()
 
 void LLFloaterTools::setStatusText(const std::string& text)
 {
+	// <FS:ND> Can be 0 during login
+	if( !mTextStatus )
+		return;
+	// </FS:ND>
+
 	std::map<std::string, std::string>::iterator iter = mStatusText.find(text);
 	if (iter != mStatusText.end())
 	{
@@ -457,6 +472,74 @@ void LLFloaterTools::refresh()
 
 	// Refresh object and prim count labels
 	LLLocale locale(LLLocale::USER_LOCALE);
+	
+	// <FS:KC>
+	std::string desc_string;
+	std::string num_string;
+	bool enable_link_count = true;
+	S32 prim_count = LLSelectMgr::getInstance()->getSelection()->getObjectCount();
+	if (prim_count == 1 && LLToolMgr::getInstance()->getCurrentTool() == LLToolFace::getInstance())
+	{
+		desc_string = getString("selected_faces");
+		
+		LLViewerObject* objectp = LLSelectMgr::getInstance()->getSelection()->getFirstRootObject();
+		LLSelectNode* nodep = LLSelectMgr::getInstance()->getSelection()->getFirstRootNode();
+		if(!objectp || !nodep)
+		{
+			objectp = LLSelectMgr::getInstance()->getSelection()->getFirstObject();
+			nodep = LLSelectMgr::getInstance()->getSelection()->getFirstNode();
+		}
+
+		if (objectp && objectp->getNumTEs() == LLSelectMgr::getInstance()->getSelection()->getTECount())
+			num_string = "ALL_SIDES";
+		else if (objectp && nodep)
+		{
+			//S32 count = 0;
+			for (S32 i = 0; i < objectp->getNumTEs(); i++)
+			{
+				if (nodep->isTESelected(i))
+				{
+					if (!num_string.empty())
+						num_string.append(", ");
+					num_string.append(llformat("%d", i));
+					//count++;
+				}
+			}
+		}
+	}
+	else if (prim_count == 1 && gSavedSettings.getBOOL("EditLinkedParts"))
+	{
+		desc_string = getString("link_number");
+		LLViewerObject* objectp = LLSelectMgr::getInstance()->getSelection()->getFirstObject();
+		if (objectp && objectp->getRootEdit())
+		{
+			LLViewerObject::child_list_t children = objectp->getRootEdit()->getChildren();
+			if (children.empty())
+				num_string = "0"; //a childless prim is always link zero, and unhappy
+			else if (objectp->getRootEdit()->isSelected())
+				num_string = "1"; //root prim is always link one
+			else
+			{
+				S32 index = 1;
+				for (LLViewerObject::child_list_t::iterator iter = children.begin(); iter != children.end(); ++iter)
+				{
+					index++;
+					if ((*iter)->isSelected())
+					{
+						LLResMgr::getInstance()->getIntegerString(num_string, index);
+						break;
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		enable_link_count = false;
+	}
+	getChild<LLUICtrl>("link_num_obj_count")->setTextArg("[DESC]", desc_string);
+	getChild<LLUICtrl>("link_num_obj_count")->setTextArg("[NUM]", num_string);
+	// </FS:KC>
 #if 0
 	if (!gMeshRepo.meshRezEnabled())
 	{		
@@ -478,6 +561,7 @@ void LLFloaterTools::refresh()
 		
 		// disable the object and prim counts if nothing selected
 		bool have_selection = ! LLSelectMgr::getInstance()->getSelection()->isEmpty();
+		getChildView("link_num_obj_count")->setEnabled(have_selection);
 		getChildView("obj_count")->setEnabled(have_selection);
 		getChildView("prim_count")->setEnabled(have_selection);
 		getChildView("RenderingCost")->setEnabled(have_selection && sShowObjectCost);
@@ -503,7 +587,18 @@ void LLFloaterTools::refresh()
 			if (selected_object)
 			{
 				// Select a parcel at the currently selected object's position.
-				LLViewerParcelMgr::getInstance()->selectParcelAt(selected_object->getPositionGlobal());
+				// <FS:Ansariel> FIRE-20387: Editing HUD attachment shows [CAPACITY_STRING] in tools floater
+				//LLViewerParcelMgr::getInstance()->selectParcelAt(selected_object->getPositionGlobal());
+				if (!selected_object->isAttachment())
+				{
+					LLViewerParcelMgr::getInstance()->selectParcelAt(selected_object->getPositionGlobal());
+				}
+				else
+				{
+					const LLStringExplicit empty_str("");
+					childSetTextArg("remaining_capacity", "[CAPACITY_STRING]", empty_str);
+				}
+				// </FS:Ansariel>
 			}
 			else
 			{
@@ -528,6 +623,10 @@ void LLFloaterTools::refresh()
 		getChild<LLTextBox>("selection_count")->setText(selection_info.str());
 	}
 
+	// <FS> disable the object and prim counts if nothing selected
+	bool have_selection = ! LLSelectMgr::getInstance()->getSelection()->isEmpty();
+	getChildView("link_num_obj_count")->setEnabled(have_selection && enable_link_count);
+	// </FS>
 
 	// Refresh child tabs
 	mPanelPermissions->refresh();
@@ -682,6 +781,16 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 
 	mBtnLink->setEnabled(LLSelectMgr::instance().enableLinkObjects());
 	mBtnUnlink->setEnabled(LLSelectMgr::instance().enableUnlinkObjects());
+
+	// <FS:PP> FIRE-14493: Buttons to cycle through linkset
+	mBtnPrevPart->setVisible(edit_visible);
+	mBtnNextPart->setVisible(edit_visible);
+
+	bool select_btn_enabled = (!LLSelectMgr::getInstance()->getSelection()->isEmpty()
+								&& (linked_parts || LLToolFace::getInstance() == LLToolMgr::getInstance()->getCurrentTool()));
+	mBtnPrevPart->setEnabled(select_btn_enabled);
+	mBtnNextPart->setEnabled(select_btn_enabled);
+	// </FS:PP>
 
 	if (mCheckSelectIndividual)
 	{
@@ -1171,7 +1280,10 @@ bool LLFloaterTools::selectedMediaEditable()
 		
 		if ( ( owner_mask_on & PERM_MODIFY ) ||
 			( group_mask_on & PERM_MODIFY ) || 
-			( group_mask_on & PERM_MODIFY ) )
+			// <FS> Copy & paste error
+			//( group_mask_on & PERM_MODIFY ) )
+			( everyone_mask_on & PERM_MODIFY ) )
+			// </FS>
 		{
 			selected_Media_editable = true;
 		}

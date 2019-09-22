@@ -74,6 +74,14 @@
      name="status_remaining_capacity">
         Remaining capacity [LAND_CAPACITY].
     </floater.string>
+	<floater.string
+	  name="link_number">
+		Link number:
+	</floater.string>
+	<floater.string
+	  name="selected_faces">
+		Face(s):
+	</floater.string>
     <button
      follows="left|top"
      height="25"
@@ -276,10 +284,37 @@
    <button
      follows="left|top"
      height="20"
-     label="Link"
+     image_overlay="BackArrow_Off"
+     top_pad="0"
      top="114"
+     left="135"
      layout="topleft"
-     left="143"
+     name="prev_part_btn"
+     tool_tip="Select previous linked part or face"
+     width="12">
+	  <button.commit_callback
+	     function="Tools.SelectNextPart"
+	     parameter="previous" />
+    </button>
+   <button
+     follows="left|top"
+     height="20"
+     image_overlay="ForwardArrow_Off"
+     left_pad="0"
+     layout="topleft"
+     name="next_part_btn"
+     tool_tip="Select next linked part or face"
+     width="12">
+	  <button.commit_callback
+	     function="Tools.SelectNextPart"
+	     parameter="next" />
+    </button>
+   <button
+     follows="left|top"
+     height="20"
+     label="Link"
+     layout="topleft"
+     left_pad="2"
      name="link_btn"
      width="50">
 	  <button.commit_callback
@@ -292,7 +327,7 @@
      layout="topleft"
      left_pad="2"
      name="unlink_btn"
-     width="90">
+     width="70">
 	  <button.commit_callback
 	     function="BuildTool.UnlinkObjects"/>
     </button>
@@ -745,10 +780,24 @@
 	     function="BuildTool.applyToSelection"/>
     </button>
     <text
+     text_color="LtGray_50"
+     type="string"
+     length="1"
+     height="11"
+     follows="left|top"
+     layout="topleft"
+     top_pad="0"
+     left="10"
+     name="link_num_obj_count"
+	 tool_tip="Link number may not be accurate."
+     width="143">
+        [DESC] [NUM]
+    </text>
+    <text
 	 text_color="LtGray_50"
 	  type="string"
 	  length="1"
-	  height="16"
+	  height="11"
 	  follows="left|top"
 	  font="SansSerifSmall"
 	  layout="topleft"
@@ -762,7 +811,7 @@
 	 text_color="LtGray_50"
 	  type="string"
 	  length="1"
-	  height="16"
+	  height="11"
 	  follows="left|top"
 	  font="SansSerifSmall"
 	  layout="topleft"
@@ -776,7 +825,7 @@
 	 text_color="LtGray_50"
 	  type="string"
 	  length="1"
-	  height="16"
+	  height="11"
 	  follows="left|top"
 	  font="SansSerifSmall"
 	  layout="topleft"
