@@ -2360,7 +2360,7 @@
              name="Report Bug Kokua">
                 <menu_item_call.on_click
                  function="Advanced.ShowURL"
-                 parameter="http://sourceforge.net/p/team-purple/kokua/tickets/?source=navbar"/>
+                 parameter="https://kokua.atlassian.net/secure/Dashboard.jspa"/>
         </menu_item_call>        
 
         <menu_item_separator/>
