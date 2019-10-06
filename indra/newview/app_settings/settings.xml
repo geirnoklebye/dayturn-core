@@ -20586,6 +20586,17 @@
        <key>Value</key>
        <string>00000000-0000-0000-0000-000000000000</string>
      </map>
+    <key>FSInspectColumnConfig</key>
+    <map>
+      <key>Comment</key>
+      <string>Stores the column visibility of the inspect window</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>U32</string>
+      <key>Value</key>
+      <integer>1023</integer>
+    </map>
   </map>
 </llsd>
 
