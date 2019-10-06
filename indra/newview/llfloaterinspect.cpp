@@ -47,6 +47,9 @@
 //#include "rlvcommon.h"
 //#include "rlvui.h"
 // [/RLVa:KB]
+//CA for @shownames
+#include "llagent.h"
+#include "RRInterface.h"
 // PoundLife - Improved Object Inspect
 #include "llresmgr.h"
 #include "lltexturectrl.h"
@@ -204,6 +207,8 @@ void LLFloaterInspect::onClickCreatorProfile()
 //			{
 //				return;
 //			}
+			// RLV/CA: Just take a brute force approach
+			if (gRRenabled && (gRRenabled && gAgent.mRRInterface.mContainsShownames)) return;
 			LLAvatarActions::showProfile(idCreator);
 		}
 }
@@ -223,6 +228,8 @@ void LLFloaterInspect::onClickOwnerProfile()
 				const LLUUID& owner_id = node->mPermissions->getOwner();
 //				if (!RlvActions::canShowName(RlvActions::SNC_DEFAULT, owner_id))
 //					return;
+				// RLV/CA: Just take a brute force approach
+				if (gRRenabled && (gRRenabled && gAgent.mRRInterface.mContainsShownames)) return;
 				LLAvatarActions::showProfile(owner_id);
 			}
 
@@ -235,8 +242,17 @@ void LLFloaterInspect::onSelectObject()
 	{
 //		if (!RlvActions::isRlvEnabled())
 //		{
-			getChildView("button owner")->setEnabled(true);
-			getChildView("button creator")->setEnabled(true);
+			// RLV/CA: Just take brute force approach
+			if (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.mContainsShownames))
+			{
+				getChildView("button owner")->setEnabled(true);
+				getChildView("button creator")->setEnabled(true);
+			}
+			else
+			{
+			getChildView("button owner")->setEnabled(false);
+			getChildView("button creator")->setEnabled(false);
+			}
 //		}
 //		else
 //		{
@@ -359,6 +375,8 @@ void LLFloaterInspect::refresh()
 //				owner_name = (fRlvCanShowName) ? av_name.getCompleteName() : RlvStrings::getAnonym(av_name);
 // [/RLVa:KB]
 				owner_name = av_name.getCompleteName();
+				//RLV:CA 
+				if (gRRenabled && (gRRenabled && gAgent.mRRInterface.mContainsShownames)) owner_name = gAgent.mRRInterface.getDummyName(owner_name);
 			}
 			else
 			{
@@ -379,6 +397,8 @@ void LLFloaterInspect::refresh()
 //			creator_name = (fRlvCanShowName) ? av_name.getCompleteName() : RlvStrings::getAnonym(av_name);
 // [/RLVa:KB]
 			creator_name = av_name.getCompleteName();
+			// RLV:CA
+			if (gRRenabled && (gRRenabled && gAgent.mRRInterface.mContainsShownames)) creator_name = gAgent.mRRInterface.getDummyName(creator_name);
 		}
 		else
 		{
