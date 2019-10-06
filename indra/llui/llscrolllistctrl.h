@@ -115,6 +115,8 @@ public:
 		Optional<S32>	search_column,
 						sort_column;
 		Optional<bool>	sort_ascending;
+		Optional<bool>	persist_sort_order; 	// <FS:Ansariel> Persists sort order of scroll lists
+		Optional<bool>	primary_sort_only;		// <FS:Ansariel> Option to only sort by one column
 
 		// colors
 		Optional<LLUIColor>	fg_unselected_color,
@@ -156,6 +158,9 @@ public:
 	// Adds a single column descriptor: ["name" : string, "label" : string, "width" : integer, "relwidth" : integer ]
 	virtual void addColumn(const LLScrollListColumn::Params& column, EAddPosition pos = ADD_BOTTOM);
 	virtual void addColumn(const LLSD& column, EAddPosition pos = ADD_BOTTOM);	
+	// <FS:Techwolf Lupindo> area search, allow deleting a column
+	virtual LLScrollListColumn::Params delColumn(std::string name);
+	// </FS:Techwolf Lupindo> area search
 	virtual void clearColumns();
 	virtual void setColumnLabel(const std::string& column, const std::string& label);
 	virtual bool 	preProcessChildNode(LLXMLNodePtr child);
@@ -237,6 +242,9 @@ public:
 	S32				getItemIndex( const LLUUID& item_id ) const;
 
 	void setCommentText( const std::string& comment_text);
+	// <FS:Ansariel> Allow appending of comment text
+	void addCommentText( const std::string& comment_text);
+	// </FS:Ansariel> Allow appending of comment text
 	LLScrollListItem* addSeparator(EAddPosition pos);
 
 	// "Simple" interface: use this when you're creating a list that contains only unique strings, only
@@ -246,6 +254,11 @@ public:
 	BOOL			selectItemByLabel( const std::string& item, BOOL case_sensitive = TRUE, S32 column = 0 );		// FALSE if item not found
 	BOOL			selectItemByPrefix(const std::string& target, BOOL case_sensitive = TRUE);
 	BOOL			selectItemByPrefix(const LLWString& target, BOOL case_sensitive = TRUE);
+	// <FS:Ansariel> Allow selection by substring match
+	BOOL			selectItemBySubstring(const std::string& target, BOOL case_sensitive = TRUE);
+	BOOL			selectItemBySubstring(const LLWString& target, BOOL case_sensitive = TRUE);
+	BOOL			selectItemByStringMatch(const LLWString& target, bool prefix_match, BOOL case_sensitive = TRUE);
+	// </FS:Ansariel>
 	LLScrollListItem*  getItemByLabel( const std::string& item, BOOL case_sensitive = TRUE, S32 column = 0 );
 	const std::string	getSelectedItemLabel(S32 column = 0) const;
 	LLSD			getSelectedValue();
@@ -304,6 +317,12 @@ public:
 	S32				getRowOffsetFromIndex(S32 index);
 
 	void			clearSearchString() { mSearchString.clear(); }
+
+	// <FS:Ansariel> Fix for FS-specific people list (radar)
+	void			setFilterString(const std::string& str);
+	void			setFilterColumn(S32 col) { mFilterColumn = col; }
+	bool			isFiltered(const LLScrollListItem* item) const;
+	// </FS:Ansariel> Fix for FS-specific people list (radar)
 
 	// support right-click context menus for avatar/group lists
 	enum ContextMenuType { MENU_NONE, MENU_AVATAR, MENU_GROUP };
@@ -395,12 +414,15 @@ public:
 		if (!mSortCallback) mSortCallback = new sort_signal_t();
 		return mSortCallback->connect(cb);
 	}
-	// <FS:Ansariel> For manually setting line height; we might need it at some time
+
 	boost::signals2::connection setIsFriendCallback(const is_friend_signal_t::slot_type& cb);
+
+	// <FS:Ansariel> For manually setting line height; we might need it at some time
 	void setLineHeight(S32 height) { mLineHeight = height; }
 
 	// <FS:Ansariel> Get list of the column init params so we can re-add them
 	std::vector<LLScrollListColumn::Params> getColumnInitParams() const { return mColumnInitParams; }
+
 protected:
 	// "Full" interface: use this when you're creating a list that has one or more of the following:
 	// * contains icons
@@ -422,6 +444,7 @@ protected:
 	typedef std::deque<LLScrollListItem *> item_list;
 	item_list&		getItemList() { return mItemList; }
 
+public:
 	void			updateLineHeight();
 
 private:
@@ -437,6 +460,9 @@ private:
 	void			commitIfChanged();
 	BOOL			setSort(S32 column, BOOL ascending);
 	S32				getLinesPerPage();
+
+	// <FS:Ansariel> Persists sort order of scroll lists
+	void			loadPersistedSortOrder();
 
 	static void		showProfile(std::string id, bool is_group);
 	static void		sendIM(std::string id);
@@ -500,12 +526,28 @@ private:
 	LLWString		mSearchString;
 	LLFrameTimer	mSearchTimer;
 	
+	// <FS:Ansariel> Fix for FS-specific people list (radar)
+	std::string		mFilterString;
+	S32				mFilterColumn;
+	bool			mIsFiltered;
+
 	S32				mSearchColumn;
 	S32				mNumDynamicWidthColumns;
 	S32				mTotalStaticColumnWidth;
 	S32				mTotalColumnPadding;
-    
+
+	// <FS:Ansariel> Get list of the column init params so we can re-add them
 	std::vector<LLScrollListColumn::Params> mColumnInitParams;
+	
+	// <FS:Ansariel> Persists sort order of scroll lists
+	bool			mPersistSortOrder;
+	bool			mPersistedSortOrderLoaded;
+	std::string		mPersistedSortOrderControl;
+	// </FS:Ansariel>
+
+	// <FS:Ansariel> Option to only sort by one column
+	bool			mPrimarySortOnly;
+
 	mutable bool	mSorted;
 	
 	typedef std::map<std::string, LLScrollListColumn*> column_map_t;
