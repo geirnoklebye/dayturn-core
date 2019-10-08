@@ -20386,6 +20386,19 @@
       <key>Backup</key>
       <integer>0</integer>
     </map>
+    <key>FSForcedVideoMemory</key>
+    <map>
+      <key>Comment</key>
+      <string>Overrides the video memory detection on Windows if a value greater 0 is passed (in case DirectX memory detection fails or is wrong)</string>
+      <key>Persist</key>
+      <integer>0</integer>
+      <key>HideFromEditor</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>S32</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
   <key>FSAdvancedTooltips</key>
 	  <map>
 	    <key>Comment</key>
