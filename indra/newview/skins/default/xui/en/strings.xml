@@ -2606,6 +2606,12 @@ If you continue to receive this message, please contact Second Life support for 
   <string name="AgeDaysA">[COUNT] day</string>
   <string name="AgeDaysB">[COUNT] days</string>
   <string name="AgeDaysC">[COUNT] days</string>
+  <string name="TimeMinutesA">[COUNT] minute</string>
+  <string name="TimeMinutesB">[COUNT] minutes</string>
+  <string name="TimeMinutesC">[COUNT] minutes</string>
+  <string name="TimeSecondsA">[COUNT] second</string>
+  <string name="TimeSecondsB">[COUNT] seconds</string>
+  <string name="TimeSecondsC">[COUNT] seconds</string>
   <!-- Group member counts -->
   <string name="GroupMembersA">[COUNT] member</string>
   <string name="GroupMembersB">[COUNT] members</string>
