@@ -598,7 +598,10 @@ LLDXDevice *LLDXHardware::findDevice(const std::string &vendor, const std::strin
 }
 */
 
-BOOL LLDXHardware::getInfo(BOOL vram_only)
+// <FS:Ansariel> FIRE-15891: Add option to disable WMI check in case of problems
+//BOOL LLDXHardware::getInfo(BOOL vram_only)
+BOOL LLDXHardware::getInfo(BOOL vram_only, bool disable_wmi)
+// </FS:Ansariel>
 {
 	LLTimer hw_timer;
 	BOOL ok = FALSE;
@@ -680,9 +683,13 @@ BOOL LLDXHardware::getInfo(BOOL vram_only)
 
 		get_wstring(device_containerp, L"szDeviceID", deviceID, 512);
 		
-		if (SUCCEEDED(GetVideoMemoryViaWMI(deviceID, &vram))) 
+		// <FS:Ansariel> FIRE-15891: Add option to disable WMI check in case of problems
+		//if (SUCCEEDED(GetVideoMemoryViaWMI(deviceID, &vram))) 
+		if (!disable_wmi && SUCCEEDED(GetVideoMemoryViaWMI(deviceID, &vram))) 
+		// </FS:Ansariel>
 		{
 			mVRAM = vram/(1024*1024);
+			LL_INFOS("AppInit") << "VRAM Detected via WMI: " << mVRAM << LL_ENDL;
 		}
 		else
 		{ // Get the English VRAM string
@@ -694,7 +701,7 @@ BOOL LLDXHardware::getInfo(BOOL vram_only)
 		  // Dump the string as an int into the structure
 		  char *stopstring;
 		  mVRAM = strtol(ram_str.c_str(), &stopstring, 10); 
-		  LL_INFOS("AppInit") << "VRAM Detected: " << mVRAM << " DX9 string: " << ram_str << LL_ENDL;
+		  LL_INFOS("AppInit") << "VRAM Detected via DirectX: " << mVRAM << " DX9 string: " << ram_str << LL_ENDL;
 		}
 
 		if (vram_only)
