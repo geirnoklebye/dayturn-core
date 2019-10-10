@@ -759,7 +759,7 @@ bool LLAppViewerWin32::initHardwareTest()
 	// Do driver verification and initialization based on DirectX
 	// hardware polling and driver versions
 	//
-	if (TRUE == gSavedSettings.getBOOL("ProbeHardwareOnStartup") && FALSE == gSavedSettings.getBOOL("NoHardwareProbe"))
+	if (/*TRUE == gSavedSettings.getBOOL("ProbeHardwareOnStartup") &&*/ FALSE == gSavedSettings.getBOOL("NoHardwareProbe")) // <FS:Ansariel> FIRE-20378 / FIRE-20382: Breaks memory detection an 4K monitor workaround
 	{
 		// per DEV-11631 - disable hardware probing for everything
 		// but vram.
@@ -769,7 +769,10 @@ bool LLAppViewerWin32::initHardwareTest()
 
 		LL_DEBUGS("AppInit") << "Attempting to poll DirectX for hardware info" << LL_ENDL;
 		gDXHardware.setWriteDebugFunc(write_debug_dx);
-		BOOL probe_ok = gDXHardware.getInfo(vram_only);
+		// <FS:Ansariel> FIRE-15891: Add option to disable WMI check in case of problems
+		//BOOL probe_ok = gDXHardware.getInfo(vram_only);
+		BOOL probe_ok = gDXHardware.getInfo(vram_only, gSavedSettings.getBOOL("FSDisableWMIProbing"));
+		// </FS:Ansariel>
 
 		if (!probe_ok
 			&& gWarningSettings.getBOOL("AboutDirectX9"))
