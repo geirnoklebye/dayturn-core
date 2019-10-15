@@ -2284,7 +2284,7 @@ if (DARWIN)
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${VIEWER_SHORT_VERSION}${VIEWER_MACOSX_PHASE}${VIEWER_REVISION}")
   set(MACOSX_BUNDLE_COPYRIGHT "Copyright © Nicky Perian, Chorazin Allen Kokua Viewer Project, 2019")
   set(MACOSX_BUNDLE_NSMAIN_NIB_FILE "Kokua.nib")
-  set(MACOSX_BUNDLE_NSPRINCIPAL_CLASS "NSApplication")
+  set(MACOSX_BUNDLE_NSPRINCIPAL_CLASS "LLApplication")
 
 
   # https://blog.kitware.com/upcoming-in-cmake-2-8-12-osx-rpath-support/

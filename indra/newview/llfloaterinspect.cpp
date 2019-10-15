@@ -245,8 +245,8 @@ void LLFloaterInspect::onSelectObject()
 			// RLV/CA: Just take brute force approach
 			if (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.mContainsShownames))
 			{
-				getChildView("button owner")->setEnabled(true);
-				getChildView("button creator")->setEnabled(true);
+		getChildView("button owner")->setEnabled(true);
+		getChildView("button creator")->setEnabled(true);
 			}
 			else
 			{
