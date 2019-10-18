@@ -1441,6 +1441,11 @@ void LLViewerTextureList::updateMaxResidentTexMem(S32Megabytes mem)
 		return; //listener will re-enter this function
 	}
 
+	if (gGLManager.mVRAM == 0)
+	{
+		LL_WARNS() << "VRAM amount not detected, defaulting to " << mem << " MB" << LL_ENDL;
+	}
+
 	// TODO: set available resident texture mem based on use by other subsystems
 	// currently max(12MB, VRAM/4) assumed...
 	
