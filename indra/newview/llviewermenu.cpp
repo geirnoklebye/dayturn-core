@@ -3202,6 +3202,18 @@ void handle_object_inspect()
 	*/
 }
 
+//reinstate Object Inspector as an edit menu action
+void handle_object_full_inspect()
+{
+	LLObjectSelectionHandle selection = LLSelectMgr::getInstance()->getSelection();
+	LLViewerObject* selected_objectp = selection->getFirstRootObject();
+	if (selected_objectp)
+	{
+		// Old floater properties
+		LLFloaterReg::showInstance("inspect", LLSD());
+	}
+}
+
 //---------------------------------------------------------------------------
 // Land pie menu
 //---------------------------------------------------------------------------
@@ -8463,6 +8475,63 @@ class LLAvatarShare : public view_listener_t
 
 namespace
 {
+	struct QueueObjectsNoModCheck : public LLSelectedNodeFunctor
+	{
+		BOOL scripted;
+		LLFloaterScriptQueue* mQueue;
+		QueueObjectsNoModCheck(LLFloaterScriptQueue* q) : mQueue(q), scripted(FALSE) {}
+		virtual bool apply(LLSelectNode* node)
+		{
+			LLViewerObject* obj = node->getObject();
+			if (!obj)
+			{
+				return true;
+			}
+			scripted = obj->flagScripted();
+
+			if( scripted )
+			{
+				mQueue->addObject(obj->getID(), node->mName);
+				//LL_INFOS() << "Queued (NMC) " << obj->getID() << " name " << node->mName << LL_ENDL;
+				return false;
+			}
+			else
+			{
+				return true; // fail: stop applying
+			}
+		}
+	};
+}
+
+void queue_actions_nomodcheck(LLFloaterScriptQueue* q, const std::string& msg)
+{
+	QueueObjectsNoModCheck func(q);
+	LLSelectMgr *mgr = LLSelectMgr::getInstance();
+	LLObjectSelectionHandle selectHandle = mgr->getSelection();
+	bool fail = selectHandle->applyToNodes(&func);
+	if(fail)
+	{
+		if ( !func.scripted )
+		{
+			std::string noscriptmsg = std::string("Cannot") + msg + "SelectObjectsNoScripts";
+			LLNotificationsUtil::add(noscriptmsg);
+		}
+		else
+		{
+			LL_ERRS() << "Bad logic." << LL_ENDL;
+		}
+	}
+	else
+	{
+		if (!q->start())
+		{
+			LL_WARNS() << "Unexpected script compile failure." << LL_ENDL;
+		}
+	}
+}
+
+namespace
+{
 	struct QueueObjects : public LLSelectedNodeFunctor
 	{
 		BOOL scripted;
@@ -8482,6 +8551,7 @@ namespace
 			if( scripted && modifiable )
 			{
 				mQueue->addObject(obj->getID(), node->mName);
+				//LL_INFOS() << "Queued " << obj->getID() << " name " << node->mName << LL_ENDL;
 				return false;
 			}
 			else
@@ -8524,19 +8594,20 @@ void queue_actions(LLFloaterScriptQueue* q, const std::string& msg)
 	}
 }
 
-class LLToolsSelectedScriptAction : public view_listener_t
+void handle_object_scripts(std::string action)
 {
-	bool handleEvent(const LLSD& userdata)
-	{
 //MK
 		// If there is at least one object locked in the selection, don't allow anything
-		if (gRRenabled && !gAgent.mRRInterface.canDetachAllSelectedObjects())
+		if (gRRenabled && !gAgent.mRRInterface.canDetachAllSelectedObjects() && action.substr(0,6) != "locate")
 		{
-			return true;
+			return;
 		}
 //mk
-		std::string action = userdata.asString();
 		bool mono = false;
+		bool full = false;
+		bool delete_only = false;
+		std::string delete_name;
+			
 		std::string msg, name;
 		std::string title;
 		if (action == "compile mono")
@@ -8570,19 +8641,60 @@ class LLToolsSelectedScriptAction : public view_listener_t
 			msg = "SetRunningNot";
 			title = LLTrans::getString("NotRunQueueTitle");
 		}
+		else if (action == "locate")
+		{
+			name = "locate_queue";
+			msg = "Locate";
+			title = LLTrans::getString("LocateQueueTitle");
+		}
+		else if (action == "locate full")
+		{
+			name = "locate_queue";
+			full = true;
+			msg = "Locate";
+			title = LLTrans::getString("LocateQueueTitle");
+		}
+		else if (action == "delete")
+		{
+			name = "delete_queue";
+			msg = "Delete";
+			delete_only=false;
+			title = LLTrans::getString("DeleteQueueTitle");
+		}
+		else if (action.substr(0,6) == "delete")
+		{
+				name="delete_queue";
+				msg="Delete";
+				delete_only=true;
+				delete_name=action.erase(0,7);
+				title = LLTrans::getString("DeleteQueueTitle");
+		}
+		
 		LLUUID id; id.generate();
 		
 		LLFloaterScriptQueue* queue =LLFloaterReg::getTypedInstance<LLFloaterScriptQueue>(name, LLSD(id));
 		if (queue)
 		{
 			queue->setMono(mono);
-			queue_actions(queue, msg);
+			queue->setFull(full);
+			queue->setDeleteOnly(delete_only);
+			queue->setDeleteName(delete_name);
+			if (msg=="Locate") queue_actions_nomodcheck(queue, msg); // passive operation, we don't need modify perms
+			else queue_actions(queue, msg);
 			queue->setTitle(title);
 		}
 		else
 		{
 			LL_WARNS() << "Failed to generate LLFloaterScriptQueue with action: " << action << LL_ENDL;
 		}
+}
+
+class LLToolsSelectedScriptAction : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		std::string action = userdata.asString();
+		handle_object_scripts(action);
 		return true;
 	}
 };
@@ -10982,6 +11094,7 @@ void initialize_menus()
 	commit.add("Object.Buy", boost::bind(&handle_buy));
 	commit.add("Object.Edit", boost::bind(&handle_object_edit));
 	commit.add("Object.Inspect", boost::bind(&handle_object_inspect));
+	commit.add("Object.FullInspect", boost::bind(&handle_object_full_inspect));		
 	commit.add("Object.Open", boost::bind(&handle_object_open));
 	commit.add("Object.Take", boost::bind(&handle_take));
 	commit.add("Object.ShowInspector", boost::bind(&handle_object_show_inspector));

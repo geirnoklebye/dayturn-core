@@ -128,6 +128,14 @@
          parameter="delete" />
     </menu_item_call>
     <menu_item_call
+     label="Delete Throughout Linkset"
+     layout="topleft"
+     name="Task Remove All">
+        <menu_item_call.on_click
+         function="Inventory.DoToSelected"
+         parameter="task_deletealllinksetscripts" />
+    </menu_item_call>
+    <menu_item_call
      label="Empty Trash"
      layout="topleft"
      name="Empty Trash">

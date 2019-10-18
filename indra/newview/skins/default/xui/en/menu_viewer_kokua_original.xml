@@ -1643,6 +1643,35 @@
            function="EditableSelected" />
       </menu_item_call>
       <menu_item_call
+         label="Locate Scripts"
+         name="Locate scripts within this object">
+        <menu_item_call.on_click
+           function="Tools.SelectedScriptAction"
+           parameter="locate" />
+        <menu_item_call.on_enable
+           function="EnableEdit" />
+      </menu_item_call>
+      <menu_item_call
+         label="Detail Scripts"
+         name="Detail scripts within this object">
+        <menu_item_call.on_click
+           function="Tools.SelectedScriptAction"
+           parameter="locate full" />
+      <menu_item_call.on_enable
+       function="EnableEdit" />
+      </menu_item_call>
+      <menu_item_separator/>
+      <menu_item_call
+         label="DELETE Scripts"
+         name="Delete scripts within this object">
+        <menu_item_call.on_click
+           function="Tools.SelectedScriptAction"
+           parameter="delete" />
+      <menu_item_call.on_enable
+       function="EditableSelected" />
+      </menu_item_call>
+      <menu_item_separator/>
+      <menu_item_call
         label="Scripting LSL wiki"
         name="scripting_wiki">
            <menu_item_call.on_click
