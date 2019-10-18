@@ -69,6 +69,7 @@ LLFloaterInspect::LLFloaterInspect(const LLSD& key)
 	mDirty(FALSE),
 	mOwnerNameCacheConnection(),
 	mCreatorNameCacheConnection(),
+	mPopupMenu(NULL),
 	// <FS:Ansariel> FIRE-22292: Configurable columns
 	mOptionsButton(NULL),
 	mFSInspectColumnConfigConnection(),
@@ -119,6 +120,8 @@ BOOL LLFloaterInspect::postBuild()
 	mFSInspectColumnConfigConnection = gSavedSettings.getControl("FSInspectColumnConfig")->getSignal()->connect(boost::bind(&LLFloaterInspect::onColumnDisplayModeChanged, this));
 	onColumnDisplayModeChanged();
 	// </FS:Ansariel>
+
+	mObjectList->setRightMouseDownCallback(boost::bind(&LLFloaterInspect::onScrollListRightClicked, this, _1, _2, _3));
 	
 	refresh();
 	
@@ -157,6 +160,37 @@ LLFloaterInspect::~LLFloaterInspect(void)
 
 	if (mOptionsMenuHandle.get()) mOptionsMenuHandle.get()->die();
 	// </FS:Ansariel>
+}
+
+void LLFloaterInspect::onScrollListRightClicked(LLUICtrl* ctrl, S32 x, S32 y)
+{
+	LLScrollListItem *item = mObjectList->hitItem(x, y);
+	if (item)
+	{
+		// check to see if we have a UUID for this row
+		std::string id = item->getValue().asString();
+		LLUUID uuid(id);
+		if (! uuid.isNull())
+		{
+			mObjectList->selectByID(uuid);
+			LLViewerObject* objectp = gObjectList.findObject(uuid);
+			// if we arrived here with a child prim, switch to its root
+			if (objectp != objectp->getRootEdit())
+			{
+				objectp = objectp->getRootEdit();
+				uuid = objectp->getID();
+			}
+			// create the context menu from the XUI file and display it
+			std::string menu_name = "menu_floater_inspect_list.xml";
+			delete mPopupMenu;
+			llassert(LLMenuGL::sMenuContainer != NULL);
+			mPopupMenu = LLUICtrlFactory::getInstance()->createFromFile<LLContextMenu>(
+				menu_name, LLMenuGL::sMenuContainer, LLMenuHolderGL::child_registry_t::instance());
+			mPopupMenu->show(x, y);
+			((LLContextMenu*)mPopupMenu)->show(x, y);
+			LLMenuGL::showPopup(ctrl, mPopupMenu, x, y);
+		}
+	}
 }
 
 void LLFloaterInspect::onOpen(const LLSD& key)

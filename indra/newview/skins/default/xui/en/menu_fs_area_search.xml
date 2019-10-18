@@ -2,17 +2,70 @@
 <context_menu
  layout="topleft"
  name="Object List popup">
-	<menu_item_call
-	 label="Script Info"
-	 layout="topleft"
-	 name="script_info">
-		<menu_item_call.on_click
-		 function="AreaSearch.Action"
-		 parameter="script"/>
-		<menu_item_call.on_enable
-		 function="AreaSearch.Enable"
-		 parameter="script"/>
-	</menu_item_call>
+    <menu
+       create_jump_keys="true"
+       label="Scripts"
+       name="Scripts"
+       tear_off="true">
+      <menu_item_call
+         label="Recompile Scripts (Mono)"
+         name="Mono">
+        <menu_item_call.on_click
+           function="AreaSearch.Action"
+           parameter="scompile mono" />
+      </menu_item_call>
+      <menu_item_call
+         label="Recompile Scripts (LSL)"
+         name="LSL">
+        <menu_item_call.on_click
+           function="AreaSearch.Action"
+           parameter="scompile lsl" />
+      </menu_item_call>
+      <menu_item_call
+         label="Reset Scripts"
+         name="Reset Scripts">
+        <menu_item_call.on_click
+           function="AreaSearch.Action"
+           parameter="sreset" />
+      </menu_item_call>
+      <menu_item_call
+         label="Set Scripts to Running"
+         name="Set Scripts to Running">
+        <menu_item_call.on_click
+           function="AreaSearch.Action"
+           parameter="sstart" />
+      </menu_item_call>
+      <menu_item_call
+         label="Set Scripts to Not Running"
+         name="Set Scripts to Not Running">
+        <menu_item_call.on_click
+           function="AreaSearch.Action"
+           parameter="sstop" />
+      </menu_item_call>
+      <menu_item_call
+         label="Locate Scripts"
+         name="Locate scripts within this object">
+        <menu_item_call.on_click
+           function="AreaSearch.Action"
+           parameter="slocate" />
+      </menu_item_call>
+      <menu_item_call
+         label="Detail Scripts"
+         name="Detail scripts within this object">
+        <menu_item_call.on_click
+           function="AreaSearch.Action"
+           parameter="slocate full" />
+      </menu_item_call>
+      <menu_item_separator/>
+      <menu_item_call
+         label="DELETE Scripts"
+         name="Delete scripts within this object">
+        <menu_item_call.on_click
+           function="AreaSearch.Action"
+           parameter="sdelete" />
+      </menu_item_call>
+    </menu>
+
 	<menu_item_call
 	 label="Touch"
 	 layout="topleft"
@@ -79,7 +132,7 @@
 		 parameter="delete"/>
 	</menu_item_call>
 	<menu_item_call
-	 label="Blacklist"
+	 label="Derender"
 	 layout="topleft"
 	 name="blacklist_object">
 		<menu_item_call.on_click

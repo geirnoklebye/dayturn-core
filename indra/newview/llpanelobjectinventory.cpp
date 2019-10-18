@@ -66,6 +66,7 @@
 #include "llviewerregion.h"
 #include "llviewerobjectlist.h"
 #include "llviewermessage.h"
+#include "llviewermenu.h" // for handle_object_scripts
 
 const LLColor4U DEFAULT_WHITE(255, 255, 255);
 
@@ -916,7 +917,61 @@ public:
 		LLTaskInvFVBridge(panel, uuid, name) {}
 
 	//static BOOL enableIfCopyable( void* userdata );
+	virtual void performAction(LLInventoryModel* model, std::string action);
+	virtual void buildContextMenu(LLMenuGL& menu, U32 flags);
 };
+
+// virtual
+void LLTaskScriptBridge::performAction(LLInventoryModel* model, std::string action)
+{
+	if (action == "task_deletealllinksetscripts")
+	{
+		LLInventoryItem* item = findItem();
+		if(item)
+		{
+			LLSelectMgr::getInstance()->promoteSelectionToRoot();
+			handle_object_scripts("delete " + item->getName());
+		}
+	}
+	LLTaskInvFVBridge::performAction(model, action);
+}
+
+void LLTaskScriptBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
+{
+	LLInventoryItem* item = findItem();
+	std::vector<std::string> items;
+	std::vector<std::string> disabled_items;
+	if (!item)
+	{
+		hide_context_entries(menu, items, disabled_items);
+		return;
+		}
+
+	if (canOpenItem())
+	{
+		if (!isItemCopyable())
+		{
+			disabled_items.push_back(std::string("Task Open"));
+		}
+	}
+	items.push_back(std::string("Task Properties"));
+	if ((flags & FIRST_SELECTED_ITEM) == 0)
+	{
+		disabled_items.push_back(std::string("Task Properties"));
+	}
+	if(isItemRenameable())
+	{
+		items.push_back(std::string("Task Rename"));
+	}
+	if(isItemRemovable())
+	{
+		items.push_back(std::string("Task Remove"));
+		items.push_back(std::string("Task Remove All"));
+	}
+
+	hide_context_entries(menu, items, disabled_items);
+}
+
 
 class LLTaskLSLBridge : public LLTaskScriptBridge
 {

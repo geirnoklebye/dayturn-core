@@ -457,10 +457,12 @@ bool FSAreaSearch::isSearchableObject(LLViewerObject* objectp, LLViewerRegion* o
 	// Excludes
 	//-----------------------------------------------------------------------
 
-	if (mExcludeChildPrims && !(objectp->isRoot() || (objectp->isAttachment() && objectp->isRootEdit())))
-	{
-		return false;
-	}
+	// we keep child prims so that we have them on hand if we want to invoke a script queue action
+	// which needs IDs and names
+	//if (mExcludeChildPrims && !(objectp->isRoot() || (objectp->isAttachment() && objectp->isRootEdit())))
+	//{
+	//	return false;
+	//}
 
 	if (mExcludeNeighborRegions && !(objectp->getRegion() == our_region))
 	{
@@ -747,6 +749,13 @@ void FSAreaSearch::matchObject(FSObjectProperties& details, LLViewerObject* obje
 	//-----------------------------------------------------------------------
 	// Filters
 	//-----------------------------------------------------------------------
+	
+	// now that we always keep child prims on hand so that we have the names for script queue operations
+	// we need a filter here for the scroll list to stop them appearing for the user
+	if (mExcludeChildPrims && !(objectp->isRoot() || (objectp->isAttachment() && objectp->isRootEdit())))
+	{
+		return;
+	}
 	
 	if (mFilterForSale && !(details.sale_info.isForSale() && (details.sale_info.getSalePrice() >= mFilterForSaleMin && details.sale_info.getSalePrice() <= mFilterForSaleMax)))
 	{
@@ -1586,7 +1595,6 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 	switch(c)
 	{
 	case 't': // touch
-	case 's': // script
 	case 'l': // blacklist
 	{
 		std::vector<LLScrollListItem*> selected = mResultList->getAllSelected();
@@ -1604,9 +1612,6 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 					touchObject(objectp);
 				}
 			}
-				break;
-			case 's': // script
-//				FSLSLBridge::instance().viewerToLSL("getScriptInfo|" + (*item_it)->getUUID().asString());
 				break;
 			case 'l': // blacklist
 			{
@@ -1793,6 +1798,7 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 	case 'e': // edit
 	case 'd': // delete
 	case 'r': // return
+	case 's': // script queue actions
 	{
 		// select the objects first
 		LLSelectMgr::getInstance()->deselectAll();
@@ -1803,10 +1809,16 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 		{
 			LLUUID object_id = (*item_it)->getUUID();
 			LLViewerObject* objectp = gObjectList.findObject(object_id);
+			// if we arrived here with a child prim, switch to its root
+			if (objectp != objectp->getRootEdit())
+			{
+				objectp = objectp->getRootEdit();
+				object_id = objectp->getID();
+			}
 			if (objectp)
 			{
 				LLSelectMgr::getInstance()->selectObjectAndFamily(objectp);
-				if ( c == 'r' )
+				if ( c == 'r' || c == 's' )
 				{
 					// need to set permissions for object return
 					LLSelectNode* node = LLSelectMgr::getInstance()->getSelection()->findNode(objectp);
@@ -1817,10 +1829,52 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 						break;
 
 					FSObjectProperties& details = mFSAreaSearch->mObjectDetails[object_id];
-					node->mValid = TRUE;
-					node->mPermissions->init(details.creator_id, details.owner_id, details.last_owner_id, details.group_id);
-					node->mPermissions->initMasks(details.base_mask, details.owner_mask, details.everyone_mask, details.group_mask, details.next_owner_mask);
-					node->mAggregatePerm = details.ag_perms;
+					if (c == 'r')
+					{
+						node->mValid = TRUE;
+						node->mPermissions->init(details.creator_id, details.owner_id, details.last_owner_id, details.group_id);
+						node->mPermissions->initMasks(details.base_mask, details.owner_mask, details.everyone_mask, details.group_mask, details.next_owner_mask);
+						node->mAggregatePerm = details.ag_perms;
+					}
+					else if (c == 's')
+					{
+						// by default the area search excludes child prims so we have to make sure they get included, but
+						// discard them if they come through as part of the original selection
+						if (objectp->getRoot() == objectp)
+						{
+							node->mName = details.name;
+							//LL_INFOS() << "Set name for root object " << object_id << " to " << details.name << LL_ENDL;
+							// enumerate down the linkset adding the children
+
+							LLViewerObject::child_list_t children = objectp->getChildren();
+							if ( ! children.empty())
+							{
+								for (LLViewerObject::child_list_t::iterator iter = children.begin(); iter != children.end(); ++iter)
+								{
+									//LL_INFOS() << "Processing child object " << (*iter)->getID() << LL_ENDL;
+									if( !mFSAreaSearch || mFSAreaSearch->mObjectDetails.end() == mFSAreaSearch->mObjectDetails.find((*iter)->getID() ) )
+									{
+										//LL_INFOS() << "didn't find " << (*iter)->getID() << "in mFSAreaSearch" << LL_ENDL;
+										break;
+									}
+									LLSelectNode* nodec = LLSelectMgr::getInstance()->getSelection()->findNode((*iter));
+									if( !nodec )
+									{
+											//LL_INFOS() << "didn't find node in getSelection()" << LL_ENDL;
+											break;
+									}
+									FSObjectProperties& cdetails = mFSAreaSearch->mObjectDetails[(*iter)->getID()];
+									nodec->mName = cdetails.name;
+									//LL_INFOS() << "Set child " << (*iter)->getID() << " as " << cdetails.name << LL_ENDL;
+								}
+							}
+						}
+						else
+						{
+							// if a child prim comes into this routine we can ignore it
+							//LL_INFOS() << "Ignoring child prim " << object_id << LL_ENDL;
+						}
+					}
 				}
 			}
 		}
@@ -1839,6 +1893,13 @@ bool FSPanelAreaSearchList::onContextMenuItemClick(const LLSD& userdata)
 			break;
 		case 'r': // return
 			handle_object_return();
+			break;
+		case 's': // script queue
+			{
+				//we use s to prefix a whole submenu of actions, so drop off the s before passing it along
+				action = action.erase(0,1);
+				handle_object_scripts(action);
+			}
 			break;
 		default:
 			break;

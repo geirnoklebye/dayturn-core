@@ -63,6 +63,7 @@ void handle_deselect(void*);
 void handle_delete_object();
 void handle_duplicate(void*);
 void handle_duplicate_in_place(void*);
+void handle_object_scripts(std::string action);
 BOOL enable_not_have_card(void *userdata);
 void process_grant_godlike_powers(LLMessageSystem* msg, void**);
 
@@ -103,6 +104,7 @@ void handle_object_edit();
 void handle_object_touch();
 bool enable_object_open();
 void handle_object_open();
+void handle_object_scripts(std::string action);
 
 bool visible_take_object();
 bool tools_visible_take_object();

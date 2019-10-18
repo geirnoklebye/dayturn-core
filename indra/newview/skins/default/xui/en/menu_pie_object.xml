@@ -436,38 +436,54 @@
 				<pie_slice.on_enable
 					function="EditableSelected" />
 			</pie_slice>
-
-<!--			<pie_slice
-				enabled="false"
-				label="Remove Scripts"
-				name="Remove Scripts From Selection">
-				<pie_slice.on_click
-					function="Tools.SelectedScriptAction"
-					parameter="delete" />
-				<pie_slice.on_enable
-					function="EditableSelected" />
-			</pie_slice>
-			
-			<pie_slice
-				enabled="true"
-				label="Script Info"
-				name="ScriptInfo">
-				<pie_slice.on_click
-					function="Tools.ScriptInfo" />
-                <pie_slice.on_enable
-                    function="Object.EnableScriptInfo" />
-			</pie_slice>
--->
+      <pie_slice
+      	enabled="false"
+         label="Locate Scripts"
+         name="Locate scripts within this object">
+        <pie_slice.on_click
+           function="Tools.SelectedScriptAction"
+           parameter="locate" />
+      <pie_slice.on_enable
+       function="EnableEdit" />
+      </pie_slice>
+      <pie_slice
+      	enabled="false"
+         label="Detail Scripts"
+         name="Detail scripts within this object">
+        <pie_slice.on_click
+           function="Tools.SelectedScriptAction"
+           parameter="locate full" />
+      <pie_slice.on_enable
+       function="EnableEdit" />
+      </pie_slice>
+      <pie_slice
+      	enabled="false"
+         label="DELETE Scripts"
+         name="Delete scripts within this object">
+        <pie_slice.on_click
+           function="Tools.SelectedScriptAction"
+           parameter="delete" />
+      <pie_slice.on_enable
+       function="EditableSelected" />
+      </pie_slice>
 		
 		</pie_menu>
-		
-        <pie_slice
-            label="Inspect"
-            name="Object Inspect">
-            <pie_slice.on_click
-                function="Floater.Show"
-                parameter="inspect" />
-        </pie_slice>
+		  <pie_slice
+		      label="Object Profile"
+		      name="Object Inspect">
+		    <pie_slice.on_click
+		        function="Object.Inspect" />
+		    <pie_slice.on_enable
+		        function="Object.EnableInspect" />
+		  </pie_slice>		
+		  <pie_slice
+		      label="Object Inspect"
+		      name="Object Inspector">
+		    <pie_slice.on_click
+		        function="Object.FullInspect" />
+		    <pie_slice.on_enable
+		        function="Object.EnableInspect" />
+		  </pie_slice>  
 
     </pie_menu>
 

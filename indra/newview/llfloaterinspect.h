@@ -67,6 +67,8 @@ protected:
 	// protected members
 	void setDirty() { mDirty = TRUE; }
 	bool mDirty;
+	void onScrollListRightClicked(LLUICtrl* ctrl, S32 x, S32 y);
+	LLContextMenu	*mPopupMenu;
 
 // [RLVa:KB] - Checked: RLVa-2.0.1
 	const LLSelectNode* getSelectedNode() /*const*/;

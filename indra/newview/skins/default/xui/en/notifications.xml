@@ -2356,6 +2356,46 @@ Select objects with scripts that you have permission to modify.
 
   <notification
    icon="alertmodal.tga"
+   name="CannotLocateSelectObjectsNoScripts"
+   type="alertmodal">
+Not able to perform &apos;locate&apos;.
+
+There are no scripts within this selection.
+  <tag>fail</tag>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="CannotLocateSelectObjectsNoPermission"
+   type="alertmodal">
+Not able to perform &apos;locate&apos;.
+
+Select objects with scripts that you have permission to modify.
+  <tag>fail</tag>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="CannotDeleteSelectObjectsNoScripts"
+   type="alertmodal">
+Not able to perform &apos;delete&apos;.
+
+There are no scripts within this selection.
+  <tag>fail</tag>
+  </notification>
+
+  <notification
+   icon="alertmodal.tga"
+   name="CannotDeleteSelectObjectsNoPermission"
+   type="alertmodal">
+Not able to perform &apos;delete&apos;.
+
+Select objects with scripts that you have permission to modify.
+  <tag>fail</tag>
+  </notification>  
+
+  <notification
+   icon="alertmodal.tga"
    name="CannotOpenScriptObjectNoMod"
    type="alertmodal">
     Unable to open script in object without modify permissions.
@@ -2381,7 +2421,42 @@ Unable to set any scripts to &apos;not running&apos;.
 Select objects with scripts.
   <tag>fail</tag>
   </notification>
-
+  <notification
+     icon="alertmodal.tga"
+     name="ConfirmScriptQueueModify"
+    type="alertmodal">
+    Are you sure you want to modify scripts in these objects?
+    <tag>confirm</tag>
+    <usetemplate
+    ignoretext="Confirm before I modify scripts in selection"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+  <notification
+     icon="alertmodal.tga"
+     name="ConfirmScriptQueueDelete"
+    type="alertmodal">
+    Are you sure you want to DELETE ALL scripts in these objects?
+    <tag>confirm</tag>
+    <usetemplate
+    ignoretext="Confirm before I DELETE ALL scripts in selection"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
+  <notification
+     icon="alertmodal.tga"
+     name="ConfirmScriptQueueDeleteOnly"
+    type="alertmodal">
+    Are you sure you want to DELETE all scripts named '[NAME]' in these objects?
+    <tag>confirm</tag>
+    <usetemplate
+    ignoretext="Confirm before I DELETE all occurrences of a script in selection"
+     name="okcancelignore"
+     notext="Cancel"
+     yestext="OK"/>
+  </notification>
   <notification
    icon="alertmodal.tga"
    name="NoFrontmostFloater"

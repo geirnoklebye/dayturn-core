@@ -59,11 +59,19 @@ public:
 	/*virtual*/ BOOL postBuild();
 	
 	void setMono(bool mono) { mMono = mono; }
+	void setFull(bool full) { mFull = full; }
+	bool getFull() { return mFull; }
+	void setDeleteOnly(bool delete_only) { mDeleteOnly = delete_only; }
+	bool getDeleteOnly() { return mDeleteOnly; }
+	void setDeleteName(std::string deletename) { mDeleteName = deletename; }
+	std::string getDeleteName() { return mDeleteName; }
 	
 	// addObject() accepts an object id.
 	void addObject(const LLUUID& id, std::string name);
 
-	// start() returns TRUE if the queue has started, otherwise FALSE.
+	// start() returns TRUE if queue started or notification raised,
+	// FALSE only if starting a non-notification action failed
+	// (previously it passed back the return from startQueue() directly)
 	BOOL start();
 	
     void addProcessingMessage(const std::string &message, const LLSD &args);
@@ -71,9 +79,28 @@ public:
 
     std::string getStartString() const { return mStartString; }
 
+  void setWaiting(bool setwaiting) { mAwaitingMessage = setwaiting; }  
+  bool getWaiting() { return mAwaitingMessage; }  
+  void setIsMono(bool setismono) { mIsMono = setismono; setismono ? mMonoCount++ : mLSLCount++; }  
+  bool getIsMono() { return mIsMono; }  
+  void setIsRunning(bool setisrunning) { mIsRunning = setisrunning; if (setisrunning) mRunningCount++; }  
+  bool getIsRunning() { return mIsRunning; } 
+  void clearScriptTotals() { mMonoCount=0; mLSLCount=0; mRunningCount=0; }
+  U32 getMonoCount() { return mMonoCount; }
+  U32 getLSLCount() { return mLSLCount; }
+  U32 getRunningCount() { return mRunningCount; } 
+    
 protected:
 	static void onCloseBtn(void* user_data);
 
+	// this does the actual starting immediately for informational operations or
+	// after confirmation for modifying/destructive operations
+	BOOL confirmedStart();
+
+	bool onScriptQueueConfirmation(const LLSD& notification, const LLSD& response);
+
+  void onClickCopyToClipboard();
+	
 	// returns true if this is done
 	BOOL isDone() const;
 
@@ -100,6 +127,15 @@ protected:
 
 	std::string mStartString;
 	bool mMono;
+	bool mFull;
+  bool mAwaitingMessage;
+  bool mIsMono;
+  bool mIsRunning;
+  bool mDeleteOnly;
+  std::string mDeleteName;
+  U32 mMonoCount;
+  U32 mLSLCount;
+  U32 mRunningCount; // we don't need a not running count - it's (mono+lsl) minus running
 
     typedef boost::function<bool(const LLPointer<LLViewerObject> &, LLInventoryObject*, LLEventPump &)>   fnQueueAction_t;
     static void objectScriptProcessingQueueCoro(std::string action, LLHandle<LLFloaterScriptQueue> hfloater, object_data_list_t objectList, fnQueueAction_t func);
@@ -196,6 +232,50 @@ protected:
 	virtual ~LLFloaterNotRunQueue();
 	
     static bool stopObjectScripts(LLHandle<LLFloaterScriptQueue> hfloater, const LLPointer<LLViewerObject> &object, LLInventoryObject* inventory, LLEventPump &pump);
+
+    virtual bool startQueue();
+};
+
+// Kokua addition
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Class LLFloaterLocateQueue
+//
+// This script queue locates each script and then optionally gets more information.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class LLFloaterLocateQueue : public LLFloaterScriptQueue
+{
+	friend class LLFloaterReg;
+	
+public:
+  static void processScriptRunningReply(LLMessageSystem* msg);
+	
+protected:
+	LLFloaterLocateQueue(const LLSD& key);
+	virtual ~LLFloaterLocateQueue();
+	
+    static bool locateObjectScripts(LLHandle<LLFloaterScriptQueue> hfloater, const LLPointer<LLViewerObject> &object, LLInventoryObject* inventory, LLEventPump &pump);
+
+    virtual bool startQueue();
+};
+
+// Kokua addition
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Class LLFloaterDeleteQueue
+//
+// This script queue will delete each script.
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class LLFloaterDeleteQueue : public LLFloaterScriptQueue
+{
+	friend class LLFloaterReg;
+protected:
+	LLFloaterDeleteQueue(const LLSD& key);
+	virtual ~LLFloaterDeleteQueue();
+	
+    static bool deleteObjectScripts(LLHandle<LLFloaterScriptQueue> hfloater, const LLPointer<LLViewerObject> &object, LLInventoryObject* inventory, LLEventPump &pump);
 
     virtual bool startQueue();
 };

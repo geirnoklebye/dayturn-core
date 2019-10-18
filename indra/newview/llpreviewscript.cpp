@@ -88,6 +88,8 @@
 #include "llfloaterexperienceprofile.h"
 #include "llviewerassetupload.h"
 
+//kokua
+#include "llcompilequeue.h"
 const std::string HELLO_LSL =
 	"default\n"
 	"{\n"
@@ -2614,6 +2616,8 @@ void LLLiveLSLEditor::processScriptRunningReply(LLMessageSystem* msg, void**)
 		monoCheckbox->setEnabled(instance->getIsModifiable() && have_script_upload_cap(object_id));
 		monoCheckbox->set(mono);
 	}
+	// send it along to compilequeue which could also have issued GetRunning
+	LLFloaterLocateQueue::processScriptRunningReply(msg);
 }
 
 
