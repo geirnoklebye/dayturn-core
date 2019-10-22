@@ -65,17 +65,66 @@
      use_ellipses="true"
      value="(loading)"
      width="180" />
+    <icon
+     height="16"
+     follows="right"
+     image_name="map_avatar_16.tga"
+     layout="topleft"
+     right="-147"
+     name="payment_info"
+     tool_tip="Payment info on file"
+     top="4"
+     width="16" /> 
+<!-- not used in kokua, so overlay it with first seen -->      
     <text
      follows="right"
      font="SansSerifSmall"
      height="15"
      layout="topleft"
      left_pad="5"
-     right="-164"
+     top="5"
+     right="-47"
      name="last_interaction"
      text_color="LtGray_50"
-     value="0s"
-     width="35" />
+     value="9999"
+     width="48" />
+<!-- not used in kokua, so overlay it with first seen -->      
+    <text
+     follows="right"
+     font="SansSerifSmall"
+     height="15"
+     top="5"
+     layout="topleft"
+     left_pad="5"
+     right="-47"
+     name="avatar_age"
+     text_color="LtGray_50"
+     value="!!!!"
+     width="48" />  
+    <text
+     follows="right"
+     font="SansSerifSmall"
+     height="15"
+     top="5"
+     layout="topleft"
+     left_pad="5"
+     right="-47"
+     name="first_seen"
+     text_color="LtGray_50"
+     value="00:00:00"
+     width="96" />  
+    <text
+     follows="right"
+     font="SansSerifSmall"
+     height="15"
+     top="5"
+     layout="topleft"
+     left_pad="5"
+     right="-32"
+     name="radar_range"
+     text_color="LtGray_50"
+     value="9999M"
+     width="60" />
     <icon
      height="16"
      follows="right"
