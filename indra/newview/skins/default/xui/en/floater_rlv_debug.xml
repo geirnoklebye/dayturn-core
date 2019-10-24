@@ -6,6 +6,7 @@
  name="RLV debug floater"
  save_rect="true"
  title="RLV COMMANDS"
+ save_visibility="true"
  reuse_instance="true"
  width="600">
     <tab_container
