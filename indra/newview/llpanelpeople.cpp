@@ -238,9 +238,9 @@ protected:
 	virtual bool doCompare(const LLAvatarListItem* item1, const LLAvatarListItem* item2) const
 	{
 
-		F32 arr_time1 = LLRecentPeople::instance().getArrivalTimeByID(item1->getAvatarId());
-		F32 arr_time2 = LLRecentPeople::instance().getArrivalTimeByID(item2->getAvatarId());
-
+		F64 arr_time1 = LLRecentPeople::instance().getArrivalTimeByID(item1->getAvatarId());
+		F64 arr_time2 = LLRecentPeople::instance().getArrivalTimeByID(item2->getAvatarId());
+			
 		if (arr_time1 == arr_time2)
 		{
 			std::string name1 = item1->getAvatarName();
@@ -1101,7 +1101,8 @@ void LLPanelPeople::updateNearbyList()
     //mk
     //CA merge error - these are duplicated above where they're used for the radar messages
     //    LLWorld::getInstance()->getAvatars(&mNearbyList->getIDs(), &positions, gAgent.getPositionGlobal(), gSavedSettings.getF32("NearMeRange"));
-    //    mNearbyList->setDirty();
+	mNearbyList->setDirty();
+	mNearbyList->sort();
     //
     //    DISTANCE_COMPARATOR.updateAvatarsPositions(positions, mNearbyList->getIDs());
     //    LLActiveSpeakerMgr::instance().update(TRUE);

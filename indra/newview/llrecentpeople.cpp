@@ -145,7 +145,7 @@ void LLRecentPeople::updateAvatarsArrivalTime(uuid_vec_t& uuids)
 	}
 }
 
-F32 LLRecentPeople::getArrivalTimeByID(const LLUUID& id)
+F64 LLRecentPeople::getArrivalTimeByID(const LLUUID& id)
 {
 	id_to_time_map_t::const_iterator it = mAvatarsArrivalTime.find(id);
 
