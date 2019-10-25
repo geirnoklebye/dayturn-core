@@ -791,33 +791,60 @@ void show_item_original(const LLUUID& item_uuid)
 		return;
 	}
 
-	//sidetray inventory panel
-	LLSidepanelInventory *sidepanel_inventory =	LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
+	////sidetray inventory panel
+	//LLSidepanelInventory *sidepanel_inventory =	LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
 
-	bool do_reset_inventory_filter = !floater_inventory->isInVisibleChain();
+	//bool do_reset_inventory_filter = !floater_inventory->isInVisibleChain();
 
-	LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel();
-	if (!active_panel) 
+	//LLInventoryPanel* active_panel = LLInventoryPanel::getActiveInventoryPanel();
+	//if (!active_panel) 
+	//{
+	//	//this may happen when there is no floatera and other panel is active in inventory tab
+
+	//	if	(sidepanel_inventory)
+	//	{
+	//		sidepanel_inventory->showInventoryPanel();
+	//	}
+	//}
+	//
+	//active_panel = LLInventoryPanel::getActiveInventoryPanel();
+	//if (!active_panel) 
+	//{
+	//	return;
+	//}
+	//active_panel->setSelection(gInventory.getLinkedItemID(item_uuid), TAKE_FOCUS_YES);
+	//
+	//if(do_reset_inventory_filter)
+	//{
+	//	reset_inventory_filter();
+	//}
+
+	LLFloaterReg::showInstance("inventory");
+	LLSidepanelInventory* sidepanel_inventory = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
+	sidepanel_inventory->showInventoryPanel();
+	LLPanelMainInventory* main_inventory = sidepanel_inventory->getMainInventoryPanel();
+	main_inventory->resetFilters();
+	main_inventory->onFilterEdit("");
+	LLUUID linked_item_id = gInventory.getLinkedItemID(item_uuid);
+	bool in_inbox = (gInventory.isObjectDescendentOf(linked_item_id, gInventory.findCategoryUUIDForType(LLFolderType::FT_INBOX)));
+	bool show_inbox = gSavedSettings.getBOOL("FSShowInboxFolder"); // <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+
+	if (in_inbox && !show_inbox)
 	{
-		//this may happen when there is no floatera and other panel is active in inventory tab
+		LLInventoryPanel * inventory_panel = NULL;
+		sidepanel_inventory->openInbox();
+		inventory_panel = sidepanel_inventory->getInboxPanel();
 
-		if	(sidepanel_inventory)
+		if (inventory_panel)
 		{
-			sidepanel_inventory->showInventoryPanel();
+			inventory_panel->setSelection(linked_item_id, TAKE_FOCUS_YES);
 		}
 	}
-	
-	active_panel = LLInventoryPanel::getActiveInventoryPanel();
-	if (!active_panel) 
+	else
 	{
-		return;
+		main_inventory->getActivePanel()->setSelection(linked_item_id, TAKE_FOCUS_YES);
 	}
-	active_panel->setSelection(gInventory.getLinkedItemID(item_uuid), TAKE_FOCUS_YES);
-	
-	if(do_reset_inventory_filter)
-	{
-		reset_inventory_filter();
-	}
+	// </FS:Ansariel>
 }
 
 

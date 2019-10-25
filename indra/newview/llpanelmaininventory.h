@@ -81,6 +81,7 @@ public:
 	LLInventoryPanel* getAllItemsPanel();
 	void selectAllItemsPanel();
 	const LLInventoryPanel* getActivePanel() const { return mActivePanel; }
+	void resetFilters();
 
 	const std::string& getFilterText() const { return mFilterText; }
 	
@@ -120,7 +121,7 @@ protected:
 	void doToSelected(const LLSD& userdata);
 	void closeAllFolders();
 	void doCreate(const LLSD& userdata);
-	void resetFilters();
+	//void resetFilters(); // Moved to public
 	void setSortBy(const LLSD& userdata);
 	void saveTexture(const LLSD& userdata);
 	bool isSaveTextureEnabled(const LLSD& userdata);

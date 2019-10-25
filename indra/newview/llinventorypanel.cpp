@@ -288,15 +288,10 @@ void LLInventoryPanel::initFromParams(const LLInventoryPanel::Params& params)
 	}
 
 	// hide inbox
-	// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
-	//getFilter()->setFilterCategoryTypes(getFilter()->getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_INBOX));
-	if (!gSavedSettings.getBOOL("FSShowInboxFolder"))
-	{
-		getFilter().setFilterCategoryTypes(getFilter().getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_INBOX));
-	}
 	if (!gSavedSettings.getBOOL("InventoryOutboxMakeVisible"))
 	{
-		getFilter().setFilterCategoryTypes(getFilter().getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_INBOX));
+		// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+		//getFilter().setFilterCategoryTypes(getFilter().getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_INBOX));
 		getFilter().setFilterCategoryTypes(getFilter().getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_OUTBOX));
 	}
     // hide marketplace listing box, unless we are a marketplace panel
@@ -305,6 +300,17 @@ void LLInventoryPanel::initFromParams(const LLInventoryPanel::Params& params)
 		getFilter().setFilterCategoryTypes(getFilter().getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_MARKETPLACE_LISTINGS));
     }
     
+	// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+	if (getName() != "Worn Items" && getName() != "inventory_inbox")
+	{
+		if (!gSavedSettings.getBOOL("FSShowInboxFolder"))
+		{
+			getFilter().setFilterCategoryTypes(getFilter().getFilterCategoryTypes() & ~(1ULL << LLFolderType::FT_INBOX));
+		}
+		gSavedSettings.getControl("FSShowInboxFolder")->getSignal()->connect(boost::bind(&LLInventoryPanel::updateShowInboxFolder, this, _2));
+	}
+	// </FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+
 	// set the filter for the empty folder if the debug setting is on
 	if (gSavedSettings.getBOOL("DebugHideEmptySystemFolders"))
 	{
@@ -1566,6 +1572,7 @@ void LLInventoryPanel::openInventoryPanelAndSetSelection(BOOL auto_open, const L
 	sidepanel_inventory->showInventoryPanel();
 
 	bool in_inbox = (gInventory.isObjectDescendentOf(obj_id, gInventory.findCategoryUUIDForType(LLFolderType::FT_INBOX)));
+	bool show_inbox = gSavedSettings.getBOOL("FSShowInboxFolder"); // <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
 
 	if (main_panel && !in_inbox)
 	{
@@ -1582,9 +1589,12 @@ void LLInventoryPanel::openInventoryPanelAndSetSelection(BOOL auto_open, const L
 			reset_inventory_filter();
 		}
 
-		if (in_inbox)
+		// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+		//if (in_inbox)
+		if (in_inbox && !show_inbox)
+		// </FS:Ansariel>
 		{
-			
+			LLSidepanelInventory* sidepanel_inventory = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory"); // <FS:Ansariel> Use correct inventory floater
 			LLInventoryPanel * inventory_panel = NULL;
 				sidepanel_inventory->openInbox();
 				inventory_panel = sidepanel_inventory->getInboxPanel();

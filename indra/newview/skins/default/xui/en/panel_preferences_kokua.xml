@@ -682,17 +682,26 @@
              control_name="DebugHideEmptySystemFolders"
              tool_tip="If enabled, the inventory windows will hide all empty system folders like Favorites, Landmarks etc.">
             </check_box>
-            <check_box
-            top_pad="5"
-            follows="left|top"
-            height="16"
-            label="Show the Received Items folder in normal inventory"
-            left="15"
-            name="FSShowInboxFolder"
-            width="270"
-            control_name="FSShowInboxFolder"
-            tool_tip="If enabled, the inventory windows will also show the Received Items folder">
-            </check_box>
+		<check_box
+		 top_pad="2"
+		 follows="left|top"
+		 height="16"
+		 label="Show the Received Items folder in normal inventory"
+		 name="FSShowInboxFolder"
+		 width="270"
+		 control_name="FSShowInboxFolder"
+		 tool_tip="If enabled, the inventory windows will also show the Received Items folder"/>
+		<check_box
+		 top_pad="2"
+		 left="30"
+		 follows="left|top"
+		 height="16"
+		 label="Always show Received Items button at bottom of inventory"
+		 name="FSAlwaysShowInboxButton"
+		 width="270"
+		 control_name="FSAlwaysShowInboxButton"
+		 enabled_control="FSShowInboxFolder"
+		 tool_tip="If enabled, the Received Items button is always shown at the bottom of the inventory windows, even if the folder is shown in the inventory."/>
             <check_box
              top_pad="5"
              layout="topleft"

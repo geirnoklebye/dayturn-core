@@ -384,7 +384,16 @@ void LLPanelMainInventory::doCreate(const LLSD& userdata)
 void LLPanelMainInventory::resetFilters()
 {
 	LLFloaterInventoryFinder *finder = getFinder();
-	getActivePanel()->getFilter().resetDefault();
+	// <FS:Ansariel> Properly reset all filters
+	//getActivePanel()->getFilter().resetDefault();
+	LLInventoryFilter& filter = getActivePanel()->getFilter();
+	filter.resetDefault();
+	filter.setFilterCreator(LLInventoryFilter::FILTERCREATOR_ALL);
+	filter.setSearchType(LLInventoryFilter::SEARCHTYPE_NAME);
+
+	getActivePanel()->updateShowInboxFolder(gSavedSettings.getBOOL("FSShowInboxFolder"));
+	getActivePanel()->updateHideEmptySystemFolders(gSavedSettings.getBOOL("DebugHideEmptySystemFolders"));
+	// </FS:Ansariel>
 	if (finder)
 	{
 		finder->updateElementsFromFilter();
@@ -521,15 +530,26 @@ void LLPanelMainInventory::onClearSearch()
 	}
 	mFilterSubString = "";
 
-	LLSidepanelInventory * sidepanel_inventory = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
-	if (sidepanel_inventory)
+	// <FS:Ansariel> FIRE-22509: Only apply inbox filter on primary inventory window
+	//LLSidepanelInventory * sidepanel_inventory = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
+	//if (sidepanel_inventory)
+	//{
+	//	LLPanelMarketplaceInbox* inbox_panel = sidepanel_inventory->getChild<LLPanelMarketplaceInbox>("marketplace_inbox");
+	//	if (inbox_panel)
+	//	{
+	//		inbox_panel->onClearSearch();
+	//	}
+	//}
+	LLSidepanelInventory * sidepanel_inventory = getParentByType<LLSidepanelInventory>();
+	if (sidepanel_inventory && sidepanel_inventory->getInboxPanel())
 	{
-		LLPanelMarketplaceInbox* inbox_panel = sidepanel_inventory->getChild<LLPanelMarketplaceInbox>("marketplace_inbox");
+		LLPanelMarketplaceInbox* inbox_panel = sidepanel_inventory->getInboxPanel()->getParentByType<LLPanelMarketplaceInbox>();
 		if (inbox_panel)
 		{
 			inbox_panel->onClearSearch();
 		}
 	}
+	// </FS:Ansariel>
 }
 
 void LLPanelMainInventory::onFilterEdit(const std::string& search_string )
@@ -562,15 +582,26 @@ void LLPanelMainInventory::onFilterEdit(const std::string& search_string )
 	// set new filter string
 	setFilterSubString(mFilterSubString);
 
-	LLSidepanelInventory * sidepanel_inventory = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
-	if (sidepanel_inventory)
+	// <FS:Ansariel> FIRE-22509: Only apply inbox filter on primary inventory window
+	//LLSidepanelInventory * sidepanel_inventory = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
+	//if (sidepanel_inventory)
+	//{
+	//	LLPanelMarketplaceInbox* inbox_panel = sidepanel_inventory->getChild<LLPanelMarketplaceInbox>("marketplace_inbox");
+	//	if (inbox_panel)
+	//	{
+	//		inbox_panel->onFilterEdit(search_string);
+	//	}
+	//}
+	LLSidepanelInventory * sidepanel_inventory = getParentByType<LLSidepanelInventory>();
+	if (sidepanel_inventory && sidepanel_inventory->getInboxPanel())
 	{
-		LLPanelMarketplaceInbox* inbox_panel = sidepanel_inventory->getChild<LLPanelMarketplaceInbox>("marketplace_inbox");
+		LLPanelMarketplaceInbox* inbox_panel = sidepanel_inventory->getInboxPanel()->getParentByType<LLPanelMarketplaceInbox>();
 		if (inbox_panel)
 		{
 			inbox_panel->onFilterEdit(search_string);
 		}
 	}
+	// </FS:Ansariel>
 }
 
 

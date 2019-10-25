@@ -75,6 +75,8 @@ static const char * const INBOX_LAYOUT_PANEL_NAME = "inbox_layout_panel";
 static const char * const INVENTORY_LAYOUT_STACK_NAME = "inventory_layout_stack";
 static const char * const MARKETPLACE_INBOX_PANEL = "marketplace_inbox";
 
+bool LLSidepanelInventory::sInboxInitalized = false; // <FS:Ansariel> Inbox panel randomly shown on secondary inventory windows
+
 //
 // Helpers
 //
@@ -128,10 +130,18 @@ LLSidepanelInventory::LLSidepanelInventory()
 
 LLSidepanelInventory::~LLSidepanelInventory()
 {
-	LLLayoutPanel* inbox_layout_panel = getChild<LLLayoutPanel>(INBOX_LAYOUT_PANEL_NAME);
+	// <FS:Ansariel> FIRE-17603: Received Items button sometimes vanishing
+	//LLLayoutPanel* inbox_layout_panel = getChild<LLLayoutPanel>(INBOX_LAYOUT_PANEL_NAME);
+	LLLayoutPanel* inbox_layout_panel = findChild<LLLayoutPanel>(INBOX_LAYOUT_PANEL_NAME);
+	if (inbox_layout_panel)
+	{
+	// </FS:Ansariel>
 
 	// Save the InventoryMainPanelHeight in settings per account
 	gSavedPerAccountSettings.setS32("InventoryInboxHeight", inbox_layout_panel->getTargetDim());
+	// <FS:Ansariel> FIRE-17603: Received Items button sometimes vanishing
+	}
+	// </FS:Ansariel>
 
 	if (mCategoriesObserver && gInventory.containsObserver(mCategoriesObserver))
 	{
@@ -214,8 +224,14 @@ BOOL LLSidepanelInventory::postBuild()
 	}
 	
 	// Received items inbox setup
+	if (!sInboxInitalized) // <FS:Ansariel> Inbox panel randomly shown on secondary inventory window
 	{
-		LLLayoutStack* inv_stack = getChild<LLLayoutStack>(INVENTORY_LAYOUT_STACK_NAME);
+		// <FS:Ansariel> FIRE-17603: Received Items button sometimes vanishing
+		//LLLayoutStack* inv_stack = getChild<LLLayoutStack>(INVENTORY_LAYOUT_STACK_NAME);
+		LLLayoutStack* inv_stack = findChild<LLLayoutStack>(INVENTORY_LAYOUT_STACK_NAME);
+		if (inv_stack)
+		{
+		// </FS:Ansariel>
 
 		// Set up button states and callbacks
 		LLButton * inbox_button = getChild<LLButton>(INBOX_BUTTON_NAME);
@@ -234,13 +250,24 @@ BOOL LLSidepanelInventory::postBuild()
 		}
 
 		// Set the inbox visible based on debug settings (final setting comes from http request below)
-		enableInbox(gSavedSettings.getBOOL("InventoryDisplayInbox"));
+		// <FS:Ansariel> FIRE-17603: Received Items button sometimes vanishing
+		//enableInbox(gSavedSettings.getBOOL("InventoryDisplayInbox"));
+		enableInbox(!gSavedSettings.getBOOL("FSShowInboxFolder") || gSavedSettings.getBOOL("FSAlwaysShowInboxButton"));
+		}
+		// </FS:Ansariel>
 
 		// Trigger callback for after login so we can setup to track inbox changes after initial inventory load
 		LLAppViewer::instance()->setOnLoginCompletedCallback(boost::bind(&LLSidepanelInventory::updateInbox, this));
+
+		// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+		gSavedSettings.getControl("FSShowInboxFolder")->getSignal()->connect(boost::bind(&LLSidepanelInventory::refreshInboxVisibility, this));
+		gSavedSettings.getControl("FSAlwaysShowInboxButton")->getSignal()->connect(boost::bind(&LLSidepanelInventory::refreshInboxVisibility, this));
+
+		sInboxInitalized = true; // <FS:Ansariel> Inbox panel randomly shown on secondary inventory window
 	}
 
-	gSavedSettings.getControl("InventoryDisplayInbox")->getCommitSignal()->connect(boost::bind(&handleInventoryDisplayInboxChanged));
+	// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+	//gSavedSettings.getControl("InventoryDisplayInbox")->getCommitSignal()->connect(boost::bind(&handleInventoryDisplayInboxChanged));
 
 	// Update the verbs buttons state.
 	updateVerbs();
@@ -339,8 +366,17 @@ void LLSidepanelInventory::enableInbox(bool enabled)
 	mInboxEnabled = enabled;
 	
 	LLLayoutPanel * inbox_layout_panel = getChild<LLLayoutPanel>(INBOX_LAYOUT_PANEL_NAME);
-	inbox_layout_panel->setVisible(enabled);
+	// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+	//inbox_layout_panel->setVisible(enabled);
+	inbox_layout_panel->setVisible(enabled && (!gSavedSettings.getBOOL("FSShowInboxFolder") || gSavedSettings.getBOOL("FSAlwaysShowInboxButton")));
 }
+
+// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+void LLSidepanelInventory::refreshInboxVisibility()
+{
+	enableInbox(mInboxEnabled);
+}
+// </FS:Ansariel> Optional hiding of Received Items folder aka Inbox
 
 void LLSidepanelInventory::openInbox()
 {
@@ -771,4 +807,16 @@ void LLSidepanelInventory::cleanup()
 			iv->cleanup();
 		}
 	}
+
+	// <FS:Ansariel> Secondary inventory floaters
+	LLFloaterReg::const_instance_list_t& secondary_inst_list = LLFloaterReg::getFloaterList("secondary_inventory");
+	for (LLFloaterReg::const_instance_list_t::const_iterator iter = secondary_inst_list.begin(); iter != secondary_inst_list.end();)
+	{
+		LLFloaterSidePanelContainer* iv = dynamic_cast<LLFloaterSidePanelContainer*>(*iter++);
+		if (iv)
+		{
+			iv->cleanup();
+		}
+	}
+	// </FS:Ansariel>
 }

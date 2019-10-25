@@ -1814,7 +1814,7 @@ void LLItemBridge::restoreToWorld()
 					gAgent.restoreToWorld = true;
 					gAgent.restoreToWorldGroup = group_id;
 					gAgent.restoreToWorldItem = itemp;
-
+					LLMessageSystem* msg = gMessageSystem;
 					msg->newMessageFast(_PREHASH_ActivateGroup);
 					msg->nextBlockFast(_PREHASH_AgentData);
 					msg->addUUIDFast(_PREHASH_AgentID, gAgent.getID());
@@ -1864,7 +1864,10 @@ void LLItemBridge::gotoItem()
 	if (obj && obj->getIsLinkType())
 	{
 		const LLUUID inbox_id = gInventory.findCategoryUUIDForType(LLFolderType::FT_INBOX);
-		if (gInventory.isObjectDescendentOf(obj->getLinkedUUID(), inbox_id))
+		// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+		//if (gInventory.isObjectDescendentOf(obj->getLinkedUUID(), inbox_id))
+		if (gInventory.isObjectDescendentOf(obj->getLinkedUUID(), inbox_id) && !gSavedSettings.getBOOL("FSShowInboxFolder"))
+		// </FS:Ansariel>
 		{
 			LLSidepanelInventory *sidepanel_inventory = LLFloaterSidePanelContainer::getPanel<LLSidepanelInventory>("inventory");
 			if (sidepanel_inventory && sidepanel_inventory->getInboxPanel())
