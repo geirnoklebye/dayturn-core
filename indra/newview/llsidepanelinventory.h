@@ -76,6 +76,9 @@ public:
 	void onToggleInboxBtn();
 
 	void enableInbox(bool enabled);
+
+	// <FS:Ansariel> Optional hiding of Received Items folder aka Inbox
+	void refreshInboxVisibility();
 	
 	void openInbox();
 	
@@ -128,6 +131,8 @@ private:
 
 	LLInventoryCategoriesObserver* 	mCategoriesObserver;
 	LLInboxAddedObserver*			mInboxAddedObserver;
+
+	static bool					sInboxInitalized; // <FS:Ansariel> Inbox panel randomly shown on secondary inventory windows
 };
 
 #endif //LL_LLSIDEPANELINVENTORY_H

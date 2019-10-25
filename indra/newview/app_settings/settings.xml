@@ -3776,17 +3776,6 @@
       <key>Backup</key>
       <integer>0</integer>
     </map>
-    <key>FSShowInboxFolder</key>
-  <map>
-    <key>Comment</key>
-    <string>If enabled, the Received Items folder aka Inbox is shown in the inventory as folder.</string>
-    <key>Persist</key>
-    <integer>1</integer>
-    <key>Type</key>
-    <string>Boolean</string>
-    <key>Value</key>
-    <integer>1</integer>
-  </map>
     <key>DebugPermissions</key>
     <map>
       <key>Comment</key>
@@ -6373,7 +6362,7 @@
     <key>InventoryDisplayInbox</key>
     <map>
         <key>Comment</key>
-        <string>Override received items inventory inbox display</string>
+        <string>UNUSED - Controlled via FSShowInboxFolder and FSAlwaysShowInboxButton: Override received items inventory inbox display</string>
         <key>Persist</key>
         <integer>0</integer>
         <key>Type</key>
@@ -19134,6 +19123,28 @@
 			<key>Value</key>
 			<integer>0</integer>
 		</map>
+		  <key>FSShowInboxFolder</key>
+		  <map>
+		    <key>Comment</key>
+		    <string>If enabled, the Received Items folder aka Inbox is shown in the inventory as folder.</string>
+		    <key>Persist</key>
+		    <integer>1</integer>
+		    <key>Type</key>
+		    <string>Boolean</string>
+		    <key>Value</key>
+		    <integer>0</integer>
+		  </map>
+		  <key>FSAlwaysShowInboxButton</key>
+		  <map>
+		    <key>Comment</key>
+		    <string>If enabled, the Received Items folder aka Inbox is always shown at the bottom of the inventory, even if it is shown as folder in the inventory itself.</string>
+		    <key>Persist</key>
+		    <integer>1</integer>
+		    <key>Type</key>
+		    <string>Boolean</string>
+		    <key>Value</key>
+		    <integer>0</integer>
+		  </map>
 		<key>FSIgnoreFinishAnimation</key>
 		<map>
 			<key>Comment</key>
