@@ -617,7 +617,7 @@ class WindowsManifest(ViewerManifest):
                 self.path("dullahan_host.exe")
                 self.path("natives_blob.bin")
                 self.path("snapshot_blob.bin")
-                self.path("widevinecdmadapter.dll")
+                # self.path("widevinecdmadapter.dll")
                 self.path("v8_context_snapshot.bin")
 
             # MSVC DLLs needed for CEF and have to be in same directory as plugin
@@ -1790,7 +1790,7 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
             #cef plugin
             self.path( "libcef.so" )
-            self.path( "libwidevinecdmadapter.so" )
+            # self.path( "libwidevinecdmadapter.so" )
 
             # Vivox runtimes
             with self.prefix(src=relpkgdir, dst="../bin"):
