@@ -91,6 +91,7 @@
 //MK
 #include "llvoavatar.h"
 //mk
+//kokua
 #include "llcompilequeue.h"
 
 const std::string HELLO_LSL =
