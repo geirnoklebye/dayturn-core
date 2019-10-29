@@ -8603,7 +8603,6 @@ void handle_object_scripts(std::string action)
 			return;
 		}
 //mk
-		std::string action = userdata.asString();
 		bool mono = false;
 		bool full = false;
 		bool delete_only = false;
