@@ -1090,9 +1090,10 @@ void LLNetMap::renderPropertyLinesForRegion(const LLViewerRegion* region)
 	U32* pTextureData = (U32*)mParcelRawImagep->getData();
 
         static LLUIColor map_property_line_colour = LLUIColorTable::instance().getColor("NetMapPropertyLineColor", LLColor4::red);
-	static LLUIColor map_for_sale_colour = LLUIColorTable::instance().getColor("NetMapPropertyForSaleColor", LLColor4::yellow);
+  //no longer used - same colours as land overlay are used now
+	//static LLUIColor map_for_sale_colour = LLUIColorTable::instance().getColor("NetMapPropertyForSaleColor", LLColor4::yellow);
 
-	const U32 colour_for_sale = LLColor4U(map_for_sale_colour.get()).asRGBA();
+	//const U32 colour_for_sale = LLColor4U(map_for_sale_colour.get()).asRGBA();
 	const U32 colour_property_lines = region->isAlive() ? LLColor4U(map_property_line_colour.get()).asRGBA() : LLColor4U(255, 128, 128, 255).asRGBA();
 
 	//
@@ -1126,28 +1127,53 @@ void LLNetMap::renderPropertyLinesForRegion(const LLViewerRegion* region)
 
 	static LLCachedControl<bool> for_sale_parcels(gSavedSettings, "MiniMapForSaleParcels", false);
 	static LLCachedControl<bool> collision_parcels(gSavedSettings, "MiniMapCollisionParcels", true);
+	static LLCachedControl<bool> land_owners(gSavedSettings, "MiniMapLandOwners", false);
+
+	const LLColor4U colour_owned = LLUIColorTable::instance().getColor("PropertyColorOther").get();
+	const LLColor4U colour_group = LLUIColorTable::instance().getColor("PropertyColorGroup").get();
+	const LLColor4U colour_self  = LLUIColorTable::instance().getColor("PropertyColorSelf").get();
+	const LLColor4U colour_for_sale  = LLUIColorTable::instance().getColor("PropertyColorForSale").get();
+	const LLColor4U colour_auction  = LLUIColorTable::instance().getColor("PropertyColorAuction").get();
+	const LLColor4U colour_default = LLColor4U(255, 128, 128, 192);
 
 	for (S32 row = 0; row < GRIDS_PER_EDGE; row++) {
 		for (S32 col = 0; col < GRIDS_PER_EDGE; col++) {
 			S32 collision_idx = (row * GRIDS_PER_EDGE) + col;
 			S32 overlay = ownerp[collision_idx];
 
-			bool detected_for_sale = (overlay & PARCEL_FOR_SALE);
+			bool detected_owned = ((overlay & PARCEL_COLOR_MASK) == PARCEL_OWNED);
+			bool detected_group = ((overlay & PARCEL_COLOR_MASK) == PARCEL_GROUP);
+			bool detected_self = ((overlay & PARCEL_COLOR_MASK) == PARCEL_SELF);
+			bool detected_for_sale = ((overlay & PARCEL_COLOR_MASK) == PARCEL_FOR_SALE);
+			bool detected_auction = ((overlay & PARCEL_COLOR_MASK) == PARCEL_AUCTION);
 			bool detected_collision = (collisionp && (collisionp[collision_idx / 8] & (1 << (collision_idx % 8))));
 
-			if (!detected_for_sale && !detected_collision && !(overlay & (PARCEL_SOUTH_LINE | PARCEL_WEST_LINE))) {
+			if (!detected_owned && !detected_group && ! detected_self && !detected_for_sale && !detected_auction && !detected_collision && !(overlay & (PARCEL_SOUTH_LINE | PARCEL_WEST_LINE))) {
 				continue;
 			}
 
 			const S32 posX = originX + llround(col * GRID_STEP * mObjectMapTPM);
 			const S32 posY = originY + llround(row * GRID_STEP * mObjectMapTPM);
 
-			if ((for_sale_parcels && detected_for_sale) || (collision_parcels && detected_collision)) {
+			if ((for_sale_parcels && (detected_auction || detected_for_sale)) || 
+				(land_owners && (detected_owned || detected_group || detected_self || detected_for_sale || detected_auction)) || 
+				(collision_parcels && detected_collision)) {
 				S32 curY = llclamp(posY, 0, imgHeight), endY = llclamp(posY + (S32)llround(GRID_STEP * mObjectMapTPM), 0, imgHeight - 1);
 				for (; curY <= endY; curY++) {
 					S32 curX = llclamp(posX, 0, imgWidth) , endX = llclamp(posX + (S32)llround(GRID_STEP * mObjectMapTPM), 0, imgWidth - 1);
 					for (; curX <= endX; curX++) {
-						pTextureData[(curY * imgWidth) + curX] = detected_for_sale ? colour_for_sale : LLColor4U(255, 128, 128, 192).asRGBA();
+						LLColor4U this_colour = colour_default;
+						if (for_sale_parcels || land_owners) {
+							if (detected_auction) this_colour = colour_auction;
+							else if (detected_for_sale) this_colour = colour_for_sale;
+						}
+						// match the land owner highlighting behaviour where owned parcels override for sale status
+						if (land_owners) {
+							if (detected_owned) this_colour = colour_owned;
+							else if (detected_group) this_colour = colour_group;
+							else if (detected_self) this_colour = colour_self;
+						}
+						pTextureData[(curY * imgWidth) + curX] = this_colour.asRGBA();
 					}
 				}
 			}
