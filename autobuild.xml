@@ -3975,7 +3975,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
         <key>license</key>
         <string>Mixed</string>
         <key>license_file</key>
-        <string>LICENSES/vivox_licenses.txt</string>
+        <string>LICENSES/slvoice.txt</string>
         <key>name</key>
         <string>slvoice</string>
         <key>platforms</key>
@@ -4023,11 +4023,11 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>86d3150b2505ee11da14fdcc956b80fd</string>
+              <string>efd43a91435e0981aaccf6bde6767a7e</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-3.2.0002.10426.298329.201607192012-linux64-201607192012.tar.bz2</string>
+              <string>https://bitbucket.org/kokua/3p-slvoice/downloads/slvoice-3.2.0002.10426.298329.193031910.193041252-linux64-193041252.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux64</string>
@@ -4058,7 +4058,7 @@ Copyright (c) 2012, 2014, 2015, 2016 nghttp2 contributors</string>
           </map>
         </map>
         <key>version</key>
-        <string>4.10.0000.32327.5fc3fe7c.531581</string>
+        <string>3.2.0002.10426.298329.193031910.193041252</string>
       </map>
       <key>tut</key>
       <map>
