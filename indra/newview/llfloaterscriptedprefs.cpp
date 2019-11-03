@@ -31,6 +31,8 @@
 #include "llcolorswatch.h"
 #include "llscripteditor.h"
 
+#include "llfloaterreg.h"
+#include "llpreviewscript.h"
 
 LLFloaterScriptEdPrefs::LLFloaterScriptEdPrefs(const LLSD& key)
 :	LLFloater(key)
@@ -56,6 +58,19 @@ void LLFloaterScriptEdPrefs::applyUIColor(LLUICtrl* ctrl, const LLSD& param)
 	LLUIColorTable::instance().setColor(param.asString(), LLColor4(ctrl->getValue()));
 	mEditor->initKeywords();
 	mEditor->loadKeywords();
+
+	// <FS:Ansariel> FIRE-16740: Color syntax highlighting changes don't immediately appear in script window
+	// This will return both LLPreviewLSL as well as LLLiveLSLEditor instances because they are grouped into "preview_script"!
+	LLFloaterReg::const_instance_list_t floaters = LLFloaterReg::getFloaterList("preview_script");
+	for (LLFloaterReg::const_instance_list_t::const_iterator it = floaters.begin(); it != floaters.end(); ++it)
+	{
+		LLScriptEdContainer* cont = dynamic_cast<LLScriptEdContainer*>(*it);
+		if (cont)
+		{
+			cont->updateStyle();
+		}
+	}
+	// </FS:Ansariel>
 }
 
 void LLFloaterScriptEdPrefs::getUIColor(LLUICtrl* ctrl, const LLSD& param)
