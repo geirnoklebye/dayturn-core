@@ -158,6 +158,8 @@ BASE_ARGUMENTS=[
          default=None),
     dict(name='versionfile',
          description="""The name of a file containing the full version number."""),
+     dict(name='fmodversion',
+         description='Version of FMOD used. Can be fmodstudio or fmodex.', default=None),
     ]
 
 def usage(arguments, srctree=""):
