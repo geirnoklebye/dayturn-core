@@ -211,6 +211,8 @@ public:
 	LLScriptEdContainer(const LLSD& key);
 	LLScriptEdContainer(const LLSD& key, const bool live);
 
+	// <FS:Ansariel> FIRE-16740: Color syntax highlighting changes don't immediately appear in script window
+	void updateStyle();
 protected:
 	std::string		getTmpFileName();
 	bool			onExternalChange(const std::string& filename);
