@@ -522,19 +522,21 @@ class WindowsManifest(ViewerManifest):
 
             # Get fmodstudio dll, continue if missing
             try:
-                if self.args['configuration'].lower() == 'debug':
-                    self.path("fmodL.dll")
-                else:
-                    self.path("fmod.dll")
+                if self.args['fmodversion'].lower() == 'fmodstudio':
+                    if self.args['configuration'].lower() == 'debug':
+                       self.path("fmodL.dll")
+                    else:
+                       self.path("fmod.dll")
             except:
                 print "Skipping fmodstudio audio library(assuming other audio engine)"
 
             # Get fmodex dll, continue if missing
             try:
-                if(self.address_size == 64):
-                    self.path("fmodex64.dll")
-                else:
-                    self.path("fmodex.dll")
+                if self.args['fmodversion'].lower() == 'fmodex':
+                    if(self.address_size == 64):
+                       self.path("fmodex64.dll")
+                    else:
+                       self.path("fmodex.dll")
             except:
                 print "Skipping fmodex audio library(assuming other audio engine)"
 
