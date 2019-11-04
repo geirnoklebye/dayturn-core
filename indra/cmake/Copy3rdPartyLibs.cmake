@@ -37,9 +37,6 @@ if(WINDOWS)
 
     set(debug_src_dir "${ARCH_PREBUILT_DIRS_DEBUG}")
     set(debug_files
- #       alut.dll
- #       openal32.dll
-#        openjpegd.dll
         libapr-1.dll
         libaprutil-1.dll
         libapriconv-1.dll
@@ -47,17 +44,12 @@ if(WINDOWS)
         libeay32.dll
         glod.dll
         libhunspell.dll
-        # Place holder
-
-
         )
 
 
 
     set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(release_files
- #       alut.dll
- #       openal32.dll
         openjpeg.dll
         libapr-1.dll
         libaprutil-1.dll
@@ -67,9 +59,6 @@ if(WINDOWS)
         nghttp2.dll
         glod.dll
         libhunspell.dll
-	# place holder
-
-
         )
 
 
@@ -111,7 +100,6 @@ if(WINDOWS)
     
     #*******************************
     # Copy MS C runtime dlls, required for packaging.
-    # *TODO - Adapt this to support VC9
     if (MSVC80)
         list(APPEND LMSVC_VER 80)
         list(APPEND LMSVC_VERDOT 8.0)
@@ -124,11 +112,6 @@ if(WINDOWS)
         MESSAGE(WARNING "New MSVC_VERSION ${MSVC_VERSION} of MSVC: adapt Copy3rdPartyLibs.cmake")
     endif (MSVC80)
 
-    # try to copy VS2010 redist independently of system version
-    # maint-7360 CP
-    # list(APPEND LMSVC_VER 100)
-    # list(APPEND LMSVC_VERDOT 10.0)
-    
     list(LENGTH LMSVC_VER count)
     math(EXPR count "${count}-1")
     foreach(i RANGE ${count})
@@ -217,8 +200,6 @@ elseif(DARWIN)
        )
     set(release_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
     set(release_files
-#        libalut.0.dylib
-#        libopenal.1.dylib
         libapr-1.0.dylib
         libapr-1.dylib
         libaprutil-1.0.dylib
@@ -226,7 +207,6 @@ elseif(DARWIN)
         libexception_handler.dylib
         ${EXPAT_COPY}
         libGLOD.dylib
-#        libopenal.1.dylib
         libndofdev.dylib
         libnghttp2.dylib
         libnghttp2.14.dylib
@@ -282,34 +262,13 @@ elseif(LINUX)
           libapr-1.so.0
           libaprutil-1.so.0
           libatk-1.0.so.0 
-#          libbreakpad_client.so.0
-#          libcares.so.2
-#          libcrypto.so
-#          libcrypto.so.1.0.0
-#          libcollada14dom.so
           libdb-5.1.so
           libexpat.so
           libexpat.so.1
-#          libgmock_main.so
-#          libgmock.so.0
           libgmodule-2.0.so.0 
           libgobject-2.0.so 
-#          libgtest_main.so
-#          libgtest.so.0
-#          libminizip.so
-#          libopenal.so
           libopenjpeg.so
           libopenjpeg.so.1.4.0
-#           libstacktrace.so
-#           libtcmalloc.so
-#          libssl.so
-#          libssl.so.1.0.0
-# Remove OPenMP from build of viewer causes conflict starting at Viewer-Beta 3.3.3
-#          libgomp.so.1
-#          libgomp.so.1.0.0
-#          libpcre.so.3
-#          libpng15.so.15
-#          libpng15.so.15.10.0
          )
     else(${ARCH} STREQUAL "x86_64")
       set(vivox_src_dir "${ARCH_PREBUILT_DIRS_RELEASE}")
@@ -332,16 +291,12 @@ elseif(LINUX)
         libgmodule-2.0.so
         libgobject-2.0.so
         libhunspell-1.3.so.0.0.0
-#        libopenal.so
         libopenjpeg.so
         libuuid.so.16
         libuuid.so.16.0.22
         libfontconfig.so.1.8.0
         libfontconfig.so.1
-# Remove OPenMP from build of viewer causes conflict starting at Viewer-Beta 3.3.3
-#        libgomp.so.1
-#        libgomp.so.1.0.0
-       )
+        )
     if (OPENAL)
            set(release_files ${release_files} "libopenal.so")
     endif (OPENAL)
@@ -351,10 +306,6 @@ elseif(LINUX)
         set(release_files ${release_files} "libfmodstudio.so")
     endif (FMODSTUDIO)
 
-    #if (FMODEX)
-        #  set(debug_files ${debug_files} "libfmodexL.so")
-        #  set(release_files ${release_files} "libfmodex.so")
-        #endif (FMODEX)
         if (FMODEX)
             if(ADDRESS_SIZE EQUAL 32)
                 set(debug_files ${debug_files} "libfmodexL.so")
