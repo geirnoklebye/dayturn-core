@@ -46,7 +46,7 @@ viewer_dir = os.path.dirname(__file__)
 # Put it FIRST because some of our build hosts have an ancient install of
 # indra.util.llmanifest under their system Python!
 sys.path.insert(0, os.path.join(viewer_dir, os.pardir, "lib", "python"))
-from indra.util.llmanifest import LLManifest, main, path_ancestors, CHANNEL_VENDOR_BASE, RELEASE_CHANNEL, ManifestError
+from indra.util.llmanifest import LLManifest, main, path_ancestors, CHANNEL_VENDOR_BASE, RELEASE_CHANNEL, ManifestError, MissingError
 from llbase import llsd
 
 class ViewerManifest(LLManifest):
@@ -1020,11 +1020,15 @@ class DarwinManifest(ViewerManifest):
                     # (source, dest) pair to self.file_list for every expanded
                     # file processed. Remember its size before the call.
                     oldlen = len(self.file_list)
-                    self.path(src, dst)
-                    # The dest appended to self.file_list has been prepended
-                    # with self.get_dst_prefix(). Strip it off again.
-                    added = [os.path.relpath(d, self.get_dst_prefix())
-                             for s, d in self.file_list[oldlen:]]
+                    try:
+                        self.path(src, dst)
+                        # The dest appended to self.file_list has been prepended
+                        # with self.get_dst_prefix(). Strip it off again.
+                        added = [os.path.relpath(d, self.get_dst_prefix())
+                                 for s, d in self.file_list[oldlen:]]
+                    except MissingError as err:
+                        print >> sys.stderr, "Warning: "+err.msg
+                        added = []
                     if not added:
                         print "Skipping %s" % dst
                     return added
@@ -1880,4 +1884,9 @@ if __name__ == "__main__":
         dict(name='bugsplat', description="""BugSplat database to which to post crashes,
              if BugSplat crash reporting is desired""", default=''),
         ]
-    main(extra=extra_arguments)
+    try:
+        main(extra=extra_arguments)
+    except (ManifestError, MissingError) as err:
+        sys.exit("\nviewer_manifest.py failed: "+err.msg)
+    except:
+        raise
