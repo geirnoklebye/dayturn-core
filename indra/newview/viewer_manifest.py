@@ -968,7 +968,7 @@ class DarwinManifest(ViewerManifest):
                 self.path(src=os.path.join(pkgdir, 'VMP'), dst="updater")
 
                 with self.prefix(src="", dst=os.path.join("updater", "icons")):
-                    self.path2basename(self.icon_path(), "kokua.ico")
+                    self.path2basename(self.icon_path(), "kokua_icon.ico")
                     with self.prefix(src="vmp_icons", dst=""):
                         self.path("*.png")
                         self.path("*.gif")
@@ -1066,28 +1066,30 @@ class DarwinManifest(ViewerManifest):
                     self.path2basename(relpkgdir, libfile)
 
                 # dylibs that vary based on configuration
-                if self.args['configuration'].lower() == 'debug':
-                    for libfile in (
-                                "libfmodL.dylib",
-                                ):
-                        dylibs += path_optional(os.path.join(debpkgdir, libfile), libfile)
-                else:
-                    for libfile in (
-                                "libfmod.dylib",
-                                ):
-                        dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
+                if self.args['fmodversion'].lower() == 'fmodstudio':
+                    if self.args['configuration'].lower() == 'debug':
+                        for libfile in (
+                                    "libfmodL.dylib",
+                                    ):
+                            dylibs += path_optional(os.path.join(debpkgdir, libfile), libfile)
+                    else:
+                        for libfile in (
+                                    "libfmod.dylib",
+                                    ):
+                            dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
 
                 # dylibs that vary based on configuration
-                if self.args['configuration'].lower() == 'debug':
-                    for libfile in (
-                                "libfmodexL.dylib",
-                                ):
-                        dylibs += path_optional(os.path.join(debpkgdir, libfile), libfile)
-                else:
-                    for libfile in (
-                                "libfmodex.dylib",
-                                ):
-                        dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
+                if self.args['fmodversion'].lower() == 'fmodex':
+                    if self.args['configuration'].lower() == 'debug':
+                        for libfile in (
+                                    "libfmodexL.dylib",
+                                    ):
+                            dylibs += path_optional(os.path.join(debpkgdir, libfile), libfile)
+                    else:
+                        for libfile in (
+                                    "libfmodex.dylib",
+                                    ):
+                            dylibs += path_optional(os.path.join(relpkgdir, libfile), libfile)
 
                 # our apps
                 executable_path = {}
