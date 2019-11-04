@@ -1446,7 +1446,7 @@ class LinuxManifest(ViewerManifest):
             self.path( "natives_blob.bin" )
             self.path( "snapshot_blob.bin" )
             self.path( "v8_context_snapshot.bin" )
-            self.path( "libffmpegsumo.so" )
+            #self.path( "libffmpegsumo.so" ) 
             self.end_prefix()
 
         # CEF files common to all configurations
@@ -1534,8 +1534,8 @@ class LinuxManifest(ViewerManifest):
             self.path( "libvlc*.so*" )
 
         # llcommon
-        if not self.path("../llcommon/libllcommon.so", "lib/libllcommon.so"):
-            print "Skipping llcommon.so (assuming llcommon was linked statically)"
+        #if not self.path("../llcommon/libllcommon.so", "lib/libllcommon.so"):
+            #print "Skipping llcommon.so (assuming llcommon was linked statically)"
 
         self.path("featuretable_linux.txt")
 
@@ -1727,12 +1727,6 @@ class Linux_x86_64_Manifest(LinuxManifest):
        # support file for valgrind debug tool
         self.path("secondlife-i686.supp")
 
-	try:
-            self.path("../llcommon/libllcommon.so", "lib/libllcommon.so")
-        except:
-            print "Skipping llcommon.so (assuming llcommon was linked statically)"
-
-
         # Arch does not package libpng12 a dependency of Kokua's gtk+ libraries
         if self.prefix("/lib/x86_64-linux-gnu", dst="lib"):
             self.path("libpng12.so.0*")
@@ -1740,21 +1734,34 @@ class Linux_x86_64_Manifest(LinuxManifest):
 
         with self.prefix(src=relpkgdir, dst="lib"):
             try:
-                self.path("libfmodstudio*.so")
-                self.path("libfmodstudio.so")
-                self.path("libfmodstudio.so*")
-                self.path("libfmod*.so")
-                self.path("libfmod.so")
-                self.path("libfmod.so*")
-                pass
+                if self.args['fmodversion'].lower() == 'fmodstudio':
+                    if self.args['configuration'].lower() == 'debug':
+                       self.path("libfmodstudio*.so")
+                       self.path("libfmodstudio.so")
+                       self.path("libfmodstudio.so*")
+                       self.path("libfmod*.so")
+                       self.path("libfmod.so")
+                       self.path("libfmod.so*")
+                    else:
+                       self.path("libfmodstudio*.so")
+                       self.path("libfmodstudio.so")
+                       self.path("libfmodstudio.so*")
+                       self.path("libfmod*.so")
+                       self.path("libfmod.so")
+                       self.path("libfmod.so*")
             except:
-                print "Skipping libfmodex.so - not found"
+                print "Skipping libfmodstudio.so - not found"
                 pass
             try:
-                self.path("libfmodex64-*.so")
-                self.path("libfmodex64.so")
-                self.path("libfmodex64.so*")
-                pass
+                if self.args['fmodversion'].lower() == 'fmodex':
+                   if self.args['configuration'].lower() == 'debug':
+                      self.path("libfmodex64-*.so")
+                      self.path("libfmodex64.so")
+                      self.path("libfmodex64.so*")
+                   else:
+                      self.path("libfmodex64-*.so")
+                      self.path("libfmodex64.so")
+                      self.path("libfmodex64.so*")
             except:
                 print "Skipping libfmodex.so - not found"
                 pass
@@ -1779,20 +1786,8 @@ class Linux_x86_64_Manifest(LinuxManifest):
             self.path("libGLOD.so")
             self.path("libfreetype.so.*.*")
 
-            # OpenAL populated when -DOPENAL:BOOL=ON.  These are not present in packages when -DOPENAL:BOOL=OFF
-	    # Voice uses 32bit versions of these. 
-            self.path("libalut.so")
-            self.path("libalut.so.0")
-            self.path("libopenal.so")
-            self.path("libopenal.so.1")
-            self.path("libalut.so.0.0.0")
-            self.path("libopenal.so.1.15.1")
-            self.path("libpng16.so.16") 
-            self.path("libpng16.so.16.8.0")
-
             #cef plugin
             self.path( "libcef.so" )
-            # self.path( "libwidevinecdmadapter.so" )
 
             # Vivox runtimes
             with self.prefix(src=relpkgdir, dst="../bin"):
