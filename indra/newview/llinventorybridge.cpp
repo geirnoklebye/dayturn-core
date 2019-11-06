@@ -370,7 +370,10 @@ BOOL LLInvFVBridge::perform_cutToClipboard()
 BOOL LLInvFVBridge::copyToClipboard() const
 {
 	const LLInventoryObject* obj = gInventory.getObject(mUUID);
-	if (obj && isItemCopyable())
+//	if (obj && isItemCopyable())
+// [SL:KB] - Patch: Inventory-Links | Checked: 2013-09-19 (Catznip-3.6)
+	if (obj && (isItemCopyable() || isItemLinkable()))
+// [/SL:KB]
 	{
 		return LLClipboard::instance().addToClipboard(mUUID);
 	}
@@ -773,9 +776,17 @@ void LLInvFVBridge::getClipboardEntries(bool show_asset_id,
 	if (obj)
 	{
 		
+// [SL:KB] - Patch: Inventory-Links | Checked: 2010-04-12 (Catznip-2.0)
 		items.push_back(std::string("Copy Separator"));
+
+		items.push_back(std::string("Cut"));
+		if (!isItemMovable() || !isItemRemovable() || isLibraryItem())
+		{
+			disabled_items.push_back(std::string("Cut"));
+		}
+
 		items.push_back(std::string("Copy"));
-		if (!isItemCopyable())
+		if (!isItemCopyable() && !isItemLinkable())
 		{
 			disabled_items.push_back(std::string("Copy"));
 		}
@@ -823,12 +834,13 @@ void LLInvFVBridge::getClipboardEntries(bool show_asset_id,
 					disabled_items.push_back(std::string("Copy Asset UUID"));
 				}
 			}
-
-			items.push_back(std::string("Cut"));
-			if (!isItemMovable() || !isItemRemovable())
-			{
-				disabled_items.push_back(std::string("Cut"));
-			}
+// [SL:KB] - Patch: Inventory-Links | Checked: 2010-04-12 (Catznip-2.0)
+			//items.push_back(std::string("Cut"));
+			//if (!isItemMovable() || !isItemRemovable())
+			//{
+			//	disabled_items.push_back(std::string("Cut"));
+			//}
+// [/SL:KB]
 
 			if (canListOnMarketplace() && !isMarketplaceListingsFolder() && !isInboxFolder())
 			{
@@ -2087,7 +2099,10 @@ BOOL LLItemBridge::removeItem()
 	// we can't do this check because we may have items in a folder somewhere that is
 	// not yet in memory, so we don't want false negatives.  (If disabled, then we 
 	// know we only have links in the Outfits folder which we explicitly fetch.)
-	if (!gSavedSettings.getBOOL("InventoryLinking"))
+// [SL:KB] - Patch: Inventory-Links | Checked: 2010-06-01 (Catznip-2.2.0a) | Added: Catznip-2.0.1a
+	// Users move folders around and reuse links that way... if we know something has links then it's just bad not to warn them :|
+// [/SL:KB]
+//	if (!gSavedSettings.getBOOL("InventoryLinking"))
 	{
 		if (!item->getIsLinkType())
 		{
@@ -2135,6 +2150,7 @@ BOOL LLItemBridge::isItemCopyable() const
 	LLViewerInventoryItem* item = getItem();
 	if (item)
 	{
+/*
 		// Can't copy worn objects.
 		// Worn objects are tied to their inworld conterparts
 		// Copy of modified worn object will return object with obsolete asset and inventory
@@ -2142,11 +2158,35 @@ BOOL LLItemBridge::isItemCopyable() const
 		{
 			return FALSE;
 		}
+*/
 
-		return item->getPermissions().allowCopyBy(gAgent.getID()) || gSavedSettings.getBOOL("InventoryLinking");
+// [SL:KB] - Patch: Inventory-Links | Checked: 2010-04-12 (Catznip-2.2.0a) | Added: Catznip-2.0.0a
+		// We'll allow copying a link if:
+		//   - its target is available
+		//   - it doesn't point to another link [see LLViewerInventoryItem::getLinkedItem() which returns NULL in that case]
+		if (item->getIsLinkType())
+		{
+			return (NULL != item->getLinkedItem());
+		}
+
+		// User can copy the item if:
+		//   - the item (or its target in the case of a link) is "copy"
+		//   - and/or if the item (or its target in the case of a link) has a linkable asset type
+		// NOTE: we do *not* want to return TRUE on everything like LL seems to do in SL-2.1.0 because not all types are "linkable"
+		return (item->getPermissions().allowCopyBy(gAgent.getID()));
+// [/SL:KB]
+//		return item->getPermissions().allowCopyBy(gAgent.getID()) || gSavedSettings.getBOOL("InventoryLinking");
 	}
 	return FALSE;
 }
+
+// [SL:KB] - Patch: Inventory-Links | Checked: 2013-09-19 (Catznip-3.6)
+bool LLItemBridge::isItemLinkable() const
+{
+	LLViewerInventoryItem* item = getItem();
+	return (item && LLAssetType::lookupCanLink(item->getType()));
+}
+// [/SL:KB]
 
 LLViewerInventoryItem* LLItemBridge::getItem() const
 {
@@ -2374,6 +2414,14 @@ BOOL LLFolderBridge::isItemCopyable() const
 	
 		return TRUE;
 	}
+
+// [SL:KB] - Patch: Inventory-Links | Checked: 2013-09-19 (Catznip-3.6)
+bool LLFolderBridge::isItemLinkable() const
+{
+	LLFolderType::EType ftType = getPreferredType();
+	return (LLFolderType::FT_NONE == ftType || LLFolderType::FT_OUTFIT == ftType);
+}
+// [/SL:KB]
 
 BOOL LLFolderBridge::isClipboardPasteable() const
 {
@@ -3978,20 +4026,37 @@ void LLFolderBridge::perform_pasteFromClipboard()
                                     break;
                                 }
                             }
-                            else if (item->getIsLinkType())
-                            {
-                                link_inventory_object(parent_id, item_id,
-                                    LLPointer<LLInventoryCallback>(NULL));
-                            }
+// [SL:KB] - Patch: Inventory-Links | Checked: 2010-04-12 (Catznip-2.2.0a) | Added: Catznip-2.0.0a
+//                            else if (item->getIsLinkType())
+//                            {
+//                                link_inventory_object(parent_id, item_id,
+//                                    LLPointer<LLInventoryCallback>(NULL));
+ //                           }
+// [/SL:KB]
                             else
                             {
-                                copy_inventory_item(
+// [SL:KB] - Patch: Inventory-Links | Checked: 2010-04-12 (Catznip-2.2.0a) | Added: Catznip-2.0.0a
+                                if (item->getPermissions().allowCopyBy(gAgent.getID()))
+                                {
+// [/SL:KB]
+                                    copy_inventory_item(
                                                     gAgent.getID(),
                                                     item->getPermissions().getOwner(),
                                                     item->getUUID(),
                                                     parent_id,
                                                     std::string(),
                                                     LLPointer<LLInventoryCallback>(NULL));
+// [SL:KB] - Patch: Inventory-Links | Checked: 2010-04-12 (Catznip-2.2.0a) | Added: Catznip-2.0.0a
+                                }
+                                else if (LLAssetType::lookupIsLinkType(item->getActualType()))
+                                {
+                                    LLInventoryObject::const_object_list_t obj_array;
+                                    obj_array.push_back(LLConstPointer<LLInventoryObject>(item));
+                                    link_inventory_array(parent_id,
+                                                         obj_array,
+                                                         LLPointer<LLInventoryCallback>(NULL));
+                                }
+// [/SL:KB]
                             }
                         }
                     }
@@ -4222,6 +4287,14 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
 				{
 					disabled_items.push_back(std::string("Delete"));
 				}
+
+				// <FS:Ansariel> FIRE-4595: Paste as Link missing for outfit folders
+				items.push_back(std::string("Paste As Link"));
+				if (!isClipboardPasteableAsLink() || (flags & FIRST_SELECTED_ITEM) == 0)
+				{
+					disabled_items.push_back(std::string("Paste As Link"));
+				}
+				// </FS:Ansariel>
 			}
 		}
 
@@ -4310,7 +4383,9 @@ void LLFolderBridge::buildContextMenuOptions(U32 flags, menuentry_vec_t&   items
 		disabled_items.push_back(std::string("Delete System Folder"));
 	}
 
-	if (isAgentInventory() && !isMarketplaceListingsFolder())
+	// <FS:AH/SJ> Don't offer sharing of trash folder (FIRE-1642, FIRE-6547)
+	//if (isAgentInventory() && !isMarketplaceListingsFolder())
+	if (isAgentInventory() && !isMarketplaceListingsFolder() && mUUID != trash_id)
 	{
 		items.push_back(std::string("Share"));
 		if (!canShare())
@@ -5225,13 +5300,15 @@ BOOL LLFolderBridge::dragItemIntoFolder(LLInventoryItem* inv_item,
 
 		// Check whether the item being dragged from active inventory panel
 		// passes the filter of the destination panel.
-		if (user_confirm && accept && active_panel && use_filter)
-		{
-			LLFolderViewItem* fv_item =   active_panel->getItemByID(inv_item->getUUID());
-			if (!fv_item) return false;
+		// <FS:Ansariel> Allow drag and drop in inventory regardless of filter (e.g. Recent)
+		//if (user_confirm && accept && active_panel && use_filter)
+		//{
+		//	LLFolderViewItem* fv_item =   active_panel->getItemByID(inv_item->getUUID());
+		//	if (!fv_item) return false;
 
-			accept = filter->check(fv_item->getViewModelItem());
-		}
+		//	accept = filter->check(fv_item->getViewModelItem());
+		//}
+		// </FS:Ansariel>
 
 		if (accept && drop)
 		{
@@ -5388,10 +5465,12 @@ BOOL LLFolderBridge::dragItemIntoFolder(LLInventoryItem* inv_item,
 		
 		// Check whether the item being dragged from in world
 		// passes the filter of the destination panel.
-		if (accept && use_filter)
-		{
-			accept = filter->check(inv_item);
-		}
+		// <FS:Ansariel> Allow dropping from inworld objects regardless of filter
+		//if (accept && use_filter)
+		//{
+		//	accept = filter->check(inv_item);
+		//}
+		// </FS:Ansariel>
 
 		if (accept && drop)
 		{
@@ -5432,10 +5511,12 @@ BOOL LLFolderBridge::dragItemIntoFolder(LLInventoryItem* inv_item,
 		
 		// Check whether the item being dragged from notecard
 		// passes the filter of the destination panel.
-		if (accept && use_filter)
-		{
-			accept = filter->check(inv_item);
-		}
+		// <FS:Ansariel> Allow dropping from notecards regardless of filter
+		//if (accept && use_filter)
+		//{
+		//	accept = filter->check(inv_item);
+		//}
+		// </FS:Ansariel>
 
 		if (accept && drop)
 		{
@@ -7135,6 +7216,13 @@ void LLWearableBridge::performAction(LLInventoryModel* model, std::string action
 
 void LLWearableBridge::openItem()
 {
+	// <FS:Ansariel> Don't take off body parts!
+	if (get_is_item_worn(mUUID) && !canRemoveFromAvatar(this))
+	{
+		return;
+	}
+	// </FS:Ansariel>
+
 //MK
 	// 
 	if (gSavedSettings.controlExists("RestrainedLoveDoubleClickWear") && !gSavedSettings.getBOOL("RestrainedLoveDoubleClickWear"))
@@ -8011,4 +8099,66 @@ bool LLFolderViewGroupedItemBridge::canWearSelected(uuid_vec_t item_ids)
 	return true;
 }
 
+/************************************************************************/
+/* Worn Inventory Panel related classes                               */
+/************************************************************************/
+void LLWornItemsFolderBridge::buildContextMenu(LLMenuGL& menu, U32 flags)
+{
+	menuentry_vec_t disabled_items, items;
+        buildContextMenuOptions(flags, items, disabled_items);
+
+	items.erase(std::remove(items.begin(), items.end(), std::string("New Body Parts")), items.end());
+	items.erase(std::remove(items.begin(), items.end(), std::string("New Clothes")), items.end());
+	items.erase(std::remove(items.begin(), items.end(), std::string("New Note")), items.end());
+	items.erase(std::remove(items.begin(), items.end(), std::string("New Gesture")), items.end());
+	items.erase(std::remove(items.begin(), items.end(), std::string("New Script")), items.end());
+	items.erase(std::remove(items.begin(), items.end(), std::string("New Folder")), items.end());
+
+	hide_context_entries(menu, items, disabled_items);
+}
+
+LLInvFVBridge* LLWornInventoryBridgeBuilder::createBridge(
+	LLAssetType::EType asset_type,
+	LLAssetType::EType actual_asset_type,
+	LLInventoryType::EType inv_type,
+	LLInventoryPanel* inventory,
+	LLFolderViewModelInventory* view_model,
+	LLFolderView* root,
+	const LLUUID& uuid,
+	U32 flags /*= 0x00*/ ) const
+{
+	LLInvFVBridge* new_listener = NULL;
+	switch(asset_type)
+	{
+	case LLAssetType::AT_CATEGORY:
+		if (actual_asset_type == LLAssetType::AT_LINK_FOLDER)
+		{
+			// *TODO: Create a link folder handler instead if it is necessary
+			new_listener = LLInventoryFolderViewModelBuilder::createBridge(
+				asset_type,
+				actual_asset_type,
+				inv_type,
+				inventory,
+																view_model,
+				root,
+				uuid,
+				flags);
+			break;
+		}
+		new_listener = new LLWornItemsFolderBridge(inv_type, inventory, root, uuid);
+		break;
+	default:
+		new_listener = LLInventoryFolderViewModelBuilder::createBridge(
+			asset_type,
+			actual_asset_type,
+			inv_type,
+			inventory,
+																view_model,
+			root,
+			uuid,
+			flags);
+	}
+	return new_listener;
+
+}
 // EOF
