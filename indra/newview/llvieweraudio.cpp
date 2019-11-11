@@ -534,10 +534,10 @@ void audio_update_volume(bool force_update)
 	BOOL media_muted = (BOOL)muteMedia;
 	// </FS:Ansariel>
 	media_volume = mute_volume * master_volume * media_volume;
-	LLViewerMedia::setVolume( media_muted ? 0.0f : media_volume );
+	LLViewerMedia::getInstance()->setVolume( media_muted ? 0.0f : media_volume );
 
-	// Voice
-	if (LLVoiceClient::getInstance())
+	// Voice, this is parametric singleton, it gets initialized when ready
+	if (LLVoiceClient::instanceExists())
 	{
 		// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 		//F32 voice_volume = gSavedSettings.getF32("AudioLevelVoice");
@@ -550,11 +550,12 @@ void audio_update_volume(bool force_update)
 		static LLCachedControl<bool> muteVoice(gSavedSettings, "MuteVoice", false);
 		BOOL voice_mute = (BOOL)muteVoice;
 		// </FS:Ansariel>
-		LLVoiceClient::getInstance()->setVoiceVolume(voice_mute ? 0.f : voice_volume);
+		LLVoiceClient *voice_inst = LLVoiceClient::getInstance();
+		voice_inst->setVoiceVolume(voice_mute ? 0.f : voice_volume);
 		// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
 		//LLVoiceClient::getInstance()->setMicGain(voice_mute ? 0.f : gSavedSettings.getF32("AudioLevelMic"));
 		static LLCachedControl<F32> audioLevelMic(gSavedSettings, "AudioLevelMic", 1.0f);
-		LLVoiceClient::getInstance()->setMicGain(voice_mute ? 0.f : (F32)audioLevelMic);
+		voice_inst->setMicGain(voice_mute ? 0.f : (F32)audioLevelMic);
 		// </FS:Ansariel>
 
 		// <FS:Ansariel> Use faster LLCachedControls for frequently visited locations
@@ -563,11 +564,11 @@ void audio_update_volume(bool force_update)
 		if (!gViewerWindow->getActive() && muteWhenMinimized)
 		// </FS:Ansariel>
 		{
-			LLVoiceClient::getInstance()->setMuteMic(true);
+			voice_inst->setMuteMic(true);
 		}
 		else
 		{
-			LLVoiceClient::getInstance()->setMuteMic(false);
+			voice_inst->setMuteMic(false);
 		}
 	}
 }
