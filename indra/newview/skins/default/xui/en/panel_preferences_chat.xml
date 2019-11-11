@@ -305,7 +305,7 @@
         name="nearby_chat"
         width="145"
         top_pad="11">
-      Nearby chat:
+      Nearby avatars:
     </text>
     <combo_box
         control_name="NotificationNearbyChatOptions"
@@ -349,7 +349,7 @@
         name="object_ims"
         width="145"
         top_pad="11">
-      Object IMs:
+      Object chat/IMs:
     </text>
     <combo_box
         control_name="NotificationObjectIMOptions"
