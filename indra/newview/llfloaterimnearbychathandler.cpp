@@ -641,8 +641,10 @@ void LLFloaterIMNearbyChatHandler::processChat(const LLChat& chat_msg,
 			}
 		}
 
-        //Will show toast when chat preference is set        
-        if((gSavedSettings.getString("NotificationNearbyChatOptions") == "toast") || !nearby_chat->isMessagePaneExpanded())
+        //Will show toast when chat preference is set
+        //KKA-623 Change this so that instead of the option for nearby chat controlling everything, the object setting controls the objects and stop
+        //the behaviour where no-popup for an object becomes a popup anyway as a chat item   
+        if((CHAT_SOURCE_OBJECT != chat_msg.mSourceType && gSavedSettings.getString("NotificationNearbyChatOptions") == "toast") || !nearby_chat->isMessagePaneExpanded() || (CHAT_SOURCE_OBJECT == chat_msg.mSourceType && gSavedSettings.getString("NotificationObjectIMOptions") == "toast"))
         {
             // Add a nearby chat toast.
             LLUUID id;

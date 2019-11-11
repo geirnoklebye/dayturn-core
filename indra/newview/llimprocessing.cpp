@@ -66,6 +66,8 @@
 #pragma warning (disable:4702)
 #endif
 
+extern void on_new_message(const LLSD& msg);
+
 // Strip out "Resident" for display, but only if the message came from a user
 // (rather than a script)
 static std::string clean_name_from_im(const std::string& name, EInstantMessage type)
@@ -1311,6 +1313,16 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 			LLNotificationsUI::LLNotificationManager::instance().onChat(chat, args);
 		}
 
+						// KKA-623 push this through the IM notification logic for object IMs
+						if (!chat_from_system) 
+						{
+							LLSD msg_notify = LLSD(LLSD::emptyMap());
+							msg_notify["session_id"] = LLUUID();
+							msg_notify["from_id"] = chat.mFromID;
+							msg_notify["source_type"] = chat.mSourceType;
+							msg_notify["chat_type"] = chat.mChatType;
+							on_new_message(msg_notify);
+						}
 
 		//Object IMs send with from name: 'Second Life' need to be displayed also in notification toasts (EXT-1590)
 		if (!chat_from_system) break;
