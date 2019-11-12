@@ -979,7 +979,7 @@ BOOL LLViewerWindow::handleAnyMouseClick(LLWindow *window,  LLCoordGL pos, MASK 
 			mWindow->releaseMouse();
 
 		// Indicate mouse was active
-		LLUI::resetMouseIdleTimer();
+		LLUI::getInstance()->resetMouseIdleTimer();
 
 		// Don't let the user move the mouse out of the window until mouse up.
 		if( LLToolMgr::getInstance()->getCurrentTool()->clipMouseWhenDown() )
@@ -1327,7 +1327,7 @@ void LLViewerWindow::handleMouseMove(LLWindow *window,  LLCoordGL pos, MASK mask
 
 	if (mouse_point != mCurrentMousePoint)
 	{
-		LLUI::resetMouseIdleTimer();
+		LLUI::getInstance()->resetMouseIdleTimer();
 	}
 
 	saveLastMouse(mouse_point);
@@ -1831,8 +1831,6 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	//
 	LL_DEBUGS("Window") << "Loading feature tables." << LL_ENDL;
 
-	LLFeatureManager::getInstance()->init();
-
 	// Initialize OpenGL Renderer
 	if (!LLFeatureManager::getInstance()->isFeatureAvailable("RenderVBOEnable") ||
 		!gGLManager.mHasVertexBufferObject)
@@ -1925,7 +1923,7 @@ LLViewerWindow::LLViewerWindow(const Params& p)
 	rvp.mouse_opaque(false);
 	rvp.follows.flags(FOLLOWS_NONE);
 	mRootView = LLUICtrlFactory::create<LLRootView>(rvp);
-	LLUI::setRootView(mRootView);
+	LLUI::getInstance()->setRootView(mRootView);
 
 	// Make avatar head look forward at start
 	mCurrentMousePoint.mX = getWindowWidthScaled() / 2;
@@ -2496,7 +2494,7 @@ void LLViewerWindow::setNormalControlsVisible( BOOL visible )
 		gStatusBar->setEnabled( visible );	
 	}
 	
-	LLNavigationBar* navbarp = LLUI::getRootView()->findChild<LLNavigationBar>("navigation_bar");
+	LLNavigationBar* navbarp = LLUI::getInstance()->getRootView()->findChild<LLNavigationBar>("navigation_bar");
 	if (navbarp)
 	{
 		// when it's time to show navigation bar we need to ensure that the user wants to see it
@@ -2606,7 +2604,7 @@ void LLViewerWindow::draw()
 
 	if (!gSavedSettings.getBOOL("RenderUIBuffer"))
 	{
-		LLUI::sDirtyRect = getWindowRectScaled();
+		LLUI::getInstance()->mDirtyRect = getWindowRectScaled();
 	}
 
 	// HACK for timecode debugging
@@ -3016,7 +3014,7 @@ BOOL LLViewerWindow::handleUnicodeChar(llwchar uni_char, MASK mask)
 
 void LLViewerWindow::handleScrollWheel(S32 clicks)
 {
-	LLUI::resetMouseIdleTimer();
+	LLUI::getInstance()->resetMouseIdleTimer();
 	
 	LLMouseHandler* mouse_captor = gFocusMgr.getMouseCapture();
 	if( mouse_captor )
@@ -3095,12 +3093,12 @@ void LLViewerWindow::moveCursorToCenter()
 		S32 x = getWorldViewWidthScaled() / 2;
 		S32 y = getWorldViewHeightScaled() / 2;
 	
+		LLUI::getInstance()->setMousePositionScreen(x, y);
 		//on a forced move, all deltas get zeroed out to prevent jumping
 		mCurrentMousePoint.set(x,y);
 		mLastMousePoint.set(x,y);
 		mCurrentMouseDelta.set(0,0);	
 
-		LLUI::setMousePositionScreen(x, y);	
 	}
 }
 
