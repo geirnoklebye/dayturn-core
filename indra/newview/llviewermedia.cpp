@@ -979,7 +979,6 @@ void LLViewerMedia::setAllMediaEnabled(bool val)
 		{
 			LLViewerAudio::getInstance()->stopInternetStreamWithAutoFade();
 		}
-*/
 	}
 }
 

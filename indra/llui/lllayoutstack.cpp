@@ -290,7 +290,7 @@ void LLLayoutStack::draw()
 		if (resize_barp && resize_barp->isShowDragHandle() && resize_barp->getVisible() && resize_barp->getRect().isValid())
 		{
 			LLRect screen_rect = resize_barp->calcScreenRect();
-			if (LLUI::getRootView()->getLocalRect().overlaps(screen_rect) && LLUI::sDirtyRect.overlaps(screen_rect))
+			if (LLUI::getInstance()->getRootView()->getLocalRect().overlaps(screen_rect) && LLUI::getInstance()->mDirtyRect.overlaps(screen_rect))
 			{
 				LLUI::pushMatrix();
 		{

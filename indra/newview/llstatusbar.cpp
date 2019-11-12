@@ -777,7 +777,7 @@ void LLStatusBar::onClickMediaToggle(void* data)
 void LLStatusBar::toggleMedia(bool enable)
 {
 // </FS:Zi>
-	LLViewerMedia::setAllMediaEnabled(enable);
+	LLViewerMedia::getInstance()->setAllMediaEnabled(enable);
 }
 void LLStatusBar::toggleStream(bool enable)
 {
@@ -791,11 +791,11 @@ void LLStatusBar::toggleStream(bool enable)
 		if (LLAudioEngine::AUDIO_PAUSED == gAudiop->isInternetStreamPlaying())
 		{
 			// 'false' means unpause
-			LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getParcelAudioURL());
+			LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getInstance()->getParcelAudioURL());
 		}
 		else
 		{
-			LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getParcelAudioURL());
+			LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getInstance()->getParcelAudioURL());
 		}
 	}
 	else
@@ -825,7 +825,7 @@ void LLStatusBar::onClickStreamToggle(void* data)
 		}
 		else
 		{
-			gAudiop->startInternetStream(LLViewerMedia::getParcelAudioURL());
+			gAudiop->startInternetStream(LLViewerMedia::getInstance()->getParcelAudioURL());
 		}
 	}
 	else
