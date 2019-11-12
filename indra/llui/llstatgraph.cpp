@@ -217,7 +217,7 @@ BOOL LLStatGraph::handleHover(S32 x, S32 y, MASK mask)
 		//
 		//	clickable statistics graphs change the cursor to a hand
 		//
-		LLUI::getWindow()->setCursor(UI_CURSOR_HAND);
+		LLUI::getInstance()->getWindow()->setCursor(UI_CURSOR_HAND);
 		handled = TRUE;
 	}
 

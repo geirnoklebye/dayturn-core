@@ -2746,15 +2746,15 @@ void LLPanelPreference::updateMediaAutoPlayCheckbox(LLUICtrl* ctrl)
 
 		getChild<LLCheckBoxCtrl>("audio_auto_play_btn")->setEnabled( music_enabled );
 	}    
-	if (name == "enable_music" && LLViewerMedia::isParcelAudioPlaying())
+	if (name == "enable_music" && LLViewerMedia::getInstance()->isParcelAudioPlaying())
 	{
 		LLViewerAudio::getInstance()->stopInternetStreamWithAutoFade();
 	}
-	else if (name == "enable_music" && (!LLViewerMedia::isParcelAudioPlaying()))
+	else if (name == "enable_music" && (!LLViewerMedia::getInstance()->isParcelAudioPlaying()))
 	{
 		if (gSavedSettings.getBOOL("ParcelMediaAutoPlayEnable"))
 		{
-			LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getParcelAudioURL());
+			LLViewerAudio::getInstance()->startInternetStreamWithAutoFade(LLViewerMedia::getInstance()->getParcelAudioURL());
 		}
 	}
 

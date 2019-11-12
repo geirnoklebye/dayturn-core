@@ -332,7 +332,7 @@ public:
 	//
 	settings_map_t mSettingGroups;
 	LLUIAudioCallback mAudioCallback;
-	LLVector2		sGLScaleFactor;
+	LLVector2		mGLScaleFactor;
 	LLUIAudioCallback mDeferredAudioCallback;
 	LLWindow*		mWindow;
 	LLView*			mRootView;
