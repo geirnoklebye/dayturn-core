@@ -150,18 +150,10 @@ sudo dpkg --add-architecture i386
 sudo apt-get update
 
 sudo apt-get install --install-recommends libasound2:i386 libasound2-plugins:i386 libasyncns0:i386 libattr1:i386 libc6:i386 libc6-i686:i386 libcap2:i386 libdbus-1-3:i386 libflac8:i386 libgcc1:i386 libice6:i386 libidn11:i386 libjson0:i386 libogg0:i386 libpulse0:i386 libsm6:i386 libsndfile1:i386 libstdc++6:i386 libvorbis0a:i386 libvorbisenc2:i386 libwrap0:i386 libuuid1:i386 libx11-6:i386 libx11-xcb1:i386 libxau6:i386 libxcb1:i386 libxdmcp6:i386 libxext6:i386 libxi6:i386 libxtst6:i386 zlib1g:i386 
-
- 
-Following applies to building 32 bit kokua by using a 32 bit virtual machine(vm). If building on 32 bit hardware -- follow 64 bit instructions from above.
-
-Install a 32 bit vm from iso -- as of January 20, 2016 
-ubuntu-16.04.1-desktop-i386.iso
-
 Open your vm and follow instructions for 64 bit from above. 
 
 Below is a sample ~/.hgrc (mercurial.ini) file. This uses tortoisehg or command line mercurial, kdiff3 as a merge tool and gedit as a visual editor.
 The visual editor may be changed based on personal perference.
-
 
 [tortoisehg]
 
