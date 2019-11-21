@@ -4050,4 +4050,14 @@ void transition_back_to_login_panel(const std::string& emsg)
 	reset_login(); // calls LLStartUp::setStartupState( STATE_LOGIN_SHOW );
 	gSavedSettings.setBOOL("AutoLogin", FALSE);
 }
-
+// <FS:KC> FIRE-18250: Option to disable default eye movement
+//static
+void update_static_eyes()
+{
+    if (gSavedPerAccountSettings.getBOOL("FSStaticEyes"))
+    {
+        LLUUID anim_id(gSavedSettings.getString("FSStaticEyesUUID"));
+        gAgent.sendAnimationRequest(anim_id, ANIM_REQUEST_START);
+    }
+}
+// </FS:KC>

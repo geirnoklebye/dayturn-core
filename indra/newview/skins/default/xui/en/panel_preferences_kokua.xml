@@ -573,6 +573,16 @@
             tool_tip="When enabled, your avatar will not turn to face the objects you select." />
             <check_box
             top_pad="15"
+            enabled="false"
+            follows="topleft"
+            label="Disable random avatar eye movements"
+            left="15"
+            name="FSStaticEyes"
+            width="250"
+            control_name="FSStaticEyes"
+            tool_tip="When enabled, your avatar's eyes have less undesired movement. Overcomes a problem when using some mesh heads." />
+            <check_box
+            top_pad="20"
             initial_value="true"
             label="Do not show money balance on snapshots"
             layout="topleft"

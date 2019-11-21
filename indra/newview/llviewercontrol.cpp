@@ -697,7 +697,30 @@ void handleOutputDeviceChanged(const LLSD& newvalue)
    }
 }
 // </FS:Ansariel>
+// <FS:Ansariel> FIRE-18250: Option to disable default eye movement
+void handleStaticEyesChanged()
+{
+    if (!isAgentAvatarValid())
+    {
+        return;
+    }
+
+    LLUUID anim_id(gSavedSettings.getString("FSStaticEyesUUID"));
+    if (gSavedPerAccountSettings.getBOOL("FSStaticEyes"))
+    {
+        gAgentAvatarp->startMotion(anim_id);
+        gAgent.sendAnimationRequest(anim_id, ANIM_REQUEST_START);
+    }
+    else
+    {
+        gAgentAvatarp->stopMotion(anim_id);
+        gAgent.sendAnimationRequest(anim_id, ANIM_REQUEST_STOP);
+    }
+}
+// </FS:Ansariel>
+
 ////////////////////////////////////////////////////////////////////////////
+
 
 void settings_setup_listeners()
 {
@@ -868,7 +891,9 @@ void settings_setup_listeners()
 	gSavedPerAccountSettings.getControl("AvatarHoverOffsetZ")->getCommitSignal()->connect(boost::bind(&handleAvatarHoverOffsetChanged, _2));
     // <FS:Ansariel> Output device selection
     gSavedSettings.getControl("FSOutputDeviceUUID")->getSignal()->connect(boost::bind(&handleOutputDeviceChanged, _2));
-
+    // <FS:Ansariel> FIRE-18250: Option to disable default eye movement
+    gSavedSettings.getControl("FSStaticEyesUUID")->getSignal()->connect(boost::bind(&handleStaticEyesChanged));
+    gSavedPerAccountSettings.getControl("FSStaticEyes")->getSignal()->connect(boost::bind(&handleStaticEyesChanged));
 }
 
 #if TEST_CACHED_CONTROL
