@@ -2038,6 +2038,9 @@ void LLFloaterPreference::setPersonalInfo(const std::string& visibility, bool im
 	getChildView("log_path_button")->setEnabled(TRUE);
 	getChildView("chat_font_size")->setEnabled(TRUE);
 	getChildView("conversation_log_combo")->setEnabled(TRUE);
+    // <FS:Ansariel> FIRE-18250: Option to disable default eye movement
+    getChildView("FSStaticEyes")->setEnabled(TRUE);
+    
 }
 
 
