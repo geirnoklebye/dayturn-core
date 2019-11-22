@@ -302,7 +302,9 @@ void trust_cert_done(const LLSD& notification, const LLSD& response);
 void apply_udp_blacklist(const std::string& csv);
 bool process_login_success_response();
 void transition_back_to_login_panel(const std::string& emsg);
-
+// <FS:KC> FIRE-18250: Option to disable default eye movement
+void update_static_eyes();
+// </FS:KC> FIRE-18250
 void callback_cache_name(const LLUUID& id, const std::string& full_name, bool is_group)
 {
 	LLNameBox::refreshAll(id, full_name, is_group);
@@ -1692,6 +1694,11 @@ bool idle_startup()
 		LLFloaterIMContainer::getInstance();
 
 		// *Note: this is where gWorldMap used to be initialized.
+
+		// <FS:KC> FIRE-18250: Option to disable default eye movement
+		gAgent.addRegionChangedCallback(boost::bind(&update_static_eyes));
+		update_static_eyes();
+		// </FS:KC>
 
 		// register null callbacks for audio until the audio system is initialized
 		gMessageSystem->setHandlerFuncFast(_PREHASH_SoundTrigger, null_message_callback, NULL);
