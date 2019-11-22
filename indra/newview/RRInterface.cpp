@@ -3714,6 +3714,7 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 			std::string clean_user_name;
 			std::string user_name;
 			std::string display_name;
+			std::string user_dot_name;
 			std::string dummy_name;
 			
 			if (object->isAvatar()) {
@@ -3724,6 +3725,8 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 						user_name = av_name.getUserName();
 						clean_user_name = LLCacheName::cleanFullName(user_name);
 						display_name = av_name.mDisplayName; // not "getDisplayName()" because we need this whether we use display names or user names
+						//KKA-631 we need to handle first.last as well
+						user_dot_name = av_name.mUsername; // needed for minimap and maybe others now they come through here
 
 						//KKA-630 to reduce the occurrences of same avatar different names in different situations (eg chat, tooltip etc) this
 						//is tweaked slightly to always derive the dummy name from user_name. getDummyName is changed to veneer into this function
@@ -3741,6 +3744,9 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 						//dummy_name = getDummyName(display_name);
 						if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, display_name + " Resident", dummy_name);
 						str = stringReplaceWholeWord(str, display_name, dummy_name);
+						
+						//KKA-631 handle first.last for minimap
+						str = stringReplaceWholeWord(str, user_dot_name, dummy_name);
 					}
 				}
 				else
