@@ -3601,20 +3601,37 @@ std::string RRInterface::stringReplaceWholeWord(std::string s, std::string what,
 
 }
 
+//KKA-630 - this is changed so that it always calls through getCensoredMessage because that takes account of exceptions, which getDummyName doesn't
+//However, this should always return an anonymised name unless there's an exception
 std::string RRInterface::getDummyName(std::string name, EChatAudible audible /* = CHAT_AUDIBLE_FULLY */)
+{
+	LL_INFOS() << "Called for " << name << LL_ENDL;
+	std::string res = getCensoredMessageInternal(name, true);
+	if (audible == CHAT_AUDIBLE_BARELY) res += " afar";
+	return res;
+}
+
+//KKA-630 - renamed from getDummyName - do NOT call directly since it doesn't check for exceptions
+std::string RRInterface::getDummyNameInternal(std::string name)
 {
 	int len = name.length();
 	if (len == 0)
 	{
 		return "";
 	}
-	int at = 3;
-	if (len <= 3) at = len-1; // just to avoid crashing in some cases
-	// We use mLaunchTimestamp in order to modify the scrambling when the session restarts (it stays consistent during the session though)
-	// But in crashy situations, let's not make it change at EVERY session, more like once a day or so
-	// A day is 86400 seconds, the closest power of two is 65536, that's a 16-bit shift
-	unsigned char hash = name.at(at) + len + (mLaunchTimestamp >> 16); // very lame hash function I know... but it should be linear enough (the old length method was way too gaussian with a peak at 11 to 16 characters)
-	unsigned char mod = hash % 28;
+	// KKA-630 - improve the hashing (slightly)
+	//int at = 3;
+	//if (len <= 3) at = len-1; // just to avoid crashing in some cases
+	//// We use mLaunchTimestamp in order to modify the scrambling when the session restarts (it stays consistent during the session though)
+	//// But in crashy situations, let's not make it change at EVERY session, more like once a day or so
+	//// A day is 86400 seconds, the closest power of two is 65536, that's a 16-bit shift
+	//unsigned char hash = name.at(at) + len + (mLaunchTimestamp >> 16); // very lame hash function I know... but it should be linear enough (the old length method was way too gaussian with a peak at 11 to 16 characters)
+	//unsigned char mod = hash % 28;
+	
+	std::size_t hash = std::hash<std::string>{}(name);
+	hash += (mLaunchTimestamp >> 16);
+	std::size_t mod = hash % 28;
+	
 	std::string res = "";
 	switch (mod) {
 		case 0:		res = "A resident";			break;
@@ -3646,11 +3663,17 @@ std::string RRInterface::getDummyName(std::string name, EChatAudible audible /* 
 		case 26:	res = "Unidentified one";	break;
 		default:	res = "An unknown person";	break;
 	}
-	if (audible == CHAT_AUDIBLE_BARELY) res += " afar";
 	return res;
 }
 
+// KKA-630 this becomes a veneer
 std::string RRInterface::getCensoredMessage (std::string str)
+{
+	return getCensoredMessageInternal(str, false);
+}
+
+// KKA-630 the new anon_name flag asserts that we've been called for something known to be a name and we should anonymise it unless there's an exception
+std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_name)
 {
 	// HACK: if the message is under the form secondlife:///app/agent/UUID/about, clear it
 	// (we could just as well clear just the first part, or return a bogus message, 
@@ -3682,6 +3705,7 @@ std::string RRInterface::getCensoredMessage (std::string str)
 	}
 
 	// Hide every occurrence of the name of anybody around (found in cache, so not completely accurate nor completely immediate)
+	std::string pre_str = str;
 	S32 i;
 	for (i=0; i<gObjectList.getNumObjects(); ++i) {
 		LLViewerObject* object = gObjectList.getObject(i);
@@ -3701,19 +3725,36 @@ std::string RRInterface::getCensoredMessage (std::string str)
 						clean_user_name = LLCacheName::cleanFullName(user_name);
 						display_name = av_name.mDisplayName; // not "getDisplayName()" because we need this whether we use display names or user names
 
-						dummy_name = getDummyName(clean_user_name);
+						//KKA-630 to reduce the occurrences of same avatar different names in different situations (eg chat, tooltip etc) this
+						//is tweaked slightly to always derive the dummy name from user_name. getDummyName is changed to veneer into this function
+						//so that exceptions can be handled whilst getDummyNameInternal is the original routine
+						dummy_name = getDummyNameInternal(user_name);
+
+						//dummy_name = getDummyName(clean_user_name);
+						if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, clean_user_name + " Resident", dummy_name);
 						str = stringReplaceWholeWord(str, clean_user_name, dummy_name);
 
-						dummy_name = getDummyName(user_name);
+						//dummy_name = getDummyName(user_name);
+						if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, user_name + " Resident", dummy_name);
 						str = stringReplaceWholeWord(str, user_name, dummy_name);
 
-						dummy_name = getDummyName(display_name);
+						//dummy_name = getDummyName(display_name);
+						if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, display_name + " Resident", dummy_name);
 						str = stringReplaceWholeWord(str, display_name, dummy_name);
 					}
+				}
+				else
+				{
+					//we found an exception, so do not apply default name anonymisation
+					anon_name = false;
 				}
 			}
 		}
 	}
+	//KKA-630 If we were called to anonymise the whole string (ie it's known to be a name) and we didn't find an exception, anonymise it
+	//This isn't ideal - references to non-present avatars with an exception are going to get anonymised, however it's only in cases where
+	//anonymisation is being forced
+	if (str.compare(pre_str) == 0 && anon_name) str = getDummyNameInternal(str);
 	return str;
 }
 

@@ -206,7 +206,7 @@ public:
 
 	std::string stringReplace(std::string s, std::string what, std::string by, BOOL caseSensitive = FALSE);
 	std::string stringReplaceWholeWord(std::string s, std::string what, std::string by, BOOL caseSensitive = FALSE); // same as stringReplace, but checks for neighbors of the occurrences of "what", and replace only if these neighbors are NOT alphanum characters
-
+	// KKA-630 this is now calls getCensoredMessage to get exceptions dealt with
 	std::string getDummyName (std::string name, EChatAudible audible = CHAT_AUDIBLE_FULLY); // return "someone", "unknown" etc according to the length of the name (when shownames is on)
 	std::string getCensoredMessage (std::string str); // replace names by dummy names
 
@@ -382,6 +382,10 @@ private:
 	std::string mLastLoadedPreset; // contains the name of the latest loaded Windlight preset
 	int mLaunchTimestamp; // timestamp of the beginning of this session
 	BOOL reallyHandleCommand (LLUUID uuid, std::string command);	// CA: the public handleCommand is now a veneer so that we can do debug output cleanly for all callers, not just chat handling
+	// KKA-630 this is now renamed and private since it doesn't handle exceptions
+	std::string getDummyNameInternal (std::string name); // return "someone", "unknown" etc according to the length of the name (when shownames is on)
+	// KKA-630 internal version with additional flag to indicated if it's called for something we know is a name and should be anonymised unless an exception applies
+	std::string getCensoredMessageInternal (std::string str, bool anon_name); // replace names by dummy names	
 };
 
 
