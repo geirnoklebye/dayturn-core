@@ -3628,9 +3628,16 @@ std::string RRInterface::getDummyNameInternal(std::string name)
 	//unsigned char hash = name.at(at) + len + (mLaunchTimestamp >> 16); // very lame hash function I know... but it should be linear enough (the old length method was way too gaussian with a peak at 11 to 16 characters)
 	//unsigned char mod = hash % 28;
 	
-	std::size_t hash = std::hash<std::string>{}(name);
+	// KKA-633 change the hashing again to use Kitty's distribution-tested algorithm
+	// std::size_t hash = std::hash<std::string>{}(name);
+	U32 hash = 0;
+	for (int idx = 0, cnt = name.length(); idx < cnt; idx++)
+			hash += name[idx];
+			
 	hash += (mLaunchTimestamp >> 16);
-	std::size_t mod = hash % 28;
+	// KKA-633 increases from 28 to > 40 and changes hash algorithm
+	// std::size_t mod = hash % 44;
+	U32 mod = hash % 44;
 	
 	std::string res = "";
 	switch (mod) {
@@ -3661,6 +3668,25 @@ std::string RRInterface::getDummyNameInternal(std::string name)
 		case 24:	res = "Mysterious one";		break;
 		case 25:	res = "An unknown being";	break;
 		case 26:	res = "Unidentified one";	break;
+		// KKA-633 with the original 28 names it's guaranteed a full sim of 40 avatars will have at least
+		// twelve duplications, probably more depending how successful the hash is at avoiding duplication
+		// Add some more so that we've at least got 40+ to work with even if the hash isn't guaranteed to
+		// avoid duplication
+		case 28: res = "A being"; break; // RLVa uses these three instead of the '..human being' set above
+		case 29: res = "This being"; break;
+		case 30: res = "That being"; break;
+		case 31: res = "A presence"; break;
+		case 32: res = "This presence"; break;
+		case 33: res = "That presence"; break;
+		case 34: res = "Some resident"; break;
+		case 35: res = "Some individual"; break;
+		case 36: res = "Some person"; break;
+		case 37: res = "Some stranger"; break;
+		case 38: res = "Some human being"; break;
+		case 39: res = "Some agent"; break;
+		case 40: res = "Some soul"; break;
+		case 41: res = "Some being"; break;
+		case 42: res = "Some presence"; break; // actually 44
 		default:	res = "An unknown person";	break;
 	}
 	return res;
