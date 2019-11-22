@@ -3158,6 +3158,8 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	static LLCachedControl<bool> NAME_SHOW_SELF(gSavedSettings, "RenderNameShowSelf", true);
 	static LLCachedControl<S32> AVATAR_NAME_TAG_MODE(gSavedSettings, "AvatarNameTagMode", 1);
 	static LLCachedControl<bool> NAME_TAG_SHOW_GROUP_TITLES(gSavedSettings, "NameTagShowGroupTitles", true);
+	// KKA-634 add a control that defaults @shownames turning off name tags
+	static LLCachedControl<bool> KOKUA_RLV_SHOW_OTHER_NAME_TAGS(gSavedSettings, "KokuaRLVShowOtherNameTags", false);
 
 //	const bool render_group_titles = (NAME_TAG_SHOW_GROUP_TITLES && AVATAR_NAME_TAG_MODE);
 
@@ -3181,7 +3183,8 @@ void LLVOAvatar::idleUpdateNameTag(const LLVector3& root_pos_last)
 	// and the other avatar is farther than the specified distance
 	if (gRRenabled)
 	{
-		if (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags)
+		// KKA-634 @shownames only hides other name tags if new control variable is false (own always gets hidden)
+		if ((gAgent.mRRInterface.mContainsShownames && (!KOKUA_RLV_SHOW_OTHER_NAME_TAGS || isSelf())) || gAgent.mRRInterface.mContainsShownametags)
 		{
 			render_name = FALSE;
 		}
@@ -3290,6 +3293,8 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 //MK
 	bool is_typing = getTyping();
 //mk
+  // KKA-634 new bool to determine whether it's a reduced content tag under @shownames
+  bool kokua_rlv_shownames = gRRenabled && gAgent.mRRInterface.mContainsShownames;
 
 	static LLCachedControl<bool> show_nearby_avatars_typing(gSavedSettings, "ShowNearbyAvatarsTyping", true);
 	if (!show_nearby_avatars_typing)
@@ -3307,7 +3312,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 	{
 		is_muted = isInMuteList();
 	}
-	bool is_friend = LLAvatarTracker::instance().isBuddy(getID());
+	bool is_friend = LLAvatarTracker::instance().isBuddy(getID()) && !kokua_rlv_shownames;
 	bool is_cloud = getIsCloud();
 
 	if (is_appearance != mNameAppearance)
@@ -3330,6 +3335,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 	LLColor4 complexity_color(LLColor4::grey1); // default if we're not limiting the complexity
 
 	if (show_arw_tag &&
+		!kokua_rlv_shownames &&
 	   ((isSelf() && show_own_arw_tag) ||
 	   (!isSelf() && (!show_too_complex_only_arw_tag || isTooComplex()))))
 	{
@@ -3414,6 +3420,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		}
 
 		if (sRenderGroupTitles
+			&& !kokua_rlv_shownames
 			&& title && title->getString() && title->getString()[0] != '\0')
 		{
 			std::string title_str = title->getString();
@@ -3427,8 +3434,15 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 
 		bool have_name = FALSE;
 
-
-		if (LLAvatarName::useDisplayNames())
+		// KKA-634 previously we wouldn't get here, but now @shownames needs to anonymise the name
+		if (kokua_rlv_shownames)
+		{
+			const LLFontGL* font = LLFontGL::getFontSansSerif();
+			std::string full_name = LLCacheName::buildFullName( firstname->getString(), lastname->getString() );
+			have_name = !full_name.empty();
+			addNameTagLine(gAgent.mRRInterface.getDummyName(full_name), name_tag_color, LLFontGL::NORMAL, font);
+		}
+		else if (LLAvatarName::useDisplayNames())
 		{
 			LLAvatarName av_name;
 			if (!LLAvatarNameCache::get(getID(), &av_name))
@@ -3468,7 +3482,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 
 
 		static LLUICachedControl<bool> show_age("NameTagShowAge", false);
-		if (show_age) {
+		if (show_age && !kokua_rlv_shownames) {
 			//
 			//	check whether the birthday is available or if
 			//	it needs to be requested from the server
@@ -3511,6 +3525,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
         		// <FS:Ansariel> Show ARW in nametag options (for Jelly Dolls)
         		static const std::string complexity_label = LLTrans::getString("Nametag_Complexity_Label");
         		if (show_arw_tag &&
+        			  !kokua_rlv_shownames &&
         		   ((isSelf() && show_own_arw_tag) ||
         		   (!isSelf() && (!show_too_complex_only_arw_tag || isTooComplex()))))
         		{

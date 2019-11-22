@@ -92,6 +92,17 @@
         <real>0.0</real>
       </array>
     </map>
+    <key>KokuaRLVShowOtherNameTags</key>
+    <map>
+      <key>Comment</key>
+    <string>Enables RLVa-like behaviour where @shownames doesn't turn off name tags for other avatars (only @shownametags does)</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
     <key>KokuaRLVOOCChatIsRedirected</key>
     <map>
       <key>Comment</key>

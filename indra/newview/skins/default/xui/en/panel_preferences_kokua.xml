@@ -137,7 +137,23 @@
               name="RestrainedLoveHeadMouselookRenderRigged"
               tool_tip="From RLV 2.9.25 rigged mesh attached to the head will not render in mouselook; enable this setting to restore original behaviour"
               width="270"/>
+          <check_box
+              top_pad="0"
+              layout="topleft"
+              follows="left|top"
+              enabled="true"
+              font="SansSerifSmall"
+              height="20"
+              initial_value="false"
+              control_name="KokuaRLVShowOtherNameTags"
+              enabled_control="RestrainedLove"
+              label="Show anonymised name tags when @shownames=n"
+              left="25"
+              name="KokuaRLVShowOtherNameTags"
+              tool_tip="@shownames=n normally hides name tags, setting this option on shows them with just the anonymised name"
+              width="270"/>
           <!-- reminder: if more controls are added here, add them to the delete list in floaterpreferences.cpp for RLV always-on mode -->
+          <!-- another reminder: this panel is just about full - rearrange or split this panel before adding more! -->
           <check_box
                 top_pad="5"
                 layout="topleft"

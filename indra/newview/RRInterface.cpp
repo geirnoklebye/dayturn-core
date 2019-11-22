@@ -357,6 +357,8 @@ void refreshCachedVariable (std::string var)
 			}
 		}
 		LLLocalSpeakerMgr::getInstance()->updateSpeakerList();
+		//KKA-634 give the name tags a kick to reflect any changes
+		LLVOAvatar::invalidateNameTags();
 	}
 
 	else if (var == "showminimap") {

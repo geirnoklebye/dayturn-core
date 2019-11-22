@@ -609,6 +609,7 @@ BOOL LLFloaterPreference::postBuild()
 	delete getChild<LLUICtrl>("RlvNoBlacklist");
 	delete getChild<LLUICtrl>("RlvDefeatStandTP");
 	delete getChild<LLUICtrl>("RestrainedLoveHeadMouselookRenderRigged");
+	delete getChild<LLUICtrl>("KokuaRLVShowOtherNameTags");
 #endif
 	
 	// Hook up and init for filtering
