@@ -470,31 +470,29 @@ void LLPanelPermissions::refresh()
 			}
 			owner_id = mLastOwnerID;
 		}
-
 		style_params.link_href = owner_app_link;
 		if (LLAvatarNameCache::get(owner_id, &av_name))
 		{
-			updateOwnerName(owner_id, av_name, style_params);
-		}
-		else
 //MK
 			if (gRRenabled && gAgent.mRRInterface.mContainsShownames)
 			{
-			if (mOwnerCacheConnection.connected())
-			{
-				mOwnerCacheConnection.disconnect();
 				av_name.mUsername = gAgent.mRRInterface.getDummyName(av_name.getUserName());
 				av_name.mDisplayName = gAgent.mRRInterface.getDummyName(av_name.getDisplayName());
 				owner_app_link = "";
 			}
+			updateOwnerName(owner_id, av_name, style_params);
+//mk
+		}
+		else
+		{
+			if (mOwnerCacheConnection.connected())
+			{
+				mOwnerCacheConnection.disconnect();
+			}
 			mLabelOwnerName->setText(LLTrans::getString("None"));
 			mOwnerCacheConnection = LLAvatarNameCache::get(owner_id, boost::bind(&LLPanelPermissions::updateOwnerName, this, _1, _2, style_params));
-//mk
-			// If name isn't present, this will 'request' it and trigger refresh() again
-			LLTextBox* text_box = getChild<LLTextBox>("Owner Name");
-			style_params.link_href = owner_app_link;
-			text_box->setText(av_name.getCompleteName(), style_params);
 		}
+
 		getChild<LLAvatarIconCtrl>("Owner Icon")->setValue(owner_id);
 		getChild<LLAvatarIconCtrl>("Owner Icon")->setVisible(TRUE);
 		getChild<LLUICtrl>("Owner Group Icon")->setVisible(FALSE);
