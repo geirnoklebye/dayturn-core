@@ -3742,28 +3742,22 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 	for (i=0; i<gObjectList.getNumObjects(); ++i) {
 		LLViewerObject* object = gObjectList.getObject(i);
 		if (object) {
-			LLAvatarName av_name;
-			std::string clean_user_name;
-			std::string user_name;
-			std::string display_name;
-			std::string user_dot_name;
-			std::string dummy_name;
-			
 			if (object->isAvatar()) {
-				if (std::find(exceptions.begin(), exceptions.end(), object->getID()) == exceptions.end()) // ignore exceptions
+				LLAvatarName av_name;
+				if (LLAvatarNameCache::get(object->getID(), &av_name))
 				{
-					if (LLAvatarNameCache::get(object->getID(), &av_name))
-					{
-						user_name = av_name.getUserName();
-						clean_user_name = LLCacheName::cleanFullName(user_name);
-						display_name = av_name.mDisplayName; // not "getDisplayName()" because we need this whether we use display names or user names
-						//KKA-631 we need to handle first.last as well
-						user_dot_name = av_name.mUsername; // needed for minimap and maybe others now they come through here
+					std::string user_name = av_name.getUserName();
+					std::string clean_user_name = LLCacheName::cleanFullName(user_name);
+					std::string  display_name = av_name.mDisplayName; // not "getDisplayName()" because we need this whether we use display names or user names
+					//KKA-631 we need to handle first.last as well
+					std::string  user_dot_name = av_name.mUsername; // needed for minimap and maybe others now they come through here
 
+					if (std::find(exceptions.begin(), exceptions.end(), object->getID()) == exceptions.end()) // ignore exceptions
+					{
 						//KKA-630 to reduce the occurrences of same avatar different names in different situations (eg chat, tooltip etc) this
 						//is tweaked slightly to always derive the dummy name from user_name. getDummyName is changed to veneer into this function
 						//so that exceptions can be handled whilst getDummyNameInternal is the original routine
-						dummy_name = getDummyNameInternal(user_name);
+						std::string  dummy_name = getDummyNameInternal(user_name);
 
 						//dummy_name = getDummyName(clean_user_name);
 						if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, clean_user_name + " Resident", dummy_name);
@@ -3780,11 +3774,15 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 						//KKA-631 handle first.last for minimap
 						str = stringReplaceWholeWord(str, user_dot_name, dummy_name);
 					}
-				}
-				else
-				{
-					//we found an exception, so do not apply default name anonymisation
-					anon_name = false;
+					else
+					{
+						// KKA-630 this av has an exception - if str exactly matches one of the name options turn off anon_name to preserve it
+						if (str == clean_user_name || str == clean_user_name + " Resident" || str == user_name || str == user_name + " Resident"
+							|| str==display_name || str==display_name + " Resident" || str == user_dot_name)
+						{
+							anon_name = false;
+						}
+					}
 				}
 			}
 		}

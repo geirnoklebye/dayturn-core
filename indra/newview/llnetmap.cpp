@@ -840,6 +840,8 @@ BOOL LLNetMap::handleToolTipAgent(const LLUUID& avatar_id)
 		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
 		{
 			label = gAgent.mRRInterface.getDummyName(av_name.mUsername);
+			// if this comes back unchanged, there's an exception so revert to original
+			if (label == av_name.mUsername) label = av_name.getCompleteName();
 		}
 
 ////		p.message(av_name.getCompleteName());
