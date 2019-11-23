@@ -3433,16 +3433,28 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 		static LLUICachedControl<bool> show_usernames("NameTagShowUsernames", true);
 
 		bool have_name = FALSE;
-
+		// KKA-635 drop back to standard code if there's a shownames exception in play
+		bool is_exception = false;
 		// KKA-634 previously we wouldn't get here, but now @shownames needs to anonymise the name
 		if (kokua_rlv_shownames)
 		{
 			const LLFontGL* font = LLFontGL::getFontSansSerif();
 			std::string full_name = LLCacheName::buildFullName( firstname->getString(), lastname->getString() );
 			have_name = !full_name.empty();
-			addNameTagLine(gAgent.mRRInterface.getDummyName(full_name), name_tag_color, LLFontGL::NORMAL, font);
+			if (gAgent.mRRInterface.getDummyName(full_name) != full_name)
+			{
+				addNameTagLine(gAgent.mRRInterface.getDummyName(full_name), name_tag_color, LLFontGL::NORMAL, font);
+			}
+			else
+			{
+				// KKA-635 anonymisation didn't occur, so it's an exception - drop into normal code to handle display names
+				is_exception = true;
+			}
 		}
-		else if (LLAvatarName::useDisplayNames())
+		// KKA-635 execute this after all if there's an exception in effect for this name
+		if (is_exception || !kokua_rlv_shownames)
+		{
+		if (LLAvatarName::useDisplayNames())
 		{
 			LLAvatarName av_name;
 			if (!LLAvatarNameCache::get(getID(), &av_name))
@@ -3474,6 +3486,7 @@ void LLVOAvatar::idleUpdateNameTagText(BOOL new_name)
 			std::string full_name = LLCacheName::buildFullName( firstname->getString(), lastname->getString() );
 			have_name = !full_name.empty();
 			addNameTagLine(full_name, name_tag_color, LLFontGL::NORMAL, font);
+		}
 		}
 
 		//

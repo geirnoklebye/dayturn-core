@@ -2946,6 +2946,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 						{
 							from_name = gAgent.mRRInterface.getDummyName(from_name, chat.mAudible);
 						}
+						else from_name = chat.mFromName; // KKA-635 stop bonus 'Resident' appearing
 					}
 					else
 					{

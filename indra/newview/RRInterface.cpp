@@ -1091,9 +1091,11 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 		refreshCachedVariable(action);
 
 		// Actions to do AFTER inserting the new behav
-		if (action=="showhovertextall" || action=="showloc" || action=="shownames"
+		// KKA-635 refresh nametags and also handle shownames & shownametags including exceptions
+		if (action=="showhovertextall" || action=="showloc" || canon_action=="shownames" || canon_action=="shownametags"
 			|| action=="showhovertexthud" || action=="showhovertextworld" ) {
 			updateAllHudTexts();
+			LLVOAvatar::invalidateNameTags();
 		}
 		else if (canon_action == "showhovertext") {
 			updateOneHudText(LLUUID(option));
@@ -1182,9 +1184,11 @@ BOOL RRInterface::remove (LLUUID object_uuid, std::string action, std::string op
 			refreshCachedVariable(action);
 
 			// Actions to do AFTER removing the behav
-			if (action=="showhovertextall" || action=="showloc" || action=="shownames"
+			// KKA-635 refresh nametags and also handle shownames & shownametags including exceptions
+			if (action=="showhovertextall" || action=="showloc" || canon_action=="shownames" || canon_action=="shownametags"
 				|| action=="showhovertexthud" || action=="showhovertextworld" ) {
 				updateAllHudTexts();
+				LLVOAvatar::invalidateNameTags();
 			}
 			if (canon_action == "showhovertext") {
 				updateOneHudText(LLUUID(option));
@@ -3607,7 +3611,6 @@ std::string RRInterface::stringReplaceWholeWord(std::string s, std::string what,
 //However, this should always return an anonymised name unless there's an exception
 std::string RRInterface::getDummyName(std::string name, EChatAudible audible /* = CHAT_AUDIBLE_FULLY */)
 {
-	LL_INFOS() << "Called for " << name << LL_ENDL;
 	std::string res = getCensoredMessageInternal(name, true);
 	if (audible == CHAT_AUDIBLE_BARELY) res += " afar";
 	return res;
@@ -3723,7 +3726,8 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 		command = it->second;
 		LLStringUtil::toLower(command);
 		if (command.find("shownames:") == 0 || command.find("shownames_sec:") == 0 || command.find("shownametags:") == 0) {
-			if (parseCommand(command, behav, option, param)) {
+			// KKA-635 this needs the =n to work
+			if (parseCommand(command+"=n", behav, option, param)) {
 				LLUUID uuid;
 				uuid.set(option, FALSE);
 				exceptions.push_back(uuid);
