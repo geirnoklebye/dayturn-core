@@ -663,26 +663,33 @@ void LLAvatarActions::share(const LLUUID& id)
 	}
 }
 
+//KKA-639 these three copy to clipboard operations should respect @shownames
 //static 
 void LLAvatarActions::copyName(const LLUUID &id)
 {
 	LLAvatarName av_name;
 
 	if (LLAvatarNameCache::get(id, &av_name)) {
-		LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(av_name.getCompleteName()));
+		LLWString s = utf8str_to_wstring(av_name.getCompleteName());
+		if (gRRenabled && gAgent.mRRInterface.mContainsShownames) s = utf8str_to_wstring("(Hidden)");
+		LLView::getWindow()->copyTextToClipboard(s);
 	}
 };
 
 //static 
 void LLAvatarActions::copyUUID(const LLUUID &id)
 {
-	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(id.asString()));
+	LLWString s = utf8str_to_wstring(id.asString());
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames) s = utf8str_to_wstring("(Hidden)");
+	LLView::getWindow()->copyTextToClipboard(s);
 }
 
 //static 
 void LLAvatarActions::copyProfileSLURL(const LLUUID &id)
 {
-	LLView::getWindow()->copyTextToClipboard(utf8str_to_wstring(LLSLURL("agent", id, "about").getSLURLString()));
+	LLWString s = utf8str_to_wstring(LLSLURL("agent", id, "about").getSLURLString());
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames) s = utf8str_to_wstring("(Hidden)");
+	LLView::getWindow()->copyTextToClipboard(s);
 }
 
 // static

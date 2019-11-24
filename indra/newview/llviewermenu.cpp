@@ -4475,6 +4475,13 @@ class LLAvatarEnableRemoveFriend : public view_listener_t
 {
 	bool handleEvent(const LLSD &userdata)
 	{
+		// KKA-639 this should be symmetrical to Add Friend
+//MK
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+		{
+			return false;
+		}
+//mk
 		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
 
 		return avatar && LLAvatarActions::isFriend(avatar->getID());
@@ -7196,10 +7203,17 @@ class LLAvatarAddFriend : public view_listener_t
 	}
 };
 
+// KKA-639 Make this summetrical to AddFriend
 class LLAvatarRemoveFriend : public view_listener_t
 {
 	bool handleEvent(const LLSD &userdata)
 	{
+//MK
+		if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
+		{
+			return false;
+		}
+//mk
 		LLVOAvatar *avatar = find_avatar_from_object(LLSelectMgr::getInstance()->getSelection()->getPrimaryObject());
 
 		if (avatar && LLAvatarActions::isFriend(avatar->getID()))
