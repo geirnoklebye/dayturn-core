@@ -209,7 +209,7 @@ Call CheckWindowsVersion					# Don't install On unsupported systems
         StrCpy $SKIP_DIALOGS "true"
 
 	${GetOptions} $COMMANDLINE "/SKIP_AUTORUN" $0
-	IfErrors +2 0 ; If error jump past setting SKIP_AUTORUN
+	IfErrors +2 0 # If error jump past setting SKIP_AUTORUN
 		StrCpy $SKIP_AUTORUN "true"
 
     ${GetOptions} $COMMANDLINE "/LANGID=" $0	# /LANGID=1033 implies US English
@@ -363,7 +363,9 @@ StrCpy $SHORTCUT_LANG_PARAM "--set InstallLanguage $(LanguageCode)"
 CreateDirectory	"$SMPROGRAMS\$INSTSHORTCUT"
 SetOutPath "$INSTDIR"
 CreateShortCut	"$SMPROGRAMS\$INSTSHORTCUT\$INSTSHORTCUT.lnk" \
-				"$INSTDIR\$VIEWER_EXE" "$SHORTCUT_LANG_PARAM" "$INSTDIR\$VIEWER_EXE"
+				"$INSTDIR\$VIEWER_EXE" "$SHORTCUT_LANG_PARAM"
+				# <FS:Ansariel> Remove VMP
+				#"$INSTDIR\$VIEWER_EXE" "$SHORTCUT_LANG_PARAM" "$INSTDIR\$VIEWER_EXE"
 
 
 WriteINIStr		"$SMPROGRAMS\$INSTSHORTCUT\SL Create Account.url" \
@@ -381,9 +383,13 @@ CreateShortCut	"$SMPROGRAMS\$INSTSHORTCUT\Uninstall $INSTSHORTCUT.lnk" \
 # Other shortcuts
 SetOutPath "$INSTDIR"
 CreateShortCut "$DESKTOP\$INSTSHORTCUT.lnk" \
-        "$INSTDIR\$VIEWER_EXE" "$SHORTCUT_LANG_PARAM" "$INSTDIR\$VIEWER_EXE"
+        "$INSTDIR\$VIEWER_EXE" "$SHORTCUT_LANG_PARAM"
+        # <FS:Ansariel> Remove VMP
+        #"$INSTDIR\$VIEWER_EXE" "$SHORTCUT_LANG_PARAM" "$INSTDIR\$VIEWER_EXE"
 CreateShortCut "$INSTDIR\$INSTSHORTCUT.lnk" \
-        "$INSTDIR\$VIEWER_EXE" "$SHORTCUT_LANG_PARAM" "$INSTDIR\$VIEWER_EXE"
+        "$INSTDIR\$VIEWER_EXE" "$SHORTCUT_LANG_PARAM"
+        # <FS:Ansariel> Remove VMP
+        #"$INSTDIR\$VIEWER_EXE" "$SHORTCUT_LANG_PARAM" "$INSTDIR\$VIEWER_EXE"
 CreateShortCut "$INSTDIR\Uninstall $INSTSHORTCUT.lnk" \
 				'"$INSTDIR\uninst.exe"' ''
 
@@ -606,7 +612,8 @@ FunctionEnd
 Function RemoveProgFilesOnInst
 
 # Remove old SecondLife.exe to invalidate any old shortcuts to it that may be in non-standard locations. See MAINT-3575
-Delete "$INSTDIR\$INSTEXE"
+# <FS:Ansariel> Remove VMP
+#Delete "$INSTDIR\$INSTEXE"
 Delete "$INSTDIR\$VIEWER_EXE"
 
 # Remove old shader files first so fallbacks will work. See DEV-5663
@@ -616,8 +623,8 @@ RMDir /r "$INSTDIR\app_settings\shaders"
 RMDir /r "$INSTDIR\skins"
 
 # We are no longer including release notes with the viewer, so remove them.
-Delete "$SMPROGRAMS\$INSTSHORTCUT\SL Release Notes.lnk"
-Delete "$INSTDIR\releasenotes.txt"
+;Delete "$SMPROGRAMS\$INSTSHORTCUT\SL Release Notes.lnk"
+;Delete "$INSTDIR\releasenotes.txt"
 
 FunctionEnd
 
@@ -672,7 +679,7 @@ Pop $2
 Pop $1
 Pop $0
 
-# Delete files in ProgramData\Secondlife
+# Delete files in ProgramData\Kokua
 Push $0
   ReadRegStr $0 SHELL_CONTEXT "${MSCURRVER_KEY}\Explorer\Shell Folders" "Common AppData"
   StrCmp $0 "" +2
@@ -751,14 +758,15 @@ Function .onInstSuccess
         FileWrite $0 "$MultiUser.InstallMode"
         FileClose $0
         Pop $0
-
-        Push $R0
-        Push $0
-        ;; MAINT-7812: Only write nsis.winstall file with /marker switch
-        ${GetParameters} $R0
-        ${GetOptionsS} $R0 "/marker" $0
-        ;; If no /marker switch, skip to ClearErrors
-        IfErrors +4 0
+        # <FS:Ansariel> Disable VMP
+        #Push $R0
+        #Push $0
+        #;; MAINT-7812: Only write nsis.winstall file with /marker switch
+        #${GetParameters} $R0
+        #${GetOptionsS} $R0 "/marker" $0
+        #;; If no /marker switch, skip to ClearErrors
+        #IfErrors +4 0
+        # </FS:Ansariel>
         ;; $EXEDIR is where we find the installer file
         ;; Put a marker file there so VMP will know we're done
         ;; and it can delete the download directory next time.
@@ -801,7 +809,9 @@ label_launch:
         # Quote the updater executable and the viewer executable because each
         # must be a distinct command-line token, but DO NOT quote the language
         # string because it must decompose into separate command-line tokens.
-        Exec '"$INSTDIR\$INSTEXE" precheck "$INSTDIR\$VIEWER_EXE" $SHORTCUT_LANG_PARAM'
+        # <FS:Ansariel> No updater, thanks!
+        # Exec '"$INSTDIR\$INSTEXE" precheck "$INSTDIR\$VIEWER_EXE" $SHORTCUT_LANG_PARAM'
+        Exec '"$WINDIR\explorer.exe" "$INSTDIR\$INSTSHORTCUT.lnk"'
 label_no_launch:
 		Pop $R0
 FunctionEnd
