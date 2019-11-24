@@ -146,21 +146,29 @@ void LLUICtrl::initFromParams(const Params& p)
 				setDisabledControlVariable(control);
 		}
 	}
-	if(p.controls_visibility.isProvided())
-	{
-		if (p.controls_visibility.visible.isChosen())
+	// <FS:Zi> Decide if a control should be visible, according to ControlVisibility
+	// if(p.controls_visibility.isProvided())
+	// {
+		// if (p.controls_visibility.visible.isChosen())
+		if (p.controls_visibility.visible.isProvided())
+		// </FS:Zi>
 		{
 			LLControlVariable* control = findControl(p.controls_visibility.visible);
 			if (control)
 				setMakeVisibleControlVariable(control);
 		}
-		else if (p.controls_visibility.invisible.isChosen())
+		// <FS:Zi> Decide if a control should be visible, according to ControlVisibility
+		// else if (p.controls_visibility.invisible.isChosen())
+		if (p.controls_visibility.invisible.isProvided())
+		// </FS:Zi>
 		{
 			LLControlVariable* control = findControl(p.controls_visibility.invisible);
 			if (control)
 				setMakeInvisibleControlVariable(control);
 		}
-	}
+	// <FS:Zi> Decide if a control should be visible, according to ControlVisibility
+	// }
+	// </FS:Zi>
 
 	setTabStop(p.tab_stop);
 
@@ -512,7 +520,9 @@ void LLUICtrl::setEnabledControlVariable(LLControlVariable* control)
 	{
 		mEnabledControlVariable = control;
 		mEnabledControlConnection = mEnabledControlVariable->getSignal()->connect(boost::bind(&controlListener, _2, getHandle(), std::string("enabled")));
-		setEnabled(mEnabledControlVariable->getValue().asBoolean());
+		// <FS:Ansariel> enabled_control / disabled_control don't work properly with LLRadioGroup
+		//setEnabled(mEnabledControlVariable->getValue().asBoolean());
+		setEnabled(mEnabledControlVariable->getValue().asString() == "0" ? FALSE : mEnabledControlVariable->getValue().asBoolean());
 	}
 }
 
@@ -527,7 +537,9 @@ void LLUICtrl::setDisabledControlVariable(LLControlVariable* control)
 	{
 		mDisabledControlVariable = control;
 		mDisabledControlConnection = mDisabledControlVariable->getSignal()->connect(boost::bind(&controlListener, _2, getHandle(), std::string("disabled")));
-		setEnabled(!(mDisabledControlVariable->getValue().asBoolean()));
+		// <FS:Ansariel> enabled_control / disabled_control don't work properly with LLRadioGroup
+		//setEnabled(!(mDisabledControlVariable->getValue().asBoolean()));
+		setEnabled(!(mDisabledControlVariable->getValue().asString() == "0" ? FALSE : mDisabledControlVariable->getValue().asBoolean()));
 	}
 }
 
@@ -542,7 +554,10 @@ void LLUICtrl::setMakeVisibleControlVariable(LLControlVariable* control)
 	{
 		mMakeVisibleControlVariable = control;
 		mMakeVisibleControlConnection = mMakeVisibleControlVariable->getSignal()->connect(boost::bind(&controlListener, _2, getHandle(), std::string("visible")));
-		setVisible(mMakeVisibleControlVariable->getValue().asBoolean());
+		// <FS:Zi> Decide if a control should be visible, according to ControlVisibility
+		// setVisible(mMakeVisibleControlVariable->getValue().asBoolean());
+		decideVisibility();
+		// </FS:Zi>
 	}
 }
 
@@ -557,7 +572,10 @@ void LLUICtrl::setMakeInvisibleControlVariable(LLControlVariable* control)
 	{
 		mMakeInvisibleControlVariable = control;
 		mMakeInvisibleControlConnection = mMakeInvisibleControlVariable->getSignal()->connect(boost::bind(&controlListener, _2, getHandle(), std::string("invisible")));
-		setVisible(!(mMakeInvisibleControlVariable->getValue().asBoolean()));
+		// <FS:Zi> Decide if a control should be visible, according to ControlVisibility
+		// setVisible(!(mMakeInvisibleControlVariable->getValue().asBoolean()));
+		decideVisibility();
+		// </FS:Zi>
 	}
 }
 // static
@@ -573,22 +591,34 @@ bool LLUICtrl::controlListener(const LLSD& newvalue, LLHandle<LLUICtrl> handle, 
 		}
 		else if (type == "enabled")
 		{
-			ctrl->setEnabled(newvalue.asBoolean());
+			// <FS:Ansariel> enabled_control / disabled_control don't work properly with LLRadioGroup
+			//ctrl->setEnabled(newvalue.asBoolean());
+			ctrl->setEnabled(newvalue.asString() == "0" ? FALSE : newvalue.asBoolean());
+			// </FS:Ansariel>
 			return true;
 		}
 		else if(type =="disabled")
 		{
-			ctrl->setEnabled(!newvalue.asBoolean());
+			// <FS:Ansariel> enabled_control / disabled_control don't work properly with LLRadioGroup
+			//ctrl->setEnabled(!newvalue.asBoolean());
+			ctrl->setEnabled(!(newvalue.asString() == "0" ? FALSE : newvalue.asBoolean()));
+			// </FS:Ansariel>
 			return true;
 		}
 		else if (type == "visible")
 		{
-			ctrl->setVisible(newvalue.asBoolean());
+			// <FS:Zi> Decide if a control should be visible, according to ControlVisibility
+			// ctrl->setVisible(newvalue.asBoolean());
+			ctrl->decideVisibility();
+			// </FS:Zi>
 			return true;
 		}
 		else if (type == "invisible")
 		{
-			ctrl->setVisible(!newvalue.asBoolean());
+			// <FS:Zi> Decide if a control should be visible, according to ControlVisibility
+			// ctrl->setVisible(!newvalue.asBoolean());
+			ctrl->decideVisibility();
+			// </FS:Zi>
 			return true;
 		}
 	}
@@ -970,7 +1000,7 @@ void LLUICtrl::setColor(const LLColor4& color)
 
 F32 LLUICtrl::getCurrentTransparency()
 {
-	F32 alpha = 0;
+	F32 alpha = 0.f;
 
 	switch(mTransparencyType)
 	{
@@ -987,8 +1017,15 @@ F32 LLUICtrl::getCurrentTransparency()
 		break;
 
 	case TT_FADING:
-		alpha = sInactiveControlTransparency / 2;
+		alpha = sInactiveControlTransparency / 2.f;
 		break;
+
+	// <FS:PP> FIRE-5583, FIRE-5220: Option to show Camera Controls always opaque
+	case TT_FORCE_OPAQUE:
+		alpha = 1.f;
+		break;
+	// </FS:PP>
+
 	}
 
 	return alpha;
@@ -1086,3 +1123,23 @@ void LLUICtrl::addInfo(LLSD & info)
 	LLView::addInfo(info);
 	info["value"] = getValue();
 }
+
+// <FS:Zi> Decide if a control should be visible, according to ControlVisibility
+void LLUICtrl::decideVisibility()
+{
+	BOOL visible=TRUE;
+
+	if(mMakeVisibleControlVariable &&
+	   !mMakeVisibleControlVariable->getValue().asBoolean())
+	{
+		visible=FALSE;
+	}
+	else if(mMakeInvisibleControlVariable &&
+	        mMakeInvisibleControlVariable->getValue().asBoolean())
+	{
+		visible=FALSE;
+	}
+
+	setVisible(visible);
+}
+// </FS:Zi>

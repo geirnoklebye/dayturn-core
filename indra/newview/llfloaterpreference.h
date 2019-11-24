@@ -170,6 +170,7 @@ public:
 	void onClickSetKey();
 	void setKey(KEY key);
 	void onClickSetMiddleMouse();
+	void onClickPreviewUISound(const LLSD& ui_sound_id); // <FS:PP> FIRE-8190: Preview function for "UI Sounds" Panel
 	void onClickSetSounds();
 	void onClickEnablePopup();
 	void onClickDisablePopup();	

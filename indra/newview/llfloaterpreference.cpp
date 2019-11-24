@@ -458,6 +458,7 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mCommitCallbackRegistrar.add("Pref.ClearLog",				boost::bind(&LLConversationLog::onClearLog, &LLConversationLog::instance()));
 	mCommitCallbackRegistrar.add("Pref.DeleteTranscripts",      boost::bind(&LLFloaterPreference::onDeleteTranscripts, this));
 	mCommitCallbackRegistrar.add("UpdateFilter", boost::bind(&LLFloaterPreference::onUpdateFilterTerm, this, false)); // <FS:ND/> Hook up for filtering
+	mCommitCallbackRegistrar.add("PreviewUISound",				boost::bind(&LLFloaterPreference::onClickPreviewUISound, this, _2));
 }
 
 void LLFloaterPreference::processProperties( void* pData, EAvatarProcessorType type )
@@ -884,7 +885,7 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 	// this variable and if that follows it are used to properly handle do not disturb mode response message
 	static bool initialized = FALSE;
 	// if user is logged in and we haven't initialized do not disturb mode response yet, do it
-	if (!initialized && LLStartUp::getStartupState() == STATE_STARTED)
+	if (!initialized && LLStartUp::getStartupState() >= STATE_MISC)
 	{
 		// Special approach is used for do not disturb response localization, because "DoNotDisturbModeResponse" is
 		// in non-localizable xml, and also because it may be changed by user and in this case it shouldn't be localized.
@@ -898,6 +899,18 @@ void LLFloaterPreference::onOpen(const LLSD& key)
 		gSavedPerAccountSettings.getControl("DoNotDisturbModeResponse")->getSignal()->connect(boost::bind(&LLFloaterPreference::onDoNotDisturbResponseChanged, this));
 		// <FS:Ansariel> FIRE-17630: Properly disable per-account settings backup list
 		getChildView("restore_per_account_disable_cover")->setVisible(FALSE);
+
+		// <FS:Ansariel> Keyword settings are per-account; enable after logging in
+		LLPanel* keyword_panel = getChild<LLPanel>("ChatKeywordAlerts");
+		for (child_list_t::const_iterator iter = keyword_panel->getChildList()->begin();
+			 iter != keyword_panel->getChildList()->end(); ++iter)
+		{
+			LLUICtrl* child = static_cast<LLUICtrl*>(*iter);
+			LLControlVariable* enabled_control = child->getEnabledControlVariable();
+			BOOL enabled = !enabled_control || enabled_control->getValue().asBoolean();
+			child->setEnabled(enabled);
+		}
+		// </FS:Ansariel>
 	}
 	gAgent.sendAgentUserInfoRequest();
 
@@ -1894,6 +1907,13 @@ void LLFloaterPreference::onClickSetSounds()
 	// or if sound effects are disabled.
 	getChild<LLCheckBoxCtrl>("gesture_audio_play_btn")->setEnabled(!gSavedSettings.getBOOL("MuteSounds"));
 }
+// <FS:PP> FIRE-8190: Preview function for "UI Sounds" Panel
+void LLFloaterPreference::onClickPreviewUISound(const LLSD& ui_sound_id)
+{
+	std::string uisndid = ui_sound_id.asString();
+	make_ui_sound(uisndid.c_str(), true);
+}
+// </FS:PP> FIRE-8190: Preview function for "UI Sounds" Panel
 
 /*
 void LLFloaterPreference::onClickSkipDialogs()

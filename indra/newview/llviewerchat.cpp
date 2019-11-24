@@ -36,6 +36,7 @@
 #include "llviewerregion.h"
 #include "llworld.h"
 #include "llinstantmessage.h" //SYSTEM_FROM
+#include "fskeywords.h"
 
 // LLViewerChat
 LLViewerChat::font_change_signal_t LLViewerChat::sChatFontChangedSignal;
@@ -43,6 +44,7 @@ LLViewerChat::font_change_signal_t LLViewerChat::sChatFontChangedSignal;
 //static 
 void LLViewerChat::getChatColor(const LLChat& chat, LLColor4& r_color)
 {
+	const bool is_local = true; // replaces call to fsdata
 	if(chat.mMuted)
 	{
 		r_color= LLUIColorTable::instance().getColor("LtGray");
@@ -95,6 +97,15 @@ void LLViewerChat::getChatColor(const LLChat& chat, LLColor4& r_color)
 			default:
 				r_color.setToWhite();
 		}
+		
+		// <FS:KC> Keyword alerts
+		static LLCachedControl<LLColor4> sFSKeywordColor(gSavedPerAccountSettings, "FSKeywordColor");
+		static LLCachedControl<bool> sFSKeywordChangeColor(gSavedPerAccountSettings, "FSKeywordChangeColor");
+		if (sFSKeywordChangeColor && FSKeywords::getInstance()->chatContainsKeyword(chat, is_local))
+		{
+			r_color = sFSKeywordColor;
+		}
+		// </FS:KC>
 		
 		if (!chat.mPosAgent.isExactlyZero())
 		{
