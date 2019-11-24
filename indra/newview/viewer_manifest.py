@@ -492,9 +492,11 @@ class WindowsManifest(ViewerManifest):
             # Find kokua-bin.exe in the 'configuration' dir, then rename it to the result of final_exe.
             self.path(src='%s/kokua-bin.exe' % self.args['configuration'], dst=self.final_exe())
 
+            """
             with self.prefix(src=os.path.join(pkgdir, "VMP")):
                 # include the compiled launcher scripts so that it gets included in the file_list
                 self.path('SLVersionChecker.exe')
+            """
 
             with self.prefix(dst="vmp_icons"):
                 with self.prefix(src=self.icon_path()):
@@ -767,7 +769,7 @@ class WindowsManifest(ViewerManifest):
         substitution_strings['installer_file'] = installer_file
         
         version_vars = """
-        !define INSTEXE "SLVersionChecker.exe"
+        !define INSTEXE "%(final_exe)s"
         !define VERSION "%(version_short)s"
         !define VERSION_LONG "%(version)s"
         !define VERSION_DASHES "%(version_dashes)s"
@@ -812,7 +814,7 @@ class WindowsManifest(ViewerManifest):
         # Unlike the viewer binary, the VMP filenames are invariant with respect to version, os, etc.
         for exe in (
             self.final_exe(),
-            "SLVersionChecker.exe",
+            
             ):
             self.sign(exe)
             
