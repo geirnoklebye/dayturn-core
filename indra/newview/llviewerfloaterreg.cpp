@@ -176,6 +176,7 @@
 #include "fspanelclassified.h"
 #include "fsfloaterimport.h"
 // NaCl - Sound explorer
+#include "fsfloaterposestand.h"
 #include "NACLfloaterexploresounds.h"
 // NaCl End
 
@@ -412,6 +413,7 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("animation_overrider", "floater_ao.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FloaterAO>);	// ## Zi: Animation Overrider	
     LLFloaterReg::add("fs_export", "floater_fs_export.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterObjectExport>);
 	LLFloaterReg::add("fs_import", "floater_fs_import.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterImport>);
+	LLFloaterReg::add("fs_posestand", "floater_fs_posestand.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterPoseStand>);
     	// <FS:CR> FIRE-6310: Include Legacy Search
 	LLFloaterReg::add("search_legacy", "floater_fs_search_legacy.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterSearchLegacy>);
 	LLFloaterReg::add("publish_classified_fs", "floater_publish_classified.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSPublishClassifiedFloater>);

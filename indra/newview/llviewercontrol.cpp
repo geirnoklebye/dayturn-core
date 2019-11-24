@@ -75,6 +75,8 @@
 #include "llspellcheck.h"
 #include "llslurl.h"
 #include "llstartup.h"
+#include "fsfloaterposestand.h"
+#include "llfloaterreg.h"
 
 // Third party library includes
 #include <boost/algorithm/string.hpp>
@@ -595,6 +597,18 @@ bool toggle_show_object_render_cost(const LLSD& newvalue)
 void handleRenderAutoMuteByteLimitChanged(const LLSD& new_value);
 
 // <FS:Ansariel> Output device selection
+// <FS:CR> Posestand Ground Lock
+static void handleSetPoseStandLock(const LLSD& newvalue)
+{
+	FSFloaterPoseStand* pose_stand = LLFloaterReg::findTypedInstance<FSFloaterPoseStand>("fs_posestand");
+	if (pose_stand)
+	{
+		pose_stand->setLock(newvalue);
+		pose_stand->onCommitCombo();
+	}
+		
+}
+// </FS:CR> Posestand Ground Lock
 void handleOutputDeviceChanged(const LLSD& newvalue)
 {
    if (gAudiop)
@@ -783,6 +797,8 @@ void settings_setup_listeners()
 	gSavedSettings.getControl("RenderAutoMuteByteLimit")->getSignal()->connect(boost::bind(&handleRenderAutoMuteByteLimitChanged, _2));
 	gSavedPerAccountSettings.getControl("AvatarHoverOffsetZ")->getCommitSignal()->connect(boost::bind(&handleAvatarHoverOffsetChanged, _2));
     // <FS:Ansariel> Output device selection
+	// <FS:CR> Pose stand ground lock
+	gSavedSettings.getControl("FSPoseStandLock")->getSignal()->connect(boost::bind(&handleSetPoseStandLock, _2));
     gSavedSettings.getControl("FSOutputDeviceUUID")->getSignal()->connect(boost::bind(&handleOutputDeviceChanged, _2));
     // <FS:Ansariel> FIRE-18250: Option to disable default eye movement
     gSavedSettings.getControl("FSStaticEyesUUID")->getSignal()->connect(boost::bind(&handleStaticEyesChanged));
