@@ -136,8 +136,9 @@ set(viewer_SOURCE_FILES
     fsareasearch.cpp
     fsareasearchmenu.cpp    
     fsexportperms.cpp
-    fsfloaterimport.cpp
     fsfloaterexport.cpp
+    fsfloaterimport.cpp
+    fsfloaterposestand.cpp
     fsfloaterprofile.cpp
     fsfloatersearch.cpp
     fsfloatersearchlegacy.cpp
@@ -801,6 +802,7 @@ set(viewer_HEADER_FILES
     fsexportperms.h
     fsfloaterexport.h    
     fsfloaterimport.h
+    fsfloaterposestand.h
     fsfloaterprofile.h
     fsfloatersearch.h
     fsfloatersearchlegacy.h
@@ -1805,6 +1807,7 @@ set(viewer_APPSETTINGS_FILES
     app_settings/logcontrol.xml
     app_settings/low_graphics.xml
     app_settings/mid_graphics.xml
+    app_settings/posestand.xml
     app_settings/settings.xml
     app_settings/settings_crash_behavior.xml
     app_settings/settings_files.xml
