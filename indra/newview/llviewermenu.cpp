@@ -8111,6 +8111,49 @@ class LLCheckControl : public view_listener_t
 		return new_value;
 	}
 };
+
+// <FS:Ansariel> Control enhancements
+class LLTogglePerAccountControl : public view_listener_t
+{
+	bool handleEvent(const LLSD& userdata)
+	{
+		std::string control_name = userdata.asString();
+		BOOL checked = gSavedPerAccountSettings.getBOOL( control_name );
+		gSavedPerAccountSettings.setBOOL( control_name, !checked );
+		return true;
+	}
+};
+
+class LLCheckPerAccountControl : public view_listener_t
+{
+	bool handleEvent( const LLSD& userdata)
+	{
+		std::string callback_data = userdata.asString();
+		bool new_value = gSavedPerAccountSettings.getBOOL(callback_data);
+		return new_value;
+	}
+};
+
+class FSResetControl : public view_listener_t
+{
+	bool handleEvent( const LLSD& userdata)
+	{
+		std::string callback_data = userdata.asString();
+		gSavedSettings.getControl(callback_data)->resetToDefault(true);
+		return true;
+	}
+};
+class FSResetPerAccountControl : public view_listener_t
+{
+	bool handleEvent( const LLSD& userdata)
+	{
+		std::string callback_data = userdata.asString();
+		gSavedPerAccountSettings.getControl(callback_data)->resetToDefault(true);
+		return true;
+	}
+};
+// </FS:Ansariel> Control enhancements
+
 // <FS:Ansariel> Reset Mesh LOD; Forcing highest LOD on each mesh briefly should fix
 //               broken meshes bursted into triangles
 static void reset_mesh_lod(LLVOAvatar* avatar)
@@ -10159,6 +10202,12 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLGoToObject(), "GoToObject");
 	commit.add("PayObject", boost::bind(&handle_give_money_dialog));
 
+	// <FS:Ansariel> Control enhancements
+	view_listener_t::addMenu(new LLTogglePerAccountControl(), "TogglePerAccountControl");
+	view_listener_t::addMenu(new LLCheckPerAccountControl(), "CheckPerAccountControl");
+	view_listener_t::addMenu(new FSResetControl(), "ResetControl");
+	view_listener_t::addMenu(new FSResetPerAccountControl(), "ResetPerAccountControl");
+	// </FS:Ansariel> Control enhancements
 	commit.add("Inventory.NewWindow", boost::bind(&LLPanelMainInventory::newWindow));
 
 	enable.add("EnablePayObject", boost::bind(&enable_pay_object));

@@ -55,6 +55,13 @@ class LLWindow;
 class LLView;
 class LLHelp;
 
+// <FS:PP> UI Sounds preview
+// void make_ui_sound(const char* name);
+void make_ui_sound(const char* name, bool force_sound = false);
+// </FS:PP> UI Sounds preview
+// <FS:CR>
+//void make_ui_sound_deferred(const char * name);
+void make_ui_sound_deferred(const char* name, bool force_sound = false);
 
 // this enum is used by the llview.h (viewer) and the llassetstorage.h (viewer and sim) 
 enum EDragAndDropType
@@ -102,8 +109,6 @@ enum EAddPosition
 };
 
 
-void make_ui_sound(const char* name);
-void make_ui_sound_deferred(const char * name);
 
 class LLImageProviderInterface;
 

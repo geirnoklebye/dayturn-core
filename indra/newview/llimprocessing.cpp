@@ -56,6 +56,7 @@
 
 #include <boost/regex.hpp>
 #include "boost/lexical_cast.hpp"
+#include "fskeywords.h"
 #if LL_MSVC
 // disable boost::lexical_cast warning
 #pragma warning (disable:4702)
@@ -508,6 +509,16 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 
                 LL_DEBUGS("Messaging") << "session_id( " << session_id << " ), from_id( " << from_id << " )" << LL_ENDL;
 
+                // <FS:PP> FIRE-10178: Keyword Alerts in group IM do not work unless the group is in the foreground (notification on receipt of IM)
+                chat.mText = buffer;
+                bool keyword_alert_performed = false;
+                if (FSKeywords::getInstance()->chatContainsKeyword(chat, false))
+                {
+                    FSKeywords::notify(chat);
+                    keyword_alert_performed = true;
+                }
+                // </FS:PP>
+
                 // add to IM panel, but do not bother the user
                 gIMMgr->addMessage(
                     session_id,
@@ -520,7 +531,9 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                     parent_estate_id,
                     region_id,
                     position,
-                    true);
+                    true,
+                    false,
+                    keyword_alert_performed);
 
                 if (!gIMMgr->isDNDMessageSend(session_id))
                 {
@@ -571,6 +584,18 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                 }
                 if (!mute_im)
                 {
+                    // <FS:PP> FIRE-10178: Keyword Alerts in group IM do not work unless the group is in the foreground (notification on receipt of IM)
+                    chat.mText = message;
+                    bool keyword_alert_performed = false;
+                    if (FSKeywords::getInstance()->chatContainsKeyword(chat, false))
+                    {
+                        FSKeywords::notify(chat);
+                        keyword_alert_performed = true;
+                    }
+                    // </FS:PP>
+
+                    buffer = saved + message;
+
                     gIMMgr->addMessage(
                         session_id,
                         from_id,
@@ -582,7 +607,9 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                         parent_estate_id,
                         region_id,
                         position,
-                        true);
+                        true,
+                        false,
+                        keyword_alert_performed);
                 }
                 else
                 {
@@ -1006,6 +1033,13 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
             chat.mURL = LLSLURL("objectim", session_id, "").getSLURLString();
             chat.mText = message;
 
+            // <FS:PP> FIRE-10178: Keyword Alerts in group IM do not work unless the group is in the foreground (notification on receipt of Task IM)
+            if (FSKeywords::getInstance()->chatContainsKeyword(chat, true))
+            {
+                FSKeywords::notify(chat);
+            }
+            // </FS:PP>
+
             // Note: lie to Nearby Chat, pretending that this is NOT an IM, because
             // IMs from obejcts don't open IM sessions.
             LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::getTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
@@ -1102,6 +1136,17 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
             }
             else
             {
+
+                // <FS:PP> FIRE-10178: Keyword Alerts in group IM do not work unless the group is in the foreground (notification on receipt of IM)
+                chat.mText = message;
+                bool keyword_alert_performed = false;
+                if (FSKeywords::getInstance()->chatContainsKeyword(chat, false))
+                {
+                    FSKeywords::notify(chat);
+                    keyword_alert_performed = true;
+                }
+                // </FS:PP>
+
                 // standard message, not from system
                 std::string saved;
                 if (offline == IM_OFFLINE)
@@ -1124,7 +1169,9 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                     parent_estate_id,
                     region_id,
                     position,
-                    true);
+                    true,
+                    false,
+                    keyword_alert_performed);
             }
             break;
 

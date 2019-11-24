@@ -1,34 +1,48 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <panel
-    border="true"
-    height="408"
-    label="Text Chat"
-    layout="topleft"
-    left="102"
-    name="chat"
-    top="1"
-    width="517">
-    
+ border="true"
+ follows="all"
+ height="408"
+ layout="topleft"
+ left="1"
+ top="1"
+ width="517"
+ label="Text Chat"
+ name="chat">
+
+<tab_container
+ label="Firestorm Prefs"
+ layout="topleft"
+ follows="all"
+ top="5"
+ bottom="-1"
+ left="1"
+ right="-1"
+ name="tabs"
+ tab_min_width="50"
+ tab_position="top" >
+
+        <!-- Chat: General -->
+        <panel
+         top_pad="1"
+         bottom="-1"
+         left="1"
+         right="-1"
+         follows="all"
+         label="General"
+         name="ChatGeneral" >
+
   <check_box
       control_name="ChatAutocompleteGestures"
       height="16"
       initial_value="true"
       label="Auto-complete gestures in nearby chat"
       layout="topleft"
-      top="17"
-      left="13"
+      top="10"
+      left="20"
       name="auto_complete_gestures"
       width="330">
   </check_box>
-
-  <panel
-      border="false"
-      height="60"
-      layout="topleft"
-      name="general_chat_settings" 
-      top="10"
-      left="13"
-      width="517">
 
     <check_box
         control_name="PlayTypingAnim"
@@ -36,7 +50,7 @@
         initial_value="true"
         label="Play typing animation when chatting"
         layout="topleft"
-        top="0"
+	      left="20"
         name="play_typing_animation"
         width="330">
     </check_box>
@@ -46,7 +60,6 @@
         initial_value="false"
         label="Display plain text chat"
         layout="topleft"
-        top_pad="2"
         name="plain_test_chat_history"
         width="330">
     </check_box>
@@ -56,37 +69,34 @@
         label="Email me IMs when I'm offline"
         layout="topleft"
         name="send_im_to_email"
-        top_pad="2"
         width="330">
     </check_box>
-
     <check_box
         control_name="VoiceCallsFriendsOnly"
         height="16"
         label="Only friends and groups can call or IM me"
         layout="topleft"
         name="voice_call_friends_only_check"
-        top_pad="2"
         width="350">     
     </check_box>
-
     <text
         layout="topleft"
-        left="345"
+        follows="left|top"
+        left="24"
+        top_pad="10"
         height="12"
         name="font_size"
-        width="120"
-        top="0">
+        width="120">
       Font size:
     </text>
-
     <combo_box
         control_name="ChatFontSize"
         height="23"
         layout="topleft"
-        left="341"
+        follows="left|top"
+        left="80"
         name="chat_font_size"
-        top_pad="5"
+        top_pad="-18"
         width="100">
       <item
           label="Small"
@@ -101,33 +111,207 @@
           name="Large"
           value="2"/>  
     </combo_box>
-
     <check_box
         control_name="UseChatBubbles"
         height="16"
         label="Bubble Chat"
+        follows="top|left"
         layout="topleft"
         top_pad="4"
+        left="20"
         name="bubble_text_chat"
         width="330">
     </check_box>
-      
-  </panel>
-
-  <panel
-      border="false"
-      height="165"
-      layout="topleft"
-      name="im_notification_settings" 	
-      left="13"
-      width="517">
-
     <text
+        layout="topleft"
+        left="24"
+        name="play_sound"
+        width="100"
+        follows="top|left"
+        top_pad="8"
+        visible="true">
+      Play sound:
+    </text>
+    <check_box
+        control_name="PlaySoundNewConversation"
+        height="16"
+        label="New conversation"
+        layout="topleft"
+        left_pad="15"
+        top_pad="-10"
+        name="new_conversation"
+        width="150" />
+    <check_box
+        control_name="PlaySoundIncomingVoiceCall"
+        height="16"
+        label="Incoming voice call"
+        layout="topleft"
+        top_pad="6"
+        name="incoming_voice_call"
+        width="150" />
+    <check_box
+        control_name="PlaySoundTeleportOffer"
+        height="16"
+        label="Teleport offer"
+        layout="topleft"
+        left_pad="35"
+        top_pad="-38"
+        name="teleport_offer"
+        width="150" />
+    <check_box
+        control_name="PlaySoundInventoryOffer"
+        height="16"
+        label="Inventory offer"
+        layout="topleft"
+        top_pad="6"
+        name="inventory_offer"
+        width="150" />
+    <text
+        name="logging_label"
+        layout="topleft"
+        left="24"
+        follows="top|left"
+        top_pad="8"
+        height="12"
+        width="55">
+        Save:
+    </text>
+    <combo_box
+        enabled="false"
+        control_name="KeepConversationLogTranscripts"
+        height="23"
+        layout="topleft"
+        follows="top|left"
+        left_pad="0"
+        top_pad="-16"
+        name="conversation_log_combo"
+        width="165">
+        <item
+            name="log_and_transcripts"
+            label="Log and transcripts"
+            value="2"/>
+        <item
+            name="log_only"
+            label="Log only"
+            value="1"/>
+        <item
+            name="no_log_or_transcript"
+            label="No log or transcripts"
+            value="0"/>
+    </combo_box>
+    <button
+        enabled="false"
+        height="23"
+        label="Clear log..."
+        layout="topleft"
+        follows="top|left"
+        left_pad="5"
+        name="clear_log"
+        width="110">
+        <commit_callback
+            function="Pref.ClearLog" />
+    </button>  
+    <button
+        enabled="false"
+        height="23"
+        label="Delete transcripts..."
+        layout="topleft"
+        left_pad="5"
+        follows="top|left"
+        name="delete_transcripts"
+        width="147">
+        <button.commit_callback
+            function="Pref.DeleteTranscripts" />
+    </button> 
+    <text
+        name="log_location_label"
+        layout="topleft"
+        follows="top|left"
+        left="24"
+        height="12"
+        top_pad="15"
+        width="55">
+        Location:
+    </text>  
+    <line_editor
+        control_name="InstantMessageLogPath"
+        border_style="line"
+        border_thickness="1"
+        font="SansSerif"
+        height="23"
+        layout="topleft"
+        follows="top|left"
+        left_pad="55"
+        max_length_bytes="4096"
+        name="log_path_string"
+        top_delta="-5"
+        width="185">
+    </line_editor> 
+    <button
+        enabled="false"
+        follows="left|top"
+        height="23"
+        label="Browse..."
+        label_selected="Browse"
+        layout="topleft"
+        left_pad="5"
+        name="log_path_button"
+        top_delta="0"
+        width="112">
+      <commit_callback function="Pref.LogPath" />
+    </button>
+  
+  <button
+      height="23"
+      label="Translation..."
+      layout="topleft"
+      left="9"
+      name="ok_btn"
+      top="-29"
+      width="170">
+    <commit_callback
+        function="Pref.TranslationSettings" />
+  </button>
+  <button
+      height="23"
+      layout="topleft"
+      top_pad="-23"
+      left_pad="5"
+      name="autoreplace_showgui"
+      commit_callback.function="Pref.AutoReplace"
+      label="Auto-Replace..."
+      width="150">
+  </button>
+  <button
+      height="23"
+      layout="topleft"
+      top_pad="-23"
+      left_pad="5"
+      name="spellcheck_showgui"
+      commit_callback.function="Pref.SpellChecker"
+      label="Spell Checking..."
+      width="150">
+  </button>
+         
+        </panel>
+
+        <!-- Chat: Notifications -->
+        <panel
+         top_pad="1"
+         bottom="-1"
+         left="1"
+         right="-1"
+         follows="all"
+         label="Notifications"
+         name="ChatNotifications" >
+ 
+     <text
         layout="topleft"
         height="12"
         name="friend_ims"
         width="145"
-        left="0"
+        follows="left|top"
+        left="20"
         top_pad="20">
       Friend IMs:
     </text>
@@ -171,7 +355,8 @@
         height="12"
         name="non_friend_ims"
         width="145"
-        left="0"
+        follows="left|top"
+        left="20"
         top_pad="11">
       Non-friend IMs:
     </text>
@@ -212,7 +397,8 @@
     </check_box>
     <text
         layout="topleft"
-        left="0"
+        follows="left|top"
+        left="20"
         height="13"
         name="conference_ims"
         width="145"
@@ -256,7 +442,8 @@
     </check_box>
     <text
         layout="topleft"
-        left="0"
+        follows="left|top"
+        left="20"
         height="13"
         name="group_chat"
         width="145"
@@ -300,7 +487,8 @@
     </check_box>
     <text
         layout="topleft"
-        left="0"
+        follows="left|top"
+        left="20"
         height="12"
         name="nearby_chat"
         width="145"
@@ -344,7 +532,8 @@
     </check_box>
     <text
         layout="topleft"
-        left="0"
+        follows="left|top"
+        left="20"
         height="12"
         name="object_ims"
         width="145"
@@ -388,7 +577,8 @@
     </check_box>
     <text
         layout="topleft"
-        left="0"
+        follows="left|top"
+        left="20"
         height="13"
         name="notifications_alert"
         width="500"
@@ -397,210 +587,211 @@
         text_color="DrYellow">
       To temporarily stop all notifications, use Communicate &gt; Do Not Disturb.
     </text>
+        
+        </panel>
 
-  </panel>
+	<!-- Chat: Keyword Alerts -->
+	<panel
+	 bottom="-1"
+	 left="1"
+	 right="-1"
+	 follows="all"
+	 label="Keyword Alerts"
+	 name="ChatKeywordAlerts">
 
-  <panel
-      border="false"
-      height="50"
-      layout="topleft"
-      name="play_sound_settings"  	
-      left="13"
-      top_pad="10"
-      width="517">
+		<check_box
+		 enabled="false"
+		 layout="topleft"
+		 follows="left|top"
+		 top="5"
+		 left="20"
+		 width="50"
+		 height="20"
+		 control_name="FSKeywordOn"
+		 name="FSKeywordOn"
+		 label="Enable Keyword Alerts"/>
+		<check_box
+		 enabled="false"
+		 enabled_control="FSKeywordOn"
+		 layout="topleft"
+		 follows="left|top"
+		 top_delta="25"
+		 left="20"
+		 width="50"
+		 height="20"
+		 control_name="FSKeywordInChat"
+		 name="FSKeywordInChat"
+		 label="Look for Keywords In Local Chat"/>
+		<check_box
+		 enabled="false"
+		 enabled_control="FSKeywordOn"
+		 layout="topleft"
+		 follows="left|top"
+		 top_delta="25"
+		 left="20"
+		 width="150"
+		 height="20"
+		 control_name="FSKeywordInIM"
+		 name="FSKeywordInIM"
+		 label="Look for Keywords In IMs and Group Chat"/>
+		<check_box
+		 enabled="false"
+		 enabled_control="FSKeywordOn"
+		 layout="topleft"
+		 follows="left|top"
+		 top_delta="25"
+		 left="20"
+		 width="150"
+		 height="20"
+		 control_name="FSKeywordSpeakersName"
+		 name="FSKeywordSpeakersName"
+		 label="Check sender's name for keywords"/>
+		<check_box
+		 enabled="false"
+		 enabled_control="FSKeywordOn"
+		 layout="topleft"
+		 follows="left|top"
+		 top_delta="25"
+		 left="20"
+		 width="150"
+		 height="20"
+		 control_name="FSKeywordCaseSensitive"
+		 name="FSKeywordCaseSensitive"
+		 label="All Keywords are case-sensitive"/>
+		<check_box
+		 enabled="false"
+		 enabled_control="FSKeywordOn"
+		 layout="topleft"
+		 follows="left|top"
+		 top_delta="25"
+		 left="20"
+		 width="150"
+		 height="20"
+		 control_name="FSKeywordMatchWholeWords"
+		 name="FSKeywordMatchWholeWords"
+		 label="Only match whole words"/>
+		<text
+		 layout="topleft"
+		 follows="left|top"
+		 top_delta="30"
+		 left="20"
+		 height="20"
+		 width="250"
+		 name="textFSKeywords">
+		  Keywords (separated by commas):
+		</text>
+		<text_editor
+		 enabled="false"
+		 border_visible="true"
+		 bg_readonly_color="MouseGray"
+		 enabled_control="FSKeywordOn"
+		 commit_on_focus_lost="true"
+		 follows="left|top"
+		 top_delta="25"
+		 layout="topleft"
+		 left="20"
+		 max_length="20480"
+		 height="55"
+		 name="FSKeywords"
+		 control_name="FSKeywords"
+		 right="-10"
+		 use_ellipses="false"
+		 word_wrap="true"/>
 
-    <text
-        layout="topleft"
-        left="0"
-        name="play_sound"
-        width="100"
-        top_pad="8"
-        visible="true">
-      Play sound:
-    </text>
-    <check_box
-        control_name="PlaySoundNewConversation"
-        height="16"
-        label="New conversation"
-        layout="topleft"
-        left_pad="15"
-        top_pad="-10"
-        name="new_conversation"
-        width="150" />
-    <check_box
-        control_name="PlaySoundIncomingVoiceCall"
-        height="16"
-        label="Incoming voice call"
-        layout="topleft"
-        top_pad="6"
-        name="incoming_voice_call"
-        width="150" />
-    <check_box
-        control_name="PlaySoundTeleportOffer"
-        height="16"
-        label="Teleport offer"
-        layout="topleft"
-        left_pad="35"
-        top_pad="-38"
-        name="teleport_offer"
-        width="150" />
-    <check_box
-        control_name="PlaySoundInventoryOffer"
-        height="16"
-        label="Inventory offer"
-        layout="topleft"
-        top_pad="6"
-        name="inventory_offer"
-        width="150" />
-    <view_border
-        bevel_style="none"
-        height="0"
-        layout="topleft"
-        left="0"
-        name="cost_text_border"
-        top_pad="7"
-        width="492"/>
-  </panel>
+		<check_box
+		 enabled="false"
+		 enabled_control="FSKeywordOn"
+		 layout="topleft"
+		 follows="left|top"
+		 top_pad="10"
+		 left="20"
+		 width="50"
+		 height="20"
+		 control_name="FSKeywordChangeColor"
+		 name="FSKeywordChangeColor"
+		 label="Enable Color Alert"/>
 
-  <panel
-      height="50"
-      layout="topleft"
-      name="log_settings" 	
-      left="13"
-      top_pad="10"
-      width="505">
+		<color_swatch
+		 enabled="false"
+		 enabled_control="FSKeywordOn"
+		 control_name="FSKeywordColor"
+		 border.border_thickness="0"
+		 label_height="0"
+		 layout="topleft"
+		 follows="left|top"
+		 top_delta="2"
+		 left="150"
+		 height="15"
+		 width="15"
+		 name="colorswatch"
+		 tool_tip="Click to open color picker"/>
 
-    <text
-        name="logging_label"
-        layout="topleft"
-        left="0"
-        text_color="White"
-        height="12"
-        top="5"
-        width="55">
-        Save:
-    </text>
+		<check_box
+		 enabled="false"
+		 enabled_control="FSKeywordOn"
+		 layout="topleft"
+		 follows="left|top"
+		 top_delta="23"
+		 left="20"
+		 width="50"
+		 height="20"
+		 control_name="PlayModeUISndFSKeywordSound"
+		 name="FSKeywordPlaySound"
+		 label="Play alert sound"/>
 
-    <combo_box
-        enabled="false"
-        control_name="KeepConversationLogTranscripts"
-        height="23"
-        layout="topleft"
-        left_pad="5"
-        name="conversation_log_combo"
-        top="0"
-        width="165">
-        <item
-            name="log_and_transcripts"
-            label="Log and transcripts"
-            value="2"/>
-        <item
-            name="log_only"
-            label="Log only"
-            value="1"/>
-        <item
-            name="no_log_or_transcript"
-            label="No log or transcripts"
-            value="0"/>
-    </combo_box>
+		<text
+		 layout="topleft"
+		 follows="left|top"
+		 top_delta="30"
+		 left="20"
+		 height="14"
+		 width="120"
+		 name="textFSKeywordSound">
+		  Alert Sound UUID:
+		</text>
+		<line_editor
+		 enabled="false"
+		 enabled_control="PlayModeUISndFSKeywordSound"
+		 follows="left|top"
+		 left_pad="5"
+		 height="20"
+		 max_length_chars="256"
+		 name="FSKeywordSound"
+		 control_name="UISndFSKeywordSound"
+		 width="250"/>
+		<button
+		 enabled="false"
+		 enabled_control="PlayModeUISndFSKeywordSound"
+		 follows="left|top"
+		 name="Prev_UISndFSKeywordSound"
+		 height="20"
+		 label="P"
+		 layout="topleft"
+		 top_delta="-1"
+		 left_pad="1"
+		 width="17"
+		 tool_tip="Preview this sound.">
+			 <button.commit_callback
+			  function="PreviewUISound"
+			  parameter="UISndFSKeywordSound"/>
+		</button>
+		<button
+		 enabled="false"
+		 enabled_control="PlayModeUISndFSKeywordSound"
+		 follows="left|top"
+		 name="Def_UISndFSKeywordSound"
+		 height="20"
+		 label="D"
+		 layout="topleft"
+		 left_pad="1"
+		 width="17"
+		 tool_tip="Reset to the default UUID.">
+			 <button.commit_callback
+			  function="ResetPerAccountControl"
+			  parameter="UISndFSKeywordSound"/>
+		</button>
+		 
+	</panel>
 
-    <button
-        enabled="false"
-        height="23"
-        label="Clear log..."
-        layout="topleft"
-        left_pad="5"
-        top="0"
-        name="clear_log"
-        width="110">
-        <commit_callback
-            function="Pref.ClearLog" />
-    </button>
-  
-    <button
-        enabled="false"
-        height="23"
-        label="Delete transcripts..."
-        layout="topleft"
-        left_pad="5"
-        top="0"
-        name="delete_transcripts"
-        width="147">
-        <button.commit_callback
-            function="Pref.DeleteTranscripts" />
-    </button>
-  
-    <text
-        name="log_location_label"
-        layout="topleft"
-        left="0"
-        text_color="White"
-        height="12"
-        top_pad="15"
-        width="55">
-        Location:
-    </text>
-  
-    <line_editor
-        control_name="InstantMessageLogPath"
-        border_style="line"
-        border_thickness="1"
-        font="SansSerif"
-        height="23"
-        layout="topleft"
-        left_pad="55"
-        max_length_bytes="4096"
-        name="log_path_string"
-        top_delta="-5"
-        width="185">
-    </line_editor>
-  
-    <button
-        enabled="false"
-        follows="left|top"
-        height="23"
-        label="Browse..."
-        label_selected="Browse"
-        layout="topleft"
-        left_pad="5"
-        name="log_path_button"
-        top_delta="0"
-        width="112">
-      <commit_callback function="Pref.LogPath" />
-    </button>
-
-  </panel>
-  
-  <button
-      height="23"
-      label="Translation..."
-      layout="topleft"
-      left="9"
-      name="ok_btn"
-      top="-29"
-      width="170">
-    <commit_callback
-        function="Pref.TranslationSettings" />
-  </button>
-  <button
-      height="23"
-      layout="topleft"
-      top_pad="-23"
-      left_pad="5"
-      name="autoreplace_showgui"
-      commit_callback.function="Pref.AutoReplace"
-      label="Auto-Replace..."
-      width="150">
-  </button>
-  <button
-      height="23"
-      layout="topleft"
-      top_pad="-23"
-      left_pad="5"
-      name="spellcheck_showgui"
-      commit_callback.function="Pref.SpellChecker"
-      label="Spell Checking..."
-      width="150">
-  </button>
-
+</tab_container>
 </panel>

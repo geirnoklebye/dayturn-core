@@ -89,21 +89,34 @@ static LLDefaultChildRegistry::Register<LLToolBar> register_toolbar("toolbar");
 // Functions
 //
 
-LLUUID find_ui_sound(const char * namep)
+// <FS:PP> UI Sounds preview
+//LLUUID find_ui_sound(const char * namep)
+LLUUID find_ui_sound(const char * namep, bool force_sound)
+// </FS:PP> UI Sounds preview
 {
 	std::string name = ll_safe_string(namep);
 	LLUUID uuid = LLUUID(NULL);
+	// <FS:Ansariel> Per-account sounds
 	LLUI *ui_inst = LLUI::getInstance();
-	if (!ui_inst->mSettingGroups["config"]->controlExists(name))
+	//if (!ui_inst->mSettingGroups["config"]->controlExists(name))
+	if (!ui_inst->mSettingGroups["config"]->controlExists(name) && !ui_inst->mSettingGroups["account"]->controlExists(name))
+	// </FS:Ansariel>
 	{
 		LL_WARNS() << "tried to make UI sound for unknown sound name: " << name << LL_ENDL;	
 	}
 	else
 	{
-		uuid = LLUUID(ui_inst->mSettingGroups["config"]->getString(name));
+		// <FS:Ansariel> Per-account sounds
+		//uuid = LLUUID(ui_inst->mSettingGroups["config"]->getString(name));
+		std::string group_name = ui_inst->mSettingGroups["config"]->controlExists(name) ? "config" : "account";
+		uuid = LLUUID(ui_inst->mSettingGroups[group_name]->getString(name));
+		// </FS:Ansariel>
 		if (uuid.isNull())
 		{
-			if (ui_inst->mSettingGroups["config"]->getString(name) == LLUUID::null.asString())
+			// <FS:Ansariel> Per-account sounds
+			//if (ui_inst->mSettingGroups["config"]->getString(name) == LLUUID::null.asString())
+			if (ui_inst->mSettingGroups[group_name]->getString(name) == LLUUID::null.asString())
+			// </FS:Ansariel>
 			{
 				if (ui_inst->mSettingGroups["config"]->getBOOL("UISndDebugSpamToggle"))
 				{
@@ -127,18 +140,20 @@ LLUUID find_ui_sound(const char * namep)
 	return uuid;
 }
 
-void make_ui_sound(const char* namep)
+//void make_ui_sound(const char* namep)
+void make_ui_sound(const char* namep, bool force_sound)
 {
-	LLUUID soundUUID = find_ui_sound(namep);
+	LLUUID soundUUID = find_ui_sound(namep, force_sound);
 	if(soundUUID.notNull())
 	{
 		LLUI::getInstance()->mAudioCallback(soundUUID);
 	}
 }
 
-void make_ui_sound_deferred(const char* namep)
+//void make_ui_sound_deferred(const char* namep)
+void make_ui_sound_deferred(const char* namep, bool force_sound)
 {
-	LLUUID soundUUID = find_ui_sound(namep);
+	LLUUID soundUUID = find_ui_sound(namep, force_sound);
 	if(soundUUID.notNull())
 	{
 		LLUI::getInstance()->mDeferredAudioCallback(soundUUID);

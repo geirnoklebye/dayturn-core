@@ -56,6 +56,7 @@
 
 //MK
 #include "llfloaterimnearbychat.h"
+#include "fskeywords.h"
 #include "llfloaterreg.h"
 //mk
 
@@ -833,6 +834,13 @@ static void on_avatar_name_cache_notify(const LLUUID& agent_id,
 		{
 			nearby_chat->addMessage(chat);
 		}
+		// <FS:PP> FIRE-10178: Keyword Alerts in group IM do not work unless the group is in the foreground (notification on receipt of IM)
+		chat.mText = notify_msg;
+		if (FSKeywords::getInstance()->chatContainsKeyword(chat, true))
+		{
+			FSKeywords::notify(chat);
+		}
+		// </FS:PP>
 	}
 }
 

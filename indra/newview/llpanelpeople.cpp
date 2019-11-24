@@ -83,6 +83,7 @@
 //CA
 #include "llnotificationhandler.h"
 #include "llnotificationmanager.h"
+#include "fskeywords.h"
 //ca
 
 #define FRIEND_LIST_UPDATE_TIMEOUT	0.5
@@ -875,6 +876,11 @@ void LLPanelPeople::giveMessage(const LLUUID& agent_id, const LLAvatarName& av_n
 	// FS:LO FIRE-1439 - Clickable avatar names on local chat radar crossing reports
 	LLSD args;
 	LLNotificationsUI::LLNotificationManager::instance().onChat(chat, args);
+
+	if (FSKeywords::getInstance()->chatContainsKeyword(chat, true))
+	{
+		FSKeywords::notify(chat);
+	}
 }
 
 
