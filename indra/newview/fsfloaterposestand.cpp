@@ -19,7 +19,7 @@
 #include "llsdserialize.h"
 #include "lltrans.h"
 #include "llviewercontrol.h"
-//#include "rlvhandler.h"
+
 
 FSFloaterPoseStand::FSFloaterPoseStand(const LLSD& key)
 :	LLFloater(key),
@@ -57,9 +57,8 @@ void FSFloaterPoseStand::onOpen(const LLSD& key)
 	}
 	
 	if (gSavedSettings.getBOOL("FSPoseStandLock")
-		&& !gAgentAvatarp->isSitting())
-//		&& !gAgentAvatarp->isSitting()
-//		&& !gRlvHandler.hasBehaviour(RLV_BHVR_SIT))
+		&& !gAgentAvatarp->isSitting()
+		&& !(gRRenabled && gAgent.mRRInterface.contains("sit")))
 	{
 		setLock(true);
 	}
