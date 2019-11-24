@@ -97,6 +97,7 @@
 #include "lloutfitslist.h"				// @showinv - "Appearance / My Outfits" panel
 #include "llpaneloutfitsinventory.h"	// @showinv - "Appearance" floater
 #include "llpanelwearing.h"				// @showinv - "Appearance / Current Outfit" panel
+#include "llworld.h"              // for avatar list
 //ca
 
 // Global and static variables initialization.
@@ -3735,16 +3736,23 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 		}
 		it++;
 	}
-
-	// Hide every occurrence of the name of anybody around (found in cache, so not completely accurate nor completely immediate)
+	
+	// KKA-638 Previously this searched the object cache to find avatars which apart from being an intensive
+	// operation had the problem that avatars within parcels with visibility turned off don't appear in the 
+	// object cache. Instead, we now use the same method used by the minimap to get its avatar list
+	
 	std::string pre_str = str;
-	S32 i;
-	for (i=0; i<gObjectList.getNumObjects(); ++i) {
-		LLViewerObject* object = gObjectList.getObject(i);
-		if (object) {
-			if (object->isAvatar()) {
+	uuid_vec_t avatar_ids;
+	std::vector<LLVector3d> positions;
+	
+	LLWorld::getInstance()->getAvatars(&avatar_ids, &positions, gAgentCamera.getCameraPositionGlobal());
+
+	for (U32 i = 0; i < avatar_ids.size(); i++)
+	{
+		LLUUID uuid = avatar_ids[i];
+
 				LLAvatarName av_name;
-				if (LLAvatarNameCache::get(object->getID(), &av_name))
+				if (LLAvatarNameCache::get(uuid, &av_name))
 				{
 					std::string user_name = av_name.getUserName();
 					std::string clean_user_name = LLCacheName::cleanFullName(user_name);
@@ -3752,7 +3760,7 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 					//KKA-631 we need to handle first.last as well
 					std::string  user_dot_name = av_name.mUsername; // needed for minimap and maybe others now they come through here
 
-					if (std::find(exceptions.begin(), exceptions.end(), object->getID()) == exceptions.end()) // ignore exceptions
+					if (std::find(exceptions.begin(), exceptions.end(), uuid) == exceptions.end()) // ignore exceptions
 					{
 						//KKA-630 to reduce the occurrences of same avatar different names in different situations (eg chat, tooltip etc) this
 						//is tweaked slightly to always derive the dummy name from user_name. getDummyName is changed to veneer into this function
@@ -3784,8 +3792,6 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 						}
 					}
 				}
-			}
-		}
 	}
 	//KKA-630 If we were called to anonymise the whole string (ie it's known to be a name) and we didn't find an exception, anonymise it
 	//This isn't ideal - references to non-present avatars with an exception are going to get anonymised, however it's only in cases where
