@@ -80,7 +80,7 @@
         </pie_slice>
 
     <pie_menu
-        label="More >"
+        label="More &gt;"
         name="Object Pie More 1">
 
     <pie_slice
@@ -111,10 +111,10 @@
             function="Tools.EnableTakeCopy" />
     </pie_slice>
     <pie_menu
-        label="Attach HUD >"
+        label="Attach HUD &gt;"
         name="Pie Object Attach HUD" />
     <pie_menu
-        label="Attach >"
+        label="Attach &gt;"
          name="Pie Object Attach">
          <pie_menu
           label="Ext. Skeleton &gt;"
@@ -286,10 +286,10 @@
         </pie_slice>
 
     <pie_menu
-        label="More >"
+        label="More &gt;"
         name="Object Pie More 2">
 
-        <pie_menu
+<pie_menu
             name="ResetMenu"
             label="Reset &gt;">
             <pie_slice
@@ -300,13 +300,28 @@
                     function="Object.TexRefresh" />
             </pie_slice>
         <pie_slice
-            enabled="true"
+            label="Skeleton"
+                 name="Reset Skeleton">
+                    <pie_slice.on_click
+                        function="Avatar.ResetSkeleton" />
+                    <pie_slice.on_visible
+                     function="Avatar.EnableResetSkeleton"/>
+            </pie_slice>
+        </pie_menu>
+        <pie_menu
+            name="DerenderMenu"
+            label="Derender &gt;">
+            <pie_slice
+                
+enabled="true"
             label="Derender"
             name="Derender">
             <pie_slice.on_click
                 function="Object.Derender" />
         </pie_slice>
-        <pie_slice
+        </pie_menu>
+        
+<pie_slice
             enabled="false"
             label="Report..."
             name="Report Abuse...">
@@ -336,13 +351,22 @@
                 <pie_slice.on_enable
                     function="Object.EnableExport" />
             </pie_slice>
-        </pie_menu>
+        <pie_slice
+                 label="Dump XML"
+                 name="Dump XML">
+                    <pie_slice.on_click
+                     function="Advanced.AppearanceToXML" />
+                    <pie_slice.on_visible
+                     function="Advanced.EnableAppearanceToXML"/>
+            </pie_slice>
+        
+</pie_menu>
 
 <!-- Phoenix has "Disable" here, which we haven't implemented yet.
      Might get interesting when we finally do ... -->
 <!-- <pie_separator name="disable_placeholder" /> -->
         <pie_menu
-         label="Pathfinding >"
+         label="Pathfinding &gt;"
          name="Pathfinding">
             <pie_slice
              start_autohide="true"
@@ -367,14 +391,28 @@
             <pie_separator name="autohide_end_crash_protection" />
         </pie_menu>
 
-        <pie_slice
-            enabled="false"
+        <pie_menu
+        name="mute_menu"
+        label="Mute &gt;">
+        
+<pie_slice
+            enabled="true"
             label="Mute"
             name="Object Mute">
             <pie_slice.on_click
                 function="Object.Mute" />
+<!--            <pie_slice.on_enable
+                    function="Object.EnableMute" /> -->
+        </pie_slice>
+        <pie_slice
+            enabled="false"
+            label="Part. Owner"
+            name="Mute Particle">
+            <pie_slice.on_click
+                function="Particle.Mute" />
             <pie_slice.on_enable
-                function="Object.EnableMute" />
+                function="EnableMuteParticle" 
+/>
         </pie_slice>
     </pie_menu>
         
