@@ -83,7 +83,8 @@
     width="165" />
   <combo_box
     allow_text_entry="true"
-    control_name="NextLoginLocation"    
+    control_name="NextLoginLocation"
+    disabled_control="RestrainedLove"    
     follows="left|top"
     label="My favorite places"
     height="32"
