@@ -1277,6 +1277,26 @@ BOOL LLToolPie::handleTooltipObject( LLViewerObject* hover_object, std::string l
 			{
 				final_name = LLTrans::getString("TooltipPerson");;
 			}
+			// Get position
+			LLViewerRegion* region = gAgent.getRegion();
+			if (region && advancedToolTip)
+			{
+				LLStringUtil::format_map_t args;
+				LLVector3 relPositionObject = region->getPosRegionFromGlobal(hover_object->getPositionGlobal());
+//MK - adapted to replace RLVa code
+				if (!(gRRenabled && (gAgent.mRRInterface.mContainsShowloc)))
+				{
+					args.clear();
+					args["POSITION"] = llformat("<%.02f, %.02f, %.02f>", relPositionObject.mV[VX], relPositionObject.mV[VY], relPositionObject.mV[VZ]);
+					final_name.append("\n" + LLTrans::getString("TooltipPosition", args));
+				}
+//mk
+				// Get distance
+				F32 distance = (relPositionObject - region->getPosRegionFromGlobal(gAgent.getPositionGlobal())).magVec();
+				args.clear();
+				args["DISTANCE"] = llformat("%.02f", distance);
+				final_name.append("\n" + LLTrans::getString("TooltipDistance", args));
+			}
 
 //MK
 			if (gRRenabled && (gAgent.mRRInterface.mContainsShownames || gAgent.mRRInterface.mContainsShownametags))
