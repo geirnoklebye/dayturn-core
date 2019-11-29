@@ -2718,7 +2718,7 @@
                  function="ToggleControl"
                  parameter="ShowCrosshairs" />
             </menu_item_check>
-  <!-- <menu
+ 				<menu
          create_jump_keys="true"
          label="Hover Tips"
          name="Hover Tips"
@@ -2757,7 +2757,30 @@
                 <menu_item_check.on_enable
                  function="View.CheckShowHoverTips" />
             </menu_item_check>
-        </menu>-->
+           <menu_item_check
+             label="Show More Information"
+             name="Show extended information in hovertips (classic Phoenix style)">
+                <menu_item_check.on_check
+                 control="FSAdvancedTooltips" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="FSAdvancedTooltips" />
+                <menu_item_check.on_enable
+                 function="View.CheckShowHoverTips" />
+            </menu_item_check>
+           <menu_item_check
+             label="Show Avatar Group"
+             name="Show avatar group in hovertips">
+                <menu_item_check.on_check
+                 control="FSShowGroupTitleInTooltip" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="FSShowGroupTitleInTooltip" />
+                <menu_item_check.on_enable
+                 function="View.CheckShowHoverTips" />
+            </menu_item_check>
+        </menu>
+
 
         </menu>
 

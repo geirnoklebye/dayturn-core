@@ -797,6 +797,68 @@
                  parameter="UseDebugMenus" />
         </menu_item_check>
         </menu>
+			<menu
+         create_jump_keys="true"
+         label="Hover Tips"
+         name="Hover Tips"
+         tear_off="true">
+            <menu_item_check
+             label="Show Tips"
+             name="Show Tips"
+             shortcut="control|shift|T">
+                <menu_item_check.on_check
+                 function="View.CheckShowHoverTips" />
+                <menu_item_check.on_click
+                 function="View.ShowHoverTips" />
+            </menu_item_check>
+
+            <menu_item_separator/>
+
+            <menu_item_check
+             label="Show Land Tooltips"
+             name="Land Tips">
+                <menu_item_check.on_check
+                 control="ShowLandHoverTip" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="ShowLandHoverTip" />
+                <menu_item_check.on_enable
+                 function="View.CheckShowHoverTips" />
+            </menu_item_check>
+           <menu_item_check
+             label="Show Tips On All Objects"
+             name="Tips On All Objects">
+                <menu_item_check.on_check
+                 control="ShowAllObjectHoverTip" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="ShowAllObjectHoverTip" />
+                <menu_item_check.on_enable
+                 function="View.CheckShowHoverTips" />
+            </menu_item_check>
+           <menu_item_check
+             label="Show More Information"
+             name="Show extended information in hovertips (classic Phoenix style)">
+                <menu_item_check.on_check
+                 control="FSAdvancedTooltips" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="FSAdvancedTooltips" />
+                <menu_item_check.on_enable
+                 function="View.CheckShowHoverTips" />
+            </menu_item_check>
+           <menu_item_check
+             label="Show Avatar Group"
+             name="Show avatar group in hovertips">
+                <menu_item_check.on_check
+                 control="FSShowGroupTitleInTooltip" />
+                <menu_item_check.on_click
+                 function="ToggleControl"
+                 parameter="FSShowGroupTitleInTooltip" />
+                <menu_item_check.on_enable
+                 function="View.CheckShowHoverTips" />
+            </menu_item_check>
+        </menu>
         
     <menu_item_separator/>
     <!--    <menu_item_check
@@ -2415,7 +2477,7 @@
                  function="ToggleControl"
                  parameter="ShowCrosshairs" />
             </menu_item_check>
-<menu
+				<menu
          create_jump_keys="true"
          label="Hover Tips"
          name="Hover Tips"
@@ -2477,47 +2539,6 @@
                  function="View.CheckShowHoverTips" />
             </menu_item_check>
         </menu>
-  <!-- <menu
-         create_jump_keys="true"
-         label="Hover Tips"
-         name="Hover Tips"
-         tear_off="true">
-            <menu_item_check
-             label="Show Tips"
-             name="Show Tips"
-             shortcut="control|shift|T">
-                <menu_item_check.on_check
-                 function="View.CheckShowHoverTips" />
-                <menu_item_check.on_click
-                 function="View.ShowHoverTips" />
-            </menu_item_check>
-
-            <menu_item_separator/>
-
-            <menu_item_check
-             label="Show Land Tooltips"
-             name="Land Tips">
-                <menu_item_check.on_check
-                 control="ShowLandHoverTip" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="ShowLandHoverTip" />
-                <menu_item_check.on_enable
-                 function="View.CheckShowHoverTips" />
-            </menu_item_check>
-           <menu_item_check
-             label="Show Tips On All Objects"
-             name="Tips On All Objects">
-                <menu_item_check.on_check
-                 control="ShowAllObjectHoverTip" />
-                <menu_item_check.on_click
-                 function="ToggleControl"
-                 parameter="ShowAllObjectHoverTip" />
-                <menu_item_check.on_enable
-                 function="View.CheckShowHoverTips" />
-            </menu_item_check>
-        </menu>-->
-
         </menu>
 
         <menu
