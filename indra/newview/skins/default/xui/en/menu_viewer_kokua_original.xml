@@ -903,6 +903,17 @@
                  function="ToggleControl"
                  parameter="UseDebugMenus" />
         </menu_item_check>
+    <menu_item_separator/>
+      <menu_item_check
+        label="Show Friends only"
+        name="Render Friends Only">
+        <menu_item_check.on_click
+          function="TogglePerAccountControl"
+          parameter="FSRenderFriendsOnly"/>
+        <menu_item_check.on_check
+          function="CheckPerAccountControl"
+          parameter="FSRenderFriendsOnly"/>
+      </menu_item_check>
     </menu>
 <!-- END OF VIEW MENU -->
 
