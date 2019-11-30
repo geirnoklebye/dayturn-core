@@ -709,7 +709,7 @@
          left="0"
          follows="left|top"
          name="text_box_scripting_font"
-         width="100">
+         width="130">
           Script Editor Font Size:
         </text>
         <combo_box
