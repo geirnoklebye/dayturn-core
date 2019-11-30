@@ -98,6 +98,7 @@
 #include "llpaneloutfitsinventory.h"	// @showinv - "Appearance" floater
 #include "llpanelwearing.h"				// @showinv - "Appearance / Current Outfit" panel
 #include "llworld.h"              // for avatar list
+#include "kokuarlvextras.h"
 //ca
 
 // Global and static variables initialization.
@@ -3620,6 +3621,10 @@ std::string RRInterface::getDummyName(std::string name, EChatAudible audible /* 
 //KKA-630 - renamed from getDummyName - do NOT call directly since it doesn't check for exceptions
 std::string RRInterface::getDummyNameInternal(std::string name)
 {
+	//KKA-646 start using a new routine which tries to avoid hashing two names identically when there
+	//are other anonyms available
+	return KokuaRLVExtras::getInstance()->getDummyName(name);
+#if 0
 	int len = name.length();
 	if (len == 0)
 	{
@@ -3696,6 +3701,7 @@ std::string RRInterface::getDummyNameInternal(std::string name)
 		default:	res = "An unknown person";	break;
 	}
 	return res;
+#endif
 }
 
 // KKA-630 this becomes a veneer

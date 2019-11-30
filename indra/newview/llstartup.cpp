@@ -223,6 +223,7 @@
 //mk
 #include "kokuarlvfloaters.h"
 #include "kokuarlvmode.h"
+#include "kokuarlvextras.h"
 
 //
 // exported globals
@@ -565,6 +566,7 @@ bool idle_startup()
 #if RLV_ALWAYS_ON
 	RRInterface::sBlacklist = "";
 #endif
+	KokuaRLVExtras::initialise();
 	
 	// Let's keep it constant for now, because there are ways to make the vision restriction less tight by playing with this setting.
 	//RRInterface::mCamDistNbGradients = gSavedSettings.getU32("RestrainedLoveCamDistNbGradients");

@@ -780,6 +780,7 @@ set(viewer_SOURCE_FILES
     streamtitledisplay.cpp
 	NACLfloaterexploresounds.cpp
 	  kokuarlvfloaters.cpp
+	  kokuarlvextras.cpp
     )
 
 set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
@@ -1443,6 +1444,7 @@ set(viewer_HEADER_FILES
     VorbisFramework.h
 	NACLfloaterexploresounds.h
 	  kokuarlvfloaters.h
+	  kokuarlvextras.h
     )
     
 # Generate the build version here to avoid rebuilding all of newview each time

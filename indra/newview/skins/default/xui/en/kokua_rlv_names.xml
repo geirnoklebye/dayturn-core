@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<llsd>
+<map>
+	<!-- Generic names used to replace resident names when @shownames restricted -->
+	<key>anonyms</key>
+	<array>
+		<string>A resident</string>
+		<string>This resident</string>
+		<string>That resident</string>
+		<string>An individual</string>
+		<string>This individual</string>
+		<string>That individual</string>
+		<string>A person</string>
+		<string>This person</string>
+		<string>That person</string>
+		<string>A stranger</string>
+		<string>This stranger</string>
+		<string>That stranger</string>
+		<string>A human being</string>
+		<string>This human being</string>
+		<string>That human being</string>
+		<string>An agent</string>
+		<string>This agent</string>
+		<string>That agent</string>
+		<string>A soul</string>
+		<string>This soul</string>
+		<string>That soul</string>
+		<string>Somebody</string>
+		<string>Anonymous one</string>
+		<string>Someone</string>
+		<string>Mysterious one</string>
+		<string>An unknown being</string>
+		<string>Unidentified one</string>
+		<string>A being</string>
+		<string>This being</string>
+		<string>That being</string>
+		<string>A presence</string>
+		<string>This presence</string>
+		<string>That presence</string>
+		<string>Some resident</string>
+		<string>Some individual</string>
+		<string>Some person</string>
+		<string>Some stranger</string>
+		<string>Some human being</string>
+		<string>Some agent</string>
+		<string>Some soul</string>
+		<string>Some being</string>
+		<string>Some presence</string>	
+		<string>An unknown person</string>
+	</array>
+</map>
+</llsd>
