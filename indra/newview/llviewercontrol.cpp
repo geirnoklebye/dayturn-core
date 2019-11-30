@@ -76,7 +76,11 @@
 #include "llslurl.h"
 #include "llstartup.h"
 #include "fsfloaterposestand.h"
+#include "llavataractions.h"
 #include "llfloaterreg.h"
+#include "llviewerkeyboard.h"
+#include "llviewerobjectlist.h"
+#include "llviewerregion.h"
 
 // Third party library includes
 #include <boost/algorithm/string.hpp>
@@ -639,6 +643,28 @@ void handleStaticEyesChanged()
 }
 // </FS:Ansariel>
 
+// <FS:Ansariel> FIRE-20288: Option to render friends only
+void handleRenderFriendsOnlyChanged(const LLSD& newvalue)
+{
+	if (newvalue.asBoolean())
+	{
+		for (std::vector<LLCharacter*>::iterator iter = LLCharacter::sInstances.begin();
+			iter != LLCharacter::sInstances.end(); ++iter)
+		{
+			LLVOAvatar* avatar = (LLVOAvatar*)*iter;
+
+			if (avatar->getID() != gAgentID && !LLAvatarActions::isFriend(avatar->getID()) && !avatar->isControlAvatar())
+			{
+				gObjectList.killObject(avatar);
+				if (LLViewerRegion::sVOCacheCullingEnabled && avatar->getRegion())
+				{
+					avatar->getRegion()->killCacheEntry(avatar->getLocalID());
+				}
+			}
+		}
+	}
+}
+// </FS:Ansariel>
 ////////////////////////////////////////////////////////////////////////////
 
 
@@ -803,6 +829,8 @@ void settings_setup_listeners()
     // <FS:Ansariel> FIRE-18250: Option to disable default eye movement
     gSavedSettings.getControl("FSStaticEyesUUID")->getSignal()->connect(boost::bind(&handleStaticEyesChanged));
     gSavedPerAccountSettings.getControl("FSStaticEyes")->getSignal()->connect(boost::bind(&handleStaticEyesChanged));
+	// <FS:Ansariel> FIRE-20288: Option to render friends only
+	gSavedPerAccountSettings.getControl("FSRenderFriendsOnly")->getSignal()->connect(boost::bind(&handleRenderFriendsOnlyChanged, _2));
 }
 
 #if TEST_CACHED_CONTROL

@@ -79,13 +79,15 @@
 #include "llappviewer.h"
 #include "llfloaterperms.h"
 #include "llvocache.h"
+#include "llcorehttputil.h"
+#include <algorithm>
+#include <iterator>
 #include "fsfloaterimport.h"
 #include "fscommon.h"
 #include "llfloaterreg.h"
-#include "llcorehttputil.h"
 
-#include <algorithm>
-#include <iterator>
+
+#include "llavataractions.h"
 
 extern F32 gMinObjectDistance;
 extern BOOL gAnimateTextures;
@@ -351,12 +353,20 @@ LLViewerObject* LLViewerObjectList::processObjectUpdateFromCache(LLVOCacheEntry*
 	cached_dpp->unpackU32(local_id, "LocalID");
 	cached_dpp->unpackU8(pcode, "PCode");
 
-	objectp = findObject(fullid);
+
 
 	if( mDerenderList.end() != mDerenderList.find(fullid))
 	{
 		return NULL;
 	}
+	// <FS:Ansariel> FIRE-20288: Option to render friends only
+	if (isNonFriendDerendered(fullid, pcode))
+	{
+		return NULL;
+	}
+	// </FS:Ansariel>
+	
+	objectp = findObject(fullid);
 
 	if (objectp)
 	{
@@ -669,6 +679,13 @@ void LLViewerObjectList::processObjectUpdate(LLMessageSystem *mesgsys,
 			}
 #endif
 
+			// <FS:Ansariel> FIRE-20288: Option to render friends only
+			if (isNonFriendDerendered(fullid, pcode))
+			{
+				LL_INFOS() << "Not rendering avatar " << fullid.asString() << " because it is not on the friend list" << LL_ENDL;
+				continue;
+			}
+			// </FS:Ansariel>
 			objectp = createObject(pcode, regionp, fullid, local_id, gMessageSystem->getSender());
 
             LL_DEBUGS("ObjectUpdate") << "creating object " << fullid << " result " << objectp << LL_ENDL;
@@ -2143,6 +2160,12 @@ LLViewerObject *LLViewerObjectList::createObjectFromCache(const LLPCode pcode, L
 LLViewerObject *LLViewerObjectList::createObject(const LLPCode pcode, LLViewerRegion *regionp,
 												 const LLUUID &uuid, const U32 local_id, const LLHost &sender)
 {
+	// <FS:Ansariel> FIRE-20288: Option to render friends only
+	if (isNonFriendDerendered(uuid, pcode))
+	{
+		return NULL;
+	}
+	// </FS:Ansariel>
 	
 	LLUUID fullid;
 	if (uuid == LLUUID::null)
@@ -2421,3 +2444,11 @@ void LLViewerObjectList::removeDerenderedItem( LLUUID const &aId )
 	mDerendered.erase( aId );
 }
 // </FS:ND>
+
+// <FS:Ansariel> FIRE-20288: Option to render friends only
+bool LLViewerObjectList::isNonFriendDerendered(const LLUUID& id, LLPCode pcode)
+{
+	static LLCachedControl<bool> fsRenderFriendsOnly(gSavedPerAccountSettings, "FSRenderFriendsOnly");
+	return (pcode == LL_PCODE_LEGACY_AVATAR && fsRenderFriendsOnly && id != gAgentID && !LLAvatarActions::isFriend(id));
+}
+// </FS:Ansariel>
