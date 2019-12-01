@@ -2449,6 +2449,8 @@ void LLViewerObjectList::removeDerenderedItem( LLUUID const &aId )
 bool LLViewerObjectList::isNonFriendDerendered(const LLUUID& id, LLPCode pcode)
 {
 	static LLCachedControl<bool> fsRenderFriendsOnly(gSavedPerAccountSettings, "FSRenderFriendsOnly");
+	// if shownames is active don't hide anyone because it'd be a clue which are friends
+	if (gRRenabled && gAgent.mRRInterface.mContainsShownames) return false;
 	return (pcode == LL_PCODE_LEGACY_AVATAR && fsRenderFriendsOnly && id != gAgentID && !LLAvatarActions::isFriend(id));
 }
 // </FS:Ansariel>

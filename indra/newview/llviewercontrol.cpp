@@ -740,7 +740,7 @@ void handleStaticEyesChanged()
 // <FS:Ansariel> FIRE-20288: Option to render friends only
 void handleRenderFriendsOnlyChanged(const LLSD& newvalue)
 {
-	if (newvalue.asBoolean())
+	if (newvalue.asBoolean() && !(gRRenabled && gAgent.mRRInterface.mContainsShownames))
 	{
 		for (std::vector<LLCharacter*>::iterator iter = LLCharacter::sInstances.begin();
 			iter != LLCharacter::sInstances.end(); ++iter)
