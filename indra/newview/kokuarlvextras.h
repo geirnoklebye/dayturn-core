@@ -36,8 +36,8 @@ public:
 	~KokuaRLVExtras() {}
 	static void initialise();
 	static void loadFromFile(const std::string& strFilePath);
-	static KokuaRLVExtras& KokuaRLVExtras::instance();
-	static KokuaRLVExtras* KokuaRLVExtras::getInstance();
+	static KokuaRLVExtras& instance();
+	static KokuaRLVExtras* getInstance();
 	std::string getDummyName (std::string name);
 private:
 	U32 mLaunchTimestamp; // timestamp of the beginning of this session
