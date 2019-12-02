@@ -189,6 +189,8 @@ protected:
     void onTeleportButtonClick();
 
     void onCopyToClipboard();
+    void onCopyAgentNameToClipboard();
+    void onCopyDisplayNameToClipboard();
     void onCopyURI();
     void onCopyKey();
     void onGroupInvite();

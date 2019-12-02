@@ -256,7 +256,9 @@ BOOL FSPanelProfile::postBuild()
     registrar.add("Profile.Freeze",                 boost::bind(&FSPanelProfile::freeze, this));
     registrar.add("Profile.Unfreeze",               boost::bind(&FSPanelProfile::unfreeze, this));
     registrar.add("Profile.CSR",                    boost::bind(&FSPanelProfile::csr, this));
-    registrar.add("Profile.CopyNameToClipboard",    boost::bind(&FSPanelProfile::onCopyToClipboard, this));
+    registrar.add("Profile.CopyNameToClipboard",    boost::bind(&FSPanelProfile::onCopyToClipboard, this));	
+    registrar.add("Profile.CopyDisplayNameToClipboard",    boost::bind(&FSPanelProfile::onCopyDisplayNameToClipboard, this));
+    registrar.add("Profile.CopyAgentNameToClipboard",      boost::bind(&FSPanelProfile::onCopyAgentNameToClipboard, this));
     registrar.add("Profile.CopyURI",                boost::bind(&FSPanelProfile::onCopyURI, this));
     registrar.add("Profile.CopyKey",                boost::bind(&FSPanelProfile::onCopyKey, this));
 
@@ -605,6 +607,35 @@ void FSPanelProfile::onCopyToClipboard()
 {
     std::string name = getChild<LLUICtrl>("complete_name")->getValue().asString();
     LLClipboard::instance().copyToClipboard(utf8str_to_wstring(name), 0, name.size() );
+}
+
+void FSPanelProfile::onCopyDisplayNameToClipboard()
+{
+    LLAvatarName av_name;
+    if (!LLAvatarNameCache::get(getAvatarId(), &av_name))
+    {
+        // shouldn't happen, button(menu) is supposed to be invisible while name is fetching
+        LL_WARNS() << "Failed to get agent data" << LL_ENDL;
+        return;
+    }
+    LLWString wstr;
+    wstr = utf8str_to_wstring(av_name.getDisplayName(true));
+	LLClipboard::instance().copyToClipboard(wstr, 0, wstr.size());
+}
+
+void FSPanelProfile::onCopyAgentNameToClipboard()
+{
+    LLAvatarName av_name;
+    if (!LLAvatarNameCache::get(getAvatarId(), &av_name))
+    {
+        // shouldn't happen, button(menu) is supposed to be invisible while name is fetching
+        LL_WARNS() << "Failed to get agent data" << LL_ENDL;
+        return;
+    }
+    LLWString wstr;
+    wstr = utf8str_to_wstring(av_name.getAccountName());
+	LLClipboard::instance().copyToClipboard(wstr, 0, wstr.size());
+
 }
 
 void FSPanelProfile::onCopyURI()

@@ -54,11 +54,18 @@
      function="Profile.EnableUnblock" />
   </menu_item_call>-->
   <menu_item_call
-   label="Copy Name"
+   label="Copy Display Name"
    layout="topleft"
-   name="copy_name_to_clipboard">
+   name="copy_display_name_to_clipboard">
     <menu_item_call.on_click
-     function="Profile.CopyNameToClipboard" />
+     function="Profile.CopyDisplayNameToClipboard" />
+  </menu_item_call>
+  <menu_item_call
+   label="Copy Agent Name"
+   layout="topleft"
+   name="copy_agent_name_to_clipboard">
+    <menu_item_call.on_click
+     function="Profile.CopyAgentNameToClipboard" />
   </menu_item_call>
   <menu_item_call
    label="Copy URI"
