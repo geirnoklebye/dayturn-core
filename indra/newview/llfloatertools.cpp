@@ -93,6 +93,10 @@
 #include "llmeshrepository.h"
 #include "llworld.h"
 
+// additional includes for right click passes to selection feature
+#include "llmutelist.h"
+#include "piemenu.h"
+#include "llviewermenu.h"
 
 // Globals
 LLFloaterTools *gFloaterTools = NULL;
@@ -248,6 +252,7 @@ BOOL	LLFloaterTools::postBuild()
 	mTitleMedia			= getChild<LLMediaCtrl>("title_media");
 	mBtnLink			= getChild<LLButton>("link_btn");
 	mBtnUnlink			= getChild<LLButton>("unlink_btn");
+	mBtnGiveMenu    = getChild<LLButton>("give_menu");
 
 	// <FS:PP> FIRE-14493: Buttons to cycle through linkset
 	mBtnPrevPart		= getChild<LLButton>("prev_part_btn");
@@ -351,6 +356,7 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 
 	mBtnLink(NULL),
 	mBtnUnlink(NULL),
+	mBtnGiveMenu(NULL),
 
 	// <FS:PP> FIRE-14493: Buttons to cycle through linkset
 	mBtnPrevPart(NULL),
@@ -410,6 +416,7 @@ LLFloaterTools::LLFloaterTools(const LLSD& key)
 	mCommitCallbackRegistrar.add("BuildTool.commitRadioLand",	boost::bind(&commit_radio_group_land,_1));
 	mCommitCallbackRegistrar.add("BuildTool.LandBrushForce",	boost::bind(&commit_slider_dozer_force,_1));
 	mCommitCallbackRegistrar.add("BuildTool.AddMedia",			boost::bind(&LLFloaterTools::onClickBtnAddMedia,this));
+	mCommitCallbackRegistrar.add("BuildTool.GiveMenu",			boost::bind(&LLFloaterTools::onClickBtnGiveMenu,this));
 	mCommitCallbackRegistrar.add("BuildTool.DeleteMedia",		boost::bind(&LLFloaterTools::onClickBtnDeleteMedia,this));
 	mCommitCallbackRegistrar.add("BuildTool.EditMedia",			boost::bind(&LLFloaterTools::onClickBtnEditMedia,this));
 
@@ -785,6 +792,7 @@ void LLFloaterTools::updatePopup(LLCoordGL center, MASK mask)
 
 	mBtnLink->setVisible(edit_visible);
 	mBtnUnlink->setVisible(edit_visible);
+	mBtnGiveMenu->setVisible(edit_visible);
 
 	mBtnLink->setEnabled(LLSelectMgr::instance().enableLinkObjects());
 	mBtnUnlink->setEnabled(LLSelectMgr::instance().enableUnlinkObjects());
@@ -1535,6 +1543,88 @@ void LLFloaterTools::getMediaState()
 	LLFloaterMediaSettings::initValues(mMediaSettings, editable );
 }
 
+void LLFloaterTools::onClickBtnGiveMenu()
+{
+	const LLRect& currentRectFloater = gFloaterTools->getRect();	
+	const LLRect& currentRectButton = mBtnGiveMenu->getRect();
+	S32 x = currentRectFloater.mLeft + currentRectButton.mLeft;
+	S32 y = currentRectFloater.mBottom + currentRectButton.mBottom;
+
+	// this code is adapated from lltoolpie
+	LLViewerObject *object = LLSelectMgr::getInstance()->getSelection()->getFirstObject();
+	if (object)
+	{
+		bool is_other_attachment = (object->isAttachment() && !object->isHUDAttachment() && !object->permYouOwner());
+		if (object->isAvatar() || is_other_attachment)
+		{
+			// Find the attachment's avatar
+			while( object && object->isAttachment())
+			{
+				object = (LLViewerObject*)object->getParent();
+				llassert(object);
+			}
+
+			if (!object)
+			{
+				return; // unexpected, but escape
+			}
+
+			// Object is an avatar, so check for mute by id.
+			LLVOAvatar* avatar = (LLVOAvatar*)object;
+			std::string name = avatar->getFullname();
+			std::string mute_msg;
+			if (LLMuteList::getInstance()->isMuted(avatar->getID(), avatar->getFullname()))
+			{
+				mute_msg = LLTrans::getString("UnmuteAvatar");
+			}
+			else
+			{
+				mute_msg = LLTrans::getString("MuteAvatar");
+			}
+
+			if (is_other_attachment)
+			{
+				gMenuAttachmentOther->getChild<LLUICtrl>("Avatar Mute")->setValue(mute_msg);
+					if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
+						gPieMenuAttachmentOther->show(x, y);
+					else
+				gMenuAttachmentOther->show(x, y);
+			}
+			else
+			{
+				gMenuAvatarOther->getChild<LLUICtrl>("Avatar Mute")->setValue(mute_msg);
+					if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
+						gPieMenuAvatarOther->show(x, y);
+					else
+				gMenuAvatarOther->show(x, y);
+			}
+		}
+		else if (object->isAttachment())
+		{
+			if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
+				gPieMenuAttachmentSelf->show(x, y);
+			else
+			gMenuAttachmentSelf->show(x, y);
+		}
+		else
+		{
+			// BUG: What about chatting child objects?
+			std::string name;
+			LLSelectNode* node = LLSelectMgr::getInstance()->getSelection()->getFirstRootNode();
+			if (node)
+			{
+				name = node->mName;
+			}
+
+				if(gSavedPerAccountSettings.getBOOL("UsePieMenu"))
+					gPieMenuObject->show(x, y);
+				else
+			gMenuObject->show(x, y);
+
+			LLToolPie::getInstance()->showVisualContextMenuEffect();
+		}
+	}	
+}
 
 //////////////////////////////////////////////////////////////////////////////
 // called when a user wants to add media to a prim or prim face

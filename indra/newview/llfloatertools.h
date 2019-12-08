@@ -109,6 +109,7 @@ public:
 	void onClickBtnDeleteMedia();
 	void onClickBtnAddMedia();
 	void onClickBtnEditMedia();
+	void onClickBtnGiveMenu();
 	void clearMediaSettings();
 	bool selectedMediaEditable();
 	void updateLandImpacts();
@@ -151,6 +152,7 @@ public:
 	LLCheckBoxCtrl	*mCheckSelectIndividual;
 	LLButton*		mBtnLink;
 	LLButton*		mBtnUnlink;
+	LLButton*   mBtnGiveMenu;
 
 	// <FS:PP> FIRE-14493: Buttons to cycle through linkset
 	LLButton*		mBtnPrevPart;
