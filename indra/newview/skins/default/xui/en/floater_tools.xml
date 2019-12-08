@@ -287,7 +287,7 @@
      image_overlay="BackArrow_Off"
      top_pad="0"
      top="114"
-     left="135"
+     left="132"
      layout="topleft"
      name="prev_part_btn"
      tool_tip="Select previous linked part or face"
@@ -316,7 +316,7 @@
      layout="topleft"
      left_pad="2"
      name="link_btn"
-     width="50">
+     width="40">
 	  <button.commit_callback
 	     function="BuildTool.LinkObjects"/>
     </button>
@@ -327,10 +327,25 @@
      layout="topleft"
      left_pad="2"
      name="unlink_btn"
-     width="70">
+     width="50">
 	  <button.commit_callback
 	     function="BuildTool.UnlinkObjects"/>
     </button>
+			<button
+			 follows="left|top"
+			 height="20"
+			 layout="topleft"
+			 name="give_menu"
+			 left_pad="2"
+			 tool_tip="Give Right-Click Menu For Selection"
+                 image_hover_unselected="Toolbar_Middle_Over"
+                 image_overlay="Conv_toolbar_sort"
+                 image_selected="Toolbar_Middle_Selected"
+                 image_unselected="Toolbar_Middle_Off"
+			 width="30">
+				<button.commit_callback
+				function="BuildTool.GiveMenu"/>
+			</button>
     <check_box
      control_name="ScaleUniform"
      height="19"

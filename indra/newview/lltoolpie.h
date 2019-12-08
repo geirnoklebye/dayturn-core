@@ -79,6 +79,8 @@ public:
 	static void			showObjectInspector(const LLUUID& object_id, const S32& object_face);
 	static void			playCurrentMedia(const LLPickInfo& info);
 	static void			VisitHomePage(const LLPickInfo& info);
+	// need this public to call it from llfloatertools
+	void showVisualContextMenuEffect();
 	
 private:
 	BOOL outsideSlop		(S32 x, S32 y, S32 start_x, S32 start_y);
@@ -86,7 +88,7 @@ private:
 	BOOL handleRightClickPick();
 	BOOL useClickAction		(MASK mask, LLViewerObject* object,LLViewerObject* parent);
 	
-	void showVisualContextMenuEffect();
+	//void showVisualContextMenuEffect();
 	ECursorType cursorFromObject(LLViewerObject* object);
 
 	bool handleMediaClick(const LLPickInfo& info, int button = 0);
