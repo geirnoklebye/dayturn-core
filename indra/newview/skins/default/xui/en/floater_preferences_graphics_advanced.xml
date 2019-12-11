@@ -361,7 +361,7 @@
   <check_box
     control_name="RenderHiDPI"
     height="16"
-    initial_value="true"
+    initial_value="false"
     label="Enable support for HiDPI displays (requires restart)"
     layout="topleft"
     left="30"
