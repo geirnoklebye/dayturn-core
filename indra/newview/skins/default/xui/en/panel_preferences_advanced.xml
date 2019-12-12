@@ -151,7 +151,7 @@
   layout="topleft"
   left="33"
   name="HUD Size:"
-  top_pad="20"
+  top_pad="6"
   width="100">
     HUD Scale:
   </text>
@@ -177,7 +177,7 @@
    layout="topleft"
    left="33"
    name="Font Size:"
-   top_pad="10"
+   top_pad="6"
    width="100">
     Font size(dpi) :
   </text>
