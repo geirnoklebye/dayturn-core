@@ -330,6 +330,7 @@ BOOL LLStatusBar::postBuild()
 	mPanelNearByMedia->setVisible(FALSE);
 
 	mScriptOut = getChildView("scriptout");
+	updateBalancePanelPosition();
 
 //MK
 	mParcelInfoPanel = getChild<LLPanel>("parcel_info_panel");
@@ -370,11 +371,17 @@ BOOL LLStatusBar::postBuild()
 	mFilterEdit = getChild<LLSearchEditor>( "search_menu_edit" );
 	mSearchPanel = getChild<LLPanel>( "menu_search_panel" );
 
-	mSearchPanel->setVisible(gSavedSettings.getBOOL("MenuSearch"));
+	BOOL search_panel_visible = gSavedSettings.getBOOL("MenuSearch");
+	mSearchPanel->setVisible(search_panel_visible);
 	mFilterEdit->setKeystrokeCallback(boost::bind(&LLStatusBar::onUpdateFilterTerm, this));
 	mFilterEdit->setCommitCallback(boost::bind(&LLStatusBar::onUpdateFilterTerm, this));
 	collectSearchableItems();
 	gSavedSettings.getControl("MenuSearch")->getCommitSignal()->connect(boost::bind(&LLStatusBar::updateMenuSearchVisibility, this, _2));
+
+	if (search_panel_visible)
+	{
+		updateMenuSearchPosition();
+	}
 
 	return TRUE;
 }
@@ -544,17 +551,7 @@ void LLStatusBar::setBalance(S32 balance)
 	std::string label_str = getString("buycurrencylabel", string_args);
 	mBoxBalance->setValue(label_str);
 
-	// Resize the L$ balance background to be wide enough for your balance plus the buy button
-	{
-		const S32 HPAD = 24;
-		LLRect balance_rect = mBoxBalance->getTextBoundingRect();
-		LLRect buy_rect = getChildView("buyL")->getRect();
-		LLRect shop_rect = getChildView("goShop")->getRect();
-		LLView* balance_bg_view = getChildView("balance_bg");
-		LLRect balance_bg_rect = balance_bg_view->getRect();
-		balance_bg_rect.mLeft = balance_bg_rect.mRight - (buy_rect.getWidth() + shop_rect.getWidth() + balance_rect.getWidth() + HPAD);
-		balance_bg_view->setShape(balance_bg_rect);
-	}
+	updateBalancePanelPosition();
 
 	// If the search panel is shown, move this according to the new balance width. Parcel text will reshape itself in setParcelInfoText
 	if (mSearchPanel && mSearchPanel->getVisible())
@@ -947,6 +944,19 @@ void LLStatusBar::updateMenuSearchPosition()
 	searchRect.mLeft = balanceRect.mLeft - w - HPAD;
 	searchRect.mRight = searchRect.mLeft + w;
 	mSearchPanel->setShape( searchRect );
+}
+
+void LLStatusBar::updateBalancePanelPosition()
+{
+    // Resize the L$ balance background to be wide enough for your balance plus the buy button
+    const S32 HPAD = 24;
+    LLRect balance_rect = mBoxBalance->getTextBoundingRect();
+    LLRect buy_rect = getChildView("buyL")->getRect();
+    LLRect shop_rect = getChildView("goShop")->getRect();
+    LLView* balance_bg_view = getChildView("balance_bg");
+    LLRect balance_bg_rect = balance_bg_view->getRect();
+    balance_bg_rect.mLeft = balance_bg_rect.mRight - (buy_rect.getWidth() + shop_rect.getWidth() + balance_rect.getWidth() + HPAD);
+    balance_bg_view->setShape(balance_bg_rect);
 }
 
 

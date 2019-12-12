@@ -762,6 +762,7 @@ void handleRenderFriendsOnlyChanged(const LLSD& newvalue)
 ////////////////////////////////////////////////////////////////////////////
 
 
+
 void settings_setup_listeners()
 {
 //MK

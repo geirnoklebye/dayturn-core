@@ -169,6 +169,7 @@ public:
 	void onSelectSkin();
 	void onClickSetKey();
 	void setKey(KEY key);
+	void setMouse(LLMouseHandler::EClickType click);
 	void onClickSetMiddleMouse();
 	void onClickPreviewUISound(const LLSD& ui_sound_id); // <FS:PP> FIRE-8190: Preview function for "UI Sounds" Panel
 	void onClickSetSounds();
