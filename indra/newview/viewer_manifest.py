@@ -1367,8 +1367,6 @@ class DarwinManifest(ViewerManifest):
         print "Converting temp disk image to final disk image"
         self.run_command(['hdiutil', 'convert', sparsename, '-format', 'UDZO',
                           '-imagekey', 'zlib-level=9', '-o', finalname])
-        # this was deprecated and has been removed in MacOS Catalina 10.15
-        # self.run_command(['hdiutil', 'internet-enable', '-yes', finalname])
         # get rid of the temp file
         self.package_file = finalname
         self.remove(sparsename)

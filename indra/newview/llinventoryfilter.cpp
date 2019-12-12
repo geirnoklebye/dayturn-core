@@ -42,6 +42,7 @@
 #include "llviewerfoldertype.h"
 #include "llradiogroup.h"
 #include "llstartup.h"
+#include <boost/regex.hpp>
 // linden library includes
 #include "llclipboard.h"
 #include "lltrans.h"
@@ -869,6 +870,38 @@ void LLInventoryFilter::setFilterSubString(const std::string& string)
 
 	if (mFilterSubString != filter_sub_string_new)
 	{
+		
+		mFilterTokens.clear();
+		if (filter_sub_string_new.find_first_of("+") != std::string::npos)
+		{
+			typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
+			boost::char_separator<char> sep("+");
+			tokenizer tokens(filter_sub_string_new, sep);
+
+			for (auto token_iter : tokens)
+			{
+				mFilterTokens.push_back(token_iter);
+			}
+		}
+
+		std::string old_token = mExactToken;
+		mExactToken.clear();
+		bool exact_token_changed = false;
+		if (mFilterTokens.empty() && filter_sub_string_new.size() > 2)
+		{
+			boost::regex mPattern = boost::regex("\"\\s*([^<]*)?\\s*\"",
+				boost::regex::perl | boost::regex::icase);
+			boost::match_results<std::string::const_iterator> matches;
+			mExactToken = (boost::regex_match(filter_sub_string_new, matches, mPattern) && matches[1].matched)
+				? matches[1]
+				: LLStringUtil::null;
+			if ((old_token.empty() && !mExactToken.empty()) 
+				|| (!old_token.empty() && mExactToken.empty()))
+			{
+				exact_token_changed = true;
+			}
+		}
+
 		// hitting BACKSPACE, for example
 		const BOOL less_restrictive = mFilterSubString.size() >= filter_sub_string_new.size()
 			&& !mFilterSubString.substr(0, filter_sub_string_new.size()).compare(filter_sub_string_new);
@@ -878,7 +911,11 @@ void LLInventoryFilter::setFilterSubString(const std::string& string)
 			&& !filter_sub_string_new.substr(0, mFilterSubString.size()).compare(mFilterSubString);
 
 		mFilterSubString = filter_sub_string_new;
-		if (less_restrictive)
+		if (exact_token_changed)
+		{
+			setModified(FILTER_RESTART);
+		}
+		else if (less_restrictive)
 		{
 			setModified(FILTER_LESS_RESTRICTIVE);
 		}
