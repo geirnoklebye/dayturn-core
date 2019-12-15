@@ -142,9 +142,6 @@ const F32 PHYSICS_TIMESTEP = 1.f / 45.f;
 const U32 MAX_INV_FILE_READ_FAILS = 25;
 const S32 MAX_OBJECT_BINARY_DATA_SIZE = 60 + 16;
 
-const F64 INVENTORY_UPDATE_WAIT_TIME_DESYNC = 5; // seconds
-const F64 INVENTORY_UPDATE_WAIT_TIME_OUTDATED = 1;
-
 static LLTrace::BlockTimerStatHandle FTM_CREATE_OBJECT("Create Object");
 
 // static
@@ -2982,8 +2979,6 @@ void LLViewerObject::fetchInventoryFromServer()
 	if (!isInventoryPending())
 	{
 		delete mInventory;
-
-		// Results in processTaskInv
 		LLMessageSystem* msg = gMessageSystem;
 		msg->newMessageFast(_PREHASH_RequestTaskInventory);
 		msg->nextBlockFast(_PREHASH_AgentData);
@@ -2993,42 +2988,9 @@ void LLViewerObject::fetchInventoryFromServer()
 		msg->addU32Fast(_PREHASH_LocalID, mLocalID);
 		msg->sendReliable(mRegionp->getHost());
 
-		// This will get reset by doInventoryCallback or processTaskInv
+		// this will get reset by dirtyInventory or doInventoryCallback
 		mInvRequestState = INVENTORY_REQUEST_PENDING;
 	}
-}
-
-void LLViewerObject::fetchInventoryDelayed(const F64 &time_seconds)
-{
-    // unless already waiting, drop previous request and shedule an update
-    if (mInvRequestState != INVENTORY_REQUEST_WAIT)
-    {
-        if (mInvRequestXFerId != 0)
-        {
-            // abort download.
-            gXferManager->abortRequestById(mInvRequestXFerId, -1);
-            mInvRequestXFerId = 0;
-        }
-        mInvRequestState = INVENTORY_REQUEST_WAIT; // affects isInventoryPending()
-        LLCoros::instance().launch("LLViewerObject::fetchInventoryDelayedCoro()",
-            boost::bind(&LLViewerObject::fetchInventoryDelayedCoro, mID, time_seconds));
-    }
-}
-
-//static
-void LLViewerObject::fetchInventoryDelayedCoro(const LLUUID task_inv, const F64 time_seconds)
-{
-    llcoro::suspendUntilTimeout(time_seconds);
-    LLViewerObject *obj = gObjectList.findObject(task_inv);
-    if (obj)
-    {
-        // Might be good idea to prolong delay here in case expected serial changed.
-        // As it is, it will get a response with obsolete serial and will delay again.
-
-        // drop waiting state to unlock isInventoryPending()
-        obj->mInvRequestState = INVENTORY_REQUEST_STOPPED;
-        obj->fetchInventoryFromServer();
-    }
 }
 
 LLControlAvatar *LLViewerObject::getControlAvatar()
@@ -3204,32 +3166,30 @@ void LLViewerObject::processTaskInv(LLMessageSystem* msg, void** user_data)
     // we can receive multiple task updates simultaneously, make sure we will not rewrite newer with older update
     msg->getS16Fast(_PREHASH_InventoryData, _PREHASH_Serial, ft->mSerial);
 
-    if (ft->mSerial == object->mInventorySerialNum
-        && ft->mSerial < object->mExpectedInventorySerialNum)
+    if (ft->mSerial == object->mInventorySerialNum)
     {
         // Loop Protection.
         // We received same serial twice.
         // Viewer did some changes to inventory that couldn't be saved server side
-        // or something went wrong to cause serial to be out of sync.
-        // Drop xfer and restart after some time, assign server's value as expected
+        // or something went wrong to cause serial to be out of sync
         LL_WARNS() << "Task inventory serial might be out of sync, server serial: " << ft->mSerial << " client expected serial: " << object->mExpectedInventorySerialNum << LL_ENDL;
         object->mExpectedInventorySerialNum = ft->mSerial;
-        object->fetchInventoryDelayed(INVENTORY_UPDATE_WAIT_TIME_DESYNC);
     }
-    else if (ft->mSerial < object->mExpectedInventorySerialNum)
+
+    if (ft->mSerial < object->mExpectedInventorySerialNum)
     {
-        // Out of date message, record to current serial for loop protection, but do not load it
-        // Drop xfer and restart after some time
+        // out of date message, record to current serial for loop protection, but do not load it
+        // just drop xfer to restart on idle
         if (ft->mSerial < object->mInventorySerialNum)
         {
-            LL_WARNS() << "Task serial decreased. Potentially out of order packet or desync." << LL_ENDL;
+            LL_WARNS() << "Somehow task serial decreased, out of order packet?" << LL_ENDL;
         }
         object->mInventorySerialNum = ft->mSerial;
-        object->fetchInventoryDelayed(INVENTORY_UPDATE_WAIT_TIME_OUTDATED);
+        object->mInvRequestXFerId = 0;
+        object->mInvRequestState = INVENTORY_REQUEST_STOPPED;
     }
     else if (ft->mSerial >= object->mExpectedInventorySerialNum)
     {
-        // We received version we expected or newer. Load it.
         object->mInventorySerialNum = ft->mSerial;
         object->mExpectedInventorySerialNum = ft->mSerial;
 
