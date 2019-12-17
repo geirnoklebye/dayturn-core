@@ -97,7 +97,6 @@
 #include "lloutfitslist.h"				// @showinv - "Appearance / My Outfits" panel
 #include "llpaneloutfitsinventory.h"	// @showinv - "Appearance" floater
 #include "llpanelwearing.h"				// @showinv - "Appearance / Current Outfit" panel
-#include "llworld.h"              // for avatar list
 #include "kokuarlvextras.h"
 //ca
 
@@ -3609,47 +3608,23 @@ std::string RRInterface::stringReplaceWholeWord(std::string s, std::string what,
 
 }
 
-//KKA-630 - this is changed so that it always calls through getCensoredMessage because that takes account of exceptions, which getDummyName doesn't
-//However, this should always return an anonymised name unless there's an exception
 std::string RRInterface::getDummyName(std::string name, EChatAudible audible /* = CHAT_AUDIBLE_FULLY */)
 {
-	std::string res = getCensoredMessageInternal(name, true);
-	if (audible == CHAT_AUDIBLE_BARELY) res += " afar";
-	return res;
-}
-
-//KKA-630 - renamed from getDummyName - do NOT call directly since it doesn't check for exceptions
-std::string RRInterface::getDummyNameInternal(std::string name)
-{
-	//KKA-646 start using a new routine which tries to avoid hashing two names identically when there
-	//are other anonyms available
-	return KokuaRLVExtras::getInstance()->getDummyName(name);
-#if 0
+#ifdef KOKUA_SHOWNAMES
+	std::string res = KokuaRLVExtras::getInstance()->kokuaGetCensoredMessage(name, true);
+#else
 	int len = name.length();
 	if (len == 0)
 	{
 		return "";
 	}
-	// KKA-630 - improve the hashing (slightly)
-	//int at = 3;
-	//if (len <= 3) at = len-1; // just to avoid crashing in some cases
-	//// We use mLaunchTimestamp in order to modify the scrambling when the session restarts (it stays consistent during the session though)
-	//// But in crashy situations, let's not make it change at EVERY session, more like once a day or so
-	//// A day is 86400 seconds, the closest power of two is 65536, that's a 16-bit shift
-	//unsigned char hash = name.at(at) + len + (mLaunchTimestamp >> 16); // very lame hash function I know... but it should be linear enough (the old length method was way too gaussian with a peak at 11 to 16 characters)
-	//unsigned char mod = hash % 28;
-	
-	// KKA-633 change the hashing again to use Kitty's distribution-tested algorithm
-	// std::size_t hash = std::hash<std::string>{}(name);
-	U32 hash = 0;
-	for (int idx = 0, cnt = name.length(); idx < cnt; idx++)
-			hash += name[idx];
-			
-	hash += (mLaunchTimestamp >> 16);
-	// KKA-633 increases from 28 to > 40 and changes hash algorithm
-	// std::size_t mod = hash % 44;
-	U32 mod = hash % 44;
-	
+	int at = 3;
+	if (len <= 3) at = len-1; // just to avoid crashing in some cases
+	// We use mLaunchTimestamp in order to modify the scrambling when the session restarts (it stays consistent during the session though)
+	// But in crashy situations, let's not make it change at EVERY session, more like once a day or so
+	// A day is 86400 seconds, the closest power of two is 65536, that's a 16-bit shift
+	unsigned char hash = name.at(at) + len + (mLaunchTimestamp >> 16); // very lame hash function I know... but it should be linear enough (the old length method was way too gaussian with a peak at 11 to 16 characters)
+	unsigned char mod = hash % 28;
 	std::string res = "";
 	switch (mod) {
 		case 0:		res = "A resident";			break;
@@ -3679,42 +3654,18 @@ std::string RRInterface::getDummyNameInternal(std::string name)
 		case 24:	res = "Mysterious one";		break;
 		case 25:	res = "An unknown being";	break;
 		case 26:	res = "Unidentified one";	break;
-		// KKA-633 with the original 28 names it's guaranteed a full sim of 40 avatars will have at least
-		// twelve duplications, probably more depending how successful the hash is at avoiding duplication
-		// Add some more so that we've at least got 40+ to work with even if the hash isn't guaranteed to
-		// avoid duplication
-		case 28: res = "A being"; break; // RLVa uses these three instead of the '..human being' set above
-		case 29: res = "This being"; break;
-		case 30: res = "That being"; break;
-		case 31: res = "A presence"; break;
-		case 32: res = "This presence"; break;
-		case 33: res = "That presence"; break;
-		case 34: res = "Some resident"; break;
-		case 35: res = "Some individual"; break;
-		case 36: res = "Some person"; break;
-		case 37: res = "Some stranger"; break;
-		case 38: res = "Some human being"; break;
-		case 39: res = "Some agent"; break;
-		case 40: res = "Some soul"; break;
-		case 41: res = "Some being"; break;
-		case 42: res = "Some presence"; break; // actually 44
 		default:	res = "An unknown person";	break;
 	}
-	return res;
 #endif
+	if (audible == CHAT_AUDIBLE_BARELY) res += " afar";
+	return res;
 }
 
-// KKA-630 this becomes a veneer
 std::string RRInterface::getCensoredMessage (std::string str)
 {
-	return getCensoredMessageInternal(str, false);
-}
-
-// KKA-630 the new anon_name flag asserts that we've been called for something known to be a name and we should anonymise it unless there's an exception
-// KKA-658 however, the approach of pecking away at the string substituting substrings causes problems when name A is wholly contained in name B - if name A
-// gets substituted first some remnant of name B will be left behind because the name B match will fail, so we need whole match testing instead
-std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_name)
-{
+#ifdef KOKUA_SHOWNAMES
+	return KokuaRLVExtras::getInstance()->kokuaGetCensoredMessage(str, false);
+#else
 	// HACK: if the message is under the form secondlife:///app/agent/UUID/about, clear it
 	// (we could just as well clear just the first part, or return a bogus message, 
 	// the purpose here is to avoid showing the profile of an avatar and displaying their name on the chat)
@@ -3735,8 +3686,7 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 		command = it->second;
 		LLStringUtil::toLower(command);
 		if (command.find("shownames:") == 0 || command.find("shownames_sec:") == 0 || command.find("shownametags:") == 0) {
-			// KKA-635 this needs the =n to work
-			if (parseCommand(command+"=n", behav, option, param)) {
+			if (parseCommand(command, behav, option, param)) {
 				LLUUID uuid;
 				uuid.set(option, FALSE);
 				exceptions.push_back(uuid);
@@ -3744,105 +3694,42 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 		}
 		it++;
 	}
-	
-	// KKA-638 Previously this searched the object cache to find avatars which apart from being an intensive
-	// operation had the problem that avatars within parcels with visibility turned off don't appear in the 
-	// object cache. Instead, we now use the same method used by the minimap to get its avatar list
-	
-	std::string pre_str = str;
-	uuid_vec_t avatar_ids;
-	std::vector<LLVector3d> positions;
-	
-	LLWorld::getInstance()->getAvatars(&avatar_ids, &positions, gAgentCamera.getCameraPositionGlobal());
 
-	for (U32 i = 0; i < avatar_ids.size(); i++)
-	{
-		LLUUID uuid = avatar_ids[i];
-
-				LLAvatarName av_name;
-				if (LLAvatarNameCache::get(uuid, &av_name))
+	// Hide every occurrence of the name of anybody around (found in cache, so not completely accurate nor completely immediate)
+	S32 i;
+	for (i=0; i<gObjectList.getNumObjects(); ++i) {
+		LLViewerObject* object = gObjectList.getObject(i);
+		if (object) {
+			LLAvatarName av_name;
+			std::string clean_user_name;
+			std::string user_name;
+			std::string display_name;
+			std::string dummy_name;
+			
+			if (object->isAvatar()) {
+				if (std::find(exceptions.begin(), exceptions.end(), object->getID()) == exceptions.end()) // ignore exceptions
 				{
-					std::string user_name = av_name.getUserName();
-					std::string clean_user_name = LLCacheName::cleanFullName(user_name);
-					std::string  display_name = av_name.mDisplayName; // not "getDisplayName()" because we need this whether we use display names or user names
-					//KKA-631 we need to handle first.last as well
-					std::string  user_dot_name = av_name.mUsername; // needed for minimap and maybe others now they come through here
-
-					if (std::find(exceptions.begin(), exceptions.end(), uuid) == exceptions.end()) // ignore exceptions
+					if (LLAvatarNameCache::get(object->getID(), &av_name))
 					{
-						//KKA-630 to reduce the occurrences of same avatar different names in different situations (eg chat, tooltip etc) this
-						//is tweaked slightly to always derive the dummy name from user_name. getDummyName is changed to veneer into this function
-						//so that exceptions can be handled whilst getDummyNameInternal is the original routine
-						std::string  dummy_name = getDummyNameInternal(user_name);
-							
-						//KKA-658 when called via getDummyName don't do substrings, require an exact match to do anything
-						if (anon_name)
-						{
-							if (str == clean_user_name + " Resident"
-								|| str == clean_user_name
-								|| str == user_name + " Resident"
-								|| str == user_name
-								|| str == display_name + " Resident"
-								|| str == display_name
-								|| str == user_dot_name)
-							{
-								str = dummy_name;
-								anon_name = false;
-								break;
-							}
-						}
-						else
-						{
-							//KKA-658 if we get an exact name match on the input string (not the evolving substituted string)
-							//substitute that and stop at that point						
-							if (pre_str == clean_user_name || pre_str == clean_user_name + " Resident" || pre_str == user_name || pre_str == user_name + " Resident"
-							|| pre_str==display_name || pre_str==display_name + " Resident" || pre_str == user_dot_name)
-							{
-								str = dummy_name;
-								break;
-							}
-							//KKA-658 we're still going to have problems in cases where two names could appear in free text and one
-							//is a wholly contained subset of the other (eg display names 0025 and 0025a). The test above deals with
-							//this if the input string is only a name, but when there's other text as well I don't see an easy solution
-							//without getting into sorting all the possible substitutions by length so we guarantee trying the longest first
-							//That's more processing than I want to be doing in this routine
-							
-							//dummy_name = getDummyName(clean_user_name);
-							if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, clean_user_name + " Resident", dummy_name);
-							str = stringReplaceWholeWord(str, clean_user_name, dummy_name);
+						user_name = av_name.getUserName();
+						clean_user_name = LLCacheName::cleanFullName(user_name);
+						display_name = av_name.mDisplayName; // not "getDisplayName()" because we need this whether we use display names or user names
 
-							//dummy_name = getDummyName(user_name);
-							if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, user_name + " Resident", dummy_name);
-							str = stringReplaceWholeWord(str, user_name, dummy_name);
+						dummy_name = getDummyName(clean_user_name);
+						str = stringReplaceWholeWord(str, clean_user_name, dummy_name);
 
-							//dummy_name = getDummyName(display_name);
-							if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, display_name + " Resident", dummy_name);
-							str = stringReplaceWholeWord(str, display_name, dummy_name);
-							
-							//KKA-631 handle first.last for minimap
-							str = stringReplaceWholeWord(str, user_dot_name, dummy_name);
-						}
-					}
-					else
-					{
-						// KKA-630 this av has an exception - if str exactly matches one of the name options turn off anon_name to preserve it
-						// KKA-658 change this test to be on the original input string so that we can correctly handle the case where one name
-						// is wholly contained in a larger name and the larger name has an exception. Test anon_name too to allow a bit of optimisation
-						if (anon_name && (pre_str == clean_user_name || pre_str == clean_user_name + " Resident" || pre_str == user_name || pre_str == user_name + " Resident"
-							|| pre_str==display_name || pre_str==display_name + " Resident" || pre_str == user_dot_name))
-						{
-							str = pre_str; // undo any partial substitutions that could have happened up to this point
-							anon_name = false;
-							break;
-						}
+						dummy_name = getDummyName(user_name);
+						str = stringReplaceWholeWord(str, user_name, dummy_name);
+
+						dummy_name = getDummyName(display_name);
+						str = stringReplaceWholeWord(str, display_name, dummy_name);
 					}
 				}
+			}
+		}
 	}
-	//KKA-630 If we were called to anonymise the whole string (ie it's known to be a name) and we didn't find an exception, anonymise it
-	//This isn't ideal - references to non-present avatars with an exception are going to get anonymised, however it's only in cases where
-	//anonymisation is being forced
-	if (str.compare(pre_str) == 0 && anon_name) str = getDummyNameInternal(str);
 	return str;
+#endif
 }
 
 void updateAndSave (WLColorControl* color)
