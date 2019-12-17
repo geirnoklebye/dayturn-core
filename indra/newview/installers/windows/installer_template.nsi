@@ -771,13 +771,15 @@ Function .onInstSuccess
         ;; Put a marker file there so VMP will know we're done
         ;; and it can delete the download directory next time.
         ;; http://nsis.sourceforge.net/Write_text_to_a_file
-        FileOpen $0 "$EXEDIR\nsis.winstall" w
-        FileWrite $0 "NSIS done$\n"
-        FileClose $0
+        # <FS:Ansariel> Disable VMP
+        #FileOpen $0 "$EXEDIR\nsis.winstall" w
+        #FileWrite $0 "NSIS done$\n"
+        #FileClose $0
 
-        ClearErrors
-        Pop $0
-        Pop $R0
+        #ClearErrors
+        #Pop $0
+        #Pop $R0
+        # </FS:Ansariel>
         Push $R0					# Option value, unused# 
 
        Call CheckWindowsServPack		# Warn if not on the latest SP before asking to launch.
