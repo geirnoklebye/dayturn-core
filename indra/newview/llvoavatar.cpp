@@ -9504,12 +9504,13 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 
     bool slam_params = false;
     applyParsedAppearanceMessage(*contents, slam_params);
+//CA - I suspect this is making things worse, disable it for now
 //MK
 	// we need to rebake the textures too, which has the effect of sanitizing the COF by 
 	// making it consistent with what we see on the screen.
 	if (isSelf())
 	{
-		handle_rebake_textures(NULL); // included in llviewermenu
+//		handle_rebake_textures(NULL); // included in llviewermenu
 	}
 
 	// We also need to reset the skeleton of this avatar because Bento-animated attachments 
@@ -9518,7 +9519,7 @@ void LLVOAvatar::processAvatarAppearance( LLMessageSystem* mesgsys )
 	// avatar in T-pose, potentially ruining some delicate positioning.
 	if (!LLSelectMgr::getInstance()->getSelection()->getObjectCount() || !LLSelectMgr::getInstance()->getSelection()->isAttachment())
 	{
-		resetSkeleton(false);
+//		resetSkeleton(false);
 	}
 //mk
 }
