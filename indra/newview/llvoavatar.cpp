@@ -11013,8 +11013,23 @@ BOOL LLVOAvatar::isTextureDefined(LLAvatarAppearanceDefines::ETextureIndex te, U
 		return FALSE;
 	}
 
-	return (getImage(te, index)->getID() != IMG_DEFAULT_AVATAR && 
-			getImage(te, index)->getID() != IMG_DEFAULT);
+	// <FS:ND> getImage(te, index) can return 0 in some edge cases. Plus make this faster as it gets called frequently.
+
+	// return (getImage(te, index)->getID() != IMG_DEFAULT_AVATAR && 
+	// 		getImage(te, index)->getID() != IMG_DEFAULT);
+
+
+	LLViewerTexture *pImage( getImage( te, index ) );
+
+	if( !pImage )
+	{
+		LL_WARNS() << "getImage( " << (S32)te << ", " << index << " ) returned invalid ptr" << LL_ENDL;
+		return FALSE;
+	}
+	// </FS:ND>
+
+	LLUUID const &id = pImage->getID();
+	return id != IMG_DEFAULT_AVATAR && id != IMG_DEFAULT;
 }
 
 //virtual
