@@ -1057,6 +1057,9 @@ bool LLPanelRegionDebugInfo::refreshFromRegion(LLViewerRegion* region)
 	getChildView("restart_btn")->setEnabled(allow_modify);
 	getChildView("cancel_restart_btn")->setEnabled(allow_modify);
 	getChildView("region_debug_console_btn")->setEnabled(allow_modify);
+	getChildView("region_restart_delay")->setEnabled(allow_modify);
+	getChildView("region_restart_delay_label")->setEnabled(allow_modify);
+	getChildView("region_restart_delay_note")->setEnabled(allow_modify);
 
 	return LLPanelRegionInfo::refreshFromRegion(region);
 }
@@ -1203,7 +1206,29 @@ void LLPanelRegionDebugInfo::onClickTopScripts(void* data)
 // static
 void LLPanelRegionDebugInfo::onClickRestart(void* data)
 {
-	LLNotificationsUtil::add("ConfirmRestart", LLSD(), LLSD(), 
+	const S32 delay = gSavedSettings.getS32("RestartDelaySeconds");
+	const S32 minutes = delay / 60;
+	const S32 seconds = delay % 60;
+	const std::string lang = LLUI::getLanguage();
+	std::string format;
+	LLSD format_args;
+	if (minutes) {
+		format_args["[MINUTES]"] = LLTrans::getCountString(lang, "TimeMinutes", minutes);
+		if (seconds) {
+			format = "TimeMinutesSeconds";
+			format_args["[SECONDS]"] = LLTrans::getCountString(lang, "TimeSeconds", seconds);
+		}
+		else {
+			format = "TimeMinutes";
+		}
+	}
+	else {
+		format = "TimeSeconds";
+		format_args["[SECONDS]"] = LLTrans::getCountString(lang, "TimeSeconds", seconds);
+	}
+	LLSD args;
+	args["[DELAY]"] = LLTrans::getString(format, format_args);
+	LLNotificationsUtil::add("ConfirmRestart", args, LLSD(), 
 		boost::bind(&LLPanelRegionDebugInfo::callbackRestart, (LLPanelRegionDebugInfo*)data, _1, _2));
 }
 
@@ -1213,7 +1238,8 @@ bool LLPanelRegionDebugInfo::callbackRestart(const LLSD& notification, const LLS
 	if (option != 0) return false;
 
 	strings_t strings;
-	strings.push_back("120");
+	strings.push_back(llformat("%d", gSavedSettings.getS32("RestartDelaySeconds")));
+
 	LLUUID invoice(LLFloaterRegionInfo::getLastInvoice());
 	sendEstateOwnerMessage(gMessageSystem, "restart", invoice, strings);
 	return false;
