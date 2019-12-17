@@ -3711,6 +3711,8 @@ std::string RRInterface::getCensoredMessage (std::string str)
 }
 
 // KKA-630 the new anon_name flag asserts that we've been called for something known to be a name and we should anonymise it unless there's an exception
+// KKA-658 however, the approach of pecking away at the string substituting substrings causes problems when name A is wholly contained in name B - if name A
+// gets substituted first some remnant of name B will be left behind because the name B match will fail, so we need whole match testing instead
 std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_name)
 {
 	// HACK: if the message is under the form secondlife:///app/agent/UUID/about, clear it
@@ -3772,29 +3774,52 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 						//is tweaked slightly to always derive the dummy name from user_name. getDummyName is changed to veneer into this function
 						//so that exceptions can be handled whilst getDummyNameInternal is the original routine
 						std::string  dummy_name = getDummyNameInternal(user_name);
+							
+						//KKA-658 when called via getDummyName don't do substrings, require an exact match to do anything
+						if (anon_name)
+						{
+							if (str == clean_user_name + " Resident"
+								|| str == clean_user_name
+								|| str == user_name + " Resident"
+								|| str == user_name
+								|| str == display_name + " Resident"
+								|| str == display_name
+								|| str == user_dot_name)
+							{
+								str = dummy_name;
+								anon_name = false;
+								break;
+							}
+						}
+						else
+						{
+							//dummy_name = getDummyName(clean_user_name);
+							if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, clean_user_name + " Resident", dummy_name);
+							str = stringReplaceWholeWord(str, clean_user_name, dummy_name);
 
-						//dummy_name = getDummyName(clean_user_name);
-						if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, clean_user_name + " Resident", dummy_name);
-						str = stringReplaceWholeWord(str, clean_user_name, dummy_name);
+							//dummy_name = getDummyName(user_name);
+							if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, user_name + " Resident", dummy_name);
+							str = stringReplaceWholeWord(str, user_name, dummy_name);
 
-						//dummy_name = getDummyName(user_name);
-						if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, user_name + " Resident", dummy_name);
-						str = stringReplaceWholeWord(str, user_name, dummy_name);
-
-						//dummy_name = getDummyName(display_name);
-						if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, display_name + " Resident", dummy_name);
-						str = stringReplaceWholeWord(str, display_name, dummy_name);
-						
-						//KKA-631 handle first.last for minimap
-						str = stringReplaceWholeWord(str, user_dot_name, dummy_name);
+							//dummy_name = getDummyName(display_name);
+							if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, display_name + " Resident", dummy_name);
+							str = stringReplaceWholeWord(str, display_name, dummy_name);
+							
+							//KKA-631 handle first.last for minimap
+							str = stringReplaceWholeWord(str, user_dot_name, dummy_name);
+						}
 					}
 					else
 					{
 						// KKA-630 this av has an exception - if str exactly matches one of the name options turn off anon_name to preserve it
-						if (str == clean_user_name || str == clean_user_name + " Resident" || str == user_name || str == user_name + " Resident"
-							|| str==display_name || str==display_name + " Resident" || str == user_dot_name)
+						// KKA-658 change this test to be on the original input string so that we can correctly handle the case where one name
+						// is wholly contained in a larger name and the larger name has an exception. Test anon_name too to allow a bit of optimisation
+						if (anon_name && (pre_str == clean_user_name || pre_str == clean_user_name + " Resident" || pre_str == user_name || pre_str == user_name + " Resident"
+							|| pre_str==display_name || pre_str==display_name + " Resident" || pre_str == user_dot_name))
 						{
+							str = pre_str; // undo any partial substitutions that could have happened up to this point
 							anon_name = false;
+							break;
 						}
 					}
 				}
