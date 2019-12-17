@@ -3793,6 +3793,20 @@ std::string RRInterface::getCensoredMessageInternal(std::string str, bool anon_n
 						}
 						else
 						{
+							//KKA-658 if we get an exact name match on the input string (not the evolving substituted string)
+							//substitute that and stop at that point						
+							if (pre_str == clean_user_name || pre_str == clean_user_name + " Resident" || pre_str == user_name || pre_str == user_name + " Resident"
+							|| pre_str==display_name || pre_str==display_name + " Resident" || pre_str == user_dot_name)
+							{
+								str = dummy_name;
+								break;
+							}
+							//KKA-658 we're still going to have problems in cases where two names could appear in free text and one
+							//is a wholly contained subset of the other (eg display names 0025 and 0025a). The test above deals with
+							//this if the input string is only a name, but when there's other text as well I don't see an easy solution
+							//without getting into sorting all the possible substitutions by length so we guarantee trying the longest first
+							//That's more processing than I want to be doing in this routine
+							
 							//dummy_name = getDummyName(clean_user_name);
 							if (user_name.find(" ") == -1) str = stringReplaceWholeWord(str, clean_user_name + " Resident", dummy_name);
 							str = stringReplaceWholeWord(str, clean_user_name, dummy_name);

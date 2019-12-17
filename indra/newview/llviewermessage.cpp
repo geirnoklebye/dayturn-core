@@ -2909,7 +2909,13 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 								{
 									from_name = gAgent.mRRInterface.getDummyName(from_name, chat.mAudible);
 								}
-						}
+							}
+							// KKA-658 however, even if the name wasn't matched we should go through the
+							// usual string search
+							else
+							{
+								from_name = gAgent.mRRInterface.getCensoredMessage(from_name);
+							}							 
 					}
 					// also scramble the name of the chatter (replace with a dummy name)
 					// KKA-658 we don't want the else below stomping over the special case above, so this becomes an elseif
