@@ -3625,6 +3625,9 @@ class LLAvatarDebug : public view_listener_t
 	bool handleEvent(const LLSD& userdata)
 	{
 		LLVOAvatar* avatar = find_avatar_from_object( LLSelectMgr::getInstance()->getSelection()->getPrimaryObject() );
+		//CA: I want to invoke this from the main menu too, when there won't be an avatar selected, so instead of
+		//doing nothing, default to self
+		if ( !avatar ) avatar = gAgentAvatarp;
 		if( avatar )
 		{
 			if (avatar->isSelf())

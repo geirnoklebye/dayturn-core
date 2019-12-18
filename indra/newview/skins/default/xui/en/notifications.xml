@@ -12003,11 +12003,4 @@ Shape import failed. Are you sure [FILENAME] is an avatar file?
 [MESSAGE]
   </notification>
 
-  <notification
-   icon="alertmodal.tga"
-   name="KokuaFetchBakedTexture"
-   type="alertmodal">
-DEBUG: Kokua has requested a fetch of a missing baked texture.
-  </notification>
-  
 </notifications>

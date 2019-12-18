@@ -2251,6 +2251,7 @@ bool LLVOAvatarSelf::getIsCloud() const
 				continue;
 
 			// Check for the case that texture is defined but not sufficiently loaded to display anything.
+			
 			const LLViewerTexture* baked_img = getImage( texture_data.mTextureIndex, 0 );
 			if (!baked_img || !baked_img->hasGLTexture())
 			{
@@ -2258,32 +2259,6 @@ bool LLVOAvatarSelf::getIsCloud() const
 				{
 					LL_INFOS() << "Self is clouded because texture at index " << i
 							<< " (texture index is " << texture_data.mTextureIndex << ") is not loaded" << LL_ENDL;
-					if (baked_img)
-					{
-						LL_INFOS() << "Kokua: Triggering a reload of " << baked_img->getID() << LL_ENDL;
-						// CA: Ending up here seems to be a regular cause of clouded avatars. However, rather than
-						// try recovering, it just keeps on reporting it. We get more proactive and force a fetch
-						// This idea is based on the fact that using Show Textures manually unsticks this failure
-						// mode because showing the texture in the floater forces a new fetch to happen
-						//LLViewerTexLayerSet *layerset = getTexLayerSet(i);
-						//layerset->setUpdatesEnabled(TRUE);
-						//gAgentAvatarp->invalidateComposite(layerset);
-						//gAgentAvatarp->updateMeshTextures();
-						//LLFloaterReg::showInstance( "avatar_textures", LLSD(gAgent.getID()) );
-						//LLFloaterReg::hideInstance( "avatar_textures", LLSD(gAgent.getID()) );
-						
-						
-						// adapted from llpreviewtexture.cpp
-						LLPointer<LLViewerFetchedTexture>		mImage = NULL;
-						LLUUID				mImageID = baked_img->getID();
-						
-						mImage = LLViewerTextureManager::getFetchedTexture(mImageID, FTT_DEFAULT, MIPMAP_TRUE, LLGLTexture::BOOST_NONE, LLViewerTexture::LOD_TEXTURE);
-						mImage->setBoostLevel(LLGLTexture::BOOST_PREVIEW);
-						mImage->forceToSaveRawImage(0) ;
-						
-						
-						LLNotificationsUtil::add("KokuaFetchBakedTexture");
-					}
 				}
 				return true;
 			}
