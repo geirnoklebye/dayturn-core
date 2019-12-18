@@ -12000,7 +12000,7 @@ Shape import failed. Are you sure [FILENAME] is an avatar file?
    name="RLVTouchRestricted"
    type="notify">
    <tag>fail</tag>
-RLV Touch is resricted. 
+RLV Touch is restricted. 
   </notification>
 
     <notification

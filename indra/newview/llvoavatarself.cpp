@@ -72,6 +72,8 @@
 #include "llsdserialize.h"
 #include "llcallstack.h"
 #include "llcorehttputil.h"
+#include "llfloaterreg.h"
+#include "llviewertexturelist.h"
 
 #if LL_MSVC
 // disable boost::lexical_cast warning
@@ -2326,6 +2328,7 @@ bool LLVOAvatarSelf::getIsCloud() const
 				continue;
 
 			// Check for the case that texture is defined but not sufficiently loaded to display anything.
+			
 			const LLViewerTexture* baked_img = getImage( texture_data.mTextureIndex, 0 );
 			if (!baked_img || !baked_img->hasGLTexture())
 			{
