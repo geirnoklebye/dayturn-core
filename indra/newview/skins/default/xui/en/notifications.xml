@@ -12000,7 +12000,7 @@ Shape import failed. Are you sure [FILENAME] is an avatar file?
    name="RLVTouchRestricted"
    type="notify">
    <tag>fail</tag>
-RLV Touch is resricted. 
+RLV Touch is restricted. 
   </notification>
 
     <notification
@@ -12020,11 +12020,4 @@ RLV Touch is resricted.
 [MESSAGE]
   </notification>
 
-  <notification
-   icon="alertmodal.tga"
-   name="KokuaFetchBakedTexture"
-   type="alertmodal">
-DEBUG: Kokua has requested a fetch of a missing baked texture.
-  </notification>
-  
 </notifications>
