@@ -54,7 +54,9 @@ struct embedded_anonym_t
 	U32 mLastReferenced;
 };
 typedef std::map<std::string, embedded_anonym_t > anonym_map_t;
-anonym_map_t mAnonEntries; 
+anonym_map_t mAnonEntries;
+
+typedef std::map<std::string, LLUUID > name_map_t; 
  
 // ---- all initialisation, called from llStartup just after other RLV setup
 
@@ -232,89 +234,72 @@ std::string KokuaRLVExtras::kokuaGetCensoredMessage(std::string str, bool anon_n
 	
 	LLWorld::getInstance()->getAvatars(&avatar_ids, &positions, gAgentCamera.getCameraPositionGlobal());
 
+	// KKA-658 Having shifted this out of RRInterface to here, the way is clear to rewrite the routine
+	// entirely to take advantage of maps being ordered, therefore reverse iterating will gives us
+	// longest names first which is what we need to avoid the problems with names that are substrings
+	// of other names
+
+	name_map_t name_map;
+	
 	for (U32 i = 0; i < avatar_ids.size(); i++)
 	{
 		LLUUID uuid = avatar_ids[i];
 
-				LLAvatarName av_name;
-				if (LLAvatarNameCache::get(uuid, &av_name))
-				{
-					std::string user_name = av_name.getUserName();
-					std::string clean_user_name = LLCacheName::cleanFullName(user_name);
-					std::string  display_name = av_name.mDisplayName; // not "getDisplayName()" because we need this whether we use display names or user names
-					//KKA-631 we need to handle first.last as well
-					std::string  user_dot_name = av_name.mUsername; // needed for minimap and maybe others now they come through here
-
-					if (std::find(exceptions.begin(), exceptions.end(), uuid) == exceptions.end()) // ignore exceptions
-					{
-						//KKA-630 to reduce the occurrences of same avatar different names in different situations (eg chat, tooltip etc) this
-						//is tweaked slightly to always derive the dummy name from user_name. getDummyName is changed to veneer into this function
-						//so that exceptions can be handled whilst kokuaGetDummyName is the original routine
-						std::string  dummy_name = kokuaGetDummyName(user_name);
-							
-						//KKA-658 when called via getDummyName don't do substrings, require an exact match to do anything
-						if (anon_name)
-						{
-							if (str == clean_user_name + " Resident"
-								|| str == clean_user_name
-								|| str == user_name + " Resident"
-								|| str == user_name
-								|| str == display_name + " Resident"
-								|| str == display_name
-								|| str == user_dot_name)
-							{
-								str = dummy_name;
-								anon_name = false;
-								break;
-							}
-						}
-						else
-						{
-							//KKA-658 if we get an exact name match on the input string (not the evolving substituted string)
-							//substitute that and stop at that point						
-							if (pre_str == clean_user_name || pre_str == clean_user_name + " Resident" || pre_str == user_name || pre_str == user_name + " Resident"
-							|| pre_str==display_name || pre_str==display_name + " Resident" || pre_str == user_dot_name)
-							{
-								str = dummy_name;
-								break;
-							}
-							//KKA-658 we're still going to have problems in cases where two names could appear in free text and one
-							//is a wholly contained subset of the other (eg display names 0025 and 0025a). The test above deals with
-							//this if the input string is only a name, but when there's other text as well I don't see an easy solution
-							//without getting into sorting all the possible substitutions by length so we guarantee trying the longest first
-							//That's more processing than I want to be doing in this routine
-							
-							if (user_name.find(" ") == -1) str = gAgent.mRRInterface.stringReplaceWholeWord(str, clean_user_name + " Resident", dummy_name);
-							str = gAgent.mRRInterface.stringReplaceWholeWord(str, clean_user_name, dummy_name);
-
-							if (user_name.find(" ") == -1) str = gAgent.mRRInterface.stringReplaceWholeWord(str, user_name + " Resident", dummy_name);
-							str = gAgent.mRRInterface.stringReplaceWholeWord(str, user_name, dummy_name);
-
-							if (user_name.find(" ") == -1) str = gAgent.mRRInterface.stringReplaceWholeWord(str, display_name + " Resident", dummy_name);
-							str = gAgent.mRRInterface.stringReplaceWholeWord(str, display_name, dummy_name);
-							
-							//KKA-631 handle first.last for minimap
-							str = gAgent.mRRInterface.stringReplaceWholeWord(str, user_dot_name, dummy_name);
-						}
-					}
-					else
-					{
-						// KKA-630 this av has an exception - if str exactly matches one of the name options turn off anon_name to preserve it
-						// KKA-658 change this test to be on the original input string so that we can correctly handle the case where one name
-						// is wholly contained in a larger name and the larger name has an exception. Test anon_name too to allow a bit of optimisation
-						if (anon_name && (pre_str == clean_user_name || pre_str == clean_user_name + " Resident" || pre_str == user_name || pre_str == user_name + " Resident"
-							|| pre_str==display_name || pre_str==display_name + " Resident" || pre_str == user_dot_name))
-						{
-							str = pre_str; // undo any partial substitutions that could have happened up to this point
-							anon_name = false;
-							break;
-						}
-					}
-				}
+		LLAvatarName av_name;
+		if (LLAvatarNameCache::get(uuid, &av_name))
+		{
+			name_map[av_name.getUserName()] = uuid;
+			name_map[av_name.getUserName()+" Resident"] = uuid;
+			name_map[LLCacheName::cleanFullName(av_name.getUserName())] = uuid;
+			name_map[LLCacheName::cleanFullName(av_name.getUserName()) + " Resident"] = uuid;
+			name_map[av_name.mDisplayName] = uuid; // not "getDisplayName()" because we need this whether we use display names or user names
+			name_map[av_name.mUsername] = uuid; // needed for minimap and maybe others now they come through here
+		}
 	}
-	//KKA-630 If we were called to anonymise the whole string (ie it's known to be a name) and we didn't find an exception, anonymise it
-	//This isn't ideal - references to non-present avatars with an exception are going to get anonymised, however it's only in cases where
-	//anonymisation is being forced
+					
+	name_map_t::reverse_iterator name_it = name_map.rbegin(); // important: iterate in reverse order to do longest strings first
+		
+	while (name_it != name_map.rend())
+	{
+		LLUUID uuid = name_it->second;
+
+		LLAvatarName av_name;
+		if (LLAvatarNameCache::get(uuid, &av_name))
+		{
+			std::string  dummy_name = kokuaGetDummyName(av_name.getUserName());
+														
+			if (std::find(exceptions.begin(), exceptions.end(), uuid) == exceptions.end())
+			{
+				// no exceptions for this uuid
+				if (pre_str == name_it->first)
+				{
+					// exact name match, return dummy name and finish
+					str = dummy_name;
+					anon_name = false;
+					break;
+				}
+				else
+				{
+					//no name match / a longer string than just a name, do the general substitution
+					str = gAgent.mRRInterface.stringReplaceWholeWord(str, name_it->first, dummy_name);					
+				}
+			}
+			else
+			{
+				// there is an exception for this uuid
+				if (pre_str == name_it->first)
+				{
+					// it matches, return original string
+					str = pre_str;
+					anon_name = false;
+					break;
+				}				
+			}
+		}
+		name_it++;
+	}
+	
+	// if we are required to anonymise this and haven't found a match, do it here
 	if (str.compare(pre_str) == 0 && anon_name) str = kokuaGetDummyName(str);
 	return str;
 }
