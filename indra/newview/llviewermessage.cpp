@@ -2895,10 +2895,9 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				if (from_id != gAgent.getID() && gAgent.mRRInterface.mContainsShownames)
 				{
 					// Special case : if the object is an attachment and imitates the name of its owner, scramble its name as if it were an agent
-					if (chatter && !chatter->isAvatar())
+					// KKA-658 also need to allow for huds which will not have chatter valid
+					if (!chatter || (chatter && !chatter->isAvatar() && chatter->isAttachment()))
 					{
-						if (chatter->isAttachment())
-						{
 							LLAvatarName av_name;
 							if (LLAvatarNameCache::get(owner_id, &av_name))
 							{
@@ -2911,10 +2910,16 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 									from_name = gAgent.mRRInterface.getDummyName(from_name, chat.mAudible);
 								}
 							}
-						}
+							// KKA-658 however, even if the name wasn't matched we should go through the
+							// usual string search
+							else
+							{
+								from_name = gAgent.mRRInterface.getCensoredMessage(from_name);
+							}							 
 					}
 					// also scramble the name of the chatter (replace with a dummy name)
-					if (chatter && chatter->isAvatar())
+					// KKA-658 we don't want the else below stomping over the special case above, so this becomes an elseif
+					else if (chatter && chatter->isAvatar())
 					{
 						std::string uuid_str = chatter->getID().asString();
 						LLStringUtil::toLower(uuid_str);
