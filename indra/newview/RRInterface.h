@@ -382,10 +382,6 @@ private:
 	std::string mLastLoadedPreset; // contains the name of the latest loaded Windlight preset
 	int mLaunchTimestamp; // timestamp of the beginning of this session
 	BOOL reallyHandleCommand (LLUUID uuid, std::string command);	// CA: the public handleCommand is now a veneer so that we can do debug output cleanly for all callers, not just chat handling
-	// KKA-630 this is now renamed and private since it doesn't handle exceptions
-	std::string getDummyNameInternal (std::string name); // return "someone", "unknown" etc according to the length of the name (when shownames is on)
-	// KKA-630 internal version with additional flag to indicated if it's called for something we know is a name and should be anonymised unless an exception applies
-	std::string getCensoredMessageInternal (std::string str, bool anon_name); // replace names by dummy names	
 };
 
 

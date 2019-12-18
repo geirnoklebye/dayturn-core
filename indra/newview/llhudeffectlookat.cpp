@@ -330,16 +330,16 @@ void LLHUDEffectLookAt::packData(LLMessageSystem *mesgsys)
 	// position interpreted as offset if target object is non-null
 	if (mTargetObject)
 	{
-		htolememcpy(&(packed_data[TARGET_OBJECT]), mTargetObject->mID.mData, MVT_LLUUID, 16);
+		htolememcpy(&(packed_data[TARGET_OBJECT]), target_object->mID.mData, MVT_LLUUID, 16);
 	}
 	else
 	{
 		htolememcpy(&(packed_data[TARGET_OBJECT]), LLUUID::null.mData, MVT_LLUUID, 16);
 	}
 
-	htolememcpy(&(packed_data[TARGET_POS]), mTargetOffsetGlobal.mdV, MVT_LLVector3d, 24);
+	htolememcpy(&(packed_data[TARGET_POS]), target_offset_global.mdV, MVT_LLVector3d, 24);
 
-	U8 lookAtTypePacked = (U8)mTargetType;
+	U8 lookAtTypePacked = (U8)target_type;
 	
 	htolememcpy(&(packed_data[LOOKAT_TYPE]), &lookAtTypePacked, MVT_U8, 1);
 

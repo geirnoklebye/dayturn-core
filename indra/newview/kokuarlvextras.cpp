@@ -25,13 +25,18 @@
  */
 
 #include "llviewerprecompiledheaders.h"
-
 #include <map>
 
+#include "kokuarlvextras.h"
+
+#include "llagent.h"
+#include "llagentcamera.h"
+#include "llavatarnamecache.h"
 #include "llerror.h"
 #include "llsdserialize.h" 
+#include "llworld.h"
+#include "RRInterface.h"
 
-#include "kokuarlvextras.h"
 
 
 // This file is intended for Kokua RLV features where including them in RRInterface would make it
@@ -49,7 +54,9 @@ struct embedded_anonym_t
 	U32 mLastReferenced;
 };
 typedef std::map<std::string, embedded_anonym_t > anonym_map_t;
-anonym_map_t mAnonEntries; 
+anonym_map_t mAnonEntries;
+
+typedef std::map<std::string, LLUUID > name_map_t; 
  
 // ---- all initialisation, called from llStartup just after other RLV setup
 
@@ -103,7 +110,7 @@ void KokuaRLVExtras::loadFromFile(const std::string& strFilePath)
 	}
 }
 
-std::string KokuaRLVExtras::getDummyName (std::string name)
+std::string KokuaRLVExtras::kokuaGetDummyName (std::string name)
 {
 	// KKA-646
 	// RLV and RLVa's original routines both use a hash algorithm for picking the anonym to associate with
@@ -183,4 +190,116 @@ std::string KokuaRLVExtras::getDummyName (std::string name)
 	(oldest->second).mLastReferenced = LLDate::now().secondsSinceEpoch();
 	(oldest->second).mOriginalName = name;
 	return oldest->first;	
+}
+
+std::string KokuaRLVExtras::kokuaGetCensoredMessage(std::string str, bool anon_name)
+{
+	// HACK: if the message is under the form secondlife:///app/agent/UUID/about, clear it
+	// (we could just as well clear just the first part, or return a bogus message, 
+	// the purpose here is to avoid showing the profile of an avatar and displaying their name on the chat)
+	if (str.find("secondlife:///app/agent/") == 0)
+	{
+		return "";
+	}
+
+	// First we need to build a list of all the exceptions to @shownames and @shownametags
+	// Each avatar object which UUID is contained in this list should not be censored
+	std::string command;
+	std::string behav;
+	std::string option;
+	std::string param;
+	std::deque<LLUUID> exceptions;
+	RRMAP::iterator it = gAgent.mRRInterface.mSpecialObjectBehaviours.begin();
+	while (it != gAgent.mRRInterface.mSpecialObjectBehaviours.end()) {
+		command = it->second;
+		LLStringUtil::toLower(command);
+		if (command.find("shownames:") == 0 || command.find("shownames_sec:") == 0 || command.find("shownametags:") == 0) {
+			// KKA-635 this needs the =n to work
+			if (gAgent.mRRInterface.parseCommand(command+"=n", behav, option, param)) {
+				LLUUID uuid;
+				uuid.set(option, FALSE);
+				exceptions.push_back(uuid);
+			}
+		}
+		it++;
+	}
+	
+	// KKA-638 Previously this searched the object cache to find avatars which apart from being an intensive
+	// operation had the problem that avatars within parcels with visibility turned off don't appear in the 
+	// object cache. Instead, we now use the same method used by the minimap to get its avatar list
+	
+	std::string pre_str = str;
+	uuid_vec_t avatar_ids;
+	std::vector<LLVector3d> positions;
+	
+	LLWorld::getInstance()->getAvatars(&avatar_ids, &positions, gAgentCamera.getCameraPositionGlobal());
+
+	// KKA-658 Having shifted this out of RRInterface to here, the way is clear to rewrite the routine
+	// entirely to take advantage of maps being ordered, therefore reverse iterating will gives us
+	// longest names first which is what we need to avoid the problems with names that are substrings
+	// of other names
+
+	name_map_t name_map;
+	
+	for (U32 i = 0; i < avatar_ids.size(); i++)
+	{
+		LLUUID uuid = avatar_ids[i];
+
+		LLAvatarName av_name;
+		if (LLAvatarNameCache::get(uuid, &av_name))
+		{
+			name_map[av_name.getUserName()] = uuid;
+			name_map[av_name.getUserName()+" Resident"] = uuid;
+			name_map[LLCacheName::cleanFullName(av_name.getUserName())] = uuid;
+			name_map[LLCacheName::cleanFullName(av_name.getUserName()) + " Resident"] = uuid;
+			name_map[av_name.mDisplayName] = uuid; // not "getDisplayName()" because we need this whether we use display names or user names
+			name_map[av_name.mUsername] = uuid; // needed for minimap and maybe others now they come through here
+		}
+	}
+					
+	name_map_t::reverse_iterator name_it = name_map.rbegin(); // important: iterate in reverse order to do longest strings first
+		
+	while (name_it != name_map.rend())
+	{
+		LLUUID uuid = name_it->second;
+
+		LLAvatarName av_name;
+		if (LLAvatarNameCache::get(uuid, &av_name))
+		{
+			std::string  dummy_name = kokuaGetDummyName(av_name.getUserName());
+														
+			if (std::find(exceptions.begin(), exceptions.end(), uuid) == exceptions.end())
+			{
+				// no exceptions for this uuid
+				if (pre_str == name_it->first)
+				{
+					// exact name match, return dummy name and finish
+					str = dummy_name;
+					anon_name = false;
+					break;
+				}
+				else
+				{
+					//no name match / a longer string than just a name, do the general substitution
+					str = gAgent.mRRInterface.stringReplaceWholeWord(str, name_it->first, dummy_name);					
+				}
+			}
+			else
+			{
+				// there is an exception for this uuid
+				if (pre_str == name_it->first)
+				{
+					// it matches, return original string
+					str = pre_str;
+					anon_name = false;
+					break;
+				}				
+			}
+		}
+		name_it++;
+	}
+	
+	// if we are required to anonymise this and haven't found a match, do it here
+	if (str.compare(pre_str) == 0 && anon_name) str = kokuaGetDummyName(str);
+	return str;
 }

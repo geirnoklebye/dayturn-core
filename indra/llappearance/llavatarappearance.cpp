@@ -271,11 +271,11 @@ void LLAvatarAppearance::initInstance()
 		// Skip it if there's no associated baked texture.
 		if (baked_texture_index == BAKED_NUM_INDICES) continue;
 		
-		for (avatar_joint_mesh_list_t::iterator iter = mMeshLOD[mesh_index]->mMeshParts.begin();
-			 iter != mMeshLOD[mesh_index]->mMeshParts.end(); 
-			 ++iter)
+		for (avatar_joint_mesh_list_t::iterator iter2 = mMeshLOD[mesh_index]->mMeshParts.begin();
+			 iter2 != mMeshLOD[mesh_index]->mMeshParts.end(); 
+			 ++iter2)
 		{
-			LLAvatarJointMesh* mesh = (*iter);
+			LLAvatarJointMesh* mesh = (*iter2);
 			mBakedTextureDatas[(S32)baked_texture_index].mJointMeshes.push_back(mesh);
 		}
 	}
