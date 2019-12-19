@@ -261,4 +261,32 @@
 		<button.commit_callback
 		  function="Pref.Proxy" />
   </button>
+		<button
+		 enabled="true"
+		 follows="left|top"
+		 height="23"
+		 label="Open Viewer Logs"
+		 label_selected="Open Viewer Logs"
+		 layout="topleft"
+		 left="20"
+		 name="browse_crashlogs"
+		 top_delta="50"
+		 width="120">
+			<button.commit_callback
+			 function="Pref.BrowseCrashLogs" />
+		</button>
+		<button
+		 enabled="true"
+		 follows="left|top"
+		 height="23"
+		 label="Open Settings folder"
+		 label_selected="Open Settings folder"
+		 layout="topleft"
+		 left_pad="10"
+		 name="browse_settingsdir"
+		 top_delta="0"
+		 width="140">
+			<button.commit_callback
+			 function="Pref.BrowseSettingsDir" />
+		</button>
 </panel>
