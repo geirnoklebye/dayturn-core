@@ -49,8 +49,17 @@ LLSplashScreen *gSplashScreenp = NULL;
 BOOL gDebugClicks = FALSE;
 BOOL gDebugWindowProc = FALSE;
 
-const S32 gURLProtocolWhitelistCount = 5;
-const std::string gURLProtocolWhitelist[] = { "secondlife:", "http:", "https:", "data:", "mailto:" };
+// <FS:Zi> Allow file: links to open folders, chat history etc. on Linux systems
+//const S32 gURLProtocolWhitelistCount = 5;
+//const std::string gURLProtocolWhitelist[] = { "secondlife:", "http:", "https:", "data:", "mailto:" };
+#if LL_LINUX
+const S32 gURLProtocolWhitelistCount = 7;
+const std::string gURLProtocolWhitelist[] = { "secondlife:", "http:", "https:", "ftp:", "data:", "mailto:", "file:" };
+#else
+const S32 gURLProtocolWhitelistCount = 6;
+const std::string gURLProtocolWhitelist[] = { "secondlife:", "http:", "https:", "ftp:", "data:", "mailto:" };
+#endif
+// </FS:Zi>
 
 // CP: added a handler list - this is what's used to open the protocol and is based on registry entry
 //	   only meaningful difference currently is that file: protocols are opened using http:
