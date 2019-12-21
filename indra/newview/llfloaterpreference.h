@@ -164,7 +164,9 @@ public:
 
 	void onClickSetCache();
 	void changeCachePath(const std::vector<std::string>& filenames, std::string proposed_name);
+	void onClickBrowseCrashLogs();
 	void onClickResetCache();
+	void onClickBrowseSettingsDir();
 	void onClickSkin(LLUICtrl* ctrl,const LLSD& userdata);
 	void onSelectSkin();
 	void onClickSetKey();
