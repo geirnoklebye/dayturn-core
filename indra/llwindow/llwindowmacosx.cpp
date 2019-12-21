@@ -1792,6 +1792,17 @@ void LLWindowMacOSX::spawnWebBrowser(const std::string& escaped_url, bool async)
 		LL_INFOS() << "Error: couldn't create URL." << LL_ENDL;
 	}
 }
+void LLWindowMacOSX::openFile(const std::string& file_name )
+{
+        LL_INFOS() << "Opening file " << file_name << LL_ENDL;
+	FSRef appRef;
+	OSStatus os_result = FSPathMakeRef((UInt8*)file_name.c_str(),
+					   &appRef,NULL);
+	if(os_result >= 0)
+	{
+		os_result = LSOpenFSRef(&appRef, NULL);
+	}
+}
 
 LLSD LLWindowMacOSX::getNativeKeyData()
 {
