@@ -19852,6 +19852,17 @@
     <map>
       <key>Comment</key>
       <string>When enabled, posestand will lock the avatar to the ground.</string>
+    <key>FSRemoveScriptBlockButton</key>
+    <map>
+      <key>Comment</key>
+      <string>Removes the "block" from script dialogs.</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>

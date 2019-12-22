@@ -188,8 +188,11 @@ void LLToastNotifyPanel::updateButtonsLayout(const std::vector<index_button_pair
 		mControlPanel->addChild(ignore_btn, -1);
 		mute_btn_pad = 4 * HPAD; //only use a 4 * HPAD padding if an ignore button exists
 	}
-
-	if (mIsScriptDialog && mute_btn != NULL)
+	// <FS:Ansariel> FIRE-3948: Option to remove the mute button; FIRE-17158: Remove "block" button for script dialog of own objects
+	//if (mIsScriptDialog && mute_btn != NULL)
+	if (mIsScriptDialog && mute_btn != NULL && !gSavedSettings.getBOOL("FSRemoveScriptBlockButton") &&
+		(!mNotification->getPayload().has("own_object") || !mNotification->getPayload()["own_object"].asBoolean()))
+	// </FS:Ansariel>
 	{
 		LLRect mute_btn_rect(mute_btn->getRect());
 		// Place mute (Block) button to the left of the ignore button.
