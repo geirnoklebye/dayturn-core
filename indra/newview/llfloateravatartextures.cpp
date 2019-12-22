@@ -38,6 +38,7 @@
 #include "llviewerobjectlist.h"
 #include "llvoavatarself.h"
 #include "lllocaltextureobject.h"
+//#include "rlvhandler.h"
 
 using namespace LLAvatarAppearanceDefines;
 
@@ -103,7 +104,7 @@ static void update_texture_ctrl(LLVOAvatar* avatarp,
 	}
 	else
 	{
-		id = avatarp->getTEref(te).getID();
+		id = tex_entry ? avatarp->getTEref(te).getID() : IMG_DEFAULT_AVATAR;
 	}
 	//id = avatarp->getTE(te)->getID();
 	if (id == IMG_DEFAULT_AVATAR)
@@ -114,7 +115,10 @@ static void update_texture_ctrl(LLVOAvatar* avatarp,
 	else
 	{
 		ctrl->setImageAssetID(id);
-		ctrl->setToolTip(tex_entry->mName + " : " + id.asString());
+		// <FS:Ansariel> Hide full texture uuid
+		//ctrl->setToolTip(tex_entry->mName + " : " + id.asString());
+		ctrl->setToolTip(tex_entry->mName + " : " + id.asString().substr(0,7));
+		// </FS:Ansariel>
 	}
 }
 
@@ -147,7 +151,10 @@ void LLFloaterAvatarTextures::refresh()
 			LLAvatarName av_name;
 			if (LLAvatarNameCache::get(avatarp->getID(), &av_name))
 			{
+				// <FS:Ansariel> FIRE-16224: Avatar textures floater can bypass RLVa shownames restriction
 				setTitle(mTitle + ": " + av_name.getCompleteName());
+				//setTitle(mTitle + ": " + (gRlvHandler.hasBehaviour(RLV_BHVR_SHOWNAMES) ? RlvStrings::getAnonym(av_name) : av_name.getCompleteName()));
+				// </FS:Ansariel>
 			}
 			for (U32 i=0; i < TEX_NUM_INDICES; i++)
 			{
