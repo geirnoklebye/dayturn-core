@@ -38,7 +38,7 @@
 #include "llviewerobjectlist.h"
 #include "llvoavatarself.h"
 #include "lllocaltextureobject.h"
-//#include "rlvhandler.h"
+#include "RRInterface.h"
 
 using namespace LLAvatarAppearanceDefines;
 
@@ -152,8 +152,10 @@ void LLFloaterAvatarTextures::refresh()
 			if (LLAvatarNameCache::get(avatarp->getID(), &av_name))
 			{
 				// <FS:Ansariel> FIRE-16224: Avatar textures floater can bypass RLVa shownames restriction
-				setTitle(mTitle + ": " + av_name.getCompleteName());
+				//setTitle(mTitle + ": " + av_name.getCompleteName());
 				//setTitle(mTitle + ": " + (gRlvHandler.hasBehaviour(RLV_BHVR_SHOWNAMES) ? RlvStrings::getAnonym(av_name) : av_name.getCompleteName()));
+				if (gRRenabled && gAgent.mRRInterface.mContainsShownames) setTitle(mTitle + ": " + gAgent.mRRInterface.getDummyName(av_name.getCompleteName()));
+				else setTitle(mTitle + ": " + av_name.getCompleteName());
 				// </FS:Ansariel>
 			}
 			for (U32 i=0; i < TEX_NUM_INDICES; i++)
