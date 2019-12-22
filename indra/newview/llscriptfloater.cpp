@@ -448,6 +448,11 @@ void LLScriptFloaterManager::onAddNotification(const LLUUID& notification_id)
 				}
 				break;
 			}
+			// <FS:Ansariel> FIRE-21224: Unconstrained script dialog option
+			case SCRIPT_UNCONSTRAINED:
+				// Do nothing here - unlimited dialog spam!
+				break;
+			// </FS:Ansariel>
 			case SCRIPT_PER_OBJECT:
 			default:
 			{
