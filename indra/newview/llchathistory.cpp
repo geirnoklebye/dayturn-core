@@ -1044,6 +1044,15 @@ public:
 			payload["name"] = chat.mFromName;
 			payload["owner_id"] = chat.mOwnerID;
 			payload["slurl"] = LLWeb::escapeURL(slurl);
+			
+			// KKA-665 if it's our attachment squash the url rather than showing a spurious value
+			LLViewerObject *object = gObjectList.findObject(chat.mFromID);
+
+			if (object) {
+				if (object->isAttachment() && object->flagObjectYouOwner()) {
+					payload["slurl"] = "";
+				}
+			}
 
 			mObjectData = payload;
 		}
