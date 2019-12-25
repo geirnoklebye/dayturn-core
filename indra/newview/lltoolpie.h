@@ -64,6 +64,7 @@ public:
 	virtual LLTool*		getOverrideTool(MASK mask);
 
 	LLPickInfo&			getPick() { return mPick; }
+	LLPickInfo&			getHoverPick() { return mHoverPick; }
 	U8					getClickAction() { return mClickAction; }
 	LLViewerObject*		getClickActionObject() { return mClickActionObject; }
 	LLObjectSelection*	getLeftClickSelection() { return (LLObjectSelection*)mLeftClickSelection; }

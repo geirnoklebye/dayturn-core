@@ -72,6 +72,7 @@
 #include "llui.h"
 #include "llweb.h"
 #include "pipeline.h"	// setHighlightObject
+#include "kokuarlvextras.h"
 
 extern BOOL gDebugClicks;
 
@@ -311,10 +312,10 @@ BOOL LLToolPie::handleLeftClickPick()
 	if (useClickAction(mask, object, parent))
 	{
 //MK
-	if (gRRenabled && !gAgent.mRRInterface.canTouch (object, mPick.mIntersection))
-	{
-		return FALSE;
-	}
+		if (gRRenabled && !gAgent.mRRInterface.canTouch (object, mPick.mIntersection))
+		{
+			return TRUE; // KKA-666 this was FALSE previously, but we should be returning TRUE for having handled the click
+		}
 //mk
 
 		mClickAction = 0;
@@ -576,7 +577,10 @@ ECursorType LLToolPie::cursorFromObject(LLViewerObject* object)
 	{
 	case CLICK_ACTION_SIT:
 		{
-			if (isAgentAvatarValid() && !gAgentAvatarp->isSitting()) // not already sitting?
+			//KKA-666 only select sit cursor if we actually can
+			//if (isAgentAvatarValid() && !gAgentAvatarp->isSitting()) // not already sitting?
+			if (isAgentAvatarValid() && !gAgentAvatarp->isSitting()
+				&& (!gRRenabled || KokuaRLVExtras::getInstance()->canSit (object, LLToolPie::getInstance()->getHoverPick().mIntersection)))
 			{
 				cursor = UI_CURSOR_TOOLSIT;
 			}
@@ -710,6 +714,12 @@ BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 	mHoverPick = gViewerWindow->pickImmediate(x, y, FALSE, pick_rigged);
 	LLViewerObject *parent = NULL;
 	LLViewerObject *object = mHoverPick.getObject();
+	// KKA-666 early exit if interact restriction in effect (or is beyond a fartouch limit)
+	if (gRRenabled && (!KokuaRLVExtras::getInstance()->canInteract(object, mHoverPick.mIntersection)))
+	{
+		gViewerWindow->setCursor(UI_CURSOR_ARROW);
+		return TRUE;
+	}	
 	LLSelectMgr::getInstance()->setHoverObject(object, mHoverPick.mObjectFace);
 	if (object)
 	{
@@ -745,6 +755,11 @@ BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 			gViewerWindow->setCursor(UI_CURSOR_ARROW);
 		}
 	}
+	// KKA-666 early exit if not touchable
+	else if (object && gRRenabled && !gAgent.mRRInterface.canTouch(object, mHoverPick.mIntersection))
+	{
+		gViewerWindow->setCursor(UI_CURSOR_ARROW);
+	}
 	else if (inCameraSteerMode())
 	{
 		steerCameraWithMouse(x, y);
@@ -764,7 +779,11 @@ BOOL LLToolPie::handleHover(S32 x, S32 y, MASK mask)
 			gViewerWindow->setCursor(cursor);
 			LL_DEBUGS("UserInput") << "hover handled by LLToolPie (inactive)" << LL_ENDL;
 		}
-		
+		// KKA-666 early exit if not touchable
+		else if (object && gRRenabled && !gAgent.mRRInterface.canTouch(object, mHoverPick.mIntersection))
+		{
+			gViewerWindow->setCursor(UI_CURSOR_ARROW);
+		}		
 		else if ((object && !object->isAvatar() && object->flagUsePhysics()) 
 				 || (parent && !parent->isAvatar() && parent->flagUsePhysics()))
 		{

@@ -30,6 +30,8 @@
 #define KOKUA_SHOWNAMES
 #define KOKUA_RLV_NAMES_FILE "kokua_rlv_names.xml"
 
+#include "llviewerobject.h"
+
 class KokuaRLVExtras
 {
 public:
@@ -40,7 +42,10 @@ public:
 	static KokuaRLVExtras& instance();
 	static KokuaRLVExtras* getInstance();
 	// KKA-630 internal version with additional flag to indicate if it's called for something we know is a name and should be anonymised unless an exception applies
-	std::string kokuaGetCensoredMessage (std::string str, bool anon_name); // replace names by dummy names	
+	std::string kokuaGetCensoredMessage (std::string str, bool anon_name); // replace names by dummy names
+	// KKA-666 we need a canSit and canInteract for lltoolpie.cpp - do them here rather than make merging RRInterface harder
+	bool canSit(LLViewerObject* pObj, const LLVector3& pickIntersect);	
+	bool canInteract(LLViewerObject* pObj, const LLVector3& pickIntersect);	
 private:
 	U32 mLaunchTimestamp; // timestamp of the beginning of this session
 	std::string kokuaGetDummyName (std::string name); // private because this doesn't do the exception detection - call kokuaGetCensoredMessage(string, true) instead

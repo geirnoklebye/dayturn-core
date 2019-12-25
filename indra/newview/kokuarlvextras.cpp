@@ -303,3 +303,44 @@ std::string KokuaRLVExtras::kokuaGetCensoredMessage(std::string str, bool anon_n
 	if (str.compare(pre_str) == 0 && anon_name) str = kokuaGetDummyName(str);
 	return str;
 }
+
+// KKA-666 RLV doesn't have this, so we need our own...
+bool KokuaRLVExtras::canSit(LLViewerObject* pObj, const LLVector3& pickIntersect)
+{
+	// logic lifted from llviewermenu sit enabling code for menus
+	// fartouch test added since fartouch will prevent click sits over distance
+	if (!pObj || !gRRenabled) return false;
+	
+	LLVOAvatar* avatar = gAgentAvatarp;
+	
+	if (avatar && gAgent.mRRInterface.mContainsUnsit && avatar->mIsSitting) return false;
+	
+	if (gAgent.mRRInterface.mContainsInteract) return false;
+	
+	if (gAgent.mRRInterface.contains("sit")) return false;
+	
+	if ((gAgent.mRRInterface.mSittpMax < EXTREMUM) || (gAgent.mRRInterface.mFartouchMax < EXTREMUM))
+	{
+		LLVector3 pos = pObj->getPositionRegion();
+		if (pickIntersect != LLVector3::zero) pos = pickIntersect;
+		pos -= gAgent.getPositionAgent();
+	
+		if (pos.magVec() >= gAgent.mRRInterface.mSittpMax) return false;	
+		if (pos.magVec() >= gAgent.mRRInterface.mFartouchMax) return false;	
+	}
+	return true;
+}
+
+// KKA-666 RLV doesn't have this either, so do our own too (logic adapted from RLVa)
+bool KokuaRLVExtras::canInteract(LLViewerObject* pObj, const LLVector3& pickIntersect)
+{
+	if (!gRRenabled) return true;
+
+	// User can interact with the specified object if:
+	//   - not interaction restricted (or the specified object is a HUD attachment)
+	//   - not prevented from touching faraway objects (or the object's center + pick offset is within range)
+
+	return
+		( (!pObj) || (pObj->isHUDAttachment()) ||
+			( !gAgent.mRRInterface.mContainsInteract && gAgent.mRRInterface.canTouchFar(pObj, pickIntersect)) );
+}
