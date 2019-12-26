@@ -86,6 +86,11 @@ LLButton* LLToastNotifyPanel::createButton(const LLSD& form_element, BOOL is_opt
 	LLButton::Params p;
 	bool make_small_btn = form_element["index"].asInteger() == -1 || form_element["index"].asInteger() == -2;
 	const LLFontGL* font = make_small_btn ? sFontSmall: sFont; // for block and ignore buttons in script dialog
+	if (mIsScriptDialog && !make_small_btn)
+	{
+		if (gSavedSettings.getBOOL("KokuaSmallScriptDialogButtonFont")) font=sFontSmall;
+		else font=sFont;
+	}
 	p.name = form_element["name"].asString();
 	p.label = form_element["text"].asString();
 	p.font = font;
@@ -294,7 +299,7 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
     // init font variables
     if (!sFont)
     {
-        sFont = LLFontGL::getFontSansSerifSmall();
+        sFont = LLFontGL::getFontSansSerif();
         sFontSmall = LLFontGL::getFontSansSerifSmall();
     }
     // initialize
@@ -317,7 +322,12 @@ void LLToastNotifyPanel::init( LLRect rect, bool show_images )
     }
     else
     {
-        mTextBox = getChild<LLTextEditor>("text_editor_box"); 
+        mTextBox = getChild<LLTextEditor>("text_editor_box");
+		if (mIsScriptDialog)
+		{
+		 	if (gSavedSettings.getBOOL("KokuaSmallScriptDialogTextFont")) mTextBox->setFont(sFontSmall);
+			else mTextBox->setFont(sFont);
+		}  
     }
 
     mTextBox->setMaxTextLength(LLToastPanel::MAX_TEXT_LENGTH);
