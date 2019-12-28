@@ -4114,7 +4114,9 @@ BOOL RRInterface::forceDebugSetting (std::string command, std::string option)
 	if (ind != -1) {
 		if (gSavedSettings.controlExists(real_command))
 		{
-			switch (gSavedSettings.getControl(real_command)->type())
+			// KKA-668 turn off persistence when non-default values are set - adapted from RLVa
+			LLControlVariable *pSetting = gSavedSettings.getControl(real_command);
+			switch (pSetting->type())
 			{
 			case TYPE_U32:
 				gSavedSettings.setU32(real_command, atoi(option.c_str()));
@@ -4158,6 +4160,12 @@ BOOL RRInterface::forceDebugSetting (std::string command, std::string option)
 
 			default:
 				break;
+			}
+			// KKA-668 turn off persistence if we're messing with RenderResolutionDivisor, logic adapted from RLVa. At the time of writing avatarsex is the only
+			// other writable debug control and that's not persistent anyway so it's not worth going the whole way and caching the persistence as RLVa does.
+			if (real_command == "RenderResolutionDivisor")
+			{
+				pSetting->setPersist( (pSetting->isDefault()) ? LLControlVariable::PERSIST_NONDFT : LLControlVariable::PERSIST_NO );
 			}
 		}
 		return TRUE;
