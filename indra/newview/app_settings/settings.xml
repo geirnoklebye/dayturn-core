@@ -20092,6 +20092,28 @@
       <key>Value</key>
       <integer>0</integer>
     </map>
+    <key>KokuaDisableALMWhileRRDExceeds</key>
+    <map>
+      <key>Comment</key>
+      <string>If non-zero, defines a value at which ALM is disabled (if active) when RenderResolutionDivisor is higher</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>U32</string>
+      <key>Value</key>
+      <integer>16</integer>
+    </map>
+    <key>KokuaReinstateALM</key>
+    <map>
+      <key>Comment</key>
+      <string>If non-zero, Kokua disabled ALM due to KokuaDisableALMWhileRRDExceeds - turn ALM back on when RRD is not higher than threshold</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
   </map>
 </llsd>
 

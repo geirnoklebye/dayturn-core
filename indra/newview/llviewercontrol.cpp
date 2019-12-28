@@ -98,7 +98,6 @@ LLControlGroup gCrashSettings("CrashSettings");	// saved at end of session
 LLControlGroup gWarningSettings("Warnings"); // persists ignored dialogs/warnings
 
 std::string gLastRunVersion;
-
 extern BOOL gResizeScreenTexture;
 extern BOOL gDebugGL;
 ////////////////////////////////////////////////////////////////////////////
@@ -448,9 +447,32 @@ static bool handleRenderDebugPipelineChanged(const LLSD& newvalue)
 	return true;
 }
 
-static bool handleRenderResolutionDivisorChanged(const LLSD&)
+static bool handleRenderResolutionDivisorChanged(const LLSD& newvalue)
 {
+	// KKA-668 ALM and high values of RenderResolutionDivisor can generate
+	// high CPU and/or GPU usage. This is a protective measure that turns off
+	// ALM when RRD goes over a threshold (default is 16) and remembers it
+	// for when RRD goes below the threshold (which could be at the next login
+	// if the RRD change came from RLV rather than being manually entered 
+	// as a debug setting)
+	U32 threshold = gSavedSettings.getU32( "KokuaDisableALMWhileRRDExceeds" );
+	bool restoreALMafterRRD = gSavedSettings.getBOOL( "KokuaReinstateALM" );
 	gResizeScreenTexture = TRUE;
+	if (threshold > 0)
+	{
+		U32 new_rrd = newvalue.asInteger();
+
+		if (new_rrd > threshold && gSavedSettings.getBOOL( "RenderDeferred" ))
+		{
+			gSavedSettings.setBOOL( "KokuaReinstateALM", TRUE );
+			gSavedSettings.setBOOL( "RenderDeferred", FALSE );
+		}
+		else if (restoreALMafterRRD && new_rrd <= threshold )
+		{
+			gSavedSettings.setBOOL( "KokuaReinstateALM", FALSE );
+			gSavedSettings.setBOOL( "RenderDeferred", TRUE );
+		}
+	}
 	return true;
 }
 
@@ -831,6 +853,11 @@ void settings_setup_listeners()
     gSavedPerAccountSettings.getControl("FSStaticEyes")->getSignal()->connect(boost::bind(&handleStaticEyesChanged));
 	// <FS:Ansariel> FIRE-20288: Option to render friends only
 	gSavedPerAccountSettings.getControl("FSRenderFriendsOnly")->getSignal()->connect(boost::bind(&handleRenderFriendsOnlyChanged, _2));
+	// KKA-668 See if we can re-enable ALM (yes if RLV set RRD and the setting didn't persist, no if RRD was set manually and is still over threshold)
+	if (gSavedSettings.getBOOL("KokuaReinstateALM"))
+	{
+		 handleRenderResolutionDivisorChanged(gSavedSettings.getLLSD("RenderResolutionDivisor"));
+	}
 }
 
 #if TEST_CACHED_CONTROL
