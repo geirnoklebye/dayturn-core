@@ -193,14 +193,17 @@ bool LLPresetsManager::savePreset(const std::string& subdirectory, std::string n
             {
                 std::string ctrl_name = *it;
                 LLControlVariable* ctrl = gSavedSettings.getControl(ctrl_name).get();
-                std::string comment = ctrl->getComment();
-                std::string type = LLControlGroup::typeEnumToString(ctrl->type());
-                LLSD value = ctrl->getValue();
+                if (ctrl) // KKA-669 avoid errors for the FSRenderFriend per account variables since we have them on the graphics tab
+                {
+                    std::string comment = ctrl->getComment();
+                    std::string type = LLControlGroup::typeEnumToString(ctrl->type());
+                    LLSD value = ctrl->getValue();
 
-                paramsData[ctrl_name]["Comment"] = comment;
-                paramsData[ctrl_name]["Persist"] = 1;
-                paramsData[ctrl_name]["Type"] = type;
-                paramsData[ctrl_name]["Value"] = value;
+                    paramsData[ctrl_name]["Comment"] = comment;
+                    paramsData[ctrl_name]["Persist"] = 1;
+                    paramsData[ctrl_name]["Type"] = type;
+                    paramsData[ctrl_name]["Value"] = value;
+                }
             }
         }
 
