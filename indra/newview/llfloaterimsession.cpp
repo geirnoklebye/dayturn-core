@@ -880,6 +880,29 @@ void LLFloaterIMSession::sessionInitReplyReceived(const LLUUID& im_session_id)
 	LLFloaterIMSessionTab::updateGearBtn();
 	//*TODO here we should remove "starting session..." warning message if we added it in postBuild() (IB)
 
+	//KKA-670 Give an early warning if this is going to be blocked or the reply will be (group IMs come through here, 1-to-1 through llavataractions)
+	if (gSavedSettings.getBOOL("KokuaIMRestrictionWarning"))
+	{
+		bool cannot_send = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim", mOtherParticipantUUID.asString())
+			|| gAgent.mRRInterface.contains ("sendimto:"+mOtherParticipantUUID.asString())));
+		bool cannot_receive = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", mOtherParticipantUUID.asString())
+			|| gAgent.mRRInterface.contains ("recvimfrom:"+mOtherParticipantUUID.asString())));
+		if (cannot_send)
+		{
+			if (cannot_receive)
+			{
+				LLIMModel::getInstance()->addMessage(mSessionID, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Both"), false);
+			}
+			else
+			{
+				LLIMModel::getInstance()->addMessage(mSessionID, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Send"), false);
+			}
+		}
+		else if (cannot_receive)
+		{
+			LLIMModel::getInstance()->addMessage(mSessionID, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Rcv"), false);
+		}	
+	}
 	//need to send delayed messages collected while waiting for session initialization
 	if (mQueuedMsgsForInit.size())
 	{

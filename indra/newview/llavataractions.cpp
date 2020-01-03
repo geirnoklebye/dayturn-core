@@ -202,6 +202,30 @@ static void on_avatar_name_cache_start_im(const LLUUID& agent_id,
 	if (session_id != LLUUID::null)
 	{
 		LLFloaterIMContainer::getInstance()->showConversation(session_id);
+
+		//KKA-670 Give an early warning if this is going to be blocked or the reply will be (this covers 1-to-1, group is in llfloaterimsession)
+		if (gSavedSettings.getBOOL("KokuaIMRestrictionWarning"))
+		{
+			bool cannot_send = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim", agent_id.asString())
+				|| gAgent.mRRInterface.contains ("sendimto:"+agent_id.asString())));
+			bool cannot_receive = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", agent_id.asString())
+				|| gAgent.mRRInterface.contains ("recvimfrom:"+agent_id.asString())));
+			if (cannot_send)
+			{
+				if (cannot_receive)
+				{
+					LLIMModel::getInstance()->addMessage(session_id, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Both"), false);
+				}
+				else
+				{
+					LLIMModel::getInstance()->addMessage(session_id, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Send"), false);
+				}
+			}
+			else if (cannot_receive)
+			{
+				LLIMModel::getInstance()->addMessage(session_id, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Rcv"), false);
+			}
+		}
 	}
 	make_ui_sound("UISndStartIM");
 }
