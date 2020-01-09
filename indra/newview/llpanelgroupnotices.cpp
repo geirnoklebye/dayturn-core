@@ -200,9 +200,13 @@ std::string build_notice_date(const U32& the_time)
 		time(&t);
 	}
 	
-	std::string dateStr = "["+LLTrans::getString("LTimeMthNum")+"]/["
-								+LLTrans::getString("LTimeDay")+"]/["
-								+LLTrans::getString("LTimeYear")+"]";
+		// KKA-671 change to ISO-style format for correct sorting across end/start of year
+        std::string dateStr = "["+LLTrans::getString("LTimeYear")+"]-["
+                                                                +LLTrans::getString("LTimeMthNum")+"]-["
+                                                                +LLTrans::getString("LTimeDay")+"] ["
+                                                                +LLTrans::getString("LTimeHour")+"]:["
+                                                                +LLTrans::getString("LTimeMin")+"]";
+
 	LLSD substitution;
 	substitution["datetime"] = (S32) t;
 	LLStringUtil::format (dateStr, substitution);
