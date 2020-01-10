@@ -107,10 +107,35 @@
      height="18"
      left_delta="20"
      name="price"
-     top_delta="0"
-     width="100">
+     top_delta="-2"
+     width="80">
         0
     </line_editor>
+    <text
+     follows="top|left"
+     height="16"
+     left_delta="90"
+     name="price_ldsqm"
+     width="20">
+        L$
+    </text>
+    <line_editor
+     follows="top|left"
+     height="18"
+     left_delta="20"
+     name="price_sqm"
+     top_delta="-2"
+     width="50">
+        0
+    </line_editor>
+    <text
+     follows="top|left"
+     height="16"
+     left_delta="60"
+     name="price_ldsqm_suffix"
+     width="36">
+        per m²
+    </text>
     <text
      height="16"
      left="40"

@@ -170,6 +170,9 @@ BOOL LLFloaterSellLandUI::postBuild()
 	childSetCommitCallback("sell_to", onChangeValue, this);
 	childSetCommitCallback("price", onChangeValue, this);
 	getChild<LLLineEditor>("price")->setPrevalidate(LLTextValidate::validateNonNegativeS32);
+	//KKA-672 - New L$/sqm entry field
+	childSetCommitCallback("price_sqm", onChangeValue, this);
+	getChild<LLLineEditor>("price_sqm")->setPrevalidate(LLTextValidate::validateNonNegativeFloat);
 	childSetCommitCallback("sell_objects", onChangeValue, this);
 	childSetAction("sell_to_select_agent", boost::bind( &LLFloaterSellLandUI::doSelectAgent, this));
 	childSetAction("cancel_btn", doCancel, this);
@@ -214,6 +217,8 @@ void LLFloaterSellLandUI::updateParcelInfo()
 	if (mParcelIsForSale)
 	{
 		getChild<LLUICtrl>("price")->setValue(mParcelPrice);
+		//KKA-672 - New L$/sqm entry field
+		getChild<LLUICtrl>("price_sqm")->setValue(mParcelPrice / mParcelActualArea);
 		if (mParcelSoldWithObjects)
 		{
 			getChild<LLUICtrl>("sell_objects")->setValue("yes");
@@ -226,6 +231,8 @@ void LLFloaterSellLandUI::updateParcelInfo()
 	else
 	{
 		getChild<LLUICtrl>("price")->setValue("");
+		//KKA-672 - New L$/sqm entry field
+		getChild<LLUICtrl>("price_sqm")->setValue("");
 		getChild<LLUICtrl>("sell_objects")->setValue("none");
 	}
 
@@ -292,7 +299,8 @@ void LLFloaterSellLandUI::refreshUI()
 		per_meter_price = F32(mParcelPrice) / F32(mParcelActualArea);
 		getChild<LLUICtrl>("price_per_m")->setTextArg("[PER_METER]", llformat("%0.2f", per_meter_price));
 		getChildView("price_per_m")->setVisible(TRUE);
-
+		// KKA-672 also set new L$/sqm entry field
+		getChild<LLUICtrl>("price_sqm")->setValue(llformat("%0.2f", per_meter_price));
 		setBadge("step_price", BADGE_OK);
 	}
 	else
@@ -386,8 +394,15 @@ void LLFloaterSellLandUI::onChangeValue(LLUICtrl *ctrl, void *userdata)
 		self->mSellToBuyer = false;
 	}
 
-	self->mParcelPrice = self->getChild<LLUICtrl>("price")->getValue();
-
+	// KKA_672 - we now need to check which price entry field was modified so that the other can get updated from it
+	if (ctrl == self->getChild<LLUICtrl>("price")) self->mParcelPrice = self->getChild<LLUICtrl>("price")->getValue();
+	if (ctrl == self->getChild<LLUICtrl>("price_sqm"))
+	{
+		self->mParcelPrice = (S32)((F32)self->mParcelActualArea * (F32)self->getChild<LLUICtrl>("price_sqm")->getValue().asReal());
+		// refreshUI works by reading back the price value, so we need to update that ourselves
+		self->getChild<LLUICtrl>("price")->setValue(self->mParcelPrice);
+	}
+	
 	if ("yes" == self->getChild<LLUICtrl>("sell_objects")->getValue().asString())
 	{
 		self->mParcelSoldWithObjects = true;

@@ -37,6 +37,7 @@ namespace LLTextValidate
 	{
 		declare("ascii", validateASCII);
 		declare("float", validateFloat);
+		declare("non_negative_float", validateNonNegativeFloat);
 		declare("int", validateInt);
 		declare("positive_s32", validatePositiveS32);
 		declare("non_negative_s32", validateNonNegativeS32);
@@ -45,6 +46,39 @@ namespace LLTextValidate
 		declare("ascii_printable_no_pipe", validateASCIIPrintableNoPipe);
 		declare("ascii_printable_no_space", validateASCIIPrintableNoSpace);
 		declare("ascii_with_newline", validateASCIIWithNewLine);
+	}
+
+	// Limits what characters can be used to [1234567890.] .
+	// Does NOT ensure that the string is a well-formed number--that's the job of post-validation--for
+	// the simple reasons that intermediate states may be invalid even if the final result is valid.
+	// KKA-672 - Added for Kokua for land L$/sqm values which can't be negative
+	//
+	bool validateNonNegativeFloat(const LLWString &str)
+	{
+		LLLocale locale(LLLocale::USER_LOCALE);
+
+		bool success = TRUE;
+		LLWString trimmed = str;
+		LLWStringUtil::trim(trimmed);
+		S32 len = trimmed.length();
+		if( 0 < len )
+		{
+			// May be a comma or period, depending on the locale
+			llwchar decimal_point = (llwchar)LLResMgr::getInstance()->getDecimalPoint();
+
+			S32 i = 0;
+
+			for( ; i < len; i++ )
+			{
+				if( (decimal_point != trimmed[i] ) && !LLStringOps::isDigit( trimmed[i] ) )
+				{
+					success = FALSE;
+					break;
+				}
+			}
+		}		
+
+		return success;
 	}
 
 	// Limits what characters can be used to [1234567890.-] with [-] only valid in the first position.
@@ -84,7 +118,7 @@ namespace LLTextValidate
 
 		return success;
 	}
-
+	
 	// Limits what characters can be used to [1234567890-] with [-] only valid in the first position.
 	// Does NOT ensure that the string is a well-formed number--that's the job of post-validation--for
 	// the simple reasons that intermediate states may be invalid even if the final result is valid.
