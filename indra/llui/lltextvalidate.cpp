@@ -118,7 +118,7 @@ namespace LLTextValidate
 
 		return success;
 	}
-	
+
 	// Limits what characters can be used to [1234567890-] with [-] only valid in the first position.
 	// Does NOT ensure that the string is a well-formed number--that's the job of post-validation--for
 	// the simple reasons that intermediate states may be invalid even if the final result is valid.
