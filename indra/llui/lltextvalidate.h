@@ -43,6 +43,8 @@ namespace LLTextValidate
 	};
 
 	bool	validateFloat(const LLWString &str );
+	// KKA-672 Added for entering L$/sqm values when selling land
+	bool  validateNonNegativeFloat(const LLWString &str );
 	bool	validateInt(const LLWString &str );
 	bool	validatePositiveS32(const LLWString &str);
 	bool	validateNonNegativeS32(const LLWString &str);
