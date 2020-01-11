@@ -85,7 +85,7 @@ void FloaterAO::updateSetParameters()
 	mOverrideSitsCheckBoxSmall->setValue(mSelectedSet->getSitOverride());
 	mSmartCheckBox->setValue(mSelectedSet->getSmart());
 	mDisableMouselookCheckBox->setValue(mSelectedSet->getMouselookDisable());
-	BOOL isDefault = (mSelectedSet == AOEngine::instance().getDefaultSet()) ? TRUE : FALSE;
+	BOOL isDefault = (mSelectedSet == AOEngine::instance().getDefaultSet());
 	mDefaultCheckBox->setValue(isDefault);
 	mDefaultCheckBox->setEnabled(!isDefault);
 	updateSmart();
@@ -137,7 +137,15 @@ void FloaterAO::updateList()
 		currentSetName = AOEngine::instance().getCurrentSetName();
 	}
 
+	// Lambda provides simple Alpha sorting, note this is case sensitive.
+	auto sortRuleLambda = [](const AOSet* s1, const AOSet* s2) -> bool
+	{
+		return s1->getName() < s2->getName();
+	};
+
 	mSetList=AOEngine::instance().getSetList();
+	std::sort(mSetList.begin(), mSetList.end(), sortRuleLambda);
+
 	mSetSelector->removeall();
 	mSetSelectorSmall->removeall();
 	mSetSelector->clear();
@@ -173,6 +181,10 @@ void FloaterAO::updateList()
 		}
 	}
 	enableSetControls(TRUE);
+	if (mSetSelector->getSelectedItemLabel().empty())
+	{
+		onClickReload();
+	}
 }
 
 BOOL FloaterAO::postBuild()
@@ -213,6 +225,7 @@ BOOL FloaterAO::postBuild()
 	mOverrideSitsCheckBoxSmall = mSmallInterfacePanel->getChild<LLCheckBoxCtrl>("ao_sit_override_small");
 
 	mSetSelector->setCommitCallback(boost::bind(&FloaterAO::onSelectSet, this));
+	mSetSelector->setFocusLostCallback(boost::bind(&FloaterAO::onSelectSet, this));
 	mActivateSetButton->setCommitCallback(boost::bind(&FloaterAO::onClickActivate, this));
 	mAddButton->setCommitCallback(boost::bind(&FloaterAO::onClickAdd, this));
 	mRemoveButton->setCommitCallback(boost::bind(&FloaterAO::onClickRemove, this));
@@ -273,7 +286,7 @@ void FloaterAO::enableSetControls(BOOL yes)
 	mSetSelectorSmall->setEnabled(yes);
 	mActivateSetButton->setEnabled(yes);
 	mRemoveButton->setEnabled(yes);
-	mDefaultCheckBox->setEnabled(yes);
+	mDefaultCheckBox->setEnabled(yes && (mSelectedSet != AOEngine::instance().getDefaultSet()));
 	mOverrideSitsCheckBox->setEnabled(yes);
 	mOverrideSitsCheckBoxSmall->setEnabled(yes);
 	mDisableMouselookCheckBox->setEnabled(yes);

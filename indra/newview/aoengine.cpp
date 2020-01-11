@@ -41,7 +41,6 @@
 #include "llvfs.h"
 #include "llviewercontrol.h"
 #include "llviewerinventory.h"
-#include "llvoavatarself.h"
 
 //#define ROOT_FIRESTORM_FOLDER 	"#Firestorm" //moved to llinventoryfunctions.h
 #define ROOT_AO_FOLDER			"#AO"
@@ -54,6 +53,7 @@ AOEngine::AOEngine() :
 	mCurrentSet(NULL),
 	mDefaultSet(NULL),
 	mEnabled(FALSE),
+	mEnabledStands(FALSE),
 	mInMouselook(FALSE),
 	mUnderWater(FALSE),
 	mImportSet(NULL),
@@ -63,6 +63,7 @@ AOEngine::AOEngine() :
 	mLastOverriddenMotion(ANIM_AGENT_STAND)
 {
 	gSavedPerAccountSettings.getControl("UseAO")->getCommitSignal()->connect(boost::bind(&AOEngine::onToggleAOControl, this));
+	gSavedPerAccountSettings.getControl("UseAOStands")->getCommitSignal()->connect(boost::bind(&AOEngine::onToggleAOStandsControl, this));
 
 	mRegionChangeConnection = gAgent.addRegionChangedCallback(boost::bind(&AOEngine::onRegionChange, this));
 }
@@ -79,7 +80,21 @@ AOEngine::~AOEngine()
 
 void AOEngine::init()
 {
-	enable(mEnabled);
+	BOOL do_enable = gSavedPerAccountSettings.getBOOL("UseAO");
+	BOOL do_enable_stands = gSavedPerAccountSettings.getBOOL("UseAOStands");
+	if (do_enable)
+	{
+		// enable_stands() calls enable(), but we need to set the
+		// mEnabled variable properly
+		mEnabled = TRUE;
+		// Enabling the AO always enables stands to start with
+		enable_stands(TRUE);
+	}
+	else
+	{
+		enable_stands(do_enable_stands);
+		enable(FALSE);
+	}
 }
 
 // static
@@ -91,6 +106,16 @@ void AOEngine::onLoginComplete()
 void AOEngine::onToggleAOControl()
 {
 	enable(gSavedPerAccountSettings.getBOOL("UseAO"));
+	if (mEnabled)
+	{
+		// Enabling the AO always enables stands to start with
+		gSavedPerAccountSettings.setBOOL("UseAOStands", TRUE);
+	}
+}
+
+void AOEngine::onToggleAOStandsControl()
+{
+	enable_stands(gSavedPerAccountSettings.getBOOL("UseAOStands"));
 }
 
 void AOEngine::clear(bool aFromTimer)
@@ -164,23 +189,62 @@ void AOEngine::setLastOverriddenMotion(const LLUUID& motion)
 	}
 }
 
-BOOL AOEngine::foreignAnimations(const LLUUID& seat)
+BOOL AOEngine::foreignAnimations()
 {
+	// checking foreign animations only makes sense when smart sit is enabled
+	if (!mCurrentSet->getSmart())
+	{
+		return FALSE;
+	}
+
+	// get the seat the avatar is sitting on
+	const LLViewerObject* agentRoot = dynamic_cast<LLViewerObject*>(gAgentAvatarp->getRoot());
+	if (!agentRoot)
+	{
+		// this should not happen, ever
+		return FALSE;
+	}
+
+	LLUUID seat = agentRoot->getID();
+	if (seat == gAgentID)
+	{
+		LL_DEBUGS("AOEngine") << "Not checking for foreign animation when not sitting." << LL_ENDL;
+		return FALSE;
+	}
+
+	LL_DEBUGS("AOEngine") << "Checking for foreign animation on seat " << seat << LL_ENDL;
+
 	for (LLVOAvatar::AnimSourceIterator sourceIterator = gAgentAvatarp->mAnimationSources.begin();
 		sourceIterator != gAgentAvatarp->mAnimationSources.end(); ++sourceIterator)
 	{
+		// skip animations run by the avatar itself
 		if (sourceIterator->first != gAgentID)
 		{
-			if (seat.isNull() || sourceIterator->first == seat)
+			// find the source object where the animation came from
+			LLViewerObject* source=gObjectList.findObject(sourceIterator->first);
+
+			// proceed if it's not an attachment
+			if(!source->isAttachment())
 			{
-				return TRUE;
+				LL_DEBUGS("AOEngine") << "Source " << sourceIterator->first << " is running animation " << sourceIterator->second << LL_ENDL;
+
+				// get the source's root prim
+				LLViewerObject* sourceRoot=dynamic_cast<LLViewerObject*>(source->getRoot());
+
+				// if the root prim is the same as the animation source, report back as TRUE
+				if (sourceRoot && sourceRoot->getID() == seat)
+				{
+					LL_DEBUGS("AOEngine") << "foreign animation " << sourceIterator->second << " found on seat." << LL_ENDL;
+					return TRUE;
+				}
 			}
 		}
 	}
 	return FALSE;
 }
 
-const LLUUID& AOEngine::mapSwimming(const LLUUID& motion) const
+// map motion to underwater state, return nullptr if not applicable
+AOSet::AOState* AOEngine::mapSwimming(const LLUUID& motion) const
 {
 	S32 stateNum;
 
@@ -202,29 +266,99 @@ const LLUUID& AOEngine::mapSwimming(const LLUUID& motion) const
 	}
 	else
 	{
-		return LLUUID::null;
+		// motion not applicable for underwater mapping
+		return nullptr;
 	}
 
-	AOSet::AOState* state = mCurrentSet->getState(stateNum);
-	return mCurrentSet->getAnimationForState(state);
+	return mCurrentSet->getState(stateNum);
 }
 
+// switch between swimming and flying on transition in and out of Linden region water
 void AOEngine::checkBelowWater(BOOL yes)
 {
+	// there was no transition, do nothing
 	if (mUnderWater == yes)
 	{
 		return;
 	}
 
-	// only restart underwater/above water motion if the overridden motion is the one currently playing
-	if (mLastMotion != mLastOverriddenMotion)
+	// only applies to motions that actually change underwater and have animations inside
+	AOSet::AOState* mapped = mapSwimming(mLastMotion);
+	if (!mapped || mapped->mAnimations.empty())
 	{
+		// set underwater status but do nothing else
+		mUnderWater = yes;
 		return;
 	}
 
-	gAgent.sendAnimationRequest(override(mLastOverriddenMotion, FALSE), ANIM_REQUEST_STOP);
+	// find animation id to stop when transitioning
+	LLUUID id = override(mLastMotion, FALSE);
+	if (id.isNull())
+	{
+		// no animation in overrider for this state, use Linden Lab motion
+		id = mLastMotion;
+	}
+
+	// stop currently running animation
+	gAgent.sendAnimationRequest(id, ANIM_REQUEST_STOP);
+
+	if (!mUnderWater)
+	{
+		// remember which animation we stopped while going under water, to catch the stop
+		// request later in the overrider - this prevents the overrider from triggering itself
+		// after the region comes back with the stop request for Linden Lab motion ids
+		mTransitionId = id;
+	}
+
+	// set requested underwater status for overrider
 	mUnderWater = yes;
-	gAgent.sendAnimationRequest(override(mLastOverriddenMotion, TRUE), ANIM_REQUEST_START);
+
+	// find animation id to start when transitioning
+	id = override(mLastMotion, TRUE);
+	if (id.isNull())
+	{
+		// no animation in overrider for this state, use Linden Lab motion
+		id = mLastMotion;
+	}
+
+	// start new animation
+	gAgent.sendAnimationRequest(id, ANIM_REQUEST_START);
+}
+
+// find the correct animation state for the requested motion, mapping flying to
+// swimming where necessary
+AOSet::AOState* AOEngine::getStateForMotion(const LLUUID& motion) const
+{
+	// get default state for this motion
+	AOSet::AOState* defaultState = mCurrentSet->getStateByRemapID(motion);
+	if (!mUnderWater)
+	{
+		return defaultState;
+	}
+
+	// get state for underwater motion
+	AOSet::AOState* mapped = mapSwimming(motion);
+	if (!mapped)
+	{
+		// not applicable for underwater motion, so use default state
+		return defaultState;
+	}
+
+	// check if the underwater state has any animations to play
+	if (mapped->mAnimations.empty())
+	{
+		// no animations in underwater state, return default
+		return defaultState;
+	}
+	return mapped;
+}
+
+void AOEngine::enable_stands(BOOL yes)
+{
+	mEnabledStands = yes;
+	// let the main enable routine decide if we need to change animations
+	// but don't actually change the state of the enabled flag
+	enable(mEnabled);
 }
 
 void AOEngine::enable(BOOL yes)
@@ -245,8 +379,8 @@ void AOEngine::enable(BOOL yes)
 		{
 			LL_DEBUGS("AOEngine") << "Enabling animation state " << state->mName << LL_ENDL;
 
-			// do not stop underlying ground sit when re-enabling the AO
-			if (mLastOverriddenMotion != ANIM_AGENT_SIT_GROUND_CONSTRAINED)
+			// do not stop underlying sit animations when re-enabling the AO
+			if (mLastOverriddenMotion != ANIM_AGENT_SIT_GROUND_CONSTRAINED && mLastOverriddenMotion != ANIM_AGENT_SIT)
 			{
 				gAgent.sendAnimationRequest(mLastOverriddenMotion, ANIM_REQUEST_STOP);
 			}
@@ -259,6 +393,11 @@ void AOEngine::enable(BOOL yes)
 
 			if (mLastMotion == ANIM_AGENT_STAND)
 			{
+				if (!mEnabledStands)
+				{
+					LL_DEBUGS("AOEngine") << "Last motion was a STAND, but disabled for stands, ignoring." << LL_ENDL;
+					return;
+				}
 				stopAllStandVariants();
 			}
 			else if (mLastMotion == ANIM_AGENT_WALK)
@@ -297,7 +436,12 @@ void AOEngine::enable(BOOL yes)
 	{
 		mAnimationChangedSignal(LLUUID::null);
 
-		gAgent.sendAnimationRequest(ANIM_AGENT_SIT_GENERIC, ANIM_REQUEST_STOP);
+		if (mLastOverriddenMotion == ANIM_AGENT_SIT)
+		{
+			// remove sit cycle cover up
+			gAgent.sendAnimationRequest(ANIM_AGENT_SIT_GENERIC, ANIM_REQUEST_STOP);
+		}
+
 		// stop all overriders, catch leftovers
 		for (S32 index = 0; index < AOSet::AOSTATES_MAX; ++index)
 		{
@@ -319,7 +463,8 @@ void AOEngine::enable(BOOL yes)
 			}
 		}
 
-		if (!foreignAnimations(LLUUID::null))
+		// restore Linden animation if applicable
+		if (mLastOverriddenMotion != ANIM_AGENT_SIT || !foreignAnimations())
 		{
 			gAgent.sendAnimationRequest(mLastMotion, ANIM_REQUEST_START);
 		}
@@ -383,7 +528,9 @@ const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
 		motion = ANIM_AGENT_SIT_GROUND_CONSTRAINED;
 	}
 
-	AOSet::AOState* state = mCurrentSet->getStateByRemapID(motion);
+	// map the requested motion to an animation state, taking underwater
+	// swimming into account where applicable
+	AOSet::AOState* state = getStateForMotion(motion);
 	if (!state)
 	{
 		LL_DEBUGS("AOEngine") << "No current AO state for motion " << motion << " (" << gAnimLibrary.animationName(motion) << ")." << LL_ENDL;
@@ -410,6 +557,63 @@ const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
 
 	mAnimationChangedSignal(LLUUID::null);
 
+	// clean up stray animations as an additional safety measure
+	// unless current motion is ANIM_AGENT_TYPE, which is a special
+	// case, as it plays at the same time as other motions
+	if (motion != ANIM_AGENT_TYPE)
+	{
+		const S32 cleanupStates[]=
+		{
+			AOSet::Standing,
+			AOSet::Walking,
+			AOSet::Running,
+			AOSet::Sitting,
+			AOSet::SittingOnGround,
+			AOSet::Crouching,
+			AOSet::CrouchWalking,
+			AOSet::Falling,
+			AOSet::FlyingDown,
+			AOSet::FlyingUp,
+			AOSet::Flying,
+			AOSet::FlyingSlow,
+			AOSet::Hovering,
+			AOSet::Jumping,
+			AOSet::TurningRight,
+			AOSet::TurningLeft,
+			AOSet::Floating,
+			AOSet::SwimmingForward,
+			AOSet::SwimmingUp,
+			AOSet::SwimmingDown,
+			AOSet::AOSTATES_MAX		// end marker, guaranteed to be different from any other entry
+		};
+
+		S32 index = 0;
+		S32 stateNum;
+
+		// loop through the list of states
+		while ((stateNum = cleanupStates[index]) != AOSet::AOSTATES_MAX)
+		{
+			// check if the next state is the one we are currently animating and skip that
+			AOSet::AOState* stateToCheck = mCurrentSet->getState(stateNum);
+			if (stateToCheck != state)
+			{
+				// check if there is an animation left over for that state
+				if (!stateToCheck->mCurrentAnimationID.isNull())
+				{
+					LL_WARNS() << "cleaning up animation in state " << stateToCheck->mName << LL_ENDL;
+
+					// stop  the leftover animation locally and in the region for everyone
+					gAgent.sendAnimationRequest(stateToCheck->mCurrentAnimationID, ANIM_REQUEST_STOP);
+					gAgentAvatarp->LLCharacter::stopMotion(stateToCheck->mCurrentAnimationID);
+
+					// mark the state as clean
+					stateToCheck->mCurrentAnimationID.setNull();
+				}
+			}
+			index++;
+		}
+	}
+
 	mCurrentSet->stopTimer();
 	if (start)
 	{
@@ -422,6 +626,14 @@ const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
 			mInMouselook)
 		{
 			LL_DEBUGS("AOEngine") << "(enabled AO, mouselook stand stopped) setting last motion id to " <<  gAnimLibrary.animationName(mLastMotion) << LL_ENDL;
+			return animation;
+		}
+
+		// Don't override start and turning stands if stand override is disabled
+		if (!mEnabledStands &&
+			(motion == ANIM_AGENT_STAND || motion == ANIM_AGENT_TURNRIGHT || motion == ANIM_AGENT_TURNLEFT))
+		{
+			LL_DEBUGS("AOEngine") << "(enabled AO, stands disabled) setting last motion id to " <<  gAnimLibrary.animationName(mLastMotion) << LL_ENDL;
 			return animation;
 		}
 
@@ -453,12 +665,6 @@ const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
 		if (motion != ANIM_AGENT_TYPE)
 		{
 			mCurrentSet->setMotion(motion);
-		}
-
-		mUnderWater = gAgentAvatarp->mBelowWater;
-		if (mUnderWater)
-		{
-			animation = mapSwimming(motion);
 		}
 
 		if (animation.isNull())
@@ -512,6 +718,20 @@ const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
 	}
 	else
 	{
+		// check for previously remembered transition motion from/to underwater movement and don't
+		// allow the overrider to stop it, or it will cancel the transition to underwater motion
+		// immediately after starting it
+		if (motion == mTransitionId)
+		{
+			// clear transition motion id and return a null UUID to allow the stock Linden animation
+			// system to take over
+			mTransitionId.setNull();
+			return LLUUID::null;
+		}
+
+		// clear transition motion id here as well, to make sure there is no stray id left behind
+		mTransitionId.setNull();
+
 		animation = state->mCurrentAnimationID;
 		state->mCurrentAnimationID.setNull();
 
@@ -554,10 +774,6 @@ const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
 		{
 			stopAllSitVariants();
 		}
-
-		LL_DEBUGS("AOEngine") << "stopping cycle timer for motion " <<  gAnimLibrary.animationName(motion) <<
-					" using animation " << animation <<
-					" in state " << state->mName << LL_ENDL;
 	}
 
 	return animation;
@@ -565,15 +781,7 @@ const LLUUID AOEngine::override(const LLUUID& pMotion, BOOL start)
 
 void AOEngine::checkSitCancel()
 {
-	LLUUID seat;
-
-	const LLViewerObject* agentRoot = dynamic_cast<LLViewerObject*>(gAgentAvatarp->getRoot());
-	if (agentRoot)
-	{
-		seat = agentRoot->getID();
-	}
-
-	if (foreignAnimations(seat))
+	if (foreignAnimations())
 	{
 		AOSet::AOState* aoState = mCurrentSet->getStateByRemapID(ANIM_AGENT_SIT);
 		if (aoState)
@@ -612,40 +820,29 @@ void AOEngine::cycleTimeout(const AOSet* set)
 
 void AOEngine::cycle(eCycleMode cycleMode)
 {
+	if (!mEnabled)
+	{
+		return;
+	}
+
 	if (!mCurrentSet)
 	{
 		LL_DEBUGS("AOEngine") << "cycle without set." << LL_ENDL;
 		return;
 	}
 
-	LLUUID motion = mCurrentSet->getMotion();
-
-	// assume stand if no motion is registered, happens after login when the avatar hasn't moved at all yet
-	// or if the agent has said something in local chat while sitting
-	if (motion.isNull())
-	{
-		if (gAgentAvatarp->isSitting())
-		{
-			motion = ANIM_AGENT_SIT;
-		}
-		else
-		{
-			motion = ANIM_AGENT_STAND;
-		}
-	}
-
 	// do not cycle if we're sitting and sit-override is off
-	else if (motion == ANIM_AGENT_SIT && !mCurrentSet->getSitOverride())
+	if (mLastMotion == ANIM_AGENT_SIT && !mCurrentSet->getSitOverride())
 	{
 		return;
 	}
 	// do not cycle if we're standing and mouselook stand override is disabled while being in mouselook
-	else if (motion == ANIM_AGENT_STAND && mCurrentSet->getMouselookDisable() && mInMouselook)
+	else if (mLastMotion == ANIM_AGENT_STAND && mCurrentSet->getMouselookDisable() && mInMouselook)
 	{
 		return;
 	}
 
-	AOSet::AOState* state = mCurrentSet->getStateByRemapID(motion);
+	AOSet::AOState* state = mCurrentSet->getStateByRemapID(mLastMotion);
 	if (!state)
 	{
 		LL_DEBUGS("AOEngine") << "cycle without state." << LL_ENDL;
@@ -707,13 +904,13 @@ void AOEngine::cycle(eCycleMode cycleMode)
 	state->mCurrentAnimationID = animation;
 	if (animation.notNull())
 	{
-		LL_DEBUGS("AOEngine") << "requesting animation start for motion " << gAnimLibrary.animationName(motion) << ": " << animation << LL_ENDL;
+		LL_DEBUGS("AOEngine") << "requesting animation start for motion " << gAnimLibrary.animationName(mLastMotion) << ": " << animation << LL_ENDL;
 		gAgent.sendAnimationRequest(animation, ANIM_REQUEST_START);
 		mAnimationChangedSignal(state->mAnimations[state->mCurrentAnimation].mInventoryUUID);
 	}
 	else
 	{
-		LL_DEBUGS("AOEngine") << "overrider came back with NULL animation for motion " << gAnimLibrary.animationName(motion) << "." << LL_ENDL;
+		LL_DEBUGS("AOEngine") << "overrider came back with NULL animation for motion " << gAnimLibrary.animationName(mLastMotion) << "." << LL_ENDL;
 	}
 
 	if (oldAnimation.notNull())
@@ -794,14 +991,17 @@ BOOL AOEngine::createAnimationLink(const AOSet* set, AOSet::AOState* state, cons
 		LLInventoryModel::cat_array_t* cats;
 		gInventory.getDirectDescendentsOf(set->getInventoryUUID(), cats, items);
 
-		for (S32 index = 0; index < cats->size(); ++index)
+		if (cats)
 		{
-			if (cats->at(index)->getName().compare(state->mName) == 0)
+			for (S32 index = 0; index < cats->size(); ++index)
 			{
-				LL_DEBUGS("AOEngine") << "UUID found!" << LL_ENDL;
-				newStateFolderUUID = cats->at(index)->getUUID();
-				state->mInventoryUUID = newStateFolderUUID;
-				break;
+				if (cats->at(index)->getName().compare(state->mName) == 0)
+				{
+					LL_DEBUGS("AOEngine") << "UUID found!" << LL_ENDL;
+					newStateFolderUUID = cats->at(index)->getUUID();
+					state->mInventoryUUID = newStateFolderUUID;
+					break;
+				}
 			}
 		}
 	}
@@ -1550,28 +1750,36 @@ void AOEngine::setOverrideSits(AOSet* set, BOOL yes)
 		return;
 	}
 
+	if (!mEnabled)
+	{
+		return;
+	}
+
 	if (yes)
 	{
 		stopAllSitVariants();
-		gAgent.sendAnimationRequest(override(ANIM_AGENT_SIT, TRUE), ANIM_REQUEST_START);
+		gAgent.sendAnimationRequest(ANIM_AGENT_SIT_GENERIC, ANIM_REQUEST_START);
 	}
 	else
 	{
+		// remove sit cycle cover up
+		gAgent.sendAnimationRequest(ANIM_AGENT_SIT_GENERIC, ANIM_REQUEST_STOP);
+
 		AOSet::AOState* state = mCurrentSet->getState(AOSet::Sitting);
-		if (!state)
+		if (state)
 		{
-			return;
+			LLUUID animation = state->mCurrentAnimationID;
+			if (animation.notNull())
+			{
+				gAgent.sendAnimationRequest(animation, ANIM_REQUEST_STOP);
+				state->mCurrentAnimationID.setNull();
+			}
 		}
 
-		LLUUID animation = state->mCurrentAnimationID;
-		if (animation.notNull())
+		if (!foreignAnimations())
 		{
-			gAgent.sendAnimationRequest(animation, ANIM_REQUEST_STOP);
-			gAgentAvatarp->LLCharacter::stopMotion(animation);
-			state->mCurrentAnimationID.setNull();
+			gAgent.sendAnimationRequest(ANIM_AGENT_SIT, ANIM_REQUEST_START);
 		}
-
-		gAgent.sendAnimationRequest(ANIM_AGENT_SIT, ANIM_REQUEST_START);
 	}
 }
 
@@ -1579,6 +1787,22 @@ void AOEngine::setSmart(AOSet* set, BOOL yes)
 {
 	set->setSmart(yes);
 	set->setDirty(TRUE);
+
+	if (!mEnabled)
+	{
+		return;
+	}
+
+	if (yes)
+	{
+		// make sure to restart the sit cancel timer to fix sit overrides when the object we are
+		// sitting on is playing its own animation
+		const LLViewerObject* agentRoot = dynamic_cast<LLViewerObject*>(gAgentAvatarp->getRoot());
+		if (agentRoot && agentRoot->getID() != gAgentID)
+		{
+			mSitCancelTimer.oneShot();
+		}
+	}
 }
 
 void AOEngine::setDisableStands(AOSet* set, BOOL yes)
@@ -1587,6 +1811,11 @@ void AOEngine::setDisableStands(AOSet* set, BOOL yes)
 	set->setDirty(TRUE);
 
 	if (mCurrentSet != set)
+	{
+		return;
+	}
+
+	if (!mEnabled)
 	{
 		return;
 	}
@@ -1982,7 +2211,7 @@ void AOEngine::onRegionChange()
 	}
 
 	// sitting needs special attention
-	if (mCurrentSet->getMotion() == ANIM_AGENT_SIT)
+	if (mLastMotion == ANIM_AGENT_SIT)
 	{
 		// do nothing if sit overrides was disabled
 		if (!mCurrentSet->getSitOverride())
@@ -1998,9 +2227,15 @@ void AOEngine::onRegionChange()
 			return;
 		}
 
-		// do nothing if smart sit is enabled because we have no
-		// animation running from the AO
-		if (mCurrentSet->getSmart())
+		AOSet::AOState* state = mCurrentSet->getState(AOSet::Sitting);
+		if (!state)
+		{
+			return;
+		}
+
+		// do nothing if no AO animation is playing (e.g. smart sit cancel)
+		LLUUID animation = state->mCurrentAnimationID;
+		if (animation.isNull())
 		{
 			return;
 		}
