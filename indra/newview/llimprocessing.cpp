@@ -807,7 +807,8 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                     }
                     // </FS:PP>
 
-                    buffer = saved + message;
+                    //KKA-674 - this got pulled across in the keywords port but isn't needed here (and reinstates squashed incoming IMs)
+					//buffer = saved + message;
 
 				gIMMgr->addMessage(
 					session_id,
