@@ -33,17 +33,30 @@
 #include "llnotifications.h"
 #include "llstyle.h"
 #include "lluiconstants.h"
+#include "llviewercontrol.h"
 #include "llviewertexteditor.h"
 
 const S32 LLToastScriptTextbox::DEFAULT_MESSAGE_MAX_LINE_COUNT= 14;
+const LLFontGL* LLToastScriptTextbox::sFont = NULL;
+const LLFontGL* LLToastScriptTextbox::sFontSmall = NULL;
+
+//KKA-675 various changes here patterned after lltoastnotifypanel.cpp to apply
+//the Kokua control settings for text size and button text size here too
 
 LLToastScriptTextbox::LLToastScriptTextbox(const LLNotificationPtr& notification)
 :	LLToastPanel(notification)
 {
 	buildFromFile( "panel_notify_textbox.xml");
-
+	// init font variables
+	if (!sFont)
+	{
+		sFont = LLFontGL::getFontSansSerif();
+		sFontSmall = LLFontGL::getFontSansSerifSmall();
+	}
 	mInfoText = getChild<LLTextEditor>("text_editor_box");
 	mInfoText->setMaxTextLength(LLToastPanel::MAX_TEXT_LENGTH);
+	if (gSavedSettings.getBOOL("KokuaSmallScriptDialogTextFont")) mInfoText->setFont(sFontSmall);
+	else mInfoText->setFont(sFont);
 	mInfoText->setValue(notification->getMessage());
 
 	getChild<LLButton>("ignore_btn")->setClickedCallback(boost::bind(&LLToastScriptTextbox::onClickIgnore, this));
@@ -64,6 +77,17 @@ LLToastScriptTextbox::LLToastScriptTextbox(const LLNotificationPtr& notification
 	LLButton* pSubmitBtn = getChild<LLButton>("btn_submit");
 	pSubmitBtn->setClickedCallback((boost::bind(&LLToastScriptTextbox::onClickSubmit, this)));
 	setDefaultBtn(pSubmitBtn);
+	
+	if (gSavedSettings.getBOOL("KokuaSmallScriptDialogButtonFont"))
+	{
+		getChild<LLButton>("ignore_btn")->setFont(sFontSmall);
+		pSubmitBtn->setFont(sFontSmall);
+	}
+	else
+	{
+		getChild<LLButton>("ignore_btn")->setFont(sFont);
+		pSubmitBtn->setFont(sFont);
+	}
 
 	snapToMessageHeight();
 }
