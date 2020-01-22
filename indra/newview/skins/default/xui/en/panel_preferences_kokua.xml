@@ -719,7 +719,7 @@
         <check_box
          control_name="KokuaSmallScriptDialogButtonFont"
          height="16"
-         label="Use a smaller font for the buttons on script dialogs"
+         label="Use a smaller font for the buttons on script dialogs/text input"
          layout="topleft"
          follows="left|top"
          top_pad="10"
@@ -730,7 +730,7 @@
         <check_box
          control_name="KokuaSmallScriptDialogTextFont"
          height="16"
-         label="Use a smaller font for the text above the buttons on script dialogs"
+         label="Use a smaller font for the text above the buttons on script dialogs/text input"
          layout="topleft"
          follows="left|top"
          top_pad="10"

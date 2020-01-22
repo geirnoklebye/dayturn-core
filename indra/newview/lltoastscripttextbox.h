@@ -55,6 +55,8 @@ private:
 
 	void snapToMessageHeight();
 	static const S32 DEFAULT_MESSAGE_MAX_LINE_COUNT;
+	static const LLFontGL* sFont;
+	static const LLFontGL* sFontSmall;
 };
 
 #endif
