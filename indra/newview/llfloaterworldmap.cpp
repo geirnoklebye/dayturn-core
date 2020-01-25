@@ -695,6 +695,46 @@ void LLFloaterWorldMap::processParcelInfo(const LLParcelData& parcel_data, const
 
 	std::string parcel_name = parcel_data.name;
 	if (parcel_name.empty()) parcel_name="(Unnamed parcel)";
+
+	// KKA-676 if the parcel is on sale and displaying for sale info is enabled add sale info to the tracker text
+	// so that you don't have to exactly click on the for sale tag to get the price information
+	if (gSavedSettings.getBOOL("MapShowLandForSale"))
+	{
+		// a non_zero parcel_data.sale_price doesn't indicate for sale reliably, instead try to locate the id
+		// in the sim_info - based on code in llworldmapview, which gives the bonus we can get the formatted
+		// tooltip string out of there too
+
+		bool is_for_sale = false;
+		
+		LLSimInfo::item_info_list_t::const_iterator it = sim_info->getLandForSale().begin();
+		while (it != sim_info->getLandForSale().end())
+		{
+			if (it->getUUID() == parcel_data.parcel_id)
+			{
+				is_for_sale = true;
+				full_name = full_name + " - " + it->getToolTip();
+				break;
+			}
+			++it;
+		}
+		// for 1.23, we're showing normal land and adult land in the same UI; you don't
+		// get a choice about which ones you want. If you're currently asking for adult
+		// content and land you'll get the adult land.
+		if (gAgent.canAccessAdult() && !is_for_sale)
+		{
+			LLSimInfo::item_info_list_t::const_iterator it = sim_info->getLandForSaleAdult().begin();
+			while (it != sim_info->getLandForSaleAdult().end())
+			{
+				if (it->getUUID() == parcel_data.parcel_id)
+				{
+					is_for_sale = true;
+					full_name = full_name + " - " + it->getToolTip();
+					break;
+				}
+				++it;
+			}
+		}
+	}
 	LLTracker::trackLocation(pos_global, parcel_name, full_name);
 }
 
