@@ -815,26 +815,32 @@ void LLFloaterLocateQueue::processScriptRunningReply(LLMessageSystem* msg)
 	LLHandle<LLFloaterScriptQueue> hfloater;
 	LLUUID item_id;
 	LLUUID object_id;
-	msg->getUUIDFast(_PREHASH_Script, _PREHASH_ObjectID, object_id);
-	msg->getUUIDFast(_PREHASH_Script, _PREHASH_ItemID, item_id);
 	
-	CQMAP::iterator it;
-		
-	it = compile_queue_floater_handles.find(object_id.asString());
-	if (it != compile_queue_floater_handles.end())
+	// KKA-678 add protection for an empty list since this is static
+	// and could get called whilst there are no floaters in existence
+	if (! compile_queue_floater_handles.empty())
 	{
-		hfloater=compile_queue_floater_handles[object_id.asString()];
-		LLCheckedHandle<LLFloaterScriptQueue> floater(hfloater);
+		msg->getUUIDFast(_PREHASH_Script, _PREHASH_ObjectID, object_id);
+		msg->getUUIDFast(_PREHASH_Script, _PREHASH_ItemID, item_id);
 		
-		BOOL running;
-		msg->getBOOLFast(_PREHASH_Script, _PREHASH_Running, running);
-		floater->setIsRunning(running);
+		CQMAP::iterator it;
+			
+		it = compile_queue_floater_handles.find(object_id.asString());
+		if (it != compile_queue_floater_handles.end())
+		{
+			hfloater=compile_queue_floater_handles[object_id.asString()];
+			LLCheckedHandle<LLFloaterScriptQueue> floater(hfloater);
+			
+			BOOL running;
+			msg->getBOOLFast(_PREHASH_Script, _PREHASH_Running, running);
+			floater->setIsRunning(running);
 
-		BOOL mono;
-		msg->getBOOLFast(_PREHASH_Script, "Mono", mono);
-		floater->setIsMono(mono);
+			BOOL mono;
+			msg->getBOOLFast(_PREHASH_Script, "Mono", mono);
+			floater->setIsMono(mono);
 
-		floater->setWaiting(false);
+			floater->setWaiting(false);
+		}
 	}
 }
 
