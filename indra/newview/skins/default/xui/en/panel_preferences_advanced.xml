@@ -296,6 +296,18 @@
      name="show_develop_menu_check"
      top_pad="5"
      width="237"/>
+    <button
+     follows="top|left"
+     layout="topleft"
+     label="Remembered Usernames"
+     name="remembered_usernames"
+     height="20"
+     left="30"
+     top_pad="16"
+     width="200">
+    <button.commit_callback
+     function="Pref.RememberedUsernames" />
+  </button>
     <check_box
      control_name="UsePieMenu"
      follows="top|left"

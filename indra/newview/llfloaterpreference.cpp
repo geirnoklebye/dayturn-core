@@ -452,6 +452,7 @@ LLFloaterPreference::LLFloaterPreference(const LLSD& key)
 	mCommitCallbackRegistrar.add("Pref.TranslationSettings",	boost::bind(&LLFloaterPreference::onClickTranslationSettings, this));
 	mCommitCallbackRegistrar.add("Pref.AutoReplace",            boost::bind(&LLFloaterPreference::onClickAutoReplace, this));
 	mCommitCallbackRegistrar.add("Pref.PermsDefault",           boost::bind(&LLFloaterPreference::onClickPermsDefault, this));
+	mCommitCallbackRegistrar.add("Pref.RememberedUsernames",    boost::bind(&LLFloaterPreference::onClickRememberedUsernames, this));
 	mCommitCallbackRegistrar.add("Pref.SpellChecker",           boost::bind(&LLFloaterPreference::onClickSpellChecker, this));
 	mCommitCallbackRegistrar.add("Pref.Advanced",				boost::bind(&LLFloaterPreference::onClickAdvanced, this));
 
@@ -1389,7 +1390,7 @@ void LLFloaterPreference::buildPopupLists()
 		LLNotificationFormPtr formp = templatep->mForm;
 		
 		LLNotificationForm::EIgnoreType ignore = formp->getIgnoreType();
-		if (ignore == LLNotificationForm::IGNORE_NO)
+		if (ignore <= LLNotificationForm::IGNORE_NO)
 			continue;
 		
 		LLSD row;
@@ -1980,7 +1981,7 @@ void LLFloaterPreference::resetAllIgnored()
 		 iter != LLNotifications::instance().templatesEnd();
 		 ++iter)
 	{
-		if (iter->second->mForm->getIgnoreType() != LLNotificationForm::IGNORE_NO)
+		if (iter->second->mForm->getIgnoreType() > LLNotificationForm::IGNORE_NO)
 		{
 			iter->second->mForm->setIgnored(false);
 		}
@@ -1993,7 +1994,7 @@ void LLFloaterPreference::setAllIgnored()
 		 iter != LLNotifications::instance().templatesEnd();
 		 ++iter)
 	{
-		if (iter->second->mForm->getIgnoreType() != LLNotificationForm::IGNORE_NO)
+		if (iter->second->mForm->getIgnoreType() > LLNotificationForm::IGNORE_NO)
 		{
 			iter->second->mForm->setIgnored(true);
 		}
@@ -2416,6 +2417,11 @@ void LLFloaterPreference::onClickPermsDefault()
 	LLFloaterReg::showInstance("perms_default");
 }
 
+void LLFloaterPreference::onClickRememberedUsernames()
+{
+    LLFloaterReg::showInstance("forget_username");
+}
+
 void LLFloaterPreference::onDeleteTranscripts()
 {
 	LLSD args;
@@ -2836,7 +2842,7 @@ void LLPanelPreference::updateMediaAutoPlayCheckbox(LLUICtrl* ctrl)
 	{
 		bool media_enabled = getChild<LLCheckBoxCtrl>("enable_media")->get();
 
-		getChild<LLCheckBoxCtrl>("media_auto_play_btn")->setEnabled( media_enabled );
+		getChild<LLCheckBoxCtrl>("media_auto_play_combo")->setEnabled( media_enabled );
 	}
 	//enable_music is confusing it is any click of the enable check mark
 	if ((name == "enable_music") )
