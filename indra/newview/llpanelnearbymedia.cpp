@@ -43,6 +43,7 @@
 #include "llbutton.h"
 #include "lltextbox.h"
 #include "llviewermedia.h"
+#include "llviewerparcelaskplay.h"
 #include "llviewerparcelmedia.h"
 #include "llviewerregion.h"
 #include "llviewermediafocus.h"
@@ -84,10 +85,10 @@ LLPanelNearByMedia::LLPanelNearByMedia()
 	mHoverTimer.stop();
 
 	/* ## Zi: Media/Stream separation
-	mParcelAudioAutoStart = gSavedSettings.getBOOL(LLViewerMedia::AUTO_PLAY_MEDIA_SETTING) &&
-							gSavedSettings.getBOOL("MediaTentativeAutoPlay");
+    mParcelAudioAutoStart = gSavedSettings.getS32("ParcelMediaAutoPlayEnable") != 0
+                            && gSavedSettings.getBOOL("MediaTentativeAutoPlay");
 
-	gSavedSettings.getControl(LLViewerMedia::AUTO_PLAY_MEDIA_SETTING)->getSignal()->connect(boost::bind(&LLPanelNearByMedia::handleMediaAutoPlayChanged, this, _2));
+    gSavedSettings.getControl("ParcelMediaAutoPlayEnable")->getSignal()->connect(boost::bind(&LLPanelNearByMedia::handleMediaAutoPlayChanged, this, _2));
 	## Zi: Media/Stream separation
 	*/
 
@@ -180,9 +181,18 @@ BOOL LLPanelNearByMedia::postBuild()
 /* ## Zi: Media/Stream separation
 void LLPanelNearByMedia::handleMediaAutoPlayChanged(const LLSD& newvalue)
 {
-	// update mParcelAudioAutoStart if AUTO_PLAY_MEDIA_SETTING changes
-	mParcelAudioAutoStart = gSavedSettings.getBOOL(LLViewerMedia::AUTO_PLAY_MEDIA_SETTING) &&
-							gSavedSettings.getBOOL("MediaTentativeAutoPlay");
+	// update mParcelAudioAutoStartMode if "ParcelMediaAutoPlayEnable" changes
+    S32 value = gSavedSettings.getS32("ParcelMediaAutoPlayEnable");
+    mParcelAudioAutoStart = value != 0
+                            && gSavedSettings.getBOOL("MediaTentativeAutoPlay");
+
+    LLViewerParcelAskPlay *inst = LLViewerParcelAskPlay::getInstance();
+    if (value == 2 && !inst->hasData())
+    {
+        // Init if nessesary
+        inst->loadSettings();
+    }
+    inst->cancelNotification();
 }
 ## Zi: Media/Stream separation
 */

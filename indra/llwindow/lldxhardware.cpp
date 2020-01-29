@@ -703,8 +703,6 @@ BOOL LLDXHardware::getInfo(BOOL vram_only, bool disable_wmi)
         }
 
 		// Get device 0
-		// By default 0 device is the primary one, howhever in case of various hybrid graphics
-		// like itegrated AMD and PCI AMD GPUs system might switch.
 		LL_DEBUGS("AppInit") << "devices_containerp->GetChildContainer" << LL_ENDL;
 		hr = devices_containerp->GetChildContainer(L"0", &device_containerp);
 		if(FAILED(hr) || !device_containerp)
