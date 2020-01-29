@@ -33,7 +33,7 @@
       auto_resize="false"
       follows="left|right|top"
       name="ui_container"
-      width="1011"
+      width="1000"
       left="0"
       top="0"
       height="172">
@@ -45,8 +45,8 @@
     top="28"
     name="kokua_logo_small" />
   <combo_box
-    left_pad="22"
-    bottom_delta="-7"
+    left_pad="10"
+    bottom_delta="-40"
     allow_text_entry="true"
     follows="left|top"
     height="32"
@@ -55,9 +55,10 @@
     max_chars="128"
     combo_editor.commit_on_focus_lost="false"
     combo_editor.prevalidate_callback="ascii"
+    combo_button.scale_image="true"
     tool_tip="The username you chose when you registered, like bobsmith12 or Steller Sunshine"
     name="username_combo"
-    width="206">
+    width="232">
     <combo_box.combo_editor
       text_pad_left="8" 
       bg_image_always_focused="true"/>
@@ -65,8 +66,8 @@
   <line_editor
     follows="left|top"
     height="32"
-    left_pad="15"
-    max_length_chars="16"
+    left_pad="10"
+    max_length_bytes="16"
     text_pad_left="8"
     name="password_edit"
     label="Password"
@@ -104,9 +105,9 @@
   </combo_box>
   <button
     follows="left|top"
-    image_unselected="PushButton_Login"
-    image_pressed="PushButton_Login_Pressed"
-    image_hover_unselected="PushButton_Login_Over"
+    image_unselected="PushButton_On"
+    image_selected="PushButton_On_Selected"    
+    image_hover_unselected="PushButton_On_Over"
     label="Log In"
     label_color="White"
     font="SansSerifMedium"
@@ -132,6 +133,7 @@
     height="34"
     name="sign_up_text"
     left_pad="10"
+    top_pad="-55"
     width="200"
     valign="center">
     Sign up
@@ -139,8 +141,8 @@
   <check_box
     follows="left|top"
     font="SansSerifMedium"
-    left="185"
-    bottom_delta="21"
+    left="90"
+    top_pad="-18"
     height="24"
     label="Remember me"
     word_wrap="down"
@@ -154,7 +156,7 @@
     font="SansSerifMedium"
     text_color="EmphasisColor"
     height="16"
-    left="408"
+    left="330"
     bottom_delta="0"
     label="Remember password"
     word_wrap="down"
@@ -166,7 +168,7 @@
     font="SansSerifTiny"
     follows="left|top"
     height="26"
-  	left="588"
+  	left="514"
   	bottom_delta="8"
     max_chars="128"
     label="Select grid"    
@@ -179,7 +181,7 @@
     text_color="EmphasisColor"
     height="16"
     name="forgot_password_text"
-    left="778"
+    left="700"
     bottom_delta="-8"
     width="120"
     halign="center">

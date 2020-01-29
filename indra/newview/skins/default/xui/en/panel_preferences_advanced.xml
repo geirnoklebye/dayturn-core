@@ -214,7 +214,7 @@
      label="Show script errors in:"
      layout="topleft"
      left="30"
-     top_pad="15" 
+     top_pad="5" 
      name="show_script_errors"
      width="256" />
     <radio_group
@@ -303,7 +303,7 @@
      name="remembered_usernames"
      height="20"
      left="30"
-     top_pad="16"
+     top_pad="5"
      width="200">
     <button.commit_callback
      function="Pref.RememberedUsernames" />
