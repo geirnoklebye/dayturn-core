@@ -1517,6 +1517,11 @@ std::string LLFavoritesOrderStorage::getStoredFavoritesFilenameWithoutPath(const
 	return "stored_favorites_" + grid + ".xml";
 }
 
+std::string LLFavoritesOrderStorage::getStoredFavoritesFilenameWithoutPath()
+{
+	return "stored_favorites_" + LLGridManager::getInstance()->getGrid() + ".xml";
+}
+
 // static
 void LLFavoritesOrderStorage::destroyClass()
 {

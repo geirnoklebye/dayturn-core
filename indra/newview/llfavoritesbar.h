@@ -211,6 +211,7 @@ public:
 	static std::string getStoredFavoritesFilename(const std::string &grid);
 	static std::string getStoredFavoritesFilename();
 	// for settings backup/restore
+	static std::string getStoredFavoritesFilenameWithoutPath(const std::string &grid);
 	static std::string getStoredFavoritesFilenameWithoutPath();
 	static std::string getSavedOrderFileName();
 

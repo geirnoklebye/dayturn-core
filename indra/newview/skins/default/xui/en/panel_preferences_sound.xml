@@ -358,8 +358,8 @@
         follows="left|top"
         layout="topleft"
         height="15"
-        left="0"
-        top_pad="3"
+        left="8"
+        top_pad="5"
         width="120"
         halign="right"
         name="media_autoplay_label">
