@@ -458,13 +458,6 @@
               <menu_item_call.on_click
                  function="BuyCurrency" />
           </menu_item_call>
-          <menu_item_call
-          label="Merchant Outbox..."
-          name="MerchantOutbox">
-              <menu_item_call.on_click
-                  function="Floater.ToggleOrBringToFront"
-                  parameter="outbox" />
-          </menu_item_call>
          <menu_item_call
             label="Marketplace Listings..."
             name="MarketplaceListings">
@@ -680,13 +673,16 @@
          function="Tools.StopAllAnimations"
          parameter="stoprevoke"/>
         </menu_item_call>
-        <menu_item_call
-         label="Walk / run / fly..."
+        <menu_item_check
+       label="Walk / run / fly..."
          name="WalkRunFly">
-          <menu_item_call.on_click
-           function="Floater.ToggleOrBringToFront"
+          <menu_item_check.on_check
+           function="Floater.Visible"
            parameter="moveview" />
-        </menu_item_call>
+          <menu_item_check.on_click
+         function="Floater.ToggleOrBringToFront"
+         parameter="moveview" />
+        </menu_item_check>
       </menu>
 
       <menu
