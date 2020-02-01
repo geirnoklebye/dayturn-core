@@ -102,11 +102,30 @@
 		        <check_box
 				         follows="left|top"
 				         height="16"
-				         label="Do not close the map when teleporting"
+				         label="Do not close the World Map when teleporting"
 				         name="FSDoNotHideMapOnTeleport"
 				         width="270"
 				         control_name="FSDoNotHideMapOnTeleport"
 				         tool_tip="Disables the automatic closing of the map when teleporting."/>
+        <check_box
+         follows="left|top"
+         height="16"
+         initial_value="false"
+         label="Show additional region information on the World Map"
+         name="FSAdvancedWorldmapRegionInfo"
+         width="270"
+         control_name="FSAdvancedWorldmapRegionInfo"
+         tool_tip="Shows additional region information on the World Map (avatar count and maturity level)."/>
+        
+        <check_box
+         follows="left|top"
+         height="16"
+         initial_value="false"
+         label="Show grid coordinates on the World Map"
+         name="FSShowRegionGridCoordinates"
+         width="270"
+         control_name="FSShowRegionGridCoordinates"
+         tool_tip="Shows the grid coordinates (in units of regions) on the World Map."/>
             <check_box
             control_name="NameTagShowAge"
             name="NameTagShowAge"
