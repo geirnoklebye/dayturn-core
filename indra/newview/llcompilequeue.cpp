@@ -65,7 +65,8 @@
 
 // user to resolve item IDs to the floater handle the message reply is for
 typedef std::map<std::string, LLHandle<LLFloaterScriptQueue>> CQMAP;
-CQMAP compile_queue_floater_handles;
+// KKA-678 Add initialisation
+CQMAP compile_queue_floater_handles = {};
 	
 namespace
 {
