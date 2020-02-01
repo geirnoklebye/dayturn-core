@@ -608,8 +608,12 @@ class LLFileTakeSnapshotToDisk : public view_listener_t
 		S32 width = gViewerWindow->getWindowWidthRaw();
 		S32 height = gViewerWindow->getWindowHeightRaw();
 
-		if (gSavedSettings.getBOOL("HighResSnapshot"))
+		if (gSavedSettings.getBOOL("HighResSnapshot") && (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.hasLockedHuds())))
 		{
+			//KKA-594 - In High Res snapshots there is currently a bug where hud rendering doesn't take account of this and
+			//huds end up appearing four times, once in each quadrant. The LL resolution will be to prevent the hud rendering
+			//however for RLV we want to keep the huds in place so we force a non-High Res snapshot instead. SL-11898 is the 
+			//LL fix, which will be compatible with this change 
 			width *= 2;
 			height *= 2;
 		}
