@@ -55,6 +55,8 @@
 #include "llviewerregion.h"
 #include "llviewerwindow.h"
 #include "lltrans.h"
+#include "llslurl.h"
+#include "llurlaction.h"
 
 #include "llglheaders.h"
 
@@ -294,6 +296,17 @@ void LLWorldMapView::draw()
 {
 	static LLUIColor map_track_color = LLUIColorTable::instance().getColor("MapTrackColor", LLColor4::white);
 	
+	// Ansariel: Replaced slow calls to gSavedSettings with faster LLCachedControl
+	static LLCachedControl<bool> mapShowInfohubs(gSavedSettings, "MapShowInfohubs");
+	static LLCachedControl<bool> mapShowTelehubs(gSavedSettings, "MapShowTelehubs");
+	static LLCachedControl<bool> mapShowLandForSale(gSavedSettings, "MapShowLandForSale");
+	static LLCachedControl<bool> mapShowEvents(gSavedSettings, "MapShowEvents");
+	static LLCachedControl<bool> mapShowPeople(gSavedSettings, "MapShowPeople");
+	static LLCachedControl<bool> showMatureEvents(gSavedSettings, "ShowMatureEvents");
+	static LLCachedControl<bool> showAdultEvents(gSavedSettings, "ShowAdultEvents");
+	static LLCachedControl<bool> drawAdvancedRegionInfo(gSavedSettings, "FSAdvancedWorldmapRegionInfo");
+	static LLCachedControl<bool> sDrawRegionGridCoordinates(gSavedSettings, "FSShowRegionGridCoordinates", false);
+
 	LLTextureView::clearDebugImages();
 
 	F64 current_time = LLTimer::getElapsedSeconds();
@@ -340,8 +353,13 @@ void LLWorldMapView::draw()
 	gGL.setColorMask(true, true);
 
 	// Draw per sim overlayed information (names, mature, offline...)
-	for (LLWorldMap::sim_info_map_t::const_iterator it = LLWorldMap::getInstance()->getRegionMap().begin();
-		 it != LLWorldMap::getInstance()->getRegionMap().end(); ++it)
+	// <FS:Ansariel> Performance tweak
+	//for (LLWorldMap::sim_info_map_t::const_iterator it = LLWorldMap::getInstance()->getRegionMap().begin();
+	//	 it != LLWorldMap::getInstance()->getRegionMap().end(); ++it)
+	LLWorldMap::sim_info_map_t::const_iterator end_it = LLWorldMap::instance().getRegionMap().end();
+	for (LLWorldMap::sim_info_map_t::const_iterator it = LLWorldMap::instance().getRegionMap().begin();
+		 it != end_it; ++it)
+	// </FS:Ansariel>
 	{
 		U64 handle = it->first;
 		LLSimInfo* info = it->second;
@@ -463,14 +481,57 @@ void LLWorldMapView::draw()
 			{
 				font->renderUTF8(
 					mesg, 0,
-					llfloor(left + 3), llfloor(bottom + 2),
+					//llfloor(left + 3), llfloor(bottom + 2),
+					llfloor(left + 3.f), llfloor(bottom + (drawAdvancedRegionInfo ? 16.f : 2.f)),
 					LLColor4::white,
 					LLFontGL::LEFT, LLFontGL::BASELINE, LLFontGL::NORMAL, LLFontGL::DROP_SHADOW,
 					S32_MAX, //max_chars
 					sMapScale, //max_pixels
 					NULL,
 					TRUE); //use ellipses
+
+				if (drawAdvancedRegionInfo)
+				{
+					std::string advanced_info = "(";
+
+					// Only show agent count when region is online
+					if (!info->isDown())
+					{
+						S32 agent_count = info->getAgentCount();
+						LLViewerRegion *region = gAgent.getRegion();
+						if (region && region->getHandle() == info->getHandle())
+						{
+							++agent_count; // Bump by 1 if we're in this region
+						}
+						if (agent_count > 0)
+						{
+							advanced_info += llformat("%d - ", agent_count);
+						}
+					}
+				
+					advanced_info += llformat("%s)", info->getAccessString().c_str());
+
+					font->renderUTF8(
+						advanced_info, 0,
+						llfloor(left + 3.f), llfloor(bottom + 2.f),
+						LLColor4::white,
+						LLFontGL::LEFT, LLFontGL::BASELINE, LLFontGL::NORMAL, LLFontGL::DROP_SHADOW,
+						S32_MAX, //max_chars
+						sMapScale, //max_pixels
+						NULL,
+						TRUE); //use ellipses
+				}
 			}
+// <FS:CR> Show the grid coordinates (in units of regions)
+			if (sDrawRegionGridCoordinates)
+			{
+				LLVector3d origin = info->getGlobalOrigin();
+				std::ostringstream coords;
+				coords << "(" << origin.mdV[VX] / REGION_WIDTH_METERS << "," << origin.mdV[VY] / REGION_WIDTH_METERS << ")";
+				font->renderUTF8(coords.str(), 0, llfloor(left + 3), llfloor(bottom + (drawAdvancedRegionInfo ? 30.f : 16.f)), LLColor4::white,
+								 LLFontGL::LEFT, LLFontGL::BASELINE, LLFontGL::NORMAL, LLFontGL::DROP_SHADOW);
+			}
+// </FS:CR>
 		}
 	}
 
@@ -490,12 +551,12 @@ void LLWorldMapView::draw()
 	gGL.setSceneBlendType(LLRender::BT_ALPHA);
 
 	// Draw item infos if we're not zoomed out too much and there's something to draw
-	if ((level <= DRAW_SIMINFO_THRESHOLD) && (gSavedSettings.getBOOL("MapShowInfohubs") || 
-											  gSavedSettings.getBOOL("MapShowTelehubs") ||
-											  gSavedSettings.getBOOL("MapShowLandForSale") || 
-											  gSavedSettings.getBOOL("MapShowEvents") || 
-											  gSavedSettings.getBOOL("ShowMatureEvents") ||
-											  gSavedSettings.getBOOL("ShowAdultEvents")))
+	if ((level <= DRAW_SIMINFO_THRESHOLD) && (mapShowInfohubs || 
+											  mapShowTelehubs ||
+											  mapShowLandForSale || 
+											  mapShowEvents || 
+											  showMatureEvents ||
+											  showAdultEvents))
 	{
 		drawItems();
 	}
@@ -527,7 +588,7 @@ void LLWorldMapView::draw()
 
 	// Draw icons for the avatars in each region.
 	// Drawn this after the current agent avatar so one can see nearby people
-	if (gSavedSettings.getBOOL("MapShowPeople") && (level <= DRAW_SIMINFO_THRESHOLD))
+	if (mapShowPeople && (level <= DRAW_SIMINFO_THRESHOLD))
 	{
 		drawAgents();
 	}
@@ -651,6 +712,7 @@ bool LLWorldMapView::drawMipmapLevel(S32 width, S32 height, S32 level, bool load
 	pos_NE[VY] += tile_width;
 
 	// Iterate through the tiles on screen: we just need to ask for one tile every tile_width meters
+	LLWorldMap* world_map = LLWorldMap::getInstance(); // <FS:Ansariel> Performance tweak
 	U32 grid_x, grid_y;
 	for (F64 index_y = pos_SW[VY]; index_y < pos_NE[VY]; index_y += tile_width)
 	{
@@ -661,7 +723,10 @@ bool LLWorldMapView::drawMipmapLevel(S32 width, S32 height, S32 level, bool load
 			// Convert to the mipmap level coordinates for that point (i.e. which tile to we hit)
 			LLWorldMipmap::globalToMipmap(pos_global[VX], pos_global[VY], level, &grid_x, &grid_y);
 			// Get the tile. Note: NULL means that the image does not exist (so it's considered "complete" as far as fetching is concerned)
-			LLPointer<LLViewerFetchedTexture> simimage = LLWorldMap::getInstance()->getObjectsTile(grid_x, grid_y, level, load);
+			// <FS:Ansariel> Performance tweak
+			//LLPointer<LLViewerFetchedTexture> simimage = LLWorldMap::getInstance()->getObjectsTile(grid_x, grid_y, level, load);
+			LLPointer<LLViewerFetchedTexture> simimage = world_map->getObjectsTile(grid_x, grid_y, level, load);
+			// </FS:Ansariel>
 			if (simimage)
 			{
 				// Checks that the image has a valid texture
@@ -798,29 +863,42 @@ void LLWorldMapView::drawItems()
 	bool mature_enabled = gAgent.canAccessMature();
 	bool adult_enabled = gAgent.canAccessAdult();
 
-    BOOL show_mature = mature_enabled && gSavedSettings.getBOOL("ShowMatureEvents");
-	BOOL show_adult = adult_enabled && gSavedSettings.getBOOL("ShowAdultEvents");
+	// Ansariel: Replaced slow calls to gSavedSettings with faster LLCachedControl
+	static LLCachedControl<bool> mapShowInfohubs(gSavedSettings, "MapShowInfohubs");
+	static LLCachedControl<bool> mapShowTelehubs(gSavedSettings, "MapShowTelehubs");
+	static LLCachedControl<bool> mapShowLandForSale(gSavedSettings, "MapShowLandForSale");
+	static LLCachedControl<bool> mapShowEvents(gSavedSettings, "MapShowEvents");
+	static LLCachedControl<bool> showMatureEvents(gSavedSettings, "ShowMatureEvents");
+	static LLCachedControl<bool> showAdultEvents(gSavedSettings, "ShowAdultEvents");
+    bool show_mature = mature_enabled && showMatureEvents;
+	bool show_adult = adult_enabled && showAdultEvents;
+
+	// <FS:Ansariel> Performance tweak
+	LLWorldMap* world_map = LLWorldMap::getInstance();
 
 	for (handle_list_t::iterator iter = mVisibleRegions.begin(); iter != mVisibleRegions.end(); ++iter)
 	{
 		U64 handle = *iter;
-		LLSimInfo* info = LLWorldMap::getInstance()->simInfoFromHandle(handle);
+		// <FS:Ansariel> Performance tweak
+		//LLSimInfo* info = LLWorldMap::getInstance()->simInfoFromHandle(handle);
+		LLSimInfo* info = world_map->simInfoFromHandle(handle);
+		// </FS:Ansariel>
 		if ((info == NULL) || (info->isDown()))
 		{
 			continue;
 		}
 		// Infohubs
-		if (gSavedSettings.getBOOL("MapShowInfohubs"))
+		if (mapShowInfohubs)
 		{
 			drawGenericItems(info->getInfoHub(), sInfohubImage);
 		}
 		// Telehubs
-		if (gSavedSettings.getBOOL("MapShowTelehubs"))
+		if (mapShowTelehubs)
 		{
 			drawGenericItems(info->getTeleHub(), sTelehubImage);
 		}
 		// Land for sale
-		if (gSavedSettings.getBOOL("MapShowLandForSale"))
+		if (mapShowLandForSale)
 		{
 			drawGenericItems(info->getLandForSale(), sForSaleImage);
 			// for 1.23, we're showing normal land and adult land in the same UI; you don't
@@ -832,7 +910,7 @@ void LLWorldMapView::drawItems()
 			}
 		}
 		// PG Events
-		if (gSavedSettings.getBOOL("MapShowEvents"))
+		if (mapShowEvents)
 		{
 			drawGenericItems(info->getPGEvent(), sEventImage);
 		}
@@ -853,10 +931,16 @@ void LLWorldMapView::drawAgents()
 {
 	static LLUIColor map_avatar_color = LLUIColorTable::instance().getColor("MapAvatarColor", LLColor4::white);
 
+	// <FS:Ansariel> Performance tweak
+	LLWorldMap* world_map = LLWorldMap::getInstance();
+
 	for (handle_list_t::iterator iter = mVisibleRegions.begin(); iter != mVisibleRegions.end(); ++iter)
 	{
 		U64 handle = *iter;
-		LLSimInfo* siminfo = LLWorldMap::getInstance()->simInfoFromHandle(handle);
+		// <FS:Ansariel> Performance tweak
+		//LLSimInfo* siminfo = LLWorldMap::getInstance()->simInfoFromHandle(handle);
+		LLSimInfo* siminfo = world_map->simInfoFromHandle(handle);
+		// </FS:Ansariel>
 		if ((siminfo == NULL) || (siminfo->isDown()))
 		{
 			continue;
@@ -1753,13 +1837,17 @@ BOOL LLWorldMapView::handleDoubleClick( S32 x, S32 y, MASK mask )
 		case MAP_ITEM_LAND_FOR_SALE:
 		case MAP_ITEM_LAND_FOR_SALE_ADULT:
 			{
-				LLVector3d pos_global = viewPosToGlobal(x, y);
-				std::string sim_name;
-				if (LLWorldMap::getInstance()->simNameFromPosGlobal(pos_global, sim_name))
-				{
-					LLFloaterReg::hideInstance("world_map");
-					LLFloaterReg::showInstance("search", LLSD().with("category", "land").with("query", sim_name));
-				}
+				// <FS:Ansariel> Show parcel details instead of search with possible useless result
+				//LLVector3d pos_global = viewPosToGlobal(x, y);
+				//std::string sim_name;
+				//if (LLWorldMap::getInstance()->simNameFromPosGlobal(pos_global, sim_name))
+				//{
+				//	LLFloaterReg::hideInstance("world_map");
+				//	LLFloaterReg::showInstance("search", LLSD().with("category", "land").with("query", sim_name));
+				//}
+				LLFloaterReg::hideInstance("world_map");
+				LLUrlAction::executeSLURL(LLSLURL("parcel", id, "about").getSLURLString());
+				// </FS:Ansariel>
 				break;
 			}
 		case MAP_ITEM_CLASSIFIED:
