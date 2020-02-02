@@ -63,7 +63,7 @@
 #include "llcorehttputil.h"
 #include <map>
 
-// user to resolve item IDs to the floater handle the message reply is for
+// used to resolve item IDs to the floater handle the message reply is for
 typedef std::map<std::string, LLHandle<LLFloaterScriptQueue>> CQMAP;
 // KKA-678 Add initialisation
 CQMAP compile_queue_floater_handles = {};
@@ -813,36 +813,56 @@ LLFloaterLocateQueue::~LLFloaterLocateQueue()
 // static (passed on by llpreviewscript)
 void LLFloaterLocateQueue::processScriptRunningReply(LLMessageSystem* msg)
 {
-	LLHandle<LLFloaterScriptQueue> hfloater;
-	LLUUID item_id;
-	LLUUID object_id;
-	
-	// KKA-678 add protection for an empty list since this is static
-	// and could get called whilst there are no floaters in existence
-	if (! compile_queue_floater_handles.empty())
+	// KKA-678 We're getting occasional exceptions thrown in the vicinity of this
+	// routine when a script is opened for editing even though compile_queue_floater_handles 
+	// is (should be) empty at the time.
+	// That said, the use of LLCheckedHandle really should have a landing pad
+	// so convert this to a try/catch structure. The overlay paranoid debug
+	// output is there in case the problem somehow still occurs.
+	try
 	{
-		msg->getUUIDFast(_PREHASH_Script, _PREHASH_ObjectID, object_id);
-		msg->getUUIDFast(_PREHASH_Script, _PREHASH_ItemID, item_id);
+		LL_INFOS() << "entry" << LL_ENDL;
+		LLHandle<LLFloaterScriptQueue> hfloater;
+		LLUUID item_id;
+		LLUUID object_id;
 		
-		CQMAP::iterator it;
-			
-		it = compile_queue_floater_handles.find(object_id.asString());
-		if (it != compile_queue_floater_handles.end())
+		// KKA-678 add protection for an empty list since this is static
+		// and could get called whilst there are no floaters in existence
+		if (! compile_queue_floater_handles.empty())
 		{
-			hfloater=compile_queue_floater_handles[object_id.asString()];
-			LLCheckedHandle<LLFloaterScriptQueue> floater(hfloater);
+			LL_INFOS() << "map not empty" << LL_ENDL;
+			msg->getUUIDFast(_PREHASH_Script, _PREHASH_ObjectID, object_id);
+			msg->getUUIDFast(_PREHASH_Script, _PREHASH_ItemID, item_id);
 			
-			BOOL running;
-			msg->getBOOLFast(_PREHASH_Script, _PREHASH_Running, running);
-			floater->setIsRunning(running);
+			CQMAP::iterator it;
+				
+			it = compile_queue_floater_handles.find(object_id.asString());
+			if (it != compile_queue_floater_handles.end())
+			{
+				LL_INFOS() << "matched object id" << LL_ENDL;
+				hfloater=compile_queue_floater_handles[object_id.asString()];
+				LLCheckedHandle<LLFloaterScriptQueue> floater(hfloater);
+				
+				BOOL running;
+				msg->getBOOLFast(_PREHASH_Script, _PREHASH_Running, running);
+				floater->setIsRunning(running);
 
-			BOOL mono;
-			msg->getBOOLFast(_PREHASH_Script, "Mono", mono);
-			floater->setIsMono(mono);
+				BOOL mono;
+				msg->getBOOLFast(_PREHASH_Script, "Mono", mono);
+				floater->setIsMono(mono);
 
-			floater->setWaiting(false);
+				floater->setWaiting(false);
+				LL_INFOS() << "done object handling" << LL_ENDL;
+			}
 		}
 	}
+  catch (LLCheckedHandleBase::Stale &)
+  {
+      // This is expected.  It means that floater has been closed before 
+      // processing was completed.
+      LL_INFOS() << "LLExeceptionStaleHandle caught in processScriptRunningReply! Floater has most likely been closed." << LL_ENDL;
+  }
+	LL_INFOS() << "exit" << LL_ENDL;
 }
 
 /// This is a utility function to be bound and called from objectScriptProcessingQueueCoro.
@@ -1175,6 +1195,6 @@ void LLFloaterScriptQueue::objectScriptProcessingQueueCoro(std::string action, L
     {
         // This is expected.  It means that floater has been closed before 
         // processing was completed.
-        LL_DEBUGS("SCRIPTQ") << "LLExeceptionStaleHandle caught! Floater has most likely been closed." << LL_ENDL;
+        LL_INFOS("SCRIPTQ") << "LLExeceptionStaleHandle caught! Floater has most likely been closed." << LL_ENDL;
     }
 }
