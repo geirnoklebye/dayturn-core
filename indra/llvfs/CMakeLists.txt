@@ -101,9 +101,9 @@ if (LL_TESTS)
 
     # TODO: Some of these need refactoring to be proper Unit tests rather than Integration tests.
     # Method 'LLDir::getNextFileInDir' causes 'LLDir_Dummy' : cannot instantiate abstract class
-    if (WINDOWS)
+    if (WINDOWS OR DARWIN)
         message (WARNING "LL_ADD_INTEGRATION_TEST(lldir skipped. LL viewer passes this test.")
-    else (WINDOWS)
+    else (WINDOWS OR DARWIN)
        LL_ADD_INTEGRATION_TEST(lldir "" "${test_libs}")
-    endif (WINDOWS) 
+    endif (WINDOWS OR DARWIN)
 endif (LL_TESTS)
