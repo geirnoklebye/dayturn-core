@@ -2143,8 +2143,10 @@ void LLVOAvatar::resetSkeleton(bool reset_animations)
         LL_ERRS() << "Error resetting skeleton" << LL_ENDL;
 	}
 
-    // Reset attachment points (buildSkeleton only does bones and CVs)
-    bool ignore_hud_joints = true;
+    // Reset attachment points
+    // BuildSkeleton only does bones and CVs but we still need to reinit huds
+    // since huds can be animated.
+    bool ignore_hud_joints = !isSelf();
     initAttachmentPoints(ignore_hud_joints);
 
     // Fix up collision volumes
@@ -7029,7 +7031,7 @@ void LLVOAvatar::initAttachmentPoints(bool ignore_hud_joints)
         LLAvatarXmlInfo::LLAvatarAttachmentInfo *info = *iter;
         if (info->mIsHUDAttachment && (!isSelf() || ignore_hud_joints))
         {
-		    //don't process hud joint for other avatars, or when doing a skeleton reset.
+		    //don't process hud joint for other avatars.
             continue;
         }
 
@@ -11019,7 +11021,7 @@ void LLVOAvatar::calculateUpdateRenderComplexity()
 	// Diagnostic list of all textures on our avatar
 	static std::set<LLUUID> all_textures;
 
-	if (mVisualComplexityStale)
+    if (mVisualComplexityStale)
 	{
 		U32 cost = VISUAL_COMPLEXITY_UNKNOWN;
 		LLVOVolume::texture_cost_t textures;
