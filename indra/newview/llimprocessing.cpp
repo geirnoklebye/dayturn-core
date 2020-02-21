@@ -1364,17 +1364,6 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
                 }
 		}
 
-						// KKA-623 push this through the IM notification logic for object IMs
-						if (!chat_from_system) 
-						{
-							LLSD msg_notify = LLSD(LLSD::emptyMap());
-							msg_notify["session_id"] = LLUUID();
-							msg_notify["from_id"] = chat.mFromID;
-							msg_notify["source_type"] = chat.mSourceType;
-							msg_notify["chat_type"] = chat.mChatType;
-							on_new_message(msg_notify);
-						}
-
 		//Object IMs send with from name: 'Second Life' need to be displayed also in notification toasts (EXT-1590)
 		if (!chat_from_system) break;
 
