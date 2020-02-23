@@ -89,6 +89,7 @@
 #include <cstdlib>
 
 #include "RRInterface.h"
+#include "llversioninfo.h"
 //CA
 #include "RRInterfaceHelper.h"
 #include "kokuarlvfloaters.h"
@@ -642,14 +643,12 @@ RRInterface::~RRInterface()
 
 std::string RRInterface::getVersion ()
 {
-	return RR_VIEWER_NAME " viewer v" RR_VERSION " (" RR_SLV_VERSION")"; // there is no '+' between the string and the macro
-//	return RR_VIEWER_NAME" viewer v"RR_VERSION" ("+LLViewerInfo::getVersion()+")";
+	return RR_VIEWER_NAME" viewer v"RR_VERSION" ("+LLVersionInfo::getShortVersion()+")";
 }
 
 std::string RRInterface::getVersion2 ()
 {
-	return RR_VIEWER_NAME_NEW " viewer v" RR_VERSION " (" RR_SLV_VERSION")"; // there is no '+' between the string and the macro
-//	return RR_VIEWER_NAME_NEW" viewer v"RR_VERSION" ("+LLViewerInfo::getVersion()+")";
+	return RR_VIEWER_NAME_NEW" viewer v"RR_VERSION" ("+LLVersionInfo::getShortVersion()+")";
 }
 
 std::string RRInterface::getVersionNum ()
