@@ -27,7 +27,7 @@
                  function="File.EnableUpload" />
                 <menu_item_call.on_visible
                  function="Upload.CalculateCosts"
-                 parameter="Upload Image" />
+                 parameter="Upload Image,texture" />
             </menu_item_call>
             <menu_item_call
              label="Sound (L$[COST])..."
@@ -53,7 +53,7 @@
                  function="File.EnableUpload" />
                 <menu_item_call.on_visible
                  function="Upload.CalculateCosts"
-                 parameter="Upload Animation" />
+                 parameter="Upload Animation,animation" />
             </menu_item_call>
                       <menu_item_call
            label="Mesh Model..."
@@ -69,7 +69,7 @@
             function="File.VisibleUploadModel"/>
             </menu_item_call>
             <menu_item_call
-             label="Bulk (L$[COST] per file)..."
+             label="Bulk..."
              layout="topleft"
              name="Bulk Upload">
                 <menu_item_call.on_click
@@ -1853,46 +1853,46 @@
      layout="topleft"
      name="Upload"
      tear_off="true">
-      <menu_item_call
-       label="Image (L$[COST])..."
-       layout="topleft"
-       name="Upload Image"
-       shortcut="control|U">
-        <menu_item_call.on_click
-         function="File.UploadImage"
-         parameter="" />
-        <menu_item_call.on_enable
-         function="File.EnableUpload" />
-        <menu_item_call.on_visible
-         function="Upload.CalculateCosts"
-         parameter="Upload Image" />
-      </menu_item_call>
-      <menu_item_call
-       label="Sound (L$[COST])..."
-       layout="topleft"
-       name="Upload Sound">
-        <menu_item_call.on_click
-         function="File.UploadSound"
-         parameter="" />
-        <menu_item_call.on_enable
-         function="File.EnableUpload" />
-        <menu_item_call.on_visible
-         function="Upload.CalculateCosts"
-         parameter="Upload Sound" />
-      </menu_item_call>
-      <menu_item_call
-       label="Animation (L$[COST])..."
-       layout="topleft"
-       name="Upload Animation">
-        <menu_item_call.on_click
-         function="File.UploadAnim"
-         parameter="" />
-        <menu_item_call.on_enable
-         function="File.EnableUpload" />
-        <menu_item_call.on_visible
-         function="Upload.CalculateCosts"
-         parameter="Upload Animation" />
-      </menu_item_call>
+            <menu_item_call
+             label="Image (L$[COST])..."
+             layout="topleft"
+             name="Upload Image"
+             shortcut="control|U">
+                <menu_item_call.on_click
+                 function="File.UploadImage"
+                 parameter="" />
+                <menu_item_call.on_enable
+                 function="File.EnableUpload" />
+                <menu_item_call.on_visible
+                 function="Upload.CalculateCosts"
+                 parameter="Upload Image,texture" />
+            </menu_item_call>
+            <menu_item_call
+             label="Sound (L$[COST])..."
+             layout="topleft"
+             name="Upload Sound">
+                <menu_item_call.on_click
+                 function="File.UploadSound"
+                 parameter="" />
+                <menu_item_call.on_enable
+                 function="File.EnableUpload" />
+                <menu_item_call.on_visible
+                 function="Upload.CalculateCosts"
+                 parameter="Upload Sound,sound" />
+            </menu_item_call>
+            <menu_item_call
+             label="Animation (L$[COST])..."
+             layout="topleft"
+             name="Upload Animation">
+                <menu_item_call.on_click
+                 function="File.UploadAnim"
+                 parameter="" />
+                <menu_item_call.on_enable
+                 function="File.EnableUpload" />
+                <menu_item_call.on_visible
+                 function="Upload.CalculateCosts"
+                 parameter="Upload Animation,animation" />
+            </menu_item_call>
       <menu_item_call
      label="Mesh Model..."
      layout="topleft"
