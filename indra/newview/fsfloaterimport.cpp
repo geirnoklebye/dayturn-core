@@ -30,16 +30,17 @@
 
 #include "fscommon.h"
 #include "llagent.h"
+#include "llagentbenefits.h"
 #include "llappviewer.h"
 #include "llbuycurrencyhtml.h"
 #include "llcallbacklist.h"
 #include "llcheckboxctrl.h"
 #include "lldatapacker.h"
 #include "lldir.h"
-#include "lleconomy.h"
 #include "llfloaterperms.h"
 #include "llinventorydefines.h"
 #include "llinventoryfunctions.h"
+#include "llinventorytype.h"
 #include "llmultigesture.h"
 #include "llnotificationsutil.h"
 #include "llparcel.h"
@@ -127,7 +128,7 @@ FSFloaterImport::~FSFloaterImport()
 
 BOOL FSFloaterImport::postBuild()
 {
-	if (LLGlobalEconomy::getInstance()->getPriceUpload() == 0 
+	if (LLAgentBenefitsMgr::current().getTextureUploadCost() == 0 
 		|| gAgent.getRegion()->getCentralBakeVersion() > 0)
 	{
 		getChild<LLCheckBoxCtrl>("temp_asset")->setVisible(FALSE);   
@@ -522,7 +523,7 @@ void FSFloaterImport::onClickBtnImport()
 		
 		if (!getChild<LLCheckBoxCtrl>("temp_asset")->get())
 		{
-			U32 expected_upload_cost = mTexturesTotal * (U32)LLGlobalEconomy::getInstance()->getPriceUpload();
+			U32 expected_upload_cost = mTexturesTotal * (U32)LLAgentBenefitsMgr::current().getTextureUploadCost();
 			if(!(can_afford_transaction(expected_upload_cost)))
 			{
 				LLStringUtil::format_map_t args;
@@ -592,7 +593,7 @@ void FSFloaterImport::onClickCheckBoxUploadAsset()
 	{
 		getChild<LLCheckBoxCtrl>("temp_asset")->setEnabled(TRUE);
 		LLUIString stats = getString("upload_cost");
-		stats.setArg("[COST]", llformat("%u", (mTexturesTotal + mSoundsTotal + mAnimsTotal) * (U32)LLGlobalEconomy::getInstance()->getPriceUpload()));
+		stats.setArg("[COST]", llformat("%u", ((mTexturesTotal * LLAgentBenefitsMgr::current().getTextureUploadCost()) +  (mSoundsTotal * LLAgentBenefitsMgr::current().getSoundUploadCost()) + (mAnimsTotal * LLAgentBenefitsMgr::current().getAnimationUploadCost())) ));
 		getChild<LLTextBox>("file_status_text")->setText(stats.getString());
 	}
 	else
@@ -615,7 +616,7 @@ void FSFloaterImport::onClickCheckBoxTempAsset()
 	else
 	{
 		LLUIString stats = getString("upload_cost");
-		stats.setArg("[COST]", llformat("%u", (mTexturesTotal + mSoundsTotal + mAnimsTotal) * (U32)LLGlobalEconomy::getInstance()->getPriceUpload()));
+		stats.setArg("[COST]", llformat("%u", ((mTexturesTotal * LLAgentBenefitsMgr::current().getTextureUploadCost()) +  (mSoundsTotal * LLAgentBenefitsMgr::current().getSoundUploadCost()) + (mAnimsTotal * LLAgentBenefitsMgr::current().getAnimationUploadCost())) ));
 		getChild<LLTextBox>("file_status_text")->setText(stats.getString());
 	}
 }
@@ -1201,6 +1202,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	bool new_file_agent_inventory = false;
 	LLWearableType::EType wearable_type = NOT_WEARABLE;
 	std::string perms_prefix = "";
+	U32 expected_upload_cost = LLAgentBenefitsMgr::current().getTextureUploadCost();
 
 	if (name.empty())
 	{
@@ -1221,6 +1223,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		{
 			url = gAgent.getRegion()->getCapability("NewFileAgentInventory");
 			new_file_agent_inventory = true;
+			expected_upload_cost = LLAgentBenefitsMgr::current().getTextureUploadCost();
 		}
 		LLTrace::add(LLStatViewer::UPLOAD_TEXTURE,1);
 	}
@@ -1239,6 +1242,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		{
 			url = gAgent.getRegion()->getCapability("NewFileAgentInventory");
 			new_file_agent_inventory = true;
+			expected_upload_cost = LLAgentBenefitsMgr::current().getSoundUploadCost();
 			LLTrace::add(LLStatViewer::UPLOAD_SOUND,1);
 		}
 		
@@ -1280,7 +1284,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 			}
 			else
 			{
-				LL_DEBUGS("export") << "Invalied uuid: " << m1->str() << LL_ENDL;
+				LL_DEBUGS("export") << "Invalid uuid: " << m1->str() << LL_ENDL;
 			}
 		}
 		if (replace) 
@@ -1359,6 +1363,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 		{
 			url = gAgent.getRegion()->getCapability("NewFileAgentInventory");
 			new_file_agent_inventory = true;
+			expected_upload_cost = LLAgentBenefitsMgr::current().getAnimationUploadCost();
 			LLTrace::add(LLStatViewer::ANIMATION_UPLOADS,1);
 		}
 	}
@@ -1470,7 +1475,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	data->mAssetInfo.mCreatorID = gAgentID;
 	data->mInventoryType = inventory_type;
 	data->mNextOwnerPerm = LLFloaterPerms::getNextOwnerPerms(perms_prefix);
-	data->mExpectedUploadCost = LLGlobalEconomy::getInstance()->getPriceUpload();
+	data->mExpectedUploadCost = expected_upload_cost;
 	FSResourceData* fs_data = new FSResourceData;
 	fs_data->uuid = asset_id;
 	fs_data->mFloater = this;
@@ -1962,7 +1967,9 @@ void uploadCoroutine( LLCoreHttpUtil::HttpCoroutineAdapter::ptr_t &a_httpAdapter
 		{
 			LLAssetType::EType asset_type = LLAssetType::lookup( aBody[ "asset_type" ].asString() );
 			LLInventoryType::EType inventory_type = LLInventoryType::lookup( aBody[ "inventory_type" ].asString() );
-			S32 upload_price = LLGlobalEconomy::getInstance()->getPriceUpload();
+			S32 upload_price = LLAgentBenefitsMgr::current().getSoundUploadCost();
+			if (inventory_type == LLInventoryType::IT_TEXTURE) upload_price = LLAgentBenefitsMgr::current().getTextureUploadCost();
+			else if (inventory_type == LLInventoryType::IT_ANIMATION) upload_price = LLAgentBenefitsMgr::current().getAnimationUploadCost();
 
 			const std::string inventory_type_string = aBody[ "asset_type" ].asString();
 			const LLUUID& item_folder_id = aBody[ "folder_id" ].asUUID();
