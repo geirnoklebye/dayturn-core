@@ -175,8 +175,6 @@
 #include "llviewerparcelmgr.h"
 #include "llworldmapview.h"
 #include "llpostprocess.h"
-#include "llwlparammanager.h"
-#include "llwaterparammanager.h"
 
 #include "lldebugview.h"
 #include "llconsole.h"
@@ -212,6 +210,7 @@
 #include "llfloateroutfitsnapshot.h"
 #include "llfloatersnapshot.h"
 #include "llsidepanelinventory.h"
+#include "llatmosphere.h"
 
 // includes for idle() idleShutdown()
 #include "llviewercontrol.h"
@@ -791,6 +790,10 @@ bool LLAppViewer::init()
 	// Memory will be cleaned up in ::cleanupClass()
 	LLWearableType::initParamSingleton(new LLUITranslationBridge());
 
+    // initialize the LLSettingsType translation bridge.
+    LLTranslationBridge::ptr_t trans = std::make_shared<LLUITranslationBridge>();
+    LLSettingsType::initClass(trans);
+
 	// initialize SSE options
 	LLVector4a::initClass();
 
@@ -1153,6 +1156,9 @@ bool LLAppViewer::init()
 	}
 
 	gGLActive = FALSE;
+#if LL_RELEASE_FOR_DOWNLOAD 
+    if (!gSavedSettings.getBOOL("CmdLineSkipUpdater"))
+    {
 /*
 #if !LL_LINUX
 	LLProcess::Params updater;
@@ -1180,18 +1186,14 @@ bool LLAppViewer::init()
 	// ForceAddressSize
 	updater.args.add(stringize(gSavedSettings.getU32("ForceAddressSize")));
 
-#if LL_WINDOWS && !LL_RELEASE_FOR_DOWNLOAD && !LL_SEND_CRASH_REPORTS
-	// This is neither a release package, nor crash-reporting enabled test build
-	// try to run version updater, but don't bother if it fails (file might be missing)
-	LLLeap *leap_p = LLLeap::create(updater, false);
-	if (!leap_p)
-	{
-		LL_WARNS("LLLeap") << "Failed to run LLLeap" << LL_ENDL;
+		// Run the updater. An exception from launching the updater should bother us.
+		LLLeap::create(updater, true);
 	}
-#else
- 	// Run the updater. An exception from launching the updater should bother us.
-	LLLeap::create(updater, true);
-#endif
+	else
+	{
+		LL_WARNS("InitInfo") << "Skipping updater check." << LL_ENDL;
+	}
+
 
 	// Iterate over --leap command-line options. But this is a bit tricky: if
 	// there's only one, it won't be an array at all.
@@ -1218,12 +1220,14 @@ bool LLAppViewer::init()
 	}
 #endif //!LL_LINUX
 */
+	}
 	if (gSavedSettings.getBOOL("QAMode") && gSavedSettings.getS32("QAModeEventHostPort") > 0)
 	{
 		LL_WARNS("InitInfo") << "QAModeEventHostPort DEPRECATED: "
 							 << "lleventhost no longer supported as a dynamic library"
 							 << LL_ENDL;
 	}
+#endif
 
 	LLTextUtil::TextHelpers::iconCallbackCreationFunction = create_text_segment_icon_from_url_match;
 
@@ -1338,6 +1342,8 @@ static LLTrace::BlockTimerStatHandle FTM_YIELD("Yield");
 
 static LLTrace::BlockTimerStatHandle FTM_TEXTURE_CACHE("Texture Cache");
 static LLTrace::BlockTimerStatHandle FTM_DECODE("Image Decode");
+static LLTrace::BlockTimerStatHandle FTM_FETCH("Image Fetch");
+
 static LLTrace::BlockTimerStatHandle FTM_VFS("VFS Thread");
 static LLTrace::BlockTimerStatHandle FTM_LFS("LFS Thread");
 static LLTrace::BlockTimerStatHandle FTM_PAUSE_THREADS("Pause Threads");
@@ -1489,8 +1495,10 @@ bool LLAppViewer::doFrame()
 				pingMainloopTimeout("Main:Display");
 				gGLActive = TRUE;
 
+				display();
+
 				static U64 last_call = 0;
-				if (!gTeleportDisplay)
+				if (!gTeleportDisplay || gGLManager.mIsIntel) // SL-10625...throttle early, throttle often with Intel
 				{
 					// Frame/draw throttling
 					U64 elapsed_time = LLTimer::getTotalTime() - last_call;
@@ -1503,8 +1511,6 @@ bool LLAppViewer::doFrame()
 					}
 				}
 				last_call = LLTimer::getTotalTime();
-
-				display();
 
 				pingMainloopTimeout("Main:Snapshot");
 				LLFloaterSnapshot::update(); // take snapshots
@@ -1652,7 +1658,7 @@ S32 LLAppViewer::updateTextureThreads(F32 max_time)
 	 	work_pending += LLAppViewer::getImageDecodeThread()->update(max_time); // unpauses the image thread
 	}
 	{
-		LL_RECORD_BLOCK_TIME(FTM_DECODE);
+		LL_RECORD_BLOCK_TIME(FTM_FETCH);
 	 	work_pending += LLAppViewer::getTextureFetch()->update(max_time); // unpauses the texture fetch thread
 	}
 	return work_pending;
@@ -1675,6 +1681,8 @@ void LLAppViewer::flushVFSIO()
 
 bool LLAppViewer::cleanup()
 {
+    LLAtmosphere::cleanupClass();
+
 	//ditch LLVOAvatarSelf instance
 	gAgentAvatarp = NULL;
 
@@ -5059,7 +5067,6 @@ void LLAppViewer::idle()
 	//
 	// Update weather effects
 	//
-	gSky.propagateHeavenlyBodies(gFrameDTClamped);				// moves sun, moon, and planets
 
 	// Update wind vector 
 	LLVector3 wind_position_region;
@@ -5548,7 +5555,7 @@ bool LLAppViewer::onChangeFrameLimit(LLSD const & evt)
 {
 	if (evt.asInteger() > 0)
 	{
-		mMinMicroSecPerFrame = 1000000 / evt.asInteger();
+		mMinMicroSecPerFrame = (U64)(1000000.0f / F32(evt.asInteger()));
 	}
 	else
 	{

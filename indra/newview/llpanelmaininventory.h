@@ -178,6 +178,7 @@ protected:
 	// ## Zi: Extended Inventory Search
 
 	bool handleDragAndDropToTrash(BOOL drop, EDragAndDropType cargo_type, EAcceptance* accept);
+    static bool hasSettingsInventory();
 	/**
 	 * Set upload cost in "Upload" sub menu.
 	 */

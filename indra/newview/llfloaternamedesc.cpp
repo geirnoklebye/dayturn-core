@@ -188,11 +188,11 @@ void LLFloaterNameDesc::onBtnOK( )
 {
 	getChildView("ok_btn")->setEnabled(FALSE); // don't allow inadvertent extra uploads
 	
-	LLAssetStorage::LLStoreAssetCallback callback = NULL;
+//	LLAssetStorage::LLStoreAssetCallback callback = NULL;
 	S32 expected_upload_cost = getExpectedUploadCost();
     if (can_afford_transaction(expected_upload_cost))
     {
-        void *nruserdata = NULL;
+//        void *nruserdata = NULL;
         std::string display_name = LLStringUtil::null;
 
         LLResourceUploadInfo::ptr_t uploadInfo(new LLNewFileResourceUploadInfo(
@@ -205,7 +205,8 @@ void LLFloaterNameDesc::onBtnOK( )
             LLFloaterPerms::getEveryonePerms("Uploads"),
             expected_upload_cost));
 
-        upload_new_resource(uploadInfo, callback, nruserdata);
+        //upload_new_resource(uploadInfo, callback, nruserdata);
+        upload_new_resource(uploadInfo);
     }
     else
     {

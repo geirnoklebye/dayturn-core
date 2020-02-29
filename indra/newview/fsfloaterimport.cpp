@@ -1200,7 +1200,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 	LLUUID folder_id = gInventory.findCategoryUUIDForType(folder_type);
 	LLInventoryType::EType inventory_type = LLInventoryType::defaultForAssetType(asset_type);
 	bool new_file_agent_inventory = false;
-	LLWearableType::EType wearable_type = NOT_WEARABLE;
+	LLWearableType::EType wearable_type = (LLWearableType::EType)NO_INV_SUBTYPE;
 	std::string perms_prefix = "";
 	U32 expected_upload_cost = LLAgentBenefitsMgr::current().getTextureUploadCost();
 
@@ -1307,7 +1307,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 			LLPointer<LLInventoryCallback> cb = new FSCreateItemCallback(ci_data);
 			create_inventory_item(gAgent.getID(), gAgent.getSessionID(),
 					      folder_id, LLTransactionID::tnull, name, description, asset_type, inventory_type,
-					      NOT_WEARABLE, PERM_ALL, cb);
+					      (LLWearableType::EType)NO_INV_SUBTYPE, PERM_ALL, cb);
 			return;
 		}
 		else
@@ -1331,7 +1331,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 			LLPointer<LLInventoryCallback> cb = new FSCreateItemCallback(ci_data);
 			create_inventory_item(gAgent.getID(), gAgent.getSessionID(),
 					      folder_id, LLTransactionID::tnull, name, description, asset_type, inventory_type,
-					      NOT_WEARABLE, PERM_MOVE | PERM_TRANSFER, cb);
+					      (LLWearableType::EType)NO_INV_SUBTYPE, PERM_MOVE | PERM_TRANSFER, cb);
 			return;
 		}
 		else
@@ -1382,7 +1382,7 @@ void FSFloaterImport::uploadAsset(LLUUID asset_id, LLUUID inventory_item)
 			LLPointer<LLInventoryCallback> cb = new FSCreateItemCallback(ci_data);
 			create_inventory_item(gAgent.getID(), gAgent.getSessionID(),
 					      folder_id, LLTransactionID::tnull, name, description, asset_type, inventory_type,
-					      NOT_WEARABLE, PERM_ALL, cb);
+					      (LLWearableType::EType)NO_INV_SUBTYPE, PERM_ALL, cb);
 			return;
 		}
 		else
