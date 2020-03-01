@@ -1537,6 +1537,7 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
             continue;
         }
 
+
 		switch (item_to_wear->getType())
 		{
 		case LLAssetType::AT_CLOTHING:
@@ -1576,6 +1577,7 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
 //mk
 			}
 			break;
+		}
 		case LLAssetType::AT_BODYPART:
 //MK
 			if (!gRRenabled || (gRRenabled && gAgent.mRRInterface.canUnwear(item_to_wear->getWearableType())))
@@ -1623,13 +1625,11 @@ void LLAppearanceMgr::wearItemsOnAvatar(const uuid_vec_t& item_ids_to_wear,
             default: continue;
         }
     }
-
 		// Batch up COF link creation - more efficient if using AIS.
 		if (items_to_link.size())
 		{
 			link_inventory_array(getCOF(), items_to_link, cb);
 		}
-	}
 }
 
 void LLAppearanceMgr::wearItemOnAvatar(const LLUUID& item_id_to_wear,

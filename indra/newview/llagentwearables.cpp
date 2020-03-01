@@ -1349,6 +1349,7 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 
 //CA I don't think we need this any more after the wholesale import of Firestorm COF handling improvements.
 // However, for ease of future merging (and in case I'm proved wrong) we'll leave the code here but disabled
+//ca OK - I was wrong, it is still needed...
 //
 //MK
 	// When calling this function, one of two purposes are expected :
@@ -1361,7 +1362,7 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 	// To distinguish between these two cases is the purpose of the boolean gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall
 	// Attention : we need to call the regular part of the function if we did a "Add to Current Outfit" or "Replace Current Outfit" in the inventory
 	// CA disable this - see comment above
-    if (gRRenabled && false)
+    if (gRRenabled)
     {
         if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall && !gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
         {
