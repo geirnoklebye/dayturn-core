@@ -25,6 +25,10 @@
  
 /*[EXTRA_CODE_HERE]*/
 
+//class1/deferred/materialF.glsl
+
+// This shader is used for both writing opaque/masked content to the gbuffer and writing blended content to the framebuffer during the alpha pass.
+
 #define DIFFUSE_ALPHA_MODE_NONE     0
 #define DIFFUSE_ALPHA_MODE_BLEND    1
 #define DIFFUSE_ALPHA_MODE_MASK     2
@@ -164,14 +168,6 @@ vec3 calcPointLightOrSpotLight(vec3 light_col, vec3 npos, vec3 diffuse, vec4 spe
     return max(col, vec3(0.0,0.0,0.0));
 }
 
-// Q&D approximate RGB-space de-saturation, strength from 0 (no effect) to 1.0 (complete grey-scale)
-vec3 desat(vec3 color, float strength)
-{
-    float primary_value = max(color.r, max(color.g, color.b));
-    vec3 delta = strength * (vec3(primary_value)-color);
-    return color + delta;
-}
-
 #else
 #ifdef DEFINE_GL_FRAGCOLOR
 out vec4 frag_data[3];
@@ -180,7 +176,7 @@ out vec4 frag_data[3];
 #endif
 #endif
 
-uniform sampler2D diffuseMap;
+uniform sampler2D diffuseMap;  //always in sRGB space
 
 #ifdef HAS_NORMAL_MAP
 uniform sampler2D bumpMap;
@@ -218,14 +214,16 @@ void main()
     vec2 pos_screen = vary_texcoord0.xy;
 
     vec4 diffuse_tap = texture2D(diffuseMap, vary_texcoord0.xy);
+    diffuse_tap.rgb *= vertex_color.rgb;
+    //diffuse_tap = vec4(1,1,1,1);
 
-#if (DIFFUSE_ALPHA_MODE == DIFFUSE_ALPHA_MODE_BLEND)
+//#if (DIFFUSE_ALPHA_MODE == DIFFUSE_ALPHA_MODE_BLEND)
     vec4 diffuse_srgb = diffuse_tap;
     vec4 diffuse_linear = vec4(srgb_to_linear(diffuse_srgb.rgb), diffuse_srgb.a);
-#else
+/*#else
     vec4 diffuse_linear = diffuse_tap;
     vec4 diffuse_srgb = vec4(linear_to_srgb(diffuse_linear.rgb), diffuse_linear.a);
-#endif
+#endif*/
 
 #if (DIFFUSE_ALPHA_MODE == DIFFUSE_ALPHA_MODE_MASK)
     if (diffuse_linear.a < minimum_alpha)
@@ -233,9 +231,6 @@ void main()
         discard;
     }
 #endif
-
-    diffuse_linear.rgb *= vertex_color.rgb;
-    diffuse_srgb.rgb *= linear_to_srgb(vertex_color.rgb);
 
 #ifdef HAS_SPECULAR_MAP
     vec4 spec = texture2D(specularMap, vary_texcoord2.xy);
@@ -247,11 +242,7 @@ void main()
     vec3 norm = vec3(0);
     float bmap_specular = 1.0;
 
-    // Non-physical gain, sole purpose to make EEP viewer better match windlight when normal-mapped.
-    float eep_bump_gain = 1.0;
-
 #ifdef HAS_NORMAL_MAP
-    eep_bump_gain = 1.75;
     vec4 bump_sample = texture2D(bumpMap, vary_texcoord1.xy);
     norm = (bump_sample.xyz * 2) - vec3(1);
     bmap_specular = bump_sample.w;
@@ -272,7 +263,6 @@ void main()
 
 #if (DIFFUSE_ALPHA_MODE == DIFFUSE_ALPHA_MODE_EMISSIVE)
     final_color.a = diffuse_linear.a;
-    final_color.rgb = mix( diffuse_linear.rgb, final_color.rgb*0.5, diffuse_tap.a ); // SL-12171: Fix emissive texture portion being twice as bright.
 #endif
 
     final_color.a = max(final_color.a, emissive_brightness);
@@ -294,17 +284,15 @@ void main()
     vec4 final_normal = vec4(abnormal, env_intensity, 0.0);
 
     vec3 color = vec3(0.0);
-    float al   = 1.0;
+    float al = 0;
 
+#ifdef HAS_SPECULAR_MAP
     if (emissive_brightness >= 1.0)
     {
-#ifdef HAS_SPECULAR_MAP
-        // Note: We actually need to adjust all 4 channels not just .rgb
-        final_color *= 0.666666;
-#endif
-        color.rgb = final_color.rgb;
-        al        = vertex_color.a;
+        float ei = env_intensity*0.5 + 0.5;
+        final_normal = vec4(abnormal, ei, 0.0);
     }
+#endif
 
     vec4 final_specular = spec;
 
@@ -317,14 +305,8 @@ void main()
 
 
 #if (DIFFUSE_ALPHA_MODE == DIFFUSE_ALPHA_MODE_BLEND)
-    if (emissive_brightness >= 1.0)
     {
-        // fullbright = diffuse texture pass-through, no lighting
-        frag_color = diffuse_srgb;
-    }
-    else
-    {
-        //forward rendering, output just lit RGBA
+        //forward rendering, output just lit sRGBA
         vec3 pos = vary_position;
 
         float shadow = 1.0f;
@@ -349,13 +331,14 @@ void main()
 
         vec3 refnormpersp = normalize(reflect(pos.xyz, norm));
 
-        float da = dot(norm, normalize(light_dir));
-        da = clamp(da, 0.0, 1.0);   // No negative light contributions
+        float da = clamp(dot(normalize(norm.xyz), light_dir.xyz), 0.0, 1.0);
 
-        // ambient weight varies from 0.75 at max direct light to 1.0 with sun at grazing angle
-        float ambient = 1.0 - (0.25 * da * da);
+        float ambient = da;
+        ambient *= 0.5;
+        ambient *= ambient;
+        ambient = (1.0 - ambient);
 
-        vec3 sun_contrib = additive + (min(da, shadow) * sunlit);
+        vec3 sun_contrib = min(da, shadow) * sunlit;
 
 #if !defined(AMBIENT_KILL)
         color.rgb = amblit;
@@ -366,18 +349,15 @@ void main()
         color.rgb += sun_contrib;
 #endif
 
-        color.rgb *= diffuse_linear.rgb; // SL-12006
-
-        // ad-hoc brighten and de-saturate (normal-mapped only), to match windlight - SL-12638
-        color.rgb = desat(color.rgb, 0.33 * (eep_bump_gain - 1.0));
-        color.rgb *= eep_bump_gain;
-
+        color.rgb *= diffuse_linear.rgb;
+        
         float glare = 0.0;
 
         if (spec.a > 0.0) // specular reflection
         {
             vec3 npos = -normalize(pos.xyz);
 
+            //vec3 ref = dot(pos+lv, norm);
             vec3 h = normalize(light_dir.xyz+npos);
             float nh = dot(norm, h);
             float nv = dot(norm, npos);
@@ -391,9 +371,9 @@ void main()
             if (nh > 0.0)
             {
                 float scol = fres*texture2D(lightFunc, vec2(nh, spec.a)).r*gt/(nh*da);
-                vec3 sp = sun_contrib*scol / 16.0f;
+                vec3 sp = sun_contrib*scol / 6.0f;
                 sp = clamp(sp, vec3(0), vec3(1));
-                bloom = dot(sp, sp) / 6.0;
+                bloom = dot(sp, sp) / 4.0;
 #if !defined(SUNLIGHT_KILL)
                 color += sp * spec.rgb;
 #endif
@@ -418,9 +398,6 @@ void main()
 
         color = atmosFragLighting(color, additive, atten);
 
-        //convert to linear space before adding local lights
-        color = srgb_to_linear(color);
-
         vec3 npos = normalize(-pos.xyz);
 
         vec3 light = vec3(0,0,0);
@@ -443,24 +420,23 @@ void main()
 #endif
 
         color = scaleSoftClipFrag(color);
-        
-        // (only) post-deferred needs inline gamma correction
-        color.rgb = linear_to_srgb(color.rgb);
 
 #ifdef WATER_FOG
         vec4 temp = applyWaterFogView(pos, vec4(color.rgb, al));
         color.rgb = temp.rgb;
         al = temp.a;
 #endif
-
-        frag_color.rgb = color.rgb;
-        frag_color.a   = al;
     }
 
-#else // if DIFFUSE_ALPHA_MODE_BLEND ...
+    
+    color.rgb = linear_to_srgb(color.rgb);
+   
+    frag_color = vec4(color, al);
+
+#else // mode is not DIFFUSE_ALPHA_MODE_BLEND, encode to gbuffer 
 
     // deferred path
-    frag_data[0] = final_color;
+    frag_data[0] = vec4(linear_to_srgb(final_color.rgb), final_color.a); //gbuffer is sRGB
     frag_data[1] = final_specular; // XYZ = Specular color. W = Specular exponent.
     frag_data[2] = final_normal; // XY = Normal.  Z = Env. intensity.
 #endif
