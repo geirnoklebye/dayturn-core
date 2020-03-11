@@ -223,6 +223,7 @@ void main()
 
     float da = dot(norm.xyz, light_dir.xyz);
           da = clamp(da, -1.0, 1.0);
+          da = pow(da, 1.0/1.3);
  
     float final_da = da;
           final_da = clamp(final_da, 0.0f, 1.0f);
@@ -231,7 +232,7 @@ void main()
 
     color.a   = final_alpha;
 
-    float ambient = da;
+    float ambient = min(abs(dot(norm.xyz, sun_dir.xyz)), 1.0);
     ambient *= 0.5;
     ambient *= ambient;
     ambient = (1.0 - ambient);
@@ -251,7 +252,7 @@ vec3 post_ambient = color.rgb;
 
 vec3 post_sunlight = color.rgb;
 
-    color.rgb *= diffuse_linear.rgb;
+    color.rgb *= diffuse_srgb.rgb;
 
 vec3 post_diffuse = color.rgb;
 
@@ -261,6 +262,11 @@ vec3 post_atmo = color.rgb;
 
     vec4 light = vec4(0,0,0,0);
     
+    color.rgb = scaleSoftClipFrag(color.rgb);
+
+    //convert to linear before applying local lights
+    color.rgb = srgb_to_linear(color.rgb);
+
    #define LIGHT_LOOP(i) light.rgb += calcPointLightOrSpotLight(light_diffuse[i].rgb, diffuse_linear.rgb, pos.xyz, norm, light_position[i], light_direction[i].xyz, light_attenuation[i].x, light_attenuation[i].y, light_attenuation[i].z, light_attenuation[i].w);
 
     LIGHT_LOOP(1)
@@ -275,9 +281,6 @@ vec3 post_atmo = color.rgb;
 #if !defined(LOCAL_LIGHT_KILL)
     color.rgb += light.rgb;
 #endif
-
-    color.rgb = scaleSoftClipFrag(color.rgb);
-
     // back to sRGB as we're going directly to the final RT post-deferred gamma correction
     color.rgb = linear_to_srgb(color.rgb);
 
