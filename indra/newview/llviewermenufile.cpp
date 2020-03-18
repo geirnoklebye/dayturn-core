@@ -435,20 +435,19 @@ void do_bulk_upload(std::vector<std::string> filenames, const LLSD& notification
 		if (LLResourceUploadInfo::findAssetTypeAndCodecOfExtension(ext, asset_type, codec) &&
 			LLAgentBenefitsMgr::current().findUploadCost(asset_type, expected_upload_cost))
 		{
-			LLResourceUploadInfo::ptr_t uploadInfo(new LLNewFileResourceUploadInfo(
-													   filename,
-													   asset_name,
-													   asset_name, 0,
-													   LLFolderType::FT_NONE, LLInventoryType::IT_NONE,
-													   LLFloaterPerms::getNextOwnerPerms("Uploads"),
-													   LLFloaterPerms::getGroupPerms("Uploads"),
-													   LLFloaterPerms::getEveryonePerms("Uploads"),
-													   expected_upload_cost));
-			
-			//upload_new_resource(uploadInfo, NULL, NULL);
-			upload_new_resource(uploadInfo);
-		}
+		LLResourceUploadInfo::ptr_t uploadInfo(new LLNewFileResourceUploadInfo(
+			filename,
+			asset_name,
+			asset_name, 0,
+			LLFolderType::FT_NONE, LLInventoryType::IT_NONE,
+			LLFloaterPerms::getNextOwnerPerms("Uploads"),
+			LLFloaterPerms::getGroupPerms("Uploads"),
+			LLFloaterPerms::getEveryonePerms("Uploads"),
+			expected_upload_cost));
+
+		upload_new_resource(uploadInfo);
 	}
+}
 }
 
 bool get_bulk_upload_expected_cost(const std::vector<std::string>& filenames, S32& total_cost, S32& file_count, S32& bvh_count)

@@ -204,7 +204,7 @@
                      function="Inventory.DoCreate"
                      parameter="tattoo" />
                 </menu_item_call>
-                <menu_item_call
+              <menu_item_call
                  label="New Universal"
                  layout="topleft"
                  name="New Universal">
