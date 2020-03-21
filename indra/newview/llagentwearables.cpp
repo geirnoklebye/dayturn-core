@@ -1347,9 +1347,9 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 
 {
 
-//CA I don't think we need this any more after the wholesale import of Firestorm COF handling improvements.
-// However, for ease of future merging (and in case I'm proved wrong) we'll leave the code here but disabled
-//ca OK - I was wrong, it is still needed...
+// CA This routine now causes problems at login (probably because the timing of when it gets called is later in Kokua than it
+// is in the standard viewer code (or Marine's viewer). However it is needed the rest of the time to prevent attachments bouncing
+// back on after being detached by a RLV operation
 //
 //MK
 	// When calling this function, one of two purposes are expected :
@@ -1361,7 +1361,7 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
 	// instead of automatically wearing them.
 	// To distinguish between these two cases is the purpose of the boolean gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall
 	// Attention : we need to call the regular part of the function if we did a "Add to Current Outfit" or "Replace Current Outfit" in the inventory
-	// CA disable this - see comment above
+
     if (gRRenabled)
     {
         if (gAgentAvatarp && !gAgentAvatarp->getIsCloud() && !gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall && !gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually)
@@ -1388,6 +1388,7 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
                                 std::string attachment_point_name;
                                 if (!gAgentAvatarp->getAttachedPointName(linked_item->getUUID(), attachment_point_name))
                                 {
+                                    //LL_INFOS() << "Removing links for " << linked_item->getName() << LL_ENDL;
                                     LLAppearanceMgr::instance().removeCOFItemLinks(linked_item->getUUID());
                                 }
                             }
@@ -1481,7 +1482,10 @@ void LLAgentWearables::findAttachmentsAddRemoveInfo(LLInventoryModel::item_array
     if (gRRenabled)
     {
         gAgent.mRRInterface.mUserUpdateAttachmentsUpdatesAll = FALSE;
-        gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall = FALSE;
+        // CA The extra MK code above causes problems at login so the following change ensures it won't start working until
+        // the second call after the avatar is fully loaded, which aligns the timing with the revised calling location of this
+        // routine
+        if (gAgentAvatarp->isFullyLoaded()) gAgent.mRRInterface.mUserUpdateAttachmentsFirstCall = FALSE;
         gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = FALSE;
     }
 //mk

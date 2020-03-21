@@ -286,10 +286,16 @@ void LLOutfitListBase::performAction(std::string action)
 
 	if ("replaceoutfit" == action)
 	{
+//MK
+		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 		LLAppearanceMgr::instance().wearInventoryCategory( cat, FALSE, FALSE );
 	}
 	else if ("addtooutfit" == action)
 	{
+//MK
+		gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
 		LLAppearanceMgr::instance().wearInventoryCategory( cat, FALSE, TRUE );
 	}
 	else if ("rename_outfit" == action)
@@ -1176,7 +1182,10 @@ void LLOutfitListGearMenuBase::onWear()
 {
     LLViewerInventoryCategory* selected_outfit = getSelectedOutfit();
     if (selected_outfit)
-    {
+	{
+//MK
+			gAgent.mRRInterface.mUserUpdateAttachmentsCalledManually = TRUE;
+//mk
         LLAppearanceMgr::instance().wearInventoryCategory(
             selected_outfit, /*copy=*/ FALSE, /*append=*/ FALSE);
     }
