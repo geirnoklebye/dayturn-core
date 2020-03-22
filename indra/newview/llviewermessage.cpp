@@ -2760,6 +2760,10 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 
 	BOOL is_audible = (CHAT_AUDIBLE_FULLY == chat.mAudible);
 	chatter = gObjectList.findObject(from_id);
+	
+	//KKA-692 Do this earlier so that the object-speaking-as-avatar routine can make necessary adjustments
+	if (chatter) chat.mPosAgent = chatter->getPositionAgent();
+
 		//MK
 	// If this is an object but its name is equal to its owner's user name or diplay name
 	// and if the debug setting is set right, then show the chat like it were said by the owner
@@ -2789,6 +2793,12 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 							chat.mFromID = owner_id;
 						}
 						chat.mSourceType = CHAT_SOURCE_AGENT;
+						// KKA-692 Two potential problems here relating to the position when viewerchat decides whether to fade due to distance
+						// a) it's a hud attachment, chatter is not valid, no fading will happen due to distance (mPosAgent unchanged from 0,0,0)
+						// b) it's a non-hud attachment, the position is reported relative to the agent wearing but gets treated at absolute later, so always fades
+						// either way, what we really need here is the position of the avatar instead which can be obtained from owner_id
+						LLViewerObject* owner_vo = gObjectList.findObject(owner_id);
+						if (owner_vo) chat.mPosAgent = owner_vo->getPositionAgent();
 					}
 				}
 			}
@@ -2798,7 +2808,8 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 
 	if (chatter)
 	{
-		chat.mPosAgent = chatter->getPositionAgent();
+		// KKA-692 Do this earlier so that it can be adjusted when objects are speaking as their wearer
+		// chat.mPosAgent = chatter->getPositionAgent();
 
 		// Make swirly things only for talking objects. (not script debug messages, though)
 		if (chat.mSourceType == CHAT_SOURCE_OBJECT
@@ -3141,10 +3152,11 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 			}
 		}
 
-		if (chatter)
-		{
-			chat.mPosAgent = chatter->getPositionAgent();
-		}
+		// KKA-692 this is already done earlier (and I need it earlier still for this fix)
+		// if (chatter)
+		// {
+		//	 chat.mPosAgent = chatter->getPositionAgent();
+		// }
 
 		// truth table:
 		// LINDEN	BUSY	MUTED	OWNED_BY_YOU	TASK		DISPLAY		STORE IN HISTORY
