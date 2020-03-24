@@ -220,7 +220,7 @@ void main()
 	diffcol.rgb *= vertex_color.rgb;
 
 #if (DIFFUSE_ALPHA_MODE == DIFFUSE_ALPHA_MODE_MASK)
-    if (diffcol.a < minimum_alpha)
+    if (diffcol.a < minimum_alpha-bias)
     {
         discard;
     }
