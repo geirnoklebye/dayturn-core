@@ -126,6 +126,15 @@
          width="270"
          control_name="FSShowRegionGridCoordinates"
          tool_tip="Shows the grid coordinates (in units of regions) on the World Map."/>
+        <check_box
+         follows="left|top"
+         height="16"
+         initial_value="false"
+         label="Filter duplicate Landmarks on World Map"
+         name="WorldmapFilterDuplicateLandmarks"
+         width="270"
+         control_name="WorldmapFilterDuplicateLandmarks"
+         tool_tip="Filters duplicate Landmark entries in the Landmark list on the World Map."/>
             <check_box
             control_name="NameTagShowAge"
             name="NameTagShowAge"
