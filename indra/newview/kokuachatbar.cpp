@@ -81,6 +81,7 @@ void KokuaChatBar::handleReshape(const LLRect& new_rect, bool by_user)
 	LLFloater::handleReshape(new_rect, by_user);
 	floater_rect = getRect();	
 	if (mInputEditor) mInputEditor->reshape(floater_rect.getWidth() - mInputEditorWidthPad,floater_rect.getHeight() - mInputEditorHeightPad, true);
+	storeRectControl();
 }
 
 
@@ -92,6 +93,10 @@ void KokuaChatBar::reshapeChatLayoutPanel()
 	// and bottom and retain the centre point's y position. However, if near top or bottom the system
 	// takes care of preventing ingress outside of visible areas or into the toolbox zone
 	reshape(getRect().getWidth(), mInputEditor->getRect().getHeight() + mInputEditorHeightPad, FALSE);
+	if (mInputEditor->getText().size() == 0)
+	{
+		storeRectControl();
+	}
 }
 
 void KokuaChatBar::onChatBoxCommit()
