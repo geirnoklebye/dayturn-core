@@ -471,9 +471,14 @@ void LLFloaterIMNearbyChat::onChatBoxKeystroke()
 		im_box->flashConversationItemWidget(mSessionID,false);
 	}
 
+	onChatBoxKeystrokeWithText(mInputEditor);
+}
+
+void LLFloaterIMNearbyChat::onChatBoxKeystrokeWithText(LLChatEntry* lmInputEditor)
+{
 	LLFirstUse::otherAvatarChatFirst(false);
 
-	LLWString raw_text = mInputEditor->getWText();
+	LLWString raw_text = lmInputEditor->getWText();
 
 	// Can't trim the end, because that will cause autocompletion
 	// to eat trailing spaces that might be part of a gesture.
@@ -528,18 +533,18 @@ void LLFloaterIMNearbyChat::onChatBoxKeystroke()
 			std::string rest_of_match = utf8_out_str.substr(utf8_trigger.size());
 			if (!rest_of_match.empty())
 			{
-				mInputEditor->setText(utf8_trigger + rest_of_match); // keep original capitalization for user-entered part
+				lmInputEditor->setText(utf8_trigger + rest_of_match); // keep original capitalization for user-entered part
 				// Select to end of line, starting from the character
 				// after the last one the user typed.
-				mInputEditor->selectByCursorPosition(utf8_out_str.size()-rest_of_match.size(),utf8_out_str.size());
+				lmInputEditor->selectByCursorPosition(utf8_out_str.size()-rest_of_match.size(),utf8_out_str.size());
 			}
 
 		}
 		else if (matchChatTypeTrigger(utf8_trigger, &utf8_out_str))
 		{
 			std::string rest_of_match = utf8_out_str.substr(utf8_trigger.size());
-			mInputEditor->setText(utf8_trigger + rest_of_match + " "); // keep original capitalization for user-entered part
-			mInputEditor->endOfDoc();
+			lmInputEditor->setText(utf8_trigger + rest_of_match + " "); // keep original capitalization for user-entered part
+			lmInputEditor->endOfDoc();
 		}
 
 		//LL_INFOS() << "GESTUREDEBUG " << trigger 
@@ -593,11 +598,30 @@ EChatType LLFloaterIMNearbyChat::processChatTypeTriggers(EChatType type, std::st
 	return type;
 }
 
+// Converted to a veneer to allow Kokua chat bar to use it too by direct calling and passing of string
 void LLFloaterIMNearbyChat::sendChat( EChatType type )
 {
 	if (mInputEditor)
 	{
 		LLWString text = mInputEditor->getWText();
+		sendChatWithText(type, text);
+		mInputEditor->setText(LLStringExplicit(""));
+
+		gAgent.stopTyping();
+
+		// If the user wants to stop chatting on hitting return, lose focus
+		// and go out of chat mode.
+		if (gSavedSettings.getBOOL("CloseChatOnReturn"))
+		{
+			stopChat();
+		}
+	}
+}
+
+// Kokua addition to allow this to be called to handle the Kokua chat bar too without needing
+// to duplicate this routine needlessly
+void LLFloaterIMNearbyChat::sendChatWithText( EChatType type, LLWString text)
+{
 		LLWStringUtil::trim(text);
 		LLWStringUtil::replaceChar(text,182,'\n'); // Convert paragraph symbols back into newlines.
 		if (!text.empty())
@@ -704,18 +728,6 @@ void LLFloaterIMNearbyChat::sendChat( EChatType type )
 				sendChatFromViewer(utf8_revised_text, type, gSavedSettings.getBOOL("PlayChatAnim"));
 			}
 		}
-
-		mInputEditor->setText(LLStringExplicit(""));
-	}
-
-	gAgent.stopTyping();
-
-	// If the user wants to stop chatting on hitting return, lose focus
-	// and go out of chat mode.
-	if (gSavedSettings.getBOOL("CloseChatOnReturn"))
-	{
-		stopChat();
-	}
 }
 
 void LLFloaterIMNearbyChat::addMessage(const LLChat& chat,bool archive,const LLSD &args)

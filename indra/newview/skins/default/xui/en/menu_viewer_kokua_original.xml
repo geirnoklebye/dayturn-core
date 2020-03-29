@@ -524,6 +524,17 @@
             <menu_item_check.on_click
              function="Communicate.NearbyChat"/>
         </menu_item_check>
+        <menu_item_check
+        	label="Chat Bar..."
+        	shortcut="alt|H"
+        	name="Chat Bar">
+        	<menu_item_check.on_check
+        		function="Floater.Visible"
+        		parameter="kokua_chatbar" />
+        	<menu_item_check.on_click
+        		function="Floater.Toggle"
+        		parameter="kokua_chatbar" />        	
+        </menu_item_check>
         <menu_item_call
          label="Nearby People"
          name="Active Speakers"

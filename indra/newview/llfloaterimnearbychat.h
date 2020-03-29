@@ -83,6 +83,9 @@ public:
 	static bool isWordsName(const std::string& name);
 
 	void showHistory();
+	// Two Kokua additions for chat bar so we don't have to duplicate the routine
+	void sendChatWithText( EChatType type, LLWString text);
+	void onChatBoxKeystrokeWithText(LLChatEntry* lmInputEditor);
 
 protected:
 	static BOOL matchChatTypeTrigger(const std::string& in_str, std::string* out_str);

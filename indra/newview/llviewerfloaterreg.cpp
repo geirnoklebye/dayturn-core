@@ -177,6 +177,7 @@
 // *NOTE: Please add files in alphabetical order to keep merges easy.
 #include "fspanelclassified.h"
 #include "fsfloaterimport.h"
+#include "kokuachatbar.h"
 #include "kokuarlvfloaters.h"
 // NaCl - Sound explorer
 #include "fsfloaterposestand.h"
@@ -418,6 +419,7 @@ void LLViewerFloaterReg::registerFloaters()
 	LLFloaterReg::add("rlv_status", "floater_rlv_status.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterRLVStatus>);
 	LLFloaterReg::add("rlv_worn", "floater_rlv_worn.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaFloaterRLVWorn>);
 	LLFloaterReg::add("fs_posestand", "floater_fs_posestand.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterPoseStand>);
+	LLFloaterReg::add("kokua_chatbar", "floater_chatbar.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<KokuaChatBar>);
     	// <FS:CR> FIRE-6310: Include Legacy Search
 	LLFloaterReg::add("search_legacy", "floater_fs_search_legacy.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSFloaterSearchLegacy>);
 	LLFloaterReg::add("publish_classified_fs", "floater_publish_classified.xml", (LLFloaterBuildFunc)&LLFloaterReg::build<FSPublishClassifiedFloater>);
