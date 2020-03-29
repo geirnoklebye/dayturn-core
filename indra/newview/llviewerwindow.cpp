@@ -217,6 +217,7 @@
 #include "llpaneltopinfobar.h"
 #include "llcleanup.h"
 
+#include "kokuachatbar.h"
 #if LL_WINDOWS
 #include <tchar.h> // For Unicode conversion methods
 #endif
@@ -2925,20 +2926,50 @@ BOOL LLViewerWindow::handleKey(KEY key, MASK mask)
 	if ( gSavedSettings.getS32("LetterKeysFocusChatBar") && !gAgentCamera.cameraMouselook() && 
 		!keyboard_focus && key < 0x80 && (mask == MASK_NONE || mask == MASK_SHIFT) )
 	{
-		// Initialize nearby chat if it's missing
-		LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
-		if (!nearby_chat)
-		{	
-			LLSD name("im_container");
-			LLFloaterReg::toggleInstanceOrBringToFront(name);
-		}
-
-		LLChatEntry* chat_editor = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat")->getChatBox();
-		if (chat_editor)
+		bool prefer_kokua_chatbar = gSavedSettings.getBOOL("KokuaUseChatBarWhenStartingLocalChat");
+		KokuaChatBar* chat_bar = LLFloaterReg::findTypedInstance<KokuaChatBar>("kokua_chatbar");
+		if (chat_bar)
 		{
-			// passing NULL here, character will be added later when it is handled by character handler.
-			nearby_chat->startChat(NULL);
+			LL_INFOS() << "chatbar located" << LL_ENDL;
+		}
+		else
+		{
+			LL_INFOS() << "chatbar not located" << LL_ENDL; 
+		}
+		if (chat_bar && chat_bar->getVisible() && prefer_kokua_chatbar)
+		{
+			LL_INFOS() << "Giving Kokua's chat bar the hit from LetterKeysFocusChatBar" << LL_ENDL;
+			chat_bar->startChat(NULL);
 			return TRUE;
+		}
+		else
+		{
+			// Initialize nearby chat if it's missing
+			LLFloaterIMNearbyChat* nearby_chat = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat");
+			if (!nearby_chat)
+			{	
+				LLSD name("im_container");
+				LLFloaterReg::toggleInstanceOrBringToFront(name);
+			}
+			
+			if (!nearby_chat->getVisible() && prefer_kokua_chatbar)
+			{
+				LL_INFOS() << "Neither chat input visible, preferring chatbar" << LL_ENDL;
+				LLSD name("kokua_chatbar");
+				LLFloaterReg::toggleInstanceOrBringToFront(name);
+				chat_bar->startChat(NULL);
+				return TRUE;
+			}
+			else
+			{
+				LLChatEntry* chat_editor = LLFloaterReg::findTypedInstance<LLFloaterIMNearbyChat>("nearby_chat")->getChatBox();
+				if (chat_editor)
+				{
+					// passing NULL here, character will be added later when it is handled by character handler.
+					nearby_chat->startChat(NULL);
+					return TRUE;
+				}
+			}
 		}
 	}
 

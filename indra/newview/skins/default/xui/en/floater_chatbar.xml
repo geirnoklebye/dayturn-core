@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<floater
+ background_visible="true"
+ height="34"
+ save_visibility="true"
+ layout="topleft"
+ name="kokua_chatbar"
+ can_dock="false"
+ can_minimize="true"
+ can_close="true"
+ save_rect="true"
+ visible="false"
+ width="394"
+ can_resize="true"
+ can_tear_off="false"
+ min_height="62"
+ min_width="120"
+ title="CHAT BAR"
+ positioning="relative">
+	<chat_editor
+	 layout="topleft"
+	 expand_lines_count="10"
+	 follows="left|right|bottom"
+	 font="SansSerifSmall"
+	 height="20"    
+	 is_expandable="true"
+	 text_tentative_color="TextFgTentativeColor"
+	 name="kc_chat_editor"
+	 max_length="1023"
+	 spellcheck="true"
+	 tab_group="3"
+	 bottom="-5"
+	 left="5"
+	 right="-5"
+	 wrap="true" />
+</floater>

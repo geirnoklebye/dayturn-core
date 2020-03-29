@@ -393,7 +393,16 @@
          value="0"
          width="75" />
     </radio_group>
-    
+   <check_box
+	     control_name="KokuaUseChatBarWhenStartingLocalChat"
+	     height="16"
+	     label="Open Chat Bar instead of Conversations"
+	     layout="topleft"
+	     left_pad="-230"
+	     width="100"
+	     top_pad="-34"
+	     name="KokuaUseChatBarWhenStartingLocakChat"
+	     tool_tip="When enabled the Kokua chat bar will be opened instead of the Conversations floater when 'Starts local chat' is enabled"/>    
     <text
      type="string"
      length="1"
@@ -402,6 +411,7 @@
      layout="topleft"
      left="10"
      name="title_afk_text"
+     top_pad="20"
      width="190">
     	Away timeout:
     </text>
@@ -454,7 +464,7 @@
       use_ellipses="false"
      commit_on_focus_lost = "true"
      follows="top|left|right"
-     height="35"
+     height="20"
      layout="topleft"
      top_pad="5"
      left="10"

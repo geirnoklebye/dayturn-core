@@ -778,6 +778,7 @@ set(viewer_SOURCE_FILES
     sanitycheck.cpp
     streamtitledisplay.cpp
 	NACLfloaterexploresounds.cpp
+	  kokuachatbar.cpp
     )
 
 set(VIEWER_BINARY_NAME "kokua-bin" CACHE STRING
@@ -1438,6 +1439,7 @@ set(viewer_HEADER_FILES
     viewerinfo.h
     VorbisFramework.h
 	NACLfloaterexploresounds.h
+	  kokuachatbar.h
     )
     
 # Generate the build version here to avoid rebuilding all of newview each time
