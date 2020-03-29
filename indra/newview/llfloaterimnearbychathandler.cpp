@@ -565,6 +565,7 @@ void LLFloaterIMNearbyChatHandler::processChat(const LLChat& chat_msg,
     LLFloaterIMContainer* im_box = LLFloaterReg::getTypedInstance<LLFloaterIMContainer>("im_container");
 
 	if((  ( chat_msg.mSourceType == CHAT_SOURCE_AGENT
+			&& !gSavedSettings.getBOOL("KokuaSuppressBubbleChatOverridingToasts") //KKA-694
 			&& gSavedSettings.getBOOL("UseChatBubbles") )
 		|| mChannel.isDead()
 		|| !mChannel.get()->getShowToasts() )

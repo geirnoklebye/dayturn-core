@@ -513,6 +513,7 @@ http://secondlife.com/support for help fixing this problem.
 
 	<!-- Chat -->
 	<string name="NearbyChatTitle">Nearby chat</string>
+	<string name="KokuaChatBar">CHAT BAR</string>
   <string name="NearbyChatLabel">(Nearby chat)</string>
 	<string name="whisper">whispers:</string>
 	<string name="shout">shouts:</string>
@@ -4171,6 +4172,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Avatar_Label">Avatar</string>
   <string name="Command_Build_Label">Build</string>
   <string name="Command_Chat_Label">Chat</string>
+  <string name="Command_Chat_Bar_Label">Chat bar</string>
   <string name="Command_Conversations_Label">Conversations</string>
   <string name="Command_Compass_Label">Compass</string>
   <string name="Command_Destinations_Label">Destinations</string>
@@ -4205,6 +4207,7 @@ Try enclosing path to the editor with double quotes.
   <string name="Command_Avatar_Tooltip">Choose a complete avatar</string>
   <string name="Command_Build_Tooltip">Building objects and reshaping terrain</string>
   <string name="Command_Chat_Tooltip">Chat with people nearby using text</string>
+  <string name="Command_Chat_Bar_Tooltip">Text input for chatting with nearby people</string>
   <string name="Command_Conversations_Tooltip">Converse with everyone</string>
   <string name="Command_Compass_Tooltip">Compass</string>
   <string name="Command_Destinations_Tooltip">Destinations of interest</string>

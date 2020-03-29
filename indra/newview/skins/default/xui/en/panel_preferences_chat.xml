@@ -122,6 +122,17 @@
         name="bubble_text_chat"
         width="330">
     </check_box>
+    <check_box
+        control_name="KokuaSuppressBubbleChatOverridingToasts"
+        height="16"
+        label="Bubble Chat does not suppress nearby avatar chat notifications"
+        follows="top|left"
+        layout="topleft"
+        top_pad="4"
+        left="20"
+        name="kokua_suppress_bubble_chat_overriding_toasts"
+        width="330">
+    </check_box>
     <text
         layout="topleft"
         left="24"
