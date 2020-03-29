@@ -529,10 +529,10 @@
         	shortcut="alt|H"
         	name="Chat Bar">
         	<menu_item_check.on_check
-        		function="Floater.Visible"
+        		function="Floater.IsOpen"
         		parameter="kokua_chatbar" />
         	<menu_item_check.on_click
-        		function="Floater.Toggle"
+        		function="Floater.ToggleOrBringToFront"
         		parameter="kokua_chatbar" />        	
         </menu_item_check>
         <menu_item_call
