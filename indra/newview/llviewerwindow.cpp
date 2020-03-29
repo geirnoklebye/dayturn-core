@@ -2856,7 +2856,7 @@ BOOL LLViewerWindow::handleKey(KEY key, MASK mask)
 
 	if( keyboard_focus )
 	{
-		if ((focusedFloaterName == "nearby_chat") || (focusedFloaterName == "im_container") || (focusedFloaterName == "impanel"))
+		if ((focusedFloaterName == "nearby_chat") || (focusedFloaterName == "im_container") || (focusedFloaterName == "impanel") || focusedFloaterName == "kokua_chatbar" || focusedFloaterName == "kc_chat_editor")
 		{
 			if (gSavedSettings.getBOOL("ArrowKeysAlwaysMove"))
 			{
@@ -2928,17 +2928,9 @@ BOOL LLViewerWindow::handleKey(KEY key, MASK mask)
 	{
 		bool prefer_kokua_chatbar = gSavedSettings.getBOOL("KokuaUseChatBarWhenStartingLocalChat");
 		KokuaChatBar* chat_bar = LLFloaterReg::findTypedInstance<KokuaChatBar>("kokua_chatbar");
-		if (chat_bar)
-		{
-			LL_INFOS() << "chatbar located" << LL_ENDL;
-		}
-		else
-		{
-			LL_INFOS() << "chatbar not located" << LL_ENDL; 
-		}
+
 		if (chat_bar && chat_bar->getVisible() && prefer_kokua_chatbar)
 		{
-			LL_INFOS() << "Giving Kokua's chat bar the hit from LetterKeysFocusChatBar" << LL_ENDL;
 			chat_bar->startChat(NULL);
 			return TRUE;
 		}
@@ -2954,7 +2946,6 @@ BOOL LLViewerWindow::handleKey(KEY key, MASK mask)
 			
 			if (!nearby_chat->getVisible() && prefer_kokua_chatbar)
 			{
-				LL_INFOS() << "Neither chat input visible, preferring chatbar" << LL_ENDL;
 				LLSD name("kokua_chatbar");
 				LLFloaterReg::toggleInstanceOrBringToFront(name);
 				chat_bar->startChat(NULL);
