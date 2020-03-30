@@ -133,6 +133,39 @@
         name="kokua_suppress_bubble_chat_overriding_toasts"
         width="330">
     </check_box>
+    <check_box
+        control_name="CloseChatOnReturn"
+        height="16"
+        label="Conversations:Nearby Chat/Chat Bar release keyboard focus after sending a line of chat"
+        follows="top|left"
+        layout="topleft"
+        top_pad="4"
+        left="20"
+        name="close_chat_on_return"
+        width="330">
+    </check_box>
+    <check_box
+        control_name="KokuaCloseChatBarOnReturn"
+        height="16"
+        label="Close the Chat Bar after sending a line of chat"
+        follows="top|left"
+        layout="topleft"
+        top_pad="4"
+        left="20"
+        name="kokua_close_chat_bar_on_return"
+        width="330">
+    </check_box>
+    <check_box
+        control_name="KokuaReopenChatBarAtLogin"
+        height="16"
+        label="Always open the Chat Bar at login"
+        follows="top|left"
+        layout="topleft"
+        top_pad="4"
+        left="20"
+        name="kokua_reopen_chat_bar_at_login"
+        width="330">
+    </check_box>
     <text
         layout="topleft"
         left="24"

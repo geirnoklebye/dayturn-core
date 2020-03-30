@@ -2527,6 +2527,7 @@ bool idle_startup()
 		// fire all the stored commands that we received while initializing
 		gAgent.mRRInterface.fireCommands ();
 //mk
+		if (gSavedSettings.getBOOL("KokuaReopenChatBarAtLogin")) LLFloaterReg::showInstance("kokua_chatbar", LLSD(), FALSE);
 		set_startup_status(1.0, "", "");
 		display_startup();
 
