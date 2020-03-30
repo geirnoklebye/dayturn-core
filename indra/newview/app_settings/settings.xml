@@ -3176,7 +3176,7 @@
     <key>CloseChatOnReturn</key>
     <map>
       <key>Comment</key>
-      <string>Close chat after hitting return</string>
+      <string>Release keyboard focus from chat after hitting return</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
@@ -20300,6 +20300,28 @@
     <map>
       <key>Comment</key>
       <string>When enabled the Kokua chat bar will be opened instead of the Conversations floater when 'Starts local chat' is enabled</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>KokuaCloseChatBarOnReturn</key>
+    <map>
+      <key>Comment</key>
+      <string>When enabled the Kokua chat bar will be close after sending a line of chat</string>
+      <key>Persist</key>
+      <integer>1</integer>
+      <key>Type</key>
+      <string>Boolean</string>
+      <key>Value</key>
+      <integer>0</integer>
+    </map>
+    <key>KokuaReopenChatBarAtLogin</key>
+    <map>
+      <key>Comment</key>
+      <string>When enabled the Kokua chat bar will open at login even if previously closed</string>
       <key>Persist</key>
       <integer>1</integer>
       <key>Type</key>
