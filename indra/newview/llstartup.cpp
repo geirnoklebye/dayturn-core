@@ -2418,6 +2418,7 @@ bool idle_startup()
 
 	if (STATE_CLEANUP == LLStartUp::getStartupState())
 	{
+		if (gSavedSettings.getBOOL("KokuaReopenChatBarAtLogin")) LLFloaterReg::showInstance("kokua_chatbar", LLSD(), FALSE);
 		set_startup_status(1.0, "", "");
 		display_startup();
 
