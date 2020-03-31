@@ -81,6 +81,7 @@
 #include "lleventcoro.h"
 #include "llcorehttputil.h"
 #include "llcallstack.h"
+#include "llsettingsdaycycle.h"
 
 #ifdef LL_WINDOWS
 	#pragma warning(disable:4355)
@@ -2926,6 +2927,7 @@ void LLViewerRegionImpl::buildCapabilityNames(LLSD& capabilityNames)
 	capabilityNames.append("EstateAccess");
 	capabilityNames.append("EstateChangeInfo");
 	capabilityNames.append("EventQueueGet");
+    capabilityNames.append("ExtEnvironment");
 
 	capabilityNames.append("FetchLib2");
 	capabilityNames.append("FetchLibDescendents2");
@@ -2947,6 +2949,7 @@ void LLViewerRegionImpl::buildCapabilityNames(LLSD& capabilityNames)
 	capabilityNames.append("IsExperienceAdmin");
 	capabilityNames.append("IsExperienceContributor");
 	capabilityNames.append("RegionExperiences");
+    capabilityNames.append("ExperienceQuery");
 	capabilityNames.append("GetMetadata");
 	capabilityNames.append("GetObjectCost");
 	capabilityNames.append("GetObjectPhysicsData");
@@ -2997,6 +3000,8 @@ void LLViewerRegionImpl::buildCapabilityNames(LLSD& capabilityNames)
 	capabilityNames.append("UpdateNotecardTaskInventory");
 	capabilityNames.append("UpdateScriptAgent");
 	capabilityNames.append("UpdateScriptTask");
+    capabilityNames.append("UpdateSettingsAgentInventory");
+    capabilityNames.append("UpdateSettingsTaskInventory");
 	capabilityNames.append("UploadBakedTexture");
     capabilityNames.append("UserInfo");
 	capabilityNames.append("ViewerAsset"); 

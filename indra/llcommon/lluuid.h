@@ -31,6 +31,7 @@
 #include <vector>
 #include "stdtypes.h"
 #include "llpreprocessor.h"
+#include <boost/functional/hash.hpp>
 
 class LLMutex;
 
@@ -163,6 +164,32 @@ public:
 	static const LLTransactionID tnull;
 	LLAssetID makeAssetID(const LLUUID& session) const;
 };
+
+// This approach won't compile on GCC, so use an alternative courtest of Henri Beauchamp
+//// Generate a hash of an LLUUID object using the boost hash templates. 
+//template <>
+//struct boost::hash<LLUUID>
+//{
+//    typedef LLUUID argument_type;
+//    typedef std::size_t result_type;
+//    result_type operator()(argument_type const& s) const
+//    {
+//        result_type seed(0);
+//
+//        for (S32 i = 0; i < UUID_BYTES; ++i)
+//        {
+//            boost::hash_combine(seed, s.mData[i]);
+//        }
+//
+//        return seed;
+//    }
+//};
+
+inline size_t hash_value(const LLUUID & id)
+{
+	return *((size_t*)id.mData);
+}
+
 // <FS:Ansariel> UUID hash calculation
 struct FSUUIDHash
 {

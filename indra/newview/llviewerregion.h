@@ -132,6 +132,7 @@ public:
 	inline BOOL isPrelude()					const;
 	inline BOOL getAllowTerraform() 		const;
 	inline BOOL getRestrictPushObject()		const;
+    inline BOOL getAllowEnvironmentOverride()   const;
 	inline BOOL getReleaseNotesRequested()		const;
 
 	bool isAlive() const; // can become false if circuit disconnects
@@ -641,6 +642,11 @@ inline BOOL LLViewerRegion::getAllowTerraform() const
 inline BOOL LLViewerRegion::getRestrictPushObject() const
 {
 	return ((mRegionFlags & REGION_FLAGS_RESTRICT_PUSHOBJECT) != 0);
+}
+
+inline BOOL LLViewerRegion::getAllowEnvironmentOverride() const
+{
+    return ((mRegionFlags & REGION_FLAGS_ALLOW_ENVIRONMENT_OVERRIDE) != 0);
 }
 
 inline BOOL LLViewerRegion::getReleaseNotesRequested() const

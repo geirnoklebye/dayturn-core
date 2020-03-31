@@ -149,7 +149,6 @@ set(viewer_SOURCE_FILES
     fspanelprofileclassifieds.cpp
     fspose.cpp
     fsscrolllistctrl.cpp
-    fslightshare.cpp
     groupchatlistener.cpp
     chatbar_as_cmdline.cpp	
     daeexport.cpp
@@ -213,7 +212,6 @@ set(viewer_SOURCE_FILES
     llcurrencyuimanager.cpp
     llcylinder.cpp
     lldateutil.cpp
-    lldaycyclemanager.cpp
     lldebugmessagebox.cpp
     lldebugview.cpp
     lldeferredsounds.cpp
@@ -236,7 +234,7 @@ set(viewer_SOURCE_FILES
     lldrawpoolwlsky.cpp
     lldynamictexture.cpp
     llemote.cpp
-    llenvmanager.cpp
+    llenvironment.cpp
     llestateinfomodel.cpp
     lleventnotifier.cpp
     lleventpoll.cpp
@@ -276,18 +274,16 @@ set(viewer_SOURCE_FILES
     llfloatercolorpicker.cpp
     llfloaterconversationlog.cpp
     llfloaterconversationpreview.cpp
-    llfloaterdeleteenvpreset.cpp
     llfloaterdeleteprefpreset.cpp
     llfloaterdestinations.cpp
     llfloaterdisplayname.cpp
-    llfloatereditdaycycle.cpp
-    llfloatereditsky.cpp
-    llfloatereditwater.cpp
-    llfloaterenvironmentsettings.cpp
+    llfloatereditextdaycycle.cpp
+    llfloaterenvironmentadjust.cpp
     llfloaterevent.cpp
     llfloaterexperiencepicker.cpp
     llfloaterexperienceprofile.cpp
     llfloaterexperiences.cpp
+    llfloaterfixedenvironment.cpp
     llfloaterfonttest.cpp
     llfloaterforgetuser.cpp
     llfloatergesture.cpp
@@ -319,6 +315,7 @@ set(viewer_SOURCE_FILES
     llfloatermodelpreview.cpp
     llfloatermodeluploadbase.cpp
     llfloatermyscripts.cpp
+    llfloatermyenvironment.cpp
     llfloaternamedesc.cpp
     llfloaternotificationsconsole.cpp
     llfloaternotificationstabbed.cpp
@@ -373,6 +370,7 @@ set(viewer_SOURCE_FILES
     llfolderviewmodelinventory.cpp
     llfollowcam.cpp
     llfriendcard.cpp
+    llflyoutcombobtn.cpp
     llgesturelistener.cpp
     llgesturemgr.cpp
     llgiveinventory.cpp
@@ -420,6 +418,7 @@ set(viewer_SOURCE_FILES
     lljoystickbutton.cpp
     lllandmarkactions.cpp
     lllandmarklist.cpp
+    lllegacyatmospherics.cpp
     lllistbrowser.cpp
     lllistcontextmenu.cpp
     lllistview.cpp
@@ -475,7 +474,10 @@ set(viewer_SOURCE_FILES
     llpanelblockedlist.cpp
     llpanelclassified.cpp
     llpanelcontents.cpp
+    llpaneleditsky.cpp
+    llpaneleditwater.cpp
     llpaneleditwearable.cpp
+    llpanelenvironment.cpp
     llpanelexperiencelisteditor.cpp
     llpanelexperiencelog.cpp
     llpanelexperiencepicker.cpp
@@ -593,6 +595,8 @@ set(viewer_SOURCE_FILES
     llsecapi.cpp
     llsechandler_basic.cpp
     llselectmgr.cpp
+    llsettingspicker.cpp
+    llsettingsvo.cpp
     llshareavatarhandler.cpp
     llsidepanelappearance.cpp
     llsidepanelinventory.cpp
@@ -657,6 +661,7 @@ set(viewer_SOURCE_FILES
     lltoolselectland.cpp
     lltoolselectrect.cpp
     lltracker.cpp
+    lltrackpicker.cpp
     lltransientdockablefloater.cpp
     lltransientfloatermgr.cpp
     lltranslate.cpp
@@ -748,19 +753,13 @@ set(viewer_SOURCE_FILES
     llvowater.cpp
     llvowlsky.cpp
     llwatchdog.cpp
-    llwaterparammanager.cpp
-    llwaterparamset.cpp
     llwearableitemslist.cpp
     llwearablelist.cpp
     llweb.cpp
     llwebprofile.cpp
     llwind.cpp
     llwindowlistener.cpp
-    llwlanimator.cpp
-    llwldaycycle.cpp
     llwlhandlers.cpp
-    llwlparammanager.cpp
-    llwlparamset.cpp
     llworld.cpp
     llworldmap.cpp
     llworldmapmessage.cpp
@@ -815,7 +814,6 @@ set(viewer_HEADER_FILES
     fspanelprofileclassifieds.h
     fspose.h
     fsscrolllistctrl.h
-    fslightshare.h
     groupchatlistener.h
     chatbar_as_cmdline.h
     llaccountingcost.h
@@ -881,7 +879,6 @@ set(viewer_HEADER_FILES
     llcurrencyuimanager.h
     llcylinder.h
     lldateutil.h
-    lldaycyclemanager.h
     lldebugmessagebox.h
     lldebugview.h
     lldeferredsounds.h
@@ -904,7 +901,7 @@ set(viewer_HEADER_FILES
     lldrawpoolwlsky.h
     lldynamictexture.h
     llemote.h
-    llenvmanager.h
+    llenvironment.h
     llestateinfomodel.h
     lleventnotifier.h
     lleventpoll.h
@@ -945,17 +942,15 @@ set(viewer_HEADER_FILES
     llfloaterconversationlog.h
     llfloaterconversationpreview.h
     llfloaterdeleteprefpreset.h
-    llfloaterdeleteenvpreset.h
     llfloaterdestinations.h
     llfloaterdisplayname.h
-    llfloatereditdaycycle.h
-    llfloatereditsky.h
-    llfloatereditwater.h
-    llfloaterenvironmentsettings.h
+    llfloatereditextdaycycle.h
+    llfloaterenvironmentadjust.h
     llfloaterevent.h
     llfloaterexperiencepicker.h
     llfloaterexperienceprofile.h
     llfloaterexperiences.h
+    llfloaterfixedenvironment.h
     llfloaterfonttest.h
     llfloaterforgetuser.h
     llfloatergesture.h
@@ -990,6 +985,7 @@ set(viewer_HEADER_FILES
     llfloatermodelpreview.h
     llfloatermodeluploadbase.h
     llfloatermyscripts.h
+    llfloatermyenvironment.h
     llfloaternamedesc.h
     llfloaternotificationsconsole.h
     llfloaternotificationstabbed.h
@@ -1044,6 +1040,7 @@ set(viewer_HEADER_FILES
     llfolderviewmodelinventory.h
     llfollowcam.h
     llfriendcard.h
+    llflyoutcombobtn.h
     llgesturelistener.h
     llgesturemgr.h
     llgiveinventory.h
@@ -1136,7 +1133,10 @@ set(viewer_HEADER_FILES
     llpanelblockedlist.h
     llpanelclassified.h
     llpanelcontents.h
+    llpaneleditsky.h
+    llpaneleditwater.h
     llpaneleditwearable.h
+    llpanelenvironment.h
     llpanelexperiencelisteditor.h
     llpanelexperiencelog.h
     llpanelexperiencepicker.h
@@ -1253,6 +1253,8 @@ set(viewer_HEADER_FILES
     llsecapi.h
     llsechandler_basic.h
     llselectmgr.h
+    llsettingspicker.h
+    llsettingsvo.h
     llsidepanelappearance.h
     llsidepanelinventory.h
     llsidepanelinventorysubpanel.h
@@ -1318,6 +1320,7 @@ set(viewer_HEADER_FILES
     lltoolselectland.h
     lltoolselectrect.h
     lltracker.h
+    lltrackpicker.h
     lltransientdockablefloater.h
     lltransientfloatermgr.h
     lltranslate.h
@@ -1410,19 +1413,13 @@ set(viewer_HEADER_FILES
     llvowater.h
     llvowlsky.h
     llwatchdog.h
-    llwaterparammanager.h
-    llwaterparamset.h
     llwearableitemslist.h
     llwearablelist.h
     llweb.h
     llwebprofile.h
     llwind.h
     llwindowlistener.h
-    llwlanimator.h
-    llwldaycycle.h
     llwlhandlers.h
-    llwlparammanager.h
-    llwlparamset.h
     llworld.h
     llworldmap.h
     llworldmapmessage.h
@@ -2305,7 +2302,7 @@ if (DARWIN)
   set(MACOSX_BUNDLE_BUNDLE_NAME "Kokua")
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${VIEWER_SHORT_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${VIEWER_SHORT_VERSION}${VIEWER_MACOSX_PHASE}${VIEWER_REVISION}")
-  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © Nicky Perian, Chorazin Allen Kokua Viewer Project, 2019")
+  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © Linden Research, Inc. 2018")
   set(MACOSX_BUNDLE_NSMAIN_NIB_FILE "Kokua.nib")
   set(MACOSX_BUNDLE_NSPRINCIPAL_CLASS "LLApplication")
 
@@ -2721,7 +2718,6 @@ if (LL_TESTS)
 include(LLAddBuildTest)
 SET(viewer_TEST_SOURCE_FILES
   llagentaccess.cpp
-  llwlparammanager.cpp
   )
 set_source_files_properties(
   ${viewer_TEST_SOURCE_FILES}

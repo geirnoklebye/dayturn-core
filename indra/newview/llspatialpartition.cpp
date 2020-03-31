@@ -55,8 +55,6 @@
 #include "llviewershadermgr.h"
 #include "llcontrolavatar.h"
 
-//#pragma optimize("", off)
-
 //MK
 #include "llagent.h"
 //mk
@@ -1095,6 +1093,11 @@ public:
 
 	virtual bool earlyFail(LLViewerOctreeGroup* base_group)
 	{
+        if (LLPipeline::sReflectionRender)
+        {
+            return false;
+        }
+
 		LLSpatialGroup* group = (LLSpatialGroup*)base_group;
 		group->checkOcclusion();
 

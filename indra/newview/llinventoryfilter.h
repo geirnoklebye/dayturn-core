@@ -63,7 +63,8 @@ public:
         FILTERTYPE_MARKETPLACE_LISTING_FOLDER = 0x1 << 9,	// pass iff folder is a listing folder
         FILTERTYPE_NO_MARKETPLACE_ITEMS = 0x1 << 10,         // pass iff folder is not under the marketplace
         FILTERTYPE_WORN = 0x1 << 11,     // pass if item is worn
-	    FILTERTYPE_TRANSFERRABLE = 0x1 << 12, //search by transferrable property
+        FILTERTYPE_SETTINGS = 0x1 << 12,    // pass if the item is a settings object
+	    FILTERTYPE_TRANSFERRABLE = 0x1 << 13, //search by transferrable property
 	};
 
 	enum EFilterDateDirection
@@ -85,7 +86,7 @@ public:
 		SO_DATE = 0x1,						// Sort inventory by date
 		SO_FOLDERS_BY_NAME = 0x1 << 1,		// Force folder sort by name
 		SO_SYSTEM_FOLDERS_TO_TOP = 0x1 << 2,// Force system folders to be on top
-		SO_FOLDERS_BY_WEIGHT = 0x1 << 3,    // Force folder sort by weight, usually, amount of some elements in their descendents
+		SO_FOLDERS_BY_WEIGHT = 0x1 << 3,    // Force folder sort by weight, usually, amount of some elements in their descendants
 	};
 	// ## Zi: Extended Inventory Search
 	enum EFilterSubstringTarget
@@ -134,6 +135,7 @@ public:
 			Optional<U32>				types;
 			Optional<U64>				object_types,
 										wearable_types,
+                                        settings_types,
 										category_types;
 			Optional<EFilterLink>		links;
 			Optional<LLUUID>			uuid;
@@ -148,6 +150,7 @@ public:
 			:	types("filter_types", FILTERTYPE_OBJECT),
 				object_types("object_types", 0xffffFFFFffffFFFFULL),
 				wearable_types("wearable_types", 0xffffFFFFffffFFFFULL),
+                settings_types("settings_types", 0xffffFFFFffffFFFFULL),
 				category_types("category_types", 0xffffFFFFffffFFFFULL),
 				links("links", FILTERLINK_INCLUDE_LINKS),
 				uuid("uuid"),
@@ -165,6 +168,7 @@ public:
 		U32 			mFilterTypes;
 		U64				mFilterObjectTypes,   // For _OBJECT
 						mFilterWearableTypes,
+                        mFilterSettingsTypes, // for _SETTINGS
 						mFilterLinks,
 						mFilterCategoryTypes; // For _CATEGORY
 		LLUUID      	mFilterUUID; 		  // for UUID
@@ -174,8 +178,8 @@ public:
 		U32				mHoursAgo;
 		U32				mDateSearchDirection;
 
-		EFolderShow			mShowFolderState;
-		PermissionMask		mPermissions;
+		EFolderShow		mShowFolderState;
+		PermissionMask	mPermissions;
 		EFilterCreatorType	mFilterCreatorType;
 	};
 							
@@ -205,11 +209,14 @@ public:
 	U64 				getFilterObjectTypes() const;
 	U64					getFilterCategoryTypes() const;
 	U64					getFilterWearableTypes() const;
+    U64                 getFilterSettingsTypes() const;
+
 	bool 				isFilterObjectTypesWith(LLInventoryType::EType t) const;
 	void 				setFilterObjectTypes(U64 types);
 	void 				setFilterCategoryTypes(U64 types);
 	void 				setFilterUUID(const LLUUID &object_id);
 	void				setFilterWearableTypes(U64 types);
+    void                setFilterSettingsTypes(U64 types);
 	void				setFilterEmptySystemFolders();
 	void				removeFilterEmptySystemFolders(); // <FS:Ansariel> Optional hiding of empty system folders
 	void				setFilterWorn();
@@ -282,8 +289,8 @@ public:
 	// +-------------------------------------------------------------------+
 	// + Presentation
 	// +-------------------------------------------------------------------+
-	void 					setShowFolderState( EFolderShow state);
-	EFolderShow 			getShowFolderState() const;
+	void 				setShowFolderState( EFolderShow state);
+	EFolderShow 		getShowFolderState() const;
 	EFilterCreatorType		getFilterCreatorType() const;
 
 	void 				setEmptyLookupMessage(const std::string& message);

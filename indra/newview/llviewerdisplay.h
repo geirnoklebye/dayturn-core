@@ -40,6 +40,7 @@ extern BOOL	gTeleportDisplay;
 extern LLFrameTimer	gTeleportDisplayTimer;
 extern BOOL			gForceRenderLandFence;
 extern BOOL gResizeScreenTexture;
+extern BOOL gResizeShadowTexture;
 extern BOOL gWindowResized;
 
 // <FS:Ansariel> FIRE-12004: Attachments getting lost on TP
