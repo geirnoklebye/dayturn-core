@@ -885,25 +885,23 @@ void LLFloaterIMSession::sessionInitReplyReceived(const LLUUID& im_session_id)
 	{
 		bool cannot_send = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("sendim", mOtherParticipantUUID.asString())
 			|| gAgent.mRRInterface.contains ("sendimto:"+mOtherParticipantUUID.asString())));
-		//KKA-697 Actually... receiving group IMs is never blocked (which I'd call a potential cheat but it's what both Marine's RLV and FS do)
-		//so there's no point giving a receive warning for groups
-//		bool cannot_receive = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", mOtherParticipantUUID.asString())
-//			|| gAgent.mRRInterface.contains ("recvimfrom:"+mOtherParticipantUUID.asString())));
+		bool cannot_receive = (gRRenabled && (gAgent.mRRInterface.containsWithoutException ("recvim", mOtherParticipantUUID.asString())
+			|| gAgent.mRRInterface.contains ("recvimfrom:"+mOtherParticipantUUID.asString())));
 		if (cannot_send)
 		{
-//			if (cannot_receive)
-//			{
-//				LLIMModel::getInstance()->addMessage(mSessionID, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Both"), false);
-//			}
-//			else
-//			{
+			if (cannot_receive)
+			{
+				LLIMModel::getInstance()->addMessage(mSessionID, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Both"), false);
+			}
+			else
+			{
 				LLIMModel::getInstance()->addMessage(mSessionID, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Send"), false);
-//			}
+			}
 		}
-//		else if (cannot_receive)
-//		{
-//			LLIMModel::getInstance()->addMessage(mSessionID, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Rcv"), false);
-//		}	
+		else if (cannot_receive)
+		{
+			LLIMModel::getInstance()->addMessage(mSessionID, SYSTEM_FROM, LLUUID::null, LLTrans::getString("Kokua_IMBlock_Rcv"), false);
+		}	
 	}
 	//need to send delayed messages collected while waiting for session initialization
 	if (mQueuedMsgsForInit.size())
