@@ -1412,6 +1412,18 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 
 			buffer = message;
 
+//MK (by CA)
+			if (gRRenabled && (gAgent.mRRInterface.containsWithoutException("recvim", from_id.asString())
+				|| gAgent.mRRInterface.contains("recvimfrom:" + from_id.asString())))
+			{
+				// agent is forbidden to receive IMs and the sender is no exception
+				buffer = "...";
+				
+				// this is a group IM, do not send the sender a personal reply about the restriction since otherwise
+				// the sender will get spammed with as many replies as recipients who are under @recvim at the time
+			}
+//mk (by CA)
+
 			LL_DEBUGS("Messaging") << "message in dnd; session_id( " << session_id << " ), from_id( " << from_id << " )" << LL_ENDL;
 
 			// add to IM panel, but do not bother the user
@@ -1449,6 +1461,18 @@ void LLIMProcessing::processNewMessage(LLUUID from_id,
 			}
 
 			buffer = saved + message;
+
+//MK (by CA)
+			if (gRRenabled && (gAgent.mRRInterface.containsWithoutException("recvim", from_id.asString())
+				|| gAgent.mRRInterface.contains("recvimfrom:" + from_id.asString())))
+			{
+				// agent is forbidden to receive IMs and the sender is no exception
+				buffer = saved + "...";
+				
+				// this is a group IM, do not send the sender a personal reply about the restriction since otherwise
+				// the sender will get spammed with as many replies as recipients who are under @recvim at the time
+			}
+//mk (by CA)
 
 			LL_DEBUGS("Messaging") << "standard message session_id( " << session_id << " ), from_id( " << from_id << " )" << LL_ENDL;
 
