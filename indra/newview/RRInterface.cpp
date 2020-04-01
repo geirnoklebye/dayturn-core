@@ -4261,9 +4261,9 @@ std::string RRInterface::getEnvironment (std::string command)
 	//else if (command == "cloudcolorb") res = params->mCloudColor.b;
 	//else if (command == "cloudcolori") res = max (max (params->mCloudColor.r, params->mCloudColor.g), params->mCloudColor.b);
 
-	else if (command == "cloudx")  res = (psky->getCloudPosDensity2().mV[0]);
-	else if (command == "cloudy")  res = (psky->getCloudPosDensity2().mV[1]);
-	else if (command == "cloudd")  res = (psky->getCloudPosDensity2().mV[2]);
+	else if (command == "cloudx")  res = (psky->getCloudPosDensity1().mV[0]);
+	else if (command == "cloudy")  res = (psky->getCloudPosDensity1().mV[1]);
+	else if (command == "cloudd")  res = (psky->getCloudPosDensity1().mV[2]);
 	//else if (command == "cloudx")  res = params->mCloudMain.r;
 	//else if (command == "cloudy")  res = params->mCloudMain.g;
 	//else if (command == "cloudd")  res = params->mCloudMain.b;
