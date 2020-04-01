@@ -63,6 +63,7 @@
 #include "llrendersphere.h"
 #include "llselectmgr.h"
 #include "llsettingssky.h" // new include for EEP
+#include "llsettingsvo.h" // new include for EEP
 #include "llspeakers.h"
 #include "llstartup.h"
 #include "llvoavatar.h"
@@ -4093,48 +4094,53 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 
 	else if (command == "cloudx") {
-		/*** NEEDS CHANGE FOR EEP ***
-		params->mCloudMain.r = val;
-		updateAndSave (&(params->mCloudMain));
-		***/
+		LLColor3 clouddetail=psky->getCloudPosDensity1();
+		clouddetail.mV[0] = val;
+		psky->setCloudPosDensity1(clouddetail);
+		//params->mCloudMain.r = val;
+		//updateAndSave (&(params->mCloudMain));
 	}
 	else if (command == "cloudy") {
-		/*** NEEDS CHANGE FOR EEP ***
-		params->mCloudMain.g = val;
-		updateAndSave (&(params->mCloudMain));
-		***/
+		LLColor3 clouddetail=psky->getCloudPosDensity1();
+		clouddetail.mV[1] = val;
+		psky->setCloudPosDensity1(clouddetail);
+		//params->mCloudMain.g = val;
+		//updateAndSave (&(params->mCloudMain));
 	}
 	else if (command == "cloudd") {
-		/*** NEEDS CHANGE FOR EEP ***
-		params->mCloudMain.b = val;
-		updateAndSave (&(params->mCloudMain));
-		***/
+		LLColor3 clouddetail=psky->getCloudPosDensity1();
+		clouddetail.mV[2] = val;
+		psky->setCloudPosDensity1(clouddetail);
+		//params->mCloudMain.b = val;
+		//updateAndSave (&(params->mCloudMain));
 	}
 
 	else if (command == "clouddetailx") {
-		/*** NEEDS CHANGE FOR EEP ***
-		params->mCloudDetail.r = val;
-		updateAndSave (&(params->mCloudDetail));
-		***/
+		LLColor3 clouddetail=psky->getCloudPosDensity2();
+		clouddetail.mV[0] = val;
+		psky->setCloudPosDensity2(clouddetail);
+		//params->mCloudDetail.r = val;
+		//updateAndSave (&(params->mCloudDetail));
 	}
 	else if (command == "clouddetaily") {
-		/*** NEEDS CHANGE FOR EEP ***
-		params->mCloudDetail.g = val;
-		updateAndSave (&(params->mCloudDetail));
-		***/
+		LLColor3 clouddetail=psky->getCloudPosDensity2();
+		clouddetail.mV[1] = val;
+		psky->setCloudPosDensity2(clouddetail);
+		//params->mCloudDetail.g = val;
+		//updateAndSave (&(params->mCloudDetail));
 	}
 	else if (command == "clouddetaild") {
-		/*** NEEDS CHANGE FOR EEP ***
-		params->mCloudDetail.b = val;
-		updateAndSave (&(params->mCloudDetail));
-		***/
+		LLColor3 clouddetail=psky->getCloudPosDensity2();
+		clouddetail.mV[2] = val;
+		psky->setCloudPosDensity2(clouddetail);
+		//params->mCloudDetail.b = val;
+		//updateAndSave (&(params->mCloudDetail));
 	}
 
 	else if (command == "cloudcoverage") {
-		/*** NEEDS CHANGE FOR EEP ***
-		params->mCloudCoverage.x = val;
-		updateAndSave (&(params->mCloudCoverage));
-		***/
+		psky->setCloudShadow(val);
+		//params->mCloudCoverage.x = val;
+		//updateAndSave (&(params->mCloudCoverage));
 	}
 	else if (command == "cloudscale") {
 		psky->setCloudScale(val);
@@ -4176,6 +4182,7 @@ std::string RRInterface::getEnvironment (std::string command)
 	command = command.substr (length);
 	//LLWLParamManager* params = LLWLParamManager::getInstance();
 	LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
+	LLSD legacy = LLSettingsVOSky::convertToLegacy(psky, false);
 
 	if (command == "daytime") {
 		/*** NEEDS CHANGE FOR EEP ***
@@ -4231,13 +4238,17 @@ std::string RRInterface::getEnvironment (std::string command)
 	//else if (command == "ambientb") res = params->mAmbient.b/3;
 	//else if (command == "ambienti") res = max (max (params->mAmbient.r, params->mAmbient.g), params->mAmbient.b) / 3;
 
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "sunglowfocus")	res = -params->mGlow.b/5;
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "sunglowsize")		res = 2-params->mGlow.r/20;
+	if (command == "sunglowfocus")	res = -legacy[LLSettingsSky::SETTING_GLOW][2].asReal()/5;
+	//else if (command == "sunglowfocus")	res = -params->mGlow.b/5;
+	if (command == "sunglowsize")		res = 2-legacy[LLSettingsSky::SETTING_GLOW][0].asReal()/20;
+	//else if (command == "sunglowsize")		res = 2-params->mGlow.r/20;
 	else if (command == "scenegamma")		res = psky->getGamma();
 	//else if (command == "scenegamma")		res = params->mWLGamma.x;
 
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "sunmoonposition")		res = params->mCurParams.getSunAngle()/F_TWO_PI;
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "eastangle")			res = params->mCurParams.getEastAngle()/F_TWO_PI;
+	else if (command == "sunmoonposition")		res = legacy[LLSettingsSky::SETTING_LEGACY_SUN_ANGLE].asReal()/F_TWO_PI; //note: originally protected
+	//else if (command == "sunmoonposition")		res = params->mCurParams.getSunAngle()/F_TWO_PI;
+	else if (command == "eastangle")			res = legacy[LLSettingsSky::SETTING_LEGACY_EAST_ANGLE].asReal()/F_TWO_PI; // note: originally protected
+	//else if (command == "eastangle")			res = params->mCurParams.getEastAngle()/F_TWO_PI;
 	else if (command == "starbrightness")		res = psky->getStarBrightness();
 	//else if (command == "starbrightness")		res = params->mCurParams.getStarBrightness();
 
@@ -4250,15 +4261,22 @@ std::string RRInterface::getEnvironment (std::string command)
 	//else if (command == "cloudcolorb") res = params->mCloudColor.b;
 	//else if (command == "cloudcolori") res = max (max (params->mCloudColor.r, params->mCloudColor.g), params->mCloudColor.b);
 
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "cloudx")  res = params->mCloudMain.r;
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "cloudy")  res = params->mCloudMain.g;
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "cloudd")  res = params->mCloudMain.b;
+	else if (command == "cloudx")  res = (psky->getCloudPosDensity2().mV[0]);
+	else if (command == "cloudy")  res = (psky->getCloudPosDensity2().mV[1]);
+	else if (command == "cloudd")  res = (psky->getCloudPosDensity2().mV[2]);
+	//else if (command == "cloudx")  res = params->mCloudMain.r;
+	//else if (command == "cloudy")  res = params->mCloudMain.g;
+	//else if (command == "cloudd")  res = params->mCloudMain.b;
 
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "clouddetailx")  res = params->mCloudDetail.r;
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "clouddetaily")  res = params->mCloudDetail.g;
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "clouddetaild")  res = params->mCloudDetail.b;
+	else if (command == "clouddetailx") res = (psky->getCloudPosDensity2().mV[0]);
+	else if (command == "clouddetaily") res = (psky->getCloudPosDensity2().mV[1]);
+	else if (command == "clouddetaild") res = (psky->getCloudPosDensity2().mV[2]);
+	//else if (command == "clouddetailx")  res = params->mCloudDetail.r;
+	//else if (command == "clouddetaily")  res = params->mCloudDetail.g;
+	//else if (command == "clouddetaild")  res = params->mCloudDetail.b;
 
-	//*** NEEDS CHANGE FOR EEP *** else if (command == "cloudcoverage")	res = params->mCloudCoverage.x;
+	else if (command == "cloudcoverage")	res = psky->getCloudShadow();
+	//else if (command == "cloudcoverage")	res = params->mCloudCoverage.x;
 	else if (command == "cloudscale")		res = psky->getCloudScale();
 	//else if (command == "cloudscale")		res = params->mCloudScale.x;
 
