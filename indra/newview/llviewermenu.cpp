@@ -10409,12 +10409,6 @@ class LLWorldEnvSettings : public view_listener_t
         else if (event_name == "my_environs")
         {
             LLFloaterReg::showInstance("my_environments");
-//MK
-			LLWLParamManager::getInstance()->mAnimator.mIsRunning = true;
-			LLWLParamManager::getInstance()->mAnimator.setTimeType(LLWLAnimator::TIME_LINDEN);
-			envmgr.useRegionSettings();
-			LLWLParamManager::getInstance()->propagateParameters();
-//mk
 		}
 		return true;
 	}

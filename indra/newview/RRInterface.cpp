@@ -34,8 +34,10 @@
 #include "llavatarnamecache.h"
 #include "llcamera.h"
 #include "lldrawpoolalpha.h"
+#include "llenvadapters.h" // new include for EEP
+#include "llenvironment.h" // new include for EEP
 //#include "llfloaterenvsettings.h"
-#include "llfloatereditsky.h"
+//#include "llfloatereditsky.h" // no longer exists with EEP
 #include "llfloaterimnearbychat.h"
 #include "llfloatermap.h"
 #include "llfloaterpostprocess.h"
@@ -60,6 +62,7 @@
 #include "llregionhandle.h"
 #include "llrendersphere.h"
 #include "llselectmgr.h"
+#include "llsettingssky.h" // new include for EEP
 #include "llspeakers.h"
 #include "llstartup.h"
 #include "llvoavatar.h"
@@ -73,12 +76,13 @@
 #include "llviewerobjectlist.h"
 #include "llviewertexturelist.h"
 #include "llviewerwindow.h"
-#include "llwaterparammanager.h"
-#include "llwlparammanager.h"
+//#include "llwaterparammanager.h" // no longer exists with EEP
+//#include "llwlparammanager.h" // no longer exists with EEP
 #include "llinventorybridge.h"
 #include "llviewerdisplay.h"
 #include "llviewerjoystick.h"
 #include "llviewerregion.h"
+#include "llViewershadermgr.h" // new include for EEP
 #include "llviewermessage.h"
 #include "llviewerparcelmgr.h"
 #include "llworldmapmessage.h"
@@ -3742,20 +3746,28 @@ std::string RRInterface::getCensoredMessage (std::string str)
 void updateAndSave (WLColorControl* color)
 {
 	if (color == NULL) return;
-	color->i = color->r;
-	if (color->g > color->i) {
-		color->i = color->g;
+	color->setIntensity(color->getRed());
+	if (color->getGreen() > color->getIntensity()) {
+		color->setIntensity(color->getGreen());
 	}
-	if (color->b > color->i) {
-		color->i = color->b;
+	if (color->getBlue() > color->getIntensity()) {
+		color->setIntensity(color->getBlue());
 	}
-	color->update (LLWLParamManager::getInstance()->mCurParams);
+//	if (color == NULL) return;
+//	color->i = color->r;
+//	if (color->g > color->i) {
+//		color->i = color->g;
+//	}
+//	if (color->b > color->i) {
+//		color->i = color->b;
+//	}
+//	color->update (LLWLParamManager::getInstance()->mCurParams);
 }
 
 void updateAndSave (WLFloatControl* floatControl)
 {
-	if (floatControl == NULL) return;
-	floatControl->update (LLWLParamManager::getInstance()->mCurParams);
+//	if (floatControl == NULL) return;
+//	floatControl->update (LLWLParamManager::getInstance()->mCurParams);
 }
 
 BOOL RRInterface::forceEnvironment (std::string command, std::string option)
@@ -3765,13 +3777,16 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 
 	int length = 7; // size of "setenv_"
 	command = command.substr (length);
-	LLWLParamManager* params = LLWLParamManager::getInstance();
+	//LLWLParamManager* params = LLWLParamManager::getInstance();
 
-	params->mAnimator.mIsRunning = false;
+	//params->mAnimator.mIsRunning = false;
 	//params->mAnimator.mUseLindenTime = false;
-	params->mAnimator.setTimeType(LLWLAnimator::TIME_CUSTOM);
+	//params->mAnimator.setTimeType(LLWLAnimator::TIME_CUSTOM);
+
+	LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
 
 	if (command == "daytime") {
+		/*** NEEDS CHANGE FOR EEP ***
 		if (val > 1.0) val = 1.0;
 		if (val >= 0.0) {
 			params->mAnimator.setDayTime(val);
@@ -3783,223 +3798,357 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 			LLWLParamManager::getInstance()->mAnimator.setTimeType(LLWLAnimator::TIME_LINDEN);
 			LLEnvManagerNew::instance().useRegionSettings();
 		}
+		***/
 	}
 	else if (command == "bluehorizonr") {
-		params->mBlueHorizon.r = val*2;
-		updateAndSave (&(params->mBlueHorizon));
+		LLColor3 bluehorizon=psky->getBlueHorizon();
+		bluehorizon.mV[0] = val * 2;
+		psky->setBlueHorizon(bluehorizon);
+		//params->mBlueHorizon.r = val*2;
+		//updateAndSave (&(params->mBlueHorizon));
 	}
 	else if (command == "bluehorizong") {
-		params->mBlueHorizon.g = val*2;
-		updateAndSave (&(params->mBlueHorizon));
+		LLColor3 bluehorizon=psky->getBlueHorizon();
+		bluehorizon.mV[1] = val * 2;
+		psky->setBlueHorizon(bluehorizon);
+		//params->mBlueHorizon.g = val*2;
+		//updateAndSave (&(params->mBlueHorizon));
 	}
 	else if (command == "bluehorizonb") {
-		params->mBlueHorizon.b = val*2;
-		updateAndSave (&(params->mBlueHorizon));
+		LLColor3 bluehorizon=psky->getBlueHorizon();
+		bluehorizon.mV[2] = val * 2;
+		psky->setBlueHorizon(bluehorizon);
+		//params->mBlueHorizon.b = val*2;
+		//updateAndSave (&(params->mBlueHorizon));
 	}
 	else if (command == "bluehorizoni") {
-		F32 old_intensity = llmax(params->mBlueHorizon.r, params->mBlueHorizon.g, params->mBlueHorizon.b);
+		LLColor3 bluehorizon=psky->getBlueHorizon();
+		F32 old_intensity = llmax(bluehorizon.mV[0], bluehorizon.mV[1], bluehorizon.mV[2]);
 		if (val == 0 || old_intensity == 0) {
-			params->mBlueHorizon.r = params->mBlueHorizon.g = params->mBlueHorizon.b = val * 2;
+			bluehorizon.mV[0] = bluehorizon.mV[1] = bluehorizon.mV[2] = val * 2;
 		}
 		else {
-			params->mBlueHorizon.r *= val * 2 / old_intensity;
-			params->mBlueHorizon.g *= val * 2 / old_intensity;
-			params->mBlueHorizon.b *= val * 2 / old_intensity;
+			bluehorizon.mV[0] *= val * 2 / old_intensity;
+			bluehorizon.mV[1] *= val * 2 / old_intensity;
+			bluehorizon.mV[2] *= val * 2 / old_intensity;
 		}
-		updateAndSave(&(params->mBlueHorizon));
+		psky->setBlueHorizon(bluehorizon);
+		//F32 old_intensity = llmax(params->mBlueHorizon.r, params->mBlueHorizon.g, params->mBlueHorizon.b);
+		//if (val == 0 || old_intensity == 0) {
+		//	params->mBlueHorizon.r = params->mBlueHorizon.g = params->mBlueHorizon.b = val * 2;
+		//}
+		//else {
+		//	params->mBlueHorizon.r *= val * 2 / old_intensity;
+		//	params->mBlueHorizon.g *= val * 2 / old_intensity;
+		//	params->mBlueHorizon.b *= val * 2 / old_intensity;
+		//}
+		//updateAndSave(&(params->mBlueHorizon));
 	}
 
 	else if (command == "bluedensityr") {
-		params->mBlueDensity.r = val*2;
-		updateAndSave (&(params->mBlueDensity));
+		LLColor3 bluedensity=psky->getBlueDensity();
+		bluedensity.mV[0] = val * 2;
+		psky->setBlueDensity(bluedensity);
+		//params->mBlueDensity.r = val*2;
+		//updateAndSave (&(params->mBlueDensity));
 	}
 	else if (command == "bluedensityg") {
-		params->mBlueDensity.g = val*2;
-		updateAndSave (&(params->mBlueDensity));
+		LLColor3 bluedensity=psky->getBlueDensity();
+		bluedensity.mV[1] = val * 2;
+		psky->setBlueDensity(bluedensity);
+		//params->mBlueDensity.g = val*2;
+		//updateAndSave (&(params->mBlueDensity));
 	}
 	else if (command == "bluedensityb") {
-		params->mBlueDensity.b = val*2;
-		updateAndSave (&(params->mBlueDensity));
+		LLColor3 bluedensity=psky->getBlueDensity();
+		bluedensity.mV[2] = val * 2;
+		psky->setBlueDensity(bluedensity);
+		//params->mBlueDensity.b = val*2;
+		//updateAndSave (&(params->mBlueDensity));
 	}
 	else if (command == "bluedensityi") {
-		F32 old_intensity = llmax(params->mBlueDensity.r, params->mBlueDensity.g, params->mBlueDensity.b);
+		LLColor3 bluedensity=psky->getBlueDensity();
+		F32 old_intensity = llmax(bluedensity.mV[0], bluedensity.mV[1], bluedensity.mV[2]);
 		if (val == 0 || old_intensity == 0) {
-			params->mBlueDensity.r = params->mBlueDensity.g = params->mBlueDensity.b = val * 2;
+			bluedensity.mV[0] = bluedensity.mV[1] = bluedensity.mV[2] = val * 2;
 		}
 		else {
-			params->mBlueDensity.r *= val * 2 / old_intensity;
-			params->mBlueDensity.g *= val * 2 / old_intensity;
-			params->mBlueDensity.b *= val * 2 / old_intensity;
+			bluedensity.mV[0] *= val * 2 / old_intensity;
+			bluedensity.mV[1] *= val * 2 / old_intensity;
+			bluedensity.mV[2] *= val * 2 / old_intensity;
 		}
-		updateAndSave(&(params->mBlueDensity));
+		psky->setBlueDensity(bluedensity);
+		//F32 old_intensity = llmax(params->mBlueDensity.r, params->mBlueDensity.g, params->mBlueDensity.b);
+		//if (val == 0 || old_intensity == 0) {
+		//	params->mBlueDensity.r = params->mBlueDensity.g = params->mBlueDensity.b = val * 2;
+		//}
+		//else {
+		//	params->mBlueDensity.r *= val * 2 / old_intensity;
+		//	params->mBlueDensity.g *= val * 2 / old_intensity;
+		//	params->mBlueDensity.b *= val * 2 / old_intensity;
+		//}
+		//updateAndSave(&(params->mBlueDensity));
 	}
 
 	else if (command == "hazehorizon") {
-		params->mHazeHorizon.x = val*2;
-		updateAndSave (&(params->mHazeHorizon));
+		psky->setHazeHorizon(val * 2);
+		//params->mHazeHorizon.x = val*2;
+		//updateAndSave (&(params->mHazeHorizon));
 	}
 	else if (command == "hazedensity") {
-		params->mHazeDensity.x = val*2;
-		updateAndSave (&(params->mHazeDensity));
+		psky->setHazeDensity(val * 2);
+		//params->mHazeDensity.x = val*2;
+		//updateAndSave (&(params->mHazeDensity));
 	}
 
 	else if (command == "densitymultiplier") {
-		params->mDensityMult.x = val / 1000;
-		params->mDensityMult.mult = 1.0;
-		updateAndSave (&(params->mDensityMult));
+		psky->setDensityMultiplier(val / 1000);
+		//params->mDensityMult.x = val / 1000;
+		//params->mDensityMult.mult = 1.0;
+		//updateAndSave (&(params->mDensityMult));
 //		LLWaterParamManager* water_params = LLWaterParamManager::instance();
 //		water_params->mFogDensity.mExp = 5.0;
 //		water_params->mFogDensity.update (water_params->mCurParams);
 	}
 	else if (command == "distancemultiplier") {
-		params->mDistanceMult.x = val;
-		params->mDistanceMult.mult = 1.0;
-		updateAndSave (&(params->mDistanceMult));
+		psky->setDistanceMultiplier(val);
+		//params->mDistanceMult.x = val;
+		//params->mDistanceMult.mult = 1.0;
+		//updateAndSave (&(params->mDistanceMult));
 //		LLWaterParamManager* water_params = LLWaterParamManager::instance();
 //		water_params->mUnderWaterFogMod.mX = 1.0;
 //		water_params->mUnderWaterFogMod.update (water_params->mCurParams);
 	}
 	else if (command == "maxaltitude") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mMaxAlt.x = val;
 		updateAndSave (&(params->mMaxAlt));
+		***/
 	}
 
 	else if (command == "sunmooncolorr") {
-		params->mSunlight.r = val*3;
-		updateAndSave (&(params->mSunlight));
+		LLColor3 suncolour=psky->getSunlightColor();
+		suncolour.mV[0] = val * 3;
+		psky->setSunlightColor(suncolour);
+		//params->mSunlight.r = val*3;
+		//updateAndSave (&(params->mSunlight));
 	}
 	else if (command == "sunmooncolorg") {
-		params->mSunlight.g = val*3;
-		updateAndSave (&(params->mSunlight));
+		LLColor3 suncolour=psky->getSunlightColor();
+		suncolour.mV[1] = val * 3;
+		psky->setSunlightColor(suncolour);
+		//params->mSunlight.g = val*3;
+		//updateAndSave (&(params->mSunlight));
 	}
 	else if (command == "sunmooncolorb") {
-		params->mSunlight.b = val*3;
-		updateAndSave (&(params->mSunlight));
+		LLColor3 suncolour=psky->getSunlightColor();
+		suncolour.mV[2] = val * 3;
+		psky->setSunlightColor(suncolour);
+		//params->mSunlight.b = val*3;
+		//updateAndSave (&(params->mSunlight));
 	}
 	else if (command == "sunmooncolori") {
-		F32 old_intensity = llmax(params->mSunlight.r, params->mSunlight.g, params->mSunlight.b);
+		LLColor3 suncolor=psky->getSunlightColor();
+		F32 old_intensity = llmax(suncolor.mV[0], suncolor.mV[1], suncolor.mV[2]);
 		if (val == 0 || old_intensity == 0) {
-			params->mSunlight.r = params->mSunlight.g = params->mSunlight.b = val * 2;
+			suncolor.mV[0] = suncolor.mV[1] = suncolor.mV[2] = val * 2;
 		}
 		else {
-			params->mSunlight.r *= val * 2 / old_intensity;
-			params->mSunlight.g *= val * 2 / old_intensity;
-			params->mSunlight.b *= val * 2 / old_intensity;
+			suncolor.mV[0] *= val * 2 / old_intensity;
+			suncolor.mV[1] *= val * 2 / old_intensity;
+			suncolor.mV[2] *= val * 2 / old_intensity;
 		}
-		updateAndSave(&(params->mSunlight));
+		psky->setSunlightColor(suncolor);
+		//F32 old_intensity = llmax(params->mSunlight.r, params->mSunlight.g, params->mSunlight.b);
+		//if (val == 0 || old_intensity == 0) {
+		//	params->mSunlight.r = params->mSunlight.g = params->mSunlight.b = val * 2;
+		//}
+		//else {
+		//	params->mSunlight.r *= val * 2 / old_intensity;
+		//	params->mSunlight.g *= val * 2 / old_intensity;
+		//	params->mSunlight.b *= val * 2 / old_intensity;
+		//}
+		//updateAndSave(&(params->mSunlight));
 	}
 
 	else if (command == "ambientr") {
-		params->mAmbient.r = val*3;
-		updateAndSave (&(params->mAmbient));
+		LLColor3 ambientcolor=psky->getAmbientColor();
+		ambientcolor.mV[0] = val * 3;
+		psky->setAmbientColor(ambientcolor);
+		//params->mAmbient.r = val*3;
+		//updateAndSave (&(params->mAmbient));
 	}
 	else if (command == "ambientg") {
-		params->mAmbient.g = val*3;
-		updateAndSave (&(params->mAmbient));
+		LLColor3 ambientcolor=psky->getAmbientColor();
+		ambientcolor.mV[1] = val * 3;
+		psky->setAmbientColor(ambientcolor);
+		//params->mAmbient.g = val*3;
+		//updateAndSave (&(params->mAmbient));
 	}
 	else if (command == "ambientb") {
-		params->mAmbient.b = val*3;
-		updateAndSave (&(params->mAmbient));
+		LLColor3 ambientcolor=psky->getAmbientColor();
+		ambientcolor.mV[2] = val * 3;
+		psky->setAmbientColor(ambientcolor);
+		//params->mAmbient.b = val*3;
+		//updateAndSave (&(params->mAmbient));
 	}
 	else if (command == "ambienti") {
-		F32 old_intensity = llmax(params->mAmbient.r, params->mAmbient.g, params->mAmbient.b);
+		LLColor3 ambientcolor=psky->getAmbientColor();
+		F32 old_intensity = llmax(ambientcolor.mV[0], ambientcolor.mV[1], ambientcolor.mV[2]);
 		if (val == 0 || old_intensity == 0) {
-			params->mAmbient.r = params->mAmbient.g = params->mAmbient.b = val * 2;
+			ambientcolor.mV[0] = ambientcolor.mV[1] = ambientcolor.mV[2] = val * 2;
 		}
 		else {
-			params->mAmbient.r *= val * 2 / old_intensity;
-			params->mAmbient.g *= val * 2 / old_intensity;
-			params->mAmbient.b *= val * 2 / old_intensity;
+			ambientcolor.mV[0] *= val * 2 / old_intensity;
+			ambientcolor.mV[1] *= val * 2 / old_intensity;
+			ambientcolor.mV[2] *= val * 2 / old_intensity;
 		}
-		updateAndSave(&(params->mAmbient));
+		psky->setAmbientColor(ambientcolor);
+		//F32 old_intensity = llmax(params->mAmbient.r, params->mAmbient.g, params->mAmbient.b);
+		//if (val == 0 || old_intensity == 0) {
+		//	params->mAmbient.r = params->mAmbient.g = params->mAmbient.b = val * 2;
+		//}
+		//else {
+		//	params->mAmbient.r *= val * 2 / old_intensity;
+		//	params->mAmbient.g *= val * 2 / old_intensity;
+		//	params->mAmbient.b *= val * 2 / old_intensity;
+		//}
+		//updateAndSave(&(params->mAmbient));
 	}
 	else if (command == "sunglowfocus") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mGlow.b = -val*5;
 		updateAndSave (&(params->mGlow));
+		***/
 	}
 	else if (command == "sunglowsize") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mGlow.r = (2-val)*20;
 		updateAndSave (&(params->mGlow));
+		***/
 	}
 	else if (command == "scenegamma") {
-		params->mWLGamma.x = val;
-		updateAndSave (&(params->mWLGamma));
+		psky->setGamma(val);
+		//params->mWLGamma.x = val;
+		//updateAndSave (&(params->mWLGamma));
 	}
 	else if (command == "sunmoonposition") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mCurParams.setSunAngle (F_TWO_PI * val);
+		***/
 	}
 	else if (command == "eastangle") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mCurParams.setEastAngle (F_TWO_PI * val);
+		***/
 	}
 	else if (command == "starbrightness") {
-		params->mCurParams.setStarBrightness (val);
+		psky->setStarBrightness(val);
+		//params->mCurParams.setStarBrightness (val);
 	}
 
 	else if (command == "cloudcolorr") {
-		params->mCloudColor.r = val;
-		updateAndSave (&(params->mCloudColor));
+		LLColor3 cloudcolor=psky->getCloudColor();
+		cloudcolor.mV[0] = val;
+		psky->setCloudColor(cloudcolor);
+		//params->mCloudColor.r = val;
+		//updateAndSave (&(params->mCloudColor));
 	}
 	else if (command == "cloudcolorg") {
-		params->mCloudColor.g = val;
-		updateAndSave (&(params->mCloudColor));
+		LLColor3 cloudcolor=psky->getCloudColor();
+		cloudcolor.mV[1] = val;
+		psky->setCloudColor(cloudcolor);
+		//params->mCloudColor.g = val;
+		//updateAndSave (&(params->mCloudColor));
 	}
 	else if (command == "cloudcolorb") {
-		params->mCloudColor.b = val;
-		updateAndSave (&(params->mCloudColor));
+		LLColor3 cloudcolor=psky->getCloudColor();
+		cloudcolor.mV[2] = val;
+		psky->setCloudColor(cloudcolor);
+		//params->mCloudColor.b = val;
+		//updateAndSave (&(params->mCloudColor));
 	}
 	else if (command == "cloudcolori") {
-		F32 old_intensity = llmax(params->mCloudColor.r, params->mCloudColor.g, params->mCloudColor.b);
+		LLColor3 cloudcolor=psky->getCloudColor();
+		F32 old_intensity = llmax(cloudcolor.mV[0], cloudcolor.mV[1], cloudcolor.mV[2]);
 		if (val == 0 || old_intensity == 0) {
-			params->mCloudColor.r = params->mCloudColor.g = params->mCloudColor.b = val * 2;
+			cloudcolor.mV[0] = cloudcolor.mV[1] = cloudcolor.mV[2] = val * 2;
 		}
 		else {
-			params->mCloudColor.r *= val * 2 / old_intensity;
-			params->mCloudColor.g *= val * 2 / old_intensity;
-			params->mCloudColor.b *= val * 2 / old_intensity;
+			cloudcolor.mV[0] *= val * 2 / old_intensity;
+			cloudcolor.mV[1] *= val * 2 / old_intensity;
+			cloudcolor.mV[2] *= val * 2 / old_intensity;
 		}
-		updateAndSave(&(params->mCloudColor));
+		psky->setCloudColor(cloudcolor);
+		//F32 old_intensity = llmax(params->mCloudColor.r, params->mCloudColor.g, params->mCloudColor.b);
+		//if (val == 0 || old_intensity == 0) {
+		//	params->mCloudColor.r = params->mCloudColor.g = params->mCloudColor.b = val * 2;
+		//}
+		//else {
+		//	params->mCloudColor.r *= val * 2 / old_intensity;
+		//	params->mCloudColor.g *= val * 2 / old_intensity;
+		//	params->mCloudColor.b *= val * 2 / old_intensity;
+		//}
+		//updateAndSave(&(params->mCloudColor));
 	}
 
 	else if (command == "cloudx") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mCloudMain.r = val;
 		updateAndSave (&(params->mCloudMain));
+		***/
 	}
 	else if (command == "cloudy") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mCloudMain.g = val;
 		updateAndSave (&(params->mCloudMain));
+		***/
 	}
 	else if (command == "cloudd") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mCloudMain.b = val;
 		updateAndSave (&(params->mCloudMain));
+		***/
 	}
 
 	else if (command == "clouddetailx") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mCloudDetail.r = val;
 		updateAndSave (&(params->mCloudDetail));
+		***/
 	}
 	else if (command == "clouddetaily") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mCloudDetail.g = val;
 		updateAndSave (&(params->mCloudDetail));
+		***/
 	}
 	else if (command == "clouddetaild") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mCloudDetail.b = val;
 		updateAndSave (&(params->mCloudDetail));
+		***/
 	}
 
 	else if (command == "cloudcoverage") {
+		/*** NEEDS CHANGE FOR EEP ***
 		params->mCloudCoverage.x = val;
 		updateAndSave (&(params->mCloudCoverage));
+		***/
 	}
 	else if (command == "cloudscale") {
-		params->mCloudScale.x = val;
-		updateAndSave (&(params->mCloudScale));
+		psky->setCloudScale(val);
+		//params->mCloudScale.x = val;
+		//updateAndSave (&(params->mCloudScale));
 	}
 
 	else if (command == "cloudscrollx") {
-		params->mCurParams.setCloudScrollX (val+10);
+		psky->setCloudScrollRateX(val + 10);
+		//params->mCurParams.setCloudScrollX (val+10);
 	}
 	else if (command == "cloudscrolly") {
-		params->mCurParams.setCloudScrollY (val+10);
+		psky->setCloudScrollRateY(val + 10);
+		//params->mCurParams.setCloudScrollY (val+10);
 	}
 	// sunglowfocus 0-0.5, sunglowsize 0-2, scenegamma 0-10, starbrightness 0-2
 	// cloudcolor rgb 0-1, cloudxydensity xyd 0-1, cloudcoverage 0-1, cloudscale 0-1, clouddetail xyd 0-1
@@ -4007,11 +4156,15 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 
 	else if (command == "preset") {
 //		params->loadPreset (option);
+		/*** NEEDS CHANGE FOR EEP ***
 		LLEnvManagerNew::getInstance()->useSkyPreset(option);
+		***/
 	}
 
 	// send the current parameters to shaders
+	/*** NEEDS CHANGE FOR EEP ***
 	LLWLParamManager::getInstance()->propagateParameters();
+	***/
 
 	return TRUE;
 }
@@ -4021,68 +4174,100 @@ std::string RRInterface::getEnvironment (std::string command)
 	F64 res = 0;
 	int length = 7; // size of "getenv_"
 	command = command.substr (length);
-	LLWLParamManager* params = LLWLParamManager::getInstance();
+	//LLWLParamManager* params = LLWLParamManager::getInstance();
+	LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
 
 	if (command == "daytime") {
+		/*** NEEDS CHANGE FOR EEP ***
 		if (params->mAnimator.mIsRunning && params->mAnimator.getTimeType() == LLWLAnimator::TIME_LINDEN) res = -1;
 		else res = params->mAnimator.getDayTime();
+		***/
 	}
 
-	else if (command == "bluehorizonr") res = params->mBlueHorizon.r/2;
-	else if (command == "bluehorizong") res = params->mBlueHorizon.g/2;
-	else if (command == "bluehorizonb") res = params->mBlueHorizon.b/2;
-	else if (command == "bluehorizoni") res = max (max (params->mBlueHorizon.r, params->mBlueHorizon.g), params->mBlueHorizon.b) / 2;
+	else if (command == "bluehorizonr") res = (psky->getBlueHorizon().mV[0])/2;
+	else if (command == "bluehorizong") res = (psky->getBlueHorizon().mV[1])/2;
+	else if (command == "bluehorizonb") res = (psky->getBlueHorizon().mV[2])/2;
+	else if (command == "bluehorizoni") res = max (max (psky->getBlueHorizon().mV[0], psky->getBlueHorizon().mV[1]), psky->getBlueHorizon().mV[2]) / 2;
+	//else if (command == "bluehorizonr") res = params->mBlueHorizon.r/2;
+	//else if (command == "bluehorizong") res = params->mBlueHorizon.g/2;
+	//else if (command == "bluehorizonb") res = params->mBlueHorizon.b/2;
+	//else if (command == "bluehorizoni") res = max (max (params->mBlueHorizon.r, params->mBlueHorizon.g), params->mBlueHorizon.b) / 2;
 
-	else if (command == "bluedensityr") res = params->mBlueDensity.r/2;
-	else if (command == "bluedensityg") res = params->mBlueDensity.g/2;
-	else if (command == "bluedensityb") res = params->mBlueDensity.b/2;
-	else if (command == "bluedensityi") res = max (max (params->mBlueDensity.r, params->mBlueDensity.g), params->mBlueDensity.b) / 2;
+	else if (command == "bluedensityr") res = (psky->getBlueDensity().mV[0])/2;
+	else if (command == "bluedensityg") res = (psky->getBlueDensity().mV[1])/2;
+	else if (command == "bluedensityb") res = (psky->getBlueDensity().mV[2])/2;
+	else if (command == "bluedensityi") res = max (max (psky->getBlueDensity().mV[0], psky->getBlueDensity().mV[1]), psky->getBlueDensity().mV[2]) / 2;
+	//else if (command == "bluedensityr") res = params->mBlueDensity.r/2;
+	//else if (command == "bluedensityg") res = params->mBlueDensity.g/2;
+	//else if (command == "bluedensityb") res = params->mBlueDensity.b/2;
+	//else if (command == "bluedensityi") res = max (max (params->mBlueDensity.r, params->mBlueDensity.g), params->mBlueDensity.b) / 2;
 
-	else if (command == "hazehorizon")  res = params->mHazeHorizon.x;
-	else if (command == "hazedensity")  res = params->mHazeDensity.x;
+	else if (command == "hazehorizon")  res = psky->getHazeHorizon();
+	else if (command == "hazedensity")  res = psky->getHazeDensity();
+	//else if (command == "hazehorizon")  res = params->mHazeHorizon.x;
+	//else if (command == "hazedensity")  res = params->mHazeDensity.x;
 
-	else if (command == "densitymultiplier")  res = params->mDensityMult.x*1000;
-	else if (command == "distancemultiplier") res = params->mDistanceMult.x;
-	else if (command == "maxaltitude")        res = params->mMaxAlt.x;
+	else if (command == "densitymultiplier")  res = psky->getDensityMultiplier()*1000;
+	else if (command == "distancemultiplier") res = psky->getDistanceMultiplier();
+	//else if (command == "densitymultiplier")  res = params->mDensityMult.x*1000;
+	//else if (command == "distancemultiplier") res = params->mDistanceMult.x;
+	// *** NEEDS CHANGE FOR EEP *** else if (command == "maxaltitude")        res = params->mMaxAlt.x;
 
-	else if (command == "sunmooncolorr") res = params->mSunlight.r/3;
-	else if (command == "sunmooncolorg") res = params->mSunlight.g/3;
-	else if (command == "sunmooncolorb") res = params->mSunlight.b/3;
-	else if (command == "sunmooncolori") res = max (max (params->mSunlight.r, params->mSunlight.g), params->mSunlight.b) / 3;
+	else if (command == "sunmooncolorr") res = (psky->getSunlightColor().mV[0])/3;
+	else if (command == "sunmooncolorg") res = (psky->getSunlightColor().mV[1])/3;
+	else if (command == "sunmooncolorb") res = (psky->getSunlightColor().mV[2])/3;
+	else if (command == "sunmooncolori") res = max (max (psky->getSunlightColor().mV[0], psky->getSunlightColor().mV[1]), psky->getSunlightColor().mV[2]) / 3;
+	//else if (command == "sunmooncolorr") res = params->mSunlight.r/3;
+	//else if (command == "sunmooncolorg") res = params->mSunlight.g/3;
+	//else if (command == "sunmooncolorb") res = params->mSunlight.b/3;
+	//else if (command == "sunmooncolori") res = max (max (params->mSunlight.r, params->mSunlight.g), params->mSunlight.b) / 3;
 
-	else if (command == "ambientr") res = params->mAmbient.r/3;
-	else if (command == "ambientg") res = params->mAmbient.g/3;
-	else if (command == "ambientb") res = params->mAmbient.b/3;
-	else if (command == "ambienti") res = max (max (params->mAmbient.r, params->mAmbient.g), params->mAmbient.b) / 3;
+	else if (command == "ambientr") res = (psky->getAmbientColor().mV[0])/3;
+	else if (command == "ambientg") res = (psky->getAmbientColor().mV[1])/3;
+	else if (command == "ambientb") res = (psky->getAmbientColor().mV[2])/3;
+	else if (command == "ambienti") res = max (max (psky->getAmbientColor().mV[0], psky->getAmbientColor().mV[1]), psky->getAmbientColor().mV[2]) / 3;
+	//else if (command == "ambientr") res = params->mAmbient.r/3;
+	//else if (command == "ambientg") res = params->mAmbient.g/3;
+	//else if (command == "ambientb") res = params->mAmbient.b/3;
+	//else if (command == "ambienti") res = max (max (params->mAmbient.r, params->mAmbient.g), params->mAmbient.b) / 3;
 
-	else if (command == "sunglowfocus")	res = -params->mGlow.b/5;
-	else if (command == "sunglowsize")		res = 2-params->mGlow.r/20;
-	else if (command == "scenegamma")		res = params->mWLGamma.x;
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "sunglowfocus")	res = -params->mGlow.b/5;
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "sunglowsize")		res = 2-params->mGlow.r/20;
+	else if (command == "scenegamma")		res = psky->getGamma();
+	//else if (command == "scenegamma")		res = params->mWLGamma.x;
 
-	else if (command == "sunmoonposition")		res = params->mCurParams.getSunAngle()/F_TWO_PI;
-	else if (command == "eastangle")			res = params->mCurParams.getEastAngle()/F_TWO_PI;
-	else if (command == "starbrightness")		res = params->mCurParams.getStarBrightness();
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "sunmoonposition")		res = params->mCurParams.getSunAngle()/F_TWO_PI;
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "eastangle")			res = params->mCurParams.getEastAngle()/F_TWO_PI;
+	else if (command == "starbrightness")		res = psky->getStarBrightness();
+	//else if (command == "starbrightness")		res = params->mCurParams.getStarBrightness();
 
-	else if (command == "cloudcolorr") res = params->mCloudColor.r;
-	else if (command == "cloudcolorg") res = params->mCloudColor.g;
-	else if (command == "cloudcolorb") res = params->mCloudColor.b;
-	else if (command == "cloudcolori") res = max (max (params->mCloudColor.r, params->mCloudColor.g), params->mCloudColor.b);
+	else if (command == "cloudcolorr") res = (psky->getCloudColor().mV[0]);
+	else if (command == "cloudcolorg") res = (psky->getCloudColor().mV[1]);
+	else if (command == "cloudcolorb") res = (psky->getCloudColor().mV[2]);
+	else if (command == "cloudcolori") res = max (max (psky->getCloudColor().mV[0], psky->getCloudColor().mV[1]), psky->getCloudColor().mV[2]);
+	//else if (command == "cloudcolorr") res = params->mCloudColor.r;
+	//else if (command == "cloudcolorg") res = params->mCloudColor.g;
+	//else if (command == "cloudcolorb") res = params->mCloudColor.b;
+	//else if (command == "cloudcolori") res = max (max (params->mCloudColor.r, params->mCloudColor.g), params->mCloudColor.b);
 
-	else if (command == "cloudx")  res = params->mCloudMain.r;
-	else if (command == "cloudy")  res = params->mCloudMain.g;
-	else if (command == "cloudd")  res = params->mCloudMain.b;
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "cloudx")  res = params->mCloudMain.r;
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "cloudy")  res = params->mCloudMain.g;
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "cloudd")  res = params->mCloudMain.b;
 
-	else if (command == "clouddetailx")  res = params->mCloudDetail.r;
-	else if (command == "clouddetaily")  res = params->mCloudDetail.g;
-	else if (command == "clouddetaild")  res = params->mCloudDetail.b;
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "clouddetailx")  res = params->mCloudDetail.r;
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "clouddetaily")  res = params->mCloudDetail.g;
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "clouddetaild")  res = params->mCloudDetail.b;
 
-	else if (command == "cloudcoverage")	res = params->mCloudCoverage.x;
-	else if (command == "cloudscale")		res = params->mCloudScale.x;
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "cloudcoverage")	res = params->mCloudCoverage.x;
+	else if (command == "cloudscale")		res = psky->getCloudScale();
+	//else if (command == "cloudscale")		res = params->mCloudScale.x;
 
-	else if (command == "cloudscrollx") res = params->mCurParams.getCloudScrollX() - 10;
-	else if (command == "cloudscrolly") res = params->mCurParams.getCloudScrollY() - 10;
+	else if (command == "cloudscrollx") res = psky->getCloudScrollRate().mV[0] - 10;
+	else if (command == "cloudscrolly") res = psky->getCloudScrollRate().mV[1] - 10;
+	//else if (command == "cloudscrollx") res = params->mCurParams.getCloudScrollX() - 10;
+	//else if (command == "cloudscrolly") res = params->mCurParams.getCloudScrollY() - 10;
 
-	else if (command == "preset") return getLastLoadedPreset();
+	//*** NEEDS CHANGE FOR EEP *** else if (command == "preset") return getLastLoadedPreset();
 
 	std::stringstream str;
 	str << res;
