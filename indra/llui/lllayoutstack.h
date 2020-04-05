@@ -38,17 +38,6 @@ class LLLayoutPanel;
 class LLLayoutStack : public LLView, public LLInstanceTracker<LLLayoutStack>
 {
 public:
-	typedef enum e_layout_orientation
-	{
-		HORIZONTAL,
-		VERTICAL
-	} ELayoutOrientation;
-
-	struct OrientationNames
-	:	public LLInitParam::TypeValuesHelper<ELayoutOrientation, OrientationNames>
-	{
-		static void declareValues();
-	};
 
 	struct LayoutStackRegistry : public LLChildRegistry<LayoutStackRegistry>
 	{
@@ -57,7 +46,7 @@ public:
 
 	struct Params : public LLInitParam::Block<Params, LLView::Params>
 	{
-		Mandatory<ELayoutOrientation, OrientationNames >	orientation;
+		Mandatory<EOrientation>	orientation;
 		Optional<S32>			border_size;
 		Optional<bool>			animate,
 								clip;
@@ -69,6 +58,11 @@ public:
 		Optional<S32>			drag_handle_second_indent;
 		Optional<S32>			drag_handle_thickness;
 		Optional<S32>			drag_handle_shift;
+
+		// <FS:Zi> Add size save control. Caveat: contained panels and widgets need to use
+		//         relative sizing, like right="-1" instead of width="XYZ" to get resized
+		//         properly when a saved size is being restored. -Zi
+		Optional<bool>			save_sizes;
 
 		Params();
 	};
@@ -102,6 +96,9 @@ public:
 	
 	static void updateClass();
 
+	// <FS:Ansariel> Applier for dimensions
+	void refreshFromSettings();
+
 protected:
 	LLLayoutStack(const Params&);
 	friend class LLUICtrlFactory;
@@ -112,7 +109,7 @@ private:
 	bool animatePanels();
 	void createResizeBar(LLLayoutPanel* panel);
 
-	const ELayoutOrientation mOrientation;
+	const EOrientation mOrientation;
 
 	typedef std::vector<LLLayoutPanel*> e_panel_list_t;
 	e_panel_list_t mPanels;
@@ -138,6 +135,12 @@ private:
 	S32  mDragHandleSecondIndent;
 	S32  mDragHandleThickness;
 	S32  mDragHandleShift;
+
+	// <FS:Zi> Save sizes of the layout stack panels
+	const bool	mSaveSizes;
+	std::string mSizeControlName;
+	LLSD mSavedSizes;
+	// </FS:Zi>
 }; // end class LLLayoutStack
 
 
@@ -195,10 +198,15 @@ public:
 
 	bool isCollapsed() const { return mCollapsed;}
 
-	void setOrientation(LLLayoutStack::ELayoutOrientation orientation);
+	void setOrientation(LLView::EOrientation orientation);
 	void storeOriginalDim();
 
 	void setIgnoreReshape(bool ignore) { mIgnoreReshape = ignore; }
+
+	// <FS:Ansariel> Add callback for reshaping
+	typedef boost::function<void(LLLayoutPanel* panel, const LLRect& rect)> reshape_panel_callback_t;
+	void setReshapePanelCallback(reshape_panel_callback_t cb) { mReshapePanelCallback = cb; }
+	// </FS:Ansariel>
 
 protected:
 	LLLayoutPanel(const Params& p);
@@ -214,8 +222,11 @@ protected:
 	F32		mFractionalSize;
 	S32		mTargetDim;
 	bool	mIgnoreReshape;
-	LLLayoutStack::ELayoutOrientation mOrientation;
+	LLView::EOrientation mOrientation;
 	class LLResizeBar* mResizeBar;
+
+	// <FS:Ansariel> Add callback for reshaping
+	reshape_panel_callback_t mReshapePanelCallback;
 };
 
 
