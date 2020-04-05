@@ -42,12 +42,6 @@ static const F32 MAX_FRACTIONAL_SIZE = 1.f;
 static LLDefaultChildRegistry::Register<LLLayoutStack> register_layout_stack("layout_stack");
 static LLLayoutStack::LayoutStackRegistry::Register<LLLayoutPanel> register_layout_panel("layout_panel");
 
-void LLLayoutStack::OrientationNames::declareValues()
-{
-	declare("horizontal", HORIZONTAL);
-	declare("vertical", VERTICAL);
-}
-
 //
 // LLLayoutPanel
 //
@@ -141,7 +135,7 @@ S32 LLLayoutPanel::getVisibleDim() const
 						+ (((F32)mTargetDim - min_dim) * (1.f - mCollapseAmt))));
 }
  
-void LLLayoutPanel::setOrientation( LLLayoutStack::ELayoutOrientation orientation )
+void LLLayoutPanel::setOrientation( LLView::EOrientation orientation )
 {
 	mOrientation = orientation;
 	S32 layout_dim = ll_round((F32)((mOrientation == LLLayoutStack::HORIZONTAL)
@@ -202,6 +196,13 @@ void LLLayoutPanel::handleReshape(const LLRect& new_rect, bool by_user)
 		stackp->mNeedsLayout = true;
 	}
 	LLPanel::handleReshape(new_rect, by_user);
+
+	// <FS:Ansariel> Add callback for reshaping
+	if (!mReshapePanelCallback.empty())
+	{
+		mReshapePanelCallback(this, new_rect);
+	}
+	// </FS:Ansariel>
 }
 
 //
@@ -211,6 +212,7 @@ void LLLayoutPanel::handleReshape(const LLRect& new_rect, bool by_user)
 LLLayoutStack::Params::Params()
 :	orientation("orientation"),
 	animate("animate", true),
+	save_sizes("save_sizes", false),		// <FS:Zi> Save sizes to settings
 	clip("clip", true),
 	open_time_constant("open_time_constant", 0.02f),
 	close_time_constant("close_time_constant", 0.03f),
@@ -232,6 +234,7 @@ LLLayoutStack::LLLayoutStack(const LLLayoutStack::Params& p)
 	mAnimate(p.animate),
 	mAnimatedThisFrame(false),
 	mNeedsLayout(true),
+ 	mSaveSizes(p.save_sizes),		// <FS:Zi> Save sizes to settings
 	mClip(p.clip),
 	mOpenTimeConstant(p.open_time_constant),
 	mCloseTimeConstant(p.close_time_constant),
@@ -242,10 +245,39 @@ LLLayoutStack::LLLayoutStack(const LLLayoutStack::Params& p)
 	mDragHandleThickness(p.drag_handle_thickness),
 	mDragHandleShift(p.drag_handle_shift)
 {
+	// <FS:Zi> Set up settings control to save sizes if not already present
+	if (mSaveSizes)
+	{
+		std::string res = std::string("layout_size_") + getName();
+		LLStringUtil::replaceChar(res, ' ', '_');
+		mSizeControlName = res;
+		LLControlGroup* controlGroup = LLUI::getInstance()->mSettingGroups["account"];
+		if (!controlGroup->controlExists(mSizeControlName))
+		{
+			LL_WARNS() << "declaring control " << mSizeControlName << LL_ENDL;
+			controlGroup->declareLLSD(
+				mSizeControlName,
+				LLSD(),
+				llformat("Fractional size for layout panel %s", getName().c_str())
+				);
+		}
+		else
+		{
+			mSavedSizes = controlGroup->getLLSD(mSizeControlName);
+		}
+	}
+	// </FS:Zi>
 }
 
 LLLayoutStack::~LLLayoutStack()
 {
+	// <FS:Zi> Save new sizes for this layout stack's panels
+	if (mSaveSizes)
+	{
+		LLUI::getInstance()->mSettingGroups["account"]->setLLSD(mSizeControlName, mSavedSizes);
+	}
+	// </FS:Zi>
+
 	e_panel_list_t panels = mPanels; // copy list of panel pointers
 	mPanels.clear(); // clear so that removeChild() calls don't cause trouble
 	std::for_each(panels.begin(), panels.end(), DeletePointer());
@@ -281,25 +313,9 @@ void LLLayoutStack::draw()
 			// only force drawing invisible children if visible amount is non-zero
 			drawChild(panelp, 0, 0, !clip_rect.isEmpty());
 		}
-	}
-
-	const LLView::child_list_t * child_listp = getChildList();
-	BOOST_FOREACH(LLView * childp, * child_listp)
-	{
-		LLResizeBar * resize_barp = dynamic_cast<LLResizeBar*>(childp);
-		if (resize_barp && resize_barp->isShowDragHandle() && resize_barp->getVisible() && resize_barp->getRect().isValid())
-		{
-			LLRect screen_rect = resize_barp->calcScreenRect();
-			if (LLUI::getInstance()->getRootView()->getLocalRect().overlaps(screen_rect) && LLUI::getInstance()->mDirtyRect.overlaps(screen_rect))
+		if (panelp->getResizeBar()->getVisible())
 			{
-				LLUI::pushMatrix();
-		{
-					const LLRect& rb_rect(resize_barp->getRect());
-					LLUI::translate(rb_rect.mLeft, rb_rect.mBottom);
-					resize_barp->draw();
-				}
-				LLUI::popMatrix();
-			}
+			drawChild(panelp->getResizeBar());
 		}
 	}
 }
@@ -311,12 +327,21 @@ void LLLayoutStack::removeChild(LLView* view)
 	if (embedded_panelp)
 	{
 		mPanels.erase(std::find(mPanels.begin(), mPanels.end(), embedded_panelp));
-		delete embedded_panelp;
+		// delete embedded_panelp;	// <FS:Zi> Fix crash when removing layout panels from a stack
 		updateFractionalSizes();
 		mNeedsLayout = true;
 	}
 
 	LLView::removeChild(view);
+
+	// <FS:Zi> Fix crash when removing layout panels from a stack
+	if (embedded_panelp)
+	{
+		// only delete the panel after it was removed from LLView to prevent
+		// LLView::removeChild() to run into an already deleted pointer
+		delete embedded_panelp;
+	}
+	// </FS:Zi>
 }
 
 BOOL LLLayoutStack::postBuild()
@@ -330,6 +355,26 @@ bool LLLayoutStack::addChild(LLView* child, S32 tab_group)
 	LLLayoutPanel* panelp = dynamic_cast<LLLayoutPanel*>(child);
 	if (panelp)
 	{
+		// <FS:Zi> Restore previously saved sizes
+		if (mSaveSizes && mSavedSizes.size() != 0)
+		{
+			S32 width = panelp->getRect().getWidth();
+			S32 height = panelp->getRect().getHeight();
+
+			S32 dim = mSavedSizes[getChildCount()];
+
+			if (mOrientation == LLLayoutStack::HORIZONTAL)
+			{
+				width = dim;
+			}
+			else
+			{
+				height = dim;
+			}
+			panelp->reshape(width, height, TRUE);
+		}
+		// </FS:Zi>
+
 		panelp->setOrientation(mOrientation);
 		mPanels.push_back(panelp);
 		createResizeBar(panelp);
@@ -452,6 +497,9 @@ void LLLayoutStack::updateLayout()
 
 	F32 cur_pos = (mOrientation == HORIZONTAL) ? 0.f : (F32)getRect().getHeight();
 
+	// <FS:Zi> Record new size for this panel
+	mSavedSizes = LLSD();
+	// </FS:Zi>
 	BOOST_FOREACH(LLLayoutPanel* panelp, mPanels)
 	{
 		F32 panel_dim = llmax(panelp->getExpandedMinDim(), panelp->mTargetDim);
@@ -473,9 +521,6 @@ void LLLayoutStack::updateLayout()
 		}
 
 		LLRect resize_bar_rect(panel_rect);
-		LLResizeBar * resize_barp = panelp->getResizeBar();
-		bool show_drag_handle = resize_barp->isShowDragHandle();
-		if (show_drag_handle) {} //init but unused workaroung
 		F32 panel_spacing = (F32)mPanelSpacing * panelp->getVisibleAmount();
 		F32 panel_visible_dim = panelp->getVisibleDim();
 		S32 panel_spacing_round = (S32)(ll_round(panel_spacing));
@@ -528,6 +573,13 @@ void LLLayoutStack::updateLayout()
 		panelp->setShape(panel_rect);
 		panelp->setIgnoreReshape(false);
 		panelp->mResizeBar->setShape(resize_bar_rect);
+
+		// <FS:Zi> Record new size for this panel
+		if (mSaveSizes)
+		{
+			mSavedSizes.append(panelp->mTargetDim);
+		}
+		// </FS:Zi>
 	}
 
 	updateResizeBarLimits();
@@ -579,7 +631,6 @@ void LLLayoutStack::createResizeBar(LLLayoutPanel* panelp)
 			resize_params.min_size(lp->getRelevantMinDim());
 			resize_params.side((mOrientation == HORIZONTAL) ? LLResizeBar::RIGHT : LLResizeBar::BOTTOM);
 			resize_params.snapping_enabled(false);
-			resize_params.show_drag_handle(mShowDragHandle);
 			LLResizeBar* resize_bar = LLUICtrlFactory::create<LLResizeBar>(resize_params);
 			lp->mResizeBar = resize_bar;
 
@@ -1023,3 +1074,39 @@ void LLLayoutStack::updateResizeBarLimits()
 	}
 }
 
+// <FS:Ansariel> Applier for dimensions
+void LLLayoutStack::refreshFromSettings()
+{
+	if (!mSaveSizes)
+	{
+		return;
+	}
+
+	LLSD dimensions = LLUI::getInstance()->mSettingGroups["account"]->getLLSD(mSizeControlName);
+	if (dimensions.size() < mPanels.size())
+	{
+		return;
+	}
+
+	for (size_t i = 0; i < mPanels.size(); ++i)
+	{
+		LLLayoutPanel* panelp = mPanels.at(i);
+
+		S32 width = panelp->getRect().getWidth();
+		S32 height = panelp->getRect().getHeight();
+
+		S32 dim = dimensions[i].asInteger();
+
+		if (mOrientation == LLLayoutStack::HORIZONTAL)
+		{
+			width = dim;
+		}
+		else
+		{
+			height = dim;
+		}
+		panelp->reshape(width, height, TRUE);
+	}
+	mNeedsLayout = true;
+}
+// </FS:Ansariel>

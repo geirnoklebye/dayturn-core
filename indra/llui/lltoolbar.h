@@ -147,7 +147,7 @@ namespace LLToolBarEnums
 		TOOLBAR_LAST = TOOLBAR_BOTTOM,
 	};
 
-	LLLayoutStack::ELayoutOrientation getOrientation(SideType sideType);
+	LLView::EOrientation getOrientation(SideType sideType);
 
 	// <FS:Zi> Add alignment settings
 	enum Alignment
@@ -211,7 +211,6 @@ public:
 	class LLCenterLayoutPanel : public LLLayoutPanel
 	{
 	public:
-		typedef struct LLLayoutPanel::Params Params;
 		typedef boost::function<void(LLToolBarEnums::EToolBarLocation tb, const LLRect& rect)> reshape_callback_t;
 
 		virtual ~LLCenterLayoutPanel() {}
@@ -230,7 +229,6 @@ public:
 		LLToolBarEnums::EToolBarLocation	mLocationId;
 		LLPanel *							mButtonPanel;
 	};
-
 
 	struct Params : public LLInitParam::Block<Params, LLUICtrl::Params>
 	{
@@ -261,6 +259,8 @@ public:
 
 		Optional<LLToolBarEnums::LayoutStyle>	layout_style;	// <FS:Zi> Add layout style parameter to XUI
 		Optional<LLToolBarEnums::Alignment>		alignment;		// <FS:Zi> Add alignment parameter to XUI
+
+		Optional<S32>							max_rows;		// <FS:Ansariel> FIRE-5137: Fix fixed size button layout
 
 		Params();
 	};
@@ -347,6 +347,8 @@ private:
 									mPadBottom,
 									mPadBetween,
 									mMinGirth;
+	// <FS:Ansariel> FIRE-5137: Fix fixed size button layout
+	const S32						mMaxRows;
 
 	// drag and drop state
 	tool_startdrag_callback_t		mStartDragItemCallback;

@@ -42,9 +42,9 @@
 
 namespace LLToolBarEnums
 {
-	LLLayoutStack::ELayoutOrientation getOrientation(SideType sideType)
+	LLView::EOrientation getOrientation(SideType sideType)
 	{
-		LLLayoutStack::ELayoutOrientation orientation = LLLayoutStack::HORIZONTAL;
+		LLView::EOrientation orientation = LLLayoutStack::HORIZONTAL;
 
 		if ((sideType == SIDE_LEFT) || (sideType == SIDE_RIGHT))
 		{
@@ -110,9 +110,14 @@ LLToolBar::Params::Params()
 	pad_bottom("pad_bottom"),
 	pad_between("pad_between"),
 	min_girth("min_girth"),
+	// <FS:Zi> Add our button (text-only) and layout style parameters, as well as alignment settings
+	// button_panel("button_panel")
 	button_panel("button_panel"),
+	button("button"),
 	layout_style("layout_style",LLToolBarEnums::LAYOUT_STYLE_NONE),
-	alignment("alignment",LLToolBarEnums::ALIGN_CENTER)
+	alignment("alignment",LLToolBarEnums::ALIGN_CENTER),
+	max_rows("max_rows", 0)
+	// </FS:Zi>
 {}
 
 LLToolBar::LLToolBar(const LLToolBar::Params& p)
@@ -144,13 +149,15 @@ LLToolBar::LLToolBar(const LLToolBar::Params& p)
 	mCaretIcon(NULL),
 	// <FS:Zi> add layout style and alignment initialisation
 	//mCenterPanel(NULL)
-	mCenterPanel(NULL)
-//	mLayoutStyle(p.layout_style),
-//	mAlignment(p.alignment)
+	mCenterPanel(NULL),
+	mLayoutStyle(p.layout_style),
+	mAlignment(p.alignment),
+	mMaxRows(p.max_rows)
 	// </FS:Zi>
 {
 	mButtonParams[LLToolBarEnums::BTNTYPE_ICONS_WITH_TEXT] = p.button_icon_and_text;
 	mButtonParams[LLToolBarEnums::BTNTYPE_ICONS_ONLY] = p.button_icon;
+	mButtonParams[LLToolBarEnums::BTNTYPE_TEXT_ONLY] = p.button;		// <FS:Zi> Add text only button
 }
 
 LLToolBar::~LLToolBar()
@@ -177,8 +184,8 @@ void LLToolBar::createContextMenu()
 
 		std::string menu_xml_name;		// <FS:Zi> Split menu XML files to have Horizontal and Vertical versions
 		// <FS:Zi> Add commit handlers for layout and alignment options in the context menu if this is a horizontal toolbar
-		LLLayoutStack::ELayoutOrientation orientation = getOrientation(mSideType);
-		if(orientation == LLLayoutStack::HORIZONTAL)
+		LLView::EOrientation orientation = getOrientation(mSideType);
+		if(orientation == LLView::HORIZONTAL)
 		{
 			menu_xml_name="menu_toolbars_horizontal.xml";
 			commit_reg.add("Toolbars.SetLayoutStyle", boost::bind(&LLToolBar::onLayoutStyleChanged, this, _2));
@@ -193,6 +200,7 @@ void LLToolBar::createContextMenu()
 		// </FS:Zi>
 
 		// Create the context menu
+		llassert(LLMenuGL::sMenuContainer != NULL);
 		// <FS:Zi> Load the context menu, using the previously defined XML file name
 		// LLContextMenu* menu = LLUICtrlFactory::instance().createFromFile<LLContextMenu>("menu_toolbars.xml", LLMenuGL::sMenuContainer, LLMenuHolderGL::child_registry_t::instance());
 		LLContextMenu* menu = LLUICtrlFactory::instance().createFromFile<LLContextMenu>(menu_xml_name, LLMenuGL::sMenuContainer, LLMenuHolderGL::child_registry_t::instance());
@@ -222,7 +230,7 @@ void LLToolBar::initFromParams(const LLToolBar::Params& p)
 	// Initialize the base object
 	LLUICtrl::initFromParams(p);
 	
-	LLLayoutStack::ELayoutOrientation orientation = getOrientation(p.side);
+	LLView::EOrientation orientation = getOrientation(p.side);
 
 	LLLayoutStack::Params centering_stack_p;
 	centering_stack_p.name = "centering_stack";
@@ -514,7 +522,7 @@ BOOL LLToolBar::isSettingChecked(const LLSD& userdata)
 		retval = (mButtonType == BTNTYPE_TEXT_ONLY);
 	}
 	// </FS:Zi>
-
+    
 	return retval;
 }
 
@@ -595,7 +603,7 @@ int LLToolBar::getRankFromPosition(S32 x, S32 y)
 	int rank = 0;
 
 	// Convert the toolbar coord into button panel coords
-	LLLayoutStack::ELayoutOrientation orientation = getOrientation(mSideType);
+	LLView::EOrientation orientation = getOrientation(mSideType);
 	S32 button_panel_x = 0;
 	S32 button_panel_y = 0;
 	localPointToOtherView(x, y, &button_panel_x, &button_panel_y, mButtonPanel);
@@ -714,7 +722,7 @@ void LLToolBar::updateLayoutAsNeeded()
 {
 	if (!mNeedsLayout) return;
 
-	LLLayoutStack::ELayoutOrientation orientation = getOrientation(mSideType);
+	LLView::EOrientation orientation = getOrientation(mSideType);
 	
 	// our terminology for orientation-agnostic layout is such that
 	// length refers to a distance in the direction we stack the buttons 
@@ -776,6 +784,13 @@ void LLToolBar::updateLayoutAsNeeded()
 				equalized_width=width;
 			}
 		}
+
+		S32 total_button_width = mButtons.size() * equalized_width + (mButtons.size() + 1) * mPadBetween;
+		if (mMaxRows > 0 && orientation == LLLayoutStack::HORIZONTAL && total_button_width > full_screen_width)
+		{
+			S32 buttons_per_row = llceil((F32)mButtons.size() / (F32)mMaxRows);
+			equalized_width = (full_screen_width - mPadBetween * (buttons_per_row + 1)) / buttons_per_row;
+		}
 	}
 	// </FS:Zi>
 
@@ -785,7 +800,14 @@ void LLToolBar::updateLayoutAsNeeded()
 		// button->reshape(button->mWidthRange.getMin(), button->mDesiredHeight);
 		if(equalized_width)
 		{
+			if (button->mWidthRange.getMin() > equalized_width)
+			{
+				button->mWidthRange.setRange(equalized_width, equalized_width);
+			}
+			else
+			{
 			button->mWidthRange.setRange(button->mWidthRange.getMin(),equalized_width);
+			}
 			button->reshape(equalized_width,button->mDesiredHeight);
 		}
 		else
@@ -1069,7 +1091,8 @@ LLToolBarButton* LLToolBar::createButton(const LLCommandId& id)
 	button_p.name = commandp->name();
 	button_p.label = LLTrans::getString(commandp->labelRef());
 	button_p.tool_tip = LLTrans::getString(commandp->tooltipRef());
-	// <FS;Zi> Add control_variable and checkbox_control to commands in toolbar if it's not read-only
+
+	// <FS:Zi> Add control_variable and checkbox_control to commands in toolbar if it's not read-only
 	if(!mReadOnly)
 	{
 		if(!commandp->controlVariableName().empty())
@@ -1092,8 +1115,8 @@ LLToolBarButton* LLToolBar::createButton(const LLCommandId& id)
 	{
 		button_p.image_overlay = LLUI::getUIImage(commandp->icon());
 	}
-	button_p.button_flash_enable = commandp->isFlashingAllowed();
 	// </FS:Zi>
+	button_p.button_flash_enable = commandp->isFlashingAllowed();
 	button_p.overwriteFrom(mButtonParams[mButtonType]);
 	LLToolBarButton* button = LLUICtrlFactory::create<LLToolBarButton>(button_p);
 
@@ -1136,7 +1159,11 @@ LLToolBarButton* LLToolBar::createButton(const LLCommandId& id)
 		}
 		else
 		{
-			button->setCommitCallback(executeParam);
+			// <FS:Ansariel> Check enabled state of button before executing!
+			//button->setCommitCallback(executeParam);
+			LLUICtrl::commit_callback_t execute_func = initCommitCallback(executeParam);
+			button->setCommitCallback(boost::bind(&LLToolBarButton::callIfEnabled, button, execute_func, _1, _2));
+			// </FS:Ansariel>
 		}
 
 		// Set up "is running" query callback
@@ -1544,4 +1571,3 @@ S32 LLToolBarButton::getInitialWidth() const
 {
 	return mInitialWidth;
 }
-
