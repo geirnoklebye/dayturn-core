@@ -5741,42 +5741,6 @@ LLRect LLViewerWindow::getChatConsoleRect()
 		// less of a problem.
 		console_rect.mRight  = console_rect.mLeft + 2 * getWindowWidthScaled() / 3;
 	}
-		// <FS:Ansariel> Push the chat console out of the way of the vertical toolbars
-	if (gToolBarView)
-	{
-		// <FS:KC> Tie console to legacy snap edge when possible
-		static LLUICachedControl<bool> legacy_snap ("FSLegacyEdgeSnap", false);
-		if (legacy_snap)
-		{
-			LLRect snap_rect = gFloaterView->getSnapRect();
-			if (console_rect.mRight > snap_rect.mRight)
-			{
-				console_rect.mRight = snap_rect.mRight;
-			}
-
-			if (console_rect.mLeft < snap_rect.mLeft)
-			{
-				console_rect.mLeft = snap_rect.mLeft;
-			}
-		}// </FS:KC> Tie console to legacy snap edge when possible
-		else
-		{
-			LLToolBar* toolbar_left = gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_LEFT);
-			if (toolbar_left && toolbar_left->hasButtons())
-			{
-				console_rect.mLeft += toolbar_left->getRect().getWidth();
-			}
-
-			LLToolBar* toolbar_right = gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_RIGHT);
-			LLRect toolbar_right_screen_rect;
-			toolbar_right->localRectToScreen(toolbar_right->getRect(), &toolbar_right_screen_rect);
-			if (toolbar_right && toolbar_right->hasButtons() && console_rect.mRight >= toolbar_right_screen_rect.mLeft)
-			{
-				console_rect.mRight -= toolbar_right->getRect().getWidth();
-			}
-		}
-	}
-	// </FS:Ansariel>
 
 	return console_rect;
 }
