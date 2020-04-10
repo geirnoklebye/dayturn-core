@@ -148,7 +148,12 @@ BOOL RRHelper::preventFloater(std::string floaterName)
 	else if (floaterName == "Destinations" && gAgent.mRRInterface.mContainsTp) return TRUE;
 	else if (floaterName == "floater_my_inventory" && gAgent.mRRInterface.mContainsShowinv) return TRUE;
 	else if (floaterName == "rlv_console" && gAgent.mRRInterface.mContainsViewScript) return TRUE;
-
+	else if (gAgent.mRRInterface.mContainsSetenv)
+	{
+		if (floaterName == "env_post_process" || floaterName == "env_fixed_environment_water" || 
+			floaterName == "env_fixed_environment_sky" || floaterName == "env_adjust_snapshot" ||
+			floaterName == "env_edit_extdaycycle" || floaterName == "my_environments") return TRUE;
+	}
 	return FALSE;
 }
 
@@ -1072,18 +1077,15 @@ BOOL RRInterface::add (LLUUID object_uuid, std::string action, std::string optio
 			if (sRRNoSetEnv) {
 				return TRUE;
 			}
-//			LLFloaterEnvSettings::instance()->close();
-//			LLFloaterWater::instance()->close();
-//			LLFloaterPostProcess::instance()->close();
-//			LLFloaterDayCycle::instance()->close();
-//			LLFloaterWindLight::instance()->close();
+			// CA update this for EEP floaters
 			gSavedSettings.setBOOL("VertexShaderEnable", TRUE);
 			gSavedSettings.setBOOL("WindLightUseAtmosShaders", TRUE);
-			LLFloaterReg::hideInstance("env_settings");
-			LLFloaterReg::hideInstance("env_water");
 			LLFloaterReg::hideInstance("env_post_process");
-			LLFloaterReg::hideInstance("env_day_cycle");
-			LLFloaterReg::hideInstance("env_windlight");
+			LLFloaterReg::hideInstance("env_fixed_environment_water");
+			LLFloaterReg::hideInstance("env_fixed_environment_sky");
+			LLFloaterReg::hideInstance("env_edit_ext_daycycle");
+			LLFloaterReg::hideInstance("my_environments");
+			LLFloaterReg::hideInstance("env_adjust_snapshot");
 		}
 		else if (action=="setdebug") {
 			if (!sRRNoSetEnv) {

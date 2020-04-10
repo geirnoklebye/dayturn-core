@@ -104,6 +104,14 @@ void LLFloaterEditSky::onOpen(const LLSD& key)
 	std::string floater_title = getString(std::string("title_") + param);
 	std::string hint = getString(std::string("hint_" + param));
 
+//MK by CA
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		closeFloater();
+		return;
+	}
+//mk by CA
+
 	// Update floater title.
 	setTitle(floater_title);
 

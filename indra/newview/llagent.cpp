@@ -394,10 +394,20 @@ bool LLAgent::isActionAllowed(const LLSD& sdname)
 //CA Area Search doesn't appear in Marine's viewer (or Kitty's) and this has no restrictions defined. Apply showloc.
 	else if (param == "areasearch")
 	{
-		retval = TRUE;
+		retval = true;
 		if (gRRenabled && gAgent.mRRInterface.mContainsShowloc)
 		{
-			retval = FALSE;
+			retval = false;
+		}
+	}
+//ca
+// CA futher extension to allow management of My Environments toolbar button
+	else if (param == "setenv")
+	{
+		retval = true;
+		if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+		{
+			retval = false;
 		}
 	}
 //ca

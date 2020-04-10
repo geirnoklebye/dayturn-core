@@ -364,5 +364,7 @@
          execute_parameters="my_environments"
          is_running_function="Floater.IsOpen"
          is_running_parameters="my_environments"
+         is_enabled_function="Agent.IsActionAllowed"
+         is_enabled_parameters="setenv"
            />
 </commands>

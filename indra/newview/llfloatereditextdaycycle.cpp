@@ -272,6 +272,13 @@ BOOL LLFloaterEditExtDayCycle::postBuild()
 
 void LLFloaterEditExtDayCycle::onOpen(const LLSD& key)
 {
+//MK by CA
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		closeFloater();
+		return;
+	}
+//mk by CA
     if (!mEditDay)
     {
         LLEnvironment::instance().saveBeaconsState();

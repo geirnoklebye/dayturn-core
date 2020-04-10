@@ -37,6 +37,7 @@
 #include "llcombobox.h"
 #include "lllineeditor.h"
 #include "llviewerwindow.h"
+#include "llagent.h" // for RLV
 
 
 LLFloaterPostProcess::LLFloaterPostProcess(const LLSD& key)
@@ -85,6 +86,18 @@ BOOL LLFloaterPostProcess::postBuild()
 
 	syncMenu();
 	return TRUE;
+}
+
+// virtual
+void LLFloaterPostProcess::onOpen(const LLSD& key)
+{
+//MK by CA
+	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
+	{
+		closeFloater();
+		return; // surplus while there's no code below here, but included for safety
+	}
+//mk by CA
 }
 
 // Bool Toggle
