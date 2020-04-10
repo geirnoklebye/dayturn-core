@@ -83,7 +83,7 @@
 #include "llviewerdisplay.h"
 #include "llviewerjoystick.h"
 #include "llviewerregion.h"
-#include "llViewershadermgr.h" // new include for EEP
+#include "llviewershadermgr.h" // new include for EEP
 #include "llviewermessage.h"
 #include "llviewerparcelmgr.h"
 #include "llworldmapmessage.h"
