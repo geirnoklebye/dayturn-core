@@ -5187,20 +5187,24 @@ bool RRInterface::canEdit(LLViewerObject* object)
 
 bool RRInterface::canTouch(LLViewerObject* object, LLVector3 pick_intersection /* = LLVector3::zero */)
 {
+	// CA optimise this slightly
+	LLUUID object_root_id = LLUUID::null;
 	if (!object) return true;
 
 	LLViewerObject* root = object->getRootEdit();
 	if (!root) return true;
+	object_root_id = root->getID();
 
-	if (!isAllowed (object->getRootEdit()->getID(), "touchme")) return true; // to check the presence of "touchme" on this object, which means that we can touch it
+	// CA turn off logging on this since it gets called a lot for the pointer hover code
+	if (!isAllowed (object_root_id, "touchme", false)) return true; // to check the presence of "touchme" on this object, which means that we can touch it
 
 	if (!root->isHUDAttachment() && contains ("touchall")) return false;
 
 //	if (!root->isHUDAttachment() && contains ("touchallnonhud")) return false;
 
-	if (root->isHUDAttachment() && containsWithoutException("touchhud", object->getRootEdit()->getID().asString())) return false;
+	if (root->isHUDAttachment() && containsWithoutException("touchhud", object_root_id.asString())) return false;
 
-	if (contains ("touchthis:"+object->getRootEdit()->getID().asString())) return false;
+	if (contains ("touchthis:"+object_root_id.asString())) return false;
 
 	if (!canTouchFar (object, pick_intersection)) return false;
 
@@ -5222,7 +5226,7 @@ bool RRInterface::canTouch(LLViewerObject* object, LLVector3 pick_intersection /
 		}
 	}
 	else {
-		if (containsWithoutException ("touchworld", object->getRootEdit()->getID().asString())) return false;
+		if (containsWithoutException ("touchworld", object_root_id.asString())) return false;
 	}
 	return true;
 }
