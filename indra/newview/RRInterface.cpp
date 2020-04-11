@@ -4987,7 +4987,8 @@ bool RRInterface::canTouch(LLViewerObject* object, LLVector3 pick_intersection /
 	LLViewerObject* root = object->getRootEdit();
 	if (!root) return true;
 
-	if (!isAllowed (object->getRootEdit()->getID(), "touchme")) return true; // to check the presence of "touchme" on this object, which means that we can touch it
+	// CA turn off logging on this since it gets called a lot for the pointer hover code
+	if (!isAllowed (object->getRootEdit()->getID(), "touchme", false)) return true; // to check the presence of "touchme" on this object, which means that we can touch it
 
 	if (!root->isHUDAttachment() && contains ("touchall")) return false;
 
