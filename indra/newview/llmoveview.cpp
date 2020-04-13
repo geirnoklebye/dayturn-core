@@ -765,10 +765,8 @@ void LLPanelStandStopFlying::updatePosition()
 	if (mAttached) return;
 
 	S32 bottom_tb_center = 0;
-    S32 y_pos = 0;
-    if (LLToolBar* toolbar_bottom = gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_BOTTOM))
+     if (LLToolBar* toolbar_bottom = gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_BOTTOM))
 	{
-		y_pos = toolbar_bottom->getRect().getHeight();
 		bottom_tb_center = toolbar_bottom->getRect().getCenterX();
 	}
 
