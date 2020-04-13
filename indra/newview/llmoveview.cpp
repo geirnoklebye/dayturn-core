@@ -712,33 +712,31 @@ void LLPanelStandStopFlying::onStopFlyingButtonClick()
  */
 void LLPanelStandStopFlying::updatePosition()
 {
-// <FS:Zi> Keep the Stand & Stop Flying panel always in the same position,
-//	if (mAttached) return;
-//
-//	S32 bottom_tb_center = 0;
-//	if (LLToolBar* toolbar_bottom = gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_BOTTOM))
-//	{
-//		y_pos = toolbar_bottom->getRect().getHeight();
-//		bottom_tb_center = toolbar_bottom->getRect().getCenterX();
-//	}
-//
-//	S32 left_tb_width = 0;
-//	if (LLToolBar* toolbar_left = gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_LEFT))
-//	{
-//		left_tb_width = toolbar_left->getRect().getWidth();
-//	}
-//
-//	if (gToolBarView != NULL && gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_LEFT)->hasButtons())
-//	{
-//		S32 x_pos = bottom_tb_center - getRect().getWidth() / 2 - left_tb_width;
-//		setOrigin( x_pos, 0);
-//	}
-//	else 
-//	{
-//		S32 x_pos = bottom_tb_center - getRect().getWidth() / 2;
-//		setOrigin( x_pos, 0);
-//	}
-// </FS:Zi>
-}
+	if (mAttached) return;
 
+	S32 bottom_tb_center = 0;
+    S32 y_pos = 0;
+    if (LLToolBar* toolbar_bottom = gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_BOTTOM))
+	{
+		y_pos = toolbar_bottom->getRect().getHeight();
+		bottom_tb_center = toolbar_bottom->getRect().getCenterX();
+	}
+
+	S32 left_tb_width = 0;
+	if (LLToolBar* toolbar_left = gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_LEFT))
+	{
+		left_tb_width = toolbar_left->getRect().getWidth();
+	}
+
+	if (gToolBarView != NULL && gToolBarView->getToolbar(LLToolBarEnums::TOOLBAR_LEFT)->hasButtons())
+	{
+		S32 x_pos = bottom_tb_center - getRect().getWidth() / 2 - left_tb_width;
+		setOrigin( x_pos, 0);
+	}
+	else
+	{
+		S32 x_pos = bottom_tb_center - getRect().getWidth() / 2;
+		setOrigin( x_pos, 0);
+	}
+}
 // EOF
