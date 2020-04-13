@@ -129,7 +129,7 @@
     </layout_stack>
   </layout_panel>
   <layout_panel name="bottom_toolbar_panel"
-                auto_resize="true"
+                auto_resize="false"
                 height="30"
                 width="1024"
                 mouse_opaque="false">
