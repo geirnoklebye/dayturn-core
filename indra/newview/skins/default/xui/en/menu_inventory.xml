@@ -916,8 +916,6 @@
             name="Settings Apply Local"
             layout="topleft"
             label="Apply Only To Myself">
-       		<menu_item_call.on_enable
-       			function="World.AllowEnvSettings" />
         <menu_item_call.on_click 
                 function="Inventory.DoToSelected"
                 parameter="apply_settings_local" />
@@ -926,8 +924,6 @@
             name="Settings Apply Parcel"
             layout="topleft"
             label="Apply To Parcel">
-       		<menu_item_call.on_enable
-       			function="World.AllowEnvSettings" />
         <menu_item_call.on_click 
                 function="Inventory.DoToSelected"
                 parameter="apply_settings_parcel" />

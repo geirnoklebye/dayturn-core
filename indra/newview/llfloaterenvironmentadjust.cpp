@@ -36,7 +36,6 @@
 #include "llvirtualtrackball.h"
 #include "llenvironment.h"
 #include "llviewercontrol.h"
-#include "llagent.h" // for RLV
 
 //=========================================================================
 namespace
@@ -116,13 +115,6 @@ BOOL LLFloaterEnvironmentAdjust::postBuild()
 
 void LLFloaterEnvironmentAdjust::onOpen(const LLSD& key)
 {
-//MK by CA
-	if (gRRenabled && gAgent.mRRInterface.mContainsSetenv)
-	{
-		closeFloater();
-		return;
-	}
-//mk by CA
     if (!mLiveSky)
     {
         LLEnvironment::instance().saveBeaconsState();

@@ -7592,10 +7592,6 @@ void LLSettingsBridge::performAction(LLInventoryModel* model, std::string action
 {
     if ("apply_settings_local" == action)
     {
-// MK by CA (nested if because we don't want this falling into the top level ELSE)
-			if (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.mContainsSetenv))
-			{
-// mk by CA
         // Single item only
         LLViewerInventoryItem* item = static_cast<LLViewerInventoryItem*>(getItem());
         if (!item) 
@@ -7603,16 +7599,9 @@ void LLSettingsBridge::performAction(LLInventoryModel* model, std::string action
         LLUUID asset_id = item->getAssetUUID();
         LLEnvironment::instance().setEnvironment(LLEnvironment::ENV_LOCAL, asset_id);
         LLEnvironment::instance().setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
-// MK by CA (nested if because we don't want this falling into the top level ELSE)
-			}
-// mk by CA
     }
     else if ("apply_settings_parcel" == action)
     {
-// MK by CA (nested if because we don't want this falling into the top level ELSE)
-			if (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.mContainsSetenv))
-			{
-// mk by CA
         // Single item only
         LLViewerInventoryItem* item = static_cast<LLViewerInventoryItem*>(getItem());
         if (!item)
@@ -7638,9 +7627,6 @@ void LLSettingsBridge::performAction(LLInventoryModel* model, std::string action
         LL_DEBUGS("ENVIRONMENT") << "Applying asset ID " << asset_id << " to parcel " << parcel_id << LL_ENDL;
         LLEnvironment::instance().updateParcel(parcel_id, asset_id, name, LLEnvironment::NO_TRACK, -1, -1, flags);
         LLEnvironment::instance().setSharedEnvironment();
-// MK by CA (nested if because we don't want this falling into the top level ELSE)
-			}
-// mk by CA
     }
     else
         LLItemBridge::performAction(model, action);
