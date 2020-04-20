@@ -907,8 +907,6 @@
             <menu_item_check
              label="Sunrise"
              name="Sunrise">
-             		<menu_item_check.on_enable
-             			function="World.AllowEnvSettings" />
                 <menu_item_check.on_click
                  function="World.EnvSettings"
                  parameter="sunrise" />
@@ -920,8 +918,6 @@
              label="Midday"
              name="Noon"
              shortcut="control|shift|Y">
-             		<menu_item_check.on_enable
-             			function="World.AllowEnvSettings" />
                 <menu_item_check.on_click
                  function="World.EnvSettings"
                  parameter="noon" />
@@ -933,8 +929,6 @@
              label="Sunset"
              name="Sunset"
              shortcut="control|shift|N">
-             		<menu_item_check.on_enable
-             			function="World.AllowEnvSettings" />
                 <menu_item_check.on_click
                  function="World.EnvSettings"
                  parameter="sunset" />
@@ -945,8 +939,6 @@
             <menu_item_check
              label="Midnight"
              name="Midnight">
-             		<menu_item_check.on_enable
-             			function="World.AllowEnvSettings" />
                 <menu_item_check.on_click
                  function="World.EnvSettings"
                  parameter="midnight" />
@@ -957,8 +949,6 @@
             <menu_item_check
              label="Use Shared Environment"
              name="Use Shared Environment">
-             		<menu_item_check.on_enable
-             			function="World.AllowEnvSettings" />
                 <menu_item_check.on_click
                  function="World.EnvSettings"
                  parameter="region" />
@@ -970,8 +960,6 @@
 	     	<menu_item_call
 	     	 label="My Environments..."
 	     	 name="my_environs">
-       		<menu_item_call.on_enable
-       			function="World.AllowEnvSettings" />
 	     	 	<menu_item_call.on_click
 	     	 	 function="World.EnvSettings"
                  parameter="my_environs" />
@@ -980,8 +968,6 @@
 <menu_item_call
 	     	 	 label="Personal Lighting..."
 	     	 	 name="adjustment_tool">
-         		<menu_item_call.on_enable
-         			function="World.AllowEnvSettings" />
 	     	 	 	<menu_item_call.on_click
 	     	 	 	function="World.EnvSettings"
 	     	 	 	parameter="adjust_tool" />
@@ -990,8 +976,6 @@
 	     	 	 <menu_item_check
 	     	 	 label="Pause Clouds"
 	     	 	 name="pause_clouds">
-         		<menu_item_check.on_enable
-         			function="World.AllowEnvSettings" />
 	     	 	 	<menu_item_check.on_click
 	     	 	 	function="World.EnvSettings"
 	     	 	 	parameter="pause_clouds" />

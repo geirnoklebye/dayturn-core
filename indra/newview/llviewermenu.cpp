@@ -10414,15 +10414,6 @@ class LLWorldEnvSettings : public view_listener_t
 	}
 };
 
-// CA allow for fading of menu items around environment
-class LLWorldAllowEnvSettings : public view_listener_t
-{
-	bool handleEvent(const LLSD& userdata)
-	{
-		return (!gRRenabled || (gRRenabled && !gAgent.mRRInterface.mContainsSetenv));
-	}
-};
-
 class LLWorldEnableEnvSettings : public view_listener_t
 {
 	bool handleEvent(const LLSD& userdata)
@@ -10890,7 +10881,6 @@ void initialize_menus()
 	view_listener_t::addMenu(new LLWorldCheckAlwaysRun(), "World.CheckAlwaysRun");
 	
 	view_listener_t::addMenu(new LLWorldEnvSettings(), "World.EnvSettings");
-	view_listener_t::addMenu(new LLWorldAllowEnvSettings(), "World.AllowEnvSettings");
 	view_listener_t::addMenu(new LLWorldEnableEnvSettings(), "World.EnableEnvSettings");
 	view_listener_t::addMenu(new LLWorldEnvPreset(), "World.EnvPreset");
 	view_listener_t::addMenu(new LLWorldEnableEnvPreset(), "World.EnableEnvPreset");
