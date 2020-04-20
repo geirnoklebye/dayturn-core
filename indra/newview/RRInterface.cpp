@@ -3785,36 +3785,8 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	//params->mAnimator.mIsRunning = false;
 	//params->mAnimator.mUseLindenTime = false;
 	//params->mAnimator.setTimeType(LLWLAnimator::TIME_CUSTOM);
-	
-	//adapted from llfloaterenvironmentadjust
-  LLEnvironment &environment(LLEnvironment::instance());
-  bool updatelocal(false);
-  LLSettingsSky::ptr_t        psky;
-    	
-  if (environment.hasEnvironment(LLEnvironment::ENV_LOCAL))
-  {
-      if (environment.getEnvironmentDay(LLEnvironment::ENV_LOCAL))
-      {   // We have a full day cycle in the local environment.  Freeze the sky
-          psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_LOCAL)->buildClone();
-          updatelocal = true;
-      }
-      else
-      {   // otherwise we can just use the sky.
-          psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_LOCAL);
-      }
-  }
-  else
-  {
-      psky = environment.getEnvironmentFixedSky(LLEnvironment::ENV_PARCEL, true)->buildClone();
-      updatelocal = true;
-  }
 
-  if (updatelocal)
-  {
-      environment.setEnvironment(LLEnvironment::ENV_LOCAL,  psky, 0);
-  }
-  environment.setSelectedEnvironment(LLEnvironment::ENV_LOCAL);
-  environment.updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+	LLSettingsSky::ptr_t psky = LLEnvironment::instance().getCurrentSky();
 
 	if (command == "daytime") {
 		/*** NEEDS CHANGE FOR EEP ***
@@ -3835,8 +3807,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 bluehorizon=psky->getBlueHorizon();
 		bluehorizon.mV[0] = val * 2;
 		psky->setBlueHorizon(bluehorizon);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mBlueHorizon.r = val*2;
 		//updateAndSave (&(params->mBlueHorizon));
 	}
@@ -3844,8 +3814,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 bluehorizon=psky->getBlueHorizon();
 		bluehorizon.mV[1] = val * 2;
 		psky->setBlueHorizon(bluehorizon);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mBlueHorizon.g = val*2;
 		//updateAndSave (&(params->mBlueHorizon));
 	}
@@ -3853,8 +3821,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 bluehorizon=psky->getBlueHorizon();
 		bluehorizon.mV[2] = val * 2;
 		psky->setBlueHorizon(bluehorizon);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mBlueHorizon.b = val*2;
 		//updateAndSave (&(params->mBlueHorizon));
 	}
@@ -3870,8 +3836,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 			bluehorizon.mV[2] *= val * 2 / old_intensity;
 		}
 		psky->setBlueHorizon(bluehorizon);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//F32 old_intensity = llmax(params->mBlueHorizon.r, params->mBlueHorizon.g, params->mBlueHorizon.b);
 		//if (val == 0 || old_intensity == 0) {
 		//	params->mBlueHorizon.r = params->mBlueHorizon.g = params->mBlueHorizon.b = val * 2;
@@ -3888,8 +3852,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 bluedensity=psky->getBlueDensity();
 		bluedensity.mV[0] = val * 2;
 		psky->setBlueDensity(bluedensity);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mBlueDensity.r = val*2;
 		//updateAndSave (&(params->mBlueDensity));
 	}
@@ -3897,8 +3859,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 bluedensity=psky->getBlueDensity();
 		bluedensity.mV[1] = val * 2;
 		psky->setBlueDensity(bluedensity);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mBlueDensity.g = val*2;
 		//updateAndSave (&(params->mBlueDensity));
 	}
@@ -3906,8 +3866,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 bluedensity=psky->getBlueDensity();
 		bluedensity.mV[2] = val * 2;
 		psky->setBlueDensity(bluedensity);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mBlueDensity.b = val*2;
 		//updateAndSave (&(params->mBlueDensity));
 	}
@@ -3923,8 +3881,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 			bluedensity.mV[2] *= val * 2 / old_intensity;
 		}
 		psky->setBlueDensity(bluedensity);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//F32 old_intensity = llmax(params->mBlueDensity.r, params->mBlueDensity.g, params->mBlueDensity.b);
 		//if (val == 0 || old_intensity == 0) {
 		//	params->mBlueDensity.r = params->mBlueDensity.g = params->mBlueDensity.b = val * 2;
@@ -3938,24 +3894,18 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 
 	else if (command == "hazehorizon") {
-		psky->setHazeHorizon(val); // original bug, slider only goes up to 1.0
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		psky->setHazeHorizon(val * 2);
 		//params->mHazeHorizon.x = val*2;
 		//updateAndSave (&(params->mHazeHorizon));
 	}
 	else if (command == "hazedensity") {
-		psky->setHazeDensity(val * 4); // original bug, slider goes up to 4.0
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
+		psky->setHazeDensity(val * 2);
 		//params->mHazeDensity.x = val*2;
 		//updateAndSave (&(params->mHazeDensity));
 	}
 
 	else if (command == "densitymultiplier") {
 		psky->setDensityMultiplier(val / 1000);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mDensityMult.x = val / 1000;
 		//params->mDensityMult.mult = 1.0;
 		//updateAndSave (&(params->mDensityMult));
@@ -3965,8 +3915,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "distancemultiplier") {
 		psky->setDistanceMultiplier(val);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mDistanceMult.x = val;
 		//params->mDistanceMult.mult = 1.0;
 		//updateAndSave (&(params->mDistanceMult));
@@ -3985,8 +3933,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 suncolour=psky->getSunlightColor();
 		suncolour.mV[0] = val * 3;
 		psky->setSunlightColor(suncolour);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mSunlight.r = val*3;
 		//updateAndSave (&(params->mSunlight));
 	}
@@ -3994,8 +3940,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 suncolour=psky->getSunlightColor();
 		suncolour.mV[1] = val * 3;
 		psky->setSunlightColor(suncolour);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mSunlight.g = val*3;
 		//updateAndSave (&(params->mSunlight));
 	}
@@ -4003,26 +3947,21 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 suncolour=psky->getSunlightColor();
 		suncolour.mV[2] = val * 3;
 		psky->setSunlightColor(suncolour);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mSunlight.b = val*3;
 		//updateAndSave (&(params->mSunlight));
 	}
 	else if (command == "sunmooncolori") {
 		LLColor3 suncolor=psky->getSunlightColor();
 		F32 old_intensity = llmax(suncolor.mV[0], suncolor.mV[1], suncolor.mV[2]);
-		// original bug, *2 used here, *3 elsewhere for sunmooncolor
 		if (val == 0 || old_intensity == 0) {
-			suncolor.mV[0] = suncolor.mV[1] = suncolor.mV[2] = val * 3;
+			suncolor.mV[0] = suncolor.mV[1] = suncolor.mV[2] = val * 2;
 		}
 		else {
-			suncolor.mV[0] *= val * 3 / old_intensity;
-			suncolor.mV[1] *= val * 3 / old_intensity;
-			suncolor.mV[2] *= val * 3 / old_intensity;
+			suncolor.mV[0] *= val * 2 / old_intensity;
+			suncolor.mV[1] *= val * 2 / old_intensity;
+			suncolor.mV[2] *= val * 2 / old_intensity;
 		}
 		psky->setSunlightColor(suncolor);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//F32 old_intensity = llmax(params->mSunlight.r, params->mSunlight.g, params->mSunlight.b);
 		//if (val == 0 || old_intensity == 0) {
 		//	params->mSunlight.r = params->mSunlight.g = params->mSunlight.b = val * 2;
@@ -4039,8 +3978,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 ambientcolor=psky->getAmbientColor();
 		ambientcolor.mV[0] = val * 3;
 		psky->setAmbientColor(ambientcolor);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mAmbient.r = val*3;
 		//updateAndSave (&(params->mAmbient));
 	}
@@ -4048,8 +3985,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 ambientcolor=psky->getAmbientColor();
 		ambientcolor.mV[1] = val * 3;
 		psky->setAmbientColor(ambientcolor);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mAmbient.g = val*3;
 		//updateAndSave (&(params->mAmbient));
 	}
@@ -4057,26 +3992,21 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 ambientcolor=psky->getAmbientColor();
 		ambientcolor.mV[2] = val * 3;
 		psky->setAmbientColor(ambientcolor);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mAmbient.b = val*3;
 		//updateAndSave (&(params->mAmbient));
 	}
 	else if (command == "ambienti") {
 		LLColor3 ambientcolor=psky->getAmbientColor();
 		F32 old_intensity = llmax(ambientcolor.mV[0], ambientcolor.mV[1], ambientcolor.mV[2]);
-		// original bug, *2 used here, *3 used in r/g/b, use *3 too
 		if (val == 0 || old_intensity == 0) {
-			ambientcolor.mV[0] = ambientcolor.mV[1] = ambientcolor.mV[2] = val * 3;
+			ambientcolor.mV[0] = ambientcolor.mV[1] = ambientcolor.mV[2] = val * 2;
 		}
 		else {
-			ambientcolor.mV[0] *= val * 3 / old_intensity;
-			ambientcolor.mV[1] *= val * 3 / old_intensity;
-			ambientcolor.mV[2] *= val * 3 / old_intensity;
+			ambientcolor.mV[0] *= val * 2 / old_intensity;
+			ambientcolor.mV[1] *= val * 2 / old_intensity;
+			ambientcolor.mV[2] *= val * 2 / old_intensity;
 		}
 		psky->setAmbientColor(ambientcolor);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//F32 old_intensity = llmax(params->mAmbient.r, params->mAmbient.g, params->mAmbient.b);
 		//if (val == 0 || old_intensity == 0) {
 		//	params->mAmbient.r = params->mAmbient.g = params->mAmbient.b = val * 2;
@@ -4102,8 +4032,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "scenegamma") {
 		psky->setGamma(val);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mWLGamma.x = val;
 		//updateAndSave (&(params->mWLGamma));
 	}
@@ -4119,8 +4047,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 	}
 	else if (command == "starbrightness") {
 		psky->setStarBrightness(val);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCurParams.setStarBrightness (val);
 	}
 
@@ -4128,8 +4054,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 cloudcolor=psky->getCloudColor();
 		cloudcolor.mV[0] = val;
 		psky->setCloudColor(cloudcolor);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudColor.r = val;
 		//updateAndSave (&(params->mCloudColor));
 	}
@@ -4137,8 +4061,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 cloudcolor=psky->getCloudColor();
 		cloudcolor.mV[1] = val;
 		psky->setCloudColor(cloudcolor);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudColor.g = val;
 		//updateAndSave (&(params->mCloudColor));
 	}
@@ -4146,26 +4068,21 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 cloudcolor=psky->getCloudColor();
 		cloudcolor.mV[2] = val;
 		psky->setCloudColor(cloudcolor);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudColor.b = val;
 		//updateAndSave (&(params->mCloudColor));
 	}
 	else if (command == "cloudcolori") {
 		LLColor3 cloudcolor=psky->getCloudColor();
 		F32 old_intensity = llmax(cloudcolor.mV[0], cloudcolor.mV[1], cloudcolor.mV[2]);
-		// original bug: *2 used here *1 for other setters, change to *1
 		if (val == 0 || old_intensity == 0) {
-			cloudcolor.mV[0] = cloudcolor.mV[1] = cloudcolor.mV[2] = val;
+			cloudcolor.mV[0] = cloudcolor.mV[1] = cloudcolor.mV[2] = val * 2;
 		}
 		else {
-			cloudcolor.mV[0] *= val / old_intensity;
-			cloudcolor.mV[1] *= val / old_intensity;
-			cloudcolor.mV[2] *= val / old_intensity;
+			cloudcolor.mV[0] *= val * 2 / old_intensity;
+			cloudcolor.mV[1] *= val * 2 / old_intensity;
+			cloudcolor.mV[2] *= val * 2 / old_intensity;
 		}
 		psky->setCloudColor(cloudcolor);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//F32 old_intensity = llmax(params->mCloudColor.r, params->mCloudColor.g, params->mCloudColor.b);
 		//if (val == 0 || old_intensity == 0) {
 		//	params->mCloudColor.r = params->mCloudColor.g = params->mCloudColor.b = val * 2;
@@ -4182,8 +4099,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 clouddetail=psky->getCloudPosDensity1();
 		clouddetail.mV[0] = val;
 		psky->setCloudPosDensity1(clouddetail);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudMain.r = val;
 		//updateAndSave (&(params->mCloudMain));
 	}
@@ -4191,8 +4106,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 clouddetail=psky->getCloudPosDensity1();
 		clouddetail.mV[1] = val;
 		psky->setCloudPosDensity1(clouddetail);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudMain.g = val;
 		//updateAndSave (&(params->mCloudMain));
 	}
@@ -4200,8 +4113,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 clouddetail=psky->getCloudPosDensity1();
 		clouddetail.mV[2] = val;
 		psky->setCloudPosDensity1(clouddetail);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudMain.b = val;
 		//updateAndSave (&(params->mCloudMain));
 	}
@@ -4210,8 +4121,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 clouddetail=psky->getCloudPosDensity2();
 		clouddetail.mV[0] = val;
 		psky->setCloudPosDensity2(clouddetail);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudDetail.r = val;
 		//updateAndSave (&(params->mCloudDetail));
 	}
@@ -4219,8 +4128,6 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 clouddetail=psky->getCloudPosDensity2();
 		clouddetail.mV[1] = val;
 		psky->setCloudPosDensity2(clouddetail);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudDetail.g = val;
 		//updateAndSave (&(params->mCloudDetail));
 	}
@@ -4228,37 +4135,27 @@ BOOL RRInterface::forceEnvironment (std::string command, std::string option)
 		LLColor3 clouddetail=psky->getCloudPosDensity2();
 		clouddetail.mV[2] = val;
 		psky->setCloudPosDensity2(clouddetail);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudDetail.b = val;
 		//updateAndSave (&(params->mCloudDetail));
 	}
 
 	else if (command == "cloudcoverage") {
 		psky->setCloudShadow(val);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudCoverage.x = val;
 		//updateAndSave (&(params->mCloudCoverage));
 	}
 	else if (command == "cloudscale") {
 		psky->setCloudScale(val);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCloudScale.x = val;
 		//updateAndSave (&(params->mCloudScale));
 	}
 
 	else if (command == "cloudscrollx") {
 		psky->setCloudScrollRateX(val + 10);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCurParams.setCloudScrollX (val+10);
 	}
 	else if (command == "cloudscrolly") {
 		psky->setCloudScrollRateY(val + 10);
-		psky->update();
-		LLEnvironment::instance().updateEnvironment(LLEnvironment::TRANSITION_INSTANT);
 		//params->mCurParams.setCloudScrollY (val+10);
 	}
 	// sunglowfocus 0-0.5, sunglowsize 0-2, scenegamma 0-10, starbrightness 0-2
@@ -4315,7 +4212,7 @@ std::string RRInterface::getEnvironment (std::string command)
 	//else if (command == "bluedensityi") res = max (max (params->mBlueDensity.r, params->mBlueDensity.g), params->mBlueDensity.b) / 2;
 
 	else if (command == "hazehorizon")  res = psky->getHazeHorizon();
-	else if (command == "hazedensity")  res = psky->getHazeDensity() / 4; //original bug: windlight slider goes up to 4
+	else if (command == "hazedensity")  res = psky->getHazeDensity();
 	//else if (command == "hazehorizon")  res = params->mHazeHorizon.x;
 	//else if (command == "hazedensity")  res = params->mHazeDensity.x;
 
