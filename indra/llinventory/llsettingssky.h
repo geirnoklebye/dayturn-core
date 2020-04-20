@@ -323,12 +323,10 @@ public:
                     F32 aniso_factor = 0.0f);
 
     virtual void        updateSettings() SETTINGS_OVERRIDE;
-    static const std::string SETTING_LEGACY_EAST_ANGLE; // RLV needs access
-    static const std::string SETTING_LEGACY_SUN_ANGLE; // RLV needs access
 protected:
-//    static const std::string SETTING_LEGACY_EAST_ANGLE;
+    static const std::string SETTING_LEGACY_EAST_ANGLE;
     static const std::string SETTING_LEGACY_ENABLE_CLOUD_SCROLL;
-//    static const std::string SETTING_LEGACY_SUN_ANGLE;
+    static const std::string SETTING_LEGACY_SUN_ANGLE;
 
     LLSettingsSky();
 
